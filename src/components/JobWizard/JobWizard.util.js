@@ -108,7 +108,7 @@ export const generateJobWizardData = (
   const functions = selectedFunctionData.functions
   const functionInfo = getFunctionInfo(selectedFunctionData)
   const defaultResources = frontendSpec?.default_function_pod_resources ?? {}
-  const functionParameters = getFunctionParameters(functions, functionInfo.method)
+  const functionParameters = getFunctionParameters(functions, functionInfo.handler)
   const [functionPriorityClassName] = getFunctionPriorityClass(functions)
   const [limits] = getLimits(functions)
   const [requests] = getRequests(functions)
@@ -123,7 +123,7 @@ export const generateJobWizardData = (
     ? getDefaultSchedule(defaultData.schedule)
     : scheduleDataInitialState
   const jobAdditionalData = {
-    methodOptions: functionInfo.methodOptions,
+    handlerOptions: functionInfo.handlerOptions,
     versionOptions: functionInfo.versionOptions
   }
   const currentLimits = parseLimits(limits, defaultResources.limits, gpuType)
@@ -133,8 +133,8 @@ export const generateJobWizardData = (
     [RUN_DETAILS_STEP]: {
       name: functionInfo.name,
       version: functionInfo.version,
-      method: functionInfo.method,
-      methodData: functionInfo.methodData,
+      handler: functionInfo.handler,
+      handlerData: functionInfo.handlerData,
       labels: [],
       image: parseImageData(functionInfo.function, frontendSpec, currentProjectName)
     },
@@ -209,7 +209,7 @@ export const generateJobWizardDefaultData = (
   if (isEmpty(defaultData)) return [{}, {}]
 
   const runInfo = getRunDefaultInfo(defaultData, selectedFunctionData)
-  const functionParameters = getFunctionDefaultParameters(selectedFunctionData, runInfo.method)
+  const functionParameters = getFunctionDefaultParameters(selectedFunctionData, runInfo.handler)
   const [predefinedParameters, customParameters] = parseDefaultParameters(
     functionParameters,
     defaultData.task.spec.parameters,
@@ -223,7 +223,7 @@ export const generateJobWizardDefaultData = (
   const requests = defaultData.function.spec?.resources?.requests
   const gpuType = getLimitsGpuType(limits)
   const jobAdditionalData = {
-    methodOptions: runInfo.methodOptions,
+    handlerOptions: runInfo.handlerOptions,
     versionOptions: runInfo.versionOptions
   }
   const currentLimits = parseLimits(limits, defaultResources.limits, gpuType)
@@ -236,8 +236,8 @@ export const generateJobWizardDefaultData = (
     [RUN_DETAILS_STEP]: {
       name: runInfo.name,
       version: runInfo.version,
-      method: runInfo.method,
-      methodData: runInfo.methodData,
+      handler: runInfo.handler,
+      handlerData: runInfo.handlerData,
       labels: runInfo.labels,
       image: parseImageData(selectedFunctionData, frontendSpec, currentProjectName)
     },
@@ -297,16 +297,16 @@ export const generateJobWizardDefaultData = (
   return [jobFormData, jobAdditionalData]
 }
 
-export const getMethodData = (selectedFunctionData, method) => {
+export const getHandlerData = (selectedFunctionData, handler) => {
   const currentFunction = selectedFunctionData?.functions
     ? chain(selectedFunctionData.functions).orderBy('metadata.updated', 'desc').get(0).value()
     : selectedFunctionData
-  const methodData = get(currentFunction, ['spec', 'entry_points', method], {})
-  const outputs = (methodData?.outputs ?? []).filter(output => !isEveryObjectValueEmpty(output))
+  const handlerData = get(currentFunction, ['spec', 'entry_points', handler], {})
+  const outputs = (handlerData?.outputs ?? []).filter(output => !isEveryObjectValueEmpty(output))
 
   return {
-    doc: methodData?.doc,
-    has_kwargs: methodData?.has_kwargs || false,
+    doc: handlerData?.doc,
+    has_kwargs: handlerData?.has_kwargs || false,
     outputs
   }
 }
@@ -316,10 +316,10 @@ const getFunctionInfo = selectedFunctionData => {
 
   if (!isEmpty(functions)) {
     const versionOptions = getVersionOptions(functions)
-    const methodOptions = getMethodOptions(functions)
-    const { defaultVersion, defaultMethod } = getDefaultMethodAndVersion(
+    const handlerOptions = getHandlerOptions(functions)
+    const { defaultVersion, defaultHandler } = getDefaultHandlerAndVersion(
       versionOptions,
-      methodOptions,
+      handlerOptions,
       functions
     )
     const currentFunctionVersion = selectedFunctionData.tag || defaultVersion
@@ -328,10 +328,10 @@ const getFunctionInfo = selectedFunctionData => {
 
     return {
       name: selectedFunctionData.name,
-      method: defaultMethod,
+      handler: defaultHandler,
       version: currentFunctionVersion,
-      methodData: getMethodData(currentFunction, defaultMethod),
-      methodOptions,
+      handlerData: getHandlerData(currentFunction, defaultHandler),
+      handlerOptions,
       versionOptions,
       function: currentFunction || {}
     }
@@ -342,15 +342,15 @@ const getRunDefaultInfo = (defaultData, selectedFunctionData) => {
   return {
     labels: parseChipsData(defaultData.task?.metadata?.labels),
     name: defaultData.task?.metadata?.name || '',
-    method: defaultData.task?.spec?.handler,
-    methodData: getMethodData(selectedFunctionData, defaultData.task?.spec?.handler),
-    methodOptions: [],
+    handler: defaultData.task?.spec?.handler,
+    handlerData: getHandlerData(selectedFunctionData, defaultData.task?.spec?.handler),
+    handlerOptions: [],
     version: '',
     versionOptions: []
   }
 }
 
-const getMethodOptions = selectedFunctions => {
+const getHandlerOptions = selectedFunctions => {
   return chain(selectedFunctions)
     .map(func => Object.values(func.spec?.entry_points ?? {}))
     .flatten()
@@ -377,47 +377,47 @@ const getVersionOptions = selectedFunctions => {
   return versionOptions.length ? versionOptions : [{ label: 'latest', id: TAG_LATEST }]
 }
 
-const getDefaultMethod = (methodOptions, selectedFunctions) => {
-  let method = ''
+const getDefaultHandler = (handlerOptions, selectedFunctions) => {
+  let handler = ''
 
   const latestFunction = selectedFunctions.find(item => item.metadata.tag === TAG_LATEST)
 
-  if (methodOptions.length) {
-    method = methodOptions[0]?.id
+  if (handlerOptions.length) {
+    handler = handlerOptions[0]?.id
   } else if (latestFunction) {
-    method = latestFunction.spec.default_handler || 'handler'
+    handler = latestFunction.spec.default_handler || 'handler'
   } else {
-    method = selectedFunctions[0]?.spec.default_handler || 'handler'
+    handler = selectedFunctions[0]?.spec.default_handler || 'handler'
   }
 
-  return method
+  return handler
 }
 
-const getDefaultMethodAndVersion = (versionOptions, methodOptions, selectedFunctions) => {
+const getDefaultHandlerAndVersion = (versionOptions, handlerOptions, selectedFunctions) => {
   const defaultVersion =
     versionOptions.find(version => version.id === TAG_LATEST)?.id || versionOptions[0].id || ''
 
-  const defaultMethod = getDefaultMethod(methodOptions, selectedFunctions)
+  const defaultHandler = getDefaultHandler(handlerOptions, selectedFunctions)
 
   return {
     defaultVersion,
-    defaultMethod
+    defaultHandler
   }
 }
 
-export const getFunctionParameters = (selectedFunction, method) => {
+export const getFunctionParameters = (selectedFunction, handler) => {
   return chain(selectedFunction)
     .orderBy('metadata.updated', 'desc')
     .map(func => {
-      return func.spec.entry_points ? func.spec.entry_points[method]?.parameters ?? [] : []
+      return func.spec.entry_points ? func.spec.entry_points[handler]?.parameters ?? [] : []
     })
     .flatten()
     .unionBy('name')
     .value()
 }
 
-export const getFunctionDefaultParameters = (selectedFunction, method) => {
-  const functionParameters = get(selectedFunction, `spec.entry_points[${method}].parameters`, [])
+export const getFunctionDefaultParameters = (selectedFunction, handler) => {
+  const functionParameters = get(selectedFunction, `spec.entry_points[${handler}].parameters`, [])
 
   return keyBy(functionParameters, 'name')
 }
@@ -1079,7 +1079,7 @@ export const generateJobRequestData = (
         // secret_sources: formData[ADVANCED_STEP].secretSourcesTable.map(secretSource => {
         //   return { kind: secretSource.data.key, source: secretSource.data.value }
         // }),
-        handler: formData[RUN_DETAILS_STEP].method ?? '',
+        handler: formData[RUN_DETAILS_STEP].handler ?? '',
         input_path: formData[ADVANCED_STEP].inputPath ?? '',
         output_path: formData[ADVANCED_STEP].outputPath,
         function:
