@@ -40,6 +40,7 @@ export const S3_INPUT_PATH_SCHEME = 's3://'
 export const V3IO_INPUT_PATH_SCHEME = 'v3io:///'
 
 export const TAG_LATEST = 'latest'
+export const TAG_NA = 'na'
 
 export const DENSITY_DENSE = 'dense'
 export const DENSITY_NORMAL = 'normal'

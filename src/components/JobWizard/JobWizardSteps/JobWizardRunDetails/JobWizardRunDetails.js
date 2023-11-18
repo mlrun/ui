@@ -38,7 +38,8 @@ import {
   DATA_INPUTS_STEP,
   EXISTING_IMAGE_SOURCE,
   PARAMETERS_STEP,
-  RUN_DETAILS_STEP
+  RUN_DETAILS_STEP,
+  TAG_NA
 } from '../../../../constants'
 import { SECONDARY_BUTTON, TERTIARY_BUTTON } from 'igz-controls/constants'
 import { areFormValuesChanged } from 'igz-controls/utils/form.util'
@@ -83,7 +84,7 @@ const JobWizardRunDetails = ({
     setSpyOnMethodChange(true)
 
     const functionParameters = getFunctionParameters(selectedFunctionData.functions, method)
-    const dataInputs = parseDataInputs(functionParameters, prePopulatedData.dataInputs)
+    const dataInputs = parseDataInputs(functionParameters, prePopulatedData?.dataInputs)
     const predefinedParameters = parsePredefinedParameters(functionParameters)
     const methodData = getMethodData(selectedFunctionData, method)
 
@@ -158,8 +159,8 @@ const JobWizardRunDetails = ({
         <div className="form-row">
           <div className="form-col-2">
             <FormInput
-              label="Name"
-              name={`${RUN_DETAILS_STEP}.name`}
+              label="Run name"
+              name={`${RUN_DETAILS_STEP}.runName`}
               disabled={isEditMode}
               required
               validationRules={getValidationRules('common.name')}
@@ -170,6 +171,10 @@ const JobWizardRunDetails = ({
               <FormSelect
                 name={`${RUN_DETAILS_STEP}.version`}
                 label="Version"
+                disabled={
+                  jobAdditionalData?.versionOptions?.length === 1 &&
+                  jobAdditionalData.versionOptions[0].id === TAG_NA
+                }
                 options={jobAdditionalData.versionOptions || []}
               />
             </div>
