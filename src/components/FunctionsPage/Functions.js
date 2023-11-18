@@ -66,7 +66,6 @@ const Functions = ({
   deleteFunction,
   fetchFunctionLogs,
   fetchFunctions,
-  fetchJobFunction,
   functionsStore,
   removeFunctionsError,
   removeNewFunction
@@ -253,15 +252,15 @@ const Functions = ({
             label: 'Run',
             icon: <Run />,
             onClick: func => {
-              if (func?.project && func?.name && func?.hash) {
-                fetchJobFunction(func.project, func.name, func.hash)
+              if (func?.project && func?.name && func?.hash && func?.ui?.originalContent) {
+                dispatch(jobsActions.fetchJobFunctionSuccess(func.ui.originalContent))
                 setJobWizardMode(PANEL_FUNCTION_CREATE_MODE)
               } else {
                 dispatch(
                   setNotification({
                     status: 400,
                     id: Math.random(),
-                    message: 'Failed to fetch the function'
+                    message: 'Failed to retrieve function data'
                   })
                 )
               }
@@ -294,7 +293,7 @@ const Functions = ({
           }
         ]
       ],
-    [dispatch, fetchJobFunction, isStagingMode, onRemoveFunction, toggleConvertedYaml]
+    [dispatch, isStagingMode, onRemoveFunction, toggleConvertedYaml]
   )
 
   useEffect(() => {
@@ -507,6 +506,5 @@ const Functions = ({
 }
 
 export default connect(({ functionsStore }) => ({ functionsStore }), {
-  ...functionsActions,
-  ...jobsActions
+  ...functionsActions
 })(React.memo(Functions))

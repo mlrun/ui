@@ -53,6 +53,7 @@ import {
   RUN_DETAILS_STEP,
   SECRET_VOLUME_TYPE,
   TAG_LATEST,
+  TAG_NA,
   V3IO_VOLUME_TYPE
 } from '../../constants'
 import {
@@ -132,7 +133,7 @@ export const generateJobWizardData = (
 
   const jobFormData = {
     [RUN_DETAILS_STEP]: {
-      name: functionInfo.name,
+      runName: functionInfo.name,
       version: functionInfo.version,
       method: functionInfo.method,
       methodData: functionInfo.methodData,
@@ -183,10 +184,10 @@ export const generateJobWizardData = (
     jobFormData[RESOURCES_STEP].jobPriorityClassName = jobPriorityClassName
   }
 
-  if (!isEmpty(functionParameters) || !isEmpty(prePopulatedData.dataInputs)) {
+  if (!isEmpty(functionParameters) || !isEmpty(prePopulatedData?.dataInputs)) {
     jobFormData[DATA_INPUTS_STEP].dataInputsTable = parseDataInputs(
       functionParameters,
-      prePopulatedData.dataInputs
+      prePopulatedData?.dataInputs
     )
   }
 
@@ -235,7 +236,7 @@ export const generateJobWizardDefaultData = (
 
   const jobFormData = {
     [RUN_DETAILS_STEP]: {
-      name: runInfo.name,
+      runName: runInfo.name,
       version: runInfo.version,
       method: runInfo.method,
       methodData: runInfo.methodData,
@@ -368,14 +369,14 @@ const getVersionOptions = selectedFunctions => {
   const versionOptions = unionBy(
     selectedFunctions.map(func => {
       return {
-        label: func.metadata.tag || TAG_LATEST,
-        id: func.metadata.tag || TAG_LATEST
+        label: func.metadata.tag || 'N/A',
+        id: func.metadata.tag || TAG_NA
       }
     }),
     'id'
   )
 
-  return versionOptions.length ? versionOptions : [{ label: 'latest', id: TAG_LATEST }]
+  return versionOptions.length ? versionOptions : [{ label: 'N/A', id: TAG_NA }]
 }
 
 const getDefaultMethod = (methodOptions, selectedFunctions) => {
@@ -920,14 +921,14 @@ const generateParameters = parametersTableData => {
 
   parametersTableData?.predefined
     ?.filter(parameter => !parameter.data.isHyper && parameter.data.isChecked)
-    .forEach(value => {
-      parameters[value.data.name] = convertParameterValue(value.data.value, value.data.type)
+    .forEach(parameter => {
+      parameters[parameter.data.name] = convertParameterValue(parameter.data.value, parameter.data.type)
     })
 
   parametersTableData?.custom
     ?.filter(parameter => !parameter.data.isHyper && parameter.data.isChecked)
-    .forEach(value => {
-      parameters[value.data.name] = convertParameterValue(value.data.value, value.data.type)
+    .forEach(parameter => {
+      parameters[parameter.data.name] = convertParameterValue(parameter.data.value, parameter.data.type)
     })
 
   return parameters
@@ -1070,7 +1071,7 @@ export const generateJobRequestData = (
     task: {
       metadata: {
         project: params.projectName,
-        name: formData[RUN_DETAILS_STEP].name,
+        name: formData[RUN_DETAILS_STEP].runName,
         labels: convertChipsData(formData[RUN_DETAILS_STEP].labels)
       },
       spec: {

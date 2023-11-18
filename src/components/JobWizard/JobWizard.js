@@ -105,6 +105,7 @@ const JobWizard = ({
     })
   )
   const isEditMode = useMemo(() => mode === PANEL_EDIT_MODE || mode === PANEL_RERUN_MODE, [mode])
+  const isRunMode = useMemo(() => mode === PANEL_FUNCTION_CREATE_MODE, [mode])
   const [selectedFunctionData, setSelectedFunctionData] = useState({})
   const [filteredFunctions, setFilteredFunctions] = useState([])
   const [filteredTemplates, setFilteredTemplates] = useState([])
@@ -159,16 +160,16 @@ const JobWizard = ({
 
   useEffect(() => {
     if (!isEmpty(jobsStore.jobFunc)) {
-      if ([PANEL_EDIT_MODE, PANEL_RERUN_MODE].includes(mode)) {
+      if (isEditMode) {
         setSelectedFunctionData(jobsStore.jobFunc)
-      } else if (mode === PANEL_FUNCTION_CREATE_MODE) {
+      } else if (isRunMode) {
         setSelectedFunctionData({
           name: jobsStore.jobFunc.metadata.name,
           functions: [jobsStore.jobFunc]
         })
       }
     }
-  }, [editJob, jobsStore, mode])
+  }, [isEditMode, isRunMode, jobsStore.jobFunc])
 
   const setJobData = useCallback(
     (formState, jobFormData, jobAdditionalData) => {
@@ -201,7 +202,7 @@ const JobWizard = ({
       setJobData(formStateRef.current, jobFormData, jobAdditionalData)
     } else if (
       formStateRef.current &&
-      isBatchInference &&
+      (isBatchInference || isRunMode) &&
       !isEmpty(selectedFunctionData) &&
       isEmpty(jobAdditionalData)
     ) {
@@ -219,6 +220,7 @@ const JobWizard = ({
     frontendSpec,
     isBatchInference,
     isEditMode,
+    isRunMode,
     jobAdditionalData,
     params.projectName,
     selectedFunctionData,
@@ -234,7 +236,7 @@ const JobWizard = ({
         {
           id: FUNCTION_SELECTION_STEP,
           label: 'Function Selection',
-          hidden: isEditMode || isBatchInference || mode === PANEL_FUNCTION_CREATE_MODE,
+          hidden: isEditMode || isRunMode || isBatchInference,
           nextIsDisabled: isEmpty(selectedFunctionData)
         },
         {
@@ -437,7 +439,7 @@ const JobWizard = ({
               stepsConfig={getStepsConfig(formState)}
               getActions={getActionsParams => getActions(getActionsParams, formState)}
               title={wizardTitle}
-              subTitle={formState.values?.[RUN_DETAILS_STEP]?.name}
+              subTitle={formState.values?.[RUN_DETAILS_STEP]?.runName}
             >
               <JobWizardFunctionSelection
                 activeTab={activeTab}
