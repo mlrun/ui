@@ -44,6 +44,7 @@ const FeatureSetsPanelSchemaView = ({
             sets, the entity is used as the key column.
           </span>
           <span>
+            &nbsp;
             <a
               className="link"
               href="https://docs.mlrun.org/en/latest/feature-store/feature-sets.html"
