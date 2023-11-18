@@ -157,6 +157,7 @@ const Content = ({
               message={getNoDataMessage(
                 filtersStore,
                 pageData.filters,
+                null,
                 pageData.page,
                 params.pageTab
               )}

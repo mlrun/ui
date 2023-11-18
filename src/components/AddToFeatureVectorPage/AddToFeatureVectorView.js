@@ -73,6 +73,7 @@ const AddToFeatureVectorView = React.forwardRef(
                 message={getNoDataMessage(
                   filtersStore,
                   filters,
+                  null,
                   FEATURE_STORE_PAGE,
                   ADD_TO_FEATURE_VECTOR_TAB
                 )}

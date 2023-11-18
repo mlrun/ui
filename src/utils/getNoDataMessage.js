@@ -96,7 +96,9 @@ const messageNamesList = {
   default: ''
 }
 
-export const getNoDataMessage = (filtersStore, filters, page, tab, filtersStoreKey) => {
+export const getNoDataMessage = (filtersStore, filters, defaultMessage, page, tab, filtersStoreKey) => {
+  if (defaultMessage) return defaultMessage
+
   const messageNames = messageNamesList[tab] || messageNamesList[page] || messageNamesList.default
 
   if (!messageNames) {

@@ -83,6 +83,7 @@ const MonitorWorkflows = ({
   const [workflowsAreLoaded, setWorkflowsAreLoaded] = useState(false)
   const [itemIsSelected, setItemIsSelected] = useState(false)
   const [selectedJob, setSelectedJob] = useState({})
+  const [largeRequestErrorMessage, setLargeRequestErrorMessage] = useState('')
   const [convertedYaml, toggleConvertedYaml] = useYaml('')
   const appStore = useSelector(store => store.appStore)
   const workflowsStore = useSelector(state => state.workflowsStore)
@@ -299,7 +300,7 @@ const MonitorWorkflows = ({
 
   const getWorkflows = useCallback(
     filter => {
-      fetchWorkflows(params.projectName, filter)
+      fetchWorkflows(params.projectName, filter, setLargeRequestErrorMessage)
     },
     [fetchWorkflows, params.projectName]
   )
@@ -536,10 +537,17 @@ const MonitorWorkflows = ({
           </div>
         </div>
       )}
-      {workflowsStore.workflows.loading ? null : !params.workflowId &&
-        workflowsStore.workflows.data.length === 0 ? (
+      {workflowsStore.workflows.loading ? null : (!params.workflowId &&
+          workflowsStore.workflows.data.length === 0) ||
+        largeRequestErrorMessage ? (
         <NoData
-          message={getNoDataMessage(filtersStore, filters, JOBS_PAGE, MONITOR_WORKFLOWS_TAB)}
+          message={getNoDataMessage(
+            filtersStore,
+            filters,
+            largeRequestErrorMessage,
+            JOBS_PAGE,
+            MONITOR_WORKFLOWS_TAB
+          )}
         />
       ) : (
         <>

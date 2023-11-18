@@ -32,16 +32,19 @@ import {
   FEATURE_STORE_PAGE,
   GROUP_BY_NAME,
   GROUP_BY_NONE,
-  TAG_FILTER_ALL_ITEMS
+  TAG_FILTER_ALL_ITEMS,
+  LARGE_REQUEST_CANCELED
 } from '../../../constants'
 import { createFeaturesRowData } from '../../../utils/createFeatureStoreContent'
 import { featuresActionCreator, featuresFilters } from './features.util'
 import { getFeatureIdentifier } from '../../../utils/getUniqueIdentifier'
+import { cancelRequest } from '../../../utils/cancelRequest'
 import { getFilterTagOptions, setFilters } from '../../../reducers/filtersReducer'
 import { parseFeatures } from '../../../utils/parseFeatures'
 import { setTablePanelOpen } from '../../../reducers/tableReducer'
 import { useGetTagOptions } from '../../../hooks/useGetTagOptions.hook'
 import { useGroupContent } from '../../../hooks/groupContent.hook'
+import { showLargeResponsePopUp } from '../../../httpClient'
 
 import { ReactComponent as Yaml } from 'igz-controls/images/yaml.svg'
 
@@ -59,6 +62,7 @@ const Features = ({
 }) => {
   const [features, setFeatures] = useState([])
   const [selectedRowData, setSelectedRowData] = useState({})
+  const [largeRequestErrorMessage, setLargeRequestErrorMessage] = useState('')
   const [urlTagOption] = useGetTagOptions(fetchFeatureSetsTags, featuresFilters)
   const params = useParams()
   const featureStore = useSelector(store => store.featureStore)
@@ -89,6 +93,9 @@ const Features = ({
 
   const fetchData = useCallback(
     filters => {
+      const cancelRequestTimeout = setTimeout(() => {
+        cancelRequest(featureStoreRef, LARGE_REQUEST_CANCELED)
+      }, 30000)
       const config = {
         cancelToken: new axios.CancelToken(cancel => {
           featureStoreRef.current.cancel = cancel
@@ -98,26 +105,36 @@ const Features = ({
       return Promise.allSettled([
         fetchFeatures(params.projectName, filters, config),
         fetchEntities(params.projectName, filters, config)
-      ]).then(result => {
-        if (result) {
-          const features = result.reduce((prevValue, nextValue) => {
-            return nextValue.value ? prevValue.concat(nextValue.value) : prevValue
-          }, [])
+      ])
+        .then(result => {
+          if (result) {
+            const features = result.reduce((prevValue, nextValue) => {
+              return nextValue.value ? prevValue.concat(nextValue.value) : prevValue
+            }, [])
 
-          setFeatures(parseFeatures(features))
+            if (features.length > 1500) {
+              showLargeResponsePopUp(setLargeRequestErrorMessage)
+              setFeatures([])
+            } else {
+              setFeatures(parseFeatures(features))
+              setLargeRequestErrorMessage('')
 
-          return features
-        }
+              return features
+            }
+          }
 
-        return result
-      })
+          return result
+        })
+        .catch(error => {
+          if (error.message === LARGE_REQUEST_CANCELED) {
+            showLargeResponsePopUp(setLargeRequestErrorMessage)
+            setFeatures([])
+          }
+        })
+        .finally(() => clearTimeout(cancelRequestTimeout))
     },
     [fetchEntities, fetchFeatures, params.projectName]
   )
-
-  const cancelRequest = message => {
-    featureStoreRef.current?.cancel && featureStoreRef.current.cancel(message)
-  }
 
   const handleRefresh = filters => {
     dispatch(getFilterTagOptions({ fetchTags: fetchFeatureSetsTags, project: params.projectName }))
@@ -266,6 +283,7 @@ const Features = ({
       getPopUpTemplate={getPopUpTemplate}
       handleExpandRow={handleExpandRow}
       handleRefresh={handleRefresh}
+      largeRequestErrorMessage={largeRequestErrorMessage}
       pageData={pageData}
       ref={featureStoreRef}
       selectedRowData={selectedRowData}

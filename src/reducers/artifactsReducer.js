@@ -112,13 +112,18 @@ export const fetchDataSet = createAsyncThunk('fetchDataSet', ({ project, dataSet
     return generateArtifacts(filterArtifacts(result), DATASETS, response.data.artifacts)
   })
 })
-export const fetchDataSets = createAsyncThunk('fetchDataSets', ({ project, filters, config }) => {
-  return artifactsApi.getDataSets(project, filters, config).then(({ data }) => {
-    const result = parseArtifacts(data.artifacts)
+export const fetchDataSets = createAsyncThunk(
+  'fetchDataSets',
+  ({ project, filters, config, setLargeRequestErrorMessage }) => {
+    return artifactsApi
+      .getDataSets(project, filters, config, setLargeRequestErrorMessage)
+      .then(({ data }) => {
+        const result = parseArtifacts(data.artifacts)
 
-    return generateArtifacts(filterArtifacts(result), DATASETS, data.artifacts)
-  })
-})
+        return generateArtifacts(filterArtifacts(result), DATASETS, data.artifacts)
+      })
+  }
+)
 export const fetchFile = createAsyncThunk('fetchFile', ({ project, file, iter, tag }) => {
   return artifactsApi.getFile(project, file, iter, tag).then(response => {
     const result = parseArtifacts(response.data.artifacts)
@@ -126,28 +131,35 @@ export const fetchFile = createAsyncThunk('fetchFile', ({ project, file, iter, t
     return generateArtifacts(filterArtifacts(result), ARTIFACTS, response.data.artifacts)
   })
 })
-export const fetchFiles = createAsyncThunk('fetchFiles', ({ project, filters }) => {
-  return artifactsApi.getFiles(project, filters).then(({ data }) => {
-    const result = parseArtifacts(data.artifacts)
+export const fetchFiles = createAsyncThunk(
+  'fetchFiles',
+  ({ project, filters, setLargeRequestErrorMessage }) => {
+    return artifactsApi.getFiles(project, filters, setLargeRequestErrorMessage).then(({ data }) => {
+      const result = parseArtifacts(data.artifacts)
 
-    return generateArtifacts(filterArtifacts(result), ARTIFACTS, data.artifacts)
-  })
-})
+      return generateArtifacts(filterArtifacts(result), ARTIFACTS, data.artifacts)
+    })
+  }
+)
 export const fetchArtifactsFunctions = createAsyncThunk(
   'fetchArtifactsFunctions',
-  ({ project, filters }) => {
-    return functionsApi.getFunctions(project, filters).then(({ data }) => {
-      return parseFunctions(
-        data.funcs.filter(func => func.kind === FUNCTION_TYPE_SERVING && func.metadata.tag?.length)
-      )
-    })
+  ({ project, filters, setLargeRequestErrorMessage }) => {
+    return functionsApi
+      .getFunctions(project, filters, null, setLargeRequestErrorMessage)
+      .then(({ data }) => {
+        return parseFunctions(
+          data.funcs.filter(
+            func => func.kind === FUNCTION_TYPE_SERVING && func.metadata.tag?.length
+          )
+        )
+      })
   }
 )
 export const fetchModelEndpoints = createAsyncThunk(
   'fetchModelEndpoints',
-  ({ project, filters, params }) => {
+  ({ project, filters, params, setLargeRequestErrorMessage }) => {
     return artifactsApi
-      .getModelEndpoints(project, filters, params)
+      .getModelEndpoints(project, filters, params, setLargeRequestErrorMessage)
       .then(({ data: { endpoints = [] } }) => {
         return generateModelEndpoints(endpoints)
       })
@@ -160,12 +172,18 @@ export const fetchModel = createAsyncThunk('fetchModel', ({ project, model, iter
     return generateArtifacts(filterArtifacts(result), MODELS_TAB, response.data.artifacts)
   })
 })
-export const fetchModels = createAsyncThunk('fetchModels', ({ project, filters }) => {
-  return artifactsApi.getModels(project, filters).then(({ data }) => {
-    const result = filterArtifacts(parseArtifacts(data.artifacts))
-    return generateArtifacts(result, MODELS_TAB, data.artifacts)
-  })
-})
+export const fetchModels = createAsyncThunk(
+  'fetchModels',
+  ({ project, filters, setLargeRequestErrorMessage }) => {
+    return artifactsApi
+      .getModels(project, filters, setLargeRequestErrorMessage)
+      .then(({ data }) => {
+        const result = filterArtifacts(parseArtifacts(data.artifacts))
+
+        return generateArtifacts(result, MODELS_TAB, data.artifacts)
+      })
+  }
+)
 export const updateArtifact = createAsyncThunk('updateArtifact', ({ project, data }) => {
   return artifactsApi.updateArtifact(project, data)
 })

@@ -28,6 +28,7 @@ import { fetchArtifactsFunctions, removePipelines } from '../../../reducers/arti
 import createFunctionsContent from '../../../utils/createFunctionsContent'
 import { cancelRequest } from '../../../utils/cancelRequest'
 import { generatePageData } from './realTimePipelines.util'
+import { largeResponseCatchHandler } from '../../../utils/largeResponseCatchHandler'
 import { getFunctionIdentifier } from '../../../utils/getUniqueIdentifier'
 import { setFilters } from '../../../reducers/filtersReducer'
 import { useGroupContent } from '../../../hooks/groupContent.hook'
@@ -36,6 +37,7 @@ import { useModelsPage } from '../ModelsPage.context'
 import { ReactComponent as Yaml } from 'igz-controls/images/yaml.svg'
 
 const RealTimePipelines = () => {
+  const [largeRequestErrorMessage, setLargeRequestErrorMessage] = useState('')
   const [pipelines, setPipelines] = useState([])
   const [selectedRowData, setSelectedRowData] = useState({})
   const artifactsStore = useSelector(store => store.artifactsStore)
@@ -62,7 +64,13 @@ const RealTimePipelines = () => {
 
   const fetchData = useCallback(
     filters => {
-      dispatch(fetchArtifactsFunctions({ project: params.projectName, filters }))
+      dispatch(
+        fetchArtifactsFunctions({
+          project: params.projectName,
+          filters,
+          setLargeRequestErrorMessage
+        })
+      )
         .unwrap()
         .then(result => {
           setPipelines(
@@ -72,6 +80,7 @@ const RealTimePipelines = () => {
             )
           )
         })
+        .catch(largeResponseCatchHandler)
     },
     [dispatch, params.projectName]
   )
@@ -166,6 +175,7 @@ const RealTimePipelines = () => {
       filtersStore={filtersStore}
       handleExpandAll={handleExpandAll}
       handleExpandRow={handleExpandRow}
+      largeRequestErrorMessage={largeRequestErrorMessage}
       pageData={pageData}
       params={params}
       pipelines={pipelines}
