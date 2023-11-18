@@ -25,8 +25,9 @@ export const generateUsageSnippets = (pageTab, selectedItem) => {
     return [
       {
         title: 'Get offline features for training:',
-        code: `features = [
-    "${selectedItem.name}.*",
+        code: `import mlrun.feature_store as fs
+features = [
+    "${selectedItem.project}/${selectedItem.name}.*",
 ]
 
 vector = fs.FeatureVector("<vector-name>",features=features,description="this is my vector")
@@ -48,7 +49,8 @@ resp = svc.get([{"${selectedItem.entities[0]?.name ?? ''}": <value>}])`
     return [
       {
         title: 'Getting offline & online features:',
-        code: `resp = fs.get_offline_features("${uri}")
+        code: `import mlrun.feature_store as fs
+resp = fs.get_offline_features("${uri}")
 #Preview the dataset
 resp.to_dataframe().tail(5)
 
