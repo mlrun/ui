@@ -38,6 +38,7 @@ import {
   ENV_VARIABLE_TYPE_SECRET,
   ENV_VARIABLE_TYPE_VALUE,
   EXISTING_IMAGE_SOURCE,
+  FUNCTION_DEFAULT_HANDLER,
   HYPERPARAMETER_STRATEGY_STEP,
   JOB_DEFAULT_OUTPUT_PATH,
   LIST_TUNING_STRATEGY,
@@ -385,9 +386,9 @@ const getDefaultMethod = (methodOptions, selectedFunctions) => {
   if (methodOptions.length) {
     method = methodOptions[0]?.id
   } else if (latestFunction) {
-    method = latestFunction.spec.default_handler || 'handler'
+    method = latestFunction.spec.default_handler || FUNCTION_DEFAULT_HANDLER
   } else {
-    method = selectedFunctions[0]?.spec.default_handler || 'handler'
+    method = selectedFunctions[0]?.spec.default_handler || FUNCTION_DEFAULT_HANDLER
   }
 
   return method

@@ -283,6 +283,7 @@ export const FUNCTION_INITIALIZED_STATE = 'initialized'
 export const FUNCTION_READY_STATE = 'ready'
 export const FUNCTION_PENDINDG_STATE = 'pending'
 export const FUNCTION_RUNNING_STATE = 'running'
+export const FUNCTION_DEFAULT_HANDLER = 'handler'
 
 /*=========== ARTIFACTS =============*/
 
