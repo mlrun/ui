@@ -238,7 +238,7 @@ const JobWizardFunctionSelection = ({
   }
 
   const onSelectedProjectNameChange = currentValue => {
-    dispatch(functionsActions.fetchFunctions(currentValue, {}, true)).then(functions => {
+    dispatch(functionsActions.fetchFunctions(currentValue, {})).then(functions => {
       const validFunctions = functions.filter(func => {
         return includes(functionRunKinds, func.kind)
       })

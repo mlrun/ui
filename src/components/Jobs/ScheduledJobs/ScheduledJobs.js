@@ -36,6 +36,7 @@ import {
   LABELS_FILTER,
   NAME_FILTER,
   PANEL_EDIT_MODE,
+  LARGE_REQUEST_CANCELED,
   SCHEDULE_TAB
 } from '../../../constants'
 import { DANGER_BUTTON, FORBIDDEN_ERROR_STATUS_CODE } from 'igz-controls/constants'
@@ -67,6 +68,7 @@ const ScheduledJobs = ({
   const [dataIsLoaded, setDataIsLoaded] = useState(false)
   const [convertedYaml, toggleConvertedYaml] = useYaml('')
   const [editableItem, setEditableItem] = useState(null)
+  const [largeRequestErrorMessage, setLargeRequestErrorMessage] = useState('')
   const dispatch = useDispatch()
   const params = useParams()
   const filtersStore = useSelector(store => store.filtersStore)
@@ -96,20 +98,22 @@ const ScheduledJobs = ({
 
   const refreshJobs = useCallback(
     filters => {
-      fetchJobs(params.projectName, filters, true)
+      fetchJobs(params.projectName, filters, true, setLargeRequestErrorMessage)
         .then(jobs => {
           setJobs(jobs.map(job => parseJob(job, SCHEDULE_TAB)))
         })
         .catch(error => {
-          dispatch(
-            setNotification({
-              status: error?.response?.status || 400,
-              id: Math.random(),
-              message: 'Failed to fetch jobs',
-              retry: () => refreshJobs(filters),
-              error
-            })
-          )
+          if (error.message !== LARGE_REQUEST_CANCELED) {
+            dispatch(
+              setNotification({
+                status: error?.response?.status || 400,
+                id: Math.random(),
+                message: 'Failed to fetch jobs',
+                retry: () => refreshJobs(filters),
+                error
+              })
+            )
+          }
         })
     },
     [dispatch, fetchJobs, params.projectName]
@@ -297,7 +301,15 @@ const ScheduledJobs = ({
         </div>
       </div>
       {jobsStore.loading ? null : jobs.length === 0 ? (
-        <NoData message={getNoDataMessage(filtersStore, filters, JOBS_PAGE, SCHEDULE_TAB)} />
+        <NoData
+          message={getNoDataMessage(
+            filtersStore,
+            filters,
+            largeRequestErrorMessage,
+            JOBS_PAGE,
+            SCHEDULE_TAB
+          )}
+        />
       ) : (
         <>
           <Table

@@ -45,6 +45,7 @@ import {
 } from './files.util'
 import { cancelRequest } from '../../utils/cancelRequest'
 import { createFilesRowData, getIsTargetPathValid } from '../../utils/createArtifactsContent'
+import { largeResponseCatchHandler } from '../../utils/largeResponseCatchHandler'
 import {
   fetchFile,
   fetchFiles,
@@ -78,6 +79,7 @@ const Files = () => {
   const [allFiles, setAllFiles] = useState([])
   const [selectedFile, setSelectedFile] = useState({})
   const [selectedRowData, setSelectedRowData] = useState({})
+  const [largeRequestErrorMessage, setLargeRequestErrorMessage] = useState('')
   const [convertedYaml, toggleConvertedYaml] = useYaml('')
   const [urlTagOption] = useGetTagOptions(null, filters, null, FILES_FILTERS)
   const artifactsStore = useSelector(store => store.artifactsStore)
@@ -104,13 +106,14 @@ const Files = () => {
 
   const fetchData = useCallback(
     filters => {
-      dispatch(fetchFiles({ project: params.projectName, filters }))
+      dispatch(fetchFiles({ project: params.projectName, filters, setLargeRequestErrorMessage }))
         .unwrap()
         .then(filesResponse => {
           setArtifactTags(filesResponse, setFiles, setAllFiles, filters, dispatch, FILES_PAGE)
 
           return filesResponse
         })
+        .catch(largeResponseCatchHandler)
     },
     [dispatch, params.projectName]
   )
@@ -360,6 +363,7 @@ const Files = () => {
       handleExpandRow={handleExpandRow}
       handleRefresh={handleRefresh}
       handleRegisterArtifact={handleRegisterArtifact}
+      largeRequestErrorMessage={largeRequestErrorMessage}
       pageData={pageData}
       ref={filesRef}
       selectedFile={selectedFile}
@@ -371,8 +375,8 @@ const Files = () => {
       tableContent={sortedTableContent}
       tableHeaders={sortedTableHeaders}
       toggleConvertedYaml={toggleConvertedYaml}
-      viewMode={viewMode}
       urlTagOption={urlTagOption}
+      viewMode={viewMode}
     />
   )
 }

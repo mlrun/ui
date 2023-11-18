@@ -125,11 +125,11 @@ const jobsActions = {
     type: EDIT_JOB_FAILURE,
     payload: error
   }),
-  fetchAllJobRuns: (project, filters, jobName, cancelToken) => dispatch => {
+  fetchAllJobRuns: (project, filters, jobName, setLargeRequestErrorMessage) => dispatch => {
     dispatch(jobsActions.fetchAllJobRunsBegin())
 
     return jobsApi
-      .getAllJobRuns(project, jobName, filters, cancelToken)
+      .getAllJobRuns(project, jobName, filters, setLargeRequestErrorMessage)
       .then(({ data }) => {
         dispatch(jobsActions.fetchAllJobRunsSuccess(data.runs || []))
 
@@ -257,12 +257,12 @@ const jobsActions = {
   fetchJobLogsSuccess: () => ({
     type: FETCH_JOB_LOGS_SUCCESS
   }),
-  fetchJobs: (project, filters, scheduled) => dispatch => {
+  fetchJobs: (project, filters, scheduled, setLargeRequestErrorMessage) => dispatch => {
     const getJobs = scheduled ? jobsApi.getScheduledJobs : jobsApi.getJobs
 
     dispatch(jobsActions.fetchJobsBegin())
 
-    return getJobs(project, filters)
+    return getJobs(project, filters, setLargeRequestErrorMessage)
       .then(({ data }) => {
         const newJobs = scheduled
           ? (data || {}).schedules

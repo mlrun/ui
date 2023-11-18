@@ -67,6 +67,7 @@ const FeatureVectors = ({
   const [featureVectors, setFeatureVectors] = useState([])
   const [selectedFeatureVector, setSelectedFeatureVector] = useState({})
   const [selectedRowData, setSelectedRowData] = useState({})
+  const [largeRequestErrorMessage, setLargeRequestErrorMessage] = useState('')
   const openPanelByDefault = useOpenPanel()
   const [urlTagOption] = useGetTagOptions(fetchFeatureVectorsTags, featureVectorsFilters)
   const params = useParams()
@@ -86,29 +87,31 @@ const FeatureVectors = ({
 
   const pageData = useMemo(() => generatePageData(selectedFeatureVector), [selectedFeatureVector])
 
-  const detailsFormInitialValues = useMemo(
-    () => {
-        return {
-          features: (selectedFeatureVector.specFeatures ?? []).map( featureData => {
-              return {...parseFeatureTemplate(featureData)}
-          })
-        }
-    },
-    [selectedFeatureVector.specFeatures]
-  )
+  const detailsFormInitialValues = useMemo(() => {
+    return {
+      features: (selectedFeatureVector.specFeatures ?? []).map(featureData => {
+        return { ...parseFeatureTemplate(featureData) }
+      })
+    }
+  }, [selectedFeatureVector.specFeatures])
 
   const fetchData = useCallback(
     filters => {
       const config = {
         cancelToken: new axios.CancelToken(cancel => {
           featureVectorsRef.current.cancel = cancel
-        })
+        }),
+        ui: {
+          setLargeRequestErrorMessage
+        }
       }
 
       return fetchFeatureVectors(params.projectName, filters, config).then(result => {
-        setFeatureVectors(parseFeatureVectors(result))
+        if (result) {
+          setFeatureVectors(parseFeatureVectors(result))
 
-        return result
+          return result
+        }
       })
     },
     [fetchFeatureVectors, params.projectName]
@@ -430,6 +433,7 @@ const FeatureVectors = ({
       filtersStore={filtersStore}
       handleExpandRow={handleExpandRow}
       handleRefresh={handleRefresh}
+      largeRequestErrorMessage={largeRequestErrorMessage}
       pageData={pageData}
       ref={featureVectorsRef}
       selectedFeatureVector={selectedFeatureVector}

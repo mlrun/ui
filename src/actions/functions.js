@@ -210,12 +210,12 @@ const functionsActions = {
     payload: err
   }),
   fetchFunctions:
-    (project, filters, withoutLoader = false) =>
+    (project, filters, setLargeRequestErrorMessage) =>
     dispatch => {
-      dispatch(functionsActions.fetchFunctionsBegin(withoutLoader))
+      dispatch(functionsActions.fetchFunctionsBegin())
 
       return functionsApi
-        .getFunctions(project, filters)
+        .getFunctions(project, filters, null, setLargeRequestErrorMessage)
         .then(({ data }) => {
           dispatch(functionsActions.fetchFunctionsSuccess(data.funcs))
 
