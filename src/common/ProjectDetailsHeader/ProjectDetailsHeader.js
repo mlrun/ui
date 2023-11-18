@@ -35,38 +35,46 @@ const ProjectDetailsHeader = ({ projectData, projectName }) => {
           <div className="project-details__header">
             <span className="project-details__title">{projectName}</span>
           </div>
-          <p className="project-details__description">{projectData.spec.description ?? ''}</p>
+
+          <p className="project-details__description">
+            {projectData && projectData.spec.description}
+          </p>
         </div>
-        <ul className="project-details__details">
-          <li>
-            <span className="project-details__details-label">Created:</span>
-            <span>
-              {getDateAndTimeByFormat(projectData.metadata.created, 'MM/DD/YYYY, HH:mm:ss A')}
-            </span>
-          </li>
-          <li>
-            <span className="project-details__details-label">Owner:</span>
-            <span>{projectData.spec.owner}</span>
-          </li>
-          <li>
-            <span className="project-details__details-label">Status:</span>
-            <div>
-              <i className={`state-${projectData.status.state}`} />
-              <span>{projectData.status.state}</span>
-            </div>
-          </li>
-          <li>
-            {location.pathname.includes(PROJECT_MONITOR) ? (
-              <Link to={`/projects/${projectName}/${PROJECT_QUICK_ACTIONS_PAGE}`} className="link">
-                Project quick actions
-              </Link>
-            ) : (
-              <Link to={`/projects/${projectName}/${PROJECT_MONITOR}`} className="link">
-                Project monitoring
-              </Link>
-            )}
-          </li>
-        </ul>
+        {projectData && (
+          <ul className="project-details__details">
+            <li>
+              <span className="project-details__details-label">Created:</span>
+              <span>
+                {getDateAndTimeByFormat(projectData.metadata.created, 'MM/DD/YYYY, HH:mm:ss A')}
+              </span>
+            </li>
+            <li>
+              <span className="project-details__details-label">Owner:</span>
+              <span>{projectData.spec.owner}</span>
+            </li>
+            <li>
+              <span className="project-details__details-label">Status:</span>
+              <div>
+                <i className={`state-${projectData.status.state}`} />
+                <span>{projectData.status.state}</span>
+              </div>
+            </li>
+            <li>
+              {location.pathname.includes(PROJECT_MONITOR) ? (
+                <Link
+                  to={`/projects/${projectName}/${PROJECT_QUICK_ACTIONS_PAGE}`}
+                  className="link"
+                >
+                  Project quick actions
+                </Link>
+              ) : (
+                <Link to={`/projects/${projectName}/${PROJECT_MONITOR}`} className="link">
+                  Project monitoring
+                </Link>
+              )}
+            </li>
+          </ul>
+        )}
       </div>
     </div>
   )

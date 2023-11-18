@@ -21,7 +21,6 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import classnames from 'classnames'
 
-import Breadcrumbs from '../../common/Breadcrumbs/Breadcrumbs'
 import ContentMenu from '../../elements/ContentMenu/ContentMenu'
 import CreateProjectDialog from './CreateProjectDialog/CreateProjectDialog'
 import Loader from '../../common/Loader/Loader'
@@ -99,9 +98,6 @@ const ProjectsView = ({
           message={confirmData.message}
         />
       )}
-      <div className="projects__header">
-        <Breadcrumbs />
-      </div>
       <div className="projects__wrapper">
         <div className="projects-content-header">
           <div className="projects-content-header__col">
