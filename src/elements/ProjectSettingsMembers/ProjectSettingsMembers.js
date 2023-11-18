@@ -35,8 +35,7 @@ const ProjectSettingsMembers = ({
   projectMembersIsShown,
   setNotification
 }) => {
-  const totalMembersInProject =
-    membersState.users.length + membersState.userGroups.length
+  const totalMembersInProject = membersState.users.length + membersState.userGroups.length
   return (
     <div className="settings__card">
       {loading ? (
@@ -48,11 +47,8 @@ const ProjectSettingsMembers = ({
               <span className="settings__members-summary_icon">
                 <Users />
               </span>
-              <span className="settings__members-summary_amount">
-                {totalMembersInProject}
-              </span>
-              member{totalMembersInProject !== 1 ? 's have' : ' has'} access to
-              this project
+              <span className="settings__members-summary_amount">{totalMembersInProject}</span>
+              {totalMembersInProject !== 1 ? 'members have' : 'member has'} access to this project
             </div>
             {projectMembersIsShown && (
               <MembersPopUp

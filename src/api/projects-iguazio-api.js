@@ -53,7 +53,8 @@ const projectsIguazioApi = {
     return iguazioHttpClient.post('/async_transactions', data)
   },
   getScrubbedUsers: config => iguazioHttpClient.get('/scrubbed_users', config),
-  getScrubbedUserGroups: config => iguazioHttpClient.get('/scrubbed_user_groups', config)
+  getScrubbedUserGroups: config => iguazioHttpClient.get('/scrubbed_user_groups', config),
+  getActiveUser: () => iguazioHttpClient.get('/self')
 }
 
 export default projectsIguazioApi
