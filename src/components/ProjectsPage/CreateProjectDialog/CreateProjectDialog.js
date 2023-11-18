@@ -74,7 +74,7 @@ const CreateProjectDialog = ({
                 />
               </div>
               <div className="form-row">
-                <FormTextarea name="description" label="Description" maxLength={500} />
+                <FormTextarea name="description" label="Description" maxLength={255} />
               </div>
               <div className="form-row">
                 <FormChipCell
