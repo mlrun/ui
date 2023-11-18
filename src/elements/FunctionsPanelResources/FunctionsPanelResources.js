@@ -89,6 +89,7 @@ const FunctionsPanelResources = ({
   ])
 
   const [data, setData] = useState({
+    disable_auto_mount: defaultData.disable_auto_mount ?? true,
     volumeMounts: getDefaultVolumeMounts(
       defaultData.volume_mounts ?? [],
       defaultData.volumes ?? [],
