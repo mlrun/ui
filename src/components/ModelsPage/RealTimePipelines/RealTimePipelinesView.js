@@ -32,6 +32,7 @@ import { filters } from './realTimePipelines.util'
 import { MODELS_PAGE, REAL_TIME_PIPELINES_TAB } from '../../../constants'
 import NoData from '../../../common/NoData/NoData'
 import { getNoDataMessage } from '../../../utils/getNoDataMessage'
+import { ACTIONS_MENU } from '../../../types'
 
 const RealTimePipelinesView = React.forwardRef(
   (
@@ -43,6 +44,7 @@ const RealTimePipelinesView = React.forwardRef(
       filtersStore,
       handleExpandAll,
       handleExpandRow,
+      largeRequestErrorMessage,
       pageData,
       params,
       pipelines,
@@ -80,6 +82,7 @@ const RealTimePipelinesView = React.forwardRef(
                 message={getNoDataMessage(
                   filtersStore,
                   filters,
+                  largeRequestErrorMessage,
                   MODELS_PAGE,
                   REAL_TIME_PIPELINES_TAB
                 )}
@@ -122,13 +125,14 @@ const RealTimePipelinesView = React.forwardRef(
 )
 
 RealTimePipelinesView.propTypes = {
-  actionsMenu: PropTypes.arrayOf(PropTypes.object).isRequired,
+  actionsMenu: ACTIONS_MENU.isRequired,
   artifactsStore: PropTypes.object.isRequired,
   expand: PropTypes.bool.isRequired,
   fetchData: PropTypes.func.isRequired,
   filtersStore: PropTypes.object.isRequired,
   handleExpandAll: PropTypes.func.isRequired,
   handleExpandRow: PropTypes.func.isRequired,
+  largeRequestErrorMessage: PropTypes.string.isRequired,
   pageData: PropTypes.object.isRequired,
   params: PropTypes.object.isRequired,
   pipelines: PropTypes.arrayOf(PropTypes.object).isRequired,

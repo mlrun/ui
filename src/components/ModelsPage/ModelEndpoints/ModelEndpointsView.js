@@ -38,6 +38,7 @@ const ModelEndpointsView = React.forwardRef(
       artifactsStore,
       fetchData,
       filtersStore,
+      largeRequestErrorMessage,
       modelEndpoints,
       pageData,
       selectedModelEndpoint,
@@ -64,7 +65,13 @@ const ModelEndpointsView = React.forwardRef(
             </div>
             {artifactsStore.loading ? null : modelEndpoints.length === 0 ? (
               <NoData
-                message={getNoDataMessage(filtersStore, filters, MODELS_PAGE, MODEL_ENDPOINTS_TAB)}
+                message={getNoDataMessage(
+                  filtersStore,
+                  filters,
+                  largeRequestErrorMessage,
+                  MODELS_PAGE,
+                  MODEL_ENDPOINTS_TAB
+                )}
               />
             ) : (
               <>
@@ -106,6 +113,7 @@ ModelEndpointsView.propTypes = {
   artifactsStore: PropTypes.object.isRequired,
   fetchData: PropTypes.func.isRequired,
   filtersStore: PropTypes.object.isRequired,
+  largeRequestErrorMessage: PropTypes.string.isRequired,
   modelEndpoints: PropTypes.arrayOf(PropTypes.object).isRequired,
   pageData: PropTypes.object.isRequired,
   selectedModelEndpoint: PropTypes.object.isRequired,

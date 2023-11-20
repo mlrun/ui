@@ -255,6 +255,9 @@ export const generateFunctionsContent = selectedItem => ({
   command: {
     value: selectedItem.command
   },
+  defaultHandler: {
+    value: selectedItem.default_handler
+  },
   image: {
     value: getFunctionImage(selectedItem)
   },

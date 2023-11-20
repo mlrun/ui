@@ -17,25 +17,10 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-export const initialEditProjectData = {
-  artifact_path: {
-    value: null,
-    isEdit: false
-  },
-  default_image: {
-    value: null,
-    isEdit: false
-  },
-  description: {
-    value: null,
-    isEdit: false
-  },
-  goals: {
-    value: null,
-    isEdit: false
-  },
-  source: {
-    value: null,
-    isEdit: true
+import { LARGE_REQUEST_CANCELED } from '../constants'
+
+export const largeResponseCatchHandler = error => {
+  if (error.message !== LARGE_REQUEST_CANCELED) {
+    throw error
   }
 }

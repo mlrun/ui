@@ -40,6 +40,7 @@ export const S3_INPUT_PATH_SCHEME = 's3://'
 export const V3IO_INPUT_PATH_SCHEME = 'v3io:///'
 
 export const TAG_LATEST = 'latest'
+export const TAG_NA = 'na'
 
 export const DENSITY_DENSE = 'dense'
 export const DENSITY_NORMAL = 'normal'
@@ -51,7 +52,7 @@ export const NAVBAR_WIDTH_OPENED = 245
 
 export const FULL_VIEW_MODE = 'full'
 
-export const REQUEST_CANCELED = 'Request canceled'
+export const LARGE_REQUEST_CANCELED = 'Request canceled'
 
 export const MODEL_PATH_DATA_INPUT = 'model_path'
 
@@ -283,6 +284,7 @@ export const FUNCTION_INITIALIZED_STATE = 'initialized'
 export const FUNCTION_READY_STATE = 'ready'
 export const FUNCTION_PENDINDG_STATE = 'pending'
 export const FUNCTION_RUNNING_STATE = 'running'
+export const FUNCTION_DEFAULT_HANDLER = 'handler'
 
 /*=========== ARTIFACTS =============*/
 
@@ -569,6 +571,7 @@ export const SMOOTH_STEP_EDGE = 'smooth-step-edge'
 
 export const ARTIFACT_PATH = 'artifact_path'
 export const SOURCE_URL = 'source'
+export const DEFAULT_IMAGE = 'default_image'
 export const DESCRIPTION = 'description'
 export const GOALS = 'goals'
 export const DATA = 'data'

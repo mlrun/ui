@@ -46,6 +46,7 @@ import {
   FUNCTIONS_PAGE,
   GROUP_BY_NAME,
   PANEL_FUNCTION_CREATE_MODE,
+  LARGE_REQUEST_CANCELED,
   SHOW_UNTAGGED_ITEMS,
   TAG_LATEST
 } from '../../constants'
@@ -66,7 +67,6 @@ const Functions = ({
   deleteFunction,
   fetchFunctionLogs,
   fetchFunctions,
-  fetchJobFunction,
   functionsStore,
   removeFunctionsError,
   removeNewFunction
@@ -82,6 +82,7 @@ const Functions = ({
   const [jobWizardMode, setJobWizardMode] = useState(null)
   const filtersStore = useSelector(store => store.filtersStore)
   const [selectedRowData, setSelectedRowData] = useState({})
+  const [largeRequestErrorMessage, setLargeRequestErrorMessage] = useState('')
   let fetchFunctionLogsTimeout = useRef(null)
   const { isStagingMode } = useMode()
   const params = useParams()
@@ -91,13 +92,19 @@ const Functions = ({
 
   const refreshFunctions = useCallback(
     filters => {
-      return fetchFunctions(params.projectName, filters).then(functions => {
-        const newFunctions = parseFunctions(functions, params.projectName)
+      return fetchFunctions(params.projectName, filters, setLargeRequestErrorMessage)
+        .then(functions => {
+          const newFunctions = parseFunctions(functions, params.projectName)
 
-        setFunctions(newFunctions)
+          setFunctions(newFunctions)
 
-        return newFunctions
-      })
+          return newFunctions
+        })
+        .catch(error => {
+          if (error.message === LARGE_REQUEST_CANCELED) {
+            setFunctions([])
+          }
+        })
     },
     [fetchFunctions, params.projectName]
   )
@@ -253,15 +260,15 @@ const Functions = ({
             label: 'Run',
             icon: <Run />,
             onClick: func => {
-              if (func?.project && func?.name && func?.hash) {
-                fetchJobFunction(func.project, func.name, func.hash)
+              if (func?.project && func?.name && func?.hash && func?.ui?.originalContent) {
+                dispatch(jobsActions.fetchJobFunctionSuccess(func.ui.originalContent))
                 setJobWizardMode(PANEL_FUNCTION_CREATE_MODE)
               } else {
                 dispatch(
                   setNotification({
                     status: 400,
                     id: Math.random(),
-                    message: 'Failed to fetch the function'
+                    message: 'Failed to retrieve function data'
                   })
                 )
               }
@@ -294,7 +301,7 @@ const Functions = ({
           }
         ]
       ],
-    [dispatch, fetchJobFunction, isStagingMode, onRemoveFunction, toggleConvertedYaml]
+    [dispatch, isStagingMode, onRemoveFunction, toggleConvertedYaml]
   )
 
   useEffect(() => {
@@ -495,6 +502,7 @@ const Functions = ({
       handleExpandAll={handleExpandAll}
       handleExpandRow={handleExpandRow}
       handleSelectFunction={handleSelectFunction}
+      largeRequestErrorMessage={largeRequestErrorMessage}
       pageData={pageData}
       refreshFunctions={refreshFunctions}
       selectedFunction={selectedFunction}
@@ -507,6 +515,5 @@ const Functions = ({
 }
 
 export default connect(({ functionsStore }) => ({ functionsStore }), {
-  ...functionsActions,
-  ...jobsActions
+  ...functionsActions
 })(React.memo(Functions))

@@ -32,7 +32,7 @@ import {
   NEW_IMAGE,
   sourceCodeInBase64
 } from './functionsPanelCode.util'
-import { PANEL_CREATE_MODE, TAG_LATEST } from '../../constants'
+import { FUNCTION_DEFAULT_HANDLER, PANEL_CREATE_MODE, TAG_LATEST } from '../../constants'
 import { splitTrim, trimSplit } from '../../utils'
 import { useParams } from 'react-router-dom'
 
@@ -59,7 +59,7 @@ const FunctionsPanelCode = ({
   const [data, setData] = useState({
     default_class: defaultData.default_class ?? '',
     entry: DEFAULT_ENTRY,
-    handler: defaultData.default_handler ?? '',
+    handler: defaultData.default_handler ?? FUNCTION_DEFAULT_HANDLER,
     image: defaultData.image ?? '',
     base_image: defaultData.build?.base_image ?? '',
     requirements: (defaultData.build?.requirements || []).join(', ') ?? '',
@@ -82,12 +82,6 @@ const FunctionsPanelCode = ({
     functionsStore.newFunction.spec.build.functionSourceCode,
     setNewFunctionSourceCode
   ])
-
-  useEffect(() => {
-    if (!functionsStore.newFunction.spec.default_handler) {
-      setNewFunctionHandler('handler')
-    }
-  }, [functionsStore.newFunction.spec.default_handler, setNewFunctionHandler])
 
   useEffect(() => {
     if (mode === PANEL_CREATE_MODE && imageType.length === 0) {

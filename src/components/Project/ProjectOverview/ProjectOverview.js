@@ -22,6 +22,7 @@ import { connect } from 'react-redux'
 import { isEmpty } from 'lodash'
 import { useNavigate, useParams } from 'react-router-dom'
 
+import Breadcrumbs from '../../../common/Breadcrumbs/Breadcrumbs'
 import Loader from '../../../common/Loader/Loader'
 import NoData from '../../../common/NoData/NoData'
 import ProjectAction from '../ProjectAction/ProjectAction'
@@ -56,10 +57,6 @@ const ProjectOverview = ({ fetchProject, project }) => {
     )
   }, [fetchProject, navigate, params.projectName])
 
-  if (project.loading) {
-    return <Loader />
-  }
-
   if (project.error) {
     return (
       <div className="project__error-container">
@@ -82,54 +79,57 @@ const ProjectOverview = ({ fetchProject, project }) => {
     )
   }
 
-  if (isEmpty(project.data)) {
-    return <NoData />
-  }
-
   return (
     <div className="project-overview">
+      <div className="content__header">
+        <Breadcrumbs />
+      </div>
       <div className="project-overview__header">
         <ProjectDetailsHeader projectData={project.data} projectName={params.projectName} />
       </div>
+      {project.loading && <Loader />}
+      {isEmpty(project.data) && !project.loading ? (
+        <NoData />
+      ) : (
+        <div className="project-overview__content">
+          {/* move to card */}
+          {Object.keys(cards).map(card => {
+            const { additionalLinks, actions, subTitle, title } = cards[card]
+            return (
+              <div className="project-overview-card" key={card}>
+                <div className="project-overview-card__top">
+                  <div className="project-overview-card__header">
+                    <h3 className="project-overview-card__header-title">{title}</h3>
+                    <p className="project-overview-card__header-subtitle">{subTitle ?? ''}</p>
+                  </div>
+                  <div className="project-overview-card__actions">
+                    <ProjectAction actions={actions} onClick={handlePathExecution} />
+                  </div>
+                </div>
+                <div className="project-overview-card__center">
+                  <ProjectOverviewTableRow />
+                </div>
 
-      <div className="project-overview__content">
-        {/* move to card */}
-        {Object.keys(cards).map(card => {
-          const { additionalLinks, actions, subTitle, title } = cards[card]
-          return (
-            <div className="project-overview-card" key={card}>
-              <div className="project-overview-card__top">
-                <div className="project-overview-card__header">
-                  <h3 className="project-overview-card__header-title">{title}</h3>
-                  <p className="project-overview-card__header-subtitle">{subTitle ?? ''}</p>
-                </div>
-                <div className="project-overview-card__actions">
-                  <ProjectAction actions={actions} onClick={handlePathExecution} />
-                </div>
-              </div>
-              <div className="project-overview-card__center">
-                <ProjectOverviewTableRow />
-              </div>
-
-              <div className="project-overview-card__bottom">
-                <p className="label">Resources</p>
-                <div className="additional-links">
-                  {additionalLinks &&
-                    additionalLinks.map(({ id, label, handleClick }) => (
-                      <span
-                        key={id}
-                        className="link"
-                        onClick={() => handlePathExecution(handleClick)}
-                      >
-                        {label}
-                      </span>
-                    ))}
+                <div className="project-overview-card__bottom">
+                  <p className="label">Resources</p>
+                  <div className="additional-links">
+                    {additionalLinks &&
+                      additionalLinks.map(({ id, label, handleClick }) => (
+                        <span
+                          key={id}
+                          className="link"
+                          onClick={() => handlePathExecution(handleClick)}
+                        >
+                          {label}
+                        </span>
+                      ))}
+                  </div>
                 </div>
               </div>
-            </div>
-          )
-        })}
-      </div>
+            )
+          })}
+        </div>
+      )}
     </div>
   )
 }

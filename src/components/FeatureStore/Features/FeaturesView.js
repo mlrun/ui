@@ -40,6 +40,7 @@ const FeaturesView = React.forwardRef(
       getPopUpTemplate,
       handleExpandRow,
       handleRefresh,
+      largeRequestErrorMessage,
       pageData,
       selectedRowData,
       tableContent,
@@ -71,6 +72,7 @@ const FeaturesView = React.forwardRef(
             message={getNoDataMessage(
               filtersStore,
               featuresFilters,
+              largeRequestErrorMessage,
               FEATURE_STORE_PAGE,
               FEATURES_TAB
             )}
@@ -117,6 +119,7 @@ FeaturesView.propTypes = {
   getPopUpTemplate: PropTypes.func.isRequired,
   handleExpandRow: PropTypes.func.isRequired,
   handleRefresh: PropTypes.func.isRequired,
+  largeRequestErrorMessage: PropTypes.string.isRequired,
   pageData: PropTypes.object.isRequired,
   selectedRowData: PropTypes.object.isRequired,
   tableContent: PropTypes.arrayOf(PropTypes.object).isRequired,
