@@ -95,7 +95,7 @@ const Breadcrumbs = ({ onClick, projectStore, fetchProjectsNames }) => {
     searchValue
       ? projectListRef.current.scrollTo({ top: 0, left: 0, behavior: 'smooth' })
       : setTimeout(() => {
-          selectedOptionEl.scrollIntoView(
+          selectedOptionEl?.scrollIntoView(
             {
               behavior: 'smooth',
               block: 'center'
