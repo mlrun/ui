@@ -48,7 +48,7 @@ import { getValidationRules } from 'igz-controls/utils/validation.util'
 import { openPopUp } from 'igz-controls/utils/common.util'
 import {
   getFunctionParameters,
-  getMethodData,
+  getHandlerData,
   parseDataInputs,
   parsePredefinedParameters
 } from '../../JobWizard.util'
@@ -64,10 +64,10 @@ const JobWizardRunDetails = ({
   selectedFunctionData,
   stepIsActive
 }) => {
-  const methodPath = `${RUN_DETAILS_STEP}.method`
+  const handlerPath = `${RUN_DETAILS_STEP}.handler`
   const imageSourcePath = `${RUN_DETAILS_STEP}.image.imageSource`
-  const outputsPath = `${RUN_DETAILS_STEP}.methodData.outputs`
-  const [spyOnMethodChange, setSpyOnMethodChange] = useState(true)
+  const outputsPath = `${RUN_DETAILS_STEP}.handlerData.outputs`
+  const [spyOnHandlerChange, setspyOnHandlerChange] = useState(true)
   const commonImageWarningMsg =
     'The image must include all the software packages that are required to run the function. ' +
     'For example, for an XGBoost model, ensure that the image includes the correct XGboost package and version'
@@ -80,13 +80,13 @@ const JobWizardRunDetails = ({
     [formState.values, imageSourcePath]
   )
 
-  const handleMethodChange = method => {
-    setSpyOnMethodChange(true)
+  const handleHandlerChange = handler => {
+    setspyOnHandlerChange(true)
 
-    const functionParameters = getFunctionParameters(selectedFunctionData.functions, method)
+    const functionParameters = getFunctionParameters(selectedFunctionData.functions, handler)
     const dataInputs = parseDataInputs(functionParameters, prePopulatedData?.dataInputs)
     const predefinedParameters = parsePredefinedParameters(functionParameters)
-    const methodData = getMethodData(selectedFunctionData, method)
+    const handlerData = getHandlerData(selectedFunctionData, handler)
 
     set(formState.initialValues, `${DATA_INPUTS_STEP}.dataInputsTable`, dataInputs)
     set(
@@ -94,18 +94,18 @@ const JobWizardRunDetails = ({
       `${PARAMETERS_STEP}.parametersTable.predefined`,
       predefinedParameters
     )
-    set(formState.initialValues, `${RUN_DETAILS_STEP}.methodData`, methodData)
+    set(formState.initialValues, `${RUN_DETAILS_STEP}.handlerData`, handlerData)
     formState.form.change(`${DATA_INPUTS_STEP}.dataInputsTable`, dataInputs)
     formState.form.change(`${PARAMETERS_STEP}.parametersTable.predefined`, predefinedParameters)
-    formState.form.change(`${RUN_DETAILS_STEP}.methodData`, methodData)
+    formState.form.change(`${RUN_DETAILS_STEP}.handlerData`, handlerData)
     formState.form.change(
       `${PARAMETERS_STEP}.parametersTable.custom`,
       get(formState.initialValues, `${PARAMETERS_STEP}.parametersTable.custom`, [])
     )
   }
 
-  const onMethodChange = (value, prevValue) => {
-    setSpyOnMethodChange(false)
+  const onHandlerChange = (value, prevValue) => {
+    setspyOnHandlerChange(false)
 
     const dataInputsAreChanged = areFormValuesChanged(
       formState.initialValues[DATA_INPUTS_STEP].dataInputsTable,
@@ -126,22 +126,22 @@ const JobWizardRunDetails = ({
           label: 'Cancel',
           variant: TERTIARY_BUTTON,
           handler: () => {
-            formState.form.change(methodPath, prevValue)
-            setSpyOnMethodChange(true)
+            formState.form.change(handlerPath, prevValue)
+            setspyOnHandlerChange(true)
           }
         },
         confirmButton: {
           label: 'OK',
           variant: SECONDARY_BUTTON,
           handler: () => {
-            handleMethodChange(value)
+            handleHandlerChange(value)
           }
         },
         header: 'Are you sure?',
         message: 'Changes made to the Data Inputs and Parameters sections will be lost'
       })
     } else {
-      handleMethodChange(value)
+      handleHandlerChange(value)
     }
   }
 
@@ -180,18 +180,18 @@ const JobWizardRunDetails = ({
             </div>
           )}
           {!isBatchInference ? (
-            jobAdditionalData.methodOptions?.length !== 0 ? (
+            jobAdditionalData.handlerOptions?.length !== 0 ? (
               <div className="form-col-1">
                 <FormSelect
-                  label="Method"
-                  name={methodPath}
-                  options={jobAdditionalData.methodOptions || []}
+                  label="Handler"
+                  name={handlerPath}
+                  options={jobAdditionalData.handlerOptions || []}
                   scrollToView={false}
                 />
               </div>
             ) : (
               <div className="form-col-1">
-                <FormInput label="Method" name={methodPath} disabled={isEditMode} />
+                <FormInput label="Handler" name={handlerPath} disabled={isEditMode} />
               </div>
             )
           ) : null}
@@ -268,10 +268,10 @@ const JobWizardRunDetails = ({
             </div>
           </>
         )}
-        {get(formState.values, `${RUN_DETAILS_STEP}.methodData.doc`, '') && (
+        {get(formState.values, `${RUN_DETAILS_STEP}.handlerData.doc`, '') && (
           <>
             <div className="form-row form-table-title">Description</div>
-            <div className="form-row">{formState.values[RUN_DETAILS_STEP].methodData.doc}</div>
+            <div className="form-row">{formState.values[RUN_DETAILS_STEP].handlerData.doc}</div>
           </>
         )}
         {get(formState.values, outputsPath, []).length > 0 && (
@@ -310,8 +310,8 @@ const JobWizardRunDetails = ({
           </>
         )}
 
-        {stepIsActive && spyOnMethodChange && (
-          <OnChange name={methodPath}>{onMethodChange}</OnChange>
+        {stepIsActive && spyOnHandlerChange && (
+          <OnChange name={handlerPath}>{onHandlerChange}</OnChange>
         )}
       </div>
     )

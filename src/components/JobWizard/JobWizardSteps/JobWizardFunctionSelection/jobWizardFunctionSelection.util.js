@@ -69,13 +69,13 @@ export const generateFunctionTemplateCardData = templateData => {
   return functionTemplateCardData
 }
 
-export const filterTrainFunctionMethods = result => {
-  const allowedMethods = trainModelAllowedHubFunctions[result.name]
+export const filterTrainFunctionHandlers = result => {
+  const allowedHandlers = trainModelAllowedHubFunctions[result.name]
   const { entry_points } = result.functions[0].spec
 
   if (entry_points) {
     result.functions[0].spec.entry_points = Object.fromEntries(
-      Object.entries(entry_points).filter(([key]) => allowedMethods.includes(key))
+      Object.entries(entry_points).filter(([key]) => allowedHandlers.includes(key))
     )
   }
 
