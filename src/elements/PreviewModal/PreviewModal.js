@@ -26,7 +26,7 @@ import { useParams } from 'react-router-dom'
 import ArtifactsPreview from '../../components/ArtifactsPreview/ArtifactsPreview'
 import Download from '../../common/Download/Download'
 import { Tooltip, TextTooltipTemplate, PopUpDialog } from 'igz-controls/components'
-import ArtifactExtraData from '../ArtifactExtraData/ArtifactExtraData'
+import ArtifactsExtraData from '../ArtifactsExtraData/ArtifactsExtraData'
 
 import { formatDatetime } from '../../utils'
 import { getArtifactPreview } from '../../utils/getArtifactPreview'
@@ -97,7 +97,7 @@ const PreviewModal = ({ artifact }) => {
             {preview[0]?.hidden && artifact.extra_data.length > 0 ? null : (
               <ArtifactsPreview noData={noData} preview={preview} />
             )}
-            {artifact.extra_data.length > 0 && <ArtifactExtraData artifact={artifact} />}
+            {artifact.extra_data.length > 0 && <ArtifactsExtraData artifact={artifact} />}
           </div>
         </div>
       </div>

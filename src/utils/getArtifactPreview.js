@@ -18,11 +18,11 @@ under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
 import { TextTooltipTemplate, Tooltip } from 'igz-controls/components'
+import CopyToClipboard from '../common/CopyToClipboard/CopyToClipboard'
+import Download from '../common/Download/Download'
 
 import api from '../api/artifacts-api'
 import { createArtifactPreviewContent } from './createArtifactPreviewContent'
-import CopyToClipboard from '../common/CopyToClipboard/CopyToClipboard'
-import Download from '../common/Download/Download'
 
 export const setArtifactPreviewFromSchema = (artifact, noData, setNoData, setPreview) => {
   if (noData) {
@@ -96,49 +96,47 @@ export const fetchArtifactPreviewFromExtraData = (
   })
 }
 
-export const generateExtraDataContent = (extraData, setExtraData, showArtifactPreview) => {
-  setExtraData(
-    extraData.map((extraDataItem, index) => {
-      return [
-        {
-          headerId: 'name',
-          headerLabel: 'Name',
-          template: (
-            <Tooltip template={<TextTooltipTemplate text={extraDataItem.header} />}>
-              <span className="link" onClick={() => showArtifactPreview(index)}>
-                {extraDataItem.header}
-              </span>
-            </Tooltip>
-          ),
-          value: extraDataItem.header,
-          className: 'table-cell-3'
-        },
-        {
-          headerId: 'path',
-          headerLabel: 'Path',
-          value: extraDataItem.path,
-          className: 'table-cell-6'
-        },
-        {
-          headerId: 'actions',
-          headerLabel: '',
-          className: 'actions-cell',
-          template: (
-            <>
-              <CopyToClipboard textToCopy={extraDataItem.path} tooltipText="Copy path" />
-              <Download
-                className="icon-download"
-                onlyIcon
-                path={extraDataItem.path}
-                //TODO: add user after BE part will be done
-                // user={artifact.ui.user}
-              />
-            </>
-          )
-        }
-      ]
-    })
-  )
+export const generateExtraDataContent = (extraData, showArtifactPreview) => {
+  return extraData.map((extraDataItem, index) => {
+    return [
+      {
+        headerId: 'name',
+        headerLabel: 'Name',
+        template: (
+          <Tooltip template={<TextTooltipTemplate text={extraDataItem.header} />}>
+            <span className="link" onClick={() => showArtifactPreview(index)}>
+              {extraDataItem.header}
+            </span>
+          </Tooltip>
+        ),
+        value: extraDataItem.header,
+        className: 'table-cell-3'
+      },
+      {
+        headerId: 'path',
+        headerLabel: 'Path',
+        value: extraDataItem.path,
+        className: 'table-cell-6'
+      },
+      {
+        headerId: 'actions',
+        headerLabel: '',
+        className: 'actions-cell',
+        template: (
+          <>
+            <CopyToClipboard textToCopy={extraDataItem.path} tooltipText="Copy path" />
+            <Download
+              className="icon-download"
+              onlyIcon
+              path={extraDataItem.path}
+              //TODO: add user after BE part will be done
+              // user={artifact.ui.user}
+            />
+          </>
+        )
+      }
+    ]
+  })
 }
 
 export const fetchArtifactPreviewFromTargetPath = (

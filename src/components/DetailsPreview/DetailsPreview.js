@@ -24,7 +24,7 @@ import classnames from 'classnames'
 import { useParams } from 'react-router-dom'
 
 import ArtifactsPreview from '../ArtifactsPreview/ArtifactsPreview'
-import ArtifactExtraData from '../../elements/ArtifactExtraData/ArtifactExtraData'
+import ArtifactsExtraData from '../../elements/ArtifactsExtraData/ArtifactsExtraData'
 import { RoundedIcon } from 'igz-controls/components'
 
 import { getArtifactPreview } from '../../utils/getArtifactPreview'
@@ -82,7 +82,7 @@ const DetailsPreview = ({ artifact, handlePreview }) => {
         {preview[0]?.hidden && artifact.extra_data.length > 0 ? null : (
           <ArtifactsPreview noData={noData} preview={preview} />
         )}
-        {artifact.extra_data.length > 0 && <ArtifactExtraData artifact={artifact} />}
+        {artifact.extra_data.length > 0 && <ArtifactsExtraData artifact={artifact} />}
       </div>
     </div>
   )

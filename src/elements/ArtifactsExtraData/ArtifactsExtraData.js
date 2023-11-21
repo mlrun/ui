@@ -28,7 +28,9 @@ import ArtifactsPreviewController from '../../components/ArtifactsPreview/Artifa
 import { generateExtraDataContent } from '../../utils/getArtifactPreview'
 import { generateArtifactIndexes } from '../../components/Details/details.util'
 
-const ArtifactExtraData = ({ artifact }) => {
+import './artifactsExtraData.scss'
+
+const ArtifactsExtraData = ({ artifact }) => {
   const [extraData, setExtraData] = useState([])
   const [artifactsIndexes, setArtifactsIndexes] = useState([])
   const params = useParams()
@@ -42,7 +44,7 @@ const ArtifactExtraData = ({ artifact }) => {
 
   useEffect(() => {
     if (artifact.extra_data && extraData.length === 0) {
-      generateExtraDataContent(artifact.extra_data, setExtraData, showArtifactPreview)
+      setExtraData(generateExtraDataContent(artifact.extra_data, showArtifactPreview))
     }
   }, [artifact, extraData.length, params.projectName, showArtifactPreview])
 
@@ -54,7 +56,7 @@ const ArtifactExtraData = ({ artifact }) => {
 
   return (
     <div className="artifact-extra-data">
-      <h1 className="artifact-extra-data__header">Related artifacts</h1>
+      <h1>Related artifacts</h1>
       <div className="table">
         <div className="table-header">
           <div className="table-row table-header-row">
@@ -117,8 +119,8 @@ const ArtifactExtraData = ({ artifact }) => {
   )
 }
 
-ArtifactExtraData.propTypes = {
+ArtifactsExtraData.propTypes = {
   artifact: PropTypes.object.isRequired
 }
 
-export default ArtifactExtraData
+export default ArtifactsExtraData
