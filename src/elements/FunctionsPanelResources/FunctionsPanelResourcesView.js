@@ -82,10 +82,11 @@ const FunctionsPanelResourcesView = ({
         title="Volumes"
         tip="Volumes that define data paths and the required information for accessing the data from the function"
       >
-        {mode === PANEL_CREATE_MODE && (
+        {(mode === PANEL_CREATE_MODE || !data.disable_auto_mount) && (
           <Select
             className="volume-mount"
             floatingLabel
+            disabled={mode !== PANEL_CREATE_MODE}
             label="Volume mount"
             options={volumeMountOptions}
             onClick={handleSelectVolumeMount}

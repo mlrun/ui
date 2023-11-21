@@ -19,18 +19,18 @@ such restriction.
 */
 import { deleteArtifact } from '../reducers/artifactsReducer'
 import { setNotification } from '../reducers/notificationReducer'
-import { TAG_LATEST } from '../constants'
 
 export const handleDeleteArtifact = (
   dispatch,
   project,
   key,
-  tag = TAG_LATEST,
+  tag,
+  uid,
   refreshArtifacts,
   filters,
   artifactType
 ) => {
-  dispatch(deleteArtifact({ project, key, tag }))
+  dispatch(deleteArtifact({ project, key, tag, uid }))
     .unwrap()
     .then(() => {
       refreshArtifacts(filters)
@@ -52,7 +52,8 @@ export const handleDeleteArtifact = (
               dispatch,
               project,
               key,
-              (tag = TAG_LATEST),
+              tag,
+              uid,
               refreshArtifacts,
               filters,
               artifactType

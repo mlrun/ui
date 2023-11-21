@@ -345,6 +345,7 @@ export const generateActionsMenu = (
             projectName,
             model.db_key,
             model.tag,
+            model.tree,
             handleRefresh,
             modelsFilters,
             MODEL_TYPE

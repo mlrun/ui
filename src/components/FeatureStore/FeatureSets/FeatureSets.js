@@ -64,6 +64,7 @@ const FeatureSets = ({
   const [featureSets, setFeatureSets] = useState([])
   const [selectedFeatureSet, setSelectedFeatureSet] = useState({})
   const [selectedRowData, setSelectedRowData] = useState({})
+  const [largeRequestErrorMessage, setLargeRequestErrorMessage] = useState('')
 
   const openPanelByDefault = useOpenPanel()
   const [urlTagOption] = useGetTagOptions(fetchFeatureSetsTags, featureSetsFilters)
@@ -106,14 +107,20 @@ const FeatureSets = ({
       const config = {
         cancelToken: new axios.CancelToken(cancel => {
           featureStoreRef.current.cancel = cancel
-        })
+        }),
+        ui: {
+          setLargeRequestErrorMessage
+        }
       }
 
-      return fetchFeatureSets(params.projectName, filters, config).then(result => {
-        setFeatureSets(parseFeatureSets(result))
+      return fetchFeatureSets(params.projectName, filters, config)
+        .then(result => {
+          if (result) {
+            setFeatureSets(parseFeatureSets(result))
 
-        return result
-      })
+            return result
+          }
+        })
     },
     [fetchFeatureSets, params.projectName]
   )
@@ -353,6 +360,7 @@ const FeatureSets = ({
       filtersStore={filtersStore}
       handleExpandRow={handleExpandRow}
       handleRefresh={handleRefresh}
+      largeRequestErrorMessage={largeRequestErrorMessage}
       pageData={pageData}
       ref={featureStoreRef}
       selectedFeatureSet={selectedFeatureSet}

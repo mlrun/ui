@@ -122,3 +122,17 @@ export const generateMembers = (membersResponse, membersDispatch) => {
     payload: members
   })
 }
+
+export const isProjectMembersTabShown = (
+  projectMembershipIsEnabled,
+  { activeUser, members, projectInfo }
+) => {
+  if (!projectMembershipIsEnabled) {
+    return false
+  }
+
+  const userIsAdmin = members.some(member => member.role === 'Admin' && member.id === activeUser.id)
+  const userIsOwner = activeUser.id === projectInfo.owner.id
+
+  return userIsOwner || userIsAdmin
+}

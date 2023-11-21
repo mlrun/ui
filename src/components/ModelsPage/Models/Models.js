@@ -68,10 +68,12 @@ import { useGetTagOptions } from '../../../hooks/useGetTagOptions.hook'
 import { getViewMode } from '../../../utils/helper'
 import { useMode } from '../../../hooks/mode.hook'
 import { setArtifactTags } from '../../../utils/artifacts.util'
+import { largeResponseCatchHandler } from '../../../utils/largeResponseCatchHandler'
 
 const Models = ({ fetchModelFeatureVector }) => {
   const [models, setModels] = useState([])
   const [allModels, setAllModels] = useState([])
+  const [largeRequestErrorMessage, setLargeRequestErrorMessage] = useState('')
   const [selectedModel, setSelectedModel] = useState({})
   const [selectedRowData, setSelectedRowData] = useState({})
   const [urlTagOption] = useGetTagOptions(null, filters, null, MODELS_FILTERS)
@@ -106,13 +108,16 @@ const Models = ({ fetchModelFeatureVector }) => {
 
   const fetchData = useCallback(
     async filters => {
-      return dispatch(fetchModels({ project: params.projectName, filters: filters }))
+      return dispatch(
+        fetchModels({ project: params.projectName, filters, setLargeRequestErrorMessage })
+      )
         .unwrap()
         .then(modelsResponse => {
           setArtifactTags(modelsResponse, setModels, setAllModels, filters, dispatch, MODELS_TAB)
 
           return modelsResponse
         })
+        .catch(largeResponseCatchHandler)
     },
     [dispatch, setModels, params.projectName]
   )
@@ -356,6 +361,7 @@ const Models = ({ fetchModelFeatureVector }) => {
       handleRegisterModel={handleRegisterModel}
       handleTrainModel={handleTrainModel}
       isDemoMode={isDemoMode}
+      largeRequestErrorMessage={largeRequestErrorMessage}
       models={models}
       pageData={pageData}
       ref={modelsRef}

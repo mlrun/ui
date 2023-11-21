@@ -50,6 +50,7 @@ import {
   handleApplyDetailsChanges,
   registerDatasetTitle
 } from './datasets.util'
+import { largeResponseCatchHandler } from '../../utils/largeResponseCatchHandler'
 import { cancelRequest } from '../../utils/cancelRequest'
 import { getArtifactIdentifier } from '../../utils/getUniqueIdentifier'
 import { isDetailsTabExists } from '../../utils/isDetailsTabExists'
@@ -69,6 +70,7 @@ const Datasets = () => {
   const [allDatasets, setAllDatasets] = useState([])
   const [selectedDataset, setSelectedDataset] = useState({})
   const [selectedRowData, setSelectedRowData] = useState({})
+  const [largeRequestErrorMessage, setLargeRequestErrorMessage] = useState('')
   const [convertedYaml, toggleConvertedYaml] = useYaml('')
   const [urlTagOption] = useGetTagOptions(null, filters, null, DATASETS_FILTERS)
   const artifactsStore = useSelector(store => store.artifactsStore)
@@ -98,7 +100,7 @@ const Datasets = () => {
 
   const fetchData = useCallback(
     filters => {
-      dispatch(fetchDataSets({ project: params.projectName, filters }))
+      dispatch(fetchDataSets({ project: params.projectName, filters, setLargeRequestErrorMessage }))
         .unwrap()
         .then(dataSetsResponse => {
           setArtifactTags(
@@ -112,6 +114,7 @@ const Datasets = () => {
 
           return dataSetsResponse
         })
+        .catch(largeResponseCatchHandler)
     },
     [dispatch, params.projectName]
   )
@@ -326,8 +329,9 @@ const Datasets = () => {
       detailsFormInitialValues={detailsFormInitialValues}
       filtersStore={filtersStore}
       handleExpandRow={handleExpandRow}
-      handleRegisterDataset={handleRegisterDataset}
       handleRefresh={handleRefresh}
+      handleRegisterDataset={handleRegisterDataset}
+      largeRequestErrorMessage={largeRequestErrorMessage}
       pageData={pageData}
       ref={datasetsRef}
       selectedDataset={selectedDataset}
@@ -339,8 +343,8 @@ const Datasets = () => {
       tableContent={sortedTableContent}
       tableHeaders={sortedTableHeaders}
       toggleConvertedYaml={toggleConvertedYaml}
-      viewMode={viewMode}
       urlTagOption={urlTagOption}
+      viewMode={viewMode}
     />
   )
 }

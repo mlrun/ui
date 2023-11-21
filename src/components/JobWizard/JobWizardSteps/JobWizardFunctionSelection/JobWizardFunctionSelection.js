@@ -45,7 +45,7 @@ import { generateProjectsList } from '../../../../utils/projects'
 import { functionRunKinds } from '../../../Jobs/jobs.util'
 import { openConfirmPopUp } from 'igz-controls/utils/common.util'
 import {
-  filterTrainFunctionMethods,
+  filterTrainFunctionHandlers,
   FUNCTIONS_SELECTION_FUNCTIONS_TAB,
   FUNCTIONS_SELECTION_HUB_TAB,
   functionsSelectionTabs,
@@ -238,7 +238,7 @@ const JobWizardFunctionSelection = ({
   }
 
   const onSelectedProjectNameChange = currentValue => {
-    dispatch(functionsActions.fetchFunctions(currentValue, {}, true)).then(functions => {
+    dispatch(functionsActions.fetchFunctions(currentValue, {})).then(functions => {
       const validFunctions = functions.filter(func => {
         return includes(functionRunKinds, func.kind)
       })
@@ -335,7 +335,7 @@ const JobWizardFunctionSelection = ({
       const functionTemplatePath = `${functionData.spec.item_uri}${functionData.spec.assets.function}`
 
       dispatch(functionsActions.fetchFunctionTemplate(functionTemplatePath)).then(result => {
-        const resultData = isTrain ? filterTrainFunctionMethods(result) : result
+        const resultData = isTrain ? filterTrainFunctionHandlers(result) : result
 
         setSelectedFunctionData(resultData)
         generateData(resultData)

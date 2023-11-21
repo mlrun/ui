@@ -31,12 +31,14 @@ import { createModelEndpointsRowData } from '../../../utils/createArtifactsConte
 import { fetchModelEndpoints, removeModelEndpoints } from '../../../reducers/artifactsReducer'
 import { generatePageData } from './modelEndpoints.util'
 import { isDetailsTabExists } from '../../../utils/isDetailsTabExists'
+import { largeResponseCatchHandler } from '../../../utils/largeResponseCatchHandler'
 import { setFilters } from '../../../reducers/filtersReducer'
 import { useModelsPage } from '../ModelsPage.context'
 
 import { ReactComponent as Yaml } from 'igz-controls/images/yaml.svg'
 
 const ModelEndpoints = () => {
+  const [largeRequestErrorMessage, setLargeRequestErrorMessage] = useState('')
   const [modelEndpoints, setModelEndpoints] = useState([])
   const [selectedModelEndpoint, setSelectedModelEndpoint] = useState({})
   const artifactsStore = useSelector(store => store.artifactsStore)
@@ -71,13 +73,15 @@ const ModelEndpoints = () => {
           params: {
             metric: 'latency_avg_1h',
             start: 'now-10m'
-          }
+          },
+          setLargeRequestErrorMessage
         })
       )
         .unwrap()
         .then(result => {
           setModelEndpoints(result)
         })
+        .catch(largeResponseCatchHandler)
     },
     [dispatch, params.projectName]
   )
@@ -159,6 +163,7 @@ const ModelEndpoints = () => {
       artifactsStore={artifactsStore}
       fetchData={fetchData}
       filtersStore={filtersStore}
+      largeRequestErrorMessage={largeRequestErrorMessage}
       modelEndpoints={modelEndpoints}
       pageData={pageData}
       ref={modelEndpointsRef}

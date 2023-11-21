@@ -275,6 +275,7 @@ export const generateActionsMenu = (
       {
         label: 'Delete',
         icon: <Delete />,
+        disabled: !dataset.tag,
         className: 'danger',
         onClick: () =>
           handleDeleteArtifact(
@@ -282,6 +283,7 @@ export const generateActionsMenu = (
             projectName,
             dataset.db_key,
             dataset.tag,
+            dataset.tree,
             handleRefresh,
             datasetsFilters,
             DATASET_TYPE
