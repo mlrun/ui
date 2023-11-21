@@ -41,10 +41,10 @@ const ActionsMenuItem = ({ dataItem, index, isIconDisplayed, menuItem }) => {
       data-testid={`actions-menu__option-${index}`}
       className={menuClassNames}
       onClick={event => {
+        event.stopPropagation()
+
         if (!menuItem.disabled) {
           menuItem.onClick(dataItem)
-        } else {
-          event.stopPropagation()
         }
       }}
     >
