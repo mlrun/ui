@@ -21,22 +21,18 @@ import React, { useEffect, useMemo, useRef, useState } from 'react'
 import { isEqual } from 'lodash'
 import PropTypes from 'prop-types'
 import classnames from 'classnames'
-import axios from 'axios'
 import { useParams } from 'react-router-dom'
 
 import ArtifactsPreview from '../ArtifactsPreview/ArtifactsPreview'
+import ArtifactExtraData from '../../elements/ArtifactExtraData/ArtifactExtraData'
 import { RoundedIcon } from 'igz-controls/components'
+
+import { getArtifactPreview } from '../../utils/getArtifactPreview'
 
 import { ReactComponent as Popout } from 'igz-controls/images/popout.svg'
 
-import {
-  fetchArtifactPreviewFromExtraData,
-  getArtifactPreview
-} from '../../utils/getArtifactPreview'
-
 const DetailsPreview = ({ artifact, handlePreview }) => {
   const [preview, setPreview] = useState([])
-  const [extraData, setExtraData] = useState([])
   const [noData, setNoData] = useState(false)
   const previewRef = useRef({ current: {} })
   const params = useParams()
@@ -44,9 +40,10 @@ const DetailsPreview = ({ artifact, handlePreview }) => {
   const popupButtonIsDisplayed = useMemo(() => {
     return (
       artifact.target_path &&
-      (extraData.length > 0 || (!preview[0]?.error && !preview.every(item => item.hidden)))
+      (artifact.extra_data.length > 0 ||
+        (!preview[0]?.error && !preview.every(item => item.hidden)))
     )
-  }, [artifact.target_path, extraData.length, preview])
+  }, [artifact.extra_data.length, artifact.target_path, preview])
 
   const artifactsPreviewClassNames = classnames(
     popupButtonIsDisplayed && 'artifact-preview__with-popout'
@@ -55,7 +52,6 @@ const DetailsPreview = ({ artifact, handlePreview }) => {
   useEffect(() => {
     return () => {
       setPreview([])
-      setExtraData([])
       cancelRequest('cancel')
     }
   }, [artifact])
@@ -63,21 +59,6 @@ const DetailsPreview = ({ artifact, handlePreview }) => {
   useEffect(() => {
     getArtifactPreview(params.projectName, artifact, noData, setNoData, setPreview)
   }, [artifact, noData, params.projectName])
-
-  useEffect(() => {
-    if (artifact.extra_data && extraData.length === 0) {
-      fetchArtifactPreviewFromExtraData(
-        params.projectName,
-        artifact,
-        noData,
-        setNoData,
-        previewContent => setExtraData(state => [...state, previewContent]),
-        new axios.CancelToken(cancel => {
-          previewRef.current.cancel = cancel
-        })
-      )
-    }
-  }, [artifact, extraData.length, noData, params.projectName])
 
   const cancelRequest = message => {
     previewRef.current?.cancel && previewRef.current.cancel(message)
@@ -98,14 +79,10 @@ const DetailsPreview = ({ artifact, handlePreview }) => {
         </div>
       )}
       <div className={artifactsPreviewClassNames}>
-        <ArtifactsPreview
-          extraData={extraData}
-          noData={noData}
-          preview={preview}
-          showExtraDataLoader={
-            artifact.extra_data && extraData.length !== artifact.extra_data.length
-          }
-        />
+        {preview[0]?.hidden && artifact.extra_data.length > 0 ? null : (
+          <ArtifactsPreview noData={noData} preview={preview} />
+        )}
+        {artifact.extra_data.length > 0 && <ArtifactExtraData artifact={artifact} />}
       </div>
     </div>
   )

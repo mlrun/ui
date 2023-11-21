@@ -26,19 +26,16 @@ import { useParams } from 'react-router-dom'
 import ArtifactsPreview from '../../components/ArtifactsPreview/ArtifactsPreview'
 import Download from '../../common/Download/Download'
 import { Tooltip, TextTooltipTemplate, PopUpDialog } from 'igz-controls/components'
+import ArtifactExtraData from '../ArtifactExtraData/ArtifactExtraData'
 
 import { formatDatetime } from '../../utils'
-import {
-  fetchArtifactPreviewFromExtraData,
-  getArtifactPreview
-} from '../../utils/getArtifactPreview'
+import { getArtifactPreview } from '../../utils/getArtifactPreview'
 import { closeArtifactsPreview } from '../../reducers/artifactsReducer'
 
 import './previewModal.scss'
 
 const PreviewModal = ({ artifact }) => {
   const [preview, setPreview] = useState([])
-  const [extraData, setExtraData] = useState([])
   const [noData, setNoData] = useState(false)
   const dispatch = useDispatch()
   const params = useParams()
@@ -50,21 +47,8 @@ const PreviewModal = ({ artifact }) => {
   }, [artifact, noData, params.projectName, preview.length])
 
   useEffect(() => {
-    if (artifact.extra_data && extraData.length === 0) {
-      fetchArtifactPreviewFromExtraData(
-        params.projectName,
-        artifact,
-        noData,
-        setNoData,
-        previewContent => setExtraData(state => [...state, previewContent])
-      )
-    }
-  }, [params.projectName, artifact, extraData.length, noData])
-
-  useEffect(() => {
     return () => {
       setPreview([])
-      setExtraData([])
     }
   }, [])
 
@@ -110,14 +94,10 @@ const PreviewModal = ({ artifact }) => {
             </div>
           </div>
           <div className="item-artifacts__preview">
-            <ArtifactsPreview
-              extraData={extraData}
-              noData={noData}
-              preview={preview}
-              showExtraDataLoader={
-                artifact.extra_data && extraData.length !== artifact.extra_data.length
-              }
-            />
+            {preview[0]?.hidden && artifact.extra_data.length > 0 ? null : (
+              <ArtifactsPreview noData={noData} preview={preview} />
+            )}
+            {artifact.extra_data.length > 0 && <ArtifactExtraData artifact={artifact} />}
           </div>
         </div>
       </div>
