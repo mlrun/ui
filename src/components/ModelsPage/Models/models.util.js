@@ -17,6 +17,7 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
+import React from 'react'
 import { cloneDeep, isEmpty, omit } from 'lodash'
 
 import {
@@ -27,16 +28,33 @@ import {
   MODELS_PAGE,
   MODELS_TAB,
   TAG_LATEST,
-  FULL_VIEW_MODE
+  FULL_VIEW_MODE,
+  MODEL_TYPE
 } from '../../../constants'
 import { FORBIDDEN_ERROR_STATUS_CODE } from 'igz-controls/constants'
 import { applyTagChanges } from '../../../utils/artifacts.util'
-import { createModelsRowData } from '../../../utils/createArtifactsContent'
+import { createModelsRowData, getIsTargetPathValid } from '../../../utils/createArtifactsContent'
 import { getArtifactIdentifier } from '../../../utils/getUniqueIdentifier'
 import { searchArtifactItem } from '../../../utils/searchArtifactItem'
-import { fetchModel, updateArtifact } from '../../../reducers/artifactsReducer'
+import {
+  fetchModel,
+  showArtifactsPreview,
+  updateArtifact
+} from '../../../reducers/artifactsReducer'
 import { convertChipsData } from '../../../utils/convertChipsData'
 import { sortListByDate } from '../../../utils'
+import { copyToClipboard } from '../../../utils/copyToClipboard'
+import { generateUri } from '../../../utils/resources'
+import { handleDeleteArtifact } from '../../../utils/handleDeleteArtifact'
+import { setDownloadItem, setShowDownloadsList } from '../../../reducers/downloadReducer'
+
+import { ReactComponent as TagIcon } from 'igz-controls/images/tag-icon.svg'
+import { ReactComponent as YamlIcon } from 'igz-controls/images/yaml.svg'
+import { ReactComponent as ArtifactView } from 'igz-controls/images/eye-icon.svg'
+import { ReactComponent as Copy } from 'igz-controls/images/copy-to-clipboard-icon.svg'
+import { ReactComponent as Delete } from 'igz-controls/images/delete.svg'
+import { ReactComponent as DeployIcon } from 'igz-controls/images/deploy-icon.svg'
+import { ReactComponent as DownloadIcon } from 'igz-controls/images/download.svg'
 
 export const filters = [
   { type: TAG_FILTER, label: 'Version tag:' },
@@ -269,4 +287,92 @@ export const checkForSelectedModel = (
       setSelectedModel({})
     }
   })
+}
+
+export const generateActionsMenu = (
+  model,
+  frontendSpec,
+  dispatch,
+  toggleConvertedYaml,
+  handleAddTag,
+  projectName,
+  handleRefresh,
+  modelsFilters,
+  handleDeployModel
+) => {
+  const isTargetPathValid = getIsTargetPathValid(model ?? {}, frontendSpec)
+  const downloadPath = `${model?.target_path}${model?.model_file || ''}`
+
+  return [
+    [
+      {
+        label: 'Download',
+        icon: <DownloadIcon />,
+        onClick: model => {
+          dispatch(
+            setDownloadItem({
+              path: downloadPath,
+              user: model.producer?.owner,
+              id: downloadPath
+            })
+          )
+          dispatch(setShowDownloadsList(true))
+        }
+      },
+      {
+        label: 'Copy URI',
+        icon: <Copy />,
+        onClick: model => copyToClipboard(generateUri(model, MODELS_TAB), dispatch)
+      },
+      {
+        label: 'View YAML',
+        icon: <YamlIcon />,
+        onClick: toggleConvertedYaml
+      },
+      {
+        label: 'Add a tag',
+        icon: <TagIcon />,
+        onClick: handleAddTag
+      },
+      {
+        label: 'Delete',
+        icon: <Delete />,
+        className: 'danger',
+        disabled: !model?.tag,
+        onClick: () =>
+          handleDeleteArtifact(
+            dispatch,
+            projectName,
+            model.db_key,
+            model.tag,
+            model.tree,
+            handleRefresh,
+            modelsFilters,
+            MODEL_TYPE
+          )
+      }
+    ],
+    [
+      {
+        disabled: !isTargetPathValid,
+        id: 'model-preview',
+        label: 'Preview',
+        icon: <ArtifactView />,
+        onClick: model => {
+          dispatch(
+            showArtifactsPreview({
+              isPreview: true,
+              selectedItem: model
+            })
+          )
+        }
+      },
+      {
+        id: 'model-deploy',
+        label: 'Deploy',
+        icon: <DeployIcon />,
+        onClick: handleDeployModel
+      }
+    ]
+  ]
 }
