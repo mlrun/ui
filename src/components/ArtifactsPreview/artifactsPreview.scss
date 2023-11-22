@@ -6,16 +6,11 @@
 }
 
 .artifact {
-  &-extra-data {
-    &__header {
-      margin: 15px;
-    }
-  }
-
   &-preview {
     display: flex;
     flex: 1;
     flex-direction: column;
+    margin-bottom: 40px;
 
     &__header {
       margin-bottom: 30px;
