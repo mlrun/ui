@@ -20,7 +20,6 @@ such restriction.
 import React, { useCallback, useState, useMemo, useEffect } from 'react'
 import { useParams } from 'react-router-dom'
 import { connect, useDispatch, useSelector } from 'react-redux'
-import { get } from 'lodash'
 
 import FilterMenu from '../../FilterMenu/FilterMenu'
 import JobWizard from '../../JobWizard/JobWizard'
@@ -44,7 +43,7 @@ import { JobsContext } from '../Jobs'
 import { createJobsScheduleTabContent } from '../../../utils/createJobsContent'
 import { getJobFunctionData } from '../jobs.util'
 import { getNoDataMessage } from '../../../utils/getNoDataMessage'
-import { openPopUp } from 'igz-controls/utils/common.util'
+import { getErrorDetail, openPopUp } from 'igz-controls/utils/common.util'
 import { parseJob } from '../../../utils/parseJob'
 import { scheduledJobsActionCreator } from './scheduledJobs.util'
 import { setFilters } from '../../../reducers/filtersReducer'
@@ -138,7 +137,7 @@ const ScheduledJobs = ({
           )
         })
         .catch(error => {
-          const errorMsg = get(error, 'response.data.detail', 'Job failed to start.')
+          const errorMsg = getErrorDetail(error) || 'Job failed to start.'
 
           dispatch(
             setNotification({

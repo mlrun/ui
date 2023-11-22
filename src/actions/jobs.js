@@ -24,7 +24,12 @@ import {
   ABORT_JOB_BEGIN,
   ABORT_JOB_FAILURE,
   ABORT_JOB_SUCCESS,
+  DELETE_JOB_BEGIN,
+  DELETE_JOB_FAILURE,
+  DELETE_JOB_SUCCESS,
+  EDIT_JOB_BEGIN,
   EDIT_JOB_FAILURE,
+  EDIT_JOB_SUCCESS,
   FETCH_ALL_JOB_RUNS_BEGIN,
   FETCH_ALL_JOB_RUNS_FAILURE,
   FETCH_ALL_JOB_RUNS_SUCCESS,
@@ -68,10 +73,7 @@ import {
   SET_NEW_JOB_VOLUMES,
   SET_NEW_JOB_VOLUME_MOUNTS,
   SET_TUNING_STRATEGY,
-  SET_URL,
-  DELETE_JOB_BEGIN,
-  DELETE_JOB_FAILURE,
-  DELETE_JOB_SUCCESS
+  SET_URL
 } from '../constants'
 import { getNewJobErrorMsg } from '../components/JobWizard/JobWizard.util'
 import { setNotification } from '../reducers/notificationReducer'
@@ -120,7 +122,28 @@ const jobsActions = {
   deleteJobSuccess: () => ({
     type: DELETE_JOB_SUCCESS
   }),
-  editJob: (postData, project) => () => jobsApi.editJob(postData, project),
+  editJob: (postData, project) => dispatch => {
+    dispatch(jobsActions.editJobBegin())
+
+    return jobsApi
+      .editJob(postData, project)
+      .then(response => {
+        dispatch(jobsActions.editJobSuccess())
+
+        return response
+      })
+      .catch(error => {
+        dispatch(jobsActions.editJobFailure(error))
+
+        throw error
+      })
+  },
+  editJobBegin: () => ({
+    type: EDIT_JOB_BEGIN
+  }),
+  editJobSuccess: () => ({
+    type: EDIT_JOB_SUCCESS
+  }),
   editJobFailure: error => ({
     type: EDIT_JOB_FAILURE,
     payload: error
