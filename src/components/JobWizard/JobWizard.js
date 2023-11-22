@@ -281,142 +281,164 @@ const JobWizard = ({
 
       return stepsConfig
     },
-    [isBatchInference, isEditMode, mode, selectedFunctionData]
+    [isBatchInference, isEditMode, isRunMode, selectedFunctionData]
   )
 
-  const getActions = ({ allStepsAreEnabled, goToFirstInvalidStep }, formState) => {
-    const formIsSubmittedAndInvalid =
-      formState.submitting || (formState.invalid && formState.submitFailed)
+  const runJobHandler = useCallback(
+    (formData, selectedFunctionData, params, isSchedule) => {
+      const jobRequestData = generateJobRequestData(
+        formData,
+        selectedFunctionData,
+        params,
+        mode,
+        isSchedule
+      )
 
-    return [
-      {
-        label: isBatchInference
-          ? 'Schedule Infer'
-          : isTrain
-          ? 'Schedule training job'
-          : 'Schedule for later',
-        onClick: () => {
-          formState.handleSubmit()
-
-          if (formState.valid) {
+      runNewJob(jobRequestData)
+        .then(() => {
+          if (isSchedule) {
             setShowSchedule(state => !state)
-          } else {
-            goToFirstInvalidStep()
           }
-        },
-        disabled: !allStepsAreEnabled || formIsSubmittedAndInvalid,
-        variant: 'tertiary',
-        ref: scheduleButtonRef
-      },
-      {
-        label:
-          mode === PANEL_EDIT_MODE
-            ? 'Save'
-            : isBatchInference
-            ? 'Infer now'
-            : isTrain
-            ? 'Run training now'
-            : 'Run',
-        onClick: () => {
-          formState.handleSubmit()
+          resolveModal()
+          onSuccessRequest && onSuccessRequest()
+          dispatch(
+            setNotification({
+              status: 200,
+              id: Math.random(),
+              message: 'Job started successfully'
+            })
+          )
+        })
+        .then(() => {
+          return navigate(
+            `/projects/${params.projectName}/jobs/${isSchedule ? SCHEDULE_TAB : MONITOR_JOBS_TAB}`
+          )
+        })
+        .catch(error => {
+          dispatch(
+            setNotification({
+              status: error.response.status || 400,
+              id: Math.random(),
+              message: getNewJobErrorMsg(error)
+            })
+          )
+        })
+    },
+    [dispatch, mode, navigate, onSuccessRequest, resolveModal, runNewJob]
+  )
 
-          if (formState.valid) {
-            if (mode === PANEL_EDIT_MODE) {
-              editJobHandler(formState.values, selectedFunctionData, params)
-            } else {
-              runJobHandler(formState.values, selectedFunctionData, params)
-            }
-          } else {
-            goToFirstInvalidStep()
-          }
+  const editJobHandler = useCallback(
+    (formData, selectedFunctionData, params, isSchedule) => {
+      const jobRequestData = generateJobRequestData(
+        formData,
+        selectedFunctionData,
+        params,
+        mode,
+        true
+      )
+      const credentials = jobRequestData.function?.metadata?.credentials
+
+      delete jobRequestData.function.metadata
+
+      editJob(
+        {
+          credentials,
+          scheduled_object: jobRequestData,
+          cron_trigger: jobRequestData.schedule
         },
-        disabled: !allStepsAreEnabled || formIsSubmittedAndInvalid,
-        variant: 'secondary'
+        params.projectName
+      )
+        .then(() => {
+          if (isSchedule) {
+            setShowSchedule(state => !state)
+          }
+          resolveModal()
+          onSuccessRequest && onSuccessRequest()
+          dispatch(
+            setNotification({
+              status: 200,
+              id: Math.random(),
+              message: 'Job saved successfully'
+            })
+          )
+        })
+        .then(() => {
+          navigate(`/projects/${params.projectName}/jobs/${SCHEDULE_TAB}`)
+        })
+        .catch(error => {
+          dispatch(
+            setNotification({
+              status: error.response.status || 400,
+              id: Math.random(),
+              message: getSaveJobErrorMsg(error)
+            })
+          )
+        })
+    },
+    [dispatch, editJob, mode, navigate, onSuccessRequest, resolveModal]
+  )
+
+  const submitRequest = useCallback(
+    (formState, isSchedule, goToFirstInvalidStep) => {
+      formState.handleSubmit()
+
+      if (formState.valid) {
+        if (mode === PANEL_EDIT_MODE) {
+          editJobHandler(formState.values, selectedFunctionData, params, isSchedule)
+        } else {
+          runJobHandler(formState.values, selectedFunctionData, params, isSchedule)
+        }
+      } else if (goToFirstInvalidStep) {
+        goToFirstInvalidStep()
       }
-    ]
-  }
+    },
+    [editJobHandler, mode, params, runJobHandler, selectedFunctionData]
+  )
 
-  const runJobHandler = (formData, selectedFunctionData, params, isSchedule) => {
-    const jobRequestData = generateJobRequestData(
-      formData,
-      selectedFunctionData,
-      params,
-      mode,
-      isSchedule
-    )
+  const getActions = useCallback(
+    ({ allStepsAreEnabled, goToFirstInvalidStep }, formState) => {
+      const formIsSubmittedAndInvalid =
+        formState.submitting || (formState.invalid && formState.submitFailed)
 
-    runNewJob(jobRequestData)
-      .then(() => {
-        resolveModal()
-        onSuccessRequest && onSuccessRequest()
-        dispatch(
-          setNotification({
-            status: 200,
-            id: Math.random(),
-            message: 'Job started successfully'
-          })
-        )
-      })
-      .then(() => {
-        return navigate(
-          `/projects/${params.projectName}/jobs/${isSchedule ? SCHEDULE_TAB : MONITOR_JOBS_TAB}`
-        )
-      })
-      .catch(error => {
-        dispatch(
-          setNotification({
-            status: error.response.status || 400,
-            id: Math.random(),
-            message: getNewJobErrorMsg(error)
-          })
-        )
-      })
-  }
+      return [
+        {
+          label: isBatchInference
+            ? 'Schedule Infer'
+            : isTrain
+            ? 'Schedule training job'
+            : 'Schedule for later',
+          onClick: () => {
+            formState.handleSubmit()
 
-  const editJobHandler = (formData, selectedFunctionData, params) => {
-    const jobRequestData = generateJobRequestData(
-      formData,
-      selectedFunctionData,
-      params,
-      mode,
-      true
-    )
-    const credentials = jobRequestData.function?.metadata?.credentials
-
-    delete jobRequestData.function.metadata
-
-    editJob(
-      {
-        credentials,
-        scheduled_object: jobRequestData,
-        cron_trigger: jobRequestData.schedule
-      },
-      params.projectName
-    )
-      .then(() => {
-        resolveModal()
-        onSuccessRequest && onSuccessRequest()
-        dispatch(
-          setNotification({
-            status: 200,
-            id: Math.random(),
-            message: 'Job saved successfully'
-          })
-        )
-      })
-      .then(() => {
-        navigate(`/projects/${params.projectName}/jobs/${SCHEDULE_TAB}`)
-      })
-      .catch(error => {
-        dispatch(
-          setNotification({
-            status: error.response.status || 400,
-            id: Math.random(),
-            message: getSaveJobErrorMsg(error)
-          })
-        )
-      })
-  }
+            if (formState.valid) {
+              setShowSchedule(state => !state)
+            } else {
+              goToFirstInvalidStep()
+            }
+          },
+          disabled: !allStepsAreEnabled || formIsSubmittedAndInvalid,
+          variant: 'tertiary',
+          ref: scheduleButtonRef
+        },
+        {
+          label:
+            mode === PANEL_EDIT_MODE
+              ? 'Save'
+              : isBatchInference
+              ? 'Infer now'
+              : isTrain
+              ? 'Run training now'
+              : 'Run',
+          onClick: () => {
+            submitRequest(formState, false, goToFirstInvalidStep)
+          },
+          disabled: !allStepsAreEnabled || formIsSubmittedAndInvalid,
+          variant: 'secondary'
+        }
+      ]
+    },
+    [isBatchInference, isTrain, mode, submitRequest]
+  )
 
   return (
     <Form form={formRef.current} onSubmit={() => {}}>
@@ -480,30 +502,12 @@ const JobWizard = ({
               <JobWizardParameters formState={formState} />
               <JobWizardHyperparameterStrategy formState={formState} />
               <JobWizardResources formState={formState} frontendSpec={frontendSpec} />
-              <JobWizardAdvanced
-                editJob={editJobHandler}
-                formState={formState}
-                mode={mode}
-                params={params}
-                runJob={runJobHandler}
-                scheduleButtonRef={scheduleButtonRef}
-                selectedFunctionData={selectedFunctionData}
-                setShowSchedule={setShowSchedule}
-                showSchedule={showSchedule}
-              />
+              <JobWizardAdvanced formState={formState} />
             </Wizard>
             {showSchedule && (
               <ScheduleWizard
                 onSchedule={() => {
-                  formState.handleSubmit()
-
-                  if (formState.valid) {
-                    if (mode === PANEL_EDIT_MODE) {
-                      editJob(formState.values, selectedFunctionData, params)
-                    } else {
-                      runJobHandler(formState.values, selectedFunctionData, params, true)
-                    }
-                  }
+                  submitRequest(formState, true)
                 }}
                 scheduleButtonRef={scheduleButtonRef}
                 scheduleData={formState.values.scheduleData}
