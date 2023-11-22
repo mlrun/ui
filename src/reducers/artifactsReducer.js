@@ -56,6 +56,7 @@ const initialState = {
       loading: false
     }
   },
+  loading: false,
   modelEndpoints: [],
   models: {
     allData: [],
@@ -67,12 +68,17 @@ const initialState = {
     }
   },
   pipelines: [],
-  preview: {},
-  loading: false
+  preview: {}
 }
 
 export const addTag = createAsyncThunk('addTag', ({ project, tag, data }) => {
   return artifactsApi.addTag(project, tag, data)
+})
+export const buildFunction = createAsyncThunk('buildFunction', ({ funcData }) => {
+  return artifactsApi.buildFunction(funcData)
+})
+export const deleteArtifact = createAsyncThunk('deleteArtifact', ({ project, key, tag, uid }) => {
+  return artifactsApi.deleteArtifact(project, key, tag, uid)
 })
 export const deleteTag = createAsyncThunk('deleteTag', ({ project, tag, data }) => {
   return artifactsApi.deleteTag(project, tag, data)
@@ -83,12 +89,6 @@ export const editTag = createAsyncThunk('editTag', ({ project, oldTag, tag, data
       return artifactsApi.deleteTag(project, oldTag, data)
     }
   })
-})
-export const replaceTag = createAsyncThunk('replaceTag', ({ project, tag, data }) => {
-  return artifactsApi.replaceTag(project, tag, data)
-})
-export const buildFunction = createAsyncThunk('buildFunction', ({ funcData }) => {
-  return artifactsApi.buildFunction(funcData)
 })
 export const fetchArtifact = createAsyncThunk('fetchArtifact', ({ project, artifact }) => {
   return artifactsApi.getArtifact(project, artifact).then(({ data }) => {
@@ -184,6 +184,9 @@ export const fetchModels = createAsyncThunk(
       })
   }
 )
+export const replaceTag = createAsyncThunk('replaceTag', ({ project, tag, data }) => {
+  return artifactsApi.replaceTag(project, tag, data)
+})
 export const updateArtifact = createAsyncThunk('updateArtifact', ({ project, data }) => {
   return artifactsApi.updateArtifact(project, data)
 })
@@ -192,9 +195,6 @@ const artifactsSlice = createSlice({
   name: 'artifactsStore',
   initialState,
   reducers: {
-    showArtifactsPreview(state, action) {
-      state.preview = action.payload
-    },
     closeArtifactsPreview(state) {
       state.preview = {
         isPreview: false,
@@ -236,21 +236,27 @@ const artifactsSlice = createSlice({
     },
     removePipelines(state) {
       state.pipelines = initialState.pipelines
+    },
+    showArtifactsPreview(state, action) {
+      state.preview = action.payload
     }
   },
   extraReducers: builder => {
     builder.addCase(addTag.pending, showLoading)
     builder.addCase(addTag.fulfilled, hideLoading)
     builder.addCase(addTag.rejected, hideLoading)
+    builder.addCase(buildFunction.pending, defaultPendingHandler)
+    builder.addCase(buildFunction.fulfilled, defaultFulfilledHandler)
+    builder.addCase(buildFunction.rejected, defaultRejectedHandler)
+    builder.addCase(deleteArtifact.pending, showLoading)
+    builder.addCase(deleteArtifact.fulfilled, hideLoading)
+    builder.addCase(deleteArtifact.rejected, hideLoading)
     builder.addCase(deleteTag.pending, showLoading)
     builder.addCase(deleteTag.fulfilled, hideLoading)
     builder.addCase(deleteTag.rejected, hideLoading)
     builder.addCase(editTag.pending, showLoading)
     builder.addCase(editTag.fulfilled, hideLoading)
     builder.addCase(editTag.rejected, hideLoading)
-    builder.addCase(buildFunction.pending, defaultPendingHandler)
-    builder.addCase(buildFunction.fulfilled, defaultFulfilledHandler)
-    builder.addCase(buildFunction.rejected, defaultRejectedHandler)
     builder.addCase(fetchArtifacts.pending, defaultPendingHandler)
     builder.addCase(fetchArtifacts.fulfilled, (state, action) => {
       state.artifacts = action.payload
@@ -261,6 +267,13 @@ const artifactsSlice = createSlice({
       state.error = action.payload
       state.loading = false
     })
+    builder.addCase(fetchArtifactsFunctions.pending, defaultPendingHandler)
+    builder.addCase(fetchArtifactsFunctions.fulfilled, (state, action) => {
+      state.error = null
+      state.pipelines = action.payload
+      state.loading = false
+    })
+    builder.addCase(fetchArtifactsFunctions.rejected, defaultRejectedHandler)
     builder.addCase(fetchDataSet.fulfilled, (state, action) => {
       state.dataSets.selectedRowData.content[getArtifactIdentifier(action.payload[0])] =
         action.payload
@@ -282,25 +295,6 @@ const artifactsSlice = createSlice({
       state.loading = false
     })
     builder.addCase(fetchFiles.rejected, defaultRejectedHandler)
-    builder.addCase(fetchArtifactsFunctions.pending, defaultPendingHandler)
-    builder.addCase(fetchArtifactsFunctions.fulfilled, (state, action) => {
-      state.error = null
-      state.pipelines = action.payload
-      state.loading = false
-    })
-    builder.addCase(fetchArtifactsFunctions.rejected, defaultRejectedHandler)
-    builder.addCase(fetchModelEndpoints.pending, defaultPendingHandler)
-    builder.addCase(fetchModelEndpoints.fulfilled, (state, action) => {
-      state.error = null
-      state.modelEndpoints = action.payload
-      state.loading = false
-    })
-    builder.addCase(fetchModelEndpoints.rejected, (state, action) => {
-      state.error = action.payload
-      state.modelEndpoints = []
-      state.loading = false
-    })
-
     builder.addCase(fetchModel.pending, (state, action) => {
       state.models.selectedRowData = {
         content: initialState.models.selectedRowData.content,
@@ -321,7 +315,17 @@ const artifactsSlice = createSlice({
         loading: true
       }
     })
-
+    builder.addCase(fetchModelEndpoints.pending, defaultPendingHandler)
+    builder.addCase(fetchModelEndpoints.fulfilled, (state, action) => {
+      state.error = null
+      state.modelEndpoints = action.payload
+      state.loading = false
+    })
+    builder.addCase(fetchModelEndpoints.rejected, (state, action) => {
+      state.error = action.payload
+      state.modelEndpoints = []
+      state.loading = false
+    })
     builder.addCase(fetchModels.pending, defaultPendingHandler)
     builder.addCase(fetchModels.fulfilled, (state, action) => {
       state.error = null

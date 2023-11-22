@@ -17,12 +17,14 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
+import React from 'react'
 
 import JobWizard from '../JobWizard/JobWizard'
 import { openPopUp } from 'igz-controls/utils/common.util'
 import { applyTagChanges } from '../../utils/artifacts.util'
 import { getArtifactIdentifier } from '../../utils/getUniqueIdentifier'
 import {
+  DATASET_TYPE,
   DATASETS,
   DATASETS_PAGE,
   FULL_VIEW_MODE,
@@ -31,10 +33,21 @@ import {
   NAME_FILTER,
   TAG_FILTER
 } from '../../constants'
-import { createDatasetsRowData } from '../../utils/createArtifactsContent'
+import { createDatasetsRowData, getIsTargetPathValid } from '../../utils/createArtifactsContent'
 import { searchArtifactItem } from '../../utils/searchArtifactItem'
 import { sortListByDate } from '../../utils'
-import { fetchDataSet } from '../../reducers/artifactsReducer'
+import { fetchDataSet, showArtifactsPreview } from '../../reducers/artifactsReducer'
+import { copyToClipboard } from '../../utils/copyToClipboard'
+import { generateUri } from '../../utils/resources'
+import { handleDeleteArtifact } from '../../utils/handleDeleteArtifact'
+import { setDownloadItem, setShowDownloadsList } from '../../reducers/downloadReducer'
+
+import { ReactComponent as TagIcon } from 'igz-controls/images/tag-icon.svg'
+import { ReactComponent as YamlIcon } from 'igz-controls/images/yaml.svg'
+import { ReactComponent as ArtifactView } from 'igz-controls/images/eye-icon.svg'
+import { ReactComponent as Copy } from 'igz-controls/images/copy-to-clipboard-icon.svg'
+import { ReactComponent as Delete } from 'igz-controls/images/delete.svg'
+import { ReactComponent as DownloadIcon } from 'igz-controls/images/download.svg'
 
 import { PRIMARY_BUTTON } from 'igz-controls/constants'
 
@@ -106,10 +119,12 @@ export const generatePageData = (selectedItem, viewMode, params) => ({
 })
 
 const handleTrainDataset = (selectedItem, params) => {
-  const prePopulatedDataInputs = [{
-    name: selectedItem.db_key || selectedItem.key || 'dataset',
-    path: selectedItem.URI
-  }]
+  const prePopulatedDataInputs = [
+    {
+      name: selectedItem.db_key || selectedItem.key || 'dataset',
+      path: selectedItem.URI
+    }
+  ]
 
   openPopUp(JobWizard, {
     params,
@@ -211,4 +226,85 @@ export const checkForSelectedDataset = (
       setSelectedDataset({})
     }
   })
+}
+
+export const generateActionsMenu = (
+  dataset,
+  frontendSpec,
+  dispatch,
+  toggleConvertedYaml,
+  handleAddTag,
+  projectName,
+  handleRefresh,
+  datasetsFilters
+) => {
+  const isTargetPathValid = getIsTargetPathValid(dataset ?? {}, frontendSpec)
+  const downloadPath = `${dataset?.target_path}${dataset?.model_file || ''}`
+
+  return [
+    [
+      {
+        label: 'Download',
+        icon: <DownloadIcon />,
+        onClick: dataset => {
+          dispatch(
+            setDownloadItem({
+              path: downloadPath,
+              user: dataset.producer?.owner,
+              id: downloadPath
+            })
+          )
+          dispatch(setShowDownloadsList(true))
+        }
+      },
+      {
+        label: 'Copy URI',
+        icon: <Copy />,
+        onClick: dataset => copyToClipboard(generateUri(dataset, DATASETS_PAGE), dispatch)
+      },
+      {
+        label: 'View YAML',
+        icon: <YamlIcon />,
+        onClick: toggleConvertedYaml
+      },
+      {
+        label: 'Add a tag',
+        icon: <TagIcon />,
+        onClick: handleAddTag
+      },
+      {
+        label: 'Delete',
+        icon: <Delete />,
+        disabled: !dataset.tag,
+        className: 'danger',
+        onClick: () =>
+          handleDeleteArtifact(
+            dispatch,
+            projectName,
+            dataset.db_key,
+            dataset.tag,
+            dataset.tree,
+            handleRefresh,
+            datasetsFilters,
+            DATASET_TYPE
+          )
+      }
+    ],
+    [
+      {
+        disabled: !isTargetPathValid,
+        id: 'dataset-preview',
+        label: 'Preview',
+        icon: <ArtifactView />,
+        onClick: dataset => {
+          dispatch(
+            showArtifactsPreview({
+              isPreview: true,
+              selectedItem: dataset
+            })
+          )
+        }
+      }
+    ]
+  ]
 }
