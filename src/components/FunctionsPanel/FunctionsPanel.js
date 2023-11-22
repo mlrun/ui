@@ -156,6 +156,7 @@ const FunctionsPanel = ({
         const with_mlrun = functionsStore.newFunction.spec.build.requirements.includes(
           appStore.frontendSpec?.function_deployment_mlrun_requirement
         )
+        const skip_deployed = imageType === EXISTING_IMAGE
 
         const data = {
           function: {
@@ -171,6 +172,7 @@ const FunctionsPanel = ({
               }
             }
           },
+          skip_deployed,
           with_mlrun
         }
 
