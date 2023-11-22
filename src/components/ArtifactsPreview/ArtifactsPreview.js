@@ -21,18 +21,15 @@ import React, { useState } from 'react'
 import PropTypes from 'prop-types'
 import classnames from 'classnames'
 
-import Accordion from '../../common/Accordion/Accordion'
 import ArtifactsPreviewView from './ArtifactsPreviewView'
 import Loader from '../../common/Loader/Loader'
 import NoData from '../../common/NoData/NoData'
 
-import { ReactComponent as Arrow } from 'igz-controls/images/arrow.svg'
-
-const ArtifactsPreview = ({ className, extraData, noData, preview, showExtraDataLoader }) => {
+const ArtifactsPreview = ({ className, noData, preview }) => {
   const [showErrorBody, setShowErrorBody] = useState(false)
   const artifactsPreviewClasses = classnames('artifact-preview', className)
 
-  return !noData && (preview.length === 0 || showExtraDataLoader) ? (
+  return !noData && preview.length === 0 ? (
     <div className="loader-container">
       <Loader />
     </div>
@@ -49,40 +46,16 @@ const ArtifactsPreview = ({ className, extraData, noData, preview, showExtraData
           showErrorBody={showErrorBody}
         />
       ))}
-      {extraData.length > 0 && (
-        <div className="artifact-extra-data">
-          <h1 className="artifact-extra-data__header">Extra Data</h1>
-          {extraData.map((extraDataItem, index) => (
-            <Accordion
-              alwaysOpened={false}
-              icon={<Arrow />}
-              iconClassName="expand-icon"
-              key={index}
-              openByDefault={false}
-            >
-              <ArtifactsPreviewView
-                className={artifactsPreviewClasses}
-                preview={extraDataItem}
-                setShowErrorBody={setShowErrorBody}
-                showErrorBody={showErrorBody}
-              />
-            </Accordion>
-          ))}
-        </div>
-      )}
     </>
   )
 }
 
 ArtifactsPreview.defaultProps = {
-  className: '',
-  extraData: [],
-  showExtraDataLoader: false
+  className: ''
 }
 
 ArtifactsPreview.propTypes = {
   className: PropTypes.string,
-  extraData: PropTypes.array,
   noData: PropTypes.bool.isRequired,
   preview: PropTypes.arrayOf(
     PropTypes.shape({
@@ -97,8 +70,7 @@ ArtifactsPreview.propTypes = {
         content: PropTypes.any.isRequired
       })
     })
-  ).isRequired,
-  showExtraDataLoader: PropTypes.bool
+  ).isRequired
 }
 
 export default ArtifactsPreview
