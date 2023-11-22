@@ -144,9 +144,9 @@ const DeployModelPopUp = ({ isOpen, model, onResolve }) => {
       func => func.name === values.selectedFunctionName && func.tag === values.selectedTag
     )
     const classArguments = mapValues(keyBy(values.arguments, 'key'), 'value')
-    const servingFunctionCopy = cloneDeep(servingFunction)
+    const servingFunctionCopy = cloneDeep(servingFunction.ui.originalContent)
 
-    servingFunctionCopy.graph.routes[values.modelName] = {
+    servingFunctionCopy.spec.graph.routes[values.modelName] = {
       class_args: {
         model_path: generateUri(model, MODELS_TAB),
         ...classArguments
