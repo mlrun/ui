@@ -64,6 +64,8 @@ import { usePods } from '../../../hooks/usePods.hook'
 import { useSortTable } from '../../../hooks/useSortTable.hook'
 import { useYaml } from '../../../hooks/yaml.hook'
 
+import './MonitorWorkflows.scss'
+
 const MonitorWorkflows = ({
   abortJob,
   fetchFunctionLogs,
@@ -526,14 +528,19 @@ const MonitorWorkflows = ({
   return (
     <>
       {!params.workflowId && (
-        <div className="content__action-bar-wrapper">
-          <div className="action-bar">
-            <FilterMenu
-              filters={filters}
-              onChange={getWorkflows}
-              page={JOBS_PAGE}
-              withoutExpandButton
-            />
+        <div className="monitor-workflows">
+          <p className="monitor-workflows__subtitle">
+            View running workflows and previously executed workflows
+          </p>
+          <div className="content__action-bar-wrapper">
+            <div className="action-bar">
+              <FilterMenu
+                filters={filters}
+                onChange={getWorkflows}
+                page={JOBS_PAGE}
+                withoutExpandButton
+              />
+            </div>
           </div>
         </div>
       )}
