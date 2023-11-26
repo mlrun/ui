@@ -95,7 +95,7 @@ const JobWizardFunctionSelection = ({
       store.filtersStore[FILTER_MENU_MODAL][JOB_WIZARD_FILTERS]?.values?.[HUB_CATEGORIES_FILTER]
   )
 
-  const { hubFunctions, hubFunctionsCatalog } = useSelector(store => store.functionsStore)
+  const { hubFunctions, hubFunctionsCatalog, loading } = useSelector(store => store.functionsStore)
 
   const dispatch = useDispatch()
 
@@ -389,9 +389,10 @@ const JobWizardFunctionSelection = ({
               <FormSelect name={`${FUNCTION_SELECTION_STEP}.projectName`} options={projects} />
             </div>
           </div>
-          {(filterByName.length > 0 &&
-            (filterMatches.length === 0 || filteredFunctions.length === 0)) ||
-          functions.length === 0 ? (
+          {!loading &&
+          ((filterByName.length > 0 &&
+            (filterMatches.length === 0 || isEmpty(filteredFunctions))) ||
+            isEmpty(functions)) ? (
             <NoData />
           ) : (
             <div className="functions-list">
@@ -438,9 +439,10 @@ const JobWizardFunctionSelection = ({
               </FilterMenuModal>
             )}
           </div>
-          {(filterByName.length > 0 &&
+          {!loading &&
+          ((filterByName.length > 0 &&
             (filterMatches.length === 0 || isEmpty(filteredTemplates))) ||
-          isEmpty(templates) ? (
+            isEmpty(templates)) ? (
             <NoData />
           ) : (
             <div className="functions-list">
