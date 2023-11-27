@@ -792,7 +792,7 @@ module.exports = {
         true
       )
     ),
-    Description_Input: textAreaGroup(generateTextAreaGroup('.feature-set-panel .panel-title .text-area-wrapper')),
+    Description_Input: textAreaGroup(generateTextAreaGroup('.feature-set-panel .panel-title .text-area-wrapper', '.text-area__counter')),
     Labels_Table: commonTable(labelsTable),
     Passthrough_Checkbox: checkboxComponent(
       generateCheckboxGroup(
@@ -805,6 +805,13 @@ module.exports = {
     Passthrough_Checkbox_State: By.css(
       '.feature-set-panel .panel-title .checkbox'
     ),
+    Passthrough_PopUp_Dialog:{
+      Dialog_PopUp: By.css('#overlay_container .pop-up-dialog'),
+      Close_Button: By.css('.pop-up-dialog .pop-up-dialog__header .pop-up-dialog__btn_close'),
+      Dialog_Message: By.css('.pop-up-dialog .confirm-dialog__message'), 
+      Keep_Online_Target_Set_Button: By.css('.pop-up-dialog .confirm-dialog__btn-container .btn-tertiary'),
+      Unset_Online_Target_Button: By.css('.pop-up-dialog .confirm-dialog__btn-container .btn-secondary')
+    },
     Offline_Checkbox_State: By.css(
       '.feature-set-panel .accordion__container:nth-of-type(3) .accordion__body .target-store__item:nth-of-type(2) .checkbox'
     ),
@@ -937,7 +944,6 @@ module.exports = {
       Edit_Online_Path_Button: By.css('.target-store__item:nth-of-type(1) .target-store__path-actions .round-icon-cp'),
       Apply_Online_Path_Button: By.css('.target-store__item:nth-of-type(1) .target-store__path-actions.editable .round-icon-cp:nth-of-type(1)'),
       Discard_Online_Path_Button: By.css('.target-store__item:nth-of-type(1) .target-store__path-actions.editable .round-icon-cp:nth-of-type(2)'),
-      Online_Path_Annotation: By.css('.target-store__item:nth-of-type(1) .annotation'),
       // Offline group
       Offline_Checkbox: checkboxComponent(
         generateCheckboxGroup(
@@ -966,7 +972,6 @@ module.exports = {
       Edit_Offline_Path_Button: By.css('.target-store__item:nth-of-type(2) .target-store__path-actions .round-icon-cp'),
       Apply_Offline_Path_Button: By.css('.target-store__item:nth-of-type(2) .target-store__path-actions.editable .round-icon-cp:nth-of-type(1)'),
       Discard_Offline_Path_Button: By.css('.target-store__item:nth-of-type(2) .target-store__path-actions.editable .round-icon-cp:nth-of-type(2)'),
-      Offline_Path_Annotation: By.css('.target-store__item:nth-of-type(2) .annotation'),
       Offline_Partition_Checkbox: checkboxComponent(
         generateCheckboxGroup(
           '.feature-set-panel .accordion__container:nth-of-type(3) .panel-section__body .target-store__item:nth-of-type(2) .target-store__inputs-container .checkbox',
@@ -1470,6 +1475,10 @@ module.exports = {
         )
       )
     }
+  },
+  batchReRun:{
+    Cross_Close_Button: By.css('.modal .modal__header-button .round-icon-cp'),
+    Batch_Re_Run_Header: By.css('.modal .modal__content h5.modal__header-title')
   },
   newJobTemplateEdit: {
     Cross_Close_Button: commonCrossCloseButton,

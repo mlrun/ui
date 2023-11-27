@@ -219,6 +219,22 @@ const action = {
     }
     return indexes
   },
+  findRowIndexesByColumnValueExpand: async function(
+    driver,
+    table,
+    columnName,
+    value
+  ) {
+    const columnValues = await getColumnValues(driver, table, columnName)
+
+    return columnValues.reduce((acc, currentValue, index) => {
+      if (currentValue === value){
+        acc.push(index)
+      }  
+      
+      return acc
+    }, [])
+  },
   findRowIndexesByColumnValueAttribute: async function(
     driver,
     table,

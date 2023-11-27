@@ -271,8 +271,10 @@ Feature: Jobs and workflows
         Then type value "kind" to "Table_Labels_Filter_Input" field on "Jobs_Monitor_Tab" wizard
         Then click on "Table_Refresh_Button" element on "Jobs_Monitor_Tab" wizard
         And wait load page
-        Then select "Re-run" option in action menu on "Jobs_Monitor_Tab" wizard in "Jobs_Monitor_Table" table at row with "test" value in "name" column
-        Then click on "Cross_Close_Button" element on "New_JobTemplate_Edit" wizard
+        Then select "Batch re-run" option in action menu on "Jobs_Monitor_Tab" wizard in "Jobs_Monitor_Table" table at row with "test" value in "name" column
+        And wait load page
+        Then "Batch_Re_Run_Header" element on "Batch_Re_Run" should contains "Batch Re-Run" value
+        Then click on "Cross_Close_Button" element on "Batch_Re_Run" wizard
         Then value in "name" column with "text" in "Jobs_Monitor_Table" on "Jobs_Monitor_Tab" wizard should contains "test"
         Then value in "labels" column with "dropdowns" in "Jobs_Monitor_Table" on "Jobs_Monitor_Tab" wizard should contains "kind"
 
