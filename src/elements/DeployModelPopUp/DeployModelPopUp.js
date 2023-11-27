@@ -63,7 +63,7 @@ const DeployModelPopUp = ({ isOpen, model, onResolve }) => {
     })
   )
   const location = useLocation()
-  const { handleCloseModal } = useModalBlockHistory(onResolve, formRef.current)
+  const { handleCloseModal, resolveModal } = useModalBlockHistory(onResolve, formRef.current)
 
   const getTagOptions = useCallback((functionList, selectedFunctionName) => {
     return chain(functionList)
@@ -158,7 +158,7 @@ const DeployModelPopUp = ({ isOpen, model, onResolve }) => {
     return dispatch(buildFunction({ funcData: { function: servingFunctionCopy } }))
       .unwrap()
       .then(response => {
-        formRef.current = null
+        resolveModal()
         dispatch(
           setNotification({
             status: response.status,
@@ -176,9 +176,7 @@ const DeployModelPopUp = ({ isOpen, model, onResolve }) => {
             retry: deployModel
           })
         )
-      })
-      .finally(() => {
-        onResolve()
+        resolveModal()
       })
   }
 
