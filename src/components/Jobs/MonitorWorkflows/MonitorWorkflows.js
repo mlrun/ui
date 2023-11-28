@@ -45,7 +45,7 @@ import {
   generatePageData,
   monitorWorkflowsActionCreator
 } from './monitorWorkflows.util'
-import { enrichRunWithFunctionFields, handleAbortJob } from '../jobs.util'
+import { enrichRunWithFunctionFields, handleAbortJob, handleDeleteJob } from '../jobs.util'
 import { DANGER_BUTTON } from 'igz-controls/constants'
 import { JobsContext } from '../Jobs'
 import { createJobsWorkflowsTabContent } from '../../../utils/createJobsContent'
@@ -68,6 +68,7 @@ import './MonitorWorkflows.scss'
 
 const MonitorWorkflows = ({
   abortJob,
+  deleteJob,
   fetchFunctionLogs,
   fetchJob,
   fetchJobFunctions,
@@ -175,8 +176,8 @@ const MonitorWorkflows = ({
   )
 
   const refreshJobs = useCallback(() => {
-    fetchWorkflow(params.workflowId)
-  }, [fetchWorkflow, params.workflowId])
+    fetchWorkflow(params.projectName, params.workflowId)
+  }, [fetchWorkflow, params.projectName, params.workflowId])
 
   const onAbortJob = useCallback(
     job => {
@@ -207,10 +208,63 @@ const MonitorWorkflows = ({
         },
         confirmHandler: () => {
           onAbortJob(job)
+          setConfirmData(null)
         }
       })
     },
     [onAbortJob, setConfirmData]
+  )
+
+  const getWorkflows = useCallback(
+    filter => {
+      fetchWorkflows(params.projectName, filter, setLargeRequestErrorMessage)
+    },
+    [fetchWorkflows, params.projectName]
+  )
+
+  const onDeleteJob = useCallback(
+    job => {
+      handleDeleteJob(deleteJob, job, params.projectName, refreshJobs, filtersStore, dispatch).then(
+        () => {
+          navigate(
+            location.pathname
+              .split('/')
+              .splice(0, location.pathname.split('/').indexOf(params.workflowId) + 1)
+              .join('/')
+          )
+        }
+      )
+    },
+    [
+      deleteJob,
+      dispatch,
+      filtersStore,
+      location.pathname,
+      navigate,
+      params.projectName,
+      params.workflowId,
+      refreshJobs
+    ]
+  )
+
+  const handleConfirmDeleteJob = useCallback(
+    job => {
+      setConfirmData({
+        item: job,
+        header: 'Delete job?',
+        message: `You try to delete job "${job.name}".`,
+        btnConfirmLabel: 'Delete',
+        btnConfirmType: DANGER_BUTTON,
+        rejectHandler: () => {
+          setConfirmData(null)
+        },
+        confirmHandler: () => {
+          onDeleteJob(job)
+          setConfirmData(null)
+        }
+      })
+    },
+    [onDeleteJob, setConfirmData]
   )
 
   const handleCatchRequest = useCallback(
@@ -241,6 +295,7 @@ const MonitorWorkflows = ({
         handleMonitoring,
         appStore.frontendSpec.abortable_function_kinds,
         handleConfirmAbortJob,
+        handleConfirmDeleteJob,
         toggleConvertedYaml
       )
   }, [
@@ -249,6 +304,7 @@ const MonitorWorkflows = ({
     appStore.frontendSpec.abortable_function_kinds,
     handleMonitoring,
     handleConfirmAbortJob,
+    handleConfirmDeleteJob,
     toggleConvertedYaml
   ])
 
@@ -299,13 +355,6 @@ const MonitorWorkflows = ({
         fetchJobFunctionsPromiseRef.current = null
       })
   }, [fetchJob, modifyAndSelectRun, navigate, params.jobId, params.projectName])
-
-  const getWorkflows = useCallback(
-    filter => {
-      fetchWorkflows(params.projectName, filter, setLargeRequestErrorMessage)
-    },
-    [fetchWorkflows, params.projectName]
-  )
 
   useEffect(() => {
     if ((params.jobId || params.functionHash) && pageData.details.menu.length > 0) {
