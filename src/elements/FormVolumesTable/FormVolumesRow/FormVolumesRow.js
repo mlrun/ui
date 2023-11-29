@@ -65,6 +65,7 @@ const FormVolumesRow = ({
           <FormInput
             density="normal"
             disabled={inputData.inputDisabled}
+            id={`${rowPath}-${inputData.fieldPath}`}
             label={inputData.label}
             tip={inputData.tip}
             name={`${rowPath}.${inputData.fieldPath}`}
@@ -79,6 +80,7 @@ const FormVolumesRow = ({
           <FormSelect
             density="normal"
             disabled={inputData.inputDisabled}
+            id={`${rowPath}-${inputData.fieldPath}`}
             label={inputData.label}
             name={`${rowPath}.${inputData.fieldPath}`}
             options={inputData.options}

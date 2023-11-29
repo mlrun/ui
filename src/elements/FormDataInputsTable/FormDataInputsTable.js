@@ -36,6 +36,7 @@ const FormDataInputsTable = ({
   exitEditModeTriggerItem,
   fieldsPath,
   formState,
+  id,
   rowCanBeAdded
 }) => {
   const [dataInputState, setDataInputState] = useState(targetPathInitialState)
@@ -76,7 +77,7 @@ const FormDataInputsTable = ({
   }
 
   return (
-    <div className={tableClassNames}>
+    <div className={tableClassNames} data-testid={id}>
       <div className="form-table__row form-table__header-row no-hover">
         <div className="form-table__cell form-table__cell_min"></div>
         <div className="form-table__cell form-table__cell_1">
@@ -117,6 +118,7 @@ const FormDataInputsTable = ({
               })}
               {rowCanBeAdded && (
                 <FormActionButton
+                  id="add-input-btn"
                   ref={bottomScrollRef}
                   hidden={editingItem?.ui?.isNew}
                   disabled={disabled}
@@ -161,6 +163,7 @@ FormDataInputsTable.propTypes = {
   exitEditModeTriggerItem: PropTypes.any,
   fieldsPath: PropTypes.string.isRequired,
   formState: PropTypes.shape({}).isRequired,
+  id: PropTypes.string,
   rowCanBeAdded: PropTypes.bool
 }
 

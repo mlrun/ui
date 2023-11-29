@@ -253,7 +253,8 @@ const FormParametersRow = ({
               <div className={tableEditingRowClassNames} key={index}>
                 <div className="form-table__cell form-table__cell_min">
                   {!fieldData.isRequired && (
-                    <FormCheckBox
+                  <FormCheckBox
+                      id={`${rowPath}-data`}
                       name={`${rowPath}.data.isChecked`}
                       onClick={event => event.stopPropagation()}
                     />
@@ -263,6 +264,7 @@ const FormParametersRow = ({
                   <div className="form-table__cell form-table__cell_hyper">
                     <FormToggle
                       density="normal"
+                      id={`${rowPath}-data-hyper`}
                       label="Hyper"
                       name={`${rowPath}.data.isHyper`}
                       onChange={() => {
@@ -274,6 +276,7 @@ const FormParametersRow = ({
                 <div className="form-table__cell form-table__cell_2">
                   <FormInput
                     label="Name"
+                    id={`${rowPath}-data-name`}
                     disabled={fieldData.isPredefined}
                     name={`${rowPath}.data.name`}
                     placeholder="Name"
@@ -288,7 +291,8 @@ const FormParametersRow = ({
                   />
                 </div>
                 <div className="form-table__cell form-table__cell_1">
-                  <FormSelect
+                <FormSelect
+                  id={`${rowPath}-data-type`}
                     label="Type"
                     onChange={() => {
                       setTypeIsChanging(true)
@@ -300,21 +304,23 @@ const FormParametersRow = ({
                 </div>
                 <div className="form-table__cell form-table__cell_3">
                   {fieldData.data.isHyper && !typeIsChanging ? (
-                    <FormInput
-                      label="Values (Comma separated)"
-                      name={`${rowPath}.data.value`}
-                      placeholder="Values"
-                      required
-                      tip={getHyperValueTip(fieldData)}
-                      validationRules={getHyperValueValidationRules(fieldData)}
-                    />
+                  <FormInput
+                    id={`${rowPath}-data-value`}
+                    label="Values (Comma separated)"
+                    name={`${rowPath}.data.value`}
+                    placeholder="Values"
+                    required
+                    tip={getHyperValueTip(fieldData)}
+                    validationRules={getHyperValueValidationRules(fieldData)}
+                  />
                   ) : fieldData.data.type === parameterTypeBool && !typeIsChanging ? (
                     <div className="radio-buttons-container">
-                      <FormRadio name={`${rowPath}.data.value`} value="true" label="True" />
-                      <FormRadio name={`${rowPath}.data.value`} value="false" label="False" />
+                      <FormRadio name={`${rowPath}.data.value`} id={`${rowPath}-data-value-true`} value="true" label="True" />
+                      <FormRadio name={`${rowPath}.data.value`} id={`${rowPath}-data-value-false`} value="false" label="False" />
                     </div>
                   ) : !typeIsChanging ? (
-                    <FormInput
+                      <FormInput
+                      id={`${rowPath}-data-value`}
                       type={
                         [parameterTypeInt, parameterTypeFloat].includes(fieldData.data.type)
                           ? 'number'
@@ -349,6 +355,7 @@ const FormParametersRow = ({
                 <div className="form-table__cell form-table__cell_min">
                   {!fieldData.isRequired && (
                     <FormCheckBox
+                      id={`${rowPath}-data`}
                       name={`${rowPath}.data.isChecked`}
                       onClick={event => event.stopPropagation()}
                     />
@@ -356,7 +363,7 @@ const FormParametersRow = ({
                 </div>
                 {withHyperparameters && (
                   <div className="form-table__cell form-table__cell_hyper">
-                    <FormToggle name={`${rowPath}.data.isHyper`} disabled />
+                    <FormToggle id={`${rowPath}-data-hyper`} name={`${rowPath}.data.isHyper`} disabled />
                   </div>
                 )}
                 <div className="form-table__cell form-table__cell_2 form-table__name-cell">
@@ -392,12 +399,14 @@ const FormParametersRow = ({
                     <div className="radio-buttons-container">
                       <FormRadio
                         readOnly
+                        id={`${rowPath}-data-value-true`}
                         name={`${rowPath}.data.value`}
                         value="true"
                         label="True"
                       />
                       <FormRadio
                         readOnly
+                        id={`${rowPath}-data-value-false`}
                         name={`${rowPath}.data.value`}
                         value="false"
                         label="False"

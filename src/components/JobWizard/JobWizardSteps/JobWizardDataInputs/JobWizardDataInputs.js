@@ -35,6 +35,7 @@ const JobWizardDataInputs = ({ formState, stepIsActive }) => {
           exitEditModeTriggerItem={stepIsActive}
           fieldsPath={`${DATA_INPUTS_STEP}.dataInputsTable`}
           formState={formState}
+          id="data-inputs-form-table"
           rowCanBeAdded={formState.values.runDetails.handlerData?.has_kwargs}
         />
       </div>

@@ -125,6 +125,7 @@ const FormResourcesUnits = ({ formState, onChangeEnabled }) => {
             <div className="resources-card__title">Memory</div>
             <div className="resources-card__fields">
               <FormInput
+                id="resources-memory-request"
                 className="resources-card__fields-input"
                 name="resources.currentRequest.memory"
                 label="Request"
@@ -135,6 +136,7 @@ const FormResourcesUnits = ({ formState, onChangeEnabled }) => {
                 invalidText="Request must be less than or equal to Limit and not be less than 1"
               />
               <FormSelect
+                id="resources-memory-request-unitid"
                 className="resources-card__fields-select"
                 name="resources.currentRequest.memoryUnitId"
                 options={selectUnitOptions.unitMemory}
@@ -142,6 +144,7 @@ const FormResourcesUnits = ({ formState, onChangeEnabled }) => {
             </div>
             <div className="resources-card__fields">
               <FormInput
+                id="resources-memory-limits"
                 className="resources-card__fields-input"
                 name="resources.currentLimits.memory"
                 label="Limit"
@@ -152,6 +155,7 @@ const FormResourcesUnits = ({ formState, onChangeEnabled }) => {
                 invalidText="Limit must be bigger than or equal to Request and not be less than 1"
               />
               <FormSelect
+                id="resources-memory-limits-unitid"
                 className="resources-card__fields-select"
                 name="resources.currentLimits.memoryUnitId"
                 options={selectUnitOptions.unitMemory}
@@ -164,6 +168,7 @@ const FormResourcesUnits = ({ formState, onChangeEnabled }) => {
             <div className="resources-card__title">CPU</div>
             <div className="resources-card__fields">
               <FormInput
+                id="resources-cpu-request"
                 className="resources-card__fields-input"
                 name="resources.currentRequest.cpu"
                 label="Request"
@@ -175,6 +180,7 @@ const FormResourcesUnits = ({ formState, onChangeEnabled }) => {
                 invalidText={`Request must be less than or equal to Limit and not be less than ${selectedRequestUnit?.minValue}`}
               />
               <FormSelect
+                id="resources-cpu-request-unitid"
                 className="resources-card__fields-select"
                 name="resources.currentRequest.cpuUnitId"
                 options={selectUnitOptions.unitCpu}
@@ -182,6 +188,7 @@ const FormResourcesUnits = ({ formState, onChangeEnabled }) => {
             </div>
             <div className="resources-card__fields">
               <FormInput
+                id="resources-cpu-limits"
                 className="resources-card__fields-input"
                 name="resources.currentLimits.cpu"
                 label="Limit"
@@ -193,6 +200,7 @@ const FormResourcesUnits = ({ formState, onChangeEnabled }) => {
                 invalidText={`Limit must be bigger than or equal to Request and not be less than ${selectedLimitUnit?.minValue}`}
               />
               <FormSelect
+                id="resources-cpu-limits-unitid"
                 className="resources-card__fields-select"
                 name="resources.currentLimits.cpuUnitId"
                 options={selectUnitOptions.unitCpu}
@@ -205,6 +213,7 @@ const FormResourcesUnits = ({ formState, onChangeEnabled }) => {
             <div className="resources-card__title">GPU</div>
             <div className="resources-card__fields">
               <FormInput
+                id={`resources-gpu-limits[${gpuType}]`}
                 className="resources-card__fields-input gpu"
                 name={`resources.currentLimits[${gpuType}]`}
                 label="Limit"

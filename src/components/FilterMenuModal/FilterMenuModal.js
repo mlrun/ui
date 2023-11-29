@@ -155,6 +155,7 @@ const FilterMenuModal = ({
         return (
           <FilterMenuWizardContext.Provider value={{ filterMenuName }}>
             <RoundedIcon
+              id="hub-filter-btn"
               ref={filtersIconButtonRef}
               className={filtersIconClassnames}
               isActive={filtersWizardIsShown}
@@ -182,6 +183,7 @@ const FilterMenuModal = ({
                       {cancelButton && (
                         <Button
                           disabled={isEqual(formState.initialValues, formState.values)}
+                          id="filter-clear-btn"
                           label={cancelButton.label}
                           onClick={() => handleClearFilters(formState, counter)}
                           variant={cancelButton.variant}
@@ -190,6 +192,7 @@ const FilterMenuModal = ({
                       {applyButton && !withoutApplyButton && (
                         <Button
                           disabled={isEqual(filtersData.values, formState.values)}
+                          id="filter-apply-btn"
                           variant={applyButton.variant}
                           label={applyButton.label}
                           onClick={() => handleApplyFilters(formState)}

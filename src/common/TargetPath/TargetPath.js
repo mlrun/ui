@@ -54,6 +54,7 @@ const TargetPath = ({
   formState,
   formStateFieldInfo,
   hiddenSelectOptionsIds,
+  id,
   inputDefaultValue,
   label,
   name,
@@ -269,6 +270,7 @@ const TargetPath = ({
       <FormCombobox
         density={density}
         hideSearchInput={!dataInputState.inputStorePathTypeEntered}
+        id={id}
         inputDefaultValue={inputDefaultValue}
         inputPlaceholder={
           pathPlaceholders[get(formState.values, `${formStateFieldInfo}.pathType`)] ?? ''
@@ -334,6 +336,7 @@ TargetPath.propTypes = {
   formState: PropTypes.object.isRequired,
   formStateFieldInfo: PropTypes.string.isRequired,
   hiddenSelectOptionsIds: PropTypes.arrayOf(PropTypes.string),
+  id: PropTypes.string,
   inputDefaultValue: PropTypes.string,
   label: PropTypes.string,
   name: PropTypes.string.isRequired,

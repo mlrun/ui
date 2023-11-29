@@ -402,6 +402,11 @@ const JobWizard = ({
 
       return [
         {
+          id: isBatchInference
+            ? 'job-wizard-btn-schedule-infer'
+            : isTrain
+            ? 'job-wizard-btn-schedule-training'
+            : 'job-wizard-btn-schedule-later',
           label: isBatchInference
             ? 'Schedule Infer'
             : isTrain
@@ -421,6 +426,14 @@ const JobWizard = ({
           ref: scheduleButtonRef
         },
         {
+          id:
+            mode === PANEL_EDIT_MODE
+              ? 'job-wizard-btn-save'
+              : isBatchInference
+              ? 'job-wizard-btn-infer-now'
+              : isTrain
+              ? 'job-wizard-btn-run-training'
+              : 'job-wizard-btn-run',
           label:
             mode === PANEL_EDIT_MODE
               ? 'Save'

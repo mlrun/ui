@@ -78,6 +78,7 @@ const FormDataInputsRow = ({
           <div className="form-table__cell form-table__cell_min">
             {!fieldData.isRequired && (
               <FormCheckBox
+                id={`${rowPath}-data`}
                 name={`${rowPath}.data.isChecked`}
                 onClick={event => event.stopPropagation()}
               />
@@ -85,6 +86,7 @@ const FormDataInputsRow = ({
           </div>
           <div className="form-table__cell form-table__cell_1">
             <FormInput
+              id={`${rowPath}-data-name`}
               density="normal"
               name={`${rowPath}.data.name`}
               placeholder="Name"
@@ -117,6 +119,7 @@ const FormDataInputsRow = ({
                     ]
                   : []
               }
+              id={`${rowPath}-data-path`}
               inputDefaultValue={editingItem.data.fieldInfo?.value}
               name={`${rowPath}.data.path`}
               required
@@ -156,7 +159,8 @@ const FormDataInputsRow = ({
         >
           <div className="form-table__cell form-table__cell_min">
             {!fieldData.isRequired && (
-              <FormCheckBox
+                <FormCheckBox
+                id={`${rowPath}-data`}
                 name={`${rowPath}.data.isChecked`}
                 onClick={event => event.stopPropagation()}
               />
