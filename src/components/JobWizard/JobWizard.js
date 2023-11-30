@@ -402,11 +402,7 @@ const JobWizard = ({
 
       return [
         {
-          id: isBatchInference
-            ? 'job-wizard-btn-schedule-infer'
-            : isTrain
-            ? 'job-wizard-btn-schedule-training'
-            : 'job-wizard-btn-schedule-later',
+          id: 'schedule-btn',
           label: isBatchInference
             ? 'Schedule Infer'
             : isTrain

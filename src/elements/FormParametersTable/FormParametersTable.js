@@ -210,6 +210,7 @@ const FormParametersTable = ({
 FormParametersTable.defaultProps = {
   disabled: false,
   exitEditModeTriggerItem: null,
+  id: 'parameters-table',
   parametersFromPath: '',
   rowCanBeAdded: false,
   withHyperparameters: false

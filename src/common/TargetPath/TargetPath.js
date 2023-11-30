@@ -324,6 +324,7 @@ const TargetPath = ({
 TargetPath.defaultProps = {
   density: 'normal',
   hiddenSelectOptionsIds: [],
+  id: 'target-path',
   inputDefaultValue: '',
   label: '',
   required: false,

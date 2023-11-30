@@ -153,6 +153,7 @@ const FormDataInputsTable = ({
 FormDataInputsTable.defaultProps = {
   className: '',
   disabled: false,
+  id: 'data-inputs-table',
   exitEditModeTriggerItem: null,
   rowCanBeAdded: false
 }

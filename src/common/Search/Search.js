@@ -180,6 +180,7 @@ const Search = ({
 
 Search.defaultProps = {
   className: '',
+  id:'search',
   matches: [],
   onFocus: () => {},
   placeholder: '',

@@ -155,7 +155,7 @@ const FilterMenuModal = ({
         return (
           <FilterMenuWizardContext.Provider value={{ filterMenuName }}>
             <RoundedIcon
-              id="hub-filter-btn"
+              id="filter-menu-btn"
               ref={filtersIconButtonRef}
               className={filtersIconClassnames}
               isActive={filtersWizardIsShown}

@@ -119,7 +119,7 @@ const FormEnvironmentVariablesTable = ({
 }
 
 FormEnvironmentVariablesTable.defaultProps = {
-  className: '',
+  className: 'env-var-table',
   disabled: false,
   exitEditModeTriggerItem: null
 }
