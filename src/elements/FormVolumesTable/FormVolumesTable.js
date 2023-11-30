@@ -113,7 +113,7 @@ const FormVolumesTable = ({ disabled, exitEditModeTriggerItem, fieldsPath, formS
 FormVolumesTable.defaultProps = {
   disabled: false,
   exitEditModeTriggerItem: null,
-  id: 'volumes-table'
+  id: 'volumes-form-table'
 }
 
 FormVolumesTable.propTypes = {

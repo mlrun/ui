@@ -337,6 +337,7 @@ Input.defaultProps = {
   focused: false,
   iconClass: '',
   iconOnClick: () => { },
+  id: '',
   infoLabel: false,
   inputIcon: null,
   invalid: false,

@@ -422,14 +422,7 @@ const JobWizard = ({
           ref: scheduleButtonRef
         },
         {
-          id:
-            mode === PANEL_EDIT_MODE
-              ? 'job-wizard-btn-save'
-              : isBatchInference
-              ? 'job-wizard-btn-infer-now'
-              : isTrain
-              ? 'job-wizard-btn-run-training'
-              : 'job-wizard-btn-run',
+          id:'run-btn',
           label:
             mode === PANEL_EDIT_MODE
               ? 'Save'

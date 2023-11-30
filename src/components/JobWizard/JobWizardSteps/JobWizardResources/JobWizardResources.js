@@ -88,7 +88,6 @@ const JobWizardResources = ({ formState, frontendSpec, stepIsActive }) => {
           exitEditModeTriggerItem={stepIsActive}
           fieldsPath={`${RESOURCES_STEP}.volumesTable`}
           formState={formState}
-          id="add-volumes-form-table"
         />
       </div>
     </div>
