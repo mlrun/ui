@@ -76,19 +76,17 @@ const workflowsApi = {
   getWorkflow: (project, workflowId) => {
     return mainHttpClient.get(`/projects/${project}/pipelines/${workflowId}`)
   },
-  getWorkflows: (project, filter, setLargeRequestErrorMessage) => {
-    const config = {
-      params: {},
-      ui: {
-        setLargeRequestErrorMessage
-      }
+  getWorkflows: (project, filter, config = {}) => {
+    const newConfig = {
+      ...config,
+      params: {}
     }
 
     if (filter?.groupBy === GROUP_BY_WORKFLOW) {
-      config.params.filter = generateQueryParams(filter)
+      newConfig.params.filter = generateQueryParams(filter)
     }
 
-    return mainHttpClient.get(`/projects/${project}/pipelines`, config)
+    return mainHttpClient.get(`/projects/${project}/pipelines`, newConfig)
   }
 }
 

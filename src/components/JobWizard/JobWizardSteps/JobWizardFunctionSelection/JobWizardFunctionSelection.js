@@ -239,33 +239,35 @@ const JobWizardFunctionSelection = ({
 
   const onSelectedProjectNameChange = currentValue => {
     dispatch(functionsActions.fetchFunctions(currentValue, {})).then(functions => {
-      const validFunctions = functions.filter(func => {
-        return includes(functionRunKinds, func.kind)
-      })
-
-      const groupedFunctions = Object.values(
-        validFunctions.reduce((prev, curr) => {
-          if (!prev[curr.metadata.name]) {
-            prev[curr.metadata.name] = {
-              name: curr.metadata.name,
-              functions: []
-            }
-          }
-
-          prev[curr.metadata.name].functions.push(curr)
-
-          return prev
-        }, {})
-      )
-
-      setFunctions(groupedFunctions)
-
-      if (filterByName.length > 0) {
-        const filteredFunctions = validFunctions.filter(func => {
-          return func.metadata.name.includes(filterByName)
+      if (functions) {
+        const validFunctions = functions.filter(func => {
+          return includes(functionRunKinds, func.kind)
         })
 
-        setFilteredFunctions(filteredFunctions)
+        const groupedFunctions = Object.values(
+          validFunctions.reduce((prev, curr) => {
+            if (!prev[curr.metadata.name]) {
+              prev[curr.metadata.name] = {
+                name: curr.metadata.name,
+                functions: []
+              }
+            }
+
+            prev[curr.metadata.name].functions.push(curr)
+
+            return prev
+          }, {})
+        )
+
+        setFunctions(groupedFunctions)
+
+        if (filterByName.length > 0) {
+          const filteredFunctions = validFunctions.filter(func => {
+            return func.metadata.name.includes(filterByName)
+          })
+
+          setFilteredFunctions(filteredFunctions)
+        }
       }
     })
 

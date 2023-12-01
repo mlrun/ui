@@ -34,6 +34,7 @@ import {
   updateGroupedFeatures
 } from '../../reducers/tableReducer'
 import { FORBIDDEN_ERROR_STATUS_CODE } from 'igz-controls/constants'
+import { showErrorNotification } from '../../utils/notifications.util'
 
 const FeaturesTablePanel = ({
   createNewFeatureVector,
@@ -108,20 +109,15 @@ const FeaturesTablePanel = ({
           )
         })
         .catch(error => {
-          dispatch(
-            setNotification({
-              status: 400,
-              id: Math.random(),
-              message:
-                tableStore.features.isNewFeatureVector &&
-                error.response.status === FORBIDDEN_ERROR_STATUS_CODE
-                  ? 'You are not permitted to create new feature vector.'
-                  : tableStore.features.isNewFeatureVector
-                  ? 'Feature vector creation failed.'
-                  : 'Failed to add features',
-              retry: addFeatures
-            })
-          )
+          const customErrorMsg =
+            tableStore.features.isNewFeatureVector &&
+            error.response.status === FORBIDDEN_ERROR_STATUS_CODE
+              ? 'You are not permitted to create new feature vector'
+              : tableStore.features.isNewFeatureVector
+              ? 'Feature vector creation failed'
+              : 'Failed to add features'
+
+          showErrorNotification(dispatch, error, '', customErrorMsg, () => addFeatures())
         })
 
       dispatch(setTablePanelOpen(false))

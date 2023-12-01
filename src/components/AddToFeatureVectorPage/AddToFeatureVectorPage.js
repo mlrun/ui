@@ -20,7 +20,6 @@ such restriction.
 import React, { useCallback, useEffect, useRef, useState, useMemo } from 'react'
 import { connect, useDispatch, useSelector } from 'react-redux'
 import { useNavigate, useParams } from 'react-router-dom'
-import axios from 'axios'
 
 import AddToFeatureVectorView from './AddToFeatureVectorView'
 import FeaturesTablePanel from '../../elements/FeaturesTablePanel/FeaturesTablePanel'
@@ -30,11 +29,11 @@ import {
   FEATURE_STORE_PAGE,
   GROUP_BY_NAME,
   GROUP_BY_NONE,
-  TAG_FILTER_ALL_ITEMS
+  TAG_FILTER_ALL_ITEMS,
+  REQUEST_CANCELED
 } from '../../constants'
 import featureStoreActions from '../../actions/featureStore'
 import { FORBIDDEN_ERROR_STATUS_CODE } from 'igz-controls/constants'
-import { cancelRequest } from '../../utils/cancelRequest'
 import { createFeaturesRowData } from '../../utils/createFeatureStoreContent'
 import { filters } from './addToFeatureVectorPage.util'
 import { getFeatureIdentifier } from '../../utils/getUniqueIdentifier'
@@ -43,6 +42,7 @@ import { parseFeatures } from '../../utils/parseFeatures'
 import { setFilters } from '../../reducers/filtersReducer'
 import { setNotification } from '../../reducers/notificationReducer'
 import { setTablePanelOpen } from '../../reducers/tableReducer'
+import { showErrorNotification } from '../../utils/notifications.util'
 import { useGetTagOptions } from '../../hooks/useGetTagOptions.hook'
 import { useGroupContent } from '../../hooks/groupContent.hook'
 import { useYaml } from '../../hooks/yaml.hook'
@@ -62,6 +62,7 @@ const AddToFeatureVectorPage = ({
   const [selectedRowData, setSelectedRowData] = useState({})
   const [convertedYaml, toggleConvertedYaml] = useYaml('')
   const addToFeatureVectorPageRef = useRef(null)
+  const abortControllerRef = useRef(new AbortController())
   const params = useParams()
   const navigate = useNavigate()
   const tableStore = useSelector(store => store.tableStore)
@@ -93,16 +94,13 @@ const AddToFeatureVectorPage = ({
           navigateToFeatureVectorsScreen()
         })
         .catch(error => {
-          dispatch(
-            setNotification({
-              status: error.response.status || 400,
-              id: Math.random(),
-              message:
-                error.response.status === FORBIDDEN_ERROR_STATUS_CODE
-                  ? 'You are not permitted to create new feature vector.'
-                  : 'Feature vector creation failed.',
-              retry: handleCreateFeatureVector
-            })
+          const customErrorMsg =
+            error.response?.status === FORBIDDEN_ERROR_STATUS_CODE
+              ? 'You are not permitted to create new feature vector'
+              : 'Feature vector creation failed'
+
+          showErrorNotification(dispatch, error, '', customErrorMsg, () =>
+            handleCreateFeatureVector(featureVector)
           )
 
           if (error.response.status === FORBIDDEN_ERROR_STATUS_CODE) {
@@ -140,10 +138,10 @@ const AddToFeatureVectorPage = ({
 
   const fetchData = useCallback(
     async filters => {
+      abortControllerRef.current = new AbortController()
+
       const config = {
-        cancelToken: new axios.CancelToken(cancel => {
-          addToFeatureVectorPageRef.current.cancel = cancel
-        })
+        signal: abortControllerRef.current.signal
       }
 
       fetchFeatures(filters.project, filters, config).then(result => {
@@ -248,7 +246,7 @@ const AddToFeatureVectorPage = ({
       removeFeature()
       removeFeatures()
       setSelectedRowData({})
-      cancelRequest(addToFeatureVectorPageRef, 'cancel')
+      abortControllerRef.current.abort(REQUEST_CANCELED)
     }
   }, [removeFeature, removeFeatures])
 
@@ -263,13 +261,7 @@ const AddToFeatureVectorPage = ({
   useEffect(() => {
     if (isEveryObjectValueEmpty(tableStore.features.featureVector)) {
       navigateToFeatureVectorsScreen()
-      dispatch(
-        setNotification({
-          status: 400,
-          id: Math.random(),
-          message: 'Please, create a feature vector first'
-        })
-      )
+      showErrorNotification(dispatch, {}, 'Please, create a feature vector first')
     } else {
       dispatch(setTablePanelOpen(true))
     }

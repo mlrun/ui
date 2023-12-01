@@ -31,22 +31,24 @@ import {
   FULL_VIEW_MODE,
   MODEL_TYPE
 } from '../../../constants'
-import { FORBIDDEN_ERROR_STATUS_CODE } from 'igz-controls/constants'
-import { applyTagChanges } from '../../../utils/artifacts.util'
-import { createModelsRowData, getIsTargetPathValid } from '../../../utils/createArtifactsContent'
-import { getArtifactIdentifier } from '../../../utils/getUniqueIdentifier'
-import { searchArtifactItem } from '../../../utils/searchArtifactItem'
 import {
   fetchModel,
   showArtifactsPreview,
   updateArtifact
 } from '../../../reducers/artifactsReducer'
+import { FORBIDDEN_ERROR_STATUS_CODE } from 'igz-controls/constants'
+import { applyTagChanges } from '../../../utils/artifacts.util'
 import { convertChipsData } from '../../../utils/convertChipsData'
-import { sortListByDate } from '../../../utils'
 import { copyToClipboard } from '../../../utils/copyToClipboard'
+import { createModelsRowData, getIsTargetPathValid } from '../../../utils/createArtifactsContent'
 import { generateUri } from '../../../utils/resources'
+import { getArtifactIdentifier } from '../../../utils/getUniqueIdentifier'
+import { getErrorMsg } from 'igz-controls/utils/common.util'
 import { handleDeleteArtifact } from '../../../utils/handleDeleteArtifact'
+import { searchArtifactItem } from '../../../utils/searchArtifactItem'
 import { setDownloadItem, setShowDownloadsList } from '../../../reducers/downloadReducer'
+import { showErrorNotification } from '../../../utils/notifications.util'
+import { sortListByDate } from '../../../utils'
 
 import { ReactComponent as TagIcon } from 'igz-controls/images/tag-icon.svg'
 import { ReactComponent as YamlIcon } from 'igz-controls/images/yaml.svg'
@@ -235,17 +237,13 @@ export const handleApplyDetailsChanges = (
         )
       })
       .catch(error => {
-        dispatch(
-          setNotification({
-            status: error.response?.status || 400,
-            id: Math.random(),
-            message:
-              error.response?.status === FORBIDDEN_ERROR_STATUS_CODE
-                ? 'Permission denied'
-                : 'Failed to update the model',
-            retry: () =>
-              dispatch(updateArtifact({ project: projectName, data: artifactItem })).unwrap()
-          })
+        const customErrorMsg =
+          error.response?.status === FORBIDDEN_ERROR_STATUS_CODE
+            ? 'Permission denied'
+            : getErrorMsg(error, 'Failed to update the model')
+
+        showErrorNotification(dispatch, error, '', customErrorMsg, () =>
+          handleApplyDetailsChanges(changes, projectName, selectedItem, setNotification, dispatch)
         )
       })
   }

@@ -29,6 +29,7 @@ import {
 } from '../constants'
 import { parseWorkflows } from '../utils/parseWorkflows'
 import { parseWorkflow } from '../components/Workflow/workflow.util'
+import { largeResponseCatchHandler } from '../utils/largeResponseCatchHandler'
 
 const workflowActions = {
   fetchWorkflow: (project, workflowId) => dispatch => {
@@ -58,15 +59,18 @@ const workflowActions = {
     type: FETCH_WORKFLOW_FAILURE,
     payload: error
   }),
-  fetchWorkflows: (project, filter, setLargeRequestErrorMessage) => dispatch => {
+  fetchWorkflows: (project, filter, config) => dispatch => {
     dispatch(workflowActions.fetchWorkflowsBegin())
 
     return workflowApi
-      .getWorkflows(project, filter, setLargeRequestErrorMessage)
+      .getWorkflows(project, filter, config)
       .then(response =>
         dispatch(workflowActions.fetchWorkflowsSuccess(parseWorkflows(response.data.runs)))
       )
-      .catch(error => dispatch(workflowActions.fetchWorkflowsFailure(error)))
+      .catch(error => {
+        dispatch(workflowActions.fetchWorkflowsFailure(error))
+        largeResponseCatchHandler(error, 'Failed to fetch workflows', dispatch)
+      })
   },
   fetchWorkflowsBegin: () => ({
     type: FETCH_WORKFLOWS_BEGIN

@@ -17,10 +17,15 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import { LARGE_REQUEST_CANCELED } from '../constants'
+import { DEFAULT_ABORT_MSG, LARGE_REQUEST_CANCELED, REQUEST_CANCELED } from '../constants'
+import { showErrorNotification } from './notifications.util'
 
-export const largeResponseCatchHandler = error => {
-  if (error.message !== LARGE_REQUEST_CANCELED) {
-    throw error
+export const largeResponseCatchHandler = (error, defaultError, dispatch) => {
+  if (
+    ![LARGE_REQUEST_CANCELED, REQUEST_CANCELED, DEFAULT_ABORT_MSG].includes(error.message) &&
+    error &&
+    dispatch
+  ) {
+    showErrorNotification(dispatch, error, defaultError)
   }
 }

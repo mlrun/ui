@@ -27,10 +27,11 @@ import { createForm } from 'final-form'
 import { Button, FormInput, Modal } from 'igz-controls/components'
 
 import { DATASET_TYPE, MODEL_TYPE } from '../../constants'
-import { setNotification } from '../../reducers/notificationReducer'
 import { SECONDARY_BUTTON, TERTIARY_BUTTON } from 'igz-controls/constants'
-import { getValidationRules } from 'igz-controls/utils/validation.util'
 import { addTag } from '../../reducers/artifactsReducer'
+import { getValidationRules } from 'igz-controls/utils/validation.util'
+import { setNotification } from '../../reducers/notificationReducer'
+import { showErrorNotification } from '../../utils/notifications.util'
 import { useModalBlockHistory } from '../../hooks/useModalBlockHistory.hook'
 
 const AddArtifactTagPopUp = ({
@@ -100,13 +101,8 @@ const AddArtifactTagPopUp = ({
         onAddTag && onAddTag(filtersStore)
       })
       .catch(error => {
-        dispatch(
-          setNotification({
-            status: 400,
-            id: Math.random(),
-            message: 'Failed to add a tag',
-            retry: addArtifactTag
-          })
+        showErrorNotification(dispatch, error, 'Failed to add a tag', '', () =>
+          addArtifactTag(values)
         )
       })
 

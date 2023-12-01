@@ -27,9 +27,6 @@ import ProjectSettingsSecrets from '../../elements/ProjectSettingsSecrets/Projec
 import Breadcrumbs from '../../common/Breadcrumbs/Breadcrumbs'
 import ContentMenu from '../../elements/ContentMenu/ContentMenu'
 
-import { setNotification } from '../../reducers/notificationReducer'
-import projectsIguazioApi from '../../api/projects-iguazio-api'
-import { PROJECTS_SETTINGS_MEMBERS_TAB, PROJECTS_SETTINGS_SECRETS_TAB } from '../../constants'
 import {
   COMPLETED_STATE,
   generateMembers,
@@ -38,12 +35,16 @@ import {
   tabs,
   validTabs
 } from './projectSettings.util'
-import { isProjectValid } from '../../utils/handleRedirect'
 import {
   initialMembersState,
   membersActions,
   membersReducer
 } from '../../elements/MembersPopUp/membersReducer'
+import projectsIguazioApi from '../../api/projects-iguazio-api'
+import { PROJECTS_SETTINGS_MEMBERS_TAB, PROJECTS_SETTINGS_SECRETS_TAB } from '../../constants'
+import { isProjectValid } from '../../utils/handleRedirect'
+import { setNotification } from '../../reducers/notificationReducer'
+import { showErrorNotification } from '../../utils/notifications.util'
 
 import './projectSettings.scss'
 
@@ -97,15 +98,7 @@ const ProjectSettings = ({ frontendSpec, projectStore }) => {
       return projectsIguazioApi
         .getProjectMembers(projectId)
         .then(membersResponse => generateMembers(membersResponse, membersDispatch))
-        .catch(() =>
-          dispatch(
-            setNotification({
-              status: 400,
-              id: Math.random(),
-              message: 'Failed to fetch data'
-            })
-          )
-        )
+        .catch(error => showErrorNotification(dispatch, error, 'Failed to fetch project members'))
     },
     [dispatch]
   )

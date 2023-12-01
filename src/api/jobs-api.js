@@ -74,23 +74,18 @@ const jobsApi = {
       `/projects/${project}/schedules/${postData.scheduled_object.task.metadata.name}`,
       postData
     ),
-  getJobs: (project, filters, setLargeRequestErrorMessage, isAllJobs) => {
-    const config = {
+  getJobs: (project, filters, config = {}) => {
+    const newConfig = {
+      ...config,
       params: {
+        'partition-by': 'name',
+        'partition-sort-by': 'updated',
         project,
         ...generateRequestParams(filters)
-      },
-      ui: {
-        setLargeRequestErrorMessage
       }
     }
 
-    if (!isAllJobs) {
-      config.params['partition-by'] = 'name'
-      config.params['partition-sort-by'] = 'updated'
-    }
-
-    return mainHttpClient.get('/runs', config)
+    return mainHttpClient.get('/runs', newConfig)
   },
   getSpecificJobs: (project, filters, jobList) => {
     const params = {
@@ -102,19 +97,17 @@ const jobsApi = {
 
     return mainHttpClient.get(`/runs?${jobListQuery}`, { params })
   },
-  getAllJobRuns: (project, jobName, filters, setLargeRequestErrorMessage) => {
-    const config = {
+  getAllJobRuns: (project, filters, config = {}, jobName) => {
+    const newConfig = {
+      ...config,
       params: {
         project,
         name: jobName,
         ...generateRequestParams(filters)
-      },
-      ui: {
-        setLargeRequestErrorMessage
       }
     }
 
-    return mainHttpClient.get('/runs', config)
+    return mainHttpClient.get('/runs', newConfig)
   },
   getJob: (project, jobId, iter) => {
     const params = {}
@@ -129,29 +122,27 @@ const jobsApi = {
     fetch(`${mainBaseUrl}/log/${project}/${id}`, {
       method: 'get'
     }),
-  getScheduledJobs: (project, filters, setLargeRequestErrorMessage) => {
-    const config = {
+  getScheduledJobs: (project, filters, config = {}) => {
+    const newConfig = {
+      ...config,
       params: {
         include_last_run: 'yes'
-      },
-      ui: {
-        setLargeRequestErrorMessage
       }
     }
 
     if (filters?.owner) {
-      config.params.owner = filters.owner
+      newConfig.params.owner = filters.owner
     }
 
     if (filters?.name) {
-      config.params.name = `~${filters.name}`
+      newConfig.params.name = `~${filters.name}`
     }
 
     if (filters?.labels) {
-      config.params.labels = filters.labels?.split(',')
+      newConfig.params.labels = filters.labels?.split(',')
     }
 
-    return mainHttpClient.get(`/projects/${project}/schedules`, config)
+    return mainHttpClient.get(`/projects/${project}/schedules`, newConfig)
   },
   removeScheduledJob: (project, scheduleName) =>
     mainHttpClient.delete(`/projects/${project}/schedules/${scheduleName}`),

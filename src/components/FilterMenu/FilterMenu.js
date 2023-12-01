@@ -45,6 +45,7 @@ import {
   NAME_FILTER,
   PERIOD_FILTER,
   PROJECT_FILTER,
+  REQUEST_CANCELED,
   SHOW_ITERATIONS,
   SHOW_UNTAGGED_FILTER,
   SHOW_UNTAGGED_ITEMS,
@@ -142,7 +143,7 @@ const FilterMenu = ({
 
   const applyChanges = (data, isRefreshed) => {
     if (isRefreshed && changes.counter > 0) {
-      cancelRequest('cancel')
+      cancelRequest(REQUEST_CANCELED)
     } else {
       if ((params.jobId || params.name) && !isRefreshed) {
         navigate(

@@ -20,16 +20,28 @@ such restriction.
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate, useParams } from 'react-router-dom'
+import classnames from 'classnames'
 
-import RealTimePipelinesView from './RealTimePipelinesView'
+import FilterMenu from '../../FilterMenu/FilterMenu'
+import FunctionsTableRow from '../../../elements/FunctionsTableRow/FunctionsTableRow'
+import Loader from '../../../common/Loader/Loader'
+import ModelsPageTabs from '../ModelsPageTabs/ModelsPageTabs'
+import NoData from '../../../common/NoData/NoData'
+import Pipeline from '../../Pipeline/Pipeline'
+import Table from '../../Table/Table'
+import { getNoDataMessage } from '../../../utils/getNoDataMessage'
 
-import { GROUP_BY_NAME, MODELS_PAGE, REAL_TIME_PIPELINES_TAB } from '../../../constants'
-import { fetchArtifactsFunctions, removePipelines } from '../../../reducers/artifactsReducer'
 import createFunctionsContent from '../../../utils/createFunctionsContent'
-import { cancelRequest } from '../../../utils/cancelRequest'
-import { generatePageData } from './realTimePipelines.util'
-import { largeResponseCatchHandler } from '../../../utils/largeResponseCatchHandler'
+import {
+  GROUP_BY_NAME,
+  MODELS_PAGE,
+  REAL_TIME_PIPELINES_TAB,
+  REQUEST_CANCELED
+} from '../../../constants'
+import { fetchArtifactsFunctions, removePipelines } from '../../../reducers/artifactsReducer'
+import { filters, generatePageData } from './realTimePipelines.util'
 import { getFunctionIdentifier } from '../../../utils/getUniqueIdentifier'
+import { largeResponseCatchHandler } from '../../../utils/largeResponseCatchHandler'
 import { setFilters } from '../../../reducers/filtersReducer'
 import { useGroupContent } from '../../../hooks/groupContent.hook'
 import { useModelsPage } from '../ModelsPage.context'
@@ -46,8 +58,14 @@ const RealTimePipelines = () => {
   const navigate = useNavigate()
   const dispatch = useDispatch()
   const pipelinesRef = useRef(null)
+  const abortControllerRef = useRef(new AbortController())
   const pageData = useMemo(() => generatePageData(params.pipelineId), [params.pipelineId])
   const { toggleConvertedYaml } = useModelsPage()
+
+  const filterMenuClassNames = classnames(
+    'content__action-bar-wrapper',
+    params.pipelineId && 'content__action-bar-wrapper_hidden'
+  )
 
   const actionsMenu = useMemo(
     () => [
@@ -64,11 +82,18 @@ const RealTimePipelines = () => {
 
   const fetchData = useCallback(
     filters => {
+      abortControllerRef.current = new AbortController()
+
       dispatch(
         fetchArtifactsFunctions({
           project: params.projectName,
           filters,
-          setLargeRequestErrorMessage
+          config: {
+            ui: {
+              controller: abortControllerRef.current,
+              setLargeRequestErrorMessage
+            }
+          }
         })
       )
         .unwrap()
@@ -80,7 +105,9 @@ const RealTimePipelines = () => {
             )
           )
         })
-        .catch(largeResponseCatchHandler)
+        .catch(error =>
+          largeResponseCatchHandler(error, 'Failed to fetch real-time pipelines', dispatch)
+        )
     },
     [dispatch, params.projectName]
   )
@@ -99,6 +126,16 @@ const RealTimePipelines = () => {
       })
     },
     [params.projectName]
+  )
+
+  const handleRefresh = useCallback(
+    filters => {
+      setPipelines([])
+      setSelectedRowData({})
+
+      return fetchData(filters)
+    },
+    [fetchData]
   )
 
   const handleCollapse = useCallback(
@@ -152,7 +189,7 @@ const RealTimePipelines = () => {
     return () => {
       setPipelines([])
       dispatch(removePipelines())
-      cancelRequest(pipelinesRef, 'cancel')
+      abortControllerRef.current.abort(REQUEST_CANCELED)
     }
   }, [dispatch])
 
@@ -167,21 +204,67 @@ const RealTimePipelines = () => {
   }, [navigate, params.pipelineId, params.projectName, pipelines])
 
   return (
-    <RealTimePipelinesView
-      actionsMenu={actionsMenu}
-      artifactsStore={artifactsStore}
-      expand={expand}
-      fetchData={fetchData}
-      filtersStore={filtersStore}
-      handleExpandAll={handleExpandAll}
-      handleExpandRow={handleExpandRow}
-      largeRequestErrorMessage={largeRequestErrorMessage}
-      pageData={pageData}
-      params={params}
-      pipelines={pipelines}
-      selectedRowData={selectedRowData}
-      tableContent={tableContent}
-    />
+    <>
+      {artifactsStore.loading && <Loader />}
+      <div className="models" ref={pipelinesRef}>
+        <div className="table-container">
+          <div className={filterMenuClassNames}>
+            <ModelsPageTabs />
+            <div className="action-bar">
+              <FilterMenu
+                expand={expand}
+                filters={filters}
+                handleExpandAll={handleExpandAll}
+                hidden={Boolean(params.pipelineId)}
+                onChange={handleRefresh}
+                page={MODELS_PAGE}
+                tab={REAL_TIME_PIPELINES_TAB}
+              />
+            </div>
+          </div>
+          {artifactsStore.loading ? null : pipelines.length === 0 ? (
+            <NoData
+              message={getNoDataMessage(
+                filtersStore,
+                filters,
+                largeRequestErrorMessage,
+                MODELS_PAGE,
+                REAL_TIME_PIPELINES_TAB
+              )}
+            />
+          ) : params.pipelineId ? (
+            <Pipeline content={pipelines} />
+          ) : (
+            <>
+              <Table
+                actionsMenu={actionsMenu}
+                content={pipelines}
+                pageData={pageData}
+                retryRequest={fetchData}
+                selectedItem={{}}
+                tab={REAL_TIME_PIPELINES_TAB}
+                tableHeaders={tableContent[0]?.content ?? []}
+              >
+                {tableContent.map((tableItem, index) => {
+                  return (
+                    <FunctionsTableRow
+                      actionsMenu={actionsMenu}
+                      handleExpandRow={handleExpandRow}
+                      handleSelectItem={() => {}}
+                      rowIndex={index}
+                      key={index}
+                      rowItem={tableItem}
+                      selectedItem={{}}
+                      selectedRowData={selectedRowData}
+                    />
+                  )
+                })}
+              </Table>
+            </>
+          )}
+        </div>
+      </div>
+    </>
   )
 }
 

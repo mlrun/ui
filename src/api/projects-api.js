@@ -41,31 +41,31 @@ const projectsApi = {
   getProject: project => mainHttpClient.get(`/projects/${project}`),
   getProjectDataSets: project =>
     mainHttpClient.get(`/projects/${project}/artifacts?category=dataset`),
-  getProjectFailedJobs: (project, cancelToken) =>
+  getProjectFailedJobs: (project, signal) =>
     mainHttpClient.get(
       `/runs?project=${project}&state=error&start_time_from=${new Date(
         Date.now() - 24 * 60 * 60 * 1000
       ).toISOString()}`,
       {
-        cancelToken: cancelToken
+        signal: signal
       }
     ),
-  getProjectFeatureSets: (project, cancelToken) =>
+  getProjectFeatureSets: (project, signal) =>
     mainHttpClient.get(`/projects/${project}/feature-sets`, {
-      cancelToken: cancelToken
+      signal: signal
     }),
   getProjectFiles: project => mainHttpClient.get(`/projects/${project}/artifacts?category=other`),
-  getProjectFunctions: (project, cancelToken) =>
+  getProjectFunctions: (project, signal) =>
     mainHttpClient.get(`/projects/${project}/functions`, {
-      cancelToken: cancelToken
+      signal: signal
     }),
-  getProjectModels: (project, cancelToken) =>
+  getProjectModels: (project, signal) =>
     mainHttpClient.get(`/projects/${project}/artifacts?category=model`, {
-      cancelToken: cancelToken
+      signal: signal
     }),
-  getProjectRunningJobs: (project, cancelToken) =>
+  getProjectRunningJobs: (project, signal) =>
     mainHttpClient.get(`/runs?project=${project}&state=running`, {
-      cancelToken: cancelToken
+      signal: signal
     }),
   getProjectScheduledJobs: project => mainHttpClient.get(`/projects/${project}/schedules`),
   getProjectSecrets: project =>
@@ -74,9 +74,9 @@ const projectsApi = {
     mainHttpClient.get('/projects', {
       params
     }),
-  getProjectSummaries: cancelToken =>
+  getProjectSummaries: signal =>
     mainHttpClient.get('/project-summaries', {
-      cancelToken
+      signal
     }),
   getProjectSummary: project => {
     return mainHttpClient.get(`/project-summaries/${project}`)
