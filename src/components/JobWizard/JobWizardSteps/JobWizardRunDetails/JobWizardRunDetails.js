@@ -154,7 +154,6 @@ const JobWizardRunDetails = ({
         {!isBatchInference && (
           <div className="form-row">
             <FormCheckBox
-              id={`${RUN_DETAILS_STEP}-hyperparameter`}
               label="Hyperparameter"
               name={`${RUN_DETAILS_STEP}.hyperparameter`}
             />
@@ -163,7 +162,6 @@ const JobWizardRunDetails = ({
         <div className="form-row">
           <div className="form-col-2">
             <FormInput
-              id={`${RUN_DETAILS_STEP}-runName`}
               label="Run name"
               name={`${RUN_DETAILS_STEP}.runName`}
               disabled={isEditMode}
@@ -174,7 +172,6 @@ const JobWizardRunDetails = ({
           {jobAdditionalData.versionOptions?.length !== 0 && (
             <div className="form-col-1">
               <FormSelect
-                id={`${RUN_DETAILS_STEP}-version`}
                 name={`${RUN_DETAILS_STEP}.version`}
                 label="Version"
                 disabled={
@@ -189,7 +186,6 @@ const JobWizardRunDetails = ({
             jobAdditionalData.handlerOptions?.length !== 0 ? (
               <div className="form-col-1">
                 <FormSelect
-                  id={`${RUN_DETAILS_STEP}-handler`}
                   label="Handler"
                   name={handlerPath}
                   options={jobAdditionalData.handlerOptions || []}
@@ -199,7 +195,6 @@ const JobWizardRunDetails = ({
             ) : (
               <div className="form-col-1">
                 <FormInput
-                  id={`${RUN_DETAILS_STEP}-handler`}
                   label="Handler"
                   name={handlerPath}
                   disabled={isEditMode}
@@ -237,7 +232,6 @@ const JobWizardRunDetails = ({
         {selectedImageSource === EXISTING_IMAGE_SOURCE ? (
           <>
             <FormInput
-              id={`${RUN_DETAILS_STEP}-image-name`}
               name={`${RUN_DETAILS_STEP}.image.imageName`}
               label="Image name"
               required
@@ -251,7 +245,6 @@ const JobWizardRunDetails = ({
           <>
             <div className="form-row">
               <FormInput
-                id={`${RUN_DETAILS_STEP}result-image`}
                 name={`${RUN_DETAILS_STEP}.image.resultingImage`}
                 label="Resulting image"
                 required
@@ -260,7 +253,6 @@ const JobWizardRunDetails = ({
             </div>
             <div className="form-row">
               <FormInput
-                id={`${RUN_DETAILS_STEP}-base-image`}
                 name={`${RUN_DETAILS_STEP}.image.baseImage"`}
                 label="Base image"
                 required
@@ -270,14 +262,12 @@ const JobWizardRunDetails = ({
             <div className="form-row">
               <div className="form-col-1">
                 <FormTextarea
-                  id={`${RUN_DETAILS_STEP}-build-commands`}
                   name={`${RUN_DETAILS_STEP}.image.buildCommands`}
                   label="Build commands"
                 />
               </div>
               <div className="form-col-1">
                 <FormTextarea
-                  id={`${RUN_DETAILS_STEP}-python-req`}
                   name={`${RUN_DETAILS_STEP}.image.pythonRequirement`}
                   label="Python requirement"
                 />

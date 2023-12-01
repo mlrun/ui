@@ -57,7 +57,6 @@ const JobWizardAdvanced = ({ formState, stepIsActive }) => {
               exitEditModeTriggerItem={stepIsActive}
               fieldsPath={`${ADVANCED_STEP}.secretSourcesTable`}
               formState={formState}
-              id="add-secret-table"
               keyHeader="Kind"
               keyLabel="Kind"
               keyOptions={secretsKindOptions}
@@ -67,19 +66,19 @@ const JobWizardAdvanced = ({ formState, stepIsActive }) => {
       )}
       <div className="form-row">
         <div className="form-col-1">
-          <FormInput id={`${ADVANCED_STEP}-input-path`} name={`${ADVANCED_STEP}.inputPath`} label="Default input path" />
+          <FormInput name={`${ADVANCED_STEP}.inputPath`} label="Default input path" />
         </div>
         <div className="form-col-1">
-          <FormInput id={`${ADVANCED_STEP}-output-path`} name={`${ADVANCED_STEP}.outputPath`} label="Default artifact path" required />
+          <FormInput name={`${ADVANCED_STEP}.outputPath`} label="Default artifact path" required />
         </div>
       </div>
       <div className="form-row align-stretch">
         <div className="access-key-checkbox">
-          <FormCheckBox id={`${ADVANCED_STEP}-access-key`} label="Auto-generate access key" name={`${ADVANCED_STEP}.accessKey`} />
+          <FormCheckBox label="Auto-generate access key" name={`${ADVANCED_STEP}.accessKey`} />
         </div>
         {!formState.values?.[ADVANCED_STEP]?.accessKey && (
           <div className="form-col-1">
-            <FormInput id={`${ADVANCED_STEP}-access-key`} name={`${ADVANCED_STEP}.accessKeyInput`} label="Access key" required />
+            <FormInput name={`${ADVANCED_STEP}.accessKeyInput`} label="Access key" required />
           </div>
         )}
       </div>

@@ -75,7 +75,6 @@ const FormEnvironmentVariablesRow = ({
           <div className="form-table__cell form-table__cell_2">
             <FormInput
               density="normal"
-              id={`${rowPath}-data-key`}
               name={`${rowPath}.data.key`}
               placeholder="Name"
               required
@@ -91,7 +90,6 @@ const FormEnvironmentVariablesRow = ({
           <div className="form-table__cell form-table__cell_1">
             <FormSelect
               density="normal"
-              id={`${rowPath}-data-type`}
               name={`${rowPath}.data.type`}
               options={environmentVariablesTypeOptions}
               required
@@ -101,7 +99,6 @@ const FormEnvironmentVariablesRow = ({
             {fieldData.data.type === 'value' && (
               <FormInput
                 density="normal"
-                id={`${rowPath}-data-value`}
                 name={`${rowPath}.data.value`}
                 placeholder="Value"
                 required
@@ -112,7 +109,6 @@ const FormEnvironmentVariablesRow = ({
                 <FormInput
                   className="secret-name"
                   density="normal"
-                  id={`${rowPath}-data-secret-name`}
                   name={`${rowPath}.data.secretName`}
                   placeholder="Secret Name"
                   required
@@ -120,7 +116,6 @@ const FormEnvironmentVariablesRow = ({
                 />
                 <FormInput
                   density="normal"
-                  id={`${rowPath}-data-secret-key`}
                   name={`${rowPath}.data.secretKey`}
                   placeholder="Secret Key"
                   required

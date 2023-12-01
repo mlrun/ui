@@ -34,7 +34,6 @@ const FormEnvironmentVariablesTable = ({
   exitEditModeTriggerItem,
   fieldsPath,
   formState,
-  id
 }) => {
   const tableClassNames = classnames('form-table', className)
   const {
@@ -55,7 +54,7 @@ const FormEnvironmentVariablesTable = ({
   }
 
   return (
-    <div className={tableClassNames} data-testid={id}>
+    <div className={tableClassNames} data-testid={fieldsPath}>
       <div className="form-table__row form-table__header-row no-hover">
         <div className="form-table__cell form-table__cell_2">
           <Tooltip template={<TextTooltipTemplate text="Name" />}>Name</Tooltip>
@@ -95,7 +94,6 @@ const FormEnvironmentVariablesTable = ({
               <FormActionButton
                 disabled={disabled}
                 hidden={editingItem?.ui?.isNew}
-                id="add-environment-variable"
                 ref={bottomScrollRef}
                 fields={fields}
                 fieldsPath={fieldsPath}
@@ -130,7 +128,6 @@ FormEnvironmentVariablesTable.propTypes = {
   exitEditModeTriggerItem: PropTypes.any,
   fieldsPath: PropTypes.string.isRequired,
   formState: PropTypes.shape({}).isRequired,
-  id: PropTypes.string,
 }
 
 export default FormEnvironmentVariablesTable

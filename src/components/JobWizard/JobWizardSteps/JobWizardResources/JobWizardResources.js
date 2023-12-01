@@ -47,7 +47,6 @@ const JobWizardResources = ({ formState, frontendSpec, stepIsActive }) => {
         {validFunctionPriorityClassNames.length > 0 && (
           <div className="form-col-auto resources__select">
             <FormSelect
-              id={`${RESOURCES_STEP}-jobPriorityClassName`}
               label="Pods priority"
               name={`${RESOURCES_STEP}.jobPriorityClassName`}
               options={validFunctionPriorityClassNames}
@@ -57,7 +56,6 @@ const JobWizardResources = ({ formState, frontendSpec, stepIsActive }) => {
         {frontendSpec.feature_flags?.preemption_nodes === 'enabled' && (
           <div className="form-col-auto resources__select">
             <FormSelect
-              id={`${RESOURCES_STEP}-preemptionMode`}
               label="Spot Instances"
               name={`${RESOURCES_STEP}.preemptionMode`}
               options={volumePreemptionModeOptions}
@@ -73,7 +71,6 @@ const JobWizardResources = ({ formState, frontendSpec, stepIsActive }) => {
           exitEditModeTriggerItem={stepIsActive}
           fieldsPath={`${RESOURCES_STEP}.nodeSelectorTable`}
           formState={formState}
-          id="add-node-selector-form-table"
           keyHeader="Key"
           keyLabel="Key"
         />

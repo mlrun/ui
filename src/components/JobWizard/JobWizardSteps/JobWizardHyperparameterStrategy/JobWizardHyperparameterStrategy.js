@@ -44,11 +44,10 @@ const JobWizardHyperparameterStrategy = ({ formState }) => {
       </div>
       <div className="grid-container">
         <div className="strategy-grid-item">
-          <FormSelect id="hyperparams-stategy" label="Strategy" name={strategiesPath} options={selectOptions.strategies} />
+          <FormSelect label="Strategy" name={strategiesPath} options={selectOptions.strategies} />
         </div>
         <div className="max-iterations-grid-item">
           <FormInput
-            id="hyperparams-stategy-max-iter"
             label="Max iterations"
             name={maxIterationsPath}
             type="number"
@@ -58,7 +57,6 @@ const JobWizardHyperparameterStrategy = ({ formState }) => {
         </div>
         <div className="max-errors-grid-item">
           <FormInput
-            id="hyperparams-stategy-max-errors"
             label="Max errors"
             name={maxErrorsPath}
             type="number"
@@ -68,24 +66,24 @@ const JobWizardHyperparameterStrategy = ({ formState }) => {
         </div>
         <div className="form-table-title ranking-title-grid-item">Ranking</div>
         <div className="result-grid-item">
-          <FormInput id="hyperparams-ranking-result" label="Result" name={resultPath} />
+          <FormInput label="Result" name={resultPath} />
         </div>
         <div className="criteria-grid-item">
-          <FormSelect id="hyperparams-ranking-criteria" label="Criteria" name={criteriaPath} options={selectOptions.criteria} />
+          <FormSelect label="Criteria" name={criteriaPath} options={selectOptions.criteria} />
         </div>
         <div className="form-table-title stop-condition-title-grid-item">Stop condition</div>
         <div className="stop-condition-grid-item">
-          <FormInput id="hyperparams-stop-condition" label="Stop condition" name={stopConditionPath} />
+          <FormInput label="Stop condition" name={stopConditionPath} />
         </div>
         <div className="form-table-title parallelism-title-grid-item">Parallelism</div>
         <div className="parallel-runs-grid-item">
-          <FormInput id="hyperparams-parallel-runs" label="Parallel runs" name={parallelRuns} type="number" min="0" />
+          <FormInput label="Parallel runs" name={parallelRuns} type="number" min="0" />
         </div>
         <div className="dask-cluster-uri-grid-item">
-          <FormInput id="hyperparams-dask-url" label="Dask clutter URL" name={dashClusterUriPath} />
+          <FormInput label="Dask clutter URL" name={dashClusterUriPath} />
         </div>
         <div className="teardown-dask-grid-item">
-          <FormCheckBox id="hyperparams-teardown" label="Teardown" name={teardownDask} />
+          <FormCheckBox label="Teardown" name={teardownDask} />
         </div>
       </div>
     </div>

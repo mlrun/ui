@@ -52,15 +52,13 @@ const JobWizardParameters = ({ formState, stepIsActive }) => {
       </div>
       {hyperParametersAreEnabled && (
         <div className="form-row">
-          <FormRadio id={`${parametersFromPath}-${PARAMETERS_FROM_UI_VALUE}`} name={parametersFromPath} value={PARAMETERS_FROM_UI_VALUE} label="From UI" />
+          <FormRadio name={parametersFromPath} value={PARAMETERS_FROM_UI_VALUE} label="From UI" />
           <FormRadio
-            id={`${parametersFromPath}-${PARAMETERS_FROM_FILE_VALUE}`}
             name={parametersFromPath}
             value={PARAMETERS_FROM_FILE_VALUE}
             label="From file"
           />
           <FormInput
-            id={parametersFromFileUrlPath}
             name={parametersFromFileUrlPath}
             placeholder="URL for a JSON or CSV file"
             disabled={selectedFromValue !== PARAMETERS_FROM_FILE_VALUE}
@@ -71,7 +69,6 @@ const JobWizardParameters = ({ formState, stepIsActive }) => {
         exitEditModeTriggerItem={stepIsActive}
         fieldsPath={`${PARAMETERS_STEP}.parametersTable`}
         formState={formState}
-        id={hyperParametersAreEnabled ? 'hyper-parameters-form-table' : 'parameters-form-table'}
         parametersFromPath={parametersFromPath}
         rowCanBeAdded={formState.values.runDetails.handlerData?.has_kwargs}
         withHyperparameters={
