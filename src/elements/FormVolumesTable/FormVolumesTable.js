@@ -118,7 +118,7 @@ FormVolumesTable.propTypes = {
   disabled: PropTypes.bool,
   exitEditModeTriggerItem: PropTypes.any,
   fieldsPath: PropTypes.string.isRequired,
-  formState: PropTypes.shape({}).isRequired,
+  formState: PropTypes.shape({}).isRequired
 }
 
 export default FormVolumesTable

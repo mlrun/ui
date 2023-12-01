@@ -33,7 +33,7 @@ const FormEnvironmentVariablesTable = ({
   disabled,
   exitEditModeTriggerItem,
   fieldsPath,
-  formState,
+  formState
 }) => {
   const tableClassNames = classnames('form-table', className)
   const {
@@ -127,7 +127,7 @@ FormEnvironmentVariablesTable.propTypes = {
   disabled: PropTypes.bool,
   exitEditModeTriggerItem: PropTypes.any,
   fieldsPath: PropTypes.string.isRequired,
-  formState: PropTypes.shape({}).isRequired,
+  formState: PropTypes.shape({}).isRequired
 }
 
 export default FormEnvironmentVariablesTable
