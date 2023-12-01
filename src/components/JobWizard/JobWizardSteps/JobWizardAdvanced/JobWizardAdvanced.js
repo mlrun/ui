@@ -51,7 +51,6 @@ const JobWizardAdvanced = ({ formState, stepIsActive }) => {
           <div className="form-row form-table-title">Secrets</div>
           <div className="form-row">
             <FormKeyValueTable
-              actionButtonId="add-secret"
               addNewItemLabel="Add secret"
               defaultKey="file"
               exitEditModeTriggerItem={stepIsActive}
