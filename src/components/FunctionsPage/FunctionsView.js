@@ -55,6 +55,7 @@ const FunctionsView = ({
   handleExpandAll,
   handleExpandRow,
   handleSelectFunction,
+  isDemoMode,
   largeRequestErrorMessage,
   pageData,
   refreshFunctions,
@@ -78,6 +79,7 @@ const FunctionsView = ({
                 <FilterMenu
                   actionButton={{
                     getCustomTemplate: getPopUpTemplate,
+                    hidden: !isDemoMode,
                     label: 'New',
                     variant: SECONDARY_BUTTON
                   }}

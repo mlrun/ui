@@ -36,6 +36,7 @@ import { areNuclioStreamsEnabled } from '../../utils/helper'
 import { generateCreateNewOptions, handleFetchProjectError } from './project.utils'
 import { openPopUp } from 'igz-controls/utils/common.util'
 import { setNotification } from '../../reducers/notificationReducer'
+import { useMode } from '../../hooks/mode.hook'
 import { useNuclioMode } from '../../hooks/nuclioMode.hook'
 
 const ProjectMonitor = ({
@@ -62,6 +63,7 @@ const ProjectMonitor = ({
   const [confirmData, setConfirmData] = useState(null)
   const navigate = useNavigate()
   const params = useParams()
+   const {isDemoMode } = useMode()
   const dispatch = useDispatch()
   const { isNuclioModeDisabled } = useNuclioMode()
 
@@ -104,13 +106,14 @@ const ProjectMonitor = ({
       openRegisterArtifactModal,
       openRegisterModelModal,
       setCreateFeatureSetPanelIsOpen,
-      setIsNewFunctionPopUpOpen
+      setIsNewFunctionPopUpOpen,
+      isDemoMode
     )
 
     return {
       createNewOptions
     }
-  }, [navigate, params, openRegisterArtifactModal, openRegisterModelModal])
+  }, [isDemoMode, navigate, params, openRegisterArtifactModal, openRegisterModelModal])
 
   const fetchProjectData = useCallback(() => {
     fetchProject(params.projectName).catch(error => {

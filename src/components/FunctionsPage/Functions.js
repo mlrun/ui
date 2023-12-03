@@ -84,7 +84,7 @@ const Functions = ({
   const [selectedRowData, setSelectedRowData] = useState({})
   const [largeRequestErrorMessage, setLargeRequestErrorMessage] = useState('')
   let fetchFunctionLogsTimeout = useRef(null)
-  const { isStagingMode } = useMode()
+  const {isDemoMode, isStagingMode } = useMode()
   const params = useParams()
   const navigate = useNavigate()
   const location = useLocation()
@@ -285,7 +285,7 @@ const Functions = ({
               setEditableItem(func)
             },
             hidden:
-              !getFunctionsEditableTypes(isStagingMode).includes(func?.type) ||
+             !isDemoMode || !getFunctionsEditableTypes(isStagingMode).includes(func?.type) ||
               !FUNCTIONS_EDITABLE_STATES.includes(func?.state?.value)
           },
           {
@@ -301,7 +301,7 @@ const Functions = ({
           }
         ]
       ],
-    [dispatch, isStagingMode, onRemoveFunction, toggleConvertedYaml]
+    [dispatch, isDemoMode,isStagingMode, onRemoveFunction, toggleConvertedYaml]
   )
 
   useEffect(() => {
@@ -502,6 +502,7 @@ const Functions = ({
       handleExpandAll={handleExpandAll}
       handleExpandRow={handleExpandRow}
       handleSelectFunction={handleSelectFunction}
+      isDemoMode={isDemoMode}
       largeRequestErrorMessage={largeRequestErrorMessage}
       pageData={pageData}
       refreshFunctions={refreshFunctions}

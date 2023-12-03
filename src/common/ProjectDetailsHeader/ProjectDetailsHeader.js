@@ -55,8 +55,8 @@ const ProjectDetailsHeader = ({ projectData, projectName }) => {
             <li>
               <span className="project-details__details-label">Status:</span>
               <div>
-                <i className={`state-${projectData.status.state}`} />
                 <span>{projectData.status.state}</span>
+                <i className={`state-${projectData.status.state}`} />
               </div>
             </li>
             <li>
