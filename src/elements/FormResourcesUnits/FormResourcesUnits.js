@@ -119,7 +119,7 @@ const FormResourcesUnits = ({ formState, onChangeEnabled }) => {
 
   return (
     <>
-      <div className="form-row resources-units">
+      <div className="form-row resources-units" data-testid="form-resources-units-tbl">
         <div className="form-col-1">
           <div className="resources-card">
             <div className="resources-card__title">Memory</div>

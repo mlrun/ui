@@ -17,6 +17,21 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-export const cancelRequest = (ref, message) => {
-  ref.current?.cancel && ref.current.cancel(message)
+
+import { setNotification } from '../reducers/notificationReducer'
+import { getErrorMsg } from 'igz-controls/utils/common.util'
+
+export const showErrorNotification = (dispatch, error, defaultErrorMsg, customErrorMsg, retryCallback) => {
+  const notificationData = {
+    status: error?.response?.status || 400,
+    id: Math.random(),
+    message: customErrorMsg || getErrorMsg(error, defaultErrorMsg),
+    error
+  }
+
+  if (retryCallback) {
+    notificationData.retry = retryCallback
+  }
+
+  dispatch(setNotification(notificationData))
 }

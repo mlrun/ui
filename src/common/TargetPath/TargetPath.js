@@ -180,7 +180,7 @@ const TargetPath = ({
         dataInputState.storePathType === 'feature-vectors' &&
         dataInputState.featureVectors.length === 0
       ) {
-        dispatch(featureStoreActions.fetchFeatureVectors(dataInputState.project)).then(
+        dispatch(featureStoreActions.fetchFeatureVectors(dataInputState.project, {}, {}, true)).then(
           featureVectors => {
             const featureVectorsList = uniqBy(featureVectors, 'metadata.name')
               .map(featureVector => ({

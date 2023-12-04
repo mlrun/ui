@@ -18,6 +18,7 @@ under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
 import { setNotification } from '../reducers/notificationReducer'
+import { showErrorNotification } from './notifications.util'
 
 export const copyToClipboard = (textToCopy, dispatch) => {
   navigator.clipboard
@@ -31,14 +32,7 @@ export const copyToClipboard = (textToCopy, dispatch) => {
         })
       )
     })
-    .catch(err => {
-      dispatch(
-        setNotification({
-          error: err,
-          status: 400,
-          id: Math.random(),
-          message: 'Copy to clipboard failed'
-        })
-      )
+    .catch(error => {
+      showErrorNotification(dispatch, error, '', 'Copy to clipboard failed')
     })
 }

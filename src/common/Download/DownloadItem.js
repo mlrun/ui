@@ -25,8 +25,9 @@ import { useParams } from 'react-router-dom'
 
 import { RoundedIcon, Tooltip, TextTooltipTemplate } from 'igz-controls/components'
 
-import { mainHttpClient } from '../../httpClient'
 import downloadFile from '../../utils/downloadFile'
+import { REQUEST_CANCELED } from '../../constants'
+import { mainHttpClient } from '../../httpClient'
 import { removeDownloadItem } from '../../reducers/downloadReducer'
 
 import { ReactComponent as Close } from 'igz-controls/images/close.svg'
@@ -39,8 +40,7 @@ const DownloadItem = ({ downloadItem }) => {
   const [isDownload, setDownload] = useState(true)
   const [isSuccessResponse, setIsSuccessResponse] = useState(null)
   const params = useParams()
-
-  const downloadRef = useRef(null)
+  const downloadAbortControllerRef = useRef(null)
   const timeoutRef = useRef(null)
   const dispatch = useDispatch()
 
@@ -54,16 +54,14 @@ const DownloadItem = ({ downloadItem }) => {
 
   const downloadCallback = useCallback(() => {
     if (isDownload) {
+      downloadAbortControllerRef.current = new AbortController()
+
       const config = {
         onDownloadProgress: progressEvent => {
           const percentCompleted = (progressEvent.loaded * 100) / progressEvent.total
           setProgress(percentCompleted)
         },
-        cancelToken: new axios.CancelToken(cancel => {
-          if (downloadRef.current) {
-            downloadRef.current.cancel = cancel
-          }
-        }),
+        signal: downloadAbortControllerRef.current.signal,
         params: { path: downloadItem.path },
         responseType: 'arraybuffer'
       }
@@ -76,7 +74,7 @@ const DownloadItem = ({ downloadItem }) => {
         .get(`projects/${params.projectName}/files`, config)
         .then(response => {
           downloadFile(file, response)
-          if (downloadRef.current) {
+          if (downloadAbortControllerRef.current) {
             setDownload(false)
             setIsSuccessResponse(true)
           }
@@ -87,14 +85,14 @@ const DownloadItem = ({ downloadItem }) => {
             return setProgress(0)
           }
 
-          if (downloadRef.current) {
+          if (downloadAbortControllerRef.current) {
             setDownload(false)
             setProgress(0)
           }
         })
         .finally(() => {
-          if (downloadRef.current) {
-            downloadRef.current.cancel = null
+          if (downloadAbortControllerRef.current) {
+            downloadAbortControllerRef.current = null
           }
 
           timeoutRef.current = setTimeout(() => {
@@ -113,20 +111,20 @@ const DownloadItem = ({ downloadItem }) => {
   ])
 
   useEffect(() => {
-    let cancelFetch = downloadRef.current
+    let cancelFetch = downloadAbortControllerRef.current
 
     setTimeout(() => {
       downloadCallback()
     }, 1000)
 
     return () => {
-      cancelFetch.cancel && cancelFetch.cancel()
+      cancelFetch && cancelFetch.abort(REQUEST_CANCELED)
     }
-  }, [downloadCallback, downloadRef])
+  }, [downloadCallback, downloadAbortControllerRef])
 
   const handleCancel = () => {
-    if (downloadRef.current?.cancel) {
-      return downloadRef.current.cancel('cancel')
+    if (downloadAbortControllerRef.current) {
+      return downloadAbortControllerRef.current.abort(REQUEST_CANCELED)
     }
 
     setDownload(!isDownload)
@@ -141,7 +139,7 @@ const DownloadItem = ({ downloadItem }) => {
   }
 
   return (
-    <div className="download-item" data-testid="download-item" ref={downloadRef}>
+    <div className="download-item" data-testid="download-item">
       <Tooltip className="download-item__filename" template={<TextTooltipTemplate text={file} />}>
         {file}
       </Tooltip>

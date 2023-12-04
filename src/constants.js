@@ -47,14 +47,17 @@ export const DENSITY_NORMAL = 'normal'
 export const DENSITY_MEDIUM = 'medium'
 export const DENSITY_CHUNKY = 'chunky'
 
-export const NAVBAR_WIDTH_CLOSED = 57
-export const NAVBAR_WIDTH_OPENED = 245
-
 export const FULL_VIEW_MODE = 'full'
 
-export const LARGE_REQUEST_CANCELED = 'Request canceled'
+export const LARGE_REQUEST_CANCELED = 'Large request canceled'
+export const REQUEST_CANCELED = 'Request canceled'
+export const DEFAULT_ABORT_MSG = 'canceled'
 
 export const MODEL_PATH_DATA_INPUT = 'model_path'
+
+export const NAVBAR_WIDTH_CLOSED = 57
+export const NAVBAR_WIDTH_OPENED = 245
+export const CANCEL_REQUEST_TIMEOUT = 60000
 
 /*=========== PAGES & TABS =============*/
 

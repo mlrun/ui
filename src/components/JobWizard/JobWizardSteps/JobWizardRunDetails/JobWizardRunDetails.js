@@ -153,7 +153,10 @@ const JobWizardRunDetails = ({
         </div>
         {!isBatchInference && (
           <div className="form-row">
-            <FormCheckBox label="Hyperparameter" name={`${RUN_DETAILS_STEP}.hyperparameter`} />
+            <FormCheckBox
+              label="Hyperparameter"
+              name={`${RUN_DETAILS_STEP}.hyperparameter`}
+            />
           </div>
         )}
         <div className="form-row">
@@ -191,7 +194,11 @@ const JobWizardRunDetails = ({
               </div>
             ) : (
               <div className="form-col-1">
-                <FormInput label="Handler" name={handlerPath} disabled={isEditMode} />
+                <FormInput
+                  label="Handler"
+                  name={handlerPath}
+                  disabled={isEditMode}
+                />
               </div>
             )
           ) : null}

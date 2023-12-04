@@ -31,6 +31,7 @@ import './search.scss'
 
 const Search = ({
   className,
+  id,
   matches,
   onChange,
   onFocus,
@@ -119,6 +120,7 @@ const Search = ({
     >
       <Input
         className="search-input"
+        id={id}
         wrapperClassName={wrapperClassName}
         density="dense"
         placeholder={placeholder}
@@ -157,8 +159,9 @@ const Search = ({
                   item={{
                     id: item,
                     label: item,
-                    labelHtml: item.replace(new RegExp(searchValue.toLocaleLowerCase(), 'gi'), match =>
-                      match ? `<b>${match}</b>` : match
+                    labelHtml: item.replace(
+                      new RegExp(searchValue.toLocaleLowerCase(), 'gi'),
+                      match => (match ? `<b>${match}</b>` : match)
                     )
                   }}
                   name={item}
@@ -177,6 +180,7 @@ const Search = ({
 
 Search.defaultProps = {
   className: '',
+  id:'search',
   matches: [],
   onFocus: () => {},
   placeholder: '',
@@ -187,6 +191,7 @@ Search.defaultProps = {
 
 Search.propTypes = {
   className: PropTypes.string,
+  id: PropTypes.string,
   matches: PropTypes.arrayOf(PropTypes.string),
   onChange: PropTypes.func.isRequired,
   onFocus: PropTypes.func,
