@@ -50,6 +50,7 @@ import { ReactComponent as MonitorIcon } from 'igz-controls/images/monitor-icon.
 import { ReactComponent as Run } from 'igz-controls/images/run.svg'
 import { ReactComponent as Cancel } from 'igz-controls/images/close.svg'
 import { ReactComponent as Yaml } from 'igz-controls/images/yaml.svg'
+import { ReactComponent as Delete } from 'igz-controls/images/delete.svg'
 
 export const generateFilters = () => [
   { type: PERIOD_FILTER, label: 'Period:' },
@@ -95,6 +96,7 @@ export const generateActionsMenu = (
   handleMonitoring,
   abortable_function_kinds,
   handleConfirmAbortJob,
+  handleConfirmDeleteJob,
   toggleConvertedYaml
 ) =>
   job?.uid
@@ -105,6 +107,12 @@ export const generateActionsMenu = (
             icon: <Run />,
             hidden: [JOB_KIND_LOCAL, ''].includes(job?.ui?.originalContent.metadata.labels.kind),
             onClick: handleRerunJob
+          },
+          {
+            label: 'Delete',
+            icon: <Delete />,
+            className: 'danger',
+            onClick: handleConfirmDeleteJob
           },
           {
             label: 'Monitoring',
@@ -146,6 +154,7 @@ export const generateActionsMenu = (
 
 export const monitorWorkflowsActionCreator = {
   abortJob: jobsActions.abortJob,
+  deleteJob: jobsActions.deleteJob,
   fetchFunctionLogs: functionsActions.fetchFunctionLogs,
   fetchJob: jobsActions.fetchJob,
   fetchJobFunctions: jobsActions.fetchJobFunctions,
