@@ -85,6 +85,7 @@ const FormVolumesTable = ({ disabled, exitEditModeTriggerItem, fieldsPath, formS
                 hidden={editingItem?.ui?.isNew}
                 fields={fields}
                 fieldsPath={fieldsPath}
+                id="add-volume"
                 label="Add volume"
                 onClick={(...addRowArgs) =>
                   addNewRow(...addRowArgs, {
@@ -111,7 +112,7 @@ const FormVolumesTable = ({ disabled, exitEditModeTriggerItem, fieldsPath, formS
 
 FormVolumesTable.defaultProps = {
   disabled: false,
-  exitEditModeTriggerItem: null,
+  exitEditModeTriggerItem: null
 }
 
 FormVolumesTable.propTypes = {
