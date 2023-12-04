@@ -305,7 +305,7 @@ const Functions = ({
           }
         ]
       ],
-    [dispatch, isDemoMode,isStagingMode, onRemoveFunction, toggleConvertedYaml]
+    [dispatch, isDemoMode, isStagingMode, onRemoveFunction, toggleConvertedYaml]
   )
 
   useEffect(() => {
