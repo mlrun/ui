@@ -23,7 +23,6 @@ import dropdownComponent from '../components/dropdown.component'
 import actionMenu from '../components/action-menu.component'
 import inputGroup from '../components/input-group.component'
 import labelComponent from '../components/label.component'
-import checkboxComponent from '../components/checkbox.component'
 import {
   generateInputGroup,
   generateDropdownGroup,
@@ -85,6 +84,7 @@ const featureSetsTable = {
       root: '.table-row',
       fields: {
         name: '.table-body__cell:nth-of-type(1) a div.link',
+        expand_name: '[data-testid="table_row_child_1_3"] .table-body__cell:nth-of-type(1) a div.link',
         expand_btn: '.table-body__cell:nth-of-type(1) svg.expand-arrow',
         tag: '.table-body__cell:nth-of-type(1) .item-tag',
         description: '.table-body__cell:nth-of-type(2) > .data-ellipsis',
@@ -97,7 +97,7 @@ const featureSetsTable = {
           structure: generateDropdownGroup(
             '.table-body__cell:nth-of-type(3)',
             '.chip-block span.chips_button',
-            '.chip-block .chip-block-hidden_visible .data-ellipsis.tooltip-wrapper',
+            '.chip-block .data-ellipsis.tooltip-wrapper',
             false,
             true
           )
@@ -146,9 +146,9 @@ const featuresTable = {
           structure: generateDropdownGroup(
             '.table-body__cell:nth-of-type(6)',
             '.chip-block span.chips_button',
-            '.chip-block .chip-block-hidden_visible .data-ellipsis.tooltip-wrapper',
+            '.chip-block-hidden_visible .data-ellipsis.tooltip-wrapper',
             false,
-            true
+            false
           )
         },
         targets: '.table-body__cell:nth-of-type(7)',
@@ -193,7 +193,7 @@ const featureVectorTable = {
           structure: generateDropdownGroup(
             '.table-body__cell:nth-of-type(3)',
             '.chip-block span.chips_button',
-            '.chip-block .chip-block-hidden_visible .data-ellipsis.tooltip-wrapper',
+            '.chip-block .data-ellipsis.tooltip-wrapper',
             false,
             true
           )
@@ -223,10 +223,10 @@ const addToFeatureVectorTable = {
   body: {
     root: '.table-body',
     row: {
-      root: '.table-body__row',
+      root: '.table-row',
       fields: {
         expand_btn: '.table-body__cell:nth-of-type(1) svg.expand-arrow',
-        featureName: '.table-body__cell:nth-of-type(1) div.data-ellipsis',
+        featureName: '.table-body__cell:nth-of-type(1) div.data-ellipsis.tooltip-wrapper',
         featureSet: '.table-body__cell:nth-of-type(2) a .link',
         type: '.table-body__cell:nth-of-type(3) .data-ellipsis',
         entities: '.table-body__cell:nth-of-type(4) .chips-wrapper',
@@ -318,12 +318,12 @@ const datasetsTable = {
 
 // Common components
 const featureStoreTabSelector = commonTable(tabSelector)
-const tableRefreshButton = By.css('.content__action-bar-wrapper .action-bar #refresh')
+const tableRefreshButton = By.css('.content__action-bar-wrapper #refresh')
 const tableFilterByButton = By.css('.content .content__action-bar-wrapper .action-bar__filters .filters-button button')
 const pageHeaderButton = By.css('.content__header .page-actions-container button')
 const commonNameFilterInput = inputGroup(
   generateInputGroup(
-    '.content .content__action-bar-wrapper .action-bar .filters .input-wrapper:nth-of-type(2)',
+    '.content .content__action-bar-wrapper .filters .input-wrapper:nth-of-type(2)',
     true,
     false,
     true
@@ -387,11 +387,12 @@ module.exports = {
     Table_Label_Filter_Input: commonLabelFilterInput,
     Table_Tag_Filter_Dropdown: commonTableTreeFilterDropdown,
     Table_Refresh_Button: tableRefreshButton,
-    Feature_Vectors_Table: commonTable(featureVectorTable)
+    Feature_Vectors_Table: commonTable(featureVectorTable),
+    Overlay: By.css('#overlay_container .chip-block-hidden_visible')
   },
   datasets: {
     Feature_Store_Tab_Selector: featureStoreTabSelector,
-    Register_Dataset_Button: By.css('.content__action-bar-wrapper .action-bar__actions .register-button'),
+    Register_Dataset_Button: By.css('.content__action-bar-wrapper .action-bar__actions .action-button'),
     Table_Name_Filter_Input: commonNameFilterInputDataset,
     Table_FilterBy_Button: tableFilterByButton,
     Table_Refresh_Button: tableRefreshButton,
