@@ -49,7 +49,7 @@ import {
 import { JobsContext } from '../Jobs'
 import { createJobsMonitorTabContent } from '../../../utils/createJobsContent'
 import { datePickerOptions, PAST_WEEK_DATE_OPTION } from '../../../utils/datePicker.util'
-import { enrichRunWithFunctionFields, handleAbortJob } from '../jobs.util'
+import { enrichRunWithFunctionFields, handleAbortJob, handleDeleteJob } from '../jobs.util'
 import { getCloseDetailsLink } from '../../../utils/getCloseDetailsLink'
 import { getJobLogs } from '../../../utils/getJobLogs.util'
 import { getNoDataMessage } from '../../../utils/getNoDataMessage'
@@ -58,7 +58,6 @@ import { openPopUp } from 'igz-controls/utils/common.util'
 import { parseJob } from '../../../utils/parseJob'
 import { setFilters } from '../../../reducers/filtersReducer'
 import { setNotification } from '../../../reducers/notificationReducer'
-import { showErrorNotification } from '../../../utils/notifications.util'
 import { useMode } from '../../../hooks/mode.hook'
 import { usePods } from '../../../hooks/usePods.hook'
 import { useYaml } from '../../../hooks/yaml.hook'
@@ -211,26 +210,50 @@ const MonitorJobs = ({
     [onAbortJob, setConfirmData]
   )
 
-  const handleDeleteJob = useCallback(
-    async job => {
-      await deleteJob(params.projectName, job)
-        .then(() => {
-          refreshJobs(filtersStore)
-          dispatch(
-            setNotification({
-              status: 200,
-              id: Math.random(),
-              message: 'Job is successfully deleted'
-            })
-          )
-        })
-        .catch(error => {
-          showErrorNotification(dispatch, error, 'Deleting job failed', '', () =>
-            handleDeleteJob(job)
-          )
-        })
+  const onDeleteJob = useCallback(
+    job => {
+      handleDeleteJob(deleteJob, job, params.projectName, refreshJobs, filtersStore, dispatch).then(
+        () => {
+          if (params.jobName)
+            navigate(
+              location.pathname
+                .split('/')
+                .splice(0, location.pathname.split('/').indexOf(params.jobName) + 1)
+                .join('/')
+            )
+        }
+      )
     },
-    [deleteJob, dispatch, filtersStore, params.projectName, refreshJobs]
+    [
+      deleteJob,
+      params.projectName,
+      params.jobName,
+      refreshJobs,
+      filtersStore,
+      dispatch,
+      navigate,
+      location.pathname
+    ]
+  )
+
+  const handleConfirmDeleteJob = useCallback(
+    job => {
+      setConfirmData({
+        item: job,
+        header: 'Delete job?',
+        message: `You try to delete job "${job.name}".`,
+        btnConfirmLabel: 'Delete',
+        btnConfirmType: DANGER_BUTTON,
+        rejectHandler: () => {
+          setConfirmData(null)
+        },
+        confirmHandler: () => {
+          onDeleteJob(job)
+          setConfirmData(null)
+        }
+      })
+    },
+    [onDeleteJob, setConfirmData]
   )
 
   const actionsMenu = useMemo(() => {
@@ -244,7 +267,7 @@ const MonitorJobs = ({
         handleConfirmAbortJob,
         toggleConvertedYaml,
         selectedJob,
-        handleDeleteJob
+        handleConfirmDeleteJob
       )
   }, [
     handleRerunJob,
@@ -254,7 +277,7 @@ const MonitorJobs = ({
     handleConfirmAbortJob,
     toggleConvertedYaml,
     selectedJob,
-    handleDeleteJob
+    handleConfirmDeleteJob
   ])
 
   const modifyAndSelectRun = useCallback(

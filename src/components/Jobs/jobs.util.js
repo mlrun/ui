@@ -33,8 +33,9 @@ import {
   JOB_KIND_SPARK
 } from '../../constants'
 import jobsActions from '../../actions/jobs'
-import { generateFunctionPriorityLabel } from '../../utils/generateFunctionPriorityLabel'
 import { generateKeyValues } from '../../utils'
+import { setNotification } from '../../reducers/notificationReducer'
+import { generateFunctionPriorityLabel } from '../../utils/generateFunctionPriorityLabel'
 import { parseKeyValues } from '../../utils/object'
 import { showErrorNotification } from '../../utils/notifications.util'
 
@@ -274,6 +275,23 @@ export const handleAbortJob = (
       )
     })
   setConfirmData(null)
+}
+
+export const handleDeleteJob = (deleteJob, job, projectName, refreshJobs, filters, dispatch) => {
+  return deleteJob(projectName, job)
+    .then(() => {
+      refreshJobs(filters)
+      dispatch(
+        setNotification({
+          status: 200,
+          id: Math.random(),
+          message: 'Job is successfully deleted'
+        })
+      )
+    })
+    .catch(error => {
+      showErrorNotification(dispatch, error, 'Deleting job failed', '', () => handleDeleteJob(job))
+    })
 }
 
 export const monitorJob = (jobs_dashboard_url, item, projectName) => {
