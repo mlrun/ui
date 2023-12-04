@@ -2,11 +2,16 @@
 
 .settings {
   &__source {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
     .input {
       width: 100%;
 
       &-wrapper {
-        width: 100%;
+        width: 70%;
+        margin-right: 10px;
       }
     }
   }

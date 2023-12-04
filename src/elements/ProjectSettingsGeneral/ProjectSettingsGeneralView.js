@@ -50,6 +50,7 @@ const ProjectSettingsGeneralView = ({
   projectMembershipIsEnabled,
   projectOwnerIsShown,
   setValidation,
+  toggleLoadSourceOnRun,
   validation
 }) => {
   return (
@@ -64,13 +65,14 @@ const ProjectSettingsGeneralView = ({
         <div className="settings__card-content">
           <div className="settings__card-content-col">
             <ProjectSettingsSource
-              editSourceData={editProjectData.source}
+              editProjectData={editProjectData}
               handleEditProject={handleEditProject}
               handleOnBlur={handleOnBlur}
               handleOnKeyDown={handleOnKeyDown}
               handleSourceChange={handleOnChange}
+              projectData={project.data?.spec}
               setValidation={setValidation}
-              settingsSource={project.data?.spec.source ?? ''}
+              toggleLoadSourceOnRun={toggleLoadSourceOnRun}
               validation={validation}
             />
             <div
@@ -218,6 +220,7 @@ ProjectSettingsGeneralView.propTypes = {
   projectMembershipIsEnabled: PropTypes.bool.isRequired,
   projectOwnerIsShown: PropTypes.bool.isRequired,
   setValidation: PropTypes.func.isRequired,
+  toggleLoadSourceOnRun: PropTypes.func.isRequired,
   validation: PropTypes.object.isRequired
 }
 

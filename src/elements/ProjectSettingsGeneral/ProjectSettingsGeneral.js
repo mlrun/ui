@@ -27,7 +27,14 @@ import ProjectSettingsGeneralView from './ProjectSettingsGeneralView'
 
 import projectsAction from '../../actions/projects'
 import projectsApi from '../../api/projects-api'
-import { ARTIFACT_PATH, DATA, LABELS, PARAMS, SOURCE_URL } from '../../constants'
+import {
+  ARTIFACT_PATH,
+  DATA,
+  LABELS,
+  LOAD_SOURCE_ON_RUN,
+  PARAMS,
+  SOURCE_URL
+} from '../../constants'
 import { FORBIDDEN_ERROR_STATUS_CODE } from 'igz-controls/constants'
 import { KEY_CODES } from '../../constants'
 import { deleteUnsafeHtml } from '../../utils/string'
@@ -256,6 +263,21 @@ const ProjectSettingsGeneral = ({
     }
   }, [])
 
+  const toggleLoadSourceOnRun = () => {
+    const data = {
+      ...projectStore.project.data,
+      spec: {
+        ...projectStore.project.data.spec,
+        [LOAD_SOURCE_ON_RUN]: !projectStore.project.data.spec[LOAD_SOURCE_ON_RUN]
+      }
+    }
+
+    setProjectSettings({
+      ...data.spec
+    })
+    sendProjectSettingsData(DATA, data)
+  }
+
   useEffect(() => {
     fetchProject(params.projectName)
 
@@ -285,6 +307,7 @@ const ProjectSettingsGeneral = ({
       projectMembershipIsEnabled={projectMembershipIsEnabled}
       projectOwnerIsShown={projectOwnerIsShown}
       setValidation={setValidation}
+      toggleLoadSourceOnRun={toggleLoadSourceOnRun}
       validation={validation}
     />
   )

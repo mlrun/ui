@@ -854,10 +854,7 @@ const projectReducer = (state = initialState, { type, payload }) => {
             ...state.project.data,
             spec: {
               ...state.project.data.spec,
-              artifact_path: payload.artifact_path,
-              description: payload.description,
-              goals: payload.goals,
-              source: payload.source
+              ...payload
             }
           }
         }
