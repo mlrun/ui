@@ -25,14 +25,16 @@ import { useParams } from 'react-router-dom'
 
 import ProjectSettingsGeneralView from './ProjectSettingsGeneralView'
 
-import { ARTIFACT_PATH, DATA, LABELS, PARAMS, SOURCE_URL } from '../../constants'
-import { setNotification } from '../../reducers/notificationReducer'
-import projectsApi from '../../api/projects-api'
 import projectsAction from '../../actions/projects'
-import { initialEditProjectData } from './projectSettingsGeneral.utils'
-import { deleteUnsafeHtml } from '../../utils/string'
-import { KEY_CODES } from '../../constants'
+import projectsApi from '../../api/projects-api'
+import { ARTIFACT_PATH, DATA, LABELS, PARAMS, SOURCE_URL } from '../../constants'
 import { FORBIDDEN_ERROR_STATUS_CODE } from 'igz-controls/constants'
+import { KEY_CODES } from '../../constants'
+import { deleteUnsafeHtml } from '../../utils/string'
+import { getErrorMsg } from 'igz-controls/utils/common.util'
+import { initialEditProjectData } from './projectSettingsGeneral.utils'
+import { setNotification } from '../../reducers/notificationReducer'
+import { showErrorNotification } from '../../utils/notifications.util'
 
 import './projectSettingsGeneral.scss'
 
@@ -87,19 +89,13 @@ const ProjectSettingsGeneral = ({
           )
         })
         .catch(error => {
-          dispatch(
-            setNotification({
-              status: error.response?.status || 400,
-              id: Math.random(),
-              message:
-                error.response?.status === FORBIDDEN_ERROR_STATUS_CODE
-                  ? 'Missing edit permission for the project.'
-                  : 'Failed to edit project data.',
-              retry:
-                error.response?.status === FORBIDDEN_ERROR_STATUS_CODE
-                  ? null
-                  : () => sendProjectSettingsData(type, data, labels)
-            })
+          const customErrorMsg =
+            error.response?.status === FORBIDDEN_ERROR_STATUS_CODE
+              ? 'Missing edit permission for the project'
+              : getErrorMsg(error, 'Failed to edit project data')
+
+          showErrorNotification(dispatch, error, '', customErrorMsg, () =>
+            sendProjectSettingsData(type, data, labels)
           )
         })
     },

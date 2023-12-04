@@ -66,6 +66,7 @@ const JobWizardResources = ({ formState, frontendSpec, stepIsActive }) => {
       <div className="form-row form-table-title">Node selection</div>
       <div className="form-row">
         <FormKeyValueTable
+          actionButtonId="add-node-selector"
           addNewItemLabel="Add node selector"
           exitEditModeTriggerItem={stepIsActive}
           fieldsPath={`${RESOURCES_STEP}.nodeSelectorTable`}

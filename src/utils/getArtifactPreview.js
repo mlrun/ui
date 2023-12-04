@@ -62,7 +62,7 @@ export const fetchArtifactPreviewFromExtraData = (
   noData,
   setNoData,
   setPreview,
-  cancelToken
+  signal
 ) => {
   artifact.extra_data.forEach(previewItem => {
     fetchArtifactPreview(
@@ -71,7 +71,7 @@ export const fetchArtifactPreviewFromExtraData = (
       previewItem.path.startsWith('/User') && (artifact.ui.user || artifact.producer.owner),
       previewItem.path.replace(/.*\./g, ''),
       artifact.db_key,
-      cancelToken
+      signal
     )
       .then(content => {
         setPreview({ ...content, header: previewItem.header })
@@ -180,9 +180,9 @@ export const fetchArtifactPreview = (
   user,
   fileFormat,
   artifactName,
-  cancelToken
+  signal
 ) => {
-  return api.getArtifactPreview(projectName, path, user, fileFormat, cancelToken).then(res => {
+  return api.getArtifactPreview(projectName, path, user, fileFormat, signal).then(res => {
     return createArtifactPreviewContent(res, fileFormat, path, artifactName)
   })
 }

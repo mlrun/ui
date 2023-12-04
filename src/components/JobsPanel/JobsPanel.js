@@ -26,9 +26,6 @@ import { isEmpty } from 'lodash'
 
 import JobsPanelView from './JobsPanelView'
 
-import { MONITOR_JOBS_TAB, PANEL_DEFAULT_ACCESS_KEY, SCHEDULE_TAB } from '../../constants'
-import jobsActions from '../../actions/jobs'
-import functionActions from '../../actions/functions'
 import {
   getMethodOptions,
   getVersionOptions,
@@ -37,10 +34,13 @@ import {
   generateRequestData,
   generateTableDataFromDefaultData
 } from './jobsPanel.util'
-import { isEveryObjectValueEmpty } from '../../utils/isEveryObjectValueEmpty'
+import functionActions from '../../actions/functions'
+import jobsActions from '../../actions/jobs'
+import { MONITOR_JOBS_TAB, PANEL_DEFAULT_ACCESS_KEY, SCHEDULE_TAB } from '../../constants'
 import { initialState, panelReducer, panelActions } from './panelReducer'
+import { isEveryObjectValueEmpty } from '../../utils/isEveryObjectValueEmpty'
 import { parseKeyValues } from '../../utils'
-import { setNotification } from '../../reducers/notificationReducer'
+import { showErrorNotification } from '../../utils/notifications.util'
 
 import './jobsPanel.scss'
 
@@ -117,13 +117,7 @@ const JobsPanel = ({
 
   useEffect(() => {
     if (!functionsStore.template.name && functionsStore.error) {
-      dispatch(
-        setNotification({
-          status: 400,
-          id: Math.random(),
-          message: 'Function template could not be loaded'
-        })
-      )
+      showErrorNotification(dispatch, functionsStore.error, '', 'Function template could not be loaded')
       closePanel()
       removeFunctionsError()
     }

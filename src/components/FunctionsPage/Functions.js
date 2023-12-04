@@ -87,7 +87,6 @@ const Functions = ({
   const fetchFunctionLogsTimeout = useRef(null)
   const abortControllerRef = useRef(new AbortController())
   const {isDemoMode, isStagingMode } = useMode()
-
   const params = useParams()
   const navigate = useNavigate()
   const location = useLocation()

@@ -62,7 +62,7 @@ const artifactsApi = {
   },
   deleteTag: (project, tag, data) =>
     mainHttpClient.delete(`/projects/${project}/tags/${tag}`, { data }),
-  getArtifactPreview: (project, path, user, fileFormat, cancelToken) => {
+  getArtifactPreview: (project, path, user, fileFormat, signal) => {
     const config = {
       params: { path }
     }
@@ -75,8 +75,8 @@ const artifactsApi = {
       config.responseType = 'blob'
     }
 
-    if (cancelToken) {
-      config.cancelToken = cancelToken
+    if (signal) {
+      config.signal = signal
     }
 
     return mainHttpClient.get(`projects/${project}/files`, config)
@@ -107,13 +107,10 @@ const artifactsApi = {
       }
     )
   },
-  getDataSets: (project, filters, config, setLargeRequestErrorMessage) => {
+  getDataSets: (project, filters, config = {}) => {
     const newConfig = {
       ...config,
-      params: { category: DATASET_TYPE },
-      ui: {
-        setLargeRequestErrorMessage
-      }
+      params: { category: DATASET_TYPE }
     }
 
     return fetchArtifacts(project, filters, newConfig)
@@ -132,15 +129,13 @@ const artifactsApi = {
       }
     )
   },
-  getFiles: (project, filters, setLargeRequestErrorMessage) => {
-    const config = {
-      params: { category: ARTIFACT_OTHER_TYPE, format: 'full' },
-      ui: {
-        setLargeRequestErrorMessage
-      }
+  getFiles: (project, filters, config = {}) => {
+    const newConfig = {
+      ...config,
+      params: { category: ARTIFACT_OTHER_TYPE, format: 'full' }
     }
 
-    return fetchArtifacts(project, filters, config)
+    return fetchArtifacts(project, filters, newConfig)
   },
   getModel: (project, model, iter, tag) => {
     return fetchArtifacts(
@@ -156,29 +151,25 @@ const artifactsApi = {
       }
     )
   },
-  getModelEndpoints: (project, filters, params = {}, setLargeRequestErrorMessage) => {
-    const config = {
-      params,
-      ui: {
-        setLargeRequestErrorMessage
-      }
+  getModelEndpoints: (project, filters, config = {}, params = {}) => {
+    const newConfig = {
+      ...config,
+      params
     }
 
     if (filters?.labels) {
-      config.params.label = filters.labels?.split(',')
+      newConfig.params.label = filters.labels?.split(',')
     }
 
-    return mainHttpClient.get(`/projects/${project}/model-endpoints`, config)
+    return mainHttpClient.get(`/projects/${project}/model-endpoints`, newConfig)
   },
-  getModels: (project, filters, setLargeRequestErrorMessage) => {
-    const config = {
-      params: { category: MODEL_TYPE, format: 'full' },
-      ui: {
-        setLargeRequestErrorMessage
-      }
+  getModels: (project, filters, config = {}) => {
+    const newConfig = {
+      ...config,
+      params: { category: MODEL_TYPE, format: 'full' }
     }
 
-    return fetchArtifacts(project, filters, config)
+    return fetchArtifacts(project, filters, newConfig)
   },
   registerArtifact: (project, data) =>
     mainHttpClient.post(

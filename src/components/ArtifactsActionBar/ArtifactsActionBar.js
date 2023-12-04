@@ -31,11 +31,16 @@ import FilterMenuModal from '../FilterMenuModal/FilterMenuModal'
 import ArtifactsFilters from './ArtifactsFilters'
 import NameFilter from '../../common/NameFilter/NameFilter'
 
-import { setFieldState } from 'igz-controls/utils/form.util'
-import { GROUP_BY_NAME, GROUP_BY_NONE, TAG_FILTER, TAG_FILTER_ALL_ITEMS } from '../../constants'
-import { removeFilters, setFilters } from '../../reducers/filtersReducer'
-
+import {
+  GROUP_BY_NAME,
+  GROUP_BY_NONE,
+  REQUEST_CANCELED,
+  TAG_FILTER,
+  TAG_FILTER_ALL_ITEMS
+} from '../../constants'
 import detailsActions from '../../actions/details'
+import { removeFilters, setFilters } from '../../reducers/filtersReducer'
+import { setFieldState } from 'igz-controls/utils/form.util'
 
 import { ReactComponent as RefreshIcon } from 'igz-controls/images/refresh.svg'
 
@@ -127,7 +132,7 @@ function ArtifactsActionBar({
 
   const refresh = formState => {
     if (changes.counter > 0 && cancelRequest) {
-      cancelRequest('cancel')
+      cancelRequest(REQUEST_CANCELED)
     } else {
       handleRefresh({
         name: formState.values.name,
