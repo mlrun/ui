@@ -39,6 +39,7 @@ import {
   findRowIndexesByColumnTooltipsValue,
   findRowIndexesByColumnValue,
   findRowIndexesByColumnValueAttribute,
+  findRowIndexesByColumnValueExpand,
   getCellByIndexColumn,
   getTableRows,
   isContainsSubstringInColumnCells,
@@ -100,6 +101,33 @@ Then(
       'action_menu'
     )
     await openActionMenu(this.driver, actionMenuSel)
+  }
+)
+
+Then(
+  'select {string} option in action menu on {string} wizard in {string} table at row with {string} value in {string} column with expand btn {string}',
+  async function (option, wizard, table, value, column, expand_name) {
+    const arr = await findRowIndexesByColumnValueExpand(
+      this.driver,
+      pageObjects[wizard][table],
+      column,
+      value
+    )
+    const indx = arr[0]
+    const actionMenuSel = await getCellByIndexColumn(
+      this.driver,
+      pageObjects[wizard][table],
+      indx,
+      'action_menu'
+    )
+    await hoverComponent(
+      this.driver,
+      pageObjects[wizard][table]['tableFields'][expand_name](indx),
+      false // scroll ?
+    )
+    await openActionMenu(this.driver, actionMenuSel)
+    await this.driver.sleep(500)
+    await selectOptionInActionMenu(this.driver, actionMenuSel, option)
   }
 )
 

@@ -59,8 +59,8 @@ module.exports = function(comboBoxRoot, newClassLocator = false) {
         `${comboBoxRoot} .combobox-select`,
         '.combobox-select__header',
         '.combobox-select__body .combobox-list .combobox-list__option',
-        '',
-        true
+        false,
+        false
       )
     )
   
