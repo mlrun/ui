@@ -23,6 +23,7 @@ import { useDispatch } from 'react-redux'
 import { Tooltip, TextTooltipTemplate, RoundedIcon } from 'igz-controls/components'
 
 import { setNotification } from '../../reducers/notificationReducer'
+import { showErrorNotification } from '../../utils/notifications.util'
 
 import { ReactComponent as Copy } from 'igz-controls/images/copy-to-clipboard-icon.svg'
 
@@ -41,15 +42,8 @@ const CopyToClipboard = ({ children, className, disabled, textToCopy, tooltipTex
           })
         )
       })
-      .catch(err => {
-        dispatch(
-          setNotification({
-            error: err,
-            status: 400,
-            id: Math.random(),
-            message: 'Copy to clipboard failed'
-          })
-        )
+      .catch(error => {
+        showErrorNotification(dispatch, error, '', 'Copy to clipboard failed')
       })
   }
 

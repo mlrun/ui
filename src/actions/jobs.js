@@ -17,7 +17,6 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import { get } from 'lodash'
 import jobsApi from '../api/jobs-api'
 import functionsApi from '../api/functions-api'
 import {
@@ -76,7 +75,8 @@ import {
   SET_URL
 } from '../constants'
 import { getNewJobErrorMsg } from '../components/JobWizard/JobWizard.util'
-import { setNotification } from '../reducers/notificationReducer'
+import { showErrorNotification } from '../utils/notifications.util'
+import { largeResponseCatchHandler } from '../utils/largeResponseCatchHandler'
 
 const jobsActions = {
   abortJob: (project, job) => dispatch => {
@@ -148,11 +148,11 @@ const jobsActions = {
     type: EDIT_JOB_FAILURE,
     payload: error
   }),
-  fetchAllJobRuns: (project, filters, jobName, setLargeRequestErrorMessage) => dispatch => {
+  fetchAllJobRuns: (project, filters, config, jobName) => dispatch => {
     dispatch(jobsActions.fetchAllJobRunsBegin())
 
     return jobsApi
-      .getAllJobRuns(project, jobName, filters, setLargeRequestErrorMessage)
+      .getAllJobRuns(project, filters, config, jobName)
       .then(({ data }) => {
         dispatch(jobsActions.fetchAllJobRunsSuccess(data.runs || []))
 
@@ -160,8 +160,7 @@ const jobsActions = {
       })
       .catch(error => {
         dispatch(jobsActions.fetchAllJobRunsFailure(error))
-
-        throw error
+        largeResponseCatchHandler(error, 'Failed to fetch jobs', dispatch)
       })
   },
   fetchAllJobRunsBegin: () => ({
@@ -210,17 +209,8 @@ const jobsActions = {
         return res.data.func
       })
       .catch(error => {
-        const errorMsg = get(error, 'response.data.detail', 'Job’s function failed to load')
-
         dispatch(jobsActions.fetchJobFunctionFailure(error))
-        dispatch(
-          setNotification({
-            status: error.response?.status || 400,
-            id: Math.random(),
-            message: errorMsg,
-            error
-          })
-        )
+        showErrorNotification(dispatch, error, 'Job’s function failed to load')
       })
   },
   fetchJobFunctionBegin: () => ({
@@ -280,12 +270,12 @@ const jobsActions = {
   fetchJobLogsSuccess: () => ({
     type: FETCH_JOB_LOGS_SUCCESS
   }),
-  fetchJobs: (project, filters, scheduled, setLargeRequestErrorMessage) => dispatch => {
+  fetchJobs: (project, filters, config, scheduled) => dispatch => {
     const getJobs = scheduled ? jobsApi.getScheduledJobs : jobsApi.getJobs
 
     dispatch(jobsActions.fetchJobsBegin())
 
-    return getJobs(project, filters, setLargeRequestErrorMessage)
+    return getJobs(project, filters, config)
       .then(({ data }) => {
         const newJobs = scheduled
           ? (data || {}).schedules
@@ -298,8 +288,7 @@ const jobsActions = {
       })
       .catch(error => {
         dispatch(jobsActions.fetchJobsFailure(error))
-
-        throw error
+        largeResponseCatchHandler(error, 'Failed to fetch jobs', dispatch)
       })
   },
   fetchSpecificJobs: (project, filters, jobList) => () => {

@@ -20,6 +20,7 @@ such restriction.
 import React from 'react'
 
 import { DANGER_BUTTON, FORBIDDEN_ERROR_STATUS_CODE } from 'igz-controls/constants'
+import { showErrorNotification } from '../../utils/notifications.util'
 
 import { ReactComponent as ArchiveIcon } from 'igz-controls/images/archive-icon.svg'
 import { ReactComponent as Delete } from 'igz-controls/images/delete.svg'
@@ -109,7 +110,6 @@ export const handleDeleteProjectError = (
   handleDeleteProject,
   project,
   setConfirmData,
-  setNotification,
   dispatch,
   deleteNonEmpty
 ) => {
@@ -130,16 +130,10 @@ export const handleDeleteProjectError = (
       }
     })
   } else {
-    dispatch(
-      setNotification({
-        status: 400,
-        id: Math.random(),
-        retry: () => handleDeleteProject(project),
-        message:
-          error.response?.status === FORBIDDEN_ERROR_STATUS_CODE
-            ? `You are not allowed to delete ${project.metadata.name} project`
-            : `Failed to delete ${project.metadata.name} project`
-      })
-    )
+    const customErrorMsg = error.response?.status === FORBIDDEN_ERROR_STATUS_CODE
+        ? `You are not allowed to delete ${project.metadata.name} project`
+        : `Failed to delete ${project.metadata.name} project`
+
+    showErrorNotification(dispatch, error, '', customErrorMsg, () => handleDeleteProject(project))
   }
 }

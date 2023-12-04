@@ -17,7 +17,7 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import React, { useCallback, useState, useMemo, useEffect } from 'react'
+import React, { useCallback, useState, useMemo, useEffect, useRef } from 'react'
 import { useParams } from 'react-router-dom'
 import { connect, useDispatch, useSelector } from 'react-redux'
 
@@ -35,19 +35,20 @@ import {
   LABELS_FILTER,
   NAME_FILTER,
   PANEL_EDIT_MODE,
-  LARGE_REQUEST_CANCELED,
-  SCHEDULE_TAB
+  SCHEDULE_TAB,
+  REQUEST_CANCELED
 } from '../../../constants'
 import { DANGER_BUTTON, FORBIDDEN_ERROR_STATUS_CODE } from 'igz-controls/constants'
 import { JobsContext } from '../Jobs'
 import { createJobsScheduleTabContent } from '../../../utils/createJobsContent'
+import { getErrorMsg, openPopUp } from 'igz-controls/utils/common.util'
 import { getJobFunctionData } from '../jobs.util'
 import { getNoDataMessage } from '../../../utils/getNoDataMessage'
-import { getErrorDetail, openPopUp } from 'igz-controls/utils/common.util'
 import { parseJob } from '../../../utils/parseJob'
 import { scheduledJobsActionCreator } from './scheduledJobs.util'
 import { setFilters } from '../../../reducers/filtersReducer'
 import { setNotification } from '../../../reducers/notificationReducer'
+import { showErrorNotification } from '../../../utils/notifications.util'
 import { useYaml } from '../../../hooks/yaml.hook'
 
 import { ReactComponent as Yaml } from 'igz-controls/images/yaml.svg'
@@ -68,6 +69,7 @@ const ScheduledJobs = ({
   const [convertedYaml, toggleConvertedYaml] = useYaml('')
   const [editableItem, setEditableItem] = useState(null)
   const [largeRequestErrorMessage, setLargeRequestErrorMessage] = useState('')
+  const abortControllerRef = useRef(new AbortController())
   const dispatch = useDispatch()
   const params = useParams()
   const filtersStore = useSelector(store => store.filtersStore)
@@ -97,25 +99,27 @@ const ScheduledJobs = ({
 
   const refreshJobs = useCallback(
     filters => {
-      fetchJobs(params.projectName, filters, true, setLargeRequestErrorMessage)
+      setJobs([])
+      abortControllerRef.current = new AbortController()
+
+      fetchJobs(
+        params.projectName,
+        filters,
+        {
+          ui: {
+            controller: abortControllerRef.current,
+            setLargeRequestErrorMessage
+          }
+        },
+        true
+      )
         .then(jobs => {
-          setJobs(jobs.map(job => parseJob(job, SCHEDULE_TAB)))
-        })
-        .catch(error => {
-          if (error.message !== LARGE_REQUEST_CANCELED) {
-            dispatch(
-              setNotification({
-                status: error?.response?.status || 400,
-                id: Math.random(),
-                message: 'Failed to fetch jobs',
-                retry: () => refreshJobs(filters),
-                error
-              })
-            )
+          if (jobs) {
+            setJobs(jobs.map(job => parseJob(job, SCHEDULE_TAB)))
           }
         })
     },
-    [dispatch, fetchJobs, params.projectName]
+    [fetchJobs, params.projectName]
   )
 
   const handleRunJob = useCallback(
@@ -137,20 +141,12 @@ const ScheduledJobs = ({
           )
         })
         .catch(error => {
-          const errorMsg = getErrorDetail(error) || 'Job failed to start.'
+          const customErrorMsg =
+            error.response.status === FORBIDDEN_ERROR_STATUS_CODE
+              ? 'You are not permitted to run a new job'
+              : getErrorMsg(error, 'Job failed to start')
 
-          dispatch(
-            setNotification({
-              status: 400,
-              id: Math.random(),
-              retry: item => handleRunJob(item),
-              message:
-                error.response.status === FORBIDDEN_ERROR_STATUS_CODE
-                  ? 'You are not permitted to run new job.'
-                  : errorMsg,
-              error
-            })
-          )
+          showErrorNotification(dispatch, error, '', customErrorMsg, () => handleRunJob(job))
         })
     },
     [dispatch, handleRunScheduledJob, params.projectName]
@@ -251,6 +247,7 @@ const ScheduledJobs = ({
     return () => {
       setJobs([])
       setDataIsLoaded(false)
+      abortControllerRef.current.abort(REQUEST_CANCELED)
     }
   }, [params.projectName])
 

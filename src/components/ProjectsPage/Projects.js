@@ -17,12 +17,11 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import React, { useEffect, useState, useCallback } from 'react'
-import { connect, useDispatch } from 'react-redux'
-import yaml from 'js-yaml'
+import React, { useEffect, useState, useCallback, useRef } from 'react'
 import FileSaver from 'file-saver'
+import yaml from 'js-yaml'
+import { connect, useDispatch } from 'react-redux'
 import { orderBy } from 'lodash'
-import axios from 'axios'
 import { useParams } from 'react-router-dom'
 
 import ProjectsView from './ProjectsView'
@@ -37,6 +36,7 @@ import nuclioActions from '../../actions/nuclio'
 import projectsAction from '../../actions/projects'
 import { DANGER_BUTTON, FORBIDDEN_ERROR_STATUS_CODE, PRIMARY_BUTTON } from 'igz-controls/constants'
 import { setNotification } from '../../reducers/notificationReducer'
+import { showErrorNotification } from '../../utils/notifications.util'
 
 import { useNuclioMode } from '../../hooks/nuclioMode.hook'
 import { useMode } from '../../hooks/mode.hook'
@@ -64,7 +64,7 @@ const Projects = ({
   const [isDescendingOrder, setIsDescendingOrder] = useState(false)
   const [selectedProjectsState, setSelectedProjectsState] = useState('active')
   const [sortProjectId, setSortProjectId] = useState('byName')
-  const [source] = useState(axios.CancelToken.source())
+  const abortControllerRef = useRef(new AbortController())
   const urlParams = useParams()
   const dispatch = useDispatch()
   const { isDemoMode } = useMode()
@@ -105,20 +105,21 @@ const Projects = ({
   )
 
   const refreshProjects = useCallback(() => {
+    abortControllerRef.current = new AbortController()
+
     if (!isNuclioModeDisabled) {
       fetchNuclioFunctions()
     }
 
     removeProjects()
     fetchMinimalProjects()
-    fetchProjectsSummary(source.token)
+    fetchProjectsSummary(abortControllerRef.current.signal)
   }, [
     fetchNuclioFunctions,
     fetchMinimalProjects,
     fetchProjectsSummary,
     isNuclioModeDisabled,
-    removeProjects,
-    source.token
+    removeProjects
   ])
 
   const handleSearchOnFocus = useCallback(() => {
@@ -140,16 +141,13 @@ const Projects = ({
           fetchMinimalProjects()
         })
         .catch(error => {
-          dispatch(
-            setNotification({
-              status: 400,
-              id: Math.random(),
-              retry: () => handleArchiveProject(project),
-              message:
-                error.response?.status === FORBIDDEN_ERROR_STATUS_CODE
-                  ? `You are not allowed to archive ${project.metadata.name} project`
-                  : `Failed to archive ${project.metadata.name} project`
-            })
+          const customErrorMsg =
+            error.response?.status === FORBIDDEN_ERROR_STATUS_CODE
+              ? `You are not allowed to archive ${project.metadata.name} project`
+              : `Failed to archive ${project.metadata.name} project`
+
+          showErrorNotification(dispatch, error, '', customErrorMsg, () =>
+            handleArchiveProject(project)
           )
         })
       setConfirmData(null)
@@ -177,7 +175,6 @@ const Projects = ({
             handleDeleteProject,
             project,
             setConfirmData,
-            setNotification,
             dispatch,
             deleteNonEmpty
           )
@@ -251,14 +248,9 @@ const Projects = ({
 
             FileSaver.saveAs(blob, `${projectMinimal.metadata.name}.yaml`)
           })
-          .catch(() => {
-            dispatch(
-              setNotification({
-                status: 400,
-                id: Math.random(),
-                retry: () => exportYaml(projectMinimal),
-                message: "Failed to fetch project's YAML"
-              })
+          .catch(error => {
+            showErrorNotification(dispatch, error, '', "Failed to fetch project's YAML", () =>
+              exportYaml(projectMinimal)
             )
           })
       }
@@ -273,16 +265,11 @@ const Projects = ({
           .then(project => {
             convertToYaml(project)
           })
-          .catch(() => {
+          .catch((error) => {
             setConvertedYaml('')
 
-            dispatch(
-              setNotification({
-                status: 400,
-                id: Math.random(),
-                retry: () => viewYaml(projectMinimal),
-                message: "Failed to fetch project's YAML"
-              })
+            showErrorNotification(dispatch, error, '', "Failed to fetch project's YAML", () =>
+              viewYaml(projectMinimal)
             )
           })
       } else {
@@ -321,20 +308,14 @@ const Projects = ({
     }
 
     fetchMinimalProjects()
-    fetchProjectsSummary(source.token)
-  }, [
-    fetchMinimalProjects,
-    fetchNuclioFunctions,
-    fetchProjectsSummary,
-    isNuclioModeDisabled,
-    source.token
-  ])
+    fetchProjectsSummary(abortControllerRef.current.signal)
+  }, [fetchMinimalProjects, fetchNuclioFunctions, fetchProjectsSummary, isNuclioModeDisabled])
 
   useEffect(() => {
     return () => {
-      source.cancel('canceled')
+      abortControllerRef.current.abort()
     }
-  }, [source])
+  }, [])
 
   useEffect(() => {
     setFilteredProjects(handleSortProjects(projectStore.projects.filter(handleFilterProject)))
@@ -361,10 +342,11 @@ const Projects = ({
       createNewProject({
         metadata: {
           name: formState.values.name,
-          labels: formState.values.labels?.reduce((acc, labelData) => {
-            acc[labelData.key] = labelData.value
-            return acc
-          }, {}) ?? {}
+          labels:
+            formState.values.labels?.reduce((acc, labelData) => {
+              acc[labelData.key] = labelData.value
+              return acc
+            }, {}) ?? {}
         },
         spec: {
           description: formState.values.description

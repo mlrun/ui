@@ -19,13 +19,14 @@ such restriction.
 */
 import { cloneDeep } from 'lodash'
 
-import { deleteTag, editTag, addTag } from '../reducers/artifactsReducer'
-import { TAG_FILTER_ALL_ITEMS, TAG_FILTER_LATEST } from '../constants'
 import artifactApi from '../api/artifacts-api'
 import { ARTIFACT_TYPE, DATASET_TYPE, MODEL_TYPE } from '../constants'
+import { TAG_FILTER_ALL_ITEMS, TAG_FILTER_LATEST } from '../constants'
+import { deleteTag, editTag, addTag } from '../reducers/artifactsReducer'
 import { getArtifactIdentifier } from './getUniqueIdentifier'
 import { parseArtifacts } from './parseArtifacts'
 import { setFilters, setModalFiltersValues } from '../reducers/filtersReducer'
+import { showErrorNotification } from './notifications.util'
 
 export const applyTagChanges = (changes, artifactItem, projectName, dispatch, setNotification) => {
   let updateTagPromise = Promise.resolve()
@@ -78,14 +79,8 @@ export const applyTagChanges = (changes, artifactItem, projectName, dispatch, se
         )
       })
       .catch(error => {
-        dispatch(
-          setNotification({
-            status: error.response?.status || 400,
-            id: Math.random(),
-            message: 'Failed to update the tag',
-            retry: () =>
-              applyTagChanges(changes, artifactItem, projectName, dispatch, setNotification)
-          })
+        showErrorNotification(dispatch, error, '', 'Failed to update the tag', () =>
+          applyTagChanges(changes, artifactItem, projectName, dispatch, setNotification)
         )
       })
   } else {

@@ -22,16 +22,19 @@ import { useDispatch, useSelector } from 'react-redux'
 import { useLocation, useNavigate, useParams } from 'react-router-dom'
 import { isEmpty, orderBy } from 'lodash'
 
-import ModelEndpointsView from './ModelEndpointsView'
+import ArtifactsTableRow from '../../../elements/ArtifactsTableRow/ArtifactsTableRow'
+import FilterMenu from '../../FilterMenu/FilterMenu'
+import ModelsPageTabs from '../ModelsPageTabs/ModelsPageTabs'
+import NoData from '../../../common/NoData/NoData'
+import Table from '../../Table/Table'
 
 import detailsActions from '../../../actions/details'
-import { GROUP_BY_NONE, MODEL_ENDPOINTS_TAB } from '../../../constants'
-import { cancelRequest } from '../../../utils/cancelRequest'
+import { GROUP_BY_NONE, MODEL_ENDPOINTS_TAB, MODELS_PAGE, REQUEST_CANCELED } from '../../../constants'
 import { createModelEndpointsRowData } from '../../../utils/createArtifactsContent'
 import { fetchModelEndpoints, removeModelEndpoints } from '../../../reducers/artifactsReducer'
-import { generatePageData } from './modelEndpoints.util'
+import { filters, generatePageData } from './modelEndpoints.util'
+import { getNoDataMessage } from '../../../utils/getNoDataMessage'
 import { isDetailsTabExists } from '../../../utils/isDetailsTabExists'
-import { largeResponseCatchHandler } from '../../../utils/largeResponseCatchHandler'
 import { setFilters } from '../../../reducers/filtersReducer'
 import { useModelsPage } from '../ModelsPage.context'
 
@@ -47,6 +50,7 @@ const ModelEndpoints = () => {
   const navigate = useNavigate()
   const location = useLocation()
   const dispatch = useDispatch()
+  const abortControllerRef = useRef(new AbortController())
   const modelEndpointsRef = useRef(null)
   const pageData = useMemo(() => generatePageData(), [])
   const { toggleConvertedYaml } = useModelsPage()
@@ -66,24 +70,42 @@ const ModelEndpoints = () => {
 
   const fetchData = useCallback(
     filters => {
+      abortControllerRef.current = new AbortController()
+
       dispatch(
         fetchModelEndpoints({
           project: params.projectName,
           filters,
+          config: {
+            ui: {
+              controller: abortControllerRef.current,
+              setLargeRequestErrorMessage
+            }
+          },
           params: {
             metric: 'latency_avg_1h',
             start: 'now-10m'
-          },
-          setLargeRequestErrorMessage
+          }
         })
       )
         .unwrap()
-        .then(result => {
-          setModelEndpoints(result)
+        .then(modelEndpoints => {
+          if (modelEndpoints) {
+            setModelEndpoints(modelEndpoints)
+          }
         })
-        .catch(largeResponseCatchHandler)
     },
     [dispatch, params.projectName]
+  )
+
+  const handleRefresh = useCallback(
+    filters => {
+      setModelEndpoints([])
+      setSelectedModelEndpoint({})
+
+      return fetchData(filters)
+    },
+    [fetchData]
   )
 
   const handleSelectItem = useCallback(
@@ -112,7 +134,7 @@ const ModelEndpoints = () => {
       setModelEndpoints([])
       dispatch(removeModelEndpoints())
       setSelectedModelEndpoint({})
-      cancelRequest(modelEndpointsRef, 'cancel')
+      abortControllerRef.current.abort(REQUEST_CANCELED)
     }
   }, [dispatch])
 
@@ -158,19 +180,60 @@ const ModelEndpoints = () => {
   }, [params.projectName, sortedContent])
 
   return (
-    <ModelEndpointsView
-      actionsMenu={actionsMenu}
-      artifactsStore={artifactsStore}
-      fetchData={fetchData}
-      filtersStore={filtersStore}
-      largeRequestErrorMessage={largeRequestErrorMessage}
-      modelEndpoints={modelEndpoints}
-      pageData={pageData}
-      ref={modelEndpointsRef}
-      selectedModelEndpoint={selectedModelEndpoint}
-      setSelectedModelEndpoint={handleSelectItem}
-      tableContent={tableContent}
-    />
+    <div className="models" ref={modelEndpointsRef}>
+      <div className="table-container">
+        <div className="content__action-bar-wrapper">
+          <ModelsPageTabs />
+          <div className="action-bar">
+            <FilterMenu
+              filters={filters}
+              onChange={handleRefresh}
+              page={MODELS_PAGE}
+              tab={MODEL_ENDPOINTS_TAB}
+              withoutExpandButton
+            />
+          </div>
+        </div>
+        {artifactsStore.loading ? null : modelEndpoints.length === 0 ? (
+          <NoData
+            message={getNoDataMessage(
+              filtersStore,
+              filters,
+              largeRequestErrorMessage,
+              MODELS_PAGE,
+              MODEL_ENDPOINTS_TAB
+            )}
+          />
+        ) : (
+          <>
+            <Table
+              actionsMenu={actionsMenu}
+              content={modelEndpoints}
+              handleCancel={() => handleSelectItem({})}
+              pageData={pageData}
+              retryRequest={fetchData}
+              selectedItem={selectedModelEndpoint}
+              tab={MODEL_ENDPOINTS_TAB}
+              tableHeaders={tableContent[0]?.content ?? []}
+            >
+              {tableContent.map((tableItem, index) => {
+                return (
+                  <ArtifactsTableRow
+                    actionsMenu={actionsMenu}
+                    handleSelectItem={handleSelectItem}
+                    key={index}
+                    rowIndex={index}
+                    rowItem={tableItem}
+                    selectedItem={selectedModelEndpoint}
+                    tab={MODEL_ENDPOINTS_TAB}
+                  />
+                )
+              })}
+            </Table>
+          </>
+        )}
+      </div>
+    </div>
   )
 }
 

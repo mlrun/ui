@@ -19,10 +19,10 @@ such restriction.
 */
 import axios from 'axios'
 import qs from 'qs'
-import { ConfirmDialog } from 'igz-controls/components'
 
+import { ConfirmDialog } from 'igz-controls/components'
+import { CANCEL_REQUEST_TIMEOUT, LARGE_REQUEST_CANCELED } from './constants'
 import { openPopUp } from 'igz-controls/utils/common.util'
-import { LARGE_REQUEST_CANCELED } from './constants'
 
 const headers = {
   'Cache-Control': 'no-cache'
@@ -53,20 +53,49 @@ export const iguazioHttpClient = axios.create({
   headers
 })
 
+const getAbortSignal = (controller, abortCallback, timeoutMs) => {
+  let timeoutId = null
+  const newController = new AbortController()
+  const abortController = controller || newController
+
+  if (timeoutMs) {
+    timeoutId = setTimeout(() => abortController.abort(LARGE_REQUEST_CANCELED), timeoutMs)
+  }
+
+  abortController.signal.onabort = event => {
+    if (timeoutId) {
+      clearTimeout(timeoutId)
+    }
+
+    if (abortCallback) {
+      abortCallback(event)
+    }
+  }
+
+  return [abortController.signal, timeoutId]
+}
+
 let requestId = 1
 let requestTimeouts = {}
+let largeResponsePopUpIsOpen = false
 
 // Request interceptor
 mainHttpClient.interceptors.request.use(
   config => {
     if (config?.ui?.setLargeRequestErrorMessage) {
-      const cancelTokenSource = axios.CancelToken.source()
+      const [signal, timeoutId] = getAbortSignal(
+        config.ui?.controller,
+        abortEvent => {
+          if (abortEvent.target.reason === LARGE_REQUEST_CANCELED) {
+            showLargeResponsePopUp(config.ui.setLargeRequestErrorMessage)
+          }
+        },
+        CANCEL_REQUEST_TIMEOUT
+      )
 
-      config.cancelToken = cancelTokenSource.token
-      requestTimeouts[requestId] = setTimeout(() => {
-        showLargeResponsePopUp(config.ui.setLargeRequestErrorMessage)
-        cancelTokenSource.cancel(LARGE_REQUEST_CANCELED)
-      }, 30000)
+      config.signal = signal
+
+      requestTimeouts[requestId] = timeoutId
       config.ui.requestId = requestId
       requestId++
     }
@@ -99,15 +128,29 @@ mainHttpClient.interceptors.response.use(
 
     return response
   },
-  error => Promise.reject(error)
+  error => {
+    if (error.config?.ui?.requestId) {
+      clearTimeout(requestTimeouts[error.config.ui.requestId])
+      delete requestTimeouts[error.config.ui.requestId]
+    }
+
+    return Promise.reject(error)
+  }
 )
 
 export const showLargeResponsePopUp = setLargeRequestErrorMessage => {
-  const errorMessage =
-    'The query result is too large to display. Add a filter (or narrow it) to retrieve fewer results.'
+  if (!largeResponsePopUpIsOpen) {
+    const errorMessage =
+      'The query result is too large to display. Add a filter (or narrow it) to retrieve fewer results.'
 
-  setLargeRequestErrorMessage(errorMessage)
-  openPopUp(ConfirmDialog, {
-    message: errorMessage
-  })
+    setLargeRequestErrorMessage(errorMessage)
+    largeResponsePopUpIsOpen = true
+
+    openPopUp(ConfirmDialog, {
+      message: errorMessage,
+      closePopUp: () => {
+        largeResponsePopUpIsOpen = false
+      }
+    })
+  }
 }

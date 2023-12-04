@@ -30,14 +30,15 @@ import { useLocation } from 'react-router-dom'
 import Loader from '../../common/Loader/Loader'
 import { Button, FormInput, FormKeyValueTable, FormSelect, Modal } from 'igz-controls/components'
 
-import { setNotification } from '../../reducers/notificationReducer'
-import { MODAL_SM, SECONDARY_BUTTON, TERTIARY_BUTTON } from 'igz-controls/constants'
 import { FUNCTION_TYPE_SERVING, MODELS_TAB } from '../../constants'
+import { MODAL_SM, SECONDARY_BUTTON, TERTIARY_BUTTON } from 'igz-controls/constants'
+import { buildFunction, fetchArtifactsFunctions } from '../../reducers/artifactsReducer'
 import { generateUri } from '../../utils/resources'
 import { getValidationRules } from 'igz-controls/utils/validation.util'
 import { setFieldState } from 'igz-controls/utils/form.util'
+import { setNotification } from '../../reducers/notificationReducer'
+import { showErrorNotification } from '../../utils/notifications.util'
 import { useModalBlockHistory } from '../../hooks/useModalBlockHistory.hook'
-import { buildFunction, fetchArtifactsFunctions } from '../../reducers/artifactsReducer'
 
 import { ReactComponent as QuestionMarkIcon } from 'igz-controls/images/question-mark.svg'
 
@@ -167,14 +168,9 @@ const DeployModelPopUp = ({ isOpen, model, onResolve }) => {
           })
         )
       })
-      .catch(() => {
-        dispatch(
-          setNotification({
-            status: 400,
-            id: Math.random(),
-            message: 'Model deployment failed to initiate',
-            retry: deployModel
-          })
+      .catch(error => {
+        showErrorNotification(dispatch, error, '', 'Model deployment failed to initiate', () =>
+          deployModel(values)
         )
       })
       .finally(() => {

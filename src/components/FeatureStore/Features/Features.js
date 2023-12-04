@@ -19,7 +19,6 @@ such restriction.
 */
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useParams } from 'react-router-dom'
-import axios from 'axios'
 import { connect, useDispatch, useSelector } from 'react-redux'
 
 import AddToFeatureVectorPopUp from '../../../elements/AddToFeatureVectorPopUp/AddToFeatureVectorPopUp'
@@ -28,17 +27,18 @@ import FeaturesView from './FeaturesView'
 import { FeatureStoreContext } from '../FeatureStore'
 
 import {
+  CANCEL_REQUEST_TIMEOUT,
   FEATURES_TAB,
   FEATURE_STORE_PAGE,
   GROUP_BY_NAME,
   GROUP_BY_NONE,
-  TAG_FILTER_ALL_ITEMS,
-  LARGE_REQUEST_CANCELED
+  LARGE_REQUEST_CANCELED,
+  REQUEST_CANCELED,
+  TAG_FILTER_ALL_ITEMS
 } from '../../../constants'
 import { createFeaturesRowData } from '../../../utils/createFeatureStoreContent'
 import { featuresActionCreator, featuresFilters } from './features.util'
 import { getFeatureIdentifier } from '../../../utils/getUniqueIdentifier'
-import { cancelRequest } from '../../../utils/cancelRequest'
 import { getFilterTagOptions, setFilters } from '../../../reducers/filtersReducer'
 import { parseFeatures } from '../../../utils/parseFeatures'
 import { setTablePanelOpen } from '../../../reducers/tableReducer'
@@ -69,6 +69,7 @@ const Features = ({
   const filtersStore = useSelector(store => store.filtersStore)
   const tableStore = useSelector(store => store.tableStore)
   const featureStoreRef = useRef(null)
+  const abortControllerRef = useRef(new AbortController())
   const dispatch = useDispatch()
 
   const { toggleConvertedYaml } = React.useContext(FeatureStoreContext)
@@ -93,13 +94,13 @@ const Features = ({
 
   const fetchData = useCallback(
     filters => {
+      abortControllerRef.current = new AbortController()
+
       const cancelRequestTimeout = setTimeout(() => {
-        cancelRequest(featureStoreRef, LARGE_REQUEST_CANCELED)
-      }, 30000)
+        abortControllerRef.current.abort(LARGE_REQUEST_CANCELED)
+      }, CANCEL_REQUEST_TIMEOUT)
       const config = {
-        cancelToken: new axios.CancelToken(cancel => {
-          featureStoreRef.current.cancel = cancel
-        })
+        signal: abortControllerRef.current.signal
       }
 
       return Promise.allSettled([
@@ -112,7 +113,10 @@ const Features = ({
               return nextValue.value ? prevValue.concat(nextValue.value) : prevValue
             }, [])
 
-            if (features.length > 1500) {
+            if (
+              features.length > 1500 ||
+              abortControllerRef.current?.signal?.reason === LARGE_REQUEST_CANCELED
+            ) {
               showLargeResponsePopUp(setLargeRequestErrorMessage)
               setFeatures([])
             } else {
@@ -125,12 +129,6 @@ const Features = ({
 
           return result
         })
-        .catch(error => {
-          if (error.message === LARGE_REQUEST_CANCELED) {
-            showLargeResponsePopUp(setLargeRequestErrorMessage)
-            setFeatures([])
-          }
-        })
         .finally(() => clearTimeout(cancelRequestTimeout))
     },
     [fetchEntities, fetchFeatures, params.projectName]
@@ -138,6 +136,12 @@ const Features = ({
 
   const handleRefresh = filters => {
     dispatch(getFilterTagOptions({ fetchTags: fetchFeatureSetsTags, project: params.projectName }))
+    setFeatures([])
+    removeFeature()
+    removeEntity()
+    removeFeatures()
+    removeEntities()
+    setSelectedRowData({})
 
     return fetchData(filters)
   }
@@ -270,7 +274,7 @@ const Features = ({
       removeFeatures()
       removeEntities()
       setSelectedRowData({})
-      cancelRequest('cancel')
+      abortControllerRef.current.abort(REQUEST_CANCELED)
     }
   }, [removeEntities, removeEntity, removeFeature, removeFeatures, params.projectName])
 

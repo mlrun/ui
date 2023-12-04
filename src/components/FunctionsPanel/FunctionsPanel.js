@@ -255,8 +255,8 @@ const FunctionsPanel = ({
       .then(response => {
         handleDeployFunctionSuccess(response.data.ready)
       })
-      .catch(() => {
-        handleDeployFunctionFailure()
+      .catch((error) => {
+        handleDeployFunctionFailure(error)
       })
   }
 
