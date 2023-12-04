@@ -241,7 +241,8 @@ export const getInitialCards = (params, navigate, isDemoMode) => {
           }),
           label: 'Create batch function',
           tooltip:
-            'Define the code and other properties to run later in batch. Batch runs are typically used for processes such as data preparation and model training.'
+            'Define the code and other properties to run later in batch. Batch runs are typically used for processes such as data preparation and model training.',
+          hidden: !isDemoMode
         },
         {
           id: 'createnBatchRun',
