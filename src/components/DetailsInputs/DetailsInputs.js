@@ -94,7 +94,8 @@ const DetailsInputs = ({ inputs }) => {
                   ui: {
                     inputName: key,
                     inputPath: value,
-                    isPreviewable: false
+                    isPreviewable: false,
+                    artifactLink: ''
                   }
                 }
               ])
@@ -107,7 +108,8 @@ const DetailsInputs = ({ inputs }) => {
             ui: {
               inputName: key,
               inputPath: value,
-              isPreviewable: false
+              isPreviewable: false,
+              artifactLink: ''
             }
           }
         ])
