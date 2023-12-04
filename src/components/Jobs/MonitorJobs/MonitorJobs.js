@@ -38,7 +38,7 @@ import {
   JOBS_PAGE,
   MONITOR_JOBS_TAB,
   PANEL_RERUN_MODE,
-  LARGE_REQUEST_CANCELED
+  REQUEST_CANCELED
 } from '../../../constants'
 import {
   generateActionsMenu,
@@ -49,18 +49,18 @@ import {
 import { JobsContext } from '../Jobs'
 import { createJobsMonitorTabContent } from '../../../utils/createJobsContent'
 import { datePickerOptions, PAST_WEEK_DATE_OPTION } from '../../../utils/datePicker.util'
-import { getCloseDetailsLink } from '../../../utils/getCloseDetailsLink'
-import { getNoDataMessage } from '../../../utils/getNoDataMessage'
 import { enrichRunWithFunctionFields, handleAbortJob, handleDeleteJob } from '../jobs.util'
+import { getCloseDetailsLink } from '../../../utils/getCloseDetailsLink'
+import { getJobLogs } from '../../../utils/getJobLogs.util'
+import { getNoDataMessage } from '../../../utils/getNoDataMessage'
 import { isDetailsTabExists } from '../../../utils/isDetailsTabExists'
 import { openPopUp } from 'igz-controls/utils/common.util'
-import { getJobLogs } from '../../../utils/getJobLogs.util'
 import { parseJob } from '../../../utils/parseJob'
+import { setFilters } from '../../../reducers/filtersReducer'
 import { setNotification } from '../../../reducers/notificationReducer'
 import { useMode } from '../../../hooks/mode.hook'
 import { usePods } from '../../../hooks/usePods.hook'
 import { useYaml } from '../../../hooks/yaml.hook'
-import { setFilters } from '../../../reducers/filtersReducer'
 
 const MonitorJobs = ({
   abortJob,
@@ -89,6 +89,7 @@ const MonitorJobs = ({
   const dispatch = useDispatch()
   const { isStagingMode } = useMode()
   const fetchJobFunctionsPromiseRef = useRef()
+  const abortControllerRef = useRef(new AbortController())
   const {
     editableItem,
     handleMonitoring,
@@ -136,14 +137,31 @@ const MonitorJobs = ({
 
   const refreshJobs = useCallback(
     filters => {
+      if (params.jobName) {
+        setJobRuns([])
+      } else {
+        setJobs([])
+      }
+      abortControllerRef.current = new AbortController()
+
       if (filters.dates) {
         setDateFilter(filters.dates.value)
       }
 
       const fetchData = params.jobName ? fetchAllJobRuns : fetchJobs
 
-      fetchData(params.projectName, filters, params.jobName ?? false, setLargeRequestErrorMessage)
-        .then(jobs => {
+      fetchData(
+        params.projectName,
+        filters,
+        {
+          ui: {
+            controller: abortControllerRef.current,
+            setLargeRequestErrorMessage
+          }
+        },
+        params.jobName ?? false
+      ).then(jobs => {
+        if (jobs) {
           const parsedJobs = jobs.map(job => parseJob(job, MONITOR_JOBS_TAB))
 
           if (params.jobName) {
@@ -151,27 +169,10 @@ const MonitorJobs = ({
           } else {
             setJobs(parsedJobs)
           }
-        })
-        .catch(error => {
-          if (error.message === LARGE_REQUEST_CANCELED) {
-            if (params.jobName) {
-              setJobRuns([])
-            } else {
-              setJobs([])
-            }
-          } else {
-            dispatch(
-              setNotification({
-                status: error?.response?.status || 400,
-                id: Math.random(),
-                message: 'Failed to fetch jobs',
-                retry: () => refreshJobs(filters)
-              })
-            )
-          }
-        })
+        }
+      })
     },
-    [dispatch, fetchAllJobRuns, fetchJobs, params.jobName, params.projectName]
+    [fetchAllJobRuns, fetchJobs, params.jobName, params.projectName]
   )
 
   const onAbortJob = useCallback(
@@ -417,6 +418,7 @@ const MonitorJobs = ({
     return () => {
       setJobs([])
       setJobRuns([])
+      abortControllerRef.current.abort(REQUEST_CANCELED)
     }
   }, [params.projectName])
 

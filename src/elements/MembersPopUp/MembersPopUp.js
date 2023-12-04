@@ -29,17 +29,19 @@ import Input from '../../common/Input/Input'
 import Select from '../../common/Select/Select'
 import { Button, ConfirmDialog, RoundedIcon, Tip } from 'igz-controls/components'
 
-import projectsIguazioApi from '../../api/projects-iguazio-api'
-import { getRoleOptions, initialNewMembersRole } from './membersPopUp.util'
-import { membersActions } from './membersReducer'
 import {
   DANGER_BUTTON,
   LABEL_BUTTON,
   PRIMARY_BUTTON,
   SECONDARY_BUTTON
 } from 'igz-controls/constants'
+import projectsIguazioApi from '../../api/projects-iguazio-api'
 import { FORBIDDEN_ERROR_STATUS_CODE } from 'igz-controls/constants'
+import { getErrorMsg } from 'igz-controls/utils/common.util'
+import { getRoleOptions, initialNewMembersRole } from './membersPopUp.util'
 import { isIgzVersionCompatible } from '../../utils/isIgzVersionCompatible'
+import { membersActions } from './membersReducer'
+import { showErrorNotification } from '../../utils/notifications.util'
 
 import { ReactComponent as Add } from 'igz-controls/images/add.svg'
 import { ReactComponent as Close } from 'igz-controls/images/close.svg'
@@ -172,21 +174,14 @@ const MembersPopUp = ({
         changeMembersCallback(response.data.data.id)
       })
       .catch(error => {
-        dispatch(
-          setNotification({
-            status: error.response?.status || 400,
-            id: Math.random(),
-            message:
-              error.response?.status === FORBIDDEN_ERROR_STATUS_CODE
-                ? 'Missing edit permission for the project.'
-                : 'Failed to edit project data.',
-            retry:
-              error.response?.status === FORBIDDEN_ERROR_STATUS_CODE
-                ? null
-                : () => applyMembersChanges(changesBody)
-          })
-        )
+        const customErrorMsg =
+          error.response?.status === FORBIDDEN_ERROR_STATUS_CODE
+            ? 'Missing edit permission for the project'
+            : getErrorMsg(error, 'Failed to edit project data')
+
+        showErrorNotification(dispatch, error, '', customErrorMsg, () => applyMembersChanges())
       })
+
     handleOnClose()
   }
 
@@ -297,13 +292,7 @@ const MembersPopUp = ({
         setNewMembersSuggestionList(suggestionList)
       })
       .catch(error => {
-        dispatch(
-          setNotification({
-            status: error.response?.status || 400,
-            id: Math.random(),
-            message: 'Failed to fetch users.'
-          })
-        )
+        showErrorNotification(dispatch, error, 'Failed to fetch users')
       })
   }, 400)
 

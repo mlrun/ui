@@ -239,33 +239,35 @@ const JobWizardFunctionSelection = ({
 
   const onSelectedProjectNameChange = currentValue => {
     dispatch(functionsActions.fetchFunctions(currentValue, {})).then(functions => {
-      const validFunctions = functions.filter(func => {
-        return includes(functionRunKinds, func.kind)
-      })
-
-      const groupedFunctions = Object.values(
-        validFunctions.reduce((prev, curr) => {
-          if (!prev[curr.metadata.name]) {
-            prev[curr.metadata.name] = {
-              name: curr.metadata.name,
-              functions: []
-            }
-          }
-
-          prev[curr.metadata.name].functions.push(curr)
-
-          return prev
-        }, {})
-      )
-
-      setFunctions(groupedFunctions)
-
-      if (filterByName.length > 0) {
-        const filteredFunctions = validFunctions.filter(func => {
-          return func.metadata.name.includes(filterByName)
+      if (functions) {
+        const validFunctions = functions.filter(func => {
+          return includes(functionRunKinds, func.kind)
         })
 
-        setFilteredFunctions(filteredFunctions)
+        const groupedFunctions = Object.values(
+          validFunctions.reduce((prev, curr) => {
+            if (!prev[curr.metadata.name]) {
+              prev[curr.metadata.name] = {
+                name: curr.metadata.name,
+                functions: []
+              }
+            }
+
+            prev[curr.metadata.name].functions.push(curr)
+
+            return prev
+          }, {})
+        )
+
+        setFunctions(groupedFunctions)
+
+        if (filterByName.length > 0) {
+          const filteredFunctions = validFunctions.filter(func => {
+            return func.metadata.name.includes(filterByName)
+          })
+
+          setFilteredFunctions(filteredFunctions)
+        }
       }
     })
 
@@ -377,6 +379,7 @@ const JobWizardFunctionSelection = ({
         <div className="functions-tab">
           <div className="form-row">
             <Search
+              id="search-functions"
               matches={filterMatches}
               onChange={value => handleSearchOnChange(value)}
               placeholder="Search functions..."
@@ -386,7 +389,10 @@ const JobWizardFunctionSelection = ({
           </div>
           <div className="form-row">
             <div className="form-row__project-name">
-              <FormSelect name={`${FUNCTION_SELECTION_STEP}.projectName`} options={projects} />
+              <FormSelect
+                name={`${FUNCTION_SELECTION_STEP}.projectName`}
+                options={projects}
+              />
             </div>
           </div>
           {!loading &&
@@ -420,6 +426,7 @@ const JobWizardFunctionSelection = ({
         <div className="hub-tab">
           <div className="form-row">
             <Search
+              id="search-hub"
               className="hub-search"
               matches={filterMatches}
               onChange={value => handleSearchOnChange(value)}

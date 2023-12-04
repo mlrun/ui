@@ -33,6 +33,7 @@ import {
   FILTER_MENU_MODAL,
   GROUP_BY_NAME,
   GROUP_BY_NONE,
+  REQUEST_CANCELED,
   TAG_FILTER_ALL_ITEMS
 } from '../../constants'
 import {
@@ -50,9 +51,9 @@ import {
   handleApplyDetailsChanges,
   registerDatasetTitle
 } from './datasets.util'
-import { largeResponseCatchHandler } from '../../utils/largeResponseCatchHandler'
-import { cancelRequest } from '../../utils/cancelRequest'
+import { createDatasetsRowData } from '../../utils/createArtifactsContent'
 import { getArtifactIdentifier } from '../../utils/getUniqueIdentifier'
+import { getViewMode } from '../../utils/helper'
 import { isDetailsTabExists } from '../../utils/isDetailsTabExists'
 import { openPopUp } from 'igz-controls/utils/common.util'
 import { setArtifactTags } from '../../utils/artifacts.util'
@@ -60,10 +61,8 @@ import { setFilters } from '../../reducers/filtersReducer'
 import { setNotification } from '../../reducers/notificationReducer'
 import { useGetTagOptions } from '../../hooks/useGetTagOptions.hook'
 import { useGroupContent } from '../../hooks/groupContent.hook'
-import { useYaml } from '../../hooks/yaml.hook'
-import { getViewMode } from '../../utils/helper'
-import { createDatasetsRowData } from '../../utils/createArtifactsContent'
 import { useSortTable } from '../../hooks/useSortTable.hook'
+import { useYaml } from '../../hooks/yaml.hook'
 
 const Datasets = () => {
   const [datasets, setDatasets] = useState([])
@@ -76,6 +75,7 @@ const Datasets = () => {
   const artifactsStore = useSelector(store => store.artifactsStore)
   const filtersStore = useSelector(store => store.filtersStore)
   const datasetsRef = useRef(null)
+  const abortControllerRef = useRef(new AbortController())
   const viewMode = getViewMode(window.location.search)
   const params = useParams()
   const navigate = useNavigate()
@@ -100,21 +100,35 @@ const Datasets = () => {
 
   const fetchData = useCallback(
     filters => {
-      dispatch(fetchDataSets({ project: params.projectName, filters, setLargeRequestErrorMessage }))
+      abortControllerRef.current = new AbortController()
+
+      dispatch(
+        fetchDataSets({
+          project: params.projectName,
+          filters,
+          config: {
+            ui: {
+              controller: abortControllerRef.current,
+              setLargeRequestErrorMessage
+            }
+          }
+        })
+      )
         .unwrap()
         .then(dataSetsResponse => {
-          setArtifactTags(
-            dataSetsResponse,
-            setDatasets,
-            setAllDatasets,
-            filters,
-            dispatch,
-            DATASETS_PAGE
-          )
+          if (dataSetsResponse) {
+            setArtifactTags(
+              dataSetsResponse,
+              setDatasets,
+              setAllDatasets,
+              filters,
+              dispatch,
+              DATASETS_PAGE
+            )
 
-          return dataSetsResponse
+            return dataSetsResponse
+          }
         })
-        .catch(largeResponseCatchHandler)
     },
     [dispatch, params.projectName]
   )
@@ -305,7 +319,7 @@ const Datasets = () => {
       setAllDatasets([])
       dispatch(removeDataSets())
       setSelectedDataset({})
-      cancelRequest(datasetsRef, 'cancel')
+      abortControllerRef.current.abort(REQUEST_CANCELED)
     }
   }, [dispatch])
 

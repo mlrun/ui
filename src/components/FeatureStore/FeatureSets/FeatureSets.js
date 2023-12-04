@@ -20,7 +20,6 @@ such restriction.
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useLocation, useNavigate, useParams } from 'react-router-dom'
 import { connect, useSelector, useDispatch } from 'react-redux'
-import axios from 'axios'
 import { cloneDeep } from 'lodash'
 
 import FeatureSetsView from './FeatureSetsView'
@@ -32,11 +31,11 @@ import {
   FEATURE_STORE_PAGE,
   GROUP_BY_NAME,
   GROUP_BY_NONE,
+  REQUEST_CANCELED,
   TAG_FILTER_ALL_ITEMS,
   TAG_LATEST
 } from '../../../constants'
 import { featureSetsActionCreator, featureSetsFilters, generatePageData } from './featureSets.util'
-import { cancelRequest } from '../../../utils/cancelRequest'
 import { checkTabIsValid, handleApplyDetailsChanges } from '../featureStore.util'
 import { createFeatureSetsRowData } from '../../../utils/createFeatureStoreContent'
 import { getFeatureSetIdentifier } from '../../../utils/getUniqueIdentifier'
@@ -72,6 +71,7 @@ const FeatureSets = ({
   const featureStore = useSelector(store => store.featureStore)
   const filtersStore = useSelector(store => store.filtersStore)
   const featureStoreRef = useRef(null)
+  const abortControllerRef = useRef(new AbortController())
   const navigate = useNavigate()
   const location = useLocation()
   const dispatch = useDispatch()
@@ -104,30 +104,31 @@ const FeatureSets = ({
 
   const fetchData = useCallback(
     filters => {
+      abortControllerRef.current = new AbortController()
+
       const config = {
-        cancelToken: new axios.CancelToken(cancel => {
-          featureStoreRef.current.cancel = cancel
-        }),
         ui: {
+          controller: abortControllerRef.current,
           setLargeRequestErrorMessage
         }
       }
 
-      return fetchFeatureSets(params.projectName, filters, config)
-        .then(result => {
-          if (result) {
-            setFeatureSets(parseFeatureSets(result))
+      return fetchFeatureSets(params.projectName, filters, config).then(result => {
+        if (result) {
+          setFeatureSets(parseFeatureSets(result))
 
-            return result
-          }
-        })
+          return result
+        }
+      })
     },
     [fetchFeatureSets, params.projectName]
   )
 
   const handleRefresh = filters => {
     dispatch(getFilterTagOptions({ fetchTags: fetchFeatureSetsTags, project: params.projectName }))
-
+    setFeatureSets([])
+    setSelectedFeatureSet({})
+    setSelectedRowData({})
     return fetchData(filters)
   }
 
@@ -342,7 +343,7 @@ const FeatureSets = ({
       removeFeatureSet()
       setSelectedFeatureSet({})
       setSelectedRowData({})
-      cancelRequest(featureStoreRef, 'cancel')
+      abortControllerRef.current.abort(REQUEST_CANCELED)
     }
   }, [removeFeatureSet, removeFeatureSets, params.projectName])
 

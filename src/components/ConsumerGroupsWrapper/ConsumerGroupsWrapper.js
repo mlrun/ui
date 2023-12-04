@@ -30,7 +30,7 @@ import { GROUP_BY_NONE } from '../../constants'
 import { areNuclioStreamsEnabled } from '../../utils/helper'
 import { isProjectValid } from '../../utils/handleRedirect'
 import { setFilters } from '../../reducers/filtersReducer'
-import { setNotification } from '../../reducers/notificationReducer'
+import { showErrorNotification } from '../../utils/notifications.util'
 
 const ConsumerGroupsWrapper = ({
   fetchNuclioV3ioStreams,
@@ -62,13 +62,8 @@ const ConsumerGroupsWrapper = ({
 
   useEffect(() => {
     if (v3ioStreams.error) {
-      dispatch(
-        setNotification({
-          status: v3ioStreams.error?.response?.status || 400,
-          id: Math.random(),
-          message: 'Failed to fetch v3io streams',
-          retry: () => refreshConsumerGroups()
-        })
+      showErrorNotification(dispatch, v3ioStreams.error, 'Failed to fetch v3io streams', () =>
+        refreshConsumerGroups()
       )
 
       resetV3ioStreamsError()

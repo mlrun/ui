@@ -37,6 +37,7 @@ import { generateKeyValues } from '../../utils'
 import { setNotification } from '../../reducers/notificationReducer'
 import { generateFunctionPriorityLabel } from '../../utils/generateFunctionPriorityLabel'
 import { parseKeyValues } from '../../utils/object'
+import { showErrorNotification } from '../../utils/notifications.util'
 
 export const page = JOBS_PAGE
 export const getInfoHeaders = isSpark =>
@@ -260,23 +261,17 @@ export const handleAbortJob = (
       )
     })
     .catch(error => {
-      dispatch(
-        setNotification({
-          status: error.response?.status || 400,
-          id: Math.random(),
-          retry: () =>
-            handleAbortJob(
-              abortJob,
-              projectName,
-              job,
-              filtersStore,
-              setNotification,
-              refreshJobs,
-              setConfirmData,
-              dispatch
-            ),
-          message: error.response?.data?.detail || 'Aborting job failed'
-        })
+      showErrorNotification(dispatch, error, 'Aborting job failed', '', () =>
+        handleAbortJob(
+          abortJob,
+          projectName,
+          job,
+          filtersStore,
+          setNotification,
+          refreshJobs,
+          setConfirmData,
+          dispatch
+        )
       )
     })
   setConfirmData(null)
@@ -295,14 +290,7 @@ export const handleDeleteJob = (deleteJob, job, projectName, refreshJobs, filter
       )
     })
     .catch(error => {
-      dispatch(
-        setNotification({
-          status: error.response?.status || 400,
-          id: Math.random(),
-          retry: () => handleDeleteJob(job),
-          message: error.response?.data?.detail || 'Deleting job failed'
-        })
-      )
+      showErrorNotification(dispatch, error, 'Deleting job failed', '', () => handleDeleteJob(job))
     })
 }
 
@@ -366,13 +354,7 @@ export const enrichRunWithFunctionFields = (
       return jobRun
     })
     .catch(error => {
-      dispatch(
-        setNotification({
-          status: error.response?.status || 400,
-          id: Math.random(),
-          message: 'Failed to fetch function tag'
-        })
-      )
+      showErrorNotification(dispatch, error, 'Failed to fetch function tag', '')
     })
 }
 

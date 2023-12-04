@@ -17,7 +17,7 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import React, { useEffect, useMemo, useRef, useState } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import { isEqual } from 'lodash'
 import PropTypes from 'prop-types'
 import classnames from 'classnames'
@@ -34,7 +34,6 @@ import { ReactComponent as Popout } from 'igz-controls/images/popout.svg'
 const DetailsPreview = ({ artifact, handlePreview }) => {
   const [preview, setPreview] = useState([])
   const [noData, setNoData] = useState(false)
-  const previewRef = useRef({ current: {} })
   const params = useParams()
 
   const popupButtonIsDisplayed = useMemo(() => {
@@ -52,17 +51,12 @@ const DetailsPreview = ({ artifact, handlePreview }) => {
   useEffect(() => {
     return () => {
       setPreview([])
-      cancelRequest('cancel')
     }
   }, [artifact])
 
   useEffect(() => {
     getArtifactPreview(params.projectName, artifact, noData, setNoData, setPreview)
   }, [artifact, noData, params.projectName])
-
-  const cancelRequest = message => {
-    previewRef.current?.cancel && previewRef.current.cancel(message)
-  }
 
   return (
     <div className="preview_container">

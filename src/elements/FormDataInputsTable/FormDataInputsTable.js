@@ -76,7 +76,7 @@ const FormDataInputsTable = ({
   }
 
   return (
-    <div className={tableClassNames}>
+    <div className={tableClassNames} data-testid={fieldsPath}>
       <div className="form-table__row form-table__header-row no-hover">
         <div className="form-table__cell form-table__cell_min"></div>
         <div className="form-table__cell form-table__cell_1">

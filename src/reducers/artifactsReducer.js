@@ -18,7 +18,6 @@ under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
-import artifactsApi from '../api/artifacts-api'
 import {
   defaultFulfilledHandler,
   defaultPendingHandler,
@@ -26,14 +25,16 @@ import {
   hideLoading,
   showLoading
 } from './redux.util'
-import { filterArtifacts } from '../utils/filterArtifacts'
-import { parseArtifacts } from '../utils/parseArtifacts'
-import { generateArtifacts } from '../utils/generateArtifacts'
-import { ARTIFACTS, DATASETS, FUNCTION_TYPE_SERVING, MODELS_TAB } from '../constants'
-import { getArtifactIdentifier } from '../utils/getUniqueIdentifier'
+import artifactsApi from '../api/artifacts-api'
 import functionsApi from '../api/functions-api'
-import { parseFunctions } from '../utils/parseFunctions'
+import { ARTIFACTS, DATASETS, FUNCTION_TYPE_SERVING, MODELS_TAB } from '../constants'
+import { filterArtifacts } from '../utils/filterArtifacts'
+import { generateArtifacts } from '../utils/generateArtifacts'
 import { generateModelEndpoints } from '../utils/generateModelEndpoints'
+import { getArtifactIdentifier } from '../utils/getUniqueIdentifier'
+import { parseArtifacts } from '../utils/parseArtifacts'
+import { parseFunctions } from '../utils/parseFunctions'
+import { largeResponseCatchHandler } from '../utils/largeResponseCatchHandler'
 
 const initialState = {
   artifacts: [],
@@ -114,14 +115,21 @@ export const fetchDataSet = createAsyncThunk('fetchDataSet', ({ project, dataSet
 })
 export const fetchDataSets = createAsyncThunk(
   'fetchDataSets',
-  ({ project, filters, config, setLargeRequestErrorMessage }) => {
+  ({ project, filters, config }, thunkAPI) => {
+    setTimeout(() => {
+      thunkAPI.dispatch(fetchDataSets.pending())
+    })
+
     return artifactsApi
-      .getDataSets(project, filters, config, setLargeRequestErrorMessage)
+      .getDataSets(project, filters, config)
       .then(({ data }) => {
         const result = parseArtifacts(data.artifacts)
 
         return generateArtifacts(filterArtifacts(result), DATASETS, data.artifacts)
       })
+      .catch(error =>
+        largeResponseCatchHandler(error, 'Failed to fetch datasets', thunkAPI.dispatch)
+      )
   }
 )
 export const fetchFile = createAsyncThunk('fetchFile', ({ project, file, iter, tag }) => {
@@ -133,36 +141,44 @@ export const fetchFile = createAsyncThunk('fetchFile', ({ project, file, iter, t
 })
 export const fetchFiles = createAsyncThunk(
   'fetchFiles',
-  ({ project, filters, setLargeRequestErrorMessage }) => {
-    return artifactsApi.getFiles(project, filters, setLargeRequestErrorMessage).then(({ data }) => {
-      const result = parseArtifacts(data.artifacts)
-
-      return generateArtifacts(filterArtifacts(result), ARTIFACTS, data.artifacts)
+  ({ project, filters, config }, thunkAPI) => {
+    setTimeout(() => {
+      thunkAPI.dispatch(fetchFiles.pending())
     })
+
+    return artifactsApi
+      .getFiles(project, filters, config)
+      .then(({ data }) => {
+        const result = parseArtifacts(data.artifacts)
+
+        return generateArtifacts(filterArtifacts(result), ARTIFACTS, data.artifacts)
+      })
+      .catch(error =>
+        largeResponseCatchHandler(error, 'Failed to fetch artifacts', thunkAPI.dispatch)
+      )
   }
 )
 export const fetchArtifactsFunctions = createAsyncThunk(
   'fetchArtifactsFunctions',
-  ({ project, filters, setLargeRequestErrorMessage }) => {
-    return functionsApi
-      .getFunctions(project, filters, null, setLargeRequestErrorMessage)
-      .then(({ data }) => {
-        return parseFunctions(
-          data.funcs.filter(
-            func => func.kind === FUNCTION_TYPE_SERVING && func.metadata.tag?.length
-          )
-        )
-      })
+  ({ project, filters, config }) => {
+    return functionsApi.getFunctions(project, filters, config, null).then(({ data }) => {
+      return parseFunctions(
+        data.funcs.filter(func => func.kind === FUNCTION_TYPE_SERVING && func.metadata.tag?.length)
+      )
+    })
   }
 )
 export const fetchModelEndpoints = createAsyncThunk(
   'fetchModelEndpoints',
-  ({ project, filters, params, setLargeRequestErrorMessage }) => {
+  ({ project, filters, config, params }, thunkAPI) => {
     return artifactsApi
-      .getModelEndpoints(project, filters, params, setLargeRequestErrorMessage)
+      .getModelEndpoints(project, filters, config, params)
       .then(({ data: { endpoints = [] } }) => {
         return generateModelEndpoints(endpoints)
       })
+      .catch(error =>
+        largeResponseCatchHandler(error, 'Failed to fetch model endpoints', thunkAPI.dispatch)
+      )
   }
 )
 export const fetchModel = createAsyncThunk('fetchModel', ({ project, model, iter, tag }) => {
@@ -174,13 +190,20 @@ export const fetchModel = createAsyncThunk('fetchModel', ({ project, model, iter
 })
 export const fetchModels = createAsyncThunk(
   'fetchModels',
-  ({ project, filters, setLargeRequestErrorMessage }) => {
+  ({ project, filters, config }, thunkAPI) => {
+    setTimeout(() => {
+      thunkAPI.dispatch(fetchModels.pending())
+    })
+
     return artifactsApi
-      .getModels(project, filters, setLargeRequestErrorMessage)
+      .getModels(project, filters, config)
       .then(({ data }) => {
         const result = filterArtifacts(parseArtifacts(data.artifacts))
 
         return generateArtifacts(result, MODELS_TAB, data.artifacts)
+      })
+      .catch(error => {
+        largeResponseCatchHandler(error, 'Failed to fetch models', thunkAPI.dispatch)
       })
   }
 )

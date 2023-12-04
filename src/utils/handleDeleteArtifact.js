@@ -19,6 +19,7 @@ such restriction.
 */
 import { deleteArtifact } from '../reducers/artifactsReducer'
 import { setNotification } from '../reducers/notificationReducer'
+import { showErrorNotification } from './notifications.util'
 
 export const handleDeleteArtifact = (
   dispatch,
@@ -43,23 +44,17 @@ export const handleDeleteArtifact = (
       )
     })
     .catch(error => {
-      dispatch(
-        setNotification({
-          status: error.response?.status || 400,
-          id: Math.random(),
-          retry: () =>
-            handleDeleteArtifact(
-              dispatch,
-              project,
-              key,
-              tag,
-              uid,
-              refreshArtifacts,
-              filters,
-              artifactType
-            ),
-          message: error.response?.data?.detail || `Deleting ${artifactType} failed`
-        })
+      showErrorNotification(dispatch, error, `Deleting ${artifactType} failed`, '', () =>
+        handleDeleteArtifact(
+          dispatch,
+          project,
+          key,
+          tag,
+          uid,
+          refreshArtifacts,
+          filters,
+          artifactType
+        )
       )
     })
 }
