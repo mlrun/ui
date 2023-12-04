@@ -529,7 +529,7 @@ module.exports = {
     Tag_Input: inputGroup(
       generateInputGroup('.pop-up-dialog .vector-tag-wrapper', true, '.input__warning svg', true)
     ),
-    Description_Input: textAreaGroup(generateTextAreaGroup('.pop-up-dialog .text-area-wrapper')),
+    Description_Input: textAreaGroup(generateTextAreaGroup('.pop-up-dialog .text-area-wrapper', '.text-area__counter')),
     Labels_Table: commonTable(createFeatureVectorLabelsTable),
     Cancel_Button: commonCancelButton,
     Create_Button: commonConfirmButton

@@ -1137,19 +1137,23 @@ function postSubmitJob(req, res) {
 
 function putTags(req, res){
   const tagName = req.params.tag
-  const projectName = req.params.project 
-  
-  let artifactForUpdate = artifacts.artifacts.find(artifact => artifact.tree === req.body.identifiers[0].uid)
-  
-  if (artifactForUpdate === undefined){
-    artifactForUpdate = artifacts.artifacts
-      .filter(item => item.metadata)
-      .find(item => item.metadata.tree === req.body.identifiers[0].uid)
-    
-    artifactForUpdate.metadata.tag = req.params.tag    
-  }
-  else{
-    artifactForUpdate.tag = req.params.tag
+  const projectName = req.params.project
+
+  const artifactForUpdate = artifacts.artifacts
+    .find(artifact => ((artifact.metadata && artifact.metadata.project === req.params.project) 
+      || artifact.project === req.params.project) 
+      && artifact.kind === req.body.identifiers[0].kind
+      && ((artifact.metadata && artifact.metadata.tree === req.body.identifiers[0].uid) 
+      || artifact.tree === req.body.identifiers[0].uid) 
+      && ((artifact.metadata && artifact.metadata.key === req.body.identifiers[0].key) 
+      || artifact.db_key === req.body.identifiers[0].key))
+  if (artifactForUpdate) {
+    if (artifactForUpdate.metadata && artifactForUpdate.metadata.tag || artifactForUpdate.metadata && artifactForUpdate.metadata.tag === ''){
+      artifactForUpdate.metadata.tag = req.params.tag
+    }
+    else if (artifactForUpdate.tag || artifactForUpdate.tag === ''){
+      artifactForUpdate.tag = req.params.tag
+    }
   }
   
   res.send({
@@ -1164,8 +1168,9 @@ function deleteTags(req, res){
       || artifact.project === req.params.project) 
       && artifact.kind === req.body.identifiers[0].kind
       && ((artifact.metadata && artifact.metadata.tree === req.body.identifiers[0].uid) 
-      || artifact.tree === req.body.identifiers[0].uid)) 
-  
+      || artifact.tree === req.body.identifiers[0].uid) 
+      && ((artifact.metadata && artifact.metadata.key === req.body.identifiers[0].key) 
+      || artifact.db_key === req.body.identifiers[0].key))
   if (collectedArtifact) {
     if (collectedArtifact.metadata && collectedArtifact.metadata.tag === req.params.tag){
       collectedArtifact.metadata.tag = ''

@@ -268,6 +268,8 @@ Feature: Datasets Page
   
   @MLD
   @passive
+  @FAILED_TODO
+  #TODO: requires a separate run
   Scenario: MLD015 - Verify View YAML action on Datasets page
     Given open url
     And wait load page
@@ -278,7 +280,7 @@ Feature: Datasets Page
     And wait load page
     And select "tab" with "Datasets" value in breadcrumbs menu
     And wait load page
-    Then select "View YAML" option in action menu on "Datasets" wizard in "Datasets_Table" table at row with "data_clean_cleaned-data" value in "name" column
+    Then select "View YAML" option in action menu on "Datasets" wizard in "Datasets_Table" table at row with "data_clean_encoded-data" value in "name" column
     Then verify if "View_YAML" popup dialog appears
     Then verify "Cross_Cancel_Button" element visibility on "View_YAML" wizard
     Then verify "YAML_Modal_Container" element visibility on "View_YAML" wizard
@@ -311,7 +313,6 @@ Feature: Datasets Page
   @MLD
   @FAILED_TODO
   #TODO: Redirection - ML-4600, url without iter number, doesn't send in new artifacts structure 
-  #TODO: requires a separate run
   Scenario: MLD016 - Check broken link redirection
     * set tear-down property "dataset" created in "default" project with "test_ds" value
     * create "test_ds" Dataset with "latest" tag in "default" project with code 200

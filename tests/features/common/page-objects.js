@@ -38,6 +38,7 @@ module.exports = {
   Artifacts_Info_Pane: infoPane['artifactsInfoPane'],
   Batch_Run: jobsAndWorkflows['BatchRun'],
   Batch_Run_Edit: sidePanel['batchRunEdit'],
+  Batch_Re_Run: sidePanel['batchReRun'],
   Batch_Inference: project['batchInference'],
   Change_Project_Owner_Popup: interactivePopup['changeProjectOwnerPopup'],
   Common_Popup: interactivePopup['commonPopup'],
