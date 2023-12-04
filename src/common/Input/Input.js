@@ -45,6 +45,7 @@ const Input = React.forwardRef(
       focused,
       iconClass,
       iconOnClick,
+      id,
       infoLabel,
       inputIcon,
       invalid,
@@ -221,7 +222,7 @@ const Input = React.forwardRef(
     return (
       <div ref={ref} className={wrapperClassNames}>
         <input
-          data-testid="input"
+          data-testid={id ? `${id}-input` : 'input'}
           className={inputClassNames}
           onBlur={handleInputBlur}
           onChange={handleInputChange}
@@ -244,7 +245,7 @@ const Input = React.forwardRef(
         {label && (
           <div className={labelClassNames}>
             <label
-              data-testid="label"
+              data-testid="input-label"
               ref={inputLabelRef}
               style={
                 infoLabel
@@ -335,7 +336,8 @@ Input.defaultProps = {
   floatingLabel: false,
   focused: false,
   iconClass: '',
-  iconOnClick: () => {},
+  iconOnClick: () => { },
+  id: '',
   infoLabel: false,
   inputIcon: null,
   invalid: false,
@@ -368,6 +370,7 @@ Input.propTypes = {
   focused: PropTypes.bool,
   iconClass: PropTypes.string,
   iconOnClick: PropTypes.func,
+  id: PropTypes.string,
   infoLabel: PropTypes.bool,
   inputIcon: PropTypes.element,
   invalid: PropTypes.bool,

@@ -43,7 +43,7 @@ const FormVolumesTable = ({ disabled, exitEditModeTriggerItem, fieldsPath, formS
   } = useFormTable(formState, exitEditModeTriggerItem)
 
   return (
-    <div className={tableClassNames}>
+    <div className={tableClassNames} data-testid={fieldsPath}>
       <div className="form-table__row form-table__header-row no-hover">
         <div className="form-table__cell form-table__cell_1">
           <Tooltip template={<TextTooltipTemplate text="Type" />}>Type</Tooltip>

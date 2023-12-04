@@ -35,7 +35,7 @@ import './jobWizardParameters.scss'
 
 const JobWizardParameters = ({ formState, stepIsActive }) => {
   const parametersFromPath = `${PARAMETERS_STEP}.parametersFrom`
-  const parametersFromFileUrlPath = `${PARAMETERS_STEP}.parametersFromFileUrl'`
+  const parametersFromFileUrlPath = `${PARAMETERS_STEP}.parametersFromFileUrl`
 
   const selectedFromValue = useMemo(
     () => get(formState.values, parametersFromPath, PARAMETERS_FROM_UI_VALUE),
