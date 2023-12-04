@@ -17,7 +17,6 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import { get } from 'lodash'
 import functionsApi from '../api/functions-api'
 import yaml from 'js-yaml'
 import {
@@ -86,7 +85,8 @@ import {
 } from '../constants'
 import { FORBIDDEN_ERROR_STATUS_CODE } from 'igz-controls/constants'
 import { generateCategories, generateHubCategories } from '../utils/generateTemplatesCategories'
-import { setNotification } from '../reducers/notificationReducer'
+import { largeResponseCatchHandler } from '../utils/largeResponseCatchHandler'
+import { showErrorNotification } from '../utils/notifications.util'
 
 const functionsActions = {
   createNewFunction: (project, data) => dispatch => {
@@ -185,17 +185,8 @@ const functionsActions = {
         return templates
       })
       .catch(error => {
-        const errorMsg = get(error, 'response.data.detail', "Function's template failed to load")
-
         dispatch(functionsActions.fetchFunctionTemplateFailure(error))
-        dispatch(
-          setNotification({
-            status: error.response?.status || 400,
-            id: Math.random(),
-            message: errorMsg,
-            error
-          })
-        )
+        showErrorNotification(dispatch, error, "Function's template failed to load")
       })
   },
   fetchFunctionTemplateSuccess: selectFunction => ({
@@ -209,22 +200,21 @@ const functionsActions = {
     type: FETCH_FUNCTION_TEMPLATE_FAILURE,
     payload: err
   }),
-  fetchFunctions:
-    (project, filters, setLargeRequestErrorMessage) =>
-    dispatch => {
-      dispatch(functionsActions.fetchFunctionsBegin())
+  fetchFunctions: (project, filters, config) => dispatch => {
+    dispatch(functionsActions.fetchFunctionsBegin())
 
-      return functionsApi
-        .getFunctions(project, filters, null, setLargeRequestErrorMessage)
-        .then(({ data }) => {
-          dispatch(functionsActions.fetchFunctionsSuccess(data.funcs))
+    return functionsApi
+      .getFunctions(project, filters, config)
+      .then(({ data }) => {
+        dispatch(functionsActions.fetchFunctionsSuccess(data.funcs))
 
-          return data.funcs
-        })
-        .catch(err => {
-          dispatch(functionsActions.fetchFunctionsFailure(err.message))
-        })
-    },
+        return data.funcs
+      })
+      .catch(error => {
+        dispatch(functionsActions.fetchFunctionsFailure(error.message))
+        largeResponseCatchHandler(error, 'Failed to fetch functions', dispatch)
+      })
+  },
   fetchFunctionsBegin: () => ({
     type: FETCH_FUNCTIONS_BEGIN
   }),
@@ -264,17 +254,8 @@ const functionsActions = {
         return response.data
       })
       .catch(error => {
-        const errorMsg = get(error, 'response.data.detail', 'The function failed to load')
         dispatch(functionsActions.fetchHubFunctionTemplateFailure(error))
-
-        dispatch(
-          setNotification({
-            status: error.response?.status || 400,
-            id: Math.random(),
-            message: errorMsg,
-            error
-          })
-        )
+        showErrorNotification(dispatch, error, 'The function failed to load')
       })
   },
   fetchHubFunctionTemplateSuccess: () => ({
@@ -300,16 +281,7 @@ const functionsActions = {
         return templatesData
       })
       .catch(error => {
-        const errorMsg = get(error, 'response.data.detail', 'Functions failed to load')
-
-        dispatch(
-          setNotification({
-            status: error.response?.status || 400,
-            id: Math.random(),
-            message: errorMsg,
-            error
-          })
-        )
+        showErrorNotification(dispatch, error, 'Functions failed to load')
       })
   },
 

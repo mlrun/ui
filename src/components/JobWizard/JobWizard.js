@@ -38,22 +38,6 @@ import Loader from '../../common/Loader/Loader'
 import ScheduleWizard from '../SheduleWizard/ScheduleWizard'
 import { Wizard } from 'igz-controls/components'
 
-import functionsActions from '../../actions/functions'
-import jobsActions from '../../actions/jobs'
-import projectsAction from '../../actions/projects'
-import { MODAL_MAX } from 'igz-controls/constants'
-import {
-  generateJobRequestData,
-  generateJobWizardData,
-  generateJobWizardDefaultData,
-  getNewJobErrorMsg,
-  getSaveJobErrorMsg
-} from './JobWizard.util'
-import { resetModalFilter } from '../../reducers/filtersReducer'
-import { scheduledJobsActionCreator } from '../Jobs/ScheduledJobs/scheduledJobs.util'
-import { setFieldState } from 'igz-controls/utils/form.util'
-import { setNotification } from '../../reducers/notificationReducer'
-import { useModalBlockHistory } from '../../hooks/useModalBlockHistory.hook'
 import {
   ADVANCED_STEP,
   DATA_INPUTS_STEP,
@@ -70,8 +54,25 @@ import {
   RUN_DETAILS_STEP,
   SCHEDULE_TAB
 } from '../../constants'
-import { JOB_WIZARD_MODE } from '../../types'
+import {
+  generateJobRequestData,
+  generateJobWizardData,
+  generateJobWizardDefaultData,
+  getNewJobErrorMsg,
+  getSaveJobErrorMsg
+} from './JobWizard.util'
+import functionsActions from '../../actions/functions'
+import jobsActions from '../../actions/jobs'
+import projectsAction from '../../actions/projects'
 import { FUNCTIONS_SELECTION_FUNCTIONS_TAB } from './JobWizardSteps/JobWizardFunctionSelection/jobWizardFunctionSelection.util'
+import { JOB_WIZARD_MODE } from '../../types'
+import { MODAL_MAX } from 'igz-controls/constants'
+import { resetModalFilter } from '../../reducers/filtersReducer'
+import { scheduledJobsActionCreator } from '../Jobs/ScheduledJobs/scheduledJobs.util'
+import { setFieldState } from 'igz-controls/utils/form.util'
+import { setNotification } from '../../reducers/notificationReducer'
+import { showErrorNotification } from '../../utils/notifications.util'
+import { useModalBlockHistory } from '../../hooks/useModalBlockHistory.hook'
 
 import './jobWizard.scss'
 
@@ -315,13 +316,7 @@ const JobWizard = ({
           )
         })
         .catch(error => {
-          dispatch(
-            setNotification({
-              status: error.response.status || 400,
-              id: Math.random(),
-              message: getNewJobErrorMsg(error)
-            })
-          )
+          showErrorNotification(dispatch, error, '', getNewJobErrorMsg(error))
         })
     },
     [dispatch, mode, navigate, onSuccessRequest, resolveModal, runNewJob]
@@ -366,13 +361,7 @@ const JobWizard = ({
           navigate(`/projects/${params.projectName}/jobs/${SCHEDULE_TAB}`)
         })
         .catch(error => {
-          dispatch(
-            setNotification({
-              status: error.response.status || 400,
-              id: Math.random(),
-              message: getSaveJobErrorMsg(error)
-            })
-          )
+          showErrorNotification(dispatch, error, '', getSaveJobErrorMsg(error))
         })
     },
     [dispatch, editJob, mode, navigate, onSuccessRequest, resolveModal]

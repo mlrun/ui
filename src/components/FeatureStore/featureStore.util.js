@@ -30,8 +30,9 @@ import {
   TAG_LATEST
 } from '../../constants'
 import { FORBIDDEN_ERROR_STATUS_CODE } from 'igz-controls/constants'
-import { truncateUid } from '../../utils'
 import { convertChipsData } from '../../utils/convertChipsData'
+import { showErrorNotification } from '../../utils/notifications.util'
+import { truncateUid } from '../../utils'
 
 export const createFeatureSetTitle = 'Create set'
 export const createFeatureVectorTitle = 'Create vector'
@@ -125,27 +126,24 @@ export const handleApplyDetailsChanges = (
       return response
     })
     .catch(error => {
-      dispatch(
-        setNotification({
-          status: error.response?.status || 400,
-          id: Math.random(),
-          message:
-            error.response?.status === FORBIDDEN_ERROR_STATUS_CODE
-              ? 'Permission denied.'
-              : 'Failed to update.',
-          retry: () => handleApplyDetailsChanges(
-            changes,
-            fetchData,
-            projectName,
-            itemName,
-            pageTab,
-            selectedItem,
-            setNotification,
-            updateFeatureStoreData,
-            filters,
-            dispatch
-          )
-        })
+      const customErrorMsg =
+        error.response?.status === FORBIDDEN_ERROR_STATUS_CODE
+          ? 'Permission denied'
+          : 'Failed to update'
+
+      showErrorNotification(dispatch, error, '', customErrorMsg, () =>
+        handleApplyDetailsChanges(
+          changes,
+          fetchData,
+          projectName,
+          itemName,
+          pageTab,
+          selectedItem,
+          setNotification,
+          updateFeatureStoreData,
+          filters,
+          dispatch
+        )
       )
     })
 }

@@ -135,7 +135,7 @@ const JobsPanelDataInputs = ({
             })
           })
       } else if (storePathType === 'feature-vectors' && inputsState.featureVectors.length === 0) {
-        fetchFeatureVectors(projectName).then(featureVectors => {
+        fetchFeatureVectors(projectName, {}, {}, true).then(featureVectors => {
           const featureVectorsList = uniqBy(featureVectors, 'metadata.name')
             .map(featureVector => ({
               label: featureVector.metadata.name,

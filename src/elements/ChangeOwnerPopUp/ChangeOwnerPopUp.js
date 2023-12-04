@@ -26,12 +26,14 @@ import { debounce } from 'lodash'
 import Input from '../../common/Input/Input'
 import { Button, PopUpDialog } from 'igz-controls/components'
 
-import { setNotification } from '../../reducers/notificationReducer'
 import projectsIguazioApi from '../../api/projects-iguazio-api'
-import { deleteUnsafeHtml } from '../../utils'
 import { FORBIDDEN_ERROR_STATUS_CODE, SECONDARY_BUTTON, LABEL_BUTTON } from 'igz-controls/constants'
-import { useDetectOutsideClick } from 'igz-controls/hooks'
+import { deleteUnsafeHtml } from '../../utils'
+import { getErrorMsg } from 'igz-controls/utils/common.util'
 import { isIgzVersionCompatible } from '../../utils/isIgzVersionCompatible'
+import { setNotification } from '../../reducers/notificationReducer'
+import { showErrorNotification } from '../../utils/notifications.util'
+import { useDetectOutsideClick } from 'igz-controls/hooks'
 
 import { ReactComponent as SearchIcon } from 'igz-controls/images/search.svg'
 
@@ -106,20 +108,12 @@ const ChangeOwnerPopUp = ({ changeOwnerCallback, projectId }) => {
           )
         })
         .catch(error => {
-          dispatch(
-            setNotification({
-              status: error.response?.status || 400,
-              id: Math.random(),
-              message:
-                error.response?.status === FORBIDDEN_ERROR_STATUS_CODE
-                  ? 'Missing edit permission for the project.'
-                  : 'Failed to edit project data.',
-              retry:
-                error.response?.status === FORBIDDEN_ERROR_STATUS_CODE
-                  ? null
-                  : () => applyChanges(newOwnerId)
-            })
-          )
+          const customErrorMsg =
+            error.response?.status === FORBIDDEN_ERROR_STATUS_CODE
+              ? 'Missing edit permission for the project'
+              : getErrorMsg(error, 'Failed to edit project data')
+
+          showErrorNotification(dispatch, error, '', customErrorMsg, () => applyChanges(newOwnerId))
         })
         .finally(handleOnClose)
     }
@@ -156,13 +150,7 @@ const ChangeOwnerPopUp = ({ changeOwnerCallback, projectId }) => {
         })
       )
     } catch (error) {
-      dispatch(
-        setNotification({
-          status: error.response?.status || 400,
-          id: Math.random(),
-          message: 'Failed to fetch users.'
-        })
-      )
+      showErrorNotification(dispatch, error, 'Failed to fetch users')
     }
 
     resolve()

@@ -41,7 +41,8 @@ import {
   TAG_FILTER_ALL_ITEMS,
   FILTER_MENU_MODAL,
   GROUP_BY_NONE,
-  MODELS_FILTERS
+  MODELS_FILTERS,
+  REQUEST_CANCELED
 } from '../../../constants'
 import {
   checkForSelectedModel,
@@ -53,7 +54,6 @@ import {
   handleApplyDetailsChanges
 } from './models.util'
 import detailsActions from '../../../actions/details'
-import { cancelRequest } from '../../../utils/cancelRequest'
 import { createModelsRowData } from '../../../utils/createArtifactsContent'
 import { getArtifactIdentifier } from '../../../utils/getUniqueIdentifier'
 import { isDetailsTabExists } from '../../../utils/isDetailsTabExists'
@@ -68,7 +68,6 @@ import { useGetTagOptions } from '../../../hooks/useGetTagOptions.hook'
 import { getViewMode } from '../../../utils/helper'
 import { useMode } from '../../../hooks/mode.hook'
 import { setArtifactTags } from '../../../utils/artifacts.util'
-import { largeResponseCatchHandler } from '../../../utils/largeResponseCatchHandler'
 
 const Models = ({ fetchModelFeatureVector }) => {
   const [models, setModels] = useState([])
@@ -85,6 +84,7 @@ const Models = ({ fetchModelFeatureVector }) => {
   const location = useLocation()
   const dispatch = useDispatch()
   const modelsRef = useRef(null)
+  const abortControllerRef = useRef(new AbortController())
   const viewMode = getViewMode(window.location.search)
   const pageData = useMemo(
     () => generatePageData(selectedModel, viewMode),
@@ -108,16 +108,28 @@ const Models = ({ fetchModelFeatureVector }) => {
 
   const fetchData = useCallback(
     async filters => {
+      abortControllerRef.current = new AbortController()
+
       return dispatch(
-        fetchModels({ project: params.projectName, filters, setLargeRequestErrorMessage })
+        fetchModels({
+          project: params.projectName,
+          filters,
+          config: {
+            ui: {
+              controller: abortControllerRef.current,
+              setLargeRequestErrorMessage
+            }
+          }
+        })
       )
         .unwrap()
         .then(modelsResponse => {
-          setArtifactTags(modelsResponse, setModels, setAllModels, filters, dispatch, MODELS_TAB)
+          if (modelsResponse) {
+            setArtifactTags(modelsResponse, setModels, setAllModels, filters, dispatch, MODELS_TAB)
 
-          return modelsResponse
+            return modelsResponse
+          }
         })
-        .catch(largeResponseCatchHandler)
     },
     [dispatch, setModels, params.projectName]
   )
@@ -288,7 +300,7 @@ const Models = ({ fetchModelFeatureVector }) => {
       setAllModels([])
       dispatch(removeModels())
       setSelectedModel({})
-      cancelRequest(modelsRef, 'cancel')
+      abortControllerRef.current.abort(REQUEST_CANCELED)
     }
   }, [dispatch, setModels, setAllModels])
 

@@ -21,15 +21,17 @@ import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import { connect, useDispatch } from 'react-redux'
 import { useParams } from 'react-router-dom'
 
-import projectApi from '../../api/projects-api'
-import projectsAction from '../../actions/projects'
-import ProjectSettingsSecretsView from './ProjectSettingsSecretsView'
-import { FORBIDDEN_ERROR_STATUS_CODE } from 'igz-controls/constants'
 import {
   ADD_PROJECT_SECRET,
   DELETE_PROJECT_SECRET,
   EDIT_PROJECT_SECRET
 } from './ProjectSettingsSecrets.utils'
+import ProjectSettingsSecretsView from './ProjectSettingsSecretsView'
+import projectApi from '../../api/projects-api'
+import projectsAction from '../../actions/projects'
+import { FORBIDDEN_ERROR_STATUS_CODE } from 'igz-controls/constants'
+import { getErrorMsg } from 'igz-controls/utils/common.util'
+import { showErrorNotification } from '../../utils/notifications.util'
 
 const ProjectSettingsSecrets = ({
   fetchProjectSecrets,
@@ -45,27 +47,16 @@ const ProjectSettingsSecrets = ({
   const fetchSecrets = useCallback(() => {
     setIsUserAllowed(true)
     fetchProjectSecrets(params.projectName).catch(error => {
-      if (error.response?.status === FORBIDDEN_ERROR_STATUS_CODE) {
-        setIsUserAllowed(false)
-        dispatch(
-          setNotification({
-            status: error.response?.status || 400,
-            id: Math.random(),
-            message: 'Permission denied.'
-          })
-        )
-      } else {
-        dispatch(
-          setNotification({
-            status: error.response?.status || 400,
-            id: Math.random(),
-            message: 'Failed to fetch project data.',
-            retry: () => fetchSecrets()
-          })
-        )
-      }
+      const customErrorMsg =
+        error.response?.status === FORBIDDEN_ERROR_STATUS_CODE
+          ? 'Permission denied'
+          : getErrorMsg(error, 'Failed to fetch project data')
+
+      showErrorNotification(dispatch, error, '', customErrorMsg, () => {
+        fetchSecrets()
+      })
     })
-  }, [dispatch, fetchProjectSecrets, params.projectName, setNotification])
+  }, [dispatch, fetchProjectSecrets, params.projectName])
 
   useEffect(() => {
     fetchSecrets()
@@ -109,14 +100,8 @@ const ProjectSettingsSecrets = ({
             })
           )
         })
-        .catch(err => {
-          dispatch(
-            setNotification({
-              status: 400,
-              id: Math.random(),
-              message: err.message
-            })
-          )
+        .catch(error => {
+          showErrorNotification(dispatch, error, 'Failed to update secrets')
         })
     },
     [dispatch, params.projectName, setNotification]

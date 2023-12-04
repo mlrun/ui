@@ -71,18 +71,20 @@ const AddToFeatureVectorPopUp = ({
   const onSelectProject = projectName => {
     setSelectedProject(projectName)
     fetchFeatureVectors(projectName).then(result => {
-      const featureVectorsOptions = result.map(featureVector => {
-        return {
-          id: featureVector.metadata.name,
-          label: featureVector.metadata.name
-        }
-      })
+      if (result) {
+        const featureVectorsOptions = result.map(featureVector => {
+          return {
+            id: featureVector.metadata.name,
+            label: featureVector.metadata.name
+          }
+        })
 
-      setFeatureVectors(result)
-      setFeatureVectorsList(uniqBy(featureVectorsOptions, 'id'))
-      setFeatureVectorTagsList([])
-      setSelectedFeatureVector('')
-      setSelectedFeatureVectorTag('')
+        setFeatureVectors(result)
+        setFeatureVectorsList(uniqBy(featureVectorsOptions, 'id'))
+        setFeatureVectorTagsList([])
+        setSelectedFeatureVector('')
+        setSelectedFeatureVectorTag('')
+      }
     })
   }
 

@@ -33,6 +33,7 @@ import {
   FILTER_MENU_MODAL,
   GROUP_BY_NAME,
   GROUP_BY_NONE,
+  REQUEST_CANCELED,
   TAG_FILTER_ALL_ITEMS
 } from '../../constants'
 import {
@@ -44,9 +45,7 @@ import {
   handleApplyDetailsChanges,
   registerArtifactTitle
 } from './files.util'
-import { cancelRequest } from '../../utils/cancelRequest'
 import { createFilesRowData } from '../../utils/createArtifactsContent'
-import {largeResponseCatchHandler } from '../../utils/largeResponseCatchHandler'
 import { fetchFile, fetchFiles, removeFile, removeFiles } from '../../reducers/artifactsReducer'
 import { getArtifactIdentifier } from '../../utils/getUniqueIdentifier'
 import { isDetailsTabExists } from '../../utils/isDetailsTabExists'
@@ -71,6 +70,7 @@ const Files = () => {
   const artifactsStore = useSelector(store => store.artifactsStore)
   const filtersStore = useSelector(store => store.filtersStore)
   const params = useParams()
+  const abortControllerRef = useRef(new AbortController())
   const navigate = useNavigate()
   const location = useLocation()
   const dispatch = useDispatch()
@@ -92,14 +92,28 @@ const Files = () => {
 
   const fetchData = useCallback(
     filters => {
-      dispatch(fetchFiles({ project: params.projectName, filters, setLargeRequestErrorMessage }))
+      abortControllerRef.current = new AbortController()
+
+      dispatch(
+        fetchFiles({
+          project: params.projectName,
+          filters,
+          config: {
+            ui: {
+              controller: abortControllerRef.current,
+              setLargeRequestErrorMessage
+            }
+          }
+        })
+      )
         .unwrap()
         .then(filesResponse => {
-          setArtifactTags(filesResponse, setFiles, setAllFiles, filters, dispatch, FILES_PAGE)
+          if (filesResponse) {
+            setArtifactTags(filesResponse, setFiles, setAllFiles, filters, dispatch, FILES_PAGE)
 
-          return filesResponse
+            return filesResponse
+          }
         })
-        .catch(largeResponseCatchHandler)
     },
     [dispatch, params.projectName]
   )
@@ -261,7 +275,7 @@ const Files = () => {
       setAllFiles([])
       dispatch(removeFiles())
       setSelectedFile({})
-      cancelRequest('cancel')
+      abortControllerRef.current.abort(REQUEST_CANCELED)
     }
   }, [params.projectName, dispatch])
 

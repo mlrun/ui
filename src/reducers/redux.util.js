@@ -31,6 +31,6 @@ export const defaultFulfilledHandler = state => {
   state.loading = false
 }
 export const defaultRejectedHandler = (state, action) => {
-  state.error = action.error
   state.loading = false
+  state.error = action.error
 }
