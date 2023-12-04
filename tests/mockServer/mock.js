@@ -22,7 +22,7 @@ import bodyParser from 'body-parser'
 import yaml from 'js-yaml'
 import fs from 'fs'
 import crypto from 'crypto'
-import { cloneDeep, remove } from 'lodash'
+import { cloneDeep, remove, defaults, noop, get, random, isFunction, clamp } from 'lodash'
 
 import frontendSpec from './data/frontendSpec.json'
 import projects from './data/projects.json'
@@ -61,7 +61,25 @@ const app = express()
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json())
 
+// collections that start as empty
+const backgroundTasks = {}
+
 // MLRun object Templates
+const backgroundTaskTemplate = {
+  kind: 'BackgroundTask',
+  metadata: {
+    name: '',
+    project: 'default',
+    created: '',
+    updated: '',
+    timeout: 600
+  },
+  spec: {},
+  status: {
+    state: 'created',
+    error: null
+  }
+}
 const projectTemplate = {
   kind: 'project',
   metadata: { name: '', created: '', labels: null, annotations: null },
@@ -353,7 +371,7 @@ function getFunctionItem(req, res) {
   res.send(hubItemInference)
 }
 
-function getFunctionObject (req, res){
+function getFunctionObject(req, res) {
   const urlParams = req.query.url
   const urlArray = urlParams.split('/')
   const funcYAMLPath = `./tests/mockServer/data/mlrun/functions/${urlArray[6]}/${urlArray[6]}.yaml`
@@ -422,14 +440,89 @@ function getRun(req, res) {
   res.send({ data: run_prj_uid })
 }
 
-function patchRun(req, res) {
-  const collectedRun = runs.runs
-    .filter(run => run.metadata.project === req.params.project)
-    .filter(run => run.metadata.uid === req.params.uid)
+function createTask(projectName, config) {
+  const newTask = cloneDeep(backgroundTaskTemplate)
+  const now = new Date().toISOString()
 
-  collectedRun[0].status.state = req.body['status.state']
+  config = defaults({}, config, {
+    timeout: newTask.metadata.timeout,
+    durationMin: 10000,
+    durationMax: 15000,
+    successRate: 100,
+    onAfterSuccess: noop,
+    onAfterFail: noop
+  })
 
-  res.send()
+  newTask.metadata.name = makeUID(36)
+  newTask.metadata['project'] = projectName
+  newTask.metadata['updated'] = now
+  newTask.metadata['created'] = now
+
+  let randomDuration = random(config.durationMin, config.durationMax)
+
+  backgroundTasks[newTask.metadata.name] = newTask
+
+  if (newTask.status.state === 'created') {
+    newTask.status.state = 'running'
+
+    setTimeout(() => {
+      newTask.metadata.updated = new Date().toISOString()
+
+      if (isFunction(config.jobFunc)) {
+        config
+          .jobFunc(newTask.metadata.name)
+          .then(() => {
+            newTask.metadata['updated'] = new Date().toISOString()
+            newTask.status.state = 'succeeded'
+
+            config.onAfterSuccess()
+          })
+          .catch(error => {
+            newTask.metadata['updated'] = new Date().toISOString()
+            newTask.status.state = 'failed'
+            newTask.status.error = get(error, 'message', '')
+
+            config.onAfterFail()
+          })
+      } else {
+        setTimeout(() => {
+          if (newTask.status.state === 'running') {
+            // make sure it wasn't canceled
+            let isSuccessful = random(1, 100) <= clamp(config.successRate, 0, 100)
+
+            newTask.metadata['updated'] = new Date().toISOString()
+            newTask.status.state = isSuccessful ? 'succeeded' : 'failed'
+
+            if (isSuccessful) {
+              config.onAfterSuccess()
+            } else {
+              config.onAfterFail()
+            }
+          }
+        }, randomDuration)
+      }
+    }, config.timeout)
+  }
+
+  return newTask
+}
+
+function postAbortTask(req, res) {
+  const jobFunc = () => {
+    return new Promise(resolve => {
+      setTimeout(resolve, random(5000, 10000))
+    })
+  }
+
+  const task = createTask(req.params['project'], { jobFunc: jobFunc })
+
+  res.status = 202
+
+  res.send(task)
+}
+
+function getTask(req, res) {
+  res.send(backgroundTasks[req.params['taskId']])
 }
 
 function getFunctionCatalog(req, res) {
@@ -790,7 +883,7 @@ function getPipeline(req, res) {
 
 function getFuncs(req, res) {
   const dt = parseInt(Date.now())
-  
+
   const collectedFuncsByPrjTime = funcs.funcs
     .filter(func => func.metadata.project === req.query.project)
     .filter(func => Date.parse(func.metadata.updated) > dt)
@@ -805,14 +898,11 @@ function getFuncs(req, res) {
         func.metadata.updated = new Date(dt).toISOString()
       }
     })
-  } 
-  else if (req.query['hash_key']){
+  } else if (req.query['hash_key']) {
+    collectedFuncs = funcs.funcs.filter(func => func.metadata.hash === req.query.hash_key)
+  } else {
     collectedFuncs = funcs.funcs
-    .filter(func => func.metadata.hash === req.query.hash_key)
-  }
-  else {
-    collectedFuncs = funcs.funcs
-      .filter(func => func.metadata.project === req.params['project']) 
+      .filter(func => func.metadata.project === req.params['project'])
       .filter(func => func.metadata.tag === 'latest')
       .filter(func => func.status?.state === 'deploying')
 
@@ -839,7 +929,7 @@ function getFuncs(req, res) {
 function getFunc(req, res) {
   const collectedFunc = funcs.funcs
     .filter(func => func.metadata.project === req.params['project'])
-    .filter(func => func.metadata.name === req.params['func']) 
+    .filter(func => func.metadata.name === req.params['func'])
     .filter(func => func.metadata.hash === req.query.hash_key)
 
   let respBody = {}
@@ -1135,42 +1225,44 @@ function postSubmitJob(req, res) {
   res.send(respTemplate)
 }
 
-function putTags(req, res){
+function putTags(req, res) {
   const tagName = req.params.tag
-  const projectName = req.params.project 
-  
-  let artifactForUpdate = artifacts.artifacts.find(artifact => artifact.tree === req.body.identifiers[0].uid)
-  
-  if (artifactForUpdate === undefined){
+  const projectName = req.params.project
+
+  let artifactForUpdate = artifacts.artifacts.find(
+    artifact => artifact.tree === req.body.identifiers[0].uid
+  )
+
+  if (artifactForUpdate === undefined) {
     artifactForUpdate = artifacts.artifacts
       .filter(item => item.metadata)
       .find(item => item.metadata.tree === req.body.identifiers[0].uid)
-    
-    artifactForUpdate.metadata.tag = req.params.tag    
-  }
-  else{
+
+    artifactForUpdate.metadata.tag = req.params.tag
+  } else {
     artifactForUpdate.tag = req.params.tag
   }
-  
+
   res.send({
     name: tagName,
     project: projectName
   })
 }
 
-function deleteTags(req, res){
-  const collectedArtifact = artifacts.artifacts
-    .find(artifact => ((artifact.metadata && artifact.metadata.project === req.params.project) 
-      || artifact.project === req.params.project) 
-      && artifact.kind === req.body.identifiers[0].kind
-      && ((artifact.metadata && artifact.metadata.tree === req.body.identifiers[0].uid) 
-      || artifact.tree === req.body.identifiers[0].uid)) 
-  
+function deleteTags(req, res) {
+  const collectedArtifact = artifacts.artifacts.find(
+    artifact =>
+      ((artifact.metadata && artifact.metadata.project === req.params.project) ||
+        artifact.project === req.params.project) &&
+      artifact.kind === req.body.identifiers[0].kind &&
+      ((artifact.metadata && artifact.metadata.tree === req.body.identifiers[0].uid) ||
+        artifact.tree === req.body.identifiers[0].uid)
+  )
+
   if (collectedArtifact) {
-    if (collectedArtifact.metadata && collectedArtifact.metadata.tag === req.params.tag){
+    if (collectedArtifact.metadata && collectedArtifact.metadata.tag === req.params.tag) {
       collectedArtifact.metadata.tag = ''
-    }
-    else if (collectedArtifact.tag === req.params.tag){
+    } else if (collectedArtifact.tag === req.params.tag) {
       collectedArtifact.tag = ''
     }
   }
@@ -1519,7 +1611,10 @@ app.get(`${mlrunAPIIngress}/project-summaries/:project`, getProjectSummary)
 
 app.get(`${mlrunAPIIngress}/runs`, getRuns)
 app.get(`${mlrunAPIIngress}/run/:project/:uid`, getRun)
-app.patch(`${mlrunAPIIngress}/run/:project/:uid`, patchRun)
+app.post(`${mlrunAPIIngress}/projects/:project/runs/:uid/abort`, postAbortTask)
+
+app.get(`${mlrunAPIIngress}/projects/:project/background-tasks/:taskId`, getTask)
+
 app.get(`${mlrunIngress}/catalog.json`, getFunctionCatalog)
 app.get(`${mlrunAPIIngress}/hub/sources/:project/items`, getFunctionCatalog)
 app.get(`${mlrunAPIIngress}/hub/sources/:project/items/:uid`, getFunctionItem)

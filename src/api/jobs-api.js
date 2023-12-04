@@ -58,10 +58,10 @@ const jobsApi = {
       params.iter = iter
     }
 
-    return mainHttpClient.patch(
-      `/run/${project}/${jobId}`,
+    return mainHttpClient.post(
+      `/projects/${project}/runs/${jobId}/abort`,
       {
-        'status.state': 'aborted'
+        'status.status_text': 'aborted'
       },
       { params }
     )
@@ -144,6 +144,8 @@ const jobsApi = {
 
     return mainHttpClient.get(`/projects/${project}/schedules`, newConfig)
   },
+  pollTask: (project, taskId) =>
+    mainHttpClient.get(`/projects/${project}/background-tasks/${taskId}`),
   removeScheduledJob: (project, scheduleName) =>
     mainHttpClient.delete(`/projects/${project}/schedules/${scheduleName}`),
   runJob: postData => mainHttpClient.post('/submit_job', postData),

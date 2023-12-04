@@ -31,9 +31,10 @@ import {
 import {
   getJobsDetailsMenu,
   getInfoHeaders,
-  isJobAbortable,
+  isJobKindAbortable,
   JOB_STEADY_STATES,
-  isJobKindDask
+  isJobKindDask,
+  isJobAborting
 } from '../jobs.util'
 import jobsActions from '../../../actions/jobs'
 import functionsActions from '../../../actions/functions'
@@ -97,7 +98,8 @@ export const generateActionsMenu = (
   abortable_function_kinds,
   handleConfirmAbortJob,
   handleConfirmDeleteJob,
-  toggleConvertedYaml
+  toggleConvertedYaml,
+  abortingJob
 ) =>
   job?.uid
     ? [
@@ -129,10 +131,13 @@ export const generateActionsMenu = (
             label: 'Abort',
             icon: <Cancel />,
             onClick: handleConfirmAbortJob,
-            tooltip: isJobAbortable(job, abortable_function_kinds)
-              ? ''
+            tooltip: isJobKindAbortable(job, abortable_function_kinds)
+              ? isJobAborting(job, abortingJob)
+                ? 'Job is aborting'
+                : ''
               : 'Cannot abort jobs of this kind',
-            disabled: !isJobAbortable(job, abortable_function_kinds),
+            disabled:
+              !isJobKindAbortable(job, abortable_function_kinds) || isJobAborting(job, abortingJob),
             hidden: JOB_STEADY_STATES.includes(job?.state?.value)
           },
           {

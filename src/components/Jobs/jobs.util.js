@@ -115,10 +115,13 @@ export const tabs = [
   { id: SCHEDULE_TAB, label: 'Schedule' }
 ]
 
-export const isJobAbortable = (job, abortableFunctionKinds) =>
+export const isJobKindAbortable = (job, abortableFunctionKinds) =>
   (abortableFunctionKinds ?? [])
     .map(kind => `kind: ${kind}`)
     .some(kindLabel => job?.labels?.includes(kindLabel))
+
+export const isJobAborting = (job, abortingJob) =>
+  job.uid === abortingJob.uid && job.iteration === abortingJob.iteration
 
 export const isJobKindDask = (jobLabels = []) => {
   return jobLabels?.includes(`kind: ${JOB_KIND_DASK}`)
@@ -247,8 +250,21 @@ export const handleAbortJob = (
   setNotification,
   refreshJobs,
   setConfirmData,
-  dispatch
+  dispatch,
+  setAbortingJob
 ) => {
+  dispatch(
+    setNotification({
+      status: 200,
+      id: Math.random(),
+      message: 'Job abortion in progress'
+    })
+  )
+  setAbortingJob({
+    uid: job.uid,
+    iteration: job.iteration
+  })
+
   abortJob(projectName, job)
     .then(() => {
       refreshJobs(filtersStore)
@@ -274,6 +290,7 @@ export const handleAbortJob = (
         )
       )
     })
+    .finally(() => setAbortingJob({}))
   setConfirmData(null)
 }
 

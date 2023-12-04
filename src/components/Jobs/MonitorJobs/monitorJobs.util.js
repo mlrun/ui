@@ -33,8 +33,9 @@ import {
   functionRunKinds,
   getInfoHeaders,
   getJobsDetailsMenu,
-  isJobAbortable,
-  isJobKindDask
+  isJobKindAbortable,
+  isJobKindDask,
+  isJobAborting
 } from '../jobs.util'
 import { TERTIARY_BUTTON } from 'igz-controls/constants'
 import jobsActions from '../../../actions/jobs'
@@ -89,7 +90,8 @@ export const generateActionsMenu = (
   handleConfirmAbortJob,
   toggleConvertedYaml,
   selectedJob,
-  handleConfirmDeleteJob
+  handleConfirmDeleteJob,
+  abortingJob
 ) => {
   return job?.uid
     ? [
@@ -122,10 +124,12 @@ export const generateActionsMenu = (
             label: 'Abort',
             icon: <Cancel />,
             onClick: handleConfirmAbortJob,
-            tooltip: isJobAbortable(job, abortable_function_kinds)
-              ? ''
+            tooltip: isJobKindAbortable(job, abortable_function_kinds)
+              ? isJobAborting(job, abortingJob)
+                ? 'Job is aborting'
+                : ''
               : 'Cannot abort jobs of this kind',
-            disabled: !isJobAbortable(job, abortable_function_kinds),
+            disabled: !isJobKindAbortable(job, abortable_function_kinds) || isJobAborting(job, abortingJob),
             hidden: JOB_STEADY_STATES.includes(job?.state?.value)
           },
           {

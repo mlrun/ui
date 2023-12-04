@@ -73,6 +73,7 @@ const MonitorJobs = ({
   fetchJobs,
   removePods
 }) => {
+  const [abortingJob, setAbortingJob] = useState({})
   const [dataIsLoaded, setDataIsLoaded] = useState(false)
   const [jobRuns, setJobRuns] = useState([])
   const [jobs, setJobs] = useState([])
@@ -185,7 +186,8 @@ const MonitorJobs = ({
         setNotification,
         refreshJobs,
         setConfirmData,
-        dispatch
+        dispatch,
+        setAbortingJob
       )
     },
     [abortJob, dispatch, filtersStore, params.projectName, refreshJobs, setConfirmData]
@@ -267,9 +269,11 @@ const MonitorJobs = ({
         handleConfirmAbortJob,
         toggleConvertedYaml,
         selectedJob,
-        handleConfirmDeleteJob
+        handleConfirmDeleteJob,
+        abortingJob
       )
   }, [
+    abortingJob,
     handleRerunJob,
     appStore.frontendSpec.jobs_dashboard_url,
     appStore.frontendSpec.abortable_function_kinds,

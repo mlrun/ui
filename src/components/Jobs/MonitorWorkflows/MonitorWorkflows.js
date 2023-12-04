@@ -82,6 +82,7 @@ const MonitorWorkflows = ({
   removePods,
   resetWorkflow
 }) => {
+  const [abortingJob, setAbortingJob] = useState({})
   const [selectedFunction, setSelectedFunction] = useState({})
   const [workflowsViewMode, setWorkflowsViewMode] = useState(WORKFLOW_GRAPH_VIEW)
   const [workflowIsLoaded, setWorkflowIsLoaded] = useState(false)
@@ -192,7 +193,8 @@ const MonitorWorkflows = ({
         setNotification,
         refreshJobs,
         setConfirmData,
-        dispatch
+        dispatch,
+        setAbortingJob
       )
     },
     [abortJob, dispatch, filtersStore, params.projectName, refreshJobs, setConfirmData]
@@ -300,9 +302,11 @@ const MonitorWorkflows = ({
         appStore.frontendSpec.abortable_function_kinds,
         handleConfirmAbortJob,
         handleConfirmDeleteJob,
-        toggleConvertedYaml
+        toggleConvertedYaml,
+        abortingJob
       )
   }, [
+    abortingJob,
     handleRerunJob,
     appStore.frontendSpec.jobs_dashboard_url,
     appStore.frontendSpec.abortable_function_kinds,
