@@ -253,7 +253,7 @@ const FormParametersRow = ({
               <div className={tableEditingRowClassNames} key={index}>
                 <div className="form-table__cell form-table__cell_min">
                   {!fieldData.isRequired && (
-                    <FormCheckBox
+                  <FormCheckBox
                       name={`${rowPath}.data.isChecked`}
                       onClick={event => event.stopPropagation()}
                     />
@@ -300,21 +300,21 @@ const FormParametersRow = ({
                 </div>
                 <div className="form-table__cell form-table__cell_3">
                   {fieldData.data.isHyper && !typeIsChanging ? (
-                    <FormInput
-                      label="Values (Comma separated)"
-                      name={`${rowPath}.data.value`}
-                      placeholder="Values"
-                      required
-                      tip={getHyperValueTip(fieldData)}
-                      validationRules={getHyperValueValidationRules(fieldData)}
-                    />
+                  <FormInput
+                    label="Values (Comma separated)"
+                    name={`${rowPath}.data.value`}
+                    placeholder="Values"
+                    required
+                    tip={getHyperValueTip(fieldData)}
+                    validationRules={getHyperValueValidationRules(fieldData)}
+                  />
                   ) : fieldData.data.type === parameterTypeBool && !typeIsChanging ? (
                     <div className="radio-buttons-container">
                       <FormRadio name={`${rowPath}.data.value`} value="true" label="True" />
                       <FormRadio name={`${rowPath}.data.value`} value="false" label="False" />
                     </div>
                   ) : !typeIsChanging ? (
-                    <FormInput
+                      <FormInput
                       type={
                         [parameterTypeInt, parameterTypeFloat].includes(fieldData.data.type)
                           ? 'number'

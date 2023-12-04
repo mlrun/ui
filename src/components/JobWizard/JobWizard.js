@@ -391,6 +391,7 @@ const JobWizard = ({
 
       return [
         {
+          id: 'schedule-btn',
           label: isBatchInference
             ? 'Schedule Infer'
             : isTrain
@@ -410,6 +411,7 @@ const JobWizard = ({
           ref: scheduleButtonRef
         },
         {
+          id:'run-btn',
           label:
             mode === PANEL_EDIT_MODE
               ? 'Save'

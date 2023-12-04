@@ -54,7 +54,7 @@ const FormEnvironmentVariablesTable = ({
   }
 
   return (
-    <div className={tableClassNames}>
+    <div className={tableClassNames} data-testid={fieldsPath}>
       <div className="form-table__row form-table__header-row no-hover">
         <div className="form-table__cell form-table__cell_2">
           <Tooltip template={<TextTooltipTemplate text="Name" />}>Name</Tooltip>
@@ -117,7 +117,7 @@ const FormEnvironmentVariablesTable = ({
 }
 
 FormEnvironmentVariablesTable.defaultProps = {
-  className: '',
+  className: 'env-var-table',
   disabled: false,
   exitEditModeTriggerItem: null
 }

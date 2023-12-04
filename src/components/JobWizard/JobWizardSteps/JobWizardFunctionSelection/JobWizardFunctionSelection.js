@@ -379,6 +379,7 @@ const JobWizardFunctionSelection = ({
         <div className="functions-tab">
           <div className="form-row">
             <Search
+              id="search-functions"
               matches={filterMatches}
               onChange={value => handleSearchOnChange(value)}
               placeholder="Search functions..."
@@ -388,7 +389,10 @@ const JobWizardFunctionSelection = ({
           </div>
           <div className="form-row">
             <div className="form-row__project-name">
-              <FormSelect name={`${FUNCTION_SELECTION_STEP}.projectName`} options={projects} />
+              <FormSelect
+                name={`${FUNCTION_SELECTION_STEP}.projectName`}
+                options={projects}
+              />
             </div>
           </div>
           {!loading &&
@@ -422,6 +426,7 @@ const JobWizardFunctionSelection = ({
         <div className="hub-tab">
           <div className="form-row">
             <Search
+              id="search-hub"
               className="hub-search"
               matches={filterMatches}
               onChange={value => handleSearchOnChange(value)}
