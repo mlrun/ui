@@ -27,6 +27,14 @@ import JobWizard from '../JobWizard/JobWizard'
 import NewFunctionPopUp from '../../elements/NewFunctionPopUp/NewFunctionPopUp'
 
 import {
+  FUNCTIONS_PAGE,
+  GROUP_BY_NAME,
+  PANEL_FUNCTION_CREATE_MODE,
+  SHOW_UNTAGGED_ITEMS,
+  TAG_LATEST,
+  REQUEST_CANCELED
+} from '../../constants'
+import {
   detailsMenu,
   FUNCTIONS_EDITABLE_STATES,
   FUNCTIONS_READY_STATES,
@@ -34,26 +42,19 @@ import {
   page,
   getFunctionsEditableTypes
 } from './functions.util'
-import { isDetailsTabExists } from '../../utils/isDetailsTabExists'
-import { getFunctionIdentifier } from '../../utils/getUniqueIdentifier'
-import { getFunctionLogs } from '../../utils/getFunctionLogs'
-import { parseFunctions } from '../../utils/parseFunctions'
-import { setFilters } from '../../reducers/filtersReducer'
-import functionsActions from '../../actions/functions'
-import { setNotification } from '../../reducers/notificationReducer'
-import jobsActions from '../../actions/jobs'
-import {
-  FUNCTIONS_PAGE,
-  GROUP_BY_NAME,
-  PANEL_FUNCTION_CREATE_MODE,
-  LARGE_REQUEST_CANCELED,
-  SHOW_UNTAGGED_ITEMS,
-  TAG_LATEST
-} from '../../constants'
 import createFunctionsContent from '../../utils/createFunctionsContent'
+import functionsActions from '../../actions/functions'
+import jobsActions from '../../actions/jobs'
 import { DANGER_BUTTON, LABEL_BUTTON } from 'igz-controls/constants'
 import { functionRunKinds } from '../Jobs/jobs.util'
+import { getFunctionIdentifier } from '../../utils/getUniqueIdentifier'
+import { getFunctionLogs } from '../../utils/getFunctionLogs'
+import { isDetailsTabExists } from '../../utils/isDetailsTabExists'
 import { openPopUp } from 'igz-controls/utils/common.util'
+import { parseFunctions } from '../../utils/parseFunctions'
+import { setFilters } from '../../reducers/filtersReducer'
+import { setNotification } from '../../reducers/notificationReducer'
+import { showErrorNotification } from '../../utils/notifications.util'
 import { useGroupContent } from '../../hooks/groupContent.hook'
 import { useMode } from '../../hooks/mode.hook'
 import { useYaml } from '../../hooks/yaml.hook'
@@ -83,30 +84,45 @@ const Functions = ({
   const filtersStore = useSelector(store => store.filtersStore)
   const [selectedRowData, setSelectedRowData] = useState({})
   const [largeRequestErrorMessage, setLargeRequestErrorMessage] = useState('')
-  let fetchFunctionLogsTimeout = useRef(null)
+  const fetchFunctionLogsTimeout = useRef(null)
+  const abortControllerRef = useRef(new AbortController())
   const {isDemoMode, isStagingMode } = useMode()
+
   const params = useParams()
   const navigate = useNavigate()
   const location = useLocation()
   const dispatch = useDispatch()
 
-  const refreshFunctions = useCallback(
+  const fetchData = useCallback(
     filters => {
-      return fetchFunctions(params.projectName, filters, setLargeRequestErrorMessage)
-        .then(functions => {
+      abortControllerRef.current = new AbortController()
+
+      return fetchFunctions(params.projectName, filters, {
+        ui: {
+          controller: abortControllerRef.current,
+          setLargeRequestErrorMessage
+        }
+      }).then(functions => {
+        if (functions) {
           const newFunctions = parseFunctions(functions, params.projectName)
 
           setFunctions(newFunctions)
 
           return newFunctions
-        })
-        .catch(error => {
-          if (error.message === LARGE_REQUEST_CANCELED) {
-            setFunctions([])
-          }
-        })
+        }
+      })
     },
     [fetchFunctions, params.projectName]
+  )
+
+  const refreshFunctions = useCallback(
+    filters => {
+      setFunctions([])
+      setSelectedFunction({})
+
+      return fetchData(filters)
+    },
+    [fetchData]
   )
 
   const handleExpand = useCallback(
@@ -179,10 +195,10 @@ const Functions = ({
         setDetailsLogs,
         offset,
         navigate,
-        refreshFunctions
+        fetchData
       )
     },
-    [fetchFunctionLogs, navigate, refreshFunctions]
+    [fetchFunctionLogs, navigate, fetchData]
   )
 
   const handleRemoveLogs = useCallback(() => {
@@ -205,22 +221,17 @@ const Functions = ({
               message: 'Function deleted successfully'
             })
           )
-          refreshFunctions()
+          fetchData()
         })
-        .catch(() => {
-          dispatch(
-            setNotification({
-              status: 400,
-              id: Math.random(),
-              retry: () => removeFunction(func),
-              message: 'Function failed to delete'
-            })
-          )
+        .catch(error => {
+          showErrorNotification(dispatch, error, 'Function failed to delete', '', () => {
+            removeFunction(func)
+          })
         })
 
       setConfirmData(null)
     },
-    [deleteFunction, dispatch, navigate, params.projectName, refreshFunctions, selectedFunction]
+    [deleteFunction, dispatch, navigate, params.projectName, fetchData, selectedFunction]
   )
 
   const onRemoveFunction = useCallback(
@@ -264,13 +275,7 @@ const Functions = ({
                 dispatch(jobsActions.fetchJobFunctionSuccess(func.ui.originalContent))
                 setJobWizardMode(PANEL_FUNCTION_CREATE_MODE)
               } else {
-                dispatch(
-                  setNotification({
-                    status: 400,
-                    id: Math.random(),
-                    message: 'Failed to retrieve function data'
-                  })
-                )
+                showErrorNotification(dispatch, {}, '', 'Failed to retrieve function data')
               }
             },
             hidden:
@@ -305,13 +310,14 @@ const Functions = ({
   )
 
   useEffect(() => {
-    refreshFunctions(filtersStore.filters)
+    fetchData(filtersStore.filters)
 
     return () => {
       setSelectedFunction({})
       setFunctions([])
+      abortControllerRef.current.abort(REQUEST_CANCELED)
     }
-  }, [filtersStore.filters, params.projectName, refreshFunctions])
+  }, [filtersStore.filters, params.projectName, fetchData])
 
   useEffect(() => {
     setTaggedFunctions(
@@ -394,7 +400,7 @@ const Functions = ({
     setFunctionsPanelIsOpen(false)
     removeNewFunction()
 
-    return refreshFunctions().then(() => {
+    return fetchData().then(() => {
       dispatch(
         setNotification({
           status: 200,
@@ -415,7 +421,7 @@ const Functions = ({
     setEditableItem(null)
     removeNewFunction()
 
-    return refreshFunctions().then(functions => {
+    return fetchData().then(functions => {
       const currentItem = functions.find(func => func.name === name && func.tag === tag)
 
       navigate(`/projects/${params.projectName}/functions/${currentItem.hash}/${tab}`)
@@ -429,23 +435,18 @@ const Functions = ({
     })
   }
 
-  const handleDeployFunctionFailure = () => {
+  const handleDeployFunctionFailure = error => {
     const { name, tag } = functionsStore.newFunction.metadata
 
     setFunctionsPanelIsOpen(false)
     removeNewFunction()
 
-    return refreshFunctions().then(functions => {
+    return fetchData().then(functions => {
       const currentItem = functions.find(func => func.name === name && func.tag === tag)
 
+      showErrorNotification(dispatch, error, '', 'Function deployment failed to initiate')
+
       navigate(`/projects/${params.projectName}/functions/${currentItem.hash}/overview`)
-      dispatch(
-        setNotification({
-          status: 400,
-          id: Math.random(),
-          message: 'Function deployment failed to initiate'
-        })
-      )
     })
   }
 

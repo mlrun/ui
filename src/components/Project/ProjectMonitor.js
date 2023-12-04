@@ -26,17 +26,17 @@ import ProjectMonitorView from './ProjectMonitorView'
 import RegisterArtifactModal from '../RegisterArtifactModal/RegisterArtifactModal'
 import RegisterModelModal from '../../elements/RegisterModelModal/RegisterModelModal'
 
-import { DATASET_TYPE, DATASETS, MODEL_TYPE } from '../../constants'
-
 import featureStoreActions from '../../actions/featureStore'
 import functionsActions from '../../actions/functions'
 import nuclioAction from '../../actions/nuclio'
 import projectsAction from '../../actions/projects'
+import { DATASET_TYPE, DATASETS, MODEL_TYPE } from '../../constants'
 import { areNuclioStreamsEnabled } from '../../utils/helper'
 import { generateCreateNewOptions, handleFetchProjectError } from './project.utils'
 import { openPopUp } from 'igz-controls/utils/common.util'
 import { setNotification } from '../../reducers/notificationReducer'
 import { useMode } from '../../hooks/mode.hook'
+import { showErrorNotification } from '../../utils/notifications.util'
 import { useNuclioMode } from '../../hooks/nuclioMode.hook'
 
 const ProjectMonitor = ({
@@ -200,7 +200,7 @@ const ProjectMonitor = ({
     setShowFunctionsPanel(false)
     removeNewFunction()
 
-    const funcs = await fetchProjectFunctions(params.projectName).catch(() => {
+    const funcs = await fetchProjectFunctions(params.projectName).catch(error => {
       dispatch(
         setNotification({
           status: 200,
@@ -209,13 +209,7 @@ const ProjectMonitor = ({
         })
       )
 
-      dispatch(
-        setNotification({
-          status: 400,
-          id: Math.random(),
-          message: 'Failed to fetch functions'
-        })
-      )
+      showErrorNotification(dispatch, error, '', 'Failed to fetch functions')
     })
 
     if (!isEmpty(funcs)) {
@@ -237,28 +231,15 @@ const ProjectMonitor = ({
     }
   }
 
-  const handleDeployFunctionFailure = async () => {
+  const handleDeployFunctionFailure = async deployError => {
     const { name, tag } = functionsStore.newFunction.metadata
 
     setShowFunctionsPanel(false)
     removeNewFunction()
 
-    const funcs = await fetchProjectFunctions(params.projectName).catch(() => {
-      dispatch(
-        setNotification({
-          status: 400,
-          id: Math.random(),
-          message: 'Function deployment failed to initiate'
-        })
-      )
-
-      dispatch(
-        setNotification({
-          status: 400,
-          id: Math.random(),
-          message: 'Failed to fetch functions'
-        })
-      )
+    const funcs = await fetchProjectFunctions(params.projectName).catch(error => {
+      showErrorNotification(dispatch, deployError, '', 'Function deployment failed to initiate')
+      showErrorNotification(dispatch, error, '', 'Failed to fetch functions')
     })
 
     if (!isEmpty(funcs)) {
@@ -270,13 +251,7 @@ const ProjectMonitor = ({
         navigate(`/projects/${params.projectName}/functions/${currentItem.metadata.hash}/overview`)
       }
 
-      return dispatch(
-        setNotification({
-          status: 400,
-          id: Math.random(),
-          message: 'Function deployment failed to initiate'
-        })
-      )
+      showErrorNotification(dispatch, deployError, '', 'Function deployment failed to initiate')
     }
   }
 
