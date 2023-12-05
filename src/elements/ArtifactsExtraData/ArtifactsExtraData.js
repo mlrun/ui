@@ -17,9 +17,8 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import React, { useEffect, useState, useCallback } from 'react'
+import React, { useEffect, useState, useCallback, useMemo } from 'react'
 import classnames from 'classnames'
-import { useParams } from 'react-router-dom'
 import PropTypes from 'prop-types'
 
 import { TextTooltipTemplate, Tooltip } from 'igz-controls/components'
@@ -31,9 +30,7 @@ import { generateArtifactIndexes } from '../../components/Details/details.util'
 import './artifactsExtraData.scss'
 
 const ArtifactsExtraData = ({ artifact }) => {
-  const [extraData, setExtraData] = useState([])
   const [artifactsIndexes, setArtifactsIndexes] = useState([])
-  const params = useParams()
 
   const showArtifactPreview = useCallback(
     index => {
@@ -42,17 +39,15 @@ const ArtifactsExtraData = ({ artifact }) => {
     [artifactsIndexes, setArtifactsIndexes]
   )
 
-  useEffect(() => {
-    if (artifact.extra_data && extraData.length === 0) {
-      setExtraData(generateExtraDataContent(artifact.extra_data, showArtifactPreview))
-    }
-  }, [artifact, extraData.length, params.projectName, showArtifactPreview])
+  const extraData = useMemo(() => {
+    return generateExtraDataContent(artifact.extra_data, showArtifactPreview)
+  }, [artifact.extra_data, showArtifactPreview])
 
   useEffect(() => {
     return () => {
-      setExtraData([])
+      setArtifactsIndexes([])
     }
-  }, [])
+  }, [artifact])
 
   return (
     <div className="artifact-extra-data">
