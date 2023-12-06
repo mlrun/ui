@@ -82,7 +82,19 @@ Feature: Datasets Page
     Then verify "Header" element visibility on "Datasets_Info_Pane" wizard
     Then verify "Updated" element visibility on "Datasets_Info_Pane" wizard
     Then verify "Action_Menu" element visibility on "Datasets_Info_Pane" wizard
-    Then verify "Action_Menu" dropdown element on "Datasets_Info_Pane" wizard should contains "Datasets_Info_Pane"."Action_Menu_List"
+    Then verify "Action_Menu" dropdown element on "Datasets_Info_Pane" wizard should contains "Common_Lists"."Action_Menu_List"
+    Then select "Download" option in action menu on "Datasets_Info_Pane" wizard
+    And wait load page
+    And wait load page
+    Then verify "Download_Pop_Up" element visibility on "Downloads_Popup" wizard
+    And wait load page
+    Then verify "Download_Pop_Up_Cross_Cancel_Button" element visibility on "Downloads_Popup" wizard
+    And wait load page
+    Then verify "Download_Pop_Up_Cross_Cancel_Button" element visibility on "Downloads_Popup" wizard
+    And wait load page
+    Then verify "Header_Download_Pop_Up" element visibility on "Downloads_Popup" wizard
+    Then "Header_Download_Pop_Up" element on "Downloads_Popup" should contains "Downloads" value
+    Then click on "Download_Pop_Up_Cross_Cancel_Button" element on "Downloads_Popup" wizard
     Then verify "Full_View_Button" element visibility on "Datasets_Info_Pane" wizard
     Then verify "Cross_Close_Button" element visibility on "Datasets_Info_Pane" wizard
     Then verify "Overview_General_Headers" on "Datasets_Info_Pane" wizard should contains "Datasets_Info_Pane"."Overview_General_Headers"
@@ -268,8 +280,7 @@ Feature: Datasets Page
   
   @MLD
   @passive
-  @uniqueTag
-  Scenario: MLD015 - Verify View YAML action on Datasets page
+  Scenario: MLD015 - Verify action menu list, Downloads action,  View YAML action
     Given open url
     And wait load page
     And click on row root with value "churn-project-admin" in "name" column in "Projects_Table" table on "Projects" wizard
@@ -279,19 +290,19 @@ Feature: Datasets Page
     And wait load page
     And select "tab" with "Datasets" value in breadcrumbs menu
     And wait load page
-    Then verify action menu on "Datasets" wizard in "Datasets_Table" table with "survival-curves_km-timelines" value in "name" column should contains "Datasets"."Action_Menu_List"
+    Then verify action menu on "Datasets" wizard in "Datasets_Table" table with "survival-curves_km-timelines" value in "name" column should contains "Common_Lists"."Action_Menu_List"
     Then select "Download" option in action menu on "Datasets" wizard in "Datasets_Table" table at row with "survival-curves_km-timelines" value in "name" column
     And wait load page
     And wait load page
-    Then verify "Download_Pop_Up" element visibility on "Datasets" wizard
+    Then verify "Download_Pop_Up" element visibility on "Downloads_Popup" wizard
     And wait load page
-    Then verify "Download_Pop_Up_Cross_Cancel_Button" element visibility on "Datasets" wizard
+    Then verify "Download_Pop_Up_Cross_Cancel_Button" element visibility on "Downloads_Popup" wizard
     And wait load page
-    Then verify "Download_Pop_Up_Cross_Cancel_Button" element visibility on "Datasets" wizard
+    Then verify "Download_Pop_Up_Cross_Cancel_Button" element visibility on "Downloads_Popup" wizard
     And wait load page
-    Then verify "Header_Download_Pop_Up" element visibility on "Datasets" wizard
-    Then "Header_Download_Pop_Up" element on "Datasets" should contains "Downloads" value
-    Then click on "Download_Pop_Up_Cross_Cancel_Button" element on "Datasets" wizard
+    Then verify "Header_Download_Pop_Up" element visibility on "Downloads_Popup" wizard
+    Then "Header_Download_Pop_Up" element on "Downloads_Popup" should contains "Downloads" value
+    Then click on "Download_Pop_Up_Cross_Cancel_Button" element on "Downloads_Popup" wizard
     Then select "View YAML" option in action menu on "Datasets" wizard in "Datasets_Table" table at row with "survival-curves_km-timelines" value in "name" column
     Then verify if "View_YAML" popup dialog appears
     Then verify "Cross_Cancel_Button" element visibility on "View_YAML" wizard
@@ -321,6 +332,18 @@ Feature: Datasets Page
     And wait load page
     Then verify "Preview_Header" element visibility on "Artifact_Preview_Popup" wizard
     Then verify "Cross_Cancel_Button" element visibility on "Artifact_Preview_Popup" wizard
+    Then check "download_btn" visibility in "Preview_Header" on "Artifact_Preview_Popup" wizard
+    Then click on "Download_Button" element on "Artifact_Preview_Popup" wizard
+    And wait load page
+    And wait load page
+    Then verify "Download_Pop_Up" element visibility on "Downloads_Popup" wizard
+    And wait load page
+    Then verify "Download_Pop_Up_Cross_Cancel_Button" element visibility on "Downloads_Popup" wizard
+    And wait load page
+    Then verify "Header_Download_Pop_Up" element visibility on "Downloads_Popup" wizard
+    Then "Header_Download_Pop_Up" element on "Downloads_Popup" should contains "Downloads" value
+    Then click on "Download_Pop_Up_Cross_Cancel_Button" element on "Downloads_Popup" wizard
+    Then click on "Cross_Cancel_Button" element on "Artifact_Preview_Popup" wizard
   
   @MLD
   @FAILED_TODO

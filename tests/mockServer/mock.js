@@ -609,10 +609,11 @@ function getArtifacts(req, res) {
   const categories = {
     dataset: ['dataset'],
     model: ['model'],
-    other: ['', 'table', 'link', 'plot', 'chart']
+    other: ['', 'table', 'link', 'plot', 'chart', 'plotly']
   }
   let collectedArtifacts = artifacts.artifacts.filter(
-    artifact => artifact.project === req.params.project
+    artifact => (artifact.metadata && artifact.metadata.project === req.params.project) 
+    || artifact.project === req.params.project
   )
 
   if (req.query['category']) {
@@ -639,9 +640,16 @@ function getArtifacts(req, res) {
   if (req.query['name']) {
     collectedArtifacts = collectedArtifacts.filter(artifact => {
       if (req.query['name'].includes('~')) {
-        return artifact.db_key.includes(req.query['name'].slice(1))
-      } else {
-        return artifact.db_key === req.query['name']
+        let artifactNewStucture = artifact.spec && artifact.spec.db_key
+        if (artifactNewStucture === undefined){
+          return artifact.db_key.includes(req.query['name'].slice(1))
+        }
+        else {
+          return artifactNewStucture.includes(req.query['name'].slice(1))
+        }
+      } 
+      else {
+        return (artifact.spec && artifact.spec.db_key === req.query['name']) || artifact.db_key === req.query['name']
       }
     })
   }
@@ -649,11 +657,11 @@ function getArtifacts(req, res) {
   if (req.query['tag']) {
     switch (req.query['tag']) {
       case '*':
-        collectedArtifacts = collectedArtifacts.filter(artifact => artifact.tag)
+        collectedArtifacts = collectedArtifacts.filter(artifact => (artifact.metadata && artifact.metadata.tag) || artifact.tag)
         break
       default:
         collectedArtifacts = collectedArtifacts.filter(
-          artifact => artifact.tag === req.query['tag']
+          artifact => (artifact.metadata && artifact.metadata.tag === req.query['tag']) || artifact.tag === req.query['tag']
         )
         break
     }

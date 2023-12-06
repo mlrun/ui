@@ -2,6 +2,7 @@ Feature: Files Page
 
   Testcases that verifies functionality on Files Page
 
+  @MLA
   @passive
   Scenario: MLA001 - Check all mandatory components on Artifacts tab
     Given open url
@@ -25,9 +26,10 @@ Feature: Files Page
     Then verify "Table_Refresh_Button" element visibility on "Files" wizard
     Then verify "Files_Table" element visibility on "Files" wizard
     Then verify "Register_File_Button" element visibility on "Files" wizard
-    Then "Register_File_Button" element on "Files" should contains "Register Artifact" value
+    Then "Register_File_Button" element on "Files" should contains "Register artifact" value
     Then verify "Table_Tree_Filter_Dropdown" dropdown element on "Artifacts_FilterBy_Popup" wizard should contains "Dropdown_Options"."Tag_Filer_Options"
 
+  @MLA
   @passive
   Scenario: MLA002 - Verify filtering by file name on Artifacts page
     Given open url
@@ -49,6 +51,7 @@ Feature: Files Page
     And wait load page
     Then value in "name" column with "text" in "Files_Table" on "Files" wizard should contains "test"
 
+  @MLA
   @passive
   Scenario: MLA003 - Verify filtering by file label on Artifacts page
     Given open url
@@ -77,6 +80,7 @@ Feature: Files Page
     And verify "No_Data_Message" element visibility on "commonPagesHeader" wizard
     Then "No_Data_Message" component on "commonPagesHeader" should contains "No_Data_Message"."No_Files_data"
 
+  @MLA
   @passive
   Scenario: MLA004 - Verify behaviour of Show iterations checkbox on Artifacts tab
     Given open url
@@ -107,9 +111,7 @@ Feature: Files Page
     Then "Show_Iterations_Checkbox" element should be checked on "Artifacts_FilterBy_Popup" wizard
     Then check "expand_btn" not presented in "Files_Table" on "Files" wizard
 
-  @FAILED_TODO
-  #TODO: 'Name_Input' - options "Input_Hint"."Artifact_Name_Hint" implementation with click on warning hint  
-  #TODO: 'Target_Path_Input' implementstion with dropdown before input, rewrite test case
+  @MLA
   @passive
   @inProgress
   Scenario: MLA005 - Check all mandatory components on Register Artifacts Popup
@@ -138,9 +140,10 @@ Feature: Files Page
     Then type value "   " to "New_File_Name_Input" field on "Register_File_Popup" wizard
     Then verify "New_File_Name_Input" on "Register_File_Popup" wizard should display options "Input_Hint"."Artifact_Name_Hint"
     Then verify "New_File_Name_Input" options rules on form "Register_File_Popup" wizard
-    Then verify "New_File_Target_Path_Input" element visibility on "Register_File_Popup" wizard
-    Then type value "   " to "New_File_Target_Path_Input" field on "Register_File_Popup" wizard
-    Then verify "New_File_Target_Path_Input" on "Register_File_Popup" wizard should display warning "Input_Hint"."Input_Field_Invalid"
+    Then verify options in "Path_Scheme_Combobox" combobox in "Target_Path" on "Register_File_Popup" wizard should contains "Register_Artifact"."Combobox_Options"
+    When select "V3IO" option in "Path_Scheme_Combobox" combobox on "Target_Path" accordion on "Register_File_Popup" wizard
+    When type value "  " to "Path_Scheme_Combobox" field on "Target_Path" on "Register_File_Popup" wizard
+    Then verify "Path_Scheme_Combobox" element in "Target_Path" on "Register_File_Popup" wizard should display warning "Input_Hint"."V3IO_Path_Hint"
     Then verify "New_File_Description_Input" element visibility on "Register_File_Popup" wizard
     Then type value "   " to "New_File_Description_Input" field on "Register_File_Popup" wizard
     Then verify "New_File_Description_Input" on "Register_File_Popup" wizard should display warning "Input_Hint"."Input_Field_Invalid"
@@ -155,7 +158,8 @@ Feature: Files Page
     Then click on "Register_Button" element on "Register_File_Popup" wizard
     Then verify "Register_Button" element on "Register_File_Popup" wizard is disabled
     Then type value "artifact" to "New_File_Name_Input" field on "Register_File_Popup" wizard
-    Then type value "target/path" to "New_File_Target_Path_Input" field on "Register_File_Popup" wizard
+    When select "V3IO" option in "Path_Scheme_Combobox" combobox on "Target_Path" accordion on "Register_File_Popup" wizard
+    When type value "target/path" to "Path_Scheme_Combobox" field on "Target_Path" on "Register_File_Popup" wizard
     Then type value "new artifact description" to "New_File_Description_Input" field on "Register_File_Popup" wizard
     Then verify "Register_Button" element on "Register_File_Popup" wizard is enabled
     Then click on "Cancel_Button" element on "Register_File_Popup" wizard
@@ -163,7 +167,7 @@ Feature: Files Page
     Then click on "Cancel_Button" element on "Common_Popup" wizard
     Then verify if "Register_File_Popup" popup dialog appears
     Then verify "New_File_Name_Input" input should contains "artifact" value on "Register_File_Popup" wizard
-    Then verify "New_File_Target_Path_Input" input should contains "target/path" value on "Register_File_Popup" wizard
+    Then verify "Path_Scheme_Combobox" input should contains "target/path" value in "Target_Path" on "Register_File_Popup" wizard
     Then verify "New_File_Description_Input" input should contains "new artifact description" value on "Register_File_Popup" wizard
     Then verify "New_File_Type_Dropdown" dropdown on "Register_File_Popup" wizard selected option value "Table"
     Then click on "Cross_Cancel_Button" element on "Register_File_Popup" wizard
@@ -171,7 +175,7 @@ Feature: Files Page
     Then click on "Cancel_Button" element on "Common_Popup" wizard
     Then verify if "Register_File_Popup" popup dialog appears
     Then verify "New_File_Name_Input" input should contains "artifact" value on "Register_File_Popup" wizard
-    Then verify "New_File_Target_Path_Input" input should contains "target/path" value on "Register_File_Popup" wizard
+    Then verify "Path_Scheme_Combobox" input should contains "target/path" value in "Target_Path" on "Register_File_Popup" wizard
     Then verify "New_File_Description_Input" input should contains "new artifact description" value on "Register_File_Popup" wizard
     Then check "New_File_Description_Input" textarea counter on "Register_File_Popup" wizard
     Then verify "New_File_Type_Dropdown" dropdown on "Register_File_Popup" wizard selected option value "Table"
@@ -186,8 +190,7 @@ Feature: Files Page
     Then navigate forward
     Then verify "Title" element not exists on "Register_File_Popup" wizard
 
-  @FAILED_TODO 
-  #TODO: 'Target_Path_Input' implementstion with dropdown before input, rewrite test case
+  @MLA
   Scenario: MLA006 - Verify behaviour on Register new Artifact
     * set tear-down property "project" created with "automation-test" value
     * create "automation-test" MLRun Project with code 201
@@ -200,7 +203,8 @@ Feature: Files Page
     Then click on "Register_File_Button" element on "Files" wizard
     Then verify if "Register_File_Popup" popup dialog appears
     Then type value "test-artifact" to "New_File_Name_Input" field on "Register_File_Popup" wizard
-    Then type value "test-path" to "New_File_Target_Path_Input" field on "Register_File_Popup" wizard
+    When select "V3IO" option in "Path_Scheme_Combobox" combobox on "Target_Path" accordion on "Register_File_Popup" wizard
+    When type value "target/path" to "Path_Scheme_Combobox" field on "Target_Path" on "Register_File_Popup" wizard
     Then select "Table" option in "New_File_Type_Dropdown" dropdown on "Register_File_Popup" wizard
     Then click on "Register_Button" element on "Register_File_Popup" wizard
     And wait load page
@@ -210,7 +214,7 @@ Feature: Files Page
     Then "Header" element on "Files_Info_Pane" should contains "test-artifact" value
     Then check "test-artifact" value in "key" column in "Overview_Table" table on "Files_Info_Pane" wizard
     Then check "latest" value in "tag" column in "Overview_Table" table on "Files_Info_Pane" wizard
-    Then check "test-path" value in "path" column in "Overview_Table" table on "Files_Info_Pane" wizard
+    Then check "v3io:///target/path" value in "path" column in "Overview_Table" table on "Files_Info_Pane" wizard
 
   @passive
   @inProgress
@@ -241,9 +245,10 @@ Feature: Files Page
     Then verify "Cross_Close_Button" element visibility on "Files_Info_Pane" wizard
 
   @passive
-  Scenario: Check Details panel still active on page refresh
-    * set tear-down property "project" created with "automation-test" value
-    * set tear-down property "file" created in "automation-test" project with "test-file" value
+  #TO DO: axios - UnhandledPromiseRejectionWarning: Error: Request failed with status code 404 at createError (D:\Iguaz.io\iguazio\ui\node_modules\axios\lib\core\createError.js:16:15)
+  Scenario: MLA013 - Check Details panel still active on page refresh
+    # * set tear-down property "project" created with "automation-test" value
+    # * set tear-down property "file" created in "automation-test" project with "test-file" value
     * create "automation-test" MLRun Project with code 201
     * create "test-file" File with "v1" tag in "automation-test" project with code 200
     Given open url
@@ -322,16 +327,29 @@ Feature: Files Page
     And wait load page
     Then verify "Projects_Table" element visibility on "Projects" wizard
 
+  @MLA
   @passive
-  Scenario: Verify View YAML action
+  Scenario: MLA014 - Verify action menu list, Downloads action,  View YAML action
     Given open url
     And wait load page
     And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
     And wait load page
+    Then verify breadcrumbs "tab" label should be equal "Project monitoring" value
     And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
     And click on cell with value "Artifacts" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
     And hover "MLRun_Logo" component on "commonPagesHeader" wizard
     And wait load page
+    Then verify action menu on "Files" wizard in "Files_Table" table with "test-i" value in "name" column should contains "Common_Lists"."Action_Menu_List"
+    Then select "Download" option in action menu on "Files" wizard in "Files_Table" table at row with "test-i" value in "name" column
+    And wait load page
+    And wait load page
+    Then verify "Download_Pop_Up" element visibility on "Downloads_Popup" wizard
+    And wait load page
+    Then verify "Download_Pop_Up_Cross_Cancel_Button" element visibility on "Downloads_Popup" wizard
+    And wait load page
+    Then verify "Header_Download_Pop_Up" element visibility on "Downloads_Popup" wizard
+    Then "Header_Download_Pop_Up" element on "Downloads_Popup" should contains "Downloads" value
+    Then click on "Download_Pop_Up_Cross_Cancel_Button" element on "Downloads_Popup" wizard
     Then select "View YAML" option in action menu on "Files" wizard in "Files_Table" table at row with "test-i" value in "name" column
     Then verify if "View_YAML" popup dialog appears
     Then verify "Cross_Cancel_Button" element visibility on "View_YAML" wizard
@@ -346,6 +364,38 @@ Feature: Files Page
     Then verify if "View_YAML" popup dialog appears
     Then verify "Cross_Cancel_Button" element visibility on "View_YAML" wizard
     Then verify "YAML_Modal_Container" element visibility on "View_YAML" wizard
+
+  @MLA
+  @passive
+  Scenario: MLA015 - Verify Preview option, view Preview action
+      Given open url
+      And wait load page
+      And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
+      And wait load page
+      Then verify breadcrumbs "tab" label should be equal "Project monitoring" value
+      And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
+      And click on cell with value "Artifacts" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+      And hover "MLRun_Logo" component on "commonPagesHeader" wizard
+      And wait load page
+      Then verify "preview" option is present on "Files" wizard in "Files_Table" table with "training_iteration_results" value in "name" column
+      Then click on "preview" option on "Files" wizard in "Files_Table" table with "training_iteration_results" value in "name" column
+      And wait load page
+      Then verify if "Preview_Popup" popup dialog appears
+      Then verify "Cross_Cancel_Button" element visibility on "Preview_Popup" wizard
+      Then verify "Preview_Modal_Container" element visibility on "Preview_Popup" wizard
+      Then verify "Download_Button" element visibility on "Preview_Popup" wizard
+      Then click on "Download_Button" element on "Preview_Popup" wizard
+      And wait load page
+      And wait load page
+      Then verify "Download_Pop_Up" element visibility on "Downloads_Popup" wizard
+      And wait load page
+      Then verify "Download_Pop_Up_Cross_Cancel_Button" element visibility on "Downloads_Popup" wizard
+      And wait load page
+      Then verify "Header_Download_Pop_Up" element visibility on "Downloads_Popup" wizard
+      Then "Header_Download_Pop_Up" element on "Downloads_Popup" should contains "Downloads" value
+      Then click on "Download_Pop_Up_Cross_Cancel_Button" element on "Downloads_Popup" wizard
+      Then click on "Cross_Cancel_Button" element on "Preview_Popup" wizard
+      
 
   @passive
   Scenario: Verify View YAML action in Item infopane
