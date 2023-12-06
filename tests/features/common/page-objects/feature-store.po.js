@@ -396,7 +396,10 @@ module.exports = {
     Table_Name_Filter_Input: commonNameFilterInputDataset,
     Table_FilterBy_Button: tableFilterByButton,
     Table_Refresh_Button: tableRefreshButton,
-    Datasets_Table: commonTable(datasetsTable)
+    Datasets_Table: commonTable(datasetsTable),
+    Download_Pop_Up: By.css('[data-testid="download-container"]'),
+    Download_Pop_Up_Cross_Cancel_Button: By.css('[data-testid="download-container"] .notification_body_close_icon'),
+    Header_Download_Pop_Up: By.css('[data-testid="download-container"] .download-container__header')
   },
   addToFeatureVector: {
     Table_Tree_Filter_Dropdown: commonTableTreeFilterDropdown,

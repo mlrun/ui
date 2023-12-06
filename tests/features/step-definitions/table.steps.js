@@ -1014,6 +1014,37 @@ Then(
 )
 
 Then(
+  'verify action menu on {string} wizard in {string} table with {string} value in {string} column should contains {string}.{string}',
+  async function (wizard, table, value, column, constWizard, constValue) {
+    const arr = await findRowIndexesByColumnValue(
+      this.driver,
+      pageObjects[wizard][table],
+      column,
+      value
+    )
+    const indx = arr[0]
+    const actionMenuSel = await getCellByIndexColumn(
+      this.driver,
+      pageObjects[wizard][table],
+      indx,
+      'action_menu'
+    )
+    await hoverComponent(
+      this.driver,
+      pageObjects[wizard][table]['tableFields'][column](indx)
+    )
+    await this.driver.sleep(500)
+    await openActionMenu(this.driver, actionMenuSel)
+    await this.driver.sleep(500)
+    await checkActionMenuOptions(
+      this.driver,
+      pageObjects[wizard][table]['tableFields']['action_menu'](indx),
+      pageObjectsConsts[constWizard][constValue]
+    )
+  }
+)
+
+Then(
   'subtable column {string} in {string} in {string} on {string} wizard should contains {string} in {string} column',
   async function (subTable, table, accordion, wizard, subString, subColumn) {
     const numOfRows = await getTableRows(this.driver, pageObjects[wizard][accordion][table])

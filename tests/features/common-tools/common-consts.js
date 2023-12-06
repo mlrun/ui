@@ -86,6 +86,9 @@ module.exports = {
       'Usage example:'
     ]
   },
+  Datasets: {
+    Action_Menu_List: ['Download', 'Copy URI', 'View YAML', 'Add a tag']
+  },
   Datasets_Info_Pane: {
     Tab_List: ['Overview', 'Preview', 'Metadata', 'Analysis'],
     Action_Menu_List: ['Download', 'Copy URI', 'View YAML', 'Add a tag'],

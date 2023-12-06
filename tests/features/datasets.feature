@@ -268,8 +268,7 @@ Feature: Datasets Page
   
   @MLD
   @passive
-  @FAILED_TODO
-  #TODO: requires a separate run
+  @uniqueTag
   Scenario: MLD015 - Verify View YAML action on Datasets page
     Given open url
     And wait load page
@@ -280,7 +279,20 @@ Feature: Datasets Page
     And wait load page
     And select "tab" with "Datasets" value in breadcrumbs menu
     And wait load page
-    Then select "View YAML" option in action menu on "Datasets" wizard in "Datasets_Table" table at row with "data_clean_encoded-data" value in "name" column
+    Then verify action menu on "Datasets" wizard in "Datasets_Table" table with "survival-curves_km-timelines" value in "name" column should contains "Datasets"."Action_Menu_List"
+    Then select "Download" option in action menu on "Datasets" wizard in "Datasets_Table" table at row with "survival-curves_km-timelines" value in "name" column
+    And wait load page
+    And wait load page
+    Then verify "Download_Pop_Up" element visibility on "Datasets" wizard
+    And wait load page
+    Then verify "Download_Pop_Up_Cross_Cancel_Button" element visibility on "Datasets" wizard
+    And wait load page
+    Then verify "Download_Pop_Up_Cross_Cancel_Button" element visibility on "Datasets" wizard
+    And wait load page
+    Then verify "Header_Download_Pop_Up" element visibility on "Datasets" wizard
+    Then "Header_Download_Pop_Up" element on "Datasets" should contains "Downloads" value
+    Then click on "Download_Pop_Up_Cross_Cancel_Button" element on "Datasets" wizard
+    Then select "View YAML" option in action menu on "Datasets" wizard in "Datasets_Table" table at row with "survival-curves_km-timelines" value in "name" column
     Then verify if "View_YAML" popup dialog appears
     Then verify "Cross_Cancel_Button" element visibility on "View_YAML" wizard
     Then verify "YAML_Modal_Container" element visibility on "View_YAML" wizard
