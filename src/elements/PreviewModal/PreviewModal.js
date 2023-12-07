@@ -26,45 +26,29 @@ import { useParams } from 'react-router-dom'
 import ArtifactsPreview from '../../components/ArtifactsPreview/ArtifactsPreview'
 import Download from '../../common/Download/Download'
 import { Tooltip, TextTooltipTemplate, PopUpDialog } from 'igz-controls/components'
+import ArtifactsExtraData from '../ArtifactsExtraData/ArtifactsExtraData'
 
 import { formatDatetime } from '../../utils'
-import {
-  fetchArtifactPreviewFromExtraData,
-  getArtifactPreview
-} from '../../utils/getArtifactPreview'
+import { getArtifactPreview } from '../../utils/getArtifactPreview'
 import { closeArtifactsPreview } from '../../reducers/artifactsReducer'
 
 import './previewModal.scss'
 
-const PreviewModal = ({ item }) => {
+const PreviewModal = ({ artifact }) => {
   const [preview, setPreview] = useState([])
-  const [extraData, setExtraData] = useState([])
   const [noData, setNoData] = useState(false)
   const dispatch = useDispatch()
   const params = useParams()
 
   useEffect(() => {
     if (preview.length === 0) {
-      getArtifactPreview(params.projectName, item, noData, setNoData, setPreview)
+      getArtifactPreview(params.projectName, artifact, noData, setNoData, setPreview)
     }
-  }, [item, noData, params.projectName, preview.length])
-
-  useEffect(() => {
-    if (item.extra_data && extraData.length === 0) {
-      fetchArtifactPreviewFromExtraData(
-        params.projectName,
-        item,
-        noData,
-        setNoData,
-        previewContent => setExtraData(state => [...state, previewContent])
-      )
-    }
-  }, [params.projectName, item, extraData.length, noData])
+  }, [artifact, noData, params.projectName, preview.length])
 
   useEffect(() => {
     return () => {
       setPreview([])
-      setExtraData([])
     }
   }, [])
 
@@ -79,38 +63,41 @@ const PreviewModal = ({ item }) => {
         <div className="preview-body">
           <div className="preview-item">
             <div className="item-data item-data__name data-ellipsis">
-              <Tooltip template={<TextTooltipTemplate text={item.db_key || item.key} />}>
-                {item.db_key || item.key}
+              <Tooltip template={<TextTooltipTemplate text={artifact.db_key || artifact.key} />}>
+                {artifact.db_key || artifact.key}
               </Tooltip>
             </div>
             <div className="item-data item-data__path data-ellipsis">
-              <Tooltip template={<TextTooltipTemplate text={item.target_path} />}>
-                {item.target_path}
+              <Tooltip template={<TextTooltipTemplate text={artifact.target_path} />}>
+                {artifact.target_path}
               </Tooltip>
             </div>
-            {item.size && (
+            {(artifact.ui.size || artifact.size) && (
               <div className="item-data">
                 size:
-                {typeof item.size === 'string' ? item.size : prettyBytes(item.size)}
+                {artifact.ui.size
+                  ? artifact.ui.size
+                  : typeof artifact.size === 'string'
+                  ? artifact.size
+                  : prettyBytes(artifact.size)}
               </div>
             )}
-            <div className="item-data">{formatDatetime(item.updated || item.date, 'N/A')}</div>
+            <div className="item-data">
+              {formatDatetime(artifact.updated || artifact.ui.date, 'N/A')}
+            </div>
             <div className="preview-body__download">
-              <Tooltip template={<TextTooltipTemplate text="Download" />}>
-                <Download
-                  path={`${item.target_path}${item.model_file ? item.model_file : ''}`}
-                  user={item.user ?? item.producer?.owner}
-                />
-              </Tooltip>
+              <Download
+                onlyIcon
+                path={`${artifact.target_path}${artifact.model_file ? artifact.model_file : ''}`}
+                user={artifact.ui.user ?? artifact.producer?.owner}
+              />
             </div>
           </div>
           <div className="item-artifacts__preview">
-            <ArtifactsPreview
-              extraData={extraData}
-              noData={noData}
-              preview={preview}
-              showExtraDataLoader={item.extra_data && extraData.length !== item.extra_data.length}
-            />
+            {preview[0]?.hidden && artifact.extra_data.length > 0 ? null : (
+              <ArtifactsPreview noData={noData} preview={preview} />
+            )}
+            {artifact.extra_data.length > 0 && <ArtifactsExtraData artifact={artifact} />}
           </div>
         </div>
       </div>
@@ -119,7 +106,7 @@ const PreviewModal = ({ item }) => {
 }
 
 PreviewModal.propTypes = {
-  item: PropTypes.shape({}).isRequired
+  artifact: PropTypes.shape({}).isRequired
 }
 
 export default PreviewModal

@@ -40,7 +40,12 @@ const TableLinkCell = ({
   selectedItem,
   showExpandButton
 }) => {
-  const tableCellClassNames = classnames('table-body__cell', data.class, className)
+  const tableCellClassNames = classnames(
+    'table-body__cell',
+    data.className,
+    className,
+    data.bodyCellClassName
+  )
   const itemNameClassNames = classnames('item-name')
   const { value: stateValue, label: stateLabel, className: stateClassName } = item.state ?? {}
 

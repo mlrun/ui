@@ -97,7 +97,7 @@ export const generateArtifactsContent = (detailsType, selectedItem, projectName)
             name: 'common.tag',
             additionalRules: {
               name: 'tagUniqueness',
-              label: 'Artifact tag should be unique',
+              label: 'Artifact tag must be unique',
               pattern: isArtifactTagUnique(projectName, detailsType, selectedItem),
               async: true
             }
@@ -162,9 +162,6 @@ export const generateArtifactsContent = (detailsType, selectedItem, projectName)
         },
         editModeEnabled: detailsType === MODELS_TAB,
         editModeType: 'chips'
-      },
-      sources: {
-        value: selectedItem.sources
       }
     }
   }
@@ -257,6 +254,9 @@ export const generateFunctionsContent = selectedItem => ({
   },
   command: {
     value: selectedItem.command
+  },
+  defaultHandler: {
+    value: selectedItem.default_handler
   },
   image: {
     value: getFunctionImage(selectedItem)

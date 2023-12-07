@@ -27,16 +27,24 @@ import ProjectSettingsSecrets from '../../elements/ProjectSettingsSecrets/Projec
 import Breadcrumbs from '../../common/Breadcrumbs/Breadcrumbs'
 import ContentMenu from '../../elements/ContentMenu/ContentMenu'
 
-import { setNotification } from '../../reducers/notificationReducer'
-import projectsIguazioApi from '../../api/projects-iguazio-api'
-import { PROJECTS_SETTINGS_MEMBERS_TAB, PROJECTS_SETTINGS_SECRETS_TAB } from '../../constants'
-import { COMPLETED_STATE, generateMembers, page, tabs, validTabs } from './projectSettings.util'
-import { isProjectValid } from '../../utils/handleRedirect'
+import {
+  COMPLETED_STATE,
+  generateMembers,
+  isProjectMembersTabShown,
+  page,
+  tabs,
+  validTabs
+} from './projectSettings.util'
 import {
   initialMembersState,
   membersActions,
   membersReducer
 } from '../../elements/MembersPopUp/membersReducer'
+import projectsIguazioApi from '../../api/projects-iguazio-api'
+import { PROJECTS_SETTINGS_MEMBERS_TAB, PROJECTS_SETTINGS_SECRETS_TAB } from '../../constants'
+import { isProjectValid } from '../../utils/handleRedirect'
+import { setNotification } from '../../reducers/notificationReducer'
+import { showErrorNotification } from '../../utils/notifications.util'
 
 import './projectSettings.scss'
 
@@ -52,6 +60,10 @@ const ProjectSettings = ({ frontendSpec, projectStore }) => {
   const projectMembershipIsEnabled = useMemo(
     () => frontendSpec?.feature_flags?.project_membership === 'enabled',
     [frontendSpec]
+  )
+  const projectMembersTabIsShown = useMemo(
+    () => isProjectMembersTabShown(projectMembershipIsEnabled, membersState),
+    [membersState, projectMembershipIsEnabled]
   )
 
   const fetchProjectIdAndOwner = useCallback(() => {
@@ -86,15 +98,7 @@ const ProjectSettings = ({ frontendSpec, projectStore }) => {
       return projectsIguazioApi
         .getProjectMembers(projectId)
         .then(membersResponse => generateMembers(membersResponse, membersDispatch))
-        .catch(() =>
-          dispatch(
-            setNotification({
-              status: 400,
-              id: Math.random(),
-              message: 'Failed to fetch data'
-            })
-          )
-        )
+        .catch(error => showErrorNotification(dispatch, error, 'Failed to fetch project members'))
     },
     [dispatch]
   )
@@ -107,6 +111,14 @@ const ProjectSettings = ({ frontendSpec, projectStore }) => {
       .catch(() => {
         setProjectMembersIsShown(false)
       })
+  }
+  const fetchActiveUser = () => {
+    projectsIguazioApi.getActiveUser().then(response => {
+      membersDispatch({
+        type: membersActions.SET_ACTIVE_USER,
+        payload: response.data.data
+      })
+    })
   }
   const fetchProjectOwnerVisibility = project => {
     projectsIguazioApi
@@ -124,6 +136,7 @@ const ProjectSettings = ({ frontendSpec, projectStore }) => {
       fetchProjectOwnerVisibility(params.projectName)
       fetchProjectIdAndOwner()
         .then(projectId => {
+          fetchActiveUser()
           fetchProjectMembersVisibility(params.projectName)
 
           return fetchProjectMembers(projectId)
@@ -215,9 +228,9 @@ const ProjectSettings = ({ frontendSpec, projectStore }) => {
           activeTab={params.pageTab}
           location={location}
           screen={page}
-          tabs={tabs(projectMembershipIsEnabled)}
+          tabs={tabs(projectMembersTabIsShown)}
         />
-        {params.pageTab === PROJECTS_SETTINGS_MEMBERS_TAB && projectMembershipIsEnabled ? (
+        {params.pageTab === PROJECTS_SETTINGS_MEMBERS_TAB && projectMembersTabIsShown ? (
           <ProjectSettingsMembers
             changeMembersCallback={changeMembersCallback}
             loading={membersState.loading}

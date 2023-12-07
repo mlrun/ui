@@ -34,18 +34,23 @@ import { getNoDataMessage } from '../../../utils/getNoDataMessage'
 import { removeModel } from '../../../reducers/artifactsReducer'
 import { filters } from './models.util'
 import { ACTIONS_MENU } from '../../../types'
+import { SECONDARY_BUTTON, PRIMARY_BUTTON } from 'igz-controls/constants'
 
 const ModelsView = React.forwardRef(
   (
     {
       actionsMenu,
-      artifactsStore,
       applyDetailsChanges,
       applyDetailsChangesCallback,
+      artifactsStore,
       detailsFormInitialValues,
       filtersStore,
       handleExpandRow,
       handleRefresh,
+      handleRegisterModel,
+      handleTrainModel,
+      isDemoMode,
+      largeRequestErrorMessage,
       models,
       pageData,
       selectedModel,
@@ -55,6 +60,7 @@ const ModelsView = React.forwardRef(
       setSelectedRowData,
       sortProps,
       tableContent,
+      tableHeaders,
       viewMode,
       urlTagOption
     },
@@ -66,7 +72,23 @@ const ModelsView = React.forwardRef(
           <div className="table-container">
             <div className="content__action-bar-wrapper">
               <ModelsPageTabs />
+              {/* TODO: remove from demo in 1.7 */}
               <ArtifactsActionBar
+                actionButtons={[
+                  {
+                    variant: PRIMARY_BUTTON,
+                    label: 'Train model',
+                    className: 'action-button',
+                    onClick: handleTrainModel
+                  },
+                  {
+                    variant: SECONDARY_BUTTON,
+                    label: 'Register model',
+                    className: 'action-button',
+                    onClick: handleRegisterModel,
+                    hidden: !isDemoMode
+                  }
+                ]}
                 filterMenuName={MODELS_FILTERS}
                 handleRefresh={handleRefresh}
                 page={MODELS_PAGE}
@@ -82,6 +104,7 @@ const ModelsView = React.forwardRef(
                 message={getNoDataMessage(
                   filtersStore,
                   filters,
+                  largeRequestErrorMessage,
                   MODELS_PAGE,
                   MODELS_TAB,
                   MODELS_FILTERS
@@ -102,7 +125,7 @@ const ModelsView = React.forwardRef(
                   selectedItem={selectedModel}
                   sortProps={sortProps}
                   tab={MODELS_TAB}
-                  tableHeaders={tableContent[0]?.content ?? []}
+                  tableHeaders={tableHeaders ?? []}
                 >
                   {tableContent.map((tableItem, index) => {
                     return (
@@ -114,6 +137,7 @@ const ModelsView = React.forwardRef(
                         rowItem={tableItem}
                         selectedItem={selectedModel}
                         selectedRowData={selectedRowData}
+                        tab={MODELS_TAB}
                       />
                     )
                   })}
@@ -149,12 +173,16 @@ ModelsView.defaultProps = {
 
 ModelsView.propTypes = {
   actionsMenu: ACTIONS_MENU.isRequired,
-  artifactsStore: PropTypes.object.isRequired,
   applyDetailsChanges: PropTypes.func.isRequired,
   applyDetailsChangesCallback: PropTypes.func.isRequired,
+  artifactsStore: PropTypes.object.isRequired,
   filtersStore: PropTypes.object.isRequired,
   handleExpandRow: PropTypes.func.isRequired,
   handleRefresh: PropTypes.func.isRequired,
+  handleRegisterModel: PropTypes.func.isRequired,
+  handleTrainModel: PropTypes.func.isRequired,
+  isDemoMode: PropTypes.bool.isRequired,
+  largeRequestErrorMessage: PropTypes.string.isRequired,
   models: PropTypes.arrayOf(PropTypes.object).isRequired,
   pageData: PropTypes.object.isRequired,
   selectedModel: PropTypes.object.isRequired,
@@ -164,6 +192,7 @@ ModelsView.propTypes = {
   setSelectedRowData: PropTypes.func.isRequired,
   sortProps: SORT_PROPS,
   tableContent: PropTypes.arrayOf(PropTypes.object).isRequired,
+  tableHeaders: PropTypes.arrayOf(PropTypes.object).isRequired,
   viewMode: PropTypes.string,
   urlTagOption: PropTypes.string
 }

@@ -28,8 +28,9 @@
   }
 
   &__description {
-    max-width: 75%;
+    max-width: 90%;
     margin: 0;
+    word-break: break-word;
   }
 
   &__details {
@@ -53,7 +54,7 @@
     }
 
     i[class^='state-'] {
-      margin-right: 5px;
+      margin-left: 5px;
     }
   }
 }

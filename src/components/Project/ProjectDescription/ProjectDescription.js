@@ -40,7 +40,7 @@ const ProjectDescription = ({
       <TextArea
         floatingLabel
         label="Project description"
-        maxLength={500}
+        maxLength={255}
         onBlur={() => handleOnBlur(DESCRIPTION)}
         onChange={value => handleOnChangeProject(DESCRIPTION, value)}
         type="text"

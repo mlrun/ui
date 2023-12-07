@@ -3,6 +3,8 @@
 @import '~igz-controls/scss/shadows';
 
 .actions-menu {
+  position: relative;
+
   &__container {
     position: relative;
     display: none;
@@ -14,6 +16,7 @@
       align-items: center;
       justify-content: center;
       background-color: $ghostWhite;
+      height: 100%;
 
       &:before {
         content: '';
@@ -22,14 +25,17 @@
         position: absolute;
         display: block;
         left: -30px;
-        background: linear-gradient(90deg, rgba(255,255,255,0) 0%, rgba(245,247,255,1) 100%);
+        background: linear-gradient(90deg, rgba(255, 255, 255, 0) 0%, rgba(245, 247, 255, 1) 100%);
+      }
+
+      .actions-menu {
+        padding: 0 5px 0 0;
       }
     }
 
     &-active {
       display: flex;
     }
-
   }
 
   &__main-actions-wrapper {
@@ -39,17 +45,18 @@
   }
 
   &__body {
-    position: fixed;
     min-width: 150px;
     max-width: 250px;
-    background: $white;
-    border: $primaryBorder;
-    border-radius: $mainBorderRadius;
-    box-shadow: $filterShadow;
-    visibility: hidden;
 
-    &.show {
-      visibility: visible;
+    .pop-up-dialog {
+      width: 100%;
+      padding: 0;
     }
+  }
+
+  &__list {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
   }
 }

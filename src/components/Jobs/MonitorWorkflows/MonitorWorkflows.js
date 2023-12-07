@@ -37,6 +37,7 @@ import {
   MONITOR_JOBS_TAB,
   MONITOR_WORKFLOWS_TAB,
   PANEL_RERUN_MODE,
+  REQUEST_CANCELED,
   WORKFLOW_GRAPH_VIEW
 } from '../../../constants'
 import {
@@ -45,10 +46,10 @@ import {
   generatePageData,
   monitorWorkflowsActionCreator
 } from './monitorWorkflows.util'
-import { enrichRunWithFunctionFields, handleAbortJob } from '../jobs.util'
 import { DANGER_BUTTON } from 'igz-controls/constants'
 import { JobsContext } from '../Jobs'
 import { createJobsWorkflowsTabContent } from '../../../utils/createJobsContent'
+import { enrichRunWithFunctionFields, handleAbortJob, handleDeleteJob } from '../jobs.util'
 import { getFunctionLogs } from '../../../utils/getFunctionLogs'
 import { getJobLogs } from '../../../utils/getJobLogs.util'
 import { getNoDataMessage } from '../../../utils/getNoDataMessage'
@@ -59,13 +60,17 @@ import { parseFunction } from '../../../utils/parseFunction'
 import { parseJob } from '../../../utils/parseJob'
 import { setFilters } from '../../../reducers/filtersReducer'
 import { setNotification } from '../../../reducers/notificationReducer'
+import { showErrorNotification } from '../../../utils/notifications.util'
 import { useMode } from '../../../hooks/mode.hook'
 import { usePods } from '../../../hooks/usePods.hook'
 import { useSortTable } from '../../../hooks/useSortTable.hook'
 import { useYaml } from '../../../hooks/yaml.hook'
 
+import './MonitorWorkflows.scss'
+
 const MonitorWorkflows = ({
   abortJob,
+  deleteJob,
   fetchFunctionLogs,
   fetchJob,
   fetchJobFunctions,
@@ -83,6 +88,7 @@ const MonitorWorkflows = ({
   const [workflowsAreLoaded, setWorkflowsAreLoaded] = useState(false)
   const [itemIsSelected, setItemIsSelected] = useState(false)
   const [selectedJob, setSelectedJob] = useState({})
+  const [largeRequestErrorMessage, setLargeRequestErrorMessage] = useState('')
   const [convertedYaml, toggleConvertedYaml] = useYaml('')
   const appStore = useSelector(store => store.appStore)
   const workflowsStore = useSelector(state => state.workflowsStore)
@@ -105,6 +111,7 @@ const MonitorWorkflows = ({
   } = React.useContext(JobsContext)
   let fetchFunctionLogsTimeout = useRef(null)
   const fetchJobFunctionsPromiseRef = useRef()
+  const abortControllerRef = useRef(new AbortController())
 
   usePods(fetchJobPods, removePods, selectedJob)
 
@@ -172,8 +179,8 @@ const MonitorWorkflows = ({
   )
 
   const refreshJobs = useCallback(() => {
-    fetchWorkflow(params.workflowId)
-  }, [fetchWorkflow, params.workflowId])
+    fetchWorkflow(params.projectName, params.workflowId)
+  }, [fetchWorkflow, params.projectName, params.workflowId])
 
   const onAbortJob = useCallback(
     job => {
@@ -204,21 +211,75 @@ const MonitorWorkflows = ({
         },
         confirmHandler: () => {
           onAbortJob(job)
+          setConfirmData(null)
         }
       })
     },
     [onAbortJob, setConfirmData]
   )
 
+  const getWorkflows = useCallback(
+    filter => {
+      abortControllerRef.current = new AbortController()
+
+      fetchWorkflows(params.projectName, filter, {
+        ui: {
+          controller: abortControllerRef.current,
+          setLargeRequestErrorMessage
+        }
+      })
+    },
+    [fetchWorkflows, params.projectName]
+  )
+
+  const onDeleteJob = useCallback(
+    job => {
+      handleDeleteJob(deleteJob, job, params.projectName, refreshJobs, filtersStore, dispatch).then(
+        () => {
+          navigate(
+            location.pathname
+              .split('/')
+              .splice(0, location.pathname.split('/').indexOf(params.workflowId) + 1)
+              .join('/')
+          )
+        }
+      )
+    },
+    [
+      deleteJob,
+      dispatch,
+      filtersStore,
+      location.pathname,
+      navigate,
+      params.projectName,
+      params.workflowId,
+      refreshJobs
+    ]
+  )
+
+  const handleConfirmDeleteJob = useCallback(
+    job => {
+      setConfirmData({
+        item: job,
+        header: 'Delete job?',
+        message: `You try to delete job "${job.name}".`,
+        btnConfirmLabel: 'Delete',
+        btnConfirmType: DANGER_BUTTON,
+        rejectHandler: () => {
+          setConfirmData(null)
+        },
+        confirmHandler: () => {
+          onDeleteJob(job)
+          setConfirmData(null)
+        }
+      })
+    },
+    [onDeleteJob, setConfirmData]
+  )
+
   const handleCatchRequest = useCallback(
     (error, message) => {
-      dispatch(
-        setNotification({
-          status: error?.response?.status || 400,
-          id: Math.random(),
-          message
-        })
-      )
+      showErrorNotification(dispatch, error, message, '')
       navigate(
         location.pathname
           .split('/')
@@ -238,6 +299,7 @@ const MonitorWorkflows = ({
         handleMonitoring,
         appStore.frontendSpec.abortable_function_kinds,
         handleConfirmAbortJob,
+        handleConfirmDeleteJob,
         toggleConvertedYaml
       )
   }, [
@@ -246,6 +308,7 @@ const MonitorWorkflows = ({
     appStore.frontendSpec.abortable_function_kinds,
     handleMonitoring,
     handleConfirmAbortJob,
+    handleConfirmDeleteJob,
     toggleConvertedYaml
   ])
 
@@ -297,13 +360,6 @@ const MonitorWorkflows = ({
       })
   }, [fetchJob, modifyAndSelectRun, navigate, params.jobId, params.projectName])
 
-  const getWorkflows = useCallback(
-    filter => {
-      fetchWorkflows(params.projectName, filter)
-    },
-    [fetchWorkflows, params.projectName]
-  )
-
   useEffect(() => {
     if ((params.jobId || params.functionHash) && pageData.details.menu.length > 0) {
       isDetailsTabExists(params.tab, pageData.details.menu, navigate, location)
@@ -314,14 +370,8 @@ const MonitorWorkflows = ({
     const workflow = { ...workflowsStore.activeWorkflow?.data }
     const getWorkflow = () => {
       fetchWorkflow(params.projectName, params.workflowId).catch(error => {
+        showErrorNotification(dispatch, error, 'Failed to fetch workflow')
         navigate(`/projects/${params.projectName}/jobs/${MONITOR_WORKFLOWS_TAB}`, { replace: true })
-        dispatch(
-          setNotification({
-            status: error?.response?.status || 400,
-            id: Math.random(),
-            message: 'Failed to fetch workflow'
-          })
-        )
       })
     }
 
@@ -488,6 +538,7 @@ const MonitorWorkflows = ({
       setItemIsSelected(false)
       setSelectedJob({})
       setSelectedFunction({})
+      abortControllerRef.current.abort(REQUEST_CANCELED)
     }
   }, [params.projectName, params.workflowId])
 
@@ -525,21 +576,33 @@ const MonitorWorkflows = ({
   return (
     <>
       {!params.workflowId && (
-        <div className="content__action-bar-wrapper">
-          <div className="action-bar">
-            <FilterMenu
-              filters={filters}
-              onChange={getWorkflows}
-              page={JOBS_PAGE}
-              withoutExpandButton
-            />
+        <div className="monitor-workflows">
+          <p className="monitor-workflows__subtitle">
+            View running workflows and previously executed workflows
+          </p>
+          <div className="content__action-bar-wrapper">
+            <div className="action-bar">
+              <FilterMenu
+                filters={filters}
+                onChange={getWorkflows}
+                page={JOBS_PAGE}
+                withoutExpandButton
+              />
+            </div>
           </div>
         </div>
       )}
-      {workflowsStore.workflows.loading ? null : !params.workflowId &&
-        workflowsStore.workflows.data.length === 0 ? (
+      {workflowsStore.workflows.loading ? null : (!params.workflowId &&
+          workflowsStore.workflows.data.length === 0) ||
+        largeRequestErrorMessage ? (
         <NoData
-          message={getNoDataMessage(filtersStore, filters, JOBS_PAGE, MONITOR_WORKFLOWS_TAB)}
+          message={getNoDataMessage(
+            filtersStore,
+            filters,
+            largeRequestErrorMessage,
+            JOBS_PAGE,
+            MONITOR_WORKFLOWS_TAB
+          )}
         />
       ) : (
         <>

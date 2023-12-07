@@ -157,6 +157,7 @@ const Content = ({
               message={getNoDataMessage(
                 filtersStore,
                 pageData.filters,
+                null,
                 pageData.page,
                 params.pageTab
               )}
@@ -183,7 +184,7 @@ const Content = ({
         )}
       </div>
       {artifactsStore?.preview?.isPreview && (
-        <PreviewModal item={artifactsStore?.preview?.selectedItem} />
+        <PreviewModal artifact={artifactsStore?.preview?.selectedItem} />
       )}
     </>
   )

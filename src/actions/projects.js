@@ -72,14 +72,10 @@ import {
   FETCH_PROJECTS_BEGIN,
   FETCH_PROJECTS_FAILURE,
   FETCH_PROJECTS_SUCCESS,
-  REMOVE_NEW_PROJECT,
   REMOVE_NEW_PROJECT_ERROR,
   REMOVE_PROJECT_SUMMARY,
   REMOVE_PROJECT_DATA,
   REMOVE_PROJECTS,
-  SET_NEW_PROJECT_DESCRIPTION,
-  SET_NEW_PROJECT_LABELS,
-  SET_NEW_PROJECT_NAME,
   SET_PROJECT_DATA,
   SET_PROJECT_LABELS,
   FETCH_PROJECTS_NAMES_BEGIN,
@@ -98,6 +94,7 @@ import {
 } from 'igz-controls/constants'
 
 import { parseSummaryData } from '../utils/parseSummaryData'
+import { showErrorNotification } from '../utils/notifications.util'
 
 const projectsAction = {
   addProjectLabel: (label, labels) => ({
@@ -222,11 +219,11 @@ const projectsAction = {
     type: FETCH_PROJECT_DATASETS_SUCCESS,
     payload: datasets
   }),
-  fetchProjectFailedJobs: (project, cancelToken) => dispatch => {
+  fetchProjectFailedJobs: (project, signal) => dispatch => {
     dispatch(projectsAction.fetchProjectFailedJobsBegin())
 
     return projectsApi
-      .getProjectFailedJobs(project, cancelToken)
+      .getProjectFailedJobs(project, signal)
       .then(response => {
         dispatch(projectsAction.fetchProjectFailedJobsSuccess(response?.data.runs))
 
@@ -261,11 +258,11 @@ const projectsAction = {
         dispatch(projectsAction.fetchProjectFilesFailure(error.message))
       })
   },
-  fetchProjectFeatureSets: (project, cancelToken) => dispatch => {
+  fetchProjectFeatureSets: (project, signal) => dispatch => {
     dispatch(projectsAction.fetchProjectFeatureSetsBegin())
 
     return projectsApi
-      .getProjectFeatureSets(project, cancelToken)
+      .getProjectFeatureSets(project, signal)
       .then(response => {
         dispatch(projectsAction.fetchProjectFeatureSetsSuccess(response.data?.feature_sets))
 
@@ -297,11 +294,11 @@ const projectsAction = {
     type: FETCH_PROJECT_FILES_SUCCESS,
     payload: files
   }),
-  fetchProjectFunctions: (project, cancelToken) => dispatch => {
+  fetchProjectFunctions: (project, signal) => dispatch => {
     dispatch(projectsAction.fetchProjectFunctionsBegin())
 
     return projectsApi
-      .getProjectFunctions(project, cancelToken)
+      .getProjectFunctions(project, signal)
       .then(response => {
         dispatch(projectsAction.fetchProjectFunctionsSuccess(response?.data.funcs))
 
@@ -359,11 +356,11 @@ const projectsAction = {
     type: FETCH_PROJECT_JOBS_SUCCESS,
     payload: jobs
   }),
-  fetchProjectModels: (project, cancelToken) => dispatch => {
+  fetchProjectModels: (project, signal) => dispatch => {
     dispatch(projectsAction.fetchProjectModelsBegin())
 
     return projectsApi
-      .getProjectModels(project, cancelToken)
+      .getProjectModels(project, signal)
       .then(response => {
         dispatch(projectsAction.fetchProjectModelsSuccess(response?.data.artifacts))
 
@@ -384,11 +381,11 @@ const projectsAction = {
     type: FETCH_PROJECT_MODELS_SUCCESS,
     payload: models
   }),
-  fetchProjectRunningJobs: (project, cancelToken) => dispatch => {
+  fetchProjectRunningJobs: (project, signal) => dispatch => {
     dispatch(projectsAction.fetchProjectRunningJobsBegin())
 
     return projectsApi
-      .getProjectRunningJobs(project, cancelToken)
+      .getProjectRunningJobs(project, signal)
       .then(response => {
         dispatch(projectsAction.fetchProjectRunningJobsSuccess(response?.data.runs))
 
@@ -503,8 +500,9 @@ const projectsAction = {
 
         return response.data.projects
       })
-      .catch(err => {
-        dispatch(projectsAction.fetchProjectsFailure(err))
+      .catch(error => {
+        dispatch(projectsAction.fetchProjectsFailure(error), dispatch)
+        showErrorNotification(dispatch, error, 'Failed to fetch projects')
       })
   },
   fetchProjectsBegin: () => ({ type: FETCH_PROJECTS_BEGIN }),
@@ -539,11 +537,11 @@ const projectsAction = {
     type: FETCH_PROJECTS_SUCCESS,
     payload: projectsList
   }),
-  fetchProjectsSummary: cancelToken => dispatch => {
+  fetchProjectsSummary: signal => dispatch => {
     dispatch(projectsAction.fetchProjectsSummaryBegin())
 
     return projectsApi
-      .getProjectSummaries(cancelToken)
+      .getProjectSummaries(signal)
       .then(({ data: { project_summaries } }) => {
         dispatch(projectsAction.fetchProjectsSummarySuccess(parseSummaryData(project_summaries)))
 
@@ -587,20 +585,10 @@ const projectsAction = {
     type: FETCH_PROJECT_WORKFLOWS_SUCCESS,
     payload: workflows
   }),
-  removeNewProject: () => ({ type: REMOVE_NEW_PROJECT }),
   removeNewProjectError: () => ({ type: REMOVE_NEW_PROJECT_ERROR }),
   removeProjectData: () => ({ type: REMOVE_PROJECT_DATA }),
   removeProjectSummary: () => ({ type: REMOVE_PROJECT_SUMMARY }),
   removeProjects: () => ({ type: REMOVE_PROJECTS }),
-  setNewProjectDescription: description => ({
-    type: SET_NEW_PROJECT_DESCRIPTION,
-    payload: description
-  }),
-  setNewProjectLabels: (label, labels) => ({
-    type: SET_NEW_PROJECT_LABELS,
-    payload: { ...labels, ...label }
-  }),
-  setNewProjectName: name => ({ type: SET_NEW_PROJECT_NAME, payload: name }),
   setProjectData: data => ({
     type: SET_PROJECT_DATA,
     payload: data

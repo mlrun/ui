@@ -17,7 +17,7 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import { artifactsHttpClient, mainHttpClient } from '../httpClient'
+import { mainHttpClient, mainHttpClientV2 } from '../httpClient'
 import {
   ARTIFACT_OTHER_TYPE,
   DATASET_TYPE,
@@ -41,7 +41,7 @@ const fetchArtifacts = (project, filters, config = {}) => {
     params.name = `~${filters.name}`
   }
 
-  return artifactsHttpClient.get(`/projects/${project}/artifacts`, {
+  return mainHttpClientV2.get(`/projects/${project}/artifacts`, {
     ...config,
     params: { ...config.params, ...params }
   })
@@ -49,11 +49,20 @@ const fetchArtifacts = (project, filters, config = {}) => {
 
 const artifactsApi = {
   addTag: (project, tag, data) => mainHttpClient.put(`/projects/${project}/tags/${tag}`, data),
-  replaceTag: (project, tag, data) => mainHttpClient.post(`/projects/${project}/tags/${tag}`, data),
+  buildFunction: data => mainHttpClient.post('/build/function', data),
+  deleteArtifact: (project, key, tag, uid) => {
+    const config = {
+      params: {
+        key,
+        tag
+      }
+    }
+
+    return mainHttpClient.delete(`/projects/${project}/artifacts/${uid}`, config)
+  },
   deleteTag: (project, tag, data) =>
     mainHttpClient.delete(`/projects/${project}/tags/${tag}`, { data }),
-  buildFunction: data => mainHttpClient.post('/build/function', data),
-  getArtifactPreview: (project, path, user, fileFormat, cancelToken) => {
+  getArtifactPreview: (project, path, user, fileFormat, signal) => {
     const config = {
       params: { path }
     }
@@ -66,8 +75,8 @@ const artifactsApi = {
       config.responseType = 'blob'
     }
 
-    if (cancelToken) {
-      config.cancelToken = cancelToken
+    if (signal) {
+      config.signal = signal
     }
 
     return mainHttpClient.get(`projects/${project}/files`, config)
@@ -79,7 +88,7 @@ const artifactsApi = {
       }
     }),
   getArtifact: (project, artifact) => {
-    return artifactsHttpClient.get(`/projects/${project}/artifacts/${artifact}`)
+    return mainHttpClientV2.get(`/projects/${project}/artifacts?name=${artifact}`)
   },
   getArtifacts: (project, filters, config) => {
     return fetchArtifacts(project, filters, config)
@@ -98,8 +107,13 @@ const artifactsApi = {
       }
     )
   },
-  getDataSets: (project, filters, config) => {
-    return fetchArtifacts(project, filters, { ...config, params: { category: DATASET_TYPE } })
+  getDataSets: (project, filters, config = {}) => {
+    const newConfig = {
+      ...config,
+      params: { category: DATASET_TYPE }
+    }
+
+    return fetchArtifacts(project, filters, newConfig)
   },
   getFile: (project, file, iter, tag) => {
     return fetchArtifacts(
@@ -115,10 +129,13 @@ const artifactsApi = {
       }
     )
   },
-  getFiles: (project, filters) => {
-    return fetchArtifacts(project, filters, {
+  getFiles: (project, filters, config = {}) => {
+    const newConfig = {
+      ...config,
       params: { category: ARTIFACT_OTHER_TYPE, format: 'full' }
-    })
+    }
+
+    return fetchArtifacts(project, filters, newConfig)
   },
   getModel: (project, model, iter, tag) => {
     return fetchArtifacts(
@@ -134,22 +151,34 @@ const artifactsApi = {
       }
     )
   },
-  getModelEndpoints: (project, filters, params = {}) => {
-    if (filters?.labels) {
-      params.label = filters.labels?.split(',')
+  getModelEndpoints: (project, filters, config = {}, params = {}) => {
+    const newConfig = {
+      ...config,
+      params
     }
 
-    return mainHttpClient.get(`/projects/${project}/model-endpoints`, {
-      params
-    })
+    if (filters?.labels) {
+      newConfig.params.label = filters.labels?.split(',')
+    }
+
+    return mainHttpClient.get(`/projects/${project}/model-endpoints`, newConfig)
   },
-  getModels: (project, filters) => {
-    return fetchArtifacts(project, filters, { params: { category: MODEL_TYPE, format: 'full' } })
+  getModels: (project, filters, config = {}) => {
+    const newConfig = {
+      ...config,
+      params: { category: MODEL_TYPE, format: 'full' }
+    }
+
+    return fetchArtifacts(project, filters, newConfig)
   },
   registerArtifact: (project, data) =>
-    artifactsHttpClient.post(`/projects/${project}/artifacts`, data),
+    mainHttpClientV2.post(`/projects/${project}/artifacts`, data),
+  replaceTag: (project, tag, data) => mainHttpClient.post(`/projects/${project}/tags/${tag}`, data),
   updateArtifact: (project, data) =>
-    artifactsHttpClient.put(`/projects/${project}/artifacts/${data.db_key || data.spec?.db_key}`, data)
+    mainHttpClientV2.put(
+      `/projects/${project}/artifacts/${data.db_key || data.spec?.db_key}`,
+      data
+    )
 }
 
 export default artifactsApi

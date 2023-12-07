@@ -17,8 +17,9 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-
+import React from 'react'
 import {
+  ARTIFACT_TYPE,
   FILES_PAGE,
   FULL_VIEW_MODE,
   ITERATIONS_FILTER,
@@ -27,12 +28,22 @@ import {
   TAG_FILTER
 } from '../../constants'
 import { applyTagChanges } from '../../utils/artifacts.util'
-import { createFilesRowData } from '../../utils/createArtifactsContent'
-import { generateProducerDetailsInfo } from '../../utils/generateProducerDetailsInfo'
+import { createFilesRowData, getIsTargetPathValid } from '../../utils/createArtifactsContent'
 import { getArtifactIdentifier } from '../../utils/getUniqueIdentifier'
 import { searchArtifactItem } from '../../utils/searchArtifactItem'
 import { sortListByDate } from '../../utils'
-import { fetchFile } from '../../reducers/artifactsReducer'
+import { fetchFile, showArtifactsPreview } from '../../reducers/artifactsReducer'
+import { copyToClipboard } from '../../utils/copyToClipboard'
+import { generateUri } from '../../utils/resources'
+import { handleDeleteArtifact } from '../../utils/handleDeleteArtifact'
+import { setDownloadItem, setShowDownloadsList } from '../../reducers/downloadReducer'
+
+import { ReactComponent as TagIcon } from 'igz-controls/images/tag-icon.svg'
+import { ReactComponent as YamlIcon } from 'igz-controls/images/yaml.svg'
+import { ReactComponent as ArtifactView } from 'igz-controls/images/eye-icon.svg'
+import { ReactComponent as Copy } from 'igz-controls/images/copy-to-clipboard-icon.svg'
+import { ReactComponent as Delete } from 'igz-controls/images/delete.svg'
+import { ReactComponent as DownloadIcon } from 'igz-controls/images/download.svg'
 
 export const pageDataInitialState = {
   details: {
@@ -74,22 +85,16 @@ export const infoHeaders = [
     tip: 'Unique identifier representing the job or the workflow that generated the artifact'
   },
   { label: 'Updated', id: 'updated' },
-  { label: 'Labels', id: 'labels' },
-  { label: 'Sources', id: 'sources' }
+  { label: 'Labels', id: 'labels' }
 ]
 
-export const generatePageData = (selectedFile, viewMode) => {
+export const generatePageData = viewMode => {
   return {
     page: FILES_PAGE,
     details: {
       type: FILES_PAGE,
       menu: detailsMenu,
       infoHeaders,
-      additionalInfo: {
-        header: 'Producer',
-        body: generateProducerDetailsInfo(selectedFile),
-        hidden: !selectedFile.producer
-      },
       hideBackBtn: viewMode === FULL_VIEW_MODE,
       withToggleViewBtn: true
     }
@@ -102,7 +107,7 @@ export const filters = [
   { type: LABELS_FILTER, label: 'Labels:' },
   { type: ITERATIONS_FILTER, label: 'Show best iteration only' }
 ]
-export const actionsMenuHeader = 'Register artifact'
+export const registerArtifactTitle = 'Register artifact'
 
 export const fetchFilesRowData = (
   file,
@@ -192,4 +197,85 @@ export const checkForSelectedFile = (
       setSelectedFile({})
     }
   })
+}
+
+export const generateActionsMenu = (
+  file,
+  frontendSpec,
+  dispatch,
+  toggleConvertedYaml,
+  handleAddTag,
+  projectName,
+  handleRefresh,
+  datasetsFilters
+) => {
+  const isTargetPathValid = getIsTargetPathValid(file ?? {}, frontendSpec)
+  const downloadPath = `${file?.target_path}${file?.model_file || ''}`
+
+  return [
+    [
+      {
+        label: 'Download',
+        icon: <DownloadIcon />,
+        onClick: file => {
+          dispatch(
+            setDownloadItem({
+              path: downloadPath,
+              user: file.producer?.owner,
+              id: downloadPath
+            })
+          )
+          dispatch(setShowDownloadsList(true))
+        }
+      },
+      {
+        label: 'Copy URI',
+        icon: <Copy />,
+        onClick: file => copyToClipboard(generateUri(file, FILES_PAGE), dispatch)
+      },
+      {
+        label: 'View YAML',
+        icon: <YamlIcon />,
+        onClick: toggleConvertedYaml
+      },
+      {
+        label: 'Add a tag',
+        icon: <TagIcon />,
+        onClick: handleAddTag
+      },
+      {
+        label: 'Delete',
+        icon: <Delete />,
+        disabled: !file?.tag,
+        className: 'danger',
+        onClick: () =>
+          handleDeleteArtifact(
+            dispatch,
+            projectName,
+            file.db_key,
+            file.tag,
+            file.tree,
+            handleRefresh,
+            datasetsFilters,
+            ARTIFACT_TYPE
+          )
+      }
+    ],
+    [
+      {
+        disabled: !isTargetPathValid,
+        id: 'artifact-preview',
+        label: 'Preview',
+        icon: <ArtifactView />,
+        onClick: file => {
+          dispatch(
+            showArtifactsPreview({
+              isPreview: true,
+              selectedItem: file
+            })
+          )
+        }
+      }
+    ]
+  ]
 }

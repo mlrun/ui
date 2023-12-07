@@ -47,7 +47,8 @@ export const generateCreateNewOptions = (
   openRegisterArtifactModal,
   openRegisterModelModal,
   setCreateFeatureSetsPanelIsOpen,
-  setIsNewFunctionPopUpOpen
+  setIsNewFunctionPopUpOpen,
+  isDemoMode
 ) => [
   {
     label: 'Batch run',
@@ -63,7 +64,8 @@ export const generateCreateNewOptions = (
     id: 'mlFunction',
     handler: () => {
       setIsNewFunctionPopUpOpen(true)
-    }
+    },
+    hidden: !isDemoMode
   },
   {
     label: 'Feature Set',

@@ -24,32 +24,36 @@ import { isNil } from 'lodash'
 
 import DatasetsView from './DatasetsView'
 import AddArtifactTagPopUp from '../../elements/AddArtifactTagPopUp/AddArtifactTagPopUp'
+import RegisterArtifactModal from '../RegisterArtifactModal/RegisterArtifactModal'
 
 import {
+  DATASET_TYPE,
   DATASETS_FILTERS,
   DATASETS_PAGE,
   FILTER_MENU_MODAL,
   GROUP_BY_NAME,
   GROUP_BY_NONE,
+  REQUEST_CANCELED,
   TAG_FILTER_ALL_ITEMS
 } from '../../constants'
 import {
   fetchDataSet,
   fetchDataSets,
   removeDataSet,
-  removeDataSets,
-  showArtifactsPreview
+  removeDataSets
 } from '../../reducers/artifactsReducer'
 import {
   checkForSelectedDataset,
   fetchDataSetRowData,
   filters,
+  generateActionsMenu,
   generatePageData,
-  handleApplyDetailsChanges
+  handleApplyDetailsChanges,
+  registerDatasetTitle
 } from './datasets.util'
-import { cancelRequest } from '../../utils/cancelRequest'
-import { createDatasetsRowData, getIsTargetPathValid } from '../../utils/createArtifactsContent'
+import { createDatasetsRowData } from '../../utils/createArtifactsContent'
 import { getArtifactIdentifier } from '../../utils/getUniqueIdentifier'
+import { getViewMode } from '../../utils/helper'
 import { isDetailsTabExists } from '../../utils/isDetailsTabExists'
 import { openPopUp } from 'igz-controls/utils/common.util'
 import { setArtifactTags } from '../../utils/artifacts.util'
@@ -57,31 +61,22 @@ import { setFilters } from '../../reducers/filtersReducer'
 import { setNotification } from '../../reducers/notificationReducer'
 import { useGetTagOptions } from '../../hooks/useGetTagOptions.hook'
 import { useGroupContent } from '../../hooks/groupContent.hook'
+import { useSortTable } from '../../hooks/useSortTable.hook'
 import { useYaml } from '../../hooks/yaml.hook'
-import { getViewMode } from '../../utils/helper'
-import { copyToClipboard } from '../../utils/copyToClipboard'
-import { generateUri } from '../../utils/resources'
-
-import { ReactComponent as TagIcon } from 'igz-controls/images/tag-icon.svg'
-import { ReactComponent as YamlIcon } from 'igz-controls/images/yaml.svg'
-import { ReactComponent as ArtifactView } from 'igz-controls/images/eye-icon.svg'
-import { ReactComponent as Copy } from 'igz-controls/images/copy-to-clipboard-icon.svg'
 
 const Datasets = () => {
   const [datasets, setDatasets] = useState([])
   const [allDatasets, setAllDatasets] = useState([])
   const [selectedDataset, setSelectedDataset] = useState({})
   const [selectedRowData, setSelectedRowData] = useState({})
+  const [largeRequestErrorMessage, setLargeRequestErrorMessage] = useState('')
   const [convertedYaml, toggleConvertedYaml] = useYaml('')
   const [urlTagOption] = useGetTagOptions(null, filters, null, DATASETS_FILTERS)
   const artifactsStore = useSelector(store => store.artifactsStore)
   const filtersStore = useSelector(store => store.filtersStore)
   const datasetsRef = useRef(null)
+  const abortControllerRef = useRef(new AbortController())
   const viewMode = getViewMode(window.location.search)
-  const pageData = useMemo(
-    () => generatePageData(selectedDataset, viewMode),
-    [selectedDataset, viewMode]
-  )
   const params = useParams()
   const navigate = useNavigate()
   const location = useLocation()
@@ -90,6 +85,10 @@ const Datasets = () => {
   const datasetsFilters = useMemo(
     () => filtersStore[FILTER_MENU_MODAL][DATASETS_FILTERS].values,
     [filtersStore]
+  )
+  const pageData = useMemo(
+    () => generatePageData(selectedDataset, viewMode, params),
+    [selectedDataset, viewMode, params]
   )
 
   const detailsFormInitialValues = useMemo(
@@ -101,19 +100,34 @@ const Datasets = () => {
 
   const fetchData = useCallback(
     filters => {
-      dispatch(fetchDataSets({ project: params.projectName, filters }))
+      abortControllerRef.current = new AbortController()
+
+      dispatch(
+        fetchDataSets({
+          project: params.projectName,
+          filters,
+          config: {
+            ui: {
+              controller: abortControllerRef.current,
+              setLargeRequestErrorMessage
+            }
+          }
+        })
+      )
         .unwrap()
         .then(dataSetsResponse => {
-          setArtifactTags(
-            dataSetsResponse,
-            setDatasets,
-            setAllDatasets,
-            filters,
-            dispatch,
-            DATASETS_PAGE
-          )
+          if (dataSetsResponse) {
+            setArtifactTags(
+              dataSetsResponse,
+              setDatasets,
+              setAllDatasets,
+              filters,
+              dispatch,
+              DATASETS_PAGE
+            )
 
-          return dataSetsResponse
+            return dataSetsResponse
+          }
         })
     },
     [dispatch, params.projectName]
@@ -149,45 +163,26 @@ const Datasets = () => {
   )
 
   const actionsMenu = useMemo(
-    () => dataset => {
-      const isTargetPathValid = getIsTargetPathValid(dataset ?? {}, frontendSpec)
-
-      return [
-        [
-          {
-            label: 'Copy URI',
-            icon: <Copy />,
-            onClick: dataset => copyToClipboard(generateUri(dataset, DATASETS_PAGE), dispatch)
-          },
-          {
-            label: 'View YAML',
-            icon: <YamlIcon />,
-            onClick: toggleConvertedYaml
-          },
-          {
-            label: 'Add a tag',
-            icon: <TagIcon />,
-            onClick: handleAddTag
-          }
-        ],
-        [
-          {
-            disabled: !isTargetPathValid,
-            label: 'Preview',
-            icon: <ArtifactView />,
-            onClick: dataset => {
-              dispatch(
-                showArtifactsPreview({
-                  isPreview: true,
-                  selectedItem: dataset
-                })
-              )
-            }
-          }
-        ]
-      ]
-    },
-    [dispatch, frontendSpec, handleAddTag, toggleConvertedYaml]
+    () => dataset =>
+      generateActionsMenu(
+        dataset,
+        frontendSpec,
+        dispatch,
+        toggleConvertedYaml,
+        handleAddTag,
+        params.projectName,
+        handleRefresh,
+        datasetsFilters
+      ),
+    [
+      datasetsFilters,
+      dispatch,
+      frontendSpec,
+      handleAddTag,
+      handleRefresh,
+      params.projectName,
+      toggleConvertedYaml
+    ]
   )
 
   const applyDetailsChanges = useCallback(
@@ -270,6 +265,15 @@ const Datasets = () => {
         )
   }, [datasets, filtersStore.groupBy, frontendSpec, latestItems, params.projectName])
 
+  const tableHeaders = useMemo(() => tableContent[0]?.content ?? [], [tableContent])
+
+  const { sortTable, selectedColumnName, getSortingIcon, sortedTableContent, sortedTableHeaders } =
+    useSortTable({
+      headers: tableHeaders,
+      content: tableContent,
+      sortConfig: { excludeSortBy: 'labels', defaultSortBy: 'updated', defaultDirection: 'desc' }
+    })
+
   useEffect(() => {
     if (params.name && params.tag && pageData.details.menu.length > 0) {
       isDetailsTabExists(params.tab, pageData.details.menu, navigate, location)
@@ -315,9 +319,18 @@ const Datasets = () => {
       setAllDatasets([])
       dispatch(removeDataSets())
       setSelectedDataset({})
-      cancelRequest(datasetsRef, 'cancel')
+      abortControllerRef.current.abort(REQUEST_CANCELED)
     }
   }, [dispatch])
+
+  const handleRegisterDataset = useCallback(() => {
+    openPopUp(RegisterArtifactModal, {
+      artifactKind: DATASET_TYPE,
+      projectName: params.projectName,
+      refresh: handleRefresh,
+      title: registerDatasetTitle
+    })
+  }, [handleRefresh, params.projectName])
 
   return (
     <DatasetsView
@@ -331,6 +344,8 @@ const Datasets = () => {
       filtersStore={filtersStore}
       handleExpandRow={handleExpandRow}
       handleRefresh={handleRefresh}
+      handleRegisterDataset={handleRegisterDataset}
+      largeRequestErrorMessage={largeRequestErrorMessage}
       pageData={pageData}
       ref={datasetsRef}
       selectedDataset={selectedDataset}
@@ -338,10 +353,12 @@ const Datasets = () => {
       setDatasets={setDatasets}
       setSelectedDataset={setSelectedDataset}
       setSelectedRowData={setSelectedRowData}
-      tableContent={tableContent}
+      sortProps={{ sortTable, selectedColumnName, getSortingIcon }}
+      tableContent={sortedTableContent}
+      tableHeaders={sortedTableHeaders}
       toggleConvertedYaml={toggleConvertedYaml}
-      viewMode={viewMode}
       urlTagOption={urlTagOption}
+      viewMode={viewMode}
     />
   )
 }

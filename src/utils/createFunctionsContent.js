@@ -36,7 +36,7 @@ const createFunctionsContent = (functions, pageTab, projectName, showExpandButto
               headerId: 'name',
               headerLabel: 'Name',
               value: func.name,
-              class: 'table-cell-name',
+              className: 'table-cell-name',
               getLink: hash => {
                 return `/projects/${projectName}/${MODELS_PAGE.toLowerCase()}/${REAL_TIME_PIPELINES_TAB}/pipeline/${hash}`
               },
@@ -44,7 +44,7 @@ const createFunctionsContent = (functions, pageTab, projectName, showExpandButto
               showStatus: true,
               expandedCellContent: {
                 value: formatDatetime(func.updated, 'N/A'),
-                class: 'table-cell-name',
+                className: 'table-cell-name',
                 type: 'date',
                 showTag: true,
                 showStatus: true
@@ -56,7 +56,7 @@ const createFunctionsContent = (functions, pageTab, projectName, showExpandButto
               headerId: 'type',
               headerLabel: 'Type',
               value: func.graph?.kind === 'router' ? 'Router' : 'Flow',
-              class: 'table-cell-small',
+              className: 'table-cell-small',
               type: 'type'
             },
             {
@@ -64,7 +64,7 @@ const createFunctionsContent = (functions, pageTab, projectName, showExpandButto
               headerId: 'function',
               headerLabel: 'Function',
               value: func.name,
-              class: 'table-cell-2',
+              className: 'table-cell-2',
               getLink: tab =>
                 validateArguments(func.hash, tab)
                   ? generateLinkToDetailsPanel(
@@ -81,7 +81,7 @@ const createFunctionsContent = (functions, pageTab, projectName, showExpandButto
               id: `updated.${func.ui.identifierUnique}`,
               headerId: 'updated',
               value: formatDatetime(func.updated, 'N/A'),
-              class: 'table-cell-2',
+              className: 'table-cell-2',
               type: 'date',
               showTag: true,
               showStatus: true,
@@ -99,13 +99,13 @@ const createFunctionsContent = (functions, pageTab, projectName, showExpandButto
               headerId: 'name',
               headerLabel: 'Name',
               value: func.name,
-              class: 'table-cell-name',
+              className: 'table-cell-name',
               getLink: (hash, tab) => {
                 return `/projects/${projectName}/functions/${hash}${`/${tab}`}`
               },
               expandedCellContent: {
                 value: formatDatetime(func.updated, 'N/A'),
-                class: 'table-cell-name',
+                className: 'table-cell-name',
                 type: 'date',
                 showTag: true,
                 showStatus: true
@@ -119,7 +119,7 @@ const createFunctionsContent = (functions, pageTab, projectName, showExpandButto
               headerId: 'kind',
               headerLabel: 'Kind',
               value: func.type,
-              class: 'table-cell-small',
+              className: 'table-cell-small',
               type: 'type'
             },
             {
@@ -127,7 +127,7 @@ const createFunctionsContent = (functions, pageTab, projectName, showExpandButto
               headerId: 'hash',
               headerLabel: 'Hash',
               value: func.hash,
-              class: 'table-cell-1',
+              className: 'table-cell-1',
               type: 'hash'
             },
             {
@@ -135,7 +135,7 @@ const createFunctionsContent = (functions, pageTab, projectName, showExpandButto
               headerId: 'updated',
               headerLabel: 'Updated',
               value: formatDatetime(func.updated, 'N/A'),
-              class: 'table-cell-2',
+              className: 'table-cell-2',
               type: 'date',
               showTag: true,
               showStatus: true
@@ -145,21 +145,28 @@ const createFunctionsContent = (functions, pageTab, projectName, showExpandButto
               headerId: 'command',
               headerLabel: 'Command',
               value: func.command,
-              class: 'table-cell-1'
+              className: 'table-cell-1'
+            },
+            {
+              id: `defaultHandler.${func.ui.identifierUnique}`,
+              headerId: 'defaultHandler',
+              headerLabel: 'Default handler',
+              value: func.default_handler,
+              className: 'table-cell-2'
             },
             {
               id: `image.${func.ui.identifierUnique}`,
               headerId: 'image',
               headerLabel: 'Image',
               value: getFunctionImage(func),
-              class: 'table-cell-1'
+              className: 'table-cell-1'
             },
             {
               id: `description.${func.ui.identifierUnique}`,
               headerId: 'description',
               headerLabel: 'Description',
               value: func.description,
-              class: 'table-cell-2'
+              className: 'table-cell-2'
             },
             {
               id: `tag.${func.ui.identifierUnique}`,

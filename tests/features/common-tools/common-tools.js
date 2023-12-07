@@ -133,7 +133,7 @@ module.exports = {
 
     return structure
   },
-  generateTextAreaGroup: function (root, counter = '.text-area__counter') {
+  generateTextAreaGroup: function (root, counter = '.form-field__counter') {
     return {
       root,
       elements: {

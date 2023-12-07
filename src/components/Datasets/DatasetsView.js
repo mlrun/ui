@@ -19,26 +19,24 @@ such restriction.
 */
 import React from 'react'
 import PropTypes from 'prop-types'
-import { useParams } from 'react-router-dom'
 
 import PreviewModal from '../../elements/PreviewModal/PreviewModal'
 import Breadcrumbs from '../../common/Breadcrumbs/Breadcrumbs'
-import PageActionsMenu from '../../common/PageActionsMenu/PageActionsMenu'
 import Table from '../Table/Table'
 import ArtifactsTableRow from '../../elements/ArtifactsTableRow/ArtifactsTableRow'
 import YamlModal from '../../common/YamlModal/YamlModal'
-import RegisterArtifactModal from '../RegisterArtifactModal/RegisterArtifactModal'
 import Loader from '../../common/Loader/Loader'
 import ArtifactsActionBar from '../ArtifactsActionBar/ArtifactsActionBar'
 import NoData from '../../common/NoData/NoData'
 import Details from '../Details/Details'
 
-import { DATASET_TYPE, DATASETS_FILTERS, DATASETS_PAGE, FULL_VIEW_MODE } from '../../constants'
+import { DATASETS_FILTERS, DATASETS_PAGE, FULL_VIEW_MODE } from '../../constants'
 import { getNoDataMessage } from '../../utils/getNoDataMessage'
-import { actionsMenuHeader, filters } from './datasets.util'
-import { openPopUp } from 'igz-controls/utils/common.util'
+import { registerDatasetTitle, filters } from './datasets.util'
 import { removeDataSet } from '../../reducers/artifactsReducer'
 import { ACTIONS_MENU } from '../../types'
+import { SECONDARY_BUTTON } from 'igz-controls/constants'
+import { SORT_PROPS } from 'igz-controls/types'
 
 const DatasetsView = React.forwardRef(
   (
@@ -53,44 +51,42 @@ const DatasetsView = React.forwardRef(
       filtersStore,
       handleExpandRow,
       handleRefresh,
+      handleRegisterDataset,
+      largeRequestErrorMessage,
       pageData,
       selectedDataset,
       selectedRowData,
       setDatasets,
       setSelectedDataset,
       setSelectedRowData,
+      sortProps,
       tableContent,
+      tableHeaders,
       toggleConvertedYaml,
-      viewMode,
-      urlTagOption
+      urlTagOption,
+      viewMode
     },
     ref
   ) => {
-    const params = useParams()
-
     return (
       <>
         <div className="content-wrapper" ref={ref}>
           <div className="content__header">
             <Breadcrumbs />
-            <PageActionsMenu
-              actionsMenuHeader={actionsMenuHeader}
-              onClick={() =>
-                openPopUp(RegisterArtifactModal, {
-                  artifactKind: DATASET_TYPE,
-                  projectName: params.projectName,
-                  refresh: handleRefresh,
-                  title: actionsMenuHeader
-                })
-              }
-              showActionsMenu
-            />
           </div>
           <div className="content">
             {artifactsStore.loading && <Loader />}
             <div className="table-container">
               <div className="content__action-bar-wrapper">
                 <ArtifactsActionBar
+                  actionButtons={[
+                    {
+                      variant: SECONDARY_BUTTON,
+                      label: registerDatasetTitle,
+                      className: 'action-button',
+                      onClick: handleRegisterDataset
+                    }
+                  ]}
                   filterMenuName={DATASETS_FILTERS}
                   handleRefresh={handleRefresh}
                   page={DATASETS_PAGE}
@@ -105,6 +101,7 @@ const DatasetsView = React.forwardRef(
                   message={getNoDataMessage(
                     filtersStore,
                     filters,
+                    largeRequestErrorMessage,
                     DATASETS_PAGE,
                     null,
                     DATASETS_FILTERS
@@ -123,7 +120,8 @@ const DatasetsView = React.forwardRef(
                     pageData={pageData}
                     retryRequest={handleRefresh}
                     selectedItem={selectedDataset}
-                    tableHeaders={tableContent[0]?.content ?? []}
+                    sortProps={sortProps}
+                    tableHeaders={tableHeaders ?? []}
                   >
                     {tableContent.map((tableItem, index) => (
                       <ArtifactsTableRow
@@ -159,7 +157,7 @@ const DatasetsView = React.forwardRef(
           <YamlModal convertedYaml={convertedYaml} toggleConvertToYaml={toggleConvertedYaml} />
         )}
         {artifactsStore?.preview?.isPreview && (
-          <PreviewModal item={artifactsStore?.preview?.selectedItem} />
+          <PreviewModal artifact={artifactsStore?.preview?.selectedItem} />
         )}
       </>
     )
@@ -182,16 +180,20 @@ DatasetsView.propTypes = {
   filtersStore: PropTypes.object.isRequired,
   handleExpandRow: PropTypes.func.isRequired,
   handleRefresh: PropTypes.func.isRequired,
+  handleRegisterDataset: PropTypes.func.isRequired,
+  largeRequestErrorMessage: PropTypes.string.isRequired,
   pageData: PropTypes.object.isRequired,
   selectedDataset: PropTypes.object.isRequired,
   selectedRowData: PropTypes.object.isRequired,
   setDatasets: PropTypes.func.isRequired,
   setSelectedDataset: PropTypes.func.isRequired,
   setSelectedRowData: PropTypes.func.isRequired,
+  sortProps: SORT_PROPS,
   tableContent: PropTypes.arrayOf(PropTypes.object).isRequired,
+  tableHeaders: PropTypes.arrayOf(PropTypes.object).isRequired,
   toggleConvertedYaml: PropTypes.func.isRequired,
-  viewMode: PropTypes.string,
-  urlTagOption: PropTypes.string
+  urlTagOption: PropTypes.string,
+  viewMode: PropTypes.string
 }
 
 export default DatasetsView

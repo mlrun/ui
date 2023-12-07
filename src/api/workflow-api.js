@@ -69,21 +69,24 @@ const generateQueryParams = filter => {
     }
   }
 
-  return `?filter=${encodeURI(JSON.stringify(queryParams))}`
+  return JSON.stringify(queryParams)
 }
 
 const workflowsApi = {
   getWorkflow: (project, workflowId) => {
     return mainHttpClient.get(`/projects/${project}/pipelines/${workflowId}`)
   },
-  getWorkflows: (project, filter) => {
-    let queryParams = ''
-
-    if (filter?.groupBy === GROUP_BY_WORKFLOW) {
-      queryParams = generateQueryParams(filter)
+  getWorkflows: (project, filter, config = {}) => {
+    const newConfig = {
+      ...config,
+      params: {}
     }
 
-    return mainHttpClient.get(`/projects/${project}/pipelines` + queryParams)
+    if (filter?.groupBy === GROUP_BY_WORKFLOW) {
+      newConfig.params.filter = generateQueryParams(filter)
+    }
+
+    return mainHttpClient.get(`/projects/${project}/pipelines`, newConfig)
   }
 }
 

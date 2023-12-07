@@ -20,12 +20,12 @@ such restriction.
 import React from 'react'
 import PropTypes from 'prop-types'
 import { useDispatch } from 'react-redux'
+import classnames from 'classnames'
 
 import ChipCell from '../../common/ChipCell/ChipCell'
 import CopyToClipboard from '../../common/CopyToClipboard/CopyToClipboard'
 import Download from '../../common/Download/Download'
 import TableLinkCell from '../TableLinkCell/TableLinkCell'
-import TableProducerCell from '../TableProducerCell/TableProducerCell'
 import TableTypeCell from '../TableTypeCell/TableTypeCell'
 import { Tooltip, TextTooltipTemplate, RoundedIcon } from 'igz-controls/components'
 
@@ -50,8 +50,16 @@ const TableCell = ({
 }) => {
   const dispatch = useDispatch()
   const { value: stateValue, label: stateLabel, className: stateClassName } = item.state ?? {}
+  const cellClassNames = classnames(
+    'table-body__cell',
+    data.className,
+    className,
+    data.bodyCellClassName
+  )
 
-  if (link && data.type !== 'hidden') {
+  if (data.template) {
+    return data.template
+  } else if (link && data.type !== 'hidden') {
     return (
       <TableLinkCell
         className={className}
@@ -66,7 +74,7 @@ const TableCell = ({
     )
   } else if (firstCell && !link) {
     return (
-      <td className={`table-body__cell ${data.class} ${className}`}>
+      <td className={cellClassNames}>
         <div className="data-ellipsis">
           {data && (
             <Tooltip template={<TextTooltipTemplate text={data.tooltip || data.value} />}>
@@ -93,7 +101,7 @@ const TableCell = ({
     return <TableTypeCell className={className} data={data} />
   } else if (data.type === 'icons') {
     return (
-      <td className={`table-body__cell ${data.class} ${className}`}>
+      <td className={cellClassNames}>
         {data.value.map((valueItem, index) => (
           <Tooltip
             key={valueItem.tooltip + index}
@@ -106,15 +114,13 @@ const TableCell = ({
     )
   } else if (Array.isArray(data.value)) {
     return (
-      <td className={`table-body__cell ${data.class} ${className}`}>
+      <td className={cellClassNames}>
         <ChipCell chipOptions={getChipOptions(data.type)} elements={data.value} tooltip />
       </td>
     )
-  } else if (data.type === 'producer') {
-    return <TableProducerCell className={className} data={data} />
   } else if (data.type === 'buttonPopout') {
     return (
-      <td className={`table-body__cell ${data.class} ${className}`}>
+      <td className={cellClassNames}>
         <RoundedIcon
           tooltipText={
             data.disabled
@@ -141,19 +147,18 @@ const TableCell = ({
     )
   } else if (data.type === 'buttonDownload') {
     return (
-      <td className={`table-body__cell ${data.class} ${className}`}>
-        <Tooltip hidden={data.disabled} template={<TextTooltipTemplate text="Download" />}>
-          <Download
-            path={`${item?.target_path}${item?.model_file ? item.model_file : ''}`}
-            user={item?.producer?.owner || item.user}
-            disabled={data.disabled}
-          />
-        </Tooltip>
+      <td className={cellClassNames}>
+        <Download
+          disabled={data.disabled}
+          onlyIcon
+          path={`${item?.target_path}${item?.model_file ? item.model_file : ''}`}
+          user={item?.producer?.owner || item.user}
+        />
       </td>
     )
   } else if (data.type === BUTTON_COPY_URI_CELL_TYPE) {
     return (
-      <td className={`table-body__cell ${data.class} ${className}`}>
+      <td className={cellClassNames}>
         <CopyToClipboard
           tooltipText="Copy URI"
           textToCopy={data.actionHandler(item)}
@@ -163,7 +168,7 @@ const TableCell = ({
     )
   } else if (data.type === 'hash') {
     return (
-      <td className={`table-body__cell ${data.class} ${className}`}>
+      <td className={cellClassNames}>
         <Tooltip template={<TextTooltipTemplate text={data.value} />}>
           <span>{truncateUid(data.value)}</span>
         </Tooltip>
@@ -172,10 +177,10 @@ const TableCell = ({
   } else if (data.type === 'hidden') {
     return null
   } else if (data.type === 'component') {
-    return <td className={`table-body__cell ${data.class} ${className}`}>{data.value}</td>
+    return <td className={cellClassNames}>{data.value}</td>
   } else {
     return (
-      <td className={`table-body__cell ${data.class} ${className}`}>
+      <td className={cellClassNames}>
         <Tooltip
           className="text_small"
           template={<TextTooltipTemplate text={data.tooltip || data.value} />}

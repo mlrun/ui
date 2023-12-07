@@ -30,6 +30,7 @@ import {
   FETCH_MODEL_FEATURE_VECTOR_SUCCESS,
   REMOVE_INFO_CONTENT,
   REMOVE_JOB_PODS,
+  REMOVE_MODEL_ENDPOINT,
   REMOVE_MODEL_FEATURE_VECTOR,
   RESET_CHANGES,
   SET_CHANGES,
@@ -123,6 +124,9 @@ const detailsActions = {
   }),
   removeInfoContent: () => ({
     type: REMOVE_INFO_CONTENT
+  }),
+  removeModelEndpoint: () => ({
+    type: REMOVE_MODEL_ENDPOINT
   }),
   removeModelFeatureVector: () => ({
     type: REMOVE_MODEL_FEATURE_VECTOR

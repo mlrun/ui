@@ -21,7 +21,7 @@ import React, { useState, useEffect, useMemo, useCallback } from 'react'
 import PropTypes from 'prop-types'
 import { OnChange } from 'react-final-form-listeners'
 import { useDispatch, useSelector } from 'react-redux'
-import { includes, isEmpty, intersection, isBoolean, pickBy, keys, uniqBy } from 'lodash'
+import { includes, isEmpty, intersection, isBoolean, pickBy, keys, uniqBy, cloneDeep } from 'lodash'
 
 import ContentMenu from '../../../../elements/ContentMenu/ContentMenu'
 import FilterMenuModal from '../../../FilterMenuModal/FilterMenuModal'
@@ -35,6 +35,7 @@ import functionsActions from '../../../../actions/functions'
 import projectsAction from '../../../../actions/projects'
 import {
   FILTER_MENU_MODAL,
+  FUNCTION_SELECTION_STEP,
   HUB_CATEGORIES_FILTER,
   JOB_WIZARD_FILTERS,
   TAG_LATEST
@@ -44,11 +45,13 @@ import { generateProjectsList } from '../../../../utils/projects'
 import { functionRunKinds } from '../../../Jobs/jobs.util'
 import { openConfirmPopUp } from 'igz-controls/utils/common.util'
 import {
+  filterTrainFunctionHandlers,
   FUNCTIONS_SELECTION_FUNCTIONS_TAB,
   FUNCTIONS_SELECTION_HUB_TAB,
   functionsSelectionTabs,
   generateFunctionCardData,
-  generateFunctionTemplateCardData
+  generateFunctionTemplateCardData,
+  trainModelAllowedHubFunctions
 } from './jobWizardFunctionSelection.util'
 
 import './jobWizardFunctionSelection.scss'
@@ -62,7 +65,9 @@ const JobWizardFunctionSelection = ({
   frontendSpec,
   functions,
   isEditMode,
+  isTrain,
   params,
+  prePopulatedData,
   selectedFunctionData,
   selectedFunctionTab,
   setActiveTab,
@@ -72,6 +77,7 @@ const JobWizardFunctionSelection = ({
   setJobAdditionalData,
   setSelectedFunctionData,
   setSelectedFunctionTab,
+  setShowSchedule,
   setTemplates,
   setTemplatesCategories,
   templates,
@@ -89,7 +95,7 @@ const JobWizardFunctionSelection = ({
       store.filtersStore[FILTER_MENU_MODAL][JOB_WIZARD_FILTERS]?.values?.[HUB_CATEGORIES_FILTER]
   )
 
-  const { hubFunctions, hubFunctionsCatalog } = useSelector(store => store.functionsStore)
+  const { hubFunctions, hubFunctionsCatalog, loading } = useSelector(store => store.functionsStore)
 
   const dispatch = useDispatch()
 
@@ -134,12 +140,15 @@ const JobWizardFunctionSelection = ({
 
     if (
       projects.length > 0 &&
-      !initialValues?.functionSelection?.projectName &&
+      !initialValues?.[FUNCTION_SELECTION_STEP]?.projectName &&
       params?.projectName
     ) {
       formState.form.reset({
         ...initialValues,
-        functionSelection: { ...initialValues?.functionSelection, projectName: params.projectName }
+        [FUNCTION_SELECTION_STEP]: {
+          ...initialValues?.[FUNCTION_SELECTION_STEP],
+          projectName: params.projectName
+        }
       })
     }
   }, [formState.form, formState.initialValues, params.projectName, projects.length])
@@ -210,11 +219,13 @@ const JobWizardFunctionSelection = ({
         functionData,
         defaultData,
         params.projectName,
-        isEditMode
+        isEditMode,
+        prePopulatedData
       )
+
       const newInitial = {
-        ...formState.initialValues,
-        ...jobFormData
+        ...cloneDeep(formState.initialValues),
+        ...cloneDeep(jobFormData)
       }
 
       formState.form.reset(newInitial)
@@ -227,38 +238,40 @@ const JobWizardFunctionSelection = ({
   }
 
   const onSelectedProjectNameChange = currentValue => {
-    dispatch(functionsActions.fetchFunctions(currentValue, {}, true)).then(functions => {
-      const validFunctions = functions.filter(func => {
-        return includes(functionRunKinds, func.kind)
-      })
-
-      const groupedFunctions = Object.values(
-        validFunctions.reduce((prev, curr) => {
-          if (!prev[curr.metadata.name]) {
-            prev[curr.metadata.name] = {
-              name: curr.metadata.name,
-              functions: []
-            }
-          }
-
-          prev[curr.metadata.name].functions.push(curr)
-
-          return prev
-        }, {})
-      )
-
-      setFunctions(groupedFunctions)
-
-      if (filterByName.length > 0) {
-        const filteredFunctions = validFunctions.filter(func => {
-          return func.metadata.name.includes(filterByName)
+    dispatch(functionsActions.fetchFunctions(currentValue, {})).then(functions => {
+      if (functions) {
+        const validFunctions = functions.filter(func => {
+          return includes(functionRunKinds, func.kind)
         })
 
-        setFilteredFunctions(filteredFunctions)
+        const groupedFunctions = Object.values(
+          validFunctions.reduce((prev, curr) => {
+            if (!prev[curr.metadata.name]) {
+              prev[curr.metadata.name] = {
+                name: curr.metadata.name,
+                functions: []
+              }
+            }
+
+            prev[curr.metadata.name].functions.push(curr)
+
+            return prev
+          }, {})
+        )
+
+        setFunctions(groupedFunctions)
+
+        if (filterByName.length > 0) {
+          const filteredFunctions = validFunctions.filter(func => {
+            return func.metadata.name.includes(filterByName)
+          })
+
+          setFilteredFunctions(filteredFunctions)
+        }
       }
     })
 
-    formState.initialValues.functionSelection.projectName = currentValue
+    formState.initialValues[FUNCTION_SELECTION_STEP].projectName = currentValue
   }
 
   useEffect(() => {
@@ -266,12 +279,14 @@ const JobWizardFunctionSelection = ({
       activeTab === FUNCTIONS_SELECTION_HUB_TAB &&
       (isEmpty(hubFunctions) || isEmpty(hubFunctionsCatalog))
     ) {
-      dispatch(functionsActions.fetchHubFunctions()).then(templatesObject => {
+      dispatch(
+        functionsActions.fetchHubFunctions(isTrain ? trainModelAllowedHubFunctions : {})
+      ).then(templatesObject => {
         if (templatesObject) {
           setTemplatesCategories(templatesObject.hubFunctionsCategories)
           setTemplates(templatesObject.hubFunctions)
 
-          formState.initialValues.functionSelection.templatesLabels =
+          formState.initialValues[FUNCTION_SELECTION_STEP].templatesLabels =
             templatesObject.hubFunctions.reduce((labels, template) => {
               labels[template.metadata.name] = template.ui.categories.map(categoryId => {
                 return {
@@ -289,9 +304,10 @@ const JobWizardFunctionSelection = ({
   }, [
     activeTab,
     dispatch,
-    formState.initialValues.functionSelection,
+    formState.initialValues,
     hubFunctions,
     hubFunctionsCatalog,
+    isTrain,
     setTemplates,
     setTemplatesCategories
   ])
@@ -301,6 +317,7 @@ const JobWizardFunctionSelection = ({
       setSelectedFunctionData(functionData)
       generateData(functionData)
       setSelectedFunctionTab(FUNCTIONS_SELECTION_FUNCTIONS_TAB)
+      setShowSchedule(false)
     }
 
     if (
@@ -320,9 +337,12 @@ const JobWizardFunctionSelection = ({
       const functionTemplatePath = `${functionData.spec.item_uri}${functionData.spec.assets.function}`
 
       dispatch(functionsActions.fetchFunctionTemplate(functionTemplatePath)).then(result => {
-        setSelectedFunctionData(result)
-        generateData(result)
+        const resultData = isTrain ? filterTrainFunctionHandlers(result) : result
+
+        setSelectedFunctionData(resultData)
+        generateData(resultData)
         setSelectedFunctionTab(FUNCTIONS_SELECTION_HUB_TAB)
+        setShowSchedule(false)
       })
     }
 
@@ -359,6 +379,7 @@ const JobWizardFunctionSelection = ({
         <div className="functions-tab">
           <div className="form-row">
             <Search
+              id="search-functions"
               matches={filterMatches}
               onChange={value => handleSearchOnChange(value)}
               placeholder="Search functions..."
@@ -368,12 +389,16 @@ const JobWizardFunctionSelection = ({
           </div>
           <div className="form-row">
             <div className="form-row__project-name">
-              <FormSelect name="functionSelection.projectName" options={projects} />
+              <FormSelect
+                name={`${FUNCTION_SELECTION_STEP}.projectName`}
+                options={projects}
+              />
             </div>
           </div>
-          {(filterByName.length > 0 &&
-            (filterMatches.length === 0 || filteredFunctions.length === 0)) ||
-          functions.length === 0 ? (
+          {!loading &&
+          ((filterByName.length > 0 &&
+            (filterMatches.length === 0 || isEmpty(filteredFunctions))) ||
+            isEmpty(functions)) ? (
             <NoData />
           ) : (
             <div className="functions-list">
@@ -401,6 +426,7 @@ const JobWizardFunctionSelection = ({
         <div className="hub-tab">
           <div className="form-row">
             <Search
+              id="search-hub"
               className="hub-search"
               matches={filterMatches}
               onChange={value => handleSearchOnChange(value)}
@@ -408,19 +434,22 @@ const JobWizardFunctionSelection = ({
               placeholder="Search functions..."
               setMatches={setFilterMatches}
             />
-            <FilterMenuModal
-              header="Filter by category"
-              wizardClassName="hub-filter"
-              filterMenuName={JOB_WIZARD_FILTERS}
-              initialValues={hubFiltersInitialValues}
-              values={hubFiltersInitialValues}
-            >
-              <HubCategoriesFilter templates={filterTemplates} />
-            </FilterMenuModal>
+            {!isTrain && (
+              <FilterMenuModal
+                header="Filter by category"
+                wizardClassName="hub-filter"
+                filterMenuName={JOB_WIZARD_FILTERS}
+                initialValues={hubFiltersInitialValues}
+                values={hubFiltersInitialValues}
+              >
+                <HubCategoriesFilter templates={filterTemplates} />
+              </FilterMenuModal>
+            )}
           </div>
-          {(filterByName.length > 0 &&
+          {!loading &&
+          ((filterByName.length > 0 &&
             (filterMatches.length === 0 || isEmpty(filteredTemplates))) ||
-          isEmpty(templates) ? (
+            isEmpty(templates)) ? (
             <NoData />
           ) : (
             <div className="functions-list">
@@ -452,7 +481,9 @@ const JobWizardFunctionSelection = ({
           )}
         </div>
       )}
-      <OnChange name="functionSelection.projectName">{onSelectedProjectNameChange}</OnChange>
+      <OnChange name={`${FUNCTION_SELECTION_STEP}.projectName`}>
+        {onSelectedProjectNameChange}
+      </OnChange>
     </div>
   )
 }
@@ -466,7 +497,9 @@ JobWizardFunctionSelection.propTypes = {
   frontendSpec: PropTypes.shape({}).isRequired,
   functions: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
   isEditMode: PropTypes.bool.isRequired,
+  isTrain: PropTypes.bool.isRequired,
   params: PropTypes.shape({}).isRequired,
+  prePopulatedData: PropTypes.shape({}).isRequired,
   selectedFunctionData: PropTypes.shape({}).isRequired,
   selectedFunctionTab: PropTypes.string.isRequired,
   setActiveTab: PropTypes.func.isRequired,
@@ -476,6 +509,7 @@ JobWizardFunctionSelection.propTypes = {
   setJobAdditionalData: PropTypes.func.isRequired,
   setSelectedFunctionData: PropTypes.func.isRequired,
   setSelectedFunctionTab: PropTypes.func.isRequired,
+  setShowSchedule: PropTypes.func.isRequired,
   setTemplates: PropTypes.func.isRequired,
   setTemplatesCategories: PropTypes.func.isRequired,
   templates: PropTypes.arrayOf(PropTypes.shape({})).isRequired,

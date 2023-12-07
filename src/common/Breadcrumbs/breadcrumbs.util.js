@@ -41,7 +41,7 @@ export const generateProjectScreens = params => [
     label: 'Quick actions',
     id: PROJECT_QUICK_ACTIONS_PAGE
   },
-  { label: 'Feature Store', id: 'feature-store' },
+  { label: 'Feature store', id: 'feature-store' },
   { label: 'Datasets', id: 'datasets' },
   { label: 'Artifacts', id: 'files' },
   { label: 'Models', id: 'models' },

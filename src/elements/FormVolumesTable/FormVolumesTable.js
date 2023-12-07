@@ -29,7 +29,7 @@ import { Tooltip, TextTooltipTemplate } from 'igz-controls/components'
 import { useFormTable } from 'igz-controls/hooks'
 import { V3IO_VOLUME_TYPE } from '../../constants'
 
-const FormVolumesTable = ({ disabled, fieldsPath, formState }) => {
+const FormVolumesTable = ({ disabled, exitEditModeTriggerItem, fieldsPath, formState }) => {
   const tableClassNames = classnames('form-table', disabled && 'disabled')
   const {
     addNewRow,
@@ -40,10 +40,10 @@ const FormVolumesTable = ({ disabled, fieldsPath, formState }) => {
     editingItem,
     enterEditMode,
     isCurrentRowEditing
-  } = useFormTable(formState)
+  } = useFormTable(formState, exitEditModeTriggerItem)
 
   return (
-    <div className={tableClassNames}>
+    <div className={tableClassNames} data-testid={fieldsPath}>
       <div className="form-table__row form-table__header-row no-hover">
         <div className="form-table__cell form-table__cell_1">
           <Tooltip template={<TextTooltipTemplate text="Type" />}>Type</Tooltip>
@@ -85,6 +85,7 @@ const FormVolumesTable = ({ disabled, fieldsPath, formState }) => {
                 hidden={editingItem?.ui?.isNew}
                 fields={fields}
                 fieldsPath={fieldsPath}
+                id="add-volume"
                 label="Add volume"
                 onClick={(...addRowArgs) =>
                   addNewRow(...addRowArgs, {
@@ -110,11 +111,13 @@ const FormVolumesTable = ({ disabled, fieldsPath, formState }) => {
 }
 
 FormVolumesTable.defaultProps = {
-  disabled: false
+  disabled: false,
+  exitEditModeTriggerItem: null
 }
 
 FormVolumesTable.propTypes = {
   disabled: PropTypes.bool,
+  exitEditModeTriggerItem: PropTypes.any,
   fieldsPath: PropTypes.string.isRequired,
   formState: PropTypes.shape({}).isRequired
 }

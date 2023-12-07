@@ -32,6 +32,7 @@ export const parseFunction = (func, projectName, customState) => {
     default_class: func.spec?.default_class ?? '',
     default_handler: func.spec?.default_handler ?? '',
     description: func.spec?.description ?? '',
+    disable_auto_mount: func.spec?.disable_auto_mount ?? true,
     env: func.spec?.env ?? [],
     error_stream: func.spec?.error_stream ?? '',
     graph: func.spec?.graph ?? {},

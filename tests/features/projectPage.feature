@@ -24,10 +24,9 @@ Feature: MLRun Project Page
         Then verify "Real_Time_Functions_Card_Statistics" element visibility on "Project" wizard
         When hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
         Then verify "General_Info_Quick_Links" element visibility on "commonPagesHeader" wizard
-    #TODO: Navigation_Bar previous implementation
+    
     @passive
-    @sanity
-    Scenario: Check all mandatory components on Navigation Bar
+    Scenario: MLNB001 - Check all mandatory components on Navigation Bar
         * set tear-down property "project" created with "automation-test-1000" value
         * create "automation-test-1000" MLRun Project with code 201
         Given open url
@@ -42,8 +41,8 @@ Feature: MLRun Project Page
         Then "Navigation_Bar" on "commonPagesHeader" wizard should be "pinned"
         Then verify "Pin_Quick_Link_Button" element visibility on "commonPagesHeader" wizard
         Then verify "General_Info_Quick_Panel" element visibility on "commonPagesHeader" wizard
-        Then verify "Project_Home_Button" element visibility on "commonPagesHeader" wizard
-        Then verify "Project_Monitoring_Button_Text" element visibility on "commonPagesHeader" wizard
+        Then verify "Project_Monitoring_Button" element visibility on "commonPagesHeader" wizard
+        Then verify "Quick_actions_Button" element visibility on "commonPagesHeader" wizard
         Then verify "Feature_Store_Button" element visibility on "commonPagesHeader" wizard
         Then verify "Datasets_Button" element visibility on "commonPagesHeader" wizard
         Then verify "Artifacts_Button" element visibility on "commonPagesHeader" wizard
@@ -58,10 +57,10 @@ Feature: MLRun Project Page
         And hover "MLRun_Logo" component on "commonPagesHeader" wizard
         Then verify "Pin_Quick_Link_Button" element invisibility on "commonPagesHeader" wizard
         Then verify "General_Info_Quick_Panel" element visibility on "commonPagesHeader" wizard
-        Then verify "Project_Home_Button" element invisibility on "commonPagesHeader" wizard
-        Then verify "Project_Home_Icon" element visibility on "commonPagesHeader" wizard
-        Then verify "Project_Monitoring_Button_Text" element invisibility on "commonPagesHeader" wizard
+        Then verify "Project_Monitoring_Button" element invisibility on "commonPagesHeader" wizard
         Then verify "Project_Monitoring_Icon" element visibility on "commonPagesHeader" wizard
+        Then verify "Quick_actions_Button" element invisibility on "commonPagesHeader" wizard
+        Then verify "Quick_actions_Icon" element visibility on "commonPagesHeader" wizard
         Then verify "Feature_Store_Button" element invisibility on "commonPagesHeader" wizard
         Then verify "Feature_Store_Icon" element visibility on "commonPagesHeader" wizard
         Then verify "Datasets_Button" element invisibility on "commonPagesHeader" wizard
@@ -112,6 +111,16 @@ Feature: MLRun Project Page
         And select "Secrets" tab in "Project_Settings_Tab_Selector" on "Project_Settings_General_Tab" wizard
         And wait load page
         Then "Navigation_Bar" on "commonPagesHeader" wizard should be "pinned"
+        #check navigation between pages  Project monitoring and Quick-actions due to instance links
+        Then click on "Project_Monitoring_Button" element on "commonPagesHeader" wizard
+        Then click on "Project_Quick_Actions_Instance" element on "commonPagesHeader" wizard
+        Then verify "Quick_actions_Active" not input element on "commonPagesHeader" wizard is active
+        Then click on "Project_Monitoring_First_Instance" element on "commonPagesHeader" wizard
+        Then verify "Project_Monitoring_Active" not input element on "commonPagesHeader" wizard is active
+        Then click on "Project_Quick_Actions_Instance" element on "commonPagesHeader" wizard
+        Then verify "Quick_actions_Active" not input element on "commonPagesHeader" wizard is active
+        Then click on "Project_Monitoring_Second_Instance" element on "commonPagesHeader" wizard
+        Then verify "Project_Monitoring_Active" not input element on "commonPagesHeader" wizard is active
 
     @passive
     Scenario: Check MLRun logo redirection

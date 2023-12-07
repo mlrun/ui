@@ -80,7 +80,7 @@ const DetailsArtifactsView = ({ artifactsIndexes, content, iteration, loading, s
               </div>
               <div className="item-artifacts__row-item">
                 <CopyToClipboard textToCopy={artifact.target_path} tooltipText="Copy URI" />
-                <RoundedIcon tooltipText="Show Details">
+                <RoundedIcon tooltipText="Show Details" id="show-details">
                   <Link
                     target="_blank"
                     to={
@@ -95,6 +95,7 @@ const DetailsArtifactsView = ({ artifactsIndexes, content, iteration, loading, s
                 </RoundedIcon>
                 <Download
                   className="icon-download"
+                  onlyIcon
                   path={artifact.target_path}
                   user={artifact.user}
                 />

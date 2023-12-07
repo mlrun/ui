@@ -17,14 +17,18 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import { get } from 'lodash'
 import jobsApi from '../api/jobs-api'
 import functionsApi from '../api/functions-api'
 import {
   ABORT_JOB_BEGIN,
   ABORT_JOB_FAILURE,
   ABORT_JOB_SUCCESS,
+  DELETE_JOB_BEGIN,
+  DELETE_JOB_FAILURE,
+  DELETE_JOB_SUCCESS,
+  EDIT_JOB_BEGIN,
   EDIT_JOB_FAILURE,
+  EDIT_JOB_SUCCESS,
   FETCH_ALL_JOB_RUNS_BEGIN,
   FETCH_ALL_JOB_RUNS_FAILURE,
   FETCH_ALL_JOB_RUNS_SUCCESS,
@@ -68,13 +72,11 @@ import {
   SET_NEW_JOB_VOLUMES,
   SET_NEW_JOB_VOLUME_MOUNTS,
   SET_TUNING_STRATEGY,
-  SET_URL,
-  DELETE_JOB_BEGIN,
-  DELETE_JOB_FAILURE,
-  DELETE_JOB_SUCCESS
+  SET_URL
 } from '../constants'
 import { getNewJobErrorMsg } from '../components/JobWizard/JobWizard.util'
-import { setNotification } from '../reducers/notificationReducer'
+import { showErrorNotification } from '../utils/notifications.util'
+import { largeResponseCatchHandler } from '../utils/largeResponseCatchHandler'
 
 const jobsActions = {
   abortJob: (project, job) => dispatch => {
@@ -120,16 +122,37 @@ const jobsActions = {
   deleteJobSuccess: () => ({
     type: DELETE_JOB_SUCCESS
   }),
-  editJob: (postData, project) => () => jobsApi.editJob(postData, project),
+  editJob: (postData, project) => dispatch => {
+    dispatch(jobsActions.editJobBegin())
+
+    return jobsApi
+      .editJob(postData, project)
+      .then(response => {
+        dispatch(jobsActions.editJobSuccess())
+
+        return response
+      })
+      .catch(error => {
+        dispatch(jobsActions.editJobFailure(error))
+
+        throw error
+      })
+  },
+  editJobBegin: () => ({
+    type: EDIT_JOB_BEGIN
+  }),
+  editJobSuccess: () => ({
+    type: EDIT_JOB_SUCCESS
+  }),
   editJobFailure: error => ({
     type: EDIT_JOB_FAILURE,
     payload: error
   }),
-  fetchAllJobRuns: (project, filters, jobName, cancelToken) => dispatch => {
+  fetchAllJobRuns: (project, filters, config, jobName) => dispatch => {
     dispatch(jobsActions.fetchAllJobRunsBegin())
 
     return jobsApi
-      .getAllJobRuns(project, jobName, filters, cancelToken)
+      .getAllJobRuns(project, filters, config, jobName)
       .then(({ data }) => {
         dispatch(jobsActions.fetchAllJobRunsSuccess(data.runs || []))
 
@@ -137,8 +160,7 @@ const jobsActions = {
       })
       .catch(error => {
         dispatch(jobsActions.fetchAllJobRunsFailure(error))
-
-        throw error
+        largeResponseCatchHandler(error, 'Failed to fetch jobs', dispatch)
       })
   },
   fetchAllJobRunsBegin: () => ({
@@ -187,17 +209,8 @@ const jobsActions = {
         return res.data.func
       })
       .catch(error => {
-        const errorMsg = get(error, 'response.data.detail', 'Job’s function failed to load')
-
         dispatch(jobsActions.fetchJobFunctionFailure(error))
-        dispatch(
-          setNotification({
-            status: error.response?.status || 400,
-            id: Math.random(),
-            message: errorMsg,
-            error
-          })
-        )
+        showErrorNotification(dispatch, error, 'Job’s function failed to load')
       })
   },
   fetchJobFunctionBegin: () => ({
@@ -257,12 +270,12 @@ const jobsActions = {
   fetchJobLogsSuccess: () => ({
     type: FETCH_JOB_LOGS_SUCCESS
   }),
-  fetchJobs: (project, filters, scheduled) => dispatch => {
+  fetchJobs: (project, filters, config, scheduled) => dispatch => {
     const getJobs = scheduled ? jobsApi.getScheduledJobs : jobsApi.getJobs
 
     dispatch(jobsActions.fetchJobsBegin())
 
-    return getJobs(project, filters)
+    return getJobs(project, filters, config)
       .then(({ data }) => {
         const newJobs = scheduled
           ? (data || {}).schedules
@@ -275,8 +288,7 @@ const jobsActions = {
       })
       .catch(error => {
         dispatch(jobsActions.fetchJobsFailure(error))
-
-        throw error
+        largeResponseCatchHandler(error, 'Failed to fetch jobs', dispatch)
       })
   },
   fetchSpecificJobs: (project, filters, jobList) => () => {

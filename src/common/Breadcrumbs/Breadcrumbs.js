@@ -95,7 +95,7 @@ const Breadcrumbs = ({ onClick, projectStore, fetchProjectsNames }) => {
     searchValue
       ? projectListRef.current.scrollTo({ top: 0, left: 0, behavior: 'smooth' })
       : setTimeout(() => {
-          selectedOptionEl.scrollIntoView(
+          selectedOptionEl?.scrollIntoView(
             {
               behavior: 'smooth',
               block: 'center'
@@ -202,7 +202,7 @@ const Breadcrumbs = ({ onClick, projectStore, fetchProjectsNames }) => {
               <li key={i} className="breadcrumbs__item">
                 <RoundedIcon
                   className={separatorClassNames}
-                  data-testid="separator"
+                  id="separator"
                   ref={separatorRef}
                   onClick={() => handleSeparatorClick(urlItems.pathItems[i + 1], separatorRef)}
                 >

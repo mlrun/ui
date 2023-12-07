@@ -29,7 +29,7 @@ import ProjectDescription from '../../components/Project/ProjectDescription/Proj
 import ProjectLabels from '../../components/Project/ProjectLabels/ProjectLabels'
 import ProjectSettingsSource from '../ProjectSettingsSource/ProjectSettingsSource'
 
-import { ARTIFACT_PATH } from '../../constants'
+import { ARTIFACT_PATH, DEFAULT_IMAGE } from '../../constants'
 
 const ProjectSettingsGeneralView = ({
   changeOwnerCallback,
@@ -50,6 +50,7 @@ const ProjectSettingsGeneralView = ({
   projectMembershipIsEnabled,
   projectOwnerIsShown,
   setValidation,
+  toggleLoadSourceOnRun,
   validation
 }) => {
   return (
@@ -64,13 +65,14 @@ const ProjectSettingsGeneralView = ({
         <div className="settings__card-content">
           <div className="settings__card-content-col">
             <ProjectSettingsSource
-              editSourceData={editProjectData.source}
+              editProjectData={editProjectData}
               handleEditProject={handleEditProject}
               handleOnBlur={handleOnBlur}
               handleOnKeyDown={handleOnKeyDown}
               handleSourceChange={handleOnChange}
+              projectData={project.data?.spec}
               setValidation={setValidation}
-              settingsSource={project.data?.spec.source ?? ''}
+              toggleLoadSourceOnRun={toggleLoadSourceOnRun}
               validation={validation}
             />
             <div
@@ -106,6 +108,17 @@ const ProjectSettingsGeneralView = ({
                   Read more
                 </a>
               </span>
+            </div>
+            <div className="settings__default-image">
+              <Input
+                floatingLabel
+                label="Default image"
+                onBlur={() => handleOnBlur(DEFAULT_IMAGE)}
+                onChange={value => handleOnChange(DEFAULT_IMAGE, value)}
+                onFocus={() => handleEditProject(DEFAULT_IMAGE)}
+                onKeyDown={handleOnKeyDown}
+                value={project.data?.spec.default_image ?? ''}
+              />
             </div>
             <ProjectDescription
               editDescriptionData={editProjectData.description}
@@ -207,6 +220,7 @@ ProjectSettingsGeneralView.propTypes = {
   projectMembershipIsEnabled: PropTypes.bool.isRequired,
   projectOwnerIsShown: PropTypes.bool.isRequired,
   setValidation: PropTypes.func.isRequired,
+  toggleLoadSourceOnRun: PropTypes.func.isRequired,
   validation: PropTypes.object.isRequired
 }
 

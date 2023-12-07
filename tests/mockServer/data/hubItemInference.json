@@ -1,51 +1,53 @@
 {
     "kind": "HubItem",
     "metadata": {
-        "name": "batch-inference",
+        "name": "batch-inference-v2",
         "description": "Batch inference (also knows as prediction) for the common ML frameworks (SciKit-Learn, XGBoost and LightGBM) while performing data drift analysis.",
         "labels": {
-            "author": "guyl"
+            "author": "eyald"
         },
         "updated": null,
         "created": null,
         "source": "functions",
-        "version": "1.4.0",
+        "version": "2.0.0",
         "tag": "latest",
-        "maintainers": [],
-        "icon": "",
-        "url": "",
-        "apiVersion": "v1",
-        "marketplaceType": "",
-        "platformVersion": "3.5.0",
-        "generationDate": "2022-08-28:17-25",
-        "example": "batch_inference.ipynb",
-        "mlrunVersion": "1.2.0",
+        "mlrunVersion": "1.5.0",
+        "doc": "",
         "categories": [
-            "utils"
+            "utils",
+            "data-analysis",
+            "monitoring"
         ],
+        "platformVersion": "3.5.3",
+        "icon": "",
+        "marketplaceType": "",
         "hidden": false,
-        "doc": ""
+        "generationDate": "2023-08-07:12-25",
+        "example": "batch_inference_v2.ipynb",
+        "url": "",
+        "maintainers": [],
+        "apiVersion": "v1"
     },
     "spec": {
-        "item_uri": "https://mlrun.github.io/marketplace/functions/master/batch_inference/latest/",
+        "item_uri": "https://mlrun.github.io/marketplace/functions/master/batch_inference_v2/latest/",
         "assets": {
-            "example": "src/batch_inference.ipynb",
-            "source": "src/batch_inference.py",
+            "example": "src/batch_inference_v2.ipynb",
+            "source": "src/batch_inference_v2.py",
             "function": "src/function.yaml",
             "docs": "static/documentation.html"
         },
-        "filename": "batch_inference.py",
-        "requirements": null,
-        "image": "mlrun/mlrun",
-        "handler": "infer",
         "kind": "job",
+        "filename": "batch_inference_v2.py",
         "extra_spec": {
             "allow_empty_resources": true,
             "build": {
                 "auto_build": false,
                 "with_mlrun": false
             }
-        }
+        },
+        "handler": "infer",
+        "requirements": null,
+        "image": "mlrun/mlrun"
     },
     "status": {
         "state": null

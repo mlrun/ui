@@ -79,6 +79,7 @@ import {
   getFeatureVectorIdentifier
 } from '../utils/getUniqueIdentifier'
 import { parseFeatureSets } from '../utils/parseFeatureSets'
+import { largeResponseCatchHandler } from '../utils/largeResponseCatchHandler'
 
 const featureStoreActions = {
   createNewFeatureSet: (project, data) => dispatch => {
@@ -180,8 +181,9 @@ const featureStoreActions = {
 
         return response.data?.feature_sets
       })
-      .catch(err => {
-        dispatch(featureStoreActions.fetchFeatureSetsFailure(err.message))
+      .catch(error => {
+        dispatch(featureStoreActions.fetchFeatureSetsFailure(error.message))
+        largeResponseCatchHandler(error, 'Failed to fetch feature sets', dispatch)
       })
   },
   fetchFeatureSetsBegin: () => ({
@@ -239,7 +241,7 @@ const featureStoreActions = {
     type: FETCH_FEATURE_VECTOR_SUCCESS,
     payload: featureSets
   }),
-  fetchFeatureVectors: (project, filters, config) => dispatch => {
+  fetchFeatureVectors: (project, filters, config = {}, skipErrorNotification) => dispatch => {
     dispatch(featureStoreActions.fetchFeatureVectorsBegin())
 
     return featureStoreApi
@@ -253,8 +255,12 @@ const featureStoreActions = {
 
         return response.data.feature_vectors
       })
-      .catch(err => {
-        dispatch(featureStoreActions.fetchFeatureVectorsFailure(err))
+      .catch(error => {
+        dispatch(featureStoreActions.fetchFeatureVectorsFailure(error))
+
+        if (!skipErrorNotification) {
+          largeResponseCatchHandler(error, 'Failed to fetch feature vectors', dispatch)
+        }
       })
   },
   fetchFeatureVectorsBegin: () => ({

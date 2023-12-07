@@ -72,7 +72,7 @@ export const createJobsMonitorTabContent = (jobs, jobName, isStagingMode) => {
           headerLabel: jobName ? 'UID' : 'Name',
           id: `name.${identifierUnique}`,
           value: jobName ? job.uid || job.id : job.name,
-          class: 'table-cell-name',
+          className: 'table-cell-name',
           type: type === JOB_KIND_WORKFLOW && !isStagingMode ? 'hidden' : 'link',
           getLink,
           showStatus: true
@@ -82,14 +82,14 @@ export const createJobsMonitorTabContent = (jobs, jobName, isStagingMode) => {
           headerLabel: 'Type',
           id: `type.${identifierUnique}`,
           value: type,
-          class: 'table-cell-1',
+          className: 'table-cell-1',
           type: 'type'
         },
         {
           headerId: 'job.uid',
           id: `uid.${identifierUnique}`,
           value: job.uid || job.id,
-          class: 'table-cell-1',
+          className: 'table-cell-1',
           type: 'hidden'
         },
         {
@@ -101,7 +101,7 @@ export const createJobsMonitorTabContent = (jobs, jobName, isStagingMode) => {
             (job.state?.value !== 'running' && job.updated) ||
               (job.state?.value !== 'error' && new Date(job.finished_at))
           ),
-          class: 'table-cell-1',
+          className: 'table-cell-1',
           type: 'duration'
         },
         {
@@ -109,14 +109,14 @@ export const createJobsMonitorTabContent = (jobs, jobName, isStagingMode) => {
           headerLabel: 'Owner',
           id: `owner.${identifierUnique}`,
           value: job.owner,
-          class: 'table-cell-1'
+          className: 'table-cell-1'
         },
         {
           headerId: 'labels',
           headerLabel: 'Labels',
           id: `labels.${identifierUnique}`,
           value: job.labels,
-          class: 'table-cell-1',
+          className: 'table-cell-1',
           type: 'labels'
         },
         {
@@ -124,7 +124,7 @@ export const createJobsMonitorTabContent = (jobs, jobName, isStagingMode) => {
           headerLabel: 'Parameters',
           id: `parameters.${identifierUnique}`,
           value: job.parametersChips,
-          class: 'table-cell-1',
+          className: 'table-cell-1',
           type: 'parameters'
         },
         {
@@ -132,14 +132,14 @@ export const createJobsMonitorTabContent = (jobs, jobName, isStagingMode) => {
           headerLabel: 'Results',
           id: `resultsChips.${identifierUnique}`,
           value: job.resultsChips,
-          class: 'table-cell-3',
+          className: 'table-cell-3',
           type: 'results'
         },
         {
           headerId: 'updated',
           id: `updated.${identifierUnique}`,
           value: job.updated || new Date(job.finished_at),
-          class: 'table-cell-1',
+          className: 'table-cell-1',
           type: 'hidden'
         }
       ]
@@ -174,7 +174,7 @@ export const createJobsScheduleTabContent = jobs => {
           headerLabel: 'Name',
           id: `name.${identifierUnique}`,
           value: job.name,
-          class: 'table-cell-name',
+          className: 'table-cell-name',
           showStatus: true,
           getLink: tab =>
             validateArguments(scheduleJobFunctionUid, tab)
@@ -194,7 +194,7 @@ export const createJobsScheduleTabContent = jobs => {
           headerLabel: 'Type',
           id: `type.${identifierUnique}`,
           value: job.type,
-          class: 'table-cell-small',
+          className: 'table-cell-small',
           type: 'type'
         },
         {
@@ -202,7 +202,7 @@ export const createJobsScheduleTabContent = jobs => {
           headerLabel: 'Next run (Local TZ)',
           id: `nextRun.${identifierUnique}`,
           value: formatDatetime(job.nextRun),
-          class: 'table-cell-1',
+          className: 'table-cell-1',
           type: 'date'
         },
         {
@@ -210,7 +210,7 @@ export const createJobsScheduleTabContent = jobs => {
           headerLabel: 'Schedule (UTC)',
           id: `schedule.${identifierUnique}`,
           value: job.scheduled_object?.schedule || null,
-          class: 'table-cell-1',
+          className: 'table-cell-1',
           tip: 'The first day of the week (0) is Monday, and not Sunday.'
         },
         {
@@ -218,7 +218,7 @@ export const createJobsScheduleTabContent = jobs => {
           headerLabel: 'Labels',
           id: `labels.${identifierUnique}`,
           value: parseKeyValues(job.scheduled_object?.task.metadata.labels || {}),
-          class: 'table-cell-1',
+          className: 'table-cell-1',
           type: 'labels'
         },
         {
@@ -226,7 +226,7 @@ export const createJobsScheduleTabContent = jobs => {
           headerLabel: 'Last run (Local TZ)',
           id: `lastRun.${identifierUnique}`,
           value: formatDatetime(job.startTime),
-          class: 'table-cell-1',
+          className: 'table-cell-1',
           getLink: lastRunLink
         },
         {
@@ -234,14 +234,14 @@ export const createJobsScheduleTabContent = jobs => {
           headerLabel: 'Created time (Local TZ)',
           id: `createdTime.${identifierUnique}`,
           value: formatDatetime(job.createdTime, 'Not yet started'),
-          class: 'table-cell-1',
+          className: 'table-cell-1',
           type: 'date'
         },
         {
           headerId: 'function',
           id: `func.${identifierUnique}`,
           value: job.func,
-          class: '',
+          className: '',
           type: 'hidden'
         }
       ]
@@ -269,7 +269,7 @@ export const createJobsWorkflowsTabContent = (jobs, projectName, isStagingMode, 
           headerLabel: 'Name',
           id: `name.${identifierUnique}`,
           value: jobName,
-          class: 'table-cell-name',
+          className: 'table-cell-name',
           type: 'link',
           getLink: () => {
             return getWorkflowDetailsLink(projectName, job.id, null, null, MONITOR_WORKFLOWS_TAB)
@@ -280,7 +280,7 @@ export const createJobsWorkflowsTabContent = (jobs, projectName, isStagingMode, 
           headerId: 'uid',
           id: `uid.${identifierUnique}`,
           value: job?.id,
-          class: 'table-cell-1',
+          className: 'table-cell-1',
           type: 'hidden',
           hidden: isSelectedItem
         },
@@ -289,7 +289,7 @@ export const createJobsWorkflowsTabContent = (jobs, projectName, isStagingMode, 
           headerLabel: 'Created at',
           id: `createdAt.${identifierUnique}`,
           value: formatDatetime(job.created_at, 'N/A'),
-          class: 'table-cell-1',
+          className: 'table-cell-1',
           hidden: isSelectedItem
         },
         {
@@ -297,7 +297,7 @@ export const createJobsWorkflowsTabContent = (jobs, projectName, isStagingMode, 
           headerLabel: 'Finished at',
           id: `finishedAt.${identifierUnique}`,
           value: formatDatetime(job.finished_at, 'N/A'),
-          class: 'table-cell-1',
+          className: 'table-cell-1',
           hidden: isSelectedItem
         },
         {
@@ -309,7 +309,7 @@ export const createJobsWorkflowsTabContent = (jobs, projectName, isStagingMode, 
             (job.state?.value !== 'running' && job.updated) ||
               (job.state?.value !== 'error' && new Date(job.finished_at))
           ),
-          class: 'table-cell-1',
+          className: 'table-cell-1',
           type: 'duration',
           hidden: isSelectedItem
         },
@@ -317,7 +317,7 @@ export const createJobsWorkflowsTabContent = (jobs, projectName, isStagingMode, 
           headerId: 'updated',
           id: `updated.${identifierUnique}`,
           value: job.updated || new Date(job.finished_at),
-          class: 'table-cell-1',
+          className: 'table-cell-1',
           type: 'hidden',
           hidden: isSelectedItem
         }
@@ -352,7 +352,7 @@ export const createJobsWorkflowContent = (
           headerLabel: 'Name',
           id: `name.${identifierUnique}`,
           value: jobName,
-          class: 'table-cell-name',
+          className: 'table-cell-name',
           type: 'link',
           getLink: tab => {
             return getWorkflowDetailsLink(
@@ -370,7 +370,7 @@ export const createJobsWorkflowContent = (
           headerLabel: 'Kind',
           id: `kind.${identifierUnique}`,
           value: job.run_type,
-          class: 'table-cell-1',
+          className: 'table-cell-1',
           type: 'type',
           hidden: isSelectedItem
         },
@@ -378,7 +378,7 @@ export const createJobsWorkflowContent = (
           headerId: 'uid',
           id: `uid.${identifierUnique}`,
           value: job.uid || job.id,
-          class: 'table-cell-1',
+          className: 'table-cell-1',
           type: 'hidden',
           hidden: isSelectedItem
         },
@@ -387,7 +387,7 @@ export const createJobsWorkflowContent = (
           headerLabel: 'Started at',
           id: `startedAt.${identifierUnique}`,
           value: formatDatetime(job.startedAt, 'N/A'),
-          class: 'table-cell-1',
+          className: 'table-cell-1',
           hidden: isSelectedItem
         },
         {
@@ -395,7 +395,7 @@ export const createJobsWorkflowContent = (
           headerLabel: 'Finished at',
           id: `finishedAt.${identifierUnique}`,
           value: formatDatetime(job.finishedAt, 'N/A'),
-          class: 'table-cell-1',
+          className: 'table-cell-1',
           hidden: isSelectedItem
         },
         {
@@ -406,7 +406,7 @@ export const createJobsWorkflowContent = (
             new Date(job.startedAt),
             job.state?.value !== 'error' && new Date(job.finishedAt)
           ),
-          class: 'table-cell-1',
+          className: 'table-cell-1',
           type: 'duration',
           hidden: isSelectedItem
         }

@@ -57,17 +57,14 @@ module.exports = {
   Project_Settings_Icon: By.css(
     '.ml-app .navbar .navbar__additional .navbar-links svg'
   ),
-  Project_Monitoring_Button: By.css(
-    '.navbar .navbar__body .navbar__content .navbar-links #monitor'
-  ),
   Pin_Quick_Link_Button: By.css(
     '.navbar .navbar__body .tooltip-wrapper button.round-icon-cp__circle'
   ),
   Navigation_Bar: By.css('.ml-app .navbar'),
-  Project_Home_Button: By.css('#home > span'),
-  Project_Home_Icon: By.css('#home > svg'),
-  Project_Monitoring_Button_Text: By.css('#monitor > span'),
+  Project_Monitoring_Button: By.css('#monitor > span'),
   Project_Monitoring_Icon: By.css('#monitor > svg'),
+  Quick_actions_Button: By.css('#quick-actions > span'),
+  Quick_actions_Icon: By.css('#quick-actions > svg'),
   Feature_Store_Button: By.css('#feature-store > span'),
   Feature_Store_Icon: By.css('#feature-store > svg'),
   Datasets_Button: By.css('#datasets > span'),
@@ -84,5 +81,10 @@ module.exports = {
   Real_Time_Functions_Icon: By.css('.ml-app .navbar .navbar__content .navbar-links .nav-link:nth-of-type(9) svg'),
   API_Gateways_Button: By.css('.ml-app .navbar .navbar__content .navbar-links .nav-link:nth-of-type(10) span'),
   API_Gateways_Icon: By.css('.ml-app .navbar .navbar__content .navbar-links .nav-link:nth-of-type(10) svg'),
-  General_Info_Quick_Panel: By.css('.ml-app .navbar .navbar__body')
+  General_Info_Quick_Panel: By.css('.ml-app .navbar .navbar__body'),
+  Project_Quick_Actions_Instance: By.css('.project-details__details .link'),
+  Quick_actions_Active: By.css('#quick-actions'),
+  Project_Monitoring_First_Instance: By.css('.project-details__details .link'),
+  Project_Monitoring_Second_Instance: By.css('.project-overview-card:nth-of-type(3) .link:nth-of-type(4)'),
+  Project_Monitoring_Active: By.css('#monitor'),
 }

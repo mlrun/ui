@@ -55,6 +55,8 @@ const FunctionsView = ({
   handleExpandAll,
   handleExpandRow,
   handleSelectFunction,
+  isDemoMode,
+  largeRequestErrorMessage,
   pageData,
   refreshFunctions,
   selectedFunction,
@@ -77,6 +79,7 @@ const FunctionsView = ({
                 <FilterMenu
                   actionButton={{
                     getCustomTemplate: getPopUpTemplate,
+                    hidden: !isDemoMode,
                     label: 'New',
                     variant: SECONDARY_BUTTON
                   }}
@@ -91,7 +94,14 @@ const FunctionsView = ({
             {functionsStore.loading ? (
               <Loader />
             ) : taggedFunctions.length === 0 ? (
-              <NoData message={getNoDataMessage(filtersStore, filters, FUNCTIONS_PAGE)} />
+              <NoData
+                message={getNoDataMessage(
+                  filtersStore,
+                  filters,
+                  largeRequestErrorMessage,
+                  FUNCTIONS_PAGE
+                )}
+              />
             ) : (
               <>
                 <Table
@@ -183,6 +193,7 @@ FunctionsView.propTypes = {
   handleExpandAll: PropTypes.func.isRequired,
   handleExpandRow: PropTypes.func.isRequired,
   handleSelectFunction: PropTypes.func.isRequired,
+  largeRequestErrorMessage: PropTypes.string.isRequired,
   pageData: PropTypes.object.isRequired,
   refreshFunctions: PropTypes.func.isRequired,
   selectedFunction: PropTypes.object.isRequired,

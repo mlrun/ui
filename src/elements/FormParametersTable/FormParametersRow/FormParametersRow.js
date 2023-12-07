@@ -50,8 +50,6 @@ import { FORM_TABLE_EDITING_ITEM } from 'igz-controls/types'
 
 import { ReactComponent as CustomIcon } from 'igz-controls/images/custom.svg'
 
-import './formParametersRow.scss'
-
 const FormParametersRow = ({
   applyChanges,
   deleteRow,
@@ -74,17 +72,13 @@ const FormParametersRow = ({
   const [typeIsChanging, setTypeIsChanging] = useState(false)
   const tableRowClassNames = classnames(
     'form-table__row',
-    'form-table__parameter-row',
-    !fieldData.data?.isChecked && 'form-table__parameter-row_excluded'
+    !fieldData.data?.isChecked && 'form-table__row_excluded'
   )
   const tableGeneralRowClassNames = classnames(
     tableRowClassNames,
     fieldData.isRequired && index in getTableArrayErrors(fieldsPath) && 'form-table__row_invalid'
   )
-  const tableEditingRowClassNames = classnames(
-    tableRowClassNames,
-    'form-table__row_active'
-  )
+  const tableEditingRowClassNames = classnames(tableRowClassNames, 'form-table__row_active')
 
   const getValueValidationRules = parameterType => {
     if (parameterType === parameterTypeMap) {
@@ -188,9 +182,9 @@ const FormParametersRow = ({
   const getValueTip = parameterType => {
     switch (parameterType) {
       case parameterTypeMap:
-        return 'The valid `map` type should be in the JSON format\n e.g. {"hello": "world"}'
+        return 'The valid `map` type must be in the JSON format\n e.g. {"hello": "world"}'
       case parameterTypeList:
-        return 'The valid `list` type should be in the JSON format\n e.g. ["hello", "world"]'
+        return 'The valid `list` type must be in the JSON format\n e.g. ["hello", "world"]'
       default:
         return ''
     }
@@ -259,7 +253,7 @@ const FormParametersRow = ({
               <div className={tableEditingRowClassNames} key={index}>
                 <div className="form-table__cell form-table__cell_min">
                   {!fieldData.isRequired && (
-                    <FormCheckBox
+                  <FormCheckBox
                       name={`${rowPath}.data.isChecked`}
                       onClick={event => event.stopPropagation()}
                     />
@@ -287,7 +281,7 @@ const FormParametersRow = ({
                     validationRules={[
                       {
                         name: 'uniqueness',
-                        label: 'Name should be unique',
+                        label: 'Name must be unique',
                         pattern: newValue => uniquenessValidator(fields, fieldsPath, newValue)
                       }
                     ]}
@@ -300,27 +294,27 @@ const FormParametersRow = ({
                       setTypeIsChanging(true)
                     }}
                     name={`${rowPath}.data.type`}
-                    options={parametersValueTypeOptions}
+                    options={fieldData?.parameterTypeOptions || parametersValueTypeOptions}
                     required={!fieldData.isPredefined}
                   />
                 </div>
                 <div className="form-table__cell form-table__cell_3">
                   {fieldData.data.isHyper && !typeIsChanging ? (
-                    <FormInput
-                      label="Values (Comma separated)"
-                      name={`${rowPath}.data.value`}
-                      placeholder="Values"
-                      required
-                      tip={getHyperValueTip(fieldData)}
-                      validationRules={getHyperValueValidationRules(fieldData)}
-                    />
+                  <FormInput
+                    label="Values (Comma separated)"
+                    name={`${rowPath}.data.value`}
+                    placeholder="Values"
+                    required
+                    tip={getHyperValueTip(fieldData)}
+                    validationRules={getHyperValueValidationRules(fieldData)}
+                  />
                   ) : fieldData.data.type === parameterTypeBool && !typeIsChanging ? (
                     <div className="radio-buttons-container">
                       <FormRadio name={`${rowPath}.data.value`} value="true" label="True" />
                       <FormRadio name={`${rowPath}.data.value`} value="false" label="False" />
                     </div>
                   ) : !typeIsChanging ? (
-                    <FormInput
+                      <FormInput
                       type={
                         [parameterTypeInt, parameterTypeFloat].includes(fieldData.data.type)
                           ? 'number'
@@ -369,7 +363,9 @@ const FormParametersRow = ({
                   <div
                     className={classnames(
                       'form-table__name',
-                      (fieldData.isRequired && withRequiredParameters) && 'form-table__name_with-asterisk'
+                      fieldData.isRequired &&
+                        withRequiredParameters &&
+                        'form-table__name_with-asterisk'
                     )}
                   >
                     <Tooltip template={<TextTooltipTemplate text={fieldData.data.name} />}>
@@ -415,7 +411,7 @@ const FormParametersRow = ({
                 </div>
                 <FormRowActions
                   applyChanges={applyChanges}
-                  deleteIsDisabled={fieldData.isPredefined}
+                  deleteButtonIsHidden={fieldData.isPredefined}
                   deleteRow={deleteRow}
                   disabled={isRowDisabled()}
                   discardOrDelete={discardOrDelete}

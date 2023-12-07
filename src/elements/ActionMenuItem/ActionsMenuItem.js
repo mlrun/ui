@@ -37,26 +37,26 @@ const ActionsMenuItem = ({ dataItem, index, isIconDisplayed, menuItem }) => {
   )
 
   return (
-    <Tooltip
-      template={<TextTooltipTemplate text={menuItem.tooltip} />}
-      hidden={!menuItem.tooltip}
-      key={menuItem.label}
+    <li
+      data-testid={`actions-menu__option-${index}`}
+      className={menuClassNames}
+      onClick={event => {
+        event.stopPropagation()
+
+        if (!menuItem.disabled) {
+          menuItem.onClick(dataItem)
+        }
+      }}
     >
-      <div
-        data-testid={`actions-menu__option-${index}`}
-        className={menuClassNames}
-        onClick={event => {
-          if (!menuItem.disabled) {
-            menuItem.onClick(dataItem)
-          } else {
-            event.stopPropagation()
-          }
-        }}
+      <Tooltip
+        template={<TextTooltipTemplate text={menuItem.tooltip} />}
+        hidden={!menuItem.tooltip}
+        key={menuItem.label}
       >
         <span className={iconClassNames}>{menuItem.icon}</span>
         {menuItem.label}
-      </div>
-    </Tooltip>
+      </Tooltip>
+    </li>
   )
 }
 

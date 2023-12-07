@@ -26,20 +26,26 @@ import { isEmpty } from 'lodash'
 import { useNavigate, useParams } from 'react-router-dom'
 import PropTypes from 'prop-types'
 
-import { RoundedIcon } from 'igz-controls/components'
+import { RoundedIcon, Button } from 'igz-controls/components'
 import FilterMenuModal from '../FilterMenuModal/FilterMenuModal'
 import ArtifactsFilters from './ArtifactsFilters'
 import NameFilter from '../../common/NameFilter/NameFilter'
 
-import { setFieldState } from 'igz-controls/utils/form.util'
-import { GROUP_BY_NAME, GROUP_BY_NONE, TAG_FILTER, TAG_FILTER_ALL_ITEMS } from '../../constants'
-import { removeFilters, setFilters } from '../../reducers/filtersReducer'
-
+import {
+  GROUP_BY_NAME,
+  GROUP_BY_NONE,
+  REQUEST_CANCELED,
+  TAG_FILTER,
+  TAG_FILTER_ALL_ITEMS
+} from '../../constants'
 import detailsActions from '../../actions/details'
+import { removeFilters, setFilters } from '../../reducers/filtersReducer'
+import { setFieldState } from 'igz-controls/utils/form.util'
 
 import { ReactComponent as RefreshIcon } from 'igz-controls/images/refresh.svg'
 
 function ArtifactsActionBar({
+  actionButtons,
   cancelRequest,
   filterMenuName,
   handleRefresh,
@@ -126,7 +132,7 @@ function ArtifactsActionBar({
 
   const refresh = formState => {
     if (changes.counter > 0 && cancelRequest) {
-      cancelRequest('cancel')
+      cancelRequest(REQUEST_CANCELED)
     } else {
       handleRefresh({
         name: formState.values.name,
@@ -153,6 +159,20 @@ function ArtifactsActionBar({
             </FilterMenuModal>
           </div>
           <div className="action-bar__actions">
+            {actionButtons.map(
+              (actionButton, index) =>
+                actionButton &&
+                !actionButton.hidden && (
+                  <Button
+                    key={index}
+                    variant={actionButton.variant}
+                    label={actionButton.label}
+                    className={actionButton.className}
+                    onClick={actionButton.onClick}
+                  />
+                )
+            )}
+
             <RoundedIcon tooltipText="Refresh" onClick={() => refresh(formState)} id="refresh">
               <RefreshIcon />
             </RoundedIcon>
@@ -164,11 +184,21 @@ function ArtifactsActionBar({
 }
 
 ArtifactsActionBar.defaultProps = {
+  actionButtons: [],
   cancelRequest: null,
   tab: ''
 }
 
 ArtifactsActionBar.propTypes = {
+  actionButtons: PropTypes.arrayOf(
+    PropTypes.shape({
+      className: PropTypes.string,
+      hidden: PropTypes.bool,
+      label: PropTypes.string.isRequired,
+      onClick: PropTypes.func.isRequired,
+      variant: PropTypes.string.isRequired
+    })
+  ),
   cancelRequest: PropTypes.func,
   filterMenuName: PropTypes.string.isRequired,
   handleRefresh: PropTypes.func.isRequired,

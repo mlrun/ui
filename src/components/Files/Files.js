@@ -24,31 +24,29 @@ import { isNil } from 'lodash'
 
 import AddArtifactTagPopUp from '../../elements/AddArtifactTagPopUp/AddArtifactTagPopUp'
 import FilesView from './FilesView'
+import RegisterArtifactModal from '../RegisterArtifactModal/RegisterArtifactModal'
 
 import {
+  ARTIFACT_TYPE,
   FILES_FILTERS,
   FILES_PAGE,
   FILTER_MENU_MODAL,
   GROUP_BY_NAME,
   GROUP_BY_NONE,
+  REQUEST_CANCELED,
   TAG_FILTER_ALL_ITEMS
 } from '../../constants'
 import {
   checkForSelectedFile,
   fetchFilesRowData,
   filters,
+  generateActionsMenu,
   generatePageData,
-  handleApplyDetailsChanges
+  handleApplyDetailsChanges,
+  registerArtifactTitle
 } from './files.util'
-import { cancelRequest } from '../../utils/cancelRequest'
-import { createFilesRowData, getIsTargetPathValid } from '../../utils/createArtifactsContent'
-import {
-  fetchFile,
-  fetchFiles,
-  removeFile,
-  removeFiles,
-  showArtifactsPreview
-} from '../../reducers/artifactsReducer'
+import { createFilesRowData } from '../../utils/createArtifactsContent'
+import { fetchFile, fetchFiles, removeFile, removeFiles } from '../../reducers/artifactsReducer'
 import { getArtifactIdentifier } from '../../utils/getUniqueIdentifier'
 import { isDetailsTabExists } from '../../utils/isDetailsTabExists'
 import { openPopUp } from 'igz-controls/utils/common.util'
@@ -59,30 +57,26 @@ import { useGetTagOptions } from '../../hooks/useGetTagOptions.hook'
 import { useGroupContent } from '../../hooks/groupContent.hook'
 import { useYaml } from '../../hooks/yaml.hook'
 import { getViewMode } from '../../utils/helper'
-import { copyToClipboard } from '../../utils/copyToClipboard'
-import { generateUri } from '../../utils/resources'
-
-import { ReactComponent as TagIcon } from 'igz-controls/images/tag-icon.svg'
-import { ReactComponent as YamlIcon } from 'igz-controls/images/yaml.svg'
-import { ReactComponent as ArtifactView } from 'igz-controls/images/eye-icon.svg'
-import { ReactComponent as Copy } from 'igz-controls/images/copy-to-clipboard-icon.svg'
+import { useSortTable } from '../../hooks/useSortTable.hook'
 
 const Files = () => {
   const [files, setFiles] = useState([])
   const [allFiles, setAllFiles] = useState([])
   const [selectedFile, setSelectedFile] = useState({})
   const [selectedRowData, setSelectedRowData] = useState({})
+  const [largeRequestErrorMessage, setLargeRequestErrorMessage] = useState('')
   const [convertedYaml, toggleConvertedYaml] = useYaml('')
   const [urlTagOption] = useGetTagOptions(null, filters, null, FILES_FILTERS)
   const artifactsStore = useSelector(store => store.artifactsStore)
   const filtersStore = useSelector(store => store.filtersStore)
   const params = useParams()
+  const abortControllerRef = useRef(new AbortController())
   const navigate = useNavigate()
   const location = useLocation()
   const dispatch = useDispatch()
   const filesRef = useRef(null)
   const viewMode = getViewMode(window.location.search)
-  const pageData = useMemo(() => generatePageData(selectedFile, viewMode), [selectedFile, viewMode])
+  const pageData = useMemo(() => generatePageData(viewMode), [viewMode])
   const frontendSpec = useSelector(store => store.appStore.frontendSpec)
   const filesFilters = useMemo(
     () => filtersStore[FILTER_MENU_MODAL][FILES_FILTERS].values,
@@ -98,12 +92,27 @@ const Files = () => {
 
   const fetchData = useCallback(
     filters => {
-      dispatch(fetchFiles({ project: params.projectName, filters }))
+      abortControllerRef.current = new AbortController()
+
+      dispatch(
+        fetchFiles({
+          project: params.projectName,
+          filters,
+          config: {
+            ui: {
+              controller: abortControllerRef.current,
+              setLargeRequestErrorMessage
+            }
+          }
+        })
+      )
         .unwrap()
         .then(filesResponse => {
-          setArtifactTags(filesResponse, setFiles, setAllFiles, filters, dispatch, FILES_PAGE)
+          if (filesResponse) {
+            setArtifactTags(filesResponse, setFiles, setAllFiles, filters, dispatch, FILES_PAGE)
 
-          return filesResponse
+            return filesResponse
+          }
         })
     },
     [dispatch, params.projectName]
@@ -139,45 +148,26 @@ const Files = () => {
   )
 
   const actionsMenu = useMemo(
-    () => file => {
-      const isTargetPathValid = getIsTargetPathValid(file ?? {}, frontendSpec)
-
-      return [
-        [
-          {
-            label: 'Copy URI',
-            icon: <Copy />,
-            onClick: file => copyToClipboard(generateUri(file, FILES_PAGE), dispatch)
-          },
-          {
-            label: 'View YAML',
-            icon: <YamlIcon />,
-            onClick: toggleConvertedYaml
-          },
-          {
-            label: 'Add a tag',
-            icon: <TagIcon />,
-            onClick: handleAddTag
-          }
-        ],
-        [
-          {
-            disabled: !isTargetPathValid,
-            label: 'Preview',
-            icon: <ArtifactView />,
-            onClick: file => {
-              dispatch(
-                showArtifactsPreview({
-                  isPreview: true,
-                  selectedItem: file
-                })
-              )
-            }
-          }
-        ]
-      ]
-    },
-    [dispatch, frontendSpec, handleAddTag, toggleConvertedYaml]
+    () => file =>
+      generateActionsMenu(
+        file,
+        frontendSpec,
+        dispatch,
+        toggleConvertedYaml,
+        handleAddTag,
+        params.projectName,
+        handleRefresh,
+        filesFilters
+      ),
+    [
+      dispatch,
+      filesFilters,
+      frontendSpec,
+      handleAddTag,
+      handleRefresh,
+      params.projectName,
+      toggleConvertedYaml
+    ]
   )
 
   const handleRemoveRowData = useCallback(
@@ -228,6 +218,15 @@ const Files = () => {
       : files.map(contentItem => createFilesRowData(contentItem, params.projectName, frontendSpec))
   }, [files, filtersStore.groupBy, frontendSpec, latestItems, params.projectName])
 
+  const tableHeaders = useMemo(() => tableContent[0]?.content ?? [], [tableContent])
+
+  const { sortTable, selectedColumnName, getSortingIcon, sortedTableContent, sortedTableHeaders } =
+    useSortTable({
+      headers: tableHeaders,
+      content: tableContent,
+      sortConfig: { excludeSortBy: 'labels', defaultSortBy: 'updated', defaultDirection: 'desc' }
+    })
+
   const applyDetailsChanges = useCallback(
     changes => {
       return handleApplyDetailsChanges(
@@ -276,7 +275,7 @@ const Files = () => {
       setAllFiles([])
       dispatch(removeFiles())
       setSelectedFile({})
-      cancelRequest('cancel')
+      abortControllerRef.current.abort(REQUEST_CANCELED)
     }
   }, [params.projectName, dispatch])
 
@@ -307,6 +306,15 @@ const Files = () => {
     selectedRowData
   ])
 
+  const handleRegisterArtifact = useCallback(() => {
+    openPopUp(RegisterArtifactModal, {
+      artifactKind: ARTIFACT_TYPE,
+      projectName: params.projectName,
+      refresh: handleRefresh,
+      title: registerArtifactTitle
+    })
+  }, [handleRefresh, params.projectName])
+
   return (
     <FilesView
       actionsMenu={actionsMenu}
@@ -319,6 +327,8 @@ const Files = () => {
       filtersStore={filtersStore}
       handleExpandRow={handleExpandRow}
       handleRefresh={handleRefresh}
+      handleRegisterArtifact={handleRegisterArtifact}
+      largeRequestErrorMessage={largeRequestErrorMessage}
       pageData={pageData}
       ref={filesRef}
       selectedFile={selectedFile}
@@ -326,10 +336,12 @@ const Files = () => {
       setFiles={setFiles}
       setSelectedFile={setSelectedFile}
       setSelectedRowData={setSelectedRowData}
-      tableContent={tableContent}
+      sortProps={{ sortTable, selectedColumnName, getSortingIcon }}
+      tableContent={sortedTableContent}
+      tableHeaders={sortedTableHeaders}
       toggleConvertedYaml={toggleConvertedYaml}
-      viewMode={viewMode}
       urlTagOption={urlTagOption}
+      viewMode={viewMode}
     />
   )
 }

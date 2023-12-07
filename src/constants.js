@@ -40,20 +40,24 @@ export const S3_INPUT_PATH_SCHEME = 's3://'
 export const V3IO_INPUT_PATH_SCHEME = 'v3io:///'
 
 export const TAG_LATEST = 'latest'
+export const TAG_NA = 'na'
 
 export const DENSITY_DENSE = 'dense'
 export const DENSITY_NORMAL = 'normal'
 export const DENSITY_MEDIUM = 'medium'
 export const DENSITY_CHUNKY = 'chunky'
 
-export const NAVBAR_WIDTH_CLOSED = 57
-export const NAVBAR_WIDTH_OPENED = 245
-
 export const FULL_VIEW_MODE = 'full'
 
+export const LARGE_REQUEST_CANCELED = 'Large request canceled'
 export const REQUEST_CANCELED = 'Request canceled'
+export const DEFAULT_ABORT_MSG = 'canceled'
 
 export const MODEL_PATH_DATA_INPUT = 'model_path'
+
+export const NAVBAR_WIDTH_CLOSED = 57
+export const NAVBAR_WIDTH_OPENED = 245
+export const CANCEL_REQUEST_TIMEOUT = 60000
 
 /*=========== PAGES & TABS =============*/
 
@@ -111,6 +115,8 @@ export const ABORT_JOB_SUCCESS = 'ABORT_JOB_SUCCESS'
 export const DELETE_JOB_BEGIN = 'DELETE_JOB_BEGIN'
 export const DELETE_JOB_FAILURE = 'DELETE_JOB_FAILURE'
 export const DELETE_JOB_SUCCESS = 'DELETE_JOB_SUCCESS'
+export const EDIT_JOB_BEGIN = 'EDIT_JOB_BEGIN'
+export const EDIT_JOB_SUCCESS = 'EDIT_JOB_SUCCESS'
 export const EDIT_JOB_FAILURE = 'EDIT_JOB_FAILURE'
 export const FETCH_ALL_JOB_RUNS_BEGIN = 'FETCH_ALL_JOB_RUNS_BEGIN'
 export const FETCH_ALL_JOB_RUNS_FAILURE = 'FETCH_ALL_JOB_RUNS_FAILURE'
@@ -160,6 +166,14 @@ export const SET_NEW_JOB_VOLUME_MOUNTS = 'SET_NEW_JOB_VOLUME_MOUNTS'
 export const SET_NEW_JOB_VOLUMES = 'SET_NEW_JOB_VOLUMES'
 export const SET_URL = 'SET_URL'
 export const SET_TUNING_STRATEGY = 'SET_TUNING_STRATEGY'
+
+export const FUNCTION_SELECTION_STEP = 'functionSelection'
+export const RUN_DETAILS_STEP = 'runDetails'
+export const PARAMETERS_STEP = 'parameters'
+export const HYPERPARAMETER_STRATEGY_STEP = 'hyperparameterStrategy'
+export const DATA_INPUTS_STEP = 'dataInputs'
+export const RESOURCES_STEP = 'resources'
+export const ADVANCED_STEP = 'advanced'
 
 /*=========== JOB KINDS =============*/
 
@@ -275,6 +289,7 @@ export const FUNCTION_INITIALIZED_STATE = 'initialized'
 export const FUNCTION_READY_STATE = 'ready'
 export const FUNCTION_PENDINDG_STATE = 'pending'
 export const FUNCTION_RUNNING_STATE = 'running'
+export const FUNCTION_DEFAULT_HANDLER = 'handler'
 
 /*=========== ARTIFACTS =============*/
 
@@ -368,6 +383,7 @@ export const FETCH_PROJECT_DATASETS_FAILURE = 'FETCH_PROJECT_DATASETS_FAILURE'
 export const FETCH_PROJECT_SUMMARY_BEGIN = 'FETCH_PROJECT_SUMMARY_BEGIN'
 export const FETCH_PROJECT_SUMMARY_FAILURE = 'FETCH_PROJECT_SUMMARY_FAILURE'
 export const FETCH_PROJECT_SUMMARY_SUCCESS = 'FETCH_PROJECT_SUMMARY_SUCCESS'
+export const LOAD_SOURCE_ON_RUN = 'load_source_on_run'
 export const SET_PROJECT_DATA = 'SET_PROJECT_DATA'
 export const SET_PROJECT_LABELS = 'SET_PROJECT_LABELS'
 export const SET_PROJECT_PARAMS = 'SET_PROJECT_PARAMS'
@@ -415,14 +431,10 @@ export const FETCH_PROJECTS_SUMMARY_SUCCESS = 'FETCH_PROJECTS_SUMMARY_SUCCESS'
 export const FETCH_PROJECT_WORKFLOWS_BEGIN = 'FETCH_PROJECT_WORKFLOWS_BEGIN'
 export const FETCH_PROJECT_WORKFLOWS_FAILURE = 'FETCH_PROJECT_WORKFLOWS_FAILURE'
 export const FETCH_PROJECT_WORKFLOWS_SUCCESS = 'FETCH_PROJECT_WORKFLOWS_SUCCESS'
-export const REMOVE_NEW_PROJECT = 'REMOVE_NEW_PROJECT'
 export const REMOVE_NEW_PROJECT_ERROR = 'REMOVE_NEW_PROJECT_ERROR'
 export const REMOVE_PROJECTS = 'REMOVE_PROJECTS'
 export const REMOVE_PROJECT_SUMMARY = 'REMOVE_PROJECT_SUMMARY'
 export const REMOVE_PROJECT_DATA = 'REMOVE_PROJECT_DATA'
-export const SET_NEW_PROJECT_DESCRIPTION = 'SET_NEW_PROJECT_DESCRIPTION'
-export const SET_NEW_PROJECT_LABELS = 'SET_NEW_PROJECT_LABELS'
-export const SET_NEW_PROJECT_NAME = 'SET_NEW_PROJECT_NAME'
 
 /*=========== DETAILS =============*/
 
@@ -448,6 +460,7 @@ export const FETCH_MODEL_FEATURE_VECTOR_BEGIN = 'FETCH_MODEL_FEATURE_VECTOR_BEGI
 export const FETCH_MODEL_FEATURE_VECTOR_FAILURE = 'FETCH_MODEL_FEATURE_VECTOR_FAILURE'
 export const FETCH_MODEL_FEATURE_VECTOR_SUCCESS = 'FETCH_MODEL_FEATURE_VECTOR_SUCCESS'
 export const REMOVE_INFO_CONTENT = 'REMOVE_INFO_CONTENT'
+export const REMOVE_MODEL_ENDPOINT = 'REMOVE_MODEL_ENDPOINT'
 export const REMOVE_MODEL_FEATURE_VECTOR = 'REMOVE_MODEL_FEATURE_VECTOR'
 export const RESET_CHANGES = 'RESET_CHANGES'
 export const SET_CHANGES = 'SET_CHANGES'
@@ -564,6 +577,7 @@ export const SMOOTH_STEP_EDGE = 'smooth-step-edge'
 
 export const ARTIFACT_PATH = 'artifact_path'
 export const SOURCE_URL = 'source'
+export const DEFAULT_IMAGE = 'default_image'
 export const DESCRIPTION = 'description'
 export const GOALS = 'goals'
 export const DATA = 'data'

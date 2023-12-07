@@ -21,7 +21,6 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import classnames from 'classnames'
 
-import Breadcrumbs from '../../common/Breadcrumbs/Breadcrumbs'
 import ContentMenu from '../../elements/ContentMenu/ContentMenu'
 import CreateProjectDialog from './CreateProjectDialog/CreateProjectDialog'
 import Loader from '../../common/Loader/Loader'
@@ -55,7 +54,6 @@ const ProjectsView = ({
   handleSelectSortOption,
   handleSearchOnFocus,
   isDescendingOrder,
-  isNameValid,
   projectStore,
   refreshProjects,
   removeNewProjectError,
@@ -64,10 +62,6 @@ const ProjectsView = ({
   setFilterByName,
   setFilterMatches,
   setIsDescendingOrder,
-  setNameValid,
-  setNewProjectDescription,
-  setNewProjectLabels,
-  setNewProjectName,
   setSelectedProjectsState,
   sortProjectId
 }) => {
@@ -83,12 +77,7 @@ const ProjectsView = ({
         <CreateProjectDialog
           closeNewProjectPopUp={closeNewProjectPopUp}
           handleCreateProject={handleCreateProject}
-          isNameValid={isNameValid}
           removeNewProjectError={removeNewProjectError}
-          setNameValid={setNameValid}
-          setNewProjectDescription={setNewProjectDescription}
-          setNewProjectLabels={setNewProjectLabels}
-          setNewProjectName={setNewProjectName}
         />
       )}
       {confirmData && (
@@ -109,9 +98,6 @@ const ProjectsView = ({
           message={confirmData.message}
         />
       )}
-      <div className="projects__header">
-        <Breadcrumbs />
-      </div>
       <div className="projects__wrapper">
         <div className="projects-content-header">
           <div className="projects-content-header__col">
@@ -153,7 +139,7 @@ const ProjectsView = ({
                 onClick={refreshProjects}
                 className="panel-title__btn_close"
                 tooltipText="Refresh"
-                data-testid="pop-up-close-btn"
+                id="pop-up-close-btn"
               >
                 <RefreshIcon />
               </RoundedIcon>
@@ -211,7 +197,6 @@ ProjectsView.propTypes = {
   handleCreateProject: PropTypes.func.isRequired,
   handleSearchOnFocus: PropTypes.func.isRequired,
   handleSelectSortOption: PropTypes.func.isRequired,
-  isNameValid: PropTypes.bool.isRequired,
   refreshProjects: PropTypes.func.isRequired,
   removeNewProjectError: PropTypes.func.isRequired,
   selectedProjectsState: PropTypes.string.isRequired,
@@ -219,9 +204,6 @@ ProjectsView.propTypes = {
   setFilterByName: PropTypes.func.isRequired,
   setFilterMatches: PropTypes.func.isRequired,
   setIsDescendingOrder: PropTypes.func.isRequired,
-  setNewProjectDescription: PropTypes.func.isRequired,
-  setNameValid: PropTypes.func.isRequired,
-  setNewProjectName: PropTypes.func.isRequired,
   setSelectedProjectsState: PropTypes.func.isRequired,
   sortProjectId: PropTypes.string.isRequired
 }

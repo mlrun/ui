@@ -47,6 +47,7 @@ import './detailsInfo.scss'
 const DetailsInfoView = React.forwardRef(
   (
     {
+      additionalInfo,
       detailsInfoDispatch,
       detailsInfoState,
       detailsStore,
@@ -57,13 +58,12 @@ const DetailsInfoView = React.forwardRef(
       pageData,
       params,
       selectedItem,
-      setChangesData,
-      sources
+      setChangesData
     },
     ref
   ) => {
     const wrapperClassNames = classnames(
-      pageData.details.additionalInfo && !pageData.details.additionalInfo.hidden
+      !isEveryObjectValueEmpty(additionalInfo)
         ? 'item-info__details-wrapper'
         : 'item-info__full-width'
     )
@@ -156,47 +156,56 @@ const DetailsInfoView = React.forwardRef(
 
                 return (
                   <li className={detailsItemClassNames} key={header.id}>
-                    {header.id === 'sources' ? (
-                      <ArtifactInfoSources header={header.label} sources={sources} />
-                    ) : (
-                      <>
-                        <div className="details-item__header">
-                          {header.label}
-                          {header.tip && <Tip className="details-item__tip" text={header.tip} />}
-                        </div>
-                        <DetailsInfoItem
-                          changesData={detailsStore.changes.data}
-                          chipsClassName={chipsClassName}
-                          chipsData={chipsData}
-                          currentField={header.id}
-                          detailsInfoDispatch={detailsInfoDispatch}
-                          detailsInfoState={detailsInfoState}
-                          editableFieldType={detailsInfoState.editMode.fieldType}
-                          formState={formState}
-                          func={func}
-                          handleDiscardChanges={handleDiscardChanges}
-                          handleFinishEdit={handleFinishEdit}
-                          info={info}
-                          isFieldInEditMode={detailsInfoState.editMode.field === header.id}
-                          item={detailsStore.infoContent[header.id]}
-                          link={detailsStore.infoContent[header.id]?.link}
-                          onClick={handleInfoItemClick}
-                          params={params}
-                          ref={ref}
-                          setChangesData={setChangesData}
-                          state={state}
-                        />
-                      </>
-                    )}
+                    <>
+                      <div className="details-item__header">
+                        {header.label}:
+                        {header.tip && <Tip className="details-item__tip" text={header.tip} />}
+                      </div>
+                      <DetailsInfoItem
+                        changesData={detailsStore.changes.data}
+                        chipsClassName={chipsClassName}
+                        chipsData={chipsData}
+                        currentField={header.id}
+                        detailsInfoDispatch={detailsInfoDispatch}
+                        detailsInfoState={detailsInfoState}
+                        editableFieldType={detailsInfoState.editMode.fieldType}
+                        formState={formState}
+                        func={func}
+                        handleDiscardChanges={handleDiscardChanges}
+                        handleFinishEdit={handleFinishEdit}
+                        info={info}
+                        isFieldInEditMode={detailsInfoState.editMode.field === header.id}
+                        item={detailsStore.infoContent[header.id]}
+                        link={detailsStore.infoContent[header.id]?.link}
+                        onClick={handleInfoItemClick}
+                        params={params}
+                        ref={ref}
+                        setChangesData={setChangesData}
+                        state={state}
+                      />
+                    </>
                   </li>
                 )
               })}
             </ul>
           </div>
-          {pageData.details.additionalInfo && !pageData.details.additionalInfo.hidden && (
-            <div className={wrapperClassNames}>
-              <h3 className="item-info__header">{pageData.details.additionalInfo.header}</h3>
-              <ul className="item-info__details">{pageData.details.additionalInfo.body}</ul>
+          {!isEveryObjectValueEmpty(additionalInfo) && (
+            <div className={wrapperClassNames} data-testid="additional-info">
+              {!isEveryObjectValueEmpty(additionalInfo.producer) && (
+                <>
+                  <h3 className="item-info__header">Producer</h3>
+                  <ul className="item-info__details">{additionalInfo.producer}</ul>
+                </>
+              )}
+              {!isEveryObjectValueEmpty(additionalInfo.drift) && (
+                <>
+                  <h3 className="item-info__header">Drift</h3>
+                  <ul className="item-info__details">{additionalInfo.drift}</ul>
+                </>
+              )}
+              {!isEveryObjectValueEmpty(additionalInfo.sources) && (
+                <ArtifactInfoSources sources={additionalInfo.sources} />
+              )}
             </div>
           )}
         </>
@@ -206,10 +215,19 @@ const DetailsInfoView = React.forwardRef(
 )
 
 DetailsInfoView.defaultProps = {
-  sources: {}
+  additionalInfo: {
+    drift: [],
+    producer: [],
+    sources: {}
+  }
 }
 
 DetailsInfoView.propTypes = {
+  additionalInfo: PropTypes.shape({
+    drift: PropTypes.array,
+    producer: PropTypes.array,
+    sources: PropTypes.shape({})
+  }),
   detailsInfoDispatch: PropTypes.func.isRequired,
   detailsInfoState: PropTypes.shape({}).isRequired,
   detailsStore: PropTypes.shape({}).isRequired,
@@ -218,8 +236,7 @@ DetailsInfoView.propTypes = {
   handleInfoItemClick: PropTypes.func.isRequired,
   pageData: PropTypes.shape({}).isRequired,
   params: PropTypes.shape({}).isRequired,
-  selectedItem: PropTypes.shape({}).isRequired,
-  sources: PropTypes.shape({})
+  selectedItem: PropTypes.shape({}).isRequired
 }
 
 export default DetailsInfoView

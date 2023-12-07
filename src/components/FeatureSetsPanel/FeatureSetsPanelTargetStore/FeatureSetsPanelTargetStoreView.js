@@ -133,7 +133,7 @@ const FeatureSetsPanelTargetStoreView = ({
                       invalid={!validation.isOnlineTargetPathValid}
                       invalidText={
                         data.online.kind === REDISNOSQL && /[{}]/g.test(data.online.path)
-                          ? 'Invalid Redis URL, change the URL to a valid URL in the form of <redis|rediss>:///<host>[:port]'
+                          ? 'Invalid Redis URL, change the URL to a valid URL in the form of <redis|rediss>://<host>[:port]'
                           : ''
                       }
                       label="Path"

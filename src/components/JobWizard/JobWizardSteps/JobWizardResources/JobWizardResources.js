@@ -24,12 +24,13 @@ import FormResourcesUnits from '../../../../elements/FormResourcesUnits/FormReso
 import FormVolumesTable from '../../../../elements/FormVolumesTable/FormVolumesTable'
 import { FormSelect, FormKeyValueTable, Tip } from 'igz-controls/components'
 
+import { RESOURCES_STEP } from '../../../../constants'
 import { generateFunctionPriorityLabel } from '../../../../utils/generateFunctionPriorityLabel'
 import { volumePreemptionModeOptions } from './JowWizardResources.util'
 
 import './jobWizardResources.scss'
 
-const JobWizardResources = ({ formState, frontendSpec }) => {
+const JobWizardResources = ({ formState, frontendSpec, stepIsActive }) => {
   const validFunctionPriorityClassNames = useMemo(() => {
     return (frontendSpec.valid_function_priority_class_names ?? []).map(className => ({
       id: className,
@@ -47,7 +48,7 @@ const JobWizardResources = ({ formState, frontendSpec }) => {
           <div className="form-col-auto resources__select">
             <FormSelect
               label="Pods priority"
-              name="resources.jobPriorityClassName"
+              name={`${RESOURCES_STEP}.jobPriorityClassName`}
               options={validFunctionPriorityClassNames}
             />
           </div>
@@ -56,7 +57,7 @@ const JobWizardResources = ({ formState, frontendSpec }) => {
           <div className="form-col-auto resources__select">
             <FormSelect
               label="Spot Instances"
-              name="resources.preemptionMode"
+              name={`${RESOURCES_STEP}.preemptionMode`}
               options={volumePreemptionModeOptions}
             />
           </div>
@@ -65,28 +66,39 @@ const JobWizardResources = ({ formState, frontendSpec }) => {
       <div className="form-row form-table-title">Node selection</div>
       <div className="form-row">
         <FormKeyValueTable
+          actionButtonId="add-node-selector"
+          addNewItemLabel="Add node selector"
+          exitEditModeTriggerItem={stepIsActive}
+          fieldsPath={`${RESOURCES_STEP}.nodeSelectorTable`}
+          formState={formState}
           keyHeader="Key"
           keyLabel="Key"
-          addNewItemLabel="Add node selector"
-          fieldsPath="resources.nodeSelectorTable"
-          formState={formState}
         />
       </div>
-      <FormResourcesUnits formState={formState} />
+      <FormResourcesUnits formState={formState} onChangeEnabled={stepIsActive} />
       <div className="form-row form-table-title">
         Volumes
         <Tip text="Volumes that define data paths and the required information for accessing the data from the function" />
       </div>
       <div className="form-row">
-        <FormVolumesTable formState={formState} fieldsPath="resources.volumesTable" />
+        <FormVolumesTable
+          exitEditModeTriggerItem={stepIsActive}
+          fieldsPath={`${RESOURCES_STEP}.volumesTable`}
+          formState={formState}
+        />
       </div>
     </div>
   )
 }
 
+JobWizardResources.defaultProps = {
+  stepIsActive: false
+}
+
 JobWizardResources.propTypes = {
   formState: PropTypes.shape({}).isRequired,
-  frontendSpec: PropTypes.shape({}).isRequired
+  frontendSpec: PropTypes.shape({}).isRequired,
+  stepIsActive: PropTypes.bool
 }
 
 export default JobWizardResources

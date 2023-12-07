@@ -183,7 +183,7 @@ const JobsPanelTitleView = ({
         onClick={() => closePanel({})}
         className="panel-title__btn_close"
         tooltipText="Close"
-        data-testid="pop-up-close-btn"
+        id="pop-up-close-btn"
       >
         <CloseIcon />
       </RoundedIcon>

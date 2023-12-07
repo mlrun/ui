@@ -30,18 +30,21 @@ const functionsApi = {
   deleteSelectedFunction: (func, project) =>
     mainHttpClient.delete(`/projects/${project}/functions/${func}`),
   deployFunction: data => mainHttpClient.post('/build/function', data),
-  getFunctions: (project, filters, hash) => {
-    const params = {}
+  getFunctions: (project, filters, config = {}, hash) => {
+    const newConfig = {
+      ...config,
+      params: {}
+    }
 
     if (filters?.name) {
-      params.name = `~${filters.name}`
+      newConfig.params.name = `~${filters.name}`
     }
 
     if (hash) {
-      params.hash_key = hash
+      newConfig.params.hash_key = hash
     }
 
-    return mainHttpClient.get(`/projects/${project}/functions`, { params })
+    return mainHttpClient.get(`/projects/${project}/functions`, newConfig)
   },
   getFunction: (project, functionName, hash, tag) => {
     const params = {}

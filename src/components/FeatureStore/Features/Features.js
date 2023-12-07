@@ -19,7 +19,6 @@ such restriction.
 */
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useParams } from 'react-router-dom'
-import axios from 'axios'
 import { connect, useDispatch, useSelector } from 'react-redux'
 
 import AddToFeatureVectorPopUp from '../../../elements/AddToFeatureVectorPopUp/AddToFeatureVectorPopUp'
@@ -28,10 +27,13 @@ import FeaturesView from './FeaturesView'
 import { FeatureStoreContext } from '../FeatureStore'
 
 import {
+  CANCEL_REQUEST_TIMEOUT,
   FEATURES_TAB,
   FEATURE_STORE_PAGE,
   GROUP_BY_NAME,
   GROUP_BY_NONE,
+  LARGE_REQUEST_CANCELED,
+  REQUEST_CANCELED,
   TAG_FILTER_ALL_ITEMS
 } from '../../../constants'
 import { createFeaturesRowData } from '../../../utils/createFeatureStoreContent'
@@ -42,6 +44,7 @@ import { parseFeatures } from '../../../utils/parseFeatures'
 import { setTablePanelOpen } from '../../../reducers/tableReducer'
 import { useGetTagOptions } from '../../../hooks/useGetTagOptions.hook'
 import { useGroupContent } from '../../../hooks/groupContent.hook'
+import { showLargeResponsePopUp } from '../../../httpClient'
 
 import { ReactComponent as Yaml } from 'igz-controls/images/yaml.svg'
 
@@ -59,12 +62,14 @@ const Features = ({
 }) => {
   const [features, setFeatures] = useState([])
   const [selectedRowData, setSelectedRowData] = useState({})
+  const [largeRequestErrorMessage, setLargeRequestErrorMessage] = useState('')
   const [urlTagOption] = useGetTagOptions(fetchFeatureSetsTags, featuresFilters)
   const params = useParams()
   const featureStore = useSelector(store => store.featureStore)
   const filtersStore = useSelector(store => store.filtersStore)
   const tableStore = useSelector(store => store.tableStore)
   const featureStoreRef = useRef(null)
+  const abortControllerRef = useRef(new AbortController())
   const dispatch = useDispatch()
 
   const { toggleConvertedYaml } = React.useContext(FeatureStoreContext)
@@ -89,38 +94,54 @@ const Features = ({
 
   const fetchData = useCallback(
     filters => {
+      abortControllerRef.current = new AbortController()
+
+      const cancelRequestTimeout = setTimeout(() => {
+        abortControllerRef.current.abort(LARGE_REQUEST_CANCELED)
+      }, CANCEL_REQUEST_TIMEOUT)
       const config = {
-        cancelToken: new axios.CancelToken(cancel => {
-          featureStoreRef.current.cancel = cancel
-        })
+        signal: abortControllerRef.current.signal
       }
 
       return Promise.allSettled([
         fetchFeatures(params.projectName, filters, config),
         fetchEntities(params.projectName, filters, config)
-      ]).then(result => {
-        if (result) {
-          const features = result.reduce((prevValue, nextValue) => {
-            return nextValue.value ? prevValue.concat(nextValue.value) : prevValue
-          }, [])
+      ])
+        .then(result => {
+          if (result) {
+            const features = result.reduce((prevValue, nextValue) => {
+              return nextValue.value ? prevValue.concat(nextValue.value) : prevValue
+            }, [])
 
-          setFeatures(parseFeatures(features))
+            if (
+              features.length > 1500 ||
+              abortControllerRef.current?.signal?.reason === LARGE_REQUEST_CANCELED
+            ) {
+              showLargeResponsePopUp(setLargeRequestErrorMessage)
+              setFeatures([])
+            } else {
+              setFeatures(parseFeatures(features))
+              setLargeRequestErrorMessage('')
 
-          return features
-        }
+              return features
+            }
+          }
 
-        return result
-      })
+          return result
+        })
+        .finally(() => clearTimeout(cancelRequestTimeout))
     },
     [fetchEntities, fetchFeatures, params.projectName]
   )
 
-  const cancelRequest = message => {
-    featureStoreRef.current?.cancel && featureStoreRef.current.cancel(message)
-  }
-
   const handleRefresh = filters => {
     dispatch(getFilterTagOptions({ fetchTags: fetchFeatureSetsTags, project: params.projectName }))
+    setFeatures([])
+    removeFeature()
+    removeEntity()
+    removeFeatures()
+    removeEntities()
+    setSelectedRowData({})
 
     return fetchData(filters)
   }
@@ -253,7 +274,7 @@ const Features = ({
       removeFeatures()
       removeEntities()
       setSelectedRowData({})
-      cancelRequest('cancel')
+      abortControllerRef.current.abort(REQUEST_CANCELED)
     }
   }, [removeEntities, removeEntity, removeFeature, removeFeatures, params.projectName])
 
@@ -266,6 +287,7 @@ const Features = ({
       getPopUpTemplate={getPopUpTemplate}
       handleExpandRow={handleExpandRow}
       handleRefresh={handleRefresh}
+      largeRequestErrorMessage={largeRequestErrorMessage}
       pageData={pageData}
       ref={featureStoreRef}
       selectedRowData={selectedRowData}

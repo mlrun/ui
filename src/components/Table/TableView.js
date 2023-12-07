@@ -20,6 +20,7 @@ such restriction.
 import React from 'react'
 import PropTypes from 'prop-types'
 import { isEmpty } from 'lodash'
+import classnames from 'classnames'
 
 import ArtifactsTableRow from '../../elements/ArtifactsTableRow/ArtifactsTableRow'
 import ConsumerGroupShardLagTableRow from '../../elements/ConsumerGroupShardLagTableRow/ConsumerGroupShardLagTableRow'
@@ -76,20 +77,30 @@ const TableView = ({
   tableHeadRef,
   tablePanelRef
 }) => {
+  const tableClass = classnames(
+    'table',
+    'table-main',
+    !isEmpty(selectedItem) && 'table-with-details'
+  )
+
   return (
     <div className="table__flex">
       <div className="table__content" id="table-content" ref={tableContentRef}>
         <div className="table__wrapper">
-          <table className="table" cellPadding="0" cellSpacing="0" ref={tableRef}>
+          <table className={tableClass} cellPadding="0" cellSpacing="0" ref={tableRef}>
             {pageData.tableHeaders && (
               <>
                 <thead className="table-header">
                   <tr className="table-row">
-                    {pageData.tableHeaders?.map(
-                      (item, index) =>
+                    {pageData.tableHeaders?.map((item, index) => {
+                      const headerClassNames = classnames(
+                        `table-header__cell ${item.className} ${item.headerCellClassName}`
+                      )
+
+                      return (
                         !item.hidden && (
                           <th
-                            className={`table-header-item ${item.class}`}
+                            className={headerClassNames}
                             key={`${item.headerLabel}${index}`}
                             ref={tableHeadRef}
                           >
@@ -98,7 +109,8 @@ const TableView = ({
                             </Tooltip>
                           </th>
                         )
-                    )}
+                      )
+                    })}
                   </tr>
                 </thead>
                 <tbody className="table-body">
@@ -248,6 +260,11 @@ const TableView = ({
             )}
             {!pageData.tableHeaders && <tbody className="table-body">{children}</tbody>}
           </table>
+          {isTablePanelOpen && (
+            <div className="table__panel-container" ref={tablePanelRef}>
+              <div className="table__panel">{pageData.tablePanel}</div>
+            </div>
+          )}
         </div>
         {!isEmpty(selectedItem) && (
           <Details
@@ -263,11 +280,6 @@ const TableView = ({
             selectedItem={selectedItem}
             tab={tab}
           />
-        )}
-        {isTablePanelOpen && (
-          <div className="table__panel-container" ref={tablePanelRef}>
-            <div className="table__panel">{pageData.tablePanel}</div>
-          </div>
         )}
       </div>
     </div>

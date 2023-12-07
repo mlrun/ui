@@ -32,7 +32,7 @@ import { RoundedIcon } from 'igz-controls/components'
 import nuclioActions from '../../actions/nuclio'
 import { generatePageData } from './consumerGroup.util.js'
 import { getNoDataMessage } from '../../utils/getNoDataMessage'
-import { setNotification } from '../../reducers/notificationReducer'
+import { showErrorNotification } from '../../utils/notifications.util'
 
 import { ReactComponent as RefreshIcon } from 'igz-controls/images/refresh.svg'
 
@@ -86,13 +86,12 @@ const ConsumerGroup = ({
 
   useEffect(() => {
     if (!isEmpty(currentV3ioStream) && nuclioStore.v3ioStreamShardLags.error) {
-      dispatch(
-        setNotification({
-          status: nuclioStore.v3ioStreamShardLags.error?.response?.status || 400,
-          id: Math.random(),
-          message: 'Failed to fetch v3io stream shard lags',
-          retry: () => refreshConsumerGroup(currentV3ioStream)
-        })
+      showErrorNotification(
+        dispatch,
+        nuclioStore.v3ioStreamShardLags.error,
+        'Failed to fetch v3io stream shard lags',
+        '',
+        () => refreshConsumerGroup(currentV3ioStream)
       )
       resetV3ioStreamShardLagsError()
     }
@@ -122,7 +121,11 @@ const ConsumerGroup = ({
           placeholder="Search by shard name..."
           value={filterByName}
         />
-        <RoundedIcon onClick={() => refreshConsumerGroup(currentV3ioStream)} tooltipText="Refresh">
+        <RoundedIcon
+          onClick={() => refreshConsumerGroup(currentV3ioStream)}
+          tooltipText="Refresh"
+          id="consumer-group-refresh"
+        >
           <RefreshIcon />
         </RoundedIcon>
       </div>

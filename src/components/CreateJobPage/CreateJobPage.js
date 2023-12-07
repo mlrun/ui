@@ -77,24 +77,26 @@ const CreateJobPage = ({
 
   useEffect(() => {
     fetchFunctions(selectedProject).then(functions => {
-      const filteredFunctions = functions.filter(func => includes(functionRunKinds, func.kind))
+      if (functions) {
+        const filteredFunctions = functions.filter(func => includes(functionRunKinds, func.kind))
 
-      const groupedFunctions = Object.values(
-        filteredFunctions.reduce((prev, curr) => {
-          if (!prev[curr.metadata.name]) {
-            prev[curr.metadata.name] = {
-              name: curr.metadata.name,
-              functions: []
+        const groupedFunctions = Object.values(
+          filteredFunctions.reduce((prev, curr) => {
+            if (!prev[curr.metadata.name]) {
+              prev[curr.metadata.name] = {
+                name: curr.metadata.name,
+                functions: []
+              }
             }
-          }
 
-          prev[curr.metadata.name].functions.push(curr)
+            prev[curr.metadata.name].functions.push(curr)
 
-          return prev
-        }, {})
-      )
+            return prev
+          }, {})
+        )
 
-      return setFunctions(groupedFunctions)
+        return setFunctions(groupedFunctions)
+      }
     })
 
     if (isEmpty(functionsStore.templatesCatalog)) {

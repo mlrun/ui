@@ -5,36 +5,6 @@
 @import '~igz-controls/scss/borders';
 @import '~igz-controls/scss/fonts';
 
-*,
-::after,
-::before {
-  box-sizing: border-box;
-}
-
-* {
-  scrollbar-color: rgba($black, 0.25) rgba($black, 0.1);
-  scrollbar-width: thin;
-}
-
-::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
-}
-
-::-webkit-scrollbar-track {
-  background-color: rgba($black, 0.1);
-  border-radius: 10px;
-}
-
-::-webkit-scrollbar-thumb {
-  background-color: rgba($black, 0.25);
-  border-radius: 10px;
-
-  &:hover {
-    background-color: rgba($black, 0.4);
-  }
-}
-
 body {
   display: flex;
   flex: 1;
@@ -68,6 +38,8 @@ body {
     font-size: 0.75rem;
   }
 }
+
+/*=========== CONTENT =============*/
 
 .content {
   position: relative;
@@ -137,6 +109,8 @@ body {
   }
 }
 
+/*=========== MAIN =============*/
+
 main {
   position: relative;
   z-index: 1;
@@ -166,6 +140,8 @@ main {
   }
 }
 
+/*=========== PAGE =============*/
+
 .page {
   flex: 1 1;
   min-width: 100%;
@@ -193,7 +169,7 @@ main {
     .table {
       border-top: none;
 
-      .table-header-item,
+      .table-header__cell,
       .table-body__cell {
         color: $primaryTextColor;
       }
@@ -207,6 +183,8 @@ main {
   }
 }
 
+/*=========== TABLE =============*/
+
 .table {
   display: flex;
   flex-flow: column nowrap;
@@ -214,6 +192,7 @@ main {
   position: relative;
   text-align: left;
   width: 100%;
+  border-spacing: 0;
 
   .table {
     &-row {
@@ -224,7 +203,7 @@ main {
       background-color: inherit;
       border-bottom: $tableRowBorder;
 
-      &:not(.parent-row-expanded) > * {
+      &:not(.parent-row_expanded) > * {
         position: relative;
         display: inline-flex;
         flex: 1;
@@ -241,14 +220,12 @@ main {
             position: sticky;
             left: 0;
             flex-basis: 240px;
-            min-width: 240px;
-            max-width: 240px;
             z-index: 1;
           }
 
           &-icon {
             justify-content: center;
-            padding: 5px;
+            padding: 0;
             max-width: 85px;
 
             @include tableColumnFlex(0, 50px);
@@ -266,19 +243,22 @@ main {
       }
 
       &.parent-row {
-        &:not(.parent-row-expanded) {
+        &:not(.parent-row_expanded) {
           &:not(.parent-row_without-actions) {
             .table-cell-icon {
               .actions-menu {
                 &__container_extended {
-                  background-color: $white;
-
                   &:before {
-                    background: linear-gradient(90deg, rgba(255,255,255,0) 0%, rgba(255,255,255,1) 100%);
+                    background: linear-gradient(
+                                    90deg,
+                                    rgba(255, 255, 255, 0) 0%,
+                                    rgba(245, 247, 255, 1) 100%
+                    );
                   }
                 }
               }
             }
+
             &:hover {
               .table-cell-icon {
                 .actions-menu {
@@ -289,7 +269,11 @@ main {
                       background-color: $ghostWhite;
 
                       &:before {
-                        background: linear-gradient(90deg, rgba(255,255,255,0) 0%, rgba(245,247,255,1) 100%);
+                        background: linear-gradient(
+                                        90deg,
+                                        rgba(255, 255, 255, 0) 0%,
+                                        rgba(245, 247, 255, 1) 100%
+                        );
                       }
                     }
 
@@ -323,7 +307,7 @@ main {
           margin-top: 3px;
         }
 
-        &-expanded {
+        &_expanded {
           flex-direction: column;
           border: 0;
 
@@ -332,7 +316,7 @@ main {
               .table-cell-icon {
                 .actions-menu {
                   &__container {
-                    display: block;
+                    display: flex;
                   }
                 }
               }
@@ -341,7 +325,7 @@ main {
 
           .row_grouped-by {
             position: sticky;
-            top: 50px;
+            top: 40px;
             background-color: $white;
             padding: 0;
             z-index: 3;
@@ -366,7 +350,11 @@ main {
       min-width: 100%;
       z-index: 3;
 
-      &-item {
+      &-row {
+        min-height: 40px;
+      }
+
+      &__cell {
         min-width: 75px;
 
         @include tableHeader;
@@ -404,7 +392,7 @@ main {
         background-color: $white;
 
         &:hover,
-        &.row_active {
+        &_active {
           background-color: $ghostWhite;
         }
 
@@ -414,7 +402,16 @@ main {
       }
     }
   }
+
+  &.table-with-details {
+    .table-cell-name {
+      min-width: 240px;
+      max-width: 240px;
+    }
+  }
 }
+
+/*=========== SORT =============*/
 
 .sortable-header {
   &-cell {
@@ -458,10 +455,7 @@ main {
   }
 }
 
-a {
-  color: inherit;
-  text-decoration: none;
-}
+/*=========== STATE =============*/
 
 [class^='state-active'],
 [class^='state-completed'],
@@ -516,10 +510,7 @@ a {
   @include statusState($topaz);
 }
 
-iframe {
-  width: 100%;
-  height: 100%;
-}
+/*=========== ERROR =============*/
 
 .error-container {
   margin: auto;
@@ -536,23 +527,7 @@ iframe {
   }
 }
 
-.data-ellipsis {
-  overflow: hidden;
-  white-space: nowrap;
-  text-overflow: ellipsis;
-}
-
-.cursor-pointer {
-  cursor: pointer;
-}
-
-.capitalize {
-  text-transform: capitalize;
-}
-
-.wrap {
-  white-space: pre-wrap;
-}
+/*=========== ACTIONS =============*/
 
 .actions {
   display: flex;
@@ -577,6 +552,8 @@ iframe {
     }
   }
 }
+
+/*=========== INPUT =============*/
 
 .auto-resizable-input {
   position: relative;
@@ -608,6 +585,9 @@ iframe {
   }
 }
 
+
+/*=========== COMBOBOX =============*/
+
 .combobox {
   .path-type {
     &-store {
@@ -632,13 +612,7 @@ iframe {
   }
 }
 
-.visibility-hidden {
-  visibility: hidden;
-}
-
-.pointer {
-  cursor: pointer;
-}
+/*=========== GRAPH =============*/
 
 .graph-container {
   display: flex;
@@ -675,6 +649,8 @@ iframe {
     }
   }
 }
+
+/*=========== FORM =============*/
 
 .form {
   color: $primary;
@@ -767,6 +743,9 @@ iframe {
   }
 }
 
+
+/*=========== SORT ICON =============*/
+
 .sort-icon {
   width: 20px;
   transition: transform 0.3s ease-in-out;
@@ -784,11 +763,89 @@ iframe {
   padding: 20px 0;
 
   .filters-button {
-    margin-left: 15px;
+    margin-left: 5px;
   }
 
   &__filters {
     display: flex;
+  }
+
+  &__actions {
+    display: flex;
+    margin-left: 20px;
+
+    .action-button {
+      width: 160px;
+
+      &:not(:last-of-type) {
+        margin-right: 10px;
+      }
+    }
+  }
+}
+
+
+/*=========== GENERAL =============*/
+
+.visibility-hidden {
+  visibility: hidden;
+}
+
+.data-ellipsis {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.cursor-pointer {
+  cursor: pointer;
+}
+
+.capitalize {
+  text-transform: capitalize;
+}
+
+.wrap {
+  white-space: pre-wrap;
+}
+
+iframe {
+  width: 100%;
+  height: 100%;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+*,
+::after,
+::before {
+  box-sizing: border-box;
+}
+
+* {
+  scrollbar-color: rgba($black, 0.25) rgba($black, 0.1);
+  scrollbar-width: thin;
+}
+
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background-color: rgba($black, 0.1);
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: rgba($black, 0.25);
+  border-radius: 10px;
+
+  &:hover {
+    background-color: rgba($black, 0.4);
   }
 }
 

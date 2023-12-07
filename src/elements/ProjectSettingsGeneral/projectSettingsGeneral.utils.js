@@ -22,6 +22,10 @@ export const initialEditProjectData = {
     value: null,
     isEdit: false
   },
+  default_image: {
+    value: null,
+    isEdit: false
+  },
   description: {
     value: null,
     isEdit: false

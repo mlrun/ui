@@ -46,6 +46,7 @@ import { generateFunctionPriorityLabel } from '../../utils/generateFunctionPrior
 import { FUNCTION_PANEL_MODE } from '../../types'
 import { PANEL_CREATE_MODE } from '../../constants'
 import { getPreemptionMode } from '../../utils/getPreemptionMode'
+import { isEveryObjectValueEmpty } from '../../utils/isEveryObjectValueEmpty'
 
 const FunctionsPanelResources = ({
   defaultData,
@@ -89,6 +90,7 @@ const FunctionsPanelResources = ({
   ])
 
   const [data, setData] = useState({
+    disable_auto_mount: defaultData.disable_auto_mount ?? true,
     volumeMounts: getDefaultVolumeMounts(
       defaultData.volume_mounts ?? [],
       defaultData.volumes ?? [],
@@ -150,18 +152,29 @@ const FunctionsPanelResources = ({
   ])
 
   useEffect(() => {
-    setNewFunctionResources({
-      limits: {
-        cpu: defaultData.resources?.limits?.cpu ?? defaultPodsResources?.limits?.cpu ?? '',
-        memory: defaultData.resources?.limits?.memory ?? defaultPodsResources?.limits?.memory ?? ''
-      },
-      requests: {
-        cpu: defaultData.resources?.requests?.cpu ?? defaultPodsResources?.requests?.cpu ?? '',
-        memory:
-          defaultData.resources?.requests?.memory ?? defaultPodsResources?.requests?.memory ?? ''
-      }
-    })
-  }, [defaultData.resources, defaultPodsResources, setNewFunctionResources])
+    if (isEveryObjectValueEmpty(functionsStore.newFunction.spec.resources)) {
+      setNewFunctionResources({
+        limits: {
+          cpu: defaultData.resources?.limits?.cpu ?? defaultPodsResources?.limits?.cpu ?? '',
+          memory:
+            defaultData.resources?.limits?.memory ?? defaultPodsResources?.limits?.memory ?? '',
+          [gpuType]:
+            defaultData.resources?.limits?.[gpuType] ?? defaultPodsResources?.limits?.gpu ?? ''
+        },
+        requests: {
+          cpu: defaultData.resources?.requests?.cpu ?? defaultPodsResources?.requests?.cpu ?? '',
+          memory:
+            defaultData.resources?.requests?.memory ?? defaultPodsResources?.requests?.memory ?? ''
+        }
+      })
+    }
+  }, [
+    defaultData.resources,
+    defaultPodsResources,
+    functionsStore.newFunction.spec.resources,
+    gpuType,
+    setNewFunctionResources
+  ])
 
   const handleAddNewVolume = newVolume => {
     const generatedVolume = createNewVolume(newVolume)

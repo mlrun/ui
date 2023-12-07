@@ -19,26 +19,24 @@ such restriction.
 */
 import React from 'react'
 import PropTypes from 'prop-types'
-import { useParams } from 'react-router-dom'
 
 import ArtifactsActionBar from '../ArtifactsActionBar/ArtifactsActionBar'
 import NoData from '../../common/NoData/NoData'
 import Table from '../Table/Table'
 import Breadcrumbs from '../../common/Breadcrumbs/Breadcrumbs'
-import RegisterArtifactModal from '../RegisterArtifactModal/RegisterArtifactModal'
 import YamlModal from '../../common/YamlModal/YamlModal'
 import Loader from '../../common/Loader/Loader'
-import PageActionsMenu from '../../common/PageActionsMenu/PageActionsMenu'
 import PreviewModal from '../../elements/PreviewModal/PreviewModal'
 import ArtifactsTableRow from '../../elements/ArtifactsTableRow/ArtifactsTableRow'
 import Details from '../Details/Details'
 
-import { ARTIFACT_TYPE, FILES_FILTERS, FILES_PAGE, FULL_VIEW_MODE } from '../../constants'
+import { FILES_FILTERS, FILES_PAGE, FULL_VIEW_MODE } from '../../constants'
 import { getNoDataMessage } from '../../utils/getNoDataMessage'
-import { actionsMenuHeader, filters } from './files.util'
-import { openPopUp } from 'igz-controls/utils/common.util'
+import { registerArtifactTitle, filters } from './files.util'
 import { removeFile } from '../../reducers/artifactsReducer'
 import { ACTIONS_MENU } from '../../types'
+import { SECONDARY_BUTTON } from 'igz-controls/constants'
+import { SORT_PROPS } from 'igz-controls/types'
 
 const FilesView = React.forwardRef(
   (
@@ -53,44 +51,42 @@ const FilesView = React.forwardRef(
       filtersStore,
       handleExpandRow,
       handleRefresh,
+      handleRegisterArtifact,
+      largeRequestErrorMessage,
       pageData,
       selectedFile,
       selectedRowData,
       setFiles,
       setSelectedFile,
       setSelectedRowData,
+      sortProps,
       tableContent,
+      tableHeaders,
       toggleConvertedYaml,
-      viewMode,
-      urlTagOption
+      urlTagOption,
+      viewMode
     },
     ref
   ) => {
-    const params = useParams()
-
     return (
       <>
         <div className="content-wrapper" ref={ref}>
           <div className="content__header">
             <Breadcrumbs />
-            <PageActionsMenu
-              actionsMenuHeader={actionsMenuHeader}
-              onClick={() =>
-                openPopUp(RegisterArtifactModal, {
-                  artifactKind: ARTIFACT_TYPE,
-                  projectName: params.projectName,
-                  refresh: handleRefresh,
-                  title: actionsMenuHeader
-                })
-              }
-              showActionsMenu
-            />
           </div>
           <div className="content">
             {artifactsStore.loading && <Loader />}
             <div className="table-container">
               <div className="content__action-bar-wrapper">
                 <ArtifactsActionBar
+                  actionButtons={[
+                    {
+                      variant: SECONDARY_BUTTON,
+                      label: registerArtifactTitle,
+                      className: 'action-button',
+                      onClick: handleRegisterArtifact
+                    }
+                  ]}
                   filterMenuName={FILES_FILTERS}
                   handleRefresh={handleRefresh}
                   page={FILES_PAGE}
@@ -102,7 +98,14 @@ const FilesView = React.forwardRef(
               </div>
               {artifactsStore.loading ? null : files.length === 0 ? (
                 <NoData
-                  message={getNoDataMessage(filtersStore, filters, FILES_PAGE, null, FILES_FILTERS)}
+                  message={getNoDataMessage(
+                    filtersStore,
+                    filters,
+                    largeRequestErrorMessage,
+                    FILES_PAGE,
+                    null,
+                    FILES_FILTERS
+                  )}
                 />
               ) : (
                 <>
@@ -117,7 +120,8 @@ const FilesView = React.forwardRef(
                     pageData={pageData}
                     retryRequest={handleRefresh}
                     selectedItem={selectedFile}
-                    tableHeaders={tableContent[0]?.content ?? []}
+                    sortProps={sortProps}
+                    tableHeaders={tableHeaders ?? []}
                   >
                     {tableContent.map((tableItem, index) => (
                       <ArtifactsTableRow
@@ -153,7 +157,7 @@ const FilesView = React.forwardRef(
           <YamlModal convertedYaml={convertedYaml} toggleConvertToYaml={toggleConvertedYaml} />
         )}
         {artifactsStore?.preview?.isPreview && (
-          <PreviewModal item={artifactsStore?.preview?.selectedItem} />
+          <PreviewModal artifact={artifactsStore?.preview?.selectedItem} />
         )}
       </>
     )
@@ -176,11 +180,15 @@ FilesView.propTypes = {
   filtersStore: PropTypes.object.isRequired,
   handleExpandRow: PropTypes.func.isRequired,
   handleRefresh: PropTypes.func.isRequired,
+  handleRegisterArtifact: PropTypes.func.isRequired,
+  largeRequestErrorMessage: PropTypes.string.isRequired,
   pageData: PropTypes.object.isRequired,
   selectedFile: PropTypes.object.isRequired,
   selectedRowData: PropTypes.object.isRequired,
   setSelectedFile: PropTypes.func.isRequired,
+  sortProps: SORT_PROPS,
   tableContent: PropTypes.arrayOf(PropTypes.object).isRequired,
+  tableHeaders: PropTypes.arrayOf(PropTypes.object).isRequired,
   toggleConvertedYaml: PropTypes.func.isRequired,
   viewMode: PropTypes.string,
   urlTagOption: PropTypes.string

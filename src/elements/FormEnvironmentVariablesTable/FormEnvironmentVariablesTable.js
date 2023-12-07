@@ -28,7 +28,13 @@ import FormEnvironmentVariablesRow from './FormEnvironmentVariablesRow/FormEnvir
 
 import { useFormTable } from 'igz-controls/hooks'
 
-const FormEnvironmentVariablesTable = ({ className, disabled, fieldsPath, formState }) => {
+const FormEnvironmentVariablesTable = ({
+  className,
+  disabled,
+  exitEditModeTriggerItem,
+  fieldsPath,
+  formState
+}) => {
   const tableClassNames = classnames('form-table', className)
   const {
     addNewRow,
@@ -39,7 +45,7 @@ const FormEnvironmentVariablesTable = ({ className, disabled, fieldsPath, formSt
     editingItem,
     enterEditMode,
     isCurrentRowEditing
-  } = useFormTable(formState)
+  } = useFormTable(formState, exitEditModeTriggerItem)
 
   const uniquenessValidator = (fields, newValue) => {
     return !fields.value.some(({ data: { key } }, index) => {
@@ -48,7 +54,7 @@ const FormEnvironmentVariablesTable = ({ className, disabled, fieldsPath, formSt
   }
 
   return (
-    <div className={tableClassNames}>
+    <div className={tableClassNames} data-testid={fieldsPath}>
       <div className="form-table__row form-table__header-row no-hover">
         <div className="form-table__cell form-table__cell_2">
           <Tooltip template={<TextTooltipTemplate text="Name" />}>Name</Tooltip>
@@ -111,13 +117,15 @@ const FormEnvironmentVariablesTable = ({ className, disabled, fieldsPath, formSt
 }
 
 FormEnvironmentVariablesTable.defaultProps = {
+  className: 'env-var-table',
   disabled: false,
-  className: ''
+  exitEditModeTriggerItem: null
 }
 
 FormEnvironmentVariablesTable.propTypes = {
   className: PropTypes.string,
   disabled: PropTypes.bool,
+  exitEditModeTriggerItem: PropTypes.any,
   fieldsPath: PropTypes.string.isRequired,
   formState: PropTypes.shape({}).isRequired
 }

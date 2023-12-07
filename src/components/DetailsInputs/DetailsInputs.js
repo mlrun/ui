@@ -17,57 +17,43 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import React, { useCallback, useEffect, useState } from 'react'
-import PropTypes from 'prop-types'
-import { isEmpty } from 'lodash'
+import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { Link, useParams } from 'react-router-dom'
+import { useParams } from 'react-router-dom'
+import { isEmpty } from 'lodash'
+import PropTypes from 'prop-types'
 import classnames from 'classnames'
 
 import ArtifactsPreviewController from '../ArtifactsPreview/ArtifactsPreviewController'
-import NoData from '../../common/NoData/NoData'
-import { Tooltip, TextTooltipTemplate, RoundedIcon } from 'igz-controls/components'
 import Loader from '../../common/Loader/Loader'
+import NoData from '../../common/NoData/NoData'
+import { Tooltip, TextTooltipTemplate } from 'igz-controls/components'
 
+import { MLRUN_STORAGE_INPUT_PATH_SCHEME, TAG_FILTER_LATEST } from '../../constants'
 import { fetchArtifacts } from '../../reducers/artifactsReducer'
 import { generateArtifactIndexes } from '../Details/details.util'
-import {
-  DATASETS,
-  MLRUN_STORAGE_INPUT_PATH_SCHEME,
-  MODELS_TAB,
-  TAG_FILTER_LATEST
-} from '../../constants'
-
-import { ReactComponent as DetailsIcon } from 'igz-controls/images/view-details.svg'
+import { generateArtifactLink, generateInputsTabContent } from './detailsInputs.util'
 
 import './detailsInputs.scss'
 
 const DetailsInputs = ({ inputs }) => {
   const [artifactsIndexes, setArtifactsIndexes] = useState([])
-  const [content, setContent] = useState([])
+  const [inputsContent, setInputsContent] = useState([])
+
+  const showArtifact = useCallback(
+    index => {
+      generateArtifactIndexes(artifactsIndexes, index, setArtifactsIndexes)
+    },
+    [artifactsIndexes, setArtifactsIndexes]
+  )
+
+  const inputsTabContent = useMemo(() => {
+    return generateInputsTabContent(inputsContent, showArtifact)
+  }, [inputsContent, showArtifact])
 
   const artifactsStore = useSelector(store => store.artifactsStore)
   const dispatch = useDispatch()
   const params = useParams()
-
-  const generateArtifactLink = useCallback(
-    artifact => {
-      const artifactLinks = {
-        model: `/projects/${params.projectName}/models/${MODELS_TAB}/${
-          artifact.db_key || artifact.key
-        }/${TAG_FILTER_LATEST}${artifact.iter ? `/${artifact.iter}` : ''}/overview`,
-        dataset: `/projects/${params.projectName}/${DATASETS}/${
-          artifact.db_key || artifact.key
-        }/${TAG_FILTER_LATEST}${artifact.iter ? `/${artifact.iter}` : ''}/overview`,
-        files: `/projects/${params.projectName}/files/${
-          artifact.db_key || artifact.key
-        }/${TAG_FILTER_LATEST}${artifact.iter ? `/${artifact.iter}` : ''}/overview`
-      }
-
-      return artifact ? artifactLinks[artifact.kind ?? 'files'] : ''
-    },
-    [params.projectName]
-  )
 
   useEffect(() => {
     Object.entries(inputs || {}).forEach(([key, value]) => {
@@ -89,39 +75,41 @@ const DetailsInputs = ({ inputs }) => {
           .unwrap()
           .then(artifacts => {
             if (artifacts.length) {
-              setContent(state => [
+              setInputsContent(state => [
                 ...state,
                 {
                   ...artifacts[0],
-                  key,
-                  value,
                   ui: {
-                    artifactLink: generateArtifactLink(artifacts[0]),
+                    inputName: key,
+                    inputPath: value,
+                    artifactLink: generateArtifactLink(artifacts[0], params.projectName),
                     isPreviewable: artifacts.length > 0
                   }
                 }
               ])
             } else {
-              setContent(state => [
+              setInputsContent(state => [
                 ...state,
                 {
-                  key,
-                  value,
                   ui: {
-                    isPreviewable: false
+                    inputName: key,
+                    inputPath: value,
+                    isPreviewable: false,
+                    artifactLink: ''
                   }
                 }
               ])
             }
           })
       } else {
-        setContent(state => [
+        setInputsContent(state => [
           ...state,
           {
-            key,
-            value,
             ui: {
-              isPreviewable: false
+              inputName: key,
+              inputPath: value,
+              isPreviewable: false,
+              artifactLink: ''
             }
           }
         ])
@@ -129,61 +117,55 @@ const DetailsInputs = ({ inputs }) => {
     })
 
     return () => {
-      setContent([])
+      setInputsContent([])
       setArtifactsIndexes([])
     }
-  }, [inputs, dispatch, generateArtifactLink])
-
-  const showArtifact = useCallback(
-    index => {
-      generateArtifactIndexes(artifactsIndexes, index, setArtifactsIndexes)
-    },
-    [artifactsIndexes, setArtifactsIndexes]
-  )
+  }, [inputs, dispatch, params.projectName])
 
   return artifactsStore.loading ? (
     <Loader />
-  ) : isEmpty(inputs) || isEmpty(content) ? (
+  ) : isEmpty(inputs) || isEmpty(inputsContent) ? (
     <NoData />
   ) : (
     <div className="item-inputs">
-      {content.map((artifact, index) => {
-        const keyClassNames = classnames(artifact.ui.isPreviewable && 'item-inputs__name link')
-
-        return (
-          <div className="item-inputs__row-wrapper" key={artifact.key}>
-            <div className="item-inputs__row">
-              <div className="item-inputs__row-item">
-                <Tooltip template={<TextTooltipTemplate text={artifact.key} />}>
-                  <span
-                    className={keyClassNames}
-                    onClick={() => artifact.ui.isPreviewable && showArtifact(index)}
-                  >
-                    {artifact.key}
-                  </span>
-                </Tooltip>
+      <div className="table">
+        <div className="table-header">
+          <div className="table-row table-header-row">
+            {inputsTabContent[0].map(({ headerId, headerLabel, className }) => (
+              <div key={headerId} className={classnames('table-header__cell', className)}>
+                {headerLabel}
               </div>
-              <div className="item-inputs__row-item item-inputs__row-item_path">
-                {artifact.value}
-              </div>
-              {artifact.ui.isPreviewable && (
-                <div className="item-inputs__row-item item-inputs__row-item_preview">
-                  <RoundedIcon tooltipText="Show Details">
-                    <Link target="_blank" to={artifact.ui.artifactLink}>
-                      <DetailsIcon />
-                    </Link>
-                  </RoundedIcon>
-                </div>
-              )}
-            </div>
-            <ArtifactsPreviewController
-              artifactsIndexes={artifactsIndexes}
-              content={content}
-              index={index}
-            />
+            ))}
           </div>
-        )
-      })}
+        </div>
+        <div className="table-body">
+          {inputsTabContent.map((inputRow, inputRowIndex) => (
+            <div key={inputRowIndex}>
+              <div className="table-row">
+                {inputRow.map((inputCell, inputCellIndex) => (
+                  <div
+                    key={inputCellIndex}
+                    className={classnames('table-body__cell', inputCell.className)}
+                  >
+                    {inputCell.template ? (
+                      inputCell.template
+                    ) : (
+                      <Tooltip template={<TextTooltipTemplate text={inputCell.value} />}>
+                        {inputCell.value}
+                      </Tooltip>
+                    )}
+                  </div>
+                ))}
+              </div>
+              <ArtifactsPreviewController
+                artifactsIndexes={artifactsIndexes}
+                artifact={inputsContent[inputRowIndex]}
+                index={inputRowIndex}
+              />
+            </div>
+          ))}
+        </div>
+      </div>
     </div>
   )
 }

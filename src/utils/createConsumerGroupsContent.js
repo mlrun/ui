@@ -29,7 +29,7 @@ const createConsumerGroupsContent = (content, params) => {
         consumerGroup: {
           id: `consumerGroup.${identifier}`,
           value: contentItem?.consumerGroup,
-          class: 'table-cell-1 text-bold',
+          className: 'table-cell-1 text-bold',
           identifier: identifier,
           identifierUnique: identifier,
           getLink: () => {
@@ -39,7 +39,7 @@ const createConsumerGroupsContent = (content, params) => {
         streamPath: {
           id: `streamPath.${identifier}`,
           value: contentItem?.containerName + contentItem?.streamPath,
-          class: 'table-cell-1'
+          className: 'table-cell-1'
         },
         realTimeFunction: {
           id: `realTimeFunction.${identifier}`,
@@ -50,7 +50,7 @@ const createConsumerGroupsContent = (content, params) => {
             )
           },
           linkIsExternal: true,
-          class: 'table-cell-1'
+          className: 'table-cell-1'
         }
       }
     }

@@ -60,44 +60,46 @@ module.exports = {
   Feature_Sets_Info_Pane: {
     Tab_List: ['Overview', 'Features', 'Transformations', 'Preview', 'Statistics', 'Analysis'],
     Overview_General_Headers: [
-      'Description',
-      'Labels',
-      'Version tag',
-      'Last updated',
-      'Entities',
-      'URI',
-      'Timestamp key',
-      'Label column',
-      'Usage example'
+      'Description:',
+      'Labels:',
+      'Version tag:',
+      'Last updated:',
+      'Entities:',
+      'Engine type:',
+      'URI:',
+      'Timestamp key:',
+      'Label column:',
+      'Usage example:'
     ]
   },
   Feature_Vectors_Info_Pane: {
     Tab_List: ['Overview', 'Requested Features', 'Analysis'],
     Overview_General_Headers: [
-      'Description',
-      'Labels',
-      'Version tag',
-      'Last updated',
-      'Entities',
-      'URI',
-      'Timestamp key',
-      'Label column',
-      'Usage example'
+      'Description:',
+      'Labels:',
+      'Version tag:',
+      'Last updated:',
+      'Entities:',
+      'URI:',
+      'Timestamp key:',
+      'Label column:',
+      'Usage example:'
     ]
   },
   Datasets_Info_Pane: {
     Tab_List: ['Overview', 'Preview', 'Metadata', 'Analysis'],
+    Action_Menu_List: ['Download', 'Copy URI', 'View YAML', 'Add a tag'],
     Overview_General_Headers: [
-      'Hash',
-      'Key',
-      'Version tag',
-      'Iter',
-      'Size',
-      'Path',
-      'URI',
-      'UID',
-      'Updated',
-      'Labels'
+      'Hash:',
+      'Key:',
+      'Version tag:',
+      'Iter:',
+      'Size:',
+      'Path:',
+      'URI:',
+      'UID:',
+      'Updated:',
+      'Labels:'
     ]
   },
   ML_Functions_Tab: {
@@ -179,7 +181,8 @@ module.exports = {
       'S3',
       'Azure storage',
       'Go-ogle storage',
-      'Google storage'
+      'Google storage',
+      'Databricks filesystem'
     ],
     Target_Store_File_Type: ['CSV', 'TSDB', 'Parquet', 'NoSql', 'Dataframe', 'Custom'],
     Target_Store_Path_Annotation:
@@ -201,7 +204,11 @@ module.exports = {
     Data_Inputs_Table_Header: ['Input name', 'Path'],
     Parameters_Table_Header: ['Name', 'Type', 'Value'],
     Parameters_Table_Header_Hyper: ['Hyper','Name', 'Type', 'Value'],
-    Image_Name_Text: 'The image must include all the software packages that are required to run the function. For example, for an XGBoost model, ensure that the image includes the correct XGboost package and version'
+    Image_Name_Text: 'The image must include all the software packages that are required to run the function. For example, for an XGBoost model, ensure that the image includes the correct XGboost package and version',
+    Hub_Filter_Category: ['Data Preparation', 'Machine Learning', 'Other', 'Data Analysis', 'Feature Store', 'Model Serving', 'Model Training', 'Monitoring', 'Model Testing', 'ETL', 'Data Validation'],
+  },
+  Batch_Inference: {
+    Model_Path_Type_Store: ['MLRun store']
   },
   Register_Artifact: {
     Type_Options: ['General', 'Chart', 'Plot', 'Table'],
@@ -240,7 +247,7 @@ module.exports = {
       'This field is required',
     Artifact_Name_Hint:
       'Valid characters: a–z, A–Z, 0–9, –, _, .\nMust begin and end with: a–z, A–Z, 0–9\nLength – max: 253\n' +
-      'This field is required\nArtifact name should be unique',
+      'This field is required\nArtifact name must be unique',
     Project_Name_Hint:
       'Valid characters: a–z, 0–9, –\nMust begin with: a–z\nMust end with: a–z, 0–9\nLength – max: 63\n' +
       'This field is required',
@@ -298,10 +305,10 @@ module.exports = {
     Add_Feature_Vector_Hint: 'Add features from the list on the left to this feature vector',
     Deploy_Model_Name_Hint:
       'After the function is deployed, it will have a URL for calling the model that is based upon this name.',
-    MLRun_Store_Path_Hint: 'Field must be in "artifacts/my-project/my-artifact:my-tag" format',
+    MLRun_Store_Path_Hint: 'Field must be in "models/my-project/my-model:my-tag" or "models/my-project/my-model@my-uid" format',
     Jobs_MLRun_Store_Path_Hint:
       'Field must be in "artifacts/my-project/my-artifact:my-tag" or "artifacts/my-project/my-artifact@my-uid" format',
-    V3IO_Path_Hint: 'Invalid URL. Field must be in "container-name/file" format',
+    V3IO_Path_Hint: 'Field must be in "container-name/file" format',
     S3_Path_Hint: 'Field must be in "bucket/path" format',
     Azure_Storage_Path_Hint: 'Field must be in "container/path" format',
     Timestamp_Column: 'The field name for filtering the source data.',

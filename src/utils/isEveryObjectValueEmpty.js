@@ -17,5 +17,7 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-export const isEveryObjectValueEmpty = obj =>
-  Object.values(obj).every(item => !item || item.length === 0)
+import { isEmpty } from 'lodash'
+
+export const isEveryObjectValueEmpty = (obj = {}) =>
+  Object.values(obj).every(item => !item || isEmpty(item))

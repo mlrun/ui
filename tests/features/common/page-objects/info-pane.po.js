@@ -379,8 +379,10 @@ const featureSetsInfoPaneLabelsTable = {
       fields: {
         key_input: 'input.input-label-key',
         value_input: 'input.input-label-value',
-        label: '.chip',
-        remove_btn: '.item-icon-close'
+        key_verify: '.edit-chip-container input.input-label-key',
+        value_verify: '.edit-chip-container input.input-label-value',
+        label: '.edit-chip-container input',
+        remove_btn: '.edit-chip__icon-close'
       }
     }
   }
@@ -478,21 +480,24 @@ module.exports = {
   featureSetsInfoPane: {
     Header: header,
     Updated: updated,
-    Cancel_Button: cancelButton,
+    Cancel_Button: By.css('.table__item .item-header__buttons .btn-normal'),
     Apply_Changes_Button: applyChangesButton,
     Action_Menu: commonActionMenu,
     Cross_Close_Button: crossCloseButton,
     Info_Pane_Tab_Selector: commonInfoPaneTabSelector,
     Overview_General_Headers: commonTable(infoPaneOverviewHeaders),
-    Description_Field: By.css('.item-info__details .details-item:nth-of-type(1) .data-ellipsis'),
+    Empty_Description_Field: By.css('.item-info__details-wrapper .details-item:nth-of-type(1) .details-item__data-add-placeholder'),
+    Full_Description_Field: By.css('.item-info .details-item:nth-of-type(1) .details-item__data > div.data-ellipsis.tooltip-wrapper'),
     Description_Input: textAreaGroup(
-      generateTextAreaGroup('.item-info__details .details-item:nth-of-type(1) .text-area-wrapper')
+      generateTextAreaGroup('.item-info__details-wrapper .details-item:nth-of-type(1) .form-field-textarea')
     ),
     Labels_Field: By.css(
       '.item-info__details .details-item:nth-of-type(2) .button-add-density_dense'
     ),
     Labels_Table: commonTable(featureSetsInfoPaneLabelsTable),
-    Apply_Button: By.css('.item-info__details .details-item__apply-btn')
+    Apply_Button: By.css('.item-info__details-wrapper .details-item__input-wrapper .round-icon-cp:nth-of-type(2)'),
+    Labels_Apply_Button: By.css('.item-info__details-wrapper .details-item .details-item__data-chips .details-item__apply-btn-wrapper'),
+    Edit_Button: By.css('.item-info__details-wrapper .details-item__data .details-item__data-btn-edit')
   },
   featuresInfoPane: {
     Header: header,
@@ -507,7 +512,7 @@ module.exports = {
   featureVectorsInfoPane: {
     Header: header,
     Updated: updated,
-    Cancel_Button: cancelButton,
+    Cancel_Button: By.css('.table__item .item-header__buttons .btn-normal'),
     Apply_Changes_Button: applyChangesButton,
     Action_Menu: commonActionMenu,
     Cross_Close_Button: crossCloseButton,

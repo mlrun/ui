@@ -28,10 +28,17 @@ import { SORT_PROPS } from 'igz-controls/types'
 
 const TableHead = React.forwardRef(
   ({ content, hideActionsMenu, mainRowItemsCount, selectedItem, sortProps }, ref) => {
-    const getHeaderCellClasses = (headerId, isSortable, tableItemClass, index) =>
+    const getHeaderCellClasses = (
+      headerId,
+      isSortable,
+      tableItemClassName,
+      headerCellClassName,
+      index
+    ) =>
       classNames(
-        'table-header-item',
-        tableItemClass,
+        'table-header__cell',
+        tableItemClassName,
+        headerCellClassName,
         isSortable && 'sortable-header-cell',
         isSortable && sortProps?.selectedColumnName === headerId && 'sortable-header-cell_active',
         !isEmpty(selectedItem) && index >= mainRowItemsCount && 'table-body__cell_hidden'
@@ -39,11 +46,17 @@ const TableHead = React.forwardRef(
 
     return (
       <thead className="table-header">
-        <tr className="table-row" ref={ref}>
+        <tr className="table-row table-header-row" ref={ref}>
           {content.map(({ headerLabel, headerId, isSortable, ...tableItem }, index) => {
             return tableItem.type !== 'hidden' && !tableItem.hidden ? (
               <th
-                className={getHeaderCellClasses(headerId, isSortable, tableItem.class, index)}
+                className={getHeaderCellClasses(
+                  headerId,
+                  isSortable,
+                  tableItem.className,
+                  tableItem.headerCellClassName,
+                  index
+                )}
                 key={`${headerId}`}
                 onClick={isSortable ? () => sortProps.sortTable(headerId) : null}
               >
@@ -58,7 +71,7 @@ const TableHead = React.forwardRef(
               </th>
             ) : null
           })}
-          {!hideActionsMenu && <th className="table-header-item table-cell-icon" />}
+          {!hideActionsMenu && <th className="table-header__cell table-cell-icon" />}
         </tr>
       </thead>
     )

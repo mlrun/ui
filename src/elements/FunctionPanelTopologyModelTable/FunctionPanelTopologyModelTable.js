@@ -33,11 +33,7 @@ import {
 import { ReactComponent as Edit } from 'igz-controls/images/edit.svg'
 import { ReactComponent as Delete } from 'igz-controls/images/delete.svg'
 
-const FunctionPanelTopologyModelTable = ({
-  defaultData,
-  functionsStore,
-  setNewFunctionGraph
-}) => {
+const FunctionPanelTopologyModelTable = ({ defaultData, functionsStore, setNewFunctionGraph }) => {
   const [data, setData] = useState([])
   const [newRoute, setNewRoute] = useState(newRouteInitialState)
   const [showAddNewRouteRow, setShowAddNewRouteRow] = useState(false)
@@ -110,9 +106,7 @@ const FunctionPanelTopologyModelTable = ({
 
       delete generatedRoutes[route.data.name]
 
-      setData(state =>
-        state.filter(stateRoute => stateRoute.data.name !== route.data.name)
-      )
+      setData(state => state.filter(stateRoute => stateRoute.data.name !== route.data.name))
       setNewFunctionGraph({
         ...functionsStore.newFunction.spec.graph,
         routes: generatedRoutes
@@ -177,22 +171,24 @@ const FunctionPanelTopologyModelTable = ({
   }
 
   const generateActionsMenu = useCallback(
-    rowItem => [
-      {
-        label: 'Edit',
-        icon: <Edit />,
-        onClick: route => {
-          setSelectedRoute(route)
-          setValidation(validationInitialState)
+    () => [
+      [
+        {
+          label: 'Edit',
+          icon: <Edit />,
+          onClick: route => {
+            setSelectedRoute(route)
+            setValidation(validationInitialState)
+          }
+        },
+        {
+          label: 'Remove',
+          icon: <Delete />,
+          onClick: selectedItem => {
+            deleteRoute(selectedItem)
+          }
         }
-      },
-      {
-        label: 'Remove',
-        icon: <Delete />,
-        onClick: selectedItem => {
-          deleteRoute(selectedItem)
-        }
-      }
+      ]
     ],
     [deleteRoute]
   )

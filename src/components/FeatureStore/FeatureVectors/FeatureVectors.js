@@ -20,7 +20,6 @@ such restriction.
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useLocation, useNavigate, useParams } from 'react-router-dom'
 import { connect, useDispatch, useSelector } from 'react-redux'
-import axios from 'axios'
 import { cloneDeep, isEmpty } from 'lodash'
 
 import FeatureVectorsView from './FeatureVectorsView'
@@ -31,6 +30,7 @@ import {
   FEATURE_VECTORS_TAB,
   GROUP_BY_NAME,
   GROUP_BY_NONE,
+  REQUEST_CANCELED,
   TAG_FILTER_ALL_ITEMS,
   TAG_FILTER_LATEST
 } from '../../../constants'
@@ -41,16 +41,16 @@ import {
   generatePageData
 } from './featureVectors.util'
 import { DANGER_BUTTON, LABEL_BUTTON } from 'igz-controls/constants'
-import { cancelRequest } from '../../../utils/cancelRequest'
 import { checkTabIsValid, handleApplyDetailsChanges } from '../featureStore.util'
 import { createFeatureVectorsRowData } from '../../../utils/createFeatureStoreContent'
 import { getFeatureVectorIdentifier } from '../../../utils/getUniqueIdentifier'
 import { getFilterTagOptions, setFilters } from '../../../reducers/filtersReducer'
 import { isDetailsTabExists } from '../../../utils/isDetailsTabExists'
-import { parseFeatureVectors } from '../../../utils/parseFeatureVectors'
 import { parseFeatureTemplate } from '../../../utils/parseFeatureTemplate'
+import { parseFeatureVectors } from '../../../utils/parseFeatureVectors'
 import { setFeaturesPanelData } from '../../../reducers/tableReducer'
 import { setNotification } from '../../../reducers/notificationReducer'
+import { showErrorNotification } from '../../../utils/notifications.util'
 import { useGetTagOptions } from '../../../hooks/useGetTagOptions.hook'
 import { useGroupContent } from '../../../hooks/groupContent.hook'
 import { useOpenPanel } from '../../../hooks/openPanel.hook'
@@ -67,12 +67,14 @@ const FeatureVectors = ({
   const [featureVectors, setFeatureVectors] = useState([])
   const [selectedFeatureVector, setSelectedFeatureVector] = useState({})
   const [selectedRowData, setSelectedRowData] = useState({})
+  const [largeRequestErrorMessage, setLargeRequestErrorMessage] = useState('')
   const openPanelByDefault = useOpenPanel()
   const [urlTagOption] = useGetTagOptions(fetchFeatureVectorsTags, featureVectorsFilters)
   const params = useParams()
   const featureStore = useSelector(store => store.featureStore)
   const filtersStore = useSelector(store => store.filtersStore)
   const featureVectorsRef = useRef(null)
+  const abortControllerRef = useRef(new AbortController())
   const navigate = useNavigate()
   const location = useLocation()
   const dispatch = useDispatch()
@@ -86,29 +88,31 @@ const FeatureVectors = ({
 
   const pageData = useMemo(() => generatePageData(selectedFeatureVector), [selectedFeatureVector])
 
-  const detailsFormInitialValues = useMemo(
-    () => {
-        return {
-          features: (selectedFeatureVector.specFeatures ?? []).map( featureData => {
-              return {...parseFeatureTemplate(featureData)}
-          })
-        }
-    },
-    [selectedFeatureVector.specFeatures]
-  )
+  const detailsFormInitialValues = useMemo(() => {
+    return {
+      features: (selectedFeatureVector.specFeatures ?? []).map(featureData => {
+        return { ...parseFeatureTemplate(featureData) }
+      })
+    }
+  }, [selectedFeatureVector.specFeatures])
 
   const fetchData = useCallback(
     filters => {
+      abortControllerRef.current = new AbortController()
+
       const config = {
-        cancelToken: new axios.CancelToken(cancel => {
-          featureVectorsRef.current.cancel = cancel
-        })
+        ui: {
+          controller: abortControllerRef.current,
+          setLargeRequestErrorMessage
+        }
       }
 
       return fetchFeatureVectors(params.projectName, filters, config).then(result => {
-        setFeatureVectors(parseFeatureVectors(result))
+        if (result) {
+          setFeatureVectors(parseFeatureVectors(result))
 
-        return result
+          return result
+        }
       })
     },
     [fetchFeatureVectors, params.projectName]
@@ -149,14 +153,9 @@ const FeatureVectors = ({
               fetchData({ ...filtersStore, tag })
             })
         })
-        .catch(() => {
-          dispatch(
-            setNotification({
-              status: 400,
-              id: Math.random(),
-              retry: () => handleDeleteFeatureVector(featureVector),
-              message: 'Feature vector failed to delete'
-            })
+        .catch(error => {
+          showErrorNotification(dispatch, error, '', 'Feature vector failed to delete', () =>
+            handleDeleteFeatureVector(featureVector)
           )
         })
 
@@ -201,6 +200,9 @@ const FeatureVectors = ({
     dispatch(
       getFilterTagOptions({ fetchTags: fetchFeatureVectorsTags, project: params.projectName })
     )
+    setFeatureVectors([])
+    setSelectedFeatureVector({})
+    setSelectedRowData({})
 
     return fetchData(filters)
   }
@@ -413,7 +415,7 @@ const FeatureVectors = ({
       removeFeatureVectors()
       setSelectedFeatureVector({})
       setSelectedRowData({})
-      cancelRequest(featureVectorsRef, 'cancel')
+      abortControllerRef.current.abort(REQUEST_CANCELED)
       setCreateVectorPopUpIsOpen(false)
     }
   }, [removeFeatureVector, removeFeatureVectors, setCreateVectorPopUpIsOpen, params.projectName])
@@ -430,6 +432,7 @@ const FeatureVectors = ({
       filtersStore={filtersStore}
       handleExpandRow={handleExpandRow}
       handleRefresh={handleRefresh}
+      largeRequestErrorMessage={largeRequestErrorMessage}
       pageData={pageData}
       ref={featureVectorsRef}
       selectedFeatureVector={selectedFeatureVector}

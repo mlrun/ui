@@ -22,6 +22,7 @@ import { configureStore } from '@reduxjs/toolkit'
 import appStore from '../reducers/appReducer'
 import artifactsStore from '../reducers/artifactsReducer'
 import detailsStore from '../reducers/detailsReducer'
+import downloadStore from '../reducers/downloadReducer'
 import featureStore from '../reducers/featureStoreReducer'
 import filtersStore from '../reducers/filtersReducer'
 import functionsStore from '../reducers/functionReducer'
@@ -37,6 +38,7 @@ const toolkitStore = configureStore({
     appStore,
     artifactsStore,
     detailsStore,
+    downloadStore,
     featureStore,
     filtersStore,
     functionsStore,

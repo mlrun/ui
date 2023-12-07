@@ -271,8 +271,10 @@ Feature: Jobs and workflows
         Then type value "kind" to "Table_Labels_Filter_Input" field on "Jobs_Monitor_Tab" wizard
         Then click on "Table_Refresh_Button" element on "Jobs_Monitor_Tab" wizard
         And wait load page
-        Then select "Re-run" option in action menu on "Jobs_Monitor_Tab" wizard in "Jobs_Monitor_Table" table at row with "test" value in "name" column
-        Then click on "Cross_Close_Button" element on "New_JobTemplate_Edit" wizard
+        Then select "Batch re-run" option in action menu on "Jobs_Monitor_Tab" wizard in "Jobs_Monitor_Table" table at row with "test" value in "name" column
+        And wait load page
+        Then "Batch_Re_Run_Header" element on "Batch_Re_Run" should contains "Batch Re-Run" value
+        Then click on "Cross_Close_Button" element on "Batch_Re_Run" wizard
         Then value in "name" column with "text" in "Jobs_Monitor_Table" on "Jobs_Monitor_Tab" wizard should contains "test"
         Then value in "labels" column with "dropdowns" in "Jobs_Monitor_Table" on "Jobs_Monitor_Tab" wizard should contains "kind"
 
@@ -2099,18 +2101,28 @@ Feature: Jobs and workflows
         Then verify "BatchRun_Tab_Selector" on "Batch_Run" wizard should contains "Batch_Run"."Tab_List"
         Then select "Hub" tab in "BatchRun_Tab_Selector" on "Batch_Run" wizard
         And wait load page
+        Then verify "Category_Selector_Dropdown" dropdown element on "Batch_Run" wizard should contains "Batch_Run"."Hub_Filter_Category"
         And click on "Filter_Button_Hub_Tab" element on "Batch_Run" wizard
         Then verify "Title" element visibility in "Filter_Dropdown" on "Batch_Run" wizard
         Then "Title" element in "Filter_Dropdown" on "Batch_Run" should contains "Filter by category" value
         Then verify "Clear_Button" element visibility in "Filter_Dropdown" on "Batch_Run" wizard
+        Then verify "Apply_Button" element visibility in "Filter_Dropdown" on "Batch_Run" wizard
         Then verify "Clear_Button" not input element in "Filter_Dropdown" on "Batch_Run" wizard is disabled
+        Then verify "Apply_Button" not input element in "Filter_Dropdown" on "Batch_Run" wizard is disabled
         Then select "Other" option in "Category_Selector_Dropdown" filter dropdown on "Batch_Run" wizard
         Then select "Data Preparation" option in "Category_Selector_Dropdown" filter dropdown on "Batch_Run" wizard
         And wait load page
         Then verify "Clear_Button" not input element in "Filter_Dropdown" on "Batch_Run" wizard is enabled
+        Then verify "Apply_Button" not input element in "Filter_Dropdown" on "Batch_Run" wizard is enabled
         When click on "Clear_Button" element in "Filter_Dropdown" on "Batch_Run" wizard
         And click on "Filter_Button_Hub_Tab" element on "Batch_Run" wizard
         Then verify "Clear_Button" not input element in "Filter_Dropdown" on "Batch_Run" wizard is disabled
+        Then verify "Apply_Button" not input element in "Filter_Dropdown" on "Batch_Run" wizard is disabled
+        And click on "Batch_Run_Header" element on "Batch_Run" wizard
+        Then select "Other" option in "Category_Selector_Dropdown" filter dropdown on "Batch_Run" wizard
+        When click on "Apply_Button" element in "Filter_Dropdown" on "Batch_Run" wizard
+        And wait load page
+        Then value in "labels" column with "attribute" in "Functions_Table" on "Batch_Run" wizard should contains "Other"
 
     Scenario: MLJW042 - Check all mandatory components on Batch Run wizard - Run Details without Method
         Given open url

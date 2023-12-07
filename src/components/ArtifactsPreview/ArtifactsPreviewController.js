@@ -32,7 +32,7 @@ import { ReactComponent as Popout } from 'igz-controls/images/popout.svg'
 
 import './artifactsPreviewController.scss'
 
-const ArtifactsPreviewController = ({ artifactsIndexes, content, index }) => {
+const ArtifactsPreviewController = ({ artifactsIndexes, artifact, index, withoutPopout }) => {
   const [noData, setNoData] = useState(false)
   const [preview, setPreview] = useState({})
   const params = useParams()
@@ -47,23 +47,15 @@ const ArtifactsPreviewController = ({ artifactsIndexes, content, index }) => {
 
   useEffect(() => {
     if (artifactsIndexes.length > 0 && !preview[index] && artifactsIndexes.includes(index)) {
-      getArtifactPreview(
-        params.projectName,
-        content[index],
-        noData,
-        setNoData,
-        setPreview,
-        true,
-        index
-      )
+      getArtifactPreview(params.projectName, artifact, noData, setNoData, setPreview, true, index)
     }
-  }, [artifactsIndexes, setPreview, content, noData, params.projectName, preview, index])
+  }, [artifactsIndexes, setPreview, artifact, noData, params.projectName, preview, index])
 
   const showPreview = () => {
     dispatch(
       showArtifactsPreview({
         isPreview: true,
-        selectedItem: content[index]
+        selectedItem: artifact
       })
     )
   }
@@ -72,12 +64,14 @@ const ArtifactsPreviewController = ({ artifactsIndexes, content, index }) => {
     <>
       {artifactsIndexes.includes(index) && (
         <div className="artifacts__preview">
-          <Tooltip
-            template={<TextTooltipTemplate text="Artifacts Preview" />}
-            className="icon-popout"
-          >
-            <Popout onClick={showPreview} />
-          </Tooltip>
+          {!withoutPopout && (
+            <Tooltip
+              template={<TextTooltipTemplate text="Artifacts Preview" />}
+              className="icon-popout"
+            >
+              <Popout onClick={showPreview} />
+            </Tooltip>
+          )}
           <ArtifactsPreview noData={noData} preview={preview[index] || []} />
         </div>
       )}
@@ -85,10 +79,15 @@ const ArtifactsPreviewController = ({ artifactsIndexes, content, index }) => {
   )
 }
 
+ArtifactsPreviewController.defaultProps = {
+  withoutPopout: false
+}
+
 ArtifactsPreviewController.propTypes = {
   artifactsIndexes: PropTypes.array.isRequired,
-  content: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
-  index: PropTypes.number.isRequired
+  artifact: PropTypes.shape({}).isRequired,
+  index: PropTypes.number.isRequired,
+  withoutPopout: PropTypes.bool
 }
 
 export default ArtifactsPreviewController

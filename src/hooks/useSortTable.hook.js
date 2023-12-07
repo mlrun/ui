@@ -45,12 +45,13 @@ export const useSortTable = ({ headers, content, sortConfig = {} }) => {
 
   const getValueByType = useCallback(
     columnIndex => rowData => {
+      const rowDataContent = rowData.content ? rowData.content : rowData
+
       if (
-        rowData.content &&
-        rowData.content[columnIndex] instanceof Object &&
-        Object.keys(rowData.content[columnIndex]).length
+        rowDataContent[columnIndex] instanceof Object &&
+        Object.keys(rowDataContent[columnIndex]).length
       ) {
-        let valueToTest = rowData.content[columnIndex].value
+        let valueToTest = rowDataContent[columnIndex].value
 
         if (!isEmpty(valueToTest)) {
           if (valueToTest instanceof Array && valueToTest.length > 0) {

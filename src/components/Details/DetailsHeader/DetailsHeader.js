@@ -26,18 +26,9 @@ import { useSelector } from 'react-redux'
 import { Button, Tooltip, TextTooltipTemplate, RoundedIcon } from 'igz-controls/components'
 import LoadButton from '../../../common/LoadButton/LoadButton'
 import Select from '../../../common/Select/Select'
-import Download from '../../../common/Download/Download'
 import ActionsMenu from '../../../common/ActionsMenu/ActionsMenu'
 
-import {
-  DATASETS_PAGE,
-  DETAILS_ARTIFACTS_TAB,
-  FILES_PAGE,
-  FULL_VIEW_MODE,
-  JOBS_PAGE,
-  MODEL_ENDPOINTS_TAB,
-  MODELS_PAGE
-} from '../../../constants'
+import { DETAILS_ARTIFACTS_TAB, FULL_VIEW_MODE, JOBS_PAGE } from '../../../constants'
 import { formatDatetime } from '../../../utils'
 import { LABEL_BUTTON } from 'igz-controls/constants'
 import { ACTIONS_MENU } from '../../../types'
@@ -106,7 +97,7 @@ const DetailsHeader = ({
               }
               onClick={handleBackClick}
             >
-              <RoundedIcon id="refresh" tooltipText="Go to list">
+              <RoundedIcon id="go-back" tooltipText="Go to list">
                 <Back />
               </RoundedIcon>
             </Link>
@@ -212,15 +203,6 @@ const DetailsHeader = ({
             selectedId={detailsStore.iteration}
           />
         )}
-        {[FILES_PAGE, DATASETS_PAGE, MODELS_PAGE].includes(pageData.page) &&
-          pageData.details.type !== MODEL_ENDPOINTS_TAB && (
-            <Tooltip template={<TextTooltipTemplate text="Download" />}>
-              <Download
-                path={`${selectedItem.target_path}${selectedItem.model_file || ''}`}
-                user={selectedItem.producer?.owner}
-              />
-            </Tooltip>
-          )}
         {actionButton && !actionButton.hidden && (
           <Button
             disabled={actionButton.disabled}
@@ -244,6 +226,7 @@ const DetailsHeader = ({
                   onClick={() => {
                     navigate(`${location.pathname}${location.search ? '&' : '?'}view=full`)
                   }}
+                  id="full-view"
                   tooltipText="Full view"
                 >
                   <EnlargeIcon />
@@ -254,6 +237,7 @@ const DetailsHeader = ({
                   onClick={() => {
                     navigate(`${location.pathname.replace(/(\?|&)view=full(&|$)/, '$1')}`)
                   }}
+                  id="table-view"
                   tooltipText="Table view"
                 >
                   <MinimizeIcon />
@@ -274,7 +258,7 @@ const DetailsHeader = ({
               }
               onClick={handleCancelClick}
             >
-              <RoundedIcon tooltipText="Close">
+              <RoundedIcon tooltipText="Close" id="details-close">
                 <Close />
               </RoundedIcon>
             </Link>

@@ -17,4 +17,34 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
+import { createSlice } from '@reduxjs/toolkit'
 
+const initialState = {
+  downloadList: [],
+  showDownloadsList: false
+}
+
+const downloadSlice = createSlice({
+  name: 'download',
+  initialState,
+  reducers: {
+    setDownloadItem(state, { payload }) {
+      if (payload.error) {
+        /* eslint-disable-next-line no-console */
+        console.error(payload.error)
+      }
+
+      state.downloadList.push(payload)
+    },
+    setShowDownloadsList(state, { payload }) {
+      state.showDownloadsList = payload
+    },
+    removeDownloadItem(state, { payload }) {
+      state.downloadList = state.downloadList.filter(item => item.id !== payload)
+    }
+  }
+})
+
+export const { setDownloadItem, setShowDownloadsList, removeDownloadItem } = downloadSlice.actions
+
+export default downloadSlice.reducer

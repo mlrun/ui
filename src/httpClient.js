@@ -20,33 +20,146 @@ such restriction.
 import axios from 'axios'
 import qs from 'qs'
 
+import { ConfirmDialog } from 'igz-controls/components'
+import { CANCEL_REQUEST_TIMEOUT, LARGE_REQUEST_CANCELED } from './constants'
+import { openPopUp } from 'igz-controls/utils/common.util'
+
+const headers = {
+  'Cache-Control': 'no-cache'
+}
+
+// serialize a param with an array value as a repeated param, for example:
+// { label: ['host', 'owner=admin'] } => 'label=host&label=owner%3Dadmin'
+const paramsSerializer = params => qs.stringify(params, { arrayFormat: 'repeat' })
+
 export const mainBaseUrl = `${process.env.PUBLIC_URL}/api/v1`
-export const artifactsBaseUrl = `${process.env.PUBLIC_URL}/api/v2`
+export const mainBaseUrlV2 = `${process.env.PUBLIC_URL}/api/v2`
 
 export const mainHttpClient = axios.create({
   baseURL: mainBaseUrl,
-
-  // serialize a param with an array value as a repeated param, for example:
-  // { label: ['host', 'owner=admin'] } => 'label=host&label=owner%3Dadmin'
-  paramsSerializer: params => qs.stringify(params, { arrayFormat: 'repeat' })
+  headers,
+  paramsSerializer
 })
 
-export const artifactsHttpClient = axios.create({
-  baseURL: artifactsBaseUrl,
-
-  // serialize a param with an array value as a repeated param, for example:
-  // { label: ['host', 'owner=admin'] } => 'label=host&label=owner%3Dadmin'
-  paramsSerializer: params => qs.stringify(params, { arrayFormat: 'repeat' })
+export const mainHttpClientV2 = axios.create({
+  baseURL: mainBaseUrlV2,
+  headers,
+  paramsSerializer
 })
 
 export const functionTemplatesHttpClient = axios.create({
-  baseURL: `${process.env.PUBLIC_URL}/function-catalog`
+  baseURL: `${process.env.PUBLIC_URL}/function-catalog`,
+  headers
 })
 
 export const nuclioHttpClient = axios.create({
-  baseURL: `${process.env.PUBLIC_URL}/nuclio/api`
+  baseURL: `${process.env.PUBLIC_URL}/nuclio/api`,
+  headers
 })
 
 export const iguazioHttpClient = axios.create({
-  baseURL: process.env.NODE_ENV === 'production' ? '/api' : '/iguazio/api'
+  baseURL: process.env.NODE_ENV === 'production' ? '/api' : '/iguazio/api',
+  headers
 })
+
+const getAbortSignal = (controller, abortCallback, timeoutMs) => {
+  let timeoutId = null
+  const newController = new AbortController()
+  const abortController = controller || newController
+
+  if (timeoutMs) {
+    timeoutId = setTimeout(() => abortController.abort(LARGE_REQUEST_CANCELED), timeoutMs)
+  }
+
+  abortController.signal.onabort = event => {
+    if (timeoutId) {
+      clearTimeout(timeoutId)
+    }
+
+    if (abortCallback) {
+      abortCallback(event)
+    }
+  }
+
+  return [abortController.signal, timeoutId]
+}
+
+let requestId = 1
+let requestTimeouts = {}
+let largeResponsePopUpIsOpen = false
+
+// Request interceptor
+mainHttpClient.interceptors.request.use(
+  config => {
+    if (config?.ui?.setLargeRequestErrorMessage) {
+      const [signal, timeoutId] = getAbortSignal(
+        config.ui?.controller,
+        abortEvent => {
+          if (abortEvent.target.reason === LARGE_REQUEST_CANCELED) {
+            showLargeResponsePopUp(config.ui.setLargeRequestErrorMessage)
+          }
+        },
+        CANCEL_REQUEST_TIMEOUT
+      )
+
+      config.signal = signal
+
+      requestTimeouts[requestId] = timeoutId
+      config.ui.requestId = requestId
+      requestId++
+    }
+
+    return config
+  },
+  error => Promise.reject(error)
+)
+
+// Response interceptor
+mainHttpClient.interceptors.response.use(
+  response => {
+    if (response.config?.ui?.requestId) {
+      const isLargeResponse =
+        response.data?.total_size >= 0
+          ? response.data.total_size > 1500
+          : Object.values(response.data)[0].length > 1500
+
+      clearTimeout(requestTimeouts[response.config.ui.requestId])
+      delete requestTimeouts[response.config.ui.requestId]
+
+      if (isLargeResponse) {
+        showLargeResponsePopUp(response.config.ui.setLargeRequestErrorMessage)
+
+        throw new Error(LARGE_REQUEST_CANCELED)
+      } else {
+        response.config.ui.setLargeRequestErrorMessage('')
+      }
+    }
+
+    return response
+  },
+  error => {
+    if (error.config?.ui?.requestId) {
+      clearTimeout(requestTimeouts[error.config.ui.requestId])
+      delete requestTimeouts[error.config.ui.requestId]
+    }
+
+    return Promise.reject(error)
+  }
+)
+
+export const showLargeResponsePopUp = setLargeRequestErrorMessage => {
+  if (!largeResponsePopUpIsOpen) {
+    const errorMessage =
+      'The query result is too large to display. Add a filter (or narrow it) to retrieve fewer results.'
+
+    setLargeRequestErrorMessage(errorMessage)
+    largeResponsePopUpIsOpen = true
+
+    openPopUp(ConfirmDialog, {
+      message: errorMessage,
+      closePopUp: () => {
+        largeResponsePopUpIsOpen = false
+      }
+    })
+  }
+}

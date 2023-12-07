@@ -522,6 +522,9 @@ Feature: MLRun Project Home Page
         Given open url
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
+        And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
+        Then click on "Quick_actions_Button" element on "commonPagesHeader" wizard
+        And wait load page
         Then verify "Deployment_Actions_Table" element visibility on "Demo_Project" wizard
         Then verify values in "Deployment_Actions_Table" table on "Demo_Project" wizard
             |           name            |
@@ -607,9 +610,31 @@ Feature: MLRun Project Home Page
         Then verify "Access_Key_Checkbox" element visibility on "Batch_Inference" wizard
         Then uncheck "Access_Key_Checkbox" element on "Batch_Inference" wizard
         Then verify "Access_Key_Input" element visibility on "Batch_Inference" wizard
-        Then type value "  " to "Access_Key_Input" field on "Batch_Inference" wizard
+        Then type value "  @" to "Access_Key_Input" field on "Batch_Inference" wizard
         Then verify "Access_Key_Input" on "Batch_Inference" wizard should display warning "Input_Hint"."Input_Field_Invalid"
         Then type value "" to "Access_Key_Input" field on "Batch_Inference" wizard
         Then verify "Access_Key_Input" on "Batch_Inference" wizard should display warning "Input_Hint"."Input_Field_Require"
-
-
+    
+    Scenario: MLPH023 - Check components - batch inference_v2, preview text, model path type store
+        Given open url
+        And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
+        And wait load page
+        And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
+        Then click on "Quick_actions_Button" element on "commonPagesHeader" wizard
+        And wait load page
+        Then verify "Deployment_Actions_Table" element visibility on "Demo_Project" wizard
+        Then verify values in "Deployment_Actions_Table" table on "Demo_Project" wizard
+            |           name            |
+            | Create real-time function |
+            |      Batch inference      |
+        When click on "name" in "Deployment_Actions_Table" table on "Demo_Project" wizard with offset "false"
+            |      name       |
+            | Batch inference |
+        And wait load page
+        Then "Function_Title" element on "Batch_Inference" should contains "batch-inference-v2" value
+        Then "Preview_text" element on "Batch_Inference" should contains "Tech Preview" value
+        And click on "Next_Button" element on "Batch_Inference" wizard
+        Then "Form_Header_Batch_Run" element on "Batch_Inference" should contains "Data Inputs" value
+        And hover "Edit_Button" component on "Batch_Inference" wizard
+        And click on "Edit_Button" element on "Batch_Inference" wizard
+        Then verify "Data_Inputs_Path_Dropdown" dropdown element on "Batch_Inference" wizard should contains "Batch_Inference"."Model_Path_Type_Store"

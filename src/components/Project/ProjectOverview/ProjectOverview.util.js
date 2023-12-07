@@ -241,7 +241,8 @@ export const getInitialCards = (params, navigate, isDemoMode) => {
           }),
           label: 'Create batch function',
           tooltip:
-            'Define the code and other properties to run later in batch. Batch runs are typically used for processes such as data preparation and model training.'
+            'Define the code and other properties to run later in batch. Batch runs are typically used for processes such as data preparation and model training.',
+          hidden: !isDemoMode
         },
         {
           id: 'createnBatchRun',
@@ -317,7 +318,7 @@ export const getInitialCards = (params, navigate, isDemoMode) => {
               component: JobWizard,
               props: {
                 params,
-                isTrainModel: true,
+                isTrain: true,
                 wizardTitle: 'Train model',
                 isOverview: true
               },
@@ -326,8 +327,7 @@ export const getInitialCards = (params, navigate, isDemoMode) => {
           },
           label: 'Train model',
           tooltip:
-            'Train a new model based on an input dataset. You can also define hyperparameters to execute and compare multiple models.',
-          hidden: !isDemoMode
+            'Train a new model based on an input dataset. You can also define hyperparameters to execute and compare multiple models.'
         },
         {
           id: 'createWorkflow',

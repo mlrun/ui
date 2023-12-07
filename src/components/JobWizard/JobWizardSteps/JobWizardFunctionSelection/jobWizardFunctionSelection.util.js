@@ -19,8 +19,15 @@ such restriction.
 */
 // import { set } from 'lodash'
 
+import { FUNCTION_SELECTION_STEP } from '../../../../constants'
+
 export const FUNCTIONS_SELECTION_FUNCTIONS_TAB = 'functions'
 export const FUNCTIONS_SELECTION_HUB_TAB = 'hub'
+
+export const trainModelAllowedHubFunctions = {
+  'auto-trainer': ['train'],
+  'azureml-utils': ['submit_training_job', 'train']
+}
 
 export const functionsSelectionTabs = [
   {
@@ -48,7 +55,7 @@ export const generateFunctionTemplateCardData = templateData => {
     subHeader: '',
     description: templateData.metadata.description,
     sideTag: '',
-    labelsName: `functionSelection.templatesLabels.${templateData.metadata.name}`
+    labelsName: `${FUNCTION_SELECTION_STEP}.templatesLabels.${templateData.metadata.name}`
   }
 
   // todo: add links when the backend is ready
@@ -60,4 +67,17 @@ export const generateFunctionTemplateCardData = templateData => {
   // }
 
   return functionTemplateCardData
+}
+
+export const filterTrainFunctionHandlers = result => {
+  const allowedHandlers = trainModelAllowedHubFunctions[result.name]
+  const { entry_points } = result.functions[0].spec
+
+  if (entry_points) {
+    result.functions[0].spec.entry_points = Object.fromEntries(
+      Object.entries(entry_points).filter(([key]) => allowedHandlers.includes(key))
+    )
+  }
+
+  return result
 }

@@ -19,14 +19,14 @@ such restriction.
 */
 import React, { useMemo } from 'react'
 import PropTypes from 'prop-types'
-import { isEmpty, isObjectLike } from 'lodash'
+import { isEmpty } from 'lodash'
 import classNames from 'classnames'
 
 import NoData from '../../common/NoData/NoData'
 import { Tip, Tooltip, TextTooltipTemplate } from 'igz-controls/components'
 
 import { roundFloats } from '../../utils/roundFloats'
-import { resultsTableContent, resultsTableHeaders } from '../../utils/resultsTable'
+import { generateResultsContent } from '../../utils/resultsTable'
 import { useSortTable } from '../../hooks/useSortTable.hook'
 import { ALLOW_SORT_BY, DEFAULT_SORT_BY, EXCLUDE_SORT_BY } from 'igz-controls/types'
 
@@ -35,91 +35,74 @@ import { ReactComponent as BestIteration } from 'igz-controls/images/best-iterat
 import './detailsResults.scss'
 
 const DetailsResults = ({ allowSortBy, defaultSortBy, defaultDirection, excludeSortBy, job }) => {
-  const tableHeaders = useMemo(() => {
-    return resultsTableHeaders(job)
-  }, [job])
-
-  const tableContent = useMemo(() => {
-    return resultsTableContent(job)
+  const resultsContent = useMemo(() => {
+    return generateResultsContent(job)
   }, [job])
 
   const { sortTable, selectedColumnName, getSortingIcon, sortedTableContent, sortedTableHeaders } =
     useSortTable({
-      headers: tableHeaders,
-      content: tableContent,
+      headers: resultsContent?.[0],
+      content: resultsContent,
       sortConfig: { allowSortBy, excludeSortBy, defaultSortBy, defaultDirection }
     })
 
   const getHeaderCellClasses = (headerId, isSortable) =>
     classNames(
-      'table-header-item',
+      'table-header__cell',
       isSortable && 'sortable-header-cell',
       isSortable && selectedColumnName === headerId && 'sortable-header-cell_active'
     )
+
+  const getHeaderTemplate = () => {
+    return (
+      <thead className="table-header">
+        <tr className="table-row table-header-row">
+          {sortedTableHeaders.map(({ headerLabel, headerId, isSortable, ...tableItem }) => {
+            return (
+              <th
+                className={getHeaderCellClasses(headerId, isSortable)}
+                key={`${headerId}`}
+                onClick={isSortable ? () => sortTable(headerId) : null}
+              >
+                <Tooltip template={<TextTooltipTemplate text={headerLabel} />}>
+                  <label className="sortable-header-label">
+                    <span className="data-ellipsis">{headerLabel}</span>
+                    {isSortable && getSortingIcon(headerId)}
+                  </label>
+                </Tooltip>
+                {tableItem.tip && <Tip text={tableItem.tip} />}
+              </th>
+            )
+          })}
+        </tr>
+      </thead>
+    )
+  }
 
   return (!job.iterationStats?.length && job.error) ||
     (!job.iterationStats?.length && isEmpty(job.results) && !job.iterations?.length) ? (
     <NoData />
   ) : (
     <div className="table__item-results">
-      <table className="table results-table" cellPadding="0" cellSpacing="0">
+      <table className="table">
         {job.iterationStats && job.iterationStats.length !== 0 ? (
           <>
-            <thead className="table-header">
-              <tr className="table-row">
-                {sortedTableHeaders.map(({ headerLabel, headerId, isSortable, ...tableItem }) => {
-                  return (
-                    <th
-                      className={getHeaderCellClasses(headerId, isSortable)}
-                      key={`${headerId}`}
-                      onClick={isSortable ? () => sortTable(headerId) : null}
-                    >
-                      <Tooltip template={<TextTooltipTemplate text={headerLabel} />}>
-                        <label className="sortable-header-label">
-                          <span className="data-ellipsis">{headerLabel}</span>
-                          {isSortable && getSortingIcon(headerId)}
-                        </label>
-                      </Tooltip>
-                      {tableItem.tip && <Tip text={tableItem.tip} />}
-                    </th>
-                  )
-                })}
-              </tr>
-            </thead>
+            {getHeaderTemplate()}
             <tbody className="table-body">
-              {sortedTableContent.map((tableContentItem, index) => (
-                <tr className="table-row parent-row" key={index}>
-                  {tableContentItem.map((contentItemValue, idx) => {
+              {sortedTableContent.map((rowData, rowIndex) => (
+                <tr className="table-row parent-row" key={rowIndex}>
+                  {rowData.map((cellData, cellIndex) => {
                     if (
-                      typeof value === 'string' &&
-                      contentItemValue.match(/completed|running|error/gi)
-                    ) {
-                      return (
-                        <td className="table-body-cell" key={`${contentItemValue}-${idx}`}>
-                          <Tooltip
-                            template={
-                              <TextTooltipTemplate
-                                text={`${contentItemValue[0].toUpperCase()}${contentItemValue.slice(
-                                  1
-                                )}`}
-                              />
-                            }
-                          >
-                            <i className={contentItemValue} />
-                          </Tooltip>
-                        </td>
-                      )
-                    } else if (
                       job.results &&
-                      contentItemValue === job.results.best_iteration &&
-                      idx === 0
+                      cellData.value === job.results.best_iteration &&
+                      cellIndex === 0
                     ) {
                       return (
                         <td
-                          key={`${contentItemValue}-${idx}`}
-                          className="results-table__medal table-body-cell"
+                          key={`${cellData.value}-${cellIndex}`}
+                          className="results-table__medal table-body__cell"
                         >
-                          <span>{contentItemValue}</span>
+                          <span>{cellData.value}</span>
                           <Tooltip
                             template={<TextTooltipTemplate text={'Best iteration'} />}
                             className="best-iteration"
@@ -130,12 +113,12 @@ const DetailsResults = ({ allowSortBy, defaultSortBy, defaultDirection, excludeS
                       )
                     } else {
                       return (
-                        <td className="table-body-cell" key={`${contentItemValue}-${idx}`}>
+                        <td className="table-body__cell" key={`${cellData.value}-${cellIndex}`}>
                           <Tooltip
                             className="data-ellipsis"
-                            template={<TextTooltipTemplate text={contentItemValue.toString()} />}
+                            template={<TextTooltipTemplate text={cellData.value.toString()} />}
                           >
-                            {roundFloats(contentItemValue, 4)}
+                            {roundFloats(cellData.value, 4)}
                           </Tooltip>
                         </td>
                       )
@@ -146,34 +129,25 @@ const DetailsResults = ({ allowSortBy, defaultSortBy, defaultDirection, excludeS
             </tbody>
           </>
         ) : job.iterations?.length === 0 && Object.keys(job.results ?? {}).length !== 0 ? (
-          <tbody className="table-body">
-            {Object.keys(job.results).map(key => {
-              const resultValue = isObjectLike(job.results[key])
-                ? JSON.stringify(job.results[key])
-                : job.results[key]
-
-              return (
-                <tr key={key} className="table-row">
-                  <td className="table-body-cell table-cell-wide">
-                    <Tooltip
-                      className="data-ellipsis"
-                      template={<TextTooltipTemplate text={key} />}
-                    >
-                      {key}
-                    </Tooltip>
-                  </td>
-                  <td className="table-body-cell table-cell-full">
-                    <Tooltip
-                      className="data-ellipsis"
-                      template={<TextTooltipTemplate text={resultValue} />}
-                    >
-                      {String(resultValue ?? '')}
-                    </Tooltip>
-                  </td>
+          <>
+            {getHeaderTemplate()}
+            <tbody className="table-body">
+              {sortedTableContent.map((rowData, rowIndex) => (
+                <tr key={rowIndex} className="table-row">
+                  {rowData.map((cellData, cellIndex) => (
+                    <td key={cellIndex} className="table-body__cell">
+                      <Tooltip
+                        className="data-ellipsis"
+                        template={<TextTooltipTemplate text={cellIndex.value} />}
+                      >
+                        {cellData.value}
+                      </Tooltip>
+                    </td>
+                  ))}
                 </tr>
-              )
-            })}
-          </tbody>
+              ))}
+            </tbody>
+          </>
         ) : null}
       </table>
     </div>

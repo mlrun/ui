@@ -89,7 +89,7 @@ export const generateActionsMenu = (
   handleConfirmAbortJob,
   toggleConvertedYaml,
   selectedJob,
-  handleDeleteJob
+  handleConfirmDeleteJob
 ) => {
   return job?.uid
     ? [
@@ -104,7 +104,7 @@ export const generateActionsMenu = (
             label: 'Delete',
             icon: <Delete />,
             className: 'danger',
-            onClick: handleDeleteJob
+            onClick: handleConfirmDeleteJob
           },
           {
             label: 'Monitoring',

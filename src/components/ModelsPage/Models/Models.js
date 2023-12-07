@@ -25,12 +25,14 @@ import { useLocation, useNavigate, useParams } from 'react-router-dom'
 import AddArtifactTagPopUp from '../../../elements/AddArtifactTagPopUp/AddArtifactTagPopUp'
 import DeployModelPopUp from '../../../elements/DeployModelPopUp/DeployModelPopUp'
 import ModelsView from './ModelsView'
+import RegisterModelModal from '../../../elements/RegisterModelModal/RegisterModelModal'
+import JobWizard from '../../JobWizard/JobWizard'
 
 import {
   fetchModel,
+  fetchModels,
   removeModel,
-  removeModels,
-  showArtifactsPreview
+  removeModels
 } from '../../../reducers/artifactsReducer'
 import {
   GROUP_BY_NAME,
@@ -39,19 +41,20 @@ import {
   TAG_FILTER_ALL_ITEMS,
   FILTER_MENU_MODAL,
   GROUP_BY_NONE,
-  MODELS_FILTERS
+  MODELS_FILTERS,
+  REQUEST_CANCELED
 } from '../../../constants'
 import {
   checkForSelectedModel,
   fetchModelsRowData,
   filters,
+  generateActionsMenu,
   generatePageData,
   getFeatureVectorData,
   handleApplyDetailsChanges
 } from './models.util'
 import detailsActions from '../../../actions/details'
-import { cancelRequest } from '../../../utils/cancelRequest'
-import { createModelsRowData, getIsTargetPathValid } from '../../../utils/createArtifactsContent'
+import { createModelsRowData } from '../../../utils/createArtifactsContent'
 import { getArtifactIdentifier } from '../../../utils/getUniqueIdentifier'
 import { isDetailsTabExists } from '../../../utils/isDetailsTabExists'
 import { openPopUp } from 'igz-controls/utils/common.util'
@@ -63,16 +66,13 @@ import { useModelsPage } from '../ModelsPage.context'
 import { useSortTable } from '../../../hooks/useSortTable.hook'
 import { useGetTagOptions } from '../../../hooks/useGetTagOptions.hook'
 import { getViewMode } from '../../../utils/helper'
-import { generateUri } from '../../../utils/resources'
-import { copyToClipboard } from '../../../utils/copyToClipboard'
-
-import { ReactComponent as DeployIcon } from 'igz-controls/images/deploy-icon.svg'
-import { ReactComponent as TagIcon } from 'igz-controls/images/tag-icon.svg'
-import { ReactComponent as YamlIcon } from 'igz-controls/images/yaml.svg'
-import { ReactComponent as ArtifactView } from 'igz-controls/images/eye-icon.svg'
-import { ReactComponent as Copy } from 'igz-controls/images/copy-to-clipboard-icon.svg'
+import { useMode } from '../../../hooks/mode.hook'
+import { setArtifactTags } from '../../../utils/artifacts.util'
 
 const Models = ({ fetchModelFeatureVector }) => {
+  const [models, setModels] = useState([])
+  const [allModels, setAllModels] = useState([])
+  const [largeRequestErrorMessage, setLargeRequestErrorMessage] = useState('')
   const [selectedModel, setSelectedModel] = useState({})
   const [selectedRowData, setSelectedRowData] = useState({})
   const [urlTagOption] = useGetTagOptions(null, filters, null, MODELS_FILTERS)
@@ -84,18 +84,19 @@ const Models = ({ fetchModelFeatureVector }) => {
   const location = useLocation()
   const dispatch = useDispatch()
   const modelsRef = useRef(null)
+  const abortControllerRef = useRef(new AbortController())
   const viewMode = getViewMode(window.location.search)
   const pageData = useMemo(
     () => generatePageData(selectedModel, viewMode),
     [selectedModel, viewMode]
   )
-  const { fetchData, models, allModels, setModels, setAllModels, toggleConvertedYaml } =
-    useModelsPage()
+  const { toggleConvertedYaml } = useModelsPage()
   const frontendSpec = useSelector(store => store.appStore.frontendSpec)
   const modelsFilters = useMemo(
     () => filtersStore[FILTER_MENU_MODAL][MODELS_FILTERS].values,
     [filtersStore]
   )
+  const { isDemoMode } = useMode()
 
   const detailsFormInitialValues = useMemo(
     () => ({
@@ -103,6 +104,34 @@ const Models = ({ fetchModelFeatureVector }) => {
       labels: parseChipsData(selectedModel.labels ?? {})
     }),
     [selectedModel.labels, selectedModel.tag]
+  )
+
+  const fetchData = useCallback(
+    async filters => {
+      abortControllerRef.current = new AbortController()
+
+      return dispatch(
+        fetchModels({
+          project: params.projectName,
+          filters,
+          config: {
+            ui: {
+              controller: abortControllerRef.current,
+              setLargeRequestErrorMessage
+            }
+          }
+        })
+      )
+        .unwrap()
+        .then(modelsResponse => {
+          if (modelsResponse) {
+            setArtifactTags(modelsResponse, setModels, setAllModels, filters, dispatch, MODELS_TAB)
+
+            return modelsResponse
+          }
+        })
+    },
+    [dispatch, setModels, params.projectName]
   )
 
   const handleDeployModel = useCallback(model => {
@@ -139,50 +168,28 @@ const Models = ({ fetchModelFeatureVector }) => {
   )
 
   const actionsMenu = useMemo(
-    () => model => {
-      const isTargetPathValid = getIsTargetPathValid(model ?? {}, frontendSpec)
-
-      return [
-        [
-          {
-            label: 'View YAML',
-            icon: <YamlIcon />,
-            onClick: toggleConvertedYaml
-          },
-          {
-            label: 'Copy URI',
-            icon: <Copy />,
-            onClick: model => copyToClipboard(generateUri(model, MODELS_TAB), dispatch)
-          },
-          {
-            label: 'Add a tag',
-            icon: <TagIcon />,
-            onClick: handleAddTag
-          }
-        ],
-        [
-          {
-            disabled: !isTargetPathValid,
-            label: 'Preview',
-            icon: <ArtifactView />,
-            onClick: model => {
-              dispatch(
-                showArtifactsPreview({
-                  isPreview: true,
-                  selectedItem: model
-                })
-              )
-            }
-          },
-          {
-            label: 'Deploy',
-            icon: <DeployIcon />,
-            onClick: handleDeployModel
-          }
-        ]
-      ]
-    },
-    [dispatch, frontendSpec, handleAddTag, handleDeployModel, toggleConvertedYaml]
+    () => model =>
+      generateActionsMenu(
+        model,
+        frontendSpec,
+        dispatch,
+        toggleConvertedYaml,
+        handleAddTag,
+        params.projectName,
+        handleRefresh,
+        modelsFilters,
+        handleDeployModel
+      ),
+    [
+      dispatch,
+      frontendSpec,
+      handleAddTag,
+      handleDeployModel,
+      handleRefresh,
+      modelsFilters,
+      params.projectName,
+      toggleConvertedYaml
+    ]
   )
 
   const handleRemoveRowData = useCallback(
@@ -236,11 +243,14 @@ const Models = ({ fetchModelFeatureVector }) => {
         )
   }, [filtersStore.groupBy, frontendSpec, latestItems, models, params.projectName])
 
-  const { sortTable, selectedColumnName, getSortingIcon, sortedTableContent } = useSortTable({
-    headers: tableContent[0]?.content,
-    content: tableContent,
-    sortConfig: { defaultSortBy: 'updated', defaultDirection: 'desc' }
-  })
+  const tableHeaders = useMemo(() => tableContent[0]?.content ?? [], [tableContent])
+
+  const { sortTable, selectedColumnName, getSortingIcon, sortedTableContent, sortedTableHeaders } =
+    useSortTable({
+      headers: tableHeaders,
+      content: tableContent,
+      sortConfig: { excludeSortBy: 'labels', defaultSortBy: 'updated', defaultDirection: 'desc' }
+    })
 
   const applyDetailsChanges = useCallback(
     changes => {
@@ -290,7 +300,7 @@ const Models = ({ fetchModelFeatureVector }) => {
       setAllModels([])
       dispatch(removeModels())
       setSelectedModel({})
-      cancelRequest(modelsRef, 'cancel')
+      abortControllerRef.current.abort(REQUEST_CANCELED)
     }
   }, [dispatch, setModels, setAllModels])
 
@@ -338,6 +348,18 @@ const Models = ({ fetchModelFeatureVector }) => {
     selectedModel.feature_vector
   ])
 
+  const handleRegisterModel = useCallback(() => {
+    openPopUp(RegisterModelModal, { projectName: params.projectName, refresh: handleRefresh })
+  }, [handleRefresh, params.projectName])
+
+  const handleTrainModel = () => {
+    openPopUp(JobWizard, {
+      params,
+      isTrain: true,
+      wizardTitle: 'Train model'
+    })
+  }
+
   return (
     <ModelsView
       actionsMenu={actionsMenu}
@@ -348,6 +370,10 @@ const Models = ({ fetchModelFeatureVector }) => {
       filtersStore={filtersStore}
       handleExpandRow={handleExpandRow}
       handleRefresh={handleRefresh}
+      handleRegisterModel={handleRegisterModel}
+      handleTrainModel={handleTrainModel}
+      isDemoMode={isDemoMode}
+      largeRequestErrorMessage={largeRequestErrorMessage}
       models={models}
       pageData={pageData}
       ref={modelsRef}
@@ -358,6 +384,7 @@ const Models = ({ fetchModelFeatureVector }) => {
       setSelectedRowData={setSelectedRowData}
       sortProps={{ sortTable, selectedColumnName, getSortingIcon }}
       tableContent={sortedTableContent}
+      tableHeaders={sortedTableHeaders}
       viewMode={viewMode}
       urlTagOption={urlTagOption}
     />
