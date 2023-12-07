@@ -29,20 +29,20 @@ import arrayMutators from 'final-form-arrays'
 import RegisterArtifactModalForm from '../../elements/RegisterArtifactModalForm/RegisterArtifactModalForm'
 import { Button, Modal } from 'igz-controls/components'
 
-import { messagesByKind } from './messagesByKind'
-import { setNotification } from '../../reducers/notificationReducer'
 import {
-  BADREQUEST_ERROR_STATUS_CODE,
   FORBIDDEN_ERROR_STATUS_CODE,
   MODAL_SM,
   SECONDARY_BUTTON,
   TERTIARY_BUTTON
 } from 'igz-controls/constants'
-import { ARTIFACT_TYPE } from '../../constants'
-import { useModalBlockHistory } from '../../hooks/useModalBlockHistory.hook'
-import { setFieldState } from 'igz-controls/utils/form.util'
-import { convertChipsData } from '../../utils/convertChipsData'
 import artifactApi from '../../api/artifacts-api'
+import { ARTIFACT_TYPE } from '../../constants'
+import { convertChipsData } from '../../utils/convertChipsData'
+import { messagesByKind } from './messagesByKind'
+import { setFieldState } from 'igz-controls/utils/form.util'
+import { setNotification } from '../../reducers/notificationReducer'
+import { showErrorNotification } from '../../utils/notifications.util'
+import { useModalBlockHistory } from '../../hooks/useModalBlockHistory.hook'
 
 const RegisterArtifactModal = ({
   actions,
@@ -106,7 +106,7 @@ const RegisterArtifactModal = ({
     }
 
     return artifactApi
-      .registerArtifact(projectName, data)
+      .registerArtifact(projectName, data, values.metadata.tag)
       .then(response => {
         resolveModal()
         refresh(filtersStore)
@@ -119,20 +119,12 @@ const RegisterArtifactModal = ({
         )
       })
       .catch(error => {
-        dispatch(
-          setNotification({
-            status:
-              error.response.status === FORBIDDEN_ERROR_STATUS_CODE
-                ? FORBIDDEN_ERROR_STATUS_CODE
-                : BADREQUEST_ERROR_STATUS_CODE,
-            id: Math.random(),
-            message:
-              error.response.status === FORBIDDEN_ERROR_STATUS_CODE
-                ? 'You are not permitted to create a new resource'
-                : `${title} failed to initiate`,
-            retry: registerArtifact
-          })
-        )
+        const customErrorMsg =
+          error.response.status === FORBIDDEN_ERROR_STATUS_CODE
+            ? 'You are not permitted to create a new resource'
+            : `${title} failed to initiate`
+
+        showErrorNotification(dispatch, error, '', customErrorMsg, () => registerArtifact(values))
 
         resolveModal()
       })

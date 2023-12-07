@@ -171,13 +171,23 @@ const artifactsApi = {
 
     return fetchArtifacts(project, filters, newConfig)
   },
-  registerArtifact: (project, data) =>
-    mainHttpClient.post(
+  registerArtifact: (project, data, tag) => {
+    const config = {
+      params: {}
+    }
+
+    if (tag) {
+      config.params.tag = tag
+    }
+
+    return mainHttpClient.post(
       `/projects/${project}/artifacts/${data.uid || data.metadata?.tree}/${
         data.key || data.metadata.key
       }`,
-      data
-    ),
+      data,
+      config
+    )
+  },
   replaceTag: (project, tag, data) => mainHttpClient.post(`/projects/${project}/tags/${tag}`, data),
   updateArtifact: (project, data) =>
     mainHttpClient.post(
