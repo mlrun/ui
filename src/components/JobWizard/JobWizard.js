@@ -411,7 +411,7 @@ const JobWizard = ({
           ref: scheduleButtonRef
         },
         {
-          id:'run-btn',
+          id: 'run-btn',
           label:
             mode === PANEL_EDIT_MODE
               ? 'Save'
@@ -483,11 +483,14 @@ const JobWizard = ({
               />
               <JobWizardRunDetails
                 formState={formState}
+                frontendSpec={frontendSpec}
                 isBatchInference={isBatchInference}
                 isEditMode={isEditMode}
                 jobAdditionalData={jobAdditionalData}
+                params={params}
                 prePopulatedData={prePopulatedData}
                 selectedFunctionData={selectedFunctionData}
+                setJobData={setJobData}
               />
               <JobWizardDataInputs formState={formState} />
               <JobWizardParameters formState={formState} />
