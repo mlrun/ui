@@ -2,16 +2,14 @@ Feature: Models Page
 
   Testcases that verifies functionality on Models Page
 
-  @FAILED_TODO
-  #TODO: Register_Model_Button hidden till 1.5, running on demo mode
+  @MLM
+  #TODO: Register_Model_Button hidden from 1.4.0, running on demo mode
   @passive
   Scenario: MLM001 - Check all mandatory components on Models tab
     Given open url
+    And turn on demo mode
     And wait load page
     And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
-    And wait load page
-    And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
-    Then click on "Project_Monitoring_Button" element on "commonPagesHeader" wizard
     And wait load page
     Then verify breadcrumbs "project" label should be equal "default" value
     And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
@@ -28,18 +26,22 @@ Feature: Models Page
     Then verify "Show_Iterations_Checkbox" element visibility on "Artifacts_FilterBy_Popup" wizard
     Then verify "Table_Refresh_Button" element visibility on "Models" wizard
     Then verify "Models_Table" element visibility on "Models" wizard
-    And turn on demo mode
     Then verify "Register_Model_Button" element visibility on "Models" wizard
-    Then "Register_Model_Button" element on "Models" should contains "Register Model" value
+    Then "Register_Model_Button" element on "Models" should contains "Register model" value
+    Then verify "Train_Model_Button" element visibility on "Models" wizard
+    Then "Train_Model_Button" element on "Models" should contains "Train model" value
+    Then click on "Train_Model_Button" element on "Models" wizard
+    Then verify "Title" element visibility on "Train_Model" wizard
+    Then "Title" element on "Train_Model" should contains "Train Model" value
+    Then verify "Cross_Cancel_Button" element visibility on "Train_Model" wizard
+    Then click on "Cross_Cancel_Button" element on "Train_Model" wizard
 
+  @MLM
   @passive
   Scenario: MLM002 - Check all mandatory components on Model Endpoints tab
     Given open url
     And wait load page
     And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
-    And wait load page
-    And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
-    Then click on "Project_Monitoring_Button" element on "commonPagesHeader" wizard
     And wait load page
     Then verify breadcrumbs "project" label should be equal "default" value
     And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
@@ -55,14 +57,12 @@ Feature: Models Page
     Then verify "Table_Refresh_Button" element visibility on "Model_Endpoints" wizard
     Then verify "Model_Endpoints_Table" element visibility on "Model_Endpoints" wizard
 
+  @MLM
   @passive
   Scenario: MLM003 - Check all mandatory components on Real-Time Pipelines tab
     Given open url
     And wait load page
     And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
-    And wait load page
-    And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
-    Then click on "Project_Monitoring_Button" element on "commonPagesHeader" wizard
     And wait load page
     Then verify breadcrumbs "project" label should be equal "default" value
     And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
@@ -77,6 +77,7 @@ Feature: Models Page
     Then verify "Table_Refresh_Button" element visibility on "Real_Time_Pipelines" wizard
     Then verify "Real_Time_Pipelines_Table" element visibility on "Real_Time_Pipelines" wizard
 
+  @MLM
   @passive
   Scenario: MLM004 - Verify filtering by model name on Models tab
     Given open url
@@ -93,6 +94,7 @@ Feature: Models Page
     And wait load page
     Then value in "name" column with "text" in "Models_Table" on "Models" wizard should contains "survival"
 
+  @MLM
   @passive
   Scenario: MLM005 - Verify behaviour of Show iterations checkbox on Models tab
     Given open url
@@ -122,16 +124,12 @@ Feature: Models Page
     Then click on "Table_FilterBy_Button" element on "Models" wizard
     Then "Show_Iterations_Checkbox" element should be checked on "Artifacts_FilterBy_Popup" wizard
 
-  @FAILED_TODO
-  #TODO: no Real-time pipelines data to show for "Name: churn-server" - add data
+  @MLM
   @passive
   Scenario: MLM006 - Verify filtering by name on Real-Time Pipelines tab
     Given open url
     And wait load page
     And click on row root with value "churn-project-admin" in "name" column in "Projects_Table" table on "Projects" wizard
-    And wait load page
-    And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
-    Then click on "Project_Monitoring_Button" element on "commonPagesHeader" wizard
     And wait load page
     Then verify breadcrumbs "project" label should be equal "churn-project-admin" value
     And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard

@@ -87,7 +87,7 @@ module.exports = {
     ]
   },
   Common_Lists: {
-    Action_Menu_List: ['Download', 'Copy URI', 'View YAML', 'Add a tag']
+    Action_Menu_List: ['Download', 'Copy URI', 'View YAML', 'Add a tag', 'Delete']
   },
   Datasets_Info_Pane: {
     Tab_List: ['Overview', 'Preview', 'Metadata', 'Analysis'],
@@ -102,6 +102,17 @@ module.exports = {
       'UID:',
       'Updated:',
       'Labels:'
+    ],
+    Overview_Producer_Headers: [
+      'Name:',
+      'Kind:',
+      'URI:',
+      'Owner:',
+      'Workflow:'
+    ],
+    Overview_Sources_Headers: [
+      'Name:',
+      'Path:'
     ]
   },
   ML_Functions_Tab: {
@@ -125,16 +136,26 @@ module.exports = {
   Files_Info_Pane: {
     Tab_List: ['Overview', 'Preview'],
     Overview_General_Headers: [
-      'Hash',
-      'Key',
-      'Version tag',
-      'Iter',
-      'Size',
-      'Path',
-      'URI',
-      'UID',
-      'Updated',
-      'Labels'
+      'Hash:',
+      'Key:',
+      'Version tag:',
+      'Iter:',
+      'Size:',
+      'Path:',
+      'URI:',
+      'UID:',
+      'Updated:',
+      'Labels:'
+    ],
+    Overview_Producer_Headers: [
+      'Name:',
+      'Kind:',
+      'URI:',
+      'Owner:'
+    ],
+    Overview_Sources_Headers: [
+      'Name:',
+      'Path:'
     ]
   },
   Models_Info_Pane: {
@@ -320,6 +341,7 @@ module.exports = {
     Jobs_MLRun_Store_Path_Hint:
       'Field must be in "artifacts/my-project/my-artifact:my-tag" or "artifacts/my-project/my-artifact@my-uid" format',
     V3IO_Path_Hint: 'Invalid URL. Field must be in "container-name/file" format',
+    V3IO_Path_Hint_Feature_Store: 'Field must be in "container-name/file" format',
     S3_Path_Hint: 'Field must be in "bucket/path" format',
     Azure_Storage_Path_Hint: 'Field must be in "container/path" format',
     Timestamp_Column: 'The field name for filtering the source data.',

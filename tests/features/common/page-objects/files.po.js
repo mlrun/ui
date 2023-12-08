@@ -91,7 +91,7 @@ module.exports = {
       )
     ),
     Table_Refresh_Button: By.css(
-      '.content .content__action-bar-wrapper .action-bar__actions #refresh'
+      '.content .content__action-bar-wrapper [data-testid="refresh"]'
     ),
     Files_Table: commonTable(filesTable),
     Register_File_Button: By.css('.content__action-bar-wrapper .action-bar__actions .action-button'),

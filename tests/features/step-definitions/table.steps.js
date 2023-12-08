@@ -148,8 +148,6 @@ Then(
       indx,
       'action_menu'
     )
-    console.log('/////////////////////')
-    console.log(actionMenuSel)
     await hoverComponent(
       this.driver,
       pageObjects[wizard][table]['tableFields'][column](indx),

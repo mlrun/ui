@@ -98,6 +98,16 @@ Feature: Datasets Page
     Then verify "Full_View_Button" element visibility on "Datasets_Info_Pane" wizard
     Then verify "Cross_Close_Button" element visibility on "Datasets_Info_Pane" wizard
     Then verify "Overview_General_Headers" on "Datasets_Info_Pane" wizard should contains "Datasets_Info_Pane"."Overview_General_Headers"
+    Then verify "Overview_Producer_Headers" on "Datasets_Info_Pane" wizard should contains "Datasets_Info_Pane"."Overview_Producer_Headers"
+    Then verify "Overview_Sources_Headers" element visibility on "Datasets_Info_Pane" wizard
+    Then verify "Overview_Sources_Headers" on "Datasets_Info_Pane" wizard should contains "Datasets_Info_Pane"."Overview_Sources_Headers"
+    Then verify "Train_Button" element visibility on "Datasets_Info_Pane" wizard
+    Then "Train_Button" element on "Datasets_Info_Pane" should contains "Train" value
+    Then click on "Train_Button" element on "Datasets_Info_Pane" wizard
+    Then verify "Title" element visibility on "Train_Model" wizard
+    Then "Title" element on "Train_Model" should contains "Train Model" value
+    Then verify "Cross_Cancel_Button" element visibility on "Train_Model" wizard
+    Then click on "Cross_Cancel_Button" element on "Train_Model" wizard
     And hover "Overview_Hash_Header" component on "Datasets_Info_Pane" wizard
     Then verify "Overview_Hash_Header" on "Datasets_Info_Pane" wizard should display "Label_Hint"."Overview_Hash"
     Then verify "Overview_UID_Header" on "Datasets_Info_Pane" wizard should display "Label_Hint"."Overview_UID"
@@ -117,6 +127,14 @@ Feature: Datasets Page
     And wait load page
     And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
     And click on cell with value "Datasets" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+    And wait load page
+    When click on cell with value "test-dataset" in "name" column in "Datasets_Table" table on "Datasets" wizard
+    Then check "latest" value in "tag" column in "Overview_Table" table on "Datasets_Info_Pane" wizard
+    Then click on "Edit_btn_table_view" element on "Datasets_Info_Pane" wizard
+    And wait load page
+    When type value "v1" to "Version_tag_Input" field on "Datasets_Info_Pane" wizard
+    Then click on "Apply_Button" element on "Datasets_Info_Pane" wizard
+    Then click on "Apply_Changes_Button" element on "Datasets_Info_Pane" wizard
     And wait load page
     Then click on "Table_FilterBy_Button" element on "Datasets" wizard
     Then select "v1" option in "Table_Tree_Filter_Dropdown" dropdown on "Artifacts_FilterBy_Popup" wizard
@@ -208,10 +226,8 @@ Feature: Datasets Page
     Then verify "Title" element not exists on "Register_Dataset" wizard
   
   @MLD
-  @FAILED_TODO
-  #TODO: requires a separate run
   Scenario: MLD007 - Verify behaviour on Register new Dataset
-    * set tear-down property "dataset" created in "default" project with "test-dataset" value
+    * set tear-down property "dataset" created in "default" project with "dataset-test" value
     Given open url
     And wait load page
     And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
@@ -221,15 +237,15 @@ Feature: Datasets Page
     And wait load page
     Then click on "Register_Dataset_Button" element on "Datasets" wizard
     Then verify if "Register_Dataset" popup dialog appears
-    Then type value "test-dataset" to "Name_Input" field on "Register_Dataset" wizard
+    Then type value "dataset-test" to "Name_Input" field on "Register_Dataset" wizard
     When select "V3IO" option in "Path_Scheme_Combobox" combobox on "Target_Path" accordion on "Register_Dataset" wizard
     When type value "target/path" to "Path_Scheme_Combobox" field on "Target_Path" on "Register_Dataset" wizard
     Then click on "Register_Button" element on "Register_Dataset" wizard
     And wait load page
-    Then check "test-dataset" value in "name" column in "Datasets_Table" table on "Datasets" wizard
-    Then click on cell with value "test-dataset" in "name" column in "Datasets_Table" table on "Datasets" wizard
-    Then "Header" element on "Datasets_Info_Pane" should contains "test-dataset" value
-    Then check "test-dataset" value in "key" column in "Overview_Table" table on "Datasets_Info_Pane" wizard
+    Then check "dataset-test" value in "name" column in "Datasets_Table" table on "Datasets" wizard
+    Then click on cell with value "dataset-test" in "name" column in "Datasets_Table" table on "Datasets" wizard
+    Then "Header" element on "Datasets_Info_Pane" should contains "dataset-test" value
+    Then check "dataset-test" value in "key" column in "Overview_Table" table on "Datasets_Info_Pane" wizard
     Then check "latest" value in "tag" column in "Overview_Table" table on "Datasets_Info_Pane" wizard
     Then check "v3io:///target/path" value in "path" column in "Overview_Table" table on "Datasets_Info_Pane" wizard
   
@@ -476,8 +492,6 @@ Scenario: MLD011 - Check that version tag has "Click to add" status when it's em
     Then "Version_Tag_Input_Placeholder" element on "Datasets_Info_Pane" should contains "Click to add" value
 
 @MLD
-@FAILED_TODO
-#TODO: requires a separate run
 Scenario: MLD012 - Check filter by "All" tag is performed when version tag was edited
     Given open url
     And wait load page

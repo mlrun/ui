@@ -250,6 +250,10 @@ module.exports = {
     Confirm_Button: By.css('.confirm-dialog__btn-container button:not(.pop-up-dialog__btn_cancel)'),
     Delete_Button: commonDeleteButton
   },
+  trainModel:{
+    Title: By.css('.modal .modal__header-title'),
+    Cross_Cancel_Button: By.css('.modal .modal__header-button')
+  },
   registerDataset: {
     Title: commonPopupTitle,
     Form_Text: commonFormText,
