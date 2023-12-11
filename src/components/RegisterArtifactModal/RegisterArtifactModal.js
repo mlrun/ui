@@ -88,6 +88,7 @@ const RegisterArtifactModal = ({
         description: values.metadata.description,
         labels: convertChipsData(values.metadata.labels),
         key: values.metadata.key,
+        tag: values.metadata.tag,
         project: projectName,
         tree: uuidv4()
       },
@@ -103,7 +104,7 @@ const RegisterArtifactModal = ({
     }
 
     return artifactApi
-      .registerArtifact(projectName, data, values.metadata.tag)
+      .registerArtifact(projectName, data)
       .then(response => {
         resolveModal()
         refresh(filtersStore)

@@ -171,16 +171,8 @@ const artifactsApi = {
 
     return fetchArtifacts(project, filters, newConfig)
   },
-  registerArtifact: (project, data, tag) => {
-    const config = {
-      params: {}
-    }
-
-    if (tag) {
-      config.params.tag = tag
-    }
-
-    return mainHttpClientV2.post(`/projects/${project}/artifacts`, data, config)
+  registerArtifact: (project, data) => {
+    return mainHttpClientV2.post(`/projects/${project}/artifacts`, data)
   },
   replaceTag: (project, tag, data) => mainHttpClient.post(`/projects/${project}/tags/${tag}`, data),
   updateArtifact: (project, data) =>

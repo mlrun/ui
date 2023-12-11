@@ -95,7 +95,7 @@ const RegisterArtifactModalForm = ({
           />
         </div>
         <div className="form-col-1">
-          <FormInput label="Tag" name="metadata.tag" required />
+          <FormInput label="Tag" name="metadata.tag" />
         </div>
         {showType && (
           <div className="form-col-1">

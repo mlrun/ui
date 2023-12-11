@@ -99,7 +99,7 @@ function RegisterModelModal({ actions, isOpen, onResolve, projectName, refresh }
     }
 
     return artifactApi
-      .registerArtifact(projectName, data, values.metadata.tag)
+      .registerArtifact(projectName, data)
       .then(response => {
         resolveModal()
         refresh(filtersStore)
@@ -168,7 +168,7 @@ function RegisterModelModal({ actions, isOpen, onResolve, projectName, refresh }
                 />
               </div>
               <div className="form-col-1">
-                <FormInput label="Tag" name="metadata.tag" required />
+                <FormInput label="Tag" name="metadata.tag" />
               </div>
             </div>
             <div className="form-row">
