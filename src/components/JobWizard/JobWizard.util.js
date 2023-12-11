@@ -346,8 +346,12 @@ const getRunDefaultInfo = (defaultData, selectedFunction) => {
 }
 
 const getHandlerOptions = (selectedFunctions, selectedVersion) => {
-  return chain(selectedFunctions)
-    .find(func => func.metadata.tag === selectedVersion)
+  const selectedFunction =
+    selectedFunctions?.length === 1
+      ? selectedFunctions[0]
+      : selectedFunctions.find(func => func.metadata.tag === selectedVersion)
+
+  return chain(selectedFunction)
     .get('spec.entry_points', {})
     .values()
     .flatten()
