@@ -132,14 +132,17 @@ const JobWizardRunDetails = ({
   }
 
   const handleHandlerChange = handler => {
-    const selectedVersionedFunction = selectedFunctionData.functions?.find(
-      func => func.metadata.tag === formState.values[RUN_DETAILS_STEP].version
-    )
+    const selectedFunction =
+      selectedFunctionData?.functions?.length === 1
+        ? selectedFunctionData.functions[0]
+        : selectedFunctionData.functions?.find(
+            func => func.metadata.tag === formState.values[RUN_DETAILS_STEP].version
+          )
 
-    const functionParameters = getFunctionParameters(selectedVersionedFunction, handler)
+    const functionParameters = getFunctionParameters(selectedFunction, handler)
     const dataInputs = parseDataInputs(functionParameters, prePopulatedData?.dataInputs)
     const predefinedParameters = parsePredefinedParameters(functionParameters)
-    const handlerData = getHandlerData(selectedVersionedFunction, handler)
+    const handlerData = getHandlerData(selectedFunction, handler)
 
     set(formState.initialValues, `${DATA_INPUTS_STEP}.dataInputsTable`, dataInputs)
     set(
