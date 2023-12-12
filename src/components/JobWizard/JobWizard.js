@@ -144,8 +144,10 @@ const JobWizard = ({
   }, [removeHubFunctions, setFunctions])
 
   useEffect(() => {
-    if (isBatchInference) {
-      fetchHubFunction('batch_inference_v2').then(hubFunction => {
+    if (isBatchInference || isTrain) {
+      const hubFunctionName = isBatchInference ? 'batch_inference_v2' : 'auto-trainer'
+
+      fetchHubFunction(hubFunctionName).then(hubFunction => {
         if (hubFunction) {
           const functionTemplatePath = `${hubFunction.spec.item_uri}${hubFunction.spec.assets.function}`
 
@@ -157,7 +159,7 @@ const JobWizard = ({
         }
       })
     }
-  }, [fetchFunctionTemplate, fetchHubFunction, isBatchInference, resolveModal])
+  }, [fetchFunctionTemplate, fetchHubFunction, isBatchInference, isTrain, resolveModal])
 
   useEffect(() => {
     if (!isEmpty(jobsStore.jobFunc)) {
@@ -203,7 +205,7 @@ const JobWizard = ({
       setJobData(formStateRef.current, jobFormData, jobAdditionalData)
     } else if (
       formStateRef.current &&
-      (isBatchInference || isRunMode) &&
+      (isBatchInference || isTrain || isRunMode) &&
       !isEmpty(selectedFunctionData) &&
       isEmpty(jobAdditionalData)
     ) {
@@ -212,11 +214,13 @@ const JobWizard = ({
         selectedFunctionData,
         null,
         params.projectName,
-        isEditMode
+        isEditMode,
+        prePopulatedData
       )
       setJobData(formStateRef.current, jobFormData, jobAdditionalData)
     }
   }, [
+    isTrain,
     defaultData,
     frontendSpec,
     isBatchInference,
@@ -226,7 +230,8 @@ const JobWizard = ({
     params.projectName,
     selectedFunctionData,
     setJobAdditionalData,
-    setJobData
+    setJobData,
+    prePopulatedData
   ])
 
   const getStepsConfig = useCallback(
@@ -237,7 +242,7 @@ const JobWizard = ({
         {
           id: FUNCTION_SELECTION_STEP,
           label: 'Function Selection',
-          hidden: isEditMode || isRunMode || isBatchInference,
+          hidden: isEditMode || isRunMode || isBatchInference || isTrain,
           nextIsDisabled: isEmpty(selectedFunctionData)
         },
         {
@@ -282,7 +287,7 @@ const JobWizard = ({
 
       return stepsConfig
     },
-    [isBatchInference, isEditMode, isRunMode, selectedFunctionData]
+    [isBatchInference, isEditMode, isRunMode, isTrain, selectedFunctionData]
   )
 
   const runJobHandler = useCallback(
@@ -465,7 +470,6 @@ const JobWizard = ({
                 isEditMode={isEditMode}
                 isTrain={isTrain}
                 params={params}
-                prePopulatedData={prePopulatedData}
                 selectedFunctionData={selectedFunctionData}
                 selectedFunctionTab={selectedFunctionTab}
                 setActiveTab={setActiveTab}
