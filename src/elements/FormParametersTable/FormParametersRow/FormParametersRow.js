@@ -220,16 +220,36 @@ const FormParametersRow = ({
         const fieldCurrentData = fields.value[index]
         const fieldType = newType ?? fieldCurrentData.data.type
         const fieldIsHyper = newIsHyper ?? fieldCurrentData.data.isHyper
+        const parsedNumber = parseFloat(fieldCurrentData.data.value)
+        let newValue =
+          fieldType === parameterTypeBool && !fieldIsHyper ? 'false' : fieldIsHyper ? '[]' : ''
 
         if (newType && fieldCurrentData.isUnsupportedType) {
           formState.form.change(`${rowPath}.isUnsupportedType`, false)
         }
 
-        formState.form.change(
-          `${rowPath}.data.value`,
-          fieldType === parameterTypeBool && !fieldIsHyper ? 'false' : fieldIsHyper ? '[]' : ''
-        )
-        formState.form.mutators.setFieldState(`${rowPath}.data.value`, { modified: false })
+        const stringValueIsRetained =
+          typeof (fieldCurrentData.data.value === 'string' || isFinite(parsedNumber)) &&
+          fieldCurrentData.data.value !== '' &&
+          (fieldIsHyper ||
+            (![parameterTypeInt, parameterTypeFloat, parameterTypeBool].includes(fieldType) &&
+              fieldCurrentData.data.type !== parameterTypeBool))
+        const numberValueIsRetained =
+          !fieldIsHyper &&
+          [parameterTypeInt, parameterTypeFloat].includes(fieldType) &&
+          isFinite(parsedNumber)
+
+        if (stringValueIsRetained || numberValueIsRetained) {
+          newValue = numberValueIsRetained ? parsedNumber : String(fieldCurrentData.data.value)
+        }
+
+        formState.form.change(`${rowPath}.data.value`, newValue)
+
+        setTimeout(() => {
+          formState.form.mutators.setFieldState(`${rowPath}.data.value`, {
+            modified: stringValueIsRetained || numberValueIsRetained
+          })
+        })
 
         setTypeIsChanging(false)
       })
@@ -253,7 +273,7 @@ const FormParametersRow = ({
               <div className={tableEditingRowClassNames} key={index}>
                 <div className="form-table__cell form-table__cell_min">
                   {!fieldData.isRequired && (
-                  <FormCheckBox
+                    <FormCheckBox
                       name={`${rowPath}.data.isChecked`}
                       onClick={event => event.stopPropagation()}
                     />
@@ -300,21 +320,21 @@ const FormParametersRow = ({
                 </div>
                 <div className="form-table__cell form-table__cell_3">
                   {fieldData.data.isHyper && !typeIsChanging ? (
-                  <FormInput
-                    label="Values (Comma separated)"
-                    name={`${rowPath}.data.value`}
-                    placeholder="Values"
-                    required
-                    tip={getHyperValueTip(fieldData)}
-                    validationRules={getHyperValueValidationRules(fieldData)}
-                  />
+                    <FormInput
+                      label="Values (Comma separated)"
+                      name={`${rowPath}.data.value`}
+                      placeholder="Values"
+                      required
+                      tip={getHyperValueTip(fieldData)}
+                      validationRules={getHyperValueValidationRules(fieldData)}
+                    />
                   ) : fieldData.data.type === parameterTypeBool && !typeIsChanging ? (
                     <div className="radio-buttons-container">
                       <FormRadio name={`${rowPath}.data.value`} value="true" label="True" />
                       <FormRadio name={`${rowPath}.data.value`} value="false" label="False" />
                     </div>
                   ) : !typeIsChanging ? (
-                      <FormInput
+                    <FormInput
                       type={
                         [parameterTypeInt, parameterTypeFloat].includes(fieldData.data.type)
                           ? 'number'
