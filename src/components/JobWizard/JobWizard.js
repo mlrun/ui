@@ -311,7 +311,7 @@ const JobWizard = ({
             setNotification({
               status: 200,
               id: Math.random(),
-              message: 'Job started successfully'
+              message: isSchedule ? 'Job scheduled successfully' : 'Job started successfully'
             })
           )
         })
