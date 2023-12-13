@@ -4,6 +4,9 @@
   flex-grow: 1;
 
   .table-main {
+    display: flex;
+    flex-flow: column nowrap;
+    flex: 1;
     overflow-y: auto;
   }
 }

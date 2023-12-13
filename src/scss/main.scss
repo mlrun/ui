@@ -186,9 +186,6 @@ main {
 /*=========== TABLE =============*/
 
 .table {
-  display: flex;
-  flex-flow: column nowrap;
-  flex: 1;
   position: relative;
   text-align: left;
   width: 100%;
@@ -250,9 +247,9 @@ main {
                 &__container_extended {
                   &:before {
                     background: linear-gradient(
-                                    90deg,
-                                    rgba(255, 255, 255, 0) 0%,
-                                    rgba(245, 247, 255, 1) 100%
+                      90deg,
+                      rgba(255, 255, 255, 0) 0%,
+                      rgba(245, 247, 255, 1) 100%
                     );
                   }
                 }
@@ -270,9 +267,9 @@ main {
 
                       &:before {
                         background: linear-gradient(
-                                        90deg,
-                                        rgba(255, 255, 255, 0) 0%,
-                                        rgba(245, 247, 255, 1) 100%
+                          90deg,
+                          rgba(255, 255, 255, 0) 0%,
+                          rgba(245, 247, 255, 1) 100%
                         );
                       }
                     }
@@ -585,7 +582,6 @@ main {
   }
 }
 
-
 /*=========== COMBOBOX =============*/
 
 .combobox {
@@ -743,7 +739,6 @@ main {
   }
 }
 
-
 /*=========== SORT ICON =============*/
 
 .sort-icon {
@@ -783,7 +778,6 @@ main {
     }
   }
 }
-
 
 /*=========== GENERAL =============*/
 
