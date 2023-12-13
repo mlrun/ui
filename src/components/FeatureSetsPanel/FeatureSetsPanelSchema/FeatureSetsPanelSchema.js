@@ -40,9 +40,9 @@ const FeatureSetsPanelSchema = ({
   const handleEntitiesOnBlur = event => {
     const entitiesArray = data.entities
       .trim()
-      .split(/[, ]+/)
+      .split(',')
       .map(entity => ({
-        name: entity,
+        name: entity.trim(),
         value_type: 'str'
       }))
       .filter(item => item.name)
