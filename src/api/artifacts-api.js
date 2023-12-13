@@ -17,7 +17,7 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import { mainHttpClient, mainHttpClientV2 } from '../httpClient'
+import { mainHttpClient } from '../httpClient'
 import {
   ARTIFACT_OTHER_TYPE,
   DATASET_TYPE,
@@ -41,7 +41,7 @@ const fetchArtifacts = (project, filters, config = {}) => {
     params.name = `~${filters.name}`
   }
 
-  return mainHttpClientV2.get(`/projects/${project}/artifacts`, {
+  return mainHttpClient.get(`/projects/${project}/artifacts`, {
     ...config,
     params: { ...config.params, ...params }
   })
@@ -88,7 +88,7 @@ const artifactsApi = {
       }
     }),
   getArtifact: (project, artifact) => {
-    return mainHttpClientV2.get(`/projects/${project}/artifacts?name=${artifact}`)
+    return mainHttpClient.get(`/projects/${project}/artifacts?name=${artifact}`)
   },
   getArtifacts: (project, filters, config) => {
     return fetchArtifacts(project, filters, config)
@@ -172,11 +172,18 @@ const artifactsApi = {
     return fetchArtifacts(project, filters, newConfig)
   },
   registerArtifact: (project, data) =>
-    mainHttpClientV2.post(`/projects/${project}/artifacts`, data),
+    mainHttpClient.post(
+      `/projects/${project}/artifacts/${data.uid || data.metadata?.tree}/${
+        data.key || data.metadata.key
+      }`,
+      data
+    ),
   replaceTag: (project, tag, data) => mainHttpClient.post(`/projects/${project}/tags/${tag}`, data),
   updateArtifact: (project, data) =>
-    mainHttpClientV2.put(
-      `/projects/${project}/artifacts/${data.db_key || data.spec?.db_key}`,
+    mainHttpClient.post(
+      `/projects/${project}/artifacts/${data.uid || data.metadata?.tree}/${
+        data.db_key || data.spec?.db_key
+      }`,
       data
     )
 }

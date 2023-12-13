@@ -82,6 +82,7 @@ const RegisterArtifactModal = ({
   const { handleCloseModal, resolveModal } = useModalBlockHistory(onResolve, formRef.current)
 
   const registerArtifact = values => {
+    const uid = uuidv4()
     const data = {
       kind: values.kind,
       metadata: {
@@ -89,8 +90,9 @@ const RegisterArtifactModal = ({
         labels: convertChipsData(values.metadata.labels),
         key: values.metadata.key,
         project: projectName,
-        tree: uuidv4()
+        tree: uid
       },
+      project: projectName,
       spec: {
         db_key: values.metadata.key,
         producer: {
@@ -99,7 +101,8 @@ const RegisterArtifactModal = ({
         },
         target_path: values.spec.target_path.path
       },
-      status: {}
+      status: {},
+      uid
     }
 
     return artifactApi
