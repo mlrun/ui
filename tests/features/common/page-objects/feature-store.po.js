@@ -84,7 +84,7 @@ const featureSetsTable = {
       root: '.table-row',
       fields: {
         name: '.table-body__cell:nth-of-type(1) a div.link',
-        expand_name: '[data-testid="table_row_child_1_3"] .table-body__cell:nth-of-type(1) a div.link',
+        name_expand_btn: '.table-body__cell:nth-of-type(1) a .name-wrapper .item-name',
         expand_btn: '.table-body__cell:nth-of-type(1) svg.expand-arrow',
         tag: '.table-body__cell:nth-of-type(1) .item-tag',
         description: '.table-body__cell:nth-of-type(2) > .data-ellipsis',
@@ -181,6 +181,7 @@ const featureVectorTable = {
       root: '.table-row',
       fields: {
         name: '.table-body__cell:nth-of-type(1) a div.link',
+        name_expand_btn: '.table-body__cell:nth-of-type(1) a .name-wrapper .item-name',
         expand_btn: '.table-body__cell:nth-of-type(1) svg.expand-arrow',
         tag: '.table-body__cell:nth-of-type(1) .item-tag',
         description: '.table-body__cell:nth-of-type(2) .data-ellipsis',
@@ -298,7 +299,7 @@ const datasetsTable = {
         owner: '.table-body__cell:nth-of-type(4) .data-ellipsis',
         uploaded: '.table-body__cell:nth-of-type(5) .data-ellipsis',
         size: '.table-body__cell:nth-of-type(6) .data-ellipsis',
-        artifact_preview_btn: '.table-body__cell:nth-of-type(7) #quick-link-dataset-preview',
+        artifact_preview_btn: '.table-body__cell:nth-of-type(7) [data-testid="quick-link-dataset-preview-tooltip-wrapper"]',
         download_btn: '.table-body__cell:nth-of-type(8) .download-container',
         copy_uri: '.table-body__cell:nth-of-type(9) > button',
         action_menu: {
@@ -318,7 +319,7 @@ const datasetsTable = {
 
 // Common components
 const featureStoreTabSelector = commonTable(tabSelector)
-const tableRefreshButton = By.css('.content__action-bar-wrapper #refresh')
+const tableRefreshButton = By.css('.content__action-bar-wrapper [data-testid="refresh"]')
 const tableFilterByButton = By.css('.content .content__action-bar-wrapper .action-bar__filters .filters-button button')
 const pageHeaderButton = By.css('.content__header .page-actions-container button')
 const commonNameFilterInput = inputGroup(
