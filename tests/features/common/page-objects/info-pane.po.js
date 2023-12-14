@@ -70,6 +70,34 @@ const infoPaneOverviewHeaders = {
   }
 }
 
+const infoPaneOverviewProducerHeaders = {
+  root: '.table__item .item-info__details-wrapper:nth-of-type(2)',
+  header: {},
+  body: {
+    row: {
+      root: '.item-info__details',
+      fields: {
+        key: '.details-item__header',
+        link: '.details-item__data .link',
+        value: '.details-item__data'
+      }
+    }
+  }
+}
+
+const infoPaneOverviewSourcesHeaders = {
+  root: '.table__item .item-info__details-wrapper:nth-of-type(2)',
+  header: {},
+  body: {
+    row: {
+      root: '.info-sources',
+      fields: {
+        key: '.info-sources__table-key',
+        value: '.info-sources__table-value'
+      }
+    }
+  }
+}
 const artifactOverviewTable = {
   root: '.table__item .item-info__details:nth-of-type(1)',
   header: {},
@@ -532,6 +560,9 @@ module.exports = {
     Cross_Close_Button: crossCloseButton,
     Info_Pane_Tab_Selector: commonInfoPaneTabSelector,
     Overview_General_Headers: commonTable(infoPaneOverviewHeaders),
+    Overview_Producer_Headers: commonTable(infoPaneOverviewProducerHeaders),
+    Overview_Sources_Headers: commonTable(infoPaneOverviewSourcesHeaders),
+    Train_Button: By.css('[data-testid="detailsPanel"] .item-header__buttons button'),
     Overview_Hash_Header: labelComponent(
       generateLabelGroup(
         '.item-info__details:nth-of-type(1) .details-item:nth-of-type(1) .details-item__header',
@@ -657,6 +688,8 @@ module.exports = {
     Tabel_View_Button: tabelViewButton,
     Info_Pane_Tab_Selector: commonInfoPaneTabSelector,
     Overview_General_Headers: commonTable(infoPaneOverviewHeaders),
+    Overview_Producer_Headers: commonTable(infoPaneOverviewProducerHeaders),
+    Overview_Sources_Headers: commonTable(infoPaneOverviewSourcesHeaders),
     Overview_Hash_Header: labelComponent(
       generateLabelGroup(
         '.item-info__details:nth-of-type(1) .details-item:nth-of-type(1) .details-item__header',
@@ -671,8 +704,8 @@ module.exports = {
         true
       )
     ),
-    Expand_Sources: By.css('.details-item .info-sources'),
-    Info_Sources_Table: commonTable(filesInfoSourcesTable),
+    // Expand_Sources: By.css('.details-item .info-sources'),
+    // Info_Sources_Table: commonTable(filesInfoSourcesTable),
     Overview_Table: commonTable(artifactOverviewTable),
     Edit_btn_table_view: commonEditBtnTableView,
     Edit_btn_full_view: commonEditBtnFullView,

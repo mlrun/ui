@@ -250,6 +250,10 @@ module.exports = {
     Confirm_Button: By.css('.confirm-dialog__btn-container button:not(.pop-up-dialog__btn_cancel)'),
     Delete_Button: commonDeleteButton
   },
+  trainModel:{
+    Title: By.css('.modal .modal__header-title'),
+    Cross_Cancel_Button: By.css('.modal .modal__header-button')
+  },
   registerDataset: {
     Title: commonPopupTitle,
     Form_Text: commonFormText,
@@ -298,7 +302,12 @@ module.exports = {
     Cross_Cancel_Button: commonCloseButton,
     New_File_Info: By.css('.form-text'),
     New_File_Name_Input: inputGroup(commonNameInput),
-    New_File_Target_Path_Input: inputGroup(commonTargetPathInput),
+    Target_Path: {
+      Path_Scheme_Combobox: comboBox(
+        '.form .form-row:nth-of-type(4) .form-field__wrapper',
+        true
+      )
+    },
     New_File_Description_Input: textAreaGroup(commonDescriptionTextArea),
     New_File_Type_Dropdown: dropdownComponent(
       generateDropdownGroup(
@@ -404,6 +413,12 @@ module.exports = {
     Title: By.css('.pop-up-dialog .pop-up-dialog__header'),
     Cross_Cancel_Button: commonCrossCancelButton,
     YAML_Modal_Container: By.css('.pop-up-dialog .yaml-modal-container pre')
+  },
+  previewPopup:{
+    Title: By.css('.pop-up-dialog .pop-up-dialog__header'),
+    Cross_Cancel_Button: commonCrossCancelButton,
+    Preview_Modal_Container: By.css('.pop-up-dialog .item-artifacts__modal-preview'),
+    Download_Button: By.css('.pop-up-dialog .preview-item .preview-body__download')
   },
   changeProjectOwnerPopup: {
     Cross_Cancel_Button: commonCrossCancelButton,
@@ -548,7 +563,8 @@ module.exports = {
   },
   artifactPreviewPopup: {
     Cross_Cancel_Button: commonCrossCancelButton,
-    Preview_Header: commonTable(artifactsPreviewHeader)
+    Preview_Header: commonTable(artifactsPreviewHeader),
+    Download_Button: By.css('.pop-up-dialog .preview-body .preview-item .preview-body__download')
   },
   removeMemberPopup: {
     Title: By.css('.delete-member__pop-up .pop-up-dialog__header-text'),
@@ -574,5 +590,10 @@ module.exports = {
     Checkbox_Label: By.css('#overlay_container .form-field-checkbox label'),
     Clear_Button: By.css('#overlay_container .btn-tertiary'),
     Apply_Button: By.css('#overlay_container .btn-secondary')
+  },
+  downloadsPopUp: {
+    Download_Pop_Up: By.css('[data-testid="download-container"]'),
+    Download_Pop_Up_Cross_Cancel_Button: By.css('[data-testid="download-container"] .notification_body_close_icon'),
+    Header_Download_Pop_Up: By.css('[data-testid="download-container"] .download-container__header')
   }
 }
