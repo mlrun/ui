@@ -202,12 +202,13 @@ export const generateJobWizardData = (
 
 export const generateJobWizardDefaultData = (
   frontendSpec,
-  selectedFunction,
+  selectedFunctionData,
   defaultData,
   currentProjectName,
   isEditMode
 ) => {
   if (isEmpty(defaultData)) return [{}, {}]
+  const selectedFunction = selectedFunctionData?.functions[0] ?? {}
 
   const runInfo = getRunDefaultInfo(defaultData, selectedFunction)
   const functionParameters = getFunctionDefaultParameters(selectedFunction, runInfo.handler)
@@ -397,7 +398,7 @@ const getDefaultVersion = versionOptions => {
   return versionOptions.find(version => version.id === TAG_LATEST)?.id || versionOptions[0].id || ''
 }
 
-const getSelectedFunction = (functions, selectedVersion) => {
+const getSelectedFunction = (functions = [], selectedVersion) => {
   return functions.find(func => func.metadata.tag === selectedVersion) ?? functions[0]
 }
 
@@ -654,9 +655,9 @@ export const parseDefaultParameters = (funcParams = {}, runParams = {}, runHyper
       const parametersIsRequired = !has(parameter, 'default')
       const parameterType = predefinedParameterIsModified
         ? parseParameterType(
-            runParams[parameter.name] ?? runHyperParams[parameter.name],
-            parameter.name in runHyperParams
-          )
+          runParams[parameter.name] ?? runHyperParams[parameter.name],
+          parameter.name in runHyperParams
+        )
         : parameter.type ?? ''
 
       return {
@@ -1025,9 +1026,9 @@ export const generateJobRequestData = (
           selectedFunction && !has(selectedFunction, 'status')
             ? `hub://${selectedFunction.metadata.name.replace(/-/g, '_')}`
             : formData.function ??
-              (selectedFunction
-                ? `${selectedFunction.metadata.project}/${selectedFunction.metadata.name}@${selectedFunction.metadata.hash}`
-                : '')
+            (selectedFunction
+              ? `${selectedFunction.metadata.project}/${selectedFunction.metadata.name}@${selectedFunction.metadata.hash}`
+              : '')
       }
     },
     function: {
@@ -1100,10 +1101,10 @@ export const getNewJobErrorMsg = error => {
   return error.response.status === NOTFOUND_ERROR_STATUS_CODE
     ? 'To run a job, the selected function needs to be built. Make sure to build the function before running the job.'
     : error.response.status === FORBIDDEN_ERROR_STATUS_CODE
-    ? 'You are not permitted to run a new job.'
-    : error.response.status === CONFLICT_ERROR_STATUS_CODE
-    ? 'This job is already scheduled'
-    : getErrorDetail(error) || 'Unable to create a new job.'
+      ? 'You are not permitted to run a new job.'
+      : error.response.status === CONFLICT_ERROR_STATUS_CODE
+        ? 'This job is already scheduled'
+        : getErrorDetail(error) || 'Unable to create a new job.'
 }
 
 export const getSaveJobErrorMsg = error => {

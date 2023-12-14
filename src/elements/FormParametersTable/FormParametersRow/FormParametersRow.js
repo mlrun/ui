@@ -321,7 +321,7 @@ const FormParametersRow = ({
                 <div className="form-table__cell form-table__cell_3">
                   {fieldData.data.isHyper && !typeIsChanging ? (
                     <FormInput
-                      label="Values (Comma separated)"
+                      label="Values (comma separated)"
                       name={`${rowPath}.data.value`}
                       placeholder="Values"
                       required
