@@ -186,9 +186,6 @@ main {
 /*=========== TABLE =============*/
 
 .table {
-  display: flex;
-  flex-flow: column nowrap;
-  flex: 1;
   position: relative;
   text-align: left;
   width: 100%;
@@ -201,13 +198,13 @@ main {
       min-width: 100%;
       min-height: 50px;
       background-color: inherit;
-      border-bottom: $tableRowBorder;
 
       &:not(.parent-row_expanded) > * {
         position: relative;
         display: inline-flex;
         flex: 1;
         align-items: center;
+        border-bottom: $tableRowBorder;
 
         @include tableDet(8px, 5px, 8px, 10px);
 
@@ -400,6 +397,13 @@ main {
         }
       }
     }
+  }
+
+  &-main {
+    display: flex;
+    flex-flow: column nowrap;
+    flex: 1;
+    overflow-y: auto;
   }
 
   &.table-with-details {
