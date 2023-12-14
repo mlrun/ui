@@ -59,7 +59,7 @@ const FeatureSetsPanelSchemaView = ({
           <Input
             floatingLabel
             invalid={!validation.isEntitiesValid}
-            label="Entities"
+            label="Entities (comma separated)"
             onBlur={handleEntitiesOnBlur}
             onChange={handleEntitiesOnChange}
             placeholder="entity1,entity2,entity3"
