@@ -27,15 +27,24 @@ import { openPopUp } from 'igz-controls/utils/common.util'
 const headers = {
   'Cache-Control': 'no-cache'
 }
+
+// serialize a param with an array value as a repeated param, for example:
+// { label: ['host', 'owner=admin'] } => 'label=host&label=owner%3Dadmin'
+const paramsSerializer = params => qs.stringify(params, { arrayFormat: 'repeat' })
+
 export const mainBaseUrl = `${process.env.PUBLIC_URL}/api/v1`
+export const mainBaseUrlV2 = `${process.env.PUBLIC_URL}/api/v2`
 
 export const mainHttpClient = axios.create({
   baseURL: mainBaseUrl,
   headers,
+  paramsSerializer
+})
 
-  // serialize a param with an array value as a repeated param, for example:
-  // { label: ['host', 'owner=admin'] } => 'label=host&label=owner%3Dadmin'
-  paramsSerializer: params => qs.stringify(params, { arrayFormat: 'repeat' })
+export const mainHttpClientV2 = axios.create({
+  baseURL: mainBaseUrlV2,
+  headers,
+  paramsSerializer
 })
 
 export const functionTemplatesHttpClient = axios.create({
