@@ -104,7 +104,12 @@ import {
   isRadioButtonUnselected,
   selectRadiobutton
 } from '../common/actions/radio-button.action'
-import { openActionMenu, selectOptionInActionMenu } from '../common/actions/action-menu.action'
+import { 
+  openActionMenu, 
+  selectOptionInActionMenu,
+  verifyOptionInActionMenuEnabled,
+  verifyOptionInActionMenuDisabled 
+} from '../common/actions/action-menu.action'
 import { expect } from 'chai'
 
 Given('open url', async function() {
@@ -1182,6 +1187,26 @@ Then('select {string} option in action menu on {string} wizard', async function(
   await openActionMenu(this.driver, actionMenu)
   await this.driver.sleep(500)
   await selectOptionInActionMenu(this.driver, actionMenu, option)
+})
+
+Then('check that {string} option in action menu on {string} wizard is enabled', async function(
+  option,
+  wizard
+) {
+  const actionMenu = pageObjects[wizard]['Action_Menu']
+  await openActionMenu(this.driver, actionMenu)
+  await this.driver.sleep(500)
+  await verifyOptionInActionMenuEnabled (this.driver, actionMenu, option)
+})
+
+Then('check that {string} option in action menu on {string} wizard is disabled', async function(
+  option,
+  wizard
+) {
+  const actionMenu = pageObjects[wizard]['Action_Menu']
+  await openActionMenu(this.driver, actionMenu)
+  await this.driver.sleep(500)
+  await verifyOptionInActionMenuDisabled (this.driver, actionMenu, option)
 })
 
 Then('check that {string} file is existed on {string} directory', async function (file, filePath) {

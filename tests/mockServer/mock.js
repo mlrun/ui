@@ -1214,7 +1214,8 @@ function postArtifact(req, res) {
         kind: req.body.spec.producer.kind,
         uri: req.body.spec.producer.uri
       },
-      target_path: req.body.spec.target_path
+      target_path: req.body.spec.target_path,
+      model_file: req.body.spec.model_file
     },
     status: req.body.status,
     uid: req.body.uid

@@ -44,7 +44,16 @@ module.exports = {
     Tab_List: ['Feature Sets', 'Features', 'Feature Vectors']
   },
   Models: {
-    Tab_List: ['Models', 'Model Endpoints', 'Real-Time Pipelines']
+    Tab_List: ['Models', 'Model Endpoints', 'Real-Time Pipelines'],
+    Combobox_Options: [
+      'V3IO',
+      'S3',
+      'HTTP',
+      'HTTPS',
+      'Azure storage',
+      'Google storage',
+      'Databricks filesystem'
+    ] 
   },
   Real_Time_Pipeline_Pane: {
     Overview_Headers: [
@@ -162,22 +171,33 @@ module.exports = {
     Tab_List: ['Overview'],
     Tab_List_Extended: ['Overview', 'Preview', 'Features', 'Statistics'],
     Overview_General_Headers: [
-      'Hash',
-      'Key',
-      'Version tag',
-      'Iter',
-      'Kind',
-      'Size',
-      'Path',
-      'URI',
-      'Model file',
-      'Feature vector',
-      'UID',
-      'Updated',
-      'Framework',
-      'Algorithm',
-      'Labels',
-      'Metrics'
+      'Hash:',
+      'Key:',
+      'Version tag:',
+      'Iter:',
+      'Kind:',
+      'Size:',
+      'Path:',
+      'URI:',
+      'Model file:',
+      'Feature vector:',
+      'UID:',
+      'Updated:',
+      'Framework:',
+      'Algorithm:',
+      'Labels:',
+      'Metrics:'
+    ],
+    Overview_Producer_Headers: [
+      'Name:',
+      'Kind:',
+      'URI:',
+      'Owner:',
+      'Workflow:'
+    ],
+    Overview_Sources_Headers: [
+      'Name:',
+      'Path:'
     ]
   },
   Models_Endpoints_Info_Pane: {

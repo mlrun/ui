@@ -33,7 +33,7 @@ import graph from '../components/graph.component'
 const actionMenuStructure = {
   root: '.actions-menu__container',
   menuElements: {
-    open_button: 'button',
+    open_button: '[data-testid="actions-menu"] button',
     options: '.actions-menu__body .actions-menu__option'
   }
 }
@@ -90,7 +90,8 @@ const modelsTable = {
         updated: '.table-body__cell:nth-of-type(5) .data-ellipsis',
         metrics: '.table-body__cell:nth-of-type(6) .data-ellipsis',
         frameworkAndAlgorithm: '.table-body__cell:nth-of-type(7) .chips-wrapper',
-        preview: '.table-body__cell:nth-of-type(8) button .data-ellipsis svg',
+        preview: '[data-testid="quick-link-model-preview-tooltip-wrapper"]',
+        deploy: '[data-testid="quick-link-model-deploy-tooltip-wrapper"]',
         download: '.table-body__cell:nth-of-type(9) button .download-container svg',
         uri: '.table-body__cell:nth-of-type(10) button .data-ellipsis svg',
         action_menu: {
