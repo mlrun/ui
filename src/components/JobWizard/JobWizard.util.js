@@ -1101,7 +1101,7 @@ export const getNewJobErrorMsg = error => {
   return error.response.status === NOTFOUND_ERROR_STATUS_CODE
     ? 'To run a job, the selected function needs to be built. Make sure to build the function before running the job.'
     : error.response.status === FORBIDDEN_ERROR_STATUS_CODE
-      ? 'You are not permitted to run new job.'
+      ? 'You are not permitted to run a new job.'
       : error.response.status === CONFLICT_ERROR_STATUS_CODE
         ? 'This job is already scheduled'
         : getErrorDetail(error) || 'Unable to create a new job.'
@@ -1109,7 +1109,7 @@ export const getNewJobErrorMsg = error => {
 
 export const getSaveJobErrorMsg = error => {
   return error.response.status === FORBIDDEN_ERROR_STATUS_CODE
-    ? 'You are not permitted to run new job.'
+    ? 'You are not permitted to run a new job.'
     : getErrorDetail(error) || 'Unable to save the job.'
 }
 
