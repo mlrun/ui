@@ -186,7 +186,7 @@ export const generateJobWizardData = (
   if (!isEmpty(functionParameters) || !isEmpty(prePopulatedData?.dataInputs)) {
     jobFormData[DATA_INPUTS_STEP].dataInputsTable = parseDataInputs(
       functionParameters,
-      prePopulatedData?.dataInputs
+      prePopulatedData?.trainDatasetUri
     )
   }
 
@@ -552,7 +552,7 @@ const getDataInputData = (dataInputName, dataInputValue, dataInputIsChecked) => 
 
 const sortParameters = (parameter, nextParameter) => nextParameter.isRequired - parameter.isRequired
 
-export const parseDataInputs = (functionParameters = [], prePopulatedDataInputs) => {
+export const parseDataInputs = (functionParameters = [], trainDatasetUri) => {
   const parsedDataInputs = functionParameters
     .filter(dataInputs => dataInputs.type?.includes('DataItem'))
     .map(dataInput => {
@@ -565,16 +565,10 @@ export const parseDataInputs = (functionParameters = [], prePopulatedDataInputs)
       }
     })
     .sort(sortParameters)
+  const dataInputsDataset = parsedDataInputs.find(dataInput => dataInput.data?.name === 'dataset')
 
-  if (!isEmpty(prePopulatedDataInputs)) {
-    prePopulatedDataInputs.forEach(dataInput => {
-      parsedDataInputs.unshift({
-        data: getDataInputData(dataInput.name, dataInput.path, true),
-        isRequired: true,
-        isDefault: true,
-        isPredefined: true
-      })
-    })
+  if (dataInputsDataset && trainDatasetUri) {
+    dataInputsDataset.data.path = trainDatasetUri
   }
 
   return parsedDataInputs
