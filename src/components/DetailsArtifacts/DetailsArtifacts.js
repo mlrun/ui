@@ -67,7 +67,7 @@ const DetailsArtifacts = ({
   )
 
   useEffect(() => {
-    if (selectedItem.iterationStats.length > 0) {
+    if (selectedItem.iterationStats?.length > 0) {
       const iterIndex = selectedItem.iterationStats[0].indexOf('iter')
       const iterationsList = []
 

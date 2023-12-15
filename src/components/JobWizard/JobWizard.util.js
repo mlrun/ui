@@ -568,6 +568,7 @@ const parseVolumes = (volumes, volumeMounts, isEditMode) => {
         name: volumeMount?.name,
         mountPath: volumeMount?.mountPath,
         typeName: currentVolume[volumeTypePath]?.[volumeTypeName],
+        accessKey: currentVolume[volumeTypePath]?.secretRef?.name ?? '',
         ...currentVolume[volumeTypePath]?.options
       },
       typeAdditionalData: omit(currentVolume[volumeTypePath], ['options', 'name']),
@@ -922,13 +923,19 @@ const generateParameters = parametersTableData => {
   parametersTableData?.predefined
     ?.filter(parameter => !parameter.data.isHyper && parameter.data.isChecked)
     .forEach(parameter => {
-      parameters[parameter.data.name] = convertParameterValue(parameter.data.value, parameter.data.type)
+      parameters[parameter.data.name] = convertParameterValue(
+        parameter.data.value,
+        parameter.data.type
+      )
     })
 
   parametersTableData?.custom
     ?.filter(parameter => !parameter.data.isHyper && parameter.data.isChecked)
     .forEach(parameter => {
-      parameters[parameter.data.name] = convertParameterValue(parameter.data.value, parameter.data.type)
+      parameters[parameter.data.name] = convertParameterValue(
+        parameter.data.value,
+        parameter.data.type
+      )
     })
 
   return parameters
