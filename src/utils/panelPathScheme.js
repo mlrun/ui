@@ -30,7 +30,7 @@ import { uniqBy } from 'lodash'
 export const generateProjectsList = (projectsList, currentProject) =>
   projectsList
     .map(projectItem => ({
-      label: projectItem === currentProject ? 'Current project' : projectItem,
+      label: projectItem === currentProject ? `${projectItem} (Current project)` : projectItem,
       id: projectItem
     }))
     .sort((prevProject, nextProject) => {
