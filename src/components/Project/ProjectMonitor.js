@@ -30,7 +30,7 @@ import featureStoreActions from '../../actions/featureStore'
 import functionsActions from '../../actions/functions'
 import nuclioAction from '../../actions/nuclio'
 import projectsAction from '../../actions/projects'
-import { DATASET_TYPE, DATASETS, MODEL_TYPE } from '../../constants'
+import { DATASET_TYPE, DATASETS, DETAILS_BUILD_LOG_TAB, MODEL_TYPE } from '../../constants'
 import { areNuclioStreamsEnabled } from '../../utils/helper'
 import { generateCreateNewOptions, handleFetchProjectError } from './project.utils'
 import { openPopUp } from 'igz-controls/utils/common.util'
@@ -193,7 +193,7 @@ const ProjectMonitor = ({
 
   const handleDeployFunctionSuccess = async ready => {
     let { name, tag } = functionsStore.newFunction.metadata
-    const tab = ready === false ? 'build-log' : 'overview'
+    const tab = ready === false ? DETAILS_BUILD_LOG_TAB : 'overview'
 
     tag ||= 'latest'
 

@@ -32,7 +32,8 @@ import {
   PANEL_FUNCTION_CREATE_MODE,
   SHOW_UNTAGGED_ITEMS,
   TAG_LATEST,
-  REQUEST_CANCELED
+  REQUEST_CANCELED,
+  DETAILS_BUILD_LOG_TAB
 } from '../../constants'
 import {
   detailsMenu,
@@ -183,8 +184,13 @@ const Functions = ({
     [latestItems, params.projectName]
   )
 
+  const handleRemoveLogs = useCallback(() => {
+    clearTimeout(fetchFunctionLogsTimeout.current)
+    fetchFunctionLogsTimeout.current = null
+  }, [])
+
   const handleFetchFunctionLogs = useCallback(
-    (item, projectName, setDetailsLogs, offset) => {
+    (item, projectName, setDetailsLogs) => {
       return getFunctionLogs(
         fetchFunctionLogs,
         fetchFunctionLogsTimeout,
@@ -192,17 +198,12 @@ const Functions = ({
         item.name,
         item.tag,
         setDetailsLogs,
-        offset,
         navigate,
         fetchData
       )
     },
     [fetchFunctionLogs, navigate, fetchData]
   )
-
-  const handleRemoveLogs = useCallback(() => {
-    clearTimeout(fetchFunctionLogsTimeout.current)
-  }, [fetchFunctionLogsTimeout])
 
   const removeFunction = useCallback(
     func => {
@@ -289,7 +290,7 @@ const Functions = ({
               setEditableItem(func)
             },
             hidden:
-             !isDemoMode || !getFunctionsEditableTypes(isStagingMode).includes(func?.type) ||
+              !isDemoMode || !getFunctionsEditableTypes(isStagingMode).includes(func?.type) ||
               !FUNCTIONS_EDITABLE_STATES.includes(func?.state?.value)
           },
           {
@@ -333,6 +334,8 @@ const Functions = ({
   useEffect(() => {
     let item = {}
 
+    handleRemoveLogs()
+
     if (params.hash && functions.length > 0) {
       const funcTagIndex = params.hash.indexOf(':')
 
@@ -358,7 +361,7 @@ const Functions = ({
     }
 
     setSelectedFunction(item)
-  }, [functions, navigate, params.funcName, params.hash, params.projectName, params.tag])
+  }, [functions, handleRemoveLogs, navigate, params.funcName, params.hash, params.projectName, params.tag])
 
   useEffect(() => {
     dispatch(setFilters({ groupBy: GROUP_BY_NAME, showUntagged: SHOW_UNTAGGED_ITEMS }))
@@ -412,7 +415,7 @@ const Functions = ({
 
   const handleDeployFunctionSuccess = ready => {
     let { name, tag } = functionsStore.newFunction.metadata
-    const tab = ready === false ? 'build-log' : 'overview'
+    const tab = ready === false ? DETAILS_BUILD_LOG_TAB : 'overview'
 
     tag ||= TAG_LATEST
 
