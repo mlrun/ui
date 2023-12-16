@@ -42,7 +42,7 @@ import artifactApi from '../../api/artifacts-api'
 
 import './RegisterModelModal.scss'
 
-function RegisterModelModal({ actions, isOpen, onResolve, projectName, refresh }) {
+function RegisterModelModal({ actions, isOpen, onResolve, params, refresh }) {
   const initialValues = {
     metadata: {
       description: undefined,
@@ -78,10 +78,10 @@ function RegisterModelModal({ actions, isOpen, onResolve, projectName, refresh }
       metadata: {
         ...values.metadata,
         labels: convertChipsData(values.metadata.labels),
-        project: projectName,
+        project: params.projectName,
         tree: uid
       },
-      project: projectName,
+      project: params.projectName,
       spec: {
         db_key: values.metadata.key,
         producer: {
@@ -102,7 +102,7 @@ function RegisterModelModal({ actions, isOpen, onResolve, projectName, refresh }
     }
 
     return artifactApi
-      .registerArtifact(projectName, data)
+      .registerArtifact(params.projectName, data)
       .then(response => {
         resolveModal()
         refresh(filtersStore)
@@ -169,7 +169,7 @@ function RegisterModelModal({ actions, isOpen, onResolve, projectName, refresh }
                 validationRules={getValidationRules('artifact.name', {
                   name: 'ArtifactExists',
                   label: 'Artifact name must be unique',
-                  pattern: isArtifactNameUnique(projectName),
+                  pattern: isArtifactNameUnique(params.projectName),
                   async: true
                 })}
               />
@@ -184,6 +184,7 @@ function RegisterModelModal({ actions, isOpen, onResolve, projectName, refresh }
                 hiddenSelectOptionsIds={[MLRUN_STORAGE_INPUT_PATH_SCHEME]}
                 label="Target Path"
                 name="spec.target_path.path"
+                params={params}
                 required
                 selectPlaceholder="Path Scheme"
                 setFieldState={formState.form.mutators.setFieldState}
@@ -214,7 +215,7 @@ function RegisterModelModal({ actions, isOpen, onResolve, projectName, refresh }
 
 RegisterModelModal.propTypes = {
   isOpen: PropTypes.bool.isRequired,
-  projectName: PropTypes.string.isRequired,
+  params: PropTypes.shape({}).isRequired,
   refresh: PropTypes.func.isRequired
 }
 

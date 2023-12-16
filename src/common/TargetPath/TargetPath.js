@@ -18,7 +18,6 @@ under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
 import React, { useState, useEffect } from 'react'
-import { useParams } from 'react-router-dom'
 import { useDispatch } from 'react-redux'
 import { get, isNil, uniqBy } from 'lodash'
 import { OnChange } from 'react-final-form-listeners'
@@ -57,13 +56,13 @@ const TargetPath = ({
   inputDefaultValue,
   label,
   name,
+  params,
   required,
   selectDefaultValue,
   selectPlaceholder,
   setFieldState
 }) => {
   const [dataInputState, setDataInputState] = useState(targetPathInitialState)
-  const params = useParams()
   const dispatch = useDispatch()
 
   const handleOnChange = (selectValue, inputValue) => {
@@ -180,23 +179,23 @@ const TargetPath = ({
         dataInputState.storePathType === 'feature-vectors' &&
         dataInputState.featureVectors.length === 0
       ) {
-        dispatch(featureStoreActions.fetchFeatureVectors(dataInputState.project, {}, {}, true)).then(
-          featureVectors => {
-            const featureVectorsList = uniqBy(featureVectors, 'metadata.name')
-              .map(featureVector => ({
-                label: featureVector.metadata.name,
-                id: featureVector.metadata.name
-              }))
-              .sort((prevFeatureVector, nextFeatureVector) =>
-                prevFeatureVector.id.localeCompare(nextFeatureVector.id)
-              )
-
-            setDataInputState(prev => ({
-              ...prev,
-              featureVectors: featureVectorsList
+        dispatch(
+          featureStoreActions.fetchFeatureVectors(dataInputState.project, {}, {}, true)
+        ).then(featureVectors => {
+          const featureVectorsList = uniqBy(featureVectors, 'metadata.name')
+            .map(featureVector => ({
+              label: featureVector.metadata.name,
+              id: featureVector.metadata.name
             }))
-          }
-        )
+            .sort((prevFeatureVector, nextFeatureVector) =>
+              prevFeatureVector.id.localeCompare(nextFeatureVector.id)
+            )
+
+          setDataInputState(prev => ({
+            ...prev,
+            featureVectors: featureVectorsList
+          }))
+        })
       }
     }
   }, [
@@ -337,6 +336,7 @@ TargetPath.propTypes = {
   inputDefaultValue: PropTypes.string,
   label: PropTypes.string,
   name: PropTypes.string.isRequired,
+  params: PropTypes.shape({}).isRequired,
   required: PropTypes.bool,
   selectDefaultValue: PropTypes.string,
   selectPlaceholder: PropTypes.string,

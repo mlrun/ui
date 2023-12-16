@@ -24,7 +24,7 @@ import FormDataInputsTable from '../../../../elements/FormDataInputsTable/FormDa
 
 import { DATA_INPUTS_STEP } from '../../../../constants'
 
-const JobWizardDataInputs = ({ formState, stepIsActive }) => {
+const JobWizardDataInputs = ({ formState, params, stepIsActive }) => {
   return (
     <div className="job-wizard__data-inputs">
       <div className="form-row">
@@ -35,6 +35,7 @@ const JobWizardDataInputs = ({ formState, stepIsActive }) => {
           exitEditModeTriggerItem={stepIsActive}
           fieldsPath={`${DATA_INPUTS_STEP}.dataInputsTable`}
           formState={formState}
+          params={params}
           rowCanBeAdded={formState.values.runDetails.handlerData?.has_kwargs}
         />
       </div>
@@ -48,6 +49,7 @@ JobWizardDataInputs.defaultProps = {
 
 JobWizardDataInputs.propTypes = {
   formState: PropTypes.shape({}).isRequired,
+  params: PropTypes.shape({}).isRequired,
   stepIsActive: PropTypes.bool
 }
 

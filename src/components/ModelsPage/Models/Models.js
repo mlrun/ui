@@ -349,8 +349,8 @@ const Models = ({ fetchModelFeatureVector }) => {
   ])
 
   const handleRegisterModel = useCallback(() => {
-    openPopUp(RegisterModelModal, { projectName: params.projectName, refresh: handleRefresh })
-  }, [handleRefresh, params.projectName])
+    openPopUp(RegisterModelModal, { params, refresh: handleRefresh })
+  }, [handleRefresh, params])
 
   const handleTrainModel = () => {
     openPopUp(JobWizard, {
