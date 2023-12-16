@@ -30,8 +30,7 @@ import FormDirtySpy from '../../common/FormDirtySpy/FormDirtySpy'
 import JobWizardAdvanced from './JobWizardSteps/JobWizardAdvanced/JobWizardAdvanced'
 import JobWizardDataInputs from './JobWizardSteps/JobWizardDataInputs/JobWizardDataInputs'
 import JobWizardFunctionSelection from './JobWizardSteps/JobWizardFunctionSelection/JobWizardFunctionSelection'
-import JobWizardHyperparameterStrategy
-  from './JobWizardSteps/JobWizardHyperparameterStrategy/JobWizardHyperparameterStrategy'
+import JobWizardHyperparameterStrategy from './JobWizardSteps/JobWizardHyperparameterStrategy/JobWizardHyperparameterStrategy'
 import JobWizardParameters from './JobWizardSteps/JobWizardParameters/JobWizardParameters'
 import JobWizardResources from './JobWizardSteps/JobWizardResources/JobWizardResources'
 import JobWizardRunDetails from './JobWizardSteps/JobWizardRunDetails/JobWizardRunDetails'
@@ -65,9 +64,7 @@ import {
 import functionsActions from '../../actions/functions'
 import jobsActions from '../../actions/jobs'
 import projectsAction from '../../actions/projects'
-import {
-  FUNCTIONS_SELECTION_FUNCTIONS_TAB
-} from './JobWizardSteps/JobWizardFunctionSelection/jobWizardFunctionSelection.util'
+import { FUNCTIONS_SELECTION_FUNCTIONS_TAB } from './JobWizardSteps/JobWizardFunctionSelection/jobWizardFunctionSelection.util'
 import { JOB_WIZARD_MODE } from '../../types'
 import { MODAL_MAX } from 'igz-controls/constants'
 import { resetModalFilter } from '../../reducers/filtersReducer'
@@ -495,7 +492,7 @@ const JobWizard = ({
                 selectedFunctionData={selectedFunctionData}
                 setJobData={setJobData}
               />
-              <JobWizardDataInputs formState={formState} />
+              <JobWizardDataInputs formState={formState} params={params} />
               <JobWizardParameters formState={formState} />
               <JobWizardHyperparameterStrategy formState={formState} />
               <JobWizardResources formState={formState} frontendSpec={frontendSpec} />

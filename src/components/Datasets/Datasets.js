@@ -326,11 +326,11 @@ const Datasets = () => {
   const handleRegisterDataset = useCallback(() => {
     openPopUp(RegisterArtifactModal, {
       artifactKind: DATASET_TYPE,
-      projectName: params.projectName,
+      params,
       refresh: handleRefresh,
       title: registerDatasetTitle
     })
-  }, [handleRefresh, params.projectName])
+  }, [handleRefresh, params])
 
   return (
     <DatasetsView
