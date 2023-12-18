@@ -8,9 +8,17 @@ Feature: Datasets Page
     Given open url
     And click on row root with value "getting-started-tutorial-admin" in "name" column in "Projects_Table" table on "Projects" wizard
     And wait load page
+    Then verify breadcrumbs "tab" label should be equal "Project monitoring" value
+    Then verify breadcrumbs "project" label should be equal "getting-started-tutorial-admin" value
     And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
-    Then click on "Project_Monitoring_Button" element on "commonPagesHeader" wizard
+    And click on cell with value "Datasets" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+    And hover "MLRun_Logo" component on "commonPagesHeader" wizard
     And wait load page
+    Then verify breadcrumbs "tab" label should be equal "Datasets" value
+    And wait load page
+    Then click on breadcrumbs "project" label on "commonPagesHeader" wizard
+    And wait load page
+    Then verify breadcrumbs "tab" label should be equal "Project monitoring" value
     Then verify breadcrumbs "project" label should be equal "getting-started-tutorial-admin" value
     And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
     And click on cell with value "Datasets" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
@@ -41,6 +49,12 @@ Feature: Datasets Page
     Given open url
     And click on row root with value "churn-project-admin" in "name" column in "Projects_Table" table on "Projects" wizard
     And wait load page
+    And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
+    And click on cell with value "Datasets" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+    And wait load page
+    And select "tab" with "Project monitoring" value in breadcrumbs menu
+    And wait load page
+    Then verify breadcrumbs "tab" label should be equal "Project monitoring" value
     And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
     And click on cell with value "Datasets" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
     And wait load page
@@ -104,6 +118,7 @@ Feature: Datasets Page
     Then verify "Train_Button" element visibility on "Datasets_Info_Pane" wizard
     Then "Train_Button" element on "Datasets_Info_Pane" should contains "Train" value
     Then click on "Train_Button" element on "Datasets_Info_Pane" wizard
+    And wait load page
     Then verify "Title" element visibility on "Train_Model" wizard
     Then "Title" element on "Train_Model" should contains "Train Model" value
     Then verify "Cross_Cancel_Button" element visibility on "Train_Model" wizard
@@ -155,9 +170,6 @@ Feature: Datasets Page
   Scenario: MLD006 - Check all mandatory components on Register Dataset form
     Given open url
     And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
-    And wait load page
-    And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
-    Then click on "Project_Monitoring_Button" element on "commonPagesHeader" wizard
     And wait load page
     And select "tab" with "Datasets" value in breadcrumbs menu
     And wait load page

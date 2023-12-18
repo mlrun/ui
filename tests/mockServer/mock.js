@@ -49,6 +49,7 @@ import iguazioProjects from './data/iguazioProjects.json'
 import iguazioUserGrops from './data/iguazioUserGroups.json'
 import iguazioProjectAuthorizationRoles from './data/iguazioProjectAuthorizationRoles.json'
 import iguazioUsers from './data/iguazioUsers.json'
+import iguazioSelf from './data/iguazioSelf.json'
 import iguazioUserRelations from './data/iguazioUserRelations.json'
 import iguazioProjectsRelations from './data/iguazioProjectsRelations.json'
 
@@ -428,6 +429,20 @@ function patchRun(req, res) {
     .filter(run => run.metadata.uid === req.params.uid)
 
   collectedRun[0].status.state = req.body['status.state']
+
+  res.send()
+}
+
+function deleteRun(req, res) {
+  const collectedRun = runs.runs
+    .find (run => run.metadata.project === req.params.project && run.metadata.uid === req.params.uid)
+  
+  if (collectedRun){
+    remove(
+      runs.runs,
+      run => run.metadata.project === req.params.project && run.metadata.uid === req.params.uid
+    )
+  }
 
   res.send()
 }
@@ -1239,6 +1254,21 @@ function postArtifact(req, res) {
   res.send()
 }
 
+function deleteArtifact(req, res){
+  const collectedArtifact = artifacts.artifacts
+    .filter (artifact => (artifact.metadata?.project === req.params.project) || artifact.project === req.params.project 
+    && (artifact.metadata?.tree === req.params.uid) || artifact.tree === req.params.uid)
+  if (collectedArtifact){
+    remove(
+      artifacts.artifacts,
+      artifact => (artifact.metadata?.project === req.params.project) || artifact.project === req.params.project 
+      && (artifact.metadata?.tree === req.params.uid) || artifact.tree === req.params.uid
+    )
+  }
+
+  res.send({})
+}
+
 function getModelEndpoints(req, res) {
   let collectedEndpoints = modelEndpoints.endpoints
     .filter(endpoint => endpoint.metadata.project === req.params.project)
@@ -1325,6 +1355,10 @@ function getIguazioProjects(req, res) {
 
 function getIguazioAuthorization(req, res) {
   res.send({ data: [], meta: { ctx: 11661436569072727632 } })
+}
+
+function getIguazioSelf(req, res) {
+  res.send(iguazioSelf)
 }
 
 function getIguazioProject(req, res) {
@@ -1534,6 +1568,7 @@ app.get(`${mlrunAPIIngress}/project-summaries/:project`, getProjectSummary)
 app.get(`${mlrunAPIIngress}/runs`, getRuns)
 app.get(`${mlrunAPIIngress}/run/:project/:uid`, getRun)
 app.patch(`${mlrunAPIIngress}/run/:project/:uid`, patchRun)
+app.delete(`${mlrunAPIIngress}/projects/:project/runs/:uid`, deleteRun)
 app.get(`${mlrunIngress}/catalog.json`, getFunctionCatalog)
 app.get(`${mlrunAPIIngress}/hub/sources/:project/items`, getFunctionCatalog)
 app.get(`${mlrunAPIIngress}/hub/sources/:project/items/:uid`, getFunctionItem)
@@ -1550,6 +1585,7 @@ app.get(`${mlrunAPIIngress}/projects/:project/pipelines/:pipelineID`, getPipelin
 app.get(`${mlrunAPIIngress}/projects/:project/artifact-tags`, getProjectsArtifactTags)
 app.get(`${mlrunAPIIngress}/projects/:project/artifacts`, getArtifacts)
 app.post(`${mlrunAPIIngress}/projects/:project/artifacts/:uid/:artifact`, postArtifact)
+app.delete(`${mlrunAPIIngress}/projects/:project/artifacts/:uid`, deleteArtifact)
 
 app.put(`${mlrunAPIIngress}/projects/:project/tags/:tag`, putTags)
 app.delete(`${mlrunAPIIngress}/projects/:project/tags/:tag`, deleteTags)
@@ -1615,6 +1651,8 @@ app.post(`${nuclioApiUrl}/api/v3io_streams/get_shard_lags`, getNuclioShardLags)
 app.get(`${iguazioApiUrl}/api/projects`, getIguazioProjects)
 
 app.get(`${iguazioApiUrl}/api/projects/__name__/:project/authorization`, getIguazioAuthorization)
+
+app.get(`${iguazioApiUrl}/api/self`, getIguazioSelf)
 
 app.get(`${iguazioApiUrl}/api/projects/:id`, getIguazioProject)
 

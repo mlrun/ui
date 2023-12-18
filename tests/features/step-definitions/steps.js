@@ -218,6 +218,15 @@ Then('click on {string} element on {string} wizard', async function(
   await this.driver.sleep(250)
 })
 
+Then('click on breadcrumbs {string} label on {string} wizard', async function(
+  labelType,
+  wizard
+) {
+  await waiteUntilComponent(this.driver, pageObjects[wizard]['Breadcrumbs'][`${labelType}Label`])
+  await clickOnComponent(this.driver, pageObjects[wizard]['Breadcrumbs'][`${labelType}Label`])
+  await this.driver.sleep(250)
+})
+
 Then('verify if {string} popup dialog appears', async function(popup) {
   await waiteUntilComponent(this.driver, pageObjects[popup]['Title'])
   await this.driver.sleep(250)

@@ -15,6 +15,13 @@ Feature: Files Page
     And hover "MLRun_Logo" component on "commonPagesHeader" wizard
     And wait load page
     Then verify breadcrumbs "tab" label should be equal "Artifacts" value
+    Then click on breadcrumbs "project" label on "commonPagesHeader" wizard
+    And wait load page
+    Then verify breadcrumbs "tab" label should be equal "Project monitoring" value
+    And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
+    And click on cell with value "Artifacts" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+    And hover "MLRun_Logo" component on "commonPagesHeader" wizard
+    And wait load page
     Then verify "Table_Name_Filter_Input" element visibility on "Files" wizard
     Then click on "Table_FilterBy_Button" element on "Files" wizard
     Then verify "Table_Label_Filter_Input" element visibility on "Artifacts_FilterBy_Popup" wizard
@@ -34,6 +41,13 @@ Feature: Files Page
     And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
     And wait load page
     Then verify breadcrumbs "project" label should be equal "default" value
+    And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
+    And click on cell with value "Artifacts" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+    And hover "MLRun_Logo" component on "commonPagesHeader" wizard
+    And wait load page
+    And select "tab" with "Project monitoring" value in breadcrumbs menu
+    And wait load page
+    Then verify breadcrumbs "tab" label should be equal "Project monitoring" value
     And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
     And click on cell with value "Artifacts" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
     And hover "MLRun_Logo" component on "commonPagesHeader" wizard

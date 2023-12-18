@@ -17,6 +17,13 @@ Feature: Models Page
     And hover "MLRun_Logo" component on "commonPagesHeader" wizard
     And wait load page
     Then verify breadcrumbs "tab" label should be equal "Models" value
+    Then click on breadcrumbs "project" label on "commonPagesHeader" wizard
+    And wait load page
+    Then verify breadcrumbs "tab" label should be equal "Project monitoring" value
+    And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
+    And click on cell with value "Models" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+    And hover "MLRun_Logo" component on "commonPagesHeader" wizard
+    And wait load page
     Then verify "Models_Tab_Selector" on "Models" wizard should contains "Models"."Tab_List"
     Then verify "Table_Name_Filter_Input" element visibility on "Models" wizard
     Then click on "Table_FilterBy_Button" element on "Models" wizard
@@ -31,6 +38,7 @@ Feature: Models Page
     Then verify "Train_Model_Button" element visibility on "Models" wizard
     Then "Train_Model_Button" element on "Models" should contains "Train model" value
     Then click on "Train_Model_Button" element on "Models" wizard
+    And wait load page
     Then verify "Title" element visibility on "Train_Model" wizard
     Then "Title" element on "Train_Model" should contains "Train Model" value
     Then verify "Cross_Cancel_Button" element visibility on "Train_Model" wizard
@@ -44,6 +52,13 @@ Feature: Models Page
     And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
     And wait load page
     Then verify breadcrumbs "project" label should be equal "default" value
+    And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
+    And click on cell with value "Models" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+    And hover "MLRun_Logo" component on "commonPagesHeader" wizard
+    And wait load page
+    And select "tab" with "Project monitoring" value in breadcrumbs menu
+    And wait load page
+    Then verify breadcrumbs "tab" label should be equal "Project monitoring" value
     And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
     And click on cell with value "Models" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
     And hover "MLRun_Logo" component on "commonPagesHeader" wizard
