@@ -56,6 +56,7 @@ const FormDataInputsRow = ({
   getTableArrayErrors,
   index,
   isCurrentRowEditing,
+  params,
   rowPath,
   setDataInputState,
   setFieldState,
@@ -119,6 +120,7 @@ const FormDataInputsRow = ({
               }
               inputDefaultValue={editingItem.data.fieldInfo?.value}
               name={`${rowPath}.data.path`}
+              params={params}
               required
               selectDefaultValue={editingItem.data.path && editingItem.data.fieldInfo?.pathType}
               selectPlaceholder="Path Scheme"
@@ -222,6 +224,7 @@ FormDataInputsRow.propTypes = {
   getTableArrayErrors: PropTypes.func.isRequired,
   index: PropTypes.number.isRequired,
   isCurrentRowEditing: PropTypes.func.isRequired,
+  params: PropTypes.shape({}).isRequired,
   rowPath: PropTypes.string.isRequired,
   setDataInputState: PropTypes.func.isRequired,
   setFieldState: PropTypes.func.isRequired,

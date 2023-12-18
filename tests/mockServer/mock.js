@@ -609,10 +609,11 @@ function getArtifacts(req, res) {
   const categories = {
     dataset: ['dataset'],
     model: ['model'],
-    other: ['', 'table', 'link', 'plot', 'chart']
+    other: ['', 'table', 'link', 'plot', 'chart', 'plotly']
   }
   let collectedArtifacts = artifacts.artifacts.filter(
-    artifact => artifact.project === req.params.project
+    artifact => (artifact.metadata?.project === req.params.project) 
+    || artifact.project === req.params.project
   )
 
   if (req.query['category']) {
@@ -639,9 +640,16 @@ function getArtifacts(req, res) {
   if (req.query['name']) {
     collectedArtifacts = collectedArtifacts.filter(artifact => {
       if (req.query['name'].includes('~')) {
-        return artifact.db_key.includes(req.query['name'].slice(1))
-      } else {
-        return artifact.db_key === req.query['name']
+        const value = artifact.spec?.db_key ?? artifact.db_key
+        if (req.query['name'].includes('~')) {
+          return value.includes(req.query['name'].slice(1))
+        } 
+        else {
+          return value.includes(req.query['name'])
+        }
+      } 
+      else {
+        return (artifact.spec && artifact.spec.db_key === req.query['name']) || artifact.db_key === req.query['name']
       }
     })
   }
@@ -649,11 +657,11 @@ function getArtifacts(req, res) {
   if (req.query['tag']) {
     switch (req.query['tag']) {
       case '*':
-        collectedArtifacts = collectedArtifacts.filter(artifact => artifact.tag)
+        collectedArtifacts = collectedArtifacts.filter(artifact => artifact.metadata?.tag || artifact.tag)
         break
       default:
         collectedArtifacts = collectedArtifacts.filter(
-          artifact => artifact.tag === req.query['tag']
+          artifact => (artifact.metadata?.tag === req.query['tag']) || artifact.tag === req.query['tag']
         )
         break
     }
@@ -1140,15 +1148,15 @@ function putTags(req, res){
   const projectName = req.params.project
 
   const artifactForUpdate = artifacts.artifacts
-    .find(artifact => ((artifact.metadata && artifact.metadata.project === req.params.project) 
-      || artifact.project === req.params.project) 
-      && artifact.kind === req.body.identifiers[0].kind
-      && ((artifact.metadata && artifact.metadata.tree === req.body.identifiers[0].uid) 
-      || artifact.tree === req.body.identifiers[0].uid) 
-      && ((artifact.metadata && artifact.metadata.key === req.body.identifiers[0].key) 
-      || artifact.db_key === req.body.identifiers[0].key))
+    .find(artifact => (((artifact.metadata?.project === req.params.project) 
+    || artifact.project === req.params.project) 
+    && artifact.kind === req.body.identifiers[0].kind
+    && ((artifact.metadata?.tree === req.body.identifiers[0].uid) 
+    || artifact.tree === req.body.identifiers[0].uid) 
+    && ((artifact.spec?.db_key === req.body.identifiers[0].key) 
+    || artifact.db_key === req.body.identifiers[0].key)))
   if (artifactForUpdate) {
-    if (artifactForUpdate.metadata && artifactForUpdate.metadata.tag || artifactForUpdate.metadata && artifactForUpdate.metadata.tag === ''){
+    if (artifactForUpdate.metadata?.tag || artifactForUpdate.metadata?.tag === ''){
       artifactForUpdate.metadata.tag = req.params.tag
     }
     else if (artifactForUpdate.tag || artifactForUpdate.tag === ''){
@@ -1164,15 +1172,15 @@ function putTags(req, res){
 
 function deleteTags(req, res){
   const collectedArtifact = artifacts.artifacts
-    .find(artifact => ((artifact.metadata && artifact.metadata.project === req.params.project) 
-      || artifact.project === req.params.project) 
-      && artifact.kind === req.body.identifiers[0].kind
-      && ((artifact.metadata && artifact.metadata.tree === req.body.identifiers[0].uid) 
-      || artifact.tree === req.body.identifiers[0].uid) 
-      && ((artifact.metadata && artifact.metadata.key === req.body.identifiers[0].key) 
-      || artifact.db_key === req.body.identifiers[0].key))
+    .find(artifact => (((artifact.metadata?.project === req.params.project) 
+    || artifact.project === req.params.project) 
+    && artifact.kind === req.body.identifiers[0].kind
+    && ((artifact.metadata?.tree === req.body.identifiers[0].uid) 
+    || artifact.tree === req.body.identifiers[0].uid) 
+    && ((artifact.spec?.db_key === req.body.identifiers[0].key) 
+    || artifact.db_key === req.body.identifiers[0].key)))
   if (collectedArtifact) {
-    if (collectedArtifact.metadata && collectedArtifact.metadata.tag === req.params.tag){
+    if (collectedArtifact.metadata?.tag === req.params.tag){
       collectedArtifact.metadata.tag = ''
     }
     else if (collectedArtifact.tag === req.params.tag){

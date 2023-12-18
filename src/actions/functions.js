@@ -146,11 +146,11 @@ const functionsActions = {
   deployFunctionSuccess: () => ({
     type: DEPLOY_FUNCTION_SUCCESS
   }),
-  fetchFunctionLogs: (project, name, tag, offset) => dispatch => {
+  fetchFunctionLogs: (project, name, tag) => dispatch => {
     dispatch(functionsActions.fetchFunctionLogsBegin())
 
     return functionsApi
-      .getFunctionLogs(project, name, tag, offset)
+      .getFunctionLogs(project, name, tag)
       .then(result => {
         dispatch(functionsActions.fetchFunctionLogsSuccess())
 

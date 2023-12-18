@@ -50,37 +50,37 @@ const DetailsLogs = ({
   }, [item, params.projectName, refreshLogs, removeLogs, withLogsRefreshBtn])
 
   const handleScroll = event => {
-    if (event.target.scrollHeight - event.target.scrollTop === event.target.clientHeight) {
+    if (streamLogsRef.current && event.target.scrollHeight - event.target.scrollTop === event.target.clientHeight) {
       streamLogsRef.current()
     }
   }
 
-  return !detailsLogs.length ? (
+  return !detailsLogs.length && !functionsStore.logs.loading && !jobsStore.logs.loading ? (
     <NoData />
   ) : (
     <div className="table__item_logs">
-      {functionsStore.logs.loading || jobsStore.logs.loading ? (
-        <Loader section secondary />
-      ) : (
-        <>
-          <div className="table__item_logs__content" onScroll={handleScroll}>
-            {detailsLogs}
+      <div className="table__item_logs-content" onScroll={handleScroll}>
+        {detailsLogs}
+      </div>
+      <div className="table__item_logs-panel">
+        {withLogsRefreshBtn && (
+          <div className="logs-refresh">
+            <Button
+              icon={<RefreshIcon />}
+              label=""
+              tooltip="Refresh"
+              onClick={() => {
+                refreshLogs(item, params.projectName, setDetailsLogs, streamLogsRef)
+              }}
+            />
           </div>
-          {withLogsRefreshBtn && (
-            <div className="logs_refresh">
-              <Button
-                icon={<RefreshIcon />}
-                label=""
-                tooltip="Refresh"
-                onClick={() => {
-                  setDetailsLogs('')
-                  refreshLogs(item, params.projectName, setDetailsLogs, streamLogsRef)
-                }}
-              />
-            </div>
+        )}
+        <div className="logs-loader">
+          {(functionsStore.logs.loading || jobsStore.logs.loading) && (
+            <Loader section secondary small />
           )}
-        </>
-      )}
+        </div>
+      </div>
     </div>
   )
 }

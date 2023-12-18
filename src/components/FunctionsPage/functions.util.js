@@ -18,6 +18,7 @@ under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
 import {
+  DETAILS_BUILD_LOG_TAB,
   FUNCTION_CREATING_STATE,
   FUNCTION_ERROR_STATE,
   FUNCTION_FAILED_STATE,
@@ -45,7 +46,7 @@ export const detailsMenu = [
     label: 'code'
   },
   {
-    id: 'build-log',
+    id: DETAILS_BUILD_LOG_TAB,
     label: 'build log'
   }
 ]

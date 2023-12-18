@@ -163,14 +163,10 @@ const JobWizard = ({
 
   useEffect(() => {
     if (!isEmpty(jobsStore.jobFunc)) {
-      if (isEditMode) {
-        setSelectedFunctionData(jobsStore.jobFunc)
-      } else if (isRunMode) {
-        setSelectedFunctionData({
-          name: jobsStore.jobFunc.metadata.name,
-          functions: [jobsStore.jobFunc]
-        })
-      }
+      setSelectedFunctionData({
+        name: jobsStore.jobFunc.metadata.name,
+        functions: [jobsStore.jobFunc]
+      })
     }
   }, [isEditMode, isRunMode, jobsStore.jobFunc])
 
@@ -311,7 +307,7 @@ const JobWizard = ({
             setNotification({
               status: 200,
               id: Math.random(),
-              message: 'Job started successfully'
+              message: isSchedule ? 'Job scheduled successfully' : 'Job started successfully'
             })
           )
         })
@@ -400,8 +396,8 @@ const JobWizard = ({
           label: isBatchInference
             ? 'Schedule Infer'
             : isTrain
-            ? 'Schedule training job'
-            : 'Schedule for later',
+              ? 'Schedule training job'
+              : 'Schedule for later',
           onClick: () => {
             formState.handleSubmit()
 
@@ -421,10 +417,10 @@ const JobWizard = ({
             mode === PANEL_EDIT_MODE
               ? 'Save'
               : isBatchInference
-              ? 'Infer now'
-              : isTrain
-              ? 'Run training now'
-              : 'Run',
+                ? 'Infer now'
+                : isTrain
+                  ? 'Run training now'
+                  : 'Run',
           onClick: () => {
             submitRequest(formState, false, goToFirstInvalidStep)
           },
@@ -496,7 +492,7 @@ const JobWizard = ({
                 selectedFunctionData={selectedFunctionData}
                 setJobData={setJobData}
               />
-              <JobWizardDataInputs formState={formState} />
+              <JobWizardDataInputs formState={formState} params={params} />
               <JobWizardParameters formState={formState} />
               <JobWizardHyperparameterStrategy formState={formState} />
               <JobWizardResources formState={formState} frontendSpec={frontendSpec} />

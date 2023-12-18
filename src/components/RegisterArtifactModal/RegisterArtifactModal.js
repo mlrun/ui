@@ -50,7 +50,7 @@ const RegisterArtifactModal = ({
   filtersStore,
   isOpen,
   onResolve,
-  projectName,
+  params,
   refresh,
   title
 }) => {
@@ -88,7 +88,7 @@ const RegisterArtifactModal = ({
         description: values.metadata.description,
         labels: convertChipsData(values.metadata.labels),
         key: values.metadata.key,
-        project: projectName,
+        project: params.projectName,
         tree: uuidv4()
       },
       spec: {
@@ -103,7 +103,7 @@ const RegisterArtifactModal = ({
     }
 
     return artifactApi
-      .registerArtifact(projectName, data)
+      .registerArtifact(params.projectName, data)
       .then(response => {
         resolveModal()
         refresh(filtersStore)
@@ -172,7 +172,7 @@ const RegisterArtifactModal = ({
               formState={formState}
               initialValues={initialValues}
               messagesByKind={messagesByKind[artifactKind.toLowerCase()]}
-              projectName={projectName}
+              params={params}
               setFieldState={formState.form.mutators.setFieldState}
               showType={artifactKind === ARTIFACT_TYPE}
             />
@@ -185,7 +185,7 @@ const RegisterArtifactModal = ({
 
 RegisterArtifactModal.propTypes = {
   artifactKind: PropTypes.string.isRequired,
-  projectName: PropTypes.string.isRequired,
+  params: PropTypes.shape({}).isRequired,
   refresh: PropTypes.func.isRequired,
   title: PropTypes.string.isRequired
 }

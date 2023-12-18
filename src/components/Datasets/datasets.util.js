@@ -119,19 +119,12 @@ export const generatePageData = (selectedItem, viewMode, params) => ({
 })
 
 const handleTrainDataset = (selectedItem, params) => {
-  const prePopulatedDataInputs = [
-    {
-      name: selectedItem.db_key || selectedItem.key || 'dataset',
-      path: selectedItem.URI
-    }
-  ]
-
   openPopUp(JobWizard, {
     params,
     isTrain: true,
     wizardTitle: 'Train model',
     prePopulatedData: {
-      dataInputs: prePopulatedDataInputs
+      trainDatasetUri: selectedItem.URI
     }
   })
 }

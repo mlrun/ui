@@ -41,7 +41,7 @@ export const generateArtifactLink = (artifact, projectName) => {
     }/overview`
   }
 
-  return artifact ? artifactLinks[artifact.kind ?? 'files'] : ''
+  return artifact ? artifactLinks[artifact.kind] ?? artifactLinks.files : ''
 }
 
 export const generateInputsTabContent = (artifacts, showArtifact) => {
