@@ -323,7 +323,6 @@ const projectsAction = {
     dispatch(projectsAction.fetchProjectJobsBegin())
 
     const params = {
-      project,
       'partition-by': 'name',
       'partition-sort-by': 'updated',
       'rows-per-partition': '5',
