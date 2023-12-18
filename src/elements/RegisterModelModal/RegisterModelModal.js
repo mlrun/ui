@@ -71,17 +71,14 @@ function RegisterModelModal({ actions, isOpen, onResolve, params, refresh }) {
   const dispatch = useDispatch()
 
   const registerModel = values => {
-    const uid = uuidv4()
-
     const data = {
       kind: 'model',
       metadata: {
         ...values.metadata,
         labels: convertChipsData(values.metadata.labels),
         project: params.projectName,
-        tree: uid
+        tree: uuidv4()
       },
-      project: params.projectName,
       spec: {
         db_key: values.metadata.key,
         producer: {
@@ -90,8 +87,7 @@ function RegisterModelModal({ actions, isOpen, onResolve, params, refresh }) {
         },
         target_path: values.spec.target_path.path
       },
-      status: {},
-      uid
+      status: {}
     }
 
     if (values.spec.target_path?.path?.includes('/')) {
