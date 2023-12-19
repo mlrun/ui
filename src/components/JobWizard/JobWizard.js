@@ -211,7 +211,9 @@ const JobWizard = ({
         null,
         params.projectName,
         isEditMode,
-        prePopulatedData
+        isTrain,
+        prePopulatedData,
+        null
       )
       setJobData(formStateRef.current, jobFormData, jobAdditionalData)
     }
