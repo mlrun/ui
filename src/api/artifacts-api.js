@@ -171,8 +171,9 @@ const artifactsApi = {
 
     return fetchArtifacts(project, filters, newConfig)
   },
-  registerArtifact: (project, data) =>
-    mainHttpClientV2.post(`/projects/${project}/artifacts`, data),
+  registerArtifact: (project, data) => {
+    return mainHttpClientV2.post(`/projects/${project}/artifacts`, data)
+  },
   replaceTag: (project, tag, data) => mainHttpClient.post(`/projects/${project}/tags/${tag}`, data),
   updateArtifact: (project, data) =>
     mainHttpClientV2.put(`/projects/${project}/artifacts/${data.db_key || data.spec?.db_key}`, data)
