@@ -159,12 +159,8 @@ const ScheduleWizard = ({
           <Button
             variant={SECONDARY_BUTTON}
             disabled={isWeekDaysEmpty}
-            label={
-              <>
-                <Schedule />
-                <span>Schedule </span>
-              </>
-            }
+            icon={<Schedule />}
+            label="Schedule"
             onClick={onSchedule}
           />
         </div>

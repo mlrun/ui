@@ -32,7 +32,7 @@ const RegisterArtifactModalForm = ({
   formState,
   initialValues,
   messagesByKind,
-  projectName,
+  params,
   setFieldState,
   showType
 }) => {
@@ -89,7 +89,7 @@ const RegisterArtifactModalForm = ({
             validationRules={getValidationRules('artifact.name', {
               name: 'ArtifactExists',
               label: 'Artifact name must be unique',
-              pattern: isArtifactNameUnique(projectName),
+              pattern: isArtifactNameUnique(params.projectName),
               async: true
             })}
           />
@@ -113,6 +113,7 @@ const RegisterArtifactModalForm = ({
           hiddenSelectOptionsIds={[MLRUN_STORAGE_INPUT_PATH_SCHEME]}
           label="Target Path"
           name="spec.target_path.path"
+          params={params}
           required
           selectPlaceholder="Path Scheme"
           setFieldState={setFieldState}
@@ -145,11 +146,11 @@ RegisterArtifactModalForm.defaultProps = {
 
 RegisterArtifactModalForm.propTypes = {
   formState: PropTypes.object.isRequired,
-  showType: PropTypes.bool,
-  projectName: PropTypes.string.isRequired,
-  messagesByKind: PropTypes.object,
   initialValues: PropTypes.object.isRequired,
-  setFieldState: PropTypes.func.isRequired
+  messagesByKind: PropTypes.object,
+  params: PropTypes.shape({}).isRequired,
+  setFieldState: PropTypes.func.isRequired,
+  showType: PropTypes.bool
 }
 
 export default RegisterArtifactModalForm

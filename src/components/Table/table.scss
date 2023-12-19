@@ -4,6 +4,11 @@
 @import '~igz-controls/scss/borders';
 @import '~igz-controls/scss/shadows';
 
+@mixin tableCellWidth {
+  flex: 0 0 auto;
+  min-width: 75px;
+}
+
 .table {
   &__flex {
     display: flex;
@@ -40,8 +45,7 @@
   }
 
   & [class*='table-cell-'] {
-    flex: 0 0 auto;
-    min-width: 75px;
+    @include tableCellWidth;
   }
 
   .table-row {
@@ -168,6 +172,8 @@
   .table {
     &-header {
       &__cell {
+        @include tableCellWidth;
+
         &.buttonPopout,
         &.buttonDownload {
           @include tableColumnFlex(0.5, 80px);
@@ -187,6 +193,8 @@
       color: $mulledWine;
 
       &__cell {
+        @include tableCellWidth;
+
         &_hidden {
           visibility: hidden;
 

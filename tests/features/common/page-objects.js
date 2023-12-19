@@ -36,6 +36,7 @@ module.exports = {
   Analysis_Info_Pane: infoPane['analysisInfoPane'],
   Artifact_Preview_Popup: interactivePopup['artifactPreviewPopup'],
   Artifacts_Info_Pane: infoPane['artifactsInfoPane'],
+  Artifacts_FilterBy_Popup: interactivePopup['artifactsFilterByPopup'],
   Batch_Run: jobsAndWorkflows['BatchRun'],
   Batch_Run_Edit: sidePanel['batchRunEdit'],
   Batch_Re_Run: sidePanel['batchReRun'],
@@ -53,6 +54,7 @@ module.exports = {
   Demo_Project: project['demoProject'],
   Deploy_Model_Popup: interactivePopup['deployModelPopup'],
   Discard_Changes_Popup: interactivePopup['discardChangesPopup'],
+  Downloads_Popup: interactivePopup['downloadsPopUp'],
   Feature_Set_Schedule_Popup: interactivePopup['featureSetSchedulePopup'],
   Feature_Sets_Info_Pane: infoPane['featureSetsInfoPane'],
   Feature_Store_Feature_Sets_Tab: featureStore['featureSetsTab'],
@@ -74,6 +76,7 @@ module.exports = {
   New_Function: sidePanel['newFunction'],
   New_JobTemplate_Edit: sidePanel['newJobTemplateEdit'],
   Preview_Info_Pane: infoPane['previewInfoPane'],
+  Preview_Popup: interactivePopup['previewPopup'],
   Project: project['project'],
   Project_Members_Popup: interactivePopup['projectMembersPopup'],
   Project_Settings_General_Tab: projectsSettings['generalTab'],
@@ -89,10 +92,10 @@ module.exports = {
   Results_Info_Pane: infoPane['resultsInfoPane'],
   Schedule_Monitor_Tab: jobsAndWorkflows['ScheduleMonitorTab'],
   Statistics_Info_Pane: infoPane['statisticsInfoPane'],
+  Train_Model: interactivePopup['trainModel'],
   Transformations_Info_Pane: infoPane['transformationsInfoPane'],
   View_YAML: interactivePopup['viewYamlPopup'],
   Workflows_Monitor_Tab: jobsAndWorkflows['WorkflowsMonitorTab'],
   Workflows_Monitor_Tab_Info_Pane: infoPane['workflowsMonitorTabInfoPane'],
-  commonPagesHeader: commonPagesHeader,
-  Artifacts_FilterBy_Popup: interactivePopup['artifactsFilterByPopup']
+  commonPagesHeader: commonPagesHeader
 }
