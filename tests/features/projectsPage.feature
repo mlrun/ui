@@ -139,6 +139,7 @@ Feature: MLRun Projects Page
         Then click on "Delete_Button" element on "Common_Popup" wizard
         Then check "automation-test-name2" value not in "name" column in "Projects_Table" table on "Projects" wizard
     
+    @MLPr
     @passive
     Scenario: MLPr010 - Unarchive ML Project
         * set tear-down property "project" created with "automation-test-name7" value
@@ -150,6 +151,13 @@ Feature: MLRun Projects Page
         Then verify if "Common_Popup" popup dialog appears
         Then click on "Confirm_Button" element on "Common_Popup" wizard
         Then check "automation-test-name7" value not in "name" column in "Projects_Table" table on "Projects" wizard
+        Then click on "Archive_Projects_Button" element on "Projects" wizard
+        Then check "automation-test-name7" value in "name" column in "Projects_Table" table on "Projects" wizard
+        And click on row root with value "automation-test-name7" in "name" column in "Projects_Table" table on "Projects" wizard
+        And wait load page
+        Then verify breadcrumbs "tab" label should be equal "Project monitoring" value
+        And click on "MLRun_Logo" element on "commonPagesHeader" wizard
+        And wait load page
         Then click on "Archive_Projects_Button" element on "Projects" wizard
         Then check "automation-test-name7" value in "name" column in "Projects_Table" table on "Projects" wizard
         Then select "Unarchive" option in action menu on "Projects" wizard in "Projects_Table" table at row with "automation-test-name7" value in "name" column

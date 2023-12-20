@@ -46,6 +46,30 @@ const action = {
   checkActionMenuOptions: async function(driver, actionMenu, values) {
     const options = await getOptionValues(driver, actionMenu.options)
     expect(differenceWith(options, values, isEqual).length).equal(0)
+  },
+  verifyOptionInActionMenuEnabled: async function(driver, actionMenu, option){
+    const elements = await driver.findElements(actionMenu.options)
+    for (const element of elements) {
+      const attributes = await element.getAttribute('class')
+      const text = await element.getText()
+  
+      if (text === option) {
+        const flag = attributes.includes('actions-menu__option_disabled')
+        expect(flag).to.equal(false)
+      }
+    }
+  },
+  verifyOptionInActionMenuDisabled: async function(driver, actionMenu, option){
+    const elements = await driver.findElements(actionMenu.options)
+    for (const element of elements) {
+      const attributes = await element.getAttribute('class')
+      const text = await element.getText()
+  
+      if (text === option) {
+        const flag = attributes.includes('actions-menu__option_disabled')
+        expect(flag).to.equal(true)
+      }
+    }
   }
 }
 

@@ -160,8 +160,9 @@ const artifactsLabelsTable = {
       fields: {
         key_input: 'input.input-label-key',
         value_input: 'input.input-label-value',
-        label: '.chip',
-        remove_btn: '.item-icon-close'
+        key_verify: '.edit-chip-container input.input-label-key',
+        value_verify: '.edit-chip-container input.input-label-value',
+        remove_btn: '.edit-chip__icon-close'
       }
     }
   }
@@ -180,13 +181,6 @@ const commonNameInput = generateInputGroup(
   '.form .form-row:nth-of-type(2) .form-field__wrapper-normal',
   true,
   true,
-  '.form-field__warning'
-)
-
-const commonTargetPathInput = generateInputGroup(
-  '.form .form-row:nth-of-type(4) .form-field__wrapper',
-  true,
-  false,
   '.form-field__warning'
 )
 
@@ -330,14 +324,12 @@ module.exports = {
         '.form-field__warning'
       )
     ),
-    New_File_Target_Path_Input: inputGroup(
-      generateInputGroup(
-        '.modal__body .form-row:nth-of-type(3) .form-field__wrapper-normal',
-        true,
-        true,
-        '.form-field__warning'
+    Target_Path: {
+      Path_Scheme_Combobox: comboBox(
+        '.form .form-row:nth-of-type(3) .form-field__wrapper',
+        true
       )
-    ),
+    },
     New_File_Description_Input: textAreaGroup(
       generateTextAreaGroup(
         '.modal__body .form-row:nth-of-type(2) .form-field-textarea',

@@ -619,7 +619,7 @@ const pageHeaderButton = By.css(
 const jobsTabSelector = commonTable(tabSelector)
 const batchRunTabSelector = commonTable(batchTabSelector)
 const tableRefreshButton = By.css(
-  '.content__action-bar-wrapper .action-bar .actions #refresh'
+  '.content .content__action-bar-wrapper [data-testid="refresh"]'
 )
 const commonStatusFilter = dropdownComponent(
   generateDropdownGroup(
