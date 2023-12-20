@@ -84,12 +84,12 @@ const ProjectMonitor = ({
     artifactKind => {
       openPopUp(RegisterArtifactModal, {
         artifactKind,
-        projectName: params.projectName,
+        params,
         refresh: () => navigate(registerArtifactLink(artifactKind)),
         title: `Register ${artifactKind}`
       })
     },
-    [navigate, params.projectName, registerArtifactLink]
+    [navigate, params, registerArtifactLink]
   )
 
   const openRegisterModelModal = useCallback(() => {
