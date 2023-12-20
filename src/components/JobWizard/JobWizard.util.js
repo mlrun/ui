@@ -104,10 +104,11 @@ export const generateJobWizardData = (
   defaultData,
   currentProjectName,
   isEditMode,
+  isTrain,
   prePopulatedData,
   selectedVersion
 ) => {
-  const functionInfo = getFunctionInfo(selectedFunctionData, selectedVersion)
+  const functionInfo = getFunctionInfo(selectedFunctionData, selectedVersion, isTrain)
   const defaultResources = frontendSpec?.default_function_pod_resources ?? {}
   const functionParameters = getFunctionParameters(functionInfo.function, functionInfo.handler)
   const functionPriorityClassName = getFunctionPriorityClass(functionInfo.function)
@@ -183,7 +184,7 @@ export const generateJobWizardData = (
     jobFormData[RESOURCES_STEP].jobPriorityClassName = jobPriorityClassName
   }
 
-  if (!isEmpty(functionParameters) || !isEmpty(prePopulatedData?.dataInputs)) {
+  if (!isEmpty(functionParameters) || !isEmpty(prePopulatedData?.trainDatasetUri)) {
     jobFormData[DATA_INPUTS_STEP].dataInputsTable = parseDataInputs(
       functionParameters,
       prePopulatedData?.trainDatasetUri
@@ -310,15 +311,16 @@ export const getHandlerData = (selectedFunction, handler) => {
   }
 }
 
-const getFunctionInfo = (selectedFunctionData, preSelectedVersion) => {
+const getFunctionInfo = (selectedFunctionData, preSelectedVersion, isTrain) => {
   const functions = selectedFunctionData?.functions
 
   if (!isEmpty(functions)) {
+    const allowedHandlers = isTrain ? ['train'] : []
     const versionOptions = getVersionOptions(functions)
     const selectedVersion = some(versionOptions, { id: preSelectedVersion })
       ? preSelectedVersion
       : getDefaultVersion(versionOptions)
-    const handlerOptions = getHandlerOptions(functions, selectedVersion)
+    const handlerOptions = getHandlerOptions(functions, selectedVersion, allowedHandlers)
     const defaultHandler = getDefaultHandler(handlerOptions, functions, selectedVersion)
     const selectedFunction = getSelectedFunction(functions, selectedVersion)
 
@@ -346,7 +348,7 @@ const getRunDefaultInfo = (defaultData, selectedFunction) => {
   }
 }
 
-const getHandlerOptions = (selectedFunctions, selectedVersion) => {
+const getHandlerOptions = (selectedFunctions, selectedVersion, allowedHandlers = []) => {
   const selectedFunction =
     selectedFunctions?.length === 1
       ? selectedFunctions[0]
@@ -356,6 +358,9 @@ const getHandlerOptions = (selectedFunctions, selectedVersion) => {
     .get('spec.entry_points', {})
     .values()
     .flatten()
+    .filter(
+      entry_point => allowedHandlers.length === 0 || allowedHandlers.includes(entry_point.name)
+    )
     .map(entry_point => ({
       label: entry_point.name,
       id: entry_point.name,
