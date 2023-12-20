@@ -573,7 +573,11 @@ export const parseDataInputs = (functionParameters = [], trainDatasetUri) => {
   const dataInputsDataset = parsedDataInputs.find(dataInput => dataInput.data?.name === 'dataset')
 
   if (dataInputsDataset && trainDatasetUri) {
-    dataInputsDataset.data.path = trainDatasetUri
+    dataInputsDataset.data = getDataInputData(
+      'dataset',
+      trainDatasetUri,
+      dataInputsDataset.data.isChecked
+    )
   }
 
   return parsedDataInputs
