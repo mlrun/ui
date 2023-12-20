@@ -206,7 +206,7 @@ const Datasets = () => {
 
       if (changes.data.tag.currentFieldValue) {
         navigate(
-          `/projects/${params.projectName}/${DATASETS_PAGE}/${params.name}/${changes.data.tag.currentFieldValue}/overview`,
+          `/projects/${params.projectName}/${DATASETS_PAGE.toLowerCase()}/${params.name}/${changes.data.tag.currentFieldValue}/overview`,
           { replace: true }
         )
       }
