@@ -406,6 +406,13 @@ module.exports = {
     Cross_Cancel_Button: commonCrossCancelButton,
     YAML_Modal_Container: By.css('.pop-up-dialog .yaml-modal-container pre')
   },
+  deleteConfirmPopup: {
+    Title: By.css('.pop-up-dialog .pop-up-dialog__header'),
+    Cross_Cancel_Button: commonCrossCancelButton,
+    Confirm_Dialog_Message: By.css('.confirm-dialog .confirm-dialog__message'),
+    Cancel_Button: By.css('.confirm-dialog .pop-up-dialog__btn_cancel'),
+    Delete_Button: By.css('.confirm-dialog .btn-danger')
+  },
   previewPopup:{
     Title: By.css('.pop-up-dialog .pop-up-dialog__header'),
     Cross_Cancel_Button: commonCrossCancelButton,

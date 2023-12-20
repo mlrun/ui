@@ -49,6 +49,7 @@ module.exports = {
   Create_ML_Function_Popup: interactivePopup['createMLFunctionPopup'],
   Create_New_Project: interactivePopup['createNewProject'],
   Create_New_Secret_Popup: interactivePopup['createNewSecretPopup'],
+  Delete_Confirm_Popup: interactivePopup['deleteConfirmPopup'],
   Datasets: featureStore['datasets'],
   Datasets_Info_Pane: infoPane['datasetsInfoPane'],
   Demo_Project: project['demoProject'],
