@@ -532,6 +532,7 @@ export const getCategoryName = categoryId => {
     NLP: 'NLP',
     notifications: 'Alerts and Notifications',
     other: 'Other',
+    utils: 'Utilities',
     'model-serving': 'Model Serving',
     simulators: 'Simulators',
     training: 'Model Training'
