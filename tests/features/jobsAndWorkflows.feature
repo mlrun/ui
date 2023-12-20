@@ -2,25 +2,30 @@ Feature: Jobs and workflows
 
     Testcases that verifies functionality on Jobs and Workflows Pages
 
+    @MLJW
     @passive
     Scenario: MLJW001 - Check all mandatory components on Jobs Monitor tab
         Given open url
         And wait load page
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
-        And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
-        Then click on "Project_Monitoring_Button" element on "commonPagesHeader" wizard
-        And wait load page
         Then verify breadcrumbs "project" label should be equal "default" value
         And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
         And click on cell with value "Jobs and workflows" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
         And hover "MLRun_Logo" component on "commonPagesHeader" wizard
         And wait load page
-        Then verify breadcrumbs "tab" label should be equal "Jobs" value
+        Then verify breadcrumbs "tab" label should be equal "Jobs and workflows" value
+        Then click on breadcrumbs "project" label on "commonPagesHeader" wizard
+        And wait load page
+        Then verify breadcrumbs "tab" label should be equal "Project monitoring" value
+        And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
+        And click on cell with value "Jobs and workflows" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+        And hover "MLRun_Logo" component on "commonPagesHeader" wizard
+        And wait load page
         Then verify "Jobs_Tab_Selector" on "Jobs_Monitor_Tab" wizard should contains "Jobs_And_Workflows"."Tab_List"
         Then verify "Monitor Jobs" tab is active in "Jobs_Tab_Selector" on "Jobs_Monitor_Tab" wizard
-        Then verify "New_Job_Button" element visibility on "Jobs_Monitor_Tab" wizard
-        Then "New_Job_Button" element on "Jobs_Monitor_Tab" should contains "New Job" value
+        Then verify "Butch_Run_Button" element visibility on "Jobs_Monitor_Tab" wizard
+        Then "Butch_Run_Button" element on "Jobs_Monitor_Tab" should contains "Batch Run" value
         Then verify "Resource_Monitoring_Button" element visibility on "Jobs_Monitor_Tab" wizard
         Then verify "Table_Refresh_Button" element visibility on "Jobs_Monitor_Tab" wizard
         Then verify "Status_Filter_Dropdown" element visibility on "Jobs_Monitor_Tab" wizard
@@ -29,9 +34,12 @@ Feature: Jobs and workflows
         Then verify "Table_Labels_Filter_Input" element visibility on "Jobs_Monitor_Tab" wizard
         Then verify "Start_Time_Filter_Dropdown" element visibility on "Jobs_Monitor_Tab" wizard
         Then verify "Start_Time_Filter_Dropdown" dropdown element on "Jobs_Monitor_Tab" wizard should contains "Dropdown_Options"."Start_Time_Filter_Options"
-        When select "Past year" option in "Start_Time_Filter_Dropdown" filter dropdown on "Jobs_Monitor_Tab" wizard
+        When select "Any time" option in "Start_Time_Filter_Dropdown" filter dropdown on "Jobs_Monitor_Tab" wizard
+        And wait load page
+        And wait load page
         Then verify "Jobs_Monitor_Table" element visibility on "Jobs_Monitor_Tab" wizard
         Then click on "Table_Refresh_Button" element on "Jobs_Monitor_Tab" wizard
+        And wait load page
         And wait load page
         Then verify "Jobs_Monitor_Table" element visibility on "Jobs_Monitor_Tab" wizard
 
@@ -42,15 +50,19 @@ Feature: Jobs and workflows
         And wait load page
         And click on row root with value "churn-project-admin" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
-        And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
-        And click on cell with value "Project monitoring" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
-        And hover "MLRun_Logo" component on "commonPagesHeader" wizard
         Then verify breadcrumbs "project" label should be equal "churn-project-admin" value
         And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
         And click on cell with value "Jobs and workflows" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
         And hover "MLRun_Logo" component on "commonPagesHeader" wizard
         And wait load page
-        Then verify breadcrumbs "tab" label should be equal "Jobs" value
+        And select "tab" with "Project monitoring" value in breadcrumbs menu
+        And wait load page
+        Then verify breadcrumbs "tab" label should be equal "Project monitoring" value
+        And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
+        And click on cell with value "Jobs and workflows" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+        And hover "MLRun_Logo" component on "commonPagesHeader" wizard
+        And wait load page
+        Then verify breadcrumbs "tab" label should be equal "Jobs and workflows" value
         Then verify "Jobs_Tab_Selector" on "Jobs_Monitor_Tab" wizard should contains "Jobs_And_Workflows"."Tab_List"
         And select "Monitor Workflows" tab in "Jobs_Tab_Selector" on "Jobs_Monitor_Tab" wizard
         And wait load page

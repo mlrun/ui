@@ -8,9 +8,17 @@ Feature: Datasets Page
     Given open url
     And click on row root with value "getting-started-tutorial-admin" in "name" column in "Projects_Table" table on "Projects" wizard
     And wait load page
+    Then verify breadcrumbs "tab" label should be equal "Project monitoring" value
+    Then verify breadcrumbs "project" label should be equal "getting-started-tutorial-admin" value
     And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
-    Then click on "Project_Monitoring_Button" element on "commonPagesHeader" wizard
+    And click on cell with value "Datasets" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+    And hover "MLRun_Logo" component on "commonPagesHeader" wizard
     And wait load page
+    Then verify breadcrumbs "tab" label should be equal "Datasets" value
+    And wait load page
+    Then click on breadcrumbs "project" label on "commonPagesHeader" wizard
+    And wait load page
+    Then verify breadcrumbs "tab" label should be equal "Project monitoring" value
     Then verify breadcrumbs "project" label should be equal "getting-started-tutorial-admin" value
     And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
     And click on cell with value "Datasets" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
@@ -41,6 +49,12 @@ Feature: Datasets Page
     Given open url
     And click on row root with value "churn-project-admin" in "name" column in "Projects_Table" table on "Projects" wizard
     And wait load page
+    And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
+    And click on cell with value "Datasets" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+    And wait load page
+    And select "tab" with "Project monitoring" value in breadcrumbs menu
+    And wait load page
+    Then verify breadcrumbs "tab" label should be equal "Project monitoring" value
     And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
     And click on cell with value "Datasets" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
     And wait load page
@@ -104,6 +118,7 @@ Feature: Datasets Page
     Then verify "Train_Button" element visibility on "Datasets_Info_Pane" wizard
     Then "Train_Button" element on "Datasets_Info_Pane" should contains "Train" value
     Then click on "Train_Button" element on "Datasets_Info_Pane" wizard
+    And wait load page
     Then verify "Title" element visibility on "Train_Model" wizard
     Then "Title" element on "Train_Model" should contains "Train Model" value
     Then verify "Cross_Cancel_Button" element visibility on "Train_Model" wizard
@@ -155,9 +170,6 @@ Feature: Datasets Page
   Scenario: MLD006 - Check all mandatory components on Register Dataset form
     Given open url
     And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
-    And wait load page
-    And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
-    Then click on "Project_Monitoring_Button" element on "commonPagesHeader" wizard
     And wait load page
     And select "tab" with "Datasets" value in breadcrumbs menu
     And wait load page
@@ -301,9 +313,6 @@ Feature: Datasets Page
     And wait load page
     And click on row root with value "churn-project-admin" in "name" column in "Projects_Table" table on "Projects" wizard
     And wait load page
-    And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
-    Then click on "Project_Monitoring_Button" element on "commonPagesHeader" wizard
-    And wait load page
     And select "tab" with "Datasets" value in breadcrumbs menu
     And wait load page
     Then verify action menu on "Datasets" wizard in "Datasets_Table" table with "survival-curves_km-timelines" value in "name" column should contains "Common_Lists"."Action_Menu_List"
@@ -333,6 +342,39 @@ Feature: Datasets Page
     Then verify if "View_YAML" popup dialog appears
     Then verify "Cross_Cancel_Button" element visibility on "View_YAML" wizard
     Then verify "YAML_Modal_Container" element visibility on "View_YAML" wizard
+
+@MLD
+Scenario: MLD018 - Verify the Delete option state in Datasets table and Overview details action menu 
+    Given open url
+    And wait load page
+    And click on row root with value "churn-project-admin" in "name" column in "Projects_Table" table on "Projects" wizard
+    And wait load page
+    And select "tab" with "Datasets" value in breadcrumbs menu
+    And wait load page
+    Then verify action menu on "Datasets" wizard in "Datasets_Table" table with "test-regressor_cox-test-summary" value in "name" column should contains "Common_Lists"."Action_Menu_List"
+    Then verify that in action menu on "Datasets" wizard in "Datasets_Table" table with "test-regressor_cox-test-summary" value in "name" column "Delete" option is enabled
+    When click on cell with row index 1 in "name" column in "Datasets_Table" table on "Datasets" wizard
+    Then check "latest" value in "tag" column in "Overview_Table" table on "Datasets_Info_Pane" wizard
+    Then verify "Action_Menu" element visibility on "Datasets_Info_Pane" wizard
+    Then verify "Action_Menu" dropdown element on "Datasets_Info_Pane" wizard should contains "Common_Lists"."Action_Menu_List"
+    Then check that "Delete" option in action menu on "Datasets_Info_Pane" wizard is enabled
+    Then click on "Edit_btn_table_view" element on "Datasets_Info_Pane" wizard
+    And wait load page
+    When type value "" to "Version_tag_Input" field on "Datasets_Info_Pane" wizard
+    Then click on "Apply_Button" element on "Datasets_Info_Pane" wizard
+    Then click on "Apply_Changes_Button" element on "Datasets_Info_Pane" wizard
+    And wait load page
+    Then verify "Table_FilterBy_Button" element visibility on "Datasets" wizard
+    Then click on "Table_FilterBy_Button" element on "Datasets" wizard
+    Then select "All" option in "Table_Tree_Filter_Dropdown" dropdown on "Artifacts_FilterBy_Popup" wizard
+    Then click on "Apply_Button" element on "Artifacts_FilterBy_Popup" wizard
+    And wait load page
+    Then verify action menu on "Datasets" wizard in "Datasets_Table" table with "test-regressor_cox-test-summary" value in "name" column should contains "Common_Lists"."Action_Menu_List"
+    Then verify that in action menu on "Datasets" wizard in "Datasets_Table" table with "test-regressor_cox-test-summary" value in "name" column "Delete" option is disabled
+    When click on cell with row index 1 in "name" column in "Datasets_Table" table on "Datasets" wizard
+    Then check "Click to add" value in "tag" column in "Overview_Table" table on "Datasets_Info_Pane" wizard
+    Then verify "Action_Menu" dropdown element on "Datasets_Info_Pane" wizard should contains "Common_Lists"."Action_Menu_List"
+    Then check that "Delete" option in action menu on "Datasets_Info_Pane" wizard is disabled
   
   @MLD
   @passive
@@ -345,6 +387,26 @@ Feature: Datasets Page
     And wait load page    
     Then hover on cell with row index 2 in "name" column in "Datasets_Table" table on "Datasets" wizard
     When click on cell with row index 2 in "artifact_preview_btn" column in "Datasets_Table" table on "Datasets" wizard
+    And wait load page
+    Then verify "Preview_Header" element visibility on "Artifact_Preview_Popup" wizard
+    Then verify "Cross_Cancel_Button" element visibility on "Artifact_Preview_Popup" wizard
+    Then check "download_btn" visibility in "Preview_Header" on "Artifact_Preview_Popup" wizard
+    Then click on "Download_Button" element on "Artifact_Preview_Popup" wizard
+    And wait load page
+    And wait load page
+    Then verify "Download_Pop_Up" element visibility on "Downloads_Popup" wizard
+    And wait load page
+    Then verify "Download_Pop_Up_Cross_Cancel_Button" element visibility on "Downloads_Popup" wizard
+    And wait load page
+    Then verify "Header_Download_Pop_Up" element visibility on "Downloads_Popup" wizard
+    Then "Header_Download_Pop_Up" element on "Downloads_Popup" should contains "Downloads" value
+    Then click on "Download_Pop_Up_Cross_Cancel_Button" element on "Downloads_Popup" wizard
+    Then click on "Cross_Cancel_Button" element on "Artifact_Preview_Popup" wizard
+    When click on cell with value "auto-trainer-train_test_set" in "name" column in "Datasets_Table" table on "Datasets" wizard
+    Then select "Preview" tab in "Info_Pane_Tab_Selector" on "Datasets_Info_Pane" wizard
+    And wait load page
+    Then verify "Pop_Out_Button" element visibility on "Datasets_Info_Pane" wizard 
+    Then click on "Pop_Out_Button" element on "Datasets_Info_Pane" wizard
     And wait load page
     Then verify "Preview_Header" element visibility on "Artifact_Preview_Popup" wizard
     Then verify "Cross_Cancel_Button" element visibility on "Artifact_Preview_Popup" wizard

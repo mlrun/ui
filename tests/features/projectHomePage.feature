@@ -2,11 +2,32 @@ Feature: MLRun Project Home Page
 
     Testcases that verifies functionality on MLRun Project Home Page
 
+    @MLPH
     Scenario: MLPH001 - Check all mandatory components on Project Home
         * set tear-down property "project" created with "automation-test-1002" value
         * create "automation-test-1002" MLRun Project with code 201
         Given open url
         And click on row root with value "automation-test-1002" in "name" column in "Projects_Table" table on "Projects" wizard
+        And wait load page
+        Then verify breadcrumbs "project" label should be equal "automation-test-1002" value
+        And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
+        And click on cell with value "Quick actions" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+        And hover "MLRun_Logo" component on "commonPagesHeader" wizard
+        And wait load page
+        Then verify breadcrumbs "tab" label should be equal "Quick actions" value
+        Then click on breadcrumbs "project" label on "commonPagesHeader" wizard
+        And wait load page
+        Then verify breadcrumbs "tab" label should be equal "Project monitoring" value
+        And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
+        And click on cell with value "Quick actions" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+        And hover "MLRun_Logo" component on "commonPagesHeader" wizard
+        And wait load page
+        And select "tab" with "Project monitoring" value in breadcrumbs menu
+        And wait load page
+        Then verify breadcrumbs "tab" label should be equal "Project monitoring" value
+        And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
+        And click on cell with value "Quick actions" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+        And hover "MLRun_Logo" component on "commonPagesHeader" wizard
         And wait load page
         Then verify "Header_Name_Label" element visibility on "Demo_Project" wizard
         Then verify "Header_Created_Time" element visibility on "Demo_Project" wizard
@@ -34,9 +55,9 @@ Feature: MLRun Project Home Page
             |     Register artifact   |
             |  Create feature vector  |
         Then verify values in "Development_Actions_Table" table on "Demo_Project" wizard
-            |          name           |
-            |  Create  function  |
-            |        Batch run        |
+            |     name    |
+            |  Batch run  |
+            | Train model |
         Then verify values in "Deployment_Actions_Table" table on "Demo_Project" wizard
             |           name            |
             | Create real-time function |
@@ -60,45 +81,61 @@ Feature: MLRun Project Home Page
             |  Nuclio Functions   |
             |     Monitoring      |
     
+    @MLPH
     @FAILED_TODO
-    #TODO: click on "name" in "Development_Actions_Table" table on "Demo_Project" - component was changed on project home
-    @demo
+    #TODO: Register_Model_Button hidden from 1.4.0, running on demo mode
     Scenario: MLPH002 - Verify behaviour on Register Model Popup on Project Home Page
         Given open url
         * turn on demo mode
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
+        And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
+        And click on cell with value "Quick actions" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+        And hover "MLRun_Logo" component on "commonPagesHeader" wizard
+        And wait load page
+
+        And select "tab" with "Project monitoring" value in breadcrumbs menu
+        And wait load page
+        Then verify breadcrumbs "tab" label should be equal "Project monitoring" value
+        And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
+        And click on cell with value "Quick actions" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+        And hover "MLRun_Logo" component on "commonPagesHeader" wizard
+        And wait load page
+
         When click on "name" in "Development_Actions_Table" table on "Demo_Project" wizard with offset "false"
             |          name           |
-            |      Register Model     |
+            |      Register model     |
         And wait load page
         Then "Title" element on "Register_Model_Popup" should contains "Register Model" value
         Then verify "Cross_Cancel_Button" element visibility on "Register_Model_Popup" wizard
         Then verify "New_File_Name_Input" element visibility on "Register_Model_Popup" wizard
         Then verify "New_File_Name_Input" on "Register_Model_Popup" wizard should display "Input_Hint"."Artifacts_Names_Unique"
-        Then verify "New_File_Target_Path_Input" element visibility on "Register_Model_Popup" wizard
+        Then verify options in "Path_Scheme_Combobox" combobox in "Target_Path" on "Register_Model_Popup" wizard should contains "Models"."Combobox_Options"
         Then verify "New_File_Description_Input" element visibility on "Register_Model_Popup" wizard
         Then verify "Cancel_Button" element visibility on "Register_Model_Popup" wizard
         Then verify "Register_Button" element visibility on "Register_Model_Popup" wizard
         Then click on "Register_Button" element on "Register_Model_Popup" wizard
-        Then verify "New_File_Target_Path_Input" on "Register_Model_Popup" wizard should display warning "Input_Hint"."Input_Field_Require"
+        Then verify "Path_Scheme_Combobox" element in "Target_Path" on "Register_Model_Popup" wizard should display warning "Input_Hint"."Input_Field_Require"
         Then type value "   " to "New_File_Name_Input" field on "Register_Model_Popup" wizard
-        Then verify "New_File_Name_Input" on "Register_Model_Popup" wizard should display warning "Input_Hint"."Input_Field_Invalid"
-        Then type value "   " to "New_File_Target_Path_Input" field on "Register_Model_Popup" wizard
-        Then verify "New_File_Target_Path_Input" on "Register_Model_Popup" wizard should display warning "Input_Hint"."Input_Field_Invalid"
+        Then verify "New_File_Name_Input" on "Register_Model_Popup" wizard should display options "Input_Hint"."Artifact_Name_Hint"
+        When select "V3IO" option in "Path_Scheme_Combobox" combobox on "Target_Path" accordion on "Register_Model_Popup" wizard
+        When type value "  " to "Path_Scheme_Combobox" field on "Target_Path" on "Register_Model_Popup" wizard
+        Then verify "Path_Scheme_Combobox" element in "Target_Path" on "Register_Model_Popup" wizard should display warning "Input_Hint"."V3IO_Path_Hint"
         Then type value "   " to "New_File_Description_Input" field on "Register_Model_Popup" wizard
         Then verify "New_File_Description_Input" on "Register_Model_Popup" wizard should display warning "Input_Hint"."Input_Field_Invalid"
-        Then type value "test-model" to "New_File_Name_Input" field on "Register_Model_Popup" wizard
-        Then type value "test-path" to "New_File_Target_Path_Input" field on "Register_Model_Popup" wizard
+        Then type value "new-model" to "New_File_Name_Input" field on "Register_Model_Popup" wizard
+        When select "V3IO" option in "Path_Scheme_Combobox" combobox on "Target_Path" accordion on "Register_Model_Popup" wizard
+        When type value "target/path" to "Path_Scheme_Combobox" field on "Target_Path" on "Register_Model_Popup" wizard
         Then type value "test-description" to "New_File_Description_Input" field on "Register_Model_Popup" wizard
         Then click on "Register_Button" element on "Register_Model_Popup" wizard
         And wait load page
+        And wait load page
         Then verify breadcrumbs "tab" label should be equal "Models" value
-        Then click on cell with value "test-model" in "name" column in "Models_Table" table on "Models" wizard
-        Then "Header" element on "Models_Info_Pane" should contains "test-model" value
-        Then check "test-model" value in "key" column in "Overview_Table" table on "Models_Info_Pane" wizard
+        Then click on cell with value "new-model" in "name" column in "Models_Table" table on "Models" wizard
+        Then "Header" element on "Models_Info_Pane" should contains "new-model" value
+        Then check "new-model" value in "key" column in "Overview_Table" table on "Models_Info_Pane" wizard
         Then check "latest" value in "tag" column in "Overview_Table" table on "Models_Info_Pane" wizard
-        Then check "test-path" value in "path" column in "Overview_Table" table on "Models_Info_Pane" wizard
+        Then check "v3io:///target/" value in "path" column in "Overview_Table" table on "Models_Info_Pane" wizard
     
     @FAILED_TODO
     #TODO: click on "name" in "Data_Collection_Actions_Table" table on "Demo_Project" - component was changed on project home
