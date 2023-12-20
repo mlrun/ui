@@ -587,10 +587,17 @@ export const parseDefaultDataInputs = (funcParams, runDataInputs = {}) => {
   const predefinedDataInputs = chain(funcParams)
     .filter(dataInput => dataInput.type?.includes('DataItem'))
     .map(dataInput => {
-      const dataInputValue = runDataInputs[dataInput.name] ?? dataInput.default ?? ''
+      const dataInputIsFromPreviousRun = has(runDataInputs, dataInput.name)
+      const dataInputValue = dataInputIsFromPreviousRun
+        ? runDataInputs[dataInput.name]
+        : dataInput.default ?? ''
 
       return {
-        data: getDataInputData(dataInput.name, dataInputValue, !has(dataInput, 'default')),
+        data: getDataInputData(
+          dataInput.name,
+          dataInputValue,
+          dataInputIsFromPreviousRun || !has(dataInput, 'default')
+        ),
         doc: dataInput.doc ?? '',
         isRequired: !has(dataInput, 'default'),
         isDefault: true,
