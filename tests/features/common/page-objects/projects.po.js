@@ -92,6 +92,7 @@ module.exports = {
     '.projects-content-header .data-ellipsis button'
   ),
   Projects_Table: commonTable(ProjectsTableSelector),
+  Overlay: By.css('#overlay_container .chip-block-hidden_visible'),
   Active_Projects_Button: By.css(
     '.projects__wrapper .projects-content-header .projects-content-header-item .content-menu .content-menu__list li[data-testid=active] a'
   ),
