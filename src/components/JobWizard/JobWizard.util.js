@@ -69,7 +69,7 @@ import {
   parameterTypeFloat,
   parameterTypeInt,
   parameterTypeList,
-  parameterTypeMap,
+  parameterTypeDict,
   parameterTypeStr,
   parameterTypeValueMap
 } from '../../elements/FormParametersTable/formParametersTable.util'
@@ -735,7 +735,7 @@ export const parseParameterType = (parameterValue, isHyper) => {
     !Array.isArray(parameterValue) &&
     parameterValue !== null
   ) {
-    return parameterTypeMap
+    return parameterTypeDict
   } else if (isFinite(parameterValue)) {
     return String(parameterValue).includes('.') ? parameterTypeFloat : parameterTypeInt
   } else if (typeof parameterValue === 'boolean') {
@@ -839,7 +839,7 @@ const convertParameterValue = (value, type) => {
     return Number(value)
   } else if (type === parameterTypeBool && ['true', 'false'].includes(value.toLowerCase())) {
     return value.toLowerCase() === 'true'
-  } else if ([parameterTypeList, parameterTypeMap].includes(type)) {
+  } else if ([parameterTypeList, parameterTypeDict].includes(type)) {
     try {
       return JSON.parse(value)
     } catch {
