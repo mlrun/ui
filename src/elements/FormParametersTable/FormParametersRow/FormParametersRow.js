@@ -37,7 +37,7 @@ import { FormRowActions } from 'igz-controls/elements'
 
 import {
   parameterTypeList,
-  parameterTypeMap,
+  parameterTypeDict,
   parametersValueTypeOptions,
   parameterTypeBool,
   parameterTypeInt,
@@ -81,11 +81,11 @@ const FormParametersRow = ({
   const tableEditingRowClassNames = classnames(tableRowClassNames, 'form-table__row_active')
 
   const getValueValidationRules = parameterType => {
-    if (parameterType === parameterTypeMap) {
+    if (parameterType === parameterTypeDict) {
       return [
         {
           name: 'invalidStructure',
-          label: 'Value is not a valid `map` type',
+          label: 'Value is not a valid `dict` type',
           pattern: newValue => {
             try {
               const parsedValue = JSON.parse(String(newValue))
@@ -162,7 +162,7 @@ const FormParametersRow = ({
                     return typeof valueItem === 'boolean'
                   case parameterTypeList:
                     return Array.isArray(valueItem)
-                  case parameterTypeMap:
+                  case parameterTypeDict:
                     return isPlainObject(valueItem)
                   default:
                     return false
@@ -181,8 +181,8 @@ const FormParametersRow = ({
 
   const getValueTip = parameterType => {
     switch (parameterType) {
-      case parameterTypeMap:
-        return 'The valid `map` type must be in the JSON format\n e.g. {"hello": "world"}'
+      case parameterTypeDict:
+        return 'The valid `dict` type must be in the JSON format\n e.g. {"hello": "world"}'
       case parameterTypeList:
         return 'The valid `list` type must be in the JSON format\n e.g. ["hello", "world"]'
       default:
@@ -207,7 +207,7 @@ const FormParametersRow = ({
         return 'Example: [true, false]'
       case parameterTypeList:
         return 'Example: [["hello", "world"], [1, 2, 3]]'
-      case parameterTypeMap:
+      case parameterTypeDict:
         return 'Example: [{"hello": "world"}, {"test": true}]'
       default:
         return ''
