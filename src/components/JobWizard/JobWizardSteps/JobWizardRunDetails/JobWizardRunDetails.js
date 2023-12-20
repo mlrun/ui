@@ -93,6 +93,7 @@ const JobWizardRunDetails = ({
       null,
       params.projectName,
       isEditMode,
+      false,
       null,
       version
     )
