@@ -94,10 +94,10 @@ const PreviewModal = ({ artifact }) => {
             </div>
           </div>
           <div className="item-artifacts__preview">
-            {preview[0]?.hidden && artifact.extra_data.length > 0 ? null : (
+            {preview[0]?.hidden && artifact.extra_data?.length > 0 ? null : (
               <ArtifactsPreview noData={noData} preview={preview} />
             )}
-            {artifact.extra_data.length > 0 && <ArtifactsExtraData artifact={artifact} />}
+            {artifact.extra_data?.length > 0 && <ArtifactsExtraData artifact={artifact} />}
           </div>
         </div>
       </div>
