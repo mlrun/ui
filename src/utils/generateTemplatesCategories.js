@@ -36,8 +36,7 @@ export const aliasToCategory = {
   'sentiment analysis': 'data-analysis',
   serve: 'model-serving',
   serving: 'model-serving',
-  test: 'other',
-  utils: 'other'
+  test: 'other'
 }
 
 export const generateCategories = functionTemplates => {
@@ -111,6 +110,7 @@ export const generateHubCategories = (functionTemplates, allowedHubFunctions = {
       }
     })
   })
+  hubFunctionsCategories.sort()
 
   return { hubFunctions, hubFunctionsCategories }
 }
