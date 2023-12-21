@@ -93,6 +93,7 @@ const JobWizardRunDetails = ({
       null,
       params.projectName,
       isEditMode,
+      false,
       null,
       version
     )
@@ -140,7 +141,7 @@ const JobWizardRunDetails = ({
           )
 
     const functionParameters = getFunctionParameters(selectedFunction, handler)
-    const dataInputs = parseDataInputs(functionParameters, prePopulatedData?.dataInputs)
+    const dataInputs = parseDataInputs(functionParameters, prePopulatedData?.trainDatasetUri)
     const predefinedParameters = parsePredefinedParameters(functionParameters)
     const handlerData = getHandlerData(selectedFunction, handler)
 

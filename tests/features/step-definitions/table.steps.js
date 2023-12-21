@@ -56,6 +56,8 @@ import {
 import {
   checkActionMenuOptions,
   openActionMenu,
+  verifyOptionInActionMenuEnabled,
+  verifyOptionInActionMenuDisabled,
   selectOptionInActionMenu
 } from '../common/actions/action-menu.action'
 import { typeValue } from '../common/actions/input-group.action'
@@ -1042,6 +1044,60 @@ Then(
       pageObjects[wizard][table]['tableFields']['action_menu'](indx),
       pageObjectsConsts[constWizard][constValue]
     )
+  }
+)
+
+Then(
+  'verify that in action menu on {string} wizard in {string} table with {string} value in {string} column {string} option is enabled',
+  async function (wizard, table, value, column, option) {
+    const arr = await findRowIndexesByColumnValue(
+      this.driver,
+      pageObjects[wizard][table],
+      column,
+      value
+    )
+    const indx = arr[0]
+    const actionMenuSel = await getCellByIndexColumn(
+      this.driver,
+      pageObjects[wizard][table],
+      indx,
+      'action_menu'
+    )
+    await hoverComponent(
+      this.driver,
+      pageObjects[wizard][table]['tableFields'][column](indx)
+    )
+    await this.driver.sleep(500)
+    await openActionMenu(this.driver, actionMenuSel)
+    await this.driver.sleep(500)
+    await verifyOptionInActionMenuEnabled (this.driver, actionMenuSel, option)
+  }
+)
+
+Then(
+  'verify that in action menu on {string} wizard in {string} table with {string} value in {string} column {string} option is disabled',
+  async function (wizard, table, value, column, option) {
+    const arr = await findRowIndexesByColumnValue(
+      this.driver,
+      pageObjects[wizard][table],
+      column,
+      value
+    )
+    const indx = arr[0]
+    const actionMenuSel = await getCellByIndexColumn(
+      this.driver,
+      pageObjects[wizard][table],
+      indx,
+      'action_menu'
+    )
+    await hoverComponent(
+      this.driver,
+      pageObjects[wizard][table]['tableFields'][column](indx)
+    )
+    await this.driver.sleep(500)
+    await openActionMenu(this.driver, actionMenuSel)
+    await this.driver.sleep(500)
+    await verifyOptionInActionMenuDisabled (this.driver, actionMenuSel, option)
   }
 )
 

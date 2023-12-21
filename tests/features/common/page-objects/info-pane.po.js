@@ -559,6 +559,7 @@ module.exports = {
     Tabel_View_Button: tabelViewButton,
     Cross_Close_Button: crossCloseButton,
     Info_Pane_Tab_Selector: commonInfoPaneTabSelector,
+    Pop_Out_Button: By.css('[data-testid="details-preview-tooltip-wrapper"]'),
     Overview_General_Headers: commonTable(infoPaneOverviewHeaders),
     Overview_Producer_Headers: commonTable(infoPaneOverviewProducerHeaders),
     Overview_Sources_Headers: commonTable(infoPaneOverviewSourcesHeaders),
@@ -687,6 +688,7 @@ module.exports = {
     Full_View_Button: fullViewButton,
     Tabel_View_Button: tabelViewButton,
     Info_Pane_Tab_Selector: commonInfoPaneTabSelector,
+    Pop_Out_Button: By.css('[data-testid="details-preview-tooltip-wrapper"]'),
     Overview_General_Headers: commonTable(infoPaneOverviewHeaders),
     Overview_Producer_Headers: commonTable(infoPaneOverviewProducerHeaders),
     Overview_Sources_Headers: commonTable(infoPaneOverviewSourcesHeaders),
@@ -704,8 +706,6 @@ module.exports = {
         true
       )
     ),
-    // Expand_Sources: By.css('.details-item .info-sources'),
-    // Info_Sources_Table: commonTable(filesInfoSourcesTable),
     Overview_Table: commonTable(artifactOverviewTable),
     Edit_btn_table_view: commonEditBtnTableView,
     Edit_btn_full_view: commonEditBtnFullView,
@@ -720,13 +720,15 @@ module.exports = {
     Download_Button: commonDownloadButton,
     Action_Menu: commonActionMenu,
     Apply_Changes_Button: applyChangesButton,
-    //Apply_Button: applyButton,
     Cross_Close_Button: crossCloseButton,
     Full_View_Button: fullViewButton,
     Tabel_View_Button: tabelViewButton,
     Info_Pane_Tab_Selector: commonInfoPaneTabSelector,
+    Pop_Out_Button: By.css('[data-testid="details-preview-tooltip-wrapper"]'),
     Overview_General_Headers: commonTable(infoPaneOverviewHeaders),
     Overview_Drift_Headers: commonTable(infoPaneDriftHeaders),
+    Overview_Producer_Headers: commonTable(infoPaneOverviewProducerHeaders),
+    Overview_Sources_Headers: commonTable(infoPaneOverviewSourcesHeaders),
     Overview_Hash_Header: labelComponent(
       generateLabelGroup(
         '.item-info__details:nth-of-type(1) .details-item:nth-of-type(1) .details-item__header',

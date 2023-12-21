@@ -36,6 +36,7 @@ const FormDataInputsTable = ({
   exitEditModeTriggerItem,
   fieldsPath,
   formState,
+  params,
   rowCanBeAdded
 }) => {
   const [dataInputState, setDataInputState] = useState(targetPathInitialState)
@@ -108,6 +109,7 @@ const FormDataInputsTable = ({
                     index={index}
                     isCurrentRowEditing={isCurrentRowEditing}
                     key={rowPath}
+                    params={params}
                     rowPath={rowPath}
                     setDataInputState={setDataInputState}
                     setFieldState={formState.form.mutators.setFieldState}
@@ -161,6 +163,7 @@ FormDataInputsTable.propTypes = {
   exitEditModeTriggerItem: PropTypes.any,
   fieldsPath: PropTypes.string.isRequired,
   formState: PropTypes.shape({}).isRequired,
+  params: PropTypes.shape({}).isRequired,
   rowCanBeAdded: PropTypes.bool
 }
 

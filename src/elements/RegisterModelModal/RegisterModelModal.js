@@ -29,20 +29,21 @@ import { v4 as uuidv4 } from 'uuid'
 import { Button, Modal, FormChipCell, FormInput, FormTextarea } from 'igz-controls/components'
 import TargetPath from '../../common/TargetPath/TargetPath'
 
-import { getChipOptions } from '../../utils/getChipOptions'
-import { convertChipsData } from '../../utils/convertChipsData'
-import { isArtifactNameUnique } from '../../utils/artifacts.util'
-import { getValidationRules } from 'igz-controls/utils/validation.util'
-import { setFieldState } from 'igz-controls/utils/form.util'
-import { useModalBlockHistory } from '../../hooks/useModalBlockHistory.hook'
-import { MODAL_SM, SECONDARY_BUTTON, TERTIARY_BUTTON } from 'igz-controls/constants'
-import { MLRUN_STORAGE_INPUT_PATH_SCHEME } from '../../constants'
-import { setNotification } from '../../reducers/notificationReducer'
 import artifactApi from '../../api/artifacts-api'
+import { MLRUN_STORAGE_INPUT_PATH_SCHEME } from '../../constants'
+import { MODAL_SM, SECONDARY_BUTTON, TERTIARY_BUTTON } from 'igz-controls/constants'
+import { convertChipsData } from '../../utils/convertChipsData'
+import { getChipOptions } from '../../utils/getChipOptions'
+import { getValidationRules } from 'igz-controls/utils/validation.util'
+import { isArtifactNameUnique } from '../../utils/artifacts.util'
+import { setFieldState } from 'igz-controls/utils/form.util'
+import { setNotification } from '../../reducers/notificationReducer'
+import { showErrorNotification } from '../../utils/notifications.util'
+import { useModalBlockHistory } from '../../hooks/useModalBlockHistory.hook'
 
 import './RegisterModelModal.scss'
 
-function RegisterModelModal({ actions, isOpen, onResolve, projectName, refresh }) {
+function RegisterModelModal({ actions, isOpen, onResolve, params, refresh }) {
   const initialValues = {
     metadata: {
       description: undefined,
@@ -71,17 +72,14 @@ function RegisterModelModal({ actions, isOpen, onResolve, projectName, refresh }
   const dispatch = useDispatch()
 
   const registerModel = values => {
-    const uid = uuidv4()
-
     const data = {
       kind: 'model',
       metadata: {
         ...values.metadata,
         labels: convertChipsData(values.metadata.labels),
-        project: projectName,
-        tree: uid
+        project: params.projectName,
+        tree: uuidv4()
       },
-      project: projectName,
       spec: {
         db_key: values.metadata.key,
         producer: {
@@ -90,8 +88,7 @@ function RegisterModelModal({ actions, isOpen, onResolve, projectName, refresh }
         },
         target_path: values.spec.target_path.path
       },
-      status: {},
-      uid
+      status: {}
     }
 
     if (values.spec.target_path?.path?.includes('/')) {
@@ -102,7 +99,7 @@ function RegisterModelModal({ actions, isOpen, onResolve, projectName, refresh }
     }
 
     return artifactApi
-      .registerArtifact(projectName, data)
+      .registerArtifact(params.projectName, data)
       .then(response => {
         resolveModal()
         refresh(filtersStore)
@@ -114,16 +111,11 @@ function RegisterModelModal({ actions, isOpen, onResolve, projectName, refresh }
           })
         )
       })
-      .catch(() => {
-        resolveModal()
-        dispatch(
-          setNotification({
-            status: 400,
-            id: Math.random(),
-            message: 'Model failed to initiate',
-            retry: registerModel
-          })
+      .catch(error => {
+        showErrorNotification(dispatch, error, '', 'Model failed to initiate', () =>
+          registerModel(values)
         )
+        resolveModal()
       })
   }
 
@@ -160,19 +152,24 @@ function RegisterModelModal({ actions, isOpen, onResolve, projectName, refresh }
             title="Register model"
           >
             <div className="form-row">
-              <FormInput
-                async
-                label="Name"
-                name="metadata.key"
-                required
-                tip="Artifacts names in the same project must be unique."
-                validationRules={getValidationRules('artifact.name', {
-                  name: 'ArtifactExists',
-                  label: 'Artifact name must be unique',
-                  pattern: isArtifactNameUnique(projectName),
-                  async: true
-                })}
-              />
+              <div className="form-col-2">
+                <FormInput
+                  async
+                  label="Name"
+                  name="metadata.key"
+                  required
+                  tip="Artifacts names in the same project must be unique."
+                  validationRules={getValidationRules('artifact.name', {
+                    name: 'ArtifactExists',
+                    label: 'Artifact name must be unique',
+                    pattern: isArtifactNameUnique(params.projectName),
+                    async: true
+                  })}
+                />
+              </div>
+              <div className="form-col-1">
+                <FormInput label="Tag" name="metadata.tag" />
+              </div>
             </div>
             <div className="form-row">
               <FormTextarea name="metadata.description" label="Description" maxLength={500} />
@@ -184,6 +181,7 @@ function RegisterModelModal({ actions, isOpen, onResolve, projectName, refresh }
                 hiddenSelectOptionsIds={[MLRUN_STORAGE_INPUT_PATH_SCHEME]}
                 label="Target Path"
                 name="spec.target_path.path"
+                params={params}
                 required
                 selectPlaceholder="Path Scheme"
                 setFieldState={formState.form.mutators.setFieldState}
@@ -214,7 +212,7 @@ function RegisterModelModal({ actions, isOpen, onResolve, projectName, refresh }
 
 RegisterModelModal.propTypes = {
   isOpen: PropTypes.bool.isRequired,
-  projectName: PropTypes.string.isRequired,
+  params: PropTypes.shape({}).isRequired,
   refresh: PropTypes.func.isRequired
 }
 

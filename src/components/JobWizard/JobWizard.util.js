@@ -69,7 +69,7 @@ import {
   parameterTypeFloat,
   parameterTypeInt,
   parameterTypeList,
-  parameterTypeMap,
+  parameterTypeDict,
   parameterTypeStr,
   parameterTypeValueMap
 } from '../../elements/FormParametersTable/formParametersTable.util'
@@ -104,10 +104,11 @@ export const generateJobWizardData = (
   defaultData,
   currentProjectName,
   isEditMode,
+  isTrain,
   prePopulatedData,
   selectedVersion
 ) => {
-  const functionInfo = getFunctionInfo(selectedFunctionData, selectedVersion)
+  const functionInfo = getFunctionInfo(selectedFunctionData, selectedVersion, isTrain)
   const defaultResources = frontendSpec?.default_function_pod_resources ?? {}
   const functionParameters = getFunctionParameters(functionInfo.function, functionInfo.handler)
   const functionPriorityClassName = getFunctionPriorityClass(functionInfo.function)
@@ -183,10 +184,10 @@ export const generateJobWizardData = (
     jobFormData[RESOURCES_STEP].jobPriorityClassName = jobPriorityClassName
   }
 
-  if (!isEmpty(functionParameters) || !isEmpty(prePopulatedData?.dataInputs)) {
+  if (!isEmpty(functionParameters) || !isEmpty(prePopulatedData?.trainDatasetUri)) {
     jobFormData[DATA_INPUTS_STEP].dataInputsTable = parseDataInputs(
       functionParameters,
-      prePopulatedData?.dataInputs
+      prePopulatedData?.trainDatasetUri
     )
   }
 
@@ -310,15 +311,16 @@ export const getHandlerData = (selectedFunction, handler) => {
   }
 }
 
-const getFunctionInfo = (selectedFunctionData, preSelectedVersion) => {
+const getFunctionInfo = (selectedFunctionData, preSelectedVersion, isTrain) => {
   const functions = selectedFunctionData?.functions
 
   if (!isEmpty(functions)) {
+    const allowedHandlers = isTrain ? ['train'] : []
     const versionOptions = getVersionOptions(functions)
     const selectedVersion = some(versionOptions, { id: preSelectedVersion })
       ? preSelectedVersion
       : getDefaultVersion(versionOptions)
-    const handlerOptions = getHandlerOptions(functions, selectedVersion)
+    const handlerOptions = getHandlerOptions(functions, selectedVersion, allowedHandlers)
     const defaultHandler = getDefaultHandler(handlerOptions, functions, selectedVersion)
     const selectedFunction = getSelectedFunction(functions, selectedVersion)
 
@@ -346,7 +348,7 @@ const getRunDefaultInfo = (defaultData, selectedFunction) => {
   }
 }
 
-const getHandlerOptions = (selectedFunctions, selectedVersion) => {
+const getHandlerOptions = (selectedFunctions, selectedVersion, allowedHandlers = []) => {
   const selectedFunction =
     selectedFunctions?.length === 1
       ? selectedFunctions[0]
@@ -356,6 +358,9 @@ const getHandlerOptions = (selectedFunctions, selectedVersion) => {
     .get('spec.entry_points', {})
     .values()
     .flatten()
+    .filter(
+      entry_point => allowedHandlers.length === 0 || allowedHandlers.includes(entry_point.name)
+    )
     .map(entry_point => ({
       label: entry_point.name,
       id: entry_point.name,
@@ -527,6 +532,7 @@ export const getCategoryName = categoryId => {
     NLP: 'NLP',
     notifications: 'Alerts and Notifications',
     other: 'Other',
+    utils: 'Utilities',
     'model-serving': 'Model Serving',
     simulators: 'Simulators',
     training: 'Model Training'
@@ -552,7 +558,7 @@ const getDataInputData = (dataInputName, dataInputValue, dataInputIsChecked) => 
 
 const sortParameters = (parameter, nextParameter) => nextParameter.isRequired - parameter.isRequired
 
-export const parseDataInputs = (functionParameters = [], prePopulatedDataInputs) => {
+export const parseDataInputs = (functionParameters = [], trainDatasetUri) => {
   const parsedDataInputs = functionParameters
     .filter(dataInputs => dataInputs.type?.includes('DataItem'))
     .map(dataInput => {
@@ -565,16 +571,14 @@ export const parseDataInputs = (functionParameters = [], prePopulatedDataInputs)
       }
     })
     .sort(sortParameters)
+  const dataInputsDataset = parsedDataInputs.find(dataInput => dataInput.data?.name === 'dataset')
 
-  if (!isEmpty(prePopulatedDataInputs)) {
-    prePopulatedDataInputs.forEach(dataInput => {
-      parsedDataInputs.unshift({
-        data: getDataInputData(dataInput.name, dataInput.path, true),
-        isRequired: true,
-        isDefault: true,
-        isPredefined: true
-      })
-    })
+  if (dataInputsDataset && trainDatasetUri) {
+    dataInputsDataset.data = getDataInputData(
+      'dataset',
+      trainDatasetUri,
+      dataInputsDataset.data.isChecked
+    )
   }
 
   return parsedDataInputs
@@ -584,10 +588,17 @@ export const parseDefaultDataInputs = (funcParams, runDataInputs = {}) => {
   const predefinedDataInputs = chain(funcParams)
     .filter(dataInput => dataInput.type?.includes('DataItem'))
     .map(dataInput => {
-      const dataInputValue = runDataInputs[dataInput.name] ?? dataInput.default ?? ''
+      const dataInputIsFromPreviousRun = has(runDataInputs, dataInput.name)
+      const dataInputValue = dataInputIsFromPreviousRun
+        ? runDataInputs[dataInput.name]
+        : dataInput.default ?? ''
 
       return {
-        data: getDataInputData(dataInput.name, dataInputValue, !has(dataInput, 'default')),
+        data: getDataInputData(
+          dataInput.name,
+          dataInputValue,
+          dataInputIsFromPreviousRun || !has(dataInput, 'default')
+        ),
         doc: dataInput.doc ?? '',
         isRequired: !has(dataInput, 'default'),
         isDefault: true,
@@ -725,7 +736,7 @@ export const parseParameterType = (parameterValue, isHyper) => {
     !Array.isArray(parameterValue) &&
     parameterValue !== null
   ) {
-    return parameterTypeMap
+    return parameterTypeDict
   } else if (isFinite(parameterValue)) {
     return String(parameterValue).includes('.') ? parameterTypeFloat : parameterTypeInt
   } else if (typeof parameterValue === 'boolean') {
@@ -829,7 +840,7 @@ const convertParameterValue = (value, type) => {
     return Number(value)
   } else if (type === parameterTypeBool && ['true', 'false'].includes(value.toLowerCase())) {
     return value.toLowerCase() === 'true'
-  } else if ([parameterTypeList, parameterTypeMap].includes(type)) {
+  } else if ([parameterTypeList, parameterTypeDict].includes(type)) {
     try {
       return JSON.parse(value)
     } catch {

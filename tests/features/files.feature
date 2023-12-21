@@ -15,6 +15,13 @@ Feature: Files Page
     And hover "MLRun_Logo" component on "commonPagesHeader" wizard
     And wait load page
     Then verify breadcrumbs "tab" label should be equal "Artifacts" value
+    Then click on breadcrumbs "project" label on "commonPagesHeader" wizard
+    And wait load page
+    Then verify breadcrumbs "tab" label should be equal "Project monitoring" value
+    And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
+    And click on cell with value "Artifacts" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+    And hover "MLRun_Logo" component on "commonPagesHeader" wizard
+    And wait load page
     Then verify "Table_Name_Filter_Input" element visibility on "Files" wizard
     Then click on "Table_FilterBy_Button" element on "Files" wizard
     Then verify "Table_Label_Filter_Input" element visibility on "Artifacts_FilterBy_Popup" wizard
@@ -34,6 +41,13 @@ Feature: Files Page
     And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
     And wait load page
     Then verify breadcrumbs "project" label should be equal "default" value
+    And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
+    And click on cell with value "Artifacts" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+    And hover "MLRun_Logo" component on "commonPagesHeader" wizard
+    And wait load page
+    And select "tab" with "Project monitoring" value in breadcrumbs menu
+    And wait load page
+    Then verify breadcrumbs "tab" label should be equal "Project monitoring" value
     And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
     And click on cell with value "Artifacts" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
     And hover "MLRun_Logo" component on "commonPagesHeader" wizard
@@ -309,8 +323,61 @@ Feature: Files Page
     Then verify "Action_Menu" element visibility on "Files_Info_Pane" wizard
     Then verify "Action_Menu" dropdown element on "Files_Info_Pane" wizard should contains "Common_Lists"."Action_Menu_List"
     Then verify "Cross_Close_Button" element visibility on "Files_Info_Pane" wizard
+    When click on cell with value "survival-curves_km-survival" in "name" column in "Files_Table" table on "Files" wizard
+    Then select "Preview" tab in "Info_Pane_Tab_Selector" on "Files_Info_Pane" wizard
+    And wait load page
+    Then verify "Pop_Out_Button" element visibility on "Files_Info_Pane" wizard 
+    Then click on "Pop_Out_Button" element on "Files_Info_Pane" wizard
+    And wait load page
+    Then verify "Preview_Header" element visibility on "Artifact_Preview_Popup" wizard
+    Then verify "Cross_Cancel_Button" element visibility on "Artifact_Preview_Popup" wizard
+    Then check "download_btn" visibility in "Preview_Header" on "Artifact_Preview_Popup" wizard
+    Then click on "Download_Button" element on "Artifact_Preview_Popup" wizard
+    And wait load page
+    And wait load page
+    Then verify "Download_Pop_Up" element visibility on "Downloads_Popup" wizard
+    And wait load page
+    Then verify "Download_Pop_Up_Cross_Cancel_Button" element visibility on "Downloads_Popup" wizard
+    And wait load page
+    Then verify "Header_Download_Pop_Up" element visibility on "Downloads_Popup" wizard
+    Then "Header_Download_Pop_Up" element on "Downloads_Popup" should contains "Downloads" value
+    Then click on "Download_Pop_Up_Cross_Cancel_Button" element on "Downloads_Popup" wizard
+    Then click on "Cross_Cancel_Button" element on "Artifact_Preview_Popup" wizard
 #    Then verify "Preview_Tab_Info_Pane_Table" element visibility on "Files_Info_Pane" wizard
 #    TO DO: should be implemented mock requests
+
+  @MLA
+  Scenario: MLA022 - Verify the Delete option state in Artifacts table and Overview details action menu 
+    Given open url
+    And wait load page
+    And click on row root with value "churn-project-admin" in "name" column in "Projects_Table" table on "Projects" wizard
+    And wait load page
+    And select "tab" with "Artifacts" value in breadcrumbs menu
+    And wait load page
+    Then verify action menu on "Files" wizard in "Files_Table" table with "survival-curves_km-survival" value in "name" column should contains "Common_Lists"."Action_Menu_List"
+    Then verify that in action menu on "Files" wizard in "Files_Table" table with "survival-curves_km-survival" value in "name" column "Delete" option is enabled
+    When click on cell with row index 1 in "name" column in "Files_Table" table on "Files" wizard
+    Then check "latest" value in "tag" column in "Overview_Table" table on "Files_Info_Pane" wizard
+    Then verify "Action_Menu" element visibility on "Files_Info_Pane" wizard
+    Then verify "Action_Menu" dropdown element on "Files_Info_Pane" wizard should contains "Common_Lists"."Action_Menu_List"
+    Then check that "Delete" option in action menu on "Files_Info_Pane" wizard is enabled
+    Then click on "Edit_btn_table_view" element on "Files_Info_Pane" wizard
+    And wait load page
+    When type value "" to "Version_tag_Input" field on "Files_Info_Pane" wizard
+    Then click on "Apply_Button" element on "Files_Info_Pane" wizard
+    Then click on "Apply_Changes_Button" element on "Files_Info_Pane" wizard
+    And wait load page
+    Then verify "Table_FilterBy_Button" element visibility on "Files" wizard
+    Then click on "Table_FilterBy_Button" element on "Files" wizard
+    Then select "All" option in "Table_Tree_Filter_Dropdown" dropdown on "Artifacts_FilterBy_Popup" wizard
+    Then click on "Apply_Button" element on "Artifacts_FilterBy_Popup" wizard
+    And wait load page
+    Then verify action menu on "Files" wizard in "Files_Table" table with "survival-curves_km-survival" value in "name" column should contains "Common_Lists"."Action_Menu_List"
+    Then verify that in action menu on "Files" wizard in "Files_Table" table with "survival-curves_km-survival" value in "name" column "Delete" option is disabled
+    When click on cell with row index 2 in "name" column in "Files_Table" table on "Files" wizard
+    Then check "Click to add" value in "tag" column in "Overview_Table" table on "Files_Info_Pane" wizard
+    Then verify "Action_Menu" dropdown element on "Files_Info_Pane" wizard should contains "Common_Lists"."Action_Menu_List"
+    Then check that "Delete" option in action menu on "Files_Info_Pane" wizard is disabled
 
   @MLA
   @passive

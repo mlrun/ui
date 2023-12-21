@@ -2,14 +2,14 @@ Feature: ML Functions
 
     Testcases that verifies functionality on ML Functions Pages
 
+    @MLF
     @passive
-    Scenario: Check all mandatory components on ML Functions Page
+    @FAILED_TODO
+    #TODO: New_Function_Button hidden from 1.6.0, running on demo mode
+    Scenario: MLF005 - Check all mandatory components on ML Functions Page
         Given open url
         And wait load page
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
-        And wait load page
-        And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
-        Then click on "Project_Monitoring_Button" element on "commonPagesHeader" wizard
         And wait load page
         Then verify breadcrumbs "project" label should be equal "default" value
         And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
@@ -17,20 +17,37 @@ Feature: ML Functions
         And hover "MLRun_Logo" component on "commonPagesHeader" wizard
         And wait load page
         Then verify breadcrumbs "tab" label should be equal "ML functions" value
+        Then click on breadcrumbs "project" label on "commonPagesHeader" wizard
+        And wait load page
+        Then verify breadcrumbs "tab" label should be equal "Project monitoring" value
+        And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
+        And click on cell with value "ML functions" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+        And hover "MLRun_Logo" component on "commonPagesHeader" wizard
+        And wait load page
         Then verify "Table_Name_Filter_Input" element visibility on "ML_Functions" wizard
         Then verify "Show_Untagged_Functions_Checkbox" element visibility on "ML_Functions" wizard
+        And turn on demo mode
+        And wait load page
         Then verify "New_Function_Button" element visibility on "ML_Functions" wizard
         Then "New_Function_Button" element on "ML_Functions" should contains "New" value
         Then verify "Table_Refresh_Button" element visibility on "ML_Functions" wizard
         Then verify "Table_Expand_Rows_Button" element visibility on "ML_Functions" wizard
         Then verify "Functions_Table" element visibility on "ML_Functions" wizard
 
+    @MLF
     @passive
-    Scenario: verify filtering by function name on Functions page
+    Scenario: MLF006 - Verify filtering by function name on Functions page
         Given open url
         And wait load page
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
+        And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
+        And click on cell with value "ML functions" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+        And hover "MLRun_Logo" component on "commonPagesHeader" wizard
+        And wait load page
+        And select "tab" with "Project monitoring" value in breadcrumbs menu
+        And wait load page
+        Then verify breadcrumbs "tab" label should be equal "Project monitoring" value
         And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
         And click on cell with value "ML functions" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
         And hover "MLRun_Logo" component on "commonPagesHeader" wizard

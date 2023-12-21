@@ -1,0 +1,64 @@
+{
+  "data": {
+      "type": "user",
+      "id": "20ab4d74-3b45-447c-aef7-47797b7a31d5",
+      "attributes": {
+          "username": "admin",
+          "first_name": "Administrator",
+          "last_name": "Iguazio",
+          "job_title": "",
+          "department": "",
+          "email": "my_admin@iguazio.com",
+          "phone_number": "",
+          "uid": 0,
+          "created_at": "2023-11-13T14:50:02.992000+00:00",
+          "data_access_mode": "enabled",
+          "authentication_scheme": "local",
+          "password_changed_at": "2023-11-13T14:50:03.009000+00:00",
+          "updated_at": "2023-12-15T23:01:14.449000+00:00",
+          "send_password_on_creation": false,
+          "assigned_policies": [
+              "Developer",
+              "Application Read Only",
+              "Service Admin",
+              "Project Security Admin",
+              "Application Admin",
+              "IT Admin",
+              "Security Admin",
+              "Data",
+              "Tenant Admin"
+          ],
+          "operational_status": "up",
+          "admin_status": "up",
+          "last_activity": "2023-12-15T23:01:14.449000+00:00"
+      },
+      "relationships": {
+          "user_groups": {
+              "data": [
+                  {
+                      "type": "user_group",
+                      "id": "c2f015cb-9cfa-4826-9bcb-ef5039654152"
+                  }
+              ]
+          }
+      }
+  },
+  "included": [
+      {
+          "type": "user_group",
+          "id": "c2f015cb-9cfa-4826-9bcb-ef5039654152",
+          "attributes": {
+              "name": "all_users",
+              "description": "All Users",
+              "data_access_mode": "disabled",
+              "gid": -1,
+              "kind": "local",
+              "assigned_policies": [],
+              "system_provided": true
+          }
+      }
+  ],
+  "meta": {
+      "ctx": "13534367212885994638"
+  }
+}

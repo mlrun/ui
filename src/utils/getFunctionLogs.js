@@ -30,22 +30,22 @@ export const getFunctionLogs = (
   name,
   tag,
   setDetailsLogs,
-  offset,
   navigate,
   refreshFunctions,
   startedDeploying
 ) => {
-  fetchFunctionLogs(projectName, name, tag, offset).then(result => {
+  fetchFunctionLogs(projectName, name, tag).then(result => {
     if (
       TRANSIENT_FUNCTION_STATUSES.includes(
         result.headers?.['x-mlrun-function-status']
       )
     ) {
-      fetchFunctionLogsTimeout.current = setTimeout(() => {
-        let currentOffset = offset
-          ? offset + result.data.length
-          : result.data.length
+      if (fetchFunctionLogsTimeout.current) {
+        clearTimeout(fetchFunctionLogsTimeout.current)
+        fetchFunctionLogsTimeout.current = null
+      }
 
+      fetchFunctionLogsTimeout.current = setTimeout(() => {
         getFunctionLogs(
           fetchFunctionLogs,
           fetchFunctionLogsTimeout,
@@ -53,7 +53,6 @@ export const getFunctionLogs = (
           name,
           tag,
           setDetailsLogs,
-          currentOffset,
           navigate,
           refreshFunctions,
           true

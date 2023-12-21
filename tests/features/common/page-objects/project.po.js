@@ -171,7 +171,7 @@ const DataCollectionAdditionalActionsTable = {
 
 const DevelopmentActionsTable = {
   root:
-    '.project-overview .project-overview__content .project-overview-card:nth-of-type(3) .project-overview-card__actions',
+    '.project-overview .project-overview__content .project-overview-card:nth-of-type(2) .project-overview-card__actions',
   header: {},
   body: {
     root: '.project-overview-actions',
@@ -216,7 +216,7 @@ const DataCollectionLinksTable = {
 
 const DevelopmentLinksTable = {
   root:
-    '.project-overview .project-overview__content .project-overview-card:nth-of-type(3) .project-overview-card__bottom',
+    '.project-overview .project-overview__content .project-overview-card:nth-of-type(2) .project-overview-card__bottom',
   header: {},
   body: {
     root: '.additional-links',
