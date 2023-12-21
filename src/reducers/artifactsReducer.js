@@ -78,8 +78,8 @@ export const addTag = createAsyncThunk('addTag', ({ project, tag, data }) => {
 export const buildFunction = createAsyncThunk('buildFunction', ({ funcData }) => {
   return artifactsApi.buildFunction(funcData)
 })
-export const deleteArtifact = createAsyncThunk('deleteArtifact', ({ project, key, tag, uid }) => {
-  return artifactsApi.deleteArtifact(project, key, tag, uid)
+export const deleteArtifact = createAsyncThunk('deleteArtifact', ({ project, key, tag, tree }) => {
+  return artifactsApi.deleteArtifact(project, key, tag, tree)
 })
 export const deleteTag = createAsyncThunk('deleteTag', ({ project, tag, data }) => {
   return artifactsApi.deleteTag(project, tag, data)
