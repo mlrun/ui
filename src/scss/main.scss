@@ -216,7 +216,7 @@ main {
           &-name {
             position: sticky;
             left: 0;
-            flex-basis: 240px;
+            min-width: 240px;
             z-index: 1;
           }
 

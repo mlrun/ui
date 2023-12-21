@@ -22,28 +22,9 @@ import PropTypes from 'prop-types'
 import { isEmpty } from 'lodash'
 import classnames from 'classnames'
 
-import ArtifactsTableRow from '../../elements/ArtifactsTableRow/ArtifactsTableRow'
-import ConsumerGroupShardLagTableRow from '../../elements/ConsumerGroupShardLagTableRow/ConsumerGroupShardLagTableRow'
-import ConsumerGroupTableRow from '../../elements/ConsumerGroupTableRow/ConsumerGroupTableRow'
 import Details from '../Details/Details'
-import FeatureStoreTableRow from '../../elements/FeatureStoreTableRow/FeatureStoreTableRow'
-import FunctionsTableRow from '../../elements/FunctionsTableRow/FunctionsTableRow'
-import NoData from '../../common/NoData/NoData'
 import TableHead from './TableHead'
-import { Tooltip, TextTooltipTemplate } from 'igz-controls/components'
 
-import {
-  ARTIFACTS_PAGE,
-  CONSUMER_GROUPS_PAGE,
-  CONSUMER_GROUP_PAGE,
-  DATASETS_PAGE,
-  FEATURE_STORE_PAGE,
-  FILES_PAGE,
-  FUNCTIONS_PAGE,
-  GROUP_BY_NONE,
-  MODELS_PAGE,
-  REAL_TIME_PIPELINES_TAB
-} from '../../constants'
 import { ACTIONS_MENU } from '../../types'
 import { SORT_PROPS } from 'igz-controls/types'
 
@@ -52,25 +33,17 @@ const TableView = ({
   applyDetailsChanges,
   applyDetailsChangesCallback,
   children,
-  content,
   detailsFormInitialValues,
   getCloseDetailsLink,
-  groupFilter,
-  groupLatestItem,
-  groupedContent,
   handleCancel,
-  handleExpandRow,
-  handleSelectItem,
   hideActionsMenu,
   isTablePanelOpen,
   mainRowItemsCount,
   pageData,
-  params,
   retryRequest,
   selectedItem,
   sortProps,
   tab,
-  tableContent,
   tableRef,
   tableContentRef,
   tableHeaders,
@@ -88,166 +61,6 @@ const TableView = ({
       <div className="table__content" id="table-content" ref={tableContentRef}>
         <div className="table__wrapper">
           <table className={tableClass} cellPadding="0" cellSpacing="0" ref={tableRef}>
-            {pageData.tableHeaders && (
-              <>
-                <thead className="table-header">
-                  <tr className="table-row">
-                    {pageData.tableHeaders?.map((item, index) => {
-                      const headerClassNames = classnames(
-                        `table-header__cell ${item.className} ${item.headerCellClassName}`
-                      )
-
-                      return (
-                        !item.hidden && (
-                          <th
-                            className={headerClassNames}
-                            key={`${item.headerLabel}${index}`}
-                            ref={tableHeadRef}
-                          >
-                            <Tooltip template={<TextTooltipTemplate text={item.headerLabel} />}>
-                              {item.headerLabel}
-                            </Tooltip>
-                          </th>
-                        )
-                      )
-                    })}
-                  </tr>
-                </thead>
-                <tbody className="table-body">
-                  {!groupFilter ||
-                  isEmpty(groupedContent) ||
-                  (groupFilter === GROUP_BY_NONE && isEmpty(groupLatestItem)) ? (
-                    tableContent.map((rowItem, i) => {
-                      switch (pageData.page) {
-                        case CONSUMER_GROUPS_PAGE:
-                          return (
-                            <ConsumerGroupTableRow key={i} content={content} rowItem={rowItem} />
-                          )
-                        case CONSUMER_GROUP_PAGE:
-                          return (
-                            <ConsumerGroupShardLagTableRow
-                              key={i}
-                              content={content}
-                              rowItem={rowItem}
-                            />
-                          )
-                        case ARTIFACTS_PAGE:
-                        case DATASETS_PAGE:
-                        case FILES_PAGE:
-                        case MODELS_PAGE:
-                          return (
-                            <ArtifactsTableRow
-                              actionsMenu={actionsMenu}
-                              content={content}
-                              handleSelectItem={handleSelectItem}
-                              key={i}
-                              rowIndex={i}
-                              rowItem={rowItem}
-                              pageData={pageData}
-                              selectedItem={selectedItem}
-                            />
-                          )
-                        case FEATURE_STORE_PAGE:
-                          return (
-                            <FeatureStoreTableRow
-                              actionsMenu={actionsMenu}
-                              content={content}
-                              handleSelectItem={handleSelectItem}
-                              key={i}
-                              rowIndex={i}
-                              rowItem={rowItem}
-                              pageData={pageData}
-                              selectedItem={selectedItem}
-                            />
-                          )
-                        case FUNCTIONS_PAGE:
-                          return (
-                            <FunctionsTableRow
-                              actionsMenu={actionsMenu}
-                              key={i}
-                              content={content}
-                              rowIndex={i}
-                              rowItem={rowItem}
-                              selectedItem={selectedItem}
-                              handleSelectItem={handleSelectItem}
-                            />
-                          )
-                        default:
-                          return null
-                      }
-                    })
-                  ) : groupLatestItem.find(latestItem => !isEmpty(latestItem)) ? (
-                    tableContent.map((group, i) => {
-                      switch (pageData.page) {
-                        case ARTIFACTS_PAGE:
-                        case DATASETS_PAGE:
-                        case FILES_PAGE:
-                        case MODELS_PAGE:
-                          return params.pageTab === REAL_TIME_PIPELINES_TAB ? (
-                            <FunctionsTableRow
-                              actionsMenu={actionsMenu}
-                              key={i}
-                              content={content}
-                              handleExpandRow={handleExpandRow}
-                              handleSelectItem={handleSelectItem}
-                              rowIndex={i}
-                              rowItem={groupLatestItem[i]}
-                              selectedItem={selectedItem}
-                              tableContent={group}
-                            />
-                          ) : (
-                            <ArtifactsTableRow
-                              actionsMenu={actionsMenu}
-                              content={content}
-                              handleSelectItem={handleSelectItem}
-                              handleExpandRow={handleExpandRow}
-                              key={i}
-                              mainRowItemsCount={mainRowItemsCount}
-                              rowIndex={i}
-                              rowItem={groupLatestItem[i]}
-                              pageData={pageData}
-                              selectedItem={selectedItem}
-                              tableContent={group}
-                            />
-                          )
-                        case FUNCTIONS_PAGE:
-                          return (
-                            <FunctionsTableRow
-                              actionsMenu={actionsMenu}
-                              key={i}
-                              content={content}
-                              handleExpandRow={handleExpandRow}
-                              handleSelectItem={handleSelectItem}
-                              rowIndex={i}
-                              rowItem={groupLatestItem[i]}
-                              selectedItem={selectedItem}
-                              tableContent={group}
-                            />
-                          )
-                        default:
-                          return (
-                            <FeatureStoreTableRow
-                              actionsMenu={actionsMenu}
-                              content={content}
-                              handleSelectItem={handleSelectItem}
-                              handleExpandRow={handleExpandRow}
-                              key={i}
-                              mainRowItemsCount={mainRowItemsCount}
-                              rowIndex={i}
-                              rowItem={groupLatestItem[i]}
-                              pageData={pageData}
-                              selectedItem={selectedItem}
-                              tableContent={group}
-                            />
-                          )
-                      }
-                    })
-                  ) : (
-                    <NoData />
-                  )}
-                </tbody>
-              </>
-            )}
             {tableHeaders?.length > 0 && (
               <TableHead
                 content={tableHeaders}
@@ -258,7 +71,7 @@ const TableView = ({
                 sortProps={sortProps}
               />
             )}
-            {!pageData.tableHeaders && <tbody className="table-body">{children}</tbody>}
+            <tbody className="table-body">{children}</tbody>
           </table>
           {isTablePanelOpen && (
             <div className="table__panel-container" ref={tablePanelRef}>
@@ -298,23 +111,16 @@ TableView.propTypes = {
   actionsMenu: ACTIONS_MENU.isRequired,
   applyDetailsChanges: PropTypes.func,
   applyDetailsChangesCallback: PropTypes.func,
-  content: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
   detailsFormInitialValues: PropTypes.object.isRequired,
   getCloseDetailsLink: PropTypes.func,
   handleCancel: PropTypes.func.isRequired,
-  handleSelectItem: PropTypes.func.isRequired,
   hideActionsMenu: PropTypes.bool.isRequired,
   isTablePanelOpen: PropTypes.bool.isRequired,
   pageData: PropTypes.shape({}).isRequired,
-  params: PropTypes.shape({}).isRequired,
   retryRequest: PropTypes.func.isRequired,
   selectedItem: PropTypes.shape({}).isRequired,
   sortProps: SORT_PROPS,
   tab: PropTypes.string,
-  tableContent: PropTypes.oneOfType([
-    PropTypes.arrayOf(PropTypes.shape({})),
-    PropTypes.arrayOf(PropTypes.arrayOf(PropTypes.shape({})))
-  ]).isRequired,
   tableHeaders: PropTypes.array,
   tableHeadRef: PropTypes.shape({}),
   tablePanelRef: PropTypes.shape({})

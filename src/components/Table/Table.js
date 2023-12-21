@@ -17,21 +17,15 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import React, { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react'
+import React, { useCallback, useEffect, useRef } from 'react'
 import PropTypes from 'prop-types'
 import { connect, useSelector } from 'react-redux'
-import { isEmpty } from 'lodash'
 import { useParams } from 'react-router-dom'
 
 import TableView from './TableView'
 
-import { useMode } from '../../hooks/mode.hook'
-import { isEveryObjectValueEmpty } from '../../utils/isEveryObjectValueEmpty'
-import { generateTableContent } from '../../utils/generateTableContent'
-import { generateGroupLatestItem } from '../../utils/generateGroupLatestItem'
 import { ACTIONS_MENU } from '../../types'
 import { SORT_PROPS } from 'igz-controls/types'
-import { GROUP_BY_NAME, GROUP_BY_NONE, MONITOR_JOBS_TAB, SCHEDULE_TAB } from '../../constants'
 
 import './table.scss'
 
@@ -40,15 +34,11 @@ const Table = ({
   applyDetailsChanges,
   applyDetailsChangesCallback,
   children,
-  content,
   detailsFormInitialValues,
-  filtersStore,
   getCloseDetailsLink,
-  groupedContent,
   handleCancel,
-  handleExpandRow,
-  handleSelectItem,
   hideActionsMenu,
+  mainRowItemsCount,
   pageData,
   retryRequest,
   selectedItem,
@@ -56,21 +46,12 @@ const Table = ({
   tab,
   tableHeaders
 }) => {
-  const [tableContent, setTableContent] = useState({
-    groupLatestItem: [],
-    groupWorkflowItems: [],
-    content: [],
-    mainRowItemsCount: 1
-  })
-
   const tableRef = useRef(null)
   const tableContentRef = useRef(null)
   const tablePanelRef = useRef(null)
   const tableHeadRef = useRef(null)
-  const { isStagingMode } = useMode()
   const params = useParams()
   const tableStore = useSelector(store => store.tableStore)
-  const frontendSpec = useSelector(store => store.appStore.frontendSpec)
 
   useEffect(() => {
     const calculatePanelHeight = () => {
@@ -98,47 +79,6 @@ const Table = ({
     }
   }, [tableStore.isTablePanelOpen])
 
-  useLayoutEffect(() => {
-    const generatedTableContent = generateTableContent(
-      content,
-      groupedContent,
-      filtersStore.groupBy,
-      pageData.page,
-      tableStore.isTablePanelOpen,
-      params,
-      frontendSpec,
-      isStagingMode,
-      !isEveryObjectValueEmpty(selectedItem)
-    )
-
-    if (filtersStore.groupBy === GROUP_BY_NAME) {
-      setTableContent({
-        content: generatedTableContent,
-        groupLatestItem: generateGroupLatestItem(generatedTableContent),
-        groupWorkflowItems: [],
-        mainRowItemsCount: pageData.mainRowItemsCount ?? 1
-      })
-    } else if (filtersStore.groupBy === GROUP_BY_NONE) {
-      setTableContent(state => ({
-        ...state,
-        groupLatestItem: [],
-        groupWorkflowItems: [],
-        content: generatedTableContent
-      }))
-    }
-  }, [
-    content,
-    filtersStore.groupBy,
-    groupedContent,
-    isStagingMode,
-    params,
-    pageData.mainRowItemsCount,
-    pageData.page,
-    selectedItem,
-    tableStore.isTablePanelOpen,
-    frontendSpec
-  ])
-
   const handleTableHScroll = useCallback(e => {
     if (tableRef.current) {
       const tableScrollPosition = e.target.scrollLeft
@@ -162,30 +102,17 @@ const Table = ({
       actionsMenu={actionsMenu}
       applyDetailsChanges={applyDetailsChanges}
       applyDetailsChangesCallback={applyDetailsChangesCallback}
-      content={content}
       detailsFormInitialValues={detailsFormInitialValues}
       getCloseDetailsLink={getCloseDetailsLink}
-      groupFilter={filtersStore.groupBy}
-      groupLatestItem={
-        isEmpty(tableContent.groupLatestItem)
-          ? tableContent.groupWorkflowItems
-          : tableContent.groupLatestItem
-      }
-      groupedContent={groupedContent}
       handleCancel={handleCancel}
-      handleExpandRow={handleExpandRow}
-      handleSelectItem={handleSelectItem}
       hideActionsMenu={hideActionsMenu}
       isTablePanelOpen={tableStore.isTablePanelOpen}
-      mainRowItemsCount={tableContent.mainRowItemsCount}
+      mainRowItemsCount={mainRowItemsCount}
       pageData={pageData}
       params={params}
       retryRequest={retryRequest}
       selectedItem={selectedItem}
       sortProps={sortProps}
-      tableContent={
-        tab === MONITOR_JOBS_TAB || tab === SCHEDULE_TAB ? content : tableContent.content
-      }
       tab={tab}
       tableRef={tableRef}
       tableContentRef={tableContentRef}
@@ -207,8 +134,8 @@ Table.defaultProps = {
   handleCancel: () => {},
   handleExpandRow: () => {},
   handleSelectItem: () => {},
-  handleTableHScroll: () => {},
   hideActionsMenu: false,
+  mainRowItemsCount: 1,
   retryRequest: () => {},
   selectedItem: {},
   sortProps: null,
@@ -227,8 +154,8 @@ Table.propTypes = {
   handleCancel: PropTypes.func,
   handleExpandRow: PropTypes.func,
   handleSelectItem: PropTypes.func,
-  handleTableHScroll: PropTypes.func,
   hideActionsMenu: PropTypes.bool,
+  mainRowItemsCount: PropTypes.number,
   pageData: PropTypes.shape({}).isRequired,
   retryRequest: PropTypes.func,
   selectedItem: PropTypes.shape({}),
