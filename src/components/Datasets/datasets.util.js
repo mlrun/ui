@@ -20,9 +20,7 @@ such restriction.
 import React from 'react'
 
 import JobWizard from '../JobWizard/JobWizard'
-import { openPopUp } from 'igz-controls/utils/common.util'
-import { applyTagChanges } from '../../utils/artifacts.util'
-import { getArtifactIdentifier } from '../../utils/getUniqueIdentifier'
+
 import {
   DATASET_TYPE,
   DATASETS,
@@ -33,14 +31,19 @@ import {
   NAME_FILTER,
   TAG_FILTER
 } from '../../constants'
-import { createDatasetsRowData, getIsTargetPathValid } from '../../utils/createArtifactsContent'
-import { searchArtifactItem } from '../../utils/searchArtifactItem'
-import { sortListByDate } from '../../utils'
-import { fetchDataSet, showArtifactsPreview } from '../../reducers/artifactsReducer'
+import { PRIMARY_BUTTON } from 'igz-controls/constants'
+import { applyTagChanges } from '../../utils/artifacts.util'
 import { copyToClipboard } from '../../utils/copyToClipboard'
+import { createDatasetsRowData, getIsTargetPathValid } from '../../utils/createArtifactsContent'
+import { fetchDataSet, showArtifactsPreview } from '../../reducers/artifactsReducer'
 import { generateUri } from '../../utils/resources'
+import { getArtifactIdentifier } from '../../utils/getUniqueIdentifier'
 import { handleDeleteArtifact } from '../../utils/handleDeleteArtifact'
+import { openDeleteConfirmPopUp } from 'igz-controls/utils/common.util'
+import { openPopUp } from 'igz-controls/utils/common.util'
+import { searchArtifactItem } from '../../utils/searchArtifactItem'
 import { setDownloadItem, setShowDownloadsList } from '../../reducers/downloadReducer'
+import { sortListByDate } from '../../utils'
 
 import { ReactComponent as TagIcon } from 'igz-controls/images/tag-icon.svg'
 import { ReactComponent as YamlIcon } from 'igz-controls/images/yaml.svg'
@@ -48,8 +51,6 @@ import { ReactComponent as ArtifactView } from 'igz-controls/images/eye-icon.svg
 import { ReactComponent as Copy } from 'igz-controls/images/copy-to-clipboard-icon.svg'
 import { ReactComponent as Delete } from 'igz-controls/images/delete.svg'
 import { ReactComponent as DownloadIcon } from 'igz-controls/images/download.svg'
-
-import { PRIMARY_BUTTON } from 'igz-controls/constants'
 
 export const infoHeaders = [
   {
@@ -237,6 +238,11 @@ export const generateActionsMenu = (
   return [
     [
       {
+        label: 'Add a tag',
+        icon: <TagIcon />,
+        onClick: handleAddTag
+      },
+      {
         label: 'Download',
         icon: <DownloadIcon />,
         onClick: dataset => {
@@ -261,25 +267,26 @@ export const generateActionsMenu = (
         onClick: toggleConvertedYaml
       },
       {
-        label: 'Add a tag',
-        icon: <TagIcon />,
-        onClick: handleAddTag
-      },
-      {
         label: 'Delete',
         icon: <Delete />,
         disabled: !dataset?.tag,
         className: 'danger',
         onClick: () =>
-          handleDeleteArtifact(
-            dispatch,
-            projectName,
-            dataset.db_key,
-            dataset.tag,
-            dataset.tree,
-            handleRefresh,
-            datasetsFilters,
-            DATASET_TYPE
+          openDeleteConfirmPopUp(
+            'Delete dataset?',
+            `Do you want to delete the dataset "${dataset.db_key}"? Deleted datasets can not be restored.`,
+            () => {
+              handleDeleteArtifact(
+                dispatch,
+                projectName,
+                dataset.db_key,
+                dataset.tag,
+                dataset.tree,
+                handleRefresh,
+                datasetsFilters,
+                DATASET_TYPE
+              )
+            }
           )
       }
     ],
