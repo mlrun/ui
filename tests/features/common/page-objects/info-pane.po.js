@@ -70,6 +70,34 @@ const infoPaneOverviewHeaders = {
   }
 }
 
+const infoPaneOverviewProducerHeaders = {
+  root: '.table__item .item-info__details-wrapper:nth-of-type(2)',
+  header: {},
+  body: {
+    row: {
+      root: '.item-info__details',
+      fields: {
+        key: '.details-item__header',
+        link: '.details-item__data .link',
+        value: '.details-item__data'
+      }
+    }
+  }
+}
+
+const infoPaneOverviewSourcesHeaders = {
+  root: '.table__item .item-info__details-wrapper:nth-of-type(2)',
+  header: {},
+  body: {
+    row: {
+      root: '.info-sources',
+      fields: {
+        key: '.info-sources__table-key',
+        value: '.info-sources__table-value'
+      }
+    }
+  }
+}
 const artifactOverviewTable = {
   root: '.table__item .item-info__details:nth-of-type(1)',
   header: {},
@@ -379,8 +407,10 @@ const featureSetsInfoPaneLabelsTable = {
       fields: {
         key_input: 'input.input-label-key',
         value_input: 'input.input-label-value',
-        label: '.chip',
-        remove_btn: '.item-icon-close'
+        key_verify: '.edit-chip-container input.input-label-key',
+        value_verify: '.edit-chip-container input.input-label-value',
+        label: '.edit-chip-container input',
+        remove_btn: '.edit-chip__icon-close'
       }
     }
   }
@@ -478,21 +508,24 @@ module.exports = {
   featureSetsInfoPane: {
     Header: header,
     Updated: updated,
-    Cancel_Button: cancelButton,
+    Cancel_Button: By.css('.table__item .item-header__buttons .btn-normal'),
     Apply_Changes_Button: applyChangesButton,
     Action_Menu: commonActionMenu,
     Cross_Close_Button: crossCloseButton,
     Info_Pane_Tab_Selector: commonInfoPaneTabSelector,
     Overview_General_Headers: commonTable(infoPaneOverviewHeaders),
-    Description_Field: By.css('.item-info__details .details-item:nth-of-type(1) .data-ellipsis'),
+    Empty_Description_Field: By.css('.item-info__details-wrapper .details-item:nth-of-type(1) .details-item__data-add-placeholder'),
+    Full_Description_Field: By.css('.item-info .details-item:nth-of-type(1) .details-item__data > div.data-ellipsis.tooltip-wrapper'),
     Description_Input: textAreaGroup(
-      generateTextAreaGroup('.item-info__details .details-item:nth-of-type(1) .text-area-wrapper')
+      generateTextAreaGroup('.item-info__details-wrapper .details-item:nth-of-type(1) .form-field-textarea')
     ),
     Labels_Field: By.css(
       '.item-info__details .details-item:nth-of-type(2) .button-add-density_dense'
     ),
     Labels_Table: commonTable(featureSetsInfoPaneLabelsTable),
-    Apply_Button: By.css('.item-info__details .details-item__apply-btn')
+    Apply_Button: By.css('.item-info__details-wrapper .details-item__input-wrapper .round-icon-cp:nth-of-type(2)'),
+    Labels_Apply_Button: By.css('.item-info__details-wrapper .details-item .details-item__data-chips .details-item__apply-btn-wrapper'),
+    Edit_Button: By.css('.item-info__details-wrapper .details-item__data .details-item__data-btn-edit')
   },
   featuresInfoPane: {
     Header: header,
@@ -507,7 +540,7 @@ module.exports = {
   featureVectorsInfoPane: {
     Header: header,
     Updated: updated,
-    Cancel_Button: cancelButton,
+    Cancel_Button: By.css('.table__item .item-header__buttons .btn-normal'),
     Apply_Changes_Button: applyChangesButton,
     Action_Menu: commonActionMenu,
     Cross_Close_Button: crossCloseButton,
@@ -526,7 +559,11 @@ module.exports = {
     Tabel_View_Button: tabelViewButton,
     Cross_Close_Button: crossCloseButton,
     Info_Pane_Tab_Selector: commonInfoPaneTabSelector,
+    Pop_Out_Button: By.css('[data-testid="details-preview-tooltip-wrapper"]'),
     Overview_General_Headers: commonTable(infoPaneOverviewHeaders),
+    Overview_Producer_Headers: commonTable(infoPaneOverviewProducerHeaders),
+    Overview_Sources_Headers: commonTable(infoPaneOverviewSourcesHeaders),
+    Train_Button: By.css('[data-testid="detailsPanel"] .item-header__buttons button'),
     Overview_Hash_Header: labelComponent(
       generateLabelGroup(
         '.item-info__details:nth-of-type(1) .details-item:nth-of-type(1) .details-item__header',
@@ -651,7 +688,10 @@ module.exports = {
     Full_View_Button: fullViewButton,
     Tabel_View_Button: tabelViewButton,
     Info_Pane_Tab_Selector: commonInfoPaneTabSelector,
+    Pop_Out_Button: By.css('[data-testid="details-preview-tooltip-wrapper"]'),
     Overview_General_Headers: commonTable(infoPaneOverviewHeaders),
+    Overview_Producer_Headers: commonTable(infoPaneOverviewProducerHeaders),
+    Overview_Sources_Headers: commonTable(infoPaneOverviewSourcesHeaders),
     Overview_Hash_Header: labelComponent(
       generateLabelGroup(
         '.item-info__details:nth-of-type(1) .details-item:nth-of-type(1) .details-item__header',
@@ -666,8 +706,6 @@ module.exports = {
         true
       )
     ),
-    Expand_Sources: By.css('.details-item .info-sources'),
-    Info_Sources_Table: commonTable(filesInfoSourcesTable),
     Overview_Table: commonTable(artifactOverviewTable),
     Edit_btn_table_view: commonEditBtnTableView,
     Edit_btn_full_view: commonEditBtnFullView,
@@ -682,13 +720,15 @@ module.exports = {
     Download_Button: commonDownloadButton,
     Action_Menu: commonActionMenu,
     Apply_Changes_Button: applyChangesButton,
-    //Apply_Button: applyButton,
     Cross_Close_Button: crossCloseButton,
     Full_View_Button: fullViewButton,
     Tabel_View_Button: tabelViewButton,
     Info_Pane_Tab_Selector: commonInfoPaneTabSelector,
+    Pop_Out_Button: By.css('[data-testid="details-preview-tooltip-wrapper"]'),
     Overview_General_Headers: commonTable(infoPaneOverviewHeaders),
     Overview_Drift_Headers: commonTable(infoPaneDriftHeaders),
+    Overview_Producer_Headers: commonTable(infoPaneOverviewProducerHeaders),
+    Overview_Sources_Headers: commonTable(infoPaneOverviewSourcesHeaders),
     Overview_Hash_Header: labelComponent(
       generateLabelGroup(
         '.item-info__details:nth-of-type(1) .details-item:nth-of-type(1) .details-item__header',

@@ -127,11 +127,13 @@ const AddToFeatureVectorPage = ({
 
   const actionsMenu = useMemo(
     () => [
-      {
-        label: 'View YAML',
-        icon: <Yaml />,
-        onClick: toggleConvertedYaml
-      }
+      [
+        {
+          label: 'View YAML',
+          icon: <Yaml />,
+          onClick: toggleConvertedYaml
+        }
+      ]
     ],
     [toggleConvertedYaml]
   )

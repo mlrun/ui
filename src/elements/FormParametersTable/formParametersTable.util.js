@@ -23,7 +23,7 @@ export const parameterTypeInt = 'int'
 export const parameterTypeFloat = 'float'
 export const parameterTypeBool = 'bool'
 export const parameterTypeList = 'list'
-export const parameterTypeMap = 'map'
+export const parameterTypeDict = 'dict'
 
 export const parameterOptionRange = 'range'
 export const parameterOptionRandomize = 'randomize'
@@ -35,7 +35,7 @@ export const parameterTypeValueMap = {
   [parameterTypeInt]: 'integer',
   [parameterTypeFloat]: 'float',
   [parameterTypeBool]: 'boolean',
-  [parameterTypeMap]: 'map',
+  [parameterTypeDict]: 'dict',
   [parameterTypeList]: 'list'
 }
 
@@ -50,27 +50,27 @@ export const parametersValueOptionsList = [
 ]
 export const parametersValueTypeOptions = [
   {
-    label: 'str',
+    label: parameterTypeStr,
     id: parameterTypeStr
   },
   {
-    label: 'int',
+    label: parameterTypeInt,
     id: parameterTypeInt
   },
   {
-    label: 'float',
+    label: parameterTypeFloat,
     id: parameterTypeFloat
   },
   {
-    label: 'bool',
+    label: parameterTypeBool,
     id: parameterTypeBool
   },
   {
-    label: 'list',
+    label: parameterTypeList,
     id: parameterTypeList
   },
   {
-    label: 'map',
-    id: parameterTypeMap
+    label: parameterTypeDict,
+    id: parameterTypeDict
   }
 ]

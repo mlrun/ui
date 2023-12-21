@@ -21,6 +21,7 @@ import { timeout } from '../../../config'
 import { until } from 'selenium-webdriver'
 import { expect } from 'chai'
 import { access, constants } from 'fs'
+import { ConsoleLogEntry } from 'selenium-webdriver/bidi/logentries'
 const path = require('path')
 const os = require('os')
 
@@ -148,7 +149,7 @@ const action = {
   verifyText: async function(driver, component, value) {
     const element = await driver.findElement(component)
     const txt = await element.getText('value')
-    const arr = txt.split('\n')
+    const arr = txt.split()
     if (arr.length > 1) {
       expect(arr.some(item => item.includes(value))).equal(
         true,

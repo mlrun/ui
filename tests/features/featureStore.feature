@@ -2,21 +2,26 @@ Feature: Feature Store Page
 
     Testcases that verifies functionality on Feature Store Page
 
+    @MLFS
     @passive
     Scenario: MLFS001 - Check all mandatory components on Feature Store tab
         Given open url
         And wait load page
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
-        And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
-        Then click on "Project_Monitoring_Button" element on "commonPagesHeader" wizard
-        And wait load page
         Then verify breadcrumbs "project" label should be equal "default" value
         And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
         And click on cell with value "Feature store" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
         And hover "MLRun_Logo" component on "commonPagesHeader" wizard
         And wait load page
-        Then verify breadcrumbs "tab" label should be equal "Feature Store" value
+        Then verify breadcrumbs "tab" label should be equal "Feature store" value
+        Then click on breadcrumbs "project" label on "commonPagesHeader" wizard
+        And wait load page
+        Then verify breadcrumbs "tab" label should be equal "Project monitoring" value
+        And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
+        And click on cell with value "Feature store" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+        And hover "MLRun_Logo" component on "commonPagesHeader" wizard
+        And wait load page
         Then verify "Feature_Store_Tab_Selector" on "Feature_Store_Feature_Sets_Tab" wizard should contains "Feature_Store"."Tab_List"
         Then verify "Feature Sets" tab is active in "Feature_Store_Tab_Selector" on "Feature_Store_Feature_Sets_Tab" wizard
         Then verify "Table_Refresh_Button" element visibility on "Feature_Store_Feature_Sets_Tab" wizard
@@ -32,20 +37,25 @@ Feature: Feature Store Page
         Then verify "Create_Set_Button" element visibility on "Feature_Store_Feature_Sets_Tab" wizard
         Then "Create_Set_Button" element on "Feature_Store_Feature_Sets_Tab" should contains "Create Set" value
 
+    @MLFS
     @passive
     Scenario: MLFS002 - Check all mandatory components on Features tab
         Given open url
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
-        And wait load page
-        And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
-        Then click on "Project_Monitoring_Button" element on "commonPagesHeader" wizard
         And wait load page
         Then verify breadcrumbs "project" label should be equal "default" value
         And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
         And click on cell with value "Feature store" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
         And hover "MLRun_Logo" component on "commonPagesHeader" wizard
         And wait load page
-        Then verify breadcrumbs "tab" label should be equal "Feature Store" value
+        And select "tab" with "Project monitoring" value in breadcrumbs menu
+        And wait load page
+        Then verify breadcrumbs "tab" label should be equal "Project monitoring" value
+        And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
+        And click on cell with value "Feature store" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+        And hover "MLRun_Logo" component on "commonPagesHeader" wizard
+        And wait load page
+        Then verify breadcrumbs "tab" label should be equal "Feature store" value
         And select "Features" tab in "Feature_Store_Tab_Selector" on "Feature_Store_Feature_Sets_Tab" wizard
         And wait load page
         Then verify "Features" tab is active in "Feature_Store_Tab_Selector" on "Feature_Store_Feature_Sets_Tab" wizard
@@ -63,13 +73,11 @@ Feature: Feature Store Page
         Then select "All" option in "Table_Tag_Filter_Dropdown" dropdown on "Feature_Store_Features_Tab" wizard
         Then "No_Data_Message" component on "commonPagesHeader" should contains "No_Data_Message"."No_Features_Yet"
 
+    @MLFS
     @passive
     Scenario: MLFS003 - Check all mandatory components on Feature Vectors tab
         Given open url
         And click on row root with value "fsdemo-admin" in "name" column in "Projects_Table" table on "Projects" wizard
-        And wait load page
-        And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
-        Then click on "Project_Monitoring_Button" element on "commonPagesHeader" wizard
         And wait load page
         Then verify breadcrumbs "project" label should be equal "fsdemo-admin" value
         And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
@@ -78,7 +86,7 @@ Feature: Feature Store Page
         And wait load page
         And select "Feature Vectors" tab in "Feature_Store_Tab_Selector" on "Feature_Store_Feature_Sets_Tab" wizard
         And wait load page
-        Then verify breadcrumbs "tab" label should be equal "Feature Store" value
+        Then verify breadcrumbs "tab" label should be equal "Feature store" value
         Then verify "Feature Vectors" tab is active in "Feature_Store_Tab_Selector" on "Feature_Store_Feature_Sets_Tab" wizard
         Then verify "Feature_Store_Tab_Selector" on "Feature_Store_Features_Vectors_Tab" wizard should contains "Feature_Store"."Tab_List"
         And turn on demo mode
@@ -91,11 +99,7 @@ Feature: Feature Store Page
         Then verify "Table_Refresh_Button" element visibility on "Feature_Store_Features_Vectors_Tab" wizard
         Then verify "Feature_Vectors_Table" element visibility on "Feature_Store_Features_Vectors_Tab" wizard
 
-    @FAILED_TODO
-    #TODO: 'Cancel_Button' - reimplemented, invisible before any changes
-    #TODO: 'Apply_Changes_Button' - reimplemented, invisible before any changes
-    #TODO: 'Action_Menu', 'Info_Pane_Tab_Selector' - reimplemented, invisible before any changes
-    #TODO: verify values in "Labels_Table" table on "Feature_Sets_Info_Pane" wizard - AssertionError: should be expected "key1:value1" but actual value ":"
+    @MLFS
     @passive
     @inProgress
     Scenario: MLFS004 - Check all mandatory components in Item infopane on Overview tab table on Feature Sets tab
@@ -113,47 +117,52 @@ Feature: Feature Store Page
         When click on cell with row index 2 in "name" column in "Feature_Sets_Table" table on "Feature_Store_Feature_Sets_Tab" wizard
         Then verify "Header" element visibility on "Feature_Sets_Info_Pane" wizard
         Then verify "Updated" element visibility on "Feature_Sets_Info_Pane" wizard
-        Then verify "Cancel_Button" element visibility on "Feature_Sets_Info_Pane" wizard
-        Then "Cancel_Button" element on "Feature_Sets_Info_Pane" should contains "Cancel" value
-        Then verify "Apply_Changes_Button" element visibility on "Feature_Sets_Info_Pane" wizard
-        Then verify "Apply_Changes_Button" element on "Feature_Sets_Info_Pane" wizard is disabled
-        Then "Apply_Changes_Button" element on "Feature_Sets_Info_Pane" should contains "Apply Changes" value
+        Then verify "Apply_Changes_Button" element not exists on "Feature_Sets_Info_Pane" wizard
+        Then verify "Cancel_Button" element not exists on "Feature_Sets_Info_Pane" wizard
         Then verify "Action_Menu" element visibility on "Feature_Sets_Info_Pane" wizard
         Then verify "Cross_Close_Button" element visibility on "Feature_Sets_Info_Pane" wizard
         Then verify "Info_Pane_Tab_Selector" element visibility on "Feature_Sets_Info_Pane" wizard
         Then verify "Info_Pane_Tab_Selector" on "Feature_Sets_Info_Pane" wizard should contains "Feature_Sets_Info_Pane"."Tab_List"
         Then verify "Overview" tab is active in "Info_Pane_Tab_Selector" on "Feature_Sets_Info_Pane" wizard
         Then verify "Overview_General_Headers" on "Feature_Sets_Info_Pane" wizard should contains "Feature_Sets_Info_Pane"."Overview_General_Headers"
-        Then click on "Description_Field" element on "Feature_Sets_Info_Pane" wizard
+        Then click on "Empty_Description_Field" element on "Feature_Sets_Info_Pane" wizard
         Then type value "test_description" to "Description_Input" field on "Feature_Sets_Info_Pane" wizard
         Then check "Description_Input" textarea counter on "Feature_Sets_Info_Pane" wizard
         Then click on "Apply_Button" element on "Feature_Sets_Info_Pane" wizard
-        Then "Description_Field" element on "Feature_Sets_Info_Pane" should contains "test_description" value
+        Then "Full_Description_Field" element on "Feature_Sets_Info_Pane" should contains "test_description" value
+        Then verify "Apply_Changes_Button" element visibility on "Feature_Sets_Info_Pane" wizard
         Then verify "Apply_Changes_Button" element on "Feature_Sets_Info_Pane" wizard is enabled
-        Then click on "Description_Field" element on "Feature_Sets_Info_Pane" wizard
+        Then "Apply_Changes_Button" element on "Feature_Sets_Info_Pane" should contains "Apply Changes" value
+        Then verify "Cancel_Button" element visibility on "Feature_Sets_Info_Pane" wizard
+        Then "Cancel_Button" element on "Feature_Sets_Info_Pane" should contains "Cancel" value
+        Then click on "Edit_Button" element on "Feature_Sets_Info_Pane" wizard
         Then type value "" to "Description_Input" field on "Feature_Sets_Info_Pane" wizard
         Then check "Description_Input" textarea counter on "Feature_Sets_Info_Pane" wizard
         Then click on "Apply_Button" element on "Feature_Sets_Info_Pane" wizard
-        Then verify "Apply_Changes_Button" element on "Feature_Sets_Info_Pane" wizard is disabled
+        Then verify "Apply_Changes_Button" element not exists on "Feature_Sets_Info_Pane" wizard
+        Then click on "Cross_Close_Button" element on "Feature_Sets_Info_Pane" wizard
+        When click on cell with row index 1 in "name" column in "Feature_Sets_Table" table on "Feature_Store_Feature_Sets_Tab" wizard
         When add rows to "Labels_Table" table on "Feature_Sets_Info_Pane" wizard
             | key_input | value_input |
             |    key1   |    value1   |
             |    key2   |    value2   |
             |    key3   |    value3   |
-        Then verify values in "Labels_Table" table on "Feature_Sets_Info_Pane" wizard
-            |       label     |
-            | key1\n:\nvalue1 |
-            | key2\n:\nvalue2 |
-            | key3\n:\nvalue3 |
-        When click on "remove_btn" in "Labels_Table" table on "Feature_Sets_Info_Pane" wizard
-            |       label     |
-            | key1\n:\nvalue1 |
-            | key3\n:\nvalue3 |
-        Then verify values in "Labels_Table" table on "Feature_Sets_Info_Pane" wizard
-            |       label     |
-            | key2\n:\nvalue2 |
-        Then click on "Apply_Button" element on "Feature_Sets_Info_Pane" wizard
+        Then verify values in "Labels_Table" table on "Feature_Sets_Info_Pane" wizard with attribute
+            | key_verify | value_verify | 
+            |    key1    |    value1    |
+            |    key2    |    value2    |
+            |    key3    |    value3    |
+        Then click on "Labels_Apply_Button" element on "Feature_Sets_Info_Pane" wizard
         Then verify "Apply_Changes_Button" element on "Feature_Sets_Info_Pane" wizard is enabled
+        Then verify "Cancel_Button" element on "Feature_Sets_Info_Pane" wizard is enabled
+        When click on "remove_btn" in "Labels_Table" table on "Feature_Sets_Info_Pane" wizard with attribute
+            | key_verify | 
+            |    key1    |    
+            |    key3    |    
+        Then verify values in "Labels_Table" table on "Feature_Sets_Info_Pane" wizard with attribute
+            | key_verify | value_verify | 
+            |    key2    |    value2    |
+        Then verify "Apply_Changes_Button" element on "Feature_Sets_Info_Pane" wizard is disabled
         When click on cell with row index 2 in "expand_btn" column in "Feature_Sets_Table" table on "Feature_Store_Feature_Sets_Tab" wizard
         And wait load page
         Then verify "Info_Pane_Tab_Selector" element visibility on "Feature_Sets_Info_Pane" wizard
@@ -161,8 +170,7 @@ Feature: Feature Store Page
         And wait load page
         Then verify "Info_Pane_Tab_Selector" element visibility on "Feature_Sets_Info_Pane" wizard
 
-    @FAILED_TODO
-    #TODO: 'Cancel_Button', 'Apply_Changes_Button' - reimplemented, editing is not allowed in Overview tab
+    @MLFS
     @passive
     @inProgress
     Scenario: MLFS005 - Check all mandatory components in Item infopane on Overview tab table on Feature Vectors tab
@@ -170,20 +178,15 @@ Feature: Feature Store Page
         And wait load page
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
-        And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
-        Then click on "Project_Monitoring_Button" element on "commonPagesHeader" wizard
-        And wait load page
-        And select "tab" with "Feature Store" value in breadcrumbs menu
+        And select "tab" with "Feature store" value in breadcrumbs menu
         And wait load page
         And select "Feature Vectors" tab in "Feature_Store_Tab_Selector" on "Feature_Store_Feature_Sets_Tab" wizard
         Then verify "Feature Vectors" tab is active in "Feature_Store_Tab_Selector" on "Feature_Store_Features_Vectors_Tab" wizard
         When click on cell with row index 1 in "name" column in "Feature_Vectors_Table" table on "Feature_Store_Features_Vectors_Tab" wizard
         Then verify "Header" element visibility on "Feature_Vectors_Info_Pane" wizard
         Then verify "Updated" element visibility on "Feature_Vectors_Info_Pane" wizard
-        Then verify "Cancel_Button" element visibility on "Feature_Vectors_Info_Pane" wizard
-        Then "Cancel_Button" element on "Feature_Vectors_Info_Pane" should contains "Cancel" value
-        Then verify "Apply_Changes_Button" element visibility on "Feature_Vectors_Info_Pane" wizard
-        Then "Apply_Changes_Button" element on "Feature_Vectors_Info_Pane" should contains "Apply Changes" value
+        Then verify "Apply_Changes_Button" element not exists on "Feature_Sets_Info_Pane" wizard
+        Then verify "Cancel_Button" element not exists on "Feature_Sets_Info_Pane" wizard
         Then verify "Action_Menu" element visibility on "Feature_Vectors_Info_Pane" wizard
         Then verify "Cross_Close_Button" element visibility on "Feature_Vectors_Info_Pane" wizard
         Then verify "Info_Pane_Tab_Selector" element visibility on "Feature_Vectors_Info_Pane" wizard
@@ -197,8 +200,7 @@ Feature: Feature Store Page
         Then verify "Analysis" tab is active in "Info_Pane_Tab_Selector" on "Feature_Vectors_Info_Pane" wizard
         Then verify "Feature Vectors" tab is active in "Feature_Store_Tab_Selector" on "Feature_Store_Feature_Sets_Tab" wizard
 
-    @FAILED_TODO
-    #TODO: 'Cancel_Button', 'Apply_Changes_Button' - reimplemented, editing is not allowed in Overview tab
+    @MLFS
     @passive
     @inProgress
     Scenario: MLFS006 - Check all mandatory components in Item infopane with non-latest tag on Overview tab table on Feature Vectors tab
@@ -216,10 +218,8 @@ Feature: Feature Store Page
         When click on cell with row index 1 in "name" column in "Feature_Vectors_Table" table on "Feature_Store_Features_Vectors_Tab" wizard
         Then verify "Header" element visibility on "Feature_Vectors_Info_Pane" wizard
         Then verify "Updated" element visibility on "Feature_Vectors_Info_Pane" wizard
-        Then verify "Cancel_Button" element visibility on "Feature_Vectors_Info_Pane" wizard
-        Then "Cancel_Button" element on "Feature_Vectors_Info_Pane" should contains "Cancel" value
-        Then verify "Apply_Changes_Button" element visibility on "Feature_Vectors_Info_Pane" wizard
-        Then "Apply_Changes_Button" element on "Feature_Vectors_Info_Pane" should contains "Apply Changes" value
+        Then verify "Apply_Changes_Button" element not exists on "Feature_Sets_Info_Pane" wizard
+        Then verify "Cancel_Button" element not exists on "Feature_Sets_Info_Pane" wizard
         Then verify "Action_Menu" element visibility on "Feature_Vectors_Info_Pane" wizard
         Then verify "Cross_Close_Button" element visibility on "Feature_Vectors_Info_Pane" wizard
         Then verify "Info_Pane_Tab_Selector" element visibility on "Feature_Vectors_Info_Pane" wizard
@@ -227,17 +227,13 @@ Feature: Feature Store Page
         Then verify "Overview" tab is active in "Info_Pane_Tab_Selector" on "Feature_Vectors_Info_Pane" wizard
         Then verify "Overview_General_Headers" on "Feature_Vectors_Info_Pane" wizard should contains "Feature_Vectors_Info_Pane"."Overview_General_Headers"
 
-    @FAILED_TODO
-    #TODO: 'Cancel_Button', 'Apply_Changes_Button' - reimplemented, allowed just after editing
+    @MLFS
     @passive
     Scenario: MLFS007 - Check all mandatory components in Item infopane on Features tab table
         Given open url
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
-        And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
-        Then click on "Project_Monitoring_Button" element on "commonPagesHeader" wizard
-        And wait load page
-        And select "tab" with "Feature Store" value in breadcrumbs menu
+        And select "tab" with "Feature store" value in breadcrumbs menu
         And wait load page
         Then verify "Feature Sets" tab is active in "Feature_Store_Tab_Selector" on "Feature_Store_Feature_Sets_Tab" wizard
         When click on cell with row index 1 in "name" column in "Feature_Sets_Table" table on "Feature_Store_Feature_Sets_Tab" wizard
@@ -248,23 +244,19 @@ Feature: Feature Store Page
         Then verify "Info_Pane_Tab_Selector" element visibility on "Features_Info_Pane" wizard
         Then verify "Header" element visibility on "Features_Info_Pane" wizard
         Then verify "Updated" element visibility on "Features_Info_Pane" wizard
-        Then verify "Cancel_Button" element visibility on "Features_Info_Pane" wizard
-        Then verify "Apply_Changes_Button" element visibility on "Features_Info_Pane" wizard
+        Then verify "Apply_Changes_Button" element not exists on "Feature_Sets_Info_Pane" wizard
+        Then verify "Cancel_Button" element not exists on "Feature_Sets_Info_Pane" wizard
         Then verify "Cross_Close_Button" element visibility on "Features_Info_Pane" wizard
         Then verify "Features_Tab_Info_Pane_Table" element visibility on "Features_Info_Pane" wizard
 
-    @FAILED_TODO
-    #TODO: 'Cancel_Button', 'Apply_Changes_Button' - reimplemented, allowed just after editing
+    @MLFS
     @passive
     @inProgress
     Scenario: MLFS008 - Check all mandatory components in Item infopane on Transformations tab table
         Given open url
         And click on row root with value "fraud-demo2-admin" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
-        And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
-        Then click on "Project_Monitoring_Button" element on "commonPagesHeader" wizard
-        And wait load page
-        And select "tab" with "Feature Store" value in breadcrumbs menu
+        And select "tab" with "Feature store" value in breadcrumbs menu
         And wait load page
         Then verify "Feature Sets" tab is active in "Feature_Store_Tab_Selector" on "Feature_Store_Feature_Sets_Tab" wizard
         When click on cell with row index 1 in "name" column in "Feature_Sets_Table" table on "Feature_Store_Feature_Sets_Tab" wizard
@@ -275,24 +267,22 @@ Feature: Feature Store Page
         Then verify "Info_Pane_Tab_Selector" element visibility on "Transformations_Info_Pane" wizard
         Then verify "Header" element visibility on "Transformations_Info_Pane" wizard
         Then verify "Updated" element visibility on "Transformations_Info_Pane" wizard
-        Then verify "Cancel_Button" element visibility on "Transformations_Info_Pane" wizard
-        Then verify "Apply_Changes_Button" element visibility on "Transformations_Info_Pane" wizard
+        Then verify "Apply_Changes_Button" element not exists on "Feature_Sets_Info_Pane" wizard
+        Then verify "Cancel_Button" element not exists on "Feature_Sets_Info_Pane" wizard
         Then verify "Cross_Close_Button" element visibility on "Transformations_Info_Pane" wizard
         Then verify "Transformation_Graph" element visibility on "Transformations_Info_Pane" wizard
-        Then verify arrow lines position on "Transformation_Graph" on "Transformations_Info_Pane" wizard
+        # TO DO: Then verify arrow lines position on "Transformation_Graph" on "Transformations_Info_Pane" wizard   => Error: KeyError: y not found
         # TO DO: configuration component for future work
 
-    @FAILED_TODO
-    #TODO: 'Cancel_Button', 'Apply_Changes_Button' - reimplemented, allowed just after editing
+    @MLFS
     @passive
+    @FAILED_TODO
+    #TODO: bug ML-5151
     Scenario: MLFS009 - Check all mandatory components in Item infopane on Preview tab table
         Given open url
         And click on row root with value "fsdemo-admin" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
-        And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
-        Then click on "Project_Monitoring_Button" element on "commonPagesHeader" wizard
-        And wait load page
-        And select "tab" with "Feature Store" value in breadcrumbs menu
+        And select "tab" with "Feature store" value in breadcrumbs menu
         And wait load page
         Then verify "Feature Sets" tab is active in "Feature_Store_Tab_Selector" on "Feature_Store_Feature_Sets_Tab" wizard
         When click on cell with row index 1 in "name" column in "Feature_Sets_Table" table on "Feature_Store_Feature_Sets_Tab" wizard
@@ -303,23 +293,19 @@ Feature: Feature Store Page
         Then verify "Info_Pane_Tab_Selector" element visibility on "Preview_Info_Pane" wizard
         Then verify "Header" element visibility on "Preview_Info_Pane" wizard
         Then verify "Updated" element visibility on "Preview_Info_Pane" wizard
-        Then verify "Cancel_Button" element visibility on "Preview_Info_Pane" wizard
-        Then verify "Apply_Changes_Button" element visibility on "Preview_Info_Pane" wizard
+        Then verify "Apply_Changes_Button" element not exists on "Feature_Sets_Info_Pane" wizard
+        Then verify "Cancel_Button" element not exists on "Feature_Sets_Info_Pane" wizard
         Then verify "Cross_Close_Button" element visibility on "Preview_Info_Pane" wizard
         Then verify "Preview_Tab_Info_Pane_Table" element visibility on "Preview_Info_Pane" wizard
 
-    @FAILED_TODO
-    #TODO: 'Cancel_Button', 'Apply_Changes_Button' - reimplemented, allowed just after editing
+    @MLFS
     @passive
     @inProgress
     Scenario: MLFS010 - Check all mandatory components in Item infopane on Statistics tab table
         Given open url
         And click on row root with value "fsdemo-admin" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
-        And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
-        Then click on "Project_Monitoring_Button" element on "commonPagesHeader" wizard
-        And wait load page
-        And select "tab" with "Feature Store" value in breadcrumbs menu
+        And select "tab" with "Feature store" value in breadcrumbs menu
         And wait load page
         Then verify "Feature Sets" tab is active in "Feature_Store_Tab_Selector" on "Feature_Store_Feature_Sets_Tab" wizard
         When click on cell with row index 1 in "name" column in "Feature_Sets_Table" table on "Feature_Store_Feature_Sets_Tab" wizard
@@ -331,22 +317,18 @@ Feature: Feature Store Page
         Then verify "Info_Pane_Tab_Selector" element visibility on "Statistics_Info_Pane" wizard
         Then verify "Header" element visibility on "Statistics_Info_Pane" wizard
         Then verify "Updated" element visibility on "Statistics_Info_Pane" wizard
-        Then verify "Cancel_Button" element visibility on "Statistics_Info_Pane" wizard
-        Then verify "Apply_Changes_Button" element visibility on "Statistics_Info_Pane" wizard
+        Then verify "Apply_Changes_Button" element not exists on "Feature_Sets_Info_Pane" wizard
+        Then verify "Cancel_Button" element not exists on "Feature_Sets_Info_Pane" wizard
         Then verify "Cross_Close_Button" element visibility on "Statistics_Info_Pane" wizard
 
-    @FAILED_TODO
-    #TODO: 'Cancel_Button', 'Apply_Changes_Button' - reimplemented, allowed just after editing
+    @MLFS
     @passive
     @inProgress
     Scenario: MLFS011 - Check all mandatory components in Item infopane on Analysis tab table
         Given open url
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
-        And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
-        Then click on "Project_Monitoring_Button" element on "commonPagesHeader" wizard
-        And wait load page
-        And select "tab" with "Feature Store" value in breadcrumbs menu
+        And select "tab" with "Feature store" value in breadcrumbs menu
         And wait load page
         Then verify "Feature Sets" tab is active in "Feature_Store_Tab_Selector" on "Feature_Store_Feature_Sets_Tab" wizard
         When click on cell with row index 1 in "name" column in "Feature_Sets_Table" table on "Feature_Store_Feature_Sets_Tab" wizard
@@ -357,20 +339,18 @@ Feature: Feature Store Page
         Then verify "Info_Pane_Tab_Selector" element visibility on "Analysis_Info_Pane" wizard
         Then verify "Header" element visibility on "Analysis_Info_Pane" wizard
         Then verify "Updated" element visibility on "Analysis_Info_Pane" wizard
-        Then verify "Cancel_Button" element visibility on "Analysis_Info_Pane" wizard
-        Then verify "Apply_Changes_Button" element visibility on "Analysis_Info_Pane" wizard
+        Then verify "Apply_Changes_Button" element not exists on "Feature_Sets_Info_Pane" wizard
+        Then verify "Cancel_Button" element not exists on "Feature_Sets_Info_Pane" wizard
         Then verify "Cross_Close_Button" element visibility on "Analysis_Info_Pane" wizard
         # TO DO: tab components too complicated for quick automatization
 
+    @MLFS
     @passive
     Scenario: MLFS012 - Check filtering by Name on Feature Store Feature Sets Tab
         Given open url
         And click on row root with value "fsdemo-admin" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
-        And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
-        Then click on "Project_Monitoring_Button" element on "commonPagesHeader" wizard
-        And wait load page
-        And select "tab" with "Feature Store" value in breadcrumbs menu
+        And select "tab" with "Feature store" value in breadcrumbs menu
         And wait load page
         Then verify "Feature Sets" tab is active in "Feature_Store_Tab_Selector" on "Feature_Store_Feature_Sets_Tab" wizard
         Then type value "ea" to "Table_Name_Filter_Input" field on "Feature_Store_Feature_Sets_Tab" wizard
@@ -382,16 +362,14 @@ Feature: Feature Store Page
         And wait load page
         And verify "No_Data_Message" element visibility on "commonPagesHeader" wizard
 
+    @MLFS
     @passive
     Scenario: MLFS013 - Check filtering by Label on Feature Store Feature Sets Tab
         Given open url
         And wait load page
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
-        And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
-        Then click on "Project_Monitoring_Button" element on "commonPagesHeader" wizard
-        And wait load page
-        And select "tab" with "Feature Store" value in breadcrumbs menu
+        And select "tab" with "Feature store" value in breadcrumbs menu
         And wait load page
         Then type value "my-key" to "Table_Label_Filter_Input" field on "Feature_Store_Feature_Sets_Tab" wizard
         Then click on "Table_Refresh_Button" element on "Feature_Store_Feature_Sets_Tab" wizard
@@ -406,16 +384,13 @@ Feature: Feature Store Page
         And wait load page
         And verify "No_Data_Message" element visibility on "commonPagesHeader" wizard
 
+    @MLFS
     @passive
-    #TODO: should be updated with changeble Name "No_Data_Message" component on "commonPagesHeader" should contains "No_Data_Message"."Common_Message" 
     Scenario: MLFS014 - Check filtering by Name on Feature Store Features Tab
         Given open url
         And click on row root with value "fsdemo-admin" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
-        And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
-        Then click on "Project_Monitoring_Button" element on "commonPagesHeader" wizard
-        And wait load page
-        And select "tab" with "Feature Store" value in breadcrumbs menu
+        And select "tab" with "Feature store" value in breadcrumbs menu
         And wait load page
         And select "Features" tab in "Feature_Store_Tab_Selector" on "Feature_Store_Feature_Sets_Tab" wizard
         And wait load page
@@ -427,16 +402,14 @@ Feature: Feature Store Page
         Then click on "Table_Refresh_Button" element on "Feature_Store_Features_Tab" wizard
         Then "No_Data_Message" component on "commonPagesHeader" should contains "No_Data_Message"."Common_Message"
     
+    @MLFS
     @passive
     Scenario: MLFS015 - Check filtering by Label on Feature Store Features Tab
         Given open url
         And wait load page
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
-        And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
-        Then click on "Project_Monitoring_Button" element on "commonPagesHeader" wizard
-        And wait load page
-        And select "tab" with "Feature Store" value in breadcrumbs menu
+        And select "tab" with "Feature store" value in breadcrumbs menu
         And wait load page
         And select "Features" tab in "Feature_Store_Tab_Selector" on "Feature_Store_Feature_Sets_Tab" wizard
         And wait load page
@@ -453,15 +426,13 @@ Feature: Feature Store Page
         And wait load page
         And verify "No_Data_Message" element visibility on "commonPagesHeader" wizard
 
+    @MLFS
     @passive
     Scenario: MLFS016 - Check filtering by Name on Feature Store Feature Vectors Tab
         Given open url
         And click on row root with value "fsdemo-admin" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
-        And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
-        Then click on "Project_Monitoring_Button" element on "commonPagesHeader" wizard
-        And wait load page
-        And select "tab" with "Feature Store" value in breadcrumbs menu
+        And select "tab" with "Feature store" value in breadcrumbs menu
         And wait load page
         And select "Feature Vectors" tab in "Feature_Store_Tab_Selector" on "Feature_Store_Feature_Sets_Tab" wizard
         And wait load page
@@ -470,41 +441,37 @@ Feature: Feature Store Page
         And wait load page
         Then value in "name" column with "text" in "Feature_Vectors_Table" on "Feature_Store_Features_Vectors_Tab" wizard should contains "io"
 
+    @MLFS
     @passive
     Scenario: MLFS017 - Check filtering by Label on Feature Store Feature Vectors Tab
         Given open url
         And wait load page
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
-        And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
-        Then click on "Project_Monitoring_Button" element on "commonPagesHeader" wizard
-        And wait load page
-        And select "tab" with "Feature Store" value in breadcrumbs menu
+        And select "tab" with "Feature store" value in breadcrumbs menu
         And wait load page
         And select "Feature Vectors" tab in "Feature_Store_Tab_Selector" on "Feature_Store_Features_Vectors_Tab" wizard
         And wait load page
         Then type value "owner" to "Table_Label_Filter_Input" field on "Feature_Store_Features_Vectors_Tab" wizard
         Then click on "Table_Refresh_Button" element on "Feature_Store_Features_Vectors_Tab" wizard
         And wait load page
-        Then value in "labels" column with "dropdowns" in "Feature_Vectors_Table" on "Feature_Store_Features_Vectors_Tab" wizard should contains "owner"
+        Then value in "labels" column with "dropdowns" in "Feature_Vectors_Table" on "Feature_Store_Features_Vectors_Tab" wizard should contains "owner" in "Overlay"
         Then type value "type=featureVector" to "Table_Label_Filter_Input" field on "Feature_Store_Features_Vectors_Tab" wizard
         Then click on "Table_Refresh_Button" element on "Feature_Store_Features_Tab" wizard
         And wait load page
-        Then value in "labels" column with "dropdowns" in "Feature_Vectors_Table" on "Feature_Store_Features_Vectors_Tab" wizard should contains "type=featureVector"
+        Then value in "labels" column with "dropdowns" in "Feature_Vectors_Table" on "Feature_Store_Features_Vectors_Tab" wizard should contains "type=featureVector" in "Overlay"
         Then type value "v3io_user=123" to "Table_Label_Filter_Input" field on "Feature_Store_Features_Vectors_Tab" wizard
         Then click on "Table_Refresh_Button" element on "Feature_Store_Features_Vectors_Tab" wizard
         And wait load page
         And verify "No_Data_Message" element visibility on "commonPagesHeader" wizard
 
+    @MLFS
     @passive
     Scenario: MLFS018 - Check filtering by Tag on Feature Store Feature Sets Tab
         Given open url
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
-        And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
-        Then click on "Project_Monitoring_Button" element on "commonPagesHeader" wizard
-        And wait load page
-        And select "tab" with "Feature Store" value in breadcrumbs menu
+        And select "tab" with "Feature store" value in breadcrumbs menu
         And wait load page
         Then verify "Feature Sets" tab is active in "Feature_Store_Tab_Selector" on "Feature_Store_Feature_Sets_Tab" wizard
         When select "my-tag" option in "Table_Tag_Filter_Dropdown" dropdown on "Feature_Store_Feature_Sets_Tab" wizard
@@ -512,15 +479,13 @@ Feature: Feature Store Page
         And wait load page
         Then value in "tag" column with "text" in "Feature_Sets_Table" on "Feature_Store_Feature_Sets_Tab" wizard should contains "my-tag"
 
+    @MLFS
     @passive
     Scenario: MLFS019 - Check filtering by Tag on Feature Store Feature Vectors Tab
         Given open url
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
-        And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
-        Then click on "Project_Monitoring_Button" element on "commonPagesHeader" wizard
-        And wait load page
-        And select "tab" with "Feature Store" value in breadcrumbs menu
+        And select "tab" with "Feature store" value in breadcrumbs menu
         And wait load page
         And select "Feature Vectors" tab in "Feature_Store_Tab_Selector" on "Feature_Store_Feature_Sets_Tab" wizard
         When select "test-tag" option in "Table_Tag_Filter_Dropdown" dropdown on "Feature_Store_Features_Vectors_Tab" wizard
@@ -528,6 +493,7 @@ Feature: Feature Store Page
         And wait load page
         Then value in "tag" column with "text" in "Feature_Vectors_Table" on "Feature_Store_Features_Vectors_Tab" wizard should contains "test-tag"
 
+    @MLFS
     @passive
     @inProgress
     Scenario: MLFS020 - Check all mandatory components on Feature Store Feature Set new item wizard on Data Source Accordion Parquet Kind
@@ -535,10 +501,7 @@ Feature: Feature Store Page
         And wait load page
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
-        And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
-        Then click on "Project_Monitoring_Button" element on "commonPagesHeader" wizard
-        And wait load page
-        And select "tab" with "Feature Store" value in breadcrumbs menu
+        And select "tab" with "Feature store" value in breadcrumbs menu
         And wait load page
         Then verify "Feature_Store_Tab_Selector" on "Feature_Store_Feature_Sets_Tab" wizard should contains "Feature_Store"."Tab_List"
         Then verify "Feature Sets" tab is active in "Feature_Store_Tab_Selector" on "Feature_Store_Feature_Sets_Tab" wizard
@@ -560,19 +523,14 @@ Feature: Feature Store Page
         Then click on "Schedule_Button" element in "Data_Source_Accordion" on "New_Feature_Set" wizard
         Then verify if "Feature_Set_Schedule_Popup" popup dialog appears
 
-    @FAILED_TODO
-    #TODO: there are no any "clean" fragment "clean" in "key" in artifacts.json 
-    #TODO: URL_Combobox hint need change the text and behavior
+    @MLFS
     @passive
     Scenario: MLFS021 - Verify behaviour of Combobox element on Feature Store Feature Set new item wizard on Data Source Accordion
         Given open url
         And wait load page
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
-        And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
-        Then click on "Project_Monitoring_Button" element on "commonPagesHeader" wizard
-        And wait load page
-        And select "tab" with "Feature Store" value in breadcrumbs menu
+        And select "tab" with "Feature store" value in breadcrumbs menu
         And wait load page
         Then verify "Create_Set_Button" element visibility on "Feature_Store_Feature_Sets_Tab" wizard
         Then click on "Create_Set_Button" element on "Feature_Store_Feature_Sets_Tab" wizard
@@ -596,7 +554,7 @@ Feature: Feature Store Page
         Then select "V3IO" option in "URL_Combobox" combobox on "Data_Source_Accordion" accordion on "New_Feature_Set" wizard
         Then type value "  " to "URL_Combobox" field on "Data_Source_Accordion" on "New_Feature_Set" wizard
         Then click on "Accordion_Header" element in "Data_Source_Accordion" on "New_Feature_Set" wizard
-        Then verify "URL_Combobox" element in "Data_Source_Accordion" on "New_Feature_Set" wizard should display warning "Input_Hint"."V3IO_Path_Hint"
+        Then verify "URL_Combobox" element in "Data_Source_Accordion" on "New_Feature_Set" wizard should display warning "Input_Hint"."V3IO_Path_Hint_Feature_Store"
         Then select "S3" option in "URL_Combobox" combobox on "Data_Source_Accordion" accordion on "New_Feature_Set" wizard
         Then type value "@!$&" to "URL_Combobox" field on "Data_Source_Accordion" on "New_Feature_Set" wizard
         Then click on "Accordion_Header" element in "Data_Source_Accordion" on "New_Feature_Set" wizard
@@ -606,6 +564,7 @@ Feature: Feature Store Page
         Then click on "Accordion_Header" element in "Data_Source_Accordion" on "New_Feature_Set" wizard
         Then verify "URL_Combobox" element in "Data_Source_Accordion" on "New_Feature_Set" wizard should display warning "Input_Hint"."Azure_Storage_Path_Hint"
 
+    @MLFS
     @passive
     @inProgress
     Scenario: MLFS022 - Check all mandatory components on Schedule popup on Feature Store Feature Set new item wizard on Data Source Accordion Parquet Kind
@@ -613,10 +572,7 @@ Feature: Feature Store Page
         And wait load page
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
-        And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
-        Then click on "Project_Monitoring_Button" element on "commonPagesHeader" wizard
-        And wait load page
-        And select "tab" with "Feature Store" value in breadcrumbs menu
+        And select "tab" with "Feature store" value in breadcrumbs menu
         And wait load page
         Then verify "Feature Sets" tab is active in "Feature_Store_Tab_Selector" on "Feature_Store_Feature_Sets_Tab" wizard
         Then click on "Create_Set_Button" element on "Feature_Store_Feature_Sets_Tab" wizard
@@ -643,6 +599,7 @@ Feature: Feature Store Page
         Then "Schedule_Button" element in "Data_Source_Accordion" on "New_Feature_Set" should contains "At 12:00 AM, only on Sunday, Monday, Tuesday, Wednesday, and Thursday" value
         Then verify "Save_And_Ingest_Button" element on "New_Feature_Set" wizard is disabled
 
+    @MLFS
     @passive
     @inProgress
     Scenario: MLFS023 - Check all mandatory components on Feature Store Feature Set new item wizard
@@ -650,10 +607,7 @@ Feature: Feature Store Page
         And wait load page
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
-        And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
-        Then click on "Project_Monitoring_Button" element on "commonPagesHeader" wizard
-        And wait load page
-        And select "tab" with "Feature Store" value in breadcrumbs menu
+        And select "tab" with "Feature store" value in breadcrumbs menu
         And wait load page
         Then verify "Feature_Store_Tab_Selector" on "Feature_Store_Feature_Sets_Tab" wizard should contains "Feature_Store"."Tab_List"
         Then verify "Feature Sets" tab is active in "Feature_Store_Tab_Selector" on "Feature_Store_Feature_Sets_Tab" wizard
@@ -697,6 +651,7 @@ Feature: Feature Store Page
         Then verify "Save_And_Ingest_Button" element visibility on "New_Feature_Set" wizard
         Then "Save_And_Ingest_Button" element on "New_Feature_Set" should contains "Save and ingest" value
 
+    @MLFS
     @passive
     @inProgress
     Scenario: MLFS024 - Check Input and Dropdown components on Feature Store Feature Set new item wizard
@@ -704,10 +659,7 @@ Feature: Feature Store Page
         And wait load page
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
-        And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
-        Then click on "Project_Monitoring_Button" element on "commonPagesHeader" wizard
-        And wait load page
-        And select "tab" with "Feature Store" value in breadcrumbs menu
+        And select "tab" with "Feature store" value in breadcrumbs menu
         And wait load page
         And verify "Feature_Store_Tab_Selector" on "Feature_Store_Feature_Sets_Tab" wizard should contains "Feature_Store"."Tab_List"
         And verify "Feature Sets" tab is active in "Feature_Store_Tab_Selector" on "Feature_Store_Feature_Sets_Tab" wizard
@@ -724,16 +676,14 @@ Feature: Feature Store Page
         When check "External_Offline_Checkbox" element in "Target_Store_Accordion" on "New_Feature_Set" wizard
         Then verify "File_Type_Dropdown" element in "Target_Store_Accordion" on "New_Feature_Set" wizard should contains "New_Feature_Store"."Target_Store_File_Type"
 
+    @MLFS
     @passive
     Scenario: MLFS025 - Check Input and Dropdown components on Feature Store Feature Set new item wizard
         Given open url
         And wait load page
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
-        And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
-        Then click on "Project_Monitoring_Button" element on "commonPagesHeader" wizard
-        And wait load page
-        And select "tab" with "Feature Store" value in breadcrumbs menu
+        And select "tab" with "Feature store" value in breadcrumbs menu
         And wait load page
         And verify "Feature_Store_Tab_Selector" on "Feature_Store_Feature_Sets_Tab" wizard should contains "Feature_Store"."Tab_List"
         And verify "Feature Sets" tab is active in "Feature_Store_Tab_Selector" on "Feature_Store_Feature_Sets_Tab" wizard
@@ -742,6 +692,7 @@ Feature: Feature Store Page
         Then verify "Entities_Input" element visibility in "Schema_Accordion" on "New_Feature_Set" wizard
         Then verify "Timestamp_Input" element visibility in "Schema_Accordion" on "New_Feature_Set" wizard
 
+    @MLFS
     @passive
     @inProgress
     Scenario: MLFS026 - Check Schema Accordion components on Feature Store Feature Set new item wizard
@@ -749,10 +700,7 @@ Feature: Feature Store Page
         And wait load page
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
-        And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
-        Then click on "Project_Monitoring_Button" element on "commonPagesHeader" wizard
-        And wait load page
-        And select "tab" with "Feature Store" value in breadcrumbs menu
+        And select "tab" with "Feature store" value in breadcrumbs menu
         And wait load page
         And verify "Feature_Store_Tab_Selector" on "Feature_Store_Feature_Sets_Tab" wizard should contains "Feature_Store"."Tab_List"
         And verify "Feature Sets" tab is active in "Feature_Store_Tab_Selector" on "Feature_Store_Feature_Sets_Tab" wizard
@@ -768,6 +716,7 @@ Feature: Feature Store Page
         Then type value "" to "Timestamp_Input" field on "Schema_Accordion" on "New_Feature_Set" wizard
         Then verify "Timestamp_Input" element in "Schema_Accordion" on "New_Feature_Set" wizard should display warning "Input_Hint"."Timestamp_Key_Warning"
 
+    @MLFS
     @passive
     @inProgress
     Scenario: MLFS027 - Check Target Store Accordion components on Feature Store Feature Set new item wizard
@@ -775,10 +724,7 @@ Feature: Feature Store Page
         And wait load page
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
-        And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
-        Then click on "Project_Monitoring_Button" element on "commonPagesHeader" wizard
-        And wait load page
-        And select "tab" with "Feature Store" value in breadcrumbs menu
+        And select "tab" with "Feature store" value in breadcrumbs menu
         And wait load page
         And verify "Feature_Store_Tab_Selector" on "Feature_Store_Feature_Sets_Tab" wizard should contains "Feature_Store"."Tab_List"
         And verify "Feature Sets" tab is active in "Feature_Store_Tab_Selector" on "Feature_Store_Feature_Sets_Tab" wizard
@@ -839,19 +785,14 @@ Feature: Feature Store Page
         When collapse "Target_Store_Accordion" on "New_Feature_Set" wizard
         And wait load page
 
-    @FAILED_TODO
-    #TODO: 'Online_Path_Annotation', 'Offline_Path_Annotation' - the implementation has changed
-    #TODO: 'Offline_Path' path value "v3io:///custom/offline/path" couldn't be apply - the implementation has changed
+    @MLFS
     @passive
     Scenario: MLFS028 - Verify behaviour of Online and Offline Target store on Feature Store Feature Set new item wizard
         Given open url
         And wait load page
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
-        And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
-        Then click on "Project_Monitoring_Button" element on "commonPagesHeader" wizard
-        And wait load page
-        And select "tab" with "Feature Store" value in breadcrumbs menu
+        And select "tab" with "Feature store" value in breadcrumbs menu
         And wait load page
         And click on "Create_Set_Button" element on "Feature_Store_Feature_Sets_Tab" wizard
         When collapse "Data_Source_Accordion" on "New_Feature_Set" wizard
@@ -883,8 +824,6 @@ Feature: Feature Store Page
         Then click on "Discard_Online_Path_Button" element in "Target_Store_Accordion" on "New_Feature_Set" wizard
         Then "Online_Path" element in "Target_Store_Accordion" on "New_Feature_Set" should contains "v3io:///projects/default/FeatureStore/test-fs2/nosql/sets/test-fs2" value
         Then click on "Edit_Online_Path_Button" element in "Target_Store_Accordion" on "New_Feature_Set" wizard
-        Then verify "Online_Path_Annotation" element visibility in "Target_Store_Accordion" on "New_Feature_Set" wizard
-        Then "Online_Path_Annotation" component in "Target_Store_Accordion" on "New_Feature_Set" should contains "New_Feature_Store"."Target_Store_Path_Annotation"
         Then type value "v3io:///custom/path" to "Online_Path_Input" field on "Target_Store_Accordion" on "New_Feature_Set" wizard
         Then click on "Apply_Online_Path_Button" element in "Target_Store_Accordion" on "New_Feature_Set" wizard
         Then "Online_Path" element in "Target_Store_Accordion" on "New_Feature_Set" should contains "v3io:///custom/path" value
@@ -893,19 +832,17 @@ Feature: Feature Store Page
         Then "Online_Path" element in "Target_Store_Accordion" on "New_Feature_Set" should contains "v3io:///custom/path" value
         Then "Offline_Path" element in "Target_Store_Accordion" on "New_Feature_Set" should contains "v3io:///projects/default/FeatureStore/test-fs3/parquet/sets/test-fs3.parquet" value
         Then click on "Edit_Offline_Path_Button" element in "Target_Store_Accordion" on "New_Feature_Set" wizard
-        Then verify "Offline_Path_Annotation" element visibility in "Target_Store_Accordion" on "New_Feature_Set" wizard
-        Then "Offline_Path_Annotation" component in "Target_Store_Accordion" on "New_Feature_Set" should contains "New_Feature_Store"."Target_Store_Path_Annotation"
-        Then type value "v3io:///custom/offline/path" to "Offline_Path_Input" field on "Target_Store_Accordion" on "New_Feature_Set" wizard
+        Then type value "v3io:///custom/offline/path.pq" to "Offline_Path_Input" field on "Target_Store_Accordion" on "New_Feature_Set" wizard
         Then click on "Discard_Offline_Path_Button" element in "Target_Store_Accordion" on "New_Feature_Set" wizard
         Then "Offline_Path" element in "Target_Store_Accordion" on "New_Feature_Set" should contains "v3io:///projects/default/FeatureStore/test-fs3/parquet/sets/test-fs3.parquet" value
         Then click on "Edit_Offline_Path_Button" element in "Target_Store_Accordion" on "New_Feature_Set" wizard
-        Then type value "v3io:///custom/offline/path" to "Offline_Path_Input" field on "Target_Store_Accordion" on "New_Feature_Set" wizard
+        Then type value "v3io:///custom/offline/path.pq" to "Offline_Path_Input" field on "Target_Store_Accordion" on "New_Feature_Set" wizard
         Then click on "Apply_Offline_Path_Button" element in "Target_Store_Accordion" on "New_Feature_Set" wizard
-        Then "Offline_Path" element in "Target_Store_Accordion" on "New_Feature_Set" should contains "v3io:///custom/offline/path" value
+        Then "Offline_Path" element in "Target_Store_Accordion" on "New_Feature_Set" should contains "v3io:///custom/offline/path.pq" value
         Then type value "test-fs3" to "Feature_Set_Name_Input" field on "New_Feature_Set" wizard
         Then click on "Accordion_Header" element in "Target_Store_Accordion" on "New_Feature_Set" wizard
         Then "Online_Path" element in "Target_Store_Accordion" on "New_Feature_Set" should contains "v3io:///custom/path" value
-        Then "Offline_Path" element in "Target_Store_Accordion" on "New_Feature_Set" should contains "v3io:///custom/offline/path" value
+        Then "Offline_Path" element in "Target_Store_Accordion" on "New_Feature_Set" should contains "v3io:///custom/offline/path.pq" value
         When uncheck "Online_Checkbox" element in "Target_Store_Accordion" on "New_Feature_Set" wizard
         When uncheck "Offline_Checkbox" element in "Target_Store_Accordion" on "New_Feature_Set" wizard
         When check "Online_Checkbox" element in "Target_Store_Accordion" on "New_Feature_Set" wizard
@@ -913,16 +850,14 @@ Feature: Feature Store Page
         Then "Online_Path" element in "Target_Store_Accordion" on "New_Feature_Set" should contains "v3io:///projects/default/FeatureStore/test-fs3/nosql/sets/test-fs3" value
         Then "Offline_Path" element in "Target_Store_Accordion" on "New_Feature_Set" should contains "v3io:///projects/default/FeatureStore/test-fs3/parquet/sets/test-fs3.parquet" value
 
+    @MLFS
     @passive
     Scenario: MLFS029 - Check Partition part in Target Store Accordion components on Feature Store Feature Set new item wizard
         Given open url
         And wait load page
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
-        And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
-        Then click on "Project_Monitoring_Button" element on "commonPagesHeader" wizard
-        And wait load page
-        And select "tab" with "Feature Store" value in breadcrumbs menu
+        And select "tab" with "Feature store" value in breadcrumbs menu
         And wait load page
         And verify "Feature_Store_Tab_Selector" on "Feature_Store_Feature_Sets_Tab" wizard should contains "Feature_Store"."Tab_List"
         And verify "Feature Sets" tab is active in "Feature_Store_Tab_Selector" on "Feature_Store_Feature_Sets_Tab" wizard
@@ -958,16 +893,14 @@ Feature: Feature Store Page
         Then "External_Offline_Partition_By_Columns_Checkbox" element should be checked in "Target_Store_Accordion" on "New_Feature_Set" wizard
         Then is "External_Offline_Partition_Number_Of_Buckets_Radiobutton" in "Target_Store_Accordion" on "New_Feature_Set" selected
 
+    @MLFS
     @passive
     Scenario: MLFS030 - Test rows Labels on Feature Store Feature Set new item wizard
         Given open url
         And wait load page
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
-        And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
-        Then click on "Project_Monitoring_Button" element on "commonPagesHeader" wizard
-        And wait load page
-        And select "tab" with "Feature Store" value in breadcrumbs menu
+        And select "tab" with "Feature store" value in breadcrumbs menu
         And wait load page
         And verify "Feature_Store_Tab_Selector" on "Feature_Store_Feature_Sets_Tab" wizard should contains "Feature_Store"."Tab_List"
         And verify "Feature Sets" tab is active in "Feature_Store_Tab_Selector" on "Feature_Store_Feature_Sets_Tab" wizard
@@ -990,6 +923,7 @@ Feature: Feature Store Page
             |      label      |
             | key2\n:\nvalue2 |
 
+    @MLFS
     @inProgress
     Scenario: MLFS031 - Save new Feature Store Feature Set new item wizard
         * set tear-down property "project" created with "automation-test-name3" value
@@ -998,10 +932,7 @@ Feature: Feature Store Page
         And wait load page
         And click on row root with value "automation-test-name3" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
-        And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
-        Then click on "Project_Monitoring_Button" element on "commonPagesHeader" wizard
-        And wait load page
-        And select "tab" with "Feature Store" value in breadcrumbs menu
+        And select "tab" with "Feature store" value in breadcrumbs menu
         And wait load page
         And verify "Feature_Store_Tab_Selector" on "Feature_Store_Feature_Sets_Tab" wizard should contains "Feature_Store"."Tab_List"
         And verify "Feature Sets" tab is active in "Feature_Store_Tab_Selector" on "Feature_Store_Feature_Sets_Tab" wizard
@@ -1032,7 +963,7 @@ Feature: Feature Store Page
         When collapse "Target_Store_Accordion" on "New_Feature_Set" wizard
         When select "MLRun store" option in "URL_Combobox" combobox on "Data_Source_Accordion" accordion on "New_Feature_Set" wizard
         When type value "artifacts/automation-test-name3/artifact" to "URL_Combobox" field on "Data_Source_Accordion" on "New_Feature_Set" wizard
-        Then click on "Save_Button" element on "New_Feature_Set" wizard
+        When click on "Accordion_Header" element in "Data_Source_Accordion" on "New_Feature_Set" wizard
         Then verify "Save_Button" element on "New_Feature_Set" wizard is enabled
         Then verify "Save_And_Ingest_Button" element on "New_Feature_Set" wizard is enabled
         Then click on "Save_Button" element on "New_Feature_Set" wizard
@@ -1043,18 +974,14 @@ Feature: Feature Store Page
             | demo_feature_set | Some demo description |
         And remove "automation-test-name3" MLRun Project with code 204
 
-    @FAILED_TODO
-    #TODO: check "expand_btn" visibility in "Features_Table" on "Feature_Store_Features_Tab" - no such element: Unable to locate element:
+    @MLFS
     @passive
     Scenario: MLFS032 - Check expand button on Feature Store tab when change tag from "latest"
         Given open url
         And wait load page
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
-        And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
-        Then click on "Project_Monitoring_Button" element on "commonPagesHeader" wizard
-        And wait load page
-        And select "tab" with "Feature Store" value in breadcrumbs menu
+        And select "tab" with "Feature store" value in breadcrumbs menu
         And wait load page
         Then verify "Feature_Store_Tab_Selector" on "Feature_Store_Feature_Sets_Tab" wizard should contains "Feature_Store"."Tab_List"
         Then verify "Feature Sets" tab is active in "Feature_Store_Tab_Selector" on "Feature_Store_Feature_Sets_Tab" wizard
@@ -1066,7 +993,7 @@ Feature: Feature Store Page
         Then verify "Features" tab is active in "Feature_Store_Tab_Selector" on "Feature_Store_Feature_Sets_Tab" wizard
         Then check "expand_btn" not presented in "Features_Table" on "Feature_Store_Features_Tab" wizard
         When select "All" option in "Table_Tag_Filter_Dropdown" dropdown on "Feature_Store_Features_Tab" wizard
-        #Then check "expand_btn" visibility in "Features_Table" on "Feature_Store_Features_Tab" wizard
+        Then check "expand_btn" visibility in "Features_Table" on "Feature_Store_Features_Tab" wizard
         When select "my-tag" option in "Table_Tag_Filter_Dropdown" dropdown on "Feature_Store_Features_Tab" wizard
         Then check "expand_btn" not presented in "Features_Table" on "Feature_Store_Features_Tab" wizard
         When select "Feature Vectors" tab in "Feature_Store_Tab_Selector" on "Feature_Store_Feature_Sets_Tab" wizard
@@ -1078,57 +1005,50 @@ Feature: Feature Store Page
         When select "test-tag" option in "Table_Tag_Filter_Dropdown" dropdown on "Feature_Store_Features_Vectors_Tab" wizard
         Then check "expand_btn" not presented in "Feature_Vectors_Table" on "Feature_Store_Features_Vectors_Tab" wizard
 
+    @MLFS
     @passive
     Scenario: MLFS033 - Check MLRun logo redirection
         Given open url
         And wait load page
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
-        And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
-        Then click on "Project_Monitoring_Button" element on "commonPagesHeader" wizard
-        And wait load page
-        And select "tab" with "Feature Store" value in breadcrumbs menu
+        And select "tab" with "Feature store" value in breadcrumbs menu
         And wait load page
         And click on "MLRun_Logo" element on "commonPagesHeader" wizard
         And wait load page
         Then verify "Projects_Table" element visibility on "Projects" wizard
 
-    @FAILED_TODO
-    #TODO: select "View YAML" option after click on "expand_btn" - moveTargetOutOfBoundsError: move target out of bounds
+    @MLFS
     @passive
+    @inProgress
     Scenario: MLFS034 - Verify View YAML action on Feature Sets tab
         Given open url
         And wait load page
-        And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
+        And click on row root with value "fraud-demo2-admin" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
-        And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
-        Then click on "Project_Monitoring_Button" element on "commonPagesHeader" wizard
+        And select "tab" with "Feature store" value in breadcrumbs menu
         And wait load page
-        And select "tab" with "Feature Store" value in breadcrumbs menu
-        And wait load page
-        Then select "View YAML" option in action menu on "Feature_Store_Feature_Sets_Tab" wizard in "Feature_Sets_Table" table at row with "test-i" value in "name" column
+        Then select "View YAML" option in action menu on "Feature_Store_Feature_Sets_Tab" wizard in "Feature_Sets_Table" table at row with "transactions" value in "name" column
         Then verify if "View_YAML" popup dialog appears
         Then verify "Cross_Cancel_Button" element visibility on "View_YAML" wizard
         Then verify "YAML_Modal_Container" element visibility on "View_YAML" wizard
         Then click on "Cross_Cancel_Button" element on "View_YAML" wizard
         Then select "All" option in "Table_Tag_Filter_Dropdown" dropdown on "Feature_Store_Feature_Sets_Tab" wizard
-        Then click on cell with row index 2 in "expand_btn" column in "Feature_Sets_Table" table on "Feature_Store_Feature_Sets_Tab" wizard
-        Then select "View YAML" option in action menu on "Feature_Store_Feature_Sets_Tab" wizard in "Feature_Sets_Table" table at row with "not-latest" value in "name" column
+        Then click on cell with row index 1 in "expand_btn" column in "Feature_Sets_Table" table on "Feature_Store_Feature_Sets_Tab" wizard
+        Then select "View YAML" option in action menu on "Feature_Store_Feature_Sets_Tab" wizard in "Feature_Sets_Table" table at row with "latest" value in "name_expand_btn" column
         Then verify if "View_YAML" popup dialog appears
         Then verify "Cross_Cancel_Button" element visibility on "View_YAML" wizard
         Then verify "YAML_Modal_Container" element visibility on "View_YAML" wizard
         Then click on "Cross_Cancel_Button" element on "View_YAML" wizard
 
+    @MLFS
     @passive
     Scenario: MLFS035 - Verify View YAML action on Features tab
         Given open url
         And wait load page
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
-        And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
-        Then click on "Project_Monitoring_Button" element on "commonPagesHeader" wizard
-        And wait load page
-        And select "tab" with "Feature Store" value in breadcrumbs menu
+        And select "tab" with "Feature store" value in breadcrumbs menu
         And wait load page
         And select "Features" tab in "Feature_Store_Tab_Selector" on "Feature_Store_Feature_Sets_Tab" wizard
         And wait load page
@@ -1138,18 +1058,15 @@ Feature: Feature Store Page
         Then verify "Cross_Cancel_Button" element visibility on "View_YAML" wizard
         Then verify "YAML_Modal_Container" element visibility on "View_YAML" wizard
 
-    @FAILED_TODO
-    #TODO: select "View YAML" option after click on "expand_btn" - moveTargetOutOfBoundsError: move target out of bounds
+    @MLFS
     @passive
+    @inProgress
     Scenario: MLFS036 - Verify View YAML action on Feature Vectors tab
         Given open url
         And wait load page
         And click on row root with value "fsdemo-admin" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
-        And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
-        Then click on "Project_Monitoring_Button" element on "commonPagesHeader" wizard
-        And wait load page
-        And select "tab" with "Feature Store" value in breadcrumbs menu
+        And select "tab" with "Feature store" value in breadcrumbs menu
         And wait load page
         And select "Feature Vectors" tab in "Feature_Store_Tab_Selector" on "Feature_Store_Feature_Sets_Tab" wizard
         And wait load page
@@ -1160,23 +1077,21 @@ Feature: Feature Store Page
         Then verify "YAML_Modal_Container" element visibility on "View_YAML" wizard
         Then click on "Cross_Cancel_Button" element on "View_YAML" wizard
         Then select "All" option in "Table_Tag_Filter_Dropdown" dropdown on "Feature_Store_Features_Vectors_Tab" wizard
-        Then click on cell with row index 3 in "expand_btn" column in "Feature_Vectors_Table" table on "Feature_Store_Features_Vectors_Tab" wizard
-        Then select "View YAML" option in action menu on "Feature_Store_Features_Vectors_Tab" wizard in "Feature_Vectors_Table" table at row with "1" value in "name" column
+        Then click on cell with row index 1 in "expand_btn" column in "Feature_Vectors_Table" table on "Feature_Store_Features_Vectors_Tab" wizard
+        Then select "View YAML" option in action menu on "Feature_Store_Features_Vectors_Tab" wizard in "Feature_Vectors_Table" table at row with "my-tag" value in "name_expand_btn" column
         Then verify if "View_YAML" popup dialog appears
         Then verify "Cross_Cancel_Button" element visibility on "View_YAML" wizard
         Then verify "YAML_Modal_Container" element visibility on "View_YAML" wizard
         Then click on "Cross_Cancel_Button" element on "View_YAML" wizard
 
+    @MLFS
     @passive
     Scenario: MLFS037 - Verify View YAML action in Item infopane on Feature Sets tab
         Given open url
         And wait load page
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
-        And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
-        Then click on "Project_Monitoring_Button" element on "commonPagesHeader" wizard
-        And wait load page
-        And select "tab" with "Feature Store" value in breadcrumbs menu
+        And select "tab" with "Feature store" value in breadcrumbs menu
         And wait load page
         Then verify "Feature Sets" tab is active in "Feature_Store_Tab_Selector" on "Feature_Store_Feature_Sets_Tab" wizard
         When click on cell with row index 1 in "name" column in "Feature_Sets_Table" table on "Feature_Store_Feature_Sets_Tab" wizard
@@ -1186,15 +1101,13 @@ Feature: Feature Store Page
         Then verify "Cross_Cancel_Button" element visibility on "View_YAML" wizard
         Then verify "YAML_Modal_Container" element visibility on "View_YAML" wizard
 
+    @MLFS
     @passive
     Scenario: MLFS038 - Check all mandatory components on Add to feature vector popup
         Given open url
         And click on row root with value "fsdemo-admin" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
-        And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
-        Then click on "Project_Monitoring_Button" element on "commonPagesHeader" wizard
-        And wait load page
-        And select "tab" with "Feature Store" value in breadcrumbs menu
+        And select "tab" with "Feature store" value in breadcrumbs menu
         And wait load page
         And select "Features" tab in "Feature_Store_Tab_Selector" on "Feature_Store_Feature_Sets_Tab" wizard
         And wait load page
@@ -1212,6 +1125,7 @@ Feature: Feature Store Page
         Then verify "Create_Feature_Vector_Button" element visibility on "Add_To_Feature_Vector_Popup" wizard
         Then "Create_Feature_Vector_Button" element on "Add_To_Feature_Vector_Popup" should contains "Create new feature vector" value
 
+    @MLFS
     @passive
     Scenario: MLFS039 - Check all mandatory components on Create feature vector popup
         Given open url
@@ -1264,6 +1178,7 @@ Feature: Feature Store Page
         Then verify "Create_Button" element visibility on "Create_Feature_Vector_Popup" wizard
         Then "Create_Button" element on "Create_Feature_Vector_Popup" should contains "Create" value
 
+    @MLFS
     @passive
     Scenario: MLFS040 - Check all mandatory components on Edit feature vector Popup
         Given open url
@@ -1302,6 +1217,7 @@ Feature: Feature Store Page
         Then "Feature_Vector_Name" element on "Add_To_Feature_Vector_Tab" should contains "automation-fv-02" value
         Then "Feature_Vector_Tag" element on "Add_To_Feature_Vector_Tab" should contains "v2" value
 
+    @MLFS
     @passive
     Scenario: MLFS041 - Check all mandatory components on Add to feature vector tab
         Given open url
@@ -1340,8 +1256,7 @@ Feature: Feature Store Page
         Then verify "Add_Button" element visibility on "Add_To_Feature_Vector_Tab" wizard
         Then "Add_Button" element on "Add_To_Feature_Vector_Tab" should contains "Add" value
 
-    @FAILED_TODO
-    #TODO: value in "featureName" column with "text" contains "department" - doesn't search though table
+    @MLFS
     @passive
     Scenario: MLFS042 - Verify filtering by name and entity on Add to feature vector tab
         Given open url
@@ -1369,8 +1284,9 @@ Feature: Feature Store Page
         Then click on "Table_Refresh_Button" element on "Add_To_Feature_Vector_Tab" wizard
         Then value in "entities" column with "text" in "Add_To_Feature_Vector_Table" on "Add_To_Feature_Vector_Tab" wizard should contains "patient_id"
 
+    @MLFS
     @FAILED_TODO
-    #TODO: click on "add_feature_btn" in "Add_To_Feature_Vector_Table" table - invalid selector: An invalid or illegal selector was specified
+    #TODO: check click on "Add_Button" element after fix ML-5115 
     @inProgress
     Scenario: MLFS043 - Add to feature vector
         Given open url
@@ -1399,41 +1315,41 @@ Feature: Feature Store Page
             | gender                   |
         Then verify values in "Features_Panel_Table" table in "Selected_Project_Accordion" on "Add_To_Feature_Vector_Tab" wizard
             | feature                                           |
+            | patient_details : latest #age_mapped_elder        |
             | patient_details : latest #department              |
             | patient_details : latest #room                    |
-            | patient_details : latest #age_mapped_elder        |
             | patient_details : latest #gender                  |
         Then click on "remove_btn" in "Features_Panel_Table" table in "Selected_Project_Accordion" on "Add_To_Feature_Vector_Tab" wizard
             | feature                        |
             | patient_details : latest #room |
         Then verify values in "Features_Panel_Table" table in "Selected_Project_Accordion" on "Add_To_Feature_Vector_Tab" wizard
             | feature                                           |
-            | patient_details : latest #department              |
             | patient_details : latest #age_mapped_elder        |
+            | patient_details : latest #department              |
             | patient_details : latest #gender                  |
         Then select "stocks" option in "Table_Projects_Filter_Dropdown" dropdown on "Add_To_Feature_Vector_Tab" wizard
         Then expand "Features_By_Projects_Accordion" on "Add_To_Feature_Vector_Tab" wizard
         Then verify values in "Features_By_Projects_Table" table in "Features_By_Projects_Accordion" on "Add_To_Feature_Vector_Tab" wizard
             | feature                                           |
-            | patient_details : latest #department              |
             | patient_details : latest #age_mapped_elder        |
+            | patient_details : latest #department              |
             | patient_details : latest #gender                  |
         Then click on "add_feature_btn" in "Add_To_Feature_Vector_Table" table on "Add_To_Feature_Vector_Tab" wizard
             | featureName |
             | name        |
             | exchange    |
             | bid         |
-            | extra       |
+            | ask         |
         Then verify values in "Features_Panel_Table" table in "Selected_Project_Accordion" on "Add_To_Feature_Vector_Tab" wizard
             | feature                      |
             | stocks : latest #name        |
             | stocks : latest #exchange    |
             | stock-quotes : latest #bid   |
-            | stock-quotes : latest #extra |
+            | stock-quotes : latest #ask |
         Then click on "remove_btn" in "Features_Panel_Table" table in "Selected_Project_Accordion" on "Add_To_Feature_Vector_Tab" wizard
             | feature                      |
             | stock-quotes : latest #bid   |
-            | stock-quotes : latest #extra |
+            | stock-quotes : latest #ask |
         Then verify values in "Features_Panel_Table" table in "Selected_Project_Accordion" on "Add_To_Feature_Vector_Tab" wizard
             | feature                      |
             | stocks : latest #name        |
@@ -1444,8 +1360,9 @@ Feature: Feature Store Page
         Then value in "name" column with "text" in "Feature_Vectors_Table" on "Feature_Store_Features_Vectors_Tab" wizard should contains "temp_vector"
         Then value in "description" column with "text" in "Feature_Vectors_Table" on "Feature_Store_Features_Vectors_Tab" wizard should contains "Automation test description"
 
+    @MLFS
     @FAILED_TODO
-    #TODO: click on "add_feature_btn" in "Add_To_Feature_Vector_Table" table - invalid selector: An invalid or illegal selector was specified
+    #TODO: check click on "Add_Button" element after fix ML-5115 
     @inProgress
     Scenario: MLFS044 - Check all mandatory components in Item infopane on Requested Features tab on Feature Vectors tab
         Given open url
@@ -1500,6 +1417,11 @@ Feature: Feature Store Page
             | feature      |
             | last_updated |
         Then type value "last_updated_alias" to "Alias_Input" field on "Requested_Features_Info_Pane" wizard
+        #TO DO - add following steps 
+        # Then verify "Cancel_Button" element visibility on "Feature_Vectors_Info_Pane" wizard
+        # Then "Cancel_Button" element on "Feature_Vectors_Info_Pane" should contains "Cancel" value
+        # Then verify "Apply_Changes_Button" element visibility on "Feature_Vectors_Info_Pane" wizard
+        # Then "Apply_Changes_Button" element on "Feature_Vectors_Info_Pane" should contains "Apply Changes" value
         Then click on "discard_btn" in "Requested_Features_Table" table on "Requested_Features_Info_Pane" wizard
             | feature      |
             | last_updated |
@@ -1534,8 +1456,9 @@ Feature: Feature Store Page
             | stocks-admin |      stocks\n: latest     |   volume     |
             | stocks-admin |      stocks\n: latest     | last_updated |
 
+    @MLFS
     @FAILED_TODO
-    #TODO: click on "add_feature_btn" in "Add_To_Feature_Vector_Table" table - invalid selector: An invalid or illegal selector was specified
+    #TODO: check click on "Add_Button" element after fix ML-5115  
     Scenario: MLFS045 - Verify Feature Label icon on Requested Features tab on Feature Vectors tab
         And set tear-down property "featureVector" created in "default" project with "test_vector" value
         Given open url
@@ -1567,16 +1490,16 @@ Feature: Feature Store Page
         And wait load page
         Then value in "labelIcon" column with "tooltip" in "Requested_Features_Table" on "Requested_Features_Info_Pane" wizard should contains "Label column"
 
+    @MLFS
+    @FAILED_TODO
+    #TODO: bug ML-5151
     Scenario: MLFS046 - Verify No Data message on Feature Store tabs
         * set tear-down property "project" created with "automation-test-name001" value
         * create "automation-test-name001" MLRun Project with code 201
         Given open url
         And click on row root with value "automation-test-name001" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
-        And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
-        Then click on "Project_Monitoring_Button" element on "commonPagesHeader" wizard
-        And wait load page
-        And select "tab" with "Feature Store" value in breadcrumbs menu
+        And select "tab" with "Feature store" value in breadcrumbs menu
         And wait load page
         Then "No_Data_Message" component on "commonPagesHeader" should contains "No_Data_Message"."Common_Message_Feature_Sets"
         * set tear-down property "featureSet" created in "automation-test-name001" project with "test_fs" value
@@ -1606,6 +1529,7 @@ Feature: Feature Store Page
         And wait load page
         Then "No_Data_Message" component on "commonPagesHeader" should contains "No_Data_Message"."No_Data"
 
+    @MLFS
     Scenario: MLFS047 - Check broken link redirection
         * set tear-down property "project" created with "automation-test-010" value
         * create "automation-test-010" MLRun Project with code 201
@@ -1615,10 +1539,7 @@ Feature: Feature Store Page
         And wait load page
         And click on row root with value "automation-test-010" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
-        And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
-        Then click on "Project_Monitoring_Button" element on "commonPagesHeader" wizard
-        And wait load page
-        And select "tab" with "Feature Store" value in breadcrumbs menu
+        And select "tab" with "Feature store" value in breadcrumbs menu
         And wait load page
         Then verify redirection from "projects/automation-test-010/feature-store/INVALID" to "projects/automation-test-010/feature-store/feature-sets"
         When click on cell with row index 1 in "name" column in "Feature_Sets_Table" table on "Feature_Store_Feature_Sets_Tab" wizard
@@ -1661,6 +1582,7 @@ Feature: Feature Store Page
         Then verify redirection from "projects/automation-test-010/feature-store/feature-vectors/test_fv/latest/INVALID" to "projects/automation-test-010/feature-store/feature-vectors/test_fv/latest/overview"
         Then verify redirection from "projects/automation-test-010/INVALID/feature-vectors/test_fv/latest/overview" to "projects"
 
+    @MLFS
     Scenario: MLFS048 - Check active/highlited items with details panel on Feature Sets tab
         Given open url
         And wait load page
@@ -1686,6 +1608,7 @@ Feature: Feature Store Page
         Then save to context "name" column on 2 row from "Feature_Sets_Table" table on "Feature_Store_Feature_Sets_Tab" wizard
         Then compare "Header" element value on "Models_Info_Pane" wizard with test "name" context value
     
+    @MLFS
     Scenario: MLFS049 - Check active/highlited items with details panel on Feature Vectors tab
         Given open url
         And wait load page
@@ -1707,6 +1630,7 @@ Feature: Feature Store Page
         Then compare "Header" element value on "Models_Info_Pane" wizard with test "name" context value
 	    Then verify that row index 1 is active in "Feature_Vectors_Table" table on "Feature_Store_Features_Vectors_Tab" wizard
 
+    @MLFS
     @passive
     Scenario: MLFS050 - Save feature set with compleated target store components and passthrough checkbox by default
         Given open url
@@ -1735,13 +1659,15 @@ Feature: Feature Store Page
         Then verify checkbox "External_Offline_Checkbox_State" element on "New_Feature_Set" wizard is enabled
         Then "External_Offline_Checkbox" element should be unchecked in "Target_Store_Accordion" on "New_Feature_Set" wizard
         Then type value "new-feature-set-1" to "Feature_Set_Name_Input" field on "New_Feature_Set" wizard
-        Then select "MLRun store" option in "URL_Combobox" combobox on "Data_Source_Accordion" accordion on "New_Feature_Set" wizard
+        Then select "V3IO" option in "URL_Combobox" combobox on "Data_Source_Accordion" accordion on "New_Feature_Set" wizard
+        When type value "target/path" to "URL_Combobox" field on "Data_Source_Accordion" on "New_Feature_Set" wizard
         Then click on "Accordion_Header" element in "Data_Source_Accordion" on "New_Feature_Set" wizard
         Then type value "text" to "Entities_Input" field on "Schema_Accordion" on "New_Feature_Set" wizard
         Then click on "Save_Button" element on "New_Feature_Set" wizard
         Then click on "Confirm_Button" element on "Common_Popup" wizard
         Then "Header" element on "Feature_Sets_Info_Pane" should contains "new-feature-set-1" value
 
+    @MLFS
     @passive
     Scenario: MLFS051 - Save feature set with checked passthrough checkbox and unchecked TARGET STORE Online checkbox
         Given open url
@@ -1758,6 +1684,9 @@ Feature: Feature Store Page
         Then verify checkbox "Passthrough_Checkbox_State" element on "New_Feature_Set" wizard is enabled
         Then "Passthrough_Checkbox" element should be unchecked on "New_Feature_Set" wizard
         Then check "Passthrough_Checkbox" element on "New_Feature_Set" wizard
+        And wait load page
+        Then verify "Dialog_PopUp" element visibility in "Passthrough_PopUp_Dialog" on "New_Feature_Set" wizard
+        Then click on "Unset_Online_Target_Button" element in "Passthrough_PopUp_Dialog" on "New_Feature_Set" wizard
         Then verify "Online_Checkbox" element visibility in "Target_Store_Accordion" on "New_Feature_Set" wizard
         Then verify checkbox "Online_Checkbox_State" element on "New_Feature_Set" wizard is enabled
         Then "Online_Checkbox" element should be unchecked in "Target_Store_Accordion" on "New_Feature_Set" wizard
@@ -1768,13 +1697,15 @@ Feature: Feature Store Page
         Then verify checkbox "External_Offline_Checkbox_State" element on "New_Feature_Set" wizard is disabled
         Then "External_Offline_Checkbox" element should be unchecked in "Target_Store_Accordion" on "New_Feature_Set" wizard
         Then type value "new-feature-set-2" to "Feature_Set_Name_Input" field on "New_Feature_Set" wizard
-        Then select "MLRun store" option in "URL_Combobox" combobox on "Data_Source_Accordion" accordion on "New_Feature_Set" wizard
+        Then select "V3IO" option in "URL_Combobox" combobox on "Data_Source_Accordion" accordion on "New_Feature_Set" wizard
+        When type value "target/path" to "URL_Combobox" field on "Data_Source_Accordion" on "New_Feature_Set" wizard
         Then click on "Accordion_Header" element in "Data_Source_Accordion" on "New_Feature_Set" wizard
         Then type value "text" to "Entities_Input" field on "Schema_Accordion" on "New_Feature_Set" wizard
         Then click on "Save_Button" element on "New_Feature_Set" wizard
         Then click on "Confirm_Button" element on "Common_Popup" wizard
         Then "Header" element on "Feature_Sets_Info_Pane" should contains "new-feature-set-2" value
     
+    @MLFS
     @passive
     Scenario: MLFS052 - Save feature set with checked passthrough checkbox and checked TARGET STORE Online checkbox
         Given open url
@@ -1791,6 +1722,9 @@ Feature: Feature Store Page
         Then verify checkbox "Passthrough_Checkbox_State" element on "New_Feature_Set" wizard is enabled
         Then "Passthrough_Checkbox" element should be unchecked on "New_Feature_Set" wizard
         Then check "Passthrough_Checkbox" element on "New_Feature_Set" wizard
+        And wait load page
+        Then verify "Dialog_PopUp" element visibility in "Passthrough_PopUp_Dialog" on "New_Feature_Set" wizard
+        Then click on "Unset_Online_Target_Button" element in "Passthrough_PopUp_Dialog" on "New_Feature_Set" wizard
         Then verify "Online_Checkbox" element visibility in "Target_Store_Accordion" on "New_Feature_Set" wizard
         Then verify checkbox "Online_Checkbox_State" element on "New_Feature_Set" wizard is enabled
         Then "Online_Checkbox" element should be unchecked in "Target_Store_Accordion" on "New_Feature_Set" wizard
@@ -1803,13 +1737,15 @@ Feature: Feature Store Page
         Then verify checkbox "External_Offline_Checkbox_State" element on "New_Feature_Set" wizard is disabled
         Then "External_Offline_Checkbox" element should be unchecked in "Target_Store_Accordion" on "New_Feature_Set" wizard
         Then type value "new-feature-set-3" to "Feature_Set_Name_Input" field on "New_Feature_Set" wizard
-        Then select "MLRun store" option in "URL_Combobox" combobox on "Data_Source_Accordion" accordion on "New_Feature_Set" wizard
+        Then select "V3IO" option in "URL_Combobox" combobox on "Data_Source_Accordion" accordion on "New_Feature_Set" wizard
+        When type value "target/path" to "URL_Combobox" field on "Data_Source_Accordion" on "New_Feature_Set" wizard
         Then click on "Accordion_Header" element in "Data_Source_Accordion" on "New_Feature_Set" wizard
         Then type value "text" to "Entities_Input" field on "Schema_Accordion" on "New_Feature_Set" wizard
         Then click on "Save_Button" element on "New_Feature_Set" wizard
         Then click on "Confirm_Button" element on "Common_Popup" wizard
         Then "Header" element on "Feature_Sets_Info_Pane" should contains "new-feature-set-3" value
 
+    @MLFS
     @passive
     Scenario: MLFS053 - Impossibility to save feature set with unchecked target store components
         Given open url
@@ -1823,7 +1759,8 @@ Feature: Feature Store Page
         And verify "Feature Sets" tab is active in "Feature_Store_Tab_Selector" on "Feature_Store_Feature_Sets_Tab" wizard
         And click on "Create_Set_Button" element on "Feature_Store_Feature_Sets_Tab" wizard
         Then type value "new-feature-set-4" to "Feature_Set_Name_Input" field on "New_Feature_Set" wizard
-        Then select "MLRun store" option in "URL_Combobox" combobox on "Data_Source_Accordion" accordion on "New_Feature_Set" wizard
+        Then select "V3IO" option in "URL_Combobox" combobox on "Data_Source_Accordion" accordion on "New_Feature_Set" wizard
+        When type value "target/path" to "URL_Combobox" field on "Data_Source_Accordion" on "New_Feature_Set" wizard
         Then click on "Accordion_Header" element in "Data_Source_Accordion" on "New_Feature_Set" wizard
         Then type value "text" to "Entities_Input" field on "Schema_Accordion" on "New_Feature_Set" wizard
         Then verify "Passthrough_Checkbox" element visibility on "New_Feature_Set" wizard
@@ -1833,13 +1770,12 @@ Feature: Feature Store Page
         Then uncheck "Offline_Checkbox" element in "Target_Store_Accordion" on "New_Feature_Set" wizard
         Then "Error_Message" component in "Target_Store_Accordion" on "New_Feature_Set" should contains "Error_Messages"."Must_Select_One"
         Then verify "Save_Button" element on "New_Feature_Set" wizard is disabled
-        Then verify "Save_And_Ingest_Button" element on "New_Feature_Set" wizard is disabled
-        Then click on "Cancel_Button" element on "New_Feature_Set" wizard
-        And click on "Create_Set_Button" element on "Feature_Store_Feature_Sets_Tab" wizard 
+        Then verify "Save_And_Ingest_Button" element on "New_Feature_Set" wizard is disabled 
         Then verify "Passthrough_Checkbox" element visibility on "New_Feature_Set" wizard
         Then verify checkbox "Passthrough_Checkbox_State" element on "New_Feature_Set" wizard is enabled
         Then "Passthrough_Checkbox" element should be unchecked on "New_Feature_Set" wizard
         Then check "Passthrough_Checkbox" element on "New_Feature_Set" wizard
+        Then "Online_Checkbox" element should be unchecked in "Target_Store_Accordion" on "New_Feature_Set" wizard
         Then uncheck "Passthrough_Checkbox" element on "New_Feature_Set" wizard
         Then "Error_Message" component in "Target_Store_Accordion" on "New_Feature_Set" should contains "Error_Messages"."Must_Select_One"
         Then verify "Save_Button" element on "New_Feature_Set" wizard is disabled
@@ -1878,7 +1814,7 @@ Feature: Feature Store Page
         Then verify "Save_Button" element on "New_Feature_Set" wizard is enabled
         Then verify "Save_And_Ingest_Button" element on "New_Feature_Set" wizard is enabled
 
-
+    @MLFS
     @passive
     Scenario: MLFS054 - Impossibility to save feature set without input mandatory Timestamp Key field
         Given open url
@@ -1892,7 +1828,8 @@ Feature: Feature Store Page
         And verify "Feature Sets" tab is active in "Feature_Store_Tab_Selector" on "Feature_Store_Feature_Sets_Tab" wizard
         And click on "Create_Set_Button" element on "Feature_Store_Feature_Sets_Tab" wizard
         Then type value "new-feature-set-5" to "Feature_Set_Name_Input" field on "New_Feature_Set" wizard
-        Then select "MLRun store" option in "URL_Combobox" combobox on "Data_Source_Accordion" accordion on "New_Feature_Set" wizard
+        Then select "V3IO" option in "URL_Combobox" combobox on "Data_Source_Accordion" accordion on "New_Feature_Set" wizard
+        When type value "target/path" to "URL_Combobox" field on "Data_Source_Accordion" on "New_Feature_Set" wizard
         Then click on "Accordion_Header" element in "Data_Source_Accordion" on "New_Feature_Set" wizard
         Then type value "text" to "Entities_Input" field on "Schema_Accordion" on "New_Feature_Set" wizard
         Then check "Offline_Partition_Checkbox" element in "Target_Store_Accordion" on "New_Feature_Set" wizard
@@ -1909,7 +1846,8 @@ Feature: Feature Store Page
         Then "Header" element on "Feature_Sets_Info_Pane" should contains "new-feature-set-5" value
         And click on "Create_Set_Button" element on "Feature_Store_Feature_Sets_Tab" wizard
         Then type value "new-feature-set-6" to "Feature_Set_Name_Input" field on "New_Feature_Set" wizard
-        Then select "MLRun store" option in "URL_Combobox" combobox on "Data_Source_Accordion" accordion on "New_Feature_Set" wizard
+        Then select "V3IO" option in "URL_Combobox" combobox on "Data_Source_Accordion" accordion on "New_Feature_Set" wizard
+        When type value "target/path" to "URL_Combobox" field on "Data_Source_Accordion" on "New_Feature_Set" wizard
         Then click on "Accordion_Header" element in "Data_Source_Accordion" on "New_Feature_Set" wizard
         Then type value "text" to "Entities_Input" field on "Schema_Accordion" on "New_Feature_Set" wizard
         Then check "External_Offline_Checkbox" element in "Target_Store_Accordion" on "New_Feature_Set" wizard
@@ -1932,6 +1870,7 @@ Feature: Feature Store Page
         And wait load page
         Then "Header" element on "Feature_Sets_Info_Pane" should contains "new-feature-set-6" value
 
+    @MLFS
     @passive
     Scenario: MLFS055 - Impossibility to save feature set without input 'Feature Set Name', 'URL', 'Entities' fields
         Given open url
@@ -1951,14 +1890,17 @@ Feature: Feature Store Page
         Then verify "Save_Button" element on "New_Feature_Set" wizard is disabled
         Then verify "Save_And_Ingest_Button" element on "New_Feature_Set" wizard is disabled
 
-    @forDevEnv
+    @MLFS
+    @FAILED_TODO
+    #TODO: ingest isn't implemented - ML-3626
+    @inProgress
     Scenario: MLFS056 - Save feature set with 'Save And Ingest' button
         Given open url
         And wait load page
         #/// precondition - CREATE PROJECT///
-        Then click on "New_Project_Button" element on "Projects" wizard
-        Then type into "Name_Input" on "Create_New_Project" popup dialog "automation-test-name201" value
-        Then click on "Create_Button" element on "Create_New_Project" wizard
+        # Then click on "New_Project_Button" element on "Projects" wizard
+        # Then type into "Name_Input" on "Create_New_Project" popup dialog "automation-test-name201" value
+        # Then click on "Create_Button" element on "Create_New_Project" wizard
         And click on row root with value "automation-test-name201" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
         And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
@@ -1987,12 +1929,13 @@ Feature: Feature Store Page
         And click on cell with value "Jobs and workflows" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
         Then value in "name" column with "text" in "Jobs_Monitor_Table" on "Jobs_Monitor_Tab" wizard should contains "new-feature-set-1-ingest"
         #///postcondition - DELETE PROJECT///
-        Then check "automation-test-name201" value in "name" column in "Projects_Table" table on "Projects" wizard
-        Then select "Delete" option in action menu on "Projects" wizard in "Projects_Table" table at row with "automation-test-name201" value in "name" column
-        Then verify if "Common_Popup" popup dialog appears
-        Then click on "Delete_Button" element on "Common_Popup" wizard
-        Then check "automation-test-name201" value not in "name" column in "Projects_Table" table on "Projects" wizard
+        # Then check "automation-test-name201" value in "name" column in "Projects_Table" table on "Projects" wizard
+        # Then select "Delete" option in action menu on "Projects" wizard in "Projects_Table" table at row with "automation-test-name201" value in "name" column
+        # Then verify if "Common_Popup" popup dialog appears
+        # Then click on "Delete_Button" element on "Common_Popup" wizard
+        # Then check "automation-test-name201" value not in "name" column in "Projects_Table" table on "Projects" wizard
 
+    @MLFS
     Scenario: MLFS059 - Check type Redis in online types of Target Store section of Create Set 
         Given open url
         And wait load page

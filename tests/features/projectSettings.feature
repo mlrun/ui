@@ -3,17 +3,21 @@ Feature: Project Settings page
     Testcases that verifies functionality on Project Settings page
     !!!TestSuit in progress!!!
 
+    @MLPS
     @inProgress
-    Scenario: Verify all mandatory components on General Tab
+    Scenario: MLPS001 - Verify all mandatory components on General Tab
         * set tear-down property "project" created with "automation-test-name8" value
         * create "automation-test-name8" MLRun Project with code 201
         Given open url
         And click on row root with value "automation-test-name8" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
-        And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
-        Then click on "Project_Monitoring_Button" element on "commonPagesHeader" wizard
-        And wait load page
         Then verify breadcrumbs "project" label should be equal "automation-test-name8" value
+        And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
+        Then click on "Project_Settings_Button" element on "commonPagesHeader" wizard
+        And hover "MLRun_Logo" component on "commonPagesHeader" wizard
+        Then click on breadcrumbs "project" label on "commonPagesHeader" wizard
+        And wait load page
+        Then verify breadcrumbs "tab" label should be equal "Project monitoring" value
         And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
         Then click on "Project_Settings_Button" element on "commonPagesHeader" wizard
         And hover "MLRun_Logo" component on "commonPagesHeader" wizard
@@ -44,14 +48,19 @@ Feature: Project Settings page
             |      label                        |
             | labelKeyTest2\n:\nlabelValueTest2 |
 
-    @inProgress
-    Scenario: Verify behaviour of editing labels on General tab
+    @MLPS
+    Scenario: MLPS002 - Verify behaviour of editing labels on General tab
         * set tear-down property "project" created with "automation-test-name9" value
         * create "automation-test-name9" MLRun Project with code 201
         Given open url
         Then type value "automation-test-name9" to "Search_Projects_Input" field on "Projects" wizard
         Then value in "description" column with "text" in "Projects_Table" on "Projects" wizard should contains "automation test description"
         And click on row root with value "automation-test-name9" in "name" column in "Projects_Table" table on "Projects" wizard
+        Then click on "Project_Settings_Button" element on "commonPagesHeader" wizard
+        And hover "MLRun_Logo" component on "commonPagesHeader" wizard
+        And select "tab" with "Project monitoring" value in breadcrumbs menu
+        And wait load page
+        Then verify breadcrumbs "tab" label should be equal "Project monitoring" value
         Then click on "Project_Settings_Button" element on "commonPagesHeader" wizard
         And hover "MLRun_Logo" component on "commonPagesHeader" wizard
         When add rows to "Labels_Table" table on "Project_Settings_General_Tab" wizard
@@ -62,8 +71,9 @@ Feature: Project Settings page
         And click on "MLRun_Logo" element on "commonPagesHeader" wizard
         And wait load page
         Then type value "automation-test-name9" to "Search_Projects_Input" field on "Projects" wizard
-        Then value in "labels" column with "dropdowns" in "Projects_Table" on "Projects" wizard should contains "c=d"
-        Then value in "labels" column with "dropdowns" in "Projects_Table" on "Projects" wizard should contains "e=f"
+        Then value in "labels" column with "dropdowns" in "Projects_Table" on "Projects" wizard should contains "c=d" in "Overlay"
+        Then click on "Active_Projects_Button" element on "Projects" wizard
+        Then value in "labels" column with "dropdowns" in "Projects_Table" on "Projects" wizard should contains "e=f" in "Overlay"
         And click on row root with value "automation-test-name9" in "name" column in "Projects_Table" table on "Projects" wizard
         Then click on "Project_Settings_Button" element on "commonPagesHeader" wizard
         And wait load page
@@ -81,8 +91,9 @@ Feature: Project Settings page
         And click on "MLRun_Logo" element on "commonPagesHeader" wizard
         And wait load page
         Then type value "automation-test-name9" to "Search_Projects_Input" field on "Projects" wizard
-        Then value in "labels" column with "dropdowns" in "Projects_Table" on "Projects" wizard should contains "project_label_key=project_label_value"
-        Then value in "labels" column with "dropdowns" in "Projects_Table" on "Projects" wizard should contains "a12345=b54321"
+        Then value in "labels" column with "dropdowns" in "Projects_Table" on "Projects" wizard should contains "project_label_key=project_label_value" in "Overlay"
+        Then click on "Active_Projects_Button" element on "Projects" wizard
+        Then value in "labels" column with "dropdowns" in "Projects_Table" on "Projects" wizard should contains "a12345=b54321" in "Overlay"
 
     @FAILED_TODO
     #TODO: run with maximize browser window on 1920х1080 screen size

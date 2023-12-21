@@ -136,15 +136,14 @@ const MonitorWorkflows = ({
   })
 
   const handleFetchFunctionLogs = useCallback(
-    (item, projectName, setDetailsLogs, offset) => {
+    (item, projectName, setDetailsLogs) => {
       return getFunctionLogs(
         fetchFunctionLogs,
         fetchFunctionLogsTimeout,
         projectName,
         item.name,
         item.tag,
-        setDetailsLogs,
-        offset
+        setDetailsLogs
       )
     },
     [fetchFunctionLogs, fetchFunctionLogsTimeout]

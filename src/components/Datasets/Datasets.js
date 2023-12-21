@@ -206,7 +206,7 @@ const Datasets = () => {
 
       if (changes.data.tag.currentFieldValue) {
         navigate(
-          `/projects/${params.projectName}/${DATASETS_PAGE}/${params.name}/${changes.data.tag.currentFieldValue}/overview`,
+          `/projects/${params.projectName}/${DATASETS_PAGE.toLowerCase()}/${params.name}/${changes.data.tag.currentFieldValue}/overview`,
           { replace: true }
         )
       }
@@ -326,11 +326,11 @@ const Datasets = () => {
   const handleRegisterDataset = useCallback(() => {
     openPopUp(RegisterArtifactModal, {
       artifactKind: DATASET_TYPE,
-      projectName: params.projectName,
+      params,
       refresh: handleRefresh,
       title: registerDatasetTitle
     })
-  }, [handleRefresh, params.projectName])
+  }, [handleRefresh, params])
 
   return (
     <DatasetsView

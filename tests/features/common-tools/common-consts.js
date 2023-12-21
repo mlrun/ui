@@ -44,7 +44,16 @@ module.exports = {
     Tab_List: ['Feature Sets', 'Features', 'Feature Vectors']
   },
   Models: {
-    Tab_List: ['Models', 'Model Endpoints', 'Real-Time Pipelines']
+    Tab_List: ['Models', 'Model Endpoints', 'Real-Time Pipelines'],
+    Combobox_Options: [
+      'V3IO',
+      'S3',
+      'HTTP',
+      'HTTPS',
+      'Azure storage',
+      'Google storage',
+      'Databricks filesystem'
+    ] 
   },
   Real_Time_Pipeline_Pane: {
     Overview_Headers: [
@@ -60,34 +69,37 @@ module.exports = {
   Feature_Sets_Info_Pane: {
     Tab_List: ['Overview', 'Features', 'Transformations', 'Preview', 'Statistics', 'Analysis'],
     Overview_General_Headers: [
-      'Description',
-      'Labels',
-      'Version tag',
-      'Last updated',
-      'Entities',
-      'URI',
-      'Timestamp key',
-      'Label column',
-      'Usage example'
+      'Description:',
+      'Labels:',
+      'Version tag:',
+      'Last updated:',
+      'Entities:',
+      'Engine type:',
+      'URI:',
+      'Timestamp key:',
+      'Label column:',
+      'Usage example:'
     ]
   },
   Feature_Vectors_Info_Pane: {
     Tab_List: ['Overview', 'Requested Features', 'Analysis'],
     Overview_General_Headers: [
-      'Description',
-      'Labels',
-      'Version tag',
-      'Last updated',
-      'Entities',
-      'URI',
-      'Timestamp key',
-      'Label column',
-      'Usage example'
+      'Description:',
+      'Labels:',
+      'Version tag:',
+      'Last updated:',
+      'Entities:',
+      'URI:',
+      'Timestamp key:',
+      'Label column:',
+      'Usage example:'
     ]
+  },
+  Common_Lists: {
+    Action_Menu_List: ['Download', 'Copy URI', 'View YAML', 'Add a tag', 'Delete']
   },
   Datasets_Info_Pane: {
     Tab_List: ['Overview', 'Preview', 'Metadata', 'Analysis'],
-    Action_Menu_List: ['Download', 'Copy URI', 'View YAML', 'Add a tag'],
     Overview_General_Headers: [
       'Hash:',
       'Key:',
@@ -99,6 +111,17 @@ module.exports = {
       'UID:',
       'Updated:',
       'Labels:'
+    ],
+    Overview_Producer_Headers: [
+      'Name:',
+      'Kind:',
+      'URI:',
+      'Owner:',
+      'Workflow:'
+    ],
+    Overview_Sources_Headers: [
+      'Name:',
+      'Path:'
     ]
   },
   ML_Functions_Tab: {
@@ -122,38 +145,59 @@ module.exports = {
   Files_Info_Pane: {
     Tab_List: ['Overview', 'Preview'],
     Overview_General_Headers: [
-      'Hash',
-      'Key',
-      'Version tag',
-      'Iter',
-      'Size',
-      'Path',
-      'URI',
-      'UID',
-      'Updated',
-      'Labels'
+      'Hash:',
+      'Key:',
+      'Version tag:',
+      'Iter:',
+      'Size:',
+      'Path:',
+      'URI:',
+      'UID:',
+      'Updated:',
+      'Labels:'
+    ],
+    Overview_Producer_Headers: [
+      'Name:',
+      'Kind:',
+      'URI:',
+      'Owner:'
+    ],
+    Overview_Sources_Headers: [
+      'Name:',
+      'Path:'
     ]
   },
   Models_Info_Pane: {
     Tab_List: ['Overview'],
     Tab_List_Extended: ['Overview', 'Preview', 'Features', 'Statistics'],
     Overview_General_Headers: [
-      'Hash',
-      'Key',
-      'Version tag',
-      'Iter',
-      'Kind',
-      'Size',
-      'Path',
-      'URI',
-      'Model file',
-      'Feature vector',
-      'UID',
-      'Updated',
-      'Framework',
-      'Algorithm',
-      'Labels',
-      'Metrics'
+      'Hash:',
+      'Key:',
+      'Version tag:',
+      'Iter:',
+      'Kind:',
+      'Size:',
+      'Path:',
+      'URI:',
+      'Model file:',
+      'Feature vector:',
+      'UID:',
+      'Updated:',
+      'Framework:',
+      'Algorithm:',
+      'Labels:',
+      'Metrics:'
+    ],
+    Overview_Producer_Headers: [
+      'Name:',
+      'Kind:',
+      'URI:',
+      'Owner:',
+      'Workflow:'
+    ],
+    Overview_Sources_Headers: [
+      'Name:',
+      'Path:'
     ]
   },
   Models_Endpoints_Info_Pane: {
@@ -180,7 +224,8 @@ module.exports = {
       'S3',
       'Azure storage',
       'Go-ogle storage',
-      'Google storage'
+      'Google storage',
+      'Databricks filesystem'
     ],
     Target_Store_File_Type: ['CSV', 'TSDB', 'Parquet', 'NoSql', 'Dataframe', 'Custom'],
     Target_Store_Path_Annotation:
@@ -213,7 +258,16 @@ module.exports = {
     Form_Text:
       /This dialog enable users to register an artifact( as a dataset)? in Iguazio database\. Once (a artifact|the dataset) is registered it can be consumed by jobs and workflows\./,
     Form_Subtext:
-      'All you need to do is enter the name of the artifact and the URL (e.g. s3://my-bucket/path).'
+      'All you need to do is enter the name of the artifact and the URL (e.g. s3://my-bucket/path).',
+    Combobox_Options: [
+      'V3IO',
+      'S3',
+      'HTTP',
+      'HTTPS',
+      'Azure storage',
+      'Google storage',
+      'Databricks filesystem'
+    ]  
   },
   Register_Dataset: {
     Type_Options: ['General', 'Chart', 'Plot', 'Table'],
@@ -245,7 +299,7 @@ module.exports = {
       'This field is required',
     Artifact_Name_Hint:
       'Valid characters: a–z, A–Z, 0–9, –, _, .\nMust begin and end with: a–z, A–Z, 0–9\nLength – max: 253\n' +
-      'This field is required\nArtifact name should be unique',
+      'This field is required\nArtifact name must be unique',
     Project_Name_Hint:
       'Valid characters: a–z, 0–9, –\nMust begin with: a–z\nMust end with: a–z, 0–9\nLength – max: 63\n' +
       'This field is required',
@@ -303,10 +357,11 @@ module.exports = {
     Add_Feature_Vector_Hint: 'Add features from the list on the left to this feature vector',
     Deploy_Model_Name_Hint:
       'After the function is deployed, it will have a URL for calling the model that is based upon this name.',
-    MLRun_Store_Path_Hint: 'Field must be in "artifacts/my-project/my-artifact:my-tag" format',
+    MLRun_Store_Path_Hint: 'Field must be in "models/my-project/my-model:my-tag" or "models/my-project/my-model@my-uid" format',
     Jobs_MLRun_Store_Path_Hint:
       'Field must be in "artifacts/my-project/my-artifact:my-tag" or "artifacts/my-project/my-artifact@my-uid" format',
     V3IO_Path_Hint: 'Invalid URL. Field must be in "container-name/file" format',
+    V3IO_Path_Hint_Feature_Store: 'Field must be in "container-name/file" format',
     S3_Path_Hint: 'Field must be in "bucket/path" format',
     Azure_Storage_Path_Hint: 'Field must be in "container/path" format',
     Timestamp_Column: 'The field name for filtering the source data.',
@@ -438,7 +493,6 @@ module.exports = {
     Hour_Intervals_Dropdown_Options: ['Every 1', 'Every 2', 'Every 3', 'Every 4', 'Every 6', 'Every 12'],
     Partition_Granularity_Options: ['Second', 'Minute', 'Hour', 'Day', 'Month', 'Year'],
     Pods_Priority: ['Low', 'Medium', 'High'],
-    //Pods_Toleration: ['Allow', 'Constrain', 'Prevent'], - Pods_Toleration is deleted from implementation
     Schedule_Variants: ['Minute', 'Hourly', 'Daily', 'Weekly', 'Monthly'],
     Schedule_Minutes_Variants: ['10', '15', '20', '30'],
     Schedule_Hours_Variants: ['1', '2', '3', '4', '6', '12']

@@ -23,6 +23,7 @@ import {
   clickNearComponent,
   clickOnComponent,
   componentIsNotPresent,
+  componentIsPresent,
   componentIsNotVisible,
   componentIsVisible,
   hoverComponent,
@@ -39,6 +40,7 @@ import {
   findRowIndexesByColumnTooltipsValue,
   findRowIndexesByColumnValue,
   findRowIndexesByColumnValueAttribute,
+  findRowIndexesByColumnValueExpand,
   getCellByIndexColumn,
   getTableRows,
   isContainsSubstringInColumnCells,
@@ -54,6 +56,8 @@ import {
 import {
   checkActionMenuOptions,
   openActionMenu,
+  verifyOptionInActionMenuEnabled,
+  verifyOptionInActionMenuDisabled,
   selectOptionInActionMenu
 } from '../common/actions/action-menu.action'
 import { typeValue } from '../common/actions/input-group.action'
@@ -100,6 +104,33 @@ Then(
       'action_menu'
     )
     await openActionMenu(this.driver, actionMenuSel)
+  }
+)
+
+Then(
+  'select {string} option in action menu on {string} wizard in {string} table at row with {string} value in {string} column with expand btn {string}',
+  async function (option, wizard, table, value, column, expand_name) {
+    const arr = await findRowIndexesByColumnValueExpand(
+      this.driver,
+      pageObjects[wizard][table],
+      column,
+      value
+    )
+    const indx = arr[0]
+    const actionMenuSel = await getCellByIndexColumn(
+      this.driver,
+      pageObjects[wizard][table],
+      indx,
+      'action_menu'
+    )
+    await hoverComponent(
+      this.driver,
+      pageObjects[wizard][table]['tableFields'][expand_name](indx),
+      false // scroll ?
+    )
+    await openActionMenu(this.driver, actionMenuSel)
+    await this.driver.sleep(500)
+    await selectOptionInActionMenu(this.driver, actionMenuSel, option)
   }
 )
 
@@ -982,6 +1013,142 @@ Then(
       pageObjects[wizard][table]['tableFields']['action_menu'](indx),
       pageObjectsConsts[constWizard][constValue]
     )
+  }
+)
+
+Then(
+  'verify action menu on {string} wizard in {string} table with {string} value in {string} column should contains {string}.{string}',
+  async function (wizard, table, value, column, constWizard, constValue) {
+    const arr = await findRowIndexesByColumnValue(
+      this.driver,
+      pageObjects[wizard][table],
+      column,
+      value
+    )
+    const indx = arr[0]
+    const actionMenuSel = await getCellByIndexColumn(
+      this.driver,
+      pageObjects[wizard][table],
+      indx,
+      'action_menu'
+    )
+    await hoverComponent(
+      this.driver,
+      pageObjects[wizard][table]['tableFields'][column](indx)
+    )
+    await this.driver.sleep(500)
+    await openActionMenu(this.driver, actionMenuSel)
+    await this.driver.sleep(500)
+    await checkActionMenuOptions(
+      this.driver,
+      pageObjects[wizard][table]['tableFields']['action_menu'](indx),
+      pageObjectsConsts[constWizard][constValue]
+    )
+  }
+)
+
+Then(
+  'verify that in action menu on {string} wizard in {string} table with {string} value in {string} column {string} option is enabled',
+  async function (wizard, table, value, column, option) {
+    const arr = await findRowIndexesByColumnValue(
+      this.driver,
+      pageObjects[wizard][table],
+      column,
+      value
+    )
+    const indx = arr[0]
+    const actionMenuSel = await getCellByIndexColumn(
+      this.driver,
+      pageObjects[wizard][table],
+      indx,
+      'action_menu'
+    )
+    await hoverComponent(
+      this.driver,
+      pageObjects[wizard][table]['tableFields'][column](indx)
+    )
+    await this.driver.sleep(500)
+    await openActionMenu(this.driver, actionMenuSel)
+    await this.driver.sleep(500)
+    await verifyOptionInActionMenuEnabled (this.driver, actionMenuSel, option)
+  }
+)
+
+Then(
+  'verify that in action menu on {string} wizard in {string} table with {string} value in {string} column {string} option is disabled',
+  async function (wizard, table, value, column, option) {
+    const arr = await findRowIndexesByColumnValue(
+      this.driver,
+      pageObjects[wizard][table],
+      column,
+      value
+    )
+    const indx = arr[0]
+    const actionMenuSel = await getCellByIndexColumn(
+      this.driver,
+      pageObjects[wizard][table],
+      indx,
+      'action_menu'
+    )
+    await hoverComponent(
+      this.driver,
+      pageObjects[wizard][table]['tableFields'][column](indx)
+    )
+    await this.driver.sleep(500)
+    await openActionMenu(this.driver, actionMenuSel)
+    await this.driver.sleep(500)
+    await verifyOptionInActionMenuDisabled (this.driver, actionMenuSel, option)
+  }
+)
+
+Then(
+  'verify {string} option is present on {string} wizard in {string} table with {string} value in {string} column',
+  async function (option, wizard, table, value, column) {
+    const arr = await findRowIndexesByColumnValue(
+      this.driver,
+      pageObjects[wizard][table],
+      column,
+      value
+    )
+    const indx = arr[0]
+    const actionMenuSel = await getCellByIndexColumn(
+      this.driver,
+      pageObjects[wizard][table],
+      indx,
+      option
+    )
+    await hoverComponent(
+      this.driver,
+      pageObjects[wizard][table]['tableFields'][column](indx)
+    )
+    await this.driver.sleep(500)
+    await componentIsPresent(this.driver, actionMenuSel)
+  }
+)
+
+Then(
+  'click on {string} option on {string} wizard in {string} table with {string} value in {string} column',
+  async function (option, wizard, table, value, column) {
+    const arr = await findRowIndexesByColumnValue(
+      this.driver,
+      pageObjects[wizard][table],
+      column,
+      value
+    )
+    const indx = arr[0]
+    const actionMenuSel = await getCellByIndexColumn(
+      this.driver,
+      pageObjects[wizard][table],
+      indx,
+      option
+    )
+    await hoverComponent(
+      this.driver,
+      pageObjects[wizard][table]['tableFields'][column](indx)
+    )
+    await this.driver.sleep(250)
+    await clickOnComponent(this.driver, actionMenuSel)
+    await this.driver.sleep(500)
   }
 )
 

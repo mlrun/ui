@@ -273,7 +273,7 @@ const Models = ({ fetchModelFeatureVector }) => {
 
       if (changes.data.tag.currentFieldValue) {
         navigate(
-          `/projects/${params.projectName}/${MODELS_PAGE}/${MODELS_TAB}/${params.name}/${changes.data.tag.currentFieldValue}/overview`,
+          `/projects/${params.projectName}/${MODELS_PAGE.toLowerCase()}/${MODELS_TAB}/${params.name}/${changes.data.tag.currentFieldValue}/overview`,
           { replace: true }
         )
       }
@@ -349,8 +349,8 @@ const Models = ({ fetchModelFeatureVector }) => {
   ])
 
   const handleRegisterModel = useCallback(() => {
-    openPopUp(RegisterModelModal, { projectName: params.projectName, refresh: handleRefresh })
-  }, [handleRefresh, params.projectName])
+    openPopUp(RegisterModelModal, { params, refresh: handleRefresh })
+  }, [handleRefresh, params])
 
   const handleTrainModel = () => {
     openPopUp(JobWizard, {

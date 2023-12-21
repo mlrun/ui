@@ -29,7 +29,7 @@ import {
   merge,
   omit,
   set,
-  unionBy
+  some
 } from 'lodash'
 import {
   ADVANCED_STEP,
@@ -69,7 +69,7 @@ import {
   parameterTypeFloat,
   parameterTypeInt,
   parameterTypeList,
-  parameterTypeMap,
+  parameterTypeDict,
   parameterTypeStr,
   parameterTypeValueMap
 } from '../../elements/FormParametersTable/formParametersTable.util'
@@ -83,7 +83,6 @@ import { generateObjectFromKeyValue, parseObjectToKeyValue } from 'igz-controls/
 import { getDefaultSchedule, scheduleDataInitialState } from '../SheduleWizard/scheduleWizard.util'
 import { getErrorDetail } from 'igz-controls/utils/common.util'
 import { getPreemptionMode } from '../../utils/getPreemptionMode'
-import { isEveryObjectValueEmpty } from '../../utils/isEveryObjectValueEmpty'
 import { trimSplit } from '../../utils'
 
 const volumeTypesMap = {
@@ -105,21 +104,22 @@ export const generateJobWizardData = (
   defaultData,
   currentProjectName,
   isEditMode,
-  prePopulatedData
+  isTrain,
+  prePopulatedData,
+  selectedVersion
 ) => {
-  const functions = selectedFunctionData.functions
-  const functionInfo = getFunctionInfo(selectedFunctionData)
+  const functionInfo = getFunctionInfo(selectedFunctionData, selectedVersion, isTrain)
   const defaultResources = frontendSpec?.default_function_pod_resources ?? {}
-  const functionParameters = getFunctionParameters(functions, functionInfo.handler)
-  const [functionPriorityClassName] = getFunctionPriorityClass(functions)
-  const [limits] = getLimits(functions)
-  const [requests] = getRequests(functions)
-  const environmentVariables = getEnvironmentVariables(functions)
-  const [preemptionMode] = getFunctionPreemptionMode(functions)
+  const functionParameters = getFunctionParameters(functionInfo.function, functionInfo.handler)
+  const functionPriorityClassName = getFunctionPriorityClass(functionInfo.function)
+  const limits = getLimits(functionInfo.function)
+  const requests = getRequests(functionInfo.function)
+  const environmentVariables = getEnvironmentVariables(functionInfo.function)
+  const preemptionMode = getFunctionPreemptionMode(functionInfo.function)
   const jobPriorityClassName =
     functionPriorityClassName || frontendSpec.default_function_priority_class_name || ''
-  const nodeSelectorTable = getNodeSelectors(functions)
-  const volumesTable = getVolumesData(functions)
+  const nodeSelectorTable = getNodeSelectors(functionInfo.function)
+  const volumesTable = getVolumes(functionInfo.function)
   const gpuType = getLimitsGpuType(limits)
   const scheduleData = defaultData?.schedule
     ? getDefaultSchedule(defaultData.schedule)
@@ -184,10 +184,10 @@ export const generateJobWizardData = (
     jobFormData[RESOURCES_STEP].jobPriorityClassName = jobPriorityClassName
   }
 
-  if (!isEmpty(functionParameters) || !isEmpty(prePopulatedData?.dataInputs)) {
+  if (!isEmpty(functionParameters) || !isEmpty(prePopulatedData?.trainDatasetUri)) {
     jobFormData[DATA_INPUTS_STEP].dataInputsTable = parseDataInputs(
       functionParameters,
-      prePopulatedData?.dataInputs
+      prePopulatedData?.trainDatasetUri
     )
   }
 
@@ -209,9 +209,10 @@ export const generateJobWizardDefaultData = (
   isEditMode
 ) => {
   if (isEmpty(defaultData)) return [{}, {}]
+  const selectedFunction = selectedFunctionData?.functions[0] ?? {}
 
-  const runInfo = getRunDefaultInfo(defaultData, selectedFunctionData)
-  const functionParameters = getFunctionDefaultParameters(selectedFunctionData, runInfo.handler)
+  const runInfo = getRunDefaultInfo(defaultData, selectedFunction)
+  const functionParameters = getFunctionDefaultParameters(selectedFunction, runInfo.handler)
   const [predefinedParameters, customParameters] = parseDefaultParameters(
     functionParameters,
     defaultData.task.spec.parameters,
@@ -241,7 +242,7 @@ export const generateJobWizardDefaultData = (
       handler: runInfo.handler,
       handlerData: runInfo.handlerData,
       labels: runInfo.labels,
-      image: parseImageData(selectedFunctionData, frontendSpec, currentProjectName)
+      image: parseImageData(selectedFunction, frontendSpec, currentProjectName)
     },
     [DATA_INPUTS_STEP]: {
       dataInputsTable: parseDefaultDataInputs(functionParameters, defaultData.task.spec.inputs)
@@ -299,12 +300,9 @@ export const generateJobWizardDefaultData = (
   return [jobFormData, jobAdditionalData]
 }
 
-export const getHandlerData = (selectedFunctionData, handler) => {
-  const currentFunction = selectedFunctionData?.functions
-    ? chain(selectedFunctionData.functions).orderBy('metadata.updated', 'desc').get(0).value()
-    : selectedFunctionData
-  const handlerData = get(currentFunction, ['spec', 'entry_points', handler], {})
-  const outputs = (handlerData?.outputs ?? []).filter(output => !isEveryObjectValueEmpty(output))
+export const getHandlerData = (selectedFunction, handler) => {
+  const handlerData = get(selectedFunction, ['spec', 'entry_points', handler], {})
+  const outputs = (handlerData?.outputs ?? []).filter(output => output.type)
 
   return {
     doc: handlerData?.doc,
@@ -313,109 +311,104 @@ export const getHandlerData = (selectedFunctionData, handler) => {
   }
 }
 
-const getFunctionInfo = selectedFunctionData => {
+const getFunctionInfo = (selectedFunctionData, preSelectedVersion, isTrain) => {
   const functions = selectedFunctionData?.functions
 
   if (!isEmpty(functions)) {
+    const allowedHandlers = isTrain ? ['train'] : []
     const versionOptions = getVersionOptions(functions)
-    const handlerOptions = getHandlerOptions(functions)
-    const { defaultVersion, defaultHandler } = getDefaultHandlerAndVersion(
-      versionOptions,
-      handlerOptions,
-      functions
-    )
-    const currentFunctionVersion = selectedFunctionData.tag || defaultVersion
-    const currentFunction =
-      functions.find(func => func.metadata.tag === currentFunctionVersion) ?? functions[0]
+    const selectedVersion = some(versionOptions, { id: preSelectedVersion })
+      ? preSelectedVersion
+      : getDefaultVersion(versionOptions)
+    const handlerOptions = getHandlerOptions(functions, selectedVersion, allowedHandlers)
+    const defaultHandler = getDefaultHandler(handlerOptions, functions, selectedVersion)
+    const selectedFunction = getSelectedFunction(functions, selectedVersion)
 
     return {
       name: selectedFunctionData.name,
       handler: defaultHandler,
-      version: currentFunctionVersion,
-      handlerData: getHandlerData(currentFunction, defaultHandler),
+      version: selectedVersion,
+      handlerData: getHandlerData(selectedFunction, defaultHandler),
       handlerOptions,
       versionOptions,
-      function: currentFunction || {}
+      function: selectedFunction || {}
     }
   }
 }
 
-const getRunDefaultInfo = (defaultData, selectedFunctionData) => {
+const getRunDefaultInfo = (defaultData, selectedFunction) => {
   return {
     labels: parseChipsData(defaultData.task?.metadata?.labels),
     name: defaultData.task?.metadata?.name || '',
     handler: defaultData.task?.spec?.handler,
-    handlerData: getHandlerData(selectedFunctionData, defaultData.task?.spec?.handler),
+    handlerData: getHandlerData(selectedFunction, defaultData.task?.spec?.handler),
     handlerOptions: [],
     version: '',
     versionOptions: []
   }
 }
 
-const getHandlerOptions = selectedFunctions => {
-  return chain(selectedFunctions)
-    .map(func => Object.values(func.spec?.entry_points ?? {}))
+const getHandlerOptions = (selectedFunctions, selectedVersion, allowedHandlers = []) => {
+  const selectedFunction =
+    selectedFunctions?.length === 1
+      ? selectedFunctions[0]
+      : selectedFunctions.find(func => func.metadata.tag === selectedVersion)
+
+  return chain(selectedFunction)
+    .get('spec.entry_points', {})
+    .values()
     .flatten()
+    .filter(
+      entry_point => allowedHandlers.length === 0 || allowedHandlers.includes(entry_point.name)
+    )
     .map(entry_point => ({
       label: entry_point.name,
       id: entry_point.name,
       subLabel: entry_point.doc
     }))
-    .uniqBy('label')
     .value()
 }
 
 const getVersionOptions = selectedFunctions => {
-  const versionOptions = unionBy(
-    selectedFunctions.map(func => {
+  const versionOptions = chain(selectedFunctions)
+    .map(func => {
+      if (!func.metadata.tag) return null
+
       return {
         label: func.metadata.tag || 'N/A',
         id: func.metadata.tag || TAG_NA
       }
-    }),
-    'id'
-  )
+    })
+    .compact()
+    .unionBy('id')
+    .value()
 
   return versionOptions.length ? versionOptions : [{ label: 'N/A', id: TAG_NA }]
 }
 
-const getDefaultHandler = (handlerOptions, selectedFunctions) => {
+const getDefaultHandler = (handlerOptions, selectedFunctions, selectedVersion) => {
   let handler = ''
-
-  const latestFunction = selectedFunctions.find(item => item.metadata.tag === TAG_LATEST)
+  const selectedFunction = selectedFunctions.find(item => item.metadata.tag === selectedVersion)
 
   if (handlerOptions.length) {
     handler = handlerOptions[0]?.id
-  } else if (latestFunction) {
-    handler = latestFunction.spec.default_handler || FUNCTION_DEFAULT_HANDLER
   } else {
-    handler = selectedFunctions[0]?.spec.default_handler || FUNCTION_DEFAULT_HANDLER
+    handler = selectedFunction?.spec?.default_handler || FUNCTION_DEFAULT_HANDLER
   }
 
   return handler
 }
 
-const getDefaultHandlerAndVersion = (versionOptions, handlerOptions, selectedFunctions) => {
-  const defaultVersion =
-    versionOptions.find(version => version.id === TAG_LATEST)?.id || versionOptions[0].id || ''
+const getDefaultVersion = versionOptions => {
+  return versionOptions.find(version => version.id === TAG_LATEST)?.id || versionOptions[0].id || ''
+}
 
-  const defaultHandler = getDefaultHandler(handlerOptions, selectedFunctions)
-
-  return {
-    defaultVersion,
-    defaultHandler
-  }
+const getSelectedFunction = (functions = [], selectedVersion) => {
+  return functions.find(func => func.metadata.tag === selectedVersion) ?? functions[0]
 }
 
 export const getFunctionParameters = (selectedFunction, handler) => {
-  return chain(selectedFunction)
-    .orderBy('metadata.updated', 'desc')
-    .map(func => {
-      return func.spec.entry_points ? func.spec.entry_points[handler]?.parameters ?? [] : []
-    })
-    .flatten()
-    .unionBy('name')
-    .value()
+  return get(selectedFunction, ['spec', 'entry_points', handler, 'parameters'], [])
 }
 
 export const getFunctionDefaultParameters = (selectedFunction, handler) => {
@@ -425,72 +418,27 @@ export const getFunctionDefaultParameters = (selectedFunction, handler) => {
 }
 
 const getFunctionPriorityClass = selectedFunction => {
-  return chain(selectedFunction)
-    .orderBy('metadata.updated', 'desc')
-    .map(func => {
-      return func.spec.priority_class_name
-    })
-    .flatten()
-    .unionBy('name')
-    .value()
+  return get(selectedFunction, 'spec.priority_class_name', '')
 }
 
 const getLimits = selectedFunction => {
-  return chain(selectedFunction)
-    .orderBy('metadata.updated', 'desc')
-    .map(func => {
-      return func.spec.resources?.limits ? func.spec.resources?.limits : {}
-    })
-    .filter(limits => !isEveryObjectValueEmpty(limits))
-    .flatten()
-    .unionBy('name')
-    .value()
+  return get(selectedFunction, 'spec.resources.limits', {})
 }
 
 const getRequests = selectedFunction => {
-  return chain(selectedFunction)
-    .orderBy('metadata.updated', 'desc')
-    .map(func => {
-      return func.spec.resources?.requests ? func.spec.resources.requests : {}
-    })
-    .filter(request => !isEveryObjectValueEmpty(request))
-    .flatten()
-    .unionBy('name')
-    .value()
+  return get(selectedFunction, 'spec.resources.requests', {})
 }
 
 const getEnvironmentVariables = selectedFunction => {
-  return chain(selectedFunction)
-    .orderBy('metadata.updated', 'desc')
-    .map(func => {
-      return func.spec.env ?? []
-    })
-    .flatten()
-    .unionBy('name')
-    .value()
+  return get(selectedFunction, 'spec.env', [])
 }
 
 const getFunctionPreemptionMode = selectedFunction => {
-  return chain(selectedFunction)
-    .orderBy('metadata.updated', 'desc')
-    .map(func => {
-      return func.spec.preemption_mode ?? ''
-    })
-    .flatten()
-    .unionBy('key')
-    .value()
+  return get(selectedFunction, 'spec.preemption_mode', '')
 }
 
 const getNodeSelectors = selectedFunction => {
-  return chain(selectedFunction)
-    .orderBy('metadata.updated', 'desc')
-    .map(func => {
-      return func.spec.node_selector ?? {}
-    })
-    .map(parseObjectToKeyValue)
-    .flatten()
-    .unionBy('data.key')
-    .value()
+  return parseObjectToKeyValue(get(selectedFunction, 'spec.node_selector', {}))
 }
 
 const getVolumeType = volume => {
@@ -505,20 +453,9 @@ const getVolumeType = volume => {
   }
 }
 
-const getVolumesData = selectedFunction => {
-  const volumes = chain(selectedFunction)
-    .orderBy('metadata.updated', 'desc')
-    .map(func => func.spec.volumes ?? [])
-    .flatten()
-    .unionBy('name')
-    .value()
-
-  const volumeMounts = chain(selectedFunction)
-    .orderBy('metadata.updated', 'desc')
-    .map(func => func.spec.volume_mounts ?? [])
-    .flatten()
-    .unionBy('name')
-    .value()
+const getVolumes = selectedFunction => {
+  const volumes = get(selectedFunction, 'spec.volumes', [])
+  const volumeMounts = get(selectedFunction, 'spec.volume_mounts', [])
 
   return parseVolumes(volumes, volumeMounts)
 }
@@ -595,6 +532,7 @@ export const getCategoryName = categoryId => {
     NLP: 'NLP',
     notifications: 'Alerts and Notifications',
     other: 'Other',
+    utils: 'Utilities',
     'model-serving': 'Model Serving',
     simulators: 'Simulators',
     training: 'Model Training'
@@ -620,7 +558,7 @@ const getDataInputData = (dataInputName, dataInputValue, dataInputIsChecked) => 
 
 const sortParameters = (parameter, nextParameter) => nextParameter.isRequired - parameter.isRequired
 
-export const parseDataInputs = (functionParameters = [], prePopulatedDataInputs) => {
+export const parseDataInputs = (functionParameters = [], trainDatasetUri) => {
   const parsedDataInputs = functionParameters
     .filter(dataInputs => dataInputs.type?.includes('DataItem'))
     .map(dataInput => {
@@ -633,16 +571,14 @@ export const parseDataInputs = (functionParameters = [], prePopulatedDataInputs)
       }
     })
     .sort(sortParameters)
+  const dataInputsDataset = parsedDataInputs.find(dataInput => dataInput.data?.name === 'dataset')
 
-  if (!isEmpty(prePopulatedDataInputs)) {
-    prePopulatedDataInputs.forEach(dataInput => {
-      parsedDataInputs.unshift({
-        data: getDataInputData(dataInput.name, dataInput.path, true),
-        isRequired: true,
-        isDefault: true,
-        isPredefined: true
-      })
-    })
+  if (dataInputsDataset && trainDatasetUri) {
+    dataInputsDataset.data = getDataInputData(
+      'dataset',
+      trainDatasetUri,
+      dataInputsDataset.data.isChecked
+    )
   }
 
   return parsedDataInputs
@@ -652,10 +588,17 @@ export const parseDefaultDataInputs = (funcParams, runDataInputs = {}) => {
   const predefinedDataInputs = chain(funcParams)
     .filter(dataInput => dataInput.type?.includes('DataItem'))
     .map(dataInput => {
-      const dataInputValue = runDataInputs[dataInput.name] ?? dataInput.default ?? ''
+      const dataInputIsFromPreviousRun = has(runDataInputs, dataInput.name)
+      const dataInputValue = dataInputIsFromPreviousRun
+        ? runDataInputs[dataInput.name]
+        : dataInput.default ?? ''
 
       return {
-        data: getDataInputData(dataInput.name, dataInputValue, !has(dataInput, 'default')),
+        data: getDataInputData(
+          dataInput.name,
+          dataInputValue,
+          dataInputIsFromPreviousRun || !has(dataInput, 'default')
+        ),
         doc: dataInput.doc ?? '',
         isRequired: !has(dataInput, 'default'),
         isDefault: true,
@@ -723,9 +666,9 @@ export const parseDefaultParameters = (funcParams = {}, runParams = {}, runHyper
       const parametersIsRequired = !has(parameter, 'default')
       const parameterType = predefinedParameterIsModified
         ? parseParameterType(
-            runParams[parameter.name] ?? runHyperParams[parameter.name],
-            parameter.name in runHyperParams
-          )
+          runParams[parameter.name] ?? runHyperParams[parameter.name],
+          parameter.name in runHyperParams
+        )
         : parameter.type ?? ''
 
       return {
@@ -793,7 +736,7 @@ export const parseParameterType = (parameterValue, isHyper) => {
     !Array.isArray(parameterValue) &&
     parameterValue !== null
   ) {
-    return parameterTypeMap
+    return parameterTypeDict
   } else if (isFinite(parameterValue)) {
     return String(parameterValue).includes('.') ? parameterTypeFloat : parameterTypeInt
   } else if (typeof parameterValue === 'boolean') {
@@ -897,7 +840,7 @@ const convertParameterValue = (value, type) => {
     return Number(value)
   } else if (type === parameterTypeBool && ['true', 'false'].includes(value.toLowerCase())) {
     return value.toLowerCase() === 'true'
-  } else if ([parameterTypeList, parameterTypeMap].includes(type)) {
+  } else if ([parameterTypeList, parameterTypeDict].includes(type)) {
     try {
       return JSON.parse(value)
     } catch {
@@ -922,13 +865,19 @@ const generateParameters = parametersTableData => {
   parametersTableData?.predefined
     ?.filter(parameter => !parameter.data.isHyper && parameter.data.isChecked)
     .forEach(parameter => {
-      parameters[parameter.data.name] = convertParameterValue(parameter.data.value, parameter.data.type)
+      parameters[parameter.data.name] = convertParameterValue(
+        parameter.data.value,
+        parameter.data.type
+      )
     })
 
   parametersTableData?.custom
     ?.filter(parameter => !parameter.data.isHyper && parameter.data.isChecked)
     .forEach(parameter => {
-      parameters[parameter.data.name] = convertParameterValue(parameter.data.value, parameter.data.type)
+      parameters[parameter.data.name] = convertParameterValue(
+        parameter.data.value,
+        parameter.data.type
+      )
     })
 
   return parameters
@@ -1061,10 +1010,10 @@ export const generateJobRequestData = (
   mode,
   isSchedule
 ) => {
-  let selectedFunction = selectedFunctionData?.functions?.find(
-    func => func.metadata.tag === formData[RUN_DETAILS_STEP].version
+  const selectedFunction = getSelectedFunction(
+    selectedFunctionData?.functions,
+    formData[RUN_DETAILS_STEP].version
   )
-  selectedFunction ??= selectedFunctionData?.functions?.[0]
   const [volume_mounts, volumes] = generateVolumes(formData[RESOURCES_STEP].volumesTable)
 
   const postData = {
@@ -1088,9 +1037,9 @@ export const generateJobRequestData = (
           selectedFunction && !has(selectedFunction, 'status')
             ? `hub://${selectedFunction.metadata.name.replace(/-/g, '_')}`
             : formData.function ??
-              (selectedFunction
-                ? `${selectedFunction.metadata.project}/${selectedFunction.metadata.name}@${selectedFunction.metadata.hash}`
-                : '')
+            (selectedFunction
+              ? `${selectedFunction.metadata.project}/${selectedFunction.metadata.name}@${selectedFunction.metadata.hash}`
+              : '')
       }
     },
     function: {
@@ -1163,15 +1112,15 @@ export const getNewJobErrorMsg = error => {
   return error.response.status === NOTFOUND_ERROR_STATUS_CODE
     ? 'To run a job, the selected function needs to be built. Make sure to build the function before running the job.'
     : error.response.status === FORBIDDEN_ERROR_STATUS_CODE
-    ? 'You are not permitted to run new job.'
-    : error.response.status === CONFLICT_ERROR_STATUS_CODE
-    ? 'This job is already scheduled'
-    : getErrorDetail(error) || 'Unable to create a new job.'
+      ? 'You are not permitted to run a new job.'
+      : error.response.status === CONFLICT_ERROR_STATUS_CODE
+        ? 'This job is already scheduled'
+        : getErrorDetail(error) || 'Unable to create a new job.'
 }
 
 export const getSaveJobErrorMsg = error => {
   return error.response.status === FORBIDDEN_ERROR_STATUS_CODE
-    ? 'You are not permitted to run new job.'
+    ? 'You are not permitted to run a new job.'
     : getErrorDetail(error) || 'Unable to save the job.'
 }
 

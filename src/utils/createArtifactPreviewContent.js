@@ -49,7 +49,8 @@ export const createArtifactPreviewContent = (res, fileFormat, path, artifactName
         content: content
       }
     }
-  } else if (res.headers['content-type'].includes('text/plain')) {
+  } else if (res.headers['content-type'].includes('text/plain') ||
+    (res.headers['content-type'].includes('application/octet-stream') && isString(res.data))) {
     artifact.type = 'text'
     artifact.data = {
       content: String(res.data)

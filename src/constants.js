@@ -57,7 +57,7 @@ export const MODEL_PATH_DATA_INPUT = 'model_path'
 
 export const NAVBAR_WIDTH_CLOSED = 57
 export const NAVBAR_WIDTH_OPENED = 245
-export const CANCEL_REQUEST_TIMEOUT = 60000
+export const CANCEL_REQUEST_TIMEOUT = 120000
 
 /*=========== PAGES & TABS =============*/
 
