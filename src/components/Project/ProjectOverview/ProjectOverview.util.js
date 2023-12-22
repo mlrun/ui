@@ -124,7 +124,7 @@ export const getInitialCards = (params, navigate, isDemoMode) => {
               // }],
 
               artifactKind: DATASET_TYPE,
-              projectName: params.projectName,
+              params,
               refresh: () => {},
               title: 'Register dataset'
             },
@@ -176,7 +176,7 @@ export const getInitialCards = (params, navigate, isDemoMode) => {
               //   variant: SECONDARY_BUTTON
               // }],
               artifactKind: ARTIFACT_TYPE,
-              projectName: params.projectName,
+              params,
               refresh: () => {},
               title: 'Register artifact'
             },
