@@ -124,11 +124,14 @@ const JobWizard = ({
   const formStateRef = useRef(null)
 
   const closeModal = useCallback(() => {
+    if (showSchedule) {
+      setShowSchedule(false)
+    }
     dispatch(resetModalFilter(JOB_WIZARD_FILTERS))
     removeJobFunction()
     onResolve()
     onWizardClose && onWizardClose()
-  }, [dispatch, onResolve, onWizardClose, removeJobFunction])
+  }, [dispatch, onResolve, onWizardClose, removeJobFunction, showSchedule])
 
   const { handleCloseModal, resolveModal } = useModalBlockHistory(closeModal, formRef.current)
 
@@ -398,8 +401,8 @@ const JobWizard = ({
           label: isBatchInference
             ? 'Schedule Infer'
             : isTrain
-              ? 'Schedule training job'
-              : 'Schedule for later',
+            ? 'Schedule training job'
+            : 'Schedule for later',
           onClick: () => {
             formState.handleSubmit()
 
@@ -419,10 +422,10 @@ const JobWizard = ({
             mode === PANEL_EDIT_MODE
               ? 'Save'
               : isBatchInference
-                ? 'Infer now'
-                : isTrain
-                  ? 'Run training now'
-                  : 'Run',
+              ? 'Infer now'
+              : isTrain
+              ? 'Run training now'
+              : 'Run',
           onClick: () => {
             submitRequest(formState, false, goToFirstInvalidStep)
           },
