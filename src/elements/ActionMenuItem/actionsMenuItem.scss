@@ -31,6 +31,16 @@
       background-color: $alabaster;
     }
 
+    &_danger {
+      color: $amaranth;
+
+      svg {
+        path:first-child {
+          fill: $amaranth;
+        }
+      }
+    }
+
     &_disabled {
       color: $spunPearl;
       cursor: not-allowed;
@@ -40,16 +50,6 @@
           path:first-child {
             fill: rgba($black, 0.2);
           }
-        }
-      }
-    }
-
-    &_danger {
-      color: $amaranth;
-
-      svg {
-        path:first-child {
-          fill: $amaranth;
         }
       }
     }
