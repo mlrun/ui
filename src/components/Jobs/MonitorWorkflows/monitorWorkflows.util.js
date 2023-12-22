@@ -109,12 +109,6 @@ export const generateActionsMenu = (
             onClick: handleRerunJob
           },
           {
-            label: 'Delete',
-            icon: <Delete />,
-            className: 'danger',
-            onClick: handleConfirmDeleteJob
-          },
-          {
             label: 'Monitoring',
             icon: <MonitorIcon />,
             tooltip: !jobs_dashboard_url
@@ -139,6 +133,12 @@ export const generateActionsMenu = (
             label: 'View YAML',
             icon: <Yaml />,
             onClick: toggleConvertedYaml
+          },
+          {
+            label: 'Delete',
+            icon: <Delete />,
+            className: 'danger',
+            onClick: handleConfirmDeleteJob
           }
         ]
       ]

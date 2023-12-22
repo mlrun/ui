@@ -72,7 +72,10 @@ import {
   SET_NEW_JOB_VOLUMES,
   SET_NEW_JOB_VOLUME_MOUNTS,
   SET_TUNING_STRATEGY,
-  SET_URL
+  SET_URL,
+  DELETE_ALL_JOB__RUNS_BEGIN,
+  DELETE_ALL_JOB_RUNS_FAILURE,
+  DELETE_ALL_JOB_RUNS_SUCCESS
 } from '../constants'
 import { getNewJobErrorMsg } from '../components/JobWizard/JobWizard.util'
 import { showErrorNotification } from '../utils/notifications.util'
@@ -100,6 +103,18 @@ const jobsActions = {
   abortJobSuccess: () => ({
     type: ABORT_JOB_SUCCESS
   }),
+  deleteAllJobRuns: (project, job) => dispatch => {
+    dispatch(jobsActions.deleteAllJobRunsBegin())
+
+    return jobsApi
+      .deleteAllJobRuns(project, job.name)
+      .then(() => dispatch(jobsActions.deleteAllJobRunsSuccess()))
+      .catch(error => {
+        dispatch(jobsActions.deleteAllJobRunsFailure(error.message))
+
+        throw error
+      })
+  },
   deleteJob: (project, job) => dispatch => {
     dispatch(jobsActions.deleteJobBegin())
 
@@ -112,6 +127,16 @@ const jobsActions = {
         throw error
       })
   },
+  deleteAllJobRunsBegin: () => ({
+    type: DELETE_ALL_JOB__RUNS_BEGIN
+  }),
+  deleteAllJobRunsFailure: error => ({
+    type: DELETE_ALL_JOB_RUNS_FAILURE,
+    payload: error
+  }),
+  deleteAllJobRunsSuccess: () => ({
+    type: DELETE_ALL_JOB_RUNS_SUCCESS
+  }),
   deleteJobBegin: () => ({
     type: DELETE_JOB_BEGIN
   }),
