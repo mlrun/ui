@@ -75,6 +75,8 @@ const Models = ({ fetchModelFeatureVector }) => {
   const [largeRequestErrorMessage, setLargeRequestErrorMessage] = useState('')
   const [selectedModel, setSelectedModel] = useState({})
   const [selectedRowData, setSelectedRowData] = useState({})
+  const [metricsCounter, setMetricsCounter] = useState(0)
+  const [dataIsLoaded, setDataIsLoaded] = useState(false)
   const [urlTagOption] = useGetTagOptions(null, filters, null, MODELS_FILTERS)
   const artifactsStore = useSelector(store => store.artifactsStore)
   const detailsStore = useSelector(store => store.detailsStore)
@@ -217,10 +219,18 @@ const Models = ({ fetchModelFeatureVector }) => {
         modelsFilters.iter,
         modelsFilters.tag,
         params.projectName,
-        frontendSpec
+        frontendSpec,
+        metricsCounter
       )
     },
-    [dispatch, modelsFilters.iter, modelsFilters.tag, frontendSpec, params.projectName]
+    [
+      dispatch,
+      modelsFilters.iter,
+      modelsFilters.tag,
+      params.projectName,
+      frontendSpec,
+      metricsCounter
+    ]
   )
 
   const { latestItems, handleExpandRow } = useGroupContent(
@@ -236,12 +246,18 @@ const Models = ({ fetchModelFeatureVector }) => {
   const tableContent = useMemo(() => {
     return filtersStore.groupBy === GROUP_BY_NAME
       ? latestItems.map(contentItem => {
-          return createModelsRowData(contentItem, params.projectName, frontendSpec, true)
+          return createModelsRowData(
+            contentItem,
+            params.projectName,
+            frontendSpec,
+            metricsCounter,
+            true
+          )
         })
       : models.map(contentItem =>
-          createModelsRowData(contentItem, params.projectName, frontendSpec)
+          createModelsRowData(contentItem, params.projectName, frontendSpec, metricsCounter)
         )
-  }, [filtersStore.groupBy, frontendSpec, latestItems, models, params.projectName])
+  }, [filtersStore.groupBy, frontendSpec, latestItems, metricsCounter, models, params.projectName])
 
   const tableHeaders = useMemo(() => tableContent[0]?.content ?? [], [tableContent])
 
@@ -347,6 +363,21 @@ const Models = ({ fetchModelFeatureVector }) => {
     params.projectName,
     selectedModel.feature_vector
   ])
+
+  useEffect(() => {
+    if (models.length > 0 && !dataIsLoaded) {
+      let maxMetricsCount = 0
+
+      models.forEach(model => {
+        if (model.metrics && Object.keys(model.metrics).length > maxMetricsCount) {
+          maxMetricsCount = Object.keys(model.metrics).length
+        }
+      })
+
+      setMetricsCounter(maxMetricsCount)
+      setDataIsLoaded(true)
+    }
+  }, [dataIsLoaded, models])
 
   const handleRegisterModel = useCallback(() => {
     openPopUp(RegisterModelModal, { params, refresh: handleRefresh })

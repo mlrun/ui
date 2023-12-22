@@ -112,8 +112,15 @@ export const getIsTargetPathValid = (artifact, frontendSpec) =>
       })
     : false
 
-export const createModelsRowData = (artifact, project, frontendSpec, showExpandButton) => {
+export const createModelsRowData = (
+  artifact,
+  project,
+  frontendSpec,
+  metricsCounter,
+  showExpandButton
+) => {
   const iter = getIter(artifact)
+  const currentMetricsCount = Object.keys(artifact?.metrics ?? {}).length ?? 0
   const content = [
     {
       id: `key.${artifact.ui.identifierUnique}`,
@@ -226,6 +233,20 @@ export const createModelsRowData = (artifact, project, frontendSpec, showExpandB
         bodyCellClassName
       })
     })
+  }
+
+  if (currentMetricsCount < metricsCounter) {
+    const missingObjects = metricsCounter - currentMetricsCount
+
+    for (let i = 0; i < missingObjects; i++) {
+      content.push({
+        id: `${i}.${artifact.ui.identifierUnique}`,
+        headerId: `${i}.${artifact.ui.identifierUnique}`,
+        headerIsHidden: true,
+        value: '',
+        className: 'table-cell-1'
+      })
+    }
   }
 
   return {
