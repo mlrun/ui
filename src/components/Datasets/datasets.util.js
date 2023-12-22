@@ -61,6 +61,7 @@ export const infoHeaders = [
   { label: 'Version tag', id: 'tag' },
   { label: 'Iter', id: 'iter' },
   { label: 'Size', id: 'size' },
+  { label: 'Label column', id: 'label_column' },
   { label: 'Path', id: 'target_path' },
   { label: 'URI', id: 'target_uri' },
   {
