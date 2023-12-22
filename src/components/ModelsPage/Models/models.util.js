@@ -99,7 +99,8 @@ export const fetchModelsRowData = async (
   iter,
   tag,
   projectName,
-  frontendSpec
+  frontendSpec,
+  metricsCounter
 ) => {
   const modelIdentifier = getArtifactIdentifier(model)
 
@@ -117,7 +118,7 @@ export const fetchModelsRowData = async (
             ...state,
             [modelIdentifier]: {
               content: sortListByDate(result, 'updated', false).map(artifact =>
-                createModelsRowData(artifact, projectName, frontendSpec)
+                createModelsRowData(artifact, projectName, frontendSpec, metricsCounter)
               )
             },
             error: null,
