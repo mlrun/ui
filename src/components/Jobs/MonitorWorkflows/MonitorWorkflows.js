@@ -261,7 +261,7 @@ const MonitorWorkflows = ({
       setConfirmData({
         item: job,
         header: 'Delete job?',
-        message: `You try to delete job "${job.name}".`,
+        message: `Do you want to delete the job "${job.name}"? Deleted jobs can not be restored.`,
         btnConfirmLabel: 'Delete',
         btnConfirmType: DANGER_BUTTON,
         rejectHandler: () => {
