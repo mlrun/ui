@@ -66,6 +66,9 @@ const jobsApi = {
       { params }
     )
   },
+  deleteAllJobRuns: (project, jobName) => {
+    return mainHttpClient.delete(`/projects/${project}/runs`, { params: { name: jobName } })
+  },
   deleteJob: (project, jobUid) => {
     return mainHttpClient.delete(`/projects/${project}/runs/${jobUid}`)
   },

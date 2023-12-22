@@ -64,6 +64,7 @@ import { useYaml } from '../../../hooks/yaml.hook'
 
 const MonitorJobs = ({
   abortJob,
+  deleteAllJobRuns,
   deleteJob,
   fetchAllJobRuns,
   fetchJob,
@@ -214,22 +215,29 @@ const MonitorJobs = ({
 
   const onDeleteJob = useCallback(
     job => {
-      handleDeleteJob(deleteJob, job, params.projectName, refreshJobs, filtersStore, dispatch).then(
-        () => {
-          if (params.jobName)
-            navigate(
-              location.pathname
-                .split('/')
-                .splice(0, location.pathname.split('/').indexOf(params.jobName) + 1)
-                .join('/')
-            )
-        }
-      )
+      handleDeleteJob(
+        params.jobName || !isEmpty(selectedJob) ? deleteJob : deleteAllJobRuns,
+        job,
+        params.projectName,
+        refreshJobs,
+        filtersStore,
+        dispatch
+      ).then(() => {
+        if (params.jobName)
+          navigate(
+            location.pathname
+              .split('/')
+              .splice(0, location.pathname.split('/').indexOf(params.jobName) + 1)
+              .join('/')
+          )
+      })
     },
     [
-      deleteJob,
-      params.projectName,
       params.jobName,
+      params.projectName,
+      selectedJob,
+      deleteJob,
+      deleteAllJobRuns,
       refreshJobs,
       filtersStore,
       dispatch,
@@ -243,7 +251,7 @@ const MonitorJobs = ({
       setConfirmData({
         item: job,
         header: 'Delete job?',
-        message: `You try to delete job "${job.name}".`,
+        message: `Do you want to delete the job "${job.name}"? Deleted jobs can not be restored.`,
         btnConfirmLabel: 'Delete',
         btnConfirmType: DANGER_BUTTON,
         rejectHandler: () => {
