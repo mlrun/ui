@@ -24,7 +24,11 @@ export const parseWorkflows = workflows => {
   return workflows.map(workflow => {
     return {
       ...workflow,
-      state: getState(workflow.status.toLowerCase(), MONITOR_WORKFLOWS_TAB, JOB_KIND_WORKFLOW),
+      state: getState(
+        workflow.status ? workflow.status.toLowerCase() : '',
+        MONITOR_WORKFLOWS_TAB,
+        JOB_KIND_WORKFLOW
+      ),
       ui: {
         originalContent: workflow
       }
