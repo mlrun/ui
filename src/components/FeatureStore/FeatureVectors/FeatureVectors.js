@@ -36,9 +36,9 @@ import {
 } from '../../../constants'
 import {
   featureVectorsFilters,
-  featuresActionCreator,
   generateActionsMenu,
-  generatePageData
+  generatePageData,
+  featureVectorsActionCreator
 } from './featureVectors.util'
 import { DANGER_BUTTON, LABEL_BUTTON } from 'igz-controls/constants'
 import { checkTabIsValid, handleApplyDetailsChanges } from '../featureStore.util'
@@ -445,5 +445,5 @@ const FeatureVectors = ({
 }
 
 export default connect(null, {
-  ...featuresActionCreator
+  ...featureVectorsActionCreator
 })(FeatureVectors)
