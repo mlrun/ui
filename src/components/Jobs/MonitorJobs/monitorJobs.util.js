@@ -34,7 +34,8 @@ import {
   getInfoHeaders,
   getJobsDetailsMenu,
   isJobAbortable,
-  isJobKindDask
+  isJobKindDask,
+  JOB_RUNNING_STATES
 } from '../jobs.util'
 import { TERTIARY_BUTTON } from 'igz-controls/constants'
 import jobsActions from '../../../actions/jobs'
@@ -131,7 +132,8 @@ export const generateActionsMenu = (
             label: 'Delete',
             icon: <Delete />,
             className: 'danger',
-            onClick: handleConfirmDeleteJob
+            onClick: handleConfirmDeleteJob,
+            hidden: JOB_RUNNING_STATES.includes(job?.state?.value)
           }
         ]
       ]
