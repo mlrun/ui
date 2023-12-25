@@ -18,6 +18,7 @@ under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
 import { LABELS_FILTER, MODEL_ENDPOINTS_TAB, MODELS_PAGE, SORT_BY } from '../../../constants'
+import { TERTIARY_BUTTON } from 'igz-controls/constants'
 import { filterSelectOptions } from '../../FilterMenu/filterMenu.settings'
 
 export const filters = [
@@ -54,12 +55,32 @@ const detailsMenu = [
   }
 ]
 
-export const generatePageData = () => ({
+export const generatePageData = (
+  selectedItem,
+  model_monitoring_dashboard_url,
+  handleMonitoring
+) => ({
   page: MODELS_PAGE,
   hidePageActionMenu: true,
   details: {
     menu: detailsMenu,
     infoHeaders,
-    type: MODEL_ENDPOINTS_TAB
+    type: MODEL_ENDPOINTS_TAB,
+    actionButton: {
+      label: 'Resource monitoring',
+      tooltip: !model_monitoring_dashboard_url ? 'Grafana service unavailable' : '',
+      variant: TERTIARY_BUTTON,
+      disabled: !model_monitoring_dashboard_url,
+      onClick: () => handleMonitoring(selectedItem)
+    }
   }
 })
+
+export const monitorModelEndpoint = (model_monitoring_dashboard_url, item, projectName) => {
+  console.log('item', item)
+  let redirectUrl = model_monitoring_dashboard_url
+    .replace('{project}', projectName)
+    .replace('{model_endpoint}', item.metadata?.uid)
+
+  window.open(redirectUrl, '_blank')
+}
