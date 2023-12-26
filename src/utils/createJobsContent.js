@@ -123,7 +123,7 @@ export const createJobsMonitorTabContent = (jobs, jobName, isStagingMode) => {
           headerId: 'parameters',
           headerLabel: 'Parameters',
           id: `parameters.${identifierUnique}`,
-          value: job.parametersChips,
+          value: job.parametersChips.filter(chip => !chip.includes('context')),
           className: 'table-cell-1',
           type: 'parameters'
         },
