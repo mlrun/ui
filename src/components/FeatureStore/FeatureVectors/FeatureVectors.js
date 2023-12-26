@@ -145,7 +145,7 @@ const FeatureVectors = ({
           )
             .unwrap()
             .then(response => {
-              const tag = [...response.payload, TAG_FILTER_ALL_ITEMS].includes(filtersStore.tag)
+              const tag = [...response, TAG_FILTER_ALL_ITEMS].includes(filtersStore.tag)
                 ? filtersStore.tag
                 : TAG_FILTER_LATEST
 
