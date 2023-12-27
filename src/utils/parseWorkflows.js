@@ -25,7 +25,7 @@ export const parseWorkflows = workflows => {
     return {
       ...workflow,
       state: getState(
-        workflow.status ? workflow.status.toLowerCase() : '',
+        (workflow.status ?? '').toLowerCase(),
         MONITOR_WORKFLOWS_TAB,
         JOB_KIND_WORKFLOW
       ),
