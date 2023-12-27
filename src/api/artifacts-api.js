@@ -50,15 +50,15 @@ const fetchArtifacts = (project, filters, config = {}) => {
 const artifactsApi = {
   addTag: (project, tag, data) => mainHttpClient.put(`/projects/${project}/tags/${tag}`, data),
   buildFunction: data => mainHttpClient.post('/build/function', data),
-  deleteArtifact: (project, key, tag, uid) => {
+  deleteArtifact: (project, key, tag, tree) => {
     const config = {
       params: {
-        key,
-        tag
+        tag,
+        tree
       }
     }
 
-    return mainHttpClient.delete(`/projects/${project}/artifacts/${uid}`, config)
+    return mainHttpClientV2.delete(`/projects/${project}/artifacts/${key}`, config)
   },
   deleteTag: (project, tag, data) =>
     mainHttpClient.delete(`/projects/${project}/tags/${tag}`, { data }),
