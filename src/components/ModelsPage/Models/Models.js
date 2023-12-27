@@ -88,17 +88,19 @@ const Models = ({ fetchModelFeatureVector }) => {
   const modelsRef = useRef(null)
   const abortControllerRef = useRef(new AbortController())
   const viewMode = getViewMode(window.location.search)
-  const pageData = useMemo(
-    () => generatePageData(selectedModel, viewMode),
-    [selectedModel, viewMode]
-  )
   const { toggleConvertedYaml } = useModelsPage()
   const frontendSpec = useSelector(store => store.appStore.frontendSpec)
+
   const modelsFilters = useMemo(
     () => filtersStore[FILTER_MENU_MODAL][MODELS_FILTERS].values,
     [filtersStore]
   )
   const { isDemoMode } = useMode()
+
+  const pageData = useMemo(
+    () => generatePageData(selectedModel, viewMode),
+    [selectedModel, viewMode]
+  )
 
   const detailsFormInitialValues = useMemo(
     () => ({
@@ -289,7 +291,9 @@ const Models = ({ fetchModelFeatureVector }) => {
 
       if (changes.data.tag.currentFieldValue) {
         navigate(
-          `/projects/${params.projectName}/${MODELS_PAGE.toLowerCase()}/${MODELS_TAB}/${params.name}/${changes.data.tag.currentFieldValue}/overview`,
+          `/projects/${params.projectName}/${MODELS_PAGE.toLowerCase()}/${MODELS_TAB}/${
+            params.name
+          }/${changes.data.tag.currentFieldValue}/overview`,
           { replace: true }
         )
       }
