@@ -55,7 +55,7 @@ const Table = ({
 
   useEffect(() => {
     const calculatePanelHeight = () => {
-      if (tableHeadRef && tableContentRef && tablePanelRef.current && tableHeadRef.current) {
+      if (tableHeadRef?.current && tableContentRef?.current && tablePanelRef?.current) {
         const tableContentHeight = tableContentRef.current.getBoundingClientRect().height
         const tableHeadCords = tableHeadRef.current.getBoundingClientRect()
         const panelHeight = window.innerHeight - tableHeadCords.top
