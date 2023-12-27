@@ -77,7 +77,6 @@ export const generatePageData = (
 })
 
 export const monitorModelEndpoint = (model_monitoring_dashboard_url, item, projectName) => {
-  console.log('item', item)
   let redirectUrl = model_monitoring_dashboard_url
     .replace('{project}', projectName)
     .replace('{model_endpoint}', item.metadata?.uid)
