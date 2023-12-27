@@ -26,12 +26,12 @@ export const handleDeleteArtifact = (
   project,
   key,
   tag,
-  uid,
+  tree,
   refreshArtifacts,
   filters,
   artifactType
 ) => {
-  dispatch(deleteArtifact({ project, key, tag, uid }))
+  dispatch(deleteArtifact({ project, key, tag, tree }))
     .unwrap()
     .then(() => {
       refreshArtifacts(filters)
@@ -50,7 +50,7 @@ export const handleDeleteArtifact = (
           project,
           key,
           tag,
-          uid,
+          tree,
           refreshArtifacts,
           filters,
           artifactType
