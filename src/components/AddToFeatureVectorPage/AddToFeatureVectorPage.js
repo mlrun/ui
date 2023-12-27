@@ -164,8 +164,8 @@ const AddToFeatureVectorPage = ({
       }
       const newSelectedRowData = { ...selectedRowData }
 
-      delete newStoreSelectedRowData[feature.ui.identifier]
-      delete newSelectedRowData[feature.ui.identifier]
+      delete newStoreSelectedRowData[feature.data.ui.identifier]
+      delete newSelectedRowData[feature.data.ui.identifier]
 
       removeFeature(newStoreSelectedRowData)
       setSelectedRowData(newSelectedRowData)
