@@ -2198,6 +2198,9 @@ Feature: Jobs and workflows
         Then verify "Step_4_Button" element on "Batch_Run" wizard is enabled
         Then verify "Step_5_Button" element on "Batch_Run" wizard is enabled
         Then verify "Step_6_Button" element on "Batch_Run" wizard is enabled
+        Then verify "Next_Button" element on "Batch_Run" wizard is enabled
+        Then verify "Schedule_for_later_Button" element on "Batch_Run" wizard is enabled
+        Then verify "Run_Button" element on "Batch_Run" wizard is enabled
     
     Scenario: MLJW013 - Verify behaviour of Filter by category on Batch Run wizard - Function selection (Hub tab)
         Given open url

@@ -594,5 +594,9 @@ module.exports = {
     Download_Pop_Up: By.css('[data-testid="download-container"]'),
     Download_Pop_Up_Cross_Cancel_Button: By.css('[data-testid="download-container"] .notification_body_close_icon'),
     Header_Download_Pop_Up: By.css('[data-testid="download-container"] .download-container__header')
+  },
+  notificationPopUp: {
+    Notification_Pop_Up: By.css('.notification_container .notification_body'),
+    Notification_Pop_Up_Cross_Close_Button: By.css('.notification_container .notification_body_close_icon')
   }
 }

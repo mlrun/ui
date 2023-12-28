@@ -76,6 +76,7 @@ module.exports = {
   New_Feature_Set: sidePanel['newFeatureSet'],
   New_Function: sidePanel['newFunction'],
   New_JobTemplate_Edit: sidePanel['newJobTemplateEdit'],
+  Notification_Popup: interactivePopup['notificationPopUp'],
   Preview_Info_Pane: infoPane['previewInfoPane'],
   Preview_Popup: interactivePopup['previewPopup'],
   Project: project['project'],
