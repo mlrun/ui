@@ -301,7 +301,7 @@ const jobsMonitorTable = {
           structure: generateLabelGroup(
             '.table-body__cell:nth-of-type(1) .status',
             'i',
-            true,
+            false,
             '.tooltip .tooltip__text span'
           )
         },
@@ -631,7 +631,7 @@ const commonStatusFilter = dropdownComponent(
 )
 const projectSelect = dropdownComponent(
   generateDropdownGroup(
-    '.form .functions-tab [data-testid="select"]',
+    '[data-testid="functionSelection.projectName-form-field-select"]',
     '[data-testid="select-header"]', // Open Component
     '[data-testid="select-body"] .select__item', // Options
     '.data-ellipsis .data-ellipsis' // Option value
@@ -738,27 +738,20 @@ module.exports = {
       }
     }),
     Batch_Run_Wizard_Steps: commonTable(batchRunWizardSteps),
-    Step_1_Button: By.css(
-      '.modal .modal__content .modal__body .wizard-steps .btn:nth-of-type(1)'
-    ),
-    Step_2_Button: By.css(
-      '.modal .modal__content .modal__body .wizard-steps .btn:nth-of-type(2)'
-    ),
-    Step_3_Button: By.css(
-      '.modal .modal__content .modal__body .wizard-steps .btn:nth-of-type(3)'
-    ),
-    Step_4_Button: By.css(
-      '.modal .modal__content .modal__body .wizard-steps .btn:nth-of-type(4)'
-    ),
-    Step_5_Button: By.css(
-      '.modal .modal__content .modal__body .wizard-steps .btn:nth-of-type(5)'
-    ),
-    Step_6_Button: By.css(
-      '.modal .modal__content .modal__body .wizard-steps .btn:nth-of-type(6)'
-    ),
-    Step_7_Button: By.css(
-      '.modal .modal__content .modal__body .wizard-steps .btn:nth-of-type(7)'
-    ),
+    Step_1_Button: By.css('.modal .modal__content .modal__body .wizard-steps .btn:nth-of-type(1)'),
+    Step_1_Button_text: By.css('.modal .modal__content .modal__body .wizard-steps .btn:nth-of-type(1) div'),
+    Step_2_Button: By.css('.modal .modal__content .modal__body .wizard-steps .btn:nth-of-type(2)'),
+    Step_2_Button_text: By.css('.modal .modal__content .modal__body .wizard-steps .btn:nth-of-type(2) div'),
+    Step_3_Button: By.css('.modal .modal__content .modal__body .wizard-steps .btn:nth-of-type(3)'),
+    Step_3_Button_text: By.css('.modal .modal__content .modal__body .wizard-steps .btn:nth-of-type(3) div'),
+    Step_4_Button: By.css('.modal .modal__content .modal__body .wizard-steps .btn:nth-of-type(4)'),
+    Step_4_Button_text: By.css('.modal .modal__content .modal__body .wizard-steps .btn:nth-of-type(4) div'),
+    Step_5_Button: By.css('.modal .modal__content .modal__body .wizard-steps .btn:nth-of-type(5)'),
+    Step_5_Button_text: By.css('.modal .modal__content .modal__body .wizard-steps .btn:nth-of-type(5) div'),
+    Step_6_Button: By.css('.modal .modal__content .modal__body .wizard-steps .btn:nth-of-type(6)'),
+    Step_6_Button_text: By.css('.modal .modal__content .modal__body .wizard-steps .btn:nth-of-type(6) div'),
+    Step_7_Button: By.css('.modal .modal__content .modal__body .wizard-steps .btn:nth-of-type(7)'),
+    Step_7_Button_text: By.css('.modal .modal__content .modal__body .wizard-steps .btn:nth-of-type(7) div'),
     BatchRun_Tab_Selector: batchRunTabSelector,
     Project_Selector_Dropdown: projectSelect,
     Category_Selector_Dropdown: categorySelect,
@@ -772,8 +765,8 @@ module.exports = {
     Filter_Button_Hub_Tab: By.css('.hub-tab .form-row .filters-button button'),
     Functions_Table: commonTable(functionsTableSelector),
     Overlay: By.css('#overlay_container .chip-block-hidden .chip-block-hidden__scrollable-container'),
-    Back_Button: By.css('.modal__content .modal__footer button.btn-tertiary'),
-    Next_Button: By.css('.modal__content .modal__footer button.btn-secondary'),
+    Back_Button: By.css('.modal__content [data-testid="wizard-btn-back"]'),
+    Next_Button: By.css('.modal__content [data-testid="wizard-btn-next"]'),
     Hyperparameter_Checkbox: checkboxComponent({
       root: '#overlay_container .form-field-checkbox',
       elements: {
@@ -828,8 +821,8 @@ module.exports = {
       generateCheckboxGroup('.wizard-form__content .form-field-checkbox input', false, false, false)
     ),
     Delete_Button_Parameters: By.css('.form-table__parameter-row .form-table__actions-cell .round-icon-cp:nth-of-type(2)'),
-    Run_Button: By.css('.modal__content .modal__footer button.btn-secondary'),
-    Schedule_for_later_Button: By.css('.modal__content .modal__footer button.btn-tertiary'),
+    Run_Button: By.css('.modal__content [data-testid="run-btn"]'),
+    Schedule_for_later_Button: By.css('.modal__content [data-testid="schedule-btn"]'),
   },
   CreateJob: {
     Back_Arrow_Button: By.css(
