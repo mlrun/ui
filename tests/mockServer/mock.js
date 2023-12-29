@@ -127,6 +127,7 @@ const secretKeyTemplate = {
 const mockHome = process.cwd() + '/tests/mockServer'
 const mlrunIngress = '/mlrun-api-ingress.default-tenant.app.vmdev36.lab.iguazeng.com'
 const mlrunAPIIngress = `${mlrunIngress}/api/v1`
+const mlrunAPIIngressV2 = `${mlrunIngress}/api/v2`
 const nuclioApiUrl = '/nuclio-ingress.default-tenant.app.vmdev36.lab.iguazeng.com'
 const iguazioApiUrl = '/platform-api.default-tenant.app.vmdev36.lab.iguazeng.com'
 const port = 30000
@@ -1206,47 +1207,58 @@ function deleteTags(req, res){
   res.send()
 }
 
-//TODO: artifact structure ML-4583
 function postArtifact(req, res) {
   const currentDate = new Date()
-  const artifactTag = req.body.tag || 'latest'
-  const tagObject = artifactTags.find(artifact => artifact.project === req.body.project)
+  const artifactTag = req.body.metadata.tag || 'latest'
+  const tagObject = artifactTags.find(artifact => artifact.metadata?.project === req.body.metadata.project 
+    || artifact.project === req.body.metadata.project)
+  const artifactUID = makeUID(40)
 
   const artifactTemplate = {
     kind: req.body.kind,
     metadata: {
+      description: req.body.metadata.description,
       labels: req.body.metadata.labels,
       key: req.body.metadata.key,
       project: req.body.metadata.project,
       tree: req.body.metadata.tree,
       updated: currentDate.toISOString(),
-      tag: artifactTag
+      uid: artifactUID,
+      created: currentDate.toISOString()
     },
-    project: req.body.project,
     spec: {
       db_key: req.body.spec.db_key,
       producer: {
         kind: req.body.spec.producer.kind,
         uri: req.body.spec.producer.uri
       },
-      target_path: req.body.spec.target_path,
-      model_file: req.body.spec.model_file
+      target_path: req.body.spec.target_path
     },
     status: req.body.status,
-    uid: req.body.uid
-    // description: req.body.description,
+    project: req.body.metadata.project
   }
+  const artifactTemplateLatest = cloneDeep(artifactTemplate)
+  
   if (req.body.kind === 'model') {
-    artifactTemplate.model_file = req.body.model_file
+    artifactTemplate.model_file = req.body.spec.model_file
   }
 
-  artifacts.artifacts.push(artifactTemplate)
+  if (artifactTag === 'latest'){
+    artifactTemplate.metadata['tag'] = artifactTag
+    artifacts.artifacts.push(artifactTemplate)
+  }
+  else{
+    artifactTemplate.metadata['tag'] = artifactTag
+    artifactTemplateLatest.metadata['tag'] = 'latest'
+    artifacts.artifacts.push(artifactTemplate)
+    artifacts.artifacts.push(artifactTemplateLatest)
+  }
 
   if (tagObject) {
     tagObject.tags.push(artifactTag)
   } else {
     artifactTags.push({
-      project: req.body.project,
+      project: req.body.metadata.project,
       tags: [artifactTag]
     })
   }
@@ -1255,15 +1267,13 @@ function postArtifact(req, res) {
 }
 
 function deleteArtifact(req, res){
-  const collectedArtifact = artifacts.artifacts
-    .filter (artifact => (artifact.metadata?.project === req.params.project) || artifact.project === req.params.project 
-    && (artifact.metadata?.tree === req.params.uid) || artifact.tree === req.params.uid)
-  if (collectedArtifact){
-    remove(
-      artifacts.artifacts,
-      artifact => (artifact.metadata?.project === req.params.project) || artifact.project === req.params.project 
-      && (artifact.metadata?.tree === req.params.uid) || artifact.tree === req.params.uid
-    )
+  const collectedArtifacts = artifacts.artifacts
+    .filter (artifact => (artifact.metadata?.project === req.params.project || artifact.project === req.params.project) 
+    && (artifact.metadata?.tree === req.params.uid || artifact.tree === req.params.uid)
+    && (artifact.metadata?.key === req.query.key || artifact.key === req.query.key))
+  
+  if (collectedArtifacts?.length > 0){
+    collectedArtifacts.forEach(collectedArtifact => remove(artifacts.artifacts, collectedArtifact))    
   }
 
   res.send({})
@@ -1583,8 +1593,8 @@ app.get(`${mlrunAPIIngress}/projects/:project/pipelines`, getPipelines)
 app.get(`${mlrunAPIIngress}/projects/:project/pipelines/:pipelineID`, getPipeline)
 
 app.get(`${mlrunAPIIngress}/projects/:project/artifact-tags`, getProjectsArtifactTags)
-app.get(`${mlrunAPIIngress}/projects/:project/artifacts`, getArtifacts)
-app.post(`${mlrunAPIIngress}/projects/:project/artifacts/:uid/:artifact`, postArtifact)
+app.get(`${mlrunAPIIngressV2}/projects/:project/artifacts`, getArtifacts)
+app.post(`${mlrunAPIIngressV2}/projects/:project/artifacts`, postArtifact)
 app.delete(`${mlrunAPIIngress}/projects/:project/artifacts/:uid`, deleteArtifact)
 
 app.put(`${mlrunAPIIngress}/projects/:project/tags/:tag`, putTags)

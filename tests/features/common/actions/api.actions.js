@@ -23,6 +23,7 @@ import { v4 as uuidv4 } from 'uuid'
 import { TAG_LATEST } from '../../../../src/constants'
 
 const REACT_APP_MLRUN_API_URL = 'http://localhost:3000/api/v1'
+const REACT_APP_MLRUN_API_URL_ARTIFACTS = 'http://localhost:3000/api/v2'
 
 const newJobTemplate = {
   task: {
@@ -326,8 +327,7 @@ const action = {
 
     await mainHttpClient
       .post(
-        //`${REACT_APP_MLRUN_API_URL}/artifact/${mlProjectName}/${uid}/${mlArtifactName}`,
-        `${REACT_APP_MLRUN_API_URL}/projects//${mlProjectName}/artifacts/${uid}/${mlArtifactName}`,
+        `${REACT_APP_MLRUN_API_URL_ARTIFACTS}/projects//${mlProjectName}/artifacts/${uid}/${mlArtifactName}`,
         data
       )
       .then(res => {

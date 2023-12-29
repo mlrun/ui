@@ -277,7 +277,7 @@ Feature: Feature Store Page
     @MLFS
     @passive
     @FAILED_TODO
-    #TODO: bug ML-5151
+    #TODO: bug ML-5151 (fixed v1.6.0-rc17)
     Scenario: MLFS009 - Check all mandatory components in Item infopane on Preview tab table
         Given open url
         And click on row root with value "fsdemo-admin" in "name" column in "Projects_Table" table on "Projects" wizard
@@ -1285,8 +1285,6 @@ Feature: Feature Store Page
         Then value in "entities" column with "text" in "Add_To_Feature_Vector_Table" on "Add_To_Feature_Vector_Tab" wizard should contains "patient_id"
 
     @MLFS
-    @FAILED_TODO
-    #TODO: check click on "Add_Button" element after fix ML-5115 
     @inProgress
     Scenario: MLFS043 - Add to feature vector
         Given open url
@@ -1361,9 +1359,6 @@ Feature: Feature Store Page
         Then value in "description" column with "text" in "Feature_Vectors_Table" on "Feature_Store_Features_Vectors_Tab" wizard should contains "Automation test description"
 
     @MLFS
-    @FAILED_TODO
-    #TODO: check click on "Add_Button" element after fix ML-5115 
-    @inProgress
     Scenario: MLFS044 - Check all mandatory components in Item infopane on Requested Features tab on Feature Vectors tab
         Given open url
         And turn on demo mode
@@ -1394,6 +1389,10 @@ Feature: Feature Store Page
             | last_updated |
         Then click on "Add_Button" element on "Add_To_Feature_Vector_Tab" wizard
         And wait load page
+        Then verify "Notification_Pop_Up" element visibility on "Notification_Popup" wizard
+        Then "Notification_Pop_Up" element on "Notification_Popup" should contains "Feature vector created successfully" value
+        Then verify "Notification_Pop_Up_Cross_Close_Button" element visibility on "Notification_Popup" wizard
+        Then click on "Notification_Pop_Up_Cross_Close_Button" element on "Notification_Popup" wizard
         And set tear-down property "featureVector" created in "fsdemo-admin" project with "temp_vector02" value
         Then click on "Table_Refresh_Button" element on "Feature_Store_Features_Vectors_Tab" wizard
         And wait load page
@@ -1401,45 +1400,40 @@ Feature: Feature Store Page
         Then select "Requested Features" tab in "Info_Pane_Tab_Selector" on "Feature_Vectors_Info_Pane" wizard
         Then click on "add_alias" in "Requested_Features_Table" table on "Requested_Features_Info_Pane" wizard
             | feature    |
-            | room       |
+            | department |
         Then type value "test_alias" to "Alias_Input" field on "Requested_Features_Info_Pane" wizard
         Then click on "apply_btn" in "Requested_Features_Table" table on "Requested_Features_Info_Pane" wizard
             | feature    |
-            | room       |
+            | department |
         Then click on "add_alias" in "Requested_Features_Table" table on "Requested_Features_Info_Pane" wizard
-            | feature    |
-            | price       |
+            | feature |
+            | bad     |
         Then type value "price_alias" to "Alias_Input" field on "Requested_Features_Info_Pane" wizard
         Then click on "apply_btn" in "Requested_Features_Table" table on "Requested_Features_Info_Pane" wizard
-            | feature    |
-            | price      |
+            | feature |
+            | bad     |
         Then click on "add_alias" in "Requested_Features_Table" table on "Requested_Features_Info_Pane" wizard
-            | feature      |
-            | last_updated |
-        Then type value "last_updated_alias" to "Alias_Input" field on "Requested_Features_Info_Pane" wizard
-        #TO DO - add following steps 
-        # Then verify "Cancel_Button" element visibility on "Feature_Vectors_Info_Pane" wizard
-        # Then "Cancel_Button" element on "Feature_Vectors_Info_Pane" should contains "Cancel" value
-        # Then verify "Apply_Changes_Button" element visibility on "Feature_Vectors_Info_Pane" wizard
-        # Then "Apply_Changes_Button" element on "Feature_Vectors_Info_Pane" should contains "Apply Changes" value
-        Then click on "discard_btn" in "Requested_Features_Table" table on "Requested_Features_Info_Pane" wizard
-            | feature      |
-            | last_updated |
-        Then click on "edit_alias" in "Requested_Features_Table" table on "Requested_Features_Info_Pane" wizard
             | feature |
             | room    |
+        Then type value "last_updated_alias" to "Alias_Input" field on "Requested_Features_Info_Pane" wizard
+        Then click on "discard_btn" in "Requested_Features_Table" table on "Requested_Features_Info_Pane" wizard
+            | feature |
+            | room    |
+        Then click on "edit_alias" in "Requested_Features_Table" table on "Requested_Features_Info_Pane" wizard
+            | feature |
+            | bad     |
         Then type value "room_alias" to "Alias_Input" field on "Requested_Features_Info_Pane" wizard
         Then click on "discard_btn" in "Requested_Features_Table" table on "Requested_Features_Info_Pane" wizard
-            | feature    |
-            | room       |
+            | feature |
+            | bad     |
         Then verify values in "Requested_Features_Table" table on "Requested_Features_Info_Pane" wizard
-            | projectName  |        featureSet         |    feature   |  alias      |
-            | fsdemo-admin | patient_details\n: latest |  department  |             |
-            | fsdemo-admin | patient_details\n: latest |      bad     |             |
-            | fsdemo-admin | patient_details\n: latest |      room    | test_alias  |
-            | stocks-admin |     stocks\n: latest      |     price    | price_alias |
-            | stocks-admin |     stocks\n: latest      |    volume    |             |
-            | stocks-admin |     stocks\n: latest      | last_updated |             |
+            | projectName  |        featureSet         |    feature   |  alias       |
+            | fsdemo-admin | patient_details\n: latest |  department  |  test_alias  |
+            | fsdemo-admin | patient_details\n: latest |      bad     |  price_alias |
+            | fsdemo-admin | patient_details\n: latest |      room    |              |
+            | stocks-admin |     stocks\n: latest      |     price    |              |
+            | stocks-admin |     stocks\n: latest      |    volume    |              |
+            | stocks-admin |     stocks\n: latest      | last_updated |              |
         Then click on "delete_btn" in "Requested_Features_Table" table on "Requested_Features_Info_Pane" wizard
             | feature    |
             | department |
@@ -1454,11 +1448,13 @@ Feature: Feature Store Page
             | fsdemo-admin | patient_details\n: latest |     room     |
             | stocks-admin |      stocks\n: latest     |    price     |
             | stocks-admin |      stocks\n: latest     |   volume     |
-            | stocks-admin |      stocks\n: latest     | last_updated |
+            | stocks-admin |      stocks\n: latest     | last_updated | 
+        Then verify "Cancel_Button" element visibility on "Feature_Vectors_Info_Pane" wizard
+        Then "Cancel_Button" element on "Feature_Vectors_Info_Pane" should contains "Cancel" value
+        Then verify "Apply_Changes_Button" element visibility on "Feature_Vectors_Info_Pane" wizard
+        Then "Apply_Changes_Button" element on "Feature_Vectors_Info_Pane" should contains "Apply Changes" value
 
-    @MLFS
-    @FAILED_TODO
-    #TODO: check click on "Add_Button" element after fix ML-5115  
+    @MLFS  
     Scenario: MLFS045 - Verify Feature Label icon on Requested Features tab on Feature Vectors tab
         And set tear-down property "featureVector" created in "default" project with "test_vector" value
         Given open url
@@ -1492,7 +1488,7 @@ Feature: Feature Store Page
 
     @MLFS
     @FAILED_TODO
-    #TODO: bug ML-5151
+    #TODO: bug ML-5151 (fixed v1.6.0-rc17)
     Scenario: MLFS046 - Verify No Data message on Feature Store tabs
         * set tear-down property "project" created with "automation-test-name001" value
         * create "automation-test-name001" MLRun Project with code 201
@@ -1892,7 +1888,7 @@ Feature: Feature Store Page
 
     @MLFS
     @FAILED_TODO
-    #TODO: ingest isn't implemented - ML-3626
+    #TODO: ingest isn't implemented for scheduling - ML-3626
     @inProgress
     Scenario: MLFS056 - Save feature set with 'Save And Ingest' button
         Given open url
