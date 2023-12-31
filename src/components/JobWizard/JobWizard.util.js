@@ -640,7 +640,7 @@ export const parsePredefinedParameters = funcParams => {
           isHyper: false
         },
         doc: parameter.doc,
-        isHidden: parameter.name === 'context',
+        isHidden: parameter.name === 'context' && !parsedValue,
         isUnsupportedType: !parameterTypeValueMap[parameter.type],
         isRequired: parameterIsRequired,
         isDefault: true,
@@ -666,9 +666,9 @@ export const parseDefaultParameters = (funcParams = {}, runParams = {}, runHyper
       const parametersIsRequired = !has(parameter, 'default')
       const parameterType = predefinedParameterIsModified
         ? parseParameterType(
-          runParams[parameter.name] ?? runHyperParams[parameter.name],
-          parameter.name in runHyperParams
-        )
+            runParams[parameter.name] ?? runHyperParams[parameter.name],
+            parameter.name in runHyperParams
+          )
         : parameter.type ?? ''
 
       return {
@@ -680,7 +680,7 @@ export const parseDefaultParameters = (funcParams = {}, runParams = {}, runHyper
           isHyper: parameter.name in runHyperParams
         },
         doc: parameter.doc ?? '',
-        isHidden: parameter.name === 'context',
+        isHidden: parameter.name === 'context' && !parsedValue,
         isUnsupportedType: !parameterTypeValueMap[parameter.type],
         isRequired: parametersIsRequired,
         isDefault: true,
@@ -865,6 +865,7 @@ const generateParameters = parametersTableData => {
   parametersTableData?.predefined
     ?.filter(parameter => !parameter.data.isHyper && parameter.data.isChecked)
     .forEach(parameter => {
+      if (parameter.data.name === 'context' && !parameter.data.value) return false
       parameters[parameter.data.name] = convertParameterValue(
         parameter.data.value,
         parameter.data.type
@@ -1037,9 +1038,9 @@ export const generateJobRequestData = (
           selectedFunction && !has(selectedFunction, 'status')
             ? `hub://${selectedFunction.metadata.name.replace(/-/g, '_')}`
             : formData.function ??
-            (selectedFunction
-              ? `${selectedFunction.metadata.project}/${selectedFunction.metadata.name}@${selectedFunction.metadata.hash}`
-              : '')
+              (selectedFunction
+                ? `${selectedFunction.metadata.project}/${selectedFunction.metadata.name}@${selectedFunction.metadata.hash}`
+                : '')
       }
     },
     function: {
@@ -1112,10 +1113,10 @@ export const getNewJobErrorMsg = error => {
   return error.response.status === NOTFOUND_ERROR_STATUS_CODE
     ? 'To run a job, the selected function needs to be built. Make sure to build the function before running the job.'
     : error.response.status === FORBIDDEN_ERROR_STATUS_CODE
-      ? 'You are not permitted to run a new job.'
-      : error.response.status === CONFLICT_ERROR_STATUS_CODE
-        ? 'This job is already scheduled'
-        : getErrorDetail(error) || 'Unable to create a new job.'
+    ? 'You are not permitted to run a new job.'
+    : error.response.status === CONFLICT_ERROR_STATUS_CODE
+    ? 'This job is already scheduled'
+    : getErrorDetail(error) || 'Unable to create a new job.'
 }
 
 export const getSaveJobErrorMsg = error => {

@@ -17,7 +17,6 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import { omit } from 'lodash'
 import {
   JOB_KIND_JOB,
   JOB_KIND_PIPELINE,
@@ -52,6 +51,14 @@ export const parseJob = (job, tab) => {
       }
     }
   } else {
+    const filteredContextParameter = job.spec?.parameters
+      ? Object.fromEntries(
+          Object.entries(job.spec.parameters).filter(([key, value]) =>
+            key !== 'context' ? key : value
+          )
+        )
+      : {}
+
     jobItem = {
       artifacts: job.status.artifacts || [],
       error: job.status.error ?? '',
@@ -68,11 +75,11 @@ export const parseJob = (job, tab) => {
       name: job.metadata.name,
       outputPath: job.spec?.output_path,
       owner: job.metadata.labels?.owner,
-      parameters: omit(job.spec?.parameters, ['context']) || {},
+      parameters: filteredContextParameter,
       parametersChips: [
-        ...parseKeyValues(job.spec?.parameters || {}),
+        ...parseKeyValues(filteredContextParameter || {}),
         ...parseKeyValues(job.spec?.hyperparams || {})
-      ].filter(chip => !chip.includes('context')),
+      ],
       project: job.metadata.project,
       reason: job.status?.reason ?? '',
       results: job.status?.results || {},
