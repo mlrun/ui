@@ -58,6 +58,29 @@ import { ReactComponent as Delete } from 'igz-controls/images/delete.svg'
 import { ReactComponent as DeployIcon } from 'igz-controls/images/deploy-icon.svg'
 import { ReactComponent as DownloadIcon } from 'igz-controls/images/download.svg'
 
+export const modelsTableHeaders = [
+  { headerId: 'name', headerLabel: 'Name', className: 'table-cell-name' },
+  {
+    headerId: 'labels',
+    headerLabel: 'Labels',
+    className: 'table-cell-1'
+  },
+  { headerId: 'producer', headerLabel: 'Producer', className: 'table-cell-1' },
+  { headerId: 'owner', headerLabel: 'Owner', className: 'table-cell-1' },
+  { headerId: 'updated', headerLabel: 'Updated', className: 'table-cell-1' },
+  {
+    headerId: 'frameWorkAndAlgorithm',
+    headerLabel: (
+      <span>
+        <span>Framework &</span>
+        <br />
+        <span>Algorithm</span>
+      </span>
+    ),
+    className: 'table-cell-1'
+  }
+]
+
 export const filters = [
   { type: TAG_FILTER, label: 'Version tag:' },
   { type: NAME_FILTER, label: 'Name:' },

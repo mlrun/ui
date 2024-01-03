@@ -51,7 +51,8 @@ import {
   generateActionsMenu,
   generatePageData,
   getFeatureVectorData,
-  handleApplyDetailsChanges
+  handleApplyDetailsChanges,
+  modelsTableHeaders
 } from './models.util'
 import detailsActions from '../../../actions/details'
 import { createModelsRowData } from '../../../utils/createArtifactsContent'
@@ -77,6 +78,7 @@ const Models = ({ fetchModelFeatureVector }) => {
   const [selectedRowData, setSelectedRowData] = useState({})
   const [metricsCounter, setMetricsCounter] = useState(0)
   const [dataIsLoaded, setDataIsLoaded] = useState(false)
+  const [tableHeaders, setTableHeaders] = useState(modelsTableHeaders)
   const [urlTagOption] = useGetTagOptions(null, filters, null, MODELS_FILTERS)
   const artifactsStore = useSelector(store => store.artifactsStore)
   const detailsStore = useSelector(store => store.detailsStore)
@@ -261,8 +263,6 @@ const Models = ({ fetchModelFeatureVector }) => {
         )
   }, [filtersStore.groupBy, frontendSpec, latestItems, metricsCounter, models, params.projectName])
 
-  const tableHeaders = useMemo(() => tableContent[0]?.content ?? [], [tableContent])
-
   const { sortTable, selectedColumnName, getSortingIcon, sortedTableContent, sortedTableHeaders } =
     useSortTable({
       headers: tableHeaders,
@@ -320,6 +320,7 @@ const Models = ({ fetchModelFeatureVector }) => {
       setAllModels([])
       dispatch(removeModels())
       setSelectedModel({})
+      setDataIsLoaded(false)
       abortControllerRef.current.abort(REQUEST_CANCELED)
     }
   }, [dispatch, setModels, setAllModels])
@@ -370,15 +371,27 @@ const Models = ({ fetchModelFeatureVector }) => {
 
   useEffect(() => {
     if (models.length > 0 && !dataIsLoaded) {
-      let maxMetricsCount = 0
-
-      models.forEach(model => {
-        if (model.metrics && Object.keys(model.metrics).length > maxMetricsCount) {
-          maxMetricsCount = Object.keys(model.metrics).length
+      const newTableHeaders = []
+      const objectWithMaxMetrics = models.reduce((max, model) => {
+        if (
+          model.metrics &&
+          Object.keys(model.metrics).length > Object.keys(max.metrics || {}).length
+        ) {
+          return model
         }
+
+        return max
+      }, {})
+      Object.keys(objectWithMaxMetrics.metrics ?? {}).forEach(metricKey => {
+        newTableHeaders.push({
+          headerId: metricKey,
+          headerLabel: metricKey,
+          className: 'table-cell-1'
+        })
       })
 
-      setMetricsCounter(maxMetricsCount)
+      setMetricsCounter(Object.keys(objectWithMaxMetrics.metrics ?? {}).length)
+      setTableHeaders(state => [...state, ...newTableHeaders])
       setDataIsLoaded(true)
     }
   }, [dataIsLoaded, models])
