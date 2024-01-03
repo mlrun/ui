@@ -81,7 +81,6 @@ const FeatureVectorsView = React.forwardRef(
             <Table
               actionsMenu={actionsMenu}
               applyDetailsChanges={applyDetailsChanges}
-              content={featureVectors}
               detailsFormInitialValues={detailsFormInitialValues}
               handleCancel={() => setSelectedFeatureVector({})}
               pageData={pageData}

@@ -28,11 +28,13 @@ import PageHeader from '../../elements/PageHeader/PageHeader'
 import Search from '../../common/Search/Search'
 import Table from '../Table/Table'
 import { RoundedIcon } from 'igz-controls/components'
+import ConsumerGroupShardLagTableRow from '../../elements/ConsumerGroupShardLagTableRow/ConsumerGroupShardLagTableRow'
 
 import nuclioActions from '../../actions/nuclio'
 import { generatePageData } from './consumerGroup.util.js'
 import { getNoDataMessage } from '../../utils/getNoDataMessage'
 import { showErrorNotification } from '../../utils/notifications.util'
+import createConsumerGroupContent from '../../utils/createConsumerGroupContent'
 
 import { ReactComponent as RefreshIcon } from 'igz-controls/images/refresh.svg'
 
@@ -105,6 +107,11 @@ const ConsumerGroup = ({
 
   const pageData = useMemo(() => generatePageData(), [])
 
+  const tableContent = useMemo(
+    () => createConsumerGroupContent(filteredV3ioStreamShardLags),
+    [filteredV3ioStreamShardLags]
+  )
+
   return (
     <>
       {!isEmpty(currentV3ioStream) && (
@@ -129,7 +136,18 @@ const ConsumerGroup = ({
           <RefreshIcon />
         </RoundedIcon>
       </div>
-      <Table actionsMenu={[]} content={filteredV3ioStreamShardLags} pageData={pageData} />
+      <Table
+        actionsMenu={[]}
+        hideActionsMenu
+        pageData={pageData}
+        tableHeaders={pageData.tableHeaders}
+      >
+        {tableContent.map((rowItem, index) => {
+          return (
+            <ConsumerGroupShardLagTableRow key={index} content={tableContent} rowItem={rowItem} />
+          )
+        })}
+      </Table>
       {!nuclioStore.v3ioStreams.loading &&
         !nuclioStore.v3ioStreamShardLags.loading &&
         nuclioStore.v3ioStreamShardLags.parsedData.length === 0 && (

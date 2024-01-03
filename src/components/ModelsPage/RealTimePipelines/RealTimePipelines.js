@@ -238,7 +238,6 @@ const RealTimePipelines = () => {
             <>
               <Table
                 actionsMenu={actionsMenu}
-                content={pipelines}
                 pageData={pageData}
                 retryRequest={fetchData}
                 selectedItem={{}}

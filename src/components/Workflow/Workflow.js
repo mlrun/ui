@@ -257,7 +257,6 @@ const Workflow = ({
         ) : (
           <Table
             actionsMenu={actionsMenu}
-            content={[]}
             getCloseDetailsLink={() => getCloseDetailsLink(location, params.workflowId)}
             handleCancel={handleCancel}
             handleSelectItem={handleSelectItem}

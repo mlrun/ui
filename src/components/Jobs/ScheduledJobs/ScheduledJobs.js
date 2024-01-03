@@ -112,12 +112,11 @@ const ScheduledJobs = ({
           }
         },
         true
-      )
-        .then(jobs => {
-          if (jobs) {
-            setJobs(jobs.map(job => parseJob(job, SCHEDULE_TAB)))
-          }
-        })
+      ).then(jobs => {
+        if (jobs) {
+          setJobs(jobs.map(job => parseJob(job, SCHEDULE_TAB)))
+        }
+      })
     },
     [fetchJobs, params.projectName]
   )
@@ -310,7 +309,6 @@ const ScheduledJobs = ({
         <>
           <Table
             actionsMenu={actionsMenu}
-            content={jobs}
             pageData={pageData}
             retryRequest={refreshJobs}
             tab={SCHEDULE_TAB}

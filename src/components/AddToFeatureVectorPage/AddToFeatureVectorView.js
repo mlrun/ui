@@ -82,7 +82,6 @@ const AddToFeatureVectorView = React.forwardRef(
               <>
                 <Table
                   actionsMenu={actionsMenu}
-                  content={content}
                   hideActionsMenu={tableStore.isTablePanelOpen}
                   pageData={pageData}
                   retryRequest={fetchData}

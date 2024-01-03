@@ -114,7 +114,6 @@ const DatasetsView = React.forwardRef(
                     applyDetailsChanges={applyDetailsChanges}
                     applyDetailsChangesCallback={applyDetailsChangesCallback}
                     actionsMenu={actionsMenu}
-                    content={datasets}
                     detailsFormInitialValues={detailsFormInitialValues}
                     handleCancel={() => setSelectedDataset({})}
                     pageData={pageData}

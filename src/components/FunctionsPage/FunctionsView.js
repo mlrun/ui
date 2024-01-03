@@ -106,7 +106,6 @@ const FunctionsView = ({
               <>
                 <Table
                   actionsMenu={actionsMenu}
-                  content={taggedFunctions}
                   handleCancel={handleCancel}
                   pageData={pageData}
                   retryRequest={refreshFunctions}
