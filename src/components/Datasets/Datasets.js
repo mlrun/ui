@@ -148,7 +148,7 @@ const Datasets = () => {
     artifact => {
       openPopUp(AddArtifactTagPopUp, {
         artifact,
-        onAddTag: handleRefresh,
+        onAddTag: (filters = datasetsFilters) => handleRefresh(filters),
         getArtifact: () =>
           fetchDataSet({
             project: params.projectName,
@@ -159,7 +159,7 @@ const Datasets = () => {
         projectName: params.projectName
       })
     },
-    [handleRefresh, params.projectName]
+    [handleRefresh, params.projectName, datasetsFilters]
   )
 
   const actionsMenu = useMemo(
@@ -327,10 +327,11 @@ const Datasets = () => {
     openPopUp(RegisterArtifactModal, {
       artifactKind: DATASET_TYPE,
       params,
-      refresh: handleRefresh,
-      title: registerDatasetTitle
+      refresh: (filters = datasetsFilters) => handleRefresh(filters),
+      title: registerDatasetTitle,
+      filters: datasetsFilters,
     })
-  }, [handleRefresh, params])
+  }, [handleRefresh, params, datasetsFilters])
 
   return (
     <DatasetsView
