@@ -133,7 +133,7 @@ const Files = () => {
     artifact => {
       openPopUp(AddArtifactTagPopUp, {
         artifact,
-        onAddTag: (filters = filesFilters) => handleRefresh(filters),
+        onAddTag: () => handleRefresh(filesFilters),
         getArtifact: () =>
           fetchFile({
             project: params.projectName,
@@ -310,7 +310,7 @@ const Files = () => {
     openPopUp(RegisterArtifactModal, {
       artifactKind: ARTIFACT_TYPE,
       params,
-      refresh: (filters = filesFilters) => handleRefresh(filters),
+      refresh: () => handleRefresh(filesFilters),
       title: registerArtifactTitle
     })
   }, [handleRefresh, params, filesFilters])

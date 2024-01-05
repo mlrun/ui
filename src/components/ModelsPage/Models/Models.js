@@ -157,7 +157,7 @@ const Models = ({ fetchModelFeatureVector }) => {
     artifact => {
       openPopUp(AddArtifactTagPopUp, {
         artifact,
-        onAddTag: (filters = modelsFilters) => handleRefresh(filters),
+        onAddTag: () => handleRefresh(modelsFilters),
         getArtifact: () =>
           fetchModel({
             project: params.projectName,
@@ -386,7 +386,7 @@ const Models = ({ fetchModelFeatureVector }) => {
   const handleRegisterModel = useCallback(() => {
     openPopUp(RegisterModelModal, {
       params,
-      refresh: (filters = modelsFilters) => handleRefresh(filters)
+      refresh: () => handleRefresh(modelsFilters)
     })
   }, [handleRefresh, params, modelsFilters])
 

@@ -148,7 +148,7 @@ const Datasets = () => {
     artifact => {
       openPopUp(AddArtifactTagPopUp, {
         artifact,
-        onAddTag: (filters = datasetsFilters) => handleRefresh(filters),
+        onAddTag: () => handleRefresh(datasetsFilters),
         getArtifact: () =>
           fetchDataSet({
             project: params.projectName,
@@ -327,9 +327,8 @@ const Datasets = () => {
     openPopUp(RegisterArtifactModal, {
       artifactKind: DATASET_TYPE,
       params,
-      refresh: (filters = datasetsFilters) => handleRefresh(filters),
-      title: registerDatasetTitle,
-      filters: datasetsFilters,
+      refresh: () => handleRefresh(datasetsFilters),
+      title: registerDatasetTitle
     })
   }, [handleRefresh, params, datasetsFilters])
 
