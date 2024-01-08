@@ -866,6 +866,7 @@ const generateParameters = parametersTableData => {
     ?.filter(parameter => !parameter.data.isHyper && parameter.data.isChecked)
     .forEach(parameter => {
       if (parameter.data.name === 'context' && !parameter.data.value) return false
+
       parameters[parameter.data.name] = convertParameterValue(
         parameter.data.value,
         parameter.data.type
