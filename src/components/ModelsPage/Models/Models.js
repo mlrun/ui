@@ -92,7 +92,7 @@ const Models = ({ fetchModelFeatureVector }) => {
   const frontendSpec = useSelector(store => store.appStore.frontendSpec)
 
   const modelsFilters = useMemo(
-    () => filtersStore[FILTER_MENU_MODAL][MODELS_FILTERS].values,
+    () => ({ name: filtersStore.name, ...filtersStore[FILTER_MENU_MODAL][MODELS_FILTERS].values }),
     [filtersStore]
   )
   const { isDemoMode } = useMode()

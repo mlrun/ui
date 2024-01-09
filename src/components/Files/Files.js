@@ -79,7 +79,7 @@ const Files = () => {
   const pageData = useMemo(() => generatePageData(viewMode), [viewMode])
   const frontendSpec = useSelector(store => store.appStore.frontendSpec)
   const filesFilters = useMemo(
-    () => filtersStore[FILTER_MENU_MODAL][FILES_FILTERS].values,
+    () => ({ name: filtersStore.name, ...filtersStore[FILTER_MENU_MODAL][FILES_FILTERS].values }),
     [filtersStore]
   )
 

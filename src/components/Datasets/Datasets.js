@@ -83,7 +83,10 @@ const Datasets = () => {
   const dispatch = useDispatch()
   const frontendSpec = useSelector(store => store.appStore.frontendSpec)
   const datasetsFilters = useMemo(
-    () => filtersStore[FILTER_MENU_MODAL][DATASETS_FILTERS].values,
+    () => ({
+      name: filtersStore.name,
+      ...filtersStore[FILTER_MENU_MODAL][DATASETS_FILTERS].values
+    }),
     [filtersStore]
   )
   const pageData = useMemo(
