@@ -50,7 +50,10 @@ const DetailsLogs = ({
   }, [item, params.projectName, refreshLogs, removeLogs, withLogsRefreshBtn])
 
   const handleScroll = event => {
-    if (streamLogsRef.current && event.target.scrollHeight - event.target.scrollTop === event.target.clientHeight) {
+    if (
+      streamLogsRef.current &&
+      event.target.scrollHeight - event.target.scrollTop - 1 < event.target.clientHeight
+    ) {
       streamLogsRef.current()
     }
   }

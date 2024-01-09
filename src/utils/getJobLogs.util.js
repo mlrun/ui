@@ -18,6 +18,8 @@ under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
 export const getJobLogs = (uid, projectName, streamLogsRef, setDetailsLogs, fetchJobLogs) => {
+  setDetailsLogs('')
+
   fetchJobLogs(uid, projectName).then(res => {
     const reader = res.body?.getReader()
 
