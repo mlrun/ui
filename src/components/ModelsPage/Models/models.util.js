@@ -128,6 +128,9 @@ export const fetchModelsRowData = async (
       } else {
         setSelectedRowData(state => ({
           ...state,
+          [modelIdentifier]: {
+            content: []
+          },
           error: null,
           loading: false
         }))
