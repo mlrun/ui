@@ -147,7 +147,6 @@ Table.propTypes = {
   actionsMenu: ACTIONS_MENU.isRequired,
   applyDetailsChanges: PropTypes.func,
   applyDetailsChangesCallback: PropTypes.func,
-  content: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
   detailsFormInitialValues: PropTypes.object,
   getCloseDetailsLink: PropTypes.func,
   groupedContent: PropTypes.shape({}),

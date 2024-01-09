@@ -240,7 +240,6 @@ const ModelEndpoints = () => {
           <>
             <Table
               actionsMenu={actionsMenu}
-              content={modelEndpoints}
               handleCancel={() => handleSelectItem({})}
               pageData={pageData}
               retryRequest={fetchData}
