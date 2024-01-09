@@ -53,7 +53,7 @@ export const useSortTable = ({ headers, content, sortConfig = {} }) => {
       ) {
         let valueToTest = rowDataContent[columnIndex].value
 
-        if (!isEmpty(valueToTest)) {
+        if (!isEmpty(valueToTest) || isNumber(valueToTest)) {
           if (valueToTest instanceof Array && valueToTest.length > 0) {
             if (valueToTest[0].match(/:/g)) {
               return valueToTest[0].split(':')[0].trim()

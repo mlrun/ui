@@ -126,6 +126,15 @@ export const fetchModelsRowData = async (
             loading: false
           }
         })
+      } else {
+        setSelectedRowData(state => ({
+          ...state,
+          [modelIdentifier]: {
+            content: []
+          },
+          error: null,
+          loading: false
+        }))
       }
     })
     .catch(error => {
