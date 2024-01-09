@@ -51,6 +51,9 @@ export const parseJob = (job, tab) => {
       }
     }
   } else {
+    let jobParameters = { ...job.spec?.parameters } || {}
+    if ('context' in jobParameters && !jobParameters.context) delete jobParameters.context
+
     jobItem = {
       artifacts: job.status.artifacts || [],
       error: job.status.error ?? '',
@@ -67,9 +70,9 @@ export const parseJob = (job, tab) => {
       name: job.metadata.name,
       outputPath: job.spec?.output_path,
       owner: job.metadata.labels?.owner,
-      parameters: job.spec?.parameters || {},
+      parameters: jobParameters,
       parametersChips: [
-        ...parseKeyValues(job.spec?.parameters || {}),
+        ...parseKeyValues(jobParameters),
         ...parseKeyValues(job.spec?.hyperparams || {})
       ],
       project: job.metadata.project,
