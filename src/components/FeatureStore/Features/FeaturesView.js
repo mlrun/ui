@@ -81,7 +81,6 @@ const FeaturesView = React.forwardRef(
           <>
             <Table
               actionsMenu={actionsMenu}
-              content={features}
               hideActionsMenu={tableStore.isTablePanelOpen}
               pageData={pageData}
               retryRequest={handleRefresh}
