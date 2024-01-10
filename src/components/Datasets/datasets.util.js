@@ -163,6 +163,17 @@ export const fetchDataSetRowData = async (
             loading: false
           }
         })
+      } else {
+        setSelectedRowData(state => {
+          return {
+            ...state,
+            [dataSetIdentifier]: {
+              content: []
+            },
+            error: null,
+            loading: false
+          }
+        })
       }
     })
     .catch(error => {
