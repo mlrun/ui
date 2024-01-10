@@ -18,7 +18,7 @@ under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
 import { useCallback, useEffect, useState, useMemo } from 'react'
-import { isEmpty, isNumber, orderBy } from 'lodash'
+import { isEmpty, isNumber, orderBy, isEqual } from 'lodash'
 
 import { ReactComponent as ArrowIcon } from 'igz-controls/images/back-arrow.svg'
 
@@ -27,22 +27,20 @@ export const useSortTable = ({ headers, content, sortConfig = {} }) => {
   const [selectedColumnName, setSelectedColumnName] = useState('')
   const [sortedTableContent, setSortedTableContent] = useState(content)
   const [sortedTableHeaders, setSortedTableHeaders] = useState(headers)
+  const [configs, setConfigs] = useState(sortConfig)
 
   const {
-    allowSortBy: _allowSortBy = null,
-    excludeSortBy: _excludeSortBy = null,
+    allowSortBy = null,
+    excludeSortBy = null,
     defaultSortBy = null,
     defaultDirection = null
-  } = sortConfig
+  } = useMemo(() => configs, [configs])
 
-  const excludeSortBy = useMemo(
-    () => (_excludeSortBy?.split?.(', ').length > 1 ? _excludeSortBy.split(', ') : _excludeSortBy),
-    [_excludeSortBy]
-  )
-  const allowSortBy = useMemo(
-    () => (_allowSortBy?.split?.(', ').length > 1 ? _allowSortBy.split(', ') : _allowSortBy),
-    [_allowSortBy]
-  )
+  useEffect(() => {
+    if(!isEqual(configs, sortConfig)) {
+      setConfigs(sortConfig)
+    }
+  }, [sortConfig, configs])
 
   const isDateValid = dateString => {
     if (Date.parse(dateString)) {
