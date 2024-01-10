@@ -141,6 +141,15 @@ export const fetchFilesRowData = (
           error: null,
           loading: false
         }))
+      } else {
+        setSelectedRowData(state => ({
+          ...state,
+          [fileIdentifier]: {
+            content: []
+          },
+          error: null,
+          loading: false
+        }))
       }
     })
     .catch(error => {

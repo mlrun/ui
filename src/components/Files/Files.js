@@ -224,7 +224,7 @@ const Files = () => {
     useSortTable({
       headers: tableHeaders,
       content: tableContent,
-      sortConfig: { excludeSortBy: ['labels', 'size'], defaultSortBy: 'updated', defaultDirection: 'desc' }
+      sortConfig: { excludeSortBy: 'labels, size', defaultSortBy: 'updated', defaultDirection: 'desc' }
     })
 
   const applyDetailsChanges = useCallback(
