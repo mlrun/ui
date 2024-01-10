@@ -78,6 +78,7 @@ const DetailsResults = ({ allowSortBy, defaultSortBy, defaultDirection, excludeS
       </thead>
     )
   }
+
   return (!job.iterationStats?.length && job.error) ||
     (!job.iterationStats?.length && isEmpty(job.results) && !job.iterations?.length) ? (
     <NoData />
