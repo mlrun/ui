@@ -80,24 +80,25 @@ const ProjectSettings = ({ frontendSpec, projectStore }) => {
         const {
           attributes: { username = '', first_name: firstName = '', last_name: lastName = '' } = {}
         } = ownerInfo ?? {}
+        const payload = {
+          id: projectId,
+          owner: { id: ownerId, username, firstName, lastName }
+        }
 
         membersDispatch({
           type: membersActions.SET_PROJECT_INFO,
-          payload: {
-            id: projectId,
-            owner: { id: ownerId, username, firstName, lastName }
-          }
+          payload
         })
 
-        return projectId
+        return payload
       })
   }, [params.projectName])
 
   const fetchProjectMembers = useCallback(
-    projectId => {
+    ({ id: projectId, owner }) => {
       return projectsIguazioApi
         .getProjectMembers(projectId)
-        .then(membersResponse => generateMembers(membersResponse, membersDispatch))
+        .then(membersResponse => generateMembers(membersResponse, membersDispatch, owner))
         .catch(error => showErrorNotification(dispatch, error, 'Failed to fetch project members'))
     },
     [dispatch]
@@ -135,11 +136,11 @@ const ProjectSettings = ({ frontendSpec, projectStore }) => {
     if (projectMembershipIsEnabled) {
       fetchProjectOwnerVisibility(params.projectName)
       fetchProjectIdAndOwner()
-        .then(projectId => {
+        .then(response => {
           fetchActiveUser()
           fetchProjectMembersVisibility(params.projectName)
 
-          return fetchProjectMembers(projectId)
+          return fetchProjectMembers(response)
         })
         .catch(() => {
           setProjectMembersIsShown(false)
@@ -158,7 +159,10 @@ const ProjectSettings = ({ frontendSpec, projectStore }) => {
         if (response.data.data.attributes.state !== COMPLETED_STATE) {
           setTimeout(fetchJob, 1000)
         } else {
-          fetchProjectMembers(membersState.projectInfo.id).then(() => {
+          fetchProjectMembers({
+            id: membersState.projectInfo.id,
+            owner: membersState.projectInfo.owner
+          }).then(() => {
             membersDispatch({
               type: membersActions.GET_PROJECT_USERS_DATA_END
             })

@@ -423,7 +423,7 @@ const MembersPopUp = ({
               >
                 <div className="member-info">
                   <div className={`member-status ${member.modification ? 'visible' : ''}`} />
-                  <div className="member-symbol">{member.name[0].toUpperCase()}</div>
+                  <div className="member-symbol">{member.name[0]?.toUpperCase()}</div>
                   <div className={`member-icon ${member.type}`}>{member.icon}</div>
                   <div className="member-name">{member.name}</div>
                 </div>
@@ -440,7 +440,7 @@ const MembersPopUp = ({
                 </div>
                 <div className="member-actions actions">
                   <button
-                    disabled={inviteNewMembers}
+                    disabled={member.role === 'Owner' || inviteNewMembers}
                     ref={member.actionElement}
                     onClick={() => setDeleteMemberId(member.id)}
                   >

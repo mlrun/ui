@@ -63,7 +63,7 @@ export const validTabs = [
 
 export const page = PROJECTS_SETTINGS_PAGE
 
-export const generateMembers = (membersResponse, membersDispatch) => {
+export const generateMembers = (membersResponse, membersDispatch, owner) => {
   const members = []
   const {
     project_authorization_role: projectAuthorizationRoles = [],
@@ -85,6 +85,19 @@ export const generateMembers = (membersResponse, membersDispatch) => {
     payload: userGroups
   })
 
+  if (owner.id && !isOwnerIncluded(owner.id, users)) {
+    members.push({
+      name: owner.username,
+      id: owner.id,
+      type: 'user',
+      initialRole: 'Owner',
+      role: 'Owner',
+      icon: <User />,
+      modification: '',
+      actionElement: createRef()
+    })
+  }
+
   projectAuthorizationRoles.forEach(role => {
     if (role.relationships) {
       forEach(role.relationships, relationData => {
@@ -103,8 +116,8 @@ export const generateMembers = (membersResponse, membersDispatch) => {
             name: type === 'user' ? username : name,
             id: id,
             type: type,
-            initialRole: role.attributes.name,
-            role: role.attributes.name,
+            initialRole: owner.id === id ? 'Owner' : role.attributes.name,
+            role: owner.id === id ? 'Owner' : role.attributes.name,
             icon: type === 'user' ? <User /> : <Users />,
             modification: '',
             actionElement: createRef()
@@ -137,4 +150,10 @@ export const isProjectMembersTabShown = (
   const userIsOwner = activeUser.id === projectInfo.owner.id
 
   return userIsOwner || userIsAdmin || userIsProjectSecurityAdmin
+}
+
+const isOwnerIncluded = (ownerId, membersList) => {
+  return membersList.some(member => {
+    return member.id === ownerId
+  })
 }
