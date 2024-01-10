@@ -65,7 +65,7 @@ const DetailsResults = ({ allowSortBy, defaultSortBy, defaultDirection, excludeS
                 onClick={isSortable ? () => sortTable(headerId) : null}
               >
                 <Tooltip template={<TextTooltipTemplate text={headerLabel} />}>
-                  <label className="sortable-header-label">
+                  <label className={isSortable? 'sortable-header-label': ''}>
                     <span className="data-ellipsis">{headerLabel}</span>
                     {isSortable && getSortingIcon(headerId)}
                   </label>
