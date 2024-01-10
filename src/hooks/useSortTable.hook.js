@@ -27,20 +27,20 @@ export const useSortTable = ({ headers, content, sortConfig = {} }) => {
   const [selectedColumnName, setSelectedColumnName] = useState('')
   const [sortedTableContent, setSortedTableContent] = useState(content)
   const [sortedTableHeaders, setSortedTableHeaders] = useState(headers)
-  const [configs, setConfigs] = useState(sortConfig)
+  const [config, setConfig] = useState(sortConfig)
 
   const {
     allowSortBy = null,
     excludeSortBy = null,
     defaultSortBy = null,
     defaultDirection = null
-  } = useMemo(() => configs, [configs])
+  } = useMemo(() => config, [config])
 
   useEffect(() => {
-    if(!isEqual(configs, sortConfig)) {
-      setConfigs(sortConfig)
+    if(!isEqual(config, sortConfig)) {
+      setConfig(sortConfig)
     }
-  }, [sortConfig, configs])
+  }, [sortConfig, config])
 
   const isDateValid = dateString => {
     if (Date.parse(dateString)) {
