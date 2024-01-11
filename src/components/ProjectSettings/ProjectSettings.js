@@ -95,7 +95,7 @@ const ProjectSettings = ({ frontendSpec, projectStore }) => {
   }, [params.projectName])
 
   const fetchProjectMembers = useCallback(
-    ({ id: projectId, owner }) => {
+    (projectId, owner) => {
       return projectsIguazioApi
         .getProjectMembers(projectId)
         .then(membersResponse => generateMembers(membersResponse, membersDispatch, owner))
@@ -136,11 +136,11 @@ const ProjectSettings = ({ frontendSpec, projectStore }) => {
     if (projectMembershipIsEnabled) {
       fetchProjectOwnerVisibility(params.projectName)
       fetchProjectIdAndOwner()
-        .then(response => {
+        .then(({ id: projectId, owner }) => {
           fetchActiveUser()
           fetchProjectMembersVisibility(params.projectName)
 
-          return fetchProjectMembers(response)
+          return fetchProjectMembers(projectId, owner)
         })
         .catch(() => {
           setProjectMembersIsShown(false)
@@ -159,21 +159,20 @@ const ProjectSettings = ({ frontendSpec, projectStore }) => {
         if (response.data.data.attributes.state !== COMPLETED_STATE) {
           setTimeout(fetchJob, 1000)
         } else {
-          fetchProjectMembers({
-            id: membersState.projectInfo.id,
-            owner: membersState.projectInfo.owner
-          }).then(() => {
-            membersDispatch({
-              type: membersActions.GET_PROJECT_USERS_DATA_END
-            })
-            dispatch(
-              setNotification({
-                status: 200,
-                id: Math.random(),
-                message: 'Members updated successfully'
+          fetchProjectMembers(membersState.projectInfo.id, membersState.projectInfo.owner).then(
+            () => {
+              membersDispatch({
+                type: membersActions.GET_PROJECT_USERS_DATA_END
               })
-            )
-          })
+              dispatch(
+                setNotification({
+                  status: 200,
+                  id: Math.random(),
+                  message: 'Members updated successfully'
+                })
+              )
+            }
+          )
         }
       })
     }

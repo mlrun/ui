@@ -43,6 +43,8 @@ import { isIgzVersionCompatible } from '../../utils/isIgzVersionCompatible'
 import { membersActions } from './membersReducer'
 import { showErrorNotification } from '../../utils/notifications.util'
 
+import { OWNER_ROLE, USER_ROLE } from '../../constants'
+
 import { ReactComponent as Add } from 'igz-controls/images/add.svg'
 import { ReactComponent as Close } from 'igz-controls/images/close.svg'
 import { ReactComponent as Delete } from 'igz-controls/images/delete.svg'
@@ -93,7 +95,7 @@ const MembersPopUp = ({
           id: newMember.id,
           type: newMember.ui.type,
           role: newMembersRole,
-          icon: newMember.ui.type === 'user' ? <User /> : <Users />,
+          icon: newMember.ui.type === USER_ROLE ? <User /> : <Users />,
           modification: 'post',
           actionElement: createRef()
         })
@@ -150,7 +152,7 @@ const MembersPopUp = ({
               },
               principal_users: {
                 data: members
-                  .filter(member => member.type === 'user')
+                  .filter(member => member.type === USER_ROLE)
                   .map(member => {
                     return { id: member.id, type: member.type }
                   })
@@ -268,12 +270,14 @@ const MembersPopUp = ({
 
             suggestionList.push({
               label:
-                identity.type === 'user' ? identity.attributes.username : identity.attributes.name,
+                identity.type === USER_ROLE
+                  ? identity.attributes.username
+                  : identity.attributes.name,
               id: identity.id,
               subLabel: existingMember?.role ?? '',
               disabled: Boolean(existingMember),
               icon:
-                identity.type === 'user' ? (
+                identity.type === USER_ROLE ? (
                   <i data-identity-type="user">
                     <User />
                   </i>
@@ -431,7 +435,7 @@ const MembersPopUp = ({
                   <Select
                     density="dense"
                     label="Role"
-                    disabled={member.role === 'Owner' || inviteNewMembers}
+                    disabled={member.role === OWNER_ROLE || inviteNewMembers}
                     floatingLabel
                     onClick={roleOption => changeMemberRole(roleOption, member)}
                     options={getRoleOptions(member.role)}
@@ -440,7 +444,7 @@ const MembersPopUp = ({
                 </div>
                 <div className="member-actions actions">
                   <button
-                    disabled={member.role === 'Owner' || inviteNewMembers}
+                    disabled={member.role === OWNER_ROLE || inviteNewMembers}
                     ref={member.actionElement}
                     onClick={() => setDeleteMemberId(member.id)}
                   >

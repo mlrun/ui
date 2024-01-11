@@ -17,13 +17,15 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-export const initialNewMembersRole = 'Viewer'
+import { ADMIN_ROLE, ALL_ROLES, EDITOR_ROLE, OWNER_ROLE, VIEWER_ROLE } from '../../constants'
+
+export const initialNewMembersRole = VIEWER_ROLE
 export const getRoleOptions = (memberRole = '', allOption = false) => {
   return [
-    { id: 'All', label: 'All', hidden: !allOption },
-    { id: 'Owner', label: 'Owner', hidden: memberRole !== 'Owner' },
-    { id: 'Viewer', label: 'Viewer' },
-    { id: 'Editor', label: 'Editor' },
-    { id: 'Admin', label: 'Admin' }
+    { id: ALL_ROLES, label: ALL_ROLES, hidden: !allOption },
+    { id: OWNER_ROLE, label: OWNER_ROLE, hidden: memberRole !== OWNER_ROLE },
+    { id: VIEWER_ROLE, label: VIEWER_ROLE },
+    { id: EDITOR_ROLE, label: EDITOR_ROLE },
+    { id: ADMIN_ROLE, label: ADMIN_ROLE }
   ]
 }

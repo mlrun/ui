@@ -41,24 +41,35 @@ const ProjectSettingsMembers = ({
     const ownerId = membersState.projectInfo?.owner?.id
 
     if (totalMembersInProject === 0) {
-      if (!ownerId) {
-        return <span>One owner has access to this project</span>
+      if (ownerId) {
+        return 'One owner has access to this project'
       } else {
-        return <span>This project does not have a valid owner</span>
+        return 'This project does not have a valid owner'
+      }
+    } else if (totalMembersInProject === 1) {
+      if (ownerId) {
+        return 'One owner and one member have access to this project'
+      } else {
+        return 'One member has access to this project'
+      }
+    } else {
+      if (ownerId) {
+        return (
+          <>
+            One owner and
+            <b> {totalMembersInProject} </b>
+            members have access to this project
+          </>
+        )
+      } else {
+        return (
+          <>
+            <b>{totalMembersInProject} </b>
+            members have access to this project
+          </>
+        )
       }
     }
-
-    const membersText = totalMembersInProject !== 1 ? 'members have' : 'member has'
-
-    return (
-      <span>
-        {ownerId && 'One owner and '}
-        <span className="settings__members-summary_amount">
-          {totalMembersInProject !== 1 ? totalMembersInProject : ownerId ? 'one' : 'One'}
-        </span>
-        {`${membersText} access to this project`}
-      </span>
-    )
   }
 
   return (
@@ -72,7 +83,7 @@ const ProjectSettingsMembers = ({
               <span className="settings__members-summary_icon">
                 <Users />
               </span>
-              {generateMembersTitle()}
+              <span>{generateMembersTitle()}</span>
             </div>
             {projectMembersIsShown && (
               <MembersPopUp
