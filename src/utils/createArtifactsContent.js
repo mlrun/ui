@@ -226,6 +226,7 @@ export const createModelsRowData = (
 
       content.push({
         id: `${key}.${artifact.ui.identifierUnique}`,
+        headerIsHidden: true,
         value: parseFloat(value),
         className: 'table-cell-1',
         bodyCellClassName
@@ -239,6 +240,7 @@ export const createModelsRowData = (
     for (let i = 0; i < missingObjects; i++) {
       content.push({
         id: `${i}.${artifact.ui.identifierUnique}`,
+        headerIsHidden: true,
         value: '',
         className: 'table-cell-1'
       })

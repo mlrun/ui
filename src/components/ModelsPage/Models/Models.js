@@ -51,8 +51,7 @@ import {
   generateActionsMenu,
   generatePageData,
   getFeatureVectorData,
-  handleApplyDetailsChanges,
-  modelsTableHeaders
+  handleApplyDetailsChanges
 } from './models.util'
 import detailsActions from '../../../actions/details'
 import { createModelsRowData } from '../../../utils/createArtifactsContent'
@@ -78,7 +77,7 @@ const Models = ({ fetchModelFeatureVector }) => {
   const [selectedRowData, setSelectedRowData] = useState({})
   const [metricsCounter, setMetricsCounter] = useState(0)
   const [dataIsLoaded, setDataIsLoaded] = useState(false)
-  const [tableHeaders, setTableHeaders] = useState(modelsTableHeaders)
+  const [tableHeaders, setTableHeaders] = useState([])
   const [urlTagOption] = useGetTagOptions(null, filters, null, MODELS_FILTERS)
   const artifactsStore = useSelector(store => store.artifactsStore)
   const detailsStore = useSelector(store => store.detailsStore)
@@ -320,10 +319,11 @@ const Models = ({ fetchModelFeatureVector }) => {
       setAllModels([])
       dispatch(removeModels())
       setSelectedModel({})
+      setTableHeaders([])
       setDataIsLoaded(false)
       abortControllerRef.current.abort(REQUEST_CANCELED)
     }
-  }, [dispatch, setModels, setAllModels])
+  }, [dispatch, params.projectName, setModels, setAllModels])
 
   useEffect(() => {
     dispatch(setFilters({ groupBy: GROUP_BY_NONE }))
@@ -370,19 +370,25 @@ const Models = ({ fetchModelFeatureVector }) => {
   ])
 
   useEffect(() => {
-    if (models.length > 0 && !dataIsLoaded) {
+    if (tableContent?.[0]?.content?.length > 0 && tableHeaders.length === 0) {
+      setTableHeaders(tableContent?.[0]?.content)
+    }
+  }, [tableContent, tableHeaders.length])
+
+  useEffect(() => {
+    if (models.length > 0 && tableHeaders.length > 0 && !dataIsLoaded) {
       const newTableHeaders = []
-      const objectWithMaxMetrics = models.reduce((max, model) => {
+      const maxMetricsModel = models.reduce((modelWithMaxMetrics, model) => {
         if (
           model.metrics &&
-          Object.keys(model.metrics).length > Object.keys(max.metrics || {}).length
+          Object.keys(model.metrics).length > Object.keys(modelWithMaxMetrics.metrics || {}).length
         ) {
           return model
         }
 
-        return max
+        return modelWithMaxMetrics
       }, {})
-      Object.keys(objectWithMaxMetrics.metrics ?? {}).forEach(metricKey => {
+      Object.keys(maxMetricsModel.metrics ?? {}).forEach(metricKey => {
         newTableHeaders.push({
           headerId: metricKey,
           headerLabel: metricKey,
@@ -390,11 +396,11 @@ const Models = ({ fetchModelFeatureVector }) => {
         })
       })
 
-      setMetricsCounter(Object.keys(objectWithMaxMetrics.metrics ?? {}).length)
+      setMetricsCounter(Object.keys(maxMetricsModel.metrics ?? {}).length)
       setTableHeaders(state => [...state, ...newTableHeaders])
       setDataIsLoaded(true)
     }
-  }, [dataIsLoaded, models])
+  }, [dataIsLoaded, models, tableHeaders])
 
   const handleRegisterModel = useCallback(() => {
     openPopUp(RegisterModelModal, { params, refresh: handleRefresh })
