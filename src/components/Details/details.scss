@@ -240,6 +240,15 @@
       width: 100%;
       height: 100%;
 
+      &__header {
+        display: flex;
+        justify-content: space-between;
+
+        &-text {
+          align-self: center;
+        }
+      }
+
       .inputs_container {
         width: 100%;
       }
@@ -255,13 +264,6 @@
       }
 
       .preview {
-        &-icon__wrapper {
-          display: flex;
-          flex: 0 1 auto;
-          justify-content: flex-end;
-          margin-bottom: 10px;
-        }
-
         &_popout {
           padding: 0;
           margin: 0;
