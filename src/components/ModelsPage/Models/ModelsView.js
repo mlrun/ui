@@ -117,7 +117,6 @@ const ModelsView = React.forwardRef(
                   actionsMenu={actionsMenu}
                   applyDetailsChanges={applyDetailsChanges}
                   applyDetailsChangesCallback={applyDetailsChangesCallback}
-                  content={models}
                   handleCancel={() => setSelectedModel({})}
                   detailsFormInitialValues={detailsFormInitialValues}
                   pageData={pageData}

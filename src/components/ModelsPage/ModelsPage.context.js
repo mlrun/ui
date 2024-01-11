@@ -17,18 +17,33 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import React, { useContext } from 'react'
+import React, { useCallback, useContext } from 'react'
+import { useSelector } from 'react-redux'
+import { useParams } from 'react-router-dom'
+
 import { useYaml } from '../../hooks/yaml.hook'
+import { monitorModelEndpoint } from '../ModelsPage/ModelEndpoints/modelEndpoints.util'
 
 export const ModelsPageContext = React.createContext({})
 
 export const ModelsPageProvider = ({ children }) => {
   const [convertedYaml, toggleConvertedYaml] = useYaml('')
 
+  const frontendSpec = useSelector(store => store.appStore.frontendSpec)
+  const params = useParams()
+
+  const handleMonitoring = useCallback(
+    item => {
+      monitorModelEndpoint(frontendSpec.model_monitoring_dashboard_url, item, params.projectName)
+    },
+    [frontendSpec.model_monitoring_dashboard_url, params.projectName]
+  )
+
   return (
     <ModelsPageContext.Provider
       value={{
         convertedYaml,
+        handleMonitoring,
         toggleConvertedYaml
       }}
     >

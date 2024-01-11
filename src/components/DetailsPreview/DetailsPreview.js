@@ -39,10 +39,10 @@ const DetailsPreview = ({ artifact, handlePreview }) => {
   const popupButtonIsDisplayed = useMemo(() => {
     return (
       artifact.target_path &&
-      (artifact.extra_data.length > 0 ||
+      (artifact.extra_data?.length > 0 ||
         (!preview[0]?.error && !preview.every(item => item.hidden)))
     )
-  }, [artifact.extra_data.length, artifact.target_path, preview])
+  }, [artifact.extra_data, artifact.target_path, preview])
 
   const artifactsPreviewClassNames = classnames(
     popupButtonIsDisplayed && 'artifact-preview__with-popout'
@@ -73,10 +73,10 @@ const DetailsPreview = ({ artifact, handlePreview }) => {
         </div>
       )}
       <div className={artifactsPreviewClassNames}>
-        {preview[0]?.hidden && artifact.extra_data.length > 0 ? null : (
+        {preview[0]?.hidden && artifact.extra_data?.length > 0 ? null : (
           <ArtifactsPreview noData={noData} preview={preview} />
         )}
-        {artifact.extra_data.length > 0 && <ArtifactsExtraData artifact={artifact} />}
+        {artifact.extra_data?.length > 0 && <ArtifactsExtraData artifact={artifact} />}
       </div>
     </div>
   )

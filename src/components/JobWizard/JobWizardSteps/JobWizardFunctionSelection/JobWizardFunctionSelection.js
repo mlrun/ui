@@ -350,7 +350,7 @@ const JobWizardFunctionSelection = ({
   }
 
   const openResetConfirm = confirmHandler => {
-    return openConfirmPopUp(confirmHandler, 'All changes will be lost')
+    return openConfirmPopUp('All changes will be lost', confirmHandler)
   }
 
   return (

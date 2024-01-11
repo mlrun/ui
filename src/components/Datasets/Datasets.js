@@ -271,7 +271,7 @@ const Datasets = () => {
     useSortTable({
       headers: tableHeaders,
       content: tableContent,
-      sortConfig: { excludeSortBy: 'labels', defaultSortBy: 'updated', defaultDirection: 'desc' }
+      sortConfig: { excludeSortBy: ['labels', 'size'], defaultSortBy: 'updated', defaultDirection: 'desc' }
     })
 
   useEffect(() => {

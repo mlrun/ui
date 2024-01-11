@@ -55,7 +55,7 @@ const Table = ({
 
   useEffect(() => {
     const calculatePanelHeight = () => {
-      if (tableHeadRef && tableContentRef && tablePanelRef.current) {
+      if (tableHeadRef?.current && tableContentRef?.current && tablePanelRef?.current) {
         const tableContentHeight = tableContentRef.current.getBoundingClientRect().height
         const tableHeadCords = tableHeadRef.current.getBoundingClientRect()
         const panelHeight = window.innerHeight - tableHeadCords.top
@@ -147,7 +147,6 @@ Table.propTypes = {
   actionsMenu: ACTIONS_MENU.isRequired,
   applyDetailsChanges: PropTypes.func,
   applyDetailsChangesCallback: PropTypes.func,
-  content: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
   detailsFormInitialValues: PropTypes.object,
   getCloseDetailsLink: PropTypes.func,
   groupedContent: PropTypes.shape({}),

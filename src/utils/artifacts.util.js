@@ -29,6 +29,7 @@ import { setFilters, setModalFiltersValues } from '../reducers/filtersReducer'
 import { showErrorNotification } from './notifications.util'
 
 export const applyTagChanges = (changes, artifactItem, projectName, dispatch, setNotification) => {
+  let updateTagMsg = 'Tag was updated successfully'
   let updateTagPromise = Promise.resolve()
   artifactItem = cloneDeep(artifactItem)
 
@@ -55,6 +56,7 @@ export const applyTagChanges = (changes, artifactItem, projectName, dispatch, se
     artifactItem.tag = changes.data.tag.currentFieldValue
 
     if (artifactItem.tag === '') {
+      updateTagMsg = 'Tag was deleted successfully'
       manageTagArgs.tag = changes.data.tag.initialFieldValue
       updateTagPromise = dispatch(deleteTag(manageTagArgs))
     } else {
@@ -74,7 +76,7 @@ export const applyTagChanges = (changes, artifactItem, projectName, dispatch, se
           setNotification({
             status: response.status,
             id: Math.random(),
-            message: 'Tag was updated successfully'
+            message: updateTagMsg
           })
         )
       })

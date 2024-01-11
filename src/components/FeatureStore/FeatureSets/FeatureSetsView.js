@@ -86,7 +86,6 @@ const FeatureSetsView = React.forwardRef(
               actionsMenu={actionsMenu}
               applyDetailsChanges={applyDetailsChanges}
               applyDetailsChangesCallback={applyDetailsChangesCallback}
-              content={featureSets}
               detailsFormInitialValues={detailsFormInitialValues}
               handleCancel={() => setSelectedFeatureSet({})}
               pageData={pageData}

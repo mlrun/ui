@@ -78,6 +78,7 @@ export const getInfoHeaders = isSpark =>
 export const actionsMenuHeader = 'Batch run'
 
 export const JOB_STEADY_STATES = ['completed', 'error', 'aborted']
+export const JOB_RUNNING_STATES = ['running', 'pending']
 
 export const getJobsDetailsMenu = (jobLabels = []) => {
   return [

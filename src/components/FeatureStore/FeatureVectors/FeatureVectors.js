@@ -36,9 +36,9 @@ import {
 } from '../../../constants'
 import {
   featureVectorsFilters,
-  featuresActionCreator,
   generateActionsMenu,
-  generatePageData
+  generatePageData,
+  featureVectorsActionCreator
 } from './featureVectors.util'
 import { DANGER_BUTTON, LABEL_BUTTON } from 'igz-controls/constants'
 import { checkTabIsValid, handleApplyDetailsChanges } from '../featureStore.util'
@@ -145,7 +145,7 @@ const FeatureVectors = ({
           )
             .unwrap()
             .then(response => {
-              const tag = [...response.payload, TAG_FILTER_ALL_ITEMS].includes(filtersStore.tag)
+              const tag = [...response, TAG_FILTER_ALL_ITEMS].includes(filtersStore.tag)
                 ? filtersStore.tag
                 : TAG_FILTER_LATEST
 
@@ -445,5 +445,5 @@ const FeatureVectors = ({
 }
 
 export default connect(null, {
-  ...featuresActionCreator
+  ...featureVectorsActionCreator
 })(FeatureVectors)

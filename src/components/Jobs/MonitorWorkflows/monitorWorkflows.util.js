@@ -34,7 +34,8 @@ import {
   isJobKindAbortable,
   JOB_STEADY_STATES,
   isJobKindDask,
-  isJobAborting
+  isJobAborting,
+  JOB_RUNNING_STATES
 } from '../jobs.util'
 import jobsActions from '../../../actions/jobs'
 import functionsActions from '../../../actions/functions'
@@ -143,7 +144,8 @@ export const generateActionsMenu = (
             label: 'Delete',
             icon: <Delete />,
             className: 'danger',
-            onClick: handleConfirmDeleteJob
+            onClick: handleConfirmDeleteJob,
+            hidden: JOB_RUNNING_STATES.includes(job?.state?.value)
           }
         ]
       ]

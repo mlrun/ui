@@ -340,8 +340,9 @@ Feature: Jobs and workflows
         And wait load page
         Then subtable column "templates_list" in "Functions_Templates_Table" in "Function_Templates_Accordion" on "Create_Job" wizard should contains "test" in "name" column
 
+    @MLJW
     @passive
-    Scenario: Check all mandatory components in Item infopane on Overview tab table on Jobs Monitor Page
+    Scenario: MLJW058 - Check all mandatory components in Item infopane on Overview tab table on Jobs Monitor Page
         Given open url
         And wait load page
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
@@ -373,6 +374,85 @@ Feature: Jobs and workflows
         Then click on "Arrow_Back" element on "Jobs_Monitor_Tab" wizard
         And wait load page
         Then verify from "01/01/2021 00:00" to "01/01/2023 00:00" filter band in "Start_Time_Filter_Dropdown" filter dropdown on "Jobs_Monitor_Tab" wizard
+
+    @MLJW
+    Scenario: MLJW059 - Check Action menu options on Job table and Overview Job tab table on Jobs Monitor Page
+        Given open url
+        And wait load page
+        And click on row root with value "cat-vs-dog-classification" in "name" column in "Projects_Table" table on "Projects" wizard
+        And wait load page
+        And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
+        And click on cell with value "Jobs and workflows" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+        And hover "MLRun_Logo" component on "commonPagesHeader" wizard
+        And wait load page
+        Then verify "Monitor Jobs" tab is active in "Jobs_Tab_Selector" on "Jobs_Monitor_Tab" wizard
+        When select "Any time" option in "Start_Time_Filter_Dropdown" filter dropdown on "Jobs_Monitor_Tab" wizard
+        When click on cell with row index 1 in "name" column in "Jobs_Monitor_Table" table on "Jobs_Monitor_Tab" wizard
+        And wait load page
+        Then verify options in action menu on "Jobs_Monitor_Tab" wizard in "Jobs_Monitor_Table" table with "Job" value in "type" column should contains "Jobs_And_Workflows"."Job_Action_Menu_Options"
+        When click on cell with row index 1 in "name" column in "Jobs_Monitor_Table" table on "Jobs_Monitor_Tab" wizard
+        And wait load page
+        Then verify "Action_Menu" dropdown element on "Jobs_Monitor_Tab_Info_Pane" wizard should contains "Jobs_And_Workflows"."Job_Overview_Action_Menu_Options"
+        Then verify "Arrow_Back" element visibility on "Jobs_Monitor_Tab_Info_Pane" wizard
+        Then verify "Header" element visibility on "Jobs_Monitor_Tab_Info_Pane" wizard
+        Then verify "Updated" element visibility on "Jobs_Monitor_Tab_Info_Pane" wizard
+        Then verify "Cross_Close_Button" element visibility on "Jobs_Monitor_Tab_Info_Pane" wizard
+        Then verify "Info_Pane_Tab_Selector" on "Jobs_Monitor_Tab_Info_Pane" wizard should contains "Jobs_Monitor_Tab_Info_Pane"."Tab_List"
+        Then verify "Overview" tab is active in "Info_Pane_Tab_Selector" on "Jobs_Monitor_Tab_Info_Pane" wizard
+        Then verify "Overview_Headers" on "Jobs_Monitor_Tab_Info_Pane" wizard should contains "Jobs_Monitor_Tab_Info_Pane"."Overview_Headers"
+
+    @MLJW
+    Scenario: MLJW061 - Check confirmation message pop-up for Delete Job option in Action menu
+        Given open url
+        And wait load page
+        And click on row root with value "churn-project-admin" in "name" column in "Projects_Table" table on "Projects" wizard
+        And wait load page
+        And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
+        And click on cell with value "Jobs and workflows" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+        And hover "MLRun_Logo" component on "commonPagesHeader" wizard
+        And wait load page
+        Then verify "Monitor Jobs" tab is active in "Jobs_Tab_Selector" on "Jobs_Monitor_Tab" wizard
+        When select "Any time" option in "Start_Time_Filter_Dropdown" filter dropdown on "Jobs_Monitor_Tab" wizard
+        Then select "Delete" option in action menu on "Jobs_Monitor_Tab" wizard in "Jobs_Monitor_Table" table at row with "test-m_ingest" value in "name" column
+        And wait load page
+        Then verify if "Delete_Confirm_Popup" popup dialog appears
+        Then "Title" element on "Delete_Confirm_Popup" should contains "Delete job?" value
+        Then verify "Cross_Cancel_Button" element visibility on "Delete_Confirm_Popup" wizard
+        Then verify "Confirm_Dialog_Message" element visibility on "Delete_Confirm_Popup" wizard
+        Then verify "Cancel_Button" element visibility on "Delete_Confirm_Popup" wizard
+        Then "Cancel_Button" element on "Delete_Confirm_Popup" should contains "Cancel" value
+        Then verify "Delete_Button" element visibility on "Delete_Confirm_Popup" wizard
+        Then "Delete_Button" element on "Delete_Confirm_Popup" should contains "Delete" value
+        When click on "Cancel_Button" element on "Delete_Confirm_Popup" wizard
+        When click on cell with row index 1 in "name" column in "Jobs_Monitor_Table" table on "Jobs_Monitor_Tab" wizard
+        And wait load page
+        Then verify options in action menu on "Jobs_Monitor_Tab" wizard in "Jobs_Monitor_Table" table with "Job" value in "type" column should contains "Jobs_And_Workflows"."Job_Action_Menu_Options"
+        Then select "Delete" option in action menu on "Jobs_Monitor_Tab" wizard in "Jobs_Monitor_Table" table at row with "1b1097f5e1bf439f82b61910f03368ae" value in "name" column
+        And wait load page
+        Then verify if "Delete_Confirm_Popup" popup dialog appears
+        Then "Title" element on "Delete_Confirm_Popup" should contains "Delete job?" value
+        Then verify "Cross_Cancel_Button" element visibility on "Delete_Confirm_Popup" wizard
+        Then verify "Confirm_Dialog_Message" element visibility on "Delete_Confirm_Popup" wizard
+        Then verify "Cancel_Button" element visibility on "Delete_Confirm_Popup" wizard
+        Then "Cancel_Button" element on "Delete_Confirm_Popup" should contains "Cancel" value
+        Then verify "Delete_Button" element visibility on "Delete_Confirm_Popup" wizard
+        Then "Delete_Button" element on "Delete_Confirm_Popup" should contains "Delete" value
+        When click on "Cancel_Button" element on "Delete_Confirm_Popup" wizard
+        When click on cell with row index 1 in "name" column in "Jobs_Monitor_Table" table on "Jobs_Monitor_Tab" wizard
+        And wait load page
+        Then verify "Action_Menu" dropdown element on "Jobs_Monitor_Tab_Info_Pane" wizard should contains "Jobs_And_Workflows"."Job_Overview_Action_Menu_Options"
+        Then select "Delete" option in action menu on "Jobs_Monitor_Tab_Info_Pane" wizard
+        And wait load page
+        Then verify if "Delete_Confirm_Popup" popup dialog appears
+        Then "Title" element on "Delete_Confirm_Popup" should contains "Delete job?" value
+        Then verify "Cross_Cancel_Button" element visibility on "Delete_Confirm_Popup" wizard
+        Then verify "Confirm_Dialog_Message" element visibility on "Delete_Confirm_Popup" wizard
+        Then verify "Cancel_Button" element visibility on "Delete_Confirm_Popup" wizard
+        Then "Cancel_Button" element on "Delete_Confirm_Popup" should contains "Cancel" value
+        Then verify "Delete_Button" element visibility on "Delete_Confirm_Popup" wizard
+        Then "Delete_Button" element on "Delete_Confirm_Popup" should contains "Delete" value
+        When click on "Cancel_Button" element on "Delete_Confirm_Popup" wizard
+        
 
     @passive
     #TODO: rewrite twst accourding to new implementation "Refresh" button
@@ -1325,8 +1405,9 @@ Feature: Jobs and workflows
         Then select "Medium" option in "Pods_Priority_Dropdown" dropdown on "Resources_Accordion" on "New_Function" wizard
         Then verify "Pods_Priority_Dropdown" dropdown in "Resources_Accordion" on "New_Function" wizard selected option value "Medium"
 
+    @MLJW
     @passive
-    Scenario: Verify View YAML action on Jobs Monitor tab
+    Scenario: MLJW060 - Verify View YAML action on Jobs Monitor tab
         Given open url
         And wait load page
         And click on row root with value "churn-project-admin" in "name" column in "Projects_Table" table on "Projects" wizard
@@ -1614,10 +1695,9 @@ Feature: Jobs and workflows
         Then verify "Preview_Header" element visibility on "Artifact_Preview_Popup" wizard
         Then verify "Cross_Cancel_Button" element visibility on "Artifact_Preview_Popup" wizard
 
-    @FAILED_TODO
-    #TODO: table with "Error" value in "status" column -  An invalid or illegal selector was specified for searching "Error" value
+    @MLJW
     @passive
-    Scenario: Check options in action menu on Jobs Monitor tab
+    Scenario: MLJW057 - Check options in action menu on Jobs Monitor tab
         Given open url
         And wait load page
         And click on row root with value "cat-vs-dog-classification" in "name" column in "Projects_Table" table on "Projects" wizard
@@ -1627,9 +1707,10 @@ Feature: Jobs and workflows
         And hover "MLRun_Logo" component on "commonPagesHeader" wizard
         And wait load page
         Then verify "Monitor Jobs" tab is active in "Jobs_Tab_Selector" on "Jobs_Monitor_Tab" wizard
-        When pick up "Custom range" from "08/28/2021 18:00" to "09/03/2021 18:00" in "Date_Time_Picker" via "Start_Time_Filter_Dropdown" on "Jobs_Monitor_Tab" wizard
+        When pick up "Custom range" from "09/01/2021 18:00" to "09/03/2021 18:00" in "Date_Time_Picker" via "Start_Time_Filter_Dropdown" on "Jobs_Monitor_Tab" wizard
         Then verify options in action menu on "Jobs_Monitor_Tab" wizard in "Jobs_Monitor_Table" table with "Error" value in "status" column should contains "Jobs_And_Workflows"."Job_Action_Menu_Options"
-        Then verify options in action menu on "Jobs_Monitor_Tab" wizard in "Jobs_Monitor_Table" table with "Running" value in "status" column should contains "Jobs_And_Workflows"."Pending_Job_Action_Menu_Options"
+        Then verify options in action menu on "Jobs_Monitor_Tab" wizard in "Jobs_Monitor_Table" table with "Running" value in "status" column should contains "Jobs_And_Workflows"."Running_Job_Action_Menu_Options"
+        When pick up "Custom range" from "08/28/2021 18:00" to "09/01/2021 18:00" in "Date_Time_Picker" via "Start_Time_Filter_Dropdown" on "Jobs_Monitor_Tab" wizard
         Then verify options in action menu on "Jobs_Monitor_Tab" wizard in "Jobs_Monitor_Table" table with "Completed" value in "status" column should contains "Jobs_And_Workflows"."Job_Action_Menu_Options"
         Then select "Any time" option in "Start_Time_Filter_Dropdown" filter dropdown on "Jobs_Monitor_Tab" wizard
         Then select "Pending" option in "Status_Filter_Dropdown" filter dropdown on "Jobs_Monitor_Tab" wizard
@@ -2038,6 +2119,7 @@ Feature: Jobs and workflows
         Then verify redirection from "projects/churn-project-admin/jobs/monitor-workflows/workflow/eaae138e-439a-47fa-93c6-ba0fe1dc3b79/INVALID/overview" to "projects/churn-project-admin/jobs/monitor-workflows"
         Then verify redirection from "projects/INVALID/jobs/monitor-workflows/workflow/eaae138e-439a-47fa-93c6-ba0fe1dc3b79/e3195358eaed416f8469451d8390ba19/overview" to "projects"
 
+    @MLJW0
     Scenario: MLJW012 - Check all mandatory components on Batch Run wizard - Function selection
         Given open url
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
@@ -2054,11 +2136,26 @@ Feature: Jobs and workflows
         Then "Form_Header_Batch_Run" element on "Batch_Run" should contains "Function selection" value
         Then verify "BatchRun_Tab_Selector" on "Batch_Run" wizard should contains "Batch_Run"."Tab_List"
         Then verify "Step_1_Button" element on "Batch_Run" wizard is enabled
+        Then "Step_1_Button_text" element on "Batch_Run" should contains "Function Selection" value
         Then verify "Step_2_Button" element on "Batch_Run" wizard is disabled
+        Then "Step_2_Button_text" element on "Batch_Run" should contains "Run Details" value
         Then verify "Step_3_Button" element on "Batch_Run" wizard is disabled
+        Then "Step_3_Button_text" element on "Batch_Run" should contains "Data Inputs" value
         Then verify "Step_4_Button" element on "Batch_Run" wizard is disabled
+        Then "Step_4_Button_text" element on "Batch_Run" should contains "Parameters" value
         Then verify "Step_5_Button" element on "Batch_Run" wizard is disabled
+        Then "Step_5_Button_text" element on "Batch_Run" should contains "Resources" value
         Then verify "Step_6_Button" element on "Batch_Run" wizard is disabled
+        Then "Step_6_Button_text" element on "Batch_Run" should contains "Advanced" value
+        Then verify "Next_Button" element visibility on "Batch_Run" wizard
+        Then verify "Next_Button" element on "Batch_Run" wizard is disabled
+        Then "Next_Button" element on "Batch_Run" should contains "Next" value
+        Then verify "Schedule_for_later_Button" element visibility on "Batch_Run" wizard
+        Then verify "Schedule_for_later_Button" element on "Batch_Run" wizard is disabled
+        Then "Schedule_for_later_Button" element on "Batch_Run" should contains "Schedule for later" value
+        Then verify "Run_Button" element visibility on "Batch_Run" wizard
+        Then verify "Run_Button" element on "Batch_Run" wizard is disabled
+        Then "Run_Button" element on "Batch_Run" should contains "Run" value
         Then verify "Search_Input" element visibility on "Batch_Run" wizard
         When type searchable fragment "test" into "Search_Input" on "Batch_Run" wizard
         Then searchable case "sensitive" fragment "test" should be in every suggested option into "Search_Input" on "Batch_Run" wizard
@@ -2078,6 +2175,7 @@ Feature: Jobs and workflows
         Then "Title" element in "Filter_Dropdown" on "Batch_Run" should contains "Filter by category" value
         And click on "Batch_Run_Header" element on "Batch_Run" wizard
         Then select "Other" option in "Category_Selector_Dropdown" filter dropdown on "Batch_Run" wizard
+        When click on "Apply_Button" element in "Filter_Dropdown" on "Batch_Run" wizard
         And wait load page
         And click on "Batch_Run_Header" element on "Batch_Run" wizard
         Then value in "labels" column with "attribute" in "Functions_Table" on "Batch_Run" wizard should contains "Other"
@@ -2092,14 +2190,17 @@ Feature: Jobs and workflows
         And click on row root with value "xgb-test" in "name" column in "Functions_Table" table on "Batch_Run" wizard
         And wait load page
         Then "Function_Title" element on "Batch_Run" should contains "xgb-test" value
-        Then verify "Back_Button" element visibility on "Batch_Run" wizard
+        Then verify "Back_Button" element not exists on "Batch_Run" wizard
         Then verify "Next_Button" element visibility on "Batch_Run" wizard
         Then verify "Step_1_Button" element on "Batch_Run" wizard is enabled
         Then verify "Step_2_Button" element on "Batch_Run" wizard is enabled
-        Then verify "Step_3_Button" element on "Batch_Run" wizard is disabled
-        Then verify "Step_4_Button" element on "Batch_Run" wizard is disabled
-        Then verify "Step_5_Button" element on "Batch_Run" wizard is disabled
-        Then verify "Step_6_Button" element on "Batch_Run" wizard is disabled
+        Then verify "Step_3_Button" element on "Batch_Run" wizard is enabled
+        Then verify "Step_4_Button" element on "Batch_Run" wizard is enabled
+        Then verify "Step_5_Button" element on "Batch_Run" wizard is enabled
+        Then verify "Step_6_Button" element on "Batch_Run" wizard is enabled
+        Then verify "Next_Button" element on "Batch_Run" wizard is enabled
+        Then verify "Schedule_for_later_Button" element on "Batch_Run" wizard is enabled
+        Then verify "Run_Button" element on "Batch_Run" wizard is enabled
     
     Scenario: MLJW013 - Verify behaviour of Filter by category on Batch Run wizard - Function selection (Hub tab)
         Given open url

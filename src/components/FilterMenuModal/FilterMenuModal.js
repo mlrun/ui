@@ -81,7 +81,12 @@ const FilterMenuModal = ({
   }, [dispatch, filtersData, filterMenuName, values])
 
   const hideFiltersWizard = useCallback(event => {
-    if (!event.target.closest('.filters-button') && !event.target.closest('.filters-wizard')) {
+    if (
+      !event.target.closest('.filters-button') &&
+      !event.target.closest('.filters-wizard') &&
+      !event.target.parentNode.previousElementSibling?.classList?.contains('filters-wizard') &&
+      !event.target.parentNode.nextElementSibling?.classList?.contains('filters-wizard')
+    ) {
       setFiltersWizardIsShown(false)
     }
   }, [])

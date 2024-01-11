@@ -29,7 +29,12 @@ import NoData from '../../../common/NoData/NoData'
 import Table from '../../Table/Table'
 
 import detailsActions from '../../../actions/details'
-import { GROUP_BY_NONE, MODEL_ENDPOINTS_TAB, MODELS_PAGE, REQUEST_CANCELED } from '../../../constants'
+import {
+  GROUP_BY_NONE,
+  MODEL_ENDPOINTS_TAB,
+  MODELS_PAGE,
+  REQUEST_CANCELED
+} from '../../../constants'
 import { createModelEndpointsRowData } from '../../../utils/createArtifactsContent'
 import { fetchModelEndpoints, removeModelEndpoints } from '../../../reducers/artifactsReducer'
 import { filters, generatePageData } from './modelEndpoints.util'
@@ -38,12 +43,14 @@ import { isDetailsTabExists } from '../../../utils/isDetailsTabExists'
 import { setFilters } from '../../../reducers/filtersReducer'
 import { useModelsPage } from '../ModelsPage.context'
 
+import { ReactComponent as MonitorIcon } from 'igz-controls/images/monitor-icon.svg'
 import { ReactComponent as Yaml } from 'igz-controls/images/yaml.svg'
 
 const ModelEndpoints = () => {
   const [largeRequestErrorMessage, setLargeRequestErrorMessage] = useState('')
   const [modelEndpoints, setModelEndpoints] = useState([])
   const [selectedModelEndpoint, setSelectedModelEndpoint] = useState({})
+  const frontendSpec = useSelector(store => store.appStore.frontendSpec)
   const artifactsStore = useSelector(store => store.artifactsStore)
   const filtersStore = useSelector(store => store.filtersStore)
   const params = useParams()
@@ -52,12 +59,32 @@ const ModelEndpoints = () => {
   const dispatch = useDispatch()
   const abortControllerRef = useRef(new AbortController())
   const modelEndpointsRef = useRef(null)
-  const pageData = useMemo(() => generatePageData(), [])
-  const { toggleConvertedYaml } = useModelsPage()
+
+  const { handleMonitoring, toggleConvertedYaml } = useModelsPage()
+
+  const pageData = useMemo(
+    () =>
+      generatePageData(
+        selectedModelEndpoint,
+        frontendSpec.model_monitoring_dashboard_url,
+        handleMonitoring
+      ),
+    [frontendSpec.model_monitoring_dashboard_url, handleMonitoring, selectedModelEndpoint]
+  )
 
   const actionsMenu = useMemo(
     () => [
       [
+        {
+          label: 'Monitoring',
+          icon: <MonitorIcon />,
+          tooltip: !frontendSpec.model_monitoring_dashboard_url
+            ? 'Grafana service unavailable'
+            : '',
+          disabled: !frontendSpec.model_monitoring_dashboard_url,
+          onClick: handleMonitoring,
+          hidden: !isEmpty(selectedModelEndpoint)
+        },
         {
           label: 'View YAML',
           icon: <Yaml />,
@@ -65,7 +92,12 @@ const ModelEndpoints = () => {
         }
       ]
     ],
-    [toggleConvertedYaml]
+    [
+      frontendSpec.model_monitoring_dashboard_url,
+      handleMonitoring,
+      selectedModelEndpoint,
+      toggleConvertedYaml
+    ]
   )
 
   const fetchData = useCallback(
@@ -208,7 +240,6 @@ const ModelEndpoints = () => {
           <>
             <Table
               actionsMenu={actionsMenu}
-              content={modelEndpoints}
               handleCancel={() => handleSelectItem({})}
               pageData={pageData}
               retryRequest={fetchData}

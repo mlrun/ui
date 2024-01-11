@@ -627,7 +627,6 @@ const MonitorWorkflows = ({
           ) : (
             <Table
               actionsMenu={actionsMenu}
-              content={workflowsStore.workflows.data}
               handleCancel={handleCancel}
               handleSelectItem={handleSelectRun}
               pageData={pageData}

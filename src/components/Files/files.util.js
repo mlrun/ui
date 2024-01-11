@@ -18,6 +18,7 @@ under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
 import React from 'react'
+
 import {
   ARTIFACT_TYPE,
   FILES_PAGE,
@@ -28,15 +29,16 @@ import {
   TAG_FILTER
 } from '../../constants'
 import { applyTagChanges } from '../../utils/artifacts.util'
-import { createFilesRowData, getIsTargetPathValid } from '../../utils/createArtifactsContent'
-import { getArtifactIdentifier } from '../../utils/getUniqueIdentifier'
-import { searchArtifactItem } from '../../utils/searchArtifactItem'
-import { sortListByDate } from '../../utils'
-import { fetchFile, showArtifactsPreview } from '../../reducers/artifactsReducer'
 import { copyToClipboard } from '../../utils/copyToClipboard'
+import { createFilesRowData, getIsTargetPathValid } from '../../utils/createArtifactsContent'
+import { fetchFile, showArtifactsPreview } from '../../reducers/artifactsReducer'
 import { generateUri } from '../../utils/resources'
+import { getArtifactIdentifier } from '../../utils/getUniqueIdentifier'
 import { handleDeleteArtifact } from '../../utils/handleDeleteArtifact'
+import { openDeleteConfirmPopUp } from 'igz-controls/utils/common.util'
+import { searchArtifactItem } from '../../utils/searchArtifactItem'
 import { setDownloadItem, setShowDownloadsList } from '../../reducers/downloadReducer'
+import { sortListByDate } from '../../utils'
 
 import { ReactComponent as TagIcon } from 'igz-controls/images/tag-icon.svg'
 import { ReactComponent as YamlIcon } from 'igz-controls/images/yaml.svg'
@@ -139,6 +141,15 @@ export const fetchFilesRowData = (
           error: null,
           loading: false
         }))
+      } else {
+        setSelectedRowData(state => ({
+          ...state,
+          [fileIdentifier]: {
+            content: []
+          },
+          error: null,
+          loading: false
+        }))
       }
     })
     .catch(error => {
@@ -215,6 +226,11 @@ export const generateActionsMenu = (
   return [
     [
       {
+        label: 'Add a tag',
+        icon: <TagIcon />,
+        onClick: handleAddTag
+      },
+      {
         label: 'Download',
         icon: <DownloadIcon />,
         onClick: file => {
@@ -239,25 +255,26 @@ export const generateActionsMenu = (
         onClick: toggleConvertedYaml
       },
       {
-        label: 'Add a tag',
-        icon: <TagIcon />,
-        onClick: handleAddTag
-      },
-      {
         label: 'Delete',
         icon: <Delete />,
         disabled: !file?.tag,
         className: 'danger',
         onClick: () =>
-          handleDeleteArtifact(
-            dispatch,
-            projectName,
-            file.db_key,
-            file.tag,
-            file.tree,
-            handleRefresh,
-            datasetsFilters,
-            ARTIFACT_TYPE
+          openDeleteConfirmPopUp(
+            'Delete artifact?',
+            `Do you want to delete the artifact "${file.db_key}"? Deleted artifacts can not be restored.`,
+            () => {
+              handleDeleteArtifact(
+                dispatch,
+                projectName,
+                file.db_key,
+                file.tag,
+                file.tree,
+                handleRefresh,
+                datasetsFilters,
+                ARTIFACT_TYPE
+              )
+            }
           )
       }
     ],

@@ -518,7 +518,6 @@ const MonitorJobs = ({
         isEmpty(selectedJob) && (
           <Table
             actionsMenu={actionsMenu}
-            content={params.jobName ? jobRuns : jobs}
             handleCancel={() => setSelectedJob({})}
             handleSelectItem={handleSelectRun}
             pageData={pageData}

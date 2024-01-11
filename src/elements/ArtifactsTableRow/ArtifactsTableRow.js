@@ -96,7 +96,7 @@ const ArtifactsTableRow = ({
               <ErrorMessage message={selectedRowData[rowItem.data.ui.identifier]?.error?.message} />
             </td>
           ) : (
-            selectedRowData[rowItem.data.ui.identifier]?.content.map((tableContentItem, index) => {
+            selectedRowData[rowItem.data.ui.identifier]?.content?.map((tableContentItem, index) => {
               const subRowClassNames = classnames(
                 'table-row',
                 selectedItem.key &&

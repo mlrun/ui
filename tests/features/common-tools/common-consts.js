@@ -413,28 +413,30 @@ module.exports = {
   },
   Jobs_And_Workflows: {
     Tab_List: ['Monitor Jobs', 'Monitor Workflows', 'Schedule'],
-    Job_Action_Menu_Options: ['View YAML', 'Re-run', 'Monitoring'],
+    Job_Action_Menu_Options: ['View YAML', 'Batch re-run', 'Monitoring', 'Delete'],
+    Job_Overview_Action_Menu_Options: ['View YAML', 'Batch re-run', 'Delete'],
+    Running_Job_Action_Menu_Options: ['View YAML', 'Delete', 'Monitoring', 'Abort'],
     Workflows_Action_Menu_Options: ['View YAML'],
-    Pending_Job_Action_Menu_Options: ['View YAML', 'Re-run', 'Monitoring', 'Abort'],
+    Pending_Job_Action_Menu_Options: ['View YAML', 'Batch re-run', 'Monitoring', 'Abort', 'Delete'],
     Schedule_Action_Menu_Options: ['View YAML', 'Run now', 'Edit', 'Delete']
   },
   Jobs_Monitor_Tab_Info_Pane: {
     Tab_List: ['Overview', 'Inputs', 'Artifacts', 'Results', 'Logs', 'Pods'],
     Overview_Headers: [
-      'UID',
-      'Start time',
-      'Last Updated',
-      'Run on spot',
-      'Node selector',
-      'Priority',
-      'Parameters',
-      'Function',
-      'Function tag',
-      'Results',
-      'Labels',
-      'Log level',
-      'Output path',
-      'Total iterations'
+      'UID:',
+      'Start time:',
+      'Last Updated:',
+      'Run on spot:',
+      'Node selector:',
+      'Priority:',
+      'Parameters:',
+      'Function:',
+      'Function tag:',
+      'Results:',
+      'Labels:',
+      'Log level:',
+      'Output path:',
+      'Total iterations:'
     ]
   },
   Jobs_Monitor_Tab: {

@@ -17,6 +17,7 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
+import { capitalize } from 'lodash'
 import { deleteArtifact } from '../reducers/artifactsReducer'
 import { setNotification } from '../reducers/notificationReducer'
 import { showErrorNotification } from './notifications.util'
@@ -26,12 +27,12 @@ export const handleDeleteArtifact = (
   project,
   key,
   tag,
-  uid,
+  tree,
   refreshArtifacts,
   filters,
   artifactType
 ) => {
-  dispatch(deleteArtifact({ project, key, tag, uid }))
+  dispatch(deleteArtifact({ project, key, tag, tree }))
     .unwrap()
     .then(() => {
       refreshArtifacts(filters)
@@ -39,7 +40,7 @@ export const handleDeleteArtifact = (
         setNotification({
           status: 200,
           id: Math.random(),
-          message: `${artifactType} is successfully deleted`
+          message: `${capitalize(artifactType)} is successfully deleted`
         })
       )
     })
@@ -50,7 +51,7 @@ export const handleDeleteArtifact = (
           project,
           key,
           tag,
-          uid,
+          tree,
           refreshArtifacts,
           filters,
           artifactType

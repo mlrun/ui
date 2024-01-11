@@ -45,6 +45,7 @@ import { generateUri } from '../../../utils/resources'
 import { getArtifactIdentifier } from '../../../utils/getUniqueIdentifier'
 import { getErrorMsg } from 'igz-controls/utils/common.util'
 import { handleDeleteArtifact } from '../../../utils/handleDeleteArtifact'
+import { openDeleteConfirmPopUp } from 'igz-controls/utils/common.util'
 import { searchArtifactItem } from '../../../utils/searchArtifactItem'
 import { setDownloadItem, setShowDownloadsList } from '../../../reducers/downloadReducer'
 import { showErrorNotification } from '../../../utils/notifications.util'
@@ -125,6 +126,15 @@ export const fetchModelsRowData = async (
             loading: false
           }
         })
+      } else {
+        setSelectedRowData(state => ({
+          ...state,
+          [modelIdentifier]: {
+            content: []
+          },
+          error: null,
+          loading: false
+        }))
       }
     })
     .catch(error => {
@@ -305,6 +315,11 @@ export const generateActionsMenu = (
   return [
     [
       {
+        label: 'Add a tag',
+        icon: <TagIcon />,
+        onClick: handleAddTag
+      },
+      {
         label: 'Download',
         icon: <DownloadIcon />,
         onClick: model => {
@@ -329,25 +344,26 @@ export const generateActionsMenu = (
         onClick: toggleConvertedYaml
       },
       {
-        label: 'Add a tag',
-        icon: <TagIcon />,
-        onClick: handleAddTag
-      },
-      {
         label: 'Delete',
         icon: <Delete />,
         className: 'danger',
         disabled: !model?.tag,
         onClick: () =>
-          handleDeleteArtifact(
-            dispatch,
-            projectName,
-            model.db_key,
-            model.tag,
-            model.tree,
-            handleRefresh,
-            modelsFilters,
-            MODEL_TYPE
+          openDeleteConfirmPopUp(
+            'Delete model?',
+            `Do you want to delete the model "${model.db_key}"? Deleted models can not be restored.`,
+            () => {
+              handleDeleteArtifact(
+                dispatch,
+                projectName,
+                model.db_key,
+                model.tag,
+                model.tree,
+                handleRefresh,
+                modelsFilters,
+                MODEL_TYPE
+              )
+            }
           )
       }
     ],
