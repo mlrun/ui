@@ -681,7 +681,7 @@ const parametersRuntimeConfigurationTable = {
 }
 
 const advancedEnvironmentVariablesTable = {
-  root: '.wizard-form__content .form-table',
+  root: '.wizard-form__content [data-testid="advanced.environmentVariablesTable"]',
   header: {},
   body: {
     add_row_btn: '.form-table__action-row button',
@@ -1332,8 +1332,8 @@ module.exports = {
       ),
       Edit_Volume_Name_Input: inputGroup(generateInputGroup('.volumes-table .edit-row:not(.no-border_top) .table__cell-input:nth-of-type(2)')),
       Edit_Volume_Path_Input: inputGroup(generateInputGroup('.volumes-table .edit-row:not(.no-border_top) .table__cell-input:nth-of-type(3)')),
-      Add_New_Row_Button: By.css('.form-table__volume-row.active .form-table__actions-cell .round-icon-cp:nth-of-type(1)'),
-      Delete_New_Row_Button: By.css('.form-table__volume-row .form-table__actions-cell .round-icon-cp:nth-of-type(2)'),
+      Add_New_Row_Button: By.css('[data-testid="resources.volumesTable"] .form-table__actions-cell .round-icon-cp:nth-of-type(1)'),
+      Delete_New_Row_Button: By.css('[data-testid="resources.volumesTable"] .form-table__actions-cell .round-icon-cp:nth-of-type(2)'),
       Apply_Edit_Button: By.css('.volumes-table .apply-edit-btn'),
       Volume_Paths_Table: commonTable(volumePathsTable),
       Memory_Request_Dropdown: dropdownComponent(
@@ -1456,7 +1456,7 @@ module.exports = {
     Advanced_Environment_Variables_Table: commonTable(advancedEnvironmentVariablesTable),
     Advanced_Accordion: {
       Accordion_Subheader: By.css(
-        '.modal__body .wizard-form__content-container .form-table-title'
+        '.modal__body .job-wizard__advanced .form-table-title'
       ),
       Default_Input_Path_Input: inputGroup(
         generateInputGroup(

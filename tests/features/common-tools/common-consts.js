@@ -96,7 +96,10 @@ module.exports = {
     ]
   },
   Common_Lists: {
-    Action_Menu_List: ['Download', 'Copy URI', 'View YAML', 'Add a tag', 'Delete']
+    Action_Menu_List: ['Download', 'Copy URI', 'View YAML', 'Add a tag', 'Delete'],
+    Handler_List: ['train'],
+    Pods_Priority_List: ['Low','Medium', 'High'],
+    Ranking_Criteria_List: ['Min','Max']
   },
   Datasets_Info_Pane: {
     Tab_List: ['Overview', 'Preview', 'Metadata', 'Analysis'],
@@ -106,6 +109,7 @@ module.exports = {
       'Version tag:',
       'Iter:',
       'Size:',
+      'Label column:',
       'Path:',
       'URI:',
       'UID:',
@@ -177,6 +181,7 @@ module.exports = {
       'Iter:',
       'Kind:',
       'Size:',
+      'Label column:',
       'Path:',
       'URI:',
       'Model file:',
@@ -306,9 +311,9 @@ module.exports = {
     Function_Name_Batch_Run_Hint:
       'Valid characters: a–z, A–Z, 0–9, –, _, .\nMust begin and end with: a–z, A–Z, 0–9\nLength – max: 63\n' +
       'This field is required',
-    Labels_Warning_Key: 'Valid characters: a–z, A–Z, 0–9, –, _, .\nMust begin and end with: a–z, A–Z, 0–9\nLength – max: 56\n' +
-    'Key should be unique',
-    Labels_Warning_Value: 'Valid characters: a–z, A–Z, 0–9, –, _, .\nMust begin and end with: a–z, A–Z, 0–9\nLength – max: 56',
+    Labels_Warning_Key: 'Valid characters: a–z, A–Z, 0–9, –, _, .\nMust begin and end with: a–z, A–Z, 0–9\nLength – max: 75\n' +
+    'Key must be unique',
+    Labels_Warning_Value: 'Valid characters: a–z, A–Z, 0–9, –, _, .\nMust begin and end with: a–z, A–Z, 0–9\nLength – max: 75',
     Feature_Set_Name_Hint:
       'Valid characters: a–z, A–Z, 0–9, –, _, .\nMust begin and end with: a–z, A–Z, 0–9\nLength – max: 56\n' +
       'This field is required',
@@ -337,7 +342,7 @@ module.exports = {
     Base_Image_Hint:
       "The name of a base container image from which to build the function's processor image",
     Limit_Number_Warning: 'Limit must be bigger than or equal to Request and not be less than 1',
-    Minimum_Value_Warning: 'The minimum value should be 1',
+    Minimum_Value_Warning: 'The minimum value must be 1',
     CPU_Limit_Number_Warning:
       'Limit must be bigger than or equal to Request and not be less than 0.001',
     Request_Number_Warning: 'Request must be less than or equal to Limit and not be less than 1',

@@ -74,10 +74,11 @@ const action = {
     value
   ) {
     const arr = await getColumnValues(driver, table, columnName)
+    const subString = value.replace('=', '\n:\n')
     expect(arr.length > 0).equal(true)
-    expect(arr.every(item => item.includes(value))).equal(
+    expect(arr.every(item => item.includes(subString))).equal(
       true,
-      `Value "${value}" does not includes in all values: [${arr}]`
+      `Value "${subString}" does not includes in all values: [${arr}]`
     )
   },
   isContainsSubstringInColumnAttributrCells: async function(
