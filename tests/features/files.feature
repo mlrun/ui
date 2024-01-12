@@ -142,7 +142,7 @@ Feature: Files Page
     Then verify "Cross_Cancel_Button" element visibility on "Register_File_Popup" wizard
     Then verify "New_File_Name_Input" element visibility on "Register_File_Popup" wizard
     Then verify "New_File_Name_Input" on "Register_File_Popup" wizard should display "Input_Hint"."Artifact_Names_Unique"
-    Then type value "   " to "New_File_Name_Input" field on "Register_File_Popup" wizard
+    Then type value " " to "New_File_Name_Input" field on "Register_File_Popup" wizard
     Then verify "New_File_Name_Input" on "Register_File_Popup" wizard should display options "Input_Hint"."Artifact_Name_Hint"
     Then verify "New_File_Name_Input" options rules on form "Register_File_Popup" wizard
     Then verify options in "Path_Scheme_Combobox" combobox in "Target_Path" on "Register_File_Popup" wizard should contains "Register_Artifact"."Combobox_Options"
@@ -267,11 +267,13 @@ Feature: Files Page
 
   @MLA
   @passive
+  @FAILED_TODO
+  #TODO: tag edit implementation on mock
   Scenario: MLA013 - Check Details panel still active on page refresh
     * set tear-down property "project" created with "automation-test" value
     * set tear-down property "file" created in "automation-test" project with "test-file" value
     * create "automation-test" MLRun Project with code 201
-    * create "test-file" File with "v1" tag in "automation-test" project with code 200
+    * create "test-file" File with "test" tag in "automation-test" project with code 200
     Given open url
     And wait load page
     And click on row root with value "automation-test" in "name" column in "Projects_Table" table on "Projects" wizard
@@ -582,6 +584,8 @@ Feature: Files Page
     Then verify "Cross_Close_Button" element visibility on "Files_Info_Pane" wizard
 
   @MLA
+  @FAILED_TODO
+  #TODO: tag edit implementation on mock
   Scenario: MLA010 - Check that version tag dropdown shows all tags on filters wizard on Artifacts page
     Given open url
     And wait load page
@@ -636,6 +640,8 @@ Feature: Files Page
     Then "Version_Tag_Input_Placeholder" element on "Files_Info_Pane" should contains "Click to add" value
 
   @MLA
+  @FAILED_TODO
+  #TODO: tag edit implementation on mock
   Scenario: MLA012 - Check filter by "All" tag is performed when version tag was edited
     Given open url
     And wait load page

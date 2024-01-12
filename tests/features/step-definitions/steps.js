@@ -48,7 +48,8 @@ import {
   verifyElementActive,
   verifyElementNotActive,
   generatePath,
-  determineFileAccess
+  determineFileAccess,
+  verifyClassDisabled
 } from '../common/actions/common.action'
 import {
   checkTableColumnValues,
@@ -374,6 +375,16 @@ Then(
   }
 )
 
+Then(
+  'verify {string} element on {string} wizard is disabled by class name',
+  async function(inputField, wizardName) {
+    await verifyClassDisabled(
+      this.driver,
+      pageObjects[wizardName][inputField]
+    )
+  }
+)
+
 When(
   'type searchable fragment {string} into {string} on {string} wizard',
   async function(subName, inputGroup, wizard) {
@@ -443,6 +454,27 @@ Then(
 )
 
 Then(
+  'increase value on {int} points in {string} field on {string} wizard',
+  async function(value, inputField, wizard) {
+    const txt = await getInputValue(
+      this.driver,
+      pageObjects[wizard][inputField]
+    )
+    const result = Number.parseInt(txt) + value
+    await incrementValue(
+      this.driver,
+      pageObjects[wizard][inputField],
+      value
+    )
+    await verifyTypedValue(
+      this.driver,
+      pageObjects[wizard][inputField],
+      result.toString()
+    )
+  }
+)
+
+Then(
     'increase value on {int} points in {string} field with {string} on {string} on {string} wizard',
     async function(value, inputField, unit, accordion, wizard) {
         const txt = await getInputValue(
@@ -480,6 +512,27 @@ Then(
     await verifyTypedValue(
       this.driver,
       pageObjects[wizard][accordion][inputField],
+      result.toString()
+    )
+  }
+)
+
+Then(
+  'decrease value on {int} points in {string} field on {string} wizard',
+  async function(value, inputField, wizard) {
+    const txt = await getInputValue(
+      this.driver,
+      pageObjects[wizard][inputField]
+    )
+    const result = Number.parseInt(txt) - value
+    await decrementValue(
+      this.driver,
+      pageObjects[wizard][inputField],
+      value
+    )
+    await verifyTypedValue(
+      this.driver,
+      pageObjects[wizard][inputField],
       result.toString()
     )
   }
