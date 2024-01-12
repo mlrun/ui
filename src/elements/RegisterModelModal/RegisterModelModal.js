@@ -17,7 +17,7 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your` compliance with
 such restriction.
 */
-import React from 'react'
+import React, { useState } from 'react'
 import PropTypes from 'prop-types'
 import { useDispatch, useSelector } from 'react-redux'
 import { useLocation } from 'react-router-dom'
@@ -25,9 +25,11 @@ import { createForm } from 'final-form'
 import { Form } from 'react-final-form'
 import arrayMutators from 'final-form-arrays'
 import { v4 as uuidv4 } from 'uuid'
+import { isEmpty } from 'lodash'
 
-import { Button, Modal, FormChipCell, FormInput, FormTextarea } from 'igz-controls/components'
+import ErrorMessage from '../../common/ErrorMessage/ErrorMessage'
 import TargetPath from '../../common/TargetPath/TargetPath'
+import { Button, Modal, FormChipCell, FormInput, FormTextarea } from 'igz-controls/components'
 
 import artifactApi from '../../api/artifacts-api'
 import { MLRUN_STORAGE_INPUT_PATH_SCHEME } from '../../constants'
@@ -35,7 +37,7 @@ import { MODAL_SM, SECONDARY_BUTTON, TERTIARY_BUTTON } from 'igz-controls/consta
 import { convertChipsData } from '../../utils/convertChipsData'
 import { getChipOptions } from '../../utils/getChipOptions'
 import { getValidationRules } from 'igz-controls/utils/validation.util'
-import { isArtifactNameUnique } from '../../utils/artifacts.util'
+import { modelUniquenessError } from '../../utils/createArtifact.util'
 import { setFieldState } from 'igz-controls/utils/form.util'
 import { setNotification } from '../../reducers/notificationReducer'
 import { showErrorNotification } from '../../utils/notifications.util'
@@ -59,6 +61,7 @@ function RegisterModelModal({ actions, isOpen, onResolve, params, refresh }) {
       }
     }
   }
+  const [uniquenessErrorIsShown, setUniquenessErrorIsShown] = useState(false)
   const formRef = React.useRef(
     createForm({
       initialValues,
@@ -99,22 +102,33 @@ function RegisterModelModal({ actions, isOpen, onResolve, params, refresh }) {
     }
 
     return artifactApi
-      .registerArtifact(params.projectName, data)
+      .getArtifact(params.projectName, values.metadata.key, values.metadata.tag)
       .then(response => {
-        resolveModal()
-        refresh(filtersStore)
-        dispatch(
-          setNotification({
-            status: response.status,
-            id: Math.random(),
-            message: 'Model initiated successfully'
-          })
-        )
+        if (response?.data) {
+          if (!isEmpty(response.data.artifacts)) {
+            setUniquenessErrorIsShown(true)
+          } else {
+            setUniquenessErrorIsShown(false)
+
+            return artifactApi.registerArtifact(params.projectName, data).then(response => {
+              resolveModal()
+              refresh(filtersStore)
+              dispatch(
+                setNotification({
+                  status: response.status,
+                  id: Math.random(),
+                  message: 'Model initiated successfully'
+                })
+              )
+            })
+          }
+        }
       })
       .catch(error => {
         showErrorNotification(dispatch, error, '', 'Model failed to initiate', () =>
           registerModel(values)
         )
+        setUniquenessErrorIsShown(false)
         resolveModal()
       })
   }
@@ -151,6 +165,14 @@ function RegisterModelModal({ actions, isOpen, onResolve, params, refresh }) {
             size={MODAL_SM}
             title="Register model"
           >
+            {uniquenessErrorIsShown && (
+              <div className="form-row">
+                <ErrorMessage
+                  closeError={() => setUniquenessErrorIsShown(false)}
+                  message={modelUniquenessError}
+                />
+              </div>
+            )}
             <div className="form-row">
               <div className="form-col-2">
                 <FormInput
@@ -158,13 +180,7 @@ function RegisterModelModal({ actions, isOpen, onResolve, params, refresh }) {
                   label="Name"
                   name="metadata.key"
                   required
-                  tip="Artifacts names in the same project must be unique."
-                  validationRules={getValidationRules('artifact.name', {
-                    name: 'ArtifactExists',
-                    label: 'Artifact name must be unique',
-                    pattern: isArtifactNameUnique(params.projectName),
-                    async: true
-                  })}
+                  validationRules={getValidationRules('artifact.name')}
                 />
               </div>
               <div className="form-col-1">

@@ -90,16 +90,6 @@ export const applyTagChanges = (changes, artifactItem, projectName, dispatch, se
   }
 }
 
-export const isArtifactNameUnique = projectName => async value => {
-  if (!value) return
-
-  const {
-    data: { artifacts }
-  } = await artifactApi.getArtifact(projectName, value)
-
-  return artifacts.length === 0
-}
-
 export const isArtifactTagUnique = (projectName, category, artifact) => async value => {
   const artifactCategory = {
     MODELS_TAB: MODEL_TYPE,
