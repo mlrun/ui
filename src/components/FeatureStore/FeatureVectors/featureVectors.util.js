@@ -75,7 +75,7 @@ export const featureSetsInfoHeaders = [
 ]
 
 export const featureVectorsFilters = [
-  { type: TAG_FILTER, label: 'Tag:' },
+  { type: TAG_FILTER, label: 'Version Tag:' },
   { type: NAME_FILTER, label: 'Name:' },
   { type: LABELS_FILTER, label: 'Labels:' }
 ]

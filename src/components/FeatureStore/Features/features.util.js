@@ -21,7 +21,7 @@ import { LABELS_FILTER, NAME_FILTER, TAG_FILTER } from '../../../constants'
 import featureStoreActions from '../../../actions/featureStore'
 
 export const featuresFilters = [
-  { type: TAG_FILTER, label: 'Tag:' },
+  { type: TAG_FILTER, label: 'Version Tag:' },
   { type: NAME_FILTER, label: 'Name:' },
   { type: LABELS_FILTER, label: 'Labels:' }
 ]
