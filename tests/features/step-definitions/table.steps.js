@@ -217,6 +217,76 @@ When('add data to {string} table on {string} wizard', async function (table, wiz
   }
 })
 
+When('add data to {string} table on {string} wizard with a pre-filled table', async function (table, wizard, dataTable) {
+  const inputFields = dataTable['rawTable'][0]
+  const rows = dataTable.rows()
+  for (const row_indx in rows) {
+    let rowsNumber = await getTableRows(this.driver, pageObjects[wizard][table])
+    await clickOnComponent(this.driver, pageObjects[wizard][table]['add_row_btn'])
+    await this.driver.sleep(100)
+    await clickOnComponent(this.driver, pageObjects[wizard][table]['tableFields'][inputFields[0]](rowsNumber + 2))
+    await this.driver.sleep(250)
+    await typeIntoInputField(                                      
+      this.driver,
+      pageObjects[wizard][table]['tableFields'][inputFields[0]](rowsNumber + 2),
+      rows[row_indx][0]
+    )
+    await this.driver.sleep(100)
+    await openDropdown(this.driver, pageObjects[wizard][table]['tableFields'][inputFields[1]](rowsNumber + 2))
+    await selectOptionInDropdownWithoutCheck(
+      this.driver,
+      pageObjects[wizard][table]['tableFields'][inputFields[1]](rowsNumber + 2),
+      rows[row_indx][1]
+    )
+    await this.driver.sleep(100)
+    await typeIntoInputField(
+      this.driver,
+      pageObjects[wizard][table]['tableFields'][inputFields[2]](rowsNumber + 2),
+      rows[row_indx][2]
+    )
+    await this.driver.sleep(100)
+    await hoverComponent(this.driver, pageObjects[wizard][table]['tableFields']['apply_btn'](rowsNumber + 2))
+    await this.driver.sleep(100)
+    await clickOnComponent(this.driver, pageObjects[wizard][table]['tableFields']['apply_btn'](rowsNumber + 2))
+    await this.driver.sleep(100)
+  }
+})
+
+When('add custom parameters to {string} table on {string} wizard with a pre-filled table', async function (table, wizard, dataTable) {
+  const inputFields = dataTable['rawTable'][0]
+  const rows = dataTable.rows()
+  for (const row_indx in rows) {
+    let rowsNumber = await getTableRows(this.driver, pageObjects[wizard][table])
+    await clickOnComponent(this.driver, pageObjects[wizard][table]['add_row_btn'])
+    await this.driver.sleep(100)
+    await clickOnComponent(this.driver, pageObjects[wizard][table]['tableFields'][inputFields[0]](rowsNumber + 1))
+    await this.driver.sleep(250)
+    await typeIntoInputField(                                      
+      this.driver,
+      pageObjects[wizard][table]['tableFields'][inputFields[0]](rowsNumber + 1),
+      rows[row_indx][0]
+    )
+    await this.driver.sleep(100)
+    await openDropdown(this.driver, pageObjects[wizard][table]['tableFields'][inputFields[1]](rowsNumber + 1))
+    await selectOptionInDropdownWithoutCheck(
+      this.driver,
+      pageObjects[wizard][table]['tableFields'][inputFields[1]](rowsNumber + 1),
+      rows[row_indx][1]
+    )
+    await this.driver.sleep(100)
+    await typeIntoInputField(
+      this.driver,
+      pageObjects[wizard][table]['tableFields'][inputFields[2]](rowsNumber + 1),
+      rows[row_indx][2]
+    )
+    await this.driver.sleep(100)
+    await hoverComponent(this.driver, pageObjects[wizard][table]['tableFields']['apply_btn'](rowsNumber + 1))
+    await this.driver.sleep(100)
+    await clickOnComponent(this.driver, pageObjects[wizard][table]['tableFields']['apply_btn'](rowsNumber + 1))
+    await this.driver.sleep(100)
+  }
+})
+
 When('add data to {string} table on {string} wizard with combobox', async function (table, wizard, dataTable) {
   const inputFields = dataTable['rawTable'][0]
   const rows = dataTable.rows()
@@ -619,6 +689,34 @@ When(
         await hoverComponent(this.driver, pageObjects[wizard][accordion][table]['tableFields']['apply_edit_btn'](parseInt(row_indx) + 2))
         await this.driver.sleep(100)
         await clickOnComponent(this.driver, pageObjects[wizard][accordion][table]['tableFields']['apply_edit_btn'](parseInt(row_indx) + 2))
+        await this.driver.sleep(100)
+      }
+
+      await this.driver.sleep(100)
+    }
+  }
+)
+
+When(
+  'add data rows to {string} key-value table on {string} wizard',
+  async function (table, wizard, dataTable) {
+    const inputFields = dataTable['rawTable'][0]
+    const rows = dataTable.rows()
+    for (const row_indx in rows) {
+      await clickOnComponent(this.driver, pageObjects[wizard][table]['add_row_btn'])
+      await this.driver.sleep(100)
+      for (const i in inputFields) {
+        const component = pageObjects[wizard][table]['tableFields'][inputFields[i]](parseInt(row_indx) + 2)
+        const inputField = component.inputField ?? component
+        await typeIntoInputField(this.driver, inputField, rows[row_indx][i])
+      }
+
+      if (pageObjects[wizard][table]['save_row_btn']) {
+        await clickOnComponent(this.driver, pageObjects[wizard][table]['save_row_btn'])
+      } else {
+        await hoverComponent(this.driver, pageObjects[wizard][table]['tableFields']['apply_edit_btn'](parseInt(row_indx) + 2))
+        await this.driver.sleep(100)
+        await clickOnComponent(this.driver, pageObjects[wizard][table]['tableFields']['apply_edit_btn'](parseInt(row_indx) + 2))
         await this.driver.sleep(100)
       }
 

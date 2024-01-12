@@ -94,6 +94,12 @@ const action = {
       .perform()
     await driver.sleep(250)
   },
+  verifyClassDisabled: async function (driver, component) {
+    const inputField = await driver.findElement(component)
+    const attributes = await inputField.getAttribute('class')
+    const flag = attributes.includes('form-field__wrapper-disabled')
+    expect(flag).equal(true)
+  },
   verifyElementDisabled: async function(driver, component) {
     const element = await driver.findElement(component)
     const flag = await element.getAttribute('disabled')
