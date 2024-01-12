@@ -593,3 +593,12 @@ export const ARTIFACT_TYPE = 'artifact'
 export const DATASET_TYPE = 'dataset'
 export const MODEL_TYPE = 'model'
 export const ARTIFACT_OTHER_TYPE = 'other'
+
+/*=========== ROLES =============*/
+
+export const ADMIN_ROLE = 'Admin'
+export const ALL_ROLES = 'All'
+export const EDITOR_ROLE = 'Editor'
+export const OWNER_ROLE = 'Owner'
+export const USER_ROLE = 'user'
+export const VIEWER_ROLE = 'Viewer'
