@@ -165,6 +165,7 @@ const ModelEndpoints = () => {
     return () => {
       setModelEndpoints([])
       dispatch(removeModelEndpoints())
+      dispatch(detailsActions.removeModelEndpoint())
       setSelectedModelEndpoint({})
       abortControllerRef.current.abort(REQUEST_CANCELED)
     }
