@@ -157,13 +157,15 @@ const DetailsResults = ({ allowSortBy, defaultSortBy, defaultDirection, excludeS
 DetailsResults.defaultProps = {
   allowSortBy: null,
   defaultSortBy: null,
-  excludeSortBy: null
+  excludeSortBy: null,
+  defaultDirection: 'desc'
 }
 
 DetailsResults.propTypes = {
   allowSortBy: ALLOW_SORT_BY,
   defaultSortBy: DEFAULT_SORT_BY,
   excludeSortBy: EXCLUDE_SORT_BY,
+  defaultDirection: PropTypes.string,
   job: PropTypes.shape({}).isRequired
 }
 
