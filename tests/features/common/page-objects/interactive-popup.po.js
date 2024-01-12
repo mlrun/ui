@@ -24,9 +24,11 @@ import labelComponent from '../components/label.component'
 import checkboxComponent from '../components/checkbox.component'
 import textAreaGroup from '../components/text-area.component'
 import comboBox from '../components/combo-box.component'
+import numberInputGroup from '../components/number-input-group.component'
 
 import {
   generateLabelGroup,
+  generateNumberInputGroup,
   generateInputGroup,
   generateDropdownGroup,
   generateTextAreaGroup
@@ -168,6 +170,154 @@ const artifactsLabelsTable = {
   }
 }
 
+const trainModelLabelsTable = {
+  root:
+    '.job-wizard__run-details .form-row:nth-of-type(4) .chips',
+  header: {},
+  body: {
+    root: '.chips-wrapper',
+    add_row_btn: '.button-add',
+    row: {
+      root: '.chip-block',
+      fields: {
+        key_input: 'input.input-label-key',
+        value_input: 'input.input-label-value',
+        key_verify: '.edit-chip-container input.input-label-key',
+        value_verify: '.edit-chip-container input.input-label-value',
+        remove_btn: '.edit-chip__icon-close'
+      }
+    }
+  }
+}
+
+const dataInputsHeaders = {
+  root: '.wizard-form__content [data-testid="dataInputs.dataInputsTable"]',  
+  header: {},
+  body: {
+    root: '.form-table__header-row', 
+    row: {
+      root: '.form-table__cell',
+      fields: {
+        key: 'div'
+      }
+    }
+  }
+}
+
+const parametersHeaders = {
+  root: '.wizard-form__content [data-testid="parameters.parametersTable"]',  
+  header: {},
+  body: {
+    root: '.form-table__header-row', 
+    row: {
+      root: '.form-table__cell',
+      fields: {
+        key: 'div'
+      }
+    }
+  }
+}
+
+const podsPriorityDropdown = dropdownComponent(
+  generateDropdownGroup(
+    '.modal__content .modal__body .job-wizard__resources .resources__select',
+    '.form-field-select .form-field__wrapper-normal', 
+    '.options-list__body .select__item-label',
+    '.data-ellipsis'
+  )
+)
+
+const resourcesNodeSelectionTable = {
+  root:
+    '.wizard-form__content [data-testid="resources.nodeSelectorTable"]',
+  header: {},
+  body: {
+    add_row_btn: '.form-table__action-row button',
+    row: {
+      root: '.form-table__row',
+      fields: {
+        key: '.form-table__cell_1:nth-of-type(1)',
+        value: '.form-table__cell_1:nth-of-type(2)',
+        delete_btn: '.form-table__actions-cell .round-icon-cp:nth-of-type(2)',
+        edit_btn: '.form-table__actions-cell .round-icon-cp:nth-of-type(1)',
+        apply_edit_btn: '.form-table__actions-cell .round-icon-cp:nth-of-type(1)',
+        key_input: {
+          componentType: inputGroup,
+          structure: generateInputGroup('.form-table__cell_1:nth-of-type(1)', true, false, false)
+        },
+        value_input: {
+          componentType: inputGroup,
+          structure: generateInputGroup(
+            '.form-table__cell_1:nth-of-type(2)',
+            true,
+            false,
+            false
+          )
+        }
+      }
+    }
+  }
+}
+
+const trainModelDataInputsTable = {
+  root: '.wizard-form__content [data-testid="dataInputs.dataInputsTable"]',
+  header: {},
+  body: {
+    add_row_btn: '.form-table__action-row button',
+    row: {
+      root: '.form-table__row',
+      fields: {
+        name_verify: '.form-table__name-cell',
+        edit_btn: '.form-table__actions-cell .round-icon-cp:nth-of-type(1)',
+        apply_btn: '.form-table__actions-cell .round-icon-cp:nth-of-type(1)',
+        delete_btn: '.form-table__actions-cell .round-icon-cp:nth-of-type(2)',
+        name_input: '.form-field-input input',
+        path_dropdown: {
+          componentType: dropdownComponent,
+          structure: generateDropdownGroup(
+            '.form-table__cell_1:nth-of-type(3) .form-field-combobox', 
+            '.form-field__icons:nth-of-type(1)', 
+            '.form-field-combobox__dropdown-list-option', 
+            false, 
+            false)  
+        },
+        path_input: 'input.form-field-combobox__input',
+        path_verify: '.form-table__cell_1:nth-of-type(3)' 
+      }
+    }
+  }
+}
+
+const trainModelParametersTable = {
+  root: '.wizard-form__content [data-testid="parameters.parametersTable"]',
+  header: {},
+  body: {
+    add_row_btn: '.form-table__action-row button',
+    row: {
+      root: '.form-table__row',
+      fields: {
+        name_verify: '.form-table__cell_2',
+        edit_btn: '.form-table__actions-cell .round-icon-cp:nth-of-type(1)',
+        apply_btn: '.form-table__actions-cell .round-icon-cp:nth-of-type(1)',
+        delete_btn: '.form-table__actions-cell .round-icon-cp:nth-of-type(2)',
+        name_input: '.form-table__cell_2 .form-field-input input',
+        type_dropdown: {
+          componentType: dropdownComponent,
+          structure: generateDropdownGroup(
+            '.form-table__cell_1 .form-field-select', 
+            '.form-field__icons', 
+            '.pop-up-dialog .options-list__body .select__item', 
+            false, 
+            false)  
+        },
+        type_dropdown_verify: '.form-table__cell_1 .data-ellipsis', 
+        value_input: '.form-table__cell_3 .form-field__control input',
+        value_verify: '.form-table__cell_3 .data-ellipsis' 
+      }
+    }
+  }
+}
+
 // Common components
 
 const commonCancelButton = By.css('.pop-up-dialog button.pop-up-dialog__btn_cancel')
@@ -246,7 +396,115 @@ module.exports = {
   },
   trainModel:{
     Title: By.css('.modal .modal__header-title'),
-    Cross_Cancel_Button: By.css('.modal .modal__header-button')
+    Cross_Cancel_Button: By.css('.modal .modal__header-button'),
+    Function_Title: By.css(
+      '.modal .modal__content h6.modal__header-sub-title'
+    ),
+    Hyperparameter_Checkbox: checkboxComponent({
+      root: '#overlay_container .form-field-checkbox',
+      elements: {
+        checkbox: 'input', 
+        name: 'label',
+        icon: ''
+      }
+    }),
+    Next_Button: By.css('.modal__content [data-testid="wizard-btn-next"]'),
+    Back_Button: By.css('.modal__content [data-testid="wizard-btn-back"]'),
+    Run_Training_Now_Button: By.css('.modal__content [data-testid="run-btn"]'),
+    Schedule_Training_Job_Button: By.css('.modal__content [data-testid="schedule-btn"]'),
+    Function_Name_Input: inputGroup(
+      generateInputGroup(
+        '.form-row .form-field-input .form-field__wrapper',
+        false,
+        true,
+        '.form-field__icons svg'
+      )
+    ),
+    Version_Tag_Dropdown_element: By.css('[data-testid="runDetails.version-form-field-select"] [data-testid="select-header"]'),
+    Handler_Dropdown: dropdownComponent(
+      generateDropdownGroup('.form-col-1:nth-of-type(3)', '[data-testid="runDetails.handler-form-field-select"]', '.select__item-main-label', false, false)
+    ),
+    Train_Model_Labels_Table: commonTable(trainModelLabelsTable),
+    Add_Label_Button: By.css('.job-wizard__run-details .form-row:nth-of-type(4) .chips .chips-wrapper .button-add'),
+    Close_Label_Button: By.css('.job-wizard__run-details .form-row:nth-of-type(4) .chips .chips-wrapper .edit-chip__icon-close'),
+    Run_Details_Labels_Key: inputGroup(
+      generateInputGroup(
+        '.job-wizard__run-details .form-row:nth-of-type(4) .chips-wrapper',
+        false,
+        true,
+        '.pop-up-dialog'
+      )
+    ),
+    Run_Details_Labels_Value: By.css ('.job-wizard__run-details .form-row:nth-of-type(4) .chips-wrapper [id="runDetails.labels[0].value"]'),
+    Image_Name_Input_Run_Details: inputGroup(
+      generateInputGroup(
+        '.job-wizard__run-details > div.form-field-input .form-field__wrapper',
+        true,
+        false,
+        '.form-field__warning svg'
+      )
+    ),
+    Image_Name_Text_Run_Details: By.css('.job-wizard__run-details .warning-text'),
+    Train_Model_Data_Inputs_Table: commonTable(trainModelDataInputsTable),
+    Data_Inputs_Headers: commonTable(dataInputsHeaders),
+    Parameters_Headers: commonTable(parametersHeaders),
+    Train_Model_Parameters_Table: commonTable(trainModelParametersTable),
+    Pods_Priority_Dropdown: podsPriorityDropdown,
+    Node_Selection_Subheader: By.css('.modal__content .wizard-form__content-container .job-wizard__resources .form-row:nth-child(3)'),
+    Resources_Node_Selection_Table: commonTable(resourcesNodeSelectionTable),
+    Ranking_Subheader: By.css('.job-wizard__hyperparameter-strategy .ranking-title-grid-item'),
+    Ranking_Result_Input: inputGroup(
+      generateInputGroup(
+        '.job-wizard__hyperparameter-strategy .result-grid-item .form-field-input .form-field__wrapper',
+        false,
+        true,
+        false
+      )
+    ),
+    Ranking_Criteria_Dropdown: dropdownComponent(
+      generateDropdownGroup(
+        '.job-wizard__hyperparameter-strategy .criteria-grid-item', 
+        '[data-testid="hyperparameterStrategy.criteria-form-field-select"]', 
+        '.options-list .select__item', 
+        false, 
+        false
+      )
+    ),
+    Stop_Condition_Subheader: By.css('.job-wizard__hyperparameter-strategy .stop-condition-title-grid-item'),
+    Stop_Condition_Input: inputGroup(
+      generateInputGroup(
+        '.job-wizard__hyperparameter-strategy .stop-condition-grid-item .form-field__control',
+        false,
+        true,
+        false
+      )
+    ),
+    Parallelism_Subheader: By.css('.job-wizard__hyperparameter-strategy .parallelism-title-grid-item'),
+    Parallel_Runs_Number_Input: numberInputGroup(
+      generateNumberInputGroup(
+        '.job-wizard__hyperparameter-strategy .parallel-runs-grid-item .form-field-input',
+        false,
+        true,
+        false,
+        false
+      )
+    ),
+    Dask_Clutter_URL_Input: inputGroup(
+      generateInputGroup(
+        '.job-wizard__hyperparameter-strategy .dask-cluster-uri-grid-item .form-field__control',
+        false,
+        true,
+        false
+      )
+    ),
+    Teardown_Checkbox: checkboxComponent({
+      root: '.job-wizard__hyperparameter-strategy .teardown-dask-grid-item .form-field-checkbox',
+      elements: {
+        checkbox: 'input', 
+        name: 'label',
+        icon: ''
+      }
+    })
   },
   registerDataset: {
     Title: commonPopupTitle,
