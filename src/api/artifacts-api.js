@@ -87,8 +87,16 @@ const artifactsApi = {
         category
       }
     }),
-  getArtifact: (project, artifact) => {
-    return mainHttpClientV2.get(`/projects/${project}/artifacts?name=${artifact}`)
+  getArtifact: (project, artifactName, artifactTag) => {
+    const params = {
+      name: artifactName
+    }
+
+    if (artifactTag) {
+      params.tag = artifactTag
+    }
+
+    return mainHttpClientV2.get(`/projects/${project}/artifacts`, { params })
   },
   getArtifacts: (project, filters, config) => {
     return fetchArtifacts(project, filters, config)

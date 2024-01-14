@@ -2,6 +2,7 @@ Feature: MLRun Projects Page
 
     Testcases that verifies functionality on MLRun Projects Page
 
+    @MLPr
     @passive
     @FAILED_TODO
     #TODO: last two steps are unstable on small screen extensions because scroll change the screen coordinates, it needs another solution
@@ -21,6 +22,7 @@ Feature: MLRun Projects Page
         Then value in "running" column with "tooltip" in "Projects_Table" on "Projects" wizard should contains "ML jobs and Nuclio functions"
         Then value in "failed" column with "tooltip" in "Projects_Table" on "Projects" wizard should contains "Failed ML jobs and nuclio functions in the last 24 hours"
 
+    @MLPr
     @passive
     Scenario: MLPr002 - Verify searching by project name
         Given open url
@@ -46,6 +48,7 @@ Feature: MLRun Projects Page
         Then type value "defa" to "Search_Projects_Input" field on "Projects" wizard
         Then value in "name" column with "text" in "Projects_Table" on "Projects" wizard should contains "default"        
 
+    @MLPr
     @passive
     Scenario: MLPr003 - Sort projects in ascending and descending order
         Given open url
@@ -56,6 +59,7 @@ Feature: MLRun Projects Page
         When select "By created date" option in "Projects_Sort_Dropdown" filter dropdown on "Projects" wizard
         Then sort projects in ascending order
 
+    @MLPr
     @passive
     Scenario: MLPr004 - Verify all mandatory components on Create new ML Project
         Given open url
@@ -76,6 +80,7 @@ Feature: MLRun Projects Page
         Then click on "Create_Button" element on "Create_New_Project" wizard
         Then "Error_Message" component on "Create_New_Project" should be equal "Error_Messages"."Project_Already_Exists"
 
+    @MLPr
     @passive
     Scenario: MLPr005 - Verify all mandatory components on Archive ML Project
         Given open url
@@ -88,6 +93,7 @@ Feature: MLRun Projects Page
         Then verify "Confirm_Button" element visibility on "Common_Popup" wizard
         Then "Confirm_Button" element on "Common_Popup" should contains "Archive" value
 
+    @MLPr
     @passive
     Scenario: MLPr006 - Verify all mandatory components on Delete existing ML Project
         Given open url
@@ -100,6 +106,7 @@ Feature: MLRun Projects Page
         Then verify "Delete_Button" element visibility on "Common_Popup" wizard
         Then "Delete_Button" element on "Common_Popup" should contains "Delete" value
 
+    @MLPr
     @sanity
     Scenario: MLPr007 - Create new ML Project with description
         Given open url
@@ -113,6 +120,7 @@ Feature: MLRun Projects Page
         And set tear-down property "project" created with "automation-test-name" value
         Then check "automation-test-name" value in "name" column in "Projects_Table" table on "Projects" wizard
     
+    @MLPr
     @passive
     Scenario: MLPr008 - Archive ML Project
         * set tear-down property "project" created with "automation-test-name1" value
@@ -127,6 +135,7 @@ Feature: MLRun Projects Page
         Then click on "Archive_Projects_Button" element on "Projects" wizard
         Then check "automation-test-name1" value in "name" column in "Projects_Table" table on "Projects" wizard
     
+    @MLPr
     @passive
     Scenario: MLPr009 - Delete existing ML Project
         * set tear-down property "project" created with "automation-test-name2" value
@@ -164,6 +173,7 @@ Feature: MLRun Projects Page
         Then click on "Active_Projects_Button" element on "Projects" wizard
         Then check "automation-test-name7" value in "name" column in "Projects_Table" table on "Projects" wizard
     
+    @MLPr
     @passive
     Scenario: MLPr011 - Verify View YAML action
         Given open url
@@ -176,7 +186,8 @@ Feature: MLRun Projects Page
         Then select "Export YAML" option in action menu on "Projects" wizard in "Projects_Table" table at row with "default" value in "name" column
         And wait load page
         Then check that "default.yaml" file is existed on "Downloads" directory
-        
+    
+    @MLPr    
     @danger
 #   Run this test case only with mocked backend!!!
     Scenario: MLPr012 - Check projects limit message
@@ -188,6 +199,7 @@ Feature: MLRun Projects Page
         Then click on "Create_Button" element on "Create_New_Project" wizard
         Then "Error_Message" component on "Create_New_Project" should contains "Error_Messages"."Projects_Limit_Reached"
 
+    @MLPr
     @passive
     Scenario: MLPr013 - Create new ML Project and check navigation through project navigation menu
         Given open url

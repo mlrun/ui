@@ -55,11 +55,6 @@ const DetailsInfo = React.forwardRef(
       dispatch(detailsActions.setEditMode(!isEveryObjectValueEmpty(detailsInfoState.editMode)))
     }, [detailsInfoState.editMode, dispatch])
 
-    useEffect(() => {
-      return () => {
-        dispatch(detailsActions.removeModelEndpoint())
-      }
-    }, [dispatch, selectedItem])
 
     useEffect(() => {
       return () => {

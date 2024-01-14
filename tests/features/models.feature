@@ -313,6 +313,7 @@ Feature: Models Page
   @MLM
   @FAILED_TODO
   #TODO: Register_Model_Button hidden from 1.4.0, running on demo mode
+  #TODO: Overview Model file doesn't created
   Scenario: MLM010 - Verify behaviour on Register new Model
     * set tear-down property "model" created in "default" project with "automation-model" value
     Given open url

@@ -27,7 +27,6 @@ import { cloneDeep, remove } from 'lodash'
 import frontendSpec from './data/frontendSpec.json'
 import projects from './data/projects.json'
 import projectsSummary from './data/summary.json'
-import hubItemInference from './data/hubItemInference.json'
 import artifacts from './data/artifacts.json'
 import featureSets from './data/featureSets.json'
 import features from './data/features.json'
@@ -352,7 +351,10 @@ function getProjectsSummaries(req, res) {
 }
 
 function getFunctionItem(req, res) {
-  res.send(hubItemInference)
+  const funcName = req.params.uid === 'batch_inference_v2' ? 'batch-inference-v2' : req.params.uid
+  const hubItem = itemsCatalog.catalog.find(item => item.metadata.name === funcName)
+  
+  res.send(hubItem)
 }
 
 function getFunctionObject (req, res){
@@ -1164,13 +1166,13 @@ function putTags(req, res){
   const projectName = req.params.project
 
   const artifactForUpdate = artifacts.artifacts
-    .find(artifact => (((artifact.metadata?.project === req.params.project) 
-    || artifact.project === req.params.project) 
-    && artifact.kind === req.body.identifiers[0].kind
-    && ((artifact.metadata?.tree === req.body.identifiers[0].uid) 
-    || artifact.tree === req.body.identifiers[0].uid) 
-    && ((artifact.spec?.db_key === req.body.identifiers[0].key) 
-    || artifact.db_key === req.body.identifiers[0].key)))
+    .filter(artifact => ((artifact.metadata?.project === req.params.project || artifact.project === req.params.project) 
+        && (artifact.kind === req.body.identifiers[0].kind)
+        && (artifact.metadata?.uid === req.body.identifiers[0].uid || artifact.metadata?.tree === req.body.identifiers[0].uid || artifact.tree === req.body.identifiers[0].uid) 
+        && (artifact.spec?.db_key === req.body.identifiers[0].key || artifact.db_key === req.body.identifiers[0].key)
+      )
+    )
+  
   if (artifactForUpdate) {
     if (artifactForUpdate.metadata?.tag || artifactForUpdate.metadata?.tag === ''){
       artifactForUpdate.metadata.tag = req.params.tag
@@ -1179,7 +1181,7 @@ function putTags(req, res){
       artifactForUpdate.tag = req.params.tag
     }
   }
-  
+
   res.send({
     name: tagName,
     project: projectName
@@ -1269,9 +1271,8 @@ function postArtifact(req, res) {
 function deleteArtifact(req, res){
   const collectedArtifacts = artifacts.artifacts
     .filter (artifact => (artifact.metadata?.project === req.params.project || artifact.project === req.params.project) 
-    && (artifact.metadata?.tree === req.params.uid || artifact.tree === req.params.uid)
-    && (artifact.metadata?.key === req.query.key || artifact.key === req.query.key))
-  
+    && (artifact.metadata?.tree === req.query.tree || artifact.tree === req.query.tree)
+    && (artifact.metadata?.key === req.params.uid || artifact.key === req.params.uid))
   if (collectedArtifacts?.length > 0){
     collectedArtifacts.forEach(collectedArtifact => remove(artifacts.artifacts, collectedArtifact))    
   }
@@ -1595,7 +1596,7 @@ app.get(`${mlrunAPIIngress}/projects/:project/pipelines/:pipelineID`, getPipelin
 app.get(`${mlrunAPIIngress}/projects/:project/artifact-tags`, getProjectsArtifactTags)
 app.get(`${mlrunAPIIngressV2}/projects/:project/artifacts`, getArtifacts)
 app.post(`${mlrunAPIIngressV2}/projects/:project/artifacts`, postArtifact)
-app.delete(`${mlrunAPIIngress}/projects/:project/artifacts/:uid`, deleteArtifact)
+app.delete(`${mlrunAPIIngressV2}/projects/:project/artifacts/:uid`, deleteArtifact)
 
 app.put(`${mlrunAPIIngress}/projects/:project/tags/:tag`, putTags)
 app.delete(`${mlrunAPIIngress}/projects/:project/tags/:tag`, deleteTags)

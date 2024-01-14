@@ -43,6 +43,7 @@ Feature: Jobs and workflows
         And wait load page
         Then verify "Jobs_Monitor_Table" element visibility on "Jobs_Monitor_Tab" wizard
 
+    @MLJW
     @passive
     Scenario: MLJW002 - Check all mandatory components on Workflows Monitor tab
         Given open url
@@ -69,6 +70,7 @@ Feature: Jobs and workflows
         Then verify "Monitor Workflows" tab is active in "Jobs_Tab_Selector" on "Jobs_Monitor_Tab" wizard
         Then verify "Workflows_Monitor_Table" element visibility on "Workflows_Monitor_Tab" wizard
 
+    @MLJW
     @passive
     Scenario: MLJW003 - Check all mandatory components on Schedule Monitor tab
         Given open url
@@ -84,7 +86,7 @@ Feature: Jobs and workflows
         And click on cell with value "Jobs and workflows" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
         And hover "MLRun_Logo" component on "commonPagesHeader" wizard
         And wait load page
-        Then verify breadcrumbs "tab" label should be equal "Jobs" value
+        Then verify breadcrumbs "tab" label should be equal "Jobs and workflows" value
         Then verify "Jobs_Tab_Selector" on "Jobs_Monitor_Tab" wizard should contains "Jobs_And_Workflows"."Tab_List"
         And select "Schedule" tab in "Jobs_Tab_Selector" on "Jobs_Monitor_Tab" wizard
         And wait load page
@@ -94,6 +96,7 @@ Feature: Jobs and workflows
         Then verify "Table_Refresh_Button" element visibility on "Schedule_Monitor_Tab" wizard
         Then verify "Schedule_Monitor_Table" element visibility on "Schedule_Monitor_Tab" wizard
 
+    @MLJW
     @passive
     Scenario: MLJW004 - Check date picker dropdown options on Jobs Monitor tab
         Given open url
@@ -117,6 +120,7 @@ Feature: Jobs and workflows
         When select "Custom range" option in "Start_Time_Filter_Dropdown" filter dropdown on "Jobs_Monitor_Tab" wizard
         Then verify "Date_Time_Picker" element visibility on "Jobs_Monitor_Tab" wizard
 
+    @MLJW
     @passive
     Scenario: MLJW005 - Verify date picker element on Jobs Monitor tab
         Given open url
@@ -137,6 +141,7 @@ Feature: Jobs and workflows
         When pick up "Custom range" from "03/31/2025 10:31" to "03/21/2025 10:30" in "Date_Time_Picker" via "Start_Time_Filter_Dropdown" on "Jobs_Monitor_Tab" wizard
         Then verify error message in "Date_Time_Picker" on "Jobs_Monitor_Tab" wizard with value "Date_Time_Picker"."Error_Message"
 
+    @MLJW
     @passive
     Scenario: MLJW006 - Verify filtering by job name on Jobs Monitor tab
         Given open url
@@ -154,6 +159,7 @@ Feature: Jobs and workflows
         And wait load page
         Then value in "name" column with "text" in "Jobs_Monitor_Table" on "Jobs_Monitor_Tab" wizard should contains "test"
 
+    @MLJW
     @passive
     Scenario: MLJW007 - Verify filtering by job name on Schedule Monitor tab
         Given open url
@@ -172,6 +178,7 @@ Feature: Jobs and workflows
         And wait load page
         Then value in "name" column with "text" in "Schedule_Monitor_Table" on "Schedule_Monitor_Tab" wizard should contains "test"
 
+    @MLJW
     @passive
     Scenario: MLJW008 - Verify filtering by name on Workflows Monitor tab
         Given open url
@@ -194,9 +201,7 @@ Feature: Jobs and workflows
         And wait load page
         Then value in "name" column with "text" in "Schedule_Monitor_Table" on "Schedule_Monitor_Tab" wizard should contains "main"
 
-    @FAILED_TODO
-    #TODO: need to rewrite test - "labels" column with "dropdowns" contains "author" not just in dropdown, add capture for all data in "labels" column
-    #TODO: also run just on full screen, because of scroll
+    @MLJW
     @passive
     Scenario: MLJW009 - Verify filtering by job label with key on Jobs Monitor tab
         Given open url
@@ -222,6 +227,7 @@ Feature: Jobs and workflows
         And wait load page
         And verify "No_Data_Message" element visibility on "commonPagesHeader" wizard
 
+    @MLJW
     @passive
     @inProgress
     Scenario: MLJW010 - Verify filtering by job label with key on Schedule tab
@@ -245,6 +251,7 @@ Feature: Jobs and workflows
         And wait load page
         Then value in "labels" column with "dropdowns" in "Schedule_Monitor_Table" on "Schedule_Monitor_Tab" wizard should contains "v3io_user=admin"
 
+    @MLJW
     @passive
     #TODO: run just on full screen, because of scroll
     Scenario: MLJW011 - Verify filtering by job status on Jobs Monitor tab
@@ -267,6 +274,7 @@ Feature: Jobs and workflows
         And wait load page
         Then value in "status" column with "tooltip" in "Jobs_Monitor_Table" on "Jobs_Monitor_Tab" wizard should contains "Pending"
 
+    @MLJW
     @passive
     Scenario: verify filtering Jobs after re-run action
         Given open url
@@ -290,6 +298,7 @@ Feature: Jobs and workflows
         Then value in "name" column with "text" in "Jobs_Monitor_Table" on "Jobs_Monitor_Tab" wizard should contains "test"
         Then value in "labels" column with "dropdowns" in "Jobs_Monitor_Table" on "Jobs_Monitor_Tab" wizard should contains "kind"
 
+    @MLJW
     @passive
     @inProgress
     Scenario: verify filtering by starttime on Jobs Monitor tab
@@ -305,7 +314,7 @@ Feature: Jobs and workflows
         Then verify from "11/07/2021 00:00" to "11/09/2021 00:00" filter band in "Start_Time_Filter_Dropdown" filter dropdown on "Jobs_Monitor_Tab" wizard
         Then value in "datetime" column in "Jobs_Monitor_Table" on "Jobs_Monitor_Tab" wizard should be from "11/07/2021 00:00" to "11/09/2021 00:00"
 
-    @passive
+    @oldJobWizard
     Scenario: verify mandatory elements starttime on Jobs Monitor tab
         Given open url
         And wait load page
@@ -321,7 +330,7 @@ Feature: Jobs and workflows
         Then verify "Select_Function_From_Dropdown" element visibility in "Select_Functions_From_Accordion" on "Create_Job" wizard
         Then verify "Collapse_Button" element visibility in "Function_Templates_Accordion" on "Create_Job" wizard
 
-    @passive
+    @oldJobWizard
     Scenario: verify mandatory elements starttime on Jobs Monitor tab
         Given open url
         And wait load page
@@ -453,7 +462,7 @@ Feature: Jobs and workflows
         Then "Delete_Button" element on "Delete_Confirm_Popup" should contains "Delete" value
         When click on "Cancel_Button" element on "Delete_Confirm_Popup" wizard
         
-
+    @MLJW
     @passive
     #TODO: rewrite twst accourding to new implementation "Refresh" button
     Scenario: Check all mandatory components in Item infopane on Logs tab table on Jobs Monitor Page
@@ -479,6 +488,7 @@ Feature: Jobs and workflows
         Then verify "Logs_Refresh_Button" element visibility on "Jobs_Monitor_Tab_Info_Pane" wizard
         #Then "Logs_Refresh_Button" element on "Jobs_Monitor_Tab_Info_Pane" should contains "Refresh" value - change from button to item_logs with text "Refresh" in toltip 
 
+    @MLJW
     @FAILED_TODO
     #TODO: select "Artifacts" tab in "Info_Pane_Tab_Selector" - rewrite test accourding to new implementation 'JOB' nesting
     @passive
@@ -516,6 +526,7 @@ Feature: Jobs and workflows
         And wait load page
         Then verify "Artifacts_Table" element visibility on "Artifacts_Info_Pane" wizard
 
+    @MLJW
     @passive
     Scenario: Check all mandatory components in Item infopane on Overview tab table on Schedule Page
         Given open url
@@ -539,6 +550,7 @@ Feature: Jobs and workflows
         Then verify "Overview" tab is active in "Info_Pane_Tab_Selector" on "ML_Function_Info_Pane" wizard
         Then verify "Overview_Headers" on "ML_Function_Info_Pane" wizard should contains "ML_Function_Info_Pane"."Overview_Headers"
 
+    @MLJW
     @passive
     Scenario: Verify all mandatory components on Delete existing scheduled job
         Given open url
@@ -560,6 +572,7 @@ Feature: Jobs and workflows
         Then verify "Delete_Button" element visibility on "Common_Popup" wizard
         Then "Delete_Button" element on "Common_Popup" should contains "Delete" value
 
+    @MLJW
     Scenario: Delete Scheduled Job
         * set tear-down property "schedule" created in "automation-test-name01" project with "new-aqa-schedule-01" value
         * set tear-down property "project" created with "automation-test-name01" value
@@ -582,7 +595,7 @@ Feature: Jobs and workflows
         And wait load page
         Then check "new-aqa-schedule-01" value not in "name" column in "Schedule_Monitor_Table" table on "Schedule_Monitor_Tab" wizard
 
-    @passive
+    @oldJobWizard
     Scenario: verify mandatory elements on Create New Jobs side panel except accordions
         Given open url
         And wait load page
@@ -599,7 +612,7 @@ Feature: Jobs and workflows
         And wait load page
         Then click on "Name_Edit_Button" element on "New_JobTemplate_Edit" wizard
         Then type value " " to "Job_Name_Input" field on "New_JobTemplate_Edit" wizard
-        #Then verify "Job_Name_Input" on "New_JobTemplate_Edit" wizard should display options "Input_Hint"."Jobs_Name_Hint" - This field doesn't required
+        Then verify "Job_Name_Input" on "New_JobTemplate_Edit" wizard should display options "Input_Hint"."Jobs_Name_Hint"
         Then verify "Job_Name_Input" options rules on "New_JobTemplate_Edit" wizard
         Then type value "demo_Job_00" to "Job_Name_Input" field on "New_JobTemplate_Edit" wizard
         When collapse "Data_Inputs_Accordion" on "New_JobTemplate_Edit" wizard
@@ -616,7 +629,7 @@ Feature: Jobs and workflows
         Then verify "Run_Now_Button" element visibility on "New_JobTemplate_Edit" wizard
         Then "Run_Now_Button" element on "New_JobTemplate_Edit" should contains "Run now" value
 
-    @passive
+    @oldJobWizard
     Scenario: verify mandatory elements in Data Inputs Accordion on Create New Jobs side panel
         Given open url
         And wait load page
@@ -634,9 +647,7 @@ Feature: Jobs and workflows
         Then verify "Default_Input_Path_Input" element visibility in "Data_Inputs_Accordion" on "New_JobTemplate_Edit" wizard
         Then verify "Default_Artifact_Path_Input" element visibility in "Data_Inputs_Accordion" on "New_JobTemplate_Edit" wizard
 
-    @FAILED_TODO
-    #TODO: verify "URL_Combobox" element in "Data_Inputs_Accordion" - bug ML-3996
-    @passive
+    @oldJobWizard
     Scenario: Verify behaviour of Combobox element on Create New Jobs wizard on Data Inputs Accordion
         Given open url
         And wait load page
@@ -677,7 +688,7 @@ Feature: Jobs and workflows
         Then select "Google storage" option in "URL_Combobox" combobox on "Data_Inputs_Accordion" accordion on "New_JobTemplate_Edit" wizard
         Then verify "URL_Combobox" element in "Data_Inputs_Accordion" on "New_JobTemplate_Edit" wizard should display warning "Input_Hint"."S3_Path_Hint"
 
-    @passive
+    @oldJobWizard
     Scenario: Verify behaviour of Data Inputs Table in Data Inputs Accordion on create New JobTemplate edit wizard
         Given open url
         And wait load page
@@ -738,7 +749,7 @@ Feature: Jobs and workflows
             | edited_name2             | store://artifacts/my-project/edited-artifact  |
             | edited_name3             | s3://artifacts/my-project/edited-artifact3    |
 
-    @passive
+    @oldJobWizard
     Scenario: verify mandatory elements in Parameters Accordion on Create New Jobs side panel
         Given open url
         And wait load page
@@ -765,8 +776,7 @@ Feature: Jobs and workflows
         Then verify "Criteria_Dropdown" element visibility in "Parameters_Accordion" on "New_JobTemplate_Edit" wizard
         Then verify "Criteria_Dropdown" element in "Parameters_Accordion" on "New_JobTemplate_Edit" wizard should contains "Dropdown_Options"."Criteria_Dropdown_Options"
 
-    @passive
-    #TODO: for 8 elements it's timeout - check function waiting time
+    @oldJobWizard
     Scenario: Verify behaviour of Parameters Table in Resources Accordion on create New JobTemplate edit wizard
         Given open url
         And wait load page
@@ -841,7 +851,7 @@ Feature: Jobs and workflows
             #| name6        | float | Simple       | value6        |
             | edited_name6 | float   | Simple       | editedValue6  |
 
-    @passive
+    @oldJobWizard
     Scenario: Verify behaviour of Volume Paths Table in Resources Accordion on create New JobTemplate edit wizard
         Given open url
         And wait load page
@@ -940,7 +950,7 @@ Feature: Jobs and workflows
             | Edited_Name_5 | /newPath/to/happines5 |
             | Volume_Name_7 | /path/to/happines7    |
 
-    @passive
+    @oldJobWizard
     Scenario: Verify behaviour of Node Selector Table in Resources Accordion on create New JobTemplate edit wizard
         Given open url
         And wait load page
@@ -989,8 +999,8 @@ Feature: Jobs and workflows
             | key        | value        |
             | key2edited | value2edited |
             | key4edited | value4edited |
-    #TODO: Pods_Toleration is deleted from implementation
-    @passive
+    
+    @oldJobWizard
     Scenario: verify mandatory elements in Resources Accordion on Create New Jobs side panel
         Given open url
         And wait load page
@@ -1011,13 +1021,13 @@ Feature: Jobs and workflows
         And wait load page
         Then verify "Pods_Priority_Dropdown" element visibility in "Resources_Accordion" on "New_JobTemplate_Edit" wizard
         Then verify "Pods_Priority_Dropdown" element in "Resources_Accordion" on "New_JobTemplate_Edit" wizard should contains "Dropdown_Options"."Pods_Priority"
-        #Then verify "Pods_Toleration_Dropdown" element visibility in "Resources_Accordion" on "New_JobTemplate_Edit" wizard - Pods_Toleration is deleted from implementation
-        #Then verify "Pods_Toleration_Dropdown" dropdown in "Resources_Accordion" on "New_JobTemplate_Edit" wizard selected option value "Prevent"
-        #Then verify "Pods_Toleration_Dropdown" element in "Resources_Accordion" on "New_JobTemplate_Edit" wizard should contains "Dropdown_Options"."Pods_Toleration"
-        #Then select "Allow" option in "Pods_Toleration_Dropdown" dropdown on "Resources_Accordion" on "New_JobTemplate_Edit" wizard
-        #Then verify "Pods_Toleration_Dropdown" dropdown in "Resources_Accordion" on "New_JobTemplate_Edit" wizard selected option value "Allow"
-        #Then select "Constrain" option in "Pods_Toleration_Dropdown" dropdown on "Resources_Accordion" on "New_JobTemplate_Edit" wizard
-        #Then verify "Pods_Toleration_Dropdown" dropdown in "Resources_Accordion" on "New_JobTemplate_Edit" wizard selected option value "Constrain"
+        Then verify "Pods_Toleration_Dropdown" element visibility in "Resources_Accordion" on "New_JobTemplate_Edit" wizard - Pods_Toleration is deleted from implementation
+        Then verify "Pods_Toleration_Dropdown" dropdown in "Resources_Accordion" on "New_JobTemplate_Edit" wizard selected option value "Prevent"
+        Then verify "Pods_Toleration_Dropdown" element in "Resources_Accordion" on "New_JobTemplate_Edit" wizard should contains "Dropdown_Options"."Pods_Toleration"
+        Then select "Allow" option in "Pods_Toleration_Dropdown" dropdown on "Resources_Accordion" on "New_JobTemplate_Edit" wizard
+        Then verify "Pods_Toleration_Dropdown" dropdown in "Resources_Accordion" on "New_JobTemplate_Edit" wizard selected option value "Allow"
+        Then select "Constrain" option in "Pods_Toleration_Dropdown" dropdown on "Resources_Accordion" on "New_JobTemplate_Edit" wizard
+        Then verify "Pods_Toleration_Dropdown" dropdown in "Resources_Accordion" on "New_JobTemplate_Edit" wizard selected option value "Constrain"
         Then verify "Volumes_Subheader" element visibility in "Resources_Accordion" on "New_JobTemplate_Edit" wizard
         Then verify "Volumes_Subheader" element in "Resources_Accordion" on "New_JobTemplate_Edit" wizard should display hint "Label_Hint"."New_Job_Volumes"
         Then verify "Volume_Paths_Table" element visibility in "Resources_Accordion" on "New_JobTemplate_Edit" wizard
@@ -1094,7 +1104,7 @@ Feature: Jobs and workflows
         Then increase value on 15 points in "GPU_Limit_Number_Input" field on "Resources_Accordion" on "New_JobTemplate_Edit" wizard
         Then decrease value on 15 points in "GPU_Limit_Number_Input" field on "Resources_Accordion" on "New_JobTemplate_Edit" wizard
 
-    @passive
+    @oldJobWizard
     Scenario: verify mandatory elements in Advanced Accordion on Create New Jobs side panel
         Given open url
         And wait load page
@@ -1115,8 +1125,7 @@ Feature: Jobs and workflows
         Then verify "Advanced_Environment_Variables_Table" element visibility in "Advanced_Accordion" on "New_JobTemplate_Edit" wizard
         When collapse "Advanced_Accordion" on "New_JobTemplate_Edit" wizard
 
-    @passive
-    @demo
+    @oldJobWizard
     Scenario: verify mandatory elements in Advanced Accordion on Create New Jobs side panel in Demo mode
         Given open url
         And wait load page
@@ -1139,8 +1148,7 @@ Feature: Jobs and workflows
         Then verify "Advanced_Secrets_Table" element visibility in "Advanced_Accordion" on "New_JobTemplate_Edit" wizard
         When collapse "Advanced_Accordion" on "New_JobTemplate_Edit" wizard
 
-    @passive
-    @inProgress
+    @oldJobWizard
     Scenario: verify Advanced Environment Variables Table in Advanced Accordion on Create New Jobs side panel
         Given open url
         And wait load page
@@ -1197,11 +1205,7 @@ Feature: Jobs and workflows
             | name0edited | value0edited      |
             | name5edited | value5edited      |
 
-    @FAILED_TODO
-    #TODO: Advanced_Environment_Variables_Table - implementation was changed, need rewrite the test
-    @passive
-    @inProgress
-    @demo
+    @oldJobWizard
     Scenario: verify Advanced Environment Variables Table in Advanced Accordion on Create New Jobs side panel
         Given open url
         And wait load page
@@ -1328,8 +1332,7 @@ Feature: Jobs and workflows
             | kind        |    value          |
             | file        | value2edited      |
 
-    @passive
-    @inProgress
+    @oldJobWizard
     Scenario: verify non-unique value input hint on Create New Jobs side panel
         Given open url
         And wait load page
@@ -1366,9 +1369,7 @@ Feature: Jobs and workflows
             |              name0               |              value0               |       yes      |                    |
         Then verify "Environment_Variables_Name_Input" element in "Advanced_Accordion" on "New_JobTemplate_Edit" wizard should display warning "Input_Hint"."Name_Already_Exists"
 
-    @FAILED_TODO
-    #TODO: Re-run Job - not enought data for re-run
-    #TODO: Resourses changes - RUN ON SPOT NODES add to test
+    @oldJobWizard
     Scenario: Run New Job from template
         * set tear-down property "project" created with "automation-test-name-1100" value
         * create "automation-test-name-1100" MLRun Project with code 201
@@ -1434,6 +1435,7 @@ Feature: Jobs and workflows
         Then verify "Cross_Cancel_Button" element visibility on "View_YAML" wizard
         Then verify "YAML_Modal_Container" element visibility on "View_YAML" wizard
 
+    @MLJW
     @passive
     Scenario: Verify View YAML action on Workflows Monitor tab
         Given open url
@@ -1453,6 +1455,7 @@ Feature: Jobs and workflows
         Then verify "Cross_Cancel_Button" element visibility on "View_YAML" wizard
         Then verify "YAML_Modal_Container" element visibility on "View_YAML" wizard
 
+    @MLJW
     @passive
     Scenario: Verify View YAML action on Schedule Monitor tab
         Given open url
@@ -1477,6 +1480,7 @@ Feature: Jobs and workflows
         Then verify "Cross_Cancel_Button" element visibility on "View_YAML" wizard
         Then verify "YAML_Modal_Container" element visibility on "View_YAML" wizard
 
+    @MLJW
     @passive
     Scenario: Check all mandatory components on Workflow List View
         Given open url
@@ -1497,6 +1501,7 @@ Feature: Jobs and workflows
         Then click on "Toggle_View_Button" element on "Workflows_Monitor_Tab" wizard
         Then verify "Workflow_List_View_Table" element visibility on "Workflows_Monitor_Tab" wizard
 
+    @MLJW
     @FAILED_TODO
     #TODO: Workflow_List_View_Table not clickable need check data on server  
     @passive
@@ -1526,6 +1531,7 @@ Feature: Jobs and workflows
         Then verify "Overview" tab is active in "Info_Pane_Tab_Selector" on "Workflows_Monitor_Tab_Info_Pane" wizard
         Then verify "Overview_Headers" on "Workflows_Monitor_Tab_Info_Pane" wizard should contains "Jobs_Monitor_Tab_Info_Pane"."Overview_Headers"
 
+    @MLJW
     @FAILED_TODO
     #TODO: Workflow_List_View_Table not clickable need check data on server
     @passive
@@ -1551,6 +1557,7 @@ Feature: Jobs and workflows
         Then verify "Logs_Refresh_Button" element visibility on "Workflows_Monitor_Tab_Info_Pane" wizard
         Then "Logs_Refresh_Button" element on "Workflows_Monitor_Tab_Info_Pane" should contains "Refresh" value
 
+    @MLJW
     @FAILED_TODO
     #TODO: Workflow_List_View_Table not clickable need check data on server
     @passive
@@ -1574,6 +1581,7 @@ Feature: Jobs and workflows
         And select "Inputs" tab in "Info_Pane_Tab_Selector" on "Workflows_Monitor_Tab_Info_Pane" wizard
         Then verify "Inputs_Table" element visibility on "Inputs_Info_Pane" wizard
 
+    @MLJW
     @FAILED_TODO
     #TODO: Workflow_List_View_Table not clickable need check data on server
     @passive
@@ -1597,6 +1605,7 @@ Feature: Jobs and workflows
         And select "Artifacts" tab in "Info_Pane_Tab_Selector" on "Workflows_Monitor_Tab_Info_Pane" wizard
         Then verify "Artifacts_Table" element visibility on "Artifacts_Info_Pane" wizard
 
+    @MLJW
     @FAILED_TODO
     #TODO: Workflow_List_View_Table not clickable need check data on server
     @passive
@@ -1620,6 +1629,7 @@ Feature: Jobs and workflows
         And select "Results" tab in "Info_Pane_Tab_Selector" on "Workflows_Monitor_Tab_Info_Pane" wizard
         Then verify "Results_Table" element visibility on "Results_Info_Pane" wizard
 
+    @MLJW
     @FAILED_TODO
     #TODO: Workflow_List_View_Table not clickable need check data on server
     @passive
@@ -1669,6 +1679,7 @@ Feature: Jobs and workflows
         Then verify "Run_Now_Button" element visibility on "New_JobTemplate_Edit" wizard
         Then "Run_Now_Button" element on "New_JobTemplate_Edit" should contains "Run now" value
 
+    @MLJW
     @FAILED_TODO
     #TODO: Workflow_List_View_Table not clickable need check data on server
     @passive
@@ -1716,6 +1727,7 @@ Feature: Jobs and workflows
         Then select "Pending" option in "Status_Filter_Dropdown" filter dropdown on "Jobs_Monitor_Tab" wizard
         Then verify options in action menu on "Jobs_Monitor_Tab" wizard in "Jobs_Monitor_Table" table with "Pending" value in "status" column should contains "Jobs_And_Workflows"."Pending_Job_Action_Menu_Options"
 
+    @MLJW
     @passive
     Scenario: Check options in action menu on Workflows Monitor tab
         Given open url
@@ -1732,6 +1744,7 @@ Feature: Jobs and workflows
         Then verify "Monitor Workflows" tab is active in "Jobs_Tab_Selector" on "Jobs_Monitor_Tab" wizard
         Then verify options in action menu on "Workflows_Monitor_Tab" wizard in "Workflows_Monitor_Table" table with "Completed" value in "status" column should contains "Jobs_And_Workflows"."Workflows_Action_Menu_Options"
 
+    @MLJW
     @passive
     Scenario: Check options in action menu on Schedule tab
         Given open url
@@ -1747,6 +1760,7 @@ Feature: Jobs and workflows
         Then verify "Schedule" tab is active in "Jobs_Tab_Selector" on "Jobs_Monitor_Tab" wizard
         Then verify options in action menu on "Schedule_Monitor_Tab" wizard in "Schedule_Monitor_Table" table with "Job" value in "type" column should contains "Jobs_And_Workflows"."Schedule_Action_Menu_Options"
 
+    @MLJW
     @passive
     Scenario: Verify all mandatory component on Edit Scheduled Job sidebar
         Given open url
@@ -1790,6 +1804,7 @@ Feature: Jobs and workflows
         Then verify "Run_Now_Button" element visibility on "New_JobTemplate_Edit" wizard
         Then "Run_Now_Button" element on "New_JobTemplate_Edit" should contains "Save" value
 
+    @MLJW
     @FAILED_TODO
     #TODO: Switch to list view - add
     #TODO: Not enought data - node with index 2 in "Workflow_Graph" graph not clickable
@@ -1822,6 +1837,7 @@ Feature: Jobs and workflows
         When click on node with name "deploy-churn-server" in "Workflow_Graph" graph on "Workflows_Monitor_Tab" wizard
         Then verify "Info_Pane_Tab_Selector" on "ML_Function_Info_Pane" wizard should contains "ML_Function_Info_Pane"."Tab_List"
 
+    @MLJW
     @passive
     @links
     Scenario: MLJW030 - Check redirect to project`s Function Infopane from Job Overview
@@ -1857,6 +1873,7 @@ Feature: Jobs and workflows
         Then verify redirection to "projects/default/functions"
         And wait load page
 
+    @MLJW
     @FAILED_TODO
     #TODO: create "test-scheduled" Schedule in "automation-test" project - createAPISchedule, newJobTemplate creating error
     @links
@@ -1888,6 +1905,7 @@ Feature: Jobs and workflows
         And select "Results" tab in "Info_Pane_Tab_Selector" on "Workflows_Monitor_Tab_Info_Pane" wizard
         And verify "No_Data_Message" element visibility on "commonPagesHeader" wizard
 
+    @oldJobWizard
     Scenario: Check redirection to Function details from Schedules tab
         * set tear-down property "function" created in "automation-test" project with "schedule-function" value
         * set tear-down property "schedule" created in "automation-test" project with "schedule-function" value
@@ -1922,6 +1940,7 @@ Feature: Jobs and workflows
         And wait load page
         Then compare current browser URL with test "href" context value
 
+    @oldJobWizard
     Scenario: Check all mandatory components on Create new Schedule
         Given open url
         And wait load page
@@ -1955,9 +1974,7 @@ Feature: Jobs and workflows
         Then click on "Schedule_Button" element in "Schedule_For_Later" on "New_JobTemplate_Edit" wizard
         Then "Error_Message" component on "New_JobTemplate_Edit" should contains "Error_Messages"."Already_Scheduled"
 
-    @FAILED_TODO
-    #TODO: check if the varification is valid after Pods_Toleration is deleted from implementation
-    @passive
+    @oldJobWizard
     Scenario: Verify behaviour of Method changing on Create New Job panel
         Given open url
         And wait load page
@@ -1976,7 +1993,7 @@ Feature: Jobs and workflows
         Then collapse "Parameters_Accordion" on "New_JobTemplate_Edit" wizard
         Then expand "Resources_Accordion" on "New_JobTemplate_Edit" wizard
         Then select "High" option in "Pods_Priority_Dropdown" dropdown on "Resources_Accordion" on "New_JobTemplate_Edit" wizard
-        #Then select "Allow" option in "Pods_Toleration_Dropdown" dropdown on "Resources_Accordion" on "New_JobTemplate_Edit" wizard - Pods_Toleration is deleted from implementation
+        Then select "Allow" option in "Pods_Toleration_Dropdown" dropdown on "Resources_Accordion" on "New_JobTemplate_Edit" wizard
         Then type value "5" to "Memory_Request_Number_Input" field on "Resources_Accordion" on "New_JobTemplate_Edit" wizard
         Then type value "10" to "Memory_Limit_Number_Input" field on "Resources_Accordion" on "New_JobTemplate_Edit" wizard
         Then select "millicpu" option in "CPU_Limit_Dropdown" dropdown on "Resources_Accordion" on "New_JobTemplate_Edit" wizard
@@ -1986,7 +2003,7 @@ Feature: Jobs and workflows
         Then type value "10" to "GPU_Limit_Number_Input" field on "Resources_Accordion" on "New_JobTemplate_Edit" wizard
         Then select "plot_stat" option in "Job_Method_Dropdown" dropdown on "New_JobTemplate_Edit" wizard
         Then verify "Pods_Priority_Dropdown" dropdown in "Resources_Accordion" on "New_JobTemplate_Edit" wizard selected option value "Medium"
-        #Then verify "Pods_Toleration_Dropdown" dropdown in "Resources_Accordion" on "New_JobTemplate_Edit" wizard selected option value "Prevent" - Pods_Toleration is deleted from implementation
+        Then verify "Pods_Toleration_Dropdown" dropdown in "Resources_Accordion" on "New_JobTemplate_Edit" wizard selected option value "Prevent"
         Then verify "Memory_Request_Number_Input" element in "Resources_Accordion" on "New_JobTemplate_Edit" wizard is disabled
         Then verify "Memory_Request_Number_Input" input should contains "" value in "Resources_Accordion" on "New_JobTemplate_Edit" wizard
         Then verify "Memory_Limit_Number_Input" element in "Resources_Accordion" on "New_JobTemplate_Edit" wizard is disabled
@@ -2001,7 +2018,7 @@ Feature: Jobs and workflows
         Then verify "Run_Now_Button" element on "New_JobTemplate_Edit" wizard is disabled
         Then click on "Job_Method_Cancel" element on "New_JobTemplate_Edit" wizard
         Then verify "Pods_Priority_Dropdown" dropdown in "Resources_Accordion" on "New_JobTemplate_Edit" wizard selected option value "High"
-        #Then verify "Pods_Toleration_Dropdown" dropdown in "Resources_Accordion" on "New_JobTemplate_Edit" wizard selected option value "Allow" - Pods_Toleration is deleted from implementation
+        Then verify "Pods_Toleration_Dropdown" dropdown in "Resources_Accordion" on "New_JobTemplate_Edit" wizard selected option value "Allow"
         Then verify "Memory_Request_Number_Input" element in "Resources_Accordion" on "New_JobTemplate_Edit" wizard is enabled
         Then verify "Memory_Request_Number_Input" input should contains "5" value in "Resources_Accordion" on "New_JobTemplate_Edit" wizard
         Then verify "Memory_Limit_Number_Input" element in "Resources_Accordion" on "New_JobTemplate_Edit" wizard is enabled
@@ -2017,7 +2034,7 @@ Feature: Jobs and workflows
         Then select "plot_stat" option in "Job_Method_Dropdown" dropdown on "New_JobTemplate_Edit" wizard
         Then click on "Job_Method_Apply" element on "New_JobTemplate_Edit" wizard
         Then verify "Pods_Priority_Dropdown" dropdown in "Resources_Accordion" on "New_JobTemplate_Edit" wizard selected option value "Medium"
-        #Then verify "Pods_Toleration_Dropdown" dropdown in "Resources_Accordion" on "New_JobTemplate_Edit" wizard selected option value "Prevent" - Pods_Toleration is deleted from implementation
+        Then verify "Pods_Toleration_Dropdown" dropdown in "Resources_Accordion" on "New_JobTemplate_Edit" wizard selected option value "Prevent"
         Then verify "CPU_Limit_Dropdown" dropdown in "Resources_Accordion" on "New_JobTemplate_Edit" wizard selected option value "cpu"
         Then verify "CPU_Request_Dropdown" dropdown in "Resources_Accordion" on "New_JobTemplate_Edit" wizard selected option value "cpu"
         Then verify "Memory_Request_Dropdown" dropdown in "Resources_Accordion" on "New_JobTemplate_Edit" wizard selected option value "MiB"
@@ -2028,6 +2045,7 @@ Feature: Jobs and workflows
         Then verify "CPU_Limit_Number_Input" input should contains "" value in "Resources_Accordion" on "New_JobTemplate_Edit" wizard
         Then verify "GPU_Limit_Number_Input" input should contains "" value in "Resources_Accordion" on "New_JobTemplate_Edit" wizard
 
+    @MLJW
     Scenario: Check broken link redirection on Monitor Jobs and Schedules screens
         Given open url
         And wait load page
@@ -2072,6 +2090,7 @@ Feature: Jobs and workflows
         Then verify redirection from "projects/default/jobs/INVALID" to "projects/default/jobs/monitor-jobs"
         Then verify redirection from "projects/default/INVALID/monitor-jobs" to "projects"
 
+    @MLJW
     @FAILED_TODO
     #TODO: Not enought data - click on node with name "clean-data" in "Workflow_Graph" graph not clickable
     Scenario: Check broken link redirection on Monitor Jobs and Schedules screens
@@ -2119,7 +2138,7 @@ Feature: Jobs and workflows
         Then verify redirection from "projects/churn-project-admin/jobs/monitor-workflows/workflow/eaae138e-439a-47fa-93c6-ba0fe1dc3b79/INVALID/overview" to "projects/churn-project-admin/jobs/monitor-workflows"
         Then verify redirection from "projects/INVALID/jobs/monitor-workflows/workflow/eaae138e-439a-47fa-93c6-ba0fe1dc3b79/e3195358eaed416f8469451d8390ba19/overview" to "projects"
 
-    @MLJW0
+    @MLJW
     Scenario: MLJW012 - Check all mandatory components on Batch Run wizard - Function selection
         Given open url
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
@@ -2202,6 +2221,7 @@ Feature: Jobs and workflows
         Then verify "Schedule_for_later_Button" element on "Batch_Run" wizard is enabled
         Then verify "Run_Button" element on "Batch_Run" wizard is enabled
     
+    @MLJW
     Scenario: MLJW013 - Verify behaviour of Filter by category on Batch Run wizard - Function selection (Hub tab)
         Given open url
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
@@ -2237,6 +2257,7 @@ Feature: Jobs and workflows
         And wait load page
         Then value in "labels" column with "attribute" in "Functions_Table" on "Batch_Run" wizard should contains "Other"
 
+    @MLJW
     Scenario: MLJW042 - Check all mandatory components on Batch Run wizard - Run Details without Method
         Given open url
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
@@ -2251,22 +2272,22 @@ Feature: Jobs and workflows
         Then "Function_Title" element on "Batch_Run" should contains "test" value
         Then verify "Next_Button" element on "Batch_Run" wizard is enabled
         And click on "Next_Button" element on "Batch_Run" wizard
-        Then verify "Step_1_Button" element on "Batch_Run" wizard is enabled
-        Then verify "Step_2_Button" element on "Batch_Run" wizard is enabled
-        Then verify "Step_3_Button" element on "Batch_Run" wizard is enabled
-        Then verify "Step_4_Button" element on "Batch_Run" wizard is disabled
-        Then verify "Step_5_Button" element on "Batch_Run" wizard is disabled
-        Then "Step_5_Button" element on "Batch_Run" should contains "Resources" value
-        Then verify "Step_6_Button" element on "Batch_Run" wizard is disabled
-        Then verify "Form_Header_Batch_Run" element visibility on "Batch_Run" wizard
-        Then "Form_Header_Batch_Run" element on "Batch_Run" should contains "Run Details" value
+        Then verify "Step_1_Button" element on "commonPagesHeader" wizard is enabled
+        Then verify "Step_2_Button" element on "commonPagesHeader" wizard is enabled
+        Then verify "Step_3_Button" element on "commonPagesHeader" wizard is enabled
+        Then verify "Step_4_Button" element on "commonPagesHeader" wizard is enabled
+        Then verify "Step_5_Button" element on "commonPagesHeader" wizard is enabled
+        Then "Step_5_Button_text" element on "commonPagesHeader" should contains "Resources" value
+        Then verify "Step_6_Button" element on "Batch_Run" wizard is enabled
+        Then verify "Form_Header_Run_Details" element visibility on "commonPagesHeader" wizard
+        Then "Form_Header_Run_Details" element on "commonPagesHeader" should contains "Run Details" value
         Then verify "Hyperparameter_Checkbox" element visibility on "Batch_Run" wizard
         Then "Hyperparameter_Checkbox" element should be unchecked on "Batch_Run" wizard
         Then check "Hyperparameter_Checkbox" element on "Batch_Run" wizard
         Then "Hyperparameter_Checkbox" element should be checked on "Batch_Run" wizard
-        Then "Step_5_Button" element on "Batch_Run" should contains "Hyperparameter strategy" value
+        Then "Step_5_Button_text" element on "Batch_Run" should contains "Hyperparameter strategy" value
         Then verify "Function_Name_Input_Batch_Run" element visibility on "Batch_Run" wizard
-        Then type value "   " to "Function_Name_Input_Batch_Run" field on "Batch_Run" wizard
+        Then type value "/" to "Function_Name_Input_Batch_Run" field on "Batch_Run" wizard
         Then verify "Function_Name_Input_Batch_Run" on "Batch_Run" wizard should display options "Input_Hint"."Function_Name_Batch_Run_Hint"
         Then type value "test" to "Function_Name_Input_Batch_Run" field on "Batch_Run" wizard
         Then "Function_Title" element on "Batch_Run" should contains "test" value
@@ -2297,6 +2318,7 @@ Feature: Jobs and workflows
             | key_verify | value_verify | 
             |    key2    |    value2    |
 
+    @MLJW
     Scenario: MLJW044 - Check "Max Iterations", "Max errors" inputs field availability according to the strategy type in Hyperparameter strategy
         Given open url
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
@@ -2326,7 +2348,8 @@ Feature: Jobs and workflows
         Then verify "Strategy_Dropdown" dropdown in "Hyperparameter_Strategy_Accordion" on "Batch_Run_Edit" wizard selected option value "Random"
         Then verify "Max_Iterations" element in "Hyperparameter_Strategy_Accordion" on "Batch_Run_Edit" wizard is enabled by class name
         Then verify "Max_Errors" element in "Hyperparameter_Strategy_Accordion" on "Batch_Run_Edit" wizard is enabled by class name
-        
+
+    @MLJW
     Scenario: MLJW051 - Check all mandatory components on Batch Run wizard - Run Details with Method
         Given open url
         And click on row root with value "churn-project-admin" in "name" column in "Projects_Table" table on "Projects" wizard
@@ -2375,6 +2398,7 @@ Feature: Jobs and workflows
             |    key2    |    value2    |
             |    key3    |    value3    |
 
+    @MLJW
     Scenario: MLJW053 - Check changing "Method" after "Hyperparameter" check in Run Details section of Batch Run
         Given open url
 	    And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
@@ -2397,6 +2421,7 @@ Feature: Jobs and workflows
         And select "plot_stat" option in "Method_Dropdown" dropdown on "Batch_Run" wizard
         Then "Method_Dropdown_Option" element on "Batch_Run" should contains "plot_stat" value
 
+    @MLJW
     Scenario: MLJW054 - Check "Image name" field in Run Details section of Batch Run
         Given open url
 	    And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
@@ -2416,6 +2441,7 @@ Feature: Jobs and workflows
         Then verify "Image_Name_Input_Run_Details" on "Batch_Run" wizard should display warning "Input_Hint"."Input_Field_Require"
         Then "Image_Name_Text_Run_Details" component on "Batch_Run" should contains "Batch_Run"."Image_Name_Text"
 
+    @MLJW
     Scenario: MLJW039 - Check all mandatory components on Batch Run wizard - Data Inputs
         Given open url
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
@@ -2465,6 +2491,7 @@ Feature: Jobs and workflows
             | name_verify |           path_verify             |
             | name2edited | v3io:///container-name/fileedited |  
     
+    @MLJW
     Scenario: MLJW038 - Check all mandatory components on Batch Run wizard - Parameters
         Given open url
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
@@ -2523,6 +2550,7 @@ Feature: Jobs and workflows
             | name_verify | type_dropdown_verify | value_verify |
             | name2edited |          int         |     1234     |      
 
+    @MLJW
     @inProgress
     Scenario: MLJW037 - Check all mandatory components on Batch Run wizard - Step 5 (Resources)
         Given open url
@@ -2661,6 +2689,7 @@ Feature: Jobs and workflows
         Then verify "Volumes_Subheader" element visibility in "Resources_Accordion" on "Batch_Run_Edit" wizard
         Then verify "Volumes_Subheader" element in "Resources_Accordion" on "Batch_Run_Edit" wizard should display hint "Label_Hint"."New_Job_Volumes"
 
+    @MLJW
     Scenario: MLJW043 - Check Batch-Run running after edit GPU limit in Resources section
         Given open url
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
@@ -2685,6 +2714,7 @@ Feature: Jobs and workflows
         And wait load page
         Then value in "name" column with "text" in "Jobs_Monitor_Table" on "Jobs_Monitor_Tab" wizard should contains "test"
 
+    @MLJW
     Scenario: MLJW025 - Check Minimum CPU value on Batch Run wizard - Resources
         Given open url
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
@@ -2729,6 +2759,7 @@ Feature: Jobs and workflows
             |               V3IO               |            Volume_Name_1             |       /path/to/happines1      |         Container_Input_1          |           Access_Key_1              |            /resource/path_1            |         yes        |                       |
             |               V3IO               |            Volume_Name_2             |       /path/to/happines2      |         Container_Input_2          |           Access_Key_2              |            /resource/path_2            |         yes        |                       |
 
+    @MLJW
     Scenario: MLJW026 - Check tip and warning messages in Volumes section on Batch Run wizard - Resources
         Given open url
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
@@ -2786,6 +2817,7 @@ Feature: Jobs and workflows
         Then verify "Volume_Paths_Table_Path_Input" element in "Resources_Accordion" on "Batch_Run_Edit" wizard should display hint "Input_Hint"."Mount_Path_Hint"
         When click on "Delete_New_Row_Button" element in "Resources_Accordion" on "Batch_Run_Edit" wizard
 
+    @MLJW
     Scenario: MLJW031 - Check mandatory of Container and Resource Path fields for V3IO volume - Batch Run - Resources
         Given open url
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
@@ -2814,7 +2846,8 @@ Feature: Jobs and workflows
         And click on "Run_Button" element on "Batch_Run" wizard
         And wait load page
         Then value in "name" column with "text" in "Jobs_Monitor_Table" on "Jobs_Monitor_Tab" wizard should contains "test"
-  
+
+    @MLJW
     Scenario: MLJW033 - Check autocomplete without tags MLRun Store path for datasets, artifacts, models, feature vectors - Batch Run - Data input
         Given open url
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
@@ -2845,6 +2878,7 @@ Feature: Jobs and workflows
             |      Models     |         store://models/default/model        |
             | Feature vectors |    store://feature-vectors/default/test-i   |
 
+    @MLJW
     Scenario: MLJW034 - Check setting schedule for a job - Batch Run - Schedule for later 
         Given open url
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
@@ -2881,6 +2915,7 @@ Feature: Jobs and workflows
         Then "Error_Message" component in "Schedule_For_Later" on "Batch_Run_Edit" should contains "Error_Messages"."One_Day_Option"
         Then verify "Schedule_Button" not input element in "Schedule_For_Later" on "Batch_Run_Edit" wizard is disabled
 
+    @MLJW
     Scenario: MLJW035 - Check environment variables table types components on Batch Run in Advanced section
         Given open url
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
@@ -2923,7 +2958,8 @@ Feature: Jobs and workflows
             | V3IO_ACCESS_KEY |        secret        | sectretName2:sectretKey2 |
             |  V3IO_FRAMESD   |        value         |    http://framesd:8080   |
 
-Scenario: MLJW036 - Check setting schedule for a job - Batch Run - Schedule for later 
+    @MLJW
+    Scenario: MLJW036 - Check setting schedule for a job - Batch Run - Schedule for later 
         Given open url
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
@@ -2998,6 +3034,7 @@ Scenario: MLJW036 - Check setting schedule for a job - Batch Run - Schedule for 
         Then type value "15:15" to "At_time_Input" field on "Schedule_For_Later" on "Batch_Run_Edit" wizard
         Then type value "01:45" to "At_time_Input" field on "Schedule_For_Later" on "Batch_Run_Edit" wizard
 
+    @MLJW
     Scenario: MLJW045 - Check back navigation from Job overview to Jobs Monitor tab and forward to Job overview
         Given open url
         And wait load page
@@ -3030,6 +3067,7 @@ Scenario: MLJW036 - Check setting schedule for a job - Batch Run - Schedule for 
         Then verify "Info_Pane_Tab_Selector" element visibility on "Jobs_Monitor_Tab_Info_Pane" wizard
         Then verify "Info_Pane_Tab_Selector" on "Jobs_Monitor_Tab_Info_Pane" wizard should contains "Jobs_Monitor_Tab_Info_Pane"."Tab_List"
 
+    @MLJW
     Scenario: MLJW046 - Check components in Parameters section on Batch Run wizard with checked Hyper
         Given open url
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
