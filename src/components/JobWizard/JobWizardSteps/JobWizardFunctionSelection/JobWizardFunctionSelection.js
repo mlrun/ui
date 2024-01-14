@@ -17,7 +17,7 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import React, { useState, useEffect, useMemo, useCallback } from 'react'
+import React, {useState, useEffect, useMemo, useCallback, useRef} from 'react'
 import PropTypes from 'prop-types'
 import { OnChange } from 'react-final-form-listeners'
 import { useDispatch, useSelector } from 'react-redux'
@@ -85,6 +85,8 @@ const JobWizardFunctionSelection = ({
   const [hubFiltersInitialValues] = useState({ [HUB_CATEGORIES_FILTER]: {} })
   const [filterByName, setFilterByName] = useState('')
   const [filterMatches, setFilterMatches] = useState([])
+  const selectedCardRef = useRef(null)
+  const containerRef = useRef(null)
   const [projects, setProjects] = useState(generateProjectsList(projectNames, params.projectName))
 
   const filtersStoreHubCategories = useSelector(
@@ -353,8 +355,34 @@ const JobWizardFunctionSelection = ({
     return openConfirmPopUp('All changes will be lost', confirmHandler)
   }
 
+  const setSelectedCard = (index) => {
+    selectedCardRef.current = index
+  }
+
+  const scrollToSelectedCard = () => {
+    const selectedRef = containerRef.current.querySelector(`[data-index="${selectedCardRef.current}"]`)
+    if (selectedCardRef.current && selectedRef) {
+      selectedRef.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'start' })
+    }
+  }
+
+  useEffect(() => {
+    const handleIntersection = (entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          scrollToSelectedCard()
+        }
+      })
+    }
+    const observer = new IntersectionObserver(handleIntersection)
+    observer.observe(containerRef.current)
+    return () => {
+      observer.disconnect()
+    }
+  }, [activeTab])
+
   return (
-    <div className="job-wizard__function-selection">
+    <div ref = {containerRef} className="job-wizard__function-selection">
       <div className="form-row">
         <h5 className="form-step-title">Function selection</h5>
       </div>
@@ -389,7 +417,7 @@ const JobWizardFunctionSelection = ({
             isEmpty(functions)) ? (
             <NoData />
           ) : (
-            <div className="functions-list">
+            <div className="functions-list functions-list-max-height">
               {(filteredFunctions.length > 0 ? filteredFunctions : functions)
                 .sort((prevFunc, nextFunc) => prevFunc.name.localeCompare(nextFunc.name))
                 .map(functionData => {
@@ -399,6 +427,7 @@ const JobWizardFunctionSelection = ({
                         functionData?.functions?.[0].metadata?.hash ===
                         selectedFunctionData?.functions?.[0].metadata.hash
                       }
+                      onSelectCardRef={setSelectedCard}
                       formState={formState}
                       functionData={generateFunctionCardData(functionData)}
                       onSelectCard={() => selectProjectFunction(functionData)}
@@ -440,7 +469,7 @@ const JobWizardFunctionSelection = ({
             isEmpty(templates)) ? (
             <NoData />
           ) : (
-            <div className="functions-list">
+            <div className="functions-list functions-list-max-height">
               {filteredTemplates
                 .sort((prevTemplate, nextTemplate) =>
                   prevTemplate.metadata.name.localeCompare(nextTemplate.metadata.name)
@@ -454,6 +483,7 @@ const JobWizardFunctionSelection = ({
                         !selectedFunctionData?.functions?.[0].status &&
                         selectedFunctionTab === FUNCTIONS_SELECTION_HUB_TAB
                       }
+                      onSelectCardRef={setSelectedCard}
                       formState={formState}
                       functionData={generateFunctionTemplateCardData(templateData)}
                       onSelectCard={event => {
