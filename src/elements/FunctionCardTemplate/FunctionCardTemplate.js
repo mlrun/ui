@@ -45,7 +45,7 @@ const FunctionCardTemplate = ({
   )
 
   return (
-    <div data-index={functionData.header} className={templateClassName} onClick={event => {onSelectCard(event); onSelectCardRef(functionData.header)}}>
+    <div card-index={functionData.header} className={templateClassName} onClick={event => {onSelectCard(event); onSelectCardRef(functionData.header)}}>
       <div className="job-card-template__header">
         <Tooltip template={<TextTooltipTemplate text={functionData.header} />}>
           {functionData.header}

@@ -21,9 +21,6 @@
     margin: 0 -10px;
     padding: 0 20px 20px 10px;
     overflow-y: auto;
-    &.functions-list-max-height {
-      max-height: 50vh;
-    }
   }
 
   .content-menu {
@@ -40,4 +37,8 @@
   .pop-up-dialog {
     max-height: 420px;
   }
+}
+
+.wizard-form-scroll-solution{
+  height: 100%;
 }

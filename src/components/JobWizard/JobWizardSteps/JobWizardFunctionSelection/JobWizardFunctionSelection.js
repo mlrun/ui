@@ -359,14 +359,21 @@ const JobWizardFunctionSelection = ({
     selectedCardRef.current = index
   }
 
-  const scrollToSelectedCard = () => {
-    const selectedRef = containerRef.current.querySelector(`[data-index="${selectedCardRef.current}"]`)
+   const setDivClass = useCallback(() => {
+    const parentElement = containerRef.current.parentNode
+    parentElement.classList.add('wizard-form-scroll-solution')
+  }, [containerRef])
+
+  const scrollToSelectedCard = useCallback(() => {
+    if (!containerRef.current.parentNode.classList.contains('wizard-form-scroll-solution')) setDivClass()
+    const selectedRef = containerRef.current.querySelector(`[card-index="${selectedCardRef.current}"]`)
     if (selectedCardRef.current && selectedRef) {
       selectedRef.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'start' })
     }
-  }
+  }, [setDivClass, containerRef, selectedCardRef])
 
   useEffect(() => {
+    setDivClass()
     const handleIntersection = (entries) => {
       entries.forEach((entry) => {
         if (entry.isIntersecting) {
@@ -379,7 +386,7 @@ const JobWizardFunctionSelection = ({
     return () => {
       observer.disconnect()
     }
-  }, [activeTab])
+  }, [activeTab,scrollToSelectedCard,setDivClass])
 
   return (
     <div ref = {containerRef} className="job-wizard__function-selection">
