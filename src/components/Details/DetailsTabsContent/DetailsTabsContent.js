@@ -117,13 +117,13 @@ const DetailsTabsContent = ({
     case DETAILS_ARTIFACTS_TAB:
       return (
         <DetailsArtifacts
+          allowSortBy={['name', 'updated']}
+          defaultSortBy="name"
+          defaultDirection="asc"
           iteration={detailsStore.iteration}
           selectedItem={selectedItem}
           setIteration={setIteration}
           setIterationOption={setIterationOption}
-          allowSortBy={['name', 'updated']}
-          defaultSortBy="name"
-          defaultDirection="asc"
         />
       )
     case DETAILS_RESULTS_TAB:

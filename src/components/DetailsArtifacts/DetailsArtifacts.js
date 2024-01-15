@@ -56,6 +56,14 @@ const DetailsArtifacts = ({
   const iterationOptions = useSelector(store => store.detailsStore.iterationOptions)
   const params = useParams()
 
+  const getAtrifactsHeaderCellClasses = (headerId, isSortable, className) =>
+    classnames(
+      'table-header__cell',
+      isSortable && 'sortable-header-cell',
+      isSortable && selectedColumnName === headerId && 'sortable-header-cell_active',
+      className && className
+    )
+
   const showArtifact = useCallback(
     index => {
       generateArtifactIndexes(artifactsIndexes, index, setArtifactsIndexes)
@@ -136,14 +144,6 @@ const DetailsArtifacts = ({
     }
   }, [fetchJob, iteration, params.jobId, params.projectName, selectedItem])
 
-  const getHeaderCellClasses = (headerId, isSortable, className) =>
-    classnames(
-      'table-header__cell',
-      isSortable && 'sortable-header-cell',
-      isSortable && selectedColumnName === headerId && 'sortable-header-cell_active',
-      className && className
-    )
-
   return jobsStore.loading ? null : artifactsPreviewContent.length === 0 ? (
     <NoData />
   ) : (
@@ -153,7 +153,7 @@ const DetailsArtifacts = ({
           <div className="table-row table-header-row">
             {sortedTableHeaders.map(({ headerLabel, headerId, isSortable, ...tableItem }) => (
               <div
-                className={getHeaderCellClasses(headerId, isSortable, tableItem.className)}
+                className={getAtrifactsHeaderCellClasses(headerId, isSortable, tableItem.className)}
                 key={`${headerId}`}
                 onClick={isSortable ? () => sortTable(headerId) : null}
               >
@@ -212,18 +212,18 @@ const DetailsArtifacts = ({
 DetailsArtifacts.defaultProps = {
   allowSortBy: null,
   defaultSortBy: null,
-  excludeSortBy: null,
-  defaultDirection: 'desc'
+  defaultDirection: 'desc',
+  excludeSortBy: null
 }
 
 DetailsArtifacts.propTypes = {
-  iteration: PropTypes.string.isRequired,
-  selectedItem: PropTypes.shape({}).isRequired,
-  setIterationOption: PropTypes.func.isRequired,
   allowSortBy: ALLOW_SORT_BY,
   defaultSortBy: DEFAULT_SORT_BY,
+  defaultDirection: PropTypes.string,
   excludeSortBy: EXCLUDE_SORT_BY,
-  defaultDirection: PropTypes.string
+  iteration: PropTypes.string.isRequired,
+  selectedItem: PropTypes.shape({}).isRequired,
+  setIterationOption: PropTypes.func.isRequired
 }
 
 export default connect(({ jobsStore }) => ({ jobsStore }), { ...jobsActions })(DetailsArtifacts)
