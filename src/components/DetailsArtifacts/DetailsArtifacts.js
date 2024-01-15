@@ -40,16 +40,16 @@ import { ALLOW_SORT_BY, DEFAULT_SORT_BY, EXCLUDE_SORT_BY } from 'igz-controls/ty
 import './detailsArtifacts.scss'
 
 const DetailsArtifacts = ({
+  allowSortBy,
+  defaultSortBy,
+  defaultDirection,
+  excludeSortBy,
   fetchJob,
   iteration,
   jobsStore,
   selectedItem,
   setIteration,
-  setIterationOption,
-  allowSortBy,
-  excludeSortBy,
-  defaultSortBy,
-  defaultDirection
+  setIterationOption
 }) => {
   const [artifactsPreviewContent, setArtifactsPreviewContent] = useState([])
   const [artifactsIndexes, setArtifactsIndexes] = useState([])

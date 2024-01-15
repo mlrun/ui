@@ -129,10 +129,10 @@ const DetailsTabsContent = ({
     case DETAILS_RESULTS_TAB:
       return (
         <DetailsResults
-          job={selectedItem}
-          excludeSortBy="state"
           defaultSortBy="name"
           defaultDirection="asc"
+          excludeSortBy="state"
+          job={selectedItem}
         />
       )
     case DETAILS_LOGS_TAB:
