@@ -707,6 +707,18 @@ Feature: Datasets Page
     Then verify "Next_Button" element on "Train_Model" wizard is disabled
     Then verify "Schedule_Training_Job_Button" element on "Train_Model" wizard is enabled
     Then verify "Run_Training_Now_Button" element on "Train_Model" wizard is enabled
+    And click on "Step_1_Button" element on "commonPagesHeader" wizard
+    Then "Form_Header_Run_Details" element on "commonPagesHeader" should contains "Run Details" value
+    And click on "Step_3_Button" element on "commonPagesHeader" wizard
+    Then "Form_Header_Parameters" element on "commonPagesHeader" should contains "Parameters" value
+    And click on "Step_4_Button" element on "commonPagesHeader" wizard
+    Then "Form_Header_Hyperparameter_Strategy" element on "commonPagesHeader" should contains "Hyperparameter strategy" value
+    And click on "Run_Training_Now_Button" element on "Train_Model" wizard
+    Then verify "Run_Training_Now_Button" element on "Train_Model" wizard is disabled
+    Then verify "Schedule_Training_Job_Button" element on "Train_Model" wizard is disabled
+    Then verify data in "Train_Model_Parameters_Table" table on "Train_Model" wizard
+            | name_verify           |         type_dropdown_verify         | value_verify |
+            | model_class           |                str                   |              |
 
   @MLD
   Scenario: MLD020 - Check Run Details components on Train Model wizard
