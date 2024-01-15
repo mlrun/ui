@@ -17,7 +17,7 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import { mainHttpClient } from '../httpClient'
+import { mainHttpClient, mainHttpClientV2 } from '../httpClient'
 import {
   ARTIFACT_OTHER_TYPE,
   DATASET_TYPE,
@@ -41,7 +41,7 @@ const fetchArtifacts = (project, filters, config = {}) => {
     params.name = `~${filters.name}`
   }
 
-  return mainHttpClient.get(`/projects/${project}/artifacts`, {
+  return mainHttpClientV2.get(`/projects/${project}/artifacts`, {
     ...config,
     params: { ...config.params, ...params }
   })
@@ -50,15 +50,15 @@ const fetchArtifacts = (project, filters, config = {}) => {
 const artifactsApi = {
   addTag: (project, tag, data) => mainHttpClient.put(`/projects/${project}/tags/${tag}`, data),
   buildFunction: data => mainHttpClient.post('/build/function', data),
-  deleteArtifact: (project, key, tag, uid) => {
+  deleteArtifact: (project, key, tag, tree) => {
     const config = {
       params: {
-        key,
-        tag
+        tag,
+        tree
       }
     }
 
-    return mainHttpClient.delete(`/projects/${project}/artifacts/${uid}`, config)
+    return mainHttpClientV2.delete(`/projects/${project}/artifacts/${key}`, config)
   },
   deleteTag: (project, tag, data) =>
     mainHttpClient.delete(`/projects/${project}/tags/${tag}`, { data }),
@@ -87,8 +87,16 @@ const artifactsApi = {
         category
       }
     }),
-  getArtifact: (project, artifact) => {
-    return mainHttpClient.get(`/projects/${project}/artifacts?name=${artifact}`)
+  getArtifact: (project, artifactName, artifactTag) => {
+    const params = {
+      name: artifactName
+    }
+
+    if (artifactTag) {
+      params.tag = artifactTag
+    }
+
+    return mainHttpClientV2.get(`/projects/${project}/artifacts`, { params })
   },
   getArtifacts: (project, filters, config) => {
     return fetchArtifacts(project, filters, config)
@@ -171,21 +179,12 @@ const artifactsApi = {
 
     return fetchArtifacts(project, filters, newConfig)
   },
-  registerArtifact: (project, data) =>
-    mainHttpClient.post(
-      `/projects/${project}/artifacts/${data.uid || data.metadata?.tree}/${
-        data.key || data.metadata.key
-      }`,
-      data
-    ),
+  registerArtifact: (project, data) => {
+    return mainHttpClientV2.post(`/projects/${project}/artifacts`, data)
+  },
   replaceTag: (project, tag, data) => mainHttpClient.post(`/projects/${project}/tags/${tag}`, data),
   updateArtifact: (project, data) =>
-    mainHttpClient.post(
-      `/projects/${project}/artifacts/${data.uid || data.metadata?.tree}/${
-        data.db_key || data.spec?.db_key
-      }`,
-      data
-    )
+    mainHttpClientV2.put(`/projects/${project}/artifacts/${data.db_key || data.spec?.db_key}`, data)
 }
 
 export default artifactsApi

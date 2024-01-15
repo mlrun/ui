@@ -21,14 +21,13 @@ import { By } from 'selenium-webdriver'
 import inputGroup from '../components/input-group.component'
 import { generateInputGroup, generateDropdownGroup } from '../../common-tools/common-tools'
 import dropdownComponent from '../components/dropdown.component'
-//import checkboxComponent from '../components/checkbox.component'
 import commonTable from '../components/table.component'
 import actionMenu from '../components/action-menu.component'
 
 const actionMenuStructure = {
   root: '.actions-menu__container',
   menuElements: {
-    open_button: 'button',
+    open_button: '[data-testid="actions-menu"] button',
     options: '.actions-menu__body .actions-menu__option'
   }
 }
@@ -71,7 +70,7 @@ const filesTable = {
         owner: '.table-body__cell:nth-of-type(5) .data-ellipsis',
         updated: '.table-body__cell:nth-of-type(6) .data-ellipsis',
         size: '.table-body__cell:nth-of-type(7) .data-ellipsis',
-        preview: '.table-body__cell:nth-of-type(8) button .data-ellipsis svg',
+        preview: '.table-body__cell:nth-of-type(8) [data-testid="quick-link-artifact-preview"]',
         download: '.table-body__cell:nth-of-type(9) button .data-ellipsis svg',
         uri: '.table-body__cell:nth-of-type(10) button .data-ellipsis svg',
         action_menu: {
@@ -92,10 +91,10 @@ module.exports = {
       )
     ),
     Table_Refresh_Button: By.css(
-      '.content .content__action-bar-wrapper .action-bar__actions #refresh'
+      '.content .content__action-bar-wrapper [data-testid="refresh"]'
     ),
     Files_Table: commonTable(filesTable),
-    Register_File_Button: By.css('.page-actions-container .btn_register'),
+    Register_File_Button: By.css('.content__action-bar-wrapper .action-bar__actions .action-button'),
     Table_FilterBy_Button: By.css(
       '.content .content__action-bar-wrapper .action-bar__filters .filters-button button'
     )

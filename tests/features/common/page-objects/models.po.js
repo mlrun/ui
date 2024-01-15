@@ -25,7 +25,6 @@ import {
   generateLabelGroup
 } from '../../common-tools/common-tools'
 import dropdownComponent from '../components/dropdown.component'
-// import checkboxComponent from '../components/checkbox.component'
 import commonTable from '../components/table.component'
 import actionMenu from '../components/action-menu.component'
 import labelComponent from '../components/label.component'
@@ -34,7 +33,7 @@ import graph from '../components/graph.component'
 const actionMenuStructure = {
   root: '.actions-menu__container',
   menuElements: {
-    open_button: 'button',
+    open_button: '[data-testid="actions-menu"] button',
     options: '.actions-menu__body .actions-menu__option'
   }
 }
@@ -91,7 +90,8 @@ const modelsTable = {
         updated: '.table-body__cell:nth-of-type(5) .data-ellipsis',
         metrics: '.table-body__cell:nth-of-type(6) .data-ellipsis',
         frameworkAndAlgorithm: '.table-body__cell:nth-of-type(7) .chips-wrapper',
-        preview: '.table-body__cell:nth-of-type(8) button .data-ellipsis svg',
+        preview: '[data-testid="quick-link-model-preview-tooltip-wrapper"]',
+        deploy: '[data-testid="quick-link-model-deploy-tooltip-wrapper"]',
         download: '.table-body__cell:nth-of-type(9) button .download-container svg',
         uri: '.table-body__cell:nth-of-type(10) button .data-ellipsis svg',
         action_menu: {
@@ -166,7 +166,7 @@ const realTimePipelinesTable = {
   body: {
     root: '.table-body',
     row: {
-      root: '.table-body__row',
+      root: '.table-row',
       fields: {
         expand_btn: '.table-body__cell:nth-of-type(1) .expand-arrow',
         status: {
@@ -233,7 +233,7 @@ const realTimePipelinesGraph = {
 }
 
 // Common components
-const tableRefreshButton = By.css('.content .action-bar .tooltip-wrapper #refresh')
+const tableRefreshButton = By.css('.content__action-bar-wrapper .action-bar [data-testid="refresh"]')
 
 module.exports = {
   modelsTab: {
@@ -244,10 +244,11 @@ module.exports = {
         true
       )
     ),
-    Table_Refresh_Button: tableRefreshButton,
+    Table_Refresh_Button: By.css('.content__action-bar-wrapper .action-bar__actions [data-testid="refresh"]'),
     Models_Table: commonTable(modelsTable),
     Overlay: By.css('#overlay_container .chip-block-hidden_visible'),
-    Register_Model_Button: By.css('.page-actions-container .btn_register'),
+    Register_Model_Button: By.css('.content__action-bar-wrapper .action-bar__actions .btn-secondary'),
+    Train_Model_Button: By.css('.content__action-bar-wrapper .action-bar__actions .btn-primary'),
     Table_FilterBy_Button: By.css(
       '.content .content__action-bar-wrapper .action-bar__filters .filters-button button'
     )

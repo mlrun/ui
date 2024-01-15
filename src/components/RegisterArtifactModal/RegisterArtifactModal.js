@@ -17,7 +17,7 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import React from 'react'
+import React, { useState } from 'react'
 import PropTypes from 'prop-types'
 import { connect, useDispatch } from 'react-redux'
 import { useLocation } from 'react-router-dom'
@@ -25,24 +25,25 @@ import { v4 as uuidv4 } from 'uuid'
 import { Form } from 'react-final-form'
 import { createForm } from 'final-form'
 import arrayMutators from 'final-form-arrays'
+import { isEmpty } from 'lodash'
 
 import RegisterArtifactModalForm from '../../elements/RegisterArtifactModalForm/RegisterArtifactModalForm'
 import { Button, Modal } from 'igz-controls/components'
 
-import { messagesByKind } from './messagesByKind'
-import { setNotification } from '../../reducers/notificationReducer'
 import {
-  BADREQUEST_ERROR_STATUS_CODE,
   FORBIDDEN_ERROR_STATUS_CODE,
   MODAL_SM,
   SECONDARY_BUTTON,
   TERTIARY_BUTTON
 } from 'igz-controls/constants'
-import { ARTIFACT_TYPE } from '../../constants'
-import { useModalBlockHistory } from '../../hooks/useModalBlockHistory.hook'
-import { setFieldState } from 'igz-controls/utils/form.util'
-import { convertChipsData } from '../../utils/convertChipsData'
 import artifactApi from '../../api/artifacts-api'
+import { ARTIFACT_TYPE } from '../../constants'
+import { convertChipsData } from '../../utils/convertChipsData'
+import { createArtifactMessages } from '../../utils/createArtifact.util'
+import { setFieldState } from 'igz-controls/utils/form.util'
+import { setNotification } from '../../reducers/notificationReducer'
+import { showErrorNotification } from '../../utils/notifications.util'
+import { useModalBlockHistory } from '../../hooks/useModalBlockHistory.hook'
 
 const RegisterArtifactModal = ({
   actions,
@@ -50,7 +51,7 @@ const RegisterArtifactModal = ({
   filtersStore,
   isOpen,
   onResolve,
-  projectName,
+  params,
   refresh,
   title
 }) => {
@@ -70,6 +71,7 @@ const RegisterArtifactModal = ({
       }
     }
   }
+  const [uniquenessErrorIsShown, setUniquenessErrorIsShown] = useState(false)
   const formRef = React.useRef(
     createForm({
       initialValues,
@@ -82,17 +84,16 @@ const RegisterArtifactModal = ({
   const { handleCloseModal, resolveModal } = useModalBlockHistory(onResolve, formRef.current)
 
   const registerArtifact = values => {
-    const uid = uuidv4()
     const data = {
       kind: values.kind,
       metadata: {
         description: values.metadata.description,
         labels: convertChipsData(values.metadata.labels),
         key: values.metadata.key,
-        project: projectName,
-        tree: uid
+        tag: values.metadata.tag,
+        project: params.projectName,
+        tree: uuidv4()
       },
-      project: projectName,
       spec: {
         db_key: values.metadata.key,
         producer: {
@@ -101,39 +102,43 @@ const RegisterArtifactModal = ({
         },
         target_path: values.spec.target_path.path
       },
-      status: {},
-      uid
+      status: {}
     }
 
     return artifactApi
-      .registerArtifact(projectName, data)
+      .getArtifact(params.projectName, values.metadata.key, values.metadata.tag)
       .then(response => {
-        resolveModal()
-        refresh(filtersStore)
-        dispatch(
-          setNotification({
-            status: response.status,
-            id: Math.random(),
-            message: `${title} initiated successfully`
-          })
-        )
+        if (response?.data) {
+          if (!isEmpty(response.data.artifacts)) {
+            setUniquenessErrorIsShown(true)
+          } else {
+            setUniquenessErrorIsShown(false)
+
+            return artifactApi
+              .registerArtifact(params.projectName, data)
+              .then(response => {
+                resolveModal()
+                refresh(filtersStore)
+                dispatch(
+                  setNotification({
+                    status: response.status,
+                    id: Math.random(),
+                    message: `${title} initiated successfully`
+                  })
+                )
+              })
+          }
+        }
       })
       .catch(error => {
-        dispatch(
-          setNotification({
-            status:
-              error.response.status === FORBIDDEN_ERROR_STATUS_CODE
-                ? FORBIDDEN_ERROR_STATUS_CODE
-                : BADREQUEST_ERROR_STATUS_CODE,
-            id: Math.random(),
-            message:
-              error.response.status === FORBIDDEN_ERROR_STATUS_CODE
-                ? 'You are not permitted to create a new resource'
-                : `${title} failed to initiate`,
-            retry: registerArtifact
-          })
-        )
+        const customErrorMsg =
+          error.response.status === FORBIDDEN_ERROR_STATUS_CODE
+            ? 'You are not permitted to create a new resource'
+            : `${title} failed to initiate`
 
+        showErrorNotification(dispatch, error, '', customErrorMsg, () => registerArtifact(values))
+
+        setUniquenessErrorIsShown(false)
         resolveModal()
       })
   }
@@ -174,10 +179,12 @@ const RegisterArtifactModal = ({
             <RegisterArtifactModalForm
               formState={formState}
               initialValues={initialValues}
-              messagesByKind={messagesByKind[artifactKind.toLowerCase()]}
-              projectName={projectName}
+              messagesByKind={createArtifactMessages[artifactKind.toLowerCase()]}
+              params={params}
               setFieldState={formState.form.mutators.setFieldState}
+              setUniquenessErrorIsShown={setUniquenessErrorIsShown}
               showType={artifactKind === ARTIFACT_TYPE}
+              uniquenessErrorIsShown={uniquenessErrorIsShown}
             />
           </Modal>
         )
@@ -188,7 +195,7 @@ const RegisterArtifactModal = ({
 
 RegisterArtifactModal.propTypes = {
   artifactKind: PropTypes.string.isRequired,
-  projectName: PropTypes.string.isRequired,
+  params: PropTypes.shape({}).isRequired,
   refresh: PropTypes.func.isRequired,
   title: PropTypes.string.isRequired
 }

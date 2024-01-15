@@ -114,7 +114,6 @@ const FilesView = React.forwardRef(
                     actionsMenu={actionsMenu}
                     applyDetailsChanges={applyDetailsChanges}
                     applyDetailsChangesCallback={applyDetailsChangesCallback}
-                    content={files}
                     detailsFormInitialValues={detailsFormInitialValues}
                     handleCancel={() => setSelectedFile({})}
                     pageData={pageData}

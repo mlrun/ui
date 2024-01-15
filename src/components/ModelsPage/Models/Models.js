@@ -75,6 +75,8 @@ const Models = ({ fetchModelFeatureVector }) => {
   const [largeRequestErrorMessage, setLargeRequestErrorMessage] = useState('')
   const [selectedModel, setSelectedModel] = useState({})
   const [selectedRowData, setSelectedRowData] = useState({})
+  const [metricsCounter, setMetricsCounter] = useState(0)
+  const [dataIsLoaded, setDataIsLoaded] = useState(false)
   const [urlTagOption] = useGetTagOptions(null, filters, null, MODELS_FILTERS)
   const artifactsStore = useSelector(store => store.artifactsStore)
   const detailsStore = useSelector(store => store.detailsStore)
@@ -86,17 +88,19 @@ const Models = ({ fetchModelFeatureVector }) => {
   const modelsRef = useRef(null)
   const abortControllerRef = useRef(new AbortController())
   const viewMode = getViewMode(window.location.search)
-  const pageData = useMemo(
-    () => generatePageData(selectedModel, viewMode),
-    [selectedModel, viewMode]
-  )
   const { toggleConvertedYaml } = useModelsPage()
   const frontendSpec = useSelector(store => store.appStore.frontendSpec)
+
   const modelsFilters = useMemo(
     () => filtersStore[FILTER_MENU_MODAL][MODELS_FILTERS].values,
     [filtersStore]
   )
   const { isDemoMode } = useMode()
+
+  const pageData = useMemo(
+    () => generatePageData(selectedModel, viewMode),
+    [selectedModel, viewMode]
+  )
 
   const detailsFormInitialValues = useMemo(
     () => ({
@@ -217,10 +221,18 @@ const Models = ({ fetchModelFeatureVector }) => {
         modelsFilters.iter,
         modelsFilters.tag,
         params.projectName,
-        frontendSpec
+        frontendSpec,
+        metricsCounter
       )
     },
-    [dispatch, modelsFilters.iter, modelsFilters.tag, frontendSpec, params.projectName]
+    [
+      dispatch,
+      modelsFilters.iter,
+      modelsFilters.tag,
+      params.projectName,
+      frontendSpec,
+      metricsCounter
+    ]
   )
 
   const { latestItems, handleExpandRow } = useGroupContent(
@@ -236,12 +248,18 @@ const Models = ({ fetchModelFeatureVector }) => {
   const tableContent = useMemo(() => {
     return filtersStore.groupBy === GROUP_BY_NAME
       ? latestItems.map(contentItem => {
-          return createModelsRowData(contentItem, params.projectName, frontendSpec, true)
+          return createModelsRowData(
+            contentItem,
+            params.projectName,
+            frontendSpec,
+            metricsCounter,
+            true
+          )
         })
       : models.map(contentItem =>
-          createModelsRowData(contentItem, params.projectName, frontendSpec)
+          createModelsRowData(contentItem, params.projectName, frontendSpec, metricsCounter)
         )
-  }, [filtersStore.groupBy, frontendSpec, latestItems, models, params.projectName])
+  }, [filtersStore.groupBy, frontendSpec, latestItems, metricsCounter, models, params.projectName])
 
   const tableHeaders = useMemo(() => tableContent[0]?.content ?? [], [tableContent])
 
@@ -273,7 +291,9 @@ const Models = ({ fetchModelFeatureVector }) => {
 
       if (changes.data.tag.currentFieldValue) {
         navigate(
-          `/projects/${params.projectName}/${MODELS_PAGE}/${MODELS_TAB}/${params.name}/${changes.data.tag.currentFieldValue}/overview`,
+          `/projects/${params.projectName}/${MODELS_PAGE.toLowerCase()}/${MODELS_TAB}/${
+            params.name
+          }/${changes.data.tag.currentFieldValue}/overview`,
           { replace: true }
         )
       }
@@ -348,9 +368,24 @@ const Models = ({ fetchModelFeatureVector }) => {
     selectedModel.feature_vector
   ])
 
+  useEffect(() => {
+    if (models.length > 0 && !dataIsLoaded) {
+      let maxMetricsCount = 0
+
+      models.forEach(model => {
+        if (model.metrics && Object.keys(model.metrics).length > maxMetricsCount) {
+          maxMetricsCount = Object.keys(model.metrics).length
+        }
+      })
+
+      setMetricsCounter(maxMetricsCount)
+      setDataIsLoaded(true)
+    }
+  }, [dataIsLoaded, models])
+
   const handleRegisterModel = useCallback(() => {
-    openPopUp(RegisterModelModal, { projectName: params.projectName, refresh: handleRefresh })
-  }, [handleRefresh, params.projectName])
+    openPopUp(RegisterModelModal, { params, refresh: handleRefresh })
+  }, [handleRefresh, params])
 
   const handleTrainModel = () => {
     openPopUp(JobWizard, {

@@ -44,7 +44,16 @@ module.exports = {
     Tab_List: ['Feature Sets', 'Features', 'Feature Vectors']
   },
   Models: {
-    Tab_List: ['Models', 'Model Endpoints', 'Real-Time Pipelines']
+    Tab_List: ['Models', 'Model Endpoints', 'Real-Time Pipelines'],
+    Combobox_Options: [
+      'V3IO',
+      'S3',
+      'HTTP',
+      'HTTPS',
+      'Azure storage',
+      'Google storage',
+      'Databricks filesystem'
+    ] 
   },
   Real_Time_Pipeline_Pane: {
     Overview_Headers: [
@@ -86,20 +95,37 @@ module.exports = {
       'Usage example:'
     ]
   },
+  Common_Lists: {
+    Action_Menu_List: ['Download', 'Copy URI', 'View YAML', 'Add a tag', 'Delete'],
+    Handler_List: ['train'],
+    Pods_Priority_List: ['Low','Medium', 'High'],
+    Ranking_Criteria_List: ['Min','Max']
+  },
   Datasets_Info_Pane: {
     Tab_List: ['Overview', 'Preview', 'Metadata', 'Analysis'],
-    Action_Menu_List: ['Download', 'Copy URI', 'View YAML', 'Add a tag'],
     Overview_General_Headers: [
       'Hash:',
       'Key:',
       'Version tag:',
       'Iter:',
       'Size:',
+      'Label column:',
       'Path:',
       'URI:',
       'UID:',
       'Updated:',
       'Labels:'
+    ],
+    Overview_Producer_Headers: [
+      'Name:',
+      'Kind:',
+      'URI:',
+      'Owner:',
+      'Workflow:'
+    ],
+    Overview_Sources_Headers: [
+      'Name:',
+      'Path:'
     ]
   },
   ML_Functions_Tab: {
@@ -123,38 +149,60 @@ module.exports = {
   Files_Info_Pane: {
     Tab_List: ['Overview', 'Preview'],
     Overview_General_Headers: [
-      'Hash',
-      'Key',
-      'Version tag',
-      'Iter',
-      'Size',
-      'Path',
-      'URI',
-      'UID',
-      'Updated',
-      'Labels'
+      'Hash:',
+      'Key:',
+      'Version tag:',
+      'Iter:',
+      'Size:',
+      'Path:',
+      'URI:',
+      'UID:',
+      'Updated:',
+      'Labels:'
+    ],
+    Overview_Producer_Headers: [
+      'Name:',
+      'Kind:',
+      'URI:',
+      'Owner:'
+    ],
+    Overview_Sources_Headers: [
+      'Name:',
+      'Path:'
     ]
   },
   Models_Info_Pane: {
     Tab_List: ['Overview'],
     Tab_List_Extended: ['Overview', 'Preview', 'Features', 'Statistics'],
     Overview_General_Headers: [
-      'Hash',
-      'Key',
-      'Version tag',
-      'Iter',
-      'Kind',
-      'Size',
-      'Path',
-      'URI',
-      'Model file',
-      'Feature vector',
-      'UID',
-      'Updated',
-      'Framework',
-      'Algorithm',
-      'Labels',
-      'Metrics'
+      'Hash:',
+      'Key:',
+      'Version tag:',
+      'Iter:',
+      'Kind:',
+      'Size:',
+      'Label column:',
+      'Path:',
+      'URI:',
+      'Model file:',
+      'Feature vector:',
+      'UID:',
+      'Updated:',
+      'Framework:',
+      'Algorithm:',
+      'Labels:',
+      'Metrics:'
+    ],
+    Overview_Producer_Headers: [
+      'Name:',
+      'Kind:',
+      'URI:',
+      'Owner:',
+      'Workflow:'
+    ],
+    Overview_Sources_Headers: [
+      'Name:',
+      'Path:'
     ]
   },
   Models_Endpoints_Info_Pane: {
@@ -215,7 +263,16 @@ module.exports = {
     Form_Text:
       /This dialog enable users to register an artifact( as a dataset)? in Iguazio database\. Once (a artifact|the dataset) is registered it can be consumed by jobs and workflows\./,
     Form_Subtext:
-      'All you need to do is enter the name of the artifact and the URL (e.g. s3://my-bucket/path).'
+      'All you need to do is enter the name of the artifact and the URL (e.g. s3://my-bucket/path).',
+    Combobox_Options: [
+      'V3IO',
+      'S3',
+      'HTTP',
+      'HTTPS',
+      'Azure storage',
+      'Google storage',
+      'Databricks filesystem'
+    ]  
   },
   Register_Dataset: {
     Type_Options: ['General', 'Chart', 'Plot', 'Table'],
@@ -254,9 +311,9 @@ module.exports = {
     Function_Name_Batch_Run_Hint:
       'Valid characters: a–z, A–Z, 0–9, –, _, .\nMust begin and end with: a–z, A–Z, 0–9\nLength – max: 63\n' +
       'This field is required',
-    Labels_Warning_Key: 'Valid characters: a–z, A–Z, 0–9, –, _, .\nMust begin and end with: a–z, A–Z, 0–9\nLength – max: 56\n' +
-    'Key should be unique',
-    Labels_Warning_Value: 'Valid characters: a–z, A–Z, 0–9, –, _, .\nMust begin and end with: a–z, A–Z, 0–9\nLength – max: 56',
+    Labels_Warning_Key: 'Valid characters: a–z, A–Z, 0–9, –, _, .\nMust begin and end with: a–z, A–Z, 0–9\nLength – max: 75\n' +
+    'Key must be unique',
+    Labels_Warning_Value: 'Valid characters: a–z, A–Z, 0–9, –, _, .\nMust begin and end with: a–z, A–Z, 0–9\nLength – max: 75',
     Feature_Set_Name_Hint:
       'Valid characters: a–z, A–Z, 0–9, –, _, .\nMust begin and end with: a–z, A–Z, 0–9\nLength – max: 56\n' +
       'This field is required',
@@ -285,7 +342,7 @@ module.exports = {
     Base_Image_Hint:
       "The name of a base container image from which to build the function's processor image",
     Limit_Number_Warning: 'Limit must be bigger than or equal to Request and not be less than 1',
-    Minimum_Value_Warning: 'The minimum value should be 1',
+    Minimum_Value_Warning: 'The minimum value must be 1',
     CPU_Limit_Number_Warning:
       'Limit must be bigger than or equal to Request and not be less than 0.001',
     Request_Number_Warning: 'Request must be less than or equal to Limit and not be less than 1',
@@ -308,7 +365,8 @@ module.exports = {
     MLRun_Store_Path_Hint: 'Field must be in "models/my-project/my-model:my-tag" or "models/my-project/my-model@my-uid" format',
     Jobs_MLRun_Store_Path_Hint:
       'Field must be in "artifacts/my-project/my-artifact:my-tag" or "artifacts/my-project/my-artifact@my-uid" format',
-    V3IO_Path_Hint: 'Field must be in "container-name/file" format',
+    V3IO_Path_Hint: 'Invalid URL. Field must be in "container-name/file" format',
+    V3IO_Path_Hint_Feature_Store: 'Field must be in "container-name/file" format',
     S3_Path_Hint: 'Field must be in "bucket/path" format',
     Azure_Storage_Path_Hint: 'Field must be in "container/path" format',
     Timestamp_Column: 'The field name for filtering the source data.',
@@ -360,28 +418,30 @@ module.exports = {
   },
   Jobs_And_Workflows: {
     Tab_List: ['Monitor Jobs', 'Monitor Workflows', 'Schedule'],
-    Job_Action_Menu_Options: ['View YAML', 'Re-run', 'Monitoring'],
+    Job_Action_Menu_Options: ['View YAML', 'Batch re-run', 'Monitoring', 'Delete'],
+    Job_Overview_Action_Menu_Options: ['View YAML', 'Batch re-run', 'Delete'],
+    Running_Job_Action_Menu_Options: ['View YAML', 'Delete', 'Monitoring', 'Abort'],
     Workflows_Action_Menu_Options: ['View YAML'],
-    Pending_Job_Action_Menu_Options: ['View YAML', 'Re-run', 'Monitoring', 'Abort'],
+    Pending_Job_Action_Menu_Options: ['View YAML', 'Batch re-run', 'Monitoring', 'Abort', 'Delete'],
     Schedule_Action_Menu_Options: ['View YAML', 'Run now', 'Edit', 'Delete']
   },
   Jobs_Monitor_Tab_Info_Pane: {
     Tab_List: ['Overview', 'Inputs', 'Artifacts', 'Results', 'Logs', 'Pods'],
     Overview_Headers: [
-      'UID',
-      'Start time',
-      'Last Updated',
-      'Run on spot',
-      'Node selector',
-      'Priority',
-      'Parameters',
-      'Function',
-      'Function tag',
-      'Results',
-      'Labels',
-      'Log level',
-      'Output path',
-      'Total iterations'
+      'UID:',
+      'Start time:',
+      'Last Updated:',
+      'Run on spot:',
+      'Node selector:',
+      'Priority:',
+      'Parameters:',
+      'Function:',
+      'Function tag:',
+      'Results:',
+      'Labels:',
+      'Log level:',
+      'Output path:',
+      'Total iterations:'
     ]
   },
   Jobs_Monitor_Tab: {
@@ -440,7 +500,6 @@ module.exports = {
     Hour_Intervals_Dropdown_Options: ['Every 1', 'Every 2', 'Every 3', 'Every 4', 'Every 6', 'Every 12'],
     Partition_Granularity_Options: ['Second', 'Minute', 'Hour', 'Day', 'Month', 'Year'],
     Pods_Priority: ['Low', 'Medium', 'High'],
-    //Pods_Toleration: ['Allow', 'Constrain', 'Prevent'], - Pods_Toleration is deleted from implementation
     Schedule_Variants: ['Minute', 'Hourly', 'Daily', 'Weekly', 'Monthly'],
     Schedule_Minutes_Variants: ['10', '15', '20', '30'],
     Schedule_Hours_Variants: ['1', '2', '3', '4', '6', '12']

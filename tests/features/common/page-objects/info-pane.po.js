@@ -70,6 +70,34 @@ const infoPaneOverviewHeaders = {
   }
 }
 
+const infoPaneOverviewProducerHeaders = {
+  root: '.table__item .item-info__details-wrapper:nth-of-type(2)',
+  header: {},
+  body: {
+    row: {
+      root: '.item-info__details',
+      fields: {
+        key: '.details-item__header',
+        link: '.details-item__data .link',
+        value: '.details-item__data'
+      }
+    }
+  }
+}
+
+const infoPaneOverviewSourcesHeaders = {
+  root: '.table__item .item-info__details-wrapper:nth-of-type(2)',
+  header: {},
+  body: {
+    row: {
+      root: '.info-sources',
+      fields: {
+        key: '.info-sources__table-key',
+        value: '.info-sources__table-value'
+      }
+    }
+  }
+}
 const artifactOverviewTable = {
   root: '.table__item .item-info__details:nth-of-type(1)',
   header: {},
@@ -83,6 +111,28 @@ const artifactOverviewTable = {
         iter: '.details-item:nth-of-type(4) .details-item__data',
         size: '.details-item:nth-of-type(5) .details-item__data',
         path: '.details-item:nth-of-type(6) .details-item__data',
+        uri: '.details-item:nth-of-type(7) .details-item__data',
+        uid: '.details-item:nth-of-type(8) .details-item__data',
+        updated: '.details-item:nth-of-type(9) .details-item__data',
+        labels: '.details-item:nth-of-type(10) .details-item__data'
+      }
+    }
+  }
+}
+
+const datasetOverviewTable = {
+  root: '.table__item .item-info__details:nth-of-type(1)',
+  header: {},
+  body: {
+    row: {
+      root: '',
+      fields: {
+        hash: '.details-item:nth-of-type(1) .details-item__data',
+        key: '.details-item:nth-of-type(2) .details-item__data',
+        tag: '.details-item:nth-of-type(3) .details-item__data',
+        iter: '.details-item:nth-of-type(4) .details-item__data',
+        size: '.details-item:nth-of-type(5) .details-item__data',
+        path: '.details-item:nth-of-type(7) .details-item__data',
         uri: '.details-item:nth-of-type(7) .details-item__data',
         uid: '.details-item:nth-of-type(8) .details-item__data',
         updated: '.details-item:nth-of-type(9) .details-item__data',
@@ -531,7 +581,12 @@ module.exports = {
     Tabel_View_Button: tabelViewButton,
     Cross_Close_Button: crossCloseButton,
     Info_Pane_Tab_Selector: commonInfoPaneTabSelector,
+    Pop_Out_Button: By.css('[data-testid="details-preview-tooltip-wrapper"]'),
     Overview_General_Headers: commonTable(infoPaneOverviewHeaders),
+    Overview_Producer_Headers: commonTable(infoPaneOverviewProducerHeaders),
+    Overview_Sources_Headers: commonTable(infoPaneOverviewSourcesHeaders),
+    Train_Button: By.css('[data-testid="detailsPanel"] .item-header__buttons button'),
+    Label_column: By.css('.item-info__details .details-item:nth-of-type(6) .details-item__data'),
     Overview_Hash_Header: labelComponent(
       generateLabelGroup(
         '.item-info__details:nth-of-type(1) .details-item:nth-of-type(1) .details-item__header',
@@ -541,14 +596,14 @@ module.exports = {
     ),
     Overview_UID_Header: labelComponent(
       generateLabelGroup(
-        '.item-info__details:nth-of-type(1) .details-item:nth-of-type(8) .details-item__header',
+        '.item-info__details:nth-of-type(1) .details-item:nth-of-type(9) .details-item__header',
         false,
         true
       )
     ),
     Expand_Sources: By.css('.details-item .info-sources'),
     Info_Sources_Table: commonTable(filesInfoSourcesTable),
-    Overview_Table: commonTable(artifactOverviewTable),
+    Overview_Table: commonTable(datasetOverviewTable),
     Edit_btn_table_view: commonEditBtnTableView,
     Edit_btn_full_view: commonEditBtnFullView,
     Version_tag_Input_table_view: commonVersionTagInputTableView,
@@ -656,7 +711,10 @@ module.exports = {
     Full_View_Button: fullViewButton,
     Tabel_View_Button: tabelViewButton,
     Info_Pane_Tab_Selector: commonInfoPaneTabSelector,
+    Pop_Out_Button: By.css('[data-testid="details-preview-tooltip-wrapper"]'),
     Overview_General_Headers: commonTable(infoPaneOverviewHeaders),
+    Overview_Producer_Headers: commonTable(infoPaneOverviewProducerHeaders),
+    Overview_Sources_Headers: commonTable(infoPaneOverviewSourcesHeaders),
     Overview_Hash_Header: labelComponent(
       generateLabelGroup(
         '.item-info__details:nth-of-type(1) .details-item:nth-of-type(1) .details-item__header',
@@ -671,8 +729,6 @@ module.exports = {
         true
       )
     ),
-    Expand_Sources: By.css('.details-item .info-sources'),
-    Info_Sources_Table: commonTable(filesInfoSourcesTable),
     Overview_Table: commonTable(artifactOverviewTable),
     Edit_btn_table_view: commonEditBtnTableView,
     Edit_btn_full_view: commonEditBtnFullView,
@@ -687,13 +743,15 @@ module.exports = {
     Download_Button: commonDownloadButton,
     Action_Menu: commonActionMenu,
     Apply_Changes_Button: applyChangesButton,
-    //Apply_Button: applyButton,
     Cross_Close_Button: crossCloseButton,
     Full_View_Button: fullViewButton,
     Tabel_View_Button: tabelViewButton,
     Info_Pane_Tab_Selector: commonInfoPaneTabSelector,
+    Pop_Out_Button: By.css('[data-testid="details-preview-tooltip-wrapper"]'),
     Overview_General_Headers: commonTable(infoPaneOverviewHeaders),
     Overview_Drift_Headers: commonTable(infoPaneDriftHeaders),
+    Overview_Producer_Headers: commonTable(infoPaneOverviewProducerHeaders),
+    Overview_Sources_Headers: commonTable(infoPaneOverviewSourcesHeaders),
     Overview_Hash_Header: labelComponent(
       generateLabelGroup(
         '.item-info__details:nth-of-type(1) .details-item:nth-of-type(1) .details-item__header',

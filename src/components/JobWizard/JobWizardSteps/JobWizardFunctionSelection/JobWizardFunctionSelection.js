@@ -45,13 +45,11 @@ import { generateProjectsList } from '../../../../utils/projects'
 import { functionRunKinds } from '../../../Jobs/jobs.util'
 import { openConfirmPopUp } from 'igz-controls/utils/common.util'
 import {
-  filterTrainFunctionHandlers,
   FUNCTIONS_SELECTION_FUNCTIONS_TAB,
   FUNCTIONS_SELECTION_HUB_TAB,
   functionsSelectionTabs,
   generateFunctionCardData,
-  generateFunctionTemplateCardData,
-  trainModelAllowedHubFunctions
+  generateFunctionTemplateCardData
 } from './jobWizardFunctionSelection.util'
 
 import './jobWizardFunctionSelection.scss'
@@ -67,7 +65,6 @@ const JobWizardFunctionSelection = ({
   isEditMode,
   isTrain,
   params,
-  prePopulatedData,
   selectedFunctionData,
   selectedFunctionTab,
   setActiveTab,
@@ -219,8 +216,7 @@ const JobWizardFunctionSelection = ({
         functionData,
         defaultData,
         params.projectName,
-        isEditMode,
-        prePopulatedData
+        isEditMode
       )
 
       const newInitial = {
@@ -279,9 +275,7 @@ const JobWizardFunctionSelection = ({
       activeTab === FUNCTIONS_SELECTION_HUB_TAB &&
       (isEmpty(hubFunctions) || isEmpty(hubFunctionsCatalog))
     ) {
-      dispatch(
-        functionsActions.fetchHubFunctions(isTrain ? trainModelAllowedHubFunctions : {})
-      ).then(templatesObject => {
+      dispatch(functionsActions.fetchHubFunctions()).then(templatesObject => {
         if (templatesObject) {
           setTemplatesCategories(templatesObject.hubFunctionsCategories)
           setTemplates(templatesObject.hubFunctions)
@@ -307,7 +301,6 @@ const JobWizardFunctionSelection = ({
     formState.initialValues,
     hubFunctions,
     hubFunctionsCatalog,
-    isTrain,
     setTemplates,
     setTemplatesCategories
   ])
@@ -337,10 +330,8 @@ const JobWizardFunctionSelection = ({
       const functionTemplatePath = `${functionData.spec.item_uri}${functionData.spec.assets.function}`
 
       dispatch(functionsActions.fetchFunctionTemplate(functionTemplatePath)).then(result => {
-        const resultData = isTrain ? filterTrainFunctionHandlers(result) : result
-
-        setSelectedFunctionData(resultData)
-        generateData(resultData)
+        setSelectedFunctionData(result)
+        generateData(result)
         setSelectedFunctionTab(FUNCTIONS_SELECTION_HUB_TAB)
         setShowSchedule(false)
       })
@@ -359,7 +350,7 @@ const JobWizardFunctionSelection = ({
   }
 
   const openResetConfirm = confirmHandler => {
-    return openConfirmPopUp(confirmHandler, 'All changes will be lost')
+    return openConfirmPopUp('All changes will be lost', confirmHandler)
   }
 
   return (
@@ -389,10 +380,7 @@ const JobWizardFunctionSelection = ({
           </div>
           <div className="form-row">
             <div className="form-row__project-name">
-              <FormSelect
-                name={`${FUNCTION_SELECTION_STEP}.projectName`}
-                options={projects}
-              />
+              <FormSelect name={`${FUNCTION_SELECTION_STEP}.projectName`} options={projects} />
             </div>
           </div>
           {!loading &&
@@ -499,7 +487,6 @@ JobWizardFunctionSelection.propTypes = {
   isEditMode: PropTypes.bool.isRequired,
   isTrain: PropTypes.bool.isRequired,
   params: PropTypes.shape({}).isRequired,
-  prePopulatedData: PropTypes.shape({}).isRequired,
   selectedFunctionData: PropTypes.shape({}).isRequired,
   selectedFunctionTab: PropTypes.string.isRequired,
   setActiveTab: PropTypes.func.isRequired,

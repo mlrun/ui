@@ -34,7 +34,8 @@ import {
   getInfoHeaders,
   getJobsDetailsMenu,
   isJobAbortable,
-  isJobKindDask
+  isJobKindDask,
+  JOB_RUNNING_STATES
 } from '../jobs.util'
 import { TERTIARY_BUTTON } from 'igz-controls/constants'
 import jobsActions from '../../../actions/jobs'
@@ -101,12 +102,6 @@ export const generateActionsMenu = (
             onClick: handleRerunJob
           },
           {
-            label: 'Delete',
-            icon: <Delete />,
-            className: 'danger',
-            onClick: handleConfirmDeleteJob
-          },
-          {
             label: 'Monitoring',
             icon: <MonitorIcon />,
             tooltip: !jobs_dashboard_url
@@ -132,6 +127,13 @@ export const generateActionsMenu = (
             label: 'View YAML',
             icon: <Yaml />,
             onClick: toggleConvertedYaml
+          },
+          {
+            label: 'Delete',
+            icon: <Delete />,
+            className: 'danger',
+            onClick: handleConfirmDeleteJob,
+            hidden: JOB_RUNNING_STATES.includes(job?.state?.value)
           }
         ]
       ]
@@ -148,6 +150,7 @@ export const generateActionsMenu = (
 
 export const monitorJobsActionCreator = {
   abortJob: jobsActions.abortJob,
+  deleteAllJobRuns: jobsActions.deleteAllJobRuns,
   deleteJob: jobsActions.deleteJob,
   fetchAllJobRuns: jobsActions.fetchAllJobRuns,
   fetchJob: jobsActions.fetchJob,

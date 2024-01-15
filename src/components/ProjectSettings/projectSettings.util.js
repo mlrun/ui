@@ -26,7 +26,10 @@ import {
   PROJECTS_SETTINGS_GENERAL_TAB,
   PROJECTS_SETTINGS_PAGE,
   PROJECTS_SETTINGS_MEMBERS_TAB,
-  PROJECTS_SETTINGS_SECRETS_TAB
+  PROJECTS_SETTINGS_SECRETS_TAB,
+  OWNER_ROLE,
+  USER_ROLE,
+  ADMIN_ROLE
 } from '../../constants'
 
 import { ReactComponent as Settings } from 'igz-controls/images/settings.svg'
@@ -63,7 +66,20 @@ export const validTabs = [
 
 export const page = PROJECTS_SETTINGS_PAGE
 
-export const generateMembers = (membersResponse, membersDispatch) => {
+const addMember = (members, name, id, type, initialRole, role) => {
+  members.push({
+    name,
+    id,
+    type,
+    initialRole,
+    role,
+    icon: type === USER_ROLE ? <User /> : <Users />,
+    modification: '',
+    actionElement: createRef()
+  })
+}
+
+export const generateMembers = (membersResponse, membersDispatch, owner) => {
   const members = []
   const {
     project_authorization_role: projectAuthorizationRoles = [],
@@ -85,11 +101,15 @@ export const generateMembers = (membersResponse, membersDispatch) => {
     payload: userGroups
   })
 
+  if (owner.id && !isOwnerInMembersList(owner.id, users)) {
+    addMember(members, owner.username, owner.id, USER_ROLE, OWNER_ROLE, OWNER_ROLE)
+  }
+
   projectAuthorizationRoles.forEach(role => {
     if (role.relationships) {
       forEach(role.relationships, relationData => {
         relationData.data.forEach(identity => {
-          const identityList = identity.type === 'user' ? users : userGroups
+          const identityList = identity.type === USER_ROLE ? users : userGroups
 
           const {
             attributes: { name, username },
@@ -99,16 +119,14 @@ export const generateMembers = (membersResponse, membersDispatch) => {
             return identityData.id === identity.id
           })
 
-          members.push({
-            name: type === 'user' ? username : name,
-            id: id,
-            type: type,
-            initialRole: role.attributes.name,
-            role: role.attributes.name,
-            icon: type === 'user' ? <User /> : <Users />,
-            modification: '',
-            actionElement: createRef()
-          })
+          addMember(
+            members,
+            type === USER_ROLE ? username : name,
+            id,
+            type,
+            owner.id === id ? OWNER_ROLE : role.attributes.name,
+            owner.id === id ? OWNER_ROLE : role.attributes.name
+          )
         })
       })
     }
@@ -131,8 +149,18 @@ export const isProjectMembersTabShown = (
     return false
   }
 
-  const userIsAdmin = members.some(member => member.role === 'Admin' && member.id === activeUser.id)
+  const userIsProjectSecurityAdmin =
+    activeUser.attributes?.assigned_policies?.includes('Project Security Admin') ?? false
+  const userIsAdmin = members.some(
+    member => member.role === ADMIN_ROLE && member.id === activeUser.id
+  )
   const userIsOwner = activeUser.id === projectInfo.owner.id
 
-  return userIsOwner || userIsAdmin
+  return userIsOwner || userIsAdmin || userIsProjectSecurityAdmin
+}
+
+const isOwnerInMembersList = (ownerId, membersList) => {
+  return membersList.some(member => {
+    return member.id === ownerId
+  })
 }

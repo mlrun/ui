@@ -57,7 +57,7 @@ export const MODEL_PATH_DATA_INPUT = 'model_path'
 
 export const NAVBAR_WIDTH_CLOSED = 57
 export const NAVBAR_WIDTH_OPENED = 245
-export const CANCEL_REQUEST_TIMEOUT = 60000
+export const CANCEL_REQUEST_TIMEOUT = 120000
 
 /*=========== PAGES & TABS =============*/
 
@@ -112,6 +112,9 @@ export const DATASETS_FILTERS = 'DATASETS_FILTERS'
 export const ABORT_JOB_BEGIN = 'ABORT_JOB_BEGIN'
 export const ABORT_JOB_FAILURE = 'ABORT_JOB_FAILURE'
 export const ABORT_JOB_SUCCESS = 'ABORT_JOB_SUCCESS'
+export const DELETE_ALL_JOB__RUNS_BEGIN = 'DELETE_ALL_JOB__RUNS_BEGIN'
+export const DELETE_ALL_JOB_RUNS_FAILURE = 'DELETE_ALL_JOB_RUNS_FAILURE'
+export const DELETE_ALL_JOB_RUNS_SUCCESS = 'DELETE_ALL_JOB_RUNS_SUCCESS'
 export const DELETE_JOB_BEGIN = 'DELETE_JOB_BEGIN'
 export const DELETE_JOB_FAILURE = 'DELETE_JOB_FAILURE'
 export const DELETE_JOB_SUCCESS = 'DELETE_JOB_SUCCESS'
@@ -590,3 +593,12 @@ export const ARTIFACT_TYPE = 'artifact'
 export const DATASET_TYPE = 'dataset'
 export const MODEL_TYPE = 'model'
 export const ARTIFACT_OTHER_TYPE = 'other'
+
+/*=========== ROLES =============*/
+
+export const ADMIN_ROLE = 'Admin'
+export const ALL_ROLES = 'All'
+export const EDITOR_ROLE = 'Editor'
+export const OWNER_ROLE = 'Owner'
+export const USER_ROLE = 'user'
+export const VIEWER_ROLE = 'Viewer'

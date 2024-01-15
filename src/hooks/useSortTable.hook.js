@@ -17,8 +17,8 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import { useCallback, useEffect, useState } from 'react'
-import { isEmpty, isNumber, orderBy } from 'lodash'
+import { useCallback, useEffect, useState, useMemo } from 'react'
+import { isEmpty, isNumber, orderBy, isEqual } from 'lodash'
 
 import { ReactComponent as ArrowIcon } from 'igz-controls/images/back-arrow.svg'
 
@@ -27,13 +27,20 @@ export const useSortTable = ({ headers, content, sortConfig = {} }) => {
   const [selectedColumnName, setSelectedColumnName] = useState('')
   const [sortedTableContent, setSortedTableContent] = useState(content)
   const [sortedTableHeaders, setSortedTableHeaders] = useState(headers)
+  const [config, setConfig] = useState(sortConfig)
 
   const {
     allowSortBy = null,
     excludeSortBy = null,
     defaultSortBy = null,
     defaultDirection = null
-  } = sortConfig
+  } = useMemo(() => config, [config])
+
+  useEffect(() => {
+    if(!isEqual(config, sortConfig)) {
+      setConfig(sortConfig)
+    }
+  }, [sortConfig, config])
 
   const isDateValid = dateString => {
     if (Date.parse(dateString)) {
@@ -53,7 +60,7 @@ export const useSortTable = ({ headers, content, sortConfig = {} }) => {
       ) {
         let valueToTest = rowDataContent[columnIndex].value
 
-        if (!isEmpty(valueToTest)) {
+        if (!isEmpty(valueToTest) || isNumber(valueToTest)) {
           if (valueToTest instanceof Array && valueToTest.length > 0) {
             if (valueToTest[0].match(/:/g)) {
               return valueToTest[0].split(':')[0].trim()

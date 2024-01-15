@@ -19,7 +19,7 @@ such restriction.
 */
 import React, { useMemo, useState } from 'react'
 import PropTypes from 'prop-types'
-import { get, isEmpty, set } from 'lodash'
+import { get, isEmpty, omit, set } from 'lodash'
 import { OnChange } from 'react-final-form-listeners'
 import { FieldArray } from 'react-final-form-arrays'
 
@@ -47,6 +47,7 @@ import { getChipOptions } from '../../../../utils/getChipOptions'
 import { getValidationRules } from 'igz-controls/utils/validation.util'
 import { openPopUp } from 'igz-controls/utils/common.util'
 import {
+  generateJobWizardData,
   getFunctionParameters,
   getHandlerData,
   parseDataInputs,
@@ -57,17 +58,22 @@ import './jobWizardRunDetails.scss'
 
 const JobWizardRunDetails = ({
   formState,
+  frontendSpec,
   isBatchInference,
   isEditMode,
   jobAdditionalData,
+  params,
   prePopulatedData,
   selectedFunctionData,
+  setJobData,
   stepIsActive
 }) => {
   const handlerPath = `${RUN_DETAILS_STEP}.handler`
+  const versionPath = `${RUN_DETAILS_STEP}.version`
   const imageSourcePath = `${RUN_DETAILS_STEP}.image.imageSource`
   const outputsPath = `${RUN_DETAILS_STEP}.handlerData.outputs`
-  const [spyOnHandlerChange, setspyOnHandlerChange] = useState(true)
+  const [spyOnHandlerChange, setSpyOnHandlerChange] = useState(true)
+  const [spyOnVersionChange, setSpyOnVersionChange] = useState(true)
   const commonImageWarningMsg =
     'The image must include all the software packages that are required to run the function. ' +
     'For example, for an XGBoost model, ensure that the image includes the correct XGboost package and version'
@@ -80,13 +86,64 @@ const JobWizardRunDetails = ({
     [formState.values, imageSourcePath]
   )
 
-  const handleHandlerChange = handler => {
-    setspyOnHandlerChange(true)
+  const handleVersionChange = version => {
+    const [jobFormData, jobAdditionalData] = generateJobWizardData(
+      frontendSpec,
+      selectedFunctionData,
+      null,
+      params.projectName,
+      isEditMode,
+      false,
+      null,
+      version
+    )
+    setJobData(formState, jobFormData, jobAdditionalData)
 
-    const functionParameters = getFunctionParameters(selectedFunctionData.functions, handler)
-    const dataInputs = parseDataInputs(functionParameters, prePopulatedData?.dataInputs)
+    setSpyOnVersionChange(true)
+  }
+
+  const onVersionChange = (currentVersion, prevVersion) => {
+    setSpyOnVersionChange(false)
+    const values = omit(formState.values, [versionPath])
+    const initialValues = omit(formState.initialValues, [versionPath])
+
+    if (areFormValuesChanged(values, initialValues)) {
+      openPopUp(ConfirmDialog, {
+        cancelButton: {
+          label: 'Cancel',
+          variant: TERTIARY_BUTTON,
+          handler: () => {
+            formState.form.change(versionPath, prevVersion)
+            setSpyOnVersionChange(true)
+          }
+        },
+        confirmButton: {
+          label: 'OK',
+          variant: SECONDARY_BUTTON,
+          handler: () => {
+            handleVersionChange(currentVersion)
+          }
+        },
+        header: 'Are you sure?',
+        message: 'You have unsaved changes. All changes will be lost'
+      })
+    } else {
+      handleVersionChange(currentVersion)
+    }
+  }
+
+  const handleHandlerChange = handler => {
+    const selectedFunction =
+      selectedFunctionData?.functions?.length === 1
+        ? selectedFunctionData.functions[0]
+        : selectedFunctionData.functions?.find(
+            func => func.metadata.tag === formState.values[RUN_DETAILS_STEP].version
+          )
+
+    const functionParameters = getFunctionParameters(selectedFunction, handler)
+    const dataInputs = parseDataInputs(functionParameters, prePopulatedData?.trainDatasetUri)
     const predefinedParameters = parsePredefinedParameters(functionParameters)
-    const handlerData = getHandlerData(selectedFunctionData, handler)
+    const handlerData = getHandlerData(selectedFunction, handler)
 
     set(formState.initialValues, `${DATA_INPUTS_STEP}.dataInputsTable`, dataInputs)
     set(
@@ -102,10 +159,12 @@ const JobWizardRunDetails = ({
       `${PARAMETERS_STEP}.parametersTable.custom`,
       get(formState.initialValues, `${PARAMETERS_STEP}.parametersTable.custom`, [])
     )
+
+    setSpyOnHandlerChange(true)
   }
 
-  const onHandlerChange = (value, prevValue) => {
-    setspyOnHandlerChange(false)
+  const onHandlerChange = (currentHandler, prevHandler) => {
+    setSpyOnHandlerChange(false)
 
     const dataInputsAreChanged = areFormValuesChanged(
       formState.initialValues[DATA_INPUTS_STEP].dataInputsTable,
@@ -126,22 +185,22 @@ const JobWizardRunDetails = ({
           label: 'Cancel',
           variant: TERTIARY_BUTTON,
           handler: () => {
-            formState.form.change(handlerPath, prevValue)
-            setspyOnHandlerChange(true)
+            formState.form.change(handlerPath, prevHandler)
+            setSpyOnHandlerChange(true)
           }
         },
         confirmButton: {
           label: 'OK',
           variant: SECONDARY_BUTTON,
           handler: () => {
-            handleHandlerChange(value)
+            handleHandlerChange(currentHandler)
           }
         },
         header: 'Are you sure?',
         message: 'Changes made to the Data Inputs and Parameters sections will be lost'
       })
     } else {
-      handleHandlerChange(value)
+      handleHandlerChange(currentHandler)
     }
   }
 
@@ -153,10 +212,7 @@ const JobWizardRunDetails = ({
         </div>
         {!isBatchInference && (
           <div className="form-row">
-            <FormCheckBox
-              label="Hyperparameter"
-              name={`${RUN_DETAILS_STEP}.hyperparameter`}
-            />
+            <FormCheckBox label="Hyperparameter" name={`${RUN_DETAILS_STEP}.hyperparameter`} />
           </div>
         )}
         <div className="form-row">
@@ -172,7 +228,7 @@ const JobWizardRunDetails = ({
           {jobAdditionalData.versionOptions?.length !== 0 && (
             <div className="form-col-1">
               <FormSelect
-                name={`${RUN_DETAILS_STEP}.version`}
+                name={versionPath}
                 label="Version"
                 disabled={
                   jobAdditionalData?.versionOptions?.length === 1 &&
@@ -194,11 +250,7 @@ const JobWizardRunDetails = ({
               </div>
             ) : (
               <div className="form-col-1">
-                <FormInput
-                  label="Handler"
-                  name={handlerPath}
-                  disabled={isEditMode}
-                />
+                <FormInput label="Handler" name={handlerPath} disabled={isEditMode} />
               </div>
             )
           ) : null}
@@ -214,8 +266,8 @@ const JobWizardRunDetails = ({
             shortChips
             visibleChipsMaxLength="all"
             validationRules={{
-              key: getValidationRules('job.label'),
-              value: getValidationRules('job.label')
+              key: getValidationRules('job.label.key'),
+              value: getValidationRules('job.label.value')
             }}
           />
         </div>
@@ -320,6 +372,9 @@ const JobWizardRunDetails = ({
         {stepIsActive && spyOnHandlerChange && (
           <OnChange name={handlerPath}>{onHandlerChange}</OnChange>
         )}
+        {stepIsActive && spyOnVersionChange && (
+          <OnChange name={versionPath}>{onVersionChange}</OnChange>
+        )}
       </div>
     )
   )
@@ -327,11 +382,14 @@ const JobWizardRunDetails = ({
 
 JobWizardRunDetails.propTypes = {
   formState: PropTypes.shape({}).isRequired,
+  frontendSpec: PropTypes.shape({}).isRequired,
   isBatchInference: PropTypes.bool.isRequired,
   isEditMode: PropTypes.bool.isRequired,
   jobAdditionalData: PropTypes.shape({}).isRequired,
+  params: PropTypes.shape({}).isRequired,
   prePopulatedData: PropTypes.shape({}).isRequired,
-  selectedFunctionData: PropTypes.shape({}).isRequired
+  selectedFunctionData: PropTypes.shape({}).isRequired,
+  setJobData: PropTypes.func.isRequired
 }
 
 export default JobWizardRunDetails

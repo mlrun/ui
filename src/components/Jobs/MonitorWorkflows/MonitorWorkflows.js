@@ -135,15 +135,14 @@ const MonitorWorkflows = ({
   })
 
   const handleFetchFunctionLogs = useCallback(
-    (item, projectName, setDetailsLogs, offset) => {
+    (item, projectName, setDetailsLogs) => {
       return getFunctionLogs(
         fetchFunctionLogs,
         fetchFunctionLogsTimeout,
         projectName,
         item.name,
         item.tag,
-        setDetailsLogs,
-        offset
+        setDetailsLogs
       )
     },
     [fetchFunctionLogs, fetchFunctionLogsTimeout]
@@ -262,7 +261,7 @@ const MonitorWorkflows = ({
       setConfirmData({
         item: job,
         header: 'Delete job?',
-        message: `You try to delete job "${job.name}".`,
+        message: `Do you want to delete the job "${job.name}"? Deleted jobs can not be restored.`,
         btnConfirmLabel: 'Delete',
         btnConfirmType: DANGER_BUTTON,
         rejectHandler: () => {
@@ -624,7 +623,6 @@ const MonitorWorkflows = ({
           ) : (
             <Table
               actionsMenu={actionsMenu}
-              content={workflowsStore.workflows.data}
               handleCancel={handleCancel}
               handleSelectItem={handleSelectRun}
               pageData={pageData}

@@ -84,7 +84,8 @@ const UrlPath = ({
       inputDefaultValue.length === 0
     ) {
       const { schema, path } = targetPath(defaultPath.path)
-      const selectDefaultValues = comboboxSelectList.find(option => option.id === `${schema}://`)
+      const selectDefaultValues =
+        comboboxSelectList.find(option => option.id === `${schema}://`) ?? comboboxSelectList[0]
 
       setUrlData(state => ({ ...state, pathType: selectDefaultValues.id, path }))
       setInputDefaultValue(path)

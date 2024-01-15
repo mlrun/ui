@@ -224,7 +224,7 @@ const Files = () => {
     useSortTable({
       headers: tableHeaders,
       content: tableContent,
-      sortConfig: { excludeSortBy: 'labels', defaultSortBy: 'updated', defaultDirection: 'desc' }
+      sortConfig: { excludeSortBy: ['labels', 'size'], defaultSortBy: 'updated', defaultDirection: 'desc' }
     })
 
   const applyDetailsChanges = useCallback(
@@ -309,11 +309,11 @@ const Files = () => {
   const handleRegisterArtifact = useCallback(() => {
     openPopUp(RegisterArtifactModal, {
       artifactKind: ARTIFACT_TYPE,
-      projectName: params.projectName,
+      params,
       refresh: handleRefresh,
       title: registerArtifactTitle
     })
-  }, [handleRefresh, params.projectName])
+  }, [handleRefresh, params])
 
   return (
     <FilesView

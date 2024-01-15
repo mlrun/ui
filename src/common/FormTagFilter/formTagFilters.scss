@@ -38,6 +38,7 @@
   &__dropdown {
     width: 100%;
     max-height: 400px;
+    align-items: normal;
     overflow-y: auto;
     background-color: $white;
     border: $primaryBorder;

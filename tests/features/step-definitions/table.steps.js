@@ -23,6 +23,7 @@ import {
   clickNearComponent,
   clickOnComponent,
   componentIsNotPresent,
+  componentIsPresent,
   componentIsNotVisible,
   componentIsVisible,
   hoverComponent,
@@ -55,6 +56,8 @@ import {
 import {
   checkActionMenuOptions,
   openActionMenu,
+  verifyOptionInActionMenuEnabled,
+  verifyOptionInActionMenuDisabled,
   selectOptionInActionMenu
 } from '../common/actions/action-menu.action'
 import { typeValue } from '../common/actions/input-group.action'
@@ -210,6 +213,76 @@ When('add data to {string} table on {string} wizard', async function (table, wiz
     await hoverComponent(this.driver, pageObjects[wizard][table]['tableFields']['apply_btn'](parseInt(row_indx) + 2))
     await this.driver.sleep(100)
     await clickOnComponent(this.driver, pageObjects[wizard][table]['tableFields']['apply_btn'](parseInt(row_indx) + 2))
+    await this.driver.sleep(100)
+  }
+})
+
+When('add data to {string} table on {string} wizard with a pre-filled table', async function (table, wizard, dataTable) {
+  const inputFields = dataTable['rawTable'][0]
+  const rows = dataTable.rows()
+  for (const row_indx in rows) {
+    let rowsNumber = await getTableRows(this.driver, pageObjects[wizard][table])
+    await clickOnComponent(this.driver, pageObjects[wizard][table]['add_row_btn'])
+    await this.driver.sleep(100)
+    await clickOnComponent(this.driver, pageObjects[wizard][table]['tableFields'][inputFields[0]](rowsNumber + 2))
+    await this.driver.sleep(250)
+    await typeIntoInputField(                                      
+      this.driver,
+      pageObjects[wizard][table]['tableFields'][inputFields[0]](rowsNumber + 2),
+      rows[row_indx][0]
+    )
+    await this.driver.sleep(100)
+    await openDropdown(this.driver, pageObjects[wizard][table]['tableFields'][inputFields[1]](rowsNumber + 2))
+    await selectOptionInDropdownWithoutCheck(
+      this.driver,
+      pageObjects[wizard][table]['tableFields'][inputFields[1]](rowsNumber + 2),
+      rows[row_indx][1]
+    )
+    await this.driver.sleep(100)
+    await typeIntoInputField(
+      this.driver,
+      pageObjects[wizard][table]['tableFields'][inputFields[2]](rowsNumber + 2),
+      rows[row_indx][2]
+    )
+    await this.driver.sleep(100)
+    await hoverComponent(this.driver, pageObjects[wizard][table]['tableFields']['apply_btn'](rowsNumber + 2))
+    await this.driver.sleep(100)
+    await clickOnComponent(this.driver, pageObjects[wizard][table]['tableFields']['apply_btn'](rowsNumber + 2))
+    await this.driver.sleep(100)
+  }
+})
+
+When('add custom parameters to {string} table on {string} wizard with a pre-filled table', async function (table, wizard, dataTable) {
+  const inputFields = dataTable['rawTable'][0]
+  const rows = dataTable.rows()
+  for (const row_indx in rows) {
+    let rowsNumber = await getTableRows(this.driver, pageObjects[wizard][table])
+    await clickOnComponent(this.driver, pageObjects[wizard][table]['add_row_btn'])
+    await this.driver.sleep(100)
+    await clickOnComponent(this.driver, pageObjects[wizard][table]['tableFields'][inputFields[0]](rowsNumber + 1))
+    await this.driver.sleep(250)
+    await typeIntoInputField(                                      
+      this.driver,
+      pageObjects[wizard][table]['tableFields'][inputFields[0]](rowsNumber + 1),
+      rows[row_indx][0]
+    )
+    await this.driver.sleep(100)
+    await openDropdown(this.driver, pageObjects[wizard][table]['tableFields'][inputFields[1]](rowsNumber + 1))
+    await selectOptionInDropdownWithoutCheck(
+      this.driver,
+      pageObjects[wizard][table]['tableFields'][inputFields[1]](rowsNumber + 1),
+      rows[row_indx][1]
+    )
+    await this.driver.sleep(100)
+    await typeIntoInputField(
+      this.driver,
+      pageObjects[wizard][table]['tableFields'][inputFields[2]](rowsNumber + 1),
+      rows[row_indx][2]
+    )
+    await this.driver.sleep(100)
+    await hoverComponent(this.driver, pageObjects[wizard][table]['tableFields']['apply_btn'](rowsNumber + 1))
+    await this.driver.sleep(100)
+    await clickOnComponent(this.driver, pageObjects[wizard][table]['tableFields']['apply_btn'](rowsNumber + 1))
     await this.driver.sleep(100)
   }
 })
@@ -625,6 +698,34 @@ When(
 )
 
 When(
+  'add data rows to {string} key-value table on {string} wizard',
+  async function (table, wizard, dataTable) {
+    const inputFields = dataTable['rawTable'][0]
+    const rows = dataTable.rows()
+    for (const row_indx in rows) {
+      await clickOnComponent(this.driver, pageObjects[wizard][table]['add_row_btn'])
+      await this.driver.sleep(100)
+      for (const i in inputFields) {
+        const component = pageObjects[wizard][table]['tableFields'][inputFields[i]](parseInt(row_indx) + 2)
+        const inputField = component.inputField ?? component
+        await typeIntoInputField(this.driver, inputField, rows[row_indx][i])
+      }
+
+      if (pageObjects[wizard][table]['save_row_btn']) {
+        await clickOnComponent(this.driver, pageObjects[wizard][table]['save_row_btn'])
+      } else {
+        await hoverComponent(this.driver, pageObjects[wizard][table]['tableFields']['apply_edit_btn'](parseInt(row_indx) + 2))
+        await this.driver.sleep(100)
+        await clickOnComponent(this.driver, pageObjects[wizard][table]['tableFields']['apply_edit_btn'](parseInt(row_indx) + 2))
+        await this.driver.sleep(100)
+      }
+
+      await this.driver.sleep(100)
+    }
+  }
+)
+
+When(
   'edit dropdown field {int} row in {string} key-value table on {string} wizard',
   async function (index, table, wizard, dataTable) {
     const inputFields = dataTable['rawTable'][0]
@@ -1010,6 +1111,142 @@ Then(
       pageObjects[wizard][table]['tableFields']['action_menu'](indx),
       pageObjectsConsts[constWizard][constValue]
     )
+  }
+)
+
+Then(
+  'verify action menu on {string} wizard in {string} table with {string} value in {string} column should contains {string}.{string}',
+  async function (wizard, table, value, column, constWizard, constValue) {
+    const arr = await findRowIndexesByColumnValue(
+      this.driver,
+      pageObjects[wizard][table],
+      column,
+      value
+    )
+    const indx = arr[0]
+    const actionMenuSel = await getCellByIndexColumn(
+      this.driver,
+      pageObjects[wizard][table],
+      indx,
+      'action_menu'
+    )
+    await hoverComponent(
+      this.driver,
+      pageObjects[wizard][table]['tableFields'][column](indx)
+    )
+    await this.driver.sleep(500)
+    await openActionMenu(this.driver, actionMenuSel)
+    await this.driver.sleep(500)
+    await checkActionMenuOptions(
+      this.driver,
+      pageObjects[wizard][table]['tableFields']['action_menu'](indx),
+      pageObjectsConsts[constWizard][constValue]
+    )
+  }
+)
+
+Then(
+  'verify that in action menu on {string} wizard in {string} table with {string} value in {string} column {string} option is enabled',
+  async function (wizard, table, value, column, option) {
+    const arr = await findRowIndexesByColumnValue(
+      this.driver,
+      pageObjects[wizard][table],
+      column,
+      value
+    )
+    const indx = arr[0]
+    const actionMenuSel = await getCellByIndexColumn(
+      this.driver,
+      pageObjects[wizard][table],
+      indx,
+      'action_menu'
+    )
+    await hoverComponent(
+      this.driver,
+      pageObjects[wizard][table]['tableFields'][column](indx)
+    )
+    await this.driver.sleep(500)
+    await openActionMenu(this.driver, actionMenuSel)
+    await this.driver.sleep(500)
+    await verifyOptionInActionMenuEnabled (this.driver, actionMenuSel, option)
+  }
+)
+
+Then(
+  'verify that in action menu on {string} wizard in {string} table with {string} value in {string} column {string} option is disabled',
+  async function (wizard, table, value, column, option) {
+    const arr = await findRowIndexesByColumnValue(
+      this.driver,
+      pageObjects[wizard][table],
+      column,
+      value
+    )
+    const indx = arr[0]
+    const actionMenuSel = await getCellByIndexColumn(
+      this.driver,
+      pageObjects[wizard][table],
+      indx,
+      'action_menu'
+    )
+    await hoverComponent(
+      this.driver,
+      pageObjects[wizard][table]['tableFields'][column](indx)
+    )
+    await this.driver.sleep(500)
+    await openActionMenu(this.driver, actionMenuSel)
+    await this.driver.sleep(500)
+    await verifyOptionInActionMenuDisabled (this.driver, actionMenuSel, option)
+  }
+)
+
+Then(
+  'verify {string} option is present on {string} wizard in {string} table with {string} value in {string} column',
+  async function (option, wizard, table, value, column) {
+    const arr = await findRowIndexesByColumnValue(
+      this.driver,
+      pageObjects[wizard][table],
+      column,
+      value
+    )
+    const indx = arr[0]
+    const actionMenuSel = await getCellByIndexColumn(
+      this.driver,
+      pageObjects[wizard][table],
+      indx,
+      option
+    )
+    await hoverComponent(
+      this.driver,
+      pageObjects[wizard][table]['tableFields'][column](indx)
+    )
+    await this.driver.sleep(500)
+    await componentIsPresent(this.driver, actionMenuSel)
+  }
+)
+
+Then(
+  'click on {string} option on {string} wizard in {string} table with {string} value in {string} column',
+  async function (option, wizard, table, value, column) {
+    const arr = await findRowIndexesByColumnValue(
+      this.driver,
+      pageObjects[wizard][table],
+      column,
+      value
+    )
+    const indx = arr[0]
+    const actionMenuSel = await getCellByIndexColumn(
+      this.driver,
+      pageObjects[wizard][table],
+      indx,
+      option
+    )
+    await hoverComponent(
+      this.driver,
+      pageObjects[wizard][table]['tableFields'][column](indx)
+    )
+    await this.driver.sleep(250)
+    await clickOnComponent(this.driver, actionMenuSel)
+    await this.driver.sleep(500)
   }
 )
 

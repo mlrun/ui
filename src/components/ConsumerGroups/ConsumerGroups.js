@@ -26,7 +26,9 @@ import NoData from '../../common/NoData/NoData'
 import PageHeader from '../../elements/PageHeader/PageHeader'
 import Search from '../../common/Search/Search'
 import Table from '../Table/Table'
+import ConsumerGroupTableRow from '../../elements/ConsumerGroupTableRow/ConsumerGroupTableRow'
 
+import createConsumerGroupsContent from '../../utils/createConsumerGroupsContent'
 import { GROUP_BY_NONE } from '../../constants'
 import { generatePageData } from './consumerGroups.util.js'
 import { setFilters } from '../../reducers/filtersReducer'
@@ -52,6 +54,11 @@ const ConsumerGroups = () => {
 
   const pageData = useMemo(() => generatePageData(), [])
 
+  const tableContent = useMemo(
+    () => createConsumerGroupsContent(filteredV3ioStreams, params),
+    [filteredV3ioStreams, params]
+  )
+
   return (
     <>
       <PageHeader
@@ -67,7 +74,16 @@ const ConsumerGroups = () => {
           value={filterByName}
         />
       </div>
-      <Table actionsMenu={[]} content={filteredV3ioStreams} pageData={pageData} />
+      <Table
+        actionsMenu={[]}
+        hideActionsMenu
+        pageData={pageData}
+        tableHeaders={pageData.tableHeaders}
+      >
+        {tableContent.map((rowItem, index) => {
+          return <ConsumerGroupTableRow key={index} content={tableContent} rowItem={rowItem} />
+        })}
+      </Table>
       {!nuclioStore.v3ioStreams.loading && nuclioStore.v3ioStreams.parsedData.length === 0 && (
         <NoData message="You haven’t created any consumer group yet" />
       )}

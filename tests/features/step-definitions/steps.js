@@ -48,7 +48,8 @@ import {
   verifyElementActive,
   verifyElementNotActive,
   generatePath,
-  determineFileAccess
+  determineFileAccess,
+  verifyClassDisabled
 } from '../common/actions/common.action'
 import {
   checkTableColumnValues,
@@ -104,7 +105,12 @@ import {
   isRadioButtonUnselected,
   selectRadiobutton
 } from '../common/actions/radio-button.action'
-import { openActionMenu, selectOptionInActionMenu } from '../common/actions/action-menu.action'
+import { 
+  openActionMenu, 
+  selectOptionInActionMenu,
+  verifyOptionInActionMenuEnabled,
+  verifyOptionInActionMenuDisabled 
+} from '../common/actions/action-menu.action'
 import { expect } from 'chai'
 
 Given('open url', async function() {
@@ -210,6 +216,15 @@ Then('click on {string} element on {string} wizard', async function(
 ) {
   await waiteUntilComponent(this.driver, pageObjects[wizard][component])
   await clickOnComponent(this.driver, pageObjects[wizard][component])
+  await this.driver.sleep(250)
+})
+
+Then('click on breadcrumbs {string} label on {string} wizard', async function(
+  labelType,
+  wizard
+) {
+  await waiteUntilComponent(this.driver, pageObjects[wizard]['Breadcrumbs'][`${labelType}Label`])
+  await clickOnComponent(this.driver, pageObjects[wizard]['Breadcrumbs'][`${labelType}Label`])
   await this.driver.sleep(250)
 })
 
@@ -360,6 +375,16 @@ Then(
   }
 )
 
+Then(
+  'verify {string} element on {string} wizard is disabled by class name',
+  async function(inputField, wizardName) {
+    await verifyClassDisabled(
+      this.driver,
+      pageObjects[wizardName][inputField]
+    )
+  }
+)
+
 When(
   'type searchable fragment {string} into {string} on {string} wizard',
   async function(subName, inputGroup, wizard) {
@@ -429,6 +454,27 @@ Then(
 )
 
 Then(
+  'increase value on {int} points in {string} field on {string} wizard',
+  async function(value, inputField, wizard) {
+    const txt = await getInputValue(
+      this.driver,
+      pageObjects[wizard][inputField]
+    )
+    const result = Number.parseInt(txt) + value
+    await incrementValue(
+      this.driver,
+      pageObjects[wizard][inputField],
+      value
+    )
+    await verifyTypedValue(
+      this.driver,
+      pageObjects[wizard][inputField],
+      result.toString()
+    )
+  }
+)
+
+Then(
     'increase value on {int} points in {string} field with {string} on {string} on {string} wizard',
     async function(value, inputField, unit, accordion, wizard) {
         const txt = await getInputValue(
@@ -466,6 +512,27 @@ Then(
     await verifyTypedValue(
       this.driver,
       pageObjects[wizard][accordion][inputField],
+      result.toString()
+    )
+  }
+)
+
+Then(
+  'decrease value on {int} points in {string} field on {string} wizard',
+  async function(value, inputField, wizard) {
+    const txt = await getInputValue(
+      this.driver,
+      pageObjects[wizard][inputField]
+    )
+    const result = Number.parseInt(txt) - value
+    await decrementValue(
+      this.driver,
+      pageObjects[wizard][inputField],
+      value
+    )
+    await verifyTypedValue(
+      this.driver,
+      pageObjects[wizard][inputField],
       result.toString()
     )
   }
@@ -1182,6 +1249,26 @@ Then('select {string} option in action menu on {string} wizard', async function(
   await openActionMenu(this.driver, actionMenu)
   await this.driver.sleep(500)
   await selectOptionInActionMenu(this.driver, actionMenu, option)
+})
+
+Then('check that {string} option in action menu on {string} wizard is enabled', async function(
+  option,
+  wizard
+) {
+  const actionMenu = pageObjects[wizard]['Action_Menu']
+  await openActionMenu(this.driver, actionMenu)
+  await this.driver.sleep(500)
+  await verifyOptionInActionMenuEnabled (this.driver, actionMenu, option)
+})
+
+Then('check that {string} option in action menu on {string} wizard is disabled', async function(
+  option,
+  wizard
+) {
+  const actionMenu = pageObjects[wizard]['Action_Menu']
+  await openActionMenu(this.driver, actionMenu)
+  await this.driver.sleep(500)
+  await verifyOptionInActionMenuDisabled (this.driver, actionMenu, option)
 })
 
 Then('check that {string} file is existed on {string} directory', async function (file, filePath) {

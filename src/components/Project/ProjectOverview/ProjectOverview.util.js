@@ -47,6 +47,9 @@ import { ReactComponent as TrainModelIcon } from 'igz-controls/images/ic-train-m
 
 export const handleClick = (navigate, openPopUp) => handler => {
   const target = handler()
+
+  if (!target) return
+  
   return target.type && target.type === 'modal'
     ? openPopUp(target.component, target.props)
     : target.externalLink
@@ -124,7 +127,7 @@ export const getInitialCards = (params, navigate, isDemoMode) => {
               // }],
 
               artifactKind: DATASET_TYPE,
-              projectName: params.projectName,
+              params,
               refresh: () => {},
               title: 'Register dataset'
             },
@@ -176,7 +179,7 @@ export const getInitialCards = (params, navigate, isDemoMode) => {
               //   variant: SECONDARY_BUTTON
               // }],
               artifactKind: ARTIFACT_TYPE,
-              projectName: params.projectName,
+              params,
               refresh: () => {},
               title: 'Register artifact'
             },
@@ -300,7 +303,7 @@ export const getInitialCards = (params, navigate, isDemoMode) => {
               //   onClick: formState.handleSubmit,
               //   variant: SECONDARY_BUTTON
               // }],
-              projectName: params.projectName,
+              params,
               refresh: () => {}
             },
             type: 'modal'

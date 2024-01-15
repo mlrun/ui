@@ -33,7 +33,8 @@ import {
   getInfoHeaders,
   isJobAbortable,
   JOB_STEADY_STATES,
-  isJobKindDask
+  isJobKindDask,
+  JOB_RUNNING_STATES
 } from '../jobs.util'
 import jobsActions from '../../../actions/jobs'
 import functionsActions from '../../../actions/functions'
@@ -109,12 +110,6 @@ export const generateActionsMenu = (
             onClick: handleRerunJob
           },
           {
-            label: 'Delete',
-            icon: <Delete />,
-            className: 'danger',
-            onClick: handleConfirmDeleteJob
-          },
-          {
             label: 'Monitoring',
             icon: <MonitorIcon />,
             tooltip: !jobs_dashboard_url
@@ -139,6 +134,13 @@ export const generateActionsMenu = (
             label: 'View YAML',
             icon: <Yaml />,
             onClick: toggleConvertedYaml
+          },
+          {
+            label: 'Delete',
+            icon: <Delete />,
+            className: 'danger',
+            onClick: handleConfirmDeleteJob,
+            hidden: JOB_RUNNING_STATES.includes(job?.state?.value)
           }
         ]
       ]

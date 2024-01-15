@@ -124,6 +124,9 @@ export const generateArtifactsContent = (detailsType, selectedItem, projectName)
       size: {
         value: selectedItem.size ?? ''
       },
+      label_column: {
+        value: selectedItem.label_column ?? ''
+      },
       target_path: {
         value: selectedItem.target_path,
         copyToClipboard: true

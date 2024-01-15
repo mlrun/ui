@@ -186,9 +186,6 @@ main {
 /*=========== TABLE =============*/
 
 .table {
-  display: flex;
-  flex-flow: column nowrap;
-  flex: 1;
   position: relative;
   text-align: left;
   width: 100%;
@@ -201,13 +198,13 @@ main {
       min-width: 100%;
       min-height: 50px;
       background-color: inherit;
-      border-bottom: $tableRowBorder;
 
       &:not(.parent-row_expanded) > * {
         position: relative;
         display: inline-flex;
         flex: 1;
         align-items: center;
+        border-bottom: $tableRowBorder;
 
         @include tableDet(8px, 5px, 8px, 10px);
 
@@ -219,11 +216,13 @@ main {
           &-name {
             position: sticky;
             left: 0;
-            flex-basis: 240px;
+            min-width: 240px;
             z-index: 1;
           }
 
           &-icon {
+            position: sticky;
+            right: 0;
             justify-content: center;
             padding: 0;
             max-width: 85px;
@@ -250,9 +249,9 @@ main {
                 &__container_extended {
                   &:before {
                     background: linear-gradient(
-                                    90deg,
-                                    rgba(255, 255, 255, 0) 0%,
-                                    rgba(245, 247, 255, 1) 100%
+                      90deg,
+                      rgba(255, 255, 255, 0) 0%,
+                      rgba(245, 247, 255, 1) 100%
                     );
                   }
                 }
@@ -270,9 +269,9 @@ main {
 
                       &:before {
                         background: linear-gradient(
-                                        90deg,
-                                        rgba(255, 255, 255, 0) 0%,
-                                        rgba(245, 247, 255, 1) 100%
+                          90deg,
+                          rgba(255, 255, 255, 0) 0%,
+                          rgba(245, 247, 255, 1) 100%
                         );
                       }
                     }
@@ -401,6 +400,13 @@ main {
         }
       }
     }
+  }
+
+  &-main {
+    display: flex;
+    flex-flow: column nowrap;
+    flex: 1;
+    overflow-y: auto;
   }
 
   &.table-with-details {
@@ -585,7 +591,6 @@ main {
   }
 }
 
-
 /*=========== COMBOBOX =============*/
 
 .combobox {
@@ -743,7 +748,6 @@ main {
   }
 }
 
-
 /*=========== SORT ICON =============*/
 
 .sort-icon {
@@ -783,7 +787,6 @@ main {
     }
   }
 }
-
 
 /*=========== GENERAL =============*/
 

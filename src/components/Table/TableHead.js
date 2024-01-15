@@ -48,7 +48,7 @@ const TableHead = React.forwardRef(
       <thead className="table-header">
         <tr className="table-row table-header-row" ref={ref}>
           {content.map(({ headerLabel, headerId, isSortable, ...tableItem }, index) => {
-            return tableItem.type !== 'hidden' && !tableItem.hidden ? (
+            return tableItem.type !== 'hidden' && !tableItem.hidden && !tableItem.headerIsHidden ? (
               <th
                 className={getHeaderCellClasses(
                   headerId,
@@ -61,7 +61,7 @@ const TableHead = React.forwardRef(
                 onClick={isSortable ? () => sortProps.sortTable(headerId) : null}
               >
                 <Tooltip template={<TextTooltipTemplate text={headerLabel} />}>
-                  <label className="sortable-header-label">
+                  <label className={isSortable? 'sortable-header-label': ''}>
                     <span className="data-ellipsis">{headerLabel}</span>
                     {isSortable && sortProps.getSortingIcon(headerId)}
                   </label>

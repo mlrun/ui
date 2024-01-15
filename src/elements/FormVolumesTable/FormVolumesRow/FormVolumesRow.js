@@ -159,7 +159,6 @@ const FormVolumesRow = ({
         {() => {
           if (isCurrentRowEditing(rowPath)) {
             const fieldNewData = pick(fields.value[index].data, ['name', 'type', 'mountPath'])
-            console.log(fieldNewData)
 
             setFieldValue(`${rowPath}.data`, fieldNewData)
           }

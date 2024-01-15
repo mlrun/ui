@@ -127,11 +127,13 @@ const AddToFeatureVectorPage = ({
 
   const actionsMenu = useMemo(
     () => [
-      {
-        label: 'View YAML',
-        icon: <Yaml />,
-        onClick: toggleConvertedYaml
-      }
+      [
+        {
+          label: 'View YAML',
+          icon: <Yaml />,
+          onClick: toggleConvertedYaml
+        }
+      ]
     ],
     [toggleConvertedYaml]
   )
@@ -162,8 +164,8 @@ const AddToFeatureVectorPage = ({
       }
       const newSelectedRowData = { ...selectedRowData }
 
-      delete newStoreSelectedRowData[feature.ui.identifier]
-      delete newSelectedRowData[feature.ui.identifier]
+      delete newStoreSelectedRowData[feature.data.ui.identifier]
+      delete newSelectedRowData[feature.data.ui.identifier]
 
       removeFeature(newStoreSelectedRowData)
       setSelectedRowData(newSelectedRowData)
