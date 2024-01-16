@@ -148,6 +148,8 @@ const Models = ({ fetchModelFeatureVector }) => {
       setSelectedRowData({})
       setModels([])
       setAllModels([])
+      setTableHeaders([])
+      setDataIsLoaded(false)
 
       return fetchData(filters)
     },
