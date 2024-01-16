@@ -17,7 +17,7 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import React, {useState, useEffect, useMemo, useCallback, useRef} from 'react'
+import React, { useState, useEffect, useMemo, useCallback, useRef } from 'react'
 import PropTypes from 'prop-types'
 import { OnChange } from 'react-final-form-listeners'
 import { useDispatch, useSelector } from 'react-redux'
@@ -355,27 +355,29 @@ const JobWizardFunctionSelection = ({
     return openConfirmPopUp('All changes will be lost', confirmHandler)
   }
 
-  const setSelectedCard = (index) => {
+  const setSelectedCard = index => {
     selectedCardRef.current = index
   }
 
-   const setDivClass = useCallback(() => {
+  const setDivClass = useCallback(() => {
     const parentElement = containerRef.current.parentNode
     parentElement.classList.add('wizard-form-scroll-solution')
   }, [containerRef])
 
   const scrollToSelectedCard = useCallback(() => {
-    if (!containerRef.current.parentNode.classList.contains('wizard-form-scroll-solution')) setDivClass()
-    const selectedRef = containerRef.current.querySelector(`[card-index="${selectedCardRef.current}"]`)
+    if (!containerRef.current.parentNode.classList.contains('wizard-form-scroll-solution'))
+      setDivClass()
+    const selectedRef = containerRef.current.querySelector(
+      `[data-card-index="${selectedCardRef.current}"]`
+    )
     if (selectedCardRef.current && selectedRef) {
       selectedRef.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'start' })
     }
   }, [setDivClass, containerRef, selectedCardRef])
 
   useEffect(() => {
-    setDivClass()
-    const handleIntersection = (entries) => {
-      entries.forEach((entry) => {
+    const handleIntersection = entries => {
+      entries.forEach(entry => {
         if (entry.isIntersecting) {
           scrollToSelectedCard()
         }
@@ -386,10 +388,10 @@ const JobWizardFunctionSelection = ({
     return () => {
       observer.disconnect()
     }
-  }, [activeTab,scrollToSelectedCard,setDivClass])
+  }, [activeTab, scrollToSelectedCard, setDivClass])
 
   return (
-    <div ref = {containerRef} className="job-wizard__function-selection">
+    <div ref={containerRef} className="job-wizard__function-selection">
       <div className="form-row">
         <h5 className="form-step-title">Function selection</h5>
       </div>
@@ -424,7 +426,7 @@ const JobWizardFunctionSelection = ({
             isEmpty(functions)) ? (
             <NoData />
           ) : (
-            <div className="functions-list functions-list-max-height">
+            <div className="functions-list">
               {(filteredFunctions.length > 0 ? filteredFunctions : functions)
                 .sort((prevFunc, nextFunc) => prevFunc.name.localeCompare(nextFunc.name))
                 .map(functionData => {
@@ -476,7 +478,7 @@ const JobWizardFunctionSelection = ({
             isEmpty(templates)) ? (
             <NoData />
           ) : (
-            <div className="functions-list functions-list-max-height">
+            <div className="functions-list">
               {filteredTemplates
                 .sort((prevTemplate, nextTemplate) =>
                   prevTemplate.metadata.name.localeCompare(nextTemplate.metadata.name)
