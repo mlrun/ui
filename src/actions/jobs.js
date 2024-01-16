@@ -349,7 +349,6 @@ const jobsActions = {
   removeScheduledJob: (project, scheduleName) => dispatch => {
     return jobsApi
       .removeScheduledJob(project, scheduleName)
-      .then(result => result.data)
       .catch(error => dispatch(jobsActions.removeScheduledJobFailure(error)))
   },
   removeScheduledJobFailure: error => ({
