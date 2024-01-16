@@ -20,6 +20,7 @@ such restriction.
 import React from 'react'
 import PropTypes from 'prop-types'
 import { useDispatch } from 'react-redux'
+import prettyBytes from 'pretty-bytes'
 import classnames from 'classnames'
 
 import ChipCell from '../../common/ChipCell/ChipCell'
@@ -185,7 +186,7 @@ const TableCell = ({
           className="text_small"
           template={<TextTooltipTemplate text={data.tooltip || data.value} />}
         >
-          {data.value}
+          {data.headerId === 'size' ? prettyBytes(item.size) : data.value}
         </Tooltip>
       </td>
     )
