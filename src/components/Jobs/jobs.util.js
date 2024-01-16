@@ -21,7 +21,6 @@ import { capitalize, defaultsDeep, isEmpty, map, uniq } from 'lodash'
 import {
   JOB_KIND_DASK,
   JOB_KIND_DATABRICKS,
-  FUNCTION_TYPE_JOB,
   JOB_KIND_MPIJOB,
   JOB_KIND_JOB,
   JOBS_PAGE,
@@ -358,5 +357,3 @@ export const enrichRunWithFunctionFields = (
       showErrorNotification(dispatch, error, 'Failed to fetch function tag', '')
     })
 }
-
-export const functionRunKinds = [FUNCTION_TYPE_JOB]

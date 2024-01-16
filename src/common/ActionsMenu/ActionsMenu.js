@@ -114,17 +114,20 @@ const ActionsMenu = ({ dataItem, menu, time, withQuickActions }) => {
     >
       {withQuickActions && (
         <div className="actions-menu__main-actions-wrapper" ref={mainActionsWrapperRef}>
-          {actionMenu[1].map(mainAction => (
-            <RoundedIcon
-              disabled={mainAction.disabled}
-              id={`quick-link-${mainAction.id}`}
-              onClick={() => mainAction.onClick(dataItem)}
-              tooltipText={mainAction.label}
-              key={mainAction.label}
-            >
-              {mainAction.icon}
-            </RoundedIcon>
-          ))}
+          {actionMenu[1].map(
+            mainAction =>
+              !mainAction.hidden && (
+                <RoundedIcon
+                  disabled={mainAction.disabled}
+                  id={`quick-link-${mainAction.id}`}
+                  onClick={() => mainAction.onClick(dataItem)}
+                  tooltipText={mainAction.label}
+                  key={mainAction.label}
+                >
+                  {mainAction.icon}
+                </RoundedIcon>
+              )
+          )}
         </div>
       )}
       <div className="actions-menu" data-testid="actions-menu">

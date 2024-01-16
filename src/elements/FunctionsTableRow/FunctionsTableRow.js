@@ -38,7 +38,8 @@ const FunctionsTableRow = ({
   mainRowItemsCount,
   rowItem,
   selectedItem,
-  selectedRowData
+  selectedRowData,
+  withQuickActions
 }) => {
   const parent = useRef()
   const params = useParams()
@@ -132,7 +133,11 @@ const FunctionsTableRow = ({
                         )
                       })}
                       <td className="table-body__cell table-cell-icon">
-                        <ActionsMenu dataItem={func.data} menu={actionsMenu} />
+                        <ActionsMenu
+                          dataItem={func.data}
+                          menu={actionsMenu}
+                          withQuickActions={withQuickActions}
+                        />
                       </td>
                     </tr>
                   </tbody>
@@ -161,7 +166,11 @@ const FunctionsTableRow = ({
             )
           })}
           <td className="table-body__cell table-cell-icon">
-            <ActionsMenu dataItem={rowItem.data} menu={actionsMenu} />
+            <ActionsMenu
+              dataItem={rowItem.data}
+              menu={actionsMenu}
+              withQuickActions={withQuickActions}
+            />
           </td>
         </>
       )}
@@ -170,7 +179,8 @@ const FunctionsTableRow = ({
 }
 
 FunctionsTableRow.defaultProps = {
-  mainRowItemsCount: 1
+  mainRowItemsCount: 1,
+  withQuickActions: false
 }
 
 FunctionsTableRow.propTypes = {
@@ -180,7 +190,8 @@ FunctionsTableRow.propTypes = {
   rowIndex: PropTypes.number.isRequired,
   rowItem: PropTypes.shape({}).isRequired,
   selectedItem: PropTypes.shape({}).isRequired,
-  selectedRowData: PropTypes.object.isRequired
+  selectedRowData: PropTypes.object.isRequired,
+  withQuickActions: PropTypes.bool
 }
 
 export default FunctionsTableRow

@@ -28,10 +28,9 @@ import JobsPanel from '../JobsPanel/JobsPanel'
 import functionsActions from '../../actions/functions'
 import jobsActions from '../../actions/jobs'
 import projectsAction from '../../actions/projects'
-import { PANEL_CREATE_MODE } from '../../constants'
+import { FUNCTION_RUN_KINDS, PANEL_CREATE_MODE } from '../../constants'
 import { generateProjectsList } from '../../utils/projects'
 import { isProjectValid } from '../../utils/handleRedirect'
-import { functionRunKinds } from '../Jobs/jobs.util'
 
 const CreateJobPage = ({
   fetchFunctions,
@@ -78,7 +77,7 @@ const CreateJobPage = ({
   useEffect(() => {
     fetchFunctions(selectedProject).then(functions => {
       if (functions) {
-        const filteredFunctions = functions.filter(func => includes(functionRunKinds, func.kind))
+        const filteredFunctions = functions.filter(func => includes(FUNCTION_RUN_KINDS, func.kind))
 
         const groupedFunctions = Object.values(
           filteredFunctions.reduce((prev, curr) => {
