@@ -184,7 +184,11 @@ function RegisterModelModal({ actions, isOpen, onResolve, params, refresh }) {
                 />
               </div>
               <div className="form-col-1">
-                <FormInput label="Tag" name="metadata.tag" />
+                <FormInput
+                  label="Tag"
+                  name="metadata.tag"
+                  validationRules={getValidationRules('common.tag')}
+                />
               </div>
             </div>
             <div className="form-row">
