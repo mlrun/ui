@@ -44,6 +44,7 @@ import { generateJobWizardData, getCategoryName } from '../../JobWizard.util'
 import { generateProjectsList } from '../../../../utils/projects'
 import { functionRunKinds } from '../../../Jobs/jobs.util'
 import { openConfirmPopUp } from 'igz-controls/utils/common.util'
+import { scrollToSelectedElements } from '../../../../utils/scrollHandler.util'
 import {
   FUNCTIONS_SELECTION_FUNCTIONS_TAB,
   FUNCTIONS_SELECTION_HUB_TAB,
@@ -364,22 +365,17 @@ const JobWizardFunctionSelection = ({
     parentElement.classList.add('wizard-form-scroll-solution')
   }, [containerRef])
 
-  const scrollToSelectedCard = useCallback(() => {
-    if (!containerRef.current.parentNode.classList.contains('wizard-form-scroll-solution'))
-      setDivClass()
-    const selectedRef = containerRef.current.querySelector(
-      `[data-card-index="${selectedCardRef.current}"]`
-    )
-    if (selectedCardRef.current && selectedRef) {
-      selectedRef.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'start' })
-    }
-  }, [setDivClass, containerRef, selectedCardRef])
+  const scrollToViewCallback = useCallback(() => {
+    setDivClass()
+    scrollToSelectedElements(containerRef, `[data-card-index="${selectedCardRef.current}"]`)
+  }, [containerRef, selectedCardRef, setDivClass])
 
   useEffect(() => {
+    setDivClass()
     const handleIntersection = entries => {
       entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          scrollToSelectedCard()
+        if (entry.isIntersecting && selectedCardRef.current && containerRef.current) {
+          scrollToViewCallback()
         }
       })
     }
@@ -388,7 +384,7 @@ const JobWizardFunctionSelection = ({
     return () => {
       observer.disconnect()
     }
-  }, [activeTab, scrollToSelectedCard, setDivClass])
+  }, [activeTab, setDivClass, scrollToViewCallback])
 
   return (
     <div ref={containerRef} className="job-wizard__function-selection">
