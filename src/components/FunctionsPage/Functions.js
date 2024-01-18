@@ -17,7 +17,7 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import React, {useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState} from 'react'
+import React, { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react'
 import { connect, useDispatch, useSelector } from 'react-redux'
 import { isEqual, isEmpty } from 'lodash'
 import { useLocation, useNavigate, useParams } from 'react-router-dom'
@@ -290,7 +290,8 @@ const Functions = ({
               setEditableItem(func)
             },
             hidden:
-              !isDemoMode || !getFunctionsEditableTypes(isStagingMode).includes(func?.type) ||
+              !isDemoMode ||
+              !getFunctionsEditableTypes(isStagingMode).includes(func?.type) ||
               !FUNCTIONS_EDITABLE_STATES.includes(func?.state?.value)
           },
           {
@@ -332,6 +333,13 @@ const Functions = ({
   }, [navigate, pageData.details.menu, location, params.hash, params.tab])
 
   useLayoutEffect(() => {
+    const checkFunctionExistence = item => {
+      if (!item || Object.keys(item).length === 0) {
+        showErrorNotification(dispatch, {}, 'This function either does not exist or was deleted')
+        navigate(`/projects/${params.projectName}/functions`, { replace: true })
+      }
+    }
+
     let item = {}
 
     handleRemoveLogs()
@@ -347,21 +355,26 @@ const Functions = ({
         }
       })
 
-      if (!item || Object.keys(item).length === 0) {
-        return navigate(`/projects/${params.projectName}/functions`, { replace: true })
-      }
+      checkFunctionExistence(item)
     } else if (params.funcName && params.tag && functions.length > 0) {
       item = functions.find(func => {
         return isEqual(func.tag, params.tag) && isEqual(func.name, params.funcName)
       })
 
-      if (!item || Object.keys(item).length === 0) {
-        return navigate(`/projects/${params.projectName}/functions`, { replace: true })
-      }
+      checkFunctionExistence(item)
     }
 
-    setSelectedFunction(item)
-  }, [functions, handleRemoveLogs, navigate, params.funcName, params.hash, params.projectName, params.tag])
+    setSelectedFunction(item ?? {})
+  }, [
+    dispatch,
+    functions,
+    handleRemoveLogs,
+    navigate,
+    params.funcName,
+    params.hash,
+    params.projectName,
+    params.tag
+  ])
 
   useEffect(() => {
     dispatch(setFilters({ groupBy: GROUP_BY_NAME, showUntagged: SHOW_UNTAGGED_ITEMS }))

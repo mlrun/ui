@@ -58,6 +58,7 @@ import { openPopUp } from 'igz-controls/utils/common.util'
 import { parseJob } from '../../../utils/parseJob'
 import { setFilters } from '../../../reducers/filtersReducer'
 import { setNotification } from '../../../reducers/notificationReducer'
+import { showErrorNotification } from '../../../utils/notifications.util'
 import { useMode } from '../../../hooks/mode.hook'
 import { usePods } from '../../../hooks/usePods.hook'
 import { useYaml } from '../../../hooks/yaml.hook'
@@ -320,13 +321,14 @@ const MonitorJobs = ({
       .then(job => {
         return modifyAndSelectRun(parseJob(job))
       })
-      .catch(() =>
+      .catch(() => {
+        showErrorNotification(dispatch, {}, 'This job either does not exist or was deleted')
         navigate(`/projects/${params.projectName}/jobs/${MONITOR_JOBS_TAB}`, { replace: true })
-      )
+      })
       .finally(() => {
         fetchJobFunctionsPromiseRef.current = null
       })
-  }, [fetchJob, modifyAndSelectRun, navigate, params.jobId, params.projectName])
+  }, [dispatch, fetchJob, modifyAndSelectRun, navigate, params.jobId, params.projectName])
 
   const isJobDataEmpty = useCallback(
     () => jobs.length === 0 && ((!params.jobName && jobRuns.length === 0) || params.jobName),
