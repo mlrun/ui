@@ -27,8 +27,9 @@ import { initialState, recurringReducer, scheduleActionType } from './recurringR
 import { decodeLocale, getWeekDays, getWeekStart } from '../../../utils/datePicker.util'
 import { getFormatTime } from '../../../utils'
 import { generateCronInitialValue } from '../../../utils/generateCronInitialValue'
+import { getDefaultSchedule } from '../../../utils/getDefaultSchedule'
 
-const ScheduleFeatureSet = ({ setNewFeatureSetSchedule, setShowSchedule }) => {
+const ScheduleFeatureSet = ({ defaultCron, setNewFeatureSetSchedule, setShowSchedule }) => {
   const [activeTab, setActiveTab] = useState(tabs[0].id)
   const [cron, setCron] = useState('10 * * * *')
   const [recurringState, recurringDispatch] = useReducer(recurringReducer, initialState)
@@ -96,6 +97,12 @@ const ScheduleFeatureSet = ({ setNewFeatureSetSchedule, setShowSchedule }) => {
       )
     }
   }, [activeTab, cron, daysOfWeek, recurringState.scheduleRepeat])
+
+  useEffect(() => {
+    if (defaultCron) {
+      getDefaultSchedule(defaultCron, recurringDispatch)
+    }
+  }, [defaultCron])
 
   return (
     <ScheduleFeatureSetView
