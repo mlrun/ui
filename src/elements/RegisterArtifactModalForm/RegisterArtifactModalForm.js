@@ -99,7 +99,11 @@ const RegisterArtifactModalForm = ({
           />
         </div>
         <div className="form-col-1">
-          <FormInput label="Tag" name="metadata.tag" />
+          <FormInput
+            label="Tag"
+            name="metadata.tag"
+            validationRules={getValidationRules('common.tag')}
+          />
         </div>
         {showType && (
           <div className="form-col-1">
