@@ -285,7 +285,7 @@ const ProjectSettingsGeneral = ({
           ? 'Permission denied'
           : getErrorMsg(error, 'Failed to fetch project data')
 
-      setTimeout(() => showErrorNotification(dispatch, error, '', customErrorMsg), 500)
+      showErrorNotification(dispatch, error, '', customErrorMsg)
     })
 
     return () => {
