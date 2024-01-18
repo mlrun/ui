@@ -19,7 +19,7 @@ such restriction.
 */
 import React, { useState } from 'react'
 import PropTypes from 'prop-types'
-import { connect, useDispatch } from 'react-redux'
+import { useDispatch } from 'react-redux'
 import { useLocation } from 'react-router-dom'
 import { v4 as uuidv4 } from 'uuid'
 import { Form } from 'react-final-form'
@@ -48,7 +48,6 @@ import { useModalBlockHistory } from '../../hooks/useModalBlockHistory.hook'
 const RegisterArtifactModal = ({
   actions,
   artifactKind,
-  filtersStore,
   isOpen,
   onResolve,
   params,
@@ -118,7 +117,7 @@ const RegisterArtifactModal = ({
               .registerArtifact(params.projectName, data)
               .then(response => {
                 resolveModal()
-                refresh(filtersStore)
+                refresh()
                 dispatch(
                   setNotification({
                     status: response.status,
@@ -200,9 +199,4 @@ RegisterArtifactModal.propTypes = {
   title: PropTypes.string.isRequired
 }
 
-export default connect(
-  ({ filtersStore }) => ({
-    filtersStore
-  }),
-  null
-)(RegisterArtifactModal)
+export default RegisterArtifactModal

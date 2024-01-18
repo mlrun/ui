@@ -83,7 +83,10 @@ const Datasets = () => {
   const dispatch = useDispatch()
   const frontendSpec = useSelector(store => store.appStore.frontendSpec)
   const datasetsFilters = useMemo(
-    () => filtersStore[FILTER_MENU_MODAL][DATASETS_FILTERS].values,
+    () => ({
+      name: filtersStore.name,
+      ...filtersStore[FILTER_MENU_MODAL][DATASETS_FILTERS].values
+    }),
     [filtersStore]
   )
   const pageData = useMemo(
@@ -148,7 +151,7 @@ const Datasets = () => {
     artifact => {
       openPopUp(AddArtifactTagPopUp, {
         artifact,
-        onAddTag: handleRefresh,
+        onAddTag: () => handleRefresh(datasetsFilters),
         getArtifact: () =>
           fetchDataSet({
             project: params.projectName,
@@ -159,7 +162,7 @@ const Datasets = () => {
         projectName: params.projectName
       })
     },
-    [handleRefresh, params.projectName]
+    [handleRefresh, params.projectName, datasetsFilters]
   )
 
   const actionsMenu = useMemo(
@@ -327,10 +330,10 @@ const Datasets = () => {
     openPopUp(RegisterArtifactModal, {
       artifactKind: DATASET_TYPE,
       params,
-      refresh: handleRefresh,
+      refresh: () => handleRefresh(datasetsFilters),
       title: registerDatasetTitle
     })
-  }, [handleRefresh, params])
+  }, [handleRefresh, params, datasetsFilters])
 
   return (
     <DatasetsView

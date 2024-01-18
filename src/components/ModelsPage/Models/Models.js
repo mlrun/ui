@@ -92,7 +92,7 @@ const Models = ({ fetchModelFeatureVector }) => {
   const frontendSpec = useSelector(store => store.appStore.frontendSpec)
 
   const modelsFilters = useMemo(
-    () => filtersStore[FILTER_MENU_MODAL][MODELS_FILTERS].values,
+    () => ({ name: filtersStore.name, ...filtersStore[FILTER_MENU_MODAL][MODELS_FILTERS].values }),
     [filtersStore]
   )
   const { isDemoMode } = useMode()
@@ -157,7 +157,7 @@ const Models = ({ fetchModelFeatureVector }) => {
     artifact => {
       openPopUp(AddArtifactTagPopUp, {
         artifact,
-        onAddTag: handleRefresh,
+        onAddTag: () => handleRefresh(modelsFilters),
         getArtifact: () =>
           fetchModel({
             project: params.projectName,
@@ -168,7 +168,7 @@ const Models = ({ fetchModelFeatureVector }) => {
         projectName: params.projectName
       })
     },
-    [handleRefresh, params.projectName]
+    [handleRefresh, params.projectName, modelsFilters]
   )
 
   const actionsMenu = useMemo(
@@ -384,8 +384,11 @@ const Models = ({ fetchModelFeatureVector }) => {
   }, [dataIsLoaded, models])
 
   const handleRegisterModel = useCallback(() => {
-    openPopUp(RegisterModelModal, { params, refresh: handleRefresh })
-  }, [handleRefresh, params])
+    openPopUp(RegisterModelModal, {
+      params,
+      refresh: () => handleRefresh(modelsFilters)
+    })
+  }, [handleRefresh, params, modelsFilters])
 
   const handleTrainModel = () => {
     openPopUp(JobWizard, {

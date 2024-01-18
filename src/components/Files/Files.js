@@ -79,7 +79,7 @@ const Files = () => {
   const pageData = useMemo(() => generatePageData(viewMode), [viewMode])
   const frontendSpec = useSelector(store => store.appStore.frontendSpec)
   const filesFilters = useMemo(
-    () => filtersStore[FILTER_MENU_MODAL][FILES_FILTERS].values,
+    () => ({ name: filtersStore.name, ...filtersStore[FILTER_MENU_MODAL][FILES_FILTERS].values }),
     [filtersStore]
   )
 
@@ -133,7 +133,7 @@ const Files = () => {
     artifact => {
       openPopUp(AddArtifactTagPopUp, {
         artifact,
-        onAddTag: handleRefresh,
+        onAddTag: () => handleRefresh(filesFilters),
         getArtifact: () =>
           fetchFile({
             project: params.projectName,
@@ -144,7 +144,7 @@ const Files = () => {
         projectName: params.projectName
       })
     },
-    [handleRefresh, params.projectName]
+    [handleRefresh, params.projectName, filesFilters]
   )
 
   const actionsMenu = useMemo(
@@ -310,10 +310,10 @@ const Files = () => {
     openPopUp(RegisterArtifactModal, {
       artifactKind: ARTIFACT_TYPE,
       params,
-      refresh: handleRefresh,
+      refresh: () => handleRefresh(filesFilters),
       title: registerArtifactTitle
     })
-  }, [handleRefresh, params])
+  }, [handleRefresh, params, filesFilters])
 
   return (
     <FilesView

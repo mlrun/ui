@@ -19,7 +19,7 @@ such restriction.
 */
 import React, { useState } from 'react'
 import PropTypes from 'prop-types'
-import { useDispatch, useSelector } from 'react-redux'
+import { useDispatch } from 'react-redux'
 import { useLocation } from 'react-router-dom'
 import { createForm } from 'final-form'
 import { Form } from 'react-final-form'
@@ -71,7 +71,6 @@ function RegisterModelModal({ actions, isOpen, onResolve, params, refresh }) {
   )
   const location = useLocation()
   const { handleCloseModal, resolveModal } = useModalBlockHistory(onResolve, formRef.current)
-  const filtersStore = useSelector(store => store.filtersStore)
   const dispatch = useDispatch()
 
   const registerModel = values => {
@@ -112,7 +111,7 @@ function RegisterModelModal({ actions, isOpen, onResolve, params, refresh }) {
 
             return artifactApi.registerArtifact(params.projectName, data).then(response => {
               resolveModal()
-              refresh(filtersStore)
+              refresh()
               dispatch(
                 setNotification({
                   status: response.status,
