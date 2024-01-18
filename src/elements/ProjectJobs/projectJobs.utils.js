@@ -76,7 +76,7 @@ export const getJobsTableData = (jobs, projectName) => {
         },
         type: {
           value: job[0].metadata.kind ?? job[0].metadata.labels?.kind ?? '',
-          class: 'project-data-card__table-cell table-cell_small'
+          className: 'project-data-card__table-cell table-cell_small'
         },
         status: {
           value: job.map(item => item.status.state),
