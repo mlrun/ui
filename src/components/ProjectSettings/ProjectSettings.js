@@ -187,7 +187,7 @@ const ProjectSettings = ({ frontendSpec, projectStore }) => {
   const changeOwnerCallback = () => {
     const prevOwner = membersState.projectInfo.owner.id
 
-    fetchProjectIdAndOwner().then(() => {
+    return fetchProjectIdAndOwner().then(() => {
       if (!membersState.members.some(member => member.id === prevOwner)) {
         navigate('/projects/')
       }
