@@ -253,7 +253,7 @@ const jobsActions = {
     dispatch(jobsActions.fetchJobFunctionsBegin())
 
     return functionsApi
-      .getFunctions(project, null, hash)
+      .getFunctions(project, null, {}, hash)
       .then(res => {
         dispatch(jobsActions.fetchJobFunctionsSuccess())
 
