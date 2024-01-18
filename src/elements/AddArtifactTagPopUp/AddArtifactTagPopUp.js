@@ -19,7 +19,7 @@ such restriction.
 */
 import React, { useEffect, useState } from 'react'
 import PropTypes from 'prop-types'
-import { useDispatch, useSelector } from 'react-redux'
+import { useDispatch } from 'react-redux'
 import { useLocation } from 'react-router-dom'
 import { Form } from 'react-final-form'
 import { createForm } from 'final-form'
@@ -47,7 +47,6 @@ const AddArtifactTagPopUp = ({
     artifactTag: ''
   })
   const [existingTags, setExistingTags] = useState([])
-  const filtersStore = useSelector(store => store.filtersStore)
 
   const formRef = React.useRef(
     createForm({
@@ -98,7 +97,7 @@ const AddArtifactTagPopUp = ({
             message: 'Tag was added successfully'
           })
         )
-        onAddTag && onAddTag(filtersStore)
+        onAddTag?.()
       })
       .catch(error => {
         showErrorNotification(dispatch, error, 'Failed to add a tag', '', () =>
