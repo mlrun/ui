@@ -62,6 +62,7 @@ const FeatureSetsPanelDataSource = ({
           : data.url.path
 
       if (kind === CSV) {
+        setNewFeatureSetSchedule('')
         setValidation(prevState => ({
           ...prevState,
           isUrlValid: url.length > 0 ? isUrlInputValid(data.url.pathType, url, kind) : true
@@ -78,7 +79,8 @@ const FeatureSetsPanelDataSource = ({
       setData(state => ({
         ...state,
         kind,
-        parseDates: ''
+        parseDates: '',
+        schedule: ''
       }))
     },
     [
@@ -86,6 +88,7 @@ const FeatureSetsPanelDataSource = ({
       data.url.path,
       data.url.pathType,
       setNewFeatureSetDataSourceKind,
+      setNewFeatureSetSchedule,
       setNewFeatureSetDataSourceParseDates,
       setValidation
     ]
