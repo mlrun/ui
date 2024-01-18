@@ -25,7 +25,7 @@ import classnames from 'classnames'
 
 import ArtifactsPreviewController from '../ArtifactsPreview/ArtifactsPreviewController'
 import NoData from '../../common/NoData/NoData'
-import { TextTooltipTemplate, Tooltip } from 'igz-controls/components'
+import { TextTooltipTemplate, Tooltip, Tip } from 'igz-controls/components'
 
 import jobsActions from '../../actions/jobs'
 import { generateArtifactIndexes } from '../Details/details.util'
@@ -34,10 +34,16 @@ import {
   generateArtifactsTabContent,
   getJobAccordingIteration
 } from './detailsArtifacts.util'
+import { useSortTable } from '../../hooks/useSortTable.hook'
+import { ALLOW_SORT_BY, DEFAULT_SORT_BY, EXCLUDE_SORT_BY } from 'igz-controls/types'
 
 import './detailsArtifacts.scss'
 
 const DetailsArtifacts = ({
+  allowSortBy,
+  defaultSortBy,
+  defaultDirection,
+  excludeSortBy,
   fetchJob,
   iteration,
   jobsStore,
@@ -50,6 +56,14 @@ const DetailsArtifacts = ({
   const iterationOptions = useSelector(store => store.detailsStore.iterationOptions)
   const params = useParams()
 
+  const getAtrifactsHeaderCellClasses = (headerId, isSortable, className) =>
+    classnames(
+      'table-header__cell',
+      isSortable && 'sortable-header-cell',
+      isSortable && selectedColumnName === headerId && 'sortable-header-cell_active',
+      className && className
+    )
+
   const showArtifact = useCallback(
     index => {
       generateArtifactIndexes(artifactsIndexes, index, setArtifactsIndexes)
@@ -60,6 +74,18 @@ const DetailsArtifacts = ({
   const artifactsTabContent = useMemo(() => {
     return generateArtifactsTabContent(artifactsPreviewContent, params, iteration, showArtifact)
   }, [artifactsPreviewContent, iteration, params, showArtifact])
+
+  const { sortTable, selectedColumnName, getSortingIcon, sortedTableContent, sortedTableHeaders } =
+    useSortTable({
+      headers: artifactsTabContent?.[0] ?? [],
+      content: artifactsTabContent,
+      sortConfig: {
+        allowSortBy,
+        excludeSortBy,
+        defaultSortBy,
+        defaultDirection
+      }
+    })
 
   const bestIteration = useMemo(
     () => selectedItem.results?.best_iteration,
@@ -125,18 +151,25 @@ const DetailsArtifacts = ({
       <div className="table">
         <div className="table-header">
           <div className="table-row table-header-row">
-            {artifactsTabContent[0].map(({ headerId, headerLabel, className }) => (
+            {sortedTableHeaders.map(({ headerLabel, headerId, isSortable, ...tableItem }) => (
               <div
-                key={headerId}
-                className={classnames('table-header__cell', className && className)}
+                className={getAtrifactsHeaderCellClasses(headerId, isSortable, tableItem.className)}
+                key={`${headerId}`}
+                onClick={isSortable ? () => sortTable(headerId) : null}
               >
-                {headerLabel}
+                <Tooltip template={<TextTooltipTemplate text={headerLabel} />}>
+                  <label className={isSortable ? 'sortable-header-label' : ''}>
+                    <span className="data-ellipsis">{headerLabel}</span>
+                    {isSortable && getSortingIcon(headerId)}
+                  </label>
+                </Tooltip>
+                {tableItem.tip && <Tip text={tableItem.tip} />}
               </div>
             ))}
           </div>
         </div>
         <div className="table-body">
-          {artifactsTabContent.map((artifactRow, artifactRowIndex) => (
+          {sortedTableContent.map((artifactRow, artifactRowIndex) => (
             <div key={artifactRowIndex}>
               <div className="table-row">
                 {artifactRow.map((artifactCell, artifactCellIndex) => (
@@ -176,7 +209,18 @@ const DetailsArtifacts = ({
   )
 }
 
+DetailsArtifacts.defaultProps = {
+  allowSortBy: null,
+  defaultSortBy: null,
+  defaultDirection: 'desc',
+  excludeSortBy: null
+}
+
 DetailsArtifacts.propTypes = {
+  allowSortBy: ALLOW_SORT_BY,
+  defaultSortBy: DEFAULT_SORT_BY,
+  defaultDirection: PropTypes.string,
+  excludeSortBy: EXCLUDE_SORT_BY,
   iteration: PropTypes.string.isRequired,
   selectedItem: PropTypes.shape({}).isRequired,
   setIterationOption: PropTypes.func.isRequired
