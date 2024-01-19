@@ -54,6 +54,7 @@ const FeatureSetsPanelTargetStore = ({
   project,
   setDisableButtons,
   setNewFeatureSetTarget,
+  setNewFeatureSetPassthrough,
   setValidation,
   validation
 }) => {
@@ -677,6 +678,9 @@ const FeatureSetsPanelTargetStore = ({
               clearTargets(true)
             }
           },
+          closePopUp: () => {
+            setNewFeatureSetPassthrough(false)
+          },
           message:
             'Passthrough set to "enabled" while online-target is set. Do you want to unset online-target?'
         })
@@ -698,7 +702,8 @@ const FeatureSetsPanelTargetStore = ({
     passthroughtEnabled,
     restoreTargets,
     selectedPartitionKind,
-    selectedTargetKind
+    selectedTargetKind,
+    setNewFeatureSetPassthrough
   ])
 
   const handlePartitionRadioButtonClick = (value, target) => {
