@@ -28,14 +28,12 @@ import Loader from '../../common/Loader/Loader'
 import nuclioActions from '../../actions/nuclio'
 import { GROUP_BY_NONE } from '../../constants'
 import { areNuclioStreamsEnabled } from '../../utils/helper'
-import { isProjectValid } from '../../utils/handleRedirect'
 import { setFilters } from '../../reducers/filtersReducer'
 import { showErrorNotification } from '../../utils/notifications.util'
 
 const ConsumerGroupsWrapper = ({
   fetchNuclioV3ioStreams,
   frontendSpec,
-  projectsNames,
   resetV3ioStreamsError,
   v3ioStreams
 }) => {
@@ -47,10 +45,6 @@ const ConsumerGroupsWrapper = ({
     () => areNuclioStreamsEnabled(frontendSpec),
     [frontendSpec]
   )
-
-  useEffect(() => {
-    isProjectValid(navigate, projectsNames.data, params.projectName)
-  }, [navigate, params.projectName, projectsNames.data])
 
   useEffect(() => {
     dispatch(setFilters({ groupBy: GROUP_BY_NONE }))
@@ -99,10 +93,9 @@ const ConsumerGroupsWrapper = ({
 }
 
 export default connect(
-  ({ appStore, nuclioStore, projectStore }) => ({
+  ({ appStore, nuclioStore }) => ({
     frontendSpec: appStore.frontendSpec,
-    v3ioStreams: nuclioStore.v3ioStreams,
-    projectsNames: projectStore.projectsNames
+    v3ioStreams: nuclioStore.v3ioStreams
   }),
   {
     ...nuclioActions

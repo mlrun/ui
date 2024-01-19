@@ -39,7 +39,7 @@ import {
 } from '../../constants'
 import { TERTIARY_BUTTON } from 'igz-controls/constants'
 import { actionCreator, actionsMenuHeader, monitorJob, rerunJob, tabs } from './jobs.util'
-import { isPageTabValid, isProjectValid } from '../../utils/handleRedirect'
+import { isPageTabValid } from '../../utils/handleRedirect'
 
 export const JobsContext = React.createContext({})
 
@@ -53,7 +53,6 @@ const Jobs = ({ fetchJobFunction }) => {
   const location = useLocation()
   const dispatch = useDispatch()
   const functionsStore = useSelector(store => store.functionsStore)
-  const projectStore = useSelector(store => store.projectStore)
   const jobsStore = useSelector(store => store.jobsStore)
   const workflowsStore = useSelector(store => store.workflowsStore)
   const appStore = useSelector(store => store.appStore)
@@ -98,10 +97,6 @@ const Jobs = ({ fetchJobFunction }) => {
       )
     }
   }, [navigate, params.pageTab, location])
-
-  useEffect(() => {
-    isProjectValid(navigate, projectStore.projectsNames.data, params.projectName)
-  }, [navigate, params.projectName, projectStore.projectsNames.data])
 
   return (
     <>
