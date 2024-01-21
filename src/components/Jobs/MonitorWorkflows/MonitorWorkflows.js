@@ -67,6 +67,7 @@ import { useSortTable } from '../../../hooks/useSortTable.hook'
 import { useYaml } from '../../../hooks/yaml.hook'
 
 import './MonitorWorkflows.scss'
+import { datePickerOptions, PAST_24_HOUR_DATE_OPTION } from '../../../utils/datePicker.util'
 
 const MonitorWorkflows = ({
   abortJob,
@@ -514,8 +515,19 @@ const MonitorWorkflows = ({
           getWorkflows(filters)
           dispatch(setFilters(filters))
         } else {
-          getWorkflows({})
-          dispatch(setFilters({ groupBy: GROUP_BY_WORKFLOW }))
+          const pastDayOption = datePickerOptions.find(
+            option => option.id === PAST_24_HOUR_DATE_OPTION
+          )
+          const filters = {
+            dates: {
+              state: filtersStore.state,
+              value: pastDayOption.handler(),
+              isPredefined: pastDayOption.isPredefined
+            },
+            groupBy: GROUP_BY_WORKFLOW
+          }
+          getWorkflows(filters)
+          dispatch(setFilters({ ...filters }))
         }
 
         setWorkflowsAreLoaded(true)
