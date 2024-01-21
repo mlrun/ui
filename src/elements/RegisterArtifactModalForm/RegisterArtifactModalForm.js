@@ -160,7 +160,7 @@ RegisterArtifactModalForm.propTypes = {
   setFieldState: PropTypes.func.isRequired,
   setUniquenessErrorIsShown: PropTypes.func.isRequired,
   showType: PropTypes.bool,
-  uniquenessError: PropTypes.string.isRequired
+  uniquenessErrorIsShown: PropTypes.bool.isRequired
 }
 
 export default RegisterArtifactModalForm
