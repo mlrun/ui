@@ -137,11 +137,10 @@ Feature: Files Page
     Then click on "Register_File_Button" element on "Files" wizard
     Then verify if "Register_File_Popup" popup dialog appears
     Then "Title" element on "Register_File_Popup" should contains "Register Artifact" value
-    Then "Form_Text" component on "Register_File_Popup" should be equal "Register_Artifact"."Form_Text"
+    Then "Form_Text" component on "Register_File_Popup" should contains "Register_Artifact"."Form_Text"
     Then "Form_Subtext" component on "Register_File_Popup" should contains "Register_Artifact"."Form_Subtext"
     Then verify "Cross_Cancel_Button" element visibility on "Register_File_Popup" wizard
     Then verify "New_File_Name_Input" element visibility on "Register_File_Popup" wizard
-    Then verify "New_File_Name_Input" on "Register_File_Popup" wizard should display "Input_Hint"."Artifact_Names_Unique"
     Then type value " " to "New_File_Name_Input" field on "Register_File_Popup" wizard
     Then verify "New_File_Name_Input" on "Register_File_Popup" wizard should display options "Input_Hint"."Artifact_Name_Hint"
     Then verify "New_File_Name_Input" options rules on form "Register_File_Popup" wizard
@@ -220,6 +219,13 @@ Feature: Files Page
     Then check "test-artifact" value in "key" column in "Overview_Table" table on "Files_Info_Pane" wizard
     Then check "latest" value in "tag" column in "Overview_Table" table on "Files_Info_Pane" wizard
     Then check "v3io:///target/path" value in "path" column in "Overview_Table" table on "Files_Info_Pane" wizard
+    Then click on "Register_File_Button" element on "Files" wizard
+    Then type value "test-artifact" to "New_File_Name_Input" field on "Register_File_Popup" wizard
+    Then type value "latest" to "Tag_Input" field on "Register_File_Popup" wizard
+    When select "V3IO" option in "Path_Scheme_Combobox" combobox on "Target_Path" accordion on "Register_Dataset" wizard
+    When type value "target/path" to "Path_Scheme_Combobox" field on "Target_Path" on "Register_Dataset" wizard
+    Then click on "Register_Button" element on "Register_File_Popup" wizard
+    Then "Register_Error_Message" component on "Register_File_Popup" should be equal "Register_Artifact"."Register_Error_Message"
 
   @MLA
   @passive
