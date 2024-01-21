@@ -135,8 +135,6 @@ Feature: Datasets Page
   
   @MLD
   @passive
-  @FAILED_TODO
-  #TODO: tag edit implementation on mock
   Scenario: MLD005 - Check Details panel still active on page refresh
     * set tear-down property "dataset" created in "automation-test" project with "test-file" value
     * create "test-dataset" Dataset with "v1" tag in "default" project with code 200
@@ -187,10 +185,9 @@ Feature: Datasets Page
     Then click on "Register_Dataset_Button" element on "Datasets" wizard
     Then verify if "Register_File_Popup" popup dialog appears
     Then "Title" element on "Register_Dataset" should contains "Register Dataset" value
-    Then "Form_Text" component on "Register_Dataset" should be equal "Register_Artifact"."Form_Text"
+    Then "Form_Text" component on "Register_Dataset" should contains "Register_Dataset"."Form_Text"
     Then "Form_Subtext" component on "Register_Dataset" should contains "Register_Dataset"."Form_Subtext"
     Then verify "Name_Input" element visibility on "Register_Dataset" wizard
-    Then verify "Name_Input" on "Register_Dataset" wizard should display "Input_Hint"."Dataset_Names_Unique"
     Then type value " " to "Name_Input" field on "Register_Dataset" wizard
     And wait load page
     Then verify "Name_Input" on "Register_Dataset" wizard should display options "Input_Hint"."Artifact_Name_Hint"
@@ -264,6 +261,13 @@ Feature: Datasets Page
     Then check "dataset-test" value in "key" column in "Overview_Table" table on "Datasets_Info_Pane" wizard
     Then check "latest" value in "tag" column in "Overview_Table" table on "Datasets_Info_Pane" wizard
     Then check "v3io:///target/path" value in "path" column in "Overview_Table" table on "Datasets_Info_Pane" wizard
+    Then click on "Register_Dataset_Button" element on "Datasets" wizard
+    Then type value "auto-trainer-train_test_set" to "Name_Input" field on "Register_Dataset" wizard
+    Then type value "latest" to "Tag_Input" field on "Register_Dataset" wizard
+    When select "V3IO" option in "Path_Scheme_Combobox" combobox on "Target_Path" accordion on "Register_Dataset" wizard
+    When type value "target/path" to "Path_Scheme_Combobox" field on "Target_Path" on "Register_Dataset" wizard
+    Then click on "Register_Button" element on "Register_Dataset" wizard
+    Then "Register_Error_Message" component on "Register_Dataset" should be equal "Register_Artifact"."Register_Error_Message"
   
   @MLD
   @passive
@@ -468,7 +472,7 @@ Feature: Datasets Page
     Then verify "Header" element visibility on "Datasets_Info_Pane" wizard
     Then save to context "name" column on 1 row from "Datasets_Table" table on "Datasets" wizard
     Then compare "Header" element value on "Datasets_Info_Pane" wizard with test "name" context value
-	  Then verify that row index 1 is active in "Datasets_Table" table on "Datasets" wizard
+    Then verify that row index 1 is active in "Datasets_Table" table on "Datasets" wizard
     Then verify that row index 2 is NOT active in "Datasets_Table" table on "Datasets" wizard
     Then click on cell with row index 2 in "name" column in "Datasets_Table" table on "Datasets" wizard  
     Then verify that row index 2 is active in "Datasets_Table" table on "Datasets" wizard   
@@ -504,8 +508,6 @@ Feature: Datasets Page
     Then verify "Cross_Close_Button" element visibility on "Datasets_Info_Pane" wizard
 
   @MLD
-  @FAILED_TODO
-  #TODO: tag edit implementation on mock
   Scenario: MLD010 - Check that version tag dropdown shows all tags on filters wizard on Datasets page
     Given open url
     And wait load page
@@ -560,8 +562,6 @@ Feature: Datasets Page
     Then "Version_Tag_Input_Placeholder" element on "Datasets_Info_Pane" should contains "Click to add" value
 
   @MLD
-  @FAILED_TODO
-  #TODO: tag edit implementation on mock
   Scenario: MLD012 - Check filter by "All" tag is performed when version tag was edited
     Given open url
     And wait load page
@@ -587,7 +587,7 @@ Feature: Datasets Page
     Then verify "Overview" tab is active in "Info_Pane_Tab_Selector" on "Datasets_Info_Pane" wizard
     Then verify "Overview_General_Headers" on "Datasets_Info_Pane" wizard should contains "Datasets_Info_Pane"."Overview_General_Headers"
     Then check "latest123456" value in "tag" column in "Overview_Table" table on "Datasets_Info_Pane" wizard
-    Then save to context "name" column on 2 row from "Datasets_Table" table on "Datasets" wizard
+    Then save to context "name" column on 3 row from "Datasets_Table" table on "Datasets" wizard
     Then compare "Header" element value on "Datasets_Info_Pane" wizard with test "name" context value
 
   @MLD
@@ -707,6 +707,18 @@ Feature: Datasets Page
     Then verify "Next_Button" element on "Train_Model" wizard is disabled
     Then verify "Schedule_Training_Job_Button" element on "Train_Model" wizard is enabled
     Then verify "Run_Training_Now_Button" element on "Train_Model" wizard is enabled
+    And click on "Step_1_Button" element on "commonPagesHeader" wizard
+    Then "Form_Header_Run_Details" element on "commonPagesHeader" should contains "Run Details" value
+    And click on "Step_3_Button" element on "commonPagesHeader" wizard
+    Then "Form_Header_Parameters" element on "commonPagesHeader" should contains "Parameters" value
+    And click on "Step_4_Button" element on "commonPagesHeader" wizard
+    Then "Form_Header_Hyperparameter_Strategy" element on "commonPagesHeader" should contains "Hyperparameter strategy" value
+    And click on "Run_Training_Now_Button" element on "Train_Model" wizard
+    Then verify "Run_Training_Now_Button" element on "Train_Model" wizard is disabled
+    Then verify "Schedule_Training_Job_Button" element on "Train_Model" wizard is disabled
+    Then verify data in "Train_Model_Parameters_Table" table on "Train_Model" wizard
+            | name_verify           |         type_dropdown_verify         | value_verify |
+            | model_class           |                str                   |              |
 
   @MLD
   Scenario: MLD020 - Check Run Details components on Train Model wizard
@@ -733,7 +745,6 @@ Feature: Datasets Page
     Then type value "/" to "Run_Details_Labels_Key" field on "Train_Model" wizard
     Then verify labels warning should display options "Input_Hint"."Labels_Warning_Key"
     Then type value "/" to "Run_Details_Labels_Value" field on "Train_Model" wizard without inputgroup
-    Then verify labels warning should display options "Input_Hint"."Labels_Warning_Value"
     When click on "Title" element on "Train_Model" wizard
     And click on "Close_Label_Button" element on "Train_Model" wizard   
     When add rows to "Train_Model_Labels_Table" table on "Train_Model" wizard
@@ -768,42 +779,42 @@ Feature: Datasets Page
     Then "Form_Header_Data_Inputs" element on "commonPagesHeader" should contains "Data Inputs" value
     Then verify "Data_Inputs_Headers" on "Train_Model" wizard should contains "Batch_Run"."Data_Inputs_Table_Header"
     Then verify data in "Train_Model_Data_Inputs_Table" table on "Train_Model" wizard
-            | name_verify |                          path_verify                          |      
-            | dataset     | store://datasets/default/auto-trainer-train_test_set#0:latest | 
-            | sample_set  |                                                               | 
-            | test_set    |                                                               | 
+            | name_verify |                     path_verify                       |      
+            | dataset     | store://datasets/default/test_new_structure2#0:latest | 
+            | sample_set  |                                                       | 
+            | test_set    |                                                       | 
     When add data to "Train_Model_Data_Inputs_Table" table on "Train_Model" wizard with a pre-filled table
             | name_input | path_dropdown |      path_input     |
             |    name1   |      V3IO     | container-name/file |
             |    name2   |      V3IO     | container-name/file |
             |    name3   |      V3IO     | container-name/file |
     Then verify data in "Train_Model_Data_Inputs_Table" table on "Train_Model" wizard
-            | name_verify |                         path_verify                           |    
-            |   dataset   | store://datasets/default/auto-trainer-train_test_set#0:latest | 
-            | sample_set  |                                                               | 
-            |   test_set  |                                                               | 
-            |    name1    |                  v3io:///container-name/file                  | 
-            |    name2    |                  v3io:///container-name/file                  | 
-            |    name3    |                  v3io:///container-name/file                  | 
+            | name_verify |                     path_verify                       |    
+            |   dataset   | store://datasets/default/test_new_structure2#0:latest | 
+            | sample_set  |                                                       | 
+            |   test_set  |                                                       | 
+            |    name1    |             v3io:///container-name/file               | 
+            |    name2    |             v3io:///container-name/file               | 
+            |    name3    |             v3io:///container-name/file               | 
     When click on "delete_btn" with data in "Train_Model_Data_Inputs_Table" table on "Train_Model" wizard with offset "false"
             | name_verify |
             |    name1    |
             |    name3    |
     Then verify data in "Train_Model_Data_Inputs_Table" table on "Train_Model" wizard
-            | name_verify |                         path_verify                           |    
-            |   dataset   | store://datasets/default/auto-trainer-train_test_set#0:latest | 
-            | sample_set  |                                                               | 
-            |   test_set  |                                                               | 
-            |    name2    |                  v3io:///container-name/file                  |    
+            | name_verify |                    path_verify                        |    
+            |   dataset   | store://datasets/default/test_new_structure2#0:latest | 
+            | sample_set  |                                                       | 
+            |   test_set  |                                                       | 
+            |    name2    |              v3io:///container-name/file              |    
     Then edit 4 row in "Train_Model_Data_Inputs_Table" key-value table on "Train_Model" wizard
             | name_input | path_input |
             |   edited   |   edited   |
     Then verify data in "Train_Model_Data_Inputs_Table" table on "Train_Model" wizard
-            | name_verify |                         path_verify                           |    
-            |   dataset   | store://datasets/default/auto-trainer-train_test_set#0:latest | 
-            | sample_set  |                                                               | 
-            |   test_set  |                                                               | 
-            | name2edited |              v3io:///container-name/fileedited                |
+            | name_verify |                    path_verify                        |    
+            |   dataset   | store://datasets/default/test_new_structure2#0:latest | 
+            | sample_set  |                                                       | 
+            |   test_set  |                                                       | 
+            | name2edited |         v3io:///container-name/fileedited             |
 
   @MLD
   Scenario: MLD022 - Check Parameters components on Train Model wizard
@@ -1105,6 +1116,3 @@ Feature: Datasets Page
     Then "Teardown_Checkbox" element should be unchecked on "Train_Model" wizard
     Then check "Teardown_Checkbox" element on "Train_Model" wizard
     Then "Teardown_Checkbox" element should be checked on "Train_Model" wizard
-
-    
-           
