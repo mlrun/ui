@@ -423,7 +423,7 @@ export const createModelEndpointsRowData = (artifact, project) => {
         id: `version.${artifact.ui.identifierUnique}`,
         headerId: 'version',
         headerLabel: 'Version',
-        value: artifact?.status?.children ? 'Router' : tag,
+        value: artifact?.status?.children?.length > 0 ? 'Router' : tag,
         className: 'table-cell-small'
       },
       {
