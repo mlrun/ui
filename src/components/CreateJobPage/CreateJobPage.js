@@ -18,7 +18,7 @@ under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
 import React, { useState, useEffect } from 'react'
-import { useNavigate, useParams } from 'react-router-dom'
+import { useParams } from 'react-router-dom'
 import { connect } from 'react-redux'
 import { includes, isEmpty } from 'lodash'
 
@@ -30,7 +30,6 @@ import jobsActions from '../../actions/jobs'
 import projectsAction from '../../actions/projects'
 import { PANEL_CREATE_MODE } from '../../constants'
 import { generateProjectsList } from '../../utils/projects'
-import { isProjectValid } from '../../utils/handleRedirect'
 import { functionRunKinds } from '../Jobs/jobs.util'
 
 const CreateJobPage = ({
@@ -42,7 +41,6 @@ const CreateJobPage = ({
   removeNewJob
 }) => {
   const params = useParams()
-  const navigate = useNavigate()
   const [filterByName, setFilterByName] = useState('')
   const [filterMatches, setFilterMatches] = useState([])
   const [filteredFunctions, setFilteredFunctions] = useState([])
@@ -56,10 +54,6 @@ const CreateJobPage = ({
   const [templatesCategories, setTemplatesCategories] = useState(functionsStore.templatesCatalog)
   const [templates, setTemplates] = useState([])
   const [showPanel, setShowPanel] = useState(false)
-
-  useEffect(() => {
-    isProjectValid(navigate, projectStore.projectsNames.data, params.projectName)
-  }, [navigate, params.projectName, projectStore.projectsNames.data])
 
   useEffect(() => {
     if (!selectedProject) {
