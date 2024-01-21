@@ -153,13 +153,20 @@ const ScheduledJobs = ({
 
   const handleRemoveScheduledJob = useCallback(
     schedule => {
-      removeScheduledJob(params.projectName, schedule.name).then(() => {
+      removeScheduledJob(params.projectName, schedule.name).then((response) => {
         refreshJobs(filtersStore)
+        dispatch(
+          setNotification({
+            status: response.status,
+            id: Math.random(),
+            message: 'Job is successfully deleted'
+          })
+        )
       })
 
       setConfirmData(null)
     },
-    [filtersStore, params.projectName, refreshJobs, removeScheduledJob, setConfirmData]
+    [filtersStore, params.projectName, refreshJobs, removeScheduledJob, setConfirmData, dispatch]
   )
 
   const onRemoveScheduledJob = useCallback(
