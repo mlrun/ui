@@ -53,7 +53,7 @@ const FormVolumesRow = ({
     isCurrentRowEditing(rowPath) && 'form-table__row_active'
   )
 
-  const accessKeyOnFocus = useCallback(
+  const accessKeyFocusHandler = useCallback(
     (accessKey, secretRef) => {
       if (accessKey === secretRef) {
         setFieldValue(`${rowPath}.data.accessKey`, '')
@@ -64,10 +64,10 @@ const FormVolumesRow = ({
 
   useLayoutEffect(() => {
     setFieldRowData(
-      generateVolumeInputsData(fields.value[index], fields, editingItem, accessKeyOnFocus)
+      generateVolumeInputsData(fields.value[index], fields, editingItem, accessKeyFocusHandler)
     )
     setFieldData(fields.value[index])
-  }, [accessKeyOnFocus, editingItem, fields, index])
+  }, [accessKeyFocusHandler, editingItem, fields, index])
 
   return (
     <>

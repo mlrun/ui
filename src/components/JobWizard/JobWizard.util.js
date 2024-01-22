@@ -498,15 +498,22 @@ const parseVolumes = (volumes, volumeMounts, isEditMode) => {
     const volumeType = getVolumeType(currentVolume)
     const volumeTypePath = volumeTypesMap[volumeType]
     const volumeTypeName = volumeTypeNamesMap[volumeType]
+    const volumeData = {
+      type: volumeType,
+      name: volumeMount?.name,
+      mountPath: volumeMount?.mountPath,
+      ...currentVolume[volumeTypePath]?.options
+    }
+
+    if (volumeType === V3IO_VOLUME_TYPE) {
+      volumeData.accessKey = currentVolume[volumeTypePath]?.secretRef?.name ?? ''
+    } else {
+      volumeData.typeName = currentVolume[volumeTypePath]?.[volumeTypeName]
+    }
 
     return {
       data: {
-        type: volumeType,
-        name: volumeMount?.name,
-        mountPath: volumeMount?.mountPath,
-        typeName: currentVolume[volumeTypePath]?.[volumeTypeName],
-        accessKey: currentVolume[volumeTypePath]?.secretRef?.name ?? '',
-        ...currentVolume[volumeTypePath]?.options
+        ...volumeData
       },
       typeAdditionalData: omit(currentVolume[volumeTypePath], ['options', 'name']),
       isDefault: true,

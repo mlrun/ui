@@ -45,11 +45,14 @@ export const tableHeaders = [
   { label: 'Path', id: 'path' }
 ]
 
-export const generateVolumeInputsData = (selectedItem, fields, editingItem, accessKeyOnFocus) => {
+export const generateVolumeInputsData = (
+  selectedItem,
+  fields,
+  editingItem,
+  accessKeyFocusHandler
+) => {
   const editingItemIndex = editingItem?.ui?.index
   const selectedType = selectedItem.data.type
-  const secretRef = editingItem?.typeAdditionalData?.secretRef?.name ?? ''
-  const accessKey = selectedItem?.data?.accessKey ?? ''
   const volumeFields = [
     'type',
     'name',
@@ -135,8 +138,14 @@ export const generateVolumeInputsData = (selectedItem, fields, editingItem, acce
           tip: 'A platform data-access key',
           required: true,
           customRequiredLabel:
-            'This function has an access key already defined. Change the value only if you want to use a different access key.',
-          onFocus: () => accessKeyOnFocus(accessKey, secretRef),
+            selectedItem?.data?.accessKey === editingItem?.typeAdditionalData?.secretRef?.name
+              ? 'This function has an access key already defined. Change the value only if you want to use a different access key.'
+              : '',
+          onFocus: () =>
+            accessKeyFocusHandler(
+              selectedItem?.data?.accessKey,
+              editingItem?.typeAdditionalData?.secretRef?.name
+            ),
           textHidden: true,
           type: 'input'
         }
