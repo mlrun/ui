@@ -24,7 +24,7 @@ import PropTypes from 'prop-types'
 import Loader from '../../common/Loader/Loader'
 import { Tip, Tooltip, TextTooltipTemplate } from 'igz-controls/components'
 
-const ProjectSummaryCard = ({ counterValue, link, projectSummary, title, tooltipText, tip }) => {
+const ProjectSummaryCard = ({ counterValue, link, projectSummary, tip, title, tooltipText }) => {
   return (
     <Link to={link} className="project-data-card project-data-card_small">
       <Tooltip
@@ -55,8 +55,9 @@ const ProjectSummaryCard = ({ counterValue, link, projectSummary, title, tooltip
 }
 
 ProjectSummaryCard.defaultProps = {
-  tooltipText: null,
-  tip: null
+  tip: null,
+  tooltipText: null
+  
 }
 
 ProjectSummaryCard.propTypes = {
@@ -64,9 +65,9 @@ ProjectSummaryCard.propTypes = {
     .isRequired,
   link: PropTypes.string.isRequired,
   projectSummary: PropTypes.object.isRequired,
+  tip: PropTypes.string,
   title: PropTypes.string.isRequired,
-  tooltipText: PropTypes.string,
-  tip: PropTypes.string
+  tooltipText: PropTypes.string
 }
 
 export default ProjectSummaryCard
