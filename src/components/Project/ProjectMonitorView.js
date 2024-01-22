@@ -140,6 +140,7 @@ const ProjectMonitorView = ({
                 link={`/projects/${params.projectName}/files`}
                 projectSummary={projectSummary}
                 title="Artifacts"
+                tip="This counter is the number of artifacts with different names (keys). Each such artifact may have many versions, produced by multiple runs and given multiple tags. You can browse them in the Artifacts page."
               />
               {nuclioStreamsAreEnabled && (
                 <ProjectSummaryCard

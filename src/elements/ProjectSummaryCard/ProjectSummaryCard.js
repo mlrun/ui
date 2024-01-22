@@ -22,15 +22,9 @@ import { Link } from 'react-router-dom'
 import PropTypes from 'prop-types'
 
 import Loader from '../../common/Loader/Loader'
-import { Tooltip, TextTooltipTemplate } from 'igz-controls/components'
+import { Tip, Tooltip, TextTooltipTemplate } from 'igz-controls/components'
 
-const ProjectSummaryCard = ({
-  counterValue,
-  link,
-  projectSummary,
-  title,
-  tooltipText
-}) => {
+const ProjectSummaryCard = ({ counterValue, link, projectSummary, title, tooltipText, tip }) => {
   return (
     <Link to={link} className="project-data-card project-data-card_small">
       <Tooltip
@@ -41,6 +35,7 @@ const ProjectSummaryCard = ({
         <div className="project-data-card__header">
           <div className="project-data-card__header-text data-ellipsis">
             {title}
+            {tip && <Tip className="checkbox__label-tip" text={tip} />}
           </div>
           <div className="project-data-card__statistics">
             <div className="project-data-card__statistics-item">
@@ -60,7 +55,8 @@ const ProjectSummaryCard = ({
 }
 
 ProjectSummaryCard.defaultProps = {
-  tooltipText: null
+  tooltipText: null,
+  tip: null
 }
 
 ProjectSummaryCard.propTypes = {
@@ -69,7 +65,8 @@ ProjectSummaryCard.propTypes = {
   link: PropTypes.string.isRequired,
   projectSummary: PropTypes.object.isRequired,
   title: PropTypes.string.isRequired,
-  tooltipText: PropTypes.string
+  tooltipText: PropTypes.string,
+  tip: PropTypes.string
 }
 
 export default ProjectSummaryCard
