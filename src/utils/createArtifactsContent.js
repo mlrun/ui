@@ -128,6 +128,7 @@ export const createModelsRowData = (
       headerLabel: 'Name',
       value: artifact.db_key,
       className: 'table-cell-name',
+      dataHeadTestId: 'Name',
       getLink: tab =>
         validateArguments(artifact.db_key, tab, artifact.tree)
           ? generateLinkToDetailsPanel(
@@ -160,7 +161,8 @@ export const createModelsRowData = (
       headerLabel: 'Labels',
       value: parseKeyValues(artifact.labels),
       className: 'table-cell-1',
-      type: 'labels'
+      type: 'labels',
+      dataHeadTestId: 'Labels'
     },
     {
       id: `producer.${artifact.ui.identifierUnique}`,
@@ -169,7 +171,8 @@ export const createModelsRowData = (
       value: artifact.producer?.name || '',
       template: <TableProducerCell className="table-cell-1" producer={artifact.producer} />,
       className: 'table-cell-1',
-      type: 'producer'
+      type: 'producer',
+      dataHeadTestId: 'Producer'
     },
     {
       id: `owner.${artifact.ui.identifierUnique}`,
@@ -177,14 +180,16 @@ export const createModelsRowData = (
       headerLabel: 'Owner',
       value: artifact.producer?.owner,
       className: 'table-cell-1',
-      type: 'owner'
+      type: 'owner',
+      dataHeadTestId: 'Owner'
     },
     {
       id: `updated.${artifact.ui.identifierUnique}`,
       headerId: 'updated',
       headerLabel: 'Updated',
       value: formatDatetime(artifact.updated, 'N/A'),
-      className: 'table-cell-1'
+      className: 'table-cell-1',
+      dataHeadTestId: 'Updated'
     },
     {
       id: `frameWorkAndAlgorithm.${artifact.ui.identifierUnique}`,
@@ -206,14 +211,16 @@ export const createModelsRowData = (
         ) : (
           ''
         ),
-      className: 'table-cell-1'
+      className: 'table-cell-1',
+      dataHeadTestId: 'frameWorkAndAlgorithm'
     },
     {
       id: `version.${artifact.ui.identifierUnique}`,
       headerId: 'tag',
       value: artifact.tag,
       className: 'table-cell-1',
-      type: 'hidden'
+      type: 'hidden',
+      dataHeadTestId: 'tag'
     }
   ]
 
@@ -223,9 +230,10 @@ export const createModelsRowData = (
         'metrics-cell',
         index === 0 && 'metrics-cell_with-border'
       )
-
       content.push({
         id: `${key}.${artifact.ui.identifierUnique}`,
+        dataTestId: index + 1,
+        dataHeadTestId: key,
         headerId: key,
         headerLabel: key,
         value: parseFloat(value),
@@ -237,7 +245,6 @@ export const createModelsRowData = (
 
   if (currentMetricsCount < metricsCounter) {
     const missingObjects = metricsCounter - currentMetricsCount
-
     for (let i = 0; i < missingObjects; i++) {
       content.push({
         id: `${i}.${artifact.ui.identifierUnique}`,

@@ -47,30 +47,35 @@ const TableHead = React.forwardRef(
     return (
       <thead className="table-header">
         <tr className="table-row table-header-row" ref={ref}>
-          {content.map(({ headerLabel, headerId, isSortable, ...tableItem }, index) => {
-            return tableItem.type !== 'hidden' && !tableItem.hidden && !tableItem.headerIsHidden ? (
-              <th
-                className={getHeaderCellClasses(
-                  headerId,
-                  isSortable,
-                  tableItem.className,
-                  tableItem.headerCellClassName,
-                  index
-                )}
-                key={`${headerId}`}
-                onClick={isSortable ? () => sortProps.sortTable(headerId) : null}
-              >
-                <Tooltip template={<TextTooltipTemplate text={headerLabel} />}>
-                  <label className={isSortable? 'sortable-header-label': ''}>
-                    <span className="data-ellipsis">{headerLabel}</span>
-                    {isSortable && sortProps.getSortingIcon(headerId)}
-                  </label>
-                </Tooltip>
+          {content.map(
+            ({ headerLabel, headerId, isSortable, dataHeadTestId, ...tableItem }, index) => {
+              return tableItem.type !== 'hidden' &&
+                !tableItem.hidden &&
+                !tableItem.headerIsHidden ? (
+                <th
+                  data-testid={dataHeadTestId}
+                  className={getHeaderCellClasses(
+                    headerId,
+                    isSortable,
+                    tableItem.className,
+                    tableItem.headerCellClassName,
+                    index
+                  )}
+                  key={`${headerId}`}
+                  onClick={isSortable ? () => sortProps.sortTable(headerId) : null}
+                >
+                  <Tooltip template={<TextTooltipTemplate text={headerLabel} />}>
+                    <label className={isSortable ? 'sortable-header-label' : ''}>
+                      <span className="data-ellipsis">{headerLabel}</span>
+                      {isSortable && sortProps.getSortingIcon(headerId)}
+                    </label>
+                  </Tooltip>
 
-                {tableItem.tip && <Tip text={tableItem.tip} />}
-              </th>
-            ) : null
-          })}
+                  {tableItem.tip && <Tip text={tableItem.tip} />}
+                </th>
+              ) : null
+            }
+          )}
           {!hideActionsMenu && <th className="table-header__cell table-cell-icon" />}
         </tr>
       </thead>

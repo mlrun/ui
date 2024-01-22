@@ -33,6 +33,7 @@ import { BUTTON_COPY_URI_CELL_TYPE, DATASET_TYPE, MODEL_TYPE } from '../../const
 import { getChipOptions } from '../../utils/getChipOptions'
 import { showArtifactsPreview } from '../../reducers/artifactsReducer'
 import { truncateUid } from '../../utils'
+import { generateMetricCellTestId } from '../../utils/generateTableRowTestId'
 
 import { ReactComponent as ArtifactView } from 'igz-controls/images/eye-icon.svg'
 import { ReactComponent as Arrow } from 'igz-controls/images/arrow.svg'
@@ -46,7 +47,8 @@ const TableCell = ({
   link,
   selectItem,
   selectedItem,
-  showExpandButton
+  showExpandButton,
+  testId
 }) => {
   const dispatch = useDispatch()
   const { value: stateValue, label: stateLabel, className: stateClassName } = item.state ?? {}
@@ -56,7 +58,6 @@ const TableCell = ({
     className,
     data.bodyCellClassName
   )
-
   if (data.template) {
     return data.template
   } else if (link && data.type !== 'hidden') {
@@ -180,7 +181,7 @@ const TableCell = ({
     return <td className={cellClassNames}>{data.value}</td>
   } else {
     return (
-      <td className={cellClassNames}>
+      <td data-testid={generateMetricCellTestId(cellClassNames, testId)} className={cellClassNames}>
         <Tooltip
           className="text_small"
           template={<TextTooltipTemplate text={data.tooltip || data.value} />}
@@ -217,7 +218,8 @@ TableCell.propTypes = {
   link: PropTypes.oneOfType([PropTypes.string, PropTypes.bool]),
   selectItem: PropTypes.func,
   selectedItem: PropTypes.shape({}),
-  showExpandButton: PropTypes.bool
+  showExpandButton: PropTypes.bool,
+  testId: PropTypes.oneOfType([PropTypes.number, PropTypes.string])
 }
 
 export default TableCell

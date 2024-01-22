@@ -126,6 +126,7 @@ const ArtifactsTableRow = ({
                               return (
                                 !value.hidden && (
                                   <TableCell
+                                    testId={value.dataTestId}
                                     className={cellClassNames}
                                     data={
                                       value.expandedCellContent ? value.expandedCellContent : value
@@ -169,6 +170,7 @@ const ArtifactsTableRow = ({
               !value.hidden && (
                 <TableCell
                   className={cellClassNames}
+                  testId={value.dataTestId}
                   data={value}
                   handleExpandRow={handleExpandRow}
                   firstCell={index === 0 && params.pageTab !== MODEL_ENDPOINTS_TAB}
