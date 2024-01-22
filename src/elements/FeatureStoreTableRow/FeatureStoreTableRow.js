@@ -21,6 +21,7 @@ import React, { useMemo, useRef } from 'react'
 import PropTypes from 'prop-types'
 import classnames from 'classnames'
 import { useParams } from 'react-router-dom'
+import { createPortal } from 'react-dom'
 import { isEmpty } from 'lodash'
 
 import TableCell from '../TableCell/TableCell'
@@ -72,12 +73,10 @@ const FeatureStoreTableRow = ({
               <tbody className="table-body">
                 <tr className="table-row">
                   {rowItem.content.map((data, index) => {
-                    const cellClassName = classnames(
-                      index >= mainRowItemsCount && 'table-body__cell_hidden'
-                    )
+                    const cellClassName = classnames(index === 1 && 'table-cell-10')
 
                     return (
-                      !data.hidden && (
+                      index < mainRowItemsCount && (
                         <TableCell
                           className={cellClassName}
                           data={data}
@@ -92,7 +91,7 @@ const FeatureStoreTableRow = ({
                           }
                           selectItem={handleSelectItem}
                           selectedItem={selectedItem}
-                          showExpandButton
+                          showExpandButton={data.showExpandButton}
                         />
                       )
                     )
@@ -104,7 +103,7 @@ const FeatureStoreTableRow = ({
           </td>
           {selectedRowData[rowItem.data.ui.identifier]?.loading ? (
             <td className="table-body__cell">
-              <Loader />
+              {createPortal(<Loader />, parent.current.closest('.table-container'))}
             </td>
           ) : selectedRowData[rowItem.data.ui.identifier]?.error ? (
             <td className="table-body__cell">

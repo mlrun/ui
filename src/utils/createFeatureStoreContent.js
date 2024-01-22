@@ -145,7 +145,8 @@ export const createFeaturesRowData = (feature, isTablePanelOpen, showExpandButto
         className: 'table-cell-name',
         expandedCellContent: {
           className: 'table-cell-name',
-          value: feature.metadata?.tag
+          value: feature.metadata?.tag || truncateUid(feature.metadata?.uid),
+          tooltip: feature.metadata?.tag || feature.metadata.uid
         },
         showExpandButton
       },
@@ -156,13 +157,17 @@ export const createFeaturesRowData = (feature, isTablePanelOpen, showExpandButto
         value: feature.metadata?.name,
         className: 'table-cell-2',
         getLink: tab =>
-          validateArguments(feature.metadata?.name, feature.metadata?.tag, tab)
+          validateArguments(
+            feature.metadata?.name,
+            feature.metadata?.tag || feature.metadata?.uid,
+            tab
+          )
             ? generateLinkToDetailsPanel(
                 feature.metadata?.project,
                 FEATURE_STORE_PAGE,
                 FEATURE_SETS_TAB,
                 feature.metadata?.name,
-                feature.metadata?.tag,
+                feature.metadata?.tag || feature.metadata?.uid,
                 tab
               )
             : '',
@@ -172,13 +177,17 @@ export const createFeaturesRowData = (feature, isTablePanelOpen, showExpandButto
         },
         rowExpanded: {
           getLink: tab =>
-            validateArguments(feature.metadata?.name, feature.metadata?.tag, tab)
+            validateArguments(
+              feature.metadata?.name,
+              feature.metadata?.tag || feature.metadata?.uid,
+              tab
+            )
               ? generateLinkToDetailsPanel(
                   feature.metadata?.project,
                   FEATURE_STORE_PAGE,
                   FEATURE_SETS_TAB,
                   feature.metadata?.name,
-                  feature.metadata?.tag,
+                  feature.metadata?.tag || feature.metadata?.uid,
                   tab
                 )
               : ''
