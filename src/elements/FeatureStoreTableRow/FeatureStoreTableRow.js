@@ -73,10 +73,12 @@ const FeatureStoreTableRow = ({
               <tbody className="table-body">
                 <tr className="table-row">
                   {rowItem.content.map((data, index) => {
-                    const cellClassName = classnames(index === 1 && 'table-cell-10')
+                    const cellClassName = classnames(
+                      index >= mainRowItemsCount && 'table-body__cell_hidden-content'
+                    )
 
                     return (
-                      index < mainRowItemsCount && (
+                      !data.hidden && (
                         <TableCell
                           className={cellClassName}
                           data={data}
@@ -103,7 +105,7 @@ const FeatureStoreTableRow = ({
           </td>
           {selectedRowData[rowItem.data.ui.identifier]?.loading ? (
             <td className="table-body__cell">
-              {createPortal(<Loader />, parent.current.closest('.table-container'))}
+              {createPortal(<Loader />, document.querySelector('.table-container'))}
             </td>
           ) : selectedRowData[rowItem.data.ui.identifier]?.error ? (
             <td className="table-body__cell">
