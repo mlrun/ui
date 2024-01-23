@@ -27,7 +27,6 @@ import { validatorStates } from './featureValidatior.utils'
 import './featureValidator.scss'
 
 const FeatureValidator = ({ validator = {} }) => {
-  console.log('validator', validator)
   const validatorEntries = Object.entries(validator)
     .filter(([key]) => !['severity', 'kind'].includes(key))
     .map(([key, value]) => `${key}=${value}`)
