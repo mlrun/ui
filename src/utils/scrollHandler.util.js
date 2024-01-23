@@ -18,7 +18,12 @@ under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
 
-export const scrollToSelectedElements = (ParentRef, querySelector, optionalState = false) => {
+export const scrollToSelectedElements = (
+  ParentRef,
+  querySelector,
+  optionalState = false,
+  timeout = 0
+) => {
   const selectedElement = ParentRef.current.querySelector(`${querySelector}`)
 
   if (!selectedElement) return
@@ -30,5 +35,5 @@ export const scrollToSelectedElements = (ParentRef, querySelector, optionalState
           block: 'center',
           inline: 'start'
         })
-      })
+      }, timeout)
 }

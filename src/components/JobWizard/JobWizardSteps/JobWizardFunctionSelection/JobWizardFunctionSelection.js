@@ -79,16 +79,18 @@ const JobWizardFunctionSelection = ({
   setTemplates,
   setTemplatesCategories,
   templates,
-  templatesCategories
+  templatesCategories,
+  stepIsActive
 }) => {
   const projectNames = useSelector(store => store.projectStore.projectsNames.data)
 
   const [hubFiltersInitialValues] = useState({ [HUB_CATEGORIES_FILTER]: {} })
   const [filterByName, setFilterByName] = useState('')
   const [filterMatches, setFilterMatches] = useState([])
+  const [projects, setProjects] = useState(generateProjectsList(projectNames, params.projectName))
   const selectedCardRef = useRef(null)
   const containerRef = useRef(null)
-  const [projects, setProjects] = useState(generateProjectsList(projectNames, params.projectName))
+  const selectedTempState = useRef('functions')
 
   const filtersStoreHubCategories = useSelector(
     store =>
@@ -358,7 +360,12 @@ const JobWizardFunctionSelection = ({
 
   const setSelectedCard = index => {
     selectedCardRef.current = index
+    selectedTempState.current = activeTab
   }
+
+  useEffect(() => {
+    if (stepIsActive === true) setActiveTab(selectedTempState.current)
+  }, [stepIsActive, setActiveTab, selectedTempState])
 
   const setDivClass = useCallback(() => {
     const parentElement = containerRef.current.parentNode
@@ -367,7 +374,12 @@ const JobWizardFunctionSelection = ({
 
   const scrollToViewCallback = useCallback(() => {
     setDivClass()
-    scrollToSelectedElements(containerRef, `[data-card-index="${selectedCardRef.current}"]`)
+    scrollToSelectedElements(
+      containerRef,
+      `[data-card-index="${selectedCardRef.current}"]`,
+      null,
+      500
+    )
   }, [containerRef, selectedCardRef, setDivClass])
 
   useEffect(() => {
@@ -512,6 +524,7 @@ const JobWizardFunctionSelection = ({
 }
 
 JobWizardFunctionSelection.propTypes = {
+  stepIsActive: PropTypes.bool,
   activeTab: PropTypes.string.isRequired,
   defaultData: PropTypes.shape({}).isRequired,
   filteredFunctions: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
