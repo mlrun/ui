@@ -84,8 +84,8 @@ const FilterMenuModal = ({
     if (
       !event.target.closest('.filters-button') &&
       !event.target.closest('.filters-wizard') &&
-      !event.target.parentNode.previousElementSibling?.classList?.contains('filters-wizard') &&
-      !event.target.parentNode.nextElementSibling?.classList?.contains('filters-wizard')
+      !event.target.parentNode?.previousElementSibling?.classList?.contains('filters-wizard') &&
+      !event.target.parentNode?.nextElementSibling?.classList?.contains('filters-wizard')
     ) {
       setFiltersWizardIsShown(false)
     }

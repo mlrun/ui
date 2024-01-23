@@ -42,13 +42,12 @@ import {
 } from '../../elements/MembersPopUp/membersReducer'
 import projectsIguazioApi from '../../api/projects-iguazio-api'
 import { PROJECTS_SETTINGS_MEMBERS_TAB, PROJECTS_SETTINGS_SECRETS_TAB } from '../../constants'
-import { isProjectValid } from '../../utils/handleRedirect'
 import { setNotification } from '../../reducers/notificationReducer'
 import { showErrorNotification } from '../../utils/notifications.util'
 
 import './projectSettings.scss'
 
-const ProjectSettings = ({ frontendSpec, projectStore }) => {
+const ProjectSettings = ({ frontendSpec }) => {
   const [projectMembersIsShown, setProjectMembersIsShown] = useState(false)
   const [projectOwnerIsShown, setProjectOwnerIsShown] = useState(false)
   const [membersState, membersDispatch] = useReducer(membersReducer, initialMembersState)
@@ -187,7 +186,7 @@ const ProjectSettings = ({ frontendSpec, projectStore }) => {
   const changeOwnerCallback = () => {
     const prevOwner = membersState.projectInfo.owner.id
 
-    fetchProjectIdAndOwner().then(() => {
+    return fetchProjectIdAndOwner().then(() => {
       if (!membersState.members.some(member => member.id === prevOwner)) {
         navigate('/projects/')
       }
@@ -210,10 +209,6 @@ const ProjectSettings = ({ frontendSpec, projectStore }) => {
       resetProjectData()
     }
   }, [fetchProjectUsersData, resetProjectData])
-
-  useEffect(() => {
-    isProjectValid(navigate, projectStore.projectsNames.data, params.projectName)
-  }, [navigate, params.projectName, projectStore.projectsNames.data])
 
   useEffect(() => {
     if (!validTabs.includes(params.pageTab)) {
@@ -258,8 +253,7 @@ const ProjectSettings = ({ frontendSpec, projectStore }) => {
 }
 
 export default connect(
-  ({ appStore, projectStore }) => ({
-    projectStore,
+  ({ appStore }) => ({
     frontendSpec: appStore.frontendSpec
   }),
   null

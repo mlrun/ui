@@ -19,7 +19,6 @@ such restriction.
 */
 import React from 'react'
 import PropTypes from 'prop-types'
-import cronstrue from 'cronstrue'
 
 import FeatureSetsPanelSection from '../FeatureSetsPanelSection/FeatureSetsPanelSection'
 import FilterParameters from './FilterParameters'
@@ -79,7 +78,7 @@ const FeatureSetsPanelDataSourceView = ({
               className="schedule-tumbler"
               label={
                 <>
-                  {data.schedule ? cronstrue.toString(data.schedule) : 'Schedule'}
+                  {data.schedule ? 'View schedule' : 'Set schedule'}
                   <Pencil className="schedule-tumbler__icon" />
                 </>
               }
@@ -88,6 +87,7 @@ const FeatureSetsPanelDataSourceView = ({
             />
             {showSchedule && (
               <ScheduleFeatureSet
+                defaultCron={data.schedule}
                 setNewFeatureSetSchedule={cron => {
                   setNewFeatureSetSchedule(cron)
                   setData(state => ({ ...state, schedule: cron }))

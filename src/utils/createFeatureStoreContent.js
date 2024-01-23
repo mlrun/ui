@@ -211,7 +211,7 @@ export const createFeaturesRowData = (feature, isTablePanelOpen, showExpandButto
         headerId: 'labels',
         headerLabel: 'Labels',
         value: parseKeyValues(feature.labels),
-        className: 'table-cell-4',
+        className: 'table-cell-3',
         type: 'labels',
         hidden: isTablePanelOpen
       },

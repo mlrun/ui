@@ -190,6 +190,26 @@ const trainModelLabelsTable = {
   }
 }
 
+const newProjectLabelsTable = {
+  root:
+    '.create-project-dialog .form-row:nth-of-type(4) .chips',
+  header: {},
+  body: {
+    root: '.chips-wrapper',
+    add_row_btn: '.button-add',
+    row: {
+      root: '.chip-block',
+      fields: {
+        key_input: 'input.input-label-key',
+        value_input: 'input.input-label-value',
+        key_verify: '.edit-chip-container input.input-label-key',
+        value_verify: '.edit-chip-container input.input-label-value',
+        remove_btn: '.edit-chip__icon-close'
+      }
+    }
+  }
+}
+
 const dataInputsHeaders = {
   root: '.wizard-form__content [data-testid="dataInputs.dataInputsTable"]',  
   header: {},
@@ -328,7 +348,14 @@ const commonDescription = By.css('.pop-up-dialog .confirm-dialog__message')
 
 const commonCrossCancelButton = By.css('.pop-up-dialog .pop-up-dialog__btn_close svg')
 const commonNameInput = generateInputGroup(
-  '.form .form-row:nth-of-type(2) .form-field__wrapper-normal',
+  '.form [data-testid="metadata.key-form-field-input"] .form-field__wrapper-normal',
+  true,
+  '.form-field__warning',
+  '.form-field__warning'
+)
+
+const commonTagInput = generateInputGroup(
+  '.form [data-testid="metadata.tag-form-field-input"] .form-field__wrapper-normal',
   true,
   true,
   '.form-field__warning'
@@ -347,6 +374,7 @@ const commonPopupTitle = By.css('.modal__header-title')
 const commonCloseButton = By.css('.modal__header-button button')
 const commonFormCancelButton = By.css('.modal__footer-actions .btn-tertiary')
 const commonFormConfirmButton = By.css('.modal__footer-actions .btn-secondary')
+const commonRegisterErrorMessage = By.css('[data-testid="error-message"] .error__message')
 const commonFormText = By.css('.form-text span')
 const commonFormSubtext = By.css('.form-text div p')
 
@@ -372,19 +400,31 @@ module.exports = {
     Title: commonTitle,
     Name_Input: inputGroup(
       generateInputGroup(
-        '.pop-up-dialog .input-wrapper:nth-of-type(1)',
+        '.pop-up-dialog [data-testid="name-form-field-input"]',
         true,
         '.input__warning svg',
         true
       )
     ),
-    Description_Input: inputGroup(
-      generateInputGroup('.pop-up-dialog .input-wrapper:nth-of-type(2)', true, false, true)
+    Description_Input: textAreaGroup(
+      generateTextAreaGroup('.pop-up-dialog .form-row:nth-of-type(3) .form-field-textarea')
     ),
     Cross_Cancel_Button: commonCrossCancelButton,
     Cancel_Button: commonCancelButton,
     Create_Button: By.css('.pop-up-dialog .btn-secondary'),
-    Error_Message: By.css('.pop-up-dialog .error__message')
+    Error_Message: By.css('.pop-up-dialog .error__message'),
+    New_Project_Labels_Table: commonTable(newProjectLabelsTable),
+    Add_Label_Button: By.css('.create-project-dialog .form-row:nth-of-type(4) .chips .chips-wrapper button'),
+    Close_Label_Button: By.css('.create-project-dialog .form-row:nth-of-type(4) .chips .chips-wrapper .edit-chip__icon-close'),
+    Run_Details_Labels_Key: inputGroup(
+      generateInputGroup(
+        '.create-project-dialog .form-row:nth-of-type(4) .chips .chips-wrapper',
+        false,
+        true,
+        '.pop-up-dialog'
+      )
+    ),
+    Run_Details_Labels_Value: By.css ('.create-project-dialog .form-row:nth-of-type(4) .chips-wrapper [id="labels[0].value"]')
   },
   commonPopup: {
     Title: commonTitle,
@@ -512,6 +552,7 @@ module.exports = {
     Form_Subtext: commonFormSubtext,
     Cross_Cancel_Button: commonCloseButton,
     Name_Input: inputGroup(commonNameInput),
+    Tag_Input: inputGroup(commonTagInput),
     Target_Path: {
       Path_Scheme_Combobox: comboBox(
         '.form .form-row:nth-of-type(4) .form-field__wrapper',
@@ -520,7 +561,8 @@ module.exports = {
     },
     Description_Input: textAreaGroup(commonDescriptionTextArea),
     Cancel_Button: commonFormCancelButton,
-    Register_Button: commonFormConfirmButton
+    Register_Button: commonFormConfirmButton,
+    Register_Error_Message: commonRegisterErrorMessage
   },
   createMLFunctionPopup: {
     Cross_Cancel_Button: commonCrossCancelButton,
@@ -554,6 +596,8 @@ module.exports = {
     Cross_Cancel_Button: commonCloseButton,
     New_File_Info: By.css('.form-text'),
     New_File_Name_Input: inputGroup(commonNameInput),
+    Tag_Input: inputGroup(commonTagInput),
+    Register_Error_Message: commonRegisterErrorMessage,
     Target_Path: {
       Path_Scheme_Combobox: comboBox(
         '.form .form-row:nth-of-type(4) .form-field__wrapper',

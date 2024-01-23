@@ -357,7 +357,7 @@ function getFunctionItem(req, res) {
   res.send(hubItem)
 }
 
-function getFunctionObject (req, res){
+function getFunctionObject (req, res) {
   const urlParams = req.query.url
   const urlArray = urlParams.split('/')
   const funcYAMLPath = `./tests/mockServer/data/mlrun/functions/${urlArray[6]}/${urlArray[6]}.yaml`
@@ -440,7 +440,7 @@ function deleteRun(req, res) {
   const collectedRun = runs.runs
     .find (run => run.metadata.project === req.params.project && run.metadata.uid === req.params.uid)
   
-  if (collectedRun){
+  if (collectedRun) {
     remove(
       runs.runs,
       run => run.metadata.project === req.params.project && run.metadata.uid === req.params.uid
@@ -675,7 +675,7 @@ function getArtifacts(req, res) {
   if (req.query['tag']) {
     switch (req.query['tag']) {
       case '*':
-        collectedArtifacts = collectedArtifacts.filter(artifact => artifact.metadata?.tag || artifact.tag)
+        collectedArtifacts = collectedArtifacts.filter(artifact => artifact.metadata?.tree || artifact.tree)
         break
       default:
         collectedArtifacts = collectedArtifacts.filter(
@@ -832,7 +832,7 @@ function getFuncs(req, res) {
       }
     })
   } 
-  else if (req.query['hash_key']){
+  else if (req.query['hash_key']) {
     collectedFuncs = funcs.funcs
     .filter(func => func.metadata.hash === req.query.hash_key)
   }
@@ -1161,25 +1161,26 @@ function postSubmitJob(req, res) {
   res.send(respTemplate)
 }
 
-function putTags(req, res){
+function putTags(req, res) {
   const tagName = req.params.tag
   const projectName = req.params.project
 
-  const artifactForUpdate = artifacts.artifacts
-    .filter(artifact => ((artifact.metadata?.project === req.params.project || artifact.project === req.params.project) 
-        && (artifact.kind === req.body.identifiers[0].kind)
-        && (artifact.metadata?.uid === req.body.identifiers[0].uid || artifact.metadata?.tree === req.body.identifiers[0].uid || artifact.tree === req.body.identifiers[0].uid) 
-        && (artifact.spec?.db_key === req.body.identifiers[0].key || artifact.db_key === req.body.identifiers[0].key)
-      )
-    )
-  
-  if (artifactForUpdate) {
-    if (artifactForUpdate.metadata?.tag || artifactForUpdate.metadata?.tag === ''){
-      artifactForUpdate.metadata.tag = req.params.tag
-    }
-    else if (artifactForUpdate.tag || artifactForUpdate.tag === ''){
-      artifactForUpdate.tag = req.params.tag
-    }
+  const collectedArtifacts = artifacts.artifacts
+    .filter(artifact => { 
+      const artifactMetaData = artifact.metadata ?? artifact
+      const artifactSpecData = artifact.spec ?? artifact
+      
+      return artifactMetaData?.project === req.params.project 
+        && artifact.kind === req.body.identifiers[0].kind
+        && (artifactMetaData?.uid === req.body.identifiers[0].uid || artifactMetaData?.tree === req.body.identifiers[0].uid) 
+        && artifactSpecData?.db_key === req.body.identifiers[0].key
+    }  
+  )
+
+  if (collectedArtifacts?.length > 0) {
+    let editedTag = cloneDeep(collectedArtifacts[0])
+    editedTag.metadata ? editedTag.metadata.tag = tagName : editedTag.tag = tagName
+    artifacts.artifacts.push(editedTag)
   }
 
   res.send({
@@ -1188,22 +1189,24 @@ function putTags(req, res){
   })
 }
 
-function deleteTags(req, res){
-  const collectedArtifact = artifacts.artifacts
-    .find(artifact => (((artifact.metadata?.project === req.params.project) 
-    || artifact.project === req.params.project) 
-    && artifact.kind === req.body.identifiers[0].kind
-    && ((artifact.metadata?.tree === req.body.identifiers[0].uid) 
-    || artifact.tree === req.body.identifiers[0].uid) 
-    && ((artifact.spec?.db_key === req.body.identifiers[0].key) 
-    || artifact.db_key === req.body.identifiers[0].key)))
-  if (collectedArtifact) {
-    if (collectedArtifact.metadata?.tag === req.params.tag){
-      collectedArtifact.metadata.tag = ''
+function deleteTags(req, res) {
+  const collectedArtifacts = artifacts.artifacts
+    .filter(artifact => {
+      const artifactMetaData = artifact.metadata ?? artifact
+      const artifactSpecData = artifact.spec ?? artifact
+
+      return artifactMetaData?.project === req.params.project 
+        && artifact.kind === req.body.identifiers[0].kind
+        && (artifactMetaData?.uid === req.body.identifiers[0].uid || artifactMetaData?.tree === req.body.identifiers[0].uid) 
+        && artifactSpecData?.db_key === req.body.identifiers[0].key
     }
-    else if (collectedArtifact.tag === req.params.tag){
-      collectedArtifact.tag = ''
-    }
+  )
+  
+  if (collectedArtifacts?.length > 1) {
+    const artifactByTag = collectedArtifacts.find(artifact => (artifact.metadata?.tag === req.params.tag || artifact.tag === req.params.tag))
+    remove(artifacts.artifacts, artifactByTag)
+  } else if (collectedArtifacts?.length === 1) {
+    collectedArtifacts[0].metadata ? delete collectedArtifacts[0].metadata.tag : delete collectedArtifacts[0].tag
   }
 
   res.send()
@@ -1245,7 +1248,7 @@ function postArtifact(req, res) {
     artifactTemplate.model_file = req.body.spec.model_file
   }
 
-  if (artifactTag === 'latest'){
+  if (artifactTag === 'latest') {
     artifactTemplate.metadata['tag'] = artifactTag
     artifacts.artifacts.push(artifactTemplate)
   }
@@ -1268,12 +1271,17 @@ function postArtifact(req, res) {
   res.send()
 }
 
-function deleteArtifact(req, res){
+function deleteArtifact(req, res) {
   const collectedArtifacts = artifacts.artifacts
-    .filter (artifact => (artifact.metadata?.project === req.params.project || artifact.project === req.params.project) 
-    && (artifact.metadata?.tree === req.query.tree || artifact.tree === req.query.tree)
-    && (artifact.metadata?.key === req.params.uid || artifact.key === req.params.uid))
-  if (collectedArtifacts?.length > 0){
+    .filter (artifact => {
+      const artifactMetaData = artifact.metadata ?? artifact
+
+      return artifactMetaData?.project === req.params.project 
+        && artifactMetaData?.tree === req.query.tree
+        && artifactMetaData?.key === req.params.uid
+    }
+  )
+  if (collectedArtifacts?.length > 0) {
     collectedArtifacts.forEach(collectedArtifact => remove(artifacts.artifacts, collectedArtifact))    
   }
 
