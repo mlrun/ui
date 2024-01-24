@@ -61,13 +61,13 @@ import { parseJob } from '../../../utils/parseJob'
 import { setFilters } from '../../../reducers/filtersReducer'
 import { setNotification } from '../../../reducers/notificationReducer'
 import { showErrorNotification } from '../../../utils/notifications.util'
+import { datePickerOptions, PAST_24_HOUR_DATE_OPTION } from '../../../utils/datePicker.util'
 import { useMode } from '../../../hooks/mode.hook'
 import { usePods } from '../../../hooks/usePods.hook'
 import { useSortTable } from '../../../hooks/useSortTable.hook'
 import { useYaml } from '../../../hooks/yaml.hook'
 
 import './MonitorWorkflows.scss'
-import { datePickerOptions, PAST_24_HOUR_DATE_OPTION } from '../../../utils/datePicker.util'
 
 const MonitorWorkflows = ({
   abortJob,
