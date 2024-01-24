@@ -47,6 +47,7 @@ import { getFeatureVectorIdentifier } from '../../../utils/getUniqueIdentifier'
 import { getFilterTagOptions, setFilters } from '../../../reducers/filtersReducer'
 import { isDetailsTabExists } from '../../../utils/isDetailsTabExists'
 import { parseFeatureTemplate } from '../../../utils/parseFeatureTemplate'
+import { parseChipsData } from '../../../utils/convertChipsData'
 import { parseFeatureVectors } from '../../../utils/parseFeatureVectors'
 import { setFeaturesPanelData } from '../../../reducers/tableReducer'
 import { setNotification } from '../../../reducers/notificationReducer'
@@ -88,13 +89,16 @@ const FeatureVectors = ({
 
   const pageData = useMemo(() => generatePageData(selectedFeatureVector), [selectedFeatureVector])
 
-  const detailsFormInitialValues = useMemo(() => {
-    return {
+  const detailsFormInitialValues = useMemo(
+    () => ({
       features: (selectedFeatureVector.specFeatures ?? []).map(featureData => {
         return { ...parseFeatureTemplate(featureData) }
-      })
-    }
-  }, [selectedFeatureVector.specFeatures])
+      }),
+      description: selectedFeatureVector.description,
+      labels: parseChipsData(selectedFeatureVector.labels)
+    }),
+    [selectedFeatureVector.description, selectedFeatureVector.labels, selectedFeatureVector.specFeatures]
+  )
 
   const fetchData = useCallback(
     filters => {
