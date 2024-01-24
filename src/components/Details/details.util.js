@@ -326,10 +326,27 @@ export const generateFeatureSetsOverviewContent = selectedItem => ({
 
 export const generateFeatureVectorsOverviewContent = selectedItem => ({
   description: {
-    value: selectedItem.description ?? ''
+    value: selectedItem.description ?? '',
+    editModeEnabled: true,
+    editModeType: 'textarea',
+    fieldData: {
+      name: 'description'
+    },
+    handleDiscardChanges: (formState, detailsStore) => {
+      formState.form.change(
+        'description',
+        detailsStore.changes.data.description?.currentFieldValue ??
+          formState.initialValues.description
+      )
+    }
   },
   labels: {
-    value: isEmpty(selectedItem.labels) ? [] : selectedItem.labels
+    value: isEmpty(selectedItem.labels) ? [] : selectedItem.labels,
+    editModeEnabled: true,
+    editModeType: 'chips',
+    fieldData: {
+      name: 'labels'
+    }
   },
   tag: {
     value: selectedItem.tag
