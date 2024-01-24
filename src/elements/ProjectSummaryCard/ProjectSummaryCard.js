@@ -35,7 +35,7 @@ const ProjectSummaryCard = ({ counterValue, link, projectSummary, tip, title, to
         <div className="project-data-card__header">
           <div className="project-data-card__header-text data-ellipsis">
             {title}
-            {tip && <Tip className="checkbox__label-tip" text={tip} />}
+            {tip && <Tip className="project-data-card__header-tip" text={tip} />}
           </div>
           <div className="project-data-card__statistics">
             <div className="project-data-card__statistics-item">
