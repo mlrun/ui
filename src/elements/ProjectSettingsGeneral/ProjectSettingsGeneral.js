@@ -279,13 +279,20 @@ const ProjectSettingsGeneral = ({
   }
 
   useEffect(() => {
-    fetchProject(params.projectName)
+    fetchProject(params.projectName).catch(error => {
+      const customErrorMsg =
+        error.response?.status === FORBIDDEN_ERROR_STATUS_CODE
+          ? 'Permission denied'
+          : getErrorMsg(error, 'Failed to fetch project data')
+
+      showErrorNotification(dispatch, error, '', customErrorMsg)
+    })
 
     return () => {
       removeProjectData()
       setEditProjectData(initialEditProjectData)
     }
-  }, [removeProjectData, params.pageTab, params.projectName, fetchProject])
+  }, [removeProjectData, params.pageTab, params.projectName, fetchProject, dispatch])
 
   return (
     <ProjectSettingsGeneralView

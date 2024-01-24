@@ -17,7 +17,7 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 
@@ -84,6 +84,15 @@ const FeatureSetsPanelTitle = ({
       passthrough: isPassthroughChecked ? id : ''
     }))
   }
+
+  useEffect(() => {
+    if (featureStore.newFeatureSet.spec.passthrough !== Boolean(data.passthrough)) {
+      setData(state => ({
+        ...state,
+        passthrough: featureStore.newFeatureSet.spec.passthrough ? 'passthrough' : ''
+      }))
+    }
+  }, [data.passthrough, featureStore.newFeatureSet.spec.passthrough])
 
   return (
     <FeatureSetsPanelTitleView

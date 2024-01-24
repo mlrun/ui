@@ -25,7 +25,6 @@ import ContentMenu from '../../elements/ContentMenu/ContentMenu'
 import CreateProjectDialog from './CreateProjectDialog/CreateProjectDialog'
 import Loader from '../../common/Loader/Loader'
 import NoData from '../../common/NoData/NoData'
-import Notification from '../../common/Notification/Notification'
 import PageActionsMenu from '../../common/PageActionsMenu/PageActionsMenu'
 import ProjectCard from '../../elements/ProjectCard/ProjectCard'
 import Search from '../../common/Search/Search'
@@ -175,7 +174,6 @@ const ProjectsView = ({
       {convertedYaml.length > 0 && (
         <YamlModal convertedYaml={convertedYaml} toggleConvertToYaml={convertToYaml} />
       )}
-      <Notification />
     </div>
   )
 }

@@ -58,14 +58,14 @@ const Breadcrumbs = ({ onClick, projectStore, fetchProjectsNames }) => {
   }, [projectStore.projectsNames.data])
 
   const urlItems = useMemo(() => {
-    const pathItems = location.pathname.split('/').slice(1, 4)
-    const screen = projectScreens.find(screen => pathItems.find(pathItem => pathItem === screen.id))
+    const [projects, projectName, screenName] = location.pathname.split('/').slice(1, 4)
+    const screen = projectScreens.find(screen => screen.id === screenName)
     const tab = projectTabs.find(tab =>
-      location.pathname.split('/').find(pathItem => pathItem === tab.id)
+      location.pathname.split('/').slice(3).find(pathItem => pathItem === tab.id)
     )
 
     return {
-      pathItems: pathItems.map(pathItem => (pathItem === screen?.id ? screen.label : pathItem)),
+      pathItems: [projects, projectName, screen?.label || screenName],
       screen,
       tab
     }

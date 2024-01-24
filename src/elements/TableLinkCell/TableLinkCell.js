@@ -85,7 +85,7 @@ const TableLinkCell = ({
                 </Tooltip>
               )}
             </div>
-            {data.showTag && data.value !== item.tag && (
+            {data.showTag && (
               <Tooltip className="item-tag" template={<TextTooltipTemplate text={item.tag} />}>
                 <span className="link-subtext">{item.tag}</span>
               </Tooltip>

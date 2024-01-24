@@ -261,9 +261,9 @@ module.exports = {
   Register_Artifact: {
     Type_Options: ['General', 'Chart', 'Plot', 'Table'],
     Form_Text:
-      /This dialog enable users to register an artifact( as a dataset)? in Iguazio database\. Once (a artifact|the dataset) is registered it can be consumed by jobs and workflows\./,
+      'Register an artifact in MLRun so it can be used, for example, by functions, jobs, and pipelines.',
     Form_Subtext:
-      'All you need to do is enter the name of the artifact and the URL (e.g. s3://my-bucket/path).',
+      'Assign it a unique combination of name and tag, and specify its path (for example, s3://mybucket/path).',
     Combobox_Options: [
       'V3IO',
       'S3',
@@ -272,14 +272,15 @@ module.exports = {
       'Azure storage',
       'Google storage',
       'Databricks filesystem'
-    ]  
+    ],
+    Register_Error_Message: /That combination of (artifact|dataset) name and (artifact|dataset) tag is already in use\. Assign a unique combination of (artifact|dataset) name and (artifact|dataset) tag\./  
   },
   Register_Dataset: {
     Type_Options: ['General', 'Chart', 'Plot', 'Table'],
     Form_Text:
-      /This dialog enable users to register an artifact( as a dataset)? in Iguazio database\. Once (a artifact|the dataset) is registered it can be consumed by jobs and workflows\./,
+      'Register a dataset as an artifact in MLRun so it can be used, for example, by functions, jobs, and pipelines.',
     Form_Subtext:
-      'All you need to do is enter the name of the dataset and the URL (e.g. s3://my-bucket/path).',
+      'Assign it a unique combination of name and tag, and specify its path (for example, s3://mybucket/path).',
     Combobox_Options: [
       'V3IO',
       'S3',
@@ -304,7 +305,7 @@ module.exports = {
       'This field is required',
     Artifact_Name_Hint:
       'Valid characters: a–z, A–Z, 0–9, –, _, .\nMust begin and end with: a–z, A–Z, 0–9\nLength – max: 253\n' +
-      'This field is required\nArtifact name must be unique',
+      'This field is required',
     Project_Name_Hint:
       'Valid characters: a–z, 0–9, –\nMust begin with: a–z\nMust end with: a–z, 0–9\nLength – max: 63\n' +
       'This field is required',
@@ -313,7 +314,9 @@ module.exports = {
       'This field is required',
     Labels_Warning_Key: 'Valid characters: a–z, A–Z, 0–9, –, _, .\nMust begin and end with: a–z, A–Z, 0–9\nLength – max: 75\n' +
     'Key must be unique',
-    Labels_Warning_Value: 'Valid characters: a–z, A–Z, 0–9, –, _, .\nMust begin and end with: a–z, A–Z, 0–9\nLength – max: 75',
+    Projects_Labels_Warning_Key: 'Valid characters: a–z, A–Z, 0–9, –, _, .\nMust begin and end with: a–z, A–Z, 0–9\nLength – max: 56\n' +
+    'Key must be unique',
+    Labels_Warning_Value: 'Valid characters: a–z, A–Z, 0–9, –, _, .\nMust begin and end with: a–z, A–Z, 0–9\nLength – max: 56',
     Feature_Set_Name_Hint:
       'Valid characters: a–z, A–Z, 0–9, –, _, .\nMust begin and end with: a–z, A–Z, 0–9\nLength – max: 56\n' +
       'This field is required',
@@ -505,9 +508,10 @@ module.exports = {
     Schedule_Hours_Variants: ['1', '2', '3', '4', '6', '12']
   },
   No_Data_Message: {
-    Common_Message: 'There is no Features data to show for "Tag: latest, Name: ccccc"',
-    Common_Message_Feature: 'There is no Features data to show for "Tag: latest"',
-    Common_Message_Feature_Vector: 'There is no Feature-Vectors data to show for "Tag: latest"',
+    Common_Message: 'There is no Features data to show for "Version Tag: latest, Name: ccccc"',
+    Common_Message_Feature: 'There is no Features data to show for "Version Tag: latest"',
+    Common_Message_Feature_Vector_Tab: 'There is no Features data to show for "Tag: latest"',
+    Common_Message_Feature_Vector: 'There is no Feature-Vectors data to show for "Version Tag: latest"',
     Common_Message_Feature_Sets: 'There is no Feature-Sets data to show for "Version Tag: latest"',
     No_Data: 'No data to show',
     No_Features_Yet: 'No features yet. Go to "Feature Sets" tab to create your first Feature Set.',

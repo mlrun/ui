@@ -115,28 +115,27 @@ const ProjectMonitor = ({
     }
   }, [isDemoMode, navigate, params, openRegisterArtifactModal, openRegisterModelModal])
 
-  const fetchProjectData = useCallback(() => {
-    fetchProject(params.projectName).catch(error => {
+  const fetchProjectDataAndSummary = useCallback(() => {
+    Promise.all([fetchProject(params.projectName), fetchProjectSummary(params.projectName)]).catch(error => {
       handleFetchProjectError(error, navigate, setConfirmData)
     })
-  }, [fetchProject, navigate, params.projectName])
+  }, [fetchProject, fetchProjectSummary, navigate, params.projectName])
+
+
 
   const resetProjectData = useCallback(() => {
     removeProjectData()
   }, [removeProjectData])
 
   useEffect(() => {
-    fetchProjectData()
-    fetchProjectSummary(params.projectName)
+    fetchProjectDataAndSummary()
 
     return () => {
       resetProjectData()
       removeProjectSummary()
     }
   }, [
-    fetchProjectSummary,
-    fetchProjectData,
-    params.projectName,
+    fetchProjectDataAndSummary,
     removeProjectSummary,
     resetProjectData
   ])
@@ -260,8 +259,7 @@ const ProjectMonitor = ({
   const handleRefresh = () => {
     removeProjectData()
     removeProjectSummary()
-    fetchProjectData()
-    fetchProjectSummary(params.projectName)
+    fetchProjectDataAndSummary()
 
     if (nuclioStreamsAreEnabled && !isNuclioModeDisabled) {
       fetchNuclioV3ioStreams(params.projectName)

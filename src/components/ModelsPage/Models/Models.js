@@ -77,6 +77,7 @@ const Models = ({ fetchModelFeatureVector }) => {
   const [selectedRowData, setSelectedRowData] = useState({})
   const [metricsCounter, setMetricsCounter] = useState(0)
   const [dataIsLoaded, setDataIsLoaded] = useState(false)
+  const [tableHeaders, setTableHeaders] = useState([])
   const [urlTagOption] = useGetTagOptions(null, filters, null, MODELS_FILTERS)
   const artifactsStore = useSelector(store => store.artifactsStore)
   const detailsStore = useSelector(store => store.detailsStore)
@@ -92,7 +93,7 @@ const Models = ({ fetchModelFeatureVector }) => {
   const frontendSpec = useSelector(store => store.appStore.frontendSpec)
 
   const modelsFilters = useMemo(
-    () => filtersStore[FILTER_MENU_MODAL][MODELS_FILTERS].values,
+    () => ({ name: filtersStore.name, ...filtersStore[FILTER_MENU_MODAL][MODELS_FILTERS].values }),
     [filtersStore]
   )
   const { isDemoMode } = useMode()
@@ -147,6 +148,8 @@ const Models = ({ fetchModelFeatureVector }) => {
       setSelectedRowData({})
       setModels([])
       setAllModels([])
+      setTableHeaders([])
+      setDataIsLoaded(false)
 
       return fetchData(filters)
     },
@@ -157,7 +160,7 @@ const Models = ({ fetchModelFeatureVector }) => {
     artifact => {
       openPopUp(AddArtifactTagPopUp, {
         artifact,
-        onAddTag: handleRefresh,
+        onAddTag: () => handleRefresh(modelsFilters),
         getArtifact: () =>
           fetchModel({
             project: params.projectName,
@@ -168,7 +171,7 @@ const Models = ({ fetchModelFeatureVector }) => {
         projectName: params.projectName
       })
     },
-    [handleRefresh, params.projectName]
+    [handleRefresh, params.projectName, modelsFilters]
   )
 
   const actionsMenu = useMemo(
@@ -261,8 +264,6 @@ const Models = ({ fetchModelFeatureVector }) => {
         )
   }, [filtersStore.groupBy, frontendSpec, latestItems, metricsCounter, models, params.projectName])
 
-  const tableHeaders = useMemo(() => tableContent[0]?.content ?? [], [tableContent])
-
   const { sortTable, selectedColumnName, getSortingIcon, sortedTableContent, sortedTableHeaders } =
     useSortTable({
       headers: tableHeaders,
@@ -320,9 +321,11 @@ const Models = ({ fetchModelFeatureVector }) => {
       setAllModels([])
       dispatch(removeModels())
       setSelectedModel({})
+      setTableHeaders([])
+      setDataIsLoaded(false)
       abortControllerRef.current.abort(REQUEST_CANCELED)
     }
-  }, [dispatch, setModels, setAllModels])
+  }, [dispatch, params.projectName, setModels, setAllModels])
 
   useEffect(() => {
     dispatch(setFilters({ groupBy: GROUP_BY_NONE }))
@@ -369,23 +372,44 @@ const Models = ({ fetchModelFeatureVector }) => {
   ])
 
   useEffect(() => {
-    if (models.length > 0 && !dataIsLoaded) {
-      let maxMetricsCount = 0
+    if (tableContent?.[0]?.content?.length > 0 && tableHeaders.length === 0) {
+      setTableHeaders(tableContent?.[0]?.content)
+    }
+  }, [tableContent, tableHeaders.length])
 
-      models.forEach(model => {
-        if (model.metrics && Object.keys(model.metrics).length > maxMetricsCount) {
-          maxMetricsCount = Object.keys(model.metrics).length
+  useEffect(() => {
+    if (models.length > 0 && tableHeaders.length > 0 && !dataIsLoaded) {
+      const newTableHeaders = []
+      const maxMetricsModel = models.reduce((modelWithMaxMetrics, model) => {
+        if (
+          model.metrics &&
+          Object.keys(model.metrics).length > Object.keys(modelWithMaxMetrics.metrics || {}).length
+        ) {
+          return model
         }
+
+        return modelWithMaxMetrics
+      }, {})
+      Object.keys(maxMetricsModel.metrics ?? {}).forEach(metricKey => {
+        newTableHeaders.push({
+          headerId: metricKey,
+          headerLabel: metricKey,
+          className: 'table-cell-1'
+        })
       })
 
-      setMetricsCounter(maxMetricsCount)
+      setMetricsCounter(Object.keys(maxMetricsModel.metrics ?? {}).length)
+      setTableHeaders(state => [...state, ...newTableHeaders])
       setDataIsLoaded(true)
     }
-  }, [dataIsLoaded, models])
+  }, [dataIsLoaded, models, tableHeaders])
 
   const handleRegisterModel = useCallback(() => {
-    openPopUp(RegisterModelModal, { params, refresh: handleRefresh })
-  }, [handleRefresh, params])
+    openPopUp(RegisterModelModal, {
+      params,
+      refresh: () => handleRefresh(modelsFilters)
+    })
+  }, [handleRefresh, params, modelsFilters])
 
   const handleTrainModel = () => {
     openPopUp(JobWizard, {
