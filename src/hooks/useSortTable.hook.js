@@ -43,7 +43,7 @@ export const useSortTable = ({ headers, content, sortConfig = {} }) => {
   }, [sortConfig, config])
 
   const isDateValid = dateString => {
-    if (Date.parse(dateString)) {
+    if (typeof dateString === 'string' && Date.parse(dateString)) {
       return !(dateString.match(/-/g) && !dateString.split('-').every(char => isNumber(char)))
     }
 
