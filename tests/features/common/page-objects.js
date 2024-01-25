@@ -73,6 +73,7 @@ module.exports = {
   Model_Endpoints: models['modelEndpoints'],
   Models: models['modelsTab'],
   Models_Info_Pane: infoPane['modelsInfoPane'],
+  Modal_Wizard_Form: interactivePopup['modalWizardForm'],
   New_Feature_Set: sidePanel['newFeatureSet'],
   New_Function: sidePanel['newFunction'],
   New_JobTemplate_Edit: sidePanel['newJobTemplateEdit'],

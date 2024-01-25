@@ -273,8 +273,6 @@ Feature: Files Page
 
   @MLA
   @passive
-  @FAILED_TODO
-  #TODO: tag edit implementation on mock
   Scenario: MLA013 - Check Details panel still active on page refresh
     * set tear-down property "project" created with "automation-test" value
     * set tear-down property "file" created in "automation-test" project with "test-file" value
@@ -508,17 +506,11 @@ Feature: Files Page
     Then verify "Cross_Cancel_Button" element visibility on "View_YAML" wizard
     Then verify "YAML_Modal_Container" element visibility on "View_YAML" wizard
 
-  @MLA
-  @FAILED_TODO
-  #TODO: redirection from "projects/INVALID/files" to "projects" - wrong redirect 
+  @MLA 
   Scenario: MLA020 - Check broken link redirection
-    * set tear-down property "project" created with "automation-test-011" value
-    * set tear-down property "file" created in "automation-test-011" project with "test_ds" value
-    * create "automation-test-011" MLRun Project with code 201
-    * create "test_file" File with "latest" tag in "automation-test-011" project with code 200
     Given open url
     And wait load page
-    And click on row root with value "automation-test-011" in "name" column in "Projects_Table" table on "Projects" wizard
+    And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
     And wait load page
     And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
     Then click on "Project_Monitoring_Button" element on "commonPagesHeader" wizard
@@ -526,18 +518,19 @@ Feature: Files Page
     And select "tab" with "Artifacts" value in breadcrumbs menu
     And wait load page
     When click on cell with row index 1 in "name" column in "Files_Table" table on "Files" wizard
-    Then verify redirection from "projects/automation-test-011/files/INVALID/latest/0/overview" to "projects/automation-test-011/files"
+    Then verify redirection from "projects/default/files/INVALID/latest/0/overview" to "projects/default/files"
     When click on cell with row index 1 in "name" column in "Files_Table" table on "Files" wizard
     And wait load page
-    And wait load page
-    Then verify redirection from "projects/automation-test-011/files/test_file/latest/0/INVALID" to "projects/automation-test-011/files/test_file/latest/0/overview"
-    And wait load page
+    Then verify redirection from "projects/default/files/training_iteration_results/latest/0/INVALID" to "projects/default/files/training_iteration_results/latest/0/overview"
     And wait load page
     Then select "Preview" tab in "Info_Pane_Tab_Selector" on "Files_Info_Pane" wizard
     And wait load page
-    Then verify redirection from "projects/automation-test-011/files/test_file/latest/0/INVALID" to "projects/automation-test-011/files/test_file/latest/0/overview"
-    Then verify redirection from "projects/automation-test-011/files/test_file/latest/IVNALID/overview" to "projects/automation-test-011/files"
+    Then verify redirection from "projects/default/files/training_iteration_results/latest/0/INVALID" to "projects/default/files/training_iteration_results/latest/0/overview"
+    And wait load page
+    Then verify redirection from "projects/default/files/training_iteration_results/latest/IVNALID/overview" to "projects/default/files"
+    And wait load page
     Then verify redirection from "projects/INVALID/files" to "projects"
+    And wait load page
 
   @MLA
   Scenario: MLA021 - Check active/highlited items with details panel on Artifacts
