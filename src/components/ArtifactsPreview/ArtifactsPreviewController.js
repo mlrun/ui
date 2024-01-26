@@ -17,7 +17,7 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import React, { useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { useDispatch } from 'react-redux'
 import PropTypes from 'prop-types'
@@ -32,12 +32,34 @@ import { ReactComponent as Popout } from 'igz-controls/images/popout.svg'
 
 import './artifactsPreviewController.scss'
 
-const ArtifactsPreviewController = ({ artifactsIndexes, artifact, index, withoutPopout }) => {
+const ArtifactsPreviewController = ({
+  artifactsIds,
+  artifact,
+  externalPreviews,
+  id,
+  setExternalPreviews,
+  withoutPopout
+}) => {
   const [noData, setNoData] = useState(false)
-  const [preview, setPreview] = useState({})
+  const [localPreview, setLocalPreview] = useState({})
   const params = useParams()
 
   const dispatch = useDispatch()
+
+  const setPreview = useCallback(
+    state => {
+      if (setExternalPreviews) {
+        setExternalPreviews(state)
+      } else {
+        setLocalPreview(state)
+      }
+    },
+    [setLocalPreview, setExternalPreviews]
+  )
+
+  const preview = useMemo(() => {
+    return externalPreviews || localPreview
+  }, [localPreview, externalPreviews])
 
   useEffect(() => {
     return () => {
@@ -46,10 +68,10 @@ const ArtifactsPreviewController = ({ artifactsIndexes, artifact, index, without
   }, [])
 
   useEffect(() => {
-    if (artifactsIndexes.length > 0 && !preview[index] && artifactsIndexes.includes(index)) {
-      getArtifactPreview(params.projectName, artifact, noData, setNoData, setPreview, true, index)
+    if (artifactsIds.length > 0 && !preview[id] && artifactsIds.includes(id)) {
+      getArtifactPreview(params.projectName, artifact, noData, setNoData, setPreview, true, id)
     }
-  }, [artifactsIndexes, setPreview, artifact, noData, params.projectName, preview, index])
+  }, [artifactsIds, setPreview, artifact, noData, params.projectName, preview, id])
 
   const showPreview = () => {
     dispatch(
@@ -62,7 +84,7 @@ const ArtifactsPreviewController = ({ artifactsIndexes, artifact, index, without
 
   return (
     <>
-      {artifactsIndexes.includes(index) && (
+      {artifactsIds.includes(id) && (
         <div className="artifacts__preview">
           {!withoutPopout && (
             <Tooltip
@@ -72,7 +94,7 @@ const ArtifactsPreviewController = ({ artifactsIndexes, artifact, index, without
               <Popout onClick={showPreview} />
             </Tooltip>
           )}
-          <ArtifactsPreview noData={noData} preview={preview[index] || []} />
+          <ArtifactsPreview noData={noData} preview={preview[id] || []} />
         </div>
       )}
     </>
@@ -80,13 +102,17 @@ const ArtifactsPreviewController = ({ artifactsIndexes, artifact, index, without
 }
 
 ArtifactsPreviewController.defaultProps = {
+  externalPreviews: null,
+  setExternalPreviews: null,
   withoutPopout: false
 }
 
 ArtifactsPreviewController.propTypes = {
-  artifactsIndexes: PropTypes.array.isRequired,
+  artifactsIds: PropTypes.array.isRequired,
   artifact: PropTypes.shape({}).isRequired,
-  index: PropTypes.number.isRequired,
+  externalPreviews: PropTypes.object,
+  id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
+  setExternalPreviews: PropTypes.func,
   withoutPopout: PropTypes.bool
 }
 

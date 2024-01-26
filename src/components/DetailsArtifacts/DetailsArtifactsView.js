@@ -102,9 +102,9 @@ const DetailsArtifactsView = ({ artifactsIndexes, content, iteration, loading, s
               </div>
             </div>
             <ArtifactsPreviewController
-              artifactsIndexes={artifactsIndexes}
+              artifactsIds={artifactsIndexes}
               content={content}
-              index={index}
+              id={index}
             />
           </div>
         )

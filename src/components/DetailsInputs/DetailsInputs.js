@@ -31,7 +31,7 @@ import { Tooltip, TextTooltipTemplate } from 'igz-controls/components'
 
 import { MLRUN_STORAGE_INPUT_PATH_SCHEME, TAG_FILTER_LATEST } from '../../constants'
 import { fetchArtifacts } from '../../reducers/artifactsReducer'
-import { generateArtifactIndexes } from '../Details/details.util'
+import { generateArtifactIdentifires } from '../Details/details.util'
 import { generateArtifactLink, generateInputsTabContent } from './detailsInputs.util'
 
 import './detailsInputs.scss'
@@ -42,7 +42,7 @@ const DetailsInputs = ({ inputs }) => {
 
   const showArtifact = useCallback(
     index => {
-      generateArtifactIndexes(artifactsIndexes, index, setArtifactsIndexes)
+      generateArtifactIdentifires(artifactsIndexes, index, setArtifactsIndexes)
     },
     [artifactsIndexes, setArtifactsIndexes]
   )
@@ -158,9 +158,9 @@ const DetailsInputs = ({ inputs }) => {
                 ))}
               </div>
               <ArtifactsPreviewController
-                artifactsIndexes={artifactsIndexes}
+                artifactsIds={artifactsIndexes}
                 artifact={inputsContent[inputRowIndex]}
-                index={inputRowIndex}
+                id={inputRowIndex}
               />
             </div>
           ))}

@@ -25,7 +25,7 @@ import { TextTooltipTemplate, Tooltip } from 'igz-controls/components'
 import ArtifactsPreviewController from '../../components/ArtifactsPreview/ArtifactsPreviewController'
 
 import { generateExtraDataContent } from '../../utils/getArtifactPreview'
-import { generateArtifactIndexes } from '../../components/Details/details.util'
+import { generateArtifactIdentifires } from '../../components/Details/details.util'
 
 import './artifactsExtraData.scss'
 
@@ -34,7 +34,7 @@ const ArtifactsExtraData = ({ artifact }) => {
 
   const showArtifactPreview = useCallback(
     index => {
-      generateArtifactIndexes(artifactsIndexes, index, setArtifactsIndexes)
+      generateArtifactIdentifires(artifactsIndexes, index, setArtifactsIndexes)
     },
     [artifactsIndexes, setArtifactsIndexes]
   )
@@ -97,12 +97,12 @@ const ArtifactsExtraData = ({ artifact }) => {
                   ))}
                 </div>
                 <ArtifactsPreviewController
-                  artifactsIndexes={artifactsIndexes}
+                  artifactsIds={artifactsIndexes}
                   artifact={{
                     target_path: artifact.extra_data[extraDataRowIndex].path,
                     db_key: artifact.db_key
                   }}
-                  index={extraDataRowIndex}
+                  id={extraDataRowIndex}
                   withoutPopout
                 />
               </div>
