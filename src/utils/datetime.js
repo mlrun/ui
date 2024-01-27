@@ -29,6 +29,7 @@ export const formatDatetime = (datetime, invalidDateMessage) => {
   return typeof date !== 'object' || !(date instanceof Date) || isNaN(date)
     ? invalidDateMessage
     : new Intl.DateTimeFormat('en-US', {
+        year: 'numeric',
         month: 'short',
         day: 'numeric',
         hour: '2-digit',
