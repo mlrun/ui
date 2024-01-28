@@ -121,10 +121,10 @@ Feature: Datasets Page
     Then "Train_Button" element on "Datasets_Info_Pane" should contains "Train" value
     Then click on "Train_Button" element on "Datasets_Info_Pane" wizard
     And wait load page
-    Then verify "Title" element visibility on "Train_Model" wizard
-    Then "Title" element on "Train_Model" should contains "Train Model" value
-    Then verify "Cross_Cancel_Button" element visibility on "Train_Model" wizard
-    Then click on "Cross_Cancel_Button" element on "Train_Model" wizard
+    Then verify "Title" element visibility on "Modal_Wizard_Form" wizard
+    Then "Title" element on "Modal_Wizard_Form" should contains "Train Model" value
+    Then verify "Cross_Cancel_Button" element visibility on "Modal_Wizard_Form" wizard
+    Then click on "Cross_Cancel_Button" element on "Modal_Wizard_Form" wizard
     And hover "Overview_Hash_Header" component on "Datasets_Info_Pane" wizard
     Then verify "Overview_Hash_Header" on "Datasets_Info_Pane" wizard should display "Label_Hint"."Overview_Hash"
     Then verify "Overview_UID_Header" on "Datasets_Info_Pane" wizard should display "Label_Hint"."Overview_UID"
@@ -431,12 +431,8 @@ Feature: Datasets Page
     Then click on "Download_Pop_Up_Cross_Cancel_Button" element on "Downloads_Popup" wizard
     Then click on "Cross_Cancel_Button" element on "Artifact_Preview_Popup" wizard
   
-  @MLD
-  @FAILED_TODO
-  #TODO: Redirection - ML-4600, url without iter number, doesn't send in new artifacts structure 
+  @MLD 
   Scenario: MLD016 - Check broken link redirection
-    * set tear-down property "dataset" created in "default" project with "test_ds" value
-    * create "test_ds" Dataset with "latest" tag in "default" project with code 200
     Given open url
     And wait load page
     And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
@@ -446,16 +442,17 @@ Feature: Datasets Page
     And wait load page
     And select "tab" with "Datasets" value in breadcrumbs menu
     And wait load page
-    When click on cell with row index 2 in "name" column in "Datasets_Table" table on "Datasets" wizard
+    When click on cell with row index 1 in "name" column in "Datasets_Table" table on "Datasets" wizard
     And wait load page
-    And wait load page
-    And wait load page
-    Then verify redirection from "projects/default/datasets/test_ds/latest/0/INVALID" to "projects/default/datasets/test_ds/latest/0/overview"
+    Then verify redirection from "projects/default/datasets/auto-trainer-train_test_set/latest/0/INVALID" to "projects/default/datasets/auto-trainer-train_test_set/latest/0/overview"
     Then select "Preview" tab in "Info_Pane_Tab_Selector" on "Datasets_Info_Pane" wizard
     And wait load page
-    Then verify redirection from "projects/default/datasets/test_ds/latest/0/INVALID" to "projects/default/datasets/test_ds/latest/0/overview"
-    Then verify redirection from "projects/INVALID/datasets/test_ds/latest/0/overview" to "projects"
-    Then verify redirection from "projects/default/INVALID/test_ds/latest/0/overview" to "projects"
+    Then verify redirection from "projects/default/datasets/auto-trainer-train_test_set/latest/0/INVALID" to "projects/default/datasets/auto-trainer-train_test_set/latest/0/overview"
+    And wait load page
+    Then verify redirection from "projects/INVALID/datasets/auto-trainer-train_test_set/latest/0/overview" to "projects"
+    And wait load page
+    Then verify redirection from "projects/default/INVALID/auto-trainer-train_test_set/latest/0/overview" to "projects"
+    And wait load page
   
   @MLD
   Scenario: MLD017 - Check active/highlited items with details panel on Datasets
@@ -604,57 +601,57 @@ Feature: Datasets Page
     Then "Train_Button" element on "Datasets_Info_Pane" should contains "Train" value
     Then click on "Train_Button" element on "Datasets_Info_Pane" wizard
     And wait load page
-    Then verify "Title" element visibility on "Train_Model" wizard
-    Then "Title" element on "Train_Model" should contains "Train Model" value
-    Then verify "Cross_Cancel_Button" element visibility on "Train_Model" wizard
-    Then "Function_Title" element on "Train_Model" should contains "auto-trainer" value
+    Then verify "Title" element visibility on "Modal_Wizard_Form" wizard
+    Then "Title" element on "Modal_Wizard_Form" should contains "Train Model" value
+    Then verify "Cross_Cancel_Button" element visibility on "Modal_Wizard_Form" wizard
+    Then "Function_Title" element on "Modal_Wizard_Form" should contains "auto-trainer" value
     Then "Form_Header_Run_Details" element on "commonPagesHeader" should contains "Run Details" value
-    Then "Hyperparameter_Checkbox" element should be unchecked on "Train_Model" wizard
+    Then "Hyperparameter_Checkbox" element should be unchecked on "Modal_Wizard_Form" wizard
     Then verify "Step_1_Button" element on "commonPagesHeader" wizard is enabled
     Then "Step_1_Button_text" element on "commonPagesHeader" should contains "Run Details" value
     Then verify "Step_2_Button" element on "commonPagesHeader" wizard is enabled
     Then verify "Step_3_Button" element on "commonPagesHeader" wizard is enabled
     Then verify "Step_4_Button" element on "commonPagesHeader" wizard is enabled
     Then verify "Step_5_Button" element on "commonPagesHeader" wizard is enabled
-    Then verify "Next_Button" element on "Train_Model" wizard is enabled
-    Then "Next_Button" element on "Train_Model" should contains "Next" value
-    Then verify "Run_Training_Now_Button" element on "Train_Model" wizard is enabled
-    Then "Run_Training_Now_Button" element on "Train_Model" should contains "Run training now" value
-    Then verify "Schedule_Training_Job_Button" element on "Train_Model" wizard is enabled
-    Then "Schedule_Training_Job_Button" element on "Train_Model" should contains "Schedule training job" value
-    Then verify "Back_Button" element not exists on "Train_Model" wizard
-    And click on "Next_Button" element on "Train_Model" wizard
+    Then verify "Next_Button" element on "Modal_Wizard_Form" wizard is enabled
+    Then "Next_Button" element on "Modal_Wizard_Form" should contains "Next" value
+    Then verify "Run_Training_Now_Button" element on "Modal_Wizard_Form" wizard is enabled
+    Then "Run_Training_Now_Button" element on "Modal_Wizard_Form" should contains "Run training now" value
+    Then verify "Schedule_Training_Job_Button" element on "Modal_Wizard_Form" wizard is enabled
+    Then "Schedule_Training_Job_Button" element on "Modal_Wizard_Form" should contains "Schedule training job" value
+    Then verify "Back_Button" element not exists on "Modal_Wizard_Form" wizard
+    And click on "Next_Button" element on "Modal_Wizard_Form" wizard
     Then "Form_Header_Data_Inputs" element on "commonPagesHeader" should contains "Data Inputs" value
     Then verify "Step_1_Button" element on "commonPagesHeader" wizard is enabled
     Then verify "Step_2_Button" element on "commonPagesHeader" wizard is enabled
     Then "Step_2_Button_text" element on "commonPagesHeader" should contains "Data Inputs" value
-    Then verify "Back_Button" element on "Train_Model" wizard is enabled
-    Then "Back_Button" element on "Train_Model" should contains "Back" value
-    Then verify "Next_Button" element on "Train_Model" wizard is enabled
-    Then verify "Schedule_Training_Job_Button" element on "Train_Model" wizard is enabled
-    Then verify "Run_Training_Now_Button" element on "Train_Model" wizard is enabled
-    And click on "Next_Button" element on "Train_Model" wizard
+    Then verify "Back_Button" element on "Modal_Wizard_Form" wizard is enabled
+    Then "Back_Button" element on "Modal_Wizard_Form" should contains "Back" value
+    Then verify "Next_Button" element on "Modal_Wizard_Form" wizard is enabled
+    Then verify "Schedule_Training_Job_Button" element on "Modal_Wizard_Form" wizard is enabled
+    Then verify "Run_Training_Now_Button" element on "Modal_Wizard_Form" wizard is enabled
+    And click on "Next_Button" element on "Modal_Wizard_Form" wizard
     Then "Form_Header_Parameters" element on "commonPagesHeader" should contains "Parameters" value
     Then verify "Step_1_Button" element on "commonPagesHeader" wizard is enabled
     Then verify "Step_2_Button" element on "commonPagesHeader" wizard is enabled
     Then verify "Step_3_Button" element on "commonPagesHeader" wizard is enabled
     Then "Step_3_Button_text" element on "commonPagesHeader" should contains "Parameters" value
-    Then verify "Back_Button" element on "Train_Model" wizard is enabled
-    Then verify "Next_Button" element on "Train_Model" wizard is enabled
-    Then verify "Schedule_Training_Job_Button" element on "Train_Model" wizard is enabled
-    Then verify "Run_Training_Now_Button" element on "Train_Model" wizard is enabled
-    And click on "Next_Button" element on "Train_Model" wizard
+    Then verify "Back_Button" element on "Modal_Wizard_Form" wizard is enabled
+    Then verify "Next_Button" element on "Modal_Wizard_Form" wizard is enabled
+    Then verify "Schedule_Training_Job_Button" element on "Modal_Wizard_Form" wizard is enabled
+    Then verify "Run_Training_Now_Button" element on "Modal_Wizard_Form" wizard is enabled
+    And click on "Next_Button" element on "Modal_Wizard_Form" wizard
     Then "Form_Header_Resources" element on "commonPagesHeader" should contains "Resources" value
     Then verify "Step_1_Button" element on "commonPagesHeader" wizard is enabled
     Then verify "Step_2_Button" element on "commonPagesHeader" wizard is enabled
     Then verify "Step_3_Button" element on "commonPagesHeader" wizard is enabled
     Then verify "Step_4_Button" element on "commonPagesHeader" wizard is enabled
     Then "Step_4_Button_text" element on "commonPagesHeader" should contains "Resources" value
-    Then verify "Back_Button" element on "Train_Model" wizard is enabled
-    Then verify "Next_Button" element on "Train_Model" wizard is enabled
-    Then verify "Schedule_Training_Job_Button" element on "Train_Model" wizard is enabled
-    Then verify "Run_Training_Now_Button" element on "Train_Model" wizard is enabled
-    And click on "Next_Button" element on "Train_Model" wizard
+    Then verify "Back_Button" element on "Modal_Wizard_Form" wizard is enabled
+    Then verify "Next_Button" element on "Modal_Wizard_Form" wizard is enabled
+    Then verify "Schedule_Training_Job_Button" element on "Modal_Wizard_Form" wizard is enabled
+    Then verify "Run_Training_Now_Button" element on "Modal_Wizard_Form" wizard is enabled
+    And click on "Next_Button" element on "Modal_Wizard_Form" wizard
     Then "Form_Header_Advanced" element on "commonPagesHeader" should contains "Advanced" value
     Then verify "Step_1_Button" element on "commonPagesHeader" wizard is enabled
     Then verify "Step_2_Button" element on "commonPagesHeader" wizard is enabled
@@ -662,40 +659,40 @@ Feature: Datasets Page
     Then verify "Step_4_Button" element on "commonPagesHeader" wizard is enabled
     Then verify "Step_5_Button" element on "commonPagesHeader" wizard is enabled
     Then "Step_5_Button_text" element on "commonPagesHeader" should contains "Advanced" value
-    Then verify "Back_Button" element on "Train_Model" wizard is enabled
-    Then verify "Next_Button" element on "Train_Model" wizard is disabled
-    Then verify "Schedule_Training_Job_Button" element on "Train_Model" wizard is enabled
-    Then verify "Run_Training_Now_Button" element on "Train_Model" wizard is enabled
-    Then click on "Cross_Cancel_Button" element on "Train_Model" wizard
+    Then verify "Back_Button" element on "Modal_Wizard_Form" wizard is enabled
+    Then verify "Next_Button" element on "Modal_Wizard_Form" wizard is disabled
+    Then verify "Schedule_Training_Job_Button" element on "Modal_Wizard_Form" wizard is enabled
+    Then verify "Run_Training_Now_Button" element on "Modal_Wizard_Form" wizard is enabled
+    Then click on "Cross_Cancel_Button" element on "Modal_Wizard_Form" wizard
     Then click on "Train_Button" element on "Datasets_Info_Pane" wizard
     And wait load page
-    Then check "Hyperparameter_Checkbox" element on "Train_Model" wizard
-    Then "Hyperparameter_Checkbox" element should be checked on "Train_Model" wizard
+    Then check "Hyperparameter_Checkbox" element on "Modal_Wizard_Form" wizard
+    Then "Hyperparameter_Checkbox" element should be checked on "Modal_Wizard_Form" wizard
     Then verify "Step_2_Button" element on "commonPagesHeader" wizard is enabled
     Then verify "Step_3_Button" element on "commonPagesHeader" wizard is enabled
     Then verify "Step_4_Button" element on "commonPagesHeader" wizard is enabled
     Then verify "Step_5_Button" element on "commonPagesHeader" wizard is enabled
     Then verify "Step_6_Button" element on "commonPagesHeader" wizard is enabled
-    And click on "Next_Button" element on "Train_Model" wizard
-    And click on "Next_Button" element on "Train_Model" wizard
-    And click on "Next_Button" element on "Train_Model" wizard
+    And click on "Next_Button" element on "Modal_Wizard_Form" wizard
+    And click on "Next_Button" element on "Modal_Wizard_Form" wizard
+    And click on "Next_Button" element on "Modal_Wizard_Form" wizard
     Then "Form_Header_Hyperparameter_Strategy" element on "commonPagesHeader" should contains "Hyperparameter strategy" value
     Then verify "Step_5_Button" element on "commonPagesHeader" wizard is enabled
     Then verify "Step_6_Button" element on "commonPagesHeader" wizard is enabled
     Then "Step_4_Button_text" element on "commonPagesHeader" should contains "Hyperparameter strategy" value
-    Then verify "Back_Button" element on "Train_Model" wizard is enabled
-    Then verify "Next_Button" element on "Train_Model" wizard is enabled
-    Then verify "Schedule_Training_Job_Button" element on "Train_Model" wizard is enabled
-    Then verify "Run_Training_Now_Button" element on "Train_Model" wizard is enabled
-    And click on "Next_Button" element on "Train_Model" wizard
+    Then verify "Back_Button" element on "Modal_Wizard_Form" wizard is enabled
+    Then verify "Next_Button" element on "Modal_Wizard_Form" wizard is enabled
+    Then verify "Schedule_Training_Job_Button" element on "Modal_Wizard_Form" wizard is enabled
+    Then verify "Run_Training_Now_Button" element on "Modal_Wizard_Form" wizard is enabled
+    And click on "Next_Button" element on "Modal_Wizard_Form" wizard
     Then "Form_Header_Resources" element on "commonPagesHeader" should contains "Resources" value
     Then verify "Step_6_Button" element on "commonPagesHeader" wizard is enabled
     Then "Step_5_Button_text" element on "commonPagesHeader" should contains "Resources" value
-    Then verify "Back_Button" element on "Train_Model" wizard is enabled
-    Then verify "Next_Button" element on "Train_Model" wizard is enabled
-    Then verify "Schedule_Training_Job_Button" element on "Train_Model" wizard is enabled
-    Then verify "Run_Training_Now_Button" element on "Train_Model" wizard is enabled
-    And click on "Next_Button" element on "Train_Model" wizard
+    Then verify "Back_Button" element on "Modal_Wizard_Form" wizard is enabled
+    Then verify "Next_Button" element on "Modal_Wizard_Form" wizard is enabled
+    Then verify "Schedule_Training_Job_Button" element on "Modal_Wizard_Form" wizard is enabled
+    Then verify "Run_Training_Now_Button" element on "Modal_Wizard_Form" wizard is enabled
+    And click on "Next_Button" element on "Modal_Wizard_Form" wizard
     Then "Form_Header_Advanced" element on "commonPagesHeader" should contains "Advanced" value
     Then verify "Step_1_Button" element on "commonPagesHeader" wizard is enabled
     Then verify "Step_2_Button" element on "commonPagesHeader" wizard is enabled
@@ -703,20 +700,20 @@ Feature: Datasets Page
     Then verify "Step_4_Button" element on "commonPagesHeader" wizard is enabled
     Then verify "Step_5_Button" element on "commonPagesHeader" wizard is enabled
     Then "Step_6_Button_text" element on "commonPagesHeader" should contains "Advanced" value
-    Then verify "Back_Button" element on "Train_Model" wizard is enabled
-    Then verify "Next_Button" element on "Train_Model" wizard is disabled
-    Then verify "Schedule_Training_Job_Button" element on "Train_Model" wizard is enabled
-    Then verify "Run_Training_Now_Button" element on "Train_Model" wizard is enabled
+    Then verify "Back_Button" element on "Modal_Wizard_Form" wizard is enabled
+    Then verify "Next_Button" element on "Modal_Wizard_Form" wizard is disabled
+    Then verify "Schedule_Training_Job_Button" element on "Modal_Wizard_Form" wizard is enabled
+    Then verify "Run_Training_Now_Button" element on "Modal_Wizard_Form" wizard is enabled
     And click on "Step_1_Button" element on "commonPagesHeader" wizard
     Then "Form_Header_Run_Details" element on "commonPagesHeader" should contains "Run Details" value
     And click on "Step_3_Button" element on "commonPagesHeader" wizard
     Then "Form_Header_Parameters" element on "commonPagesHeader" should contains "Parameters" value
     And click on "Step_4_Button" element on "commonPagesHeader" wizard
     Then "Form_Header_Hyperparameter_Strategy" element on "commonPagesHeader" should contains "Hyperparameter strategy" value
-    And click on "Run_Training_Now_Button" element on "Train_Model" wizard
-    Then verify "Run_Training_Now_Button" element on "Train_Model" wizard is disabled
-    Then verify "Schedule_Training_Job_Button" element on "Train_Model" wizard is disabled
-    Then verify data in "Train_Model_Parameters_Table" table on "Train_Model" wizard
+    And click on "Run_Training_Now_Button" element on "Modal_Wizard_Form" wizard
+    Then verify "Run_Training_Now_Button" element on "Modal_Wizard_Form" wizard is disabled
+    Then verify "Schedule_Training_Job_Button" element on "Modal_Wizard_Form" wizard is disabled
+    Then verify data in "Parameters_Table" table on "Modal_Wizard_Form" wizard
             | name_verify           |         type_dropdown_verify         | value_verify |
             | model_class           |                str                   |              |
 
@@ -733,34 +730,34 @@ Feature: Datasets Page
     Then click on "Train_Button" element on "Datasets_Info_Pane" wizard
     And wait load page
     Then "Form_Header_Run_Details" element on "commonPagesHeader" should contains "Run Details" value
-    Then "Hyperparameter_Checkbox" element should be unchecked on "Train_Model" wizard
-    Then verify "Function_Name_Input" element visibility on "Train_Model" wizard
-    Then type value "/" to "Function_Name_Input" field on "Train_Model" wizard
-    Then verify "Function_Name_Input" on "Train_Model" wizard should display options "Input_Hint"."Function_Name_Batch_Run_Hint"
-    Then verify "Version_Tag_Dropdown_element" element on "Train_Model" wizard is disabled by class name
-    Then verify "Handler_Dropdown" element visibility on "Train_Model" wizard
-    Then verify "Handler_Dropdown" dropdown element on "Train_Model" wizard should contains "Common_Lists"."Handler_List"
-    Then verify "Train_Model_Labels_Table" element visibility on "Train_Model" wizard
-    And click on "Add_Label_Button" element on "Train_Model" wizard
-    Then type value "/" to "Run_Details_Labels_Key" field on "Train_Model" wizard
+    Then "Hyperparameter_Checkbox" element should be unchecked on "Modal_Wizard_Form" wizard
+    Then verify "Run_Name_Input" element visibility on "Modal_Wizard_Form" wizard
+    Then type value "/" to "Run_Name_Input" field on "Modal_Wizard_Form" wizard
+    Then verify "Run_Name_Input" on "Modal_Wizard_Form" wizard should display options "Input_Hint"."Function_Name_Batch_Run_Hint"
+    Then verify "Version_Tag_Dropdown" element on "Modal_Wizard_Form" wizard is disabled by class name
+    Then verify "Handler_Dropdown" element visibility on "Modal_Wizard_Form" wizard
+    Then verify "Handler_Dropdown" dropdown element on "Modal_Wizard_Form" wizard should contains "Common_Lists"."Handler_List"
+    Then verify "Labels_Table" element visibility on "Modal_Wizard_Form" wizard
+    And click on "Add_Label_Button" element on "Modal_Wizard_Form" wizard
+    Then type value "/" to "Run_Details_Labels_Key" field on "Modal_Wizard_Form" wizard
     Then verify labels warning should display options "Input_Hint"."Labels_Warning_Key"
-    Then type value "/" to "Run_Details_Labels_Value" field on "Train_Model" wizard without inputgroup
-    When click on "Title" element on "Train_Model" wizard
-    And click on "Close_Label_Button" element on "Train_Model" wizard   
-    When add rows to "Train_Model_Labels_Table" table on "Train_Model" wizard
+    Then type value "/" to "Run_Details_Labels_Value" field on "Modal_Wizard_Form" wizard without inputgroup
+    When click on "Title" element on "Modal_Wizard_Form" wizard
+    And click on "Close_Label_Button" element on "Modal_Wizard_Form" wizard   
+    When add rows to "Labels_Table" table on "Modal_Wizard_Form" wizard
             | key_input | value_input |
             |    key1   |    value1   |
             |    key2   |    value2   |
             |    key3   |    value3   |
-    Then verify values in "Train_Model_Labels_Table" table on "Train_Model" wizard with attribute
+    Then verify values in "Labels_Table" table on "Modal_Wizard_Form" wizard with attribute
             | key_verify | value_verify | 
             |    key1    |    value1    |
             |    key2    |    value2    |
             |    key3    |    value3    |
-    Then verify "Image_Name_Input_Run_Details" element visibility on "Train_Model" wizard
-    Then type value "" to "Image_Name_Input_Run_Details" field on "Train_Model" wizard
-    Then verify "Image_Name_Input_Run_Details" on "Train_Model" wizard should display warning "Input_Hint"."Input_Field_Require"
-    Then "Image_Name_Text_Run_Details" component on "Train_Model" should contains "Batch_Run"."Image_Name_Text"
+    Then verify "Image_Name_Input_Run_Details" element visibility on "Modal_Wizard_Form" wizard
+    Then type value "" to "Image_Name_Input_Run_Details" field on "Modal_Wizard_Form" wizard
+    Then verify "Image_Name_Input_Run_Details" on "Modal_Wizard_Form" wizard should display warning "Input_Hint"."Input_Field_Require"
+    Then "Image_Name_Text_Run_Details" component on "Modal_Wizard_Form" should contains "Batch_Run"."Image_Name_Text"
 
   @MLD
   Scenario: MLD021 - Check Data Inputs components on Train Model wizard
@@ -775,20 +772,20 @@ Feature: Datasets Page
     Then click on "Train_Button" element on "Datasets_Info_Pane" wizard
     And wait load page
     Then "Form_Header_Run_Details" element on "commonPagesHeader" should contains "Run Details" value
-    And click on "Next_Button" element on "Train_Model" wizard
+    And click on "Next_Button" element on "Modal_Wizard_Form" wizard
     Then "Form_Header_Data_Inputs" element on "commonPagesHeader" should contains "Data Inputs" value
-    Then verify "Data_Inputs_Headers" on "Train_Model" wizard should contains "Batch_Run"."Data_Inputs_Table_Header"
-    Then verify data in "Train_Model_Data_Inputs_Table" table on "Train_Model" wizard
+    Then verify "Data_Inputs_Headers" on "Modal_Wizard_Form" wizard should contains "Batch_Run"."Data_Inputs_Table_Header"
+    Then verify data in "Data_Inputs_Table" table on "Modal_Wizard_Form" wizard
             | name_verify |                     path_verify                       |      
             | dataset     | store://datasets/default/test_new_structure2#0:latest | 
             | sample_set  |                                                       | 
             | test_set    |                                                       | 
-    When add data to "Train_Model_Data_Inputs_Table" table on "Train_Model" wizard with a pre-filled table
+    When add data to "Data_Inputs_Table" table on "Modal_Wizard_Form" wizard with a pre-filled table
             | name_input | path_dropdown |      path_input     |
             |    name1   |      V3IO     | container-name/file |
             |    name2   |      V3IO     | container-name/file |
             |    name3   |      V3IO     | container-name/file |
-    Then verify data in "Train_Model_Data_Inputs_Table" table on "Train_Model" wizard
+    Then verify data in "Data_Inputs_Table" table on "Modal_Wizard_Form" wizard
             | name_verify |                     path_verify                       |    
             |   dataset   | store://datasets/default/test_new_structure2#0:latest | 
             | sample_set  |                                                       | 
@@ -796,20 +793,20 @@ Feature: Datasets Page
             |    name1    |             v3io:///container-name/file               | 
             |    name2    |             v3io:///container-name/file               | 
             |    name3    |             v3io:///container-name/file               | 
-    When click on "delete_btn" with data in "Train_Model_Data_Inputs_Table" table on "Train_Model" wizard with offset "false"
+    When click on "delete_btn" with data in "Data_Inputs_Table" table on "Modal_Wizard_Form" wizard with offset "false"
             | name_verify |
             |    name1    |
             |    name3    |
-    Then verify data in "Train_Model_Data_Inputs_Table" table on "Train_Model" wizard
+    Then verify data in "Data_Inputs_Table" table on "Modal_Wizard_Form" wizard
             | name_verify |                    path_verify                        |    
             |   dataset   | store://datasets/default/test_new_structure2#0:latest | 
             | sample_set  |                                                       | 
             |   test_set  |                                                       | 
             |    name2    |              v3io:///container-name/file              |    
-    Then edit 4 row in "Train_Model_Data_Inputs_Table" key-value table on "Train_Model" wizard
+    Then edit 4 row in "Data_Inputs_Table" key-value table on "Modal_Wizard_Form" wizard
             | name_input | path_input |
             |   edited   |   edited   |
-    Then verify data in "Train_Model_Data_Inputs_Table" table on "Train_Model" wizard
+    Then verify data in "Data_Inputs_Table" table on "Modal_Wizard_Form" wizard
             | name_verify |                    path_verify                        |    
             |   dataset   | store://datasets/default/test_new_structure2#0:latest | 
             | sample_set  |                                                       | 
@@ -829,11 +826,11 @@ Feature: Datasets Page
     Then click on "Train_Button" element on "Datasets_Info_Pane" wizard
     And wait load page
     Then "Form_Header_Run_Details" element on "commonPagesHeader" should contains "Run Details" value
-    And click on "Next_Button" element on "Train_Model" wizard
-    And click on "Next_Button" element on "Train_Model" wizard
+    And click on "Next_Button" element on "Modal_Wizard_Form" wizard
+    And click on "Next_Button" element on "Modal_Wizard_Form" wizard
     Then "Form_Header_Parameters" element on "commonPagesHeader" should contains "Parameters" value
-    Then verify "Parameters_Headers" on "Train_Model" wizard should contains "Batch_Run"."Parameters_Table_Header"
-    Then verify data in "Train_Model_Parameters_Table" table on "Train_Model" wizard
+    Then verify "Parameters_Headers" on "Modal_Wizard_Form" wizard should contains "Batch_Run"."Parameters_Table_Header"
+    Then verify data in "Parameters_Table" table on "Modal_Wizard_Form" wizard
             | name_verify           |         type_dropdown_verify         | value_verify |
             | model_class           |                str                   |              |
             | label_columns         |  Optional[Union[str, List[str]]]     |              |
@@ -843,12 +840,12 @@ Feature: Datasets Page
             | train_test_split_size |                float                 |              |
             | random_state          |                int                   |              |
             | labels                |                dict                  |              |
-    When add custom parameters to "Train_Model_Parameters_Table" table on "Train_Model" wizard with a pre-filled table
+    When add custom parameters to "Parameters_Table" table on "Modal_Wizard_Form" wizard with a pre-filled table
             | name_input | type_dropdown | value_input |
             |    name1   |      str      |    value1   |
             |    name2   |      int      |      1      |
             |    name3   |      float    |     0.5     |
-    Then verify data in "Train_Model_Parameters_Table" table on "Train_Model" wizard
+    Then verify data in "Parameters_Table" table on "Modal_Wizard_Form" wizard
             | name_verify           |         type_dropdown_verify         | value_verify |
             | model_class           |                str                   |              |
             | label_columns         |  Optional[Union[str, List[str]]]     |              |
@@ -861,11 +858,11 @@ Feature: Datasets Page
             | name1                 |                str                   |    value1    |
             | name2                 |                int                   |      1       |
             | name3                 |               float                  |     0.5      | 
-    When click on "delete_btn" in "Train_Model_Parameters_Table" table on "Train_Model" wizard with offset "false"
+    When click on "delete_btn" in "Parameters_Table" table on "Modal_Wizard_Form" wizard with offset "false"
             | name_verify |
             |    name3    |
             |    name1    |
-    Then verify data in "Train_Model_Parameters_Table" table on "Train_Model" wizard
+    Then verify data in "Parameters_Table" table on "Modal_Wizard_Form" wizard
             | name_verify           |         type_dropdown_verify         | value_verify |
             | model_class           |                str                   |              |
             | label_columns         |  Optional[Union[str, List[str]]]     |              |
@@ -876,10 +873,10 @@ Feature: Datasets Page
             | random_state          |                int                   |              |
             | labels                |                dict                  |              |
             | name2                 |                int                   |      1       |
-    Then edit 9 row in "Train_Model_Parameters_Table" key-value table on "Train_Model" wizard
+    Then edit 9 row in "Parameters_Table" key-value table on "Modal_Wizard_Form" wizard
             |  name_input | value_input |
             |    edited   |     234     |   
-    Then verify data in "Train_Model_Parameters_Table" table on "Train_Model" wizard
+    Then verify data in "Parameters_Table" table on "Modal_Wizard_Form" wizard
             | name_verify           |         type_dropdown_verify         | value_verify |
             | model_class           |                str                   |              |
             | label_columns         |  Optional[Union[str, List[str]]]     |              |
@@ -904,131 +901,131 @@ Feature: Datasets Page
     Then click on "Train_Button" element on "Datasets_Info_Pane" wizard
     And wait load page
     Then "Form_Header_Run_Details" element on "commonPagesHeader" should contains "Run Details" value
-    And click on "Next_Button" element on "Train_Model" wizard
-    And click on "Next_Button" element on "Train_Model" wizard
-    And click on "Next_Button" element on "Train_Model" wizard
+    And click on "Next_Button" element on "Modal_Wizard_Form" wizard
+    And click on "Next_Button" element on "Modal_Wizard_Form" wizard
+    And click on "Next_Button" element on "Modal_Wizard_Form" wizard
     Then "Form_Header_Resources" element on "commonPagesHeader" should contains "Resources" value
-    Then verify "Pods_Priority_Dropdown" element visibility on "Train_Model" wizard
-    Then verify "Pods_Priority_Dropdown" dropdown element on "Train_Model" wizard should contains "Common_Lists"."Pods_Priority_List"
-    Then verify "Node_Selection_Subheader" element visibility on "Train_Model" wizard
-    Then "Node_Selection_Subheader" element on "Train_Model" should contains "Node selection" value
-    When add data rows to "Resources_Node_Selection_Table" key-value table on "Train_Model" wizard
+    Then verify "Pods_Priority_Dropdown" element visibility in "Resources_Accordion" on "Modal_Wizard_Form" wizard
+    Then verify "Pods_Priority_Dropdown" element in "Resources_Accordion" on "Modal_Wizard_Form" wizard should contains "Common_Lists"."Pods_Priority_List"
+    Then verify "Node_Selection_Subheader" element visibility in "Resources_Accordion" on "Modal_Wizard_Form" wizard
+    Then "Node_Selection_Subheader" element in "Resources_Accordion" on "Modal_Wizard_Form" should contains "Node selection" value
+    When add data rows to "Resources_Node_Selector_Table" key-value table in "Resources_Accordion" on "Modal_Wizard_Form" wizard
             | key_input | value_input |
             | key1      | value1      |
             | key2      | value2      |
             | key3      | value3      |
             | key4      | value4      |
-    Then verify data values in "Resources_Node_Selector_Table" table in "Resources_Accordion" on "Batch_Run_Edit" wizard
+    Then verify data values in "Resources_Node_Selector_Table" table in "Resources_Accordion" on "Modal_Wizard_Form" wizard
             | key  | value  |
             | key1 | value1 |
             | key2 | value2 |
             | key3 | value3 |
             | key4 | value4 |
-    When click on "delete_btn" in "Resources_Node_Selector_Table" table in "Resources_Accordion" on "Batch_Run_Edit" wizard with offset "false"
+    When click on "delete_btn" in "Resources_Node_Selector_Table" table in "Resources_Accordion" on "Modal_Wizard_Form" wizard with offset "false"
             | key  |
             | key3 |
             | key1 |
-    Then verify data values in "Resources_Node_Selector_Table" table in "Resources_Accordion" on "Batch_Run_Edit" wizard
+    Then verify data values in "Resources_Node_Selector_Table" table in "Resources_Accordion" on "Modal_Wizard_Form" wizard
             | key  | value  |
             | key2 | value2 |
             | key4 | value4 |
-    Then edit 2 row in "Resources_Node_Selector_Table" key-value table in "Resources_Accordion" on "Batch_Run_Edit" wizard
+    Then edit 2 row in "Resources_Node_Selector_Table" key-value table in "Resources_Accordion" on "Modal_Wizard_Form" wizard
             | key_input        | value_input      |
             | edited           | edited           |
-    Then verify data values in "Resources_Node_Selector_Table" table in "Resources_Accordion" on "Batch_Run_Edit" wizard
+    Then verify data values in "Resources_Node_Selector_Table" table in "Resources_Accordion" on "Modal_Wizard_Form" wizard
             | key        | value        |
             | key2edited | value2edited |
             | key4       | value4       |
-    Then verify "Memory_Request_Dropdown" element in "Resources_Accordion" on "Batch_Run_Edit" wizard should contains "Dropdown_Options"."Memory_Unit_Options"
-    Then verify "Memory_Limit_Dropdown" element in "Resources_Accordion" on "Batch_Run_Edit" wizard should contains "Dropdown_Options"."Memory_Unit_Options"
-    Then type value "0" to "Memory_Limit_Number_Input" field on "Resources_Accordion" on "Batch_Run_Edit" wizard
-    Then verify "Memory_Limit_Number_Input" element in "Resources_Accordion" on "Batch_Run_Edit" wizard should display warning "Input_Hint"."Minimum_Value_Warning"
-    Then type value "1" to "Memory_Limit_Number_Input" field on "Resources_Accordion" on "Batch_Run_Edit" wizard
-    Then type value "1025" to "Memory_Request_Number_Input" field on "Resources_Accordion" on "Batch_Run_Edit" wizard
-    Then verify "Memory_Limit_Number_Input" element in "Resources_Accordion" on "Batch_Run_Edit" wizard should display warning "Input_Hint"."Limit_Number_Warning"
-    Then verify "Memory_Request_Number_Input" element in "Resources_Accordion" on "Batch_Run_Edit" wizard should display warning "Input_Hint"."Request_Number_Warning"
-    Then type value "2" to "Memory_Limit_Number_Input" field on "Resources_Accordion" on "Batch_Run_Edit" wizard
-    Then select "KB" option in "Memory_Limit_Dropdown" dropdown on "Resources_Accordion" on "Batch_Run_Edit" wizard
-    Then verify "Memory_Limit_Number_Input" element in "Resources_Accordion" on "Batch_Run_Edit" wizard should display warning "Input_Hint"."Limit_Number_Warning"
-    Then verify "Memory_Request_Number_Input" element in "Resources_Accordion" on "Batch_Run_Edit" wizard should display warning "Input_Hint"."Request_Number_Warning"
-    Then select "KB" option in "Memory_Request_Dropdown" dropdown on "Resources_Accordion" on "Batch_Run_Edit" wizard
-    Then type value "" to "Memory_Limit_Number_Input" field on "Resources_Accordion" on "Batch_Run_Edit" wizard
-    Then verify "Memory_Limit_Number_Input" element in "Resources_Accordion" on "Batch_Run_Edit" wizard should display warning "Input_Hint"."Input_Field_Require"
-    Then type value "2" to "Memory_Limit_Number_Input" field on "Resources_Accordion" on "Batch_Run_Edit" wizard
-    Then select "GB" option in "Memory_Request_Dropdown" dropdown on "Resources_Accordion" on "Batch_Run_Edit" wizard
-    Then verify "Memory_Limit_Number_Input" element in "Resources_Accordion" on "Batch_Run_Edit" wizard should display warning "Input_Hint"."Limit_Number_Warning"
-    Then verify "Memory_Request_Number_Input" element in "Resources_Accordion" on "Batch_Run_Edit" wizard should display warning "Input_Hint"."Request_Number_Warning"
-    Then verify "CPU_Request_Dropdown" element in "Resources_Accordion" on "Batch_Run_Edit" wizard should contains "Dropdown_Options"."CPU_Unit_Options"
-    Then verify "CPU_Limit_Dropdown" element in "Resources_Accordion" on "Batch_Run_Edit" wizard should contains "Dropdown_Options"."CPU_Unit_Options"
-    Then select "millicpu" option in "CPU_Limit_Dropdown" dropdown on "Resources_Accordion" on "Batch_Run_Edit" wizard
-    Then select "millicpu" option in "CPU_Request_Dropdown" dropdown on "Resources_Accordion" on "Batch_Run_Edit" wizard
-    Then type value "0" to "CPU_Limit_Number_Input" field on "Resources_Accordion" on "Batch_Run_Edit" wizard
-    Then verify "CPU_Limit_Number_Input" element in "Resources_Accordion" on "Batch_Run_Edit" wizard should display warning "Input_Hint"."Minimum_Value_Warning"
-    Then type value "1" to "CPU_Limit_Number_Input" field on "Resources_Accordion" on "Batch_Run_Edit" wizard
-    Then type value "1025" to "CPU_Request_Number_Input" field on "Resources_Accordion" on "Batch_Run_Edit" wizard
-    Then verify "CPU_Limit_Number_Input" element in "Resources_Accordion" on "Batch_Run_Edit" wizard should display warning "Input_Hint"."Limit_Number_Warning" 
-    Then verify "CPU_Request_Number_Input" element in "Resources_Accordion" on "Batch_Run_Edit" wizard should display warning "Input_Hint"."Request_Number_Warning" 
-    Then type value "0" to "GPU_Limit_Number_Input" field on "Resources_Accordion" on "Batch_Run_Edit" wizard
-    Then verify "GPU_Limit_Number_Input" element in "Resources_Accordion" on "Batch_Run_Edit" wizard should display warning "Input_Hint"."Minimum_Value_Warning"
-    Then verify "Memory_Request_Dropdown" element in "Resources_Accordion" on "Batch_Run_Edit" wizard should contains "Dropdown_Options"."Memory_Unit_Options"
-    Then type value "1" to "Memory_Request_Number_Input" field on "Resources_Accordion" on "Batch_Run_Edit" wizard
-    Then increase value on 15 points in "Memory_Request_Number_Input" field on "Resources_Accordion" on "Batch_Run_Edit" wizard
-    Then decrease value on 15 points in "Memory_Request_Number_Input" field on "Resources_Accordion" on "Batch_Run_Edit" wizard
-    Then verify "Memory_Limit_Dropdown" element in "Resources_Accordion" on "Batch_Run_Edit" wizard should contains "Dropdown_Options"."Memory_Unit_Options"
-    Then type value "2" to "Memory_Limit_Number_Input" field on "Resources_Accordion" on "Batch_Run_Edit" wizard
-    Then increase value on 15 points in "Memory_Limit_Number_Input" field on "Resources_Accordion" on "Batch_Run_Edit" wizard
-    Then decrease value on 15 points in "Memory_Limit_Number_Input" field on "Resources_Accordion" on "Batch_Run_Edit" wizard
-    Then verify "CPU_Request_Dropdown" element in "Resources_Accordion" on "Batch_Run_Edit" wizard should contains "Dropdown_Options"."CPU_Unit_Options"
-    Then type value "3" to "CPU_Request_Number_Input" field on "Resources_Accordion" on "Batch_Run_Edit" wizard
-    Then increase value on 15 points in "CPU_Request_Number_Input" field with "millicpu" on "Resources_Accordion" on "Batch_Run_Edit" wizard
-    Then decrease value on 15 points in "CPU_Request_Number_Input" field with "millicpu" on "Resources_Accordion" on "Batch_Run_Edit" wizard
-    Then select "cpu" option in "CPU_Request_Dropdown" dropdown on "Resources_Accordion" on "Batch_Run_Edit" wizard
-    Then verify "CPU_Request_Number_Input" input should contains "0.003" value in "Resources_Accordion" on "Batch_Run_Edit" wizard
-    Then verify "CPU_Limit_Dropdown" element in "Resources_Accordion" on "Batch_Run_Edit" wizard should contains "Dropdown_Options"."CPU_Unit_Options"
-    Then type value "4" to "CPU_Limit_Number_Input" field on "Resources_Accordion" on "Batch_Run_Edit" wizard
-    Then increase value on 15 points in "CPU_Limit_Number_Input" field with "millicpu" on "Resources_Accordion" on "Batch_Run_Edit" wizard
-    Then decrease value on 15 points in "CPU_Limit_Number_Input" field with "millicpu" on "Resources_Accordion" on "Batch_Run_Edit" wizard
-    Then select "cpu" option in "CPU_Limit_Dropdown" dropdown on "Resources_Accordion" on "Batch_Run_Edit" wizard
-    Then verify "CPU_Limit_Number_Input" input should contains "0.004" value in "Resources_Accordion" on "Batch_Run_Edit" wizard
-    Then type value "5" to "GPU_Limit_Number_Input" field on "Resources_Accordion" on "Batch_Run_Edit" wizard
-    Then increase value on 15 points in "GPU_Limit_Number_Input" field on "Resources_Accordion" on "Batch_Run_Edit" wizard
-    Then decrease value on 15 points in "GPU_Limit_Number_Input" field on "Resources_Accordion" on "Batch_Run_Edit" wizard
-    Then verify "Volumes_Subheader" element in "Resources_Accordion" on "Batch_Run_Edit" wizard should display hint "Label_Hint"."New_Job_Volumes"
-    When add new volume rows to "Volume_Paths_Table" table in "Resources_Accordion" on "Batch_Run_Edit" wizard using nontable inputs
+    Then verify "Memory_Request_Dropdown" element in "Resources_Accordion" on "Modal_Wizard_Form" wizard should contains "Dropdown_Options"."Memory_Unit_Options"
+    Then verify "Memory_Limit_Dropdown" element in "Resources_Accordion" on "Modal_Wizard_Form" wizard should contains "Dropdown_Options"."Memory_Unit_Options"
+    Then type value "0" to "Memory_Limit_Number_Input" field on "Resources_Accordion" on "Modal_Wizard_Form" wizard
+    Then verify "Memory_Limit_Number_Input" element in "Resources_Accordion" on "Modal_Wizard_Form" wizard should display warning "Input_Hint"."Minimum_Value_Warning"
+    Then type value "1" to "Memory_Limit_Number_Input" field on "Resources_Accordion" on "Modal_Wizard_Form" wizard
+    Then type value "1025" to "Memory_Request_Number_Input" field on "Resources_Accordion" on "Modal_Wizard_Form" wizard
+    Then verify "Memory_Limit_Number_Input" element in "Resources_Accordion" on "Modal_Wizard_Form" wizard should display warning "Input_Hint"."Limit_Number_Warning"
+    Then verify "Memory_Request_Number_Input" element in "Resources_Accordion" on "Modal_Wizard_Form" wizard should display warning "Input_Hint"."Request_Number_Warning"
+    Then type value "2" to "Memory_Limit_Number_Input" field on "Resources_Accordion" on "Modal_Wizard_Form" wizard
+    Then select "KB" option in "Memory_Limit_Dropdown" dropdown on "Resources_Accordion" on "Modal_Wizard_Form" wizard
+    Then verify "Memory_Limit_Number_Input" element in "Resources_Accordion" on "Modal_Wizard_Form" wizard should display warning "Input_Hint"."Limit_Number_Warning"
+    Then verify "Memory_Request_Number_Input" element in "Resources_Accordion" on "Modal_Wizard_Form" wizard should display warning "Input_Hint"."Request_Number_Warning"
+    Then select "KB" option in "Memory_Request_Dropdown" dropdown on "Resources_Accordion" on "Modal_Wizard_Form" wizard
+    Then type value "" to "Memory_Limit_Number_Input" field on "Resources_Accordion" on "Modal_Wizard_Form" wizard
+    Then verify "Memory_Limit_Number_Input" element in "Resources_Accordion" on "Modal_Wizard_Form" wizard should display warning "Input_Hint"."Input_Field_Require"
+    Then type value "2" to "Memory_Limit_Number_Input" field on "Resources_Accordion" on "Modal_Wizard_Form" wizard
+    Then select "GB" option in "Memory_Request_Dropdown" dropdown on "Resources_Accordion" on "Modal_Wizard_Form" wizard
+    Then verify "Memory_Limit_Number_Input" element in "Resources_Accordion" on "Modal_Wizard_Form" wizard should display warning "Input_Hint"."Limit_Number_Warning"
+    Then verify "Memory_Request_Number_Input" element in "Resources_Accordion" on "Modal_Wizard_Form" wizard should display warning "Input_Hint"."Request_Number_Warning"
+    Then verify "CPU_Request_Dropdown" element in "Resources_Accordion" on "Modal_Wizard_Form" wizard should contains "Dropdown_Options"."CPU_Unit_Options"
+    Then verify "CPU_Limit_Dropdown" element in "Resources_Accordion" on "Modal_Wizard_Form" wizard should contains "Dropdown_Options"."CPU_Unit_Options"
+    Then select "millicpu" option in "CPU_Limit_Dropdown" dropdown on "Resources_Accordion" on "Modal_Wizard_Form" wizard
+    Then select "millicpu" option in "CPU_Request_Dropdown" dropdown on "Resources_Accordion" on "Modal_Wizard_Form" wizard
+    Then type value "0" to "CPU_Limit_Number_Input" field on "Resources_Accordion" on "Modal_Wizard_Form" wizard
+    Then verify "CPU_Limit_Number_Input" element in "Resources_Accordion" on "Modal_Wizard_Form" wizard should display warning "Input_Hint"."Minimum_Value_Warning"
+    Then type value "1" to "CPU_Limit_Number_Input" field on "Resources_Accordion" on "Modal_Wizard_Form" wizard
+    Then type value "1025" to "CPU_Request_Number_Input" field on "Resources_Accordion" on "Modal_Wizard_Form" wizard
+    Then verify "CPU_Limit_Number_Input" element in "Resources_Accordion" on "Modal_Wizard_Form" wizard should display warning "Input_Hint"."Limit_Number_Warning" 
+    Then verify "CPU_Request_Number_Input" element in "Resources_Accordion" on "Modal_Wizard_Form" wizard should display warning "Input_Hint"."Request_Number_Warning" 
+    Then type value "0" to "GPU_Limit_Number_Input" field on "Resources_Accordion" on "Modal_Wizard_Form" wizard
+    Then verify "GPU_Limit_Number_Input" element in "Resources_Accordion" on "Modal_Wizard_Form" wizard should display warning "Input_Hint"."Minimum_Value_Warning"
+    Then verify "Memory_Request_Dropdown" element in "Resources_Accordion" on "Modal_Wizard_Form" wizard should contains "Dropdown_Options"."Memory_Unit_Options"
+    Then type value "1" to "Memory_Request_Number_Input" field on "Resources_Accordion" on "Modal_Wizard_Form" wizard
+    Then increase value on 15 points in "Memory_Request_Number_Input" field on "Resources_Accordion" on "Modal_Wizard_Form" wizard
+    Then decrease value on 15 points in "Memory_Request_Number_Input" field on "Resources_Accordion" on "Modal_Wizard_Form" wizard
+    Then verify "Memory_Limit_Dropdown" element in "Resources_Accordion" on "Modal_Wizard_Form" wizard should contains "Dropdown_Options"."Memory_Unit_Options"
+    Then type value "2" to "Memory_Limit_Number_Input" field on "Resources_Accordion" on "Modal_Wizard_Form" wizard
+    Then increase value on 15 points in "Memory_Limit_Number_Input" field on "Resources_Accordion" on "Modal_Wizard_Form" wizard
+    Then decrease value on 15 points in "Memory_Limit_Number_Input" field on "Resources_Accordion" on "Modal_Wizard_Form" wizard
+    Then verify "CPU_Request_Dropdown" element in "Resources_Accordion" on "Modal_Wizard_Form" wizard should contains "Dropdown_Options"."CPU_Unit_Options"
+    Then type value "3" to "CPU_Request_Number_Input" field on "Resources_Accordion" on "Modal_Wizard_Form" wizard
+    Then increase value on 15 points in "CPU_Request_Number_Input" field with "millicpu" on "Resources_Accordion" on "Modal_Wizard_Form" wizard
+    Then decrease value on 15 points in "CPU_Request_Number_Input" field with "millicpu" on "Resources_Accordion" on "Modal_Wizard_Form" wizard
+    Then select "cpu" option in "CPU_Request_Dropdown" dropdown on "Resources_Accordion" on "Modal_Wizard_Form" wizard
+    Then verify "CPU_Request_Number_Input" input should contains "0.003" value in "Resources_Accordion" on "Modal_Wizard_Form" wizard
+    Then verify "CPU_Limit_Dropdown" element in "Resources_Accordion" on "Modal_Wizard_Form" wizard should contains "Dropdown_Options"."CPU_Unit_Options"
+    Then type value "4" to "CPU_Limit_Number_Input" field on "Resources_Accordion" on "Modal_Wizard_Form" wizard
+    Then increase value on 15 points in "CPU_Limit_Number_Input" field with "millicpu" on "Resources_Accordion" on "Modal_Wizard_Form" wizard
+    Then decrease value on 15 points in "CPU_Limit_Number_Input" field with "millicpu" on "Resources_Accordion" on "Modal_Wizard_Form" wizard
+    Then select "cpu" option in "CPU_Limit_Dropdown" dropdown on "Resources_Accordion" on "Modal_Wizard_Form" wizard
+    Then verify "CPU_Limit_Number_Input" input should contains "0.004" value in "Resources_Accordion" on "Modal_Wizard_Form" wizard
+    Then type value "5" to "GPU_Limit_Number_Input" field on "Resources_Accordion" on "Modal_Wizard_Form" wizard
+    Then increase value on 15 points in "GPU_Limit_Number_Input" field on "Resources_Accordion" on "Modal_Wizard_Form" wizard
+    Then decrease value on 15 points in "GPU_Limit_Number_Input" field on "Resources_Accordion" on "Modal_Wizard_Form" wizard
+    Then verify "Volumes_Subheader" element in "Resources_Accordion" on "Modal_Wizard_Form" wizard should display hint "Label_Hint"."New_Job_Volumes"
+    When add new volume rows to "Volume_Paths_Table" table in "Resources_Accordion" on "Modal_Wizard_Form" wizard using nontable inputs
             | Volume_Paths_Table_Type_Dropdown | Volume_Paths_Table_Volume_Name_Input | Volume_Paths_Table_Path_Input | Volume_Paths_Table_Container_Input | Volume_Paths_Table_Access_Key_Input | Volume_Paths_Table_Resource_Path_Input | Add_New_Row_Button |
             |             V3IO                 |                                      |                               |                                    |                                     |                                        |         yes        |
-    Then verify "Volume_Paths_Table_Volume_Name_Input" element in "Resources_Accordion" on "Batch_Run_Edit" wizard should display warning "Input_Hint"."Input_Field_Require"
-    Then verify "Volume_Paths_Table_Path_Input" element in "Resources_Accordion" on "Batch_Run_Edit" wizard should display warning "Input_Hint"."Input_Field_Require"
-    Then verify "Volume_Paths_Table_Access_Key_Input" element in "Resources_Accordion" on "Batch_Run_Edit" wizard should display warning "Input_Hint"."Input_Field_Require"
-    Then verify "Volume_Paths_Table_Path_Input" element in "Resources_Accordion" on "Batch_Run_Edit" wizard should display hint "Input_Hint"."Mount_Path_Hint"
-    Then verify "Volume_Paths_Table_Container_Input" element in "Resources_Accordion" on "Batch_Run_Edit" wizard should display hint "Input_Hint"."Data_Container_Hint"
-    Then verify "Volume_Paths_Table_Access_Key_Input" element in "Resources_Accordion" on "Batch_Run_Edit" wizard should display hint "Input_Hint"."DataAccess_Key_Hint"
-    Then verify "Volume_Paths_Table_Resource_Path_Input" element in "Resources_Accordion" on "Batch_Run_Edit" wizard should display hint "Input_Hint"."Relative_Directory_Path_Hint"
-    When click on "Delete_New_Row_Button" element in "Resources_Accordion" on "Batch_Run_Edit" wizard
-    When add new volume rows to "Volume_Paths_Table" table in "Resources_Accordion" on "Batch_Run_Edit" wizard using nontable inputs
+    Then verify "Volume_Paths_Table_Volume_Name_Input" element in "Resources_Accordion" on "Modal_Wizard_Form" wizard should display warning "Input_Hint"."Input_Field_Require"
+    Then verify "Volume_Paths_Table_Path_Input" element in "Resources_Accordion" on "Modal_Wizard_Form" wizard should display warning "Input_Hint"."Input_Field_Require"
+    Then verify "Volume_Paths_Table_Access_Key_Input" element in "Resources_Accordion" on "Modal_Wizard_Form" wizard should display warning "Input_Hint"."Input_Field_Require"
+    Then verify "Volume_Paths_Table_Path_Input" element in "Resources_Accordion" on "Modal_Wizard_Form" wizard should display hint "Input_Hint"."Mount_Path_Hint"
+    Then verify "Volume_Paths_Table_Container_Input" element in "Resources_Accordion" on "Modal_Wizard_Form" wizard should display hint "Input_Hint"."Data_Container_Hint"
+    Then verify "Volume_Paths_Table_Access_Key_Input" element in "Resources_Accordion" on "Modal_Wizard_Form" wizard should display hint "Input_Hint"."DataAccess_Key_Hint"
+    Then verify "Volume_Paths_Table_Resource_Path_Input" element in "Resources_Accordion" on "Modal_Wizard_Form" wizard should display hint "Input_Hint"."Relative_Directory_Path_Hint"
+    When click on "Delete_New_Row_Button" element in "Resources_Accordion" on "Modal_Wizard_Form" wizard
+    When add new volume rows to "Volume_Paths_Table" table in "Resources_Accordion" on "Modal_Wizard_Form" wizard using nontable inputs
             | Volume_Paths_Table_Type_Dropdown | Volume_Paths_Table_Volume_Name_Input | Volume_Paths_Table_Path_Input | Volume_Paths_Table_Config_Map_Input | Add_New_Row_Button |
             |           Config Map             |                                      |                               |                                     |         yes        |
-    Then verify "Volume_Paths_Table_Volume_Name_Input" element in "Resources_Accordion" on "Batch_Run_Edit" wizard should display warning "Input_Hint"."Input_Field_Require"
-    Then verify "Volume_Paths_Table_Path_Input" element in "Resources_Accordion" on "Batch_Run_Edit" wizard should display warning "Input_Hint"."Input_Field_Require"
-    Then verify "Volume_Paths_Table_Config_Map_Input" element in "Resources_Accordion" on "Batch_Run_Edit" wizard should display warning "Input_Hint"."Input_Field_Require"
-    Then verify "Volume_Paths_Table_Path_Input" element in "Resources_Accordion" on "Batch_Run_Edit" wizard should display hint "Input_Hint"."Mount_Path_Hint"
-    When click on "Delete_New_Row_Button" element in "Resources_Accordion" on "Batch_Run_Edit" wizard
-    When add new volume rows to "Volume_Paths_Table" table in "Resources_Accordion" on "Batch_Run_Edit" wizard using nontable inputs
+    Then verify "Volume_Paths_Table_Volume_Name_Input" element in "Resources_Accordion" on "Modal_Wizard_Form" wizard should display warning "Input_Hint"."Input_Field_Require"
+    Then verify "Volume_Paths_Table_Path_Input" element in "Resources_Accordion" on "Modal_Wizard_Form" wizard should display warning "Input_Hint"."Input_Field_Require"
+    Then verify "Volume_Paths_Table_Config_Map_Input" element in "Resources_Accordion" on "Modal_Wizard_Form" wizard should display warning "Input_Hint"."Input_Field_Require"
+    Then verify "Volume_Paths_Table_Path_Input" element in "Resources_Accordion" on "Modal_Wizard_Form" wizard should display hint "Input_Hint"."Mount_Path_Hint"
+    When click on "Delete_New_Row_Button" element in "Resources_Accordion" on "Modal_Wizard_Form" wizard
+    When add new volume rows to "Volume_Paths_Table" table in "Resources_Accordion" on "Modal_Wizard_Form" wizard using nontable inputs
             | Volume_Paths_Table_Type_Dropdown | Volume_Paths_Table_Volume_Name_Input | Volume_Paths_Table_Path_Input | Volume_Paths_Table_Secret_Name_Input | Add_New_Row_Button |
             |             Secret               |                                      |                               |                                      |         yes        |
-    Then verify "Volume_Paths_Table_Volume_Name_Input" element in "Resources_Accordion" on "Batch_Run_Edit" wizard should display warning "Input_Hint"."Input_Field_Require"
-    Then verify "Volume_Paths_Table_Path_Input" element in "Resources_Accordion" on "Batch_Run_Edit" wizard should display warning "Input_Hint"."Input_Field_Require"
-    Then verify "Volume_Paths_Table_Secret_Name_Input" element in "Resources_Accordion" on "Batch_Run_Edit" wizard should display warning "Input_Hint"."Input_Field_Require"
-    Then verify "Volume_Paths_Table_Path_Input" element in "Resources_Accordion" on "Batch_Run_Edit" wizard should display hint "Input_Hint"."Mount_Path_Hint"
-    When click on "Delete_New_Row_Button" element in "Resources_Accordion" on "Batch_Run_Edit" wizard
-    When add new volume rows to "Volume_Paths_Table" table in "Resources_Accordion" on "Batch_Run_Edit" wizard using nontable inputs
+    Then verify "Volume_Paths_Table_Volume_Name_Input" element in "Resources_Accordion" on "Modal_Wizard_Form" wizard should display warning "Input_Hint"."Input_Field_Require"
+    Then verify "Volume_Paths_Table_Path_Input" element in "Resources_Accordion" on "Modal_Wizard_Form" wizard should display warning "Input_Hint"."Input_Field_Require"
+    Then verify "Volume_Paths_Table_Secret_Name_Input" element in "Resources_Accordion" on "Modal_Wizard_Form" wizard should display warning "Input_Hint"."Input_Field_Require"
+    Then verify "Volume_Paths_Table_Path_Input" element in "Resources_Accordion" on "Modal_Wizard_Form" wizard should display hint "Input_Hint"."Mount_Path_Hint"
+    When click on "Delete_New_Row_Button" element in "Resources_Accordion" on "Modal_Wizard_Form" wizard
+    When add new volume rows to "Volume_Paths_Table" table in "Resources_Accordion" on "Modal_Wizard_Form" wizard using nontable inputs
             | Volume_Paths_Table_Type_Dropdown | Volume_Paths_Table_Volume_Name_Input | Volume_Paths_Table_Path_Input | Volume_Paths_Table_Claime_Name_Input | Add_New_Row_Button |
             |               PVC                |                                      |                               |                                      |         yes        |
-    Then verify "Volume_Paths_Table_Volume_Name_Input" element in "Resources_Accordion" on "Batch_Run_Edit" wizard should display warning "Input_Hint"."Input_Field_Require"
-    Then verify "Volume_Paths_Table_Path_Input" element in "Resources_Accordion" on "Batch_Run_Edit" wizard should display warning "Input_Hint"."Input_Field_Require"
-    Then verify "Volume_Paths_Table_Claime_Name_Input" element in "Resources_Accordion" on "Batch_Run_Edit" wizard should display warning "Input_Hint"."Input_Field_Require"
-    Then verify "Volume_Paths_Table_Path_Input" element in "Resources_Accordion" on "Batch_Run_Edit" wizard should display hint "Input_Hint"."Mount_Path_Hint"
-    When click on "Delete_New_Row_Button" element in "Resources_Accordion" on "Batch_Run_Edit" wizard
+    Then verify "Volume_Paths_Table_Volume_Name_Input" element in "Resources_Accordion" on "Modal_Wizard_Form" wizard should display warning "Input_Hint"."Input_Field_Require"
+    Then verify "Volume_Paths_Table_Path_Input" element in "Resources_Accordion" on "Modal_Wizard_Form" wizard should display warning "Input_Hint"."Input_Field_Require"
+    Then verify "Volume_Paths_Table_Claime_Name_Input" element in "Resources_Accordion" on "Modal_Wizard_Form" wizard should display warning "Input_Hint"."Input_Field_Require"
+    Then verify "Volume_Paths_Table_Path_Input" element in "Resources_Accordion" on "Modal_Wizard_Form" wizard should display hint "Input_Hint"."Mount_Path_Hint"
+    When click on "Delete_New_Row_Button" element in "Resources_Accordion" on "Modal_Wizard_Form" wizard
 
   @MLD
   Scenario: MLD024 - Check Advanced components on Train Model wizard
@@ -1043,14 +1040,15 @@ Feature: Datasets Page
     Then click on "Train_Button" element on "Datasets_Info_Pane" wizard
     And wait load page
     Then "Form_Header_Run_Details" element on "commonPagesHeader" should contains "Run Details" value
-    And click on "Next_Button" element on "Train_Model" wizard
-    And click on "Next_Button" element on "Train_Model" wizard
-    And click on "Next_Button" element on "Train_Model" wizard
-    And click on "Next_Button" element on "Train_Model" wizard
+    And click on "Next_Button" element on "Modal_Wizard_Form" wizard
+    And click on "Next_Button" element on "Modal_Wizard_Form" wizard
+    And click on "Next_Button" element on "Modal_Wizard_Form" wizard
+    And click on "Next_Button" element on "Modal_Wizard_Form" wizard
     Then "Form_Header_Advanced" element on "commonPagesHeader" should contains "Advanced" value
-    Then "Accordion_Subheader" element in "Advanced_Accordion" on "Batch_Run_Edit" should contains "Environment variables" value
-    Then verify "Advanced_Environment_Variables_Table" element visibility on "Batch_Run_Edit" wizard 
-    When add data to "Advanced_Environment_Variables_Table" table on "Batch_Run_Edit" wizard
+
+    Then "Accordion_Subheader" element on "Modal_Wizard_Form" should contains "Environment variables" value
+    Then verify "Advanced_Environment_Variables_Table" element visibility on "Modal_Wizard_Form" wizard 
+    When add data to "Advanced_Environment_Variables_Table" table on "Modal_Wizard_Form" wizard
             | name_input | type_dropdown | value_input |
             |    name1   |      Value    |    value1   |
             |    name2   |      Value    |      1      |

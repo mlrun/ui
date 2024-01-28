@@ -450,6 +450,17 @@ function deleteRun(req, res) {
   res.send()
 }
 
+function deleteRuns(req, res) {
+  const collectedRuns = runs.runs
+    .filter (run => run.metadata.project === req.params.project && run.metadata.name === req.query.name)
+  
+  if (collectedRuns?.length > 0) {
+    collectedRuns.forEach(collectedRun => remove(runs.runs, collectedRun))    
+  }
+
+  res.send()
+}
+
 function getFunctionCatalog(req, res) {
   res.send(itemsCatalog)
 }
@@ -1275,10 +1286,11 @@ function deleteArtifact(req, res) {
   const collectedArtifacts = artifacts.artifacts
     .filter (artifact => {
       const artifactMetaData = artifact.metadata ?? artifact
+      const artifactSpecData = artifact.spec ?? artifact
 
       return artifactMetaData?.project === req.params.project 
         && artifactMetaData?.tree === req.query.tree
-        && artifactMetaData?.key === req.params.uid
+        && artifactSpecData?.db_key === req.params.key
     }
   )
   if (collectedArtifacts?.length > 0) {
@@ -1588,6 +1600,7 @@ app.get(`${mlrunAPIIngress}/runs`, getRuns)
 app.get(`${mlrunAPIIngress}/run/:project/:uid`, getRun)
 app.patch(`${mlrunAPIIngress}/run/:project/:uid`, patchRun)
 app.delete(`${mlrunAPIIngress}/projects/:project/runs/:uid`, deleteRun)
+app.delete(`${mlrunAPIIngress}/projects/:project/runs`, deleteRuns)
 app.get(`${mlrunIngress}/catalog.json`, getFunctionCatalog)
 app.get(`${mlrunAPIIngress}/hub/sources/:project/items`, getFunctionCatalog)
 app.get(`${mlrunAPIIngress}/hub/sources/:project/items/:uid`, getFunctionItem)
@@ -1604,7 +1617,7 @@ app.get(`${mlrunAPIIngress}/projects/:project/pipelines/:pipelineID`, getPipelin
 app.get(`${mlrunAPIIngress}/projects/:project/artifact-tags`, getProjectsArtifactTags)
 app.get(`${mlrunAPIIngressV2}/projects/:project/artifacts`, getArtifacts)
 app.post(`${mlrunAPIIngressV2}/projects/:project/artifacts`, postArtifact)
-app.delete(`${mlrunAPIIngressV2}/projects/:project/artifacts/:uid`, deleteArtifact)
+app.delete(`${mlrunAPIIngressV2}/projects/:project/artifacts/:key`, deleteArtifact)
 
 app.put(`${mlrunAPIIngress}/projects/:project/tags/:tag`, putTags)
 app.delete(`${mlrunAPIIngress}/projects/:project/tags/:tag`, deleteTags)

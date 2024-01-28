@@ -362,7 +362,7 @@ const requestedFeaturesTable = {
 }
 
 const inputsTable = {
-  root: '.table__item .inputs_container',
+  root: '.table__item .item-info .table',
   header: {
     root: '',
     sorters: {}
@@ -382,14 +382,16 @@ const inputsTable = {
 const artifactsTable = {
   root: '.table__item .item-artifacts',
   header: {
-    root: '',
-    sorters: {}
+    root: '.table-header',
+    sorters: {
+      sorter_icon: '.table-header__cell:nth-of-type(1) svg'
+    }
   },
   body: {
     row: {
-      root: '.item-artifacts__row-wrapper',
+      root: '.table-row',
       fields: {
-        name: '.item-artifacts__row-item:nth-of-type(1) span.link',
+        name: '.table-body__cell:nth-of-type(1) span.link',
         path: '.item-artifacts__row-item:nth-of-type(2) .data-ellipsis',
         size: '.item-artifacts__row-item:nth-of-type(3) .data-ellipsis',
         updated: '.item-artifacts__row-item:nth-of-type(4) .data-ellipsis',
@@ -673,8 +675,8 @@ module.exports = {
     Overview_Headers: commonTable(infoPaneOverviewHeaders),
 
     // Logs tab.
-    Logs_Text_container: By.css('.table__item .table__item_logs__content'),
-    Logs_Refresh_Button: By.css('.table__item .logs_refresh')
+    Logs_Text_container: By.css('.table__item .table__item_logs-content'),
+    Logs_Refresh_Button: By.css('.table__item .logs-refresh')
   },
   workflowsMonitorTabInfoPane: {
     Arrow_Back: commonArrowBack,
@@ -686,15 +688,15 @@ module.exports = {
     Overview_Headers: commonTable(infoPaneOverviewHeaders),
 
     // Logs tab.
-    Logs_Text_container: By.css('.table__item .table__item_logs__content'),
-    Logs_Refresh_Button: By.css('.table__item .logs_refresh')
+    Logs_Text_container: By.css('.table__item .table__item_logs-content'),
+    Logs_Refresh_Button: By.css('.table__item .logs-refresh')
   },
   inputsInfoPane: {
     Inputs_Table: commonTable(inputsTable)
   },
   artifactsInfoPane: {
     Artifacts_Table: commonTable(artifactsTable),
-    Artifact_Preview_Button: By.css('.item-artifacts .item-artifacts__preview .data-ellipsis svg'),
+    Artifact_Preview_Button: By.css('.item-artifacts .artifacts__preview .data-ellipsis svg'),
     Iterations_Dropdown: dropdownComponent(generateDropdownGroup('.item-header__buttons .select'))
   },
   resultsInfoPane: {
