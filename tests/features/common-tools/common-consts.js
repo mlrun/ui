@@ -135,15 +135,16 @@ module.exports = {
   ML_Function_Info_Pane: {
     Tab_List: ['Overview', 'Code', 'Build Log'],
     Overview_Headers: [
-      'Name',
-      'Kind',
-      'Hash',
-      'Version tag',
-      'Code origin',
-      'Updated',
-      'Command',
-      'Image',
-      'Description'
+      'Name:',
+      'Kind:',
+      'Hash:',
+      'Version tag:',
+      'Code origin:',
+      'Updated:',
+      'Command:',
+      'Default handler:',
+      'Image:',
+      'Description:'
     ]
   },
   Files_Info_Pane: {
