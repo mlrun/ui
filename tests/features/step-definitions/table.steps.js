@@ -33,7 +33,8 @@ import {
   verifyText,
   verifyComponentContainsAttributeValue,
   verifyTypedText,
-  waitPageLoad
+  waitPageLoad,
+  waiteUntilComponent
 } from '../common/actions/common.action'
 import {
   checkCellHintText,
@@ -549,6 +550,20 @@ When(
         pageObjects[wizardName][tableName]['tableFields'][fieldName](indx)
       )
     }
+  }
+)
+
+When(
+  'click on {string} in {string} table on {string} wizard with sorters',
+  async function (fieldName, tableName, wizardName) {
+    await waiteUntilComponent(
+      this.driver, 
+      pageObjects[wizardName][tableName]['headerSorters'][fieldName])
+    await clickOnComponent(
+      this.driver,
+      pageObjects[wizardName][tableName]['headerSorters'][fieldName]
+    )
+    await this.driver.sleep(250)
   }
 )
 
