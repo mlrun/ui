@@ -167,8 +167,9 @@ export const createFeaturesRowData = (feature, isTablePanelOpen, showExpandButto
                 FEATURE_STORE_PAGE,
                 FEATURE_SETS_TAB,
                 feature.metadata?.name,
-                feature.metadata?.tag || feature.metadata?.uid,
-                tab
+                feature.metadata?.tag,
+                tab,
+                feature.metadata?.uid
               )
             : '',
         expandedCellContent: {
@@ -187,8 +188,9 @@ export const createFeaturesRowData = (feature, isTablePanelOpen, showExpandButto
                   FEATURE_STORE_PAGE,
                   FEATURE_SETS_TAB,
                   feature.metadata?.name,
-                  feature.metadata?.tag || feature.metadata?.uid,
-                  tab
+                  feature.metadata?.tag,
+                  tab,
+                  feature.metadata?.uid
                 )
               : ''
         }

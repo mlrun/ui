@@ -203,12 +203,6 @@
           }
         }
 
-        &_hidden-content {
-          & * {
-            visibility: hidden;
-          }
-        }
-
         .cell_name {
           position: relative;
           display: flex;

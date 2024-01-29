@@ -517,6 +517,8 @@ export const UPDATE_FEATURE_VECTOR = 'UPDATE_FEATURE_VECTOR'
 
 export const BUTTON_COPY_URI_CELL_TYPE = 'buttonCopyURI'
 
+export const TABLE_LOADER_TARGET_CLASS = 'table-loader-target'
+
 /*=========== FILTERS =============*/
 
 export const DATE_FILTER_ANY_TIME = ['', '']

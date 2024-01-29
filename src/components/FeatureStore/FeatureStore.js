@@ -21,13 +21,14 @@ import React, { useState } from 'react'
 import { Outlet } from 'react-router-dom'
 import { useSelector } from 'react-redux'
 import { useLocation } from 'react-router-dom'
-
+import classNames from 'classnames'
 import Loader from '../../common/Loader/Loader'
 import Breadcrumbs from '../../common/Breadcrumbs/Breadcrumbs'
 import PageActionsMenu from '../../common/PageActionsMenu/PageActionsMenu'
 import ContentMenu from '../../elements/ContentMenu/ContentMenu'
 import YamlModal from '../../common/YamlModal/YamlModal'
 import { ConfirmDialog } from 'igz-controls/components'
+import { TABLE_LOADER_TARGET_CLASS } from '../../constants'
 
 import {
   FEATURE_SETS_TAB,
@@ -86,7 +87,7 @@ const FeatureStore = () => {
             screen={FEATURE_STORE_PAGE}
             tabs={tabs}
           />
-          <div className="table-container">
+          <div className={classNames('table-container', TABLE_LOADER_TARGET_CLASS)}>
             <FeatureStoreContext.Provider
               value={{
                 setConfirmData,
