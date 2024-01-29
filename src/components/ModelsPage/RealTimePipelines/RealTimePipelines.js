@@ -112,22 +112,6 @@ const RealTimePipelines = () => {
     [dispatch, params.projectName]
   )
 
-  const handleExpand = useCallback(
-    (func, content) => {
-      const funcIdentifier = getFunctionIdentifier(func)
-
-      setSelectedRowData(state => {
-        return {
-          ...state,
-          [funcIdentifier]: {
-            content: createFunctionsContent(content[func.name], null, params.projectName, false)
-          }
-        }
-      })
-    },
-    [params.projectName]
-  )
-
   const handleRefresh = useCallback(
     filters => {
       setPipelines([])
@@ -138,46 +122,18 @@ const RealTimePipelines = () => {
     [fetchData]
   )
 
-  const handleCollapse = useCallback(
-    func => {
-      const funcIdentifier = getFunctionIdentifier(func)
-      const newPageDataSelectedRowData = { ...selectedRowData }
-
-      delete newPageDataSelectedRowData[funcIdentifier]
-
-      setSelectedRowData(newPageDataSelectedRowData)
-    },
-    [selectedRowData]
-  )
-
-  const handleExpandAllCallback = (collapse, content) => {
-    const newSelectedRowData = {}
-    if (collapse) {
-      setSelectedRowData({})
-    } else {
-      Object.entries(content).forEach(([key, value]) => {
-        newSelectedRowData[key] = {
-          content: createFunctionsContent(value, null, params.projectName, false)
-        }
-      })
-    }
-
-    setSelectedRowData(newSelectedRowData)
-  }
-
-  const { latestItems, handleExpandRow, expand, handleExpandAll } = useGroupContent(
+  const { latestItems } = useGroupContent(
     pipelines,
     getFunctionIdentifier,
-    handleCollapse,
-    handleExpand,
+    null,
+    null,
     null,
     MODELS_PAGE,
-    REAL_TIME_PIPELINES_TAB,
-    handleExpandAllCallback
+    REAL_TIME_PIPELINES_TAB
   )
 
   const tableContent = useMemo(() => {
-    return createFunctionsContent(latestItems, REAL_TIME_PIPELINES_TAB, params.projectName, true)
+    return createFunctionsContent(latestItems, REAL_TIME_PIPELINES_TAB, params.projectName)
   }, [latestItems, params.projectName])
 
   useEffect(() => {
@@ -212,13 +168,12 @@ const RealTimePipelines = () => {
             <ModelsPageTabs />
             <div className="action-bar">
               <FilterMenu
-                expand={expand}
                 filters={filters}
-                handleExpandAll={handleExpandAll}
                 hidden={Boolean(params.pipelineId)}
                 onChange={handleRefresh}
                 page={MODELS_PAGE}
                 tab={REAL_TIME_PIPELINES_TAB}
+                withoutExpandButton
               />
             </div>
           </div>
@@ -248,7 +203,6 @@ const RealTimePipelines = () => {
                   return (
                     <FunctionsTableRow
                       actionsMenu={actionsMenu}
-                      handleExpandRow={handleExpandRow}
                       handleSelectItem={() => {}}
                       rowIndex={index}
                       key={index}
