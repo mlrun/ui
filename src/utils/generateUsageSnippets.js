@@ -31,13 +31,13 @@ features = [
 ]
 
 vector = fs.FeatureVector("<vector-name>",features=features,description="this is my vector")
-resp = fs.get_offline_features(vector)
+resp = fs.FeatureVector.get_offline_features(vector)
 #Preview the dataset
 resp.to_dataframe().tail(5)`
       },
       {
         title: 'Getting online features:',
-        code: `svc = fs.get_online_feature_service("<vector-uri>")
+        code: `svc = fs.FeatureVector.get_online_feature_service("<vector-uri>")
 resp = svc.get([{"${selectedItem.entities[0]?.name ?? ''}": <value>}])`
       }
     ]
@@ -50,11 +50,11 @@ resp = svc.get([{"${selectedItem.entities[0]?.name ?? ''}": <value>}])`
       {
         title: 'Getting offline & online features:',
         code: `import mlrun.feature_store as fs
-resp = fs.get_offline_features("${uri}")
+resp = fs.FeatureVector.get_offline_features("${uri}")
 #Preview the dataset
 resp.to_dataframe().tail(5)
 
-svc = fs.get_online_feature_service("${uri}")
+svc = fs.FeatureVector.get_online_feature_service("${uri}")
 resp = svc.get([{"customer_id": "42"}, {"customer_id": "50"}])`
       }
     ]

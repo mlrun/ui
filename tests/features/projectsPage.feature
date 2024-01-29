@@ -116,6 +116,14 @@ Feature: MLRun Projects Page
         Then verify if "Create_New_Project" popup dialog appears
         Then type into "Name_Input" on "Create_New_Project" popup dialog "automation-test-name" value
         Then type into "Description_Input" on "Create_New_Project" popup dialog "automation test description" value
+        Then verify "New_Project_Labels_Table" element visibility on "Create_New_Project" wizard
+        And click on "Add_Label_Button" element on "Create_New_Project" wizard
+        Then type value "/" to "Run_Details_Labels_Key" field on "Create_New_Project" wizard
+        Then verify labels warning should display options "Input_Hint"."Projects_Labels_Warning_Key"
+        Then type value "/" to "Run_Details_Labels_Value" field on "Create_New_Project" wizard without inputgroup
+        Then verify labels warning should display options "Input_Hint"."Labels_Warning_Value"
+        When click on "Title" element on "Create_New_Project" wizard
+        And click on "Close_Label_Button" element on "Create_New_Project" wizard
         Then click on "Create_Button" element on "Create_New_Project" wizard
         And set tear-down property "project" created with "automation-test-name" value
         Then check "automation-test-name" value in "name" column in "Projects_Table" table on "Projects" wizard

@@ -93,7 +93,6 @@ Feature: MLRun Project Home Page
         And click on cell with value "Quick actions" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
         And hover "MLRun_Logo" component on "commonPagesHeader" wizard
         And wait load page
-
         And select "tab" with "Project monitoring" value in breadcrumbs menu
         And wait load page
         Then verify breadcrumbs "tab" label should be equal "Project monitoring" value
@@ -675,3 +674,39 @@ Feature: MLRun Project Home Page
         And hover "Edit_Button" component on "Batch_Inference" wizard
         And click on "Edit_Button" element on "Batch_Inference" wizard
         Then verify "Data_Inputs_Path_Dropdown" dropdown element on "Batch_Inference" wizard should contains "Batch_Inference"."Model_Path_Type_Store"
+
+    @MLPH
+    Scenario: MLPH024 - Check Train model wizard opens up
+        Given open url
+        And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
+        And wait load page
+        And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
+        Then click on "Quick_actions_Button" element on "commonPagesHeader" wizard
+        And wait load page
+        Then verify "Development_Actions_Table" element visibility on "Demo_Project" wizard
+        Then verify values in "Development_Actions_Table" table on "Demo_Project" wizard
+            |     name    |
+            |  Batch run  |
+            | Train model |
+        When click on "name" in "Development_Actions_Table" table on "Demo_Project" wizard with offset "false"
+            |    name     |
+            | Train model |
+        And wait load page
+        Then verify "Title" element visibility on "Train_Model" wizard
+        Then "Title" element on "Train_Model" should contains "Train Model" value
+        Then verify "Cross_Cancel_Button" element visibility on "Train_Model" wizard
+        Then "Function_Title" element on "Train_Model" should contains "auto-trainer" value
+        Then "Form_Header_Run_Details" element on "commonPagesHeader" should contains "Run Details" value
+        Then "Hyperparameter_Checkbox" element should be unchecked on "Train_Model" wizard
+        Then verify "Step_1_Button" element on "commonPagesHeader" wizard is enabled
+        Then verify "Step_2_Button" element on "commonPagesHeader" wizard is enabled
+        Then verify "Step_3_Button" element on "commonPagesHeader" wizard is enabled
+        Then verify "Step_4_Button" element on "commonPagesHeader" wizard is enabled
+        Then verify "Step_5_Button" element on "commonPagesHeader" wizard is enabled
+        Then verify "Next_Button" element on "Train_Model" wizard is enabled
+        Then "Next_Button" element on "Train_Model" should contains "Next" value
+        Then verify "Run_Training_Now_Button" element on "Train_Model" wizard is enabled
+        Then "Run_Training_Now_Button" element on "Train_Model" should contains "Run training now" value
+        Then verify "Schedule_Training_Job_Button" element on "Train_Model" wizard is enabled
+        Then "Schedule_Training_Job_Button" element on "Train_Model" should contains "Schedule training job" value
+        Then verify "Back_Button" element not exists on "Train_Model" wizard

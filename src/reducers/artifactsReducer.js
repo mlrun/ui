@@ -93,7 +93,9 @@ export const editTag = createAsyncThunk('editTag', ({ project, oldTag, tag, data
 })
 export const fetchArtifact = createAsyncThunk('fetchArtifact', ({ project, artifact }) => {
   return artifactsApi.getArtifact(project, artifact).then(({ data }) => {
-    return filterArtifacts(data.artifacts)
+    const result = parseArtifacts(data.artifacts)
+
+    return filterArtifacts(result)
   })
 })
 export const fetchArtifacts = createAsyncThunk('fetchArtifacts', ({ project, filters, config }) => {

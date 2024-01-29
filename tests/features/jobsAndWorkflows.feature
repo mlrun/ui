@@ -253,30 +253,34 @@ Feature: Jobs and workflows
 
     @MLJW
     @passive
-    #TODO: run just on full screen, because of scroll
     Scenario: MLJW011 - Verify filtering by job status on Jobs Monitor tab
         Given open url
         And wait load page
-        And click on row root with value "cat-vs-dog-classification" in "name" column in "Projects_Table" table on "Projects" wizard
+        And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
         And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
         And click on cell with value "Jobs and workflows" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
         And hover "MLRun_Logo" component on "commonPagesHeader" wizard
         And wait load page
-        When select "Any time" option in "Start_Time_Filter_Dropdown" filter dropdown on "Jobs_Monitor_Tab" wizard
+        When pick up "Custom range" from "09/03/2021 00:00" to "09/04/2021 00:00" in "Date_Time_Picker" via "Start_Time_Filter_Dropdown" on "Jobs_Monitor_Tab" wizard
+        Then verify from "09/03/2021 00:00" to "09/04/2021 00:00" filter band in "Start_Time_Filter_Dropdown" filter dropdown on "Jobs_Monitor_Tab" wizard
+        And wait load page
         Then select "Completed" option in "Status_Filter_Dropdown" filter dropdown on "Jobs_Monitor_Tab" wizard
         And wait load page
         Then value in "status" column with "tooltip" in "Jobs_Monitor_Table" on "Jobs_Monitor_Tab" wizard should contains "Completed"
         Then select "Error" option in "Status_Filter_Dropdown" filter dropdown on "Jobs_Monitor_Tab" wizard
         And wait load page
         Then value in "status" column with "tooltip" in "Jobs_Monitor_Table" on "Jobs_Monitor_Tab" wizard should contains "Error"
+        When pick up "Custom range" from "09/08/2021 00:00" to "09/09/2021 00:00" in "Date_Time_Picker" via "Start_Time_Filter_Dropdown" on "Jobs_Monitor_Tab" wizard
+        Then verify from "09/08/2021 00:00" to "09/09/2021 00:00" filter band in "Start_Time_Filter_Dropdown" filter dropdown on "Jobs_Monitor_Tab" wizard
+        And wait load page
         Then select "Pending" option in "Status_Filter_Dropdown" filter dropdown on "Jobs_Monitor_Tab" wizard
         And wait load page
         Then value in "status" column with "tooltip" in "Jobs_Monitor_Table" on "Jobs_Monitor_Tab" wizard should contains "Pending"
 
     @MLJW
     @passive
-    Scenario: verify filtering Jobs after re-run action
+    Scenario: MLJW062 - Verify filtering Jobs after opening Batch Re-run wizard
         Given open url
         And wait load page
         And wait load page
@@ -287,21 +291,21 @@ Feature: Jobs and workflows
         And hover "MLRun_Logo" component on "commonPagesHeader" wizard
         And wait load page
         Then select "Any time" option in "Start_Time_Filter_Dropdown" filter dropdown on "Jobs_Monitor_Tab" wizard
-        Then type value "test" to "Table_Name_Filter_Input" field on "Jobs_Monitor_Tab" wizard
+        Then type value "seff" to "Table_Name_Filter_Input" field on "Jobs_Monitor_Tab" wizard
         Then type value "kind" to "Table_Labels_Filter_Input" field on "Jobs_Monitor_Tab" wizard
         Then click on "Table_Refresh_Button" element on "Jobs_Monitor_Tab" wizard
         And wait load page
-        Then select "Batch re-run" option in action menu on "Jobs_Monitor_Tab" wizard in "Jobs_Monitor_Table" table at row with "test" value in "name" column
+        Then select "Batch re-run" option in action menu on "Jobs_Monitor_Tab" wizard in "Jobs_Monitor_Table" table at row with "seff" value in "name" column
         And wait load page
         Then "Batch_Re_Run_Header" element on "Batch_Re_Run" should contains "Batch Re-Run" value
         Then click on "Cross_Close_Button" element on "Batch_Re_Run" wizard
-        Then value in "name" column with "text" in "Jobs_Monitor_Table" on "Jobs_Monitor_Tab" wizard should contains "test"
+        Then value in "name" column with "text" in "Jobs_Monitor_Table" on "Jobs_Monitor_Tab" wizard should contains "seff"
         Then value in "labels" column with "dropdowns" in "Jobs_Monitor_Table" on "Jobs_Monitor_Tab" wizard should contains "kind"
 
     @MLJW
     @passive
     @inProgress
-    Scenario: verify filtering by starttime on Jobs Monitor tab
+    Scenario: MLJW064 - Verify filtering by starttime on Jobs Monitor tab
         Given open url
         And wait load page
         And click on row root with value "churn-project-admin" in "name" column in "Projects_Table" table on "Projects" wizard
@@ -315,7 +319,7 @@ Feature: Jobs and workflows
         Then value in "datetime" column in "Jobs_Monitor_Table" on "Jobs_Monitor_Tab" wizard should be from "11/07/2021 00:00" to "11/09/2021 00:00"
 
     @oldJobWizard
-    Scenario: verify mandatory elements starttime on Jobs Monitor tab
+    Scenario: Prior implementation - verify mandatory elements starttime on Jobs Monitor tab
         Given open url
         And wait load page
         And click on row root with value "churn-project-admin" in "name" column in "Projects_Table" table on "Projects" wizard
@@ -331,7 +335,7 @@ Feature: Jobs and workflows
         Then verify "Collapse_Button" element visibility in "Function_Templates_Accordion" on "Create_Job" wizard
 
     @oldJobWizard
-    Scenario: verify mandatory elements starttime on Jobs Monitor tab
+    Scenario: Prior implementation - verify mandatory elements starttime on Jobs Monitor tab
         Given open url
         And wait load page
         And click on row root with value "churn-project-admin" in "name" column in "Projects_Table" table on "Projects" wizard
@@ -464,11 +468,10 @@ Feature: Jobs and workflows
         
     @MLJW
     @passive
-    #TODO: rewrite twst accourding to new implementation "Refresh" button
-    Scenario: Check all mandatory components in Item infopane on Logs tab table on Jobs Monitor Page
+    Scenario: MLJW063 - Check all mandatory components in Item infopane on Logs tab table on Jobs Monitor Page
         Given open url
         And wait load page
-        And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
+        And click on row root with value "cat-vs-dog-classification" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
         And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
         And click on cell with value "Jobs and workflows" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
@@ -476,9 +479,9 @@ Feature: Jobs and workflows
         And wait load page
         Then verify "Monitor Jobs" tab is active in "Jobs_Tab_Selector" on "Jobs_Monitor_Tab" wizard
         When select "Any time" option in "Start_Time_Filter_Dropdown" filter dropdown on "Jobs_Monitor_Tab" wizard
-        When click on cell with row index 1 in "name" column in "Schedule_Monitor_Table" table on "Schedule_Monitor_Tab" wizard
+        Then select "Completed" option in "Status_Filter_Dropdown" filter dropdown on "Jobs_Monitor_Tab" wizard
         And wait load page
-        Then select "Any time" option in "Start_Time_Filter_Dropdown" filter dropdown on "Jobs_Monitor_Tab" wizard
+        When click on cell with row index 1 in "name" column in "Schedule_Monitor_Table" table on "Schedule_Monitor_Tab" wizard
         And wait load page
         When click on cell with row index 1 in "name" column in "Jobs_Monitor_Table" table on "Jobs_Monitor_Tab" wizard
         And wait load page
@@ -486,13 +489,10 @@ Feature: Jobs and workflows
         Then verify "Logs" tab is active in "Info_Pane_Tab_Selector" on "Jobs_Monitor_Tab_Info_Pane" wizard
         Then verify "Logs_Text_container" element visibility on "Jobs_Monitor_Tab_Info_Pane" wizard
         Then verify "Logs_Refresh_Button" element visibility on "Jobs_Monitor_Tab_Info_Pane" wizard
-        #Then "Logs_Refresh_Button" element on "Jobs_Monitor_Tab_Info_Pane" should contains "Refresh" value - change from button to item_logs with text "Refresh" in toltip 
 
     @MLJW
-    @FAILED_TODO
-    #TODO: select "Artifacts" tab in "Info_Pane_Tab_Selector" - rewrite test accourding to new implementation 'JOB' nesting
     @passive
-    Scenario: Check all mandatory components in Item infopane on Artifacts tab on Jobs Monitor Page
+    Scenario: MLJW065 - Check all mandatory components in Item infopane on Artifacts tab on Jobs Monitor Page
         Given open url
         And wait load page
         And click on row root with value "churn-project-admin" in "name" column in "Projects_Table" table on "Projects" wizard
@@ -508,17 +508,21 @@ Feature: Jobs and workflows
         And wait load page
         And select "Artifacts" tab in "Info_Pane_Tab_Selector" on "Jobs_Monitor_Tab_Info_Pane" wizard
         Then verify "Artifacts_Table" element visibility on "Artifacts_Info_Pane" wizard
+        When click on "sorter_icon" in "Artifacts_Table" table on "Artifacts_Info_Pane" wizard with sorters
+        And wait load page
+        And select "Artifacts" tab in "Info_Pane_Tab_Selector" on "Jobs_Monitor_Tab_Info_Pane" wizard
         Then click on cell with row index 1 in "name" column in "Artifacts_Table" table on "Artifacts_Info_Pane" wizard
         Then click on "Artifact_Preview_Button" element on "Artifacts_Info_Pane" wizard
+        And wait load page
         Then verify "Preview_Header" element visibility on "Artifact_Preview_Popup" wizard
         Then verify "Cross_Cancel_Button" element visibility on "Artifact_Preview_Popup" wizard
         Then click on "Cross_Cancel_Button" element on "Artifact_Preview_Popup" wizard
+        And wait load page
         Then verify "Iterations_Dropdown" element visibility on "Artifacts_Info_Pane" wizard
-        Then click on cell with row index 2 in "name" column in "Artifacts_Table" table on "Artifacts_Info_Pane" wizard
         Then select "1" option in "Iterations_Dropdown" dropdown on "Artifacts_Info_Pane" wizard
         And wait load page
         Then verify "Artifacts_Table" element visibility on "Artifacts_Info_Pane" wizard
-        Then click on cell with row index 2 in "name" column in "Artifacts_Table" table on "Artifacts_Info_Pane" wizard
+        Then click on cell with row index 1 in "name" column in "Artifacts_Table" table on "Artifacts_Info_Pane" wizard
         Then click on "Artifact_Preview_Button" element on "Artifacts_Info_Pane" wizard
         Then verify "Preview_Header" element visibility on "Artifact_Preview_Popup" wizard
         Then click on "Cross_Cancel_Button" element on "Artifact_Preview_Popup" wizard
@@ -528,7 +532,7 @@ Feature: Jobs and workflows
 
     @MLJW
     @passive
-    Scenario: Check all mandatory components in Item infopane on Overview tab table on Schedule Page
+    Scenario: MLJW066 - Check all mandatory components in Item infopane on Overview tab table on Schedule Page
         Given open url
         And wait load page
         And click on row root with value "churn-project-admin" in "name" column in "Projects_Table" table on "Projects" wizard
@@ -552,7 +556,7 @@ Feature: Jobs and workflows
 
     @MLJW
     @passive
-    Scenario: Verify all mandatory components on Delete existing scheduled job
+    Scenario: MLJW067 - Verify all mandatory components on Delete existing scheduled job
         Given open url
         And wait load page
         And click on row root with value "churn-project-admin" in "name" column in "Projects_Table" table on "Projects" wizard
@@ -573,14 +577,10 @@ Feature: Jobs and workflows
         Then "Delete_Button" element on "Common_Popup" should contains "Delete" value
 
     @MLJW
-    Scenario: Delete Scheduled Job
-        * set tear-down property "schedule" created in "automation-test-name01" project with "new-aqa-schedule-01" value
-        * set tear-down property "project" created with "automation-test-name01" value
-        * create "automation-test-name01" MLRun Project with code 201
-        * create "new-aqa-schedule-01" Schedule in "automation-test-name01" project with code 200
+    Scenario: MLJW068 - Delete Scheduled Job
         Given open url
         And wait load page
-        And click on row root with value "automation-test-name01" in "name" column in "Projects_Table" table on "Projects" wizard
+        And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
         And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
         And click on cell with value "Jobs and workflows" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
@@ -589,14 +589,14 @@ Feature: Jobs and workflows
         And select "Schedule" tab in "Jobs_Tab_Selector" on "Jobs_Monitor_Tab" wizard
         And wait load page
         Then verify "Schedule" tab is active in "Jobs_Tab_Selector" on "Jobs_Monitor_Tab" wizard
-        Then select "Delete" option in action menu on "Schedule_Monitor_Tab" wizard in "Schedule_Monitor_Table" table at row with "new-aqa-schedule-01" value in "name" column
+        Then select "Delete" option in action menu on "Schedule_Monitor_Tab" wizard in "Schedule_Monitor_Table" table at row with "erann-test" value in "name" column
         Then verify if "Common_Popup" popup dialog appears
         Then click on "Delete_Button" element on "Common_Popup" wizard
         And wait load page
-        Then check "new-aqa-schedule-01" value not in "name" column in "Schedule_Monitor_Table" table on "Schedule_Monitor_Tab" wizard
+        Then check "erann-test" value not in "name" column in "Schedule_Monitor_Table" table on "Schedule_Monitor_Tab" wizard
 
     @oldJobWizard
-    Scenario: verify mandatory elements on Create New Jobs side panel except accordions
+    Scenario: Prior implementation - verify mandatory elements on Create New Jobs side panel except accordions
         Given open url
         And wait load page
         And click on row root with value "churn-project-admin" in "name" column in "Projects_Table" table on "Projects" wizard
@@ -630,7 +630,7 @@ Feature: Jobs and workflows
         Then "Run_Now_Button" element on "New_JobTemplate_Edit" should contains "Run now" value
 
     @oldJobWizard
-    Scenario: verify mandatory elements in Data Inputs Accordion on Create New Jobs side panel
+    Scenario: Prior implementation - verify mandatory elements in Data Inputs Accordion on Create New Jobs side panel
         Given open url
         And wait load page
         And click on row root with value "churn-project-admin" in "name" column in "Projects_Table" table on "Projects" wizard
@@ -648,7 +648,7 @@ Feature: Jobs and workflows
         Then verify "Default_Artifact_Path_Input" element visibility in "Data_Inputs_Accordion" on "New_JobTemplate_Edit" wizard
 
     @oldJobWizard
-    Scenario: Verify behaviour of Combobox element on Create New Jobs wizard on Data Inputs Accordion
+    Scenario: Prior implementation - verify behaviour of Combobox element on Create New Jobs wizard on Data Inputs Accordion
         Given open url
         And wait load page
         And click on row root with value "churn-project-admin" in "name" column in "Projects_Table" table on "Projects" wizard
@@ -689,7 +689,7 @@ Feature: Jobs and workflows
         Then verify "URL_Combobox" element in "Data_Inputs_Accordion" on "New_JobTemplate_Edit" wizard should display warning "Input_Hint"."S3_Path_Hint"
 
     @oldJobWizard
-    Scenario: Verify behaviour of Data Inputs Table in Data Inputs Accordion on create New JobTemplate edit wizard
+    Scenario: Prior implementation - verify behaviour of Data Inputs Table in Data Inputs Accordion on create New JobTemplate edit wizard
         Given open url
         And wait load page
         And click on row root with value "churn-project-admin" in "name" column in "Projects_Table" table on "Projects" wizard
@@ -750,7 +750,7 @@ Feature: Jobs and workflows
             | edited_name3             | s3://artifacts/my-project/edited-artifact3    |
 
     @oldJobWizard
-    Scenario: verify mandatory elements in Parameters Accordion on Create New Jobs side panel
+    Scenario: Prior implementation - verify mandatory elements in Parameters Accordion on Create New Jobs side panel
         Given open url
         And wait load page
         And click on row root with value "churn-project-admin" in "name" column in "Projects_Table" table on "Projects" wizard
@@ -777,7 +777,7 @@ Feature: Jobs and workflows
         Then verify "Criteria_Dropdown" element in "Parameters_Accordion" on "New_JobTemplate_Edit" wizard should contains "Dropdown_Options"."Criteria_Dropdown_Options"
 
     @oldJobWizard
-    Scenario: Verify behaviour of Parameters Table in Resources Accordion on create New JobTemplate edit wizard
+    Scenario: Prior implementation - verify behaviour of Parameters Table in Resources Accordion on create New JobTemplate edit wizard
         Given open url
         And wait load page
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
@@ -852,7 +852,7 @@ Feature: Jobs and workflows
             | edited_name6 | float   | Simple       | editedValue6  |
 
     @oldJobWizard
-    Scenario: Verify behaviour of Volume Paths Table in Resources Accordion on create New JobTemplate edit wizard
+    Scenario: Prior implementation - verify behaviour of Volume Paths Table in Resources Accordion on create New JobTemplate edit wizard
         Given open url
         And wait load page
         And click on row root with value "churn-project-admin" in "name" column in "Projects_Table" table on "Projects" wizard
@@ -951,7 +951,7 @@ Feature: Jobs and workflows
             | Volume_Name_7 | /path/to/happines7    |
 
     @oldJobWizard
-    Scenario: Verify behaviour of Node Selector Table in Resources Accordion on create New JobTemplate edit wizard
+    Scenario: Prior implementation - verify behaviour of Node Selector Table in Resources Accordion on create New JobTemplate edit wizard
         Given open url
         And wait load page
         And click on row root with value "churn-project-admin" in "name" column in "Projects_Table" table on "Projects" wizard
@@ -1001,7 +1001,7 @@ Feature: Jobs and workflows
             | key4edited | value4edited |
     
     @oldJobWizard
-    Scenario: verify mandatory elements in Resources Accordion on Create New Jobs side panel
+    Scenario: Prior implementation - verify mandatory elements in Resources Accordion on Create New Jobs side panel
         Given open url
         And wait load page
         And click on row root with value "churn-project-admin" in "name" column in "Projects_Table" table on "Projects" wizard
@@ -1105,7 +1105,7 @@ Feature: Jobs and workflows
         Then decrease value on 15 points in "GPU_Limit_Number_Input" field on "Resources_Accordion" on "New_JobTemplate_Edit" wizard
 
     @oldJobWizard
-    Scenario: verify mandatory elements in Advanced Accordion on Create New Jobs side panel
+    Scenario: Prior implementation - verify mandatory elements in Advanced Accordion on Create New Jobs side panel
         Given open url
         And wait load page
         And click on row root with value "churn-project-admin" in "name" column in "Projects_Table" table on "Projects" wizard
@@ -1126,7 +1126,7 @@ Feature: Jobs and workflows
         When collapse "Advanced_Accordion" on "New_JobTemplate_Edit" wizard
 
     @oldJobWizard
-    Scenario: verify mandatory elements in Advanced Accordion on Create New Jobs side panel in Demo mode
+    Scenario: Prior implementation - verify mandatory elements in Advanced Accordion on Create New Jobs side panel in Demo mode
         Given open url
         And wait load page
         And turn on demo mode
@@ -1149,7 +1149,7 @@ Feature: Jobs and workflows
         When collapse "Advanced_Accordion" on "New_JobTemplate_Edit" wizard
 
     @oldJobWizard
-    Scenario: verify Advanced Environment Variables Table in Advanced Accordion on Create New Jobs side panel
+    Scenario: Prior implementation - verify Advanced Environment Variables Table in Advanced Accordion on Create New Jobs side panel
         Given open url
         And wait load page
         And click on row root with value "churn-project-admin" in "name" column in "Projects_Table" table on "Projects" wizard
@@ -1206,7 +1206,7 @@ Feature: Jobs and workflows
             | name5edited | value5edited      |
 
     @oldJobWizard
-    Scenario: verify Advanced Environment Variables Table in Advanced Accordion on Create New Jobs side panel
+    Scenario: Prior implementation - verify Advanced Environment Variables Table in Advanced Accordion on Create New Jobs side panel
         Given open url
         And wait load page
         And click on row root with value "churn-project-admin" in "name" column in "Projects_Table" table on "Projects" wizard
@@ -1333,7 +1333,7 @@ Feature: Jobs and workflows
             | file        | value2edited      |
 
     @oldJobWizard
-    Scenario: verify non-unique value input hint on Create New Jobs side panel
+    Scenario: Prior implementation - verify non-unique value input hint on Create New Jobs side panel
         Given open url
         And wait load page
         And click on row root with value "churn-project-admin" in "name" column in "Projects_Table" table on "Projects" wizard
@@ -1370,7 +1370,7 @@ Feature: Jobs and workflows
         Then verify "Environment_Variables_Name_Input" element in "Advanced_Accordion" on "New_JobTemplate_Edit" wizard should display warning "Input_Hint"."Name_Already_Exists"
 
     @oldJobWizard
-    Scenario: Run New Job from template
+    Scenario: Prior implementation - run New Job from template
         * set tear-down property "project" created with "automation-test-name-1100" value
         * create "automation-test-name-1100" MLRun Project with code 201
         Given open url
@@ -1437,7 +1437,7 @@ Feature: Jobs and workflows
 
     @MLJW
     @passive
-    Scenario: Verify View YAML action on Workflows Monitor tab
+    Scenario: MLJW069 - Verify View YAML action on Workflows Monitor tab
         Given open url
         And turn on demo mode
         And wait load page
@@ -1457,7 +1457,7 @@ Feature: Jobs and workflows
 
     @MLJW
     @passive
-    Scenario: Verify View YAML action on Schedule Monitor tab
+    Scenario: MLJW070 - Verify View YAML action on Schedule Monitor tab
         Given open url
         And wait load page
         And click on row root with value "churn-project-admin" in "name" column in "Projects_Table" table on "Projects" wizard
@@ -1482,7 +1482,7 @@ Feature: Jobs and workflows
 
     @MLJW
     @passive
-    Scenario: Check all mandatory components on Workflow List View
+    Scenario: MLJW071 - Check all mandatory components on Workflow List View
         Given open url
         And turn on demo mode
         And wait load page
@@ -1501,11 +1501,9 @@ Feature: Jobs and workflows
         Then click on "Toggle_View_Button" element on "Workflows_Monitor_Tab" wizard
         Then verify "Workflow_List_View_Table" element visibility on "Workflows_Monitor_Tab" wizard
 
-    @MLJW
-    @FAILED_TODO
-    #TODO: Workflow_List_View_Table not clickable need check data on server  
+    @MLJW 
     @passive
-    Scenario: Check all mandatory components on Overview tab Item infopane on Workflow List View Tab
+    Scenario: MLJW072 - Check all mandatory components on Overview tab Item infopane on Workflow List View Tab
         Given open url
         And turn on demo mode
         And wait load page
@@ -1517,7 +1515,7 @@ Feature: Jobs and workflows
         And wait load page
         And select "Monitor Workflows" tab in "Jobs_Tab_Selector" on "Jobs_Monitor_Tab" wizard
         And wait load page
-        When click on cell with row index 1 in "name" column in "Workflows_Monitor_Table" table on "Workflows_Monitor_Tab" wizard
+        When click on cell with row index 2 in "name" column in "Workflows_Monitor_Table" table on "Workflows_Monitor_Tab" wizard
         And wait load page
         Then click on "Toggle_View_Button" element on "Workflows_Monitor_Tab" wizard
         And wait load page
@@ -1532,10 +1530,8 @@ Feature: Jobs and workflows
         Then verify "Overview_Headers" on "Workflows_Monitor_Tab_Info_Pane" wizard should contains "Jobs_Monitor_Tab_Info_Pane"."Overview_Headers"
 
     @MLJW
-    @FAILED_TODO
-    #TODO: Workflow_List_View_Table not clickable need check data on server
     @passive
-    Scenario: Check all mandatory components on Logs tab Item infopane on Workflow List View Tab
+    Scenario: MLJW073 - Check all mandatory components on Logs tab Item infopane on Workflow List View Tab
         Given open url
         And turn on demo mode
         And wait load page
@@ -1547,21 +1543,19 @@ Feature: Jobs and workflows
         And wait load page
         And select "Monitor Workflows" tab in "Jobs_Tab_Selector" on "Jobs_Monitor_Tab" wizard
         And wait load page
-        When click on cell with row index 1 in "name" column in "Workflows_Monitor_Table" table on "Workflows_Monitor_Tab" wizard
+        When click on cell with row index 2 in "name" column in "Workflows_Monitor_Table" table on "Workflows_Monitor_Tab" wizard
         And wait load page
         Then click on "Toggle_View_Button" element on "Workflows_Monitor_Tab" wizard
         When click on cell with row index 2 in "name" column in "Workflow_List_View_Table" table on "Workflows_Monitor_Tab" wizard
+        And wait load page
         And select "Logs" tab in "Info_Pane_Tab_Selector" on "Workflows_Monitor_Tab_Info_Pane" wizard
         Then verify "Logs" tab is active in "Info_Pane_Tab_Selector" on "Workflows_Monitor_Tab_Info_Pane" wizard
         Then verify "Logs_Text_container" element visibility on "Workflows_Monitor_Tab_Info_Pane" wizard
         Then verify "Logs_Refresh_Button" element visibility on "Workflows_Monitor_Tab_Info_Pane" wizard
-        Then "Logs_Refresh_Button" element on "Workflows_Monitor_Tab_Info_Pane" should contains "Refresh" value
 
     @MLJW
-    @FAILED_TODO
-    #TODO: Workflow_List_View_Table not clickable need check data on server
     @passive
-    Scenario: Check all mandatory components on Inputs tab Item infopane on Workflow List View Tab
+    Scenario: MLJW074 - Check all mandatory components on Inputs tab Item infopane on Workflow List View Tab
         Given open url
         And turn on demo mode
         And wait load page
@@ -1574,18 +1568,17 @@ Feature: Jobs and workflows
         And select "Monitor Workflows" tab in "Jobs_Tab_Selector" on "Jobs_Monitor_Tab" wizard
         And wait load page
         Then verify "Monitor Workflows" tab is active in "Jobs_Tab_Selector" on "Jobs_Monitor_Tab" wizard
-        When click on cell with row index 1 in "name" column in "Workflows_Monitor_Table" table on "Workflows_Monitor_Tab" wizard
+        When click on cell with row index 2 in "name" column in "Workflows_Monitor_Table" table on "Workflows_Monitor_Tab" wizard
         And wait load page
         Then click on "Toggle_View_Button" element on "Workflows_Monitor_Tab" wizard
         When click on cell with row index 2 in "name" column in "Workflow_List_View_Table" table on "Workflows_Monitor_Tab" wizard
+        And wait load page
         And select "Inputs" tab in "Info_Pane_Tab_Selector" on "Workflows_Monitor_Tab_Info_Pane" wizard
         Then verify "Inputs_Table" element visibility on "Inputs_Info_Pane" wizard
 
     @MLJW
-    @FAILED_TODO
-    #TODO: Workflow_List_View_Table not clickable need check data on server
     @passive
-    Scenario: Check all mandatory components on Artifacts tab Item infopane on Workflow List View Tab
+    Scenario: MLJW075 - Check all mandatory components on Artifacts tab Item infopane on Workflow List View Tab
         Given open url
         And turn on demo mode
         And wait load page
@@ -1598,18 +1591,17 @@ Feature: Jobs and workflows
         And select "Monitor Workflows" tab in "Jobs_Tab_Selector" on "Jobs_Monitor_Tab" wizard
         And wait load page
         Then verify "Monitor Workflows" tab is active in "Jobs_Tab_Selector" on "Jobs_Monitor_Tab" wizard
-        When click on cell with row index 1 in "name" column in "Workflows_Monitor_Table" table on "Workflows_Monitor_Tab" wizard
+        When click on cell with row index 2 in "name" column in "Workflows_Monitor_Table" table on "Workflows_Monitor_Tab" wizard
         And wait load page
         Then click on "Toggle_View_Button" element on "Workflows_Monitor_Tab" wizard
         When click on cell with row index 2 in "name" column in "Workflow_List_View_Table" table on "Workflows_Monitor_Tab" wizard
+        And wait load page
         And select "Artifacts" tab in "Info_Pane_Tab_Selector" on "Workflows_Monitor_Tab_Info_Pane" wizard
         Then verify "Artifacts_Table" element visibility on "Artifacts_Info_Pane" wizard
 
     @MLJW
-    @FAILED_TODO
-    #TODO: Workflow_List_View_Table not clickable need check data on server
     @passive
-    Scenario: Check all mandatory components on Results tab Item infopane on Workflow List View Tab
+    Scenario: MLJW076 - Check all mandatory components on Results tab Item infopane on Workflow List View Tab
         Given open url
         And turn on demo mode
         And wait load page
@@ -1622,10 +1614,11 @@ Feature: Jobs and workflows
         And select "Monitor Workflows" tab in "Jobs_Tab_Selector" on "Jobs_Monitor_Tab" wizard
         And wait load page
         Then verify "Monitor Workflows" tab is active in "Jobs_Tab_Selector" on "Jobs_Monitor_Tab" wizard
-        When click on cell with row index 1 in "name" column in "Workflows_Monitor_Table" table on "Workflows_Monitor_Tab" wizard
+        When click on cell with row index 2 in "name" column in "Workflows_Monitor_Table" table on "Workflows_Monitor_Tab" wizard
         And wait load page
         Then click on "Toggle_View_Button" element on "Workflows_Monitor_Tab" wizard
-        When click on cell with row index 2 in "name" column in "Workflow_List_View_Table" table on "Workflows_Monitor_Tab" wizard
+        When click on cell with row index 4 in "name" column in "Workflow_List_View_Table" table on "Workflows_Monitor_Tab" wizard
+        And wait load page
         And select "Results" tab in "Info_Pane_Tab_Selector" on "Workflows_Monitor_Tab_Info_Pane" wizard
         Then verify "Results_Table" element visibility on "Results_Info_Pane" wizard
 
@@ -1633,7 +1626,8 @@ Feature: Jobs and workflows
     @FAILED_TODO
     #TODO: Workflow_List_View_Table not clickable need check data on server
     @passive
-    Scenario: Verify all mandatory component on Re-run Workflow sidebar
+    #@uniqueTag
+    Scenario: Verify all mandatory component on Batch Re-run Workflow wizard
         Given open url
         And turn on demo mode
         And wait load page
@@ -1680,10 +1674,8 @@ Feature: Jobs and workflows
         Then "Run_Now_Button" element on "New_JobTemplate_Edit" should contains "Run now" value
 
     @MLJW
-    @FAILED_TODO
-    #TODO: Workflow_List_View_Table not clickable need check data on server
     @passive
-    Scenario: Check Artifacts preview action on Artifacts tab Item infopane on Workflow List View Tab
+    Scenario: MLJW077 - Check Artifacts preview action on Artifacts tab Item infopane on Workflow List View Tab
         Given open url
         And turn on demo mode
         And wait load page
@@ -1696,13 +1688,15 @@ Feature: Jobs and workflows
         And select "Monitor Workflows" tab in "Jobs_Tab_Selector" on "Jobs_Monitor_Tab" wizard
         And wait load page
         Then verify "Monitor Workflows" tab is active in "Jobs_Tab_Selector" on "Jobs_Monitor_Tab" wizard
-        When click on cell with row index 1 in "name" column in "Workflows_Monitor_Table" table on "Workflows_Monitor_Tab" wizard
+        When click on cell with row index 2 in "name" column in "Workflows_Monitor_Table" table on "Workflows_Monitor_Tab" wizard
         And wait load page
         Then click on "Toggle_View_Button" element on "Workflows_Monitor_Tab" wizard
-        When click on cell with row index 3 in "name" column in "Workflow_List_View_Table" table on "Workflows_Monitor_Tab" wizard
+        When click on cell with row index 1 in "name" column in "Workflow_List_View_Table" table on "Workflows_Monitor_Tab" wizard
+        And wait load page
         And select "Artifacts" tab in "Info_Pane_Tab_Selector" on "Workflows_Monitor_Tab_Info_Pane" wizard
         Then click on cell with row index 1 in "name" column in "Artifacts_Table" table on "Artifacts_Info_Pane" wizard
         Then click on "Artifact_Preview_Button" element on "Artifacts_Info_Pane" wizard
+        And wait load page
         Then verify "Preview_Header" element visibility on "Artifact_Preview_Popup" wizard
         Then verify "Cross_Cancel_Button" element visibility on "Artifact_Preview_Popup" wizard
 
@@ -1719,9 +1713,12 @@ Feature: Jobs and workflows
         And wait load page
         Then verify "Monitor Jobs" tab is active in "Jobs_Tab_Selector" on "Jobs_Monitor_Tab" wizard
         When pick up "Custom range" from "09/01/2021 18:00" to "09/03/2021 18:00" in "Date_Time_Picker" via "Start_Time_Filter_Dropdown" on "Jobs_Monitor_Tab" wizard
+        Then select "Error" option in "Status_Filter_Dropdown" filter dropdown on "Jobs_Monitor_Tab" wizard
         Then verify options in action menu on "Jobs_Monitor_Tab" wizard in "Jobs_Monitor_Table" table with "Error" value in "status" column should contains "Jobs_And_Workflows"."Job_Action_Menu_Options"
+        Then select "Running" option in "Status_Filter_Dropdown" filter dropdown on "Jobs_Monitor_Tab" wizard
         Then verify options in action menu on "Jobs_Monitor_Tab" wizard in "Jobs_Monitor_Table" table with "Running" value in "status" column should contains "Jobs_And_Workflows"."Running_Job_Action_Menu_Options"
         When pick up "Custom range" from "08/28/2021 18:00" to "09/01/2021 18:00" in "Date_Time_Picker" via "Start_Time_Filter_Dropdown" on "Jobs_Monitor_Tab" wizard
+        Then select "Completed" option in "Status_Filter_Dropdown" filter dropdown on "Jobs_Monitor_Tab" wizard
         Then verify options in action menu on "Jobs_Monitor_Tab" wizard in "Jobs_Monitor_Table" table with "Completed" value in "status" column should contains "Jobs_And_Workflows"."Job_Action_Menu_Options"
         Then select "Any time" option in "Start_Time_Filter_Dropdown" filter dropdown on "Jobs_Monitor_Tab" wizard
         Then select "Pending" option in "Status_Filter_Dropdown" filter dropdown on "Jobs_Monitor_Tab" wizard
@@ -1729,7 +1726,7 @@ Feature: Jobs and workflows
 
     @MLJW
     @passive
-    Scenario: Check options in action menu on Workflows Monitor tab
+    Scenario: MLJW077 - Check options in action menu on Workflows Monitor tab
         Given open url
         And turn on demo mode
         And wait load page
@@ -1746,10 +1743,10 @@ Feature: Jobs and workflows
 
     @MLJW
     @passive
-    Scenario: Check options in action menu on Schedule tab
+    Scenario: MLJW078 - Check options in action menu on Schedule tab
         Given open url
         And wait load page
-        And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
+        And click on row root with value "churn-project-admin" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
         And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
         And click on cell with value "Jobs and workflows" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
@@ -1758,11 +1755,11 @@ Feature: Jobs and workflows
         And select "Schedule" tab in "Jobs_Tab_Selector" on "Jobs_Monitor_Tab" wizard
         And wait load page
         Then verify "Schedule" tab is active in "Jobs_Tab_Selector" on "Jobs_Monitor_Tab" wizard
-        Then verify options in action menu on "Schedule_Monitor_Tab" wizard in "Schedule_Monitor_Table" table with "Job" value in "type" column should contains "Jobs_And_Workflows"."Schedule_Action_Menu_Options"
-
+        Then verify action menu on "Schedule_Monitor_Tab" wizard in "Schedule_Monitor_Table" table with "clean-data" value in "name" column should contains "Jobs_And_Workflows"."Schedule_Action_Menu_Options"
+        
     @MLJW
     @passive
-    Scenario: Verify all mandatory component on Edit Scheduled Job sidebar
+    Scenario: MLJW079 - Verify visibility of main components on Edit Scheduled Job wizard
         Given open url
         And wait load page
         And click on row root with value "churn-project-admin" in "name" column in "Projects_Table" table on "Projects" wizard
@@ -1775,34 +1772,53 @@ Feature: Jobs and workflows
         And wait load page
         Then select "Edit" option in action menu on "Schedule_Monitor_Tab" wizard in "Schedule_Monitor_Table" table at row with "clean-data" value in "name" column
         And wait load page
-        Then verify "Data_Source_Input_Sources_Table" element visibility in "Data_Inputs_Accordion" on "New_JobTemplate_Edit" wizard
-        Then verify "Default_Input_Path_Input" element visibility in "Data_Inputs_Accordion" on "New_JobTemplate_Edit" wizard
-        Then verify "Default_Artifact_Path_Input" element visibility in "Data_Inputs_Accordion" on "New_JobTemplate_Edit" wizard
-        When collapse "Data_Inputs_Accordion" on "New_JobTemplate_Edit" wizard
-        Then verify "Job_Custom_Parameters_Table" element visibility in "Parameters_Accordion" on "New_JobTemplate_Edit" wizard
-        Then verify "Parameters_Additional_Settings_Input" element visibility in "Parameters_Accordion" on "New_JobTemplate_Edit" wizard
-        Then verify "Result_Input" element visibility in "Parameters_Accordion" on "New_JobTemplate_Edit" wizard
-        Then verify "Turning_Strategy_Dropdown" element visibility in "Parameters_Accordion" on "New_JobTemplate_Edit" wizard
-        Then verify "Criteria_Dropdown" element visibility in "Parameters_Accordion" on "New_JobTemplate_Edit" wizard
-        When collapse "Parameters_Accordion" on "New_JobTemplate_Edit" wizard
-        When expand "Resources_Accordion" on "New_JobTemplate_Edit" wizard
-        Then verify "Volume_Paths_Table" element visibility in "Resources_Accordion" on "New_JobTemplate_Edit" wizard
-        Then verify "Resources_Node_Selector_Table" element visibility in "Resources_Accordion" on "New_JobTemplate_Edit" wizard
-        Then verify "Memory_Request_Dropdown" element visibility in "Resources_Accordion" on "New_JobTemplate_Edit" wizard
-        Then verify "Memory_Request_Number_Input" element visibility in "Resources_Accordion" on "New_JobTemplate_Edit" wizard
-        Then verify "Memory_Limit_Dropdown" element visibility in "Resources_Accordion" on "New_JobTemplate_Edit" wizard
-        Then verify "Memory_Limit_Number_Input" element visibility in "Resources_Accordion" on "New_JobTemplate_Edit" wizard
-        Then verify "CPU_Request_Dropdown" element visibility in "Resources_Accordion" on "New_JobTemplate_Edit" wizard
-        Then verify "CPU_Request_Number_Input" element visibility in "Resources_Accordion" on "New_JobTemplate_Edit" wizard
-        Then verify "CPU_Limit_Dropdown" element visibility in "Resources_Accordion" on "New_JobTemplate_Edit" wizard
-        Then verify "CPU_Limit_Number_Input" element visibility in "Resources_Accordion" on "New_JobTemplate_Edit" wizard
-        Then verify "GPU_Limit_Number_Input" element visibility in "Resources_Accordion" on "New_JobTemplate_Edit" wizard
-        When expand "Advanced_Accordion" on "New_JobTemplate_Edit" wizard
-        Then verify "Advanced_Environment_Variables_Table" element visibility in "Advanced_Accordion" on "New_JobTemplate_Edit" wizard
-        Then verify "Schedule_For_Later_Button" element visibility on "New_JobTemplate_Edit" wizard
-        Then "Schedule_For_Later_Button" element on "New_JobTemplate_Edit" should contains "Schedule for later" value
-        Then verify "Run_Now_Button" element visibility on "New_JobTemplate_Edit" wizard
-        Then "Run_Now_Button" element on "New_JobTemplate_Edit" should contains "Save" value
+        Then verify "Title" element visibility on "Modal_Wizard_Form" wizard
+        Then "Title" element on "Modal_Wizard_Form" should contains "Edit Job" value
+        Then verify "Cross_Cancel_Button" element visibility on "Modal_Wizard_Form" wizard
+        Then verify "Step_1_Button" element on "commonPagesHeader" wizard is enabled
+        Then verify "Step_2_Button" element on "commonPagesHeader" wizard is enabled
+        Then verify "Step_3_Button" element on "commonPagesHeader" wizard is enabled
+        Then "Step_1_Button_text" element on "commonPagesHeader" should contains "Run Details" value
+        Then verify "Step_4_Button" element on "commonPagesHeader" wizard is enabled
+        Then verify "Step_5_Button" element on "commonPagesHeader" wizard is enabled
+        Then "Form_Header_Run_Details" element on "commonPagesHeader" should contains "Run Details" value
+        Then "Hyperparameter_Checkbox" element should be unchecked on "Modal_Wizard_Form" wizard
+        Then verify "Run_Name_Input" element visibility on "Modal_Wizard_Form" wizard
+        Then verify "Handler_Edit_Job" element visibility on "Modal_Wizard_Form" wizard
+        Then verify "Handler_Edit_Job" element on "Modal_Wizard_Form" wizard is disabled
+        Then verify "Labels_Table" element visibility on "Modal_Wizard_Form" wizard
+        And click on "Next_Button" element on "Modal_Wizard_Form" wizard
+        Then "Form_Header_Data_Inputs" element on "commonPagesHeader" should contains "Data Inputs" value
+        Then verify "Data_Inputs_Headers" on "Modal_Wizard_Form" wizard should contains "Batch_Run"."Data_Inputs_Table_Header"
+        And click on "Next_Button" element on "Modal_Wizard_Form" wizard
+        Then "Form_Header_Parameters" element on "commonPagesHeader" should contains "Parameters" value
+        Then verify "Parameters_Headers" on "Modal_Wizard_Form" wizard should contains "Batch_Run"."Parameters_Table_Header"
+        Then verify "Parameters_Table" element visibility on "Modal_Wizard_Form" wizard
+        And click on "Next_Button" element on "Modal_Wizard_Form" wizard
+        Then "Form_Header_Resources" element on "commonPagesHeader" should contains "Resources" value
+        Then verify "Pods_Priority_Dropdown" element visibility in "Resources_Accordion" on "Modal_Wizard_Form" wizard
+        Then verify "Node_Selection_Subheader" element visibility in "Resources_Accordion" on "Modal_Wizard_Form" wizard
+        Then verify "Resources_Node_Selector_Table" element visibility in "Resources_Accordion" on "Modal_Wizard_Form" wizard
+        Then verify "Memory_Request_Dropdown" element visibility in "Resources_Accordion" on "Modal_Wizard_Form" wizard
+        Then verify "Memory_Request_Number_Input" element visibility in "Resources_Accordion" on "Modal_Wizard_Form" wizard
+        Then verify "Memory_Limit_Dropdown" element visibility in "Resources_Accordion" on "Modal_Wizard_Form" wizard
+        Then verify "Memory_Limit_Number_Input" element visibility in "Resources_Accordion" on "Modal_Wizard_Form" wizard
+        Then verify "Memory_Request_Dropdown" element in "Resources_Accordion" on "Modal_Wizard_Form" wizard should contains "Dropdown_Options"."Memory_Unit_Options"
+        Then verify "Memory_Limit_Dropdown" element in "Resources_Accordion" on "Modal_Wizard_Form" wizard should contains "Dropdown_Options"."Memory_Unit_Options"
+        Then verify "CPU_Request_Dropdown" element visibility in "Resources_Accordion" on "Modal_Wizard_Form" wizard
+        Then verify "CPU_Request_Number_Input" element visibility in "Resources_Accordion" on "Modal_Wizard_Form" wizard
+        Then verify "CPU_Limit_Dropdown" element visibility in "Resources_Accordion" on "Modal_Wizard_Form" wizard
+        Then verify "CPU_Limit_Number_Input" element visibility in "Resources_Accordion" on "Modal_Wizard_Form" wizard
+        Then verify "GPU_Limit_Number_Input" element visibility in "Resources_Accordion" on "Modal_Wizard_Form" wizard
+        Then verify "Volume_Paths_Table" element visibility in "Resources_Accordion" on "Modal_Wizard_Form" wizard
+        And click on "Next_Button" element on "Modal_Wizard_Form" wizard
+        Then "Form_Header_Advanced" element on "commonPagesHeader" should contains "Advanced" value
+        Then "Accordion_Subheader" element on "Modal_Wizard_Form" should contains "Environment variables" value
+        Then verify "Advanced_Environment_Variables_Table" element visibility on "Modal_Wizard_Form" wizard
+        Then verify "Schedule_For_Later_Button" element visibility on "Modal_Wizard_Form" wizard
+        Then "Schedule_For_Later_Button" element on "Modal_Wizard_Form" should contains "Schedule for later" value
+        Then verify "Save_Button" element visibility on "Modal_Wizard_Form" wizard
+        Then "Save_Button" element on "Modal_Wizard_Form" should contains "Save" value
 
     @MLJW
     @FAILED_TODO
@@ -2552,6 +2568,7 @@ Feature: Jobs and workflows
 
     @MLJW
     @inProgress
+    #@uniqueTag
     Scenario: MLJW037 - Check all mandatory components on Batch Run wizard - Step 5 (Resources)
         Given open url
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
@@ -2561,15 +2578,15 @@ Feature: Jobs and workflows
         And wait load page
         And click on "Butch_Run_Button" element on "Jobs_Monitor_Tab" wizard
         And wait load page
-        Then verify "Next_Button" element on "Batch_Run" wizard is disabled
+        Then verify "Next_Button" element on "Modal_Wizard_Form" wizard is disabled
         And click on row root with value "test" in "name" column in "Functions_Table" table on "Batch_Run" wizard
-        Then "Function_Title" element on "Batch_Run" should contains "test" value
-        Then verify "Next_Button" element on "Batch_Run" wizard is enabled
-        And click on "Next_Button" element on "Batch_Run" wizard
-        And click on "Next_Button" element on "Batch_Run" wizard
-        And click on "Next_Button" element on "Batch_Run" wizard
-        And click on "Next_Button" element on "Batch_Run" wizard
-        Then "Function_Title" element on "Batch_Run" should contains "test" value
+        Then "Function_Title" element on "Modal_Wizard_Form" should contains "test" value
+        Then verify "Next_Button" element on "Modal_Wizard_Form" wizard is enabled
+        And click on "Next_Button" element on "Modal_Wizard_Form" wizard
+        And click on "Next_Button" element on "Modal_Wizard_Form" wizard
+        And click on "Next_Button" element on "Modal_Wizard_Form" wizard
+        And click on "Next_Button" element on "Modal_Wizard_Form" wizard
+        Then "Function_Title" element on "Modal_Wizard_Form" should contains "test" value
         Then verify "Step_1_Button" element on "Batch_Run" wizard is enabled
         Then verify "Step_2_Button" element on "Batch_Run" wizard is enabled
         Then verify "Step_3_Button" element on "Batch_Run" wizard is enabled
