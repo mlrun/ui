@@ -414,6 +414,34 @@ const advancedEnvironmentVariablesTable = {
   }
 }
 
+const functionsTableSelector = {
+  root: '.form .functions-list',
+  header: {},
+  body: {
+    row: {
+      root: '.job-card-template',
+      fields: {
+        name:
+          '.job-card-template__header > div:first-child',
+        sub_name:
+          '.job-card-template__header .job-card-template__sub-header .data-ellipsis',
+        description:
+          '.job-card-template__description',
+        labels: {
+          componentType: dropdownComponent,
+          structure: generateDropdownGroup(
+            '.job-card-template__chips input',
+            '.chip-block span.chips_button',
+            '.chip-block .data-ellipsis.tooltip-wrapper .edit-chip-container',
+            false,
+            true
+          )
+        }
+      }
+    }
+  }
+}
+
 // Common components
 
 const commonCancelButton = By.css('.pop-up-dialog button.pop-up-dialog__btn_cancel')
@@ -518,6 +546,7 @@ module.exports = {
     Function_Title: By.css(
       '.modal .modal__content h6.modal__header-sub-title'
     ),
+    Functions_Table: commonTable(functionsTableSelector),
     Hyperparameter_Checkbox: checkboxComponent({
       root: '#overlay_container .form-field-checkbox',
       elements: {
@@ -532,6 +561,7 @@ module.exports = {
     Schedule_Training_Job_Button: commonScheduleButton,
     Schedule_For_Later_Button: commonScheduleButton,
     Save_Button: commonRunSaveButton,
+    Run_Button: commonRunSaveButton,
     Run_Name_Input: inputGroup(
       generateInputGroup(
         '.form-row .form-field-input .form-field__wrapper',

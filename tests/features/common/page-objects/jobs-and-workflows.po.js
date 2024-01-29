@@ -79,34 +79,6 @@ const batchTabSelector = {
   }
 }
 
-const functionsTableSelector = {
-  root: '.form .functions-list',
-  header: {},
-  body: {
-    row: {
-      root: '.job-card-template',
-      fields: {
-        name:
-          '.job-card-template__header > div:first-child',
-        sub_name:
-          '.job-card-template__header .job-card-template__sub-header .data-ellipsis',
-        description:
-          '.job-card-template__description',
-        labels: {
-          componentType: dropdownComponent,
-          structure: generateDropdownGroup(
-            '.job-card-template__chips input',
-            '.chip-block span.chips_button',
-            '.chip-block .data-ellipsis.tooltip-wrapper .edit-chip-container',
-            false,
-            true
-          )
-        }
-      }
-    }
-  }
-}
-
 const checkboxCategorySelector = {
   root: '.hub-filter .categories-list',
   header: {},
@@ -763,7 +735,7 @@ module.exports = {
       Apply_Button: By.css('.hub-filter .filters-wizard__modal-buttons .btn-secondary')
     },
     Filter_Button_Hub_Tab: By.css('.hub-tab .form-row .filters-button button'),
-    Functions_Table: commonTable(functionsTableSelector),
+    //Functions_Table: commonTable(functionsTableSelector), delete finish batch-run common wizard
     Overlay: By.css('#overlay_container .chip-block-hidden .chip-block-hidden__scrollable-container'),
     Back_Button: By.css('.modal__content [data-testid="wizard-btn-back"]'),
     Next_Button: By.css('.modal__content [data-testid="wizard-btn-next"]'),

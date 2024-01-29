@@ -426,6 +426,7 @@ module.exports = {
     Job_Overview_Action_Menu_Options: ['View YAML', 'Batch re-run', 'Delete'],
     Running_Job_Action_Menu_Options: ['View YAML', 'Delete', 'Monitoring', 'Abort'],
     Workflows_Action_Menu_Options: ['View YAML'],
+    Workflows_Info_Pane_Action_Menu_Options: ['Batch re-run', 'Monitoring', 'View YAML', 'Delete'],
     Pending_Job_Action_Menu_Options: ['View YAML', 'Batch re-run', 'Monitoring', 'Abort', 'Delete'],
     Schedule_Action_Menu_Options: ['View YAML', 'Run now', 'Edit', 'Delete']
   },

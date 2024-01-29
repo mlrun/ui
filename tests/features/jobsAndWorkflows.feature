@@ -1623,11 +1623,10 @@ Feature: Jobs and workflows
         Then verify "Results_Table" element visibility on "Results_Info_Pane" wizard
 
     @MLJW
-    @FAILED_TODO
-    #TODO: Workflow_List_View_Table not clickable need check data on server
     @passive
-    #@uniqueTag
-    Scenario: Verify all mandatory component on Batch Re-run Workflow wizard
+    @FAILED_TODO
+    #TODO: Bug ML-5609 - Batch re-run wizard opens with 'Batch Run' title
+    Scenario: MLJW080 - Verify visibility of main components on Batch re-run Workflow wizard
         Given open url
         And turn on demo mode
         And wait load page
@@ -1639,39 +1638,63 @@ Feature: Jobs and workflows
         And wait load page
         And select "Monitor Workflows" tab in "Jobs_Tab_Selector" on "Jobs_Monitor_Tab" wizard
         And wait load page
-        When click on cell with row index 1 in "name" column in "Workflows_Monitor_Table" table on "Workflows_Monitor_Tab" wizard
+        When click on cell with row index 2 in "name" column in "Workflows_Monitor_Table" table on "Workflows_Monitor_Tab" wizard
         And wait load page
         Then click on "Toggle_View_Button" element on "Workflows_Monitor_Tab" wizard
-        Then select "Re-run" option in action menu on "Workflows_Monitor_Tab" wizard in "Workflow_List_View_Table" table at row with "test-classifier" value in "name" column
         And wait load page
-        Then verify "Data_Source_Input_Sources_Table" element visibility in "Data_Inputs_Accordion" on "New_JobTemplate_Edit" wizard
-        Then verify "Default_Input_Path_Input" element visibility in "Data_Inputs_Accordion" on "New_JobTemplate_Edit" wizard
-        Then verify "Default_Artifact_Path_Input" element visibility in "Data_Inputs_Accordion" on "New_JobTemplate_Edit" wizard
-        When collapse "Data_Inputs_Accordion" on "New_JobTemplate_Edit" wizard
-        Then verify "Job_Custom_Parameters_Table" element visibility in "Parameters_Accordion" on "New_JobTemplate_Edit" wizard
-        Then verify "Parameters_Additional_Settings_Input" element visibility in "Parameters_Accordion" on "New_JobTemplate_Edit" wizard
-        Then verify "Result_Input" element visibility in "Parameters_Accordion" on "New_JobTemplate_Edit" wizard
-        Then verify "Turning_Strategy_Dropdown" element visibility in "Parameters_Accordion" on "New_JobTemplate_Edit" wizard
-        Then verify "Criteria_Dropdown" element visibility in "Parameters_Accordion" on "New_JobTemplate_Edit" wizard
-        When collapse "Parameters_Accordion" on "New_JobTemplate_Edit" wizard
-        When expand "Resources_Accordion" on "New_JobTemplate_Edit" wizard
-        Then verify "Volume_Paths_Table" element visibility in "Resources_Accordion" on "New_JobTemplate_Edit" wizard
-        Then verify "Resources_Node_Selector_Table" element visibility in "Resources_Accordion" on "New_JobTemplate_Edit" wizard
-        Then verify "Memory_Request_Dropdown" element visibility in "Resources_Accordion" on "New_JobTemplate_Edit" wizard
-        Then verify "Memory_Request_Number_Input" element visibility in "Resources_Accordion" on "New_JobTemplate_Edit" wizard
-        Then verify "Memory_Limit_Dropdown" element visibility in "Resources_Accordion" on "New_JobTemplate_Edit" wizard
-        Then verify "Memory_Limit_Number_Input" element visibility in "Resources_Accordion" on "New_JobTemplate_Edit" wizard
-        Then verify "CPU_Request_Dropdown" element visibility in "Resources_Accordion" on "New_JobTemplate_Edit" wizard
-        Then verify "CPU_Request_Number_Input" element visibility in "Resources_Accordion" on "New_JobTemplate_Edit" wizard
-        Then verify "CPU_Limit_Dropdown" element visibility in "Resources_Accordion" on "New_JobTemplate_Edit" wizard
-        Then verify "CPU_Limit_Number_Input" element visibility in "Resources_Accordion" on "New_JobTemplate_Edit" wizard
-        Then verify "GPU_Limit_Number_Input" element visibility in "Resources_Accordion" on "New_JobTemplate_Edit" wizard
-        When expand "Advanced_Accordion" on "New_JobTemplate_Edit" wizard
-        Then verify "Advanced_Environment_Variables_Demo_Table" element visibility in "Advanced_Accordion" on "New_JobTemplate_Edit" wizard
-        Then verify "Schedule_For_Later_Button" element visibility on "New_JobTemplate_Edit" wizard
-        Then "Schedule_For_Later_Button" element on "New_JobTemplate_Edit" should contains "Schedule for later" value
-        Then verify "Run_Now_Button" element visibility on "New_JobTemplate_Edit" wizard
-        Then "Run_Now_Button" element on "New_JobTemplate_Edit" should contains "Run now" value
+        When click on cell with row index 1 in "name" column in "Workflow_List_View_Table" table on "Workflows_Monitor_Tab" wizard
+        And wait load page
+        Then verify "Action_Menu" dropdown element on "Workflows_Monitor_Tab_Info_Pane" wizard should contains "Jobs_And_Workflows"."Workflows_Info_Pane_Action_Menu_Options"
+        Then select "Batch re-run" option in action menu on "Workflows_Monitor_Tab_Info_Pane" wizard
+        And wait load page
+        Then verify "Title" element visibility on "Modal_Wizard_Form" wizard
+        And wait load page
+        Then "Title" element on "Modal_Wizard_Form" should contains "Batch Re-Run" value
+        Then verify "Cross_Cancel_Button" element visibility on "Modal_Wizard_Form" wizard
+        Then verify "Step_1_Button" element on "commonPagesHeader" wizard is enabled
+        Then verify "Step_2_Button" element on "commonPagesHeader" wizard is enabled
+        Then verify "Step_3_Button" element on "commonPagesHeader" wizard is enabled
+        Then "Step_1_Button_text" element on "commonPagesHeader" should contains "Run Details" value
+        Then verify "Step_4_Button" element on "commonPagesHeader" wizard is enabled
+        Then verify "Step_5_Button" element on "commonPagesHeader" wizard is enabled
+        Then "Form_Header_Run_Details" element on "commonPagesHeader" should contains "Run Details" value
+        Then "Hyperparameter_Checkbox" element should be unchecked on "Modal_Wizard_Form" wizard
+        Then verify "Run_Name_Input" element visibility on "Modal_Wizard_Form" wizard
+        Then verify "Handler_Edit_Job" element visibility on "Modal_Wizard_Form" wizard
+        Then verify "Handler_Edit_Job" element on "Modal_Wizard_Form" wizard is disabled
+        Then verify "Labels_Table" element visibility on "Modal_Wizard_Form" wizard
+        And click on "Next_Button" element on "Modal_Wizard_Form" wizard
+        Then "Form_Header_Data_Inputs" element on "commonPagesHeader" should contains "Data Inputs" value
+        Then verify "Data_Inputs_Headers" on "Modal_Wizard_Form" wizard should contains "Batch_Run"."Data_Inputs_Table_Header"
+        And click on "Next_Button" element on "Modal_Wizard_Form" wizard
+        Then "Form_Header_Parameters" element on "commonPagesHeader" should contains "Parameters" value
+        Then verify "Parameters_Headers" on "Modal_Wizard_Form" wizard should contains "Batch_Run"."Parameters_Table_Header"
+        Then verify "Parameters_Table" element visibility on "Modal_Wizard_Form" wizard
+        And click on "Next_Button" element on "Modal_Wizard_Form" wizard
+        Then "Form_Header_Resources" element on "commonPagesHeader" should contains "Resources" value
+        Then verify "Pods_Priority_Dropdown" element visibility in "Resources_Accordion" on "Modal_Wizard_Form" wizard
+        Then verify "Node_Selection_Subheader" element visibility in "Resources_Accordion" on "Modal_Wizard_Form" wizard
+        Then verify "Resources_Node_Selector_Table" element visibility in "Resources_Accordion" on "Modal_Wizard_Form" wizard
+        Then verify "Memory_Request_Dropdown" element visibility in "Resources_Accordion" on "Modal_Wizard_Form" wizard
+        Then verify "Memory_Request_Number_Input" element visibility in "Resources_Accordion" on "Modal_Wizard_Form" wizard
+        Then verify "Memory_Limit_Dropdown" element visibility in "Resources_Accordion" on "Modal_Wizard_Form" wizard
+        Then verify "Memory_Limit_Number_Input" element visibility in "Resources_Accordion" on "Modal_Wizard_Form" wizard
+        Then verify "Memory_Request_Dropdown" element in "Resources_Accordion" on "Modal_Wizard_Form" wizard should contains "Dropdown_Options"."Memory_Unit_Options"
+        Then verify "Memory_Limit_Dropdown" element in "Resources_Accordion" on "Modal_Wizard_Form" wizard should contains "Dropdown_Options"."Memory_Unit_Options"
+        Then verify "CPU_Request_Dropdown" element visibility in "Resources_Accordion" on "Modal_Wizard_Form" wizard
+        Then verify "CPU_Request_Number_Input" element visibility in "Resources_Accordion" on "Modal_Wizard_Form" wizard
+        Then verify "CPU_Limit_Dropdown" element visibility in "Resources_Accordion" on "Modal_Wizard_Form" wizard
+        Then verify "CPU_Limit_Number_Input" element visibility in "Resources_Accordion" on "Modal_Wizard_Form" wizard
+        Then verify "GPU_Limit_Number_Input" element visibility in "Resources_Accordion" on "Modal_Wizard_Form" wizard
+        Then verify "Volume_Paths_Table" element visibility in "Resources_Accordion" on "Modal_Wizard_Form" wizard
+        And click on "Next_Button" element on "Modal_Wizard_Form" wizard
+        Then "Form_Header_Advanced" element on "commonPagesHeader" should contains "Advanced" value
+        Then "Accordion_Subheader" element on "Modal_Wizard_Form" should contains "Environment variables" value
+        Then verify "Advanced_Environment_Variables_Table" element visibility on "Modal_Wizard_Form" wizard
+        Then verify "Schedule_For_Later_Button" element visibility on "Modal_Wizard_Form" wizard
+        Then "Schedule_For_Later_Button" element on "Modal_Wizard_Form" should contains "Schedule for later" value
+        Then verify "Save_Button" element visibility on "Modal_Wizard_Form" wizard
+        Then "Save_Button" element on "Modal_Wizard_Form" should contains "Run" value
 
     @MLJW
     @passive
@@ -1821,11 +1844,9 @@ Feature: Jobs and workflows
         Then "Save_Button" element on "Modal_Wizard_Form" should contains "Save" value
 
     @MLJW
-    @FAILED_TODO
-    #TODO: Switch to list view - add
-    #TODO: Not enought data - node with index 2 in "Workflow_Graph" graph not clickable
+    #TODO: arrow lines position - y not found
     @passive
-    Scenario: Check all mandatory components on Workflow graph View
+    Scenario: MLJW081 - Check visibility of main components on Workflow graph View
         Given open url
         And turn on demo mode
         And wait load page
@@ -1837,10 +1858,10 @@ Feature: Jobs and workflows
         And wait load page
         And select "Monitor Workflows" tab in "Jobs_Tab_Selector" on "Jobs_Monitor_Tab" wizard
         And wait load page
-        When click on cell with row index 1 in "name" column in "Workflows_Monitor_Table" table on "Workflows_Monitor_Tab" wizard
+        When click on cell with row index 2 in "name" column in "Workflows_Monitor_Table" table on "Workflows_Monitor_Tab" wizard
         And wait load page
         Then verify "Workflow_Graph" element visibility on "Workflows_Monitor_Tab" wizard
-        Then verify arrow lines position on "Workflow_Graph" on "Workflows_Monitor_Tab" wizard
+        # Then verify arrow lines position on "Workflow_Graph" on "Workflows_Monitor_Tab" wizard
         When click on node with index 2 in "Workflow_Graph" graph on "Workflows_Monitor_Tab" wizard
         And wait load page
         Then verify "Header" element visibility on "Jobs_Monitor_Tab_Info_Pane" wizard
@@ -1858,22 +1879,36 @@ Feature: Jobs and workflows
     @links
     Scenario: MLJW030 - Check redirect to project`s Function Infopane from Job Overview
         Given open url
-        And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
+        And click on row root with value "churn-project-admin" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
-        And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
-        Then click on "Project_Monitoring_Button" element on "commonPagesHeader" wizard
+        And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard       
+        And click on cell with value "Jobs and workflows" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
         And hover "MLRun_Logo" component on "commonPagesHeader" wizard
         And wait load page
-        When click on cell with value "aggregate-test" in "name" column in "Jobs_And_Workflows" table on "Project" wizard
+        And click on "Butch_Run_Button" element on "Jobs_Monitor_Tab" wizard
+        And wait load page
+        And click on row root with value "test-m_ingest" in "name" column in "Functions_Table" table on "Modal_Wizard_Form" wizard
+        Then "Function_Title" element on "Modal_Wizard_Form" should contains "test-m_ingest" value
+        And click on "Run_Button" element on "Modal_Wizard_Form" wizard
+        And wait load page
+        And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
+        And click on cell with value "Project monitoring" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+        And hover "MLRun_Logo" component on "commonPagesHeader" wizard
+        And wait load page
+        When click on cell with value "test-m_ingest" in "name" column in "Jobs_And_Workflows" table on "Project" wizard
+        And wait load page
+        When click on cell with value "test-m_ingest" in "name" column in "Jobs_Monitor_Table" table on "Jobs_Monitor_Tab" wizard
+        And wait load page
+        When click on cell with row index 1 in "name" column in "Jobs_Monitor_Table" table on "Jobs_Monitor_Tab" wizard
         And wait load page
         Then verify "Overview" tab is active in "Info_Pane_Tab_Selector" on "Jobs_Monitor_Tab_Info_Pane" wizard
-        And save to context "link" column and "href" attributes row where header "key" is "Function" from "Overview_Headers" table on "Jobs_Monitor_Tab_Info_Pane" wizard
-        When click on "link" value where option is "Function" in "Overview_Headers" on "Jobs_Monitor_Tab_Info_Pane" wizard
+        And save to context "link" column and "href" attributes row where header "key" is "Function:" from "Overview_Headers" table on "Jobs_Monitor_Tab_Info_Pane" wizard
+        When click on "link" value where option is "Function:" in "Overview_Headers" on "Jobs_Monitor_Tab_Info_Pane" wizard
         And wait load page
-        Then verify "key" values "Name,Hash" values from "Overview_Headers" on "ML_Function_Info_Pane" with "link" context value
+        Then verify "key" values "Hash:,Default handler:" values from "Overview_Headers" on "ML_Function_Info_Pane" with "link" context value with split
         Then compare current browser URL with test "href" context value
         Then click on "Cross_Close_Button" element on "ML_Function_Info_Pane" wizard
-        Then select "Delete" option in action menu on "ML_Functions" wizard in "Functions_Table" table at row with "aggregate" value in "name" column
+        Then select "Delete" option in action menu on "ML_Functions" wizard in "Functions_Table" table at row with "test-m_ingest" value in "name" column
         And wait load page
         Then "Title" element on "Common_Popup" should contains "Delete function?" value
         Then verify "Delete_Button" element visibility on "Common_Popup" wizard
@@ -1882,16 +1917,20 @@ Feature: Jobs and workflows
         And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
         Then click on "Project_Monitoring_Button" element on "commonPagesHeader" wizard
         And hover "MLRun_Logo" component on "commonPagesHeader" wizard
-        When click on cell with value "aggregate-test" in "name" column in "Jobs_And_Workflows" table on "Project" wizard
+        When click on cell with value "test-m_ingest" in "name" column in "Jobs_And_Workflows" table on "Project" wizard
         And wait load page
-        When click on "link" value where option is "Function" in "Overview_Headers" on "Jobs_Monitor_Tab_Info_Pane" wizard
+        When click on cell with value "test-m_ingest" in "name" column in "Jobs_Monitor_Table" table on "Jobs_Monitor_Tab" wizard
         And wait load page
-        Then verify redirection to "projects/default/functions"
+        When click on cell with row index 1 in "name" column in "Jobs_Monitor_Table" table on "Jobs_Monitor_Tab" wizard
+        And wait load page
+        When click on "link" value where option is "Function:" in "Overview_Headers" on "Jobs_Monitor_Tab_Info_Pane" wizard
+        And wait load page
+        Then verify redirection to "projects/churn-project-admin/functions"
         And wait load page
 
     @MLJW
     @FAILED_TODO
-    #TODO: create "test-scheduled" Schedule in "automation-test" project - createAPISchedule, newJobTemplate creating error
+    #TODO: invokeSchedule implementation
     @links
     Scenario: Check redirection to Last Run Drill-down from Schedules tab
         * set tear-down property "project" created with "automation-test" value
@@ -1900,6 +1939,7 @@ Feature: Jobs and workflows
         Given open url
         And click on row root with value "automation-test" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
+        And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
         And click on cell with value "Jobs and workflows" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
         And wait load page
         And select "Schedule" tab in "Jobs_Tab_Selector" on "Jobs_Monitor_Tab" wizard
@@ -2568,7 +2608,6 @@ Feature: Jobs and workflows
 
     @MLJW
     @inProgress
-    #@uniqueTag
     Scenario: MLJW037 - Check all mandatory components on Batch Run wizard - Step 5 (Resources)
         Given open url
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard

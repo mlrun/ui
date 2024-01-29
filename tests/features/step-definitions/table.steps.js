@@ -1743,6 +1743,31 @@ Then(
 )
 
 Then(
+  'verify {string} values {string} values from {string} on {string} with {string} context value with split',
+  async function (keyColumn, keys, overviewTable, wizardName, contextContainer) {
+    const keysArr = keys.split(',')
+    
+    for (let key of keysArr) {
+      const arr = await findRowIndexesByColumnValue(
+        this.driver,
+        pageObjects[wizardName][overviewTable],
+        keyColumn,
+        key
+      )
+      const cellComponent = await this.driver.findElement(
+        pageObjects[wizardName][overviewTable].tableFields['value'](arr[0])
+      )
+      const cellValue = await cellComponent.getText()
+      const contextSplit = this.testContext[contextContainer].split(/[/@]/)
+      expect(contextSplit.includes(cellValue)).equal(
+        true,
+        `"${key}" value "${cellValue}" is not in link "${contextSplit}"`
+      )
+    }
+  }
+)
+
+Then(
   'verify cell with {string} value in {string} column in {string} table on {string} wizard should display {string}.{string}',
   async function (fieldName, columnName, tableName, wizardName, constStorage, constValue) {
     const arr = await findRowIndexesByColumnValue(
