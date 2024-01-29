@@ -881,7 +881,7 @@ module.exports = {
           true
         )
       ),
-      Schedule_Button: By.css(
+      Set_Schedule_Button: By.css(
         '.feature-set-panel .accordion__container:nth-of-type(1)  button.schedule-tumbler'
       )
     },
