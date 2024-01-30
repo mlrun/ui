@@ -20,6 +20,7 @@ such restriction.
 import React from 'react'
 import { OnChange } from 'react-final-form-listeners'
 import { useForm } from 'react-final-form'
+import PropTypes from 'prop-types'
 
 import { FormInput, FormCheckBox } from 'igz-controls/components'
 import FormTagFilter from '../../common/FormTagFilter/FormTagFilter'
@@ -28,7 +29,7 @@ import { ITERATIONS_FILTER, LABELS_FILTER, SHOW_ITERATIONS, TAG_FILTER } from '.
 
 import './artifactsFilters.scss'
 
-const ArtifactsFilters = () => {
+const ArtifactsFilters = ({ artifacts }) => {
   const form = useForm()
 
   const handleIter = value => {
@@ -46,7 +47,7 @@ const ArtifactsFilters = () => {
         <OnChange name={LABELS_FILTER}>{handleLabelsChange}</OnChange>
       </div>
       <div className="form-row">
-        <FormTagFilter label="Version tag" name={TAG_FILTER} />
+        <FormTagFilter content={artifacts} label="Version tag" name={TAG_FILTER} />
       </div>
       <div className="form-row">
         <FormCheckBox
@@ -58,6 +59,10 @@ const ArtifactsFilters = () => {
       </div>
     </div>
   )
+}
+
+ArtifactsFilters.propTypes = {
+  artifacts: PropTypes.arrayOf(PropTypes.object).isRequired
 }
 
 export default ArtifactsFilters
