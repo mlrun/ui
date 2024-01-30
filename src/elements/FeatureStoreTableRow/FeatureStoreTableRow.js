@@ -31,7 +31,7 @@ import ErrorMessage from '../../common/ErrorMessage/ErrorMessage'
 
 import { getIdentifierMethod } from '../../utils/getUniqueIdentifier'
 import { generateTableRowTestId } from '../../utils/generateTableRowTestId'
-import { DETAILS_OVERVIEW_TAB, TABLE_LOADER_TARGET_CLASS } from '../../constants'
+import { DETAILS_OVERVIEW_TAB, TABLE_CONTAINER } from '../../constants'
 import { ACTIONS_MENU } from '../../types'
 
 const FeatureStoreTableRow = ({
@@ -105,7 +105,7 @@ const FeatureStoreTableRow = ({
           </td>
           {selectedRowData[rowItem.data.ui.identifier]?.loading ? (
             <td className="table-body__cell">
-              {createPortal(<Loader />, document.querySelector(`.${TABLE_LOADER_TARGET_CLASS}`))}
+              {createPortal(<Loader />, document.querySelector(`.${TABLE_CONTAINER}`))}
             </td>
           ) : selectedRowData[rowItem.data.ui.identifier]?.error ? (
             <td className="table-body__cell">
