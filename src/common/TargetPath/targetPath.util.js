@@ -302,6 +302,7 @@ export const generateArtifactsReferencesList = artifacts => {
     .sort((prevRef, nextRef) => {
       const [prevRefIter, prevRefTree] = prevRef.id.split('@')
       const [nextRefIter, nextRefTree] = nextRef.id.split('@')
+
       if (prevRefTree === nextRefTree) {
         return prevRefIter && prevRefIter.localeCompare(nextRefIter)
       } else {
