@@ -31,20 +31,20 @@ import { Tooltip, TextTooltipTemplate } from 'igz-controls/components'
 
 import { MLRUN_STORAGE_INPUT_PATH_SCHEME, TAG_FILTER_LATEST } from '../../constants'
 import { fetchArtifacts } from '../../reducers/artifactsReducer'
-import { generateArtifactIdentifires } from '../Details/details.util'
+import { generateArtifactIdentifiers } from '../Details/details.util'
 import { generateArtifactLink, generateInputsTabContent } from './detailsInputs.util'
 
 import './detailsInputs.scss'
 
 const DetailsInputs = ({ inputs }) => {
-  const [artifactsIndexes, setArtifactsIndexes] = useState([])
+  const [artifactsIds, setArtifactsIds] = useState([])
   const [inputsContent, setInputsContent] = useState([])
 
   const showArtifact = useCallback(
-    index => {
-      generateArtifactIdentifires(artifactsIndexes, index, setArtifactsIndexes)
+    id => {
+      if (id) generateArtifactIdentifiers(artifactsIds, id, setArtifactsIds)
     },
-    [artifactsIndexes, setArtifactsIndexes]
+    [artifactsIds, setArtifactsIds]
   )
 
   const inputsTabContent = useMemo(() => {
@@ -118,7 +118,7 @@ const DetailsInputs = ({ inputs }) => {
 
     return () => {
       setInputsContent([])
-      setArtifactsIndexes([])
+      setArtifactsIds([])
     }
   }, [inputs, dispatch, params.projectName])
 
@@ -140,7 +140,7 @@ const DetailsInputs = ({ inputs }) => {
         </div>
         <div className="table-body">
           {inputsTabContent.map((inputRow, inputRowIndex) => (
-            <div key={inputRowIndex}>
+            <div key={inputRow[0]?.artifact?.uid ?? inputRowIndex}>
               <div className="table-row">
                 {inputRow.map((inputCell, inputCellIndex) => (
                   <div
@@ -157,11 +157,13 @@ const DetailsInputs = ({ inputs }) => {
                   </div>
                 ))}
               </div>
-              <ArtifactsPreviewController
-                artifactsIds={artifactsIndexes}
-                artifact={inputsContent[inputRowIndex]}
-                id={inputRowIndex}
-              />
+              {inputRow[0]?.artifact?.uid && (
+                <ArtifactsPreviewController
+                  artifactsIds={artifactsIds}
+                  artifact={inputRow[0]?.artifact}
+                  id={inputRow[0]?.artifact?.uid}
+                />
+              )}
             </div>
           ))}
         </div>

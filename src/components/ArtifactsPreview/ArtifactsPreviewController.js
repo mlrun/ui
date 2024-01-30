@@ -17,7 +17,7 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import React, { useCallback, useEffect, useMemo, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { useDispatch } from 'react-redux'
 import PropTypes from 'prop-types'
@@ -35,31 +35,14 @@ import './artifactsPreviewController.scss'
 const ArtifactsPreviewController = ({
   artifactsIds,
   artifact,
-  externalPreviews,
   id,
-  setExternalPreviews,
   withoutPopout
 }) => {
   const [noData, setNoData] = useState(false)
-  const [localPreview, setLocalPreview] = useState({})
+  const [preview, setPreview] = useState({})
   const params = useParams()
 
   const dispatch = useDispatch()
-
-  const setPreview = useCallback(
-    state => {
-      if (setExternalPreviews) {
-        setExternalPreviews(state)
-      } else {
-        setLocalPreview(state)
-      }
-    },
-    [setLocalPreview, setExternalPreviews]
-  )
-
-  const preview = useMemo(() => {
-    return externalPreviews || localPreview
-  }, [localPreview, externalPreviews])
 
   useEffect(() => {
     return () => {
@@ -102,17 +85,13 @@ const ArtifactsPreviewController = ({
 }
 
 ArtifactsPreviewController.defaultProps = {
-  externalPreviews: null,
-  setExternalPreviews: null,
   withoutPopout: false
 }
 
 ArtifactsPreviewController.propTypes = {
   artifactsIds: PropTypes.array.isRequired,
   artifact: PropTypes.shape({}).isRequired,
-  externalPreviews: PropTypes.object,
   id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
-  setExternalPreviews: PropTypes.func,
   withoutPopout: PropTypes.bool
 }
 

@@ -104,13 +104,14 @@ export const generateExtraDataContent = (extraData, showArtifactPreview) => {
         headerLabel: 'Name',
         template: (
           <Tooltip template={<TextTooltipTemplate text={extraDataItem.header} />}>
-            <span className="link" onClick={() => showArtifactPreview(index)}>
+            <span className="link" onClick={() => showArtifactPreview(extraDataItem.id)}>
               {extraDataItem.header}
             </span>
           </Tooltip>
         ),
         value: extraDataItem.header,
-        className: 'table-cell-3'
+        className: 'table-cell-3',
+        extraDataItem
       },
       {
         headerId: 'path',

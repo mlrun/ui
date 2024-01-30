@@ -20,32 +20,39 @@ such restriction.
 import React, { useEffect, useState, useCallback, useMemo } from 'react'
 import classnames from 'classnames'
 import PropTypes from 'prop-types'
+import { v4 as uuidv4 } from 'uuid'
 
 import { TextTooltipTemplate, Tooltip } from 'igz-controls/components'
 import ArtifactsPreviewController from '../../components/ArtifactsPreview/ArtifactsPreviewController'
 
 import { generateExtraDataContent } from '../../utils/getArtifactPreview'
-import { generateArtifactIdentifires } from '../../components/Details/details.util'
+import { generateArtifactIdentifiers } from '../../components/Details/details.util'
 
 import './artifactsExtraData.scss'
 
 const ArtifactsExtraData = ({ artifact }) => {
-  const [artifactsIndexes, setArtifactsIndexes] = useState([])
+  const [artifactsIds, setArtifactsIds] = useState([])
 
   const showArtifactPreview = useCallback(
-    index => {
-      generateArtifactIdentifires(artifactsIndexes, index, setArtifactsIndexes)
+    id => {
+      generateArtifactIdentifiers(artifactsIds, id, setArtifactsIds)
     },
-    [artifactsIndexes, setArtifactsIndexes]
+    [artifactsIds, setArtifactsIds]
   )
 
+  const artifactExtraDataWithId = useMemo(() => {
+    return artifact.extra_data?.map((item = {}) => {
+       return { ...item, id: uuidv4() }
+    }) || []
+  }, [artifact])
+
   const extraData = useMemo(() => {
-    return generateExtraDataContent(artifact.extra_data, showArtifactPreview)
-  }, [artifact.extra_data, showArtifactPreview])
+    return generateExtraDataContent(artifactExtraDataWithId, showArtifactPreview)
+  }, [artifactExtraDataWithId, showArtifactPreview])
 
   useEffect(() => {
     return () => {
-      setArtifactsIndexes([])
+      setArtifactsIds([])
     }
   }, [artifact])
 
@@ -70,7 +77,7 @@ const ArtifactsExtraData = ({ artifact }) => {
         <div className="table-body">
           {extraData.map((extraDataRow, extraDataRowIndex) => {
             return (
-              <div key={extraDataRowIndex}>
+              <div key={extraDataRow[0]?.extraDataItem?.id}>
                 <div className="table-row">
                   {extraDataRow.map((extraDataCell, extraDataIndex) => (
                     <div
@@ -97,12 +104,12 @@ const ArtifactsExtraData = ({ artifact }) => {
                   ))}
                 </div>
                 <ArtifactsPreviewController
-                  artifactsIds={artifactsIndexes}
+                  artifactsIds={artifactsIds}
                   artifact={{
-                    target_path: artifact.extra_data[extraDataRowIndex].path,
+                    target_path: extraDataRow[0]?.extraDataItem?.path,
                     db_key: artifact.db_key
                   }}
-                  id={extraDataRowIndex}
+                  id={extraDataRow[0]?.extraDataItem?.id}
                   withoutPopout
                 />
               </div>

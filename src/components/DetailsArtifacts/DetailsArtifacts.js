@@ -28,7 +28,7 @@ import NoData from '../../common/NoData/NoData'
 import { TextTooltipTemplate, Tooltip, Tip } from 'igz-controls/components'
 
 import jobsActions from '../../actions/jobs'
-import { generateArtifactIdentifires } from '../Details/details.util'
+import { generateArtifactIdentifiers } from '../Details/details.util'
 import {
   generateArtifactsPreviewContent,
   generateArtifactsTabContent,
@@ -53,7 +53,6 @@ const DetailsArtifacts = ({
 }) => {
   const [artifactsPreviewContent, setArtifactsPreviewContent] = useState([])
   const [artifactsIds, setArtifactsIds] = useState([])
-  const [artifactsPreview, setArifactsPreview] = useState({})
   const iterationOptions = useSelector(store => store.detailsStore.iterationOptions)
   const params = useParams()
   const getAtrifactsHeaderCellClasses = (headerId, isSortable, className) =>
@@ -65,9 +64,8 @@ const DetailsArtifacts = ({
     )
 
   const showArtifact = useCallback(
-    element => {
-      const id = element?.closest('.table-row')?.getAttribute('data-id')
-      if (id) generateArtifactIdentifires(artifactsIds, id, setArtifactsIds)
+    id => {
+      if (id) generateArtifactIdentifiers(artifactsIds, id, setArtifactsIds)
     },
     [artifactsIds, setArtifactsIds]
   )
@@ -170,9 +168,9 @@ const DetailsArtifacts = ({
           </div>
         </div>
         <div className="table-body">
-          {sortedTableContent.map((artifactRow, artifactRowIndex) => (
-            <div key={artifactRowIndex}>
-              <div className="table-row" data-id={artifactRow[0]?.artifact?.ui?.identifierUnique}>
+          {sortedTableContent.map((artifactRow) => (
+            <div key={artifactRow[0]?.artifact?.ui?.identifierUnique}>
+              <div className="table-row">
                 {artifactRow.map((artifactCell, artifactCellIndex) => (
                   <div
                     key={`${artifactCellIndex}`}
@@ -200,9 +198,7 @@ const DetailsArtifacts = ({
               <ArtifactsPreviewController
                 artifactsIds={artifactsIds}
                 artifact={artifactRow[0]?.artifact}
-                externalPreviews={artifactsPreview}
                 id={artifactRow[0]?.artifact?.ui?.identifierUnique}
-                setExternalPreviews={setArifactsPreview}
               />
             </div>
           ))}

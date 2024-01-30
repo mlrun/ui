@@ -85,7 +85,7 @@ export const generateArtifactsTabContent = (artifacts, params, iteration, showAr
         headerLabel: 'Name',
         template: (
           <Tooltip template={<TextTooltipTemplate text={artifact.db_key || artifact.key} />}>
-            <span className="link" onClick={(event) => showArtifact(event?.target)}>
+            <span className="link" onClick={() => showArtifact(artifact?.ui?.identifierUnique)}>
               {artifact.db_key || artifact.key}
             </span>
           </Tooltip>

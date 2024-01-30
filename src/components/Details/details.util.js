@@ -440,12 +440,12 @@ export const countChanges = changesData => {
   return changesCounter
 }
 
-export const generateArtifactIdentifires = (artifactsIdentifires, identifire, setArtifactsIdentifires) => {
-  const newArtifactsIdentifires = artifactsIdentifires.filter(artifactIdentifires => artifactIdentifires !== identifire)
+export const generateArtifactIdentifiers = (artifactsIdentifiers, identifier, setArtifactsIdentifiers) => {
+  const newArtifactsIdentifiers = artifactsIdentifiers.filter(artifactsIdentifier => artifactsIdentifier !== identifier)
 
-  if (!artifactsIdentifires.includes(identifire)) {
-    newArtifactsIdentifires.push(identifire)
+  if (!artifactsIdentifiers.includes(identifier)) {
+    newArtifactsIdentifiers.push(identifier)
   }
 
-  setArtifactsIdentifires(newArtifactsIdentifires)
+  setArtifactsIdentifiers(newArtifactsIdentifiers)
 }
