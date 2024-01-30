@@ -89,6 +89,7 @@ const ModelsView = React.forwardRef(
                     hidden: !isDemoMode
                   }
                 ]}
+                artifacts={models}
                 filterMenuName={MODELS_FILTERS}
                 handleRefresh={handleRefresh}
                 page={MODELS_PAGE}
