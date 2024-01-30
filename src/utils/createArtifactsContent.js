@@ -31,7 +31,7 @@ import {
 } from '../constants'
 import { parseKeyValues } from './object'
 import { formatDatetime } from './datetime'
-import { convertBytes } from './convertBytes'
+import prettyBytes from 'pretty-bytes'
 import { parseUri } from './parseUri'
 import { generateFunctionDetailsLink } from './generateFunctionDetailsLink'
 import { generateLinkToDetailsPanel } from './generateLinkToDetailsPanel'
@@ -345,7 +345,7 @@ export const createFilesRowData = (artifact, project, frontendSpec, showExpandBu
         id: `size.${artifact.ui.identifierUnique}`,
         headerId: 'size',
         headerLabel: 'Size',
-        value: isNumber(artifact.size) && artifact.size >= 0 ? convertBytes(artifact.size) : 'N/A',
+        value: isNumber(artifact.size) && artifact.size >= 0 ? prettyBytes(artifact.size) : 'N/A',
         className: 'table-cell-1'
       }
     ]
@@ -555,7 +555,7 @@ export const createDatasetsRowData = (artifact, project, frontendSpec, showExpan
         id: `size.${artifact.ui.identifierUnique}`,
         headerId: 'size',
         headerLabel: 'Size',
-        value: isNumber(artifact.size) && artifact.size >= 0 ? convertBytes(artifact.size) : 'N/A',
+        value: isNumber(artifact.size) && artifact.size >= 0 ? prettyBytes(artifact.size) : 'N/A',
         className: 'table-cell-1'
       },
       {
