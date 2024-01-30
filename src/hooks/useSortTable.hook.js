@@ -42,7 +42,9 @@ export const useSortTable = ({ headers, content, sortConfig = {} }) => {
     }
   }, [sortConfig, config])
 
-  const isDateValid = dateString => {
+  const isDateValid = date => {
+    const dateString = String(date)
+    
     if (Date.parse(dateString)) {
       return !(dateString.match(/-/g) && !dateString.split('-').every(char => isNumber(char)))
     }
@@ -67,7 +69,7 @@ export const useSortTable = ({ headers, content, sortConfig = {} }) => {
             }
 
             return valueToTest[0]
-          } else if (isDateValid(valueToTest)) {
+          } else if (typeof valueToTest === 'string' && isDateValid(valueToTest)) {
             return new Date(valueToTest)
           } else {
             return valueToTest
