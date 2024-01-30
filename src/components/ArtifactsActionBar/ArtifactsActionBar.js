@@ -46,6 +46,7 @@ import { ReactComponent as RefreshIcon } from 'igz-controls/images/refresh.svg'
 
 function ArtifactsActionBar({
   actionButtons,
+  artifacts,
   cancelRequest,
   filterMenuName,
   handleRefresh,
@@ -155,7 +156,7 @@ function ArtifactsActionBar({
               values={filtersInitialState}
               wizardClassName="artifacts-filters__wrapper"
             >
-              <ArtifactsFilters filterMenuName={filterMenuName} page={page} />
+              <ArtifactsFilters artifacts={artifacts} filterMenuName={filterMenuName} page={page} />
             </FilterMenuModal>
           </div>
           <div className="action-bar__actions">
@@ -199,6 +200,7 @@ ArtifactsActionBar.propTypes = {
       variant: PropTypes.string.isRequired
     })
   ),
+  artifacts: PropTypes.arrayOf(PropTypes.object).isRequired,
   cancelRequest: PropTypes.func,
   filterMenuName: PropTypes.string.isRequired,
   handleRefresh: PropTypes.func.isRequired,

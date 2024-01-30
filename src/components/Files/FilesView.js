@@ -87,6 +87,7 @@ const FilesView = React.forwardRef(
                       onClick: handleRegisterArtifact
                     }
                   ]}
+                  artifacts={files}
                   filterMenuName={FILES_FILTERS}
                   handleRefresh={handleRefresh}
                   page={FILES_PAGE}
