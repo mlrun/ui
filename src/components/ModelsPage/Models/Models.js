@@ -19,7 +19,7 @@ such restriction.
 */
 import React, { useCallback, useEffect, useMemo, useState, useRef } from 'react'
 import { connect, useDispatch, useSelector } from 'react-redux'
-import { isEmpty, isNil } from 'lodash'
+import { isEmpty } from 'lodash'
 import { useLocation, useNavigate, useParams } from 'react-router-dom'
 
 import AddArtifactTagPopUp from '../../../elements/AddArtifactTagPopUp/AddArtifactTagPopUp'
@@ -29,6 +29,7 @@ import RegisterModelModal from '../../../elements/RegisterModelModal/RegisterMod
 import JobWizard from '../../JobWizard/JobWizard'
 
 import {
+  fetchArtifactTags,
   fetchModel,
   fetchModels,
   removeModel,
@@ -42,7 +43,9 @@ import {
   FILTER_MENU_MODAL,
   GROUP_BY_NONE,
   MODELS_FILTERS,
-  REQUEST_CANCELED
+  REQUEST_CANCELED,
+  MODEL_TYPE,
+  SHOW_ITERATIONS
 } from '../../../constants'
 import {
   checkForSelectedModel,
@@ -59,7 +62,7 @@ import { getArtifactIdentifier } from '../../../utils/getUniqueIdentifier'
 import { isDetailsTabExists } from '../../../utils/isDetailsTabExists'
 import { openPopUp } from 'igz-controls/utils/common.util'
 import { parseChipsData } from '../../../utils/convertChipsData'
-import { setFilters } from '../../../reducers/filtersReducer'
+import { getFilterTagOptions, setFilters } from '../../../reducers/filtersReducer'
 import { setNotification } from '../../../reducers/notificationReducer'
 import { useGroupContent } from '../../../hooks/groupContent.hook'
 import { useModelsPage } from '../ModelsPage.context'
@@ -67,18 +70,16 @@ import { useSortTable } from '../../../hooks/useSortTable.hook'
 import { useGetTagOptions } from '../../../hooks/useGetTagOptions.hook'
 import { getViewMode } from '../../../utils/helper'
 import { useMode } from '../../../hooks/mode.hook'
-import { setArtifactTags } from '../../../utils/artifacts.util'
 
 const Models = ({ fetchModelFeatureVector }) => {
   const [models, setModels] = useState([])
-  const [allModels, setAllModels] = useState([])
   const [largeRequestErrorMessage, setLargeRequestErrorMessage] = useState('')
   const [selectedModel, setSelectedModel] = useState({})
   const [selectedRowData, setSelectedRowData] = useState({})
   const [metricsCounter, setMetricsCounter] = useState(0)
   const [dataIsLoaded, setDataIsLoaded] = useState(false)
   const [tableHeaders, setTableHeaders] = useState([])
-  const [urlTagOption] = useGetTagOptions(null, filters, null, MODELS_FILTERS)
+  const [urlTagOption] = useGetTagOptions(fetchArtifactTags, filters, MODEL_TYPE, MODELS_FILTERS)
   const artifactsStore = useSelector(store => store.artifactsStore)
   const detailsStore = useSelector(store => store.detailsStore)
   const filtersStore = useSelector(store => store.filtersStore)
@@ -128,12 +129,12 @@ const Models = ({ fetchModelFeatureVector }) => {
         })
       )
         .unwrap()
-        .then(modelsResponse => {
-          if (modelsResponse) {
-            setArtifactTags(modelsResponse, setModels, setAllModels, filters, dispatch, MODELS_TAB)
-
-            return modelsResponse
+        .then(result => {
+          if (result) {
+            setModels(result)
           }
+
+          return result
         })
     },
     [dispatch, setModels, params.projectName]
@@ -145,15 +146,22 @@ const Models = ({ fetchModelFeatureVector }) => {
 
   const handleRefresh = useCallback(
     filters => {
+      dispatch(
+        getFilterTagOptions({
+          dispatch,
+          fetchTags: fetchArtifactTags,
+          project: params.projectName,
+          category: MODEL_TYPE
+        })
+      )
       setSelectedRowData({})
       setModels([])
-      setAllModels([])
       setTableHeaders([])
       setDataIsLoaded(false)
 
       return fetchData(filters)
     },
-    [fetchData, setAllModels, setModels]
+    [dispatch, fetchData, params.projectName]
   )
 
   const handleAddTag = useCallback(
@@ -288,7 +296,6 @@ const Models = ({ fetchModelFeatureVector }) => {
     if ('tag' in changes.data) {
       setSelectedRowData({})
       setModels([])
-      setAllModels([])
 
       if (changes.data.tag.currentFieldValue) {
         navigate(
@@ -310,22 +317,24 @@ const Models = ({ fetchModelFeatureVector }) => {
   }, [navigate, location, pageData.details.menu, params.name, params.tag, params.tab])
 
   useEffect(() => {
-    if (isNil(filtersStore.tagOptions) && urlTagOption) {
-      fetchData({ ...modelsFilters, tag: urlTagOption })
+    if (urlTagOption) {
+      fetchData({
+        tag: urlTagOption,
+        iter: SHOW_ITERATIONS
+      })
     }
-  }, [fetchData, filtersStore, modelsFilters, urlTagOption])
+  }, [fetchData, urlTagOption])
 
   useEffect(() => {
     return () => {
       setModels([])
-      setAllModels([])
       dispatch(removeModels())
       setSelectedModel({})
       setTableHeaders([])
       setDataIsLoaded(false)
       abortControllerRef.current.abort(REQUEST_CANCELED)
     }
-  }, [dispatch, params.projectName, setModels, setAllModels])
+  }, [dispatch, params.projectName, setModels])
 
   useEffect(() => {
     dispatch(setFilters({ groupBy: GROUP_BY_NONE }))
@@ -335,7 +344,7 @@ const Models = ({ fetchModelFeatureVector }) => {
     checkForSelectedModel(
       params.name,
       selectedRowData,
-      allModels,
+      models,
       params.tag,
       params.iter,
       params.uid,
@@ -344,7 +353,7 @@ const Models = ({ fetchModelFeatureVector }) => {
       setSelectedModel
     )
   }, [
-    allModels,
+    models,
     navigate,
     params.iter,
     params.name,
@@ -403,6 +412,8 @@ const Models = ({ fetchModelFeatureVector }) => {
       setDataIsLoaded(true)
     }
   }, [dataIsLoaded, models, tableHeaders])
+
+  useEffect(() => setModels([]), [filtersStore.tag])
 
   const handleRegisterModel = useCallback(() => {
     openPopUp(RegisterModelModal, {
