@@ -37,13 +37,14 @@ const projectsApi = {
   deleteSecret: (project, key) =>
     mainHttpClient.delete(`/projects/${project}/secrets?provider=kubernetes&secret=${key}`),
   editProject: (project, data) => mainHttpClient.put(`/projects/${project}`, data),
-  getJobsAndWorkflows: (project, params) => mainHttpClient.get('/runs', { params }),
+  getJobsAndWorkflows: (project, params) =>
+    mainHttpClient.get(`/projects/${project}/runs`, { params }),
   getProject: project => mainHttpClient.get(`/projects/${project}`),
   getProjectDataSets: project =>
     mainHttpClient.get(`/projects/${project}/artifacts?category=dataset`),
   getProjectFailedJobs: (project, signal) =>
     mainHttpClient.get(
-      `/runs?project=${project}&state=error&start_time_from=${new Date(
+      `/projects/${project}/runs?state=error&start_time_from=${new Date(
         Date.now() - 24 * 60 * 60 * 1000
       ).toISOString()}`,
       {
@@ -64,7 +65,7 @@ const projectsApi = {
       signal: signal
     }),
   getProjectRunningJobs: (project, signal) =>
-    mainHttpClient.get(`/runs?project=${project}&state=running`, {
+    mainHttpClient.get(`/projects/${project}/runs?state=running`, {
       signal: signal
     }),
   getProjectScheduledJobs: project => mainHttpClient.get(`/projects/${project}/schedules`),
