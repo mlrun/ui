@@ -23,7 +23,7 @@ import { useNavigate, useParams } from 'react-router-dom'
 import classnames from 'classnames'
 
 import FilterMenu from '../../FilterMenu/FilterMenu'
-import FunctionsTableRow from '../../../elements/FunctionsTableRow/FunctionsTableRow'
+import RealTimePipelinesTableRow from '../../../elements/RealTimePipelinesTableRow/RealTimePipelinesTableRow'
 import Loader from '../../../common/Loader/Loader'
 import ModelsPageTabs from '../ModelsPageTabs/ModelsPageTabs'
 import NoData from '../../../common/NoData/NoData'
@@ -31,7 +31,7 @@ import Pipeline from '../../Pipeline/Pipeline'
 import Table from '../../Table/Table'
 import { getNoDataMessage } from '../../../utils/getNoDataMessage'
 
-import createFunctionsContent from '../../../utils/createFunctionsContent'
+import createRealTimePiplelinesContent from '../../../utils/createRealTimePipelinesContent'
 import {
   GROUP_BY_NAME,
   MODELS_PAGE,
@@ -40,10 +40,8 @@ import {
 } from '../../../constants'
 import { fetchArtifactsFunctions, removePipelines } from '../../../reducers/artifactsReducer'
 import { filters, generatePageData } from './realTimePipelines.util'
-import { getFunctionIdentifier } from '../../../utils/getUniqueIdentifier'
 import { largeResponseCatchHandler } from '../../../utils/largeResponseCatchHandler'
 import { setFilters } from '../../../reducers/filtersReducer'
-import { useGroupContent } from '../../../hooks/groupContent.hook'
 import { useModelsPage } from '../ModelsPage.context'
 
 import { ReactComponent as Yaml } from 'igz-controls/images/yaml.svg'
@@ -51,7 +49,6 @@ import { ReactComponent as Yaml } from 'igz-controls/images/yaml.svg'
 const RealTimePipelines = () => {
   const [largeRequestErrorMessage, setLargeRequestErrorMessage] = useState('')
   const [pipelines, setPipelines] = useState([])
-  const [selectedRowData, setSelectedRowData] = useState({})
   const artifactsStore = useSelector(store => store.artifactsStore)
   const filtersStore = useSelector(store => store.filtersStore)
   const params = useParams()
@@ -115,26 +112,15 @@ const RealTimePipelines = () => {
   const handleRefresh = useCallback(
     filters => {
       setPipelines([])
-      setSelectedRowData({})
 
       return fetchData(filters)
     },
     [fetchData]
   )
 
-  const { latestItems } = useGroupContent(
-    pipelines,
-    getFunctionIdentifier,
-    null,
-    null,
-    null,
-    MODELS_PAGE,
-    REAL_TIME_PIPELINES_TAB
-  )
-
   const tableContent = useMemo(() => {
-    return createFunctionsContent(latestItems, REAL_TIME_PIPELINES_TAB, params.projectName)
-  }, [latestItems, params.projectName])
+    return createRealTimePiplelinesContent(pipelines, params.projectName)
+  }, [pipelines, params.projectName])
 
   useEffect(() => {
     fetchData({})
@@ -201,14 +187,10 @@ const RealTimePipelines = () => {
               >
                 {tableContent.map((tableItem, index) => {
                   return (
-                    <FunctionsTableRow
+                    <RealTimePipelinesTableRow
                       actionsMenu={actionsMenu}
-                      handleSelectItem={() => {}}
-                      rowIndex={index}
                       key={index}
                       rowItem={tableItem}
-                      selectedItem={{}}
-                      selectedRowData={selectedRowData}
                     />
                   )
                 })}

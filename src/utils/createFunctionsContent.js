@@ -18,164 +18,97 @@ under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
 import { formatDatetime } from './datetime'
-import { FUNCTIONS_PAGE, MODELS_PAGE, REAL_TIME_PIPELINES_TAB } from '../constants'
-import { generateLinkToDetailsPanel } from './generateLinkToDetailsPanel'
 import { getFunctionImage } from '../components/FunctionsPage/functions.util'
-import { validateArguments } from './validateArguments'
 
-const createFunctionsContent = (functions, pageTab, projectName, showExpandButton) =>
+const createFunctionsContent = (functions, projectName, showExpandButton) =>
   functions.map(func => {
-    return pageTab === REAL_TIME_PIPELINES_TAB
-      ? {
-          data: {
-            ...func
+    return {
+      data: {
+        ...func
+      },
+      content: [
+        {
+          id: `name.${func.ui.identifierUnique}`,
+          headerId: 'name',
+          headerLabel: 'Name',
+          value: func.name,
+          className: 'table-cell-name',
+          getLink: (hash, tab) => {
+            return `/projects/${projectName}/functions/${hash}${`/${tab}`}`
           },
-          content: [
-            {
-              id: `name.${func.ui.identifierUnique}`,
-              headerId: 'name',
-              headerLabel: 'Name',
-              value: func.name,
-              className: 'table-cell-name',
-              getLink: hash => {
-                return `/projects/${projectName}/${MODELS_PAGE.toLowerCase()}/${REAL_TIME_PIPELINES_TAB}/pipeline/${hash}`
-              },
-              showTag: true,
-              showStatus: true,
-              expandedCellContent: {
-                value: formatDatetime(func.updated, 'N/A'),
-                className: 'table-cell-name',
-                type: 'date',
-                showTag: true,
-                showStatus: true
-              },
-              showExpandButton
-            },
-            {
-              id: `kind.${func.ui.identifierUnique}`,
-              headerId: 'type',
-              headerLabel: 'Type',
-              value: func.graph?.kind === 'router' ? 'Router' : 'Flow',
-              className: 'table-cell-small',
-              type: 'type'
-            },
-            {
-              id: `function.${func.ui.identifierUnique}`,
-              headerId: 'function',
-              headerLabel: 'Function',
-              value: func.name,
-              className: 'table-cell-2',
-              getLink: tab =>
-                validateArguments(func.hash, tab)
-                  ? generateLinkToDetailsPanel(
-                      func.project,
-                      FUNCTIONS_PAGE,
-                      null,
-                      func.hash,
-                      null,
-                      tab
-                    )
-                  : ''
-            },
-            {
-              id: `updated.${func.ui.identifierUnique}`,
-              headerId: 'updated',
-              value: formatDatetime(func.updated, 'N/A'),
-              className: 'table-cell-2',
-              type: 'date',
-              showTag: true,
-              showStatus: true,
-              hidden: true
-            }
-          ]
-        }
-      : {
-          data: {
-            ...func
+          expandedCellContent: {
+            value: formatDatetime(func.updated, 'N/A'),
+            className: 'table-cell-name',
+            type: 'date',
+            showTag: true,
+            showStatus: true
           },
-          content: [
-            {
-              id: `name.${func.ui.identifierUnique}`,
-              headerId: 'name',
-              headerLabel: 'Name',
-              value: func.name,
-              className: 'table-cell-name',
-              getLink: (hash, tab) => {
-                return `/projects/${projectName}/functions/${hash}${`/${tab}`}`
-              },
-              expandedCellContent: {
-                value: formatDatetime(func.updated, 'N/A'),
-                className: 'table-cell-name',
-                type: 'date',
-                showTag: true,
-                showStatus: true
-              },
-              showTag: true,
-              showStatus: true,
-              showExpandButton
-            },
-            {
-              id: `kind.${func.ui.identifierUnique}`,
-              headerId: 'kind',
-              headerLabel: 'Kind',
-              value: func.type,
-              className: 'table-cell-small',
-              type: 'type'
-            },
-            {
-              id: `hash.${func.ui.identifierUnique}`,
-              headerId: 'hash',
-              headerLabel: 'Hash',
-              value: func.hash,
-              className: 'table-cell-1',
-              type: 'hash'
-            },
-            {
-              id: `updated.${func.ui.identifierUnique}`,
-              headerId: 'updated',
-              headerLabel: 'Updated',
-              value: formatDatetime(func.updated, 'N/A'),
-              className: 'table-cell-2',
-              type: 'date',
-              showTag: true,
-              showStatus: true
-            },
-            {
-              id: `command.${func.ui.identifierUnique}`,
-              headerId: 'command',
-              headerLabel: 'Command',
-              value: func.command,
-              className: 'table-cell-1'
-            },
-            {
-              id: `defaultHandler.${func.ui.identifierUnique}`,
-              headerId: 'defaultHandler',
-              headerLabel: 'Default handler',
-              value: func.default_handler,
-              className: 'table-cell-2'
-            },
-            {
-              id: `image.${func.ui.identifierUnique}`,
-              headerId: 'image',
-              headerLabel: 'Image',
-              value: getFunctionImage(func),
-              className: 'table-cell-1'
-            },
-            {
-              id: `description.${func.ui.identifierUnique}`,
-              headerId: 'description',
-              headerLabel: 'Description',
-              value: func.description,
-              className: 'table-cell-2'
-            },
-            {
-              id: `tag.${func.ui.identifierUnique}`,
-              headerId: 'tag',
-              value: func.tag,
-              type: 'hidden'
-            }
-          ]
+          showTag: true,
+          showStatus: true,
+          showExpandButton
+        },
+        {
+          id: `kind.${func.ui.identifierUnique}`,
+          headerId: 'kind',
+          headerLabel: 'Kind',
+          value: func.type,
+          className: 'table-cell-small',
+          type: 'type'
+        },
+        {
+          id: `hash.${func.ui.identifierUnique}`,
+          headerId: 'hash',
+          headerLabel: 'Hash',
+          value: func.hash,
+          className: 'table-cell-1',
+          type: 'hash'
+        },
+        {
+          id: `updated.${func.ui.identifierUnique}`,
+          headerId: 'updated',
+          headerLabel: 'Updated',
+          value: formatDatetime(func.updated, 'N/A'),
+          className: 'table-cell-2',
+          type: 'date',
+          showTag: true,
+          showStatus: true
+        },
+        {
+          id: `command.${func.ui.identifierUnique}`,
+          headerId: 'command',
+          headerLabel: 'Command',
+          value: func.command,
+          className: 'table-cell-1'
+        },
+        {
+          id: `defaultHandler.${func.ui.identifierUnique}`,
+          headerId: 'defaultHandler',
+          headerLabel: 'Default handler',
+          value: func.default_handler,
+          className: 'table-cell-2'
+        },
+        {
+          id: `image.${func.ui.identifierUnique}`,
+          headerId: 'image',
+          headerLabel: 'Image',
+          value: getFunctionImage(func),
+          className: 'table-cell-1'
+        },
+        {
+          id: `description.${func.ui.identifierUnique}`,
+          headerId: 'description',
+          headerLabel: 'Description',
+          value: func.description,
+          className: 'table-cell-2'
+        },
+        {
+          id: `tag.${func.ui.identifierUnique}`,
+          headerId: 'tag',
+          value: func.tag,
+          type: 'hidden'
         }
+      ]
+    }
   })
 
 export default createFunctionsContent

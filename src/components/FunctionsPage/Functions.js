@@ -133,7 +133,7 @@ const Functions = ({
         return {
           ...state,
           [funcIdentifier]: {
-            content: createFunctionsContent(content[func.name], null, params.projectName, false)
+            content: createFunctionsContent(content[func.name], params.projectName, false)
           }
         }
       })
@@ -160,7 +160,7 @@ const Functions = ({
     } else {
       Object.entries(content).forEach(([key, value]) => {
         newSelectedRowData[key] = {
-          content: createFunctionsContent(value, null, params.projectName, false)
+          content: createFunctionsContent(value, params.projectName, false)
         }
       })
     }
@@ -180,7 +180,7 @@ const Functions = ({
   )
 
   const tableContent = useMemo(
-    () => createFunctionsContent(latestItems, null, params.projectName, true),
+    () => createFunctionsContent(latestItems, params.projectName, true),
     [latestItems, params.projectName]
   )
 
