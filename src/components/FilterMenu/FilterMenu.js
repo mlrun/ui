@@ -79,7 +79,11 @@ const FilterMenu = ({
   const [name, setName] = useState('')
   const [entities, setEntities] = useState('')
   const [tagOptions, setTagOptions] = useState(tagFilterOptions)
-  const [autoRefresh, setAutoRefresh] = useState({ state: true, refresh: REFRESH })
+  const [autoRefresh, setAutoRefresh] = useState({
+    id: AUTO_REFRESH,
+    state: true,
+    refresh: REFRESH
+  })
   const navigate = useNavigate()
   const params = useParams()
   const selectOptions = useMemo(() => cloneDeep(filterSelectOptions), [])
@@ -468,7 +472,7 @@ const FilterMenu = ({
         <div className="actions">
           {monitorJobsTab && (
             <CheckBox
-              key={AUTO_REFRESH}
+              key={autoRefresh.id}
               item={{ label: AUTO_REFRESH, id: REFRESH }}
               onChange={handleAutoRefresh}
               selectedId={autoRefresh.refresh}
