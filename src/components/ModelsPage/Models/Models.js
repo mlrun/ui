@@ -76,9 +76,10 @@ const Models = ({ fetchModelFeatureVector }) => {
   const [largeRequestErrorMessage, setLargeRequestErrorMessage] = useState('')
   const [selectedModel, setSelectedModel] = useState({})
   const [selectedRowData, setSelectedRowData] = useState({})
-  const [metricsCounter, setMetricsCounter] = useState(0)
-  const [dataIsLoaded, setDataIsLoaded] = useState(false)
-  const [tableHeaders, setTableHeaders] = useState([])
+  //temporarily commented till ML-5606 will be done
+  // const [metricsCounter, setMetricsCounter] = useState(0)
+  // const [dataIsLoaded, setDataIsLoaded] = useState(false)
+  // const [tableHeaders, setTableHeaders] = useState([])
   const [urlTagOption] = useGetTagOptions(fetchArtifactTags, filters, MODEL_TYPE, MODELS_FILTERS)
   const artifactsStore = useSelector(store => store.artifactsStore)
   const detailsStore = useSelector(store => store.detailsStore)
@@ -156,8 +157,9 @@ const Models = ({ fetchModelFeatureVector }) => {
       )
       setSelectedRowData({})
       setModels([])
-      setTableHeaders([])
-      setDataIsLoaded(false)
+      //temporarily commented till ML-5606 will be done
+      // setTableHeaders([])
+      // setDataIsLoaded(false)
 
       return fetchData(filters)
     },
@@ -232,18 +234,12 @@ const Models = ({ fetchModelFeatureVector }) => {
         modelsFilters.iter,
         modelsFilters.tag,
         params.projectName,
-        frontendSpec,
-        metricsCounter
+        frontendSpec
+        //temporarily commented till ML-5606 will be done
+        // metricsCounter
       )
     },
-    [
-      dispatch,
-      modelsFilters.iter,
-      modelsFilters.tag,
-      params.projectName,
-      frontendSpec,
-      metricsCounter
-    ]
+    [dispatch, modelsFilters.iter, modelsFilters.tag, params.projectName, frontendSpec]
   )
 
   const { latestItems, handleExpandRow } = useGroupContent(
@@ -259,18 +255,14 @@ const Models = ({ fetchModelFeatureVector }) => {
   const tableContent = useMemo(() => {
     return filtersStore.groupBy === GROUP_BY_NAME
       ? latestItems.map(contentItem => {
-          return createModelsRowData(
-            contentItem,
-            params.projectName,
-            frontendSpec,
-            metricsCounter,
-            true
-          )
+          return createModelsRowData(contentItem, params.projectName, frontendSpec, null, true)
         })
       : models.map(contentItem =>
-          createModelsRowData(contentItem, params.projectName, frontendSpec, metricsCounter)
+          createModelsRowData(contentItem, params.projectName, frontendSpec)
         )
-  }, [filtersStore.groupBy, frontendSpec, latestItems, metricsCounter, models, params.projectName])
+  }, [filtersStore.groupBy, frontendSpec, latestItems, models, params.projectName])
+
+  const tableHeaders = useMemo(() => tableContent[0]?.content ?? [], [tableContent])
 
   const { sortTable, selectedColumnName, getSortingIcon, sortedTableContent, sortedTableHeaders } =
     useSortTable({
@@ -330,8 +322,9 @@ const Models = ({ fetchModelFeatureVector }) => {
       setModels([])
       dispatch(removeModels())
       setSelectedModel({})
-      setTableHeaders([])
-      setDataIsLoaded(false)
+      //temporarily commented till ML-5606 will be done
+      // setTableHeaders([])
+      // setDataIsLoaded(false)
       abortControllerRef.current.abort(REQUEST_CANCELED)
     }
   }, [dispatch, params.projectName, setModels])
@@ -380,38 +373,39 @@ const Models = ({ fetchModelFeatureVector }) => {
     selectedModel.feature_vector
   ])
 
-  useEffect(() => {
-    if (tableContent?.[0]?.content?.length > 0 && tableHeaders.length === 0) {
-      setTableHeaders(tableContent?.[0]?.content)
-    }
-  }, [tableContent, tableHeaders.length])
+  //temporarily commented till ML-5606 will be done
+  // useEffect(() => {
+  //   if (tableContent?.[0]?.content?.length > 0 && tableHeaders.length === 0) {
+  //     setTableHeaders(tableContent?.[0]?.content)
+  //   }
+  // }, [tableContent, tableHeaders.length])
 
-  useEffect(() => {
-    if (models.length > 0 && tableHeaders.length > 0 && !dataIsLoaded) {
-      const newTableHeaders = []
-      const maxMetricsModel = models.reduce((modelWithMaxMetrics, model) => {
-        if (
-          model.metrics &&
-          Object.keys(model.metrics).length > Object.keys(modelWithMaxMetrics.metrics || {}).length
-        ) {
-          return model
-        }
-
-        return modelWithMaxMetrics
-      }, {})
-      Object.keys(maxMetricsModel.metrics ?? {}).forEach(metricKey => {
-        newTableHeaders.push({
-          headerId: metricKey,
-          headerLabel: metricKey,
-          className: 'table-cell-1'
-        })
-      })
-
-      setMetricsCounter(Object.keys(maxMetricsModel.metrics ?? {}).length)
-      setTableHeaders(state => [...state, ...newTableHeaders])
-      setDataIsLoaded(true)
-    }
-  }, [dataIsLoaded, models, tableHeaders])
+  // useEffect(() => {
+  //   if (models.length > 0 && tableHeaders.length > 0 && !dataIsLoaded) {
+  //     const newTableHeaders = []
+  //     const maxMetricsModel = models.reduce((modelWithMaxMetrics, model) => {
+  //       if (
+  //         model.metrics &&
+  //         Object.keys(model.metrics).length > Object.keys(modelWithMaxMetrics.metrics || {}).length
+  //       ) {
+  //         return model
+  //       }
+  //
+  //       return modelWithMaxMetrics
+  //     }, {})
+  //     Object.keys(maxMetricsModel.metrics ?? {}).forEach(metricKey => {
+  //       newTableHeaders.push({
+  //         headerId: metricKey,
+  //         headerLabel: metricKey,
+  //         className: 'table-cell-1'
+  //       })
+  //     })
+  //
+  //     setMetricsCounter(Object.keys(maxMetricsModel.metrics ?? {}).length)
+  //     setTableHeaders(state => [...state, ...newTableHeaders])
+  //     setDataIsLoaded(true)
+  //   }
+  // }, [dataIsLoaded, models, tableHeaders])
 
   useEffect(() => setModels([]), [filtersStore.tag])
 
