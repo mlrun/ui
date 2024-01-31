@@ -89,7 +89,7 @@ const FilterMenu = ({
   const changes = useSelector(store => store.detailsStore.changes)
 
   const { '*': selectedTab } = params
-  const monitorJobsTab = selectedTab.includes(MONITOR_JOBS_TAB)
+  const monitorJobsTab = selectedTab ? selectedTab.includes(MONITOR_JOBS_TAB) : false
 
   useEffect(() => {
     setLabels(filtersStore.labels)
