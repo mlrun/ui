@@ -35,6 +35,7 @@ import { ReactComponent as CollapseIcon } from 'igz-controls/images/collapse.svg
 import { ReactComponent as ExpandIcon } from 'igz-controls/images/expand.svg'
 
 import {
+  AUTO_REFRESH,
   DATE_RANGE_TIME_FILTER,
   ENTITIES_FILTER,
   GROUP_BY_FILTER,
@@ -42,9 +43,11 @@ import {
   ITERATIONS_FILTER,
   KEY_CODES,
   LABELS_FILTER,
+  MONITOR_JOBS_TAB,
   NAME_FILTER,
   PERIOD_FILTER,
   PROJECT_FILTER,
+  REFRESH,
   REQUEST_CANCELED,
   SHOW_ITERATIONS,
   SHOW_UNTAGGED_FILTER,
@@ -76,6 +79,7 @@ const FilterMenu = ({
   const [name, setName] = useState('')
   const [entities, setEntities] = useState('')
   const [tagOptions, setTagOptions] = useState(tagFilterOptions)
+  const [autoRefresh, setAutoRefresh] = useState({ state: true, refresh: REFRESH })
   const navigate = useNavigate()
   const params = useParams()
   const selectOptions = useMemo(() => cloneDeep(filterSelectOptions), [])
@@ -83,6 +87,9 @@ const FilterMenu = ({
   const filtersStore = useSelector(store => store.filtersStore)
   const projectStore = useSelector(store => store.projectStore)
   const changes = useSelector(store => store.detailsStore.changes)
+
+  const { '*': selectedTab } = params
+  const monitorJobsTab = selectedTab.includes(MONITOR_JOBS_TAB)
 
   useEffect(() => {
     setLabels(filtersStore.labels)
@@ -301,11 +308,25 @@ const FilterMenu = ({
     }
   }
 
+  const handleAutoRefresh = item => {
+    const refreshValue = autoRefresh.refresh === item ? '' : REFRESH
+    setAutoRefresh(prev => ({ ...prev, refresh: refreshValue, state: !prev.state }))
+  }
+
   useEffect(() => {
     return () => {
       dispatch(removeFilters())
     }
   }, [params.pageTab, params.projectName, page, params.jobName, dispatch])
+
+  useEffect(() => {
+    if (monitorJobsTab && autoRefresh.state) {
+      const intervalId = setInterval(() => {
+        applyChanges(filtersStore, true)
+      }, 30000)
+      return () => clearInterval(intervalId)
+    }
+  }, [autoRefresh])
 
   return (
     !hidden && (
@@ -445,6 +466,14 @@ const FilterMenu = ({
           ))}
 
         <div className="actions">
+          {monitorJobsTab && (
+            <CheckBox
+              key={AUTO_REFRESH}
+              item={{ label: AUTO_REFRESH, id: REFRESH }}
+              onChange={handleAutoRefresh}
+              selectedId={autoRefresh.refresh}
+            />
+          )}
           <RoundedIcon
             tooltipText="Refresh"
             onClick={() => applyChanges(filtersStore, true)}
