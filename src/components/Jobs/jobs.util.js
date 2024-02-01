@@ -37,7 +37,7 @@ import {
 } from '../../constants'
 import jobsActions from '../../actions/jobs'
 import { generateKeyValues, truncateUid } from '../../utils'
-import { BG_TASK_FAILED, BG_TASK_SUCCEEDED, poll } from '../../utils/poll.util'
+import { BG_TASK_FAILED, BG_TASK_SUCCEEDED, pollTask } from '../../utils/poll.util'
 import { setNotification } from '../../reducers/notificationReducer'
 import { generateFunctionPriorityLabel } from '../../utils/generateFunctionPriorityLabel'
 import { parseKeyValues } from '../../utils/object'
@@ -120,7 +120,7 @@ export const isJobKindAbortable = (job, abortableFunctionKinds) =>
     .some(kindLabel => job?.labels?.includes(kindLabel))
 
 export const isJobAborting = (currentJob = {}) => {
-  return currentJob.state.value === 'aborting'
+  return currentJob?.state?.value === 'aborting'
 }
 
 export const isJobKindDask = (jobLabels = []) => {
@@ -437,7 +437,7 @@ export const pollAbortingJobs = (project, terminatePollRef, abortingJobs, refres
   terminatePollRef?.current?.()
   terminatePollRef.current = null
 
-  poll(pollMethod, isDone, { terminatePollRef })
+  pollTask(pollMethod, isDone, { terminatePollRef })
 }
 
 const abortJobSuccessHandler = (dispatch, job) => {

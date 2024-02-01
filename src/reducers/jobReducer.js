@@ -136,6 +136,7 @@ const jobReducer = (state = initialState, { type, payload }) => {
     case ABORT_JOB_SUCCESS:
       return {
         ...state,
+        loading: false,
         error: null
       }
     case DELETE_JOB_BEGIN:

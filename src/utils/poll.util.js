@@ -45,7 +45,7 @@ export const BG_TASK_SUCCEEDED = 'succeeded'
  *     was aborted by resolving `options.timeoutPromise`, or polling timed out after `options.timeoutMillis`
  *     milli-seconds.
  */
-export const poll = (pollMethod, isDone, options) => {
+export const pollTask = (pollMethod, isDone, options) => {
   let iterationTimeout = null
   let overallTimeout = null
   let terminated = false
