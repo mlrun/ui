@@ -264,7 +264,9 @@ export const handleAbortJob = (
   )
 
   abortJob(projectName, job)
-    .then(abortTaskId => {
+    .then(response => {
+      const abortTaskId = get(response, 'metadata.name', '')
+
       setJobStatusAborting?.(abortTaskId)
 
       if (setAbortingJobs) {

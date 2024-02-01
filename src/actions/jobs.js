@@ -90,7 +90,7 @@ const jobsActions = {
       .then(response => {
         dispatch(jobsActions.abortJobSuccess())
 
-        return get(response, 'data.metadata.name', '')
+        return get(response, 'data', {})
       })
       .catch(error => {
         dispatch(jobsActions.abortJobFailure(error.message))

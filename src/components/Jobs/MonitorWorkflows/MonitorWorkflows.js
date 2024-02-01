@@ -188,15 +188,17 @@ const MonitorWorkflows = ({
   const handlePollAbortingJob = useCallback(
     (jobRun, refresh) => {
       if (jobRun.abortTaskId && jobRun.state.value === 'aborting') {
+        const abortingJob = {
+          [jobRun.abortTaskId]: {
+            uid: jobRun.uid,
+            name: jobRun.name
+          }
+        }
+
         pollAbortingJobs(
           params.projectName,
           abortJobRef,
-          {
-            [jobRun.abortTaskId]: {
-              uid: jobRun.uid,
-              name: jobRun.name
-            }
-          },
+          abortingJob,
           refresh,
           dispatch
         )

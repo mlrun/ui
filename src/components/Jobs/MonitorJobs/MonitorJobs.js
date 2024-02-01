@@ -521,20 +521,23 @@ const MonitorJobs = ({
 
   useEffect(() => {
     if (!isEmpty(selectedJob)) {
-      // stop polling on entering details.
+      // stop polling on entering Details panel.
       terminateAbortTasksPolling()
 
       if (selectedJob.state.value === 'aborting' && selectedJob.abortTaskId) {
         // start polling a single task.
+
+        const abortingJob = {
+          [selectedJob.abortTaskId]: {
+            uid: selectedJob.uid,
+            name: selectedJob.name
+          }
+        }
+
         pollAbortingJobs(
           params.projectName,
           abortJobRef,
-          {
-            [selectedJob.abortTaskId]: {
-              uid: selectedJob.uid,
-              name: selectedJob.name
-            }
-          },
+          abortingJob,
           fetchRun,
           dispatch
         )
