@@ -309,7 +309,7 @@ const FilterMenu = ({
   }
 
   const handleAutoRefresh = itemId => {
-    setAutoRefresh(autoRefresh === itemId ? '' : AUTO_REFRESH_ID)
+    setAutoRefresh((prevAutoRefresh) => prevAutoRefresh === itemId ? '' : AUTO_REFRESH_ID)
   }
 
   useEffect(() => {
