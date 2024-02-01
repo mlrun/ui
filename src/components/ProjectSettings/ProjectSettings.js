@@ -42,13 +42,12 @@ import {
 } from '../../elements/MembersPopUp/membersReducer'
 import projectsIguazioApi from '../../api/projects-iguazio-api'
 import { PROJECTS_SETTINGS_MEMBERS_TAB, PROJECTS_SETTINGS_SECRETS_TAB } from '../../constants'
-import { isProjectValid } from '../../utils/handleRedirect'
 import { setNotification } from '../../reducers/notificationReducer'
 import { showErrorNotification } from '../../utils/notifications.util'
 
 import './projectSettings.scss'
 
-const ProjectSettings = ({ frontendSpec, projectStore }) => {
+const ProjectSettings = ({ frontendSpec }) => {
   const [projectMembersIsShown, setProjectMembersIsShown] = useState(false)
   const [projectOwnerIsShown, setProjectOwnerIsShown] = useState(false)
   const [membersState, membersDispatch] = useReducer(membersReducer, initialMembersState)
@@ -80,24 +79,25 @@ const ProjectSettings = ({ frontendSpec, projectStore }) => {
         const {
           attributes: { username = '', first_name: firstName = '', last_name: lastName = '' } = {}
         } = ownerInfo ?? {}
+        const payload = {
+          id: projectId,
+          owner: { id: ownerId, username, firstName, lastName }
+        }
 
         membersDispatch({
           type: membersActions.SET_PROJECT_INFO,
-          payload: {
-            id: projectId,
-            owner: { id: ownerId, username, firstName, lastName }
-          }
+          payload
         })
 
-        return projectId
+        return payload
       })
   }, [params.projectName])
 
   const fetchProjectMembers = useCallback(
-    projectId => {
+    (projectId, owner) => {
       return projectsIguazioApi
         .getProjectMembers(projectId)
-        .then(membersResponse => generateMembers(membersResponse, membersDispatch))
+        .then(membersResponse => generateMembers(membersResponse, membersDispatch, owner))
         .catch(error => showErrorNotification(dispatch, error, 'Failed to fetch project members'))
     },
     [dispatch]
@@ -135,11 +135,11 @@ const ProjectSettings = ({ frontendSpec, projectStore }) => {
     if (projectMembershipIsEnabled) {
       fetchProjectOwnerVisibility(params.projectName)
       fetchProjectIdAndOwner()
-        .then(projectId => {
+        .then(({ id: projectId, owner }) => {
           fetchActiveUser()
           fetchProjectMembersVisibility(params.projectName)
 
-          return fetchProjectMembers(projectId)
+          return fetchProjectMembers(projectId, owner)
         })
         .catch(() => {
           setProjectMembersIsShown(false)
@@ -158,18 +158,20 @@ const ProjectSettings = ({ frontendSpec, projectStore }) => {
         if (response.data.data.attributes.state !== COMPLETED_STATE) {
           setTimeout(fetchJob, 1000)
         } else {
-          fetchProjectMembers(membersState.projectInfo.id).then(() => {
-            membersDispatch({
-              type: membersActions.GET_PROJECT_USERS_DATA_END
-            })
-            dispatch(
-              setNotification({
-                status: 200,
-                id: Math.random(),
-                message: 'Members updated successfully'
+          fetchProjectMembers(membersState.projectInfo.id, membersState.projectInfo.owner).then(
+            () => {
+              membersDispatch({
+                type: membersActions.GET_PROJECT_USERS_DATA_END
               })
-            )
-          })
+              dispatch(
+                setNotification({
+                  status: 200,
+                  id: Math.random(),
+                  message: 'Members updated successfully'
+                })
+              )
+            }
+          )
         }
       })
     }
@@ -184,7 +186,7 @@ const ProjectSettings = ({ frontendSpec, projectStore }) => {
   const changeOwnerCallback = () => {
     const prevOwner = membersState.projectInfo.owner.id
 
-    fetchProjectIdAndOwner().then(() => {
+    return fetchProjectIdAndOwner().then(() => {
       if (!membersState.members.some(member => member.id === prevOwner)) {
         navigate('/projects/')
       }
@@ -207,10 +209,6 @@ const ProjectSettings = ({ frontendSpec, projectStore }) => {
       resetProjectData()
     }
   }, [fetchProjectUsersData, resetProjectData])
-
-  useEffect(() => {
-    isProjectValid(navigate, projectStore.projectsNames.data, params.projectName)
-  }, [navigate, params.projectName, projectStore.projectsNames.data])
 
   useEffect(() => {
     if (!validTabs.includes(params.pageTab)) {
@@ -255,8 +253,7 @@ const ProjectSettings = ({ frontendSpec, projectStore }) => {
 }
 
 export default connect(
-  ({ appStore, projectStore }) => ({
-    projectStore,
+  ({ appStore }) => ({
     frontendSpec: appStore.frontendSpec
   }),
   null

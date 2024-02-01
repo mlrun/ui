@@ -19,7 +19,7 @@ such restriction.
 */
 import React, { useCallback, useEffect, useMemo, useState, useRef } from 'react'
 import { connect, useDispatch, useSelector } from 'react-redux'
-import { isEmpty, isNil } from 'lodash'
+import { isEmpty } from 'lodash'
 import { useLocation, useNavigate, useParams } from 'react-router-dom'
 
 import AddArtifactTagPopUp from '../../../elements/AddArtifactTagPopUp/AddArtifactTagPopUp'
@@ -29,6 +29,7 @@ import RegisterModelModal from '../../../elements/RegisterModelModal/RegisterMod
 import JobWizard from '../../JobWizard/JobWizard'
 
 import {
+  fetchArtifactTags,
   fetchModel,
   fetchModels,
   removeModel,
@@ -42,7 +43,9 @@ import {
   FILTER_MENU_MODAL,
   GROUP_BY_NONE,
   MODELS_FILTERS,
-  REQUEST_CANCELED
+  REQUEST_CANCELED,
+  MODEL_TYPE,
+  SHOW_ITERATIONS
 } from '../../../constants'
 import {
   checkForSelectedModel,
@@ -59,7 +62,7 @@ import { getArtifactIdentifier } from '../../../utils/getUniqueIdentifier'
 import { isDetailsTabExists } from '../../../utils/isDetailsTabExists'
 import { openPopUp } from 'igz-controls/utils/common.util'
 import { parseChipsData } from '../../../utils/convertChipsData'
-import { setFilters } from '../../../reducers/filtersReducer'
+import { getFilterTagOptions, setFilters } from '../../../reducers/filtersReducer'
 import { setNotification } from '../../../reducers/notificationReducer'
 import { useGroupContent } from '../../../hooks/groupContent.hook'
 import { useModelsPage } from '../ModelsPage.context'
@@ -67,17 +70,16 @@ import { useSortTable } from '../../../hooks/useSortTable.hook'
 import { useGetTagOptions } from '../../../hooks/useGetTagOptions.hook'
 import { getViewMode } from '../../../utils/helper'
 import { useMode } from '../../../hooks/mode.hook'
-import { setArtifactTags } from '../../../utils/artifacts.util'
 
 const Models = ({ fetchModelFeatureVector }) => {
   const [models, setModels] = useState([])
-  const [allModels, setAllModels] = useState([])
   const [largeRequestErrorMessage, setLargeRequestErrorMessage] = useState('')
   const [selectedModel, setSelectedModel] = useState({})
   const [selectedRowData, setSelectedRowData] = useState({})
   const [metricsCounter, setMetricsCounter] = useState(0)
   const [dataIsLoaded, setDataIsLoaded] = useState(false)
-  const [urlTagOption] = useGetTagOptions(null, filters, null, MODELS_FILTERS)
+  const [tableHeaders, setTableHeaders] = useState([])
+  const [urlTagOption] = useGetTagOptions(fetchArtifactTags, filters, MODEL_TYPE, MODELS_FILTERS)
   const artifactsStore = useSelector(store => store.artifactsStore)
   const detailsStore = useSelector(store => store.detailsStore)
   const filtersStore = useSelector(store => store.filtersStore)
@@ -92,7 +94,7 @@ const Models = ({ fetchModelFeatureVector }) => {
   const frontendSpec = useSelector(store => store.appStore.frontendSpec)
 
   const modelsFilters = useMemo(
-    () => filtersStore[FILTER_MENU_MODAL][MODELS_FILTERS].values,
+    () => ({ name: filtersStore.name, ...filtersStore[FILTER_MENU_MODAL][MODELS_FILTERS].values }),
     [filtersStore]
   )
   const { isDemoMode } = useMode()
@@ -127,12 +129,12 @@ const Models = ({ fetchModelFeatureVector }) => {
         })
       )
         .unwrap()
-        .then(modelsResponse => {
-          if (modelsResponse) {
-            setArtifactTags(modelsResponse, setModels, setAllModels, filters, dispatch, MODELS_TAB)
-
-            return modelsResponse
+        .then(result => {
+          if (result) {
+            setModels(result)
           }
+
+          return result
         })
     },
     [dispatch, setModels, params.projectName]
@@ -144,20 +146,29 @@ const Models = ({ fetchModelFeatureVector }) => {
 
   const handleRefresh = useCallback(
     filters => {
+      dispatch(
+        getFilterTagOptions({
+          dispatch,
+          fetchTags: fetchArtifactTags,
+          project: params.projectName,
+          category: MODEL_TYPE
+        })
+      )
       setSelectedRowData({})
       setModels([])
-      setAllModels([])
+      setTableHeaders([])
+      setDataIsLoaded(false)
 
       return fetchData(filters)
     },
-    [fetchData, setAllModels, setModels]
+    [dispatch, fetchData, params.projectName]
   )
 
   const handleAddTag = useCallback(
     artifact => {
       openPopUp(AddArtifactTagPopUp, {
         artifact,
-        onAddTag: handleRefresh,
+        onAddTag: () => handleRefresh(modelsFilters),
         getArtifact: () =>
           fetchModel({
             project: params.projectName,
@@ -168,7 +179,7 @@ const Models = ({ fetchModelFeatureVector }) => {
         projectName: params.projectName
       })
     },
-    [handleRefresh, params.projectName]
+    [handleRefresh, params.projectName, modelsFilters]
   )
 
   const actionsMenu = useMemo(
@@ -261,8 +272,6 @@ const Models = ({ fetchModelFeatureVector }) => {
         )
   }, [filtersStore.groupBy, frontendSpec, latestItems, metricsCounter, models, params.projectName])
 
-  const tableHeaders = useMemo(() => tableContent[0]?.content ?? [], [tableContent])
-
   const { sortTable, selectedColumnName, getSortingIcon, sortedTableContent, sortedTableHeaders } =
     useSortTable({
       headers: tableHeaders,
@@ -287,7 +296,6 @@ const Models = ({ fetchModelFeatureVector }) => {
     if ('tag' in changes.data) {
       setSelectedRowData({})
       setModels([])
-      setAllModels([])
 
       if (changes.data.tag.currentFieldValue) {
         navigate(
@@ -309,20 +317,24 @@ const Models = ({ fetchModelFeatureVector }) => {
   }, [navigate, location, pageData.details.menu, params.name, params.tag, params.tab])
 
   useEffect(() => {
-    if (isNil(filtersStore.tagOptions) && urlTagOption) {
-      fetchData({ ...modelsFilters, tag: urlTagOption })
+    if (urlTagOption) {
+      fetchData({
+        tag: urlTagOption,
+        iter: SHOW_ITERATIONS
+      })
     }
-  }, [fetchData, filtersStore, modelsFilters, urlTagOption])
+  }, [fetchData, urlTagOption])
 
   useEffect(() => {
     return () => {
       setModels([])
-      setAllModels([])
       dispatch(removeModels())
       setSelectedModel({})
+      setTableHeaders([])
+      setDataIsLoaded(false)
       abortControllerRef.current.abort(REQUEST_CANCELED)
     }
-  }, [dispatch, setModels, setAllModels])
+  }, [dispatch, params.projectName, setModels])
 
   useEffect(() => {
     dispatch(setFilters({ groupBy: GROUP_BY_NONE }))
@@ -332,7 +344,7 @@ const Models = ({ fetchModelFeatureVector }) => {
     checkForSelectedModel(
       params.name,
       selectedRowData,
-      allModels,
+      models,
       params.tag,
       params.iter,
       params.uid,
@@ -341,7 +353,7 @@ const Models = ({ fetchModelFeatureVector }) => {
       setSelectedModel
     )
   }, [
-    allModels,
+    models,
     navigate,
     params.iter,
     params.name,
@@ -369,23 +381,46 @@ const Models = ({ fetchModelFeatureVector }) => {
   ])
 
   useEffect(() => {
-    if (models.length > 0 && !dataIsLoaded) {
-      let maxMetricsCount = 0
+    if (tableContent?.[0]?.content?.length > 0 && tableHeaders.length === 0) {
+      setTableHeaders(tableContent?.[0]?.content)
+    }
+  }, [tableContent, tableHeaders.length])
 
-      models.forEach(model => {
-        if (model.metrics && Object.keys(model.metrics).length > maxMetricsCount) {
-          maxMetricsCount = Object.keys(model.metrics).length
+  useEffect(() => {
+    if (models.length > 0 && tableHeaders.length > 0 && !dataIsLoaded) {
+      const newTableHeaders = []
+      const maxMetricsModel = models.reduce((modelWithMaxMetrics, model) => {
+        if (
+          model.metrics &&
+          Object.keys(model.metrics).length > Object.keys(modelWithMaxMetrics.metrics || {}).length
+        ) {
+          return model
         }
+
+        return modelWithMaxMetrics
+      }, {})
+      Object.keys(maxMetricsModel.metrics ?? {}).forEach(metricKey => {
+        newTableHeaders.push({
+          headerId: metricKey,
+          headerLabel: metricKey,
+          className: 'table-cell-1'
+        })
       })
 
-      setMetricsCounter(maxMetricsCount)
+      setMetricsCounter(Object.keys(maxMetricsModel.metrics ?? {}).length)
+      setTableHeaders(state => [...state, ...newTableHeaders])
       setDataIsLoaded(true)
     }
-  }, [dataIsLoaded, models])
+  }, [dataIsLoaded, models, tableHeaders])
+
+  useEffect(() => setModels([]), [filtersStore.tag])
 
   const handleRegisterModel = useCallback(() => {
-    openPopUp(RegisterModelModal, { params, refresh: handleRefresh })
-  }, [handleRefresh, params])
+    openPopUp(RegisterModelModal, {
+      params,
+      refresh: () => handleRefresh(modelsFilters)
+    })
+  }, [handleRefresh, params, modelsFilters])
 
   const handleTrainModel = () => {
     openPopUp(JobWizard, {

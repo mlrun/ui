@@ -17,7 +17,7 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import { capitalize, defaultsDeep, isEmpty, map, uniq } from 'lodash'
+import { capitalize, chain, defaultsDeep, isEmpty } from 'lodash'
 import {
   JOB_KIND_DASK,
   JOB_KIND_DATABRICKS,
@@ -40,41 +40,35 @@ import { parseKeyValues } from '../../utils/object'
 import { showErrorNotification } from '../../utils/notifications.util'
 
 export const page = JOBS_PAGE
-export const getInfoHeaders = isSpark =>
-  isSpark
-    ? [
-        { label: 'UID', id: 'uid' },
-        { label: 'Start time', id: 'startTime' },
-        { label: 'Last Updated', id: 'updated' },
-        { label: 'Run on spot', id: 'runOnSpot' },
-        { label: 'Node selector', id: 'nodeSelectorChips' },
-        { label: 'Priority', id: 'priority' },
-        { label: 'Parameters', id: 'parameters' },
-        { label: 'Function', id: 'function' },
-        { label: 'Function tag', id: 'functionTag' },
-        { label: 'Results', id: 'resultsChips' },
-        { label: 'Labels', id: 'labels' },
-        { label: 'SPARK UI URL', id: 'sparkUiUrl' },
-        { label: 'Log level', id: 'logLevel' },
-        { label: 'Output path', id: 'outputPath' },
-        { label: 'Total iterations', id: 'iterations' }
-      ]
-    : [
-        { label: 'UID', id: 'uid' },
-        { label: 'Start time', id: 'startTime' },
-        { label: 'Last Updated', id: 'updated' },
-        { label: 'Run on spot', id: 'runOnSpot' },
-        { label: 'Node selector', id: 'nodeSelectorChips' },
-        { label: 'Priority', id: 'priority' },
-        { label: 'Parameters', id: 'parameters' },
-        { label: 'Function', id: 'function' },
-        { label: 'Function tag', id: 'functionTag' },
-        { label: 'Results', id: 'resultsChips' },
-        { label: 'Labels', id: 'labels' },
-        { label: 'Log level', id: 'logLevel' },
-        { label: 'Output path', id: 'outputPath' },
-        { label: 'Total iterations', id: 'iterations' }
-      ]
+const LOG_LEVEL_ID = 'logLevel'
+export const getInfoHeaders = isSpark => {
+  const infoHeaders = [
+    { label: 'UID', id: 'uid' },
+    { label: 'Start time', id: 'startTime' },
+    { label: 'Last Updated', id: 'updated' },
+    { label: 'Run on spot', id: 'runOnSpot' },
+    { label: 'Node selector', id: 'nodeSelectorChips' },
+    { label: 'Priority', id: 'priority' },
+    { label: 'Parameters', id: 'parameters' },
+    { label: 'Function', id: 'function' },
+    { label: 'Function tag', id: 'functionTag' },
+    { label: 'Results', id: 'resultsChips' },
+    { label: 'Labels', id: 'labels' },
+    { label: 'Log level', id: LOG_LEVEL_ID },
+    { label: 'Output path', id: 'outputPath' },
+    { label: 'Total iterations', id: 'iterations' }
+  ]
+
+  if (isSpark) {
+    infoHeaders.splice(
+      infoHeaders.findIndex(header => header.id === LOG_LEVEL_ID),
+      0,
+      { label: 'SPARK UI URL', id: 'sparkUiUrl' }
+    )
+  }
+
+  return infoHeaders
+}
 export const actionsMenuHeader = 'Batch run'
 
 export const JOB_STEADY_STATES = ['completed', 'error', 'aborted']
@@ -349,7 +343,8 @@ export const enrichRunWithFunctionFields = (
   return fetchJobFunctionsPromiseRef.current
     .then(funcs => {
       if (!isEmpty(funcs)) {
-        const tagsList = uniq(map(funcs, 'metadata.tag'))
+        const tagsList = chain(funcs).map('metadata.tag').compact().uniq().value()
+
         defaultsDeep(jobRun, {
           ui: {
             functionTag: tagsList.join(', '),

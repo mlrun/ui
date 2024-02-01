@@ -17,14 +17,15 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import React from 'react'
+import React, { useState } from 'react'
 import PropTypes from 'prop-types'
-import { connect, useDispatch } from 'react-redux'
+import { useDispatch } from 'react-redux'
 import { useLocation } from 'react-router-dom'
 import { v4 as uuidv4 } from 'uuid'
 import { Form } from 'react-final-form'
 import { createForm } from 'final-form'
 import arrayMutators from 'final-form-arrays'
+import { isEmpty } from 'lodash'
 
 import RegisterArtifactModalForm from '../../elements/RegisterArtifactModalForm/RegisterArtifactModalForm'
 import { Button, Modal } from 'igz-controls/components'
@@ -38,7 +39,7 @@ import {
 import artifactApi from '../../api/artifacts-api'
 import { ARTIFACT_TYPE } from '../../constants'
 import { convertChipsData } from '../../utils/convertChipsData'
-import { messagesByKind } from './messagesByKind'
+import { createArtifactMessages } from '../../utils/createArtifact.util'
 import { setFieldState } from 'igz-controls/utils/form.util'
 import { setNotification } from '../../reducers/notificationReducer'
 import { showErrorNotification } from '../../utils/notifications.util'
@@ -47,7 +48,6 @@ import { useModalBlockHistory } from '../../hooks/useModalBlockHistory.hook'
 const RegisterArtifactModal = ({
   actions,
   artifactKind,
-  filtersStore,
   isOpen,
   onResolve,
   params,
@@ -70,6 +70,7 @@ const RegisterArtifactModal = ({
       }
     }
   }
+  const [uniquenessErrorIsShown, setUniquenessErrorIsShown] = useState(false)
   const formRef = React.useRef(
     createForm({
       initialValues,
@@ -104,17 +105,29 @@ const RegisterArtifactModal = ({
     }
 
     return artifactApi
-      .registerArtifact(params.projectName, data)
+      .getArtifact(params.projectName, values.metadata.key, values.metadata.tag)
       .then(response => {
-        resolveModal()
-        refresh(filtersStore)
-        dispatch(
-          setNotification({
-            status: response.status,
-            id: Math.random(),
-            message: `${title} initiated successfully`
-          })
-        )
+        if (response?.data) {
+          if (!isEmpty(response.data.artifacts)) {
+            setUniquenessErrorIsShown(true)
+          } else {
+            setUniquenessErrorIsShown(false)
+
+            return artifactApi
+              .registerArtifact(params.projectName, data)
+              .then(response => {
+                resolveModal()
+                refresh()
+                dispatch(
+                  setNotification({
+                    status: response.status,
+                    id: Math.random(),
+                    message: `${title} initiated successfully`
+                  })
+                )
+              })
+          }
+        }
       })
       .catch(error => {
         const customErrorMsg =
@@ -124,6 +137,7 @@ const RegisterArtifactModal = ({
 
         showErrorNotification(dispatch, error, '', customErrorMsg, () => registerArtifact(values))
 
+        setUniquenessErrorIsShown(false)
         resolveModal()
       })
   }
@@ -164,10 +178,12 @@ const RegisterArtifactModal = ({
             <RegisterArtifactModalForm
               formState={formState}
               initialValues={initialValues}
-              messagesByKind={messagesByKind[artifactKind.toLowerCase()]}
+              messagesByKind={createArtifactMessages[artifactKind.toLowerCase()]}
               params={params}
               setFieldState={formState.form.mutators.setFieldState}
+              setUniquenessErrorIsShown={setUniquenessErrorIsShown}
               showType={artifactKind === ARTIFACT_TYPE}
+              uniquenessErrorIsShown={uniquenessErrorIsShown}
             />
           </Modal>
         )
@@ -183,9 +199,4 @@ RegisterArtifactModal.propTypes = {
   title: PropTypes.string.isRequired
 }
 
-export default connect(
-  ({ filtersStore }) => ({
-    filtersStore
-  }),
-  null
-)(RegisterArtifactModal)
+export default RegisterArtifactModal

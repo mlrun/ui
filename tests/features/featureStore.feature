@@ -276,8 +276,6 @@ Feature: Feature Store Page
 
     @MLFS
     @passive
-    @FAILED_TODO
-    #TODO: bug ML-5151 (fixed v1.6.0-rc17)
     Scenario: MLFS009 - Check all mandatory components in Item infopane on Preview tab table
         Given open url
         And click on row root with value "fsdemo-admin" in "name" column in "Projects_Table" table on "Projects" wizard
@@ -378,7 +376,7 @@ Feature: Feature Store Page
         Then type value "type=featureSet" to "Table_Label_Filter_Input" field on "Feature_Store_Feature_Sets_Tab" wizard
         Then click on "Table_Refresh_Button" element on "Feature_Store_Feature_Sets_Tab" wizard
         And wait load page
-        Then value in "labels" column with "dropdowns" in "Feature_Sets_Table" on "Feature_Store_Feature_Sets_Tab" wizard should contains "type=featureSet" in "Overlay"
+        Then value in "labels" column with "text" in "Feature_Sets_Table" on "Feature_Store_Feature_Sets_Tab" wizard should contains "type=featureSet"
         Then type value "v3io_user=123" to "Table_Label_Filter_Input" field on "Feature_Store_Feature_Sets_Tab" wizard
         Then click on "Table_Refresh_Button" element on "Feature_Store_Feature_Sets_Tab" wizard
         And wait load page
@@ -455,11 +453,11 @@ Feature: Feature Store Page
         Then type value "owner" to "Table_Label_Filter_Input" field on "Feature_Store_Features_Vectors_Tab" wizard
         Then click on "Table_Refresh_Button" element on "Feature_Store_Features_Vectors_Tab" wizard
         And wait load page
-        Then value in "labels" column with "dropdowns" in "Feature_Vectors_Table" on "Feature_Store_Features_Vectors_Tab" wizard should contains "owner" in "Overlay"
+        Then value in "labels" column with "text" in "Feature_Vectors_Table" on "Feature_Store_Features_Vectors_Tab" wizard should contains "owner"
         Then type value "type=featureVector" to "Table_Label_Filter_Input" field on "Feature_Store_Features_Vectors_Tab" wizard
         Then click on "Table_Refresh_Button" element on "Feature_Store_Features_Tab" wizard
         And wait load page
-        Then value in "labels" column with "dropdowns" in "Feature_Vectors_Table" on "Feature_Store_Features_Vectors_Tab" wizard should contains "type=featureVector" in "Overlay"
+        Then value in "labels" column with "text" in "Feature_Vectors_Table" on "Feature_Store_Features_Vectors_Tab" wizard should contains "type=featureVector"
         Then type value "v3io_user=123" to "Table_Label_Filter_Input" field on "Feature_Store_Features_Vectors_Tab" wizard
         Then click on "Table_Refresh_Button" element on "Feature_Store_Features_Vectors_Tab" wizard
         And wait load page
@@ -577,9 +575,9 @@ Feature: Feature Store Page
         Then verify "Feature Sets" tab is active in "Feature_Store_Tab_Selector" on "Feature_Store_Feature_Sets_Tab" wizard
         Then click on "Create_Set_Button" element on "Feature_Store_Feature_Sets_Tab" wizard
         When select "PARQUET" option in "Kind_Dropdown" dropdown on "Data_Source_Accordion" on "New_Feature_Set" wizard
-        Then verify "Schedule_Button" element visibility in "Data_Source_Accordion" on "New_Feature_Set" wizard
-        Then "Schedule_Button" element in "Data_Source_Accordion" on "New_Feature_Set" should contains "Schedule" value
-        Then click on "Schedule_Button" element in "Data_Source_Accordion" on "New_Feature_Set" wizard
+        Then verify "Set_Schedule_Button" element visibility in "Data_Source_Accordion" on "New_Feature_Set" wizard
+        Then "Set_Schedule_Button" element in "Data_Source_Accordion" on "New_Feature_Set" should contains "Set schedule" value
+        Then click on "Set_Schedule_Button" element in "Data_Source_Accordion" on "New_Feature_Set" wizard
         Then verify if "Feature_Set_Schedule_Popup" popup dialog appears
         Then verify "Repeat_Dropdown" element visibility on "Feature_Set_Schedule_Popup" wizard
         Then verify "Time_Dropdown" element visibility on "Feature_Set_Schedule_Popup" wizard
@@ -589,14 +587,21 @@ Feature: Feature Store Page
         Then select "Hourly" option in "Repeat_Dropdown" dropdown on "Feature_Set_Schedule_Popup" wizard
         Then verify "Time_Dropdown" dropdown element on "Feature_Set_Schedule_Popup" wizard should contains "Dropdown_Options"."Schedule_Hours_Variants"
         Then select "Minute" option in "Repeat_Dropdown" dropdown on "Feature_Set_Schedule_Popup" wizard
-        Then select "10" option in "Time_Dropdown" dropdown on "Feature_Set_Schedule_Popup" wizard
+        Then select "20" option in "Time_Dropdown" dropdown on "Feature_Set_Schedule_Popup" wizard
         And click on "Schedule_Button" element on "Feature_Set_Schedule_Popup" wizard
-        Then "Schedule_Button" element in "Data_Source_Accordion" on "New_Feature_Set" should contains "Every 10 minutes" value
+        Then "Set_Schedule_Button" element in "Data_Source_Accordion" on "New_Feature_Set" should contains "View schedule" value
+        Then click on "Set_Schedule_Button" element in "Data_Source_Accordion" on "New_Feature_Set" wizard
+        Then verify "Repeat_Dropdown" dropdown on "Feature_Set_Schedule_Popup" wizard selected option value "Minute"
+        Then verify "Time_Dropdown" dropdown on "Feature_Set_Schedule_Popup" wizard selected option value "20"
+        And click on "Schedule_Button" element on "Feature_Set_Schedule_Popup" wizard
         Then verify "Save_And_Ingest_Button" element on "New_Feature_Set" wizard is disabled
-        Then click on "Schedule_Button" element in "Data_Source_Accordion" on "New_Feature_Set" wizard
+        Then click on "Set_Schedule_Button" element in "Data_Source_Accordion" on "New_Feature_Set" wizard
         Then select "Weekly" option in "Repeat_Dropdown" dropdown on "Feature_Set_Schedule_Popup" wizard
         And click on "Schedule_Button" element on "Feature_Set_Schedule_Popup" wizard
-        Then "Schedule_Button" element in "Data_Source_Accordion" on "New_Feature_Set" should contains "At 12:00 AM, only on Sunday, Monday, Tuesday, Wednesday, and Thursday" value
+        Then "Set_Schedule_Button" element in "Data_Source_Accordion" on "New_Feature_Set" should contains "View schedule" value
+        Then click on "Set_Schedule_Button" element in "Data_Source_Accordion" on "New_Feature_Set" wizard
+        Then verify "Repeat_Dropdown" dropdown on "Feature_Set_Schedule_Popup" wizard selected option value "Weekly"
+        And click on "Schedule_Button" element on "Feature_Set_Schedule_Popup" wizard
         Then verify "Save_And_Ingest_Button" element on "New_Feature_Set" wizard is disabled
 
     @MLFS
@@ -1246,7 +1251,7 @@ Feature: Feature Store Page
         Then verify "Features_Panel_Title" on "Add_To_Feature_Vector_Tab" wizard should display "Input_Hint"."Add_Feature_Vector_Hint"
         When select "test-test" option in "Table_Projects_Filter_Dropdown" filter dropdown on "Add_To_Feature_Vector_Tab" wizard
         And wait load page
-        Then "No_Data_Message" component on "commonPagesHeader" should contains "No_Data_Message"."Common_Message_Feature"
+        Then "No_Data_Message" component on "commonPagesHeader" should contains "No_Data_Message"."Common_Message_Feature_Vector_Tab"
         When select "stocks" option in "Table_Projects_Filter_Dropdown" filter dropdown on "Add_To_Feature_Vector_Tab" wizard
         And wait load page
         Then verify "Features_Panel_Title" element visibility on "Add_To_Feature_Vector_Tab" wizard
@@ -1487,8 +1492,6 @@ Feature: Feature Store Page
         Then value in "labelIcon" column with "tooltip" in "Requested_Features_Table" on "Requested_Features_Info_Pane" wizard should contains "Label column"
 
     @MLFS
-    @FAILED_TODO
-    #TODO: bug ML-5151 (fixed v1.6.0-rc17)
     Scenario: MLFS046 - Verify No Data message on Feature Store tabs
         * set tear-down property "project" created with "automation-test-name001" value
         * create "automation-test-name001" MLRun Project with code 201
@@ -1880,6 +1883,8 @@ Feature: Feature Store Page
         And verify "Feature Sets" tab is active in "Feature_Store_Tab_Selector" on "Feature_Store_Feature_Sets_Tab" wizard
         And click on "Create_Set_Button" element on "Feature_Store_Feature_Sets_Tab" wizard
         Then click on "Save_Button" element on "New_Feature_Set" wizard
+        And wait load page
+        Then type value "   " to "Feature_Set_Name_Input" field on "New_Feature_Set" wizard
         Then verify "Feature_Set_Name_Input" on "New_Feature_Set" wizard should display options "Input_Hint"."Feature_Set_Name_Hint"
         Then verify "URL_Combobox" element in "Data_Source_Accordion" on "New_Feature_Set" wizard should display warning "Input_Hint"."Input_Field_Require"
         Then verify "Entities_Input" element in "Schema_Accordion" on "New_Feature_Set" wizard should display warning "Input_Hint"."Input_Field_Require"

@@ -60,18 +60,26 @@ const DetailsPreview = ({ artifact, handlePreview }) => {
 
   return (
     <div className="preview_container">
-      {popupButtonIsDisplayed && (
-        <div className="preview-icon__wrapper">
-          <RoundedIcon
-            onClick={handlePreview}
-            className="preview_popout"
-            tooltipText="Pop-out"
-            id="details-preview"
-          >
-            <Popout />
-          </RoundedIcon>
+      <div className="preview_container__header">
+        <div className="preview_container__header-text">
+          {artifact.header_original_length &&
+            artifact.header_original_length > preview[0]?.data?.headers?.length && (
+              <span>This table presents partial data. To view complete data, download it.</span>
+            )}
         </div>
-      )}
+        {popupButtonIsDisplayed && (
+          <div className="preview-icon__wrapper">
+            <RoundedIcon
+              onClick={handlePreview}
+              className="preview_popout"
+              tooltipText="Pop-out"
+              id="details-preview"
+            >
+              <Popout />
+            </RoundedIcon>
+          </div>
+        )}
+      </div>
       <div className={artifactsPreviewClassNames}>
         {preview[0]?.hidden && artifact.extra_data?.length > 0 ? null : (
           <ArtifactsPreview noData={noData} preview={preview} />

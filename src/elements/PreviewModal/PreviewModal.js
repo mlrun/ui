@@ -74,7 +74,7 @@ const PreviewModal = ({ artifact }) => {
             </div>
             {(artifact.ui.size || artifact.size) && (
               <div className="item-data">
-                size:
+                <span className="item-data__size">size:</span>
                 {artifact.ui.size
                   ? artifact.ui.size
                   : typeof artifact.size === 'string'
@@ -93,6 +93,12 @@ const PreviewModal = ({ artifact }) => {
               />
             </div>
           </div>
+          {artifact.header_original_length &&
+            artifact.header_original_length > preview[0]?.data?.headers?.length && (
+              <div className="preview-message">
+                This table presents partial data. To view complete data, download it.
+              </div>
+            )}
           <div className="item-artifacts__preview">
             {preview[0]?.hidden && artifact.extra_data?.length > 0 ? null : (
               <ArtifactsPreview noData={noData} preview={preview} />

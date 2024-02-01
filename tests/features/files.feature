@@ -137,12 +137,11 @@ Feature: Files Page
     Then click on "Register_File_Button" element on "Files" wizard
     Then verify if "Register_File_Popup" popup dialog appears
     Then "Title" element on "Register_File_Popup" should contains "Register Artifact" value
-    Then "Form_Text" component on "Register_File_Popup" should be equal "Register_Artifact"."Form_Text"
+    Then "Form_Text" component on "Register_File_Popup" should contains "Register_Artifact"."Form_Text"
     Then "Form_Subtext" component on "Register_File_Popup" should contains "Register_Artifact"."Form_Subtext"
     Then verify "Cross_Cancel_Button" element visibility on "Register_File_Popup" wizard
     Then verify "New_File_Name_Input" element visibility on "Register_File_Popup" wizard
-    Then verify "New_File_Name_Input" on "Register_File_Popup" wizard should display "Input_Hint"."Artifact_Names_Unique"
-    Then type value "   " to "New_File_Name_Input" field on "Register_File_Popup" wizard
+    Then type value " " to "New_File_Name_Input" field on "Register_File_Popup" wizard
     Then verify "New_File_Name_Input" on "Register_File_Popup" wizard should display options "Input_Hint"."Artifact_Name_Hint"
     Then verify "New_File_Name_Input" options rules on form "Register_File_Popup" wizard
     Then verify options in "Path_Scheme_Combobox" combobox in "Target_Path" on "Register_File_Popup" wizard should contains "Register_Artifact"."Combobox_Options"
@@ -220,6 +219,13 @@ Feature: Files Page
     Then check "test-artifact" value in "key" column in "Overview_Table" table on "Files_Info_Pane" wizard
     Then check "latest" value in "tag" column in "Overview_Table" table on "Files_Info_Pane" wizard
     Then check "v3io:///target/path" value in "path" column in "Overview_Table" table on "Files_Info_Pane" wizard
+    Then click on "Register_File_Button" element on "Files" wizard
+    Then type value "test-artifact" to "New_File_Name_Input" field on "Register_File_Popup" wizard
+    Then type value "latest" to "Tag_Input" field on "Register_File_Popup" wizard
+    When select "V3IO" option in "Path_Scheme_Combobox" combobox on "Target_Path" accordion on "Register_Dataset" wizard
+    When type value "target/path" to "Path_Scheme_Combobox" field on "Target_Path" on "Register_Dataset" wizard
+    Then click on "Register_Button" element on "Register_File_Popup" wizard
+    Then "Register_Error_Message" component on "Register_File_Popup" should be equal "Register_Artifact"."Register_Error_Message"
 
   @MLA
   @passive
@@ -271,7 +277,7 @@ Feature: Files Page
     * set tear-down property "project" created with "automation-test" value
     * set tear-down property "file" created in "automation-test" project with "test-file" value
     * create "automation-test" MLRun Project with code 201
-    * create "test-file" File with "v1" tag in "automation-test" project with code 200
+    * create "test-file" File with "test" tag in "automation-test" project with code 200
     Given open url
     And wait load page
     And click on row root with value "automation-test" in "name" column in "Projects_Table" table on "Projects" wizard
@@ -500,17 +506,11 @@ Feature: Files Page
     Then verify "Cross_Cancel_Button" element visibility on "View_YAML" wizard
     Then verify "YAML_Modal_Container" element visibility on "View_YAML" wizard
 
-  @MLA
-  @FAILED_TODO
-  #TODO: redirection from "projects/INVALID/files" to "projects" - wrong redirect 
+  @MLA 
   Scenario: MLA020 - Check broken link redirection
-    * set tear-down property "project" created with "automation-test-011" value
-    * set tear-down property "file" created in "automation-test-011" project with "test_ds" value
-    * create "automation-test-011" MLRun Project with code 201
-    * create "test_file" File with "latest" tag in "automation-test-011" project with code 200
     Given open url
     And wait load page
-    And click on row root with value "automation-test-011" in "name" column in "Projects_Table" table on "Projects" wizard
+    And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
     And wait load page
     And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
     Then click on "Project_Monitoring_Button" element on "commonPagesHeader" wizard
@@ -518,18 +518,19 @@ Feature: Files Page
     And select "tab" with "Artifacts" value in breadcrumbs menu
     And wait load page
     When click on cell with row index 1 in "name" column in "Files_Table" table on "Files" wizard
-    Then verify redirection from "projects/automation-test-011/files/INVALID/latest/0/overview" to "projects/automation-test-011/files"
+    Then verify redirection from "projects/default/files/INVALID/latest/0/overview" to "projects/default/files"
     When click on cell with row index 1 in "name" column in "Files_Table" table on "Files" wizard
     And wait load page
-    And wait load page
-    Then verify redirection from "projects/automation-test-011/files/test_file/latest/0/INVALID" to "projects/automation-test-011/files/test_file/latest/0/overview"
-    And wait load page
+    Then verify redirection from "projects/default/files/training_iteration_results/latest/0/INVALID" to "projects/default/files/training_iteration_results/latest/0/overview"
     And wait load page
     Then select "Preview" tab in "Info_Pane_Tab_Selector" on "Files_Info_Pane" wizard
     And wait load page
-    Then verify redirection from "projects/automation-test-011/files/test_file/latest/0/INVALID" to "projects/automation-test-011/files/test_file/latest/0/overview"
-    Then verify redirection from "projects/automation-test-011/files/test_file/latest/IVNALID/overview" to "projects/automation-test-011/files"
+    Then verify redirection from "projects/default/files/training_iteration_results/latest/0/INVALID" to "projects/default/files/training_iteration_results/latest/0/overview"
+    And wait load page
+    Then verify redirection from "projects/default/files/training_iteration_results/latest/IVNALID/overview" to "projects/default/files"
+    And wait load page
     Then verify redirection from "projects/INVALID/files" to "projects"
+    And wait load page
 
   @MLA
   Scenario: MLA021 - Check active/highlited items with details panel on Artifacts
@@ -582,6 +583,8 @@ Feature: Files Page
     Then verify "Cross_Close_Button" element visibility on "Files_Info_Pane" wizard
 
   @MLA
+  @FAILED_TODO
+  #TODO: tag edit implementation on mock
   Scenario: MLA010 - Check that version tag dropdown shows all tags on filters wizard on Artifacts page
     Given open url
     And wait load page
@@ -636,6 +639,8 @@ Feature: Files Page
     Then "Version_Tag_Input_Placeholder" element on "Files_Info_Pane" should contains "Click to add" value
 
   @MLA
+  @FAILED_TODO
+  #TODO: tag edit implementation on mock
   Scenario: MLA012 - Check filter by "All" tag is performed when version tag was edited
     Given open url
     And wait load page

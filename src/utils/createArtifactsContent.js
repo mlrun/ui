@@ -31,7 +31,7 @@ import {
 } from '../constants'
 import { parseKeyValues } from './object'
 import { formatDatetime } from './datetime'
-import { convertBytes } from './convertBytes'
+import prettyBytes from 'pretty-bytes'
 import { parseUri } from './parseUri'
 import { generateFunctionDetailsLink } from './generateFunctionDetailsLink'
 import { generateLinkToDetailsPanel } from './generateLinkToDetailsPanel'
@@ -226,8 +226,7 @@ export const createModelsRowData = (
 
       content.push({
         id: `${key}.${artifact.ui.identifierUnique}`,
-        headerId: key,
-        headerLabel: key,
+        headerIsHidden: true,
         value: parseFloat(value),
         className: 'table-cell-1',
         bodyCellClassName
@@ -241,7 +240,6 @@ export const createModelsRowData = (
     for (let i = 0; i < missingObjects; i++) {
       content.push({
         id: `${i}.${artifact.ui.identifierUnique}`,
-        headerId: `${i}.${artifact.ui.identifierUnique}`,
         headerIsHidden: true,
         value: '',
         className: 'table-cell-1'
@@ -347,7 +345,7 @@ export const createFilesRowData = (artifact, project, frontendSpec, showExpandBu
         id: `size.${artifact.ui.identifierUnique}`,
         headerId: 'size',
         headerLabel: 'Size',
-        value: isNumber(artifact.size) && artifact.size >= 0 ? convertBytes(artifact.size) : 'N/A',
+        value: isNumber(artifact.size) && artifact.size >= 0 ? prettyBytes(artifact.size) : 'N/A',
         className: 'table-cell-1'
       }
     ]
@@ -423,7 +421,7 @@ export const createModelEndpointsRowData = (artifact, project) => {
         id: `version.${artifact.ui.identifierUnique}`,
         headerId: 'version',
         headerLabel: 'Version',
-        value: artifact?.status?.children ? 'Router' : tag,
+        value: artifact?.status?.children?.length > 0 ? 'Router' : tag,
         className: 'table-cell-small'
       },
       {
@@ -557,7 +555,7 @@ export const createDatasetsRowData = (artifact, project, frontendSpec, showExpan
         id: `size.${artifact.ui.identifierUnique}`,
         headerId: 'size',
         headerLabel: 'Size',
-        value: isNumber(artifact.size) && artifact.size >= 0 ? convertBytes(artifact.size) : 'N/A',
+        value: isNumber(artifact.size) && artifact.size >= 0 ? prettyBytes(artifact.size) : 'N/A',
         className: 'table-cell-1'
       },
       {

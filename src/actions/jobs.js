@@ -260,7 +260,7 @@ const jobsActions = {
     dispatch(jobsActions.fetchJobFunctionsBegin())
 
     return functionsApi
-      .getFunctions(project, null, hash)
+      .getFunctions(project, null, {}, hash)
       .then(res => {
         dispatch(jobsActions.fetchJobFunctionsSuccess())
 
@@ -356,7 +356,6 @@ const jobsActions = {
   removeScheduledJob: (project, scheduleName) => dispatch => {
     return jobsApi
       .removeScheduledJob(project, scheduleName)
-      .then(result => result.data)
       .catch(error => dispatch(jobsActions.removeScheduledJobFailure(error)))
   },
   removeScheduledJobFailure: error => ({

@@ -35,6 +35,8 @@ import { setNotification } from '../../reducers/notificationReducer'
 import { showErrorNotification } from '../../utils/notifications.util'
 import { useDetectOutsideClick } from 'igz-controls/hooks'
 
+import { USER_ROLE } from '../../constants'
+
 import { ReactComponent as SearchIcon } from 'igz-controls/images/search.svg'
 
 import './changeOwnerPopUp.scss'
@@ -88,7 +90,7 @@ const ChangeOwnerPopUp = ({ changeOwnerCallback, projectId }) => {
             owner: {
               data: {
                 id: newOwnerId,
-                type: 'user'
+                type: USER_ROLE
               }
             }
           }

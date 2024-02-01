@@ -120,6 +120,28 @@ const artifactOverviewTable = {
   }
 }
 
+const datasetOverviewTable = {
+  root: '.table__item .item-info__details:nth-of-type(1)',
+  header: {},
+  body: {
+    row: {
+      root: '',
+      fields: {
+        hash: '.details-item:nth-of-type(1) .details-item__data',
+        key: '.details-item:nth-of-type(2) .details-item__data',
+        tag: '.details-item:nth-of-type(3) .details-item__data',
+        iter: '.details-item:nth-of-type(4) .details-item__data',
+        size: '.details-item:nth-of-type(5) .details-item__data',
+        path: '.details-item:nth-of-type(7) .details-item__data',
+        uri: '.details-item:nth-of-type(7) .details-item__data',
+        uid: '.details-item:nth-of-type(8) .details-item__data',
+        updated: '.details-item:nth-of-type(9) .details-item__data',
+        labels: '.details-item:nth-of-type(10) .details-item__data'
+      }
+    }
+  }
+}
+
 const modelsOverviewTable = {
   root: '.table__item .item-info__details:nth-of-type(1)',
   header: {},
@@ -340,7 +362,7 @@ const requestedFeaturesTable = {
 }
 
 const inputsTable = {
-  root: '.table__item .inputs_container',
+  root: '.table__item .item-info .table',
   header: {
     root: '',
     sorters: {}
@@ -360,14 +382,16 @@ const inputsTable = {
 const artifactsTable = {
   root: '.table__item .item-artifacts',
   header: {
-    root: '',
-    sorters: {}
+    root: '.table-header',
+    sorters: {
+      sorter_icon: '.table-header__cell:nth-of-type(1) svg'
+    }
   },
   body: {
     row: {
-      root: '.item-artifacts__row-wrapper',
+      root: '.table-row',
       fields: {
-        name: '.item-artifacts__row-item:nth-of-type(1) span.link',
+        name: '.table-body__cell:nth-of-type(1) span.link',
         path: '.item-artifacts__row-item:nth-of-type(2) .data-ellipsis',
         size: '.item-artifacts__row-item:nth-of-type(3) .data-ellipsis',
         updated: '.item-artifacts__row-item:nth-of-type(4) .data-ellipsis',
@@ -564,6 +588,7 @@ module.exports = {
     Overview_Producer_Headers: commonTable(infoPaneOverviewProducerHeaders),
     Overview_Sources_Headers: commonTable(infoPaneOverviewSourcesHeaders),
     Train_Button: By.css('[data-testid="detailsPanel"] .item-header__buttons button'),
+    Label_column: By.css('.item-info__details .details-item:nth-of-type(6) .details-item__data'),
     Overview_Hash_Header: labelComponent(
       generateLabelGroup(
         '.item-info__details:nth-of-type(1) .details-item:nth-of-type(1) .details-item__header',
@@ -573,14 +598,14 @@ module.exports = {
     ),
     Overview_UID_Header: labelComponent(
       generateLabelGroup(
-        '.item-info__details:nth-of-type(1) .details-item:nth-of-type(8) .details-item__header',
+        '.item-info__details:nth-of-type(1) .details-item:nth-of-type(9) .details-item__header',
         false,
         true
       )
     ),
     Expand_Sources: By.css('.details-item .info-sources'),
     Info_Sources_Table: commonTable(filesInfoSourcesTable),
-    Overview_Table: commonTable(artifactOverviewTable),
+    Overview_Table: commonTable(datasetOverviewTable),
     Edit_btn_table_view: commonEditBtnTableView,
     Edit_btn_full_view: commonEditBtnFullView,
     Version_tag_Input_table_view: commonVersionTagInputTableView,
@@ -650,8 +675,8 @@ module.exports = {
     Overview_Headers: commonTable(infoPaneOverviewHeaders),
 
     // Logs tab.
-    Logs_Text_container: By.css('.table__item .table__item_logs__content'),
-    Logs_Refresh_Button: By.css('.table__item .logs_refresh')
+    Logs_Text_container: By.css('.table__item .table__item_logs-content'),
+    Logs_Refresh_Button: By.css('.table__item .logs-refresh')
   },
   workflowsMonitorTabInfoPane: {
     Arrow_Back: commonArrowBack,
@@ -663,15 +688,15 @@ module.exports = {
     Overview_Headers: commonTable(infoPaneOverviewHeaders),
 
     // Logs tab.
-    Logs_Text_container: By.css('.table__item .table__item_logs__content'),
-    Logs_Refresh_Button: By.css('.table__item .logs_refresh')
+    Logs_Text_container: By.css('.table__item .table__item_logs-content'),
+    Logs_Refresh_Button: By.css('.table__item .logs-refresh')
   },
   inputsInfoPane: {
     Inputs_Table: commonTable(inputsTable)
   },
   artifactsInfoPane: {
     Artifacts_Table: commonTable(artifactsTable),
-    Artifact_Preview_Button: By.css('.item-artifacts .item-artifacts__preview .data-ellipsis svg'),
+    Artifact_Preview_Button: By.css('.item-artifacts .artifacts__preview .data-ellipsis svg'),
     Iterations_Dropdown: dropdownComponent(generateDropdownGroup('.item-header__buttons .select'))
   },
   resultsInfoPane: {

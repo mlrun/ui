@@ -19,7 +19,9 @@ such restriction.
 */
 
 export const validatorStates = {
+  error: 'error',
   info: 'info',
   warn: 'warning',
+  warning: 'warning',
   fail: 'fail'
 }

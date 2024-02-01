@@ -20,7 +20,6 @@ such restriction.
 import React, { useCallback, useEffect, useRef, useState, useMemo } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useLocation, useNavigate, useParams } from 'react-router-dom'
-import { isNil } from 'lodash'
 
 import DatasetsView from './DatasetsView'
 import AddArtifactTagPopUp from '../../elements/AddArtifactTagPopUp/AddArtifactTagPopUp'
@@ -34,9 +33,11 @@ import {
   GROUP_BY_NAME,
   GROUP_BY_NONE,
   REQUEST_CANCELED,
+  SHOW_ITERATIONS,
   TAG_FILTER_ALL_ITEMS
 } from '../../constants'
 import {
+  fetchArtifactTags,
   fetchDataSet,
   fetchDataSets,
   removeDataSet,
@@ -56,8 +57,7 @@ import { getArtifactIdentifier } from '../../utils/getUniqueIdentifier'
 import { getViewMode } from '../../utils/helper'
 import { isDetailsTabExists } from '../../utils/isDetailsTabExists'
 import { openPopUp } from 'igz-controls/utils/common.util'
-import { setArtifactTags } from '../../utils/artifacts.util'
-import { setFilters } from '../../reducers/filtersReducer'
+import { getFilterTagOptions, setFilters } from '../../reducers/filtersReducer'
 import { setNotification } from '../../reducers/notificationReducer'
 import { useGetTagOptions } from '../../hooks/useGetTagOptions.hook'
 import { useGroupContent } from '../../hooks/groupContent.hook'
@@ -66,12 +66,16 @@ import { useYaml } from '../../hooks/yaml.hook'
 
 const Datasets = () => {
   const [datasets, setDatasets] = useState([])
-  const [allDatasets, setAllDatasets] = useState([])
   const [selectedDataset, setSelectedDataset] = useState({})
   const [selectedRowData, setSelectedRowData] = useState({})
   const [largeRequestErrorMessage, setLargeRequestErrorMessage] = useState('')
   const [convertedYaml, toggleConvertedYaml] = useYaml('')
-  const [urlTagOption] = useGetTagOptions(null, filters, null, DATASETS_FILTERS)
+  const [urlTagOption] = useGetTagOptions(
+    fetchArtifactTags,
+    filters,
+    DATASET_TYPE,
+    DATASETS_FILTERS
+  )
   const artifactsStore = useSelector(store => store.artifactsStore)
   const filtersStore = useSelector(store => store.filtersStore)
   const datasetsRef = useRef(null)
@@ -83,7 +87,10 @@ const Datasets = () => {
   const dispatch = useDispatch()
   const frontendSpec = useSelector(store => store.appStore.frontendSpec)
   const datasetsFilters = useMemo(
-    () => filtersStore[FILTER_MENU_MODAL][DATASETS_FILTERS].values,
+    () => ({
+      name: filtersStore.name,
+      ...filtersStore[FILTER_MENU_MODAL][DATASETS_FILTERS].values
+    }),
     [filtersStore]
   )
   const pageData = useMemo(
@@ -115,19 +122,12 @@ const Datasets = () => {
         })
       )
         .unwrap()
-        .then(dataSetsResponse => {
-          if (dataSetsResponse) {
-            setArtifactTags(
-              dataSetsResponse,
-              setDatasets,
-              setAllDatasets,
-              filters,
-              dispatch,
-              DATASETS_PAGE
-            )
-
-            return dataSetsResponse
+        .then(result => {
+          if (result) {
+            setDatasets(result)
           }
+
+          return result
         })
     },
     [dispatch, params.projectName]
@@ -135,20 +135,27 @@ const Datasets = () => {
 
   const handleRefresh = useCallback(
     filters => {
+      dispatch(
+        getFilterTagOptions({
+          dispatch,
+          fetchTags: fetchArtifactTags,
+          project: params.projectName,
+          category: DATASET_TYPE
+        })
+      )
       setSelectedRowData({})
       setDatasets([])
-      setAllDatasets([])
 
       return fetchData(filters)
     },
-    [fetchData]
+    [dispatch, fetchData, params.projectName]
   )
 
   const handleAddTag = useCallback(
     artifact => {
       openPopUp(AddArtifactTagPopUp, {
         artifact,
-        onAddTag: handleRefresh,
+        onAddTag: () => handleRefresh(datasetsFilters),
         getArtifact: () =>
           fetchDataSet({
             project: params.projectName,
@@ -159,7 +166,7 @@ const Datasets = () => {
         projectName: params.projectName
       })
     },
-    [handleRefresh, params.projectName]
+    [handleRefresh, params.projectName, datasetsFilters]
   )
 
   const actionsMenu = useMemo(
@@ -202,11 +209,12 @@ const Datasets = () => {
     if ('tag' in changes.data) {
       setSelectedRowData({})
       setDatasets([])
-      setAllDatasets([])
 
       if (changes.data.tag.currentFieldValue) {
         navigate(
-          `/projects/${params.projectName}/${DATASETS_PAGE.toLowerCase()}/${params.name}/${changes.data.tag.currentFieldValue}/overview`,
+          `/projects/${params.projectName}/${DATASETS_PAGE.toLowerCase()}/${params.name}/${
+            changes.data.tag.currentFieldValue
+          }/overview`,
           { replace: true }
         )
       }
@@ -271,7 +279,11 @@ const Datasets = () => {
     useSortTable({
       headers: tableHeaders,
       content: tableContent,
-      sortConfig: { excludeSortBy: ['labels', 'size'], defaultSortBy: 'updated', defaultDirection: 'desc' }
+      sortConfig: {
+        excludeSortBy: ['labels', 'size'],
+        defaultSortBy: 'updated',
+        defaultDirection: 'desc'
+      }
     })
 
   useEffect(() => {
@@ -281,10 +293,13 @@ const Datasets = () => {
   }, [location, navigate, pageData.details.menu, params.name, params.tab, params.tag])
 
   useEffect(() => {
-    if (isNil(filtersStore.tagOptions) && urlTagOption) {
-      fetchData({ ...datasetsFilters, tag: urlTagOption })
+    if (urlTagOption && datasets.length === 0) {
+      fetchData({
+        tag: urlTagOption,
+        iter: SHOW_ITERATIONS
+      })
     }
-  }, [datasetsFilters, fetchData, filtersStore, urlTagOption])
+  }, [datasets.length, fetchData, urlTagOption])
 
   useEffect(() => {
     dispatch(setFilters({ groupBy: GROUP_BY_NONE }))
@@ -294,7 +309,7 @@ const Datasets = () => {
     checkForSelectedDataset(
       params.name,
       selectedRowData,
-      allDatasets,
+      datasets,
       params.tag,
       params.iter,
       params.uid,
@@ -303,7 +318,7 @@ const Datasets = () => {
       navigate
     )
   }, [
-    allDatasets,
+    datasets,
     navigate,
     params.iter,
     params.name,
@@ -316,7 +331,6 @@ const Datasets = () => {
   useEffect(() => {
     return () => {
       setDatasets([])
-      setAllDatasets([])
       dispatch(removeDataSets())
       setSelectedDataset({})
       abortControllerRef.current.abort(REQUEST_CANCELED)
@@ -327,10 +341,12 @@ const Datasets = () => {
     openPopUp(RegisterArtifactModal, {
       artifactKind: DATASET_TYPE,
       params,
-      refresh: handleRefresh,
+      refresh: () => handleRefresh(datasetsFilters),
       title: registerDatasetTitle
     })
-  }, [handleRefresh, params])
+  }, [handleRefresh, params, datasetsFilters])
+
+  useEffect(() => setDatasets([]), [filtersStore.tag])
 
   return (
     <DatasetsView

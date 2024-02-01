@@ -20,13 +20,13 @@ such restriction.
 import React, { useMemo } from 'react'
 import PropTypes from 'prop-types'
 
+import ErrorMessage from '../../common/ErrorMessage/ErrorMessage'
 import TargetPath from '../../common/TargetPath/TargetPath'
 import { FormInput, FormSelect, FormTextarea, FormChipCell } from 'igz-controls/components'
-import { ARTIFACT_TYPE, MLRUN_STORAGE_INPUT_PATH_SCHEME } from '../../constants'
 
-import { getValidationRules } from 'igz-controls/utils/validation.util'
-import { isArtifactNameUnique } from '../../utils/artifacts.util'
+import { ARTIFACT_TYPE, MLRUN_STORAGE_INPUT_PATH_SCHEME } from '../../constants'
 import { getChipOptions } from '../../utils/getChipOptions'
+import { getValidationRules } from 'igz-controls/utils/validation.util'
 
 const RegisterArtifactModalForm = ({
   formState,
@@ -34,7 +34,9 @@ const RegisterArtifactModalForm = ({
   messagesByKind,
   params,
   setFieldState,
-  showType
+  setUniquenessErrorIsShown,
+  showType,
+  uniquenessErrorIsShown
 }) => {
   const kindOptions = useMemo(
     () => [
@@ -78,6 +80,14 @@ const RegisterArtifactModalForm = ({
           </div>
         )}
       </div>
+      {uniquenessErrorIsShown && (
+        <div className="form-row">
+          <ErrorMessage
+            closeError={() => setUniquenessErrorIsShown(false)}
+            message={messagesByKind.uniquenessError}
+          />
+        </div>
+      )}
       <div className="form-row">
         <div className="form-col-2">
           <FormInput
@@ -85,17 +95,15 @@ const RegisterArtifactModalForm = ({
             label="Name"
             name="metadata.key"
             required
-            tip={messagesByKind?.nameTip}
-            validationRules={getValidationRules('artifact.name', {
-              name: 'ArtifactExists',
-              label: 'Artifact name must be unique',
-              pattern: isArtifactNameUnique(params.projectName),
-              async: true
-            })}
+            validationRules={getValidationRules('artifact.name')}
           />
         </div>
         <div className="form-col-1">
-          <FormInput label="Tag" name="metadata.tag" />
+          <FormInput
+            label="Tag"
+            name="metadata.tag"
+            validationRules={getValidationRules('common.tag')}
+          />
         </div>
         {showType && (
           <div className="form-col-1">
@@ -150,7 +158,9 @@ RegisterArtifactModalForm.propTypes = {
   messagesByKind: PropTypes.object,
   params: PropTypes.shape({}).isRequired,
   setFieldState: PropTypes.func.isRequired,
-  showType: PropTypes.bool
+  setUniquenessErrorIsShown: PropTypes.func.isRequired,
+  showType: PropTypes.bool,
+  uniquenessErrorIsShown: PropTypes.bool.isRequired
 }
 
 export default RegisterArtifactModalForm

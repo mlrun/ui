@@ -11927,6 +11927,7 @@
         "owner": "admin",
         "workflow": "eaae138e-439a-47fa-93c6-ba0fe1dc3b79"
       },
+      "label_column": "radius",
       "sources": [
         {
           "name": "models_path",
@@ -35012,6 +35013,7 @@
               "uri": "ds-source/7cce8e5794aa41bca4ca7fd0f492bd1b",
               "owner": "admin"
           },
+          "label_column": "radius",
           "sources": [
               {
                   "name": "dataset",
