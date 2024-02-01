@@ -44,7 +44,6 @@ import {
   ITERATIONS_FILTER,
   KEY_CODES,
   LABELS_FILTER,
-  MONITOR_JOBS_TAB,
   NAME_FILTER,
   PERIOD_FILTER,
   PROJECT_FILTER,
@@ -73,13 +72,14 @@ const FilterMenu = ({
   onChange,
   page,
   tab,
-  withoutExpandButton
+  withoutExpandButton,
+  enableAutoRefresh
 }) => {
   const [labels, setLabels] = useState('')
   const [name, setName] = useState('')
   const [entities, setEntities] = useState('')
   const [tagOptions, setTagOptions] = useState(tagFilterOptions)
-  const [autoRefresh, setAutoRefresh] = useState(AUTO_REFRESH)
+  const [autoRefresh, setAutoRefresh] = useState(AUTO_REFRESH_ID)
   const navigate = useNavigate()
   const params = useParams()
   const selectOptions = useMemo(() => cloneDeep(filterSelectOptions), [])
@@ -309,7 +309,7 @@ const FilterMenu = ({
   }
 
   const handleAutoRefresh = itemId => {
-    const refreshValue = autoRefresh === itemId ? '' : AUTO_REFRESH
+    const refreshValue = autoRefresh === itemId ? '' : AUTO_REFRESH_ID
     setAutoRefresh(prev => refreshValue)
   }
 
@@ -320,13 +320,13 @@ const FilterMenu = ({
   }, [params.pageTab, params.projectName, page, params.jobName, dispatch])
 
   useEffect(() => {
-    if (tab === MONITOR_JOBS_TAB && autoRefresh === AUTO_REFRESH && !hidden) {
+    if (enableAutoRefresh && autoRefresh === AUTO_REFRESH_ID && !hidden) {
       const intervalId = setInterval(() => {
         applyChanges(filtersStore, true)
       }, 30000)
       return () => clearInterval(intervalId)
     }
-  }, [autoRefresh, hidden, tab, filtersStore, applyChanges])
+  }, [autoRefresh, hidden, enableAutoRefresh, filtersStore, applyChanges])
   return (
     !hidden && (
       <>
@@ -465,10 +465,10 @@ const FilterMenu = ({
           ))}
 
         <div className="actions">
-          {tab === MONITOR_JOBS_TAB && (
+          {enableAutoRefresh && (
             <CheckBox
               key={AUTO_REFRESH_ID}
-              item={{ label: AUTO_REFRESH, id: AUTO_REFRESH }}
+              item={{ label: AUTO_REFRESH, id: AUTO_REFRESH_ID }}
               onChange={handleAutoRefresh}
               selectedId={autoRefresh}
             />
@@ -503,7 +503,8 @@ FilterMenu.defaultProps = {
   handleExpandAll: () => {},
   hidden: false,
   tab: '',
-  withoutExpandButton: false
+  withoutExpandButton: false,
+  enableAutoRefresh: false
 }
 
 FilterMenu.propTypes = {
@@ -517,7 +518,8 @@ FilterMenu.propTypes = {
   onChange: PropTypes.func.isRequired,
   page: PropTypes.string.isRequired,
   tab: PropTypes.string,
-  withoutExpandButton: PropTypes.bool
+  withoutExpandButton: PropTypes.bool,
+  autoRefresh: PropTypes.bool
 }
 
 export default React.memo(FilterMenu)
