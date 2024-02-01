@@ -22,7 +22,7 @@ import bodyParser from 'body-parser'
 import yaml from 'js-yaml'
 import fs from 'fs'
 import crypto from 'crypto'
-import { cloneDeep, remove, defaults, noop, get, random, isFunction, clamp } from 'lodash'
+import { cloneDeep, remove, defaults, noop, get, random, isFunction, clamp, find } from 'lodash'
 
 import frontendSpec from './data/frontendSpec.json'
 import projects from './data/projects.json'
@@ -296,8 +296,8 @@ function deleteProject(req, res) {
       featureSet => featureSet.metadata.project === req.params['project']
     )
     remove(artifacts.artifacts, artifact => artifact.project === req.params['project'])
-    remove(run.data, artifact => artifact.metadata.project === req.params['project'])
-    remove(run.data, artifact => artifact.metadata.project === req.params['project'])
+    remove(runs.runs, artifact => artifact.metadata.project === req.params['project'])
+    remove(runs.runs, artifact => artifact.metadata.project === req.params['project'])
     delete secretKeys[req.params.project]
     res.statusCode = 204
   } else {
@@ -436,7 +436,7 @@ function getRuns(req, res) {
 }
 
 function getRun(req, res) {
-  const run_prj_uid = run.data.find(
+  const run_prj_uid = runs.runs.find(
     item =>
       item.metadata.project === req.params['project'] && item.metadata.uid === req.params['uid']
   )
@@ -521,10 +521,38 @@ function createTask(projectName, config) {
   return newTask
 }
 
+function getGraphById(targetId) {
+  let foundGraph = null
+
+  find(pipelineIDs, item => {
+    return foundGraph = find(item.graph, element => element.run_uid === targetId)
+  })
+
+  return foundGraph
+}
+
 function postAbortTask(req, res) {
-  const jobFunc = () => {
+  const currentRun = runs.runs.find(run => run.metadata.uid === req.params.uid)
+
+  currentRun.status.state = 'aborting'
+
+  const jobFunc = id => {
+    currentRun.status.abort_task_id = id
+
     return new Promise(resolve => {
-      setTimeout(resolve, random(5000, 10000))
+      setTimeout(() => {
+        const collectedPipeline = getGraphById(req.params.uid)
+
+        currentRun.status.state = 'aborted'
+
+        if (collectedPipeline) {
+          collectedPipeline.phase = 'Error'
+        }
+
+        delete currentRun.status.abort_task_id
+
+        resolve()
+      }, random(15000, 25000))
     })
   }
 

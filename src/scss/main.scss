@@ -501,6 +501,10 @@ main {
   @include statusState($burntSienna);
 }
 
+[class^='state-aborting'] {
+  @include statusState($burntSiennaTwo);
+}
+
 [class^='state-omitted'] {
   @include statusState($silver);
 }

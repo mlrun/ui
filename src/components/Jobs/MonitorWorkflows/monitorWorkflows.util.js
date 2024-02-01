@@ -99,8 +99,7 @@ export const generateActionsMenu = (
   abortable_function_kinds,
   handleConfirmAbortJob,
   handleConfirmDeleteJob,
-  toggleConvertedYaml,
-  abortingJob
+  toggleConvertedYaml
 ) =>
   job?.uid
     ? [
@@ -127,12 +126,11 @@ export const generateActionsMenu = (
             icon: <Cancel />,
             onClick: handleConfirmAbortJob,
             tooltip: isJobKindAbortable(job, abortable_function_kinds)
-              ? isJobAborting(job, abortingJob)
+              ? isJobAborting(job)
                 ? 'Job is aborting'
                 : ''
               : 'Cannot abort jobs of this kind',
-            disabled:
-              !isJobKindAbortable(job, abortable_function_kinds) || isJobAborting(job, abortingJob),
+            disabled: !isJobKindAbortable(job, abortable_function_kinds) || isJobAborting(job),
             hidden: JOB_STEADY_STATES.includes(job?.state?.value)
           },
           {

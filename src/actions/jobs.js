@@ -17,7 +17,7 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import { pollTask } from '../utils/poll'
+import { get } from 'lodash'
 
 import jobsApi from '../api/jobs-api'
 import functionsApi from '../api/functions-api'
@@ -88,12 +88,10 @@ const jobsActions = {
     return jobsApi
       .abortJob(project, job.uid, job.iteration)
       .then(response => {
-        const pollMethodCallback = () =>
-          jobsApi.pollTask(response.data.metadata.project, response.data.metadata.name)
+        dispatch(jobsActions.abortJobSuccess())
 
-        return pollTask(pollMethodCallback)
+        return get(response, 'data.metadata.name', '')
       })
-      .then(() => dispatch(jobsActions.abortJobSuccess()))
       .catch(error => {
         dispatch(jobsActions.abortJobFailure(error.message))
 

@@ -17,32 +17,11 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import {
-  constant,
-  chain,
-  isNil,
-  overSome,
-  isNaN,
-  isFunction,
-  isObject,
-  isFinite,
-  negate
-} from 'lodash'
+import { constant, chain, isNil, overSome, isNaN, isFinite } from 'lodash'
 
-/**
- * Polls a task until it completes running.
- * @param pollMethod - request callback
- * @returns {Promise} a promise that is resolved with the task once it is done running, or rejected with
- *     `maxRetriesExceededValue` in case the request for polling failed at least `maxRetries` times.
- */
-export const pollTask = pollMethod =>
-  poll(pollMethod, negate(isTaskRunning), {}).then(result => {
-    if (result.data.status.state === 'failed') {
-      throw new Error(result.data?.status?.error)
-    } else {
-      return result
-    }
-  })
+export const BG_TASK_RUNNING = 'running'
+export const BG_TASK_FAILED = 'failed'
+export const BG_TASK_SUCCEEDED = 'succeeded'
 
 /**
  * Polls by calling `pollMethod` and then invoking `isDone` method with `pollMethod`'s result. Stops polling
@@ -60,7 +39,7 @@ export const pollTask = pollMethod =>
  *     polling cycles. Successful polling cycles could go on forever.
  * @param {number} [options.timeoutMillis] - If provided, polling will time out after this number of
  *     milliseconds.
- * @param {Promise} [options.timeoutPromise] - if provided, the request is cancelled on resolving this promise.
+ * @param {Promise} [options.terminatePollRef] - if provided, the request is cancelled on resolving this promise.
  * @returns {Promise} a promise that is resolved with the result of last polling cycle (when polling is done),
  *     or rejected with an error in case the request for polling failed at least `maxRetries` times or polling
  *     was aborted by resolving `options.timeoutPromise`, or polling timed out after `options.timeoutMillis`
@@ -69,6 +48,7 @@ export const pollTask = pollMethod =>
 export const poll = (pollMethod, isDone, options) => {
   let iterationTimeout = null
   let overallTimeout = null
+  let terminated = false
 
   const config = chain(options)
     .clone()
@@ -78,9 +58,7 @@ export const poll = (pollMethod, isDone, options) => {
       maxRetries: 10,
       timeoutMillis: NaN,
       isDoneFail: constant(false),
-      timeoutPromise: {
-        then: () => {}
-      }
+      terminatePollRef: null
     })
     .value()
 
@@ -92,9 +70,8 @@ export const poll = (pollMethod, isDone, options) => {
     overallTimeout = setTimeout(() => terminatePolling(pollingTimedOutError), config.timeoutMillis)
   }
 
-  // when `config.timeoutPromise` is a promise - terminate polling process when it is resolved
-  if (isObject(config.timeoutPromise) && isFunction(config.timeoutPromise.then)) {
-    config.timeoutPromise.then(() => terminatePolling(pollingAbortedError))
+  if (config.terminatePollRef) {
+    config.terminatePollRef.current = () => terminatePolling(pollingAbortedError)
   }
 
   return pollOnce()
@@ -105,14 +82,18 @@ export const poll = (pollMethod, isDone, options) => {
    * @param {Error} error - used as the rejection reason of the returned promise.
    */
   function terminatePolling(error) {
+    terminated = true
+
     if (iterationTimeout !== null) {
       clearTimeout(iterationTimeout)
+      iterationTimeout = null
     }
     if (overallTimeout !== null) {
       clearTimeout(overallTimeout)
+      overallTimeout = null
     }
 
-    return Promise.reject(error)
+    return error
   }
 
   /**
@@ -122,12 +103,13 @@ export const poll = (pollMethod, isDone, options) => {
    */
   function pollOnce() {
     return pollMethod()
-      .then(result => isDone(result) ? result : pollAgain())
+      .then(result => (isDone(result) ? result : pollAgain()))
       .catch(error => {
         if (config.isDoneFail(error)) {
           return error
         } else {
           config.maxRetries -= 1
+
           if (config.maxRetries > 0) {
             return pollAgain()
           } else {
@@ -142,18 +124,13 @@ export const poll = (pollMethod, isDone, options) => {
    */
   function pollAgain() {
     return new Promise(resolve => {
-      iterationTimeout = setTimeout(() => {
-        iterationTimeout = null
+      if (!terminated) {
+        iterationTimeout = setTimeout(() => {
+          iterationTimeout = null
 
-        resolve(pollOnce())
-      }, config.delay)
+          resolve(pollOnce())
+        }, config.delay)
+      }
     })
   }
 }
-
-/**
- * Tests if a task is currently running
- * @param task - the task to test
- * @returns {boolean} `true` in case `task` is currently running, or `false` otherwise
- */
-const isTaskRunning = task => task.data.status.state === 'running'

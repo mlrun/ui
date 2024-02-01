@@ -33,6 +33,7 @@ import YamlModal from '../../../common/YamlModal/YamlModal'
 import {
   GROUP_BY_NONE,
   GROUP_BY_WORKFLOW,
+  JOB_KIND_JOB,
   JOBS_PAGE,
   MONITOR_JOBS_TAB,
   MONITOR_WORKFLOWS_TAB,
@@ -40,27 +41,33 @@ import {
   REQUEST_CANCELED,
   WORKFLOW_GRAPH_VIEW
 } from '../../../constants'
+import { DANGER_BUTTON } from 'igz-controls/constants'
 import {
   generateActionsMenu,
   generateFilters,
   generatePageData,
   monitorWorkflowsActionCreator
 } from './monitorWorkflows.util'
-import { DANGER_BUTTON } from 'igz-controls/constants'
 import { JobsContext } from '../Jobs'
 import { createJobsWorkflowsTabContent } from '../../../utils/createJobsContent'
-import { enrichRunWithFunctionFields, handleAbortJob, handleDeleteJob } from '../jobs.util'
+import {
+  enrichRunWithFunctionFields,
+  handleAbortJob,
+  handleDeleteJob,
+  pollAbortingJobs
+} from '../jobs.util'
+import getState from '../../../utils/getState'
 import { getFunctionLogs } from '../../../utils/getFunctionLogs'
 import { getJobLogs } from '../../../utils/getJobLogs.util'
 import { getNoDataMessage } from '../../../utils/getNoDataMessage'
 import { isDetailsTabExists } from '../../../utils/isDetailsTabExists'
 import { isWorkflowStepExecutable } from '../../Workflow/workflow.util'
 import { openPopUp } from 'igz-controls/utils/common.util'
+import { showErrorNotification } from '../../../utils/notifications.util'
 import { parseFunction } from '../../../utils/parseFunction'
 import { parseJob } from '../../../utils/parseJob'
 import { setFilters } from '../../../reducers/filtersReducer'
 import { setNotification } from '../../../reducers/notificationReducer'
-import { showErrorNotification } from '../../../utils/notifications.util'
 import { useMode } from '../../../hooks/mode.hook'
 import { usePods } from '../../../hooks/usePods.hook'
 import { useSortTable } from '../../../hooks/useSortTable.hook'
@@ -82,7 +89,6 @@ const MonitorWorkflows = ({
   removePods,
   resetWorkflow
 }) => {
-  const [abortingJob, setAbortingJob] = useState({})
   const [selectedFunction, setSelectedFunction] = useState({})
   const [workflowsViewMode, setWorkflowsViewMode] = useState(WORKFLOW_GRAPH_VIEW)
   const [workflowIsLoaded, setWorkflowIsLoaded] = useState(false)
@@ -99,6 +105,7 @@ const MonitorWorkflows = ({
   const location = useLocation()
   const dispatch = useDispatch()
   const { isStagingMode } = useMode()
+  const abortJobRef = useRef(null)
   const {
     editableItem,
     handleMonitoring,
@@ -178,9 +185,68 @@ const MonitorWorkflows = ({
     ]
   )
 
+  const handlePollAbortingJob = useCallback(
+    (jobRun, refresh) => {
+      if (jobRun.abortTaskId && jobRun.state.value === 'aborting') {
+        pollAbortingJobs(
+          params.projectName,
+          abortJobRef,
+          {
+            [jobRun.abortTaskId]: {
+              uid: jobRun.uid,
+              name: jobRun.name
+            }
+          },
+          refresh,
+          dispatch
+        )
+      }
+    },
+    [dispatch, params.projectName]
+  )
+
+  const modifyAndSelectRun = useCallback(
+    (jobRun, refresh) => {
+      return enrichRunWithFunctionFields(
+        dispatch,
+        jobRun,
+        fetchJobFunctions,
+        fetchJobFunctionsPromiseRef
+      ).then(jobRun => {
+        setSelectedJob(jobRun)
+        setSelectedFunction({})
+        setItemIsSelected(true)
+
+        if (refresh) {
+          handlePollAbortingJob(jobRun, refresh)
+        }
+      })
+    },
+    [dispatch, fetchJobFunctions, handlePollAbortingJob]
+  )
+
+  const fetchRun = useCallback(() => {
+    return fetchJob(params.projectName, params.jobId)
+      .then(job => modifyAndSelectRun(parseJob(job), fetchRun))
+      .catch(() =>
+        navigate(`/projects/${params.projectName}/jobs/${MONITOR_WORKFLOWS_TAB}`, { replace: true })
+      )
+      .finally(() => {
+        fetchJobFunctionsPromiseRef.current = null
+      })
+  }, [fetchJob, modifyAndSelectRun, navigate, params.jobId, params.projectName])
+
   const refreshJobs = useCallback(() => {
     fetchWorkflow(params.projectName, params.workflowId)
   }, [fetchWorkflow, params.projectName, params.workflowId])
+
+  const setJobStatusAborting = useCallback(task => {
+    setSelectedJob(state => ({
+      ...state,
+      abortTaskId: task,
+      state: getState('aborting', JOBS_PAGE, JOB_KIND_JOB)
+    }))
+  }, [])
 
   const onAbortJob = useCallback(
     job => {
@@ -188,15 +254,26 @@ const MonitorWorkflows = ({
         abortJob,
         params.projectName,
         job,
-        filtersStore,
         setNotification,
-        refreshJobs,
+        () => {
+          refreshJobs()
+          fetchRun()
+        },
         setConfirmData,
         dispatch,
-        setAbortingJob
+        abortJobRef,
+        setJobStatusAborting
       )
     },
-    [abortJob, dispatch, filtersStore, params.projectName, refreshJobs, setConfirmData]
+    [
+      abortJob,
+      dispatch,
+      fetchRun,
+      params.projectName,
+      refreshJobs,
+      setConfirmData,
+      setJobStatusAborting
+    ]
   )
 
   const handleConfirmAbortJob = useCallback(
@@ -301,11 +378,9 @@ const MonitorWorkflows = ({
         appStore.frontendSpec.abortable_function_kinds,
         handleConfirmAbortJob,
         handleConfirmDeleteJob,
-        toggleConvertedYaml,
-        abortingJob
+        toggleConvertedYaml
       )
   }, [
-    abortingJob,
     handleRerunJob,
     appStore.frontendSpec.jobs_dashboard_url,
     appStore.frontendSpec.abortable_function_kinds,
@@ -314,22 +389,6 @@ const MonitorWorkflows = ({
     handleConfirmDeleteJob,
     toggleConvertedYaml
   ])
-
-  const modifyAndSelectRun = useCallback(
-    jobRun => {
-      return enrichRunWithFunctionFields(
-        dispatch,
-        jobRun,
-        fetchJobFunctions,
-        fetchJobFunctionsPromiseRef
-      ).then(jobRun => {
-        setSelectedJob(jobRun)
-        setSelectedFunction({})
-        setItemIsSelected(true)
-      })
-    },
-    [dispatch, fetchJobFunctions]
-  )
 
   const handleSelectRun = useCallback(
     item => {
@@ -349,19 +408,6 @@ const MonitorWorkflows = ({
     setSelectedFunction({})
     setItemIsSelected(false)
   }
-
-  const fetchRun = useCallback(() => {
-    return fetchJob(params.projectName, params.jobId)
-      .then(job => {
-        return modifyAndSelectRun(parseJob(job))
-      })
-      .catch(() =>
-        navigate(`/projects/${params.projectName}/jobs/${MONITOR_WORKFLOWS_TAB}`, { replace: true })
-      )
-      .finally(() => {
-        fetchJobFunctionsPromiseRef.current = null
-      })
-  }, [fetchJob, modifyAndSelectRun, navigate, params.jobId, params.projectName])
 
   useEffect(() => {
     if ((params.jobId || params.functionHash) && pageData.details.menu.length > 0) {
@@ -544,6 +590,10 @@ const MonitorWorkflows = ({
       abortControllerRef.current.abort(REQUEST_CANCELED)
     }
   }, [params.projectName, params.workflowId])
+
+  useEffect(() => {
+    abortJobRef.current?.()
+  }, [params.jobId])
 
   useEffect(() => {
     if (
