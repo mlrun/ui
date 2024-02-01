@@ -54,7 +54,6 @@ const DatePickerView = React.forwardRef(
       isRangeDateValid,
       isSameDate,
       isTime,
-      isTopPosition,
       isValueEmpty,
       label,
       months,
@@ -136,7 +135,7 @@ const DatePickerView = React.forwardRef(
         {isDatePickerOptionsOpened && (
           <div
             ref={ref.datePickerViewRef}
-            className={`date-picker__pop-up ${isTopPosition ? 'positionTop' : 'positionBottom'}`}
+            className='date-picker__pop-up'
           >
             {datePickerOptions.map(option => (
               <SelectOption
@@ -150,12 +149,7 @@ const DatePickerView = React.forwardRef(
           </div>
         )}
         {isDatePickerOpened && (
-          <div
-            ref={ref.datePickerViewRef}
-            className={`date-picker__pop-up date-picker ${
-              isTopPosition ? 'positionTop' : 'positionBottom'
-            }`}
-          >
+          <div ref={ref.datePickerViewRef} className="date-picker__pop-up date-picker">
             <div className="date-picker__calendars">
               {config.map(item => (
                 <div className={classnames('date-picker__calendar')} key={item.id}>
@@ -265,7 +259,6 @@ DatePickerView.propTypes = {
   isRangeDateValid: PropTypes.func.isRequired,
   isSameDate: PropTypes.func.isRequired,
   isTime: PropTypes.bool.isRequired,
-  isTopPosition: PropTypes.bool.isRequired,
   isValueEmpty: PropTypes.bool.isRequired,
   label: PropTypes.string,
   months: PropTypes.array.isRequired,

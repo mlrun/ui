@@ -53,14 +53,6 @@
 
   .date-picker {
     padding: 30px 15px;
-
-    &.positionTop {
-      bottom: calc(100% + 5px);
-    }
-
-    &.positionBottom {
-      top: calc(100% + 5px);
-    }
   }
 
   .date-picker__calendars {
