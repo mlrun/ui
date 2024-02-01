@@ -497,6 +497,7 @@ const MonitorJobs = ({
             onChange={refreshJobs}
             page={JOBS_PAGE}
             withoutExpandButton
+            tab={MONITOR_JOBS_TAB}
           />
         </div>
       </div>

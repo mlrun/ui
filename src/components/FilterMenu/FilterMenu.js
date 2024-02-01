@@ -17,7 +17,7 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import React, { useEffect, useMemo, useState } from 'react'
+import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import PropTypes from 'prop-types'
 import { useNavigate, useParams } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
@@ -36,6 +36,7 @@ import { ReactComponent as ExpandIcon } from 'igz-controls/images/expand.svg'
 
 import {
   AUTO_REFRESH,
+  AUTO_REFRESH_ID,
   DATE_RANGE_TIME_FILTER,
   ENTITIES_FILTER,
   GROUP_BY_FILTER,
@@ -47,7 +48,6 @@ import {
   NAME_FILTER,
   PERIOD_FILTER,
   PROJECT_FILTER,
-  REFRESH,
   REQUEST_CANCELED,
   SHOW_ITERATIONS,
   SHOW_UNTAGGED_FILTER,
@@ -79,11 +79,7 @@ const FilterMenu = ({
   const [name, setName] = useState('')
   const [entities, setEntities] = useState('')
   const [tagOptions, setTagOptions] = useState(tagFilterOptions)
-  const [autoRefresh, setAutoRefresh] = useState({
-    id: AUTO_REFRESH,
-    state: true,
-    refresh: REFRESH
-  })
+  const [autoRefresh, setAutoRefresh] = useState(AUTO_REFRESH)
   const navigate = useNavigate()
   const params = useParams()
   const selectOptions = useMemo(() => cloneDeep(filterSelectOptions), [])
@@ -91,9 +87,6 @@ const FilterMenu = ({
   const filtersStore = useSelector(store => store.filtersStore)
   const projectStore = useSelector(store => store.projectStore)
   const changes = useSelector(store => store.detailsStore.changes)
-
-  const { '*': selectedTab } = params
-  const monitorJobsTab = selectedTab ? selectedTab.includes(MONITOR_JOBS_TAB) : false
 
   useEffect(() => {
     setLabels(filtersStore.labels)
@@ -152,22 +145,25 @@ const FilterMenu = ({
     projectStore.projectsNames.data
   ])
 
-  const applyChanges = (data, isRefreshed) => {
-    if (isRefreshed && changes.counter > 0) {
-      cancelRequest(REQUEST_CANCELED)
-    } else {
-      if ((params.jobId || params.name) && !isRefreshed) {
-        navigate(
-          `/projects/${params.projectName}/${page.toLowerCase()}${
-            params.pageTab ? `/${params.pageTab}` : tab ? `/${tab}` : ''
-          }`
-        )
-      }
+  const applyChanges = useCallback(
+    (data, isRefreshed) => {
+      if (isRefreshed && changes.counter > 0) {
+        cancelRequest(REQUEST_CANCELED)
+      } else {
+        if ((params.jobId || params.name) && !isRefreshed) {
+          navigate(
+            `/projects/${params.projectName}/${page.toLowerCase()}${
+              params.pageTab ? `/${params.pageTab}` : tab ? `/${tab}` : ''
+            }`
+          )
+        }
 
-      handleExpandAll && handleExpandAll(true)
-      onChange(data)
-    }
-  }
+        handleExpandAll && handleExpandAll(true)
+        onChange(data)
+      }
+    },
+    [params, page, tab, handleExpandAll, onChange, navigate, changes.counter, cancelRequest]
+  )
 
   const filtersHelper = async (changes, dispatch) => {
     let handleChangeFilters = Promise.resolve(true)
@@ -312,9 +308,9 @@ const FilterMenu = ({
     }
   }
 
-  const handleAutoRefresh = item => {
-    const refreshValue = autoRefresh.refresh === item ? '' : REFRESH
-    setAutoRefresh(prev => ({ ...prev, refresh: refreshValue, state: !prev.state }))
+  const handleAutoRefresh = itemId => {
+    const refreshValue = autoRefresh === itemId ? '' : AUTO_REFRESH
+    setAutoRefresh(prev => refreshValue)
   }
 
   useEffect(() => {
@@ -324,14 +320,13 @@ const FilterMenu = ({
   }, [params.pageTab, params.projectName, page, params.jobName, dispatch])
 
   useEffect(() => {
-    if (monitorJobsTab && autoRefresh.state) {
+    if (tab === MONITOR_JOBS_TAB && autoRefresh === AUTO_REFRESH && !hidden) {
       const intervalId = setInterval(() => {
         applyChanges(filtersStore, true)
       }, 30000)
       return () => clearInterval(intervalId)
     }
-  }, [autoRefresh])
-
+  }, [autoRefresh, hidden, tab, filtersStore, applyChanges])
   return (
     !hidden && (
       <>
@@ -470,12 +465,12 @@ const FilterMenu = ({
           ))}
 
         <div className="actions">
-          {monitorJobsTab && (
+          {tab === MONITOR_JOBS_TAB && (
             <CheckBox
-              key={autoRefresh.id}
-              item={{ label: AUTO_REFRESH, id: REFRESH }}
+              key={AUTO_REFRESH_ID}
+              item={{ label: AUTO_REFRESH, id: AUTO_REFRESH }}
               onChange={handleAutoRefresh}
-              selectedId={autoRefresh.refresh}
+              selectedId={autoRefresh}
             />
           )}
           <RoundedIcon
