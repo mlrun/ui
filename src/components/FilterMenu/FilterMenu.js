@@ -309,8 +309,7 @@ const FilterMenu = ({
   }
 
   const handleAutoRefresh = itemId => {
-    const refreshValue = autoRefresh === itemId ? '' : AUTO_REFRESH_ID
-    setAutoRefresh(prev => refreshValue)
+    setAutoRefresh(autoRefresh === itemId ? '' : AUTO_REFRESH_ID)
   }
 
   useEffect(() => {
@@ -499,18 +498,19 @@ FilterMenu.defaultProps = {
   actionButton: null,
   cancelRequest: () => {},
   changes: {},
+  enableAutoRefresh: false,
   expand: false,
   handleExpandAll: () => {},
   hidden: false,
   tab: '',
-  withoutExpandButton: false,
-  enableAutoRefresh: false
+  withoutExpandButton: false
 }
 
 FilterMenu.propTypes = {
   actionButton: PropTypes.shape({}),
   cancelRequest: PropTypes.func,
   changes: PropTypes.shape({}),
+  enableAutoRefresh: PropTypes.bool,
   expand: PropTypes.bool,
   filters: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
   handleExpandAll: PropTypes.func,
@@ -518,8 +518,7 @@ FilterMenu.propTypes = {
   onChange: PropTypes.func.isRequired,
   page: PropTypes.string.isRequired,
   tab: PropTypes.string,
-  withoutExpandButton: PropTypes.bool,
-  autoRefresh: PropTypes.bool
+  withoutExpandButton: PropTypes.bool
 }
 
 export default React.memo(FilterMenu)
