@@ -44,7 +44,7 @@ import {
 import { generateJobWizardData, getCategoryName } from '../../JobWizard.util'
 import { generateProjectsList } from '../../../../utils/projects'
 import { openConfirmPopUp } from 'igz-controls/utils/common.util'
-import { scrollToSelectedElements } from '../../../../utils/scrollHandler.util'
+// import { scrollToSelectedElements } from '../../../../utils/scrollHandler.util'
 import {
   FUNCTIONS_SELECTION_FUNCTIONS_TAB,
   FUNCTIONS_SELECTION_HUB_TAB,
@@ -87,16 +87,14 @@ const JobWizardFunctionSelection = ({
   const [hubFiltersInitialValues] = useState({ [HUB_CATEGORIES_FILTER]: {} })
   const [filterByName, setFilterByName] = useState('')
   const [filterMatches, setFilterMatches] = useState([])
+  const [toggle, setToggle] = useState(true)
   const [projects, setProjects] = useState(generateProjectsList(projectNames, params.projectName))
-  const selectedCardRef = useRef(null)
-  const containerRef = useRef(null)
-  const selectedTempState = useRef('functions')
+  const selectedActiveTab = useRef(null)
 
   const filtersStoreHubCategories = useSelector(
     store =>
       store.filtersStore[FILTER_MENU_MODAL][JOB_WIZARD_FILTERS]?.values?.[HUB_CATEGORIES_FILTER]
   )
-
   const { hubFunctions, hubFunctionsCatalog, loading } = useSelector(store => store.functionsStore)
 
   const dispatch = useDispatch()
@@ -311,6 +309,7 @@ const JobWizardFunctionSelection = ({
   ])
 
   const selectProjectFunction = functionData => {
+    selectedActiveTab.current = activeTab
     const selectNewFunction = () => {
       setSelectedFunctionData(functionData)
       generateData(functionData)
@@ -331,6 +330,7 @@ const JobWizardFunctionSelection = ({
   }
 
   const selectTemplateFunction = functionData => {
+    selectedActiveTab.current = activeTab
     const selectNewFunction = () => {
       const functionTemplatePath = `${functionData.spec.item_uri}${functionData.spec.assets.function}`
 
@@ -358,48 +358,26 @@ const JobWizardFunctionSelection = ({
     return openConfirmPopUp('All changes will be lost', confirmHandler)
   }
 
-  const setSelectedCard = index => {
-    selectedCardRef.current = index
-    selectedTempState.current = activeTab
-  }
-
   useEffect(() => {
-    if (stepIsActive === true) setActiveTab(selectedTempState.current)
-  }, [stepIsActive, setActiveTab, selectedTempState])
-
-  const setDivClass = useCallback(() => {
-    const parentElement = containerRef.current.parentNode
-    parentElement.classList.add('wizard-form-scroll-solution')
-  }, [containerRef])
-
-  const scrollToViewCallback = useCallback(() => {
-    setDivClass()
-    scrollToSelectedElements(
-      containerRef,
-      `[data-card-index="${selectedCardRef.current}"]`,
-      null,
-      500
-    )
-  }, [containerRef, selectedCardRef, setDivClass])
-
-  useEffect(() => {
-    setDivClass()
-    const handleIntersection = entries => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting && selectedCardRef.current && containerRef.current) {
-          scrollToViewCallback()
-        }
-      })
+    if (!stepIsActive) {
+      setToggle(true)
+      return
     }
-    const observer = new IntersectionObserver(handleIntersection)
-    observer.observe(containerRef.current)
-    return () => {
-      observer.disconnect()
+    if (stepIsActive && toggle) {
+      if (selectedActiveTab.current && selectedActiveTab.current !== activeTab) {
+        setActiveTab(selectedActiveTab.current)
+      }
+      setToggle(false)
     }
-  }, [activeTab, setDivClass, scrollToViewCallback])
+    if (stepIsActive) {
+      const selectedElement = document.querySelector('.selected')
+      if (!selectedElement) return
+      selectedElement.scrollIntoView({ behavior: 'smooth', block: 'center' })
+    }
+  }, [stepIsActive, toggle, activeTab])
 
   return (
-    <div ref={containerRef} className="job-wizard__function-selection">
+    <div className="job-wizard__function-selection">
       <div className="form-row">
         <h5 className="form-step-title">Function selection</h5>
       </div>
@@ -444,7 +422,6 @@ const JobWizardFunctionSelection = ({
                         functionData?.functions?.[0].metadata?.hash ===
                         selectedFunctionData?.functions?.[0].metadata.hash
                       }
-                      onSelectCardRef={setSelectedCard}
                       formState={formState}
                       functionData={generateFunctionCardData(functionData)}
                       onSelectCard={() => selectProjectFunction(functionData)}
@@ -500,7 +477,6 @@ const JobWizardFunctionSelection = ({
                         !selectedFunctionData?.functions?.[0].status &&
                         selectedFunctionTab === FUNCTIONS_SELECTION_HUB_TAB
                       }
-                      onSelectCardRef={setSelectedCard}
                       formState={formState}
                       functionData={generateFunctionTemplateCardData(templateData)}
                       onSelectCard={event => {

@@ -34,7 +34,6 @@ const FunctionCardTemplate = ({
   dense,
   functionData,
   onSelectCard,
-  onSelectCardRef,
   selected
 }) => {
   const templateClassName = classnames(
@@ -43,16 +42,8 @@ const FunctionCardTemplate = ({
     selected && 'selected',
     className
   )
-
   return (
-    <div
-      data-card-index={functionData.header}
-      className={templateClassName}
-      onClick={event => {
-        onSelectCard(event)
-        onSelectCardRef(functionData.header)
-      }}
-    >
+    <div className={templateClassName} onClick={event => onSelectCard(event)}>
       <div className="job-card-template__header">
         <Tooltip template={<TextTooltipTemplate text={functionData.header} />}>
           {functionData.header}
@@ -122,7 +113,6 @@ FunctionCardTemplate.propTypes = {
     sideTag: PropTypes.string
   }).isRequired,
   onSelectCard: PropTypes.func.isRequired,
-  onSelectCardRef: PropTypes.func.isRequired,
   selected: PropTypes.bool
 }
 
