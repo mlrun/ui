@@ -309,7 +309,7 @@ const jobsActions = {
       .then(({ data }) => {
         const newJobs = scheduled
           ? (data || {}).schedules
-          : (data || {}).runs.filter(job => job.metadata.iteration === 0)
+          : (data || {}).runs?.filter(job => job.metadata.iteration === 0)
 
         dispatch(jobsActions.fetchJobsSuccess(newJobs))
         dispatch(jobsActions.setJobsData(data.runs || []))
