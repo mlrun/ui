@@ -65,6 +65,7 @@ import './filterMenu.scss'
 const FilterMenu = ({
   actionButton,
   cancelRequest,
+  enableAutoRefresh,
   expand,
   filters,
   handleExpandAll,
@@ -72,8 +73,7 @@ const FilterMenu = ({
   onChange,
   page,
   tab,
-  withoutExpandButton,
-  enableAutoRefresh
+  withoutExpandButton
 }) => {
   const [labels, setLabels] = useState('')
   const [name, setName] = useState('')
@@ -309,7 +309,7 @@ const FilterMenu = ({
   }
 
   const handleAutoRefresh = itemId => {
-    setAutoRefresh((prevAutoRefresh) => prevAutoRefresh === itemId ? '' : AUTO_REFRESH_ID)
+    setAutoRefresh(prevAutoRefresh => (prevAutoRefresh === itemId ? '' : AUTO_REFRESH_ID))
   }
 
   useEffect(() => {
