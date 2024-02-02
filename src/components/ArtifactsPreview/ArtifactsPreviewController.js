@@ -35,7 +35,7 @@ import './artifactsPreviewController.scss'
 const ArtifactsPreviewController = ({
   artifactsIds,
   artifact,
-  id,
+  artifactId,
   withoutPopout
 }) => {
   const [noData, setNoData] = useState(false)
@@ -51,10 +51,10 @@ const ArtifactsPreviewController = ({
   }, [])
 
   useEffect(() => {
-    if (artifactsIds.length > 0 && !preview[id] && artifactsIds.includes(id)) {
-      getArtifactPreview(params.projectName, artifact, noData, setNoData, setPreview, true, id)
+    if (artifactsIds.length > 0 && !preview[artifactId] && artifactsIds.includes(artifactId)) {
+      getArtifactPreview(params.projectName, artifact, noData, setNoData, setPreview, true, artifactId)
     }
-  }, [artifactsIds, setPreview, artifact, noData, params.projectName, preview, id])
+  }, [artifactsIds, setPreview, artifact, noData, params.projectName, preview, artifactId])
 
   const showPreview = () => {
     dispatch(
@@ -67,7 +67,7 @@ const ArtifactsPreviewController = ({
 
   return (
     <>
-      {artifactsIds.includes(id) && (
+      {artifactsIds.includes(artifactId) && (
         <div className="artifacts__preview">
           {!withoutPopout && (
             <Tooltip
@@ -77,7 +77,7 @@ const ArtifactsPreviewController = ({
               <Popout onClick={showPreview} />
             </Tooltip>
           )}
-          <ArtifactsPreview noData={noData} preview={preview[id] || []} />
+          <ArtifactsPreview noData={noData} preview={preview[artifactId] || []} />
         </div>
       )}
     </>
@@ -91,7 +91,7 @@ ArtifactsPreviewController.defaultProps = {
 ArtifactsPreviewController.propTypes = {
   artifactsIds: PropTypes.array.isRequired,
   artifact: PropTypes.shape({}).isRequired,
-  id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
+  artifactId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
   withoutPopout: PropTypes.bool
 }
 

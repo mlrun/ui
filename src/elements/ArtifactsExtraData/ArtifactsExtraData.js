@@ -109,7 +109,7 @@ const ArtifactsExtraData = ({ artifact }) => {
                     target_path: extraDataRow[0]?.extraDataItem?.path,
                     db_key: artifact.db_key
                   }}
-                  id={extraDataRow[0]?.extraDataItem?.id}
+                  artifactId={extraDataRow[0]?.extraDataItem?.id}
                   withoutPopout
                 />
               </div>

@@ -161,7 +161,7 @@ const DetailsInputs = ({ inputs }) => {
                 <ArtifactsPreviewController
                   artifactsIds={artifactsIds}
                   artifact={inputRow[0]?.artifact}
-                  id={inputRow[0]?.artifact?.uid}
+                  artifactId={inputRow[0]?.artifact?.uid}
                 />
               )}
             </div>

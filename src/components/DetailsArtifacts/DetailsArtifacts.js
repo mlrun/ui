@@ -198,7 +198,7 @@ const DetailsArtifacts = ({
               <ArtifactsPreviewController
                 artifactsIds={artifactsIds}
                 artifact={artifactRow[0]?.artifact}
-                id={artifactRow[0]?.artifact?.ui?.identifierUnique}
+                artifactId={artifactRow[0]?.artifact?.ui?.identifierUnique}
               />
             </div>
           ))}
