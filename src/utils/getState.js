@@ -43,6 +43,7 @@ const getState = (state, page, kind) => {
 
 const commonStateLabels = {
   aborted: 'Aborted',
+  aborting: 'Aborting',
   active: 'Active',
   completed: 'Completed',
   created: 'Created',
