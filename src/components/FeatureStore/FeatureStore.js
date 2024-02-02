@@ -28,6 +28,7 @@ import PageActionsMenu from '../../common/PageActionsMenu/PageActionsMenu'
 import ContentMenu from '../../elements/ContentMenu/ContentMenu'
 import YamlModal from '../../common/YamlModal/YamlModal'
 import { ConfirmDialog } from 'igz-controls/components'
+import { TABLE_CONTAINER } from '../../constants'
 
 import {
   FEATURE_SETS_TAB,
@@ -86,7 +87,7 @@ const FeatureStore = () => {
             screen={FEATURE_STORE_PAGE}
             tabs={tabs}
           />
-          <div className="table-container">
+          <div className={TABLE_CONTAINER}>
             <FeatureStoreContext.Provider
               value={{
                 setConfirmData,
