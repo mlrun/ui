@@ -35,6 +35,7 @@ import YamlModal from '../../../common/YamlModal/YamlModal'
 import { DANGER_BUTTON, TERTIARY_BUTTON } from 'igz-controls/constants'
 import {
   GROUP_BY_NONE,
+  JOB_KIND_JOB,
   JOBS_PAGE,
   MONITOR_JOBS_TAB,
   PANEL_RERUN_MODE,
@@ -49,7 +50,13 @@ import {
 import { JobsContext } from '../Jobs'
 import { createJobsMonitorTabContent } from '../../../utils/createJobsContent'
 import { datePickerOptions, PAST_WEEK_DATE_OPTION } from '../../../utils/datePicker.util'
-import { enrichRunWithFunctionFields, handleAbortJob, handleDeleteJob } from '../jobs.util'
+import {
+  enrichRunWithFunctionFields,
+  handleAbortJob,
+  handleDeleteJob,
+  pollAbortingJobs
+} from '../jobs.util'
+import getState from '../../../utils/getState'
 import { getCloseDetailsLink } from '../../../utils/getCloseDetailsLink'
 import { getJobLogs } from '../../../utils/getJobLogs.util'
 import { getNoDataMessage } from '../../../utils/getNoDataMessage'
@@ -75,6 +82,7 @@ const MonitorJobs = ({
   fetchJobs,
   removePods
 }) => {
+  const [abortingJobs, setAbortingJobs] = useState({})
   const [dataIsLoaded, setDataIsLoaded] = useState(false)
   const [jobRuns, setJobRuns] = useState([])
   const [jobs, setJobs] = useState([])
@@ -90,6 +98,7 @@ const MonitorJobs = ({
   const location = useLocation()
   const dispatch = useDispatch()
   const { isStagingMode } = useMode()
+  const abortJobRef = useRef(null)
   const fetchJobFunctionsPromiseRef = useRef()
   const abortControllerRef = useRef(new AbortController())
   const {
@@ -137,6 +146,11 @@ const MonitorJobs = ({
     [handleFetchJobLogs, selectedJob, appStore.frontendSpec.jobs_dashboard_url, handleMonitoring]
   )
 
+  const terminateAbortTasksPolling = () => {
+    abortJobRef?.current?.()
+    setAbortingJobs({})
+  }
+
   const refreshJobs = useCallback(
     filters => {
       if (params.jobName) {
@@ -145,6 +159,8 @@ const MonitorJobs = ({
         setJobs([])
       }
       abortControllerRef.current = new AbortController()
+
+      terminateAbortTasksPolling()
 
       if (filters.dates) {
         setDateFilter(filters.dates.value)
@@ -165,6 +181,27 @@ const MonitorJobs = ({
       ).then(jobs => {
         if (jobs) {
           const parsedJobs = jobs.map(job => parseJob(job, MONITOR_JOBS_TAB))
+          const responseAbortingJobs = parsedJobs.reduce((acc, job) => {
+            if (job.state.value === 'aborting' && job.abortTaskId) {
+              acc[job.abortTaskId] = {
+                uid: job.uid,
+                name: job.name
+              }
+            }
+
+            return acc
+          }, {})
+
+          if (Object.keys(responseAbortingJobs).length > 0) {
+            setAbortingJobs(responseAbortingJobs)
+            pollAbortingJobs(
+              params.projectName,
+              abortJobRef,
+              responseAbortingJobs,
+              () => refreshJobs(filters),
+              dispatch
+            )
+          }
 
           if (params.jobName) {
             setJobRuns(parsedJobs)
@@ -174,23 +211,93 @@ const MonitorJobs = ({
         }
       })
     },
-    [fetchAllJobRuns, fetchJobs, params.jobName, params.projectName]
+    [dispatch, fetchAllJobRuns, fetchJobs, params.jobName, params.projectName]
   )
+
+  const setJobStatusAborting = useCallback(
+    (job, task) => {
+      const setData = params.jobName ? setJobRuns : setJobs
+
+      if (!isEmpty(selectedJob)) {
+        setSelectedJob(state => ({
+          ...state,
+          abortTaskId: task,
+          state: getState('aborting', JOBS_PAGE, JOB_KIND_JOB)
+        }))
+      }
+
+      setData(state =>
+        state.map(aJob => {
+          if (aJob.uid === job.uid) {
+            aJob.abortTaskId = task
+            aJob.state = getState('aborting', JOBS_PAGE, JOB_KIND_JOB)
+          }
+
+          return aJob
+        })
+      )
+    },
+    [params.jobName, selectedJob]
+  )
+
+  const modifyAndSelectRun = useCallback(
+    jobRun => {
+      return enrichRunWithFunctionFields(
+        dispatch,
+        jobRun,
+        fetchJobFunctions,
+        fetchJobFunctionsPromiseRef
+      ).then(jobRun => {
+        setSelectedJob(jobRun)
+      })
+    },
+    [dispatch, fetchJobFunctions]
+  )
+
+  const fetchRun = useCallback(() => {
+    fetchJob(params.projectName, params.jobId)
+      .then(job => {
+        return modifyAndSelectRun(parseJob(job))
+      })
+      .catch(() => {
+        showErrorNotification(dispatch, {}, 'This job either does not exist or was deleted')
+        navigate(`/projects/${params.projectName}/jobs/${MONITOR_JOBS_TAB}`, { replace: true })
+      })
+      .finally(() => {
+        fetchJobFunctionsPromiseRef.current = null
+      })
+  }, [dispatch, fetchJob, modifyAndSelectRun, navigate, params.jobId, params.projectName])
 
   const onAbortJob = useCallback(
     job => {
+      const refresh = !isEmpty(selectedJob) ? fetchRun : () => refreshJobs(filtersStore)
+
       handleAbortJob(
         abortJob,
         params.projectName,
         job,
-        filtersStore,
         setNotification,
-        refreshJobs,
+        refresh,
         setConfirmData,
-        dispatch
+        dispatch,
+        abortJobRef,
+        task => setJobStatusAborting(job, task),
+        abortingJobs,
+        setAbortingJobs
       )
     },
-    [abortJob, dispatch, filtersStore, params.projectName, refreshJobs, setConfirmData]
+    [
+      abortJob,
+      abortingJobs,
+      dispatch,
+      fetchRun,
+      filtersStore,
+      params.projectName,
+      refreshJobs,
+      selectedJob,
+      setConfirmData,
+      setJobStatusAborting
+    ]
   )
 
   const handleConfirmAbortJob = useCallback(
@@ -289,20 +396,6 @@ const MonitorJobs = ({
     handleConfirmDeleteJob
   ])
 
-  const modifyAndSelectRun = useCallback(
-    jobRun => {
-      return enrichRunWithFunctionFields(
-        dispatch,
-        jobRun,
-        fetchJobFunctions,
-        fetchJobFunctionsPromiseRef
-      ).then(jobRun => {
-        setSelectedJob(jobRun)
-      })
-    },
-    [dispatch, fetchJobFunctions]
-  )
-
   const handleSelectRun = useCallback(
     item => {
       if (params.jobName) {
@@ -315,20 +408,6 @@ const MonitorJobs = ({
     },
     [modifyAndSelectRun, params.jobName]
   )
-
-  const fetchRun = useCallback(() => {
-    fetchJob(params.projectName, params.jobId)
-      .then(job => {
-        return modifyAndSelectRun(parseJob(job))
-      })
-      .catch(() => {
-        showErrorNotification(dispatch, {}, 'This job either does not exist or was deleted')
-        navigate(`/projects/${params.projectName}/jobs/${MONITOR_JOBS_TAB}`, { replace: true })
-      })
-      .finally(() => {
-        fetchJobFunctionsPromiseRef.current = null
-      })
-  }, [dispatch, fetchJob, modifyAndSelectRun, navigate, params.jobId, params.projectName])
 
   const isJobDataEmpty = useCallback(
     () => jobs.length === 0 && ((!params.jobName && jobRuns.length === 0) || params.jobName),
@@ -429,14 +508,42 @@ const MonitorJobs = ({
       setJobs([])
       setJobRuns([])
       abortControllerRef.current.abort(REQUEST_CANCELED)
+      terminateAbortTasksPolling()
     }
   }, [params.projectName])
 
   useEffect(() => {
     return () => {
       setDataIsLoaded(false)
+      terminateAbortTasksPolling()
     }
-  }, [params.projectName, params.jobName])
+  }, [params.projectName, params.jobName, params.jobId])
+
+  useEffect(() => {
+    if (!isEmpty(selectedJob)) {
+      // stop polling on entering Details panel.
+      terminateAbortTasksPolling()
+
+      if (selectedJob.state.value === 'aborting' && selectedJob.abortTaskId) {
+        // start polling a single task.
+
+        const abortingJob = {
+          [selectedJob.abortTaskId]: {
+            uid: selectedJob.uid,
+            name: selectedJob.name
+          }
+        }
+
+        pollAbortingJobs(
+          params.projectName,
+          abortJobRef,
+          abortingJob,
+          fetchRun,
+          dispatch
+        )
+      }
+    }
+  }, [dispatch, filters, params.jobName, params.projectName, fetchRun, selectedJob, params.jobId])
 
   useEffect(() => {
     if (

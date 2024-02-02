@@ -17,6 +17,8 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
+import { get } from 'lodash'
+
 import jobsApi from '../api/jobs-api'
 import functionsApi from '../api/functions-api'
 import {
@@ -83,13 +85,16 @@ import { largeResponseCatchHandler } from '../utils/largeResponseCatchHandler'
 
 const jobsActions = {
   abortJob: (project, job) => dispatch => {
-    dispatch(jobsActions.abortJobBegin())
-
     return jobsApi
       .abortJob(project, job.uid, job.iteration)
-      .then(() => dispatch(jobsActions.abortJobSuccess()))
+      .then(response => {
+        dispatch(jobsActions.abortJobSuccess())
+
+        return get(response, 'data', {})
+      })
       .catch(error => {
         dispatch(jobsActions.abortJobFailure(error.message))
+
         throw error
       })
   },
@@ -304,7 +309,7 @@ const jobsActions = {
       .then(({ data }) => {
         const newJobs = scheduled
           ? (data || {}).schedules
-          : (data || {}).runs.filter(job => job.metadata.iteration === 0)
+          : (data || {}).runs?.filter(job => job.metadata.iteration === 0)
 
         dispatch(jobsActions.fetchJobsSuccess(newJobs))
         dispatch(jobsActions.setJobsData(data.runs || []))
