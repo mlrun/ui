@@ -17,7 +17,7 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import React, { useEffect, useMemo, useState } from 'react'
+import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import PropTypes from 'prop-types'
 import { useDispatch } from 'react-redux'
 import { useParams } from 'react-router-dom'
@@ -25,26 +25,17 @@ import { isNil } from 'lodash'
 
 import Combobox from '../../common/Combobox/Combobox'
 
-import {
-  ARTIFACT_OTHER_TYPE,
-  DATASET_TYPE,
-  MLRUN_STORAGE_INPUT_PATH_SCHEME,
-  MODEL_TYPE
-} from '../../constants'
+import { MLRUN_STORAGE_INPUT_PATH_SCHEME } from '../../constants'
 import targetPath from '../../utils/parseTargetPath'
 import { getParsedResource } from '../../utils/resources'
+import { pathTips, pathPlaceholders } from '../../utils/panelPathScheme'
+
 import {
-  generateArtifactsList,
-  generateArtifactsReferencesList,
-  generateProjectsList,
-  pathTips,
-  pathPlaceholders
-} from '../../utils/panelPathScheme'
-
-import { generateComboboxMatchesList } from './UrlPath.utils'
-
-import { fetchArtifact, fetchArtifacts } from '../../reducers/artifactsReducer'
-import projectsAction from '../../actions/projects'
+  generateComboboxMatchesList,
+  getArtifact,
+  getArtifacts,
+  getProjectsNames
+} from './UrlPath.utils'
 
 const UrlPath = ({
   comboboxSelectList,
@@ -92,51 +83,33 @@ const UrlPath = ({
     }
   }, [comboboxSelectList, defaultPath.path, inputDefaultValue, invalid, urlData.path])
 
+  const handleGetProjectNames = useCallback(() => {
+    getProjectsNames(dispatch, setProjects, project)
+  }, [dispatch, project])
+
+  const handleGetArtifacts = useCallback(() => {
+    getArtifacts(dispatch, urlData.project, urlData.projectItemType, setArtifacts)
+  }, [dispatch, urlData.project, urlData.projectItemType])
+
+  const handleGetArtifact = useCallback(() => {
+    getArtifact(dispatch, urlData.project, urlData.artifact, setArtifactsReferences)
+  }, [dispatch, urlData.artifact, urlData.project])
+
   useEffect(() => {
     if (
       urlData.pathType === MLRUN_STORAGE_INPUT_PATH_SCHEME &&
       urlProjectItemTypeEntered &&
       projects.length === 0
     ) {
-      dispatch(projectsAction.fetchProjectsNames()).then(projects => {
-        setProjects(generateProjectsList(projects, project))
-      })
+      handleGetProjectNames()
     }
-  }, [dispatch, urlData.pathType, project, projects.length, urlProjectItemTypeEntered])
+  }, [handleGetProjectNames, projects.length, urlData.pathType, urlProjectItemTypeEntered])
 
   useEffect(() => {
     if (urlProjectItemTypeEntered && urlProjectPathEntered && artifacts.length === 0) {
-      dispatch(
-        fetchArtifacts({
-          project: urlData.project,
-          filters: null,
-          config: {
-            params: {
-              category:
-                urlData.projectItemType === 'artifacts'
-                  ? ARTIFACT_OTHER_TYPE
-                  : urlData.projectItemType === 'datasets'
-                  ? DATASET_TYPE
-                  : MODEL_TYPE
-            }
-          }
-        })
-      )
-        .unwrap()
-        .then(artifacts => {
-          if (artifacts?.length > 0) {
-            setArtifacts(generateArtifactsList(artifacts))
-          }
-        })
+      handleGetArtifacts()
     }
-  }, [
-    artifacts.length,
-    urlData.project,
-    urlData.projectItemType,
-    dispatch,
-    urlProjectItemTypeEntered,
-    urlProjectPathEntered
-  ])
+  }, [artifacts.length, handleGetArtifacts, urlProjectItemTypeEntered, urlProjectPathEntered])
 
   useEffect(() => {
     if (
@@ -145,19 +118,11 @@ const UrlPath = ({
       urlArtifactPathEntered &&
       artifactsReferences.length === 0
     ) {
-      dispatch(fetchArtifact({ project: urlData.project, artifact: urlData.artifact }))
-        .unwrap()
-        .then(artifacts => {
-          if (artifacts.length > 0 && artifacts[0].data) {
-            setArtifactsReferences(generateArtifactsReferencesList(artifacts[0].data))
-          }
-        })
+      handleGetArtifact()
     }
   }, [
     artifactsReferences.length,
-    urlData.artifact,
-    urlData.project,
-    dispatch,
+    handleGetArtifact,
     urlArtifactPathEntered,
     urlProjectItemTypeEntered,
     urlProjectPathEntered
