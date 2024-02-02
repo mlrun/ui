@@ -129,32 +129,33 @@ const DatePicker = ({
     if (isDatePickerOpened || isDatePickerOptionsOpened) {
       const containerRect = datePickerRef?.current?.getBoundingClientRect()
       const popUpRect = datePickerViewRef?.current?.getBoundingClientRect()
+      const padding = 5
 
-      if (!containerRect || !popUpRect) return
+      if (containerRect && popUpRect) {
+        let topPosition
 
-      let topPosition
-
-      if (
-        popUpRect.height + containerRect.bottom > window.innerHeight &&
-        containerRect.top - popUpRect.height > 5
-      ) {
-        topPosition = -5 - popUpRect.height
-      } else {
-        topPosition =
-          popUpRect.height + containerRect.bottom > window.innerHeight
-            ? containerRect.height +
-              (window.innerHeight - (popUpRect.height + containerRect.bottom)) -
-              5
-            : containerRect.height + 5
-      }
-      datePickerViewRef.current.style.top = `${topPosition}px`
-
-      if (popUpRect.width + containerRect.left > window.innerWidth) {
-        datePickerViewRef.current.style.left = `${
-          window.innerWidth - popUpRect.width - containerRect.left - 5
-        }px`
-      } else {
-        datePickerViewRef.current.style.left = `${0}px`
+        if (
+          popUpRect.height + containerRect.bottom > window.innerHeight &&
+          containerRect.top - popUpRect.height > padding
+        ) {
+          topPosition = -padding - popUpRect.height
+        } else {
+          topPosition =
+            popUpRect.height + containerRect.bottom > window.innerHeight
+              ? containerRect.height +
+                (window.innerHeight - (popUpRect.height + containerRect.bottom)) -
+                padding
+              : containerRect.height + padding
+        }
+        datePickerViewRef.current.style.top = `${topPosition}px`
+  
+        if (popUpRect.width + containerRect.left > window.innerWidth) {
+          datePickerViewRef.current.style.left = `${
+            window.innerWidth - popUpRect.width - containerRect.left - padding
+          }px`
+        } else {
+          datePickerViewRef.current.style.left = '0px'
+        }
       }
     }
   }, [isDatePickerOpened, isDatePickerOptionsOpened])
@@ -164,14 +165,14 @@ const DatePicker = ({
   }, [calcPosition])
 
   useEffect(() => {
-    if (!isDatePickerOpened && !isDatePickerOptionsOpened) return
+    if (isDatePickerOpened || isDatePickerOptionsOpened) {
+      const throttledCalcPosition = throttle(calcPosition, 100, { trailing: true, leading: true })
 
-    const throttledCalcPosition = throttle(calcPosition, 100, { trailing: true, leading: true })
+      window.addEventListener('resize', throttledCalcPosition)
 
-    window.addEventListener('resize', throttledCalcPosition)
-
-    return () => {
-      window.removeEventListener('resize', throttledCalcPosition)
+      return () => {
+        window.removeEventListener('resize', throttledCalcPosition)
+      }
     }
   }, [calcPosition, isDatePickerOpened, isDatePickerOptionsOpened])
 
