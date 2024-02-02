@@ -353,11 +353,11 @@ function getProjectsSummaries(req, res) {
 function getFunctionItem(req, res) {
   const funcName = req.params.uid === 'batch_inference_v2' ? 'batch-inference-v2' : req.params.uid
   const hubItem = itemsCatalog.catalog.find(item => item.metadata.name === funcName)
-  
+
   res.send(hubItem)
 }
 
-function getFunctionObject (req, res) {
+function getFunctionObject(req, res) {
   const urlParams = req.query.url
   const urlArray = urlParams.split('/')
   const funcYAMLPath = `./tests/mockServer/data/mlrun/functions/${urlArray[6]}/${urlArray[6]}.yaml`
@@ -437,9 +437,10 @@ function patchRun(req, res) {
 }
 
 function deleteRun(req, res) {
-  const collectedRun = runs.runs
-    .find (run => run.metadata.project === req.params.project && run.metadata.uid === req.params.uid)
-  
+  const collectedRun = runs.runs.find(
+    run => run.metadata.project === req.params.project && run.metadata.uid === req.params.uid
+  )
+
   if (collectedRun) {
     remove(
       runs.runs,
@@ -451,11 +452,12 @@ function deleteRun(req, res) {
 }
 
 function deleteRuns(req, res) {
-  const collectedRuns = runs.runs
-    .filter (run => run.metadata.project === req.params.project && run.metadata.name === req.query.name)
-  
+  const collectedRuns = runs.runs.filter(
+    run => run.metadata.project === req.params.project && run.metadata.name === req.query.name
+  )
+
   if (collectedRuns?.length > 0) {
-    collectedRuns.forEach(collectedRun => remove(runs.runs, collectedRun))    
+    collectedRuns.forEach(collectedRun => remove(runs.runs, collectedRun))
   }
 
   res.send()
@@ -504,7 +506,7 @@ function getProjectsSchedule(req, res) {
 function invokeSchedule(req, res) {
   const currentDate = new Date()
   const runUID = makeUID(32)
-  const { project: runProject, name: runName , labels} = req.body.task.metadata
+  const { project: runProject, name: runName, labels } = req.body.task.metadata
   const runAuthor = labels.author
   const outputPath = req.body.task.spec.output_path
     .replace('{{run.project}}', runProject)
@@ -537,11 +539,17 @@ function invokeSchedule(req, res) {
       }
     }
   }
-  
-  let job = { 
-    kind: 'run', 
-    metadata: { ...respTemplate.data.metadata,  anotations: {} }, 
-    spec: { ...omit(respTemplate.data.spec, 'secret_sources'), hyper_param_options: {}, hyperparams: {}, inputs: {}, log_level: 'info' }, 
+
+  let job = {
+    kind: 'run',
+    metadata: { ...respTemplate.data.metadata, anotations: {} },
+    spec: {
+      ...omit(respTemplate.data.spec, 'secret_sources'),
+      hyper_param_options: {},
+      hyperparams: {},
+      inputs: {},
+      log_level: 'info'
+    },
     status: { ...omit(respTemplate.data.status, 'status_text'), results: {} }
   }
 
@@ -550,28 +558,37 @@ function invokeSchedule(req, res) {
     const splitedFunctionURI = req.body.task.spec.function.split('/')
     const functionProject = splitedFunctionURI[0]
     const [functionName, functionHash] = splitedFunctionURI[1].split('@')
-    funcObject = funcs.funcs
-      .find(item => item.metadata.hash === functionHash && item.metadata.project === functionProject && item.metadata.name === functionName)
+    funcObject = funcs.funcs.find(
+      item =>
+        item.metadata.hash === functionHash &&
+        item.metadata.project === functionProject &&
+        item.metadata.name === functionName
+    )
   } else {
-  const funcYAMLPath = `./tests/mockServer/data/mlrun/functions/${req.body.task.spec.function.slice(
+    const funcYAMLPath = `./tests/mockServer/data/mlrun/functions/${req.body.task.spec.function.slice(
       6
     )}/${req.body.task.spec.function.slice(6)}.yaml`
     funcObject = yaml.load(fs.readFileSync(funcYAMLPath, 'utf8'))
   }
   const funcUID = makeUID(32)
   funcObject = {
-    ...funcObject, 
-    metadata: {...funcObject.metadata, project: runProject, tag: 'latest', updated: currentDate.toISOString() },
-    spec: { 
-      ...funcObject.spec, 
-      disable_auto_mount: false, 
-      priority_class_name: req.body.function.spec.priority_class_name, 
-      inputs: {}, 
+    ...funcObject,
+    metadata: {
+      ...funcObject.metadata,
+      project: runProject,
+      tag: 'latest',
+      updated: currentDate.toISOString()
+    },
+    spec: {
+      ...funcObject.spec,
+      disable_auto_mount: false,
+      priority_class_name: req.body.function.spec.priority_class_name,
+      inputs: {},
       log_level: 'info',
       preemption_mode: req.body.function.spec.preemption_mode,
       volume_mounts: req.body.function.spec.volume_mounts,
       volumes: req.body.function.spec.volumes
-    }, 
+    },
     status: {}
   }
 
@@ -587,17 +604,18 @@ function invokeSchedule(req, res) {
   runs.runs.push(job)
   funcs.funcs.push(funcObject)
   logs.push(jobLogs)
-  
-  let scheduleObject = schedules.schedules
-    .find(schedule => schedule.scheduled_object.task.spec.function === req.body.task.spec.function)
+
+  let scheduleObject = schedules.schedules.find(
+    schedule => schedule.scheduled_object.task.spec.function === req.body.task.spec.function
+  )
   scheduleObject.last_run = { ...respTemplate.data }
-  
+
   setTimeout(() => {
     job.status.state = 'completed'
     scheduleObject.last_run.status.state = 'completed'
-    delete job.status.error  
-  }, 5000)   
-  
+    delete job.status.error
+  }, 5000)
+
   res.send(respTemplate)
 }
 
@@ -741,8 +759,8 @@ function getArtifacts(req, res) {
     other: ['', 'table', 'link', 'plot', 'chart', 'plotly', 'artifact']
   }
   let collectedArtifacts = artifacts.artifacts.filter(
-    artifact => (artifact.metadata?.project === req.params.project) 
-    || artifact.project === req.params.project
+    artifact =>
+      artifact.metadata?.project === req.params.project || artifact.project === req.params.project
   )
 
   if (req.query['category']) {
@@ -772,13 +790,14 @@ function getArtifacts(req, res) {
         const value = artifact.spec?.db_key ?? artifact.db_key
         if (req.query['name'].includes('~')) {
           return value.includes(req.query['name'].slice(1))
-        } 
-        else {
+        } else {
           return value.includes(req.query['name'])
         }
-      } 
-      else {
-        return (artifact.spec && artifact.spec.db_key === req.query['name']) || artifact.db_key === req.query['name']
+      } else {
+        return (
+          (artifact.spec && artifact.spec.db_key === req.query['name']) ||
+          artifact.db_key === req.query['name']
+        )
       }
     })
   }
@@ -786,11 +805,14 @@ function getArtifacts(req, res) {
   if (req.query['tag']) {
     switch (req.query['tag']) {
       case '*':
-        collectedArtifacts = collectedArtifacts.filter(artifact => artifact.metadata?.tree || artifact.tree)
+        collectedArtifacts = collectedArtifacts.filter(
+          artifact => artifact.metadata?.tree || artifact.tree
+        )
         break
       default:
         collectedArtifacts = collectedArtifacts.filter(
-          artifact => (artifact.metadata?.tag === req.query['tag']) || artifact.tag === req.query['tag']
+          artifact =>
+            artifact.metadata?.tag === req.query['tag'] || artifact.tag === req.query['tag']
         )
         break
     }
@@ -927,7 +949,7 @@ function getPipeline(req, res) {
 
 function getFuncs(req, res) {
   const dt = parseInt(Date.now())
-  
+
   const collectedFuncsByPrjTime = funcs.funcs
     .filter(func => func.metadata.project === req.query.project)
     .filter(func => Date.parse(func.metadata.updated) > dt)
@@ -942,14 +964,11 @@ function getFuncs(req, res) {
         func.metadata.updated = new Date(dt).toISOString()
       }
     })
-  } 
-  else if (req.query['hash_key']) {
+  } else if (req.query['hash_key']) {
+    collectedFuncs = funcs.funcs.filter(func => func.metadata.hash === req.query.hash_key)
+  } else {
     collectedFuncs = funcs.funcs
-    .filter(func => func.metadata.hash === req.query.hash_key)
-  }
-  else {
-    collectedFuncs = funcs.funcs
-      .filter(func => func.metadata.project === req.params['project']) 
+      .filter(func => func.metadata.project === req.params['project'])
       .filter(func => func.metadata.tag === 'latest')
       .filter(func => func.status?.state === 'deploying')
 
@@ -976,7 +995,7 @@ function getFuncs(req, res) {
 function getFunc(req, res) {
   const collectedFunc = funcs.funcs
     .filter(func => func.metadata.project === req.params['project'])
-    .filter(func => func.metadata.name === req.params['func']) 
+    .filter(func => func.metadata.name === req.params['func'])
     .filter(func => func.metadata.hash === req.query.hash_key)
 
   let respBody = {}
@@ -1276,21 +1295,22 @@ function putTags(req, res) {
   const tagName = req.params.tag
   const projectName = req.params.project
 
-  const collectedArtifacts = artifacts.artifacts
-    .filter(artifact => { 
-      const artifactMetaData = artifact.metadata ?? artifact
-      const artifactSpecData = artifact.spec ?? artifact
-      
-      return artifactMetaData?.project === req.params.project 
-        && artifact.kind === req.body.identifiers[0].kind
-        && (artifactMetaData?.uid === req.body.identifiers[0].uid || artifactMetaData?.tree === req.body.identifiers[0].uid) 
-        && artifactSpecData?.db_key === req.body.identifiers[0].key
-    }  
-  )
+  const collectedArtifacts = artifacts.artifacts.filter(artifact => {
+    const artifactMetaData = artifact.metadata ?? artifact
+    const artifactSpecData = artifact.spec ?? artifact
+
+    return (
+      artifactMetaData?.project === req.params.project &&
+      artifact.kind === req.body.identifiers[0].kind &&
+      (artifactMetaData?.uid === req.body.identifiers[0].uid ||
+        artifactMetaData?.tree === req.body.identifiers[0].uid) &&
+      artifactSpecData?.db_key === req.body.identifiers[0].key
+    )
+  })
 
   if (collectedArtifacts?.length > 0) {
     let editedTag = cloneDeep(collectedArtifacts[0])
-    editedTag.metadata ? editedTag.metadata.tag = tagName : editedTag.tag = tagName
+    editedTag.metadata ? (editedTag.metadata.tag = tagName) : (editedTag.tag = tagName)
     artifacts.artifacts.push(editedTag)
   }
 
@@ -1301,23 +1321,28 @@ function putTags(req, res) {
 }
 
 function deleteTags(req, res) {
-  const collectedArtifacts = artifacts.artifacts
-    .filter(artifact => {
-      const artifactMetaData = artifact.metadata ?? artifact
-      const artifactSpecData = artifact.spec ?? artifact
+  const collectedArtifacts = artifacts.artifacts.filter(artifact => {
+    const artifactMetaData = artifact.metadata ?? artifact
+    const artifactSpecData = artifact.spec ?? artifact
 
-      return artifactMetaData?.project === req.params.project 
-        && artifact.kind === req.body.identifiers[0].kind
-        && (artifactMetaData?.uid === req.body.identifiers[0].uid || artifactMetaData?.tree === req.body.identifiers[0].uid) 
-        && artifactSpecData?.db_key === req.body.identifiers[0].key
-    }
-  )
-  
+    return (
+      artifactMetaData?.project === req.params.project &&
+      artifact.kind === req.body.identifiers[0].kind &&
+      (artifactMetaData?.uid === req.body.identifiers[0].uid ||
+        artifactMetaData?.tree === req.body.identifiers[0].uid) &&
+      artifactSpecData?.db_key === req.body.identifiers[0].key
+    )
+  })
+
   if (collectedArtifacts?.length > 1) {
-    const artifactByTag = collectedArtifacts.find(artifact => (artifact.metadata?.tag === req.params.tag || artifact.tag === req.params.tag))
+    const artifactByTag = collectedArtifacts.find(
+      artifact => artifact.metadata?.tag === req.params.tag || artifact.tag === req.params.tag
+    )
     remove(artifacts.artifacts, artifactByTag)
   } else if (collectedArtifacts?.length === 1) {
-    collectedArtifacts[0].metadata ? delete collectedArtifacts[0].metadata.tag : delete collectedArtifacts[0].tag
+    collectedArtifacts[0].metadata
+      ? delete collectedArtifacts[0].metadata.tag
+      : delete collectedArtifacts[0].tag
   }
 
   res.send()
@@ -1326,8 +1351,11 @@ function deleteTags(req, res) {
 function postArtifact(req, res) {
   const currentDate = new Date()
   const artifactTag = req.body.metadata.tag || 'latest'
-  const tagObject = artifactTags.find(artifact => artifact.metadata?.project === req.body.metadata.project 
-    || artifact.project === req.body.metadata.project)
+  const tagObject = artifactTags.find(
+    artifact =>
+      artifact.metadata?.project === req.body.metadata.project ||
+      artifact.project === req.body.metadata.project
+  )
   const artifactUID = makeUID(40)
 
   const artifactTemplate = {
@@ -1354,7 +1382,7 @@ function postArtifact(req, res) {
     project: req.body.metadata.project
   }
   const artifactTemplateLatest = cloneDeep(artifactTemplate)
-  
+
   if (req.body.kind === 'model') {
     artifactTemplate.spec.model_file = req.body.spec.model_file
   }
@@ -1362,8 +1390,7 @@ function postArtifact(req, res) {
   if (artifactTag === 'latest') {
     artifactTemplate.metadata['tag'] = artifactTag
     artifacts.artifacts.push(artifactTemplate)
-  }
-  else{
+  } else {
     artifactTemplate.metadata['tag'] = artifactTag
     artifactTemplateLatest.metadata['tag'] = 'latest'
     artifacts.artifacts.push(artifactTemplate)
@@ -1383,18 +1410,18 @@ function postArtifact(req, res) {
 }
 
 function deleteArtifact(req, res) {
-  const collectedArtifacts = artifacts.artifacts
-    .filter (artifact => {
-      const artifactMetaData = artifact.metadata ?? artifact
-      const artifactSpecData = artifact.spec ?? artifact
+  const collectedArtifacts = artifacts.artifacts.filter(artifact => {
+    const artifactMetaData = artifact.metadata ?? artifact
+    const artifactSpecData = artifact.spec ?? artifact
 
-      return artifactMetaData?.project === req.params.project 
-        && artifactMetaData?.tree === req.query.tree
-        && artifactSpecData?.db_key === req.params.key
-    }
-  )
+    return (
+      artifactMetaData?.project === req.params.project &&
+      artifactMetaData?.tree === req.query.tree &&
+      artifactSpecData?.db_key === req.params.key
+    )
+  })
   if (collectedArtifacts?.length > 0) {
-    collectedArtifacts.forEach(collectedArtifact => remove(artifacts.artifacts, collectedArtifact))    
+    collectedArtifacts.forEach(collectedArtifact => remove(artifacts.artifacts, collectedArtifact))
   }
 
   res.send({})
