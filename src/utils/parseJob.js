@@ -55,6 +55,7 @@ export const parseJob = (job, tab) => {
     if ('context' in jobParameters && !jobParameters.context) delete jobParameters.context
 
     jobItem = {
+      abortTaskId: job.status?.abort_task_id || '',
       artifacts: job.status.artifacts || [],
       error: job.status.error ?? '',
       function: job.spec?.function ?? '',

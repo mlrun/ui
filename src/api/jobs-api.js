@@ -58,10 +58,10 @@ const jobsApi = {
       params.iter = iter
     }
 
-    return mainHttpClient.patch(
-      `/run/${project}/${jobId}`,
+    return mainHttpClient.post(
+      `/projects/${project}/runs/${jobId}/abort`,
       {
-        'status.state': 'aborted'
+        'status.status_text': 'aborted'
       },
       { params }
     )

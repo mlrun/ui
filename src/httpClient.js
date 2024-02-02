@@ -121,7 +121,7 @@ mainHttpClient.interceptors.response.use(
       const isLargeResponse =
         response.data?.total_size >= 0
           ? response.data.total_size > 1500
-          : Object.values(response.data)[0].length > 1500
+          : Object.values(response.data)?.[0]?.length > 1500
 
       clearTimeout(requestTimeouts[response.config.ui.requestId])
       delete requestTimeouts[response.config.ui.requestId]
