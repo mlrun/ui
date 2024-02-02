@@ -20,8 +20,8 @@ such restriction.
 import React, { useEffect, useState, useCallback, useRef } from 'react'
 import FileSaver from 'file-saver'
 import yaml from 'js-yaml'
-import { connect, useDispatch } from 'react-redux'
-import { orderBy } from 'lodash'
+import { connect, useDispatch, useSelector } from 'react-redux'
+import { isEmpty, last, orderBy } from 'lodash'
 import { useParams } from 'react-router-dom'
 
 import ProjectsView from './ProjectsView'
@@ -29,17 +29,20 @@ import ProjectsView from './ProjectsView'
 import {
   generateProjectActionsMenu,
   handleDeleteProjectError,
-  projectsSortOptions,
-  successProjectDeletingMessage
-} from './projectsData'
+  pollDeletingProjects,
+  projectDeletionKind,
+  projectDeletionWrapperKind,
+  projectsSortOptions
+} from './projects.util'
 import nuclioActions from '../../actions/nuclio'
 import projectsAction from '../../actions/projects'
+import { BG_TASK_RUNNING, isBackgroundTaskRunning } from '../../utils/poll.util'
 import { DANGER_BUTTON, FORBIDDEN_ERROR_STATUS_CODE, PRIMARY_BUTTON } from 'igz-controls/constants'
+import { fetchBackgroundTasks } from '../../reducers/tasksReducer'
 import { setNotification } from '../../reducers/notificationReducer'
 import { showErrorNotification } from '../../utils/notifications.util'
-
-import { useNuclioMode } from '../../hooks/nuclioMode.hook'
 import { useMode } from '../../hooks/mode.hook'
+import { useNuclioMode } from '../../hooks/nuclioMode.hook'
 
 const Projects = ({
   changeProjectState,
@@ -64,12 +67,15 @@ const Projects = ({
   const [isDescendingOrder, setIsDescendingOrder] = useState(false)
   const [selectedProjectsState, setSelectedProjectsState] = useState('active')
   const [sortProjectId, setSortProjectId] = useState('byName')
+  const [deletingProjects, setDeletingProjects] = useState({})
   const abortControllerRef = useRef(new AbortController())
+  const terminatePollRef = useRef(null)
   const urlParams = useParams()
   const dispatch = useDispatch()
   const { isDemoMode } = useMode()
-
   const { isNuclioModeDisabled } = useNuclioMode()
+
+  const tasksStore = useSelector(store => store.tasksStore)
 
   const fetchMinimalProjects = useCallback(() => {
     fetchProjects({ format: 'minimal' })
@@ -114,12 +120,40 @@ const Projects = ({
     removeProjects()
     fetchMinimalProjects()
     fetchProjectsSummary(abortControllerRef.current.signal)
+
+    dispatch(fetchBackgroundTasks({}))
+      .unwrap()
+      .then(backgroundTasks => {
+        const wrapperIsUsed = backgroundTasks.some(backgroundTask =>
+          backgroundTask.metadata.kind.startsWith(projectDeletionWrapperKind)
+        )
+
+        const newDeletingProjects = backgroundTasks
+          .filter(
+            backgroundTask =>
+              backgroundTask.metadata.kind.startsWith(
+                wrapperIsUsed ? projectDeletionWrapperKind : projectDeletionKind
+              ) && backgroundTask.status.state === BG_TASK_RUNNING
+          )
+          .reduce((acc, backgroundTask) => {
+            acc[backgroundTask.metadata.name] = last(backgroundTask.metadata.kind.split('.'))
+
+            return acc
+          }, {})
+
+        setDeletingProjects(newDeletingProjects)
+
+        if (!isEmpty(newDeletingProjects)) {
+          pollDeletingProjects(terminatePollRef, newDeletingProjects, refreshProjects, dispatch)
+        }
+      })
   }, [
-    fetchNuclioFunctions,
+    isNuclioModeDisabled,
+    removeProjects,
     fetchMinimalProjects,
     fetchProjectsSummary,
-    isNuclioModeDisabled,
-    removeProjects
+    dispatch,
+    fetchNuclioFunctions
   ])
 
   const handleSearchOnFocus = useCallback(() => {
@@ -158,16 +192,38 @@ const Projects = ({
   const handleDeleteProject = useCallback(
     (project, deleteNonEmpty) => {
       setConfirmData(null)
+
       deleteProject(project.metadata.name, deleteNonEmpty)
-        .then(() => {
-          fetchMinimalProjects()
-          dispatch(
-            setNotification({
-              status: 200,
-              id: Math.random(),
-              message: successProjectDeletingMessage
+        .then(response => {
+          if (isBackgroundTaskRunning(response)) {
+            dispatch(
+              setNotification({
+                status: 200,
+                id: Math.random(),
+                message: 'Project deletion in progress'
+              })
+            )
+
+            setDeletingProjects((prevDeletingProjects) => {
+              const newDeletingProjects = {
+                ...prevDeletingProjects,
+                [response.data.metadata.name]: last(response.data.metadata.kind.split('.'))
+              }
+
+              pollDeletingProjects(terminatePollRef, newDeletingProjects, refreshProjects, dispatch)
+
+              return newDeletingProjects
             })
-          )
+          } else {
+            fetchMinimalProjects()
+            dispatch(
+              setNotification({
+                status: 200,
+                id: Math.random(),
+                message: `Project "${project}" was deleted successfully`
+              })
+            )
+          }
         })
         .catch(error => {
           handleDeleteProjectError(
@@ -180,7 +236,7 @@ const Projects = ({
           )
         })
     },
-    [deleteProject, dispatch, fetchMinimalProjects]
+    [deleteProject, dispatch, fetchMinimalProjects, refreshProjects]
   )
 
   const handleUnarchiveProject = useCallback(
@@ -265,7 +321,7 @@ const Projects = ({
           .then(project => {
             convertToYaml(project)
           })
-          .catch((error) => {
+          .catch(error => {
             setConvertedYaml('')
 
             showErrorNotification(dispatch, error, '', "Failed to fetch project's YAML", () =>
@@ -283,6 +339,7 @@ const Projects = ({
     setActionsMenu(
       generateProjectActionsMenu(
         projectStore.projects,
+        deletingProjects,
         exportYaml,
         viewYaml,
         onArchiveProject,
@@ -293,23 +350,19 @@ const Projects = ({
     )
   }, [
     convertToYaml,
+    deletingProjects,
     exportYaml,
+    handleUnarchiveProject,
+    isDemoMode,
     onArchiveProject,
     onDeleteProject,
-    handleUnarchiveProject,
     projectStore.projects,
-    viewYaml,
-    isDemoMode
+    viewYaml
   ])
 
   useEffect(() => {
-    if (!isNuclioModeDisabled) {
-      fetchNuclioFunctions()
-    }
-
-    fetchMinimalProjects()
-    fetchProjectsSummary(abortControllerRef.current.signal)
-  }, [fetchMinimalProjects, fetchNuclioFunctions, fetchProjectsSummary, isNuclioModeDisabled])
+    refreshProjects()
+  }, [refreshProjects])
 
   useEffect(() => {
     return () => {
@@ -366,15 +419,15 @@ const Projects = ({
       actionsMenu={actionsMenu}
       closeNewProjectPopUp={closeNewProjectPopUp}
       confirmData={confirmData}
-      convertedYaml={convertedYaml}
       convertToYaml={convertToYaml}
+      convertedYaml={convertedYaml}
       createProject={createProject}
       filterByName={filterByName}
-      filteredProjects={filteredProjects}
       filterMatches={filterMatches}
+      filteredProjects={filteredProjects}
       handleCreateProject={handleCreateProject}
-      handleSelectSortOption={handleSelectSortOption}
       handleSearchOnFocus={handleSearchOnFocus}
+      handleSelectSortOption={handleSelectSortOption}
       isDescendingOrder={isDescendingOrder}
       projectStore={projectStore}
       refreshProjects={refreshProjects}
@@ -386,6 +439,7 @@ const Projects = ({
       setIsDescendingOrder={setIsDescendingOrder}
       setSelectedProjectsState={setSelectedProjectsState}
       sortProjectId={sortProjectId}
+      tasksStore={tasksStore}
       urlParams={urlParams}
     />
   )

@@ -31,6 +31,7 @@ import notificationStore from '../reducers/notificationReducer'
 import nuclioStore from '../reducers/nuclioReducer'
 import projectStore from '../reducers/projectReducer'
 import tableStore from '../reducers/tableReducer'
+import tasksStore from '../reducers/tasksReducer'
 import workflowsStore from '../reducers/workflowReducer'
 
 const toolkitStore = configureStore({
@@ -47,6 +48,7 @@ const toolkitStore = configureStore({
     nuclioStore,
     projectStore,
     tableStore,
+    tasksStore,
     workflowsStore
   },
   // todo: remove this when redux is removed and switched to redux-toolkit

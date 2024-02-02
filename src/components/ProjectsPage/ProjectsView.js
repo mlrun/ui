@@ -32,7 +32,7 @@ import Sort from '../../common/Sort/Sort'
 import YamlModal from '../../common/YamlModal/YamlModal'
 import { ConfirmDialog, RoundedIcon } from 'igz-controls/components'
 
-import { projectsSortOptions, projectsStates } from './projectsData'
+import { projectsSortOptions, projectsStates } from './projects.util'
 import { PRIMARY_BUTTON, TERTIARY_BUTTON } from 'igz-controls/constants'
 
 import { ReactComponent as RefreshIcon } from 'igz-controls/images/refresh.svg'
@@ -50,8 +50,8 @@ const ProjectsView = ({
   filteredProjects,
   filterMatches,
   handleCreateProject,
-  handleSelectSortOption,
   handleSearchOnFocus,
+  handleSelectSortOption,
   isDescendingOrder,
   projectStore,
   refreshProjects,
@@ -62,7 +62,8 @@ const ProjectsView = ({
   setFilterMatches,
   setIsDescendingOrder,
   setSelectedProjectsState,
-  sortProjectId
+  sortProjectId,
+  tasksStore
 }) => {
   const projectsClassNames = classnames(
     'projects',
@@ -71,7 +72,7 @@ const ProjectsView = ({
 
   return (
     <div className={projectsClassNames}>
-      {(projectStore.loading || projectStore.project.loading) && <Loader />}
+      {(projectStore.loading || projectStore.project.loading || tasksStore.loading) && <Loader />}
       {createProject && (
         <CreateProjectDialog
           closeNewProjectPopUp={closeNewProjectPopUp}

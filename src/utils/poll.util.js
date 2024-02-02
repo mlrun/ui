@@ -43,7 +43,7 @@ export const BG_TASK_SUCCEEDED = 'succeeded'
  * @returns {Promise} a promise that is resolved with the result of last polling cycle (when polling is done),
  *     or rejected with an error in case the request for polling failed at least `maxRetries` times or polling
  *     was aborted by resolving `options.timeoutPromise`, or polling timed out after `options.timeoutMillis`
- *     milli-seconds.
+ *     milliseconds.
  */
 export const pollTask = (pollMethod, isDone, options) => {
   let iterationTimeout = null
@@ -120,7 +120,7 @@ export const pollTask = (pollMethod, isDone, options) => {
   }
 
   /**
-   * Schedules next poll cycle after `delay` milli-seconds.
+   * Schedules next poll cycle after `delay` milliseconds.
    */
   function pollAgain() {
     return new Promise(resolve => {
@@ -133,4 +133,12 @@ export const pollTask = (pollMethod, isDone, options) => {
       }
     })
   }
+}
+
+export const isBackgroundTaskRunning = response => {
+  return (
+    response.data?.kind === 'BackgroundTask' &&
+    response.data?.metadata?.name &&
+    response.data.status.state === BG_TASK_RUNNING
+  )
 }
