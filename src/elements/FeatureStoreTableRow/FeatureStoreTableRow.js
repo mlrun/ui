@@ -21,6 +21,7 @@ import React, { useMemo, useRef } from 'react'
 import PropTypes from 'prop-types'
 import classnames from 'classnames'
 import { useParams } from 'react-router-dom'
+import { createPortal } from 'react-dom'
 import { isEmpty } from 'lodash'
 
 import TableCell from '../TableCell/TableCell'
@@ -30,7 +31,7 @@ import ErrorMessage from '../../common/ErrorMessage/ErrorMessage'
 
 import { getIdentifierMethod } from '../../utils/getUniqueIdentifier'
 import { generateTableRowTestId } from '../../utils/generateTableRowTestId'
-import { DETAILS_OVERVIEW_TAB } from '../../constants'
+import { DETAILS_OVERVIEW_TAB, TABLE_CONTAINER } from '../../constants'
 import { ACTIONS_MENU } from '../../types'
 
 const FeatureStoreTableRow = ({
@@ -92,7 +93,7 @@ const FeatureStoreTableRow = ({
                           }
                           selectItem={handleSelectItem}
                           selectedItem={selectedItem}
-                          showExpandButton
+                          showExpandButton={data.showExpandButton}
                         />
                       )
                     )
@@ -104,7 +105,7 @@ const FeatureStoreTableRow = ({
           </td>
           {selectedRowData[rowItem.data.ui.identifier]?.loading ? (
             <td className="table-body__cell">
-              <Loader />
+              {createPortal(<Loader />, document.querySelector(`.${TABLE_CONTAINER}`))}
             </td>
           ) : selectedRowData[rowItem.data.ui.identifier]?.error ? (
             <td className="table-body__cell">
