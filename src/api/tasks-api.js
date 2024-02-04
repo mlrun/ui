@@ -17,6 +17,17 @@ such restriction.
 import { mainHttpClient } from '../httpClient'
 
 const tasksApi = {
+  getBackgroundTasks: (kind) => {
+    const config = {}
+
+    if (kind) {
+      config.params = {
+        kind
+      }
+    }
+
+    return mainHttpClient.get('/background-tasks', config)
+  },
   getProjectBackgroundTask: (project, id) => {
     return mainHttpClient.get(`/projects/${project}/background-tasks/${id}`)
   },
