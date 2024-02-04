@@ -604,6 +604,7 @@ const MonitorJobs = ({
             onChange={refreshJobs}
             page={JOBS_PAGE}
             withoutExpandButton
+            enableAutoRefresh
           />
         </div>
       </div>
