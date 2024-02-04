@@ -965,8 +965,14 @@ const generateVolumes = volumesTable => {
         [volumeTypeNamesMap[volume.data.type]]: volume.data.typeName
       }
     } else {
+      const omitData = ['type', 'name', 'typeName', 'mountPath']
+
+      if (volume.data?.accessKey === volume.typeAdditionalData?.secretRef?.name) {
+        omitData.push('accessKey')
+      }
+
       volumeData[volume.data.type] = {
-        options: omit(volume.data, ['type', 'name', 'typeName', 'mountPath'])
+        options: omit(volume.data, omitData)
       }
 
       if (volume.data.type === V3IO_VOLUME_TYPE && !volume.typeAdditionalData?.driver) {
