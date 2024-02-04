@@ -541,6 +541,8 @@ export const SHOW_UNTAGGED_FILTER = 'showUntagged'
 export const SORT_BY = 'sortBy'
 export const STATUS_FILTER = 'status'
 export const TAG_FILTER = 'tag'
+export const AUTO_REFRESH_ID = 'auto-refresh'
+export const AUTO_REFRESH = 'Auto Refresh'
 
 export const FILTER_MENU_MODAL = 'filterMenuModal'
 export const JOB_WIZARD_FILTERS = 'jobWizardFilters'
