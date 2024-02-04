@@ -32,7 +32,12 @@ import { ReactComponent as Popout } from 'igz-controls/images/popout.svg'
 
 import './artifactsPreviewController.scss'
 
-const ArtifactsPreviewController = ({ artifactsIndexes, artifact, index, withoutPopout }) => {
+const ArtifactsPreviewController = ({
+  artifactsIds,
+  artifact,
+  artifactId,
+  withoutPopout
+}) => {
   const [noData, setNoData] = useState(false)
   const [preview, setPreview] = useState({})
   const params = useParams()
@@ -46,10 +51,10 @@ const ArtifactsPreviewController = ({ artifactsIndexes, artifact, index, without
   }, [])
 
   useEffect(() => {
-    if (artifactsIndexes.length > 0 && !preview[index] && artifactsIndexes.includes(index)) {
-      getArtifactPreview(params.projectName, artifact, noData, setNoData, setPreview, true, index)
+    if (artifactsIds.length > 0 && !preview[artifactId] && artifactsIds.includes(artifactId)) {
+      getArtifactPreview(params.projectName, artifact, noData, setNoData, setPreview, true, artifactId)
     }
-  }, [artifactsIndexes, setPreview, artifact, noData, params.projectName, preview, index])
+  }, [artifactsIds, setPreview, artifact, noData, params.projectName, preview, artifactId])
 
   const showPreview = () => {
     dispatch(
@@ -62,7 +67,7 @@ const ArtifactsPreviewController = ({ artifactsIndexes, artifact, index, without
 
   return (
     <>
-      {artifactsIndexes.includes(index) && (
+      {artifactsIds.includes(artifactId) && (
         <div className="artifacts__preview">
           {!withoutPopout && (
             <Tooltip
@@ -72,7 +77,7 @@ const ArtifactsPreviewController = ({ artifactsIndexes, artifact, index, without
               <Popout onClick={showPreview} />
             </Tooltip>
           )}
-          <ArtifactsPreview noData={noData} preview={preview[index] || []} />
+          <ArtifactsPreview noData={noData} preview={preview[artifactId] || []} />
         </div>
       )}
     </>
@@ -84,9 +89,9 @@ ArtifactsPreviewController.defaultProps = {
 }
 
 ArtifactsPreviewController.propTypes = {
-  artifactsIndexes: PropTypes.array.isRequired,
+  artifactsIds: PropTypes.array.isRequired,
   artifact: PropTypes.shape({}).isRequired,
-  index: PropTypes.number.isRequired,
+  artifactId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
   withoutPopout: PropTypes.bool
 }
 
