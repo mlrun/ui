@@ -19,13 +19,24 @@ such restriction.
 */
 
 import {
+  ARTIFACT_OTHER_TYPE,
   AZURE_STORAGE_INPUT_PATH_SCHEME,
+  DATASET_TYPE,
   DBFS_STORAGE_INPUT_PATH_SCHEME,
   GOOGLE_STORAGE_INPUT_PATH_SCHEME,
   MLRUN_STORAGE_INPUT_PATH_SCHEME,
+  MODEL_TYPE,
   S3_INPUT_PATH_SCHEME,
   V3IO_INPUT_PATH_SCHEME
 } from '../../constants'
+import projectsAction from '../../actions/projects'
+import {
+  generateArtifactsList,
+  generateArtifactsReferencesList,
+  generateProjectsList
+} from '../../utils/panelPathScheme'
+import { showErrorNotification } from '../../utils/notifications.util'
+import { fetchArtifact, fetchArtifacts } from '../../reducers/artifactsReducer'
 
 export const CSV = 'csv'
 
@@ -131,4 +142,51 @@ export const isUrlInputValid = (pathInputType, pathInputValue, dataSourceKind) =
         ? defaultValidation && !pathInputValue.endsWith('/')
         : defaultValidation
   }
+}
+
+export const getProjectsNames = (dispatch, setProjects, project) => {
+  dispatch(projectsAction.fetchProjectsNames()).then(projects => {
+    return setProjects(generateProjectsList(projects ?? [], project))
+  })
+}
+
+export const getArtifacts = (dispatch, project, projectItemType, setArtifacts) => {
+  dispatch(
+    fetchArtifacts({
+      project,
+      filters: null,
+      config: {
+        params: {
+          category:
+            projectItemType === 'artifacts'
+              ? ARTIFACT_OTHER_TYPE
+              : projectItemType === 'datasets'
+              ? DATASET_TYPE
+              : MODEL_TYPE
+        }
+      }
+    })
+  )
+    .unwrap()
+    .then(artifacts => {
+      if (artifacts?.length > 0) {
+        setArtifacts(generateArtifactsList(artifacts ?? []))
+      }
+    })
+    .catch(error => {
+      showErrorNotification(dispatch, error, '', 'Failed to fetch artifacts')
+    })
+}
+
+export const getArtifact = (dispatch, project, artifact, setArtifactsReferences) => {
+  dispatch(fetchArtifact({ project, artifact: artifact }))
+    .unwrap()
+    .then(artifacts => {
+      if (artifacts.length > 0 && artifacts[0].data) {
+        setArtifactsReferences(generateArtifactsReferencesList(artifacts[0].data ?? {}))
+      }
+    })
+    .catch(error => {
+      showErrorNotification(dispatch, error, '', 'Failed to fetch artifact data')
+    })
 }
