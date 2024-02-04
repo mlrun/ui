@@ -17,7 +17,7 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import React, { useEffect, useMemo, useState } from 'react'
+import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import PropTypes from 'prop-types'
 import { useNavigate, useParams } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
@@ -35,6 +35,8 @@ import { ReactComponent as CollapseIcon } from 'igz-controls/images/collapse.svg
 import { ReactComponent as ExpandIcon } from 'igz-controls/images/expand.svg'
 
 import {
+  AUTO_REFRESH,
+  AUTO_REFRESH_ID,
   DATE_RANGE_TIME_FILTER,
   ENTITIES_FILTER,
   GROUP_BY_FILTER,
@@ -63,6 +65,7 @@ import './filterMenu.scss'
 const FilterMenu = ({
   actionButton,
   cancelRequest,
+  enableAutoRefresh,
   expand,
   filters,
   handleExpandAll,
@@ -76,6 +79,7 @@ const FilterMenu = ({
   const [name, setName] = useState('')
   const [entities, setEntities] = useState('')
   const [tagOptions, setTagOptions] = useState(tagFilterOptions)
+  const [autoRefresh, setAutoRefresh] = useState(AUTO_REFRESH_ID)
   const navigate = useNavigate()
   const params = useParams()
   const selectOptions = useMemo(() => cloneDeep(filterSelectOptions), [])
@@ -141,22 +145,25 @@ const FilterMenu = ({
     projectStore.projectsNames.data
   ])
 
-  const applyChanges = (data, isRefreshed) => {
-    if (isRefreshed && changes.counter > 0) {
-      cancelRequest(REQUEST_CANCELED)
-    } else {
-      if ((params.jobId || params.name) && !isRefreshed) {
-        navigate(
-          `/projects/${params.projectName}/${page.toLowerCase()}${
-            params.pageTab ? `/${params.pageTab}` : tab ? `/${tab}` : ''
-          }`
-        )
-      }
+  const applyChanges = useCallback(
+    (data, isRefreshed) => {
+      if (isRefreshed && changes.counter > 0) {
+        cancelRequest(REQUEST_CANCELED)
+      } else {
+        if ((params.jobId || params.name) && !isRefreshed) {
+          navigate(
+            `/projects/${params.projectName}/${page.toLowerCase()}${
+              params.pageTab ? `/${params.pageTab}` : tab ? `/${tab}` : ''
+            }`
+          )
+        }
 
-      handleExpandAll && handleExpandAll(true)
-      onChange(data)
-    }
-  }
+        handleExpandAll && handleExpandAll(true)
+        onChange(data)
+      }
+    },
+    [params, page, tab, handleExpandAll, onChange, navigate, changes.counter, cancelRequest]
+  )
 
   const filtersHelper = async (changes, dispatch) => {
     let handleChangeFilters = Promise.resolve(true)
@@ -301,12 +308,24 @@ const FilterMenu = ({
     }
   }
 
+  const handleAutoRefresh = itemId => {
+    setAutoRefresh(prevAutoRefresh => (prevAutoRefresh === itemId ? '' : AUTO_REFRESH_ID))
+  }
+
   useEffect(() => {
     return () => {
       dispatch(removeFilters())
     }
   }, [params.pageTab, params.projectName, page, params.jobName, dispatch])
 
+  useEffect(() => {
+    if (enableAutoRefresh && autoRefresh === AUTO_REFRESH_ID && !hidden) {
+      const intervalId = setInterval(() => {
+        applyChanges(filtersStore, true)
+      }, 30000)
+      return () => clearInterval(intervalId)
+    }
+  }, [autoRefresh, hidden, enableAutoRefresh, filtersStore, applyChanges])
   return (
     !hidden && (
       <>
@@ -445,6 +464,14 @@ const FilterMenu = ({
           ))}
 
         <div className="actions">
+          {enableAutoRefresh && (
+            <CheckBox
+              key={AUTO_REFRESH_ID}
+              item={{ label: AUTO_REFRESH, id: AUTO_REFRESH_ID }}
+              onChange={handleAutoRefresh}
+              selectedId={autoRefresh}
+            />
+          )}
           <RoundedIcon
             tooltipText="Refresh"
             onClick={() => applyChanges(filtersStore, true)}
@@ -471,6 +498,7 @@ FilterMenu.defaultProps = {
   actionButton: null,
   cancelRequest: () => {},
   changes: {},
+  enableAutoRefresh: false,
   expand: false,
   handleExpandAll: () => {},
   hidden: false,
@@ -482,6 +510,7 @@ FilterMenu.propTypes = {
   actionButton: PropTypes.shape({}),
   cancelRequest: PropTypes.func,
   changes: PropTypes.shape({}),
+  enableAutoRefresh: PropTypes.bool,
   expand: PropTypes.bool,
   filters: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
   handleExpandAll: PropTypes.func,
