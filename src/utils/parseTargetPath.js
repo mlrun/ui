@@ -17,7 +17,7 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-export default targetPath => {
+const parseTargetPath = targetPath => {
   if (!targetPath) {
     return {
       schema: '',
@@ -26,9 +26,9 @@ export default targetPath => {
   }
 
   return {
-    schema: targetPath.includes('://')
-      ? targetPath.replace(/:\/\/.*$/g, '')
-      : '',
+    schema: targetPath.includes('://') ? targetPath.replace(/:\/\/.*$/g, '') : '',
     path: targetPath.replace(/.*:\/\//g, '')
   }
 }
+
+export default parseTargetPath
