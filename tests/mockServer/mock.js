@@ -74,11 +74,13 @@ app.use(bodyParser.json())
 
 // MLRun object Templates
 const projectBackgroundTasks = {}
+const backgroundTasks = {}
 const backgroundTaskTemplate = {
   kind: 'BackgroundTask',
   metadata: {
     name: '',
     project: null,
+    kind: null,
     created: '',
     updated: '',
     timeout: 600
@@ -177,9 +179,15 @@ function createTask(projectName, config) {
   newTask.metadata['updated'] = now
   newTask.metadata['created'] = now
 
-  let randomDuration = random(config.durationMin, config.durationMax)
+  if (config.kind) {
+    newTask.metadata.kind = config.kind
+  }
 
-  set(projectBackgroundTasks, [projectName, newTask.metadata.name], newTask)
+  if (projectName) {
+    set(projectBackgroundTasks, [projectName, newTask.metadata.name], newTask)
+  } else {
+    set(backgroundTasks, newTask.metadata.name, newTask)
+  }
 
   if (newTask.status.state === 'created') {
     newTask.status.state = 'running'
@@ -204,6 +212,8 @@ function createTask(projectName, config) {
             config.onAfterFail()
           })
       } else {
+        let randomDuration = random(config.durationMin, config.durationMax)
+
         setTimeout(() => {
           if (newTask.status.state === 'running') {
             // make sure it wasn't canceled
@@ -252,9 +262,56 @@ function makeUID(length) {
   return result
 }
 
+function deleteProjectHandler(req, res, omitResponse) {
+  //todo: Improve this handler according to the real roles of deleting. Add 412 response (if project has resources)
+
+  const collectedProject = projects.projects.filter(
+    project => project.metadata.name === req.params['project']
+  )
+  if (collectedProject.length) {
+    remove(projects.projects, project => project.metadata.name === req.params['project'])
+    remove(projectsSummary.projects, project => project.name === req.params['project'])
+    remove(
+      featureSets.feature_sets,
+      featureSet => featureSet.metadata.project === req.params['project']
+    )
+    remove(artifacts.artifacts, artifact => artifact.project === req.params['project'])
+    remove(run.data, artifact => artifact.metadata.project === req.params['project'])
+    remove(run.data, artifact => artifact.metadata.project === req.params['project'])
+    delete secretKeys[req.params.project]
+    res.statusCode = 204
+  } else {
+    res.statusCode = 500
+  }
+
+  if (!omitResponse) {
+    res.send({})
+  }
+}
+
 // Request Handlers
 function getFrontendSpec(req, res) {
   res.send(frontendSpec)
+}
+
+function getProjectTask(req, res) {
+  res.send(get(projectBackgroundTasks, [req.params.project, req.params.taskId], {}))
+}
+
+function getProjectTasks(req, res) {
+  res.send({
+    background_tasks: Object.values(get(projectBackgroundTasks, req.params.project, []))
+  })
+}
+
+function getTask(req, res) {
+  res.send(get(backgroundTasks, req.params.taskId, {}))
+}
+
+function getTasks(req, res) {
+  res.send({
+    background_tasks: Object.values(backgroundTasks) ?? []
+  })
 }
 
 function getFeatureSet(req, res) {
@@ -370,27 +427,28 @@ function createNewProject(req, res) {
 }
 
 function deleteProject(req, res) {
-  // TODO: improve that hendler acording to the real rooles of deleting
-  const collectedProject = projects.projects.filter(
-    project => project.metadata.name === req.params['project']
-  )
-  if (collectedProject.length) {
-    remove(projects.projects, project => project.metadata.name === req.params['project'])
-    remove(projectsSummary.projects, project => project.name === req.params['project'])
-    remove(
-      featureSets.feature_sets,
-      featureSet => featureSet.metadata.project === req.params['project']
-    )
-    remove(artifacts.artifacts, artifact => artifact.project === req.params['project'])
-    remove(run.data, artifact => artifact.metadata.project === req.params['project'])
-    remove(run.data, artifact => artifact.metadata.project === req.params['project'])
-    delete secretKeys[req.params.project]
-    res.statusCode = 204
-  } else {
-    res.statusCode = 500
+  deleteProjectHandler(req, res)
+}
+
+function deleteProjectV2(req, res) {
+  const taskFunc = () => {
+    return new Promise(resolve => {
+      setTimeout(() => {
+        deleteProjectHandler(req, res, true)
+
+        resolve()
+      }, random(5000, 10000))
+    })
   }
 
-  res.send({})
+  const task = createTask(null, {
+    taskFunc,
+    kind: `project.deletion.wrapper.${req.params.project}`
+  })
+
+  res.status = 202
+
+  res.send(task)
 }
 
 function patchProject(req, res) {
@@ -540,7 +598,7 @@ function patchRun(req, res) {
   res.send()
 }
 
-function postAbortTask(req, res) {
+function abortRun(req, res) {
   const currentRun = runs.runs.find(run => run.metadata.uid === req.params.uid)
 
   currentRun.status.state = 'aborting'
@@ -570,16 +628,6 @@ function postAbortTask(req, res) {
   res.status = 202
 
   res.send(task)
-}
-
-function getProjectTask(req, res) {
-  res.send(get(projectBackgroundTasks, [req.params.project, req.params.taskId], {}))
-}
-
-function getProjectTasks(req, res) {
-  res.send({
-    background_tasks: Object.values(get(projectBackgroundTasks, req.params.project, []))
-  })
 }
 
 function deleteRun(req, res) {
@@ -1729,10 +1777,14 @@ function getIguazioJob(req, res) {
 
 // REQUESTS
 app.get(`${mlrunAPIIngress}/frontend-spec`, getFrontendSpec)
+app.get(`${mlrunAPIIngress}/projects/:project/background-tasks/:taskId`, getProjectTask)
+app.get(`${mlrunAPIIngress}/projects/:project/background-tasks`, getProjectTasks)
+app.get(`${mlrunAPIIngress}/background-tasks/:taskId`, getTask)
+app.get(`${mlrunAPIIngress}/background-tasks`, getTasks)
 
 app.get(`${mlrunAPIIngress}/projects/:project/feature-sets`, getFeatureSet)
 
-// POST request after ferification should be deleted
+// POST request after verification should be deleted
 app.post(`${mlrunAPIIngress}/projects/:project/feature-sets`, createProjectsFeatureSet)
 app.put(
   `${mlrunAPIIngress}/projects/:project/feature-sets/:name/references/:tag`,
@@ -1744,6 +1796,7 @@ app.get(`${mlrunAPIIngress}/projects`, getProjects)
 app.post(`${mlrunAPIIngress}/projects`, createNewProject)
 app.get(`${mlrunAPIIngress}/projects/:project`, getProject)
 app.delete(`${mlrunAPIIngress}/projects/:project`, deleteProject)
+app.delete(`${mlrunAPIIngressV2}/projects/:project`, deleteProjectV2)
 app.patch(`${mlrunAPIIngress}/projects/:project`, patchProject)
 app.put(`${mlrunAPIIngress}/projects/:project`, putProject)
 app.get(`${mlrunAPIIngress}/projects/:project/secret-keys`, getSecretKeys)
@@ -1758,9 +1811,7 @@ app.get(`${mlrunAPIIngress}/run/:project/:uid`, getRun)
 app.patch(`${mlrunAPIIngress}/run/:project/:uid`, patchRun)
 app.delete(`${mlrunAPIIngress}/projects/:project/runs/:uid`, deleteRun)
 app.delete(`${mlrunAPIIngress}/projects/:project/runs`, deleteRuns)
-app.post(`${mlrunAPIIngress}/projects/:project/runs/:uid/abort`, postAbortTask)
-app.get(`${mlrunAPIIngress}/projects/:project/background-tasks/:taskId`, getProjectTask)
-app.get(`${mlrunAPIIngress}/projects/:project/background-tasks`, getProjectTasks)
+app.post(`${mlrunAPIIngress}/projects/:project/runs/:uid/abort`, abortRun)
 
 app.get(`${mlrunIngress}/catalog.json`, getFunctionCatalog)
 app.get(`${mlrunAPIIngress}/hub/sources/:project/items`, getFunctionCatalog)

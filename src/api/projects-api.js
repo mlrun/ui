@@ -17,7 +17,7 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import { mainHttpClient } from '../httpClient'
+import { mainHttpClient, mainHttpClientV2 } from '../httpClient'
 
 const projectsApi = {
   changeProjectState: (project, state) =>
@@ -26,7 +26,7 @@ const projectsApi = {
     }),
   createProject: postData => mainHttpClient.post('/projects', postData),
   deleteProject: (project, deleteNonEmpty) =>
-    mainHttpClient.delete(
+    mainHttpClientV2.delete(
       `/projects/${project}`,
       deleteNonEmpty && {
         headers: {

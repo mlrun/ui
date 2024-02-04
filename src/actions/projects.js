@@ -147,7 +147,11 @@ const projectsAction = {
 
     return projectsApi
       .deleteProject(project, deleteNonEmpty)
-      .then(() => dispatch(projectsAction.deleteProjectSuccess()))
+      .then(response => {
+        dispatch(projectsAction.deleteProjectSuccess())
+
+        return response
+      })
       .catch(error => {
         dispatch(projectsAction.deleteProjectFailure())
 
