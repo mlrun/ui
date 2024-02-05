@@ -27,6 +27,7 @@ import TimePicker from '../TimePicker/TimePicker'
 import { Button, Tip, Tooltip, TextTooltipTemplate } from 'igz-controls/components'
 import { SelectOption } from 'igz-controls/elements'
 
+import { ANY_TIME } from '../../constants'
 import { SECONDARY_BUTTON } from 'igz-controls/constants'
 
 import { ReactComponent as Arrow } from 'igz-controls/images/arrow.svg'
@@ -114,7 +115,9 @@ const DatePickerView = React.forwardRef(
             {label}
             {required && <span className="input__label-mandatory"> *</span>}
           </span>
-          {isValueEmpty && <span className="input__label input__label-empty">&nbsp;Any time</span>}
+          {isValueEmpty && (
+            <span className="input__label input__label-empty">&nbsp;{ANY_TIME}</span>
+          )}
           {isInvalid && (
             <Tooltip
               className="input__warning"

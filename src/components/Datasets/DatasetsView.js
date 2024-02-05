@@ -87,6 +87,7 @@ const DatasetsView = React.forwardRef(
                       onClick: handleRegisterDataset
                     }
                   ]}
+                  artifacts={datasets}
                   filterMenuName={DATASETS_FILTERS}
                   handleRefresh={handleRefresh}
                   page={DATASETS_PAGE}

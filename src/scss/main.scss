@@ -501,6 +501,10 @@ main {
   @include statusState($burntSienna);
 }
 
+[class^='state-aborting'] {
+  @include statusState($burntSiennaTwo);
+}
+
 [class^='state-omitted'] {
   @include statusState($silver);
 }
@@ -826,11 +830,6 @@ a {
 ::after,
 ::before {
   box-sizing: border-box;
-}
-
-* {
-  scrollbar-color: rgba($black, 0.25) rgba($black, 0.1);
-  scrollbar-width: thin;
 }
 
 ::-webkit-scrollbar {

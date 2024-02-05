@@ -127,6 +127,9 @@ const ProjectMonitorView = ({
                 counterValue={projectSummary.data.models_count ?? 0}
                 link={`/projects/${params.projectName}/models`}
                 projectSummary={projectSummary}
+                tip="This counter is the number of models with different names (keys). 
+                  Each such model may have many versions, produced by multiple runs and given multiple tags. 
+                  You can browse them in the Models page."
                 title="Models"
               />
               <ProjectSummaryCard
