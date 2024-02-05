@@ -515,6 +515,7 @@ export const SET_FEATURES_PANEL_DATA = 'SET_FEATURES_PANEL_DATA'
 export const UPDATE_CURRENT_PROJECT_NAME = 'UPDATE_CURRENT_PROJECT_NAME'
 export const UPDATE_GROUPED_FEATURES = 'UPDATE_GROUPED_FEATURES'
 export const UPDATE_FEATURE_VECTOR = 'UPDATE_FEATURE_VECTOR'
+export const TABLE_CONTAINER = 'table-container'
 
 export const BUTTON_COPY_URI_CELL_TYPE = 'buttonCopyURI'
 
@@ -542,6 +543,8 @@ export const SHOW_UNTAGGED_FILTER = 'showUntagged'
 export const SORT_BY = 'sortBy'
 export const STATUS_FILTER = 'status'
 export const TAG_FILTER = 'tag'
+export const AUTO_REFRESH_ID = 'auto-refresh'
+export const AUTO_REFRESH = 'Auto Refresh'
 
 export const FILTER_MENU_MODAL = 'filterMenuModal'
 export const JOB_WIZARD_FILTERS = 'jobWizardFilters'

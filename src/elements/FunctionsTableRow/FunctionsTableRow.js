@@ -65,14 +65,9 @@ const FunctionsTableRow = ({
               <tbody className="table-body">
                 <tr className="table-row">
                   {rowItem.content.map((data, index) => {
-                    const cellClassName = classnames(
-                      index >= mainRowItemsCount && 'table-body__cell_hidden'
-                    )
-
                     return (
-                      !data.hidden && (
+                      index < mainRowItemsCount ? (
                         <TableCell
-                          className={cellClassName}
                           data={data}
                           firstCell
                           handleExpandRow={handleExpandRow}
@@ -82,7 +77,7 @@ const FunctionsTableRow = ({
                           selectedItem={selectedItem}
                           showExpandButton
                         />
-                      )
+                      ) : null
                     )
                   })}
                   <td className="table-body__cell table-cell-icon" />

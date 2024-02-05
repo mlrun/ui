@@ -19,7 +19,7 @@ such restriction.
 */
 import React, { useEffect, useMemo, useRef } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { useParams, Outlet } from 'react-router-dom'
+import { useParams, Outlet, useNavigate } from 'react-router-dom'
 import classNames from 'classnames'
 import { isEmpty } from 'lodash'
 
@@ -29,6 +29,7 @@ import DownloadContainer from '../../common/Download/DownloadContainer'
 import { getTransitionEndEventName } from 'igz-controls/utils/common.util'
 import { fetchFrontendSpec } from '../../reducers/appReducer'
 import { NAVBAR_WIDTH_CLOSED, NAVBAR_WIDTH_OPENED } from '../../constants'
+import { isProjectValid } from '../../utils/handleRedirect'
 
 import './Page.scss'
 
@@ -36,6 +37,7 @@ const Page = ({ isNavbarPinned, setProjectName }) => {
   const { projectName } = useParams()
   const mainRef = useRef()
   const dispatch = useDispatch()
+  const navigate = useNavigate()
   const transitionEndEventName = useMemo(() => getTransitionEndEventName(), [])
   const pinnedClasses = classNames(!(isNavbarPinned && projectName) && 'unpinned')
   const mainStyles = {
@@ -46,10 +48,15 @@ const Page = ({ isNavbarPinned, setProjectName }) => {
       : `${NAVBAR_WIDTH_CLOSED}px`
   }
   const { frontendSpec, frontendSpecPopupIsOpened } = useSelector(store => store.appStore)
+  const { projectsNames } = useSelector(store => store.projectStore)
 
   useEffect(() => {
     setProjectName(projectName)
   }, [projectName, setProjectName])
+
+  useEffect(() => {
+    isProjectValid(navigate, projectsNames.data, projectName)
+  }, [navigate, projectName, projectsNames.data])
 
   useEffect(() => {
     if (mainRef) {

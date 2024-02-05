@@ -39,7 +39,7 @@ import NoData from '../../../common/NoData/NoData'
 import DetailsStatistics from '../../DetailsStatistics/DetailsStatistics'
 import DetailsRequestedFeatures from '../../DetailsRequestedFeatures/DetailsRequestedFeatures'
 
-import {isJobKindDask, JOB_STEADY_STATES} from '../../Jobs/jobs.util'
+import { isJobKindDask, JOB_STEADY_STATES } from '../../Jobs/jobs.util'
 
 import {
   DETAILS_ANALYSIS_TAB,
@@ -113,10 +113,13 @@ const DetailsTabsContent = ({
     case DETAILS_PREVIEW_TAB:
       return <DetailsPreview artifact={selectedItem} handlePreview={handlePreview} />
     case DETAILS_INPUTS_TAB:
-      return <DetailsInputs inputs={selectedItem.inputs}/>
+      return <DetailsInputs inputs={selectedItem.inputs} />
     case DETAILS_ARTIFACTS_TAB:
       return (
         <DetailsArtifacts
+          allowSortBy={['name', 'updated']}
+          defaultSortBy="name"
+          defaultDirection="asc"
           iteration={detailsStore.iteration}
           selectedItem={selectedItem}
           setIteration={setIteration}
@@ -124,7 +127,14 @@ const DetailsTabsContent = ({
         />
       )
     case DETAILS_RESULTS_TAB:
-      return <DetailsResults job={selectedItem} excludeSortBy="state" defaultDirection="desc" />
+      return (
+        <DetailsResults
+          defaultSortBy="name"
+          defaultDirection="asc"
+          excludeSortBy="state"
+          job={selectedItem}
+        />
+      )
     case DETAILS_LOGS_TAB:
     case DETAILS_BUILD_LOG_TAB:
       return (

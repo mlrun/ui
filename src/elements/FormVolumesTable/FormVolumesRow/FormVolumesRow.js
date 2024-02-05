@@ -17,7 +17,7 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import React, { useEffect, useState } from 'react'
+import React, { useCallback, useLayoutEffect, useState } from 'react'
 import PropTypes from 'prop-types'
 import classnames from 'classnames'
 import { OnChange } from 'react-final-form-listeners'
@@ -53,42 +53,21 @@ const FormVolumesRow = ({
     isCurrentRowEditing(rowPath) && 'form-table__row_active'
   )
 
-  useEffect(() => {
-    setFieldRowData(generateVolumeInputsData(fields.value[index], fields, editingItem))
-    setFieldData(fields.value[index])
-  }, [editingItem, fields, index])
+  const accessKeyFocusHandler = useCallback(
+    (accessKey, secretRef) => {
+      if (accessKey === secretRef) {
+        setFieldValue(`${rowPath}.data.accessKey`, '')
+      }
+    },
+    [rowPath, setFieldValue]
+  )
 
-  const generateVolumeInput = inputData => {
-    switch (inputData.type) {
-      case 'input':
-        return (
-          <FormInput
-            density="normal"
-            disabled={inputData.inputDisabled}
-            label={inputData.label}
-            tip={inputData.tip}
-            name={`${rowPath}.${inputData.fieldPath}`}
-            placeholder={inputData.placeholder}
-            required={inputData.required}
-            focused={inputData.focused}
-            validationRules={inputData.validationRules ?? []}
-          />
-        )
-      case 'select':
-        return (
-          <FormSelect
-            density="normal"
-            disabled={inputData.inputDisabled}
-            label={inputData.label}
-            name={`${rowPath}.${inputData.fieldPath}`}
-            options={inputData.options}
-            required={inputData.required}
-          />
-        )
-      default:
-        return ''
-    }
-  }
+  useLayoutEffect(() => {
+    setFieldRowData(
+      generateVolumeInputsData(fields.value[index], fields, editingItem, accessKeyFocusHandler)
+    )
+    setFieldData(fields.value[index])
+  }, [accessKeyFocusHandler, editingItem, fields, index])
 
   return (
     <>
@@ -104,7 +83,31 @@ const FormVolumesRow = ({
                         key={inputData.fieldPath}
                         className="form-table__cell form-table__volume-cell"
                       >
-                        {generateVolumeInput(inputData)}
+                        {inputData.type === 'input' && (
+                          <FormInput
+                            customRequiredLabel={inputData.customRequiredLabel}
+                            density="normal"
+                            disabled={inputData.inputDisabled}
+                            label={inputData.label}
+                            tip={inputData.tip}
+                            name={`${rowPath}.${inputData.fieldPath}`}
+                            placeholder={inputData.placeholder}
+                            required={inputData.required}
+                            focused={inputData.focused}
+                            onFocus={inputData.onFocus}
+                            validationRules={inputData.validationRules ?? []}
+                          />
+                        )}
+                        {inputData.type === 'select' && (
+                          <FormSelect
+                            density="normal"
+                            disabled={inputData.inputDisabled}
+                            label={inputData.label}
+                            name={`${rowPath}.${inputData.fieldPath}`}
+                            options={inputData.options}
+                            required={inputData.required}
+                          />
+                        )}
                       </div>
                     )
                   )

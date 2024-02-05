@@ -39,6 +39,8 @@ export const useGetTagOptions = (fetchTags, filters, category, modalFiltersName)
     ) {
       if (!paramTag) {
         setUrlTagOption(TAG_FILTER_LATEST)
+      } else if (paramTag) {
+        setUrlTagOption(paramTag)
       }
 
       if (fetchTags) {
@@ -54,7 +56,6 @@ export const useGetTagOptions = (fetchTags, filters, category, modalFiltersName)
           .then(tags => {
             if (paramTag) {
               if (tags.find(filterTag => filterTag === paramTag)) {
-                setUrlTagOption(paramTag)
                 dispatch(setFilters({ paramTag }))
                 modalFiltersName &&
                   dispatch(
@@ -77,7 +78,6 @@ export const useGetTagOptions = (fetchTags, filters, category, modalFiltersName)
             }
           })
       } else if (paramTag) {
-        setUrlTagOption(paramTag)
         dispatch(setFilters({ paramTag }))
         modalFiltersName &&
           dispatch(

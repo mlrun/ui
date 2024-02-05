@@ -24,6 +24,7 @@ import {
   DATASETS_PAGE,
   DATE_FILTER_ANY_TIME,
   DATE_RANGE_TIME_FILTER,
+  ENTITIES_FILTER,
   FEATURE_SETS_TAB,
   FEATURE_VECTORS_TAB,
   FEATURES_TAB,
@@ -182,7 +183,7 @@ const getChangedFiltersList = (filters, filtersStore, filtersStoreKey) => {
       (type === LABELS_FILTER &&
         filtersStore.filterMenuModal[filtersStoreKey]?.values?.labels.length > 0) ||
       (type === TAG_FILTER && isTagChanged) ||
-      ((type === NAME_FILTER || type === LABELS_FILTER) && filtersStore[type].length > 0) ||
+      ((type === NAME_FILTER || type === LABELS_FILTER || type === ENTITIES_FILTER) && filtersStore[type].length > 0) ||
       (type === STATUS_FILTER && filtersStore.state !== STATE_FILTER_ALL_ITEMS) ||
       (type === DATE_RANGE_TIME_FILTER &&
         !isEqual(filtersStore.dates.value, DATE_FILTER_ANY_TIME)) ||

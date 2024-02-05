@@ -326,10 +326,27 @@ export const generateFeatureSetsOverviewContent = selectedItem => ({
 
 export const generateFeatureVectorsOverviewContent = selectedItem => ({
   description: {
-    value: selectedItem.description ?? ''
+    value: selectedItem.description ?? '',
+    editModeEnabled: true,
+    editModeType: 'textarea',
+    fieldData: {
+      name: 'description'
+    },
+    handleDiscardChanges: (formState, detailsStore) => {
+      formState.form.change(
+        'description',
+        detailsStore.changes.data.description?.currentFieldValue ??
+          formState.initialValues.description
+      )
+    }
   },
   labels: {
-    value: isEmpty(selectedItem.labels) ? [] : selectedItem.labels
+    value: isEmpty(selectedItem.labels) ? [] : selectedItem.labels,
+    editModeEnabled: true,
+    editModeType: 'chips',
+    fieldData: {
+      name: 'labels'
+    }
   },
   tag: {
     value: selectedItem.tag
@@ -423,12 +440,12 @@ export const countChanges = changesData => {
   return changesCounter
 }
 
-export const generateArtifactIndexes = (artifactsIndexes, index, setArtifactsIndexes) => {
-  const newArtifactsIndexes = artifactsIndexes.filter(artifactIndex => artifactIndex !== index)
+export const generateArtifactIdentifiers = (artifactsIdentifiers, identifier, setArtifactsIdentifiers) => {
+  const newArtifactsIdentifiers = artifactsIdentifiers.filter(artifactsIdentifier => artifactsIdentifier !== identifier)
 
-  if (!artifactsIndexes.includes(index)) {
-    newArtifactsIndexes.push(index)
+  if (!artifactsIdentifiers.includes(identifier)) {
+    newArtifactsIdentifiers.push(identifier)
   }
 
-  setArtifactsIndexes(newArtifactsIndexes)
+  setArtifactsIdentifiers(newArtifactsIdentifiers)
 }

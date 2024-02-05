@@ -99,7 +99,11 @@ const RegisterArtifactModalForm = ({
           />
         </div>
         <div className="form-col-1">
-          <FormInput label="Tag" name="metadata.tag" />
+          <FormInput
+            label="Tag"
+            name="metadata.tag"
+            validationRules={getValidationRules('common.tag')}
+          />
         </div>
         {showType && (
           <div className="form-col-1">
@@ -156,7 +160,7 @@ RegisterArtifactModalForm.propTypes = {
   setFieldState: PropTypes.func.isRequired,
   setUniquenessErrorIsShown: PropTypes.func.isRequired,
   showType: PropTypes.bool,
-  uniquenessError: PropTypes.string.isRequired
+  uniquenessErrorIsShown: PropTypes.bool.isRequired
 }
 
 export default RegisterArtifactModalForm

@@ -25,7 +25,6 @@ import ContentMenu from '../../elements/ContentMenu/ContentMenu'
 import CreateProjectDialog from './CreateProjectDialog/CreateProjectDialog'
 import Loader from '../../common/Loader/Loader'
 import NoData from '../../common/NoData/NoData'
-import Notification from '../../common/Notification/Notification'
 import PageActionsMenu from '../../common/PageActionsMenu/PageActionsMenu'
 import ProjectCard from '../../elements/ProjectCard/ProjectCard'
 import Search from '../../common/Search/Search'
@@ -33,7 +32,7 @@ import Sort from '../../common/Sort/Sort'
 import YamlModal from '../../common/YamlModal/YamlModal'
 import { ConfirmDialog, RoundedIcon } from 'igz-controls/components'
 
-import { projectsSortOptions, projectsStates } from './projectsData'
+import { projectsSortOptions, projectsStates } from './projects.util'
 import { PRIMARY_BUTTON, TERTIARY_BUTTON } from 'igz-controls/constants'
 
 import { ReactComponent as RefreshIcon } from 'igz-controls/images/refresh.svg'
@@ -51,8 +50,8 @@ const ProjectsView = ({
   filteredProjects,
   filterMatches,
   handleCreateProject,
-  handleSelectSortOption,
   handleSearchOnFocus,
+  handleSelectSortOption,
   isDescendingOrder,
   projectStore,
   refreshProjects,
@@ -63,7 +62,8 @@ const ProjectsView = ({
   setFilterMatches,
   setIsDescendingOrder,
   setSelectedProjectsState,
-  sortProjectId
+  sortProjectId,
+  tasksStore
 }) => {
   const projectsClassNames = classnames(
     'projects',
@@ -72,7 +72,7 @@ const ProjectsView = ({
 
   return (
     <div className={projectsClassNames}>
-      {(projectStore.loading || projectStore.project.loading) && <Loader />}
+      {(projectStore.loading || projectStore.project.loading || tasksStore.loading) && <Loader />}
       {createProject && (
         <CreateProjectDialog
           closeNewProjectPopUp={closeNewProjectPopUp}
@@ -175,7 +175,6 @@ const ProjectsView = ({
       {convertedYaml.length > 0 && (
         <YamlModal convertedYaml={convertedYaml} toggleConvertToYaml={convertToYaml} />
       )}
-      <Notification />
     </div>
   )
 }

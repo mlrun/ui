@@ -17,11 +17,34 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
+import { mainHttpClient } from '../httpClient'
 
-export const validatorStates = {
-  error: 'error',
-  info: 'info',
-  warn: 'warning',
-  warning: 'warning',
-  fail: 'fail'
+const tasksApi = {
+  getBackgroundTasks: (kind) => {
+    const config = {}
+
+    if (kind) {
+      config.params = {
+        kind
+      }
+    }
+
+    return mainHttpClient.get('/background-tasks', config)
+  },
+  getProjectBackgroundTask: (project, id) => {
+    return mainHttpClient.get(`/projects/${project}/background-tasks/${id}`)
+  },
+  getProjectBackgroundTasks: (project, state) => {
+    const config = {}
+
+    if (state) {
+      config.params = {
+        state
+      }
+    }
+
+    return mainHttpClient.get(`/projects/${project}/background-tasks`, config)
+  }
 }
+
+export default tasksApi

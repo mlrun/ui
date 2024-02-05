@@ -147,7 +147,11 @@ const projectsAction = {
 
     return projectsApi
       .deleteProject(project, deleteNonEmpty)
-      .then(() => dispatch(projectsAction.deleteProjectSuccess()))
+      .then(response => {
+        dispatch(projectsAction.deleteProjectSuccess())
+
+        return response
+      })
       .catch(error => {
         dispatch(projectsAction.deleteProjectFailure())
 
@@ -323,7 +327,6 @@ const projectsAction = {
     dispatch(projectsAction.fetchProjectJobsBegin())
 
     const params = {
-      project,
       'partition-by': 'name',
       'partition-sort-by': 'updated',
       'rows-per-partition': '5',
@@ -520,8 +523,9 @@ const projectsAction = {
 
         return projects
       })
-      .catch(err => {
-        dispatch(projectsAction.fetchProjectsNamesFailure(err))
+      .catch(error => {
+        dispatch(projectsAction.fetchProjectsNamesFailure(error))
+        showErrorNotification(dispatch, error, '', 'Failed to fetch projects')
       })
   },
   fetchProjectsNamesBegin: () => ({ type: FETCH_PROJECTS_NAMES_BEGIN }),

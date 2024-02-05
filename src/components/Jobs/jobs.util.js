@@ -17,7 +17,10 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import { capitalize, defaultsDeep, isEmpty, map, uniq } from 'lodash'
+import { capitalize, chain, defaultsDeep, get, isEmpty } from 'lodash'
+
+import tasksApi from '../../api/tasks-api'
+
 import {
   JOB_KIND_DASK,
   JOB_KIND_DATABRICKS,
@@ -32,48 +35,43 @@ import {
   JOB_KIND_SPARK
 } from '../../constants'
 import jobsActions from '../../actions/jobs'
-import { generateKeyValues } from '../../utils'
+import { generateKeyValues, truncateUid } from '../../utils'
+import { BG_TASK_FAILED, BG_TASK_SUCCEEDED, pollTask } from '../../utils/poll.util'
 import { setNotification } from '../../reducers/notificationReducer'
 import { generateFunctionPriorityLabel } from '../../utils/generateFunctionPriorityLabel'
-import { parseKeyValues } from '../../utils/object'
+import { parseKeyValues } from '../../utils'
 import { showErrorNotification } from '../../utils/notifications.util'
 
 export const page = JOBS_PAGE
-export const getInfoHeaders = isSpark =>
-  isSpark
-    ? [
-        { label: 'UID', id: 'uid' },
-        { label: 'Start time', id: 'startTime' },
-        { label: 'Last Updated', id: 'updated' },
-        { label: 'Run on spot', id: 'runOnSpot' },
-        { label: 'Node selector', id: 'nodeSelectorChips' },
-        { label: 'Priority', id: 'priority' },
-        { label: 'Parameters', id: 'parameters' },
-        { label: 'Function', id: 'function' },
-        { label: 'Function tag', id: 'functionTag' },
-        { label: 'Results', id: 'resultsChips' },
-        { label: 'Labels', id: 'labels' },
-        { label: 'SPARK UI URL', id: 'sparkUiUrl' },
-        { label: 'Log level', id: 'logLevel' },
-        { label: 'Output path', id: 'outputPath' },
-        { label: 'Total iterations', id: 'iterations' }
-      ]
-    : [
-        { label: 'UID', id: 'uid' },
-        { label: 'Start time', id: 'startTime' },
-        { label: 'Last Updated', id: 'updated' },
-        { label: 'Run on spot', id: 'runOnSpot' },
-        { label: 'Node selector', id: 'nodeSelectorChips' },
-        { label: 'Priority', id: 'priority' },
-        { label: 'Parameters', id: 'parameters' },
-        { label: 'Function', id: 'function' },
-        { label: 'Function tag', id: 'functionTag' },
-        { label: 'Results', id: 'resultsChips' },
-        { label: 'Labels', id: 'labels' },
-        { label: 'Log level', id: 'logLevel' },
-        { label: 'Output path', id: 'outputPath' },
-        { label: 'Total iterations', id: 'iterations' }
-      ]
+const LOG_LEVEL_ID = 'logLevel'
+export const getInfoHeaders = isSpark => {
+  const infoHeaders = [
+    { label: 'UID', id: 'uid' },
+    { label: 'Start time', id: 'startTime' },
+    { label: 'Last Updated', id: 'updated' },
+    { label: 'Run on spot', id: 'runOnSpot' },
+    { label: 'Node selector', id: 'nodeSelectorChips' },
+    { label: 'Priority', id: 'priority' },
+    { label: 'Parameters', id: 'parameters' },
+    { label: 'Function', id: 'function' },
+    { label: 'Function tag', id: 'functionTag' },
+    { label: 'Results', id: 'resultsChips' },
+    { label: 'Labels', id: 'labels' },
+    { label: 'Log level', id: LOG_LEVEL_ID },
+    { label: 'Output path', id: 'outputPath' },
+    { label: 'Total iterations', id: 'iterations' }
+  ]
+
+  if (isSpark) {
+    infoHeaders.splice(
+      infoHeaders.findIndex(header => header.id === LOG_LEVEL_ID),
+      0,
+      { label: 'SPARK UI URL', id: 'sparkUiUrl' }
+    )
+  }
+
+  return infoHeaders
+}
 export const actionsMenuHeader = 'Batch run'
 
 export const JOB_STEADY_STATES = ['completed', 'error', 'aborted']
@@ -115,10 +113,14 @@ export const tabs = [
   { id: SCHEDULE_TAB, label: 'Schedule' }
 ]
 
-export const isJobAbortable = (job, abortableFunctionKinds) =>
+export const isJobKindAbortable = (job, abortableFunctionKinds) =>
   (abortableFunctionKinds ?? [])
     .map(kind => `kind: ${kind}`)
     .some(kindLabel => job?.labels?.includes(kindLabel))
+
+export const isJobAborting = (currentJob = {}) => {
+  return currentJob?.state?.value === 'aborting'
+}
 
 export const isJobKindDask = (jobLabels = []) => {
   return jobLabels?.includes(`kind: ${JOB_KIND_DASK}`)
@@ -243,22 +245,57 @@ export const handleAbortJob = (
   abortJob,
   projectName,
   job,
-  filtersStore,
   setNotification,
   refreshJobs,
   setConfirmData,
-  dispatch
+  dispatch,
+  abortJobRef,
+  setJobStatusAborting,
+  abortingJobs = {},
+  setAbortingJobs
 ) => {
+  dispatch(
+    setNotification({
+      status: 200,
+      id: Math.random(),
+      message: 'Job abortion in progress'
+    })
+  )
+
   abortJob(projectName, job)
-    .then(() => {
-      refreshJobs(filtersStore)
-      dispatch(
-        setNotification({
-          status: 200,
-          id: Math.random(),
-          message: 'Job is successfully aborted'
+    .then(response => {
+      const abortTaskId = get(response, 'metadata.name', '')
+
+      setJobStatusAborting?.(abortTaskId)
+
+      if (setAbortingJobs) {
+        setAbortingJobs(state => {
+          const newAbortingJobs = {
+            ...state,
+            [abortTaskId]: {
+              uid: job.uid,
+              name: job.name
+            }
+          }
+
+          pollAbortingJobs(projectName, abortJobRef, newAbortingJobs, refreshJobs, dispatch)
+
+          return newAbortingJobs
         })
-      )
+      } else {
+        pollAbortingJobs(
+          projectName,
+          abortJobRef,
+          {
+            [abortTaskId]: {
+              uid: job.uid,
+              name: job.name
+            }
+          },
+          refreshJobs,
+          dispatch
+        )
+      }
     })
     .catch(error => {
       showErrorNotification(dispatch, error, 'Aborting job failed', '', () =>
@@ -266,14 +303,18 @@ export const handleAbortJob = (
           abortJob,
           projectName,
           job,
-          filtersStore,
           setNotification,
           refreshJobs,
           setConfirmData,
-          dispatch
+          dispatch,
+          abortJobRef,
+          setAbortingJobs,
+          abortingJobs,
+          setJobStatusAborting
         )
       )
     })
+
   setConfirmData(null)
 }
 
@@ -331,7 +372,8 @@ export const enrichRunWithFunctionFields = (
   return fetchJobFunctionsPromiseRef.current
     .then(funcs => {
       if (!isEmpty(funcs)) {
-        const tagsList = uniq(map(funcs, 'metadata.tag'))
+        const tagsList = chain(funcs).map('metadata.tag').compact().uniq().value()
+
         defaultsDeep(jobRun, {
           ui: {
             functionTag: tagsList.join(', '),
@@ -356,4 +398,53 @@ export const enrichRunWithFunctionFields = (
     .catch(error => {
       showErrorNotification(dispatch, error, 'Failed to fetch function tag', '')
     })
+}
+
+export const pollAbortingJobs = (project, terminatePollRef, abortingJobs, refresh, dispatch) => {
+  const taskIds = Object.keys(abortingJobs)
+
+  const pollMethod = () => {
+    if (taskIds.length === 1) {
+      return tasksApi.getProjectBackgroundTask(project, taskIds[0])
+    }
+
+    return tasksApi.getProjectBackgroundTasks(project)
+  }
+  const isDone = result => {
+    const tasks = taskIds.length === 1 ? [result.data] : get(result, 'data.background_tasks', [])
+    const finishedTasks = tasks.filter(
+      task =>
+        abortingJobs?.[task.metadata.name] &&
+        [BG_TASK_SUCCEEDED, BG_TASK_FAILED].includes(task.status?.state)
+    )
+
+    if (finishedTasks.length > 0) {
+      finishedTasks.forEach(task => {
+        if (task.status.state === BG_TASK_SUCCEEDED) {
+          abortJobSuccessHandler(dispatch, abortingJobs[task.metadata.name])
+        } else {
+          showErrorNotification(dispatch, {}, task.status.error || 'Aborting job failed')
+        }
+      })
+
+      refresh()
+    }
+
+    return finishedTasks.length > 0
+  }
+
+  terminatePollRef?.current?.()
+  terminatePollRef.current = null
+
+  pollTask(pollMethod, isDone, { terminatePollRef })
+}
+
+const abortJobSuccessHandler = (dispatch, job) => {
+  dispatch(
+    setNotification({
+      status: 200,
+      id: Math.random(),
+      message: `Job ${job.name} (${truncateUid(job.uid)}) is successfully aborted`
+    })
+  )
 }

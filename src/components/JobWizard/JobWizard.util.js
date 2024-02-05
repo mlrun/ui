@@ -498,14 +498,22 @@ const parseVolumes = (volumes, volumeMounts, isEditMode) => {
     const volumeType = getVolumeType(currentVolume)
     const volumeTypePath = volumeTypesMap[volumeType]
     const volumeTypeName = volumeTypeNamesMap[volumeType]
+    const volumeData = {
+      type: volumeType,
+      name: volumeMount?.name,
+      mountPath: volumeMount?.mountPath,
+      ...currentVolume[volumeTypePath]?.options
+    }
+
+    if (volumeType === V3IO_VOLUME_TYPE) {
+      volumeData.accessKey = currentVolume[volumeTypePath]?.secretRef?.name ?? ''
+    } else {
+      volumeData.typeName = currentVolume[volumeTypePath]?.[volumeTypeName]
+    }
 
     return {
       data: {
-        type: volumeType,
-        name: volumeMount?.name,
-        mountPath: volumeMount?.mountPath,
-        typeName: currentVolume[volumeTypePath]?.[volumeTypeName],
-        ...currentVolume[volumeTypePath]?.options
+        ...volumeData
       },
       typeAdditionalData: omit(currentVolume[volumeTypePath], ['options', 'name']),
       isDefault: true,
@@ -957,8 +965,14 @@ const generateVolumes = volumesTable => {
         [volumeTypeNamesMap[volume.data.type]]: volume.data.typeName
       }
     } else {
+      const omitData = ['type', 'name', 'typeName', 'mountPath']
+
+      if (volume.data?.accessKey === volume.typeAdditionalData?.secretRef?.name) {
+        omitData.push('accessKey')
+      }
+
       volumeData[volume.data.type] = {
-        options: omit(volume.data, ['type', 'name', 'typeName', 'mountPath'])
+        options: omit(volume.data, omitData)
       }
 
       if (volume.data.type === V3IO_VOLUME_TYPE && !volume.typeAdditionalData?.driver) {

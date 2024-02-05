@@ -65,7 +65,8 @@ const RangeInput = ({
   const handleIncrease = () => {
     if (inputValue >= max) return
 
-    const value = isCurrentValueEmpty() ? step : Number(inputValue) + step
+    let value = isCurrentValueEmpty() ? step : Number(inputValue) + step
+    value = max && value > max ? max : value
     const nextValue = isInteger(value) ? value : value.toFixed(3)
 
     setInputValue(nextValue)
@@ -75,7 +76,8 @@ const RangeInput = ({
   const handleDecrease = () => {
     if (inputValue <= 0 || inputValue <= min) return
 
-    const value = isCurrentValueEmpty() ? -step : Number(inputValue) - step
+    let value = isCurrentValueEmpty() ? -step : Number(inputValue) - step
+    value = min && value < min ? min : value
     const nextValue = isInteger(value) ? value : value.toFixed(3)
 
     setInputValue(nextValue)

@@ -122,7 +122,7 @@ const Functions = ({
         return {
           ...state,
           [funcIdentifier]: {
-            content: createFunctionsContent(content[func.name], null, params.projectName, false)
+            content: createFunctionsContent(content[func.name], params.projectName, false)
           }
         }
       })
@@ -149,7 +149,7 @@ const Functions = ({
     } else {
       Object.entries(content).forEach(([key, value]) => {
         newSelectedRowData[key] = {
-          content: createFunctionsContent(value, null, params.projectName, false)
+          content: createFunctionsContent(value, params.projectName, false)
         }
       })
     }
@@ -169,7 +169,7 @@ const Functions = ({
   )
 
   const tableContent = useMemo(
-    () => createFunctionsContent(latestItems, null, params.projectName, true),
+    () => createFunctionsContent(latestItems, params.projectName, true),
     [latestItems, params.projectName]
   )
 
@@ -279,48 +279,64 @@ const Functions = ({
         }
       }
 
-      deployFunction(data).then(result => {
-        const data = result.data.data
-        const postData = {
-          function: {
-            metadata: {
-              credentials: {
-                access_key: data.metadata.credentials.access_key
+      deployFunction(data)
+        .then(result => {
+          const data = result.data.data
+          const postData = {
+            function: {
+              metadata: {
+                credentials: {
+                  access_key: data.metadata.credentials.access_key
+                }
+              },
+              spec: {
+                build: data.spec.build,
+                env: data.spec.env,
+                image: data.spec.image,
+                node_selector: data.spec.node_selector,
+                preemption_mode: data.spec.preemption_mode,
+                priority_class_name: data.spec.priority_class_name,
+                resources: data.spec.resources,
+                volume_mounts: data.spec.volume_mounts,
+                volumes: data.spec.volumes
               }
             },
-            spec: {
-              build: data.spec.build,
-              env: data.spec.env,
-              image: data.spec.image,
-              node_selector: data.spec.node_selector,
-              preemption_mode: data.spec.preemption_mode,
-              priority_class_name: data.spec.priority_class_name,
-              resources: data.spec.resources,
-              volume_mounts: data.spec.volume_mounts,
-              volumes: data.spec.volumes
-            }
-          },
-          task: {
-            metadata: {
-              labels: data.metadata.labels,
-              name: data.metadata.name,
-              project: data.metadata.project
-            },
-            spec: {
-              function: `${func.project}/${func.name}@${func.hash}`,
-              handler: data.spec.default_handler,
-              input_path: '',
-              inputs: {},
-              output_path: JOB_DEFAULT_OUTPUT_PATH,
-              parameters: {}
+            task: {
+              metadata: {
+                labels: data.metadata.labels,
+                name: data.metadata.name,
+                project: data.metadata.project
+              },
+              spec: {
+                function: `${func.project}/${func.name}@${func.hash}`,
+                handler: data.spec.default_handler,
+                input_path: '',
+                inputs: {},
+                output_path: JOB_DEFAULT_OUTPUT_PATH,
+                parameters: {}
+              }
             }
           }
-        }
 
-        runNewJob(postData)
-      })
+          return runNewJob(postData)
+        })
+        .then(() => {
+          dispatch(
+            setNotification({
+              status: 200,
+              id: Math.random(),
+              message: 'Function is built and ran successfully.'
+            })
+          )
+          refreshFunctions(filtersStore)
+        })
+        .catch(error => {
+          showErrorNotification(dispatch, error, 'Failed to build and run function.', '', () => {
+            buildAndRunFunc(func)
+          })
+        })
     },
-    [deployFunction, runNewJob]
+    [deployFunction, dispatch, filtersStore, refreshFunctions, runNewJob]
   )
 
   const pageData = {
@@ -375,6 +391,13 @@ const Functions = ({
   }, [navigate, pageData.details.menu, location, params.hash, params.tab])
 
   useLayoutEffect(() => {
+    const checkFunctionExistence = item => {
+      if (!item || Object.keys(item).length === 0) {
+        showErrorNotification(dispatch, {}, 'This function either does not exist or was deleted')
+        navigate(`/projects/${params.projectName}/functions`, { replace: true })
+      }
+    }
+
     let item = {}
 
     handleRemoveLogs()
@@ -390,21 +413,18 @@ const Functions = ({
         }
       })
 
-      if (!item || Object.keys(item).length === 0) {
-        return navigate(`/projects/${params.projectName}/functions`, { replace: true })
-      }
+      checkFunctionExistence(item)
     } else if (params.funcName && params.tag && functions.length > 0) {
       item = functions.find(func => {
         return isEqual(func.tag, params.tag) && isEqual(func.name, params.funcName)
       })
 
-      if (!item || Object.keys(item).length === 0) {
-        return navigate(`/projects/${params.projectName}/functions`, { replace: true })
-      }
+      checkFunctionExistence(item)
     }
 
-    setSelectedFunction(item)
+    setSelectedFunction(item ?? {})
   }, [
+    dispatch,
     functions,
     handleRemoveLogs,
     navigate,
