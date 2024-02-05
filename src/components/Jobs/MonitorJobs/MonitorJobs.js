@@ -305,7 +305,8 @@ const MonitorJobs = ({
       setConfirmData({
         item: job,
         header: 'Abort job?',
-        message: `You try to abort job "${job.name}".`,
+        message: <div>You try to abort job "{job.name}". <br/>
+          This is a local run. You can abort the run, though the actual process will continue.</div>,
         btnConfirmLabel: 'Abort',
         btnConfirmType: DANGER_BUTTON,
         rejectHandler: () => {
