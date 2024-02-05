@@ -21,6 +21,7 @@ import { isEqual, isNil } from 'lodash'
 import { formatDate } from '../utils/datePicker.util'
 import {
   ADD_TO_FEATURE_VECTOR_TAB,
+  ANY_TIME,
   DATASETS_PAGE,
   DATE_FILTER_ANY_TIME,
   DATE_RANGE_TIME_FILTER,
@@ -86,6 +87,10 @@ const messageNamesList = {
     single: 'Model',
     plural: 'Models'
   },
+  [MONITOR_WORKFLOWS_TAB]: {
+    single: 'Workflow',
+    plural: 'Workflows'
+  },
   [MODEL_ENDPOINTS_TAB]: {
     single: 'Model-endpoint',
     plural: 'Model-endpoints'
@@ -97,7 +102,14 @@ const messageNamesList = {
   default: ''
 }
 
-export const getNoDataMessage = (filtersStore, filters, defaultMessage, page, tab, filtersStoreKey) => {
+export const getNoDataMessage = (
+  filtersStore,
+  filters,
+  defaultMessage,
+  page,
+  tab,
+  filtersStoreKey
+) => {
   if (defaultMessage) return defaultMessage
 
   const messageNames = messageNamesList[tab] || messageNamesList[page] || messageNamesList.default
@@ -134,6 +146,21 @@ const generateEmptyListMessage = (messageNames, tab) => {
   return `No ${messageNames.plural} yet. Create your first ${messageNames.single} now.`
 }
 
+const getSelectedDateValue = (filter, filtersStore) => {
+  const date = formatDate(
+    true,
+    true,
+    '/',
+    filtersStore.dates.value[0],
+    filtersStore.dates.value[1] ?? new Date()
+  )
+
+  return filter.type === DATE_RANGE_TIME_FILTER &&
+    !isEqual(filtersStore.dates.value, DATE_FILTER_ANY_TIME)
+    ? date
+    : ANY_TIME
+}
+
 const generateNoEntriesFoundMessage = (
   changedFilters,
   filtersStore,
@@ -149,13 +176,7 @@ const generateNoEntriesFoundMessage = (
     const value = [ITERATIONS_FILTER, SHOW_UNTAGGED_ITEMS].includes(filter.type)
       ? 'true'
       : filter.type === DATE_RANGE_TIME_FILTER
-      ? formatDate(
-          true,
-          true,
-          '/',
-          filtersStore.dates.value[0],
-          filtersStore.dates.value[1] ?? new Date()
-        )
+      ? getSelectedDateValue(filter, filtersStore)
       : filter.type === STATUS_FILTER
       ? filtersStore['state']
       : filtersStore.filterMenuModal[filtersStoreKey]?.values?.[filter.type] ??
@@ -183,10 +204,10 @@ const getChangedFiltersList = (filters, filtersStore, filtersStoreKey) => {
       (type === LABELS_FILTER &&
         filtersStore.filterMenuModal[filtersStoreKey]?.values?.labels.length > 0) ||
       (type === TAG_FILTER && isTagChanged) ||
-      ((type === NAME_FILTER || type === LABELS_FILTER || type === ENTITIES_FILTER) && filtersStore[type].length > 0) ||
+      ((type === NAME_FILTER || type === LABELS_FILTER || type === ENTITIES_FILTER) &&
+        filtersStore[type].length > 0) ||
       (type === STATUS_FILTER && filtersStore.state !== STATE_FILTER_ALL_ITEMS) ||
-      (type === DATE_RANGE_TIME_FILTER &&
-        !isEqual(filtersStore.dates.value, DATE_FILTER_ANY_TIME)) ||
+      type === DATE_RANGE_TIME_FILTER ||
       (type === ITERATIONS_FILTER && isIterChanged) ||
       (type === SHOW_UNTAGGED_FILTER && filtersStore.showUntagged === SHOW_UNTAGGED_ITEMS) ||
       (type === GROUP_BY_FILTER && filtersStore.groupBy !== GROUP_BY_NONE)
