@@ -24,7 +24,6 @@ import tasksApi from '../../api/tasks-api'
 import {
   JOB_KIND_DASK,
   JOB_KIND_DATABRICKS,
-  FUNCTION_TYPE_JOB,
   JOB_KIND_MPIJOB,
   JOB_KIND_JOB,
   JOBS_PAGE,
@@ -40,7 +39,7 @@ import { generateKeyValues, truncateUid } from '../../utils'
 import { BG_TASK_FAILED, BG_TASK_SUCCEEDED, pollTask } from '../../utils/poll.util'
 import { setNotification } from '../../reducers/notificationReducer'
 import { generateFunctionPriorityLabel } from '../../utils/generateFunctionPriorityLabel'
-import { parseKeyValues } from '../../utils/object'
+import { parseKeyValues } from '../../utils'
 import { showErrorNotification } from '../../utils/notifications.util'
 
 export const page = JOBS_PAGE
@@ -449,5 +448,3 @@ const abortJobSuccessHandler = (dispatch, job) => {
     })
   )
 }
-
-export const functionRunKinds = [FUNCTION_TYPE_JOB]
