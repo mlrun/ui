@@ -258,6 +258,7 @@ export const generateActionsMenu = (
         label: 'Delete',
         icon: <Delete />,
         disabled: !file?.tag,
+        tooltip: !file?.tag && 'A tag is required to delete an artifact. Open the artifact, click on the edit icon, and assign a tag before proceeding with the deletion',
         className: 'danger',
         onClick: () =>
           openDeleteConfirmPopUp(
