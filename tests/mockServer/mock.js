@@ -645,7 +645,6 @@ function deleteRun(req, res) {
   res.send()
 }
 
-<<<<<<< HEAD
 function deleteRuns(req, res) {
   const collectedRuns = runs.runs.filter(
     run => run.metadata.project === req.params.project && run.metadata.name === req.query.name
@@ -658,8 +657,6 @@ function deleteRuns(req, res) {
   res.send()
 }
 
-=======
->>>>>>> parent of a265844b (Merge branch 'development' of https://github.com/mlrun/ui into ML-5455)
 function getFunctionCatalog(req, res) {
   res.send(itemsCatalog)
 }
@@ -1491,7 +1488,6 @@ function postArtifact(req, res) {
 }
 
 function deleteArtifact(req, res) {
-<<<<<<< HEAD
   const collectedArtifacts = artifacts.artifacts.filter(artifact => {
     const artifactMetaData = artifact.metadata ?? artifact
     const artifactSpecData = artifact.spec ?? artifact
@@ -1502,17 +1498,6 @@ function deleteArtifact(req, res) {
       artifactSpecData?.db_key === req.params.key
     )
   })
-=======
-  const collectedArtifacts = artifacts.artifacts
-    .filter (artifact => {
-      const artifactMetaData = artifact.metadata ?? artifact
-
-      return artifactMetaData?.project === req.params.project 
-        && artifactMetaData?.tree === req.query.tree
-        && artifactMetaData?.key === req.params.uid
-    }
-  )
->>>>>>> parent of a265844b (Merge branch 'development' of https://github.com/mlrun/ui into ML-5455)
   if (collectedArtifacts?.length > 0) {
     collectedArtifacts.forEach(collectedArtifact => remove(artifacts.artifacts, collectedArtifact))
   }
@@ -1825,12 +1810,9 @@ app.get(`${mlrunAPIIngress}/projects/:project/runs`, getRuns)
 app.get(`${mlrunAPIIngress}/run/:project/:uid`, getRun)
 app.patch(`${mlrunAPIIngress}/run/:project/:uid`, patchRun)
 app.delete(`${mlrunAPIIngress}/projects/:project/runs/:uid`, deleteRun)
-<<<<<<< HEAD
 app.delete(`${mlrunAPIIngress}/projects/:project/runs`, deleteRuns)
 app.post(`${mlrunAPIIngress}/projects/:project/runs/:uid/abort`, abortRun)
 
-=======
->>>>>>> parent of a265844b (Merge branch 'development' of https://github.com/mlrun/ui into ML-5455)
 app.get(`${mlrunIngress}/catalog.json`, getFunctionCatalog)
 app.get(`${mlrunAPIIngress}/hub/sources/:project/items`, getFunctionCatalog)
 app.get(`${mlrunAPIIngress}/hub/sources/:project/items/:uid`, getFunctionItem)
@@ -1847,7 +1829,7 @@ app.get(`${mlrunAPIIngress}/projects/:project/pipelines/:pipelineID`, getPipelin
 app.get(`${mlrunAPIIngress}/projects/:project/artifact-tags`, getProjectsArtifactTags)
 app.get(`${mlrunAPIIngressV2}/projects/:project/artifacts`, getArtifacts)
 app.post(`${mlrunAPIIngressV2}/projects/:project/artifacts`, postArtifact)
-app.delete(`${mlrunAPIIngressV2}/projects/:project/artifacts/:uid`, deleteArtifact)
+app.delete(`${mlrunAPIIngressV2}/projects/:project/artifacts/:key`, deleteArtifact)
 
 app.put(`${mlrunAPIIngress}/projects/:project/tags/:tag`, putTags)
 app.delete(`${mlrunAPIIngress}/projects/:project/tags/:tag`, deleteTags)
