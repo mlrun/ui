@@ -86,12 +86,8 @@ const FunctionsPanelCodeView = ({
           {data.entry === DEFAULT_ENTRY && (
             <Button
               className="btn_edit"
-              label={
-                <>
-                  <Edit />
-                  <span>Edit source</span>
-                </>
-              }
+              icon={<Edit />}
+              label="Edit source"
               onClick={() => setEditCode(true)}
               variant={LABEL_BUTTON}
             />

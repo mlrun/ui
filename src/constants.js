@@ -293,6 +293,7 @@ export const FUNCTION_READY_STATE = 'ready'
 export const FUNCTION_PENDINDG_STATE = 'pending'
 export const FUNCTION_RUNNING_STATE = 'running'
 export const FUNCTION_DEFAULT_HANDLER = 'handler'
+export const FUNCTION_RUN_KINDS = [FUNCTION_TYPE_JOB]
 
 /*=========== ARTIFACTS =============*/
 
@@ -544,6 +545,7 @@ export const STATUS_FILTER = 'status'
 export const TAG_FILTER = 'tag'
 export const AUTO_REFRESH_ID = 'auto-refresh'
 export const AUTO_REFRESH = 'Auto Refresh'
+export const ANY_TIME = 'Any time'
 
 export const FILTER_MENU_MODAL = 'filterMenuModal'
 export const JOB_WIZARD_FILTERS = 'jobWizardFilters'
