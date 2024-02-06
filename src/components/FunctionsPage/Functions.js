@@ -29,25 +29,16 @@ import NewFunctionPopUp from '../../elements/NewFunctionPopUp/NewFunctionPopUp'
 import {
   FUNCTIONS_PAGE,
   GROUP_BY_NAME,
-  PANEL_FUNCTION_CREATE_MODE,
   SHOW_UNTAGGED_ITEMS,
   TAG_LATEST,
   REQUEST_CANCELED,
-  DETAILS_BUILD_LOG_TAB
+  DETAILS_BUILD_LOG_TAB,
+  JOB_DEFAULT_OUTPUT_PATH
 } from '../../constants'
-import {
-  detailsMenu,
-  FUNCTIONS_EDITABLE_STATES,
-  FUNCTIONS_READY_STATES,
-  infoHeaders,
-  page,
-  getFunctionsEditableTypes
-} from './functions.util'
+import { detailsMenu, infoHeaders, page, generateActionsMenu } from './functions.util'
 import createFunctionsContent from '../../utils/createFunctionsContent'
 import functionsActions from '../../actions/functions'
-import jobsActions from '../../actions/jobs'
 import { DANGER_BUTTON, LABEL_BUTTON } from 'igz-controls/constants'
-import { functionRunKinds } from '../Jobs/jobs.util'
 import { getFunctionIdentifier } from '../../utils/getUniqueIdentifier'
 import { getFunctionLogs } from '../../utils/getFunctionLogs'
 import { isDetailsTabExists } from '../../utils/isDetailsTabExists'
@@ -59,19 +50,17 @@ import { showErrorNotification } from '../../utils/notifications.util'
 import { useGroupContent } from '../../hooks/groupContent.hook'
 import { useMode } from '../../hooks/mode.hook'
 import { useYaml } from '../../hooks/yaml.hook'
-
-import { ReactComponent as Delete } from 'igz-controls/images/delete.svg'
-import { ReactComponent as Run } from 'igz-controls/images/run.svg'
-import { ReactComponent as Edit } from 'igz-controls/images/edit.svg'
-import { ReactComponent as Yaml } from 'igz-controls/images/yaml.svg'
+import jobsActions from '../../actions/jobs'
 
 const Functions = ({
   deleteFunction,
+  deployFunction,
   fetchFunctionLogs,
   fetchFunctions,
   functionsStore,
   removeFunctionsError,
-  removeNewFunction
+  removeNewFunction,
+  runNewJob
 }) => {
   const [confirmData, setConfirmData] = useState(null)
   const [convertedYaml, toggleConvertedYaml] = useYaml('')
@@ -251,6 +240,105 @@ const Functions = ({
     [removeFunction]
   )
 
+  const buildAndRunFunc = useCallback(
+    func => {
+      const data = {
+        function: {
+          kind: func.type,
+          metadata: {
+            credentials: {
+              access_key: func.access_key
+            },
+            labels: func.labels,
+            name: func.name,
+            project: func.project,
+            tag: func.tag
+          },
+          spec: {
+            args: func.args,
+            base_spec: func.base_spec,
+            build: func.build,
+            command: func.command,
+            default_class: func.default_class,
+            default_handler: func.default_handler,
+            description: func.description,
+            disable_auto_mount: func.disable_auto_mount,
+            env: func.env,
+            error_stream: func.error_stream,
+            graph: func.graph,
+            image: func.image,
+            parameters: func.parameters,
+            preemption_mode: func.preemption_mode,
+            priority_class_name: func.priority_class_name,
+            resources: func.resources,
+            secret_sources: func.secret_sources,
+            track_models: func.track_models,
+            volume_mounts: func.volume_mounts,
+            volumes: func.volumes
+          }
+        }
+      }
+
+      deployFunction(data)
+        .then(result => {
+          const data = result.data.data
+          const postData = {
+            function: {
+              metadata: {
+                credentials: {
+                  access_key: data.metadata.credentials.access_key
+                }
+              },
+              spec: {
+                build: data.spec.build,
+                env: data.spec.env,
+                image: data.spec.image,
+                node_selector: data.spec.node_selector,
+                preemption_mode: data.spec.preemption_mode,
+                priority_class_name: data.spec.priority_class_name,
+                resources: data.spec.resources,
+                volume_mounts: data.spec.volume_mounts,
+                volumes: data.spec.volumes
+              }
+            },
+            task: {
+              metadata: {
+                labels: data.metadata.labels,
+                name: data.metadata.name,
+                project: data.metadata.project
+              },
+              spec: {
+                function: `${func.project}/${func.name}@${func.hash}`,
+                handler: data.spec.default_handler,
+                input_path: '',
+                inputs: {},
+                output_path: JOB_DEFAULT_OUTPUT_PATH,
+                parameters: {}
+              }
+            }
+          }
+
+          return runNewJob(postData)
+        })
+        .then(() => {
+          dispatch(
+            setNotification({
+              status: 200,
+              id: Math.random(),
+              message: 'Function is built and ran successfully.'
+            })
+          )
+          refreshFunctions(filtersStore)
+        })
+        .catch(error => {
+          showErrorNotification(dispatch, error, 'Failed to build and run function.', '', () => {
+            buildAndRunFunc(func)
+          })
+        })
+    },
+    [deployFunction, dispatch, filtersStore, refreshFunctions, runNewJob]
+  )
+
   const pageData = {
     page,
     details: {
@@ -265,49 +353,19 @@ const Functions = ({
 
   const actionsMenu = useMemo(
     () => func =>
-      [
-        [
-          {
-            label: 'Run',
-            icon: <Run />,
-            onClick: func => {
-              if (func?.project && func?.name && func?.hash && func?.ui?.originalContent) {
-                dispatch(jobsActions.fetchJobFunctionSuccess(func.ui.originalContent))
-                setJobWizardMode(PANEL_FUNCTION_CREATE_MODE)
-              } else {
-                showErrorNotification(dispatch, {}, '', 'Failed to retrieve function data')
-              }
-            },
-            hidden:
-              !functionRunKinds.includes(func?.type) ||
-              !FUNCTIONS_READY_STATES.includes(func?.state?.value)
-          },
-          {
-            label: 'Edit',
-            icon: <Edit />,
-            onClick: func => {
-              setFunctionsPanelIsOpen(true)
-              setEditableItem(func)
-            },
-            hidden:
-              !isDemoMode ||
-              !getFunctionsEditableTypes(isStagingMode).includes(func?.type) ||
-              !FUNCTIONS_EDITABLE_STATES.includes(func?.state?.value)
-          },
-          {
-            label: 'Delete',
-            icon: <Delete />,
-            className: 'danger',
-            onClick: onRemoveFunction
-          },
-          {
-            label: 'View YAML',
-            icon: <Yaml />,
-            onClick: toggleConvertedYaml
-          }
-        ]
-      ],
-    [dispatch, isDemoMode, isStagingMode, onRemoveFunction, toggleConvertedYaml]
+      generateActionsMenu(
+        dispatch,
+        func,
+        isDemoMode,
+        isStagingMode,
+        setJobWizardMode,
+        setFunctionsPanelIsOpen,
+        setEditableItem,
+        onRemoveFunction,
+        toggleConvertedYaml,
+        buildAndRunFunc
+      ),
+    [buildAndRunFunc, dispatch, isDemoMode, isStagingMode, onRemoveFunction, toggleConvertedYaml]
   )
 
   useEffect(() => {
@@ -534,5 +592,6 @@ const Functions = ({
 }
 
 export default connect(({ functionsStore }) => ({ functionsStore }), {
-  ...functionsActions
+  ...functionsActions,
+  ...jobsActions
 })(React.memo(Functions))
