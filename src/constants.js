@@ -293,6 +293,7 @@ export const FUNCTION_READY_STATE = 'ready'
 export const FUNCTION_PENDINDG_STATE = 'pending'
 export const FUNCTION_RUNNING_STATE = 'running'
 export const FUNCTION_DEFAULT_HANDLER = 'handler'
+export const FUNCTION_RUN_KINDS = [FUNCTION_TYPE_JOB]
 
 /*=========== ARTIFACTS =============*/
 

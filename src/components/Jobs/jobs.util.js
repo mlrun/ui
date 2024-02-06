@@ -24,7 +24,6 @@ import tasksApi from '../../api/tasks-api'
 import {
   JOB_KIND_DASK,
   JOB_KIND_DATABRICKS,
-  FUNCTION_TYPE_JOB,
   JOB_KIND_MPIJOB,
   JOB_KIND_JOB,
   JOBS_PAGE,
@@ -449,5 +448,3 @@ const abortJobSuccessHandler = (dispatch, job) => {
     })
   )
 }
-
-export const functionRunKinds = [FUNCTION_TYPE_JOB]
