@@ -24,7 +24,7 @@ export const roundFloats = (value, precision) => {
   ) {
     const parsedNum = parseFloat(value)
 
-    return parsedNum % 1 == 0 ? parsedNum : +parsedNum.toFixed(precision ?? 2)
+    return parsedNum % 1 === 0 ? parsedNum : +parsedNum.toFixed(precision ?? 2)
   }
 
   return value
