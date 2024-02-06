@@ -68,6 +68,7 @@ import { parseFunction } from '../../../utils/parseFunction'
 import { parseJob } from '../../../utils/parseJob'
 import { setFilters } from '../../../reducers/filtersReducer'
 import { setNotification } from '../../../reducers/notificationReducer'
+import { datePickerOptions, PAST_WEEK_DATE_OPTION } from '../../../utils/datePicker.util'
 import { useMode } from '../../../hooks/mode.hook'
 import { usePods } from '../../../hooks/usePods.hook'
 import { useSortTable } from '../../../hooks/useSortTable.hook'
@@ -195,13 +196,7 @@ const MonitorWorkflows = ({
           }
         }
 
-        pollAbortingJobs(
-          params.projectName,
-          abortJobRef,
-          abortingJob,
-          refresh,
-          dispatch
-        )
+        pollAbortingJobs(params.projectName, abortJobRef, abortingJob, refresh, dispatch)
       }
     },
     [dispatch, params.projectName]
@@ -566,8 +561,19 @@ const MonitorWorkflows = ({
           getWorkflows(filters)
           dispatch(setFilters(filters))
         } else {
-          getWorkflows({})
-          dispatch(setFilters({ groupBy: GROUP_BY_WORKFLOW }))
+          const pastDayOption = datePickerOptions.find(
+            option => option.id === PAST_WEEK_DATE_OPTION
+          )
+          const filters = {
+            dates: {
+              state: filtersStore.state,
+              value: pastDayOption.handler(),
+              isPredefined: pastDayOption.isPredefined
+            },
+            groupBy: GROUP_BY_WORKFLOW
+          }
+          getWorkflows(filters)
+          dispatch(setFilters({ ...filters }))
         }
 
         setWorkflowsAreLoaded(true)
