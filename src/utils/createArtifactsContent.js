@@ -187,6 +187,14 @@ export const createModelsRowData = (
       className: 'table-cell-1'
     },
     {
+      id: `metrics.${artifact.ui.identifierUnique}`,
+      headerId: 'metrics',
+      headerLabel: 'Metrics',
+      value: parseKeyValues(artifact.metrics),
+      className: 'table-cell-1',
+      type: 'metrics'
+    },
+    {
       id: `frameWorkAndAlgorithm.${artifact.ui.identifierUnique}`,
       headerId: 'frameWorkAndAlgorithm',
       headerLabel: (
@@ -207,14 +215,6 @@ export const createModelsRowData = (
           ''
         ),
       className: 'table-cell-1'
-    },
-    {
-      id: `metrics.${artifact.ui.identifierUnique}`,
-      headerId: 'metrics',
-      headerLabel: 'Metrics',
-      value: parseKeyValues(artifact.metrics),
-      className: 'table-cell-1',
-      type: 'metrics'
     },
     {
       id: `version.${artifact.ui.identifierUnique}`,
