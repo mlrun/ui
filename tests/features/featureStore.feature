@@ -511,14 +511,14 @@ Feature: Feature Store Page
         Then verify "Description_Input" element visibility on "New_Feature_Set" wizard
         Then verify "Labels_Table" element visibility on "New_Feature_Set" wizard
         When select "PARQUET" option in "Kind_Dropdown" dropdown on "Data_Source_Accordion" on "New_Feature_Set" wizard
-        Then verify "Schedule_Button" element visibility in "Data_Source_Accordion" on "New_Feature_Set" wizard
+        Then verify "Set_Schedule_Button" element visibility in "Data_Source_Accordion" on "New_Feature_Set" wizard
         Then verify "Parquet_Timestamp_Column_Input" element visibility in "Data_Source_Accordion" on "New_Feature_Set" wizard
         Then verify "Parquet_Timestamp_Column_Input" element in "Data_Source_Accordion" on "New_Feature_Set" wizard should display hint "Input_Hint"."Timestamp_Column"
         Then verify "Start_Date_Time_Picker" element visibility in "Data_Source_Accordion" on "New_Feature_Set" wizard
         Then verify "Start_Date_Time_Hint" element in "Data_Source_Accordion" on "New_Feature_Set" wizard should display hint "Input_Hint"."Start_Time_Input"
         Then verify "End_Date_Time_Picker" element visibility in "Data_Source_Accordion" on "New_Feature_Set" wizard
         Then verify "End_Date_Time_Hint" element in "Data_Source_Accordion" on "New_Feature_Set" wizard should display hint "Input_Hint"."End_Time_Input"
-        Then click on "Schedule_Button" element in "Data_Source_Accordion" on "New_Feature_Set" wizard
+        Then click on "Set_Schedule_Button" element in "Data_Source_Accordion" on "New_Feature_Set" wizard
         Then verify if "Feature_Set_Schedule_Popup" popup dialog appears
 
     @MLFS
