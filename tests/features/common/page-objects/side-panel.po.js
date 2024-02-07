@@ -1186,32 +1186,6 @@ module.exports = {
     )
   },
   batchRunEdit: {
-    Hyperparameter_Strategy_Accordion:{
-      Strategy_Dropdown: dropdownComponent(
-        generateDropdownGroup(
-          '.modal__content .modal__body .job-wizard__hyperparameter-strategy .strategy-grid-item',
-          '.form-field-select .form-field__wrapper-normal', 
-          '.options-list__body .select__item-label',
-          '.data-ellipsis'
-        )
-      ),
-      Max_Iterations: inputGroup(
-        generateInputGroup(
-          '.modal__content .modal__body .wizard-form__content .max-iterations-grid-item .form-field__wrapper-normal',
-          true,
-          true,
-          false
-        )
-      ),
-      Max_Errors: inputGroup(
-        generateInputGroup(
-          '.modal__content .modal__body .wizard-form__content .max-errors-grid-item .form-field__wrapper-normal',
-          true,
-          true,
-          false
-        )
-      )
-    },
     Parameters_Accordion:{
       Parameters_From_UI_Radiobutton: radiobuttonComponent(
         {
@@ -1417,41 +1391,6 @@ module.exports = {
         )
       ),
       Resources_Node_Selector_Table: commonTable(resourcesNodeSelectorTable)
-    },
-    Schedule_For_Later: {
-      Schedule_Button: By.css('.schedule-wizard .modal__footer-actions .btn-secondary'),
-      Time_unit_Dropdown: dropdownComponent(
-        generateDropdownGroup(
-          '.simple-schedule-item .form-field-select .form-field__wrapper',
-          '.form-field__control .form-field__select',
-          '.options-list__body .select__item',
-          '.data-ellipsis .data-ellipsis'
-        )
-      ),
-      Intervals_Dropdown: dropdownComponent(
-        generateDropdownGroup(
-          '.simple-schedule-item:nth-of-type(2) .form-field-select .form-field__wrapper',
-          '.form-field__control .form-field__select',
-          '.options-list__body .select__item',
-          '.data-ellipsis .data-ellipsis'
-        )
-      ),
-      At_time_Input: numberInputGroup(
-        generateNumberInputGroup(
-          '.form-col-1 .time-picker-container .time-picker__control',
-          false,
-          true,
-          false
-        )
-      ),
-      Schedule_item_Sunday: By.css('.simple-schedule-item .schedule-repeat-week .schedule-repeat-week_day:nth-of-type(1)'),
-      Schedule_item_Monday: By.css('.simple-schedule-item .schedule-repeat-week .schedule-repeat-week_day:nth-of-type(2)'),
-      Schedule_item_Tuesday: By.css('.simple-schedule-item .schedule-repeat-week .schedule-repeat-week_day:nth-of-type(3)'),
-      Schedule_item_Wednesday: By.css('.simple-schedule-item .schedule-repeat-week .schedule-repeat-week_day:nth-of-type(4)'),
-      Schedule_item_Thursday: By.css('.simple-schedule-item .schedule-repeat-week .schedule-repeat-week_day:nth-of-type(5)'),
-      Schedule_item_Friday: By.css('.simple-schedule-item .schedule-repeat-week .schedule-repeat-week_day:nth-of-type(6)'),
-      Schedule_item_Saturday: By.css('.simple-schedule-item .schedule-repeat-week .schedule-repeat-week_day:nth-of-type(7)'),
-      Error_Message: By.css('.schedule-content .error')
     },
     Advanced_Environment_Variables_Table: commonTable(advancedEnvironmentVariablesTable),
     Advanced_Accordion: {

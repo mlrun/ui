@@ -297,8 +297,8 @@ Feature: Jobs and workflows
         And wait load page
         Then select "Batch re-run" option in action menu on "Jobs_Monitor_Tab" wizard in "Jobs_Monitor_Table" table at row with "seff" value in "name" column
         And wait load page
-        Then "Batch_Re_Run_Header" element on "Batch_Re_Run" should contains "Batch Re-Run" value
-        Then click on "Cross_Close_Button" element on "Batch_Re_Run" wizard
+        Then "Title" element on "Modal_Wizard_Form" should contains "Batch Re-Run" value
+        Then click on "Cross_Close_Button" element on "Modal_Wizard_Form" wizard
         Then value in "name" column with "text" in "Jobs_Monitor_Table" on "Jobs_Monitor_Tab" wizard should contains "seff"
         Then value in "labels" column with "dropdowns" in "Jobs_Monitor_Table" on "Jobs_Monitor_Tab" wizard should contains "kind"
 
@@ -1650,7 +1650,7 @@ Feature: Jobs and workflows
         Then verify "Title" element visibility on "Modal_Wizard_Form" wizard
         And wait load page
         Then "Title" element on "Modal_Wizard_Form" should contains "Batch Re-Run" value
-        Then verify "Cross_Cancel_Button" element visibility on "Modal_Wizard_Form" wizard
+        Then verify "Cross_Close_Button" element visibility on "Modal_Wizard_Form" wizard
         Then verify "Step_1_Button" element on "commonPagesHeader" wizard is enabled
         Then verify "Step_2_Button" element on "commonPagesHeader" wizard is enabled
         Then verify "Step_3_Button" element on "commonPagesHeader" wizard is enabled
@@ -1698,7 +1698,7 @@ Feature: Jobs and workflows
 
     @MLJW
     @passive
-    Scenario: MLJW077 - Check Artifacts preview action on Artifacts tab Item infopane on Workflow List View Tab
+    Scenario: MLJW082 - Check Artifacts preview action on Artifacts tab Item infopane on Workflow List View Tab
         Given open url
         And turn on demo mode
         And wait load page
@@ -1797,7 +1797,7 @@ Feature: Jobs and workflows
         And wait load page
         Then verify "Title" element visibility on "Modal_Wizard_Form" wizard
         Then "Title" element on "Modal_Wizard_Form" should contains "Edit Job" value
-        Then verify "Cross_Cancel_Button" element visibility on "Modal_Wizard_Form" wizard
+        Then verify "Cross_Close_Button" element visibility on "Modal_Wizard_Form" wizard
         Then verify "Step_1_Button" element on "commonPagesHeader" wizard is enabled
         Then verify "Step_2_Button" element on "commonPagesHeader" wizard is enabled
         Then verify "Step_3_Button" element on "commonPagesHeader" wizard is enabled
@@ -1932,7 +1932,7 @@ Feature: Jobs and workflows
     @FAILED_TODO
     #TODO: invokeSchedule implementation
     @links
-    Scenario: Check redirection to Last Run Drill-down from Schedules tab
+    Scenario: MLJW083 - Check redirection to Last Run Drill-down from Schedules tab
         * set tear-down property "project" created with "automation-test" value
         * create "automation-test" MLRun Project with code 201
         * create "test-scheduled" Schedule in "automation-test" project with code 200
@@ -1961,8 +1961,8 @@ Feature: Jobs and workflows
         And select "Results" tab in "Info_Pane_Tab_Selector" on "Workflows_Monitor_Tab_Info_Pane" wizard
         And verify "No_Data_Message" element visibility on "commonPagesHeader" wizard
 
-    @oldJobWizard
-    Scenario: Check redirection to Function details from Schedules tab
+    @MLJW
+    Scenario: MLJW084 - Check redirection to Function details from Schedules tab
         * set tear-down property "function" created in "automation-test" project with "schedule-function" value
         * set tear-down property "schedule" created in "automation-test" project with "schedule-function" value
         * set tear-down property "project" created with "automation-test" value
@@ -1970,6 +1970,8 @@ Feature: Jobs and workflows
         Given open url
         And wait load page
         And click on row root with value "automation-test" in "name" column in "Projects_Table" table on "Projects" wizard
+        And wait load page
+        And turn on demo mode
         And wait load page
         And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
         And click on cell with value "ML functions" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
@@ -1979,17 +1981,23 @@ Feature: Jobs and workflows
         And type value "latest" to "New_Function_Tag_Input" field on "Create_ML_Function_Popup" wizard
         And click on "Continue_Button" element on "Create_ML_Function_Popup" wizard
         Then collapse "General_Accordion" on "New_Function" wizard
-        Then collapse "General_Accordion" on "New_Function" wizard
         Then collapse "Resources_Accordion" on "New_Function" wizard
         Then click on "Save_Button" element on "New_Function" wizard
         And wait load page
-        And select "tab" with "Jobs" value in breadcrumbs menu
-        And click on "New_Job_Button" element on "Jobs_Monitor_Tab" wizard
         And wait load page
-        Then click on row root with value "schedule-function" in "name" column in "Selected_Functions_Templates" table in "Select_Functions_From_Accordion" on "Create_Job" wizard
-        Then click on "Schedule_For_Later_Button" element on "New_JobTemplate_Edit" wizard
-        Then select "Monthly" option in "Schedule_Days_Dropdown" dropdown on "Schedule_For_Later" on "New_JobTemplate_Edit" wizard
-        Then click on "Schedule_Button" element in "Schedule_For_Later" on "New_JobTemplate_Edit" wizard
+        Then click on "Notification_Pop_Up_Cross_Close_Button" element on "Notification_Popup" wizard
+        And wait load page
+        And select "tab" with "Jobs and workflows" value in breadcrumbs menu
+        And wait load page
+        Then verify breadcrumbs "tab" label should be equal "Jobs and workflows" value
+        And click on "Butch_Run_Button" element on "Jobs_Monitor_Tab" wizard
+        And wait load page
+        And click on row root with value "schedule-function" in "name" column in "Functions_Table" table on "Modal_Wizard_Form" wizard
+        Then "Function_Title" element on "Modal_Wizard_Form" should contains "schedule-function" value
+        And wait load page
+        And click on "Schedule_For_Later_Button" element on "Modal_Wizard_Form" wizard
+        Then select "Monthly" option in "Time_unit_Dropdown" dropdown on "Schedule_For_Later" on "Schedule_PopUp" wizard
+        When click on "Schedule_Button" element in "Schedule_For_Later" on "Schedule_PopUp" wizard
         And wait load page
         Then save to context "name" column and "href" attribute on 1 row from "Schedule_Monitor_Table" table on "Schedule_Monitor_Tab" wizard
         Then click on cell with row index 1 in "name" column in "Schedule_Monitor_Table" table on "Schedule_Monitor_Tab" wizard
@@ -2904,6 +2912,8 @@ Feature: Jobs and workflows
         Then value in "name" column with "text" in "Jobs_Monitor_Table" on "Jobs_Monitor_Tab" wizard should contains "test"
 
     @MLJW
+    @FAILED_TODO
+    #TODO: Bug ML-5591 - Blank project screen after setting model target path (because of empty tag in dataset)
     Scenario: MLJW033 - Check autocomplete without tags MLRun Store path for datasets, artifacts, models, feature vectors - Batch Run - Data input
         Given open url
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
@@ -2913,26 +2923,33 @@ Feature: Jobs and workflows
         And wait load page
         And click on "Butch_Run_Button" element on "Jobs_Monitor_Tab" wizard
         And wait load page
-        Then verify "Next_Button" element on "Batch_Run" wizard is disabled
-        And click on row root with value "test" in "name" column in "Functions_Table" table on "Batch_Run" wizard
-        Then "Function_Title" element on "Batch_Run" should contains "test" value
-        Then verify "Next_Button" element on "Batch_Run" wizard is enabled
-        And click on "Next_Button" element on "Batch_Run" wizard
-        And click on "Next_Button" element on "Batch_Run" wizard
-        Then "Batch_Run_Header" element on "Batch_Run" should contains "Batch Run" value
-        Then "Form_Header_Batch_Run" element on "Batch_Run" should contains "Data Inputs" value
-        When add data to "Batch_Run_Data_Inputs_Table" table on "Batch_Run" wizard with combobox
+        Then verify "Next_Button" element on "Modal_Wizard_Form" wizard is disabled
+        Then select "Hub" tab in "Function_Selection_Tabs" on "Modal_Wizard_Form" wizard
+        And wait load page
+        And click on row root with value "auto-trainer" in "name" column in "Functions_Table" table on "Modal_Wizard_Form" wizard
+        Then "Function_Title" element on "Modal_Wizard_Form" should contains "auto-trainer" value
+        Then verify "Next_Button" element on "Modal_Wizard_Form" wizard is enabled
+        And click on "Next_Button" element on "Modal_Wizard_Form" wizard
+        And click on "Next_Button" element on "Modal_Wizard_Form" wizard
+        Then "Title" element on "Modal_Wizard_Form" should contains "Batch Run" value
+        Then "Form_Header_Data_Inputs" element on "commonPagesHeader" should contains "Data Inputs" value
+        When add data to "Data_Inputs_Table" table on "Modal_Wizard_Form" wizard with combobox
             |    name_input   | path_dropdown | path_dropdown_autocomplete_artifacts | path_dropdown_autocomplete_project | path_dropdown_autocomplete_item |
-            |     Artifacts   |  MLRun store  |               Artifacts              |              default               |            content              |
-            |     Datasets    |  MLRun store  |               Datasets               |              default               |       test_new_structure        |
-            |      Models     |  MLRun store  |                Models                |              default               |              model              |
-            | Feature vectors |  MLRun store  |           Feature vectors            |              default               |             test-i              |
-        Then verify data in "Batch_Run_Data_Inputs_Table" table on "Batch_Run" wizard
-            |   name_verify   |                 path_verify                 |      
-            |    Artifacts    |      store://artifacts/default/content      | 
-            |     Datasets    | store://datasets/default/test_new_structure | 
-            |      Models     |         store://models/default/model        |
-            | Feature vectors |    store://feature-vectors/default/test-i   |
+            |     artifacts   |  MLRun store  |               Artifacts              |     default (Current project)      |        download_content         |
+            |     datasets    |  MLRun store  |               Datasets               |     default (Current project)      |       test_new_structure        |
+            |      models     |  MLRun store  |                Models                |     default (Current project)      |          model_default          |
+            | feature vectors |  MLRun store  |           Feature vectors            |     default (Current project)      |             test-i              |
+            |     data_tag    |  MLRun store  |               Datasets               |     default (Current project)      |             test-i              |
+        Then verify data in "Data_Inputs_Table" table on "Modal_Wizard_Form" wizard
+            |   name_verify   |                 path_verify                 |
+            |     dataset     |                                             | 
+            |    sample_set   |                                             | 
+            |     test_set    |                                             |    
+            |    artifacts    | store://artifacts/default/download_content  | 
+            |     datasets    | store://datasets/default/test_new_structure | 
+            |      models     |    store://models/default/model_default     |
+            | feature vectors |   store://feature-vectors/default/test-i    |
+            |     data_tag    |      store://datasets/default/test-i        |
 
     @MLJW
     Scenario: MLJW034 - Check setting schedule for a job - Batch Run - Schedule for later 

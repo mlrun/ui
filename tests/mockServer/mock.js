@@ -22,7 +22,7 @@ import bodyParser from 'body-parser'
 import yaml from 'js-yaml'
 import fs from 'fs'
 import crypto from 'crypto'
-import { cloneDeep, remove } from 'lodash'
+import { cloneDeep, remove, omit } from 'lodash'
 
 import frontendSpec from './data/frontendSpec.json'
 import projects from './data/projects.json'
@@ -503,136 +503,101 @@ function getProjectsSchedule(req, res) {
 
 function invokeSchedule(req, res) {
   const currentDate = new Date()
-
-  let respTemplate = {
-    data: {
-      spec: {
-        parameters: {},
-        outputs: [],
-        output_path: '',
-        function: '',
-        secret_sources: [],
-        data_stores: []
-      },
-      metadata: {
-        uid: '',
-        name: '',
-        labels: { v3io_user: 'admin', owner: 'admin', kind: 'job' },
-        iteration: 0
-      },
-      status: {
-        state: 'running',
-        status_text: 'Job is running in the background, pod: {{run.name}}-mocks',
-        artifacts: [],
-        start_time: '',
-        last_update: ''
-      }
-    }
-  }
   const runUID = makeUID(32)
-  const runProject = req.body.task.metadata.project
-  const runName = req.body.task.metadata.name
-  const runAuthor = req.body.task.metadata.labels.author
+  const { project: runProject, name: runName , labels} = req.body.task.metadata
+  const runAuthor = labels.author
   const outputPath = req.body.task.spec.output_path
     .replace('{{run.project}}', runProject)
     .replace('{{run.uid}}', runUID)
   const jobStart = currentDate.toISOString()
 
-  respTemplate.data.metadata.uid = runUID
-  respTemplate.data.metadata.project = runProject
-  respTemplate.data.metadata.labels.author = runAuthor
-  respTemplate.data.metadata.name = runName
-  respTemplate.data.status.start_time = jobStart
-  respTemplate.data.status.last_update = jobStart
-  respTemplate.data.status.status_text = respTemplate.data.status.status_text.replace(
-    '{{run.name}}',
-    runName
-  )
-  respTemplate.data.spec.output_path = outputPath
-  respTemplate.data.spec.parameters = req.body.task.spec.parameters
-
-  if (req.body.schedule) {
-    if (
-      schedules.schedules.find(
-        schedule =>
-          schedule.name === runName &&
-          schedule.scheduled_object.task.metadata.project === runProject
-      )
-    ) {
-      res.statusCode = 409
-      return res.send({
-        detail: {
-          reason: `MLRunConflictError('Conflict - Schedule already exists: ${runProject}/${runName}')`
-        }
-      })
+  let respTemplate = {
+    data: {
+      spec: {
+        parameters: req.body.task.spec.parameters,
+        outputs: [],
+        output_path: outputPath,
+        function: '',
+        secret_sources: [],
+        data_stores: []
+      },
+      metadata: {
+        project: runProject,
+        uid: runUID,
+        name: runName,
+        labels: { v3io_user: 'admin', owner: 'admin', kind: 'job', author: runAuthor },
+        iteration: 0
+      },
+      status: {
+        state: 'running',
+        status_text: `Job is running in the background, pod: ${runName}-mocks`,
+        artifacts: [],
+        start_time: jobStart,
+        last_update: jobStart
+      }
     }
-    let schedule = { ...scheduleTemplate }
-    schedule.name = runName
-    schedule.project = runProject
-    schedule.scheduled_object.task.metadata.name = runName
-    schedule.scheduled_object.task.metadata.project = runProject
-    schedule.scheduled_object.task.metadata.labels.author = runAuthor
-    schedule.scheduled_object.task.spec.function = req.body.task.spec.function
-    schedule.creation_time = currentDate.toISOString()
-
-    schedules.schedules.push(schedule)
-  } 
-  else {
-    let job = { ...jobTemplate }
-    job.metadata = { ...respTemplate.data.metadata }
-    job.metadata.anotations = {}
-    job.spec = { ...respTemplate.data.spec }
-    delete job.spec.secret_sources
-    job.spec.hyper_param_options = {}
-    job.spec.hyperparams = {}
-    job.spec.inputs = {}
-    job.spec.log_level = 'info'
-    job.status = { ...respTemplate.data.status }
-    delete job.status.status_text
-    job.status.results = {}
-
-    let funcObject
-    if (req.body.task.spec.function.includes('@') && req.body.task.spec.function.includes('/')) {
-      const filterPRJ = req.body.task.spec.function.split('/')[0]
-      const filterFunc = req.body.task.spec.function.split('/')[1].split('@')[0]
-      const filterFuncHash = req.body.task.spec.function.split('/')[1].split('@')[1]
-      funcObject = funcs.funcs
-        .filter(item => item.metadata.hash === filterFuncHash)
-        .filter(item => item.metadata.project === filterPRJ)
-        .filter(item => item.metadata.name === filterFunc)[0]
-    } else {
-      const funcYAMLPath = `./tests/mockServer/data/mlrun/functions/${req.body.task.spec.function.slice(
-        6
-      )}/${req.body.task.spec.function.slice(6)}.yaml`
-      funcObject = yaml.load(fs.readFileSync(funcYAMLPath, 'utf8'))
-    }
-    const funcUID = makeUID(32)
-    // funcObject.kind = respTemplate.data.metadata.labels.kind
-    funcObject.metadata.hash = funcUID
-    funcObject.metadata.project = runProject
-    funcObject.metadata.tag = 'latest'
-    funcObject.metadata.updated = currentDate.toISOString()
-    funcObject.spec.disable_auto_mount = false
-    funcObject.spec.priority_class_name = req.body.function.spec.priority_class_name
-    funcObject.spec.preemption_mode = req.body.function.spec.preemption_mode
-    funcObject.spec.volume_mounts = req.body.function.spec.volume_mounts
-    funcObject.spec.volumes = req.body.function.spec.volumes
-    funcObject.status = {}
-
-    const functionSpec = `${runProject}/${req.body.task.spec.handler}@${funcUID}`
-    respTemplate.data.spec.function = functionSpec
-    job.spec.function = functionSpec
-
-    const jobLogs = {
-      uid: runUID,
-      log: `> ${currentDate.toISOString()} Mock autogenerated log data`
-    }
-
-    runs.runs.push(job)
-    funcs.funcs.push(funcObject)
-    logs.push(jobLogs)
+  }
+  
+  let job = { 
+    kind: 'run', 
+    metadata: { ...respTemplate.data.metadata,  anotations: {} }, 
+    spec: { ...omit(respTemplate.data.spec, 'secret_sources'), hyper_param_options: {}, hyperparams: {}, inputs: {}, log_level: 'info' }, 
+    status: { ...omit(respTemplate.data.status, 'status_text'), results: {} }
   }
 
+  let funcObject = {}
+  if (req.body.task.spec.function.includes('@') && req.body.task.spec.function.includes('/')) {
+    const splitedFunctionURI = req.body.task.spec.function.split('/')
+    const functionProject = splitedFunctionURI[0]
+    const [functionName, functionHash] = splitedFunctionURI[1].split('@')
+    funcObject = funcs.funcs
+      .find(item => item.metadata.hash === functionHash && item.metadata.project === functionProject && item.metadata.name === functionName)
+  } else {
+  const funcYAMLPath = `./tests/mockServer/data/mlrun/functions/${req.body.task.spec.function.slice(
+      6
+    )}/${req.body.task.spec.function.slice(6)}.yaml`
+    funcObject = yaml.load(fs.readFileSync(funcYAMLPath, 'utf8'))
+  }
+  const funcUID = makeUID(32)
+  funcObject = {
+    ...funcObject, 
+    metadata: {...funcObject.metadata, project: runProject, tag: 'latest', updated: currentDate.toISOString() },
+    spec: { 
+      ...funcObject.spec, 
+      disable_auto_mount: false, 
+      priority_class_name: req.body.function.spec.priority_class_name, 
+      inputs: {}, 
+      log_level: 'info',
+      preemption_mode: req.body.function.spec.preemption_mode,
+      volume_mounts: req.body.function.spec.volume_mounts,
+      volumes: req.body.function.spec.volumes
+    }, 
+    status: {}
+  }
+
+  const functionSpec = `${runProject}/${req.body.task.spec.handler}@${funcUID}`
+  respTemplate.data.spec.function = functionSpec
+  job.spec.function = functionSpec
+
+  const jobLogs = {
+    uid: runUID,
+    log: `> ${currentDate.toISOString()} Mock autogenerated log data`
+  }
+
+  runs.runs.push(job)
+  funcs.funcs.push(funcObject)
+  logs.push(jobLogs)
+  
+  let scheduleObject = schedules.schedules
+    .find(schedule => schedule.scheduled_object.task.spec.function === req.body.task.spec.function)
+  scheduleObject.last_run = { ...respTemplate.data }
+  
+  setTimeout(() => {
+    job.status.state = 'completed'
+    scheduleObject.last_run.status.state = 'completed'
+    delete job.status.error  
+  }, 5000)   
+  
   res.send(respTemplate)
 }
 
@@ -773,7 +738,7 @@ function getArtifacts(req, res) {
   const categories = {
     dataset: ['dataset'],
     model: ['model'],
-    other: ['', 'table', 'link', 'plot', 'chart', 'plotly']
+    other: ['', 'table', 'link', 'plot', 'chart', 'plotly', 'artifact']
   }
   let collectedArtifacts = artifacts.artifacts.filter(
     artifact => (artifact.metadata?.project === req.params.project) 
@@ -1391,7 +1356,7 @@ function postArtifact(req, res) {
   const artifactTemplateLatest = cloneDeep(artifactTemplate)
   
   if (req.body.kind === 'model') {
-    artifactTemplate.model_file = req.body.spec.model_file
+    artifactTemplate.spec.model_file = req.body.spec.model_file
   }
 
   if (artifactTag === 'latest') {
