@@ -422,11 +422,12 @@ module.exports = {
   },
   Jobs_And_Workflows: {
     Tab_List: ['Monitor Jobs', 'Monitor Workflows', 'Schedule'],
-    Job_Action_Menu_Options: ['View YAML', 'Batch re-run', 'Monitoring', 'Delete'],
+    Job_Action_Menu_Options: ['Batch re-run', 'Monitoring', 'View YAML', 'Delete'],
     Job_Overview_Action_Menu_Options: ['View YAML', 'Batch re-run', 'Delete'],
-    Running_Job_Action_Menu_Options: ['View YAML', 'Delete', 'Monitoring', 'Abort'],
+    Running_Job_Action_Menu_Options: ['Monitoring', 'Abort', 'View YAML'],
     Workflows_Action_Menu_Options: ['View YAML'],
-    Pending_Job_Action_Menu_Options: ['View YAML', 'Batch re-run', 'Monitoring', 'Abort', 'Delete'],
+    Workflows_Info_Pane_Action_Menu_Options: ['Batch re-run', 'Monitoring', 'View YAML', 'Delete'],
+    Pending_Job_Action_Menu_Options: ['Batch re-run', 'Monitoring', 'Abort', 'View YAML'],
     Schedule_Action_Menu_Options: ['View YAML', 'Run now', 'Edit', 'Delete']
   },
   Jobs_Monitor_Tab_Info_Pane: {

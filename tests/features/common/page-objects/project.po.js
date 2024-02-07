@@ -70,7 +70,7 @@ const projectDashboardRealtimeFunctionsTable = {
 }
 
 const projectJobsAndWorkflows = {
-  root: '.project-data-card:nth-of-type(1) .project-data-card__table',
+  root: '.main-info__statistics-section:nth-of-type(4) .project-data-card:nth-of-type(1)',
   header: {
     root: '.project-data-card__table-header',
     sorters: {
@@ -345,7 +345,7 @@ const commonAccessKeyInput = inputGroup(
 module.exports = {
   project: {
     Create_New: createNewObject,
-    Refresh_Button: By.css('.main-info__toolbar .refresh button[id=refresh]'),
+    Refresh_Button: By.css('.main-info__toolbar [data-testid="refresh"]'),
     Dashboard_Realtime_Functions_Table: commonTable(
       projectDashboardRealtimeFunctionsTable
     ),
