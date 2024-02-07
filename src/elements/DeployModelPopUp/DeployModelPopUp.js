@@ -27,12 +27,11 @@ import arrayMutators from 'final-form-arrays'
 import { OnChange } from 'react-final-form-listeners'
 import { useLocation } from 'react-router-dom'
 
-import Loader from '../../common/Loader/Loader'
 import { Button, FormInput, FormKeyValueTable, FormSelect, Modal } from 'igz-controls/components'
 
-import { FUNCTION_TYPE_SERVING, MODELS_TAB } from '../../constants'
+import { MODELS_TAB } from '../../constants'
 import { MODAL_SM, SECONDARY_BUTTON, TERTIARY_BUTTON } from 'igz-controls/constants'
-import { buildFunction, fetchArtifactsFunctions } from '../../reducers/artifactsReducer'
+import { buildFunction } from '../../reducers/artifactsReducer'
 import { generateUri } from '../../utils/resources'
 import { getValidationRules } from 'igz-controls/utils/validation.util'
 import { setFieldState } from 'igz-controls/utils/form.util'
@@ -44,18 +43,15 @@ import { ReactComponent as QuestionMarkIcon } from 'igz-controls/images/question
 
 import './deployModelPopUp.scss'
 
-const DeployModelPopUp = ({ isOpen, model, onResolve }) => {
-  const [functionList, setFunctionList] = useState([])
-  const [functionOptionList, setFunctionOptionList] = useState([])
+const DeployModelPopUp = ({ functionList, functionOptionList, isOpen, model, onResolve }) => {
   const [tagOptionList, setTagOptionList] = useState([])
   const [initialValues, setInitialValues] = useState({
     modelName: '',
     className: '',
     selectedTag: '',
-    selectedFunctionName: '',
+    selectedFunctionName: functionOptionList?.[0].id ?? '',
     arguments: []
   })
-  const [showLoader, setShowLoader] = useState(false)
   const dispatch = useDispatch()
 
   const formRef = React.useRef(
@@ -76,29 +72,6 @@ const DeployModelPopUp = ({ isOpen, model, onResolve }) => {
       }))
       .value()
   }, [])
-
-  useEffect(() => {
-    if (functionOptionList.length === 0) {
-      setShowLoader(true)
-      dispatch(fetchArtifactsFunctions({ project: model.project, filters: {} }))
-        .unwrap()
-        .then(functions => {
-          const functionOptions = chain(functions)
-            .filter(func => func.type === FUNCTION_TYPE_SERVING && func.graph?.kind === 'router')
-            .uniqBy('name')
-            .map(func => ({ label: func.name, id: func.name }))
-            .value()
-
-          if (functionOptions.length !== 0) {
-            setFunctionList(functions)
-            setFunctionOptionList(functionOptions)
-            setInitialValues(prev => ({ ...prev, selectedFunctionName: functionOptions[0].id }))
-          }
-
-          setShowLoader(false)
-        })
-    }
-  }, [dispatch, functionOptionList.length, initialValues.selectedFunctionName, model.project])
 
   useEffect(() => {
     setInitialValues(prev => ({ ...prev, modelName: model?.db_key }))
@@ -134,8 +107,6 @@ const DeployModelPopUp = ({ isOpen, model, onResolve }) => {
 
   useEffect(() => {
     return () => {
-      setFunctionList([])
-      setFunctionOptionList([])
       setTagOptionList([])
     }
   }, [])
@@ -147,13 +118,18 @@ const DeployModelPopUp = ({ isOpen, model, onResolve }) => {
     const classArguments = mapValues(keyBy(values.arguments, 'key'), 'value')
     const servingFunctionCopy = cloneDeep(servingFunction.ui.originalContent)
 
-    servingFunctionCopy.spec.graph.routes[values.modelName] = {
-      class_args: {
-        model_path: generateUri(model, MODELS_TAB),
-        ...classArguments
-      },
-      class_name: values.className,
-      kind: 'task'
+    servingFunctionCopy.spec.graph = {
+      ...servingFunctionCopy.spec.graph,
+      routes: {
+        [values.modelName]: {
+          class_args: {
+            model_path: generateUri(model, MODELS_TAB),
+            ...classArguments
+          },
+          class_name: values.className,
+          kind: 'task'
+        }
+      }
     }
 
     return dispatch(buildFunction({ funcData: { function: servingFunctionCopy } }))
@@ -206,7 +182,6 @@ const DeployModelPopUp = ({ isOpen, model, onResolve }) => {
 
   return (
     <>
-      {showLoader && <Loader />}
       <Form
         form={formRef.current}
         initialValues={initialValues}
@@ -225,7 +200,7 @@ const DeployModelPopUp = ({ isOpen, model, onResolve }) => {
               title="Deploy model"
             >
               <div className="form">
-                {functionOptionList.length === 0 && !showLoader && (
+                {functionOptionList.length === 0 && (
                   <div className="form-row">
                     <div className="form-text info-container">
                       <QuestionMarkIcon />
