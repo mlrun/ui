@@ -17,11 +17,13 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import { capitalize, chain, defaultsDeep, isEmpty } from 'lodash'
+import { capitalize, chain, defaultsDeep, get, isEmpty } from 'lodash'
+
+import tasksApi from '../../api/tasks-api'
+
 import {
   JOB_KIND_DASK,
   JOB_KIND_DATABRICKS,
-  FUNCTION_TYPE_JOB,
   JOB_KIND_MPIJOB,
   JOB_KIND_JOB,
   JOBS_PAGE,
@@ -33,10 +35,11 @@ import {
   JOB_KIND_SPARK
 } from '../../constants'
 import jobsActions from '../../actions/jobs'
-import { generateKeyValues } from '../../utils'
+import { generateKeyValues, truncateUid } from '../../utils'
+import { BG_TASK_FAILED, BG_TASK_SUCCEEDED, pollTask } from '../../utils/poll.util'
 import { setNotification } from '../../reducers/notificationReducer'
 import { generateFunctionPriorityLabel } from '../../utils/generateFunctionPriorityLabel'
-import { parseKeyValues } from '../../utils/object'
+import { parseKeyValues } from '../../utils'
 import { showErrorNotification } from '../../utils/notifications.util'
 
 export const page = JOBS_PAGE
@@ -110,10 +113,14 @@ export const tabs = [
   { id: SCHEDULE_TAB, label: 'Schedule' }
 ]
 
-export const isJobAbortable = (job, abortableFunctionKinds) =>
+export const isJobKindAbortable = (job, abortableFunctionKinds) =>
   (abortableFunctionKinds ?? [])
     .map(kind => `kind: ${kind}`)
     .some(kindLabel => job?.labels?.includes(kindLabel))
+
+export const isJobAborting = (currentJob = {}) => {
+  return currentJob?.state?.value === 'aborting'
+}
 
 export const isJobKindDask = (jobLabels = []) => {
   return jobLabels?.includes(`kind: ${JOB_KIND_DASK}`)
@@ -238,22 +245,57 @@ export const handleAbortJob = (
   abortJob,
   projectName,
   job,
-  filtersStore,
   setNotification,
   refreshJobs,
   setConfirmData,
-  dispatch
+  dispatch,
+  abortJobRef,
+  setJobStatusAborting,
+  abortingJobs = {},
+  setAbortingJobs
 ) => {
+  dispatch(
+    setNotification({
+      status: 200,
+      id: Math.random(),
+      message: 'Job abortion in progress'
+    })
+  )
+
   abortJob(projectName, job)
-    .then(() => {
-      refreshJobs(filtersStore)
-      dispatch(
-        setNotification({
-          status: 200,
-          id: Math.random(),
-          message: 'Job is successfully aborted'
+    .then(response => {
+      const abortTaskId = get(response, 'metadata.name', '')
+
+      setJobStatusAborting?.(abortTaskId)
+
+      if (setAbortingJobs) {
+        setAbortingJobs(state => {
+          const newAbortingJobs = {
+            ...state,
+            [abortTaskId]: {
+              uid: job.uid,
+              name: job.name
+            }
+          }
+
+          pollAbortingJobs(projectName, abortJobRef, newAbortingJobs, refreshJobs, dispatch)
+
+          return newAbortingJobs
         })
-      )
+      } else {
+        pollAbortingJobs(
+          projectName,
+          abortJobRef,
+          {
+            [abortTaskId]: {
+              uid: job.uid,
+              name: job.name
+            }
+          },
+          refreshJobs,
+          dispatch
+        )
+      }
     })
     .catch(error => {
       showErrorNotification(dispatch, error, 'Aborting job failed', '', () =>
@@ -261,14 +303,18 @@ export const handleAbortJob = (
           abortJob,
           projectName,
           job,
-          filtersStore,
           setNotification,
           refreshJobs,
           setConfirmData,
-          dispatch
+          dispatch,
+          abortJobRef,
+          setAbortingJobs,
+          abortingJobs,
+          setJobStatusAborting
         )
       )
     })
+
   setConfirmData(null)
 }
 
@@ -354,4 +400,51 @@ export const enrichRunWithFunctionFields = (
     })
 }
 
-export const functionRunKinds = [FUNCTION_TYPE_JOB]
+export const pollAbortingJobs = (project, terminatePollRef, abortingJobs, refresh, dispatch) => {
+  const taskIds = Object.keys(abortingJobs)
+
+  const pollMethod = () => {
+    if (taskIds.length === 1) {
+      return tasksApi.getProjectBackgroundTask(project, taskIds[0])
+    }
+
+    return tasksApi.getProjectBackgroundTasks(project)
+  }
+  const isDone = result => {
+    const tasks = taskIds.length === 1 ? [result.data] : get(result, 'data.background_tasks', [])
+    const finishedTasks = tasks.filter(
+      task =>
+        abortingJobs?.[task.metadata.name] &&
+        [BG_TASK_SUCCEEDED, BG_TASK_FAILED].includes(task.status?.state)
+    )
+
+    if (finishedTasks.length > 0) {
+      finishedTasks.forEach(task => {
+        if (task.status.state === BG_TASK_SUCCEEDED) {
+          abortJobSuccessHandler(dispatch, abortingJobs[task.metadata.name])
+        } else {
+          showErrorNotification(dispatch, {}, task.status.error || 'Aborting job failed')
+        }
+      })
+
+      refresh()
+    }
+
+    return finishedTasks.length > 0
+  }
+
+  terminatePollRef?.current?.()
+  terminatePollRef.current = null
+
+  pollTask(pollMethod, isDone, { terminatePollRef })
+}
+
+const abortJobSuccessHandler = (dispatch, job) => {
+  dispatch(
+    setNotification({
+      status: 200,
+      id: Math.random(),
+      message: `Job ${job.name} (${truncateUid(job.uid)}) is successfully aborted`
+    })
+  )
+}

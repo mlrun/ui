@@ -17,18 +17,26 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
+import { get, isNil, uniqBy } from 'lodash'
+
 import {
+  ARTIFACT_OTHER_TYPE,
   AZURE_STORAGE_INPUT_PATH_SCHEME,
+  DATASET_TYPE,
   DBFS_STORAGE_INPUT_PATH_SCHEME,
   GOOGLE_STORAGE_INPUT_PATH_SCHEME,
   HTTP_STORAGE_INPUT_PATH_SCHEME,
   HTTPS_STORAGE_INPUT_PATH_SCHEME,
   MLRUN_STORAGE_INPUT_PATH_SCHEME,
+  MODEL_TYPE,
   S3_INPUT_PATH_SCHEME,
   V3IO_INPUT_PATH_SCHEME
 } from '../../constants'
-import { get, isNil, uniqBy } from 'lodash'
-import { getArtifactReference, getParsedResource } from '../../utils/resources'
+import { getArtifactReference, getFeatureReference, getParsedResource } from '../../utils/resources'
+import projectAction from '../../actions/projects'
+import { showErrorNotification } from '../../utils/notifications.util'
+import { fetchArtifact, fetchArtifacts } from '../../reducers/artifactsReducer'
+import featureStoreActions from '../../actions/featureStore'
 
 const targetPathRegex =
   /^(store|v3io|s3|az|gs):(\/\/\/|\/\/)(?!.*:\/\/)([\w\-._~:?#[\]@!$&'()*+,;=]+)\/([\w\-._~:/?#[\]%@!$&'()*+,;=]+)$/i
@@ -304,11 +312,109 @@ export const generateArtifactsReferencesList = artifacts => {
       const [nextRefIter, nextRefTree] = nextRef.id.split('@')
 
       if (prevRefTree === nextRefTree) {
-        return prevRefIter.localeCompare(nextRefIter)
+        return prevRefIter && prevRefIter.localeCompare(nextRefIter)
       } else {
-        return prevRefTree.localeCompare(nextRefTree)
+        return prevRefTree && prevRefTree.localeCompare(nextRefTree)
       }
     })
 
   return uniqBy(generatedArtifacts, 'id')
+}
+
+export const getProjectsNames = (dispatch, setDataInputState, projectName) => {
+  dispatch(projectAction.fetchProjectsNames()).then(result => {
+    setDataInputState(prev => ({
+      ...prev,
+      projects: generateProjectsList(result ?? [], projectName)
+    }))
+  })
+}
+
+export const getArtifacts = (dispatch, project, storePathType, setDataInputState) => {
+  dispatch(
+    fetchArtifacts({
+      project,
+      filters: null,
+      config: {
+        params: {
+          category:
+            storePathType === 'artifacts'
+              ? ARTIFACT_OTHER_TYPE
+              : storePathType === 'datasets'
+              ? DATASET_TYPE
+              : MODEL_TYPE
+        }
+      }
+    })
+  )
+    .unwrap()
+    .then(artifacts => {
+      setDataInputState(prev => ({
+        ...prev,
+        artifacts: generateArtifactsList(artifacts ?? [])
+      }))
+    })
+    .catch(error => {
+      showErrorNotification(dispatch, error, '', 'Failed to fetch artifacts')
+    })
+}
+
+export const getFeatureVectors = (dispatch, project, setDataInputState) => {
+  dispatch(featureStoreActions.fetchFeatureVectors(project, {}, {})).then(featureVectors => {
+    const featureVectorsList = uniqBy(featureVectors, 'metadata.name')
+      .map(featureVector => ({
+        label: featureVector.metadata.name,
+        id: featureVector.metadata.name
+      }))
+      .sort((prevFeatureVector, nextFeatureVector) =>
+        prevFeatureVector.id.localeCompare(nextFeatureVector.id)
+      )
+
+    setDataInputState(prev => ({
+      ...prev,
+      featureVectors: featureVectorsList
+    }))
+  })
+}
+
+export const getArtifact = (dispatch, project, projectItem, setDataInputState) => {
+  dispatch(fetchArtifact({ project, artifact: projectItem }))
+    .unwrap()
+    .then(artifacts => {
+      if (artifacts.length > 0 && artifacts[0].data) {
+        setDataInputState(prev => ({
+          ...prev,
+          artifactsReferences: generateArtifactsReferencesList(artifacts[0].data ?? {})
+        }))
+      }
+    })
+    .catch(error => {
+      showErrorNotification(dispatch, error, '', 'Failed to fetch artifact data')
+    })
+}
+
+export const getFeatureVector = (dispatch, project, projectItem, setDataInputState) => {
+  dispatch(featureStoreActions.fetchFeatureVector(project, projectItem))
+    .then(featureVectors => {
+      const featureVectorsReferencesList = featureVectors
+        .map(featureVector => {
+          let featureVectorReference = getFeatureReference(featureVector.metadata ?? {})
+
+          return {
+            label: featureVectorReference,
+            id: featureVectorReference,
+            customDelimiter: featureVectorReference[0]
+          }
+        })
+        .filter(featureVector => featureVector.label !== '')
+        .sort((prevRef, nextRef) => prevRef.id.localeCompare(nextRef.id))
+
+      setDataInputState(prev => ({
+        ...prev,
+        featureVectorsReferences: featureVectorsReferencesList
+      }))
+    })
+    .catch(error => {
+      showErrorNotification(dispatch, error, '', 'Failed to fetch feature vector data')
+    })
 }

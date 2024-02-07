@@ -20,13 +20,13 @@ such restriction.
 import React, { useCallback, useEffect, useState, useMemo, useRef } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useLocation, useNavigate, useParams } from 'react-router-dom'
-import { isNil } from 'lodash'
 
 import AddArtifactTagPopUp from '../../elements/AddArtifactTagPopUp/AddArtifactTagPopUp'
 import FilesView from './FilesView'
 import RegisterArtifactModal from '../RegisterArtifactModal/RegisterArtifactModal'
 
 import {
+  ARTIFACT_OTHER_TYPE,
   ARTIFACT_TYPE,
   FILES_FILTERS,
   FILES_PAGE,
@@ -34,6 +34,7 @@ import {
   GROUP_BY_NAME,
   GROUP_BY_NONE,
   REQUEST_CANCELED,
+  SHOW_ITERATIONS,
   TAG_FILTER_ALL_ITEMS
 } from '../../constants'
 import {
@@ -46,12 +47,17 @@ import {
   registerArtifactTitle
 } from './files.util'
 import { createFilesRowData } from '../../utils/createArtifactsContent'
-import { fetchFile, fetchFiles, removeFile, removeFiles } from '../../reducers/artifactsReducer'
+import {
+  fetchArtifactTags,
+  fetchFile,
+  fetchFiles,
+  removeFile,
+  removeFiles
+} from '../../reducers/artifactsReducer'
 import { getArtifactIdentifier } from '../../utils/getUniqueIdentifier'
 import { isDetailsTabExists } from '../../utils/isDetailsTabExists'
 import { openPopUp } from 'igz-controls/utils/common.util'
-import { setArtifactTags } from '../../utils/artifacts.util'
-import { setFilters } from '../../reducers/filtersReducer'
+import { getFilterTagOptions, setFilters } from '../../reducers/filtersReducer'
 import { setNotification } from '../../reducers/notificationReducer'
 import { useGetTagOptions } from '../../hooks/useGetTagOptions.hook'
 import { useGroupContent } from '../../hooks/groupContent.hook'
@@ -61,12 +67,16 @@ import { useSortTable } from '../../hooks/useSortTable.hook'
 
 const Files = () => {
   const [files, setFiles] = useState([])
-  const [allFiles, setAllFiles] = useState([])
   const [selectedFile, setSelectedFile] = useState({})
   const [selectedRowData, setSelectedRowData] = useState({})
   const [largeRequestErrorMessage, setLargeRequestErrorMessage] = useState('')
   const [convertedYaml, toggleConvertedYaml] = useYaml('')
-  const [urlTagOption] = useGetTagOptions(null, filters, null, FILES_FILTERS)
+  const [urlTagOption] = useGetTagOptions(
+    fetchArtifactTags,
+    filters,
+    ARTIFACT_OTHER_TYPE,
+    FILES_FILTERS
+  )
   const artifactsStore = useSelector(store => store.artifactsStore)
   const filtersStore = useSelector(store => store.filtersStore)
   const params = useParams()
@@ -107,12 +117,12 @@ const Files = () => {
         })
       )
         .unwrap()
-        .then(filesResponse => {
-          if (filesResponse) {
-            setArtifactTags(filesResponse, setFiles, setAllFiles, filters, dispatch, FILES_PAGE)
-
-            return filesResponse
+        .then(result => {
+          if (result) {
+            setFiles(result)
           }
+
+          return result
         })
     },
     [dispatch, params.projectName]
@@ -120,13 +130,20 @@ const Files = () => {
 
   const handleRefresh = useCallback(
     filters => {
+      dispatch(
+        getFilterTagOptions({
+          dispatch,
+          fetchTags: fetchArtifactTags,
+          project: params.projectName,
+          category: ARTIFACT_OTHER_TYPE
+        })
+      )
       setSelectedRowData({})
       setFiles([])
-      setAllFiles([])
 
       return fetchData(filters)
     },
-    [fetchData]
+    [dispatch, fetchData, params.projectName]
   )
 
   const handleAddTag = useCallback(
@@ -224,7 +241,11 @@ const Files = () => {
     useSortTable({
       headers: tableHeaders,
       content: tableContent,
-      sortConfig: { excludeSortBy: ['labels', 'size'], defaultSortBy: 'updated', defaultDirection: 'desc' }
+      sortConfig: {
+        excludeSortBy: ['labels', 'size'],
+        defaultSortBy: 'updated',
+        defaultDirection: 'desc'
+      }
     })
 
   const applyDetailsChanges = useCallback(
@@ -244,7 +265,6 @@ const Files = () => {
     if ('tag' in changes.data) {
       setSelectedRowData({})
       setFiles([])
-      setAllFiles([])
 
       if (changes.data.tag.currentFieldValue) {
         navigate(
@@ -264,20 +284,21 @@ const Files = () => {
   }, [navigate, location, pageData.details.menu, params.name, params.tag, params.tab])
 
   useEffect(() => {
-    if (isNil(filtersStore.tagOptions) && urlTagOption) {
-      fetchData({ ...filesFilters, tag: urlTagOption })
+    if (urlTagOption) {
+      fetchData({ tag: urlTagOption, iter: SHOW_ITERATIONS })
     }
-  }, [fetchData, filesFilters, filtersStore, urlTagOption])
+  }, [fetchData, urlTagOption])
 
   useEffect(() => {
     return () => {
       setFiles([])
-      setAllFiles([])
       dispatch(removeFiles())
       setSelectedFile({})
       abortControllerRef.current.abort(REQUEST_CANCELED)
     }
   }, [params.projectName, dispatch])
+
+  useEffect(() => setFiles([]), [filtersStore.tag])
 
   useEffect(() => {
     dispatch(setFilters({ groupBy: GROUP_BY_NONE }))
@@ -287,7 +308,7 @@ const Files = () => {
     checkForSelectedFile(
       params.name,
       selectedRowData,
-      allFiles,
+      files,
       params.tag,
       params.iter,
       params.uid,
@@ -296,7 +317,7 @@ const Files = () => {
       setSelectedFile
     )
   }, [
-    allFiles,
+    files,
     navigate,
     params.iter,
     params.name,

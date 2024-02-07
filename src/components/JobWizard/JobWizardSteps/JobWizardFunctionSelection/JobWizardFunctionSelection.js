@@ -35,6 +35,7 @@ import functionsActions from '../../../../actions/functions'
 import projectsAction from '../../../../actions/projects'
 import {
   FILTER_MENU_MODAL,
+  FUNCTION_RUN_KINDS,
   FUNCTION_SELECTION_STEP,
   HUB_CATEGORIES_FILTER,
   JOB_WIZARD_FILTERS,
@@ -42,7 +43,6 @@ import {
 } from '../../../../constants'
 import { generateJobWizardData, getCategoryName } from '../../JobWizard.util'
 import { generateProjectsList } from '../../../../utils/projects'
-import { functionRunKinds } from '../../../Jobs/jobs.util'
 import { openConfirmPopUp } from 'igz-controls/utils/common.util'
 import { scrollToSelectedElements } from '../../../../utils/scrollHandler.util'
 import {
@@ -242,7 +242,7 @@ const JobWizardFunctionSelection = ({
     dispatch(functionsActions.fetchFunctions(currentValue, {})).then(functions => {
       if (functions) {
         const validFunctions = functions.filter(func => {
-          return includes(functionRunKinds, func.kind)
+          return includes(FUNCTION_RUN_KINDS, func.kind)
         })
 
         const groupedFunctions = Object.values(

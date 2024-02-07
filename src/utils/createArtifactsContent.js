@@ -18,8 +18,7 @@ under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
 import React from 'react'
-import { isEmpty, isNil, isNumber } from 'lodash'
-import classnames from 'classnames'
+import { isNumber } from 'lodash'
 
 import {
   ARTIFACTS_PAGE,
@@ -31,11 +30,12 @@ import {
 } from '../constants'
 import { parseKeyValues } from './object'
 import { formatDatetime } from './datetime'
-import { convertBytes } from './convertBytes'
+import prettyBytes from 'pretty-bytes'
 import { parseUri } from './parseUri'
 import { generateFunctionDetailsLink } from './generateFunctionDetailsLink'
 import { generateLinkToDetailsPanel } from './generateLinkToDetailsPanel'
 import { validateArguments } from './validateArguments'
+// import { roundFloats } from './roundFloats'
 import TableProducerCell from '../elements/TableProducerCell/TableProducerCell'
 
 import { ReactComponent as SeverityOk } from 'igz-controls/images/severity-ok.svg'
@@ -120,7 +120,8 @@ export const createModelsRowData = (
   showExpandButton
 ) => {
   const iter = getIter(artifact)
-  const currentMetricsCount = Object.keys(artifact?.metrics ?? {}).length ?? 0
+  //temporarily commented till ML-5606 will be done
+  // const currentMetricsCount = Object.keys(artifact?.metrics ?? {}).length ?? 0
   const content = [
     {
       id: `key.${artifact.ui.identifierUnique}`,
@@ -187,6 +188,14 @@ export const createModelsRowData = (
       className: 'table-cell-1'
     },
     {
+      id: `metrics.${artifact.ui.identifierUnique}`,
+      headerId: 'metrics',
+      headerLabel: 'Metrics',
+      value: parseKeyValues(artifact.metrics),
+      className: 'table-cell-1',
+      type: 'metrics'
+    },
+    {
       id: `frameWorkAndAlgorithm.${artifact.ui.identifierUnique}`,
       headerId: 'frameWorkAndAlgorithm',
       headerLabel: (
@@ -217,35 +226,36 @@ export const createModelsRowData = (
     }
   ]
 
-  if (!isNil(artifact.metrics) && !isEmpty(artifact.metrics)) {
-    Object.entries(artifact.metrics).forEach(([key, value], index) => {
-      const bodyCellClassName = classnames(
-        'metrics-cell',
-        index === 0 && 'metrics-cell_with-border'
-      )
+  //temporarily commented till ML-5606 will be done
+  // if (!isNil(artifact.metrics) && !isEmpty(artifact.metrics)) {
+  //   Object.entries(artifact.metrics).forEach(([key, value], index) => {
+  //     const bodyCellClassName = classnames(
+  //       'metrics-cell',
+  //       index === 0 && 'metrics-cell_with-border'
+  //     )
+  //
+  //     content.push({
+  //       id: `${key}.${artifact.ui.identifierUnique}`,
+  //       headerIsHidden: true,
+  //       value: roundFloats(value, 4),
+  //       className: 'table-cell-1',
+  //       bodyCellClassName
+  //     })
+  //   })
+  // }
 
-      content.push({
-        id: `${key}.${artifact.ui.identifierUnique}`,
-        headerIsHidden: true,
-        value: parseFloat(value),
-        className: 'table-cell-1',
-        bodyCellClassName
-      })
-    })
-  }
-
-  if (currentMetricsCount < metricsCounter) {
-    const missingObjects = metricsCounter - currentMetricsCount
-
-    for (let i = 0; i < missingObjects; i++) {
-      content.push({
-        id: `${i}.${artifact.ui.identifierUnique}`,
-        headerIsHidden: true,
-        value: '',
-        className: 'table-cell-1'
-      })
-    }
-  }
+  // if (currentMetricsCount < metricsCounter) {
+  //   const missingObjects = metricsCounter - currentMetricsCount
+  //
+  //   for (let i = 0; i < missingObjects; i++) {
+  //     content.push({
+  //       id: `${i}.${artifact.ui.identifierUnique}`,
+  //       headerIsHidden: true,
+  //       value: '',
+  //       className: 'table-cell-1'
+  //     })
+  //   }
+  // }
 
   return {
     data: {
@@ -345,7 +355,7 @@ export const createFilesRowData = (artifact, project, frontendSpec, showExpandBu
         id: `size.${artifact.ui.identifierUnique}`,
         headerId: 'size',
         headerLabel: 'Size',
-        value: isNumber(artifact.size) && artifact.size >= 0 ? convertBytes(artifact.size) : 'N/A',
+        value: isNumber(artifact.size) && artifact.size >= 0 ? prettyBytes(artifact.size) : 'N/A',
         className: 'table-cell-1'
       }
     ]
@@ -555,7 +565,7 @@ export const createDatasetsRowData = (artifact, project, frontendSpec, showExpan
         id: `size.${artifact.ui.identifierUnique}`,
         headerId: 'size',
         headerLabel: 'Size',
-        value: isNumber(artifact.size) && artifact.size >= 0 ? convertBytes(artifact.size) : 'N/A',
+        value: isNumber(artifact.size) && artifact.size >= 0 ? prettyBytes(artifact.size) : 'N/A',
         className: 'table-cell-1'
       },
       {

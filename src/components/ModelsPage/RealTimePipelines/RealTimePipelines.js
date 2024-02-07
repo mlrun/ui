@@ -23,7 +23,7 @@ import { useNavigate, useParams } from 'react-router-dom'
 import classnames from 'classnames'
 
 import FilterMenu from '../../FilterMenu/FilterMenu'
-import FunctionsTableRow from '../../../elements/FunctionsTableRow/FunctionsTableRow'
+import RealTimePipelinesTableRow from '../../../elements/RealTimePipelinesTableRow/RealTimePipelinesTableRow'
 import Loader from '../../../common/Loader/Loader'
 import ModelsPageTabs from '../ModelsPageTabs/ModelsPageTabs'
 import NoData from '../../../common/NoData/NoData'
@@ -31,7 +31,7 @@ import Pipeline from '../../Pipeline/Pipeline'
 import Table from '../../Table/Table'
 import { getNoDataMessage } from '../../../utils/getNoDataMessage'
 
-import createFunctionsContent from '../../../utils/createFunctionsContent'
+import createRealTimePiplelinesContent from '../../../utils/createRealTimePipelinesContent'
 import {
   GROUP_BY_NAME,
   MODELS_PAGE,
@@ -40,10 +40,8 @@ import {
 } from '../../../constants'
 import { fetchArtifactsFunctions, removePipelines } from '../../../reducers/artifactsReducer'
 import { filters, generatePageData } from './realTimePipelines.util'
-import { getFunctionIdentifier } from '../../../utils/getUniqueIdentifier'
 import { largeResponseCatchHandler } from '../../../utils/largeResponseCatchHandler'
 import { setFilters } from '../../../reducers/filtersReducer'
-import { useGroupContent } from '../../../hooks/groupContent.hook'
 import { useModelsPage } from '../ModelsPage.context'
 
 import { ReactComponent as Yaml } from 'igz-controls/images/yaml.svg'
@@ -51,7 +49,6 @@ import { ReactComponent as Yaml } from 'igz-controls/images/yaml.svg'
 const RealTimePipelines = () => {
   const [largeRequestErrorMessage, setLargeRequestErrorMessage] = useState('')
   const [pipelines, setPipelines] = useState([])
-  const [selectedRowData, setSelectedRowData] = useState({})
   const artifactsStore = useSelector(store => store.artifactsStore)
   const filtersStore = useSelector(store => store.filtersStore)
   const params = useParams()
@@ -112,73 +109,18 @@ const RealTimePipelines = () => {
     [dispatch, params.projectName]
   )
 
-  const handleExpand = useCallback(
-    (func, content) => {
-      const funcIdentifier = getFunctionIdentifier(func)
-
-      setSelectedRowData(state => {
-        return {
-          ...state,
-          [funcIdentifier]: {
-            content: createFunctionsContent(content[func.name], null, params.projectName, false)
-          }
-        }
-      })
-    },
-    [params.projectName]
-  )
-
   const handleRefresh = useCallback(
     filters => {
       setPipelines([])
-      setSelectedRowData({})
 
       return fetchData(filters)
     },
     [fetchData]
   )
 
-  const handleCollapse = useCallback(
-    func => {
-      const funcIdentifier = getFunctionIdentifier(func)
-      const newPageDataSelectedRowData = { ...selectedRowData }
-
-      delete newPageDataSelectedRowData[funcIdentifier]
-
-      setSelectedRowData(newPageDataSelectedRowData)
-    },
-    [selectedRowData]
-  )
-
-  const handleExpandAllCallback = (collapse, content) => {
-    const newSelectedRowData = {}
-    if (collapse) {
-      setSelectedRowData({})
-    } else {
-      Object.entries(content).forEach(([key, value]) => {
-        newSelectedRowData[key] = {
-          content: createFunctionsContent(value, null, params.projectName, false)
-        }
-      })
-    }
-
-    setSelectedRowData(newSelectedRowData)
-  }
-
-  const { latestItems, handleExpandRow, expand, handleExpandAll } = useGroupContent(
-    pipelines,
-    getFunctionIdentifier,
-    handleCollapse,
-    handleExpand,
-    null,
-    MODELS_PAGE,
-    REAL_TIME_PIPELINES_TAB,
-    handleExpandAllCallback
-  )
-
   const tableContent = useMemo(() => {
-    return createFunctionsContent(latestItems, REAL_TIME_PIPELINES_TAB, params.projectName, true)
-  }, [latestItems, params.projectName])
+    return createRealTimePiplelinesContent(pipelines, params.projectName)
+  }, [pipelines, params.projectName])
 
   useEffect(() => {
     fetchData({})
@@ -205,24 +147,23 @@ const RealTimePipelines = () => {
 
   return (
     <>
-      {artifactsStore.loading && <Loader />}
+      {artifactsStore.pipelines.loading && <Loader />}
       <div className="models" ref={pipelinesRef}>
         <div className="table-container">
           <div className={filterMenuClassNames}>
             <ModelsPageTabs />
             <div className="action-bar">
               <FilterMenu
-                expand={expand}
                 filters={filters}
-                handleExpandAll={handleExpandAll}
                 hidden={Boolean(params.pipelineId)}
                 onChange={handleRefresh}
                 page={MODELS_PAGE}
                 tab={REAL_TIME_PIPELINES_TAB}
+                withoutExpandButton
               />
             </div>
           </div>
-          {artifactsStore.loading ? null : pipelines.length === 0 ? (
+          {artifactsStore.pipelines.loading ? null : pipelines.length === 0 ? (
             <NoData
               message={getNoDataMessage(
                 filtersStore,
@@ -246,15 +187,10 @@ const RealTimePipelines = () => {
               >
                 {tableContent.map((tableItem, index) => {
                   return (
-                    <FunctionsTableRow
+                    <RealTimePipelinesTableRow
                       actionsMenu={actionsMenu}
-                      handleExpandRow={handleExpandRow}
-                      handleSelectItem={() => {}}
-                      rowIndex={index}
                       key={index}
                       rowItem={tableItem}
-                      selectedItem={{}}
-                      selectedRowData={selectedRowData}
                     />
                   )
                 })}
