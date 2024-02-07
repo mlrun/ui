@@ -45,7 +45,15 @@ const action = {
   },
   checkActionMenuOptions: async function(driver, actionMenu, values) {
     const options = await getOptionValues(driver, actionMenu.options)
-    expect(differenceWith(options, values, isEqual).length).equal(0)
+
+    if (options.length === values.length){
+      const diff = options.every((elem, index) => isEqual(elem, values[index]))
+      expect(diff).to.equal(true, 
+        `Actual options in action menu [${options}] don't match with expected values [${values}]`)
+    } else {
+      expect(options.length).equal(values.length,
+        `Actual options in action menu [${options}] don't match with expected values [${values}]`)
+    }
   },
   verifyOptionInActionMenuEnabled: async function(driver, actionMenu, option){
     const elements = await driver.findElements(actionMenu.options)

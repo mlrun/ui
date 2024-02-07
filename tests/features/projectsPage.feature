@@ -68,9 +68,9 @@ Feature: MLRun Projects Page
         Then click on "New_Project_Button" element on "Projects" wizard
         Then verify if "Create_New_Project" popup dialog appears
         Then verify "Name_Input" element visibility on "Create_New_Project" wizard
-        Then type value "   " to "Name_Input" field on "Create_New_Project" wizard
+        Then type value "/" to "Name_Input" field on "Create_New_Project" wizard
         Then verify "Name_Input" on "Create_New_Project" wizard should display options "Input_Hint"."Project_Name_Hint"
-        Then verify "Name_Input" options rules on "Create_New_Project" wizard
+        Then verify "Name_Input" options rules on form "Create_New_Project" wizard
         Then verify "Description_Input" element visibility on "Create_New_Project" wizard
         Then verify "Cancel_Button" element visibility on "Create_New_Project" wizard
         Then "Cancel_Button" element on "Create_New_Project" should contains "Cancel" value
@@ -219,15 +219,19 @@ Feature: MLRun Projects Page
         Then click on "Create_Button" element on "Create_New_Project" wizard
         And click on row root with value "navigation-test" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
+        And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
+        And click on cell with value "Quick actions" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+        And hover "MLRun_Logo" component on "commonPagesHeader" wizard
+        And wait load page
         Then verify value should equal "navigation-test" in "Header_Name_Label" on "Demo_Project" wizard
         And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
         Then click on "Pin_Quick_Link_Button" element on "commonPagesHeader" wizard
         And click on cell with value "Project monitoring" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
         And wait load page
-        Then verify breadcrumbs "tab" label should be equal "Project Monitoring" value
+        Then verify breadcrumbs "tab" label should be equal "Project monitoring" value
         And click on cell with value "Feature store" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
         And wait load page
-        Then verify breadcrumbs "tab" label should be equal "Feature Store" value
+        Then verify breadcrumbs "tab" label should be equal "Feature store" value
         And click on cell with value "Datasets" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
         And wait load page
         Then verify breadcrumbs "tab" label should be equal "Datasets" value
@@ -239,10 +243,7 @@ Feature: MLRun Projects Page
         Then verify breadcrumbs "tab" label should be equal "Models" value
         And click on cell with value "Jobs and workflows" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
         And wait load page
-        Then verify breadcrumbs "tab" label should be equal "Jobs" value
-        And click on cell with value "ML functions" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
-        And wait load page
-        Then verify breadcrumbs "tab" label should be equal "ML functions" value
+        Then verify breadcrumbs "tab" label should be equal "Jobs and workflows" value
         And click on cell with value "ML functions" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
         And wait load page
         Then verify breadcrumbs "tab" label should be equal "ML functions" value
