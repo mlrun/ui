@@ -79,34 +79,6 @@ const batchTabSelector = {
   }
 }
 
-const functionsTableSelector = {
-  root: '.form .functions-list',
-  header: {},
-  body: {
-    row: {
-      root: '.job-card-template',
-      fields: {
-        name:
-          '.job-card-template__header > div:first-child',
-        sub_name:
-          '.job-card-template__header .job-card-template__sub-header .data-ellipsis',
-        description:
-          '.job-card-template__description',
-        labels: {
-          componentType: dropdownComponent,
-          structure: generateDropdownGroup(
-            '.job-card-template__chips input',
-            '.chip-block span.chips_button',
-            '.chip-block .data-ellipsis.tooltip-wrapper .edit-chip-container',
-            false,
-            true
-          )
-        }
-      }
-    }
-  }
-}
-
 const checkboxCategorySelector = {
   root: '.hub-filter .categories-list',
   header: {},
@@ -174,7 +146,7 @@ const BatchRunDataInputsTable = {
         path_dropdown: {
           componentType: dropdownComponent,
           structure: generateDropdownGroup(
-            '.form-table__cell_1:nth-of-type(2) .form-field-combobox', 
+            '.form-table__cell_1:nth-of-type(3) .form-field-combobox', 
             '.form-field__icons:nth-of-type(1)', 
             '.form-field-combobox__dropdown-list-option', 
             false, 
@@ -183,7 +155,7 @@ const BatchRunDataInputsTable = {
         path_dropdown_autocomplete_artifacts: {
           componentType: dropdownComponent,
           structure: generateDropdownGroup(
-            '.form-table__cell_1:nth-of-type(2) .form-field-combobox', 
+            '.form-table__cell_1:nth-of-type(3) .form-field-combobox', 
             '.form-field-combobox__input', 
             '.form-field-combobox__dropdown-list-option', 
             false, 
@@ -192,7 +164,7 @@ const BatchRunDataInputsTable = {
         path_dropdown_autocomplete_project: {
           componentType: dropdownComponent,
           structure: generateDropdownGroup(
-            '.form-table__cell_1:nth-of-type(2) .form-field-combobox', 
+            '.form-table__cell_1:nth-of-type(3) .form-field-combobox', 
             '.form-field-combobox__input', 
             '.form-field-combobox__dropdown-list-option', 
             false, 
@@ -201,14 +173,14 @@ const BatchRunDataInputsTable = {
         path_dropdown_autocomplete_item: {
           componentType: dropdownComponent,
           structure: generateDropdownGroup(
-            '.form-table__cell_1:nth-of-type(2) .form-field-combobox', 
+            '.form-table__cell_1:nth-of-type(3) .form-field-combobox', 
             '.form-field-combobox__input', 
             '.form-field-combobox__dropdown-list-option', 
             false, 
             false)  
         },
         path_input: 'input.form-field-combobox__input',
-        path_verify: '.form-table__cell_1:nth-of-type(2)' 
+        path_verify: '.form-table__cell_1:nth-of-type(3)' 
       }
     }
   }
@@ -723,9 +695,9 @@ module.exports = {
     Batch_Run_Header: By.css(
       '.modal .modal__content h5.modal__header-title'
     ),
-    Function_Title: By.css(
-      '.modal .modal__content h6.modal__header-sub-title'
-    ),
+    // Function_Title: By.css(                              TODO: delete when finish batch-run common wizard
+    //   '.modal .modal__content h6.modal__header-sub-title' 
+    // ),
     Cross_Close_Button: By.css(
       '.modal .modal__header-button .round-icon-cp'
     ),
@@ -763,7 +735,7 @@ module.exports = {
       Apply_Button: By.css('.hub-filter .filters-wizard__modal-buttons .btn-secondary')
     },
     Filter_Button_Hub_Tab: By.css('.hub-tab .form-row .filters-button button'),
-    Functions_Table: commonTable(functionsTableSelector),
+    //Functions_Table: commonTable(functionsTableSelector), TODO: delete when finish batch-run common wizard
     Overlay: By.css('#overlay_container .chip-block-hidden .chip-block-hidden__scrollable-container'),
     Back_Button: By.css('.modal__content [data-testid="wizard-btn-back"]'),
     Next_Button: By.css('.modal__content [data-testid="wizard-btn-next"]'),
@@ -822,7 +794,7 @@ module.exports = {
     ),
     Delete_Button_Parameters: By.css('.form-table__parameter-row .form-table__actions-cell .round-icon-cp:nth-of-type(2)'),
     Run_Button: By.css('.modal__content [data-testid="run-btn"]'),
-    Schedule_for_later_Button: By.css('.modal__content [data-testid="schedule-btn"]'),
+    //Schedule_for_later_Button: By.css('.modal__content [data-testid="schedule-btn"]'),  TODO: delete when finish batch-run common wizard
   },
   CreateJob: {
     Back_Arrow_Button: By.css(

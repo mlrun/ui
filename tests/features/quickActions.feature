@@ -692,21 +692,21 @@ Feature: MLRun Project Home Page
             |    name     |
             | Train model |
         And wait load page
-        Then verify "Title" element visibility on "Train_Model" wizard
-        Then "Title" element on "Train_Model" should contains "Train Model" value
-        Then verify "Cross_Cancel_Button" element visibility on "Train_Model" wizard
-        Then "Function_Title" element on "Train_Model" should contains "auto-trainer" value
+        Then verify "Title" element visibility on "Modal_Wizard_Form" wizard
+        Then "Title" element on "Modal_Wizard_Form" should contains "Train Model" value
+        Then verify "Cross_Cancel_Button" element visibility on "Modal_Wizard_Form" wizard
+        Then "Function_Title" element on "Modal_Wizard_Form" should contains "auto-trainer" value
         Then "Form_Header_Run_Details" element on "commonPagesHeader" should contains "Run Details" value
-        Then "Hyperparameter_Checkbox" element should be unchecked on "Train_Model" wizard
+        Then "Hyperparameter_Checkbox" element should be unchecked on "Modal_Wizard_Form" wizard
         Then verify "Step_1_Button" element on "commonPagesHeader" wizard is enabled
         Then verify "Step_2_Button" element on "commonPagesHeader" wizard is enabled
         Then verify "Step_3_Button" element on "commonPagesHeader" wizard is enabled
         Then verify "Step_4_Button" element on "commonPagesHeader" wizard is enabled
         Then verify "Step_5_Button" element on "commonPagesHeader" wizard is enabled
-        Then verify "Next_Button" element on "Train_Model" wizard is enabled
-        Then "Next_Button" element on "Train_Model" should contains "Next" value
-        Then verify "Run_Training_Now_Button" element on "Train_Model" wizard is enabled
-        Then "Run_Training_Now_Button" element on "Train_Model" should contains "Run training now" value
-        Then verify "Schedule_Training_Job_Button" element on "Train_Model" wizard is enabled
-        Then "Schedule_Training_Job_Button" element on "Train_Model" should contains "Schedule training job" value
-        Then verify "Back_Button" element not exists on "Train_Model" wizard
+        Then verify "Next_Button" element on "Modal_Wizard_Form" wizard is enabled
+        Then "Next_Button" element on "Modal_Wizard_Form" should contains "Next" value
+        Then verify "Run_Training_Now_Button" element on "Modal_Wizard_Form" wizard is enabled
+        Then "Run_Training_Now_Button" element on "Modal_Wizard_Form" should contains "Run training now" value
+        Then verify "Schedule_Training_Job_Button" element on "Modal_Wizard_Form" wizard is enabled
+        Then "Schedule_Training_Job_Button" element on "Modal_Wizard_Form" should contains "Schedule training job" value
+        Then verify "Back_Button" element not exists on "Modal_Wizard_Form" wizard

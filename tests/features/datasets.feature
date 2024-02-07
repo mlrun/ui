@@ -123,8 +123,8 @@ Feature: Datasets Page
     And wait load page
     Then verify "Title" element visibility on "Modal_Wizard_Form" wizard
     Then "Title" element on "Modal_Wizard_Form" should contains "Train Model" value
-    Then verify "Cross_Cancel_Button" element visibility on "Modal_Wizard_Form" wizard
-    Then click on "Cross_Cancel_Button" element on "Modal_Wizard_Form" wizard
+    Then verify "Cross_Close_Button" element visibility on "Modal_Wizard_Form" wizard
+    Then click on "Cross_Close_Button" element on "Modal_Wizard_Form" wizard
     And hover "Overview_Hash_Header" component on "Datasets_Info_Pane" wizard
     Then verify "Overview_Hash_Header" on "Datasets_Info_Pane" wizard should display "Label_Hint"."Overview_Hash"
     Then verify "Overview_UID_Header" on "Datasets_Info_Pane" wizard should display "Label_Hint"."Overview_UID"
@@ -603,7 +603,7 @@ Feature: Datasets Page
     And wait load page
     Then verify "Title" element visibility on "Modal_Wizard_Form" wizard
     Then "Title" element on "Modal_Wizard_Form" should contains "Train Model" value
-    Then verify "Cross_Cancel_Button" element visibility on "Modal_Wizard_Form" wizard
+    Then verify "Cross_Close_Button" element visibility on "Modal_Wizard_Form" wizard
     Then "Function_Title" element on "Modal_Wizard_Form" should contains "auto-trainer" value
     Then "Form_Header_Run_Details" element on "commonPagesHeader" should contains "Run Details" value
     Then "Hyperparameter_Checkbox" element should be unchecked on "Modal_Wizard_Form" wizard
@@ -663,7 +663,7 @@ Feature: Datasets Page
     Then verify "Next_Button" element on "Modal_Wizard_Form" wizard is disabled
     Then verify "Schedule_Training_Job_Button" element on "Modal_Wizard_Form" wizard is enabled
     Then verify "Run_Training_Now_Button" element on "Modal_Wizard_Form" wizard is enabled
-    Then click on "Cross_Cancel_Button" element on "Modal_Wizard_Form" wizard
+    Then click on "Cross_Close_Button" element on "Modal_Wizard_Form" wizard
     Then click on "Train_Button" element on "Datasets_Info_Pane" wizard
     And wait load page
     Then check "Hyperparameter_Checkbox" element on "Modal_Wizard_Form" wizard
@@ -1083,34 +1083,34 @@ Feature: Datasets Page
     Then click on "Train_Button" element on "Datasets_Info_Pane" wizard
     And wait load page
     Then "Form_Header_Run_Details" element on "commonPagesHeader" should contains "Run Details" value
-    Then check "Hyperparameter_Checkbox" element on "Train_Model" wizard
-    Then "Hyperparameter_Checkbox" element should be checked on "Train_Model" wizard
-    And click on "Next_Button" element on "Train_Model" wizard
-    And click on "Next_Button" element on "Train_Model" wizard
-    And click on "Next_Button" element on "Train_Model" wizard
+    Then check "Hyperparameter_Checkbox" element on "Modal_Wizard_Form" wizard
+    Then "Hyperparameter_Checkbox" element should be checked on "Modal_Wizard_Form" wizard
+    And click on "Next_Button" element on "Modal_Wizard_Form" wizard
+    And click on "Next_Button" element on "Modal_Wizard_Form" wizard
+    And click on "Next_Button" element on "Modal_Wizard_Form" wizard
     Then "Form_Header_Hyperparameter_Strategy" element on "commonPagesHeader" should contains "Hyperparameter strategy" value
-    Then verify "Strategy_Dropdown" element in "Hyperparameter_Strategy_Accordion" on "Batch_Run_Edit" wizard should contains "Dropdown_Options"."Hyperparameter_Strategy_Options"
-    Then verify "Strategy_Dropdown" dropdown in "Hyperparameter_Strategy_Accordion" on "Batch_Run_Edit" wizard selected option value "List"
-    Then verify "Max_Iterations" element in "Hyperparameter_Strategy_Accordion" on "Batch_Run_Edit" wizard is disabled by class name
-    Then verify "Max_Errors" element in "Hyperparameter_Strategy_Accordion" on "Batch_Run_Edit" wizard is disabled by class name
-    Then select "Grid" option in "Strategy_Dropdown" dropdown on "Hyperparameter_Strategy_Accordion" on "Batch_Run_Edit" wizard
-    Then verify "Strategy_Dropdown" dropdown in "Hyperparameter_Strategy_Accordion" on "Batch_Run_Edit" wizard selected option value "Grid"
-    Then verify "Max_Iterations" element in "Hyperparameter_Strategy_Accordion" on "Batch_Run_Edit" wizard is disabled by class name
-    Then verify "Max_Errors" element in "Hyperparameter_Strategy_Accordion" on "Batch_Run_Edit" wizard is disabled by class name
-    Then select "Random" option in "Strategy_Dropdown" dropdown on "Hyperparameter_Strategy_Accordion" on "Batch_Run_Edit" wizard
-    Then verify "Strategy_Dropdown" dropdown in "Hyperparameter_Strategy_Accordion" on "Batch_Run_Edit" wizard selected option value "Random"
-    Then verify "Max_Iterations" element in "Hyperparameter_Strategy_Accordion" on "Batch_Run_Edit" wizard is enabled by class name
-    Then verify "Max_Errors" element in "Hyperparameter_Strategy_Accordion" on "Batch_Run_Edit" wizard is enabled by class name
-    Then "Ranking_Subheader" element on "Train_Model" should contains "Ranking" value
-    When type value "ordinal" to "Ranking_Result_Input" field on "Train_Model" wizard
-    Then verify "Ranking_Criteria_Dropdown" dropdown element on "Train_Model" wizard should contains "Common_Lists"."Ranking_Criteria_List"
-    Then "Stop_Condition_Subheader" element on "Train_Model" should contains "Stop condition" value
-    When type value "dbutils.notebook.exit()" to "Stop_Condition_Input" field on "Train_Model" wizard
-    Then "Parallelism_Subheader" element on "Train_Model" should contains "Parallelism" value
-    Then type value "5" to "Parallel_Runs_Number_Input" field on "Train_Model" wizard
-    Then increase value on 4 points in "Parallel_Runs_Number_Input" field on "Train_Model" wizard
-    Then decrease value on 4 points in "Parallel_Runs_Number_Input" field on "Train_Model" wizard
-    When type value "cluster.dashboard_link" to "Dask_Clutter_URL_Input" field on "Train_Model" wizard
-    Then "Teardown_Checkbox" element should be unchecked on "Train_Model" wizard
-    Then check "Teardown_Checkbox" element on "Train_Model" wizard
-    Then "Teardown_Checkbox" element should be checked on "Train_Model" wizard
+    Then verify "Strategy_Dropdown" element in "Hyperparameter_Strategy_Accordion" on "Modal_Wizard_Form" wizard should contains "Dropdown_Options"."Hyperparameter_Strategy_Options"
+    Then verify "Strategy_Dropdown" dropdown in "Hyperparameter_Strategy_Accordion" on "Modal_Wizard_Form" wizard selected option value "List"
+    Then verify "Max_Iterations" element in "Hyperparameter_Strategy_Accordion" on "Modal_Wizard_Form" wizard is disabled by class name
+    Then verify "Max_Errors" element in "Hyperparameter_Strategy_Accordion" on "Modal_Wizard_Form" wizard is disabled by class name
+    Then select "Grid" option in "Strategy_Dropdown" dropdown on "Hyperparameter_Strategy_Accordion" on "Modal_Wizard_Form" wizard
+    Then verify "Strategy_Dropdown" dropdown in "Hyperparameter_Strategy_Accordion" on "Modal_Wizard_Form" wizard selected option value "Grid"
+    Then verify "Max_Iterations" element in "Hyperparameter_Strategy_Accordion" on "Modal_Wizard_Form" wizard is disabled by class name
+    Then verify "Max_Errors" element in "Hyperparameter_Strategy_Accordion" on "Modal_Wizard_Form" wizard is disabled by class name
+    Then select "Random" option in "Strategy_Dropdown" dropdown on "Hyperparameter_Strategy_Accordion" on "Modal_Wizard_Form" wizard
+    Then verify "Strategy_Dropdown" dropdown in "Hyperparameter_Strategy_Accordion" on "Modal_Wizard_Form" wizard selected option value "Random"
+    Then verify "Max_Iterations" element in "Hyperparameter_Strategy_Accordion" on "Modal_Wizard_Form" wizard is enabled by class name
+    Then verify "Max_Errors" element in "Hyperparameter_Strategy_Accordion" on "Modal_Wizard_Form" wizard is enabled by class name
+    Then "Ranking_Subheader" element on "Modal_Wizard_Form" should contains "Ranking" value
+    When type value "ordinal" to "Ranking_Result_Input" field on "Modal_Wizard_Form" wizard
+    Then verify "Ranking_Criteria_Dropdown" dropdown element on "Modal_Wizard_Form" wizard should contains "Common_Lists"."Ranking_Criteria_List"
+    Then "Stop_Condition_Subheader" element on "Modal_Wizard_Form" should contains "Stop condition" value
+    When type value "dbutils.notebook.exit()" to "Stop_Condition_Input" field on "Modal_Wizard_Form" wizard
+    Then "Parallelism_Subheader" element on "Modal_Wizard_Form" should contains "Parallelism" value
+    Then type value "5" to "Parallel_Runs_Number_Input" field on "Modal_Wizard_Form" wizard
+    Then increase value on 4 points in "Parallel_Runs_Number_Input" field on "Modal_Wizard_Form" wizard
+    Then decrease value on 4 points in "Parallel_Runs_Number_Input" field on "Modal_Wizard_Form" wizard
+    When type value "cluster.dashboard_link" to "Dask_Clutter_URL_Input" field on "Modal_Wizard_Form" wizard
+    Then "Teardown_Checkbox" element should be unchecked on "Modal_Wizard_Form" wizard
+    Then check "Teardown_Checkbox" element on "Modal_Wizard_Form" wizard
+    Then "Teardown_Checkbox" element should be checked on "Modal_Wizard_Form" wizard
