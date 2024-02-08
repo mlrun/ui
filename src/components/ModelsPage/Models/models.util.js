@@ -352,7 +352,9 @@ export const generateActionsMenu = (
         icon: <Delete />,
         className: 'danger',
         disabled: !model?.tag,
-        tooltip: !model?.tag && 'A tag is required to delete a model. Open the model, click on the edit icon, and assign a tag before proceeding with the deletion',
+        tooltip:
+          !model?.tag &&
+          'A tag is required to delete a model. Open the model, click on the edit icon, and assign a tag before proceeding with the deletion',
         onClick: () =>
           openDeleteConfirmPopUp(
             'Delete model?',
@@ -398,7 +400,7 @@ export const generateActionsMenu = (
 }
 
 export const handleDeployModelFailure = projectName => {
-  const codeSnippet = `project = mlrun.get_or_create_project(<the UI can plug in here the project name>, context="./")
+  const codeSnippet = `project = mlrun.get_or_create_project(${projectName}, context="./")
 
           serving_function_image = "mlrun/mlrun"
           serving_model_class_name = "mlrun.frameworks.sklearn.SklearnModelServer"
@@ -415,6 +417,7 @@ export const handleDeployModelFailure = projectName => {
           <a
             className="link"
             href="https://docs.mlrun.org/en/stable/serving/built-in-model-serving.html"
+            rel="noreferrer"
             target="_blank"
           >
             https://docs.mlrun.org/en/stable/serving/built-in-model-serving.html
@@ -423,6 +426,7 @@ export const handleDeployModelFailure = projectName => {
           <a
             className="link"
             href="https://docs.mlrun.org/en/stable/tutorials/03-model-serving.html"
+            rel="noreferrer"
             target="_blank"
           >
             https://docs.mlrun.org/en/stable/tutorials/03-model-serving.html
