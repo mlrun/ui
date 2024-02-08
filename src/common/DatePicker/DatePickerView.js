@@ -29,8 +29,10 @@ import { SelectOption } from 'igz-controls/elements'
 
 import { ANY_TIME } from '../../constants'
 import { SECONDARY_BUTTON } from 'igz-controls/constants'
+import { CUSTOM_RANGE_DATE_OPTION } from '../../utils/datePicker.util'
 
 import { ReactComponent as Arrow } from 'igz-controls/images/arrow.svg'
+import { ReactComponent as CaretIcon } from 'igz-controls/images/dropdown.svg'
 import { ReactComponent as Invalid } from 'igz-controls/images/invalid.svg'
 
 import './datePicker.scss'
@@ -68,10 +70,12 @@ const DatePickerView = React.forwardRef(
       position,
       required,
       requiredText,
+      selectedOption,
       setSelectedDate,
       tip,
       valueDatePickerInput,
-      weekDay
+      weekDay,
+      withLabels
     },
     ref
   ) => {
@@ -88,39 +92,91 @@ const DatePickerView = React.forwardRef(
     )
     const inputLabelClassNames = classnames('input__label', label && 'active-label')
 
+    const datePickerElement = () => {
+      if (withLabels) {
+        if (selectedOption && selectedOption.id !== CUSTOM_RANGE_DATE_OPTION) {
+          return (
+            <>
+              <span>{selectedOption.label}</span>
+              <i className='date-picker__caret'>
+                <CaretIcon />
+              </i>
+            </>
+          )
+        } else {
+          return (
+            <>
+              {selectedOption && !isValueEmpty ? (
+                <MaskedInput
+                  className={inputClassNames}
+                  keepCharPositions={true}
+                  mask={dateMask}
+                  disabled={disabled}
+                  readOnly={isValueEmpty}
+                  showMask={!isValueEmpty || ['', '']}
+                  onBlur={datePickerInputOnBlur}
+                  onChange={onInputChange}
+                  pipe={autoCorrectedDatePipe}
+                  value={valueDatePickerInput}
+                  size={valueDatePickerInput.length}
+                />
+              ) : (
+                <>
+                  <span>Any time</span>
+                  <i className='date-picker__caret'>
+                    <CaretIcon />
+                  </i>
+                </>
+              )}
+            </>
+          )
+        }
+      } else {
+        return (
+          <>
+            <MaskedInput
+              className={inputClassNames}
+              keepCharPositions={true}
+              mask={dateMask}
+              disabled={disabled}
+              readOnly={isValueEmpty}
+              showMask={!isValueEmpty}
+              onBlur={datePickerInputOnBlur}
+              onChange={onInputChange}
+              pipe={autoCorrectedDatePipe}
+              value={valueDatePickerInput}
+              size={valueDatePickerInput.length}
+            />
+            {isValueEmpty && (
+              <span className='input__label input__label-empty'>&nbsp;Any time</span>
+            )}
+          </>
+        )
+      }
+    }
+
     return (
       <div
-        data-testid="date-picker-container"
+        data-testid='date-picker-container'
         className={datePickerClassNames}
         ref={ref.datePickerRef}
       >
         <div
-          data-testid="date-picker-input"
-          className="date-picker__input-wrapper input-wrapper"
+          data-testid='date-picker-input'
+          className='date-picker__input-wrapper input-wrapper'
           onClick={onInputClick}
         >
-          <MaskedInput
-            className={inputClassNames}
-            keepCharPositions={true}
-            mask={dateMask}
-            disabled={disabled}
-            readOnly={isValueEmpty}
-            showMask={!isValueEmpty}
-            onBlur={datePickerInputOnBlur}
-            onChange={onInputChange}
-            pipe={autoCorrectedDatePipe}
-            value={valueDatePickerInput}
-          />
+          {datePickerElement()}
           <span className={inputLabelClassNames}>
             {label}
-            {required && <span className="input__label-mandatory"> *</span>}
+            {required && <span className='input__label-mandatory'> *</span>}
           </span>
           {isValueEmpty && (
-            <span className="input__label input__label-empty">&nbsp;{ANY_TIME}</span>
+            <span className='input__label input__label-empty'>&nbsp;{ANY_TIME}</span>
           )}
           {isInvalid && (
             <Tooltip
-              className="input__warning"
+              className='input__warning'
               template={
                 <TextTooltipTemplate
                   text={
@@ -138,14 +194,14 @@ const DatePickerView = React.forwardRef(
         </div>
         {isDatePickerOptionsOpened && (
           <PopUpDialog
-            className="date-picker__pop-up-wrapper"
+            className='date-picker__pop-up-wrapper'
             headerIsHidden
             customPosition={{
               element: ref.datePickerRef,
               position
             }}
           >
-            <div ref={ref.datePickerViewRef} className="date-picker__pop-up">
+            <div ref={ref.datePickerViewRef} className='date-picker__pop-up'>
               {datePickerOptions.map(option => (
                 <SelectOption
                   item={option}
@@ -154,7 +210,7 @@ const DatePickerView = React.forwardRef(
                   onClick={() => {
                     onSelectOption(option)
                   }}
-                  selectType=""
+                  selectType=''
                 />
               ))}
             </div>
@@ -162,49 +218,49 @@ const DatePickerView = React.forwardRef(
         )}
         {isDatePickerOpened && (
           <PopUpDialog
-            className="date-picker__pop-up-wrapper"
+            className='date-picker__pop-up-wrapper'
             headerIsHidden
             customPosition={{
               element: ref.datePickerRef,
               position
             }}
           >
-            <div ref={ref.datePickerViewRef} className="date-picker__pop-up date-picker">
-              <div className="date-picker__calendars">
+            <div ref={ref.datePickerViewRef} className='date-picker__pop-up date-picker'>
+              <div className='date-picker__calendars'>
                 {config.map(item => (
                   <div className={classnames('date-picker__calendar')} key={item.id}>
-                    <div className="date-picker__header">
+                    <div className='date-picker__header'>
                       <Arrow
-                        data-testid="btn-previous-month"
-                        className="date-picker__header-previous-month"
+                        data-testid='btn-previous-month'
+                        className='date-picker__header-previous-month'
                         onClick={() => onPreviousMonth(item.id)}
                       />
-                      {isRange && <span className="date-picker__header-label">{item.label}</span>}
+                      {isRange && <span className='date-picker__header-label'>{item.label}</span>}
                       <div>
-                        <span className="date-picker__header-month">
+                        <span className='date-picker__header-month'>
                           {months[item.visibleDate.getMonth()]}
                         </span>
-                        <span className="date-picker__header-year">
+                        <span className='date-picker__header-year'>
                           {item.visibleDate.getFullYear()}
                         </span>
                       </div>
                       <Arrow
-                        data-testid="btn-next-month"
-                        className="date-picker__header-next-month"
+                        data-testid='btn-next-month'
+                        className='date-picker__header-next-month'
                         onClick={() => onNextMonth(item.id)}
                       />
                     </div>
-                    <div className="date-picker__weeks">
+                    <div className='date-picker__weeks'>
                       {weekDay.map((day, index) => {
                         return (
-                          <div key={`${day}${index}`} className="date-picker__weeks-day">
+                          <div key={`${day}${index}`} className='date-picker__weeks-day'>
                             {day.label}
                           </div>
                         )
                       })}
                     </div>
                     {item.calendar.map(({ week }, index) => (
-                      <div key={`${week[0].day.getMonth()}${index}`} className="date-picker__week">
+                      <div key={`${week[0].day.getMonth()}${index}`} className='date-picker__week'>
                         {week.map(({ day }) => (
                           <div
                             key={`${day.getMonth()}${day.getDate()}${day.getFullYear()}`}
@@ -224,13 +280,13 @@ const DatePickerView = React.forwardRef(
                                 setSelectedDate(item.id, day, item.selectedDate)
                             }}
                           >
-                            <div className="date-picker__week-day">{day.getDate()}</div>
+                            <div className='date-picker__week-day'>{day.getDate()}</div>
                           </div>
                         ))}
                       </div>
                     ))}
                     {isTime && (
-                      <div className="date-picker__time">
+                      <div className='date-picker__time'>
                         <TimePicker
                           onChange={time => onTimeChange(item.id, time, item.selectedDate)}
                           value={`${String(item.selectedDate.getHours()).padStart(2, '0')}:${String(
@@ -242,24 +298,28 @@ const DatePickerView = React.forwardRef(
                   </div>
                 ))}
               </div>
-              <div className="date-picker__footer">
-                {isCalendarInvalid && <ErrorMessage message="“To” must be later than “From”" />}
+              <div className='date-picker__footer'>
+                {isCalendarInvalid && <ErrorMessage message='“To” must be later than “From”' />}
                 <Button
                   variant={SECONDARY_BUTTON}
-                  label="Apply"
+                  label='Apply'
                   onClick={onApplyChanges}
-                  className="date-picker__apply-btn"
+                  className='date-picker__apply-btn'
                   disabled={isCalendarInvalid}
                 />
               </div>
             </div>
           </PopUpDialog>
         )}
-        {tip && <Tip text={tip} className="input__tip" />}
+        {tip && <Tip text={tip} className='input__tip' />}
       </div>
     )
   }
 )
+
+DatePickerView.defaultProps = {
+  withLabels: false
+}
 
 DatePickerView.propTypes = {
   autoCorrectedDatePipe: PropTypes.func.isRequired,
@@ -296,7 +356,8 @@ DatePickerView.propTypes = {
   setSelectedDate: PropTypes.func.isRequired,
   tip: PropTypes.string.isRequired,
   valueDatePickerInput: PropTypes.string.isRequired,
-  weekDay: PropTypes.array.isRequired
+  weekDay: PropTypes.array.isRequired,
+  withLabels: PropTypes.bool
 }
 
 export default React.memo(DatePickerView)

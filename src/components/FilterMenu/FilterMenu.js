@@ -329,120 +329,128 @@ const FilterMenu = ({
   return (
     !hidden && (
       <>
-        <div className="filters">
+        <div className='filters'>
           {filters.map(filter => {
             if (!filter.hidden) {
               switch (filter.type) {
                 case TAG_FILTER:
                   return (
-                    <TagFilter
-                      key={filter.type}
-                      label={filter.label}
-                      onChange={item => handleSelectOption(item, filter)}
-                      page={page}
-                      tagFilterOptions={tagOptions}
-                      value={filtersStore[TAG_FILTER]}
-                    />
+                    <div className='filters-col' key={filter.type}>
+                      <TagFilter
+                        label={filter.label}
+                        onChange={item => handleSelectOption(item, filter)}
+                        page={page}
+                        tagFilterOptions={tagOptions}
+                        value={filtersStore[TAG_FILTER]}
+                      />
+                    </div>
                   )
                 case LABELS_FILTER:
                   return (
-                    <Input
-                      density="dense"
-                      key={filter.type}
-                      label={filter.label}
-                      onChange={setLabels}
-                      onBlur={onBlur}
-                      onKeyDown={onKeyDown}
-                      placeholder="key1,key2=value,..."
-                      type="text"
-                      value={labels}
-                    />
+                    <div className='filters-col' key={filter.type}>
+                      <Input
+                        density='dense'
+                        label={filter.label}
+                        onChange={setLabels}
+                        onBlur={onBlur}
+                        onKeyDown={onKeyDown}
+                        placeholder='key1,key2=value,...'
+                        type='text'
+                        value={labels}
+                      />
+                    </div>
                   )
                 case NAME_FILTER:
                   return (
-                    <Input
-                      density="dense"
-                      key={filter.type}
-                      label={filter.label}
-                      onChange={setName}
-                      onBlur={onBlur}
-                      onKeyDown={onKeyDown}
-                      type="text"
-                      value={name}
-                    />
+                    <div className='filters-col' key={filter.type}>
+                      <Input
+                        density='dense'
+                        label={filter.label}
+                        onChange={setName}
+                        onBlur={onBlur}
+                        onKeyDown={onKeyDown}
+                        type='text'
+                        value={name}
+                      />
+                    </div>
                   )
                 case ENTITIES_FILTER:
                   return (
-                    <Input
-                      density="dense"
-                      key={filter.type}
-                      label={filter.label}
-                      onChange={setEntities}
-                      onBlur={onBlur}
-                      onKeyDown={onKeyDown}
-                      type="text"
-                      value={entities}
-                    />
+                    <div className='filters-col' key={filter.type}>
+                      <Input
+                        density='dense'
+                        label={filter.label}
+                        onChange={setEntities}
+                        onBlur={onBlur}
+                        onKeyDown={onKeyDown}
+                        type='text'
+                        value={entities}
+                      />
+                    </div>
                   )
                 case DATE_RANGE_TIME_FILTER:
                   return (
-                    <DatePicker
-                      date={filtersStore.dates.value[0]}
-                      dateTo={filtersStore.dates.value[1]}
-                      key={filter.type}
-                      label={filter.label}
-                      onChange={handleChangeDates}
-                      type="date-range-time"
-                      withOptions
-                    />
+                    <div className='filters-col' key={filter.type}>
+                      <DatePicker
+                        date={filtersStore.dates.value[0]}
+                        dateTo={filtersStore.dates.value[1]}
+                        label={filter.label}
+                        onChange={handleChangeDates}
+                        type='date-range-time'
+                        withOptions
+                      />
+                    </div>
                   )
                 case ITERATIONS_FILTER:
                   return (
-                    <CheckBox
-                      key={filter.type}
-                      item={{ label: filter.label, id: 'iter' }}
-                      onChange={handleIter}
-                      selectedId={filtersStore.iter}
-                    />
+                    <div className='filters-col' key={filter.type}>
+                      <CheckBox
+                        item={{ label: filter.label, id: 'iter' }}
+                        onChange={handleIter}
+                        selectedId={filtersStore.iter}
+                      />
+                    </div>
                   )
                 case SHOW_UNTAGGED_FILTER:
                   return (
-                    <CheckBox
-                      key={filter.type}
-                      className="filters-checkbox"
-                      item={{ label: filter.label, id: SHOW_UNTAGGED_ITEMS }}
-                      onChange={handleShowUntagged}
-                      selectedId={filtersStore.showUntagged}
-                    />
+                    <div className='filters-col' key={filter.type}>
+                      <CheckBox
+                        className='filters-checkbox'
+                        item={{ label: filter.label, id: SHOW_UNTAGGED_ITEMS }}
+                        onChange={handleShowUntagged}
+                        selectedId={filtersStore.showUntagged}
+                      />
+                    </div>
                   )
                 case PROJECT_FILTER:
                   return (
-                    <Select
-                      density="dense"
-                      className={''}
-                      label={filter.label}
-                      key={filter.type}
-                      onClick={project => handleSelectOption(project, filter)}
-                      options={filtersStore.projectOptions}
-                      selectedId={filtersStore.project}
-                    />
+                    <div className='filters-col' key={filter.type}>
+                      <Select
+                        density='dense'
+                        className=''
+                        label={filter.label}
+                        onClick={project => handleSelectOption(project, filter)}
+                        options={filtersStore.projectOptions}
+                        selectedId={filtersStore.project}
+                      />
+                    </div>
                   )
                 default:
-                  return (
-                    <Select
-                      density="dense"
-                      className={filter.type === PERIOD_FILTER ? 'period-filter' : ''}
-                      label={`${filter.type.replace(/([A-Z])/g, ' $1')}:`}
-                      key={filter.type}
-                      onClick={item => handleSelectOption(item, filter)}
-                      options={filter.options || selectOptions[filter.type]}
-                      selectedId={
-                        (filter.type === STATUS_FILTER && filtersStore.state) ||
-                        (filter.type === GROUP_BY_FILTER && filtersStore.groupBy) ||
-                        (filter.type === SORT_BY && filtersStore.sortBy)
-                      }
-                    />
-                  )
+                  return filter.type === PERIOD_FILTER ? (
+                    <div className='filters-col' key={filter.type}>
+                      <Select
+                        density='dense'
+                        label={`${filter.type.replace(/([A-Z])/g, ' $1')}:`}
+                        onClick={item => handleSelectOption(item, filter)}
+                        options={filter.options || selectOptions[filter.type]}
+                        selectedId={
+                          (filter.type === STATUS_FILTER && filtersStore.state) ||
+                          (filter.type === GROUP_BY_FILTER && filtersStore.groupBy) ||
+                          (filter.type === SORT_BY && filtersStore.sortBy)
+                        }
+                      />
+                    </div>
+                  ) : null
               }
             } else {
               return null
@@ -463,7 +471,7 @@ const FilterMenu = ({
             />
           ))}
 
-        <div className="actions">
+        <div className='actions'>
           {enableAutoRefresh && (
             <CheckBox
               key={AUTO_REFRESH_ID}
@@ -473,15 +481,15 @@ const FilterMenu = ({
             />
           )}
           <RoundedIcon
-            tooltipText="Refresh"
+            tooltipText='Refresh'
             onClick={() => applyChanges(filtersStore, true)}
-            id="refresh"
+            id='refresh'
           >
             <RefreshIcon />
           </RoundedIcon>
           {!withoutExpandButton && filtersStore.groupBy !== GROUP_BY_NONE && (
             <RoundedIcon
-              id="toggle-collapse"
+              id='toggle-collapse'
               tooltipText={expand ? 'Collapse' : 'Expand all'}
               onClick={() => handleExpandAll()}
             >

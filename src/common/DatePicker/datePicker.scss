@@ -7,6 +7,9 @@
 
   .date-picker__input-wrapper {
     position: relative;
+    display: flex;
+    align-items: center;
+    cursor: pointer;
 
     .date-picker__input {
       &_empty {
@@ -57,6 +60,15 @@
 
   .date-picker {
     padding: 30px 15px;
+  }
+
+  .date-picker {
+    padding: 30px 15px;
+
+    &__caret {
+      display: inline-flex;
+      margin-left: 10px;
+    }
   }
 
   .date-picker__calendars {
@@ -189,7 +201,7 @@
   .date-picker__time {
     display: flex;
     justify-content: flex-end;
-    margin-top: 10px;
+    margin-bottom: 20px;
 
     .time-picker-container {
       width: 100px;
@@ -207,7 +219,7 @@
     align-items: center;
     justify-content: flex-end;
     min-height: 45px;
-    margin: 10px 15px 0;
+    margin: 20px 15px 0;
 
     .date-picker__apply-btn {
       margin-left: 15px;

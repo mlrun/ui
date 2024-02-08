@@ -121,17 +121,17 @@ const ConsumerGroup = ({
           backLink={`/projects/${params.projectName}/monitor/consumer-groups`}
         />
       )}
-      <div className="page-actions">
+      <div className='page-actions'>
         <Search
-          wrapperClassName="search-input-wrapper"
+          wrapperClassName='search-input-wrapper'
           onChange={searchTerm => setFilterByName(searchTerm.toLowerCase())}
-          placeholder="Search by shard name..."
+          placeholder='Search by shard name...'
           value={filterByName}
         />
         <RoundedIcon
           onClick={() => refreshConsumerGroup(currentV3ioStream)}
-          tooltipText="Refresh"
-          id="consumer-group-refresh"
+          tooltipText='Refresh'
+          id='consumer-group-refresh'
         >
           <RefreshIcon />
         </RoundedIcon>

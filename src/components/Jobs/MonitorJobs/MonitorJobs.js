@@ -168,6 +168,10 @@ const MonitorJobs = ({
       }
 
       const fetchData = params.jobName ? fetchAllJobRuns : fetchJobs
+      const newParams = !params.jobName && {
+        'partition-by': 'name',
+        'partition-sort-by': 'updated'
+      }
 
       fetchData(
         params.projectName,
@@ -176,7 +180,8 @@ const MonitorJobs = ({
           ui: {
             controller: abortControllerRef.current,
             setLargeRequestErrorMessage
-          }
+          },
+          params: { ...newParams }
         },
         params.jobName ?? false
       ).then(jobs => {
@@ -590,7 +595,7 @@ const MonitorJobs = ({
         />
       )}
       <div className={filterMenuClassNames}>
-        <div className="action-bar">
+        <div className='action-bar'>
           <FilterMenu
             actionButton={{
               label: 'Resource monitoring',

@@ -60,7 +60,7 @@ const ScheduledJobs = ({
   fetchFunctionTemplate,
   fetchJobFunction,
   fetchJobFunctionSuccess,
-  fetchJobs,
+  fetchScheduledJobs,
   handleRunScheduledJob,
   removeScheduledJob
 }) => {
@@ -102,23 +102,18 @@ const ScheduledJobs = ({
       setJobs([])
       abortControllerRef.current = new AbortController()
 
-      fetchJobs(
-        params.projectName,
-        filters,
-        {
-          ui: {
-            controller: abortControllerRef.current,
-            setLargeRequestErrorMessage
-          }
-        },
-        true
-      ).then(jobs => {
+      fetchScheduledJobs(params.projectName, filters, {
+        ui: {
+          controller: abortControllerRef.current,
+          setLargeRequestErrorMessage
+        }
+      }).then(jobs => {
         if (jobs) {
           setJobs(jobs.map(job => parseJob(job, SCHEDULE_TAB)))
         }
       })
     },
-    [fetchJobs, params.projectName]
+    [fetchScheduledJobs, params.projectName]
   )
 
   const handleRunJob = useCallback(
@@ -217,7 +212,7 @@ const ScheduledJobs = ({
         [
           {
             label: 'Run now',
-            icon: <Run className="action_cell__run-icon" />,
+            icon: <Run className='action_cell__run-icon' />,
             onClick: handleRunJob
           },
           {
@@ -292,8 +287,8 @@ const ScheduledJobs = ({
 
   return (
     <>
-      <div className="content__action-bar-wrapper">
-        <div className="action-bar">
+      <div className='content__action-bar-wrapper'>
+        <div className='action-bar'>
           <FilterMenu
             filters={filters}
             onChange={refreshJobs}

@@ -26,6 +26,8 @@ import { DANGER_BUTTON, FORBIDDEN_ERROR_STATUS_CODE } from 'igz-controls/constan
 import { setNotification } from '../../reducers/notificationReducer'
 import { showErrorNotification } from '../../utils/notifications.util'
 
+import { NEXT_24_HOUR_DATE_OPTION, PAST_24_HOUR_DATE_OPTION } from '../../utils/datePicker.util'
+
 import { ReactComponent as ArchiveIcon } from 'igz-controls/images/archive-icon.svg'
 import { ReactComponent as Delete } from 'igz-controls/images/delete.svg'
 import { ReactComponent as DownloadIcon } from 'igz-controls/images/ml-download.svg'
@@ -44,8 +46,7 @@ export const generateProjectActionsMenu = (
   viewYaml,
   archiveProject,
   unarchiveProject,
-  deleteProject,
-  isDemoMode
+  deleteProject
 ) => {
   const deletingProjectNames = Object.values(deletingProjects)
   let actionsMenu = {}
@@ -70,15 +71,6 @@ export const generateProjectActionsMenu = (
           onClick: unarchiveProject
         },
         {
-          label: 'Delete',
-          icon: <Delete />,
-          className: 'danger',
-          hidden:
-            window.mlrunConfig.nuclioMode === 'enabled' && project.metadata.name === 'default',
-          disabled: projectIsDeleting,
-          onClick: deleteProject
-        },
-        {
           label: 'Export YAML',
           icon: <DownloadIcon />,
           disabled: projectIsDeleting,
@@ -89,6 +81,15 @@ export const generateProjectActionsMenu = (
           icon: <Yaml />,
           disabled: projectIsDeleting,
           onClick: viewYaml
+        },
+        {
+          label: 'Delete',
+          icon: <Delete />,
+          className: 'danger',
+          hidden:
+            window.mlrunConfig.nuclioMode === 'enabled' && project.metadata.name === 'default',
+          disabled: projectIsDeleting,
+          onClick: deleteProject
         }
       ]
     ]
@@ -96,6 +97,7 @@ export const generateProjectActionsMenu = (
 
   return actionsMenu
 }
+
 export const projectsStates = [
   {
     id: 'active',
@@ -106,6 +108,7 @@ export const projectsStates = [
     label: 'Archived'
   }
 ]
+
 export const projectsSortOptions = [
   {
     id: 'byName',
@@ -198,5 +201,117 @@ export const pollDeletingProjects = (terminatePollRef, deletingProjects, refresh
 
   return pollTask(() => tasksApi.getBackgroundTasks(), isDone, {
     terminatePollRef
+  })
+}
+
+export const getJobsStatsConfig = (
+  handleDateSelection,
+  jobs,
+  jobsFilter,
+  navigate,
+  scheduled,
+  scheduledFilter,
+  workflows,
+  workflowsFilter
+) => [
+  {
+    id: 'jobs',
+    title: 'Jobs',
+    counters: {
+      all: {
+        counter: jobs.length,
+        link: () => navigate('')
+      },
+      running: {
+        counter: jobs.filter(job => job.status?.state === 'running').length,
+        link: () => navigate('')
+      },
+      failed: {
+        counter: jobs.filter(job => ['error', 'failed'].includes(job.status?.state)).length,
+        link: () => navigate('')
+      },
+      completed: {
+        counter: jobs.filter(job => job.status?.state === 'completed').length,
+        link: () => navigate('')
+      }
+    },
+    filters: {
+      initialDateID: PAST_24_HOUR_DATE_OPTION,
+      dates: jobsFilter.dates,
+      handler: handleDateSelection
+    }
+  },
+  {
+    id: 'workflows',
+    title: 'Workflows',
+    counters: {
+      all: {
+        counter: workflows.length,
+        link: () => navigate('')
+      },
+      running: {
+        counter: workflows.filter(workflow => workflow.state?.value === 'running').length,
+        link: () => navigate('')
+      },
+      failed: {
+        counter: workflows.filter(workflow => ['error', 'failed'].includes(workflow.state?.value))
+          .length,
+        link: () => navigate('')
+      },
+      completed: {
+        counter: workflows.filter(workflow =>
+          ['completed', 'succeeded'].includes(workflow.state?.value)
+        ).length,
+        link: () => navigate('')
+      }
+    },
+    filters: {
+      initialDateID: PAST_24_HOUR_DATE_OPTION,
+      dates: workflowsFilter.dates,
+      handler: handleDateSelection
+    }
+  },
+  {
+    id: 'scheduled',
+    title: 'Scheduled',
+    counters: {
+      jobs: {
+        counter: filterScheduledByDate(scheduled, scheduledFilter).filter(
+          job =>
+            job.kind === 'job' &&
+            !(
+              job.labels &&
+              'job-type' in job.labels &&
+              job.labels['job-type'] === 'workflow-runner'
+            )
+        ).length,
+        link: () => navigate('')
+      },
+      workflows: {
+        counter: filterScheduledByDate(scheduled, scheduledFilter).filter(
+          job =>
+            job.labels && 'job-type' in job.labels && job.labels['job-type'] === 'workflow-runner'
+        ).length,
+        link: () => navigate('')
+      }
+    },
+    filters: {
+      initialDateID: NEXT_24_HOUR_DATE_OPTION,
+      dates: scheduledFilter.dates,
+      handler: handleDateSelection
+    }
+  }
+]
+
+const filterScheduledByDate = (scheduled, scheduledFilter) => {
+  if (!scheduledFilter.dates.value[0] && !scheduledFilter.dates.value[1]) return scheduled
+
+  return scheduled.filter(job => {
+    const runTime = new Date(job.next_run_time)
+
+    const start = new Date(scheduledFilter.dates.value[0])
+    const end = new Date(scheduledFilter.dates.value[1])
+
+    return runTime > start && runTime < end ? job : null
   })
 }

@@ -23,12 +23,14 @@ import classnames from 'classnames'
 
 import ContentMenu from '../../elements/ContentMenu/ContentMenu'
 import CreateProjectDialog from './CreateProjectDialog/CreateProjectDialog'
+import DatePicker from '../../common/DatePicker/DatePicker'
 import Loader from '../../common/Loader/Loader'
 import NoData from '../../common/NoData/NoData'
 import PageActionsMenu from '../../common/PageActionsMenu/PageActionsMenu'
 import ProjectCard from '../../elements/ProjectCard/ProjectCard'
 import Search from '../../common/Search/Search'
 import Sort from '../../common/Sort/Sort'
+import StatsCard from '../../elements/StatsCard/StatsCard'
 import YamlModal from '../../common/YamlModal/YamlModal'
 import { ConfirmDialog, RoundedIcon } from 'igz-controls/components'
 
@@ -53,6 +55,8 @@ const ProjectsView = ({
   handleSearchOnFocus,
   handleSelectSortOption,
   isDescendingOrder,
+  isDemoMode,
+  loadingState,
   projectStore,
   refreshProjects,
   removeNewProjectError,
@@ -63,6 +67,7 @@ const ProjectsView = ({
   setIsDescendingOrder,
   setSelectedProjectsState,
   sortProjectId,
+  statsConfig,
   tasksStore
 }) => {
   const projectsClassNames = classnames(
@@ -98,51 +103,176 @@ const ProjectsView = ({
           message={confirmData.message}
         />
       )}
-      <div className="projects__wrapper">
-        <div className="projects-content-header">
-          <div className="projects-content-header__col">
-            <div className="projects-content-header-item">
-              <ContentMenu
-                activeTab={selectedProjectsState}
-                screen="active"
-                tabs={projectsStates}
-                onClick={setSelectedProjectsState}
-              />
-
-              <Sort
-                isDescendingOrder={isDescendingOrder}
-                onSelectOption={handleSelectSortOption}
-                options={projectsSortOptions}
-                selectedId={sortProjectId}
-                setIsDescendingOrder={setIsDescendingOrder}
-              />
+      <div className='projects__wrapper'>
+        {projectStore.projects.length > 0 && isDemoMode && (
+          <div className='projects-jobs-container'>
+            <div className='projects-jobs-legend'>
+              <h5 className='projects-jobs-legend__title'>Monitoring</h5>
+              <ul className='projects-jobs-stats__counters'>
+                <li>
+                  Running <i className='state-running-job'></i>
+                </li>
+                <li>
+                  Failed <i className='state-failed-job'></i>
+                </li>
+                <li>
+                  Completed <i className='state-completed-job'></i>
+                </li>
+              </ul>
+            </div>
+            <div className='projects-jobs-stats'>
+              {statsConfig.map(stats => (
+                <StatsCard key={stats.id}>
+                  <>
+                    <div className='projects-jobs-stats__row'>
+                      <h5 className='projects-jobs-stats__title'>{stats.title}</h5>
+                      <DatePicker
+                        date={stats.filters.dates.value[0]}
+                        dateTo={stats.filters.dates.value[1]}
+                        initialDateID={stats.filters.initialDateID}
+                        label=''
+                        onChange={stats.filters.handler(stats.id)}
+                        showNext={stats.id === 'scheduled'}
+                        type='date-range-time'
+                        withLabels
+                        withOptions
+                      />
+                    </div>
+                    {stats.id !== 'scheduled' ? (
+                      <>
+                        <div className='projects-jobs-stats__row  projects-jobs-stats__full-row'>
+                          <div className='projects-jobs-stats__counter'>
+                            <span className='projects-jobs-stats__counter-display'>
+                              {loadingState[stats.id] ? (
+                                <Loader section small secondary />
+                              ) : (
+                                stats.counters.all.counter
+                              )}
+                            </span>
+                          </div>
+                        </div>
+                        <div className='projects-jobs-stats__row'>
+                          <ul className='projects-jobs-stats__counters'>
+                            <li className='link' onClick={stats.counters.running.link}>
+                              {loadingState[stats.id] ? (
+                                <Loader section small secondary />
+                              ) : (
+                                stats.counters.running.counter
+                              )}
+                              <i className='state-running-job'></i>
+                            </li>
+                            <li className='link' onClick={stats.counters.failed.link}>
+                              {loadingState[stats.id] ? (
+                                <Loader section small secondary />
+                              ) : (
+                                stats.counters.failed.counter
+                              )}
+                              <i className='state-failed-job'></i>
+                            </li>
+                            <li className='link' onClick={stats.counters.completed.link}>
+                              {loadingState[stats.id] ? (
+                                <Loader section small secondary />
+                              ) : (
+                                stats.counters.completed.counter
+                              )}
+                              <i className='state-completed-job'></i>
+                            </li>
+                          </ul>
+                          <span className='link' onClick={stats.counters.all.link}>
+                            See all
+                          </span>
+                        </div>
+                      </>
+                    ) : (
+                      <>
+                        <div className='projects-jobs-stats__row projects-jobs-stats__full-row'>
+                          <div className='projects-jobs-stats__counter'>
+                            <span className='projects-jobs-stats__counter-display'>
+                              {loadingState[stats.id] ? (
+                                <Loader section small secondary />
+                              ) : (
+                                stats.counters.jobs.counter
+                              )}
+                            </span>
+                            <h6 className='projects-jobs-stats__subtitle'>Jobs</h6>
+                          </div>
+                          <div className='projects-jobs-stats__counter'>
+                            <span className='projects-jobs-stats__counter-display'>
+                              {loadingState[stats.id] ? (
+                                <Loader section small secondary />
+                              ) : (
+                                stats.counters.workflows.counter
+                              )}
+                            </span>
+                            <h6 className='projects-jobs-stats__subtitle'>Workflows</h6>
+                          </div>
+                        </div>
+                        <div className='projects-jobs-stats__row'>
+                          <div className='projects-jobs-stats__counter'>
+                            <span className='link' onClick={stats.counters.jobs.link}>
+                              See all
+                            </span>
+                          </div>
+                          <div className='projects-jobs-stats__counter'>
+                            <span className='link' onClick={stats.counters.workflows.link}>
+                              See all
+                            </span>
+                          </div>
+                        </div>
+                      </>
+                    )}
+                  </>
+                </StatsCard>
+              ))}
             </div>
           </div>
-          <div className="projects-content-header__col projects-content-header__col-right">
-            <div className="projects-content-header-item">
-              <Search
-                className="projects-search"
-                matches={filterMatches}
-                onChange={setFilterByName}
-                onFocus={handleSearchOnFocus}
-                placeholder="Search projects..."
-                setMatches={setFilterMatches}
-                value={filterByName}
-              />
-              <PageActionsMenu
-                actionsMenuHeader={'New Project'}
-                onClick={() => setCreateProject(true)}
-                showActionsMenu
-                variant={PRIMARY_BUTTON}
-              />
-              <RoundedIcon
-                onClick={refreshProjects}
-                className="panel-title__btn_close"
-                tooltipText="Refresh"
-                id="pop-up-close-btn"
-              >
-                <RefreshIcon />
-              </RoundedIcon>
+        )}
+        <div className='projects-content-header'>
+          <div className='projects-content-header__row'>
+            <div className='projects-content-header__col'>
+              <div className='projects-content-header-item'>
+                <ContentMenu
+                  activeTab={selectedProjectsState}
+                  screen='active'
+                  tabs={projectsStates}
+                  onClick={setSelectedProjectsState}
+                />
+
+                <Sort
+                  isDescendingOrder={isDescendingOrder}
+                  onSelectOption={handleSelectSortOption}
+                  options={projectsSortOptions}
+                  selectedId={sortProjectId}
+                  setIsDescendingOrder={setIsDescendingOrder}
+                />
+              </div>
+            </div>
+            <div className='projects-content-header__col projects-content-header__col-right'>
+              <div className='projects-content-header-item'>
+                <Search
+                  className='projects-search'
+                  matches={filterMatches}
+                  onChange={setFilterByName}
+                  onFocus={handleSearchOnFocus}
+                  placeholder='Search projects...'
+                  setMatches={setFilterMatches}
+                  value={filterByName}
+                />
+                <PageActionsMenu
+                  actionsMenuHeader={'New Project'}
+                  onClick={() => setCreateProject(true)}
+                  showActionsMenu
+                  variant={PRIMARY_BUTTON}
+                />
+                <RoundedIcon
+                  onClick={refreshProjects}
+                  className='panel-title__btn_close'
+                  tooltipText='Refresh'
+                  id='pop-up-close-btn'
+                >
+                  <RefreshIcon />
+                </RoundedIcon>
+              </div>
             </div>
           </div>
         </div>
@@ -151,9 +281,9 @@ const ProjectsView = ({
           (filterMatches.length === 0 || filteredProjects.length === 0) ? (
             <NoData />
           ) : selectedProjectsState === 'archived' && filteredProjects.length === 0 ? (
-            <div className="no-filtered-data">No archived projects.</div>
+            <div className='no-filtered-data'>No archived projects.</div>
           ) : (
-            <div className="projects-content">
+            <div className='projects-content'>
               {filteredProjects.map(project => {
                 return (
                   <ProjectCard
@@ -169,7 +299,7 @@ const ProjectsView = ({
             </div>
           )
         ) : projectStore.loading ? null : (
-          <NoData message="Your projects list is empty." />
+          <NoData message='Your projects list is empty.' />
         )}
       </div>
       {convertedYaml.length > 0 && (

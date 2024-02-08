@@ -62,8 +62,15 @@ const workflowActions = {
   fetchWorkflows: (project, filter, config) => dispatch => {
     dispatch(workflowActions.fetchWorkflowsBegin())
 
+    const newConfig = {
+      ...config,
+      params: {
+        ...config?.params
+      }
+    }
+
     return workflowApi
-      .getWorkflows(project, filter, config)
+      .getWorkflows(project, filter, newConfig)
       .then(response =>
         dispatch(workflowActions.fetchWorkflowsSuccess(parseWorkflows(response.data.runs)))
       )

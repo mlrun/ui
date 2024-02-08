@@ -27,6 +27,7 @@ import { createAutoCorrectedDatePipe } from '../../utils/createAutoCorrectedDate
 import {
   datesDivider,
   datePickerOptions,
+  datePickerNextOptions,
   decodeLocale,
   formatDate,
   generateCalendar,
@@ -44,6 +45,7 @@ const DatePicker = ({
   date,
   dateTo,
   disabled,
+  initialDateID,
   invalid,
   invalidText,
   label,
@@ -52,9 +54,11 @@ const DatePicker = ({
   required,
   requiredText,
   setInvalid,
+  showNext,
   splitCharacter,
   tip,
   type,
+  withLabels,
   withOptions
 }) => {
   const [datePickerState, datePickerDispatch] = useReducer(datePickerReducer, initialState)
@@ -64,6 +68,7 @@ const DatePicker = ({
   const [isRange] = useState(type.includes('range'))
   const [isTime] = useState(type.includes('time'))
   const [isValueEmpty, setIsValueEmpty] = useState(true)
+  const [selectedOption, setSelectedOption] = useState({})
   const [valueDatePickerInput, setValueDatePickerInput] = useState(
     formatDate(isRange, isTime, splitCharacter, date, dateTo)
   )
@@ -80,6 +85,8 @@ const DatePicker = ({
   )
   const dateRegEx = getDateRegEx(dateMask)
   const startWeek = getWeekStart(decodeLocale(navigator.language))
+
+  const datePickerOptionsElements = showNext ? datePickerNextOptions : datePickerOptions
 
   const handleCloseDatePickerOutside = useCallback(
     event => {
@@ -164,6 +171,12 @@ const DatePicker = ({
       }
     }
   }, [calcPosition, isDatePickerOpened, isDatePickerOptionsOpened])
+
+  useEffect(() => {
+    if (initialDateID) {
+      setSelectedOption(datePickerOptionsElements.find(option => option.id === initialDateID))
+    }
+  }, [datePickerOptionsElements, initialDateID])
 
   useEffect(() => {
     datePickerDispatch({
@@ -350,9 +363,9 @@ const DatePicker = ({
   const onInputDatePickerClick = () => {
     if (!disabled) {
       if (withOptions && !isDatePickerOpened) {
-        setIsDatePickerOptionsOpened(true)
+        setIsDatePickerOptionsOpened(state => !state)
       } else {
-        setIsDatePickerOpened(true)
+        setIsDatePickerOpened(state => !state)
         datePickerDispatch({
           type: datePickerActions.UPDATE_SELECTED_DATE_FROM,
           payload: date || new Date()
@@ -386,6 +399,7 @@ const DatePicker = ({
       setIsDatePickerOpened(true)
     }
 
+    setSelectedOption(option)
     setIsDatePickerOptionsOpened(false)
   }
 
@@ -418,7 +432,7 @@ const DatePicker = ({
       }
       dateMask={dateMask}
       datePickerInputOnBlur={datePickerInputOnBlur}
-      datePickerOptions={datePickerOptions}
+      datePickerOptions={datePickerOptionsElements}
       disabled={disabled}
       getInputValueValidity={getInputValueValidity}
       invalidText={invalidText}
@@ -444,10 +458,12 @@ const DatePicker = ({
       ref={{ datePickerRef, datePickerViewRef }}
       required={required}
       requiredText={requiredText}
+      selectedOption={selectedOption}
       setSelectedDate={setSelectedDate}
       tip={tip}
       valueDatePickerInput={valueDatePickerInput}
       weekDay={getWeekDays(startWeek)}
+      withLabels={withLabels}
     />
   )
 }
@@ -455,6 +471,7 @@ DatePicker.defaultProps = {
   className: '',
   dateTo: new Date(),
   disabled: false,
+  initialDateID: '',
   invalid: false,
   invalidText: 'This field is invalid',
   label: 'Date',
@@ -462,9 +479,11 @@ DatePicker.defaultProps = {
   required: false,
   requiredText: 'This field is required',
   setInvalid: () => {},
+  showNext: false,
   splitCharacter: '/',
   tip: '',
   type: 'date',
+  withLabels: false,
   withOptions: false
 }
 
@@ -473,6 +492,7 @@ DatePicker.propTypes = {
   date: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.string]).isRequired,
   dateTo: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.string]),
   disabled: PropTypes.bool,
+  initialDateID: PropTypes.string,
   invalid: PropTypes.bool,
   invalidText: PropTypes.string,
   label: PropTypes.string,
@@ -481,9 +501,11 @@ DatePicker.propTypes = {
   required: PropTypes.bool,
   requiredText: PropTypes.string,
   setInvalid: PropTypes.func,
+  showNext: PropTypes.bool,
   splitCharacter: PropTypes.oneOf(['/', '.']),
   tip: PropTypes.oneOfType([PropTypes.string, PropTypes.element]),
   type: PropTypes.oneOf(['date', 'date-time', 'date-range', 'date-range-time']),
+  withLabels: PropTypes.bool,
   withOptions: PropTypes.bool
 }
 

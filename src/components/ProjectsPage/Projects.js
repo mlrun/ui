@@ -17,12 +17,13 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import React, { useEffect, useState, useCallback, useRef } from 'react'
+import React, { useEffect, useState, useCallback, useRef, useMemo } from 'react'
 import FileSaver from 'file-saver'
 import yaml from 'js-yaml'
-import { connect, useDispatch, useSelector } from 'react-redux'
+import moment from 'moment'
+import { useNavigate } from 'react-router-dom'
+import { useDispatch, useSelector } from 'react-redux'
 import { isEmpty, last, orderBy } from 'lodash'
-import { useParams } from 'react-router-dom'
 
 import ProjectsView from './ProjectsView'
 
@@ -39,24 +40,18 @@ import projectsAction from '../../actions/projects'
 import { BG_TASK_RUNNING, isBackgroundTaskRunning } from '../../utils/poll.util'
 import { DANGER_BUTTON, FORBIDDEN_ERROR_STATUS_CODE, PRIMARY_BUTTON } from 'igz-controls/constants'
 import { fetchBackgroundTasks } from '../../reducers/tasksReducer'
+import jobsActions from '../../actions/jobs'
+import workflowActions from '../../actions/workflow'
+
+import { GROUP_BY_WORKFLOW, STATE_FILTER_ALL_ITEMS } from '../../constants'
+import { getJobsStatsConfig } from './projects.util'
+
 import { setNotification } from '../../reducers/notificationReducer'
 import { showErrorNotification } from '../../utils/notifications.util'
 import { useMode } from '../../hooks/mode.hook'
 import { useNuclioMode } from '../../hooks/nuclioMode.hook'
 
-const Projects = ({
-  changeProjectState,
-  createNewProject,
-  deleteProject,
-  fetchNuclioFunctions,
-  fetchProject,
-  fetchProjects,
-  fetchProjectsNames,
-  fetchProjectsSummary,
-  projectStore,
-  removeNewProjectError,
-  removeProjects
-}) => {
+const Projects = () => {
   const [actionsMenu, setActionsMenu] = useState({})
   const [confirmData, setConfirmData] = useState(null)
   const [convertedYaml, setConvertedYaml] = useState('')
@@ -68,18 +63,100 @@ const Projects = ({
   const [selectedProjectsState, setSelectedProjectsState] = useState('active')
   const [sortProjectId, setSortProjectId] = useState('byName')
   const [deletingProjects, setDeletingProjects] = useState({})
+  const [jobsFilter, setJobsFilter] = useState({
+    dates: {
+      value: [new Date(moment().add(-1, 'days'))]
+    }
+  })
+  const [workflowsFilter, setWorkflowsFilter] = useState({
+    groupBy: GROUP_BY_WORKFLOW,
+    dates: {
+      value: [new Date(moment().add(-1, 'days'))]
+    },
+    state: STATE_FILTER_ALL_ITEMS
+  })
+  const [scheduledFilter, setScheduledFilter] = useState({
+    dates: {
+      value: [new Date(), new Date(moment().add(1, 'days'))]
+    }
+  })
+  const [loadingState, setLoadingState] = useState({
+    jobs: true,
+    workflows: true,
+    scheduled: true
+  })
+
   const abortControllerRef = useRef(new AbortController())
   const terminatePollRef = useRef(null)
-  const urlParams = useParams()
+  const navigate = useNavigate()
   const dispatch = useDispatch()
   const { isDemoMode } = useMode()
   const { isNuclioModeDisabled } = useNuclioMode()
-
+  const projectStore = useSelector(store => store.projectStore)
+  const { jobs, scheduled } = useSelector(store => store.jobsStore)
+  const { data: workflows } = useSelector(store => store.workflowsStore.workflows)
   const tasksStore = useSelector(store => store.tasksStore)
 
+  //
+  useEffect(() => {
+    dispatch(jobsActions.fetchJobs('*', jobsFilter)).then(() => {
+      setLoadingState(state => ({
+        ...state,
+        jobs: false
+      }))
+    })
+  }, [dispatch, jobsFilter])
+  //
+
+  //
+  useEffect(() => {
+    dispatch(workflowActions.fetchWorkflows('*', workflowsFilter)).then(() => {
+      setLoadingState(state => ({
+        ...state,
+        workflows: false
+      }))
+    })
+  }, [dispatch, workflowsFilter])
+  //
+
+  //
+  useEffect(() => {
+    dispatch(jobsActions.fetchScheduledJobs('*')).then(() => {
+      setLoadingState(state => ({
+        ...state,
+        scheduled: false
+      }))
+    })
+  }, [dispatch])
+  //
+
+  const handleDateSelection = id => dates => {
+    const generatedDates = [...dates]
+
+    if (generatedDates.length === 1) {
+      !id.includes('scheduled')
+        ? generatedDates.push(new Date())
+        : generatedDates.unshift(new Date())
+    }
+
+    const setFilters = id.includes('jobs')
+      ? setJobsFilter
+      : id.includes('workflows')
+      ? setWorkflowsFilter
+      : setScheduledFilter
+
+    setFilters(filters => ({ ...filters, dates: { value: generatedDates } }))
+
+    !id.includes('scheduled') &&
+      setLoadingState(state => ({
+        ...state,
+        [id]: true
+      }))
+  }
+
   const fetchMinimalProjects = useCallback(() => {
-    fetchProjects({ format: 'minimal' })
-  }, [fetchProjects])
+    dispatch(projectsAction.fetchProjects({ format: 'minimal' }))
+  }, [dispatch])
 
   const isValidProjectState = useCallback(
     project => {
@@ -114,12 +191,12 @@ const Projects = ({
     abortControllerRef.current = new AbortController()
 
     if (!isNuclioModeDisabled) {
-      fetchNuclioFunctions()
+      dispatch(nuclioActions.fetchNuclioFunctions())
     }
 
-    removeProjects()
+    dispatch(projectsAction.removeProjects())
     fetchMinimalProjects()
-    fetchProjectsSummary(abortControllerRef.current.signal)
+    dispatch(projectsAction.fetchProjectsSummary(abortControllerRef.current.signal))
 
     dispatch(fetchBackgroundTasks({}))
       .unwrap()
@@ -147,14 +224,7 @@ const Projects = ({
           pollDeletingProjects(terminatePollRef, newDeletingProjects, refreshProjects, dispatch)
         }
       })
-  }, [
-    isNuclioModeDisabled,
-    removeProjects,
-    fetchMinimalProjects,
-    fetchProjectsSummary,
-    dispatch,
-    fetchNuclioFunctions
-  ])
+  }, [fetchMinimalProjects, isNuclioModeDisabled, dispatch])
 
   const handleSearchOnFocus = useCallback(() => {
     refreshProjects()
@@ -170,7 +240,7 @@ const Projects = ({
 
   const handleArchiveProject = useCallback(
     project => {
-      changeProjectState(project.metadata.name, 'archived')
+      dispatch(projectsAction.changeProjectState(project.metadata.name, 'archived'))
         .then(() => {
           fetchMinimalProjects()
         })
@@ -186,14 +256,14 @@ const Projects = ({
         })
       setConfirmData(null)
     },
-    [changeProjectState, dispatch, fetchMinimalProjects]
+    [dispatch, fetchMinimalProjects]
   )
 
   const handleDeleteProject = useCallback(
     (project, deleteNonEmpty) => {
       setConfirmData(null)
 
-      deleteProject(project.metadata.name, deleteNonEmpty)
+      dispatch(projectsAction.deleteProject(project.metadata.name, deleteNonEmpty))
         .then(response => {
           if (isBackgroundTaskRunning(response)) {
             dispatch(
@@ -204,7 +274,7 @@ const Projects = ({
               })
             )
 
-            setDeletingProjects((prevDeletingProjects) => {
+            setDeletingProjects(prevDeletingProjects => {
               const newDeletingProjects = {
                 ...prevDeletingProjects,
                 [response.data.metadata.name]: last(response.data.metadata.kind.split('.'))
@@ -236,16 +306,16 @@ const Projects = ({
           )
         })
     },
-    [deleteProject, dispatch, fetchMinimalProjects, refreshProjects]
+    [dispatch, fetchMinimalProjects, refreshProjects]
   )
 
   const handleUnarchiveProject = useCallback(
     project => {
-      changeProjectState(project.metadata.name, 'online').then(() => {
+      dispatch(projectsAction.changeProjectState(project.metadata.name, 'online')).then(() => {
         fetchMinimalProjects()
       })
     },
-    [changeProjectState, fetchMinimalProjects]
+    [dispatch, fetchMinimalProjects]
   )
 
   const convertToYaml = useCallback(
@@ -298,7 +368,7 @@ const Projects = ({
   const exportYaml = useCallback(
     projectMinimal => {
       if (projectMinimal?.metadata?.name) {
-        fetchProject(projectMinimal.metadata.name)
+        dispatch(projectsAction.fetchProject(projectMinimal.metadata.name))
           .then(project => {
             var blob = new Blob([yaml.dump(project, { lineWidth: -1 })])
 
@@ -311,13 +381,13 @@ const Projects = ({
           })
       }
     },
-    [dispatch, fetchProject]
+    [dispatch]
   )
 
   const viewYaml = useCallback(
     projectMinimal => {
       if (projectMinimal?.metadata?.name) {
-        fetchProject(projectMinimal.metadata.name)
+        dispatch(projectsAction.fetchProject(projectMinimal.metadata.name))
           .then(project => {
             convertToYaml(project)
           })
@@ -332,7 +402,27 @@ const Projects = ({
         setConvertedYaml('')
       }
     },
-    [convertToYaml, dispatch, fetchProject]
+    [convertToYaml, dispatch]
+  )
+
+  const removeNewProjectError = useCallback(
+    () => dispatch(projectsAction.removeNewProjectError()),
+    [dispatch]
+  )
+
+  const statsConfig = useMemo(
+    () =>
+      getJobsStatsConfig(
+        handleDateSelection,
+        jobs,
+        jobsFilter,
+        navigate,
+        scheduled,
+        scheduledFilter,
+        workflows,
+        workflowsFilter
+      ),
+    [jobs, jobsFilter, navigate, scheduled, scheduledFilter, workflows, workflowsFilter]
   )
 
   useEffect(() => {
@@ -344,8 +434,7 @@ const Projects = ({
         viewYaml,
         onArchiveProject,
         handleUnarchiveProject,
-        onDeleteProject,
-        isDemoMode
+        onDeleteProject
       )
     )
   }, [
@@ -392,23 +481,25 @@ const Projects = ({
     e.preventDefault()
 
     if (e.currentTarget.checkValidity() && formState.valid) {
-      createNewProject({
-        metadata: {
-          name: formState.values.name,
-          labels:
-            formState.values.labels?.reduce((acc, labelData) => {
-              acc[labelData.key] = labelData.value
-              return acc
-            }, {}) ?? {}
-        },
-        spec: {
-          description: formState.values.description
-        }
-      }).then(result => {
+      dispatch(
+        projectsAction.createNewProject({
+          metadata: {
+            name: formState.values.name,
+            labels:
+              formState.values.labels?.reduce((acc, labelData) => {
+                acc[labelData.key] = labelData.value
+                return acc
+              }, {}) ?? {}
+          },
+          spec: {
+            description: formState.values.description
+          }
+        })
+      ).then(result => {
         if (result) {
           setCreateProject(false)
           refreshProjects()
-          fetchProjectsNames()
+          dispatch(projectsAction.fetchProjectsNames())
         }
       })
     }
@@ -429,6 +520,8 @@ const Projects = ({
       handleSearchOnFocus={handleSearchOnFocus}
       handleSelectSortOption={handleSelectSortOption}
       isDescendingOrder={isDescendingOrder}
+      isDemoMode={isDemoMode}
+      loadingState={loadingState}
       projectStore={projectStore}
       refreshProjects={refreshProjects}
       removeNewProjectError={removeNewProjectError}
@@ -439,18 +532,10 @@ const Projects = ({
       setIsDescendingOrder={setIsDescendingOrder}
       setSelectedProjectsState={setSelectedProjectsState}
       sortProjectId={sortProjectId}
+      statsConfig={statsConfig}
       tasksStore={tasksStore}
-      urlParams={urlParams}
     />
   )
 }
 
-export default connect(
-  projectStore => ({
-    ...projectStore
-  }),
-  {
-    ...projectsAction,
-    ...nuclioActions
-  }
-)(Projects)
+export default Projects
