@@ -61,6 +61,8 @@ const ProjectJobs = ({ fetchProjectJobs, projectStore }) => {
       link={`/projects/${params.projectName}/jobs/${MONITOR_JOBS_TAB}`}
       params={params}
       statistics={jobsData.statistics}
+      tip="Each jobs and workflow can have multiple versions, produced by multiple runs and given multiple tags.
+           You can browse them in the Jobs and workflows page."
       table={jobsData.table}
       title="Jobs and workflows"
     />
