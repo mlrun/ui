@@ -95,10 +95,9 @@ Feature: Project Settings page
         Then click on "Active_Projects_Button" element on "Projects" wizard
         Then value in "labels" column with "dropdowns" in "Projects_Table" on "Projects" wizard should contains "a12345=b54321" in "Overlay"
 
-    @FAILED_TODO
-    #TODO: run with maximize browser window on 1920х1080 screen size
+    @MLPS
     @inProgress
-    Scenario: Verify Parameters Table on General Tab
+    Scenario: MLPS003 - Verify Parameters Table on General Tab
         * set tear-down property "project" created with "automation-test-name5" value
         * create "automation-test-name5" MLRun Project with code 201
         Given open url
@@ -113,7 +112,7 @@ Feature: Project Settings page
         Then verify "Parameters_Table_Key_Input" on "Project_Settings_General_Tab" wizard should display warning "Input_Hint"."Input_Field_Require"
         Then verify "Parameters_Table_Value_Input" on "Project_Settings_General_Tab" wizard should display warning "Input_Hint"."Input_Field_Require"
         When click on "Parameters_Table_Discard_Row_Button" element on "Project_Settings_General_Tab" wizard
-        When add new rows to "Parameters_Table" table on "Project_Settings_General_Tab" wizard using nontable inputs
+        When add new rows to "Parameters_Table" table on "Project_Settings_General_Tab" wizard using nontable inputs with notification pop-up
             | Parameters_Table_Key_Input | Parameters_Table_Value_Input | Parameters_Table_Add_Row_Button | Parameters_Table_Discard_Row_Button |
             |          key0              |           value0             |               yes               |                                     |
             |          key1              |           value1             |               yes               |                                     |
@@ -143,8 +142,9 @@ Feature: Project Settings page
             | key0 | value0 |
             | key6 | value6 |
 
+    @MLPS
     @passive
-    Scenario: Check MLRun logo redirection
+    Scenario: MLPS006 - Check MLRun logo redirection
         Given open url
         And wait load page
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
@@ -156,8 +156,9 @@ Feature: Project Settings page
         And wait load page
         Then verify "Projects_Table" element visibility on "Projects" wizard
 
+    @MLPS
     @passive
-    Scenario: Verify all mandatory components on Secrets tab
+    Scenario: MLPS007 - Verify all mandatory components on Secrets tab
         Given open url
         And wait load page
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
@@ -178,9 +179,9 @@ Feature: Project Settings page
         Then type value "   " to "New_Secret_Value_Input" field on "Create_New_Secret_Popup" wizard
         Then verify "New_Secret_Value_Input" on "Create_New_Secret_Popup" wizard should display warning "Input_Hint"."Input_Field_Invalid"
 
-
+    @MLPS
     @inProgress
-    Scenario: Verify Secrets table on Secrets tab
+    Scenario: MLPS008 - Verify Secrets table on Secrets tab
         * set tear-down property "project" created with "automation-test" value
         * create "automation-test" MLRun Project with code 201
         Given open url
@@ -214,10 +215,11 @@ Feature: Project Settings page
             | key2 |
             | key3 |
 
+    @MLPS
     @passive
     @inProgress
     @enabledProjectMembership
-    Scenario: Check all mandatory components on Project Owner
+    Scenario: MLPS009 - Check all mandatory components on Project Owner
         Given open url
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
@@ -233,10 +235,11 @@ Feature: Project Settings page
         And wait load page
         Then searchable case "insensitive" fragment "admin" should be in every suggested option into "Search_Input" on "Change_Project_Owner_Popup" wizard
 
+    @MLPS
     @passive
     @inProgress
     @enabledProjectMembership
-    Scenario: Check all mandatory components on Members tab
+    Scenario: MLPS010 - Check all mandatory components on Members tab
         Given open url
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
@@ -255,8 +258,11 @@ Feature: Project Settings page
         Then verify "Apply_Button" element visibility on "Project_Members_Popup" wizard
         Then verify "Footer_Annotation_Label" element visibility on "Project_Members_Popup" wizard
 
+    @MLPS
     @enabledProjectMembership
-    Scenario: Verify behaviour of Invite New Members on Members tab
+    @FAILED_TODO
+    #TODO: owner igz_nobody, iguazioUsers, change getIguazioProjects implementation
+    Scenario: MLPS004 - Verify behaviour of Invite New Members on Members tab
         Given open url
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
@@ -265,7 +271,7 @@ Feature: Project Settings page
         And wait load page
         And select "Members" tab in "Project_Settings_Tab_Selector" on "Project_Settings_General_Tab" wizard
         And wait load page
-        Then "Members_Summary" element on "Project_Members_Popup" should contains "0members have access to this project" value
+        Then "Members_Summary" element on "Project_Members_Popup" should contains "One owner has access to this project" value
         Then verify "Discard_Button" element on "Project_Members_Popup" wizard is disabled
         Then verify "Apply_Button" element on "Project_Members_Popup" wizard is disabled
         Then click on "Invite_New_Members_Button" element on "Project_Members_Popup" wizard
@@ -333,7 +339,8 @@ Feature: Project Settings page
         Then verify "Apply_Button" element on "Project_Members_Popup" wizard is disabled
         And remove "automation-test" MLRun Project with code 204
 
-    Scenario: Check broken link redirection
+    @MLPS
+    Scenario: MLPS005 - Check broken link redirection
         Given open url
         And wait load page
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard

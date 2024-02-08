@@ -18,9 +18,14 @@ under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
 export const roundFloats = (value, precision) => {
-  const floatNumber = parseFloat(value)
+  if (
+    ((typeof value === 'string' && value.trim() !== '') || typeof value === 'number') &&
+    !isNaN(value)
+  ) {
+    const parsedNum = parseFloat(value)
 
-  if (isNaN(floatNumber)) return value
+    return parsedNum % 1 === 0 ? parsedNum : +parsedNum.toFixed(precision ?? 2)
+  }
 
-  return parseFloat(floatNumber.toFixed(precision ?? 2))
+  return value
 }

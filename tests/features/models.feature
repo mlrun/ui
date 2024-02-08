@@ -39,10 +39,10 @@ Feature: Models Page
     Then "Train_Model_Button" element on "Models" should contains "Train model" value
     Then click on "Train_Model_Button" element on "Models" wizard
     And wait load page
-    Then verify "Title" element visibility on "Train_Model" wizard
-    Then "Title" element on "Train_Model" should contains "Train Model" value
-    Then verify "Cross_Cancel_Button" element visibility on "Train_Model" wizard
-    Then click on "Cross_Cancel_Button" element on "Train_Model" wizard
+    Then verify "Title" element visibility on "Modal_Wizard_Form" wizard
+    Then "Title" element on "Modal_Wizard_Form" should contains "Train Model" value
+    Then verify "Cross_Close_Button" element visibility on "Modal_Wizard_Form" wizard
+    Then click on "Cross_Close_Button" element on "Modal_Wizard_Form" wizard
 
   @MLM
   @passive

@@ -18,7 +18,7 @@ under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
 import { trim } from 'lodash'
-import { DATE_FILTER_ANY_TIME } from '../constants'
+import { ANY_TIME, DATE_FILTER_ANY_TIME } from '../constants'
 
 export const datesDivider = ' - '
 
@@ -48,7 +48,7 @@ export const CUSTOM_RANGE_DATE_OPTION = 'customRange'
 export const datePickerOptions = [
   {
     id: ANY_TIME_DATE_OPTION,
-    label: 'Any time',
+    label: ANY_TIME,
     handler: () => DATE_FILTER_ANY_TIME
   },
   {
@@ -125,24 +125,16 @@ export const formatDate = (isRange, isTime, splitCharacter, date, dateTo) => {
   let dateString = formatSingleDate(isTime, splitCharacter, date)
 
   if (isRange) {
-    dateString += `${datesDivider}${formatSingleDate(
-      isTime,
-      splitCharacter,
-      dateTo
-    )}`
+    dateString += `${datesDivider}${formatSingleDate(isTime, splitCharacter, dateTo)}`
   }
 
   return dateString
 }
 
 const formatSingleDate = (isTime, splitCharacter, date) => {
-  let dateString = `${String(date.getMonth() + 1).padStart(
-    2,
-    '0'
-  )}${splitCharacter}${String(date.getDate()).padStart(
-    2,
-    '0'
-  )}${splitCharacter}${date.getFullYear()}`
+  let dateString = `${String(date.getMonth() + 1).padStart(2, '0')}${splitCharacter}${String(
+    date.getDate()
+  ).padStart(2, '0')}${splitCharacter}${date.getFullYear()}`
 
   if (isTime) {
     dateString += ` ${String(date.getHours()).padStart(2, '0')}:${String(
@@ -172,9 +164,7 @@ export const generateCalendar = (date, startWeek) => {
       day: new Date(
         new Date(lastDayInPreviousMonth).setDate(
           lastDayInPreviousMonth.getDate() -
-            (startWeek === 'mon'
-              ? lastDayInPreviousMonth.getDay()
-              : firstDay.getDay()) +
+            (startWeek === 'mon' ? lastDayInPreviousMonth.getDay() : firstDay.getDay()) +
             index +
             1
         )
@@ -186,18 +176,7 @@ export const generateCalendar = (date, startWeek) => {
 }
 
 export const getDateMask = (isRange, isTime, splitCharacter) => {
-  let dateMask = [
-    /\d/,
-    /\d/,
-    splitCharacter,
-    /\d/,
-    /\d/,
-    splitCharacter,
-    /\d/,
-    /\d/,
-    /\d/,
-    /\d/
-  ]
+  let dateMask = [/\d/, /\d/, splitCharacter, /\d/, /\d/, splitCharacter, /\d/, /\d/, /\d/, /\d/]
 
   if (isTime) {
     dateMask.push(' ', /\d/, /\d/, ':', /\d/, /\d/)
@@ -229,11 +208,7 @@ export const getDateRegEx = dateMask => {
 
   dateMask.forEach(value => {
     regExpString +=
-      value === ' '
-        ? '\\s'
-        : typeof value === 'string'
-        ? `\\${value}`
-        : trim(value, '/')
+      value === ' ' ? '\\s' : typeof value === 'string' ? `\\${value}` : trim(value, '/')
   })
 
   return regExpString
