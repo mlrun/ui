@@ -126,9 +126,13 @@ const DatePicker = ({
   }, [])
 
   const calcPosition = useCallback(() => {
-    if (isDatePickerOpened || isDatePickerOptionsOpened) {
-      const containerRect = datePickerRef?.current?.getBoundingClientRect()
-      const popUpRect = datePickerViewRef?.current?.getBoundingClientRect()
+    if (
+      datePickerRef?.current &&
+      datePickerViewRef?.current &&
+      (isDatePickerOpened || isDatePickerOptionsOpened)
+    ) {
+      const containerRect = datePickerRef.current.getBoundingClientRect()
+      const popUpRect = datePickerViewRef.current.getBoundingClientRect()
       const padding = 5
 
       if (containerRect && popUpRect) {
@@ -148,7 +152,7 @@ const DatePicker = ({
               : containerRect.height + padding
         }
         datePickerViewRef.current.style.top = `${topPosition}px`
-  
+
         if (popUpRect.width + containerRect.left > window.innerWidth) {
           datePickerViewRef.current.style.left = `${
             window.innerWidth - popUpRect.width - containerRect.left - padding
