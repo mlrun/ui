@@ -19,6 +19,7 @@ such restriction.
 */
 import React, { useState, useRef, useEffect, useCallback, useLayoutEffect, useReducer } from 'react'
 import PropTypes from 'prop-types'
+import { throttle } from 'lodash'
 
 import DatePickerView from './DatePickerView'
 import { DATE_FILTER_ANY_TIME } from '../../constants'
@@ -62,7 +63,6 @@ const DatePicker = ({
   const [isDatePickerOptionsOpened, setIsDatePickerOptionsOpened] = useState(false)
   const [isRange] = useState(type.includes('range'))
   const [isTime] = useState(type.includes('time'))
-  const [isTopPosition, setIsTopPosition] = useState(false)
   const [isValueEmpty, setIsValueEmpty] = useState(true)
   const [valueDatePickerInput, setValueDatePickerInput] = useState(
     formatDate(isRange, isTime, splitCharacter, date, dateTo)
@@ -125,16 +125,60 @@ const DatePicker = ({
     return inputValue.length === 0
   }, [])
 
-  useLayoutEffect(() => {
-    if (isDatePickerOpened) {
-      const { top, bottom } = datePickerViewRef.current.getBoundingClientRect()
-      if (bottom > window.innerHeight && top > datePickerViewRef.current.offsetHeight) {
-        setIsTopPosition(true)
+  const calcPosition = useCallback(() => {
+    if (
+      datePickerRef?.current &&
+      datePickerViewRef?.current &&
+      (isDatePickerOpened || isDatePickerOptionsOpened)
+    ) {
+      const containerRect = datePickerRef.current.getBoundingClientRect()
+      const popUpRect = datePickerViewRef.current.getBoundingClientRect()
+      const padding = 5
+
+      if (containerRect && popUpRect) {
+        let topPosition
+
+        if (
+          popUpRect.height + containerRect.bottom > window.innerHeight &&
+          containerRect.top - popUpRect.height > padding
+        ) {
+          topPosition = -padding - popUpRect.height
+        } else {
+          topPosition =
+            popUpRect.height + containerRect.bottom > window.innerHeight
+              ? containerRect.height +
+                (window.innerHeight - (popUpRect.height + containerRect.bottom)) -
+                padding
+              : containerRect.height + padding
+        }
+        datePickerViewRef.current.style.top = `${topPosition}px`
+
+        if (popUpRect.width + containerRect.left > window.innerWidth) {
+          datePickerViewRef.current.style.left = `${
+            window.innerWidth - popUpRect.width - containerRect.left - padding
+          }px`
+        } else {
+          datePickerViewRef.current.style.left = '0px'
+        }
       }
-    } else {
-      setIsTopPosition(false)
     }
-  }, [isDatePickerOpened])
+  }, [isDatePickerOpened, isDatePickerOptionsOpened])
+
+  useLayoutEffect(() => {
+    calcPosition()
+  }, [calcPosition])
+
+  useEffect(() => {
+    if (isDatePickerOpened || isDatePickerOptionsOpened) {
+      const throttledCalcPosition = throttle(calcPosition, 100, { trailing: true, leading: true })
+
+      window.addEventListener('resize', throttledCalcPosition)
+
+      return () => {
+        window.removeEventListener('resize', throttledCalcPosition)
+      }
+    }
+  }, [calcPosition, isDatePickerOpened, isDatePickerOptionsOpened])
 
   useEffect(() => {
     datePickerDispatch({
@@ -193,7 +237,7 @@ const DatePicker = ({
 
   useEffect(() => {
     if (isDatePickerOpened || isDatePickerOptionsOpened) {
-      window.addEventListener('click', handleCloseDatePickerOutside)
+      window.addEventListener('click', handleCloseDatePickerOutside, true)
       return () => window.removeEventListener('click', handleCloseDatePickerOutside)
     }
   }, [handleCloseDatePickerOutside, isDatePickerOpened, isDatePickerOptionsOpened])
@@ -397,7 +441,6 @@ const DatePicker = ({
       isRangeDateValid={isRangeDateValid}
       isSameDate={isSameDate}
       isTime={isTime}
-      isTopPosition={isTopPosition}
       isValueEmpty={isValueEmpty}
       label={label}
       months={months}
