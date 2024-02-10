@@ -374,7 +374,7 @@ const JobWizardFunctionSelection = ({
       if (!selectedElement) return
       selectedElement.scrollIntoView({ behavior: 'smooth', block: 'center' })
     }
-  }, [stepIsActive, toggle, activeTab])
+  }, [stepIsActive, toggle, activeTab, setActiveTab])
 
   return (
     <div className="job-wizard__function-selection">
