@@ -23,7 +23,6 @@ import {
   DATE_RANGE_TIME_FILTER,
   FUNCTIONS_PAGE,
   JOBS_PAGE,
-  JOB_KIND_LOCAL,
   NAME_FILTER,
   PERIOD_FILTER,
   STATUS_FILTER
@@ -35,7 +34,8 @@ import {
   JOB_STEADY_STATES,
   isJobKindDask,
   isJobAborting,
-  JOB_RUNNING_STATES
+  JOB_RUNNING_STATES,
+  isJobKindLocal
 } from '../jobs.util'
 import jobsActions from '../../../actions/jobs'
 import functionsActions from '../../../actions/functions'
@@ -111,7 +111,7 @@ export const generateActionsMenu = (
         {
           label: 'Batch re-run',
           icon: <Run />,
-          hidden: [JOB_KIND_LOCAL, ''].includes(job?.ui?.originalContent.metadata.labels.kind),
+          hidden: isJobKindLocal(job),
           onClick: handleRerunJob
         },
         {
