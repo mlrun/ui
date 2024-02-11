@@ -123,6 +123,7 @@ const FunctionsView = ({
                         rowItem={tableItem}
                         selectedItem={selectedFunction}
                         selectedRowData={selectedRowData}
+                        withQuickActions
                       />
                     )
                   })}

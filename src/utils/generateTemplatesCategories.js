@@ -20,7 +20,7 @@ such restriction.
 
 import { isEmpty } from 'lodash'
 
-import { functionRunKinds } from '../components/Jobs/jobs.util'
+import { FUNCTION_RUN_KINDS } from '../constants'
 
 const excludedFunctionNames = ['batch-inference']
 
@@ -59,7 +59,7 @@ export const generateCategories = functionTemplates => {
         categories: value?.categories.map(category => aliasToCategory[category] ?? category)
       }
     }))
-    .filter(template => functionRunKinds.includes(template.kind))
+    .filter(template => FUNCTION_RUN_KINDS.includes(template.kind))
 
   const templatesCategories = {}
 
@@ -82,7 +82,7 @@ export const generateHubCategories = (functionTemplates, allowedHubFunctions = {
   const hubFunctions = functionTemplates
     .filter(
       template =>
-        functionRunKinds.includes(template.spec.kind) &&
+        FUNCTION_RUN_KINDS.includes(template.spec.kind) &&
         !excludedFunctionNames.includes(template.metadata.name) &&
         (isEmpty(allowedHubFunctions) ||
           Object.keys(allowedHubFunctions).includes(template.metadata.name))

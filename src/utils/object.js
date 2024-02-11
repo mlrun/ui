@@ -18,6 +18,7 @@ under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
 import { isNil } from 'lodash'
+import { roundFloats } from './roundFloats'
 
 // {key: "value", key2: "value2"} --> ["key: value", "key2: value2"]
 export const parseKeyValues = (object = {}) =>
@@ -34,7 +35,7 @@ export const parseKeyValues = (object = {}) =>
             })}]`
           : typeof value === 'object' && value !== null
           ? `${key}: ${JSON.stringify(value, null, 1)}`
-          : `${key}: ${value}`
+          : `${key}: ${roundFloats(value, 4)}`
       })
 
 // ["key: value", "key2: value2"] -> {key: "value", key2: "value2"}

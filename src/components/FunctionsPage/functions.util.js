@@ -17,6 +17,8 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
+import React from 'react'
+
 import {
   DETAILS_BUILD_LOG_TAB,
   FUNCTION_CREATING_STATE,
@@ -25,6 +27,7 @@ import {
   FUNCTION_INITIALIZED_STATE,
   FUNCTION_PENDINDG_STATE,
   FUNCTION_READY_STATE,
+  FUNCTION_RUN_KINDS,
   FUNCTION_RUNNING_STATE,
   FUNCTION_TYPE_JOB,
   FUNCTION_TYPE_LOCAL,
@@ -32,8 +35,17 @@ import {
   FUNCTION_TYPE_REMOTE,
   FUNCTION_TYPE_SERVING,
   NAME_FILTER,
+  PANEL_FUNCTION_CREATE_MODE,
   SHOW_UNTAGGED_FILTER
 } from '../../constants'
+import jobsActions from '../../actions/jobs'
+import { showErrorNotification } from '../../utils/notifications.util'
+
+import { ReactComponent as Delete } from 'igz-controls/images/delete.svg'
+import { ReactComponent as Run } from 'igz-controls/images/run.svg'
+import { ReactComponent as Edit } from 'igz-controls/images/edit.svg'
+import { ReactComponent as Yaml } from 'igz-controls/images/yaml.svg'
+import { ReactComponent as DeployIcon } from 'igz-controls/images/deploy-icon.svg'
 
 export const page = 'FUNCTIONS'
 export const detailsMenu = [
@@ -91,4 +103,84 @@ export const getFunctionImage = func => {
     func.type === FUNCTION_TYPE_REMOTE
     ? func.container_image
     : func.image
+}
+
+export const generateActionsMenu = (
+  dispatch,
+  func,
+  isDemoMode,
+  isStagingMode,
+  setJobWizardMode,
+  setFunctionsPanelIsOpen,
+  setEditableItem,
+  onRemoveFunction,
+  toggleConvertedYaml,
+  buildAndRunFunc
+) => {
+  return [
+    [
+      {
+        id: 'run',
+        label: 'Run',
+        icon: <Run />,
+        onClick: func => {
+          if (func?.project && func?.name && func?.hash && func?.ui?.originalContent) {
+            dispatch(jobsActions.fetchJobFunctionSuccess(func.ui.originalContent))
+            setJobWizardMode(PANEL_FUNCTION_CREATE_MODE)
+          } else {
+            showErrorNotification(dispatch, {}, '', 'Failed to retrieve function data')
+          }
+        },
+        hidden:
+          !FUNCTION_RUN_KINDS.includes(func?.type) ||
+          !FUNCTIONS_READY_STATES.includes(func?.state?.value)
+      },
+      {
+        label: 'Edit',
+        icon: <Edit />,
+        onClick: func => {
+          setFunctionsPanelIsOpen(true)
+          setEditableItem(func)
+        },
+        hidden:
+          !isDemoMode ||
+          !getFunctionsEditableTypes(isStagingMode).includes(func?.type) ||
+          !FUNCTIONS_EDITABLE_STATES.includes(func?.state?.value)
+      },
+      {
+        label: 'Delete',
+        icon: <Delete />,
+        className: 'danger',
+        onClick: onRemoveFunction
+      },
+      {
+        label: 'View YAML',
+        icon: <Yaml />,
+        onClick: toggleConvertedYaml
+      }
+    ],
+    [
+      {
+        id: 'build-and-run',
+        label: 'Build and run',
+        icon: <DeployIcon />,
+        onClick: func => {
+          buildAndRunFunc(func)
+        },
+        hidden:
+          func?.type !== FUNCTION_TYPE_JOB ||
+          (func?.type === FUNCTION_TYPE_JOB && func?.state?.value !== FUNCTION_INITIALIZED_STATE)
+      },
+      {
+        id: 'deploy',
+        label: 'Deploy',
+        icon: <DeployIcon />,
+        onClick: func => {
+          setFunctionsPanelIsOpen(true)
+          setEditableItem(func)
+        },
+        hidden: func?.type !== FUNCTION_TYPE_SERVING
+      }
+    ]
+  ]
 }

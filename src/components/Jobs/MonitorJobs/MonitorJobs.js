@@ -54,6 +54,7 @@ import {
   enrichRunWithFunctionFields,
   handleAbortJob,
   handleDeleteJob,
+  isJobKindLocal,
   pollAbortingJobs
 } from '../jobs.util'
 import getState from '../../../utils/getState'
@@ -305,7 +306,13 @@ const MonitorJobs = ({
       setConfirmData({
         item: job,
         header: 'Abort job?',
-        message: `You try to abort job "${job.name}".`,
+        message: (
+          <div>
+            You try to abort job "{job.name}". <br />
+            {isJobKindLocal(job) &&
+              'This is a local run. You can abort the run, though the actual process will continue.'}
+          </div>
+        ),
         btnConfirmLabel: 'Abort',
         btnConfirmType: DANGER_BUTTON,
         rejectHandler: () => {
@@ -534,13 +541,7 @@ const MonitorJobs = ({
           }
         }
 
-        pollAbortingJobs(
-          params.projectName,
-          abortJobRef,
-          abortingJob,
-          fetchRun,
-          dispatch
-        )
+        pollAbortingJobs(params.projectName, abortJobRef, abortingJob, fetchRun, dispatch)
       }
     }
   }, [dispatch, filters, params.jobName, params.projectName, fetchRun, selectedJob, params.jobId])

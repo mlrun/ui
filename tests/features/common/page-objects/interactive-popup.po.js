@@ -334,12 +334,40 @@ const dataInputsTable = {
         edit_btn: '.form-table__actions-cell .round-icon-cp:nth-of-type(1)',
         apply_btn: '.form-table__actions-cell .round-icon-cp:nth-of-type(1)',
         delete_btn: '.form-table__actions-cell .round-icon-cp:nth-of-type(2)',
+        discard_btn: '.form-table__actions-cell .round-icon-cp:nth-of-type(2)',
         name_input: '.form-field-input input',
         path_dropdown: {
           componentType: dropdownComponent,
           structure: generateDropdownGroup(
             '.form-table__cell_1:nth-of-type(3) .form-field-combobox', 
             '.form-field__icons:nth-of-type(1)', 
+            '.form-field-combobox__dropdown-list-option', 
+            false, 
+            false)  
+        },
+        path_dropdown_autocomplete_artifacts: {
+          componentType: dropdownComponent,
+          structure: generateDropdownGroup(
+            '.form-table__cell_1:nth-of-type(3) .form-field-combobox', 
+            '.form-field-combobox__input', 
+            '.form-field-combobox__dropdown-list-option', 
+            false, 
+            false)  
+        },
+        path_dropdown_autocomplete_project: {
+          componentType: dropdownComponent,
+          structure: generateDropdownGroup(
+            '.form-table__cell_1:nth-of-type(3) .form-field-combobox', 
+            '.form-field-combobox__input', 
+            '.form-field-combobox__dropdown-list-option', 
+            false, 
+            false)  
+        },
+        path_dropdown_autocomplete_item: {
+          componentType: dropdownComponent,
+          structure: generateDropdownGroup(
+            '.form-table__cell_1:nth-of-type(3) .form-field-combobox', 
+            '.form-field-combobox__input', 
             '.form-field-combobox__dropdown-list-option', 
             false, 
             false)  
@@ -414,6 +442,48 @@ const advancedEnvironmentVariablesTable = {
   }
 }
 
+const functionsTableSelector = {
+  root: '.form .functions-list',
+  header: {},
+  body: {
+    row: {
+      root: '.job-card-template',
+      fields: {
+        name:
+          '.job-card-template__header > div:first-child',
+        sub_name:
+          '.job-card-template__header .job-card-template__sub-header .data-ellipsis',
+        description:
+          '.job-card-template__description',
+        labels: {
+          componentType: dropdownComponent,
+          structure: generateDropdownGroup(
+            '.job-card-template__chips input',
+            '.chip-block span.chips_button',
+            '.chip-block .data-ellipsis.tooltip-wrapper .edit-chip-container',
+            false,
+            true
+          )
+        }
+      }
+    }
+  }
+}
+
+const functionSelectionTabs = {
+  root: '.wizard-form__content .content-menu',
+  header: {},
+  body: {
+    root: '.content-menu__list',
+    row: {
+      root: '.content-menu__item',
+      fields: {
+        key: 'a'
+      }
+    }
+  }
+}
+
 // Common components
 
 const commonCancelButton = By.css('.pop-up-dialog button.pop-up-dialog__btn_cancel')
@@ -478,10 +548,10 @@ module.exports = {
     Title: commonTitle,
     Name_Input: inputGroup(
       generateInputGroup(
-        '.pop-up-dialog [data-testid="name-form-field-input"]',
+        '.pop-up-dialog [data-testid="name-form-field-input"] .form-field__wrapper-normal',
         true,
-        '.input__warning svg',
-        true
+        '.form-field__warning svg',
+        '.form-field__warning svg'
       )
     ),
     Description_Input: textAreaGroup(
@@ -514,10 +584,12 @@ module.exports = {
   },
   modalWizardForm:{
     Title: By.css('.modal .modal__header-title'),
-    Cross_Cancel_Button: By.css('.modal .modal__header-button'),
+    Cross_Close_Button: By.css('.modal .modal__header-button'),
     Function_Title: By.css(
       '.modal .modal__content h6.modal__header-sub-title'
     ),
+    Function_Selection_Tabs: commonTable(functionSelectionTabs),
+    Functions_Table: commonTable(functionsTableSelector),
     Hyperparameter_Checkbox: checkboxComponent({
       root: '#overlay_container .form-field-checkbox',
       elements: {
@@ -532,6 +604,7 @@ module.exports = {
     Schedule_Training_Job_Button: commonScheduleButton,
     Schedule_For_Later_Button: commonScheduleButton,
     Save_Button: commonRunSaveButton,
+    Run_Button: commonRunSaveButton,
     Run_Name_Input: inputGroup(
       generateInputGroup(
         '.form-row .form-field-input .form-field__wrapper',
@@ -742,9 +815,33 @@ module.exports = {
       Resources_Node_Selector_Table: commonTable(resourcesNodeSelectorTable)
     },
     Accordion_Subheader: By.css('.modal__body .job-wizard__advanced .form-table-title'),
-    Advanced_Environment_Variables_Table: commonTable(advancedEnvironmentVariablesTable)
-  },
-  trainModel:{
+    Advanced_Environment_Variables_Table: commonTable(advancedEnvironmentVariablesTable),
+    Hyperparameter_Strategy_Accordion:{
+      Strategy_Dropdown: dropdownComponent(
+        generateDropdownGroup(
+          '.modal__content .modal__body .job-wizard__hyperparameter-strategy .strategy-grid-item',
+          '.form-field-select .form-field__wrapper-normal', 
+          '.options-list__body .select__item-label',
+          '.data-ellipsis'
+        )
+      ),
+      Max_Iterations: inputGroup(
+        generateInputGroup(
+          '.modal__content .modal__body .wizard-form__content .max-iterations-grid-item .form-field__wrapper-normal',
+          true,
+          true,
+          false
+        )
+      ),
+      Max_Errors: inputGroup(
+        generateInputGroup(
+          '.modal__content .modal__body .wizard-form__content .max-errors-grid-item .form-field__wrapper-normal',
+          true,
+          true,
+          false
+        )
+      )
+    },
     Ranking_Subheader: By.css('.job-wizard__hyperparameter-strategy .ranking-title-grid-item'),
     Ranking_Result_Input: inputGroup(
       generateInputGroup(
@@ -1153,5 +1250,42 @@ module.exports = {
   notificationPopUp: {
     Notification_Pop_Up: By.css('.notification_container .notification_body'),
     Notification_Pop_Up_Cross_Close_Button: By.css('.notification_container .notification_body_close_icon')
+  },
+  schedulePopUp: {
+    Schedule_For_Later: {
+      Schedule_Button: By.css('.schedule-wizard .modal__footer-actions .btn-secondary'),
+      Time_unit_Dropdown: dropdownComponent(
+        generateDropdownGroup(
+          '.simple-schedule-item .form-field-select .form-field__wrapper',
+          '.form-field__control .form-field__select',
+          '.options-list__body .select__item',
+          '.data-ellipsis .data-ellipsis'
+        )
+      ),
+      Intervals_Dropdown: dropdownComponent(
+        generateDropdownGroup(
+          '.simple-schedule-item:nth-of-type(2) .form-field-select .form-field__wrapper',
+          '.form-field__control .form-field__select',
+          '.options-list__body .select__item',
+          '.data-ellipsis .data-ellipsis'
+        )
+      ),
+      At_time_Input: numberInputGroup(
+        generateNumberInputGroup(
+          '.form-col-1 .time-picker-container .time-picker__control',
+          false,
+          true,
+          false
+        )
+      ),
+      Schedule_item_Sunday: By.css('.simple-schedule-item .schedule-repeat-week .schedule-repeat-week_day:nth-of-type(1)'),
+      Schedule_item_Monday: By.css('.simple-schedule-item .schedule-repeat-week .schedule-repeat-week_day:nth-of-type(2)'),
+      Schedule_item_Tuesday: By.css('.simple-schedule-item .schedule-repeat-week .schedule-repeat-week_day:nth-of-type(3)'),
+      Schedule_item_Wednesday: By.css('.simple-schedule-item .schedule-repeat-week .schedule-repeat-week_day:nth-of-type(4)'),
+      Schedule_item_Thursday: By.css('.simple-schedule-item .schedule-repeat-week .schedule-repeat-week_day:nth-of-type(5)'),
+      Schedule_item_Friday: By.css('.simple-schedule-item .schedule-repeat-week .schedule-repeat-week_day:nth-of-type(6)'),
+      Schedule_item_Saturday: By.css('.simple-schedule-item .schedule-repeat-week .schedule-repeat-week_day:nth-of-type(7)'),
+      Error_Message: By.css('.schedule-content .error')
+    }
   }
 }

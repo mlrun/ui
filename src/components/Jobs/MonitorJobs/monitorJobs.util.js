@@ -22,6 +22,7 @@ import { isNil, isEmpty } from 'lodash'
 
 import {
   DATE_RANGE_TIME_FILTER,
+  FUNCTION_RUN_KINDS,
   JOBS_PAGE,
   LABELS_FILTER,
   NAME_FILTER,
@@ -30,7 +31,6 @@ import {
 } from '../../../constants'
 import {
   JOB_STEADY_STATES,
-  functionRunKinds,
   getInfoHeaders,
   getJobsDetailsMenu,
   isJobKindAbortable,
@@ -103,7 +103,7 @@ export const generateActionsMenu = (
         {
           label: 'Batch re-run',
           icon: <Run />,
-          hidden: !functionRunKinds.includes(job?.ui?.originalContent.metadata.labels?.kind),
+          hidden: !FUNCTION_RUN_KINDS.includes(job?.ui?.originalContent.metadata.labels?.kind),
           onClick: handleRerunJob
         },
         {
