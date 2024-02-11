@@ -56,6 +56,10 @@ const TableCell = ({
     className,
     data.bodyCellClassName
   )
+  const driftStatus =
+    data.tooltip && ['POSSIBLE_DRIFT', 'DRIFT_DETECTED'].includes(item.status.drift_status)
+      ? item.status.drift_status.toLowerCase()
+      : ''
 
   if (data.template) {
     return data.template
@@ -180,7 +184,7 @@ const TableCell = ({
     return <td className={cellClassNames}>{data.value}</td>
   } else {
     return (
-      <td className={cellClassNames}>
+      <td className={`${cellClassNames} ${driftStatus}`}>
         <Tooltip
           className="text_small"
           template={<TextTooltipTemplate text={data.tooltip || data.value} />}
