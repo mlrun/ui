@@ -561,19 +561,32 @@ const MonitorWorkflows = ({
           getWorkflows(filters)
           dispatch(setFilters(filters))
         } else {
-          const pastDayOption = datePickerOptions.find(
+          const pastWeekOption = datePickerOptions.find(
             option => option.id === PAST_WEEK_DATE_OPTION
           )
-          const filters = {
-            dates: {
-              state: filtersStore.state,
-              value: pastDayOption.handler(),
-              isPredefined: pastDayOption.isPredefined
-            },
-            groupBy: GROUP_BY_WORKFLOW
+          const generatedDates = [...pastWeekOption.handler()]
+
+          if (generatedDates.length === 1) {
+            generatedDates.push(new Date())
           }
-          getWorkflows(filters)
-          dispatch(setFilters({ ...filters }))
+
+          dispatch(
+            setFilters({
+              groupBy: GROUP_BY_WORKFLOW,
+              dates: {
+                value: generatedDates,
+                isPredefined: pastWeekOption.isPredefined
+              }
+            })
+          )
+          getWorkflows({
+            ...filtersStore,
+            groupBy: GROUP_BY_WORKFLOW,
+            dates: {
+              value: generatedDates,
+              isPredefined: pastWeekOption.isPredefined
+            }
+          })
         }
 
         setWorkflowsAreLoaded(true)
