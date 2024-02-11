@@ -184,7 +184,7 @@ const generateNoEntriesFoundMessage = (
     const isLastElement = index === changedFilters.length - 1
 
     return message + `${label} ${value}${isLastElement ? '"' : ', '}`
-  }, `There is no ${messageNames.plural} data to show for "`)
+  }, 'No data matches the filter: "')
 }
 
 const getChangedFiltersList = (filters, filtersStore, filtersStoreKey) => {

@@ -335,7 +335,7 @@ const Datasets = () => {
       setSelectedDataset({})
       abortControllerRef.current.abort(REQUEST_CANCELED)
     }
-  }, [dispatch])
+  }, [dispatch, params.projectName])
 
   const handleRegisterDataset = useCallback(() => {
     openPopUp(RegisterArtifactModal, {

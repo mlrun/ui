@@ -19,7 +19,7 @@ such restriction.
 */
 import React, { useCallback, useEffect, useMemo, useState, useRef } from 'react'
 import { connect, useDispatch, useSelector } from 'react-redux'
-import { isEmpty } from 'lodash'
+import { chain, isEmpty } from 'lodash'
 import { useLocation, useNavigate, useParams } from 'react-router-dom'
 
 import AddArtifactTagPopUp from '../../../elements/AddArtifactTagPopUp/AddArtifactTagPopUp'
@@ -29,6 +29,7 @@ import RegisterModelModal from '../../../elements/RegisterModelModal/RegisterMod
 import JobWizard from '../../JobWizard/JobWizard'
 
 import {
+  fetchArtifactsFunctions,
   fetchArtifactTags,
   fetchModel,
   fetchModels,
@@ -45,7 +46,8 @@ import {
   MODELS_FILTERS,
   REQUEST_CANCELED,
   MODEL_TYPE,
-  SHOW_ITERATIONS
+  SHOW_ITERATIONS,
+  FUNCTION_TYPE_SERVING
 } from '../../../constants'
 import {
   checkForSelectedModel,
@@ -54,7 +56,8 @@ import {
   generateActionsMenu,
   generatePageData,
   getFeatureVectorData,
-  handleApplyDetailsChanges
+  handleApplyDetailsChanges,
+  handleDeployModelFailure
 } from './models.util'
 import detailsActions from '../../../actions/details'
 import { createModelsRowData } from '../../../utils/createArtifactsContent'
@@ -141,9 +144,30 @@ const Models = ({ fetchModelFeatureVector }) => {
     [dispatch, setModels, params.projectName]
   )
 
-  const handleDeployModel = useCallback(model => {
-    openPopUp(DeployModelPopUp, { model })
-  }, [])
+  const handleDeployModel = useCallback(
+    model => {
+      dispatch(fetchArtifactsFunctions({ project: model.project, filters: {} }))
+        .unwrap()
+        .then(functions => {
+          const functionOptions = chain(functions)
+            .filter(func => func.type === FUNCTION_TYPE_SERVING && func.graph?.kind === 'router')
+            .uniqBy('name')
+            .map(func => ({ label: func.name, id: func.name }))
+            .value()
+
+          if (functionOptions.length > 0) {
+            openPopUp(DeployModelPopUp, {
+              model,
+              functionList: functions,
+              functionOptionList: functionOptions
+            })
+          } else {
+            handleDeployModelFailure(params.projectName)
+          }
+        })
+    },
+    [dispatch, params.projectName]
+  )
 
   const handleRefresh = useCallback(
     filters => {

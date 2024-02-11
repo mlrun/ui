@@ -205,7 +205,7 @@ const RealTimePipelines = () => {
 
   return (
     <>
-      {artifactsStore.loading && <Loader />}
+      {artifactsStore.pipelines.loading && <Loader />}
       <div className="models" ref={pipelinesRef}>
         <div className="table-container">
           <div className={filterMenuClassNames}>
@@ -222,7 +222,7 @@ const RealTimePipelines = () => {
               />
             </div>
           </div>
-          {artifactsStore.loading ? null : pipelines.length === 0 ? (
+          {artifactsStore.pipelines.loading ? null : pipelines.length === 0 ? (
             <NoData
               message={getNoDataMessage(
                 filtersStore,

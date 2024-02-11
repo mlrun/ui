@@ -35,6 +35,7 @@ import { parseUri } from './parseUri'
 import { generateFunctionDetailsLink } from './generateFunctionDetailsLink'
 import { generateLinkToDetailsPanel } from './generateLinkToDetailsPanel'
 import { validateArguments } from './validateArguments'
+// import { roundFloats } from './roundFloats'
 import TableProducerCell from '../elements/TableProducerCell/TableProducerCell'
 
 import { ReactComponent as SeverityOk } from 'igz-controls/images/severity-ok.svg'
@@ -187,6 +188,14 @@ export const createModelsRowData = (
       className: 'table-cell-1'
     },
     {
+      id: `metrics.${artifact.ui.identifierUnique}`,
+      headerId: 'metrics',
+      headerLabel: 'Metrics',
+      value: parseKeyValues(artifact.metrics),
+      className: 'table-cell-1',
+      type: 'metrics'
+    },
+    {
       id: `frameWorkAndAlgorithm.${artifact.ui.identifierUnique}`,
       headerId: 'frameWorkAndAlgorithm',
       headerLabel: (
@@ -209,14 +218,6 @@ export const createModelsRowData = (
       className: 'table-cell-1'
     },
     {
-      id: `metrics.${artifact.ui.identifierUnique}`,
-      headerId: 'metrics',
-      headerLabel: 'Metrics',
-      value: parseKeyValues(artifact.metrics),
-      className: 'table-cell-1',
-      type: 'metrics'
-    },
-    {
       id: `version.${artifact.ui.identifierUnique}`,
       headerId: 'tag',
       value: artifact.tag,
@@ -236,7 +237,7 @@ export const createModelsRowData = (
   //     content.push({
   //       id: `${key}.${artifact.ui.identifierUnique}`,
   //       headerIsHidden: true,
-  //       value: parseFloat(value),
+  //       value: roundFloats(value, 4),
   //       className: 'table-cell-1',
   //       bodyCellClassName
   //     })

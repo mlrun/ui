@@ -24,7 +24,6 @@ import tasksApi from '../../api/tasks-api'
 import {
   JOB_KIND_DASK,
   JOB_KIND_DATABRICKS,
-  FUNCTION_TYPE_JOB,
   JOB_KIND_MPIJOB,
   JOB_KIND_JOB,
   JOBS_PAGE,
@@ -33,7 +32,8 @@ import {
   PANEL_RERUN_MODE,
   JOB_KIND_REMOTE_SPARK,
   SCHEDULE_TAB,
-  JOB_KIND_SPARK
+  JOB_KIND_SPARK,
+  JOB_KIND_LOCAL
 } from '../../constants'
 import jobsActions from '../../actions/jobs'
 import { generateKeyValues, truncateUid } from '../../utils'
@@ -126,6 +126,9 @@ export const isJobAborting = (currentJob = {}) => {
 export const isJobKindDask = (jobLabels = []) => {
   return jobLabels?.includes(`kind: ${JOB_KIND_DASK}`)
 }
+
+export const isJobKindLocal = job =>
+  [JOB_KIND_LOCAL, ''].includes(get(job, 'ui.originalContent.metadata.labels.kind'))
 
 export const arePodsHidden = (jobLabels = []) => {
   const jobKind = (jobLabels.find(label => label.startsWith('kind:')) ?? '').split(':')[1]?.trim()
@@ -449,5 +452,3 @@ const abortJobSuccessHandler = (dispatch, job) => {
     })
   )
 }
-
-export const functionRunKinds = [FUNCTION_TYPE_JOB]

@@ -24,6 +24,7 @@ import { isEmpty, orderBy } from 'lodash'
 
 import ArtifactsTableRow from '../../../elements/ArtifactsTableRow/ArtifactsTableRow'
 import FilterMenu from '../../FilterMenu/FilterMenu'
+import Loader from '../../../common/Loader/Loader'
 import ModelsPageTabs from '../ModelsPageTabs/ModelsPageTabs'
 import NoData from '../../../common/NoData/NoData'
 import Table from '../../Table/Table'
@@ -213,59 +214,62 @@ const ModelEndpoints = () => {
   }, [params.projectName, sortedContent])
 
   return (
-    <div className="models" ref={modelEndpointsRef}>
-      <div className="table-container">
-        <div className="content__action-bar-wrapper">
-          <ModelsPageTabs />
-          <div className="action-bar">
-            <FilterMenu
-              filters={filters}
-              onChange={handleRefresh}
-              page={MODELS_PAGE}
-              tab={MODEL_ENDPOINTS_TAB}
-              withoutExpandButton
-            />
+    <>
+      {artifactsStore.modelEndpoints.loading && <Loader />}
+      <div className="models" ref={modelEndpointsRef}>
+        <div className="table-container">
+          <div className="content__action-bar-wrapper">
+            <ModelsPageTabs />
+            <div className="action-bar">
+              <FilterMenu
+                filters={filters}
+                onChange={handleRefresh}
+                page={MODELS_PAGE}
+                tab={MODEL_ENDPOINTS_TAB}
+                withoutExpandButton
+              />
+            </div>
           </div>
+          {artifactsStore.modelEndpoints.loading ? null : modelEndpoints.length === 0 ? (
+            <NoData
+              message={getNoDataMessage(
+                filtersStore,
+                filters,
+                largeRequestErrorMessage,
+                MODELS_PAGE,
+                MODEL_ENDPOINTS_TAB
+              )}
+            />
+          ) : (
+            <>
+              <Table
+                actionsMenu={actionsMenu}
+                handleCancel={() => handleSelectItem({})}
+                pageData={pageData}
+                retryRequest={fetchData}
+                selectedItem={selectedModelEndpoint}
+                tab={MODEL_ENDPOINTS_TAB}
+                tableHeaders={tableContent[0]?.content ?? []}
+              >
+                {tableContent.map((tableItem, index) => {
+                  return (
+                    <ArtifactsTableRow
+                      actionsMenu={actionsMenu}
+                      handleSelectItem={handleSelectItem}
+                      key={index}
+                      rowIndex={index}
+                      rowItem={tableItem}
+                      selectedItem={selectedModelEndpoint}
+                      tab={MODEL_ENDPOINTS_TAB}
+                    />
+                  )
+                })}
+              </Table>
+            </>
+          )}
         </div>
-        {artifactsStore.loading ? null : modelEndpoints.length === 0 ? (
-          <NoData
-            message={getNoDataMessage(
-              filtersStore,
-              filters,
-              largeRequestErrorMessage,
-              MODELS_PAGE,
-              MODEL_ENDPOINTS_TAB
-            )}
-          />
-        ) : (
-          <>
-            <Table
-              actionsMenu={actionsMenu}
-              handleCancel={() => handleSelectItem({})}
-              pageData={pageData}
-              retryRequest={fetchData}
-              selectedItem={selectedModelEndpoint}
-              tab={MODEL_ENDPOINTS_TAB}
-              tableHeaders={tableContent[0]?.content ?? []}
-            >
-              {tableContent.map((tableItem, index) => {
-                return (
-                  <ArtifactsTableRow
-                    actionsMenu={actionsMenu}
-                    handleSelectItem={handleSelectItem}
-                    key={index}
-                    rowIndex={index}
-                    rowItem={tableItem}
-                    selectedItem={selectedModelEndpoint}
-                    tab={MODEL_ENDPOINTS_TAB}
-                  />
-                )
-              })}
-            </Table>
-          </>
-        )}
       </div>
-    </div>
+    </>
   )
 }
 
