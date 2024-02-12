@@ -114,9 +114,12 @@ export const fetchArtifacts = createAsyncThunk('fetchArtifacts', ({ project, fil
     return generateArtifacts(filterArtifacts(result))
   })
 })
-export const fetchArtifactTags = createAsyncThunk('fetchArtifactTags', ({ project, category }) => {
-  return artifactsApi.getArtifactTags(project, category)
-})
+export const fetchArtifactTags = createAsyncThunk(
+  'fetchArtifactTags',
+  ({ project, category, config }) => {
+    return artifactsApi.getArtifactTags(project, category, config)
+  }
+)
 export const fetchDataSet = createAsyncThunk('fetchDataSet', ({ project, dataSet, iter, tag }) => {
   return artifactsApi.getDataSet(project, dataSet, iter, tag).then(response => {
     const result = parseArtifacts(response.data.artifacts)
