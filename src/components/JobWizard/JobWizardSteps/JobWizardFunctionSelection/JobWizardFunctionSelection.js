@@ -44,7 +44,6 @@ import {
 import { generateJobWizardData, getCategoryName } from '../../JobWizard.util'
 import { generateProjectsList } from '../../../../utils/projects'
 import { openConfirmPopUp } from 'igz-controls/utils/common.util'
-// import { scrollToSelectedElements } from '../../../../utils/scrollHandler.util'
 import {
   FUNCTIONS_SELECTION_FUNCTIONS_TAB,
   FUNCTIONS_SELECTION_HUB_TAB,
@@ -78,16 +77,16 @@ const JobWizardFunctionSelection = ({
   setShowSchedule,
   setTemplates,
   setTemplatesCategories,
+  stepIsActive,
   templates,
-  templatesCategories,
-  stepIsActive
+  templatesCategories
 }) => {
   const projectNames = useSelector(store => store.projectStore.projectsNames.data)
 
   const [hubFiltersInitialValues] = useState({ [HUB_CATEGORIES_FILTER]: {} })
   const [filterByName, setFilterByName] = useState('')
   const [filterMatches, setFilterMatches] = useState([])
-  const [toggle, setToggle] = useState(true)
+  const [autoSwitchedTab, setAutoSwitchedTab] = useState(true)
   const [projects, setProjects] = useState(generateProjectsList(projectNames, params.projectName))
   const selectedActiveTab = useRef(null)
 
@@ -360,21 +359,22 @@ const JobWizardFunctionSelection = ({
 
   useEffect(() => {
     if (!stepIsActive) {
-      setToggle(true)
+      setAutoSwitchedTab(true)
       return
     }
-    if (stepIsActive && toggle) {
+    if (autoSwitchedTab) {
       if (selectedActiveTab.current && selectedActiveTab.current !== activeTab) {
         setActiveTab(selectedActiveTab.current)
       }
-      setToggle(false)
+      setAutoSwitchedTab(false)
     }
-    if (stepIsActive) {
-      const selectedElement = document.querySelector('.selected')
-      if (!selectedElement) return
-      selectedElement.scrollIntoView({ behavior: 'smooth', block: 'center' })
+    if (selectedActiveTab.current === activeTab) {
+      const selectedCard = document.querySelector('.selected')
+      if (selectedCard) {
+        selectedCard.scrollIntoView({ behavior: 'smooth', block: 'center' })
+      }
     }
-  }, [stepIsActive, toggle, activeTab, setActiveTab])
+  }, [stepIsActive, autoSwitchedTab, activeTab, setActiveTab, selectedActiveTab])
 
   return (
     <div className="job-wizard__function-selection">
@@ -500,7 +500,6 @@ const JobWizardFunctionSelection = ({
 }
 
 JobWizardFunctionSelection.propTypes = {
-  stepIsActive: PropTypes.bool,
   activeTab: PropTypes.string.isRequired,
   defaultData: PropTypes.shape({}).isRequired,
   filteredFunctions: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
@@ -523,6 +522,7 @@ JobWizardFunctionSelection.propTypes = {
   setShowSchedule: PropTypes.func.isRequired,
   setTemplates: PropTypes.func.isRequired,
   setTemplatesCategories: PropTypes.func.isRequired,
+  stepIsActive: PropTypes.bool,
   templates: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
   templatesCategories: PropTypes.arrayOf(PropTypes.string).isRequired
 }
