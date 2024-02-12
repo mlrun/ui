@@ -292,55 +292,56 @@ When('add data to {string} table on {string} wizard with combobox', async functi
   const inputFields = dataTable['rawTable'][0]
   const rows = dataTable.rows()
   for (const row_indx in rows) {
+    let rowsNumber = await getTableRows(this.driver, pageObjects[wizard][table])
     await clickOnComponent(this.driver, pageObjects[wizard][table]['add_row_btn'])
     await this.driver.sleep(100)
     await clickOnComponent(
       this.driver,
-      pageObjects[wizard][table]['tableFields'][inputFields[0]](parseInt(row_indx) + 2)
+      pageObjects[wizard][table]['tableFields'][inputFields[0]](rowsNumber + 2)
     )
     await this.driver.sleep(250)
     await typeIntoInputField(
       this.driver,
-      pageObjects[wizard][table]['tableFields'][inputFields[0]](parseInt(row_indx) + 2),
+      pageObjects[wizard][table]['tableFields'][inputFields[0]](rowsNumber + 2),
       rows[row_indx][0]
     )
     await this.driver.sleep(100)
     await openDropdown(
       this.driver,
-      pageObjects[wizard][table]['tableFields'][inputFields[1]](parseInt(row_indx) + 2)
+      pageObjects[wizard][table]['tableFields'][inputFields[1]](rowsNumber + 2)
     )
     await selectOptionInDropdownWithoutCheck(
       this.driver,
-      pageObjects[wizard][table]['tableFields'][inputFields[1]](parseInt(row_indx) + 2),
+      pageObjects[wizard][table]['tableFields'][inputFields[1]](rowsNumber + 2),
       rows[row_indx][1]
     )
     await this.driver.sleep(100)
     await selectOptionInDropdownWithoutCheck(
       this.driver,
-      pageObjects[wizard][table]['tableFields'][inputFields[2]](parseInt(row_indx) + 2),
+      pageObjects[wizard][table]['tableFields'][inputFields[2]](rowsNumber + 2),
       rows[row_indx][2]
     )
     await this.driver.sleep(100)
     await selectOptionInDropdownWithoutCheck(
       this.driver,
-      pageObjects[wizard][table]['tableFields'][inputFields[3]](parseInt(row_indx) + 2),
+      pageObjects[wizard][table]['tableFields'][inputFields[3]](rowsNumber + 2),
       rows[row_indx][3]
     )
     await this.driver.sleep(100)
     await selectOptionInDropdownWithoutCheck(
       this.driver,
-      pageObjects[wizard][table]['tableFields'][inputFields[4]](parseInt(row_indx) + 2),
+      pageObjects[wizard][table]['tableFields'][inputFields[4]](rowsNumber + 2),
       rows[row_indx][4]
     )
     await this.driver.sleep(100)
     await hoverComponent(
       this.driver,
-      pageObjects[wizard][table]['tableFields']['apply_btn'](parseInt(row_indx) + 2)
+      pageObjects[wizard][table]['tableFields']['apply_btn'](rowsNumber + 2)
     )
     await this.driver.sleep(100)
     await clickOnComponent(
       this.driver,
-      pageObjects[wizard][table]['tableFields']['apply_btn'](parseInt(row_indx) + 2)
+      pageObjects[wizard][table]['tableFields']['apply_btn'](rowsNumber + 2)
     )
     await this.driver.sleep(100)
   }
@@ -1516,6 +1517,55 @@ When(
 )
 
 When(
+  'add new rows to {string} table on {string} wizard using nontable inputs with notification pop-up',
+  async function (tableName, wizardName, dataTable) {
+    const pageComponents = dataTable['rawTable'][0]
+    const rows = dataTable.rows()
+
+    for (const row of rows) {
+      await clickOnComponent(this.driver, pageObjects[wizardName][tableName]['add_row_btn'])
+      for (const indx in pageComponents) {
+        if (pageComponents[indx].includes('Dropdown')) {
+          await openDropdown(this.driver, pageObjects[wizardName][pageComponents[indx]])
+          await selectOptionInDropdown(
+            this.driver,
+            pageObjects[wizardName][pageComponents[indx]],
+            row[indx]
+          )
+          await this.driver.sleep(500)
+          await checkDropdownSelectedOption(
+            this.driver,
+            pageObjects[wizardName][pageComponents[indx]],
+            row[indx]
+          )
+        }
+
+        if (pageComponents[indx].includes('Input')) {
+          await typeValue(this.driver, pageObjects[wizardName][pageComponents[indx]], row[indx])
+          await this.driver.sleep(250)
+        }
+
+        if (pageComponents[indx].includes('Button')) {
+          if (row[indx] === 'yes') {
+            await clickOnComponent(this.driver, pageObjects[wizardName][pageComponents[indx]])
+            await this.driver.sleep(250)
+          }
+        }
+
+        if (pageComponents[indx].includes('Add')) {
+          if (row[indx] === 'yes') {
+            await this.driver.sleep(500)
+            await waiteUntilComponent(this.driver, pageObjects['Notification_Popup']['Notification_Pop_Up_Cross_Close_Button'])
+            await clickOnComponent(this.driver, pageObjects['Notification_Popup']['Notification_Pop_Up_Cross_Close_Button'])
+            await this.driver.sleep(250)
+          }
+        }
+      }
+    }
+  }
+)
+
+When(
   'click on {string} in action menu in {string} table in {string} on {string} wizard',
   async function (option, tableName, accordionName, wizardName, dataTable) {
     const column = dataTable['rawTable'][0][0]
@@ -1737,6 +1787,31 @@ Then(
         `"${key}" value "${cellValue}" is not in link "${this.testContext[
           contextContainer
         ].includes(cellValue)}"`
+      )
+    }
+  }
+)
+
+Then(
+  'verify {string} values {string} values from {string} on {string} with {string} context value with split',
+  async function (keyColumn, keys, overviewTable, wizardName, contextContainer) {
+    const keysArr = keys.split(',')
+    
+    for (let key of keysArr) {
+      const arr = await findRowIndexesByColumnValue(
+        this.driver,
+        pageObjects[wizardName][overviewTable],
+        keyColumn,
+        key
+      )
+      const cellComponent = await this.driver.findElement(
+        pageObjects[wizardName][overviewTable].tableFields['value'](arr[0])
+      )
+      const cellValue = await cellComponent.getText()
+      const contextSplit = this.testContext[contextContainer].split(/[/@]/)
+      expect(contextSplit.includes(cellValue)).equal(
+        true,
+        `"${key}" value "${cellValue}" is not in link "${contextSplit}"`
       )
     }
   }

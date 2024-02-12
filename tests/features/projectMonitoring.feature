@@ -2,17 +2,12 @@ Feature: MLRun Project Page
 
     Testcases that verifies functionality on MLRun Project Page
 
+    @MLPM
     @passive
     @sanity
-    Scenario: Check all mandatory components
+    Scenario: MLPM002 - Check all mandatory components
         Given open url
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
-        And wait load page
-        And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
-        Then click on "Project_Monitoring_Button" element on "commonPagesHeader" wizard
-        And wait load page
-        And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
-        Then click on "Project_Monitoring_Button" element on "commonPagesHeader" wizard
         And wait load page
         Then verify breadcrumbs "project" label should be equal "default" value
         Then verify "Create_New" element visibility on "Project" wizard
@@ -25,6 +20,7 @@ Feature: MLRun Project Page
         When hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
         Then verify "General_Info_Quick_Links" element visibility on "commonPagesHeader" wizard
     
+    @MLPM
     @passive
     Scenario: MLNB001 - Check all mandatory components on Navigation Bar
         * set tear-down property "project" created with "automation-test-1000" value
@@ -122,8 +118,9 @@ Feature: MLRun Project Page
         Then click on "Project_Monitoring_Second_Instance" element on "commonPagesHeader" wizard
         Then verify "Project_Monitoring_Active" not input element on "commonPagesHeader" wizard is active
 
+    @MLPM
     @passive
-    Scenario: Check MLRun logo redirection
+    Scenario: MLPM003 - Check MLRun logo redirection
         Given open url
         And wait load page
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
@@ -132,15 +129,13 @@ Feature: MLRun Project Page
         And wait load page
         Then verify "Projects_Table" element visibility on "Projects" wizard
 
+    @MLPM
     @FAILED_TODO
     #TODO: 'New_File_Target_Path_Input' was redesigned, need case rewrite (also affects on 'Register_Button' anable)
     @passive
     Scenario: Check all mandatory components on Register File Popup
         Given open url
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
-        And wait load page
-        And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
-        Then click on "Project_Monitoring_Button" element on "commonPagesHeader" wizard
         And wait load page
         Then verify "Create_New" element visibility on "Project" wizard
         #Then verify "Create_New" dropdown element on "Project" wizard should contains "Project"."Create_New_Options" - 'Register Model' should be in demo mode
