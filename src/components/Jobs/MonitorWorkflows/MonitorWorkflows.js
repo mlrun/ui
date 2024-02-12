@@ -576,24 +576,16 @@ const MonitorWorkflows = ({
           if (generatedDates.length === 1) {
             generatedDates.push(new Date())
           }
-
-          dispatch(
-            setFilters({
-              groupBy: GROUP_BY_WORKFLOW,
-              dates: {
-                value: generatedDates,
-                isPredefined: pastWeekOption.isPredefined
-              }
-            })
-          )
-          getWorkflows({
-            ...filtersStore,
-            groupBy: GROUP_BY_WORKFLOW,
+          const filters = {
             dates: {
               value: generatedDates,
               isPredefined: pastWeekOption.isPredefined
-            }
-          })
+            },
+            groupBy: GROUP_BY_WORKFLOW
+          }
+
+          dispatch(setFilters({ ...filters }))
+          getWorkflows({ ...filtersStore, ...filters })
         }
 
         setWorkflowsAreLoaded(true)
