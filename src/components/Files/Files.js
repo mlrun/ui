@@ -71,7 +71,7 @@ const Files = () => {
   const [selectedRowData, setSelectedRowData] = useState({})
   const [largeRequestErrorMessage, setLargeRequestErrorMessage] = useState('')
   const [convertedYaml, toggleConvertedYaml] = useYaml('')
-  const [urlTagOption] = useGetTagOptions(
+  const [urlTagOption, tagAbortControllerRef] = useGetTagOptions(
     fetchArtifactTags,
     filters,
     ARTIFACT_OTHER_TYPE,
@@ -135,7 +135,13 @@ const Files = () => {
           dispatch,
           fetchTags: fetchArtifactTags,
           project: params.projectName,
-          category: ARTIFACT_OTHER_TYPE
+          category: ARTIFACT_OTHER_TYPE,
+          config: {
+            ui: {
+              controller: tagAbortControllerRef.current,
+              setLargeRequestErrorMessage
+            }
+          }
         })
       )
       setSelectedRowData({})
@@ -143,7 +149,7 @@ const Files = () => {
 
       return fetchData(filters)
     },
-    [dispatch, fetchData, params.projectName]
+    [dispatch, fetchData, params.projectName, tagAbortControllerRef]
   )
 
   const handleAddTag = useCallback(
@@ -290,13 +296,16 @@ const Files = () => {
   }, [fetchData, urlTagOption])
 
   useEffect(() => {
+    const tagAbortControllerCurrent = tagAbortControllerRef.current
+
     return () => {
       setFiles([])
       dispatch(removeFiles())
       setSelectedFile({})
       abortControllerRef.current.abort(REQUEST_CANCELED)
+      tagAbortControllerCurrent.abort(REQUEST_CANCELED)
     }
-  }, [params.projectName, dispatch])
+  }, [params.projectName, dispatch, tagAbortControllerRef])
 
   useEffect(() => setFiles([]), [filtersStore.tag])
 

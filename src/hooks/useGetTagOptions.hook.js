@@ -18,18 +18,19 @@ under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
 import { useParams } from 'react-router-dom'
-import { useLayoutEffect, useState } from 'react'
+import { useLayoutEffect, useState, useRef } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
+import { isNil } from 'lodash'
 
 import { TAG_FILTER, TAG_FILTER_ALL_ITEMS, TAG_FILTER_LATEST } from '../constants'
 import { getFilterTagOptions, setFilters, setModalFiltersValues } from '../reducers/filtersReducer'
-import { isNil } from 'lodash'
 
 export const useGetTagOptions = (fetchTags, filters, category, modalFiltersName) => {
   const [urlTagOption, setUrlTagOption] = useState(null)
   const { projectName, tag: paramTag } = useParams()
   const tagOptions = useSelector(store => store.filtersStore.tagOptions)
   const dispatch = useDispatch()
+  const abortControllerRef = useRef(new AbortController())
 
   useLayoutEffect(() => {
     if (
@@ -44,12 +45,19 @@ export const useGetTagOptions = (fetchTags, filters, category, modalFiltersName)
       }
 
       if (fetchTags) {
+        abortControllerRef.current = new AbortController()
+
         dispatch(
           getFilterTagOptions({
             dispatch,
             fetchTags,
             project: projectName,
-            category
+            category,
+            config: {
+              ui: {
+                controller: abortControllerRef.current
+              }
+            }
           })
         )
           .unwrap()
@@ -92,5 +100,5 @@ export const useGetTagOptions = (fetchTags, filters, category, modalFiltersName)
     }
   }, [category, dispatch, fetchTags, filters, modalFiltersName, paramTag, projectName, tagOptions])
 
-  return [urlTagOption]
+  return [urlTagOption, abortControllerRef]
 }

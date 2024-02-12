@@ -70,10 +70,11 @@ const initialState = {
 
 export const getFilterTagOptions = createAsyncThunk(
   'getFilterTagOptions',
-  ({ dispatch, fetchTags, project, category }) => {
+  ({ dispatch, fetchTags, project, category, config }) => {
     const fetchTagsArguments = {
       project,
-      category
+      category,
+      config
     }
     const fetchTagsPromise =
       [ARTIFACT_OTHER_TYPE, MODEL_TYPE, DATASET_TYPE].includes(category) && dispatch
