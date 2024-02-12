@@ -114,8 +114,7 @@ export const generateActionsMenu = (
   setFunctionsPanelIsOpen,
   setEditableItem,
   onRemoveFunction,
-  toggleConvertedYaml,
-  buildAndRunFunc
+  toggleConvertedYaml
 ) => {
   return [
     [
@@ -160,17 +159,6 @@ export const generateActionsMenu = (
       }
     ],
     [
-      {
-        id: 'build-and-run',
-        label: 'Build and run',
-        icon: <DeployIcon />,
-        onClick: func => {
-          buildAndRunFunc(func)
-        },
-        hidden:
-          func?.type !== FUNCTION_TYPE_JOB ||
-          (func?.type === FUNCTION_TYPE_JOB && func?.state?.value !== FUNCTION_INITIALIZED_STATE)
-      },
       {
         id: 'deploy',
         label: 'Deploy',
