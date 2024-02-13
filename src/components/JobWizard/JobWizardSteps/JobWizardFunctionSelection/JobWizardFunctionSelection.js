@@ -44,7 +44,7 @@ import {
 import { generateJobWizardData, getCategoryName } from '../../JobWizard.util'
 import { generateProjectsList } from '../../../../utils/projects'
 import { openConfirmPopUp } from 'igz-controls/utils/common.util'
-import { scrollToSelectedElements } from '../../../../utils/scrollHandler.util'
+import { handleScroll } from '../../../../utils/scrollHandler.util'
 import {
   FUNCTIONS_SELECTION_FUNCTIONS_TAB,
   FUNCTIONS_SELECTION_HUB_TAB,
@@ -371,7 +371,7 @@ const JobWizardFunctionSelection = ({
       setAutoSwitchedTab(false)
     }
     if (selectedActiveTab.current === activeTab) {
-      scrollToSelectedElements(containerRef, '.selected')
+      handleScroll(containerRef, '.selected')
     }
   }, [stepIsActive, autoSwitchedTab, activeTab, setActiveTab, selectedActiveTab])
 

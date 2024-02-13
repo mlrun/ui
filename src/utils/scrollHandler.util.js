@@ -18,7 +18,7 @@ under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
 
-export const scrollToSelectedElements = (
+export const handleScroll = (
   parentRef,
   querySelector,
   shouldScrollToTop = false,
@@ -27,6 +27,7 @@ export const scrollToSelectedElements = (
   const selectedElement = parentRef.current.querySelector(`${querySelector}`)
 
   if (!selectedElement) return
+
   shouldScrollToTop
     ? parentRef.current.scrollTo({ top: 0, left: 0, behavior: 'smooth' })
     : setTimeout(() => {
