@@ -44,6 +44,7 @@ import {
 import { generateJobWizardData, getCategoryName } from '../../JobWizard.util'
 import { generateProjectsList } from '../../../../utils/projects'
 import { openConfirmPopUp } from 'igz-controls/utils/common.util'
+import { scrollToSelectedElements } from '../../../../utils/scrollHandler.util'
 import {
   FUNCTIONS_SELECTION_FUNCTIONS_TAB,
   FUNCTIONS_SELECTION_HUB_TAB,
@@ -89,6 +90,7 @@ const JobWizardFunctionSelection = ({
   const [autoSwitchedTab, setAutoSwitchedTab] = useState(true)
   const [projects, setProjects] = useState(generateProjectsList(projectNames, params.projectName))
   const selectedActiveTab = useRef(null)
+  const containerRef = useRef(null)
 
   const filtersStoreHubCategories = useSelector(
     store =>
@@ -369,15 +371,12 @@ const JobWizardFunctionSelection = ({
       setAutoSwitchedTab(false)
     }
     if (selectedActiveTab.current === activeTab) {
-      const selectedCard = document.querySelector('.selected')
-      if (selectedCard) {
-        selectedCard.scrollIntoView({ behavior: 'smooth', block: 'center' })
-      }
+      scrollToSelectedElements(containerRef, '.selected')
     }
   }, [stepIsActive, autoSwitchedTab, activeTab, setActiveTab, selectedActiveTab])
 
   return (
-    <div className="job-wizard__function-selection">
+    <div ref={containerRef} className="job-wizard__function-selection">
       <div className="form-row">
         <h5 className="form-step-title">Function selection</h5>
       </div>

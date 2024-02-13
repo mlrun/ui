@@ -19,21 +19,21 @@ such restriction.
 */
 
 export const scrollToSelectedElements = (
-  ParentRef,
+  parentRef,
   querySelector,
-  optionalState = false,
-  timeout = 0
+  shouldScrollToTop = false,
+  timeoutDuration = 0
 ) => {
-  const selectedElement = ParentRef.current.querySelector(`${querySelector}`)
+  const selectedElement = parentRef.current.querySelector(`${querySelector}`)
 
   if (!selectedElement) return
-  optionalState
-    ? ParentRef.current.scrollTo({ top: 0, left: 0, behavior: 'smooth' })
+  shouldScrollToTop
+    ? parentRef.current.scrollTo({ top: 0, left: 0, behavior: 'smooth' })
     : setTimeout(() => {
         selectedElement.scrollIntoView({
           behavior: 'smooth',
           block: 'center',
           inline: 'start'
         })
-      }, timeout)
+      }, timeoutDuration)
 }
