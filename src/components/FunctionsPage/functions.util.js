@@ -167,7 +167,7 @@ export const generateActionsMenu = (
           setFunctionsPanelIsOpen(true)
           setEditableItem(func)
         },
-        hidden: func?.type !== FUNCTION_TYPE_SERVING
+        hidden: !isDemoMode || func?.type !== FUNCTION_TYPE_SERVING
       }
     ]
   ]
