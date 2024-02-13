@@ -32,8 +32,7 @@ import {
   SHOW_UNTAGGED_ITEMS,
   TAG_LATEST,
   REQUEST_CANCELED,
-  DETAILS_BUILD_LOG_TAB,
-  JOB_DEFAULT_OUTPUT_PATH
+  DETAILS_BUILD_LOG_TAB
 } from '../../constants'
 import { detailsMenu, infoHeaders, page, generateActionsMenu } from './functions.util'
 import createFunctionsContent from '../../utils/createFunctionsContent'
@@ -50,17 +49,14 @@ import { showErrorNotification } from '../../utils/notifications.util'
 import { useGroupContent } from '../../hooks/groupContent.hook'
 import { useMode } from '../../hooks/mode.hook'
 import { useYaml } from '../../hooks/yaml.hook'
-import jobsActions from '../../actions/jobs'
 
 const Functions = ({
   deleteFunction,
-  deployFunction,
   fetchFunctionLogs,
   fetchFunctions,
   functionsStore,
   removeFunctionsError,
-  removeNewFunction,
-  runNewJob
+  removeNewFunction
 }) => {
   const [confirmData, setConfirmData] = useState(null)
   const [convertedYaml, toggleConvertedYaml] = useYaml('')
@@ -240,89 +236,6 @@ const Functions = ({
     [removeFunction]
   )
 
-  const buildAndRunFunc = useCallback(
-    func => {
-      const data = {
-        function: {
-          kind: func.type,
-          metadata: {
-            credentials: {
-              access_key: func.access_key
-            },
-            labels: func.labels,
-            name: func.name,
-            project: func.project,
-            tag: func.tag
-          },
-          spec: {
-            args: func.args,
-            base_spec: func.base_spec,
-            build: func.build,
-            command: func.command,
-            default_class: func.default_class,
-            default_handler: func.default_handler,
-            description: func.description,
-            disable_auto_mount: func.disable_auto_mount,
-            env: func.env,
-            error_stream: func.error_stream,
-            graph: func.graph,
-            image: func.image,
-            parameters: func.parameters,
-            preemption_mode: func.preemption_mode,
-            priority_class_name: func.priority_class_name,
-            resources: func.resources,
-            secret_sources: func.secret_sources,
-            track_models: func.track_models,
-            volume_mounts: func.volume_mounts,
-            volumes: func.volumes
-          }
-        }
-      }
-
-      deployFunction(data).then(result => {
-        const data = result.data.data
-        const postData = {
-          function: {
-            metadata: {
-              credentials: {
-                access_key: data.metadata.credentials.access_key
-              }
-            },
-            spec: {
-              build: data.spec.build,
-              env: data.spec.env,
-              image: data.spec.image,
-              node_selector: data.spec.node_selector,
-              preemption_mode: data.spec.preemption_mode,
-              priority_class_name: data.spec.priority_class_name,
-              resources: data.spec.resources,
-              volume_mounts: data.spec.volume_mounts,
-              volumes: data.spec.volumes
-            }
-          },
-          task: {
-            metadata: {
-              labels: data.metadata.labels,
-              name: data.metadata.name,
-              project: data.metadata.project
-            },
-            spec: {
-              function: `${func.project}/${func.name}@${func.hash}`,
-              handler: data.spec.default_handler,
-              input_path: '',
-              inputs: {},
-              output_path: JOB_DEFAULT_OUTPUT_PATH,
-              parameters: {}
-            }
-          }
-        }
-
-        runNewJob(postData)
-      })
-    },
-    [deployFunction, runNewJob]
-  )
-
   const pageData = {
     page,
     details: {
@@ -346,10 +259,9 @@ const Functions = ({
         setFunctionsPanelIsOpen,
         setEditableItem,
         onRemoveFunction,
-        toggleConvertedYaml,
-        buildAndRunFunc
+        toggleConvertedYaml
       ),
-    [buildAndRunFunc, dispatch, isDemoMode, isStagingMode, onRemoveFunction, toggleConvertedYaml]
+    [dispatch, isDemoMode, isStagingMode, onRemoveFunction, toggleConvertedYaml]
   )
 
   useEffect(() => {
@@ -576,6 +488,5 @@ const Functions = ({
 }
 
 export default connect(({ functionsStore }) => ({ functionsStore }), {
-  ...functionsActions,
-  ...jobsActions
+  ...functionsActions
 })(React.memo(Functions))
