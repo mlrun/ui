@@ -1485,7 +1485,6 @@ When(
         }
 
         if (pageComponents[indx].includes('Input')) {
-          console.log('KKKKKKKKKKKKKKKKKK',pageObjects[wizardName][accordionName][pageComponents[indx]] )
           await typeValue(
             this.driver,
             pageObjects[wizardName][accordionName][pageComponents[indx]],
