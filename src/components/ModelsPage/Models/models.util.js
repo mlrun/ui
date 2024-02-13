@@ -19,7 +19,6 @@ such restriction.
 */
 import React from 'react'
 import { cloneDeep, isEmpty, omit } from 'lodash'
-import Prism from 'prismjs'
 
 import { PopUpDialog } from 'igz-controls/components'
 
@@ -399,16 +398,7 @@ export const generateActionsMenu = (
   ]
 }
 
-export const handleDeployModelFailure = projectName => {
-  const codeSnippet = `project = mlrun.get_or_create_project(${projectName}, context="./")
-
-          serving_function_image = "mlrun/mlrun"
-          serving_model_class_name = "mlrun.frameworks.sklearn.SklearnModelServer"
-
-          # Create a serving function
-          serving_fn = mlrun.new_function("serving", project=${projectName}, kind="serving", image=serving_function_image)
-          serving_fn.deploy()`
-
+export const handleDeployModelFailure = () => {
   openPopUp(PopUpDialog, {
     children: (
       <>
@@ -432,13 +422,6 @@ export const handleDeployModelFailure = projectName => {
             https://docs.mlrun.org/en/stable/tutorials/03-model-serving.html
           </a>
         </div>
-        <pre>
-          <code
-            dangerouslySetInnerHTML={{
-              __html: Prism.highlight(codeSnippet, Prism.languages.py, 'py')
-            }}
-          />
-        </pre>
       </>
     ),
     className: 'deploy-model-failure-popup',
