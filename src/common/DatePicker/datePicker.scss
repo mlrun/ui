@@ -39,10 +39,15 @@
     left: 65px;
     font-size: 14px;
   }
+}
+
+.date-picker__pop-up-wrapper {
+  .pop-up-dialog {
+    width: auto;
+    padding: 0;
+  }
 
   .date-picker__pop-up {
-    position: absolute;
-    z-index: 5;
     display: flex;
     flex-direction: column;
     justify-content: center;
