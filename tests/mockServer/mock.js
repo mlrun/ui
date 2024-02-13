@@ -1409,6 +1409,30 @@ function postArtifact(req, res) {
   res.send()
 }
 
+function putArtifact(req, res) {
+  const collectedArtifacts = artifacts.artifacts
+    .filter (artifact => {
+      const artifactMetaData = artifact.metadata ?? artifact
+      const artifactSpecData = artifact.spec ?? artifact
+      const artifactBodyData = req.body.metadata ?? req.body
+
+      return artifactMetaData?.project === req.params.project 
+        && artifactMetaData?.tree === artifactBodyData?.tree
+        && artifactSpecData?.db_key === req.params.key
+    }
+  )
+  if (collectedArtifacts?.length > 0) {
+    collectedArtifacts.forEach (collectedArtifact => {
+      const artifactMetaData = collectedArtifact.metadata ?? collectedArtifact
+      const artifactBodyData = req.body.metadata ?? req.body
+      
+      artifactMetaData.labels = artifactBodyData?.labels
+    })
+  }
+
+  res.send(collectedArtifacts)
+}
+
 function deleteArtifact(req, res) {
   const collectedArtifacts = artifacts.artifacts.filter(artifact => {
     const artifactMetaData = artifact.metadata ?? artifact
@@ -1745,6 +1769,7 @@ app.get(`${mlrunAPIIngress}/projects/:project/pipelines/:pipelineID`, getPipelin
 app.get(`${mlrunAPIIngress}/projects/:project/artifact-tags`, getProjectsArtifactTags)
 app.get(`${mlrunAPIIngressV2}/projects/:project/artifacts`, getArtifacts)
 app.post(`${mlrunAPIIngressV2}/projects/:project/artifacts`, postArtifact)
+app.put(`${mlrunAPIIngressV2}/projects/:project/artifacts/:key`, putArtifact)
 app.delete(`${mlrunAPIIngressV2}/projects/:project/artifacts/:key`, deleteArtifact)
 
 app.put(`${mlrunAPIIngress}/projects/:project/tags/:tag`, putTags)
