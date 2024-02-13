@@ -167,11 +167,11 @@ const Models = ({ fetchModelFeatureVector }) => {
               functionOptionList: functionOptions
             })
           } else {
-            handleDeployModelFailure(params.projectName)
+            handleDeployModelFailure()
           }
         })
     },
-    [dispatch, params.projectName]
+    [dispatch]
   )
 
   const handleRefresh = useCallback(
