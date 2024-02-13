@@ -83,7 +83,12 @@ const Models = ({ fetchModelFeatureVector }) => {
   // const [metricsCounter, setMetricsCounter] = useState(0)
   // const [dataIsLoaded, setDataIsLoaded] = useState(false)
   // const [tableHeaders, setTableHeaders] = useState([])
-  const [urlTagOption] = useGetTagOptions(fetchArtifactTags, filters, MODEL_TYPE, MODELS_FILTERS)
+  const [urlTagOption, tagAbortControllerRef] = useGetTagOptions(
+    fetchArtifactTags,
+    filters,
+    MODEL_TYPE,
+    MODELS_FILTERS
+  )
   const artifactsStore = useSelector(store => store.artifactsStore)
   const detailsStore = useSelector(store => store.detailsStore)
   const filtersStore = useSelector(store => store.filtersStore)
@@ -176,7 +181,13 @@ const Models = ({ fetchModelFeatureVector }) => {
           dispatch,
           fetchTags: fetchArtifactTags,
           project: params.projectName,
-          category: MODEL_TYPE
+          category: MODEL_TYPE,
+          config: {
+            ui: {
+              controller: tagAbortControllerRef.current,
+              setLargeRequestErrorMessage
+            }
+          }
         })
       )
       setSelectedRowData({})
@@ -187,7 +198,7 @@ const Models = ({ fetchModelFeatureVector }) => {
 
       return fetchData(filters)
     },
-    [dispatch, fetchData, params.projectName]
+    [dispatch, fetchData, params.projectName, tagAbortControllerRef]
   )
 
   const handleAddTag = useCallback(
@@ -342,6 +353,8 @@ const Models = ({ fetchModelFeatureVector }) => {
   }, [fetchData, urlTagOption])
 
   useEffect(() => {
+    const tagAbortControllerCurrent = tagAbortControllerRef.current
+
     return () => {
       setModels([])
       dispatch(removeModels())
@@ -350,8 +363,9 @@ const Models = ({ fetchModelFeatureVector }) => {
       // setTableHeaders([])
       // setDataIsLoaded(false)
       abortControllerRef.current.abort(REQUEST_CANCELED)
+      tagAbortControllerCurrent.abort(REQUEST_CANCELED)
     }
-  }, [dispatch, params.projectName, setModels])
+  }, [dispatch, params.projectName, setModels, tagAbortControllerRef])
 
   useEffect(() => {
     dispatch(setFilters({ groupBy: GROUP_BY_NONE }))

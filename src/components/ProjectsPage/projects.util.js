@@ -153,12 +153,7 @@ export const handleDeleteProjectError = (
   }
 }
 
-export const pollDeletingProjects = (
-  terminatePollRef,
-  deletingProjects,
-  refresh,
-  dispatch
-) => {
+export const pollDeletingProjects = (terminatePollRef, deletingProjects, refresh, dispatch) => {
   const isDone = result => {
     const tasks = get(result, 'data.background_tasks', [])
     const finishedTasks = tasks.filter(
@@ -181,7 +176,11 @@ export const pollDeletingProjects = (
           showErrorNotification(
             dispatch,
             {},
-            `Failed to delete "${deletingProjects?.[task.metadata.name]}" project`
+            get(
+              task,
+              'status.error',
+              `Failed to delete "${deletingProjects?.[task.metadata.name]}" project`
+            )
           )
         }
       })
