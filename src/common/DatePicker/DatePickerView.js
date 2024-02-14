@@ -65,6 +65,7 @@ const DatePickerView = React.forwardRef(
       onPreviousMonth,
       onSelectOption,
       onTimeChange,
+      position,
       required,
       requiredText,
       setSelectedDate,
@@ -141,7 +142,7 @@ const DatePickerView = React.forwardRef(
             headerIsHidden
             customPosition={{
               element: ref.datePickerRef,
-              position: 'bottom-right'
+              position
             }}
           >
             <div ref={ref.datePickerViewRef} className="date-picker__pop-up">
@@ -165,7 +166,7 @@ const DatePickerView = React.forwardRef(
             headerIsHidden
             customPosition={{
               element: ref.datePickerRef,
-              position: 'bottom-right'
+              position
             }}
           >
             <div ref={ref.datePickerViewRef} className="date-picker__pop-up date-picker">
@@ -289,6 +290,7 @@ DatePickerView.propTypes = {
   onPreviousMonth: PropTypes.func.isRequired,
   onSelectOption: PropTypes.func.isRequired,
   onTimeChange: PropTypes.func.isRequired,
+  position: PropTypes.string.isRequired,
   required: PropTypes.bool.isRequired,
   requiredText: PropTypes.string.isRequired,
   setSelectedDate: PropTypes.func.isRequired,
