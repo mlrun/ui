@@ -128,7 +128,6 @@ export const createModelsRowData = (
       headerLabel: 'Name',
       value: artifact.db_key,
       className: 'table-cell-name',
-      dataHeadTestId: 'Name',
       getLink: tab =>
         validateArguments(artifact.db_key, tab, artifact.tree)
           ? generateLinkToDetailsPanel(
@@ -161,8 +160,7 @@ export const createModelsRowData = (
       headerLabel: 'Labels',
       value: parseKeyValues(artifact.labels),
       className: 'table-cell-1',
-      type: 'labels',
-      dataHeadTestId: 'Labels'
+      type: 'labels'
     },
     {
       id: `producer.${artifact.ui.identifierUnique}`,
@@ -171,8 +169,7 @@ export const createModelsRowData = (
       value: artifact.producer?.name || '',
       template: <TableProducerCell className="table-cell-1" producer={artifact.producer} />,
       className: 'table-cell-1',
-      type: 'producer',
-      dataHeadTestId: 'Producer'
+      type: 'producer'
     },
     {
       id: `owner.${artifact.ui.identifierUnique}`,
@@ -180,16 +177,22 @@ export const createModelsRowData = (
       headerLabel: 'Owner',
       value: artifact.producer?.owner,
       className: 'table-cell-1',
-      type: 'owner',
-      dataHeadTestId: 'Owner'
+      type: 'owner'
     },
     {
       id: `updated.${artifact.ui.identifierUnique}`,
       headerId: 'updated',
       headerLabel: 'Updated',
       value: formatDatetime(artifact.updated, 'N/A'),
+      className: 'table-cell-1'
+    },
+    {
+      id: `metrics.${artifact.ui.identifierUnique}`,
+      headerId: 'metrics',
+      headerLabel: 'Metrics',
+      value: parseKeyValues(artifact.metrics),
       className: 'table-cell-1',
-      dataHeadTestId: 'Updated'
+      type: 'metrics'
     },
     {
       id: `frameWorkAndAlgorithm.${artifact.ui.identifierUnique}`,
@@ -211,16 +214,14 @@ export const createModelsRowData = (
         ) : (
           ''
         ),
-      className: 'table-cell-1',
-      dataHeadTestId: 'frameWorkAndAlgorithm'
+      className: 'table-cell-1'
     },
     {
       id: `version.${artifact.ui.identifierUnique}`,
       headerId: 'tag',
       value: artifact.tag,
       className: 'table-cell-1',
-      type: 'hidden',
-      dataHeadTestId: 'tag'
+      type: 'hidden'
     }
   ]
 

@@ -33,7 +33,6 @@ import { BUTTON_COPY_URI_CELL_TYPE, DATASET_TYPE, MODEL_TYPE } from '../../const
 import { getChipOptions } from '../../utils/getChipOptions'
 import { showArtifactsPreview } from '../../reducers/artifactsReducer'
 import { truncateUid } from '../../utils'
-import { generateMetricCellTestId } from '../../utils/generateTableRowTestId'
 
 import { ReactComponent as ArtifactView } from 'igz-controls/images/eye-icon.svg'
 import { ReactComponent as Arrow } from 'igz-controls/images/arrow.svg'
@@ -47,8 +46,7 @@ const TableCell = ({
   link,
   selectItem,
   selectedItem,
-  showExpandButton,
-  testId
+  showExpandButton
 }) => {
   const dispatch = useDispatch()
   const { value: stateValue, label: stateLabel, className: stateClassName } = item.state ?? {}
@@ -62,20 +60,22 @@ const TableCell = ({
     return data.template
   } else if (link && data.type !== 'hidden') {
     return (
-      <TableLinkCell
-        className={className}
-        data={data}
-        showExpandButton={showExpandButton}
-        handleExpandRow={handleExpandRow}
-        item={item}
-        link={link}
-        selectItem={selectItem}
-        selectedItem={selectedItem}
-      />
+      <div data-testid={data.headerId}>
+        <TableLinkCell
+          className={className}
+          data={data}
+          showExpandButton={showExpandButton}
+          handleExpandRow={handleExpandRow}
+          item={item}
+          link={link}
+          selectItem={selectItem}
+          selectedItem={selectedItem}
+        />
+      </div>
     )
   } else if (firstCell && !link) {
     return (
-      <td className={cellClassNames}>
+      <td data-testid={data.headerId} className={cellClassNames}>
         <div className="data-ellipsis">
           {data && (
             <Tooltip template={<TextTooltipTemplate text={data.tooltip || data.value} />}>
@@ -99,10 +99,14 @@ const TableCell = ({
       </td>
     )
   } else if (data.type === 'type') {
-    return <TableTypeCell className={className} data={data} />
+    return (
+      <div data-testid={data.headerId}>
+        <TableTypeCell className={className} data={data} />
+      </div>
+    )
   } else if (data.type === 'icons') {
     return (
-      <td className={cellClassNames}>
+      <td data-testid={data.headerId} className={cellClassNames}>
         {data.value.map((valueItem, index) => (
           <Tooltip
             key={valueItem.tooltip + index}
@@ -115,13 +119,13 @@ const TableCell = ({
     )
   } else if (Array.isArray(data.value)) {
     return (
-      <td className={cellClassNames}>
+      <td data-testid={data.headerId} className={cellClassNames}>
         <ChipCell chipOptions={getChipOptions(data.type)} elements={data.value} tooltip />
       </td>
     )
   } else if (data.type === 'buttonPopout') {
     return (
-      <td className={cellClassNames}>
+      <td data-testid={data.headerId} className={cellClassNames}>
         <RoundedIcon
           tooltipText={
             data.disabled
@@ -148,7 +152,7 @@ const TableCell = ({
     )
   } else if (data.type === 'buttonDownload') {
     return (
-      <td className={cellClassNames}>
+      <td data-testid={data.headerId} className={cellClassNames}>
         <Download
           disabled={data.disabled}
           onlyIcon
@@ -159,7 +163,7 @@ const TableCell = ({
     )
   } else if (data.type === BUTTON_COPY_URI_CELL_TYPE) {
     return (
-      <td className={cellClassNames}>
+      <td data-testid={data.headerId} className={cellClassNames}>
         <CopyToClipboard
           tooltipText="Copy URI"
           textToCopy={data.actionHandler(item)}
@@ -169,7 +173,7 @@ const TableCell = ({
     )
   } else if (data.type === 'hash') {
     return (
-      <td className={cellClassNames}>
+      <td data-testid={data.headerId} className={cellClassNames}>
         <Tooltip template={<TextTooltipTemplate text={data.value} />}>
           <span>{truncateUid(data.value)}</span>
         </Tooltip>
@@ -178,10 +182,14 @@ const TableCell = ({
   } else if (data.type === 'hidden') {
     return null
   } else if (data.type === 'component') {
-    return <td className={cellClassNames}>{data.value}</td>
+    return (
+      <td data-testid={data.headerId} className={cellClassNames}>
+        {data.value}
+      </td>
+    )
   } else {
     return (
-      <td data-testid={generateMetricCellTestId(cellClassNames, testId)} className={cellClassNames}>
+      <td data-testid={data.headerId} className={cellClassNames}>
         <Tooltip
           className="text_small"
           template={<TextTooltipTemplate text={data.tooltip || data.value} />}
@@ -218,8 +226,7 @@ TableCell.propTypes = {
   link: PropTypes.oneOfType([PropTypes.string, PropTypes.bool]),
   selectItem: PropTypes.func,
   selectedItem: PropTypes.shape({}),
-  showExpandButton: PropTypes.bool,
-  testId: PropTypes.oneOfType([PropTypes.number, PropTypes.string])
+  showExpandButton: PropTypes.bool
 }
 
 export default TableCell

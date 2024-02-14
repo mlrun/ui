@@ -126,7 +126,6 @@ const ArtifactsTableRow = ({
                               return (
                                 !value.hidden && (
                                   <TableCell
-                                    testId={value.dataTestId}
                                     className={cellClassNames}
                                     data={
                                       value.expandedCellContent ? value.expandedCellContent : value

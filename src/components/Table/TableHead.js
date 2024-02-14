@@ -53,7 +53,7 @@ const TableHead = React.forwardRef(
                 !tableItem.hidden &&
                 !tableItem.headerIsHidden ? (
                 <th
-                  data-testid={dataHeadTestId}
+                  data-testid={headerId}
                   className={getHeaderCellClasses(
                     headerId,
                     isSortable,

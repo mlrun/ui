@@ -24,7 +24,3 @@ export const generateTableRowTestId = (parentIndex, childIndex) => {
     ? `table_row_parent_${parentIndex}`
     : `table_row_child_${parentIndex}_${childIndex}`
 }
-
-export const generateMetricCellTestId = (className, id) => {
-  if (className.includes('metrics-cell') && id) return `metrics-cell${id}`
-}
