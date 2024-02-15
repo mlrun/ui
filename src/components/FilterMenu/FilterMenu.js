@@ -184,63 +184,69 @@ const FilterMenu = ({
     return handleChangeFilters
   }
 
-  const handleSelectOption = async (item, filter) => {
-    const filtersHelperResult = await filtersHelper(changes, dispatch)
-
-    if (filtersHelperResult) {
-      if (filter.type === STATUS_FILTER) {
-        dispatch(setFilters({ state: item }))
-        applyChanges({
-          ...filtersStore,
-          state: item
-        })
-      } else if (filter.type === SORT_BY) {
-        dispatch(setFilters({ sortBy: item }))
-      } else if (filter.type === GROUP_BY_FILTER) {
-        dispatch(setFilters({ groupBy: item }))
-      } else if (filter.type === TAG_FILTER && item !== filtersStore.tag) {
-        dispatch(setFilters({ tag: item }))
-        applyChanges({
-          ...filtersStore,
-          tag: item
-        })
-      } else if (filter.type === PROJECT_FILTER) {
-        dispatch(
-          setFilters({
-            project: item
-          })
-        )
-        applyChanges({
-          ...filtersStore,
-          project: item.toLowerCase()
-        })
-      }
-    }
-  }
-
-  const onKeyDown = async event => {
-    if (event.keyCode === KEY_CODES.ENTER) {
+  const handleSelectOption = useCallback(
+    async (item, filter) => {
       const filtersHelperResult = await filtersHelper(changes, dispatch)
 
       if (filtersHelperResult) {
-        dispatch(
-          setFilters({
+        if (filter.type === STATUS_FILTER) {
+          dispatch(setFilters({ state: item }))
+          applyChanges({
+            ...filtersStore,
+            state: item
+          })
+        } else if (filter.type === SORT_BY) {
+          dispatch(setFilters({ sortBy: item }))
+        } else if (filter.type === GROUP_BY_FILTER) {
+          dispatch(setFilters({ groupBy: item }))
+        } else if (filter.type === TAG_FILTER && item !== filtersStore.tag) {
+          dispatch(setFilters({ tag: item }))
+          applyChanges({
+            ...filtersStore,
+            tag: item
+          })
+        } else if (filter.type === PROJECT_FILTER) {
+          dispatch(
+            setFilters({
+              project: item
+            })
+          )
+          applyChanges({
+            ...filtersStore,
+            project: item.toLowerCase()
+          })
+        }
+      }
+    },
+    [applyChanges, changes, dispatch, filtersStore]
+  )
+
+  const onKeyDown = useCallback(
+    async event => {
+      if (event.keyCode === KEY_CODES.ENTER) {
+        const filtersHelperResult = await filtersHelper(changes, dispatch)
+
+        if (filtersHelperResult) {
+          dispatch(
+            setFilters({
+              labels,
+              name,
+              entities
+            })
+          )
+          applyChanges({
+            ...filtersStore,
             labels,
             name,
             entities
           })
-        )
-        applyChanges({
-          ...filtersStore,
-          labels,
-          name,
-          entities
-        })
+        }
       }
-    }
-  }
+    },
+    [applyChanges, changes, dispatch, entities, filtersStore, labels, name]
+  )
 
-  const onBlur = () => {
+  const onBlur = useCallback(() => {
     dispatch(
       setFilters({
         labels,
@@ -248,65 +254,74 @@ const FilterMenu = ({
         entities
       })
     )
-  }
+  }, [dispatch, entities, labels, name])
 
-  const handleChangeDates = (dates, isPredefined) => {
-    const generatedDates = [...dates]
+  const handleChangeDates = useCallback(
+    (dates, isPredefined) => {
+      const generatedDates = [...dates]
 
-    if (generatedDates.length === 1) {
-      generatedDates.push(new Date())
-    }
+      if (generatedDates.length === 1) {
+        generatedDates.push(new Date())
+      }
 
-    dispatch(
-      setFilters({
+      dispatch(
+        setFilters({
+          dates: {
+            value: generatedDates,
+            isPredefined
+          }
+        })
+      )
+      applyChanges({
+        ...filtersStore,
         dates: {
           value: generatedDates,
           isPredefined
         }
       })
-    )
-    applyChanges({
-      ...filtersStore,
-      dates: {
-        value: generatedDates,
-        isPredefined
-      }
-    })
-  }
+    },
+    [applyChanges, dispatch, filtersStore]
+  )
 
-  const handleIter = async iteration => {
-    const iterValue = filtersStore.iter !== iteration ? SHOW_ITERATIONS : ''
-    const filtersHelperResult = await filtersHelper(changes, dispatch)
+  const handleIter = useCallback(
+    async iteration => {
+      const iterValue = filtersStore.iter !== iteration ? SHOW_ITERATIONS : ''
+      const filtersHelperResult = await filtersHelper(changes, dispatch)
 
-    if (filtersHelperResult) {
-      dispatch(
-        setFilters({
+      if (filtersHelperResult) {
+        dispatch(
+          setFilters({
+            iter: iterValue
+          })
+        )
+        applyChanges({
+          ...filtersStore,
           iter: iterValue
         })
-      )
-      applyChanges({
-        ...filtersStore,
-        iter: iterValue
-      })
-    }
-  }
+      }
+    },
+    [applyChanges, changes, dispatch, filtersStore]
+  )
 
-  const handleShowUntagged = async showUntagged => {
-    const showUntaggedValue = filtersStore.showUntagged === showUntagged ? '' : showUntagged
-    const filtersHelperResult = await filtersHelper(changes, dispatch)
+  const handleShowUntagged = useCallback(
+    async showUntagged => {
+      const showUntaggedValue = filtersStore.showUntagged === showUntagged ? '' : showUntagged
+      const filtersHelperResult = await filtersHelper(changes, dispatch)
 
-    if (filtersHelperResult) {
-      dispatch(
-        setFilters({
+      if (filtersHelperResult) {
+        dispatch(
+          setFilters({
+            showUntagged: showUntaggedValue
+          })
+        )
+        applyChanges({
+          ...filtersStore,
           showUntagged: showUntaggedValue
         })
-      )
-      applyChanges({
-        ...filtersStore,
-        showUntagged: showUntaggedValue
-      })
-    }
-  }
+      }
+    },
+    [applyChanges, changes, dispatch, filtersStore]
+  )
 
   const handleAutoRefresh = itemId => {
     setAutoRefresh(prevAutoRefresh => (prevAutoRefresh === itemId ? '' : AUTO_REFRESH_ID))
