@@ -443,7 +443,7 @@ const DatePicker = ({
       }
       dateMask={dateMask}
       datePickerInputOnBlur={datePickerInputOnBlur}
-      datePickerOptions={datePickerOptionsElements}
+      datePickerOptions={datePickerOptions}
       disabled={disabled}
       getInputValueValidity={getInputValueValidity}
       invalidText={invalidText}
