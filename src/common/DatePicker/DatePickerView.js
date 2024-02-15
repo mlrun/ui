@@ -17,7 +17,7 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import React from 'react'
+import React, { useMemo } from 'react'
 import PropTypes from 'prop-types'
 import MaskedInput from 'react-text-mask'
 import classnames from 'classnames'
@@ -27,7 +27,6 @@ import TimePicker from '../TimePicker/TimePicker'
 import { Button, Tip, Tooltip, TextTooltipTemplate, PopUpDialog } from 'igz-controls/components'
 import { SelectOption } from 'igz-controls/elements'
 
-import { ANY_TIME } from '../../constants'
 import { SECONDARY_BUTTON } from 'igz-controls/constants'
 import { CUSTOM_RANGE_DATE_OPTION } from '../../utils/datePicker.util'
 
@@ -92,68 +91,125 @@ const DatePickerView = React.forwardRef(
     )
     const inputLabelClassNames = classnames('input__label', label && 'active-label')
 
-    const datePickerElement = () => {
-      if (withLabels) {
-        if (selectedOption && selectedOption.id !== CUSTOM_RANGE_DATE_OPTION) {
-          return (
+    const datePickerElement = useMemo(() => {
+      // console.log('isValueEmpty', isValueEmpty)
+      return (
+        <>
+          {withLabels && selectedOption && selectedOption.id !== CUSTOM_RANGE_DATE_OPTION ? (
             <>
               <span>{selectedOption.label}</span>
               <i className='date-picker__caret'>
                 <CaretIcon />
               </i>
             </>
-          )
-        } else {
-          return (
+          ) : (
             <>
-              {selectedOption && !isValueEmpty ? (
-                <MaskedInput
-                  className={inputClassNames}
-                  keepCharPositions={true}
-                  mask={dateMask}
-                  disabled={disabled}
-                  readOnly={isValueEmpty}
-                  showMask={!isValueEmpty || ['', '']}
-                  onBlur={datePickerInputOnBlur}
-                  onChange={onInputChange}
-                  pipe={autoCorrectedDatePipe}
-                  value={valueDatePickerInput}
-                  size={valueDatePickerInput.length}
-                />
-              ) : (
-                <>
-                  <span>Any time</span>
-                  <i className='date-picker__caret'>
-                    <CaretIcon />
-                  </i>
-                </>
+              <MaskedInput
+                className={inputClassNames}
+                keepCharPositions={true}
+                mask={dateMask}
+                disabled={disabled}
+                readOnly={isValueEmpty}
+                showMask={!isValueEmpty}
+                onBlur={datePickerInputOnBlur}
+                onChange={onInputChange}
+                pipe={autoCorrectedDatePipe}
+                value={valueDatePickerInput}
+                size={valueDatePickerInput.length}
+              />
+              {isValueEmpty && (
+                <span className='input__label input__label-empty'>&nbsp;Any time</span>
               )}
             </>
-          )
-        }
-      } else {
-        return (
-          <>
-            <MaskedInput
-              className={inputClassNames}
-              keepCharPositions={true}
-              mask={dateMask}
-              disabled={disabled}
-              readOnly={isValueEmpty}
-              showMask={!isValueEmpty}
-              onBlur={datePickerInputOnBlur}
-              onChange={onInputChange}
-              pipe={autoCorrectedDatePipe}
-              value={valueDatePickerInput}
-              size={valueDatePickerInput.length}
-            />
-            {isValueEmpty && (
-              <span className='input__label input__label-empty'>&nbsp;Any time</span>
-            )}
-          </>
-        )
-      }
-    }
+          )}
+        </>
+      )
+    }, [
+      autoCorrectedDatePipe,
+      dateMask,
+      datePickerInputOnBlur,
+      disabled,
+      inputClassNames,
+      isValueEmpty,
+      onInputChange,
+      selectedOption,
+      valueDatePickerInput,
+      withLabels
+    ])
+
+    // const datePickerElement2 = useMemo(() => {
+    //   if (withLabels) {
+    //     if (selectedOption && selectedOption.id !== CUSTOM_RANGE_DATE_OPTION) {
+    //       return (
+    //         <>
+    //           <span>{selectedOption.label}</span>
+    //           <i className='date-picker__caret'>
+    //             <CaretIcon />
+    //           </i>
+    //         </>
+    //       )
+    //     } else {
+    //       return (
+    //         <>
+    //           {selectedOption && !isValueEmpty ? (
+    //             <MaskedInput
+    //               className={inputClassNames}
+    //               keepCharPositions={true}
+    //               mask={dateMask}
+    //               disabled={disabled}
+    //               readOnly={isValueEmpty}
+    //               showMask={!isValueEmpty || ['', '']}
+    //               onBlur={datePickerInputOnBlur}
+    //               onChange={onInputChange}
+    //               pipe={autoCorrectedDatePipe}
+    //               value={valueDatePickerInput}
+    //               size={valueDatePickerInput.length}
+    //             />
+    //           ) : (
+    //             <>
+    //               <span>Any time</span>
+    //               <i className='date-picker__caret'>
+    //                 <CaretIcon />
+    //               </i>
+    //             </>
+    //           )}
+    //         </>
+    //       )
+    //     }
+    //   } else {
+    //     return (
+    //       <>
+    //         <MaskedInput
+    //           className={inputClassNames}
+    //           keepCharPositions={true}
+    //           mask={dateMask}
+    //           disabled={disabled}
+    //           readOnly={isValueEmpty}
+    //           showMask={!isValueEmpty}
+    //           onBlur={datePickerInputOnBlur}
+    //           onChange={onInputChange}
+    //           pipe={autoCorrectedDatePipe}
+    //           value={valueDatePickerInput}
+    //           size={valueDatePickerInput.length}
+    //         />
+    //         {isValueEmpty && (
+    //           <span className='input__label input__label-empty'>&nbsp;Any time</span>
+    //         )}
+    //       </>
+    //     )
+    //   }
+    // }, [
+    //   autoCorrectedDatePipe,
+    //   dateMask,
+    //   datePickerInputOnBlur,
+    //   disabled,
+    //   inputClassNames,
+    //   isValueEmpty,
+    //   onInputChange,
+    //   selectedOption,
+    //   valueDatePickerInput,
+    //   withLabels
+    // ])
 
     return (
       <div
@@ -166,14 +222,11 @@ const DatePickerView = React.forwardRef(
           className='date-picker__input-wrapper input-wrapper'
           onClick={onInputClick}
         >
-          {datePickerElement()}
+          {datePickerElement}
           <span className={inputLabelClassNames}>
             {label}
             {required && <span className='input__label-mandatory'> *</span>}
           </span>
-          {isValueEmpty && (
-            <span className='input__label input__label-empty'>&nbsp;{ANY_TIME}</span>
-          )}
           {isInvalid && (
             <Tooltip
               className='input__warning'

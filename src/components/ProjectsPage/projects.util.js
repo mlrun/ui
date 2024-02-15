@@ -236,7 +236,7 @@ export const getJobsStatsConfig = (
       }
     },
     filters: {
-      initialDateID: PAST_24_HOUR_DATE_OPTION,
+      selectedOptionId: PAST_24_HOUR_DATE_OPTION,
       dates: jobsFilter.dates,
       handler: handleDateSelection
     }
@@ -266,7 +266,7 @@ export const getJobsStatsConfig = (
       }
     },
     filters: {
-      initialDateID: PAST_24_HOUR_DATE_OPTION,
+      selectedOptionId: PAST_24_HOUR_DATE_OPTION,
       dates: workflowsFilter.dates,
       handler: handleDateSelection
     }
@@ -296,7 +296,7 @@ export const getJobsStatsConfig = (
       }
     },
     filters: {
-      initialDateID: NEXT_24_HOUR_DATE_OPTION,
+      selectedOptionId: NEXT_24_HOUR_DATE_OPTION,
       dates: scheduledFilter.dates,
       handler: handleDateSelection
     }

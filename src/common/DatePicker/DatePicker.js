@@ -26,7 +26,7 @@ import { DATE_FILTER_ANY_TIME } from '../../constants'
 import { createAutoCorrectedDatePipe } from '../../utils/createAutoCorrectedDatePipe'
 import {
   datesDivider,
-  datePickerOptions,
+  datePickerPastOptions,
   datePickerNextOptions,
   decodeLocale,
   formatDate,
@@ -36,7 +36,8 @@ import {
   getDateRegEx,
   getWeekDays,
   getWeekStart,
-  months
+  months,
+  ANY_TIME_DATE_OPTION
 } from '../../utils/datePicker.util'
 import { initialState, datePickerActions, datePickerReducer } from './datePickerReducer'
 
@@ -45,23 +46,23 @@ const DatePicker = ({
   date,
   dateTo,
   disabled,
-  initialDateID,
   invalid,
   invalidText,
   label,
   onBlur,
   onChange,
+  optionsType,
   required,
   requiredText,
   setInvalid,
-  showNext,
+  selectedOptionId,
   splitCharacter,
   tip,
   type,
-  withLabels,
-  withOptions
+  withLabels
 }) => {
   const [datePickerState, datePickerDispatch] = useReducer(datePickerReducer, initialState)
+  const [datePickerOptions, setDatePickerOptions] = useState([])
   const [isCalendarInvalid, setIsCalendarInvalid] = useState(false)
   const [isDatePickerOpened, setIsDatePickerOpened] = useState(false)
   const [isDatePickerOptionsOpened, setIsDatePickerOptionsOpened] = useState(false)
@@ -86,7 +87,14 @@ const DatePicker = ({
   const dateRegEx = getDateRegEx(dateMask)
   const startWeek = getWeekStart(decodeLocale(navigator.language))
 
-  const datePickerOptionsElements = showNext ? datePickerNextOptions : datePickerOptions
+  useEffect(() => {
+    if (optionsType) {
+      const datePickerOptionsElements =
+        optionsType === 'next' ? datePickerNextOptions : datePickerPastOptions
+
+      setDatePickerOptions(datePickerOptionsElements)
+    }
+  }, [optionsType])
 
   const handleCloseDatePickerOutside = useCallback(
     event => {
@@ -173,10 +181,10 @@ const DatePicker = ({
   }, [calcPosition, isDatePickerOpened, isDatePickerOptionsOpened])
 
   useEffect(() => {
-    if (initialDateID) {
-      setSelectedOption(datePickerOptionsElements.find(option => option.id === initialDateID))
+    if (selectedOptionId) {
+      setSelectedOption(datePickerOptions.find(option => option.id === selectedOptionId))
     }
-  }, [datePickerOptionsElements, initialDateID])
+  }, [datePickerOptions, selectedOptionId])
 
   useEffect(() => {
     datePickerDispatch({
@@ -198,10 +206,11 @@ const DatePicker = ({
 
   useEffect(() => {
     const isInputValueEmpty = getInputValueValidity(valueDatePickerInput)
-    setIsValueEmpty(withOptions && isInputValueEmpty)
+
+    setIsValueEmpty(optionsType && isInputValueEmpty)
 
     isInputValueEmpty && setIsDatePickerOpened(false)
-  }, [getInputValueValidity, valueDatePickerInput, withOptions])
+  }, [getInputValueValidity, valueDatePickerInput, optionsType])
 
   useEffect(() => {
     let isCalendarInvalid = false
@@ -332,6 +341,8 @@ const DatePicker = ({
     if (new RegExp(dateRegEx).test(event.target.value) || isValueEmpty) {
       let dates = DATE_FILTER_ANY_TIME
 
+      setSelectedOption(datePickerOptions.find(option => option.id === ANY_TIME_DATE_OPTION))
+
       if (!isValueEmpty) {
         dates = event.target.value.split(datesDivider).map(date => new Date(date))
 
@@ -362,7 +373,7 @@ const DatePicker = ({
 
   const onInputDatePickerClick = () => {
     if (!disabled) {
-      if (withOptions && !isDatePickerOpened) {
+      if (optionsType && !isDatePickerOpened) {
         setIsDatePickerOptionsOpened(state => !state)
       } else {
         setIsDatePickerOpened(state => !state)
@@ -432,7 +443,7 @@ const DatePicker = ({
       }
       dateMask={dateMask}
       datePickerInputOnBlur={datePickerInputOnBlur}
-      datePickerOptions={datePickerOptionsElements}
+      datePickerOptions={datePickerOptions}
       disabled={disabled}
       getInputValueValidity={getInputValueValidity}
       invalidText={invalidText}
@@ -471,20 +482,19 @@ DatePicker.defaultProps = {
   className: '',
   dateTo: new Date(),
   disabled: false,
-  initialDateID: '',
   invalid: false,
   invalidText: 'This field is invalid',
   label: 'Date',
   onBlur: () => {},
+  optionsType: '',
   required: false,
   requiredText: 'This field is required',
   setInvalid: () => {},
-  showNext: false,
+  selectedOptionId: '',
   splitCharacter: '/',
   tip: '',
   type: 'date',
-  withLabels: false,
-  withOptions: false
+  withLabels: false
 }
 
 DatePicker.propTypes = {
@@ -492,21 +502,20 @@ DatePicker.propTypes = {
   date: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.string]).isRequired,
   dateTo: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.string]),
   disabled: PropTypes.bool,
-  initialDateID: PropTypes.string,
   invalid: PropTypes.bool,
   invalidText: PropTypes.string,
   label: PropTypes.string,
   onBlur: PropTypes.func,
   onChange: PropTypes.func.isRequired,
+  optionsType: PropTypes.oneOf(['next', 'past']),
   required: PropTypes.bool,
   requiredText: PropTypes.string,
   setInvalid: PropTypes.func,
-  showNext: PropTypes.bool,
+  selectedOptionId: PropTypes.string,
   splitCharacter: PropTypes.oneOf(['/', '.']),
   tip: PropTypes.oneOfType([PropTypes.string, PropTypes.element]),
   type: PropTypes.oneOf(['date', 'date-time', 'date-range', 'date-range-time']),
-  withLabels: PropTypes.bool,
-  withOptions: PropTypes.bool
+  withLabels: PropTypes.bool
 }
 
 export default React.memo(

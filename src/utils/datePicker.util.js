@@ -53,7 +53,7 @@ export const NEXT_YEAR_DATE_OPTION = 'nextYear'
 
 export const CUSTOM_RANGE_DATE_OPTION = 'customRange'
 
-export const datePickerOptions = [
+export const datePickerPastOptions = [
   {
     id: ANY_TIME_DATE_OPTION,
     label: ANY_TIME,

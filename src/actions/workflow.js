@@ -71,9 +71,10 @@ const workflowActions = {
 
     return workflowApi
       .getWorkflows(project, filter, newConfig)
-      .then(response =>
+      .then(response => {
         dispatch(workflowActions.fetchWorkflowsSuccess(parseWorkflows(response.data.runs)))
-      )
+        return response.data.runs
+      })
       .catch(error => {
         dispatch(workflowActions.fetchWorkflowsFailure(error))
         largeResponseCatchHandler(error, 'Failed to fetch workflows', dispatch)

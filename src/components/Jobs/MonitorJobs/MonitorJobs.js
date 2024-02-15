@@ -49,7 +49,7 @@ import {
 } from './monitorJobs.util'
 import { JobsContext } from '../Jobs'
 import { createJobsMonitorTabContent } from '../../../utils/createJobsContent'
-import { datePickerOptions, PAST_WEEK_DATE_OPTION } from '../../../utils/datePicker.util'
+import { datePickerPastOptions, PAST_WEEK_DATE_OPTION } from '../../../utils/datePicker.util'
 import {
   enrichRunWithFunctionFields,
   handleAbortJob,
@@ -478,7 +478,9 @@ const MonitorJobs = ({
           dates: filtersStore.dates
         }
       } else if (isJobDataEmpty()) {
-        const pastWeekOption = datePickerOptions.find(option => option.id === PAST_WEEK_DATE_OPTION)
+        const pastWeekOption = datePickerPastOptions.find(
+          option => option.id === PAST_WEEK_DATE_OPTION
+        )
 
         filters = {
           dates: {

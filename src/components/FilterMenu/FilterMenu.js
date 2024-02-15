@@ -326,135 +326,143 @@ const FilterMenu = ({
       return () => clearInterval(intervalId)
     }
   }, [autoRefresh, hidden, enableAutoRefresh, filtersStore, applyChanges])
+
+  const elementToRender = useCallback(
+    filter => {
+      switch (filter.type) {
+        case TAG_FILTER:
+          return (
+            <TagFilter
+              label={filter.label}
+              onChange={item => handleSelectOption(item, filter)}
+              page={page}
+              tagFilterOptions={tagOptions}
+              value={filtersStore[TAG_FILTER]}
+            />
+          )
+        case LABELS_FILTER:
+          return (
+            <Input
+              density='dense'
+              label={filter.label}
+              onChange={setLabels}
+              onBlur={onBlur}
+              onKeyDown={onKeyDown}
+              placeholder='key1,key2=value,...'
+              type='text'
+              value={labels}
+            />
+          )
+        case NAME_FILTER:
+          return (
+            <Input
+              density='dense'
+              label={filter.label}
+              onChange={setName}
+              onBlur={onBlur}
+              onKeyDown={onKeyDown}
+              type='text'
+              value={name}
+            />
+          )
+        case ENTITIES_FILTER:
+          return (
+            <Input
+              density='dense'
+              label={filter.label}
+              onChange={setEntities}
+              onBlur={onBlur}
+              onKeyDown={onKeyDown}
+              type='text'
+              value={entities}
+            />
+          )
+        case DATE_RANGE_TIME_FILTER:
+          return (
+            <DatePicker
+              date={filtersStore.dates.value[0]}
+              dateTo={filtersStore.dates.value[1]}
+              label={filter.label}
+              onChange={handleChangeDates}
+              type='date-range-time'
+              optionsType='past'
+            />
+          )
+        case ITERATIONS_FILTER:
+          return (
+            <CheckBox
+              item={{ label: filter.label, id: 'iter' }}
+              onChange={handleIter}
+              selectedId={filtersStore.iter}
+            />
+          )
+        case SHOW_UNTAGGED_FILTER:
+          return (
+            <CheckBox
+              className='filters-checkbox'
+              item={{ label: filter.label, id: SHOW_UNTAGGED_ITEMS }}
+              onChange={handleShowUntagged}
+              selectedId={filtersStore.showUntagged}
+            />
+          )
+        case PROJECT_FILTER:
+          return (
+            <Select
+              density='dense'
+              className=''
+              label={filter.label}
+              onClick={project => handleSelectOption(project, filter)}
+              options={filtersStore.projectOptions}
+              selectedId={filtersStore.project}
+            />
+          )
+        default:
+          return (
+            <Select
+              density='dense'
+              className={filter.type === PERIOD_FILTER ? 'period-filter' : ''}
+              label={`${filter.type.replace(/([A-Z])/g, ' $1')}:`}
+              key={filter.type}
+              onClick={item => handleSelectOption(item, filter)}
+              options={filter.options || selectOptions[filter.type]}
+              selectedId={
+                (filter.type === STATUS_FILTER && filtersStore.state) ||
+                (filter.type === GROUP_BY_FILTER && filtersStore.groupBy) ||
+                (filter.type === SORT_BY && filtersStore.sortBy)
+              }
+            />
+          )
+      }
+    },
+    [
+      entities,
+      filtersStore,
+      handleChangeDates,
+      handleIter,
+      handleSelectOption,
+      handleShowUntagged,
+      labels,
+      name,
+      onBlur,
+      onKeyDown,
+      page,
+      selectOptions,
+      tagOptions
+    ]
+  )
+
   return (
     !hidden && (
       <>
         <div className='filters'>
           {filters.map(filter => {
-            if (!filter.hidden) {
-              switch (filter.type) {
-                case TAG_FILTER:
-                  return (
-                    <div className='filters-col' key={filter.type}>
-                      <TagFilter
-                        label={filter.label}
-                        onChange={item => handleSelectOption(item, filter)}
-                        page={page}
-                        tagFilterOptions={tagOptions}
-                        value={filtersStore[TAG_FILTER]}
-                      />
-                    </div>
-                  )
-                case LABELS_FILTER:
-                  return (
-                    <div className='filters-col' key={filter.type}>
-                      <Input
-                        density='dense'
-                        label={filter.label}
-                        onChange={setLabels}
-                        onBlur={onBlur}
-                        onKeyDown={onKeyDown}
-                        placeholder='key1,key2=value,...'
-                        type='text'
-                        value={labels}
-                      />
-                    </div>
-                  )
-                case NAME_FILTER:
-                  return (
-                    <div className='filters-col' key={filter.type}>
-                      <Input
-                        density='dense'
-                        label={filter.label}
-                        onChange={setName}
-                        onBlur={onBlur}
-                        onKeyDown={onKeyDown}
-                        type='text'
-                        value={name}
-                      />
-                    </div>
-                  )
-                case ENTITIES_FILTER:
-                  return (
-                    <div className='filters-col' key={filter.type}>
-                      <Input
-                        density='dense'
-                        label={filter.label}
-                        onChange={setEntities}
-                        onBlur={onBlur}
-                        onKeyDown={onKeyDown}
-                        type='text'
-                        value={entities}
-                      />
-                    </div>
-                  )
-                case DATE_RANGE_TIME_FILTER:
-                  return (
-                    <div className='filters-col' key={filter.type}>
-                      <DatePicker
-                        date={filtersStore.dates.value[0]}
-                        dateTo={filtersStore.dates.value[1]}
-                        label={filter.label}
-                        onChange={handleChangeDates}
-                        type='date-range-time'
-                        withOptions
-                      />
-                    </div>
-                  )
-                case ITERATIONS_FILTER:
-                  return (
-                    <div className='filters-col' key={filter.type}>
-                      <CheckBox
-                        item={{ label: filter.label, id: 'iter' }}
-                        onChange={handleIter}
-                        selectedId={filtersStore.iter}
-                      />
-                    </div>
-                  )
-                case SHOW_UNTAGGED_FILTER:
-                  return (
-                    <div className='filters-col' key={filter.type}>
-                      <CheckBox
-                        className='filters-checkbox'
-                        item={{ label: filter.label, id: SHOW_UNTAGGED_ITEMS }}
-                        onChange={handleShowUntagged}
-                        selectedId={filtersStore.showUntagged}
-                      />
-                    </div>
-                  )
-                case PROJECT_FILTER:
-                  return (
-                    <div className='filters-col' key={filter.type}>
-                      <Select
-                        density='dense'
-                        className=''
-                        label={filter.label}
-                        onClick={project => handleSelectOption(project, filter)}
-                        options={filtersStore.projectOptions}
-                        selectedId={filtersStore.project}
-                      />
-                    </div>
-                  )
-                default:
-                  return filter.type === PERIOD_FILTER ? (
-                    <div className='filters-col' key={filter.type}>
-                      <Select
-                        density='dense'
-                        label={`${filter.type.replace(/([A-Z])/g, ' $1')}:`}
-                        onClick={item => handleSelectOption(item, filter)}
-                        options={filter.options || selectOptions[filter.type]}
-                        selectedId={
-                          (filter.type === STATUS_FILTER && filtersStore.state) ||
-                          (filter.type === GROUP_BY_FILTER && filtersStore.groupBy) ||
-                          (filter.type === SORT_BY && filtersStore.sortBy)
-                        }
-                      />
-                    </div>
-                  ) : null
-              }
-            } else {
-              return null
-            }
+            if (filter.hidden) return null
+
+            return (
+              <div className='filter-column' key={filter.type}>
+                {elementToRender(filter)}
+              </div>
+            )
           })}
         </div>
         {actionButton &&

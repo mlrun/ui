@@ -346,7 +346,7 @@ const jobsActions = {
   fetchJobs: (project, filters, config) => dispatch => {
     dispatch(jobsActions.fetchJobsBegin())
 
-    const params = {
+    const newConfig = {
       ...config,
       params: {
         ...config?.params,
@@ -355,7 +355,7 @@ const jobsActions = {
     }
 
     return jobsApi
-      .getJobs(project, params)
+      .getJobs(project, newConfig)
       .then(({ data }) => {
         const newJobs = (data || {}).runs.filter(job => job.metadata.iteration === 0)
 

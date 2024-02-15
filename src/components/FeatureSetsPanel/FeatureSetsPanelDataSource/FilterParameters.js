@@ -141,16 +141,16 @@ const FilterParameters = ({
   }
 
   return (
-    <FeatureSetsPanelSection title="Filter Parameters">
-      <span className="data-source__description">
+    <FeatureSetsPanelSection title='Filter Parameters'>
+      <span className='data-source__description'>
         Users can add the following parameters to filter the data.
       </span>
-      <div className="data-source__inputs-container">
+      <div className='data-source__inputs-container'>
         <Input
           floatingLabel
           invalid={!validation.isTimeFieldValid}
-          invalidText="Timestamp key is invalid"
-          label="Timestamp column"
+          invalidText='Timestamp key is invalid'
+          label='Timestamp column'
           onBlur={event => handleTimestampColumnOnBlur(event, TIME_FIELD)}
           onChange={value =>
             setData(state => ({
@@ -159,24 +159,24 @@ const FilterParameters = ({
             }))
           }
           required={Boolean(data.timeField.length > 0 || data.startTime || data.endTime)}
-          requiredText="Timestamp key is required"
+          requiredText='Timestamp key is required'
           setInvalid={value =>
             setValidation(state => ({
               ...state,
               isTimeFieldValid: value
             }))
           }
-          tip="The field name for filtering the source data."
-          type="text"
+          tip='The field name for filtering the source data.'
+          type='text'
           value={data.timeField}
-          wrapperClassName="data-source__inputs-item"
+          wrapperClassName='data-source__inputs-item'
         />
         <DatePicker
-          className="data-source__inputs-item"
+          className='data-source__inputs-item'
           date={data.startTime}
           invalid={!validation.isStartTimeValid}
-          invalidText="Start time is invalid"
-          label="Start time"
+          invalidText='Start time is invalid'
+          label='Start time'
           onChange={date => handleChangeDates(date, START_TIME)}
           required={Boolean((data.timeField || data.endTime) && !data.startTime)}
           setInvalid={value =>
@@ -185,15 +185,15 @@ const FilterParameters = ({
               isStartTimeValid: value
             }))
           }
-          tip="Filter data by start date >= value"
-          type="date-time"
+          tip='Filter data by start date >= value'
+          type='date-time'
         />
         <DatePicker
-          className="data-source__inputs-item"
+          className='data-source__inputs-item'
           date={data.endTime}
           invalid={!validation.isEndTimeValid}
-          invalidText="End time is invalid"
-          label="End time"
+          invalidText='End time is invalid'
+          label='End time'
           onChange={date => handleChangeDates(date, END_TIME)}
           required={Boolean((data.timeField || data.startTime) && !data.endTime)}
           setInvalid={value =>
@@ -202,8 +202,8 @@ const FilterParameters = ({
               isEndTimeValid: value
             }))
           }
-          tip="Filter data by start date <= value"
-          type="date-time"
+          tip='Filter data by start date <= value'
+          type='date-time'
         />
       </div>
     </FeatureSetsPanelSection>

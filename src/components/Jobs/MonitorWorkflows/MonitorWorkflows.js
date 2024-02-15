@@ -69,7 +69,7 @@ import { parseFunction } from '../../../utils/parseFunction'
 import { parseJob } from '../../../utils/parseJob'
 import { setFilters } from '../../../reducers/filtersReducer'
 import { setNotification } from '../../../reducers/notificationReducer'
-import { datePickerOptions, PAST_WEEK_DATE_OPTION } from '../../../utils/datePicker.util'
+import { datePickerPastOptions, PAST_WEEK_DATE_OPTION } from '../../../utils/datePicker.util'
 import { useMode } from '../../../hooks/mode.hook'
 import { usePods } from '../../../hooks/usePods.hook'
 import { useSortTable } from '../../../hooks/useSortTable.hook'
@@ -568,7 +568,7 @@ const MonitorWorkflows = ({
           getWorkflows(filters)
           dispatch(setFilters(filters))
         } else if (workflowsStore.workflows.data.length === 0) {
-          const pastWeekOption = datePickerOptions.find(
+          const pastWeekOption = datePickerPastOptions.find(
             option => option.id === PAST_WEEK_DATE_OPTION
           )
           const generatedDates = [...pastWeekOption.handler()]

@@ -46,8 +46,8 @@ const jobsApi = {
       `/projects/${project}/schedules/${postData.scheduled_object.task.metadata.name}`,
       postData
     ),
-  getJobs: (project, params) => {
-    return mainHttpClient.get(`/projects/${project}/runs`, params)
+  getJobs: (project, config) => {
+    return mainHttpClient.get(`/projects/${project}/runs`, config)
   },
   getSpecificJobs: (project, params, jobList) => {
     const jobListQuery = jobList.map(value => `uid=${value}`).join('&')
