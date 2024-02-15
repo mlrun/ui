@@ -63,7 +63,6 @@ const Projects = () => {
   const { isDemoMode } = useMode()
   const { isNuclioModeDisabled } = useNuclioMode()
   const projectStore = useSelector(store => store.projectStore)
-
   const tasksStore = useSelector(store => store.tasksStore)
 
   const fetchMinimalProjects = useCallback(() => {
