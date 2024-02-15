@@ -26,6 +26,7 @@ import CreateProjectDialog from './CreateProjectDialog/CreateProjectDialog'
 import Loader from '../../common/Loader/Loader'
 import NoData from '../../common/NoData/NoData'
 import PageActionsMenu from '../../common/PageActionsMenu/PageActionsMenu'
+import PageHeader from '../../elements/PageHeader/PageHeader'
 import ProjectCard from '../../elements/ProjectCard/ProjectCard'
 import ProjectsMonitoring from './ProjectsMonitoring/ProjectsMonitoring'
 import Search from '../../common/Search/Search'
@@ -102,6 +103,7 @@ const ProjectsView = ({
       )}
       <div className='projects__wrapper'>
         {projectStore.projects.length > 0 && isDemoMode && <ProjectsMonitoring />}
+        <PageHeader title='Projects' />
         <div className='projects-content-header'>
           <div className='projects-content-header__row'>
             <div className='projects-content-header__col'>
