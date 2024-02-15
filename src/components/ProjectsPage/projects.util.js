@@ -132,7 +132,7 @@ export const handleDeleteProjectError = (
       item: project,
       header: 'Delete project?',
       message:
-        `You try to delete project "${project.metadata.name}". 'The project is not empty. Deleting it will also delete all of its resources, such as jobs, '` +
+        `You try to delete project "${project.metadata.name}". The project is not empty. Deleting it will also delete all of its resources, such as jobs, ` +
         'artifacts, and features.',
       btnConfirmLabel: 'Delete',
       btnConfirmType: DANGER_BUTTON,
@@ -169,7 +169,9 @@ export const pollDeletingProjects = (terminatePollRef, deletingProjects, refresh
             setNotification({
               status: 200,
               id: Math.random(),
-              message: `Project "${deletingProjects?.[task.metadata.name]}" was deleted successfully`
+              message: `Project "${
+                deletingProjects?.[task.metadata.name]
+              }" was deleted successfully`
             })
           )
         } else {
