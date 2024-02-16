@@ -199,15 +199,12 @@ main {
       min-height: 50px;
       background-color: inherit;
 
-      &:not(.parent-row_expanded) {
-        border-bottom: $tableRowBorder;
-      }
-
       &:not(.parent-row_expanded) > * {
         position: relative;
         display: inline-flex;
         flex: 1;
         align-items: center;
+        border-bottom: $tableRowBorder;
 
         @include tableDet(8px, 5px, 8px, 10px);
 
