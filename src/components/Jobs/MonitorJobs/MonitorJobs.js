@@ -458,6 +458,7 @@ const MonitorJobs = ({
   useEffect(() => {
     if (!params.jobId && !isEmpty(selectedJob)) {
       setSelectedJob({})
+      fetchJobFunctionsPromiseRef.current = null
     }
   }, [params.jobId, selectedJob])
 
