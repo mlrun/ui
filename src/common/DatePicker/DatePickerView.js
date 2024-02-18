@@ -263,7 +263,8 @@ const DatePickerView = React.forwardRef(
                   onClick={() => {
                     onSelectOption(option)
                   }}
-                  selectType=''
+                  withSelectedIcon
+                  selectedId={selectedOption && selectedOption.id}
                 />
               ))}
             </div>
