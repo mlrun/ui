@@ -1930,7 +1930,7 @@ Feature: Jobs and workflows
 
     @MLJW
     @FAILED_TODO
-    #TODO: invokeSchedule implementation
+    #TODO: Bug ML-5672 - Last run link is missing after running a scheduled job
     @links
     Scenario: MLJW083 - Check redirection to Last Run Drill-down from Schedules tab
         * set tear-down property "project" created with "automation-test" value

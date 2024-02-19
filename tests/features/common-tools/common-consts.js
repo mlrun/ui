@@ -96,7 +96,7 @@ module.exports = {
     ]
   },
   Common_Lists: {
-    Action_Menu_List: ['Download', 'Copy URI', 'View YAML', 'Add a tag', 'Delete'],
+    Action_Menu_List: ['Add a tag', 'Download', 'Copy URI', 'View YAML', 'Delete'],
     Handler_List: ['train'],
     Pods_Priority_List: ['Low','Medium', 'High'],
     Ranking_Criteria_List: ['Min','Max']
@@ -209,18 +209,25 @@ module.exports = {
   Models_Endpoints_Info_Pane: {
     Tab_List: ['Overview', 'Features Analysis'],
     Overview_General_Headers: [
-      'UID',
-      'Model class',
-      'Model artifact',
-      'Function URI',
-      'Function Tag',
-      'Feature set',
-      'Last prediction',
-      'Error count',
-      'Accuracy',
-      'Stream path'
+      'UID:',
+      'Model class:',
+      'Model artifact:',
+      'Function URI:',
+      'Function Tag:',
+      'Feature set:',
+      'Last prediction:',
+      'Error count:',
+      'Accuracy:',
+      'Stream path:'
     ],
-    Overview_Drift_Headers: ['Mean TVD', 'Mean Hellinger', 'Mean KLD']
+    Overview_Drift_Headers: [
+      'Mean TVD:', 
+      'Mean Hellinger:', 
+      'Mean KLD:', 
+      'Drift Actual Value:', 
+      'Drift Detected Threshold:',
+      'Possible Drift Threshold:'
+    ]
   },
   New_Feature_Store: {
     Kind_Options: ['HTTP', 'CSV', 'PARQUET'],
@@ -299,7 +306,6 @@ module.exports = {
   },
   Input_Hint: {
     Artifact_Names_Unique: 'Artifact names in the same project must be unique',
-    Artifacts_Names_Unique: 'Artifacts names in the same project must be unique.',
     Dataset_Names_Unique: 'Dataset names in the same project must be unique',
     Artifact_Name_Hint_Deploy_Model:
       'Valid characters: a–z, A–Z, 0–9, –, _, .\nMust begin and end with: a–z, A–Z, 0–9\nLength – max: 253\n' +
@@ -328,7 +334,7 @@ module.exports = {
       'This field is required',
     Input_Field_Require: 'This field is required',
     Input_Field_Invalid: 'This field is invalid',
-    Input_Field_Unique: 'Name should be unique',
+    Input_Field_Unique: 'Name must be unique',
     URL_Field_Require: 'URL is required',
     Key_Bucketing_Number_Hint:
       'If you partition by key and the number of unique keys is very high it is recommended to use buckets for ' +

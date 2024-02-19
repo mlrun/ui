@@ -101,14 +101,14 @@ const deployModelTable = {
   },
   body: {
     offset: 0,
-    add_row_btn: 'button',
+    add_row_btn: '.form-table__action-row button',
     row: {
-      root: '.table-row',
+      root: '.form-table__row',
       fields: {
-        name: '.table-cell__key .data-ellipsis',
-        value: '.table-cell__value .data-ellipsis',
-        edit_btn: '.key-value-table__btn:nth-of-type(1)',
-        delete_btn: '.key-value-table__btn:nth-of-type(2)'
+        name: '.form-table__cell_1:nth-of-type(1) .data-ellipsis',
+        value: '.form-table__cell_1:nth-of-type(2) .data-ellipsis',
+        edit_btn: '[data-testid="edit-btn"]',
+        delete_btn: '[data-testid="delete-btn"]'
       }
     }
   }
@@ -1029,7 +1029,7 @@ module.exports = {
       Key_Value_Table: commonTable(deployModelTable),
       Class_Argument_Name_Input: inputGroup(
         generateInputGroup(
-          '.deploy-model .table-row_edit .table-cell__key',
+          '.deploy-model .form-table__row_active .form-table__cell_1:nth-of-type(1)',
           true,
           false,
           '.form-field__warning'
@@ -1037,17 +1037,17 @@ module.exports = {
       ),
       Class_Argument_Value_Input: inputGroup(
         generateInputGroup(
-          '.deploy-model .table-row_edit .table-cell__value',
+          '.deploy-model .form-table__row_active .form-table__cell_1:nth-of-type(2)',
           true,
           false,
           '.form-field__warning'
         )
       ),
       Add_New_Row_Button: By.css(
-        '.deploy-model .table-row_edit .table-cell__actions .key-value-table__btn:nth-of-type(1)'
+        '.deploy-model .form-table__actions-cell [data-testid="apply-btn"] button'
       ),
       Delete_New_Row_Button: By.css(
-        '.deploy-model .table-row_edit .table-cell__actions .key-value-table__btn:nth-of-type(2)'
+        '.deploy-model .form-table__actions-cell [data-testid="delete-discard-btn"] button'
       )
     },
     Cancel_Button: commonFormCancelButton,
