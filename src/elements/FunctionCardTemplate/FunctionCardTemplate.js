@@ -42,6 +42,7 @@ const FunctionCardTemplate = ({
     selected && 'selected',
     className
   )
+
   return (
     <div className={templateClassName} onClick={event => onSelectCard(event)}>
       <div className="job-card-template__header">

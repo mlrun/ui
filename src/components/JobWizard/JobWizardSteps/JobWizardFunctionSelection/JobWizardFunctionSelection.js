@@ -44,7 +44,7 @@ import {
 import { generateJobWizardData, getCategoryName } from '../../JobWizard.util'
 import { generateProjectsList } from '../../../../utils/projects'
 import { openConfirmPopUp } from 'igz-controls/utils/common.util'
-import { handleScroll } from '../../../../utils/scrollHandler.util'
+import { scrollToElement } from '../../../../utils/scroll.util'
 import {
   FUNCTIONS_SELECTION_FUNCTIONS_TAB,
   FUNCTIONS_SELECTION_HUB_TAB,
@@ -87,10 +87,9 @@ const JobWizardFunctionSelection = ({
   const [hubFiltersInitialValues] = useState({ [HUB_CATEGORIES_FILTER]: {} })
   const [filterByName, setFilterByName] = useState('')
   const [filterMatches, setFilterMatches] = useState([])
-  const [autoSwitchedTab, setAutoSwitchedTab] = useState(true)
   const [projects, setProjects] = useState(generateProjectsList(projectNames, params.projectName))
   const selectedActiveTab = useRef(null)
-  const containerRef = useRef(null)
+  const functionSelectionRef = useRef(null)
 
   const filtersStoreHubCategories = useSelector(
     store =>
@@ -310,12 +309,12 @@ const JobWizardFunctionSelection = ({
   ])
 
   const selectProjectFunction = functionData => {
-    selectedActiveTab.current = activeTab
     const selectNewFunction = () => {
       setSelectedFunctionData(functionData)
       generateData(functionData)
       setSelectedFunctionTab(FUNCTIONS_SELECTION_FUNCTIONS_TAB)
       setShowSchedule(false)
+      selectedActiveTab.current = activeTab
     }
 
     if (
@@ -331,7 +330,6 @@ const JobWizardFunctionSelection = ({
   }
 
   const selectTemplateFunction = functionData => {
-    selectedActiveTab.current = activeTab
     const selectNewFunction = () => {
       const functionTemplatePath = `${functionData.spec.item_uri}${functionData.spec.assets.function}`
 
@@ -340,6 +338,7 @@ const JobWizardFunctionSelection = ({
         generateData(result)
         setSelectedFunctionTab(FUNCTIONS_SELECTION_HUB_TAB)
         setShowSchedule(false)
+        selectedActiveTab.current = activeTab
       })
     }
 
@@ -360,23 +359,17 @@ const JobWizardFunctionSelection = ({
   }
 
   useEffect(() => {
-    if (!stepIsActive) {
-      setAutoSwitchedTab(true)
-      return
+    const isTabActive = selectedActiveTab.current && selectedActiveTab.current === activeTab
+
+    if (stepIsActive && isTabActive) {
+      scrollToElement(functionSelectionRef, '.selected')
+    } else if (!stepIsActive && !isTabActive) {
+      setActiveTab(selectedActiveTab.current)
     }
-    if (autoSwitchedTab) {
-      if (selectedActiveTab.current && selectedActiveTab.current !== activeTab) {
-        setActiveTab(selectedActiveTab.current)
-      }
-      setAutoSwitchedTab(false)
-    }
-    if (selectedActiveTab.current === activeTab) {
-      handleScroll(containerRef, '.selected')
-    }
-  }, [stepIsActive, autoSwitchedTab, activeTab, setActiveTab, selectedActiveTab])
+  }, [stepIsActive, activeTab, setActiveTab, selectedActiveTab])
 
   return (
-    <div ref={containerRef} className="job-wizard__function-selection">
+    <div ref={functionSelectionRef} className="job-wizard__function-selection">
       <div className="form-row">
         <h5 className="form-step-title">Function selection</h5>
       </div>
@@ -496,6 +489,10 @@ const JobWizardFunctionSelection = ({
       </OnChange>
     </div>
   )
+}
+
+JobWizardFunctionSelection.defaultProps = {
+  stepIsActive: false
 }
 
 JobWizardFunctionSelection.propTypes = {

@@ -18,13 +18,13 @@ under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
 
-export const handleScroll = (
+export const scrollToElement = (
   parentRef,
   querySelector,
   shouldScrollToTop = false,
   timeoutDuration = 0
 ) => {
-  const selectedElement = parentRef.current.querySelector(`${querySelector}`)
+  const selectedElement = parentRef?.current?.querySelector(`${querySelector}`)
 
   if (!selectedElement) return
 
