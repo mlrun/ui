@@ -60,22 +60,20 @@ const TableCell = ({
     return data.template
   } else if (link && data.type !== 'hidden') {
     return (
-      <div data-testid={data.headerId}>
-        <TableLinkCell
-          className={className}
-          data={data}
-          showExpandButton={showExpandButton}
-          handleExpandRow={handleExpandRow}
-          item={item}
-          link={link}
-          selectItem={selectItem}
-          selectedItem={selectedItem}
-        />
-      </div>
+      <TableLinkCell
+        className={className}
+        data={data}
+        showExpandButton={showExpandButton}
+        handleExpandRow={handleExpandRow}
+        item={item}
+        link={link}
+        selectItem={selectItem}
+        selectedItem={selectedItem}
+      />
     )
   } else if (firstCell && !link) {
     return (
-      <td data-testid={data.headerId} className={cellClassNames}>
+      <td className={cellClassNames}>
         <div className="data-ellipsis">
           {data && (
             <Tooltip template={<TextTooltipTemplate text={data.tooltip || data.value} />}>
@@ -99,11 +97,7 @@ const TableCell = ({
       </td>
     )
   } else if (data.type === 'type') {
-    return (
-      <div data-testid={data.headerId}>
-        <TableTypeCell className={className} data={data} />
-      </div>
-    )
+    return <TableTypeCell className={className} data={data} />
   } else if (data.type === 'icons') {
     return (
       <td data-testid={data.headerId} className={cellClassNames}>

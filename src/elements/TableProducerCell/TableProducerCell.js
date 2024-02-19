@@ -36,7 +36,7 @@ const TableProducerCell = ({ bodyCellClassName, className, producer }) => {
 
   return (
     producer && (
-      <td className={cellClassNames}>
+      <td data-testid={'producer'} className={cellClassNames}>
         {producer?.name && uid && (
           <Link
             className="data-ellipsis"
