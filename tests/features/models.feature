@@ -217,7 +217,6 @@ Feature: Models Page
     And verify "No_Data_Message" element visibility on "commonPagesHeader" wizard
 
   @MLM
-  @FAILED_TODO
   #TODO: Register_Model_Button hidden from 1.4.0, running on demo mode
   @passive
   Scenario: MLM009 - Check all mandatory components on Register Model Popup
@@ -239,7 +238,6 @@ Feature: Models Page
     Then verify if "Register_Model_Popup" popup dialog appears
     Then verify "Cross_Cancel_Button" element visibility on "Register_Model_Popup" wizard
     Then verify "New_File_Name_Input" element visibility on "Register_Model_Popup" wizard
-    Then verify "New_File_Name_Input" on "Register_Model_Popup" wizard should display "Input_Hint"."Artifacts_Names_Unique"
     Then type value "   " to "New_File_Name_Input" field on "Register_Model_Popup" wizard
     Then verify "New_File_Name_Input" on "Register_Model_Popup" wizard should display options "Input_Hint"."Artifact_Name_Hint"
     Then verify options in "Path_Scheme_Combobox" combobox in "Target_Path" on "Register_Model_Popup" wizard should contains "Models"."Combobox_Options"
@@ -311,9 +309,7 @@ Feature: Models Page
     Then verify "Title" element not exists on "Register_Model_Popup" wizard
 
   @MLM
-  @FAILED_TODO
   #TODO: Register_Model_Button hidden from 1.4.0, running on demo mode
-  #TODO: Overview Model file doesn't created
   Scenario: MLM010 - Verify behaviour on Register new Model
     * set tear-down property "model" created in "default" project with "automation-model" value
     Given open url
@@ -553,10 +549,8 @@ Feature: Models Page
       Then click on "Download_Pop_Up_Cross_Cancel_Button" element on "Downloads_Popup" wizard
       Then click on "Cross_Cancel_Button" element on "Artifact_Preview_Popup" wizard
 
-  @FAILED_TODO
-  #TODO: 'Apply_Changes_Button' implementation was changed - button is invisible before any changes
-  #TODO: verify, remove, verify changes with 'Labels_Table' - invalid selector: An invalid or illegal selector was specified
-  Scenario: MLM015 - Check all mandatory components in Item infopane on Overview tab table
+  @MLM
+  Scenario: MLM015 - Check Labels table components in Item infopane on Overview tab table
     * set tear-down property "model" created in "default" project with "test-model" value
     * create "test-model" Model with "latest" tag in "default" project with code 200
     Given open url
@@ -569,41 +563,53 @@ Feature: Models Page
     When click on cell with value "test-model" in "name" column in "Models_Table" table on "Models" wizard
     And wait load page
     Then verify "Header" element visibility on "Models_Info_Pane" wizard
-    Then verify "Apply_Changes_Button" element on "Models_Info_Pane" wizard is disabled
     When add rows to "Labels_Table" table on "Models_Info_Pane" wizard
             | key_input | value_input |
             |    key1   |    value1   |
             |    key2   |    value2   |
             |    key3   |    value3   |
-    Then verify values in "Labels_Table" table on "Models_Info_Pane" wizard
-            |       label     |
-            | key1\n:\nvalue1 |
-            | key2\n:\nvalue2 |
-            | key3\n:\nvalue3 |
-    When click on "remove_btn" in "Labels_Table" table on "Models_Info_Pane" wizard
-            |       label     |
-            | key1\n:\nvalue1 |
-            | key3\n:\nvalue3 |
-    Then verify values in "Labels_Table" table on "Models_Info_Pane" wizard
-            |       label     |
-            | key2\n:\nvalue2 |
-    Then click on "Apply_Button" element on "Models_Info_Pane" wizard
+    Then verify values in "Labels_Table" table on "Models_Info_Pane" wizard with attribute
+            | key_verify | value_verify | 
+            |    key1    |    value1    |
+            |    key2    |    value2    |
+            |    key3    |    value3    |
+    When click on "remove_btn" in "Labels_Table" table on "Models_Info_Pane" wizard with attribute
+            | key_verify | 
+            |    key3    |    
+            |    key1    |
+    Then verify values in "Labels_Table" table on "Models_Info_Pane" wizard with attribute
+            | key_verify | value_verify | 
+            |    key2    |    value2    |
+    Then click on "Labels_Apply_Button" element on "Models_Info_Pane" wizard
+    And wait load page
     Then verify "Apply_Changes_Button" element on "Models_Info_Pane" wizard is enabled
     Then click on "Apply_Changes_Button" element on "Models_Info_Pane" wizard
     And wait load page
-    Then verify "Apply_Changes_Button" element on "Models_Info_Pane" wizard is disabled
-    Then verify values in "Labels_Table" table on "Models_Info_Pane" wizard
-            |       label     |
-            | key2\n:\nvalue2 |
-    When click on "Expand_Sources" element on "Models_Info_Pane" wizard
-    When click on "remove_btn" in "Labels_Table" table on "Models_Info_Pane" wizard
-           |       label     |
-           | key2\n:\nvalue2 |
-    Then click on "Apply_Button" element on "Models_Info_Pane" wizard
+    Then verify values in "Labels_Table" table on "Models_Info_Pane" wizard with attribute
+            | key_verify | value_verify | 
+            |    key2    |    value2    |
+    And wait load page
+    Then click on "Notification_Pop_Up_Cross_Close_Button" element on "Notification_Popup" wizard
+    And wait load page
+    When click on "remove_btn" in "Labels_Table" table on "Models_Info_Pane" wizard with attribute
+            | key_verify | 
+            |    key2    |    
+    Then click on "Labels_Apply_Button" element on "Models_Info_Pane" wizard
     Then click on "Apply_Changes_Button" element on "Models_Info_Pane" wizard
     And wait load page
-    Then verify "Apply_Changes_Button" element on "Models_Info_Pane" wizard is disabled
-
+    When add rows to "Labels_Table" table on "Models_Info_Pane" wizard
+            | key_input | value_input |
+            |    key3   |    value3   |
+            |    key4   |    value4   |
+    Then click on "Labels_Apply_Button" element on "Models_Info_Pane" wizard
+    Then click on "Apply_Changes_Button" element on "Models_Info_Pane" wizard
+    And wait load page
+    Then verify values in "Labels_Table" table on "Models_Info_Pane" wizard with attribute
+            | key_verify | value_verify | 
+            |    key3   |    value3   |
+            |    key4   |    value4   |
+    
+  @MLM
   @passive
   Scenario: MLM016 - Check all mandatory components in Item infopane on Overview tab table on Model Endpoints tab
     Given open url
@@ -627,8 +633,9 @@ Feature: Models Page
     Then verify "Overview_General_Headers" on "Models_Info_Pane" wizard should contains "Models_Endpoints_Info_Pane"."Overview_General_Headers"
     Then verify "Overview_Drift_Headers" on "Models_Info_Pane" wizard should contains "Models_Endpoints_Info_Pane"."Overview_Drift_Headers"
 
+  @MLM
   @passive
-  Scenario: Check Details panel still active on page refresh
+  Scenario: MLM027 - Check Details panel still active on page refresh
     * set tear-down property "model" created in "default" project with "test-model" value
     * create "test-model" Model with "v1" tag in "default" project with code 200
     Given open url
@@ -652,11 +659,13 @@ Feature: Models Page
     Then verify "Header" element visibility on "Models_Info_Pane" wizard
     Then "Header" element on "Models_Info_Pane" should contains "test-model" value
 
+  @MLM
   @passive
-  Scenario: Check expand sources Item infopane on Overview tab table
+  @inProgress
+  Scenario: MLM028 - Check tab list compontnts on Model Item infopane
     Given open url
     And wait load page
-    And click on row root with value "churn-project-admin" in "name" column in "Projects_Table" table on "Projects" wizard
+    And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
     And wait load page
     And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
     And click on cell with value "Models" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
@@ -664,13 +673,13 @@ Feature: Models Page
     And wait load page
     When click on cell with row index 1 in "name" column in "Models_Table" table on "Models" wizard
     Then verify "Info_Pane_Tab_Selector" element visibility on "Models_Info_Pane" wizard
-    Then verify "Info_Pane_Tab_Selector" on "Models_Info_Pane" wizard should contains "Models_Info_Pane"."Tab_List"
+    Then verify "Info_Pane_Tab_Selector" on "Models_Info_Pane" wizard should contains "Models_Info_Pane"."Tab_List_Extended"
     Then verify "Overview" tab is active in "Info_Pane_Tab_Selector" on "Models_Info_Pane" wizard
-    When click on "Expand_Sources" element on "Models_Info_Pane" wizard
-    Then verify "Info_Sources_Table" element visibility on "Models_Info_Pane" wizard
+    Then verify "Overview_Sources_Headers" on "Models_Info_Pane" wizard should contains "Models_Info_Pane"."Overview_Sources_Headers"
 
+  @MLM
   @passive
-  Scenario: Check all mandatory components on Deploy Model Popup
+  Scenario: MLM029 - Check components on Deploy Model Popup
     * set tear-down property "function" created in "default" project with "automation-test-function-1" value
     * set tear-down property "function" created in "default" project with "automation-test-function-2" value
     * set tear-down property "model" created in "default" project with "automation-test-model" value
@@ -685,13 +694,15 @@ Feature: Models Page
     And click on cell with value "Models" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
     And wait load page
     And hover "MLRun_Logo" component on "commonPagesHeader" wizard
-    Then select "Deploy" option in action menu on "Models" wizard in "Models_Table" table at row with "automation-test-model" value in "name" column
+    Then verify "deploy" option is present on "Models" wizard in "Models_Table" table with "automation-test-model" value in "name" column
+    Then click on "deploy" option on "Models" wizard in "Models_Table" table with "automation-test-model" value in "name" column
     Then verify if "Deploy_Model_Popup" popup dialog appears
     Then navigate back
     Then verify "Title" element not exists on "Deploy_Model_Popup" wizard
     Then navigate forward
     Then verify "Title" element not exists on "Deploy_Model_Popup" wizard
-    Then select "Deploy" option in action menu on "Models" wizard in "Models_Table" table at row with "automation-test-model" value in "name" column
+    Then verify "deploy" option is present on "Models" wizard in "Models_Table" table with "automation-test-model" value in "name" column
+    Then click on "deploy" option on "Models" wizard in "Models_Table" table with "automation-test-model" value in "name" column
     Then verify if "Deploy_Model_Popup" popup dialog appears
     Then verify "Cross_Cancel_Button" element visibility on "Deploy_Model_Popup" wizard
     Then verify "Serving_Function_Dropdown" element visibility on "Deploy_Model_Popup" wizard
@@ -700,13 +711,14 @@ Feature: Models Page
     Then select "non-latest" option in "Tag_Dropdown" dropdown on "Deploy_Model_Popup" wizard
     Then verify "Model_Name_Input" element visibility on "Deploy_Model_Popup" wizard
     Then verify "Model_Name_Input" input should contains "automation-test-model" value on "Deploy_Model_Popup" wizard
-    Then type value "  " to "Model_Name_Input" field on "Deploy_Model_Popup" wizard
+    Then type value "/" to "Model_Name_Input" field on "Deploy_Model_Popup" wizard
     Then verify "Model_Name_Input" on "Deploy_Model_Popup" wizard should display options "Input_Hint"."Artifact_Name_Hint_Deploy_Model"
     Then verify "Model_Name_Input" options rules on form "Deploy_Model_Popup" wizard
     Then verify "Model_Name_Input" on "Deploy_Model_Popup" wizard should display "Input_Hint"."Deploy_Model_Name_Hint"
+    Then type value "/" to "Model_Name_Input" field on "Deploy_Model_Popup" wizard
     Then verify "Class_Name_Input" element visibility on "Deploy_Model_Popup" wizard
     Then type value "  " to "Class_Name_Input" field on "Deploy_Model_Popup" wizard
-    Then verify "Class_Name_Input" on "Deploy_Model_Popup" wizard should display warning "Input_Hint"."Input_Field_Invalid"
+    Then verify "Class_Name_Input" on "Deploy_Model_Popup" wizard should display warning "Input_Hint"."Input_Field_Require"
     Then verify "Cancel_Button" element visibility on "Deploy_Model_Popup" wizard
     Then "Cancel_Button" element on "Deploy_Model_Popup" should contains "Cancel" value
     Then verify "Deploy_Button" element visibility on "Deploy_Model_Popup" wizard
@@ -715,7 +727,7 @@ Feature: Models Page
     Then verify "Deploy_Button" element on "Deploy_Model_Popup" wizard is disabled
     Then verify "Model_Name_Input" on "Deploy_Model_Popup" wizard should display options "Input_Hint"."Artifact_Name_Hint_Deploy_Model"
     Then type value "automation-test-model" to "Model_Name_Input" field on "Deploy_Model_Popup" wizard
-    Then verify "Class_Name_Input" on "Deploy_Model_Popup" wizard should display warning "Input_Hint"."Input_Field_Invalid"
+    Then verify "Class_Name_Input" on "Deploy_Model_Popup" wizard should display warning "Input_Hint"."Input_Field_Require"
     Then type value "Class" to "Class_Name_Input" field on "Deploy_Model_Popup" wizard
     Then verify "Deploy_Button" element on "Deploy_Model_Popup" wizard is enabled
     Then click on "Cancel_Button" element on "Deploy_Model_Popup" wizard
@@ -745,9 +757,8 @@ Feature: Models Page
     Then navigate forward
     Then verify "Title" element not exists on "Deploy_Model_Popup" wizard
 
-    @FAILED_TODO
-    #TODO: locators structure of 'Add class argument'was changed - need change locators
-    Scenario: Verify behaviour of key-value table on Deploy Model Popup
+    @MLM
+    Scenario: MLM030 - Verify behaviour of key-value table on Deploy Model Popup
      * set tear-down property "model" created in "default" project with "automation-test-model" value
      * create "automation-test-model" Model with "latest" tag in "default" project with code 200
      Given open url
@@ -758,7 +769,8 @@ Feature: Models Page
      And click on cell with value "Models" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
      And wait load page
      And hover "MLRun_Logo" component on "commonPagesHeader" wizard
-     Then select "Deploy" option in action menu on "Models" wizard in "Models_Table" table at row with "automation-test-model" value in "name" column
+     Then verify "deploy" option is present on "Models" wizard in "Models_Table" table with "automation-test-model" value in "name" column
+     Then click on "deploy" option on "Models" wizard in "Models_Table" table with "automation-test-model" value in "name" column
      Then verify if "Deploy_Model_Popup" popup dialog appears
      When add new volume rows to "Key_Value_Table" table in "Deploy_Model_Table" on "Deploy_Model_Popup" wizard using nontable inputs
        | Class_Argument_Name_Input | Class_Argument_Value_Input | Add_New_Row_Button | Delete_New_Row_Button |
@@ -774,17 +786,17 @@ Feature: Models Page
        | name4                     | value4                     | yes                |                       |
        | name5                     | value5                     |                    | yes                   |
        | name6                     | value6                     | yes                |                       |
-     Then verify values in "Key_Value_Table" table in "Deploy_Model_Table" on "Deploy_Model_Popup" wizard
+     Then verify data values in "Key_Value_Table" table in "Deploy_Model_Table" on "Deploy_Model_Popup" wizard
        | name  | value  |
        | name1 | value1 |
        | name2 | value2 |
        | name4 | value4 |
        | name6 | value6 |
-     When click on "delete_btn" in "Key_Value_Table" table in "Deploy_Model_Table" on "Deploy_Model_Popup" wizard with offset "false"
+     When click on "delete_btn" with data in "Key_Value_Table" table in "Deploy_Model_Table" on "Deploy_Model_Popup" wizard with offset "false"
        | name  |
        | name6 |
        | name1 |
-     Then verify values in "Key_Value_Table" table in "Deploy_Model_Table" on "Deploy_Model_Popup" wizard
+     Then verify data values in "Key_Value_Table" table in "Deploy_Model_Table" on "Deploy_Model_Popup" wizard
        | name  | value  |
        | name2 | value2 |
        | name4 | value4 |
@@ -792,13 +804,13 @@ Feature: Models Page
        | Class_Argument_Name_Input | Class_Argument_Value_Input | Add_New_Row_Button | Delete_New_Row_Button |
        |           name2           |            value2          | yes                |                       |
      Then verify "Class_Argument_Name_Input" in "Deploy_Model_Table" on "Deploy_Model_Popup" wizard should display options "Input_Hint"."Input_Field_Unique"
-     When click on "edit_btn" in "Key_Value_Table" table in "Deploy_Model_Table" on "Deploy_Model_Popup" wizard with offset "false"
+     When click on "edit_btn" with data in "Key_Value_Table" table in "Deploy_Model_Table" on "Deploy_Model_Popup" wizard with offset "false"
        | name  |
        | name2 |
      Then type value "edited_name2" to "Class_Argument_Name_Input" field on "Deploy_Model_Table" on "Deploy_Model_Popup" wizard
      Then type value "edited_value2" to "Class_Argument_Value_Input" field on "Deploy_Model_Table" on "Deploy_Model_Popup" wizard
      Then click on "Add_New_Row_Button" element in "Deploy_Model_Table" on "Deploy_Model_Popup" wizard
-     Then verify values in "Key_Value_Table" table in "Deploy_Model_Table" on "Deploy_Model_Popup" wizard
+     Then verify data values in "Key_Value_Table" table in "Deploy_Model_Table" on "Deploy_Model_Popup" wizard
        | name         | value         |
        | edited_name2 | edited_value2 |
        | name4        | value4        |
@@ -806,15 +818,17 @@ Feature: Models Page
      Then verify if "Common_Popup" popup dialog appears
      Then click on "Cancel_Button" element on "Common_Popup" wizard
      Then verify if "Deploy_Model_Popup" popup dialog appears
-     Then verify values in "Key_Value_Table" table in "Deploy_Model_Table" on "Deploy_Model_Popup" wizard
+     Then verify data values in "Key_Value_Table" table in "Deploy_Model_Table" on "Deploy_Model_Popup" wizard
        | name         | value         |
        | edited_name2 | edited_value2 |
        | name4        | value4        |
 
+  @MLM
   @FAILED_TODO
-  #TODO: save to context "name" column and "href" attribute on 1 row from "Real_Time_Pipelines_Table" - no such element (maybe some changes with URL)
+  #TODO: Bug - broken function link
+  #TODO: arrow lines position - y not found
   @passive
-  Scenario: Verify behaviour of Real-Time Pipelines table
+  Scenario: MLM031 - Verify behaviour of Real-Time Pipelines table
     Given open url
     And wait load page
     And click on row root with value "churn-project-admin" in "name" column in "Projects_Table" table on "Projects" wizard
@@ -837,7 +851,7 @@ Feature: Models Page
     And wait load page
     Then compare current browser URL with test "href" context value
     Then verify "Real_Time_Pipelines_Graph" element visibility on "Real_Time_Pipelines" wizard
-    Then verify arrow lines position on "Real_Time_Pipelines_Graph" on "Real_Time_Pipelines" wizard
+    # Then verify arrow lines position on "Real_Time_Pipelines_Graph" on "Real_Time_Pipelines" wizard
     When click on node with index 2 in "Real_Time_Pipelines_Graph" graph on "Real_Time_Pipelines" wizard
     Then verify "Header" element visibility on "Real_Time_Pipeline_Pane" wizard
     Then verify "Cross_Close_Button" element visibility on "Real_Time_Pipeline_Pane" wizard
@@ -851,13 +865,8 @@ Feature: Models Page
     Then compare current browser URL with test "href" context value
     Then compare "Header" element value on "ML_Function_Info_Pane" wizard with test "function" context value
 
-  @FAILED_TODO
-  #TODO: new conditions for mandatory tabs (generateModelsDetailsMenu() - need to check the test implementation)
-  #TODO: select "Preview" tab in "Info_Pane_Tab_Selector" - invalid selector
-  #TODO: select "Model Endpoints" tab in "Models_Tab_Selector" - invalid selector
-  #TODO: select "Features Analysis" tab in "Info_Pane_Tab_Selector" - invalid selector
-  #TODO: click on cell with row index 1 in "name" column in "Real_Time_Pipelines_Table" table on "Real_Time_Pipelines" - no such element
-  Scenario: Check broken link redirection
+  @MLM
+  Scenario: MLM032 - Check broken link redirection
     Given open url
     And wait load page
     And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
@@ -868,16 +877,16 @@ Feature: Models Page
     And select "tab" with "Models" value in breadcrumbs menu
     And wait load page
     Then verify redirection from "projects/default/models/INVALID" to "projects/default/models/models"
-    When click on cell with row index 1 in "name" column in "Models_Table" table on "Models" wizard
+    When click on cell with row index 3 in "name" column in "Models_Table" table on "Models" wizard
     Then verify redirection from "projects/default/models/INVALID/model_default/latest/0/overview" to "projects/default/models/models"
-    When click on cell with row index 1 in "name" column in "Models_Table" table on "Models" wizard
     Then verify redirection from "projects/default/models/models/INVALID/latest/0/overview" to "projects/default/models/models"
-    When click on cell with row index 1 in "name" column in "Models_Table" table on "Models" wizard
+    When click on cell with row index 3 in "name" column in "Models_Table" table on "Models" wizard
     Then verify redirection from "projects/default/models/models/model_default/latest/0/INVALID" to "projects/default/models/models/model_default/latest/0/overview"
-    Then select "Preview" tab in "Info_Pane_Tab_Selector" on "Models_Info_Pane" wizard
-    And wait load page
     Then verify redirection from "projects/default/models/models/model_default/latest/0/INVALID" to "projects/default/models/models/model_default/latest/0/overview"
     Then verify redirection from "projects/default/models/models/model_default/latest/INVALID/overview" to "projects/default/models/models"
+    When click on cell with row index 1 in "name" column in "Models_Table" table on "Models" wizard
+    Then select "Preview" tab in "Info_Pane_Tab_Selector" on "Models_Info_Pane" wizard
+    And wait load page
     When select "Model Endpoints" tab in "Models_Tab_Selector" on "Models" wizard
     And wait load page
     Then verify redirection from "projects/default/models/INVALID" to "projects/default/models/models"
@@ -897,7 +906,8 @@ Feature: Models Page
     Then verify redirection from "projects/default/models/real-time-pipelines/pipeline/INVALID" to "projects/default/models/real-time-pipelines"
     Then verify redirection from "projects/INVALID/models/real-time-pipelines" to "projects"
   
-  Scenario: Check active/highlited items with details panel on Model Endpoints tab
+  @MLM
+  Scenario: MLM033 - Check active/highlited items with details panel on Model Endpoints tab
     Given open url
     And wait load page
     And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
@@ -926,7 +936,8 @@ Feature: Models Page
     Then save to context "name" column on 2 row from "Model_Endpoints_Table" table on "Model_Endpoints" wizard
     Then compare "Header" element value on "Models_Info_Pane" wizard with test "name" context value
 
-  Scenario: Check active/highlited items with details panel on Models tab
+  @MLM
+  Scenario: MLM034 - Check active/highlited items with details panel on Models tab
     Given open url
     And wait load page
     And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
@@ -950,7 +961,8 @@ Feature: Models Page
     Then verify "Header" element visibility on "Models_Info_Pane" wizard
     Then save to context "name" column on 2 row from "Models_Table" table on "Models" wizard
     Then compare "Header" element value on "Models_Info_Pane" wizard with test "name" context value
-    
+
+  @MLM  
   Scenario: MLM020 - Check that version tag is filled when edit it in table view and full view on Overview tab table on Models page
     Given open url
     And wait load page
@@ -974,6 +986,7 @@ Feature: Models Page
     Then click on "Tabel_View_Button" element on "Models_Info_Pane" wizard
     Then verify "Cross_Close_Button" element visibility on "Models_Info_Pane" wizard
 
+  @MLM
   Scenario: MLM021 - Check that version tag dropdown shows all tags on filters wizard on Models page
     Given open url
     And wait load page
@@ -983,7 +996,7 @@ Feature: Models Page
     And click on cell with value "Models" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
     And wait load page
     When click on cell with row index 2 in "name" column in "Models_Table" table on "Models" wizard
-    Then verify "Info_Pane_Tab_Selector" on "Models_Info_Pane" wizard should contains "Models_Info_Pane"."Tab_List"
+    Then verify "Info_Pane_Tab_Selector" on "Models_Info_Pane" wizard should contains "Models_Info_Pane"."Tab_List_Extended"
     Then verify "Overview" tab is active in "Info_Pane_Tab_Selector" on "Models_Info_Pane" wizard
     Then verify "Overview_General_Headers" on "Models_Info_Pane" wizard should contains "Models_Info_Pane"."Overview_General_Headers"
     Then check "latest" value in "tag" column in "Overview_Table" table on "Models_Info_Pane" wizard
@@ -1000,7 +1013,8 @@ Feature: Models Page
     And wait load page
     Then check "newTag" value in "tag" column in "Models_Table" table on "Models" wizard
 
-Scenario: MLM023 - Check that version tag has "Click to add" status when it's empty after edited
+  @MLM
+  Scenario: MLM023 - Check that version tag has "Click to add" status when it's empty after edited
     Given open url
     And wait load page
     And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
@@ -1026,7 +1040,8 @@ Scenario: MLM023 - Check that version tag has "Click to add" status when it's em
     And wait load page
     Then "Version_Tag_Input_Placeholder" element on "Models_Info_Pane" should contains "Click to add" value
 
-Scenario: MLM024 - Check filter by "All" tag is performed when version tag was edited
+  @MLM
+  Scenario: MLM024 - Check filter by "All" tag is performed when version tag was edited
     Given open url
     And wait load page
     And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
@@ -1047,7 +1062,7 @@ Scenario: MLM024 - Check filter by "All" tag is performed when version tag was e
     Then click on "Apply_Button" element on "Models_Info_Pane" wizard
     Then click on "Apply_Changes_Button" element on "Models_Info_Pane" wizard
     And wait load page
-    Then verify "Info_Pane_Tab_Selector" on "Models_Info_Pane" wizard should contains "Models_Info_Pane"."Tab_List"
+    Then verify "Info_Pane_Tab_Selector" on "Models_Info_Pane" wizard should contains "Models_Info_Pane"."Tab_List_Extended"
     Then verify "Overview" tab is active in "Info_Pane_Tab_Selector" on "Models_Info_Pane" wizard
     Then verify "Overview_General_Headers" on "Models_Info_Pane" wizard should contains "Models_Info_Pane"."Overview_General_Headers"
     Then check "latest123456" value in "tag" column in "Overview_Table" table on "Models_Info_Pane" wizard

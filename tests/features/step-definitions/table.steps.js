@@ -973,8 +973,9 @@ When(
       await hoverComponent(
         this.driver,
         pageObjects[wizardName][tableName]['tableFields'][field](indx),
-        false
+        true
       )
+      await this.driver.sleep(500)
       await clickOnComponent(
         this.driver,
         pageObjects[wizardName][tableName]['tableFields'][field](indx)
@@ -1007,6 +1008,35 @@ When(
       await clickOnComponent(
         this.driver,
         pageObjects[wizardName][accordionName][tableName]['tableFields'][field](indx)
+      )
+    }
+  }
+)
+
+When(
+  'click on {string} with data in {string} table in {string} on {string} wizard with offset {string}',
+  async function (field, tableName, accordionName, wizardName, offsetFlag, dataTable) {
+    const column = dataTable['rawTable'][0][0]
+    const rows = dataTable.rows()
+    for (const row_indx in rows) {
+      const arr = await findRowIndexesByColumnValue(
+        this.driver,
+        pageObjects[wizardName][accordionName][tableName],
+        column,
+        rows[row_indx][0]
+      )
+
+      let indx = arr[0]
+      if (offsetFlag === 'true') {
+        indx -= pageObjects[wizardName][accordionName][tableName].offset
+      }
+      await hoverComponent(
+        this.driver,
+        pageObjects[wizardName][accordionName][tableName]['tableFields'][column](indx + 1)
+      )
+      await clickOnComponent(
+        this.driver,
+        pageObjects[wizardName][accordionName][tableName]['tableFields'][field](indx + 1)
       )
     }
   }
@@ -1464,7 +1494,7 @@ When(
 
         if (pageComponents[indx].includes('Button')) {
           if (row[indx] === 'yes') {
-            await hoverComponent(this.driver, pageObjects[wizardName][accordionName][pageComponents[indx]], false)
+            await hoverComponent(this.driver, pageObjects[wizardName][accordionName][pageComponents[indx]], true)
             await clickOnComponent(
               this.driver,
               pageObjects[wizardName][accordionName][pageComponents[indx]]
