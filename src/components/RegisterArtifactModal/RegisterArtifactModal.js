@@ -110,22 +110,24 @@ const RegisterArtifactModal = ({
         if (response?.data) {
           if (!isEmpty(response.data.artifacts)) {
             setUniquenessErrorIsShown(true)
+
+            return null
           } else {
             setUniquenessErrorIsShown(false)
 
-            return artifactApi
-              .registerArtifact(params.projectName, data)
-              .then(response => {
-                resolveModal()
-                refresh()
-                dispatch(
-                  setNotification({
-                    status: response.status,
-                    id: Math.random(),
-                    message: `${title} initiated successfully`
-                  })
-                )
-              })
+            return artifactApi.registerArtifact(params.projectName, data).then(response => {
+              resolveModal()
+              refresh()
+              dispatch(
+                setNotification({
+                  status: response.status,
+                  id: Math.random(),
+                  message: `${title} initiated successfully`
+                })
+              )
+
+              return response
+            })
           }
         }
       })
