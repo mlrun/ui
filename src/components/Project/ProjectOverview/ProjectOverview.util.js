@@ -49,7 +49,7 @@ export const handleClick = (navigate, openPopUp) => handler => {
   const target = handler()
 
   if (!target) return
-  
+
   return target.type && target.type === 'modal'
     ? openPopUp(target.component, target.props)
     : target.externalLink
@@ -100,9 +100,9 @@ export const getInitialCards = (params, navigate, isDemoMode) => {
                   disabled: formState.submitting || (formState.invalid && formState.submitFailed),
                   label: 'Register',
                   onClick: async () => {
-                    await formState.handleSubmit()
+                    const submitSuccess = await formState.handleSubmit()
 
-                    if (!formState.invalid) {
+                    if (!formState.invalid && submitSuccess) {
                       navigate(`${base_url}/datasets`)
                     }
                   },
@@ -154,9 +154,9 @@ export const getInitialCards = (params, navigate, isDemoMode) => {
                   disabled: formState.submitting || (formState.invalid && formState.submitFailed),
                   label: 'Register',
                   onClick: async () => {
-                    await formState.handleSubmit()
+                    const submitSuccess = await formState.handleSubmit()
 
-                    if (!formState.invalid) {
+                    if (!formState.invalid && submitSuccess) {
                       navigate(`${base_url}/files`)
                     }
                   },
