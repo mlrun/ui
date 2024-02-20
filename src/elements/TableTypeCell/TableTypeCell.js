@@ -61,6 +61,7 @@ const TableTypeCell = ({ className, data }) => {
     [JOB_KIND_WORKFLOW]: { label: 'Workflow', icon: <Workflow /> }
   }
   const cellClassNames = classnames('table-body__cell', data.className, data.bodyCellClassName)
+
   return (
     <td data-testid={data.headerId} className={cellClassNames}>
       <Tooltip

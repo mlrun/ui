@@ -56,6 +56,7 @@ const TableCell = ({
     className,
     data.bodyCellClassName
   )
+
   if (data.template) {
     return data.template
   } else if (link && data.type !== 'hidden') {

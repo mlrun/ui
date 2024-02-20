@@ -233,8 +233,6 @@ export const createModelsRowData = (
       )
       content.push({
         id: `${key}.${artifact.ui.identifierUnique}`,
-        dataTestId: index + 1,
-        dataHeadTestId: key,
         headerId: key,
         headerLabel: key,
         value: parseFloat(value),
