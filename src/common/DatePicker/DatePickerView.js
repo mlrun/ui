@@ -24,7 +24,7 @@ import classnames from 'classnames'
 
 import ErrorMessage from '../ErrorMessage/ErrorMessage'
 import TimePicker from '../TimePicker/TimePicker'
-import { Button, Tip, Tooltip, TextTooltipTemplate } from 'igz-controls/components'
+import { Button, Tip, Tooltip, TextTooltipTemplate, PopUpDialog } from 'igz-controls/components'
 import { SelectOption } from 'igz-controls/elements'
 
 import { ANY_TIME } from '../../constants'
@@ -65,6 +65,7 @@ const DatePickerView = React.forwardRef(
       onPreviousMonth,
       onSelectOption,
       onTimeChange,
+      position,
       required,
       requiredText,
       setSelectedDate,
@@ -136,106 +137,123 @@ const DatePickerView = React.forwardRef(
           )}
         </div>
         {isDatePickerOptionsOpened && (
-          <div
-            ref={ref.datePickerViewRef}
-            className='date-picker__pop-up'
+          <PopUpDialog
+            className="date-picker__pop-up-wrapper"
+            headerIsHidden
+            customPosition={{
+              element: ref.datePickerRef,
+              position
+            }}
           >
-            {datePickerOptions.map(option => (
-              <SelectOption
-                item={option}
-                name={option.id}
-                key={option.id}
-                onClick={() => onSelectOption(option)}
-                selectType=""
-              />
-            ))}
-          </div>
-        )}
-        {isDatePickerOpened && (
-          <div ref={ref.datePickerViewRef} className="date-picker__pop-up date-picker">
-            <div className="date-picker__calendars">
-              {config.map(item => (
-                <div className={classnames('date-picker__calendar')} key={item.id}>
-                  <div className="date-picker__header">
-                    <Arrow
-                      data-testid="btn-previous-month"
-                      className="date-picker__header-previous-month"
-                      onClick={() => onPreviousMonth(item.id)}
-                    />
-                    {isRange && <span className="date-picker__header-label">{item.label}</span>}
-                    <div>
-                      <span className="date-picker__header-month">
-                        {months[item.visibleDate.getMonth()]}
-                      </span>
-                      <span className="date-picker__header-year">
-                        {item.visibleDate.getFullYear()}
-                      </span>
-                    </div>
-                    <Arrow
-                      data-testid="btn-next-month"
-                      className="date-picker__header-next-month"
-                      onClick={() => onNextMonth(item.id)}
-                    />
-                  </div>
-                  <div className="date-picker__weeks">
-                    {weekDay.map((day, index) => {
-                      return (
-                        <div key={`${day}${index}`} className="date-picker__weeks-day">
-                          {day.label}
-                        </div>
-                      )
-                    })}
-                  </div>
-                  {item.calendar.map(({ week }, index) => (
-                    <div key={`${week[0].day.getMonth()}${index}`} className="date-picker__week">
-                      {week.map(({ day }) => (
-                        <div
-                          key={`${day.getMonth()}${day.getDate()}${day.getFullYear()}`}
-                          className={classnames(
-                            'date-picker__week-day-wrapper',
-                            item.id === 'configFrom' ? 'calendar-from' : 'calendar-to',
-                            item.visibleDate.getMonth() === day.getMonth()
-                              ? 'current-month'
-                              : 'not-current-month',
-                            isSameDate(config[0].selectedDate, day) && 'selected-from',
-                            isRange && isSameDate(config[1].selectedDate, day) && 'selected-to',
-                            isRangeDateValid(day) && 'in-range',
-                            isCalendarInvalid && 'invalid'
-                          )}
-                          onClick={() => {
-                            item.visibleDate.getMonth() === day.getMonth() &&
-                              setSelectedDate(item.id, day, item.selectedDate)
-                          }}
-                        >
-                          <div className="date-picker__week-day">{day.getDate()}</div>
-                        </div>
-                      ))}
-                    </div>
-                  ))}
-                  {isTime && (
-                    <div className="date-picker__time">
-                      <TimePicker
-                        onChange={time => onTimeChange(item.id, time, item.selectedDate)}
-                        value={`${String(item.selectedDate.getHours()).padStart(2, '0')}:${String(
-                          item.selectedDate.getMinutes()
-                        ).padStart(2, '0')}`}
-                      />
-                    </div>
-                  )}
-                </div>
+            <div ref={ref.datePickerViewRef} className="date-picker__pop-up">
+              {datePickerOptions.map(option => (
+                <SelectOption
+                  item={option}
+                  name={option.id}
+                  key={option.id}
+                  onClick={() => {
+                    onSelectOption(option)
+                  }}
+                  selectType=""
+                />
               ))}
             </div>
-            <div className="date-picker__footer">
-              {isCalendarInvalid && <ErrorMessage message="“To” must be later than “From”" />}
-              <Button
-                variant={SECONDARY_BUTTON}
-                label="Apply"
-                onClick={onApplyChanges}
-                className="date-picker__apply-btn"
-                disabled={isCalendarInvalid}
-              />
+          </PopUpDialog>
+        )}
+        {isDatePickerOpened && (
+          <PopUpDialog
+            className="date-picker__pop-up-wrapper"
+            headerIsHidden
+            customPosition={{
+              element: ref.datePickerRef,
+              position
+            }}
+          >
+            <div ref={ref.datePickerViewRef} className="date-picker__pop-up date-picker">
+              <div className="date-picker__calendars">
+                {config.map(item => (
+                  <div className={classnames('date-picker__calendar')} key={item.id}>
+                    <div className="date-picker__header">
+                      <Arrow
+                        data-testid="btn-previous-month"
+                        className="date-picker__header-previous-month"
+                        onClick={() => onPreviousMonth(item.id)}
+                      />
+                      {isRange && <span className="date-picker__header-label">{item.label}</span>}
+                      <div>
+                        <span className="date-picker__header-month">
+                          {months[item.visibleDate.getMonth()]}
+                        </span>
+                        <span className="date-picker__header-year">
+                          {item.visibleDate.getFullYear()}
+                        </span>
+                      </div>
+                      <Arrow
+                        data-testid="btn-next-month"
+                        className="date-picker__header-next-month"
+                        onClick={() => onNextMonth(item.id)}
+                      />
+                    </div>
+                    <div className="date-picker__weeks">
+                      {weekDay.map((day, index) => {
+                        return (
+                          <div key={`${day}${index}`} className="date-picker__weeks-day">
+                            {day.label}
+                          </div>
+                        )
+                      })}
+                    </div>
+                    {item.calendar.map(({ week }, index) => (
+                      <div key={`${week[0].day.getMonth()}${index}`} className="date-picker__week">
+                        {week.map(({ day }) => (
+                          <div
+                            key={`${day.getMonth()}${day.getDate()}${day.getFullYear()}`}
+                            className={classnames(
+                              'date-picker__week-day-wrapper',
+                              item.id === 'configFrom' ? 'calendar-from' : 'calendar-to',
+                              item.visibleDate.getMonth() === day.getMonth()
+                                ? 'current-month'
+                                : 'not-current-month',
+                              isSameDate(config[0].selectedDate, day) && 'selected-from',
+                              isRange && isSameDate(config[1].selectedDate, day) && 'selected-to',
+                              isRangeDateValid(day) && 'in-range',
+                              isCalendarInvalid && 'invalid'
+                            )}
+                            onClick={() => {
+                              item.visibleDate.getMonth() === day.getMonth() &&
+                                setSelectedDate(item.id, day, item.selectedDate)
+                            }}
+                          >
+                            <div className="date-picker__week-day">{day.getDate()}</div>
+                          </div>
+                        ))}
+                      </div>
+                    ))}
+                    {isTime && (
+                      <div className="date-picker__time">
+                        <TimePicker
+                          onChange={time => onTimeChange(item.id, time, item.selectedDate)}
+                          value={`${String(item.selectedDate.getHours()).padStart(2, '0')}:${String(
+                            item.selectedDate.getMinutes()
+                          ).padStart(2, '0')}`}
+                        />
+                      </div>
+                    )}
+                  </div>
+                ))}
+              </div>
+              <div className="date-picker__footer">
+                {isCalendarInvalid && <ErrorMessage message="“To” must be later than “From”" />}
+                <Button
+                  variant={SECONDARY_BUTTON}
+                  label="Apply"
+                  onClick={onApplyChanges}
+                  className="date-picker__apply-btn"
+                  disabled={isCalendarInvalid}
+                />
+              </div>
             </div>
-          </div>
+          </PopUpDialog>
         )}
         {tip && <Tip text={tip} className="input__tip" />}
       </div>
@@ -272,6 +290,7 @@ DatePickerView.propTypes = {
   onPreviousMonth: PropTypes.func.isRequired,
   onSelectOption: PropTypes.func.isRequired,
   onTimeChange: PropTypes.func.isRequired,
+  position: PropTypes.string.isRequired,
   required: PropTypes.bool.isRequired,
   requiredText: PropTypes.string.isRequired,
   setSelectedDate: PropTypes.func.isRequired,

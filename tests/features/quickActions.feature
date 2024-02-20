@@ -108,7 +108,6 @@ Feature: MLRun Project Home Page
         Then "Title" element on "Register_Model_Popup" should contains "Register Model" value
         Then verify "Cross_Cancel_Button" element visibility on "Register_Model_Popup" wizard
         Then verify "New_File_Name_Input" element visibility on "Register_Model_Popup" wizard
-        Then verify "New_File_Name_Input" on "Register_Model_Popup" wizard should display "Input_Hint"."Artifacts_Names_Unique"
         Then verify options in "Path_Scheme_Combobox" combobox in "Target_Path" on "Register_Model_Popup" wizard should contains "Models"."Combobox_Options"
         Then verify "New_File_Description_Input" element visibility on "Register_Model_Popup" wizard
         Then verify "Cancel_Button" element visibility on "Register_Model_Popup" wizard

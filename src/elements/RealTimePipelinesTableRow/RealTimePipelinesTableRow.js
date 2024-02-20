@@ -21,17 +21,13 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { useParams } from 'react-router-dom'
 
-
 import TableCell from '../TableCell/TableCell'
 import ActionsMenu from '../../common/ActionsMenu/ActionsMenu'
 
 import { ACTIONS_MENU } from '../../types'
 import { DETAILS_OVERVIEW_TAB } from '../../constants'
 
-const RealTimePipelinesTableRow = ({
-  actionsMenu,
-  rowItem,
-}) => {
+const RealTimePipelinesTableRow = ({ actionsMenu, rowItem }) => {
   const params = useParams()
 
   return (
@@ -44,7 +40,7 @@ const RealTimePipelinesTableRow = ({
               firstCell={index === 0}
               item={rowItem.data}
               key={value.id}
-              link={value.getLink?.(rowItem.data.hash, params.tab ?? DETAILS_OVERVIEW_TAB)}
+              link={value.getLink?.(params.tab ?? DETAILS_OVERVIEW_TAB)}
             />
           )
         )
@@ -58,7 +54,7 @@ const RealTimePipelinesTableRow = ({
 
 RealTimePipelinesTableRow.propTypes = {
   actionsMenu: ACTIONS_MENU.isRequired,
-  rowItem: PropTypes.shape({}).isRequired,
+  rowItem: PropTypes.shape({}).isRequired
 }
 
 export default RealTimePipelinesTableRow

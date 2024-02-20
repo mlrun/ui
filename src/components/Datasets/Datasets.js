@@ -70,7 +70,7 @@ const Datasets = () => {
   const [selectedRowData, setSelectedRowData] = useState({})
   const [largeRequestErrorMessage, setLargeRequestErrorMessage] = useState('')
   const [convertedYaml, toggleConvertedYaml] = useYaml('')
-  const [urlTagOption] = useGetTagOptions(
+  const [urlTagOption, tagAbortControllerRef] = useGetTagOptions(
     fetchArtifactTags,
     filters,
     DATASET_TYPE,
@@ -140,7 +140,13 @@ const Datasets = () => {
           dispatch,
           fetchTags: fetchArtifactTags,
           project: params.projectName,
-          category: DATASET_TYPE
+          category: DATASET_TYPE,
+          config: {
+            ui: {
+              controller: tagAbortControllerRef.current,
+              setLargeRequestErrorMessage
+            }
+          }
         })
       )
       setSelectedRowData({})
@@ -148,7 +154,7 @@ const Datasets = () => {
 
       return fetchData(filters)
     },
-    [dispatch, fetchData, params.projectName]
+    [dispatch, fetchData, params.projectName, tagAbortControllerRef]
   )
 
   const handleAddTag = useCallback(
@@ -329,13 +335,16 @@ const Datasets = () => {
   ])
 
   useEffect(() => {
+    const tagAbortControllerCurrent = tagAbortControllerRef.current
+
     return () => {
       setDatasets([])
       dispatch(removeDataSets())
       setSelectedDataset({})
       abortControllerRef.current.abort(REQUEST_CANCELED)
+      tagAbortControllerCurrent.abort(REQUEST_CANCELED)
     }
-  }, [dispatch, params.projectName])
+  }, [dispatch, params.projectName, tagAbortControllerRef])
 
   const handleRegisterDataset = useCallback(() => {
     openPopUp(RegisterArtifactModal, {

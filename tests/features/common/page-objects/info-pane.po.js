@@ -527,6 +527,7 @@ const commonVersionTagInput = inputGroup(
   )
 )
 const commonVersionTagInputFullView = By.css('.table__item_big .details-item__input-wrapper input')
+const commonLabelsApplyButton = By.css('.item-info__details-wrapper .details-item .details-item__data-chips .details-item__apply-btn-wrapper')
 
 module.exports = {
   featureSetsInfoPane: {
@@ -548,7 +549,7 @@ module.exports = {
     ),
     Labels_Table: commonTable(featureSetsInfoPaneLabelsTable),
     Apply_Button: By.css('.item-info__details-wrapper .details-item__input-wrapper .round-icon-cp:nth-of-type(2)'),
-    Labels_Apply_Button: By.css('.item-info__details-wrapper .details-item .details-item__data-chips .details-item__apply-btn-wrapper'),
+    Labels_Apply_Button: commonLabelsApplyButton,
     Edit_Button: By.css('.item-info__details-wrapper .details-item__data .details-item__data-btn-edit')
   },
   featuresInfoPane: {
@@ -576,7 +577,7 @@ module.exports = {
     Updated: updated,
     Cancel_Button: cancelButton,
     Apply_Changes_Button: applyChangesButton,
-    Apply_Button: applyButton,
+    Applyv_Button: applyButton,
     Download_Button: commonDownloadButton,
     Action_Menu: commonActionMenu,
     Full_View_Button: fullViewButton,
@@ -745,6 +746,7 @@ module.exports = {
     Download_Button: commonDownloadButton,
     Action_Menu: commonActionMenu,
     Apply_Changes_Button: applyChangesButton,
+    Labels_Apply_Button: commonLabelsApplyButton,
     Cross_Close_Button: crossCloseButton,
     Full_View_Button: fullViewButton,
     Tabel_View_Button: tabelViewButton,
