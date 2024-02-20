@@ -25,6 +25,7 @@ import { BG_TASK_FAILED, BG_TASK_SUCCEEDED, pollTask } from '../../utils/poll.ut
 import { DANGER_BUTTON, FORBIDDEN_ERROR_STATUS_CODE } from 'igz-controls/constants'
 import { setNotification } from '../../reducers/notificationReducer'
 import { showErrorNotification } from '../../utils/notifications.util'
+import { jobHasWorkflowLabel } from '../../utils/parseJob'
 
 import { NEXT_24_HOUR_DATE_OPTION, PAST_24_HOUR_DATE_OPTION } from '../../utils/datePicker.util'
 
@@ -277,20 +278,13 @@ export const getJobsStatsConfig = (
     counters: {
       jobs: {
         counter: filterScheduledByDate(scheduled, scheduledFilter).filter(
-          job =>
-            job.kind === 'job' &&
-            !(
-              job.labels &&
-              'job-type' in job.labels &&
-              job.labels['job-type'] === 'workflow-runner'
-            )
+          job => job.kind === 'job' && !jobHasWorkflowLabel(job)
         ).length,
         link: () => navigate('')
       },
       workflows: {
-        counter: filterScheduledByDate(scheduled, scheduledFilter).filter(
-          job =>
-            job.labels && 'job-type' in job.labels && job.labels['job-type'] === 'workflow-runner'
+        counter: filterScheduledByDate(scheduled, scheduledFilter).filter(job =>
+          jobHasWorkflowLabel(job)
         ).length,
         link: () => navigate('')
       }

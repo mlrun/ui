@@ -92,7 +92,6 @@ const DatePickerView = React.forwardRef(
     const inputLabelClassNames = classnames('input__label', label && 'active-label')
 
     const datePickerElement = useMemo(() => {
-      // console.log('isValueEmpty', isValueEmpty)
       return (
         <>
           {withLabels && selectedOption && selectedOption.id !== CUSTOM_RANGE_DATE_OPTION ? (
@@ -136,80 +135,6 @@ const DatePickerView = React.forwardRef(
       valueDatePickerInput,
       withLabels
     ])
-
-    // const datePickerElement2 = useMemo(() => {
-    //   if (withLabels) {
-    //     if (selectedOption && selectedOption.id !== CUSTOM_RANGE_DATE_OPTION) {
-    //       return (
-    //         <>
-    //           <span>{selectedOption.label}</span>
-    //           <i className='date-picker__caret'>
-    //             <CaretIcon />
-    //           </i>
-    //         </>
-    //       )
-    //     } else {
-    //       return (
-    //         <>
-    //           {selectedOption && !isValueEmpty ? (
-    //             <MaskedInput
-    //               className={inputClassNames}
-    //               keepCharPositions={true}
-    //               mask={dateMask}
-    //               disabled={disabled}
-    //               readOnly={isValueEmpty}
-    //               showMask={!isValueEmpty || ['', '']}
-    //               onBlur={datePickerInputOnBlur}
-    //               onChange={onInputChange}
-    //               pipe={autoCorrectedDatePipe}
-    //               value={valueDatePickerInput}
-    //               size={valueDatePickerInput.length}
-    //             />
-    //           ) : (
-    //             <>
-    //               <span>Any time</span>
-    //               <i className='date-picker__caret'>
-    //                 <CaretIcon />
-    //               </i>
-    //             </>
-    //           )}
-    //         </>
-    //       )
-    //     }
-    //   } else {
-    //     return (
-    //       <>
-    //         <MaskedInput
-    //           className={inputClassNames}
-    //           keepCharPositions={true}
-    //           mask={dateMask}
-    //           disabled={disabled}
-    //           readOnly={isValueEmpty}
-    //           showMask={!isValueEmpty}
-    //           onBlur={datePickerInputOnBlur}
-    //           onChange={onInputChange}
-    //           pipe={autoCorrectedDatePipe}
-    //           value={valueDatePickerInput}
-    //           size={valueDatePickerInput.length}
-    //         />
-    //         {isValueEmpty && (
-    //           <span className='input__label input__label-empty'>&nbsp;Any time</span>
-    //         )}
-    //       </>
-    //     )
-    //   }
-    // }, [
-    //   autoCorrectedDatePipe,
-    //   dateMask,
-    //   datePickerInputOnBlur,
-    //   disabled,
-    //   inputClassNames,
-    //   isValueEmpty,
-    //   onInputChange,
-    //   selectedOption,
-    //   valueDatePickerInput,
-    //   withLabels
-    // ])
 
     return (
       <div
@@ -371,10 +296,6 @@ const DatePickerView = React.forwardRef(
   }
 )
 
-DatePickerView.defaultProps = {
-  withLabels: false
-}
-
 DatePickerView.propTypes = {
   autoCorrectedDatePipe: PropTypes.func.isRequired,
   className: PropTypes.string.isRequired,
@@ -411,7 +332,7 @@ DatePickerView.propTypes = {
   tip: PropTypes.string.isRequired,
   valueDatePickerInput: PropTypes.string.isRequired,
   weekDay: PropTypes.array.isRequired,
-  withLabels: PropTypes.bool
+  withLabels: PropTypes.bool.isRequired
 }
 
 export default React.memo(DatePickerView)
