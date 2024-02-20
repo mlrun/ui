@@ -215,7 +215,7 @@ export const createModelsRowData = (
         ) : (
           ''
         ),
-      className: 'table-cell-1'
+      className: 'table-cell-2'
     },
     {
       id: `version.${artifact.ui.identifierUnique}`,
@@ -349,7 +349,7 @@ export const createFilesRowData = (artifact, project, frontendSpec, showExpandBu
         headerId: 'updated',
         headerLabel: 'Updated',
         value: formatDatetime(artifact.updated, 'N/A'),
-        className: 'table-cell-1'
+        className: 'table-cell-2'
       },
       {
         id: `size.${artifact.ui.identifierUnique}`,
