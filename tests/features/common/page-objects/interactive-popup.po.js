@@ -25,6 +25,7 @@ import checkboxComponent from '../components/checkbox.component'
 import textAreaGroup from '../components/text-area.component'
 import comboBox from '../components/combo-box.component'
 import numberInputGroup from '../components/number-input-group.component'
+import actionMenu from '../components/action-menu.component'
 
 import {
   generateLabelGroup,
@@ -100,14 +101,14 @@ const deployModelTable = {
   },
   body: {
     offset: 0,
-    add_row_btn: 'button',
+    add_row_btn: '.form-table__action-row button',
     row: {
-      root: '.table-row',
+      root: '.form-table__row',
       fields: {
-        name: '.table-cell__key .data-ellipsis',
-        value: '.table-cell__value .data-ellipsis',
-        edit_btn: '.key-value-table__btn:nth-of-type(1)',
-        delete_btn: '.key-value-table__btn:nth-of-type(2)'
+        name: '.form-table__cell_1:nth-of-type(1) .data-ellipsis',
+        value: '.form-table__cell_1:nth-of-type(2) .data-ellipsis',
+        edit_btn: '[data-testid="edit-btn"]',
+        delete_btn: '[data-testid="delete-btn"]'
       }
     }
   }
@@ -170,9 +171,29 @@ const artifactsLabelsTable = {
   }
 }
 
-const trainModelLabelsTable = {
+const labelsTable = {
   root:
     '.job-wizard__run-details .form-row:nth-of-type(4) .chips',
+  header: {},
+  body: {
+    root: '.chips-wrapper',
+    add_row_btn: '.button-add',
+    row: {
+      root: '.chip-block',
+      fields: {
+        key_input: 'input.input-label-key',
+        value_input: 'input.input-label-value',
+        key_verify: '.edit-chip-container input.input-label-key',
+        value_verify: '.edit-chip-container input.input-label-value',
+        remove_btn: '.edit-chip__icon-close'
+      }
+    }
+  }
+}
+
+const newProjectLabelsTable = {
+  root:
+    '.create-project-dialog .form-row:nth-of-type(4) .chips',
   header: {},
   body: {
     root: '.chips-wrapper',
@@ -227,10 +248,15 @@ const podsPriorityDropdown = dropdownComponent(
   )
 )
 
-const resourcesNodeSelectionTable = {
+const resourcesNodeSelectorTable = {
   root:
     '.wizard-form__content [data-testid="resources.nodeSelectorTable"]',
-  header: {},
+  header: {
+    sorters: {
+      key: '.form-table__cell_1:nth-of-type(1)',
+      value: '.form-table__cell_1:nth-of-type(2)',
+    }
+  },
   body: {
     add_row_btn: '.form-table__action-row button',
     row: {
@@ -259,7 +285,44 @@ const resourcesNodeSelectionTable = {
   }
 }
 
-const trainModelDataInputsTable = {
+const actionMenuStructure = {
+  root: '.table__cell-actions',
+  menuElements: {
+    open_button: 'button',
+    options: '.actions-menu__body .data-ellipsis'
+  }
+}
+
+const volumePathsTable = {
+  root:
+    '.modal__content .form-row:nth-of-type(7)',
+  header: {
+    root: '.form-table__header-row',
+    sorters: {
+      type: '.form-table__cell:nth-of-type(1)',
+      volume_name: '.form-table__cell:nth-of-type(2)',
+      path: '.form-table__cell:nth-of-type(3)',
+    }
+  },
+  body: {
+    offset: 1,
+    add_row_btn: '.form-table__action-row button',
+    row: {
+      root: 'div[class=table__row]',
+      fields: {
+        type: '.table__cell:nth-of-type(1) .data-ellipsis',
+        volume_name: '.table__cell:nth-of-type(2) .data-ellipsis',
+        path: '.table__cell:nth-of-type(3) .data-ellipsis',
+        action_menu: {
+          componentType: actionMenu,
+          structure: actionMenuStructure
+        }
+      }
+    }
+  }
+}
+
+const dataInputsTable = {
   root: '.wizard-form__content [data-testid="dataInputs.dataInputsTable"]',
   header: {},
   body: {
@@ -271,12 +334,40 @@ const trainModelDataInputsTable = {
         edit_btn: '.form-table__actions-cell .round-icon-cp:nth-of-type(1)',
         apply_btn: '.form-table__actions-cell .round-icon-cp:nth-of-type(1)',
         delete_btn: '.form-table__actions-cell .round-icon-cp:nth-of-type(2)',
+        discard_btn: '.form-table__actions-cell .round-icon-cp:nth-of-type(2)',
         name_input: '.form-field-input input',
         path_dropdown: {
           componentType: dropdownComponent,
           structure: generateDropdownGroup(
             '.form-table__cell_1:nth-of-type(3) .form-field-combobox', 
             '.form-field__icons:nth-of-type(1)', 
+            '.form-field-combobox__dropdown-list-option', 
+            false, 
+            false)  
+        },
+        path_dropdown_autocomplete_artifacts: {
+          componentType: dropdownComponent,
+          structure: generateDropdownGroup(
+            '.form-table__cell_1:nth-of-type(3) .form-field-combobox', 
+            '.form-field-combobox__input', 
+            '.form-field-combobox__dropdown-list-option', 
+            false, 
+            false)  
+        },
+        path_dropdown_autocomplete_project: {
+          componentType: dropdownComponent,
+          structure: generateDropdownGroup(
+            '.form-table__cell_1:nth-of-type(3) .form-field-combobox', 
+            '.form-field-combobox__input', 
+            '.form-field-combobox__dropdown-list-option', 
+            false, 
+            false)  
+        },
+        path_dropdown_autocomplete_item: {
+          componentType: dropdownComponent,
+          structure: generateDropdownGroup(
+            '.form-table__cell_1:nth-of-type(3) .form-field-combobox', 
+            '.form-field-combobox__input', 
             '.form-field-combobox__dropdown-list-option', 
             false, 
             false)  
@@ -288,7 +379,7 @@ const trainModelDataInputsTable = {
   }
 }
 
-const trainModelParametersTable = {
+const parametersTable = {
   root: '.wizard-form__content [data-testid="parameters.parametersTable"]',
   header: {},
   body: {
@@ -318,6 +409,81 @@ const trainModelParametersTable = {
   }
 }
 
+const advancedEnvironmentVariablesTable = {
+  root: '.wizard-form__content [data-testid="advanced.environmentVariablesTable"]',
+  header: {},
+  body: {
+    add_row_btn: '.form-table__action-row button',
+    row: {
+      root: '.form-table__row',
+      fields: {
+        edit_btn: '.form-table__actions-cell .round-icon-cp:nth-of-type(1)',
+        apply_btn: '.form-table__actions-cell .round-icon-cp:nth-of-type(1)',
+        delete_btn: '.form-table__actions-cell .round-icon-cp:nth-of-type(2)',
+        discard_btn: '.form-table__actions-cell .round-icon-cp:nth-of-type(2)',
+        checkbox: '.form-field-checkbox input',
+        name_input: '.form-field-input input',
+        name_verify: '.form-table__cell_2',
+        type_dropdown: {
+          componentType: dropdownComponent,
+          structure: generateDropdownGroup(
+            '.form-table__cell_1 .form-field-select', 
+            '.form-field__icons', 
+            '.pop-up-dialog .options-list__body .select__item', 
+            false, 
+            false)  
+        },
+        type_dropdown_verify: '.form-table__cell_1 .data-ellipsis', 
+        value_input: '.form-table__cell_3 .form-field__control input',
+        value_verify: '.form-table__cell_3 .data-ellipsis',
+        value_input_key: '.form-table__cell_3 .form-field-input:nth-of-type(2) .form-field__control input' 
+      }
+    }
+  }
+}
+
+const functionsTableSelector = {
+  root: '.form .functions-list',
+  header: {},
+  body: {
+    row: {
+      root: '.job-card-template',
+      fields: {
+        name:
+          '.job-card-template__header > div:first-child',
+        sub_name:
+          '.job-card-template__header .job-card-template__sub-header .data-ellipsis',
+        description:
+          '.job-card-template__description',
+        labels: {
+          componentType: dropdownComponent,
+          structure: generateDropdownGroup(
+            '.job-card-template__chips input',
+            '.chip-block span.chips_button',
+            '.chip-block .data-ellipsis.tooltip-wrapper .edit-chip-container',
+            false,
+            true
+          )
+        }
+      }
+    }
+  }
+}
+
+const functionSelectionTabs = {
+  root: '.wizard-form__content .content-menu',
+  header: {},
+  body: {
+    root: '.content-menu__list',
+    row: {
+      root: '.content-menu__item',
+      fields: {
+        key: 'a'
+      }
+    }
+  }
+}
+
 // Common components
 
 const commonCancelButton = By.css('.pop-up-dialog button.pop-up-dialog__btn_cancel')
@@ -328,7 +494,14 @@ const commonDescription = By.css('.pop-up-dialog .confirm-dialog__message')
 
 const commonCrossCancelButton = By.css('.pop-up-dialog .pop-up-dialog__btn_close svg')
 const commonNameInput = generateInputGroup(
-  '.form .form-row:nth-of-type(2) .form-field__wrapper-normal',
+  '.form [data-testid="metadata.key-form-field-input"] .form-field__wrapper-normal',
+  true,
+  '.form-field__warning',
+  '.form-field__warning'
+)
+
+const commonTagInput = generateInputGroup(
+  '.form [data-testid="metadata.tag-form-field-input"] .form-field__wrapper-normal',
   true,
   true,
   '.form-field__warning'
@@ -347,8 +520,11 @@ const commonPopupTitle = By.css('.modal__header-title')
 const commonCloseButton = By.css('.modal__header-button button')
 const commonFormCancelButton = By.css('.modal__footer-actions .btn-tertiary')
 const commonFormConfirmButton = By.css('.modal__footer-actions .btn-secondary')
+const commonRegisterErrorMessage = By.css('[data-testid="error-message"] .error__message')
 const commonFormText = By.css('.form-text span')
 const commonFormSubtext = By.css('.form-text div p')
+const commonScheduleButton = By.css('.modal__content [data-testid="schedule-btn"]')
+const commonRunSaveButton = By.css('.modal__content [data-testid="run-btn"]')
 
 const commonLabelFilterInput = inputGroup(
   generateInputGroup(
@@ -372,19 +548,31 @@ module.exports = {
     Title: commonTitle,
     Name_Input: inputGroup(
       generateInputGroup(
-        '.pop-up-dialog .input-wrapper:nth-of-type(1)',
+        '.pop-up-dialog [data-testid="name-form-field-input"] .form-field__wrapper-normal',
         true,
-        '.input__warning svg',
-        true
+        '.form-field__warning svg',
+        '.form-field__warning svg'
       )
     ),
-    Description_Input: inputGroup(
-      generateInputGroup('.pop-up-dialog .input-wrapper:nth-of-type(2)', true, false, true)
+    Description_Input: textAreaGroup(
+      generateTextAreaGroup('.pop-up-dialog .form-row:nth-of-type(3) .form-field-textarea')
     ),
     Cross_Cancel_Button: commonCrossCancelButton,
     Cancel_Button: commonCancelButton,
     Create_Button: By.css('.pop-up-dialog .btn-secondary'),
-    Error_Message: By.css('.pop-up-dialog .error__message')
+    Error_Message: By.css('.pop-up-dialog .error__message'),
+    New_Project_Labels_Table: commonTable(newProjectLabelsTable),
+    Add_Label_Button: By.css('.create-project-dialog .form-row:nth-of-type(4) .chips .chips-wrapper button'),
+    Close_Label_Button: By.css('.create-project-dialog .form-row:nth-of-type(4) .chips .chips-wrapper .edit-chip__icon-close'),
+    Run_Details_Labels_Key: inputGroup(
+      generateInputGroup(
+        '.create-project-dialog .form-row:nth-of-type(4) .chips .chips-wrapper',
+        false,
+        true,
+        '.pop-up-dialog'
+      )
+    ),
+    Run_Details_Labels_Value: By.css ('.create-project-dialog .form-row:nth-of-type(4) .chips-wrapper [id="labels[0].value"]')
   },
   commonPopup: {
     Title: commonTitle,
@@ -394,12 +582,14 @@ module.exports = {
     Confirm_Button: By.css('.confirm-dialog__btn-container button:not(.pop-up-dialog__btn_cancel)'),
     Delete_Button: commonDeleteButton
   },
-  trainModel:{
+  modalWizardForm:{
     Title: By.css('.modal .modal__header-title'),
-    Cross_Cancel_Button: By.css('.modal .modal__header-button'),
+    Cross_Close_Button: By.css('.modal .modal__header-button'),
     Function_Title: By.css(
       '.modal .modal__content h6.modal__header-sub-title'
     ),
+    Function_Selection_Tabs: commonTable(functionSelectionTabs),
+    Functions_Table: commonTable(functionsTableSelector),
     Hyperparameter_Checkbox: checkboxComponent({
       root: '#overlay_container .form-field-checkbox',
       elements: {
@@ -410,9 +600,12 @@ module.exports = {
     }),
     Next_Button: By.css('.modal__content [data-testid="wizard-btn-next"]'),
     Back_Button: By.css('.modal__content [data-testid="wizard-btn-back"]'),
-    Run_Training_Now_Button: By.css('.modal__content [data-testid="run-btn"]'),
-    Schedule_Training_Job_Button: By.css('.modal__content [data-testid="schedule-btn"]'),
-    Function_Name_Input: inputGroup(
+    Run_Training_Now_Button: commonRunSaveButton,
+    Schedule_Training_Job_Button: commonScheduleButton,
+    Schedule_For_Later_Button: commonScheduleButton,
+    Save_Button: commonRunSaveButton,
+    Run_Button: commonRunSaveButton,
+    Run_Name_Input: inputGroup(
       generateInputGroup(
         '.form-row .form-field-input .form-field__wrapper',
         false,
@@ -420,13 +613,13 @@ module.exports = {
         '.form-field__icons svg'
       )
     ),
-    Version_Tag_Dropdown_element: By.css('[data-testid="runDetails.version-form-field-select"] [data-testid="select-header"]'),
+    Version_Tag_Dropdown: By.css('[data-testid="runDetails.version-form-field-select"] [data-testid="select-header"]'),
     Handler_Dropdown: dropdownComponent(
       generateDropdownGroup('.form-col-1:nth-of-type(3)', '[data-testid="runDetails.handler-form-field-select"]', '.select__item-main-label', false, false)
     ),
-    Train_Model_Labels_Table: commonTable(trainModelLabelsTable),
+    Handler_Edit_Job: By.css('.form-col-1:nth-of-type(2) [data-testid="runDetails.handler-form-input"]'),
+    Labels_Table: commonTable(labelsTable),
     Add_Label_Button: By.css('.job-wizard__run-details .form-row:nth-of-type(4) .chips .chips-wrapper .button-add'),
-    Close_Label_Button: By.css('.job-wizard__run-details .form-row:nth-of-type(4) .chips .chips-wrapper .edit-chip__icon-close'),
     Run_Details_Labels_Key: inputGroup(
       generateInputGroup(
         '.job-wizard__run-details .form-row:nth-of-type(4) .chips-wrapper',
@@ -436,6 +629,7 @@ module.exports = {
       )
     ),
     Run_Details_Labels_Value: By.css ('.job-wizard__run-details .form-row:nth-of-type(4) .chips-wrapper [id="runDetails.labels[0].value"]'),
+    Close_Label_Button: By.css('.job-wizard__run-details .form-row:nth-of-type(4) .chips .chips-wrapper .edit-chip__icon-close'),
     Image_Name_Input_Run_Details: inputGroup(
       generateInputGroup(
         '.job-wizard__run-details > div.form-field-input .form-field__wrapper',
@@ -445,13 +639,209 @@ module.exports = {
       )
     ),
     Image_Name_Text_Run_Details: By.css('.job-wizard__run-details .warning-text'),
-    Train_Model_Data_Inputs_Table: commonTable(trainModelDataInputsTable),
     Data_Inputs_Headers: commonTable(dataInputsHeaders),
+    Data_Inputs_Table: commonTable(dataInputsTable),
     Parameters_Headers: commonTable(parametersHeaders),
-    Train_Model_Parameters_Table: commonTable(trainModelParametersTable),
-    Pods_Priority_Dropdown: podsPriorityDropdown,
-    Node_Selection_Subheader: By.css('.modal__content .wizard-form__content-container .job-wizard__resources .form-row:nth-child(3)'),
-    Resources_Node_Selection_Table: commonTable(resourcesNodeSelectionTable),
+    Parameters_Table: commonTable(parametersTable),
+    Resources_Accordion: {
+      Pods_Priority_Dropdown: podsPriorityDropdown,
+      Node_Selection_Subheader: By.css('  .modal__content .wizard-form__content-container .job-wizard__resources .form-row:nth-child(3)'),
+      Volumes_Subheader: labelComponent(
+        generateLabelGroup(
+          '.modal__content .wizard-form__content-container .form-row:nth-child(6)',
+          false,
+          true
+        )
+      ),
+      // Volume Path inputs
+      Volume_Paths_Table_Type_Dropdown: dropdownComponent(
+        generateDropdownGroup(
+          '.form-table__volume-row .form-table__volume-cell:nth-of-type(1) .form-field__wrapper .form-field__select',
+          '.form-field__select-value',
+          '.options-list__body .select__item',
+          '.data-ellipsis .data-ellipsis'
+        )
+      ),
+      Volume_Paths_Table_Volume_Name_Input: inputGroup(
+        generateInputGroup(
+          '.form-table__volume-row .form-table__volume-cell:nth-of-type(2) .form-field__wrapper',
+          true,
+          true,
+          '.form-field__warning svg'
+        )
+      ),
+      Volume_Paths_Table_Path_Input: inputGroup(
+        generateInputGroup(
+          '.form-table__volume-row .form-table__volume-cell:nth-of-type(3) .form-field__wrapper',
+          true,
+          true,
+          '.form-field__warning svg'
+        )
+      ),
+      Volume_Paths_Table_Container_Input: inputGroup(
+        generateInputGroup(
+          '.form-table__volume-row .form-table__volume-cell:nth-of-type(4) .form-field__wrapper',
+          true,
+          true,
+          true
+        )
+      ),
+      Volume_Paths_Table_Config_Map_Input: inputGroup(
+        generateInputGroup(
+          '.form-table__volume-row .form-table__volume-cell:nth-of-type(4) .form-field__wrapper',
+          true,
+          true,
+          '.form-field__warning svg'
+        )
+      ),
+      Volume_Paths_Table_Secret_Name_Input: inputGroup(
+        generateInputGroup(
+          '.form-table__volume-row .form-table__volume-cell:nth-of-type(4) .form-field__wrapper',
+          true,
+          true,
+          '.form-field__warning svg'
+        )
+      ),
+      Volume_Paths_Table_Claime_Name_Input: inputGroup(
+        generateInputGroup(
+          '.form-table__volume-row .form-table__volume-cell:nth-of-type(4) .form-field__wrapper',
+          true,
+          true,
+          '.form-field__warning svg'
+        )
+      ),
+      Volume_Paths_Table_Access_Key_Input: inputGroup(
+        generateInputGroup(
+          '.form-table__volume-row .form-table__volume-cell:nth-of-type(5) .form-field__wrapper',
+          true,
+          true,
+          '.form-field__warning svg'
+        )
+      ),
+      Volume_Paths_Table_Resource_Path_Input: inputGroup(
+        generateInputGroup(
+          '.form-table__volume-row .form-table__volume-cell:nth-of-type(6) .form-field__wrapper',
+          true,
+          true,
+          true
+        )
+      ),
+      Edit_Volume_Name_Input: inputGroup(generateInputGroup('.volumes-table .edit-row:not(.no-border_top) .table__cell-input:nth-of-type(2)')),
+      Edit_Volume_Path_Input: inputGroup(generateInputGroup('.volumes-table .edit-row:not(.no-border_top) .table__cell-input:nth-of-type(3)')),
+      Add_New_Row_Button: By.css('[data-testid="resources.volumesTable"] .form-table__actions-cell .round-icon-cp:nth-of-type(1)'),
+      Delete_New_Row_Button: By.css('[data-testid="resources.volumesTable"] .form-table__actions-cell .round-icon-cp:nth-of-type(2)'),
+      Apply_Edit_Button: By.css('.volumes-table .apply-edit-btn'),
+      Volume_Paths_Table: commonTable(volumePathsTable),
+      Memory_Request_Dropdown: dropdownComponent(
+        generateDropdownGroup(
+          '.wizard-form__content-container .resources-units .form-col-1:nth-of-type(1) .resources-card__fields:nth-child(2)',
+          '.resources-card__fields-select',
+          '.options-list__body .select__item',
+          '.data-ellipsis .data-ellipsis'
+        )
+      ),
+      Memory_Request_Number_Input: numberInputGroup(
+        generateNumberInputGroup(
+          '.wizard-form__content-container .resources-units .form-col-1:nth-of-type(1) .resources-card__fields:nth-child(2) .form-field-input',
+          {
+            inc_btn: '.range__buttons button[class*=increase]',
+            dec_btn: '.range__buttons button[class*=decrease]'
+          },
+          true,
+          false,
+          '.form-field__icons svg'
+        )
+      ),
+      Memory_Limit_Dropdown: dropdownComponent(
+          generateDropdownGroup(
+              '.wizard-form__content-container .resources-units .form-col-1:nth-of-type(1) .resources-card__fields:nth-child(3)',
+              '.resources-card__fields-select',
+              '.options-list__body .select__item',
+              '.data-ellipsis .data-ellipsis'
+          )
+      ),
+      Memory_Limit_Number_Input: numberInputGroup(
+        generateNumberInputGroup(
+          '.wizard-form__content-container .resources-units .form-col-1:nth-of-type(1) .resources-card__fields:nth-child(3) .form-field-input',
+          false,
+          true,
+          false,
+          '.form-field__icons svg'
+        )
+      ),
+      CPU_Request_Dropdown: dropdownComponent(
+        generateDropdownGroup(
+          '.wizard-form__content-container .resources-units .form-col-1:nth-of-type(2) .resources-card__fields:nth-child(2)',
+          '.resources-card__fields-select',
+          '.options-list__body .select__item',
+          '.data-ellipsis .data-ellipsis'
+        )
+      ),
+      CPU_Request_Number_Input: numberInputGroup(
+        generateNumberInputGroup(
+          '.wizard-form__content-container .resources-units .form-col-1:nth-of-type(2) .resources-card__fields:nth-child(2) .form-field-input',
+          false,
+          true,
+          false,
+          '.form-field__icons svg'
+        )
+      ),
+      CPU_Limit_Dropdown: dropdownComponent(
+          generateDropdownGroup(
+              '.wizard-form__content-container .resources-units .form-col-1:nth-of-type(2) .resources-card__fields:nth-child(3)',
+              '.resources-card__fields-select',
+              '.options-list__body .select__item',
+              '.data-ellipsis .data-ellipsis'
+          )
+      ),
+      CPU_Limit_Number_Input: numberInputGroup(
+        generateNumberInputGroup(
+          '.wizard-form__content-container .resources-units .form-col-1:nth-of-type(2) .resources-card__fields:nth-child(3) .form-field-input',
+          false,
+          true,
+          false,
+          '.form-field__icons svg'
+        )
+      ),
+      GPU_Limit_Number_Input: numberInputGroup(
+        generateNumberInputGroup(
+          '.wizard-form__content-container .resources-units .form-col-1:nth-of-type(3) .resources-card__fields .form-field-input',
+          false,
+          true,
+          false,
+          '.form-field__icons svg'
+        )
+      ),
+      Resources_Node_Selector_Table: commonTable(resourcesNodeSelectorTable)
+    },
+    Accordion_Subheader: By.css('.modal__body .job-wizard__advanced .form-table-title'),
+    Advanced_Environment_Variables_Table: commonTable(advancedEnvironmentVariablesTable),
+    Hyperparameter_Strategy_Accordion:{
+      Strategy_Dropdown: dropdownComponent(
+        generateDropdownGroup(
+          '.modal__content .modal__body .job-wizard__hyperparameter-strategy .strategy-grid-item',
+          '.form-field-select .form-field__wrapper-normal', 
+          '.options-list__body .select__item-label',
+          '.data-ellipsis'
+        )
+      ),
+      Max_Iterations: inputGroup(
+        generateInputGroup(
+          '.modal__content .modal__body .wizard-form__content .max-iterations-grid-item .form-field__wrapper-normal',
+          true,
+          true,
+          false
+        )
+      ),
+      Max_Errors: inputGroup(
+        generateInputGroup(
+          '.modal__content .modal__body .wizard-form__content .max-errors-grid-item .form-field__wrapper-normal',
+          true,
+          true,
+          false
+        )
+      )
+    },
     Ranking_Subheader: By.css('.job-wizard__hyperparameter-strategy .ranking-title-grid-item'),
     Ranking_Result_Input: inputGroup(
       generateInputGroup(
@@ -512,6 +902,7 @@ module.exports = {
     Form_Subtext: commonFormSubtext,
     Cross_Cancel_Button: commonCloseButton,
     Name_Input: inputGroup(commonNameInput),
+    Tag_Input: inputGroup(commonTagInput),
     Target_Path: {
       Path_Scheme_Combobox: comboBox(
         '.form .form-row:nth-of-type(4) .form-field__wrapper',
@@ -520,7 +911,8 @@ module.exports = {
     },
     Description_Input: textAreaGroup(commonDescriptionTextArea),
     Cancel_Button: commonFormCancelButton,
-    Register_Button: commonFormConfirmButton
+    Register_Button: commonFormConfirmButton,
+    Register_Error_Message: commonRegisterErrorMessage
   },
   createMLFunctionPopup: {
     Cross_Cancel_Button: commonCrossCancelButton,
@@ -554,6 +946,8 @@ module.exports = {
     Cross_Cancel_Button: commonCloseButton,
     New_File_Info: By.css('.form-text'),
     New_File_Name_Input: inputGroup(commonNameInput),
+    Tag_Input: inputGroup(commonTagInput),
+    Register_Error_Message: commonRegisterErrorMessage,
     Target_Path: {
       Path_Scheme_Combobox: comboBox(
         '.form .form-row:nth-of-type(4) .form-field__wrapper',
@@ -635,7 +1029,7 @@ module.exports = {
       Key_Value_Table: commonTable(deployModelTable),
       Class_Argument_Name_Input: inputGroup(
         generateInputGroup(
-          '.deploy-model .table-row_edit .table-cell__key',
+          '.deploy-model .form-table__row_active .form-table__cell_1:nth-of-type(1)',
           true,
           false,
           '.form-field__warning'
@@ -643,17 +1037,17 @@ module.exports = {
       ),
       Class_Argument_Value_Input: inputGroup(
         generateInputGroup(
-          '.deploy-model .table-row_edit .table-cell__value',
+          '.deploy-model .form-table__row_active .form-table__cell_1:nth-of-type(2)',
           true,
           false,
           '.form-field__warning'
         )
       ),
       Add_New_Row_Button: By.css(
-        '.deploy-model .table-row_edit .table-cell__actions .key-value-table__btn:nth-of-type(1)'
+        '.deploy-model .form-table__actions-cell [data-testid="apply-btn"] button'
       ),
       Delete_New_Row_Button: By.css(
-        '.deploy-model .table-row_edit .table-cell__actions .key-value-table__btn:nth-of-type(2)'
+        '.deploy-model .form-table__actions-cell [data-testid="delete-discard-btn"] button'
       )
     },
     Cancel_Button: commonFormCancelButton,
@@ -856,5 +1250,42 @@ module.exports = {
   notificationPopUp: {
     Notification_Pop_Up: By.css('.notification_container .notification_body'),
     Notification_Pop_Up_Cross_Close_Button: By.css('.notification_container .notification_body_close_icon')
+  },
+  schedulePopUp: {
+    Schedule_For_Later: {
+      Schedule_Button: By.css('.schedule-wizard .modal__footer-actions .btn-secondary'),
+      Time_unit_Dropdown: dropdownComponent(
+        generateDropdownGroup(
+          '.simple-schedule-item .form-field-select .form-field__wrapper',
+          '.form-field__control .form-field__select',
+          '.options-list__body .select__item',
+          '.data-ellipsis .data-ellipsis'
+        )
+      ),
+      Intervals_Dropdown: dropdownComponent(
+        generateDropdownGroup(
+          '.simple-schedule-item:nth-of-type(2) .form-field-select .form-field__wrapper',
+          '.form-field__control .form-field__select',
+          '.options-list__body .select__item',
+          '.data-ellipsis .data-ellipsis'
+        )
+      ),
+      At_time_Input: numberInputGroup(
+        generateNumberInputGroup(
+          '.form-col-1 .time-picker-container .time-picker__control',
+          false,
+          true,
+          false
+        )
+      ),
+      Schedule_item_Sunday: By.css('.simple-schedule-item .schedule-repeat-week .schedule-repeat-week_day:nth-of-type(1)'),
+      Schedule_item_Monday: By.css('.simple-schedule-item .schedule-repeat-week .schedule-repeat-week_day:nth-of-type(2)'),
+      Schedule_item_Tuesday: By.css('.simple-schedule-item .schedule-repeat-week .schedule-repeat-week_day:nth-of-type(3)'),
+      Schedule_item_Wednesday: By.css('.simple-schedule-item .schedule-repeat-week .schedule-repeat-week_day:nth-of-type(4)'),
+      Schedule_item_Thursday: By.css('.simple-schedule-item .schedule-repeat-week .schedule-repeat-week_day:nth-of-type(5)'),
+      Schedule_item_Friday: By.css('.simple-schedule-item .schedule-repeat-week .schedule-repeat-week_day:nth-of-type(6)'),
+      Schedule_item_Saturday: By.css('.simple-schedule-item .schedule-repeat-week .schedule-repeat-week_day:nth-of-type(7)'),
+      Error_Message: By.css('.schedule-content .error')
+    }
   }
 }

@@ -58,7 +58,7 @@ const TableHead = React.forwardRef(
                   tableItem.headerCellClassName,
                   index
                 )}
-                key={`${headerId}`}
+                key={headerId}
                 onClick={isSortable ? () => sortProps.sortTable(headerId) : null}
               >
                 <Tooltip template={<TextTooltipTemplate text={headerLabel} />}>

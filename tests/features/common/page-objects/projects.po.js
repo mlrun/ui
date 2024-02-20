@@ -105,7 +105,7 @@ module.exports = {
   Projects_Sort_Dropdown: dropdownComponent(
     generateDropdownGroup(
       '.projects-content-header-item .sort .split-btn__button:nth-of-type(2)',
-      'button .tooltip-wrapper svg', // Open Component
+      'button svg', // Open Component
       '.select__item', // Options
       '.data-ellipsis > .tooltip-wrapper' // Option value
     )

@@ -17,15 +17,34 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-export const roundFloats = (value, precision) => {
-  if (
-    ((typeof value === 'string' && value.trim() !== '') || typeof value === 'number') &&
-    !isNaN(value)
-  ) {
-    const parsedNum = parseFloat(value)
+import { mainHttpClient } from '../httpClient'
 
-    return parsedNum % 1 === 0 ? parsedNum : +parsedNum.toFixed(precision ?? 2)
+const tasksApi = {
+  getBackgroundTasks: (kind) => {
+    const config = {}
+
+    if (kind) {
+      config.params = {
+        kind
+      }
+    }
+
+    return mainHttpClient.get('/background-tasks', config)
+  },
+  getProjectBackgroundTask: (project, id) => {
+    return mainHttpClient.get(`/projects/${project}/background-tasks/${id}`)
+  },
+  getProjectBackgroundTasks: (project, state) => {
+    const config = {}
+
+    if (state) {
+      config.params = {
+        state
+      }
+    }
+
+    return mainHttpClient.get(`/projects/${project}/background-tasks`, config)
   }
-
-  return value
 }
+
+export default tasksApi

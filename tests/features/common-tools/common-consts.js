@@ -96,7 +96,7 @@ module.exports = {
     ]
   },
   Common_Lists: {
-    Action_Menu_List: ['Download', 'Copy URI', 'View YAML', 'Add a tag', 'Delete'],
+    Action_Menu_List: ['Add a tag', 'Download', 'Copy URI', 'View YAML', 'Delete'],
     Handler_List: ['train'],
     Pods_Priority_List: ['Low','Medium', 'High'],
     Ranking_Criteria_List: ['Min','Max']
@@ -135,15 +135,16 @@ module.exports = {
   ML_Function_Info_Pane: {
     Tab_List: ['Overview', 'Code', 'Build Log'],
     Overview_Headers: [
-      'Name',
-      'Kind',
-      'Hash',
-      'Version tag',
-      'Code origin',
-      'Updated',
-      'Command',
-      'Image',
-      'Description'
+      'Name:',
+      'Kind:',
+      'Hash:',
+      'Version tag:',
+      'Code origin:',
+      'Updated:',
+      'Command:',
+      'Default handler:',
+      'Image:',
+      'Description:'
     ]
   },
   Files_Info_Pane: {
@@ -208,18 +209,25 @@ module.exports = {
   Models_Endpoints_Info_Pane: {
     Tab_List: ['Overview', 'Features Analysis'],
     Overview_General_Headers: [
-      'UID',
-      'Model class',
-      'Model artifact',
-      'Function URI',
-      'Function Tag',
-      'Feature set',
-      'Last prediction',
-      'Error count',
-      'Accuracy',
-      'Stream path'
+      'UID:',
+      'Model class:',
+      'Model artifact:',
+      'Function URI:',
+      'Function Tag:',
+      'Feature set:',
+      'Last prediction:',
+      'Error count:',
+      'Accuracy:',
+      'Stream path:'
     ],
-    Overview_Drift_Headers: ['Mean TVD', 'Mean Hellinger', 'Mean KLD']
+    Overview_Drift_Headers: [
+      'Mean TVD:', 
+      'Mean Hellinger:', 
+      'Mean KLD:', 
+      'Drift Actual Value:', 
+      'Drift Detected Threshold:',
+      'Possible Drift Threshold:'
+    ]
   },
   New_Feature_Store: {
     Kind_Options: ['HTTP', 'CSV', 'PARQUET'],
@@ -261,9 +269,9 @@ module.exports = {
   Register_Artifact: {
     Type_Options: ['General', 'Chart', 'Plot', 'Table'],
     Form_Text:
-      /This dialog enable users to register an artifact( as a dataset)? in Iguazio database\. Once (a artifact|the dataset) is registered it can be consumed by jobs and workflows\./,
+      'Register an artifact in MLRun so it can be used, for example, by functions, jobs, and pipelines.',
     Form_Subtext:
-      'All you need to do is enter the name of the artifact and the URL (e.g. s3://my-bucket/path).',
+      'Assign it a unique combination of name and tag, and specify its path (for example, s3://mybucket/path).',
     Combobox_Options: [
       'V3IO',
       'S3',
@@ -272,14 +280,15 @@ module.exports = {
       'Azure storage',
       'Google storage',
       'Databricks filesystem'
-    ]  
+    ],
+    Register_Error_Message: /That combination of (artifact|dataset) name and (artifact|dataset) tag is already in use\. Assign a unique combination of (artifact|dataset) name and (artifact|dataset) tag\./  
   },
   Register_Dataset: {
     Type_Options: ['General', 'Chart', 'Plot', 'Table'],
     Form_Text:
-      /This dialog enable users to register an artifact( as a dataset)? in Iguazio database\. Once (a artifact|the dataset) is registered it can be consumed by jobs and workflows\./,
+      'Register a dataset as an artifact in MLRun so it can be used, for example, by functions, jobs, and pipelines.',
     Form_Subtext:
-      'All you need to do is enter the name of the dataset and the URL (e.g. s3://my-bucket/path).',
+      'Assign it a unique combination of name and tag, and specify its path (for example, s3://mybucket/path).',
     Combobox_Options: [
       'V3IO',
       'S3',
@@ -297,14 +306,13 @@ module.exports = {
   },
   Input_Hint: {
     Artifact_Names_Unique: 'Artifact names in the same project must be unique',
-    Artifacts_Names_Unique: 'Artifacts names in the same project must be unique.',
     Dataset_Names_Unique: 'Dataset names in the same project must be unique',
     Artifact_Name_Hint_Deploy_Model:
       'Valid characters: a–z, A–Z, 0–9, –, _, .\nMust begin and end with: a–z, A–Z, 0–9\nLength – max: 253\n' +
       'This field is required',
     Artifact_Name_Hint:
       'Valid characters: a–z, A–Z, 0–9, –, _, .\nMust begin and end with: a–z, A–Z, 0–9\nLength – max: 253\n' +
-      'This field is required\nArtifact name must be unique',
+      'This field is required',
     Project_Name_Hint:
       'Valid characters: a–z, 0–9, –\nMust begin with: a–z\nMust end with: a–z, 0–9\nLength – max: 63\n' +
       'This field is required',
@@ -313,7 +321,9 @@ module.exports = {
       'This field is required',
     Labels_Warning_Key: 'Valid characters: a–z, A–Z, 0–9, –, _, .\nMust begin and end with: a–z, A–Z, 0–9\nLength – max: 75\n' +
     'Key must be unique',
-    Labels_Warning_Value: 'Valid characters: a–z, A–Z, 0–9, –, _, .\nMust begin and end with: a–z, A–Z, 0–9\nLength – max: 75',
+    Projects_Labels_Warning_Key: 'Valid characters: a–z, A–Z, 0–9, –, _, .\nMust begin and end with: a–z, A–Z, 0–9\nLength – max: 56\n' +
+    'Key must be unique',
+    Labels_Warning_Value: 'Valid characters: a–z, A–Z, 0–9, –, _, .\nMust begin and end with: a–z, A–Z, 0–9\nLength – max: 56',
     Feature_Set_Name_Hint:
       'Valid characters: a–z, A–Z, 0–9, –, _, .\nMust begin and end with: a–z, A–Z, 0–9\nLength – max: 56\n' +
       'This field is required',
@@ -324,7 +334,7 @@ module.exports = {
       'This field is required',
     Input_Field_Require: 'This field is required',
     Input_Field_Invalid: 'This field is invalid',
-    Input_Field_Unique: 'Name should be unique',
+    Input_Field_Unique: 'Name must be unique',
     URL_Field_Require: 'URL is required',
     Key_Bucketing_Number_Hint:
       'If you partition by key and the number of unique keys is very high it is recommended to use buckets for ' +
@@ -418,11 +428,12 @@ module.exports = {
   },
   Jobs_And_Workflows: {
     Tab_List: ['Monitor Jobs', 'Monitor Workflows', 'Schedule'],
-    Job_Action_Menu_Options: ['View YAML', 'Batch re-run', 'Monitoring', 'Delete'],
+    Job_Action_Menu_Options: ['Batch re-run', 'Monitoring', 'View YAML', 'Delete'],
     Job_Overview_Action_Menu_Options: ['View YAML', 'Batch re-run', 'Delete'],
-    Running_Job_Action_Menu_Options: ['View YAML', 'Delete', 'Monitoring', 'Abort'],
+    Running_Job_Action_Menu_Options: ['Monitoring', 'Abort', 'View YAML'],
     Workflows_Action_Menu_Options: ['View YAML'],
-    Pending_Job_Action_Menu_Options: ['View YAML', 'Batch re-run', 'Monitoring', 'Abort', 'Delete'],
+    Workflows_Info_Pane_Action_Menu_Options: ['Batch re-run', 'Monitoring', 'View YAML', 'Delete'],
+    Pending_Job_Action_Menu_Options: ['Batch re-run', 'Monitoring', 'Abort', 'View YAML'],
     Schedule_Action_Menu_Options: ['View YAML', 'Run now', 'Edit', 'Delete']
   },
   Jobs_Monitor_Tab_Info_Pane: {
@@ -505,9 +516,10 @@ module.exports = {
     Schedule_Hours_Variants: ['1', '2', '3', '4', '6', '12']
   },
   No_Data_Message: {
-    Common_Message: 'There is no Features data to show for "Tag: latest, Name: ccccc"',
-    Common_Message_Feature: 'There is no Features data to show for "Tag: latest"',
-    Common_Message_Feature_Vector: 'There is no Feature-Vectors data to show for "Tag: latest"',
+    Common_Message: 'There is no Features data to show for "Version Tag: latest, Name: ccccc"',
+    Common_Message_Feature: 'There is no Features data to show for "Version Tag: latest"',
+    Common_Message_Feature_Vector_Tab: 'There is no Features data to show for "Tag: latest"',
+    Common_Message_Feature_Vector: 'There is no Feature-Vectors data to show for "Version Tag: latest"',
     Common_Message_Feature_Sets: 'There is no Feature-Sets data to show for "Version Tag: latest"',
     No_Data: 'No data to show',
     No_Features_Yet: 'No features yet. Go to "Feature Sets" tab to create your first Feature Set.',

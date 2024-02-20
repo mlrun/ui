@@ -58,10 +58,10 @@ const jobsApi = {
       params.iter = iter
     }
 
-    return mainHttpClient.patch(
-      `/run/${project}/${jobId}`,
+    return mainHttpClient.post(
+      `/projects/${project}/runs/${jobId}/abort`,
       {
-        'status.state': 'aborted'
+        'status.status_text': 'aborted'
       },
       { params }
     )
@@ -83,34 +83,31 @@ const jobsApi = {
       params: {
         'partition-by': 'name',
         'partition-sort-by': 'updated',
-        project,
         ...generateRequestParams(filters)
       }
     }
 
-    return mainHttpClient.get('/runs', newConfig)
+    return mainHttpClient.get(`/projects/${project}/runs`, newConfig)
   },
   getSpecificJobs: (project, filters, jobList) => {
     const params = {
-      project,
       ...generateRequestParams(filters)
     }
 
     const jobListQuery = jobList.map(value => `uid=${value}`).join('&')
 
-    return mainHttpClient.get(`/runs?${jobListQuery}`, { params })
+    return mainHttpClient.get(`/projects/${project}/runs?${jobListQuery}`, { params })
   },
   getAllJobRuns: (project, filters, config = {}, jobName) => {
     const newConfig = {
       ...config,
       params: {
-        project,
         name: jobName,
         ...generateRequestParams(filters)
       }
     }
 
-    return mainHttpClient.get('/runs', newConfig)
+    return mainHttpClient.get(`/projects/${project}/runs`, newConfig)
   },
   getJob: (project, jobId, iter) => {
     const params = {}

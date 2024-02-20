@@ -45,7 +45,7 @@ export const generateArtifactLink = (artifact, projectName) => {
 }
 
 export const generateInputsTabContent = (artifacts, showArtifact) => {
-  return artifacts.map((artifact, index) => {
+  return artifacts.map(artifact => {
     const keyClassNames = classnames(artifact.ui.isPreviewable && 'link')
 
     return [
@@ -57,12 +57,13 @@ export const generateInputsTabContent = (artifacts, showArtifact) => {
           <Tooltip template={<TextTooltipTemplate text={artifact.ui.inputName} />}>
             <span
               className={keyClassNames}
-              onClick={() => artifact.ui.isPreviewable && showArtifact(index)}
+              onClick={() => artifact.ui.isPreviewable && showArtifact(artifact.uid)}
             >
               {artifact.ui.inputName}
             </span>
           </Tooltip>
-        )
+        ),
+        artifact
       },
       {
         headerId: 'path',

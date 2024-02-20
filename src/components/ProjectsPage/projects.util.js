@@ -18,8 +18,12 @@ under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
 import React from 'react'
+import { get } from 'lodash'
 
+import tasksApi from '../../api/tasks-api'
+import { BG_TASK_FAILED, BG_TASK_SUCCEEDED, pollTask } from '../../utils/poll.util'
 import { DANGER_BUTTON, FORBIDDEN_ERROR_STATUS_CODE } from 'igz-controls/constants'
+import { setNotification } from '../../reducers/notificationReducer'
 import { showErrorNotification } from '../../utils/notifications.util'
 
 import { ReactComponent as ArchiveIcon } from 'igz-controls/images/archive-icon.svg'
@@ -28,11 +32,14 @@ import { ReactComponent as DownloadIcon } from 'igz-controls/images/ml-download.
 import { ReactComponent as UnarchiveIcon } from 'igz-controls/images/unarchive-icon.svg'
 import { ReactComponent as Yaml } from 'igz-controls/images/yaml.svg'
 
+export const projectDeletionKind = 'project.deletion'
+export const projectDeletionWrapperKind = 'project.deletion.wrapper'
 export const pageData = {
   page: 'PROJECTS'
 }
 export const generateProjectActionsMenu = (
   projects,
+  deletingProjects,
   exportYaml,
   viewYaml,
   archiveProject,
@@ -40,21 +47,26 @@ export const generateProjectActionsMenu = (
   deleteProject,
   isDemoMode
 ) => {
+  const deletingProjectNames = Object.values(deletingProjects)
   let actionsMenu = {}
 
   projects.forEach(project => {
+    const projectIsDeleting = deletingProjectNames.includes(project.metadata.name)
+
     actionsMenu[project.metadata.name] = [
       [
         {
           label: 'Archive',
           icon: <ArchiveIcon />,
           hidden: project.status.state === 'archived',
+          disabled: projectIsDeleting,
           onClick: archiveProject
         },
         {
           label: 'Unarchive',
           icon: <UnarchiveIcon />,
           hidden: project.status.state === 'online',
+          disabled: projectIsDeleting,
           onClick: unarchiveProject
         },
         {
@@ -63,16 +75,19 @@ export const generateProjectActionsMenu = (
           className: 'danger',
           hidden:
             window.mlrunConfig.nuclioMode === 'enabled' && project.metadata.name === 'default',
+          disabled: projectIsDeleting,
           onClick: deleteProject
         },
         {
           label: 'Export YAML',
           icon: <DownloadIcon />,
+          disabled: projectIsDeleting,
           onClick: exportYaml
         },
         {
           label: 'View YAML',
           icon: <Yaml />,
+          disabled: projectIsDeleting,
           onClick: viewYaml
         }
       ]
@@ -103,7 +118,6 @@ export const projectsSortOptions = [
     path: 'metadata.created'
   }
 ]
-export const successProjectDeletingMessage = 'Project deleted successfully'
 
 export const handleDeleteProjectError = (
   error,
@@ -130,10 +144,57 @@ export const handleDeleteProjectError = (
       }
     })
   } else {
-    const customErrorMsg = error.response?.status === FORBIDDEN_ERROR_STATUS_CODE
+    const customErrorMsg =
+      error.response?.status === FORBIDDEN_ERROR_STATUS_CODE
         ? `You are not allowed to delete ${project.metadata.name} project`
         : `Failed to delete ${project.metadata.name} project`
 
     showErrorNotification(dispatch, error, '', customErrorMsg, () => handleDeleteProject(project))
   }
+}
+
+export const pollDeletingProjects = (terminatePollRef, deletingProjects, refresh, dispatch) => {
+  const isDone = result => {
+    const tasks = get(result, 'data.background_tasks', [])
+    const finishedTasks = tasks.filter(
+      task =>
+        deletingProjects?.[task.metadata.name] &&
+        [BG_TASK_SUCCEEDED, BG_TASK_FAILED].includes(task.status?.state)
+    )
+
+    if (finishedTasks.length > 0) {
+      finishedTasks.forEach(task => {
+        if (task.status.state === BG_TASK_SUCCEEDED) {
+          dispatch(
+            setNotification({
+              status: 200,
+              id: Math.random(),
+              message: `Project "${deletingProjects?.[task.metadata.name]}" was deleted successfully`
+            })
+          )
+        } else {
+          showErrorNotification(
+            dispatch,
+            {},
+            get(
+              task,
+              'status.error',
+              `Failed to delete "${deletingProjects?.[task.metadata.name]}" project`
+            )
+          )
+        }
+      })
+
+      refresh()
+    }
+
+    return finishedTasks.length > 0
+  }
+
+  terminatePollRef.current?.()
+  terminatePollRef.current = null
+
+  return pollTask(() => tasksApi.getBackgroundTasks(), isDone, {
+    terminatePollRef
+  })
 }

@@ -362,7 +362,7 @@ const requestedFeaturesTable = {
 }
 
 const inputsTable = {
-  root: '.table__item .inputs_container',
+  root: '.table__item .item-info .table',
   header: {
     root: '',
     sorters: {}
@@ -382,14 +382,16 @@ const inputsTable = {
 const artifactsTable = {
   root: '.table__item .item-artifacts',
   header: {
-    root: '',
-    sorters: {}
+    root: '.table-header',
+    sorters: {
+      sorter_icon: '.table-header__cell:nth-of-type(1) svg'
+    }
   },
   body: {
     row: {
-      root: '.item-artifacts__row-wrapper',
+      root: '.table-row',
       fields: {
-        name: '.item-artifacts__row-item:nth-of-type(1) span.link',
+        name: '.table-body__cell:nth-of-type(1) span.link',
         path: '.item-artifacts__row-item:nth-of-type(2) .data-ellipsis',
         size: '.item-artifacts__row-item:nth-of-type(3) .data-ellipsis',
         updated: '.item-artifacts__row-item:nth-of-type(4) .data-ellipsis',
@@ -525,6 +527,7 @@ const commonVersionTagInput = inputGroup(
   )
 )
 const commonVersionTagInputFullView = By.css('.table__item_big .details-item__input-wrapper input')
+const commonLabelsApplyButton = By.css('.item-info__details-wrapper .details-item .details-item__data-chips .details-item__apply-btn-wrapper')
 
 module.exports = {
   featureSetsInfoPane: {
@@ -546,7 +549,7 @@ module.exports = {
     ),
     Labels_Table: commonTable(featureSetsInfoPaneLabelsTable),
     Apply_Button: By.css('.item-info__details-wrapper .details-item__input-wrapper .round-icon-cp:nth-of-type(2)'),
-    Labels_Apply_Button: By.css('.item-info__details-wrapper .details-item .details-item__data-chips .details-item__apply-btn-wrapper'),
+    Labels_Apply_Button: commonLabelsApplyButton,
     Edit_Button: By.css('.item-info__details-wrapper .details-item__data .details-item__data-btn-edit')
   },
   featuresInfoPane: {
@@ -574,7 +577,7 @@ module.exports = {
     Updated: updated,
     Cancel_Button: cancelButton,
     Apply_Changes_Button: applyChangesButton,
-    Apply_Button: applyButton,
+    Applyv_Button: applyButton,
     Download_Button: commonDownloadButton,
     Action_Menu: commonActionMenu,
     Full_View_Button: fullViewButton,
@@ -673,8 +676,8 @@ module.exports = {
     Overview_Headers: commonTable(infoPaneOverviewHeaders),
 
     // Logs tab.
-    Logs_Text_container: By.css('.table__item .table__item_logs__content'),
-    Logs_Refresh_Button: By.css('.table__item .logs_refresh')
+    Logs_Text_container: By.css('.table__item .table__item_logs-content'),
+    Logs_Refresh_Button: By.css('.table__item .logs-refresh')
   },
   workflowsMonitorTabInfoPane: {
     Arrow_Back: commonArrowBack,
@@ -686,15 +689,15 @@ module.exports = {
     Overview_Headers: commonTable(infoPaneOverviewHeaders),
 
     // Logs tab.
-    Logs_Text_container: By.css('.table__item .table__item_logs__content'),
-    Logs_Refresh_Button: By.css('.table__item .logs_refresh')
+    Logs_Text_container: By.css('.table__item .table__item_logs-content'),
+    Logs_Refresh_Button: By.css('.table__item .logs-refresh')
   },
   inputsInfoPane: {
     Inputs_Table: commonTable(inputsTable)
   },
   artifactsInfoPane: {
     Artifacts_Table: commonTable(artifactsTable),
-    Artifact_Preview_Button: By.css('.item-artifacts .item-artifacts__preview .data-ellipsis svg'),
+    Artifact_Preview_Button: By.css('.item-artifacts .artifacts__preview .data-ellipsis svg'),
     Iterations_Dropdown: dropdownComponent(generateDropdownGroup('.item-header__buttons .select'))
   },
   resultsInfoPane: {
@@ -743,6 +746,7 @@ module.exports = {
     Download_Button: commonDownloadButton,
     Action_Menu: commonActionMenu,
     Apply_Changes_Button: applyChangesButton,
+    Labels_Apply_Button: commonLabelsApplyButton,
     Cross_Close_Button: crossCloseButton,
     Full_View_Button: fullViewButton,
     Tabel_View_Button: tabelViewButton,

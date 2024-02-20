@@ -293,6 +293,7 @@ export const FUNCTION_READY_STATE = 'ready'
 export const FUNCTION_PENDINDG_STATE = 'pending'
 export const FUNCTION_RUNNING_STATE = 'running'
 export const FUNCTION_DEFAULT_HANDLER = 'handler'
+export const FUNCTION_RUN_KINDS = [FUNCTION_TYPE_JOB]
 
 /*=========== ARTIFACTS =============*/
 
@@ -514,6 +515,7 @@ export const SET_FEATURES_PANEL_DATA = 'SET_FEATURES_PANEL_DATA'
 export const UPDATE_CURRENT_PROJECT_NAME = 'UPDATE_CURRENT_PROJECT_NAME'
 export const UPDATE_GROUPED_FEATURES = 'UPDATE_GROUPED_FEATURES'
 export const UPDATE_FEATURE_VECTOR = 'UPDATE_FEATURE_VECTOR'
+export const TABLE_CONTAINER = 'table-container'
 
 export const BUTTON_COPY_URI_CELL_TYPE = 'buttonCopyURI'
 
@@ -541,6 +543,9 @@ export const SHOW_UNTAGGED_FILTER = 'showUntagged'
 export const SORT_BY = 'sortBy'
 export const STATUS_FILTER = 'status'
 export const TAG_FILTER = 'tag'
+export const AUTO_REFRESH_ID = 'auto-refresh'
+export const AUTO_REFRESH = 'Auto Refresh'
+export const ANY_TIME = 'Any time'
 
 export const FILTER_MENU_MODAL = 'filterMenuModal'
 export const JOB_WIZARD_FILTERS = 'jobWizardFilters'

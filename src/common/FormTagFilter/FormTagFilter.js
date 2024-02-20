@@ -21,7 +21,7 @@ import React, { useState, useRef, useEffect, useCallback, useMemo, useLayoutEffe
 import PropTypes from 'prop-types'
 import { Field, useField } from 'react-final-form'
 import { useSelector } from 'react-redux'
-import { isEqual } from 'lodash'
+import { isEqual, uniq } from 'lodash'
 import classnames from 'classnames'
 
 import { PopUpDialog } from 'igz-controls/components'
@@ -33,7 +33,7 @@ import { ReactComponent as Caret } from 'igz-controls/images/dropdown.svg'
 
 import './formTagFilters.scss'
 
-const FormTagFilter = ({ label, name }) => {
+const FormTagFilter = ({ content, label, name }) => {
   const { input } = useField(name)
   const [isDropDownMenuOpen, setIsDropDownMenuOpen] = useState(false)
   const [tagFilter, setTagFilter] = useState(input.value)
@@ -51,26 +51,44 @@ const FormTagFilter = ({ label, name }) => {
 
   const options = useMemo(() => {
     let newTagOptions = tagFilterOptions
+    let pageTagList = []
 
     if (filtersStore.tagOptions?.length > 0) {
       const defaultOptionsTags = tagFilterOptions.map(option => option.id)
+      pageTagList = [...tagFilterOptions]
+      let contentTagList = []
+
+      if (content) {
+        contentTagList = uniq(content.map(contentItem => contentItem.tag))
+      }
+
       newTagOptions = [
-        ...tagFilterOptions,
         ...filtersStore.tagOptions.reduce((acc, tag) => {
           if (!defaultOptionsTags.includes(tag)) {
-            acc.push({
-              label: tag,
-              id: tag
-            })
+            if (contentTagList.includes(tag)) {
+              pageTagList.push({
+                label: tag,
+                id: tag
+              })
+            } else {
+              acc.push({
+                label: tag,
+                id: tag
+              })
+            }
           }
 
           return acc
         }, [])
       ]
+
+      if (pageTagList.length > 2) {
+        pageTagList[pageTagList.length - 1].className = 'page-tag-list'
+      }
     }
 
-    return newTagOptions
-  }, [filtersStore.tagOptions])
+    return [...pageTagList, ...newTagOptions]
+  }, [content, filtersStore.tagOptions])
 
   useEffect(() => {
     if (!isEqual(options, filtersStore.tagOptions)) {
@@ -193,7 +211,8 @@ const FormTagFilter = ({ label, name }) => {
                   'form-tag-filter__dropdown-item',
                   tagFilter.length !== 0 &&
                     tagFilter === tag.id &&
-                    'form-tag-filter__dropdown-item_selected'
+                    'form-tag-filter__dropdown-item_selected',
+                  tag.className
                 )
 
                 return (

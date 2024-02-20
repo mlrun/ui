@@ -41,6 +41,7 @@ const initialState = {
   dataSets: {
     allData: [],
     filteredData: [],
+    loading: false,
     selectedRowData: {
       content: {},
       error: null,
@@ -51,6 +52,7 @@ const initialState = {
   files: {
     allData: [],
     filteredData: [],
+    loading: false,
     selectedRowData: {
       content: {},
       error: null,
@@ -58,17 +60,24 @@ const initialState = {
     }
   },
   loading: false,
-  modelEndpoints: [],
+  modelEndpoints: {
+    allData: [],
+    loading: false
+  },
   models: {
     allData: [],
     filteredData: [],
+    loading: false,
     selectedRowData: {
       content: {},
       error: null,
       loading: false
     }
   },
-  pipelines: [],
+  pipelines: {
+    allData: [],
+    loading: false
+  },
   preview: {}
 }
 
@@ -93,7 +102,9 @@ export const editTag = createAsyncThunk('editTag', ({ project, oldTag, tag, data
 })
 export const fetchArtifact = createAsyncThunk('fetchArtifact', ({ project, artifact }) => {
   return artifactsApi.getArtifact(project, artifact).then(({ data }) => {
-    return filterArtifacts(data.artifacts)
+    const result = parseArtifacts(data.artifacts)
+
+    return filterArtifacts(result)
   })
 })
 export const fetchArtifacts = createAsyncThunk('fetchArtifacts', ({ project, filters, config }) => {
@@ -103,9 +114,12 @@ export const fetchArtifacts = createAsyncThunk('fetchArtifacts', ({ project, fil
     return generateArtifacts(filterArtifacts(result))
   })
 })
-export const fetchArtifactTags = createAsyncThunk('fetchArtifactTags', ({ project, category }) => {
-  return artifactsApi.getArtifactTags(project, category)
-})
+export const fetchArtifactTags = createAsyncThunk(
+  'fetchArtifactTags',
+  ({ project, category, config }) => {
+    return artifactsApi.getArtifactTags(project, category, config)
+  }
+)
 export const fetchDataSet = createAsyncThunk('fetchDataSet', ({ project, dataSet, iter, tag }) => {
   return artifactsApi.getDataSet(project, dataSet, iter, tag).then(response => {
     const result = parseArtifacts(response.data.artifacts)
@@ -116,10 +130,6 @@ export const fetchDataSet = createAsyncThunk('fetchDataSet', ({ project, dataSet
 export const fetchDataSets = createAsyncThunk(
   'fetchDataSets',
   ({ project, filters, config }, thunkAPI) => {
-    setTimeout(() => {
-      thunkAPI.dispatch(fetchDataSets.pending())
-    })
-
     return artifactsApi
       .getDataSets(project, filters, config)
       .then(({ data }) => {
@@ -142,10 +152,6 @@ export const fetchFile = createAsyncThunk('fetchFile', ({ project, file, iter, t
 export const fetchFiles = createAsyncThunk(
   'fetchFiles',
   ({ project, filters, config }, thunkAPI) => {
-    setTimeout(() => {
-      thunkAPI.dispatch(fetchFiles.pending())
-    })
-
     return artifactsApi
       .getFiles(project, filters, config)
       .then(({ data }) => {
@@ -191,10 +197,6 @@ export const fetchModel = createAsyncThunk('fetchModel', ({ project, model, iter
 export const fetchModels = createAsyncThunk(
   'fetchModels',
   ({ project, filters, config }, thunkAPI) => {
-    setTimeout(() => {
-      thunkAPI.dispatch(fetchModels.pending())
-    })
-
     return artifactsApi
       .getModels(project, filters, config)
       .then(({ data }) => {
@@ -255,10 +257,10 @@ const artifactsSlice = createSlice({
       state.models = initialState.models
     },
     removeModelEndpoints(state) {
-      state.modelEndpoints = initialState.modelEndpoints
+      state.modelEndpoints.allData = initialState.modelEndpoints.allData
     },
     removePipelines(state) {
-      state.pipelines = initialState.pipelines
+      state.pipelines.allData = initialState.pipelines.allData
     },
     showArtifactsPreview(state, action) {
       state.preview = action.payload
@@ -290,34 +292,51 @@ const artifactsSlice = createSlice({
       state.error = action.payload
       state.loading = false
     })
-    builder.addCase(fetchArtifactsFunctions.pending, defaultPendingHandler)
+    builder.addCase(fetchArtifactsFunctions.pending, state => {
+      state.pipelines.loading = true
+    })
     builder.addCase(fetchArtifactsFunctions.fulfilled, (state, action) => {
       state.error = null
-      state.pipelines = action.payload
-      state.loading = false
+      state.pipelines = { allData: action.payload, loading: false }
     })
-    builder.addCase(fetchArtifactsFunctions.rejected, defaultRejectedHandler)
+    builder.addCase(fetchArtifactsFunctions.rejected, state => {
+      state.pipelines.loading = false
+    })
     builder.addCase(fetchDataSet.fulfilled, (state, action) => {
       state.dataSets.selectedRowData.content[getArtifactIdentifier(action.payload[0])] =
         action.payload
     })
-    builder.addCase(fetchDataSets.pending, defaultPendingHandler)
+    builder.addCase(fetchDataSets.pending, state => {
+      state.dataSets.loading = true
+      state.loading = true
+    })
     builder.addCase(fetchDataSets.fulfilled, (state, action) => {
       state.error = null
       state.dataSets.allData = action.payload
       state.loading = false
+      state.loading = state.models.loading || state.files.loading
     })
-    builder.addCase(fetchDataSets.rejected, defaultRejectedHandler)
+    builder.addCase(fetchDataSets.rejected, state => {
+      state.dataSets.loading = false
+      state.loading = state.models.loading || state.files.loading
+    })
     builder.addCase(fetchFile.fulfilled, (state, action) => {
       state.files.selectedRowData.content[getArtifactIdentifier(action.payload[0])] = action.payload
     })
-    builder.addCase(fetchFiles.pending, defaultPendingHandler)
+    builder.addCase(fetchFiles.pending, state => {
+      state.files.loading = true
+      state.loading = true
+    })
     builder.addCase(fetchFiles.fulfilled, (state, action) => {
       state.error = null
       state.files.allData = action.payload
-      state.loading = false
+      state.files.loading = false
+      state.loading = state.models.loading || state.dataSets.loading
     })
-    builder.addCase(fetchFiles.rejected, defaultRejectedHandler)
+    builder.addCase(fetchFiles.rejected, state => {
+      state.files.loading = false
+      state.loading = state.models.loading || state.dataSets.loading
+    })
     builder.addCase(fetchModel.pending, (state, action) => {
       state.models.selectedRowData = {
         content: initialState.models.selectedRowData.content,
@@ -338,24 +357,31 @@ const artifactsSlice = createSlice({
         loading: true
       }
     })
-    builder.addCase(fetchModelEndpoints.pending, defaultPendingHandler)
+    builder.addCase(fetchModelEndpoints.pending, state => {
+      state.modelEndpoints.loading = true
+    })
     builder.addCase(fetchModelEndpoints.fulfilled, (state, action) => {
       state.error = null
-      state.modelEndpoints = action.payload
-      state.loading = false
+      state.modelEndpoints = { allData: action.payload, loading: false }
     })
     builder.addCase(fetchModelEndpoints.rejected, (state, action) => {
       state.error = action.payload
-      state.modelEndpoints = []
-      state.loading = false
+      state.modelEndpoints = { allData: [], loading: false }
     })
-    builder.addCase(fetchModels.pending, defaultPendingHandler)
+    builder.addCase(fetchModels.pending, state => {
+      state.models.loading = true
+      state.loading = true
+    })
     builder.addCase(fetchModels.fulfilled, (state, action) => {
       state.error = null
       state.models.allData = action.payload
-      state.loading = false
+      state.models.loading = false
+      state.loading = state.files.loading || state.dataSets.loading
     })
-    builder.addCase(fetchModels.rejected, defaultRejectedHandler)
+    builder.addCase(fetchModels.rejected, state => {
+      state.models.loading = false
+      state.loading = state.files.loading || state.dataSets.loading
+    })
   }
 })
 

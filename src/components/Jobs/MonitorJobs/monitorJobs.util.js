@@ -22,6 +22,7 @@ import { isNil, isEmpty } from 'lodash'
 
 import {
   DATE_RANGE_TIME_FILTER,
+  FUNCTION_RUN_KINDS,
   JOBS_PAGE,
   LABELS_FILTER,
   NAME_FILTER,
@@ -30,11 +31,11 @@ import {
 } from '../../../constants'
 import {
   JOB_STEADY_STATES,
-  functionRunKinds,
   getInfoHeaders,
   getJobsDetailsMenu,
-  isJobAbortable,
+  isJobKindAbortable,
   isJobKindDask,
+  isJobAborting,
   JOB_RUNNING_STATES
 } from '../jobs.util'
 import { TERTIARY_BUTTON } from 'igz-controls/constants'
@@ -92,60 +93,68 @@ export const generateActionsMenu = (
   selectedJob,
   handleConfirmDeleteJob
 ) => {
-  return job?.uid
-    ? [
-        [
-          {
-            label: 'Batch re-run',
-            icon: <Run />,
-            hidden: !functionRunKinds.includes(job?.ui?.originalContent.metadata.labels?.kind),
-            onClick: handleRerunJob
-          },
-          {
-            label: 'Monitoring',
-            icon: <MonitorIcon />,
-            tooltip: !jobs_dashboard_url
-              ? 'Grafana service unavailable'
-              : isJobKindDask(job?.labels)
-              ? 'Unavailable for Dask jobs'
-              : '',
-            disabled: !jobs_dashboard_url || isJobKindDask(job?.labels),
-            onClick: handleMonitoring,
-            hidden: !isEmpty(selectedJob)
-          },
-          {
-            label: 'Abort',
-            icon: <Cancel />,
-            onClick: handleConfirmAbortJob,
-            tooltip: isJobAbortable(job, abortable_function_kinds)
-              ? ''
-              : 'Cannot abort jobs of this kind',
-            disabled: !isJobAbortable(job, abortable_function_kinds),
-            hidden: JOB_STEADY_STATES.includes(job?.state?.value)
-          },
-          {
-            label: 'View YAML',
-            icon: <Yaml />,
-            onClick: toggleConvertedYaml
-          },
-          {
-            label: 'Delete',
-            icon: <Delete />,
-            className: 'danger',
-            onClick: handleConfirmDeleteJob,
-            hidden: JOB_RUNNING_STATES.includes(job?.state?.value)
-          }
-        ]
+  if (job?.uid) {
+    const jobKindIsAbortable = isJobKindAbortable(job, abortable_function_kinds)
+    const jobIsAborting = isJobAborting(job)
+    const jobKindIsDask = isJobKindDask(job?.labels)
+
+    return [
+      [
+        {
+          label: 'Batch re-run',
+          icon: <Run />,
+          hidden: !FUNCTION_RUN_KINDS.includes(job?.ui?.originalContent.metadata.labels?.kind),
+          onClick: handleRerunJob
+        },
+        {
+          label: 'Monitoring',
+          icon: <MonitorIcon />,
+          tooltip: !jobs_dashboard_url
+            ? 'Grafana service unavailable'
+            : jobKindIsDask
+            ? 'Unavailable for Dask jobs'
+            : '',
+          disabled: !jobs_dashboard_url || jobKindIsDask,
+          onClick: handleMonitoring,
+          hidden: !isEmpty(selectedJob)
+        },
+        {
+          label: 'Abort',
+          icon: <Cancel />,
+          onClick: handleConfirmAbortJob,
+          tooltip: jobKindIsAbortable
+            ? jobIsAborting
+              ? 'Job is aborting'
+              : ''
+            : 'Cannot abort jobs of this kind',
+          disabled: !jobKindIsAbortable || jobIsAborting,
+          hidden: JOB_STEADY_STATES.includes(job?.state?.value)
+        },
+        {
+          label: 'View YAML',
+          icon: <Yaml />,
+          onClick: toggleConvertedYaml
+        },
+        {
+          label: 'Delete',
+          icon: <Delete />,
+          className: 'danger',
+          onClick: handleConfirmDeleteJob,
+          hidden: JOB_RUNNING_STATES.includes(job?.state?.value)
+        }
       ]
-    : [
-        [
-          {
-            label: 'View YAML',
-            icon: <Yaml />,
-            onClick: toggleConvertedYaml
-          }
-        ]
+    ]
+  } else {
+    return [
+      [
+        {
+          label: 'View YAML',
+          icon: <Yaml />,
+          onClick: toggleConvertedYaml
+        }
       ]
+    ]
+  }
 }
 
 export const monitorJobsActionCreator = {

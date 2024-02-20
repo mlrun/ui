@@ -20,6 +20,8 @@ such restriction.
 import React from 'react'
 import { cloneDeep, isEmpty, omit } from 'lodash'
 
+import { PopUpDialog } from 'igz-controls/components'
+
 import {
   ITERATIONS_FILTER,
   LABELS_FILTER,
@@ -50,6 +52,7 @@ import { searchArtifactItem } from '../../../utils/searchArtifactItem'
 import { setDownloadItem, setShowDownloadsList } from '../../../reducers/downloadReducer'
 import { showErrorNotification } from '../../../utils/notifications.util'
 import { sortListByDate } from '../../../utils'
+import { openPopUp } from 'igz-controls/utils/common.util'
 
 import { ReactComponent as TagIcon } from 'igz-controls/images/tag-icon.svg'
 import { ReactComponent as YamlIcon } from 'igz-controls/images/yaml.svg'
@@ -348,6 +351,9 @@ export const generateActionsMenu = (
         icon: <Delete />,
         className: 'danger',
         disabled: !model?.tag,
+        tooltip:
+          !model?.tag &&
+          'A tag is required to delete a model. Open the model, click on the edit icon, and assign a tag before proceeding with the deletion',
         onClick: () =>
           openDeleteConfirmPopUp(
             'Delete model?',
@@ -390,4 +396,35 @@ export const generateActionsMenu = (
       }
     ]
   ]
+}
+
+export const handleDeployModelFailure = () => {
+  openPopUp(PopUpDialog, {
+    children: (
+      <>
+        <div>
+          See how to create a serving function in{' '}
+          <a
+            className="link"
+            href="https://docs.mlrun.org/en/stable/serving/built-in-model-serving.html"
+            rel="noreferrer"
+            target="_blank"
+          >
+            https://docs.mlrun.org/en/stable/serving/built-in-model-serving.html
+          </a>{' '}
+          and{' '}
+          <a
+            className="link"
+            href="https://docs.mlrun.org/en/stable/tutorials/03-model-serving.html"
+            rel="noreferrer"
+            target="_blank"
+          >
+            https://docs.mlrun.org/en/stable/tutorials/03-model-serving.html
+          </a>
+        </div>
+      </>
+    ),
+    className: 'deploy-model-failure-popup',
+    headerText: 'Failed to deploy model'
+  })
 }

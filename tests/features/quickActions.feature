@@ -93,7 +93,6 @@ Feature: MLRun Project Home Page
         And click on cell with value "Quick actions" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
         And hover "MLRun_Logo" component on "commonPagesHeader" wizard
         And wait load page
-
         And select "tab" with "Project monitoring" value in breadcrumbs menu
         And wait load page
         Then verify breadcrumbs "tab" label should be equal "Project monitoring" value
@@ -109,7 +108,6 @@ Feature: MLRun Project Home Page
         Then "Title" element on "Register_Model_Popup" should contains "Register Model" value
         Then verify "Cross_Cancel_Button" element visibility on "Register_Model_Popup" wizard
         Then verify "New_File_Name_Input" element visibility on "Register_Model_Popup" wizard
-        Then verify "New_File_Name_Input" on "Register_Model_Popup" wizard should display "Input_Hint"."Artifacts_Names_Unique"
         Then verify options in "Path_Scheme_Combobox" combobox in "Target_Path" on "Register_Model_Popup" wizard should contains "Models"."Combobox_Options"
         Then verify "New_File_Description_Input" element visibility on "Register_Model_Popup" wizard
         Then verify "Cancel_Button" element visibility on "Register_Model_Popup" wizard
@@ -675,3 +673,39 @@ Feature: MLRun Project Home Page
         And hover "Edit_Button" component on "Batch_Inference" wizard
         And click on "Edit_Button" element on "Batch_Inference" wizard
         Then verify "Data_Inputs_Path_Dropdown" dropdown element on "Batch_Inference" wizard should contains "Batch_Inference"."Model_Path_Type_Store"
+
+    @MLPH
+    Scenario: MLPH024 - Check Train model wizard opens up
+        Given open url
+        And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
+        And wait load page
+        And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
+        Then click on "Quick_actions_Button" element on "commonPagesHeader" wizard
+        And wait load page
+        Then verify "Development_Actions_Table" element visibility on "Demo_Project" wizard
+        Then verify values in "Development_Actions_Table" table on "Demo_Project" wizard
+            |     name    |
+            |  Batch run  |
+            | Train model |
+        When click on "name" in "Development_Actions_Table" table on "Demo_Project" wizard with offset "false"
+            |    name     |
+            | Train model |
+        And wait load page
+        Then verify "Title" element visibility on "Modal_Wizard_Form" wizard
+        Then "Title" element on "Modal_Wizard_Form" should contains "Train Model" value
+        Then verify "Cross_Cancel_Button" element visibility on "Modal_Wizard_Form" wizard
+        Then "Function_Title" element on "Modal_Wizard_Form" should contains "auto-trainer" value
+        Then "Form_Header_Run_Details" element on "commonPagesHeader" should contains "Run Details" value
+        Then "Hyperparameter_Checkbox" element should be unchecked on "Modal_Wizard_Form" wizard
+        Then verify "Step_1_Button" element on "commonPagesHeader" wizard is enabled
+        Then verify "Step_2_Button" element on "commonPagesHeader" wizard is enabled
+        Then verify "Step_3_Button" element on "commonPagesHeader" wizard is enabled
+        Then verify "Step_4_Button" element on "commonPagesHeader" wizard is enabled
+        Then verify "Step_5_Button" element on "commonPagesHeader" wizard is enabled
+        Then verify "Next_Button" element on "Modal_Wizard_Form" wizard is enabled
+        Then "Next_Button" element on "Modal_Wizard_Form" should contains "Next" value
+        Then verify "Run_Training_Now_Button" element on "Modal_Wizard_Form" wizard is enabled
+        Then "Run_Training_Now_Button" element on "Modal_Wizard_Form" should contains "Run training now" value
+        Then verify "Schedule_Training_Job_Button" element on "Modal_Wizard_Form" wizard is enabled
+        Then "Schedule_Training_Job_Button" element on "Modal_Wizard_Form" should contains "Schedule training job" value
+        Then verify "Back_Button" element not exists on "Modal_Wizard_Form" wizard

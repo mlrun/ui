@@ -17,19 +17,21 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useCallback } from 'react'
 import { useDispatch } from 'react-redux'
-import { get, isNil, uniqBy } from 'lodash'
+import { get, isNil } from 'lodash'
 import { OnChange } from 'react-final-form-listeners'
 import PropTypes from 'prop-types'
 
 import { FormCombobox } from 'igz-controls/components'
 
 import {
-  generateArtifactsList,
-  generateArtifactsReferencesList,
   generateComboboxMatchesList,
-  generateProjectsList,
+  getArtifact,
+  getArtifacts,
+  getFeatureVector,
+  getFeatureVectors,
+  getProjectsNames,
   getTargetPathInvalidText,
   getTargetPathOptions,
   handleStoreInputPathChange,
@@ -37,16 +39,7 @@ import {
   pathPlaceholders,
   targetPathInitialState
 } from './targetPath.util'
-import featureStoreActions from '../../actions/featureStore'
-import projectAction from '../../actions/projects'
-import {
-  ARTIFACT_OTHER_TYPE,
-  DATASET_TYPE,
-  MLRUN_STORAGE_INPUT_PATH_SCHEME,
-  MODEL_TYPE
-} from '../../constants'
-import { fetchArtifact, fetchArtifacts } from '../../reducers/artifactsReducer'
-import { getFeatureReference } from '../../utils/resources'
+import { MLRUN_STORAGE_INPUT_PATH_SCHEME } from '../../constants'
 
 const TargetPath = ({
   density,
@@ -83,21 +76,40 @@ const TargetPath = ({
     }
   }
 
+  const handleGetProjectsNames = useCallback(() => {
+    getProjectsNames(dispatch, setDataInputState, params.projectName)
+  }, [dispatch, params.projectName])
+
+  const handleGetArtifacts = useCallback(() => {
+    getArtifacts(dispatch, dataInputState.project, dataInputState.storePathType, setDataInputState)
+  }, [dataInputState.project, dataInputState.storePathType, dispatch])
+
+  const handleGetFeatureVectors = useCallback(() => {
+    getFeatureVectors(dispatch, dataInputState.project, setDataInputState)
+  }, [dataInputState.project, dispatch])
+
+  const handleGetArtifact = useCallback(() => {
+    getArtifact(dispatch, dataInputState.project, dataInputState.projectItem, setDataInputState)
+  }, [dataInputState.project, dataInputState.projectItem, dispatch])
+
+  const handleGetFeatureVector = useCallback(() => {
+    getFeatureVector(
+      dispatch,
+      dataInputState.project,
+      dataInputState.projectItem,
+      setDataInputState
+    )
+  }, [dataInputState.project, dataInputState.projectItem, dispatch])
+
   useEffect(() => {
     if (dataInputState.inputStorePathTypeEntered && dataInputState.projects.length === 0) {
-      dispatch(projectAction.fetchProjectsNames()).then(result => {
-        setDataInputState(prev => ({
-          ...prev,
-          projects: generateProjectsList(result, params.projectName)
-        }))
-      })
+      handleGetProjectsNames()
     }
   }, [
     dataInputState.inputStorePathTypeEntered,
     dataInputState.projects.length,
     dispatch,
-    params.projectName,
-    setDataInputState
+    handleGetProjectsNames
   ])
 
   useEffect(() => {
@@ -152,50 +164,12 @@ const TargetPath = ({
         dataInputState.storePathType !== 'feature-vectors' &&
         dataInputState.artifacts.length === 0
       ) {
-        dispatch(
-          fetchArtifacts({
-            project: dataInputState.project,
-            filters: null,
-            config: {
-              params: {
-                category:
-                  dataInputState.storePathType === 'artifacts'
-                    ? ARTIFACT_OTHER_TYPE
-                    : dataInputState.storePathType === 'datasets'
-                    ? DATASET_TYPE
-                    : MODEL_TYPE
-              }
-            }
-          })
-        )
-          .unwrap()
-          .then(artifacts => {
-            setDataInputState(prev => ({
-              ...prev,
-              artifacts: generateArtifactsList(artifacts)
-            }))
-          })
+        handleGetArtifacts()
       } else if (
         dataInputState.storePathType === 'feature-vectors' &&
         dataInputState.featureVectors.length === 0
       ) {
-        dispatch(
-          featureStoreActions.fetchFeatureVectors(dataInputState.project, {}, {}, true)
-        ).then(featureVectors => {
-          const featureVectorsList = uniqBy(featureVectors, 'metadata.name')
-            .map(featureVector => ({
-              label: featureVector.metadata.name,
-              id: featureVector.metadata.name
-            }))
-            .sort((prevFeatureVector, nextFeatureVector) =>
-              prevFeatureVector.id.localeCompare(nextFeatureVector.id)
-            )
-
-          setDataInputState(prev => ({
-            ...prev,
-            featureVectors: featureVectorsList
-          }))
-        })
+        handleGetFeatureVectors()
       }
     }
   }, [
@@ -204,52 +178,26 @@ const TargetPath = ({
     dataInputState.inputProjectPathEntered,
     dataInputState.project,
     dataInputState.storePathType,
-    dispatch,
-    setDataInputState
+    handleGetArtifacts,
+    handleGetFeatureVectors
   ])
 
   useEffect(() => {
     const storePathType = dataInputState.storePathType
-    const projectName = dataInputState.project
-    const projectItem = dataInputState.projectItem
 
-    if (dataInputState.inputProjectItemPathEntered && storePathType && projectName && projectItem) {
+    if (
+      dataInputState.inputProjectItemPathEntered &&
+      storePathType &&
+      dataInputState.project &&
+      dataInputState.projectItem
+    ) {
       if (storePathType !== 'feature-vectors' && dataInputState.artifactsReferences.length === 0) {
-        dispatch(fetchArtifact({ project: projectName, artifact: projectItem }))
-          .unwrap()
-          .then(artifacts => {
-            if (artifacts.length > 0 && artifacts[0].data) {
-              setDataInputState(prev => ({
-                ...prev,
-                artifactsReferences: generateArtifactsReferencesList(artifacts[0].data)
-              }))
-            }
-          })
+        handleGetArtifact()
       } else if (
         storePathType === 'feature-vectors' &&
         dataInputState.featureVectorsReferences.length === 0
       ) {
-        dispatch(featureStoreActions.fetchFeatureVector(projectName, projectItem)).then(
-          featureVectors => {
-            const featureVectorsReferencesList = featureVectors
-              .map(featureVector => {
-                let featureVectorReference = getFeatureReference(featureVector.metadata)
-
-                return {
-                  label: featureVectorReference,
-                  id: featureVectorReference,
-                  customDelimiter: featureVectorReference[0]
-                }
-              })
-              .filter(featureVector => featureVector.label !== '')
-              .sort((prevRef, nextRef) => prevRef.id.localeCompare(nextRef.id))
-
-            setDataInputState(prev => ({
-              ...prev,
-              featureVectorsReferences: featureVectorsReferencesList
-            }))
-          }
-        )
+        handleGetFeatureVector()
       }
     }
   }, [
@@ -259,8 +207,8 @@ const TargetPath = ({
     dataInputState.project,
     dataInputState.projectItem,
     dataInputState.storePathType,
-    dispatch,
-    setDataInputState
+    handleGetArtifact,
+    handleGetFeatureVector
   ])
 
   return (

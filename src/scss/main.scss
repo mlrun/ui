@@ -199,12 +199,15 @@ main {
       min-height: 50px;
       background-color: inherit;
 
+      &:not(.parent-row_expanded) {
+        border-bottom: $tableRowBorder;
+      }
+
       &:not(.parent-row_expanded) > * {
         position: relative;
         display: inline-flex;
         flex: 1;
         align-items: center;
-        border-bottom: $tableRowBorder;
 
         @include tableDet(8px, 5px, 8px, 10px);
 
@@ -499,6 +502,10 @@ main {
 [class^='state-fail'],
 [class^='state-failed'] {
   @include statusState($burntSienna);
+}
+
+[class^='state-aborting'] {
+  @include statusState($burntSiennaTwo);
 }
 
 [class^='state-omitted'] {
@@ -826,11 +833,6 @@ a {
 ::after,
 ::before {
   box-sizing: border-box;
-}
-
-* {
-  scrollbar-color: rgba($black, 0.25) rgba($black, 0.1);
-  scrollbar-width: thin;
 }
 
 ::-webkit-scrollbar {

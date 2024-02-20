@@ -17,8 +17,9 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import React, { useState, useRef, useEffect, useCallback, useLayoutEffect, useReducer } from 'react'
+import React, { useState, useRef, useEffect, useLayoutEffect, useCallback, useReducer } from 'react'
 import PropTypes from 'prop-types'
+import { throttle } from 'lodash'
 
 import DatePickerView from './DatePickerView'
 import { DATE_FILTER_ANY_TIME } from '../../constants'
@@ -62,12 +63,12 @@ const DatePicker = ({
   const [isDatePickerOptionsOpened, setIsDatePickerOptionsOpened] = useState(false)
   const [isRange] = useState(type.includes('range'))
   const [isTime] = useState(type.includes('time'))
-  const [isTopPosition, setIsTopPosition] = useState(false)
   const [isValueEmpty, setIsValueEmpty] = useState(true)
   const [valueDatePickerInput, setValueDatePickerInput] = useState(
     formatDate(isRange, isTime, splitCharacter, date, dateTo)
   )
   const [isInvalid, setIsInvalid] = useState(false)
+  const [position, setPosition] = useState('bottom-right')
 
   const datePickerRef = useRef()
   const datePickerViewRef = useRef()
@@ -82,7 +83,11 @@ const DatePicker = ({
 
   const handleCloseDatePickerOutside = useCallback(
     event => {
-      if (datePickerRef.current && !datePickerRef.current.contains(event.target)) {
+      if (
+        !event.target.closest('.date-picker__pop-up-wrapper') &&
+        datePickerViewRef.current &&
+        !datePickerViewRef.current.contains(event.target)
+      ) {
         if (isDatePickerOptionsOpened) {
           setIsDatePickerOptionsOpened(false)
         } else if (isDatePickerOpened) {
@@ -103,7 +108,7 @@ const DatePicker = ({
       }
     },
     [
-      datePickerRef,
+      datePickerViewRef,
       datePickerState.configFrom.date,
       datePickerState.configTo.date,
       isDatePickerOpened,
@@ -125,16 +130,40 @@ const DatePicker = ({
     return inputValue.length === 0
   }, [])
 
-  useLayoutEffect(() => {
-    if (isDatePickerOpened) {
-      const { top, bottom } = datePickerViewRef.current.getBoundingClientRect()
-      if (bottom > window.innerHeight && top > datePickerViewRef.current.offsetHeight) {
-        setIsTopPosition(true)
+  const calcPosition = useCallback(() => {
+    if (
+      datePickerRef?.current &&
+      datePickerViewRef?.current &&
+      (isDatePickerOpened || isDatePickerOptionsOpened)
+    ) {
+      const containerRect = datePickerRef.current.getBoundingClientRect()
+      const popUpRect = datePickerViewRef.current.getBoundingClientRect()
+      const margin = 15
+
+      if (containerRect && popUpRect) {
+        containerRect.left + popUpRect.width + margin > window.innerWidth &&
+        containerRect.right - popUpRect.width > margin
+          ? setPosition('bottom-left')
+          : setPosition('bottom-right')
       }
-    } else {
-      setIsTopPosition(false)
     }
-  }, [isDatePickerOpened])
+  }, [isDatePickerOpened, isDatePickerOptionsOpened])
+
+  useLayoutEffect(() => {
+    calcPosition()
+  }, [calcPosition])
+
+  useEffect(() => {
+    if (isDatePickerOpened || isDatePickerOptionsOpened) {
+      const throttledCalcPosition = throttle(calcPosition, 100, { trailing: true, leading: true })
+
+      window.addEventListener('resize', throttledCalcPosition)
+
+      return () => {
+        window.removeEventListener('resize', throttledCalcPosition)
+      }
+    }
+  }, [calcPosition, isDatePickerOpened, isDatePickerOptionsOpened])
 
   useEffect(() => {
     datePickerDispatch({
@@ -193,8 +222,12 @@ const DatePicker = ({
 
   useEffect(() => {
     if (isDatePickerOpened || isDatePickerOptionsOpened) {
-      window.addEventListener('click', handleCloseDatePickerOutside)
-      return () => window.removeEventListener('click', handleCloseDatePickerOutside)
+      window.addEventListener('click', handleCloseDatePickerOutside, true)
+      window.addEventListener('scroll', handleCloseDatePickerOutside, true)
+      return () => {
+        window.removeEventListener('click', handleCloseDatePickerOutside, true)
+        window.removeEventListener('scroll', handleCloseDatePickerOutside, true)
+      }
     }
   }, [handleCloseDatePickerOutside, isDatePickerOpened, isDatePickerOptionsOpened])
 
@@ -397,7 +430,6 @@ const DatePicker = ({
       isRangeDateValid={isRangeDateValid}
       isSameDate={isSameDate}
       isTime={isTime}
-      isTopPosition={isTopPosition}
       isValueEmpty={isValueEmpty}
       label={label}
       months={months}
@@ -408,6 +440,7 @@ const DatePicker = ({
       onPreviousMonth={onChangePreviousMonth}
       onSelectOption={onSelectOption}
       onTimeChange={onTimeChange}
+      position={position}
       ref={{ datePickerRef, datePickerViewRef }}
       required={required}
       requiredText={requiredText}

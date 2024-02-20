@@ -19,7 +19,7 @@ such restriction.
 */
 import React, { useCallback, useEffect, useMemo, useState, useRef } from 'react'
 import { connect, useDispatch, useSelector } from 'react-redux'
-import { isEmpty, isNil } from 'lodash'
+import { chain, isEmpty } from 'lodash'
 import { useLocation, useNavigate, useParams } from 'react-router-dom'
 
 import AddArtifactTagPopUp from '../../../elements/AddArtifactTagPopUp/AddArtifactTagPopUp'
@@ -29,6 +29,8 @@ import RegisterModelModal from '../../../elements/RegisterModelModal/RegisterMod
 import JobWizard from '../../JobWizard/JobWizard'
 
 import {
+  fetchArtifactsFunctions,
+  fetchArtifactTags,
   fetchModel,
   fetchModels,
   removeModel,
@@ -42,7 +44,10 @@ import {
   FILTER_MENU_MODAL,
   GROUP_BY_NONE,
   MODELS_FILTERS,
-  REQUEST_CANCELED
+  REQUEST_CANCELED,
+  MODEL_TYPE,
+  SHOW_ITERATIONS,
+  FUNCTION_TYPE_SERVING
 } from '../../../constants'
 import {
   checkForSelectedModel,
@@ -51,7 +56,8 @@ import {
   generateActionsMenu,
   generatePageData,
   getFeatureVectorData,
-  handleApplyDetailsChanges
+  handleApplyDetailsChanges,
+  handleDeployModelFailure
 } from './models.util'
 import detailsActions from '../../../actions/details'
 import { createModelsRowData } from '../../../utils/createArtifactsContent'
@@ -59,7 +65,7 @@ import { getArtifactIdentifier } from '../../../utils/getUniqueIdentifier'
 import { isDetailsTabExists } from '../../../utils/isDetailsTabExists'
 import { openPopUp } from 'igz-controls/utils/common.util'
 import { parseChipsData } from '../../../utils/convertChipsData'
-import { setFilters } from '../../../reducers/filtersReducer'
+import { getFilterTagOptions, setFilters } from '../../../reducers/filtersReducer'
 import { setNotification } from '../../../reducers/notificationReducer'
 import { useGroupContent } from '../../../hooks/groupContent.hook'
 import { useModelsPage } from '../ModelsPage.context'
@@ -67,17 +73,22 @@ import { useSortTable } from '../../../hooks/useSortTable.hook'
 import { useGetTagOptions } from '../../../hooks/useGetTagOptions.hook'
 import { getViewMode } from '../../../utils/helper'
 import { useMode } from '../../../hooks/mode.hook'
-import { setArtifactTags } from '../../../utils/artifacts.util'
 
 const Models = ({ fetchModelFeatureVector }) => {
   const [models, setModels] = useState([])
-  const [allModels, setAllModels] = useState([])
   const [largeRequestErrorMessage, setLargeRequestErrorMessage] = useState('')
   const [selectedModel, setSelectedModel] = useState({})
   const [selectedRowData, setSelectedRowData] = useState({})
-  const [metricsCounter, setMetricsCounter] = useState(0)
-  const [dataIsLoaded, setDataIsLoaded] = useState(false)
-  const [urlTagOption] = useGetTagOptions(null, filters, null, MODELS_FILTERS)
+  //temporarily commented till ML-5606 will be done
+  // const [metricsCounter, setMetricsCounter] = useState(0)
+  // const [dataIsLoaded, setDataIsLoaded] = useState(false)
+  // const [tableHeaders, setTableHeaders] = useState([])
+  const [urlTagOption, tagAbortControllerRef] = useGetTagOptions(
+    fetchArtifactTags,
+    filters,
+    MODEL_TYPE,
+    MODELS_FILTERS
+  )
   const artifactsStore = useSelector(store => store.artifactsStore)
   const detailsStore = useSelector(store => store.detailsStore)
   const filtersStore = useSelector(store => store.filtersStore)
@@ -127,30 +138,67 @@ const Models = ({ fetchModelFeatureVector }) => {
         })
       )
         .unwrap()
-        .then(modelsResponse => {
-          if (modelsResponse) {
-            setArtifactTags(modelsResponse, setModels, setAllModels, filters, dispatch, MODELS_TAB)
-
-            return modelsResponse
+        .then(result => {
+          if (result) {
+            setModels(result)
           }
+
+          return result
         })
     },
     [dispatch, setModels, params.projectName]
   )
 
-  const handleDeployModel = useCallback(model => {
-    openPopUp(DeployModelPopUp, { model })
-  }, [])
+  const handleDeployModel = useCallback(
+    model => {
+      dispatch(fetchArtifactsFunctions({ project: model.project, filters: {} }))
+        .unwrap()
+        .then(functions => {
+          const functionOptions = chain(functions)
+            .filter(func => func.type === FUNCTION_TYPE_SERVING && func.graph?.kind === 'router')
+            .uniqBy('name')
+            .map(func => ({ label: func.name, id: func.name }))
+            .value()
+
+          if (functionOptions.length > 0) {
+            openPopUp(DeployModelPopUp, {
+              model,
+              functionList: functions,
+              functionOptionList: functionOptions
+            })
+          } else {
+            handleDeployModelFailure()
+          }
+        })
+    },
+    [dispatch]
+  )
 
   const handleRefresh = useCallback(
     filters => {
+      dispatch(
+        getFilterTagOptions({
+          dispatch,
+          fetchTags: fetchArtifactTags,
+          project: params.projectName,
+          category: MODEL_TYPE,
+          config: {
+            ui: {
+              controller: tagAbortControllerRef.current,
+              setLargeRequestErrorMessage
+            }
+          }
+        })
+      )
       setSelectedRowData({})
       setModels([])
-      setAllModels([])
+      //temporarily commented till ML-5606 will be done
+      // setTableHeaders([])
+      // setDataIsLoaded(false)
 
       return fetchData(filters)
     },
-    [fetchData, setAllModels, setModels]
+    [dispatch, fetchData, params.projectName, tagAbortControllerRef]
   )
 
   const handleAddTag = useCallback(
@@ -221,18 +269,12 @@ const Models = ({ fetchModelFeatureVector }) => {
         modelsFilters.iter,
         modelsFilters.tag,
         params.projectName,
-        frontendSpec,
-        metricsCounter
+        frontendSpec
+        //temporarily commented till ML-5606 will be done
+        // metricsCounter
       )
     },
-    [
-      dispatch,
-      modelsFilters.iter,
-      modelsFilters.tag,
-      params.projectName,
-      frontendSpec,
-      metricsCounter
-    ]
+    [dispatch, modelsFilters.iter, modelsFilters.tag, params.projectName, frontendSpec]
   )
 
   const { latestItems, handleExpandRow } = useGroupContent(
@@ -248,18 +290,12 @@ const Models = ({ fetchModelFeatureVector }) => {
   const tableContent = useMemo(() => {
     return filtersStore.groupBy === GROUP_BY_NAME
       ? latestItems.map(contentItem => {
-          return createModelsRowData(
-            contentItem,
-            params.projectName,
-            frontendSpec,
-            metricsCounter,
-            true
-          )
+          return createModelsRowData(contentItem, params.projectName, frontendSpec, null, true)
         })
       : models.map(contentItem =>
-          createModelsRowData(contentItem, params.projectName, frontendSpec, metricsCounter)
+          createModelsRowData(contentItem, params.projectName, frontendSpec)
         )
-  }, [filtersStore.groupBy, frontendSpec, latestItems, metricsCounter, models, params.projectName])
+  }, [filtersStore.groupBy, frontendSpec, latestItems, models, params.projectName])
 
   const tableHeaders = useMemo(() => tableContent[0]?.content ?? [], [tableContent])
 
@@ -287,7 +323,6 @@ const Models = ({ fetchModelFeatureVector }) => {
     if ('tag' in changes.data) {
       setSelectedRowData({})
       setModels([])
-      setAllModels([])
 
       if (changes.data.tag.currentFieldValue) {
         navigate(
@@ -309,20 +344,28 @@ const Models = ({ fetchModelFeatureVector }) => {
   }, [navigate, location, pageData.details.menu, params.name, params.tag, params.tab])
 
   useEffect(() => {
-    if (isNil(filtersStore.tagOptions) && urlTagOption) {
-      fetchData({ ...modelsFilters, tag: urlTagOption })
+    if (urlTagOption) {
+      fetchData({
+        tag: urlTagOption,
+        iter: SHOW_ITERATIONS
+      })
     }
-  }, [fetchData, filtersStore, modelsFilters, urlTagOption])
+  }, [fetchData, urlTagOption])
 
   useEffect(() => {
+    const tagAbortControllerCurrent = tagAbortControllerRef.current
+
     return () => {
       setModels([])
-      setAllModels([])
       dispatch(removeModels())
       setSelectedModel({})
+      //temporarily commented till ML-5606 will be done
+      // setTableHeaders([])
+      // setDataIsLoaded(false)
       abortControllerRef.current.abort(REQUEST_CANCELED)
+      tagAbortControllerCurrent.abort(REQUEST_CANCELED)
     }
-  }, [dispatch, setModels, setAllModels])
+  }, [dispatch, params.projectName, setModels, tagAbortControllerRef])
 
   useEffect(() => {
     dispatch(setFilters({ groupBy: GROUP_BY_NONE }))
@@ -332,7 +375,7 @@ const Models = ({ fetchModelFeatureVector }) => {
     checkForSelectedModel(
       params.name,
       selectedRowData,
-      allModels,
+      models,
       params.tag,
       params.iter,
       params.uid,
@@ -341,7 +384,7 @@ const Models = ({ fetchModelFeatureVector }) => {
       setSelectedModel
     )
   }, [
-    allModels,
+    models,
     navigate,
     params.iter,
     params.name,
@@ -368,20 +411,41 @@ const Models = ({ fetchModelFeatureVector }) => {
     selectedModel.feature_vector
   ])
 
-  useEffect(() => {
-    if (models.length > 0 && !dataIsLoaded) {
-      let maxMetricsCount = 0
+  //temporarily commented till ML-5606 will be done
+  // useEffect(() => {
+  //   if (tableContent?.[0]?.content?.length > 0 && tableHeaders.length === 0) {
+  //     setTableHeaders(tableContent?.[0]?.content)
+  //   }
+  // }, [tableContent, tableHeaders.length])
 
-      models.forEach(model => {
-        if (model.metrics && Object.keys(model.metrics).length > maxMetricsCount) {
-          maxMetricsCount = Object.keys(model.metrics).length
-        }
-      })
+  // useEffect(() => {
+  //   if (models.length > 0 && tableHeaders.length > 0 && !dataIsLoaded) {
+  //     const newTableHeaders = []
+  //     const maxMetricsModel = models.reduce((modelWithMaxMetrics, model) => {
+  //       if (
+  //         model.metrics &&
+  //         Object.keys(model.metrics).length > Object.keys(modelWithMaxMetrics.metrics || {}).length
+  //       ) {
+  //         return model
+  //       }
+  //
+  //       return modelWithMaxMetrics
+  //     }, {})
+  //     Object.keys(maxMetricsModel.metrics ?? {}).forEach(metricKey => {
+  //       newTableHeaders.push({
+  //         headerId: metricKey,
+  //         headerLabel: metricKey,
+  //         className: 'table-cell-1'
+  //       })
+  //     })
+  //
+  //     setMetricsCounter(Object.keys(maxMetricsModel.metrics ?? {}).length)
+  //     setTableHeaders(state => [...state, ...newTableHeaders])
+  //     setDataIsLoaded(true)
+  //   }
+  // }, [dataIsLoaded, models, tableHeaders])
 
-      setMetricsCounter(maxMetricsCount)
-      setDataIsLoaded(true)
-    }
-  }, [dataIsLoaded, models])
+  useEffect(() => setModels([]), [filtersStore.tag])
 
   const handleRegisterModel = useCallback(() => {
     openPopUp(RegisterModelModal, {

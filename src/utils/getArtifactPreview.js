@@ -104,13 +104,14 @@ export const generateExtraDataContent = (extraData, showArtifactPreview) => {
         headerLabel: 'Name',
         template: (
           <Tooltip template={<TextTooltipTemplate text={extraDataItem.header} />}>
-            <span className="link" onClick={() => showArtifactPreview(index)}>
+            <span className="link" onClick={() => showArtifactPreview(extraDataItem.id)}>
               {extraDataItem.header}
             </span>
           </Tooltip>
         ),
         value: extraDataItem.header,
-        className: 'table-cell-3'
+        className: 'table-cell-3',
+        extraDataItem
       },
       {
         headerId: 'path',
@@ -187,17 +188,17 @@ export const fetchArtifactPreview = (
   })
 }
 
-const handleSetArtifactPreviewObject = (previewContent, artifactIndex, setPreview) => {
+const handleSetArtifactPreviewObject = (previewContent, artifactId, setPreview) => {
   setPreview(state => {
-    if (state[artifactIndex]) {
+    if (state[artifactId]) {
       return {
         ...state,
-        [artifactIndex]: [...state[artifactIndex], previewContent]
+        [artifactId]: [...state[artifactId], previewContent]
       }
     } else {
       return {
         ...state,
-        [artifactIndex]: Array.isArray(previewContent) ? previewContent : [previewContent]
+        [artifactId]: Array.isArray(previewContent) ? previewContent : [previewContent]
       }
     }
   })
@@ -210,24 +211,24 @@ export const getArtifactPreview = (
   setNoData,
   setPreview,
   previewIsObject = false,
-  artifactIndex = null
+  artifactId = null
 ) => {
   if (artifact.schema) {
     setArtifactPreviewFromSchema(artifact, noData, setNoData, previewContent =>
       previewIsObject
-        ? handleSetArtifactPreviewObject(previewContent, artifactIndex, setPreview)
+        ? handleSetArtifactPreviewObject(previewContent, artifactId, setPreview)
         : setPreview(previewContent)
     )
   } else if (artifact.target_path) {
     fetchArtifactPreviewFromTargetPath(projectName, artifact, noData, setNoData, previewContent =>
       previewIsObject
-        ? handleSetArtifactPreviewObject(previewContent, artifactIndex, setPreview)
+        ? handleSetArtifactPreviewObject(previewContent, artifactId, setPreview)
         : setPreview(previewContent)
     )
   } else if (artifact.preview?.length > 0) {
     setArtifactPreviewFromPreviewData(artifact, noData, setNoData, previewContent =>
       previewIsObject
-        ? handleSetArtifactPreviewObject(previewContent, artifactIndex, setPreview)
+        ? handleSetArtifactPreviewObject(previewContent, artifactId, setPreview)
         : setPreview(previewContent)
     )
   } else {
