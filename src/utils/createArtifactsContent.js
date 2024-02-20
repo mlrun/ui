@@ -483,7 +483,8 @@ export const createModelEndpointsRowData = (artifact, project) => {
         headerLabel: 'Drift',
         value: driftStatusIcons[artifact.status?.drift_status]?.value,
         className: 'table-cell-small',
-        tooltip: driftStatusIcons[artifact.status?.drift_status]?.tooltip
+        tooltip: driftStatusIcons[artifact.status?.drift_status]?.tooltip,
+        driftStatus: artifact.status?.drift_status.toLowerCase().split('_').join('-') || ''
       }
     ]
   }
