@@ -75,7 +75,8 @@ export const createJobsMonitorTabContent = (jobs, jobName, isStagingMode) => {
           className: 'table-cell-name',
           type: type === JOB_KIND_WORKFLOW && !isStagingMode ? 'hidden' : 'link',
           getLink,
-          showStatus: true
+          showStatus: true,
+          showUidRow: true
         },
         {
           headerId: 'type',
@@ -227,7 +228,8 @@ export const createJobsScheduleTabContent = jobs => {
           id: `lastRun.${identifierUnique}`,
           value: formatDatetime(job.startTime),
           className: 'table-cell-1',
-          getLink: lastRunLink
+          getLink: lastRunLink,
+          type: 'link'
         },
         {
           headerId: 'createdtime',
@@ -363,7 +365,8 @@ export const createJobsWorkflowContent = (
               MONITOR_WORKFLOWS_TAB
             )
           },
-          showStatus: true
+          showStatus: true,
+          showUidRow: true
         },
         {
           headerId: 'kind',
