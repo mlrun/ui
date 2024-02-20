@@ -63,7 +63,7 @@ const TableTypeCell = ({ className, data }) => {
   const cellClassNames = classnames('table-body__cell', data.className, data.bodyCellClassName)
 
   return (
-    <td className={cellClassNames}>
+    <td className={className || cellClassNames}>
       <Tooltip
         className="table-body__cell_type"
         template={

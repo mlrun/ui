@@ -69,23 +69,29 @@ const ArtifactsTableRow = ({
               <tbody className="table-body">
                 <tr className="table-row">
                   {rowItem.content.map((data, index) => {
-                    return index < mainRowItemsCount ? (
-                      <TableCell
-                        data={data}
-                        firstCell={index === 0}
-                        handleExpandRow={handleExpandRow}
-                        item={rowItem}
-                        key={data.id}
-                        link={
-                          data.rowExpanded?.getLink
-                            ? data.rowExpanded.getLink(params.tab ?? DETAILS_OVERVIEW_TAB)
-                            : ''
-                        }
-                        selectItem={handleSelectItem}
-                        selectedItem={selectedItem}
-                        showExpandButton
-                      />
-                    ) : null
+                     const cellClassName = classnames(
+                       index >= mainRowItemsCount && 'table-body__cell_hidden'
+                     )
+                     return (
+                       !data.hidden && (
+                         <TableCell
+                           className={cellClassName}
+                           data={data}
+                           firstCell={index === 0}
+                           handleExpandRow={handleExpandRow}
+                           item={rowItem}
+                           key={data.id}
+                           link={
+                             data.rowExpanded?.getLink
+                               ? data.rowExpanded.getLink(params.tab ?? DETAILS_OVERVIEW_TAB)
+                               : ''
+                           }
+                           selectItem={handleSelectItem}
+                           selectedItem={selectedItem}
+                           showExpandButton
+                         />
+                       )
+                     )
                   })}
                 </tr>
               </tbody>
