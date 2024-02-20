@@ -52,6 +52,7 @@ const TableProducerCell = ({ bodyCellClassName, className, producer }) => {
                     owner={producer.owner ? producer.owner : ''}
                   />
                 }
+                textShow
               >
                 {producer.name}
               </Tooltip>

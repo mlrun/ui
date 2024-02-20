@@ -17,7 +17,7 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import React, { useState, useRef, useEffect, useCallback, useLayoutEffect, useReducer } from 'react'
+import React, { useState, useRef, useEffect, useLayoutEffect, useCallback, useReducer } from 'react'
 import PropTypes from 'prop-types'
 import { throttle } from 'lodash'
 
@@ -68,6 +68,7 @@ const DatePicker = ({
     formatDate(isRange, isTime, splitCharacter, date, dateTo)
   )
   const [isInvalid, setIsInvalid] = useState(false)
+  const [position, setPosition] = useState('bottom-right')
 
   const datePickerRef = useRef()
   const datePickerViewRef = useRef()
@@ -82,7 +83,11 @@ const DatePicker = ({
 
   const handleCloseDatePickerOutside = useCallback(
     event => {
-      if (datePickerRef.current && !datePickerRef.current.contains(event.target)) {
+      if (
+        !event.target.closest('.date-picker__pop-up-wrapper') &&
+        datePickerViewRef.current &&
+        !datePickerViewRef.current.contains(event.target)
+      ) {
         if (isDatePickerOptionsOpened) {
           setIsDatePickerOptionsOpened(false)
         } else if (isDatePickerOpened) {
@@ -103,7 +108,7 @@ const DatePicker = ({
       }
     },
     [
-      datePickerRef,
+      datePickerViewRef,
       datePickerState.configFrom.date,
       datePickerState.configTo.date,
       isDatePickerOpened,
@@ -133,33 +138,13 @@ const DatePicker = ({
     ) {
       const containerRect = datePickerRef.current.getBoundingClientRect()
       const popUpRect = datePickerViewRef.current.getBoundingClientRect()
-      const padding = 5
+      const margin = 15
 
       if (containerRect && popUpRect) {
-        let topPosition
-
-        if (
-          popUpRect.height + containerRect.bottom > window.innerHeight &&
-          containerRect.top - popUpRect.height > padding
-        ) {
-          topPosition = -padding - popUpRect.height
-        } else {
-          topPosition =
-            popUpRect.height + containerRect.bottom > window.innerHeight
-              ? containerRect.height +
-                (window.innerHeight - (popUpRect.height + containerRect.bottom)) -
-                padding
-              : containerRect.height + padding
-        }
-        datePickerViewRef.current.style.top = `${topPosition}px`
-
-        if (popUpRect.width + containerRect.left > window.innerWidth) {
-          datePickerViewRef.current.style.left = `${
-            window.innerWidth - popUpRect.width - containerRect.left - padding
-          }px`
-        } else {
-          datePickerViewRef.current.style.left = '0px'
-        }
+        containerRect.left + popUpRect.width + margin > window.innerWidth &&
+        containerRect.right - popUpRect.width > margin
+          ? setPosition('bottom-left')
+          : setPosition('bottom-right')
       }
     }
   }, [isDatePickerOpened, isDatePickerOptionsOpened])
@@ -238,7 +223,11 @@ const DatePicker = ({
   useEffect(() => {
     if (isDatePickerOpened || isDatePickerOptionsOpened) {
       window.addEventListener('click', handleCloseDatePickerOutside, true)
-      return () => window.removeEventListener('click', handleCloseDatePickerOutside)
+      window.addEventListener('scroll', handleCloseDatePickerOutside, true)
+      return () => {
+        window.removeEventListener('click', handleCloseDatePickerOutside, true)
+        window.removeEventListener('scroll', handleCloseDatePickerOutside, true)
+      }
     }
   }, [handleCloseDatePickerOutside, isDatePickerOpened, isDatePickerOptionsOpened])
 
@@ -451,6 +440,7 @@ const DatePicker = ({
       onPreviousMonth={onChangePreviousMonth}
       onSelectOption={onSelectOption}
       onTimeChange={onTimeChange}
+      position={position}
       ref={{ datePickerRef, datePickerViewRef }}
       required={required}
       requiredText={requiredText}
