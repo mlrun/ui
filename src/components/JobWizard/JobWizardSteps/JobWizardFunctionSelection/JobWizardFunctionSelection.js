@@ -88,6 +88,7 @@ const JobWizardFunctionSelection = ({
   const [filterByName, setFilterByName] = useState('')
   const [filterMatches, setFilterMatches] = useState([])
   const [projects, setProjects] = useState(generateProjectsList(projectNames, params.projectName))
+  const [autoSwitchedTab, setAutoSwitchedTab] = useState(true)
   const selectedActiveTab = useRef(null)
   const functionSelectionRef = useRef(null)
 
@@ -359,14 +360,20 @@ const JobWizardFunctionSelection = ({
   }
 
   useEffect(() => {
-    const isTabActive = selectedActiveTab.current && selectedActiveTab.current === activeTab
-
-    if (stepIsActive && isTabActive) {
-      scrollToElement(functionSelectionRef, '.selected')
-    } else if (!stepIsActive && !isTabActive) {
-      setActiveTab(selectedActiveTab.current)
+    if (!stepIsActive) {
+      setAutoSwitchedTab(true)
+      return
     }
-  }, [stepIsActive, activeTab, setActiveTab, selectedActiveTab])
+    if (autoSwitchedTab) {
+      if (selectedActiveTab.current && selectedActiveTab.current !== activeTab) {
+        setActiveTab(selectedActiveTab.current)
+      }
+      setAutoSwitchedTab(false)
+    }
+    if (selectedActiveTab.current === activeTab) {
+      scrollToElement(functionSelectionRef, '.selected')
+    }
+  }, [stepIsActive, autoSwitchedTab, activeTab, setActiveTab, selectedActiveTab])
 
   return (
     <div ref={functionSelectionRef} className="job-wizard__function-selection">
