@@ -73,9 +73,11 @@ export const generateArtifactsTabContent = (artifacts, params, iteration, showAr
     const artifactScreenLinks = {
       model: `/projects/${params.projectName}/models/${MODELS_TAB}/${
         artifact.db_key || artifact.key
-      }/${artifact.tag ?? TAG_FILTER_LATEST}${iteration ? `/${iteration}` : ''}/overview`,
+      }/${artifact.tag ? artifact.tag : artifact.tree ?? TAG_FILTER_LATEST}${
+        iteration ? `/${iteration}` : ''
+      }/overview`,
       dataset: `/projects/${params.projectName}/${DATASETS}/${artifact.db_key || artifact.key}/${
-        artifact.tag ?? TAG_FILTER_LATEST
+        artifact.tag ? artifact.tag : artifact.tree ?? TAG_FILTER_LATEST
       }${iteration ? `/${iteration}` : ''}/overview`
     }
 
@@ -124,7 +126,7 @@ export const generateArtifactsTabContent = (artifacts, params, iteration, showAr
                 to={
                   artifactScreenLinks[artifact.kind] ??
                   `/projects/${params.projectName}/files/${artifact.db_key || artifact.key}/${
-                    artifact.tag ?? TAG_FILTER_LATEST
+                    artifact.tag ? artifact.tag : artifact.tree ?? TAG_FILTER_LATEST
                   }${iteration ? `/${iteration}` : ''}/overview`
                 }
               >
