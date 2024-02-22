@@ -567,7 +567,7 @@ const MonitorWorkflows = ({
 
           getWorkflows(filters)
           dispatch(setFilters(filters))
-        } else {
+        } else if (workflowsStore.workflows.data.length === 0) {
           const pastWeekOption = datePickerOptions.find(
             option => option.id === PAST_WEEK_DATE_OPTION
           )
@@ -586,6 +586,9 @@ const MonitorWorkflows = ({
 
           dispatch(setFilters({ ...filters }))
           getWorkflows({ ...filtersStore, ...filters })
+        } else {
+          getWorkflows({ ...filtersStore, groupBy: GROUP_BY_WORKFLOW })
+          dispatch(setFilters({ groupBy: GROUP_BY_WORKFLOW }))
         }
 
         setWorkflowsAreLoaded(true)
@@ -597,7 +600,8 @@ const MonitorWorkflows = ({
     params.workflowId,
     params.projectName,
     filtersStore,
-    workflowsAreLoaded
+    workflowsAreLoaded,
+    workflowsStore.workflows.data.length
   ])
 
   useEffect(() => {
