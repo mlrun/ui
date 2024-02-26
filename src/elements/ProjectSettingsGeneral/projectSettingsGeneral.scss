@@ -27,16 +27,6 @@
     }
   }
 
-  &__labels {
-    @include fieldWrapperOld;
-
-    padding: 25px 16px 11px;
-
-    .chips-wrapper {
-      flex-wrap: wrap;
-    }
-  }
-
   &__params {
     padding-top: 0;
     padding-bottom: 0;
@@ -59,6 +49,20 @@
         display: inline-block;
         margin-right: 1rem;
       }
+    }
+  }
+
+  &__source {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    .source-url {
+      margin-right: 2rem;
+    }
+
+    .pull-at-runtime {
+      margin-top: 20px;
     }
   }
 
