@@ -99,7 +99,7 @@ const ProjectMonitorView = ({
               <div className="main-info__toolbar-banner">
                 <span>Counters use a caching mechanism, and are not auto-refreshed.</span>
                 <br />
-                <span>Refresh your browser page to update the counters.</span>
+                <span>Refresh your browser page to see the updated counters.</span>
               </div>
               <div className="main-info__toolbar-actions">
                 <Select
