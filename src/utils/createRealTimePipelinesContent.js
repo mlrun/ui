@@ -22,7 +22,7 @@ import { FUNCTIONS_PAGE, MODELS_PAGE, REAL_TIME_PIPELINES_TAB } from '../constan
 import { generateLinkToDetailsPanel } from './generateLinkToDetailsPanel'
 import { validateArguments } from './validateArguments'
 
-const createRealTimePiplelinesContent = (pipelines, projectName) =>
+const createRealTimePipelinesContent = (pipelines, projectName) =>
   pipelines.map(pipeline => {
     return {
       data: {
@@ -35,8 +35,8 @@ const createRealTimePiplelinesContent = (pipelines, projectName) =>
           headerLabel: 'Name',
           value: pipeline.name,
           className: 'table-cell-name',
-          getLink: hash => {
-            return `/projects/${projectName}/${MODELS_PAGE.toLowerCase()}/${REAL_TIME_PIPELINES_TAB}/pipeline/${hash}`
+          getLink: () => {
+            return `/projects/${projectName}/${MODELS_PAGE.toLowerCase()}/${REAL_TIME_PIPELINES_TAB}/pipeline/${pipeline.hash}`
           },
           showTag: true,
           showStatus: true,
@@ -81,4 +81,4 @@ const createRealTimePiplelinesContent = (pipelines, projectName) =>
     }
   })
 
-export default createRealTimePiplelinesContent
+export default createRealTimePipelinesContent
