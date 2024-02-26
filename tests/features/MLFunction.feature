@@ -4,8 +4,7 @@ Feature: ML Functions
 
     @MLF
     @passive
-    @FAILED_TODO
-    #TODO: New_Function_Button hidden from 1.6.0, running on demo mode
+    #TODO: ML-5137 - move create/edit 'function panel' to UI Demo mode
     Scenario: MLF005 - Check all mandatory components on ML Functions Page
         Given open url
         And wait load page
@@ -58,8 +57,9 @@ Feature: ML Functions
         And wait load page
         Then value in "name" column with "text" in "Functions_Table" on "ML_Functions" wizard should contains "test"
 
+    @MLF
     @passive
-    Scenario: Check all mandatory components in Item infopane on Overview tab table
+    Scenario: MLF007 - Check all mandatory components in Item infopane on Overview tab table
         Given open url
         And wait load page
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
@@ -77,8 +77,9 @@ Feature: ML Functions
         Then verify "Overview" tab is active in "Info_Pane_Tab_Selector" on "ML_Function_Info_Pane" wizard
         Then verify "Overview_Headers" on "ML_Function_Info_Pane" wizard should contains "ML_Function_Info_Pane"."Overview_Headers"
 
+    @MLF
     @passive
-    Scenario: Verify all mandatory components on Delete existing function
+    Scenario: MLF008 - Verify all mandatory components on Delete existing function
         Given open url
         And wait load page
         And click on row root with value "churn-project-admin" in "name" column in "Projects_Table" table on "Projects" wizard
@@ -96,8 +97,9 @@ Feature: ML Functions
         Then verify "Delete_Button" element visibility on "Common_Popup" wizard
         Then "Delete_Button" element on "Common_Popup" should contains "Delete" value
 
+    @MLF
     @passive
-    Scenario: Verify all mandatory components on Delete existing function in Item infopane
+    Scenario: MLF009 - Verify all mandatory components on Delete existing function in Item infopane
         Given open url
         And wait load page
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
@@ -117,10 +119,13 @@ Feature: ML Functions
         Then verify "Delete_Button" element visibility on "Common_Popup" wizard
         Then "Delete_Button" element on "Common_Popup" should contains "Delete" value
 
+    @MLF
     @passive
-    @inProgress
+    #TODO: ML-5137 - move create/edit 'function panel' to UI Demo mode
     Scenario: MLF003 - Check all mandatory components on Create ML Function Popup
         Given open url
+        And wait load page
+        And turn on demo mode
         And wait load page
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
@@ -144,9 +149,13 @@ Feature: ML Functions
         Then verify "Continue_Button" element visibility on "Create_ML_Function_Popup" wizard
         Then "Continue_Button" element on "Create_ML_Function_Popup" should contains "Continue" value
 
+    @MLF
     @passive
-    Scenario: Check all mandatory components in General Accordion on create New Function page
+    #TODO: ML-5137 - move create/edit 'function panel' to UI Demo mode
+    Scenario: MLF010 - Check all mandatory components in General Accordion on create New Function page
         Given open url
+        And wait load page
+        And turn on demo mode
         And wait load page
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
@@ -185,9 +194,13 @@ Feature: ML Functions
             |       label     |
             | key2\n:\nvalue2 |
 
+    @MLF
     @passive
-    Scenario: Check all mandatory components in Code Accordion on create New Function page
+    #TODO: ML-5137 - move create/edit 'function panel' to UI Demo mode
+    Scenario: MLF011 - Check all mandatory components in Code Accordion on create New Function page
         Given open url
+        And wait load page
+        And turn on demo mode
         And wait load page
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
@@ -226,11 +239,13 @@ Feature: ML Functions
         Then verify "New_Function_Base_Image_Input" element in "Code_Accordion" on "New_Function" wizard should display warning "Input_Hint"."Input_Field_Invalid"
         Then verify "New_Function_Base_Image_Input" element in "Code_Accordion" on "New_Function" wizard should display hint "Input_Hint"."Base_Image_Hint"
 
-    @FAILED_TODO
-    #TODO: CPU_Request_Number_Input - input units are changed, need to rewrite test
+    @MLF
     @passive
-    Scenario: Check all mandatory components in Resources Accordion on create New Function page
+    #TODO: ML-5137 - move create/edit 'function panel' to UI Demo mode
+    Scenario: MLF012 - Check all mandatory components in Resources Accordion on create New Function page
         Given open url
+        And wait load page
+        And turn on demo mode
         And wait load page
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
@@ -264,10 +279,9 @@ Feature: ML Functions
         Then select "GB" option in "Memory_Request_Dropdown" dropdown on "Resources_Accordion" on "New_Function" wizard
         Then verify "Memory_Limit_Number_Input" element in "Resources_Accordion" on "New_Function" wizard should display warning "Input_Hint"."Limit_Number_Warning"
         Then verify "Memory_Request_Number_Input" element in "Resources_Accordion" on "New_Function" wizard should display warning "Input_Hint"."Request_Number_Warning"
+        Then select "cpu" option in "CPU_Request_Dropdown" dropdown on "Resources_Accordion" on "New_Function" wizard
         Then increase value on 2 points in "CPU_Request_Number_Input" field with "cpu" on "Resources_Accordion" on "New_Function" wizard
         Then increase value on 1 points in "CPU_Limit_Number_Input" field with "cpu" on "Resources_Accordion" on "New_Function" wizard
-        Then verify "CPU_Request_Number_Input" element in "Resources_Accordion" on "New_Function" wizard should display warning "Input_Hint"."CPU_Request_Number_Warning"
-        Then verify "CPU_Limit_Number_Input" element in "Resources_Accordion" on "New_Function" wizard should display warning "Input_Hint"."CPU_Limit_Number_Warning"
         Then select "millicpu" option in "CPU_Limit_Dropdown" dropdown on "Resources_Accordion" on "New_Function" wizard
         Then select "millicpu" option in "CPU_Request_Dropdown" dropdown on "Resources_Accordion" on "New_Function" wizard
         Then type value "0" to "CPU_Limit_Number_Input" field on "Resources_Accordion" on "New_Function" wizard
@@ -315,9 +329,13 @@ Feature: ML Functions
         Then increase value on 15 points in "GPU_Limit_Number_Input" field on "Resources_Accordion" on "New_Function" wizard
         Then decrease value on 15 points in "GPU_Limit_Number_Input" field on "Resources_Accordion" on "New_Function" wizard
 
+    @MLF
     @passive
-    Scenario: Verify behaviour of Volume Paths Table in Resources Accordion on create New Function page
+    #TODO: ML-5137 - move create/edit 'function panel' to UI Demo mode
+    Scenario: MLF013 - Verify behaviour of Volume Paths Table in Resources Accordion on create New Function page
         Given open url
+        And wait load page
+        And turn on demo mode
         And wait load page
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
@@ -333,8 +351,6 @@ Feature: ML Functions
         When collapse "Code_Accordion" on "New_Function" wizard
         Then verify "Pods_Priority_Dropdown" element visibility in "Resources_Accordion" on "New_Function" wizard
         Then verify "Pods_Priority_Dropdown" element in "Resources_Accordion" on "New_Function" wizard should contains "Dropdown_Options"."Pods_Priority"
-        #Then verify "Pods_Toleration_Dropdown" element visibility in "Resources_Accordion" on "New_Function" wizard - Pods_Toleration is deleted from implementation
-        #Then verify "Pods_Toleration_Dropdown" element in "Resources_Accordion" on "New_Function" wizard should contains "Dropdown_Options"."Pods_Toleration" - Pods_Toleration is deleted from implementation
         When select "Manual" option in "New_Function_Volume_Mount_Dropdown" dropdown on "Resources_Accordion" on "New_Function" wizard
         When add new volume rows to "Volume_Paths_Table" table in "Resources_Accordion" on "New_Function" wizard using nontable inputs
             | Volume_Paths_Table_Type_Dropdown | Volume_Paths_Table_Volume_Name_Input | Volume_Paths_Table_Path_Input | Volume_Paths_Table_Container_Input | Volume_Paths_Table_Access_Key_Input | Volume_Paths_Table_Resource_Path_Input | Add_New_Row_Button |
@@ -417,70 +433,10 @@ Feature: ML Functions
             | Volume_Name_5 | /path/to/happines5    |
             | Edited_Name_7 | /newPath/to/happines7 |
 
+    @MLF
     @passive
-    Scenario: Check all mandatory components in Resources Accordion on create New Function page
-        Given open url
-        And wait load page
-        And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
-        And wait load page
-        And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
-        And click on cell with value "ML functions" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
-        And hover "MLRun_Logo" component on "commonPagesHeader" wizard
-        And wait load page
-        And click on "New_Function_Button" element on "ML_Functions" wizard
-        And type value "demo-function-04" to "New_Function_Name_Input" field on "Create_ML_Function_Popup" wizard
-        And type value "latest" to "New_Function_Tag_Input" field on "Create_ML_Function_Popup" wizard
-        And click on "Continue_Button" element on "Create_ML_Function_Popup" wizard
-        When collapse "General_Accordion" on "New_Function" wizard
-        When collapse "Code_Accordion" on "New_Function" wizard
-        When collapse "Resources_Accordion" on "New_Function" wizard
-        When add rows to "Function_Environment_Variables_Table" key-value table in "Environment_Variables_Accordion" on "New_Function" wizard
-            | name_input | value_input |
-            |    name1   |    value1   |
-            |    name2   |    value2   |
-            |    name3   |    value3   |
-        Then verify values in "Function_Environment_Variables_Table" table in "Environment_Variables_Accordion" on "New_Function" wizard
-            | name  | value  |
-            | name1 | value1 |
-            | name2 | value2 |
-            | name3 | value3 |
-        When click on "delete_btn" in "Function_Environment_Variables_Table" table in "Environment_Variables_Accordion" on "New_Function" wizard with offset "false"
-            | name  |
-            | name1 |
-            | name3 |
-        Then verify values in "Function_Environment_Variables_Table" table in "Environment_Variables_Accordion" on "New_Function" wizard
-            | name  | value  |
-            | name2 | value2 |
-        Then edit 1 row in "Function_Environment_Variables_Table" key-value table in "Environment_Variables_Accordion" on "New_Function" wizard
-            | name_input        | value_input      |
-            | edited            | edited           |
-        Then verify values in "Function_Environment_Variables_Table" table in "Environment_Variables_Accordion" on "New_Function" wizard
-            | name        |    value          |
-            | name2edited | value2edited      |
-        When collapse "Environment_Variables_Accordion" on "New_Function" wizard
-        Then verify "Access_Key_Checkbox" element visibility on "New_Function" wizard
-        Then uncheck "Access_Key_Checkbox" element on "New_Function" wizard
-        Then verify "Access_Key_Input" element visibility on "New_Function" wizard
-        Then type value "  " to "Access_Key_Input" field on "New_Function" wizard
-        Then verify "Access_Key_Input" on "New_Function" wizard should display warning "Input_Hint"."Input_Field_Invalid"
-        Then type value "" to "Access_Key_Input" field on "New_Function" wizard
-        Then verify "Access_Key_Input" on "New_Function" wizard should display warning "Input_Hint"."Input_Field_Require"
-        Then verify "Cancel_Button" element visibility on "New_Function" wizard
-        Then "Cancel_Button" element on "New_Function" should contains "Cancel" value
-        Then verify "Save_Button" element visibility on "New_Function" wizard
-        Then "Save_Button" element on "New_Function" should contains "Save" value
-        Then verify "Deploy_Button" element visibility on "New_Function" wizard
-        Then "Deploy_Button" element on "New_Function" should contains "Deploy" value
-        And click on "Save_Button" element on "New_Function" wizard
-        Then verify "Cancel_Button" element on "New_Function" wizard is enabled
-        Then verify "Save_Button" element on "New_Function" wizard is disabled
-        Then verify "Deploy_Button" element on "New_Function" wizard is disabled
-
-    @FAILED_TODO
-    #TODO: click on "Remove" in action menu in "Function_Environment_Variables_Demo_Table" table - Remove button implemented in dropdown menu, need to rewrite test
-    @passive
-    @demo
-    Scenario: Check all mandatory components in Resources Accordion on create New Function page in Demo mode
+    #TODO: ML-5137 - move create/edit 'function panel' to UI Demo mode
+    Scenario: MLF014 - Check all mandatory components in Resources Accordion on create New Function page
         Given open url
         And wait load page
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
@@ -548,7 +504,7 @@ Feature: ML Functions
             | name6 | secret | value6:key6 |
             | name7 | secret | value7:key7 |
             | name9 | secret | value9:key9 |
-        When click on "Remove" in action menu in "Function_Environment_Variables_Demo_Table" table in "Environment_Variables_Accordion" on "New_Function" wizard with offset "false"
+        When click on "Delete" in action menu in "Function_Environment_Variables_Demo_Table" table in "Environment_Variables_Accordion" on "New_Function" wizard with offset "false"
             | name  |
             | name2 |
             | name4 |
@@ -582,13 +538,35 @@ Feature: ML Functions
             | Edited_Name_5 | secret | secret:123    |
             | name3         | secret | value3:key3   |
             | Edited_Name_6 | value  | Edited_Value6 |
+        When collapse "Environment_Variables_Accordion" on "New_Function" wizard
+        Then verify "Access_Key_Checkbox" element visibility on "New_Function" wizard
+        Then uncheck "Access_Key_Checkbox" element on "New_Function" wizard
+        Then verify "Access_Key_Input" element visibility on "New_Function" wizard
+        Then type value "  " to "Access_Key_Input" field on "New_Function" wizard
+        Then verify "Access_Key_Input" on "New_Function" wizard should display warning "Input_Hint"."Input_Field_Invalid"
+        Then type value "" to "Access_Key_Input" field on "New_Function" wizard
+        Then verify "Access_Key_Input" on "New_Function" wizard should display warning "Input_Hint"."Input_Field_Require"
+        Then verify "Cancel_Button" element visibility on "New_Function" wizard
+        Then "Cancel_Button" element on "New_Function" should contains "Cancel" value
+        Then verify "Save_Button" element visibility on "New_Function" wizard
+        Then "Save_Button" element on "New_Function" should contains "Save" value
+        Then verify "Deploy_Button" element visibility on "New_Function" wizard
+        Then "Deploy_Button" element on "New_Function" should contains "Deploy" value 
+        #TODO: Then "Deploy_Button" element on "New_Function" should contains "Create" value - check the condition for deploy
+        And click on "Save_Button" element on "New_Function" wizard
+        Then verify "Cancel_Button" element on "New_Function" wizard is enabled
+        Then verify "Save_Button" element on "New_Function" wizard is disabled
+        Then verify "Deploy_Button" element on "New_Function" wizard is disabled
 
-    @inProgress
-    Scenario: Save new ml-function
+    @MLF
+    #TODO: ML-5137 - move create/edit 'function panel' to UI Demo mode
+    Scenario: MLF015 - Save new ml-function
         * set tear-down property "function" created in "default" project with "new-aqa-function-00" value
         Given open url
         And wait load page
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
+        And wait load page
+        And turn on demo mode
         And wait load page
         And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
         And click on cell with value "ML functions" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
@@ -608,7 +586,6 @@ Feature: ML Functions
         Then type value "demo" to "New_Function_Handler_Input" field on "Code_Accordion" on "New_Function" wizard
         When collapse "General_Accordion" on "New_Function" wizard
         Then select "Low" option in "Pods_Priority_Dropdown" dropdown on "Resources_Accordion" on "New_Function" wizard
-        #Then select "Allow" option in "Pods_Toleration_Dropdown" dropdown on "Resources_Accordion" on "New_Function" wizard - Pods_Toleration is deleted from implementation
         Then type value "1" to "Memory_Request_Number_Input" field on "Resources_Accordion" on "New_Function" wizard
         Then select "MB" option in "Memory_Request_Dropdown" dropdown on "Resources_Accordion" on "New_Function" wizard
         Then type value "1000" to "Memory_Limit_Number_Input" field on "Resources_Accordion" on "New_Function" wizard
@@ -633,7 +610,6 @@ Feature: ML Functions
         Then verify "New_Function_Handler_Input" input should contains "demo" value in "Code_Accordion" on "New_Function" wizard
         When collapse "Code_Accordion" on "New_Function" wizard
         Then verify "Pods_Priority_Dropdown" dropdown in "Resources_Accordion" on "New_Function" wizard selected option value "Low"
-        #Then verify "Pods_Toleration_Dropdown" dropdown in "Resources_Accordion" on "New_Function" wizard selected option value "Allow" - Pods_Toleration is deleted from implementation
         Then verify "Memory_Request_Number_Input" input should contains "1" value in "Resources_Accordion" on "New_Function" wizard
         Then type value "" to "Memory_Request_Number_Input" field on "Resources_Accordion" on "New_Function" wizard
         Then verify "Memory_Request_Number_Input" element in "Resources_Accordion" on "New_Function" wizard should display warning "Input_Hint"."Input_Field_Require"
@@ -652,11 +628,14 @@ Feature: ML Functions
         Then verify "CPU_Limit_Dropdown" dropdown in "Resources_Accordion" on "New_Function" wizard selected option value "millicpu"
         Then verify "GPU_Limit_Number_Input" input should contains "15" value in "Resources_Accordion" on "New_Function" wizard
 
-    @inProgress
-    Scenario: deploy new ml-function with build new image option
+    @MLF
+    #TODO: ML-5137 - move create/edit 'function panel' to UI Demo mode
+    Scenario: MLF016 - Deploy new ml-function with build new image option
         Given open url
         And wait load page
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
+        And wait load page
+        And turn on demo mode
         And wait load page
         And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
         And click on cell with value "ML functions" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
@@ -673,10 +652,12 @@ Feature: ML Functions
         When collapse "Resources_Accordion" on "New_Function" wizard
         And set tear-down property "function" created in "default" project with "new-aqa-function-00" value
         Then click on "Deploy_Button" element on "New_Function" wizard
+        #TODO: Then "Deploy_Button" element contains "Create" value - check the condition for deploy
         Then click on "Cross_Close_Button" element on "ML_Function_Info_Pane" wizard
         Then check "new-aqa-function-01" value in "name" column in "Functions_Table" table on "ML_Functions" wizard
 
-    Scenario: Delete ml-function
+    @MLF
+    Scenario: MLF017 - Delete ml-function
          * set tear-down property "function" created with "new-aqa-function-01" value
          * set tear-down property "project" created with "automation-test-name07" value
         * create "automation-test-name07" MLRun Project with code 201
@@ -695,9 +676,10 @@ Feature: ML Functions
         And click on "Delete_Button" element on "Common_Popup" wizard
         Then check "new-aqa-function-01" value not in "name" column in "Functions_Table" table on "ML_Functions" wizard
 
+    @MLF
     @passive
-    @demo
-    Scenario: Check all mandatory components in Serving Runtime Configuration Accordion on create New Serving Function page
+    #TODO: ML-5137 - move create/edit 'function panel' to UI Demo mode
+    Scenario: MLF018 - Check all mandatory components in Serving Runtime Configuration Accordion on create New Serving Function page
         Given open url
         And wait load page
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
@@ -726,12 +708,10 @@ Feature: ML Functions
         Then verify "Stream_Path_Input" element in "Serving_Runtime_Configuration_Accordion" on "New_Function" wizard should display hint "Input_Hint"."Stream_Path_Hint"
         Then verify "Parameters_Runtime_Configuration_Table" element visibility in "Serving_Runtime_Configuration_Accordion" on "New_Function" wizard
 
-    @FAILED_TODO
-    #TODO: click on "Remove" in action menu in "Function_Environment_Variables_Demo_Table" table - Remove button implemented in dropdown menu, need to rewrite test
+    @MLF
     @passive
-    @inProgress
-    @demo
-    Scenario: Check Model Table in Serving Runtime Configuration Accordion on create New Serving Function page
+    #TODO: ML-5137 - move create/edit 'function panel' to UI Demo mode
+    Scenario: MLF019 - Check Model Table in Serving Runtime Configuration Accordion on create New Serving Function page
         Given open url
         And wait load page
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
@@ -799,10 +779,10 @@ Feature: ML Functions
             | editedName4 | edited_class4 | edited/path/4 |
             | editedName8 | edited_class8 | edited/path/8 |
 
+    @MLF
     @passive
-    @demo
-    @inProgress
-    Scenario: Check Secret Table in Serving Runtime Configuration Accordion on create New Serving Function page
+    #TODO: ML-5137 - move create/edit 'function panel' to UI Demo mode
+    Scenario: MLF020 - Check Secret Table in Serving Runtime Configuration Accordion on create New Serving Function page
         Given open url
         And wait load page
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
@@ -821,13 +801,13 @@ Feature: ML Functions
         When collapse "Code_Accordion" on "New_Function" wizard
         When collapse "Resources_Accordion" on "New_Function" wizard
         When collapse "Environment_Variables_Accordion" on "New_Function" wizard
-        When add rows to "Secrets_Runtime_Configuration_Table" key-value table in "Serving_Runtime_Configuration_Accordion" on "New_Function" wizard
-            | value_input |
-            |    value0   |
-            |    value1   |
-            |    value2   |
-            |    value3   |
-            |    value4   |
+        When add new volume rows to "Secrets_Runtime_Configuration_Table" table in "Serving_Runtime_Configuration_Accordion" on "New_Function" wizard using nontable inputs
+            | Secrets_Table_Value_Input | Apply_Secrets_Table_Row_Button |
+            |           value0          |               yes              |
+            |           value1          |               yes              |
+            |           value2          |               yes              |
+            |           value3          |               yes              |
+            |           value4          |               yes              |
         Then verify values in "Secrets_Runtime_Configuration_Table" table in "Serving_Runtime_Configuration_Accordion" on "New_Function" wizard
             | kind | value  |
             | file | value0 |
@@ -855,12 +835,10 @@ Feature: ML Functions
             | file | value1edited |
             | file | value3edited |
 
-    @FAILED_TODO
-    #TODO: click on "Remove" in action menu in "Function_Environment_Variables_Demo_Table" table - Remove button implemented in dropdown menu, need to rewrite test
+    @MLF
     @passive
-    @demo
-    @inProgress
-    Scenario: Check Parameters Table in Serving Runtime Configuration Accordion on create New Serving Function page
+    #TODO: ML-5137 - move create/edit 'function panel' to UI Demo mode
+    Scenario: MLF021 - Check Parameters Table in Serving Runtime Configuration Accordion on create New Serving Function page
         Given open url
         And wait load page
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
@@ -924,12 +902,15 @@ Feature: ML Functions
             | editedName1 | json   | {"key":"value"} |
             | editedName5 | string | editedValue     |
 
+    @MLF
     @passive
-    @inProgress
-    Scenario: verify non-unique value input hint on Create New Function page
+    #TODO: ML-5137 - move create/edit 'function panel' to UI Demo mode
+    Scenario: MLF022 - Verify non-unique value input hint on Create New Function page
         Given open url
         And wait load page
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
+        And wait load page
+        And turn on demo mode
         And wait load page
         And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
         And click on cell with value "ML functions" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
@@ -948,9 +929,10 @@ Feature: ML Functions
         Then verify "Volume_Paths_Table_Volume_Name_Input" element in "Resources_Accordion" on "New_Function" wizard should display warning "Input_Hint"."Name_Already_Exists"
         Then verify "Volume_Paths_Table_Path_Input" element in "Resources_Accordion" on "New_JobTemplate_Edit" wizard should display warning "Input_Hint"."Volumes_Path_Already_Exists"
 
+    @MLF
     @passive
-    @demo
-    Scenario: verify non-unique value input hint on Create New Serving Function page
+    #TODO: ML-5137 - move create/edit 'function panel' to UI Demo mode
+    Scenario: MLF023 - Verify non-unique value input hint on Create New Serving Function page
         Given open url
         And wait load page
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
@@ -974,12 +956,14 @@ Feature: ML Functions
         Then verify "Volume_Paths_Table_Volume_Name_Input" element in "Resources_Accordion" on "New_Function" wizard should display warning "Input_Hint"."Name_Already_Exists"
         Then verify "Volume_Paths_Table_Path_Input" element in "Resources_Accordion" on "New_JobTemplate_Edit" wizard should display warning "Input_Hint"."Volumes_Path_Already_Exists"
         When collapse "Resources_Accordion" on "New_Function" wizard
+        When collapse "Serving_Runtime_Configuration_Accordion" on "New_Function" wizard
         When add new volume rows to "Function_Environment_Variables_Demo_Table" table in "Environment_Variables_Accordion" on "New_Function" wizard using nontable inputs
             | Function_Environment_Variables_Name_Input | Function_Environment_Variables_Type_Dropdown | Function_Environment_Variables_Value_Input | Add_Row_Button | Discard_Row_Button |
             |                 name0                     |                    Value                     |                  value0                    |       yes      |                    |
             |                 name0                     |                    Value                     |                  value0                    |       yes      |                    |
         Then verify "Function_Environment_Variables_Name_Input" element in "Environment_Variables_Accordion" on "New_Function" wizard should display warning "Input_Hint"."Name_Already_Exists"
         When collapse "Environment_Variables_Accordion" on "New_Function" wizard
+        When expand "Serving_Runtime_Configuration_Accordion" on "New_Function" wizard
         When add new volume rows to "Serving_Runtime_Configuration_Model_Table" table in "Serving_Runtime_Configuration_Accordion" on "New_Function" wizard using nontable inputs
             | Model_Table_Name_Input | Model_Table_Class_Input | Model_Table_Path_Input | Add_Model_Table_Row_Button | Discard_Model_Table_Row_Button |
             |          name0         |          class0         |         /path/0        |            yes             |                                |
@@ -991,8 +975,9 @@ Feature: ML Functions
             |            name0            |             String             |            valueA            |                yes             |                                   |
         Then verify "Parameters_Table_Name_Input" element in "Serving_Runtime_Configuration_Accordion" on "New_Function" wizard should display warning "Input_Hint"."Name_Already_Exists"
 
+    @MLF
     @passive
-    Scenario: Check MLRun logo redirection
+    Scenario: MLF024 - Check MLRun logo redirection
         Given open url
         And wait load page
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
@@ -1005,8 +990,9 @@ Feature: ML Functions
         And wait load page
         Then verify "Projects_Table" element visibility on "Projects" wizard
 
+    @MLF
     @passive
-    Scenario: Verify View YAML action
+    Scenario: MLF025 - Verify View YAML action
         Given open url
         And wait load page
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
@@ -1026,8 +1012,9 @@ Feature: ML Functions
         Then verify "Cross_Cancel_Button" element visibility on "View_YAML" wizard
         Then verify "YAML_Modal_Container" element visibility on "View_YAML" wizard
 
+    @MLF
     @passive
-    Scenario: Verify View YAML action in Item infopane
+    Scenario: MLF026 - Verify View YAML action in Item infopane
         Given open url
         And wait load page
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
@@ -1043,12 +1030,15 @@ Feature: ML Functions
         Then verify "Cross_Cancel_Button" element visibility on "View_YAML" wizard
         Then verify "YAML_Modal_Container" element visibility on "View_YAML" wizard
 
+    @MLF
     @passive
-    #TODO: can fail if scroll needed
-    Scenario: Verify Edit action visibility in action menu
+    #TODO: ML-5137 - move create/edit 'function panel' to UI Demo mode
+    Scenario: MLF027 - Verify Edit action visibility in action menu
         Given open url
         And wait load page
         And click on row root with value "churn-project-admin" in "name" column in "Projects_Table" table on "Projects" wizard
+        And wait load page
+        And turn on demo mode
         And wait load page
         And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
         And click on cell with value "ML functions" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
@@ -1056,12 +1046,17 @@ Feature: ML Functions
         And wait load page
         Then verify options in action menu on "ML_Functions" wizard in "Functions_Table" table with "Job" value in "kind" column should contains "ML_Functions_Tab"."Common_Action_Menu_Options"
         Then verify options in action menu on "ML_Functions" wizard in "Functions_Table" table with "Serving" value in "kind" column should contains "ML_Functions_Tab"."Serving_Action_Menu_Options"
+        #TODO: check if serving function can be edited
 
+    @MLF
     @passive
-    Scenario: Verify Edit action visibility in Item infopane for Job function
+    #TODO: ML-5137 - move create/edit 'function panel' to UI Demo mode
+    Scenario: MLF028 - Verify Edit action visibility in Item infopane for Job function
         Given open url
         And wait load page
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
+        And wait load page
+        And turn on demo mode
         And wait load page
         And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
         And click on cell with value "ML functions" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
@@ -1071,11 +1066,15 @@ Feature: ML Functions
         Then verify "Action_Menu" element visibility on "ML_Function_Info_Pane" wizard
         Then verify "Action_Menu" dropdown element on "ML_Function_Info_Pane" wizard should contains "ML_Functions_Tab"."Common_Action_Menu_Options"
 
+    @MLF
     @passive
-    Scenario: Verify Edit action visibility in Item infopane for Serving function
+    #TODO: ML-5137 - move create/edit 'function panel' to UI Demo mode
+    Scenario: MLF029 - Verify Edit action visibility in Item infopane for Serving function
         Given open url
         And wait load page
         And click on row root with value "churn-project-admin" in "name" column in "Projects_Table" table on "Projects" wizard
+        And wait load page
+        And turn on demo mode
         And wait load page
         And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
         And click on cell with value "ML functions" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
@@ -1084,15 +1083,20 @@ Feature: ML Functions
         When click on cell with row index 9 in "name" column in "Functions_Table" table on "ML_Functions" wizard
         Then verify "Action_Menu" element visibility on "ML_Function_Info_Pane" wizard
         Then verify "Action_Menu" dropdown element on "ML_Function_Info_Pane" wizard should contains "ML_Functions_Tab"."Serving_Action_Menu_Options"
+        #TODO: check if serving function can be edited
 
+    @MLF
     @passive
-    Scenario: Verify all mandatory component on Edit Function sidebar
+    #TODO: ML-5137 - move create/edit 'function panel' to UI Demo mode
+    Scenario: MLF030 - Verify all mandatory component on Edit Function sidebar
         * set tear-down property "project" created with "automation-test" value
         * create "automation-test" MLRun Project with code 201
         * create "test-function" Function with "job" kind and "latest" tag in "automation-test" project with code 200
         Given open url
         And wait load page
         And click on row root with value "automation-test" in "name" column in "Projects_Table" table on "Projects" wizard
+        And wait load page
+        And turn on demo mode
         And wait load page
         And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
         And click on cell with value "ML functions" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
@@ -1124,13 +1128,6 @@ Feature: ML Functions
         Then verify "Pods_Priority_Dropdown" dropdown in "Resources_Accordion" on "New_Function" wizard selected option value "Low"
         Then select "High" option in "Pods_Priority_Dropdown" dropdown on "Resources_Accordion" on "New_Function" wizard
         Then verify "Pods_Priority_Dropdown" dropdown in "Resources_Accordion" on "New_Function" wizard selected option value "High"
-        #Then verify "Pods_Toleration_Dropdown" element visibility in "Resources_Accordion" on "New_Function" wizard - Pods_Toleration is deleted from implementation
-        #Then verify "Pods_Toleration_Dropdown" dropdown in "Resources_Accordion" on "New_Function" wizard selected option value "Prevent"
-        #Then verify "Pods_Toleration_Dropdown" element in "Resources_Accordion" on "New_Function" wizard should contains "Dropdown_Options"."Pods_Toleration"
-        # Then select "Allow" option in "Pods_Toleration_Dropdown" dropdown on "Resources_Accordion" on "New_Function" wizard
-        # Then verify "Pods_Toleration_Dropdown" dropdown in "Resources_Accordion" on "New_Function" wizard selected option value "Allow"
-        # Then select "Constrain" option in "Pods_Toleration_Dropdown" dropdown on "Resources_Accordion" on "New_Function" wizard
-        # Then verify "Pods_Toleration_Dropdown" dropdown in "Resources_Accordion" on "New_Function" wizard selected option value "Constrain"
         Then verify "Volumes_Subheader" element visibility in "Resources_Accordion" on "New_Function" wizard
         Then verify "Volume_Paths_Table" element visibility in "Resources_Accordion" on "New_Function" wizard
         Then verify "Memory_Request_Dropdown" element visibility in "Resources_Accordion" on "New_Function" wizard
@@ -1157,9 +1154,10 @@ Feature: ML Functions
         Then "Save_Button" element on "New_Function" should contains "Save" value
         Then verify "Deploy_Button" element visibility on "New_Function" wizard
         Then "Deploy_Button" element on "New_Function" should contains "Deploy" value
+        #TODO: Then "Deploy_Button" element on "New_Function" should contains "Create" value - check the condition for deploy
 
-    @FAILED_TODO
-    #TODO: Create_Job - reimplemented, need to rewrite test
+    @MLF
+    #TODO: ML-5137 - move create/edit 'function panel' to UI Demo mode
     Scenario: Verify Resources values on Function Deploy and Run
         * set tear-down property "project" created with "automation-test" value
         * set tear-down property "function" created in "automation-test" project with "new-aqa-function-00" value
@@ -1168,6 +1166,8 @@ Feature: ML Functions
         And wait load page
         And click on row root with value "automation-test" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
+        And turn on demo mode
+        And wait load page
         And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
         And click on cell with value "ML functions" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
         And wait load page
@@ -1175,8 +1175,8 @@ Feature: ML Functions
         And type value "new-aqa-function-00" to "New_Function_Name_Input" field on "Create_ML_Function_Popup" wizard
         And type value "latest" to "New_Function_Tag_Input" field on "Create_ML_Function_Popup" wizard
         And click on "Continue_Button" element on "Create_ML_Function_Popup" wizard
-        #Then select "High" option in "Pods_Priority_Dropdown" dropdown on "Resources_Accordion" on "New_Function" wizard     - Pods_Toleration is deleted from implementation
-        #Then select "Constrain" option in "Pods_Toleration_Dropdown" dropdown on "Resources_Accordion" on "New_Function" wizard
+        Then select "High" option in "Pods_Priority_Dropdown" dropdown on "Resources_Accordion" on "New_Function" wizard
+        Then verify "Pods_Priority_Dropdown" dropdown in "Resources_Accordion" on "New_Function" wizard selected option value "High"
         Then type value "1" to "Memory_Request_Number_Input" field on "Resources_Accordion" on "New_Function" wizard
         Then select "MB" option in "Memory_Request_Dropdown" dropdown on "Resources_Accordion" on "New_Function" wizard
         Then type value "1000" to "Memory_Limit_Number_Input" field on "Resources_Accordion" on "New_Function" wizard
@@ -1189,28 +1189,28 @@ Feature: ML Functions
         Then click on "Deploy_Button" element on "New_Function" wizard
         And wait load page
         Then "Header" element on "ML_Function_Info_Pane" should contains "new-aqa-function-00" value
-        Then select "tab" with "Jobs" value in breadcrumbs menu
+        Then select "tab" with "Jobs and workflows" value in breadcrumbs menu
         And wait load page
-        Then click on "New_Job_Button" element on "Jobs_Monitor_Tab" wizard
+        And click on "Batch_Run_Button" element on "Jobs_Monitor_Tab" wizard
         And wait load page
-        Then value in "name" column with "text" in "Selected_Functions_Templates" in "Select_Functions_From_Accordion" on "Create_Job" wizard should contains "new-aqa-function-00"
-        Then click on row root with value "new-aqa-function-00" in "name" column in "Selected_Functions_Templates" table in "Select_Functions_From_Accordion" on "Create_Job" wizard
-        When collapse "Parameters_Accordion" on "New_JobTemplate_Edit" wizard
-        When collapse "Data_Inputs_Accordion" on "New_JobTemplate_Edit" wizard
-        When expand "Resources_Accordion" on "New_JobTemplate_Edit" wizard
-        Then verify "Pods_Priority_Dropdown" dropdown in "Resources_Accordion" on "New_JobTemplate_Edit" wizard selected option value "High"
-        #Then verify "Pods_Toleration_Dropdown" dropdown in "Resources_Accordion" on "New_JobTemplate_Edit" wizard selected option value "Constrain"  - Pods_Toleration is deleted from implementation
-        Then verify "Memory_Request_Number_Input" input should contains "1" value in "Resources_Accordion" on "New_JobTemplate_Edit" wizard
-        Then verify "Memory_Request_Dropdown" dropdown in "Resources_Accordion" on "New_JobTemplate_Edit" wizard selected option value "MB"
-        Then verify "Memory_Limit_Number_Input" input should contains "1000" value in "Resources_Accordion" on "New_JobTemplate_Edit" wizard
-        Then verify "Memory_Limit_Dropdown" dropdown in "Resources_Accordion" on "New_JobTemplate_Edit" wizard selected option value "KB"
-        Then verify "CPU_Request_Number_Input" input should contains "6" value in "Resources_Accordion" on "New_JobTemplate_Edit" wizard
-        Then verify "CPU_Request_Dropdown" dropdown in "Resources_Accordion" on "New_JobTemplate_Edit" wizard selected option value "millicpu"
-        Then verify "CPU_Limit_Number_Input" input should contains "7" value in "Resources_Accordion" on "New_JobTemplate_Edit" wizard
-        Then verify "CPU_Limit_Dropdown" dropdown in "Resources_Accordion" on "New_JobTemplate_Edit" wizard selected option value "millicpu"
-        Then verify "GPU_Limit_Number_Input" input should contains "99" value in "Resources_Accordion" on "New_JobTemplate_Edit" wizard
+        Then "Title" element on "Modal_Wizard_Form" should contains "Batch Run" value
+        And click on row root with value "new-aqa-function-00" in "name" column in "Functions_Table" table on "Modal_Wizard_Form" wizard
+        Then "Function_Title" element on "Modal_Wizard_Form" should contains "new-aqa-function-00" value
+        And click on "Step_5_Button" element on "commonPagesHeader" wizard
+        Then "Form_Header_Resources" element on "commonPagesHeader" should contains "Resources" value
+        Then verify "Pods_Priority_Dropdown" dropdown in "Resources_Accordion" on "Modal_Wizard_Form" wizard selected option value "High"
+        Then verify "Memory_Request_Number_Input" input should contains "1" value in "Resources_Accordion" on "Modal_Wizard_Form" wizard
+        Then verify "Memory_Request_Dropdown" dropdown in "Resources_Accordion" on "Modal_Wizard_Form" wizard selected option value "MB"
+        Then verify "Memory_Limit_Number_Input" input should contains "1000" value in "Resources_Accordion" on "Modal_Wizard_Form" wizard
+        Then verify "Memory_Limit_Dropdown" dropdown in "Resources_Accordion" on "Modal_Wizard_Form" wizard selected option value "KB"
+        Then verify "CPU_Request_Number_Input" input should contains "6" value in "Resources_Accordion" on "Modal_Wizard_Form" wizard
+        Then verify "CPU_Request_Dropdown" dropdown in "Resources_Accordion" on "Modal_Wizard_Form" wizard selected option value "millicpu"
+        Then verify "CPU_Limit_Number_Input" input should contains "7" value in "Resources_Accordion" on "Modal_Wizard_Form" wizard
+        Then verify "CPU_Limit_Dropdown" dropdown in "Resources_Accordion" on "Modal_Wizard_Form" wizard selected option value "millicpu"
+        Then verify "GPU_Limit_Number_Input" input should contains "99" value in "Resources_Accordion" on "Modal_Wizard_Form" wizard
 
-    Scenario: Check broken link redirection
+    @MLF
+    Scenario: MLF032 - Check broken link redirection
         Given open url
         And wait load page
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
@@ -1232,7 +1232,8 @@ Feature: ML Functions
         Then verify redirection from "projects/default/functions/85957751e571a92e07213781f5e0c35bfbe42c64/INVALID" to "projects/default/functions/85957751e571a92e07213781f5e0c35bfbe42c64/overview"
         Then verify redirection from "projects/default/INVALID/85957751e571a92e07213781f5e0c35bfbe42c64/overview" to "projects"
 
-    Scenario: Check active/highlited items with details panel on Models tab
+    @MLF
+    Scenario: MLF031 - Check active/highlited items with details panel on ML Function Info Pane
         Given open url
         And wait load page
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
@@ -1240,27 +1241,34 @@ Feature: ML Functions
         And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
         And click on cell with value "ML functions" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
         And wait load page
+        And hover "MLRun_Logo" component on "commonPagesHeader" wizard
+        And wait load page
         Then click on cell with row index 1 in "name" column in "Functions_Table" table on "ML_Functions" wizard
-        Then verify "Info_Pane_Tab_Selector" element visibility on "Models_Info_Pane" wizard
-        Then verify "Overview" tab is active in "Info_Pane_Tab_Selector" on "Models_Info_Pane" wizard
-        Then verify "Header" element visibility on "Models_Info_Pane" wizard
+        And wait load page
+        Then verify "Info_Pane_Tab_Selector" element visibility on "ML_Function_Info_Pane" wizard
+        Then verify "Overview" tab is active in "Info_Pane_Tab_Selector" on "ML_Function_Info_Pane" wizard
+        Then verify "Header" element visibility on "ML_Function_Info_Pane" wizard
         Then save to context "name" column on 1 row from "Functions_Table" table on "ML_Functions" wizard
-        Then compare "Header" element value on "Models_Info_Pane" wizard with test "name" context value
+        Then compare "Header" element value on "ML_Function_Info_Pane" wizard with test "name" context value
 	    Then verify that row index 1 is active in "Functions_Table" table on "ML_Functions" wizard
         Then verify that row index 2 is NOT active in "Functions_Table" table on "ML_Functions" wizard
         Then click on cell with row index 2 in "name" column in "Functions_Table" table on "ML_Functions" wizard  
         Then verify that row index 2 is active in "Functions_Table" table on "ML_Functions" wizard   
         Then verify that row index 1 is NOT active in "Functions_Table" table on "ML_Functions" wizard
-        Then verify "Info_Pane_Tab_Selector" element visibility on "Models_Info_Pane" wizard
-        Then verify "Overview" tab is active in "Info_Pane_Tab_Selector" on "Models_Info_Pane" wizard
-        Then verify "Header" element visibility on "Models_Info_Pane" wizard
+        Then verify "Info_Pane_Tab_Selector" element visibility on "ML_Function_Info_Pane" wizard
+        Then verify "Overview" tab is active in "Info_Pane_Tab_Selector" on "ML_Function_Info_Pane" wizard
+        Then verify "Header" element visibility on "ML_Function_Info_Pane" wizard
         Then save to context "name" column on 2 row from "Functions_Table" table on "ML_Functions" wizard
-        Then compare "Header" element value on "Models_Info_Pane" wizard with test "name" context value
+        Then compare "Header" element value on "ML_Function_Info_Pane" wizard with test "name" context value
 
-Scenario: MLF002 - Check requirements field in Code Accordion on Create New Function page
+    @MLF
+    #TODO: ML-5137 - move create/edit 'function panel' to UI Demo mode
+    Scenario: MLF002 - Check requirements field in Code Accordion on Create New Function page
         Given open url
         And wait load page
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
+        And wait load page
+        And turn on demo mode
         And wait load page
         And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
         And click on cell with value "ML functions" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
