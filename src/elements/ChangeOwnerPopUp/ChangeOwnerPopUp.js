@@ -17,7 +17,7 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useRef, useState } from 'react'
 import { useDispatch } from 'react-redux'
 import PropTypes from 'prop-types'
 import classnames from 'classnames'
@@ -59,26 +59,6 @@ const ChangeOwnerPopUp = ({ changeOwnerCallback, projectId }) => {
     setUsersList([])
     setShowSuggestionList(false)
   }
-
-  useEffect(() => {
-    usersList.forEach(item => {
-      if (item.name === searchValue || item.username === searchValue) {
-        setNewOwnerId(item.id)
-      }
-    })
-
-    if (
-      usersList.filter(member => {
-        return member.label.toLowerCase().includes(searchValue.toLowerCase())
-      }).length === 0
-    ) {
-      setShowSuggestionList(false)
-    }
-
-    return () => {
-      setNewOwnerId('')
-    }
-  }, [searchValue, usersList])
 
   const applyChanges = () => {
     if (newOwnerId) {
@@ -126,6 +106,7 @@ const ChangeOwnerPopUp = ({ changeOwnerCallback, projectId }) => {
       'filter[assigned_policies]': '[$contains_any]Developer,Project Admin'
     }
     const requiredIgzVersion = '3.5.3'
+    let usersList = []
 
     if (isIgzVersionCompatible(requiredIgzVersion)) {
       params['filter[username]'] = `[$contains_istr]${memberName}`
@@ -140,22 +121,21 @@ const ChangeOwnerPopUp = ({ changeOwnerCallback, projectId }) => {
         data: { data: users }
       } = response
 
-      setUsersList(
-        users.map(user => {
-          return {
-            name: `${user.attributes.first_name} ${user.attributes.last_name}`,
-            username: user.attributes.username,
-            label: `${user.attributes.first_name} ${user.attributes.last_name} (${user.attributes.username})`,
-            id: user.id,
-            role: ''
-          }
-        })
-      )
+      usersList = users.map(user => {
+        return {
+          name: `${user.attributes.first_name} ${user.attributes.last_name}`,
+          username: user.attributes.username,
+          label: `${user.attributes.first_name} ${user.attributes.last_name} (${user.attributes.username})`,
+          id: user.id,
+          role: ''
+        }
+      })
+      setUsersList(usersList)
     } catch (error) {
       showErrorNotification(dispatch, error, 'Failed to fetch users')
     }
 
-    resolve()
+    resolve(usersList)
   }, 200)
 
   const onSearchChange = memberName => {
@@ -163,11 +143,29 @@ const ChangeOwnerPopUp = ({ changeOwnerCallback, projectId }) => {
     setSearchValue(memberNameEscaped)
 
     if (memberNameEscaped !== '') {
-      generateSuggestionList(memberName, () => {
-        setShowSuggestionList(true)
+      generateSuggestionList(memberName, members => {
+        const matchedOwner = members.find(
+          member => member.name === memberNameEscaped || member.username === memberNameEscaped
+        )
+        if (matchedOwner) {
+          setNewOwnerId(matchedOwner.id)
+        } else {
+          setNewOwnerId('')
+        }
+
+        if (
+          members.filter(member => {
+            return member.label.toLowerCase().includes(memberNameEscaped.toLowerCase())
+          }).length === 0
+        ) {
+          setShowSuggestionList(false)
+        } else {
+          setShowSuggestionList(true)
+        }
       })
     } else {
       setNewOwnerId('')
+      setShowSuggestionList(false)
     }
   }
 
