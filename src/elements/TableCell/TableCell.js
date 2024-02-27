@@ -17,7 +17,7 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import React, {cloneElement} from 'react'
+import React, { cloneElement } from 'react'
 import PropTypes from 'prop-types'
 import { useDispatch } from 'react-redux'
 import classnames from 'classnames'
@@ -58,12 +58,9 @@ const TableCell = ({
   )
 
   if (data.template) {
-    if (cellClassNames.includes('table-body__cell_hidden')) {
-      return cloneElement(data.template, {
-        className: cellClassNames
+    return cloneElement(data.template, {
+      className
     })
-    }
-    return data.template
   } else if (link && data.type !== 'hidden') {
     return (
       <TableLinkCell
@@ -103,7 +100,7 @@ const TableCell = ({
       </td>
     )
   } else if (data.type === 'type') {
-    return <TableTypeCell className={cellClassNames} data={data} />
+    return <TableTypeCell className={className} data={data} />
   } else if (data.type === 'icons') {
     return (
       <td className={cellClassNames}>
