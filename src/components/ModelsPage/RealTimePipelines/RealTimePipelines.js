@@ -31,7 +31,7 @@ import Pipeline from '../../Pipeline/Pipeline'
 import Table from '../../Table/Table'
 import { getNoDataMessage } from '../../../utils/getNoDataMessage'
 
-import createRealTimePiplelinesContent from '../../../utils/createRealTimePipelinesContent'
+import createRealTimePipelinesContent from '../../../utils/createRealTimePipelinesContent'
 import {
   GROUP_BY_NAME,
   MODELS_PAGE,
@@ -119,7 +119,7 @@ const RealTimePipelines = () => {
   )
 
   const tableContent = useMemo(() => {
-    return createRealTimePiplelinesContent(pipelines, params.projectName)
+    return createRealTimePipelinesContent(pipelines, params.projectName)
   }, [pipelines, params.projectName])
 
   useEffect(() => {
