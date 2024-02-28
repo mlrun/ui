@@ -82,6 +82,10 @@
         align-items: center;
         margin-bottom: 15px;
 
+        &-banner {
+          align-self: flex-end;
+        }
+
         &-menu {
           width: 155px;
 

@@ -26,8 +26,9 @@ import Loader from '../../common/Loader/Loader'
 import NoData from '../../common/NoData/NoData'
 import ProjectStatistics from '../ProjectStatistics/ProjectStatistics'
 import ProjectTable from '../ProjectTable/ProjectTable'
+import { Tip } from 'igz-controls/components'
 
-const ProjectDataCard = ({ content, href, link, params, statistics, table, title }) => {
+const ProjectDataCard = ({ content, href, link, params, statistics, table, tip, title }) => {
   return (
     <div className="project-data-card">
       <div className="project-data-card__header table-header">
@@ -39,6 +40,7 @@ const ProjectDataCard = ({ content, href, link, params, statistics, table, title
           ) : (
             <Link to={link}>{title}</Link>
           )}
+          {tip && <Tip className="project-data-card__header-tip" text={tip} />}
         </div>
         {!content.loading && (
           <div className="project-data-card__statistics">
@@ -85,7 +87,8 @@ ProjectDataCard.defaultProps = {
   href: '',
   link: '',
   statistics: {},
-  table: {}
+  table: {},
+  tip: null,
 }
 
 ProjectDataCard.propTypes = {
@@ -95,6 +98,7 @@ ProjectDataCard.propTypes = {
   params: PropTypes.shape({}).isRequired,
   statistics: PropTypes.shape({}),
   table: PropTypes.shape({}),
+  tip: PropTypes.string,
   title: PropTypes.string
 }
 
