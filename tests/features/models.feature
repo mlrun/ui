@@ -523,11 +523,11 @@ Feature: Models Page
       Then click on "Cross_Cancel_Button" element on "Preview_Popup" wizard
       Then verify "deploy" option is present on "Models" wizard in "Models_Table" table with "transaction_fraud_xgboost" value in "name" column
       Then click on "deploy" option on "Models" wizard in "Models_Table" table with "transaction_fraud_xgboost" value in "name" column
-      Then verify if "Deploy_Model_Popup" popup dialog appears
-      Then verify "Title" element visibility on "Deploy_Model_Popup" wizard
-      Then "Title" element on "Deploy_Model_Popup" should contains "Deploy Model" value
-      Then verify "Cross_Cancel_Button" element visibility on "Deploy_Model_Popup" wizard
-      Then click on "Cross_Cancel_Button" element on "Deploy_Model_Popup" wizard
+      Then verify if "Common_Popup" popup dialog appears
+      Then "Title" element on "Common_Popup" should contains "Failed to deploy model" value
+      Then "Message" component on "Common_Popup" should contains "Messages"."How_To_Create"
+      Then verify "Cross_Cancel_Button" element visibility on "Common_Popup" wizard
+      Then click on "Cross_Cancel_Button" element on "Common_Popup" wizard
       When click on cell with value "transaction_fraud_xgboost" in "name" column in "Models_Table" table on "Models" wizard
       Then select "Preview" tab in "Info_Pane_Tab_Selector" on "Models_Info_Pane" wizard
       And wait load page
@@ -548,6 +548,16 @@ Feature: Models Page
       Then "Header_Download_Pop_Up" element on "Downloads_Popup" should contains "Downloads" value
       Then click on "Download_Pop_Up_Cross_Cancel_Button" element on "Downloads_Popup" wizard
       Then click on "Cross_Cancel_Button" element on "Artifact_Preview_Popup" wizard
+      And select "project" with "churn-project-admin" value in breadcrumbs menu
+      And wait load page
+      Then verify breadcrumbs "project" label should be equal "churn-project-admin" value
+      Then verify "deploy" option is present on "Models" wizard in "Models_Table" table with "current-state_model" value in "name" column
+      Then click on "deploy" option on "Models" wizard in "Models_Table" table with "current-state_model" value in "name" column
+      Then verify if "Deploy_Model_Popup" popup dialog appears
+      Then verify "Title" element visibility on "Deploy_Model_Popup" wizard
+      Then "Title" element on "Deploy_Model_Popup" should contains "Deploy Model" value
+      Then verify "Cross_Cancel_Button" element visibility on "Deploy_Model_Popup" wizard
+      Then click on "Cross_Cancel_Button" element on "Deploy_Model_Popup" wizard
 
   @MLM
   Scenario: MLM015 - Check Labels table components in Item infopane on Overview tab table
@@ -759,18 +769,16 @@ Feature: Models Page
 
     @MLM
     Scenario: MLM030 - Verify behaviour of key-value table on Deploy Model Popup
-     * set tear-down property "model" created in "default" project with "automation-test-model" value
-     * create "automation-test-model" Model with "latest" tag in "default" project with code 200
      Given open url
      And wait load page
-     And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
+     And click on row root with value "churn-project-admin" in "name" column in "Projects_Table" table on "Projects" wizard
      And wait load page
      And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
      And click on cell with value "Models" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
      And wait load page
      And hover "MLRun_Logo" component on "commonPagesHeader" wizard
-     Then verify "deploy" option is present on "Models" wizard in "Models_Table" table with "automation-test-model" value in "name" column
-     Then click on "deploy" option on "Models" wizard in "Models_Table" table with "automation-test-model" value in "name" column
+     Then verify "deploy" option is present on "Models" wizard in "Models_Table" table with "current-state_model" value in "name" column
+     Then click on "deploy" option on "Models" wizard in "Models_Table" table with "current-state_model" value in "name" column
      Then verify if "Deploy_Model_Popup" popup dialog appears
      When add new volume rows to "Key_Value_Table" table in "Deploy_Model_Table" on "Deploy_Model_Popup" wizard using nontable inputs
        | Class_Argument_Name_Input | Class_Argument_Value_Input | Add_New_Row_Button | Delete_New_Row_Button |
@@ -825,7 +833,7 @@ Feature: Models Page
 
   @MLM
   @FAILED_TODO
-  #TODO: Bug - broken function link
+  #TODO: Bug - broken function link ML-5709
   #TODO: arrow lines position - y not found
   @passive
   Scenario: MLM031 - Verify behaviour of Real-Time Pipelines table
@@ -1036,7 +1044,7 @@ Feature: Models Page
     Then select "All" option in "Table_Tree_Filter_Dropdown" dropdown on "Artifacts_FilterBy_Popup" wizard
     Then click on "Apply_Button" element on "Artifacts_FilterBy_Popup" wizard
     And wait load page
-    When click on cell with row index 2 in "name" column in "Models_Table" table on "Models" wizard
+    When click on cell with row index 1 in "name" column in "Models_Table" table on "Models" wizard
     And wait load page
     Then "Version_Tag_Input_Placeholder" element on "Models_Info_Pane" should contains "Click to add" value
 

@@ -70,6 +70,7 @@ const action = {
   },
   clickOnComponent: async function(driver, component) {
     const element = await driver.findElement(component)
+    await driver.sleep(250)
     await element.click()
   },
   clickNearComponent: async function(driver, component) {

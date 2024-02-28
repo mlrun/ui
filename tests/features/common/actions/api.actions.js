@@ -327,7 +327,7 @@ const action = {
 
     await mainHttpClient
       .post(
-        `${REACT_APP_MLRUN_API_URL_ARTIFACTS}/projects//${mlProjectName}/artifacts`,
+        `${REACT_APP_MLRUN_API_URL_ARTIFACTS}/projects/${mlProjectName}/artifacts`,
         data
       )
       .then(res => {
