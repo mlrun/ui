@@ -22,7 +22,13 @@ import { useLayoutEffect, useState, useRef } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { isNil } from 'lodash'
 
-import { TAG_FILTER, TAG_FILTER_ALL_ITEMS, TAG_FILTER_LATEST } from '../constants'
+import {
+  GROUP_BY_FILTER,
+  GROUP_BY_NAME,
+  TAG_FILTER,
+  TAG_FILTER_ALL_ITEMS,
+  TAG_FILTER_LATEST
+} from '../constants'
 import { getFilterTagOptions, setFilters, setModalFiltersValues } from '../reducers/filtersReducer'
 
 export const useGetTagOptions = (fetchTags, filters, category, modalFiltersName) => {
@@ -74,7 +80,9 @@ export const useGetTagOptions = (fetchTags, filters, category, modalFiltersName)
                   )
               } else {
                 setUrlTagOption(TAG_FILTER_ALL_ITEMS)
-                dispatch(setFilters({ tag: TAG_FILTER_ALL_ITEMS }))
+                dispatch(
+                  setFilters({ tag: TAG_FILTER_ALL_ITEMS, [GROUP_BY_FILTER]: GROUP_BY_NAME })
+                )
                 modalFiltersName &&
                   dispatch(
                     setModalFiltersValues({
