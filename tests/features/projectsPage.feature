@@ -4,7 +4,6 @@ Feature: MLRun Projects Page
 
     @MLPr
     @passive
-    @FAILED_TODO
     #TODO: last two steps are unstable on small screen extensions because scroll change the screen coordinates, it needs another solution
     Scenario: MLPr001 - Check all mandatory components
         Given open url
@@ -154,6 +153,18 @@ Feature: MLRun Projects Page
         Then select "Delete" option in action menu on "Projects" wizard in "Projects_Table" table at row with "automation-test-name2" value in "name" column
         Then verify if "Common_Popup" popup dialog appears
         Then click on "Delete_Button" element on "Common_Popup" wizard
+        And wait load page
+        Then verify "Notification_Pop_Up" element visibility on "Notification_Popup" wizard
+        Then "Notification_Pop_Up" element on "Notification_Popup" should contains "Project deletion in progress" value
+        And wait load page
+        Then verify "Notification_Pop_Up_Cross_Close_Button" element visibility on "Notification_Popup" wizard
+        Then click on "Notification_Pop_Up_Cross_Close_Button" element on "Notification_Popup" wizard
+        And wait load page
+        Then verify if "Notification_Popup" popup dialog appears
+        Then verify "Notification_Pop_Up" element visibility on "Notification_Popup" wizard
+        Then "Notification_Pop_Up" element on "Notification_Popup" should contains "Project \"automation-test-name2\" was deleted successfully" value
+        Then verify "Notification_Pop_Up_Cross_Close_Button" element visibility on "Notification_Popup" wizard
+        Then click on "Notification_Pop_Up_Cross_Close_Button" element on "Notification_Popup" wizard
         Then check "automation-test-name2" value not in "name" column in "Projects_Table" table on "Projects" wizard
     
     @MLPr

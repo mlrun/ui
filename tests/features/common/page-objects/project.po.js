@@ -147,9 +147,11 @@ const DataCollectionActionsTable = {
   header: {},
   body: {
     row: {
-      root: '.project-overview-actions__item',
+      root: 
+      '.project-overview-actions__item',
       fields: {
-        name: '.link'
+        name: 
+        '.link'
       }
     }
   }
@@ -441,57 +443,5 @@ module.exports = {
     Consumer_Groups_Table: commonTable(consumerGroupsTable),
     Shard_Lags_Table: commonTable(shardLagsTable),
     Refresh_Button: By.css('.page-actions .round-icon-cp')
-  },
-  batchInference: {
-    Function_Title: By.css(
-      '.modal .modal__content h6.modal__header-sub-title'
-    ),
-    Form_Header_Batch_Run: By.css('.form .form-row .form-step-title'),
-    Edit_Button: By.css('.form-table__row:nth-of-type(3) .form-table__actions-cell .round-icon-cp:nth-of-type(1)'),
-    Data_Inputs_Path_Dropdown: dropdownComponent(
-      generateDropdownGroup(
-        '.form-table__row_active .form-field-combobox',
-        '.form-field-combobox__select',
-        '.form-field-combobox__dropdown-list-option'
-      )
-    ),
-    Preview_text: By.css(
-      '.modal .modal__content .modal__header-preview-text'
-    ),
-    Next_Button: By.css(
-      '.modal__footer .btn-secondary'
-    ),
-    Back_Button: By.css(
-      '.modal__footer .btn-tertiary'
-    ),
-    Advanced_Environment_Variables_Table: commonTable(
-      advancedEnvironmentVariablesTable
-    ),
-    Access_Key_Checkbox: commonAccessKeyCheckbox,
-    Access_Key_Input: commonAccessKeyInput,
-    Advanced_Accordion: {
-      Accordion_Header: By.css(
-        '.modal__body .wizard-form__content-container h5'
-      ),
-      Accordion_Subheader: By.css(
-        '.modal__body .wizard-form__content-container .form-table-title'
-      ),
-      Default_Input_Path_Input: inputGroup(
-        generateInputGroup(
-          '.modal__body .job-wizard__advanced .form-col-1:nth-of-type(1) .form-field__wrapper',
-          true,
-          false,
-          true
-        )
-      ),
-      Default_Artifact_Path_Input: inputGroup(
-        generateInputGroup(
-          '.modal__body .job-wizard__advanced .form-col-1:nth-of-type(2) .form-field__wrapper',
-          true,
-          false,
-          true
-        )
-      )
-    }
   }
 }

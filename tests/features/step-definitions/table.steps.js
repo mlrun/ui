@@ -334,6 +334,12 @@ When('add data to {string} table on {string} wizard with combobox', async functi
       rows[row_indx][4]
     )
     await this.driver.sleep(100)
+    await selectOptionInDropdownWithoutCheck(
+      this.driver,
+      pageObjects[wizard][table]['tableFields'][inputFields[4]](rowsNumber + 2),
+      rows[row_indx][5]
+    )
+    await this.driver.sleep(100)
     await hoverComponent(
       this.driver,
       pageObjects[wizard][table]['tableFields']['apply_btn'](rowsNumber + 2)
@@ -541,7 +547,6 @@ When(
       if (offsetFlag === 'true') {
         indx -= pageObjects[wizardName][tableName].offset
       }
-
       await hoverComponent(
         this.driver,
         pageObjects[wizardName][tableName]['tableFields'][fieldName](indx)
@@ -670,6 +675,7 @@ When(
       await this.driver.sleep(100)
       for (const i in inputFields) {
         const component = pageObjects[wizard][accordion][table]['tableFields'][inputFields[i]](3)
+        // const component = pageObjects[wizard][accordion][table]['tableFields'][inputFields[i]]
         const inputField = component.inputField ?? component
         await typeIntoInputField(this.driver, inputField, rows[row_indx][i])
       }

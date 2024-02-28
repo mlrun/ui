@@ -32,7 +32,7 @@ import labelComponent from '../components/label.component'
 const actionMenuStructure = {
   root: '.actions-menu__container',
   menuElements: {
-    open_button: 'button',
+    open_button: '[data-testid="actions-menu-button-tooltip-wrapper"]',
     options: '.actions-menu__body .actions-menu__option'
   }
 }

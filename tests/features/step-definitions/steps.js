@@ -230,8 +230,9 @@ Then('click on breadcrumbs {string} label on {string} wizard', async function(
 
 Then('verify if {string} popup dialog appears', async function(popup) {
   await waiteUntilComponent(this.driver, pageObjects[popup]['Title'])
-  await this.driver.sleep(250)
+  await this.driver.sleep(500)
   await componentIsPresent(this.driver, pageObjects[popup]['Title'])
+  await this.driver.sleep(500)
   await componentIsVisible(this.driver, pageObjects[popup]['Title'])
 })
 
@@ -482,7 +483,10 @@ Then(
             pageObjects[wizard][accordion][inputField]
         )
         const unitValue = unit === 'cpu' ? value / 1000 : unit === 'millicpu' ? value * 100 : value
-        const result = Number.parseFloat(txt || '0') + unitValue
+        let result = Number.parseFloat(txt || '0') + unitValue
+        if (unit === 'cpu') {
+          return result.toFixed(3)
+        }
         await incrementValue(
             this.driver,
             pageObjects[wizard][accordion][inputField],
@@ -543,11 +547,11 @@ Then(
   async function (value, inputField, unit, accordion, wizard) {
     const txt = await getInputValue(this.driver, pageObjects[wizard][accordion][inputField])
     const unitValue = unit === 'cpu' ? value / 1000 : unit === 'millicpu' ? value * 100 : value
-    let result =
-      unit === 'cpu'
-        ? (Number.parseFloat(txt) - unitValue).toFixed(3)
-        : Number.parseFloat(txt) - unitValue
-    if(result < 1){
+    let result = Number.parseFloat(txt) - unitValue
+    if (unit === 'cpu') {
+      return result.toFixed(3)
+    }
+    else if (unit !== 'cpu' && result < 1) {
       result = 1
     }
     await decrementValue(this.driver, pageObjects[wizard][accordion][inputField], value)

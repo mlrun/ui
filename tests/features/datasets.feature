@@ -733,7 +733,7 @@ Feature: Datasets Page
     Then "Hyperparameter_Checkbox" element should be unchecked on "Modal_Wizard_Form" wizard
     Then verify "Run_Name_Input" element visibility on "Modal_Wizard_Form" wizard
     Then type value "/" to "Run_Name_Input" field on "Modal_Wizard_Form" wizard
-    Then verify "Run_Name_Input" on "Modal_Wizard_Form" wizard should display options "Input_Hint"."Function_Name_Batch_Run_Hint"
+    Then verify "Run_Name_Input" on "Modal_Wizard_Form" wizard should display options "Input_Hint"."Run_Name_Hint"
     Then verify "Version_Tag_Dropdown" element on "Modal_Wizard_Form" wizard is disabled by class name
     Then verify "Handler_Dropdown" element visibility on "Modal_Wizard_Form" wizard
     Then verify "Handler_Dropdown" dropdown element on "Modal_Wizard_Form" wizard should contains "Common_Lists"."Handler_List"
@@ -757,7 +757,7 @@ Feature: Datasets Page
     Then verify "Image_Name_Input_Run_Details" element visibility on "Modal_Wizard_Form" wizard
     Then type value "" to "Image_Name_Input_Run_Details" field on "Modal_Wizard_Form" wizard
     Then verify "Image_Name_Input_Run_Details" on "Modal_Wizard_Form" wizard should display warning "Input_Hint"."Input_Field_Require"
-    Then "Image_Name_Text_Run_Details" component on "Modal_Wizard_Form" should contains "Batch_Run"."Image_Name_Text"
+    Then "Image_Name_Text_Run_Details" component on "Modal_Wizard_Form" should contains "Modal_Wizard_Form"."Image_Name_Text"
 
   @MLD
   Scenario: MLD021 - Check Data Inputs components on Train Model wizard
@@ -768,13 +768,13 @@ Feature: Datasets Page
     And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
     And click on cell with value "Datasets" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
     And wait load page
-    When click on cell with row index 1 in "name" column in "Datasets_Table" table on "Datasets" wizard
+    When click on cell with row index 3 in "name" column in "Datasets_Table" table on "Datasets" wizard
     Then click on "Train_Button" element on "Datasets_Info_Pane" wizard
     And wait load page
     Then "Form_Header_Run_Details" element on "commonPagesHeader" should contains "Run Details" value
     And click on "Next_Button" element on "Modal_Wizard_Form" wizard
     Then "Form_Header_Data_Inputs" element on "commonPagesHeader" should contains "Data Inputs" value
-    Then verify "Data_Inputs_Headers" on "Modal_Wizard_Form" wizard should contains "Batch_Run"."Data_Inputs_Table_Header"
+    Then verify "Data_Inputs_Headers" on "Modal_Wizard_Form" wizard should contains "Modal_Wizard_Form"."Data_Inputs_Table_Header"
     Then verify data in "Data_Inputs_Table" table on "Modal_Wizard_Form" wizard
             | name_verify |                     path_verify                       |      
             | dataset     | store://datasets/default/test_new_structure2#0:latest | 
@@ -829,7 +829,7 @@ Feature: Datasets Page
     And click on "Next_Button" element on "Modal_Wizard_Form" wizard
     And click on "Next_Button" element on "Modal_Wizard_Form" wizard
     Then "Form_Header_Parameters" element on "commonPagesHeader" should contains "Parameters" value
-    Then verify "Parameters_Headers" on "Modal_Wizard_Form" wizard should contains "Batch_Run"."Parameters_Table_Header"
+    Then verify "Parameters_Headers" on "Modal_Wizard_Form" wizard should contains "Modal_Wizard_Form"."Parameters_Table_Header"
     Then verify data in "Parameters_Table" table on "Modal_Wizard_Form" wizard
             | name_verify           |         type_dropdown_verify         | value_verify |
             | model_class           |                str                   |              |
@@ -1045,26 +1045,25 @@ Feature: Datasets Page
     And click on "Next_Button" element on "Modal_Wizard_Form" wizard
     And click on "Next_Button" element on "Modal_Wizard_Form" wizard
     Then "Form_Header_Advanced" element on "commonPagesHeader" should contains "Advanced" value
-
-    Then "Accordion_Subheader" element on "Modal_Wizard_Form" should contains "Environment variables" value
+    Then "Accordion_Advanced_Subheader" element on "Modal_Wizard_Form" should contains "Environment variables" value
     Then verify "Advanced_Environment_Variables_Table" element visibility on "Modal_Wizard_Form" wizard 
     When add data to "Advanced_Environment_Variables_Table" table on "Modal_Wizard_Form" wizard
             | name_input | type_dropdown | value_input |
             |    name1   |      Value    |    value1   |
             |    name2   |      Value    |      1      |
             |    name3   |      Value    |     0.5     |    
-    Then verify data in "Advanced_Environment_Variables_Table" table on "Batch_Run_Edit" wizard
+    Then verify data in "Advanced_Environment_Variables_Table" table on "Modal_Wizard_Form" wizard
             | name_verify | type_dropdown_verify | value_verify |
             |    name1    |        value         |    value1    |
             |    name2    |        value         |      1       | 
             |    name3    |        value         |     0.5      |  
-    Then edit dropdown field 1 row in "Advanced_Environment_Variables_Table" key-value table on "Batch_Run_Edit" wizard
+    Then edit dropdown field 1 row in "Advanced_Environment_Variables_Table" key-value table on "Modal_Wizard_Form" wizard
             | type_dropdown |  value_input | value_input_key |
             |     Secret    | sectretName1 |   sectretKey1   |
-    Then edit dropdown field 3 row in "Advanced_Environment_Variables_Table" key-value table on "Batch_Run_Edit" wizard
+    Then edit dropdown field 3 row in "Advanced_Environment_Variables_Table" key-value table on "Modal_Wizard_Form" wizard
             | type_dropdown |  value_input | value_input_key |
             |     Secret    | sectretName2 |   sectretKey2   |
-    Then verify data in "Advanced_Environment_Variables_Table" table on "Batch_Run_Edit" wizard
+    Then verify data in "Advanced_Environment_Variables_Table" table on "Modal_Wizard_Form" wizard
             | name_verify | type_dropdown_verify |        value_verify      |
             |    name1    |        secret        | sectretName1:sectretKey1 |
             |    name2    |        value         |             1            | 
