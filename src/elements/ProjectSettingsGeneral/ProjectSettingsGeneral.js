@@ -318,6 +318,8 @@ const ProjectSettingsGeneral = ({
                     </p>
                     <FormKeyValueTable
                       addNewItemLabel="Add parameter"
+                      keyValidationRules={getValidationRules('project.params.key')}
+                      valueValidationRules={getValidationRules('project.params.value')}
                       onExitEditModeCallback={updateProjectData}
                       fieldsPath={PARAMS}
                       formState={formState}
