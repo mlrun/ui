@@ -85,7 +85,7 @@ const FeatureStoreTableRow = ({
                           firstCell={index === 0}
                           handleExpandRow={handleExpandRow}
                           item={rowItem}
-                          key={data.id}
+                          key={`${data.id}${data.isTablePanelOpen || ''}`}
                           link={
                             data.rowExpanded?.getLink
                               ? data.rowExpanded.getLink(params.tab ?? DETAILS_OVERVIEW_TAB)
@@ -147,7 +147,7 @@ const FeatureStoreTableRow = ({
                                     }
                                     item={tableContentItem.data}
                                     link={value.getLink?.(params.tab ?? DETAILS_OVERVIEW_TAB)}
-                                    key={value.id}
+                                    key={`${value.id}${value.isTablePanelOpen || ''}`}
                                     selectItem={handleSelectItem}
                                     selectedItem={selectedItem}
                                   />
@@ -184,7 +184,7 @@ const FeatureStoreTableRow = ({
                   firstCell={index === 0}
                   handleExpandRow={handleExpandRow}
                   item={rowItem.data}
-                  key={value.id}
+                  key={`${value.id}${value.isTablePanelOpen || ''}`}
                   link={value.getLink?.(params.tab ?? DETAILS_OVERVIEW_TAB)}
                   selectedItem={selectedItem}
                   selectItem={handleSelectItem}
