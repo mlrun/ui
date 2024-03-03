@@ -93,6 +93,7 @@ export const useGetTagOptions = (fetchTags, filters, category, modalFiltersName)
               }
             }
           })
+          .catch(() => {})
       } else if (paramTag) {
         dispatch(setFilters({ paramTag }))
         modalFiltersName &&

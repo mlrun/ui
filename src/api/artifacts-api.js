@@ -48,6 +48,7 @@ const fetchArtifacts = (project, filters, config = {}, withLatestTag) => {
 
   return mainHttpClientV2.get(`/projects/${project}/artifacts`, {
     ...config,
+    signal: config.ui?.controller?.signal,
     params: { ...config.params, ...params }
   })
 }
@@ -86,14 +87,16 @@ const artifactsApi = {
 
     return mainHttpClient.get(`projects/${project}/files`, config)
   },
-  getArtifactTags: (project, category, config) =>
-    mainHttpClient.get(`/projects/${project}/artifact-tags`, {
+  getArtifactTags: (project, category, config) => {
+    return mainHttpClient.get(`/projects/${project}/artifact-tags`, {
       ...config,
+      signal: config.ui?.controller?.signal,
       params: {
         ...config.params,
         category
       }
-    }),
+    })
+  },
   getArtifact: (project, artifactName, artifactTag) => {
     const params = {
       name: artifactName
