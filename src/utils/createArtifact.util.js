@@ -17,19 +17,24 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-export const modelUniquenessError = 'That combination of model name and model tag is already in use. Assign a unique combination of model name and model tag.'
-const artifactSubTitle = 'Assign it a unique combination of name and tag, and specify its path (for example, s3://mybucket/path).'
+export const modelUniquenessError =
+  'That combination of model name and model tag is already in use. Assign a unique combination of model name and model tag.'
+const artifactSubTitle =
+  'Assign it a unique combination of name and tag, and specify its path (for example, s3://mybucket/path).'
 
 export const createArtifactMessages = {
   artifact: {
-    title: 'Register an artifact in MLRun so it can be used, for example, by functions, jobs, and pipelines.',
+    title:
+      'Register an artifact in MLRun so it can used, for example, by functions, jobs, and pipelines.',
     subTitle: artifactSubTitle,
-    uniquenessError: 'That combination of artifact name and artifact tag is already in use. Assign a unique combination of artifact name and artifact tag.'
+    uniquenessError:
+      'That combination of artifact name and artifact tag is already in use. Assign a unique combination of artifact name and artifact tag.'
   },
   dataset: {
     title:
       'Register a dataset as an artifact in MLRun so it can be used, for example, by functions, jobs, and pipelines.',
     subTitle: artifactSubTitle,
-    uniquenessError: 'That combination of dataset name and dataset tag is already in use. Assign a unique combination of dataset name and dataset tag.'
+    uniquenessError:
+      'That combination of dataset name and dataset tag is already in use. Assign a unique combination of dataset name and dataset tag.'
   }
 }
