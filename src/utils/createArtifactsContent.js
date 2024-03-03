@@ -332,7 +332,9 @@ export const createFilesRowData = (artifact, project, frontendSpec, showExpandBu
         headerId: 'producer',
         headerLabel: 'Producer',
         value: artifact.producer?.name || '',
-        template: <TableProducerCell bodyCellClassName="table-cell-1" producer={artifact.producer} />,
+        template: (
+          <TableProducerCell bodyCellClassName="table-cell-1" producer={artifact.producer} />
+        ),
         className: 'table-cell-1',
         type: 'producer'
       },
@@ -385,7 +387,7 @@ export const createModelEndpointsRowData = (artifact, project) => {
     : ''
   const { key: functionName } = parseUri(functionUri)
   const averageLatency = artifact.status?.metrics?.real_time?.latency_avg_1h?.[0]?.[1]
-
+  console.log('artifact', artifact)
   return {
     data: {
       ...artifact
@@ -431,7 +433,12 @@ export const createModelEndpointsRowData = (artifact, project) => {
         id: `version.${artifact.ui.identifierUnique}`,
         headerId: 'version',
         headerLabel: 'Version',
-        value: artifact?.status?.children?.length > 0 ? 'Router' : tag,
+        value:
+          artifact?.status?.endpoint_type === 2
+            ? ''
+            : artifact?.status?.children?.length > 0
+            ? 'Router'
+            : tag,
         className: 'table-cell-small'
       },
       {
@@ -542,7 +549,9 @@ export const createDatasetsRowData = (artifact, project, frontendSpec, showExpan
         headerId: 'producer',
         headerLabel: 'Producer',
         value: artifact.producer?.name || '',
-        template: <TableProducerCell bodyCellClassName="table-cell-1" producer={artifact.producer} />,
+        template: (
+          <TableProducerCell bodyCellClassName="table-cell-1" producer={artifact.producer} />
+        ),
         className: 'table-cell-1',
         type: 'producer'
       },
