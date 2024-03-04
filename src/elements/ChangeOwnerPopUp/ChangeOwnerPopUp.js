@@ -17,7 +17,7 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import React, { useRef, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { useDispatch } from 'react-redux'
 import PropTypes from 'prop-types'
 import classnames from 'classnames'
@@ -52,6 +52,16 @@ const ChangeOwnerPopUp = ({ changeOwnerCallback, projectId }) => {
   useDetectOutsideClick(searchInputRef, () => setShowSuggestionList(false))
 
   const { width: dropdownWidth } = searchRowRef?.current?.getBoundingClientRect() || {}
+
+  useEffect(() => {
+    if (
+      usersList.filter(member => {
+        return member.label.toLowerCase().includes(searchValue.toLowerCase())
+      }).length === 0
+    ) {
+      setShowSuggestionList(false)
+    }
+  }, [searchValue, usersList])
 
   const handleOnClose = () => {
     setSearchValue('')
@@ -144,6 +154,7 @@ const ChangeOwnerPopUp = ({ changeOwnerCallback, projectId }) => {
 
     if (memberNameEscaped !== '') {
       generateSuggestionList(memberName, members => {
+        setShowSuggestionList(true)
         const matchedOwner = members.find(
           member => member.name === memberNameEscaped || member.username === memberNameEscaped
         )
@@ -152,20 +163,9 @@ const ChangeOwnerPopUp = ({ changeOwnerCallback, projectId }) => {
         } else {
           setNewOwnerId('')
         }
-
-        if (
-          members.filter(member => {
-            return member.label.toLowerCase().includes(memberNameEscaped.toLowerCase())
-          }).length === 0
-        ) {
-          setShowSuggestionList(false)
-        } else {
-          setShowSuggestionList(true)
-        }
       })
     } else {
       setNewOwnerId('')
-      setShowSuggestionList(false)
     }
   }
 
