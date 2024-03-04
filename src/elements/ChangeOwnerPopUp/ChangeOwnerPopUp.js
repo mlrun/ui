@@ -116,7 +116,7 @@ const ChangeOwnerPopUp = ({ changeOwnerCallback, projectId }) => {
       'filter[assigned_policies]': '[$contains_any]Developer,Project Admin'
     }
     const requiredIgzVersion = '3.5.3'
-    let usersList = []
+    let formattedUsers = []
 
     if (isIgzVersionCompatible(requiredIgzVersion)) {
       params['filter[username]'] = `[$contains_istr]${memberName}`
@@ -131,7 +131,7 @@ const ChangeOwnerPopUp = ({ changeOwnerCallback, projectId }) => {
         data: { data: users }
       } = response
 
-      usersList = users.map(user => {
+      formattedUsers = users.map(user => {
         return {
           name: `${user.attributes.first_name} ${user.attributes.last_name}`,
           username: user.attributes.username,
@@ -140,12 +140,12 @@ const ChangeOwnerPopUp = ({ changeOwnerCallback, projectId }) => {
           role: ''
         }
       })
-      setUsersList(usersList)
+      setUsersList(formattedUsers)
     } catch (error) {
       showErrorNotification(dispatch, error, 'Failed to fetch users')
     }
 
-    resolve(usersList)
+    resolve(formattedUsers)
   }, 200)
 
   const onSearchChange = memberName => {
@@ -158,11 +158,8 @@ const ChangeOwnerPopUp = ({ changeOwnerCallback, projectId }) => {
         const matchedOwner = members.find(
           member => member.name === memberNameEscaped || member.username === memberNameEscaped
         )
-        if (matchedOwner) {
-          setNewOwnerId(matchedOwner.id)
-        } else {
-          setNewOwnerId('')
-        }
+
+        setNewOwnerId(matchedOwner?.id || '')
       })
     } else {
       setNewOwnerId('')
