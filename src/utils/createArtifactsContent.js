@@ -387,7 +387,9 @@ export const createModelEndpointsRowData = (artifact, project) => {
     : ''
   const { key: functionName } = parseUri(functionUri)
   const averageLatency = artifact.status?.metrics?.real_time?.latency_avg_1h?.[0]?.[1]
-  console.log('artifact', artifact)
+
+  const isEndpointTypeRouter = artifact?.status?.endpoint_type === 2
+
   return {
     data: {
       ...artifact
@@ -433,12 +435,7 @@ export const createModelEndpointsRowData = (artifact, project) => {
         id: `version.${artifact.ui.identifierUnique}`,
         headerId: 'version',
         headerLabel: 'Version',
-        value:
-          artifact?.status?.endpoint_type === 2
-            ? ''
-            : artifact?.status?.children?.length > 0
-            ? 'Router'
-            : tag,
+        value: isEndpointTypeRouter ? '' : artifact?.status?.children?.length > 0 ? 'Router' : tag,
         className: 'table-cell-small'
       },
       {
