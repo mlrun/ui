@@ -184,7 +184,7 @@ const FeatureStoreTableRow = ({
                   firstCell={index === 0}
                   handleExpandRow={handleExpandRow}
                   item={rowItem.data}
-                  key={`${value.id}${value.isTablePanelOpen || ''}`}
+                  key={value.id}
                   link={value.getLink?.(params.tab ?? DETAILS_OVERVIEW_TAB)}
                   selectedItem={selectedItem}
                   selectItem={handleSelectItem}

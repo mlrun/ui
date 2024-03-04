@@ -203,13 +203,12 @@ export const createFeaturesRowData = (feature, isTablePanelOpen, showExpandButto
         className: 'table-cell-1'
       },
       {
-        id: `entity.${feature.ui.identifierUnique}`,
+        id: `entity.${feature.ui.identifierUnique}.${isTablePanelOpen}`,
         headerId: 'entities',
         headerLabel: 'Entities',
         type: 'labels',
         value: feature.spec?.entities.map(entity => entity.name) || '',
-        className: 'table-cell-2',
-        isTablePanelOpen
+        className: 'table-cell-2'
       },
       {
         id: `description.${feature.ui.identifierUnique}`,
@@ -219,13 +218,12 @@ export const createFeaturesRowData = (feature, isTablePanelOpen, showExpandButto
         className: 'table-cell-2'
       },
       {
-        id: `labels.${feature.ui.identifierUnique}`,
+        id: `labels.${feature.ui.identifierUnique}.${isTablePanelOpen}`,
         headerId: 'labels',
         headerLabel: 'Labels',
         value: parseKeyValues(feature.labels),
         className: isTablePanelOpen ? 'table-cell-2' : 'table-cell-3',
-        type: 'labels',
-        isTablePanelOpen
+        type: 'labels'
       },
       {
         ...getFeatureSetTargetCellValue(feature.targets),
