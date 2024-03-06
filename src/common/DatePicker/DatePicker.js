@@ -17,7 +17,15 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import React, { useState, useRef, useEffect, useLayoutEffect, useCallback, useReducer } from 'react'
+import React, {
+  useState,
+  useRef,
+  useEffect,
+  useLayoutEffect,
+  useCallback,
+  useReducer,
+  useMemo
+} from 'react'
 import PropTypes from 'prop-types'
 import { throttle } from 'lodash'
 
@@ -62,7 +70,6 @@ const DatePicker = ({
   withLabels
 }) => {
   const [datePickerState, datePickerDispatch] = useReducer(datePickerReducer, initialState)
-  const [datePickerOptions, setDatePickerOptions] = useState([])
   const [isCalendarInvalid, setIsCalendarInvalid] = useState(false)
   const [isDatePickerOpened, setIsDatePickerOpened] = useState(false)
   const [isDatePickerOptionsOpened, setIsDatePickerOptionsOpened] = useState(false)
@@ -87,8 +94,8 @@ const DatePicker = ({
   const dateRegEx = getDateRegEx(dateMask)
   const startWeek = getWeekStart(decodeLocale(navigator.language))
 
-  useEffect(() => {
-    setDatePickerOptions(hasFutureOptions ? datePickerFutureOptions : datePickerPastOptions)
+  const datePickerOptions = useMemo(() => {
+    return hasFutureOptions ? datePickerFutureOptions : datePickerPastOptions
   }, [hasFutureOptions])
 
   const handleCloseDatePickerOutside = useCallback(
