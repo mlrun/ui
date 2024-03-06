@@ -17,7 +17,7 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import { capitalize } from 'lodash'
+import { capitalize, set } from 'lodash'
 
 import { mainHttpClient } from '../httpClient'
 import { GROUP_BY_WORKFLOW, STATE_FILTER_ALL_ITEMS } from '../constants'
@@ -77,7 +77,7 @@ const workflowsApi = {
   },
   getWorkflows: (project, filter, config = {}) => {
     if (filter?.groupBy === GROUP_BY_WORKFLOW) {
-      config.params.filter = generateQueryParams(filter)
+      set(config, ['params', 'filter'], generateQueryParams(filter))
     }
 
     return mainHttpClient.get(`/projects/${project}/pipelines`, config)

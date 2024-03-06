@@ -17,7 +17,7 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import React, { useMemo } from 'react'
+import React from 'react'
 import PropTypes from 'prop-types'
 import MaskedInput from 'react-text-mask'
 import classnames from 'classnames'
@@ -91,9 +91,17 @@ const DatePickerView = React.forwardRef(
     )
     const inputLabelClassNames = classnames('input__label', label && 'active-label')
 
-    const datePickerElement = useMemo(() => {
-      return (
-        <>
+    return (
+      <div
+        data-testid='date-picker-container'
+        className={datePickerClassNames}
+        ref={ref.datePickerRef}
+      >
+        <div
+          data-testid='date-picker-input'
+          className='date-picker__input-wrapper input-wrapper'
+          onClick={onInputClick}
+        >
           {withLabels && selectedOption && selectedOption.id !== CUSTOM_RANGE_DATE_OPTION ? (
             <>
               <span>{selectedOption.label}</span>
@@ -121,33 +129,6 @@ const DatePickerView = React.forwardRef(
               )}
             </>
           )}
-        </>
-      )
-    }, [
-      autoCorrectedDatePipe,
-      dateMask,
-      datePickerInputOnBlur,
-      disabled,
-      inputClassNames,
-      isValueEmpty,
-      onInputChange,
-      selectedOption,
-      valueDatePickerInput,
-      withLabels
-    ])
-
-    return (
-      <div
-        data-testid='date-picker-container'
-        className={datePickerClassNames}
-        ref={ref.datePickerRef}
-      >
-        <div
-          data-testid='date-picker-input'
-          className='date-picker__input-wrapper input-wrapper'
-          onClick={onInputClick}
-        >
-          {datePickerElement}
           <span className={inputLabelClassNames}>
             {label}
             {required && <span className='input__label-mandatory'> *</span>}
@@ -296,6 +277,10 @@ const DatePickerView = React.forwardRef(
   }
 )
 
+DatePickerView.defaultProps = {
+  selectedOption: {}
+}
+
 DatePickerView.propTypes = {
   autoCorrectedDatePipe: PropTypes.func.isRequired,
   className: PropTypes.string.isRequired,
@@ -328,6 +313,7 @@ DatePickerView.propTypes = {
   position: PropTypes.string.isRequired,
   required: PropTypes.bool.isRequired,
   requiredText: PropTypes.string.isRequired,
+  selectedOption: PropTypes.object,
   setSelectedDate: PropTypes.func.isRequired,
   tip: PropTypes.string.isRequired,
   valueDatePickerInput: PropTypes.string.isRequired,

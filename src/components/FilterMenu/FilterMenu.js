@@ -45,7 +45,6 @@ import {
   KEY_CODES,
   LABELS_FILTER,
   NAME_FILTER,
-  PERIOD_FILTER,
   PROJECT_FILTER,
   REQUEST_CANCELED,
   SHOW_ITERATIONS,
@@ -342,7 +341,7 @@ const FilterMenu = ({
     }
   }, [autoRefresh, hidden, enableAutoRefresh, filtersStore, applyChanges])
 
-  const elementToRender = useCallback(
+  const getFilterTemplate = useCallback(
     filter => {
       switch (filter.type) {
         case TAG_FILTER:
@@ -400,7 +399,6 @@ const FilterMenu = ({
               label={filter.label}
               onChange={handleChangeDates}
               type='date-range-time'
-              optionsType='past'
             />
           )
         case ITERATIONS_FILTER:
@@ -435,7 +433,7 @@ const FilterMenu = ({
           return (
             <Select
               density='dense'
-              className={filter.type === PERIOD_FILTER ? 'period-filter' : ''}
+              className=''
               label={`${filter.type.replace(/([A-Z])/g, ' $1')}:`}
               key={filter.type}
               onClick={item => handleSelectOption(item, filter)}
@@ -475,7 +473,7 @@ const FilterMenu = ({
 
             return (
               <div className='filter-column' key={filter.type}>
-                {elementToRender(filter)}
+                {getFilterTemplate(filter)}
               </div>
             )
           })}

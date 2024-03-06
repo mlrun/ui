@@ -21,7 +21,7 @@ import {
   GROUP_BY_FILTER,
   GROUP_BY_NAME,
   GROUP_BY_NONE,
-  PERIOD_FILTER,
+  PROJECT_FILTER,
   SORT_BY,
   STATE_FILTER_ALL_ITEMS,
   STATUS_FILTER,
@@ -43,18 +43,13 @@ export const generateStatusFilter = useFailedStatus => {
 }
 
 export const filterSelectOptions = {
-  [PERIOD_FILTER]: [
-    { label: 'Last 7 days', id: 'last7Days' },
-    { label: 'Last 14 days', id: 'last14Days' },
-    { label: 'Last months', id: 'lastMonths' },
-    { label: 'Last 6 months', id: 'last6Months' }
-  ],
   [STATUS_FILTER]: generateStatusFilter(false),
   [GROUP_BY_FILTER]: [
     { label: 'None', id: GROUP_BY_NONE },
     { label: 'Name', id: GROUP_BY_NAME }
   ],
-  [SORT_BY]: [{ label: 'Name', id: 'name' }]
+  [SORT_BY]: [{ label: 'Name', id: 'name' }],
+  [PROJECT_FILTER]: [{ label: 'Project', id: 'project' }]
 }
 
 export const tagFilterOptions = [

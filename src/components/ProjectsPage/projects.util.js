@@ -26,7 +26,6 @@ import { DANGER_BUTTON, FORBIDDEN_ERROR_STATUS_CODE } from 'igz-controls/constan
 import { setNotification } from '../../reducers/notificationReducer'
 import { showErrorNotification } from '../../utils/notifications.util'
 import { jobHasWorkflowLabel } from '../../utils/parseJob'
-
 import { NEXT_24_HOUR_DATE_OPTION, PAST_24_HOUR_DATE_OPTION } from '../../utils/datePicker.util'
 
 import { ReactComponent as ArchiveIcon } from 'igz-controls/images/archive-icon.svg'

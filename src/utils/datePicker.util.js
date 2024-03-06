@@ -64,7 +64,7 @@ export const datePickerPastOptions = [
     label: 'Past hour',
     isPredefined: true,
     handler: () => {
-      return getPastDate((fromDate, toDate) => {
+      return getDates((fromDate, toDate) => {
         fromDate.setHours(toDate.getHours() - 1)
       })
     }
@@ -74,7 +74,7 @@ export const datePickerPastOptions = [
     label: 'Past 24 hours',
     isPredefined: true,
     handler: () => {
-      return getPastDate((fromDate, toDate) => {
+      return getDates((fromDate, toDate) => {
         fromDate.setDate(toDate.getDate() - 1)
       })
     }
@@ -84,7 +84,7 @@ export const datePickerPastOptions = [
     label: 'Past week',
     isPredefined: true,
     handler: () => {
-      return getPastDate((fromDate, toDate) => {
+      return getDates((fromDate, toDate) => {
         fromDate.setDate(toDate.getDate() - 7)
       })
     }
@@ -94,7 +94,7 @@ export const datePickerPastOptions = [
     label: 'Past month',
     isPredefined: true,
     handler: () => {
-      return getPastDate((fromDate, toDate) => {
+      return getDates((fromDate, toDate) => {
         fromDate.setMonth(toDate.getMonth() - 1)
       })
     }
@@ -104,7 +104,7 @@ export const datePickerPastOptions = [
     label: 'Past year',
     isPredefined: true,
     handler: () => {
-      return getPastDate((fromDate, toDate) => {
+      return getDates((fromDate, toDate) => {
         fromDate.setFullYear(toDate.getFullYear() - 1)
       })
     }
@@ -116,7 +116,7 @@ export const datePickerPastOptions = [
   }
 ]
 
-export const datePickerNextOptions = [
+export const datePickerFutureOptions = [
   {
     id: ANY_TIME_DATE_OPTION,
     label: 'Any time',
@@ -127,7 +127,7 @@ export const datePickerNextOptions = [
     label: 'Next hour',
     isPredefined: true,
     handler: () => {
-      return getPastDate((fromDate, toDate) => {
+      return getDates((fromDate, toDate) => {
         fromDate.setHours(toDate.getHours() + 1)
       })
     }
@@ -137,7 +137,7 @@ export const datePickerNextOptions = [
     label: 'Next 24 hours',
     isPredefined: true,
     handler: () => {
-      return getPastDate((fromDate, toDate) => {
+      return getDates((fromDate, toDate) => {
         fromDate.setDate(toDate.getDate() + 1)
       })
     }
@@ -147,7 +147,7 @@ export const datePickerNextOptions = [
     label: 'Next week',
     isPredefined: true,
     handler: () => {
-      return getPastDate((fromDate, toDate) => {
+      return getDates((fromDate, toDate) => {
         fromDate.setDate(toDate.getDate() + 7)
       })
     }
@@ -157,7 +157,7 @@ export const datePickerNextOptions = [
     label: 'Next month',
     isPredefined: true,
     handler: () => {
-      return getPastDate((fromDate, toDate) => {
+      return getDates((fromDate, toDate) => {
         fromDate.setMonth(toDate.getMonth() + 1)
       })
     }
@@ -167,7 +167,7 @@ export const datePickerNextOptions = [
     label: 'Next year',
     isPredefined: true,
     handler: () => {
-      return getPastDate((fromDate, toDate) => {
+      return getDates((fromDate, toDate) => {
         fromDate.setFullYear(toDate.getFullYear() + 1)
       })
     }
@@ -179,7 +179,7 @@ export const datePickerNextOptions = [
   }
 ]
 
-const getPastDate = setDate => {
+const getDates = setDate => {
   let fromDate = new Date()
   let toDate = new Date()
 

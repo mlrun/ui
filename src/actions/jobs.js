@@ -375,6 +375,7 @@ const jobsActions = {
     const newConfig = {
       ...config,
       params: {
+        ...config?.params,
         include_last_run: 'yes'
       }
     }

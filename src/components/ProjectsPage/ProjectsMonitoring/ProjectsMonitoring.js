@@ -59,13 +59,20 @@ const ProjectsMonitoring = () => {
   const dispatch = useDispatch({})
   const navigate = useNavigate({})
   const jobsAbortControllerRef = useRef()
+  const scheduledAbortControllerRef = useRef()
   const workflowsAbortControllerRef = useRef()
 
   const { jobs, scheduled } = useSelector(store => store.jobsStore)
   const { data: workflows } = useSelector(store => store.workflowsStore.workflows)
 
   const handleDateSelection = id => dates => {
-    const requestToAbort = id === 'jobs' ? jobsAbortControllerRef : workflowsAbortControllerRef
+    const requestToAbort =
+      id === 'jobs'
+        ? jobsAbortControllerRef
+        : id === 'workflows'
+        ? workflowsAbortControllerRef
+        : scheduledAbortControllerRef
+
     requestToAbort.current.abort(REQUEST_CANCELED)
 
     const generatedDates = [...dates]
@@ -141,18 +148,27 @@ const ProjectsMonitoring = () => {
   }, [dispatch, workflowsFilter])
 
   useEffect(() => {
-    dispatch(jobsActions.fetchScheduledJobs('*')).then(() => {
-      setLoadingState(state => ({
-        ...state,
-        scheduled: false
-      }))
+    scheduledAbortControllerRef.current = new AbortController()
+
+    dispatch(
+      jobsActions.fetchScheduledJobs('*', scheduledFilter, {
+        signal: scheduledAbortControllerRef.current.signal
+      })
+    ).then(data => {
+      if (data) {
+        setLoadingState(state => ({
+          ...state,
+          scheduled: false
+        }))
+      }
     })
-  }, [dispatch])
+  }, [dispatch, scheduledFilter])
 
   useEffect(() => {
     return () => {
       jobsAbortControllerRef.current.abort(REQUEST_CANCELED)
       workflowsAbortControllerRef.current.abort(REQUEST_CANCELED)
+      scheduledAbortControllerRef.current.abort(REQUEST_CANCELED)
     }
   }, [])
 
@@ -185,7 +201,7 @@ const ProjectsMonitoring = () => {
                   label=''
                   onChange={stats.filters.handler(stats.id)}
                   type='date-range-time'
-                  optionsType={stats.id === 'scheduled' ? 'next' : 'past'}
+                  hasFutureOptions={stats.id === 'scheduled'}
                   withLabels
                 />
               </div>
