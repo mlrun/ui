@@ -128,7 +128,9 @@ const ArtifactsTableRow = ({
                                   <TableCell
                                     className={cellClassNames}
                                     data={
-                                      value.expandedCellContent ? value.expandedCellContent : value
+                                      value.expandedCellContent
+                                        ? { headerId: value.headerId, ...value.expandedCellContent }
+                                        : value
                                     }
                                     item={tableContentItem.data}
                                     link={value.getLink?.(params.tab ?? DETAILS_OVERVIEW_TAB)}
