@@ -28,6 +28,9 @@ import ModelsView from './ModelsView'
 import RegisterModelModal from '../../../elements/RegisterModelModal/RegisterModelModal'
 import JobWizard from '../../JobWizard/JobWizard'
 
+import './models.scss'
+import cssVariables from './models.scss'
+
 import {
   fetchArtifactsFunctions,
   fetchArtifactTags,
@@ -73,6 +76,7 @@ import { useSortTable } from '../../../hooks/useSortTable.hook'
 import { useGetTagOptions } from '../../../hooks/useGetTagOptions.hook'
 import { getViewMode } from '../../../utils/helper'
 import { useMode } from '../../../hooks/mode.hook'
+import { useVirtualization } from '../../../hooks/useVirtualization.hook'
 
 const Models = ({ fetchModelFeatureVector }) => {
   const [models, setModels] = useState([])
@@ -92,15 +96,18 @@ const Models = ({ fetchModelFeatureVector }) => {
   const artifactsStore = useSelector(store => store.artifactsStore)
   const detailsStore = useSelector(store => store.detailsStore)
   const filtersStore = useSelector(store => store.filtersStore)
-  const params = useParams()
-  const navigate = useNavigate()
-  const location = useLocation()
+  const frontendSpec = useSelector(store => store.appStore.frontendSpec)
   const dispatch = useDispatch()
-  const modelsRef = useRef(null)
-  const abortControllerRef = useRef(new AbortController())
+  const location = useLocation()
+  const navigate = useNavigate()
+  const params = useParams()
   const viewMode = getViewMode(window.location.search)
   const { toggleConvertedYaml } = useModelsPage()
-  const frontendSpec = useSelector(store => store.appStore.frontendSpec)
+
+  const abortControllerRef = useRef(new AbortController())
+  const modelsRef = useRef(null)
+  const tableBodyRef = useRef(null)
+  const tableRef = useRef(null)
 
   const modelsFilters = useMemo(
     () => ({ name: filtersStore.name, ...filtersStore[FILTER_MENU_MODAL][MODELS_FILTERS].values }),
@@ -251,8 +258,8 @@ const Models = ({ fetchModelFeatureVector }) => {
       }
       const newPageDataSelectedRowData = { ...selectedRowData }
 
-      delete newStoreSelectedRowData[model.data.ui.value]
-      delete newPageDataSelectedRowData[model.data.ui.value]
+      delete newStoreSelectedRowData[model.data.ui.identifier]
+      delete newPageDataSelectedRowData[model.data.ui.identifier]
 
       dispatch(removeModel(newStoreSelectedRowData))
       setSelectedRowData(newPageDataSelectedRowData)
@@ -462,6 +469,21 @@ const Models = ({ fetchModelFeatureVector }) => {
     })
   }
 
+  const virtualizationConfig = useVirtualization({
+    tableRef,
+    tableBodyRef,
+    rowsData: {
+      content: sortedTableContent,
+      expandedRowsData: selectedRowData,
+      selectedItem: selectedModel
+    },
+    heightData: {
+      headerRowHeight: cssVariables.modelsHeaderRowHeight,
+      rowHeight: cssVariables.modelsRowHeight,
+      rowHeightExtended: cssVariables.modelsRowHeightExtended
+    }
+  })
+
   return (
     <ModelsView
       actionsMenu={actionsMenu}
@@ -478,7 +500,7 @@ const Models = ({ fetchModelFeatureVector }) => {
       largeRequestErrorMessage={largeRequestErrorMessage}
       models={models}
       pageData={pageData}
-      ref={modelsRef}
+      ref={{ modelsRef, tableRef, tableBodyRef }}
       selectedModel={selectedModel}
       selectedRowData={selectedRowData}
       setModels={setModels}
@@ -489,6 +511,7 @@ const Models = ({ fetchModelFeatureVector }) => {
       tableHeaders={sortedTableHeaders}
       viewMode={viewMode}
       urlTagOption={urlTagOption}
+      virtualizationConfig={virtualizationConfig}
     />
   )
 }

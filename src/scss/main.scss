@@ -324,7 +324,7 @@ main {
 
           .row_grouped-by {
             position: sticky;
-            top: 40px;
+            top: #{$headerRowHeight}px;
             background-color: $white;
             padding: 0;
             z-index: 3;
@@ -350,7 +350,7 @@ main {
       z-index: 3;
 
       &-row {
-        min-height: 40px;
+        min-height: #{$headerRowHeight}px;
       }
 
       &__cell {
@@ -407,6 +407,7 @@ main {
     flex-flow: column nowrap;
     flex: 1;
     overflow-y: auto;
+    will-change: scroll-position;
   }
 
   &.table-with-details {
