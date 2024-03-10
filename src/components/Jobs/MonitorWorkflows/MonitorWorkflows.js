@@ -634,7 +634,8 @@ const MonitorWorkflows = ({
           setJobWizardIsOpened(false)
         },
         defaultData: jobWizardMode === PANEL_RERUN_MODE ? editableItem?.rerun_object : {},
-        mode: jobWizardMode
+        mode: jobWizardMode,
+        wizardTitle: jobWizardMode === PANEL_RERUN_MODE ? 'Batch re-run' : undefined
       })
 
       setJobWizardIsOpened(true)
