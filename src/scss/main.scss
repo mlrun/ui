@@ -493,7 +493,10 @@ main {
   @include statusState($pictonBlue);
 }
 
-[class^='state-aborted'],
+[class^='state-aborted'] {
+  @include statusState($babyPink);
+}
+
 [class^='state-broken'],
 [class^='state-error'],
 [class^='state-fail'],
