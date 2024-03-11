@@ -59,7 +59,8 @@ const DetailsInputs = ({ inputs }) => {
     Object.entries(inputs || {}).forEach(([key, value]) => {
       if (value.startsWith(MLRUN_STORAGE_INPUT_PATH_SCHEME)) {
         const [, , , project, dbKeyWithHash] = value.split('/')
-        const [dbKey, hash] = dbKeyWithHash.split(':')
+        const [dbKeyWithIter, hash] = dbKeyWithHash.split(':')
+        const [dbKey, iter] = dbKeyWithIter.split('#')
 
         dispatch(
           fetchArtifacts({
@@ -67,6 +68,7 @@ const DetailsInputs = ({ inputs }) => {
             filters: { name: dbKey },
             config: {
               params: {
+                iter,
                 tag: hash ?? TAG_FILTER_LATEST
               }
             }
