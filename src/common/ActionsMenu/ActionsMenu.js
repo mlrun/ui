@@ -136,7 +136,7 @@ const ActionsMenu = ({ dataItem, menu, time, withQuickActions }) => {
             customPosition={{
               element: actionMenuBtnRef,
               position: 'bottom-left',
-              switchOppositeVertical: true
+              autoVerticalPosition: true
             }}
             headerIsHidden
             ref={dropDownMenuRef}
