@@ -116,8 +116,8 @@ const responseLargeDataOnFulfill = response => {
   if (response.config?.ui?.requestId) {
     const isLargeResponse =
       response.data?.total_size >= 0
-        ? response.data.total_size > 1500
-        : Object.values(response.data)?.[0]?.length > 1500
+        ? response.data.total_size > 10000
+        : Object.values(response.data)?.[0]?.length > 10000
 
     clearTimeout(requestTimeouts[response.config.ui.requestId])
     delete requestTimeouts[response.config.ui.requestId]

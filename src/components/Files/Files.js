@@ -55,15 +55,19 @@ import {
   removeFiles
 } from '../../reducers/artifactsReducer'
 import { getArtifactIdentifier } from '../../utils/getUniqueIdentifier'
+import { getFilterTagOptions, setFilters } from '../../reducers/filtersReducer'
+import { getViewMode } from '../../utils/helper'
 import { isDetailsTabExists } from '../../utils/isDetailsTabExists'
 import { openPopUp } from 'igz-controls/utils/common.util'
-import { getFilterTagOptions, setFilters } from '../../reducers/filtersReducer'
 import { setNotification } from '../../reducers/notificationReducer'
 import { useGetTagOptions } from '../../hooks/useGetTagOptions.hook'
 import { useGroupContent } from '../../hooks/groupContent.hook'
-import { useYaml } from '../../hooks/yaml.hook'
-import { getViewMode } from '../../utils/helper'
 import { useSortTable } from '../../hooks/useSortTable.hook'
+import { useVirtualization } from '../../hooks/useVirtualization.hook'
+import { useYaml } from '../../hooks/yaml.hook'
+
+import './files.scss'
+import cssVariables from './files.scss'
 
 const Files = () => {
   const [files, setFiles] = useState([])
@@ -79,15 +83,20 @@ const Files = () => {
   )
   const artifactsStore = useSelector(store => store.artifactsStore)
   const filtersStore = useSelector(store => store.filtersStore)
-  const params = useParams()
-  const abortControllerRef = useRef(new AbortController())
-  const navigate = useNavigate()
-  const location = useLocation()
-  const dispatch = useDispatch()
-  const filesRef = useRef(null)
-  const viewMode = getViewMode(window.location.search)
-  const pageData = useMemo(() => generatePageData(viewMode), [viewMode])
   const frontendSpec = useSelector(store => store.appStore.frontendSpec)
+  const dispatch = useDispatch()
+  const location = useLocation()
+  const navigate = useNavigate()
+  const params = useParams()
+  const viewMode = getViewMode(window.location.search)
+
+  const abortControllerRef = useRef(new AbortController())
+  const filesRef = useRef(null)
+  const tableRef = useRef(null)
+  const tableBodyRef = useRef(null)
+
+  const pageData = useMemo(() => generatePageData(viewMode), [viewMode])
+
   const filesFilters = useMemo(
     () => ({ name: filtersStore.name, ...filtersStore[FILTER_MENU_MODAL][FILES_FILTERS].values }),
     [filtersStore]
@@ -345,6 +354,21 @@ const Files = () => {
     })
   }, [handleRefresh, params, filesFilters])
 
+  const virtualizationConfig = useVirtualization({
+    tableRef,
+    tableBodyRef,
+    rowsData: {
+      content: sortedTableContent,
+      expandedRowsData: selectedRowData,
+      selectedItem: selectedFile
+    },
+    heightData: {
+      headerRowHeight: cssVariables.filesHeaderRowHeight,
+      rowHeight: cssVariables.filesRowHeight,
+      rowHeightExtended: cssVariables.filesRowHeightExtended
+    }
+  })
+
   return (
     <FilesView
       actionsMenu={actionsMenu}
@@ -360,7 +384,7 @@ const Files = () => {
       handleRegisterArtifact={handleRegisterArtifact}
       largeRequestErrorMessage={largeRequestErrorMessage}
       pageData={pageData}
-      ref={filesRef}
+      ref={{ filesRef, tableRef, tableBodyRef }}
       selectedFile={selectedFile}
       selectedRowData={selectedRowData}
       setFiles={setFiles}
@@ -372,6 +396,7 @@ const Files = () => {
       toggleConvertedYaml={toggleConvertedYaml}
       urlTagOption={urlTagOption}
       viewMode={viewMode}
+      virtualizationConfig={virtualizationConfig}
     />
   )
 }

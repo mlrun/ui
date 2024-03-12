@@ -19,7 +19,7 @@ such restriction.
 */
 import React, { useCallback, useEffect, useRef } from 'react'
 import PropTypes from 'prop-types'
-import { connect, useSelector } from 'react-redux'
+import { useSelector } from 'react-redux'
 import { useParams } from 'react-router-dom'
 
 import TableView from './TableView'
@@ -29,101 +29,115 @@ import { SORT_PROPS } from 'igz-controls/types'
 
 import './table.scss'
 
-const Table = ({
-  actionsMenu,
-  applyDetailsChanges,
-  applyDetailsChangesCallback,
-  children,
-  detailsFormInitialValues,
-  getCloseDetailsLink,
-  handleCancel,
-  hideActionsMenu,
-  mainRowItemsCount,
-  pageData,
-  retryRequest,
-  selectedItem,
-  sortProps,
-  tab,
-  tableHeaders
-}) => {
-  const tableRef = useRef(null)
-  const tableContentRef = useRef(null)
-  const tablePanelRef = useRef(null)
-  const tableHeadRef = useRef(null)
-  const params = useParams()
-  const tableStore = useSelector(store => store.tableStore)
+const Table = React.forwardRef(
+  (
+    {
+      actionsMenu,
+      applyDetailsChanges,
+      applyDetailsChangesCallback,
+      children,
+      detailsFormInitialValues,
+      getCloseDetailsLink,
+      handleCancel,
+      hideActionsMenu,
+      mainRowItemsCount,
+      pageData,
+      retryRequest,
+      selectedItem,
+      sortProps,
+      tab,
+      tableClassName,
+      tableHeaders
+    },
+    ref
+  ) => {
+    const tableRefLocal = useRef(null)
+    const tableBodyRefLocal = useRef(null)
+    const tableRef = ref?.tableRef ?? tableRefLocal
+    const tableBodyRef = ref?.tableBodyRef ?? tableBodyRefLocal
+    const tableContentRef = useRef(null)
+    const tablePanelRef = useRef(null)
+    const tableHeadRef = useRef(null)
+    const params = useParams()
+    const tableStore = useSelector(store => store.tableStore)
 
-  useEffect(() => {
-    const calculatePanelHeight = () => {
-      if (tableHeadRef?.current && tableContentRef?.current && tablePanelRef?.current) {
-        const tableContentHeight = tableContentRef.current.getBoundingClientRect().height
-        const tableHeadCords = tableHeadRef.current.getBoundingClientRect()
-        const panelHeight = window.innerHeight - tableHeadCords.top
+    useEffect(() => {
+      const calculatePanelHeight = () => {
+        if (tableHeadRef?.current && tableContentRef?.current && tablePanelRef?.current) {
+          const tableContentHeight = tableContentRef.current.getBoundingClientRect().height
+          const tableHeadCords = tableHeadRef.current.getBoundingClientRect()
+          const panelHeight = window.innerHeight - tableHeadCords.top
 
-        tablePanelRef.current.style.height =
-          tableContentHeight > panelHeight
-            ? `${panelHeight}px`
-            : `${panelHeight - (panelHeight - tableContentHeight)}px`
+          tablePanelRef.current.style.height =
+            tableContentHeight > panelHeight
+              ? `${panelHeight}px`
+              : `${panelHeight - (panelHeight - tableContentHeight)}px`
+        }
       }
-    }
 
-    if (tableStore.isTablePanelOpen && tablePanelRef.current) {
-      calculatePanelHeight()
+      if (tableStore.isTablePanelOpen && tablePanelRef.current) {
+        calculatePanelHeight()
 
-      document.getElementById('main-wrapper').addEventListener('scroll', calculatePanelHeight)
-      window.addEventListener('resize', calculatePanelHeight)
-    }
-    return () => {
-      window.removeEventListener('scroll', calculatePanelHeight)
-      window.removeEventListener('resize', calculatePanelHeight)
-    }
-  }, [tableStore.isTablePanelOpen])
-
-  const handleTableHScroll = useCallback(e => {
-    if (tableRef.current) {
-      const tableScrollPosition = e.target.scrollLeft
-
-      if (tableScrollPosition > 0) {
-        tableRef.current.classList.add('table__scrolled')
-      } else {
-        tableRef.current.classList.remove('table__scrolled')
+        document.getElementById('main-wrapper').addEventListener('scroll', calculatePanelHeight)
+        window.addEventListener('resize', calculatePanelHeight)
       }
-    }
-  }, [])
+      return () => {
+        window.removeEventListener('scroll', calculatePanelHeight)
+        window.removeEventListener('resize', calculatePanelHeight)
+      }
+    }, [tableStore.isTablePanelOpen])
 
-  useEffect(() => {
-    window.addEventListener('scroll', handleTableHScroll, true)
+    const handleTableHScroll = useCallback(
+      e => {
+        if (tableRef.current) {
+          const tableScrollPosition = e.target.scrollLeft
 
-    return () => window.removeEventListener('scroll', handleTableHScroll, true)
-  }, [handleTableHScroll])
+          if (tableScrollPosition > 0) {
+            tableRef.current.classList.add('table__scrolled')
+          } else {
+            tableRef.current.classList.remove('table__scrolled')
+          }
+        }
+      },
+      [tableRef]
+    )
 
-  return (
-    <TableView
-      actionsMenu={actionsMenu}
-      applyDetailsChanges={applyDetailsChanges}
-      applyDetailsChangesCallback={applyDetailsChangesCallback}
-      detailsFormInitialValues={detailsFormInitialValues}
-      getCloseDetailsLink={getCloseDetailsLink}
-      handleCancel={handleCancel}
-      hideActionsMenu={hideActionsMenu}
-      isTablePanelOpen={tableStore.isTablePanelOpen}
-      mainRowItemsCount={mainRowItemsCount}
-      pageData={pageData}
-      params={params}
-      retryRequest={retryRequest}
-      selectedItem={selectedItem}
-      sortProps={sortProps}
-      tab={tab}
-      tableRef={tableRef}
-      tableContentRef={tableContentRef}
-      tableHeaders={tableHeaders}
-      tableHeadRef={tableHeadRef}
-      tablePanelRef={tablePanelRef}
-    >
-      {children}
-    </TableView>
-  )
-}
+    useEffect(() => {
+      window.addEventListener('scroll', handleTableHScroll, true)
+
+      return () => window.removeEventListener('scroll', handleTableHScroll, true)
+    }, [handleTableHScroll])
+
+    return (
+      <TableView
+        actionsMenu={actionsMenu}
+        applyDetailsChanges={applyDetailsChanges}
+        applyDetailsChangesCallback={applyDetailsChangesCallback}
+        detailsFormInitialValues={detailsFormInitialValues}
+        getCloseDetailsLink={getCloseDetailsLink}
+        handleCancel={handleCancel}
+        hideActionsMenu={hideActionsMenu}
+        isTablePanelOpen={tableStore.isTablePanelOpen}
+        mainRowItemsCount={mainRowItemsCount}
+        pageData={pageData}
+        params={params}
+        retryRequest={retryRequest}
+        selectedItem={selectedItem}
+        sortProps={sortProps}
+        tab={tab}
+        tableRef={tableRef}
+        tableClassName={tableClassName}
+        tableBodyRef={tableBodyRef}
+        tableContentRef={tableContentRef}
+        tableHeaders={tableHeaders}
+        tableHeadRef={tableHeadRef}
+        tablePanelRef={tablePanelRef}
+      >
+        {children}
+      </TableView>
+    )
+  }
+)
 
 Table.defaultProps = {
   applyDetailsChanges: () => {},
@@ -140,6 +154,7 @@ Table.defaultProps = {
   selectedItem: {},
   sortProps: null,
   tab: '',
+  tableClassName: '',
   tableHeaders: []
 }
 
@@ -160,12 +175,8 @@ Table.propTypes = {
   selectedItem: PropTypes.shape({}),
   sortProps: SORT_PROPS,
   tab: PropTypes.string,
+  tableClassName: PropTypes.string,
   tableHeaders: PropTypes.array
 }
 
-export default connect(
-  ({ filtersStore }) => ({
-    filtersStore
-  }),
-  {}
-)(Table)
+export default Table
