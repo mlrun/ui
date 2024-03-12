@@ -786,6 +786,8 @@ module.exports = {
       generateDropdownGroup('.form-col-1:nth-of-type(3)', '.form-field-select', '.select__item-main-label', false, false)
     ),
     Method_Dropdown_Option: By.css('.form-col-1:nth-of-type(3) .form-field-select .form-field__select span'),
+    Method_Dropdown_Label: By.css('[data-testid="runDetails.handler-form-label"]'),
+    Method_Dropdown_Label_Select: By.css('[data-testid="runDetails.handler-form-select-label"]'),
     Run_Details_Labels_Table: commonTable(runDetailsLabelsTable),
     Data_Inputs_Table: commonTable(dataInputsTable),
     Data_Inputs_Inference_Table: commonTable(dataInputsInferenceTable),

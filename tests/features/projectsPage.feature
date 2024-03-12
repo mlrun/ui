@@ -120,7 +120,7 @@ Feature: MLRun Projects Page
         Then type value "/" to "Run_Details_Labels_Key" field on "Create_New_Project" wizard
         Then verify labels warning should display options "Input_Hint"."Projects_Labels_Warning_Key"
         Then type value "/" to "Run_Details_Labels_Value" field on "Create_New_Project" wizard without inputgroup
-        Then verify labels warning should display options "Input_Hint"."Labels_Warning_Value"
+        Then verify labels warning should display options "Input_Hint"."Projects_Labels_Warning_Value"
         When click on "Title" element on "Create_New_Project" wizard
         And click on "Close_Label_Button" element on "Create_New_Project" wizard
         Then click on "Create_Button" element on "Create_New_Project" wizard
@@ -166,6 +166,8 @@ Feature: MLRun Projects Page
         Then verify "Notification_Pop_Up_Cross_Close_Button" element visibility on "Notification_Popup" wizard
         Then click on "Notification_Pop_Up_Cross_Close_Button" element on "Notification_Popup" wizard
         Then check "automation-test-name2" value not in "name" column in "Projects_Table" table on "Projects" wizard
+        Then verify "New_Project_Button" element visibility on "Projects" wizard
+        Then "New_Project_Button" element on "Projects" should contains "New Project" value
     
     @MLPr
     @passive

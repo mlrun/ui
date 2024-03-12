@@ -4,7 +4,7 @@ Feature: Datasets Page
     
   @MLD
   @passive
-  Scenario: MLD001 - Check all mandatory components on Datasets page
+  Scenario: MLD001 - Check components on Datasets page
     Given open url
     And click on row root with value "getting-started-tutorial-admin" in "name" column in "Projects_Table" table on "Projects" wizard
     And wait load page
@@ -70,7 +70,7 @@ Feature: Datasets Page
     Then check "expand_btn" visibility in "Datasets_Table" on "Datasets" wizard
     Then click on cell with row index 1 in "expand_btn" column in "Datasets_Table" table on "Datasets" wizard
     And wait load page
-    Then click on cell with row index 1 in "name" column in "Datasets_Table" table on "Datasets" wizard
+    Then click on cell with row index 2 in "name" column in "Datasets_Table" table on "Datasets" wizard
     Then verify "Header" element visibility on "Datasets_Info_Pane" wizard
     Then click on "Table_FilterBy_Button" element on "Datasets" wizard
     Then check "Show_Iterations_Checkbox" element on "Artifacts_FilterBy_Popup" wizard

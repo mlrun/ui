@@ -536,9 +536,8 @@ function getProjectSummary(req, res) {
   res.send(collectedProject)
 }
 
-//TODO: on 1.7.0 version update getRun func with:  let collectedRuns = runs.runs.filter(run => run.metadata.project === req.params['project'])
 function getRuns(req, res) {
-  let collectedRuns = runs.runs.filter(run => run.metadata.project === req.query['project']) 
+  let collectedRuns = runs.runs.filter(run => run.metadata.project === req.params['project'])
 
   if (req.query['start_time_from']) {
     collectedRuns = collectedRuns.filter(
@@ -1966,8 +1965,7 @@ app.delete(`${mlrunAPIIngress}/projects/:project/secrets`, deleteSecretKeys)
 app.get(`${mlrunAPIIngress}/project-summaries`, getProjectsSummaries)
 app.get(`${mlrunAPIIngress}/project-summaries/:project`, getProjectSummary)
 
-//TODO: on 1.7.0 version update getRun func with:  app.get(`${mlrunAPIIngress}/projects/:project/runs`, getRuns)
-app.get(`${mlrunAPIIngress}/runs`, getRuns)
+app.get(`${mlrunAPIIngress}/projects/:project/runs`, getRuns)
 app.get(`${mlrunAPIIngress}/run/:project/:uid`, getRun)
 app.patch(`${mlrunAPIIngress}/run/:project/:uid`, patchRun)
 app.delete(`${mlrunAPIIngress}/projects/:project/runs/:uid`, deleteRun)

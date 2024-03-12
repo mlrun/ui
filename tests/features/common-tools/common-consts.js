@@ -330,8 +330,10 @@ module.exports = {
       'This field is required',
     Labels_Warning_Key: 'Valid characters: a–z, A–Z, 0–9, –, _, .\nMust begin and end with: a–z, A–Z, 0–9\nLength – max: 75\n' +
     'Key must be unique',
-    Projects_Labels_Warning_Key: 'Valid characters: a–z, A–Z, 0–9, –, _, .\nMust begin and end with: a–z, A–Z, 0–9\nLength – max: 56\n' +
-    'Key must be unique',
+    Projects_Labels_Warning_Key: '[Name] Valid characters : a–z, A–Z, 0–9, –, _, .\n[Name] Must begin and end with: a–z, A–Z, 0–9\n[Name] Max length - 63 characters\n' +
+    '[Prefix] Valid characters: a–z, 0–9, –, .\n[Prefix] Must begin and end with: a–z, 0–9\n[Prefix] Max length - 253 characters\n' +
+    '[Prefix] Must not start with \'kubernetes.io\', \'k8s.io\'\nKey must be unique',
+    Projects_Labels_Warning_Value: '[Value] Must begin and end with : a–z, A–Z, 0–9\n[Value] Max length - 63 characters\n[Value] Valid characters: a–z, A–Z, 0–9, –, _, .',
     Labels_Warning_Value: 'Valid characters: a–z, A–Z, 0–9, –, _, .\nMust begin and end with: a–z, A–Z, 0–9\nLength – max: 56',
     Feature_Set_Name_Hint:
       'Valid characters: a–z, A–Z, 0–9, –, _, .\nMust begin and end with: a–z, A–Z, 0–9\nLength – max: 56\n' +
@@ -381,7 +383,7 @@ module.exports = {
     Add_Feature_Vector_Hint: 'Add features from the list on the left to this feature vector',
     Deploy_Model_Name_Hint:
       'After the function is deployed, it will have a URL for calling the model that is based upon this name.',
-    MLRun_Store_Path_Hint: 'Field must be in "models/my-project/my-model:my-tag" or "models/my-project/my-model@my-uid" format',
+    MLRun_Store_Path_Hint: 'Field must be in "<artifact type>/<project>/<artifact name>:<artifact tag>" or "<artifact type>/<project>/<artifact name>@<artifact uid>" format',
     Jobs_MLRun_Store_Path_Hint:
       'Field must be in "artifacts/my-project/my-artifact:my-tag" or "artifacts/my-project/my-artifact@my-uid" format',
     V3IO_Path_Hint: 'Invalid URL. Field must be in "container-name/file" format',
@@ -474,7 +476,8 @@ module.exports = {
     'Past 24 hours': 86400000,
     'Past week': 604800000,
     'Past month': { min: 2419200000, max: 2678400000 },
-    'Past year': 31536000000
+    'Past non-leap year': 31536000000,
+    'Past leap year': 31622400000
   },
   Date_Time_Picker: {
     Error_Message: '“To” must be later than “From”'
