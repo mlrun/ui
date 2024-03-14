@@ -92,6 +92,23 @@ const Features = ({
     [toggleConvertedYaml]
   )
 
+  useEffect(() => {
+    setSelectedRowData(prevSate => {
+      const newState = {}
+
+      for (const [featureIdentifier, feature] of Object.entries(prevSate)) {
+        newState[featureIdentifier] = {
+          ...feature,
+          content: feature.content.map(contentItem =>
+            createFeaturesRowData(contentItem.data, tableStore.isTablePanelOpen)
+          )
+        }
+      }
+
+      return newState
+    })
+  }, [tableStore.isTablePanelOpen, setSelectedRowData])
+
   const fetchData = useCallback(
     filters => {
       abortControllerRef.current = new AbortController()
