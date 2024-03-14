@@ -1,0 +1,26 @@
+@import '~igz-controls/scss/colors';
+
+.projects-monitoring {
+  &-container {
+    background-color: $wildSand;
+    margin-bottom: 2rem;
+    padding: 30px;
+  }
+
+  &-legend {
+    display: flex;
+    align-items: baseline;
+    margin-bottom: 2em;
+
+    &__title {
+      font-size: 24px;
+      margin: 0 30px 0 0;
+    }
+  }
+
+  &-stats {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 18px 24px;
+  }
+}

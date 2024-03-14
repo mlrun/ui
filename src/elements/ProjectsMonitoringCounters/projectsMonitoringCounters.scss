@@ -1,0 +1,61 @@
+@import '~igz-controls/scss/colors';
+
+.stats {
+  &__subtitle {
+    color: $topaz;
+    font-size: 1rem;
+    font-weight: normal;
+    margin: 0 0 5px 0;
+  }
+
+  &__counter {
+    flex: 1;
+    color: $primary;
+    text-align: center;
+
+    &-display {
+      display: block;
+      font-size: 2.5em;
+      color: #4b4760;
+      margin: 0 0 5px 0;
+    }
+  }
+
+  &__counters {
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: center;
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+
+    li {
+      display: flex;
+      align-items: center;
+
+      margin-right: 1.5rem;
+
+      [class^='state-'] {
+        margin-left: 5px;
+      }
+
+      &.link {
+        font-size: 13px;
+        color: $primary;
+      }
+    }
+  }
+
+  .link {
+    font-size: 1rem;
+  }
+
+  .date-picker-container {
+    margin-left: 15px;
+
+    .input-wrapper .input.date-picker__input {
+      padding: 10px;
+      width: auto;
+    }
+  }
+}
