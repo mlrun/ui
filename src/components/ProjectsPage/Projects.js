@@ -135,6 +135,9 @@ const Projects = () => {
           pollDeletingProjects(terminatePollRef, newDeletingProjects, refreshProjects, dispatch)
         }
       })
+      .catch(error => {
+        showErrorNotification(dispatch, error, '')
+      })
   }, [fetchMinimalProjects, isNuclioModeDisabled, dispatch])
 
   const handleSearchOnFocus = useCallback(() => {

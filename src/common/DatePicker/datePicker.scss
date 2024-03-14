@@ -43,6 +43,13 @@
   }
 }
 
+.date-picker {
+  &__caret {
+    display: inline-flex;
+    margin-left: 5px;
+  }
+}
+
 .date-picker__pop-up-wrapper {
   .pop-up-dialog {
     width: auto;
@@ -60,11 +67,6 @@
 
   .date-picker {
     padding: 30px 15px;
-
-    &__caret {
-      display: inline-flex;
-      margin-left: 10px;
-    }
   }
 
   .date-picker__calendars {

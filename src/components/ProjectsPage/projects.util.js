@@ -25,8 +25,6 @@ import { BG_TASK_FAILED, BG_TASK_SUCCEEDED, pollTask } from '../../utils/poll.ut
 import { DANGER_BUTTON, FORBIDDEN_ERROR_STATUS_CODE } from 'igz-controls/constants'
 import { setNotification } from '../../reducers/notificationReducer'
 import { showErrorNotification } from '../../utils/notifications.util'
-import { jobHasWorkflowLabel } from '../../utils/parseJob'
-import { NEXT_24_HOUR_DATE_OPTION, PAST_24_HOUR_DATE_OPTION } from '../../utils/datePicker.util'
 
 import { ReactComponent as ArchiveIcon } from 'igz-controls/images/archive-icon.svg'
 import { ReactComponent as Delete } from 'igz-controls/images/delete.svg'
@@ -201,110 +199,5 @@ export const pollDeletingProjects = (terminatePollRef, deletingProjects, refresh
 
   return pollTask(() => tasksApi.getBackgroundTasks(), isDone, {
     terminatePollRef
-  })
-}
-
-export const getJobsStatsConfig = (
-  handleDateSelection,
-  jobs,
-  jobsFilter,
-  navigate,
-  scheduled,
-  scheduledFilter,
-  workflows,
-  workflowsFilter
-) => [
-  {
-    id: 'jobs',
-    title: 'Jobs',
-    counters: {
-      all: {
-        counter: jobs.length,
-        link: () => navigate('')
-      },
-      running: {
-        counter: jobs.filter(job => job.status?.state === 'running').length,
-        link: () => navigate('')
-      },
-      failed: {
-        counter: jobs.filter(job => ['error', 'failed'].includes(job.status?.state)).length,
-        link: () => navigate('')
-      },
-      completed: {
-        counter: jobs.filter(job => job.status?.state === 'completed').length,
-        link: () => navigate('')
-      }
-    },
-    filters: {
-      selectedOptionId: PAST_24_HOUR_DATE_OPTION,
-      dates: jobsFilter.dates,
-      handler: handleDateSelection
-    }
-  },
-  {
-    id: 'workflows',
-    title: 'Workflows',
-    counters: {
-      all: {
-        counter: workflows.length,
-        link: () => navigate('')
-      },
-      running: {
-        counter: workflows.filter(workflow => workflow.state?.value === 'running').length,
-        link: () => navigate('')
-      },
-      failed: {
-        counter: workflows.filter(workflow => ['error', 'failed'].includes(workflow.state?.value))
-          .length,
-        link: () => navigate('')
-      },
-      completed: {
-        counter: workflows.filter(workflow =>
-          ['completed', 'succeeded'].includes(workflow.state?.value)
-        ).length,
-        link: () => navigate('')
-      }
-    },
-    filters: {
-      selectedOptionId: PAST_24_HOUR_DATE_OPTION,
-      dates: workflowsFilter.dates,
-      handler: handleDateSelection
-    }
-  },
-  {
-    id: 'scheduled',
-    title: 'Scheduled',
-    counters: {
-      jobs: {
-        counter: filterScheduledByDate(scheduled, scheduledFilter).filter(
-          job => job.kind === 'job' && !jobHasWorkflowLabel(job)
-        ).length,
-        link: () => navigate('')
-      },
-      workflows: {
-        counter: filterScheduledByDate(scheduled, scheduledFilter).filter(job =>
-          jobHasWorkflowLabel(job)
-        ).length,
-        link: () => navigate('')
-      }
-    },
-    filters: {
-      selectedOptionId: NEXT_24_HOUR_DATE_OPTION,
-      dates: scheduledFilter.dates,
-      handler: handleDateSelection
-    }
-  }
-]
-
-const filterScheduledByDate = (scheduled, scheduledFilter) => {
-  if (!scheduledFilter.dates.value[0] && !scheduledFilter.dates.value[1]) return scheduled
-
-  return scheduled.filter(job => {
-    const runTime = new Date(job.next_run_time)
-
-    const start = new Date(scheduledFilter.dates.value[0])
-    const end = new Date(scheduledFilter.dates.value[1])
-
-    return runTime > start && runTime < end ? job : null
   })
 }
