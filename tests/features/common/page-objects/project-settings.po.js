@@ -166,7 +166,25 @@ module.exports = {
     ),
     Parameters_Table_Discard_Row_Button: By.css(
       '.form-key-value-table .form-table__row_active .form-table__actions-cell [data-testid="delete-discard-btn"]'
-    )
+    ),
+    Add_Label_Button: By.css('.settings__labels .chips__wrapper .chips-wrapper button'),
+    Labels_Key: inputGroup(
+      generateInputGroup(
+        '.settings__labels .chips-wrapper .chip-block .edit-chip-container',
+        false,
+        true,
+        false
+      )
+    ),
+    Labels_Value: inputGroup(
+      generateInputGroup(
+        '.settings__labels .chips-wrapper .chip-block .edit-chip-container',
+        false,
+        true,
+        false,
+        '.input-label-value'
+      )
+    ),
   },
   secretsTab: {
     Secrets_Table: commonTable(secretsTable),

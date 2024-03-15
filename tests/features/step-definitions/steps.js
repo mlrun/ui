@@ -1319,6 +1319,20 @@ Then('verify {string} options rules on form {string} wizard', async function(
   )
 })
 
+Then('verify {string} options rules on {string} wizard with labels', async function(
+  inputField,
+  wizardName
+) {
+  await checkInputAccordingHintText(
+    this.driver,
+    this.attach,
+    pageObjects[wizardName][inputField],
+    pageObjects['commonPagesHeader']['Common_Options'],
+    false,
+    true
+  )
+})
+
 Then(
   'verify breadcrumbs {string} label should be equal {string} value',
   async function(labelType, value) {

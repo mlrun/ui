@@ -51,11 +51,11 @@ const symbols = [
 ]
 
 export const getLength = array => {
-  return getValueFromArray(array, 'length')
+  return getRuleValue(array, 'length')
 }
 
 export const getNotToBe = (array, substring) => {
-  const value = getValueFromArray(array, substring)
+  const value = getRuleValue(array, substring)
 
   if (!value) return false
 
@@ -74,7 +74,7 @@ export const getNotToBe = (array, substring) => {
 }
 
 export const getRule = (array, substring) => {
-  const value = getValueFromArray(array, substring)
+  const value = getRuleValue(array, substring)
 
   if (!value) return false
 
@@ -84,12 +84,26 @@ export const getRule = (array, substring) => {
     .join('')
 }
 
-const getValueFromArray = (array, substring) => {
-  const stringWithValue = array.find(el => el.toLowerCase().includes(substring))
+const getRuleValue = (array, substring) => {
+  let stringWithValue = array.find(el => el.toLowerCase().includes(substring))
+
+  if(stringWithValue){
+    //TODO: Add checks for Prefix, unique, spaces rules (labels, parameters)
+    if (stringWithValue.includes('[Prefix]')) {
+      stringWithValue = false
+    }
+    else if (stringWithValue.includes(':')) {
+      stringWithValue = stringWithValue.slice(stringWithValue.lastIndexOf(':') + 1).trim()
+    }
+    else if (stringWithValue.includes('-')) {
+      stringWithValue = parseInt(stringWithValue.slice(stringWithValue.lastIndexOf('-') + 1).trim())
+    }
+  }
+  else {
+    stringWithValue = false
+  }
 
   return stringWithValue
-    ? stringWithValue.slice(stringWithValue.lastIndexOf(':') + 1).trim()
-    : false
 }
 
 const setInvalidCharacters = (allCharacters, rule, invalidCharacters) => {

@@ -52,6 +52,7 @@ Feature: Project Settings page
         Then type value "cat-vs-dog-classification" to "Search_Projects_Input" field on "Projects" wizard
         Then value in "description" column with "text" in "Projects_Table" on "Projects" wizard should contains "123"
         And click on row root with value "cat-vs-dog-classification" in "name" column in "Projects_Table" table on "Projects" wizard
+        And wait load page
         And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
         And wait load page
         Then click on "Project_Settings_Button" element on "commonPagesHeader" wizard
@@ -94,6 +95,23 @@ Feature: Project Settings page
         Then value in "labels" column with "dropdowns" in "Projects_Table" on "Projects" wizard should contains "project_label_key=project_label_value" in "Overlay"
         Then click on "Active_Projects_Button" element on "Projects" wizard
         Then value in "labels" column with "dropdowns" in "Projects_Table" on "Projects" wizard should contains "a12345=b54321" in "Overlay"
+        And click on row root with value "cat-vs-dog-classification" in "name" column in "Projects_Table" table on "Projects" wizard
+        And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
+        Then click on "Project_Settings_Button" element on "commonPagesHeader" wizard
+        And wait load page
+        And hover "MLRun_Logo" component on "commonPagesHeader" wizard
+        When click on "remove_btn" in "Labels_Table" table on "Project_Settings_General_Tab" wizard with attribute
+            | key_verify        |
+            | a                 |
+            | project_label_key |
+            | a12345            |
+        And click on "Add_Label_Button" element on "Project_Settings_General_Tab" wizard
+        Then type value "/" to "Labels_Key" field on "Project_Settings_General_Tab" wizard
+        Then verify labels warning should display options "Input_Hint"."Projects_Labels_Warning_Key"
+        Then verify "Labels_Key" options rules on "Project_Settings_General_Tab" wizard with labels
+        Then type value "/" to "Labels_Value" field on "Project_Settings_General_Tab" wizard
+        Then verify labels warning should display options "Input_Hint"."Projects_Labels_Warning_Value"
+        Then verify "Labels_Value" options rules on "Project_Settings_General_Tab" wizard with labels
 
     @MLPS
     @inProgress

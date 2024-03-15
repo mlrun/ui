@@ -671,15 +671,23 @@ module.exports = {
     New_Project_Labels_Table: commonTable(newProjectLabelsTable),
     Add_Label_Button: By.css('.create-project-dialog .form-row:nth-of-type(4) .chips .chips-wrapper button'),
     Close_Label_Button: By.css('.create-project-dialog .form-row:nth-of-type(4) .chips .chips-wrapper .edit-chip__icon-close'),
-    Run_Details_Labels_Key: inputGroup(
+    Labels_Key: inputGroup(
       generateInputGroup(
         '.create-project-dialog .form-row:nth-of-type(4) .chips .chips-wrapper',
         false,
         true,
-        '.pop-up-dialog'
+        false
       )
     ),
-    Run_Details_Labels_Value: By.css ('.create-project-dialog .form-row:nth-of-type(4) .chips-wrapper [id="labels[0].value"]')
+    Labels_Value: inputGroup(
+      generateInputGroup(
+        '.create-project-dialog .form-row:nth-of-type(4) .chips .chips-wrapper',
+        false,
+        true,
+        false,
+        '.input-label-value'
+      )
+    ),
   },
   commonPopup: {
     Title: commonTitle,
