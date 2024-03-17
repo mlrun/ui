@@ -75,7 +75,7 @@ TableProducerCell.defaultProps = {
 TableProducerCell.propTypes = {
   bodyCellClassName: PropTypes.string,
   className: PropTypes.string,
-  id: PropTypes.string,
+  id: PropTypes.string.isRequired,
   producer: PropTypes.shape({}).isRequired
 }
 
