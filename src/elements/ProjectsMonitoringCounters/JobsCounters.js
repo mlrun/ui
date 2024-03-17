@@ -17,9 +17,10 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import React, { useMemo, useState } from 'react'
+import React, { useCallback, useMemo, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useSelector } from 'react-redux'
+import { upperFirst } from 'lodash'
 import moment from 'moment'
 
 import DatePicker from '../../common/DatePicker/DatePicker'
@@ -45,11 +46,11 @@ const JobsCounters = () => {
 
   const navigate = useNavigate()
   const { loading: jobsLoading } = useFetchData({
-    filter: filter,
+    filter,
     action: jobsActions.fetchJobs
   })
   const { loading: workflowsLoading } = useFetchData({
-    filter: filter,
+    filter,
     action: workflowActions.fetchWorkflows
   })
   const { jobs } = useSelector(store => store.jobsStore)
@@ -69,22 +70,22 @@ const JobsCounters = () => {
     () => ({
       all: {
         counter: jobs.length,
-        link: () => navigate('/projects/jobsMonitoring/jobs/all')
+        link: () => navigate('/projects/jobs-monitoring/jobs')
       },
       counters: [
         {
           counter: jobs.filter(job => job.status?.state === 'running').length,
-          link: () => navigate('/projects/jobsMonitoring/jobs/running'),
+          link: () => navigate('/projects/jobs-monitoring/jobs'),
           statusClass: 'running'
         },
         {
           counter: jobs.filter(job => ['error', 'failed'].includes(job.status?.state)).length,
-          link: () => navigate('/projects/jobsMonitoring/jobs/failed'),
+          link: () => navigate('/projects/jobs-monitoring/jobs'),
           statusClass: 'failed'
         },
         {
           counter: jobs.filter(job => job.status?.state === 'completed').length,
-          link: () => navigate('/projects/jobsMonitoring/jobs/completed'),
+          link: () => navigate('/projects/jobs-monitoring/jobs'),
           statusClass: 'completed'
         }
       ]
@@ -96,25 +97,25 @@ const JobsCounters = () => {
     () => ({
       all: {
         counter: workflows.length,
-        link: () => navigate('/projects/jobsMonitoring/workflows/all')
+        link: () => navigate('/projects/jobs-monitoring/workflows')
       },
       counters: [
         {
           counter: workflows.filter(workflow => workflow.state?.value === 'running').length,
-          link: () => navigate('/projects/jobsMonitoring/workflows/running'),
+          link: () => navigate('/projects/jobs-monitoring/workflows'),
           statusClass: 'running'
         },
         {
           counter: workflows.filter(workflow => ['error', 'failed'].includes(workflow.state?.value))
             .length,
-          link: () => navigate('/projects/jobsMonitoring/workflows/failed'),
+          link: () => navigate('/projects/jobs-monitoring/workflows'),
           statusClass: 'failed'
         },
         {
           counter: workflows.filter(workflow =>
             ['completed', 'succeeded'].includes(workflow.state?.value)
           ).length,
-          link: () => navigate('/projects/jobsMonitoring/workflows/completed'),
+          link: () => navigate('/projects/jobs-monitoring/workflows'),
           statusClass: 'completed'
         }
       ]
@@ -122,8 +123,36 @@ const JobsCounters = () => {
     [workflows, navigate]
   )
 
+  const templateToRender = useCallback(
+    type => {
+      const stats = type === 'jobs' ? jobStats : workflowsStats
+
+      return (
+        <>
+          <h6 className='stats__subtitle'>{upperFirst(type)}</h6>
+          <span className='stats__counter'>
+            {jobsLoading || workflowsLoading ? (
+              <Loader section small secondary />
+            ) : (
+              stats.all.counter
+            )}
+          </span>
+          <ul className='projects-monitoring-legend__status'>
+            {stats.counters.map(({ counter, link, statusClass }) => (
+              <li className='link' onClick={link} key={`${statusClass}-jobs`}>
+                {jobsLoading || workflowsLoading ? <Loader section small secondary /> : counter}
+                <i className={`state-${statusClass}`}></i>
+              </li>
+            ))}
+          </ul>
+        </>
+      )
+    },
+    [jobStats, jobsLoading, workflowsStats, workflowsLoading]
+  )
+
   return (
-    <StatsCard className='stats'>
+    <StatsCard className='monitoring-stats'>
       <StatsCard.Header title='Jobs and Workflows'>
         <DatePicker
           date={filter.dates.value[0]}
@@ -136,34 +165,8 @@ const JobsCounters = () => {
         />
       </StatsCard.Header>
       <StatsCard.Body>
-        <StatsCard.Col>
-          <h6 className='stats__subtitle'>Jobs</h6>
-          <span className='stats__counter-display'>
-            {jobsLoading ? <Loader section small secondary /> : jobStats.all.counter}
-          </span>
-          <ul className='stats__counters'>
-            {jobStats.counters.map(counter => (
-              <li className='link' onClick={counter.link} key={`${counter.statusClass}-jobs`}>
-                {jobsLoading ? <Loader section small secondary /> : counter.counter}
-                <i className={`state-${counter.statusClass}-job`}></i>
-              </li>
-            ))}
-          </ul>
-        </StatsCard.Col>
-        <StatsCard.Col>
-          <h6 className='stats__subtitle'>Workflows</h6>
-          <span className='stats__counter-display'>
-            {workflowsLoading ? <Loader section small secondary /> : workflowsStats.all.counter}
-          </span>
-          <ul className='stats__counters'>
-            {workflowsStats.counters.map(counter => (
-              <li className='link' onClick={counter.link} key={`${counter.statusClass}-jobs`}>
-                {workflowsLoading ? <Loader section small secondary /> : counter.counter}
-                <i className={`state-${counter.statusClass}-job`}></i>
-              </li>
-            ))}
-          </ul>
-        </StatsCard.Col>
+        <StatsCard.Col>{templateToRender('jobs')}</StatsCard.Col>
+        <StatsCard.Col>{templateToRender('workflows')}</StatsCard.Col>
       </StatsCard.Body>
       <StatsCard.Footer>
         <StatsCard.Col>

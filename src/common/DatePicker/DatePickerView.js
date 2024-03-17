@@ -278,7 +278,7 @@ const DatePickerView = React.forwardRef(
 )
 
 DatePickerView.defaultProps = {
-  selectedOption: {}
+  selectedOption: null
 }
 
 DatePickerView.propTypes = {

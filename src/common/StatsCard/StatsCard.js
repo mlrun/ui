@@ -47,6 +47,15 @@ StatsCard.Col = ({ children }) => {
   return <div className='stats-card__col'>{children}</div>
 }
 
+StatsCard.defaultProps = {
+  className: ''
+}
+
+StatsCard.Header.defaultProps = {
+  children: null,
+  title: ''
+}
+
 StatsCard.propTypes = {
   children: PropTypes.node.isRequired,
   className: PropTypes.string

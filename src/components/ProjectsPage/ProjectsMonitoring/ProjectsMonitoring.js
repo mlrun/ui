@@ -18,7 +18,7 @@ under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
 import JobsCounters from '../../../elements/ProjectsMonitoringCounters/JobsCounters'
-import ScheduledCounters from '../../../elements/ProjectsMonitoringCounters/ScheduledCounters'
+import ScheduledJobsCounters from '../../../elements/ProjectsMonitoringCounters/ScheduledJobsCounters'
 
 import './projectsMonitoring.scss'
 
@@ -27,22 +27,22 @@ const ProjectsMonitoring = () => {
     <div className='projects-monitoring-container'>
       <div className='projects-monitoring-legend'>
         <h5 className='projects-monitoring-legend__title'>Monitoring</h5>
-        <ul className='stats__counters'>
+        <ul className='projects-monitoring-legend__status'>
           <li>
-            Running <i className='state-running-job'></i>
+            Running <i className='state-running'></i>
           </li>
           <li>
-            Failed <i className='state-failed-job'></i>
+            Failed <i className='state-failed'></i>
           </li>
           <li>
-            Completed <i className='state-completed-job'></i>
+            Completed <i className='state-completed'></i>
           </li>
         </ul>
       </div>
       <div className='projects-monitoring-stats'>
         <JobsCounters />
-        <ScheduledCounters />
-        {/* To implement as part of ML-5460
+        <ScheduledJobsCounters />
+        {/* Todo: implement as part of ML-5460
         <ModelEndpointsCounters /> */}
       </div>
     </div>

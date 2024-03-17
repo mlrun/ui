@@ -109,10 +109,7 @@ const App = () => {
         {projectName && <Navbar projectName={projectName} setIsNavbarPinned={setIsNavbarPinned} />}
         <Suspense fallback={<Loader />}>
           <Routes>
-            <Route
-              path='projects/jobsMonitoring/:tab/:filter'
-              element={<ProjectsJobsMonitoring />}
-            />
+            <Route path='projects/jobs-monitoring/:tab' element={<ProjectsJobsMonitoring />} />
             <Route
               path=''
               element={
