@@ -180,9 +180,11 @@ const TableCell = ({
     return <td className={cellClassNames}>{data.value}</td>
   } else {
     return (
-      <td className={cellClassNames}>
+      <td
+        data-testid={data?.headerId + (data?.driftStatus ? ' ' + data.driftStatus : '')}
+        className={cellClassNames}
+      >
         <Tooltip
-          id={data?.driftStatus ? data.driftStatus : ''}
           className="text_small"
           template={<TextTooltipTemplate text={data.tooltip || data.value} />}
         >
