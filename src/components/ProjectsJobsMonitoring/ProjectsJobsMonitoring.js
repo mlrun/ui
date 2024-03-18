@@ -17,18 +17,10 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import jobsActions from '../../../actions/jobs'
-import workflowsActions from '../../../actions/workflow'
-import functionsActions from '../../../actions/functions'
+import React from 'react'
 
-export const scheduledJobsActionCreator = {
-  editJob: jobsActions.editJob,
-  fetchFunctionTemplate: functionsActions.fetchFunctionTemplate,
-  fetchJob: jobsActions.fetchJob,
-  fetchJobFunction: jobsActions.fetchJobFunction,
-  fetchJobFunctionSuccess: jobsActions.fetchJobFunctionSuccess,
-  fetchScheduledJobs: jobsActions.fetchScheduledJobs,
-  handleRunScheduledJob: jobsActions.handleRunScheduledJob,
-  removeScheduledJob: jobsActions.removeScheduledJob,
-  resetWorkflow: workflowsActions.resetWorkflow
+const ProjectsJobsMonitoring = () => {
+  return <div>JobsMonitoring</div>
 }
+
+export default ProjectsJobsMonitoring

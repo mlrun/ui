@@ -17,18 +17,37 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import jobsActions from '../../../actions/jobs'
-import workflowsActions from '../../../actions/workflow'
-import functionsActions from '../../../actions/functions'
+import { useEffect, useRef, useState } from 'react'
+import { useDispatch } from 'react-redux'
+import { REQUEST_CANCELED } from '../constants'
 
-export const scheduledJobsActionCreator = {
-  editJob: jobsActions.editJob,
-  fetchFunctionTemplate: functionsActions.fetchFunctionTemplate,
-  fetchJob: jobsActions.fetchJob,
-  fetchJobFunction: jobsActions.fetchJobFunction,
-  fetchJobFunctionSuccess: jobsActions.fetchJobFunctionSuccess,
-  fetchScheduledJobs: jobsActions.fetchScheduledJobs,
-  handleRunScheduledJob: jobsActions.handleRunScheduledJob,
-  removeScheduledJob: jobsActions.removeScheduledJob,
-  resetWorkflow: workflowsActions.resetWorkflow
+export const useFetchData = ({ action, filter }) => {
+  const [loadingState, setLoadingState] = useState(true)
+  const dispatch = useDispatch()
+  const abortRef = useRef()
+
+  useEffect(() => {
+    return () => {
+      if (abortRef.current) {
+        abortRef.current.abort(REQUEST_CANCELED)
+      }
+    }
+  }, [])
+
+  useEffect(() => {
+    setLoadingState(true)
+    abortRef.current = new AbortController()
+
+    dispatch(
+      action('*', filter, {
+        signal: abortRef.current.signal
+      })
+    ).then(data => {
+      if (data) {
+        setLoadingState(false)
+      }
+    })
+  }, [dispatch, filter, action])
+
+  return { loading: loadingState }
 }

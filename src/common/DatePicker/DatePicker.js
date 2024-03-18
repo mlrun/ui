@@ -17,7 +17,15 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import React, { useState, useRef, useEffect, useLayoutEffect, useCallback, useReducer } from 'react'
+import React, {
+  useState,
+  useRef,
+  useEffect,
+  useLayoutEffect,
+  useCallback,
+  useReducer,
+  useMemo
+} from 'react'
 import PropTypes from 'prop-types'
 import { throttle } from 'lodash'
 
@@ -26,7 +34,8 @@ import { DATE_FILTER_ANY_TIME } from '../../constants'
 import { createAutoCorrectedDatePipe } from '../../utils/createAutoCorrectedDatePipe'
 import {
   datesDivider,
-  datePickerOptions,
+  datePickerPastOptions,
+  datePickerFutureOptions,
   decodeLocale,
   formatDate,
   generateCalendar,
@@ -35,7 +44,8 @@ import {
   getDateRegEx,
   getWeekDays,
   getWeekStart,
-  months
+  months,
+  ANY_TIME_DATE_OPTION
 } from '../../utils/datePicker.util'
 import { initialState, datePickerActions, datePickerReducer } from './datePickerReducer'
 
@@ -44,6 +54,7 @@ const DatePicker = ({
   date,
   dateTo,
   disabled,
+  hasFutureOptions,
   invalid,
   invalidText,
   label,
@@ -52,10 +63,11 @@ const DatePicker = ({
   required,
   requiredText,
   setInvalid,
+  selectedOptionId,
   splitCharacter,
   tip,
   type,
-  withOptions
+  withLabels
 }) => {
   const [datePickerState, datePickerDispatch] = useReducer(datePickerReducer, initialState)
   const [isCalendarInvalid, setIsCalendarInvalid] = useState(false)
@@ -64,6 +76,7 @@ const DatePicker = ({
   const [isRange] = useState(type.includes('range'))
   const [isTime] = useState(type.includes('time'))
   const [isValueEmpty, setIsValueEmpty] = useState(true)
+  const [selectedOption, setSelectedOption] = useState({})
   const [valueDatePickerInput, setValueDatePickerInput] = useState(
     formatDate(isRange, isTime, splitCharacter, date, dateTo)
   )
@@ -80,6 +93,10 @@ const DatePicker = ({
   )
   const dateRegEx = getDateRegEx(dateMask)
   const startWeek = getWeekStart(decodeLocale(navigator.language))
+
+  const datePickerOptions = useMemo(() => {
+    return hasFutureOptions ? datePickerFutureOptions : datePickerPastOptions
+  }, [hasFutureOptions])
 
   const handleCloseDatePickerOutside = useCallback(
     event => {
@@ -165,6 +182,12 @@ const DatePicker = ({
     }
   }, [calcPosition, isDatePickerOpened, isDatePickerOptionsOpened])
 
+  useLayoutEffect(() => {
+    if (selectedOptionId) {
+      setSelectedOption(datePickerOptions.find(option => option.id === selectedOptionId))
+    }
+  }, [datePickerOptions, selectedOptionId])
+
   useEffect(() => {
     datePickerDispatch({
       type: datePickerActions.UPDATE_DATE_FROM,
@@ -185,10 +208,11 @@ const DatePicker = ({
 
   useEffect(() => {
     const isInputValueEmpty = getInputValueValidity(valueDatePickerInput)
-    setIsValueEmpty(withOptions && isInputValueEmpty)
+
+    setIsValueEmpty(datePickerOptions && isInputValueEmpty)
 
     isInputValueEmpty && setIsDatePickerOpened(false)
-  }, [getInputValueValidity, valueDatePickerInput, withOptions])
+  }, [getInputValueValidity, valueDatePickerInput, datePickerOptions])
 
   useEffect(() => {
     let isCalendarInvalid = false
@@ -319,6 +343,8 @@ const DatePicker = ({
     if (new RegExp(dateRegEx).test(event.target.value) || isValueEmpty) {
       let dates = DATE_FILTER_ANY_TIME
 
+      setSelectedOption(datePickerOptions.find(option => option.id === ANY_TIME_DATE_OPTION))
+
       if (!isValueEmpty) {
         dates = event.target.value.split(datesDivider).map(date => new Date(date))
 
@@ -349,10 +375,10 @@ const DatePicker = ({
 
   const onInputDatePickerClick = () => {
     if (!disabled) {
-      if (withOptions && !isDatePickerOpened) {
-        setIsDatePickerOptionsOpened(true)
+      if (datePickerOptions && !isDatePickerOpened) {
+        setIsDatePickerOptionsOpened(state => !state)
       } else {
-        setIsDatePickerOpened(true)
+        setIsDatePickerOpened(state => !state)
         datePickerDispatch({
           type: datePickerActions.UPDATE_SELECTED_DATE_FROM,
           payload: date || new Date()
@@ -386,6 +412,7 @@ const DatePicker = ({
       setIsDatePickerOpened(true)
     }
 
+    setSelectedOption(option)
     setIsDatePickerOptionsOpened(false)
   }
 
@@ -444,10 +471,12 @@ const DatePicker = ({
       ref={{ datePickerRef, datePickerViewRef }}
       required={required}
       requiredText={requiredText}
+      selectedOption={selectedOption}
       setSelectedDate={setSelectedDate}
       tip={tip}
       valueDatePickerInput={valueDatePickerInput}
       weekDay={getWeekDays(startWeek)}
+      withLabels={withLabels}
     />
   )
 }
@@ -455,6 +484,7 @@ DatePicker.defaultProps = {
   className: '',
   dateTo: new Date(),
   disabled: false,
+  hasFutureOptions: false,
   invalid: false,
   invalidText: 'This field is invalid',
   label: 'Date',
@@ -462,10 +492,11 @@ DatePicker.defaultProps = {
   required: false,
   requiredText: 'This field is required',
   setInvalid: () => {},
+  selectedOptionId: '',
   splitCharacter: '/',
   tip: '',
   type: 'date',
-  withOptions: false
+  withLabels: false
 }
 
 DatePicker.propTypes = {
@@ -473,6 +504,7 @@ DatePicker.propTypes = {
   date: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.string]).isRequired,
   dateTo: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.string]),
   disabled: PropTypes.bool,
+  hasFutureOptions: PropTypes.bool,
   invalid: PropTypes.bool,
   invalidText: PropTypes.string,
   label: PropTypes.string,
@@ -481,10 +513,11 @@ DatePicker.propTypes = {
   required: PropTypes.bool,
   requiredText: PropTypes.string,
   setInvalid: PropTypes.func,
+  selectedOptionId: PropTypes.string,
   splitCharacter: PropTypes.oneOf(['/', '.']),
   tip: PropTypes.oneOfType([PropTypes.string, PropTypes.element]),
   type: PropTypes.oneOf(['date', 'date-time', 'date-range', 'date-range-time']),
-  withOptions: PropTypes.bool
+  withLabels: PropTypes.bool
 }
 
 export default React.memo(

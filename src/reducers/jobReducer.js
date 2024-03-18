@@ -45,6 +45,9 @@ import {
   FETCH_JOB_LOGS_FAILURE,
   FETCH_JOB_LOGS_SUCCESS,
   FETCH_JOB_SUCCESS,
+  FETCH_SCHEDULED_JOBS_BEGIN,
+  FETCH_SCHEDULED_JOBS_FAILURE,
+  FETCH_SCHEDULED_JOBS_SUCCESS,
   REMOVE_JOB,
   REMOVE_JOB_ERROR,
   REMOVE_JOB_FUNCTION,
@@ -117,7 +120,8 @@ const initialState = {
         volumes: []
       }
     }
-  }
+  },
+  scheduled: []
 }
 
 const jobReducer = (state = initialState, { type, payload }) => {
@@ -286,6 +290,24 @@ const jobReducer = (state = initialState, { type, payload }) => {
       return {
         ...state,
         jobs: payload,
+        loading: false
+      }
+    case FETCH_SCHEDULED_JOBS_BEGIN:
+      return {
+        ...state,
+        loading: true
+      }
+    case FETCH_SCHEDULED_JOBS_FAILURE:
+      return {
+        ...state,
+        scheduled: [],
+        loading: false,
+        error: payload
+      }
+    case FETCH_SCHEDULED_JOBS_SUCCESS:
+      return {
+        ...state,
+        scheduled: payload,
         loading: false
       }
     case REMOVE_JOB:

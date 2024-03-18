@@ -88,6 +88,9 @@ const Features = lazyRetry(() => import('./components/FeatureStore/Features/Feat
 const FeatureVectors = lazyRetry(() =>
   import('./components/FeatureStore/FeatureVectors/FeatureVectors')
 )
+const ProjectsJobsMonitoring = lazyRetry(() =>
+  import('./components/ProjectsJobsMonitoring/ProjectsJobsMonitoring')
+)
 
 const App = () => {
   const [projectName, setProjectName] = useState('')
@@ -106,6 +109,7 @@ const App = () => {
         {projectName && <Navbar projectName={projectName} setIsNavbarPinned={setIsNavbarPinned} />}
         <Suspense fallback={<Loader />}>
           <Routes>
+            <Route path="projects/jobs-monitoring/:tab" element={<ProjectsJobsMonitoring />} />
             <Route
               path=""
               element={
@@ -118,7 +122,10 @@ const App = () => {
             >
               <Route path="projects" element={<Projects />} />
 
-              <Route path="projects/:projectName" element={<Navigate replace to="monitor" />} />
+              <Route
+                path="projects/:projectName"
+                element={<Navigate replace to={PROJECT_MONITOR} />}
+              />
               <Route
                 path={`projects/:projectName/${PROJECT_MONITOR}`}
                 element={<ProjectMonitor />}

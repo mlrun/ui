@@ -18,37 +18,6 @@ under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
 import { mainBaseUrl, mainHttpClient } from '../httpClient'
-import { STATE_FILTER_ALL_ITEMS } from '../constants'
-
-const generateRequestParams = filters => {
-  const params = {
-    iter: false
-  }
-
-  if (filters?.labels) {
-    params.label = filters.labels.split(',')
-  }
-
-  if (filters?.name) {
-    params.name = `~${filters.name}`
-  }
-
-  if (filters?.state && filters.state !== STATE_FILTER_ALL_ITEMS) {
-    params.state = filters.state
-  }
-
-  if (filters?.dates) {
-    if (filters.dates.value[0]) {
-      params.start_time_from = filters.dates.value[0].toISOString()
-    }
-
-    if (filters.dates.value[1] && !filters.dates.isPredefined) {
-      params.start_time_to = filters.dates.value[1].toISOString()
-    }
-  }
-
-  return params
-}
 
 const jobsApi = {
   abortJob: (project, jobId, iter) => {
@@ -77,36 +46,15 @@ const jobsApi = {
       `/projects/${project}/schedules/${postData.scheduled_object.task.metadata.name}`,
       postData
     ),
-  getJobs: (project, filters, config = {}) => {
-    const newConfig = {
-      ...config,
-      params: {
-        'partition-by': 'name',
-        'partition-sort-by': 'updated',
-        ...generateRequestParams(filters)
-      }
-    }
-
-    return mainHttpClient.get(`/projects/${project}/runs`, newConfig)
+  getJobs: (project, config) => {
+    return mainHttpClient.get(`/projects/${project}/runs`, config)
   },
-  getSpecificJobs: (project, filters, jobList) => {
-    const params = {
-      ...generateRequestParams(filters)
-    }
-
+  getSpecificJobs: (project, params, jobList) => {
     const jobListQuery = jobList.map(value => `uid=${value}`).join('&')
 
     return mainHttpClient.get(`/projects/${project}/runs?${jobListQuery}`, { params })
   },
-  getAllJobRuns: (project, filters, config = {}, jobName) => {
-    const newConfig = {
-      ...config,
-      params: {
-        name: jobName,
-        ...generateRequestParams(filters)
-      }
-    }
-
+  getAllJobRuns: (project, newConfig) => {
     return mainHttpClient.get(`/projects/${project}/runs`, newConfig)
   },
   getJob: (project, jobId, iter) => {
@@ -122,26 +70,7 @@ const jobsApi = {
     fetch(`${mainBaseUrl}/log/${project}/${id}`, {
       method: 'get'
     }),
-  getScheduledJobs: (project, filters, config = {}) => {
-    const newConfig = {
-      ...config,
-      params: {
-        include_last_run: 'yes'
-      }
-    }
-
-    if (filters?.owner) {
-      newConfig.params.owner = filters.owner
-    }
-
-    if (filters?.name) {
-      newConfig.params.name = `~${filters.name}`
-    }
-
-    if (filters?.labels) {
-      newConfig.params.labels = filters.labels?.split(',')
-    }
-
+  getScheduledJobs: (project, newConfig) => {
     return mainHttpClient.get(`/projects/${project}/schedules`, newConfig)
   },
   removeScheduledJob: (project, scheduleName) =>

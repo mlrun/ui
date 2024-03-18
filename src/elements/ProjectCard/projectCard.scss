@@ -21,12 +21,12 @@
     flex-flow: column nowrap;
     justify-content: flex-start;
     height: 100%;
-    padding: 25px 25px 15px;
+    padding: 20px 25px 15px;
   }
 
   &__header {
     margin-bottom: 0.5rem;
-    padding-right: 1.5rem;
+    padding-right: 1.7rem;
 
     &-title {
       display: flex;
@@ -148,7 +148,7 @@
 
   &__actions-menu {
     position: absolute;
-    top: 22px;
+    top: 14px;
     right: 7px;
     z-index: 4;
     transition: opacity 0.3s ease-in-out;
