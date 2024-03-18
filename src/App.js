@@ -103,15 +103,15 @@ const App = () => {
   const mlAppContainerClasses = classNames('ml-app-container', isHeaderShown && 'has-header')
 
   return (
-    <div className='ml-app'>
+    <div className="ml-app">
       {isHeaderShown && <Header />}
       <div className={mlAppContainerClasses}>
         {projectName && <Navbar projectName={projectName} setIsNavbarPinned={setIsNavbarPinned} />}
         <Suspense fallback={<Loader />}>
           <Routes>
-            <Route path='projects/jobs-monitoring/:tab' element={<ProjectsJobsMonitoring />} />
+            <Route path="projects/jobs-monitoring/:tab" element={<ProjectsJobsMonitoring />} />
             <Route
-              path=''
+              path=""
               element={
                 <Page
                   isHeaderShown={isHeaderShown}
@@ -120,10 +120,10 @@ const App = () => {
                 />
               }
             >
-              <Route path='projects' element={<Projects />} />
+              <Route path="projects" element={<Projects />} />
 
               <Route
-                path='projects/:projectName'
+                path="projects/:projectName"
                 element={<Navigate replace to={PROJECT_MONITOR} />}
               />
               <Route
@@ -133,11 +133,11 @@ const App = () => {
 
               {!isNuclioModeDisabled && (
                 <Route
-                  path='projects/:projectName/monitor/consumer-groups/*'
+                  path="projects/:projectName/monitor/consumer-groups/*"
                   element={<ConsumerGroupsWrapper />}
                 >
-                  <Route path='' exact element={<ConsumerGroups />} />
-                  <Route path=':functionName/:streamName' exact element={<ConsumerGroup />} />
+                  <Route path="" exact element={<ConsumerGroups />} />
+                  <Route path=":functionName/:streamName" exact element={<ConsumerGroup />} />
                 </Route>
               )}
               <Route
@@ -145,23 +145,23 @@ const App = () => {
                 element={<ProjectOverview />}
               />
               <Route
-                path='projects/:projectName/settings'
+                path="projects/:projectName/settings"
                 element={<Navigate to={`${PROJECTS_SETTINGS_GENERAL_TAB}`} replace />}
               />
               <Route
-                path='/projects/:projectName/settings/:pageTab'
+                path="/projects/:projectName/settings/:pageTab"
                 element={<ProjectSettings />}
               />
               {/*/!* Adding the next redirect for backwards compatability *!/*/}
               <Route
-                path='projects/:projectName/jobs'
+                path="projects/:projectName/jobs"
                 element={<Navigate to={`${MONITOR_JOBS_TAB}`} replace />}
               />
               <Route
-                path='projects/:projectName/jobs/:pageTab/create-new-job'
+                path="projects/:projectName/jobs/:pageTab/create-new-job"
                 element={<CreateJobPage />}
               />
-              <Route path='projects/:projectName/jobs/*' element={<Jobs />}>
+              <Route path="projects/:projectName/jobs/*" element={<Jobs />}>
                 {[
                   `${MONITOR_JOBS_TAB}/:jobName/:jobId/:tab`,
                   `${MONITOR_JOBS_TAB}/:jobId/:tab`,
@@ -185,7 +185,7 @@ const App = () => {
                   </Fragment>
                 ))}
                 <Route path={`${SCHEDULE_TAB}`} element={<ScheduledJobs />} />
-                <Route path='*' element={<Navigate to={MONITOR_JOBS_TAB} />} replace />
+                <Route path="*" element={<Navigate to={MONITOR_JOBS_TAB} />} replace />
               </Route>
               {[
                 'projects/:projectName/functions',
@@ -197,8 +197,8 @@ const App = () => {
                 </Fragment>
               ))}
               <Route
-                path='projects/:projectName/feature-store/datasets/*'
-                element={<Navigate to=':name/:tag/:iter/:tab' replace />}
+                path="projects/:projectName/feature-store/datasets/*"
+                element={<Navigate to=":name/:tag/:iter/:tab" replace />}
               />
               {[
                 'projects/:projectName/datasets',
@@ -210,14 +210,14 @@ const App = () => {
                 </Fragment>
               ))}
               <Route
-                path='projects/:projectName/feature-store'
+                path="projects/:projectName/feature-store"
                 element={<Navigate to={`${FEATURE_SETS_TAB}`} replace />}
               />
               <Route
-                path='projects/:projectName/feature-store/add-to-feature-vector'
+                path="projects/:projectName/feature-store/add-to-feature-vector"
                 element={<AddToFeatureVectorPage />}
               />
-              <Route path='projects/:projectName/feature-store/*' element={<FeatureStore />}>
+              <Route path="projects/:projectName/feature-store/*" element={<FeatureStore />}>
                 {[`${FEATURE_SETS_TAB}`, `${FEATURE_SETS_TAB}/:name/:tag/:tab`].map(
                   (path, index) => (
                     <Fragment key={index}>
@@ -233,9 +233,9 @@ const App = () => {
                   )
                 )}
                 <Route path={`${FEATURES_TAB}`} element={<Features />} />
-                <Route path='*' element={<Navigate to={FEATURE_SETS_TAB} replace />} />
+                <Route path="*" element={<Navigate to={FEATURE_SETS_TAB} replace />} />
               </Route>
-              <Route path='projects/:projectName/models/*' element={<ModelsPage />}>
+              <Route path="projects/:projectName/models/*" element={<ModelsPage />}>
                 {[
                   `${MODELS_TAB}`,
                   `${MODELS_TAB}/:name/:tab`,
@@ -261,7 +261,7 @@ const App = () => {
                     <Route path={path} element={<RealTimePipelines />} />
                   </Fragment>
                 ))}
-                <Route path='*' element={<Navigate to={MODELS_TAB} replace />} />
+                <Route path="*" element={<Navigate to={MODELS_TAB} replace />} />
               </Route>
               {[
                 'projects/:projectName/files',
@@ -272,8 +272,8 @@ const App = () => {
                   <Route path={path} element={<Files />} />
                 </Fragment>
               ))}
-              <Route path='*' element={<Navigate replace to='projects' />} />
-              <Route path='/' element={<Navigate replace to='projects' />} />
+              <Route path="*" element={<Navigate replace to="projects" />} />
+              <Route path="/" element={<Navigate replace to="projects" />} />
             </Route>
           </Routes>
         </Suspense>

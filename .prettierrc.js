@@ -19,7 +19,7 @@ such restriction.
 */
 module.exports = {
   semi: false,
-  jsxSingleQuote: true,
+  // jsxSingleQuote: true,
   singleQuote: true,
   trailingComma: 'none',
   printWidth: 100,

@@ -72,24 +72,24 @@ const ProjectStatistics = ({ statistics }) => {
 
   return Object.keys(statistics).map((key, index) => {
     return (
-      <div key={key + index} className='project-data-card__statistics-item'>
+      <div key={key + index} className="project-data-card__statistics-item">
         {statistics[key].href ? (
           <a
             href={statistics[key].href}
-            target='_top'
-            className='project-data-card__statistics-link'
+            target="_top"
+            className="project-data-card__statistics-link"
           >
             <ProjectStatisticsCounter counterObject={statistics[key]} />
           </a>
         ) : statistics[key].link ? (
           <div
-            className='project-data-card__statistics-link'
+            className="project-data-card__statistics-link"
             onClick={() => onNavigate(statistics[key], key)}
           >
             <ProjectStatisticsCounter counterObject={statistics[key]} />
           </div>
         ) : (
-          <div className='project-data-card__statistics-data'>
+          <div className="project-data-card__statistics-data">
             <ProjectStatisticsCounter counterObject={statistics[key]} />
           </div>
         )}

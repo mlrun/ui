@@ -148,7 +148,7 @@ const ScheduledJobs = ({
 
   const handleRemoveScheduledJob = useCallback(
     schedule => {
-      removeScheduledJob(params.projectName, schedule.name).then((response) => {
+      removeScheduledJob(params.projectName, schedule.name).then(response => {
         refreshJobs(filtersStore)
         dispatch(
           setNotification({
@@ -212,7 +212,7 @@ const ScheduledJobs = ({
         [
           {
             label: 'Run now',
-            icon: <Run className='action_cell__run-icon' />,
+            icon: <Run className="action_cell__run-icon" />,
             onClick: handleRunJob
           },
           {
@@ -287,8 +287,8 @@ const ScheduledJobs = ({
 
   return (
     <>
-      <div className='content__action-bar-wrapper'>
-        <div className='action-bar'>
+      <div className="content__action-bar-wrapper">
+        <div className="action-bar">
           <FilterMenu
             filters={filters}
             onChange={refreshJobs}

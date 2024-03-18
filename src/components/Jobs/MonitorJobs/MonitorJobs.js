@@ -597,7 +597,7 @@ const MonitorJobs = ({
         />
       )}
       <div className={filterMenuClassNames}>
-        <div className='action-bar'>
+        <div className="action-bar">
           <FilterMenu
             actionButton={{
               label: 'Resource monitoring',

@@ -101,16 +101,16 @@ const ProjectsView = ({
           message={confirmData.message}
         />
       )}
-      <div className='projects__wrapper'>
+      <div className="projects__wrapper">
         {projectStore.projects.length > 0 && isDemoMode && <ProjectsMonitoring />}
-        <PageHeader title='Projects' />
-        <div className='projects-content-header'>
-          <div className='projects-content-header__row'>
-            <div className='projects-content-header__col'>
-              <div className='projects-content-header-item'>
+        <PageHeader title="Projects" />
+        <div className="projects-content-header">
+          <div className="projects-content-header__row">
+            <div className="projects-content-header__col">
+              <div className="projects-content-header-item">
                 <ContentMenu
                   activeTab={selectedProjectsState}
-                  screen='active'
+                  screen="active"
                   tabs={projectsStates}
                   onClick={setSelectedProjectsState}
                 />
@@ -124,14 +124,14 @@ const ProjectsView = ({
                 />
               </div>
             </div>
-            <div className='projects-content-header__col projects-content-header__col-right'>
-              <div className='projects-content-header-item'>
+            <div className="projects-content-header__col projects-content-header__col-right">
+              <div className="projects-content-header-item">
                 <Search
-                  className='projects-search'
+                  className="projects-search"
                   matches={filterMatches}
                   onChange={setFilterByName}
                   onFocus={handleSearchOnFocus}
-                  placeholder='Search projects...'
+                  placeholder="Search projects..."
                   setMatches={setFilterMatches}
                   value={filterByName}
                 />
@@ -143,9 +143,9 @@ const ProjectsView = ({
                 />
                 <RoundedIcon
                   onClick={refreshProjects}
-                  className='panel-title__btn_close'
-                  tooltipText='Refresh'
-                  id='pop-up-close-btn'
+                  className="panel-title__btn_close"
+                  tooltipText="Refresh"
+                  id="pop-up-close-btn"
                 >
                   <RefreshIcon />
                 </RoundedIcon>
@@ -158,9 +158,9 @@ const ProjectsView = ({
           (filterMatches.length === 0 || filteredProjects.length === 0) ? (
             <NoData />
           ) : selectedProjectsState === 'archived' && filteredProjects.length === 0 ? (
-            <div className='no-filtered-data'>No archived projects.</div>
+            <div className="no-filtered-data">No archived projects.</div>
           ) : (
-            <div className='projects-content'>
+            <div className="projects-content">
               {filteredProjects.map(project => {
                 return (
                   <ProjectCard
@@ -176,7 +176,7 @@ const ProjectsView = ({
             </div>
           )
         ) : projectStore.loading ? null : (
-          <NoData message='Your projects list is empty.' />
+          <NoData message="Your projects list is empty." />
         )}
       </div>
       {convertedYaml.length > 0 && (

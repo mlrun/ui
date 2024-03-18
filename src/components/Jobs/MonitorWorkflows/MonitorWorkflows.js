@@ -653,12 +653,12 @@ const MonitorWorkflows = ({
   return (
     <>
       {!params.workflowId && (
-        <div className='monitor-workflows'>
-          <p className='monitor-workflows__subtitle'>
+        <div className="monitor-workflows">
+          <p className="monitor-workflows__subtitle">
             View running workflows and previously executed workflows
           </p>
-          <div className='content__action-bar-wrapper'>
-            <div className='action-bar'>
+          <div className="content__action-bar-wrapper">
+            <div className="action-bar">
               <FilterMenu
                 filters={filters}
                 onChange={getWorkflows}
