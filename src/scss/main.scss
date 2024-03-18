@@ -199,15 +199,12 @@ main {
       min-height: 50px;
       background-color: inherit;
 
-      &:not(.parent-row_expanded) {
-        border-bottom: $tableRowBorder;
-      }
-
       &:not(.parent-row_expanded) > * {
         position: relative;
         display: inline-flex;
         flex: 1;
         align-items: center;
+        border-bottom: $tableRowBorder;
 
         @include tableDet(8px, 5px, 8px, 10px);
 
@@ -219,7 +216,7 @@ main {
           &-name {
             position: sticky;
             left: 0;
-            min-width: 240px;
+            min-width: 250px;
             z-index: 1;
           }
 
@@ -327,7 +324,7 @@ main {
 
           .row_grouped-by {
             position: sticky;
-            top: 40px;
+            top: #{$headerRowHeight}px;
             background-color: $white;
             padding: 0;
             z-index: 3;
@@ -353,7 +350,7 @@ main {
       z-index: 3;
 
       &-row {
-        min-height: 40px;
+        min-height: #{$headerRowHeight}px;
       }
 
       &__cell {
@@ -410,6 +407,7 @@ main {
     flex-flow: column nowrap;
     flex: 1;
     overflow-y: auto;
+    will-change: scroll-position;
   }
 
   &.table-with-details {

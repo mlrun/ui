@@ -91,7 +91,7 @@ const TableLinkCell = ({
               </Tooltip>
             )}
           </div>
-          {(link.match(/jobs/) ||
+          {(data.showUidRow ||
             ((link.match(/functions/) ||
               link.match(/models/) ||
               link.match(/files/) ||

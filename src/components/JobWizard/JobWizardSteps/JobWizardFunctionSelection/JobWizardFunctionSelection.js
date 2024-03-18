@@ -17,7 +17,7 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import React, { useState, useEffect, useMemo, useCallback } from 'react'
+import React, { useState, useEffect, useMemo, useCallback, useRef } from 'react'
 import PropTypes from 'prop-types'
 import { OnChange } from 'react-final-form-listeners'
 import { useDispatch, useSelector } from 'react-redux'
@@ -44,6 +44,7 @@ import {
 import { generateJobWizardData, getCategoryName } from '../../JobWizard.util'
 import { generateProjectsList } from '../../../../utils/projects'
 import { openConfirmPopUp } from 'igz-controls/utils/common.util'
+import { scrollToElement } from '../../../../utils/scroll.util'
 import {
   FUNCTIONS_SELECTION_FUNCTIONS_TAB,
   FUNCTIONS_SELECTION_HUB_TAB,
@@ -77,6 +78,7 @@ const JobWizardFunctionSelection = ({
   setShowSchedule,
   setTemplates,
   setTemplatesCategories,
+  stepIsActive,
   templates,
   templatesCategories
 }) => {
@@ -86,12 +88,13 @@ const JobWizardFunctionSelection = ({
   const [filterByName, setFilterByName] = useState('')
   const [filterMatches, setFilterMatches] = useState([])
   const [projects, setProjects] = useState(generateProjectsList(projectNames, params.projectName))
+  const selectedActiveTab = useRef(null)
+  const functionSelectionRef = useRef(null)
 
   const filtersStoreHubCategories = useSelector(
     store =>
       store.filtersStore[FILTER_MENU_MODAL][JOB_WIZARD_FILTERS]?.values?.[HUB_CATEGORIES_FILTER]
   )
-
   const { hubFunctions, hubFunctionsCatalog, loading } = useSelector(store => store.functionsStore)
 
   const dispatch = useDispatch()
@@ -311,6 +314,7 @@ const JobWizardFunctionSelection = ({
       generateData(functionData)
       setSelectedFunctionTab(FUNCTIONS_SELECTION_FUNCTIONS_TAB)
       setShowSchedule(false)
+      selectedActiveTab.current = activeTab
     }
 
     if (
@@ -334,6 +338,7 @@ const JobWizardFunctionSelection = ({
         generateData(result)
         setSelectedFunctionTab(FUNCTIONS_SELECTION_HUB_TAB)
         setShowSchedule(false)
+        selectedActiveTab.current = activeTab
       })
     }
 
@@ -353,8 +358,18 @@ const JobWizardFunctionSelection = ({
     return openConfirmPopUp('All changes will be lost', confirmHandler)
   }
 
+  useEffect(() => {
+    const isTabActive = selectedActiveTab.current && selectedActiveTab.current === activeTab
+
+    if (stepIsActive && isTabActive) {
+      scrollToElement(functionSelectionRef, '.selected')
+    } else if (!stepIsActive && !isTabActive) {
+      setActiveTab(selectedActiveTab.current)
+    }
+  }, [stepIsActive, activeTab, setActiveTab, selectedActiveTab])
+
   return (
-    <div className="job-wizard__function-selection">
+    <div ref={functionSelectionRef} className="job-wizard__function-selection">
       <div className="form-row">
         <h5 className="form-step-title">Function selection</h5>
       </div>
@@ -476,6 +491,10 @@ const JobWizardFunctionSelection = ({
   )
 }
 
+JobWizardFunctionSelection.defaultProps = {
+  stepIsActive: false
+}
+
 JobWizardFunctionSelection.propTypes = {
   activeTab: PropTypes.string.isRequired,
   defaultData: PropTypes.shape({}).isRequired,
@@ -499,6 +518,7 @@ JobWizardFunctionSelection.propTypes = {
   setShowSchedule: PropTypes.func.isRequired,
   setTemplates: PropTypes.func.isRequired,
   setTemplatesCategories: PropTypes.func.isRequired,
+  stepIsActive: PropTypes.bool,
   templates: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
   templatesCategories: PropTypes.arrayOf(PropTypes.string).isRequired
 }

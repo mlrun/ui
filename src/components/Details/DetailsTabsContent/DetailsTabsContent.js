@@ -129,7 +129,7 @@ const DetailsTabsContent = ({
     case DETAILS_RESULTS_TAB:
       return (
         <DetailsResults
-          defaultSortBy="name"
+          defaultSortBy={0}
           defaultDirection="asc"
           excludeSortBy="state"
           job={selectedItem}

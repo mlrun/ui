@@ -41,7 +41,7 @@ module.exports = {
   }),
   tab: {
     open_button: By.css('.breadcrumbs__item:nth-of-type(4) button'),
-    options: By.css('.breadcrumbs__dropdown-item'),
+    options: By.css('a.breadcrumbs__dropdown-item'),
     option: function(index) {
       return By.css(`.breadcrumbs__dropdown-item:nth-of-type(${index})`)
     }

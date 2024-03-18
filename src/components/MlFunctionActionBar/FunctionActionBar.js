@@ -19,42 +19,47 @@ such restriction.
 */
 import React, { useEffect, useMemo } from 'react'
 import { createForm } from 'final-form'
-import arrayMutators from 'final-form-arrays'
+// import arrayMutators from 'final-form-arrays'
 import { Form } from 'react-final-form'
 import { useDispatch, useSelector } from 'react-redux'
-import { isEmpty } from 'lodash'
+// import { isEmpty } from 'lodash'
 import { useNavigate, useParams } from 'react-router-dom'
 import PropTypes from 'prop-types'
 
 import { RoundedIcon, Button } from 'igz-controls/components'
+
 import FilterMenuModal from '../FilterMenuModal/FilterMenuModal'
-import ArtifactsFilters from './ArtifactsFilters'
 import NameFilter from '../../common/NameFilter/NameFilter'
 
 import {
-  GROUP_BY_NAME,
+  // GROUP_BY_NAME,
   GROUP_BY_NONE,
-  REQUEST_CANCELED,
-  TAG_FILTER_ALL_ITEMS
+  REQUEST_CANCELED
+  // TAG_FILTER_ALL_ITEMS
 } from '../../constants'
 import detailsActions from '../../actions/details'
 import { removeFilters, setFilters } from '../../reducers/filtersReducer'
 import { setFieldState } from 'igz-controls/utils/form.util'
 
 import { ReactComponent as RefreshIcon } from 'igz-controls/images/refresh.svg'
+import { ReactComponent as CollapseIcon } from 'igz-controls/images/collapse.svg'
+import { ReactComponent as ExpandIcon } from 'igz-controls/images/expand.svg'
+import FunctionsFilters from './FunctionsFilters'
 
-function ArtifactsActionBar({
+function FunctionActionBar({
   actionButtons,
-  artifacts,
+  // artifacts,
   cancelRequest,
+  expand,
   filterMenuName,
+  handleExpandAll,
   handleRefresh,
   page,
   removeSelectedItem,
   setContent,
   setSelectedRowData,
-  tab,
-  urlTagOption
+  urlTagOption,
+  withoutExpandButton
 }) {
   const filtersStore = useSelector(store => store.filtersStore)
   const filterMenuModal = useSelector(store => store.filtersStore.filterMenuModal[filterMenuName])
@@ -65,7 +70,7 @@ function ArtifactsActionBar({
   const formRef = React.useRef(
     createForm({
       initialValues: { name: '' },
-      mutators: { ...arrayMutators, setFieldState },
+      mutators: { setFieldState },
       onSubmit: () => {}
     })
   )
@@ -80,32 +85,27 @@ function ArtifactsActionBar({
     return () => {
       dispatch(removeFilters())
     }
-  }, [params.pageTab, params.projectName, page, tab, dispatch])
+  }, [params.pageTab, params.projectName, page, dispatch])
 
   const applyChanges = async (name, filterMenuModal) => {
     const filtersHelperResult = await filtersHelper(changes, dispatch)
 
     if (filtersHelperResult) {
       if (params.name) {
-        navigate(`/projects/${params.projectName}/${page.toLowerCase()}${tab ? `/${tab}` : ''}`)
+        navigate(`/projects/${params.projectName}/${page.toLowerCase()}`)
       }
+      const showUntaggedValue =
+        filterMenuModal.showUntagged === 'showUntagged' ? 'showUntagged' : ''
+      dispatch(
+        setFilters({
+          showUntagged: showUntaggedValue
+        })
+      )
+      // applyChanges({
+      //   ...filtersStore,
+      //   showUntagged: showUntaggedValue
+      // })
 
-      if (
-        (filterMenuModal.tag === TAG_FILTER_ALL_ITEMS || isEmpty(filterMenuModal.iter)) &&
-        filtersStore.groupBy === GROUP_BY_NONE
-      ) {
-        dispatch(setFilters({ groupBy: GROUP_BY_NAME }))
-      } else if (
-        filtersStore.groupBy === GROUP_BY_NAME &&
-        filterMenuModal.tag !== TAG_FILTER_ALL_ITEMS &&
-        !isEmpty(filterMenuModal.iter)
-      ) {
-        dispatch(setFilters({ groupBy: GROUP_BY_NONE }))
-      }
-
-      setContent([])
-      dispatch(removeSelectedItem({}))
-      setSelectedRowData({})
       handleRefresh({ name, ...filterMenuModal })
     }
   }
@@ -142,53 +142,67 @@ function ArtifactsActionBar({
 
   return (
     <Form form={formRef.current} onSubmit={() => {}}>
-      {formState => (
-        <div className="action-bar">
-          <div className="action-bar__filters">
-            <NameFilter applyChanges={value => applyChanges(value, filterMenuModal.values)} />
-            <FilterMenuModal
-              applyChanges={filterMenuModal => applyChanges(formState.values.name, filterMenuModal)}
-              filterMenuName={filterMenuName}
-              initialValues={filtersInitialState}
-              restartFormTrigger={tab ?? page}
-              values={filterMenuModal.values}
-              wizardClassName="artifacts-filters__wrapper"
-            >
-              <ArtifactsFilters artifacts={artifacts} />
-            </FilterMenuModal>
-          </div>
-          <div className="action-bar__actions">
-            {actionButtons.map(
-              (actionButton, index) =>
-                actionButton &&
-                !actionButton.hidden && (
-                  <Button
-                    key={index}
-                    variant={actionButton.variant}
-                    label={actionButton.label}
-                    className={actionButton.className}
-                    onClick={actionButton.onClick}
-                  />
-                )
-            )}
+      {formState => {
+        // console.log(formState)
+        return (
+          <div className="action-bar">
+            <div className="action-bar__filters">
+              <NameFilter applyChanges={value => applyChanges(value, filterMenuModal.values)} />
+              <FilterMenuModal
+                applyChanges={filterMenuModal =>
+                  applyChanges(formState.values.name, filterMenuModal)
+                }
+                filterMenuName={filterMenuName}
+                initialValues={filtersInitialState}
+                restartFormTrigger={page}
+                values={filterMenuModal.values}
+                wizardClassName="artifacts-filters__wrapper"
+              >
+                <FunctionsFilters />
+              </FilterMenuModal>
+            </div>
+            <div className="action-bar__actions">
+              {actionButtons.map(
+                (actionButton, index) =>
+                  actionButton &&
+                  !actionButton.hidden && (
+                    <Button
+                      key={index}
+                      variant={actionButton.variant}
+                      label={actionButton.label}
+                      className={actionButton.className}
+                      onClick={actionButton.onClick}
+                    />
+                  )
+              )}
 
-            <RoundedIcon tooltipText="Refresh" onClick={() => refresh(formState)} id="refresh">
-              <RefreshIcon />
-            </RoundedIcon>
+              <RoundedIcon tooltipText="Refresh" onClick={() => refresh(formState)} id="refresh">
+                <RefreshIcon />
+              </RoundedIcon>
+              {!withoutExpandButton && filtersStore.groupBy !== GROUP_BY_NONE && (
+                <RoundedIcon
+                  id="toggle-collapse"
+                  tooltipText={expand ? 'Collapse' : 'Expand all'}
+                  onClick={() => handleExpandAll()}
+                >
+                  {expand ? <CollapseIcon /> : <ExpandIcon />}
+                </RoundedIcon>
+              )}
+            </div>
           </div>
-        </div>
-      )}
+        )
+      }}
     </Form>
   )
 }
 
-ArtifactsActionBar.defaultProps = {
+FunctionActionBar.defaultProps = {
   actionButtons: [],
   cancelRequest: null,
-  tab: ''
+  withoutExpandButton: false
 }
 
-ArtifactsActionBar.propTypes = {
+FunctionActionBar.propTypes = {
   actionButtons: PropTypes.arrayOf(
     PropTypes.shape({
       className: PropTypes.string,
@@ -198,15 +212,17 @@ ArtifactsActionBar.propTypes = {
       variant: PropTypes.string.isRequired
     })
   ),
-  artifacts: PropTypes.arrayOf(PropTypes.object).isRequired,
+  // artifacts: PropTypes.arrayOf(PropTypes.object).isRequired,
   cancelRequest: PropTypes.func,
+  expand: PropTypes.bool,
   filterMenuName: PropTypes.string.isRequired,
+  handleExpandAll: PropTypes.func,
   handleRefresh: PropTypes.func.isRequired,
   page: PropTypes.string.isRequired,
-  removeSelectedItem: PropTypes.func.isRequired,
-  setContent: PropTypes.func.isRequired,
-  setSelectedRowData: PropTypes.func.isRequired,
-  tab: PropTypes.string
+  // removeSelectedItem: PropTypes.func.isRequired,
+  // setContent: PropTypes.func.isRequired,
+  // setSelectedRowData: PropTypes.func.isRequired,
+  withoutExpandButton: PropTypes.bool
 }
 
-export default ArtifactsActionBar
+export default FunctionActionBar

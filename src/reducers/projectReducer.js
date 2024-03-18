@@ -18,7 +18,6 @@ under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
 import {
-  ADD_PROJECT_LABEL,
   CHANGE_PROJECT_STATE_BEGIN,
   CHANGE_PROJECT_STATE_FAILURE,
   CHANGE_PROJECT_STATE_SUCCESS,
@@ -68,7 +67,6 @@ import {
   REMOVE_PROJECT_SUMMARY,
   REMOVE_PROJECT_DATA,
   REMOVE_PROJECTS,
-  SET_PROJECT_LABELS,
   FETCH_PROJECT_FEATURE_SETS_BEGIN,
   FETCH_PROJECT_FEATURE_SETS_SUCCESS,
   FETCH_PROJECT_FEATURE_SETS_FAILURE,
@@ -78,9 +76,6 @@ import {
   FETCH_PROJECTS_NAMES_BEGIN,
   FETCH_PROJECTS_NAMES_FAILURE,
   FETCH_PROJECTS_NAMES_SUCCESS,
-  SET_PROJECT_DATA,
-  SET_PROJECT_SETTINGS,
-  SET_PROJECT_PARAMS,
   FETCH_PROJECT_SECRETS_BEGIN,
   FETCH_PROJECT_SECRETS_FAILURE,
   FETCH_PROJECT_SECRETS_SUCCESS,
@@ -173,22 +168,6 @@ const initialState = {
 
 const projectReducer = (state = initialState, { type, payload }) => {
   switch (type) {
-    case ADD_PROJECT_LABEL:
-      return {
-        ...state,
-        project: {
-          ...state.project,
-          data: {
-            ...state.project.data,
-            metadata: {
-              ...state.project.data.metadata,
-              labels: {
-                ...payload
-              }
-            }
-          }
-        }
-      }
     case CHANGE_PROJECT_STATE_BEGIN:
       return {
         ...state,
@@ -790,44 +769,6 @@ const projectReducer = (state = initialState, { type, payload }) => {
           error: null
         }
       }
-    case SET_PROJECT_DATA: {
-      return {
-        ...state,
-        project: payload
-      }
-    }
-    case SET_PROJECT_LABELS: {
-      return {
-        ...state,
-        project: {
-          ...state.project,
-          data: {
-            ...state.project.data,
-            metadata: {
-              ...state.project.data.metadata,
-              labels: {
-                ...payload
-              }
-            }
-          }
-        }
-      }
-    }
-    case SET_PROJECT_PARAMS: {
-      return {
-        ...state,
-        project: {
-          ...state.project,
-          data: {
-            ...state.project.data,
-            spec: {
-              ...state.project.data.spec,
-              params: payload
-            }
-          }
-        }
-      }
-    }
     case SET_PROJECT_SECRETS: {
       return {
         ...state,
@@ -841,21 +782,6 @@ const projectReducer = (state = initialState, { type, payload }) => {
             },
             error: null,
             loading: false
-          }
-        }
-      }
-    }
-    case SET_PROJECT_SETTINGS: {
-      return {
-        ...state,
-        project: {
-          ...state.project,
-          data: {
-            ...state.project.data,
-            spec: {
-              ...state.project.data.spec,
-              ...payload
-            }
           }
         }
       }

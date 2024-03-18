@@ -26,13 +26,15 @@ import textAreaGroup from '../components/text-area.component'
 import comboBox from '../components/combo-box.component'
 import numberInputGroup from '../components/number-input-group.component'
 import actionMenu from '../components/action-menu.component'
+import radiobuttonComponent from '../components/radio-button.component'
 
 import {
   generateLabelGroup,
   generateNumberInputGroup,
   generateInputGroup,
   generateDropdownGroup,
-  generateTextAreaGroup
+  generateTextAreaGroup,
+  generateCheckboxGroup
 } from '../../common-tools/common-tools'
 import inputWithAutocomplete from '../components/input-with-autocomplete.component'
 
@@ -322,6 +324,34 @@ const volumePathsTable = {
   }
 }
 
+const dataInputsInferenceTable = {
+  root: '.wizard-form__content [data-testid="dataInputs.dataInputsTable"]',
+  header: {},
+  body: {
+    row: {
+      root: '.form-table__row_excluded',
+      fields: {
+        checkbox: '[data-testid="form-field-checkbox"]',
+        name_verify: '.form-table__name-cell',
+        edit_btn: '.form-table__actions-cell .round-icon-cp:nth-of-type(1)',
+        apply_btn: '.form-table__actions-cell .round-icon-cp:nth-of-type(1)',
+        delete_btn: '.form-table__actions-cell .round-icon-cp:nth-of-type(2)',
+        discard_btn: '.form-table__actions-cell .round-icon-cp:nth-of-type(2)',
+        name_input: '.form-field-input input',
+        path_dropdown: {
+          componentType: dropdownComponent,
+          structure: generateDropdownGroup(
+            '.form-table__row_active .form-field-combobox',
+            '.form-field-combobox__select',
+            '.form-field-combobox__dropdown-list-option'
+          )
+        }
+      }
+
+    }
+  }
+
+}
 const dataInputsTable = {
   root: '.wizard-form__content [data-testid="dataInputs.dataInputsTable"]',
   header: {},
@@ -364,6 +394,15 @@ const dataInputsTable = {
             false)  
         },
         path_dropdown_autocomplete_item: {
+          componentType: dropdownComponent,
+          structure: generateDropdownGroup(
+            '.form-table__cell_1:nth-of-type(3) .form-field-combobox', 
+            '.form-field-combobox__input', 
+            '.form-field-combobox__dropdown-list-option', 
+            false, 
+            false)  
+        },
+        path_dropdown_autocomplete_tag: {
           componentType: dropdownComponent,
           structure: generateDropdownGroup(
             '.form-table__cell_1:nth-of-type(3) .form-field-combobox', 
@@ -484,6 +523,74 @@ const functionSelectionTabs = {
   }
 }
 
+const wizardStepsContent = {
+  root: '.modal .modal__content .modal__body .wizard-steps',
+  header: {},
+  body: {
+    row: {
+      root: '.btn',
+      fields: {
+        text: 'span:nth-of-type(2)',
+        indicator: '.wizard-steps__indicator'
+      }
+    }
+  }
+}
+
+const projectSelect = dropdownComponent(
+  generateDropdownGroup(
+    '[data-testid="functionSelection.projectName-form-field-select"]',
+    '[data-testid="select-header"]', // Open Component
+    '[data-testid="select-body"] .select__item', // Options
+    '.data-ellipsis .data-ellipsis' // Option value
+  )
+)
+
+const categorySelect = dropdownComponent(
+  generateDropdownGroup(
+    '.hub-tab .form-row .filters-button',
+    '.data-ellipsis button', // Open Component
+    '.hub-filter .categories-list .category', // Options
+    '.form-field-checkbox' // Option value
+  )
+)
+
+const runDetailsLabelsTable = {
+  root:
+    '.job-wizard__run-details .form-row:nth-of-type(4) .chips',
+  header: {},
+  body: {
+    root: '.chips-wrapper',
+    add_row_btn: '.button-add',
+    row: {
+      root: '.chip-block',
+      fields: {
+        key_input: 'input.input-label-key',
+        value_input: 'input.input-label-value',
+        key_verify: '.edit-chip-container input.input-label-key',
+        value_verify: '.edit-chip-container input.input-label-value',
+        remove_btn: '.edit-chip__icon-close'
+      }
+    }
+  }
+}
+
+const checkboxCategorySelector = {
+  root: '.hub-filter .categories-list',
+  header: {},
+  body: {
+    row: {
+      root: '.category',
+      fields: {
+        name:
+          '.form-field-checkbox label',
+        checkbox:
+          '.form-field-checkbox input'
+      }
+    }
+  }
+}
+
 // Common components
 
 const commonCancelButton = By.css('.pop-up-dialog button.pop-up-dialog__btn_cancel')
@@ -580,16 +687,37 @@ module.exports = {
     Cross_Cancel_Button: commonCrossCancelButton,
     Cancel_Button: commonCancelButton,
     Confirm_Button: By.css('.confirm-dialog__btn-container button:not(.pop-up-dialog__btn_cancel)'),
-    Delete_Button: commonDeleteButton
+    Delete_Button: commonDeleteButton,
+    Message: By.css('#overlay_container > div > div > div:nth-child(2)')
   },
   modalWizardForm:{
     Title: By.css('.modal .modal__header-title'),
     Cross_Close_Button: By.css('.modal .modal__header-button'),
+    Preview_text: By.css('.modal .modal__content .modal__header-preview-text'),
+    Wizard_Steps_Content: commonTable(wizardStepsContent),
     Function_Title: By.css(
       '.modal .modal__content h6.modal__header-sub-title'
     ),
     Function_Selection_Tabs: commonTable(functionSelectionTabs),
+    Search_Input: inputWithAutocomplete({
+      root: '.form-row .search-container',
+      elements: {
+        input: 'input',
+        options: '.functions-list > div > div.job-card-template__header > div.data-ellipsis.tooltip-wrapper',
+        option_name: ''
+      }
+    }),
+    Project_Selector_Dropdown: projectSelect,
     Functions_Table: commonTable(functionsTableSelector),
+    Filter_Button_Hub_Tab: By.css('.hub-tab .form-row .filters-button button'),
+    Filter_Dropdown: {
+      Title: By.css('.hub-filter h3.filters-wizard__header'),
+      Clear_Button: By.css('.hub-filter .filters-wizard__modal-buttons .btn-tertiary'),
+      Apply_Button: By.css('.hub-filter .filters-wizard__modal-buttons .btn-secondary')
+    },
+    Category_Selector_Dropdown: categorySelect,
+    Checkbox_Category_Selector: commonTable(checkboxCategorySelector),
+    Overlay: By.css('#overlay_container .chip-block-hidden .chip-block-hidden__scrollable-container'),
     Hyperparameter_Checkbox: checkboxComponent({
       root: '#overlay_container .form-field-checkbox',
       elements: {
@@ -605,6 +733,8 @@ module.exports = {
     Schedule_For_Later_Button: commonScheduleButton,
     Save_Button: commonRunSaveButton,
     Run_Button: commonRunSaveButton,
+    Infer_Now_Button: commonRunSaveButton,
+    Schedule_Infer_Button: commonScheduleButton,
     Run_Name_Input: inputGroup(
       generateInputGroup(
         '.form-row .form-field-input .form-field__wrapper',
@@ -640,9 +770,67 @@ module.exports = {
     ),
     Image_Name_Text_Run_Details: By.css('.job-wizard__run-details .warning-text'),
     Data_Inputs_Headers: commonTable(dataInputsHeaders),
+    Run_Name_Field: By.css('.form-row .form-field-input .form-field__wrapper input'),
+    Run_Name_Input: inputGroup(
+      generateInputGroup(
+        '.form-row .form-field-input .form-field__wrapper',
+        false,
+        true,
+        '.form-field__icons svg'
+      )
+    ),
+    Version_Dropdown: dropdownComponent(
+      generateDropdownGroup('.form-col-1:nth-of-type(2)', '.form-field-select', '.form-field__select-value', false, false)
+    ),
+    Method_Dropdown: dropdownComponent(
+      generateDropdownGroup('.form-col-1:nth-of-type(3)', '.form-field-select', '.select__item-main-label', false, false)
+    ),
+    Method_Dropdown_Option: By.css('.form-col-1:nth-of-type(3) .form-field-select .form-field__select span'),
+    Run_Details_Labels_Table: commonTable(runDetailsLabelsTable),
     Data_Inputs_Table: commonTable(dataInputsTable),
+    Data_Inputs_Inference_Table: commonTable(dataInputsInferenceTable),
     Parameters_Headers: commonTable(parametersHeaders),
     Parameters_Table: commonTable(parametersTable),
+    Add_Custom_Parameter_Button: By.css('.job-wizard__parameters [data-testid="parameters.parametersTable"] .form-table__action-row button'),
+    Checkbox_Parameters: checkboxComponent(
+      generateCheckboxGroup('.job-wizard__parameters .form-table__row_active .form-field-checkbox input', false, false, false)
+    ),
+    Delete_Button_Parameters: By.css('.job-wizard__parameters [data-testid="delete-discard-btn-tooltip-wrapper"]'),
+    Parameters_Accordion:{
+      Parameters_From_UI_Radiobutton: radiobuttonComponent(
+        {
+          root:
+            '.modal__content .wizard-form__content-container .form-row .form-field-radio:nth-of-type(1)',
+          elements: {
+            radiobutton: 'input',
+            mark: 'label',
+            name: '',
+            description: ''
+          }
+        }
+      ),
+      Parameters_From_File_Radiobutton: radiobuttonComponent(
+        {
+          root:
+            '.modal__content .wizard-form__content-container .form-row .form-field-radio:nth-of-type(2)',
+          elements: {
+            radiobutton: 'input',
+            mark: '',
+            name: 'label',
+            description: ''
+          }
+        }
+      ),
+      Parameters_From_File_Input: inputGroup(
+        generateInputGroup(
+          '.job-wizard__parameters .form-row .form-field-input .form-field__wrapper',
+          true,
+          true,
+          false
+        )
+      ),
+      Hyper_Toggle_Switch: By.css('.modal__content .form-table__row:nth-of-type(2) .form-table__cell_hyper .form-field-toggle__switch')
+    },
     Resources_Accordion: {
       Pods_Priority_Dropdown: podsPriorityDropdown,
       Node_Selection_Subheader: By.css('  .modal__content .wizard-form__content-container .job-wizard__resources .form-row:nth-child(3)'),
@@ -814,8 +1002,37 @@ module.exports = {
       ),
       Resources_Node_Selector_Table: commonTable(resourcesNodeSelectorTable)
     },
-    Accordion_Subheader: By.css('.modal__body .job-wizard__advanced .form-table-title'),
+    Accordion_Advanced_Subheader: By.css('.modal__body .job-wizard__advanced .form-table-title'),
     Advanced_Environment_Variables_Table: commonTable(advancedEnvironmentVariablesTable),
+    Access_Key_Checkbox: checkboxComponent(
+      generateCheckboxGroup('.job-wizard__advanced .access-key-checkbox input', false, false, false)
+    ),
+    Access_Key_Input: inputGroup(
+      generateInputGroup(
+        '.align-stretch .form-field-input',
+        true,
+        false,
+        '.tooltip-wrapper svg'
+      )
+    ),
+    Advanced_Accordion: {
+      Default_Input_Path_Input: inputGroup(
+        generateInputGroup(
+          '.modal__body .job-wizard__advanced .form-col-1:nth-of-type(1) .form-field__wrapper',
+          true,
+          false,
+          true
+        )
+      ),
+      Default_Artifact_Path_Input: inputGroup(
+        generateInputGroup(
+          '.modal__body .job-wizard__advanced .form-col-1:nth-of-type(2) .form-field__wrapper',
+          true,
+          false,
+          true
+        )
+      )
+    },
     Hyperparameter_Strategy_Accordion:{
       Strategy_Dropdown: dropdownComponent(
         generateDropdownGroup(
@@ -1248,6 +1465,7 @@ module.exports = {
     Header_Download_Pop_Up: By.css('[data-testid="download-container"] .download-container__header')
   },
   notificationPopUp: {
+    Title: By.css('.notification_container .notification_body'),
     Notification_Pop_Up: By.css('.notification_container .notification_body'),
     Notification_Pop_Up_Cross_Close_Button: By.css('.notification_container .notification_body_close_icon')
   },

@@ -60,7 +60,7 @@ const TableTypeCell = ({ className, data }) => {
     [JOB_KIND_SPARK]: { label: 'Spark', icon: <Spark /> },
     [JOB_KIND_WORKFLOW]: { label: 'Workflow', icon: <Workflow /> }
   }
-  const cellClassNames = classnames('table-body__cell', data.className, data.bodyCellClassName)
+  const cellClassNames = classnames('table-body__cell', data.className, data.bodyCellClassName, className)
 
   return (
     <td data-testid={data.headerId} className={cellClassNames}>

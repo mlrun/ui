@@ -35,7 +35,7 @@ import Select from '../../common/Select/Select'
 import { ConfirmDialog, RoundedIcon } from 'igz-controls/components'
 
 import { PANEL_CREATE_MODE } from '../../constants'
-import { launchIDEOptions } from './project.utils'
+import { launchIDEOptions, generateTipMessageForCounter } from './project.utils'
 
 import { ReactComponent as RefreshIcon } from 'igz-controls/images/refresh.svg'
 
@@ -96,6 +96,9 @@ const ProjectMonitorView = ({
           <div className="main-info">
             <ProjectDetailsHeader projectData={project.data} projectName={params.projectName} />
             <div className="main-info__toolbar">
+              <div className="main-info__toolbar-banner">
+                <span>Counters use a caching mechanism, and are not auto-refreshed.</span>
+              </div>
               <div className="main-info__toolbar-actions">
                 <Select
                   className="main-info__toolbar-menu launch-menu"
@@ -127,24 +130,21 @@ const ProjectMonitorView = ({
                 counterValue={projectSummary.data.models_count ?? 0}
                 link={`/projects/${params.projectName}/models`}
                 projectSummary={projectSummary}
-                tip="This counter is the number of models with different names (keys). 
-                  Each such model may have many versions, produced by multiple runs and given multiple tags. 
-                  You can browse them in the Models page."
+                tip={generateTipMessageForCounter('model', 'Models')}
                 title="Models"
               />
               <ProjectSummaryCard
                 counterValue={projectSummary.data.feature_sets_count ?? 0}
                 link={`/projects/${params.projectName}/feature-store`}
                 projectSummary={projectSummary}
+                tip={generateTipMessageForCounter('feature set', 'Feature store')}
                 title="Feature sets"
               />
               <ProjectSummaryCard
                 counterValue={projectSummary.data.files_count ?? 0}
                 link={`/projects/${params.projectName}/files`}
                 projectSummary={projectSummary}
-                tip="This counter is the number of artifacts with different names (keys). 
-                  Each such artifact may have many versions, produced by multiple runs and given multiple tags. 
-                  You can browse them in the Artifacts page."
+                tip={generateTipMessageForCounter('artifact', 'Artifacts')}
                 title="Artifacts"
               />
               {nuclioStreamsAreEnabled && (

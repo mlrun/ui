@@ -88,64 +88,68 @@ let requestId = 1
 let requestTimeouts = {}
 let largeResponsePopUpIsOpen = false
 
-// Request interceptor
-mainHttpClient.interceptors.request.use(
-  config => {
-    if (config?.ui?.setLargeRequestErrorMessage) {
-      const [signal, timeoutId] = getAbortSignal(
-        config.ui?.controller,
-        abortEvent => {
-          if (abortEvent.target.reason === LARGE_REQUEST_CANCELED) {
-            showLargeResponsePopUp(config.ui.setLargeRequestErrorMessage)
-          }
-        },
-        CANCEL_REQUEST_TIMEOUT
-      )
+const requestLargeDataOnFulfill = config => {
+  if (config?.ui?.setLargeRequestErrorMessage) {
+    const [signal, timeoutId] = getAbortSignal(
+      config.ui?.controller,
+      abortEvent => {
+        if (abortEvent.target.reason === LARGE_REQUEST_CANCELED) {
+          showLargeResponsePopUp(config.ui.setLargeRequestErrorMessage)
+        }
+      },
+      CANCEL_REQUEST_TIMEOUT
+    )
 
-      config.signal = signal
+    config.signal = signal
 
-      requestTimeouts[requestId] = timeoutId
-      config.ui.requestId = requestId
-      requestId++
-    }
-
-    return config
-  },
-  error => Promise.reject(error)
-)
-
-// Response interceptor
-mainHttpClient.interceptors.response.use(
-  response => {
-    if (response.config?.ui?.requestId) {
-      const isLargeResponse =
-        response.data?.total_size >= 0
-          ? response.data.total_size > 1500
-          : Object.values(response.data)?.[0]?.length > 1500
-
-      clearTimeout(requestTimeouts[response.config.ui.requestId])
-      delete requestTimeouts[response.config.ui.requestId]
-
-      if (isLargeResponse) {
-        showLargeResponsePopUp(response.config.ui.setLargeRequestErrorMessage)
-
-        throw new Error(LARGE_REQUEST_CANCELED)
-      } else {
-        response.config.ui.setLargeRequestErrorMessage('')
-      }
-    }
-
-    return response
-  },
-  error => {
-    if (error.config?.ui?.requestId) {
-      clearTimeout(requestTimeouts[error.config.ui.requestId])
-      delete requestTimeouts[error.config.ui.requestId]
-    }
-
-    return Promise.reject(error)
+    requestTimeouts[requestId] = timeoutId
+    config.ui.requestId = requestId
+    requestId++
   }
-)
+
+  return config
+}
+const requestLargeDataOnReject = error => {
+  return Promise.reject(error)
+}
+const responseLargeDataOnFulfill = response => {
+  if (response.config?.ui?.requestId) {
+    const isLargeResponse =
+      response.data?.total_size >= 0
+        ? response.data.total_size > 10000
+        : Object.values(response.data)?.[0]?.length > 10000
+
+    clearTimeout(requestTimeouts[response.config.ui.requestId])
+    delete requestTimeouts[response.config.ui.requestId]
+
+    if (isLargeResponse) {
+      showLargeResponsePopUp(response.config.ui.setLargeRequestErrorMessage)
+
+      throw new Error(LARGE_REQUEST_CANCELED)
+    } else {
+      response.config.ui.setLargeRequestErrorMessage('')
+    }
+  }
+
+  return response
+}
+const responseLargeDataOnReject = error => {
+  if (error.config?.ui?.requestId) {
+    clearTimeout(requestTimeouts[error.config.ui.requestId])
+    delete requestTimeouts[error.config.ui.requestId]
+  }
+
+  return Promise.reject(error)
+}
+
+
+// Request interceptors
+mainHttpClient.interceptors.request.use(requestLargeDataOnFulfill, requestLargeDataOnReject)
+mainHttpClientV2.interceptors.request.use(requestLargeDataOnFulfill, requestLargeDataOnReject)
+
+// Response interceptors
+mainHttpClient.interceptors.response.use(responseLargeDataOnFulfill, responseLargeDataOnReject)
+mainHttpClientV2.interceptors.response.use(responseLargeDataOnFulfill, responseLargeDataOnReject)
 
 export const showLargeResponsePopUp = setLargeRequestErrorMessage => {
   if (!largeResponsePopUpIsOpen) {

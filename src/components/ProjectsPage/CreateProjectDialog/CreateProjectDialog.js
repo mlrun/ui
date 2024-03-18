@@ -87,8 +87,8 @@ const CreateProjectDialog = ({
                   shortChips
                   visibleChipsMaxLength="2"
                   validationRules={{
-                    key: getValidationRules('common.tag'),
-                    value: getValidationRules('common.tag')
+                    key: getValidationRules('project.labels.key'),
+                    value: getValidationRules('project.labels.value')
                   }}
                 />
               </div>

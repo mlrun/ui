@@ -28,7 +28,7 @@ import { groupBy } from 'lodash'
  * - users                    : the list of user members (original list from response)
  * - useGroups                : the list of user-group members (original list from response)
  * - membersOriginal          : the list of users and user-groups that is used to revert changes
- * - members                  : the list of users and user-groups that is displayed in the table of the `Member` dialog
+ * - members                  : the list of users and user-groups that is displayed in the table of the `Member` dialog (includes owner)
  * - groupedOriginalMembers   : grouped members list by their role, which is used to display the number of
  *                              users/user-groups for each role at the top of `Member` dialog
  *                              (ex: 2 editors, 3 viewers, 1 admins)

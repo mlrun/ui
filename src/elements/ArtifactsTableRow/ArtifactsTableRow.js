@@ -17,7 +17,7 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import React, { useRef } from 'react'
+import React, { useMemo, useRef } from 'react'
 import PropTypes from 'prop-types'
 import classnames from 'classnames'
 import { useParams } from 'react-router-dom'
@@ -42,157 +42,179 @@ const ArtifactsTableRow = ({
   rowItem,
   selectedItem,
   selectedRowData,
-  tab
+  tab,
+  style
 }) => {
   const parent = useRef()
   const params = useParams()
+  const rowIsExpanded = useMemo(() => {
+    return (
+      parent.current?.classList.value.includes('parent-row_expanded') ||
+      rowItem.data.ui.identifier in selectedRowData
+    )
+  }, [rowItem.data.ui.identifier, selectedRowData])
   const rowClassNames = classnames(
     'table-row',
+    'table-body-row',
     'parent-row',
     (selectedItem.db_key || selectedItem?.spec?.model) &&
       getArtifactIdentifier(selectedItem, true) === rowItem.data.ui.identifierUnique &&
-      !parent.current?.classList.value.includes('parent-row_expanded') &&
+      !rowIsExpanded &&
       'table-row_active',
-    parent.current?.classList.value.includes('parent-row_expanded') && 'parent-row_expanded'
+    rowIsExpanded && 'parent-row_expanded'
   )
 
   return (
-    <tr className={rowClassNames} ref={parent}>
-      {parent.current?.classList.contains('parent-row_expanded') ? (
-        <>
-          <td
-            data-testid={generateTableRowTestId(rowIndex)}
-            className={`table-body__cell
-              ${parent.current?.classList.contains('parent-row_expanded') && 'row_grouped-by'}`}
+    <tr className={rowClassNames} style={style} ref={parent}>
+      {
+        (rowIsExpanded ? (
+          <>
+            <td
+              data-testid={generateTableRowTestId(rowIndex)}
+              className={`table-body__cell
+              ${rowIsExpanded && 'row_grouped-by'}`}
           >
             <table cellPadding="0" cellSpacing="0" className="table">
               <tbody className="table-body">
                 <tr className="table-row">
                   {rowItem.content.map((data, index) => {
-                    return index < mainRowItemsCount ? (
-                      <TableCell
-                        data={data}
-                        firstCell={index === 0}
-                        handleExpandRow={handleExpandRow}
-                        item={rowItem}
-                        key={data.id}
-                        link={
-                          data.rowExpanded?.getLink
-                            ? data.rowExpanded.getLink(params.tab ?? DETAILS_OVERVIEW_TAB)
-                            : ''
-                        }
-                        selectItem={handleSelectItem}
-                        selectedItem={selectedItem}
-                        showExpandButton
-                      />
-                    ) : null
-                  })}
-                </tr>
-              </tbody>
-            </table>
-          </td>
-          {selectedRowData[rowItem.data.ui.identifier]?.error ? (
-            <td className="table-body__cell">
-              <ErrorMessage message={selectedRowData[rowItem.data.ui.identifier]?.error?.message} />
+                     const cellClassName = classnames(
+                       index >= mainRowItemsCount && 'table-body__cell_hidden'
+                     )
+                     return (
+                       !data.hidden && (
+                         <TableCell
+                           className={cellClassName}
+                           data={data}
+                           firstCell={index === 0}
+                           handleExpandRow={handleExpandRow}
+                           item={rowItem}
+                           key={data.id}
+                           link={
+                             data.rowExpanded?.getLink
+                               ? data.rowExpanded.getLink(params.tab ?? DETAILS_OVERVIEW_TAB)
+                               : ''
+                           }
+                           selectItem={handleSelectItem}
+                           selectedItem={selectedItem}
+                           showExpandButton
+                         />
+                       )
+                     )
+                    })}
+                  </tr>
+                </tbody>
+              </table>
             </td>
-          ) : (
-            selectedRowData[rowItem.data.ui.identifier]?.content?.map((tableContentItem, index) => {
-              const subRowClassNames = classnames(
-                'table-row',
-                selectedItem.key &&
-                  tableContentItem.data.ui.identifierUnique ===
-                    getArtifactIdentifier(selectedItem, true) &&
-                  'table-row_active'
+            {selectedRowData[rowItem.data.ui.identifier]?.error ? (
+              <td className="table-body__cell">
+                <ErrorMessage
+                  message={selectedRowData[rowItem.data.ui.identifier]?.error?.message}
+                />
+              </td>
+            ) : (
+              selectedRowData[rowItem.data.ui.identifier]?.content?.map(
+                (tableContentItem, index) => {
+                  const subRowClassNames = classnames(
+                    'table-row',
+                    'table-body-row',
+                    selectedItem.key &&
+                      tableContentItem.data.ui.identifierUnique ===
+                        getArtifactIdentifier(selectedItem, true) &&
+                      'table-row_active'
+                  )
+
+                  return (
+                    <td
+                      data-testid={generateTableRowTestId(rowIndex, index)}
+                      className="table-body__cell"
+                      key={index}
+                    >
+                      <table cellPadding="0" cellSpacing="0" className="table">
+                        <tbody className="table-body">
+                          <tr className={subRowClassNames}>
+                            {
+                              <>
+                                {tableContentItem.content.map((value, index) => {
+                                  const cellClassNames = classnames(
+                                    !isEmpty(selectedItem) &&
+                                      index >= mainRowItemsCount &&
+                                      'table-body__cell_hidden'
+                                  )
+
+                                  return (
+                                    !value.hidden && (
+                                      <TableCell
+                                        className={cellClassNames}
+                                        data={
+                                          value.expandedCellContent
+                                            ? value.expandedCellContent
+                                            : value
+                                        }
+                                        item={tableContentItem.data}
+                                        link={value.getLink?.(params.tab ?? DETAILS_OVERVIEW_TAB)}
+                                        key={value.id}
+                                        selectItem={handleSelectItem}
+                                        selectedItem={selectedItem}
+                                      />
+                                    )
+                                  )
+                                })}
+                                {!hideActionsMenu && (
+                                  <td className="table-body__cell table-cell-icon">
+                                    <ActionsMenu
+                                      dataItem={tableContentItem.data}
+                                      withQuickActions
+                                      menu={actionsMenu}
+                                    />
+                                  </td>
+                                )}
+                              </>
+                            }
+                          </tr>
+                        </tbody>
+                      </table>
+                    </td>
+                  )
+                }
+              )
+            )}
+          </>
+        ) : (
+          <>
+            {rowItem.content.map((value, index) => {
+              const cellClassNames = classnames(
+                !isEmpty(selectedItem) && index >= mainRowItemsCount && 'table-body__cell_hidden'
               )
 
               return (
-                <td
-                  data-testid={generateTableRowTestId(rowIndex, index)}
-                  className="table-body__cell"
-                  key={index}
-                >
-                  <table cellPadding="0" cellSpacing="0" className="table">
-                    <tbody className="table-body">
-                      <tr className={subRowClassNames}>
-                        {
-                          <>
-                            {tableContentItem.content.map((value, index) => {
-                              const cellClassNames = classnames(
-                                !isEmpty(selectedItem) &&
-                                  index >= mainRowItemsCount &&
-                                  'table-body__cell_hidden'
-                              )
-
-                              return (
-                                !value.hidden && (
-                                  <TableCell
-                                    className={cellClassNames}
-                                    data={
-                                      value.expandedCellContent ? value.expandedCellContent : value
-                                    }
-                                    item={tableContentItem.data}
-                                    link={value.getLink?.(params.tab ?? DETAILS_OVERVIEW_TAB)}
-                                    key={value.id}
-                                    selectItem={handleSelectItem}
-                                    selectedItem={selectedItem}
-                                  />
-                                )
-                              )
-                            })}
-                            {!hideActionsMenu && (
-                              <td className="table-body__cell table-cell-icon">
-                                <ActionsMenu
-                                  dataItem={tableContentItem.data}
-                                  withQuickActions
-                                  menu={actionsMenu}
-                                />
-                              </td>
-                            )}
-                          </>
-                        }
-                      </tr>
-                    </tbody>
-                  </table>
-                </td>
+                !value.hidden && (
+                  <TableCell
+                    className={cellClassNames}
+                    data={value}
+                    handleExpandRow={handleExpandRow}
+                    firstCell={index === 0 && params.pageTab !== MODEL_ENDPOINTS_TAB}
+                    item={rowItem.data}
+                    key={value.id}
+                    link={value.getLink?.(params.tab ?? DETAILS_OVERVIEW_TAB)}
+                    selectedItem={selectedItem}
+                    selectItem={handleSelectItem}
+                    showExpandButton={value.showExpandButton}
+                  />
+                )
               )
-            })
-          )}
-        </>
-      ) : (
-        <>
-          {rowItem.content.map((value, index) => {
-            const cellClassNames = classnames(
-              !isEmpty(selectedItem) && index >= mainRowItemsCount && 'table-body__cell_hidden'
-            )
-
-            return (
-              !value.hidden && (
-                <TableCell
-                  className={cellClassNames}
-                  data={value}
-                  handleExpandRow={handleExpandRow}
-                  firstCell={index === 0 && params.pageTab !== MODEL_ENDPOINTS_TAB}
-                  item={rowItem.data}
-                  key={value.id}
-                  link={value.getLink?.(params.tab ?? DETAILS_OVERVIEW_TAB)}
-                  selectedItem={selectedItem}
-                  selectItem={handleSelectItem}
-                  showExpandButton={value.showExpandButton}
+            })}
+            {!hideActionsMenu && (
+              <td className="table-body__cell table-cell-icon">
+                <ActionsMenu
+                  dataItem={rowItem.data}
+                  withQuickActions={tab !== MODEL_ENDPOINTS_TAB}
+                  menu={actionsMenu}
                 />
-              )
-            )
-          })}
-          {!hideActionsMenu && (
-            <td className="table-body__cell table-cell-icon">
-              <ActionsMenu
-                dataItem={rowItem.data}
-                withQuickActions={tab !== MODEL_ENDPOINTS_TAB}
-                menu={actionsMenu}
-              />
-            </td>
-          )}
-        </>
-      )}
+              </td>
+            )}
+          </>
+        ))}
     </tr>
   )
 }

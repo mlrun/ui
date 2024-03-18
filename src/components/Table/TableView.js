@@ -44,16 +44,19 @@ const TableView = ({
   selectedItem,
   sortProps,
   tab,
-  tableRef,
+  tableBodyRef,
+  tableClassName,
   tableContentRef,
-  tableHeaders,
   tableHeadRef,
-  tablePanelRef
+  tableHeaders,
+  tablePanelRef,
+  tableRef
 }) => {
   const tableClass = classnames(
     'table',
     'table-main',
-    !isEmpty(selectedItem) && 'table-with-details'
+    !isEmpty(selectedItem) && 'table-with-details',
+    tableClassName && tableClassName
   )
 
   return (
@@ -71,7 +74,7 @@ const TableView = ({
                 sortProps={sortProps}
               />
             )}
-            <tbody className="table-body">{children}</tbody>
+            <tbody className="table-body" ref={tableBodyRef}>{children}</tbody>
           </table>
           {isTablePanelOpen && (
             <div className="table__panel-container" ref={tablePanelRef}>
@@ -121,8 +124,9 @@ TableView.propTypes = {
   selectedItem: PropTypes.shape({}).isRequired,
   sortProps: SORT_PROPS,
   tab: PropTypes.string,
-  tableHeaders: PropTypes.array,
+  tableClassName: PropTypes.string.isRequired,
   tableHeadRef: PropTypes.shape({}),
+  tableHeaders: PropTypes.array,
   tablePanelRef: PropTypes.shape({})
 }
 

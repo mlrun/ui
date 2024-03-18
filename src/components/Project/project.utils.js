@@ -97,6 +97,11 @@ export const generateCreateNewOptions = (
   }
 ]
 
+export const generateTipMessageForCounter = (counter = '', page = '') => {
+  return `Each ${counter} can have multiple versions, produced by multiple runs and given multiple tags. 
+          You can browse them in the ${page} page.`
+}
+
 export const handleFetchProjectError = (error, navigate, setConfirmData) => {
   if (error.response?.status === FORBIDDEN_ERROR_STATUS_CODE) {
     setConfirmData({

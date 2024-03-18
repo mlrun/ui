@@ -282,7 +282,9 @@ export const generateActionsMenu = (
         label: 'Delete',
         icon: <Delete />,
         disabled: !dataset?.tag,
-        tooltip: !dataset?.tag && 'A tag is required to delete a dataset. Open the dataset, click on the edit icon, and assign a tag before proceeding with the deletion',
+        tooltip: !dataset?.tag
+          ? 'A tag is required to delete a dataset. Open the dataset, click on the edit icon, and assign a tag before proceeding with the deletion'
+          : '',
         className: 'danger',
         onClick: () =>
           openDeleteConfirmPopUp(

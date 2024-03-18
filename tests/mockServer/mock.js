@@ -536,8 +536,9 @@ function getProjectSummary(req, res) {
   res.send(collectedProject)
 }
 
+//TODO: on 1.7.0 version update getRun func with:  let collectedRuns = runs.runs.filter(run => run.metadata.project === req.params['project'])
 function getRuns(req, res) {
-  let collectedRuns = runs.runs.filter(run => run.metadata.project === req.params['project'])
+  let collectedRuns = runs.runs.filter(run => run.metadata.project === req.query['project']) 
 
   if (req.query['start_time_from']) {
     collectedRuns = collectedRuns.filter(
@@ -808,7 +809,7 @@ function invokeSchedule(req, res) {
     job.status.state = 'completed'
     scheduleObject.last_run.status.state = 'completed'
     delete job.status.error
-  }, 5000)
+  }, 2000)
 
   res.send(respTemplate)
 }
@@ -1480,6 +1481,11 @@ function postSubmitJob(req, res) {
     runs.runs.push(job)
     funcs.funcs.push(funcObject)
     logs.push(jobLogs)
+
+    setTimeout(() => {
+      job.status.state = 'completed'
+      delete job.status.error
+    }, 5000)
   }
 
   res.send(respTemplate)
@@ -1488,6 +1494,11 @@ function postSubmitJob(req, res) {
 function putTags(req, res) {
   const tagName = req.params.tag
   const projectName = req.params.project
+  const tagObject = artifactTags.find(
+    artifact =>
+      artifact.metadata?.project === projectName ||
+      artifact.project === projectName
+  )
 
   const collectedArtifacts = artifacts.artifacts.filter(artifact => {
     const artifactMetaData = artifact.metadata ?? artifact
@@ -1506,6 +1517,15 @@ function putTags(req, res) {
     let editedTag = cloneDeep(collectedArtifacts[0])
     editedTag.metadata ? (editedTag.metadata.tag = tagName) : (editedTag.tag = tagName)
     artifacts.artifacts.push(editedTag)
+  }
+
+  if (tagObject) {
+    tagObject.tags.push(tagName)
+  } else {
+    artifactTags.push({
+      project: req.body.metadata.project,
+      tags: [tagName]
+    })
   }
 
   res.send({
@@ -1946,7 +1966,8 @@ app.delete(`${mlrunAPIIngress}/projects/:project/secrets`, deleteSecretKeys)
 app.get(`${mlrunAPIIngress}/project-summaries`, getProjectsSummaries)
 app.get(`${mlrunAPIIngress}/project-summaries/:project`, getProjectSummary)
 
-app.get(`${mlrunAPIIngress}/projects/:project/runs`, getRuns)
+//TODO: on 1.7.0 version update getRun func with:  app.get(`${mlrunAPIIngress}/projects/:project/runs`, getRuns)
+app.get(`${mlrunAPIIngress}/runs`, getRuns)
 app.get(`${mlrunAPIIngress}/run/:project/:uid`, getRun)
 app.patch(`${mlrunAPIIngress}/run/:project/:uid`, patchRun)
 app.delete(`${mlrunAPIIngress}/projects/:project/runs/:uid`, deleteRun)

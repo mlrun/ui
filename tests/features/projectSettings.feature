@@ -56,11 +56,14 @@ Feature: Project Settings page
         Then type value "automation-test-name9" to "Search_Projects_Input" field on "Projects" wizard
         Then value in "description" column with "text" in "Projects_Table" on "Projects" wizard should contains "automation test description"
         And click on row root with value "automation-test-name9" in "name" column in "Projects_Table" table on "Projects" wizard
+        And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
+        And wait load page
         Then click on "Project_Settings_Button" element on "commonPagesHeader" wizard
         And hover "MLRun_Logo" component on "commonPagesHeader" wizard
         And select "tab" with "Project monitoring" value in breadcrumbs menu
         And wait load page
         Then verify breadcrumbs "tab" label should be equal "Project monitoring" value
+        And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
         Then click on "Project_Settings_Button" element on "commonPagesHeader" wizard
         And hover "MLRun_Logo" component on "commonPagesHeader" wizard
         When add rows to "Labels_Table" table on "Project_Settings_General_Tab" wizard
@@ -75,6 +78,7 @@ Feature: Project Settings page
         Then click on "Active_Projects_Button" element on "Projects" wizard
         Then value in "labels" column with "dropdowns" in "Projects_Table" on "Projects" wizard should contains "e=f" in "Overlay"
         And click on row root with value "automation-test-name9" in "name" column in "Projects_Table" table on "Projects" wizard
+        And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
         Then click on "Project_Settings_Button" element on "commonPagesHeader" wizard
         And wait load page
         And hover "MLRun_Logo" component on "commonPagesHeader" wizard
@@ -344,6 +348,8 @@ Feature: Project Settings page
         Given open url
         And wait load page
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
+        And wait load page
+        And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
         And wait load page
         Then click on "Project_Settings_Button" element on "commonPagesHeader" wizard
         And wait load page
