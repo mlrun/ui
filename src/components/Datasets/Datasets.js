@@ -54,15 +54,19 @@ import {
 } from './datasets.util'
 import { createDatasetsRowData } from '../../utils/createArtifactsContent'
 import { getArtifactIdentifier } from '../../utils/getUniqueIdentifier'
+import { getFilterTagOptions, setFilters } from '../../reducers/filtersReducer'
 import { getViewMode } from '../../utils/helper'
 import { isDetailsTabExists } from '../../utils/isDetailsTabExists'
 import { openPopUp } from 'igz-controls/utils/common.util'
-import { getFilterTagOptions, setFilters } from '../../reducers/filtersReducer'
 import { setNotification } from '../../reducers/notificationReducer'
 import { useGetTagOptions } from '../../hooks/useGetTagOptions.hook'
 import { useGroupContent } from '../../hooks/groupContent.hook'
 import { useSortTable } from '../../hooks/useSortTable.hook'
+import { useVirtualization } from '../../hooks/useVirtualization.hook'
 import { useYaml } from '../../hooks/yaml.hook'
+
+import './datasets.scss'
+import cssVariables from './datasets.scss'
 
 const Datasets = () => {
   const [datasets, setDatasets] = useState([])
@@ -78,14 +82,18 @@ const Datasets = () => {
   )
   const artifactsStore = useSelector(store => store.artifactsStore)
   const filtersStore = useSelector(store => store.filtersStore)
-  const datasetsRef = useRef(null)
-  const abortControllerRef = useRef(new AbortController())
-  const viewMode = getViewMode(window.location.search)
-  const params = useParams()
-  const navigate = useNavigate()
-  const location = useLocation()
-  const dispatch = useDispatch()
   const frontendSpec = useSelector(store => store.appStore.frontendSpec)
+  const viewMode = getViewMode(window.location.search)
+  const dispatch = useDispatch()
+  const location = useLocation()
+  const navigate = useNavigate()
+  const params = useParams()
+
+  const abortControllerRef = useRef(new AbortController())
+  const datasetsRef = useRef(null)
+  const tableBodyRef = useRef(null)
+  const tableRef = useRef(null)
+
   const datasetsFilters = useMemo(
     () => ({
       name: filtersStore.name,
@@ -357,6 +365,21 @@ const Datasets = () => {
 
   useEffect(() => setDatasets([]), [filtersStore.tag])
 
+  const virtualizationConfig = useVirtualization({
+    tableRef,
+    tableBodyRef,
+    rowsData: {
+      content: sortedTableContent,
+      expandedRowsData: selectedRowData,
+      selectedItem: selectedDataset
+    },
+    heightData: {
+      headerRowHeight: cssVariables.datasetsHeaderRowHeight,
+      rowHeight: cssVariables.datasetsRowHeight,
+      rowHeightExtended: cssVariables.datasetsRowHeightExtended
+    }
+  })
+
   return (
     <DatasetsView
       actionsMenu={actionsMenu}
@@ -372,7 +395,7 @@ const Datasets = () => {
       handleRegisterDataset={handleRegisterDataset}
       largeRequestErrorMessage={largeRequestErrorMessage}
       pageData={pageData}
-      ref={datasetsRef}
+      ref={{ datasetsRef, tableRef, tableBodyRef }}
       selectedDataset={selectedDataset}
       selectedRowData={selectedRowData}
       setDatasets={setDatasets}
@@ -384,6 +407,7 @@ const Datasets = () => {
       toggleConvertedYaml={toggleConvertedYaml}
       urlTagOption={urlTagOption}
       viewMode={viewMode}
+      virtualizationConfig={virtualizationConfig}
     />
   )
 }

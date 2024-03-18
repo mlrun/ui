@@ -29,6 +29,7 @@ import { RoundedIcon } from 'igz-controls/components'
 import { useMode } from '../../hooks/mode.hook'
 import { generateProjectScreens, generateTabsList } from './breadcrumbs.util'
 import { generateProjectsList } from '../../utils/projects'
+import { scrollToElement } from '../../utils/scroll.util'
 import projectsAction from '../../actions/projects'
 
 import { ReactComponent as ArrowIcon } from 'igz-controls/images/arrow.svg'
@@ -60,7 +61,10 @@ const Breadcrumbs = ({ onClick, projectStore, fetchProjectsNames }) => {
     const [projects, projectName, screenName] = location.pathname.split('/').slice(1, 4)
     const screen = projectScreens.find(screen => screen.id === screenName)
     const tab = projectTabs.find(tab =>
-      location.pathname.split('/').slice(3).find(pathItem => pathItem === tab.id)
+      location.pathname
+        .split('/')
+        .slice(3)
+        .find(pathItem => pathItem === tab.id)
     )
 
     return {
@@ -90,19 +94,7 @@ const Breadcrumbs = ({ onClick, projectStore, fetchProjectsNames }) => {
   )
 
   const scrollProjectOptionToView = useCallback(() => {
-    const selectedOptionEl = projectListRef.current.querySelector(`#${params.projectName}`)
-
-    searchValue
-      ? projectListRef.current.scrollTo({ top: 0, left: 0, behavior: 'smooth' })
-      : setTimeout(() => {
-          selectedOptionEl?.scrollIntoView(
-            {
-              behavior: 'smooth',
-              block: 'center'
-            },
-            0
-          )
-        })
+    scrollToElement(projectListRef, `#${params.projectName}`, searchValue)
   }, [params.projectName, searchValue])
 
   useEffect(() => {

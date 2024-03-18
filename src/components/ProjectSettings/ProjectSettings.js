@@ -187,7 +187,7 @@ const ProjectSettings = ({ frontendSpec }) => {
     const prevOwner = membersState.projectInfo.owner.id
 
     return fetchProjectIdAndOwner().then(() => {
-      if (!membersState.members.some(member => member.id === prevOwner)) {
+      if (!membersState.users.some(member => member.id === prevOwner)) {
         navigate('/projects/')
       }
     })

@@ -196,7 +196,11 @@
         @include tableCellWidth;
 
         &_hidden {
-          visibility: hidden;
+          font-size: 0;
+          *  {
+            visibility: hidden;
+          }
+          
 
           .chip {
             visibility: hidden;

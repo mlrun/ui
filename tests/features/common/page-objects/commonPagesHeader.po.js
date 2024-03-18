@@ -101,6 +101,7 @@ module.exports = {
   Step_6_Button_text: By.css('.modal .modal__content .modal__body .wizard-steps .btn:nth-of-type(6) div'),
   Step_7_Button: By.css('.modal .modal__content .modal__body .wizard-steps .btn:nth-of-type(7)'),
   Step_7_Button_text: By.css('.modal .modal__content .modal__body .wizard-steps .btn:nth-of-type(7) div'),
+  Form_Header_Function_Selection: By.css('.job-wizard__function-selection .form-row .form-step-title'),
   Form_Header_Run_Details: By.css('.job-wizard__run-details .form-row .form-step-title'),
   Form_Header_Data_Inputs: By.css('.job-wizard__data-inputs .form-row .form-step-title'),
   Form_Header_Parameters: By.css('.job-wizard__parameters .form-row .form-step-title'),

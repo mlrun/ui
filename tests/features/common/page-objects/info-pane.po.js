@@ -577,7 +577,7 @@ module.exports = {
     Updated: updated,
     Cancel_Button: cancelButton,
     Apply_Changes_Button: applyChangesButton,
-    Applyv_Button: applyButton,
+    Apply_Button: applyButton,
     Download_Button: commonDownloadButton,
     Action_Menu: commonActionMenu,
     Full_View_Button: fullViewButton,

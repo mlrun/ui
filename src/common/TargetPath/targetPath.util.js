@@ -79,9 +79,13 @@ export const pathTips = projectItem => {
   const reference = pathType[projectItem]
 
   return {
-    [MLRUN_STORAGE_INPUT_PATH_SCHEME]: `${reference ?? 'reference'}s/my-project/my-${
-      reference ?? 'reference'
-    }:my-tag" or "${reference ?? 'reference'}s/my-project/my-${reference ?? 'reference'}@my-uid`,
+    [MLRUN_STORAGE_INPUT_PATH_SCHEME]: `${
+      reference ? `${reference}s` : '<artifact type>'
+    }/<project>/${reference ? `<${reference} name>` : '<artifact name>'}:${
+      reference ? `<${reference} tag>` : '<artifact tag>'
+    }" or "${reference ? `${reference}s` : '<artifact type>'}/<project>/${
+      reference ? `<${reference} name>` : '<artifact name>'
+    }@${reference ? `<${reference} uid>` : '<artifact uid>'}`,
     [S3_INPUT_PATH_SCHEME]: 'bucket/path',
     [GOOGLE_STORAGE_INPUT_PATH_SCHEME]: 'bucket/path',
     [AZURE_STORAGE_INPUT_PATH_SCHEME]: 'container/path',

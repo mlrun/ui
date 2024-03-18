@@ -91,17 +91,22 @@ export const pathPlaceholders = {
 }
 
 export const pathTips = projectItem => {
-  const pathType =
-    projectItem === 'feature-vectors'
-      ? 'feature-vector'
-      : projectItem === 'datasets'
-      ? 'dataset'
-      : projectItem === 'artifacts'
-      ? 'artifact'
-      : 'model'
+  const pathType = {
+    'feature-vectors': 'feature-vector',
+    artifacts: 'artifact',
+    datasets: 'dataset',
+    models: 'model'
+  }
+  const reference = pathType[projectItem]
 
   return {
-    [MLRUN_STORAGE_INPUT_PATH_SCHEME]: `${pathType}s/my-project/my-${pathType}:my-tag" or "${pathType}s/my-project/my-${pathType}@my-uid`,
+    [MLRUN_STORAGE_INPUT_PATH_SCHEME]: `${
+      reference ? `${reference}s` : '<artifact type>'
+    }/<project>/${reference ? `<${reference} name>` : '<artifact name>'}:${
+      reference ? `<${reference} tag>` : '<artifact tag>'
+    }" or "${reference ? `${reference}s` : '<artifact type>'}/<project>/${
+      reference ? `<${reference} name>` : '<artifact name>'
+    }@${reference ? `<${reference} uid>` : '<artifact uid>'}`,
     [S3_INPUT_PATH_SCHEME]: 'bucket/path',
     [GOOGLE_STORAGE_INPUT_PATH_SCHEME]: 'bucket/path',
     [AZURE_STORAGE_INPUT_PATH_SCHEME]: 'container/path',

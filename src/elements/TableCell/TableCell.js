@@ -17,7 +17,7 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import React from 'react'
+import React, { cloneElement } from 'react'
 import PropTypes from 'prop-types'
 import { useDispatch } from 'react-redux'
 import classnames from 'classnames'
@@ -58,7 +58,9 @@ const TableCell = ({
   )
 
   if (data.template) {
-    return data.template
+    return cloneElement(data.template, {
+      className
+    })
   } else if (link && data.type !== 'hidden') {
     return (
       <TableLinkCell

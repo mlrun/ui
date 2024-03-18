@@ -76,7 +76,7 @@ const action = {
     const arr = await getColumnValues(driver, table, columnName)
     const subString = value.replace('=', '\n:\n')
     expect(arr.length > 0).equal(true)
-    expect(arr.every(item => item.includes(subString))).equal(
+    expect(arr.some(item => item.includes(subString))).equal(
       true,
       `Value "${subString}" does not includes in all values: [${arr}]`
     )

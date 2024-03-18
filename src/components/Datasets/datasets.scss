@@ -1,0 +1,16 @@
+@import '~igz-controls/scss/variables';
+@import 'src/scss/mixins';
+
+$datasetsRowHeight: $rowHeight;
+$datasetsHeaderRowHeight: $headerRowHeight;
+$datasetsRowHeightExtended: $rowHeightExtended;
+
+.files-table {
+  @include rowsHeight($datasetsHeaderRowHeight, $datasetsRowHeight, $datasetsRowHeightExtended);
+}
+
+:export {
+  datasetsRowHeight: $datasetsRowHeight;
+  datasetsHeaderRowHeight: $datasetsHeaderRowHeight;
+  datasetsRowHeightExtended: $datasetsRowHeightExtended;
+}

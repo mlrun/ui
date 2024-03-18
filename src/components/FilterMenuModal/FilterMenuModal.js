@@ -69,6 +69,12 @@ const FilterMenuModal = ({
   const filtersWizardClassnames = classnames('filters-wizard', wizardClassName)
 
   useEffect(() => {
+    if (formRef.current && !isEqual(formRef.current.getState().values, values)) {
+      formRef.current.reset(values)
+    }
+  }, [initialValues, values])
+
+  useEffect(() => {
     if (!has(filtersData, 'initialValues')) {
       dispatch(setModalFiltersInitialValues({ name: filterMenuName, value: initialValues }))
     }

@@ -1,0 +1,23 @@
+@mixin rowsHeight($headerRowHeight, $rowHeight, $rowHeightExtended) {
+  &.table-with-details {
+    .table-body-row:not(.parent-row_expanded) {
+      height: #{$rowHeightExtended}px;
+    }
+  }
+
+  .table-body-row:not(.parent-row_expanded), .row_grouped-by .table-row {
+    height: #{$rowHeight}px;
+  }
+
+  .table-body-row {
+    &.parent-row_expanded {
+      .row_grouped-by {
+        top: #{$headerRowHeight}px;
+      }
+    }
+  }
+
+  .table-header-row {
+    height: #{$headerRowHeight}px;
+  }
+}

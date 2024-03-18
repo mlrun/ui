@@ -35,7 +35,6 @@ import {
   GROUP_BY_NAME,
   GROUP_BY_NONE,
   REQUEST_CANCELED,
-  TAG_FILTER,
   TAG_FILTER_ALL_ITEMS
 } from '../../constants'
 import detailsActions from '../../actions/details'
@@ -73,10 +72,9 @@ function ArtifactsActionBar({
 
   const filtersInitialState = useMemo(() => {
     return {
-      ...filterMenuModal.initialValues,
-      [TAG_FILTER]: urlTagOption ?? filterMenuModal.initialValues.tag
+      ...filterMenuModal.initialValues
     }
-  }, [filterMenuModal.initialValues, urlTagOption])
+  }, [filterMenuModal.initialValues])
 
   useEffect(() => {
     return () => {
@@ -153,10 +151,10 @@ function ArtifactsActionBar({
               filterMenuName={filterMenuName}
               initialValues={filtersInitialState}
               restartFormTrigger={tab ?? page}
-              values={filtersInitialState}
+              values={filterMenuModal.values}
               wizardClassName="artifacts-filters__wrapper"
             >
-              <ArtifactsFilters artifacts={artifacts} filterMenuName={filterMenuName} page={page} />
+              <ArtifactsFilters artifacts={artifacts} />
             </FilterMenuModal>
           </div>
           <div className="action-bar__actions">

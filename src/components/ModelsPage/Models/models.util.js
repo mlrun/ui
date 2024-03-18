@@ -351,9 +351,9 @@ export const generateActionsMenu = (
         icon: <Delete />,
         className: 'danger',
         disabled: !model?.tag,
-        tooltip:
-          !model?.tag &&
-          'A tag is required to delete a model. Open the model, click on the edit icon, and assign a tag before proceeding with the deletion',
+        tooltip: !model?.tag
+          ? 'A tag is required to delete a model. Open the model, click on the edit icon, and assign a tag before proceeding with the deletion'
+          : '',
         onClick: () =>
           openDeleteConfirmPopUp(
             'Delete model?',
