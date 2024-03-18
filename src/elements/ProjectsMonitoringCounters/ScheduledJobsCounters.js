@@ -28,7 +28,7 @@ import StatsCard from '../../common/StatsCard/StatsCard'
 
 import jobsActions from '../../actions/jobs'
 import { NEXT_24_HOUR_DATE_OPTION } from '../../utils/datePicker.util'
-import { useFetchData } from '../../hooks/useFetchData'
+import { useFetchData } from '../../hooks/useFetchData.hook'
 import { jobHasWorkflowLabel } from '../../utils/parseJob'
 
 import './projectsMonitoringCounters.scss'
@@ -46,7 +46,7 @@ const ScheduledJobsCounters = () => {
     filter: filter,
     action: jobsActions.fetchScheduledJobs
   })
-  const { scheduled } = useSelector(store => store.jobsStore)
+  const { scheduled: scheduledJobs } = useSelector(store => store.jobsStore)
 
   const handleDateSelection = dates => {
     const generatedDates = [...dates]
@@ -74,18 +74,19 @@ const ScheduledJobsCounters = () => {
   const stats = useMemo(
     () => ({
       jobs: {
-        counter: filterScheduledByDate(scheduled, filter).filter(
+        counter: filterScheduledByDate(scheduledJobs, filter).filter(
           job => job.kind === 'job' && !jobHasWorkflowLabel(job)
         ).length,
         link: () => navigate('/projects/jobs-monitoring/scheduled')
       },
       workflows: {
-        counter: filterScheduledByDate(scheduled, filter).filter(job => jobHasWorkflowLabel(job))
-          .length,
+        counter: filterScheduledByDate(scheduledJobs, filter).filter(job =>
+          jobHasWorkflowLabel(job)
+        ).length,
         link: () => navigate('/projects/jobs-monitoring/scheduled')
       }
     }),
-    [filter, navigate, scheduled]
+    [filter, navigate, scheduledJobs]
   )
 
   return (

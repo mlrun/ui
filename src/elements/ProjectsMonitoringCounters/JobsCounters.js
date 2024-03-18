@@ -30,7 +30,7 @@ import StatsCard from '../../common/StatsCard/StatsCard'
 import jobsActions from '../../actions/jobs'
 import workflowActions from '../../actions/workflow'
 import { PAST_24_HOUR_DATE_OPTION } from '../../utils/datePicker.util'
-import { useFetchData } from '../../hooks/useFetchData'
+import { useFetchData } from '../../hooks/useFetchData.hook'
 import { GROUP_BY_WORKFLOW, STATE_FILTER_ALL_ITEMS } from '../../constants'
 
 import './projectsMonitoringCounters.scss'
@@ -123,7 +123,7 @@ const JobsCounters = () => {
     [workflows, navigate]
   )
 
-  const templateToRender = useCallback(
+  const getCounterTemplate = useCallback(
     type => {
       const stats = type === 'jobs' ? jobStats : workflowsStats
 
@@ -165,8 +165,8 @@ const JobsCounters = () => {
         />
       </StatsCard.Header>
       <StatsCard.Body>
-        <StatsCard.Col>{templateToRender('jobs')}</StatsCard.Col>
-        <StatsCard.Col>{templateToRender('workflows')}</StatsCard.Col>
+        <StatsCard.Col>{getCounterTemplate('jobs')}</StatsCard.Col>
+        <StatsCard.Col>{getCounterTemplate('workflows')}</StatsCard.Col>
       </StatsCard.Body>
       <StatsCard.Footer>
         <StatsCard.Col>
