@@ -6,12 +6,10 @@ Feature: Project Settings page
     @MLPS
     @inProgress
     Scenario: MLPS001 - Verify all mandatory components on General Tab
-        * set tear-down property "project" created with "automation-test-name8" value
-        * create "automation-test-name8" MLRun Project with code 201
         Given open url
-        And click on row root with value "automation-test-name8" in "name" column in "Projects_Table" table on "Projects" wizard
+        And click on row root with value "cat-vs-dog-classification" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
-        Then verify breadcrumbs "project" label should be equal "automation-test-name8" value
+        Then verify breadcrumbs "project" label should be equal "cat-vs-dog-classification" value
         And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
         Then click on "Project_Settings_Button" element on "commonPagesHeader" wizard
         And hover "MLRun_Logo" component on "commonPagesHeader" wizard
@@ -35,27 +33,26 @@ Feature: Project Settings page
             | label1        | value1          |
             | labelKeyTest2 | labelValueTest2 |
             | key3          | value3          |
-        Then verify values in "Labels_Table" table on "Project_Settings_General_Tab" wizard
-            |      label                         |
-            | label1\n:\nvalue1                  |
-            | labelKeyTest2\n:\nlabelValueTest2  |
-            | key3\n:\nvalue3                    |
-        When click on "remove_btn" in "Labels_Table" table on "Project_Settings_General_Tab" wizard with offset "false"
-            |      label        |
-            | label1\n:\nvalue1 |
-            | key3\n:\nvalue3   |
-        Then verify values in "Labels_Table" table on "Project_Settings_General_Tab" wizard
-            |      label                        |
-            | labelKeyTest2\n:\nlabelValueTest2 |
+        Then verify values in "Labels_Table" table on "Project_Settings_General_Tab" wizard with attribute
+            |   key_verify  |  value_verify   |
+            |     label1    |     value1      |
+            | labelKeyTest2 | labelValueTest2 |
+            |      key3     |     value3      |
+        When click on "remove_btn" in "Labels_Table" table on "Project_Settings_General_Tab" wizard with attribute
+            | key_verify |
+            |   label1   |
+            |    key3    |
+        Then verify values in "Labels_Table" table on "Project_Settings_General_Tab" wizard with attribute
+            |   key_verify  |  value_verify   |
+            | labelKeyTest2 | labelValueTest2 |
 
     @MLPS
     Scenario: MLPS002 - Verify behaviour of editing labels on General tab
-        * set tear-down property "project" created with "automation-test-name9" value
-        * create "automation-test-name9" MLRun Project with code 201
         Given open url
-        Then type value "automation-test-name9" to "Search_Projects_Input" field on "Projects" wizard
-        Then value in "description" column with "text" in "Projects_Table" on "Projects" wizard should contains "automation test description"
-        And click on row root with value "automation-test-name9" in "name" column in "Projects_Table" table on "Projects" wizard
+        Then type value "cat-vs-dog-classification" to "Search_Projects_Input" field on "Projects" wizard
+        Then value in "description" column with "text" in "Projects_Table" on "Projects" wizard should contains "123"
+        And click on row root with value "cat-vs-dog-classification" in "name" column in "Projects_Table" table on "Projects" wizard
+        And wait load page
         And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
         And wait load page
         Then click on "Project_Settings_Button" element on "commonPagesHeader" wizard
@@ -73,39 +70,54 @@ Feature: Project Settings page
             | e         | f           |
         And click on "MLRun_Logo" element on "commonPagesHeader" wizard
         And wait load page
-        Then type value "automation-test-name9" to "Search_Projects_Input" field on "Projects" wizard
+        Then type value "cat-vs-dog-classification" to "Search_Projects_Input" field on "Projects" wizard
         Then value in "labels" column with "dropdowns" in "Projects_Table" on "Projects" wizard should contains "c=d" in "Overlay"
         Then click on "Active_Projects_Button" element on "Projects" wizard
         Then value in "labels" column with "dropdowns" in "Projects_Table" on "Projects" wizard should contains "e=f" in "Overlay"
-        And click on row root with value "automation-test-name9" in "name" column in "Projects_Table" table on "Projects" wizard
+        And click on row root with value "cat-vs-dog-classification" in "name" column in "Projects_Table" table on "Projects" wizard
         And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
         Then click on "Project_Settings_Button" element on "commonPagesHeader" wizard
         And wait load page
         And hover "MLRun_Logo" component on "commonPagesHeader" wizard
-        When click on "remove_btn" in "Labels_Table" table on "Project_Settings_General_Tab" wizard with offset "false"
-            | label   |
-            | a\n:\nb |
-            | c\n:\nd |
-            | e\n:\nf |
+        When click on "remove_btn" in "Labels_Table" table on "Project_Settings_General_Tab" wizard with attribute
+            | key_verify |
+            |     a      |
+            |     c      |
+            |     e      |
         When add rows to "Labels_Table" table on "Project_Settings_General_Tab" wizard
             | key_input         | value_input         |
-            | a                 | b                 |
+            | a                 | b                   |
             | project_label_key | project_label_value |
-            | a12345            | b54321             |
+            | a12345            | b54321              |
         And click on "MLRun_Logo" element on "commonPagesHeader" wizard
         And wait load page
-        Then type value "automation-test-name9" to "Search_Projects_Input" field on "Projects" wizard
+        Then type value "cat-vs-dog-classification" to "Search_Projects_Input" field on "Projects" wizard
         Then value in "labels" column with "dropdowns" in "Projects_Table" on "Projects" wizard should contains "project_label_key=project_label_value" in "Overlay"
         Then click on "Active_Projects_Button" element on "Projects" wizard
         Then value in "labels" column with "dropdowns" in "Projects_Table" on "Projects" wizard should contains "a12345=b54321" in "Overlay"
+        And click on row root with value "cat-vs-dog-classification" in "name" column in "Projects_Table" table on "Projects" wizard
+        And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
+        Then click on "Project_Settings_Button" element on "commonPagesHeader" wizard
+        And wait load page
+        And hover "MLRun_Logo" component on "commonPagesHeader" wizard
+        When click on "remove_btn" in "Labels_Table" table on "Project_Settings_General_Tab" wizard with attribute
+            | key_verify        |
+            | a                 |
+            | project_label_key |
+            | a12345            |
+        And click on "Add_Label_Button" element on "Project_Settings_General_Tab" wizard
+        Then type value "/" to "Labels_Key" field on "Project_Settings_General_Tab" wizard
+        Then verify labels warning should display options "Input_Hint"."Projects_Labels_Warning_Key"
+        Then verify "Labels_Key" options rules on "Project_Settings_General_Tab" wizard with labels
+        Then type value "/" to "Labels_Value" field on "Project_Settings_General_Tab" wizard
+        Then verify labels warning should display options "Input_Hint"."Projects_Labels_Warning_Value"
+        Then verify "Labels_Value" options rules on "Project_Settings_General_Tab" wizard with labels
 
     @MLPS
     @inProgress
     Scenario: MLPS003 - Verify Parameters Table on General Tab
-        * set tear-down property "project" created with "automation-test-name5" value
-        * create "automation-test-name5" MLRun Project with code 201
         Given open url
-        And click on row root with value "automation-test-name5" in "name" column in "Projects_Table" table on "Projects" wizard
+        And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
         And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
         Then click on "Project_Settings_Button" element on "commonPagesHeader" wizard
@@ -128,7 +140,7 @@ Feature: Project Settings page
             |          key7              |           value7             |                                 |                 yes                 |
             |          key8              |           value8             |               yes               |                                     |
             |          key9              |           value9             |                                 |                 yes                 |
-        Then verify values in "Parameters_Table" table on "Project_Settings_General_Tab" wizard
+        Then verify data in "Parameters_Table_Verify" table on "Project_Settings_General_Tab" wizard
             | key  | value  |
             | key0 | value0 |
             | key1 | value1 |
@@ -136,12 +148,12 @@ Feature: Project Settings page
             | key6 | value6 |
             | key8 | value8 |
         And refresh a page
-        When click on "remove_btn" in "Parameters_Table" table on "Project_Settings_General_Tab" wizard
+        When click on "remove_btn" in "Parameters_Table_Verify" table on "Project_Settings_General_Tab" wizard
             | key  |
             | key1 |
             | key4 |
             | key8 |
-        Then verify values in "Parameters_Table" table on "Project_Settings_General_Tab" wizard
+        Then verify data in "Parameters_Table_Verify" table on "Project_Settings_General_Tab" wizard
             | key  | value  |
             | key0 | value0 |
             | key6 | value6 |
@@ -186,11 +198,9 @@ Feature: Project Settings page
     @MLPS
     @inProgress
     Scenario: MLPS008 - Verify Secrets table on Secrets tab
-        * set tear-down property "project" created with "automation-test" value
-        * create "automation-test" MLRun Project with code 201
         Given open url
         And wait load page
-        And click on row root with value "automation-test" in "name" column in "Projects_Table" table on "Projects" wizard
+        And click on row root with value "cat-vs-dog-classification" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
         And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
         Then click on "Project_Settings_Button" element on "commonPagesHeader" wizard

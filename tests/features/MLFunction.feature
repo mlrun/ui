@@ -551,8 +551,7 @@ Feature: ML Functions
         Then verify "Save_Button" element visibility on "New_Function" wizard
         Then "Save_Button" element on "New_Function" should contains "Save" value
         Then verify "Deploy_Button" element visibility on "New_Function" wizard
-        Then "Deploy_Button" element on "New_Function" should contains "Deploy" value 
-        #TODO: Then "Deploy_Button" element on "New_Function" should contains "Create" value - check the condition for deploy
+        Then "Deploy_Button" element on "New_Function" should contains "Create" value 
         And click on "Save_Button" element on "New_Function" wizard
         Then verify "Cancel_Button" element on "New_Function" wizard is enabled
         Then verify "Save_Button" element on "New_Function" wizard is disabled
@@ -652,14 +651,14 @@ Feature: ML Functions
         When collapse "Resources_Accordion" on "New_Function" wizard
         And set tear-down property "function" created in "default" project with "new-aqa-function-00" value
         Then click on "Deploy_Button" element on "New_Function" wizard
-        #TODO: Then "Deploy_Button" element contains "Create" value - check the condition for deploy
+        Then "Deploy_Button" element on "New_Function" should contains "Create" value
         Then click on "Cross_Close_Button" element on "ML_Function_Info_Pane" wizard
         Then check "new-aqa-function-01" value in "name" column in "Functions_Table" table on "ML_Functions" wizard
 
     @MLF
     Scenario: MLF017 - Delete ml-function
-         * set tear-down property "function" created with "new-aqa-function-01" value
-         * set tear-down property "project" created with "automation-test-name07" value
+        * set tear-down property "function" created with "new-aqa-function-01" value
+        * set tear-down property "project" created with "automation-test-name07" value
         * create "automation-test-name07" MLRun Project with code 201
         * create "new-aqa-function-01" Function with "job" kind and "latest" tag in "automation-test-name07" project with code 200
         And set tear-down property "function" created in "automation-test-name07" project with "new-aqa-function-01" value
@@ -1007,7 +1006,7 @@ Feature: ML Functions
         Then verify "YAML_Modal_Container" element visibility on "View_YAML" wizard
         Then click on "Cross_Cancel_Button" element on "View_YAML" wizard
         Then click on cell with row index 7 in "expand_btn" column in "Functions_Table" table on "ML_Functions" wizard
-        Then select "View YAML" option in action menu on "ML_Functions" wizard in "Functions_Table" table at row with "Nov 23, 11:31:51 AM" value in "name" column
+        Then select "View YAML" option in action menu on "ML_Functions" wizard in "Functions_Table" table at row with "Nov 23, 2021, 11:31:51 AM" value in "name" column
         Then verify if "View_YAML" popup dialog appears
         Then verify "Cross_Cancel_Button" element visibility on "View_YAML" wizard
         Then verify "YAML_Modal_Container" element visibility on "View_YAML" wizard
@@ -1153,12 +1152,11 @@ Feature: ML Functions
         Then verify "Save_Button" element visibility on "New_Function" wizard
         Then "Save_Button" element on "New_Function" should contains "Save" value
         Then verify "Deploy_Button" element visibility on "New_Function" wizard
-        Then "Deploy_Button" element on "New_Function" should contains "Deploy" value
-        #TODO: Then "Deploy_Button" element on "New_Function" should contains "Create" value - check the condition for deploy
+        Then "Deploy_Button" element on "New_Function" should contains "Create" value
 
     @MLF
     #TODO: ML-5137 - move create/edit 'function panel' to UI Demo mode
-    Scenario: Verify Resources values on Function Deploy and Run
+    Scenario: MLF033 - Verify Resources values on Function Deploy and Run
         * set tear-down property "project" created with "automation-test" value
         * set tear-down property "function" created in "automation-test" project with "new-aqa-function-00" value
         * create "automation-test" MLRun Project with code 201
@@ -1297,3 +1295,28 @@ Feature: ML Functions
         And wait load page
         Then "Header" element on "ML_Function_Info_Pane" should contains "demo-function-02" value
         Then check "demo-function-02" value in "name" column in "Overview_Table" table on "ML_Function_Info_Pane" wizard
+
+    @MLF
+    @passive
+    #TODO: ML-5718 - move 'Deploy' button for "Serving" function to demo mode
+    Scenario: MLF034 - Verify Deploy option for serving kind functions
+        Given open url
+        And wait load page
+        And click on row root with value "churn-project-admin" in "name" column in "Projects_Table" table on "Projects" wizard
+        And wait load page
+        And turn on demo mode
+        And wait load page
+        Then verify breadcrumbs "tab" label should be equal "Project monitoring" value
+        And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
+        And click on cell with value "ML functions" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+        And hover "MLRun_Logo" component on "commonPagesHeader" wizard
+        And wait load page
+        Then value in "kind" column with "text" in "Functions_Table" on "ML_Functions" wizard should contains "Serving"
+        Then verify that "Serving" type is displayed in "kind" kind on "ML_Functions" wizard in "Functions_Table" table with "churn-server" value in "name" column
+        Then verify "deploy" option is present on "ML_Functions" wizard in "Functions_Table" table with "churn-server" value in "name" column
+        Then click on "deploy" option on "ML_Functions" wizard in "Functions_Table" table with "churn-server" value in "name" column
+        And wait load page
+        Then verify "Function_Name" element visibility in "General_Accordion" on "New_Function" wizard
+        Then "Function_Name" element in "General_Accordion" on "New_Function" should contains "churn-server" value
+        Then verify "Deploy_Button" element visibility on "New_Function" wizard
+        Then "Deploy_Button" element on "New_Function" should contains "Deploy" value

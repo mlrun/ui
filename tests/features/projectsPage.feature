@@ -107,6 +107,7 @@ Feature: MLRun Projects Page
 
     @MLPr
     @sanity
+    @uniqueTag
     Scenario: MLPr007 - Create new ML Project with description
         Given open url
         And wait load page
@@ -117,10 +118,14 @@ Feature: MLRun Projects Page
         Then type into "Description_Input" on "Create_New_Project" popup dialog "automation test description" value
         Then verify "New_Project_Labels_Table" element visibility on "Create_New_Project" wizard
         And click on "Add_Label_Button" element on "Create_New_Project" wizard
-        Then type value "/" to "Run_Details_Labels_Key" field on "Create_New_Project" wizard
+        Then type value "/" to "Labels_Key" field on "Create_New_Project" wizard
         Then verify labels warning should display options "Input_Hint"."Projects_Labels_Warning_Key"
-        Then type value "/" to "Run_Details_Labels_Value" field on "Create_New_Project" wizard without inputgroup
-        Then verify labels warning should display options "Input_Hint"."Labels_Warning_Value"
+        Then verify "Labels_Key" options rules on "Create_New_Project" wizard with labels
+        Then type value "/" to "Labels_Value" field on "Create_New_Project" wizard
+        Then verify labels warning should display options "Input_Hint"."Projects_Labels_Warning_Value"
+        Then verify "Labels_Value" options rules on "Create_New_Project" wizard with labels
+        Then type value "/" to "Labels_Key" field on "Create_New_Project" wizard
+        Then type value "/" to "Labels_Value" field on "Create_New_Project" wizard
         When click on "Title" element on "Create_New_Project" wizard
         And click on "Close_Label_Button" element on "Create_New_Project" wizard
         Then click on "Create_Button" element on "Create_New_Project" wizard
@@ -166,6 +171,8 @@ Feature: MLRun Projects Page
         Then verify "Notification_Pop_Up_Cross_Close_Button" element visibility on "Notification_Popup" wizard
         Then click on "Notification_Pop_Up_Cross_Close_Button" element on "Notification_Popup" wizard
         Then check "automation-test-name2" value not in "name" column in "Projects_Table" table on "Projects" wizard
+        Then verify "New_Project_Button" element visibility on "Projects" wizard
+        Then "New_Project_Button" element on "Projects" should contains "New Project" value
     
     @MLPr
     @passive

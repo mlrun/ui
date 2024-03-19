@@ -96,11 +96,15 @@ const action = {
     attach,
     inputGroup,
     hintComponent,
-    isForm = false
+    isForm = false,
+    isLabel = false
   ) {
-    const hintButton = await driver.findElement(inputGroup.hintButton)
-    await hintButton.click()
-    await driver.sleep(250)
+
+    if (!isLabel){
+      const hintButton = await driver.findElement(inputGroup.hintButton)
+      await hintButton.click()
+      await driver.sleep(250)
+    }
     const hint = await driver.findElement(hintComponent)
     const hintText = await hint.getText()
     const { validStrings, invalidStrings } = parseString(hintText)
