@@ -1277,6 +1277,26 @@ Then(
 )
 
 Then(
+  'verify that {string} type is displayed in {string} kind on {string} wizard in {string} table with {string} value in {string} column',
+  async function (type, kind, wizard, table, value, column) {
+    const arr = await findRowIndexesByColumnValue (
+      this.driver,
+      pageObjects[wizard][table],
+      column,
+      value
+    )
+    const indx = arr[0]
+    const tabelCell = await getCellByIndexColumn (
+      this.driver,
+      pageObjects[wizard][table],
+      indx,
+      kind
+    )
+    await verifyText(this.driver, tabelCell['label'], type)
+  }
+)
+
+Then(
   'click on {string} option on {string} wizard in {string} table with {string} value in {string} column',
   async function (option, wizard, table, value, column) {
     const arr = await findRowIndexesByColumnValue(

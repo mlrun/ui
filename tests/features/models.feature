@@ -832,8 +832,6 @@ Feature: Models Page
        | name4        | value4        |
 
   @MLM
-  @FAILED_TODO
-  #TODO: Bug - broken function link ML-5709
   #TODO: arrow lines position - y not found
   @passive
   Scenario: MLM031 - Verify behaviour of Real-Time Pipelines table

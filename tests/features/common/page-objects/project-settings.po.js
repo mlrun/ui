@@ -49,33 +49,48 @@ const labelsTable = {
       fields: {
         key_input: 'input.input-label-key',
         value_input: 'input.input-label-value',
-        label: '.chip',
-        remove_btn: '.item-icon-close'
+        key_verify: '.edit-chip-container input.input-label-key',
+        value_verify: '.edit-chip-container input.input-label-value',
+        remove_btn: '.edit-chip__icon-close'
       }
     }
   }
 }
 
 const parametersTable = {
-  root: '.key-value-table.settings__params',
+  root: '[data-testid="params"]',
   header: {
-    root: '.table-row__header ',
+    root: '.form-table__header-row',
     sorters: {
       key: '.table-cell__key',
       value: '.table-cell__value'
     }
   },
   body: {
-    root: '.key-value-table__body',
-    add_row_btn: '.table-row .add-new-item-btn',
+    add_row_btn: '[data-testid="params-add-btn"]',
     row: {
-      root: '.table-row',
+      root: '.form-table__row:nth-of-type(2)',
       fields: {
-        key: '.table-cell__key',
-        value: '.table-cell__value',
-        edit_btn: '.table-cell__actions .key-value-table__btn:nth-of-type(1)',
-        apply_edit_btn: '.table-cell__actions .key-value-table__btn:nth-of-type(1)',
-        remove_btn: '.table-cell__actions .key-value-table__btn:nth-of-type(2)'
+        key: '.form-table__cell_1:nth-of-type(1)',
+        value: '.form-table__cell_1:nth-of-type(2)',
+        edit_btn: '.form-table__actions-cell [data-testid="edit-btn"]',
+        apply_edit_btn: '.form-table__actions-cell [data-testid="apply-btn"]',
+        remove_btn: '.form-table__actions-cell [data-testid="delete-btn"]'
+      }
+    }
+  }
+}
+
+const parametersTableVerify = {
+  root: '[data-testid="params"]',
+  header: {},
+  body: {
+    row: {
+      root: '.form-table__row',
+      fields: {
+        key: '.form-table__cell_1:nth-of-type(1)',
+        value: '.form-table__cell_1:nth-of-type(2)',
+        remove_btn: '.form-table__actions-cell [data-testid="delete-btn"]'
       }
     }
   }
@@ -112,45 +127,64 @@ module.exports = {
     Project_Settings_Tab_Selector: commonTable(tabSelector),
     Source_URL_Input: inputGroup(
       generateInputGroup(
-        '.settings__card-content .settings__source .input-wrapper',
+        '.settings__card-content .settings__source [data-testid="source-form-field-input"]',
         true,
         true,
-        true
+        '.form-field__warning svg'
       )
     ),
     Artifact_Path_Input: inputGroup(
       generateInputGroup(
-        '.settings__card-content .settings__artifact-path .input-wrapper',
+        '.settings__card-content .settings__artifact-path [data-testid="artifact_path-form-field-input"]',
         true,
         false,
-        true
+        '.form-field__warning svg'
       )
     ),
     Project_Description: textAreaGroup(generateTextAreaGroup('.settings__description .text-area-wrapper')),
     Labels_Table: commonTable(labelsTable),
     Parameters_Table: commonTable(parametersTable),
+    Parameters_Table_Verify: commonTable(parametersTableVerify),
     Parameters_Table_Key_Input: inputGroup(
       generateInputGroup(
-        '.key-value-table.settings__params .table-cell__key .input-wrapper',
+        '.form-key-value-table .form-table__row_active .form-table__cell_1:nth-of-type(1)',
         true,
         false,
-        true
+        '.form-field__warning'
       )
     ),
     Parameters_Table_Value_Input: inputGroup(
       generateInputGroup(
-        '.key-value-table.settings__params .table-cell__value .input-wrapper',
+        '.form-key-value-table .form-table__row_active .form-table__cell_1:nth-of-type(2)',
         true,
         false,
-        true
+        '.form-field__warning'
       )
     ),
     Parameters_Table_Add_Row_Button: By.css(
-      '.key-value-table.settings__params .table-cell__actions .btn-add:nth-of-type(1)'
+      '.form-key-value-table .form-table__row_active .form-table__actions-cell [data-testid="apply-btn"]'
     ),
     Parameters_Table_Discard_Row_Button: By.css(
-      '.key-value-table.settings__params .table-cell__actions .btn-add:nth-of-type(2)'
-    )
+      '.form-key-value-table .form-table__row_active .form-table__actions-cell [data-testid="delete-discard-btn"]'
+    ),
+    Add_Label_Button: By.css('.settings__labels .chips__wrapper .chips-wrapper button'),
+    Labels_Key: inputGroup(
+      generateInputGroup(
+        '.settings__labels .chips-wrapper .chip-block .edit-chip-container',
+        false,
+        true,
+        false
+      )
+    ),
+    Labels_Value: inputGroup(
+      generateInputGroup(
+        '.settings__labels .chips-wrapper .chip-block .edit-chip-container',
+        false,
+        true,
+        false,
+        '.input-label-value'
+      )
+    ),
   },
   secretsTab: {
     Secrets_Table: commonTable(secretsTable),

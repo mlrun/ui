@@ -313,7 +313,7 @@ const calendarTable = {
 }
 
 const dateTimePickerCalendars = {
-  root: '.date-picker-container',
+  root: '.date-picker__pop-up',
   apply_button: 'button.date-picker__apply-btn',
   error_message: '.error',
   fromDatePicker: {
@@ -436,7 +436,7 @@ const commonStartTimeFilter = dropdownComponent(
     'input.date-picker__input',
     '.date-picker__pop-up .select__item',
     '.data-ellipsis .data-ellipsis',
-    true // options_in_root ?
+    false // options_in_root ?
   )
 )
 

@@ -22,10 +22,8 @@ Feature: MLRun Project Page
     @MLPM
     @passive
     Scenario: MLNB001 - Check all mandatory components on Navigation Bar
-        * set tear-down property "project" created with "automation-test-1000" value
-        * create "automation-test-1000" MLRun Project with code 201
         Given open url
-        And click on row root with value "automation-test-1000" in "name" column in "Projects_Table" table on "Projects" wizard
+        And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
         #check the default state of 'Navigation_Bar'
         And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
