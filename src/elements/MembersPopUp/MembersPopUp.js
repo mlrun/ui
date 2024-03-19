@@ -248,15 +248,15 @@ const MembersPopUp = ({
     let paramsUserGroups = { 'filter[name]': `[$match-i]^.*${searchQuery}.*$`, 'page[size]': 200 }
 
     if (isIgzVersionCompatible(requiredIgzVersion)) {
-      paramsScrubbedUsers = { 'filter[username]': `[$contains_istr]${searchQuery}` }
-      paramsUserGroups = { 'filter[name]': `[$contains_istr]${searchQuery}` }
+      paramsScrubbedUsers['filter[username]'] = `[$contains_istr]${searchQuery}`
+      paramsUserGroups['filter[name]'] = `[$contains_istr]${searchQuery}`
     }
 
     const getUsersPromise = projectsIguazioApi.getScrubbedUsers({
-      paramsScrubbedUsers
+      params: paramsScrubbedUsers
     })
     const getUserGroupsPromise = projectsIguazioApi.getScrubbedUserGroups({
-      paramsUserGroups
+      params: paramsUserGroups
     })
     const suggestionList = []
 
