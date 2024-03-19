@@ -584,6 +584,7 @@ const Functions = ({
       refreshFunctions={refreshFunctions}
       selectedFunction={selectedFunction}
       selectedRowData={selectedRowData}
+      setSelectedRowData={setSelectedRowData}
       tableContent={tableContent}
       taggedFunctions={taggedFunctions}
       toggleConvertedYaml={toggleConvertedYaml}

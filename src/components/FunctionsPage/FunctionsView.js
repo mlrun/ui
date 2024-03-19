@@ -22,7 +22,7 @@ import { useParams } from 'react-router-dom'
 import PropTypes from 'prop-types'
 
 import Breadcrumbs from '../../common/Breadcrumbs/Breadcrumbs'
-import FilterMenu from '../FilterMenu/FilterMenu'
+import FunctionActionBar from '../FunctionActionBar/FunctionActionBar'
 import Loader from '../../common/Loader/Loader'
 import NoData from '../../common/NoData/NoData'
 import Table from '../Table/Table'
@@ -34,7 +34,12 @@ import YamlModal from '../../common/YamlModal/YamlModal'
 import { getNoDataMessage } from '../../utils/getNoDataMessage'
 import { SECONDARY_BUTTON } from 'igz-controls/constants'
 import { filters } from './functions.util'
-import { FUNCTIONS_PAGE, PANEL_CREATE_MODE, PANEL_EDIT_MODE } from '../../constants'
+import {
+  FUNCTIONS_PAGE,
+  FUNCTION_FILTERS,
+  PANEL_CREATE_MODE,
+  PANEL_EDIT_MODE
+} from '../../constants'
 
 const FunctionsView = ({
   actionsMenu,
@@ -61,6 +66,7 @@ const FunctionsView = ({
   refreshFunctions,
   selectedFunction,
   selectedRowData,
+  setSelectedRowData,
   tableContent,
   taggedFunctions,
   toggleConvertedYaml
@@ -76,18 +82,22 @@ const FunctionsView = ({
           <div className="table-container">
             <div className="content__action-bar-wrapper">
               <div className="action-bar">
-                <FilterMenu
-                  actionButton={{
-                    getCustomTemplate: getPopUpTemplate,
-                    hidden: !isDemoMode,
-                    label: 'New',
-                    variant: SECONDARY_BUTTON
-                  }}
+                <FunctionActionBar
+                  actionButtons={[
+                    {
+                      className: 'action-button',
+                      hidden: !isDemoMode,
+                      label: 'New',
+                      onClick: getPopUpTemplate,
+                      variant: SECONDARY_BUTTON
+                    }
+                  ]}
                   expand={expand}
-                  filters={filters}
+                  filterMenuName={FUNCTION_FILTERS}
                   handleExpandAll={handleExpandAll}
-                  onChange={filtersChangeCallback}
+                  handleRefresh={filtersChangeCallback}
                   page={FUNCTIONS_PAGE}
+                  setSelectedRowData={setSelectedRowData}
                 />
               </div>
             </div>
@@ -198,6 +208,7 @@ FunctionsView.propTypes = {
   refreshFunctions: PropTypes.func.isRequired,
   selectedFunction: PropTypes.object.isRequired,
   selectedRowData: PropTypes.object.isRequired,
+  setSelectedRowData: PropTypes.func.isRequired,
   tableContent: PropTypes.arrayOf(PropTypes.object).isRequired,
   taggedFunctions: PropTypes.arrayOf(PropTypes.object).isRequired,
   toggleConvertedYaml: PropTypes.func.isRequired
