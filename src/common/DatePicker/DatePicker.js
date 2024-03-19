@@ -27,7 +27,6 @@ import React, {
   useMemo
 } from 'react'
 import PropTypes from 'prop-types'
-import { throttle } from 'lodash'
 
 import DatePickerView from './DatePickerView'
 import { DATE_FILTER_ANY_TIME } from '../../constants'
@@ -81,7 +80,6 @@ const DatePicker = ({
     formatDate(isRange, isTime, splitCharacter, date, dateTo)
   )
   const [isInvalid, setIsInvalid] = useState(false)
-  const [position, setPosition] = useState('bottom-right')
 
   const datePickerRef = useRef()
   const datePickerViewRef = useRef()
@@ -146,41 +144,6 @@ const DatePicker = ({
     const inputValue = value.replace(/[_\-:/\s]/g, '')
     return inputValue.length === 0
   }, [])
-
-  const calcPosition = useCallback(() => {
-    if (
-      datePickerRef?.current &&
-      datePickerViewRef?.current &&
-      (isDatePickerOpened || isDatePickerOptionsOpened)
-    ) {
-      const containerRect = datePickerRef.current.getBoundingClientRect()
-      const popUpRect = datePickerViewRef.current.getBoundingClientRect()
-      const margin = 15
-
-      if (containerRect && popUpRect) {
-        containerRect.left + popUpRect.width + margin > window.innerWidth &&
-        containerRect.right - popUpRect.width > margin
-          ? setPosition('bottom-left')
-          : setPosition('bottom-right')
-      }
-    }
-  }, [isDatePickerOpened, isDatePickerOptionsOpened])
-
-  useLayoutEffect(() => {
-    calcPosition()
-  }, [calcPosition])
-
-  useEffect(() => {
-    if (isDatePickerOpened || isDatePickerOptionsOpened) {
-      const throttledCalcPosition = throttle(calcPosition, 100, { trailing: true, leading: true })
-
-      window.addEventListener('resize', throttledCalcPosition)
-
-      return () => {
-        window.removeEventListener('resize', throttledCalcPosition)
-      }
-    }
-  }, [calcPosition, isDatePickerOpened, isDatePickerOptionsOpened])
 
   useLayoutEffect(() => {
     if (selectedOptionId) {
@@ -467,7 +430,6 @@ const DatePicker = ({
       onPreviousMonth={onChangePreviousMonth}
       onSelectOption={onSelectOption}
       onTimeChange={onTimeChange}
-      position={position}
       ref={{ datePickerRef, datePickerViewRef }}
       required={required}
       requiredText={requiredText}
