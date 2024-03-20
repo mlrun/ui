@@ -567,7 +567,7 @@ export const INPUT_NODE = 'input-node'
 export const OUTPUT_NODE = 'output-node'
 export const PRIMARY_NODE = 'primary-node'
 export const SECONDARY_NODE = 'secondary-node'
-export const ERROR_NODE = 'error-node'
+export const GREY_NODE = 'grey-node'
 
 export const ML_EDGE = 'ml-edge'
 

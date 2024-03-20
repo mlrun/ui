@@ -44,6 +44,7 @@ import functionsActions from '../../actions/functions'
 import { ACTIONS_MENU } from '../../types'
 import {
   DEFAULT_EDGE,
+  GREY_NODE,
   JOB_KIND_JOB,
   JOBS_PAGE,
   ML_EDGE,
@@ -123,6 +124,7 @@ const Workflow = ({
         run_type: job.run_type,
         type: job.type
       }
+      const stepIsExecutable = isWorkflowStepExecutable(job)
 
       if (job.function) {
         const [, , functionName = '', functionHash = '', functionTag = ''] =
@@ -137,11 +139,11 @@ const Workflow = ({
         type: ML_NODE,
         data: {
           customData,
-          isSelectable: isWorkflowStepExecutable(job),
-          isOpacity: !isWorkflowStepExecutable(job),
+          isSelectable: stepIsExecutable,
           label: job.name,
           sourceHandle,
-          subType: PRIMARY_NODE
+          tip: stepIsExecutable ? null : 'This step cannot be previewed',
+          subType: stepIsExecutable ? PRIMARY_NODE : GREY_NODE
         },
         className: classnames(
           ((job.run_uid && selectedJob.uid === job.run_uid) ||

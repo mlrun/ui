@@ -29,7 +29,7 @@ import MlReactFlow from '../../common/ReactFlow/MlReactFlow'
 import { getLayoutedElements } from '../../common/ReactFlow/mlReactFlow.util'
 import {
   DEFAULT_EDGE,
-  ERROR_NODE,
+  GREY_NODE,
   INPUT_NODE,
   ML_EDGE,
   ML_NODE,
@@ -126,7 +126,7 @@ const DetailsTransformations = ({ selectedItem }) => {
         let errorHandlerElement = find(newNodes, ['id', target])
 
         if (errorHandlerElement) {
-          errorHandlerElement.data.subType = ERROR_NODE
+          errorHandlerElement.data.subType = GREY_NODE
         }
 
         return {

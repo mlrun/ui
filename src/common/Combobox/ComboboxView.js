@@ -27,7 +27,7 @@ import { COMBOBOX_MATCHES } from '../../types'
 
 import { ReactComponent as Arrow } from 'igz-controls/images/arrow.svg'
 import { ReactComponent as SearchIcon } from 'igz-controls/images/search.svg'
-import { ReactComponent as Invalid } from 'igz-controls/images/invalid.svg'
+import { ReactComponent as ExclamationMarkIcon } from 'igz-controls/images/exclamation-mark.svg'
 
 const ComboboxView = React.forwardRef(
   (
@@ -162,7 +162,7 @@ const ComboboxView = React.forwardRef(
               />
             }
           >
-            <Invalid />
+            <ExclamationMarkIcon />
           </Tooltip>
         )}
       </div>

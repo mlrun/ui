@@ -29,7 +29,7 @@ import { Tooltip, TextTooltipTemplate, RoundedIcon } from 'igz-controls/componen
 
 import {
   DEFAULT_EDGE,
-  ERROR_NODE,
+  GREY_NODE,
   FLOATING_EDGE,
   ML_EDGE,
   ML_NODE,
@@ -208,7 +208,7 @@ const Pipeline = ({ content }) => {
 
       const errorEdges = map(errorsMap, (target, source) => {
         const errorHandlerElement = newNodes.find(node => node.id === target)
-        errorHandlerElement.data.subType = ERROR_NODE
+        errorHandlerElement.data.subType = GREY_NODE
 
         return {
           type: ML_EDGE,
