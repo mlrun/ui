@@ -25,7 +25,7 @@ const artifactSubTitle =
 export const createArtifactMessages = {
   artifact: {
     title:
-      'Register an artifact in MLRun so it can used, for example, by functions, jobs, and pipelines.',
+      'Register an artifact in MLRun so it can be used, for example, by functions, jobs, and pipelines.',
     subTitle: artifactSubTitle,
     uniquenessError:
       'That combination of artifact name and artifact tag is already in use. Assign a unique combination of artifact name and artifact tag.'
