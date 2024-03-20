@@ -29,7 +29,7 @@ import { checkPatternsValidity } from 'igz-controls/utils/validation.util'
 import { useDetectOutsideClick } from 'igz-controls/hooks'
 import { DENSITY_OPTIONS, INPUT_LINK } from '../../types'
 
-import { ReactComponent as InvalidIcon } from 'igz-controls/images/invalid.svg'
+import { ReactComponent as ExclamationMarkIcon } from 'igz-controls/images/exclamation-mark.svg'
 import { ReactComponent as LinkIcon } from 'igz-controls/images/link-icon.svg'
 import { ReactComponent as WarningIcon } from 'igz-controls/images/warning.svg'
 
@@ -289,7 +289,7 @@ const Input = React.forwardRef(
               />
             }
           >
-            <InvalidIcon />
+            <ExclamationMarkIcon />
           </Tooltip>
         )}
         {tip && <Tip text={tip} className="input__tip" />}

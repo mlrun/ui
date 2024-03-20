@@ -26,7 +26,7 @@
   border-color: $orchid;
 }
 
-@mixin errorNode {
+@mixin greyNode {
   color: rgba($black, 0.2);
   background-color: $white;
 
@@ -69,6 +69,17 @@
       opacity: 0.8;
     }
 
+    .react-flow__node-tip {
+      svg {
+        width: 20px;
+        height: 20px;
+
+        path {
+          fill: $bombay;
+        }
+      }
+    }
+
     &.input-node {
       @include inputNode;
     }
@@ -85,8 +96,8 @@
       @include secondaryNode;
     }
 
-    &.error-node {
-      @include errorNode;
+    &.grey-node {
+      @include greyNode;
     }
 
     &.react-flow__node-input {

@@ -32,7 +32,7 @@ import { CUSTOM_RANGE_DATE_OPTION } from '../../utils/datePicker.util'
 
 import { ReactComponent as Arrow } from 'igz-controls/images/arrow.svg'
 import { ReactComponent as CaretIcon } from 'igz-controls/images/dropdown.svg'
-import { ReactComponent as Invalid } from 'igz-controls/images/invalid.svg'
+import { ReactComponent as ExclamationMarkIcon } from 'igz-controls/images/exclamation-mark.svg'
 
 import './datePicker.scss'
 
@@ -146,7 +146,7 @@ const DatePickerView = React.forwardRef(
                 />
               }
             >
-              <Invalid />
+              <ExclamationMarkIcon />
             </Tooltip>
           )}
         </div>
