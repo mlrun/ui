@@ -50,7 +50,7 @@ const ArtifactsTableRow = ({
   const rowIsExpanded = useMemo(() => {
     return (
       parent.current?.classList.value.includes('parent-row_expanded') ||
-      rowItem.data.ui.identifier in selectedRowData
+      selectedRowData && rowItem.data.ui.identifier in selectedRowData
     )
   }, [rowItem.data.ui.identifier, selectedRowData])
   const rowClassNames = classnames(
