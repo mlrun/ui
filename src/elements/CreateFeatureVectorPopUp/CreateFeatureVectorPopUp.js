@@ -63,7 +63,7 @@ const CreateFeatureVectorPopUp = ({ closePopUp, createFeatureVector, featureVect
   const handleCreateFeatureVector = (e, formState) => {
     e.preventDefault()
 
-    if (e.currentTarget.checkValidity() && formState.valid) {
+    if (formState.valid) {
       createFeatureVector({
         name: formState.values.name,
         tag: formState.values.tag,
@@ -140,7 +140,7 @@ const CreateFeatureVectorPopUp = ({ closePopUp, createFeatureVector, featureVect
                   onClick={closePopUp}
                 />
                 <Button
-                  disabled={!formState.values.name || !formState.values.tag || formState.invalid}
+                  disabled={formState.invalid}
                   variant={PRIMARY_BUTTON}
                   label="Create"
                   onClick={event => handleCreateFeatureVector(event, formState)}
