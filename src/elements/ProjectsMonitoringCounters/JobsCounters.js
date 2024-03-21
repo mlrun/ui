@@ -17,7 +17,7 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import React, { useCallback, useMemo, useState } from 'react'
+import React, { useMemo, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useSelector } from 'react-redux'
 import { upperFirst } from 'lodash'
@@ -28,7 +28,7 @@ import Loader from '../../common/Loader/Loader'
 import StatsCard from '../../common/StatsCard/StatsCard'
 
 import jobsActions from '../../actions/jobs'
-import workflowActions from '../../actions/workflow'
+// import workflowActions from '../../actions/workflow'
 import { PAST_24_HOUR_DATE_OPTION } from '../../utils/datePicker.util'
 import { useFetchData } from '../../hooks/useFetchData.hook'
 import { GROUP_BY_WORKFLOW, STATE_FILTER_ALL_ITEMS } from '../../constants'
@@ -49,12 +49,12 @@ const JobsCounters = () => {
     filter,
     action: jobsActions.fetchJobs
   })
-  const { loading: workflowsLoading } = useFetchData({
-    filter,
-    action: workflowActions.fetchWorkflows
-  })
+  // const { loading: workflowsLoading } = useFetchData({
+  //   filter,
+  //   action: workflowActions.fetchWorkflows
+  // })
   const { jobs } = useSelector(store => store.jobsStore)
-  const { data: workflows } = useSelector(store => store.workflowsStore.workflows)
+  // const { data: workflows } = useSelector(store => store.workflowsStore.workflows)
 
   const handleDateSelection = dates => {
     const generatedDates = [...dates]
@@ -93,6 +93,7 @@ const JobsCounters = () => {
     [jobs, navigate]
   )
 
+  /* todo: Un-hide the code below after  ML-5460 is impplemented
   const workflowsStats = useMemo(
     () => ({
       all: {
@@ -129,17 +130,17 @@ const JobsCounters = () => {
 
       return (
         <>
-          <h6 className='stats__subtitle'>{upperFirst(type)}</h6>
-          <span className='stats__counter'>
+          <h6 className="stats__subtitle">{upperFirst(type)}</h6>
+          <span className="stats__counter">
             {jobsLoading || workflowsLoading ? (
               <Loader section small secondary />
             ) : (
               stats.all.counter
             )}
           </span>
-          <ul className='projects-monitoring-legend__status'>
+          <ul className="projects-monitoring-legend__status">
             {stats.counters.map(({ counter, link, statusClass }) => (
-              <li className='link' onClick={link} key={`${statusClass}-jobs`}>
+              <li className="link" onClick={link} key={`${statusClass}-jobs`}>
                 {jobsLoading || workflowsLoading ? <Loader section small secondary /> : counter}
                 <i className={`state-${statusClass}`}></i>
               </li>
@@ -150,9 +151,55 @@ const JobsCounters = () => {
     },
     [jobStats, jobsLoading, workflowsStats, workflowsLoading]
   )
+  */
 
   return (
-    <StatsCard className='monitoring-stats'>
+    <StatsCard className="monitoring-stats">
+      <StatsCard.Header title="Jobs">
+        <DatePicker
+          date={filter.dates.value[0]}
+          dateTo={filter.dates.value[1]}
+          selectedOptionId={PAST_24_HOUR_DATE_OPTION}
+          label=""
+          onChange={handleDateSelection}
+          type="date-range-time"
+          withLabels
+        />
+      </StatsCard.Header>
+      <StatsCard.Body>
+        <StatsCard.Col>
+          <>
+            <h6 className="stats__subtitle">{upperFirst('jobs')}</h6>
+            <span className="stats__counter">
+              {jobsLoading ? <Loader section small secondary /> : jobStats.all.counter}
+            </span>
+            <ul className="projects-monitoring-legend__status">
+              {jobStats.counters.map(({ counter, link, statusClass }) => (
+                <li className="link" onClick={link} key={`${statusClass}-jobs`}>
+                  {jobsLoading ? <Loader section small secondary /> : counter}
+                  <i className={`state-${statusClass}`}></i>
+                </li>
+              ))}
+            </ul>
+          </>
+        </StatsCard.Col>
+      </StatsCard.Body>
+      <StatsCard.Footer>
+        <StatsCard.Col>
+          <span className="link" onClick={jobStats.all.link}>
+            See all
+          </span>
+        </StatsCard.Col>
+      </StatsCard.Footer>
+    </StatsCard>
+  )
+}
+
+export default React.memo(JobsCounters)
+
+/* Todo: use the structure below after  ML-5460 is impplemented
+
+ <StatsCard className='monitoring-stats'>
       <StatsCard.Header title='Jobs and Workflows'>
         <DatePicker
           date={filter.dates.value[0]}
@@ -181,7 +228,4 @@ const JobsCounters = () => {
         </StatsCard.Col>
       </StatsCard.Footer>
     </StatsCard>
-  )
-}
-
-export default React.memo(JobsCounters)
+  */
