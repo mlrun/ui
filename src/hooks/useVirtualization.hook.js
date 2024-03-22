@@ -80,11 +80,7 @@ export const useVirtualization = ({
   tableBodyRef,
   rowsSizes = [],
   rowsData = {},
-  heightData: {
-    rowHeight,
-    rowHeightExtended,
-    headerRowHeight
-  },
+  heightData: { rowHeight, rowHeightExtended, headerRowHeight }
 }) => {
   const [virtualizationConfig, setVirtualizationConfig] = useState({
     startIndex: -1,
@@ -137,7 +133,7 @@ export const useVirtualization = ({
         if (heightToFirstVisibleItem > tableRefEl.scrollTop) {
           firstVisibleItemIndex = index
           lastVisibleItemIndex = firstVisibleItemIndex
-          heightToLastVisibleItem = heightToFirstVisibleItem - nextElementHeight
+          heightToLastVisibleItem = heightToFirstVisibleItem
 
           return true
         }
@@ -145,22 +141,28 @@ export const useVirtualization = ({
         return false
       })
 
-      rowsSizesLocal.slice(firstVisibleItemIndex).some((nextElementHeight, index) => {
-        if (heightToLastVisibleItem > scrollClientHeight) return true
+      const lastRowExceedsScrollHeight = rowsSizesLocal
+        .slice(firstVisibleItemIndex)
+        .some((nextElementHeight, index) => {
+          if (heightToLastVisibleItem >= scrollClientHeight) return true
 
-        heightToLastVisibleItem += nextElementHeight
+          heightToLastVisibleItem += nextElementHeight
 
-        if (heightToLastVisibleItem >= scrollClientHeight) {
-          lastVisibleItemIndex = index + firstVisibleItemIndex
+          if (heightToLastVisibleItem >= scrollClientHeight) {
+            lastVisibleItemIndex = index + firstVisibleItemIndex
 
-          return true
-        }
+            return true
+          }
 
-        return false
-      })
+          return false
+        })
+
+      if (!lastRowExceedsScrollHeight) {
+        lastVisibleItemIndex = rowsSizesLocal.length - 1
+      }
 
       const firstRenderIndex = Math.max(firstVisibleItemIndex - 5, 0)
-      const lastRenderIndex = Math.min(lastVisibleItemIndex + 5, rowsSizesLocal.length)
+      const lastRenderIndex = Math.min(lastVisibleItemIndex + 5, rowsSizesLocal.length - 1)
       const tableBodyPaddingTop = Math.min(
         sum(rowsSizesLocal.slice(0, firstRenderIndex)),
         elementsHeight - tableRefEl.clientHeight
