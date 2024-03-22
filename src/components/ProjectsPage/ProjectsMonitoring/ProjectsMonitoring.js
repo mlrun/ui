@@ -42,8 +42,9 @@ const ProjectsMonitoring = () => {
       </div>
       <div className="projects-monitoring-stats">
         <JobsCounters />
+        {/* Todo: Delete WorkflowsCounters after ML-5460 is impplemented */}
         <WorkflowsCounters />
-        {/* Todo: Delete ScheduledJobsCounters after ML-5460 is impplemented */}
+
         <ScheduledJobsCounters />
         {/* Todo: implement as part of ML-5460
         <ModelEndpointsCounters /> */}
