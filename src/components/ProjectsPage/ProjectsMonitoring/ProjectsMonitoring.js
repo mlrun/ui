@@ -19,28 +19,32 @@ such restriction.
 */
 import JobsCounters from '../../../elements/ProjectsMonitoringCounters/JobsCounters'
 import ScheduledJobsCounters from '../../../elements/ProjectsMonitoringCounters/ScheduledJobsCounters'
+import WorkflowsCounters from '../../../elements/ProjectsMonitoringCounters/WorkflowsCounters'
 
 import './projectsMonitoring.scss'
 
 const ProjectsMonitoring = () => {
   return (
-    <div className='projects-monitoring-container'>
-      <div className='projects-monitoring-legend'>
-        <h5 className='projects-monitoring-legend__title'>Monitoring</h5>
-        <ul className='projects-monitoring-legend__status'>
+    <div className="projects-monitoring-container">
+      <div className="projects-monitoring-legend">
+        <h5 className="projects-monitoring-legend__title">Monitoring</h5>
+        <ul className="projects-monitoring-legend__status">
           <li>
-            Running <i className='state-running'></i>
+            Running <i className="state-running"></i>
           </li>
           <li>
-            Failed <i className='state-failed'></i>
+            Failed <i className="state-failed"></i>
           </li>
           <li>
-            Completed <i className='state-completed'></i>
+            Completed <i className="state-completed"></i>
           </li>
         </ul>
       </div>
-      <div className='projects-monitoring-stats'>
+      <div className="projects-monitoring-stats">
         <JobsCounters />
+        {/* Todo: Delete WorkflowsCounters after ML-5460 is impplemented */}
+        <WorkflowsCounters />
+
         <ScheduledJobsCounters />
         {/* Todo: implement as part of ML-5460
         <ModelEndpointsCounters /> */}
