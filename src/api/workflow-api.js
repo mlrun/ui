@@ -79,6 +79,7 @@ const workflowsApi = {
     if (filter?.groupBy === GROUP_BY_WORKFLOW) {
       set(config, ['params', 'filter'], generateQueryParams(filter))
     }
+    set(config, ['params', 'sort_by'], 'created_at desc')
 
     return mainHttpClient.get(`/projects/${project}/pipelines`, config)
   }
