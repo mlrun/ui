@@ -29,6 +29,7 @@ import {
   PROJECTS_SETTINGS_SECRETS_TAB,
   OWNER_ROLE,
   USER_ROLE,
+  USER_GROUP_ROLE,
   ADMIN_ROLE
 } from '../../constants'
 
@@ -152,7 +153,11 @@ export const isProjectMembersTabShown = (
   const userIsProjectSecurityAdmin =
     activeUser.attributes?.assigned_policies?.includes('Project Security Admin') ?? false
   const userIsAdmin = members.some(
-    member => member.role === ADMIN_ROLE && member.id === activeUser.id
+    member =>
+      member.role === ADMIN_ROLE &&
+      (member.id === activeUser.id ||
+        (member.type === USER_GROUP_ROLE &&
+          activeUser.relationships?.user_groups?.data?.some?.(group => group.id === member.id)))
   )
   const userIsOwner = activeUser.id === projectInfo.owner.id
 
