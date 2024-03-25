@@ -42,7 +42,8 @@ import {
   PROJECT_MONITOR,
   PROJECT_QUICK_ACTIONS_PAGE,
   REAL_TIME_PIPELINES_TAB,
-  SCHEDULE_TAB
+  SCHEDULE_TAB,
+  JOBS_MONITORING_PAGE
 } from './constants'
 
 import 'reactflow/dist/style.css'
@@ -109,7 +110,6 @@ const App = () => {
         {projectName && <Navbar projectName={projectName} setIsNavbarPinned={setIsNavbarPinned} />}
         <Suspense fallback={<Loader />}>
           <Routes>
-            <Route path="projects/jobs-monitoring/:tab" element={<ProjectsJobsMonitoring />} />
             <Route
               path=""
               element={
@@ -121,6 +121,10 @@ const App = () => {
               }
             >
               <Route path="projects" element={<Projects />} />
+              <Route
+                path={`projects/${JOBS_MONITORING_PAGE}/:tabId`}
+                element={<ProjectsJobsMonitoring />}
+              />
 
               <Route
                 path="projects/:projectName"
