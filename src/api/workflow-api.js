@@ -46,8 +46,7 @@ const generateQueryParams = filter => {
     queryParams.predicates.push({
       key: 'status',
       op: 1,
-      string_value:
-        filter.state === 'completed' ? 'Succeeded' : capitalize(filter.state)
+      string_value: filter.state === 'completed' ? 'Succeeded' : capitalize(filter.state)
     })
   }
 
@@ -79,7 +78,7 @@ const workflowsApi = {
   getWorkflows: (project, filter, config = {}) => {
     const newConfig = {
       ...config,
-      params: {}
+      params: { sort_by: 'created_at desc' }
     }
 
     if (filter?.groupBy === GROUP_BY_WORKFLOW) {
