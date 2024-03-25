@@ -77,6 +77,11 @@ export const SIMPLE_SCHEDULE = 'simple'
 export const CRONSTRING_SCHEDULE = 'cronstring'
 export const WORKFLOW_SUB_PAGE = 'workflow'
 
+export const JOBS_MONITORING_PAGE = 'jobs-monitoring'
+export const JOBS_MONITORING_JOBS_TAB = 'jobs'
+export const JOBS_MONITORING_WORKFLOWS_TAB = 'workflows'
+export const JOBS_MONITORING_SCHEDULED_TAB = 'scheduled'
+
 export const MODELS_PAGE = 'MODELS'
 export const MODELS_TAB = 'models'
 export const MODEL_ENDPOINTS_TAB = 'model-endpoints'

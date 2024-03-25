@@ -17,15 +17,23 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-export const isPageTabValid = (pageTab, tabs, navigate, location) => {
-  if (!tabs.includes(pageTab)) {
-    // Change invalid "tab" part of the link to a valid one
-    navigate([...location.pathname.split('/').slice(0, 4)].join('/'))
-  }
-}
+import {
+  JOBS_MONITORING_JOBS_TAB,
+  JOBS_MONITORING_WORKFLOWS_TAB,
+  JOBS_MONITORING_SCHEDULED_TAB,
+  NAME_FILTER,
+  GROUP_BY_FILTER,
+  DATE_RANGE_TIME_FILTER
+} from '../../constants'
 
-export const isProjectValid = (navigate, projectsNames, currentProjectName) => {
-  if (projectsNames.length > 0 && currentProjectName && !projectsNames.some(project => project === currentProjectName)) {
-    navigate('/projects')
-  }
-}
+export const tabs = [
+  { id: JOBS_MONITORING_JOBS_TAB, label: 'Jobs' },
+  { id: JOBS_MONITORING_WORKFLOWS_TAB, label: 'Workflows' },
+  { id: JOBS_MONITORING_SCHEDULED_TAB, label: 'Scheduled' }
+]
+
+export const jobMonitoringFilters = [
+  { type: NAME_FILTER, label: 'Search by name:' },
+  { type: GROUP_BY_FILTER, label: 'Group by' },
+  { type: DATE_RANGE_TIME_FILTER, label: 'Timeframe:' }
+]
