@@ -33,6 +33,16 @@ const ContentMenu = ({ activeTab, screen, tabs, onClick }) => {
     onClick(tabId)
   }
 
+  const generateRedirectLink = tabId => {
+    if (onClick) {
+      return '/'
+    }
+
+    return `/projects${
+      params.projectName ? `/${params.projectName}` : ''
+    }/${screen.toLowerCase()}/${tabId}`
+  }
+
   return (
     <div className="content-menu">
       <ul className="content-menu__list">
@@ -46,11 +56,7 @@ const ContentMenu = ({ activeTab, screen, tabs, onClick }) => {
             !tab.hidden && (
               <li data-testid={tab.id} className={tabClassNames} key={tab.id}>
                 <Link
-                  to={
-                    onClick
-                      ? '/'
-                      : `/projects/${params.projectName}/${screen.toLowerCase()}/${tab.id}`
-                  }
+                  to={generateRedirectLink(tab.id)}
                   className={tab.icon && 'content-menu__item-icon'}
                   onClick={onClick && (e => handleClick(e, tab.id))}
                 >

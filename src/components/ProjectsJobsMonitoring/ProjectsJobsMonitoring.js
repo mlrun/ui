@@ -17,10 +17,44 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import React from 'react'
+import React, { useState } from 'react'
+import { useNavigate, useParams } from 'react-router-dom'
+
+import ContentMenu from '../../elements/ContentMenu/ContentMenu'
+
+import { tabs } from './projectsJobsMotinoring.util'
+import { JOBS_MONITORING_PAGE } from '../../constants'
+
+import './projectsJobsMonitoring.scss'
 
 const ProjectsJobsMonitoring = () => {
-  return <div>JobsMonitoring</div>
+  const { tabId } = useParams()
+  const [selectedTab, setSelectedTab] = useState(tabId)
+  const navigate = useNavigate()
+
+  const handleTabChange = tabName => {
+    setSelectedTab(tabName)
+    navigate(`/projects/jobs-monitoring/${tabName}`)
+  }
+
+  return (
+    <div className="job-monitoring content-wrapper">
+      <div className="content">
+        <div className="content__action-bar-wrapper">
+          <ContentMenu
+            activeTab={selectedTab}
+            screen={JOBS_MONITORING_PAGE}
+            onClick={handleTabChange}
+            tabs={tabs}
+          />
+          <div className="action-bar">Filter menu</div>
+        </div>
+        <div className="jobs-cards-wrapper">
+          Cards
+        </div>
+      </div>
+    </div>
+  )
 }
 
 export default ProjectsJobsMonitoring
