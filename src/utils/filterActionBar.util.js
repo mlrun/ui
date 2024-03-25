@@ -17,8 +17,9 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import detailsActions from '../actions/details'
 import { SHOW_UNTAGGED_ITEMS } from '../constants'
+
+import detailsActions from '../actions/details'
 import { setFilters } from '../reducers/filtersReducer'
 
 export const filtersHelper = async (changes, dispatch, detailsActions) => {
@@ -40,7 +41,7 @@ export const filtersHelper = async (changes, dispatch, detailsActions) => {
   return handleChangeFilters
 }
 
-export const applyChanges = async (
+export const applyFunctionsChanges = async (
   name,
   filterMenuModal,
   changes,

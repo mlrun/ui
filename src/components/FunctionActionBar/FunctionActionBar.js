@@ -30,7 +30,7 @@ import NameFilter from '../../common/NameFilter/NameFilter'
 
 import { GROUP_BY_NONE } from '../../constants'
 import { removeFilters } from '../../reducers/filtersReducer'
-import { applyChanges } from '../../utils/filterActionBar.util'
+import { applyFunctionsChanges } from '../../utils/filterActionBar.util'
 import useCustomHook from '../../hooks/filterActionBar.hook'
 
 import { ReactComponent as RefreshIcon } from 'igz-controls/images/refresh.svg'
@@ -78,7 +78,7 @@ function FunctionActionBar({
           <div className="action-bar__filters">
             <NameFilter
               applyChanges={value =>
-                applyChanges(
+                applyFunctionsChanges(
                   value,
                   filterMenuModal.values,
                   changes,
@@ -90,7 +90,7 @@ function FunctionActionBar({
             />
             <FilterMenuModal
               applyChanges={filterMenuModal =>
-                applyChanges(
+                applyFunctionsChanges(
                   formState.values.name,
                   filterMenuModal,
                   changes,
