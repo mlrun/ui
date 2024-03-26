@@ -52,6 +52,18 @@ const detailsMenu = [
     label: 'features analysis',
     id: 'features-analysis',
     tip: 'The statistics are calculated on the last rolling hour of data'
+  },
+  {
+    label: 'metrics',
+    id: 'metrics',
+  },
+  {
+    label: 'events list',
+    id: 'events-list'
+  },
+  {
+    label: 'applications',
+    id: 'applications',
   }
 ]
 
