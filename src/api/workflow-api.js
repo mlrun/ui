@@ -22,7 +22,7 @@ import { capitalize, set } from 'lodash'
 import { mainHttpClient } from '../httpClient'
 import { GROUP_BY_WORKFLOW, STATE_FILTER_ALL_ITEMS } from '../constants'
 
-const generateQueryParams = filter => {
+const generateQueryParams = (project, filter) => {
   // Generating encoded JSON query string to send as a value to the filter query param
   // each "predicates" item is a single filter
   // key - type of filter (filter by name, by status, by dates)
@@ -31,7 +31,13 @@ const generateQueryParams = filter => {
   // op === 7 - means that the filtered response should be equal or to be less to the "timestamp_value"
   // op === 9 - checks if the value contains |string_value| as a substring match
   const queryParams = {
-    predicates: []
+    predicates: [
+      {
+        key: 'name',
+        op: 9,
+        string_value: project
+      }
+    ]
   }
 
   if (filter.name) {
@@ -77,7 +83,8 @@ const workflowsApi = {
   },
   getWorkflows: (project, filter, config = {}) => {
     if (filter?.groupBy === GROUP_BY_WORKFLOW) {
-      set(config, ['params', 'filter'], generateQueryParams(filter))
+      set(config, ['params', 'filter'], generateQueryParams(project, filter))
+      filter.name && set(config, ['params', 'name-contains'], filter.name)
     }
     set(config, ['params', 'sort_by'], 'created_at desc')
 
