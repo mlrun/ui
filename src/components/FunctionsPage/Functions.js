@@ -27,6 +27,7 @@ import JobWizard from '../JobWizard/JobWizard'
 import NewFunctionPopUp from '../../elements/NewFunctionPopUp/NewFunctionPopUp'
 
 import {
+  FUNCTION_FILTERS,
   FUNCTIONS_PAGE,
   GROUP_BY_NAME,
   SHOW_UNTAGGED_ITEMS,
@@ -380,9 +381,11 @@ const Functions = ({
 
   useEffect(() => {
     setTaggedFunctions(
-      !filtersStore.showUntagged ? functions.filter(func => func.tag.length) : functions
+      !filtersStore.filterMenuModal[FUNCTION_FILTERS].values.showUntagged
+        ? functions.filter(func => func.tag.length)
+        : functions
     )
-  }, [filtersStore.showUntagged, functions])
+  }, [filtersStore.filterMenuModal, functions])
 
   useEffect(() => {
     if (params.hash && pageData.details.menu.length > 0) {
@@ -441,11 +444,13 @@ const Functions = ({
   const filtersChangeCallback = filters => {
     if (
       !filters.showUntagged &&
-      filters.showUntagged !== filtersStore.showUntagged &&
+      filters.showUntagged !== filtersStore.filterMenuModal[FUNCTION_FILTERS].values.showUntagged &&
       selectedFunction.hash
     ) {
       navigate(`/projects/${params.projectName}/functions`)
-    } else if (filters.showUntagged === filtersStore.showUntagged) {
+    } else if (
+      filters.showUntagged === filtersStore.filterMenuModal[FUNCTION_FILTERS].values.showUntagged
+    ) {
       refreshFunctions(filters)
     }
   }

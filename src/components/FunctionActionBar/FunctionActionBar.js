@@ -84,6 +84,7 @@ function FunctionActionBar({
                   changes,
                   dispatch,
                   setSelectedRowData,
+                  handleExpandAll,
                   handleRefresh
                 )
               }
@@ -96,6 +97,7 @@ function FunctionActionBar({
                   changes,
                   dispatch,
                   setSelectedRowData,
+                  handleExpandAll,
                   handleRefresh
                 )
               }

@@ -17,10 +17,7 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import { SHOW_UNTAGGED_ITEMS } from '../constants'
-
 import detailsActions from '../actions/details'
-import { setFilters } from '../reducers/filtersReducer'
 
 export const filtersHelper = async (changes, dispatch, detailsActions) => {
   let handleChangeFilters = Promise.resolve(true)
@@ -47,14 +44,12 @@ export const applyFunctionsChanges = async (
   changes,
   dispatch,
   setSelectedRowData,
+  handleExpandAll,
   handleRefresh
 ) => {
   const filtersHelperResult = await filtersHelper(changes, dispatch, detailsActions)
   if (filtersHelperResult) {
-    const showUntaggedValue =
-      filterMenuModal.showUntagged === SHOW_UNTAGGED_ITEMS ? SHOW_UNTAGGED_ITEMS : ''
-    dispatch(setFilters({ showUntagged: showUntaggedValue }))
-    setSelectedRowData({})
+    handleExpandAll && handleExpandAll(true)
     handleRefresh({ name, ...filterMenuModal })
   }
 }

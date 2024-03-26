@@ -109,7 +109,8 @@ const FunctionsView = ({
                   filtersStore,
                   filters,
                   largeRequestErrorMessage,
-                  FUNCTIONS_PAGE
+                  FUNCTIONS_PAGE,
+                  FUNCTION_FILTERS
                 )}
               />
             ) : (
