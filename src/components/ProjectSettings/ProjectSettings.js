@@ -116,7 +116,7 @@ const ProjectSettings = ({ frontendSpec }) => {
     projectsIguazioApi.getActiveUser().then(response => {
       membersDispatch({
         type: membersActions.SET_ACTIVE_USER,
-        payload: response.data.data
+        payload: response.data
       })
     })
   }
