@@ -17,36 +17,56 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import React, { useMemo, useState } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
-import { useSelector } from 'react-redux'
 import moment from 'moment'
 
 import DatePicker from '../../common/DatePicker/DatePicker'
-import Loader from '../../common/Loader/Loader'
 import StatsCard from '../../common/StatsCard/StatsCard'
+import Loader from '../../common/Loader/Loader'
 
+import projectsAction from '../../actions/projects'
 import jobsActions from '../../actions/jobs'
+
 import { NEXT_24_HOUR_DATE_OPTION } from '../../utils/datePicker.util'
+import {
+  generateMonitoringStats,
+  generateScheduledMonitoringGroupedData
+} from '../../utils/generateMonitoringData'
 import { useFetchData } from '../../hooks/useFetchData.hook'
-import { jobHasWorkflowLabel } from '../../utils/parseJob'
+import { JOBS_MONITORING_SCHEDULED_TAB } from '../../constants'
 
 import './projectsMonitoringCounters.scss'
 
 const ScheduledJobsCounters = () => {
+  const dispatch = useDispatch()
+  const navigate = useNavigate()
   const [filter, setFilter] = useState({
     dates: {
       value: [new Date(), new Date(moment().add(1, 'days'))]
     }
   })
-
-  const navigate = useNavigate()
-
+  const [groupedScheduledData, setGroupedScheduledData] = useState({
+    all: [],
+    jobs: [],
+    workflows: []
+  })
   const { loading } = useFetchData({
     filter: filter,
     action: jobsActions.fetchScheduledJobs
   })
   const { scheduled: scheduledJobs } = useSelector(store => store.jobsStore)
+  const scheduledStats = useMemo(
+    () =>
+      generateMonitoringStats(
+        groupedScheduledData,
+        navigate,
+        dispatch,
+        JOBS_MONITORING_SCHEDULED_TAB
+      ),
+    [groupedScheduledData, navigate, dispatch]
+  )
 
   const handleDateSelection = dates => {
     const generatedDates = [...dates]
@@ -58,73 +78,48 @@ const ScheduledJobsCounters = () => {
     setFilter(filters => ({ ...filters, dates: { value: generatedDates } }))
   }
 
-  const filterScheduledByDate = (scheduled, scheduledFilter) => {
-    if (!scheduledFilter.dates.value[0] && !scheduledFilter.dates.value[1]) return scheduled
-
-    return scheduled.filter(job => {
-      const runTime = new Date(job.next_run_time)
-
-      const start = new Date(scheduledFilter.dates.value[0])
-      const end = new Date(scheduledFilter.dates.value[1])
-
-      return runTime > start && runTime < end ? job : null
-    })
-  }
-
-  const stats = useMemo(
-    () => ({
-      jobs: {
-        counter: filterScheduledByDate(scheduledJobs, filter).filter(
-          job => job.kind === 'job' && !jobHasWorkflowLabel(job)
-        ).length,
-        link: () => navigate('/projects/jobs-monitoring/scheduled')
-      },
-      workflows: {
-        counter: filterScheduledByDate(scheduledJobs, filter).filter(job =>
-          jobHasWorkflowLabel(job)
-        ).length,
-        link: () => navigate('/projects/jobs-monitoring/scheduled')
-      }
-    }),
-    [filter, navigate, scheduledJobs]
-  )
+  useEffect(() => {
+    generateScheduledMonitoringGroupedData(scheduledJobs, filter, setGroupedScheduledData, data =>
+      projectsAction.setJobsMonitoringData({ scheduled: data })
+    )
+  }, [dispatch, filter, scheduledJobs])
 
   return (
-    <StatsCard className='monitoring-stats'>
-      <StatsCard.Header title='Scheduled'>
+    <StatsCard className="monitoring-stats">
+      <StatsCard.Header title="Scheduled">
         <DatePicker
           date={filter.dates.value[0]}
           dateTo={filter.dates.value[1]}
           hasFutureOptions
           selectedOptionId={NEXT_24_HOUR_DATE_OPTION}
-          label=''
+          label=""
           onChange={handleDateSelection}
-          type='date-range-time'
+          type="date-range-time"
           withLabels
         />
       </StatsCard.Header>
       <StatsCard.Body>
         <StatsCard.Col>
-          <h6 className='stats__subtitle'>Jobs</h6>
-          <span className='stats__counter'>
-            {loading ? <Loader section small secondary /> : stats.jobs.counter}
+          <h6 className="stats__subtitle">Jobs</h6>
+          <span className="stats__counter">
+            {loading ? <Loader section small secondary /> : scheduledStats.jobs.counter}
           </span>
         </StatsCard.Col>
         <StatsCard.Col>
-          <h6 className='stats__subtitle'>Workflows</h6>
-          <span className='stats__counter'>
-            {loading ? <Loader section small secondary /> : stats.workflows.counter}
+          <h6 className="stats__subtitle">Workflows</h6>
+          <span className="stats__counter">
+            {loading ? <Loader section small secondary /> : scheduledStats.workflows.counter}
           </span>
         </StatsCard.Col>
       </StatsCard.Body>
       <StatsCard.Footer>
         <StatsCard.Col>
-          <span className='link' onClick={stats.jobs.link}>
+          <span className="link" onClick={scheduledStats.jobs.link}>
             See all
           </span>
         </StatsCard.Col>
         <StatsCard.Col>
-          <span className='link' onClick={stats.workflows.link}>
+          <span className="link" onClick={scheduledStats.workflows.link}>
             See all
           </span>
         </StatsCard.Col>

@@ -17,9 +17,9 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import React, { useCallback, useMemo, useState } from 'react'
+import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { upperFirst } from 'lodash'
 import moment from 'moment'
 
@@ -27,14 +27,26 @@ import DatePicker from '../../common/DatePicker/DatePicker'
 import Loader from '../../common/Loader/Loader'
 import StatsCard from '../../common/StatsCard/StatsCard'
 
+import projectsAction from '../../actions/projects'
 import workflowActions from '../../actions/workflow'
+
 import { PAST_24_HOUR_DATE_OPTION } from '../../utils/datePicker.util'
+import {
+  generateMonitoringGroupedData,
+  generateMonitoringStats
+} from '../../utils/generateMonitoringData'
 import { useFetchData } from '../../hooks/useFetchData.hook'
-import { GROUP_BY_WORKFLOW, STATE_FILTER_ALL_ITEMS } from '../../constants'
+import {
+  GROUP_BY_WORKFLOW,
+  JOBS_MONITORING_WORKFLOWS_TAB,
+  STATE_FILTER_ALL_ITEMS
+} from '../../constants'
 
 import './projectsMonitoringCounters.scss'
 
 const WorkflowsCounters = () => {
+  const dispatch = useDispatch()
+  const navigate = useNavigate()
   const [filter, setFilter] = useState({
     groupBy: GROUP_BY_WORKFLOW,
     dates: {
@@ -42,8 +54,12 @@ const WorkflowsCounters = () => {
     },
     state: STATE_FILTER_ALL_ITEMS
   })
-
-  const navigate = useNavigate()
+  const [groupedWorkflowsData, setGroupedWorkflowsData] = useState({
+    all: [],
+    running: [],
+    failed: [],
+    completed: []
+  })
   const { loading: workflowsLoading } = useFetchData({
     filter,
     action: workflowActions.fetchWorkflows
@@ -61,34 +77,21 @@ const WorkflowsCounters = () => {
   }
 
   const workflowsStats = useMemo(
-    () => ({
-      all: {
-        counter: workflows.length,
-        link: () => navigate('/projects/jobs-monitoring/workflows')
-      },
-      counters: [
-        {
-          counter: workflows.filter(workflow => workflow.state?.value === 'running').length,
-          link: () => navigate('/projects/jobs-monitoring/workflows'),
-          statusClass: 'running'
-        },
-        {
-          counter: workflows.filter(workflow => ['error', 'failed'].includes(workflow.state?.value))
-            .length,
-          link: () => navigate('/projects/jobs-monitoring/workflows'),
-          statusClass: 'failed'
-        },
-        {
-          counter: workflows.filter(workflow =>
-            ['completed', 'succeeded'].includes(workflow.state?.value)
-          ).length,
-          link: () => navigate('/projects/jobs-monitoring/workflows'),
-          statusClass: 'completed'
-        }
-      ]
-    }),
-    [workflows, navigate]
+    () =>
+      generateMonitoringStats(
+        groupedWorkflowsData,
+        navigate,
+        dispatch,
+        JOBS_MONITORING_WORKFLOWS_TAB
+      ),
+    [dispatch, groupedWorkflowsData, navigate]
   )
+
+  useEffect(() => {
+    generateMonitoringGroupedData(workflows, setGroupedWorkflowsData, data =>
+      dispatch(projectsAction.setJobsMonitoringData({ workflows: data }))
+    )
+  }, [dispatch, workflows])
 
   const getCounterTemplate = useCallback(
     type => {
@@ -102,7 +105,7 @@ const WorkflowsCounters = () => {
             {workflowsStats.counters.map(({ counter, link, statusClass }) => (
               <li className="link" onClick={link} key={`${statusClass}-jobs`}>
                 {workflowsLoading ? <Loader section small secondary /> : counter}
-                <i className={`state-${statusClass}`}></i>
+                <i className={`state-${statusClass}`} />
               </li>
             ))}
           </ul>
@@ -126,7 +129,7 @@ const WorkflowsCounters = () => {
         />
       </StatsCard.Header>
       <StatsCard.Body>
-        <StatsCard.Col>{getCounterTemplate('workflows')}</StatsCard.Col>
+        <StatsCard.Col>{getCounterTemplate(JOBS_MONITORING_WORKFLOWS_TAB)}</StatsCard.Col>
       </StatsCard.Body>
       <StatsCard.Footer>
         <StatsCard.Col>
