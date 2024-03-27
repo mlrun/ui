@@ -18,12 +18,10 @@ under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
 import React from 'react'
-import PropTypes from 'prop-types'
-import { connect } from 'react-redux'
+// import { useSelector } from 'react-redux'
 
-import './detailsEventsList.scss'
-
-const DetailsEventSList = ({ detailsStore }) => {
+const DetailsEventSList = () => {
+  // const detailsStore = useSelector(store => store.detailsStore)
 
   return (
     <div className="events-list">
@@ -32,10 +30,6 @@ const DetailsEventSList = ({ detailsStore }) => {
   )
 }
 
-DetailsEventSList.propTypes = {
-  detailsStore: PropTypes.shape({}).isRequired
-}
 
-export default connect(({ detailsStore }) => ({
-  detailsStore
-}))(DetailsEventSList)
+
+export default DetailsEventSList
