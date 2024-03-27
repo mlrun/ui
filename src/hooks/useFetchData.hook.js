@@ -21,33 +21,35 @@ import { useEffect, useRef, useState } from 'react'
 import { useDispatch } from 'react-redux'
 import { REQUEST_CANCELED } from '../constants'
 
-export const useFetchData = ({ action, filter }) => {
+export const useFetchData = ({ action, filter, skipFetching = false }) => {
   const [loadingState, setLoadingState] = useState(true)
   const dispatch = useDispatch()
   const abortRef = useRef()
 
   useEffect(() => {
     return () => {
-      if (abortRef.current) {
+      if (abortRef.current && !skipFetching) {
         abortRef.current.abort(REQUEST_CANCELED)
       }
     }
-  }, [])
+  }, [skipFetching])
 
   useEffect(() => {
-    setLoadingState(true)
-    abortRef.current = new AbortController()
+    if (!skipFetching) {
+      setLoadingState(true)
+      abortRef.current = new AbortController()
 
-    dispatch(
-      action('*', filter, {
-        signal: abortRef.current.signal
+      dispatch(
+        action('*', filter, {
+          signal: abortRef.current.signal
+        })
+      ).then(data => {
+        if (data) {
+          setLoadingState(false)
+        }
       })
-    ).then(data => {
-      if (data) {
-        setLoadingState(false)
-      }
-    })
-  }, [dispatch, filter, action])
+    }
+  }, [dispatch, filter, action, skipFetching])
 
-  return { loading: loadingState }
+  return { loading: !skipFetching && loadingState }
 }

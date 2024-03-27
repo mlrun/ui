@@ -17,22 +17,57 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import React, { useState } from 'react'
-import { useNavigate, useParams } from 'react-router-dom'
+import React, { useEffect, useMemo, useState } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
+import { Outlet, useLocation, useNavigate } from 'react-router-dom'
+import moment from 'moment'
 
 import ContentMenu from '../../elements/ContentMenu/ContentMenu'
 
-import { tabs } from './projectsJobsMotinoring.util'
-import { JOBS_MONITORING_PAGE } from '../../constants'
+import projectsAction from '../../actions/projects'
 
-import './projectsJobsMonitoring.scss'
+import { STATS_TOTAL_CARD, tabs } from './projectsJobsMotinoring.util'
+import {
+  JOBS_MONITORING_JOBS_TAB,
+  JOBS_MONITORING_PAGE,
+  JOBS_MONITORING_SCHEDULED_TAB,
+  JOBS_MONITORING_WORKFLOWS_TAB
+} from '../../constants'
+
+export const ProjectJobsMonitoringContext = React.createContext({})
 
 const ProjectsJobsMonitoring = () => {
-  const { tabId } = useParams()
-  const [selectedTab, setSelectedTab] = useState(tabId)
+  const dispatch = useDispatch()
+  const location = useLocation()
   const navigate = useNavigate()
+  const { jobsMonitoringData } = useSelector(store => store.projectStore)
+  const [selectedCard, setSelectedCard] = useState(
+    jobsMonitoringData.filters?.status || STATS_TOTAL_CARD
+  )
+
+  // TODO: add group by;
+  //  add name filter;
+  //  change time filter if the user changed the date filter in projects page
+  const [filters] = useState({
+    dates: {
+      value: [new Date(moment().add(-1, 'days'))]
+    }
+  })
+  const tabId = useMemo(() => {
+    return location.pathname.includes(JOBS_MONITORING_SCHEDULED_TAB)
+      ? JOBS_MONITORING_SCHEDULED_TAB
+      : location.pathname.includes(JOBS_MONITORING_WORKFLOWS_TAB)
+      ? JOBS_MONITORING_WORKFLOWS_TAB
+      : JOBS_MONITORING_JOBS_TAB
+  }, [location.pathname])
+  const [selectedTab, setSelectedTab] = useState(tabId)
+
+  useEffect(() => {
+    dispatch(projectsAction.removeJobsMonitoringFilters())
+  }, [dispatch])
 
   const handleTabChange = tabName => {
+    setSelectedCard(STATS_TOTAL_CARD)
     setSelectedTab(tabName)
     navigate(`/projects/jobs-monitoring/${tabName}`)
   }
@@ -49,8 +84,17 @@ const ProjectsJobsMonitoring = () => {
           />
           <div className="action-bar">Filter menu</div>
         </div>
-        <div className="jobs-cards-wrapper">
-          Cards
+        <div>
+          <ProjectJobsMonitoringContext.Provider
+            value={{
+              filters,
+              jobsMonitoringData,
+              selectedCard,
+              setSelectedCard
+            }}
+          >
+            <Outlet />
+          </ProjectJobsMonitoringContext.Provider>
         </div>
       </div>
     </div>
