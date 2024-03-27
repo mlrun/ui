@@ -151,11 +151,7 @@ export const isProjectMembersTabShown = (
   }
 
   const userIsProjectSecurityAdmin =
-    (activeUser.data?.attributes?.assigned_policies?.includes('Project Security Admin') ||
-      activeUser.included?.some?.(group =>
-        group?.attributes?.assigned_policies?.includes('Project Security Admin')
-      )) ??
-    false
+    activeUser.data?.attributes?.user_policies_collection?.has('Project Security Admin') ?? false
   const userIsAdmin = members.some(
     member =>
       member.role === ADMIN_ROLE &&
