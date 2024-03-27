@@ -151,15 +151,21 @@ export const isProjectMembersTabShown = (
   }
 
   const userIsProjectSecurityAdmin =
-    activeUser.attributes?.assigned_policies?.includes('Project Security Admin') ?? false
+    (activeUser.data?.attributes?.assigned_policies?.includes('Project Security Admin') ||
+      activeUser.included?.some?.(group =>
+        group?.attributes?.assigned_policies?.includes('Project Security Admin')
+      )) ??
+    false
   const userIsAdmin = members.some(
     member =>
       member.role === ADMIN_ROLE &&
-      (member.id === activeUser.id ||
+      (member.id === activeUser.data?.id ||
         (member.type === USER_GROUP_ROLE &&
-          activeUser.relationships?.user_groups?.data?.some?.(group => group.id === member.id)))
+          activeUser.data?.relationships?.user_groups?.data?.some?.(
+            group => group.id === member.id
+          )))
   )
-  const userIsOwner = activeUser.id === projectInfo.owner.id
+  const userIsOwner = activeUser.data?.id === projectInfo.owner.id
 
   return userIsOwner || userIsAdmin || userIsProjectSecurityAdmin
 }
