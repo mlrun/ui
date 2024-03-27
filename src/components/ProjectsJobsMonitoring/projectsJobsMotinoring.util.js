@@ -26,6 +26,13 @@ import {
   DATE_RANGE_TIME_FILTER
 } from '../../constants'
 
+export const STATS_TOTAL_CARD = 'total'
+export const STATS_RUNNING_CARD = 'running'
+export const STATS_FAILED_CARD = 'failed'
+export const STATS_COMPLETED_CARD = 'completed'
+export const STATS_JOBS_CARD = 'jobs'
+export const STATS_WORKFLOWS_CARD = 'workflows'
+
 export const tabs = [
   { id: JOBS_MONITORING_JOBS_TAB, label: 'Jobs' },
   { id: JOBS_MONITORING_WORKFLOWS_TAB, label: 'Workflows' },
@@ -37,3 +44,62 @@ export const jobMonitoringFilters = [
   { type: GROUP_BY_FILTER, label: 'Group by' },
   { type: DATE_RANGE_TIME_FILTER, label: 'Timeframe:' }
 ]
+
+export const generateStatsData = (cardsData, tab) =>
+  tab === JOBS_MONITORING_SCHEDULED_TAB
+    ? [
+        {
+          id: STATS_TOTAL_CARD,
+          className: 'total',
+          counter: cardsData.all.length,
+          subTitle: 'Total',
+          tooltip: 'Click to see all'
+        },
+        {
+          id: STATS_JOBS_CARD,
+          className: 'total',
+          counter: cardsData.jobs.length,
+          subTitle: 'Jobs',
+          tooltip: 'Click to see only jobs'
+        },
+        {
+          id: STATS_WORKFLOWS_CARD,
+          className: 'total',
+          counter: cardsData.workflows.length,
+          subTitle: 'Workflows',
+          tooltip: 'Click to see only workflows'
+        }
+      ]
+    : [
+        {
+          id: STATS_TOTAL_CARD,
+          className: 'total',
+          counter: cardsData.all.length,
+          subTitle: 'Total',
+          tooltip: 'Click to see all'
+        },
+        {
+          id: STATS_RUNNING_CARD,
+          className: 'running',
+          counter: cardsData.running.length,
+          statusClass: 'running',
+          subTitle: 'Running',
+          tooltip: 'Click to filter by status running'
+        },
+        {
+          id: STATS_FAILED_CARD,
+          className: 'failed',
+          counter: cardsData.failed.length,
+          statusClass: 'failed',
+          subTitle: 'Failed',
+          tooltip: 'Click to filter by status failed'
+        },
+        {
+          id: STATS_COMPLETED_CARD,
+          className: 'completed',
+          counter: cardsData.completed.length,
+          statusClass: 'completed',
+          subTitle: 'Completed',
+          tooltip: 'Click to filter by status completed'
+        }
+      ]

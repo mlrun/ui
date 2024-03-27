@@ -48,7 +48,10 @@ import {
   PROJECT_QUICK_ACTIONS_PAGE,
   REAL_TIME_PIPELINES_TAB,
   SCHEDULE_TAB,
-  JOBS_MONITORING_PAGE
+  JOBS_MONITORING_PAGE,
+  JOBS_MONITORING_JOBS_TAB,
+  JOBS_MONITORING_WORKFLOWS_TAB,
+  JOBS_MONITORING_SCHEDULED_TAB
 } from './constants'
 
 import 'reactflow/dist/style.css'
@@ -97,7 +100,21 @@ const FeatureVectors = lazyRetry(() =>
 const ProjectsJobsMonitoring = lazyRetry(() =>
   import('./components/ProjectsJobsMonitoring/ProjectsJobsMonitoring')
 )
-
+const ProjectsJobsMonitoringJobs = lazyRetry(() =>
+  import(
+    './components/ProjectsJobsMonitoring/ProjectsJobsMonitoringJobs/ProjectsJobsMonitoringJobs'
+  )
+)
+const ProjectsJobsMonitoringWorkflows = lazyRetry(() =>
+  import(
+    './components/ProjectsJobsMonitoring/ProjectsJobsMonitoringWorkflows/ProjectsJobsMonitoringWorkflows'
+  )
+)
+const ProjectsJobsMonitoringScheduled = lazyRetry(() =>
+  import(
+    './components/ProjectsJobsMonitoring/ProjectsJobsMonitoringScheduled/ProjectsJobsMonitoringScheduled'
+  )
+)
 const App = () => {
   const { isNuclioModeDisabled } = useNuclioMode()
   const isHeaderShown = localStorageService.getStorageValue('mlrunUi.headerHidden') !== 'true'
@@ -109,6 +126,20 @@ const App = () => {
         <Route path="projects/jobs-monitoring/:tab" element={<ProjectsJobsMonitoring />} />
         <Route path="" element={<Page isHeaderShown={isHeaderShown} />}>
           <Route path="projects" element={<Projects />} />
+          <Route
+                path={`projects/${JOBS_MONITORING_PAGE}/*`}
+                element={<ProjectsJobsMonitoring />}
+              >
+                <Route path={JOBS_MONITORING_JOBS_TAB} element={<ProjectsJobsMonitoringJobs />} />
+                <Route
+                  path={JOBS_MONITORING_WORKFLOWS_TAB}
+                  element={<ProjectsJobsMonitoringWorkflows />}
+                />
+                <Route
+                  path={JOBS_MONITORING_SCHEDULED_TAB}
+                  element={<ProjectsJobsMonitoringScheduled />}
+                />
+              </Route>
           <Route
             path={`projects/${JOBS_MONITORING_PAGE}/:tabId`}
             element={<ProjectsJobsMonitoring />}
