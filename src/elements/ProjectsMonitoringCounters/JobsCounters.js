@@ -17,9 +17,9 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import React, { useMemo, useState } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
-import { useSelector } from 'react-redux'
 import { upperFirst } from 'lodash'
 import moment from 'moment'
 
@@ -28,14 +28,25 @@ import Loader from '../../common/Loader/Loader'
 import StatsCard from '../../common/StatsCard/StatsCard'
 
 import jobsActions from '../../actions/jobs'
-// import workflowActions from '../../actions/workflow'
+import projectsAction from '../../actions/projects'
+
 import { PAST_24_HOUR_DATE_OPTION } from '../../utils/datePicker.util'
+import {
+  generateMonitoringStats,
+  generateMonitoringGroupedData
+} from '../../utils/generateMonitoringData'
 import { useFetchData } from '../../hooks/useFetchData.hook'
-import { GROUP_BY_WORKFLOW, STATE_FILTER_ALL_ITEMS } from '../../constants'
+import {
+  GROUP_BY_WORKFLOW,
+  JOBS_MONITORING_JOBS_TAB,
+  STATE_FILTER_ALL_ITEMS
+} from '../../constants'
 
 import './projectsMonitoringCounters.scss'
 
 const JobsCounters = () => {
+  const dispatch = useDispatch()
+  const navigate = useNavigate()
   const [filter, setFilter] = useState({
     groupBy: GROUP_BY_WORKFLOW,
     dates: {
@@ -43,8 +54,12 @@ const JobsCounters = () => {
     },
     state: STATE_FILTER_ALL_ITEMS
   })
-
-  const navigate = useNavigate()
+  const [groupedJobsData, setGroupedJobsData] = useState({
+    all: [],
+    running: [],
+    failed: [],
+    completed: []
+  })
   const { loading: jobsLoading } = useFetchData({
     filter,
     action: jobsActions.fetchJobs
@@ -67,31 +82,15 @@ const JobsCounters = () => {
   }
 
   const jobStats = useMemo(
-    () => ({
-      all: {
-        counter: jobs.length,
-        link: () => navigate('/projects/jobs-monitoring/jobs')
-      },
-      counters: [
-        {
-          counter: jobs.filter(job => job.status?.state === 'running').length,
-          link: () => navigate('/projects/jobs-monitoring/jobs'),
-          statusClass: 'running'
-        },
-        {
-          counter: jobs.filter(job => ['error', 'failed'].includes(job.status?.state)).length,
-          link: () => navigate('/projects/jobs-monitoring/jobs'),
-          statusClass: 'failed'
-        },
-        {
-          counter: jobs.filter(job => job.status?.state === 'completed').length,
-          link: () => navigate('/projects/jobs-monitoring/jobs'),
-          statusClass: 'completed'
-        }
-      ]
-    }),
-    [jobs, navigate]
+    () => generateMonitoringStats(groupedJobsData, navigate, dispatch, JOBS_MONITORING_JOBS_TAB),
+    [dispatch, groupedJobsData, navigate]
   )
+
+  useEffect(() => {
+    generateMonitoringGroupedData(jobs, setGroupedJobsData, data =>
+      dispatch(projectsAction.setJobsMonitoringData({ jobs: data }))
+    )
+  }, [dispatch, jobs])
 
   /* todo: Un-hide the code below after  ML-5460 is impplemented
   const workflowsStats = useMemo(
@@ -169,7 +168,7 @@ const JobsCounters = () => {
       <StatsCard.Body>
         <StatsCard.Col>
           <>
-            <h6 className="stats__subtitle">{upperFirst('jobs')}</h6>
+            <h6 className="stats__subtitle">{upperFirst(JOBS_MONITORING_JOBS_TAB)}</h6>
             <span className="stats__counter">
               {jobsLoading ? <Loader section small secondary /> : jobStats.all.counter}
             </span>
@@ -177,7 +176,7 @@ const JobsCounters = () => {
               {jobStats.counters.map(({ counter, link, statusClass }) => (
                 <li className="link" onClick={link} key={`${statusClass}-jobs`}>
                   {jobsLoading ? <Loader section small secondary /> : counter}
-                  <i className={`state-${statusClass}`}></i>
+                  <i className={`state-${statusClass}`} />
                 </li>
               ))}
             </ul>

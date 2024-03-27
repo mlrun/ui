@@ -81,7 +81,9 @@ import {
   FETCH_PROJECT_SECRETS_BEGIN,
   FETCH_PROJECT_SECRETS_FAILURE,
   FETCH_PROJECT_SECRETS_SUCCESS,
-  SET_PROJECT_SECRETS
+  SET_PROJECT_SECRETS,
+  SET_JOBS_MONITORING_DATA,
+  REMOVE_JOBS_MONITORING_DATA_FILTERS
 } from '../constants'
 import {
   CONFLICT_ERROR_STATUS_CODE,
@@ -575,6 +577,9 @@ const projectsAction = {
     type: FETCH_PROJECT_WORKFLOWS_SUCCESS,
     payload: workflows
   }),
+  removeJobsMonitoringFilters: () => ({
+    type: REMOVE_JOBS_MONITORING_DATA_FILTERS
+  }),
   removeNewProjectError: () => ({ type: REMOVE_NEW_PROJECT_ERROR }),
   removeProjectData: () => ({ type: REMOVE_PROJECT_DATA }),
   removeProjectSummary: () => ({ type: REMOVE_PROJECT_SUMMARY }),
@@ -582,6 +587,10 @@ const projectsAction = {
   setProjectSecrets: secrets => ({
     type: SET_PROJECT_SECRETS,
     payload: secrets
+  }),
+  setJobsMonitoringData: data => ({
+    type: SET_JOBS_MONITORING_DATA,
+    payload: data
   })
 }
 
