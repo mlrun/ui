@@ -21,7 +21,7 @@ import React, { createRef, useState } from 'react'
 import PropTypes from 'prop-types'
 import classnames from 'classnames'
 import { useDispatch } from 'react-redux'
-import { cloneDeep, debounce } from 'lodash'
+import { cloneDeep, debounce, groupBy } from 'lodash'
 
 import CheckBox from '../../common/CheckBox/CheckBox'
 import ChipInput from '../../common/ChipInput/ChipInput'
@@ -57,9 +57,9 @@ import './membersPopUp.scss'
 const MembersPopUp = ({
   changeMembersCallback,
   membersDispatch,
-  membersState,
-  setNotification
+  membersState
 }) => {
+  const [membersData, setMembersData] = useState(membersState)
   const [deleteMemberId, setDeleteMemberId] = useState('')
   const [confirmDiscard, setConfirmDiscard] = useState(false)
   const [inviteNewMembers, setInviteNewMembers] = useState(false)
@@ -81,7 +81,7 @@ const MembersPopUp = ({
   }
 
   const addNewMembers = () => {
-    const membersCopy = cloneDeep(membersState.members)
+    const membersCopy = cloneDeep(membersData.members)
 
     newMembers.forEach(newMember => {
       const existingMember = membersCopy.find(member => member.id === newMember.id)
@@ -106,10 +106,7 @@ const MembersPopUp = ({
     setNewMembersRole(initialNewMembersRole)
     setInviteNewMembers(false)
 
-    membersDispatch({
-      type: membersActions.SET_MEMBERS,
-      payload: membersCopy
-    })
+    setMembersData(state => ({ ...state, members: membersCopy }))
   }
 
   const applyMembersChanges = () => {
@@ -117,7 +114,7 @@ const MembersPopUp = ({
       data: {
         attributes: {
           metadata: {
-            project_ids: [membersState.projectInfo.id],
+            project_ids: [membersData.projectInfo.id],
             notify_by_email: notifyByEmail
           },
           requests: []
@@ -125,13 +122,30 @@ const MembersPopUp = ({
       }
     }
     const rolesData = {}
+    const modifiedRoles = Array.from(
+      membersData.members.reduce((prevValue, member) => {
+        if (member.modification) {
+          prevValue.add(member.role)
+
+          if (member.initialRole) {
+            prevValue.add(member.initialRole)
+          }
+        }
+
+        return prevValue
+      }, new Set())
+    )
+    const groupedVisibleMembers = groupBy(
+      membersData.members.filter(member => member.modification !== 'delete'),
+      item => item.role
+    )
 
     membersState.projectAuthorizationRoles.forEach(roleData => {
       rolesData[roleData.attributes.name] = roleData
     })
 
-    changesBody.data.attributes.requests = membersState.modifiedRoles.map(modifiedRole => {
-      const members = membersState.groupedVisibleMembers[modifiedRole] ?? []
+    changesBody.data.attributes.requests = modifiedRoles.map(modifiedRole => {
+      const membersCopy = groupedVisibleMembers[modifiedRole] ?? []
 
       return {
         method: 'put',
@@ -147,18 +161,18 @@ const MembersPopUp = ({
               project: {
                 data: {
                   type: 'project',
-                  id: membersState.projectInfo.id
+                  id: membersData.projectInfo.id
                 }
               },
               principal_users: {
-                data: members
+                data: membersCopy
                   .filter(member => member.type === USER_ROLE)
                   .map(member => {
                     return { id: member.id, type: member.type }
                   })
               },
               principal_user_groups: {
-                data: members
+                data: membersCopy
                   .filter(member => member.type === 'user_group')
                   .map(member => {
                     return { id: member.id, type: member.type }
@@ -168,6 +182,11 @@ const MembersPopUp = ({
           }
         }
       }
+    })
+
+    membersDispatch({
+      type: membersActions.SET_MEMBERS,
+      payload: membersData.members
     })
 
     projectsIguazioApi
@@ -188,11 +207,11 @@ const MembersPopUp = ({
   }
 
   const areChangesMade = () => {
-    return membersState.members.some(member => member.modification !== '')
+    return membersData.members.some(member => member.modification !== '')
   }
 
   const changeMemberRole = (roleOption, memberToEdit) => {
-    const membersCopy = cloneDeep(membersState.members)
+    const membersCopy = cloneDeep(membersData.members)
     const member = membersCopy.find(member => member.id === memberToEdit.id)
 
     if (member.initialRole) {
@@ -200,10 +219,7 @@ const MembersPopUp = ({
     }
     member.role = roleOption
 
-    membersDispatch({
-      type: membersActions.SET_MEMBERS,
-      payload: membersCopy
-    })
+    setMembersData(state => ({ ...state, members: membersCopy }))
   }
 
   const closeMemberPopUp = event => {
@@ -215,7 +231,7 @@ const MembersPopUp = ({
   }
 
   const deleteMember = memberToDelete => {
-    let membersCopy = cloneDeep(membersState.members)
+    let membersCopy = cloneDeep(membersData.members)
 
     if (memberToDelete.initialRole) {
       membersCopy.find(member => member.id === memberToDelete.id).modification = 'delete'
@@ -223,19 +239,13 @@ const MembersPopUp = ({
       membersCopy = membersCopy.filter(member => member.id !== memberToDelete.id)
     }
 
-    membersDispatch({
-      type: membersActions.SET_MEMBERS,
-      payload: membersCopy
-    })
+    setMembersData(state => ({ ...state, members: membersCopy }))
     setDeleteMemberId('')
   }
 
   const discardChanges = event => {
     event.stopPropagation()
-    membersDispatch({
-      type: membersActions.SET_MEMBERS,
-      payload: membersState.membersOriginal
-    })
+    setMembersData(membersState)
     handleOnClose()
   }
 
@@ -264,7 +274,7 @@ const MembersPopUp = ({
       .then(response => {
         response.forEach(identityResponse => {
           identityResponse.data.data.forEach(identity => {
-            const existingMember = membersState.members.find(
+            const existingMember = membersData.members.find(
               member => member.id === identity.id && member.modification !== 'delete'
             )
 
@@ -306,19 +316,19 @@ const MembersPopUp = ({
         <div className="members-overview">
           <span className="member-overview">
             <span className="member-count">
-              {membersState.groupedOriginalMembers.Editor?.length ?? 0}
+              {membersData.groupedOriginalMembers.Editor?.length ?? 0}
             </span>
             &nbsp;editors,&nbsp;
           </span>
           <span className="member-overview">
             <span className="member-count">
-              {membersState.groupedOriginalMembers.Viewer?.length ?? 0}
+              {membersData.groupedOriginalMembers.Viewer?.length ?? 0}
             </span>
             &nbsp;viewers,&nbsp;
           </span>
           <span className="member-overview">
             <span className="member-count">
-              {membersState.groupedOriginalMembers.Admin?.length ?? 0}
+              {membersData.groupedOriginalMembers.Admin?.length ?? 0}
             </span>
             &nbsp;admins&nbsp;
           </span>
@@ -412,7 +422,7 @@ const MembersPopUp = ({
           <div className="member-actions actions"></div>
         </div>
         <div className="table-body">
-          {membersState.members
+          {membersData.members
             .filter(member => {
               return (
                 (!filters.name || member.name.toLowerCase().includes(filters.name.toLowerCase())) &&
@@ -540,8 +550,7 @@ const MembersPopUp = ({
 MembersPopUp.propTypes = {
   changeMembersCallback: PropTypes.func.isRequired,
   membersDispatch: PropTypes.func.isRequired,
-  membersState: PropTypes.shape({}).isRequired,
-  setNotification: PropTypes.func.isRequired
+  membersState: PropTypes.shape({}).isRequired
 }
 
 export default MembersPopUp
