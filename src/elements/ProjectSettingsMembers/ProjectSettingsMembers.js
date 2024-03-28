@@ -32,8 +32,7 @@ const ProjectSettingsMembers = ({
   loading,
   membersDispatch,
   membersState,
-  projectMembersIsShown,
-  setNotification
+  projectMembersIsShown
 }) => {
   const totalMembersInProject = membersState.users.length + membersState.userGroups.length
 
@@ -90,7 +89,6 @@ const ProjectSettingsMembers = ({
                 changeMembersCallback={changeMembersCallback}
                 membersState={membersState}
                 membersDispatch={membersDispatch}
-                setNotification={setNotification}
               />
             )}
           </div>
