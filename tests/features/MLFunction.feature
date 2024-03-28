@@ -125,9 +125,9 @@ Feature: ML Functions
     Scenario: MLF003 - Check all mandatory components on Create ML Function Popup
         Given open url
         And wait load page
-        And turn on demo mode
-        And wait load page
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
+        And wait load page
+        And turn on demo mode
         And wait load page
         And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
         And click on cell with value "ML functions" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
@@ -155,9 +155,9 @@ Feature: ML Functions
     Scenario: MLF010 - Check all mandatory components in General Accordion on create New Function page
         Given open url
         And wait load page
-        And turn on demo mode
-        And wait load page
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
+        And wait load page
+        And turn on demo mode
         And wait load page
         And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
         And click on cell with value "ML functions" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
@@ -200,9 +200,9 @@ Feature: ML Functions
     Scenario: MLF011 - Check all mandatory components in Code Accordion on create New Function page
         Given open url
         And wait load page
-        And turn on demo mode
-        And wait load page
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
+        And wait load page
+        And turn on demo mode
         And wait load page
         And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
         And click on cell with value "ML functions" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
@@ -245,9 +245,9 @@ Feature: ML Functions
     Scenario: MLF012 - Check all mandatory components in Resources Accordion on create New Function page
         Given open url
         And wait load page
-        And turn on demo mode
-        And wait load page
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
+        And wait load page
+        And turn on demo mode
         And wait load page
         And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
         And click on cell with value "ML functions" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
@@ -335,9 +335,9 @@ Feature: ML Functions
     Scenario: MLF013 - Verify behaviour of Volume Paths Table in Resources Accordion on create New Function page
         Given open url
         And wait load page
-        And turn on demo mode
-        And wait load page
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
+        And wait load page
+        And turn on demo mode
         And wait load page
         And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
         And click on cell with value "ML functions" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard

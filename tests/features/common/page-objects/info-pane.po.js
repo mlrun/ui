@@ -342,7 +342,7 @@ const requestedFeaturesTable = {
           componentType: labelComponent,
           structure: generateLabelGroup(
             '.item-requested-features__table-cel.cell_icon',
-            false,
+            'svg',
             false,
             '.tooltip .tooltip__text span'
           )
