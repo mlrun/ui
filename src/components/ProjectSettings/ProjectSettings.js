@@ -235,7 +235,6 @@ const ProjectSettings = ({ frontendSpec }) => {
             membersState={membersState}
             membersDispatch={membersDispatch}
             projectMembersIsShown={projectMembersIsShown}
-            setNotification={setNotification}
           />
         ) : params.pageTab === PROJECTS_SETTINGS_SECRETS_TAB ? (
           <ProjectSettingsSecrets setNotification={setNotification} />
