@@ -27,7 +27,7 @@ import BreadcrumbsDropdown from '../../elements/BreadcrumbsDropdown/BreadcrumbsD
 import { RoundedIcon } from 'igz-controls/components'
 
 import { useMode } from '../../hooks/mode.hook'
-import { generateProjectScreens, generateTabsList } from './breadcrumbs.util'
+import { generateMlrunScreens, generateTabsList } from './breadcrumbs.util'
 import { generateProjectsList } from '../../utils/projects'
 import { scrollToElement } from '../../utils/scroll.util'
 import projectsAction from '../../actions/projects'
@@ -46,8 +46,8 @@ const Breadcrumbs = ({ onClick, projectStore, fetchProjectsNames }) => {
   const params = useParams()
   const location = useLocation()
 
-  const projectScreens = useMemo(() => {
-    return generateProjectScreens(params, isDemoMode)
+  const mlrunScreens = useMemo(() => {
+    return generateMlrunScreens(params, isDemoMode)
   }, [isDemoMode, params])
   const projectTabs = useMemo(() => {
     return generateTabsList()
@@ -58,21 +58,32 @@ const Breadcrumbs = ({ onClick, projectStore, fetchProjectsNames }) => {
   }, [projectStore.projectsNames.data])
 
   const urlItems = useMemo(() => {
-    const [projects, projectName, screenName] = location.pathname.split('/').slice(1, 4)
-    const screen = projectScreens.find(screen => screen.id === screenName)
-    const tab = projectTabs.find(tab =>
-      location.pathname
-        .split('/')
-        .slice(3)
-        .find(pathItem => pathItem === tab.id)
-    )
+    if (params.projectName) {
+      const [projects, projectName, screenName] = location.pathname.split('/').slice(1, 4)
+      const screen = mlrunScreens.find(screen => screen.id === screenName)
+      const tab = projectTabs.find(tab =>
+        location.pathname
+          .split('/')
+          .slice(3)
+          .find(pathItem => pathItem === tab.id)
+      )
 
-    return {
-      pathItems: [projects, projectName, screen?.label || screenName],
-      screen,
-      tab
+      return {
+        pathItems: [projects, projectName, screen?.label || screenName],
+        screen,
+        tab
+      }
+    } else {
+      const [projects, page] = location.pathname.split('/').slice(1, 3)
+      const screen = mlrunScreens.find(screen => screen.id === page)
+
+      return {
+        pathItems: [projects, screen?.label || page],
+        screen
+      }
     }
-  }, [location.pathname, projectScreens, projectTabs])
+
+  }, [location.pathname, params.projectName, mlrunScreens, projectTabs])
 
   const handleCloseDropdown = useCallback(
     event => {
@@ -118,7 +129,7 @@ const Breadcrumbs = ({ onClick, projectStore, fetchProjectsNames }) => {
   }, [fetchProjectsNames, location.pathname, projectsList.length])
 
   const handleSeparatorClick = (nextItem, separatorRef) => {
-    const nextItemIsScreen = Boolean(projectScreens.find(screen => screen.label === nextItem))
+    const nextItemIsScreen = Boolean(mlrunScreens.find(screen => screen.label === nextItem))
 
     if (nextItemIsScreen || nextItem === params.projectName) {
       const [activeSeparator] = document.getElementsByClassName('breadcrumbs__separator_active')
@@ -203,7 +214,7 @@ const Breadcrumbs = ({ onClick, projectStore, fetchProjectsNames }) => {
                 {showScreensList && urlItems.pathItems[i + 1] === urlItems.screen?.label && (
                   <BreadcrumbsDropdown
                     link={to}
-                    list={projectScreens}
+                    list={mlrunScreens}
                     onClick={() => handleSelectDropdownItem(separatorRef)}
                     selectedItem={urlItems.screen?.id}
                     searchValue={searchValue}
