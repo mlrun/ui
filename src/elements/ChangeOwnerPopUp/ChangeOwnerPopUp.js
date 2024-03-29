@@ -113,7 +113,8 @@ const ChangeOwnerPopUp = ({ changeOwnerCallback, projectId }) => {
 
   const generateSuggestionList = debounce(async (memberName, resolve) => {
     const params = {
-      'filter[assigned_policies]': '[$contains_any]Developer,Project Admin'
+      'filter[assigned_policies]': '[$contains_any]Developer,Project Admin',
+      'page[size]': 200
     }
     const requiredIgzVersion = '3.5.3'
     let formattedUsers = []
