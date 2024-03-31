@@ -55,11 +55,7 @@ import { ReactComponent as Users } from 'igz-controls/images/users.svg'
 
 import './membersPopUp.scss'
 
-const MembersPopUp = ({
-  changeMembersCallback,
-  membersDispatch,
-  membersState
-}) => {
+const MembersPopUp = ({ changeMembersCallback, membersDispatch, membersState }) => {
   const [membersData, setMembersData] = useState(membersState)
   const [deleteMemberId, setDeleteMemberId] = useState('')
   const [confirmDiscard, setConfirmDiscard] = useState(false)
@@ -204,7 +200,7 @@ const MembersPopUp = ({
                 )))
         )
         const userIsProjectSecurityAdmin =
-        membersData.activeUser.data?.attributes?.user_policies_collection?.has(
+          membersData.activeUser.data?.attributes?.user_policies_collection?.has(
             'Project Security Admin'
           ) ?? false
 
