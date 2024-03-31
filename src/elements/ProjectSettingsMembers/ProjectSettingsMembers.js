@@ -32,8 +32,7 @@ const ProjectSettingsMembers = ({
   loading,
   membersDispatch,
   membersState,
-  projectMembersIsShown,
-  setNotification
+  projectMembersIsShown
 }) => {
 
   const generateMembersTitle = () => {
@@ -92,7 +91,6 @@ const ProjectSettingsMembers = ({
                 changeMembersCallback={changeMembersCallback}
                 membersState={membersState}
                 membersDispatch={membersDispatch}
-                setNotification={setNotification}
               />
             )}
           </div>
