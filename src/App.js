@@ -139,6 +139,10 @@ const App = () => {
             >
               <Route path="projects" element={<Projects />} />
               <Route
+                path={`projects/${JOBS_MONITORING_PAGE}`}
+                element={<Navigate to={`${JOBS_MONITORING_JOBS_TAB}`} replace />}
+              />
+              <Route
                 path={`projects/${JOBS_MONITORING_PAGE}/*`}
                 element={<ProjectsJobsMonitoring />}
               >

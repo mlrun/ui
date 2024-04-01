@@ -23,6 +23,7 @@ import { Outlet, useLocation, useNavigate } from 'react-router-dom'
 import moment from 'moment'
 
 import ContentMenu from '../../elements/ContentMenu/ContentMenu'
+import Breadcrumbs from '../../common/Breadcrumbs/Breadcrumbs'
 
 import projectsAction from '../../actions/projects'
 
@@ -74,6 +75,9 @@ const ProjectsJobsMonitoring = () => {
 
   return (
     <div className="job-monitoring content-wrapper">
+      <div className="content__header">
+        <Breadcrumbs />
+      </div>
       <div className="content">
         <div className="content__action-bar-wrapper">
           <ContentMenu
