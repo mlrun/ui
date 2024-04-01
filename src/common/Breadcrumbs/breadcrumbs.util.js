@@ -28,40 +28,49 @@ import {
   PROJECT_MONITOR,
   PROJECT_QUICK_ACTIONS_PAGE,
   SCHEDULE_TAB,
-  REAL_TIME_PIPELINES_TAB
+  REAL_TIME_PIPELINES_TAB,
+  JOBS_MONITORING_PAGE
 } from '../../constants'
 import { generateNuclioLink } from '../../utils'
 
-export const generateProjectScreens = params => [
-  {
-    label: 'Project monitoring',
-    id: PROJECT_MONITOR
-  },
-  {
-    label: 'Quick actions',
-    id: PROJECT_QUICK_ACTIONS_PAGE
-  },
-  { label: 'Feature store', id: 'feature-store' },
-  { label: 'Datasets', id: 'datasets' },
-  { label: 'Artifacts', id: 'files' },
-  { label: 'Models', id: 'models' },
-  { label: 'Jobs and workflows', id: 'jobs' },
-  { label: 'ML functions', id: 'functions' },
-  {
-    label: 'Real-time functions',
-    id: 'Real-time functions',
-    link: generateNuclioLink(`/projects/${params.projectName}/functions`)
-  },
-  {
-    label: 'API gateways',
-    id: 'API gateways',
-    link: generateNuclioLink(`/projects/${params.projectName}/api-gateways`)
-  },
-  {
-    label: 'Settings',
-    id: 'settings'
-  }
-]
+export const generateMlrunScreens = params =>
+  params.projectName
+    ? [
+        {
+          label: 'Project monitoring',
+          id: PROJECT_MONITOR
+        },
+        {
+          label: 'Quick actions',
+          id: PROJECT_QUICK_ACTIONS_PAGE
+        },
+        { label: 'Feature store', id: 'feature-store' },
+        { label: 'Datasets', id: 'datasets' },
+        { label: 'Artifacts', id: 'files' },
+        { label: 'Models', id: 'models' },
+        { label: 'Jobs and workflows', id: 'jobs' },
+        { label: 'ML functions', id: 'functions' },
+        {
+          label: 'Real-time functions',
+          id: 'Real-time functions',
+          link: generateNuclioLink(`/projects/${params.projectName}/functions`)
+        },
+        {
+          label: 'API gateways',
+          id: 'API gateways',
+          link: generateNuclioLink(`/projects/${params.projectName}/api-gateways`)
+        },
+        {
+          label: 'Settings',
+          id: 'settings'
+        }
+      ]
+    : [
+        {
+          label: 'Jobs monitoring',
+          id: JOBS_MONITORING_PAGE
+        }
+      ]
 
 export const generateTabsList = () => [
   {
