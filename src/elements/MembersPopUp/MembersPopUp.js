@@ -38,12 +38,13 @@ import {
 import projectsIguazioApi from '../../api/projects-iguazio-api'
 import { FORBIDDEN_ERROR_STATUS_CODE } from 'igz-controls/constants'
 import { getErrorMsg } from 'igz-controls/utils/common.util'
-import { getRoleOptions, initialNewMembersRole } from './membersPopUp.util'
+import { getRoleOptions, initialNewMembersRole, DELETE_MODIFICATION } from './membersPopUp.util'
 import { isIgzVersionCompatible } from '../../utils/isIgzVersionCompatible'
 import { membersActions } from './membersReducer'
 import { showErrorNotification } from '../../utils/notifications.util'
+import { useNavigate } from 'react-router-dom'
 
-import { OWNER_ROLE, USER_ROLE } from '../../constants'
+import { OWNER_ROLE, USER_GROUP_ROLE, USER_ROLE } from '../../constants'
 
 import { ReactComponent as Add } from 'igz-controls/images/add.svg'
 import { ReactComponent as Close } from 'igz-controls/images/close.svg'
@@ -72,6 +73,7 @@ const MembersPopUp = ({
     role: 'All'
   })
   const dispatch = useDispatch()
+  const navigate = useNavigate()
   const membersTableRowClassNames = classnames('table-row', inviteNewMembers && 'inactive')
 
   const handleOnClose = () => {
@@ -136,7 +138,7 @@ const MembersPopUp = ({
       }, new Set())
     )
     const groupedVisibleMembers = groupBy(
-      membersData.members.filter(member => member.modification !== 'delete'),
+      membersData.members.filter(member => member.modification !== DELETE_MODIFICATION),
       item => item.role
     )
 
@@ -192,7 +194,25 @@ const MembersPopUp = ({
     projectsIguazioApi
       .updateProjectMembers(changesBody)
       .then(response => {
-        changeMembersCallback(response.data.data.id)
+        const validMember = membersData.members?.some(
+          member =>
+            member.modification !== DELETE_MODIFICATION &&
+            (member.id === membersData.activeUser.data?.id ||
+              (member.type === USER_GROUP_ROLE &&
+                membersData.activeUser.data?.relationships?.user_groups?.data?.some?.(
+                  group => group.id === member.id
+                )))
+        )
+        const userIsProjectSecurityAdmin =
+        membersData.activeUser.data?.attributes?.user_policies_collection?.has(
+            'Project Security Admin'
+          ) ?? false
+
+        if (validMember || userIsProjectSecurityAdmin) {
+          changeMembersCallback(response.data.data.id)
+        } else {
+          navigate('/projects/')
+        }
       })
       .catch(error => {
         const customErrorMsg =
@@ -234,7 +254,7 @@ const MembersPopUp = ({
     let membersCopy = cloneDeep(membersData.members)
 
     if (memberToDelete.initialRole) {
-      membersCopy.find(member => member.id === memberToDelete.id).modification = 'delete'
+      membersCopy.find(member => member.id === memberToDelete.id).modification = DELETE_MODIFICATION
     } else {
       membersCopy = membersCopy.filter(member => member.id !== memberToDelete.id)
     }
@@ -275,7 +295,7 @@ const MembersPopUp = ({
         response.forEach(identityResponse => {
           identityResponse.data.data.forEach(identity => {
             const existingMember = membersData.members.find(
-              member => member.id === identity.id && member.modification !== 'delete'
+              member => member.id === identity.id && member.modification !== DELETE_MODIFICATION
             )
 
             suggestionList.push({
@@ -427,7 +447,7 @@ const MembersPopUp = ({
               return (
                 (!filters.name || member.name.toLowerCase().includes(filters.name.toLowerCase())) &&
                 (filters.role === 'All' || member.role === filters.role) &&
-                member.modification !== 'delete'
+                member.modification !== DELETE_MODIFICATION
               )
             })
             .map(member => (
