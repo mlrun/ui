@@ -19,6 +19,7 @@ such restriction.
 */
 import { ADMIN_ROLE, ALL_ROLES, EDITOR_ROLE, OWNER_ROLE, VIEWER_ROLE } from '../../constants'
 
+export const DELETE_MODIFICATION = 'delete'
 export const initialNewMembersRole = VIEWER_ROLE
 export const getRoleOptions = (memberRole = '', allOption = false) => {
   return [
