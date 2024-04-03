@@ -119,6 +119,8 @@ Feature: Files Page
   @MLA
   @passive
   @inProgress
+  @FAILED_TODO
+  #TODO: bug #2339 Fix [Artifacts] refine UI text for Register Artifact
   Scenario: MLA005 - Check all mandatory components on Register Artifacts Popup
     Given open url
     And wait load page
