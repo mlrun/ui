@@ -267,6 +267,7 @@ Feature: Datasets Page
     When select "V3IO" option in "Path_Scheme_Combobox" combobox on "Target_Path" accordion on "Register_Dataset" wizard
     When type value "target/path" to "Path_Scheme_Combobox" field on "Target_Path" on "Register_Dataset" wizard
     Then click on "Register_Button" element on "Register_Dataset" wizard
+    And wait load page
     Then "Register_Error_Message" component on "Register_Dataset" should be equal "Register_Artifact"."Register_Error_Message"
   
   @MLD
@@ -1113,3 +1114,95 @@ Feature: Datasets Page
     Then "Teardown_Checkbox" element should be unchecked on "Modal_Wizard_Form" wizard
     Then check "Teardown_Checkbox" element on "Modal_Wizard_Form" wizard
     Then "Teardown_Checkbox" element should be checked on "Modal_Wizard_Form" wizard
+
+  @MLD
+  @FAILED_TODO
+  #TODO: bug - not all artifacts are being displayed - ML-5942
+  Scenario: MLD026 - Verify dataset elements visibility on Datasets Table with low number of rows
+    Given open url
+    And wait load page
+    And click on row root with value "churn-project-admin" in "name" column in "Projects_Table" table on "Projects" wizard
+    And wait load page
+    And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
+    And click on cell with value "Datasets" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+    And wait load page
+    Then verify that 9 row elements are displayed in "Datasets_Table" on "Datasets" wizard
+    When click on cell with row index 1 in "name" column in "Datasets_Table" table on "Datasets" wizard
+    Then verify "Info_Pane_Tab_Selector" on "Datasets_Info_Pane" wizard should contains "Datasets_Info_Pane"."Tab_List"
+    Then verify that 9 row elements are displayed in "Datasets_Table" on "Datasets" wizard
+    Then click on "Cross_Close_Button" element on "Datasets_Info_Pane" wizard
+    Then verify that 6 row elements are displayed in "Datasets_Table" on "Datasets" wizard
+    Then click on "Table_FilterBy_Button" element on "Datasets" wizard
+    Then select "All" option in "Table_Tree_Filter_Dropdown" dropdown on "Artifacts_FilterBy_Popup" wizard
+    Then click on "Apply_Button" element on "Artifacts_FilterBy_Popup" wizard
+    And wait load page
+    Then check "expand_btn" visibility in "Datasets_Table" on "Datasets" wizard
+    Then verify that 6 row elements are displayed in "Datasets_Table" on "Datasets" wizard
+    Then click on cell with row index 1 in "expand_btn" column in "Datasets_Table" table on "Datasets" wizard
+    Then verify that 7 row elements are displayed in "Datasets_Table" on "Datasets" wizard
+    Then select "View YAML" option in action menu on "Datasets" wizard in "Datasets_Table" table at row with "latest" value in "name_expand_btn" column
+    Then verify if "View_YAML" popup dialog appears
+    Then verify that 7 row elements are displayed in "Datasets_Table" on "Datasets" wizard
+    Then click on "Cross_Cancel_Button" element on "View_YAML" wizard
+    Then verify that 7 row elements are displayed in "Datasets_Table" on "Datasets" wizard
+    Then click on cell with row index 2 in "name" column in "Datasets_Table" table on "Datasets" wizard
+    Then verify "Info_Pane_Tab_Selector" on "Datasets_Info_Pane" wizard should contains "Datasets_Info_Pane"."Tab_List"
+    Then verify that 10 row elements are displayed in "Datasets_Table" on "Datasets" wizard
+    Then click on "Cross_Close_Button" element on "Datasets_Info_Pane" wizard
+    Then verify that 7 row elements are displayed in "Datasets_Table" on "Datasets" wizard
+    Then click on cell with row index 1 in "expand_btn" column in "Datasets_Table" table on "Datasets" wizard
+    Then verify that 6 row elements are displayed in "Datasets_Table" on "Datasets" wizard
+
+  @MLD
+  Scenario: MLD027 - Verify dataset elements visibility on Datasets Table with high number of rows
+    * create "new_dataset_10" Dataset with "set_10" tag in "churn-project-admin" project with code 200
+    * create "new_dataset_11" Dataset with "set_11" tag in "churn-project-admin" project with code 200
+    * create "new_dataset_12" Dataset with "set_12" tag in "churn-project-admin" project with code 200
+    * create "new_dataset_13" Dataset with "set_13" tag in "churn-project-admin" project with code 200
+    * create "new_dataset_14" Dataset with "set_14" tag in "churn-project-admin" project with code 200
+    * create "new_dataset_15" Dataset with "set_15" tag in "churn-project-admin" project with code 200
+    * create "new_dataset_16" Dataset with "set_16" tag in "churn-project-admin" project with code 200
+    * create "new_dataset_17" Dataset with "set_17" tag in "churn-project-admin" project with code 200
+    * create "new_dataset_18" Dataset with "set_18" tag in "churn-project-admin" project with code 200
+    * create "new_dataset_19" Dataset with "set_19" tag in "churn-project-admin" project with code 200
+    * create "new_dataset_20" Dataset with "set_20" tag in "churn-project-admin" project with code 200
+    * create "new_dataset_21" Dataset with "set_21" tag in "churn-project-admin" project with code 200
+    * create "new_dataset_22" Dataset with "set_22" tag in "churn-project-admin" project with code 200
+    * create "new_dataset_23" Dataset with "set_23" tag in "churn-project-admin" project with code 200
+    * create "new_dataset_24" Dataset with "set_24" tag in "churn-project-admin" project with code 200
+    Given open url
+    And wait load page
+    And click on row root with value "churn-project-admin" in "name" column in "Projects_Table" table on "Projects" wizard
+    And wait load page
+    And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
+    And click on cell with value "Datasets" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+    And wait load page
+    And hover "MLRun_Logo" component on "commonPagesHeader" wizard
+    And wait load page
+    Then verify that 16 row elements are displayed in "Datasets_Table" on "Datasets" wizard
+    Then verify that 16 web elements are exist in "Datasets_Table_View" on "Datasets" wizard
+    Then check "new_dataset_10" value in "name" column in "Datasets_Table" table on "Datasets" wizard
+    Then check "new_dataset_24" value in "name" column in "Datasets_Table" table on "Datasets" wizard
+    Then check "test-regressor_cox-test-summary" value in "name" column in "Datasets_Table" table on "Datasets" wizard
+    Then check "survival-curves_coxhazard-summary" value not in "name" column in "Datasets_Table" table on "Datasets" wizard
+    Then check "iris_gen_iris_dataset" value not in "name" column in "Datasets_Table" table on "Datasets" wizard
+    Then check "data_clean_cleaned-data" value not in "name" column in "Datasets_Table" table on "Datasets" wizard
+    Then click on cell with value "test-regressor_cox-test-summary" in "name" column in "Datasets_Table" table on "Datasets" wizard
+    Then "Header" element on "Datasets_Info_Pane" should contains "test-regressor_cox-test-summary" value
+    Then click on "Cross_Close_Button" element on "Datasets_Info_Pane" wizard
+    And wait load page
+    And wait load page
+    Then verify that 22 row elements are displayed in "Datasets_Table" on "Datasets" wizard
+    Then verify that 22 web elements are exist in "Datasets_Table_View" on "Datasets" wizard
+    Then check "survival-curves_coxhazard-summary" value in "name" column in "Datasets_Table" table on "Datasets" wizard
+    Then check "iris_gen_iris_dataset" value in "name" column in "Datasets_Table" table on "Datasets" wizard
+    Then check "new_dataset_10" value not in "name" column in "Datasets_Table" table on "Datasets" wizard
+    Then check "data_clean_cleaned-data" value not in "name" column in "Datasets_Table" table on "Datasets" wizard
+    Then click on cell with value "iris_gen_iris_dataset" in "name" column in "Datasets_Table" table on "Datasets" wizard
+    Then "Header" element on "Datasets_Info_Pane" should contains "iris_gen_iris_dataset" value
+    Then click on "Cross_Close_Button" element on "Datasets_Info_Pane" wizard
+    Then verify that 21 row elements are displayed in "Datasets_Table" on "Datasets" wizard
+    Then verify that 21 web elements are exist in "Datasets_Table_View" on "Datasets" wizard
+    Then check "new_dataset_11" value not in "name" column in "Datasets_Table" table on "Datasets" wizard
+    Then check "new_dataset_12" value not in "name" column in "Datasets_Table" table on "Datasets" wizard
+    Then check "data_clean_cleaned-data" value in "name" column in "Datasets_Table" table on "Datasets" wizard

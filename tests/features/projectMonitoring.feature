@@ -128,6 +128,8 @@ Feature: MLRun Project Page
 
     @MLPM
     @passive
+    @FAILED_TODO
+    #TODO: bug #2339 Fix [Artifacts] refine UI text for Register Artifact
     Scenario: MLPM004 - Check all mandatory components on Register File Popup
         Given open url
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
@@ -519,8 +521,6 @@ Feature: MLRun Project Page
     @passive
     Scenario: MLPM011 - Check Project Counter redirection to Models page
         Given open url
-        And turn on demo mode
-        And wait load page
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
         Then click on cell with value "Models" in "name" column in "Mono_Values_Cards" table on "Project" wizard
@@ -532,6 +532,8 @@ Feature: MLRun Project Page
         Then verify "Show_Iterations_Checkbox" element visibility on "Artifacts_FilterBy_Popup" wizard
         Then verify "Table_Refresh_Button" element visibility on "Models" wizard
         Then verify "Models_Table" element visibility on "Models" wizard
+        And turn on demo mode
+        And wait load page
         Then verify "Register_Model_Button" element visibility on "Models" wizard
         Then "Register_Model_Button" element on "Models" should contains "Register model" value
 
