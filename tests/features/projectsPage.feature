@@ -107,7 +107,6 @@ Feature: MLRun Projects Page
 
     @MLPr
     @sanity
-    @uniqueTag
     Scenario: MLPr007 - Create new ML Project with description
         Given open url
         And wait load page

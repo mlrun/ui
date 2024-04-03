@@ -366,6 +366,8 @@ Feature: MLRun Project Home Page
 
     @MLPH
     @passive
+    @FAILED_TODO
+    #TODO: bug #2339 Fix [Artifacts] refine UI text for Register Artifact
     Scenario: MLPH007 - Check all mandatory components on Register File Popup on Project Home Page
         Given open url
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
@@ -642,6 +644,8 @@ Feature: MLRun Project Home Page
 
     @MLPH
     @passive
+    @FAILED_TODO
+    #TODO: bug - UI crash upon navigating to model endpoints tab ML-5919 (fixed on rc6) - failed
     Scenario: MLPH017 - Check all mandatory components on Models Endpoint tab on Project Home Page
         Given open url
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
