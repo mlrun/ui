@@ -44,6 +44,7 @@ import {
   findRowIndexesByColumnValueExpand,
   getCellByIndexColumn,
   getTableRows,
+  getHtmlTag,
   isContainsSubstringInColumnCells,
   isContainsSubstringInColumnAttributrCells,
   isContainsSubstringInColumnDropdownCells,
@@ -1697,6 +1698,22 @@ When(
       await selectOptionInActionMenu(this.driver, actionMenuSel, option)
       await this.driver.sleep(500)
     }
+  }
+)
+
+Then(
+  'verify that {int} row elements are displayed in {string} on {string} wizard',
+  async function (rowElement, tableName, wizardName) {
+    const rowsNumber = await getTableRows(this.driver, pageObjects[wizardName][tableName])
+    expect(rowsNumber).equal(rowElement, `${rowsNumber} row elements are not equal expected ${rowElement} row elements`)
+  }
+)
+
+Then(
+  'verify that {int} web elements are exist in {string} on {string} wizard',
+  async function (webElement, tableName, wizardName) {
+    const webElementsNumber = await getHtmlTag(this.driver, pageObjects[wizardName][tableName])
+    expect(webElementsNumber).equal(webElement, `${webElementsNumber} row elements are not equal expected ${webElement} row elements`)
   }
 )
 

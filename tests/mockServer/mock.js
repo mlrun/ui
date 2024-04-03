@@ -537,6 +537,24 @@ function getProjectSummary(req, res) {
 }
 
 function getRuns(req, res) {
+  //get runs for Projects Monitoring page
+  if (req.params['project'] === '*') {
+    let collectedMonitoringRuns = runs.runs
+
+    if (req.query['start_time_from']) {
+      collectedMonitoringRuns = collectedMonitoringRuns.filter(
+        run => Date.parse(run.status.start_time) >= Date.parse(req.query['start_time_from'])
+      )
+    }
+    if (req.query['start_time_to']) {
+      collectedMonitoringRuns = collectedMonitoringRuns.filter(
+        run => Date.parse(run.status.start_time) <= Date.parse(req.query['start_time_to'])
+      )
+    }
+
+    res.send({ runs: collectedMonitoringRuns })
+  }
+  //get runs for Jobs and workflows page
   let collectedRuns = runs.runs.filter(run => run.metadata.project === req.params['project'])
 
   if (req.query['start_time_from']) {
@@ -669,6 +687,13 @@ function getFunctionTemplate(req, res) {
 }
 
 function getProjectsSchedules(req, res) {
+  //get schedules for Projects Monitoring page  
+  if (req.params['project'] === '*') {
+    let collectedSchedules = schedules.schedules
+
+    res.send({ schedules: collectedSchedules })
+  }
+  //get schedules for Jobs and workflows page Schedules tab
   let collectedSchedules = schedules.schedules.filter(
     schedule => schedule.scheduled_object.task.metadata.project === req.params['project']
   )
@@ -1113,6 +1138,27 @@ function deleteProjectsFeatureVectors(req, res) {
 }
 
 function getPipelines(req, res) {
+  //get pipelines for Projects Monitoring page
+  if (req.params['project'] === '*') {
+    let collectedMonitoringPipelines = pipelineIDs.map(pipeline => {
+      return pipeline.run
+    })
+    if (JSON.parse(req.query.filter).predicates.length >= 1) {
+      if (JSON.parse(req.query.filter).predicates[0]) {
+        collectedMonitoringPipelines = collectedMonitoringPipelines.filter(
+          pipeline => Date.parse(pipeline.created_at) >= Date.parse(JSON.parse(req.query.filter).predicates[0].timestamp_value)  //start time from
+        )
+      }
+      if (JSON.parse(req.query.filter).predicates[1]) {
+        collectedMonitoringPipelines = collectedMonitoringPipelines.filter(
+          pipeline => Date.parse(pipeline.created_at) <= Date.parse(JSON.parse(req.query.filter).predicates[1].timestamp_value)  //start time to
+        )
+      }
+    } 
+
+    res.send({ runs: collectedMonitoringPipelines, total_size : collectedMonitoringPipelines.length, next_page_token : null })
+  }
+  //get pipelines for Jobs and workflows page Monitor Workflows tab
   const collectedPipelines = { ...pipelines[req.params.project] }
 
   if (req.query.filter) {
@@ -1966,6 +2012,7 @@ app.get(`${mlrunAPIIngress}/project-summaries`, getProjectsSummaries)
 app.get(`${mlrunAPIIngress}/project-summaries/:project`, getProjectSummary)
 
 app.get(`${mlrunAPIIngress}/projects/:project/runs`, getRuns)
+app.get(`${mlrunAPIIngress}/projects/*/runs`, getRuns)
 app.get(`${mlrunAPIIngress}/run/:project/:uid`, getRun)
 app.patch(`${mlrunAPIIngress}/run/:project/:uid`, patchRun)
 app.delete(`${mlrunAPIIngress}/projects/:project/runs/:uid`, deleteRun)
@@ -1979,11 +2026,13 @@ app.get(`${mlrunAPIIngress}/hub/sources/:project/item-object`, getFunctionObject
 app.get(`${mlrunIngress}/:function/function.yaml`, getFunctionTemplate)
 
 app.get(`${mlrunAPIIngress}/projects/:project/schedules`, getProjectsSchedules)
+app.get(`${mlrunAPIIngress}/projects/*/schedules`, getProjectsSchedules)
 app.get(`${mlrunAPIIngress}/projects/:project/schedules/:schedule`, getProjectsSchedule)
 app.delete(`${mlrunAPIIngress}/projects/:project/schedules/:schedule`, deleteSchedule)
 app.post(`${mlrunAPIIngress}/projects/:project/schedules/:schedule/invoke`, invokeSchedule)
 
 app.get(`${mlrunAPIIngress}/projects/:project/pipelines`, getPipelines)
+app.get(`${mlrunAPIIngress}/projects/*/pipelines`, getPipelines)
 app.get(`${mlrunAPIIngress}/projects/:project/pipelines/:pipelineID`, getPipeline)
 
 app.get(`${mlrunAPIIngress}/projects/:project/artifact-tags`, getProjectsArtifactTags)

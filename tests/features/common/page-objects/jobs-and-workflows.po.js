@@ -30,8 +30,7 @@ import graph from '../components/graph.component'
 import {
   generateInputGroup,
   generateDropdownGroup,
-  generateLabelGroup,
-  generateCheckboxGroup
+  generateLabelGroup
 } from '../../common-tools/common-tools'
 
 // Monitor tab
@@ -417,17 +416,10 @@ const tableRefreshButton = By.css(
 )
 const commonStatusFilter = dropdownComponent(
   generateDropdownGroup(
-    '.content__action-bar-wrapper .filters .select:nth-of-type(2)',
+    '.content__action-bar-wrapper .filters [data-testid="select"]',
     '.select__header', // Open Component
     '.select__body .select__item', // Options
     '.data-ellipsis .data-ellipsis' // Option value
-  )
-)
-const commonNameFilter = inputGroup(
-  generateInputGroup(
-    '.content__action-bar-wrapper .filters > .input-wrapper:nth-of-type(3)',
-    true,
-    false
   )
 )
 const commonStartTimeFilter = dropdownComponent(
@@ -460,14 +452,14 @@ module.exports = {
     Status_Filter_Dropdown: commonStatusFilter,
     Table_Name_Filter_Input: inputGroup(
       generateInputGroup(
-        '.content__action-bar-wrapper .filters > .input-wrapper:nth-of-type(3)',
+        '.content__action-bar-wrapper .filter-column:nth-of-type(2) .input-wrapper',
         true,
         false
       )
     ),
     Table_Labels_Filter_Input: inputGroup(
       generateInputGroup(
-        '.content__action-bar-wrapper .filters > .input-wrapper:nth-of-type(4)',
+        '.content__action-bar-wrapper .filter-column:nth-of-type(3) .input-wrapper',
         true,
         false
       )
@@ -478,7 +470,13 @@ module.exports = {
   },
   WorkflowsMonitorTab: {
     Status_Filter_Dropdown: commonStatusFilter,
-    Table_Name_Filter_Input: commonNameFilter,
+    Table_Name_Filter_Input: inputGroup(
+      generateInputGroup(
+        '.content__action-bar-wrapper .filter-column:nth-of-type(2) .input-wrapper',
+        true,
+        false
+      )
+    ),
     Start_Time_Filter_Dropdown: commonStartTimeFilter,
     Date_Time_Picker: datepicker(dateTimePickerCalendars),
     Workflows_Monitor_Table: commonTable(workflowsMonitorTable),
@@ -490,14 +488,14 @@ module.exports = {
   ScheduleMonitorTab: {
     Table_Name_Filter_Input: inputGroup(
       generateInputGroup(
-        '.content__action-bar-wrapper .filters > .input-wrapper:nth-of-type(1)',
+        '.content__action-bar-wrapper .filter-column:nth-of-type(1) .input-wrapper',
         true,
         false
       )
     ),
     Table_Labels_Filter_Input: inputGroup(
       generateInputGroup(
-        '.content__action-bar-wrapper .filters > .input-wrapper:nth-of-type(2)',
+        '.content__action-bar-wrapper .filter-column:nth-of-type(2) .input-wrapper',
         true,
         false
       )
