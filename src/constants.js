@@ -574,6 +574,9 @@ export const PRIMARY_NODE = 'primary-node'
 export const SECONDARY_NODE = 'secondary-node'
 export const GREY_NODE = 'grey-node'
 
+export const OVAL_NODE_SHAPE = 'oval-shape'
+export const ROUNDED_RECTANGLE_NODE_SHAPE = 'rounded-rectangle-shape'
+
 export const ML_EDGE = 'ml-edge'
 
 export const DEFAULT_EDGE = 'default-edge'

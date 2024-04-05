@@ -24,7 +24,15 @@ import { Handle } from 'reactflow'
 import { Tooltip, TextTooltipTemplate } from 'igz-controls/components'
 import { Tip } from 'igz-controls/components'
 
-import { GREY_NODE, INPUT_NODE, OUTPUT_NODE, PRIMARY_NODE, SECONDARY_NODE } from '../../constants'
+import {
+  GREY_NODE,
+  INPUT_NODE,
+  OUTPUT_NODE,
+  OVAL_NODE_SHAPE,
+  PRIMARY_NODE,
+  ROUNDED_RECTANGLE_NODE_SHAPE,
+  SECONDARY_NODE
+} from '../../constants'
 
 const MlReactFlowNode = ({ data, isConnectable }) => {
   return (
@@ -69,8 +77,8 @@ MlReactFlowNode.propTypes = {
     label: PropTypes.string.isRequired,
     subLabel: PropTypes.string,
     isSelectable: PropTypes.bool,
-    isOvalShape: PropTypes.bool,
-    isOpacity: PropTypes.bool,
+    withOpacity: PropTypes.bool,
+    shape: PropTypes.oneOf([OVAL_NODE_SHAPE, ROUNDED_RECTANGLE_NODE_SHAPE]),
     sourceHandle: PropTypes.shape({
       tooltip: PropTypes.string,
       className: PropTypes.string
