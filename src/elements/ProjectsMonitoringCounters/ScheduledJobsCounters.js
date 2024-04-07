@@ -22,14 +22,12 @@ import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 import moment from 'moment'
 
-import DatePicker from '../../common/DatePicker/DatePicker'
 import StatsCard from '../../common/StatsCard/StatsCard'
 import Loader from '../../common/Loader/Loader'
 
 import projectsAction from '../../actions/projects'
 import jobsActions from '../../actions/jobs'
 
-import { NEXT_24_HOUR_DATE_OPTION } from '../../utils/datePicker.util'
 import {
   generateMonitoringStats,
   generateScheduledMonitoringGroupedData
@@ -37,25 +35,30 @@ import {
 import { useFetchData } from '../../hooks/useFetchData.hook'
 import { JOBS_MONITORING_SCHEDULED_TAB } from '../../constants'
 
+import { ReactComponent as ClockIcon } from 'igz-controls/images/clock.svg'
+
 import './projectsMonitoringCounters.scss'
 
 const ScheduledJobsCounters = () => {
   const dispatch = useDispatch()
   const navigate = useNavigate()
-  const [filter, setFilter] = useState({
+  const [filter] = useState({
     dates: {
       value: [new Date(), new Date(moment().add(1, 'days'))]
     }
   })
+
   const [groupedScheduledData, setGroupedScheduledData] = useState({
     all: [],
     jobs: [],
     workflows: []
   })
+
   const { loading } = useFetchData({
     filter: filter,
     action: jobsActions.fetchScheduledJobs
   })
+
   const { scheduled: scheduledJobs } = useSelector(store => store.jobsStore)
   const scheduledStats = useMemo(
     () =>
@@ -68,15 +71,15 @@ const ScheduledJobsCounters = () => {
     [groupedScheduledData, navigate, dispatch]
   )
 
-  const handleDateSelection = dates => {
-    const generatedDates = [...dates]
+  // const handleDateSelection = dates => {
+  //   const generatedDates = [...dates]
 
-    if (generatedDates.length === 1) {
-      generatedDates.unshift(new Date())
-    }
+  //   if (generatedDates.length === 1) {
+  //     generatedDates.unshift(new Date())
+  //   }
 
-    setFilter(filters => ({ ...filters, dates: { value: generatedDates } }))
-  }
+  //   setFilter(filters => ({ ...filters, dates: { value: generatedDates } }))
+  // }
 
   useEffect(() => {
     generateScheduledMonitoringGroupedData(scheduledJobs, filter, setGroupedScheduledData, data =>
@@ -87,6 +90,12 @@ const ScheduledJobsCounters = () => {
   return (
     <StatsCard className="monitoring-stats">
       <StatsCard.Header title="Scheduled">
+        <div className="project-card__info">
+          <ClockIcon className="project-card__info-icon" />
+          <span>Next 24 hours</span>
+        </div>
+
+        {/* Todo: Use in the future
         <DatePicker
           date={filter.dates.value[0]}
           dateTo={filter.dates.value[1]}
@@ -96,7 +105,7 @@ const ScheduledJobsCounters = () => {
           onChange={handleDateSelection}
           type="date-range-time"
           withLabels
-        />
+        /> */}
       </StatsCard.Header>
       <StatsCard.Body>
         <StatsCard.Col>

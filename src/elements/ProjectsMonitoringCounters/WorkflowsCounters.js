@@ -23,14 +23,12 @@ import { useDispatch, useSelector } from 'react-redux'
 import { upperFirst } from 'lodash'
 import moment from 'moment'
 
-import DatePicker from '../../common/DatePicker/DatePicker'
 import Loader from '../../common/Loader/Loader'
 import StatsCard from '../../common/StatsCard/StatsCard'
 
 import projectsAction from '../../actions/projects'
 import workflowActions from '../../actions/workflow'
 
-import { PAST_24_HOUR_DATE_OPTION } from '../../utils/datePicker.util'
 import {
   generateMonitoringGroupedData,
   generateMonitoringStats
@@ -42,12 +40,14 @@ import {
   STATE_FILTER_ALL_ITEMS
 } from '../../constants'
 
+import { ReactComponent as ClockIcon } from 'igz-controls/images/clock.svg'
+
 import './projectsMonitoringCounters.scss'
 
 const WorkflowsCounters = () => {
   const dispatch = useDispatch()
   const navigate = useNavigate()
-  const [filter, setFilter] = useState({
+  const [filter] = useState({
     groupBy: GROUP_BY_WORKFLOW,
     dates: {
       value: [new Date(moment().add(-1, 'days'))]
@@ -66,15 +66,15 @@ const WorkflowsCounters = () => {
   })
   const { data: workflows } = useSelector(store => store.workflowsStore.workflows)
 
-  const handleDateSelection = dates => {
-    const generatedDates = [...dates]
+  // const handleDateSelection = dates => {
+  //   const generatedDates = [...dates]
 
-    if (generatedDates.length === 1) {
-      generatedDates.push(new Date())
-    }
+  //   if (generatedDates.length === 1) {
+  //     generatedDates.push(new Date())
+  //   }
 
-    setFilter(filters => ({ ...filters, dates: { value: generatedDates } }))
-  }
+  //   setFilter(filters => ({ ...filters, dates: { value: generatedDates } }))
+  // }
 
   const workflowsStats = useMemo(
     () =>
@@ -118,6 +118,11 @@ const WorkflowsCounters = () => {
   return (
     <StatsCard className="monitoring-stats">
       <StatsCard.Header title="Workflows">
+        <div className="project-card__info">
+          <ClockIcon className="project-card__info-icon" />
+          <span>Past 24 hours</span>
+        </div>
+        {/* Todo: Use in the future
         <DatePicker
           date={filter.dates.value[0]}
           dateTo={filter.dates.value[1]}
@@ -126,7 +131,7 @@ const WorkflowsCounters = () => {
           onChange={handleDateSelection}
           type="date-range-time"
           withLabels
-        />
+        /> */}
       </StatsCard.Header>
       <StatsCard.Body>
         <StatsCard.Col>{getCounterTemplate(JOBS_MONITORING_WORKFLOWS_TAB)}</StatsCard.Col>
