@@ -20,23 +20,21 @@ such restriction.
 import React, { useContext, useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
-import JobsMonitoringStatsCard from '../../../elements/JobsMonitoringStatsCard/JobsMonitoringStatsCard'
+// import JobsMonitoringStatsCard from '../../../elements/JobsMonitoringStatsCard/JobsMonitoringStatsCard'
 
 import jobsActions from '../../../actions/jobs'
 import projectsAction from '../../../actions/projects'
 
 import { generateMonitoringGroupedData } from '../../../utils/generateMonitoringData'
 import { isEveryObjectValueEmpty } from '../../../utils/isEveryObjectValueEmpty'
-import { generateStatsData } from '../projectsJobsMotinoring.util'
+// import { generateStatsData } from '../projectsJobsMotinoring.util'
 import { useFetchData } from '../../../hooks/useFetchData.hook'
-import { JOBS_MONITORING_JOBS_TAB } from '../../../constants'
+// import { JOBS_MONITORING_JOBS_TAB } from '../../../constants'
 
 import { ProjectJobsMonitoringContext } from '../ProjectsJobsMonitoring'
 
 const ProjectsJobsMonitoringJobs = () => {
-  const { filters, jobsMonitoringData, selectedCard, setSelectedCard } = useContext(
-    ProjectJobsMonitoringContext
-  )
+  const { filters, jobsMonitoringData } = useContext(ProjectJobsMonitoringContext)
   const dispatch = useDispatch()
   const { jobs } = useSelector(store => store.jobsStore)
   const [groupedJobs, setGroupedJobs] = useState({
@@ -65,12 +63,14 @@ const ProjectsJobsMonitoringJobs = () => {
 
   return (
     <div>
+      {loading ? 'loading' : ''}
+      {/* Todo: Use in future phase
       <JobsMonitoringStatsCard
         loading={loading}
         selectedCard={selectedCard}
         setSelectedCard={setSelectedCard}
         statsData={generateStatsData(groupedJobs, JOBS_MONITORING_JOBS_TAB)}
-      />
+      /> */}
     </div>
   )
 }
