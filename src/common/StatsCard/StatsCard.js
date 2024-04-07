@@ -39,14 +39,6 @@ StatsCard.Header = ({ children, title }) => {
   )
 }
 
-StatsCard.Body = ({ children }) => {
-  return <div className="stats-card__row">{children}</div>
-}
-
-StatsCard.Footer = ({ children }) => {
-  return <div className="stats-card__row">{children}</div>
-}
-
 StatsCard.Row = ({ children }) => {
   return <div className="stats-card__row">{children}</div>
 }

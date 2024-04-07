@@ -128,16 +128,16 @@ const WorkflowsCounters = () => {
           withLabels
         />
       </StatsCard.Header>
-      <StatsCard.Body>
+      <StatsCard.Row>
         <StatsCard.Col>{getCounterTemplate(JOBS_MONITORING_WORKFLOWS_TAB)}</StatsCard.Col>
-      </StatsCard.Body>
-      <StatsCard.Footer>
+      </StatsCard.Row>
+      <StatsCard.Row>
         <StatsCard.Col>
           <span className="link" onClick={workflowsStats.all.link}>
             See all
           </span>
         </StatsCard.Col>
-      </StatsCard.Footer>
+      </StatsCard.Row>
     </StatsCard>
   )
 }

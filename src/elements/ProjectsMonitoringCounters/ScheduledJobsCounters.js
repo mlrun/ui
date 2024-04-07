@@ -98,7 +98,7 @@ const ScheduledJobsCounters = () => {
           withLabels
         />
       </StatsCard.Header>
-      <StatsCard.Body>
+      <StatsCard.Row>
         <StatsCard.Col>
           <h6 className="stats__subtitle">Jobs</h6>
           <span className="stats__counter">
@@ -111,8 +111,8 @@ const ScheduledJobsCounters = () => {
             {loading ? <Loader section small secondary /> : scheduledStats.workflows.counter}
           </span>
         </StatsCard.Col>
-      </StatsCard.Body>
-      <StatsCard.Footer>
+      </StatsCard.Row>
+      <StatsCard.Row>
         <StatsCard.Col>
           <span className="link" onClick={scheduledStats.jobs.link}>
             See all
@@ -123,7 +123,7 @@ const ScheduledJobsCounters = () => {
             See all
           </span>
         </StatsCard.Col>
-      </StatsCard.Footer>
+      </StatsCard.Row>
     </StatsCard>
   )
 }

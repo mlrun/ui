@@ -45,7 +45,7 @@ const JobsMonitoringStatsCard = ({ loading, selectedCard, setSelectedCard, stats
           >
             <StatsCard.Row>
               <Tooltip template={<TextTooltipTemplate text={cardData.tooltip} />}>
-                <StatsCard.Body>
+                <StatsCard.Row>
                   <StatsCard.Col>
                     <span className="stats__counter">
                       {loading ? <Loader section small secondary /> : cardData.counter}
@@ -55,7 +55,7 @@ const JobsMonitoringStatsCard = ({ loading, selectedCard, setSelectedCard, stats
                       <i className={`state-${cardData.statusClass}`} />
                     </span>
                   </StatsCard.Col>
-                </StatsCard.Body>
+                </StatsCard.Row>
               </Tooltip>
             </StatsCard.Row>
           </StatsCard>
