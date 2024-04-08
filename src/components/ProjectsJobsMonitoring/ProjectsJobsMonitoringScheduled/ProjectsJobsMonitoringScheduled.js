@@ -20,23 +20,21 @@ such restriction.
 import React, { useContext, useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
-import JobsMonitoringStatsCard from '../../../elements/JobsMonitoringStatsCard/JobsMonitoringStatsCard'
+// import JobsMonitoringStatsCard from '../../../elements/JobsMonitoringStatsCard/JobsMonitoringStatsCard'
 
 import jobsActions from '../../../actions/jobs'
 import projectsAction from '../../../actions/projects'
 
 import { useFetchData } from '../../../hooks/useFetchData.hook'
-import { generateStatsData } from '../projectsJobsMotinoring.util'
+// import { generateStatsData } from '../projectsJobsMotinoring.util'
 import { isEveryObjectValueEmpty } from '../../../utils/isEveryObjectValueEmpty'
 import { generateScheduledMonitoringGroupedData } from '../../../utils/generateMonitoringData'
-import { JOBS_MONITORING_SCHEDULED_TAB } from '../../../constants'
+// import { JOBS_MONITORING_SCHEDULED_TAB } from '../../../constants'
 
 import { ProjectJobsMonitoringContext } from '../ProjectsJobsMonitoring'
 
 const ProjectsJobsMonitoringScheduled = () => {
-  const { filters, jobsMonitoringData, selectedCard, setSelectedCard } = useContext(
-    ProjectJobsMonitoringContext
-  )
+  const { filters, jobsMonitoringData } = useContext(ProjectJobsMonitoringContext)
   const dispatch = useDispatch()
   const { scheduled: scheduledJobs } = useSelector(store => store.jobsStore)
   const [groupedScheduled, setGroupedScheduled] = useState({
@@ -64,12 +62,14 @@ const ProjectsJobsMonitoringScheduled = () => {
 
   return (
     <div>
+      {loading ? 'loading' : ''}
+      {/* Todo: Use in future phase
       <JobsMonitoringStatsCard
         loading={loading}
         selectedCard={selectedCard}
         setSelectedCard={setSelectedCard}
         statsData={generateStatsData(groupedScheduled, JOBS_MONITORING_SCHEDULED_TAB)}
-      />
+      /> */}
     </div>
   )
 }
