@@ -29,6 +29,7 @@ import {
   getSelectedMemoryOption,
   selectUnitOptions
 } from './formResourcesUnits.util'
+import { isCommunityEdition } from '../../utils/helper'
 
 import './formResourcesUnits.scss'
 
@@ -131,7 +132,7 @@ const FormResourcesUnits = ({ formState, onChangeEnabled }) => {
                 type="number"
                 min={1}
                 validator={(value, allValues) => validateMemory(value, allValues)}
-                required
+                required={!isCommunityEdition()}
                 invalidText="Request must be less than or equal to Limit and not be less than 1"
               />
               <FormSelect
@@ -148,7 +149,7 @@ const FormResourcesUnits = ({ formState, onChangeEnabled }) => {
                 type="number"
                 min={1}
                 validator={(value, allValues) => validateMemory(value, allValues)}
-                required
+                required={!isCommunityEdition()}
                 invalidText="Limit must be bigger than or equal to Request and not be less than 1"
               />
               <FormSelect
@@ -171,7 +172,7 @@ const FormResourcesUnits = ({ formState, onChangeEnabled }) => {
                 min={selectedRequestUnit?.minValue ?? 1}
                 step={selectedRequestUnit?.step ?? 1}
                 validator={validateCpu}
-                required
+                required={!isCommunityEdition()}
                 invalidText={`Request must be less than or equal to Limit and not be less than ${selectedRequestUnit?.minValue}`}
               />
               <FormSelect
@@ -189,7 +190,7 @@ const FormResourcesUnits = ({ formState, onChangeEnabled }) => {
                 min={selectedLimitUnit?.minValue ?? 1}
                 step={selectedLimitUnit?.step ?? 1}
                 validator={validateCpu}
-                required
+                required={!isCommunityEdition()}
                 invalidText={`Limit must be bigger than or equal to Request and not be less than ${selectedLimitUnit?.minValue}`}
               />
               <FormSelect
