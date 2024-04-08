@@ -55,15 +55,7 @@ const detailsMenu = [
   },
   {
     label: 'metrics',
-    id: 'metrics',
-  },
-  {
-    label: 'events list',
-    id: 'events-list'
-  },
-  {
-    label: 'applications',
-    id: 'applications',
+    id: 'metrics'
   }
 ]
 

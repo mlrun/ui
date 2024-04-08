@@ -23,11 +23,9 @@ import { useSelector } from 'react-redux'
 import { useParams } from 'react-router-dom'
 
 import DetailsAnalysis from '../../DetailsAnalysis/DetailsAnalysis'
-import DetailsApplications from '../../DetailsApplication/DetailsApplications'
 import DetailsArtifacts from '../../DetailsArtifacts/DetailsArtifacts'
 import DetailsCode from '../../DetailsCode/DetailsCode'
 import DetailsDriftAnalysis from '../../DetailsDriftAnalysis/DetailsDriftAnalysis'
-import DetailsEventsList from '../../DetailsEventList/DetailsEventsList'
 import DetailsFeatureAnalysis from '../../DetailsFeaturesAnalysis/DetailsFeaturesAnalysis'
 import DetailsInfo from '../../DetailsInfo/DetailsInfo'
 import DetailsInputs from '../../DetailsInputs/DetailsInputs'
@@ -46,12 +44,10 @@ import { isJobKindDask, JOB_STEADY_STATES } from '../../Jobs/jobs.util'
 
 import {
   DETAILS_ANALYSIS_TAB,
-  DETAILS_APPLICATIONS_TAB,
   DETAILS_ARTIFACTS_TAB,
   DETAILS_BUILD_LOG_TAB,
   DETAILS_CODE_TAB,
   DETAILS_DRIFT_ANALYSIS_TAB,
-  DETAILS_EVENTS_LIST_TAB,
   DETAILS_FEATURES_ANALYSIS_TAB,
   DETAILS_FEATURES_TAB,
   DETAILS_INPUTS_TAB,
@@ -116,10 +112,6 @@ const DetailsTabsContent = ({
       )
     case DETAILS_FEATURES_ANALYSIS_TAB:
       return <DetailsFeatureAnalysis />
-    case DETAILS_APPLICATIONS_TAB:
-      return <DetailsApplications />
-    case DETAILS_EVENTS_LIST_TAB:
-      return <DetailsEventsList />
     case DETAILS_METRICS_TAB:
       return <DetailsMetrics />
     case DETAILS_PREVIEW_TAB:
