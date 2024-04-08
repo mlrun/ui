@@ -450,12 +450,10 @@ export const REMOVE_PROJECT_DATA = 'REMOVE_PROJECT_DATA'
 /*=========== DETAILS =============*/
 
 export const DETAILS_ANALYSIS_TAB = 'analysis'
-export const DETAILS_APPLICATIONS_TAB = 'applications'
 export const DETAILS_ARTIFACTS_TAB = 'artifacts'
 export const DETAILS_BUILD_LOG_TAB = 'build-log'
 export const DETAILS_CODE_TAB = 'code'
 export const DETAILS_DRIFT_ANALYSIS_TAB = 'drift-analysis'
-export const DETAILS_EVENTS_LIST_TAB = 'events-list'
 export const DETAILS_FEATURES_ANALYSIS_TAB = 'features-analysis'
 export const DETAILS_FEATURES_TAB = 'features'
 export const DETAILS_INPUTS_TAB = 'inputs'
