@@ -19,9 +19,9 @@ such restriction.
 */
 import React, { useEffect, useMemo } from 'react'
 import PropTypes from 'prop-types'
-import { OnChange } from 'react-final-form-listeners'
 
 import { FormInput, FormSelect } from 'igz-controls/components'
+import FormOnChange from '../../common/FormOnChange/FormOnChange'
 
 import {
   getLimitsGpuType,
@@ -216,18 +216,20 @@ const FormResourcesUnits = ({ formState, onChangeEnabled }) => {
         </div>
       </div>
       {onChangeEnabled && (
-        <OnChange name="resources.currentRequest.cpuUnitId">
-          {(value, prevValue) => {
+        <FormOnChange
+          handler={(value, prevValue) => {
             handleSelectCpuUnit(value, 'currentRequest')
           }}
-        </OnChange>
+          name="resources.currentRequest.cpuUnitId"
+        />
       )}
       {onChangeEnabled && (
-        <OnChange name="resources.currentLimits.cpuUnitId">
-          {(value, prevValue) => {
+        <FormOnChange
+          handler={(value, prevValue) => {
             handleSelectCpuUnit(value, 'currentLimits')
           }}
-        </OnChange>
+          name="resources.currentLimits.cpuUnitId"
+        />
       )}
     </>
   )

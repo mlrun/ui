@@ -20,9 +20,9 @@ such restriction.
 import React from 'react'
 import PropTypes from 'prop-types'
 import classnames from 'classnames'
-import { OnChange } from 'react-final-form-listeners'
 
 import { RoundedIcon, FormChipCell } from 'igz-controls/components'
+import FormOnChange from '../../common/FormOnChange/FormOnChange'
 
 import { getValidationRules } from 'igz-controls/utils/validation.util'
 import { detailsInfoActions } from '../../components/DetailsInfo/detailsInfoReducer'
@@ -75,7 +75,7 @@ const DetailsInfoItemChip = ({
           value: getValidationRules('common.tag')
         }}
       />
-      <OnChange name={item.fieldData.name}>{setEditMode}</OnChange>
+      <FormOnChange name={item.fieldData.name} handler={setEditMode} />
       {isFieldInEditMode && (
         <div className="details-item__apply-btn-wrapper">
           <RoundedIcon

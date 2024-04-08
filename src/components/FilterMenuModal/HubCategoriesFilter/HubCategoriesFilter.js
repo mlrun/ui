@@ -19,13 +19,13 @@ such restriction.
 */
 import React, { useContext, useEffect } from 'react'
 import PropTypes from 'prop-types'
-import { OnChange } from 'react-final-form-listeners'
 import { isEqual, pickBy } from 'lodash'
 import { useSelector } from 'react-redux'
 import { useForm } from 'react-final-form'
 
 import { FilterMenuWizardContext } from '../FilterMenuModal'
 import { FormCheckBox } from 'igz-controls/components'
+import FormOnChange from '../../../common/FormOnChange/FormOnChange'
 
 import { FILTER_MENU_MODAL, HUB_CATEGORIES_FILTER } from '../../../constants'
 
@@ -45,6 +45,16 @@ const HubCategoriesFilter = ({ templates }) => {
     form.change(HUB_CATEGORIES_FILTER, filtersStoreHubCategories)
   }, [filtersStoreHubCategories, form])
 
+  const handleHubCategoriesChange = (next, prev) => {
+    if (!isEqual(prev, next)) {
+      const hubCategories = pickBy(next, value => value)
+
+      if (!isEqual(hubCategories, filtersStoreHubCategories)) {
+        form.change(HUB_CATEGORIES_FILTER, hubCategories)
+      }
+    }
+  }
+
   return (
     <div className="categories-list">
       {templates.map(template => (
@@ -56,17 +66,7 @@ const HubCategoriesFilter = ({ templates }) => {
           />
         </div>
       ))}
-      <OnChange name={HUB_CATEGORIES_FILTER}>
-        {(next, prev) => {
-          if (!isEqual(prev, next)) {
-            const hubCategories = pickBy(next, value => value)
-
-            if (!isEqual(hubCategories, filtersStoreHubCategories)) {
-              form.change(HUB_CATEGORIES_FILTER, hubCategories)
-            }
-          }
-        }}
-      </OnChange>
+      <FormOnChange handler={handleHubCategoriesChange} name={HUB_CATEGORIES_FILTER} />
     </div>
   )
 }

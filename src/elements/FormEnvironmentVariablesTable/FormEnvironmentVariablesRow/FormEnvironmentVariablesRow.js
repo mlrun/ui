@@ -17,13 +17,13 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import React, { useEffect, useMemo, useState } from 'react'
+import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import classnames from 'classnames'
 import PropTypes from 'prop-types'
-import { OnChange } from 'react-final-form-listeners'
 
 import { FormInput, FormSelect, TextTooltipTemplate, Tip, Tooltip } from 'igz-controls/components'
 import { FormRowActions } from 'igz-controls/elements'
+import FormOnChange from '../../../common/FormOnChange/FormOnChange'
 
 import { environmentVariablesTypeOptions } from '../formEnvironmentVariablesTable.util'
 import { getValidationRules } from 'igz-controls/utils/validation.util'
@@ -67,6 +67,18 @@ const FormEnvironmentVariablesRow = ({
   useEffect(() => {
     setFieldData(fields.value[index])
   }, [fields.value, index])
+
+  const handleTypeChange = useCallback(
+    type => {
+      if (isCurrentRowEditing(rowPath)) {
+        setFieldValue(`${rowPath}.data`, {
+          key: fields.value[index].data.key,
+          type
+        })
+      }
+    },
+    [fields.value, index, isCurrentRowEditing, rowPath, setFieldValue]
+  )
 
   return (
     <>
@@ -163,16 +175,7 @@ const FormEnvironmentVariablesRow = ({
           />
         </div>
       )}
-      <OnChange name={`${rowPath}.data.type`}>
-        {type => {
-          if (isCurrentRowEditing(rowPath)) {
-            setFieldValue(`${rowPath}.data`, {
-              key: fields.value[index].data.key,
-              type
-            })
-          }
-        }}
-      </OnChange>
+      <FormOnChange handler={handleTypeChange} name={`${rowPath}.data.type`} />
     </>
   )
 }

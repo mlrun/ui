@@ -21,7 +21,7 @@ import express from 'express'
 import bodyParser from 'body-parser'
 import yaml from 'js-yaml'
 import fs from 'fs'
-import crypto from 'crypto'
+import crypto from 'node:crypto'
 import {
   cloneDeep,
   remove,
@@ -1540,9 +1540,7 @@ function putTags(req, res) {
   const tagName = req.params.tag
   const projectName = req.params.project
   const tagObject = artifactTags.find(
-    artifact =>
-      artifact.metadata?.project === projectName ||
-      artifact.project === projectName
+    artifact => artifact.metadata?.project === projectName || artifact.project === projectName
   )
 
   const collectedArtifacts = artifacts.artifacts.filter(artifact => {
@@ -1675,7 +1673,7 @@ function putArtifact(req, res) {
       const artifactSpecData = artifact.spec ?? artifact
       const artifactBodyData = req.body.metadata ?? req.body
 
-      return artifactMetaData?.project === req.params.project 
+      return artifactMetaData?.project === req.params.project
         && artifactMetaData?.tree === artifactBodyData?.tree
         && artifactSpecData?.db_key === req.params.key
     }
@@ -1684,7 +1682,7 @@ function putArtifact(req, res) {
     collectedArtifacts.forEach (collectedArtifact => {
       const artifactMetaData = collectedArtifact.metadata ?? collectedArtifact
       const artifactBodyData = req.body.metadata ?? req.body
-      
+
       artifactMetaData.labels = artifactBodyData?.labels
     })
   }
