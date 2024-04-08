@@ -170,7 +170,7 @@ const JobsCounters = () => {
           withLabels
         /> */}
       </StatsCard.Header>
-      <StatsCard.Body>
+      <StatsCard.Row>
         <StatsCard.Col>
           <>
             <h6 className="stats__subtitle">{upperFirst(JOBS_MONITORING_JOBS_TAB)}</h6>
@@ -187,14 +187,14 @@ const JobsCounters = () => {
             </ul>
           </>
         </StatsCard.Col>
-      </StatsCard.Body>
-      <StatsCard.Footer>
+      </StatsCard.Row>
+      <StatsCard.Row>
         <StatsCard.Col>
           <span className="link" onClick={jobStats.all.link}>
             See all
           </span>
         </StatsCard.Col>
-      </StatsCard.Footer>
+      </StatsCard.Row>
     </StatsCard>
   )
 }
@@ -215,11 +215,11 @@ export default React.memo(JobsCounters)
           withLabels
         />
       </StatsCard.Header>
-      <StatsCard.Body>
+      <StatsCard.Row>
         <StatsCard.Col>{getCounterTemplate('jobs')}</StatsCard.Col>
         <StatsCard.Col>{getCounterTemplate('workflows')}</StatsCard.Col>
-      </StatsCard.Body>
-      <StatsCard.Footer>
+      </StatsCard.Row>
+      <StatsCard.Row>
         <StatsCard.Col>
           <span className='link' onClick={jobStats.all.link}>
             See all
@@ -230,6 +230,6 @@ export default React.memo(JobsCounters)
             See all
           </span>
         </StatsCard.Col>
-      </StatsCard.Footer>
+      </StatsCard.Row>
     </StatsCard>
   */

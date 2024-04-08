@@ -11,10 +11,11 @@
 
     flex: 1;
     align-self: center;
-    cursor: pointer;
 
     &-card {
-      height: 144px;
+      cursor: pointer;
+      border: 2px solid transparent;
+      min-height: 144px;
     }
 
     &__counter {
@@ -41,6 +42,8 @@
       }
     }
   }
+
+  .data-ellipsis {
+    flex: 1;
+  }
 }
-
-
