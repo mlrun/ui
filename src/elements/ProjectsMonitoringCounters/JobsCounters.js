@@ -23,14 +23,12 @@ import { useNavigate } from 'react-router-dom'
 import { upperFirst } from 'lodash'
 import moment from 'moment'
 
-import DatePicker from '../../common/DatePicker/DatePicker'
 import Loader from '../../common/Loader/Loader'
 import StatsCard from '../../common/StatsCard/StatsCard'
 
 import jobsActions from '../../actions/jobs'
 import projectsAction from '../../actions/projects'
 
-import { PAST_24_HOUR_DATE_OPTION } from '../../utils/datePicker.util'
 import {
   generateMonitoringStats,
   generateMonitoringGroupedData
@@ -42,12 +40,14 @@ import {
   STATE_FILTER_ALL_ITEMS
 } from '../../constants'
 
+import { ReactComponent as ClockIcon } from 'igz-controls/images/clock.svg'
+
 import './projectsMonitoringCounters.scss'
 
 const JobsCounters = () => {
   const dispatch = useDispatch()
   const navigate = useNavigate()
-  const [filter, setFilter] = useState({
+  const [filter] = useState({
     groupBy: GROUP_BY_WORKFLOW,
     dates: {
       value: [new Date(moment().add(-1, 'days'))]
@@ -71,15 +71,15 @@ const JobsCounters = () => {
   const { jobs } = useSelector(store => store.jobsStore)
   // const { data: workflows } = useSelector(store => store.workflowsStore.workflows)
 
-  const handleDateSelection = dates => {
-    const generatedDates = [...dates]
+  // const handleDateSelection = dates => {
+  //   const generatedDates = [...dates]
 
-    if (generatedDates.length === 1) {
-      generatedDates.push(new Date())
-    }
+  //   if (generatedDates.length === 1) {
+  //     generatedDates.push(new Date())
+  //   }
 
-    setFilter(filters => ({ ...filters, dates: { value: generatedDates } }))
-  }
+  //   setFilter(filters => ({ ...filters, dates: { value: generatedDates } }))
+  // }
 
   const jobStats = useMemo(
     () => generateMonitoringStats(groupedJobsData, navigate, dispatch, JOBS_MONITORING_JOBS_TAB),
@@ -155,6 +155,11 @@ const JobsCounters = () => {
   return (
     <StatsCard className="monitoring-stats">
       <StatsCard.Header title="Jobs">
+        <div className="project-card__info">
+          <ClockIcon className="project-card__info-icon" />
+          <span>Past 24 hours</span>
+        </div>
+        {/* Todo: Use in the future
         <DatePicker
           date={filter.dates.value[0]}
           dateTo={filter.dates.value[1]}
@@ -163,7 +168,7 @@ const JobsCounters = () => {
           onChange={handleDateSelection}
           type="date-range-time"
           withLabels
-        />
+        /> */}
       </StatsCard.Header>
       <StatsCard.Body>
         <StatsCard.Col>
