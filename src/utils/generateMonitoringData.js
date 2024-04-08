@@ -77,7 +77,9 @@ export const generateMonitoringGroupedData = (data, setData, handleDispatchData)
       element => element.status?.state === 'running' || element.state?.value === 'running'
     ),
     failed: data.filter(element =>
-      ['error', 'failed'].includes(element.status?.state || element.state?.value)
+      ['aborting', 'aborted', 'error', 'failed'].includes(
+        element.status?.state || element.state?.value
+      )
     ),
     completed: data.filter(
       element => element.status?.state === 'completed' || element.state?.value === 'completed'
