@@ -27,7 +27,7 @@
 }
 
 @mixin greyNode {
-  color: rgba($black, 0.2);
+  color: rgba($black, 0.3);
   background-color: $white;
 
   &:not(.selected) {
@@ -113,11 +113,15 @@
     }
 
     &.oval-shape {
-      border-radius: 30px;
+      border-radius: 50%;
+    }
+
+    &.rounded-rectangle-shape {
+      border-radius: 50px;
     }
 
     &.with-opacity {
-      opacity: 0.7 !important;
+      opacity: 0.6 !important;
     }
 
     &.selectable {
