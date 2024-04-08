@@ -121,7 +121,6 @@ const DatePickerView = React.forwardRef(
                 onChange={onInputChange}
                 pipe={autoCorrectedDatePipe}
                 value={valueDatePickerInput}
-                size={valueDatePickerInput.length}
               />
               {isValueEmpty && (
                 <span className="input__label input__label-empty">&nbsp;Any time</span>

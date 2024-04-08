@@ -38,24 +38,27 @@ const JobsMonitoringStatsCard = ({ loading, selectedCard, setSelectedCard, stats
         )
 
         return (
-          <Tooltip key={cardData.id} template={<TextTooltipTemplate text={cardData.tooltip} />}>
-            <StatsCard
-              className={cardClassNames}
-              onClick={() => setSelectedCard(cardData.id)}
-            >
-              <StatsCard.Body>
-                <div className="stats">
+          <StatsCard
+            key={cardData.id}
+            className={cardClassNames}
+            onClick={() => setSelectedCard(cardData.id)}
+          >
+            <StatsCard.Row>
+              <Tooltip template={<TextTooltipTemplate text={cardData.tooltip} />}>
+                <StatsCard.Row>
+                  <StatsCard.Col>
                     <span className="stats__counter">
                       {loading ? <Loader section small secondary /> : cardData.counter}
                     </span>
-                  <span className="stats__subtitle">
+                    <span className="stats__subtitle">
                       {cardData.subTitle}
-                    <i className={`state-${cardData.statusClass}`} />
+                      <i className={`state-${cardData.statusClass}`} />
                     </span>
-                </div>
-              </StatsCard.Body>
-            </StatsCard>
-          </Tooltip>
+                  </StatsCard.Col>
+                </StatsCard.Row>
+              </Tooltip>
+            </StatsCard.Row>
+          </StatsCard>
         )
       })}
     </div>

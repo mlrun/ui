@@ -39,11 +39,7 @@ StatsCard.Header = ({ children, title }) => {
   )
 }
 
-StatsCard.Body = ({ children }) => {
-  return <div className="stats-card__row stats-card__full-row">{children}</div>
-}
-
-StatsCard.Footer = ({ children }) => {
+StatsCard.Row = ({ children }) => {
   return <div className="stats-card__row">{children}</div>
 }
 
@@ -53,7 +49,7 @@ StatsCard.Col = ({ children }) => {
 
 StatsCard.defaultProps = {
   className: '',
-  onClick: () => {},
+  onClick: () => {}
 }
 
 StatsCard.Header.defaultProps = {
