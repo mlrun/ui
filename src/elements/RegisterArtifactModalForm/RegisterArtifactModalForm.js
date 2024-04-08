@@ -20,9 +20,8 @@ such restriction.
 import React, { useMemo } from 'react'
 import PropTypes from 'prop-types'
 
-import ErrorMessage from '../../common/ErrorMessage/ErrorMessage'
 import TargetPath from '../../common/TargetPath/TargetPath'
-import { FormInput, FormSelect, FormTextarea, FormChipCell } from 'igz-controls/components'
+import { FormChipCell, FormInput, FormSelect, FormTextarea } from 'igz-controls/components'
 
 import { ARTIFACT_TYPE, MLRUN_STORAGE_INPUT_PATH_SCHEME } from '../../constants'
 import { getChipOptions } from '../../utils/getChipOptions'
@@ -34,9 +33,7 @@ const RegisterArtifactModalForm = ({
   messagesByKind,
   params,
   setFieldState,
-  setUniquenessErrorIsShown,
-  showType,
-  uniquenessErrorIsShown
+  showType
 }) => {
   const kindOptions = useMemo(
     () => [
@@ -80,14 +77,6 @@ const RegisterArtifactModalForm = ({
           </div>
         )}
       </div>
-      {uniquenessErrorIsShown && (
-        <div className="form-row">
-          <ErrorMessage
-            closeError={() => setUniquenessErrorIsShown(false)}
-            message={messagesByKind.uniquenessError}
-          />
-        </div>
-      )}
       <div className="form-row">
         <div className="form-col-2">
           <FormInput
@@ -103,6 +92,7 @@ const RegisterArtifactModalForm = ({
             label="Tag"
             name="metadata.tag"
             validationRules={getValidationRules('common.tag')}
+            placeholder="latest"
           />
         </div>
         {showType && (
@@ -158,9 +148,7 @@ RegisterArtifactModalForm.propTypes = {
   messagesByKind: PropTypes.object,
   params: PropTypes.shape({}).isRequired,
   setFieldState: PropTypes.func.isRequired,
-  setUniquenessErrorIsShown: PropTypes.func.isRequired,
-  showType: PropTypes.bool,
-  uniquenessErrorIsShown: PropTypes.bool.isRequired
+  showType: PropTypes.bool
 }
 
 export default RegisterArtifactModalForm

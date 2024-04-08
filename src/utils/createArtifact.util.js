@@ -17,8 +17,6 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-export const modelUniquenessError =
-  'That combination of model name and model tag is already in use. Assign a unique combination of model name and model tag.'
 const artifactSubTitle =
   'Assign it a unique combination of name and tag, and specify its path (for example, s3://mybucket/path).'
 
@@ -27,14 +25,22 @@ export const createArtifactMessages = {
     title:
       'Register an artifact in MLRun so it can be used, for example, by functions, jobs, and pipelines.',
     subTitle: artifactSubTitle,
-    uniquenessError:
-      'That combination of artifact name and artifact tag is already in use. Assign a unique combination of artifact name and artifact tag.'
+    overwriteConfirmTitle: 'Overwrite artifact?',
+    overwriteConfirmMessage:
+      'That combination of artifact name and artifact tag is already in use. If you continue, the current artifact will be overwritten.'
   },
   dataset: {
     title:
       'Register a dataset as an artifact in MLRun so it can be used, for example, by functions, jobs, and pipelines.',
     subTitle: artifactSubTitle,
-    uniquenessError:
-      'That combination of dataset name and dataset tag is already in use. Assign a unique combination of dataset name and dataset tag.'
+    overwriteConfirmTitle: 'Overwrite dataset?',
+    overwriteConfirmMessage:
+      'That combination of dataset name and dataset tag is already in use. If you continue, the current dataset will be overwritten.'
   }
+}
+
+export const createModelMessages = {
+  overwriteConfirmTitle: 'Overwrite model?',
+  overwriteConfirmMessage:
+    'That combination of model name and model tag is already in use. If you continue, the current model will be overwritten.'
 }

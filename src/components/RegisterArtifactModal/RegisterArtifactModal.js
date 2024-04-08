@@ -17,7 +17,7 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import React, { useState } from 'react'
+import React, { useMemo } from 'react'
 import PropTypes from 'prop-types'
 import { useDispatch } from 'react-redux'
 import { useLocation } from 'react-router-dom'
@@ -28,13 +28,14 @@ import arrayMutators from 'final-form-arrays'
 import { isEmpty } from 'lodash'
 
 import RegisterArtifactModalForm from '../../elements/RegisterArtifactModalForm/RegisterArtifactModalForm'
-import { Button, Modal } from 'igz-controls/components'
+import { Button, Modal, ConfirmDialog } from 'igz-controls/components'
 
 import {
   FORBIDDEN_ERROR_STATUS_CODE,
   MODAL_SM,
   SECONDARY_BUTTON,
-  TERTIARY_BUTTON
+  TERTIARY_BUTTON,
+  PRIMARY_BUTTON
 } from 'igz-controls/constants'
 import artifactApi from '../../api/artifacts-api'
 import { ARTIFACT_TYPE } from '../../constants'
@@ -43,6 +44,7 @@ import { createArtifactMessages } from '../../utils/createArtifact.util'
 import { setFieldState } from 'igz-controls/utils/form.util'
 import { setNotification } from '../../reducers/notificationReducer'
 import { showErrorNotification } from '../../utils/notifications.util'
+import { openPopUp } from 'igz-controls/utils/common.util'
 import { useModalBlockHistory } from '../../hooks/useModalBlockHistory.hook'
 
 const RegisterArtifactModal = ({
@@ -70,7 +72,6 @@ const RegisterArtifactModal = ({
       }
     }
   }
-  const [uniquenessErrorIsShown, setUniquenessErrorIsShown] = useState(false)
   const formRef = React.useRef(
     createForm({
       initialValues,
@@ -81,6 +82,9 @@ const RegisterArtifactModal = ({
   const location = useLocation()
   const dispatch = useDispatch()
   const { handleCloseModal, resolveModal } = useModalBlockHistory(onResolve, formRef.current)
+  const messagesByKind = useMemo(() => {
+    return createArtifactMessages[artifactKind.toLowerCase()]
+  }, [artifactKind])
 
   const registerArtifact = values => {
     const data = {
@@ -104,30 +108,44 @@ const RegisterArtifactModal = ({
       status: {}
     }
 
+    const handleRegisterArtifact = () => {
+      return artifactApi.registerArtifact(params.projectName, data).then(response => {
+        resolveModal()
+        refresh()
+        dispatch(
+          setNotification({
+            status: response.status,
+            id: Math.random(),
+            message: `${title} initiated successfully`
+          })
+        )
+
+        return response
+      })
+    }
+
     return artifactApi
       .getArtifact(params.projectName, values.metadata.key, values.metadata.tag)
       .then(response => {
         if (response?.data) {
           if (!isEmpty(response.data.artifacts)) {
-            setUniquenessErrorIsShown(true)
+            openPopUp(ConfirmDialog, {
+              confirmButton: {
+                label: 'Overwrite',
+                variant: PRIMARY_BUTTON,
+                handler: handleRegisterArtifact
+              },
+              cancelButton: {
+                label: 'Cancel',
+                variant: TERTIARY_BUTTON
+              },
+              header: messagesByKind.overwriteConfirmTitle,
+              message: messagesByKind.overwriteConfirmMessage
+            })
 
             return null
           } else {
-            setUniquenessErrorIsShown(false)
-
-            return artifactApi.registerArtifact(params.projectName, data).then(response => {
-              resolveModal()
-              refresh()
-              dispatch(
-                setNotification({
-                  status: response.status,
-                  id: Math.random(),
-                  message: `${title} initiated successfully`
-                })
-              )
-
-              return response
-            })
+            return handleRegisterArtifact()
           }
         }
       })
@@ -139,7 +157,6 @@ const RegisterArtifactModal = ({
 
         showErrorNotification(dispatch, error, '', customErrorMsg, () => registerArtifact(values))
 
-        setUniquenessErrorIsShown(false)
         resolveModal()
       })
   }
@@ -180,12 +197,10 @@ const RegisterArtifactModal = ({
             <RegisterArtifactModalForm
               formState={formState}
               initialValues={initialValues}
-              messagesByKind={createArtifactMessages[artifactKind.toLowerCase()]}
+              messagesByKind={messagesByKind}
               params={params}
               setFieldState={formState.form.mutators.setFieldState}
-              setUniquenessErrorIsShown={setUniquenessErrorIsShown}
               showType={artifactKind === ARTIFACT_TYPE}
-              uniquenessErrorIsShown={uniquenessErrorIsShown}
             />
           </Modal>
         )
