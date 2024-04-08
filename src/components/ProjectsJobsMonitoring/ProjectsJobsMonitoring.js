@@ -35,6 +35,8 @@ import {
   JOBS_MONITORING_WORKFLOWS_TAB
 } from '../../constants'
 
+import './projectsJobsMonitoring.scss'
+
 export const ProjectJobsMonitoringContext = React.createContext({})
 
 const ProjectsJobsMonitoring = () => {
@@ -88,18 +90,16 @@ const ProjectsJobsMonitoring = () => {
           />
           <div className="action-bar">Filter menu</div>
         </div>
-        <div>
-          <ProjectJobsMonitoringContext.Provider
-            value={{
-              filters,
-              jobsMonitoringData,
-              selectedCard,
-              setSelectedCard
-            }}
-          >
-            <Outlet />
-          </ProjectJobsMonitoringContext.Provider>
-        </div>
+        <ProjectJobsMonitoringContext.Provider
+          value={{
+            filters,
+            jobsMonitoringData,
+            selectedCard,
+            setSelectedCard
+          }}
+        >
+          <Outlet />
+        </ProjectJobsMonitoringContext.Provider>
       </div>
     </div>
   )
