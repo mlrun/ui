@@ -17,12 +17,39 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
+import React, { useEffect, useState } from 'react'
+import { Field } from 'react-final-form'
+import PropTypes from 'prop-types'
 
-const { createHash } = require('node:crypto')
+const OnChangeState = ({ inputValue, handler }) => {
+  const [previousValue, setPreviousValue] = useState(inputValue)
 
-module.exports = env => {
-  const hash = createHash('md5')
-  hash.update(JSON.stringify(env))
+  useEffect(() => {
+    if (inputValue !== previousValue) {
+      setPreviousValue(inputValue)
+      handler(inputValue, previousValue)
+    }
+  }, [handler, inputValue, previousValue])
 
-  return hash.digest('hex')
+  return null
 }
+
+const FormOnChange = ({ handler, name }) => {
+  return (
+    <Field
+      name={name}
+      subscription={{
+        value: true
+      }}
+      allowNull
+      render={props => <OnChangeState inputValue={props.input.value} handler={handler} />}
+    />
+  )
+}
+
+FormOnChange.propTypes = {
+  handler: PropTypes.func.isRequired,
+  name: PropTypes.string.isRequired
+}
+
+export default FormOnChange

@@ -20,7 +20,6 @@ such restriction.
 import React, { useMemo, useState } from 'react'
 import PropTypes from 'prop-types'
 import { get, isEmpty, omit, set } from 'lodash'
-import { OnChange } from 'react-final-form-listeners'
 import { FieldArray } from 'react-final-form-arrays'
 
 import {
@@ -33,6 +32,7 @@ import {
   Tooltip,
   TextTooltipTemplate
 } from 'igz-controls/components'
+import FormOnChange from '../../../../common/FormOnChange/FormOnChange'
 
 import {
   DATA_INPUTS_STEP,
@@ -368,12 +368,11 @@ const JobWizardRunDetails = ({
             </div>
           </>
         )}
-
         {stepIsActive && spyOnHandlerChange && (
-          <OnChange name={handlerPath}>{onHandlerChange}</OnChange>
+          <FormOnChange handler={onHandlerChange} name={handlerPath} />
         )}
         {stepIsActive && spyOnVersionChange && (
-          <OnChange name={versionPath}>{onVersionChange}</OnChange>
+          <FormOnChange handler={onVersionChange} name={versionPath} />
         )}
       </div>
     )

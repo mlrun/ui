@@ -18,9 +18,7 @@ under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
 import React from 'react'
-import ReactDOM, { createPortal } from 'react-dom'
-import ModalContainer from 'react-modal-promise'
-import { BrowserRouter as Router } from 'react-router-dom'
+import { createRoot } from 'react-dom/client'
 
 import App from './App'
 import ErrorBoundary from './components/ErrorBoundary/ErrorBoundary'
@@ -29,7 +27,7 @@ import * as serviceWorker from './serviceWorker'
 import { Provider } from 'react-redux'
 import toolkitStore from './store/toolkitStore'
 
-if(!window.location.pathname.includes(process.env.PUBLIC_URL)) {
+if (!window.location.pathname.includes(process.env.PUBLIC_URL)) {
   window.location.href = process.env.PUBLIC_URL
 }
 
@@ -39,16 +37,14 @@ fetch(`${process.env.PUBLIC_URL}/config.json`, { cache: 'no-store' })
     window.mlrunConfig = json
   })
   .then(() => {
-    ReactDOM.render(
+    const root = createRoot(document.getElementById('root'))
+
+    root.render(
       <Provider store={toolkitStore}>
-        <Router basename={process.env.PUBLIC_URL}>
-          <ErrorBoundary>
-            <App />
-          </ErrorBoundary>
-          {createPortal(<ModalContainer />, document.getElementById('overlay_container'))}
-        </Router>
-      </Provider>,
-      document.getElementById('root')
+        <ErrorBoundary>
+          <App />
+        </ErrorBoundary>
+      </Provider>
     )
   })
 

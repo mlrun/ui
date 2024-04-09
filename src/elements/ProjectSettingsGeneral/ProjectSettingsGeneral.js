@@ -25,7 +25,6 @@ import { connect, useDispatch } from 'react-redux'
 import { createForm } from 'final-form'
 import { cloneDeep, isBoolean } from 'lodash'
 import { useParams } from 'react-router-dom'
-import { OnChange } from 'react-final-form-listeners'
 
 import {
   FormKeyValueTable,
@@ -36,6 +35,7 @@ import {
 } from 'igz-controls/components'
 import ChangeOwnerPopUp from '../ChangeOwnerPopUp/ChangeOwnerPopUp'
 import Loader from '../../common/Loader/Loader'
+import FormOnChange from '../../common/FormOnChange/FormOnChange'
 
 import projectsAction from '../../actions/projects'
 import projectsApi from '../../api/projects-api'
@@ -221,13 +221,11 @@ const ProjectSettingsGeneral = ({
                       label="Pull at runtime"
                       name={LOAD_SOURCE_ON_RUN}
                     />
-                    <OnChange name={LOAD_SOURCE_ON_RUN}>
-                      {(curr, prev) => {
-                        if (isBoolean(prev)) {
-                          updateProjectData()
-                        }
-                      }}
-                    </OnChange>
+                    <FormOnChange handler={(curr, prev) => {
+                      if (isBoolean(prev)) {
+                        updateProjectData()
+                      }
+                    }} name={LOAD_SOURCE_ON_RUN} />
                   </div>
                   <div className="settings__artifact-path">
                     <FormInput

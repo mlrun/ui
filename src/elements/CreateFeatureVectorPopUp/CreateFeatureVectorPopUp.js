@@ -20,7 +20,6 @@ such restriction.
 import React, { useState } from 'react'
 import PropTypes from 'prop-types'
 import arrayMutators from 'final-form-arrays'
-import { OnChange } from 'react-final-form-listeners'
 import { Form } from 'react-final-form'
 import { createForm } from 'final-form'
 import { isEmpty } from 'lodash'
@@ -34,6 +33,7 @@ import {
   TextTooltipTemplate,
   Tooltip
 } from 'igz-controls/components'
+import FormOnChange from '../../common/FormOnChange/FormOnChange'
 
 import { getValidationRules } from 'igz-controls/utils/validation.util'
 import { setFieldState } from 'igz-controls/utils/form.util'
@@ -104,11 +104,12 @@ const CreateFeatureVectorPopUp = ({ closePopUp, createFeatureVector, featureVect
                       validationRules={getValidationRules('common.tag')}
                       onBlur={() => setTagTooltipIsHidden(false)}
                     />
-                    <OnChange name={'tag'}>
-                      {() => {
+                    <FormOnChange
+                      handler={() => {
                         setTagTooltipIsHidden(true)
                       }}
-                    </OnChange>
+                      name={'tag'}
+                    />
                   </Tooltip>
                 </div>
               </div>

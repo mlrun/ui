@@ -20,10 +20,10 @@ such restriction.
 import React, { useState, useEffect, useCallback } from 'react'
 import { useDispatch } from 'react-redux'
 import { get, isNil } from 'lodash'
-import { OnChange } from 'react-final-form-listeners'
 import PropTypes from 'prop-types'
 
 import { FormCombobox } from 'igz-controls/components'
+import FormOnChange from '../FormOnChange/FormOnChange'
 
 import {
   generateComboboxMatchesList,
@@ -211,6 +211,16 @@ const TargetPath = ({
     handleGetFeatureVector
   ])
 
+  const handlePathChange = useCallback(
+    value => {
+      if (value.length !== 0) {
+        formState.form.change(`${formStateFieldInfo}.value`, value.replace(/[^:/]*:[/]{2,3}/, ''))
+        formState.form.change(`${formStateFieldInfo}.pathType`, value.match(/^\w*:[/]{2,3}/)[0])
+      }
+    },
+    [formState.form, formStateFieldInfo]
+  )
+
   return (
     <>
       <FormCombobox
@@ -244,24 +254,15 @@ const TargetPath = ({
         }
         validator={(fieldValue, allValues) => validatePath(allValues)}
       />
-      <OnChange name={name}>
-        {value => {
-          if (value.length !== 0) {
-            formState.form.change(
-              `${formStateFieldInfo}.value`,
-              value.replace(/[^:/]*:[/]{2,3}/, '')
-            )
-            formState.form.change(`${formStateFieldInfo}.pathType`, value.match(/^\w*:[/]{2,3}/)[0])
-          }
-        }}
-      </OnChange>
-      <OnChange name={`${formStateFieldInfo}.pathType`}>
-        {(value, prevValue) => {
+      <FormOnChange handler={handlePathChange} name={name} />
+      <FormOnChange
+        handler={(value, prevValue) => {
           if (prevValue === MLRUN_STORAGE_INPUT_PATH_SCHEME) {
             setDataInputState(targetPathInitialState)
           }
         }}
-      </OnChange>
+        name={`${formStateFieldInfo}.pathType`}
+      />
     </>
   )
 }
