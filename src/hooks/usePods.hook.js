@@ -24,29 +24,33 @@ import { useParams } from 'react-router-dom'
 import { arePodsHidden } from '../components/Jobs/jobs.util'
 import { JOB_KIND_JOB } from '../constants'
 
-export const usePods = (fetchJobPods, removePods, selectedJob) => {
+export const usePods = (dispatch, fetchJobPods, removePods, selectedJob) => {
   const params = useParams()
 
   useEffect(() => {
     if (!isEmpty(selectedJob) && !arePodsHidden(selectedJob?.labels)) {
-      fetchJobPods(
-        params.projectName,
-        selectedJob.uid,
-        get(selectedJob, 'ui.originalContent.metadata.labels.kind', JOB_KIND_JOB)
-      )
-
-      const interval = setInterval(() => {
+      dispatch(
         fetchJobPods(
           params.projectName,
           selectedJob.uid,
           get(selectedJob, 'ui.originalContent.metadata.labels.kind', JOB_KIND_JOB)
         )
+      )
+
+      const interval = setInterval(() => {
+        dispatch(
+          fetchJobPods(
+            params.projectName,
+            selectedJob.uid,
+            get(selectedJob, 'ui.originalContent.metadata.labels.kind', JOB_KIND_JOB)
+          )
+        )
       }, 30000)
 
       return () => {
-        removePods()
+        dispatch(removePods())
         clearInterval(interval)
       }
     }
-  }, [fetchJobPods, params.projectName, removePods, selectedJob])
+  }, [dispatch, fetchJobPods, params.projectName, removePods, selectedJob])
 }

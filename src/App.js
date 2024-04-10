@@ -100,11 +100,6 @@ const FeatureVectors = lazyRetry(() =>
 const ProjectsJobsMonitoring = lazyRetry(() =>
   import('./components/ProjectsJobsMonitoring/ProjectsJobsMonitoring')
 )
-const ProjectsJobsMonitoringJobs = lazyRetry(() =>
-  import(
-    './components/ProjectsJobsMonitoring/ProjectsJobsMonitoringJobs/ProjectsJobsMonitoringJobs'
-  )
-)
 const ProjectsJobsMonitoringWorkflows = lazyRetry(() =>
   import(
     './components/ProjectsJobsMonitoring/ProjectsJobsMonitoringWorkflows/ProjectsJobsMonitoringWorkflows'
@@ -115,6 +110,10 @@ const ProjectsJobsMonitoringScheduled = lazyRetry(() =>
     './components/ProjectsJobsMonitoring/ProjectsJobsMonitoringScheduled/ProjectsJobsMonitoringScheduled'
   )
 )
+const JobsMonitoring = lazyRetry(() =>
+  import('./components/ProjectsJobsMonitoring/JobsMonitoring/JobsMonitoring')
+)
+
 const App = () => {
   const { isNuclioModeDisabled } = useNuclioMode()
   const isHeaderShown = localStorageService.getStorageValue('mlrunUi.headerHidden') !== 'true'
@@ -123,27 +122,30 @@ const App = () => {
   const router = createBrowserRouter(
     createRoutesFromElements(
       <>
-        <Route path="projects/jobs-monitoring/:tab" element={<ProjectsJobsMonitoring />} />
         <Route path="" element={<Page isHeaderShown={isHeaderShown} />}>
           <Route path="projects" element={<Projects />} />
-          <Route
-                path={`projects/${JOBS_MONITORING_PAGE}/*`}
-                element={<ProjectsJobsMonitoring />}
-              >
-                <Route path={JOBS_MONITORING_JOBS_TAB} element={<ProjectsJobsMonitoringJobs />} />
-                <Route
-                  path={JOBS_MONITORING_WORKFLOWS_TAB}
-                  element={<ProjectsJobsMonitoringWorkflows />}
-                />
-                <Route
-                  path={JOBS_MONITORING_SCHEDULED_TAB}
-                  element={<ProjectsJobsMonitoringScheduled />}
-                />
-              </Route>
-          <Route
-            path={`projects/${JOBS_MONITORING_PAGE}/:tabId`}
-            element={<ProjectsJobsMonitoring />}
-          />
+          <Route path={`projects/${JOBS_MONITORING_PAGE}/*`} element={<ProjectsJobsMonitoring />}>
+            {[
+              `${JOBS_MONITORING_JOBS_TAB}/:jobName/:jobId/:tab`,
+              `${JOBS_MONITORING_JOBS_TAB}/:jobId/:tab`,
+              `${JOBS_MONITORING_JOBS_TAB}/:jobName`,
+              `${JOBS_MONITORING_JOBS_TAB}`
+            ].map((path, index) => {
+              return (
+                <Fragment key={index}>
+                  <Route path={path} element={<JobsMonitoring />} />
+                </Fragment>
+              )
+            })}
+            <Route
+              path={JOBS_MONITORING_WORKFLOWS_TAB}
+              element={<ProjectsJobsMonitoringWorkflows />}
+            />
+            <Route
+              path={JOBS_MONITORING_SCHEDULED_TAB}
+              element={<ProjectsJobsMonitoringScheduled />}
+            />
+          </Route>
           <Route path="projects/:projectName" element={<Navigate replace to={PROJECT_MONITOR} />} />
           <Route path={`projects/:projectName/${PROJECT_MONITOR}`} element={<ProjectMonitor />} />
 

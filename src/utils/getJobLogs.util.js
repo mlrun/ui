@@ -17,10 +17,17 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-export const getJobLogs = (uid, projectName, streamLogsRef, setDetailsLogs, fetchJobLogs) => {
+export const getJobLogs = (
+  uid,
+  projectName,
+  streamLogsRef,
+  setDetailsLogs,
+  fetchJobLogs,
+  dispatch
+) => {
   setDetailsLogs('')
 
-  fetchJobLogs(uid, projectName).then(res => {
+  dispatch(fetchJobLogs(uid, projectName)).then(res => {
     const reader = res.body?.getReader()
 
     if (reader) {

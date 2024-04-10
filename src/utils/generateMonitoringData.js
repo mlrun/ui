@@ -19,16 +19,14 @@ such restriction.
 */
 import { jobHasWorkflowLabel } from './parseJob'
 
-import projectsAction from '../actions/projects'
 import { JOBS_MONITORING_SCHEDULED_TAB } from '../constants'
+import { setFilters } from '../reducers/filtersReducer'
 
 export const generateMonitoringStats = (data, navigate, dispatch, tab) => {
   const navigateToJobsMonitoringPage = status => {
     dispatch(
-      projectsAction.setJobsMonitoringData({
-        filters: {
-          status
-        }
+      setFilters({
+        state: status
       })
     )
     navigate(`/projects/jobs-monitoring/${tab}`)

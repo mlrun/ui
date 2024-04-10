@@ -19,109 +19,50 @@ such restriction.
 */
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import classnames from 'classnames'
-import { useLocation, useNavigate, useParams } from 'react-router-dom'
+import { useParams } from 'react-router-dom'
 import { connect, useDispatch, useSelector } from 'react-redux'
 import { isEmpty } from 'lodash'
 
-import JobWizard from '../../JobWizard/JobWizard'
-import Details from '../../Details/Details'
 import FilterMenu from '../../FilterMenu/FilterMenu'
-import JobsTableRow from '../../../elements/JobsTableRow/JobsTableRow'
-import NoData from '../../../common/NoData/NoData'
-import Table from '../../Table/Table'
 import TableTop from '../../../elements/TableTop/TableTop'
-import YamlModal from '../../../common/YamlModal/YamlModal'
+import JobsTable from '../../../elements/JobsTable/JobsTable'
 
-import { DANGER_BUTTON, TERTIARY_BUTTON } from 'igz-controls/constants'
-import {
-  GROUP_BY_NONE,
-  JOB_KIND_JOB,
-  JOBS_PAGE,
-  MONITOR_JOBS_TAB,
-  PANEL_RERUN_MODE,
-  REQUEST_CANCELED
-} from '../../../constants'
-import {
-  generateActionsMenu,
-  generateFilters,
-  generatePageData,
-  monitorJobsActionCreator
-} from './monitorJobs.util'
+import { TERTIARY_BUTTON } from 'igz-controls/constants'
+import { GROUP_BY_NONE, JOBS_PAGE, MONITOR_JOBS_TAB, REQUEST_CANCELED } from '../../../constants'
+import { generateFilters, monitorJobsActionCreator } from './monitorJobs.util'
 import { JobsContext } from '../Jobs'
 import { createJobsMonitorTabContent } from '../../../utils/createJobsContent'
-import { datePickerPastOptions, PAST_WEEK_DATE_OPTION } from '../../../utils/datePicker.util'
-import {
-  enrichRunWithFunctionFields,
-  handleAbortJob,
-  handleDeleteJob,
-  isJobKindLocal,
-  pollAbortingJobs
-} from '../jobs.util'
-import getState from '../../../utils/getState'
-import { getCloseDetailsLink } from '../../../utils/getCloseDetailsLink'
-import { getJobLogs } from '../../../utils/getJobLogs.util'
-import { getNoDataMessage } from '../../../utils/getNoDataMessage'
-import { isDetailsTabExists } from '../../../utils/isDetailsTabExists'
-import { openPopUp } from 'igz-controls/utils/common.util'
+import { pollAbortingJobs } from '../jobs.util'
 import { parseJob } from '../../../utils/parseJob'
 import { setFilters } from '../../../reducers/filtersReducer'
-import { setNotification } from '../../../reducers/notificationReducer'
-import { showErrorNotification } from '../../../utils/notifications.util'
 import { useMode } from '../../../hooks/mode.hook'
-import { usePods } from '../../../hooks/usePods.hook'
-import { useYaml } from '../../../hooks/yaml.hook'
+import { datePickerPastOptions, PAST_WEEK_DATE_OPTION } from '../../../utils/datePicker.util'
 
-const MonitorJobs = ({
-  abortJob,
-  deleteAllJobRuns,
-  deleteJob,
-  fetchAllJobRuns,
-  fetchJob,
-  fetchJobFunctions,
-  fetchJobLogs,
-  fetchJobPods,
-  fetchJobs,
-  removePods
-}) => {
+const MonitorJobs = ({ fetchAllJobRuns, fetchJobs }) => {
   const [abortingJobs, setAbortingJobs] = useState({})
-  const [dataIsLoaded, setDataIsLoaded] = useState(false)
   const [jobRuns, setJobRuns] = useState([])
   const [jobs, setJobs] = useState([])
   const [selectedJob, setSelectedJob] = useState({})
-  const [convertedYaml, toggleConvertedYaml] = useYaml('')
   const [dateFilter, setDateFilter] = useState(['', ''])
+  const [dataIsLoaded, setDataIsLoaded] = useState(false)
   const appStore = useSelector(store => store.appStore)
-  const jobsStore = useSelector(store => store.jobsStore)
   const filtersStore = useSelector(store => store.filtersStore)
   const [largeRequestErrorMessage, setLargeRequestErrorMessage] = useState('')
   const params = useParams()
-  const navigate = useNavigate()
-  const location = useLocation()
   const dispatch = useDispatch()
   const { isStagingMode } = useMode()
   const abortJobRef = useRef(null)
-  const fetchJobFunctionsPromiseRef = useRef()
+  const { handleMonitoring } = React.useContext(JobsContext)
   const abortControllerRef = useRef(new AbortController())
-  const {
-    editableItem,
-    handleMonitoring,
-    handleRerunJob,
-    jobWizardIsOpened,
-    jobWizardMode,
-    setConfirmData,
-    setEditableItem,
-    setJobWizardIsOpened,
-    setJobWizardMode
-  } = React.useContext(JobsContext)
+
   const filters = useMemo(() => {
     return generateFilters(params.jobName)
   }, [params.jobName])
+
   const filterMenuClassNames = classnames(
     'content__action-bar-wrapper',
     params.jobId && 'content__action-bar-wrapper_hidden'
   )
-
-  usePods(fetchJobPods, removePods, selectedJob)
 
   const tableContent = useMemo(
     () =>
@@ -129,28 +70,10 @@ const MonitorJobs = ({
     [isStagingMode, jobRuns, jobs, params.jobName]
   )
 
-  const handleFetchJobLogs = useCallback(
-    (item, projectName, setDetailsLogs, streamLogsRef) => {
-      return getJobLogs(item.uid, projectName, streamLogsRef, setDetailsLogs, fetchJobLogs)
-    },
-    [fetchJobLogs]
-  )
-
-  const pageData = useMemo(
-    () =>
-      generatePageData(
-        handleFetchJobLogs,
-        selectedJob,
-        appStore.frontendSpec.jobs_dashboard_url,
-        handleMonitoring
-      ),
-    [handleFetchJobLogs, selectedJob, appStore.frontendSpec.jobs_dashboard_url, handleMonitoring]
-  )
-
-  const terminateAbortTasksPolling = () => {
+  const terminateAbortTasksPolling = useCallback(() => {
     abortJobRef?.current?.()
     setAbortingJobs({})
-  }
+  }, [])
 
   const refreshJobs = useCallback(
     filters => {
@@ -217,255 +140,20 @@ const MonitorJobs = ({
         }
       })
     },
-    [dispatch, fetchAllJobRuns, fetchJobs, params.jobName, params.projectName]
-  )
-
-  const setJobStatusAborting = useCallback(
-    (job, task) => {
-      const setData = params.jobName ? setJobRuns : setJobs
-
-      if (!isEmpty(selectedJob)) {
-        setSelectedJob(state => ({
-          ...state,
-          abortTaskId: task,
-          state: getState('aborting', JOBS_PAGE, JOB_KIND_JOB)
-        }))
-      }
-
-      setData(state =>
-        state.map(aJob => {
-          if (aJob.uid === job.uid) {
-            aJob.abortTaskId = task
-            aJob.state = getState('aborting', JOBS_PAGE, JOB_KIND_JOB)
-          }
-
-          return aJob
-        })
-      )
-    },
-    [params.jobName, selectedJob]
-  )
-
-  const modifyAndSelectRun = useCallback(
-    jobRun => {
-      return enrichRunWithFunctionFields(
-        dispatch,
-        jobRun,
-        fetchJobFunctions,
-        fetchJobFunctionsPromiseRef
-      ).then(jobRun => {
-        setSelectedJob(jobRun)
-      })
-    },
-    [dispatch, fetchJobFunctions]
-  )
-
-  const fetchRun = useCallback(() => {
-    fetchJob(params.projectName, params.jobId)
-      .then(job => {
-        return modifyAndSelectRun(parseJob(job))
-      })
-      .catch(() => {
-        showErrorNotification(dispatch, {}, 'This job either does not exist or was deleted')
-        navigate(`/projects/${params.projectName}/jobs/${MONITOR_JOBS_TAB}`, { replace: true })
-      })
-      .finally(() => {
-        fetchJobFunctionsPromiseRef.current = null
-      })
-  }, [dispatch, fetchJob, modifyAndSelectRun, navigate, params.jobId, params.projectName])
-
-  const onAbortJob = useCallback(
-    job => {
-      const refresh = !isEmpty(selectedJob) ? fetchRun : () => refreshJobs(filtersStore)
-
-      handleAbortJob(
-        abortJob,
-        params.projectName,
-        job,
-        setNotification,
-        refresh,
-        setConfirmData,
-        dispatch,
-        abortJobRef,
-        task => setJobStatusAborting(job, task),
-        abortingJobs,
-        setAbortingJobs
-      )
-    },
     [
-      abortJob,
-      abortingJobs,
       dispatch,
-      fetchRun,
-      filtersStore,
-      params.projectName,
-      refreshJobs,
-      selectedJob,
-      setConfirmData,
-      setJobStatusAborting
-    ]
-  )
-
-  const handleConfirmAbortJob = useCallback(
-    job => {
-      setConfirmData({
-        item: job,
-        header: 'Abort job?',
-        message: (
-          <div>
-            You try to abort job "{job.name}". <br />
-            {isJobKindLocal(job) &&
-              'This is a local run. You can abort the run, though the actual process will continue.'}
-          </div>
-        ),
-        btnConfirmLabel: 'Abort',
-        btnConfirmType: DANGER_BUTTON,
-        rejectHandler: () => {
-          setConfirmData(null)
-        },
-        confirmHandler: () => {
-          onAbortJob(job)
-        }
-      })
-    },
-    [onAbortJob, setConfirmData]
-  )
-
-  const onDeleteJob = useCallback(
-    job => {
-      handleDeleteJob(
-        params.jobName || !isEmpty(selectedJob) ? deleteJob : deleteAllJobRuns,
-        job,
-        params.projectName,
-        refreshJobs,
-        filtersStore,
-        dispatch
-      ).then(() => {
-        if (params.jobName)
-          navigate(
-            location.pathname
-              .split('/')
-              .splice(0, location.pathname.split('/').indexOf(params.jobName) + 1)
-              .join('/')
-          )
-      })
-    },
-    [
+      fetchAllJobRuns,
+      fetchJobs,
       params.jobName,
       params.projectName,
-      selectedJob,
-      deleteJob,
-      deleteAllJobRuns,
-      refreshJobs,
-      filtersStore,
-      dispatch,
-      navigate,
-      location.pathname
+      terminateAbortTasksPolling
     ]
-  )
-
-  const handleConfirmDeleteJob = useCallback(
-    job => {
-      setConfirmData({
-        item: job,
-        header: 'Delete job?',
-        message: `Do you want to delete the job "${job.name}"? Deleted jobs can not be restored.`,
-        btnConfirmLabel: 'Delete',
-        btnConfirmType: DANGER_BUTTON,
-        rejectHandler: () => {
-          setConfirmData(null)
-        },
-        confirmHandler: () => {
-          onDeleteJob(job)
-          setConfirmData(null)
-        }
-      })
-    },
-    [onDeleteJob, setConfirmData]
-  )
-
-  const actionsMenu = useMemo(() => {
-    return job =>
-      generateActionsMenu(
-        job,
-        handleRerunJob,
-        appStore.frontendSpec.jobs_dashboard_url,
-        handleMonitoring,
-        appStore.frontendSpec.abortable_function_kinds,
-        handleConfirmAbortJob,
-        toggleConvertedYaml,
-        selectedJob,
-        handleConfirmDeleteJob
-      )
-  }, [
-    handleRerunJob,
-    appStore.frontendSpec.jobs_dashboard_url,
-    appStore.frontendSpec.abortable_function_kinds,
-    handleMonitoring,
-    handleConfirmAbortJob,
-    toggleConvertedYaml,
-    selectedJob,
-    handleConfirmDeleteJob
-  ])
-
-  const handleSelectRun = useCallback(
-    item => {
-      if (params.jobName) {
-        if (document.getElementsByClassName('view')[0]) {
-          document.getElementsByClassName('view')[0].classList.remove('view')
-        }
-
-        modifyAndSelectRun(item)
-      }
-    },
-    [modifyAndSelectRun, params.jobName]
   )
 
   const isJobDataEmpty = useCallback(
     () => jobs.length === 0 && ((!params.jobName && jobRuns.length === 0) || params.jobName),
     [jobRuns.length, jobs.length, params.jobName]
   )
-
-  useEffect(() => {
-    if (selectedJob.name) {
-      const urlPathArray = location.pathname.split('/')
-      const jobNameIndex = urlPathArray.indexOf(selectedJob.uid) - 1
-
-      if (urlPathArray[jobNameIndex] !== selectedJob.name && jobNameIndex > 0) {
-        navigate(
-          [
-            ...urlPathArray.slice(0, jobNameIndex + 1),
-            selectedJob.name,
-            ...urlPathArray.slice(jobNameIndex + 1)
-          ].join('/'),
-          { replace: true }
-        )
-      }
-    }
-  }, [navigate, selectedJob.name, selectedJob.uid, location])
-
-  useEffect(() => {
-    if (params.jobId && pageData.details.menu.length > 0) {
-      isDetailsTabExists(params.tab, pageData.details.menu, navigate, location)
-    }
-  }, [navigate, pageData.details.menu, location, params.jobId, params.tab])
-
-  useEffect(() => {
-    if (
-      !fetchJobFunctionsPromiseRef.current &&
-      params.jobId &&
-      (isEmpty(selectedJob) || params.jobId !== selectedJob.uid)
-    ) {
-      fetchRun()
-    }
-  }, [fetchRun, params.jobId, selectedJob])
-
-  useEffect(() => {
-    if (!params.jobId && !isEmpty(selectedJob)) {
-      setSelectedJob({})
-      fetchJobFunctionsPromiseRef.current = null
-    }
-  }, [params.jobId, selectedJob])
 
   useEffect(() => {
     if (isEmpty(selectedJob) && !params.jobId && !dataIsLoaded) {
@@ -525,68 +213,14 @@ const MonitorJobs = ({
       abortControllerRef.current.abort(REQUEST_CANCELED)
       terminateAbortTasksPolling()
     }
-  }, [params.projectName])
+  }, [params.projectName, terminateAbortTasksPolling])
 
   useEffect(() => {
     return () => {
       setDataIsLoaded(false)
       terminateAbortTasksPolling()
     }
-  }, [params.projectName, params.jobName, params.jobId])
-
-  useEffect(() => {
-    if (!isEmpty(selectedJob)) {
-      // stop polling on entering Details panel.
-      terminateAbortTasksPolling()
-
-      if (selectedJob.state.value === 'aborting' && selectedJob.abortTaskId) {
-        // start polling a single task.
-
-        const abortingJob = {
-          [selectedJob.abortTaskId]: {
-            uid: selectedJob.uid,
-            name: selectedJob.name
-          }
-        }
-
-        pollAbortingJobs(params.projectName, abortJobRef, abortingJob, fetchRun, dispatch)
-      }
-    }
-  }, [dispatch, filters, params.jobName, params.projectName, fetchRun, selectedJob, params.jobId])
-
-  useEffect(() => {
-    if (
-      jobWizardMode &&
-      !jobWizardIsOpened &&
-      ((jobWizardMode === PANEL_RERUN_MODE && editableItem?.rerun_object) ||
-        jobWizardMode !== PANEL_RERUN_MODE)
-    ) {
-      openPopUp(JobWizard, {
-        params,
-        onWizardClose: () => {
-          setEditableItem(null)
-          setJobWizardMode(null)
-          setJobWizardIsOpened(false)
-        },
-        defaultData: jobWizardMode === PANEL_RERUN_MODE ? editableItem?.rerun_object : {},
-        mode: jobWizardMode,
-        wizardTitle: jobWizardMode === PANEL_RERUN_MODE ? 'Batch re-run' : undefined,
-        onSuccessRequest: () => refreshJobs(filtersStore)
-      })
-
-      setJobWizardIsOpened(true)
-    }
-  }, [
-    editableItem?.rerun_object,
-    filtersStore,
-    jobWizardIsOpened,
-    jobWizardMode,
-    params,
-    refreshJobs,
-    setEditableItem,
-    setJobWizardIsOpened,
-    setJobWizardMode
-  ])
+  }, [params.projectName, params.jobName, params.jobId, terminateAbortTasksPolling])
 
   return (
     <>
@@ -617,58 +251,24 @@ const MonitorJobs = ({
           />
         </div>
       </div>
-
-      {jobsStore.loading ? null : (params.jobName && jobRuns.length === 0) ||
-        (jobs.length === 0 && !params.jobName) ? (
-        <NoData
-          message={getNoDataMessage(
-            filtersStore,
-            filters,
-            largeRequestErrorMessage,
-            JOBS_PAGE,
-            MONITOR_JOBS_TAB
-          )}
-        />
-      ) : (
-        isEmpty(selectedJob) && (
-          <Table
-            actionsMenu={actionsMenu}
-            handleCancel={() => setSelectedJob({})}
-            handleSelectItem={handleSelectRun}
-            pageData={pageData}
-            retryRequest={refreshJobs}
-            selectedItem={selectedJob}
-            tab={MONITOR_JOBS_TAB}
-            tableHeaders={tableContent[0]?.content ?? []}
-          >
-            {tableContent.map((tableItem, index) => (
-              <JobsTableRow
-                actionsMenu={actionsMenu}
-                handleSelectJob={handleSelectRun}
-                key={index}
-                rowItem={tableItem}
-                selectedJob={selectedJob}
-              />
-            ))}
-          </Table>
-        )
-      )}
-      {!isEmpty(selectedJob) && (
-        <Details
-          actionsMenu={actionsMenu}
-          detailsMenu={pageData.details.menu}
-          getCloseDetailsLink={() => getCloseDetailsLink(location, params.jobName)}
-          handleCancel={() => setSelectedJob({})}
-          handleRefresh={fetchRun}
-          isDetailsScreen
-          pageData={pageData}
-          selectedItem={selectedJob}
-          tab={MONITOR_JOBS_TAB}
-        />
-      )}
-      {convertedYaml.length > 0 && (
-        <YamlModal convertedYaml={convertedYaml} toggleConvertToYaml={toggleConvertedYaml} />
-      )}
+      <JobsTable
+        abortingJobs={abortingJobs}
+        abortJobRef={abortJobRef}
+        context={JobsContext}
+        filters={filters}
+        jobRuns={jobRuns}
+        jobs={jobs}
+        largeRequestErrorMessage={largeRequestErrorMessage}
+        navigateLink={`/projects/${params.projectName}/jobs/${MONITOR_JOBS_TAB}`}
+        refreshJobs={refreshJobs}
+        selectedJob={selectedJob}
+        setAbortingJobs={setAbortingJobs}
+        setJobRuns={setJobRuns}
+        setJobs={setJobs}
+        setSelectedJob={setSelectedJob}
+        tableContent={tableContent}
+        terminateAbortTasksPolling={terminateAbortTasksPolling}
+      />
     </>
   )
 }
