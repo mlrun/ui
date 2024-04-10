@@ -22,6 +22,7 @@ import React from 'react'
 import {
   ARTIFACT_TYPE,
   FILES_PAGE,
+  FILES_TAB,
   FULL_VIEW_MODE,
   ITERATIONS_FILTER,
   LABELS_FILTER,
@@ -94,7 +95,7 @@ export const generatePageData = viewMode => {
   return {
     page: FILES_PAGE,
     details: {
-      type: FILES_PAGE,
+      type: FILES_TAB,
       menu: detailsMenu,
       infoHeaders,
       hideBackBtn: viewMode === FULL_VIEW_MODE,
@@ -247,7 +248,7 @@ export const generateActionsMenu = (
       {
         label: 'Copy URI',
         icon: <Copy />,
-        onClick: file => copyToClipboard(generateUri(file, FILES_PAGE), dispatch)
+        onClick: file => copyToClipboard(generateUri(file, FILES_TAB), dispatch)
       },
       {
         label: 'View YAML',

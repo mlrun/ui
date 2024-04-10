@@ -38,8 +38,8 @@ import { TERTIARY_BUTTON, PRIMARY_BUTTON } from 'igz-controls/constants'
 import detailsActions from '../../actions/details'
 import {
   ARTIFACTS_PAGE,
-  DATASETS,
-  FILES_PAGE,
+  DATASETS_TAB,
+  FILES_TAB,
   FUNCTIONS_PAGE,
   JOBS_PAGE,
   MODEL_ENDPOINTS_TAB,
@@ -127,10 +127,10 @@ const Details = ({
         setInfoContent(generateJobsContent(selectedItem))
       } else if (
         pageData.details.type === ARTIFACTS_PAGE ||
-        pageData.details.type === FILES_PAGE ||
+        pageData.details.type === FILES_TAB ||
         pageData.details.type === MODELS_TAB ||
         pageData.details.type === MODEL_ENDPOINTS_TAB ||
-        pageData.details.type === DATASETS
+        pageData.details.type === DATASETS_TAB
       ) {
         setInfoContent(
           generateArtifactsContent(pageData.details.type, selectedItem, params.projectName)
@@ -181,17 +181,17 @@ const Details = ({
     }
   }, [handleRefreshClick])
 
-  let blocker = useBlocker(
-    ({ currentLocation, nextLocation }) => {
-      const currentLocationPathname = currentLocation.pathname.split('/')
-      const nextLocationPathname = nextLocation.pathname.split('/')
-      currentLocationPathname.pop()
-      nextLocationPathname.pop()
+  let blocker = useBlocker(({ currentLocation, nextLocation }) => {
+    const currentLocationPathname = currentLocation.pathname.split('/')
+    const nextLocationPathname = nextLocation.pathname.split('/')
+    currentLocationPathname.pop()
+    nextLocationPathname.pop()
 
-      return detailsStore.changes.counter > 0 &&
-        currentLocationPathname.join('/') !== nextLocationPathname.join('/')
-    }
-  )
+    return (
+      detailsStore.changes.counter > 0 &&
+      currentLocationPathname.join('/') !== nextLocationPathname.join('/')
+    )
+  })
 
   useEffect(() => {
     if (
@@ -235,7 +235,15 @@ const Details = ({
     }
 
     window.dispatchEvent(new CustomEvent('discardChanges'))
-  }, [blocker, cancelChanges, detailsStore.filtersWasHandled, filtersStore, handleShowWarning, retryRequest, setFiltersWasHandled])
+  }, [
+    blocker,
+    cancelChanges,
+    detailsStore.filtersWasHandled,
+    filtersStore,
+    handleShowWarning,
+    retryRequest,
+    setFiltersWasHandled
+  ])
 
   return (
     <Form form={formRef.current} onSubmit={() => {}}>
