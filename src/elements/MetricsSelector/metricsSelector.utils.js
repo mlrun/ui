@@ -69,6 +69,7 @@ export const getMetricColorById = id => {
     return metricsColorsById[id]
   } else {
     const newColor = generateUniqueColor()
+    metricsColorsById[id] = newColor
     
     return newColor
   }

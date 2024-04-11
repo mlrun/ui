@@ -1,11 +1,14 @@
+@import '~igz-controls/scss/colors';
+@import '~igz-controls/scss/borders';
+
 .metrics-selector {
     padding-right: 16px;
     &-header {
         align-items: center;
         background-color: transparent;
         border-radius: 4px;
-        border: 1px solid rgba(0, 0, 0, 0.2);
-        color: #4b4760;
+        border: $primaryBorder;
+        color: $mulledWine;
         display: flex;
         flex-flow: row nowrap;
         flex: 1 1;
@@ -15,7 +18,7 @@
         width: 280px;
 
         &__open {
-            background-color: #f8f7f8;;
+            background-color: $alabaster;;
         }
 
         &__icon {
@@ -78,7 +81,7 @@
         &.accordion__container {
             height: 50px;
             overflow-y: hidden;
-            border-bottom: 1px solid rgba(0, 0, 0, 0.12);
+            border-bottom: $dividerBorder;
             &:last-child {
                 border: none;
             }
