@@ -253,7 +253,7 @@ const MonitorJobs = ({ fetchAllJobRuns, fetchJobs }) => {
       </div>
       <JobsTable
         abortingJobs={abortingJobs}
-        abortJobRef={abortJobRef}
+        ref={{ abortJobRef }}
         context={JobsContext}
         filters={filters}
         jobRuns={jobRuns}

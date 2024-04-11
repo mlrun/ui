@@ -27,7 +27,13 @@ import JobsTableRow from '../JobsTableRow/JobsTableRow'
 import YamlModal from '../../common/YamlModal/YamlModal'
 import Loader from '../../common/Loader/Loader'
 
-import { JOB_KIND_JOB, JOBS_PAGE, MONITOR_JOBS_TAB, PANEL_RERUN_MODE } from '../../constants'
+import {
+  JOB_KIND_JOB,
+  JOBS_MONITORING_PAGE,
+  JOBS_PAGE,
+  MONITOR_JOBS_TAB,
+  PANEL_RERUN_MODE
+} from '../../constants'
 import { DANGER_BUTTON } from 'igz-controls/constants'
 import { openPopUp } from 'igz-controls/utils/common.util'
 import {
@@ -336,7 +342,10 @@ const JobsTable = React.forwardRef(
     useEffect(() => {
       if (selectedJob.name) {
         const urlPathArray = location.pathname.split('/')
-        const jobNameIndex = urlPathArray.indexOf(selectedJob.uid) - 1
+        const jobIdIndex = urlPathArray.indexOf(selectedJob.uid)
+        const jobNameIndex = urlPathArray.includes(JOBS_MONITORING_PAGE)
+          ? jobIdIndex - 2
+          : jobIdIndex - 1
 
         if (urlPathArray[jobNameIndex] !== selectedJob.name && jobNameIndex > 0) {
           navigate(
@@ -420,10 +429,9 @@ const JobsTable = React.forwardRef(
         params.jobId &&
         (isEmpty(selectedJob) || params.jobId !== selectedJob.uid)
       ) {
-        //TODO: fix on the monitoring
-        fetchRun(selectedJob.project)
+        fetchRun(params.jobProjectName || params.projectName)
       }
-    }, [fetchRun, params.jobId, params.projectName, selectedJob])
+    }, [fetchRun, params.jobId, params.jobProjectName, params.projectName, selectedJob])
 
     useEffect(() => {
       if (!params.jobId && !isEmpty(selectedJob)) {
@@ -491,6 +499,10 @@ const JobsTable = React.forwardRef(
   }
 )
 
+JobsTable.defaultProps = {
+  setSelectedRunProject: null
+}
+
 JobsTable.propTypes = {
   abortingJobs: PropTypes.object.isRequired,
   context: PropTypes.object.isRequired,
@@ -505,7 +517,7 @@ JobsTable.propTypes = {
   setJobRuns: PropTypes.func.isRequired,
   setJobs: PropTypes.func.isRequired,
   setSelectedJob: PropTypes.func.isRequired,
-  setSelectedRunProject: PropTypes.func.isRequired,
+  setSelectedRunProject: PropTypes.func,
   tableContent: PropTypes.array.isRequired,
   terminateAbortTasksPolling: PropTypes.func.isRequired
 }

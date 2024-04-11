@@ -23,6 +23,7 @@ import { connect, useDispatch, useSelector } from 'react-redux'
 import { isEmpty } from 'lodash'
 
 import JobsTable from '../../../elements/JobsTable/JobsTable'
+import TableTop from '../../../elements/TableTop/TableTop'
 
 import { ProjectJobsMonitoringContext } from '../ProjectsJobsMonitoring'
 import { parseJob } from '../../../utils/parseJob'
@@ -170,25 +171,33 @@ const JobsMonitoring = ({ fetchAllJobRuns, fetchJobs }) => {
   }, [params.jobName, params.jobId, terminateAbortTasksPolling])
 
   return (
-    <JobsTable
-      abortingJobs={abortingJobs}
-      ref={{ abortJobRef }}
-      context={ProjectJobsMonitoringContext}
-      filters={filters}
-      jobRuns={jobRuns}
-      jobs={jobs}
-      largeRequestErrorMessage={largeRequestErrorMessage}
-      navigateLink={`/projects/${JOBS_MONITORING_PAGE}/${JOBS_MONITORING_JOBS_TAB}`}
-      refreshJobs={refreshJobs}
-      selectedJob={selectedJob}
-      setAbortingJobs={setAbortingJobs}
-      setJobRuns={setJobRuns}
-      setJobs={setJobs}
-      setSelectedJob={setSelectedJob}
-      setSelectedRunProject={setSelectedRunProject}
-      tableContent={tableContent}
-      terminateAbortTasksPolling={terminateAbortTasksPolling}
-    />
+    <>
+      {params.jobName && (
+        <TableTop
+          link={`/projects/${JOBS_MONITORING_PAGE}/${JOBS_MONITORING_JOBS_TAB}`}
+          text={params.jobName}
+        />
+      )}
+      <JobsTable
+        abortingJobs={abortingJobs}
+        ref={{ abortJobRef }}
+        context={ProjectJobsMonitoringContext}
+        filters={filters}
+        jobRuns={jobRuns}
+        jobs={jobs}
+        largeRequestErrorMessage={largeRequestErrorMessage}
+        navigateLink={`/projects/${JOBS_MONITORING_PAGE}/${JOBS_MONITORING_JOBS_TAB}`}
+        refreshJobs={refreshJobs}
+        selectedJob={selectedJob}
+        setAbortingJobs={setAbortingJobs}
+        setJobRuns={setJobRuns}
+        setJobs={setJobs}
+        setSelectedJob={setSelectedJob}
+        setSelectedRunProject={setSelectedRunProject}
+        tableContent={tableContent}
+        terminateAbortTasksPolling={terminateAbortTasksPolling}
+      />
+    </>
   )
 }
 

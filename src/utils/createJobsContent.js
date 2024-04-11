@@ -429,7 +429,7 @@ export const createJobsMonitoringContent = (jobs, jobName, isStagingMode) => {
         return validateArguments(job.uid, tab, job.name)
           ? `/projects/${JOBS_MONITORING_PAGE}/${JOBS_MONITORING_JOBS_TAB}${
               job.name ? `/${job.name}` : ''
-            }/${job.uid}/${tab.toLowerCase()}`
+            }/${job.project}/${job.uid}/${tab.toLowerCase()}`
           : ''
       } else {
         return `/projects/${JOBS_MONITORING_PAGE}/${JOBS_MONITORING_JOBS_TAB}/${job.name}`
@@ -462,7 +462,7 @@ export const createJobsMonitoringContent = (jobs, jobName, isStagingMode) => {
           headerLabel: 'Project name',
           id: `projectName.${identifierUnique}`,
           value: job.project,
-          className: 'table-cell-1'
+          className: 'table-cell-2'
         },
         {
           headerId: 'type',
@@ -506,20 +506,20 @@ export const createJobsMonitoringContent = (jobs, jobName, isStagingMode) => {
           className: 'table-cell-1'
         },
         {
-          headerId: 'parameters',
-          headerLabel: 'Parameters',
-          id: `parameters.${identifierUnique}`,
-          value: job.parametersChips,
-          className: 'table-cell-1',
-          type: 'parameters'
-        },
-        {
           headerId: 'labels',
           headerLabel: 'Labels',
           id: `labels.${identifierUnique}`,
           value: job.labels,
           className: 'table-cell-1',
           type: 'labels'
+        },
+        {
+          headerId: 'parameters',
+          headerLabel: 'Parameters',
+          id: `parameters.${identifierUnique}`,
+          value: job.parametersChips,
+          className: 'table-cell-1',
+          type: 'parameters'
         },
         {
           headerId: 'updated',
