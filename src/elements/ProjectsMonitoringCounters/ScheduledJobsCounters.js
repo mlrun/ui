@@ -123,12 +123,20 @@ const ScheduledJobsCounters = () => {
       </StatsCard.Row>
       <StatsCard.Row>
         <StatsCard.Col>
-          <span className="link" onClick={scheduledStats.jobs.link}>
+          <span
+            className="link"
+            onClick={scheduledStats.jobs.link}
+            data-testid="scheduled_jobs_see_all"
+          >
             See all
           </span>
         </StatsCard.Col>
         <StatsCard.Col>
-          <span className="link" onClick={scheduledStats.workflows.link}>
+          <span
+            className="link"
+            onClick={scheduledStats.workflows.link}
+            data-testid="scheduled_wf_see_all"
+          >
             See all
           </span>
         </StatsCard.Col>
