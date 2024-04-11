@@ -138,7 +138,7 @@ const WorkflowsCounters = () => {
       </StatsCard.Row>
       <StatsCard.Row>
         <StatsCard.Col>
-          <span className="link" onClick={workflowsStats.all.link}>
+          <span className="link" onClick={workflowsStats.all.link} data-testid="wf-see-all">
             See all
           </span>
         </StatsCard.Col>

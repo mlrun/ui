@@ -190,7 +190,7 @@ const JobsCounters = () => {
       </StatsCard.Row>
       <StatsCard.Row>
         <StatsCard.Col>
-          <span className="link" onClick={jobStats.all.link}>
+          <span className="link" onClick={jobStats.all.link} data-testid="jobs-see-all">
             See all
           </span>
         </StatsCard.Col>
