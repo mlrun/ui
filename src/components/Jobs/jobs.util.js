@@ -431,7 +431,7 @@ export const pollAbortingJobs = (project, terminatePollRef, abortingJobs, refres
         }
       })
 
-      refresh()
+      refresh(project)
     }
 
     return finishedTasks.length > 0
