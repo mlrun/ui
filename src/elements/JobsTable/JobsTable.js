@@ -104,15 +104,19 @@ const JobsTable = React.forwardRef(
 
     usePods(dispatch, detailsActions.fetchJobPods, detailsActions.removePods, selectedJob)
 
-    const handleFetchJobLogs = useCallback((item, projectName, setDetailsLogs, streamLogsRef) => {
-      return getJobLogs(
-        item.uid,
-        projectName,
-        streamLogsRef,
-        setDetailsLogs,
-        jobsActions.fetchJobLogs
-      )
-    }, [])
+    const handleFetchJobLogs = useCallback(
+      (item, projectName, setDetailsLogs, streamLogsRef) => {
+        return getJobLogs(
+          item.uid,
+          projectName,
+          streamLogsRef,
+          setDetailsLogs,
+          jobsActions.fetchJobLogs,
+          dispatch
+        )
+      },
+      [dispatch]
+    )
 
     const pageData = useMemo(
       () =>
