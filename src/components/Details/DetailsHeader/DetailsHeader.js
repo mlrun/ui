@@ -27,9 +27,15 @@ import { Button, Tooltip, TextTooltipTemplate, RoundedIcon } from 'igz-controls/
 import LoadButton from '../../../common/LoadButton/LoadButton'
 import Select from '../../../common/Select/Select'
 import ActionsMenu from '../../../common/ActionsMenu/ActionsMenu'
+import MetricsSelector from '../../../elements/MetricsSelector/MetricsSelector'
 import DatePicker from '../../../common/DatePicker/DatePicker'
 
-import { DETAILS_ARTIFACTS_TAB, DETAILS_METRICS_TAB, FULL_VIEW_MODE, JOBS_PAGE } from '../../../constants'
+import {
+  DETAILS_ARTIFACTS_TAB,
+  DETAILS_METRICS_TAB,
+  FULL_VIEW_MODE,
+  JOBS_PAGE
+} from '../../../constants'
 import { formatDatetime } from '../../../utils'
 import { LABEL_BUTTON } from 'igz-controls/constants'
 import { ACTIONS_MENU } from '../../../types'
@@ -56,6 +62,7 @@ const DetailsHeader = ({
   pageData,
   selectedItem,
   setIteration,
+  setSelectedMetricsOptions,
   tab
 }) => {
   const detailsStore = useSelector(store => store.detailsStore)
@@ -133,12 +140,12 @@ const DetailsHeader = ({
                   stateValue === 'aborted' ? 'N/A' : 'Not yet started'
                 )
               : selectedItem?.updated
-              ? formatDatetime(selectedItem?.updated, 'N/A')
-              : selectedItem?.spec?.model.includes(':') // 'model-key:model-tag'
-              ? selectedItem.spec.model.replace(/^.*:/, '') // remove key
-              : selectedItem?.spec?.model
-              ? selectedItem?.metadata?.uid
-              : ''}
+                ? formatDatetime(selectedItem?.updated, 'N/A')
+                : selectedItem?.spec?.model.includes(':') // 'model-key:model-tag'
+                  ? selectedItem.spec.model.replace(/^.*:/, '') // remove key
+                  : selectedItem?.spec?.model
+                    ? selectedItem?.metadata?.uid
+                    : ''}
           </span>
           {stateValue && stateLabel && (
             <Tooltip className="state" template={<TextTooltipTemplate text={stateLabel} />}>
@@ -218,6 +225,16 @@ const DetailsHeader = ({
             selectedId={detailsStore.iteration}
           />
         )}
+        {params.tab === DETAILS_METRICS_TAB && (
+          <MetricsSelector
+            name="metrics"
+            metrics={detailsStore.metricsOptions.all}
+            onSelect={selectedMetrics => {
+              setSelectedMetricsOptions(selectedMetrics)
+            }}
+            preselectedMetrics={detailsStore.metricsOptions.initiallySelected}
+          />
+        )}
         {actionButton && !actionButton.hidden && (
           <Button
             disabled={actionButton.disabled}
@@ -290,6 +307,7 @@ const DetailsHeader = ({
 
 DetailsHeader.defaultProps = {
   handleCancel: null,
+  setSelectedMetricsOptions: () => {},
   handleChangeDates: () => {}
 }
 
@@ -305,6 +323,7 @@ DetailsHeader.propTypes = {
   pageData: PropTypes.shape({}).isRequired,
   selectedItem: PropTypes.shape({}).isRequired,
   setIteration: PropTypes.func.isRequired,
+  setSelectedMetricsOptions: PropTypes.func,
   tab: PropTypes.string
 }
 

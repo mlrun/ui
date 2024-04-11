@@ -42,6 +42,9 @@ import {
   SET_INFO_CONTENT,
   SET_ITERATION,
   SET_ITERATION_OPTIONS,
+  SET_METRICS_OPTIONS,
+  SET_SELECTED_METRICS_OPTIONS,
+  SET_INITIALLY_SELECTED_METRICS_OPTIONS,
   SHOW_WARNING
 } from '../constants'
 import { generatePods } from '../utils/generatePods'
@@ -177,6 +180,18 @@ const detailsActions = {
   showWarning: show => ({
     type: SHOW_WARNING,
     payload: show
+  }),
+  setMetricsOptions: options => ({
+    type: SET_METRICS_OPTIONS,
+    payload: options
+  }),
+  setSelectedMetricsOptions: options => ({
+    type: SET_SELECTED_METRICS_OPTIONS,
+    payload: options
+  }),
+  setInitiallySelectedMetricsOptions: options => ({
+    type: SET_INITIALLY_SELECTED_METRICS_OPTIONS,
+    payload: options
   })
 }
 

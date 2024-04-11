@@ -224,3 +224,11 @@ export const VIRTUALIZATION_CONFIG = PropTypes.shape({
 
 export const SLIDER_STYLE_1 = 'style1'
 export const SLIDER_STYLE_2 = 'style2'
+
+export const METRICS_SELECTOR_OPTIONS = PropTypes.arrayOf(
+  PropTypes.shape({
+    id: PropTypes.string.isRequired,
+    label: PropTypes.string.isRequired,
+    application: PropTypes.string.isRequired
+  })
+)

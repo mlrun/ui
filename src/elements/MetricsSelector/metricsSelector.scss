@@ -1,0 +1,101 @@
+.metrics-selector {
+    padding-right: 16px;
+    &-header {
+        align-items: center;
+        background-color: transparent;
+        border-radius: 4px;
+        border: 1px solid rgba(0, 0, 0, 0.2);
+        color: #4b4760;
+        display: flex;
+        flex-flow: row nowrap;
+        flex: 1 1;
+        height: 40px;
+        justify-content: space-between;
+        position: relative;
+        width: 280px;
+
+        &__open {
+            background-color: #f8f7f8;;
+        }
+
+        &__icon {
+            align-items: center;
+            display: flex;
+            height: 100%;
+            margin-right: 10px;
+        }
+
+        &__selected-metrics {
+            padding: 0 20px 0 16px;
+        }
+    }
+
+    &-popup {
+        .metrics-selector-search {
+            padding: 8px 12px;
+        }
+        
+        .metrics-selector-counter {
+            background-color: inherit;
+            padding: 6px 15px;
+            text-align: right;
+            width: 100%;
+        }
+        
+        .metrics-selector-options {
+            padding-left: 0;
+
+            &.options-list {
+                max-height: 400px;
+                width: 100%;
+        
+                .select__item {
+                    padding-left: 35px;
+                    height: 50px;
+
+                    label {
+                        font-size: 15px;
+                        overflow: hidden;
+                        text-overflow: ellipsis;
+                        white-space: nowrap;
+                    }
+        
+                    .metrics-selector-color-indicator {
+                        background-color: transparent;
+                        border-radius: 50%;
+                        display: inline-block;
+                        height: 8px;
+                        margin: 0 5px 0 10px;
+                        min-width: 8px;
+                        width: 8px;
+                    }
+                }
+            }
+        }
+    }
+
+    &-accordion {
+        &.accordion__container {
+            height: 50px;
+            overflow-y: hidden;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.12);
+            &:last-child {
+                border: none;
+            }
+    
+            &.open {
+                height: 100%;
+            }
+        }
+    
+        &-icon {
+            position: absolute;
+            top: 6px;
+        }
+    
+        &-title {
+            padding: 15px 0 11px 45px;
+            height: 50px;
+        }
+    }
+}

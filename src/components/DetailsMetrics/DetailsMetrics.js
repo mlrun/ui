@@ -17,11 +17,32 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import React from 'react'
+import React, { useEffect } from 'react'
 // import { useSelector } from 'react-redux'
+import { useDispatch } from 'react-redux'
+
+import detailsActions from '../../actions/details'
+
+const metricsMock = Array(100)
+  .fill(1)
+  .map((metric, index) => ({
+    id: 'someId' + index,
+    label: 'labelName' + index,
+    application: 'application' + Math.floor(Math.random() * 30)
+  }))
+
 
 const DetailsMetrics = () => {
   // const detailsStore = useSelector(store => store.detailsStore)
+  const dispatch = useDispatch()
+
+  useEffect(() => {
+    // just mocked data
+    const endNum = (Math.random() * 10).toFixed()
+    dispatch(detailsActions.setMetricsOptions(metricsMock))
+    dispatch(detailsActions.setInitiallySelectedMetricsOptions(metricsMock.filter(metric => metric.label.endsWith(endNum))))
+  }, [dispatch])
+  
 
   return (
     <div className="metrics">

@@ -41,6 +41,9 @@ import {
   SET_EDIT_MODE,
   FETCH_JOB_PODS_BEGIN,
   REMOVE_MODEL_ENDPOINT,
+  SET_METRICS_OPTIONS,
+  SET_SELECTED_METRICS_OPTIONS,
+  SET_INITIALLY_SELECTED_METRICS_OPTIONS,
   DATE_FILTER_ANY_TIME,
   SET_DETAILS_DATES
 } from '../constants'
@@ -71,7 +74,12 @@ const initialState = {
     podsTooltip: []
   },
   filtersWasHandled: false,
-  showWarning: false
+  showWarning: false,
+  metricsOptions : {
+    all: [],
+    selected: [],
+    initiallySelected: []
+  }
 }
 
 const detailsReducer = (state = initialState, { type, payload }) => {
@@ -229,6 +237,30 @@ const detailsReducer = (state = initialState, { type, payload }) => {
         ...state,
         showWarning: payload
       }
+    case SET_METRICS_OPTIONS:
+      return {
+        ...state,
+        metricsOptions: {
+          ...state['metricsOptions'],
+          all: payload
+        }
+      }
+    case SET_SELECTED_METRICS_OPTIONS:
+      return {
+        ...state,
+        metricsOptions: {
+          ...state['metricsOptions'],
+          selected: payload
+        }
+      }
+      case SET_INITIALLY_SELECTED_METRICS_OPTIONS:
+        return {
+          ...state,
+          metricsOptions: {
+            ...state['metricsOptions'],
+            initiallySelected: payload
+          }
+        }
     default:
       return state
   }
