@@ -126,7 +126,7 @@ const ScheduledJobsCounters = () => {
           <span
             className="link"
             onClick={scheduledStats.jobs.link}
-            data-testid="scheduled-jobs-see-all"
+            data-testid="scheduled_jobs_see_all"
           >
             See all
           </span>
@@ -135,7 +135,7 @@ const ScheduledJobsCounters = () => {
           <span
             className="link"
             onClick={scheduledStats.workflows.link}
-            data-testid="scheduled-wf-see-all"
+            data-testid="scheduled_wf_see_all"
           >
             See all
           </span>
