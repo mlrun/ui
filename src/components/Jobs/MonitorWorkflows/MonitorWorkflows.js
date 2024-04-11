@@ -74,6 +74,8 @@ import { useMode } from '../../../hooks/mode.hook'
 import { usePods } from '../../../hooks/usePods.hook'
 import { useSortTable } from '../../../hooks/useSortTable.hook'
 import { useYaml } from '../../../hooks/yaml.hook'
+import detailsActions from '../../../actions/details'
+import jobsActions from '../../../actions/jobs'
 
 import './MonitorWorkflows.scss'
 
@@ -83,12 +85,9 @@ const MonitorWorkflows = ({
   fetchFunctionLogs,
   fetchJob,
   fetchJobFunctions,
-  fetchJobLogs,
-  fetchJobPods,
   fetchWorkflow,
   fetchWorkflows,
   getFunction,
-  removePods,
   resetWorkflow
 }) => {
   const [selectedFunction, setSelectedFunction] = useState({})
@@ -123,7 +122,7 @@ const MonitorWorkflows = ({
   const fetchJobFunctionsPromiseRef = useRef()
   const abortControllerRef = useRef(new AbortController())
 
-  usePods(fetchJobPods, removePods, selectedJob)
+  usePods(dispatch, detailsActions.fetchJobPods, detailsActions.removePods, selectedJob)
 
   const filters = useMemo(() => generateFilters(), [])
 
@@ -160,9 +159,16 @@ const MonitorWorkflows = ({
 
   const handleFetchJobLogs = useCallback(
     (item, projectName, setDetailsLogs, streamLogsRef) => {
-      return getJobLogs(item.uid, projectName, streamLogsRef, setDetailsLogs, fetchJobLogs)
+      return getJobLogs(
+        item.uid,
+        projectName,
+        streamLogsRef,
+        setDetailsLogs,
+        jobsActions.fetchJobLogs,
+        dispatch
+      )
     },
-    [fetchJobLogs]
+    [dispatch]
   )
 
   const handleRemoveFunctionLogs = useCallback(() => {
