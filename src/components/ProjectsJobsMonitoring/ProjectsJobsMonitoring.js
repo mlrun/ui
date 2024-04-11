@@ -95,8 +95,8 @@ const ProjectsJobsMonitoring = ({ fetchJobFunction }) => {
       location.pathname.includes(JOBS_MONITORING_WORKFLOWS_TAB)
         ? JOBS_MONITORING_WORKFLOWS_TAB
         : location.pathname.includes(JOBS_MONITORING_SCHEDULED_TAB)
-        ? JOBS_MONITORING_SCHEDULED_TAB
-        : JOBS_MONITORING_JOBS_TAB
+          ? JOBS_MONITORING_SCHEDULED_TAB
+          : JOBS_MONITORING_JOBS_TAB
     )
   }, [location.pathname])
 
@@ -116,25 +116,27 @@ const ProjectsJobsMonitoring = ({ fetchJobFunction }) => {
             />
             <div className="action-bar">Filter menu</div>
           </div>
-          <ProjectJobsMonitoringContext.Provider
-            value={{
-              filters,
-              jobsMonitoringData,
-              selectedCard,
-              setSelectedCard,
-              editableItem,
-              handleMonitoring,
-              handleRerunJob,
-              jobWizardIsOpened,
-              jobWizardMode,
-              setConfirmData,
-              setEditableItem,
-              setJobWizardIsOpened,
-              setJobWizardMode
-            }}
-          >
-            <Outlet />
-          </ProjectJobsMonitoringContext.Provider>
+          <div className="table-container">
+            <ProjectJobsMonitoringContext.Provider
+              value={{
+                filters,
+                jobsMonitoringData,
+                selectedCard,
+                setSelectedCard,
+                editableItem,
+                handleMonitoring,
+                handleRerunJob,
+                jobWizardIsOpened,
+                jobWizardMode,
+                setConfirmData,
+                setEditableItem,
+                setJobWizardIsOpened,
+                setJobWizardMode
+              }}
+            >
+              <Outlet />
+            </ProjectJobsMonitoringContext.Provider>
+          </div>
         </div>
       </div>
       {confirmData && (
