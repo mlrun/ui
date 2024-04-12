@@ -18,8 +18,9 @@ under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
 import {
-  DATASETS,
+  DATASETS_TAB,
   FEATURE_SETS_TAB,
+  FILES_TAB,
   FEATURE_VECTORS_TAB,
   MODELS_TAB,
   MONITOR_JOBS_TAB
@@ -82,8 +83,8 @@ const parseUri = uri =>
   )?.groups ?? {}
 
 const kindToScreen = {
-  artifacts: 'files',
-  datasets: `feature-store/${DATASETS}`,
+  artifacts: FILES_TAB,
+  datasets: `feature-store/${DATASETS_TAB}`,
   'feature-sets': `feature-store/${FEATURE_SETS_TAB}`,
   'feature-vectors': `feature-store/${FEATURE_VECTORS_TAB}`,
   functions: 'functions',
@@ -93,7 +94,7 @@ const kindToScreen = {
 
 const generateLinkPath = (uri = '', ignoreKey = false) => {
   const { kind, project, key, tag, uid } = parseUri(uri)
-  const screen = kindToScreen[kind] ?? 'files'
+  const screen = kindToScreen[kind] ?? FILES_TAB
   const reference = tag ?? uid
   return `/projects/${project}/${screen}${ignoreKey ? '' : `/${key}`}${reference ? `/${reference}` : ''}`
 }

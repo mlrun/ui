@@ -30,7 +30,14 @@ import featureStoreActions from '../../actions/featureStore'
 import functionsActions from '../../actions/functions'
 import nuclioAction from '../../actions/nuclio'
 import projectsAction from '../../actions/projects'
-import { DATASET_TYPE, DATASETS, DETAILS_BUILD_LOG_TAB, MODEL_TYPE } from '../../constants'
+import {
+  DATASET_TYPE,
+  DATASETS_TAB,
+  DETAILS_BUILD_LOG_TAB,
+  FILES_TAB,
+  MODELS_TAB,
+  MODEL_TYPE
+} from '../../constants'
 import { areNuclioStreamsEnabled } from '../../utils/helper'
 import { generateCreateNewOptions, handleFetchProjectError } from './project.utils'
 import { openPopUp } from 'igz-controls/utils/common.util'
@@ -70,7 +77,11 @@ const ProjectMonitor = ({
   const registerArtifactLink = useCallback(
     artifactKind =>
       `/projects/${params.projectName}/${
-        artifactKind === MODEL_TYPE ? 'models' : artifactKind === DATASET_TYPE ? DATASETS : 'files'
+        artifactKind === MODEL_TYPE
+          ? MODELS_TAB
+          : artifactKind === DATASET_TYPE
+            ? DATASETS_TAB
+            : FILES_TAB
       }`,
     [params.projectName]
   )
@@ -116,12 +127,12 @@ const ProjectMonitor = ({
   }, [isDemoMode, navigate, params, openRegisterArtifactModal, openRegisterModelModal])
 
   const fetchProjectDataAndSummary = useCallback(() => {
-    Promise.all([fetchProject(params.projectName), fetchProjectSummary(params.projectName)]).catch(error => {
-      handleFetchProjectError(error, navigate, setConfirmData)
-    })
+    Promise.all([fetchProject(params.projectName), fetchProjectSummary(params.projectName)]).catch(
+      error => {
+        handleFetchProjectError(error, navigate, setConfirmData)
+      }
+    )
   }, [fetchProject, fetchProjectSummary, navigate, params.projectName])
-
-
 
   const resetProjectData = useCallback(() => {
     removeProjectData()
@@ -134,11 +145,7 @@ const ProjectMonitor = ({
       resetProjectData()
       removeProjectSummary()
     }
-  }, [
-    fetchProjectDataAndSummary,
-    removeProjectSummary,
-    resetProjectData
-  ])
+  }, [fetchProjectDataAndSummary, removeProjectSummary, resetProjectData])
 
   useEffect(() => {
     if (nuclioStreamsAreEnabled && !isNuclioModeDisabled) {

@@ -113,7 +113,6 @@ export const CONSUMER_GROUP_PAGE = 'CONSUMER_GROUP'
 export const CONSUMER_GROUPS_PAGE = 'CONSUMER_GROUPS'
 
 /*=========== DATASETS =============*/
-export const DATASETS = 'datasets'
 export const DATASETS_FILTERS = 'DATASETS_FILTERS'
 
 /*=========== JOBS =============*/
