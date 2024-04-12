@@ -130,6 +130,7 @@ const ModelsView = React.forwardRef(
                   tab={MODELS_TAB}
                   tableClassName="models-table"
                   tableHeaders={tableHeaders ?? []}
+                  virtualizationConfig={virtualizationConfig}
                 >
                   {tableContent.map(
                     (tableItem, index) =>

@@ -126,6 +126,7 @@ const DatasetsView = React.forwardRef(
                     sortProps={sortProps}
                     tableClassName="datasets-table"
                     tableHeaders={tableHeaders ?? []}
+                    virtualizationConfig={virtualizationConfig}
                   >
                     {tableContent.map(
                       (tableItem, index) =>
