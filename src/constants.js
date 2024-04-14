@@ -95,9 +95,13 @@ export const FEATURE_VECTORS_TAB = 'feature-vectors'
 export const ADD_TO_FEATURE_VECTOR_TAB = 'add-to-feature-vector'
 
 export const DATASETS_PAGE = 'DATASETS'
+export const DATASETS_TAB = 'datasets'
+
 export const FUNCTIONS_PAGE = 'FUNCTIONS'
 export const ARTIFACTS_PAGE = 'ARTIFACTS'
+
 export const FILES_PAGE = 'FILES'
+export const FILES_TAB = 'files'
 
 export const PROJECT_MONITOR = 'monitor'
 
@@ -109,7 +113,6 @@ export const CONSUMER_GROUP_PAGE = 'CONSUMER_GROUP'
 export const CONSUMER_GROUPS_PAGE = 'CONSUMER_GROUPS'
 
 /*=========== DATASETS =============*/
-export const DATASETS = 'datasets'
 export const DATASETS_FILTERS = 'DATASETS_FILTERS'
 
 /*=========== JOBS =============*/

@@ -17,7 +17,7 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import { DATASETS, FEATURE_SETS_TAB, FEATURE_VECTORS_TAB, FEATURES_TAB } from '../constants'
+import { DATASETS_TAB, FEATURE_SETS_TAB, FEATURE_VECTORS_TAB, FEATURES_TAB } from '../constants'
 
 export const getArtifactIdentifier = (artifact, unique) => {
   let identifier = `${artifact?.db_key || artifact?.spec?.model || ''}`
@@ -115,7 +115,7 @@ export const getIdentifierMethod = tab => {
       return getFeatureSetIdentifier
     case FEATURE_VECTORS_TAB:
       return getFeatureVectorIdentifier
-    case DATASETS:
+    case DATASETS_TAB:
       return getArtifactIdentifier
     default:
       return getFeatureIdentifier

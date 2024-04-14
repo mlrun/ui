@@ -23,8 +23,8 @@ import JobWizard from '../JobWizard/JobWizard'
 
 import {
   DATASET_TYPE,
-  DATASETS,
   DATASETS_PAGE,
+  DATASETS_TAB,
   FULL_VIEW_MODE,
   ITERATIONS_FILTER,
   LABELS_FILTER,
@@ -109,7 +109,7 @@ export const generatePageData = (selectedItem, viewMode, params) => ({
   details: {
     menu: generateDataSetsDetailsMenu(selectedItem),
     infoHeaders,
-    type: DATASETS,
+    type: DATASETS_TAB,
     hideBackBtn: viewMode === FULL_VIEW_MODE,
     withToggleViewBtn: true,
     actionButton: {
@@ -271,7 +271,7 @@ export const generateActionsMenu = (
       {
         label: 'Copy URI',
         icon: <Copy />,
-        onClick: dataset => copyToClipboard(generateUri(dataset, DATASETS_PAGE), dispatch)
+        onClick: dataset => copyToClipboard(generateUri(dataset, DATASETS_TAB), dispatch)
       },
       {
         label: 'View YAML',
