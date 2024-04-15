@@ -20,6 +20,7 @@ such restriction.
 import React from 'react'
 
 import {
+  ARTIFACTS,
   ARTIFACT_TYPE,
   FILES_PAGE,
   FILES_TAB,
@@ -248,7 +249,7 @@ export const generateActionsMenu = (
       {
         label: 'Copy URI',
         icon: <Copy />,
-        onClick: file => copyToClipboard(generateUri(file, FILES_TAB), dispatch)
+        onClick: file => copyToClipboard(generateUri(file, ARTIFACTS), dispatch)
       },
       {
         label: 'View YAML',
