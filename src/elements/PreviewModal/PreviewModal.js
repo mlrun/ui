@@ -62,6 +62,13 @@ const PreviewModal = ({ artifact }) => {
       <div className="item-artifacts__modal-preview">
         <div className="preview-body">
           <div className="preview-item">
+            <div className="item-data">Name</div>
+            <div className="item-data item-data__path">Path</div>
+            {(artifact.ui.size || artifact.size) && <div className="item-data">Size</div>}
+            <div className="item-data">Updated</div>
+            <div className="preview-body__download"></div>
+          </div>
+          <div className="preview-item">
             <div className="item-data item-data__name data-ellipsis">
               <Tooltip template={<TextTooltipTemplate text={artifact.db_key || artifact.key} />}>
                 {artifact.db_key || artifact.key}
@@ -78,8 +85,8 @@ const PreviewModal = ({ artifact }) => {
                 {artifact.ui.size
                   ? artifact.ui.size
                   : typeof artifact.size === 'string'
-                  ? artifact.size
-                  : prettyBytes(artifact.size)}
+                    ? artifact.size
+                    : prettyBytes(artifact.size)}
               </div>
             )}
             <div className="item-data">
