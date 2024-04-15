@@ -31,14 +31,10 @@ const Notification = () => {
   const notificationStore = useSelector(store => store.notificationStore)
 
   const defaultStyle = {
-    position: 'fixed',
-    right: '24px',
-    bottom: '-115px',
-    opacity: 0,
-    zIndex: '1000'
+    transform: 'translateY(130px)',
+    opacity: 0
   }
-  const heightNotification = 65
-  const offsetNotification = 65
+
   const duration = 500
 
   const handleRemoveNotification = itemId => {
@@ -54,17 +50,15 @@ const Notification = () => {
     <TransitionGroup>
       {notificationStore.notification.map((item, index) => {
         const isSuccessResponse = inRange(item.status, 200, 300)
-        const bottomPosition =
-          (notificationStore.notification.length - index) * heightNotification + offsetNotification
 
         const transitionStyles = {
           entered: {
-            transform: `translateY(-${bottomPosition}px)`,
+            transform: 'translateY(0)',
             opacity: 1,
             transition: `transform ${duration}ms ease-in-out, opacity ${duration}ms ease-in-out`
           },
           exiting: {
-            transform: 'translateY(0px)',
+            transform: 'translateY(130px)',
             opacity: 0,
             transition: `transform ${duration}ms ease-in-out, opacity ${duration}ms ease-in-out`
           }
