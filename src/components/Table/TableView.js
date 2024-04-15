@@ -25,7 +25,7 @@ import classnames from 'classnames'
 import Details from '../Details/Details'
 import TableHead from './TableHead'
 
-import { ACTIONS_MENU } from '../../types'
+import { ACTIONS_MENU, VIRTUALIZATION_CONFIG } from '../../types'
 import { SORT_PROPS } from 'igz-controls/types'
 
 const TableView = ({
@@ -50,7 +50,8 @@ const TableView = ({
   tableHeadRef,
   tableHeaders,
   tablePanelRef,
-  tableRef
+  tableRef,
+  virtualizationConfig
 }) => {
   const tableClass = classnames(
     'table',
@@ -74,7 +75,13 @@ const TableView = ({
                 sortProps={sortProps}
               />
             )}
-            <tbody className="table-body" ref={tableBodyRef}>{children}</tbody>
+            <tbody
+              className="table-body"
+              style={{ paddingTop: virtualizationConfig.tableBodyPaddingTop }}
+              ref={tableBodyRef}
+            >
+              {children}
+            </tbody>
           </table>
           {isTablePanelOpen && (
             <div className="table__panel-container" ref={tablePanelRef}>
@@ -107,7 +114,12 @@ TableView.defaultProps = {
   applyDetailsChangesCallback: () => {},
   getCloseDetailsLink: null,
   groupLatestJob: {},
-  sortProps: null
+  sortProps: null,
+  virtualizationConfig: {
+    tableBodyPaddingTop: 0,
+    startIndex: -1,
+    endIndex: -1
+  }
 }
 
 TableView.propTypes = {
@@ -127,7 +139,8 @@ TableView.propTypes = {
   tableClassName: PropTypes.string.isRequired,
   tableHeadRef: PropTypes.shape({}),
   tableHeaders: PropTypes.array,
-  tablePanelRef: PropTypes.shape({})
+  tablePanelRef: PropTypes.shape({}),
+  virtualizationConfig: VIRTUALIZATION_CONFIG
 }
 
 export default TableView

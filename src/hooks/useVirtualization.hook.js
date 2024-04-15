@@ -20,6 +20,8 @@ such restriction.
 import { useLayoutEffect, useMemo, useState } from 'react'
 import { isEmpty, isEqual, sum, throttle } from 'lodash'
 
+const HIDDEN_RENDER_ITEMS_LENGTH = 5
+
 /**
  * Checks if a row is rendered based on the provided virtualization configuration and row index.
  * @param {Object} virtualizationConfig - The virtualization configuration object containing start and end indices.
@@ -34,7 +36,7 @@ export const isRowRendered = (virtualizationConfig, rowIndex) => {
  * Calculates the heights of rows based on the provided table content, selected item, row data, and row heights.
  * @param {Array} tableContent - Array containing content for each row.
  * @param {Object} selectedItem - The selected item.
- * @param {Object} selectedRowData - Object representing the currently selected item.
+ * @param {Object} expandedRowsData - Object representing currently expanded items.
  * @param {number} rowHeight - The height of a regular row.
  * @param {number} rowHeightExtended - The height of an extended row.
  * @returns {Array} An array containing the calculated heights of rows.
@@ -42,17 +44,21 @@ export const isRowRendered = (virtualizationConfig, rowIndex) => {
 export const getRowsSizes = (
   tableContent,
   selectedItem,
-  selectedRowData,
+  expandedRowsData,
   rowHeight,
   rowHeightExtended
 ) => {
-  return tableContent.map(contentItem => {
-    const baseRowHeight = isEmpty(selectedItem) ? rowHeight : rowHeightExtended
+  const baseRowHeight = isEmpty(selectedItem) ? rowHeight : rowHeightExtended
 
-    if (!selectedRowData[contentItem.data.ui.identifier]) {
+  return tableContent.map(contentItem => {
+    const expandedRowData = expandedRowsData?.[contentItem.data.ui.identifier]
+
+    if (!expandedRowData) {
       return baseRowHeight
+    } else if (!expandedRowData.content || expandedRowData.loading) {
+      return rowHeight
     } else {
-      return selectedRowData[contentItem.data.ui.identifier].content.reduce(accumulatedHeight => {
+      return expandedRowData.content.reduce(accumulatedHeight => {
         return (accumulatedHeight += baseRowHeight)
       }, rowHeight)
     }
@@ -84,7 +90,8 @@ export const useVirtualization = ({
 }) => {
   const [virtualizationConfig, setVirtualizationConfig] = useState({
     startIndex: -1,
-    endIndex: -1
+    endIndex: -1,
+    tableBodyPaddingTop: 0
   })
   const [rowsSizesLocal, setRowsSizesLocal] = useState(rowsSizes)
   const tableRefEl = tableRef.current
@@ -161,19 +168,24 @@ export const useVirtualization = ({
         lastVisibleItemIndex = rowsSizesLocal.length - 1
       }
 
-      const firstRenderIndex = Math.max(firstVisibleItemIndex - 5, 0)
-      const lastRenderIndex = Math.min(lastVisibleItemIndex + 5, rowsSizesLocal.length - 1)
+      const firstRenderIndex = Math.max(firstVisibleItemIndex - HIDDEN_RENDER_ITEMS_LENGTH, 0)
+      const lastRenderIndex = Math.min(
+        lastVisibleItemIndex + HIDDEN_RENDER_ITEMS_LENGTH,
+        rowsSizesLocal.length - 1
+      )
       const tableBodyPaddingTop = Math.min(
         sum(rowsSizesLocal.slice(0, firstRenderIndex)),
         elementsHeight - tableRefEl.clientHeight
       )
 
-      setVirtualizationConfig({
-        startIndex: firstRenderIndex,
-        endIndex: lastRenderIndex
-      })
-      tableBodyRefEl.style.paddingTop = `${tableBodyPaddingTop}px`
-    }, 100)
+        setVirtualizationConfig(() => {
+          return {
+            startIndex: firstRenderIndex,
+            endIndex: lastRenderIndex,
+            tableBodyPaddingTop
+          }
+        })
+    }, 150)
 
     if (tableRefEl && tableBodyRefEl) {
       tableBodyRefEl.style.minHeight = `${elementsHeight}px`
@@ -182,11 +194,13 @@ export const useVirtualization = ({
       calculateVirtualizationConfig(null)
 
       tableRefEl.addEventListener('scroll', calculateVirtualizationConfig)
+      window.addEventListener('resize', calculateVirtualizationConfig)
     }
 
     return () => {
       if (tableRefEl) {
         tableRefEl.removeEventListener('scroll', calculateVirtualizationConfig)
+        window.removeEventListener('resize', calculateVirtualizationConfig)
       }
     }
   }, [headerRowHeightLocal, rowsSizesLocal, tableBodyRefEl, tableRefEl])

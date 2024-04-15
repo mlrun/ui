@@ -47,7 +47,8 @@ const Table = React.forwardRef(
       sortProps,
       tab,
       tableClassName,
-      tableHeaders
+      tableHeaders,
+      virtualizationConfig
     },
     ref
   ) => {
@@ -132,6 +133,7 @@ const Table = React.forwardRef(
         tableHeaders={tableHeaders}
         tableHeadRef={tableHeadRef}
         tablePanelRef={tablePanelRef}
+        virtualizationConfig={virtualizationConfig}
       >
         {children}
       </TableView>
