@@ -36,6 +36,7 @@ import {
   SET_CHANGES,
   SET_CHANGES_COUNTER,
   SET_CHANGES_DATA,
+  SET_DETAILS_DATES,
   SET_EDIT_MODE,
   SET_FILTERS_WAS_HANDLED,
   SET_INFO_CONTENT,
@@ -147,6 +148,10 @@ const detailsActions = {
   }),
   setChangesData: data => ({
     type: SET_CHANGES_DATA,
+    payload: data
+  }),
+  setDetailsDates: data => ({
+    type: SET_DETAILS_DATES,
     payload: data
   }),
   setEditMode: value => ({
