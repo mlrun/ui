@@ -27,7 +27,13 @@ import {
 } from './redux.util'
 import artifactsApi from '../api/artifacts-api'
 import functionsApi from '../api/functions-api'
-import { ARTIFACTS, DATASETS_TAB, FILES_TAB, FUNCTION_TYPE_SERVING, MODELS_TAB } from '../constants'
+import {
+  ARTIFACTS_TAB,
+  DATASETS_TAB,
+  FILES_TAB,
+  FUNCTION_TYPE_SERVING,
+  MODELS_TAB
+} from '../constants'
 import { filterArtifacts } from '../utils/filterArtifacts'
 import { generateArtifacts } from '../utils/generateArtifacts'
 import { generateModelEndpoints } from '../utils/generateModelEndpoints'
@@ -157,7 +163,7 @@ export const fetchFiles = createAsyncThunk(
       .then(({ data }) => {
         const result = parseArtifacts(data.artifacts)
 
-        return generateArtifacts(filterArtifacts(result), ARTIFACTS, data.artifacts)
+        return generateArtifacts(filterArtifacts(result), ARTIFACTS_TAB, data.artifacts)
       })
       .catch(error =>
         largeResponseCatchHandler(error, 'Failed to fetch artifacts', thunkAPI.dispatch)

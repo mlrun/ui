@@ -18,7 +18,7 @@ under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
 import {
-  ARTIFACTS,
+  ARTIFACTS_TAB,
   DATASETS_TAB,
   FILES_TAB,
   FEATURE_SETS_TAB,
@@ -30,7 +30,7 @@ import { isNil } from 'lodash'
 export const generateUri = (item, tab) => {
   let uri = `store://${tab}/${item.project}/`
 
-  if (tab === MODELS_TAB || tab === DATASETS_TAB || tab === FILES_TAB || tab === ARTIFACTS) {
+  if (tab === MODELS_TAB || tab === DATASETS_TAB || tab === FILES_TAB || tab === ARTIFACTS_TAB) {
     uri += item.db_key
     uri += getArtifactReference(item)
   } else if (tab === FEATURE_SETS_TAB || tab === FEATURE_VECTORS_TAB) {
