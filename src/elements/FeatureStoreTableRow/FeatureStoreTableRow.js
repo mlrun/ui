@@ -24,50 +24,55 @@ import { useParams } from 'react-router-dom'
 import { createPortal } from 'react-dom'
 import { isEmpty } from 'lodash'
 
-import TableCell from '../TableCell/TableCell'
 import ActionsMenu from '../../common/ActionsMenu/ActionsMenu'
-import Loader from '../../common/Loader/Loader'
 import ErrorMessage from '../../common/ErrorMessage/ErrorMessage'
+import Loader from '../../common/Loader/Loader'
+import TableCell from '../TableCell/TableCell'
 
-import { getIdentifierMethod } from '../../utils/getUniqueIdentifier'
-import { generateTableRowTestId } from '../../utils/generateTableRowTestId'
-import { DETAILS_OVERVIEW_TAB, TABLE_CONTAINER } from '../../constants'
 import { ACTIONS_MENU } from '../../types'
+import { DETAILS_OVERVIEW_TAB, TABLE_CONTAINER } from '../../constants'
+import { generateTableRowTestId } from '../../utils/generateTableRowTestId'
+import { getIdentifierMethod } from '../../utils/getUniqueIdentifier'
+import { isRowExpanded, PARENT_ROW_EXPANDED_CLASS } from '../../utils/tableRows.util'
 
 const FeatureStoreTableRow = ({
   actionsMenu,
   handleExpandRow,
   handleSelectItem,
   hideActionsMenu,
-  rowIndex,
   mainRowItemsCount,
   pageTab,
+  rowIndex,
   rowItem,
   selectedItem,
   selectedRowData
 }) => {
   const parent = useRef()
   const params = useParams()
-
+  const rowIsExpanded = useMemo(
+    () => isRowExpanded(parent, selectedRowData, rowItem),
+    [rowItem, selectedRowData]
+  )
   const getIdentifier = useMemo(() => getIdentifierMethod(pageTab), [pageTab])
   const rowClassNames = classnames(
     'table-row',
+    'table-body-row',
     'parent-row',
     selectedItem?.name &&
       getIdentifier(selectedItem, true) === rowItem.data.ui.identifierUnique &&
-      !parent.current?.classList.value.includes('parent-row_expanded') &&
+      !rowIsExpanded &&
       'table-row_active',
-    parent.current?.classList.value.includes('parent-row_expanded') && 'parent-row_expanded'
+    rowIsExpanded && PARENT_ROW_EXPANDED_CLASS
   )
 
   return (
     <tr className={rowClassNames} ref={parent}>
-      {parent.current?.classList.contains('parent-row_expanded') ? (
+      {rowIsExpanded ? (
         <>
           <td
             data-testid={generateTableRowTestId(rowIndex)}
             className={`table-body__cell
-              ${parent.current?.classList.contains('parent-row_expanded') && 'row_grouped-by'}`}
+              ${rowIsExpanded && 'row_grouped-by'}`}
           >
             <table cellPadding="0" cellSpacing="0" className="table">
               <tbody className="table-body">
@@ -115,6 +120,7 @@ const FeatureStoreTableRow = ({
             selectedRowData[rowItem.data.ui.identifier]?.content.map((tableContentItem, index) => {
               const subRowClassNames = classnames(
                 'table-row',
+                'table-body-row',
                 selectedItem.name &&
                   getIdentifier(selectedItem, true) === tableContentItem.data.ui.identifierUnique &&
                   'table-row_active'
@@ -208,7 +214,6 @@ FeatureStoreTableRow.defaultProps = {
   handleExpandRow: () => {},
   handleSelectItem: () => {},
   hideActionsMenu: false,
-  tableContent: null,
   mainRowItemsCount: 1,
   selectedItem: {}
 }

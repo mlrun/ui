@@ -18,14 +18,15 @@ under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
 import React, { useMemo, useCallback, useEffect, useRef } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
+import PropTypes from 'prop-types'
 import { isEmpty } from 'lodash'
+import { useDispatch, useSelector } from 'react-redux'
 import { useLocation, useNavigate, useParams } from 'react-router-dom'
 
-import Table from '../../components/Table/Table'
 import JobsTableRow from '../JobsTableRow/JobsTableRow'
-import YamlModal from '../../common/YamlModal/YamlModal'
 import Loader from '../../common/Loader/Loader'
+import Table from '../../components/Table/Table'
+import YamlModal from '../../common/YamlModal/YamlModal'
 
 import {
   JOB_KIND_JOB,
@@ -34,30 +35,32 @@ import {
   MONITOR_JOBS_TAB,
   PANEL_RERUN_MODE
 } from '../../constants'
-import { DANGER_BUTTON } from 'igz-controls/constants'
-import { openPopUp } from 'igz-controls/utils/common.util'
 import {
   generateActionsMenu,
   generatePageData
 } from '../../components/Jobs/MonitorJobs/monitorJobs.util'
-import { isJobKindLocal, pollAbortingJobs } from '../../components/Jobs/jobs.util'
-import { setNotification } from '../../reducers/notificationReducer'
-import getState from '../../utils/getState'
-import { usePods } from '../../hooks/usePods.hook'
-import jobsActions from '../../actions/jobs'
-import detailsActions from '../../actions/details'
-import { enrichRunWithFunctionFields, handleAbortJob, handleDeleteJob } from './jobsTable.util'
-import { useYaml } from '../../hooks/yaml.hook'
-import { getJobLogs } from '../../utils/getJobLogs.util'
-import NoData from '../../common/NoData/NoData'
-import { getNoDataMessage } from '../../utils/getNoDataMessage'
 import Details from '../../components/Details/Details'
-import { getCloseDetailsLink } from '../../utils/getCloseDetailsLink'
-import { isDetailsTabExists } from '../../utils/isDetailsTabExists'
 import JobWizard from '../../components/JobWizard/JobWizard'
+import NoData from '../../common/NoData/NoData'
+import detailsActions from '../../actions/details'
+import getState from '../../utils/getState'
+import jobsActions from '../../actions/jobs'
+import { DANGER_BUTTON } from 'igz-controls/constants'
+import { enrichRunWithFunctionFields, handleAbortJob, handleDeleteJob } from './jobsTable.util'
+import { getCloseDetailsLink } from '../../utils/getCloseDetailsLink'
+import { getJobLogs } from '../../utils/getJobLogs.util'
+import { getNoDataMessage } from '../../utils/getNoDataMessage'
+import { isDetailsTabExists } from '../../utils/isDetailsTabExists'
+import { isJobKindLocal, pollAbortingJobs } from '../../components/Jobs/jobs.util'
+import { openPopUp } from 'igz-controls/utils/common.util'
 import { parseJob } from '../../utils/parseJob'
+import { setNotification } from '../../reducers/notificationReducer'
 import { showErrorNotification } from '../../utils/notifications.util'
-import PropTypes from 'prop-types'
+import { usePods } from '../../hooks/usePods.hook'
+import { useYaml } from '../../hooks/yaml.hook'
+import { isRowRendered, useVirtualization } from '../../hooks/useVirtualization.hook'
+
+import cssVariables from './jobsTable.scss'
 
 const JobsTable = React.forwardRef(
   (
@@ -90,6 +93,8 @@ const JobsTable = React.forwardRef(
     const navigate = useNavigate()
     const location = useLocation()
     const fetchJobFunctionsPromiseRef = useRef()
+    const tableBodyRef = useRef(null)
+    const tableRef = useRef(null)
     const {
       editableItem,
       handleMonitoring,
@@ -444,6 +449,19 @@ const JobsTable = React.forwardRef(
       }
     }, [params.jobId, selectedJob, setSelectedJob])
 
+    const virtualizationConfig = useVirtualization({
+      tableRef,
+      tableBodyRef,
+      rowsData: {
+        content: tableContent
+      },
+      heightData: {
+        headerRowHeight: cssVariables.monitorJobsHeaderRowHeight,
+        rowHeight: cssVariables.monitorJobsRowHeight,
+        rowHeightExtended: cssVariables.monitorJobsRowHeightExtended
+      }
+    })
+
     return (
       <>
         {jobsStore.loading && <Loader />}
@@ -465,20 +483,26 @@ const JobsTable = React.forwardRef(
               handleCancel={() => setSelectedJob({})}
               handleSelectItem={handleSelectRun}
               pageData={pageData}
+              ref={{ tableRef, tableBodyRef }}
               retryRequest={refreshJobs}
               selectedItem={selectedJob}
               tab={MONITOR_JOBS_TAB}
+              tableClassName="monitor-jobs-table"
               tableHeaders={tableContent[0]?.content ?? []}
+              virtualizationConfig={virtualizationConfig}
             >
-              {tableContent.map((tableItem, index) => (
-                <JobsTableRow
-                  actionsMenu={actionsMenu}
-                  handleSelectJob={handleSelectRun}
-                  key={index}
-                  rowItem={tableItem}
-                  selectedJob={selectedJob}
-                />
-              ))}
+              {tableContent.map(
+                (tableItem, index) =>
+                  isRowRendered(virtualizationConfig, index) && (
+                    <JobsTableRow
+                      actionsMenu={actionsMenu}
+                      handleSelectJob={handleSelectRun}
+                      key={index}
+                      rowItem={tableItem}
+                      selectedJob={selectedJob}
+                    />
+                  )
+              )}
             </Table>
           )
         )}

@@ -35,20 +35,23 @@ import {
   TAG_FILTER_ALL_ITEMS,
   TAG_LATEST
 } from '../../../constants'
-import { featureSetsActionCreator, featureSetsFilters, generatePageData } from './featureSets.util'
 import { checkTabIsValid, handleApplyDetailsChanges } from '../featureStore.util'
 import { createFeatureSetsRowData } from '../../../utils/createFeatureStoreContent'
+import { featureSetsActionCreator, featureSetsFilters, generatePageData } from './featureSets.util'
 import { getFeatureSetIdentifier } from '../../../utils/getUniqueIdentifier'
-import { isDetailsTabExists } from '../../../utils/isDetailsTabExists'
-import { parseFeatureSets } from '../../../utils/parseFeatureSets'
 import { getFilterTagOptions, setFilters } from '../../../reducers/filtersReducer'
+import { isDetailsTabExists } from '../../../utils/isDetailsTabExists'
+import { parseChipsData } from '../../../utils/convertChipsData'
+import { parseFeatureSets } from '../../../utils/parseFeatureSets'
 import { setNotification } from '../../../reducers/notificationReducer'
 import { useGetTagOptions } from '../../../hooks/useGetTagOptions.hook'
 import { useGroupContent } from '../../../hooks/groupContent.hook'
 import { useOpenPanel } from '../../../hooks/openPanel.hook'
-import { parseChipsData } from '../../../utils/convertChipsData'
+import { useVirtualization } from '../../../hooks/useVirtualization.hook'
 
 import { ReactComponent as Yaml } from 'igz-controls/images/yaml.svg'
+
+import cssVariables from './featureSets.scss'
 
 const FeatureSets = ({
   fetchFeatureSet,
@@ -70,8 +73,10 @@ const FeatureSets = ({
   const params = useParams()
   const featureStore = useSelector(store => store.featureStore)
   const filtersStore = useSelector(store => store.filtersStore)
-  const featureStoreRef = useRef(null)
   const abortControllerRef = useRef(new AbortController())
+  const featureStoreRef = useRef(null)
+  const tableBodyRef = useRef(null)
+  const tableRef = useRef(null)
   const navigate = useNavigate()
   const location = useLocation()
   const dispatch = useDispatch()
@@ -347,6 +352,21 @@ const FeatureSets = ({
     }
   }, [removeFeatureSet, removeFeatureSets, params.projectName])
 
+  const virtualizationConfig = useVirtualization({
+    tableRef,
+    tableBodyRef,
+    rowsData: {
+      content: tableContent,
+      expandedRowsData: selectedRowData,
+      selectedItem: selectedFeatureSet
+    },
+    heightData: {
+      headerRowHeight: cssVariables.featureSetsHeaderRowHeight,
+      rowHeight: cssVariables.featureSetsRowHeight,
+      rowHeightExtended: cssVariables.featureSetsRowHeightExtended
+    }
+  })
+
   return (
     <FeatureSetsView
       actionsMenu={actionsMenu}
@@ -363,11 +383,12 @@ const FeatureSets = ({
       handleRefresh={handleRefresh}
       largeRequestErrorMessage={largeRequestErrorMessage}
       pageData={pageData}
-      ref={featureStoreRef}
+      ref={{ featureStoreRef, tableRef, tableBodyRef }}
       selectedFeatureSet={selectedFeatureSet}
       selectedRowData={selectedRowData}
       setSelectedFeatureSet={handleSelectFeatureSet}
       tableContent={tableContent}
+      virtualizationConfig={virtualizationConfig}
     />
   )
 }

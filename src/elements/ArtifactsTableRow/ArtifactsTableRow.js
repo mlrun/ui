@@ -23,14 +23,15 @@ import classnames from 'classnames'
 import { useParams } from 'react-router-dom'
 import { isEmpty } from 'lodash'
 
-import TableCell from '../TableCell/TableCell'
 import ActionsMenu from '../../common/ActionsMenu/ActionsMenu'
 import ErrorMessage from '../../common/ErrorMessage/ErrorMessage'
+import TableCell from '../TableCell/TableCell'
 
-import { DETAILS_OVERVIEW_TAB, MODEL_ENDPOINTS_TAB } from '../../constants'
 import { ACTIONS_MENU } from '../../types'
-import { getArtifactIdentifier } from '../../utils/getUniqueIdentifier'
+import { DETAILS_OVERVIEW_TAB, MODEL_ENDPOINTS_TAB } from '../../constants'
 import { generateTableRowTestId } from '../../utils/generateTableRowTestId'
+import { getArtifactIdentifier } from '../../utils/getUniqueIdentifier'
+import { isRowExpanded, PARENT_ROW_EXPANDED_CLASS } from '../../utils/tableRows.util'
 
 const ArtifactsTableRow = ({
   actionsMenu,
@@ -42,17 +43,14 @@ const ArtifactsTableRow = ({
   rowItem,
   selectedItem,
   selectedRowData,
-  tab,
-  style
+  tab
 }) => {
   const parent = useRef()
   const params = useParams()
-  const rowIsExpanded = useMemo(() => {
-    return (
-      parent.current?.classList.value.includes('parent-row_expanded') ||
-      selectedRowData && rowItem.data.ui.identifier in selectedRowData
-    )
-  }, [rowItem.data.ui.identifier, selectedRowData])
+  const rowIsExpanded = useMemo(
+    () => isRowExpanded(parent, selectedRowData, rowItem),
+    [rowItem, selectedRowData]
+  )
   const rowClassNames = classnames(
     'table-row',
     'table-body-row',
@@ -61,11 +59,11 @@ const ArtifactsTableRow = ({
       getArtifactIdentifier(selectedItem, true) === rowItem.data.ui.identifierUnique &&
       !rowIsExpanded &&
       'table-row_active',
-    rowIsExpanded && 'parent-row_expanded'
+    rowIsExpanded && PARENT_ROW_EXPANDED_CLASS
   )
 
   return (
-    <tr className={rowClassNames} style={style} ref={parent}>
+    <tr className={rowClassNames} ref={parent}>
       {
         (rowIsExpanded ? (
           <>

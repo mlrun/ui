@@ -21,15 +21,17 @@ import React from 'react'
 import { useParams } from 'react-router-dom'
 import PropTypes from 'prop-types'
 
-import FilterMenu from '../../FilterMenu/FilterMenu'
-import Table from '../../Table/Table'
-import NoData from '../../../common/NoData/NoData'
 import FeatureSetsPanel from '../../FeatureSetsPanel/FeatureSetsPanel'
 import FeatureStoreTableRow from '../../../elements/FeatureStoreTableRow/FeatureStoreTableRow'
+import FilterMenu from '../../FilterMenu/FilterMenu'
+import NoData from '../../../common/NoData/NoData'
+import Table from '../../Table/Table'
 
-import { featureSetsFilters } from './featureSets.util'
 import { FEATURE_SETS_TAB, FEATURE_STORE_PAGE } from '../../../constants'
+import { VIRTUALIZATION_CONFIG } from '../../../types'
+import { featureSetsFilters } from './featureSets.util'
 import { getNoDataMessage } from '../../../utils/getNoDataMessage'
+import { isRowRendered } from '../../../hooks/useVirtualization.hook'
 
 const FeatureSetsView = React.forwardRef(
   (
@@ -51,14 +53,15 @@ const FeatureSetsView = React.forwardRef(
       selectedFeatureSet,
       selectedRowData,
       setSelectedFeatureSet,
-      tableContent
+      tableContent,
+      virtualizationConfig
     },
-    ref
+    { featureStoreRef, tableRef, tableBodyRef }
   ) => {
     const params = useParams()
 
     return (
-      <div className="feature-store" ref={ref}>
+      <div className="feature-store" ref={featureStoreRef}>
         <div className="content__action-bar-wrapper">
           <div className="action-bar">
             <FilterMenu
@@ -89,23 +92,29 @@ const FeatureSetsView = React.forwardRef(
               detailsFormInitialValues={detailsFormInitialValues}
               handleCancel={() => setSelectedFeatureSet({})}
               pageData={pageData}
+              ref={{ tableRef, tableBodyRef }}
               retryRequest={handleRefresh}
               selectedItem={selectedFeatureSet}
               tab={FEATURE_SETS_TAB}
+              tableClassName="feature-sets-table"
               tableHeaders={tableContent[0]?.content ?? []}
+              virtualizationConfig={virtualizationConfig}
             >
-              {tableContent.map((tableItem, index) => (
-                <FeatureStoreTableRow
-                  actionsMenu={actionsMenu}
-                  handleExpandRow={handleExpandRow}
-                  rowIndex={index}
-                  key={index}
-                  pageTab={FEATURE_SETS_TAB}
-                  rowItem={tableItem}
-                  selectedItem={selectedFeatureSet}
-                  selectedRowData={selectedRowData}
-                />
-              ))}
+              {tableContent.map(
+                (tableItem, index) =>
+                  isRowRendered(virtualizationConfig, index) && (
+                    <FeatureStoreTableRow
+                      actionsMenu={actionsMenu}
+                      handleExpandRow={handleExpandRow}
+                      rowIndex={index}
+                      key={index}
+                      pageTab={FEATURE_SETS_TAB}
+                      rowItem={tableItem}
+                      selectedItem={selectedFeatureSet}
+                      selectedRowData={selectedRowData}
+                    />
+                  )
+              )}
             </Table>
           </>
         )}
@@ -139,7 +148,8 @@ FeatureSetsView.propTypes = {
   selectedFeatureSet: PropTypes.object.isRequired,
   selectedRowData: PropTypes.object.isRequired,
   setSelectedFeatureSet: PropTypes.func.isRequired,
-  tableContent: PropTypes.arrayOf(PropTypes.object).isRequired
+  tableContent: PropTypes.arrayOf(PropTypes.object).isRequired,
+  virtualizationConfig: VIRTUALIZATION_CONFIG.isRequired
 }
 
 export default FeatureSetsView

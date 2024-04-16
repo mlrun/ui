@@ -44,9 +44,12 @@ import { getNoDataMessage } from '../../../utils/getNoDataMessage'
 import { isDetailsTabExists } from '../../../utils/isDetailsTabExists'
 import { setFilters } from '../../../reducers/filtersReducer'
 import { useModelsPage } from '../ModelsPage.context'
+import { isRowRendered, useVirtualization } from '../../../hooks/useVirtualization.hook'
 
 import { ReactComponent as MonitorIcon } from 'igz-controls/images/monitor-icon.svg'
 import { ReactComponent as Yaml } from 'igz-controls/images/yaml.svg'
+
+import cssVariables from './modelEndpoints.scss'
 
 const ModelEndpoints = () => {
   const [largeRequestErrorMessage, setLargeRequestErrorMessage] = useState('')
@@ -62,6 +65,8 @@ const ModelEndpoints = () => {
   const dispatch = useDispatch()
   const abortControllerRef = useRef(new AbortController())
   const modelEndpointsRef = useRef(null)
+  const tableBodyRef = useRef(null)
+  const tableRef = useRef(null)
 
   const { handleMonitoring, toggleConvertedYaml } = useModelsPage()
 
@@ -221,6 +226,20 @@ const ModelEndpoints = () => {
     )
   }, [params.projectName, sortedContent])
 
+  const virtualizationConfig = useVirtualization({
+    tableRef,
+    tableBodyRef,
+    rowsData: {
+      content: tableContent,
+      selectedItem: selectedModelEndpoint
+    },
+    heightData: {
+      headerRowHeight: cssVariables.modelEndpointsHeaderRowHeight,
+      rowHeight: cssVariables.modelEndpointsRowHeight,
+      rowHeightExtended: cssVariables.modelEndpointsRowHeightExtended
+    }
+  })
+
   return (
     <>
       {artifactsStore.modelEndpoints.loading && <Loader />}
@@ -254,24 +273,28 @@ const ModelEndpoints = () => {
                 actionsMenu={actionsMenu}
                 handleCancel={() => handleSelectItem({})}
                 pageData={pageData}
+                ref={{ tableRef, tableBodyRef }}
                 retryRequest={fetchData}
                 selectedItem={selectedModelEndpoint}
                 tab={MODEL_ENDPOINTS_TAB}
+                tableClassName="model-endpoints-table"
                 tableHeaders={tableContent[0]?.content ?? []}
+                virtualizationConfig={virtualizationConfig}
               >
-                {tableContent.map((tableItem, index) => {
-                  return (
-                    <ArtifactsTableRow
-                      actionsMenu={actionsMenu}
-                      handleSelectItem={handleSelectItem}
-                      key={index}
-                      rowIndex={index}
-                      rowItem={tableItem}
-                      selectedItem={selectedModelEndpoint}
-                      tab={MODEL_ENDPOINTS_TAB}
-                    />
-                  )
-                })}
+                {tableContent.map(
+                  (tableItem, index) =>
+                    isRowRendered(virtualizationConfig, index) && (
+                      <ArtifactsTableRow
+                        actionsMenu={actionsMenu}
+                        handleSelectItem={handleSelectItem}
+                        key={index}
+                        rowIndex={index}
+                        rowItem={tableItem}
+                        selectedItem={selectedModelEndpoint}
+                        tab={MODEL_ENDPOINTS_TAB}
+                      />
+                    )
+                )}
               </Table>
             </>
           )}
