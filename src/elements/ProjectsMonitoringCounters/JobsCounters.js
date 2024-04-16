@@ -17,34 +17,49 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import React, { useMemo, useState } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
-import { useSelector } from 'react-redux'
 import { upperFirst } from 'lodash'
 import moment from 'moment'
 
-import DatePicker from '../../common/DatePicker/DatePicker'
 import Loader from '../../common/Loader/Loader'
 import StatsCard from '../../common/StatsCard/StatsCard'
 
 import jobsActions from '../../actions/jobs'
-// import workflowActions from '../../actions/workflow'
-import { PAST_24_HOUR_DATE_OPTION } from '../../utils/datePicker.util'
+import projectsAction from '../../actions/projects'
+
+import {
+  generateMonitoringStats,
+  generateMonitoringGroupedData
+} from '../../utils/generateMonitoringData'
 import { useFetchData } from '../../hooks/useFetchData.hook'
-import { GROUP_BY_WORKFLOW, STATE_FILTER_ALL_ITEMS } from '../../constants'
+import {
+  GROUP_BY_WORKFLOW,
+  JOBS_MONITORING_JOBS_TAB,
+  STATE_FILTER_ALL_ITEMS
+} from '../../constants'
+
+import { ReactComponent as ClockIcon } from 'igz-controls/images/clock.svg'
 
 import './projectsMonitoringCounters.scss'
 
 const JobsCounters = () => {
-  const [filter, setFilter] = useState({
+  const dispatch = useDispatch()
+  const navigate = useNavigate()
+  const [filter] = useState({
     groupBy: GROUP_BY_WORKFLOW,
     dates: {
       value: [new Date(moment().add(-1, 'days'))]
     },
     state: STATE_FILTER_ALL_ITEMS
   })
-
-  const navigate = useNavigate()
+  const [groupedJobsData, setGroupedJobsData] = useState({
+    all: [],
+    running: [],
+    failed: [],
+    completed: []
+  })
   const { loading: jobsLoading } = useFetchData({
     filter,
     action: jobsActions.fetchJobs
@@ -56,42 +71,26 @@ const JobsCounters = () => {
   const { jobs } = useSelector(store => store.jobsStore)
   // const { data: workflows } = useSelector(store => store.workflowsStore.workflows)
 
-  const handleDateSelection = dates => {
-    const generatedDates = [...dates]
+  // const handleDateSelection = dates => {
+  //   const generatedDates = [...dates]
 
-    if (generatedDates.length === 1) {
-      generatedDates.push(new Date())
-    }
+  //   if (generatedDates.length === 1) {
+  //     generatedDates.push(new Date())
+  //   }
 
-    setFilter(filters => ({ ...filters, dates: { value: generatedDates } }))
-  }
+  //   setFilter(filters => ({ ...filters, dates: { value: generatedDates } }))
+  // }
 
   const jobStats = useMemo(
-    () => ({
-      all: {
-        counter: jobs.length,
-        link: () => navigate('/projects/jobs-monitoring/jobs')
-      },
-      counters: [
-        {
-          counter: jobs.filter(job => job.status?.state === 'running').length,
-          link: () => navigate('/projects/jobs-monitoring/jobs'),
-          statusClass: 'running'
-        },
-        {
-          counter: jobs.filter(job => ['error', 'failed'].includes(job.status?.state)).length,
-          link: () => navigate('/projects/jobs-monitoring/jobs'),
-          statusClass: 'failed'
-        },
-        {
-          counter: jobs.filter(job => job.status?.state === 'completed').length,
-          link: () => navigate('/projects/jobs-monitoring/jobs'),
-          statusClass: 'completed'
-        }
-      ]
-    }),
-    [jobs, navigate]
+    () => generateMonitoringStats(groupedJobsData, navigate, dispatch, JOBS_MONITORING_JOBS_TAB),
+    [dispatch, groupedJobsData, navigate]
   )
+
+  useEffect(() => {
+    generateMonitoringGroupedData(jobs, setGroupedJobsData, data =>
+      dispatch(projectsAction.setJobsMonitoringData({ jobs: data }))
+    )
+  }, [dispatch, jobs])
 
   /* todo: Un-hide the code below after  ML-5460 is impplemented
   const workflowsStats = useMemo(
@@ -156,6 +155,11 @@ const JobsCounters = () => {
   return (
     <StatsCard className="monitoring-stats">
       <StatsCard.Header title="Jobs">
+        <div className="project-card__info">
+          <ClockIcon className="project-card__info-icon" />
+          <span>Past 24 hours</span>
+        </div>
+        {/* Todo: Use in the future
         <DatePicker
           date={filter.dates.value[0]}
           dateTo={filter.dates.value[1]}
@@ -164,12 +168,12 @@ const JobsCounters = () => {
           onChange={handleDateSelection}
           type="date-range-time"
           withLabels
-        />
+        /> */}
       </StatsCard.Header>
-      <StatsCard.Body>
+      <StatsCard.Row>
         <StatsCard.Col>
           <>
-            <h6 className="stats__subtitle">{upperFirst('jobs')}</h6>
+            <h6 className="stats__subtitle">{upperFirst(JOBS_MONITORING_JOBS_TAB)}</h6>
             <span className="stats__counter">
               {jobsLoading ? <Loader section small secondary /> : jobStats.all.counter}
             </span>
@@ -177,20 +181,20 @@ const JobsCounters = () => {
               {jobStats.counters.map(({ counter, link, statusClass }) => (
                 <li className="link" onClick={link} key={`${statusClass}-jobs`}>
                   {jobsLoading ? <Loader section small secondary /> : counter}
-                  <i className={`state-${statusClass}`}></i>
+                  <i className={`state-${statusClass}`} />
                 </li>
               ))}
             </ul>
           </>
         </StatsCard.Col>
-      </StatsCard.Body>
-      <StatsCard.Footer>
+      </StatsCard.Row>
+      <StatsCard.Row>
         <StatsCard.Col>
-          <span className="link" onClick={jobStats.all.link}>
+          <span className="link" onClick={jobStats.all.link} data-testid="jobs_see_all">
             See all
           </span>
         </StatsCard.Col>
-      </StatsCard.Footer>
+      </StatsCard.Row>
     </StatsCard>
   )
 }
@@ -211,11 +215,11 @@ export default React.memo(JobsCounters)
           withLabels
         />
       </StatsCard.Header>
-      <StatsCard.Body>
+      <StatsCard.Row>
         <StatsCard.Col>{getCounterTemplate('jobs')}</StatsCard.Col>
         <StatsCard.Col>{getCounterTemplate('workflows')}</StatsCard.Col>
-      </StatsCard.Body>
-      <StatsCard.Footer>
+      </StatsCard.Row>
+      <StatsCard.Row>
         <StatsCard.Col>
           <span className='link' onClick={jobStats.all.link}>
             See all
@@ -226,6 +230,6 @@ export default React.memo(JobsCounters)
             See all
           </span>
         </StatsCard.Col>
-      </StatsCard.Footer>
+      </StatsCard.Row>
     </StatsCard>
   */

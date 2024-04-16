@@ -125,7 +125,7 @@ const RegisterArtifactModal = ({
     }
 
     return artifactApi
-      .getArtifact(params.projectName, values.metadata.key, values.metadata.tag)
+      .getArtifact(params.projectName, values.metadata.key, values.metadata.tag ?? 'latest')
       .then(response => {
         if (response?.data) {
           if (!isEmpty(response.data.artifacts)) {

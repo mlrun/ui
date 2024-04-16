@@ -1,7 +1,14 @@
 .job-monitoring {
-  .jobs-cards-wrapper {
-    display: grid;
-    grid-template-columns: repeat(4, minmax(0, 1fr));
-    gap: 18px 24px;
+  .content__action-bar-wrapper {
+    margin-bottom: 25px;
+  }
+
+  .table-top {
+    margin-top: 0;
+    margin-bottom: 20px;
+  }
+
+  .action-bar {
+    padding: 0;
   }
 }

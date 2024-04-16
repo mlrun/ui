@@ -41,13 +41,13 @@ const DetailsLogs = ({
   const streamLogsRef = useRef()
 
   useEffect(() => {
-    refreshLogs(item, params.projectName, setDetailsLogs, streamLogsRef)
+    refreshLogs(item, item.project, setDetailsLogs, streamLogsRef)
 
     return () => {
       setDetailsLogs('')
       removeLogs()
     }
-  }, [item, params.projectName, refreshLogs, removeLogs, withLogsRefreshBtn])
+  }, [item, refreshLogs, removeLogs, withLogsRefreshBtn])
 
   const handleScroll = event => {
     if (

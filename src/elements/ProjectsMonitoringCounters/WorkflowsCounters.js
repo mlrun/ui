@@ -17,78 +17,81 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import React, { useCallback, useMemo, useState } from 'react'
+import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { upperFirst } from 'lodash'
 import moment from 'moment'
 
-import DatePicker from '../../common/DatePicker/DatePicker'
 import Loader from '../../common/Loader/Loader'
 import StatsCard from '../../common/StatsCard/StatsCard'
 
+import projectsAction from '../../actions/projects'
 import workflowActions from '../../actions/workflow'
-import { PAST_24_HOUR_DATE_OPTION } from '../../utils/datePicker.util'
+
+import {
+  generateMonitoringGroupedData,
+  generateMonitoringStats
+} from '../../utils/generateMonitoringData'
 import { useFetchData } from '../../hooks/useFetchData.hook'
-import { GROUP_BY_WORKFLOW, STATE_FILTER_ALL_ITEMS } from '../../constants'
+import {
+  GROUP_BY_WORKFLOW,
+  JOBS_MONITORING_WORKFLOWS_TAB,
+  STATE_FILTER_ALL_ITEMS
+} from '../../constants'
+
+import { ReactComponent as ClockIcon } from 'igz-controls/images/clock.svg'
 
 import './projectsMonitoringCounters.scss'
 
 const WorkflowsCounters = () => {
-  const [filter, setFilter] = useState({
+  const dispatch = useDispatch()
+  const navigate = useNavigate()
+  const [filter] = useState({
     groupBy: GROUP_BY_WORKFLOW,
     dates: {
       value: [new Date(moment().add(-1, 'days'))]
     },
     state: STATE_FILTER_ALL_ITEMS
   })
-
-  const navigate = useNavigate()
+  const [groupedWorkflowsData, setGroupedWorkflowsData] = useState({
+    all: [],
+    running: [],
+    failed: [],
+    completed: []
+  })
   const { loading: workflowsLoading } = useFetchData({
     filter,
     action: workflowActions.fetchWorkflows
   })
   const { data: workflows } = useSelector(store => store.workflowsStore.workflows)
 
-  const handleDateSelection = dates => {
-    const generatedDates = [...dates]
+  // const handleDateSelection = dates => {
+  //   const generatedDates = [...dates]
 
-    if (generatedDates.length === 1) {
-      generatedDates.push(new Date())
-    }
+  //   if (generatedDates.length === 1) {
+  //     generatedDates.push(new Date())
+  //   }
 
-    setFilter(filters => ({ ...filters, dates: { value: generatedDates } }))
-  }
+  //   setFilter(filters => ({ ...filters, dates: { value: generatedDates } }))
+  // }
 
   const workflowsStats = useMemo(
-    () => ({
-      all: {
-        counter: workflows.length,
-        link: () => navigate('/projects/jobs-monitoring/workflows')
-      },
-      counters: [
-        {
-          counter: workflows.filter(workflow => workflow.state?.value === 'running').length,
-          link: () => navigate('/projects/jobs-monitoring/workflows'),
-          statusClass: 'running'
-        },
-        {
-          counter: workflows.filter(workflow => ['error', 'failed'].includes(workflow.state?.value))
-            .length,
-          link: () => navigate('/projects/jobs-monitoring/workflows'),
-          statusClass: 'failed'
-        },
-        {
-          counter: workflows.filter(workflow =>
-            ['completed', 'succeeded'].includes(workflow.state?.value)
-          ).length,
-          link: () => navigate('/projects/jobs-monitoring/workflows'),
-          statusClass: 'completed'
-        }
-      ]
-    }),
-    [workflows, navigate]
+    () =>
+      generateMonitoringStats(
+        groupedWorkflowsData,
+        navigate,
+        dispatch,
+        JOBS_MONITORING_WORKFLOWS_TAB
+      ),
+    [dispatch, groupedWorkflowsData, navigate]
   )
+
+  useEffect(() => {
+    generateMonitoringGroupedData(workflows, setGroupedWorkflowsData, data =>
+      dispatch(projectsAction.setJobsMonitoringData({ workflows: data }))
+    )
+  }, [dispatch, workflows])
 
   const getCounterTemplate = useCallback(
     type => {
@@ -102,7 +105,7 @@ const WorkflowsCounters = () => {
             {workflowsStats.counters.map(({ counter, link, statusClass }) => (
               <li className="link" onClick={link} key={`${statusClass}-jobs`}>
                 {workflowsLoading ? <Loader section small secondary /> : counter}
-                <i className={`state-${statusClass}`}></i>
+                <i className={`state-${statusClass}`} />
               </li>
             ))}
           </ul>
@@ -115,6 +118,11 @@ const WorkflowsCounters = () => {
   return (
     <StatsCard className="monitoring-stats">
       <StatsCard.Header title="Workflows">
+        <div className="project-card__info">
+          <ClockIcon className="project-card__info-icon" />
+          <span>Past 24 hours</span>
+        </div>
+        {/* Todo: Use in the future
         <DatePicker
           date={filter.dates.value[0]}
           dateTo={filter.dates.value[1]}
@@ -123,18 +131,18 @@ const WorkflowsCounters = () => {
           onChange={handleDateSelection}
           type="date-range-time"
           withLabels
-        />
+        /> */}
       </StatsCard.Header>
-      <StatsCard.Body>
-        <StatsCard.Col>{getCounterTemplate('workflows')}</StatsCard.Col>
-      </StatsCard.Body>
-      <StatsCard.Footer>
+      <StatsCard.Row>
+        <StatsCard.Col>{getCounterTemplate(JOBS_MONITORING_WORKFLOWS_TAB)}</StatsCard.Col>
+      </StatsCard.Row>
+      <StatsCard.Row>
         <StatsCard.Col>
-          <span className="link" onClick={workflowsStats.all.link}>
+          <span className="link" onClick={workflowsStats.all.link} data-testid="workflows_see_all">
             See all
           </span>
         </StatsCard.Col>
-      </StatsCard.Footer>
+      </StatsCard.Row>
     </StatsCard>
   )
 }

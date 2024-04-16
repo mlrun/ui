@@ -22,22 +22,23 @@ import PropTypes from 'prop-types'
 import { useSelector } from 'react-redux'
 import { useParams } from 'react-router-dom'
 
-import DetailsInfo from '../../DetailsInfo/DetailsInfo'
-import DetailsDriftAnalysis from '../../DetailsDriftAnalysis/DetailsDriftAnalysis'
-import DetailsPods from '../../DetailsPods/DetailsPods'
-import DetailsFeatureAnalysis from '../../DetailsFeaturesAnalysis/DetailsFeaturesAnalysis'
-import DetailsPreview from '../../DetailsPreview/DetailsPreview'
-import DetailsInputs from '../../DetailsInputs/DetailsInputs'
-import DetailsArtifacts from '../../DetailsArtifacts/DetailsArtifacts'
-import DetailsResults from '../../DetailsResults/DetailsResults'
-import DetailsLogs from '../../DetailsLogs/DetailsLogs'
-import DetailsCode from '../../DetailsCode/DetailsCode'
-import DetailsMetadata from '../../DetailsMetadata/DetailsMetadata'
-import DetailsTransformations from '../../DetailsTransformations/DetailsTransformations'
 import DetailsAnalysis from '../../DetailsAnalysis/DetailsAnalysis'
-import NoData from '../../../common/NoData/NoData'
-import DetailsStatistics from '../../DetailsStatistics/DetailsStatistics'
+import DetailsArtifacts from '../../DetailsArtifacts/DetailsArtifacts'
+import DetailsCode from '../../DetailsCode/DetailsCode'
+import DetailsDriftAnalysis from '../../DetailsDriftAnalysis/DetailsDriftAnalysis'
+import DetailsFeatureAnalysis from '../../DetailsFeaturesAnalysis/DetailsFeaturesAnalysis'
+import DetailsInfo from '../../DetailsInfo/DetailsInfo'
+import DetailsInputs from '../../DetailsInputs/DetailsInputs'
+import DetailsLogs from '../../DetailsLogs/DetailsLogs'
+import DetailsMetadata from '../../DetailsMetadata/DetailsMetadata'
+import DetailsMetrics from '../../DetailsMetrics/DetailsMetrics'
+import DetailsPods from '../../DetailsPods/DetailsPods'
+import DetailsPreview from '../../DetailsPreview/DetailsPreview'
 import DetailsRequestedFeatures from '../../DetailsRequestedFeatures/DetailsRequestedFeatures'
+import DetailsResults from '../../DetailsResults/DetailsResults'
+import DetailsStatistics from '../../DetailsStatistics/DetailsStatistics'
+import DetailsTransformations from '../../DetailsTransformations/DetailsTransformations'
+import NoData from '../../../common/NoData/NoData'
 
 import { isJobKindDask, JOB_STEADY_STATES } from '../../Jobs/jobs.util'
 
@@ -52,6 +53,7 @@ import {
   DETAILS_INPUTS_TAB,
   DETAILS_LOGS_TAB,
   DETAILS_METADATA_TAB,
+  DETAILS_METRICS_TAB,
   DETAILS_OVERVIEW_TAB,
   DETAILS_PODS_TAB,
   DETAILS_PREVIEW_TAB,
@@ -110,6 +112,8 @@ const DetailsTabsContent = ({
       )
     case DETAILS_FEATURES_ANALYSIS_TAB:
       return <DetailsFeatureAnalysis />
+    case DETAILS_METRICS_TAB:
+      return <DetailsMetrics />
     case DETAILS_PREVIEW_TAB:
       return <DetailsPreview artifact={selectedItem} handlePreview={handlePreview} />
     case DETAILS_INPUTS_TAB:

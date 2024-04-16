@@ -126,6 +126,7 @@ const FilesView = React.forwardRef(
                     sortProps={sortProps}
                     tableClassName="files-table"
                     tableHeaders={tableHeaders ?? []}
+                    virtualizationConfig={virtualizationConfig}
                   >
                     {tableContent.map(
                       (tableItem, index) =>

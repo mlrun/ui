@@ -1,0 +1,49 @@
+@import '~igz-controls/scss/mixins';
+@import '~igz-controls/scss/colors';
+
+.jobs-cards-wrapper {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 18px 24px;
+
+  .stats {
+    @include stats();
+
+    flex: 1;
+    align-self: center;
+
+    &-card {
+      cursor: pointer;
+      border: 2px solid transparent;
+      min-height: 144px;
+    }
+
+    &__counter {
+      display: block;
+      flex: 1;
+      color: $primary;
+      font-weight: 700;
+      font-size: 3em;
+      text-align: center;
+    }
+
+    &__subtitle {
+      display: block;
+      flex: 1;
+      margin-left: 5px;
+      color: $topaz;
+      font-weight: normal;
+      font-size: 1.25rem;
+      text-align: center;
+
+      i {
+        margin-bottom: 2px;
+        margin-left: 5px;
+      }
+    }
+  }
+
+  .data-ellipsis {
+    flex: 1;
+  }
+}

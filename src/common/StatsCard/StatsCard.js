@@ -22,33 +22,34 @@ import PropTypes from 'prop-types'
 
 import './statsCard.scss'
 
-const StatsCard = ({ children, className }) => {
-  return <div className={`stats-card ${className}`}>{children}</div>
-}
-
-StatsCard.Header = ({ children, title }) => {
+const StatsCard = ({ children, className, onClick }) => {
   return (
-    <div className='stats-card__row'>
-      {title && <h5 className='stats-card__title'>{title}</h5>}
+    <div className={`stats-card ${className}`} onClick={onClick}>
       {children}
     </div>
   )
 }
 
-StatsCard.Body = ({ children }) => {
-  return <div className='stats-card__row stats-card__full-row'>{children}</div>
+StatsCard.Header = ({ children, title }) => {
+  return (
+    <div className="stats-card__row">
+      {title && <h5 className="stats-card__title">{title}</h5>}
+      {children}
+    </div>
+  )
 }
 
-StatsCard.Footer = ({ children }) => {
-  return <div className='stats-card__row'>{children}</div>
+StatsCard.Row = ({ children }) => {
+  return <div className="stats-card__row">{children}</div>
 }
 
 StatsCard.Col = ({ children }) => {
-  return <div className='stats-card__col'>{children}</div>
+  return <div className="stats-card__col">{children}</div>
 }
 
 StatsCard.defaultProps = {
-  className: ''
+  className: '',
+  onClick: () => {}
 }
 
 StatsCard.Header.defaultProps = {
@@ -58,7 +59,8 @@ StatsCard.Header.defaultProps = {
 
 StatsCard.propTypes = {
   children: PropTypes.node.isRequired,
-  className: PropTypes.string
+  className: PropTypes.string,
+  onClick: PropTypes.func
 }
 
 StatsCard.Header.propTypes = {

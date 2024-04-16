@@ -95,9 +95,13 @@ export const FEATURE_VECTORS_TAB = 'feature-vectors'
 export const ADD_TO_FEATURE_VECTOR_TAB = 'add-to-feature-vector'
 
 export const DATASETS_PAGE = 'DATASETS'
+export const DATASETS_TAB = 'datasets'
+
 export const FUNCTIONS_PAGE = 'FUNCTIONS'
 export const ARTIFACTS_PAGE = 'ARTIFACTS'
+
 export const FILES_PAGE = 'FILES'
+export const FILES_TAB = 'files'
 
 export const PROJECT_MONITOR = 'monitor'
 
@@ -109,7 +113,6 @@ export const CONSUMER_GROUP_PAGE = 'CONSUMER_GROUP'
 export const CONSUMER_GROUPS_PAGE = 'CONSUMER_GROUPS'
 
 /*=========== DATASETS =============*/
-export const DATASETS = 'datasets'
 export const DATASETS_FILTERS = 'DATASETS_FILTERS'
 
 /*=========== JOBS =============*/
@@ -155,12 +158,14 @@ export const REMOVE_JOB = 'REMOVE_JOB'
 export const REMOVE_JOB_ERROR = 'REMOVE_JOB_ERROR'
 export const REMOVE_JOB_FUNCTION = 'REMOVE_JOB_FUNCTION'
 export const REMOVE_JOB_PODS = 'REMOVE_JOB_PODS'
+export const REMOVE_JOBS_MONITORING_DATA_FILTERS = 'REMOVE_JOBS_MONITORING_DATA_FILTERS'
 export const REMOVE_NEW_JOB = 'REMOVE_NEW_JOB'
 export const REMOVE_SCHEDULED_JOB_FAILURE = 'REMOVE_SCHEDULED_JOB_FAILURE'
 export const RUN_NEW_JOB_BEGIN = 'RUN_NEW_JOB_BEGIN'
 export const RUN_NEW_JOB_FAILURE = 'RUN_NEW_JOB_FAILURE'
 export const RUN_NEW_JOB_SUCCESS = 'RUN_NEW_JOB_SUCCESS'
 export const SET_JOBS_DATA = 'SET_JOBS_DATA'
+export const SET_JOBS_MONITORING_DATA = 'SET_JOBS_MONITORING_DATA'
 export const SET_NEW_JOB = 'SET_NEW_JOB'
 export const SET_NEW_JOB_CREDENTIALS_ACCESS_KEY = 'SET_NEW_JOB_CREDENTIALS_ACCESS_KEY'
 export const SET_NEW_JOB_ENVIRONMENT_VARIABLES = 'SET_NEW_JOB_ENVIRONMENT_VARIABLES'
@@ -454,6 +459,7 @@ export const DETAILS_FEATURES_TAB = 'features'
 export const DETAILS_INPUTS_TAB = 'inputs'
 export const DETAILS_LOGS_TAB = 'logs'
 export const DETAILS_METADATA_TAB = 'metadata'
+export const DETAILS_METRICS_TAB = 'metrics'
 export const DETAILS_OVERVIEW_TAB = 'overview'
 export const DETAILS_PODS_TAB = 'pods'
 export const DETAILS_PREVIEW_TAB = 'preview'

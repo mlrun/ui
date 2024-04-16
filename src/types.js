@@ -218,7 +218,8 @@ export const JOB_WIZARD_MODE = PropTypes.oneOf([
 
 export const VIRTUALIZATION_CONFIG = PropTypes.shape({
   startIndex: PropTypes.number.isRequired,
-  endIndex: PropTypes.number.isRequired
+  endIndex: PropTypes.number.isRequired,
+  tableBodyPaddingTop: PropTypes.number.isRequired
 })
 
 export const SLIDER_STYLE_1 = 'style1'

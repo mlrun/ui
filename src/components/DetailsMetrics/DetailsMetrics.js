@@ -17,33 +17,17 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-export const getJobLogs = (
-  uid,
-  projectName,
-  streamLogsRef,
-  setDetailsLogs,
-  fetchJobLogs,
-  dispatch
-) => {
-  setDetailsLogs('')
+import React from 'react'
+// import { useSelector } from 'react-redux'
 
-  dispatch(fetchJobLogs(uid, projectName)).then(res => {
-    const reader = res.body?.getReader()
+const DetailsMetrics = () => {
+  // const detailsStore = useSelector(store => store.detailsStore)
 
-    if (reader) {
-      const decoder = new TextDecoder()
-      const read = () => {
-        reader.read().then(({ done, value }) => {
-          if (done) {
-            return
-          }
-
-          setDetailsLogs(prevState => prevState + decoder.decode(value))
-        })
-      }
-
-      streamLogsRef.current = read
-      read()
-    }
-  })
+  return (
+    <div className="metrics">
+      Home for Metrics
+    </div>
+  )
 }
+
+export default DetailsMetrics
