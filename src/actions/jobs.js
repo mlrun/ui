@@ -49,6 +49,9 @@ import {
   FETCH_JOB_LOGS_FAILURE,
   FETCH_JOB_LOGS_SUCCESS,
   FETCH_JOB_SUCCESS,
+  FETCH_SCHEDULED_JOBS_BEGIN,
+  FETCH_SCHEDULED_JOBS_FAILURE,
+  FETCH_SCHEDULED_JOBS_SUCCESS,
   REMOVE_JOB,
   REMOVE_JOB_ERROR,
   REMOVE_JOB_FUNCTION,
@@ -77,11 +80,42 @@ import {
   SET_URL,
   DELETE_ALL_JOB__RUNS_BEGIN,
   DELETE_ALL_JOB_RUNS_FAILURE,
-  DELETE_ALL_JOB_RUNS_SUCCESS
+  DELETE_ALL_JOB_RUNS_SUCCESS,
+  STATE_FILTER_ALL_ITEMS
 } from '../constants'
 import { getNewJobErrorMsg } from '../components/JobWizard/JobWizard.util'
 import { showErrorNotification } from '../utils/notifications.util'
 import { largeResponseCatchHandler } from '../utils/largeResponseCatchHandler'
+
+const generateRequestParams = filters => {
+  const params = {
+    iter: false
+  }
+
+  if (filters?.labels) {
+    params.label = filters.labels.split(',')
+  }
+
+  if (filters?.name) {
+    params.name = `~${filters.name}`
+  }
+
+  if (filters?.state && filters.state !== STATE_FILTER_ALL_ITEMS) {
+    params.state = filters.state
+  }
+
+  if (filters?.dates) {
+    if (filters.dates.value[0]) {
+      params.start_time_from = filters.dates.value[0].toISOString()
+    }
+
+    if (filters.dates.value[1] && !filters.dates.isPredefined) {
+      params.start_time_to = filters.dates.value[1].toISOString()
+    }
+  }
+
+  return params
+}
 
 const jobsActions = {
   abortJob: (project, job) => dispatch => {
@@ -108,11 +142,11 @@ const jobsActions = {
   abortJobSuccess: () => ({
     type: ABORT_JOB_SUCCESS
   }),
-  deleteAllJobRuns: (project, job) => dispatch => {
+  deleteAllJobRuns: job => dispatch => {
     dispatch(jobsActions.deleteAllJobRunsBegin())
 
     return jobsApi
-      .deleteAllJobRuns(project, job.name)
+      .deleteAllJobRuns(job.project, job.name)
       .then(() => dispatch(jobsActions.deleteAllJobRunsSuccess()))
       .catch(error => {
         dispatch(jobsActions.deleteAllJobRunsFailure(error.message))
@@ -179,10 +213,19 @@ const jobsActions = {
     payload: error
   }),
   fetchAllJobRuns: (project, filters, config, jobName) => dispatch => {
+    const newConfig = {
+      ...config,
+      params: {
+        ...config?.params,
+        name: jobName,
+        ...generateRequestParams(filters)
+      }
+    }
+
     dispatch(jobsActions.fetchAllJobRunsBegin())
 
     return jobsApi
-      .getAllJobRuns(project, filters, config, jobName)
+      .getAllJobRuns(project, newConfig)
       .then(({ data }) => {
         dispatch(jobsActions.fetchAllJobRunsSuccess(data.runs || []))
 
@@ -300,16 +343,21 @@ const jobsActions = {
   fetchJobLogsSuccess: () => ({
     type: FETCH_JOB_LOGS_SUCCESS
   }),
-  fetchJobs: (project, filters, config, scheduled) => dispatch => {
-    const getJobs = scheduled ? jobsApi.getScheduledJobs : jobsApi.getJobs
-
+  fetchJobs: (project, filters, config) => dispatch => {
     dispatch(jobsActions.fetchJobsBegin())
 
-    return getJobs(project, filters, config)
+    const newConfig = {
+      ...config,
+      params: {
+        ...config?.params,
+        ...generateRequestParams(filters)
+      }
+    }
+
+    return jobsApi
+      .getJobs(project, newConfig)
       .then(({ data }) => {
-        const newJobs = scheduled
-          ? (data || {}).schedules
-          : (data || {}).runs?.filter(job => job.metadata.iteration === 0)
+        const newJobs = (data || {}).runs.filter(job => job.metadata.iteration === 0)
 
         dispatch(jobsActions.fetchJobsSuccess(newJobs))
         dispatch(jobsActions.setJobsData(data.runs || []))
@@ -321,8 +369,49 @@ const jobsActions = {
         largeResponseCatchHandler(error, 'Failed to fetch jobs', dispatch)
       })
   },
+  fetchScheduledJobs: (project, filters, config) => dispatch => {
+    dispatch(jobsActions.fetchScheduledJobsBegin())
+
+    const newConfig = {
+      ...config,
+      params: {
+        ...config?.params,
+        include_last_run: 'yes'
+      }
+    }
+
+    if (filters?.owner) {
+      newConfig.params.owner = filters.owner
+    }
+
+    if (filters?.name) {
+      newConfig.params.name = `~${filters.name}`
+    }
+
+    if (filters?.labels) {
+      newConfig.params.labels = filters.labels?.split(',')
+    }
+
+    return jobsApi
+      .getScheduledJobs(project, newConfig)
+      .then(({ data }) => {
+        const newJobs = (data || {}).schedules
+
+        dispatch(jobsActions.fetchScheduledJobsSuccess(newJobs))
+
+        return newJobs
+      })
+      .catch(error => {
+        dispatch(jobsActions.fetchScheduledJobsFailure(error))
+        largeResponseCatchHandler(error, 'Failed to fetch scheduled jobs', dispatch)
+      })
+  },
   fetchSpecificJobs: (project, filters, jobList) => () => {
-    return jobsApi.getSpecificJobs(project, filters, jobList).then(({ data }) => {
+    const params = {
+      ...generateRequestParams(filters)
+    }
+
+    return jobsApi.getSpecificJobs(project, params, jobList).then(({ data }) => {
       return data.runs
     })
   },
@@ -335,6 +424,17 @@ const jobsActions = {
   }),
   fetchJobsSuccess: jobsList => ({
     type: FETCH_JOBS_SUCCESS,
+    payload: jobsList
+  }),
+  fetchScheduledJobsBegin: () => ({
+    type: FETCH_SCHEDULED_JOBS_BEGIN
+  }),
+  fetchScheduledJobsFailure: error => ({
+    type: FETCH_SCHEDULED_JOBS_FAILURE,
+    payload: error
+  }),
+  fetchScheduledJobsSuccess: jobsList => ({
+    type: FETCH_SCHEDULED_JOBS_SUCCESS,
     payload: jobsList
   }),
   handleRunScheduledJob: (postData, project, job) => () =>

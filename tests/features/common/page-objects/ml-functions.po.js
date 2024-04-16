@@ -59,6 +59,7 @@ const functionsTable = {
         expand_btn: '.table-body__cell:nth-of-type(1) svg.expand-arrow',
         name: '.table-body__cell:nth-of-type(1) a .name-wrapper .link', 
         tag: '.table-body__cell:nth-of-type(1) a .item-tag span',
+        name_expand_btn: '.table-body__cell:nth-of-type(1) a .name-wrapper .item-tag',
         status: '.table-body__cell:nth-of-type(1) .status i',
         kind: {
           componentType: labelComponent,
@@ -73,6 +74,7 @@ const functionsTable = {
         updated: '.table-body__cell:nth-of-type(4) .data-ellipsis',
         command: '.table-body__cell:nth-of-type(5) .data-ellipsis',
         image: '.table-body__cell:nth-of-type(6) .data-ellipsis',
+        deploy: '[data-testid="quick-link-deploy"]',
         description: '.table-body__cell:nth-of-type(7) .data-ellipsis',
         action_menu: {
           componentType: actionMenu,

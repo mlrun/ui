@@ -77,12 +77,10 @@ const DetailsHeader = ({
   }, [detailsStore.changes.counter, handleCancel, handleShowWarning])
 
   const handleCancelClick = useCallback(() => {
-    if (detailsStore.changes.counter > 0) {
-      handleShowWarning(true)
-    } else {
+    if (detailsStore.changes.counter === 0) {
       handleCancel()
     }
-  }, [detailsStore.changes.counter, handleCancel, handleShowWarning])
+  }, [detailsStore.changes.counter, handleCancel])
 
   return (
     <div className="item-header">
@@ -213,7 +211,11 @@ const DetailsHeader = ({
           />
         )}
         {isDetailsScreen && (
-          <RoundedIcon id="refresh" onClick={handleRefresh} tooltipText="Refresh">
+          <RoundedIcon
+            id="refresh"
+            onClick={() => handleRefresh(selectedItem.project)}
+            tooltipText="Refresh"
+          >
             <Refresh />
           </RoundedIcon>
         )}

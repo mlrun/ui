@@ -19,7 +19,7 @@ such restriction.
 */
 import React, { useState, useEffect, useMemo, useCallback, useRef } from 'react'
 import PropTypes from 'prop-types'
-import { OnChange } from 'react-final-form-listeners'
+// import { OnChange } from 'react-final-form-listeners'
 import { useDispatch, useSelector } from 'react-redux'
 import { includes, isEmpty, intersection, isBoolean, pickBy, keys, uniqBy, cloneDeep } from 'lodash'
 
@@ -30,6 +30,7 @@ import HubCategoriesFilter from '../../../FilterMenuModal/HubCategoriesFilter/Hu
 import NoData from '../../../../common/NoData/NoData'
 import Search from '../../../../common/Search/Search'
 import { FormSelect } from 'igz-controls/components'
+import FormOnChange from '../../../../common/FormOnChange/FormOnChange'
 
 import functionsActions from '../../../../actions/functions'
 import projectsAction from '../../../../actions/projects'
@@ -484,9 +485,10 @@ const JobWizardFunctionSelection = ({
           )}
         </div>
       )}
-      <OnChange name={`${FUNCTION_SELECTION_STEP}.projectName`}>
-        {onSelectedProjectNameChange}
-      </OnChange>
+      <FormOnChange
+        handler={onSelectedProjectNameChange}
+        name={`${FUNCTION_SELECTION_STEP}.projectName`}
+      />
     </div>
   )
 }

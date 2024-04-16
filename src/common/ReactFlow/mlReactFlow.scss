@@ -26,8 +26,8 @@
   border-color: $orchid;
 }
 
-@mixin errorNode {
-  color: rgba($black, 0.2);
+@mixin greyNode {
+  color: rgba($black, 0.3);
   background-color: $white;
 
   &:not(.selected) {
@@ -69,6 +69,17 @@
       opacity: 0.8;
     }
 
+    .react-flow__node-tip {
+      svg {
+        width: 20px;
+        height: 20px;
+
+        path {
+          fill: $bombay;
+        }
+      }
+    }
+
     &.input-node {
       @include inputNode;
     }
@@ -85,8 +96,8 @@
       @include secondaryNode;
     }
 
-    &.error-node {
-      @include errorNode;
+    &.grey-node {
+      @include greyNode;
     }
 
     &.react-flow__node-input {
@@ -102,11 +113,15 @@
     }
 
     &.oval-shape {
-      border-radius: 30px;
+      border-radius: 50%;
+    }
+
+    &.rounded-rectangle-shape {
+      border-radius: 50px;
     }
 
     &.with-opacity {
-      opacity: 0.7 !important;
+      opacity: 0.6 !important;
     }
 
     &.selectable {

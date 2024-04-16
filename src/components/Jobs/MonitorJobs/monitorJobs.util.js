@@ -26,7 +26,6 @@ import {
   JOBS_PAGE,
   LABELS_FILTER,
   NAME_FILTER,
-  PERIOD_FILTER,
   STATUS_FILTER
 } from '../../../constants'
 import {
@@ -49,7 +48,6 @@ import { ReactComponent as Yaml } from 'igz-controls/images/yaml.svg'
 import { ReactComponent as Delete } from 'igz-controls/images/delete.svg'
 
 export const generateFilters = jobName => [
-  { type: PERIOD_FILTER, label: 'Period:' },
   { type: STATUS_FILTER, label: 'Status:' },
   { type: NAME_FILTER, label: 'Name:', hidden: Boolean(jobName) },
   { type: LABELS_FILTER, label: 'Labels:' },

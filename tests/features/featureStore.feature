@@ -89,7 +89,6 @@ Feature: Feature Store Page
         Then verify breadcrumbs "tab" label should be equal "Feature store" value
         Then verify "Feature Vectors" tab is active in "Feature_Store_Tab_Selector" on "Feature_Store_Feature_Sets_Tab" wizard
         Then verify "Feature_Store_Tab_Selector" on "Feature_Store_Features_Vectors_Tab" wizard should contains "Feature_Store"."Tab_List"
-        And turn on demo mode
         Then verify "Create_Vector_Button" element visibility on "Feature_Store_Features_Vectors_Tab" wizard
         Then "Create_Vector_Button" element on "Feature_Store_Features_Vectors_Tab" should contains "Create Vector" value
         Then verify "Table_Name_Filter_Input" element visibility on "Feature_Store_Features_Vectors_Tab" wizard
@@ -376,7 +375,7 @@ Feature: Feature Store Page
         Then type value "type=featureSet" to "Table_Label_Filter_Input" field on "Feature_Store_Feature_Sets_Tab" wizard
         Then click on "Table_Refresh_Button" element on "Feature_Store_Feature_Sets_Tab" wizard
         And wait load page
-        Then value in "labels" column with "text" in "Feature_Sets_Table" on "Feature_Store_Feature_Sets_Tab" wizard should contains "type=featureSet"
+        Then value in "labels" column with "dropdowns" in "Feature_Sets_Table" on "Feature_Store_Feature_Sets_Tab" wizard should contains "type=featureSet" in "Overlay"
         Then type value "v3io_user=123" to "Table_Label_Filter_Input" field on "Feature_Store_Feature_Sets_Tab" wizard
         Then click on "Table_Refresh_Button" element on "Feature_Store_Feature_Sets_Tab" wizard
         And wait load page
@@ -457,7 +456,7 @@ Feature: Feature Store Page
         Then type value "type=featureVector" to "Table_Label_Filter_Input" field on "Feature_Store_Features_Vectors_Tab" wizard
         Then click on "Table_Refresh_Button" element on "Feature_Store_Features_Tab" wizard
         And wait load page
-        Then value in "labels" column with "text" in "Feature_Vectors_Table" on "Feature_Store_Features_Vectors_Tab" wizard should contains "type=featureVector"
+        Then value in "labels" column with "dropdowns" in "Feature_Vectors_Table" on "Feature_Store_Features_Vectors_Tab" wizard should contains "type=featureVector" in "Overlay"
         Then type value "v3io_user=123" to "Table_Label_Filter_Input" field on "Feature_Store_Features_Vectors_Tab" wizard
         Then click on "Table_Refresh_Button" element on "Feature_Store_Features_Vectors_Tab" wizard
         And wait load page
@@ -1293,7 +1292,6 @@ Feature: Feature Store Page
     @inProgress
     Scenario: MLFS043 - Add to feature vector
         Given open url
-        And turn on demo mode
         And click on row root with value "fsdemo-admin" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
         And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
@@ -1366,7 +1364,6 @@ Feature: Feature Store Page
     @MLFS
     Scenario: MLFS044 - Check all mandatory components in Item infopane on Requested Features tab on Feature Vectors tab
         Given open url
-        And turn on demo mode
         And click on row root with value "fsdemo-admin" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
         And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
@@ -1463,7 +1460,6 @@ Feature: Feature Store Page
     Scenario: MLFS045 - Verify Feature Label icon on Requested Features tab on Feature Vectors tab
         And set tear-down property "featureVector" created in "default" project with "test_vector" value
         Given open url
-        And turn on demo mode
         And click on row root with value "fsdemo-admin" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
         And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard

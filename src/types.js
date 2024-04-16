@@ -216,5 +216,11 @@ export const JOB_WIZARD_MODE = PropTypes.oneOf([
   PANEL_RERUN_MODE
 ])
 
+export const VIRTUALIZATION_CONFIG = PropTypes.shape({
+  startIndex: PropTypes.number.isRequired,
+  endIndex: PropTypes.number.isRequired,
+  tableBodyPaddingTop: PropTypes.number.isRequired
+})
+
 export const SLIDER_STYLE_1 = 'style1'
 export const SLIDER_STYLE_2 = 'style2'

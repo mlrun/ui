@@ -34,9 +34,10 @@ import { DATASETS_FILTERS, DATASETS_PAGE, FULL_VIEW_MODE } from '../../constants
 import { getNoDataMessage } from '../../utils/getNoDataMessage'
 import { registerDatasetTitle, filters } from './datasets.util'
 import { removeDataSet } from '../../reducers/artifactsReducer'
-import { ACTIONS_MENU } from '../../types'
+import { ACTIONS_MENU, VIRTUALIZATION_CONFIG } from '../../types'
 import { SECONDARY_BUTTON } from 'igz-controls/constants'
 import { SORT_PROPS } from 'igz-controls/types'
+import { isRowRendered } from '../../hooks/useVirtualization.hook'
 
 const DatasetsView = React.forwardRef(
   (
@@ -64,13 +65,14 @@ const DatasetsView = React.forwardRef(
       tableHeaders,
       toggleConvertedYaml,
       urlTagOption,
-      viewMode
+      viewMode,
+      virtualizationConfig
     },
-    ref
+    { datasetsRef, tableRef, tableBodyRef }
   ) => {
     return (
       <>
-        <div className="content-wrapper" ref={ref}>
+        <div className="content-wrapper" ref={datasetsRef}>
           <div className="content__header">
             <Breadcrumbs />
           </div>
@@ -112,28 +114,34 @@ const DatasetsView = React.forwardRef(
                 <>
                   {selectedRowData.loading && <Loader />}
                   <Table
+                    actionsMenu={actionsMenu}
                     applyDetailsChanges={applyDetailsChanges}
                     applyDetailsChangesCallback={applyDetailsChangesCallback}
-                    actionsMenu={actionsMenu}
                     detailsFormInitialValues={detailsFormInitialValues}
                     handleCancel={() => setSelectedDataset({})}
                     pageData={pageData}
+                    ref={{ tableRef, tableBodyRef }}
                     retryRequest={handleRefresh}
                     selectedItem={selectedDataset}
                     sortProps={sortProps}
+                    tableClassName="datasets-table"
                     tableHeaders={tableHeaders ?? []}
+                    virtualizationConfig={virtualizationConfig}
                   >
-                    {tableContent.map((tableItem, index) => (
-                      <ArtifactsTableRow
-                        actionsMenu={actionsMenu}
-                        handleExpandRow={handleExpandRow}
-                        key={index}
-                        rowIndex={index}
-                        rowItem={tableItem}
-                        selectedItem={selectedDataset}
-                        selectedRowData={selectedRowData}
-                      />
-                    ))}
+                    {tableContent.map(
+                      (tableItem, index) =>
+                        isRowRendered(virtualizationConfig, index) && (
+                          <ArtifactsTableRow
+                            actionsMenu={actionsMenu}
+                            handleExpandRow={handleExpandRow}
+                            key={index}
+                            rowIndex={index}
+                            rowItem={tableItem}
+                            selectedItem={selectedDataset}
+                            selectedRowData={selectedRowData}
+                          />
+                        )
+                    )}
                   </Table>
                 </>
               )}
@@ -193,7 +201,8 @@ DatasetsView.propTypes = {
   tableHeaders: PropTypes.arrayOf(PropTypes.object).isRequired,
   toggleConvertedYaml: PropTypes.func.isRequired,
   urlTagOption: PropTypes.string,
-  viewMode: PropTypes.string
+  viewMode: PropTypes.string,
+  virtualizationConfig: VIRTUALIZATION_CONFIG.isRequired
 }
 
 export default DatasetsView

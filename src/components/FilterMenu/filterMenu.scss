@@ -8,13 +8,13 @@
   flex-wrap: wrap;
   align-items: center;
 
-  .input-wrapper {
-    margin: 0 15px 0 0;
-
-    &:last-child {
-      margin: 0;
+  .filter-column {
+    &:not(:last-child) {
+      margin: 0 15px 0 0;
     }
+  }
 
+  .input-wrapper {
     .input {
       width: 200px;
       padding: 10px 10px 10px 64px;
@@ -29,25 +29,9 @@
     }
   }
 
-  .date-picker-container {
-    margin: 0 15px 0 0;
-  }
-
-  .select {
-    margin: 0 15px 0 0;
-
-    &:last-child {
-      margin: 0;
-    }
-  }
-
   .filters-checkbox {
     margin-top: 7px;
     margin-bottom: 7px;
-  }
-
-  .period-filter {
-    display: none;
   }
 
   .active-label {

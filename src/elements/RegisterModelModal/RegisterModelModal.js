@@ -17,7 +17,7 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your` compliance with
 such restriction.
 */
-import React, { useState } from 'react'
+import React from 'react'
 import PropTypes from 'prop-types'
 import { useDispatch } from 'react-redux'
 import { useLocation } from 'react-router-dom'
@@ -27,20 +27,21 @@ import arrayMutators from 'final-form-arrays'
 import { v4 as uuidv4 } from 'uuid'
 import { isEmpty } from 'lodash'
 
-import ErrorMessage from '../../common/ErrorMessage/ErrorMessage'
+import { ConfirmDialog } from 'igz-controls/components'
 import TargetPath from '../../common/TargetPath/TargetPath'
 import { Button, Modal, FormChipCell, FormInput, FormTextarea } from 'igz-controls/components'
 
 import artifactApi from '../../api/artifacts-api'
 import { MLRUN_STORAGE_INPUT_PATH_SCHEME } from '../../constants'
-import { MODAL_SM, SECONDARY_BUTTON, TERTIARY_BUTTON } from 'igz-controls/constants'
+import { MODAL_SM, SECONDARY_BUTTON, TERTIARY_BUTTON, PRIMARY_BUTTON } from 'igz-controls/constants'
 import { convertChipsData } from '../../utils/convertChipsData'
 import { getChipOptions } from '../../utils/getChipOptions'
 import { getValidationRules } from 'igz-controls/utils/validation.util'
-import { modelUniquenessError } from '../../utils/createArtifact.util'
+import { createModelMessages } from '../../utils/createArtifact.util'
 import { setFieldState } from 'igz-controls/utils/form.util'
 import { setNotification } from '../../reducers/notificationReducer'
 import { showErrorNotification } from '../../utils/notifications.util'
+import { openPopUp } from 'igz-controls/utils/common.util'
 import { useModalBlockHistory } from '../../hooks/useModalBlockHistory.hook'
 
 import './RegisterModelModal.scss'
@@ -61,7 +62,6 @@ function RegisterModelModal({ actions, isOpen, onResolve, params, refresh }) {
       }
     }
   }
-  const [uniquenessErrorIsShown, setUniquenessErrorIsShown] = useState(false)
   const formRef = React.useRef(
     createForm({
       initialValues,
@@ -100,26 +100,40 @@ function RegisterModelModal({ actions, isOpen, onResolve, params, refresh }) {
       data.spec.model_file = path[1]
     }
 
+    const handleRegisterModel = () => {
+      return artifactApi.registerArtifact(params.projectName, data).then(response => {
+        resolveModal()
+        refresh()
+        dispatch(
+          setNotification({
+            status: response.status,
+            id: Math.random(),
+            message: 'Model initiated successfully'
+          })
+        )
+      })
+    }
+
     return artifactApi
-      .getArtifact(params.projectName, values.metadata.key, values.metadata.tag)
+      .getArtifact(params.projectName, values.metadata.key, values.metadata.tag ?? 'latest')
       .then(response => {
         if (response?.data) {
           if (!isEmpty(response.data.artifacts)) {
-            setUniquenessErrorIsShown(true)
-          } else {
-            setUniquenessErrorIsShown(false)
-
-            return artifactApi.registerArtifact(params.projectName, data).then(response => {
-              resolveModal()
-              refresh()
-              dispatch(
-                setNotification({
-                  status: response.status,
-                  id: Math.random(),
-                  message: 'Model initiated successfully'
-                })
-              )
+            openPopUp(ConfirmDialog, {
+              confirmButton: {
+                label: 'Overwrite',
+                variant: PRIMARY_BUTTON,
+                handler: handleRegisterModel
+              },
+              cancelButton: {
+                label: 'Cancel',
+                variant: TERTIARY_BUTTON
+              },
+              header: createModelMessages.overwriteConfirmTitle,
+              message: createModelMessages.overwriteConfirmMessage
             })
+          } else {
+            return handleRegisterModel()
           }
         }
       })
@@ -127,7 +141,6 @@ function RegisterModelModal({ actions, isOpen, onResolve, params, refresh }) {
         showErrorNotification(dispatch, error, '', 'Model failed to initiate', () =>
           registerModel(values)
         )
-        setUniquenessErrorIsShown(false)
         resolveModal()
       })
   }
@@ -164,14 +177,6 @@ function RegisterModelModal({ actions, isOpen, onResolve, params, refresh }) {
             size={MODAL_SM}
             title="Register model"
           >
-            {uniquenessErrorIsShown && (
-              <div className="form-row">
-                <ErrorMessage
-                  closeError={() => setUniquenessErrorIsShown(false)}
-                  message={modelUniquenessError}
-                />
-              </div>
-            )}
             <div className="form-row">
               <div className="form-col-2">
                 <FormInput
@@ -187,6 +192,7 @@ function RegisterModelModal({ actions, isOpen, onResolve, params, refresh }) {
                   label="Tag"
                   name="metadata.tag"
                   validationRules={getValidationRules('common.tag')}
+                  placeholder="latest"
                 />
               </div>
             </div>

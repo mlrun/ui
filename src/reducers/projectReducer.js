@@ -79,11 +79,21 @@ import {
   FETCH_PROJECT_SECRETS_BEGIN,
   FETCH_PROJECT_SECRETS_FAILURE,
   FETCH_PROJECT_SECRETS_SUCCESS,
-  SET_PROJECT_SECRETS
+  SET_PROJECT_SECRETS,
+  SET_JOBS_MONITORING_DATA,
+  REMOVE_JOBS_MONITORING_DATA_FILTERS
 } from '../constants'
 
 const initialState = {
   error: null,
+  jobsMonitoringData: {
+    jobs: {},
+    workflows: {},
+    scheduled: {},
+    filters: {
+      status: ''
+    }
+  },
   loading: false,
   newProject: {
     error: null
@@ -741,6 +751,16 @@ const projectReducer = (state = initialState, { type, payload }) => {
           }
         }
       }
+    case REMOVE_JOBS_MONITORING_DATA_FILTERS:
+      return {
+        ...state,
+        jobsMonitoringData: {
+          ...state.jobsMonitoringData,
+          filters: {
+            ...initialState.jobsMonitoringData.filters
+          }
+        }
+      }
     case REMOVE_PROJECT_SUMMARY:
       return {
         ...state,
@@ -767,6 +787,14 @@ const projectReducer = (state = initialState, { type, payload }) => {
         ...state,
         newProject: {
           error: null
+        }
+      }
+    case SET_JOBS_MONITORING_DATA:
+      return {
+        ...state,
+        jobsMonitoringData: {
+          ...state.jobsMonitoringData,
+          ...payload
         }
       }
     case SET_PROJECT_SECRETS: {

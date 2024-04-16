@@ -22,8 +22,17 @@ import PropTypes from 'prop-types'
 import { Handle } from 'reactflow'
 
 import { Tooltip, TextTooltipTemplate } from 'igz-controls/components'
+import { Tip } from 'igz-controls/components'
 
-import { ERROR_NODE, INPUT_NODE, OUTPUT_NODE, PRIMARY_NODE, SECONDARY_NODE } from '../../constants'
+import {
+  GREY_NODE,
+  INPUT_NODE,
+  OUTPUT_NODE,
+  OVAL_NODE_SHAPE,
+  PRIMARY_NODE,
+  ROUNDED_RECTANGLE_NODE_SHAPE,
+  SECONDARY_NODE
+} from '../../constants'
 
 const MlReactFlowNode = ({ data, isConnectable }) => {
   return (
@@ -45,6 +54,7 @@ const MlReactFlowNode = ({ data, isConnectable }) => {
         </Tooltip>
         {data.subLabel && <div className="react-flow__node-sub-label">{data.subLabel}</div>}
       </div>
+      {data.tip && <Tip className="react-flow__node-tip" text={data.tip} withExclamationMark />}
       <Tooltip
         hidden={!data.sourceHandle?.tooltip}
         template={<TextTooltipTemplate text={data.sourceHandle?.tooltip} />}
@@ -62,13 +72,13 @@ const MlReactFlowNode = ({ data, isConnectable }) => {
 
 MlReactFlowNode.propTypes = {
   data: PropTypes.shape({
-    subType: PropTypes.oneOf([INPUT_NODE, OUTPUT_NODE, PRIMARY_NODE, SECONDARY_NODE, ERROR_NODE])
+    subType: PropTypes.oneOf([INPUT_NODE, OUTPUT_NODE, PRIMARY_NODE, SECONDARY_NODE, GREY_NODE])
       .isRequired,
     label: PropTypes.string.isRequired,
     subLabel: PropTypes.string,
     isSelectable: PropTypes.bool,
-    isOvalShape: PropTypes.bool,
-    isOpacity: PropTypes.bool,
+    withOpacity: PropTypes.bool,
+    shape: PropTypes.oneOf([OVAL_NODE_SHAPE, ROUNDED_RECTANGLE_NODE_SHAPE]),
     sourceHandle: PropTypes.shape({
       tooltip: PropTypes.string,
       className: PropTypes.string

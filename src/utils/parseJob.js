@@ -28,13 +28,14 @@ import getState from './getState'
 import { parseKeyValues } from './object'
 import { getJobIdentifier } from './getUniqueIdentifier'
 
+export const jobHasWorkflowLabel = job => {
+  return job.labels && 'job-type' in job.labels && job.labels['job-type'] === 'workflow-runner'
+}
+
 export const parseJob = (job, tab) => {
   let jobItem = null
 
   if (tab === SCHEDULE_TAB) {
-    const jobHasWorkflowLabel =
-      job.labels && 'job-type' in job.labels && job.labels['job-type'] === 'workflow-runner'
-
     jobItem = {
       createdTime: new Date(job.creation_time),
       func: job.scheduled_object.task.spec.function,
@@ -45,7 +46,8 @@ export const parseJob = (job, tab) => {
       scheduled_object: job.scheduled_object,
       startTime: new Date(job.last_run?.status?.start_time),
       state: getState(job.last_run?.status?.state, JOBS_PAGE, JOB_KIND_JOB),
-      type: job.kind === JOB_KIND_PIPELINE || jobHasWorkflowLabel ? JOB_KIND_WORKFLOW : job.kind,
+      type:
+        job.kind === JOB_KIND_PIPELINE || jobHasWorkflowLabel(job) ? JOB_KIND_WORKFLOW : job.kind,
       ui: {
         originalContent: job
       }

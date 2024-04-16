@@ -28,7 +28,7 @@ import { Tooltip, TextTooltipTemplate } from 'igz-controls/components'
 import { DENSITY_OPTIONS } from '../../types'
 
 import { ReactComponent as Arrow } from 'igz-controls/images/range-arrow-small.svg'
-import { ReactComponent as Invalid } from 'igz-controls/images/invalid.svg'
+import { ReactComponent as ExclamationMarkIcon } from 'igz-controls/images/exclamation-mark.svg'
 
 import './rangeInput.scss'
 
@@ -165,7 +165,7 @@ const RangeInput = ({
             />
           }
         >
-          <Invalid className="range__warning-icon" />
+          <ExclamationMarkIcon className="range__warning-icon" />
         </Tooltip>
       )}
       {required && labelType === 'none' && (

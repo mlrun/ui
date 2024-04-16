@@ -50,7 +50,7 @@ body {
 
   @include jobsFlex;
 
-  @media screen and (min-width: 1200px) {
+  @media screen and (min-width: 1300px) {
     padding: 15px 64px 30px;
   }
 
@@ -158,7 +158,7 @@ main {
     .page-actions {
       display: flex;
       justify-content: flex-end;
-      margin: 20px 0;
+      margin: 0 0 20px 0;
 
       .search-container {
         flex: unset;
@@ -324,7 +324,7 @@ main {
 
           .row_grouped-by {
             position: sticky;
-            top: 40px;
+            top: #{$headerRowHeight}px;
             background-color: $white;
             padding: 0;
             z-index: 3;
@@ -350,7 +350,7 @@ main {
       z-index: 3;
 
       &-row {
-        min-height: 40px;
+        min-height: #{$headerRowHeight}px;
       }
 
       &__cell {
@@ -407,6 +407,7 @@ main {
     flex-flow: column nowrap;
     flex: 1;
     overflow-y: auto;
+    will-change: scroll-position;
   }
 
   &.table-with-details {
@@ -493,7 +494,10 @@ main {
   @include statusState($pictonBlue);
 }
 
-[class^='state-aborted'],
+[class^='state-aborted'] {
+  @include statusState($babyPink);
+}
+
 [class^='state-broken'],
 [class^='state-error'],
 [class^='state-fail'],
@@ -783,7 +787,11 @@ main {
     margin-left: 20px;
 
     .action-button {
-      width: 160px;
+      white-space: nowrap;
+
+      @media screen and (min-width: 1300px) {
+        min-width: 160px;
+      }
 
       &:not(:last-of-type) {
         margin-right: 10px;

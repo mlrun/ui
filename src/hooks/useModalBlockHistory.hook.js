@@ -17,24 +17,29 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import { useBlockHistory } from './useBlockHistory.hook'
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback } from 'react'
+import { useBlocker } from 'react-router-dom'
+
 import { defaultCloseModalHandler } from '../utils/defaultCloseModalHandler'
 import { areFormValuesChanged } from 'igz-controls/utils/form.util'
 
 export const useModalBlockHistory = (closeModal, form) => {
-  const { blockHistory, unblockHistory } = useBlockHistory()
-  const [confirmationIsOpened, setConfirmationIsOpened] = useState(false)
+  let blocker = useBlocker(
+    () => {
+      const { initialValues, values } = form.getState()
+
+      return areFormValuesChanged(initialValues, values)
+    }
+  )
 
   const resolveModal = useCallback(() => {
     closeModal()
-    unblockHistory()
-  }, [closeModal, unblockHistory])
+    blocker.proceed?.()
+  }, [blocker, closeModal])
 
   const handleRejectConfirmation = useCallback(() => {
-    setConfirmationIsOpened(false)
-    unblockHistory()
-  }, [unblockHistory])
+    blocker.reset?.()
+  }, [blocker])
 
   const handleCloseModal = useCallback(() => {
     const { initialValues, values } = form.getState()
@@ -44,16 +49,9 @@ export const useModalBlockHistory = (closeModal, form) => {
     defaultCloseModalHandler(
       showConfirmation,
       resolveModal,
-      handleRejectConfirmation,
-      setConfirmationIsOpened
+      handleRejectConfirmation
     )
   }, [form, resolveModal, handleRejectConfirmation])
-
-  useEffect(() => {
-    if (form) {
-      blockHistory(handleCloseModal, confirmationIsOpened)
-    }
-  }, [confirmationIsOpened, blockHistory, handleCloseModal, form])
 
   return { handleCloseModal, resolveModal }
 }

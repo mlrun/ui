@@ -52,9 +52,9 @@ export const getLayoutedElements = (nodes, edges, direction = 'TB') => {
     node.className = classnames(
       node.className,
       node.data.subType,
+      node.data.shape && node.data.shape,
       node.data.isSelectable && 'selectable',
-      node.data.isOvalShape && 'oval-shape',
-      node.data.isOpacity && 'with-opacity'
+      node.data.withOpacity && 'with-opacity'
     )
 
     node.style = {

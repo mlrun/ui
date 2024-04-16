@@ -39,9 +39,10 @@ module.exports = {
       return result.join('')
     }
   },
-  generateInputGroup: function (root, label = false, hint = false, warning = false) {
+  generateInputGroup: function (root, label = false, hint = false, warning = false, input = 'input') {
     const structure = { root, elements: {} }
-    structure.elements.input = 'input'
+    structure.elements.input = input
+    
     if (label) {
       structure.elements.label = 'label'
     }

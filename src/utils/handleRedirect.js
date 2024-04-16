@@ -25,7 +25,7 @@ export const isPageTabValid = (pageTab, tabs, navigate, location) => {
 }
 
 export const isProjectValid = (navigate, projectsNames, currentProjectName) => {
-  if (projectsNames.length > 0 && !projectsNames.some(project => project === currentProjectName)) {
+  if (projectsNames.length > 0 && currentProjectName && !projectsNames.some(project => project === currentProjectName)) {
     navigate('/projects')
   }
 }

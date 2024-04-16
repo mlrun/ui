@@ -44,8 +44,7 @@ export const generateProjectActionsMenu = (
   viewYaml,
   archiveProject,
   unarchiveProject,
-  deleteProject,
-  isDemoMode
+  deleteProject
 ) => {
   const deletingProjectNames = Object.values(deletingProjects)
   let actionsMenu = {}
@@ -70,15 +69,6 @@ export const generateProjectActionsMenu = (
           onClick: unarchiveProject
         },
         {
-          label: 'Delete',
-          icon: <Delete />,
-          className: 'danger',
-          hidden:
-            window.mlrunConfig.nuclioMode === 'enabled' && project.metadata.name === 'default',
-          disabled: projectIsDeleting,
-          onClick: deleteProject
-        },
-        {
           label: 'Export YAML',
           icon: <DownloadIcon />,
           disabled: projectIsDeleting,
@@ -89,6 +79,15 @@ export const generateProjectActionsMenu = (
           icon: <Yaml />,
           disabled: projectIsDeleting,
           onClick: viewYaml
+        },
+        {
+          label: 'Delete',
+          icon: <Delete />,
+          className: 'danger',
+          hidden:
+            window.mlrunConfig.nuclioMode === 'enabled' && project.metadata.name === 'default',
+          disabled: projectIsDeleting,
+          onClick: deleteProject
         }
       ]
     ]
@@ -96,6 +95,7 @@ export const generateProjectActionsMenu = (
 
   return actionsMenu
 }
+
 export const projectsStates = [
   {
     id: 'active',
@@ -106,6 +106,7 @@ export const projectsStates = [
     label: 'Archived'
   }
 ]
+
 export const projectsSortOptions = [
   {
     id: 'byName',

@@ -391,9 +391,7 @@
         "description": "",
         "owner": null,
         "goals": "",
-        "params": {
-          "фф": "ии"
-        },
+        "params": {},
         "functions": null,
         "workflows": null,
         "artifacts": null,

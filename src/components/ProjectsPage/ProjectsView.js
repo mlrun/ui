@@ -26,7 +26,9 @@ import CreateProjectDialog from './CreateProjectDialog/CreateProjectDialog'
 import Loader from '../../common/Loader/Loader'
 import NoData from '../../common/NoData/NoData'
 import PageActionsMenu from '../../common/PageActionsMenu/PageActionsMenu'
+import PageHeader from '../../elements/PageHeader/PageHeader'
 import ProjectCard from '../../elements/ProjectCard/ProjectCard'
+import ProjectsMonitoring from './ProjectsMonitoring/ProjectsMonitoring'
 import Search from '../../common/Search/Search'
 import Sort from '../../common/Sort/Sort'
 import YamlModal from '../../common/YamlModal/YamlModal'
@@ -53,6 +55,7 @@ const ProjectsView = ({
   handleSearchOnFocus,
   handleSelectSortOption,
   isDescendingOrder,
+  isDemoMode,
   projectStore,
   refreshProjects,
   removeNewProjectError,
@@ -99,50 +102,54 @@ const ProjectsView = ({
         />
       )}
       <div className="projects__wrapper">
+        {projectStore.projects.length > 0 && isDemoMode && <ProjectsMonitoring />}
+        <PageHeader title="Projects" />
         <div className="projects-content-header">
-          <div className="projects-content-header__col">
-            <div className="projects-content-header-item">
-              <ContentMenu
-                activeTab={selectedProjectsState}
-                screen="active"
-                tabs={projectsStates}
-                onClick={setSelectedProjectsState}
-              />
+          <div className="projects-content-header__row">
+            <div className="projects-content-header__col">
+              <div className="projects-content-header-item">
+                <ContentMenu
+                  activeTab={selectedProjectsState}
+                  screen="active"
+                  tabs={projectsStates}
+                  onClick={setSelectedProjectsState}
+                />
 
-              <Sort
-                isDescendingOrder={isDescendingOrder}
-                onSelectOption={handleSelectSortOption}
-                options={projectsSortOptions}
-                selectedId={sortProjectId}
-                setIsDescendingOrder={setIsDescendingOrder}
-              />
+                <Sort
+                  isDescendingOrder={isDescendingOrder}
+                  onSelectOption={handleSelectSortOption}
+                  options={projectsSortOptions}
+                  selectedId={sortProjectId}
+                  setIsDescendingOrder={setIsDescendingOrder}
+                />
+              </div>
             </div>
-          </div>
-          <div className="projects-content-header__col projects-content-header__col-right">
-            <div className="projects-content-header-item">
-              <Search
-                className="projects-search"
-                matches={filterMatches}
-                onChange={setFilterByName}
-                onFocus={handleSearchOnFocus}
-                placeholder="Search projects..."
-                setMatches={setFilterMatches}
-                value={filterByName}
-              />
-              <PageActionsMenu
-                actionsMenuHeader={'New Project'}
-                onClick={() => setCreateProject(true)}
-                showActionsMenu
-                variant={PRIMARY_BUTTON}
-              />
-              <RoundedIcon
-                onClick={refreshProjects}
-                className="panel-title__btn_close"
-                tooltipText="Refresh"
-                id="pop-up-close-btn"
-              >
-                <RefreshIcon />
-              </RoundedIcon>
+            <div className="projects-content-header__col projects-content-header__col-right">
+              <div className="projects-content-header-item">
+                <Search
+                  className="projects-search"
+                  matches={filterMatches}
+                  onChange={setFilterByName}
+                  onFocus={handleSearchOnFocus}
+                  placeholder="Search projects..."
+                  setMatches={setFilterMatches}
+                  value={filterByName}
+                />
+                <PageActionsMenu
+                  actionsMenuHeader={'New Project'}
+                  onClick={() => setCreateProject(true)}
+                  showActionsMenu
+                  variant={PRIMARY_BUTTON}
+                />
+                <RoundedIcon
+                  onClick={refreshProjects}
+                  className="panel-title__btn_close"
+                  tooltipText="Refresh"
+                  id="pop-up-close-btn"
+                >
+                  <RefreshIcon />
+                </RoundedIcon>
+              </div>
             </div>
           </div>
         </div>

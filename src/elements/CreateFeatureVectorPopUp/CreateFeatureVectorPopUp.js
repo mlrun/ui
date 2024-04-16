@@ -19,126 +19,138 @@ such restriction.
 */
 import React, { useState } from 'react'
 import PropTypes from 'prop-types'
+import arrayMutators from 'final-form-arrays'
+import { Form } from 'react-final-form'
+import { createForm } from 'final-form'
+import { isEmpty } from 'lodash'
 
-import ChipCell from '../../common/ChipCell/ChipCell'
-import Input from '../../common/Input/Input'
-import TextArea from '../../common/TextArea/TextArea'
-import { Button, PopUpDialog, Tooltip, TextTooltipTemplate } from 'igz-controls/components'
+import {
+  Button,
+  FormChipCell,
+  FormInput,
+  FormTextarea,
+  PopUpDialog,
+  TextTooltipTemplate,
+  Tooltip
+} from 'igz-controls/components'
+import FormOnChange from '../../common/FormOnChange/FormOnChange'
 
 import { getValidationRules } from 'igz-controls/utils/validation.util'
-import { generateKeyValues, parseKeyValues } from '../../utils'
+import { setFieldState } from 'igz-controls/utils/form.util'
 import { TAG_LATEST } from '../../constants'
 import { LABEL_BUTTON, PRIMARY_BUTTON } from 'igz-controls/constants'
+import { getChipOptions } from '../../utils/getChipOptions'
+import { convertChipsData, parseChipsData } from '../../utils/convertChipsData'
 
 import './createFeatureVectorPopUp.scss'
 
 const CreateFeatureVectorPopUp = ({ closePopUp, createFeatureVector, featureVectorData }) => {
-  const [featureVectorName, setFeatureVectorName] = useState(featureVectorData.name)
-  const [featureVectorTag, setFeatureVectorTag] = useState(featureVectorData.tag || TAG_LATEST)
-  const [featureVectorDescription, setFeatureVectorDescription] = useState(
-    featureVectorData.description
-  )
-  const [featureVectorLabels, setFeatureVectorLabels] = useState(
-    parseKeyValues(featureVectorData.labels)
-  )
   const [tagTooltipIsHidden, setTagTooltipIsHidden] = useState(false)
-  const [validation, setValidation] = useState({
-    isNameValid: true,
-    isTagValid: true
-  })
+  const initialValues = {
+    name: featureVectorData.name,
+    tag: featureVectorData.tag || TAG_LATEST,
+    description: featureVectorData.description,
+    labels: parseChipsData(featureVectorData.labels)
+  }
+  const formRef = React.useRef(
+    createForm({
+      initialValues,
+      mutators: { ...arrayMutators, setFieldState },
+      onSubmit: () => {}
+    })
+  )
+
+  const handleCreateFeatureVector = (e, formState) => {
+    e.preventDefault()
+
+    if (formState.valid) {
+      createFeatureVector({
+        name: formState.values.name,
+        tag: formState.values.tag,
+        description: formState.values.description,
+        labels: convertChipsData(formState.values.labels)
+      })
+    }
+  }
 
   return (
     <PopUpDialog
-      className="new-feature-vector__pop-up"
+      className="new-feature-vector__pop-up form"
       headerText={`${!featureVectorData.name ? 'Create' : 'Edit'} feature vector`}
       closePopUp={closePopUp}
     >
-      <div className="new-feature-vector__row new-feature-vector__name-tag-row">
-        <Input
-          className="vector-name"
-          floatingLabel
-          invalid={!validation.isNameValid}
-          label="Vector name"
-          onChange={setFeatureVectorName}
-          required
-          setInvalid={value => setValidation(state => ({ ...state, isNameValid: value }))}
-          type="text"
-          value={featureVectorName}
-          wrapperClassName="vector-name-wrapper"
-          validationRules={getValidationRules('feature.vector.name')}
-        />
-        <Tooltip
-          className="vector-tag-wrapper"
-          hidden={tagTooltipIsHidden || featureVectorTag.length === 0}
-          template={<TextTooltipTemplate text={featureVectorTag} />}
-        >
-          <Input
-            className="vector-tag"
-            floatingLabel
-            invalid={!validation.isTagValid}
-            label="Tag"
-            onBlur={() => setTagTooltipIsHidden(false)}
-            onChange={value => {
-              setTagTooltipIsHidden(true)
-              setFeatureVectorTag(value)
-            }}
-            required
-            setInvalid={value => setValidation(state => ({ ...state, isTagValid: value }))}
-            type="text"
-            validationRules={getValidationRules('common.tag')}
-            value={featureVectorTag}
-          />
-        </Tooltip>
-      </div>
-      <div className="new-feature-vector__row new-feature-vector__description-row">
-        <TextArea
-          floatingLabel
-          label="Description"
-          maxLength={500}
-          onChange={setFeatureVectorDescription}
-          value={featureVectorDescription}
-        />
-      </div>
-      <div className="new-feature-vector__row new-feature-vector__labels-row">
-        <div className="labels-container">
-          <div className="labels-container__title">Labels</div>
-          <ChipCell
-            addChip={(label, labels) => {
-              setFeatureVectorLabels([...labels, label])
-            }}
-            editChip={setFeatureVectorLabels}
-            elements={featureVectorLabels}
-            isEditMode
-            removeChip={setFeatureVectorLabels}
-          />
-        </div>
-      </div>
-      <div className="pop-up-dialog__footer-container">
-        <Button
-          variant={LABEL_BUTTON}
-          label="Cancel"
-          className="pop-up-dialog__btn_cancel"
-          onClick={closePopUp}
-        />
-        <Button
-          variant={PRIMARY_BUTTON}
-          label="Create"
-          disabled={
-            !featureVectorName.trim() ||
-            !featureVectorTag.trim() ||
-            !validation.isNameValid ||
-            !validation.isTagValid
-          }
-          onClick={() =>
-            createFeatureVector({
-              name: featureVectorName,
-              tag: featureVectorTag,
-              description: featureVectorDescription,
-              labels: generateKeyValues(featureVectorLabels)
-            })
-          }
-        />
-      </div>
+      <Form form={formRef.current} onSubmit={() => {}}>
+        {formState => {
+          return (
+            <>
+              <div className="form-row">
+                <div className="form-col-2">
+                  <FormInput
+                    label="Vector name"
+                    name="name"
+                    required
+                    validationRules={getValidationRules('feature.vector.name')}
+                  />
+                </div>
+                <div className="form-col-1">
+                  <Tooltip
+                    hidden={tagTooltipIsHidden || isEmpty(formState.values.tag)}
+                    template={<TextTooltipTemplate text={formState.values.tag} />}
+                  >
+                    <FormInput
+                      label="Tag"
+                      name="tag"
+                      required
+                      validationRules={getValidationRules('common.tag')}
+                      onBlur={() => setTagTooltipIsHidden(false)}
+                    />
+                    <FormOnChange
+                      handler={() => {
+                        setTagTooltipIsHidden(true)
+                      }}
+                      name={'tag'}
+                    />
+                  </Tooltip>
+                </div>
+              </div>
+              <div className="form-row new-feature-vector__description-row">
+                <FormTextarea name="description" label="Description" maxLength={500} />
+              </div>
+              <div className="form-row">
+                <FormChipCell
+                  chipOptions={getChipOptions('labels')}
+                  formState={formState}
+                  initialValues={initialValues}
+                  isEditable
+                  label="Labels"
+                  name="labels"
+                  shortChips
+                  visibleChipsMaxLength="2"
+                  validationRules={{
+                    key: getValidationRules('common.tag'),
+                    value: getValidationRules('common.tag')
+                  }}
+                />
+              </div>
+              <div className="pop-up-dialog__footer-container">
+                <Button
+                  type="button"
+                  variant={LABEL_BUTTON}
+                  label="Cancel"
+                  className="pop-up-dialog__btn_cancel"
+                  onClick={closePopUp}
+                />
+                <Button
+                  disabled={formState.invalid}
+                  variant={PRIMARY_BUTTON}
+                  label="Create"
+                  onClick={event => handleCreateFeatureVector(event, formState)}
+                />
+              </div>
+            </>
+          )
+        }}
+      </Form>
     </PopUpDialog>
   )
 }

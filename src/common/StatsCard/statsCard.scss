@@ -1,0 +1,45 @@
+@import '~igz-controls/scss/shadows';
+@import '~igz-controls/scss/colors';
+
+.stats {
+  &-card {
+    display: flex;
+    flex-wrap: wrap;
+    position: relative;
+    color: $topaz;
+    background-color: $white;
+    border-radius: 8px;
+    box-shadow: $previewBoxShadowInit;
+    padding: 20px 25px 15px;
+    transition: box-shadow 0.3s ease-in-out;
+
+    &__row {
+      display: flex;
+      flex-flow: row nowrap;
+      flex: 1 0 100%;
+      justify-content: space-between;
+      align-items: center;
+
+      &:not(:last-child) {
+        margin-bottom: 1em;
+        min-height: 40px;
+      }
+    }
+
+    &__full-row {
+      flex: 1 1;
+      align-items: flex-start;
+    }
+
+    &__col {
+      flex: 1 1;
+      text-align: center;
+    }
+
+    &__title {
+      font-size: 1.1rem;
+      font-weight: bold;
+      margin: 0;
+    }
+  }
+}

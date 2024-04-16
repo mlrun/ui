@@ -20,5 +20,7 @@ such restriction.
 import { isNil } from 'lodash'
 
 export const generateTableRowTestId = (parentIndex, childIndex) => {
-  return isNil(childIndex) ? `table_row_parent_${parentIndex}` : `table_row_child_${parentIndex}_${childIndex}`
+  return isNil(childIndex)
+    ? `table_row_parent_${parentIndex}`
+    : `table_row_child_${parentIndex}_${childIndex}`
 }

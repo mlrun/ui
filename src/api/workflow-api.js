@@ -17,12 +17,12 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import { capitalize } from 'lodash'
+import { capitalize, set } from 'lodash'
 
 import { mainHttpClient } from '../httpClient'
 import { GROUP_BY_WORKFLOW, STATE_FILTER_ALL_ITEMS } from '../constants'
 
-const generateQueryParams = filter => {
+const generateQueryParams = (project, filter, config) => {
   // Generating encoded JSON query string to send as a value to the filter query param
   // each "predicates" item is a single filter
   // key - type of filter (filter by name, by status, by dates)
@@ -31,7 +31,13 @@ const generateQueryParams = filter => {
   // op === 7 - means that the filtered response should be equal or to be less to the "timestamp_value"
   // op === 9 - checks if the value contains |string_value| as a substring match
   const queryParams = {
-    predicates: []
+    predicates: [
+      {
+        key: 'name',
+        op: 9,
+        string_value: project
+      }
+    ]
   }
 
   if (filter.name) {
@@ -40,14 +46,15 @@ const generateQueryParams = filter => {
       op: 9,
       string_value: filter.name
     })
+
+    set(config, ['params', 'name-contains'], filter.name)
   }
 
   if (filter.state !== STATE_FILTER_ALL_ITEMS) {
     queryParams.predicates.push({
       key: 'status',
       op: 1,
-      string_value:
-        filter.state === 'completed' ? 'Succeeded' : capitalize(filter.state)
+      string_value: filter.state === 'completed' ? 'Succeeded' : capitalize(filter.state)
     })
   }
 
@@ -77,16 +84,12 @@ const workflowsApi = {
     return mainHttpClient.get(`/projects/${project}/pipelines/${workflowId}`)
   },
   getWorkflows: (project, filter, config = {}) => {
-    const newConfig = {
-      ...config,
-      params: {}
-    }
-
     if (filter?.groupBy === GROUP_BY_WORKFLOW) {
-      newConfig.params.filter = generateQueryParams(filter)
+      set(config, ['params', 'filter'], generateQueryParams(project, filter, config))
     }
+    set(config, ['params', 'sort_by'], 'created_at desc')
 
-    return mainHttpClient.get(`/projects/${project}/pipelines`, newConfig)
+    return mainHttpClient.get(`/projects/${project}/pipelines`, config)
   }
 }
 

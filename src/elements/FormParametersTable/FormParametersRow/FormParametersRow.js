@@ -20,7 +20,6 @@ such restriction.
 import PropTypes from 'prop-types'
 import React, { useEffect, useState } from 'react'
 import classnames from 'classnames'
-import { OnChange } from 'react-final-form-listeners'
 import { isPlainObject } from 'lodash'
 
 import {
@@ -34,6 +33,7 @@ import {
   Tooltip
 } from 'igz-controls/components'
 import { FormRowActions } from 'igz-controls/elements'
+import FormOnChange from '../../../common/FormOnChange/FormOnChange'
 
 import {
   parameterTypeList,
@@ -444,10 +444,11 @@ const FormParametersRow = ({
             )}
           </>
         )}
-      <OnChange name={`${rowPath}.data.type`}>{newType => resetValue(newType)}</OnChange>
-      <OnChange name={`${rowPath}.data.isHyper`}>
-        {newIsHyper => resetValue(null, newIsHyper)}
-      </OnChange>
+      <FormOnChange handler={newType => resetValue(newType)} name={`${rowPath}.data.type`} />
+      <FormOnChange
+        handler={newIsHyper => resetValue(null, newIsHyper)}
+        name={`${rowPath}.data.isHyper`}
+      />
     </>
   )
 }

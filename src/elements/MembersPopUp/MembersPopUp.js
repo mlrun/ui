@@ -21,7 +21,7 @@ import React, { createRef, useState } from 'react'
 import PropTypes from 'prop-types'
 import classnames from 'classnames'
 import { useDispatch } from 'react-redux'
-import { cloneDeep, debounce } from 'lodash'
+import { cloneDeep, debounce, groupBy } from 'lodash'
 
 import CheckBox from '../../common/CheckBox/CheckBox'
 import ChipInput from '../../common/ChipInput/ChipInput'
@@ -38,12 +38,13 @@ import {
 import projectsIguazioApi from '../../api/projects-iguazio-api'
 import { FORBIDDEN_ERROR_STATUS_CODE } from 'igz-controls/constants'
 import { getErrorMsg } from 'igz-controls/utils/common.util'
-import { getRoleOptions, initialNewMembersRole } from './membersPopUp.util'
+import { getRoleOptions, initialNewMembersRole, DELETE_MODIFICATION } from './membersPopUp.util'
 import { isIgzVersionCompatible } from '../../utils/isIgzVersionCompatible'
 import { membersActions } from './membersReducer'
 import { showErrorNotification } from '../../utils/notifications.util'
+import { useNavigate } from 'react-router-dom'
 
-import { OWNER_ROLE, USER_ROLE } from '../../constants'
+import { OWNER_ROLE, USER_GROUP_ROLE, USER_ROLE } from '../../constants'
 
 import { ReactComponent as Add } from 'igz-controls/images/add.svg'
 import { ReactComponent as Close } from 'igz-controls/images/close.svg'
@@ -54,12 +55,8 @@ import { ReactComponent as Users } from 'igz-controls/images/users.svg'
 
 import './membersPopUp.scss'
 
-const MembersPopUp = ({
-  changeMembersCallback,
-  membersDispatch,
-  membersState,
-  setNotification
-}) => {
+const MembersPopUp = ({ changeMembersCallback, membersDispatch, membersState }) => {
+  const [membersData, setMembersData] = useState(membersState)
   const [deleteMemberId, setDeleteMemberId] = useState('')
   const [confirmDiscard, setConfirmDiscard] = useState(false)
   const [inviteNewMembers, setInviteNewMembers] = useState(false)
@@ -72,6 +69,7 @@ const MembersPopUp = ({
     role: 'All'
   })
   const dispatch = useDispatch()
+  const navigate = useNavigate()
   const membersTableRowClassNames = classnames('table-row', inviteNewMembers && 'inactive')
 
   const handleOnClose = () => {
@@ -81,7 +79,7 @@ const MembersPopUp = ({
   }
 
   const addNewMembers = () => {
-    const membersCopy = cloneDeep(membersState.members)
+    const membersCopy = cloneDeep(membersData.members)
 
     newMembers.forEach(newMember => {
       const existingMember = membersCopy.find(member => member.id === newMember.id)
@@ -106,10 +104,7 @@ const MembersPopUp = ({
     setNewMembersRole(initialNewMembersRole)
     setInviteNewMembers(false)
 
-    membersDispatch({
-      type: membersActions.SET_MEMBERS,
-      payload: membersCopy
-    })
+    setMembersData(state => ({ ...state, members: membersCopy }))
   }
 
   const applyMembersChanges = () => {
@@ -117,7 +112,7 @@ const MembersPopUp = ({
       data: {
         attributes: {
           metadata: {
-            project_ids: [membersState.projectInfo.id],
+            project_ids: [membersData.projectInfo.id],
             notify_by_email: notifyByEmail
           },
           requests: []
@@ -125,13 +120,30 @@ const MembersPopUp = ({
       }
     }
     const rolesData = {}
+    const modifiedRoles = Array.from(
+      membersData.members.reduce((prevValue, member) => {
+        if (member.modification) {
+          prevValue.add(member.role)
+
+          if (member.initialRole) {
+            prevValue.add(member.initialRole)
+          }
+        }
+
+        return prevValue
+      }, new Set())
+    )
+    const groupedVisibleMembers = groupBy(
+      membersData.members.filter(member => member.modification !== DELETE_MODIFICATION),
+      item => item.role
+    )
 
     membersState.projectAuthorizationRoles.forEach(roleData => {
       rolesData[roleData.attributes.name] = roleData
     })
 
-    changesBody.data.attributes.requests = membersState.modifiedRoles.map(modifiedRole => {
-      const members = membersState.groupedVisibleMembers[modifiedRole] ?? []
+    changesBody.data.attributes.requests = modifiedRoles.map(modifiedRole => {
+      const membersCopy = groupedVisibleMembers[modifiedRole] ?? []
 
       return {
         method: 'put',
@@ -147,18 +159,18 @@ const MembersPopUp = ({
               project: {
                 data: {
                   type: 'project',
-                  id: membersState.projectInfo.id
+                  id: membersData.projectInfo.id
                 }
               },
               principal_users: {
-                data: members
+                data: membersCopy
                   .filter(member => member.type === USER_ROLE)
                   .map(member => {
                     return { id: member.id, type: member.type }
                   })
               },
               principal_user_groups: {
-                data: members
+                data: membersCopy
                   .filter(member => member.type === 'user_group')
                   .map(member => {
                     return { id: member.id, type: member.type }
@@ -170,10 +182,33 @@ const MembersPopUp = ({
       }
     })
 
+    membersDispatch({
+      type: membersActions.SET_MEMBERS,
+      payload: membersData.members
+    })
+
     projectsIguazioApi
       .updateProjectMembers(changesBody)
       .then(response => {
-        changeMembersCallback(response.data.data.id)
+        const validMember = membersData.members?.some(
+          member =>
+            member.modification !== DELETE_MODIFICATION &&
+            (member.id === membersData.activeUser.data?.id ||
+              (member.type === USER_GROUP_ROLE &&
+                membersData.activeUser.data?.relationships?.user_groups?.data?.some?.(
+                  group => group.id === member.id
+                )))
+        )
+        const userIsProjectSecurityAdmin =
+          membersData.activeUser.data?.attributes?.user_policies_collection?.has(
+            'Project Security Admin'
+          ) ?? false
+
+        if (validMember || userIsProjectSecurityAdmin) {
+          changeMembersCallback(response.data.data.id)
+        } else {
+          navigate('/projects/')
+        }
       })
       .catch(error => {
         const customErrorMsg =
@@ -188,11 +223,11 @@ const MembersPopUp = ({
   }
 
   const areChangesMade = () => {
-    return membersState.members.some(member => member.modification !== '')
+    return membersData.members.some(member => member.modification !== '')
   }
 
   const changeMemberRole = (roleOption, memberToEdit) => {
-    const membersCopy = cloneDeep(membersState.members)
+    const membersCopy = cloneDeep(membersData.members)
     const member = membersCopy.find(member => member.id === memberToEdit.id)
 
     if (member.initialRole) {
@@ -200,10 +235,7 @@ const MembersPopUp = ({
     }
     member.role = roleOption
 
-    membersDispatch({
-      type: membersActions.SET_MEMBERS,
-      payload: membersCopy
-    })
+    setMembersData(state => ({ ...state, members: membersCopy }))
   }
 
   const closeMemberPopUp = event => {
@@ -215,27 +247,21 @@ const MembersPopUp = ({
   }
 
   const deleteMember = memberToDelete => {
-    let membersCopy = cloneDeep(membersState.members)
+    let membersCopy = cloneDeep(membersData.members)
 
     if (memberToDelete.initialRole) {
-      membersCopy.find(member => member.id === memberToDelete.id).modification = 'delete'
+      membersCopy.find(member => member.id === memberToDelete.id).modification = DELETE_MODIFICATION
     } else {
       membersCopy = membersCopy.filter(member => member.id !== memberToDelete.id)
     }
 
-    membersDispatch({
-      type: membersActions.SET_MEMBERS,
-      payload: membersCopy
-    })
+    setMembersData(state => ({ ...state, members: membersCopy }))
     setDeleteMemberId('')
   }
 
   const discardChanges = event => {
     event.stopPropagation()
-    membersDispatch({
-      type: membersActions.SET_MEMBERS,
-      payload: membersState.membersOriginal
-    })
+    setMembersData(membersState)
     handleOnClose()
   }
 
@@ -248,15 +274,15 @@ const MembersPopUp = ({
     let paramsUserGroups = { 'filter[name]': `[$match-i]^.*${searchQuery}.*$`, 'page[size]': 200 }
 
     if (isIgzVersionCompatible(requiredIgzVersion)) {
-      paramsScrubbedUsers = { 'filter[username]': `[$contains_istr]${searchQuery}` }
-      paramsUserGroups = { 'filter[name]': `[$contains_istr]${searchQuery}` }
+      paramsScrubbedUsers['filter[username]'] = `[$contains_istr]${searchQuery}`
+      paramsUserGroups['filter[name]'] = `[$contains_istr]${searchQuery}`
     }
 
     const getUsersPromise = projectsIguazioApi.getScrubbedUsers({
-      paramsScrubbedUsers
+      params: paramsScrubbedUsers
     })
     const getUserGroupsPromise = projectsIguazioApi.getScrubbedUserGroups({
-      paramsUserGroups
+      params: paramsUserGroups
     })
     const suggestionList = []
 
@@ -264,8 +290,8 @@ const MembersPopUp = ({
       .then(response => {
         response.forEach(identityResponse => {
           identityResponse.data.data.forEach(identity => {
-            const existingMember = membersState.members.find(
-              member => member.id === identity.id && member.modification !== 'delete'
+            const existingMember = membersData.members.find(
+              member => member.id === identity.id && member.modification !== DELETE_MODIFICATION
             )
 
             suggestionList.push({
@@ -306,19 +332,19 @@ const MembersPopUp = ({
         <div className="members-overview">
           <span className="member-overview">
             <span className="member-count">
-              {membersState.groupedOriginalMembers.Editor?.length ?? 0}
+              {membersData.groupedOriginalMembers.Editor?.length ?? 0}
             </span>
             &nbsp;editors,&nbsp;
           </span>
           <span className="member-overview">
             <span className="member-count">
-              {membersState.groupedOriginalMembers.Viewer?.length ?? 0}
+              {membersData.groupedOriginalMembers.Viewer?.length ?? 0}
             </span>
             &nbsp;viewers,&nbsp;
           </span>
           <span className="member-overview">
             <span className="member-count">
-              {membersState.groupedOriginalMembers.Admin?.length ?? 0}
+              {membersData.groupedOriginalMembers.Admin?.length ?? 0}
             </span>
             &nbsp;admins&nbsp;
           </span>
@@ -412,12 +438,12 @@ const MembersPopUp = ({
           <div className="member-actions actions"></div>
         </div>
         <div className="table-body">
-          {membersState.members
+          {membersData.members
             .filter(member => {
               return (
                 (!filters.name || member.name.toLowerCase().includes(filters.name.toLowerCase())) &&
                 (filters.role === 'All' || member.role === filters.role) &&
-                member.modification !== 'delete'
+                member.modification !== DELETE_MODIFICATION
               )
             })
             .map(member => (
@@ -540,8 +566,7 @@ const MembersPopUp = ({
 MembersPopUp.propTypes = {
   changeMembersCallback: PropTypes.func.isRequired,
   membersDispatch: PropTypes.func.isRequired,
-  membersState: PropTypes.shape({}).isRequired,
-  setNotification: PropTypes.func.isRequired
+  membersState: PropTypes.shape({}).isRequired
 }
 
 export default MembersPopUp

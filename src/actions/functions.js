@@ -174,7 +174,7 @@ const functionsActions = {
     return functionsApi
       .getFunctionTemplate(path)
       .then(response => {
-        let parsedData = yaml.safeLoad(response.data)
+        let parsedData = yaml.load(response.data)
         const templates = {
           name: parsedData.metadata.name,
           functions: parsedData.spec.entry_point ? [] : [parsedData]

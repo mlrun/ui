@@ -76,9 +76,9 @@ const createFunctionsContent = (functions, projectName, showExpandButton) =>
         {
           id: `command.${func.ui.identifierUnique}`,
           headerId: 'command',
-          headerLabel: 'Command',
+          headerLabel: 'Code Entry Point',
           value: func.command,
-          className: 'table-cell-1'
+          className: 'table-cell-2'
         },
         {
           id: `defaultHandler.${func.ui.identifierUnique}`,

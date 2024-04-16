@@ -27,11 +27,12 @@ import TimePicker from '../TimePicker/TimePicker'
 import { Button, Tip, Tooltip, TextTooltipTemplate, PopUpDialog } from 'igz-controls/components'
 import { SelectOption } from 'igz-controls/elements'
 
-import { ANY_TIME } from '../../constants'
 import { SECONDARY_BUTTON } from 'igz-controls/constants'
+import { CUSTOM_RANGE_DATE_OPTION } from '../../utils/datePicker.util'
 
 import { ReactComponent as Arrow } from 'igz-controls/images/arrow.svg'
-import { ReactComponent as Invalid } from 'igz-controls/images/invalid.svg'
+import { ReactComponent as CaretIcon } from 'igz-controls/images/dropdown.svg'
+import { ReactComponent as ExclamationMarkIcon } from 'igz-controls/images/exclamation-mark.svg'
 
 import './datePicker.scss'
 
@@ -65,13 +66,14 @@ const DatePickerView = React.forwardRef(
       onPreviousMonth,
       onSelectOption,
       onTimeChange,
-      position,
       required,
       requiredText,
+      selectedOption,
       setSelectedDate,
       tip,
       valueDatePickerInput,
-      weekDay
+      weekDay,
+      withLabels
     },
     ref
   ) => {
@@ -99,25 +101,36 @@ const DatePickerView = React.forwardRef(
           className="date-picker__input-wrapper input-wrapper"
           onClick={onInputClick}
         >
-          <MaskedInput
-            className={inputClassNames}
-            keepCharPositions={true}
-            mask={dateMask}
-            disabled={disabled}
-            readOnly={isValueEmpty}
-            showMask={!isValueEmpty}
-            onBlur={datePickerInputOnBlur}
-            onChange={onInputChange}
-            pipe={autoCorrectedDatePipe}
-            value={valueDatePickerInput}
-          />
+          {withLabels && selectedOption && selectedOption.id !== CUSTOM_RANGE_DATE_OPTION ? (
+            <>
+              <span>{selectedOption.label}</span>
+              <i className="date-picker__caret">
+                <CaretIcon />
+              </i>
+            </>
+          ) : (
+            <>
+              <MaskedInput
+                className={inputClassNames}
+                keepCharPositions={true}
+                mask={dateMask}
+                disabled={disabled}
+                readOnly={isValueEmpty}
+                showMask={!isValueEmpty}
+                onBlur={datePickerInputOnBlur}
+                onChange={onInputChange}
+                pipe={autoCorrectedDatePipe}
+                value={valueDatePickerInput}
+              />
+              {isValueEmpty && (
+                <span className="input__label input__label-empty">&nbsp;Any time</span>
+              )}
+            </>
+          )}
           <span className={inputLabelClassNames}>
             {label}
             {required && <span className="input__label-mandatory"> *</span>}
           </span>
-          {isValueEmpty && (
-            <span className="input__label input__label-empty">&nbsp;{ANY_TIME}</span>
-          )}
           {isInvalid && (
             <Tooltip
               className="input__warning"
@@ -132,7 +145,7 @@ const DatePickerView = React.forwardRef(
                 />
               }
             >
-              <Invalid />
+              <ExclamationMarkIcon />
             </Tooltip>
           )}
         </div>
@@ -142,7 +155,8 @@ const DatePickerView = React.forwardRef(
             headerIsHidden
             customPosition={{
               element: ref.datePickerRef,
-              position
+              position: 'bottom-right',
+              autoHorizontalPosition: true
             }}
           >
             <div ref={ref.datePickerViewRef} className="date-picker__pop-up">
@@ -154,7 +168,8 @@ const DatePickerView = React.forwardRef(
                   onClick={() => {
                     onSelectOption(option)
                   }}
-                  selectType=""
+                  withSelectedIcon
+                  selectedId={selectedOption && selectedOption.id}
                 />
               ))}
             </div>
@@ -166,7 +181,9 @@ const DatePickerView = React.forwardRef(
             headerIsHidden
             customPosition={{
               element: ref.datePickerRef,
-              position
+              position: 'bottom-right',
+              autoVerticalPosition: true,
+              autoHorizontalPosition: true
             }}
           >
             <div ref={ref.datePickerViewRef} className="date-picker__pop-up date-picker">
@@ -261,6 +278,10 @@ const DatePickerView = React.forwardRef(
   }
 )
 
+DatePickerView.defaultProps = {
+  selectedOption: null
+}
+
 DatePickerView.propTypes = {
   autoCorrectedDatePipe: PropTypes.func.isRequired,
   className: PropTypes.string.isRequired,
@@ -290,13 +311,14 @@ DatePickerView.propTypes = {
   onPreviousMonth: PropTypes.func.isRequired,
   onSelectOption: PropTypes.func.isRequired,
   onTimeChange: PropTypes.func.isRequired,
-  position: PropTypes.string.isRequired,
   required: PropTypes.bool.isRequired,
   requiredText: PropTypes.string.isRequired,
+  selectedOption: PropTypes.object,
   setSelectedDate: PropTypes.func.isRequired,
   tip: PropTypes.string.isRequired,
   valueDatePickerInput: PropTypes.string.isRequired,
-  weekDay: PropTypes.array.isRequired
+  weekDay: PropTypes.array.isRequired,
+  withLabels: PropTypes.bool.isRequired
 }
 
 export default React.memo(DatePickerView)

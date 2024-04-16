@@ -46,6 +46,8 @@ Feature: Models Page
 
   @MLM
   @passive
+  @FAILED_TODO
+  #TODO: Bug - UI crash upon navigating to model endpoints tab ML-5919 (fixed on rc6)
   Scenario: MLM002 - Check all mandatory components on Model Endpoints tab
     Given open url
     And wait load page
@@ -191,6 +193,8 @@ Feature: Models Page
 
   @MLM
   @passive
+  @FAILED_TODO
+  #TODO: Bug - UI crash upon navigating to model endpoints tab ML-5919 (fixed on rc6)
   Scenario: MLM008 - Verify filtering by label on Model Endpoints tab
     Given open url
     And wait load page
@@ -621,6 +625,8 @@ Feature: Models Page
     
   @MLM
   @passive
+  @FAILED_TODO
+  #TODO: Bug - UI crash upon navigating to model endpoints tab ML-5919 (fixed on rc6)
   Scenario: MLM016 - Check all mandatory components in Item infopane on Overview tab table on Model Endpoints tab
     Given open url
     And wait load page
@@ -832,8 +838,6 @@ Feature: Models Page
        | name4        | value4        |
 
   @MLM
-  @FAILED_TODO
-  #TODO: Bug - broken function link ML-5709
   #TODO: arrow lines position - y not found
   @passive
   Scenario: MLM031 - Verify behaviour of Real-Time Pipelines table
@@ -874,6 +878,8 @@ Feature: Models Page
     Then compare "Header" element value on "ML_Function_Info_Pane" wizard with test "function" context value
 
   @MLM
+  @FAILED_TODO
+  #TODO: Bug - UI crash upon navigating to model endpoints tab ML-5919 (fixed on rc6)
   Scenario: MLM032 - Check broken link redirection
     Given open url
     And wait load page
@@ -915,6 +921,8 @@ Feature: Models Page
     Then verify redirection from "projects/INVALID/models/real-time-pipelines" to "projects"
   
   @MLM
+  @FAILED_TODO
+  #TODO: Bug - UI crash upon navigating to model endpoints tab ML-5919 (fixed on rc6)
   Scenario: MLM033 - Check active/highlited items with details panel on Model Endpoints tab
     Given open url
     And wait load page

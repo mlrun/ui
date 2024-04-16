@@ -28,13 +28,14 @@ import NoData from '../../../common/NoData/NoData'
 import Table from '../../Table/Table'
 import Details from '../../Details/Details'
 
+import { ACTIONS_MENU, VIRTUALIZATION_CONFIG } from '../../../types'
 import { FULL_VIEW_MODE, MODELS_FILTERS, MODELS_PAGE, MODELS_TAB } from '../../../constants'
-import { SORT_PROPS } from 'igz-controls/types'
-import { getNoDataMessage } from '../../../utils/getNoDataMessage'
-import { removeModel } from '../../../reducers/artifactsReducer'
-import { filters } from './models.util'
-import { ACTIONS_MENU } from '../../../types'
 import { SECONDARY_BUTTON, PRIMARY_BUTTON } from 'igz-controls/constants'
+import { SORT_PROPS } from 'igz-controls/types'
+import { filters } from './models.util'
+import { getNoDataMessage } from '../../../utils/getNoDataMessage'
+import { isRowRendered } from '../../../hooks/useVirtualization.hook'
+import { removeModel } from '../../../reducers/artifactsReducer'
 
 const ModelsView = React.forwardRef(
   (
@@ -61,14 +62,15 @@ const ModelsView = React.forwardRef(
       sortProps,
       tableContent,
       tableHeaders,
+      urlTagOption,
       viewMode,
-      urlTagOption
+      virtualizationConfig
     },
-    ref
+    { modelsRef, tableRef, tableBodyRef }
   ) => {
     return (
       <>
-        <div className="models" ref={ref}>
+        <div className="models" ref={modelsRef}>
           <div className="table-container">
             <div className="content__action-bar-wrapper">
               <ModelsPageTabs />
@@ -118,29 +120,33 @@ const ModelsView = React.forwardRef(
                   actionsMenu={actionsMenu}
                   applyDetailsChanges={applyDetailsChanges}
                   applyDetailsChangesCallback={applyDetailsChangesCallback}
-                  handleCancel={() => setSelectedModel({})}
                   detailsFormInitialValues={detailsFormInitialValues}
+                  handleCancel={() => setSelectedModel({})}
                   pageData={pageData}
+                  ref={{ tableRef, tableBodyRef }}
                   retryRequest={handleRefresh}
                   selectedItem={selectedModel}
                   sortProps={sortProps}
                   tab={MODELS_TAB}
+                  tableClassName="models-table"
                   tableHeaders={tableHeaders ?? []}
+                  virtualizationConfig={virtualizationConfig}
                 >
-                  {tableContent.map((tableItem, index) => {
-                    return (
-                      <ArtifactsTableRow
-                        actionsMenu={actionsMenu}
-                        handleExpandRow={handleExpandRow}
-                        rowIndex={index}
-                        key={index}
-                        rowItem={tableItem}
-                        selectedItem={selectedModel}
-                        selectedRowData={selectedRowData}
-                        tab={MODELS_TAB}
-                      />
-                    )
-                  })}
+                  {tableContent.map(
+                    (tableItem, index) =>
+                      isRowRendered(virtualizationConfig, index) && (
+                        <ArtifactsTableRow
+                          actionsMenu={actionsMenu}
+                          handleExpandRow={handleExpandRow}
+                          rowIndex={index}
+                          key={index}
+                          rowItem={tableItem}
+                          selectedItem={selectedModel}
+                          selectedRowData={selectedRowData}
+                          tab={MODELS_TAB}
+                        />
+                      )
+                  )}
                 </Table>
               </>
             )}
@@ -193,8 +199,9 @@ ModelsView.propTypes = {
   sortProps: SORT_PROPS,
   tableContent: PropTypes.arrayOf(PropTypes.object).isRequired,
   tableHeaders: PropTypes.arrayOf(PropTypes.object).isRequired,
+  urlTagOption: PropTypes.string,
   viewMode: PropTypes.string,
-  urlTagOption: PropTypes.string
+  virtualizationConfig: VIRTUALIZATION_CONFIG.isRequired
 }
 
 export default ModelsView

@@ -41,14 +41,13 @@ Feature: Jobs and workflows
         Then click on "Table_Refresh_Button" element on "Jobs_Monitor_Tab" wizard
         And wait load page
         And wait load page
+        And wait load page
         Then verify "Jobs_Monitor_Table" element visibility on "Jobs_Monitor_Tab" wizard
 
     @MLJW
     @passive
     Scenario: MLJW002 - Check all mandatory components on Workflows Monitor tab
         Given open url
-        And turn on demo mode
-        And wait load page
         And click on row root with value "churn-project-admin" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
         Then verify breadcrumbs "project" label should be equal "churn-project-admin" value
@@ -74,8 +73,6 @@ Feature: Jobs and workflows
     @passive
     Scenario: MLJW003 - Check all mandatory components on Schedule Monitor tab
         Given open url
-        And turn on demo mode
-        And wait load page
         And click on row root with value "churn-project-admin" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
         And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
@@ -116,7 +113,7 @@ Feature: Jobs and workflows
         When select "Past month" option in "Start_Time_Filter_Dropdown" filter dropdown on "Jobs_Monitor_Tab" wizard
         Then verify "Past month" filter band in "Start_Time_Filter_Dropdown" filter dropdown on "Jobs_Monitor_Tab" wizard
         When select "Past year" option in "Start_Time_Filter_Dropdown" filter dropdown on "Jobs_Monitor_Tab" wizard
-        Then verify "Past year" filter band in "Start_Time_Filter_Dropdown" filter dropdown on "Jobs_Monitor_Tab" wizard
+        Then verify "Past leap year" filter band in "Start_Time_Filter_Dropdown" filter dropdown on "Jobs_Monitor_Tab" wizard
         When select "Custom range" option in "Start_Time_Filter_Dropdown" filter dropdown on "Jobs_Monitor_Tab" wizard
         Then verify "Date_Time_Picker" element visibility on "Jobs_Monitor_Tab" wizard
 
@@ -145,7 +142,6 @@ Feature: Jobs and workflows
     @passive
     Scenario: MLJW006 - Verify filtering by job name on Jobs Monitor tab
         Given open url
-        And wait load page
         And wait load page
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
@@ -282,7 +278,6 @@ Feature: Jobs and workflows
     @passive
     Scenario: MLJW062 - Verify filtering Jobs after opening Batch Re-run wizard
         Given open url
-        And wait load page
         And wait load page
         And click on row root with value "cat-vs-dog-classification" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
@@ -1443,8 +1438,6 @@ Feature: Jobs and workflows
     @passive
     Scenario: MLJW069 - Verify View YAML action on Workflows Monitor tab
         Given open url
-        And turn on demo mode
-        And wait load page
         And click on row root with value "churn-project-admin" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
         And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
@@ -1488,8 +1481,6 @@ Feature: Jobs and workflows
     @passive
     Scenario: MLJW071 - Check all mandatory components on Workflow List View
         Given open url
-        And turn on demo mode
-        And wait load page
         And click on row root with value "churn-project-admin" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
         And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
@@ -1509,8 +1500,6 @@ Feature: Jobs and workflows
     @passive
     Scenario: MLJW072 - Check all mandatory components on Overview tab Item infopane on Workflow List View Tab
         Given open url
-        And turn on demo mode
-        And wait load page
         And click on row root with value "churn-project-admin" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
         And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
@@ -1537,8 +1526,6 @@ Feature: Jobs and workflows
     @passive
     Scenario: MLJW073 - Check all mandatory components on Logs tab Item infopane on Workflow List View Tab
         Given open url
-        And turn on demo mode
-        And wait load page
         And click on row root with value "churn-project-admin" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
         And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
@@ -1561,8 +1548,6 @@ Feature: Jobs and workflows
     @passive
     Scenario: MLJW074 - Check all mandatory components on Inputs tab Item infopane on Workflow List View Tab
         Given open url
-        And turn on demo mode
-        And wait load page
         And click on row root with value "churn-project-admin" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
         And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
@@ -1584,8 +1569,6 @@ Feature: Jobs and workflows
     @passive
     Scenario: MLJW075 - Check all mandatory components on Artifacts tab Item infopane on Workflow List View Tab
         Given open url
-        And turn on demo mode
-        And wait load page
         And click on row root with value "churn-project-admin" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
         And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
@@ -1607,8 +1590,6 @@ Feature: Jobs and workflows
     @passive
     Scenario: MLJW076 - Check all mandatory components on Results tab Item infopane on Workflow List View Tab
         Given open url
-        And turn on demo mode
-        And wait load page
         And click on row root with value "churn-project-admin" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
         And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
@@ -1628,12 +1609,8 @@ Feature: Jobs and workflows
 
     @MLJW
     @passive
-    @FAILED_TODO
-    #TODO: Bug ML-5609 - Batch re-run wizard opens with 'Batch Run' title
     Scenario: MLJW080 - Verify visibility of main components on Batch re-run Workflow wizard
         Given open url
-        And turn on demo mode
-        And wait load page
         And click on row root with value "churn-project-admin" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
         And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
@@ -1669,10 +1646,10 @@ Feature: Jobs and workflows
         Then verify "Labels_Table" element visibility on "Modal_Wizard_Form" wizard
         And click on "Next_Button" element on "Modal_Wizard_Form" wizard
         Then "Form_Header_Data_Inputs" element on "commonPagesHeader" should contains "Data Inputs" value
-        Then verify "Data_Inputs_Headers" on "Modal_Wizard_Form" wizard should contains "Batch_Run"."Data_Inputs_Table_Header"
+        Then verify "Data_Inputs_Headers" on "Modal_Wizard_Form" wizard should contains "Modal_Wizard_Form"."Data_Inputs_Table_Header"
         And click on "Next_Button" element on "Modal_Wizard_Form" wizard
         Then "Form_Header_Parameters" element on "commonPagesHeader" should contains "Parameters" value
-        Then verify "Parameters_Headers" on "Modal_Wizard_Form" wizard should contains "Batch_Run"."Parameters_Table_Header"
+        Then verify "Parameters_Headers" on "Modal_Wizard_Form" wizard should contains "Modal_Wizard_Form"."Parameters_Table_Header"
         Then verify "Parameters_Table" element visibility on "Modal_Wizard_Form" wizard
         And click on "Next_Button" element on "Modal_Wizard_Form" wizard
         Then "Form_Header_Resources" element on "commonPagesHeader" should contains "Resources" value
@@ -1704,8 +1681,6 @@ Feature: Jobs and workflows
     @passive
     Scenario: MLJW082 - Check Artifacts preview action on Artifacts tab Item infopane on Workflow List View Tab
         Given open url
-        And turn on demo mode
-        And wait load page
         And click on row root with value "churn-project-admin" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
         And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
@@ -1755,8 +1730,6 @@ Feature: Jobs and workflows
     @passive
     Scenario: MLJW077 - Check options in action menu on Workflows Monitor tab
         Given open url
-        And turn on demo mode
-        And wait load page
         And click on row root with value "churn-project-admin" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
         And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
@@ -1852,8 +1825,6 @@ Feature: Jobs and workflows
     @passive
     Scenario: MLJW081 - Check visibility of main components on Workflow graph View
         Given open url
-        And turn on demo mode
-        And wait load page
         And click on row root with value "churn-project-admin" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
         And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
@@ -1941,9 +1912,6 @@ Feature: Jobs and workflows
 
 
     @MLJW
-    @FAILED_TODO
-    #TODO: Bug ML-5672 - Last run link is missing after running a scheduled job
-    @links
     Scenario: MLJW083 - Check redirection to Last Run Drill-down from Schedules tab
         Given open url
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
@@ -1991,21 +1959,24 @@ Feature: Jobs and workflows
         Then compare current browser URL with test "href" context value
 
     @oldJobWizard
-    Scenario: Check all mandatory components on Create new Schedule
+    #@uniqueTag
+    Scenario: Check messages when create a new Schedule
         Given open url
         And wait load page
-        And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
+        And click on row root with value "churn-project-admin" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
         And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
         And click on cell with value "Jobs and workflows" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
         And wait load page
-        And click on "New_Job_Button" element on "Jobs_Monitor_Tab" wizard
+        And click on "Batch_Run_Button" element on "Jobs_Monitor_Tab" wizard
         And wait load page
-        And expand row with "Data Preparation" at "name" in "Functions_Templates_Table" in "Function_Templates_Accordion" on "Create_Job" wizard
-        When select "aggregate" in subcolumn "name" at "templates_list" column in "Data Preparation" row by "name" at "Functions_Templates_Table" in "Function_Templates_Accordion" on "Create_Job" wizard
-        And wait load page
-        Then verify "Schedule_For_Later_Button" element visibility on "New_JobTemplate_Edit" wizard
-        Then click on "Schedule_For_Later_Button" element on "New_JobTemplate_Edit" wizard
+        Then verify "Title" element visibility on "Modal_Wizard_Form" wizard
+        Then "Title" element on "Modal_Wizard_Form" should contains "Batch Run" value
+        And click on row root with value "clean-data" in "name" column in "Functions_Table" table on "Modal_Wizard_Form" wizard
+        Then "Function_Title" element on "Modal_Wizard_Form" should contains "clean-data" value
+        Then verify "Schedule_For_Later_Button" element visibility on "Modal_Wizard_Form" wizard
+        Then verify "Schedule_For_Later_Button" element on "Modal_Wizard_Form" wizard is enabled
+        Then click on "Schedule_For_Later_Button" element on "Modal_Wizard_Form" wizard
         Then verify "Schedule_Button" element visibility in "Schedule_For_Later" on "New_JobTemplate_Edit" wizard
         Then verify "Schedule_Days_Dropdown" element visibility in "Schedule_For_Later" on "New_JobTemplate_Edit" wizard
         Then verify "Schedule_Time_Dropdown" element visibility in "Schedule_For_Later" on "New_JobTemplate_Edit" wizard
@@ -2429,6 +2400,7 @@ Feature: Jobs and workflows
         Then verify "Version_Dropdown" element visibility on "Modal_Wizard_Form" wizard
         And select "$latest" option in "Version_Dropdown" dropdown on "Modal_Wizard_Form" wizard
         Then verify "Method_Dropdown" element visibility on "Modal_Wizard_Form" wizard 
+        Then "Method_Dropdown_Label_Select" element on "Modal_Wizard_Form" should contains "Handler" value
         And select "data_clean" option in "Method_Dropdown" dropdown on "Modal_Wizard_Form" wizard 
         Then verify "Run_Details_Labels_Table" element visibility on "Modal_Wizard_Form" wizard
         And click on "Add_Label_Button" element on "Modal_Wizard_Form" wizard
@@ -3101,7 +3073,6 @@ Feature: Jobs and workflows
         Then type value "01:45" to "At_time_Input" field on "Schedule_For_Later" on "Schedule_PopUp" wizard
 
     @MLJW
-    #TODO: Bug ML-4775 Job overview details panel doesn't display using browsers forward button
     Scenario: MLJW045 - Check back navigation from Job overview to Jobs Monitor tab and forward to Job overview
         Given open url
         And wait load page

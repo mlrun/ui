@@ -17,9 +17,10 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import React, { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { connect, useDispatch, useSelector } from 'react-redux'
+import { mapValues, map } from 'lodash'
 
 import AddToFeatureVectorPopUp from '../../../elements/AddToFeatureVectorPopUp/AddToFeatureVectorPopUp'
 import FeaturesTablePanel from '../../../elements/FeaturesTablePanel/FeaturesTablePanel'
@@ -91,6 +92,17 @@ const Features = ({
     ],
     [toggleConvertedYaml]
   )
+
+  useLayoutEffect(() => {
+    setSelectedRowData(prevSelectedRowData => {
+      return mapValues(prevSelectedRowData, feature => ({
+        ...feature,
+        content: map(feature.content, contentItem =>
+          createFeaturesRowData(contentItem.data, tableStore.isTablePanelOpen)
+        )
+      }))
+    })
+  }, [tableStore.isTablePanelOpen, setSelectedRowData])
 
   const fetchData = useCallback(
     filters => {

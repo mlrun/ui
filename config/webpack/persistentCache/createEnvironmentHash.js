@@ -17,12 +17,12 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-'use strict';
-const { createHash } = require('crypto');
+
+const { createHash } = require('node:crypto')
 
 module.exports = env => {
-  const hash = createHash('md5');
-  hash.update(JSON.stringify(env));
+  const hash = createHash('md5')
+  hash.update(JSON.stringify(env))
 
-  return hash.digest('hex');
-};
+  return hash.digest('hex')
+}

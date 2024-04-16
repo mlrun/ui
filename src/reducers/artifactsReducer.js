@@ -27,7 +27,7 @@ import {
 } from './redux.util'
 import artifactsApi from '../api/artifacts-api'
 import functionsApi from '../api/functions-api'
-import { ARTIFACTS, DATASETS, FUNCTION_TYPE_SERVING, MODELS_TAB } from '../constants'
+import { FILES_TAB, DATASETS_TAB, FUNCTION_TYPE_SERVING, MODELS_TAB } from '../constants'
 import { filterArtifacts } from '../utils/filterArtifacts'
 import { generateArtifacts } from '../utils/generateArtifacts'
 import { generateModelEndpoints } from '../utils/generateModelEndpoints'
@@ -124,7 +124,7 @@ export const fetchDataSet = createAsyncThunk('fetchDataSet', ({ project, dataSet
   return artifactsApi.getDataSet(project, dataSet, iter, tag).then(response => {
     const result = parseArtifacts(response.data.artifacts)
 
-    return generateArtifacts(filterArtifacts(result), DATASETS, response.data.artifacts)
+    return generateArtifacts(filterArtifacts(result), DATASETS_TAB, response.data.artifacts)
   })
 })
 export const fetchDataSets = createAsyncThunk(
@@ -135,7 +135,7 @@ export const fetchDataSets = createAsyncThunk(
       .then(({ data }) => {
         const result = parseArtifacts(data.artifacts)
 
-        return generateArtifacts(filterArtifacts(result), DATASETS, data.artifacts)
+        return generateArtifacts(filterArtifacts(result), DATASETS_TAB, data.artifacts)
       })
       .catch(error =>
         largeResponseCatchHandler(error, 'Failed to fetch datasets', thunkAPI.dispatch)
@@ -146,7 +146,7 @@ export const fetchFile = createAsyncThunk('fetchFile', ({ project, file, iter, t
   return artifactsApi.getFile(project, file, iter, tag).then(response => {
     const result = parseArtifacts(response.data.artifacts)
 
-    return generateArtifacts(filterArtifacts(result), ARTIFACTS, response.data.artifacts)
+    return generateArtifacts(filterArtifacts(result), FILES_TAB, response.data.artifacts)
   })
 })
 export const fetchFiles = createAsyncThunk(
@@ -157,7 +157,7 @@ export const fetchFiles = createAsyncThunk(
       .then(({ data }) => {
         const result = parseArtifacts(data.artifacts)
 
-        return generateArtifacts(filterArtifacts(result), ARTIFACTS, data.artifacts)
+        return generateArtifacts(filterArtifacts(result), FILES_TAB, data.artifacts)
       })
       .catch(error =>
         largeResponseCatchHandler(error, 'Failed to fetch artifacts', thunkAPI.dispatch)

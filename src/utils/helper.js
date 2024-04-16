@@ -17,6 +17,9 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
+
+import localStorageService from './localStorageService'
+
 export const isDemoMode = search => {
   return new URLSearchParams(search).get('demo')?.toLowerCase() === 'true'
 }
@@ -35,3 +38,7 @@ export const isPanelOpened = search => {
 
 export const areNuclioStreamsEnabled = frontendSpec =>
   frontendSpec?.feature_flags?.nuclio_streams === 'enabled'
+
+export const isCommunityEdition = () => {
+  return !localStorageService.getStorageValue('igzFullVersion')
+}

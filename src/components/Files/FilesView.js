@@ -30,13 +30,14 @@ import PreviewModal from '../../elements/PreviewModal/PreviewModal'
 import ArtifactsTableRow from '../../elements/ArtifactsTableRow/ArtifactsTableRow'
 import Details from '../Details/Details'
 
+import { ACTIONS_MENU, VIRTUALIZATION_CONFIG } from '../../types'
 import { FILES_FILTERS, FILES_PAGE, FULL_VIEW_MODE } from '../../constants'
-import { getNoDataMessage } from '../../utils/getNoDataMessage'
-import { registerArtifactTitle, filters } from './files.util'
-import { removeFile } from '../../reducers/artifactsReducer'
-import { ACTIONS_MENU } from '../../types'
 import { SECONDARY_BUTTON } from 'igz-controls/constants'
 import { SORT_PROPS } from 'igz-controls/types'
+import { getNoDataMessage } from '../../utils/getNoDataMessage'
+import { isRowRendered } from '../../hooks/useVirtualization.hook'
+import { registerArtifactTitle, filters } from './files.util'
+import { removeFile } from '../../reducers/artifactsReducer'
 
 const FilesView = React.forwardRef(
   (
@@ -64,13 +65,14 @@ const FilesView = React.forwardRef(
       tableHeaders,
       toggleConvertedYaml,
       urlTagOption,
-      viewMode
+      viewMode,
+      virtualizationConfig
     },
-    ref
+    { filesRef, tableRef, tableBodyRef }
   ) => {
     return (
       <>
-        <div className="content-wrapper" ref={ref}>
+        <div className="content-wrapper" ref={filesRef}>
           <div className="content__header">
             <Breadcrumbs />
           </div>
@@ -118,22 +120,28 @@ const FilesView = React.forwardRef(
                     detailsFormInitialValues={detailsFormInitialValues}
                     handleCancel={() => setSelectedFile({})}
                     pageData={pageData}
+                    ref={{ tableRef, tableBodyRef }}
                     retryRequest={handleRefresh}
                     selectedItem={selectedFile}
                     sortProps={sortProps}
+                    tableClassName="files-table"
                     tableHeaders={tableHeaders ?? []}
+                    virtualizationConfig={virtualizationConfig}
                   >
-                    {tableContent.map((tableItem, index) => (
-                      <ArtifactsTableRow
-                        actionsMenu={actionsMenu}
-                        handleExpandRow={handleExpandRow}
-                        key={index}
-                        rowIndex={index}
-                        rowItem={tableItem}
-                        selectedItem={selectedFile}
-                        selectedRowData={selectedRowData}
-                      />
-                    ))}
+                    {tableContent.map(
+                      (tableItem, index) =>
+                        isRowRendered(virtualizationConfig, index) && (
+                          <ArtifactsTableRow
+                            actionsMenu={actionsMenu}
+                            handleExpandRow={handleExpandRow}
+                            key={index}
+                            rowIndex={index}
+                            rowItem={tableItem}
+                            selectedItem={selectedFile}
+                            selectedRowData={selectedRowData}
+                          />
+                        )
+                    )}
                   </Table>
                 </>
               )}
@@ -190,8 +198,9 @@ FilesView.propTypes = {
   tableContent: PropTypes.arrayOf(PropTypes.object).isRequired,
   tableHeaders: PropTypes.arrayOf(PropTypes.object).isRequired,
   toggleConvertedYaml: PropTypes.func.isRequired,
+  urlTagOption: PropTypes.string,
   viewMode: PropTypes.string,
-  urlTagOption: PropTypes.string
+  virtualizationConfig: VIRTUALIZATION_CONFIG.isRequired
 }
 
 export default FilesView
