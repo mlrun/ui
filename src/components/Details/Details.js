@@ -55,6 +55,7 @@ import {
 import { isEveryObjectValueEmpty } from '../../utils/isEveryObjectValueEmpty'
 import { showArtifactsPreview } from '../../reducers/artifactsReducer'
 import { setFieldState } from 'igz-controls/utils/form.util'
+import { datePickerPastOptions, PAST_24_HOUR_DATE_OPTION } from '../../utils/datePicker.util'
 
 import './details.scss'
 
@@ -262,8 +263,11 @@ const Details = ({
   )
 
   useEffect(() => {
-    const date24HoursBefore = new Date(new Date().setDate(new Date().getDate() - 1))
-    handleChangeDates([date24HoursBefore, new Date()], true)
+    const past24hoursOption = datePickerPastOptions.find(
+      option => option.id === PAST_24_HOUR_DATE_OPTION
+    )
+
+    handleChangeDates(past24hoursOption.handler(), true)
   }, [handleChangeDates])
 
   return (
