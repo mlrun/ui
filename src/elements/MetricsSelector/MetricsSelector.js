@@ -30,14 +30,15 @@ import { PopUpDialog, FormInput } from 'igz-controls/components'
 import { SelectOption } from 'igz-controls/elements'
 import { TextTooltipTemplate, Tooltip } from 'iguazio.dashboard-react-controls/dist/components'
 import { ReactComponent as Caret } from 'igz-controls/images/dropdown.svg'
+import Accordion from '../../common/Accordion/Accordion'
+import FormOnChange from '../../common/FormOnChange/FormOnChange'
+
 import {
   filterMetrics,
   generateMetricsItemsByApplication,
   getMetricColorById
 } from './metricsSelector.utils'
 import { METRICS_SELECTOR_OPTIONS } from '../../types'
-import Accordion from '../../common/Accordion/Accordion'
-import FormOnChange from '../../common/FormOnChange/FormOnChange'
 
 import { ReactComponent as Arrow } from 'igz-controls/images/arrow.svg'
 import { ReactComponent as SearchIcon } from 'igz-controls/images/search.svg'
@@ -99,7 +100,7 @@ const MetricsSelector = ({ maxSelectionNumber, metrics, name, onSelect, preselec
     [setIsOpen]
   )
 
-  const handleScroll = useCallback(
+  const scrollHandler = useCallback(
     event => {
       if (!event.target.closest('.metrics-selector-popup')) {
         setIsOpen(false)
@@ -110,15 +111,15 @@ const MetricsSelector = ({ maxSelectionNumber, metrics, name, onSelect, preselec
 
   useEffect(() => {
     if (isOpen) {
-      window.addEventListener('scroll', handleScroll, true)
+      window.addEventListener('scroll', scrollHandler, true)
       window.addEventListener('click', clickHandler)
     }
 
     return () => {
       window.removeEventListener('click', clickHandler)
-      window.removeEventListener('scroll', handleScroll, true)
+      window.removeEventListener('scroll', scrollHandler, true)
     }
-  }, [clickHandler, handleScroll, isOpen])
+  }, [clickHandler, scrollHandler, isOpen])
 
   const handleOnChange = selectedMetricsIds => {
     onSelect(
@@ -148,9 +149,9 @@ const MetricsSelector = ({ maxSelectionNumber, metrics, name, onSelect, preselec
       {formState => (
         <div className="metrics-selector" data-testid="metrics-selector">
           <div
-            data-testid={'metric-selector-field'}
+            data-testid='metric-selector-field'
             ref={selectorFieldRef}
-            className={'metric-selector-field'}
+            className='metric-selector-field'
           >
             <div
               data-testid="metrics-selector-header"
@@ -184,10 +185,10 @@ const MetricsSelector = ({ maxSelectionNumber, metrics, name, onSelect, preselec
                   <div className="metrics-selector-search__name-filter">
                     <FormInput
                       inputIcon={<SearchIcon />}
-                      name={'metric-name'}
+                      name='metric-name'
                       placeholder="Search metrics..."
                     />
-                    <FormOnChange name={'metric-name'} handler={setNameFilerDebounced} />
+                    <FormOnChange name='metric-name' handler={setNameFilerDebounced} />
                   </div>
                 </div>
 

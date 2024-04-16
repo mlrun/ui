@@ -229,9 +229,7 @@ const DetailsHeader = ({
           <MetricsSelector
             name="metrics"
             metrics={detailsStore.metricsOptions.all}
-            onSelect={selectedMetrics => {
-              setSelectedMetricsOptions(selectedMetrics)
-            }}
+            onSelect={setSelectedMetricsOptions}
             preselectedMetrics={detailsStore.metricsOptions.initiallySelected}
           />
         )}

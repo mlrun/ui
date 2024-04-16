@@ -31,26 +31,33 @@ const getMetricsLabel = (metric, metricColor) => {
   )
 }
 
-const getRandomHexColor = () => {
-  const hue = Math.floor(Math.random() * 361)
-  const saturation = Math.floor(Math.random() * 56) + 45 // from 45 to 100
-  const lightness = Math.floor(Math.random() * 71) // max 70
-  // max number of combinations: 360 * 55 * 70 = 1 386 000
+const hslToHex = (hue, saturation, lightness) => {
+  const normalizedLightness = lightness / 100
 
-  const hslToHex = (h, s, l) => {
-    l /= 100
-    const a = (s * Math.min(l, 1 - l)) / 100
-    const f = n => {
-      const k = (n + h / 30) % 12
-      const color = l - a * Math.max(Math.min(k - 3, 9 - k, 1), -1)
-      return Math.round(255 * color)
-        .toString(16)
-        .padStart(2, '0') // convert to Hex and prefix "0" if needed
-    }
-    return `#${f(0)}${f(8)}${f(4)}`
+  const chroma = (saturation * Math.min(normalizedLightness, 1 - normalizedLightness)) / 100
+
+  const calculateColorComponent = step => {
+    const rotation = (step + hue / 30) % 12
+    const color = normalizedLightness - chroma * Math.max(Math.min(rotation - 3, 9 - rotation, 1), -1)
+    
+    return Math.round(255 * color)
+      .toString(16)
+      .padStart(2, '0')
   }
 
+  return `#${calculateColorComponent(0)}${calculateColorComponent(8)}${calculateColorComponent(4)}`
+}
+
+const getRandomHexColor = () => {
+  const hue = Math.floor(Math.random() * 361)
+  const saturation = Math.floor(Math.random() * 56) + 45
+  const lightness = Math.floor(Math.random() * 71)
+
   return hslToHex(hue, saturation, lightness)
+}
+
+const setMetricColorById = (id, color) => {
+  metricsColorsById[id] = color
 }
 
 export const generateUniqueColor = () => {
@@ -59,6 +66,7 @@ export const generateUniqueColor = () => {
 
     if (!usedColors.has(color)) {
       usedColors.add(color)
+      
       return color
     }
   }
@@ -69,14 +77,11 @@ export const getMetricColorById = id => {
     return metricsColorsById[id]
   } else {
     const newColor = generateUniqueColor()
-    metricsColorsById[id] = newColor
+
+    setMetricColorById(id, newColor)
     
     return newColor
   }
-}
-
-export const setMetricColorById = (id, color) => {
-  metricsColorsById[id] = color
 }
 
 export const filterMetrics = (metrics, nameFilter) => {
