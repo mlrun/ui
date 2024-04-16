@@ -18,10 +18,10 @@ under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
 import React from 'react'
-import { OnChange } from 'react-final-form-listeners'
 import { useForm } from 'react-final-form'
 
 import { FormCheckBox } from 'igz-controls/components'
+import FormOnChange from '../../common/FormOnChange/FormOnChange'
 
 import { SHOW_UNTAGGED_FILTER, SHOW_UNTAGGED_ITEMS } from '../../constants'
 
@@ -41,7 +41,7 @@ const FunctionsFilters = () => {
           label="Show untagged"
           name={SHOW_UNTAGGED_FILTER}
         />
-        <OnChange name={SHOW_UNTAGGED_FILTER}>{handleIter}</OnChange>
+        <FormOnChange handler={handleIter} name={SHOW_UNTAGGED_FILTER} />
       </div>
     </div>
   )
