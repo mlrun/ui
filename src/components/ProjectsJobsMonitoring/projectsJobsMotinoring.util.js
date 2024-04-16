@@ -25,6 +25,7 @@ import {
   GROUP_BY_FILTER,
   DATE_RANGE_TIME_FILTER
 } from '../../constants'
+import jobsActions from '../../actions/jobs'
 
 export const STATS_TOTAL_CARD = 'total'
 export const STATS_RUNNING_CARD = 'running'
@@ -103,3 +104,9 @@ export const generateStatsData = (cardsData, tab) =>
           tooltip: 'Click to filter by status completed'
         }
       ]
+
+export const actionCreator = {
+  fetchAllJobRuns: jobsActions.fetchAllJobRuns,
+  fetchJobFunction: jobsActions.fetchJobFunction,
+  fetchJobs: jobsActions.fetchJobs
+}

@@ -17,65 +17,67 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import React, { useCallback, useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { connect, useDispatch, useSelector } from 'react-redux'
 import { Outlet, useLocation, useNavigate, useParams } from 'react-router-dom'
-import moment from 'moment'
 
 import ContentMenu from '../../elements/ContentMenu/ContentMenu'
 import { ConfirmDialog } from 'igz-controls/components'
 import PreviewModal from '../../elements/PreviewModal/PreviewModal'
 import Breadcrumbs from '../../common/Breadcrumbs/Breadcrumbs'
+import ActionBar from '../ActionBar/ActionBar'
+import JobsMonitoringFilters from './JobsMonitoring/JobsMonitoringFilters'
 
-import { STATS_TOTAL_CARD, tabs } from './projectsJobsMotinoring.util'
+import { actionCreator, STATS_TOTAL_CARD, tabs } from './projectsJobsMotinoring.util'
 import {
   JOBS_MONITORING_JOBS_TAB,
   JOBS_MONITORING_PAGE,
   JOBS_MONITORING_SCHEDULED_TAB,
-  JOBS_MONITORING_WORKFLOWS_TAB
+  JOBS_MONITORING_WORKFLOWS_TAB,
+  NAME_FILTER
 } from '../../constants'
-import { actionCreator, monitorJob, rerunJob } from '../Jobs/jobs.util'
+import { monitorJob, pollAbortingJobs, rerunJob } from '../Jobs/jobs.util'
 import { TERTIARY_BUTTON } from 'igz-controls/constants'
-import projectsAction from '../../actions/projects'
+import { parseJob } from '../../utils/parseJob'
+import { datePickerPastOptions, PAST_24_HOUR_DATE_OPTION } from '../../utils/datePicker.util'
 
 import './projectsJobsMonitoring.scss'
 
 export const ProjectJobsMonitoringContext = React.createContext({})
 
-const ProjectsJobsMonitoring = ({ fetchJobFunction }) => {
+const ProjectsJobsMonitoring = ({ fetchAllJobRuns, fetchJobFunction, fetchJobs }) => {
+  const [abortingJobs, setAbortingJobs] = useState({})
   const [editableItem, setEditableItem] = useState(null)
   const [jobWizardMode, setJobWizardMode] = useState(null)
   const [jobWizardIsOpened, setJobWizardIsOpened] = useState(false)
   const [confirmData, setConfirmData] = useState(null)
-  const [selectedTab, setSelectedTab] = useState('')
-  const navigate = useNavigate()
+  const [selectedTab, setSelectedTab] = useState(JOBS_MONITORING_JOBS_TAB)
+  const [jobRuns, setJobRuns] = useState([])
+  const [jobs, setJobs] = useState([])
+  const [selectedRunProject, setSelectedRunProject] = useState('')
+  const [largeRequestErrorMessage, setLargeRequestErrorMessage] = useState('')
   const { jobsMonitoringData } = useSelector(store => store.projectStore)
   const [selectedCard, setSelectedCard] = useState(
     jobsMonitoringData.filters?.status || STATS_TOTAL_CARD
   )
-  //
-  // TODO: add group by;
-  //  add name filter;
-  //  change time filter if the user changed the date filter in projects page
-  const [filters] = useState({
-    dates: {
-      value: [new Date(moment().add(-1, 'days'))]
-    }
-  })
+  const abortJobRef = useRef(null)
+  const abortControllerRef = useRef(new AbortController())
   const dispatch = useDispatch()
   const location = useLocation()
   const params = useParams()
+  const navigate = useNavigate()
   const appStore = useSelector(store => store.appStore)
   const artifactsStore = useSelector(store => store.artifactsStore)
 
-  useEffect(() => {
-    dispatch(projectsAction.removeJobsMonitoringFilters())
-  }, [dispatch])
+  const jobsFilters = useMemo(
+    () => [{ type: NAME_FILTER, label: 'Name:', initialValue: '', hidden: params.jobName }],
+    [params.jobName]
+  )
 
   const handleTabChange = tabName => {
     setSelectedCard(STATS_TOTAL_CARD)
     setSelectedTab(tabName)
-    navigate(`/projects/jobs-monitoring/${tabName}`)
+    navigate(`/projects/${JOBS_MONITORING_PAGE}/${tabName}`)
   }
 
   const handleRerunJob = useCallback(
@@ -88,6 +90,93 @@ const ProjectsJobsMonitoring = ({ fetchJobFunction }) => {
       monitorJob(appStore.frontendSpec.jobs_dashboard_url, item, params.projectName)
     },
     [appStore.frontendSpec.jobs_dashboard_url, params.projectName]
+  )
+
+  const terminateAbortTasksPolling = useCallback(() => {
+    abortJobRef?.current?.()
+    setAbortingJobs({})
+  }, [])
+
+  const refreshJobs = useCallback(
+    filters => {
+      if (params.jobName) {
+        setJobRuns([])
+      } else {
+        setJobs([])
+      }
+      abortControllerRef.current = new AbortController()
+
+      terminateAbortTasksPolling()
+
+      const fetchData = params.jobName ? fetchAllJobRuns : fetchJobs
+      const newParams = !params.jobName && {
+        'partition-by': 'name',
+        'partition-sort-by': 'updated'
+      }
+      //TODO: remove past 24 hours default filter when date filters is ready
+      const past24HourOption = datePickerPastOptions.find(
+        option => option.id === PAST_24_HOUR_DATE_OPTION
+      )
+      const newFilters = {
+        dates: {
+          value: past24HourOption.handler(),
+          isPredefined: past24HourOption.isPredefined
+        },
+        ...filters
+      }
+
+      fetchData(
+        params.jobName ? selectedRunProject || '*' : '*',
+        newFilters,
+        {
+          ui: {
+            controller: abortControllerRef.current,
+            setLargeRequestErrorMessage
+          },
+          params: { ...newParams }
+        },
+        params.jobName ?? false
+      ).then(jobs => {
+        if (jobs) {
+          const parsedJobs = jobs.map(job => parseJob(job))
+          const responseAbortingJobs = parsedJobs.reduce((acc, job) => {
+            if (job.state.value === 'aborting' && job.abortTaskId) {
+              acc[job.abortTaskId] = {
+                uid: job.uid,
+                name: job.name
+              }
+            }
+
+            return acc
+          }, {})
+
+          if (Object.keys(responseAbortingJobs).length > 0) {
+            setAbortingJobs(responseAbortingJobs)
+            pollAbortingJobs(
+              '*',
+              abortJobRef,
+              responseAbortingJobs,
+              () => refreshJobs(filters),
+              dispatch
+            )
+          }
+
+          if (params.jobName) {
+            setJobRuns(parsedJobs)
+          } else {
+            setJobs(parsedJobs)
+          }
+        }
+      })
+    },
+    [
+      dispatch,
+      fetchAllJobRuns,
+      fetchJobs,
+      params.jobName,
+      selectedRunProject,
+      terminateAbortTasksPolling
+    ]
   )
 
   useEffect(() => {
@@ -114,24 +203,48 @@ const ProjectsJobsMonitoring = ({ fetchJobFunction }) => {
               onClick={handleTabChange}
               tabs={tabs}
             />
-            <div className="action-bar">Filter menu</div>
+            <div className="action-bar">
+              {selectedTab === JOBS_MONITORING_JOBS_TAB && !params.jobId && (
+                <ActionBar
+                  filterMenuName={selectedTab}
+                  filters={jobsFilters}
+                  handleRefresh={refreshJobs}
+                  setContent={params.jobName ? setJobRuns : setJobs}
+                  page={JOBS_MONITORING_PAGE}
+                  tab={JOBS_MONITORING_JOBS_TAB}
+                  withRefreshButton={false}
+                >
+                  <JobsMonitoringFilters />
+                </ActionBar>
+              )}
+            </div>
           </div>
           <div className="table-container">
             <ProjectJobsMonitoringContext.Provider
               value={{
-                filters,
+                abortJobRef,
+                abortingJobs,
                 jobsMonitoringData,
-                selectedCard,
-                setSelectedCard,
+                largeRequestErrorMessage,
                 editableItem,
                 handleMonitoring,
                 handleRerunJob,
+                jobRuns,
                 jobWizardIsOpened,
                 jobWizardMode,
+                jobs,
+                refreshJobs,
+                selectedCard,
+                setAbortingJobs,
                 setConfirmData,
                 setEditableItem,
+                setJobRuns,
+                setJobs,
                 setJobWizardIsOpened,
-                setJobWizardMode
+                setJobWizardMode,
+                setSelectedCard,
+                setSelectedRunProject,
+                terminateAbortTasksPolling
               }}
             >
               <Outlet />

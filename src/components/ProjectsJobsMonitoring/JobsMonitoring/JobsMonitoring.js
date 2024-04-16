@@ -17,37 +17,39 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import React, { useState, useCallback, useMemo, useRef, useEffect } from 'react'
+import React, { useState, useCallback, useMemo, useEffect } from 'react'
 import { useParams } from 'react-router-dom'
-import { connect, useDispatch, useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { isEmpty } from 'lodash'
 
 import JobsTable from '../../../elements/JobsTable/JobsTable'
 import TableTop from '../../../elements/TableTop/TableTop'
 
 import { ProjectJobsMonitoringContext } from '../ProjectsJobsMonitoring'
-import { parseJob } from '../../../utils/parseJob'
-import { pollAbortingJobs } from '../../Jobs/jobs.util'
 import { createJobsMonitoringContent } from '../../../utils/createJobsContent'
 import { useMode } from '../../../hooks/mode.hook'
-import { datePickerPastOptions, PAST_24_HOUR_DATE_OPTION } from '../../../utils/datePicker.util'
 import { JOBS_MONITORING_JOBS_TAB, JOBS_MONITORING_PAGE } from '../../../constants'
-import { jobsMonitoringActionCreator } from './jobsMonitoring.util'
 
-const JobsMonitoring = ({ fetchAllJobRuns, fetchJobs }) => {
-  const [abortingJobs, setAbortingJobs] = useState({})
-  const [jobRuns, setJobRuns] = useState([])
+const JobsMonitoring = () => {
   const [selectedJob, setSelectedJob] = useState({})
-  const [selectedRunProject, setSelectedRunProject] = useState('')
   const [dataIsLoaded, setDataIsLoaded] = useState(false)
-  const [jobs, setJobs] = useState([])
-  const [largeRequestErrorMessage, setLargeRequestErrorMessage] = useState('')
-  const abortJobRef = useRef(null)
-  const abortControllerRef = useRef(new AbortController())
   const params = useParams()
   const dispatch = useDispatch()
   const { isStagingMode } = useMode()
   const filtersStore = useSelector(store => store.filtersStore)
+  const {
+    abortJobRef,
+    abortingJobs,
+    jobRuns,
+    jobs,
+    largeRequestErrorMessage,
+    refreshJobs,
+    setAbortingJobs,
+    setJobRuns,
+    setJobs,
+    setSelectedRunProject,
+    terminateAbortTasksPolling
+  } = React.useContext(ProjectJobsMonitoringContext)
 
   const filters = useMemo(() => [], [])
 
@@ -57,82 +59,6 @@ const JobsMonitoring = ({ fetchAllJobRuns, fetchJobs }) => {
     [isStagingMode, jobRuns, jobs, params.jobName]
   )
 
-  const terminateAbortTasksPolling = useCallback(() => {
-    abortJobRef?.current?.()
-    setAbortingJobs({})
-  }, [])
-
-  const refreshJobs = useCallback(
-    filters => {
-      if (params.jobName) {
-        setJobRuns([])
-      } else {
-        setJobs([])
-      }
-      abortControllerRef.current = new AbortController()
-
-      terminateAbortTasksPolling()
-
-      const fetchData = params.jobName ? fetchAllJobRuns : fetchJobs
-      const newParams = !params.jobName && {
-        'partition-by': 'name',
-        'partition-sort-by': 'updated'
-      }
-
-      fetchData(
-        params.jobName ? selectedRunProject || '*' : '*',
-        filters,
-        {
-          ui: {
-            controller: abortControllerRef.current,
-            setLargeRequestErrorMessage
-          },
-          params: { ...newParams }
-        },
-        params.jobName ?? false
-      ).then(jobs => {
-        if (jobs) {
-          const parsedJobs = jobs.map(job => parseJob(job))
-          const responseAbortingJobs = parsedJobs.reduce((acc, job) => {
-            if (job.state.value === 'aborting' && job.abortTaskId) {
-              acc[job.abortTaskId] = {
-                uid: job.uid,
-                name: job.name
-              }
-            }
-
-            return acc
-          }, {})
-
-          if (Object.keys(responseAbortingJobs).length > 0) {
-            setAbortingJobs(responseAbortingJobs)
-            pollAbortingJobs(
-              '*',
-              abortJobRef,
-              responseAbortingJobs,
-              () => refreshJobs(filters),
-              dispatch
-            )
-          }
-
-          if (params.jobName) {
-            setJobRuns(parsedJobs)
-          } else {
-            setJobs(parsedJobs)
-          }
-        }
-      })
-    },
-    [
-      dispatch,
-      fetchAllJobRuns,
-      fetchJobs,
-      params.jobName,
-      selectedRunProject,
-      terminateAbortTasksPolling
-    ]
-  )
-
   const isJobDataEmpty = useCallback(
     () => jobs.length === 0 && ((!params.jobName && jobRuns.length === 0) || params.jobName),
     [jobRuns.length, jobs.length, params.jobName]
@@ -140,14 +66,7 @@ const JobsMonitoring = ({ fetchAllJobRuns, fetchJobs }) => {
 
   useEffect(() => {
     if (isEmpty(selectedJob) && !params.jobId && !dataIsLoaded) {
-      const past24HourOption = datePickerPastOptions.find(
-        option => option.id === PAST_24_HOUR_DATE_OPTION
-      )
       refreshJobs({
-        dates: {
-          value: past24HourOption.handler(),
-          isPredefined: past24HourOption.isPredefined
-        },
         state: filtersStore.state
       })
       setDataIsLoaded(true)
@@ -201,6 +120,4 @@ const JobsMonitoring = ({ fetchAllJobRuns, fetchJobs }) => {
   )
 }
 
-export default connect(null, {
-  ...jobsMonitoringActionCreator
-})(JobsMonitoring)
+export default JobsMonitoring
