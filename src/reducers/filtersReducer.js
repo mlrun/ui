@@ -39,7 +39,8 @@ const initialState = {
   saveFilters: false,
   dates: {
     value: DATE_FILTER_ANY_TIME,
-    isPredefined: false
+    isPredefined: false,
+    initialSelectedOptionId: ''
   },
   entities: '',
   groupBy: GROUP_BY_NAME,

@@ -173,7 +173,8 @@ const MonitorJobs = ({ fetchAllJobRuns, fetchJobs }) => {
         filters = {
           dates: {
             value: pastWeekOption.handler(),
-            isPredefined: pastWeekOption.isPredefined
+            isPredefined: pastWeekOption.isPredefined,
+            initialSelectedOptionId: pastWeekOption.id
           }
         }
       } else {
