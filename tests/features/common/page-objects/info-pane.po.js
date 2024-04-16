@@ -434,7 +434,7 @@ const featureSetsInfoPaneLabelsTable = {
         key_verify: '.edit-chip-container input.input-label-key',
         value_verify: '.edit-chip-container input.input-label-value',
         label: '.edit-chip-container input',
-        remove_btn: '.edit-chip__icon-close'
+        remove_btn: '.item-icon-close'
       }
     }
   }

@@ -24,6 +24,7 @@ import { parseString } from '../../common-tools/common-tools'
 async function verifyInputInvalid(driver, inputGroup) {
   const inputField = await driver.findElement(inputGroup.inputField)
   const flag = await inputField.getAttribute('class')
+  await driver.sleep(500)
   expect(flag.includes('invalid')).equal(true)
 }
 
