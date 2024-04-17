@@ -18,6 +18,7 @@ under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
 import {
+  DELETE_WORKFLOWS,
   FETCH_WORKFLOW_BEGIN,
   FETCH_WORKFLOW_FAILURE,
   FETCH_WORKFLOW_SUCCESS,
@@ -43,6 +44,11 @@ const initialState = {
 
 const workflowReducer = (state = initialState, { type, payload }) => {
   switch (type) {
+    case DELETE_WORKFLOWS:
+      return {
+        ...state,
+        workflows: initialState.workflows
+      }
     case FETCH_WORKFLOW_BEGIN:
       return {
         ...state,

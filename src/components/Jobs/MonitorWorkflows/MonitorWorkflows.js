@@ -21,6 +21,7 @@ import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useLocation, useNavigate, useParams } from 'react-router-dom'
 import { connect, useDispatch, useSelector } from 'react-redux'
 import { find, isEmpty } from 'lodash'
+import classnames from 'classnames'
 
 import FilterMenu from '../../FilterMenu/FilterMenu'
 import JobWizard from '../../JobWizard/JobWizard'
@@ -39,6 +40,7 @@ import {
   MONITOR_WORKFLOWS_TAB,
   PANEL_RERUN_MODE,
   REQUEST_CANCELED,
+  STATE_FILTER_ALL_ITEMS,
   WORKFLOW_GRAPH_VIEW
 } from '../../../constants'
 import { DANGER_BUTTON } from 'igz-controls/constants'
@@ -84,6 +86,7 @@ import cssVariables from './monitorWorkflows.scss'
 const MonitorWorkflows = ({
   abortJob,
   deleteJob,
+  deleteWorkflows,
   fetchFunctionLogs,
   fetchJob,
   fetchJobFunctions,
@@ -293,7 +296,7 @@ const MonitorWorkflows = ({
           <div>
             You try to abort job "{job.name}". <br />
             {isJobKindLocal(job) &&
-              'This is a local run. You can abort the run, though the actual process will continue.'}
+            'This is a local run. You can abort the run, though the actual process will continue.'}
           </div>
         ),
         btnConfirmLabel: 'Abort',
@@ -591,11 +594,12 @@ const MonitorWorkflows = ({
               value: generatedDates,
               isPredefined: pastWeekOption.isPredefined
             },
+            state: STATE_FILTER_ALL_ITEMS,
             groupBy: GROUP_BY_WORKFLOW
           }
 
           dispatch(setFilters({ ...filters }))
-          getWorkflows({ ...filtersStore, ...filters })
+          getWorkflows(filters)
         } else {
           getWorkflows({ ...filtersStore, groupBy: GROUP_BY_WORKFLOW })
           dispatch(setFilters({ groupBy: GROUP_BY_WORKFLOW }))
@@ -624,6 +628,13 @@ const MonitorWorkflows = ({
       abortControllerRef.current.abort(REQUEST_CANCELED)
     }
   }, [params.projectName, params.workflowId])
+
+  useEffect(() => {
+    return () => {
+      deleteWorkflows()
+      setWorkflowsAreLoaded(false)
+    }
+  }, [deleteWorkflows])
 
   useEffect(() => {
     abortJobRef.current?.()
@@ -676,26 +687,31 @@ const MonitorWorkflows = ({
 
   return (
     <>
-      {!params.workflowId && (
-        <div className="monitor-workflows">
-          <p className="monitor-workflows__subtitle">
-            View running workflows and previously executed workflows
-          </p>
-          <div className="content__action-bar-wrapper">
-            <div className="action-bar">
-              <FilterMenu
-                filters={filters}
-                onChange={getWorkflows}
-                page={JOBS_PAGE}
-                withoutExpandButton
-              />
-            </div>
+      <div className="monitor-workflows">
+        {
+          !params.workflowId && (
+            <p className="monitor-workflows__subtitle">
+              View running workflows and previously executed workflows
+            </p>
+          )
+        }
+        <div className="content__action-bar-wrapper">
+          <div className={classnames(!params.workflowId && 'action-bar')}>
+            <FilterMenu
+              filters={filters}
+              onChange={getWorkflows}
+              page={JOBS_PAGE}
+              saveFilterOnProjectChange
+              tab={MONITOR_WORKFLOWS_TAB}
+              withoutExpandButton
+              hidden={Boolean(params.workflowId)}
+            />
           </div>
         </div>
-      )}
+      </div>
       {workflowsStore.workflows.loading ? null : (!params.workflowId &&
-          workflowsStore.workflows.data.length === 0) ||
-        largeRequestErrorMessage ? (
+        workflowsStore.workflows.data.length === 0) ||
+      largeRequestErrorMessage ? (
         <NoData
           message={getNoDataMessage(
             filtersStore,
