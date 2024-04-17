@@ -2,11 +2,9 @@
 @import '~igz-controls/scss/shadows';
 
 .download-container {
-  position: fixed;
-  right: 24px;
-  bottom: -115px;
+  position: relative;
+  align-self: flex-end;
   opacity: 0;
-  z-index: 9;
   width: 220px;
   min-height: 90px;
   max-height: 200px;
@@ -15,6 +13,9 @@
   background-color: $darkPurple;
   border-radius: 5px;
   box-shadow: $tooltipShadow;
+  margin-right: 24px;
+  margin-bottom: 10px;
+  z-index: 9;
 
   &__header {
     margin-bottom: 15px;

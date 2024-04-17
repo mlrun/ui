@@ -3,11 +3,17 @@
 
 .notification {
   &_container {
+    position: relative;
+    align-self: flex-end;
+    opacity: 0;
     padding: 15px;
     color: $white;
     background-color: $darkPurple;
     border-radius: 5px;
     box-shadow: $tooltipShadow;
+    margin-right: 24px;
+    margin-bottom: 10px;
+    z-index: 1000;
   }
 
   &_body {
