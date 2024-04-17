@@ -1,0 +1,26 @@
+@import '~igz-controls/scss/variables';
+@import 'src/scss/mixins';
+
+$monitorWorkflowsRowHeight: $rowHeightSmall;
+$monitorWorkflowsHeaderRowHeight: $headerRowHeight;
+$monitorWorkflowsRowHeightExtended: $rowHeightSmall;
+
+.monitor-workflows {
+  &__subtitle {
+    margin: 10px 0 0;
+  }
+}
+
+.monitor-workflows-table {
+  @include rowsHeight(
+    $monitorWorkflowsHeaderRowHeight,
+    $monitorWorkflowsRowHeight,
+    $monitorWorkflowsRowHeightExtended
+  );
+}
+
+:export {
+  monitorWorkflowsRowHeight: $monitorWorkflowsRowHeight;
+  monitorWorkflowsHeaderRowHeight: $monitorWorkflowsHeaderRowHeight;
+  monitorWorkflowsRowHeightExtended: $monitorWorkflowsRowHeightExtended;
+}
