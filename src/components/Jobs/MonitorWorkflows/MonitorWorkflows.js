@@ -79,7 +79,7 @@ import detailsActions from '../../../actions/details'
 import jobsActions from '../../../actions/jobs'
 
 import './monitorWorkflows.scss'
-import cssVariables from './monitorWorkflows.scss'
+// import cssVariables from './monitorWorkflows.scss'
 
 const MonitorWorkflows = ({
   abortJob,
