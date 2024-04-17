@@ -24,19 +24,19 @@ import { connect, useDispatch, useSelector } from 'react-redux'
 import { isEmpty } from 'lodash'
 
 import FilterMenu from '../../FilterMenu/FilterMenu'
-import TableTop from '../../../elements/TableTop/TableTop'
 import JobsTable from '../../../elements/JobsTable/JobsTable'
+import TableTop from '../../../elements/TableTop/TableTop'
 
-import { TERTIARY_BUTTON } from 'igz-controls/constants'
 import { GROUP_BY_NONE, JOBS_PAGE, MONITOR_JOBS_TAB, REQUEST_CANCELED } from '../../../constants'
-import { generateFilters, monitorJobsActionCreator } from './monitorJobs.util'
 import { JobsContext } from '../Jobs'
+import { TERTIARY_BUTTON } from 'igz-controls/constants'
 import { createJobsMonitorTabContent } from '../../../utils/createJobsContent'
-import { pollAbortingJobs } from '../jobs.util'
+import { datePickerPastOptions, PAST_WEEK_DATE_OPTION } from '../../../utils/datePicker.util'
+import { generateFilters, monitorJobsActionCreator } from './monitorJobs.util'
 import { parseJob } from '../../../utils/parseJob'
+import { pollAbortingJobs } from '../jobs.util'
 import { setFilters } from '../../../reducers/filtersReducer'
 import { useMode } from '../../../hooks/mode.hook'
-import { datePickerPastOptions, PAST_WEEK_DATE_OPTION } from '../../../utils/datePicker.util'
 
 const MonitorJobs = ({ fetchAllJobRuns, fetchJobs }) => {
   const [abortingJobs, setAbortingJobs] = useState({})

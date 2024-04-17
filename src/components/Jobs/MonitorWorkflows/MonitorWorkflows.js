@@ -58,18 +58,19 @@ import {
   pollAbortingJobs
 } from '../jobs.util'
 import getState from '../../../utils/getState'
+import { datePickerPastOptions, PAST_WEEK_DATE_OPTION } from '../../../utils/datePicker.util'
 import { getFunctionLogs } from '../../../utils/getFunctionLogs'
 import { getJobLogs } from '../../../utils/getJobLogs.util'
 import { getNoDataMessage } from '../../../utils/getNoDataMessage'
 import { isDetailsTabExists } from '../../../utils/isDetailsTabExists'
+import { isRowRendered, useVirtualization } from '../../../hooks/useVirtualization.hook'
 import { isWorkflowStepExecutable } from '../../Workflow/workflow.util'
 import { openPopUp } from 'igz-controls/utils/common.util'
-import { showErrorNotification } from '../../../utils/notifications.util'
 import { parseFunction } from '../../../utils/parseFunction'
 import { parseJob } from '../../../utils/parseJob'
 import { setFilters } from '../../../reducers/filtersReducer'
 import { setNotification } from '../../../reducers/notificationReducer'
-import { datePickerPastOptions, PAST_WEEK_DATE_OPTION } from '../../../utils/datePicker.util'
+import { showErrorNotification } from '../../../utils/notifications.util'
 import { useMode } from '../../../hooks/mode.hook'
 import { usePods } from '../../../hooks/usePods.hook'
 import { useSortTable } from '../../../hooks/useSortTable.hook'
@@ -77,7 +78,8 @@ import { useYaml } from '../../../hooks/yaml.hook'
 import detailsActions from '../../../actions/details'
 import jobsActions from '../../../actions/jobs'
 
-import './MonitorWorkflows.scss'
+import './monitorWorkflows.scss'
+import cssVariables from './monitorWorkflows.scss'
 
 const MonitorWorkflows = ({
   abortJob,
@@ -106,7 +108,6 @@ const MonitorWorkflows = ({
   const location = useLocation()
   const dispatch = useDispatch()
   const { isStagingMode } = useMode()
-  const abortJobRef = useRef(null)
   const {
     editableItem,
     handleMonitoring,
@@ -118,9 +119,12 @@ const MonitorWorkflows = ({
     setJobWizardIsOpened,
     setJobWizardMode
   } = React.useContext(JobsContext)
-  let fetchFunctionLogsTimeout = useRef(null)
-  const fetchJobFunctionsPromiseRef = useRef()
   const abortControllerRef = useRef(new AbortController())
+  const abortJobRef = useRef(null)
+  const fetchJobFunctionsPromiseRef = useRef()
+  const tableBodyRef = useRef(null)
+  const tableRef = useRef(null)
+  let fetchFunctionLogsTimeout = useRef(null)
 
   usePods(dispatch, detailsActions.fetchJobPods, detailsActions.removePods, selectedJob)
 
@@ -657,6 +661,19 @@ const MonitorWorkflows = ({
     setJobWizardMode
   ])
 
+  const virtualizationConfig = useVirtualization({
+    tableRef,
+    tableBodyRef,
+    rowsData: {
+      content: tableContent
+    },
+    heightData: {
+      headerRowHeight: cssVariables.monitorWorkflowsHeaderRowHeight,
+      rowHeight: cssVariables.monitorWorkflowsRowHeight,
+      rowHeightExtended: cssVariables.monitorWorkflowsRowHeightExtended
+    }
+  })
+
   return (
     <>
       {!params.workflowId && (
@@ -711,20 +728,26 @@ const MonitorWorkflows = ({
               handleCancel={handleCancel}
               handleSelectItem={handleSelectRun}
               pageData={pageData}
+              ref={{ tableRef, tableBodyRef }}
               retryRequest={getWorkflows}
               selectedItem={selectedJob}
               tab={MONITOR_JOBS_TAB}
+              tableClassName="monitor-workflows-table"
               tableHeaders={sortedTableContent[0]?.content ?? []}
+              virtualizationConfig={virtualizationConfig}
             >
-              {sortedTableContent.map((tableItem, index) => (
-                <JobsTableRow
-                  actionsMenu={actionsMenu}
-                  handleSelectJob={handleSelectRun}
-                  key={index}
-                  rowItem={tableItem}
-                  selectedJob={selectedJob}
-                />
-              ))}
+              {sortedTableContent.map(
+                (tableItem, index) =>
+                  isRowRendered(virtualizationConfig, index) && (
+                    <JobsTableRow
+                      actionsMenu={actionsMenu}
+                      handleSelectJob={handleSelectRun}
+                      key={index}
+                      rowItem={tableItem}
+                      selectedJob={selectedJob}
+                    />
+                  )
+              )}
             </Table>
           )}
         </>

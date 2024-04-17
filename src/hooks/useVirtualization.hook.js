@@ -178,13 +178,13 @@ export const useVirtualization = ({
         elementsHeight - tableRefEl.clientHeight
       )
 
-        setVirtualizationConfig(() => {
-          return {
-            startIndex: firstRenderIndex,
-            endIndex: lastRenderIndex,
-            tableBodyPaddingTop
-          }
-        })
+      setVirtualizationConfig(() => {
+        return {
+          startIndex: firstRenderIndex,
+          endIndex: lastRenderIndex,
+          tableBodyPaddingTop
+        }
+      })
     }, 150)
 
     if (tableRefEl && tableBodyRefEl) {

@@ -44,6 +44,7 @@ import { createJobsScheduleTabContent } from '../../../utils/createJobsContent'
 import { getErrorMsg, openPopUp } from 'igz-controls/utils/common.util'
 import { getJobFunctionData } from '../jobs.util'
 import { getNoDataMessage } from '../../../utils/getNoDataMessage'
+import { isRowRendered, useVirtualization } from '../../../hooks/useVirtualization.hook'
 import { parseJob } from '../../../utils/parseJob'
 import { scheduledJobsActionCreator } from './scheduledJobs.util'
 import { setFilters } from '../../../reducers/filtersReducer'
@@ -55,6 +56,8 @@ import { ReactComponent as Yaml } from 'igz-controls/images/yaml.svg'
 import { ReactComponent as Run } from 'igz-controls/images/run.svg'
 import { ReactComponent as Edit } from 'igz-controls/images/edit.svg'
 import { ReactComponent as Delete } from 'igz-controls/images/delete.svg'
+
+import cssVariables from './scheduledJobs.scss'
 
 const ScheduledJobs = ({
   fetchFunctionTemplate,
@@ -70,6 +73,8 @@ const ScheduledJobs = ({
   const [editableItem, setEditableItem] = useState(null)
   const [largeRequestErrorMessage, setLargeRequestErrorMessage] = useState('')
   const abortControllerRef = useRef(new AbortController())
+  const tableBodyRef = useRef(null)
+  const tableRef = useRef(null)
   const dispatch = useDispatch()
   const params = useParams()
   const filtersStore = useSelector(store => store.filtersStore)
@@ -207,33 +212,32 @@ const ScheduledJobs = ({
   )
 
   const actionsMenu = useMemo(
-    () => job =>
+    () => job => [
       [
-        [
-          {
-            label: 'Run now',
-            icon: <Run className="action_cell__run-icon" />,
-            onClick: handleRunJob
-          },
-          {
-            label: 'Edit',
-            icon: <Edit />,
-            onClick: handleEditScheduleJob,
-            hidden: job?.type === JOB_KIND_WORKFLOW
-          },
-          {
-            label: 'Delete',
-            icon: <Delete />,
-            className: 'danger',
-            onClick: onRemoveScheduledJob
-          },
-          {
-            label: 'View YAML',
-            icon: <Yaml />,
-            onClick: toggleConvertedYaml
-          }
-        ]
-      ],
+        {
+          label: 'Run now',
+          icon: <Run className="action_cell__run-icon" />,
+          onClick: handleRunJob
+        },
+        {
+          label: 'Edit',
+          icon: <Edit />,
+          onClick: handleEditScheduleJob,
+          hidden: job?.type === JOB_KIND_WORKFLOW
+        },
+        {
+          label: 'Delete',
+          icon: <Delete />,
+          className: 'danger',
+          onClick: onRemoveScheduledJob
+        },
+        {
+          label: 'View YAML',
+          icon: <Yaml />,
+          onClick: toggleConvertedYaml
+        }
+      ]
+    ],
     [handleEditScheduleJob, handleRunJob, onRemoveScheduledJob, toggleConvertedYaml]
   )
 
@@ -285,6 +289,19 @@ const ScheduledJobs = ({
     setJobWizardMode
   ])
 
+  const virtualizationConfig = useVirtualization({
+    tableRef,
+    tableBodyRef,
+    rowsData: {
+      content: tableContent
+    },
+    heightData: {
+      headerRowHeight: cssVariables.scheduledJobsHeaderRowHeight,
+      rowHeight: cssVariables.scheduledJobsRowHeight,
+      rowHeightExtended: cssVariables.scheduledJobsRowHeightExtended
+    }
+  })
+
   return (
     <>
       <div className="content__action-bar-wrapper">
@@ -312,13 +329,19 @@ const ScheduledJobs = ({
           <Table
             actionsMenu={actionsMenu}
             pageData={pageData}
+            ref={{ tableRef, tableBodyRef }}
             retryRequest={refreshJobs}
             tab={SCHEDULE_TAB}
+            tableClassName="scheduled-jobs-table"
             tableHeaders={tableContent[0]?.content ?? []}
+            virtualizationConfig={virtualizationConfig}
           >
-            {tableContent.map((tableItem, index) => (
-              <JobsTableRow actionsMenu={actionsMenu} key={index} rowItem={tableItem} />
-            ))}
+            {tableContent.map(
+              (tableItem, index) =>
+                isRowRendered(virtualizationConfig, index) && (
+                  <JobsTableRow actionsMenu={actionsMenu} key={index} rowItem={tableItem} />
+                )
+            )}
           </Table>
         </>
       )}

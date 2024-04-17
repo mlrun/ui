@@ -23,151 +23,162 @@ import PropTypes from 'prop-types'
 
 import Breadcrumbs from '../../common/Breadcrumbs/Breadcrumbs'
 import FilterMenu from '../FilterMenu/FilterMenu'
+import FunctionsPanel from '../FunctionsPanel/FunctionsPanel'
+import FunctionsTableRow from '../../elements/FunctionsTableRow/FunctionsTableRow'
 import Loader from '../../common/Loader/Loader'
 import NoData from '../../common/NoData/NoData'
 import Table from '../Table/Table'
-import FunctionsTableRow from '../../elements/FunctionsTableRow/FunctionsTableRow'
-import FunctionsPanel from '../FunctionsPanel/FunctionsPanel'
-import { ConfirmDialog } from 'igz-controls/components'
 import YamlModal from '../../common/YamlModal/YamlModal'
+import { ConfirmDialog } from 'igz-controls/components'
 
-import { getNoDataMessage } from '../../utils/getNoDataMessage'
-import { SECONDARY_BUTTON } from 'igz-controls/constants'
-import { filters } from './functions.util'
 import { FUNCTIONS_PAGE, PANEL_CREATE_MODE, PANEL_EDIT_MODE } from '../../constants'
+import { SECONDARY_BUTTON } from 'igz-controls/constants'
+import { VIRTUALIZATION_CONFIG } from '../../types'
+import { filters } from './functions.util'
+import { getNoDataMessage } from '../../utils/getNoDataMessage'
+import { isRowRendered } from '../../hooks/useVirtualization.hook'
 
-const FunctionsView = ({
-  actionsMenu,
-  closePanel,
-  confirmData,
-  convertedYaml,
-  createFunctionSuccess,
-  editableItem,
-  expand,
-  filtersChangeCallback,
-  filtersStore,
-  functionsPanelIsOpen,
-  functionsStore,
-  getPopUpTemplate,
-  handleCancel,
-  handleDeployFunctionFailure,
-  handleDeployFunctionSuccess,
-  handleExpandAll,
-  handleExpandRow,
-  handleSelectFunction,
-  isDemoMode,
-  largeRequestErrorMessage,
-  pageData,
-  refreshFunctions,
-  selectedFunction,
-  selectedRowData,
-  tableContent,
-  taggedFunctions,
-  toggleConvertedYaml
-}) => {
-  const params = useParams()
-  return (
-    <>
-      <div className="content-wrapper">
-        <div className="content__header">
-          <Breadcrumbs />
-        </div>
-        <div className="content">
-          <div className="table-container">
-            <div className="content__action-bar-wrapper">
-              <div className="action-bar">
-                <FilterMenu
-                  actionButton={{
-                    getCustomTemplate: getPopUpTemplate,
-                    hidden: !isDemoMode,
-                    label: 'New',
-                    variant: SECONDARY_BUTTON
-                  }}
-                  expand={expand}
-                  filters={filters}
-                  handleExpandAll={handleExpandAll}
-                  onChange={filtersChangeCallback}
-                  page={FUNCTIONS_PAGE}
-                />
+const FunctionsView = React.forwardRef(
+  (
+    {
+      actionsMenu,
+      closePanel,
+      confirmData,
+      convertedYaml,
+      createFunctionSuccess,
+      editableItem,
+      expand,
+      filtersChangeCallback,
+      filtersStore,
+      functionsPanelIsOpen,
+      functionsStore,
+      getPopUpTemplate,
+      handleCancel,
+      handleDeployFunctionFailure,
+      handleDeployFunctionSuccess,
+      handleExpandAll,
+      handleExpandRow,
+      handleSelectFunction,
+      isDemoMode,
+      largeRequestErrorMessage,
+      pageData,
+      refreshFunctions,
+      selectedFunction,
+      selectedRowData,
+      tableContent,
+      taggedFunctions,
+      toggleConvertedYaml,
+      virtualizationConfig
+    },
+    { tableRef, tableBodyRef }
+  ) => {
+    const params = useParams()
+    return (
+      <>
+        <div className="content-wrapper">
+          <div className="content__header">
+            <Breadcrumbs />
+          </div>
+          <div className="content">
+            <div className="table-container">
+              <div className="content__action-bar-wrapper">
+                <div className="action-bar">
+                  <FilterMenu
+                    actionButton={{
+                      getCustomTemplate: getPopUpTemplate,
+                      hidden: !isDemoMode,
+                      label: 'New',
+                      variant: SECONDARY_BUTTON
+                    }}
+                    expand={expand}
+                    filters={filters}
+                    handleExpandAll={handleExpandAll}
+                    onChange={filtersChangeCallback}
+                    page={FUNCTIONS_PAGE}
+                  />
+                </div>
               </div>
+              {functionsStore.loading ? (
+                <Loader />
+              ) : taggedFunctions.length === 0 ? (
+                <NoData
+                  message={getNoDataMessage(
+                    filtersStore,
+                    filters,
+                    largeRequestErrorMessage,
+                    FUNCTIONS_PAGE
+                  )}
+                />
+              ) : (
+                <>
+                  <Table
+                    actionsMenu={actionsMenu}
+                    handleCancel={handleCancel}
+                    pageData={pageData}
+                    ref={{ tableRef, tableBodyRef }}
+                    retryRequest={refreshFunctions}
+                    selectedItem={selectedFunction}
+                    tableClassName="functions-table"
+                    tableHeaders={tableContent[0]?.content ?? []}
+                  >
+                    {tableContent.map(
+                      (tableItem, index) =>
+                        isRowRendered(virtualizationConfig, index) && (
+                          <FunctionsTableRow
+                            actionsMenu={actionsMenu}
+                            handleExpandRow={handleExpandRow}
+                            handleSelectItem={handleSelectFunction}
+                            rowIndex={index}
+                            key={index}
+                            rowItem={tableItem}
+                            selectedItem={selectedFunction}
+                            selectedRowData={selectedRowData}
+                            withQuickActions
+                          />
+                        )
+                    )}
+                  </Table>
+                </>
+              )}
             </div>
-            {functionsStore.loading ? (
-              <Loader />
-            ) : taggedFunctions.length === 0 ? (
-              <NoData
-                message={getNoDataMessage(
-                  filtersStore,
-                  filters,
-                  largeRequestErrorMessage,
-                  FUNCTIONS_PAGE
-                )}
-              />
-            ) : (
-              <>
-                <Table
-                  actionsMenu={actionsMenu}
-                  handleCancel={handleCancel}
-                  pageData={pageData}
-                  retryRequest={refreshFunctions}
-                  selectedItem={selectedFunction}
-                  tableHeaders={tableContent[0]?.content ?? []}
-                >
-                  {tableContent.map((tableItem, index) => {
-                    return (
-                      <FunctionsTableRow
-                        actionsMenu={actionsMenu}
-                        handleExpandRow={handleExpandRow}
-                        handleSelectItem={handleSelectFunction}
-                        rowIndex={index}
-                        key={index}
-                        rowItem={tableItem}
-                        selectedItem={selectedFunction}
-                        selectedRowData={selectedRowData}
-                        withQuickActions
-                      />
-                    )
-                  })}
-                </Table>
-              </>
-            )}
           </div>
         </div>
-      </div>
-      {functionsPanelIsOpen && (
-        <FunctionsPanel
-          closePanel={closePanel}
-          createFunctionSuccess={createFunctionSuccess}
-          defaultData={editableItem}
-          handleDeployFunctionFailure={handleDeployFunctionFailure}
-          handleDeployFunctionSuccess={handleDeployFunctionSuccess}
-          mode={editableItem ? PANEL_EDIT_MODE : PANEL_CREATE_MODE}
-          project={params.projectName}
-        />
-      )}
-      {confirmData && (
-        <ConfirmDialog
-          cancelButton={{
-            handler: confirmData.rejectHandler,
-            label: confirmData.btnCancelLabel,
-            variant: confirmData.btnCancelVariant
-          }}
-          closePopUp={confirmData.rejectHandler}
-          confirmButton={{
-            handler: () => confirmData.confirmHandler(confirmData.item),
-            label: confirmData.btnConfirmLabel,
-            variant: confirmData.btnConfirmVariant
-          }}
-          header={confirmData.header}
-          isOpen={confirmData}
-          message={confirmData.message}
-        />
-      )}
-      {convertedYaml.length > 0 && (
-        <YamlModal convertedYaml={convertedYaml} toggleConvertToYaml={toggleConvertedYaml} />
-      )}
-    </>
-  )
-}
+        {functionsPanelIsOpen && (
+          <FunctionsPanel
+            closePanel={closePanel}
+            createFunctionSuccess={createFunctionSuccess}
+            defaultData={editableItem}
+            handleDeployFunctionFailure={handleDeployFunctionFailure}
+            handleDeployFunctionSuccess={handleDeployFunctionSuccess}
+            mode={editableItem ? PANEL_EDIT_MODE : PANEL_CREATE_MODE}
+            project={params.projectName}
+          />
+        )}
+        {confirmData && (
+          <ConfirmDialog
+            cancelButton={{
+              handler: confirmData.rejectHandler,
+              label: confirmData.btnCancelLabel,
+              variant: confirmData.btnCancelVariant
+            }}
+            closePopUp={confirmData.rejectHandler}
+            confirmButton={{
+              handler: () => confirmData.confirmHandler(confirmData.item),
+              label: confirmData.btnConfirmLabel,
+              variant: confirmData.btnConfirmVariant
+            }}
+            header={confirmData.header}
+            isOpen={confirmData}
+            message={confirmData.message}
+          />
+        )}
+        {convertedYaml.length > 0 && (
+          <YamlModal convertedYaml={convertedYaml} toggleConvertToYaml={toggleConvertedYaml} />
+        )}
+      </>
+    )
+  }
+)
 
 FunctionsView.defaultPropTypes = {
   confirmData: null,
@@ -200,7 +211,8 @@ FunctionsView.propTypes = {
   selectedRowData: PropTypes.object.isRequired,
   tableContent: PropTypes.arrayOf(PropTypes.object).isRequired,
   taggedFunctions: PropTypes.arrayOf(PropTypes.object).isRequired,
-  toggleConvertedYaml: PropTypes.func.isRequired
+  toggleConvertedYaml: PropTypes.func.isRequired,
+  virtualizationConfig: VIRTUALIZATION_CONFIG.isRequired
 }
 
 export default FunctionsView
