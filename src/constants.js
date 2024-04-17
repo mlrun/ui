@@ -599,6 +599,7 @@ export const DEFAULT_IMAGE = 'default_image'
 export const DESCRIPTION = 'description'
 export const GOALS = 'goals'
 export const LABELS = 'labels'
+export const NODE_SELECTORS = 'default_function_node_selector'
 export const PARAMS = 'params'
 export const LOAD_SOURCE_ON_RUN = 'load_source_on_run'
 

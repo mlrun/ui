@@ -46,6 +46,7 @@ import {
   GOALS,
   LABELS,
   LOAD_SOURCE_ON_RUN,
+  NODE_SELECTORS,
   PARAMS,
   SOURCE_URL
 } from '../../constants'
@@ -100,12 +101,13 @@ const ProjectSettingsGeneral = ({
             [DESCRIPTION]: projectResponse.spec[DESCRIPTION],
             [GOALS]: projectResponse.spec[GOALS],
             [PARAMS]: parseObjectToKeyValue(projectResponse.spec[PARAMS]),
+            [NODE_SELECTORS]: parseObjectToKeyValue(projectResponse.spec[NODE_SELECTORS]),
             [LABELS]: parseChipsData(projectResponse.metadata[LABELS])
           }
 
           setLastEditedProjectValues(newInitial)
           formStateRef.current.form.restart(newInitial)
-        })
+        }, 10)
       })
       .catch(error => {
         const customErrorMsg =
@@ -169,6 +171,7 @@ const ProjectSettingsGeneral = ({
             [DEFAULT_IMAGE]: formStateLocal.values[DEFAULT_IMAGE] ?? '',
             [DESCRIPTION]: formStateLocal.values[DESCRIPTION] ?? '',
             [GOALS]: formStateLocal.values[GOALS] ?? '',
+            [NODE_SELECTORS]: generateObjectFromKeyValue(formStateLocal.values[NODE_SELECTORS]),
             [PARAMS]: generateObjectFromKeyValue(formStateLocal.values[PARAMS])
           },
           metadata: {
@@ -287,6 +290,17 @@ const ProjectSettingsGeneral = ({
                         key: getValidationRules('project.labels.key'),
                         value: getValidationRules('project.labels.value')
                       }}
+                    />
+                  </div>
+                  <div>
+                    <p className="settings__card-title">Node Selectors</p>
+                    <FormKeyValueTable
+                      addNewItemLabel="Add node selector"
+                      keyValidationRules={getValidationRules('nodeSelectors.key')}
+                      valueValidationRules={getValidationRules('nodeSelectors.value')}
+                      onExitEditModeCallback={updateProjectData}
+                      fieldsPath={NODE_SELECTORS}
+                      formState={formState}
                     />
                   </div>
                 </div>
