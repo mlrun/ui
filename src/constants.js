@@ -310,7 +310,7 @@ export const FUNCTION_RUN_KINDS = [FUNCTION_TYPE_JOB]
 
 /*=========== ARTIFACTS =============*/
 
-export const ARTIFACTS = 'artifacts'
+export const ARTIFACTS_TAB = 'artifacts'
 export const FILES_FILTERS = 'FILES_FILTERS'
 export const ARTIFACT_PREVIEW_TABLE_ROW_LIMIT = 100
 
