@@ -12,7 +12,11 @@ $monitorWorkflowsRowHeightExtended: $rowHeightSmall;
 }
 
 .monitor-workflows-table {
-  @include rowsHeight($monitorWorkflowsHeaderRowHeight, $monitorWorkflowsRowHeight, $monitorWorkflowsRowHeightExtended);
+  @include rowsHeight(
+    $monitorWorkflowsHeaderRowHeight,
+    $monitorWorkflowsRowHeight,
+    $monitorWorkflowsRowHeightExtended
+  );
 }
 
 :export {
