@@ -119,8 +119,6 @@ Feature: Files Page
   @MLA
   @passive
   @inProgress
-  @FAILED_TODO
-  #TODO: bug #2339 Fix [Artifacts] refine UI text for Register Artifact
   Scenario: MLA005 - Check all mandatory components on Register Artifacts Popup
     Given open url
     And wait load page
@@ -132,6 +130,7 @@ Feature: Files Page
     And wait load page
     Then click on "Register_File_Button" element on "Files" wizard
     Then verify if "Register_File_Popup" popup dialog appears
+    Then verify options in "Path_Scheme_Combobox" combobox in "Target_Path" on "Register_File_Popup" wizard should contains "Register_Artifact"."Combobox_Options"
     Then navigate back
     Then verify "Title" element not exists on "Register_File_Popup" wizard
     Then navigate forward
@@ -146,7 +145,6 @@ Feature: Files Page
     Then type value " " to "New_File_Name_Input" field on "Register_File_Popup" wizard
     Then verify "New_File_Name_Input" on "Register_File_Popup" wizard should display options "Input_Hint"."Artifact_Name_Hint"
     Then verify "New_File_Name_Input" options rules on form "Register_File_Popup" wizard
-    Then verify options in "Path_Scheme_Combobox" combobox in "Target_Path" on "Register_File_Popup" wizard should contains "Register_Artifact"."Combobox_Options"
     When select "V3IO" option in "Path_Scheme_Combobox" combobox on "Target_Path" accordion on "Register_File_Popup" wizard
     When type value "  " to "Path_Scheme_Combobox" field on "Target_Path" on "Register_File_Popup" wizard
     Then verify "Path_Scheme_Combobox" element in "Target_Path" on "Register_File_Popup" wizard should display warning "Input_Hint"."V3IO_Path_Hint"

@@ -56,20 +56,9 @@ async function getTableRows(driver, table) {
   return await arr.length
 }
 
-async function getHtmlTag(driver, table) {
-  const arr = await driver
-    .findElements(table)
-    .then(function(elements) {
-      return Promise.all(elements.map(element => element))
-    })
-
-  return await arr.length
-}
-
 const action = {
   getColumnValues: getColumnValues,
   getTableRows: getTableRows,
-  getHtmlTag: getHtmlTag,
   isContainsValueInColumn: async function(driver, table, columnName, value) {
     const arr = await getColumnValues(driver, table, columnName)
     expect(arr.includes(value)).equal(true, `Column values [${arr}] is not equal with "${value}" `)

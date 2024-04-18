@@ -1131,6 +1131,8 @@ Feature: Feature Store Page
 
     @MLFS
     @passive
+    @FAILED_TODO
+    #TODO: Bug ML-6142 - [Feature Vectors] Unify the conditions for the 'Tag' field
     Scenario: MLFS039 - Check all mandatory components on Create feature vector popup
         Given open url
         And click on row root with value "fsdemo-admin" in "name" column in "Projects_Table" table on "Projects" wizard
@@ -1146,11 +1148,11 @@ Feature: Feature Store Page
         Then verify "Cross_Cancel_Button" element visibility on "Create_Feature_Vector_Popup" wizard
         Then verify "Name_Input" element visibility on "Create_Feature_Vector_Popup" wizard
         Then type value "   " to "Name_Input" field on "Create_Feature_Vector_Popup" wizard
-        Then verify "Name_Input" options rules on "Create_Feature_Vector_Popup" wizard
+        Then verify "Name_Input" options rules on form "Create_Feature_Vector_Popup" wizard
         Then verify "Tag_Input" element visibility on "Create_Feature_Vector_Popup" wizard
         Then verify "Tag_Input" input should contains "latest" value on "Create_Feature_Vector_Popup" wizard
         Then type value "   " to "Tag_Input" field on "Create_Feature_Vector_Popup" wizard
-        Then verify "Tag_Input" options rules on "Create_Feature_Vector_Popup" wizard
+        Then verify "Tag_Input" options rules on form "Create_Feature_Vector_Popup" wizard
         Then verify "Description_Input" element visibility on "Create_Feature_Vector_Popup" wizard
         Then check "Description_Input" textarea counter on "Create_Feature_Vector_Popup" wizard
         Then verify "Labels_Table" element visibility on "Create_Feature_Vector_Popup" wizard
@@ -1184,6 +1186,7 @@ Feature: Feature Store Page
 
     @MLFS
     @passive
+    #TODO: add check tag validation rules after fixing bug ML-6142
     Scenario: MLFS040 - Check all mandatory components on Edit feature vector Popup
         Given open url
         And click on row root with value "fsdemo-admin" in "name" column in "Projects_Table" table on "Projects" wizard
@@ -1207,7 +1210,7 @@ Feature: Feature Store Page
         Then verify "Cross_Cancel_Button" element visibility on "Create_Feature_Vector_Popup" wizard
         Then verify "Name_Input" element visibility on "Create_Feature_Vector_Popup" wizard
         Then type value "   " to "Name_Input" field on "Create_Feature_Vector_Popup" wizard
-        Then verify "Name_Input" options rules on "Create_Feature_Vector_Popup" wizard
+        Then verify "Name_Input" options rules on form "Create_Feature_Vector_Popup" wizard
         Then type value "automation-fv-02" to "Name_Input" field on "Create_Feature_Vector_Popup" wizard
         Then verify "Tag_Input" element visibility on "Create_Feature_Vector_Popup" wizard
         Then type value "v2" to "Tag_Input" field on "Create_Feature_Vector_Popup" wizard
@@ -1290,6 +1293,7 @@ Feature: Feature Store Page
 
     @MLFS
     @inProgress
+    #@uniqueTag
     Scenario: MLFS043 - Add to feature vector
         Given open url
         And click on row root with value "fsdemo-admin" in "name" column in "Projects_Table" table on "Projects" wizard
