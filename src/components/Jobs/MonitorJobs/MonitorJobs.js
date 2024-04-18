@@ -178,6 +178,9 @@ const MonitorJobs = ({ fetchAllJobRuns, fetchJobs }) => {
         }
       } else {
         filters = {
+          name: filtersStore.name,
+          state: filtersStore.state,
+          labels: filtersStore.labels,
           dates: {
             value: dateFilter,
             isPredefined: false
@@ -246,6 +249,7 @@ const MonitorJobs = ({ fetchAllJobRuns, fetchJobs }) => {
             hidden={Boolean(params.jobId)}
             onChange={refreshJobs}
             page={JOBS_PAGE}
+            tab={MONITOR_JOBS_TAB}
             withoutExpandButton
             enableAutoRefresh
           />
