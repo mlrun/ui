@@ -137,7 +137,7 @@ const artifactsPreviewHeader = {
 }
 
 const createFeatureVectorLabelsTable = {
-  root: '.new-feature-vector__labels-row .chips-cell',
+  root: '[data-testid="labels-chips"] .chips-cell',
   header: {},
   body: {
     root: '.chips-wrapper',
@@ -767,7 +767,7 @@ module.exports = {
       )
     ),
     Run_Details_Labels_Value: By.css ('.job-wizard__run-details .form-row:nth-of-type(4) .chips-wrapper [id="runDetails.labels[0].value"]'),
-    Close_Label_Button: By.css('.job-wizard__run-details .form-row:nth-of-type(4) .chips .chips-wrapper .edit-chip__icon-close'),
+    Close_Label_Button: By.css('.job-wizard__run-details .form-row:nth-of-type(4) .chips .chips-wrapper .item-icon-close'),
     Image_Name_Input_Run_Details: inputGroup(
       generateInputGroup(
         '.job-wizard__run-details > div.form-field-input .form-field__wrapper',
@@ -779,14 +779,6 @@ module.exports = {
     Image_Name_Text_Run_Details: By.css('.job-wizard__run-details .warning-text'),
     Data_Inputs_Headers: commonTable(dataInputsHeaders),
     Run_Name_Field: By.css('.form-row .form-field-input .form-field__wrapper input'),
-    Run_Name_Input: inputGroup(
-      generateInputGroup(
-        '.form-row .form-field-input .form-field__wrapper',
-        false,
-        true,
-        '.form-field__icons svg'
-      )
-    ),
     Version_Dropdown: dropdownComponent(
       generateDropdownGroup('.form-col-1:nth-of-type(2)', '.form-field-select', '.form-field__select-value', false, false)
     ),
@@ -1417,12 +1409,12 @@ module.exports = {
     Title: commonTitle,
     Cross_Cancel_Button: commonCrossCancelButton,
     Name_Input: inputGroup(
-      generateInputGroup('.pop-up-dialog .vector-name-wrapper', true, '.input__warning svg', true)
+      generateInputGroup('.pop-up-dialog [data-testid="name-form-field-input"] .form-field__wrapper', true, '.form-field__warning svg', true)
     ),
     Tag_Input: inputGroup(
-      generateInputGroup('.pop-up-dialog .vector-tag-wrapper', true, '.input__warning svg', true)
+      generateInputGroup('.pop-up-dialog [data-testid="tag-form-field-input"] .form-field__wrapper', true, '.form-field__warning svg', true)
     ),
-    Description_Input: textAreaGroup(generateTextAreaGroup('.pop-up-dialog .text-area-wrapper', '.text-area__counter')),
+    Description_Input: textAreaGroup(generateTextAreaGroup('.pop-up-dialog .new-feature-vector__description-row .form-field__wrapper', '.text-area__counter')),
     Labels_Table: commonTable(createFeatureVectorLabelsTable),
     Cancel_Button: commonCancelButton,
     Create_Button: commonConfirmButton

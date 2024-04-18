@@ -22,6 +22,7 @@ const inputWithAutocomplete = require('./input-with-autocomplete.component')
 
 module.exports = {
   root: By.css('nav.breadcrumbs'),
+  projectsPageLabel: By.css('.breadcrumbs__item:nth-of-type(1)'),
   projectLabel: By.css('.breadcrumbs__item:nth-of-type(3)'),
   tabLabel: By.css('.breadcrumbs__item:nth-of-type(5)'),
   project: {
