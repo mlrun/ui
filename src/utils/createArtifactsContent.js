@@ -260,7 +260,8 @@ export const createModelsRowData = (
 
   return {
     data: {
-      ...artifact
+      ...artifact,
+      showExpandButton
     },
     content
   }
@@ -271,7 +272,8 @@ export const createFilesRowData = (artifact, project, frontendSpec, showExpandBu
 
   return {
     data: {
-      ...artifact
+      ...artifact,
+      showExpandButton
     },
     content: [
       {
@@ -500,7 +502,8 @@ export const createDatasetsRowData = (artifact, project, frontendSpec, showExpan
 
   return {
     data: {
-      ...artifact
+      ...artifact,
+      showExpandButton
     },
     content: [
       {

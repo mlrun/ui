@@ -180,7 +180,7 @@ const Files = () => {
   )
 
   const actionsMenu = useMemo(
-    () => file =>
+    () => (file, menuPosition) =>
       generateActionsMenu(
         file,
         frontendSpec,
@@ -189,7 +189,8 @@ const Files = () => {
         handleAddTag,
         params.projectName,
         handleRefresh,
-        filesFilters
+        filesFilters,
+        menuPosition
       ),
     [
       dispatch,

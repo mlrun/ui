@@ -20,7 +20,10 @@ such restriction.
 import React from 'react'
 
 import {
+  AM_PARENT_ROW,
+  AM_PARENT_ROW_EXPANDED,
   ARTIFACTS_TAB,
+  ARTIFACT_OTHER_TYPE,
   ARTIFACT_TYPE,
   FILES_PAGE,
   FILES_TAB,
@@ -220,7 +223,8 @@ export const generateActionsMenu = (
   handleAddTag,
   projectName,
   handleRefresh,
-  datasetsFilters
+  datasetsFilters,
+  menuPosition
 ) => {
   const isTargetPathValid = getIsTargetPathValid(file ?? {}, frontendSpec)
   const downloadPath = `${file?.target_path}${file?.model_file || ''}`
@@ -229,11 +233,13 @@ export const generateActionsMenu = (
     [
       {
         label: 'Add a tag',
+        hidden: menuPosition === AM_PARENT_ROW_EXPANDED,
         icon: <TagIcon />,
         onClick: handleAddTag
       },
       {
         label: 'Download',
+        hidden: menuPosition === AM_PARENT_ROW_EXPANDED,
         icon: <DownloadIcon />,
         onClick: file => {
           dispatch(
@@ -248,17 +254,20 @@ export const generateActionsMenu = (
       },
       {
         label: 'Copy URI',
+        hidden: menuPosition === AM_PARENT_ROW_EXPANDED,
         icon: <Copy />,
         onClick: file => copyToClipboard(generateUri(file, ARTIFACTS_TAB), dispatch)
       },
       {
         label: 'View YAML',
+        hidden: menuPosition === AM_PARENT_ROW_EXPANDED,
         icon: <YamlIcon />,
         onClick: toggleConvertedYaml
       },
       {
         label: 'Delete',
         icon: <Delete />,
+        hidden: menuPosition?.startsWith?.(AM_PARENT_ROW),
         disabled: !file?.tag,
         tooltip: !file?.tag
           ? 'A tag is required to delete an artifact. Open the artifact, click on the edit icon, and assign a tag before proceeding with the deletion'
@@ -277,7 +286,32 @@ export const generateActionsMenu = (
                 file.tree,
                 handleRefresh,
                 datasetsFilters,
-                ARTIFACT_TYPE
+                ARTIFACT_TYPE,
+              )
+            }
+          )
+      },
+      {
+        label: 'Delete all',
+        icon: <Delete />,
+        hidden: !menuPosition?.startsWith?.(AM_PARENT_ROW),
+        className: 'danger',
+        onClick: () =>
+          openDeleteConfirmPopUp(
+            'Delete artifact?',
+            `Do you want to delete all versions of the artifact "${file.db_key}"? Deleted artifacts can not be restored.`,
+            () => {
+              handleDeleteArtifact(
+                dispatch,
+                projectName,
+                file.db_key,
+                file.tag,
+                file.tree,
+                handleRefresh,
+                datasetsFilters,
+                ARTIFACT_TYPE,
+                true,
+                ARTIFACT_OTHER_TYPE
               )
             }
           )

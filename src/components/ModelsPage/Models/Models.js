@@ -227,7 +227,7 @@ const Models = ({ fetchModelFeatureVector }) => {
   )
 
   const actionsMenu = useMemo(
-    () => model =>
+    () => (model, menuPosition) =>
       generateActionsMenu(
         model,
         frontendSpec,
@@ -237,7 +237,8 @@ const Models = ({ fetchModelFeatureVector }) => {
         params.projectName,
         handleRefresh,
         modelsFilters,
-        handleDeployModel
+        handleDeployModel,
+        menuPosition
       ),
     [
       dispatch,
