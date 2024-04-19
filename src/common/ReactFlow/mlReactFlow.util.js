@@ -49,13 +49,7 @@ export const getLayoutedElements = (nodes, edges, direction = 'TB') => {
     node.targetPosition = isHorizontal ? 'left' : 'top'
     node.sourcePosition = isHorizontal ? 'right' : 'bottom'
 
-    node.className = classnames(
-      node.className,
-      node.data.subType,
-      node.data.shape && node.data.shape,
-      node.data.isSelectable && 'selectable',
-      node.data.withOpacity && 'with-opacity'
-    )
+    node.className = getNodeClassName(node)
 
     node.style = {
       width: elWidth,
@@ -85,6 +79,16 @@ export const getLayoutedElements = (nodes, edges, direction = 'TB') => {
   })
 
   return [layoutedNodes, layoutedEdges]
+}
+
+export const getNodeClassName = (node) => {
+  return classnames(
+    node.className,
+    node.data.subType,
+    node.data.shape && node.data.shape,
+    node.data.isSelectable && 'selectable',
+    node.data.withOpacity && 'with-opacity'
+  )
 }
 
 // this helper function returns the intersection point
