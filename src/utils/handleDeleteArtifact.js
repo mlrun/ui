@@ -32,12 +32,12 @@ export const handleDeleteArtifact = (
   refreshArtifacts,
   filters,
   artifactType,
-  allVersions,
-  category
+  category,
+  isDeleteAll
 ) => {
   dispatch(
-    allVersions
-      ? deleteArtifacts({ project, name: key, category: category || artifactType })
+    isDeleteAll
+      ? deleteArtifacts({ project, name: key, category })
       : deleteArtifact({ project, key, tag, tree })
   )
     .unwrap()
@@ -62,8 +62,8 @@ export const handleDeleteArtifact = (
           refreshArtifacts,
           filters,
           artifactType,
-          allVersions,
-          category
+          category,
+          isDeleteAll
         )
       )
     })

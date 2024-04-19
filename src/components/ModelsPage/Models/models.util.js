@@ -32,8 +32,8 @@ import {
   TAG_LATEST,
   FULL_VIEW_MODE,
   MODEL_TYPE,
-  AM_PARENT_ROW,
-  AM_PARENT_ROW_EXPANDED
+  ACTION_MENU_PARENT_ROW,
+  ACTION_MENU_PARENT_ROW_EXPANDED
 } from '../../../constants'
 import {
   fetchModel,
@@ -322,13 +322,13 @@ export const generateActionsMenu = (
     [
       {
         label: 'Add a tag',
-        hidden: menuPosition === AM_PARENT_ROW_EXPANDED,
+        hidden: menuPosition === ACTION_MENU_PARENT_ROW_EXPANDED,
         icon: <TagIcon />,
         onClick: handleAddTag
       },
       {
         label: 'Download',
-        hidden: menuPosition === AM_PARENT_ROW_EXPANDED,
+        hidden: menuPosition === ACTION_MENU_PARENT_ROW_EXPANDED,
         icon: <DownloadIcon />,
         onClick: model => {
           dispatch(
@@ -343,13 +343,13 @@ export const generateActionsMenu = (
       },
       {
         label: 'Copy URI',
-        hidden: menuPosition === AM_PARENT_ROW_EXPANDED,
+        hidden: menuPosition === ACTION_MENU_PARENT_ROW_EXPANDED,
         icon: <Copy />,
         onClick: model => copyToClipboard(generateUri(model, MODELS_TAB), dispatch)
       },
       {
         label: 'View YAML',
-        hidden: menuPosition === AM_PARENT_ROW_EXPANDED,
+        hidden: menuPosition === ACTION_MENU_PARENT_ROW_EXPANDED,
         icon: <YamlIcon />,
         onClick: toggleConvertedYaml
       },
@@ -358,7 +358,7 @@ export const generateActionsMenu = (
         icon: <Delete />,
         className: 'danger',
         disabled: !model?.tag,
-        hidden: menuPosition?.startsWith?.(AM_PARENT_ROW),
+        hidden: [ACTION_MENU_PARENT_ROW, ACTION_MENU_PARENT_ROW_EXPANDED].includes(menuPosition),
         tooltip: !model?.tag
           ? 'A tag is required to delete a model. Open the model, click on the edit icon, and assign a tag before proceeding with the deletion'
           : '',
@@ -383,7 +383,7 @@ export const generateActionsMenu = (
       {
         label: 'Delete all',
         icon: <Delete />,
-        hidden: !menuPosition?.startsWith?.(AM_PARENT_ROW),
+        hidden: ![ACTION_MENU_PARENT_ROW, ACTION_MENU_PARENT_ROW_EXPANDED].includes(menuPosition),
         className: 'danger',
         onClick: () =>
           openDeleteConfirmPopUp(
@@ -398,6 +398,7 @@ export const generateActionsMenu = (
                 model.tree,
                 handleRefresh,
                 modelsFilters,
+                MODEL_TYPE,
                 MODEL_TYPE,
                 true
               )

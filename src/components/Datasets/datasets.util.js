@@ -22,8 +22,8 @@ import React from 'react'
 import JobWizard from '../JobWizard/JobWizard'
 
 import {
-  AM_PARENT_ROW,
-  AM_PARENT_ROW_EXPANDED,
+  ACTION_MENU_PARENT_ROW,
+  ACTION_MENU_PARENT_ROW_EXPANDED,
   DATASET_TYPE,
   DATASETS_PAGE,
   DATASETS_TAB,
@@ -253,13 +253,13 @@ export const generateActionsMenu = (
   return [
     [
       {
-        hidden: menuPosition === AM_PARENT_ROW_EXPANDED,
+        hidden: menuPosition === ACTION_MENU_PARENT_ROW_EXPANDED,
         label: 'Add a tag',
         icon: <TagIcon />,
         onClick: handleAddTag
       },
       {
-        hidden: menuPosition === AM_PARENT_ROW_EXPANDED,
+        hidden: menuPosition === ACTION_MENU_PARENT_ROW_EXPANDED,
         label: 'Download',
         icon: <DownloadIcon />,
         onClick: dataset => {
@@ -274,13 +274,13 @@ export const generateActionsMenu = (
         }
       },
       {
-        hidden: menuPosition === AM_PARENT_ROW_EXPANDED,
+        hidden: menuPosition === ACTION_MENU_PARENT_ROW_EXPANDED,
         label: 'Copy URI',
         icon: <Copy />,
         onClick: dataset => copyToClipboard(generateUri(dataset, DATASETS_TAB), dispatch)
       },
       {
-        hidden: menuPosition === AM_PARENT_ROW_EXPANDED,
+        hidden: menuPosition === ACTION_MENU_PARENT_ROW_EXPANDED,
         label: 'View YAML',
         icon: <YamlIcon />,
         onClick: toggleConvertedYaml
@@ -289,12 +289,12 @@ export const generateActionsMenu = (
         label: 'Delete',
         icon: <Delete />,
         disabled: !dataset?.tag,
-        hidden: menuPosition?.startsWith?.(AM_PARENT_ROW),
+        hidden: [ACTION_MENU_PARENT_ROW, ACTION_MENU_PARENT_ROW_EXPANDED].includes(menuPosition),
         tooltip: !dataset?.tag
           ? 'A tag is required to delete a dataset. Open the dataset, click on the edit icon, and assign a tag before proceeding with the deletion'
           : '',
         className: 'danger',
-        onClick: () => 
+        onClick: () =>
           openDeleteConfirmPopUp(
             'Delete dataset?',
             `Do you want to delete the dataset "${dataset.db_key}"? Deleted datasets can not be restored.`,
@@ -315,7 +315,7 @@ export const generateActionsMenu = (
       {
         label: 'Delete all',
         icon: <Delete />,
-        hidden: !menuPosition?.startsWith?.(AM_PARENT_ROW),
+        hidden: ![ACTION_MENU_PARENT_ROW, ACTION_MENU_PARENT_ROW_EXPANDED].includes(menuPosition),
         className: 'danger',
         onClick: () =>
           openDeleteConfirmPopUp(
@@ -330,6 +330,7 @@ export const generateActionsMenu = (
                 dataset.tree,
                 handleRefresh,
                 datasetsFilters,
+                DATASET_TYPE,
                 DATASET_TYPE,
                 true
               )

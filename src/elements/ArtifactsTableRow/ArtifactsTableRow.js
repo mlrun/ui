@@ -29,8 +29,8 @@ import TableCell from '../TableCell/TableCell'
 
 import { ACTIONS_MENU } from '../../types'
 import {
-  AM_PARENT_ROW,
-  AM_PARENT_ROW_EXPANDED,
+  ACTION_MENU_PARENT_ROW,
+  ACTION_MENU_PARENT_ROW_EXPANDED,
   DETAILS_OVERVIEW_TAB,
   MODEL_ENDPOINTS_TAB
 } from '../../constants'
@@ -109,7 +109,7 @@ const ArtifactsTableRow = ({
                       <ActionsMenu
                         dataItem={rowItem.data}
                         menu={actionsMenu}
-                        menuPosition={AM_PARENT_ROW_EXPANDED}
+                        menuPosition={ACTION_MENU_PARENT_ROW_EXPANDED}
                       />
                     </td>
                   )}
@@ -215,7 +215,7 @@ const ArtifactsTableRow = ({
                 dataItem={rowItem.data}
                 withQuickActions={tab !== MODEL_ENDPOINTS_TAB}
                 menu={actionsMenu}
-                menuPosition={rowItem.data?.showExpandButton ? AM_PARENT_ROW : ''}
+                menuPosition={rowItem.content[0]?.showExpandButton ? ACTION_MENU_PARENT_ROW : ''}
               />
             </td>
           )}

@@ -622,5 +622,5 @@ export const USER_GROUP_ROLE = 'user_group'
 export const VIEWER_ROLE = 'Viewer'
 
 /*=========== ACTIONS MENU POSITION =============*/
-export const AM_PARENT_ROW = 'parent-row'
-export const AM_PARENT_ROW_EXPANDED = 'parent-row-expanded'
+export const ACTION_MENU_PARENT_ROW = 'action-menu_parent-row'
+export const ACTION_MENU_PARENT_ROW_EXPANDED = 'action-menu_parent-row-expanded'

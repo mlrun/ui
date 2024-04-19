@@ -20,8 +20,8 @@ such restriction.
 import React from 'react'
 
 import {
-  AM_PARENT_ROW,
-  AM_PARENT_ROW_EXPANDED,
+  ACTION_MENU_PARENT_ROW,
+  ACTION_MENU_PARENT_ROW_EXPANDED,
   ARTIFACTS_TAB,
   ARTIFACT_OTHER_TYPE,
   ARTIFACT_TYPE,
@@ -233,13 +233,13 @@ export const generateActionsMenu = (
     [
       {
         label: 'Add a tag',
-        hidden: menuPosition === AM_PARENT_ROW_EXPANDED,
+        hidden: menuPosition === ACTION_MENU_PARENT_ROW_EXPANDED,
         icon: <TagIcon />,
         onClick: handleAddTag
       },
       {
         label: 'Download',
-        hidden: menuPosition === AM_PARENT_ROW_EXPANDED,
+        hidden: menuPosition === ACTION_MENU_PARENT_ROW_EXPANDED,
         icon: <DownloadIcon />,
         onClick: file => {
           dispatch(
@@ -254,20 +254,20 @@ export const generateActionsMenu = (
       },
       {
         label: 'Copy URI',
-        hidden: menuPosition === AM_PARENT_ROW_EXPANDED,
+        hidden: menuPosition === ACTION_MENU_PARENT_ROW_EXPANDED,
         icon: <Copy />,
         onClick: file => copyToClipboard(generateUri(file, ARTIFACTS_TAB), dispatch)
       },
       {
         label: 'View YAML',
-        hidden: menuPosition === AM_PARENT_ROW_EXPANDED,
+        hidden: menuPosition === ACTION_MENU_PARENT_ROW_EXPANDED,
         icon: <YamlIcon />,
         onClick: toggleConvertedYaml
       },
       {
         label: 'Delete',
         icon: <Delete />,
-        hidden: menuPosition?.startsWith?.(AM_PARENT_ROW),
+        hidden: [ACTION_MENU_PARENT_ROW, ACTION_MENU_PARENT_ROW_EXPANDED].includes(menuPosition),
         disabled: !file?.tag,
         tooltip: !file?.tag
           ? 'A tag is required to delete an artifact. Open the artifact, click on the edit icon, and assign a tag before proceeding with the deletion'
@@ -294,7 +294,7 @@ export const generateActionsMenu = (
       {
         label: 'Delete all',
         icon: <Delete />,
-        hidden: !menuPosition?.startsWith?.(AM_PARENT_ROW),
+        hidden: ![ACTION_MENU_PARENT_ROW, ACTION_MENU_PARENT_ROW_EXPANDED].includes(menuPosition),
         className: 'danger',
         onClick: () =>
           openDeleteConfirmPopUp(
@@ -310,8 +310,8 @@ export const generateActionsMenu = (
                 handleRefresh,
                 datasetsFilters,
                 ARTIFACT_TYPE,
-                true,
-                ARTIFACT_OTHER_TYPE
+                ARTIFACT_OTHER_TYPE,
+                true
               )
             }
           )
