@@ -5,7 +5,7 @@ $datasetsRowHeight: $rowHeight;
 $datasetsHeaderRowHeight: $headerRowHeight;
 $datasetsRowHeightExtended: $rowHeightExtended;
 
-.files-table {
+.datasets-table {
   @include rowsHeight($datasetsHeaderRowHeight, $datasetsRowHeight, $datasetsRowHeightExtended);
 }
 

@@ -78,7 +78,7 @@ MlReactFlowNode.propTypes = {
     subLabel: PropTypes.string,
     isSelectable: PropTypes.bool,
     withOpacity: PropTypes.bool,
-    shape: PropTypes.oneOf([OVAL_NODE_SHAPE, ROUNDED_RECTANGLE_NODE_SHAPE]),
+    shape: PropTypes.oneOf([OVAL_NODE_SHAPE, ROUNDED_RECTANGLE_NODE_SHAPE, null]),
     sourceHandle: PropTypes.shape({
       tooltip: PropTypes.string,
       className: PropTypes.string

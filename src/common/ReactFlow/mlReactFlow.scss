@@ -3,14 +3,18 @@
 @mixin inputNode {
   color: $white;
   background-color: $hotPink;
+  fill: $hotPink;
   border-color: $hotPink;
+  stroke: $hotPink;
   box-shadow: 0 3px 14px rgba($hotPink, 0.34);
 }
 
 @mixin outputNode {
   color: $white;
   background-color: $malibu;
+  fill: $malibu;
   border-color: $malibu;
+  stroke: $malibu;
   box-shadow: 0 3px 14px rgba($malibu, 0.5);
 }
 
@@ -18,12 +22,14 @@
   color: $malibu;
   background-color: $white;
   border-color: $malibu;
+  stroke: $malibu;
 }
 
 @mixin secondaryNode {
   color: $orchid;
   background-color: $white;
   border-color: $orchid;
+  stroke: $orchid;
 }
 
 @mixin greyNode {
@@ -32,6 +38,62 @@
 
   &:not(.selected) {
     border-color: $bombay;
+    stroke: $bombay;
+  }
+}
+
+@mixin nodes {
+  &.input-node {
+    @include inputNode;
+  }
+
+  &.output-node {
+    @include outputNode;
+  }
+
+  &.primary-node {
+    @include primaryNode;
+  }
+
+  &.secondary-node {
+    @include secondaryNode;
+  }
+
+  &.grey-node {
+    @include greyNode;
+  }
+
+  &.react-flow__node-input {
+    @include inputNode;
+  }
+
+  &.react-flow__node-output {
+    @include outputNode;
+  }
+
+  &.react-flow__node-default {
+    @include primaryNode;
+  }
+}
+
+@mixin selectedNode {
+  &.selected {
+    border-color: $brightTurquoise;
+    stroke: $brightTurquoise;
+    box-shadow: 0 4px 20px rgba($brightTurquoise, 0.5);
+
+    &.status-error,
+    &.status-failed {
+      border-color: $burntSienna;
+      stroke: $burntSienna;
+      box-shadow: 0 4px 20px rgba($burntSienna, 0.5);
+    }
+
+    &.status-running {
+      border-color: $pictonBlue;
+      stroke: $pictonBlue;
+      box-shadow: 0 4px 20px rgba($pictonBlue, 0.5);
+    }
   }
 }
 
@@ -70,6 +132,8 @@
     }
 
     .react-flow__node-tip {
+      stroke: none;
+
       svg {
         width: 20px;
         height: 20px;
@@ -80,37 +144,7 @@
       }
     }
 
-    &.input-node {
-      @include inputNode;
-    }
-
-    &.output-node {
-      @include outputNode;
-    }
-
-    &.primary-node {
-      @include primaryNode;
-    }
-
-    &.secondary-node {
-      @include secondaryNode;
-    }
-
-    &.grey-node {
-      @include greyNode;
-    }
-
-    &.react-flow__node-input {
-      @include inputNode;
-    }
-
-    &.react-flow__node-output {
-      @include outputNode;
-    }
-
-    &.react-flow__node-default {
-      @include primaryNode;
-    }
+    @include nodes();
 
     &.oval-shape {
       border-radius: 50%;
@@ -128,21 +162,7 @@
       cursor: pointer;
     }
 
-    &.selected {
-      border-color: $brightTurquoise;
-      box-shadow: 0 4px 20px rgba($brightTurquoise, 0.5);
-
-      &.status-error,
-      &.status-failed {
-        border-color: $burntSienna;
-        box-shadow: 0 4px 20px rgba($burntSienna, 0.5);
-      }
-
-      &.status-running {
-        border-color: $pictonBlue;
-        box-shadow: 0 4px 20px rgba($pictonBlue, 0.5);
-      }
-    }
+    @include selectedNode();
 
     .react-flow__handle {
       width: 12px;
@@ -223,4 +243,25 @@
       }
     }
   }
+}
+
+.react-flow__minimap {
+  background-color: $gallery;
+
+  svg {
+    display: block;
+    width: 150px;
+    height: 110px;
+
+    path {
+      fill: rgba($black, 0.2);
+    }
+  }
+}
+
+.react-flow__minimap-node {
+  fill: $white;
+
+  @include nodes();
+  @include selectedNode()
 }
