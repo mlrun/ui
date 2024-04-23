@@ -23,24 +23,37 @@ import { useForm } from 'react-final-form'
 import { FormInput, FormSelect } from 'igz-controls/components'
 import FormOnChange from '../../../common/FormOnChange/FormOnChange'
 
-import { LABELS_FILTER } from '../../../constants'
-import { generateStatusFilter } from '../../FilterMenu/filterMenu.settings'
+import { LABELS_FILTER, PROJECT_FILTER } from '../../../constants'
+import { generateStatusFilter, generateTypeFilter } from '../../FilterMenu/filterMenu.settings'
 
 const JobsMonitoringFilters = () => {
   const form = useForm()
 
-  const handleLabelsChange = value => {
-    form.change(LABELS_FILTER, value || '')
+  const handleInputChange = (value, inputName) => {
+    form.change(inputName, value || '')
   }
 
   return (
     <div className="artifacts-filters">
       <div className="form-row">
-        <FormInput label="Labels" name={LABELS_FILTER} placeholder="key1,key2=value,..." />
-        <FormOnChange handler={handleLabelsChange} name={LABELS_FILTER} />
+        <FormInput name={PROJECT_FILTER} placeholder="Search by project name..." />
+        <FormOnChange
+          handler={value => handleInputChange(value, PROJECT_FILTER)}
+          name={PROJECT_FILTER}
+        />
       </div>
       <div className="form-row">
         <FormSelect label="Status" name="state" options={generateStatusFilter(false)} />
+      </div>
+      <div className="form-row">
+        <FormSelect label="Type" name="type" options={generateTypeFilter()} />
+      </div>
+      <div className="form-row">
+        <FormInput label="Labels" name={LABELS_FILTER} placeholder="key1,key2=value,..." />
+        <FormOnChange
+          handler={value => handleInputChange(value, LABELS_FILTER)}
+          name={LABELS_FILTER}
+        />
       </div>
     </div>
   )

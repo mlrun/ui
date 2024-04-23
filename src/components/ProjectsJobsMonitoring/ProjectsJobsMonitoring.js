@@ -30,6 +30,8 @@ import JobsMonitoringFilters from './JobsMonitoring/JobsMonitoringFilters'
 
 import { actionCreator, STATS_TOTAL_CARD, tabs } from './projectsJobsMotinoring.util'
 import {
+  FILTER_ALL_ITEMS,
+  JOB_KIND_LOCAL,
   JOBS_MONITORING_JOBS_TAB,
   JOBS_MONITORING_PAGE,
   JOBS_MONITORING_SCHEDULED_TAB,
@@ -104,6 +106,7 @@ const ProjectsJobsMonitoring = ({ fetchAllJobRuns, fetchJobFunction, fetchJobs }
       } else {
         setJobs([])
       }
+
       abortControllerRef.current = new AbortController()
 
       terminateAbortTasksPolling()
@@ -138,7 +141,18 @@ const ProjectsJobsMonitoring = ({ fetchAllJobRuns, fetchJobFunction, fetchJobs }
         params.jobName ?? false
       ).then(jobs => {
         if (jobs) {
-          const parsedJobs = jobs.map(job => parseJob(job))
+          const parsedJobs = jobs
+            .map(job => parseJob(job))
+            .filter(job => {
+              const type =
+                job.labels?.find(label => label.includes('kind:'))?.replace('kind: ', '') ??
+                JOB_KIND_LOCAL
+
+              return (
+                (!filters.type || filters.type === FILTER_ALL_ITEMS || type === filters.type) &&
+                (!filters.project || job.project.includes(filters.project.toLowerCase()))
+              )
+            })
           const responseAbortingJobs = parsedJobs.reduce((acc, job) => {
             if (job.state.value === 'aborting' && job.abortTaskId) {
               acc[job.abortTaskId] = {

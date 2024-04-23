@@ -81,7 +81,8 @@ import {
   FETCH_PROJECT_SECRETS_BEGIN,
   FETCH_PROJECT_SECRETS_FAILURE,
   FETCH_PROJECT_SECRETS_SUCCESS,
-  SET_PROJECT_SECRETS
+  SET_PROJECT_SECRETS,
+  SET_JOBS_MONITORING_DATA
 } from '../constants'
 import {
   CONFLICT_ERROR_STATUS_CODE,
@@ -579,6 +580,10 @@ const projectsAction = {
   removeProjectData: () => ({ type: REMOVE_PROJECT_DATA }),
   removeProjectSummary: () => ({ type: REMOVE_PROJECT_SUMMARY }),
   removeProjects: () => ({ type: REMOVE_PROJECTS }),
+  setJobsMonitoringData: data => ({
+    type: SET_JOBS_MONITORING_DATA,
+    payload: data
+  }),
   setProjectSecrets: secrets => ({
     type: SET_PROJECT_SECRETS,
     payload: secrets

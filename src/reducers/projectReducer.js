@@ -79,7 +79,8 @@ import {
   FETCH_PROJECT_SECRETS_BEGIN,
   FETCH_PROJECT_SECRETS_FAILURE,
   FETCH_PROJECT_SECRETS_SUCCESS,
-  SET_PROJECT_SECRETS
+  SET_PROJECT_SECRETS,
+  SET_JOBS_MONITORING_DATA
 } from '../constants'
 
 const initialState = {
@@ -772,6 +773,14 @@ const projectReducer = (state = initialState, { type, payload }) => {
         ...state,
         newProject: {
           error: null
+        }
+      }
+    case SET_JOBS_MONITORING_DATA:
+      return {
+        ...state,
+        jobsMonitoringData: {
+          ...state.jobsMonitoringData,
+          ...payload
         }
       }
     case SET_PROJECT_SECRETS: {

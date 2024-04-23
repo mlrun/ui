@@ -34,11 +34,7 @@ import {
   generateMonitoringStats
 } from '../../utils/generateMonitoringData'
 import { useFetchData } from '../../hooks/useFetchData.hook'
-import {
-  GROUP_BY_WORKFLOW,
-  JOBS_MONITORING_WORKFLOWS_TAB,
-  STATE_FILTER_ALL_ITEMS
-} from '../../constants'
+import { GROUP_BY_WORKFLOW, JOBS_MONITORING_WORKFLOWS_TAB, FILTER_ALL_ITEMS } from '../../constants'
 
 import { ReactComponent as ClockIcon } from 'igz-controls/images/clock.svg'
 
@@ -52,7 +48,7 @@ const WorkflowsCounters = () => {
     dates: {
       value: [new Date(moment().add(-1, 'days'))]
     },
-    state: STATE_FILTER_ALL_ITEMS
+    state: FILTER_ALL_ITEMS
   })
   const [groupedWorkflowsData, setGroupedWorkflowsData] = useState({
     all: [],

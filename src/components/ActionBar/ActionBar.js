@@ -53,7 +53,6 @@ const ActionBar = ({
   navigateLink,
   page,
   removeSelectedItem,
-  setContent,
   setSelectedRowData,
   tab,
   withRefreshButton
@@ -126,7 +125,6 @@ const ActionBar = ({
         dispatch(setFilters({ groupBy: GROUP_BY_NONE }))
       }
 
-      setContent([])
       removeSelectedItem && dispatch(removeSelectedItem({}))
       setSelectedRowData && setSelectedRowData({})
       handleRefresh({ name, ...filterMenuModal })
