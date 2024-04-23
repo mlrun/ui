@@ -69,19 +69,20 @@ const FeatureSetsPanelTargetStoreView = ({
   frontendSpecIsNotEmpty,
   handleAdvancedLinkClick,
   handleDiscardPathChange,
-  handleExternalOfflineKindPathOnBlur,
-  handleExternalOfflineKindPathOnFocus,
+  handleExternalOfflineKindInputOnChange,
+  handleExternalOfflineKindOnEditModeChange,
+  handleExternalOfflineKindPathOnApply,
+  handleExternalOfflineKindSelectOnChange,
+  handleExternalOfflineKindTypeChange,
   handleKeyBucketingNumberChange,
   handleOfflineKindPathChange,
   handleOnlineKindPathChange,
   handleOnlineKindTypeChange,
-  handleExternalOfflineKindTypeChange,
   handlePartitionColsOnBlur,
   handlePartitionColsOnChange,
   handlePartitionRadioButtonClick,
   handleSelectTargetKind,
   handleTimePartitioningGranularityChange,
-  handleUrlSelectOnChange,
   partitionRadioButtonsState,
   selectedPartitionKind,
   selectedTargetKind,
@@ -395,12 +396,15 @@ const FeatureSetsPanelTargetStoreView = ({
                       option.id !== MLRUN_STORAGE_INPUT_PATH_SCHEME &&
                       option.id !== V3IO_INPUT_PATH_SCHEME
                   )}
-                  disabled={featureStore.newFeatureSet.spec.passthrough}
                   defaultPath={externalOfflineTarget}
+                  disabled={featureStore.newFeatureSet.spec.passthrough}
+                  handleUrlInputOnChange={handleExternalOfflineKindInputOnChange}
+                  handleUrlOnApply={handleExternalOfflineKindPathOnApply}
+                  handleUrlOnEditModeChanged={handleExternalOfflineKindOnEditModeChange}
+                  handleUrlSelectOnChange={handleExternalOfflineKindSelectOnChange}
                   invalid={!validation.isExternalOfflineTargetPathValid}
-                  handleUrlOnBlur={handleExternalOfflineKindPathOnBlur}
-                  handleUrlOnFocus={handleExternalOfflineKindPathOnFocus}
-                  handleUrlSelectOnChange={handleUrlSelectOnChange}
+                  previewMaxWith={data.externalOffline.kind === PARQUET ? '337px' : '423px'}
+                  useActionButtons
                 />
                 {data.externalOffline.kind === PARQUET && (
                   <CheckBox
@@ -471,8 +475,7 @@ const FeatureSetsPanelTargetStoreView = ({
 }
 
 FeatureSetsPanelTargetStoreView.defualtProps = {
-  externalOfflineTarget: {},
-  handleUrlSelectOnChange: null
+  externalOfflineTarget: {}
 }
 
 FeatureSetsPanelTargetStoreView.propTypes = {
@@ -482,8 +485,10 @@ FeatureSetsPanelTargetStoreView.propTypes = {
   frontendSpecIsNotEmpty: PropTypes.bool.isRequired,
   handleAdvancedLinkClick: PropTypes.func.isRequired,
   handleDiscardPathChange: PropTypes.func.isRequired,
-  handleExternalOfflineKindPathOnBlur: PropTypes.func.isRequired,
-  handleExternalOfflineKindPathOnFocus: PropTypes.func.isRequired,
+  handleExternalOfflineKindInputOnChange: PropTypes.func.isRequired,
+  handleExternalOfflineKindOnEditModeChange: PropTypes.func.isRequired,
+  handleExternalOfflineKindPathOnApply: PropTypes.func.isRequired,
+  handleExternalOfflineKindSelectOnChange: PropTypes.func.isRequired,
   handleExternalOfflineKindTypeChange: PropTypes.func.isRequired,
   handleKeyBucketingNumberChange: PropTypes.func.isRequired,
   handleOfflineKindPathChange: PropTypes.func.isRequired,
@@ -494,7 +499,6 @@ FeatureSetsPanelTargetStoreView.propTypes = {
   handlePartitionRadioButtonClick: PropTypes.func.isRequired,
   handleSelectTargetKind: PropTypes.func.isRequired,
   handleTimePartitioningGranularityChange: PropTypes.func.isRequired,
-  handleUrlSelectOnChange: PropTypes.func,
   partitionRadioButtonsState: PropTypes.shape({
     parquet: PropTypes.string.isRequired,
     externalOffline: PropTypes.string.isRequired

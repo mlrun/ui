@@ -17,7 +17,7 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import React, { useState, useEffect, useCallback, useRef } from 'react'
+import React, { useState, useEffect, useLayoutEffect, useCallback, useRef } from 'react'
 import PropTypes from 'prop-types'
 
 import ComboboxView from './ComboboxView'
@@ -64,14 +64,14 @@ const Combobox = ({
   const comboboxRef = useRef()
   const inputRef = useRef()
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     if (inputDefaultValue.length > 0 && selectValue.id.length > 0 && inputValue.length === 0) {
       setInputValue(inputDefaultValue)
       inputOnChange(inputDefaultValue)
     }
   }, [inputDefaultValue, inputOnChange, inputValue.length, selectValue.id.length])
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     if (selectDefaultValue?.label.length > 0 && selectValue.label.length === 0) {
       setSelectValue(selectDefaultValue)
     }
@@ -97,7 +97,7 @@ const Combobox = ({
         if (showSelectDropdown) {
           setShowSelectDropdown(false)
 
-          if (selectValue.id.length === 0 && required) {
+          if (selectValue.id.length === 0 && required && onBlur) {
             setIsInvalid(true)
           }
 
@@ -107,7 +107,7 @@ const Combobox = ({
         if (showMatchesDropdown) {
           setShowMatchesDropdown(false)
 
-          if (inputValue.length === 0 && required) {
+          if (inputValue.length === 0 && required && onBlur) {
             setIsInvalid(true)
           }
 

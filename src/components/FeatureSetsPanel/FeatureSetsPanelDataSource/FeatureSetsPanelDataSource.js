@@ -30,6 +30,7 @@ import { MLRUN_STORAGE_INPUT_PATH_SCHEME } from '../../../constants'
 
 import { CSV, PARQUET } from './featureSetsPanelDataSource.util'
 import { isUrlInputValid } from '../UrlPath.utils'
+import { isEmpty } from 'lodash'
 
 const FeatureSetsPanelDataSource = ({
   featureStore,
@@ -103,12 +104,15 @@ const FeatureSetsPanelDataSource = ({
     setNewFeatureSetDataSourceUrl('')
   }
 
-  const handleUrlOnBlur = ({ selectValue, inputValue, urlData }) => {
+  const handleUrlOnApply = ({ selectValue, inputValue, urlData }) => {
+    let isUrlValid = true
+
     if (!isUrlInputValid(selectValue, inputValue, data.kind)) {
       setValidation(prevState => ({
         ...prevState,
         isUrlValid: false
       }))
+      isUrlValid = false
     } else {
       if (!validation.isUrlValid) {
         setValidation(prevState => ({
@@ -118,27 +122,31 @@ const FeatureSetsPanelDataSource = ({
       }
 
       setNewFeatureSetDataSourceUrl(`${selectValue}${inputValue}`)
+
+      setData(state => ({
+        ...state,
+        url: {
+          ...state.url,
+          ...urlData,
+          fullPath: `${selectValue}${inputValue}`
+        }
+      }))
     }
 
-    setData(state => ({
-      ...state,
-      url: {
-        ...state.url,
-        ...urlData,
-        fullPath: `${selectValue}${inputValue}`
-      }
-    }))
-
-    setDisableButtons(state => ({
-      ...state,
-      isUrlEditModeClosed: true
-    }))
+    return isUrlValid
   }
 
-  const handleUrlOnFocus = () => {
+  const handleUrlOnEditModeChange = useCallback((isEditModeActive) => {
     setDisableButtons(state => ({
       ...state,
-      isUrlEditModeClosed: false
+      isUrlEditModeClosed: !isEditModeActive
+    }))
+  }, [setDisableButtons])
+
+  const handleUrlInputOnChange = path => {
+    setValidation(state => ({
+      ...state,
+      isUrlValid: !isEmpty(path)
     }))
   }
 
@@ -147,15 +155,16 @@ const FeatureSetsPanelDataSource = ({
       data={data}
       featureStore={featureStore}
       handleKindOnChange={handleKindOnChange}
-      handleUrlOnBlur={handleUrlOnBlur}
-      handleUrlOnFocus={handleUrlOnFocus}
+      handleUrlInputOnChange={handleUrlInputOnChange}
+      handleUrlOnApply={handleUrlOnApply}
+      handleUrlOnEditModeChange={handleUrlOnEditModeChange}
       handleUrlSelectOnChange={handleUrlSelectOnChange}
       setData={setData}
       setNewFeatureSetDataSourceParseDates={setNewFeatureSetDataSourceParseDates}
+      setNewFeatureSetSchedule={setNewFeatureSetSchedule}
       setShowSchedule={setShowSchedule}
       setValidation={setValidation}
       showSchedule={showSchedule}
-      setNewFeatureSetSchedule={setNewFeatureSetSchedule}
       validation={validation}
     />
   )

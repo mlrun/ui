@@ -1,0 +1,45 @@
+@import '~igz-controls/scss/colors';
+
+.url-path {
+  display: flex;
+  flex: 1;
+  align-items: center;
+  width: 100%;
+  flex-wrap: nowrap;
+
+  &-preview {
+    margin-left: 25px;
+
+    &__text {
+      width: 100%;
+    }
+
+    &__disabled {
+      background-color: transparent;
+      color: $spunPearl;
+    }
+
+    &__required {
+      color: $amaranth;
+    }
+
+    &__actions {
+      display: flex;
+      justify-content: flex-end;
+      min-width: 75px;
+      margin-right: 5px;
+    }
+  }
+
+  &-actions {
+    display: flex;
+    justify-content: flex-end;
+    min-width: 75px;
+    margin-right: 5px;
+
+    &__apply-btn {
+      min-width: 30px;
+      height: 30px;
+    }
+  }
+}
