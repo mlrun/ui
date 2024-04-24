@@ -72,7 +72,18 @@ const ProjectsJobsMonitoring = ({ fetchAllJobRuns, fetchJobFunction, fetchJobs }
   const artifactsStore = useSelector(store => store.artifactsStore)
 
   const jobsFilters = useMemo(
-    () => [{ type: NAME_FILTER, label: 'Name:', initialValue: '', hidden: params.jobName }],
+    () => [
+      { type: NAME_FILTER, label: 'Name:', initialValue: '', hidden: params.jobName },
+      {
+        type: 'dates',
+        initialValue: {
+          value: datePickerPastOptions
+            .find(option => option.id === PAST_24_HOUR_DATE_OPTION)
+            .handler(),
+          isPredefined: true
+        }
+      }
+    ],
     [params.jobName]
   )
 
@@ -116,21 +127,10 @@ const ProjectsJobsMonitoring = ({ fetchAllJobRuns, fetchJobFunction, fetchJobs }
         'partition-by': 'name',
         'partition-sort-by': 'updated'
       }
-      //TODO: remove past 24 hours default filter when date filters is ready
-      const past24HourOption = datePickerPastOptions.find(
-        option => option.id === PAST_24_HOUR_DATE_OPTION
-      )
-      const newFilters = {
-        dates: {
-          value: past24HourOption.handler(),
-          isPredefined: past24HourOption.isPredefined
-        },
-        ...filters
-      }
 
       fetchData(
         params.jobName ? selectedRunProject || '*' : '*',
-        newFilters,
+        filters,
         {
           ui: {
             controller: abortControllerRef.current,

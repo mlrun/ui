@@ -142,11 +142,11 @@ const jobsActions = {
   abortJobSuccess: () => ({
     type: ABORT_JOB_SUCCESS
   }),
-  deleteAllJobRuns: job => dispatch => {
+  deleteAllJobRuns: (project, job) => dispatch => {
     dispatch(jobsActions.deleteAllJobRunsBegin())
 
     return jobsApi
-      .deleteAllJobRuns(job.project, job.name)
+      .deleteAllJobRuns(project, job.name)
       .then(() => dispatch(jobsActions.deleteAllJobRunsSuccess()))
       .catch(error => {
         dispatch(jobsActions.deleteAllJobRunsFailure(error.message))

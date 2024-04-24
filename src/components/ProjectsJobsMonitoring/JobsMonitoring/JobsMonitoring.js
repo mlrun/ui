@@ -67,6 +67,7 @@ const JobsMonitoring = () => {
   useEffect(() => {
     if (isEmpty(selectedJob) && !params.jobId && !dataIsLoaded) {
       refreshJobs({
+        dates: filtersStore.dates,
         state: filtersStore.state
       })
       setDataIsLoaded(true)
@@ -74,6 +75,7 @@ const JobsMonitoring = () => {
   }, [
     dataIsLoaded,
     dispatch,
+    filtersStore.dates,
     filtersStore.state,
     isJobDataEmpty,
     params.jobId,

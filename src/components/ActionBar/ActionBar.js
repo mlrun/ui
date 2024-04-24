@@ -22,6 +22,7 @@ import { Form } from 'react-final-form'
 import { useDispatch, useSelector } from 'react-redux'
 import { isEmpty } from 'lodash'
 import { createForm } from 'final-form'
+import { Field } from 'react-final-form'
 import arrayMutators from 'final-form-arrays'
 import PropTypes from 'prop-types'
 import { useNavigate, useParams } from 'react-router-dom'
@@ -29,6 +30,7 @@ import { useNavigate, useParams } from 'react-router-dom'
 import FilterMenuModal from '../FilterMenuModal/FilterMenuModal'
 import NameFilter from '../../common/NameFilter/NameFilter'
 import { RoundedIcon, Button } from 'igz-controls/components'
+import DatePicker from '../../common/DatePicker/DatePicker'
 
 import { setFieldState } from 'igz-controls/utils/form.util'
 import { removeFilters, setFilters } from '../../reducers/filtersReducer'
@@ -40,6 +42,7 @@ import {
   REQUEST_CANCELED,
   TAG_FILTER_ALL_ITEMS
 } from '../../constants'
+import { PAST_24_HOUR_DATE_OPTION } from '../../utils/datePicker.util'
 
 import { ReactComponent as RefreshIcon } from 'igz-controls/images/refresh.svg'
 
@@ -63,12 +66,15 @@ const ActionBar = ({
   const dispatch = useDispatch()
   const params = useParams()
   const navigate = useNavigate()
+
   const formInitialValues = useMemo(() => {
     const values = {}
+
     filters.map(filter => (values[filter.type] = filter.initialValue))
 
     return values
   }, [filters])
+
   const formRef = React.useRef(
     createForm({
       initialValues: formInitialValues,
@@ -104,7 +110,7 @@ const ActionBar = ({
     return handleChangeFilters
   }
 
-  const applyChanges = async (name, filterMenuModal) => {
+  const applyChanges = async (formValues, filterMenuModal) => {
     const filtersHelperResult = await filtersHelper(changes, dispatch)
 
     if (filtersHelperResult) {
@@ -127,7 +133,7 @@ const ActionBar = ({
 
       removeSelectedItem && dispatch(removeSelectedItem({}))
       setSelectedRowData && setSelectedRowData({})
-      handleRefresh({ name, ...filterMenuModal })
+      handleRefresh({ ...formValues, ...filterMenuModal })
     }
   }
 
@@ -136,17 +142,48 @@ const ActionBar = ({
       cancelRequest(REQUEST_CANCELED)
     } else {
       handleRefresh({
-        name: formState.values.name,
+        ...formState.values,
         ...filtersStore.filterMenuModal[filterMenuName].values
       })
     }
+  }
+
+  const handleDateChange = (dates, isPredefined, input, formState) => {
+    const generatedDates = [...dates]
+
+    if (generatedDates.length === 1) {
+      generatedDates.push(new Date())
+    }
+
+    dispatch(
+      setFilters({
+        dates: {
+          value: generatedDates,
+          isPredefined
+        }
+      })
+    )
+    applyChanges(
+      {
+        ...formState.values,
+        dates: {
+          value: generatedDates,
+          isPredefined
+        }
+      },
+      filterMenuModal.values
+    )
+    input.onChange({
+      value: generatedDates,
+      isPredefined
+    })
   }
 
   useEffect(() => {
     return () => {
       dispatch(removeFilters())
     }
-  }, [params.projectName, params.jobName, params.name, page, tab, dispatch])
+  }, [params.projectName, params.name, page, tab, dispatch])
 
   return (
     <Form form={formRef.current} onSubmit={() => {}}>
@@ -158,11 +195,40 @@ const ActionBar = ({
                 case NAME_FILTER:
                   return (
                     !filter.hidden && (
-                      <NameFilter
-                        applyChanges={value => applyChanges(value, filterMenuModal.values)}
-                        key={filter.type}
-                      />
+                      <div className="action-bar__filters-item" key={filter.type}>
+                        <NameFilter
+                          applyChanges={value =>
+                            applyChanges(
+                              { ...formState.values, name: value },
+                              filterMenuModal.values
+                            )
+                          }
+                        />
+                      </div>
                     )
+                  )
+                case 'dates':
+                  return (
+                    <div className="action-bar__filters-item" key={filter.type}>
+                      <Field name={'dates'}>
+                        {({ input }) => {
+                          return (
+                            <DatePicker
+                              className="details-date-picker"
+                              date={input.value.value[0]}
+                              dateTo={input.value.value[1]}
+                              selectedOptionId={PAST_24_HOUR_DATE_OPTION}
+                              label=""
+                              onChange={(dates, isPredefined) =>
+                                handleDateChange(dates, isPredefined, input, formState)
+                              }
+                              type="date-range-time"
+                              withLabels
+                            />
+                          )
+                        }}
+                      </Field>
+                    </div>
                   )
                 default:
                   return null
@@ -170,9 +236,7 @@ const ActionBar = ({
             })}
             {filterMenuModal && (
               <FilterMenuModal
-                applyChanges={filterMenuModal =>
-                  applyChanges(formState.values.name, filterMenuModal)
-                }
+                applyChanges={filterMenuModal => applyChanges(formState.values, filterMenuModal)}
                 filterMenuName={filterMenuName}
                 initialValues={filterMenuModalInitialState}
                 restartFormTrigger={tab}

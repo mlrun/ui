@@ -105,6 +105,14 @@ body {
       align-items: center;
       justify-content: flex-end;
       width: 100%;
+
+      &__filters {
+        &-item {
+          &:not(:last-child) {
+            margin: 0 15px 0 0;
+          }
+        }
+      }
     }
   }
 }
