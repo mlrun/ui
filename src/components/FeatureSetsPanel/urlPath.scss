@@ -3,20 +3,29 @@
 .url-path {
   display: flex;
   flex: 1;
-  align-items: center;
-  width: 100%;
   flex-wrap: nowrap;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
 
   &-preview {
     margin-left: 25px;
 
-    &__text {
-      width: 100%;
+    &.external-offline_with-parquet {
+      max-width: 337px;
+    }
+
+    &.external-offline {
+      max-width: 423px;
+    }
+
+    &.data-source {
+      max-width: 505px;
     }
 
     &__disabled {
-      background-color: transparent;
       color: $spunPearl;
+      background-color: transparent;
     }
 
     &__required {

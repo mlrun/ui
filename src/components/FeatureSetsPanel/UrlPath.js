@@ -54,12 +54,12 @@ const UrlPath = ({
   handleUrlOnApply,
   handleUrlOnBlur,
   handleUrlOnDiscard,
-  handleUrlOnEditModeChanged,
+  handleUrlOnEditModeChange,
   handleUrlOnFocus,
   handleUrlSelectOnChange,
   invalid,
-  previewMaxWith,
-  useActionButtons
+  previewClassName,
+  withActionButtons
 }) => {
   const [urlData, setUrlData] = useState({
     artifact: '',
@@ -80,7 +80,7 @@ const UrlPath = ({
   const [urlArtifactReferencePathEntered, setUrlArtifactReferencePathEntered] = useState(false)
   const [inputDefaultValue, setInputDefaultValue] = useState('')
   const [editMode, setEditMode] = useState({
-    isActive: false,
+    isActive: isEmpty(defaultPath.path),
     savedUrlData: {
       artifact: '',
       artifactReference: '',
@@ -191,17 +191,17 @@ const UrlPath = ({
   ])
 
   useEffect(() => {
-    useActionButtons && handleUrlOnEditModeChanged(editMode.isActive)
-  }, [editMode.isActive, useActionButtons, handleUrlOnEditModeChanged])
+    withActionButtons && handleUrlOnEditModeChange(editMode.isActive)
+  }, [editMode.isActive, withActionButtons, handleUrlOnEditModeChange])
 
   useEffect(() => {
-    if (useActionButtons && invalid) {
+    if (withActionButtons && invalid) {
       setEditMode(prevState => ({
         ...prevState,
         isActive: true
       }))
     }
-  }, [invalid, useActionButtons, setEditMode])
+  }, [invalid, withActionButtons, setEditMode])
 
   const generatedPathTips = useMemo(() => {
     const pathTipsList = pathTips(urlData.projectItemType)
@@ -298,11 +298,8 @@ const UrlPath = ({
     })
   }
 
-  return !editMode.isActive && useActionButtons ? (
-    <div
-      className="url-path url-path-preview"
-      style={previewMaxWith ? { maxWidth: previewMaxWith } : {}}
-    >
+  return !editMode.isActive && withActionButtons ? (
+    <div className={classNames('url-path url-path-preview', previewClassName)}>
       <Tooltip
         className={classNames('url-path-preview__text', disabled && 'url-path-preview__disabled')}
         template={<TextTooltipTemplate text={`${`${urlData.pathType}${urlData.path}` || URL}`} />}
@@ -341,7 +338,7 @@ const UrlPath = ({
         matches={urlData.pathType === MLRUN_STORAGE_INPUT_PATH_SCHEME ? comboboxMatches : []}
         maxSuggestedMatches={3}
         onBlur={
-          useActionButtons
+          withActionButtons
             ? null
             : (selectValue, inputValue) => handleUrlOnBlur({ selectValue, inputValue, urlData })
         }
@@ -353,7 +350,7 @@ const UrlPath = ({
         selectOnChange={handleUrlPathTypeChange}
         selectPlaceholder={URL}
       />
-      {useActionButtons && (
+      {withActionButtons && (
         <div className="url-path-actions">
           <RoundedIcon onClick={handleApplyClick} tooltipText="Apply" disabled={invalid}>
             <Checkmark className="url-path-actions__apply-btn" />
@@ -383,12 +380,12 @@ UrlPath.defaultProps = {
   handleUrlOnApply: () => {},
   handleUrlOnBlur: () => {},
   handleUrlOnDiscard: () => {},
-  handleUrlOnEditModeChanged: () => {},
+  handleUrlOnEditModeChange: () => {},
   handleUrlOnFocus: () => {},
   handleUrlSelectOnChange: () => {},
   invalid: false,
-  previewMaxWith: null,
-  useActionButtons: false
+  previewClassName: '',
+  withActionButtons: false
 }
 
 UrlPath.propTypes = {
@@ -404,12 +401,12 @@ UrlPath.propTypes = {
   handleUrlOnApply: PropTypes.func,
   handleUrlOnBlur: PropTypes.func,
   handleUrlOnDiscard: PropTypes.func,
-  handleUrlOnEditModeChanged: PropTypes.func,
+  handleUrlOnEditModeChange: PropTypes.func,
   handleUrlOnFocus: PropTypes.func,
   handleUrlSelectOnChange: PropTypes.func,
   invalid: PropTypes.bool,
-  previewMaxWith: PropTypes.string,
-  useActionButtons: PropTypes.bool
+  previewClassName: PropTypes.string,
+  withActionButtons: PropTypes.bool
 }
 
 export default UrlPath

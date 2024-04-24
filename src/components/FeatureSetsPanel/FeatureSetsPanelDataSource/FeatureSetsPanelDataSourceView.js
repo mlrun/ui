@@ -69,11 +69,11 @@ const FeatureSetsPanelDataSourceView = ({
             comboboxSelectList={comboboxSelectList}
             handleUrlInputOnChange={handleUrlInputOnChange}
             handleUrlOnApply={handleUrlOnApply}
-            handleUrlOnEditModeChanged={handleUrlOnEditModeChange}
+            handleUrlOnEditModeChange={handleUrlOnEditModeChange}
             handleUrlSelectOnChange={handleUrlSelectOnChange}
             invalid={!validation.isUrlValid}
-            previewMaxWith={'505px'}
-            useActionButtons
+            previewClassName={'data-source'}
+            withActionButtons
           />
         </div>
         {data.kind !== CSV && (

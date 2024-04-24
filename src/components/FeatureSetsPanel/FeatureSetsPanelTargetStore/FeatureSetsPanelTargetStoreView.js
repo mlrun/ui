@@ -400,11 +400,15 @@ const FeatureSetsPanelTargetStoreView = ({
                   disabled={featureStore.newFeatureSet.spec.passthrough}
                   handleUrlInputOnChange={handleExternalOfflineKindInputOnChange}
                   handleUrlOnApply={handleExternalOfflineKindPathOnApply}
-                  handleUrlOnEditModeChanged={handleExternalOfflineKindOnEditModeChange}
+                  handleUrlOnEditModeChange={handleExternalOfflineKindOnEditModeChange}
                   handleUrlSelectOnChange={handleExternalOfflineKindSelectOnChange}
                   invalid={!validation.isExternalOfflineTargetPathValid}
-                  previewMaxWith={data.externalOffline.kind === PARQUET ? '337px' : '423px'}
-                  useActionButtons
+                  previewClassName={
+                    data.externalOffline.kind === PARQUET
+                      ? 'external-offline_with-parquet'
+                      : 'external-offline'
+                  }
+                  withActionButtons
                 />
                 {data.externalOffline.kind === PARQUET && (
                   <CheckBox
