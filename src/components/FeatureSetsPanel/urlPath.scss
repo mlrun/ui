@@ -1,0 +1,54 @@
+@import '~igz-controls/scss/colors';
+
+.url-path {
+  display: flex;
+  flex: 1;
+  flex-wrap: nowrap;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+
+  &-preview {
+    margin-left: 25px;
+
+    &.external-offline_with-parquet {
+      max-width: 337px;
+    }
+
+    &.external-offline {
+      max-width: 423px;
+    }
+
+    &.data-source {
+      max-width: 505px;
+    }
+
+    &__disabled {
+      color: $spunPearl;
+      background-color: transparent;
+    }
+
+    &__required {
+      color: $amaranth;
+    }
+
+    &__actions {
+      display: flex;
+      justify-content: flex-end;
+      min-width: 75px;
+      margin-right: 5px;
+    }
+  }
+
+  &-actions {
+    display: flex;
+    justify-content: flex-end;
+    min-width: 75px;
+    margin-right: 5px;
+
+    &__apply-btn {
+      min-width: 30px;
+      height: 30px;
+    }
+  }
+}
