@@ -56,6 +56,10 @@
         height: 40px;
         padding: 0;
         border: none;
+
+        &:focus {
+          border: none;
+        }
       }
     }
   }

@@ -196,8 +196,8 @@ const DetailsHeader = ({
           <>
             <DatePicker
               className="details-date-picker"
-              date={detailsStore.detailsDates.value[0]}
-              dateTo={detailsStore.detailsDates.value[1]}
+              date={detailsStore.dates.value[0]}
+              dateTo={detailsStore.dates.value[1]}
               selectedOptionId={PAST_24_HOUR_DATE_OPTION}
               label=""
               onChange={handleChangeDates}

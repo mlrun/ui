@@ -50,7 +50,7 @@ const initialState = {
     counter: 0,
     data: {}
   },
-  detailsDates: {
+  dates: {
     value: DATE_FILTER_ANY_TIME,
     isPredefined: false
   },
@@ -197,7 +197,7 @@ const detailsReducer = (state = initialState, { type, payload }) => {
     case SET_DETAILS_DATES:
       return {
         ...state,
-        detailsDates: payload
+        dates: payload
       }
     case SET_EDIT_MODE:
       return {
