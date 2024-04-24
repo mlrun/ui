@@ -31,7 +31,7 @@ import { ReactComponent as ActionMenuIcon } from 'igz-controls/images/elipsis.sv
 
 import './actionsMenu.scss'
 
-const ActionsMenu = ({ dataItem, menu, time, withQuickActions }) => {
+const ActionsMenu = ({ dataItem, menu, menuPosition, time, withQuickActions }) => {
   const [actionMenu, setActionMenu] = useState(menu)
   const [isIconDisplayed, setIsIconDisplayed] = useState(false)
   const [isShowMenu, setIsShowMenu] = useState(false)
@@ -75,9 +75,9 @@ const ActionsMenu = ({ dataItem, menu, time, withQuickActions }) => {
 
   useEffect(() => {
     if (!isEmpty(dataItem)) {
-      setActionMenu(typeof menu === 'function' ? menu(dataItem) : menu)
+      setActionMenu(typeof menu === 'function' ? menu(dataItem, menuPosition) : menu)
     }
-  }, [dataItem, menu])
+  }, [dataItem, menu, menuPosition])
 
   useEffect(() => {
     setIsIconDisplayed(actionMenu[0].some(menuItem => menuItem.icon))
@@ -164,6 +164,7 @@ const ActionsMenu = ({ dataItem, menu, time, withQuickActions }) => {
 
 ActionsMenu.defaultProps = {
   dataItem: {},
+  menuPosition: '',
   time: 100,
   withQuickActions: false
 }
@@ -171,6 +172,7 @@ ActionsMenu.defaultProps = {
 ActionsMenu.propTypes = {
   dataItem: PropTypes.oneOfType([PropTypes.shape({}), PropTypes.string]),
   menu: ACTIONS_MENU.isRequired,
+  menuPosition: PropTypes.string,
   time: PropTypes.number,
   withQuickActions: PropTypes.bool
 }

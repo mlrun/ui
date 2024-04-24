@@ -620,3 +620,7 @@ export const OWNER_ROLE = 'Owner'
 export const USER_ROLE = 'user'
 export const USER_GROUP_ROLE = 'user_group'
 export const VIEWER_ROLE = 'Viewer'
+
+/*=========== ACTIONS MENU POSITION =============*/
+export const ACTION_MENU_PARENT_ROW = 'action-menu_parent-row'
+export const ACTION_MENU_PARENT_ROW_EXPANDED = 'action-menu_parent-row-expanded'
