@@ -55,6 +55,7 @@ import {
 import { isEveryObjectValueEmpty } from '../../utils/isEveryObjectValueEmpty'
 import { showArtifactsPreview } from '../../reducers/artifactsReducer'
 import { setFieldState } from 'igz-controls/utils/form.util'
+import { datePickerPastOptions, PAST_24_HOUR_DATE_OPTION } from '../../utils/datePicker.util'
 
 import './details.scss'
 
@@ -77,6 +78,7 @@ const Details = ({
   setChanges,
   setChangesCounter,
   setChangesData,
+  setDetailsDates,
   setInfoContent,
   setIteration,
   setIterationOption,
@@ -245,6 +247,29 @@ const Details = ({
     setFiltersWasHandled
   ])
 
+  const handleChangeDates = useCallback(
+    (dates, isPredefined) => {
+      const generatedDates = [...dates]
+
+      if (generatedDates.length === 1) {
+        generatedDates.push(new Date())
+      }
+      setDetailsDates({
+        value: generatedDates,
+        isPredefined
+      })
+    },
+    [setDetailsDates]
+  )
+
+  useEffect(() => {
+    const past24hoursOption = datePickerPastOptions.find(
+      option => option.id === PAST_24_HOUR_DATE_OPTION
+    )
+
+    handleChangeDates(past24hoursOption.handler(), true)
+  }, [handleChangeDates])
+
   return (
     <Form form={formRef.current} onSubmit={() => {}}>
       {formState => (
@@ -260,6 +285,7 @@ const Details = ({
               getCloseDetailsLink={getCloseDetailsLink}
               isDetailsScreen={isDetailsScreen}
               handleCancel={handleCancel}
+              handleChangeDates={handleChangeDates}
               handleRefresh={handleRefresh}
               handleShowWarning={handleShowWarning}
               pageData={pageData}

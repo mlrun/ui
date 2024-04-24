@@ -41,6 +41,28 @@
     left: 65px;
     font-size: 14px;
   }
+
+  &__with-labels {
+    .date-picker__input-wrapper {
+      justify-content: space-between;
+      min-width: 180px;
+      height: 40px;
+      padding: 0 8px 0 16px;
+      border: $primaryBorder;
+      border-radius: 4px;
+
+      .date-picker__input {
+        max-width: 270px;
+        height: 40px;
+        padding: 0;
+        border: none;
+
+        &:focus {
+          border: none;
+        }
+      }
+    }
+  }
 }
 
 .date-picker {

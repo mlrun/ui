@@ -77,7 +77,11 @@ const DatePickerView = React.forwardRef(
     },
     ref
   ) => {
-    const datePickerClassNames = classnames('date-picker-container', className)
+    const datePickerClassNames = classnames(
+      'date-picker-container',
+      className,
+      withLabels && 'date-picker-container__with-labels'
+    )
     const inputClassNames = classnames(
       'input',
       'input-short',
