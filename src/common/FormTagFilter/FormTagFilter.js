@@ -24,7 +24,7 @@ import { useSelector } from 'react-redux'
 import { isEqual, uniq } from 'lodash'
 import classnames from 'classnames'
 
-import { PopUpDialog } from 'igz-controls/components'
+import { PopUpDialog, Tooltip, TextTooltipTemplate } from 'igz-controls/components'
 
 import { tagFilterOptions } from '../../components/FilterMenu/filterMenu.settings'
 import { TAG_FILTER_LATEST } from '../../constants'
@@ -168,7 +168,7 @@ const FormTagFilter = ({ content, label, name }) => {
 
   return (
     <Field name={name}>
-      {({ input, meta }) => (
+      {() => (
         <div
           className="form-tag-filter"
           ref={tagFilterRef}
@@ -221,7 +221,9 @@ const FormTagFilter = ({ content, label, name }) => {
                     className={dropdownItemClassName}
                     onClick={event => handleSelectFilter(event, tag)}
                   >
-                    {tag.label}
+                    <Tooltip template={<TextTooltipTemplate text={tag.label} />}>
+                      <span>{tag.label}</span>
+                    </Tooltip>
                   </div>
                 )
               })}

@@ -21,6 +21,7 @@ import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useLocation, useNavigate, useParams } from 'react-router-dom'
 import { connect, useDispatch, useSelector } from 'react-redux'
 import { find, isEmpty } from 'lodash'
+import classnames from 'classnames'
 
 import FilterMenu from '../../FilterMenu/FilterMenu'
 import JobWizard from '../../JobWizard/JobWizard'
@@ -39,6 +40,7 @@ import {
   MONITOR_WORKFLOWS_TAB,
   PANEL_RERUN_MODE,
   REQUEST_CANCELED,
+  STATE_FILTER_ALL_ITEMS,
   WORKFLOW_GRAPH_VIEW
 } from '../../../constants'
 import { DANGER_BUTTON } from 'igz-controls/constants'
@@ -58,18 +60,19 @@ import {
   pollAbortingJobs
 } from '../jobs.util'
 import getState from '../../../utils/getState'
+import { datePickerPastOptions, PAST_WEEK_DATE_OPTION } from '../../../utils/datePicker.util'
 import { getFunctionLogs } from '../../../utils/getFunctionLogs'
 import { getJobLogs } from '../../../utils/getJobLogs.util'
 import { getNoDataMessage } from '../../../utils/getNoDataMessage'
 import { isDetailsTabExists } from '../../../utils/isDetailsTabExists'
+import { isRowRendered, useVirtualization } from '../../../hooks/useVirtualization.hook'
 import { isWorkflowStepExecutable } from '../../Workflow/workflow.util'
 import { openPopUp } from 'igz-controls/utils/common.util'
-import { showErrorNotification } from '../../../utils/notifications.util'
 import { parseFunction } from '../../../utils/parseFunction'
 import { parseJob } from '../../../utils/parseJob'
 import { setFilters } from '../../../reducers/filtersReducer'
 import { setNotification } from '../../../reducers/notificationReducer'
-import { datePickerPastOptions, PAST_WEEK_DATE_OPTION } from '../../../utils/datePicker.util'
+import { showErrorNotification } from '../../../utils/notifications.util'
 import { useMode } from '../../../hooks/mode.hook'
 import { usePods } from '../../../hooks/usePods.hook'
 import { useSortTable } from '../../../hooks/useSortTable.hook'
@@ -77,11 +80,13 @@ import { useYaml } from '../../../hooks/yaml.hook'
 import detailsActions from '../../../actions/details'
 import jobsActions from '../../../actions/jobs'
 
-import './MonitorWorkflows.scss'
+import './monitorWorkflows.scss'
+import cssVariables from './monitorWorkflows.scss'
 
 const MonitorWorkflows = ({
   abortJob,
   deleteJob,
+  deleteWorkflows,
   fetchFunctionLogs,
   fetchJob,
   fetchJobFunctions,
@@ -106,7 +111,6 @@ const MonitorWorkflows = ({
   const location = useLocation()
   const dispatch = useDispatch()
   const { isStagingMode } = useMode()
-  const abortJobRef = useRef(null)
   const {
     editableItem,
     handleMonitoring,
@@ -118,9 +122,12 @@ const MonitorWorkflows = ({
     setJobWizardIsOpened,
     setJobWizardMode
   } = React.useContext(JobsContext)
-  let fetchFunctionLogsTimeout = useRef(null)
-  const fetchJobFunctionsPromiseRef = useRef()
   const abortControllerRef = useRef(new AbortController())
+  const abortJobRef = useRef(null)
+  const fetchJobFunctionsPromiseRef = useRef()
+  const tableBodyRef = useRef(null)
+  const tableRef = useRef(null)
+  let fetchFunctionLogsTimeout = useRef(null)
 
   usePods(dispatch, detailsActions.fetchJobPods, detailsActions.removePods, selectedJob)
 
@@ -289,7 +296,7 @@ const MonitorWorkflows = ({
           <div>
             You try to abort job "{job.name}". <br />
             {isJobKindLocal(job) &&
-              'This is a local run. You can abort the run, though the actual process will continue.'}
+            'This is a local run. You can abort the run, though the actual process will continue.'}
           </div>
         ),
         btnConfirmLabel: 'Abort',
@@ -587,11 +594,12 @@ const MonitorWorkflows = ({
               value: generatedDates,
               isPredefined: pastWeekOption.isPredefined
             },
+            state: STATE_FILTER_ALL_ITEMS,
             groupBy: GROUP_BY_WORKFLOW
           }
 
           dispatch(setFilters({ ...filters }))
-          getWorkflows({ ...filtersStore, ...filters })
+          getWorkflows(filters)
         } else {
           getWorkflows({ ...filtersStore, groupBy: GROUP_BY_WORKFLOW })
           dispatch(setFilters({ groupBy: GROUP_BY_WORKFLOW }))
@@ -620,6 +628,13 @@ const MonitorWorkflows = ({
       abortControllerRef.current.abort(REQUEST_CANCELED)
     }
   }, [params.projectName, params.workflowId])
+
+  useEffect(() => {
+    return () => {
+      deleteWorkflows()
+      setWorkflowsAreLoaded(false)
+    }
+  }, [deleteWorkflows])
 
   useEffect(() => {
     abortJobRef.current?.()
@@ -657,28 +672,46 @@ const MonitorWorkflows = ({
     setJobWizardMode
   ])
 
+  const virtualizationConfig = useVirtualization({
+    tableRef,
+    tableBodyRef,
+    rowsData: {
+      content: tableContent
+    },
+    heightData: {
+      headerRowHeight: cssVariables.monitorWorkflowsHeaderRowHeight,
+      rowHeight: cssVariables.monitorWorkflowsRowHeight,
+      rowHeightExtended: cssVariables.monitorWorkflowsRowHeightExtended
+    }
+  })
+
   return (
     <>
-      {!params.workflowId && (
-        <div className="monitor-workflows">
-          <p className="monitor-workflows__subtitle">
-            View running workflows and previously executed workflows
-          </p>
-          <div className="content__action-bar-wrapper">
-            <div className="action-bar">
-              <FilterMenu
-                filters={filters}
-                onChange={getWorkflows}
-                page={JOBS_PAGE}
-                withoutExpandButton
-              />
-            </div>
+      <div className="monitor-workflows">
+        {
+          !params.workflowId && (
+            <p className="monitor-workflows__subtitle">
+              View running workflows and previously executed workflows
+            </p>
+          )
+        }
+        <div className="content__action-bar-wrapper">
+          <div className={classnames(!params.workflowId && 'action-bar')}>
+            <FilterMenu
+              filters={filters}
+              onChange={getWorkflows}
+              page={JOBS_PAGE}
+              saveFilterOnProjectChange
+              tab={MONITOR_WORKFLOWS_TAB}
+              withoutExpandButton
+              hidden={Boolean(params.workflowId)}
+            />
           </div>
         </div>
-      )}
+      </div>
       {workflowsStore.workflows.loading ? null : (!params.workflowId &&
-          workflowsStore.workflows.data.length === 0) ||
-        largeRequestErrorMessage ? (
+        workflowsStore.workflows.data.length === 0) ||
+      largeRequestErrorMessage ? (
         <NoData
           message={getNoDataMessage(
             filtersStore,
@@ -711,20 +744,26 @@ const MonitorWorkflows = ({
               handleCancel={handleCancel}
               handleSelectItem={handleSelectRun}
               pageData={pageData}
+              ref={{ tableRef, tableBodyRef }}
               retryRequest={getWorkflows}
               selectedItem={selectedJob}
               tab={MONITOR_JOBS_TAB}
+              tableClassName="monitor-workflows-table"
               tableHeaders={sortedTableContent[0]?.content ?? []}
+              virtualizationConfig={virtualizationConfig}
             >
-              {sortedTableContent.map((tableItem, index) => (
-                <JobsTableRow
-                  actionsMenu={actionsMenu}
-                  handleSelectJob={handleSelectRun}
-                  key={index}
-                  rowItem={tableItem}
-                  selectedJob={selectedJob}
-                />
-              ))}
+              {sortedTableContent.map(
+                (tableItem, index) =>
+                  isRowRendered(virtualizationConfig, index) && (
+                    <JobsTableRow
+                      actionsMenu={actionsMenu}
+                      handleSelectJob={handleSelectRun}
+                      key={index}
+                      rowItem={tableItem}
+                      selectedJob={selectedJob}
+                    />
+                  )
+              )}
             </Table>
           )}
         </>

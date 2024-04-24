@@ -165,6 +165,7 @@ export const generateActionsMenu = (
 export const monitorWorkflowsActionCreator = {
   abortJob: jobsActions.abortJob,
   deleteJob: jobsActions.deleteJob,
+  deleteWorkflows: workflowsActions.deleteWorkflows,
   fetchFunctionLogs: functionsActions.fetchFunctionLogs,
   fetchJob: jobsActions.fetchJob,
   fetchJobFunctions: jobsActions.fetchJobFunctions,

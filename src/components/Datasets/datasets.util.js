@@ -65,11 +65,6 @@ export const infoHeaders = [
   { label: 'Label column', id: 'label_column' },
   { label: 'Path', id: 'target_path' },
   { label: 'URI', id: 'target_uri' },
-  {
-    label: 'UID',
-    id: 'tree',
-    tip: 'Unique identifier representing the job or the workflow that generated the artifact'
-  },
   { label: 'Updated', id: 'updated' },
   { label: 'Labels', id: 'labels' }
 ]

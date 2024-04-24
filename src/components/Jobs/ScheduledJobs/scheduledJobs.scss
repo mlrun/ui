@@ -1,0 +1,16 @@
+@import '~igz-controls/scss/variables';
+@import 'src/scss/mixins';
+
+$scheduledJobsRowHeight: $rowHeightSmall;
+$scheduledJobsHeaderRowHeight: $headerRowHeight;
+$scheduledJobsRowHeightExtended: $rowHeightSmall;
+
+.scheduled-jobs-table {
+  @include rowsHeight($scheduledJobsHeaderRowHeight, $scheduledJobsRowHeight, $scheduledJobsRowHeightExtended);
+}
+
+:export {
+  scheduledJobsRowHeight: $scheduledJobsRowHeight;
+  scheduledJobsHeaderRowHeight: $scheduledJobsHeaderRowHeight;
+  scheduledJobsRowHeightExtended: $scheduledJobsRowHeightExtended;
+}

@@ -217,6 +217,7 @@ main {
             position: sticky;
             left: 0;
             min-width: 250px;
+            padding-right: 10px;
             z-index: 1;
           }
 
@@ -628,6 +629,7 @@ main {
 /*=========== GRAPH =============*/
 
 .graph-container {
+  position: relative;
   display: flex;
   flex: 1 1;
 

@@ -20,6 +20,7 @@ such restriction.
 import React from 'react'
 
 import {
+  ARTIFACTS_TAB,
   ARTIFACT_TYPE,
   FILES_PAGE,
   FILES_TAB,
@@ -82,11 +83,6 @@ export const infoHeaders = [
   { label: 'Size', id: 'size' },
   { label: 'Path', id: 'target_path' },
   { label: 'URI', id: 'target_uri' },
-  {
-    label: 'UID',
-    id: 'tree',
-    tip: 'Unique identifier representing the job or the workflow that generated the artifact'
-  },
   { label: 'Updated', id: 'updated' },
   { label: 'Labels', id: 'labels' }
 ]
@@ -248,7 +244,7 @@ export const generateActionsMenu = (
       {
         label: 'Copy URI',
         icon: <Copy />,
-        onClick: file => copyToClipboard(generateUri(file, FILES_TAB), dispatch)
+        onClick: file => copyToClipboard(generateUri(file, ARTIFACTS_TAB), dispatch)
       },
       {
         label: 'View YAML',

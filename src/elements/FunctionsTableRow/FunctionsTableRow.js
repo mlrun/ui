@@ -17,25 +17,27 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import React, { useRef } from 'react'
+import React, { useMemo, useRef } from 'react'
 import PropTypes from 'prop-types'
 import classnames from 'classnames'
 import { useParams } from 'react-router-dom'
 import { isEmpty } from 'lodash'
 
-import TableCell from '../TableCell/TableCell'
 import ActionsMenu from '../../common/ActionsMenu/ActionsMenu'
-import { getFunctionIdentifier } from '../../utils/getUniqueIdentifier'
-import { generateTableRowTestId } from '../../utils/generateTableRowTestId'
+import TableCell from '../TableCell/TableCell'
+
 import { ACTIONS_MENU } from '../../types'
 import { DETAILS_OVERVIEW_TAB } from '../../constants'
+import { generateTableRowTestId } from '../../utils/generateTableRowTestId'
+import { getFunctionIdentifier } from '../../utils/getUniqueIdentifier'
+import { isRowExpanded, PARENT_ROW_EXPANDED_CLASS } from '../../utils/tableRows.util'
 
 const FunctionsTableRow = ({
   actionsMenu,
   handleExpandRow,
   handleSelectItem,
-  rowIndex,
   mainRowItemsCount,
+  rowIndex,
   rowItem,
   selectedItem,
   selectedRowData,
@@ -43,23 +45,28 @@ const FunctionsTableRow = ({
 }) => {
   const parent = useRef()
   const params = useParams()
+  const rowIsExpanded = useMemo(
+    () => isRowExpanded(parent, selectedRowData, rowItem),
+    [rowItem, selectedRowData]
+  )
   const rowClassNames = classnames(
     'table-row',
+    'table-body-row',
     'parent-row',
     getFunctionIdentifier(selectedItem, true) === rowItem.data?.ui?.identifierUnique &&
-      !parent.current?.classList.value.includes('parent-row_expanded') &&
+      !rowIsExpanded &&
       'table-row_active',
-    parent.current?.classList.value.includes('parent-row_expanded') && 'parent-row_expanded'
+    rowIsExpanded && PARENT_ROW_EXPANDED_CLASS
   )
 
   return (
     <tr className={rowClassNames} ref={parent}>
-      {parent.current?.classList.contains('parent-row_expanded') ? (
+      {rowIsExpanded ? (
         <>
           <td
             data-testid={generateTableRowTestId(rowIndex)}
             className={`table-body__cell
-              ${parent.current?.classList.contains('parent-row_expanded') && 'row_grouped-by'}`}
+              ${rowIsExpanded && 'row_grouped-by'}`}
           >
             <table cellPadding="0" cellSpacing="0" className="table">
               <tbody className="table-body">
@@ -94,6 +101,7 @@ const FunctionsTableRow = ({
           {selectedRowData[rowItem.data.ui.identifier]?.content.map((func, index) => {
             const subRowClassNames = classnames(
               'table-row',
+              'table-body-row',
               selectedItem.name &&
                 getFunctionIdentifier(selectedItem, true) === func.data.ui.identifierUnique &&
                 'table-row_active'

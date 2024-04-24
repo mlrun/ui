@@ -397,8 +397,7 @@ module.exports = {
     Table_Name_Filter_Input: commonNameFilterInputDataset,
     Table_FilterBy_Button: tableFilterByButton,
     Table_Refresh_Button: tableRefreshButton,
-    Datasets_Table: commonTable(datasetsTable),
-    Datasets_Table_View: By.xpath('//html/body/div[1]/div/div/main/div/div/div[2]/div/div[2]/div/div/table/tbody/tr')
+    Datasets_Table: commonTable(datasetsTable)
   },
   addToFeatureVector: {
     Table_Tree_Filter_Dropdown: commonTableTreeFilterDropdown,

@@ -38,8 +38,8 @@ export const generateArtifacts = (artifacts, tab, originalContent) => {
                 item.producer.kind.toLowerCase() === 'api'
                   ? 'UI'
                   : item.producer.kind.toLowerCase() === 'project'
-                  ? 'MLrun client'
-                  : ''
+                    ? 'MLrun client'
+                    : ''
             }
 
             if (generatedArtifact.extra_data) {
@@ -49,6 +49,8 @@ export const generateArtifacts = (artifacts, tab, originalContent) => {
             } else {
               item.extra_data ??= []
             }
+
+            item.producer.uid = item.tree
 
             if (!generatedArtifact.ui) {
               item.ui = {

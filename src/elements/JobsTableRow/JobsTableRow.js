@@ -33,6 +33,7 @@ const JobsTableRow = ({ actionsMenu, handleSelectJob, rowItem, selectedJob }) =>
   const params = useParams()
   const rowClassNames = classnames(
     'table-row',
+    'table-body-row',
     'parent-row',
     getJobIdentifier(selectedJob, true) === rowItem.data.ui.identifierUnique && 'table-row_active'
   )

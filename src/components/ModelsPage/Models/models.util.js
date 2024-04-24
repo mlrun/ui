@@ -84,11 +84,6 @@ export const infoHeaders = [
   { label: 'URI', id: 'target_uri' },
   { label: 'Model file', id: 'model_file' },
   { label: 'Feature vector', id: 'feature_vector' },
-  {
-    label: 'UID',
-    id: 'tree',
-    tip: 'Unique identifier representing the job or the workflow that generated the artifact'
-  },
   { label: 'Updated', id: 'updated' },
   { label: 'Framework', id: 'framework' },
   { label: 'Algorithm', id: 'algorithm' },

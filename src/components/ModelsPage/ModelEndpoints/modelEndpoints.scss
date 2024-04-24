@@ -1,0 +1,16 @@
+@import '~igz-controls/scss/variables';
+@import 'src/scss/mixins';
+
+$modelEndpointsRowHeight: $rowHeightSmall;
+$modelEndpointsHeaderRowHeight: $headerRowHeight;
+$modelEndpointsRowHeightExtended: $rowHeightSmall;
+
+.model-endpoints-table {
+  @include rowsHeight($modelEndpointsHeaderRowHeight, $modelEndpointsRowHeight, $modelEndpointsRowHeightExtended);
+}
+
+:export {
+  modelEndpointsRowHeight: $modelEndpointsRowHeight;
+  modelEndpointsHeaderRowHeight: $modelEndpointsHeaderRowHeight;
+  modelEndpointsRowHeightExtended: $modelEndpointsRowHeightExtended;
+}

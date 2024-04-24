@@ -43,11 +43,14 @@ import { getFeatureIdentifier } from '../../../utils/getUniqueIdentifier'
 import { getFilterTagOptions, setFilters } from '../../../reducers/filtersReducer'
 import { parseFeatures } from '../../../utils/parseFeatures'
 import { setTablePanelOpen } from '../../../reducers/tableReducer'
+import { showLargeResponsePopUp } from '../../../httpClient'
 import { useGetTagOptions } from '../../../hooks/useGetTagOptions.hook'
 import { useGroupContent } from '../../../hooks/groupContent.hook'
-import { showLargeResponsePopUp } from '../../../httpClient'
+import { useVirtualization } from '../../../hooks/useVirtualization.hook'
 
 import { ReactComponent as Yaml } from 'igz-controls/images/yaml.svg'
+
+import cssVariables from './features.scss'
 
 const Features = ({
   fetchEntity,
@@ -70,6 +73,8 @@ const Features = ({
   const filtersStore = useSelector(store => store.filtersStore)
   const tableStore = useSelector(store => store.tableStore)
   const featureStoreRef = useRef(null)
+  const tableBodyRef = useRef(null)
+  const tableRef = useRef(null)
   const abortControllerRef = useRef(new AbortController())
   const dispatch = useDispatch()
 
@@ -290,21 +295,36 @@ const Features = ({
     }
   }, [removeEntities, removeEntity, removeFeature, removeFeatures, params.projectName])
 
+  const virtualizationConfig = useVirtualization({
+    tableRef,
+    tableBodyRef,
+    rowsData: {
+      content: tableContent,
+      expandedRowsData: selectedRowData
+    },
+    heightData: {
+      headerRowHeight: cssVariables.featuresHeaderRowHeight,
+      rowHeight: cssVariables.featuresRowHeight,
+      rowHeightExtended: cssVariables.featuresRowHeightExtended
+    }
+  })
+
   return (
     <FeaturesView
       actionsMenu={actionsMenu}
-      features={features}
       featureStore={featureStore}
+      features={features}
       filtersStore={filtersStore}
       getPopUpTemplate={getPopUpTemplate}
       handleExpandRow={handleExpandRow}
       handleRefresh={handleRefresh}
       largeRequestErrorMessage={largeRequestErrorMessage}
       pageData={pageData}
-      ref={featureStoreRef}
+      ref={{ featureStoreRef, tableRef, tableBodyRef }}
       selectedRowData={selectedRowData}
       tableContent={tableContent}
       tableStore={tableStore}
+      virtualizationConfig={virtualizationConfig}
     />
   )
 }

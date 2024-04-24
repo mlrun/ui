@@ -19,6 +19,7 @@ such restriction.
 */
 import workflowApi from '../api/workflow-api'
 import {
+  DELETE_WORKFLOWS,
   FETCH_WORKFLOW_BEGIN,
   FETCH_WORKFLOW_FAILURE,
   FETCH_WORKFLOW_SUCCESS,
@@ -32,6 +33,9 @@ import { parseWorkflow } from '../components/Workflow/workflow.util'
 import { largeResponseCatchHandler } from '../utils/largeResponseCatchHandler'
 
 const workflowActions = {
+  deleteWorkflows: () => ({
+    type: DELETE_WORKFLOWS
+  }),
   fetchWorkflow: (project, workflowId) => dispatch => {
     dispatch(workflowActions.fetchWorkflowBegin())
 

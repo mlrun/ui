@@ -21,6 +21,7 @@ such restriction.
 
 export const SET_LOADING = 'SET_LOADING'
 
+export const DELETE_WORKFLOWS = 'DELETE_WORKFLOWS'
 export const FETCH_WORKFLOWS_BEGIN = 'FETCH_WORKFLOWS_BEGIN'
 export const FETCH_WORKFLOWS_FAILURE = 'FETCH_WORKFLOWS_FAILURE'
 export const FETCH_WORKFLOWS_SUCCESS = 'FETCH_WORKFLOWS_SUCCESS'
@@ -311,7 +312,7 @@ export const FUNCTION_FILTERS = 'FUNCTION_FILTERS'
 
 /*=========== ARTIFACTS =============*/
 
-export const ARTIFACTS = 'artifacts'
+export const ARTIFACTS_TAB = 'artifacts'
 export const FILES_FILTERS = 'FILES_FILTERS'
 export const ARTIFACT_PREVIEW_TABLE_ROW_LIMIT = 100
 
@@ -600,6 +601,7 @@ export const DEFAULT_IMAGE = 'default_image'
 export const DESCRIPTION = 'description'
 export const GOALS = 'goals'
 export const LABELS = 'labels'
+export const NODE_SELECTORS = 'default_function_node_selector'
 export const PARAMS = 'params'
 export const LOAD_SOURCE_ON_RUN = 'load_source_on_run'
 

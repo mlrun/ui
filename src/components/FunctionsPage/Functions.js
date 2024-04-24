@@ -36,10 +36,11 @@ import {
   DETAILS_BUILD_LOG_TAB,
   JOB_DEFAULT_OUTPUT_PATH
 } from '../../constants'
-import { detailsMenu, infoHeaders, page, generateActionsMenu } from './functions.util'
 import createFunctionsContent from '../../utils/createFunctionsContent'
 import functionsActions from '../../actions/functions'
+import jobsActions from '../../actions/jobs'
 import { DANGER_BUTTON, LABEL_BUTTON } from 'igz-controls/constants'
+import { detailsMenu, infoHeaders, page, generateActionsMenu } from './functions.util'
 import { getFunctionIdentifier } from '../../utils/getUniqueIdentifier'
 import { getFunctionLogs } from '../../utils/getFunctionLogs'
 import { isDetailsTabExists } from '../../utils/isDetailsTabExists'
@@ -50,8 +51,10 @@ import { setNotification } from '../../reducers/notificationReducer'
 import { showErrorNotification } from '../../utils/notifications.util'
 import { useGroupContent } from '../../hooks/groupContent.hook'
 import { useMode } from '../../hooks/mode.hook'
+import { useVirtualization } from '../../hooks/useVirtualization.hook'
 import { useYaml } from '../../hooks/yaml.hook'
-import jobsActions from '../../actions/jobs'
+
+import cssVariables from './functions.scss'
 
 const Functions = ({
   deleteFunction,
@@ -75,8 +78,10 @@ const Functions = ({
   const filtersStore = useSelector(store => store.filtersStore)
   const [selectedRowData, setSelectedRowData] = useState({})
   const [largeRequestErrorMessage, setLargeRequestErrorMessage] = useState('')
-  const fetchFunctionLogsTimeout = useRef(null)
   const abortControllerRef = useRef(new AbortController())
+  const fetchFunctionLogsTimeout = useRef(null)
+  const tableBodyRef = useRef(null)
+  const tableRef = useRef(null)
   const { isDemoMode, isStagingMode } = useMode()
   const params = useParams()
   const navigate = useNavigate()
@@ -133,7 +138,7 @@ const Functions = ({
 
   const handleCollapse = useCallback(
     func => {
-      const funcIdentifier = getFunctionIdentifier(func)
+      const funcIdentifier = getFunctionIdentifier(func.data)
       const newPageDataSelectedRowData = { ...selectedRowData }
 
       delete newPageDataSelectedRowData[funcIdentifier]
@@ -563,6 +568,21 @@ const Functions = ({
     }
   }, [editableItem, jobWizardIsOpened, jobWizardMode, params])
 
+  const virtualizationConfig = useVirtualization({
+    tableRef,
+    tableBodyRef,
+    rowsData: {
+      content: tableContent,
+      expandedRowsData: selectedRowData,
+      selectedItem: selectedFunction
+    },
+    heightData: {
+      headerRowHeight: cssVariables.functionsHeaderRowHeight,
+      rowHeight: cssVariables.functionsRowHeight,
+      rowHeightExtended: cssVariables.functionsRowHeightExtended
+    }
+  })
+
   return (
     <FunctionsView
       actionsMenu={actionsMenu}
@@ -586,6 +606,7 @@ const Functions = ({
       isDemoMode={isDemoMode}
       largeRequestErrorMessage={largeRequestErrorMessage}
       pageData={pageData}
+      ref={{ tableRef, tableBodyRef }}
       refreshFunctions={refreshFunctions}
       selectedFunction={selectedFunction}
       selectedRowData={selectedRowData}
@@ -593,6 +614,7 @@ const Functions = ({
       tableContent={tableContent}
       taggedFunctions={taggedFunctions}
       toggleConvertedYaml={toggleConvertedYaml}
+      virtualizationConfig={virtualizationConfig}
     />
   )
 }

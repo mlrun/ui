@@ -114,12 +114,7 @@ TableView.defaultProps = {
   applyDetailsChangesCallback: () => {},
   getCloseDetailsLink: null,
   groupLatestJob: {},
-  sortProps: null,
-  virtualizationConfig: {
-    tableBodyPaddingTop: 0,
-    startIndex: -1,
-    endIndex: -1
-  }
+  sortProps: null
 }
 
 TableView.propTypes = {
@@ -140,7 +135,7 @@ TableView.propTypes = {
   tableHeadRef: PropTypes.shape({}),
   tableHeaders: PropTypes.array,
   tablePanelRef: PropTypes.shape({}),
-  virtualizationConfig: VIRTUALIZATION_CONFIG
+  virtualizationConfig: VIRTUALIZATION_CONFIG.isRequired
 }
 
 export default TableView

@@ -19,12 +19,13 @@ such restriction.
 */
 import React, { useState, useEffect, useCallback } from 'react'
 import PropTypes from 'prop-types'
-import ReactFlow, { ReactFlowProvider } from 'reactflow'
+import ReactFlow, { ReactFlowProvider, MiniMap, Controls } from 'reactflow'
 
 import MlReactFlowNode from './MlReactFlowNode'
 import MlReactFlowEdge from './MlReactFlowEdge'
 
 import { ML_EDGE, ML_NODE } from '../../constants'
+import { getNodeClassName } from './mlReactFlow.util'
 
 import './mlReactFlow.scss'
 
@@ -50,14 +51,13 @@ const MlReactFlow = ({ alignTriggerItem, edges, nodes, onNodeClick }) => {
 
   const handleFitGraphView = useCallback(() => {
     setTimeout(() => {
-      reactFlowInstance.fitView()
-
       const {
-        viewport: { x, zoom }
+        viewport: { x, y, zoom }
       } = reactFlowInstance.toObject()
 
-      reactFlowInstance.setViewport({ x, y: 50, zoom: zoom })
-    }, 20)
+      reactFlowInstance.setViewport({ x, y, zoom: zoom })
+      reactFlowInstance.fitView({ padding: 0.2, duration: 200 })
+    }, 50)
   }, [reactFlowInstance])
 
   useEffect(() => {
@@ -108,6 +108,20 @@ const MlReactFlow = ({ alignTriggerItem, edges, nodes, onNodeClick }) => {
         onNodeClick={onNodeClick}
         proOptions={{ hideAttribution: true }}
         selectionKeyCode={null}
+      />
+      <Controls
+        fitViewOptions={{ padding: 0.2, duration: 200 }}
+        position="top-left"
+        showInteractive={false}
+        showZoom={false}
+      />
+      <MiniMap
+        nodeStrokeWidth={3}
+        nodeClassName={getNodeClassName}
+        pannable
+        position="bottom-left"
+        zoomStep={1}
+        zoomable
       />
     </ReactFlowProvider>
   )

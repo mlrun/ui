@@ -35,14 +35,19 @@ const DownloadContainer = () => {
   const dispatch = useDispatch()
   const duration = 500
 
+  const defaultStyle = {
+    transform: 'translateY(130px)',
+    opacity: 0
+  }
+
   const transitionStyles = {
     entered: {
-      transform: 'translateY(-130px)',
+      transform: 'translateY(0)',
       opacity: 1,
       transition: `transform ${duration}ms ease-in-out, opacity ${duration}ms ease-in-out`
     },
     exiting: {
-      transform: 'translateY(0px)',
+      transform: 'translateY(130px)',
       opacity: 0,
       transition: `transform ${duration}ms ease-in-out, opacity ${duration}ms ease-in-out`
     }
@@ -61,7 +66,7 @@ const DownloadContainer = () => {
               <div
                 className="download-container"
                 data-testid="download-container"
-                style={{ ...transitionStyles[state] }}
+                style={{ ...defaultStyle, ...transitionStyles[state] }}
               >
                 <div className="download-container__header">Downloads</div>
                 <button className="notification_body_close_icon" onClick={handleCancel}>

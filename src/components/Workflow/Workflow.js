@@ -143,7 +143,7 @@ const Workflow = ({
         data: {
           customData,
           isSelectable: stepIsExecutable,
-          shape: stepIsCondition && OVAL_NODE_SHAPE,
+          shape: stepIsCondition ? OVAL_NODE_SHAPE : null,
           label: job.name,
           sourceHandle,
           tip: stepIsExecutable || stepIsCondition ? null : 'This step cannot be previewed',
