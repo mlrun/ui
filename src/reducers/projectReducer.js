@@ -80,8 +80,7 @@ import {
   FETCH_PROJECT_SECRETS_FAILURE,
   FETCH_PROJECT_SECRETS_SUCCESS,
   SET_PROJECT_SECRETS,
-  SET_JOBS_MONITORING_DATA,
-  REMOVE_JOBS_MONITORING_DATA_FILTERS
+  SET_JOBS_MONITORING_DATA
 } from '../constants'
 
 const initialState = {
@@ -89,10 +88,7 @@ const initialState = {
   jobsMonitoringData: {
     jobs: {},
     workflows: {},
-    scheduled: {},
-    filters: {
-      status: ''
-    }
+    scheduled: {}
   },
   loading: false,
   newProject: {
@@ -748,16 +744,6 @@ const projectReducer = (state = initialState, { type, payload }) => {
             data: payload,
             error: null,
             loading: false
-          }
-        }
-      }
-    case REMOVE_JOBS_MONITORING_DATA_FILTERS:
-      return {
-        ...state,
-        jobsMonitoringData: {
-          ...state.jobsMonitoringData,
-          filters: {
-            ...initialState.jobsMonitoringData.filters
           }
         }
       }

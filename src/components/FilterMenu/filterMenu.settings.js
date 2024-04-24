@@ -21,9 +21,19 @@ import {
   GROUP_BY_FILTER,
   GROUP_BY_NAME,
   GROUP_BY_NONE,
+  JOB_KIND_DASK,
+  JOB_KIND_DATABRICKS,
+  JOB_KIND_HANDLER,
+  JOB_KIND_JOB,
+  JOB_KIND_LOCAL,
+  JOB_KIND_MPIJOB,
+  JOB_KIND_NUCLIO,
+  JOB_KIND_REMOTE,
+  JOB_KIND_SPARK,
+  JOB_KIND_WORKFLOW,
   PROJECT_FILTER,
   SORT_BY,
-  STATE_FILTER_ALL_ITEMS,
+  FILTER_ALL_ITEMS,
   STATUS_FILTER,
   TAG_FILTER_ALL_ITEMS,
   TAG_FILTER_LATEST
@@ -33,12 +43,28 @@ export const generateStatusFilter = useFailedStatus => {
   const status = useFailedStatus ? 'failed' : 'error'
 
   return [
-    { label: 'All', id: STATE_FILTER_ALL_ITEMS, status: 'all' },
+    { label: 'All', id: FILTER_ALL_ITEMS, status: 'all' },
     { label: 'Completed', id: 'completed', status: 'completed' },
     { label: 'Running', id: 'running', status: 'running' },
     { label: 'Pending', id: 'pending', status: 'pending' },
     { label: 'Error', id: status, status: status },
     { label: 'Aborted', id: 'aborted', status: 'aborted' }
+  ]
+}
+
+export const generateTypeFilter = () => {
+  return [
+    { label: 'All', id: FILTER_ALL_ITEMS },
+    { label: 'Local', id: JOB_KIND_LOCAL },
+    { label: 'Dask', id: JOB_KIND_DASK },
+    { label: 'Databricks', id: JOB_KIND_DATABRICKS },
+    { label: 'Handler', id: JOB_KIND_HANDLER },
+    { label: 'Job', id: JOB_KIND_JOB },
+    { label: 'Horovod', id: JOB_KIND_MPIJOB },
+    { label: 'Nuclio', id: JOB_KIND_NUCLIO },
+    { label: 'Remote', id: JOB_KIND_REMOTE },
+    { label: 'Spark', id: JOB_KIND_SPARK },
+    { label: 'Workflow', id: JOB_KIND_WORKFLOW }
   ]
 }
 

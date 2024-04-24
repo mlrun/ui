@@ -23,7 +23,6 @@ import { generateLinkToDetailsPanel } from '../../../utils/generateLinkToDetails
 import { JOB_KIND_WORKFLOW, JOBS_PAGE, MONITOR_JOBS_TAB } from '../../../constants'
 import measureTime from '../../../utils/measureTime'
 import { formatDatetime } from '../../../utils'
-import jobsActions from '../../../actions/jobs'
 
 export const createJobsMonitoringContent = (jobs, jobName, isStagingMode) => {
   return jobs.map(job => {
@@ -144,9 +143,4 @@ export const createJobsMonitoringContent = (jobs, jobName, isStagingMode) => {
       ]
     }
   })
-}
-
-export const jobsMonitoringActionCreator = {
-  fetchAllJobRuns: jobsActions.fetchAllJobRuns,
-  fetchJobs: jobsActions.fetchJobs
 }

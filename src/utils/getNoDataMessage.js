@@ -44,7 +44,7 @@ import {
   SHOW_ITERATIONS,
   SHOW_UNTAGGED_FILTER,
   SHOW_UNTAGGED_ITEMS,
-  STATE_FILTER_ALL_ITEMS,
+  FILTER_ALL_ITEMS,
   STATUS_FILTER,
   TAG_FILTER,
   TAG_FILTER_ALL_ITEMS
@@ -171,16 +171,16 @@ const generateNoEntriesFoundMessage = (
     const label = [ITERATIONS_FILTER, SHOW_UNTAGGED_ITEMS].includes(filter.type)
       ? `${filter.label}:`
       : filter.type === DATE_RANGE_TIME_FILTER
-      ? 'Date:'
-      : filter.label
+        ? 'Date:'
+        : filter.label
     const value = [ITERATIONS_FILTER, SHOW_UNTAGGED_ITEMS].includes(filter.type)
       ? 'true'
       : filter.type === DATE_RANGE_TIME_FILTER
-      ? getSelectedDateValue(filter, filtersStore)
-      : filter.type === STATUS_FILTER
-      ? filtersStore['state']
-      : filtersStore.filterMenuModal[filtersStoreKey]?.values?.[filter.type] ??
-        filtersStore[filter.type]
+        ? getSelectedDateValue(filter, filtersStore)
+        : filter.type === STATUS_FILTER
+          ? filtersStore['state']
+          : filtersStore.filterMenuModal[filtersStoreKey]?.values?.[filter.type] ??
+            filtersStore[filter.type]
     const isLastElement = index === changedFilters.length - 1
 
     return message + `${label} ${value}${isLastElement ? '"' : ', '}`
@@ -206,7 +206,7 @@ const getChangedFiltersList = (filters, filtersStore, filtersStoreKey) => {
       (type === TAG_FILTER && isTagChanged) ||
       ((type === NAME_FILTER || type === LABELS_FILTER || type === ENTITIES_FILTER) &&
         filtersStore[type].length > 0) ||
-      (type === STATUS_FILTER && filtersStore.state !== STATE_FILTER_ALL_ITEMS) ||
+      (type === STATUS_FILTER && filtersStore.state !== FILTER_ALL_ITEMS) ||
       type === DATE_RANGE_TIME_FILTER ||
       (type === ITERATIONS_FILTER && isIterChanged) ||
       (type === SHOW_UNTAGGED_FILTER && filtersStore.showUntagged === SHOW_UNTAGGED_ITEMS) ||
