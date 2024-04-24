@@ -21,6 +21,8 @@ import { capitalize, isNil, isNumber } from 'lodash'
 
 import DetailsInfoItem from '../../elements/DetailsInfoItem/DetailsInfoItem'
 
+import { Tip } from 'igz-controls/components'
+
 import {
   FEATURE_STORE_PAGE,
   FILES_PAGE,
@@ -131,7 +133,13 @@ export const generateProducerDetailsInfo = selectedItem => {
       return (
         <li className="details-item" key={key}>
           <div className="details-item__header">
-            {key === 'uri' ? key.toUpperCase() : capitalize(key)}:
+            {key === 'uri' || key === 'uid' ? key.toUpperCase() : capitalize(key)}:
+            {key === 'uid' && (
+              <Tip
+                className="details-item__tip"
+                text="Unique identifier representing the job or the workflow that generated the artifact"
+              />
+            )}
           </div>
           <DetailsInfoItem link={url} info={value} />
         </li>
