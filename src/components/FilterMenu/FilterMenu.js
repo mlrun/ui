@@ -398,7 +398,8 @@ const FilterMenu = ({
               dateTo={filtersStore.dates.value[1]}
               label={filter.label}
               onChange={handleChangeDates}
-              type='date-range-time'
+              selectedOptionId={filtersStore.dates.initialSelectedOptionId}
+              type="date-range-time"
             />
           )
         case ITERATIONS_FILTER:
