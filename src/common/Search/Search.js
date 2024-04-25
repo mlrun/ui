@@ -31,6 +31,7 @@ import './search.scss'
 
 const Search = ({
   className,
+  disabled,
   id,
   matches,
   onChange,
@@ -120,6 +121,7 @@ const Search = ({
     >
       <Input
         className="search-input"
+        disabled={disabled}
         id={id}
         wrapperClassName={wrapperClassName}
         density="dense"
@@ -180,6 +182,7 @@ const Search = ({
 
 Search.defaultProps = {
   className: '',
+  disabled: false,
   id:'search',
   matches: [],
   onFocus: () => {},
@@ -191,6 +194,7 @@ Search.defaultProps = {
 
 Search.propTypes = {
   className: PropTypes.string,
+  disabled: PropTypes.bool,
   id: PropTypes.string,
   matches: PropTypes.arrayOf(PropTypes.string),
   onChange: PropTypes.func.isRequired,

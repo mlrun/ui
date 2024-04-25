@@ -87,6 +87,14 @@
       }
     }
 
+    &_disabled {
+      pointer-events: none;
+
+      a {
+        cursor: not-allowed;
+      }
+    }
+
     &__preview {
       color: $spunPearl;
       font-size: 10px;

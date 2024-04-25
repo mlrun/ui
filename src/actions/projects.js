@@ -82,7 +82,9 @@ import {
   FETCH_PROJECT_SECRETS_FAILURE,
   FETCH_PROJECT_SECRETS_SUCCESS,
   SET_PROJECT_SECRETS,
-  SET_JOBS_MONITORING_DATA
+  SET_JOBS_MONITORING_DATA,
+  SET_MLRUN_IS_UNHEALTHY,
+  SET_MLRUN_UNHEALTHY_RETRYING
 } from '../constants'
 import {
   CONFLICT_ERROR_STATUS_CODE,
@@ -91,6 +93,9 @@ import {
 
 import { parseSummaryData } from '../utils/parseSummaryData'
 import { showErrorNotification } from '../utils/notifications.util'
+import { mlrunUnhealthyErrors } from '../components/ProjectsPage/projects.util'
+
+let firstServerErrorTimestamp = null
 
 const projectsAction = {
   changeProjectState: (project, status) => dispatch => {
@@ -528,17 +533,44 @@ const projectsAction = {
     type: FETCH_PROJECTS_SUCCESS,
     payload: projectsList
   }),
-  fetchProjectsSummary: signal => dispatch => {
+  fetchProjectsSummary: (signal, refresh) => dispatch => {
     dispatch(projectsAction.fetchProjectsSummaryBegin())
 
     return projectsApi
       .getProjectSummaries(signal)
       .then(({ data: { project_summaries } }) => {
+        if (firstServerErrorTimestamp && refresh) {
+          firstServerErrorTimestamp = null
+
+          refresh()
+        }
+
         dispatch(projectsAction.fetchProjectsSummarySuccess(parseSummaryData(project_summaries)))
+        dispatch(projectsAction.setMlrunIsUnhealthy(false))
+        dispatch(projectsAction.setMlrunUnhealthyRetrying(false))
 
         return parseSummaryData(project_summaries)
       })
       .catch(err => {
+        if (!firstServerErrorTimestamp) {
+          firstServerErrorTimestamp = new Date()
+
+          dispatch(projectsAction.setMlrunUnhealthyRetrying(true))
+        }
+
+        const threeMinutesPassed = ((new Date - firstServerErrorTimestamp) / 1000) > 180
+
+        if (mlrunUnhealthyErrors.includes(err.response?.status) && !threeMinutesPassed) {
+          setTimeout(() => {
+            dispatch(projectsAction.fetchProjectsSummary(signal, refresh))
+          }, 3000)
+        }
+
+        if (threeMinutesPassed) {
+          dispatch(projectsAction.setMlrunIsUnhealthy(true))
+          dispatch(projectsAction.setMlrunUnhealthyRetrying(true))
+        }
+
         dispatch(projectsAction.fetchProjectsSummaryFailure(err))
       })
   },
@@ -580,6 +612,14 @@ const projectsAction = {
   removeProjectData: () => ({ type: REMOVE_PROJECT_DATA }),
   removeProjectSummary: () => ({ type: REMOVE_PROJECT_SUMMARY }),
   removeProjects: () => ({ type: REMOVE_PROJECTS }),
+  setMlrunIsUnhealthy: isUnhealthy => ({
+    type: SET_MLRUN_IS_UNHEALTHY,
+    payload: isUnhealthy
+  }),
+  setMlrunUnhealthyRetrying: isRetrying => ({
+    type: SET_MLRUN_UNHEALTHY_RETRYING,
+    payload: isRetrying
+  }),
   setJobsMonitoringData: data => ({
     type: SET_JOBS_MONITORING_DATA,
     payload: data

@@ -21,6 +21,11 @@ import React from 'react'
 import { get } from 'lodash'
 
 import tasksApi from '../../api/tasks-api'
+import {
+  BAD_GATEWAY_ERROR_STATUS_CODE,
+  SERVICE_UNAVAILABLE_ERROR_STATUS_CODE,
+  GATEWAY_TIMEOUT_STATUS_CODE
+} from 'igz-controls/constants'
 import { BG_TASK_FAILED, BG_TASK_SUCCEEDED, pollTask } from '../../utils/poll.util'
 import { DANGER_BUTTON, FORBIDDEN_ERROR_STATUS_CODE } from 'igz-controls/constants'
 import { setNotification } from '../../reducers/notificationReducer'
@@ -32,6 +37,7 @@ import { ReactComponent as DownloadIcon } from 'igz-controls/images/ml-download.
 import { ReactComponent as UnarchiveIcon } from 'igz-controls/images/unarchive-icon.svg'
 import { ReactComponent as Yaml } from 'igz-controls/images/yaml.svg'
 
+export const mlrunUnhealthyErrors = [BAD_GATEWAY_ERROR_STATUS_CODE, SERVICE_UNAVAILABLE_ERROR_STATUS_CODE, GATEWAY_TIMEOUT_STATUS_CODE]
 export const projectDeletionKind = 'project.deletion'
 export const projectDeletionWrapperKind = 'project.deletion.wrapper'
 export const pageData = {

@@ -32,7 +32,7 @@ import ProjectsMonitoring from './ProjectsMonitoring/ProjectsMonitoring'
 import Search from '../../common/Search/Search'
 import Sort from '../../common/Sort/Sort'
 import YamlModal from '../../common/YamlModal/YamlModal'
-import { ConfirmDialog, RoundedIcon } from 'igz-controls/components'
+import { ConfirmDialog, RoundedIcon, PopUpDialog } from 'igz-controls/components'
 
 import { projectsSortOptions, projectsStates } from './projects.util'
 import { PRIMARY_BUTTON, TERTIARY_BUTTON } from 'igz-controls/constants'
@@ -75,7 +75,15 @@ const ProjectsView = ({
 
   return (
     <div className={projectsClassNames}>
-      {(projectStore.loading || projectStore.project.loading || tasksStore.loading) && <Loader />}
+      {(projectStore.loading || projectStore.project.loading || projectStore.projectsSummary.loading || tasksStore.loading) &&
+      <Loader />}
+      {
+        projectStore.mlrunUnhealthy.isUnhealthy && (
+          <PopUpDialog headerIsHidden>
+            MLRun seems to be down. Try again in a few minutes.
+          </PopUpDialog>
+        )
+      }
       {createProject && (
         <CreateProjectDialog
           closeNewProjectPopUp={closeNewProjectPopUp}
@@ -110,12 +118,14 @@ const ProjectsView = ({
               <div className="projects-content-header-item">
                 <ContentMenu
                   activeTab={selectedProjectsState}
+                  disabled={projectStore.mlrunUnhealthy.retrying}
                   screen="active"
                   tabs={projectsStates}
                   onClick={setSelectedProjectsState}
                 />
 
                 <Sort
+                  disabled={projectStore.mlrunUnhealthy.retrying}
                   isDescendingOrder={isDescendingOrder}
                   onSelectOption={handleSelectSortOption}
                   options={projectsSortOptions}
@@ -128,6 +138,7 @@ const ProjectsView = ({
               <div className="projects-content-header-item">
                 <Search
                   className="projects-search"
+                  disabled={projectStore.mlrunUnhealthy.retrying}
                   matches={filterMatches}
                   onChange={setFilterByName}
                   onFocus={handleSearchOnFocus}
@@ -137,11 +148,13 @@ const ProjectsView = ({
                 />
                 <PageActionsMenu
                   actionsMenuHeader={'New Project'}
+                  disabled={projectStore.mlrunUnhealthy.retrying}
                   onClick={() => setCreateProject(true)}
                   showActionsMenu
                   variant={PRIMARY_BUTTON}
                 />
                 <RoundedIcon
+                  disabled={projectStore.mlrunUnhealthy.retrying}
                   onClick={refreshProjects}
                   className="panel-title__btn_close"
                   tooltipText="Refresh"
@@ -176,7 +189,8 @@ const ProjectsView = ({
             </div>
           )
         ) : projectStore.loading ? null : (
-          <NoData message="Your projects list is empty." />
+          <NoData
+            message={projectStore.mlrunUnhealthy.retrying ? 'Retrieving projects.' : 'Your projects list is empty.'} />
         )}
       </div>
       {convertedYaml.length > 0 && (
