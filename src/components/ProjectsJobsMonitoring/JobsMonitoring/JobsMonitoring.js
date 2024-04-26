@@ -43,7 +43,7 @@ const JobsMonitoring = () => {
     jobRuns,
     jobs,
     largeRequestErrorMessage,
-    refreshJobs,
+    refreshJobsTabJobs: refreshJobs,
     setAbortingJobs,
     setJobRuns,
     setJobs,

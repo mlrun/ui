@@ -17,7 +17,7 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import React, { useCallback, useLayoutEffect, useMemo, useRef, useState } from 'react'
 import { connect, useDispatch, useSelector } from 'react-redux'
 import { Outlet, useLocation, useNavigate, useParams } from 'react-router-dom'
 
@@ -36,12 +36,14 @@ import {
   JOBS_MONITORING_PAGE,
   JOBS_MONITORING_SCHEDULED_TAB,
   JOBS_MONITORING_WORKFLOWS_TAB,
-  NAME_FILTER
+  NAME_FILTER,
+  SCHEDULE_TAB
 } from '../../constants'
 import { monitorJob, pollAbortingJobs, rerunJob } from '../Jobs/jobs.util'
 import { TERTIARY_BUTTON } from 'igz-controls/constants'
 import { parseJob } from '../../utils/parseJob'
 import { datePickerPastOptions, PAST_24_HOUR_DATE_OPTION } from '../../utils/datePicker.util'
+import jobsActions from '../../actions/jobs'
 
 import './projectsJobsMonitoring.scss'
 
@@ -53,7 +55,7 @@ const ProjectsJobsMonitoring = ({ fetchAllJobRuns, fetchJobFunction, fetchJobs }
   const [jobWizardMode, setJobWizardMode] = useState(null)
   const [jobWizardIsOpened, setJobWizardIsOpened] = useState(false)
   const [confirmData, setConfirmData] = useState(null)
-  const [selectedTab, setSelectedTab] = useState(JOBS_MONITORING_JOBS_TAB)
+  const [selectedTab, setSelectedTab] = useState('')
   const [jobRuns, setJobRuns] = useState([])
   const [jobs, setJobs] = useState([])
   const [selectedRunProject, setSelectedRunProject] = useState('')
@@ -110,7 +112,7 @@ const ProjectsJobsMonitoring = ({ fetchAllJobRuns, fetchJobFunction, fetchJobs }
     setAbortingJobs({})
   }, [])
 
-  const refreshJobs = useCallback(
+  const refreshJobsTabJobs = useCallback(
     filters => {
       if (params.jobName) {
         setJobRuns([])
@@ -170,7 +172,7 @@ const ProjectsJobsMonitoring = ({ fetchAllJobRuns, fetchJobFunction, fetchJobs }
               '*',
               abortJobRef,
               responseAbortingJobs,
-              () => refreshJobs(filters),
+              () => refreshJobsTabJobs(filters),
               dispatch
             )
           }
@@ -193,7 +195,26 @@ const ProjectsJobsMonitoring = ({ fetchAllJobRuns, fetchJobFunction, fetchJobs }
     ]
   )
 
-  useEffect(() => {
+  const refreshScheduledTabJobs = useCallback(
+    filters => {
+      setJobs([])
+      abortControllerRef.current = new AbortController()
+
+      dispatch(jobsActions.fetchScheduledJobs('*', filters, {
+        ui: {
+          controller: abortControllerRef.current,
+          setLargeRequestErrorMessage
+        }
+      })).then(jobs => {
+        if (jobs) {
+          setJobs(jobs.map(job => parseJob(job, SCHEDULE_TAB)))
+        }
+      })
+    },
+    [dispatch]
+  )
+
+  useLayoutEffect(() => {
     setSelectedTab(
       location.pathname.includes(JOBS_MONITORING_WORKFLOWS_TAB)
         ? JOBS_MONITORING_WORKFLOWS_TAB
@@ -222,7 +243,7 @@ const ProjectsJobsMonitoring = ({ fetchAllJobRuns, fetchJobFunction, fetchJobs }
                 <ActionBar
                   filterMenuName={selectedTab}
                   filters={jobsFilters}
-                  handleRefresh={refreshJobs}
+                  handleRefresh={refreshJobsTabJobs}
                   setContent={params.jobName ? setJobRuns : setJobs}
                   page={JOBS_MONITORING_PAGE}
                   tab={JOBS_MONITORING_JOBS_TAB}
@@ -247,7 +268,8 @@ const ProjectsJobsMonitoring = ({ fetchAllJobRuns, fetchJobFunction, fetchJobs }
                 jobWizardIsOpened,
                 jobWizardMode,
                 jobs,
-                refreshJobs,
+                refreshJobsTabJobs,
+                refreshScheduledTabJobs,
                 selectedCard,
                 setAbortingJobs,
                 setConfirmData,

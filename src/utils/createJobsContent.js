@@ -532,3 +532,113 @@ export const createJobsMonitoringContent = (jobs, jobName, isStagingMode) => {
     }
   })
 }
+
+export const createJobsMonitoringScheduleTabContent = jobs => {
+  return jobs.map(job => {
+    const identifierUnique = getJobIdentifier(job, true)
+    const [, , scheduleJobFunctionUid] = job.func?.match(/\w[\w'-]*/g, '') || []
+    const [, projectName, jobUid] = job.lastRunUri?.match(/(.+)@(.+)#([^:]+)(?::(.+))?/) || []
+    const jobName = job.name
+    const lastRunLink = () =>
+      projectName &&
+      jobName &&
+      jobUid &&
+      `/projects/${projectName}/jobs/${MONITOR_JOBS_TAB}/${jobName}/${jobUid}/overview`
+
+    return {
+      data: {
+        ...job,
+        ui: {
+          ...job.ui,
+          identifier: getJobIdentifier(job),
+          identifierUnique: identifierUnique
+        }
+      },
+      content: [
+        {
+          headerId: 'name',
+          headerLabel: 'Name',
+          id: `name.${identifierUnique}`,
+          value: job.name,
+          className: 'table-cell-name',
+          showStatus: true,
+          getLink: tab =>
+            validateArguments(scheduleJobFunctionUid, tab)
+              ? generateLinkToDetailsPanel(
+                job.project,
+                FUNCTIONS_PAGE,
+                null,
+                scheduleJobFunctionUid,
+                null,
+                tab
+              )
+              : '',
+          type: 'link'
+        },
+        {
+          headerId: 'projectName',
+          headerLabel: 'Project name',
+          id: `projectName.${identifierUnique}`,
+          value: job.project,
+          className: 'table-cell-2'
+        },
+        {
+          headerId: 'type',
+          headerLabel: 'Type',
+          id: `type.${identifierUnique}`,
+          value: job.type,
+          className: 'table-cell-small',
+          type: 'type'
+        },
+        {
+          headerId: 'nextrun',
+          headerLabel: 'Next run (Local TZ)',
+          id: `nextRun.${identifierUnique}`,
+          value: formatDatetime(job.nextRun),
+          className: 'table-cell-1',
+          type: 'date'
+        },
+        {
+          headerId: 'schedule',
+          headerLabel: 'Schedule (UTC)',
+          id: `schedule.${identifierUnique}`,
+          value: job.scheduled_object?.schedule || null,
+          className: 'table-cell-1',
+          tip: 'The first day of the week (0) is Monday, and not Sunday.'
+        },
+        {
+          headerId: 'labels',
+          headerLabel: 'Labels',
+          id: `labels.${identifierUnique}`,
+          value: parseKeyValues(job.scheduled_object?.task.metadata.labels || {}),
+          className: 'table-cell-1',
+          type: 'labels'
+        },
+        {
+          headerId: 'lastrun',
+          headerLabel: 'Last run (Local TZ)',
+          id: `lastRun.${identifierUnique}`,
+          value: formatDatetime(job.startTime),
+          className: 'table-cell-1',
+          getLink: lastRunLink,
+          type: 'link'
+        },
+        {
+          headerId: 'createdtime',
+          headerLabel: 'Created time (Local TZ)',
+          id: `createdTime.${identifierUnique}`,
+          value: formatDatetime(job.createdTime, 'Not yet started'),
+          className: 'table-cell-1',
+          type: 'date'
+        },
+        {
+          headerId: 'function',
+          id: `func.${identifierUnique}`,
+          value: job.func,
+          className: '',
+          type: 'hidden'
+        }
+      ]
+    }
+  })
+}
