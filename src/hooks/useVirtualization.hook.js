@@ -173,9 +173,12 @@ export const useVirtualization = ({
         lastVisibleItemIndex + HIDDEN_RENDER_ITEMS_LENGTH,
         rowsSizesLocal.length - 1
       )
-      const tableBodyPaddingTop = Math.min(
-        sum(rowsSizesLocal.slice(0, firstRenderIndex)),
-        elementsHeight - tableRefEl.clientHeight
+      const tableBodyPaddingTop = Math.max(
+        Math.min(
+          sum(rowsSizesLocal.slice(0, firstRenderIndex)),
+          elementsHeight - tableRefEl.clientHeight
+        ),
+        0
       )
 
       setVirtualizationConfig(() => {
