@@ -23,6 +23,19 @@ import {
 } from '../components/FunctionsPage/functions.util'
 import { TAG_LATEST } from '../constants'
 
+const isFunctionTransient = (response) => {
+  return TRANSIENT_FUNCTION_STATUSES.includes(
+    response.headers?.['x-mlrun-function-status']
+  )
+}
+
+const clearLogsTimeout = (timeoutRef) => {
+  if (timeoutRef.current) {
+    clearTimeout(timeoutRef.current)
+    timeoutRef.current = null
+  }
+}
+
 export const getFunctionLogs = (
   fetchFunctionLogs,
   fetchFunctionLogsTimeout,
@@ -34,16 +47,9 @@ export const getFunctionLogs = (
   refreshFunctions,
   startedDeploying
 ) => {
-  fetchFunctionLogs(projectName, name, tag).then(result => {
-    if (
-      TRANSIENT_FUNCTION_STATUSES.includes(
-        result.headers?.['x-mlrun-function-status']
-      )
-    ) {
-      if (fetchFunctionLogsTimeout.current) {
-        clearTimeout(fetchFunctionLogsTimeout.current)
-        fetchFunctionLogsTimeout.current = null
-      }
+  fetchFunctionLogs(projectName, name, tag).then(response => {
+    if (isFunctionTransient(response)) {
+      clearLogsTimeout(fetchFunctionLogsTimeout)
 
       fetchFunctionLogsTimeout.current = setTimeout(() => {
         getFunctionLogs(
@@ -61,7 +67,7 @@ export const getFunctionLogs = (
     } else {
       if (
         FUNCTIONS_READY_STATES.includes(
-          result.headers?.['x-mlrun-function-status']
+          response.headers?.['x-mlrun-function-status']
         ) &&
         startedDeploying
       ) {
@@ -79,6 +85,34 @@ export const getFunctionLogs = (
       clearTimeout(fetchFunctionLogsTimeout.current)
     }
 
-    setDetailsLogs(result.data || '')
+    setDetailsLogs(response.data || '')
+  })
+}
+
+export const getFunctionNuclioLogs = (
+  fetchFunctionNuclioLogs,
+  fetchFunctionNuclioLogsTimeoutRef,
+  projectName,
+  name,
+  tag,
+  setDetailsLogs
+) => {
+  fetchFunctionNuclioLogs(projectName, name, tag).then(response => {
+    if (isFunctionTransient(response)) {
+      clearLogsTimeout(fetchFunctionNuclioLogsTimeoutRef)
+
+      fetchFunctionNuclioLogsTimeoutRef.current = setTimeout(() => {
+        getFunctionNuclioLogs(
+          fetchFunctionNuclioLogs,
+          fetchFunctionNuclioLogsTimeoutRef,
+          projectName,
+          name,
+          tag,
+          setDetailsLogs
+        )
+      }, 2000)
+    }
+
+    setDetailsLogs(response.data || '')
   })
 }

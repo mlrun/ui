@@ -39,9 +39,9 @@ import createFunctionsContent from '../../utils/createFunctionsContent'
 import functionsActions from '../../actions/functions'
 import jobsActions from '../../actions/jobs'
 import { DANGER_BUTTON, LABEL_BUTTON } from 'igz-controls/constants'
-import { detailsMenu, infoHeaders, page, generateActionsMenu } from './functions.util'
+import { generateActionsMenu, generateFunctionsPageData } from './functions.util'
 import { getFunctionIdentifier } from '../../utils/getUniqueIdentifier'
-import { getFunctionLogs } from '../../utils/getFunctionLogs'
+import { getFunctionNuclioLogs, getFunctionLogs } from '../../utils/getFunctionLogs'
 import { isDetailsTabExists } from '../../utils/isDetailsTabExists'
 import { openPopUp } from 'igz-controls/utils/common.util'
 import { parseFunctions } from '../../utils/parseFunctions'
@@ -58,6 +58,7 @@ import cssVariables from './functions.scss'
 const Functions = ({
   deleteFunction,
   deployFunction,
+  fetchFunctionNuclioLogs,
   fetchFunctionLogs,
   fetchFunctions,
   functionsStore,
@@ -79,6 +80,7 @@ const Functions = ({
   const [largeRequestErrorMessage, setLargeRequestErrorMessage] = useState('')
   const abortControllerRef = useRef(new AbortController())
   const fetchFunctionLogsTimeout = useRef(null)
+  const fetchFunctionNuclioLogsTimeout = useRef(null)
   const tableBodyRef = useRef(null)
   const tableRef = useRef(null)
   const { isDemoMode, isStagingMode } = useMode()
@@ -183,6 +185,11 @@ const Functions = ({
     fetchFunctionLogsTimeout.current = null
   }, [])
 
+  const handleRemoveApplicationLogs = useCallback(() => {
+    clearTimeout(fetchFunctionNuclioLogsTimeout.current)
+    fetchFunctionNuclioLogsTimeout.current = null
+  }, [])
+
   const handleFetchFunctionLogs = useCallback(
     (item, projectName, setDetailsLogs) => {
       return getFunctionLogs(
@@ -197,6 +204,20 @@ const Functions = ({
       )
     },
     [fetchFunctionLogs, navigate, fetchData]
+  )
+
+  const handleFetchFunctionApplicationLogs = useCallback(
+    (item, projectName, setDetailsLogs) => {
+      return getFunctionNuclioLogs(
+        fetchFunctionNuclioLogs,
+        fetchFunctionNuclioLogsTimeout,
+        projectName,
+        item.name,
+        item.tag,
+        setDetailsLogs
+      )
+    },
+    [fetchFunctionNuclioLogs]
   )
 
   const removeFunction = useCallback(
@@ -344,17 +365,25 @@ const Functions = ({
     [deployFunction, dispatch, filtersStore, refreshFunctions, runNewJob]
   )
 
-  const pageData = {
-    page,
-    details: {
-      menu: detailsMenu,
-      infoHeaders,
-      refreshLogs: handleFetchFunctionLogs,
-      removeLogs: handleRemoveLogs,
-      withLogsRefreshBtn: false,
-      type: FUNCTIONS_PAGE
-    }
-  }
+  const pageData = useMemo(
+    () =>
+      generateFunctionsPageData(
+        selectedFunction,
+        handleFetchFunctionLogs,
+        handleFetchFunctionApplicationLogs,
+        handleRemoveLogs,
+        handleRemoveApplicationLogs,
+        isDemoMode
+      ),
+    [
+      handleFetchFunctionApplicationLogs,
+      handleFetchFunctionLogs,
+      handleRemoveApplicationLogs,
+      handleRemoveLogs,
+      isDemoMode,
+      selectedFunction
+    ]
+  )
 
   const actionsMenu = useMemo(
     () => func =>

@@ -29,11 +29,13 @@ import {
   FUNCTION_READY_STATE,
   FUNCTION_RUN_KINDS,
   FUNCTION_RUNNING_STATE,
+  FUNCTION_TYPE_APPLICATION,
   FUNCTION_TYPE_JOB,
   FUNCTION_TYPE_LOCAL,
   FUNCTION_TYPE_NUCLIO,
   FUNCTION_TYPE_REMOTE,
   FUNCTION_TYPE_SERVING,
+  FUNCTIONS_PAGE,
   NAME_FILTER,
   PANEL_FUNCTION_CREATE_MODE,
   SHOW_UNTAGGED_FILTER
@@ -87,6 +89,77 @@ export const filters = [
   { type: SHOW_UNTAGGED_FILTER, label: 'Show untagged' }
 ]
 export const TRANSIENT_FUNCTION_STATUSES = [FUNCTION_PENDINDG_STATE, FUNCTION_RUNNING_STATE]
+
+export const generateFunctionsPageData = (
+  selectedFunction,
+  handleFetchFunctionLogs,
+  handleFetchFunctionApplicationLogs,
+  handleRemoveLogs,
+  handleRemoveApplicationLogs,
+  isDemoMode
+) => {
+  const showAdditionalLogs = selectedFunction.type === FUNCTION_TYPE_APPLICATION && isDemoMode
+
+  return {
+    page,
+    details: {
+      menu: generateFunctionsDetailsMenu(selectedFunction),
+      infoHeaders: generateFunctionsInfoHeaders(selectedFunction),
+      refreshLogs: handleFetchFunctionLogs,
+      refreshAdditionalLogs: showAdditionalLogs && handleFetchFunctionApplicationLogs,
+      removeLogs: handleRemoveLogs,
+      removeAdditionalLogs: showAdditionalLogs && handleRemoveApplicationLogs,
+      withLogsRefreshBtn: false,
+      type: FUNCTIONS_PAGE
+    }
+  }
+}
+
+const generateFunctionsDetailsMenu = selectedFunction => [
+  {
+    id: 'overview',
+    label: 'overview'
+  },
+  {
+    id: 'code',
+    label: 'code',
+    hidden: selectedFunction.type === FUNCTION_TYPE_APPLICATION
+  },
+  {
+    id: DETAILS_BUILD_LOG_TAB,
+    label: 'build log'
+  }
+]
+
+const generateFunctionsInfoHeaders = selectedFunction => {
+  return [
+    { label: 'Name', id: 'name' },
+    { label: 'Kind', id: 'type' },
+    { label: 'Code entry point', id: 'command' },
+    {
+      label: 'Internal URL',
+      id: 'internalUrl',
+      hidden: selectedFunction.type !== FUNCTION_TYPE_APPLICATION
+    },
+    { label: 'Image', id: 'image' },
+    {
+      label: 'Application image',
+      id: 'applicationImage',
+      hidden: selectedFunction.type !== FUNCTION_TYPE_APPLICATION
+    },
+    { label: 'Version tag', id: 'tag' },
+    { label: 'Hash', id: 'hash' },
+    {
+      label: 'Internal port',
+      id: 'internalPort',
+      hidden: selectedFunction.type !== FUNCTION_TYPE_APPLICATION
+    },
+    { label: 'Code origin', id: 'codeOrigin' },
+    { label: 'Updated', id: 'updated' },
+    { label: 'Default handler', id: 'defaultHandler' },
+    { label: 'Description', id: 'description' }
+  ]
+}
 
 export const getFunctionsEditableTypes = isStagingMode => {
   const editableTypes = [FUNCTION_TYPE_JOB, FUNCTION_TYPE_LOCAL, '']

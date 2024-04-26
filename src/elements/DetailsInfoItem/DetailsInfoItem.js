@@ -56,7 +56,6 @@ const DetailsInfoItem = React.forwardRef(
       info,
       isFieldInEditMode,
       item,
-      link,
       onClick,
       params,
       setChangesData,
@@ -149,7 +148,7 @@ const DetailsInfoItem = React.forwardRef(
           />
         </div>
       )
-    } else if (item?.copyToClipboard) {
+    } else if (item?.copyToClipboard && info) {
       return (
         <CopyToClipboard
           className="details-item__data details-item__copy-to-clipboard"
@@ -218,11 +217,20 @@ const DetailsInfoItem = React.forwardRef(
           </Link>
         </Tooltip>
       )
-    } else if (link && info) {
-      return (
-        <Link className="link details-item__data details-item__link" to={link}>
+    } else if ((item.link || item.externalLink) && info) {
+      return item.link ? (
+        <Link className="link details-item__data details-item__link" to={item.link}>
           <Tooltip template={<TextTooltipTemplate text={info} />}>{info}</Tooltip>
         </Link>
+      ) : (
+        <a className="details-item__data details-item__link" href={info} target="_blank" rel="noreferrer">
+          <Tooltip
+            className="link"
+            template={<TextTooltipTemplate text={info} />}
+          >
+            {info}
+          </Tooltip>
+        </a>
       )
     } else if ((typeof info !== 'object' || Array.isArray(info)) && item?.editModeEnabled) {
       return (
@@ -256,6 +264,22 @@ const DetailsInfoItem = React.forwardRef(
           )}
         </div>
       )
+    } else if (Array.isArray(info)) {
+      return (
+        <div className="details-item__data details-item__data_multiline">
+          {info.map((infoItem, index) => {
+            return (
+              <div className="details-item__data" key={index}>
+                {typeof infoItem === 'string' ? (
+                  <Tooltip template={<TextTooltipTemplate text={infoItem} />}>{infoItem}</Tooltip>
+                ) : (
+                  infoItem
+                )}
+              </div>
+            )
+          })}
+        </div>
+      )
     }
 
     return (
@@ -271,10 +295,10 @@ const DetailsInfoItem = React.forwardRef(
 )
 
 DetailsInfoItem.defaultProps = {
-  chipOptions: {},
   chipsClassName: '',
   chipsData: {
     chips: [],
+    chipOptions: {},
     delimiter: null
   },
   currentField: '',
@@ -286,7 +310,6 @@ DetailsInfoItem.defaultProps = {
   info: null,
   isFieldInEditMode: false,
   item: {},
-  link: '',
   onClick: null,
   params: {},
   setChangesData: () => {},
@@ -295,10 +318,10 @@ DetailsInfoItem.defaultProps = {
 
 DetailsInfoItem.propTypes = {
   changesData: PropTypes.object,
-  chipOptions: CHIP_OPTIONS,
   chipsClassName: PropTypes.string,
   chipsData: PropTypes.shape({
     chips: PropTypes.arrayOf(PropTypes.string),
+    chipOptions: CHIP_OPTIONS,
     delimiter: PropTypes.oneOfType([PropTypes.string, PropTypes.element])
   }),
   currentField: PropTypes.string,
@@ -311,7 +334,6 @@ DetailsInfoItem.propTypes = {
   info: PropTypes.any,
   isFieldInEditMode: PropTypes.bool,
   item: PropTypes.shape({}),
-  link: PropTypes.string,
   onClick: PropTypes.func,
   params: PropTypes.shape({}),
   setChangesData: PropTypes.func,

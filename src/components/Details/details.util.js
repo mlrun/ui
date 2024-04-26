@@ -25,6 +25,7 @@ import {
   FEATURE_STORE_PAGE,
   FEATURE_VECTORS_TAB,
   FILES_PAGE,
+  FUNCTION_TYPE_APPLICATION,
   FUNCTION_TYPE_LOCAL,
   MODEL_ENDPOINTS_TAB,
   MODELS_TAB
@@ -230,8 +231,8 @@ export const generateJobsContent = selectedItem => {
         selectedItem.iteration >= 0
           ? selectedItem.iteration
           : selectedItem.iterationStats?.length
-          ? selectedItem.iterationStats.length - 1
-          : 'N/A'
+            ? selectedItem.iterationStats.length - 1
+            : 'N/A'
     }
   }
 }
@@ -256,13 +257,24 @@ export const generateFunctionsContent = selectedItem => ({
     value: formatDatetime(selectedItem.updated, 'N/A')
   },
   command: {
-    value: selectedItem.command
+    value: selectedItem.command,
+    copyToClipboard: selectedItem.type !== FUNCTION_TYPE_APPLICATION,
+    externalLink: selectedItem.type === FUNCTION_TYPE_APPLICATION
+  },
+  internalPort: {
+    value: selectedItem.internal_application_port
+  },
+  internalUrl: {
+    value: selectedItem.internal_invocation_urls
   },
   defaultHandler: {
     value: selectedItem.default_handler
   },
   image: {
     value: getFunctionImage(selectedItem)
+  },
+  applicationImage: {
+    value: selectedItem.application_image
   },
   description: {
     value: selectedItem.description
@@ -440,8 +452,14 @@ export const countChanges = changesData => {
   return changesCounter
 }
 
-export const generateArtifactIdentifiers = (artifactsIdentifiers, identifier, setArtifactsIdentifiers) => {
-  const newArtifactsIdentifiers = artifactsIdentifiers.filter(artifactsIdentifier => artifactsIdentifier !== identifier)
+export const generateArtifactIdentifiers = (
+  artifactsIdentifiers,
+  identifier,
+  setArtifactsIdentifiers
+) => {
+  const newArtifactsIdentifiers = artifactsIdentifiers.filter(
+    artifactsIdentifier => artifactsIdentifier !== identifier
+  )
 
   if (!artifactsIdentifiers.includes(identifier)) {
     newArtifactsIdentifiers.push(identifier)

@@ -144,7 +144,9 @@ const DetailsTabsContent = ({
       return (
         <DetailsLogs
           item={selectedItem}
+          refreshAdditionalLogs={pageData.details.refreshAdditionalLogs}
           refreshLogs={pageData.details.refreshLogs}
+          removeAdditionalLogs={pageData.details.removeAdditionalLogs}
           removeLogs={pageData.details.removeLogs}
           withLogsRefreshBtn={pageData.details.withLogsRefreshBtn}
         />
