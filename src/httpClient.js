@@ -21,8 +21,9 @@ import axios from 'axios'
 import qs from 'qs'
 
 import { ConfirmDialog } from 'igz-controls/components'
-import { CANCEL_REQUEST_TIMEOUT, LARGE_REQUEST_CANCELED } from './constants'
+import { CANCEL_REQUEST_TIMEOUT, LARGE_REQUEST_CANCELED, PROJECTS_PAGE_PATH } from './constants'
 import { openPopUp } from 'igz-controls/utils/common.util'
+import { mlrunUnhealthyErrors } from './components/ProjectsPage/projects.util'
 
 const headers = {
   'Cache-Control': 'no-cache'
@@ -31,6 +32,9 @@ const headers = {
 // serialize a param with an array value as a repeated param, for example:
 // { label: ['host', 'owner=admin'] } => 'label=host&label=owner%3Dadmin'
 const paramsSerializer = params => qs.stringify(params, { arrayFormat: 'repeat' })
+
+const MAX_CONSECUTIVE_ERRORS_COUNT = 2
+let consecutiveErrorsCount = 0
 
 export const mainBaseUrl = `${process.env.PUBLIC_URL}/api/v1`
 export const mainBaseUrlV2 = `${process.env.PUBLIC_URL}/api/v2`
@@ -112,7 +116,9 @@ const requestLargeDataOnFulfill = config => {
 const requestLargeDataOnReject = error => {
   return Promise.reject(error)
 }
-const responseLargeDataOnFulfill = response => {
+const responseFulfillInterceptor = response => {
+  consecutiveErrorsCount = 0
+
   if (response.config?.ui?.requestId) {
     const isLargeResponse =
       response.data?.total_size >= 0
@@ -133,10 +139,20 @@ const responseLargeDataOnFulfill = response => {
 
   return response
 }
-const responseLargeDataOnReject = error => {
+const responseRejectInterceptor = error => {
   if (error.config?.ui?.requestId) {
     clearTimeout(requestTimeouts[error.config.ui.requestId])
     delete requestTimeouts[error.config.ui.requestId]
+  }
+
+  if (error.config?.method === 'get') {
+    if (mlrunUnhealthyErrors.includes(error.response?.status) && consecutiveErrorsCount < MAX_CONSECUTIVE_ERRORS_COUNT) {
+      consecutiveErrorsCount++
+
+      if (consecutiveErrorsCount === MAX_CONSECUTIVE_ERRORS_COUNT && window.location.pathname !== `/${PROJECTS_PAGE_PATH}`) {
+        window.location.href = '/projects'
+      }
+    }
   }
 
   return Promise.reject(error)
@@ -148,8 +164,8 @@ mainHttpClient.interceptors.request.use(requestLargeDataOnFulfill, requestLargeD
 mainHttpClientV2.interceptors.request.use(requestLargeDataOnFulfill, requestLargeDataOnReject)
 
 // Response interceptors
-mainHttpClient.interceptors.response.use(responseLargeDataOnFulfill, responseLargeDataOnReject)
-mainHttpClientV2.interceptors.response.use(responseLargeDataOnFulfill, responseLargeDataOnReject)
+mainHttpClient.interceptors.response.use(responseFulfillInterceptor, responseRejectInterceptor)
+mainHttpClientV2.interceptors.response.use(responseFulfillInterceptor, responseRejectInterceptor)
 
 export const showLargeResponsePopUp = setLargeRequestErrorMessage => {
   if (!largeResponsePopUpIsOpen) {

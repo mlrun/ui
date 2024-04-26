@@ -31,8 +31,9 @@ import { TERTIARY_BUTTON } from 'igz-controls/constants'
 import { ReactComponent as CaretIcon } from 'igz-controls/images/dropdown.svg'
 
 import './splitButton.scss'
+import PropTypes from 'prop-types'
 
-const SplitButton = ({ mainButton, additionalButton }) => {
+const SplitButton = ({ disabled, mainButton, additionalButton }) => {
   const { onClick: mainAction, ...mainProps } = mainButton
   const { icon, options, onSelectOption, selectedOption, ...additionalProps } = additionalButton
 
@@ -64,11 +65,12 @@ const SplitButton = ({ mainButton, additionalButton }) => {
     <div className="split-btn" ref={mainRef}>
       <div className="split-btn__header">
         <div className="split-btn__button">
-          <Button {...mainProps} onClick={handleMainAction} />
+          <Button {...mainProps} onClick={handleMainAction} disabled={disabled} />
         </div>
         <div className="split-btn__button">
           <Button
             {...additionalProps}
+            disabled={disabled}
             icon={icon ?? <CaretIcon />}
             onClick={() => setIsBodyOpen(state => !state)}
           />
@@ -96,6 +98,7 @@ const SplitButton = ({ mainButton, additionalButton }) => {
 }
 
 SplitButton.defaultProps = {
+  disabled: false,
   mainButton: {
     label: 'Main',
     onClick: () => {},
@@ -112,6 +115,7 @@ SplitButton.defaultProps = {
 }
 
 SplitButton.propTypes = {
+  disabled: PropTypes.bool,
   mainButton: MAIN_SPLIT_BUTTON,
   additionalButton: ADDITIONAL_SPLIT_BUTTON
 }

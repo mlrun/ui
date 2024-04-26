@@ -107,7 +107,7 @@ const Projects = () => {
 
     dispatch(projectsAction.removeProjects())
     fetchMinimalProjects()
-    dispatch(projectsAction.fetchProjectsSummary(abortControllerRef.current.signal))
+    dispatch(projectsAction.fetchProjectsSummary(abortControllerRef.current.signal, refreshProjects))
 
     dispatch(fetchBackgroundTasks({}))
       .unwrap()
