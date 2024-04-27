@@ -19,6 +19,7 @@ such restriction.
 */
 import { capitalize } from 'lodash'
 import { deleteArtifact } from '../reducers/artifactsReducer'
+import { deleteArtifacts } from '../reducers/artifactsReducer'
 import { setNotification } from '../reducers/notificationReducer'
 import { showErrorNotification } from './notifications.util'
 
@@ -30,9 +31,15 @@ export const handleDeleteArtifact = (
   tree,
   refreshArtifacts,
   filters,
-  artifactType
+  artifactType,
+  category,
+  isDeleteAll
 ) => {
-  dispatch(deleteArtifact({ project, key, tag, tree }))
+  dispatch(
+    isDeleteAll
+      ? deleteArtifacts({ project, name: key, category })
+      : deleteArtifact({ project, key, tag, tree })
+  )
     .unwrap()
     .then(() => {
       refreshArtifacts(filters)
@@ -54,7 +61,9 @@ export const handleDeleteArtifact = (
           tree,
           refreshArtifacts,
           filters,
-          artifactType
+          artifactType,
+          category,
+          isDeleteAll
         )
       )
     })

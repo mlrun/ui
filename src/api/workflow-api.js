@@ -20,7 +20,7 @@ such restriction.
 import { capitalize, set } from 'lodash'
 
 import { mainHttpClient } from '../httpClient'
-import { GROUP_BY_WORKFLOW, STATE_FILTER_ALL_ITEMS } from '../constants'
+import { GROUP_BY_WORKFLOW, FILTER_ALL_ITEMS } from '../constants'
 
 const generateQueryParams = (project, filter, config) => {
   // Generating encoded JSON query string to send as a value to the filter query param
@@ -50,7 +50,7 @@ const generateQueryParams = (project, filter, config) => {
     set(config, ['params', 'name-contains'], filter.name)
   }
 
-  if (filter.state !== STATE_FILTER_ALL_ITEMS) {
+  if (filter.state !== FILTER_ALL_ITEMS) {
     queryParams.predicates.push({
       key: 'status',
       op: 1,

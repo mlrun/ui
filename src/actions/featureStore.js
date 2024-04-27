@@ -97,7 +97,7 @@ const featureStoreActions = {
           error.response.status === CONFLICT_ERROR_STATUS_CODE
             ? 'Adding an already-existing FeatureSet'
             : error.response.status === FORBIDDEN_ERROR_STATUS_CODE
-            ? 'You are not permitted to create new feature set.'
+            ? 'You do not have permission to create a new feature set.'
             : error.message
 
         dispatch(featureStoreActions.createNewFeatureSetFailure(message))
@@ -456,6 +456,8 @@ const featureStoreActions = {
         const message =
           error.response.status === CONFLICT_ERROR_STATUS_CODE
             ? 'Adding an already-existing FeatureSet'
+            : error.response.status === FORBIDDEN_ERROR_STATUS_CODE
+            ? 'You do not have permission to create a new feature set'
             : error.message
 
         dispatch(featureStoreActions.createNewFeatureSetFailure(message))

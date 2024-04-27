@@ -48,7 +48,8 @@ const ProjectStatistics = ({ statistics }) => {
         state: 'running',
         dates: {
           value: anyTimeOption.handler(),
-          isPredefined: false
+          isPredefined: false,
+          initialSelectedOptionId: anyTimeOption.id
         }
       }
     } else if (key === 'failed') {
@@ -61,7 +62,8 @@ const ProjectStatistics = ({ statistics }) => {
         state: 'error',
         dates: {
           value: past24HourOption.handler(),
-          isPredefined: past24HourOption.isPredefined
+          isPredefined: past24HourOption.isPredefined,
+          initialSelectedOptionId: past24HourOption.id
         }
       }
     }

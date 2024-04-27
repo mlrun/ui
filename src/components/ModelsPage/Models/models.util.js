@@ -31,7 +31,9 @@ import {
   MODELS_TAB,
   TAG_LATEST,
   FULL_VIEW_MODE,
-  MODEL_TYPE
+  MODEL_TYPE,
+  ACTION_MENU_PARENT_ROW,
+  ACTION_MENU_PARENT_ROW_EXPANDED
 } from '../../../constants'
 import {
   fetchModel,
@@ -305,7 +307,8 @@ export const generateActionsMenu = (
   projectName,
   handleRefresh,
   modelsFilters,
-  handleDeployModel
+  handleDeployModel,
+  menuPosition
 ) => {
   const isTargetPathValid = getIsTargetPathValid(model ?? {}, frontendSpec)
   const downloadPath = `${model?.target_path}${model?.model_file || ''}`
@@ -314,11 +317,13 @@ export const generateActionsMenu = (
     [
       {
         label: 'Add a tag',
+        hidden: menuPosition === ACTION_MENU_PARENT_ROW_EXPANDED,
         icon: <TagIcon />,
         onClick: handleAddTag
       },
       {
         label: 'Download',
+        hidden: menuPosition === ACTION_MENU_PARENT_ROW_EXPANDED,
         icon: <DownloadIcon />,
         onClick: model => {
           dispatch(
@@ -333,11 +338,13 @@ export const generateActionsMenu = (
       },
       {
         label: 'Copy URI',
+        hidden: menuPosition === ACTION_MENU_PARENT_ROW_EXPANDED,
         icon: <Copy />,
         onClick: model => copyToClipboard(generateUri(model, MODELS_TAB), dispatch)
       },
       {
         label: 'View YAML',
+        hidden: menuPosition === ACTION_MENU_PARENT_ROW_EXPANDED,
         icon: <YamlIcon />,
         onClick: toggleConvertedYaml
       },
@@ -346,6 +353,7 @@ export const generateActionsMenu = (
         icon: <Delete />,
         className: 'danger',
         disabled: !model?.tag,
+        hidden: [ACTION_MENU_PARENT_ROW, ACTION_MENU_PARENT_ROW_EXPANDED].includes(menuPosition),
         tooltip: !model?.tag
           ? 'A tag is required to delete a model. Open the model, click on the edit icon, and assign a tag before proceeding with the deletion'
           : '',
@@ -363,6 +371,31 @@ export const generateActionsMenu = (
                 handleRefresh,
                 modelsFilters,
                 MODEL_TYPE
+              )
+            }
+          )
+      },
+      {
+        label: 'Delete all',
+        icon: <Delete />,
+        hidden: ![ACTION_MENU_PARENT_ROW, ACTION_MENU_PARENT_ROW_EXPANDED].includes(menuPosition),
+        className: 'danger',
+        onClick: () =>
+          openDeleteConfirmPopUp(
+            'Delete dataset?',
+            `Do you want to delete all versions of the dataset "${model.db_key}"? Deleted datasets can not be restored.`,
+            () => {
+              handleDeleteArtifact(
+                dispatch,
+                projectName,
+                model.db_key,
+                model.tag,
+                model.tree,
+                handleRefresh,
+                modelsFilters,
+                MODEL_TYPE,
+                MODEL_TYPE,
+                true
               )
             }
           )

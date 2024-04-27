@@ -184,7 +184,7 @@ const Datasets = () => {
   )
 
   const actionsMenu = useMemo(
-    () => dataset =>
+    () => (dataset, menuPosition) =>
       generateActionsMenu(
         dataset,
         frontendSpec,
@@ -193,7 +193,8 @@ const Datasets = () => {
         handleAddTag,
         params.projectName,
         handleRefresh,
-        datasetsFilters
+        datasetsFilters,
+        menuPosition
       ),
     [
       datasetsFilters,

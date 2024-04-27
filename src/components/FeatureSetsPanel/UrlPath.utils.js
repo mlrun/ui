@@ -39,6 +39,7 @@ import { showErrorNotification } from '../../utils/notifications.util'
 import { fetchArtifact, fetchArtifacts } from '../../reducers/artifactsReducer'
 
 export const CSV = 'csv'
+export const URL = 'URL'
 
 const dbfsTargetPathRegex = /^(dbfs):(\/\/\/|\/\/)(?!.*:\/\/)([\w\-._~:/?#[\]%@!$&'()*+,;=]+)$/i
 

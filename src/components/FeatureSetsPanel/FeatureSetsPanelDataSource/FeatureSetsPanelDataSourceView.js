@@ -40,15 +40,16 @@ const FeatureSetsPanelDataSourceView = ({
   data,
   featureStore,
   handleKindOnChange,
-  handleUrlOnBlur,
-  handleUrlOnFocus,
+  handleUrlInputOnChange,
+  handleUrlOnApply,
+  handleUrlOnEditModeChange,
   handleUrlSelectOnChange,
   setData,
   setNewFeatureSetDataSourceParseDates,
+  setNewFeatureSetSchedule,
   setShowSchedule,
   setValidation,
   showSchedule,
-  setNewFeatureSetSchedule,
   validation
 }) => {
   return (
@@ -66,10 +67,13 @@ const FeatureSetsPanelDataSourceView = ({
           />
           <UrlPath
             comboboxSelectList={comboboxSelectList}
-            invalid={!validation.isUrlValid}
-            handleUrlOnBlur={handleUrlOnBlur}
-            handleUrlOnFocus={handleUrlOnFocus}
+            handleUrlInputOnChange={handleUrlInputOnChange}
+            handleUrlOnApply={handleUrlOnApply}
+            handleUrlOnEditModeChange={handleUrlOnEditModeChange}
             handleUrlSelectOnChange={handleUrlSelectOnChange}
+            invalid={!validation.isUrlValid}
+            previewClassName={'data-source'}
+            withActionButtons
           />
         </div>
         {data.kind !== CSV && (
@@ -135,8 +139,9 @@ FeatureSetsPanelDataSourceView.propTypes = {
   data: PropTypes.shape({}).isRequired,
   featureStore: PropTypes.shape({}).isRequired,
   handleKindOnChange: PropTypes.func.isRequired,
-  handleUrlOnBlur: PropTypes.func.isRequired,
-  handleUrlOnFocus: PropTypes.func.isRequired,
+  handleUrlInputOnChange: PropTypes.func.isRequired,
+  handleUrlOnApply: PropTypes.func.isRequired,
+  handleUrlOnEditModeChange: PropTypes.func.isRequired,
   handleUrlSelectOnChange: PropTypes.func,
   setData: PropTypes.func.isRequired,
   setNewFeatureSetDataSourceParseDates: PropTypes.func.isRequired,

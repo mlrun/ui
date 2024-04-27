@@ -81,7 +81,7 @@ import {
   DELETE_ALL_JOB__RUNS_BEGIN,
   DELETE_ALL_JOB_RUNS_FAILURE,
   DELETE_ALL_JOB_RUNS_SUCCESS,
-  STATE_FILTER_ALL_ITEMS
+  FILTER_ALL_ITEMS
 } from '../constants'
 import { getNewJobErrorMsg } from '../components/JobWizard/JobWizard.util'
 import { showErrorNotification } from '../utils/notifications.util'
@@ -100,7 +100,7 @@ const generateRequestParams = filters => {
     params.name = `~${filters.name}`
   }
 
-  if (filters?.state && filters.state !== STATE_FILTER_ALL_ITEMS) {
+  if (filters?.state && filters.state !== FILTER_ALL_ITEMS) {
     params.state = filters.state
   }
 
@@ -142,11 +142,11 @@ const jobsActions = {
   abortJobSuccess: () => ({
     type: ABORT_JOB_SUCCESS
   }),
-  deleteAllJobRuns: job => dispatch => {
+  deleteAllJobRuns: (project, job) => dispatch => {
     dispatch(jobsActions.deleteAllJobRunsBegin())
 
     return jobsApi
-      .deleteAllJobRuns(job.project, job.name)
+      .deleteAllJobRuns(project, job.name)
       .then(() => dispatch(jobsActions.deleteAllJobRunsSuccess()))
       .catch(error => {
         dispatch(jobsActions.deleteAllJobRunsFailure(error.message))

@@ -21,39 +21,54 @@ import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import PropTypes from 'prop-types'
 import { useDispatch } from 'react-redux'
 import { useParams } from 'react-router-dom'
-import { isNil } from 'lodash'
+import { isEmpty, isNil } from 'lodash'
+import classNames from 'classnames'
 
 import Combobox from '../../common/Combobox/Combobox'
+import { Tooltip, TextTooltipTemplate, RoundedIcon } from 'igz-controls/components'
 
 import { MLRUN_STORAGE_INPUT_PATH_SCHEME } from '../../constants'
 import targetPath from '../../utils/parseTargetPath'
 import { getParsedResource } from '../../utils/resources'
 import { pathTips, pathPlaceholders } from '../../utils/panelPathScheme'
 
+import { ReactComponent as Edit } from 'igz-controls/images/edit.svg'
+import { ReactComponent as Checkmark } from 'igz-controls/images/checkmark.svg'
+import { ReactComponent as Close } from 'igz-controls/images/close.svg'
+
+import './urlPath.scss'
+
 import {
   generateComboboxMatchesList,
   getArtifact,
   getArtifacts,
-  getProjectsNames
+  getProjectsNames,
+  URL
 } from './UrlPath.utils'
 
 const UrlPath = ({
   comboboxSelectList,
   defaultPath,
   disabled,
+  handleUrlInputOnChange,
+  handleUrlOnApply,
   handleUrlOnBlur,
+  handleUrlOnDiscard,
+  handleUrlOnEditModeChange,
   handleUrlOnFocus,
   handleUrlSelectOnChange,
-  invalid
+  invalid,
+  previewClassName,
+  withActionButtons
 }) => {
   const [urlData, setUrlData] = useState({
-    pathType: '',
-    projectItemType: '',
-    project: '',
     artifact: '',
-    placeholder: '',
+    artifactReference: '',
     path: '',
-    artifactReference: ''
+    pathType: '',
+    placeholder: '',
+    project: '',
+    projectItemType: ''
   })
   const [comboboxMatches, setComboboxMatches] = useState([])
   const [projects, setProjects] = useState([])
@@ -64,6 +79,18 @@ const UrlPath = ({
   const [urlArtifactPathEntered, setUrlArtifactPathEntered] = useState(false)
   const [urlArtifactReferencePathEntered, setUrlArtifactReferencePathEntered] = useState(false)
   const [inputDefaultValue, setInputDefaultValue] = useState('')
+  const [editMode, setEditMode] = useState({
+    isActive: isEmpty(defaultPath.path),
+    savedUrlData: {
+      artifact: '',
+      artifactReference: '',
+      path: '',
+      pathType: '',
+      placeholder: '',
+      project: '',
+      projectItemType: ''
+    }
+  })
 
   const dispatch = useDispatch()
   const { projectName: project } = useParams()
@@ -72,7 +99,8 @@ const UrlPath = ({
     if (
       defaultPath?.path.length > 0 &&
       urlData?.path.length === 0 &&
-      inputDefaultValue.length === 0
+      inputDefaultValue.length === 0 &&
+      !editMode.isActive
     ) {
       const { schema, path } = targetPath(defaultPath.path)
       const selectDefaultValues =
@@ -81,7 +109,14 @@ const UrlPath = ({
       setUrlData(state => ({ ...state, pathType: selectDefaultValues.id, path }))
       setInputDefaultValue(path)
     }
-  }, [comboboxSelectList, defaultPath.path, inputDefaultValue, invalid, urlData.path])
+  }, [
+    comboboxSelectList,
+    defaultPath.path,
+    inputDefaultValue,
+    invalid,
+    urlData.path,
+    editMode.isActive
+  ])
 
   const handleGetProjectNames = useCallback(() => {
     getProjectsNames(dispatch, setProjects, project)
@@ -155,6 +190,19 @@ const UrlPath = ({
     urlProjectPathEntered
   ])
 
+  useEffect(() => {
+    withActionButtons && handleUrlOnEditModeChange(editMode.isActive)
+  }, [editMode.isActive, withActionButtons, handleUrlOnEditModeChange])
+
+  useEffect(() => {
+    if (withActionButtons && invalid) {
+      setEditMode(prevState => ({
+        ...prevState,
+        isActive: true
+      }))
+    }
+  }, [invalid, withActionButtons, setEditMode])
+
   const generatedPathTips = useMemo(() => {
     const pathTipsList = pathTips(urlData.projectItemType)
     return pathTipsList[urlData.pathType]
@@ -179,7 +227,7 @@ const UrlPath = ({
     setUrlArtifactPathEntered(false)
     setUrlArtifactReferencePathEntered(false)
 
-    handleUrlSelectOnChange && handleUrlSelectOnChange()
+    handleUrlSelectOnChange(path)
   }
 
   const handleUrlPathChange = path => {
@@ -197,6 +245,7 @@ const UrlPath = ({
 
       setUrlData(state => ({
         ...state,
+        path: path,
         projectItemType: pathItems[0],
         project: pathItems[1] ?? '',
         artifact: artifact ?? '',
@@ -215,33 +264,107 @@ const UrlPath = ({
         path
       }))
     }
+    handleUrlInputOnChange(path)
   }
 
-  return (
-    <Combobox
-      comboboxClassName="url"
-      disabled={disabled}
-      hideSearchInput={!urlProjectItemTypeEntered}
-      inputDefaultValue={
-        urlData.pathType === MLRUN_STORAGE_INPUT_PATH_SCHEME
-          ? urlData.projectItemType
-          : urlData.path
-      }
-      inputOnChange={handleUrlPathChange}
-      inputPlaceholder={urlData.placeholder}
-      invalid={invalid}
-      invalidText={generatedPathTips}
-      matches={urlData.pathType === MLRUN_STORAGE_INPUT_PATH_SCHEME ? comboboxMatches : []}
-      maxSuggestedMatches={3}
-      onBlur={(selectValue, inputValue) => handleUrlOnBlur({ selectValue, inputValue, urlData })}
-      onFocus={handleUrlOnFocus}
-      required
-      requiredText="This field is required"
-      selectDefaultValue={comboboxSelectList.find(option => option.id === urlData.pathType)}
-      selectDropdownList={comboboxSelectList}
-      selectOnChange={handleUrlPathTypeChange}
-      selectPlaceholder="URL"
-    />
+  const handleApplyClick = () => {
+    const isUrlValid = handleUrlOnApply({
+      selectValue: urlData.pathType,
+      inputValue: urlData.path,
+      urlData
+    })
+
+    if (isUrlValid || isNil(isUrlValid)) {
+      setEditMode(prevState => ({
+        ...prevState,
+        isActive: false
+      }))
+    }
+  }
+
+  const handleDiscardClick = () => {
+    setUrlData(editMode.savedUrlData)
+    setEditMode(prevState => ({
+      ...prevState,
+      isActive: false
+    }))
+    handleUrlOnDiscard()
+  }
+
+  const handleEditClick = () => {
+    setEditMode({
+      isActive: true,
+      savedUrlData: urlData
+    })
+  }
+
+  return !editMode.isActive && withActionButtons ? (
+    <div className={classNames('url-path url-path-preview', previewClassName)}>
+      <Tooltip
+        className={classNames('url-path-preview__text', disabled && 'url-path-preview__disabled')}
+        template={<TextTooltipTemplate text={`${`${urlData.pathType}${urlData.path}` || URL}`} />}
+      >
+        <span>{`${urlData.pathType}${urlData.path}`}</span>
+        {(isEmpty(urlData.pathType) || isEmpty(urlData.path)) && (
+          <span>
+            {URL}
+            {<span className="url-path-preview__required">*</span>}
+          </span>
+        )}
+      </Tooltip>
+      {!disabled && (
+        <div className="url-path-preview__actions">
+          <RoundedIcon onClick={handleEditClick} tooltipText="Edit">
+            <Edit />
+          </RoundedIcon>
+        </div>
+      )}
+    </div>
+  ) : (
+    <div className="url-path">
+      <Combobox
+        comboboxClassName="url"
+        disabled={disabled}
+        hideSearchInput={!urlProjectItemTypeEntered}
+        inputDefaultValue={
+          urlData.pathType === MLRUN_STORAGE_INPUT_PATH_SCHEME && !urlData.path
+            ? urlData.projectItemType
+            : urlData.path
+        }
+        inputOnChange={handleUrlPathChange}
+        inputPlaceholder={urlData.placeholder}
+        invalid={invalid}
+        invalidText={generatedPathTips}
+        matches={urlData.pathType === MLRUN_STORAGE_INPUT_PATH_SCHEME ? comboboxMatches : []}
+        maxSuggestedMatches={3}
+        onBlur={
+          withActionButtons
+            ? null
+            : (selectValue, inputValue) => handleUrlOnBlur({ selectValue, inputValue, urlData })
+        }
+        onFocus={handleUrlOnFocus}
+        required
+        requiredText="This field is required"
+        selectDefaultValue={comboboxSelectList.find(option => option.id === urlData.pathType)}
+        selectDropdownList={comboboxSelectList}
+        selectOnChange={handleUrlPathTypeChange}
+        selectPlaceholder={URL}
+      />
+      {withActionButtons && (
+        <div className="url-path-actions">
+          <RoundedIcon onClick={handleApplyClick} tooltipText="Apply" disabled={invalid}>
+            <Checkmark className="url-path-actions__apply-btn" />
+          </RoundedIcon>
+          <RoundedIcon
+            onClick={handleDiscardClick}
+            tooltipText="Discard changes"
+            disabled={isEmpty(editMode.savedUrlData.pathType)}
+          >
+            <Close />
+          </RoundedIcon>
+        </div>
+      )}
+    </div>
   )
 }
 
@@ -253,8 +376,16 @@ UrlPath.defaultProps = {
     path: ''
   },
   disabled: false,
-  handleUrlSelectOnChange: null,
-  invalid: false
+  handleUrlInputOnChange: () => {},
+  handleUrlOnApply: () => {},
+  handleUrlOnBlur: () => {},
+  handleUrlOnDiscard: () => {},
+  handleUrlOnEditModeChange: () => {},
+  handleUrlOnFocus: () => {},
+  handleUrlSelectOnChange: () => {},
+  invalid: false,
+  previewClassName: '',
+  withActionButtons: false
 }
 
 UrlPath.propTypes = {
@@ -266,10 +397,16 @@ UrlPath.propTypes = {
     path: PropTypes.string
   }),
   disabled: PropTypes.bool,
-  handleUrlOnBlur: PropTypes.func.isRequired,
-  handleUrlOnFocus: PropTypes.func.isRequired,
+  handleUrlInputOnChange: PropTypes.func,
+  handleUrlOnApply: PropTypes.func,
+  handleUrlOnBlur: PropTypes.func,
+  handleUrlOnDiscard: PropTypes.func,
+  handleUrlOnEditModeChange: PropTypes.func,
+  handleUrlOnFocus: PropTypes.func,
   handleUrlSelectOnChange: PropTypes.func,
-  invalid: PropTypes.bool
+  invalid: PropTypes.bool,
+  previewClassName: PropTypes.string,
+  withActionButtons: PropTypes.bool
 }
 
 export default UrlPath

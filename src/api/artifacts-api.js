@@ -65,6 +65,16 @@ const artifactsApi = {
 
     return mainHttpClientV2.delete(`/projects/${project}/artifacts/${key}`, config)
   },
+  deleteArtifacts: (project, name, category) => {
+    const config = {
+      params: {}
+    }
+    
+    if (name) config.params.name = name
+    if (category) config.params.category = category
+
+    return mainHttpClientV2.delete(`/projects/${project}/artifacts`, config)
+  },
   deleteTag: (project, tag, data) =>
     mainHttpClient.delete(`/projects/${project}/tags/${tag}`, { data }),
   getArtifactPreview: (project, path, user, fileFormat, signal) => {

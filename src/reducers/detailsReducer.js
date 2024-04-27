@@ -40,13 +40,19 @@ import {
   SET_FILTERS_WAS_HANDLED,
   SET_EDIT_MODE,
   FETCH_JOB_PODS_BEGIN,
-  REMOVE_MODEL_ENDPOINT
+  REMOVE_MODEL_ENDPOINT,
+  DATE_FILTER_ANY_TIME,
+  SET_DETAILS_DATES
 } from '../constants'
 
 const initialState = {
   changes: {
     counter: 0,
     data: {}
+  },
+  dates: {
+    value: DATE_FILTER_ANY_TIME,
+    isPredefined: false
   },
   editMode: false,
   error: null,
@@ -187,6 +193,11 @@ const detailsReducer = (state = initialState, { type, payload }) => {
           ...state.changes,
           data: payload
         }
+      }
+    case SET_DETAILS_DATES:
+      return {
+        ...state,
+        dates: payload
       }
     case SET_EDIT_MODE:
       return {

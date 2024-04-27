@@ -82,8 +82,7 @@ import {
   FETCH_PROJECT_SECRETS_FAILURE,
   FETCH_PROJECT_SECRETS_SUCCESS,
   SET_PROJECT_SECRETS,
-  SET_JOBS_MONITORING_DATA,
-  REMOVE_JOBS_MONITORING_DATA_FILTERS
+  SET_JOBS_MONITORING_DATA
 } from '../constants'
 import {
   CONFLICT_ERROR_STATUS_CODE,
@@ -123,8 +122,8 @@ const projectsAction = {
           error.response.status === CONFLICT_ERROR_STATUS_CODE
             ? `Project name "${postData.metadata.name}" already exists`
             : error.response.status === INTERNAL_SERVER_ERROR_STATUS_CODE
-            ? 'Cannot create more than 200 projects due to resource limitation. Either delete existing projects or contact our customer support for assistance'
-            : error.message
+              ? 'Cannot create more than 200 projects due to resource limitation. Either delete existing projects or contact our customer support for assistance'
+              : error.message
 
         dispatch(projectsAction.createProjectFailure(message))
       })
@@ -577,20 +576,17 @@ const projectsAction = {
     type: FETCH_PROJECT_WORKFLOWS_SUCCESS,
     payload: workflows
   }),
-  removeJobsMonitoringFilters: () => ({
-    type: REMOVE_JOBS_MONITORING_DATA_FILTERS
-  }),
   removeNewProjectError: () => ({ type: REMOVE_NEW_PROJECT_ERROR }),
   removeProjectData: () => ({ type: REMOVE_PROJECT_DATA }),
   removeProjectSummary: () => ({ type: REMOVE_PROJECT_SUMMARY }),
   removeProjects: () => ({ type: REMOVE_PROJECTS }),
-  setProjectSecrets: secrets => ({
-    type: SET_PROJECT_SECRETS,
-    payload: secrets
-  }),
   setJobsMonitoringData: data => ({
     type: SET_JOBS_MONITORING_DATA,
     payload: data
+  }),
+  setProjectSecrets: secrets => ({
+    type: SET_PROJECT_SECRETS,
+    payload: secrets
   })
 }
 
