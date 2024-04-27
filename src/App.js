@@ -105,14 +105,11 @@ const ProjectsJobsMonitoringWorkflows = lazyRetry(() =>
     './components/ProjectsJobsMonitoring/ProjectsJobsMonitoringWorkflows/ProjectsJobsMonitoringWorkflows'
   )
 )
-const ProjectsJobsMonitoringScheduled = lazyRetry(() =>
-  import(
-    './components/ProjectsJobsMonitoring/ProjectsJobsMonitoringScheduled/ProjectsJobsMonitoringScheduled'
-  )
-)
 const JobsMonitoring = lazyRetry(() =>
   import('./components/ProjectsJobsMonitoring/JobsMonitoring/JobsMonitoring')
 )
+const ScheduledMonitoring = lazyRetry(() =>
+  import('./components/ProjectsJobsMonitoring/ScheduledMonitoring/ScheduledMonitoring'))
 
 const App = () => {
   const { isNuclioModeDisabled } = useNuclioMode()
@@ -143,7 +140,7 @@ const App = () => {
             />
             <Route
               path={JOBS_MONITORING_SCHEDULED_TAB}
-              element={<ProjectsJobsMonitoringScheduled />}
+              element={<ScheduledMonitoring />}
             />
           </Route>
           <Route path="projects/:projectName" element={<Navigate replace to={PROJECT_MONITOR} />} />
