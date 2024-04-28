@@ -17,28 +17,38 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useEffect, useMemo, useRef, useState } from 'react'
 import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
-import { useParams } from 'react-router-dom'
 
+import Logs from './Logs'
 import NoData from '../../common/NoData/NoData'
-import Loader from '../../common/Loader/Loader'
-import { Button } from 'igz-controls/components'
-
-import { ReactComponent as RefreshIcon } from 'igz-controls/images/refresh.svg'
 
 const DetailsLogs = ({
-  item,
-  refreshLogs,
   functionsStore,
+  item,
   jobsStore,
+  refreshAdditionalLogs,
+  refreshLogs,
+  removeAdditionalLogs,
   removeLogs,
   withLogsRefreshBtn
 }) => {
   const [detailsLogs, setDetailsLogs] = useState('')
-  const params = useParams()
+  const [detailsAdditionalLogs, setDetailsAdditionalLogs] = useState('')
   const streamLogsRef = useRef()
+  const streamAdditionalLogsRef = useRef()
+  const logsAreLoading = useMemo(() => {
+    return (
+      functionsStore.logs.loading || functionsStore.nuclioLogs.loading || jobsStore.logs.loading
+    )
+  }, [functionsStore.logs.loading, functionsStore.nuclioLogs.loading, jobsStore.logs.loading])
+  const mainLogsAreLoading = useMemo(() => {
+    return functionsStore.logs.loading || jobsStore.logs.loading
+  }, [functionsStore.logs.loading, jobsStore.logs.loading])
+  const additionalLogsAreLoading = useMemo(() => {
+    return functionsStore.nuclioLogs.loading
+  }, [functionsStore.nuclioLogs.loading])
 
   useEffect(() => {
     refreshLogs(item, item.project, setDetailsLogs, streamLogsRef)
@@ -49,48 +59,65 @@ const DetailsLogs = ({
     }
   }, [item, refreshLogs, removeLogs, withLogsRefreshBtn])
 
-  const handleScroll = event => {
-    if (
-      streamLogsRef.current &&
-      event.target.scrollHeight - event.target.scrollTop - 1 < event.target.clientHeight
-    ) {
-      streamLogsRef.current()
-    }
-  }
+  useEffect(() => {
+    refreshAdditionalLogs &&
+      refreshAdditionalLogs(item, item.project, setDetailsAdditionalLogs, streamAdditionalLogsRef)
 
-  return !detailsLogs.length && !functionsStore.logs.loading && !jobsStore.logs.loading ? (
+    return () => {
+      setDetailsAdditionalLogs('')
+      removeAdditionalLogs && removeAdditionalLogs()
+    }
+  }, [item, withLogsRefreshBtn, refreshAdditionalLogs, removeAdditionalLogs])
+
+  return !detailsLogs.length && !detailsAdditionalLogs.length && !logsAreLoading ? (
     <NoData />
   ) : (
-    <div className="table__item_logs">
-      <div className="table__item_logs-content" onScroll={handleScroll}>
-        {detailsLogs}
-      </div>
-      <div className="table__item_logs-panel">
-        {withLogsRefreshBtn && (
-          <div className="logs-refresh">
-            <Button
-              icon={<RefreshIcon />}
-              label=""
-              tooltip="Refresh"
-              onClick={() => {
-                refreshLogs(item, params.projectName, setDetailsLogs, streamLogsRef)
-              }}
-            />
-          </div>
-        )}
-        <div className="logs-loader">
-          {(functionsStore.logs.loading || jobsStore.logs.loading) && (
-            <Loader section secondary small />
-          )}
-        </div>
-      </div>
+    <div className="table__item-logs-container">
+      {mainLogsAreLoading || detailsLogs.length ? (
+        <Logs
+          isLoading={logsAreLoading}
+          refreshLogs={() => refreshLogs(item, item.project, setDetailsLogs, streamLogsRef)}
+          removeLogs={removeLogs}
+          item={item}
+          ref={streamLogsRef}
+          withLogsRefreshBtn={withLogsRefreshBtn}
+          detailsLogs={detailsLogs}
+          setDetailsLogs={setDetailsLogs}
+        />
+      ) : null}
+      {refreshAdditionalLogs && (additionalLogsAreLoading || detailsAdditionalLogs.length) ? (
+        <Logs
+          isLoading={logsAreLoading}
+          refreshLogs={() =>
+            refreshAdditionalLogs(
+              item,
+              item.project,
+              setDetailsAdditionalLogs,
+              streamAdditionalLogsRef
+            )
+          }
+          removeLogs={removeAdditionalLogs}
+          item={item}
+          ref={streamAdditionalLogsRef}
+          withLogsRefreshBtn={withLogsRefreshBtn}
+          detailsLogs={detailsAdditionalLogs}
+          setDetailsLogs={setDetailsAdditionalLogs}
+        />
+      ) : null}
     </div>
   )
 }
 
+DetailsLogs.defaultProps = {
+  refreshAdditionalLogs: false,
+  removeAdditionalLogs: false
+}
+
 DetailsLogs.propTypes = {
   item: PropTypes.object.isRequired,
+  refreshAdditionalLogs: PropTypes.oneOfType([PropTypes.func, PropTypes.bool]),
   refreshLogs: PropTypes.func.isRequired,
+  removeAdditionalLogs: PropTypes.oneOfType([PropTypes.func, PropTypes.bool]),
   removeLogs: PropTypes.func.isRequired,
   withLogsRefreshBtn: PropTypes.bool.isRequired
 }

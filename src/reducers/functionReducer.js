@@ -27,18 +27,22 @@ import {
   FETCH_FUNCTIONS_BEGIN,
   FETCH_FUNCTIONS_FAILURE,
   FETCH_FUNCTIONS_SUCCESS,
+  FETCH_FUNCTIONS_TEMPLATES_FAILURE,
+  FETCH_FUNCTION_NUCLIO_LOGS_BEGIN,
+  FETCH_FUNCTION_NUCLIO_LOGS_FAILURE,
+  FETCH_FUNCTION_NUCLIO_LOGS_SUCCESS,
   FETCH_FUNCTION_LOGS_BEGIN,
   FETCH_FUNCTION_LOGS_FAILURE,
   FETCH_FUNCTION_LOGS_SUCCESS,
   FETCH_FUNCTION_TEMPLATE_BEGIN,
   FETCH_FUNCTION_TEMPLATE_FAILURE,
   FETCH_FUNCTION_TEMPLATE_SUCCESS,
-  FETCH_FUNCTIONS_TEMPLATES_FAILURE,
+  FETCH_HUB_FUNCTIONS_BEGIN,
+  FETCH_HUB_FUNCTIONS_FAILURE,
   FETCH_HUB_FUNCTION_TEMPLATE_BEGIN,
   FETCH_HUB_FUNCTION_TEMPLATE_FAILURE,
   FETCH_HUB_FUNCTION_TEMPLATE_SUCCESS,
-  FETCH_HUB_FUNCTIONS_BEGIN,
-  FETCH_HUB_FUNCTIONS_FAILURE,
+  FUNCTION_TYPE_JOB,
   GET_FUNCTION_BEGIN,
   GET_FUNCTION_FAILURE,
   GET_FUNCTION_SUCCESS,
@@ -46,10 +50,11 @@ import {
   REMOVE_FUNCTION,
   REMOVE_FUNCTIONS_ERROR,
   REMOVE_FUNCTION_TEMPLATE,
-  REMOVE_NEW_FUNCTION,
   REMOVE_HUB_FUNCTIONS,
+  REMOVE_NEW_FUNCTION,
   RESET_NEW_FUNCTION_CODE_CUSTOM_IMAGE,
   SET_FUNCTIONS_TEMPLATES,
+  SET_HUB_FUNCTIONS,
   SET_NEW_FUNCTION,
   SET_NEW_FUNCTION_BASE_IMAGE,
   SET_NEW_FUNCTION_BUILD_IMAGE,
@@ -78,9 +83,7 @@ import {
   SET_NEW_FUNCTION_TAG,
   SET_NEW_FUNCTION_TRACK_MODELS,
   SET_NEW_FUNCTION_VOLUMES,
-  SET_NEW_FUNCTION_VOLUME_MOUNTS,
-  SET_HUB_FUNCTIONS,
-  FUNCTION_TYPE_JOB
+  SET_NEW_FUNCTION_VOLUME_MOUNTS
 } from '../constants'
 
 const initialState = {
@@ -89,6 +92,10 @@ const initialState = {
   functions: [],
   func: {},
   logs: {
+    loading: false,
+    error: null
+  },
+  nuclioLogs: {
     loading: false,
     error: null
   },
@@ -207,6 +214,30 @@ const functionReducer = (state = initialState, { type, payload }) => {
       return {
         ...state,
         logs: {
+          loading: false,
+          error: null
+        }
+      }
+    case FETCH_FUNCTION_NUCLIO_LOGS_BEGIN:
+      return {
+        ...state,
+        nuclioLogs: {
+          ...state.nuclioLogs,
+          loading: true
+        }
+      }
+    case FETCH_FUNCTION_NUCLIO_LOGS_FAILURE:
+      return {
+        ...state,
+        nuclioLogs: {
+          loading: false,
+          error: payload
+        }
+      }
+    case FETCH_FUNCTION_NUCLIO_LOGS_SUCCESS:
+      return {
+        ...state,
+        nuclioLogs: {
           loading: false,
           error: null
         }

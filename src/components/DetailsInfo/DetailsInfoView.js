@@ -176,7 +176,6 @@ const DetailsInfoView = React.forwardRef(
                         info={info}
                         isFieldInEditMode={detailsInfoState.editMode.field === header.id}
                         item={detailsStore.infoContent[header.id]}
-                        link={detailsStore.infoContent[header.id]?.link}
                         onClick={handleInfoItemClick}
                         params={params}
                         ref={ref}
@@ -201,6 +200,12 @@ const DetailsInfoView = React.forwardRef(
                 <>
                   <h3 className="item-info__header">Drift</h3>
                   <ul className="item-info__details">{additionalInfo.drift}</ul>
+                </>
+              )}
+              {!isEveryObjectValueEmpty(additionalInfo.configuration) && (
+                <>
+                  <h3 className="item-info__header">Configuration</h3>
+                  <ul className="item-info__details">{additionalInfo.configuration}</ul>
                 </>
               )}
               {!isEveryObjectValueEmpty(additionalInfo.sources) && (
