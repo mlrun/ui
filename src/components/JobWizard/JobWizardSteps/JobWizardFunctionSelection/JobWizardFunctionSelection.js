@@ -262,8 +262,8 @@ const JobWizardFunctionSelection = ({
         setFunctions(groupedFunctions)
 
         if (filterByName.length > 0) {
-          const filteredFunctions = validFunctions.filter(func => {
-            return func.metadata.name.includes(filterByName)
+          const filteredFunctions = groupedFunctions.filter(func => {
+            return func.name.includes(filterByName)
           })
 
           setFilteredFunctions(filteredFunctions)
