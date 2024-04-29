@@ -31,13 +31,15 @@ const generateQueryParams = (project, filter, config) => {
   // op === 7 - means that the filtered response should be equal or to be less to the "timestamp_value"
   // op === 9 - checks if the value contains |string_value| as a substring match
   const queryParams = {
-    predicates: [
-      {
-        key: 'name',
-        op: 9,
-        string_value: project
-      }
-    ]
+    predicates: []
+  }
+
+  if (project !== '*') {
+    queryParams.predicates.push({
+      key: 'name',
+      op: 9,
+      string_value: project
+    })
   }
 
   if (filter.name) {
@@ -83,13 +85,24 @@ const workflowsApi = {
   getWorkflow: (project, workflowId) => {
     return mainHttpClient.get(`/projects/${project}/pipelines/${workflowId}`)
   },
-  getWorkflows: (project, filter, config = {}) => {
-    if (filter?.groupBy === GROUP_BY_WORKFLOW) {
-      set(config, ['params', 'filter'], generateQueryParams(project, filter, config))
-    }
-    set(config, ['params', 'sort_by'], 'created_at desc')
+  getWorkflows: (project, filter, config = {}, page_token) => {
+    let newConfig = {}
 
-    return mainHttpClient.get(`/projects/${project}/pipelines`, config)
+    if (page_token) {
+      newConfig.params = { page_token }
+    } else {
+      newConfig = {
+        ...config
+      }
+
+      if (filter?.groupBy === GROUP_BY_WORKFLOW) {
+        set(newConfig, ['params', 'filter'], generateQueryParams(project, filter, config))
+      }
+
+      set(newConfig, ['params', 'sort_by'], 'created_at desc')
+    }
+
+    return mainHttpClient.get(`/projects/${project}/pipelines`, newConfig)
   }
 }
 

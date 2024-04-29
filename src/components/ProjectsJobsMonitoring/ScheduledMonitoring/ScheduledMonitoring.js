@@ -22,27 +22,26 @@ import React, { useEffect, useMemo, useState } from 'react'
 import ScheduledJobsTable from '../../../elements/ScheduledJobsTable/ScheduledJobsTable'
 import { ProjectJobsMonitoringContext } from '../ProjectsJobsMonitoring'
 
-import { createJobsMonitoringScheduleTabContent } from '../../../utils/createJobsContent'
+import { createScheduleJobsMonitoringContent } from '../../../utils/createJobsContent'
 
 const ScheduledMonitoring = () => {
   const [dataIsLoaded, setDataIsLoaded] = useState(false)
-  const { jobs, largeRequestErrorMessage, refreshScheduledTabJobs: refreshJobs } = React.useContext(
-    ProjectJobsMonitoringContext)
+  const {
+    jobs,
+    largeRequestErrorMessage,
+    refreshScheduledTabJobs: refreshJobs
+  } = React.useContext(ProjectJobsMonitoringContext)
 
   const tableContent = useMemo(() => {
-    return createJobsMonitoringScheduleTabContent(jobs)
+    return createScheduleJobsMonitoringContent(jobs)
   }, [jobs])
-
 
   useEffect(() => {
     if (!dataIsLoaded) {
       refreshJobs({})
       setDataIsLoaded(true)
     }
-  }, [
-    dataIsLoaded,
-    refreshJobs
-  ])
+  }, [dataIsLoaded, refreshJobs])
 
   useEffect(() => {
     return () => {

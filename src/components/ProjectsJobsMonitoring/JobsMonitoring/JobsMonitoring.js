@@ -29,6 +29,7 @@ import { ProjectJobsMonitoringContext } from '../ProjectsJobsMonitoring'
 import { createJobsMonitoringContent } from '../../../utils/createJobsContent'
 import { useMode } from '../../../hooks/mode.hook'
 import { JOBS_MONITORING_JOBS_TAB, JOBS_MONITORING_PAGE } from '../../../constants'
+import { datePickerPastOptions, PAST_24_HOUR_DATE_OPTION } from '../../../utils/datePicker.util'
 
 const JobsMonitoring = () => {
   const [selectedJob, setSelectedJob] = useState({})
@@ -51,8 +52,6 @@ const JobsMonitoring = () => {
     terminateAbortTasksPolling
   } = React.useContext(ProjectJobsMonitoringContext)
 
-  const filters = useMemo(() => [], [])
-
   const tableContent = useMemo(
     () =>
       createJobsMonitoringContent(params.jobName ? jobRuns : jobs, params.jobName, isStagingMode),
@@ -66,8 +65,16 @@ const JobsMonitoring = () => {
 
   useEffect(() => {
     if (isEmpty(selectedJob) && !params.jobId && !dataIsLoaded) {
+      const past24HourOption = datePickerPastOptions.find(
+        option => option.id === PAST_24_HOUR_DATE_OPTION
+      )
+
       refreshJobs({
-        dates: filtersStore.dates,
+        dates: {
+          value: past24HourOption.handler(),
+          isPredefined: past24HourOption.isPredefined,
+          initialSelectedOptionId: past24HourOption.id
+        },
         state: filtersStore.state
       })
       setDataIsLoaded(true)
@@ -103,7 +110,6 @@ const JobsMonitoring = () => {
         abortingJobs={abortingJobs}
         ref={{ abortJobRef }}
         context={ProjectJobsMonitoringContext}
-        filters={filters}
         jobRuns={jobRuns}
         jobs={jobs}
         largeRequestErrorMessage={largeRequestErrorMessage}

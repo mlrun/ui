@@ -27,10 +27,12 @@ import PreviewModal from '../../elements/PreviewModal/PreviewModal'
 import Breadcrumbs from '../../common/Breadcrumbs/Breadcrumbs'
 import ActionBar from '../ActionBar/ActionBar'
 import JobsMonitoringFilters from './JobsMonitoring/JobsMonitoringFilters'
+import WorkflowsMonitoringFilters from './WorkflowsMonitoring/WorkflowsMonitoringFilters'
 
 import { actionCreator, STATS_TOTAL_CARD, tabs } from './projectsJobsMotinoring.util'
 import {
   FILTER_ALL_ITEMS,
+  GROUP_BY_WORKFLOW,
   JOB_KIND_LOCAL,
   JOBS_MONITORING_JOBS_TAB,
   JOBS_MONITORING_PAGE,
@@ -44,6 +46,7 @@ import { TERTIARY_BUTTON } from 'igz-controls/constants'
 import { parseJob } from '../../utils/parseJob'
 import { datePickerPastOptions, PAST_24_HOUR_DATE_OPTION } from '../../utils/datePicker.util'
 import jobsActions from '../../actions/jobs'
+import workflowActions from '../../actions/workflow'
 
 import './projectsJobsMonitoring.scss'
 
@@ -87,6 +90,22 @@ const ProjectsJobsMonitoring = ({ fetchAllJobRuns, fetchJobFunction, fetchJobs }
       }
     ],
     [params.jobName]
+  )
+
+  const workflowsFilters = useMemo(
+    () => [
+      { type: NAME_FILTER, label: 'Name:', initialValue: '' },
+      {
+        type: 'dates',
+        initialValue: {
+          value: datePickerPastOptions
+            .find(option => option.id === PAST_24_HOUR_DATE_OPTION)
+            .handler(),
+          isPredefined: true
+        }
+      }
+    ],
+    []
   )
 
   const handleTabChange = tabName => {
@@ -200,12 +219,14 @@ const ProjectsJobsMonitoring = ({ fetchAllJobRuns, fetchJobFunction, fetchJobs }
       setJobs([])
       abortControllerRef.current = new AbortController()
 
-      dispatch(jobsActions.fetchScheduledJobs('*', filters, {
-        ui: {
-          controller: abortControllerRef.current,
-          setLargeRequestErrorMessage
-        }
-      })).then(jobs => {
+      dispatch(
+        jobsActions.fetchScheduledJobs('*', filters, {
+          ui: {
+            controller: abortControllerRef.current,
+            setLargeRequestErrorMessage
+          }
+        })
+      ).then(jobs => {
         if (jobs) {
           setJobs(jobs.map(job => parseJob(job, SCHEDULE_TAB)))
         }
@@ -224,6 +245,42 @@ const ProjectsJobsMonitoring = ({ fetchAllJobRuns, fetchJobFunction, fetchJobs }
     )
   }, [location.pathname])
 
+  const getWorkflows = useCallback(
+    filter => {
+      abortControllerRef.current = new AbortController()
+
+      dispatch(
+        workflowActions.fetchWorkflows(
+          '*',
+          { ...filter, groupBy: GROUP_BY_WORKFLOW },
+          {
+            ui: {
+              controller: abortControllerRef.current,
+              setLargeRequestErrorMessage
+            }
+          },
+          true
+        )
+      )
+    },
+    [dispatch]
+  )
+
+  const tabData = useMemo(() => {
+    return {
+      [JOBS_MONITORING_JOBS_TAB]: {
+        filters: jobsFilters,
+        handleRefresh: refreshJobsTabJobs,
+        modalFilters: <JobsMonitoringFilters />
+      },
+      [JOBS_MONITORING_WORKFLOWS_TAB]: {
+        filters: workflowsFilters,
+        handleRefresh: getWorkflows,
+        modalFilters: <WorkflowsMonitoringFilters />
+      }
+    }
+  }, [getWorkflows, jobsFilters, refreshJobsTabJobs, workflowsFilters])
+
   return (
     <>
       <div className="job-monitoring content-wrapper">
@@ -239,17 +296,17 @@ const ProjectsJobsMonitoring = ({ fetchAllJobRuns, fetchJobFunction, fetchJobs }
               tabs={tabs}
             />
             <div className="action-bar">
-              {selectedTab === JOBS_MONITORING_JOBS_TAB && !params.jobId && (
+              {((selectedTab === JOBS_MONITORING_JOBS_TAB && !params.jobId) ||
+                (selectedTab === JOBS_MONITORING_WORKFLOWS_TAB && !params.workflowId)) && (
                 <ActionBar
                   filterMenuName={selectedTab}
-                  filters={jobsFilters}
-                  handleRefresh={refreshJobsTabJobs}
-                  setContent={params.jobName ? setJobRuns : setJobs}
+                  filters={tabData[selectedTab].filters}
+                  handleRefresh={tabData[selectedTab].handleRefresh}
                   page={JOBS_MONITORING_PAGE}
-                  tab={JOBS_MONITORING_JOBS_TAB}
+                  tab={selectedTab}
                   withRefreshButton={false}
                 >
-                  <JobsMonitoringFilters />
+                  {tabData[selectedTab].modalFilters}
                 </ActionBar>
               )}
             </div>
@@ -262,6 +319,7 @@ const ProjectsJobsMonitoring = ({ fetchAllJobRuns, fetchJobFunction, fetchJobs }
                 jobsMonitoringData,
                 largeRequestErrorMessage,
                 editableItem,
+                getWorkflows,
                 handleMonitoring,
                 handleRerunJob,
                 jobRuns,

@@ -300,7 +300,6 @@ ActionBar.propTypes = {
   navigateLink: PropTypes.string,
   page: PropTypes.string.isRequired,
   removeSelectedItem: PropTypes.func,
-  setContent: PropTypes.func.isRequired,
   setSelectedRowData: PropTypes.func,
   tab: PropTypes.string,
   withRefreshButton: PropTypes.bool
