@@ -130,7 +130,7 @@ function RegisterModelModal({ actions, isOpen, onResolve, params, refresh }) {
                 variant: TERTIARY_BUTTON
               },
               header: createModelMessages.overwriteConfirmTitle,
-              message: createModelMessages.overwriteConfirmMessage
+              message: createModelMessages.getOverwriteConfirmMessage(response.data.artifacts[0].kind)
             })
           } else {
             return handleRegisterModel()
