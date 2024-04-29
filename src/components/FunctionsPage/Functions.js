@@ -81,6 +81,7 @@ const Functions = ({
   const fetchFunctionLogsTimeout = useRef(null)
   const tableBodyRef = useRef(null)
   const tableRef = useRef(null)
+  const nameFilterRef = useRef('')
   const { isDemoMode, isStagingMode } = useMode()
   const params = useParams()
   const navigate = useNavigate()
@@ -90,6 +91,7 @@ const Functions = ({
   const fetchData = useCallback(
     filters => {
       abortControllerRef.current = new AbortController()
+      nameFilterRef.current = filters?.name ?? ''
 
       return fetchFunctions(params.projectName, filters, {
         ui: {
@@ -398,7 +400,10 @@ const Functions = ({
   useLayoutEffect(() => {
     const checkFunctionExistence = item => {
       if (!item || Object.keys(item).length === 0) {
-        showErrorNotification(dispatch, {}, 'This function either does not exist or was deleted')
+        if (isEmpty(nameFilterRef.current)) {
+          showErrorNotification(dispatch, {}, 'This function either does not exist or was deleted')
+        }
+        
         navigate(`/projects/${params.projectName}/functions`, { replace: true })
       }
     }
