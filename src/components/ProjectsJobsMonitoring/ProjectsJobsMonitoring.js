@@ -17,7 +17,7 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import React, { useCallback, useLayoutEffect, useMemo, useRef, useState } from 'react'
+import React, { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react'
 import { connect, useDispatch, useSelector } from 'react-redux'
 import { Outlet, useLocation, useNavigate, useParams } from 'react-router-dom'
 
@@ -27,6 +27,7 @@ import PreviewModal from '../../elements/PreviewModal/PreviewModal'
 import Breadcrumbs from '../../common/Breadcrumbs/Breadcrumbs'
 import ActionBar from '../ActionBar/ActionBar'
 import JobsMonitoringFilters from './JobsMonitoring/JobsMonitoringFilters'
+import ScheduledMonitoringFilters from './ScheduledMonitoring/ScheduledMonitoringFilters'
 
 import { actionCreator, STATS_TOTAL_CARD, tabs } from './projectsJobsMotinoring.util'
 import {
@@ -39,10 +40,16 @@ import {
   NAME_FILTER,
   SCHEDULE_TAB
 } from '../../constants'
+import { removeFilters } from '../../reducers/filtersReducer'
 import { monitorJob, pollAbortingJobs, rerunJob } from '../Jobs/jobs.util'
 import { TERTIARY_BUTTON } from 'igz-controls/constants'
 import { parseJob } from '../../utils/parseJob'
-import { datePickerPastOptions, PAST_24_HOUR_DATE_OPTION } from '../../utils/datePicker.util'
+import {
+  datePickerFutureOptions,
+  datePickerPastOptions,
+  NEXT_24_HOUR_DATE_OPTION,
+  PAST_24_HOUR_DATE_OPTION
+} from '../../utils/datePicker.util'
 import jobsActions from '../../actions/jobs'
 
 import './projectsJobsMonitoring.scss'
@@ -88,6 +95,20 @@ const ProjectsJobsMonitoring = ({ fetchAllJobRuns, fetchJobFunction, fetchJobs }
     ],
     [params.jobName]
   )
+
+  const scheduledFilters = useMemo(() => [
+    { type: NAME_FILTER, label: 'Name:', initialValue: '' },
+    {
+      type: 'dates',
+      initialValue: {
+        value: datePickerFutureOptions
+          .find(option => option.id === NEXT_24_HOUR_DATE_OPTION)
+          .handler(),
+        isPredefined: true
+      },
+      isFuture: true
+    }
+  ], [])
 
   const handleTabChange = tabName => {
     setSelectedCard(STATS_TOTAL_CARD)
@@ -207,12 +228,42 @@ const ProjectsJobsMonitoring = ({ fetchAllJobRuns, fetchJobFunction, fetchJobs }
         }
       })).then(jobs => {
         if (jobs) {
-          setJobs(jobs.map(job => parseJob(job, SCHEDULE_TAB)))
+          const parsedJobs = jobs.map(job => parseJob(job, SCHEDULE_TAB)).filter(job => {
+            let inDateRange = true
+
+            if (filters.dates) {
+              const timeTo = filters.dates.value[0]?.getTime()
+              const timeFrom = filters.dates.value[1]?.getTime()
+              const nextRun = job.nextRun.getTime()
+
+              if (timeFrom) {
+                inDateRange = nextRun >= timeFrom
+              }
+
+              if (timeTo && inDateRange) {
+                inDateRange = nextRun <= timeTo
+              }
+            }
+
+            return (
+              inDateRange &&
+              (!filters.type || filters.type === FILTER_ALL_ITEMS || job.type === filters.type) &&
+              (!filters.project || job.project.includes(filters.project.toLowerCase()))
+            )
+          })
+
+          setJobs(parsedJobs)
         }
       })
     },
     [dispatch]
   )
+
+  useEffect(() => {
+    return () => {
+      dispatch(removeFilters())
+    }
+  }, [dispatch, selectedTab])
 
   useLayoutEffect(() => {
     setSelectedTab(
@@ -239,17 +290,20 @@ const ProjectsJobsMonitoring = ({ fetchAllJobRuns, fetchJobFunction, fetchJobs }
               tabs={tabs}
             />
             <div className="action-bar">
-              {selectedTab === JOBS_MONITORING_JOBS_TAB && !params.jobId && (
+              {(selectedTab === JOBS_MONITORING_JOBS_TAB && !params.jobId || selectedTab === JOBS_MONITORING_SCHEDULED_TAB) && (
                 <ActionBar
                   filterMenuName={selectedTab}
-                  filters={jobsFilters}
-                  handleRefresh={refreshJobsTabJobs}
-                  setContent={params.jobName ? setJobRuns : setJobs}
+                  filters={selectedTab === JOBS_MONITORING_JOBS_TAB ? jobsFilters : scheduledFilters}
+                  handleRefresh={selectedTab === JOBS_MONITORING_JOBS_TAB ? refreshJobsTabJobs : refreshScheduledTabJobs}
+                  setContent={selectedTab === JOBS_MONITORING_JOBS_TAB && params.jobName ? setJobRuns : setJobs}
                   page={JOBS_MONITORING_PAGE}
-                  tab={JOBS_MONITORING_JOBS_TAB}
+                  tab={selectedTab}
                   withRefreshButton={false}
                 >
-                  <JobsMonitoringFilters />
+                  {selectedTab === JOBS_MONITORING_JOBS_TAB ?
+                    <JobsMonitoringFilters /> :
+                    <ScheduledMonitoringFilters />
+                  }
                 </ActionBar>
               )}
             </div>
