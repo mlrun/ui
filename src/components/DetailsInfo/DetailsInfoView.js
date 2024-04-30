@@ -75,6 +75,7 @@ const DetailsInfoView = React.forwardRef(
             {(pageData.page === ARTIFACTS_PAGE ||
               pageData.page === DATASETS_PAGE ||
               pageData.page === FILES_PAGE ||
+              pageData.page === FUNCTIONS_PAGE ||
               pageData.page === MODELS_PAGE ||
               pageData.page === FEATURE_STORE_PAGE) &&
               params.pageTab !== FEATURE_SETS_TAB && <h3 className="item-info__header">General</h3>}
@@ -176,7 +177,6 @@ const DetailsInfoView = React.forwardRef(
                         info={info}
                         isFieldInEditMode={detailsInfoState.editMode.field === header.id}
                         item={detailsStore.infoContent[header.id]}
-                        link={detailsStore.infoContent[header.id]?.link}
                         onClick={handleInfoItemClick}
                         params={params}
                         ref={ref}
@@ -201,6 +201,12 @@ const DetailsInfoView = React.forwardRef(
                 <>
                   <h3 className="item-info__header">Drift</h3>
                   <ul className="item-info__details">{additionalInfo.drift}</ul>
+                </>
+              )}
+              {!isEveryObjectValueEmpty(additionalInfo.configuration) && (
+                <>
+                  <h3 className="item-info__header">Configuration</h3>
+                  <ul className="item-info__details">{additionalInfo.configuration}</ul>
                 </>
               )}
               {!isEveryObjectValueEmpty(additionalInfo.sources) && (

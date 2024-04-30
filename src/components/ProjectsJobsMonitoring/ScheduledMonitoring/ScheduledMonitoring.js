@@ -18,14 +18,18 @@ under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
 import React, { useEffect, useMemo, useState } from 'react'
+import { useDispatch } from 'react-redux'
 
 import ScheduledJobsTable from '../../../elements/ScheduledJobsTable/ScheduledJobsTable'
 import { ProjectJobsMonitoringContext } from '../ProjectsJobsMonitoring'
 
 import { createJobsMonitoringScheduleTabContent } from '../../../utils/createJobsContent'
+import { datePickerFutureOptions, NEXT_24_HOUR_DATE_OPTION } from '../../../utils/datePicker.util'
+import { setFilters } from '../../../reducers/filtersReducer'
 
 const ScheduledMonitoring = () => {
   const [dataIsLoaded, setDataIsLoaded] = useState(false)
+  const dispatch = useDispatch()
   const { jobs, largeRequestErrorMessage, refreshScheduledTabJobs: refreshJobs } = React.useContext(
     ProjectJobsMonitoringContext)
 
@@ -36,13 +40,22 @@ const ScheduledMonitoring = () => {
 
   useEffect(() => {
     if (!dataIsLoaded) {
-      refreshJobs({})
+      const next24HourOption = datePickerFutureOptions.find(option => option.id === NEXT_24_HOUR_DATE_OPTION)
+      const dateFilter = {
+        value: next24HourOption.handler(),
+        isPredefined: next24HourOption.isPredefined,
+        initialSelectedOptionId: next24HourOption.id
+      }
+
+      dispatch(setFilters({
+        dates: dateFilter
+      }))
+      refreshJobs({
+        dates: dateFilter
+      })
       setDataIsLoaded(true)
     }
-  }, [
-    dataIsLoaded,
-    refreshJobs
-  ])
+  }, [dataIsLoaded, dispatch, refreshJobs])
 
   useEffect(() => {
     return () => {

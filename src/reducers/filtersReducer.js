@@ -34,7 +34,8 @@ import {
   SHOW_ITERATIONS,
   SHOW_UNTAGGED_ITEMS,
   FILTER_ALL_ITEMS,
-  TAG_FILTER_LATEST
+  TAG_FILTER_LATEST,
+  JOBS_MONITORING_SCHEDULED_TAB
 } from '../constants'
 
 const initialState = {
@@ -84,6 +85,18 @@ const initialState = {
         labels: '',
         project: '',
         state: FILTER_ALL_ITEMS,
+        type: FILTER_ALL_ITEMS
+      }
+    },
+    [JOBS_MONITORING_SCHEDULED_TAB]: {
+      initialValues: {
+        labels: '',
+        project: '',
+        type: FILTER_ALL_ITEMS
+      },
+      values: {
+        labels: '',
+        project: '',
         type: FILTER_ALL_ITEMS
       }
     }

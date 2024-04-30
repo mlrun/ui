@@ -42,7 +42,7 @@ import {
   REQUEST_CANCELED,
   TAG_FILTER_ALL_ITEMS
 } from '../../constants'
-import { PAST_24_HOUR_DATE_OPTION } from '../../utils/datePicker.util'
+import { NEXT_24_HOUR_DATE_OPTION, PAST_24_HOUR_DATE_OPTION } from '../../utils/datePicker.util'
 
 import { ReactComponent as CollapseIcon } from 'igz-controls/images/collapse.svg'
 import { ReactComponent as ExpandIcon } from 'igz-controls/images/expand.svg'
@@ -223,7 +223,8 @@ const ActionBar = ({
                               className="details-date-picker"
                               date={input.value.value[0]}
                               dateTo={input.value.value[1]}
-                              selectedOptionId={PAST_24_HOUR_DATE_OPTION}
+                              hasFutureOptions={filter.isFuture}
+                              selectedOptionId={filter.isFuture ? NEXT_24_HOUR_DATE_OPTION : PAST_24_HOUR_DATE_OPTION}
                               label=""
                               onChange={(dates, isPredefined) =>
                                 handleDateChange(dates, isPredefined, input, formState)

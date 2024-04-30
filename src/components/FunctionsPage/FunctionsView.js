@@ -134,6 +134,7 @@ const FunctionsView = React.forwardRef(
                     selectedItem={selectedFunction}
                     tableClassName="functions-table"
                     tableHeaders={tableContent[0]?.content ?? []}
+                    virtualizationConfig={virtualizationConfig}
                   >
                     {tableContent.map(
                       (tableItem, index) =>
