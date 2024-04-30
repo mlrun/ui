@@ -548,8 +548,6 @@ export const createScheduleJobsMonitoringContent = jobs => {
       jobUid &&
       `/projects/${projectName}/jobs/${MONITOR_JOBS_TAB}/${jobName}/${jobUid}/overview`
 
-    console.log(job.project)
-
     return {
       data: {
         ...job,
