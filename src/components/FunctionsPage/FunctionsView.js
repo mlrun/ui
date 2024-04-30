@@ -21,8 +21,9 @@ import React from 'react'
 import { useParams } from 'react-router-dom'
 import PropTypes from 'prop-types'
 
+import ActionBar from '../ActionBar/ActionBar'
 import Breadcrumbs from '../../common/Breadcrumbs/Breadcrumbs'
-import FunctionActionBar from '../FunctionActionBar/FunctionActionBar'
+import FunctionsFilters from './FunctionsFilters'
 import FunctionsPanel from '../FunctionsPanel/FunctionsPanel'
 import FunctionsTableRow from '../../elements/FunctionsTableRow/FunctionsTableRow'
 import Loader from '../../common/Loader/Loader'
@@ -55,6 +56,7 @@ const FunctionsView = React.forwardRef(
       expand,
       filtersChangeCallback,
       filtersStore,
+      functionsFilters,
       functionsPanelIsOpen,
       functionsStore,
       getPopUpTemplate,
@@ -89,7 +91,12 @@ const FunctionsView = React.forwardRef(
             <div className="table-container">
               <div className="content__action-bar-wrapper">
                 <div className="action-bar">
-                  <FunctionActionBar
+                  <ActionBar
+                    expand={expand}
+                    filters={functionsFilters}
+                    filterMenuName={FUNCTION_FILTERS}
+                    handleExpandAll={handleExpandAll}
+                    handleRefresh={filtersChangeCallback}
                     actionButtons={[
                       {
                         className: 'action-button',
@@ -99,13 +106,9 @@ const FunctionsView = React.forwardRef(
                         variant: SECONDARY_BUTTON
                       }
                     ]}
-                    expand={expand}
-                    filterMenuName={FUNCTION_FILTERS}
-                    handleExpandAll={handleExpandAll}
-                    handleRefresh={filtersChangeCallback}
-                    page={FUNCTIONS_PAGE}
-                    setSelectedRowData={setSelectedRowData}
-                  />
+                  >
+                    <FunctionsFilters />
+                  </ActionBar>
                 </div>
               </div>
               {functionsStore.loading ? (
@@ -206,6 +209,7 @@ FunctionsView.propTypes = {
   expand: PropTypes.bool.isRequired,
   filtersChangeCallback: PropTypes.func.isRequired,
   filtersStore: PropTypes.object.isRequired,
+  functionsFilters: PropTypes.arrayOf(PropTypes.object).isRequired,
   functionsPanelIsOpen: PropTypes.bool.isRequired,
   functionsStore: PropTypes.object.isRequired,
   getPopUpTemplate: PropTypes.func.isRequired,

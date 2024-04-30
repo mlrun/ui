@@ -40,7 +40,7 @@ import createFunctionsContent from '../../utils/createFunctionsContent'
 import functionsActions from '../../actions/functions'
 import jobsActions from '../../actions/jobs'
 import { DANGER_BUTTON, LABEL_BUTTON } from 'igz-controls/constants'
-import { detailsMenu, infoHeaders, page, generateActionsMenu } from './functions.util'
+import { detailsMenu, filters, generateActionsMenu, infoHeaders, page } from './functions.util'
 import { getFunctionIdentifier } from '../../utils/getUniqueIdentifier'
 import { getFunctionLogs } from '../../utils/getFunctionLogs'
 import { isDetailsTabExists } from '../../utils/isDetailsTabExists'
@@ -374,6 +374,8 @@ const Functions = ({
     [buildAndRunFunc, dispatch, isDemoMode, isStagingMode, onRemoveFunction, toggleConvertedYaml]
   )
 
+  const functionsFilters = useMemo(() => [filters[0]], [])
+
   useEffect(() => {
     fetchData(filtersStore.filters)
 
@@ -594,6 +596,7 @@ const Functions = ({
       expand={expand}
       filtersChangeCallback={filtersChangeCallback}
       filtersStore={filtersStore}
+      functionsFilters={functionsFilters}
       functionsPanelIsOpen={functionsPanelIsOpen}
       functionsStore={functionsStore}
       getPopUpTemplate={getPopUpTemplate}
