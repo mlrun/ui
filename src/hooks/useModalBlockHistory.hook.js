@@ -28,7 +28,13 @@ export const useModalBlockHistory = (closeModal, form) => {
     () => {
       const { initialValues, values } = form.getState()
 
-      return areFormValuesChanged(initialValues, values)
+      const isFormDirty =  areFormValuesChanged(initialValues, values)
+
+      if (!isFormDirty) {
+        closeModal()
+      }
+
+      return isFormDirty
     }
   )
 
