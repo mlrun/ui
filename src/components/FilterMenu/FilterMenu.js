@@ -330,7 +330,7 @@ const FilterMenu = ({
     return () => {
       dispatch(removeFilters())
     }
-  }, [params.pageTab, params.projectName, page, params.jobName, dispatch])
+  }, [params.pageTab, params.projectName, page, dispatch])
 
   useEffect(() => {
     if (enableAutoRefresh && autoRefresh === AUTO_REFRESH_ID && !hidden) {
