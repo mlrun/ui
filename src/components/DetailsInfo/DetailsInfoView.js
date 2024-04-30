@@ -75,6 +75,7 @@ const DetailsInfoView = React.forwardRef(
             {(pageData.page === ARTIFACTS_PAGE ||
               pageData.page === DATASETS_PAGE ||
               pageData.page === FILES_PAGE ||
+              pageData.page === FUNCTIONS_PAGE ||
               pageData.page === MODELS_PAGE ||
               pageData.page === FEATURE_STORE_PAGE) &&
               params.pageTab !== FEATURE_SETS_TAB && <h3 className="item-info__header">General</h3>}
