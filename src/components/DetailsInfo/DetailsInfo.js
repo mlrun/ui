@@ -24,11 +24,15 @@ import { useDispatch } from 'react-redux'
 
 import DetailsInfoView from './DetailsInfoView'
 
-import { handleFinishEdit } from '../Details/details.util'
-import { detailsInfoActions, detailsInfoReducer, initialState } from './detailsInfoReducer'
-import { isEveryObjectValueEmpty } from '../../utils/isEveryObjectValueEmpty'
 import detailsActions from '../../actions/details'
-import { generateDriftDetailsInfo, generateProducerDetailsInfo } from './detailsInfo.util'
+import { detailsInfoActions, detailsInfoReducer, initialState } from './detailsInfoReducer'
+import { handleFinishEdit } from '../Details/details.util'
+import { isEveryObjectValueEmpty } from '../../utils/isEveryObjectValueEmpty'
+import {
+  generateConfigurationDetailsInfo,
+  generateDriftDetailsInfo,
+  generateProducerDetailsInfo
+} from './detailsInfo.util'
 
 const DetailsInfo = React.forwardRef(
   (
@@ -113,6 +117,11 @@ const DetailsInfo = React.forwardRef(
       [detailsStore.modelEndpoint.data]
     )
 
+    const configuration = useMemo(
+      () => generateConfigurationDetailsInfo(selectedItem),
+      [selectedItem]
+    )
+
     const finishEdit = useCallback(
       currentField => {
         return handleFinishEdit(
@@ -130,7 +139,7 @@ const DetailsInfo = React.forwardRef(
 
     return (
       <DetailsInfoView
-        additionalInfo={{ drift, producer, sources }}
+        additionalInfo={{ configuration, drift, producer, sources }}
         detailsInfoDispatch={detailsInfoDispatch}
         detailsInfoState={detailsInfoState}
         detailsStore={detailsStore}

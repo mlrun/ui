@@ -20,10 +20,12 @@ such restriction.
 import getState from './getState'
 import { page } from '../components/FunctionsPage/functions.util'
 import { getFunctionIdentifier } from './getUniqueIdentifier'
+import { parseKeyValues } from './object'
 
 export const parseFunction = (func, projectName, customState) => {
   const item = {
     access_key: func.metadata.credentials?.access_key ?? '',
+    application_image: func.status?.application_image ?? '',
     args: func.spec?.args ?? [],
     base_spec: func.spec?.base_spec ?? {},
     build: func.spec?.build ?? {},
@@ -38,8 +40,13 @@ export const parseFunction = (func, projectName, customState) => {
     graph: func.spec?.graph ?? {},
     hash: func.metadata?.hash ?? '',
     image: func.spec?.image ?? '',
+    internal_invocation_urls: func.status?.internal_invocation_urls ?? [],
+    internal_application_port: func.spec?.internal_application_port ?? '',
     labels: func.metadata?.labels ?? {},
+    max_replicas: func.spec?.max_replicas ?? '',
+    min_replicas: func.spec?.min_replicas ?? '',
     name: func.metadata?.name ?? '',
+    node_selector: parseKeyValues(func.spec?.node_selector || {}),
     nuclio_name: func.status?.nuclio_name ?? '',
     parameters: func.spec?.parameters ?? {},
     preemption_mode: func.spec?.preemption_mode ?? '',
@@ -51,9 +58,9 @@ export const parseFunction = (func, projectName, customState) => {
     tag: func.metadata?.tag ?? '',
     track_models: func.spec?.track_models ?? false,
     type: func.kind,
+    updated: new Date(func.metadata?.updated ?? ''),
     volume_mounts: func.spec?.volume_mounts ?? [],
-    volumes: func.spec?.volumes ?? [],
-    updated: new Date(func.metadata?.updated ?? '')
+    volumes: func.spec?.volumes ?? []
   }
 
   item.ui = {

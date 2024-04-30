@@ -74,6 +74,10 @@
         word-break: break-word;
         color: $topaz;
 
+        &_multiline {
+          display: inline-block;
+        }
+
         &-btn-edit {
           margin-left: 10px;
         }

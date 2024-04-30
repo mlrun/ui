@@ -62,6 +62,7 @@ import { isDetailsTabExists } from '../../utils/isDetailsTabExists'
 import JobWizard from '../../components/JobWizard/JobWizard'
 import { openPopUp } from 'igz-controls/utils/common.util'
 import { useSortTable } from '../../hooks/useSortTable.hook'
+import Loader from '../../common/Loader/Loader'
 
 const WorkflowsTable = React.forwardRef(
   (
@@ -435,7 +436,6 @@ const WorkflowsTable = React.forwardRef(
 
     useEffect(() => {
       const functionToBeSelected = findSelectedWorkflowFunction()
-      //TODO: check if we can use function.project
 
       if (isWorkflowStepExecutable(functionToBeSelected)) {
         const workflow = { ...workflowsStore.activeWorkflow?.data }
@@ -611,9 +611,11 @@ const WorkflowsTable = React.forwardRef(
 
     return (
       <>
-        {workflowsStore.workflows.loading ? null : (!params.workflowId &&
-            workflowsStore.workflows.data.length === 0) ||
-          largeRequestErrorMessage ? (
+        {workflowsStore.workflows.loading && <Loader />}
+        {(!workflowsStore.workflows.loading &&
+          !params.workflowId &&
+          workflowsStore.workflows.data.length === 0) ||
+        largeRequestErrorMessage ? (
           <NoData
             message={getNoDataMessage(
               filtersStore,

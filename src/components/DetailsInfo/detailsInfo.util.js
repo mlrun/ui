@@ -26,13 +26,16 @@ import { Tip } from 'igz-controls/components'
 import {
   FEATURE_STORE_PAGE,
   FILES_PAGE,
-  MODEL_ENDPOINTS_TAB,
+  FUNCTION_TYPE_APPLICATION,
   MODELS_PAGE,
+  MODEL_ENDPOINTS_TAB,
   MONITOR_JOBS_TAB
 } from '../../constants'
 import { formatDatetime } from '../../utils'
-import { roundFloats } from '../../utils/roundFloats'
+import { getChipOptions } from '../../utils/getChipOptions'
+import { getLimitsGpuType } from '../../elements/FormResourcesUnits/formResourcesUnits.util'
 import { isEveryObjectValueEmpty } from '../../utils/isEveryObjectValueEmpty'
+import { roundFloats } from '../../utils/roundFloats'
 
 export const generateArtifactsInfoContent = (page, pageTab, selectedItem) => {
   if (pageTab === MODEL_ENDPOINTS_TAB) {
@@ -53,6 +56,65 @@ export const generateArtifactsInfoContent = (page, pageTab, selectedItem) => {
       selectedItem.labels ?? [],
       selectedItem.sources
     ].filter(content => !isNil(content))
+}
+
+const generateFunctionConfigurationContent = selectedFunction => {
+  const requests = selectedFunction.resources.requests ?? {}
+  const limits = selectedFunction.resources.limits ?? {}
+
+  return [
+    {
+      id: 'runOnSpotNodes',
+      label: 'Run on Spot nodes',
+      value: selectedFunction.preemption_mode
+    },
+    {
+      id: 'podsPriority',
+      label: 'Pods priority',
+      value: selectedFunction.priority_class_name
+    },
+    {
+      id: 'memoryRequests',
+      label: 'Memory requests',
+      value: requests.memory ?? ''
+    },
+    {
+      id: 'memoryLimit',
+      label: 'Memory limit',
+      value: limits.memory ?? ''
+    },
+    {
+      id: 'cpuRequests',
+      label: 'CPU requests',
+      value: requests.cpu ?? ''
+    },
+    {
+      id: 'cpuLimit',
+      label: 'CPU limit',
+      value: limits.cpu ?? ''
+    },
+    {
+      id: 'gpuLimit',
+      label: 'GPU limit',
+      value: limits[getLimitsGpuType(limits)] ?? ''
+    },
+    {
+      id: 'minReplicas',
+      label: 'Min replicas',
+      value: selectedFunction.min_replicas
+    },
+    {
+      id: 'maxReplicas',
+      label: 'Max replicas',
+      value: selectedFunction.max_replicas
+    },
+    {
+      id: 'nodeSelectors',
+      label: 'Node Selectors',
+      value: selectedFunction.node_selector,
+      chipVariant: 'results'
+    }
+  ]
 }
 
 const generateModelEndpointDriftContent = modelEndpoint => {
@@ -99,6 +161,33 @@ const generateModelEndpointDriftContent = modelEndpoint => {
         roundFloats(modelEndpoint.spec?.monitor_configuration?.possible_drift_threshold, 2) ?? '-'
     }
   ]
+}
+
+export const generateConfigurationDetailsInfo = selectedFunction => {
+  if (selectedFunction.type === FUNCTION_TYPE_APPLICATION) {
+    const functionContent = generateFunctionConfigurationContent(selectedFunction)
+
+    return functionContent.map(item => {
+      return (
+        <li className="details-item" key={item.id}>
+          <div className="details-item__header">{item.label}:</div>
+          <DetailsInfoItem
+            info={item.value}
+            chipsData={
+              item.chipVariant
+                ? {
+                    chips: item.value,
+                    chipOptions: getChipOptions(item.chipVariant)
+                  }
+                : null
+            }
+          />
+        </li>
+      )
+    })
+  } else {
+    return []
+  }
 }
 
 export const generateDriftDetailsInfo = modelEndpoint => {
