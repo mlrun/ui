@@ -23,20 +23,22 @@ import { useDispatch } from 'react-redux'
 import ScheduledJobsTable from '../../../elements/ScheduledJobsTable/ScheduledJobsTable'
 import { ProjectJobsMonitoringContext } from '../ProjectsJobsMonitoring'
 
-import { createJobsMonitoringScheduleTabContent } from '../../../utils/createJobsContent'
+import { createScheduleJobsMonitoringContent } from '../../../utils/createJobsContent'
 import { datePickerFutureOptions, NEXT_24_HOUR_DATE_OPTION } from '../../../utils/datePicker.util'
 import { setFilters } from '../../../reducers/filtersReducer'
 
 const ScheduledMonitoring = () => {
   const [dataIsLoaded, setDataIsLoaded] = useState(false)
   const dispatch = useDispatch()
-  const { jobs, largeRequestErrorMessage, refreshScheduledTabJobs: refreshJobs } = React.useContext(
-    ProjectJobsMonitoringContext)
+  const {
+    jobs,
+    largeRequestErrorMessage,
+    refreshScheduledTabJobs: refreshJobs
+  } = React.useContext(ProjectJobsMonitoringContext)
 
   const tableContent = useMemo(() => {
-    return createJobsMonitoringScheduleTabContent(jobs)
+    return createScheduleJobsMonitoringContent(jobs)
   }, [jobs])
-
 
   useEffect(() => {
     if (!dataIsLoaded) {
@@ -55,7 +57,7 @@ const ScheduledMonitoring = () => {
       })
       setDataIsLoaded(true)
     }
-  }, [dataIsLoaded, dispatch, refreshJobs])
+  }, [dataIsLoaded,dispatch, refreshJobs])
 
   useEffect(() => {
     return () => {

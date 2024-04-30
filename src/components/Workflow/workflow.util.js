@@ -20,7 +20,12 @@ such restriction.
 import { cloneDeep, forEach, isEmpty, set } from 'lodash'
 
 import { page } from '../Jobs/jobs.util'
-import { DETAILS_OVERVIEW_TAB, WORKFLOW_TYPE_SKIPPED } from '../../constants'
+import {
+  DETAILS_OVERVIEW_TAB,
+  JOBS_MONITORING_PAGE,
+  JOBS_MONITORING_WORKFLOWS_TAB,
+  WORKFLOW_TYPE_SKIPPED
+} from '../../constants'
 
 const DAG_WORFLOW_STEP = 'DAG'
 const SKIPPED_PHASE = 'Skipped'
@@ -84,6 +89,46 @@ export const getWorkflowDetailsLink = (projectName, workflowId, job, tab, pageTa
   }
 
   return `/projects/${projectName}/${page.toLowerCase()}/${pageTab}/workflow/${workflowId}${
+    jobPath ? `/${jobPath}/${tab ?? DETAILS_OVERVIEW_TAB}` : ''
+  }`
+}
+
+/**
+ * Gets Monitoring Details panel link depending on the item's type
+ *
+ * @param {String} projectName
+ * @param {String} workflowId
+ * @param {Object} job
+ * @param {String} tab
+ * @returns {String}
+ */
+export const getWorkflowMonitoringDetailsLink = (
+  projectName,
+  workflowId,
+  job = null,
+  tab = null
+) => {
+  let jobPath = null
+
+  if (job) {
+    if (job.run_uid) {
+      jobPath = job.run_uid
+    } else if (
+      isFunctionTypeSelectable(job) &&
+      job.functionName &&
+      job?.type !== WORKFLOW_TYPE_SKIPPED
+    ) {
+      if (job.function.includes('@') && job.functionHash) {
+        jobPath = `${job.functionName}/${job.functionHash}`
+      } else {
+        jobPath = `${job.functionName}`
+      }
+    } else {
+      return null
+    }
+  }
+
+  return `/projects/${JOBS_MONITORING_PAGE}/${JOBS_MONITORING_WORKFLOWS_TAB}/workflow/${projectName}/${workflowId}${
     jobPath ? `/${jobPath}/${tab ?? DETAILS_OVERVIEW_TAB}` : ''
   }`
 }

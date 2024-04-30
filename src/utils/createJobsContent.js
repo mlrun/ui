@@ -32,7 +32,10 @@ import measureTime from './measureTime'
 import { parseKeyValues } from './object'
 import { generateLinkToDetailsPanel } from './generateLinkToDetailsPanel'
 import { getJobIdentifier, getWorkflowJobIdentifier } from './getUniqueIdentifier'
-import { getWorkflowDetailsLink } from '../components/Workflow/workflow.util'
+import {
+  getWorkflowDetailsLink,
+  getWorkflowMonitoringDetailsLink
+} from '../components/Workflow/workflow.util'
 import { validateArguments } from './validateArguments'
 
 export const createJobsMonitorTabContent = (jobs, jobName, isStagingMode) => {
@@ -533,7 +536,7 @@ export const createJobsMonitoringContent = (jobs, jobName, isStagingMode) => {
   })
 }
 
-export const createJobsMonitoringScheduleTabContent = jobs => {
+export const createScheduleJobsMonitoringContent = jobs => {
   return jobs.map(job => {
     const identifierUnique = getJobIdentifier(job, true)
     const [, , scheduleJobFunctionUid] = job.func?.match(/\w[\w'-]*/g, '') || []
@@ -544,6 +547,8 @@ export const createJobsMonitoringScheduleTabContent = jobs => {
       jobName &&
       jobUid &&
       `/projects/${projectName}/jobs/${MONITOR_JOBS_TAB}/${jobName}/${jobUid}/overview`
+
+    console.log(job.project)
 
     return {
       data: {
@@ -565,13 +570,13 @@ export const createJobsMonitoringScheduleTabContent = jobs => {
           getLink: tab =>
             validateArguments(scheduleJobFunctionUid, tab)
               ? generateLinkToDetailsPanel(
-                job.project,
-                FUNCTIONS_PAGE,
-                null,
-                scheduleJobFunctionUid,
-                null,
-                tab
-              )
+                  job.project,
+                  FUNCTIONS_PAGE,
+                  null,
+                  scheduleJobFunctionUid,
+                  null,
+                  tab
+                )
               : '',
           type: 'link'
         },
@@ -637,6 +642,90 @@ export const createJobsMonitoringScheduleTabContent = jobs => {
           value: job.func,
           className: '',
           type: 'hidden'
+        }
+      ]
+    }
+  })
+}
+
+export const createWorkflowsMonitoringContent = (jobs, isStagingMode, isSelectedItem) => {
+  return jobs.map(job => {
+    const identifierUnique = getJobIdentifier(job, true)
+    const jobName = job.name.replace(`${job.project}-`, '')
+
+    return {
+      data: {
+        ...job,
+        ui: {
+          ...job.ui,
+          identifier: getJobIdentifier(job),
+          identifierUnique: identifierUnique
+        }
+      },
+      content: [
+        {
+          headerId: 'name',
+          headerLabel: 'Name',
+          id: `name.${identifierUnique}`,
+          value: jobName,
+          className: 'table-cell-name',
+          type: 'link',
+          getLink: () => {
+            return getWorkflowMonitoringDetailsLink(job.project, job.id)
+          },
+          showStatus: true
+        },
+        {
+          headerId: 'projectName',
+          headerLabel: 'Project name',
+          id: `projectName.${identifierUnique}`,
+          value: job.project,
+          className: 'table-cell-2'
+        },
+        {
+          headerId: 'uid',
+          id: `uid.${identifierUnique}`,
+          value: job?.id,
+          className: 'table-cell-1',
+          type: 'hidden',
+          hidden: isSelectedItem
+        },
+        {
+          headerId: 'createdat',
+          headerLabel: 'Created at',
+          id: `createdAt.${identifierUnique}`,
+          value: formatDatetime(job.created_at, 'N/A'),
+          className: 'table-cell-1',
+          hidden: isSelectedItem
+        },
+        {
+          headerId: 'finishedat',
+          headerLabel: 'Finished at',
+          id: `finishedAt.${identifierUnique}`,
+          value: formatDatetime(job.finished_at, 'N/A'),
+          className: 'table-cell-1',
+          hidden: isSelectedItem
+        },
+        {
+          headerId: 'duration',
+          headerLabel: 'Duration',
+          id: `duration.${identifierUnique}`,
+          value: measureTime(
+            job.startTime || new Date(job.created_at),
+            (job.state?.value !== 'running' && job.updated) ||
+              (job.state?.value !== 'error' && new Date(job.finished_at))
+          ),
+          className: 'table-cell-1',
+          type: 'duration',
+          hidden: isSelectedItem
+        },
+        {
+          headerId: 'updated',
+          id: `updated.${identifierUnique}`,
+          value: job.updated || new Date(job.finished_at),
+          className: 'table-cell-1',
+          type: 'hidden',
+          hidden: isSelectedItem
         }
       ]
     }

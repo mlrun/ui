@@ -24,9 +24,9 @@ import { FormInput, FormSelect } from 'igz-controls/components'
 import FormOnChange from '../../../common/FormOnChange/FormOnChange'
 
 import { LABELS_FILTER, PROJECT_FILTER } from '../../../constants'
-import { generateStatusFilter, generateTypeFilter } from '../../FilterMenu/filterMenu.settings'
+import { generateStatusFilter } from '../../FilterMenu/filterMenu.settings'
 
-const JobsMonitoringFilters = () => {
+const WorkflowsMonitoringFilters = () => {
   const form = useForm()
 
   const handleInputChange = (value, inputName) => {
@@ -46,9 +46,6 @@ const JobsMonitoringFilters = () => {
         <FormSelect label="Status" name="state" options={generateStatusFilter(false)} />
       </div>
       <div className="form-row">
-        <FormSelect label="Type" name="type" options={generateTypeFilter()} />
-      </div>
-      <div className="form-row">
         <FormInput label="Labels" name={LABELS_FILTER} placeholder="key1,key2=value,..." />
         <FormOnChange
           handler={value => handleInputChange(value, LABELS_FILTER)}
@@ -59,4 +56,4 @@ const JobsMonitoringFilters = () => {
   )
 }
 
-export default JobsMonitoringFilters
+export default WorkflowsMonitoringFilters

@@ -66,50 +66,49 @@ const Files = lazyRetry(() => import('./components/Files/Files'))
 const Functions = lazyRetry(() => import('./components/FunctionsPage/Functions'))
 const Jobs = lazyRetry(() => import('./components/Jobs/Jobs'))
 const MonitorJobs = lazyRetry(() => import('./components/Jobs/MonitorJobs/MonitorJobs'))
-const MonitorWorkflows = lazyRetry(() =>
-  import('./components/Jobs/MonitorWorkflows/MonitorWorkflows')
+const MonitorWorkflows = lazyRetry(
+  () => import('./components/Jobs/MonitorWorkflows/MonitorWorkflows')
 )
 const ScheduledJobs = lazyRetry(() => import('./components/Jobs/ScheduledJobs/ScheduledJobs'))
 const Models = lazyRetry(() => import('./components/ModelsPage/Models/Models'))
-const RealTimePipelines = lazyRetry(() =>
-  import('./components/ModelsPage/RealTimePipelines/RealTimePipelines')
+const RealTimePipelines = lazyRetry(
+  () => import('./components/ModelsPage/RealTimePipelines/RealTimePipelines')
 )
-const ModelEndpoints = lazyRetry(() =>
-  import('./components/ModelsPage/ModelEndpoints/ModelEndpoints')
+const ModelEndpoints = lazyRetry(
+  () => import('./components/ModelsPage/ModelEndpoints/ModelEndpoints')
 )
 const ModelsPage = lazyRetry(() => import('./components/ModelsPage/ModelsPage'))
 const Projects = lazyRetry(() => import('./components/ProjectsPage/Projects'))
 const ProjectMonitor = lazyRetry(() => import('./components/Project/ProjectMonitor'))
-const ConsumerGroupsWrapper = lazyRetry(() =>
-  import('./components/ConsumerGroupsWrapper/ConsumerGroupsWrapper')
+const ConsumerGroupsWrapper = lazyRetry(
+  () => import('./components/ConsumerGroupsWrapper/ConsumerGroupsWrapper')
 )
 const ConsumerGroup = lazyRetry(() => import('./components/ConsumerGroup/ConsumerGroup'))
 const ConsumerGroups = lazyRetry(() => import('./components/ConsumerGroups/ConsumerGroups'))
-const ProjectOverview = lazyRetry(() =>
-  import('./components/Project/ProjectOverview/ProjectOverview')
+const ProjectOverview = lazyRetry(
+  () => import('./components/Project/ProjectOverview/ProjectOverview')
 )
 const ProjectSettings = lazyRetry(() => import('./components/ProjectSettings/ProjectSettings'))
-const AddToFeatureVectorPage = lazyRetry(() =>
-  import('./components/AddToFeatureVectorPage/AddToFeatureVectorPage')
+const AddToFeatureVectorPage = lazyRetry(
+  () => import('./components/AddToFeatureVectorPage/AddToFeatureVectorPage')
 )
 const FeatureSets = lazyRetry(() => import('./components/FeatureStore/FeatureSets/FeatureSets'))
 const Features = lazyRetry(() => import('./components/FeatureStore/Features/Features'))
-const FeatureVectors = lazyRetry(() =>
-  import('./components/FeatureStore/FeatureVectors/FeatureVectors')
+const FeatureVectors = lazyRetry(
+  () => import('./components/FeatureStore/FeatureVectors/FeatureVectors')
 )
-const ProjectsJobsMonitoring = lazyRetry(() =>
-  import('./components/ProjectsJobsMonitoring/ProjectsJobsMonitoring')
+const ProjectsJobsMonitoring = lazyRetry(
+  () => import('./components/ProjectsJobsMonitoring/ProjectsJobsMonitoring')
 )
-const ProjectsJobsMonitoringWorkflows = lazyRetry(() =>
-  import(
-    './components/ProjectsJobsMonitoring/ProjectsJobsMonitoringWorkflows/ProjectsJobsMonitoringWorkflows'
-  )
+const JobsMonitoring = lazyRetry(
+  () => import('./components/ProjectsJobsMonitoring/JobsMonitoring/JobsMonitoring')
 )
-const JobsMonitoring = lazyRetry(() =>
-  import('./components/ProjectsJobsMonitoring/JobsMonitoring/JobsMonitoring')
+const ScheduledMonitoring = lazyRetry(
+  () => import('./components/ProjectsJobsMonitoring/ScheduledMonitoring/ScheduledMonitoring')
 )
-const ScheduledMonitoring = lazyRetry(() =>
-  import('./components/ProjectsJobsMonitoring/ScheduledMonitoring/ScheduledMonitoring'))
+const WorkflowsMonitoring = lazyRetry(
+  () => import('./components/ProjectsJobsMonitoring/WorkflowsMonitoring/WorkflowsMonitoring')
+)
 
 const App = () => {
   const { isNuclioModeDisabled } = useNuclioMode()
@@ -134,14 +133,17 @@ const App = () => {
                 </Fragment>
               )
             })}
-            <Route
-              path={JOBS_MONITORING_WORKFLOWS_TAB}
-              element={<ProjectsJobsMonitoringWorkflows />}
-            />
-            <Route
-              path={JOBS_MONITORING_SCHEDULED_TAB}
-              element={<ScheduledMonitoring />}
-            />
+            {[
+              `${JOBS_MONITORING_WORKFLOWS_TAB}/workflow/:workflowProjectName/:workflowId/:functionName/:functionHash/:tab`,
+              `${JOBS_MONITORING_WORKFLOWS_TAB}/workflow/:workflowProjectName/:workflowId/:jobId/:tab`,
+              `${JOBS_MONITORING_WORKFLOWS_TAB}/workflow/:workflowProjectName/:workflowId`,
+              `${JOBS_MONITORING_WORKFLOWS_TAB}`
+            ].map((path, index) => (
+              <Fragment key={index}>
+                <Route path={path} element={<WorkflowsMonitoring />} />
+              </Fragment>
+            ))}
+            <Route path={JOBS_MONITORING_SCHEDULED_TAB} element={<ScheduledMonitoring />} />
           </Route>
           <Route path="projects/:projectName" element={<Navigate replace to={PROJECT_MONITOR} />} />
           <Route path={`projects/:projectName/${PROJECT_MONITOR}`} element={<ProjectMonitor />} />

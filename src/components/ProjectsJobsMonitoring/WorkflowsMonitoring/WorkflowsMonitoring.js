@@ -17,37 +17,33 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import React, { useEffect, useMemo, useRef, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { connect, useDispatch, useSelector } from 'react-redux'
 import { isEmpty } from 'lodash'
-import classnames from 'classnames'
 
-import FilterMenu from '../../FilterMenu/FilterMenu'
 import WorkflowsTable from '../../../elements/WorkflowsTable/WorkflowsTable'
+import { ProjectJobsMonitoringContext } from '../ProjectsJobsMonitoring'
 
 import {
   FILTER_ALL_ITEMS,
   GROUP_BY_NONE,
   GROUP_BY_WORKFLOW,
-  JOBS_PAGE,
-  MONITOR_WORKFLOWS_TAB,
+  JOBS_MONITORING_PAGE,
+  JOBS_MONITORING_WORKFLOWS_TAB,
   REQUEST_CANCELED
 } from '../../../constants'
-import { generateFilters, monitorWorkflowsActionCreator } from './monitorWorkflows.util'
-import { JobsContext } from '../Jobs'
-import { createJobsWorkflowsTabContent } from '../../../utils/createJobsContent'
-import { datePickerPastOptions, PAST_WEEK_DATE_OPTION } from '../../../utils/datePicker.util'
+import { createWorkflowsMonitoringContent } from '../../../utils/createJobsContent'
+import { datePickerPastOptions, PAST_24_HOUR_DATE_OPTION } from '../../../utils/datePicker.util'
 import { setFilters } from '../../../reducers/filtersReducer'
 import { useMode } from '../../../hooks/mode.hook'
 import { usePods } from '../../../hooks/usePods.hook'
 import detailsActions from '../../../actions/details'
+import workflowsActions from '../../../actions/workflow'
+import { actionCreator } from './workflowsMonitoring.util'
 
-import './monitorWorkflows.scss'
-
-const MonitorWorkflows = ({ deleteWorkflows, fetchFunctionLogs, fetchWorkflows }) => {
+const WorkflowsMonitoring = ({ fetchFunctionLogs }) => {
   const [selectedFunction, setSelectedFunction] = useState({})
-  const [largeRequestErrorMessage, setLargeRequestErrorMessage] = useState('')
   const [workflowsAreLoaded, setWorkflowsAreLoaded] = useState(false)
   const [workflowIsLoaded, setWorkflowIsLoaded] = useState(false)
   const [itemIsSelected, setItemIsSelected] = useState(false)
@@ -57,55 +53,43 @@ const MonitorWorkflows = ({ deleteWorkflows, fetchFunctionLogs, fetchWorkflows }
   const params = useParams()
   const dispatch = useDispatch()
   const { isStagingMode } = useMode()
-  const abortJobRef = useRef(null)
   const abortControllerRef = useRef(new AbortController())
+
+  const { abortJobRef, getWorkflows, largeRequestErrorMessage } = React.useContext(
+    ProjectJobsMonitoringContext
+  )
 
   usePods(dispatch, detailsActions.fetchJobPods, detailsActions.removePods, selectedJob)
 
-  const filters = useMemo(() => generateFilters(), [])
-
   const tableContent = useMemo(
     () =>
-      createJobsWorkflowsTabContent(
+      createWorkflowsMonitoringContent(
         workflowsStore.workflows.data,
-        params.projectName,
         isStagingMode,
         !isEmpty(selectedJob)
       ),
-    [isStagingMode, params.projectName, selectedJob, workflowsStore.workflows.data]
-  )
-
-  const getWorkflows = useCallback(
-    filter => {
-      abortControllerRef.current = new AbortController()
-
-      fetchWorkflows(params.projectName, filter, {
-        ui: {
-          controller: abortControllerRef.current,
-          setLargeRequestErrorMessage
-        }
-      })
-    },
-    [fetchWorkflows, params.projectName, setLargeRequestErrorMessage]
+    [isStagingMode, selectedJob, workflowsStore.workflows.data]
   )
 
   useEffect(() => {
+    const abortControllerRefCurrent = abortControllerRef.current
+
     return () => {
       setWorkflowIsLoaded(false)
       setWorkflowsAreLoaded(false)
       setItemIsSelected(false)
       setSelectedJob({})
       setSelectedFunction({})
-      abortControllerRef.current.abort(REQUEST_CANCELED)
+      abortControllerRefCurrent?.abort(REQUEST_CANCELED)
     }
-  }, [params.projectName, params.workflowId])
+  }, [params.workflowId])
 
   useEffect(() => {
     return () => {
-      deleteWorkflows()
+      dispatch(workflowsActions.deleteWorkflows())
       setWorkflowsAreLoaded(false)
     }
-  }, [deleteWorkflows])
+  }, [dispatch])
 
   useEffect(() => {
     if (!workflowsAreLoaded) {
@@ -116,35 +100,41 @@ const MonitorWorkflows = ({ deleteWorkflows, fetchFunctionLogs, fetchWorkflows }
           const filters = {
             state: filtersStore.state,
             dates: filtersStore.dates,
-            saveFilters: false,
-            groupBy: GROUP_BY_WORKFLOW
+            saveFilters: false
           }
 
           getWorkflows(filters)
           dispatch(setFilters(filters))
         } else if (workflowsStore.workflows.data.length === 0) {
-          const pastWeekOption = datePickerPastOptions.find(
-            option => option.id === PAST_WEEK_DATE_OPTION
+          const past24HourOption = datePickerPastOptions.find(
+            option => option.id === PAST_24_HOUR_DATE_OPTION
           )
-          const generatedDates = [...pastWeekOption.handler()]
+          const generatedDates = [...past24HourOption.handler()]
 
-          if (generatedDates.length === 1) {
-            generatedDates.push(new Date())
-          }
           const filters = {
             dates: {
               value: generatedDates,
-              isPredefined: pastWeekOption.isPredefined,
-              initialSelectedOptionId: pastWeekOption.id
+              isPredefined: past24HourOption.isPredefined
             },
-            state: FILTER_ALL_ITEMS,
-            groupBy: GROUP_BY_WORKFLOW
+            state: FILTER_ALL_ITEMS
           }
 
           dispatch(setFilters({ ...filters }))
           getWorkflows(filters)
         } else {
-          getWorkflows({ ...filtersStore, groupBy: GROUP_BY_WORKFLOW })
+          const past24HourOption = datePickerPastOptions.find(
+            option => option.id === PAST_24_HOUR_DATE_OPTION
+          )
+
+          getWorkflows({
+            ...filtersStore,
+            dates: {
+              value: past24HourOption.handler(),
+              isPredefined: past24HourOption.isPredefined,
+              initialSelectedOptionId: past24HourOption.id
+            },
+            state: filtersStore.state || FILTER_ALL_ITEMS
+          })
           dispatch(setFilters({ groupBy: GROUP_BY_WORKFLOW }))
         }
 
@@ -153,41 +143,19 @@ const MonitorWorkflows = ({ deleteWorkflows, fetchFunctionLogs, fetchWorkflows }
     }
   }, [
     dispatch,
+    filtersStore,
     getWorkflows,
     params.workflowId,
-    params.projectName,
-    filtersStore,
     workflowsAreLoaded,
     workflowsStore.workflows.data.length
   ])
 
   return (
     <>
-      <div className="monitor-workflows">
-        {!params.workflowId && (
-          <p className="monitor-workflows__subtitle">
-            View running workflows and previously executed workflows
-          </p>
-        )}
-        <div className="content__action-bar-wrapper">
-          <div className={classnames(!params.workflowId && 'action-bar')}>
-            <FilterMenu
-              filters={filters}
-              onChange={getWorkflows}
-              page={JOBS_PAGE}
-              saveFilterOnProjectChange
-              tab={MONITOR_WORKFLOWS_TAB}
-              withoutExpandButton
-              hidden={Boolean(params.workflowId)}
-            />
-          </div>
-        </div>
-      </div>
       <WorkflowsTable
-        backLink={`/projects/${params.projectName}/jobs/${MONITOR_WORKFLOWS_TAB}`}
-        context={JobsContext}
+        backLink={`/projects/${JOBS_MONITORING_PAGE}/${JOBS_MONITORING_WORKFLOWS_TAB}`}
+        context={ProjectJobsMonitoringContext}
         fetchFunctionLogs={fetchFunctionLogs}
-        filters={filters}
         getWorkflows={getWorkflows}
         itemIsSelected={itemIsSelected}
         largeRequestErrorMessage={largeRequestErrorMessage}
@@ -205,8 +173,4 @@ const MonitorWorkflows = ({ deleteWorkflows, fetchFunctionLogs, fetchWorkflows }
   )
 }
 
-MonitorWorkflows.propTypes = {}
-
-export default connect(null, {
-  ...monitorWorkflowsActionCreator
-})(React.memo(MonitorWorkflows))
+export default connect(null, { ...actionCreator })(WorkflowsMonitoring)

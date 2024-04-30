@@ -26,6 +26,7 @@ import {
   DATE_RANGE_TIME_FILTER
 } from '../../constants'
 import jobsActions from '../../actions/jobs'
+import functionsActions from '../../actions/functions'
 
 export const STATS_TOTAL_CARD = 'total'
 export const STATS_RUNNING_CARD = 'running'
@@ -107,6 +108,7 @@ export const generateStatsData = (cardsData, tab) =>
 
 export const actionCreator = {
   fetchAllJobRuns: jobsActions.fetchAllJobRuns,
+  fetchFunctionLogs: functionsActions.fetchFunctionLogs,
   fetchJobFunction: jobsActions.fetchJobFunction,
   fetchJobs: jobsActions.fetchJobs
 }

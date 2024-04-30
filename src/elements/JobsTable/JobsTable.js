@@ -35,10 +35,7 @@ import {
   MONITOR_JOBS_TAB,
   PANEL_RERUN_MODE
 } from '../../constants'
-import {
-  generateActionsMenu,
-  generatePageData
-} from '../../components/Jobs/MonitorJobs/monitorJobs.util'
+import { generateActionsMenu } from '../../components/Jobs/MonitorJobs/monitorJobs.util'
 import Details from '../../components/Details/Details'
 import JobWizard from '../../components/JobWizard/JobWizard'
 import NoData from '../../common/NoData/NoData'
@@ -46,7 +43,6 @@ import detailsActions from '../../actions/details'
 import getState from '../../utils/getState'
 import jobsActions from '../../actions/jobs'
 import { DANGER_BUTTON } from 'igz-controls/constants'
-import { enrichRunWithFunctionFields, handleAbortJob, handleDeleteJob } from './jobsTable.util'
 import { getCloseDetailsLink } from '../../utils/getCloseDetailsLink'
 import { getJobLogs } from '../../utils/getJobLogs.util'
 import { getNoDataMessage } from '../../utils/getNoDataMessage'
@@ -59,6 +55,8 @@ import { showErrorNotification } from '../../utils/notifications.util'
 import { usePods } from '../../hooks/usePods.hook'
 import { useYaml } from '../../hooks/yaml.hook'
 import { isRowRendered, useVirtualization } from '../../hooks/useVirtualization.hook'
+import { enrichRunWithFunctionFields, handleAbortJob, handleDeleteJob } from '../../utils/jobs.util'
+import { generatePageData } from './jobsTable.util'
 
 import cssVariables from './jobsTable.scss'
 
@@ -423,7 +421,6 @@ const JobsTable = React.forwardRef(
       }
     }, [
       dispatch,
-      filters,
       params.jobName,
       fetchRun,
       selectedJob,
@@ -528,13 +525,14 @@ const JobsTable = React.forwardRef(
 )
 
 JobsTable.defaultProps = {
+  filters: [],
   setSelectedRunProject: null
 }
 
 JobsTable.propTypes = {
   abortingJobs: PropTypes.object.isRequired,
   context: PropTypes.object.isRequired,
-  filters: PropTypes.array.isRequired,
+  filters: PropTypes.array,
   jobRuns: PropTypes.array.isRequired,
   jobs: PropTypes.array.isRequired,
   largeRequestErrorMessage: PropTypes.string.isRequired,

@@ -37,6 +37,7 @@ import {
 } from '../../common/ReactFlow/mlReactFlow.util'
 import {
   getWorkflowDetailsLink,
+  getWorkflowMonitoringDetailsLink,
   isWorkflowStepCondition,
   isWorkflowStepExecutable,
   isWorkflowStepVisible
@@ -69,6 +70,7 @@ import './workflow.scss'
 
 const Workflow = ({
   actionsMenu,
+  backLink,
   handleCancel,
   handleSelectItem,
   itemIsSelected,
@@ -97,12 +99,19 @@ const Workflow = ({
   const tableContent = useMemo(() => {
     return createJobsWorkflowContent(
       jobsContent,
-      params.projectName,
+      params.workflowProjectName || params.projectName,
       params.workflowId,
       isStagingMode,
       !isEmpty(selectedJob)
     )
-  }, [isStagingMode, jobsContent, params.projectName, params.workflowId, selectedJob])
+  }, [
+    isStagingMode,
+    jobsContent,
+    params.projectName,
+    params.workflowId,
+    params.workflowProjectName,
+    selectedJob
+  ])
 
   const { sortedTableContent } = useSortTable({
     headers: tableContent[0]?.content,
@@ -191,13 +200,19 @@ const Workflow = ({
   }, [selectedFunction.hash, selectedFunction.name, selectedJob.uid, workflow.graph])
 
   const onNodeClick = (event, node) => {
-    const detailsLink = getWorkflowDetailsLink(
-      params.projectName,
-      params.workflowId,
-      node.data.customData,
-      null,
-      MONITOR_WORKFLOWS_TAB
-    )
+    const detailsLink = params.workflowProjectName
+      ? getWorkflowMonitoringDetailsLink(
+          params.workflowProjectName,
+          params.workflowId,
+          node.data.customData
+        )
+      : getWorkflowDetailsLink(
+          params.projectName,
+          params.workflowId,
+          node.data.customData,
+          null,
+          MONITOR_WORKFLOWS_TAB
+        )
 
     if (detailsLink) {
       navigate(detailsLink)
@@ -206,10 +221,7 @@ const Workflow = ({
 
   return (
     <div className="workflow-container">
-      <TableTop
-        link={`/projects/${params.projectName}/jobs/${MONITOR_WORKFLOWS_TAB}`}
-        text={workflow?.run?.name.replace(`${params.projectName}-`, '')}
-      >
+      <TableTop link={backLink} text={workflow?.run?.name.replace(`${params.projectName}-`, '')}>
         <div className="actions">
           <Tooltip
             template={
@@ -296,6 +308,7 @@ Workflow.defaultProps = {
 
 Workflow.propTypes = {
   actionsMenu: ACTIONS_MENU.isRequired,
+  backLink: PropTypes.string.isRequired,
   handleCancel: PropTypes.func.isRequired,
   handleSelectItem: PropTypes.func.isRequired,
   itemIsSelected: PropTypes.bool.isRequired,
