@@ -18,8 +18,18 @@ under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
+import { useLocation, useNavigate, useParams } from 'react-router-dom'
+import { find, isEmpty } from 'lodash'
 
 import NoData from '../../common/NoData/NoData'
+import Workflow from '../../components/Workflow/Workflow'
+import Table from '../../components/Table/Table'
+import JobsTableRow from '../JobsTableRow/JobsTableRow'
+import YamlModal from '../../common/YamlModal/YamlModal'
+import Loader from '../../common/Loader/Loader'
+import JobWizard from '../../components/JobWizard/JobWizard'
+
 import { getNoDataMessage } from '../../utils/getNoDataMessage'
 import {
   JOB_KIND_JOB,
@@ -29,14 +39,7 @@ import {
   PANEL_RERUN_MODE,
   WORKFLOW_GRAPH_VIEW
 } from '../../constants'
-import Workflow from '../../components/Workflow/Workflow'
-import Table from '../../components/Table/Table'
 import { isRowRendered, useVirtualization } from '../../hooks/useVirtualization.hook'
-import JobsTableRow from '../JobsTableRow/JobsTableRow'
-import YamlModal from '../../common/YamlModal/YamlModal'
-
-import { useDispatch, useSelector } from 'react-redux'
-import { useLocation, useNavigate, useParams } from 'react-router-dom'
 import {
   generateActionsMenu,
   generatePageData
@@ -50,7 +53,6 @@ import workflowsActions from '../../actions/workflow'
 import { parseJob } from '../../utils/parseJob'
 import getState from '../../utils/getState'
 import { useYaml } from '../../hooks/yaml.hook'
-import { find, isEmpty } from 'lodash'
 import { getFunctionLogs } from '../../utils/getFunctionLogs'
 import { getJobLogs } from '../../utils/getJobLogs.util'
 import cssVariables from '../../components/Jobs/MonitorWorkflows/monitorWorkflows.scss'
@@ -59,10 +61,9 @@ import { parseFunction } from '../../utils/parseFunction'
 import functionsActions from '../../actions/functions'
 import { showErrorNotification } from '../../utils/notifications.util'
 import { isDetailsTabExists } from '../../utils/isDetailsTabExists'
-import JobWizard from '../../components/JobWizard/JobWizard'
 import { openPopUp } from 'igz-controls/utils/common.util'
 import { useSortTable } from '../../hooks/useSortTable.hook'
-import Loader from '../../common/Loader/Loader'
+import PropTypes from 'prop-types'
 
 const WorkflowsTable = React.forwardRef(
   (
@@ -680,5 +681,23 @@ const WorkflowsTable = React.forwardRef(
     )
   }
 )
+
+WorkflowsTable.propTypes = {
+  backLink: PropTypes.string.isRequired,
+  context: PropTypes.object.isRequired,
+  fetchFunctionLogs: PropTypes.func.isRequired,
+  filters: PropTypes.arrayOf(PropTypes.shape({})),
+  getWorkflows: PropTypes.func.isRequired,
+  itemIsSelected: PropTypes.bool.isRequired,
+  largeRequestErrorMessage: PropTypes.string.isRequired,
+  selectedFunction: PropTypes.object.isRequired,
+  selectedJob: PropTypes.object.isRequired,
+  setItemIsSelected: PropTypes.func.isRequired,
+  setSelectedFunction: PropTypes.func.isRequired,
+  setSelectedJob: PropTypes.func.isRequired,
+  setWorkflowIsLoaded: PropTypes.func.isRequired,
+  tableContent: PropTypes.arrayOf(PropTypes.shape({})),
+  workflowIsLoaded: PropTypes.bool.isRequired
+}
 
 export default WorkflowsTable

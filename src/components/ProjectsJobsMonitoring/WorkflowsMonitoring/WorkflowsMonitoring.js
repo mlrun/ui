@@ -19,7 +19,7 @@ such restriction.
 */
 import React, { useEffect, useMemo, useRef, useState } from 'react'
 import { useParams } from 'react-router-dom'
-import { useDispatch, useSelector } from 'react-redux'
+import { connect, useDispatch, useSelector } from 'react-redux'
 import { isEmpty } from 'lodash'
 
 import WorkflowsTable from '../../../elements/WorkflowsTable/WorkflowsTable'
@@ -40,8 +40,9 @@ import { useMode } from '../../../hooks/mode.hook'
 import { usePods } from '../../../hooks/usePods.hook'
 import detailsActions from '../../../actions/details'
 import workflowsActions from '../../../actions/workflow'
+import { actionCreator } from './workflowsMonitoring.util'
 
-const WorkflowsMonitoring = () => {
+const WorkflowsMonitoring = ({ fetchFunctionLogs }) => {
   const [selectedFunction, setSelectedFunction] = useState({})
   const [workflowsAreLoaded, setWorkflowsAreLoaded] = useState(false)
   const [workflowIsLoaded, setWorkflowIsLoaded] = useState(false)
@@ -154,6 +155,7 @@ const WorkflowsMonitoring = () => {
       <WorkflowsTable
         backLink={`/projects/${JOBS_MONITORING_PAGE}/${JOBS_MONITORING_WORKFLOWS_TAB}`}
         context={ProjectJobsMonitoringContext}
+        fetchFunctionLogs={fetchFunctionLogs}
         getWorkflows={getWorkflows}
         itemIsSelected={itemIsSelected}
         largeRequestErrorMessage={largeRequestErrorMessage}
@@ -171,4 +173,4 @@ const WorkflowsMonitoring = () => {
   )
 }
 
-export default WorkflowsMonitoring
+export default connect(null, { ...actionCreator })(WorkflowsMonitoring)

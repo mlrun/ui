@@ -34,7 +34,7 @@ const JobsMonitoringFilters = () => {
   }
 
   return (
-    <div className="artifacts-filters">
+    <div>
       <div className="form-row">
         <FormInput name={PROJECT_FILTER} placeholder="Search by project name..." />
         <FormOnChange
