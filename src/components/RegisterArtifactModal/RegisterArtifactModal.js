@@ -140,7 +140,7 @@ const RegisterArtifactModal = ({
                 variant: TERTIARY_BUTTON
               },
               header: messagesByKind.overwriteConfirmTitle,
-              message: messagesByKind.overwriteConfirmMessage
+              message: messagesByKind.getOverwriteConfirmMessage(response.data.artifacts[0].kind)
             })
 
             return null

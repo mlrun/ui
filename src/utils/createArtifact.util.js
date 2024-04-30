@@ -20,27 +20,27 @@ such restriction.
 const artifactSubTitle =
   'Assign it a unique combination of name and tag, and specify its path (for example, s3://mybucket/path).'
 
+  const getOverwriteConfirmMessage = (existingKind = '') =>
+  `That combination of name and tag is already in use in an existing ${existingKind}. If you proceed, the existing ${existingKind} will be overwritten`
+
 export const createArtifactMessages = {
   artifact: {
     title:
       'Register an artifact in MLRun so it can be used, for example, by functions, jobs, and pipelines.',
     subTitle: artifactSubTitle,
     overwriteConfirmTitle: 'Overwrite artifact?',
-    overwriteConfirmMessage:
-      'That combination of artifact name and artifact tag is already in use. If you continue, the current artifact will be overwritten.'
+    getOverwriteConfirmMessage
   },
   dataset: {
     title:
       'Register a dataset as an artifact in MLRun so it can be used, for example, by functions, jobs, and pipelines.',
     subTitle: artifactSubTitle,
     overwriteConfirmTitle: 'Overwrite dataset?',
-    overwriteConfirmMessage:
-      'That combination of dataset name and dataset tag is already in use. If you continue, the current dataset will be overwritten.'
+    getOverwriteConfirmMessage
   }
 }
 
 export const createModelMessages = {
   overwriteConfirmTitle: 'Overwrite model?',
-  overwriteConfirmMessage:
-    'That combination of model name and model tag is already in use. If you continue, the current model will be overwritten.'
+  getOverwriteConfirmMessage
 }
