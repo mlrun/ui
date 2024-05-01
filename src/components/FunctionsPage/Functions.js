@@ -372,15 +372,13 @@ const Functions = ({
         handleFetchFunctionLogs,
         handleFetchFunctionApplicationLogs,
         handleRemoveLogs,
-        handleRemoveApplicationLogs,
-        isDemoMode
+        handleRemoveApplicationLogs
       ),
     [
       handleFetchFunctionApplicationLogs,
       handleFetchFunctionLogs,
       handleRemoveApplicationLogs,
       handleRemoveLogs,
-      isDemoMode,
       selectedFunction
     ]
   )
