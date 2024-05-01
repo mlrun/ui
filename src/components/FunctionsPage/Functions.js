@@ -27,6 +27,7 @@ import JobWizard from '../JobWizard/JobWizard'
 import NewFunctionPopUp from '../../elements/NewFunctionPopUp/NewFunctionPopUp'
 
 import {
+  FUNCTION_FILTERS,
   FUNCTIONS_PAGE,
   GROUP_BY_NAME,
   SHOW_UNTAGGED_ITEMS,
@@ -39,7 +40,7 @@ import createFunctionsContent from '../../utils/createFunctionsContent'
 import functionsActions from '../../actions/functions'
 import jobsActions from '../../actions/jobs'
 import { DANGER_BUTTON, LABEL_BUTTON } from 'igz-controls/constants'
-import { generateActionsMenu, generateFunctionsPageData } from './functions.util'
+import { generateActionsMenu,filters, generateFunctionsPageData } from './functions.util'
 import { getFunctionIdentifier } from '../../utils/getUniqueIdentifier'
 import { getFunctionNuclioLogs, getFunctionLogs } from '../../utils/getFunctionLogs'
 import { isDetailsTabExists } from '../../utils/isDetailsTabExists'
@@ -402,6 +403,8 @@ const Functions = ({
     [buildAndRunFunc, dispatch, isDemoMode, isStagingMode, onRemoveFunction, toggleConvertedYaml]
   )
 
+  const functionsFilters = useMemo(() => [filters[0]], [])
+
   useEffect(() => {
     fetchData(filtersStore.filters)
 
@@ -414,9 +417,11 @@ const Functions = ({
 
   useEffect(() => {
     setTaggedFunctions(
-      !filtersStore.showUntagged ? functions.filter(func => func.tag.length) : functions
+      !filtersStore.filterMenuModal[FUNCTION_FILTERS].values.showUntagged
+        ? functions.filter(func => func.tag.length)
+        : functions
     )
-  }, [filtersStore.showUntagged, functions])
+  }, [filtersStore.filterMenuModal, functions])
 
   useEffect(() => {
     if (params.hash && pageData.details.menu.length > 0) {
@@ -475,11 +480,13 @@ const Functions = ({
   const filtersChangeCallback = filters => {
     if (
       !filters.showUntagged &&
-      filters.showUntagged !== filtersStore.showUntagged &&
+      filters.showUntagged !== filtersStore.filterMenuModal[FUNCTION_FILTERS].values.showUntagged &&
       selectedFunction.hash
     ) {
       navigate(`/projects/${params.projectName}/functions`)
-    } else if (filters.showUntagged === filtersStore.showUntagged) {
+    } else if (
+      filters.showUntagged === filtersStore.filterMenuModal[FUNCTION_FILTERS].values.showUntagged
+    ) {
       refreshFunctions(filters)
     }
   }
@@ -618,6 +625,7 @@ const Functions = ({
       expand={expand}
       filtersChangeCallback={filtersChangeCallback}
       filtersStore={filtersStore}
+      functionsFilters={functionsFilters}
       functionsPanelIsOpen={functionsPanelIsOpen}
       functionsStore={functionsStore}
       getPopUpTemplate={getPopUpTemplate}
@@ -634,6 +642,7 @@ const Functions = ({
       refreshFunctions={refreshFunctions}
       selectedFunction={selectedFunction}
       selectedRowData={selectedRowData}
+      setSelectedRowData={setSelectedRowData}
       tableContent={tableContent}
       taggedFunctions={taggedFunctions}
       toggleConvertedYaml={toggleConvertedYaml}

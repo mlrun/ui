@@ -26,11 +26,13 @@ import {
   DATE_FILTER_ANY_TIME,
   FILES_FILTERS,
   FILTER_MENU_MODAL,
+  FUNCTION_FILTERS,
   GROUP_BY_NAME,
   JOBS_MONITORING_JOBS_TAB,
   MODEL_TYPE,
   MODELS_FILTERS,
   SHOW_ITERATIONS,
+  SHOW_UNTAGGED_ITEMS,
   FILTER_ALL_ITEMS,
   TAG_FILTER_LATEST,
   JOBS_MONITORING_WORKFLOWS_TAB,
@@ -64,6 +66,10 @@ const initialState = {
     [FILES_FILTERS]: {
       initialValues: { tag: TAG_FILTER_LATEST, labels: '', iter: SHOW_ITERATIONS },
       values: { tag: TAG_FILTER_LATEST, labels: '', iter: SHOW_ITERATIONS }
+    },
+    [FUNCTION_FILTERS]: {
+      initialValues: { showUntagged: SHOW_UNTAGGED_ITEMS },
+      values: { showUntagged: SHOW_UNTAGGED_ITEMS }
     },
     [MODELS_FILTERS]: {
       initialValues: { tag: TAG_FILTER_LATEST, labels: '', iter: SHOW_ITERATIONS },
