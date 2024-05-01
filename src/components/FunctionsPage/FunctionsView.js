@@ -21,8 +21,9 @@ import React from 'react'
 import { useParams } from 'react-router-dom'
 import PropTypes from 'prop-types'
 
+import ActionBar from '../ActionBar/ActionBar'
 import Breadcrumbs from '../../common/Breadcrumbs/Breadcrumbs'
-import FilterMenu from '../FilterMenu/FilterMenu'
+import FunctionsFilters from './FunctionsFilters'
 import FunctionsPanel from '../FunctionsPanel/FunctionsPanel'
 import FunctionsTableRow from '../../elements/FunctionsTableRow/FunctionsTableRow'
 import Loader from '../../common/Loader/Loader'
@@ -31,7 +32,12 @@ import Table from '../Table/Table'
 import YamlModal from '../../common/YamlModal/YamlModal'
 import { ConfirmDialog } from 'igz-controls/components'
 
-import { FUNCTIONS_PAGE, PANEL_CREATE_MODE, PANEL_EDIT_MODE } from '../../constants'
+import {
+  FUNCTIONS_PAGE,
+  FUNCTION_FILTERS,
+  PANEL_CREATE_MODE,
+  PANEL_EDIT_MODE
+} from '../../constants'
 import { SECONDARY_BUTTON } from 'igz-controls/constants'
 import { VIRTUALIZATION_CONFIG } from '../../types'
 import { filters } from './functions.util'
@@ -50,6 +56,7 @@ const FunctionsView = React.forwardRef(
       expand,
       filtersChangeCallback,
       filtersStore,
+      functionsFilters,
       functionsPanelIsOpen,
       functionsStore,
       getPopUpTemplate,
@@ -65,6 +72,7 @@ const FunctionsView = React.forwardRef(
       refreshFunctions,
       selectedFunction,
       selectedRowData,
+      setSelectedRowData,
       tableContent,
       taggedFunctions,
       toggleConvertedYaml,
@@ -83,19 +91,24 @@ const FunctionsView = React.forwardRef(
             <div className="table-container">
               <div className="content__action-bar-wrapper">
                 <div className="action-bar">
-                  <FilterMenu
-                    actionButton={{
-                      getCustomTemplate: getPopUpTemplate,
-                      hidden: !isDemoMode,
-                      label: 'New',
-                      variant: SECONDARY_BUTTON
-                    }}
+                  <ActionBar
                     expand={expand}
-                    filters={filters}
+                    filters={functionsFilters}
+                    filterMenuName={FUNCTION_FILTERS}
                     handleExpandAll={handleExpandAll}
-                    onChange={filtersChangeCallback}
-                    page={FUNCTIONS_PAGE}
-                  />
+                    handleRefresh={filtersChangeCallback}
+                    actionButtons={[
+                      {
+                        className: 'action-button',
+                        hidden: !isDemoMode,
+                        label: 'New',
+                        onClick: getPopUpTemplate,
+                        variant: SECONDARY_BUTTON
+                      }
+                    ]}
+                  >
+                    <FunctionsFilters />
+                  </ActionBar>
                 </div>
               </div>
               {functionsStore.loading ? (
@@ -106,7 +119,8 @@ const FunctionsView = React.forwardRef(
                     filtersStore,
                     filters,
                     largeRequestErrorMessage,
-                    FUNCTIONS_PAGE
+                    FUNCTIONS_PAGE,
+                    FUNCTION_FILTERS
                   )}
                 />
               ) : (
@@ -196,6 +210,7 @@ FunctionsView.propTypes = {
   expand: PropTypes.bool.isRequired,
   filtersChangeCallback: PropTypes.func.isRequired,
   filtersStore: PropTypes.object.isRequired,
+  functionsFilters: PropTypes.arrayOf(PropTypes.object).isRequired,
   functionsPanelIsOpen: PropTypes.bool.isRequired,
   functionsStore: PropTypes.object.isRequired,
   getPopUpTemplate: PropTypes.func.isRequired,
@@ -210,6 +225,7 @@ FunctionsView.propTypes = {
   refreshFunctions: PropTypes.func.isRequired,
   selectedFunction: PropTypes.object.isRequired,
   selectedRowData: PropTypes.object.isRequired,
+  setSelectedRowData: PropTypes.func.isRequired,
   tableContent: PropTypes.arrayOf(PropTypes.object).isRequired,
   taggedFunctions: PropTypes.arrayOf(PropTypes.object).isRequired,
   toggleConvertedYaml: PropTypes.func.isRequired,

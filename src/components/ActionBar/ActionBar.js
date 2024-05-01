@@ -44,20 +44,25 @@ import {
 } from '../../constants'
 import { NEXT_24_HOUR_DATE_OPTION, PAST_24_HOUR_DATE_OPTION } from '../../utils/datePicker.util'
 
+import { ReactComponent as CollapseIcon } from 'igz-controls/images/collapse.svg'
+import { ReactComponent as ExpandIcon } from 'igz-controls/images/expand.svg'
 import { ReactComponent as RefreshIcon } from 'igz-controls/images/refresh.svg'
 
 const ActionBar = ({
   actionButtons,
   cancelRequest,
   children,
+  expand,
   filterMenuName,
   filters,
+  handleExpandAll,
   handleRefresh,
   navigateLink,
   page,
   removeSelectedItem,
   setSelectedRowData,
   tab,
+  withoutExpandButton,
   withRefreshButton
 }) => {
   const filtersStore = useSelector(store => store.filtersStore)
@@ -133,6 +138,7 @@ const ActionBar = ({
 
       removeSelectedItem && dispatch(removeSelectedItem({}))
       setSelectedRowData && setSelectedRowData({})
+      handleExpandAll && handleExpandAll(true)
       handleRefresh({ ...formValues, ...filterMenuModal })
     }
   }
@@ -268,6 +274,15 @@ const ActionBar = ({
                   <RefreshIcon />
                 </RoundedIcon>
               )}
+              {!withoutExpandButton && filtersStore.groupBy !== GROUP_BY_NONE && (
+                <RoundedIcon
+                  id="toggle-collapse"
+                  tooltipText={expand ? 'Collapse' : 'Expand all'}
+                  onClick={() => handleExpandAll()}
+                >
+                  {expand ? <CollapseIcon /> : <ExpandIcon />}
+                </RoundedIcon>
+              )}
             </div>
           )}
         </div>
@@ -296,13 +311,17 @@ ActionBar.propTypes = {
     })
   ),
   cancelRequest: PropTypes.func,
+  expand: PropTypes.bool,
+  filters: PropTypes.arrayOf(PropTypes.object).isRequired,
   filterMenuName: PropTypes.string.isRequired,
+  handleExpandAll: PropTypes.func,
   handleRefresh: PropTypes.func.isRequired,
   navigateLink: PropTypes.string,
   page: PropTypes.string.isRequired,
   removeSelectedItem: PropTypes.func,
   setSelectedRowData: PropTypes.func,
   tab: PropTypes.string,
+  withoutExpandButton: PropTypes.bool,
   withRefreshButton: PropTypes.bool
 }
 

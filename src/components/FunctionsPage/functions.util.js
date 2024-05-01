@@ -85,7 +85,7 @@ export const infoHeaders = [
   { label: 'Description', id: 'description' }
 ]
 export const filters = [
-  { type: NAME_FILTER, label: 'Name:' },
+  { type: NAME_FILTER, initialValue: '', label: 'Name:' },
   { type: SHOW_UNTAGGED_FILTER, label: 'Show untagged' }
 ]
 export const TRANSIENT_FUNCTION_STATUSES = [FUNCTION_PENDINDG_STATE, FUNCTION_RUNNING_STATE]
