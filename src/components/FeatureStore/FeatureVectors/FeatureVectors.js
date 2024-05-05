@@ -102,7 +102,11 @@ const FeatureVectors = ({
       description: selectedFeatureVector.description,
       labels: parseChipsData(selectedFeatureVector.labels)
     }),
-    [selectedFeatureVector.description, selectedFeatureVector.labels, selectedFeatureVector.specFeatures]
+    [
+      selectedFeatureVector.description,
+      selectedFeatureVector.labels,
+      selectedFeatureVector.specFeatures
+    ]
   )
 
   const fetchData = useCallback(
@@ -142,7 +146,7 @@ const FeatureVectors = ({
             setNotification({
               status: 200,
               id: Math.random(),
-              message: 'Feature vector deleted successfully'
+              message: 'Feature vector was deleted'
             })
           )
 
@@ -163,7 +167,7 @@ const FeatureVectors = ({
             })
         })
         .catch(error => {
-          showErrorNotification(dispatch, error, '', 'Feature vector failed to delete', () =>
+          showErrorNotification(dispatch, error, '', 'Failed to delete the feature vector', () =>
             handleDeleteFeatureVector(featureVector)
           )
         })
@@ -188,7 +192,7 @@ const FeatureVectors = ({
       setConfirmData({
         item: featureVector,
         header: 'Delete feature vector?',
-        message: `You try to delete feature vector "${featureVector.name}". Deleted feature vectors cannot be restored.`,
+        message: `Are you sure you want to delete the feature vector "${featureVector.name}"?. You cannot restore a feature vector after deleting it.`,
         btnCancelLabel: 'Cancel',
         btnCancelVariant: LABEL_BUTTON,
         btnConfirmLabel: 'Delete',

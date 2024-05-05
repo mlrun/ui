@@ -125,9 +125,9 @@ const projectsAction = {
       .catch(error => {
         const message =
           error.response.status === CONFLICT_ERROR_STATUS_CODE
-            ? `Project name "${postData.metadata.name}" already exists`
+            ? `A project named "${postData.metadata.name}" already exists`
             : error.response.status === INTERNAL_SERVER_ERROR_STATUS_CODE
-              ? 'Cannot create more than 200 projects due to resource limitation. Either delete existing projects or contact our customer support for assistance'
+              ? 'The system already has the maximum number of projects. An existing project must be deleted before you can create another.'
               : error.message
 
         dispatch(projectsAction.createProjectFailure(message))
@@ -558,7 +558,7 @@ const projectsAction = {
           dispatch(projectsAction.setMlrunUnhealthyRetrying(true))
         }
 
-        const threeMinutesPassed = ((new Date - firstServerErrorTimestamp) / 1000) > 180
+        const threeMinutesPassed = (new Date() - firstServerErrorTimestamp) / 1000 > 180
 
         if (mlrunUnhealthyErrors.includes(err.response?.status) && !threeMinutesPassed) {
           setTimeout(() => {

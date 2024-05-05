@@ -81,7 +81,7 @@ export const handleAbortJob = (
       }
     })
     .catch(error => {
-      showErrorNotification(dispatch, error, 'Aborting job failed', '', () =>
+      showErrorNotification(dispatch, error, 'Failed to abort job', '', () =>
         handleAbortJob(
           abortJob,
           job,

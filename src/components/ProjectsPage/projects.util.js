@@ -37,7 +37,11 @@ import { ReactComponent as DownloadIcon } from 'igz-controls/images/ml-download.
 import { ReactComponent as UnarchiveIcon } from 'igz-controls/images/unarchive-icon.svg'
 import { ReactComponent as Yaml } from 'igz-controls/images/yaml.svg'
 
-export const mlrunUnhealthyErrors = [BAD_GATEWAY_ERROR_STATUS_CODE, SERVICE_UNAVAILABLE_ERROR_STATUS_CODE, GATEWAY_TIMEOUT_STATUS_CODE]
+export const mlrunUnhealthyErrors = [
+  BAD_GATEWAY_ERROR_STATUS_CODE,
+  SERVICE_UNAVAILABLE_ERROR_STATUS_CODE,
+  GATEWAY_TIMEOUT_STATUS_CODE
+]
 export const projectDeletionKind = 'project.deletion'
 export const projectDeletionWrapperKind = 'project.deletion.wrapper'
 export const pageData = {
@@ -139,7 +143,7 @@ export const handleDeleteProjectError = (
       item: project,
       header: 'Delete project?',
       message:
-        `You try to delete project "${project.metadata.name}". The project is not empty. Deleting it will also delete all of its resources, such as jobs, ` +
+        `You are trying to delete the non-empty project  "${project.metadata.name}". Deleting it will also delete all of its resources, such as jobs, ` +
         'artifacts, and features.',
       btnConfirmLabel: 'Delete',
       btnConfirmType: DANGER_BUTTON,
@@ -153,8 +157,8 @@ export const handleDeleteProjectError = (
   } else {
     const customErrorMsg =
       error.response?.status === FORBIDDEN_ERROR_STATUS_CODE
-        ? `You are not allowed to delete ${project.metadata.name} project`
-        : `Failed to delete ${project.metadata.name} project`
+        ? `You do not have permission to delete the project ${project.metadata.name} `
+        : `Failed to delete the project ${project.metadata.name} project`
 
     showErrorNotification(dispatch, error, '', customErrorMsg, () => handleDeleteProject(project))
   }
@@ -188,7 +192,7 @@ export const pollDeletingProjects = (terminatePollRef, deletingProjects, refresh
             get(
               task,
               'status.error',
-              `Failed to delete "${deletingProjects?.[task.metadata.name]}" project`
+              `Failed to delete the project "${deletingProjects?.[task.metadata.name]}"`
             )
           )
         }

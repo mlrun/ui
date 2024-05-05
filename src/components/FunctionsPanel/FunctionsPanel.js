@@ -225,7 +225,7 @@ const FunctionsPanel = ({
           .then(() => {
             setConfirmData({
               header: 'Overwrite function?',
-              message: `You try to overwrite function "${functionsStore.newFunction.metadata.name}". The specified function name is already used by another function. Overwrite the other function with this one, or cancel and give this function another name?`,
+              message: `The specified function name is already in use. Are you sure you want to overwrite the function "${functionsStore.newFunction.metadata.name}"?`,
               btnCancelLabel: 'Cancel',
               btnCancelVariant: LABEL_BUTTON,
               btnConfirmLabel: 'Overwrite',
@@ -255,7 +255,7 @@ const FunctionsPanel = ({
       .then(response => {
         handleDeployFunctionSuccess(response.data.ready)
       })
-      .catch((error) => {
+      .catch(error => {
         handleDeployFunctionFailure(error)
       })
   }

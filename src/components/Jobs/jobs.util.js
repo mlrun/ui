@@ -302,7 +302,7 @@ export const handleAbortJob = (
       }
     })
     .catch(error => {
-      showErrorNotification(dispatch, error, 'Aborting job failed', '', () =>
+      showErrorNotification(dispatch, error, 'Failed to abort job', '', () =>
         handleAbortJob(
           abortJob,
           projectName,
@@ -427,7 +427,7 @@ export const pollAbortingJobs = (project, terminatePollRef, abortingJobs, refres
         if (task.status.state === BG_TASK_SUCCEEDED) {
           abortJobSuccessHandler(dispatch, abortingJobs[task.metadata.name])
         } else {
-          showErrorNotification(dispatch, {}, task.status.error || 'Aborting job failed')
+          showErrorNotification(dispatch, {}, task.status.error || 'Failed to abort job')
         }
       })
 
@@ -448,7 +448,7 @@ const abortJobSuccessHandler = (dispatch, job) => {
     setNotification({
       status: 200,
       id: Math.random(),
-      message: `Job ${job.name} (${truncateUid(job.uid)}) is successfully aborted`
+      message: `Job ${job.name} (${truncateUid(job.uid)}) was aborted`
     })
   )
 }
