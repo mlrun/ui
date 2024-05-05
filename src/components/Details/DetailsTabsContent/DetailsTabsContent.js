@@ -143,7 +143,9 @@ const DetailsTabsContent = ({
     case DETAILS_BUILD_LOG_TAB:
       return (
         <DetailsLogs
+          additionalLogsTitle={pageData.details.additionalLogsTitle}
           item={selectedItem}
+          logsTitle={pageData.details.logsTitle}
           refreshAdditionalLogs={pageData.details.refreshAdditionalLogs}
           refreshLogs={pageData.details.refreshLogs}
           removeAdditionalLogs={pageData.details.removeAdditionalLogs}
