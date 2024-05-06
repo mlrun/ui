@@ -312,7 +312,7 @@ const JobWizard = ({
             setNotification({
               status: 200,
               id: Math.random(),
-              message: isSchedule ? 'Job scheduled successfully' : 'Job started successfully'
+              message: isSchedule ? 'The batch run was scheduled' : 'The batch run was started'
             })
           )
         })
@@ -401,8 +401,8 @@ const JobWizard = ({
           label: isBatchInference
             ? 'Schedule Infer'
             : isTrain
-            ? 'Schedule training job'
-            : 'Schedule for later',
+              ? 'Schedule training job'
+              : 'Schedule for later',
           onClick: () => {
             formState.handleSubmit()
 
@@ -422,10 +422,10 @@ const JobWizard = ({
             mode === PANEL_EDIT_MODE
               ? 'Save'
               : isBatchInference
-              ? 'Infer now'
-              : isTrain
-              ? 'Run training now'
-              : 'Run',
+                ? 'Infer now'
+                : isTrain
+                  ? 'Run training now'
+                  : 'Run',
           onClick: () => {
             submitRequest(formState, false, goToFirstInvalidStep)
           },

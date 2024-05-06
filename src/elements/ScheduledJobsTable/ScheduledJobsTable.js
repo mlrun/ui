@@ -80,19 +80,21 @@ const ScheduledJobsTable = ({
 
   const handleRunJob = useCallback(
     job => {
-      dispatch(jobsActions.handleRunScheduledJob(
-        {
-          ...job.scheduled_object
-        },
-        job.project || params.projectName,
-        job.name
-      ))
+      dispatch(
+        jobsActions.handleRunScheduledJob(
+          {
+            ...job.scheduled_object
+          },
+          job.project || params.projectName,
+          job.name
+        )
+      )
         .then(response => {
           dispatch(
             setNotification({
               status: response.status,
               id: Math.random(),
-              message: 'Job started successfully'
+              message: 'The batch run was started'
             })
           )
         })
@@ -110,7 +112,9 @@ const ScheduledJobsTable = ({
 
   const handleRemoveScheduledJob = useCallback(
     schedule => {
-      dispatch(jobsActions.removeScheduledJob(params.projectName || schedule.project, schedule.name)).then(response => {
+      dispatch(
+        jobsActions.removeScheduledJob(params.projectName || schedule.project, schedule.name)
+      ).then(response => {
         refreshJobs(filtersStore)
         dispatch(
           setNotification({
@@ -125,7 +129,6 @@ const ScheduledJobsTable = ({
     },
     [filtersStore, params.projectName, refreshJobs, setConfirmData, dispatch]
   )
-
 
   const onRemoveScheduledJob = useCallback(
     scheduledJob => {
@@ -244,7 +247,6 @@ const ScheduledJobsTable = ({
       rowHeightExtended: cssVariables.scheduledJobsRowHeightExtended
     }
   })
-
 
   return (
     <>

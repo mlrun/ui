@@ -52,8 +52,8 @@ import {
 
 const messageNamesList = {
   [ADD_TO_FEATURE_VECTOR_TAB]: {
-    single: 'Feature',
-    plural: 'Features'
+    single: 'Feature vector',
+    plural: 'Features vectors'
   },
   [DATASETS_PAGE]: {
     single: 'Dataset',
@@ -92,8 +92,8 @@ const messageNamesList = {
     plural: 'Workflows'
   },
   [MODEL_ENDPOINTS_TAB]: {
-    single: 'Model-endpoint',
-    plural: 'Model-endpoints'
+    single: 'Model endpoint',
+    plural: 'Model endpoints'
   },
   [REAL_TIME_PIPELINES_TAB]: {
     single: 'Real-time pipeline',
@@ -126,24 +126,8 @@ export const getNoDataMessage = (
           messageNames,
           filtersStoreKey
         )
-      : generateEmptyListMessage(messageNames, tab)
+      : `No ${messageNames.plural.toLocaleLowerCase()} found.`
   }
-}
-
-const generateEmptyListMessage = (messageNames, tab) => {
-  if ([MODEL_ENDPOINTS_TAB, REAL_TIME_PIPELINES_TAB].includes(tab)) {
-    return 'No data to show'
-  }
-
-  if ([FEATURES_TAB, ADD_TO_FEATURE_VECTOR_TAB].includes(tab)) {
-    return 'No features yet. Go to "Feature Sets" tab to create your first Feature Set.'
-  }
-
-  if (MONITOR_WORKFLOWS_TAB === tab) {
-    return 'No Workflows created yet.'
-  }
-
-  return `No ${messageNames.plural} yet. Create your first ${messageNames.single} now.`
 }
 
 const getSelectedDateValue = (filter, filtersStore) => {
