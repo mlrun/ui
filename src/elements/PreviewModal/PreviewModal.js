@@ -62,10 +62,12 @@ const PreviewModal = ({ artifact }) => {
       <div className="item-artifacts__modal-preview">
         <div className="preview-body">
           <div className="preview-item">
-            <div className="item-data">Name</div>
-            <div className="item-data item-data__path">Path</div>
-            {(artifact.ui.size || artifact.size) && <div className="item-data">Size</div>}
-            <div className="item-data">Updated</div>
+            <div className="item-data item-data__header">Name</div>
+            <div className="item-data item-data__path item-data__header">Path</div>
+            {(artifact.ui.size || artifact.size) && (
+              <div className="item-data item-data__header">Size</div>
+            )}
+            <div className="item-data item-data__header">Updated</div>
             <div className="preview-body__download"></div>
           </div>
           <div className="preview-item">
@@ -81,7 +83,6 @@ const PreviewModal = ({ artifact }) => {
             </div>
             {(artifact.ui.size || artifact.size) && (
               <div className="item-data">
-                <span className="item-data__size">size:</span>
                 {artifact.ui.size
                   ? artifact.ui.size
                   : typeof artifact.size === 'string'
