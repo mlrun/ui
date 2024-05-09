@@ -236,13 +236,13 @@ const Functions = ({
             setNotification({
               status: 200,
               id: Math.random(),
-              message: 'Function deleted successfully'
+              message: 'Function was deleted'
             })
           )
           fetchData()
         })
         .catch(error => {
-          showErrorNotification(dispatch, error, 'Function failed to delete', '', () => {
+          showErrorNotification(dispatch, error, 'Failed to delete the function ', '', () => {
             removeFunction(func)
           })
         })
@@ -548,7 +548,7 @@ const Functions = ({
         setNotification({
           status: 200,
           id: Math.random(),
-          message: 'Function deployment initiated successfully'
+          message: 'Function was deployed'
         })
       )
     })
@@ -563,7 +563,7 @@ const Functions = ({
     return fetchData().then(functions => {
       const currentItem = functions.find(func => func.name === name && func.tag === tag)
 
-      showErrorNotification(dispatch, error, '', 'Function deployment failed to initiate')
+      showErrorNotification(dispatch, error, '', 'Failed to deploy the function')
 
       navigate(`/projects/${params.projectName}/functions/${currentItem.hash}/overview`)
     })

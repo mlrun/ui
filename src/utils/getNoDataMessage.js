@@ -52,51 +52,39 @@ import {
 
 const messageNamesList = {
   [ADD_TO_FEATURE_VECTOR_TAB]: {
-    single: 'Feature',
     plural: 'Features'
   },
   [DATASETS_PAGE]: {
-    single: 'Dataset',
     plural: 'Datasets'
   },
   [FEATURE_SETS_TAB]: {
-    single: 'Feature-Set',
     plural: 'Feature-Sets'
   },
   [FEATURE_VECTORS_TAB]: {
-    single: 'Feature-Vector',
     plural: 'Feature-Vectors'
   },
   [FEATURES_TAB]: {
-    single: 'Feature',
     plural: 'Features'
   },
   [FILES_PAGE]: {
-    single: 'File',
     plural: 'Files'
   },
   [FUNCTIONS_PAGE]: {
-    single: 'Function',
     plural: 'Functions'
   },
   [JOBS_PAGE]: {
-    single: 'Job',
     plural: 'Jobs'
   },
   [MODELS_TAB]: {
-    single: 'Model',
     plural: 'Models'
   },
   [MONITOR_WORKFLOWS_TAB]: {
-    single: 'Workflow',
     plural: 'Workflows'
   },
   [MODEL_ENDPOINTS_TAB]: {
-    single: 'Model-endpoint',
-    plural: 'Model-endpoints'
+    plural: 'Model endpoints'
   },
   [REAL_TIME_PIPELINES_TAB]: {
-    single: 'Real-time pipeline',
     plural: 'Real-time pipelines'
   },
   default: ''
@@ -126,24 +114,8 @@ export const getNoDataMessage = (
           messageNames,
           filtersStoreKey
         )
-      : generateEmptyListMessage(messageNames, tab)
+      : `No ${messageNames.plural.toLocaleLowerCase()} found.`
   }
-}
-
-const generateEmptyListMessage = (messageNames, tab) => {
-  if ([MODEL_ENDPOINTS_TAB, REAL_TIME_PIPELINES_TAB].includes(tab)) {
-    return 'No data to show'
-  }
-
-  if ([FEATURES_TAB, ADD_TO_FEATURE_VECTOR_TAB].includes(tab)) {
-    return 'No features yet. Go to "Feature Sets" tab to create your first Feature Set.'
-  }
-
-  if (MONITOR_WORKFLOWS_TAB === tab) {
-    return 'No Workflows created yet.'
-  }
-
-  return `No ${messageNames.plural} yet. Create your first ${messageNames.single} now.`
 }
 
 const getSelectedDateValue = (filter, filtersStore) => {

@@ -29,7 +29,7 @@ import { setFilters, setModalFiltersValues } from '../reducers/filtersReducer'
 import { showErrorNotification } from './notifications.util'
 
 export const applyTagChanges = (changes, artifactItem, projectName, dispatch, setNotification) => {
-  let updateTagMsg = 'Tag was updated successfully'
+  let updateTagMsg = 'Tag was updated'
   let updateTagPromise = Promise.resolve()
   artifactItem = cloneDeep(artifactItem)
 
