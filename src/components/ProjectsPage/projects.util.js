@@ -143,7 +143,7 @@ export const handleDeleteProjectError = (
       item: project,
       header: 'Delete project?',
       message:
-        `You are trying to delete the non-empty project  "${project.metadata.name}". Deleting it will also delete all of its resources, such as jobs, ` +
+        `You are trying to delete the non-empty project "${project.metadata.name}". Deleting it will also delete all of its resources, such as jobs, ` +
         'artifacts, and features.',
       btnConfirmLabel: 'Delete',
       btnConfirmType: DANGER_BUTTON,
