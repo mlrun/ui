@@ -81,7 +81,6 @@ import {
   FETCH_PROJECT_SECRETS_BEGIN,
   FETCH_PROJECT_SECRETS_FAILURE,
   FETCH_PROJECT_SECRETS_SUCCESS,
-  SET_PROJECT_SECRETS,
   SET_JOBS_MONITORING_DATA,
   SET_MLRUN_IS_UNHEALTHY,
   SET_MLRUN_UNHEALTHY_RETRYING
@@ -623,10 +622,6 @@ const projectsAction = {
   setJobsMonitoringData: data => ({
     type: SET_JOBS_MONITORING_DATA,
     payload: data
-  }),
-  setProjectSecrets: secrets => ({
-    type: SET_PROJECT_SECRETS,
-    payload: secrets
   })
 }
 

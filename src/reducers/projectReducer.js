@@ -79,7 +79,6 @@ import {
   FETCH_PROJECT_SECRETS_BEGIN,
   FETCH_PROJECT_SECRETS_FAILURE,
   FETCH_PROJECT_SECRETS_SUCCESS,
-  SET_PROJECT_SECRETS,
   SET_JOBS_MONITORING_DATA,
   SET_MLRUN_IS_UNHEALTHY,
   SET_MLRUN_UNHEALTHY_RETRYING
@@ -806,23 +805,6 @@ const projectReducer = (state = initialState, { type, payload }) => {
           retrying: payload
         }
       }
-    case SET_PROJECT_SECRETS: {
-      return {
-        ...state,
-        project: {
-          ...state.project,
-          secrets: {
-            ...state.project.secrets,
-            data: {
-              ...state.project.secrets.data,
-              secret_keys: payload
-            },
-            error: null,
-            loading: false
-          }
-        }
-      }
-    }
     default:
       return state
   }
