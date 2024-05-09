@@ -174,7 +174,7 @@ const Models = ({ fetchModelFeatureVector }) => {
               functionOptionList: functionOptions
             })
           } else {
-            handleDeployModelFailure()
+            handleDeployModelFailure(params.projectName, model.db_key)
           }
         })
     },
