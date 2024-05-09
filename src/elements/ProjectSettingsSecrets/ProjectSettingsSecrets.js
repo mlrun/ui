@@ -17,32 +17,49 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import React, { useCallback, useEffect, useMemo, useState } from 'react'
+import React, { useCallback, useEffect, useRef, useState } from 'react'
+import { Form } from 'react-final-form'
 import { connect, useDispatch } from 'react-redux'
+import { createForm } from 'final-form'
+import { differenceWith, isEmpty, isEqual } from 'lodash'
 import { useParams } from 'react-router-dom'
+import arrayMutators from 'final-form-arrays'
+
+import Loader from '../../common/Loader/Loader'
+import { FormKeyValueTable } from 'igz-controls/components'
 
 import {
   ADD_PROJECT_SECRET,
   DELETE_PROJECT_SECRET,
   EDIT_PROJECT_SECRET
 } from './ProjectSettingsSecrets.utils'
-import ProjectSettingsSecretsView from './ProjectSettingsSecretsView'
+import { areFormValuesChanged, setFieldState } from 'igz-controls/utils/form.util'
 import projectApi from '../../api/projects-api'
 import projectsAction from '../../actions/projects'
 import { FORBIDDEN_ERROR_STATUS_CODE } from 'igz-controls/constants'
 import { getErrorMsg } from 'igz-controls/utils/common.util'
+import { getValidationRules } from 'igz-controls/utils/validation.util'
 import { showErrorNotification } from '../../utils/notifications.util'
 
 const ProjectSettingsSecrets = ({
   fetchProjectSecrets,
   projectStore,
   removeProjectData,
-  setNotification,
-  setProjectSecrets
+  setNotification
 }) => {
+  const [modifyingIsInProgress, setModifyingIsInProgress] = useState(false)
+  const [lastEditedFormValues, setLastEditedFormValues] = useState({})
   const [isUserAllowed, setIsUserAllowed] = useState(true)
   const params = useParams()
   const dispatch = useDispatch()
+  const formRef = React.useRef(
+    createForm({
+      initialValues: {},
+      mutators: { ...arrayMutators, setFieldState },
+      onSubmit: () => {}
+    })
+  )
+  const formStateRef = useRef(null)
 
   const fetchSecrets = useCallback(() => {
     setIsUserAllowed(true)
@@ -66,97 +83,145 @@ const ProjectSettingsSecrets = ({
     }
   }, [fetchSecrets, removeProjectData, params.projectName])
 
-  const generalSecrets = useMemo(
-    () =>
-      projectStore.project.secrets?.data['secret_keys']
-        ? projectStore.project.secrets.data['secret_keys'].map(secret => ({
-            key: secret,
-            value: '*****'
-          }))
-        : [],
-    [projectStore.project.secrets.data]
-  )
+  useEffect(() => {
+    const formSecrets = projectStore.project.secrets?.data['secret_keys']
+      ? projectStore.project.secrets.data['secret_keys'].map(secret => ({
+        data: {
+          key: secret,
+          value: ''
+        }
+      }))
+      : []
+    const newInitial = {
+      secrets: formSecrets
+    }
 
-  const handleProjectSecret = useCallback(
-    (type, data) => {
+    setLastEditedFormValues(newInitial)
+    formStateRef.current.form.restart(newInitial)
+  }, [projectStore.project.secrets.data])
+
+  const modifyProjectSecret = useCallback(
+    (modificationType, requestData) => {
+      setModifyingIsInProgress(true)
       const updateSecret =
-        type === ADD_PROJECT_SECRET || type === EDIT_PROJECT_SECRET
+        modificationType === ADD_PROJECT_SECRET || modificationType === EDIT_PROJECT_SECRET
           ? projectApi.setProjectSecret
           : projectApi.deleteSecret
 
-      updateSecret(params.projectName, data)
+      updateSecret(params.projectName, requestData)
         .then(() => {
           dispatch(
             setNotification({
               status: 200,
               id: Math.random(),
               message: `Secret ${
-                type === DELETE_PROJECT_SECRET
+                modificationType === DELETE_PROJECT_SECRET
                   ? 'deleted'
-                  : type === EDIT_PROJECT_SECRET
-                  ? 'edited'
-                  : 'added'
+                  : modificationType === EDIT_PROJECT_SECRET
+                    ? 'edited'
+                    : 'added'
               } successfully`
             })
           )
         })
         .catch(error => {
           showErrorNotification(dispatch, error, 'Failed to update secrets')
+          fetchSecrets()
         })
+        .finally(() => setModifyingIsInProgress(false))
     },
-    [dispatch, params.projectName, setNotification]
+    [dispatch, fetchSecrets, params.projectName, setNotification]
   )
 
-  const handleAddNewSecret = useCallback(
-    createSecretData => {
-      const data = {
-        provider: 'kubernetes',
-        secrets: {
-          [createSecretData.key]: createSecretData.value
+  const updateSecretsData = useCallback(() => {
+    setTimeout(() => {
+      const formStateLocal = formStateRef.current
+
+      if (
+        areFormValuesChanged(lastEditedFormValues, formStateLocal.values) &&
+        formStateLocal.valid
+      ) {
+        const modificationType  =
+          formStateLocal.values.secrets.length > lastEditedFormValues.secrets.length
+            ? ADD_PROJECT_SECRET
+            : formStateLocal.values.secrets.length === lastEditedFormValues.secrets.length
+              ? EDIT_PROJECT_SECRET
+              : DELETE_PROJECT_SECRET
+        const primarySecretsArray =
+          modificationType  === DELETE_PROJECT_SECRET
+            ? lastEditedFormValues.secrets
+            : formStateLocal.values.secrets
+        const secondarySecretsArray =
+          modificationType  === DELETE_PROJECT_SECRET
+            ? formStateLocal.values.secrets
+            : lastEditedFormValues.secrets
+        const differences = differenceWith(primarySecretsArray, secondarySecretsArray, isEqual)
+
+        if (!isEmpty(differences)) {
+          const changedData = differences[0].data
+          const newSecrets = formStateLocal.values.secrets.map(secretData => ({
+            data: { key: secretData.data.key, value: '' }
+          }))
+          const newFormValues = { secrets: newSecrets }
+          const requestData =
+            modificationType  === DELETE_PROJECT_SECRET
+              ? changedData.key
+              : { provider: 'kubernetes', secrets: { [changedData.key]: changedData.value } }
+
+          setLastEditedFormValues(newFormValues)
+          formStateRef.current.form.restart(newFormValues)
+          modifyProjectSecret(modificationType , requestData)
         }
       }
-
-      const secretKeys = [
-        ...(projectStore.project.secrets.data?.secret_keys ?? []),
-        createSecretData.key
-      ]
-
-      setProjectSecrets(secretKeys) // redux
-      handleProjectSecret(ADD_PROJECT_SECRET, data) // api
-    },
-    [handleProjectSecret, projectStore.project.secrets.data, setProjectSecrets]
-  )
-
-  const handleSecretDelete = (index, secret) => {
-    const filteredArray = projectStore.project.secrets?.data['secret_keys'].filter(
-      (_, elementIndex) => elementIndex !== index
-    )
-
-    setProjectSecrets(filteredArray)
-    handleProjectSecret(DELETE_PROJECT_SECRET, secret.key) // api
-  }
-
-  const handleSecretEdit = editedSecretData => {
-    const data = {
-      provider: 'kubernetes',
-      secrets: {
-        [editedSecretData.key]: editedSecretData.value
-      }
-    }
-
-    handleProjectSecret(EDIT_PROJECT_SECRET, data) // api
-  }
+    })
+  }, [modifyProjectSecret, lastEditedFormValues])
 
   return (
-    <ProjectSettingsSecretsView
-      error={projectStore.project.secrets?.error}
-      handleAddNewSecret={handleAddNewSecret}
-      handleSecretDelete={handleSecretDelete}
-      handleSecretEdit={handleSecretEdit}
-      isUserAllowed={isUserAllowed}
-      loading={projectStore.project.secrets?.loading}
-      secrets={generalSecrets}
-    />
+    <Form form={formRef.current} onSubmit={() => {}}>
+      {formState => {
+        formStateRef.current = formState
+
+        return (
+          <div className="settings__card">
+            {projectStore.project.secrets?.loading ? (
+              <Loader />
+            ) : !isUserAllowed ? (
+              <div>
+                <h1>You don't have access to this project's secrets</h1>
+              </div>
+            ) : (
+              <div className="settings__card-content">
+                <div className="settings__card-content-col">
+                  <p className="settings__card-subtitle">
+                    These secrets are automatically available to all jobs belonging to this project
+                    that are not executed locally. See{' '}
+                    <a
+                      href="https://docs.mlrun.org/en/latest/secrets.html"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="link"
+                    >
+                      Secrets
+                    </a>
+                  </p>
+                  <FormKeyValueTable
+                    addNewItemLabel="Add secret"
+                    isKeyEditable={false}
+                    isValuePassword={true}
+                    valueType="password"
+                    disabled={modifyingIsInProgress}
+                    keyValidationRules={getValidationRules('project.secrets.key')}
+                    onExitEditModeCallback={updateSecretsData}
+                    fieldsPath="secrets"
+                    formState={formState}
+                  />
+                </div>
+              </div>
+            )}
+          </div>
+        )
+      }}
+    </Form>
   )
 }
 
