@@ -132,7 +132,7 @@ module.exports = {
   },
   Monitoring_Jobs_Box:{
     Monitoring_Jobs_Box_Title: By.css('.projects-monitoring-stats .stats-card:nth-of-type(1) .stats-card__title'),
-    Filtering_Time_Period: By.css('.stats-card:nth-of-type(1) [data-testid="date-picker-input"]'),
+    Filtering_Time_Period: By.css('.stats-card:nth-of-type(1) .project-card__info'),
     Total_Counter_Title: By.css('.stats-card:nth-of-type(1) .stats-card__row:nth-of-type(2) .stats__subtitle'),
     Total_Counter_Number: By.css('.stats-card:nth-of-type(1) .stats-card__row:nth-of-type(2) .stats__counter'),
     Counter_Running_Status_Number: By.css('.stats-card:nth-of-type(1) .stats-card__row:nth-of-type(2) .projects-monitoring-legend__status .link:nth-of-type(1)'),
@@ -145,7 +145,7 @@ module.exports = {
   },
   Monitoring_Workflows_Box:{
     Monitoring_Workflows_Box_Title: By.css('.projects-monitoring-stats .stats-card:nth-of-type(2) .stats-card__title'),
-    Filtering_Time_Period: By.css('.stats-card:nth-of-type(2) [data-testid="date-picker-input"]'),
+    Filtering_Time_Period: By.css('.stats-card:nth-of-type(2) .project-card__info'),
     Total_Counter_Title: By.css('.stats-card:nth-of-type(2) .stats-card__row:nth-of-type(2) .stats__subtitle'),
     Total_Counter_Number: By.css('.stats-card:nth-of-type(2) .stats-card__row:nth-of-type(2) .stats__counter'),
     Counter_Running_Status_Number: By.css('.stats-card:nth-of-type(2) .stats-card__row:nth-of-type(2) .projects-monitoring-legend__status .link:nth-of-type(1)'),
@@ -158,7 +158,7 @@ module.exports = {
   },
   Monitoring_Scheduled_Box:{
     Monitoring_Scheduled_Box_Title: By.css('.projects-monitoring-stats .stats-card:nth-of-type(3) .stats-card__title'),
-    Filtering_Time_Period: By.css('.stats-card:nth-of-type(3) [data-testid="date-picker-input"]'),
+    Filtering_Time_Period: By.css('.stats-card:nth-of-type(3) .project-card__info'),
     Total_Job_Counter_Title: By.css('.stats-card:nth-of-type(3) .stats-card__row:nth-of-type(2) .stats-card__col:nth-of-type(1) .stats__subtitle'),
     Total_Workflows_Counter_Title: By.css('.stats-card:nth-of-type(3) .stats-card__row:nth-of-type(2) .stats-card__col:nth-of-type(2) .stats__subtitle'),
     Total_Job_Counter_Number: By.css('.stats-card:nth-of-type(3) .stats-card__row:nth-of-type(2) .stats-card__col:nth-of-type(1) .stats__counter'),

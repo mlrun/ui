@@ -265,7 +265,7 @@ module.exports = {
     ),
     Table_Sort_By_Filter: dropdownComponent(
       generateDropdownGroup(
-        '.content__action-bar-wrapper .filters .select:nth-of-type(2)',
+        '.content__action-bar-wrapper .filters .filter-column:nth-of-type(2) .select',
         '.select__header',
         '.select__body .select__item',
         '.data-ellipsis .data-ellipsis'

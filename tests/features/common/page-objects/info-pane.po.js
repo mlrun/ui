@@ -774,7 +774,7 @@ module.exports = {
     Overview_Table: commonTable(modelsOverviewTable),
     Info_Sources_Table: commonTable(filesInfoSourcesTable),
     Labels_Field: By.css(
-      '.item-info__details .details-item:nth-of-type(2) .button-add-density_dense'
+      '.item-info__details-wrapper .details-item:nth-of-type(15) .button-add-density_dense'
     ),
     Labels_Table: commonTable(featureSetsInfoPaneLabelsTable),
     Apply_Button: By.css('.item-info__details .round-icon-cp:nth-of-type(2) button'),
