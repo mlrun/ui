@@ -281,7 +281,7 @@ const WorkflowsTable = React.forwardRef(
           header: 'Abort job?',
           message: (
             <div>
-              You try to abort job "{job.name}". <br />
+              Are you sure you want to abort the job "{job.name}"? <br />
               {isJobKindLocal(job) &&
                 'This is a local run. You can abort the run, though the actual process will continue.'}
             </div>
@@ -322,7 +322,7 @@ const WorkflowsTable = React.forwardRef(
         setConfirmData({
           item: job,
           header: 'Delete job?',
-          message: `Do you want to delete the job "${job.name}"? Deleted jobs can not be restored.`,
+          message: `Are you sure you want to delete the job "${job.name}"? Deleted jobs can not be restored.`,
           btnConfirmLabel: 'Delete',
           btnConfirmType: DANGER_BUTTON,
           rejectHandler: () => {

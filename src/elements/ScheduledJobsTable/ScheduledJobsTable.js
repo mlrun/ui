@@ -101,8 +101,8 @@ const ScheduledJobsTable = ({
         .catch(error => {
           const customErrorMsg =
             error.response.status === FORBIDDEN_ERROR_STATUS_CODE
-              ? 'You are not permitted to run a new job'
-              : getErrorMsg(error, 'Job failed to start')
+              ? 'You do not have permission to run a new job.'
+              : getErrorMsg(error, 'Failed to start job')
 
           showErrorNotification(dispatch, error, '', customErrorMsg, () => handleRunJob(job))
         })
@@ -135,7 +135,7 @@ const ScheduledJobsTable = ({
       setConfirmData({
         item: scheduledJob,
         header: 'Delete scheduled job?',
-        message: `You try to delete scheduled job "${scheduledJob.name}". Deleted scheduled jobs can not be restored.`,
+        message: `Are you sure you want to delete the scheduled job "${scheduledJob.name}"? Deleted scheduled jobs can not be restored.`,
         btnConfirmLabel: 'Delete',
         btnConfirmType: DANGER_BUTTON,
         rejectHandler: () => {
