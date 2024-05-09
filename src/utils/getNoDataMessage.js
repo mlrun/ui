@@ -53,7 +53,7 @@ import {
 const messageNamesList = {
   [ADD_TO_FEATURE_VECTOR_TAB]: {
     single: 'Feature vector',
-    plural: 'Features vectors'
+    plural: 'Features'
   },
   [DATASETS_PAGE]: {
     single: 'Dataset',
