@@ -123,8 +123,10 @@ export const getFilterTagOptions = createAsyncThunk(
         ? dispatch(fetchTags(fetchTagsArguments)).unwrap()
         : fetchTags(fetchTagsArguments)
 
-    return fetchTagsPromise.then(({ data }) => {
-      return [...new Set(data.tags)].filter(option => option)
+    return fetchTagsPromise.then(response => {
+      if (response?.data) {
+        return [...new Set(response.data.tags)].filter(option => option)
+      }
     })
   }
 )
