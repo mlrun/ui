@@ -28,6 +28,7 @@ import {
   FETCH_MODEL_FEATURE_VECTOR_BEGIN,
   FETCH_MODEL_FEATURE_VECTOR_FAILURE,
   FETCH_MODEL_FEATURE_VECTOR_SUCCESS,
+  FETCH_ENDPOINT_METRICS_LIST_SUCCESS,
   REMOVE_INFO_CONTENT,
   REMOVE_JOB_PODS,
   REMOVE_MODEL_ENDPOINT,
@@ -42,9 +43,7 @@ import {
   SET_INFO_CONTENT,
   SET_ITERATION,
   SET_ITERATION_OPTIONS,
-  SET_METRICS_OPTIONS,
   SET_SELECTED_METRICS_OPTIONS,
-  SET_INITIALLY_SELECTED_METRICS_OPTIONS,
   SHOW_WARNING
 } from '../constants'
 import { generatePods } from '../utils/generatePods'
@@ -126,6 +125,18 @@ const detailsActions = {
     type: FETCH_JOB_PODS_SUCCESS,
     payload: pods
   }),
+  fetchModelEndPointMetricsList: (project, uid, generateMetricsItems) => async dispatch => {
+    const { data } = await detailsApi.getModelEndpointMetricsList(project, uid)
+    const metrics = generateMetricsItems(project, uid, data)
+
+    dispatch(detailsActions.fetchEndpointMetricsListSuccess({ endpointUid: uid, metrics }))
+
+    return metrics
+  },
+  fetchEndpointMetricsListSuccess: payload => ({
+    type: FETCH_ENDPOINT_METRICS_LIST_SUCCESS,
+    payload
+  }),
   removeInfoContent: () => ({
     type: REMOVE_INFO_CONTENT
   }),
@@ -181,18 +192,10 @@ const detailsActions = {
     type: SHOW_WARNING,
     payload: show
   }),
-  setMetricsOptions: options => ({
-    type: SET_METRICS_OPTIONS,
-    payload: options
-  }),
-  setSelectedMetricsOptions: options => ({
+  setSelectedMetricsOptions: (payload) => ({
     type: SET_SELECTED_METRICS_OPTIONS,
-    payload: options
+    payload
   }),
-  setInitiallySelectedMetricsOptions: options => ({
-    type: SET_INITIALLY_SELECTED_METRICS_OPTIONS,
-    payload: options
-  })
 }
 
 export default detailsActions

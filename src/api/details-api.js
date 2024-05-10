@@ -34,7 +34,9 @@ const detailsApi = {
   getModelEndpoint: (project, uid) =>
     mainHttpClient.get(`/projects/${project}/model-endpoints/${uid}?feature_analysis=true`),
   getModelFeatureVector: (project, name, reference) =>
-    mainHttpClient.get(`/projects/${project}/feature-vectors/${name}/references/${reference}`)
+    mainHttpClient.get(`/projects/${project}/feature-vectors/${name}/references/${reference}`),
+  getModelEndpointMetricsList: (project, uid) =>
+    mainHttpClient.get(`/projects/${project}/model-endpoints/${uid}/metrics?type=all`) // type=results/metrics/all
 }
 
 export default detailsApi

@@ -27,6 +27,7 @@ import {
   FETCH_MODEL_FEATURE_VECTOR_BEGIN,
   FETCH_MODEL_FEATURE_VECTOR_FAILURE,
   FETCH_MODEL_FEATURE_VECTOR_SUCCESS,
+  FETCH_ENDPOINT_METRICS_LIST_SUCCESS,
   REMOVE_MODEL_FEATURE_VECTOR,
   SET_CHANGES_COUNTER,
   SET_CHANGES,
@@ -41,9 +42,7 @@ import {
   SET_EDIT_MODE,
   FETCH_JOB_PODS_BEGIN,
   REMOVE_MODEL_ENDPOINT,
-  SET_METRICS_OPTIONS,
   SET_SELECTED_METRICS_OPTIONS,
-  SET_INITIALLY_SELECTED_METRICS_OPTIONS,
   DATE_FILTER_ANY_TIME,
   SET_DETAILS_DATES
 } from '../constants'
@@ -75,10 +74,11 @@ const initialState = {
   },
   filtersWasHandled: false,
   showWarning: false,
-  metricsOptions : {
+  metricsOptions: {
     all: [],
-    selected: [],
-    initiallySelected: []
+    lastSelected: [],
+    selectedByEndpoint: {},
+    preselected: []
   }
 }
 
@@ -171,6 +171,31 @@ const detailsReducer = (state = initialState, { type, payload }) => {
           data: payload
         }
       }
+    case FETCH_ENDPOINT_METRICS_LIST_SUCCESS: {
+      const selectedMetrics = state.metricsOptions.selectedByEndpoint[payload.endpointUid]?.length
+        ? state.metricsOptions.selectedByEndpoint[payload.endpointUid]
+        : payload.metrics.filter(metric => {
+            return state.metricsOptions.lastSelected.find(
+              selectedMetric =>
+                selectedMetric.name === metric.name &&
+                selectedMetric.app === metric.app &&
+                selectedMetric.type === metric.type
+            )
+          })
+      return {
+        ...state,
+        metricsOptions: {
+          ...state['metricsOptions'],
+          all: payload.metrics,
+          lastSelected: selectedMetrics,
+          preselected: selectedMetrics,
+          selectedByEndpoint: {
+            ...state['metricsOptions']['selectedByEndpoint'],
+            [payload.endpointUid]: selectedMetrics
+          }
+        }
+      }
+    }
     case REMOVE_INFO_CONTENT:
       return {
         ...state,
@@ -237,30 +262,18 @@ const detailsReducer = (state = initialState, { type, payload }) => {
         ...state,
         showWarning: payload
       }
-    case SET_METRICS_OPTIONS:
-      return {
-        ...state,
-        metricsOptions: {
-          ...state['metricsOptions'],
-          all: payload
-        }
-      }
     case SET_SELECTED_METRICS_OPTIONS:
       return {
         ...state,
         metricsOptions: {
           ...state['metricsOptions'],
-          selected: payload
-        }
-      }
-      case SET_INITIALLY_SELECTED_METRICS_OPTIONS:
-        return {
-          ...state,
-          metricsOptions: {
-            ...state['metricsOptions'],
-            initiallySelected: payload
+          lastSelected: payload.metrics,
+          selectedByEndpoint: {
+            ...state['metricsOptions']['selectedByEndpoint'],
+            [payload.endpointUid]: payload.metrics
           }
         }
+      }
     default:
       return state
   }

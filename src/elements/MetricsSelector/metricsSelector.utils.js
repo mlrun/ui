@@ -17,113 +17,39 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import { sortBy } from 'lodash'
+import { chain, isEmpty } from 'lodash'
 
-const metricsColorsById = {}
-const usedColors = new Set()
+const metricsTypes = {
+  metric: 'metric',
+  result: 'result'
+}
 
-const getMetricsLabel = (metric, metricColor) => {
+export const getMetricsLabel = (metric) => {
   return (
     <>
-      <span className="metrics-selector-color-indicator" style={{ backgroundColor: metricColor }} />
-      <span className="data-ellipsis">{metric.label}</span>
+      <span className="metrics-selector-color-indicator" style={{ backgroundColor: metric.color }} />
+      <span className="data-ellipsis">{metric.name}</span>
+      <sup className="data-ellipsis">{metric.type === metricsTypes.metric ? ' (M)' : ' (R)'}</sup>
     </>
   )
 }
 
-const hslToHex = (hue, saturation, lightness) => {
-  const normalizedLightness = lightness / 100
+export const filterMetrics = (metricsByApplication, nameFilter) => {
+  return metricsByApplication.reduce((metricsList, [app, metrics]) => {
+    const filteredMetrics = metrics.filter(metric => {
+      return metric.name.toLowerCase().includes(nameFilter.toLowerCase())
+    })
 
-  const chroma = (saturation * Math.min(normalizedLightness, 1 - normalizedLightness)) / 100
+    if (!isEmpty(filteredMetrics)) metricsList.push({ app, metrics: filteredMetrics })
 
-  const calculateColorComponent = step => {
-    const rotation = (step + hue / 30) % 12
-    const color = normalizedLightness - chroma * Math.max(Math.min(rotation - 3, 9 - rotation, 1), -1)
-    
-    return Math.round(255 * color)
-      .toString(16)
-      .padStart(2, '0')
-  }
-
-  return `#${calculateColorComponent(0)}${calculateColorComponent(8)}${calculateColorComponent(4)}`
+    return metricsList
+  }, [])
 }
 
-const getRandomHexColor = () => {
-  const hue = Math.floor(Math.random() * 361)
-  const saturation = Math.floor(Math.random() * 56) + 45
-  const lightness = Math.floor(Math.random() * 71)
-
-  return hslToHex(hue, saturation, lightness)
-}
-
-const setMetricColorById = (id, color) => {
-  metricsColorsById[id] = color
-}
-
-export const generateUniqueColor = () => {
-  for (;;) {
-    let color = getRandomHexColor()
-
-    if (!usedColors.has(color)) {
-      usedColors.add(color)
-      
-      return color
-    }
-  }
-}
-
-export const getMetricColorById = id => {
-  if (metricsColorsById[id]) {
-    return metricsColorsById[id]
-  } else {
-    const newColor = generateUniqueColor()
-
-    setMetricColorById(id, newColor)
-    
-    return newColor
-  }
-}
-
-export const filterMetrics = (metrics, nameFilter) => {
-  return metrics.map(applicationData => {
-    return {
-      ...applicationData,
-      metrics: applicationData.metrics.filter(metric => {
-        return metric.originalLabel.toLowerCase().includes(nameFilter.toLowerCase())
-      })
-    }
-  })
-}
-
-export const generateMetricsItemsByApplication = (metrics, preselectedMetrics) => {
-  preselectedMetrics.forEach(metric => {
-    setMetricColorById(metric.id, metric.color)
-  })
-
-  return sortBy(
-    Object.values(
-      sortBy(metrics, metric => metric.label).reduce((groupedMetrics, metric) => {
-        const metricColor = getMetricColorById(metric.id)
-        const modifiedMetric = {
-          ...metric,
-          label: getMetricsLabel(metric, metricColor),
-          colorIndicator: metricColor,
-          originalLabel: metric.label
-        }
-
-        if (groupedMetrics[metric.application]?.metrics) {
-          groupedMetrics[metric.application].metrics.push(modifiedMetric)
-        } else {
-          groupedMetrics[metric.application] = {
-            applicationId: metric.application,
-            applicationLabel: metric.application,
-            metrics: [modifiedMetric]
-          }
-        }
-
-        return groupedMetrics
-      }, {})
-    ),
-    metricsGroup => metricsGroup.applicationLabel
-  )
+export const groupMetricByApplication = (metrics) => {
+  return chain(metrics)
+    .groupBy(metric => metric.app)
+    .toPairs()
+    .sortBy(([app]) => app)
+    .value()
 }

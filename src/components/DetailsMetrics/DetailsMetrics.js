@@ -17,38 +17,58 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import React, { useEffect } from 'react'
+import React, { useEffect, useMemo } from 'react'
 // import { useSelector } from 'react-redux'
 import { useDispatch } from 'react-redux'
 
 import detailsActions from '../../actions/details'
+import { generateMetricsItems } from './detailsMetrics.utils'
 
-const metricsMock = Array(100)
-  .fill(1)
-  .map((metric, index) => ({
-    id: 'someId' + index,
-    label: 'labelName' + index,
-    application: 'application' + Math.floor(Math.random() * 30)
-  }))
+const getMetricsMock = selectedItem => {
+  if (getMetricsMock[selectedItem.metadata.uid]) return getMetricsMock[selectedItem.metadata.uid]
+  const mock = Array(100)
+    .fill(1)
+    .map((metric, index) => {
+      const app = 'application' + Math.floor(Math.random() * 10)
+      const name = 'metric' + index
+      const type = index % 6 === 0 ? 'result' : 'metric'
+      return {
+        full_name: `${selectedItem.metadata.project}.${app}.${type}.${name}`,
+        name,
+        type,
+        project: selectedItem.metadata.project,
+        app
+      }
+    })
+    getMetricsMock[selectedItem.metadata.uid] = mock
+    return mock
+}
 
-
-const DetailsMetrics = () => {
+const DetailsMetrics = ({ selectedItem }) => {
   // const detailsStore = useSelector(store => store.detailsStore)
   const dispatch = useDispatch()
 
-  useEffect(() => {
-    // just mocked data
-    const endNum = (Math.random() * 10).toFixed()
-    dispatch(detailsActions.setMetricsOptions(metricsMock))
-    dispatch(detailsActions.setInitiallySelectedMetricsOptions(metricsMock.filter(metric => metric.label.endsWith(endNum))))
-  }, [dispatch])
-  
+  const generatedMetrics = useMemo(() => {
+    return generateMetricsItems(getMetricsMock(selectedItem))
+  }, [selectedItem])
 
-  return (
-    <div className="metrics">
-      Home for Metrics
-    </div>
-  )
+  useEffect(() => {
+    // dispatch(
+    //   detailsActions.fetchModelEndPointMetricsList(
+    //     selectedItem.metadata.project,
+    //     selectedItem.metadata.uid,
+    //     generateMetricsItems
+    //   )
+
+    dispatch(
+      detailsActions.fetchEndpointMetricsListSuccess({
+        endpointUid: selectedItem.metadata.uid,
+        metrics: generatedMetrics
+      })
+    )
+  }, [dispatch, selectedItem, generatedMetrics])
+
+  return <div className="metrics">Home for Metrics</div>
 }
 
 export default DetailsMetrics

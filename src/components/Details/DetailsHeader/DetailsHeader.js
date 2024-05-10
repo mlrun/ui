@@ -199,20 +199,6 @@ const DetailsHeader = ({
             </Tooltip>
           </>
         )}
-        {params.tab === DETAILS_METRICS_TAB && (
-          <>
-            <DatePicker
-              className="details-date-picker"
-              date={detailsStore.dates.value[0]}
-              dateTo={detailsStore.dates.value[1]}
-              selectedOptionId={PAST_24_HOUR_DATE_OPTION}
-              label=""
-              onChange={handleChangeDates}
-              type="date-range-time"
-              withLabels
-            />
-          </>
-        )}
         {params.tab === DETAILS_ARTIFACTS_TAB && detailsStore.iteration && (
           <Select
             density="dense"
@@ -226,12 +212,26 @@ const DetailsHeader = ({
           />
         )}
         {params.tab === DETAILS_METRICS_TAB && (
-          <MetricsSelector
-            name="metrics"
-            metrics={detailsStore.metricsOptions.all}
-            onSelect={setSelectedMetricsOptions}
-            preselectedMetrics={detailsStore.metricsOptions.initiallySelected}
-          />
+          <>
+            <MetricsSelector
+              name="metrics"
+              metrics={detailsStore.metricsOptions.all}
+              onSelect={metrics =>
+                setSelectedMetricsOptions({ endpointUid: selectedItem.metadata.uid, metrics })
+              }
+              preselectedMetrics={detailsStore.metricsOptions.preselected}
+            />
+            <DatePicker
+              className="details-date-picker"
+              date={detailsStore.dates.value[0]}
+              dateTo={detailsStore.dates.value[1]}
+              selectedOptionId={PAST_24_HOUR_DATE_OPTION}
+              label=""
+              onChange={handleChangeDates}
+              type="date-range-time"
+              withLabels
+            />
+          </>
         )}
         {actionButton && !actionButton.hidden && (
           <Button

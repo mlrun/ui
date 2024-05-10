@@ -33,11 +33,7 @@ import { ReactComponent as Caret } from 'igz-controls/images/dropdown.svg'
 import Accordion from '../../common/Accordion/Accordion'
 import FormOnChange from '../../common/FormOnChange/FormOnChange'
 
-import {
-  filterMetrics,
-  generateMetricsItemsByApplication,
-  getMetricColorById
-} from './metricsSelector.utils'
+import { filterMetrics, getMetricsLabel, groupMetricByApplication } from './metricsSelector.utils'
 import { METRICS_SELECTOR_OPTIONS } from '../../types'
 
 import { ReactComponent as Arrow } from 'igz-controls/images/arrow.svg'
@@ -52,7 +48,7 @@ const MetricsSelector = ({ maxSelectionNumber, metrics, name, onSelect, preselec
   const formRef = React.useRef(
     createForm({
       initialValues: {
-        metrics: preselectedMetrics.map(metricItem => metricItem.id)
+        metrics: []
       },
       mutators: { ...arrayMutators },
       onSubmit: () => {}
@@ -60,8 +56,8 @@ const MetricsSelector = ({ maxSelectionNumber, metrics, name, onSelect, preselec
   )
 
   const generatedMetrics = useMemo(() => {
-    return generateMetricsItemsByApplication(metrics, preselectedMetrics)
-  }, [metrics, preselectedMetrics])
+    return groupMetricByApplication(metrics)
+  }, [metrics])
 
   const filteredMetrics = useMemo(() => {
     return filterMetrics(generatedMetrics, nameFilter)
@@ -81,9 +77,9 @@ const MetricsSelector = ({ maxSelectionNumber, metrics, name, onSelect, preselec
   )
 
   useEffect(() => {
-    if (!isEmpty(preselectedMetrics)) {
+    if (preselectedMetrics) {
       formRef.current.reset({
-        metrics: preselectedMetrics.map(metricItem => metricItem.id)
+        metrics: preselectedMetrics.map(metricItem => metricItem.full_name)
       })
     }
   }, [preselectedMetrics])
@@ -121,13 +117,11 @@ const MetricsSelector = ({ maxSelectionNumber, metrics, name, onSelect, preselec
     }
   }, [clickHandler, scrollHandler, isOpen])
 
-  const handleOnChange = selectedMetricsIds => {
+  const handleOnChange = selectedMetrics => {
     onSelect(
-      selectedMetricsIds.map(metricId => {
-        return {
-          id: metricId,
-          color: getMetricColorById(metricId)
-        }
+      selectedMetrics.map(metricFullName => {
+        return metrics.find(metric => metric.full_name === metricFullName)
+  
       })
     )
   }
@@ -149,9 +143,9 @@ const MetricsSelector = ({ maxSelectionNumber, metrics, name, onSelect, preselec
       {formState => (
         <div className="metrics-selector" data-testid="metrics-selector">
           <div
-            data-testid='metric-selector-field'
+            data-testid="metric-selector-field"
             ref={selectorFieldRef}
-            className='metric-selector-field'
+            className="metric-selector-field"
           >
             <div
               data-testid="metrics-selector-header"
@@ -185,10 +179,10 @@ const MetricsSelector = ({ maxSelectionNumber, metrics, name, onSelect, preselec
                   <div className="metrics-selector-search__name-filter">
                     <FormInput
                       inputIcon={<SearchIcon />}
-                      name='metric-name'
+                      name="metric-name"
                       placeholder="Search metrics..."
                     />
-                    <FormOnChange name='metric-name' handler={setNameFilerDebounced} />
+                    <FormOnChange name="metric-name" handler={setNameFilerDebounced} />
                   </div>
                 </div>
 
@@ -200,7 +194,7 @@ const MetricsSelector = ({ maxSelectionNumber, metrics, name, onSelect, preselec
                           {filteredMetrics.map(metricsGroup => {
                             return !isEmpty(metricsGroup.metrics) ? (
                               <Accordion
-                                key={metricsGroup.applicationId}
+                                key={metricsGroup.app}
                                 accordionClassName="metrics-selector-accordion"
                                 icon={<Arrow />}
                                 iconClassName="metrics-selector-accordion-icon"
@@ -208,18 +202,19 @@ const MetricsSelector = ({ maxSelectionNumber, metrics, name, onSelect, preselec
                               >
                                 <div className="metrics-selector-accordion-content">
                                   <div className="metrics-selector-accordion-title">
-                                    {metricsGroup.applicationLabel}
+                                    {metricsGroup.app}
                                   </div>
                                   <ul className="metrics-selector-options">
                                     {metricsGroup.metrics.map(metricItem => {
                                       return (
                                         <Tooltip
                                           key={metricItem.id}
-                                          template={<TextTooltipTemplate text={metricItem.label} />}
+                                          template={<TextTooltipTemplate text={metricItem.name} />}
                                         >
                                           <SelectOption
                                             item={{
                                               ...metricItem,
+                                              label: getMetricsLabel(metricItem),
                                               disabled:
                                                 fields.value?.length >= maxSelectionNumber &&
                                                 !fields.value.includes(metricItem.id)
