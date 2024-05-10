@@ -21,7 +21,7 @@ such restriction.
 import { getArtifactIdentifier } from './getUniqueIdentifier'
 
 export const parseArtifacts = artifacts =>
-  artifacts.map(artifact => {
+  (artifacts ?? []).map(artifact => {
     let item = { ...artifact }
 
     //remove when format=full is by default

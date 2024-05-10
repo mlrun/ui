@@ -33,6 +33,7 @@ import { getFilterTagOptions, setFilters, setModalFiltersValues } from '../reduc
 
 export const useGetTagOptions = (fetchTags, filters, category, modalFiltersName) => {
   const [urlTagOption, setUrlTagOption] = useState(null)
+  const [largeRequestErrorMessage, setLargeRequestErrorMessage] = useState('')
   const { projectName, tag: paramTag } = useParams()
   const tagOptions = useSelector(store => store.filtersStore.tagOptions)
   const dispatch = useDispatch()
@@ -61,7 +62,8 @@ export const useGetTagOptions = (fetchTags, filters, category, modalFiltersName)
             category,
             config: {
               ui: {
-                controller: abortControllerRef.current
+                controller: abortControllerRef.current,
+                setLargeRequestErrorMessage
               }
             }
           })
@@ -108,5 +110,5 @@ export const useGetTagOptions = (fetchTags, filters, category, modalFiltersName)
     }
   }, [category, dispatch, fetchTags, filters, modalFiltersName, paramTag, projectName, tagOptions])
 
-  return [urlTagOption, abortControllerRef]
+  return [urlTagOption, abortControllerRef, largeRequestErrorMessage]
 }

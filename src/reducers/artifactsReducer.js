@@ -90,9 +90,12 @@ export const buildFunction = createAsyncThunk('buildFunction', ({ funcData }) =>
 export const deleteArtifact = createAsyncThunk('deleteArtifact', ({ project, key, tag, tree }) => {
   return artifactsApi.deleteArtifact(project, key, tag, tree)
 })
-export const deleteArtifacts = createAsyncThunk('deleteArtifacts', ({ project, name, category }) => {
-  return artifactsApi.deleteArtifacts(project, name, category)
-})
+export const deleteArtifacts = createAsyncThunk(
+  'deleteArtifacts',
+  ({ project, name, category }) => {
+    return artifactsApi.deleteArtifacts(project, name, category)
+  }
+)
 export const deleteTag = createAsyncThunk('deleteTag', ({ project, tag, data }) => {
   return artifactsApi.deleteTag(project, tag, data)
 })
@@ -119,8 +122,10 @@ export const fetchArtifacts = createAsyncThunk('fetchArtifacts', ({ project, fil
 })
 export const fetchArtifactTags = createAsyncThunk(
   'fetchArtifactTags',
-  ({ project, category, config }) => {
-    return artifactsApi.getArtifactTags(project, category, config)
+  ({ project, category, config }, thunkAPI) => {
+    return artifactsApi
+      .getArtifactTags(project, category, config)
+      .catch(error => largeResponseCatchHandler(error, 'Failed to fetch tags', thunkAPI.dispatch))
   }
 )
 export const fetchDataSet = createAsyncThunk('fetchDataSet', ({ project, dataSet, iter, tag }) => {
