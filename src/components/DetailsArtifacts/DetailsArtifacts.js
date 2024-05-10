@@ -18,7 +18,7 @@ under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
 import React, { useState, useEffect, useCallback, useMemo } from 'react'
-import { connect, useSelector } from 'react-redux'
+import { connect, useDispatch, useSelector } from 'react-redux'
 import { useParams } from 'react-router-dom'
 import PropTypes from 'prop-types'
 import classnames from 'classnames'
@@ -36,6 +36,8 @@ import {
 } from './detailsArtifacts.util'
 import { useSortTable } from '../../hooks/useSortTable.hook'
 import { ALLOW_SORT_BY, DEFAULT_SORT_BY, EXCLUDE_SORT_BY } from 'igz-controls/types'
+import { fetchArtifacts } from '../../reducers/artifactsReducer'
+import { getChipLabelAndValue } from '../../utils/getChipLabelAndValue'
 
 import './detailsArtifacts.scss'
 
@@ -55,13 +57,15 @@ const DetailsArtifacts = ({
   const [artifactsIds, setArtifactsIds] = useState([])
   const iterationOptions = useSelector(store => store.detailsStore.iterationOptions)
   const params = useParams()
-  const getAtrifactsHeaderCellClasses = (headerId, isSortable, className) =>
+  const getArtifactsHeaderCellClasses = (headerId, isSortable, className) =>
     classnames(
       'table-header__cell',
       isSortable && 'sortable-header-cell',
       isSortable && selectedColumnName === headerId && 'sortable-header-cell_active',
       className && className
     )
+
+  const dispatch = useDispatch()
 
   const showArtifact = useCallback(
     id => {
@@ -126,22 +130,50 @@ const DetailsArtifacts = ({
     }
   }, [bestIteration, setIteration, selectedItem.iterationStats, iterationOptions])
 
+  const getJobArtifacts = useCallback(
+    job => {
+      const workflowLabel = job.labels.find(label => label.includes('workflow:'))
+      const { chipValue: workflowId } = getChipLabelAndValue({ value: workflowLabel ?? '' })
+      const config = {
+        params: { tree: job.uid }
+      }
+
+      if (workflowId) {
+        config.params.tree = workflowId.trim()
+        config.params.producer_uri = `${params.projectName}/${job.uid}`
+      }
+
+      dispatch(
+        fetchArtifacts({
+          project: params.projectName,
+          filters: {},
+          config
+        })
+      )
+        .unwrap()
+        .then(result => {
+          setArtifactsPreviewContent(generateArtifactsPreviewContent(job, result))
+        })
+    },
+    [dispatch, params.projectName]
+  )
+
   useEffect(() => {
     if (selectedItem.iterationStats.length > 0 && iteration) {
       fetchJob(params.projectName, params.jobId, iteration).then(job => {
         const selectedJob = getJobAccordingIteration(job)
 
-        setArtifactsPreviewContent(generateArtifactsPreviewContent(selectedJob))
+        getJobArtifacts(selectedJob)
       })
     } else if (selectedItem.iterationStats.length === 0) {
-      setArtifactsPreviewContent(generateArtifactsPreviewContent(selectedItem))
+      getJobArtifacts(selectedItem)
     }
 
     return () => {
       setArtifactsPreviewContent([])
       setArtifactsIds([])
     }
-  }, [fetchJob, iteration, params.jobId, params.projectName, selectedItem])
+  }, [fetchJob, getJobArtifacts, iteration, params.jobId, params.projectName, selectedItem])
 
   return jobsStore.loading ? null : artifactsPreviewContent.length === 0 ? (
     <NoData />
@@ -152,7 +184,7 @@ const DetailsArtifacts = ({
           <div className="table-row table-header-row">
             {sortedTableHeaders.map(({ headerLabel, headerId, isSortable, ...tableItem }) => (
               <div
-                className={getAtrifactsHeaderCellClasses(headerId, isSortable, tableItem.className)}
+                className={getArtifactsHeaderCellClasses(headerId, isSortable, tableItem.className)}
                 key={`${headerId}`}
                 onClick={isSortable ? () => sortTable(headerId) : null}
               >
@@ -168,7 +200,7 @@ const DetailsArtifacts = ({
           </div>
         </div>
         <div className="table-body">
-          {sortedTableContent.map((artifactRow) => (
+          {sortedTableContent.map(artifactRow => (
             <div key={artifactRow[0]?.artifact?.ui?.identifierUnique}>
               <div className="table-row">
                 {artifactRow.map((artifactCell, artifactCellIndex) => (
