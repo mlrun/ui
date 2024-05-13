@@ -57,6 +57,7 @@ import {
 import './jobWizardRunDetails.scss'
 
 const JobWizardRunDetails = ({
+  currentProject,
   formState,
   frontendSpec,
   isBatchInference,
@@ -92,6 +93,7 @@ const JobWizardRunDetails = ({
       selectedFunctionData,
       null,
       params.projectName,
+      currentProject,
       isEditMode,
       false,
       null,
@@ -378,8 +380,12 @@ const JobWizardRunDetails = ({
     )
   )
 }
+JobWizardRunDetails.defaultProps = {
+  currentProject: null
+}
 
 JobWizardRunDetails.propTypes = {
+  currentProject: PropTypes.shape({}),
   formState: PropTypes.shape({}).isRequired,
   frontendSpec: PropTypes.shape({}).isRequired,
   isBatchInference: PropTypes.bool.isRequired,

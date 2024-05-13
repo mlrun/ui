@@ -164,11 +164,11 @@ const projectsAction = {
   deleteProjectSuccess: () => ({
     type: DELETE_PROJECT_SUCCESS
   }),
-  fetchProject: project => dispatch => {
+  fetchProject: (project, params) => dispatch => {
     dispatch(projectsAction.fetchProjectBegin())
 
     return projectsApi
-      .getProject(project)
+      .getProject(project, params)
       .then(response => {
         dispatch(projectsAction.fetchProjectSuccess(response?.data))
 
