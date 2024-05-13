@@ -27,7 +27,9 @@ import {
   FETCH_MODEL_FEATURE_VECTOR_BEGIN,
   FETCH_MODEL_FEATURE_VECTOR_FAILURE,
   FETCH_MODEL_FEATURE_VECTOR_SUCCESS,
-  FETCH_ENDPOINT_METRICS_LIST_SUCCESS,
+  FETCH_ENDPOINT_METRICS_BEGIN,
+  FETCH_ENDPOINT_METRICS_SUCCESS,
+  FETCH_ENDPOINT_METRICS_FAILURE,
   REMOVE_MODEL_FEATURE_VECTOR,
   SET_CHANGES_COUNTER,
   SET_CHANGES,
@@ -77,8 +79,9 @@ const initialState = {
   metricsOptions: {
     all: [],
     lastSelected: [],
-    selectedByEndpoint: {},
-    preselected: []
+    loading: true,
+    preselected: [],
+    selectedByEndpoint: {}
   }
 }
 
@@ -171,7 +174,15 @@ const detailsReducer = (state = initialState, { type, payload }) => {
           data: payload
         }
       }
-    case FETCH_ENDPOINT_METRICS_LIST_SUCCESS: {
+    case FETCH_ENDPOINT_METRICS_BEGIN:
+      return {
+        ...state,
+        metricsOptions: {
+          ...state.metricsOptions,
+          loading: true
+        }
+      }
+    case FETCH_ENDPOINT_METRICS_SUCCESS: {
       const selectedMetrics = state.metricsOptions.selectedByEndpoint[payload.endpointUid]?.length
         ? state.metricsOptions.selectedByEndpoint[payload.endpointUid]
         : payload.metrics.filter(metric => {
@@ -185,17 +196,27 @@ const detailsReducer = (state = initialState, { type, payload }) => {
       return {
         ...state,
         metricsOptions: {
-          ...state['metricsOptions'],
           all: payload.metrics,
+          error: null,
           lastSelected: selectedMetrics,
+          loading: false,
           preselected: selectedMetrics,
           selectedByEndpoint: {
-            ...state['metricsOptions']['selectedByEndpoint'],
+            ...state.metricsOptions.selectedByEndpoint,
             [payload.endpointUid]: selectedMetrics
           }
         }
       }
     }
+    case FETCH_ENDPOINT_METRICS_FAILURE:
+      return {
+        ...state,
+        error: payload,
+        metricsOptions: {
+          ...initialState.metricsOptions,
+          loading: false
+        }
+      }
     case REMOVE_INFO_CONTENT:
       return {
         ...state,
@@ -266,10 +287,10 @@ const detailsReducer = (state = initialState, { type, payload }) => {
       return {
         ...state,
         metricsOptions: {
-          ...state['metricsOptions'],
+          ...state.metricsOptions,
           lastSelected: payload.metrics,
           selectedByEndpoint: {
-            ...state['metricsOptions']['selectedByEndpoint'],
+            ...state.metricsOptions.selectedByEndpoint,
             [payload.endpointUid]: payload.metrics
           }
         }

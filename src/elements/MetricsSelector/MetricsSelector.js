@@ -33,7 +33,7 @@ import { ReactComponent as Caret } from 'igz-controls/images/dropdown.svg'
 import Accordion from '../../common/Accordion/Accordion'
 import FormOnChange from '../../common/FormOnChange/FormOnChange'
 
-import { filterMetrics, getMetricsLabel, groupMetricByApplication } from './metricsSelector.utils'
+import { filterMetrics, groupMetricByApplication, metricsTypes } from './metricsSelector.utils'
 import { METRICS_SELECTOR_OPTIONS } from '../../types'
 
 import { ReactComponent as Arrow } from 'igz-controls/images/arrow.svg'
@@ -63,7 +63,7 @@ const MetricsSelector = ({ maxSelectionNumber, metrics, name, onSelect, preselec
     return filterMetrics(generatedMetrics, nameFilter)
   }, [generatedMetrics, nameFilter])
 
-  const setNameFilerDebounced = useMemo(
+  const setNameFilterDebounced = useMemo(
     () =>
       debounce(name => {
         setNameFilter(name)
@@ -73,7 +73,7 @@ const MetricsSelector = ({ maxSelectionNumber, metrics, name, onSelect, preselec
 
   const metricsHeaderClassNames = classNames(
     'metrics-selector-header',
-    isOpen && 'metrics-selector-header__open'
+    isOpen && 'metrics-selector-header_open'
   )
 
   useEffect(() => {
@@ -84,7 +84,7 @@ const MetricsSelector = ({ maxSelectionNumber, metrics, name, onSelect, preselec
     }
   }, [preselectedMetrics])
 
-  const clickHandler = useCallback(
+  const windowClickHandler = useCallback(
     event => {
       if (
         !event.target.closest('.metrics-selector-popup') &&
@@ -96,7 +96,7 @@ const MetricsSelector = ({ maxSelectionNumber, metrics, name, onSelect, preselec
     [setIsOpen]
   )
 
-  const scrollHandler = useCallback(
+  const windowScrollHandler = useCallback(
     event => {
       if (!event.target.closest('.metrics-selector-popup')) {
         setIsOpen(false)
@@ -107,21 +107,20 @@ const MetricsSelector = ({ maxSelectionNumber, metrics, name, onSelect, preselec
 
   useEffect(() => {
     if (isOpen) {
-      window.addEventListener('scroll', scrollHandler, true)
-      window.addEventListener('click', clickHandler)
+      window.addEventListener('scroll', windowScrollHandler, true)
+      window.addEventListener('click', windowClickHandler)
     }
 
     return () => {
-      window.removeEventListener('click', clickHandler)
-      window.removeEventListener('scroll', scrollHandler, true)
+      window.removeEventListener('click', windowClickHandler)
+      window.removeEventListener('scroll', windowScrollHandler, true)
     }
-  }, [clickHandler, scrollHandler, isOpen])
+  }, [windowClickHandler, windowScrollHandler, isOpen])
 
   const handleOnChange = selectedMetrics => {
     onSelect(
       selectedMetrics.map(metricFullName => {
         return metrics.find(metric => metric.full_name === metricFullName)
-  
       })
     )
   }
@@ -136,6 +135,19 @@ const MetricsSelector = ({ maxSelectionNumber, metrics, name, onSelect, preselec
     }
 
     return `${selectedMetrics.length} metrics selected`
+  }
+
+  const getMetricsLabel = metric => {
+    return (
+      <>
+        <span
+          className="metrics-selector-color-indicator"
+          style={{ backgroundColor: metric.color }}
+        />
+        <span className="data-ellipsis">{metric.name}</span>
+        <sup className="data-ellipsis">{metric.type === metricsTypes.metric ? ' (M)' : ' (R)'}</sup>
+      </>
+    )
   }
 
   return (
@@ -179,10 +191,10 @@ const MetricsSelector = ({ maxSelectionNumber, metrics, name, onSelect, preselec
                   <div className="metrics-selector-search__name-filter">
                     <FormInput
                       inputIcon={<SearchIcon />}
-                      name="metric-name"
+                      name="metricSearchName"
                       placeholder="Search metrics..."
                     />
-                    <FormOnChange name="metric-name" handler={setNameFilerDebounced} />
+                    <FormOnChange name="metricSearchName" handler={setNameFilterDebounced} />
                   </div>
                 </div>
 
@@ -237,7 +249,7 @@ const MetricsSelector = ({ maxSelectionNumber, metrics, name, onSelect, preselec
                 </ul>
                 <FormOnChange name={name} handler={handleOnChange} />
                 <div data-testid="metrics-selector-counter" className="metrics-selector-counter">
-                  {`${formState.values.metrics.length}/${maxSelectionNumber}`}
+                  {`${formState.values.metrics?.length ?? 0}/${maxSelectionNumber}`}
                 </div>
               </PopUpDialog>
             )}

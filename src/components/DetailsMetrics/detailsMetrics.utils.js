@@ -25,7 +25,6 @@ const usedColors = new Set()
 
 const hslToHex = (hue, saturation, lightness) => {
   const normalizedLightness = lightness / 100
-
   const chroma = (saturation * Math.min(normalizedLightness, 1 - normalizedLightness)) / 100
 
   const calculateColorComponent = step => {

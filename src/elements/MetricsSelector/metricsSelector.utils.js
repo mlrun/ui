@@ -19,19 +19,9 @@ such restriction.
 */
 import { chain, isEmpty } from 'lodash'
 
-const metricsTypes = {
+export const metricsTypes = {
   metric: 'metric',
   result: 'result'
-}
-
-export const getMetricsLabel = (metric) => {
-  return (
-    <>
-      <span className="metrics-selector-color-indicator" style={{ backgroundColor: metric.color }} />
-      <span className="data-ellipsis">{metric.name}</span>
-      <sup className="data-ellipsis">{metric.type === metricsTypes.metric ? ' (M)' : ' (R)'}</sup>
-    </>
-  )
 }
 
 export const filterMetrics = (metricsByApplication, nameFilter) => {

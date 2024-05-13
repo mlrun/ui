@@ -28,7 +28,9 @@ import {
   FETCH_MODEL_FEATURE_VECTOR_BEGIN,
   FETCH_MODEL_FEATURE_VECTOR_FAILURE,
   FETCH_MODEL_FEATURE_VECTOR_SUCCESS,
-  FETCH_ENDPOINT_METRICS_LIST_SUCCESS,
+  FETCH_ENDPOINT_METRICS_BEGIN,
+  FETCH_ENDPOINT_METRICS_SUCCESS,
+  FETCH_ENDPOINT_METRICS_FAILURE,
   REMOVE_INFO_CONTENT,
   REMOVE_JOB_PODS,
   REMOVE_MODEL_ENDPOINT,
@@ -47,6 +49,7 @@ import {
   SHOW_WARNING
 } from '../constants'
 import { generatePods } from '../utils/generatePods'
+import { generateMetricsItems } from '../components/DetailsMetrics/detailsMetrics.utils'
 
 const detailsActions = {
   fetchModelEndpointWithAnalysis: (project, uid) => dispatch => {
@@ -125,16 +128,28 @@ const detailsActions = {
     type: FETCH_JOB_PODS_SUCCESS,
     payload: pods
   }),
-  fetchModelEndPointMetricsList: (project, uid, generateMetricsItems) => async dispatch => {
-    const { data } = await detailsApi.getModelEndpointMetricsList(project, uid)
-    const metrics = generateMetricsItems(project, uid, data)
+  fetchModelEndpointMetrics: (project, uid) => async dispatch => {
+    detailsActions.fetchEndpointMetricsBegin()
+    try {
+      const { data } = await detailsApi.getModelEndpointMetrics(project, uid)
+      const metrics = generateMetricsItems(data)
 
-    dispatch(detailsActions.fetchEndpointMetricsListSuccess({ endpointUid: uid, metrics }))
+      dispatch(detailsActions.fetchEndpointMetricsSuccess({ endpointUid: uid, metrics }))
 
-    return metrics
+      return metrics
+    } catch (error) {
+      detailsActions.fetchEndpointMetricsFailure(error)
+    }
   },
-  fetchEndpointMetricsListSuccess: payload => ({
-    type: FETCH_ENDPOINT_METRICS_LIST_SUCCESS,
+  fetchEndpointMetricsBegin: () => ({
+    type: FETCH_ENDPOINT_METRICS_BEGIN
+  }),
+  fetchEndpointMetricsFailure: error => ({
+    type: FETCH_ENDPOINT_METRICS_FAILURE,
+    payload: error
+  }),
+  fetchEndpointMetricsSuccess: payload => ({
+    type: FETCH_ENDPOINT_METRICS_SUCCESS,
     payload
   }),
   removeInfoContent: () => ({
@@ -192,10 +207,10 @@ const detailsActions = {
     type: SHOW_WARNING,
     payload: show
   }),
-  setSelectedMetricsOptions: (payload) => ({
+  setSelectedMetricsOptions: payload => ({
     type: SET_SELECTED_METRICS_OPTIONS,
     payload
-  }),
+  })
 }
 
 export default detailsActions

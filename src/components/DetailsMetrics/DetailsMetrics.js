@@ -54,14 +54,13 @@ const DetailsMetrics = ({ selectedItem }) => {
 
   useEffect(() => {
     // dispatch(
-    //   detailsActions.fetchModelEndPointMetricsList(
+    //   detailsActions.fetchModelEndpointMetrics(
     //     selectedItem.metadata.project,
     //     selectedItem.metadata.uid,
-    //     generateMetricsItems
     //   )
 
     dispatch(
-      detailsActions.fetchEndpointMetricsListSuccess({
+      detailsActions.fetchEndpointMetricsSuccess({
         endpointUid: selectedItem.metadata.uid,
         metrics: generatedMetrics
       })
