@@ -17,7 +17,7 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import React, { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react'
+import React, { useCallback, useLayoutEffect, useMemo, useRef, useState } from 'react'
 import { connect, useDispatch, useSelector } from 'react-redux'
 import { Outlet, useLocation, useNavigate, useParams } from 'react-router-dom'
 
@@ -42,7 +42,6 @@ import {
   NAME_FILTER,
   SCHEDULE_TAB
 } from '../../constants'
-import { removeFilters } from '../../reducers/filtersReducer'
 import { monitorJob, pollAbortingJobs, rerunJob } from '../Jobs/jobs.util'
 import { TERTIARY_BUTTON } from 'igz-controls/constants'
 import { parseJob } from '../../utils/parseJob'
@@ -258,8 +257,8 @@ const ProjectsJobsMonitoring = ({ fetchAllJobRuns, fetchJobFunction, fetchJobs }
               let inDateRange = true
 
               if (filters.dates) {
-                const timeTo = filters.dates.value[0]?.getTime()
-                const timeFrom = filters.dates.value[1]?.getTime()
+                const timeTo = filters.dates.value[0]?.getTime?.() || ''
+                const timeFrom = filters.dates.value[1]?.getTime?.() || ''
                 const nextRun = job.nextRun.getTime()
 
                 if (timeFrom) {
@@ -284,12 +283,6 @@ const ProjectsJobsMonitoring = ({ fetchAllJobRuns, fetchJobFunction, fetchJobs }
     },
     [dispatch]
   )
-
-  useEffect(() => {
-    return () => {
-      dispatch(removeFilters())
-    }
-  }, [dispatch, selectedTab])
 
   useLayoutEffect(() => {
     setSelectedTab(

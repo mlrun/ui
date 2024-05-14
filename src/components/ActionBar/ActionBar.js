@@ -186,10 +186,13 @@ const ActionBar = ({
   }
 
   useEffect(() => {
+    const formState = formRef.current
+
     return () => {
+      formState?.reset?.(formInitialValues)
       dispatch(removeFilters())
     }
-  }, [params.projectName, params.name, page, tab, dispatch])
+  }, [params.projectName, params.name, page, tab, dispatch, formInitialValues])
 
   return (
     <Form form={formRef.current} onSubmit={() => {}}>
