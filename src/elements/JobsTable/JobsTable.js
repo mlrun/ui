@@ -57,6 +57,7 @@ import { useYaml } from '../../hooks/yaml.hook'
 import { isRowRendered, useVirtualization } from '../../hooks/useVirtualization.hook'
 import { enrichRunWithFunctionFields, handleAbortJob, handleDeleteJob } from '../../utils/jobs.util'
 import { generatePageData } from './jobsTable.util'
+import { setFilters } from '../../reducers/filtersReducer'
 
 import cssVariables from './jobsTable.scss'
 
@@ -255,7 +256,7 @@ const JobsTable = React.forwardRef(
             <div>
               Are you sure you want to abort the job "{job.name}"? <br />
               {isJobKindLocal(job) &&
-                'This is a local run. You can abort the run, though the actual process will continue.'}
+              'This is a local run. You can abort the run, though the actual process will continue.'}
             </div>
           ),
           btnConfirmLabel: 'Abort',
@@ -508,7 +509,10 @@ const JobsTable = React.forwardRef(
             actionsMenu={actionsMenu}
             detailsMenu={pageData.details.menu}
             getCloseDetailsLink={() => getCloseDetailsLink(location, params.jobName)}
-            handleCancel={() => setSelectedJob({})}
+            handleCancel={() => {
+              setSelectedJob({})
+              dispatch(setFilters({ saveFilters: true }))
+            }}
             handleRefresh={fetchRun}
             isDetailsScreen
             pageData={pageData}

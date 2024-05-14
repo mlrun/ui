@@ -141,10 +141,8 @@ const filtersSlice = createSlice({
   name: 'filtersStore',
   initialState,
   reducers: {
-    removeFilters(state) {
-      for (let filterProp in state) {
-        state[filterProp] = initialState[filterProp]
-      }
+    removeFilters() {
+      return initialState
     },
     resetModalFilter(state, action) {
       delete state[FILTER_MENU_MODAL][action.payload]
