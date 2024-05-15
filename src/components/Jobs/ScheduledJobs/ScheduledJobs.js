@@ -19,11 +19,10 @@ such restriction.
 */
 import React, { useCallback, useState, useMemo, useEffect, useRef } from 'react'
 import { useParams } from 'react-router-dom'
-import { connect, useDispatch, useSelector } from 'react-redux'
+import { connect, useDispatch } from 'react-redux'
 
 import FilterMenu from '../../FilterMenu/FilterMenu'
-import NoData from '../../../common/NoData/NoData'
-import YamlModal from '../../../common/YamlModal/YamlModal'
+import ScheduledJobsTable from '../../../elements/ScheduledJobsTable/ScheduledJobsTable'
 
 import {
   GROUP_BY_NONE,
@@ -35,26 +34,18 @@ import {
 } from '../../../constants'
 import { JobsContext } from '../Jobs'
 import { createJobsScheduleTabContent } from '../../../utils/createJobsContent'
-import { getNoDataMessage } from '../../../utils/getNoDataMessage'
 import { parseJob } from '../../../utils/parseJob'
 import { scheduledJobsActionCreator } from './scheduledJobs.util'
 import { setFilters } from '../../../reducers/filtersReducer'
-import { useYaml } from '../../../hooks/yaml.hook'
-
-
-import ScheduledJobsTable from '../../../elements/ScheduledJobsTable/ScheduledJobsTable'
 
 const ScheduledJobs = ({ fetchScheduledJobs }) => {
   const [jobs, setJobs] = useState([])
   const [dataIsLoaded, setDataIsLoaded] = useState(false)
-  const [convertedYaml, toggleConvertedYaml] = useYaml('')
   const [largeRequestErrorMessage, setLargeRequestErrorMessage] = useState('')
   const abortControllerRef = useRef(new AbortController())
 
   const dispatch = useDispatch()
   const params = useParams()
-  const filtersStore = useSelector(store => store.filtersStore)
-  const jobsStore = useSelector(store => store.jobsStore)
 
   const tableContent = useMemo(() => createJobsScheduleTabContent(jobs), [jobs])
 
@@ -116,29 +107,14 @@ const ScheduledJobs = ({ fetchScheduledJobs }) => {
           />
         </div>
       </div>
-      {jobsStore.loading ? null : jobs.length === 0 ? (
-        <NoData
-          message={getNoDataMessage(
-            filtersStore,
-            filters,
-            largeRequestErrorMessage,
-            JOBS_PAGE,
-            SCHEDULE_TAB
-          )}
-        />
-      ) : (
-        <ScheduledJobsTable
-          context={JobsContext}
-          filters={filters}
-          jobs={jobs}
-          largeRequestErrorMessage={largeRequestErrorMessage}
-          refreshJobs={refreshJobs}
-          tableContent={tableContent}
-        />
-      )}
-      {convertedYaml.length > 0 && (
-        <YamlModal convertedYaml={convertedYaml} toggleConvertToYaml={toggleConvertedYaml} />
-      )}
+      <ScheduledJobsTable
+        context={JobsContext}
+        filters={filters}
+        jobs={jobs}
+        largeRequestErrorMessage={largeRequestErrorMessage}
+        refreshJobs={refreshJobs}
+        tableContent={tableContent}
+      />
     </>
   )
 }
