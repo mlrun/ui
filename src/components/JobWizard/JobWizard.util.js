@@ -103,6 +103,7 @@ export const generateJobWizardData = (
   selectedFunctionData,
   defaultData,
   currentProjectName,
+  currentProject,
   isEditMode,
   isTrain,
   prePopulatedData,
@@ -163,7 +164,7 @@ export const generateJobWizardData = (
     },
     [ADVANCED_STEP]: {
       inputPath: null,
-      outputPath: frontendSpec.default_artifact_path || JOB_DEFAULT_OUTPUT_PATH,
+      outputPath: currentProject?.spec?.artifact_path || frontendSpec.default_artifact_path || JOB_DEFAULT_OUTPUT_PATH,
       accessKey: true,
       accessKeyInput: '',
       environmentVariablesTable: parseEnvironmentVariables(environmentVariables)

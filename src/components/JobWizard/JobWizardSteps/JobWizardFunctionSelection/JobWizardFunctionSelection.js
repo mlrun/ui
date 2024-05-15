@@ -58,6 +58,7 @@ import './jobWizardFunctionSelection.scss'
 
 const JobWizardFunctionSelection = ({
   activeTab,
+  currentProject,
   defaultData,
   filteredFunctions,
   filteredTemplates,
@@ -220,6 +221,7 @@ const JobWizardFunctionSelection = ({
         functionData,
         defaultData,
         params.projectName,
+        currentProject,
         isEditMode
       )
 
@@ -494,11 +496,13 @@ const JobWizardFunctionSelection = ({
 }
 
 JobWizardFunctionSelection.defaultProps = {
+  currentProject: null,
   stepIsActive: false
 }
 
 JobWizardFunctionSelection.propTypes = {
   activeTab: PropTypes.string.isRequired,
+  currentProject: PropTypes.shape({}),
   defaultData: PropTypes.shape({}).isRequired,
   filteredFunctions: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
   filteredTemplates: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
