@@ -178,7 +178,7 @@ const Models = ({ fetchModelFeatureVector }) => {
           }
         })
     },
-    [dispatch]
+    [dispatch, params.projectName]
   )
 
   const handleRefresh = useCallback(
