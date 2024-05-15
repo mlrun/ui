@@ -30,6 +30,9 @@ import {
   FETCH_ENDPOINT_METRICS_BEGIN,
   FETCH_ENDPOINT_METRICS_SUCCESS,
   FETCH_ENDPOINT_METRICS_FAILURE,
+  FETCH_ENDPOINT_METRICS_VALUES_BEGIN,
+  FETCH_ENDPOINT_METRICS_VALUES_SUCCESS,
+  FETCH_ENDPOINT_METRICS_VALUES_FAILURE,
   REMOVE_MODEL_FEATURE_VECTOR,
   SET_CHANGES_COUNTER,
   SET_CHANGES,
@@ -214,8 +217,25 @@ const detailsReducer = (state = initialState, { type, payload }) => {
         error: payload,
         metricsOptions: {
           ...initialState.metricsOptions,
-          loading: false
+          loading: false,
+          all: [],
         }
+      }
+    case FETCH_ENDPOINT_METRICS_VALUES_BEGIN:
+      return {
+        ...state,
+        loading: true
+      }
+    case FETCH_ENDPOINT_METRICS_VALUES_SUCCESS:
+      return {
+        ...state,
+        loading: false
+      }
+    case FETCH_ENDPOINT_METRICS_VALUES_FAILURE:
+      return {
+        ...state,
+        error: payload,
+        loading: false
       }
     case REMOVE_INFO_CONTENT:
       return {

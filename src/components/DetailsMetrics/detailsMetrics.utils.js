@@ -64,7 +64,7 @@ const generateUniqueColor = () => {
   }
 }
 
-const getMetricColorByFullName = name => {
+export const getMetricColorByFullName = name => {
   if (metricsColorsByFullName[name]) {
     return metricsColorsByFullName[name]
   } else {

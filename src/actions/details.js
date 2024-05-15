@@ -31,6 +31,9 @@ import {
   FETCH_ENDPOINT_METRICS_BEGIN,
   FETCH_ENDPOINT_METRICS_SUCCESS,
   FETCH_ENDPOINT_METRICS_FAILURE,
+  FETCH_ENDPOINT_METRICS_VALUES_BEGIN,
+  FETCH_ENDPOINT_METRICS_VALUES_SUCCESS,
+  FETCH_ENDPOINT_METRICS_VALUES_FAILURE,
   REMOVE_INFO_CONTENT,
   REMOVE_JOB_PODS,
   REMOVE_MODEL_ENDPOINT,
@@ -49,7 +52,7 @@ import {
   SHOW_WARNING
 } from '../constants'
 import { generatePods } from '../utils/generatePods'
-import { generateMetricsItems } from '../components/DetailsMetrics/detailsMetrics.utils'
+import { generateMetricsItems, getMetricColorByFullName } from '../components/DetailsMetrics/detailsMetrics.utils'
 
 const detailsActions = {
   fetchModelEndpointWithAnalysis: (project, uid) => dispatch => {
@@ -131,7 +134,7 @@ const detailsActions = {
   fetchModelEndpointMetrics: (project, uid) => async dispatch => {
     detailsActions.fetchEndpointMetricsBegin()
     try {
-      const { data } = await detailsApi.getModelEndpointMetrics(project, uid)
+      const { data = []} = await detailsApi.getModelEndpointMetrics(project, uid)
       const metrics = generateMetricsItems(data)
 
       dispatch(detailsActions.fetchEndpointMetricsSuccess({ endpointUid: uid, metrics }))
@@ -151,6 +154,34 @@ const detailsActions = {
   fetchEndpointMetricsSuccess: payload => ({
     type: FETCH_ENDPOINT_METRICS_SUCCESS,
     payload
+  }),
+  fetchModelEndpointMetricsValues: (project, uid, config) => async dispatch => {
+    detailsActions.fetchEndpointMetricsValuesBegin()
+    try {
+      const { data = [] } = await detailsApi.getModelEndpointMetricsValues(project, uid, config)
+      const metrics = data.map(metric => {
+        return {
+          ...metric,
+          color: getMetricColorByFullName(metric.full_name)
+        }
+      })
+
+      dispatch(detailsActions.fetchEndpointMetricsValuesSuccess())
+
+      return metrics
+    } catch (error) {
+      detailsActions.fetchEndpointMetricsValuesFailure(error)
+    }
+  },
+  fetchEndpointMetricsValuesBegin: () => ({
+    type: FETCH_ENDPOINT_METRICS_VALUES_BEGIN
+  }),
+  fetchEndpointMetricsValuesFailure: error => ({
+    type: FETCH_ENDPOINT_METRICS_VALUES_FAILURE,
+    payload: error
+  }),
+  fetchEndpointMetricsValuesSuccess: () => ({
+    type: FETCH_ENDPOINT_METRICS_VALUES_SUCCESS
   }),
   removeInfoContent: () => ({
     type: REMOVE_INFO_CONTENT

@@ -20,6 +20,7 @@ such restriction.
 import { mainHttpClient } from '../httpClient'
 
 import { JOB_KIND_JOB } from '../constants'
+import { getMetrics, getMetricsValues } from '../components/DetailsMetrics/metricsMock'
 
 const detailsApi = {
   getJobPods: (project, uid, kind) => {
@@ -35,8 +36,15 @@ const detailsApi = {
     mainHttpClient.get(`/projects/${project}/model-endpoints/${uid}?feature_analysis=true`),
   getModelFeatureVector: (project, name, reference) =>
     mainHttpClient.get(`/projects/${project}/feature-vectors/${name}/references/${reference}`),
-  getModelEndpointMetricsList: (project, uid, type='all') =>
-    mainHttpClient.get(`/projects/${project}/model-endpoints/${uid}/metrics?type=${type}`) // type=results/metrics/all
+  getModelEndpointMetrics: (project, uid, type = 'all') =>
+    // mainHttpClient.get(`/projects/${project}/model-endpoints/${uid}/metrics?type=${type}`), // type=results/metrics/all
+    Promise.resolve({ data: getMetrics() }),
+  getModelEndpointMetricsValues: (project, uid, params) => {
+    // return mainHttpClient.get(`/projects/${project}/model-endpoints/${uid}/metrics-values`, {
+    //   params
+    // })
+    return Promise.resolve({ data: getMetricsValues().filter(metric => params.name.includes(metric.full_name))})
+  }
 }
 
 export default detailsApi

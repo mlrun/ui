@@ -17,55 +17,61 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import React, { useEffect, useMemo } from 'react'
-// import { useSelector } from 'react-redux'
+import React, { useEffect, useState } from 'react'
+import { useSelector } from 'react-redux'
 import { useDispatch } from 'react-redux'
+import { isEmpty } from 'lodash'
 
 import detailsActions from '../../actions/details'
-import { generateMetricsItems } from './detailsMetrics.utils'
-
-const getMetricsMock = selectedItem => {
-  if (getMetricsMock[selectedItem.metadata.uid]) return getMetricsMock[selectedItem.metadata.uid]
-  const mock = Array(100)
-    .fill(1)
-    .map((metric, index) => {
-      const app = 'application' + Math.floor(Math.random() * 10)
-      const name = 'metric' + index
-      const type = index % 6 === 0 ? 'result' : 'metric'
-      return {
-        full_name: `${selectedItem.metadata.project}.${app}.${type}.${name}`,
-        name,
-        type,
-        project: selectedItem.metadata.project,
-        app
-      }
-    })
-    getMetricsMock[selectedItem.metadata.uid] = mock
-    return mock
-}
 
 const DetailsMetrics = ({ selectedItem }) => {
-  // const detailsStore = useSelector(store => store.detailsStore)
+  const [metrics, setMetrics] = useState([])
+  const detailsStore = useSelector(store => store.detailsStore)
   const dispatch = useDispatch()
 
-  const generatedMetrics = useMemo(() => {
-    return generateMetricsItems(getMetricsMock(selectedItem))
-  }, [selectedItem])
+  useEffect(() => {
+    dispatch(
+      detailsActions.fetchModelEndpointMetrics(
+        selectedItem.metadata.project,
+        selectedItem.metadata.uid
+      )
+    )
+  }, [dispatch, selectedItem])
 
   useEffect(() => {
-    // dispatch(
-    //   detailsActions.fetchModelEndpointMetrics(
-    //     selectedItem.metadata.project,
-    //     selectedItem.metadata.uid,
-    //   )
+    if (
+      selectedItem.metadata?.uid &&
+      !isEmpty(detailsStore.metricsOptions.selectedByEndpoint[selectedItem.metadata?.uid])
+    ) {
+      const selectedMetrics =
+        detailsStore.metricsOptions.selectedByEndpoint[selectedItem.metadata?.uid]
+      const params = { name: [] }
 
-    dispatch(
-      detailsActions.fetchEndpointMetricsSuccess({
-        endpointUid: selectedItem.metadata.uid,
-        metrics: generatedMetrics
+      if (detailsStore.dates.value[0]) {
+        params.start = detailsStore.dates.value[0].getTime()
+      }
+
+      if (detailsStore.dates.value[1]) {
+        params.end = detailsStore.dates.value[1].getTime()
+      }
+
+      selectedMetrics.forEach(metric => {
+        params.name.push(metric.full_name)
       })
-    )
-  }, [dispatch, selectedItem, generatedMetrics])
+
+      dispatch(
+        detailsActions.fetchModelEndpointMetricsValues(
+          selectedItem.metadata.project,
+          selectedItem.metadata.uid,
+          params
+        )
+      ).then(metricsList => {
+        setMetrics(metricsList)
+      })
+    }
+  }, [dispatch, selectedItem, detailsStore.dates, detailsStore.metricsOptions.selectedByEndpoint])
+
+  console.log(metrics)
 
   return <div className="metrics">Home for Metrics</div>
 }
