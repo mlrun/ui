@@ -40,7 +40,7 @@ import { formatDatetime } from '../../../utils'
 import { LABEL_BUTTON } from 'igz-controls/constants'
 import { ACTIONS_MENU } from '../../../types'
 import { getViewMode } from '../../../utils/helper'
-import { PAST_24_HOUR_DATE_OPTION } from '../../../utils/datePicker.util'
+import { PAST_24_HOUR_DATE_OPTION, TIME_FRAME_LIMITS } from '../../../utils/datePicker.util'
 
 import { ReactComponent as Close } from 'igz-controls/images/close.svg'
 import { ReactComponent as Back } from 'igz-controls/images/back-arrow.svg'
@@ -199,6 +199,29 @@ const DetailsHeader = ({
             </Tooltip>
           </>
         )}
+        {params.tab === DETAILS_METRICS_TAB && (
+          <>
+            <MetricsSelector
+              name="metrics"
+              metrics={detailsStore.metricsOptions.all}
+              onSelect={metrics =>
+                setSelectedMetricsOptions({ endpointUid: selectedItem.metadata.uid, metrics })
+              }
+              preselectedMetrics={detailsStore.metricsOptions.preselected}
+            />
+            <DatePicker
+              className="details-date-picker"
+              date={detailsStore.dates.value[0]}
+              dateTo={detailsStore.dates.value[1]}
+              selectedOptionId={PAST_24_HOUR_DATE_OPTION}
+              label=""
+              onChange={handleChangeDates}
+              type="date-range-time"
+              timeFrameLimit={TIME_FRAME_LIMITS.MONTH}
+              withLabels
+            />
+          </>
+        )}
         {params.tab === DETAILS_ARTIFACTS_TAB && detailsStore.iteration && (
           <Select
             density="dense"
@@ -229,6 +252,7 @@ const DetailsHeader = ({
               label=""
               onChange={handleChangeDates}
               type="date-range-time"
+              timeFrameLimit={TIME_FRAME_LIMITS.MONTH}
               withLabels
             />
           </>

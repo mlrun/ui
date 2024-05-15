@@ -52,14 +52,16 @@
       border-radius: 4px;
 
       .date-picker__input {
-        max-width: 270px;
+        max-width: 390px;
         height: 40px;
+        padding: 0 8px 0 16px;
+      }
+    }
+
+    &.date-picker-container__custom-range {
+      .date-picker__input-wrapper {
         padding: 0;
         border: none;
-
-        &:focus {
-          border: none;
-        }
       }
     }
   }
@@ -241,8 +243,22 @@
     min-height: 45px;
     margin: 20px 15px 0;
 
+    .error {
+      margin-right: auto;
+    }
+
     .date-picker__apply-btn {
       margin-left: 15px;
+    }
+
+    &:not(.date-picker__footer-range) {
+      flex-direction: column;
+      align-items: flex-end;
+
+      .error {
+        width: 240px;
+        margin-bottom: 10px;
+      }
     }
   }
 }
