@@ -33,17 +33,19 @@ export const handleDeleteArtifact = (
   filters,
   artifactType,
   category,
-  isDeleteAll
+  isDeleteAll,
+  deletion_strategy,
+  secrets
 ) => {
-  dispatch(
+  return dispatch(
     isDeleteAll
       ? deleteArtifacts({ project, name: key, category })
-      : deleteArtifact({ project, key, tag, tree })
+      : deleteArtifact({ project, key, tag, tree, deletion_strategy, secrets })
   )
     .unwrap()
     .then(() => {
       refreshArtifacts(filters)
-      dispatch(
+      return dispatch(
         setNotification({
           status: 200,
           id: Math.random(),

@@ -55,12 +55,17 @@ const fetchArtifacts = (project, filters, config = {}, withLatestTag) => {
 const artifactsApi = {
   addTag: (project, tag, data) => mainHttpClient.put(`/projects/${project}/tags/${tag}`, data),
   buildFunction: data => mainHttpClient.post('/build/function', data),
-  deleteArtifact: (project, key, tag, tree) => {
+  deleteArtifact: (project, key, tag, tree, deletion_strategy, secrets) => {
     const config = {
       params: {
         tag,
         tree
       }
+    }
+
+    if (deletion_strategy) {
+      config.params.deletion_strategy = deletion_strategy
+      config.data = { secrets }
     }
 
     return mainHttpClientV2.delete(`/projects/${project}/artifacts/${key}`, config)
@@ -69,7 +74,7 @@ const artifactsApi = {
     const config = {
       params: {}
     }
-    
+
     if (name) config.params.name = name
     if (category) config.params.category = category
 

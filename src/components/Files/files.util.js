@@ -19,6 +19,8 @@ such restriction.
 */
 import React from 'react'
 
+import DeleteArtifactPopUp from '../../elements/DeleteArtifactPopUp/DeleteArtifactPopUp'
+
 import {
   ACTION_MENU_PARENT_ROW,
   ACTION_MENU_PARENT_ROW_EXPANDED,
@@ -44,6 +46,7 @@ import { openDeleteConfirmPopUp } from 'igz-controls/utils/common.util'
 import { searchArtifactItem } from '../../utils/searchArtifactItem'
 import { setDownloadItem, setShowDownloadsList } from '../../reducers/downloadReducer'
 import { sortListByDate } from '../../utils'
+import { openPopUp } from 'igz-controls/utils/common.util'
 
 import { ReactComponent as TagIcon } from 'igz-controls/images/tag-icon.svg'
 import { ReactComponent as YamlIcon } from 'igz-controls/images/yaml.svg'
@@ -218,7 +221,7 @@ export const generateActionsMenu = (
   handleAddTag,
   projectName,
   handleRefresh,
-  datasetsFilters,
+  filters,
   menuPosition
 ) => {
   const isTargetPathValid = getIsTargetPathValid(file ?? {}, frontendSpec)
@@ -269,22 +272,13 @@ export const generateActionsMenu = (
           : '',
         className: 'danger',
         onClick: () =>
-          openDeleteConfirmPopUp(
-            'Delete artifact?',
-            `Do you want to delete the artifact "${file.db_key}"? Deleted artifacts can not be restored.`,
-            () => {
-              handleDeleteArtifact(
-                dispatch,
-                projectName,
-                file.db_key,
-                file.tag,
-                file.tree,
-                handleRefresh,
-                datasetsFilters,
-                ARTIFACT_TYPE,
-              )
-            }
-          )
+          openPopUp(DeleteArtifactPopUp, {
+            artifact: file,
+            artifactType: ARTIFACT_TYPE,
+            category: ARTIFACT_OTHER_TYPE,
+            filters,
+            handleRefresh
+          })
       },
       {
         label: 'Delete all',
@@ -303,7 +297,7 @@ export const generateActionsMenu = (
                 file.tag,
                 file.tree,
                 handleRefresh,
-                datasetsFilters,
+                filters,
                 ARTIFACT_TYPE,
                 ARTIFACT_OTHER_TYPE,
                 true
