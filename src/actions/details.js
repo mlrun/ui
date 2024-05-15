@@ -131,18 +131,21 @@ const detailsActions = {
     type: FETCH_JOB_PODS_SUCCESS,
     payload: pods
   }),
-  fetchModelEndpointMetrics: (project, uid) => async dispatch => {
+  fetchModelEndpointMetrics: (project, uid) => dispatch => {
     detailsActions.fetchEndpointMetricsBegin()
-    try {
-      const { data = []} = await detailsApi.getModelEndpointMetrics(project, uid)
-      const metrics = generateMetricsItems(data)
 
-      dispatch(detailsActions.fetchEndpointMetricsSuccess({ endpointUid: uid, metrics }))
+    return detailsApi
+      .getModelEndpointMetrics(project, uid)
+      .then(({ data = [] }) => {
+        const metrics = generateMetricsItems(data)
 
-      return metrics
-    } catch (error) {
-      detailsActions.fetchEndpointMetricsFailure(error)
-    }
+        dispatch(detailsActions.fetchEndpointMetricsSuccess({ endpointUid: uid, metrics }))
+
+        return metrics
+      })
+      .catch(error => {
+        detailsActions.fetchEndpointMetricsFailure(error)
+      })
   },
   fetchEndpointMetricsBegin: () => ({
     type: FETCH_ENDPOINT_METRICS_BEGIN
@@ -155,23 +158,26 @@ const detailsActions = {
     type: FETCH_ENDPOINT_METRICS_SUCCESS,
     payload
   }),
-  fetchModelEndpointMetricsValues: (project, uid, config) => async dispatch => {
+  fetchModelEndpointMetricsValues: (project, uid, config) => dispatch => {
     detailsActions.fetchEndpointMetricsValuesBegin()
-    try {
-      const { data = [] } = await detailsApi.getModelEndpointMetricsValues(project, uid, config)
-      const metrics = data.map(metric => {
-        return {
-          ...metric,
-          color: getMetricColorByFullName(metric.full_name)
-        }
+
+    return detailsApi
+      .getModelEndpointMetricsValues(project, uid, config)
+      .then(({ data = [] }) => {
+        const metrics = data.map(metric => {
+          return {
+            ...metric,
+            color: getMetricColorByFullName(metric.full_name)
+          }
+        })
+
+        dispatch(detailsActions.fetchEndpointMetricsValuesSuccess())
+
+        return metrics
       })
-
-      dispatch(detailsActions.fetchEndpointMetricsValuesSuccess())
-
-      return metrics
-    } catch (error) {
-      detailsActions.fetchEndpointMetricsValuesFailure(error)
-    }
+      .catch(error => {
+        detailsActions.fetchEndpointMetricsValuesFailure(error)
+      })
   },
   fetchEndpointMetricsValuesBegin: () => ({
     type: FETCH_ENDPOINT_METRICS_VALUES_BEGIN

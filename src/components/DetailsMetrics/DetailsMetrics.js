@@ -71,6 +71,7 @@ const DetailsMetrics = ({ selectedItem }) => {
     }
   }, [dispatch, selectedItem, detailsStore.dates, detailsStore.metricsOptions.selectedByEndpoint])
 
+  // todo: metrics - remove when merge charts
   console.log(metrics)
 
   return <div className="metrics">Home for Metrics</div>

@@ -1,3 +1,4 @@
+// todo: metrics - remove when use real APi
 export const getMetrics = () => [
   {
     app: 'mlrun-infra',
