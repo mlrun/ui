@@ -245,18 +245,18 @@ const ActionBar = ({
                   return null
               }
             })}
-            {filterMenuModal && (
-              <FilterMenuModal
-                applyChanges={filterMenuModal => applyChanges(formState.values, filterMenuModal)}
-                filterMenuName={filterMenuName}
-                initialValues={filterMenuModalInitialState}
-                restartFormTrigger={tab}
-                values={filterMenuModal.values}
-              >
-                {children}
-              </FilterMenuModal>
-            )}
           </div>
+          {filterMenuModal && (
+            <FilterMenuModal
+              applyChanges={filterMenuModal => applyChanges(formState.values, filterMenuModal)}
+              filterMenuName={filterMenuName}
+              initialValues={filterMenuModalInitialState}
+              restartFormTrigger={tab}
+              values={filterMenuModal.values}
+            >
+              {children}
+            </FilterMenuModal>
+          )}
           {(withRefreshButton || !isEmpty(actionButtons)) && (
             <div className="action-bar__actions">
               {actionButtons.map(
