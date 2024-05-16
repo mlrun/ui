@@ -21,6 +21,8 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import classnames from 'classnames'
 
+import { Tooltip, TextTooltipTemplate } from 'igz-controls/components'
+
 const TagFilterDropdown = ({
   handleSelectFilter,
   setIsDropDownMenuOpen,
@@ -41,7 +43,9 @@ const TagFilterDropdown = ({
             className={dropdownItemClassName}
             onClick={event => handleSelectFilter(event, tag)}
           >
-            {tag.label}
+            <Tooltip template={<TextTooltipTemplate text={tag.label} />}>
+              <span>{tag.label}</span>
+            </Tooltip>
           </div>
         )
       })}

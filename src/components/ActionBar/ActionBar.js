@@ -201,7 +201,7 @@ const ActionBar = ({
                 case NAME_FILTER:
                   return (
                     !filter.hidden && (
-                      <div className="action-bar__filters-item" key={filter.type}>
+                      <div key={filter.type} className="action-bar__filters-item">
                         <NameFilter
                           applyChanges={value =>
                             applyChanges(
@@ -215,7 +215,7 @@ const ActionBar = ({
                   )
                 case 'dates':
                   return (
-                    <div className="action-bar__filters-item" key={filter.type}>
+                    <div key={filter.type} className="action-bar__filters-item">
                       <Field name={'dates'}>
                         {({ input }) => {
                           return (
@@ -224,7 +224,11 @@ const ActionBar = ({
                               date={input.value.value[0]}
                               dateTo={input.value.value[1]}
                               hasFutureOptions={filter.isFuture}
-                              selectedOptionId={filter.isFuture ? NEXT_24_HOUR_DATE_OPTION : PAST_24_HOUR_DATE_OPTION}
+                              selectedOptionId={
+                                filter.isFuture
+                                  ? NEXT_24_HOUR_DATE_OPTION
+                                  : PAST_24_HOUR_DATE_OPTION
+                              }
                               label=""
                               onChange={(dates, isPredefined) =>
                                 handleDateChange(dates, isPredefined, input, formState)
@@ -241,18 +245,18 @@ const ActionBar = ({
                   return null
               }
             })}
-            {filterMenuModal && (
-              <FilterMenuModal
-                applyChanges={filterMenuModal => applyChanges(formState.values, filterMenuModal)}
-                filterMenuName={filterMenuName}
-                initialValues={filterMenuModalInitialState}
-                restartFormTrigger={tab}
-                values={filterMenuModal.values}
-              >
-                {children}
-              </FilterMenuModal>
-            )}
           </div>
+          {filterMenuModal && (
+            <FilterMenuModal
+              applyChanges={filterMenuModal => applyChanges(formState.values, filterMenuModal)}
+              filterMenuName={filterMenuName}
+              initialValues={filterMenuModalInitialState}
+              restartFormTrigger={tab}
+              values={filterMenuModal.values}
+            >
+              {children}
+            </FilterMenuModal>
+          )}
           {(withRefreshButton || !isEmpty(actionButtons)) && (
             <div className="action-bar__actions">
               {actionButtons.map(
