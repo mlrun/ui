@@ -790,6 +790,12 @@ main {
 
   &__filters {
     display: flex;
+
+    .filter-column {
+      &:not(:last-child) {
+        margin: 0 15px 0 0;
+      }
+    }
   }
 
   &__actions {
