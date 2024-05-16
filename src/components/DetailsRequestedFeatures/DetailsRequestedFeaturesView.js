@@ -114,9 +114,12 @@ const DetailsRequestedFeaturesView = ({
                             {featureSet}
                           </Tooltip>
                           {tag && (
-                            <>
+                            <Tooltip
+                              className="cell_tag-set"
+                              template={<TextTooltipTemplate text={featureSet} />}
+                            >
                               <span className="cell_tag">: {tag}</span>
-                            </>
+                            </Tooltip>
                           )}
                         </div>
                         <div className="item-requested-features__table-cell cell_feature">
