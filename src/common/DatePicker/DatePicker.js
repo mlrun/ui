@@ -72,7 +72,8 @@ const DatePicker = ({
   withLabels
 }) => {
   const [datePickerState, datePickerDispatch] = useReducer(datePickerReducer, initialState)
-  const [outOfTimeFrameMessage, setOutOfTimeFrameMessage] = useState('')
+  const [invalidMessage, setInvalidMessage] = useState('')
+  const [isTimeRangeNegative, setIsTimeRangeNegative] = useState(false)
   const [isDatePickerOpened, setIsDatePickerOpened] = useState(false)
   const [isDatePickerOptionsOpened, setIsDatePickerOptionsOpened] = useState(false)
   const [isRange] = useState(type.includes('range'))
@@ -100,6 +101,8 @@ const DatePicker = ({
       option => option.millisecondsValue <= timeFrameLimit
     )
   }, [hasFutureOptions, timeFrameLimit])
+
+  window.optiiions = datePickerOptions
 
   const handleCloseDatePickerOutside = useCallback(
     event => {
@@ -183,7 +186,8 @@ const DatePicker = ({
   }, [getInputValueValidity, valueDatePickerInput, datePickerOptions])
 
   useEffect(() => {
-    let outOfTimeFrameMessage = ''
+    let invalidMessage = ''
+    let timeRangeIsNegative = false
 
     if (
       isRange &&
@@ -194,21 +198,23 @@ const DatePicker = ({
         datePickerState.configFrom.selectedDate.getTime() >
         datePickerState.configTo.selectedDate.getTime()
       ) {
-        outOfTimeFrameMessage = '“To” must be later than “From”'
+        invalidMessage = '“To” must be later than “From”'
+        timeRangeIsNegative = true
       } else if (
         datePickerState.configTo.selectedDate.getTime() -
           datePickerState.configFrom.selectedDate.getTime() >
         timeFrameLimit
       ) {
-        outOfTimeFrameMessage = getTimeFrameWarningMsg(timeFrameLimit)
+        invalidMessage = getTimeFrameWarningMsg(timeFrameLimit)
       }
     } else if (datePickerState.configFrom.selectedDate) {
       if (Date.now() - datePickerState.configFrom.selectedDate.getTime() > timeFrameLimit) {
-        outOfTimeFrameMessage = getTimeFrameWarningMsg(timeFrameLimit)
+        invalidMessage = getTimeFrameWarningMsg(timeFrameLimit)
       }
     }
 
-    setOutOfTimeFrameMessage(outOfTimeFrameMessage)
+    setIsTimeRangeNegative(timeRangeIsNegative)
+    setInvalidMessage(invalidMessage)
   }, [
     datePickerState.configFrom.selectedDate,
     datePickerState.configTo.selectedDate,
@@ -499,6 +505,7 @@ const DatePicker = ({
       datePickerOptions={datePickerOptions}
       disabled={disabled}
       getInputValueValidity={getInputValueValidity}
+      invalidMessage={invalidMessage}
       invalidText={invalidText}
       isDatePickerOpened={isDatePickerOpened}
       isDatePickerOptionsOpened={isDatePickerOptionsOpened}
@@ -507,6 +514,7 @@ const DatePicker = ({
       isRangeDateValid={isRangeDateValid}
       isSameDate={isSameDate}
       isTime={isTime}
+      isTimeRangeNegative={isTimeRangeNegative}
       isValueEmpty={isValueEmpty}
       label={label}
       months={months}
@@ -522,7 +530,6 @@ const DatePicker = ({
       requiredText={requiredText}
       selectedOption={selectedOption}
       setSelectedDate={setSelectedDate}
-      outOfTimeFrameMessage={outOfTimeFrameMessage}
       timeFrameLimit={timeFrameLimit}
       tip={tip}
       valueDatePickerInput={valueDatePickerInput}

@@ -198,7 +198,7 @@
           }
         }
 
-        &:not(.invalid) {
+        &:not(.negative-range) {
           &.selected-to,
           &.selected-from,
           &.in-range {

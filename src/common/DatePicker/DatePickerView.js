@@ -48,6 +48,7 @@ const DatePickerView = React.forwardRef(
       datePickerOptions,
       disabled,
       getInputValueValidity,
+      invalidMessage,
       invalidText,
       isDatePickerOpened,
       isDatePickerOptionsOpened,
@@ -56,6 +57,7 @@ const DatePickerView = React.forwardRef(
       isRangeDateValid,
       isSameDate,
       isTime,
+      isTimeRangeNegative,
       isValueEmpty,
       label,
       months,
@@ -66,7 +68,6 @@ const DatePickerView = React.forwardRef(
       onPreviousMonth,
       onSelectOption,
       onTimeChange,
-      outOfTimeFrameMessage,
       required,
       requiredText,
       selectedOption,
@@ -241,10 +242,7 @@ const DatePickerView = React.forwardRef(
                               isSameDate(config[0].selectedDate, day) && 'selected-from',
                               isRange && isSameDate(config[1].selectedDate, day) && 'selected-to',
                               isRangeDateValid(day) && 'in-range',
-                              isRange &&
-                                config[0].selectedDate.getTime() >
-                                  config[1].selectedDate.getTime() &&
-                                'invalid'
+                              isTimeRangeNegative && 'negative-range'
                             )}
                             onClick={() => {
                               item.visibleDate.getMonth() === day.getMonth() &&
@@ -275,15 +273,13 @@ const DatePickerView = React.forwardRef(
                   isRange && 'date-picker__footer-range'
                 )}
               >
-                {!isEmpty(outOfTimeFrameMessage) && (
-                  <ErrorMessage message={outOfTimeFrameMessage} />
-                )}
+                {!isEmpty(invalidMessage) && <ErrorMessage message={invalidMessage} />}
                 <Button
                   variant={SECONDARY_BUTTON}
                   label="Apply"
                   onClick={onApplyChanges}
                   className="date-picker__apply-btn"
-                  disabled={!isEmpty(outOfTimeFrameMessage)}
+                  disabled={!isEmpty(invalidMessage)}
                 />
               </div>
             </div>
@@ -310,6 +306,7 @@ DatePickerView.propTypes = {
   getInputValueValidity: PropTypes.func.isRequired,
   invalidText: PropTypes.string.isRequired,
   floatingLabel: PropTypes.bool,
+  invalidMessage: PropTypes.string.isRequired,
   isDatePickerOpened: PropTypes.bool.isRequired,
   isDatePickerOptionsOpened: PropTypes.bool.isRequired,
   isInvalid: PropTypes.bool.isRequired,
@@ -317,6 +314,7 @@ DatePickerView.propTypes = {
   isRangeDateValid: PropTypes.func.isRequired,
   isSameDate: PropTypes.func.isRequired,
   isTime: PropTypes.bool.isRequired,
+  isTimeRangeNegative: PropTypes.bool.isRequired,
   isValueEmpty: PropTypes.bool.isRequired,
   label: PropTypes.string,
   months: PropTypes.array.isRequired,
@@ -327,12 +325,11 @@ DatePickerView.propTypes = {
   onPreviousMonth: PropTypes.func.isRequired,
   onSelectOption: PropTypes.func.isRequired,
   onTimeChange: PropTypes.func.isRequired,
-  outOfTimeFrameMessage: PropTypes.string.isRequired,
   required: PropTypes.bool.isRequired,
   requiredText: PropTypes.string.isRequired,
   selectedOption: PropTypes.object,
   setSelectedDate: PropTypes.func.isRequired,
-  timeFrameLimit: PropTypes.string.isRequired,
+  timeFrameLimit: PropTypes.number.isRequired,
   tip: PropTypes.string.isRequired,
   valueDatePickerInput: PropTypes.string.isRequired,
   weekDay: PropTypes.array.isRequired,

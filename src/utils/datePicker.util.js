@@ -78,7 +78,7 @@ export const datePickerPastOptions = [
         fromDate.setHours(toDate.getHours() - 1)
       })
     },
-    millisecondsValue: 3600000
+    millisecondsValue: TIME_FRAME_LIMITS.HOUR
   },
   {
     id: PAST_24_HOUR_DATE_OPTION,
@@ -89,7 +89,7 @@ export const datePickerPastOptions = [
         fromDate.setDate(toDate.getDate() - 1)
       })
     },
-    millisecondsValue: 86400000
+    millisecondsValue: TIME_FRAME_LIMITS['24_HOURS']
   },
   {
     id: PAST_WEEK_DATE_OPTION,
@@ -100,7 +100,7 @@ export const datePickerPastOptions = [
         fromDate.setDate(toDate.getDate() - 7)
       })
     },
-    millisecondsValue: 604800000
+    millisecondsValue: TIME_FRAME_LIMITS.WEEK
   },
   {
     id: PAST_MONTH_DATE_OPTION,
@@ -111,7 +111,7 @@ export const datePickerPastOptions = [
         fromDate.setMonth(toDate.getMonth() - 1)
       })
     },
-    millisecondsValue: 2678400000
+    millisecondsValue: TIME_FRAME_LIMITS.MONTH
   },
   {
     id: PAST_YEAR_DATE_OPTION,
@@ -122,7 +122,7 @@ export const datePickerPastOptions = [
         fromDate.setFullYear(toDate.getFullYear() - 1)
       })
     },
-    millisecondsValue: 31536000000
+    millisecondsValue: TIME_FRAME_LIMITS.YEAR
   },
   {
     id: CUSTOM_RANGE_DATE_OPTION,
@@ -148,7 +148,7 @@ export const datePickerFutureOptions = [
         fromDate.setHours(toDate.getHours() + 1)
       })
     },
-    millisecondsValue: 3600000
+    millisecondsValue: TIME_FRAME_LIMITS.HOUR
   },
   {
     id: NEXT_24_HOUR_DATE_OPTION,
@@ -159,7 +159,7 @@ export const datePickerFutureOptions = [
         fromDate.setDate(toDate.getDate() + 1)
       })
     },
-    millisecondsValue: 86400000
+    millisecondsValue: TIME_FRAME_LIMITS['24_HOURS']
   },
   {
     id: NEXT_WEEK_DATE_OPTION,
@@ -170,7 +170,7 @@ export const datePickerFutureOptions = [
         fromDate.setDate(toDate.getDate() + 7)
       })
     },
-    millisecondsValue: 604800000
+    millisecondsValue: TIME_FRAME_LIMITS.WEEK
   },
   {
     id: NEXT_MONTH_DATE_OPTION,
@@ -181,7 +181,7 @@ export const datePickerFutureOptions = [
         fromDate.setMonth(toDate.getMonth() + 1)
       })
     },
-    millisecondsValue: 2678400000
+    millisecondsValue: TIME_FRAME_LIMITS.MONTH
   },
   {
     id: NEXT_YEAR_DATE_OPTION,
@@ -192,7 +192,7 @@ export const datePickerFutureOptions = [
         fromDate.setFullYear(toDate.getFullYear() + 1)
       })
     },
-    millisecondsValue: 31536000000
+    millisecondsValue: TIME_FRAME_LIMITS.YEAR
   },
   {
     id: CUSTOM_RANGE_DATE_OPTION,
@@ -348,7 +348,7 @@ export const getTimeFrameWarningMsg = (timeFrameLimit) => {
     [TIME_FRAME_LIMITS.HOUR]: '1 hour',
     [TIME_FRAME_LIMITS['24_HOURS']]: '24 hours',
     [TIME_FRAME_LIMITS.WEEK]: '7 days',
-    [TIME_FRAME_LIMITS.MONTH]: '31 day',
+    [TIME_FRAME_LIMITS.MONTH]: '31 days',
     [TIME_FRAME_LIMITS.YEAR]: '365 days'
   }
 
