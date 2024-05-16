@@ -144,8 +144,13 @@ const MetricsSelector = ({ maxSelectionNumber, metrics, name, onSelect, preselec
           className="metrics-selector-color-indicator"
           style={{ backgroundColor: metric.color }}
         />
-        <span className="data-ellipsis">{metric.name}</span>
-        <sup className="data-ellipsis">{metric.type === metricsTypes.metric ? ' (M)' : ' (R)'}</sup>
+        <span className="data-ellipsis">
+          {metric.name}
+          {/*todo change according to design when ready  */}
+          <span style={{ marginLeft: '5px' }}>
+            {metric.type === metricsTypes.metric ? ' (M)' : ' (R)'}
+          </span>
+        </span>
       </>
     )
   }
@@ -221,7 +226,11 @@ const MetricsSelector = ({ maxSelectionNumber, metrics, name, onSelect, preselec
                                       return (
                                         <Tooltip
                                           key={metricItem.id}
-                                          template={<TextTooltipTemplate text={metricItem.name} />}
+                                          template={
+                                            <TextTooltipTemplate
+                                              text={`${metricItem.name} ${metricItem.type === metricsTypes.metric ? ' (M)' : ' (R)'}`}
+                                            />
+                                          }
                                         >
                                           <SelectOption
                                             item={{

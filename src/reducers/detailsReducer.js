@@ -82,7 +82,6 @@ const initialState = {
   metricsOptions: {
     all: [],
     lastSelected: [],
-    loading: true,
     preselected: [],
     selectedByEndpoint: {}
   }
@@ -180,9 +179,9 @@ const detailsReducer = (state = initialState, { type, payload }) => {
     case FETCH_ENDPOINT_METRICS_BEGIN:
       return {
         ...state,
+        loading: true,
         metricsOptions: {
           ...state.metricsOptions,
-          loading: true
         }
       }
     case FETCH_ENDPOINT_METRICS_SUCCESS: {
@@ -198,11 +197,11 @@ const detailsReducer = (state = initialState, { type, payload }) => {
           })
       return {
         ...state,
+        error: null,
+        loading: false,
         metricsOptions: {
           all: payload.metrics,
-          error: null,
           lastSelected: selectedMetrics,
-          loading: false,
           preselected: selectedMetrics,
           selectedByEndpoint: {
             ...state.metricsOptions.selectedByEndpoint,
@@ -215,9 +214,9 @@ const detailsReducer = (state = initialState, { type, payload }) => {
       return {
         ...state,
         error: payload,
+        loading: false,
         metricsOptions: {
           ...initialState.metricsOptions,
-          loading: false,
           all: [],
         }
       }
@@ -229,6 +228,7 @@ const detailsReducer = (state = initialState, { type, payload }) => {
     case FETCH_ENDPOINT_METRICS_VALUES_SUCCESS:
       return {
         ...state,
+        error: null,
         loading: false
       }
     case FETCH_ENDPOINT_METRICS_VALUES_FAILURE:

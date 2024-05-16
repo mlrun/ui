@@ -55,18 +55,37 @@ const DetailsMetrics = ({ selectedItem }) => {
         params.end = detailsStore.dates.value[1].getTime()
       }
 
+      // todo remove mockNamesToFilter after test and when real API ready with all types (for now metrics type is not supported and it leads to error)
+      const mockNamesToFilter = []
+
       selectedMetrics.forEach(metric => {
+        // todo remove 'if statement and mockNamesToFilter after test and when real API ready with all types (for now metrics type is not supported and it leads to error)
+        mockNamesToFilter.push(metric.full_name)
+        if (metric.type === 'metric') return
+
         params.name.push(metric.full_name)
       })
 
+       // todo remove if block after test and when real API ready with all types (for now metrics type is not supported and it leads to error)
+      if (isEmpty(params.name))
+        params.name.push('for-mock-only.histogram-data-drift.result.hellinger_mean')
+
+      // todo remove mockNamesToFilter after test and when real API ready with all types (for now metrics type is not supported and it leads to error)
       dispatch(
         detailsActions.fetchModelEndpointMetricsValues(
           selectedItem.metadata.project,
           selectedItem.metadata.uid,
-          params
+          params,
+          mockNamesToFilter
         )
       ).then(metricsList => {
-        setMetrics(metricsList)
+        // todo remove filter after test and when real API ready with all types (for now metrics type is not supported and it leads to error)
+        setMetrics(
+          metricsList.filter(
+            metric =>
+              metric.full_name !== 'for-mock-only.histogram-data-drift.result.hellinger_mean'
+          )
+        )
       })
     }
   }, [dispatch, selectedItem, detailsStore.dates, detailsStore.metricsOptions.selectedByEndpoint])

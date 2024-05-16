@@ -53,6 +53,7 @@ import {
 } from '../constants'
 import { generatePods } from '../utils/generatePods'
 import { generateMetricsItems, getMetricColorByFullName } from '../components/DetailsMetrics/detailsMetrics.utils'
+import { getMetrics, getMetricsValues } from '../components/DetailsMetrics/metricsMock' // todo remove after tests and when real API ready with all types
 
 const detailsActions = {
   fetchModelEndpointWithAnalysis: (project, uid) => dispatch => {
@@ -132,19 +133,20 @@ const detailsActions = {
     payload: pods
   }),
   fetchModelEndpointMetrics: (project, uid) => dispatch => {
-    detailsActions.fetchEndpointMetricsBegin()
+    dispatch(detailsActions.fetchEndpointMetricsBegin())
 
+    // todo remove 'results' type and getMetrics() from mock after test and when real API ready with all types
     return detailsApi
-      .getModelEndpointMetrics(project, uid)
+      .getModelEndpointMetrics(project, uid, 'results')
       .then(({ data = [] }) => {
-        const metrics = generateMetricsItems(data)
+        const metrics = generateMetricsItems([...data, ...getMetrics()])
 
         dispatch(detailsActions.fetchEndpointMetricsSuccess({ endpointUid: uid, metrics }))
 
         return metrics
       })
       .catch(error => {
-        detailsActions.fetchEndpointMetricsFailure(error)
+        dispatch(detailsActions.fetchEndpointMetricsFailure(error))
       })
   },
   fetchEndpointMetricsBegin: () => ({
@@ -158,13 +160,15 @@ const detailsActions = {
     type: FETCH_ENDPOINT_METRICS_SUCCESS,
     payload
   }),
-  fetchModelEndpointMetricsValues: (project, uid, config) => dispatch => {
-    detailsActions.fetchEndpointMetricsValuesBegin()
+  // todo remove mockNamesToFilter after test and when real API ready with all types
+  fetchModelEndpointMetricsValues: (project, uid, params, mockNamesToFilter) => dispatch => {
+    dispatch(detailsActions.fetchEndpointMetricsValuesBegin())
 
     return detailsApi
-      .getModelEndpointMetricsValues(project, uid, config)
+      .getModelEndpointMetricsValues(project, uid, params)
       .then(({ data = [] }) => {
-        const metrics = data.map(metric => {
+        // todo remove getMetricsValues() with filter after test and when real API ready with all types
+        const metrics = [...data, ...getMetricsValues().filter(metric => mockNamesToFilter.includes(metric.full_name))].map(metric => {
           return {
             ...metric,
             color: getMetricColorByFullName(metric.full_name)
@@ -176,7 +180,7 @@ const detailsActions = {
         return metrics
       })
       .catch(error => {
-        detailsActions.fetchEndpointMetricsValuesFailure(error)
+        dispatch(detailsActions.fetchEndpointMetricsValuesFailure(error))
       })
   },
   fetchEndpointMetricsValuesBegin: () => ({

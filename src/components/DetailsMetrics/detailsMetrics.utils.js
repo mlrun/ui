@@ -77,7 +77,6 @@ export const getMetricColorByFullName = name => {
 }
 
 export const generateMetricsItems = metrics => {
-
   return chain(metrics)
     .filter(metric => metric.app !== mlrunInfra)
     .sortBy(metric => metric.label)
