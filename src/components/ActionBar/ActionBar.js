@@ -201,7 +201,7 @@ const ActionBar = ({
                 case NAME_FILTER:
                   return (
                     !filter.hidden && (
-                      <div key={filter.type} className="filter-column">
+                      <div key={filter.type} className="action-bar__filters-item">
                         <NameFilter
                           applyChanges={value =>
                             applyChanges(
@@ -215,7 +215,7 @@ const ActionBar = ({
                   )
                 case 'dates':
                   return (
-                    <div key={filter.type} className="filter-column">
+                    <div key={filter.type} className="action-bar__filters-item">
                       <Field name={'dates'}>
                         {({ input }) => {
                           return (
