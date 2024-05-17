@@ -122,8 +122,8 @@ const functionsActions = {
   createNewFunctionSuccess: () => ({
     type: CREATE_NEW_FUNCTION_SUCCESS
   }),
-  deleteFunction: (func, project) => () => {
-    return functionsApi.deleteSelectedFunction(func, project)
+  deleteFunction: (funcName, project) => () => {
+    return functionsApi.deleteSelectedFunction(funcName, project)
   },
   deployFunction: data => dispatch => {
     dispatch(functionsActions.deployFunctionBegin())

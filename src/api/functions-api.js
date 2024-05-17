@@ -17,7 +17,7 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import { functionTemplatesHttpClient, mainHttpClient } from '../httpClient'
+import { functionTemplatesHttpClient, mainHttpClient, mainHttpClientV2 } from '../httpClient'
 
 const functionsApi = {
   createNewFunction: (project, data) =>
@@ -27,8 +27,8 @@ const functionsApi = {
         versioned: true
       }
     }),
-  deleteSelectedFunction: (func, project) =>
-    mainHttpClient.delete(`/projects/${project}/functions/${func}`),
+  deleteSelectedFunction: (funcName, project) =>
+    mainHttpClientV2.delete(`/projects/${project}/functions/${funcName}`),
   deployFunction: data => mainHttpClient.post('/build/function', data),
   getFunctions: (project, filters, config = {}, hash) => {
     const newConfig = {
