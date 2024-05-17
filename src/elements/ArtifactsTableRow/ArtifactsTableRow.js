@@ -35,13 +35,14 @@ import {
   MODEL_ENDPOINTS_TAB
 } from '../../constants'
 import { generateTableRowTestId } from '../../utils/generateTableRowTestId'
+import { dispatchItemSelectEvent } from '../../hooks/useTableScroll.hook'
 import { getArtifactIdentifier } from '../../utils/getUniqueIdentifier'
 import { isRowExpanded, PARENT_ROW_EXPANDED_CLASS } from '../../utils/tableRows.util'
 
 const ArtifactsTableRow = ({
   actionsMenu,
   handleExpandRow,
-  handleSelectItem,
+  handleSelectItem: handleSelectItemExternal,
   hideActionsMenu,
   rowIndex,
   mainRowItemsCount,
@@ -66,6 +67,11 @@ const ArtifactsTableRow = ({
       'table-row_active',
     rowIsExpanded && PARENT_ROW_EXPANDED_CLASS
   )
+
+  const handleSelectItem = (item, event) => {
+    dispatchItemSelectEvent(event)
+    handleSelectItemExternal(item)
+  }
 
   return (
     <tr className={rowClassNames} ref={parent}>
@@ -131,7 +137,6 @@ const ArtifactsTableRow = ({
                     getArtifactIdentifier(selectedItem, true) &&
                   'table-row_active'
               )
-
               return (
                 <td
                   data-testid={generateTableRowTestId(rowIndex, index)}
@@ -150,38 +155,40 @@ const ArtifactsTableRow = ({
                                   'table-body__cell_hidden'
                               )
 
-                              return (
-                                !value.hidden && (
-                                  <TableCell
-                                    className={cellClassNames}
-                                    data={
-                                      value.expandedCellContent ? value.expandedCellContent : value
-                                    }
-                                    item={tableContentItem.data}
-                                    link={value.getLink?.(params.tab ?? DETAILS_OVERVIEW_TAB)}
-                                    key={value.id}
-                                    selectItem={handleSelectItem}
-                                    selectedItem={selectedItem}
-                                  />
-                                )
-                              )
-                            })}
-                            {!hideActionsMenu && (
-                              <td className="table-body__cell table-cell-icon">
-                                <ActionsMenu
-                                  dataItem={tableContentItem.data}
-                                  withQuickActions
-                                  menu={actionsMenu}
-                                />
-                              </td>
-                            )}
-                          </>
-                        }
-                      </tr>
-                    </tbody>
-                  </table>
-                </td>
-              )
+                                  return (
+                                    !value.hidden && (
+                                      <TableCell
+                                        className={cellClassNames}
+                                        data={
+                                          value.expandedCellContent
+                                            ? value.expandedCellContent
+                                            : value
+                                        }
+                                        item={tableContentItem.data}
+                                        link={value.getLink?.(params.tab ?? DETAILS_OVERVIEW_TAB)}
+                                        key={value.id}
+                                        selectItem={handleSelectItem}
+                                        selectedItem={selectedItem}
+                                      />
+                                    )
+                                  )
+                                })}
+                                {!hideActionsMenu && (
+                                  <td className="table-body__cell table-cell-icon">
+                                    <ActionsMenu
+                                      dataItem={tableContentItem.data}
+                                      withQuickActions
+                                      menu={actionsMenu}
+                                    />
+                                  </td>
+                                )}
+                              </>
+                            }
+                          </tr>
+                        </tbody>
+                      </table>
+                    </td>
+                  )
             })
           )}
         </>

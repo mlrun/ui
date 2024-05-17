@@ -60,6 +60,7 @@ import { useGroupContent } from '../../hooks/groupContent.hook'
 import { useMode } from '../../hooks/mode.hook'
 import { useVirtualization } from '../../hooks/useVirtualization.hook'
 import { useYaml } from '../../hooks/yaml.hook'
+import { useTableScroll } from '../../hooks/useTableScroll.hook'
 
 import cssVariables from './functions.scss'
 
@@ -697,6 +698,15 @@ const Functions = ({
       rowHeight: cssVariables.functionsRowHeight,
       rowHeightExtended: cssVariables.functionsRowHeightExtended
     }
+  })
+
+  useTableScroll({
+    content: tableContent,
+    rowHeight: cssVariables.functionsRowHeight,
+    rowHeightExtended: cssVariables.functionsRowHeightExtended,
+    selectedItem: selectedFunction,
+    expandedRowsData: selectedRowData,
+    tableRef
   })
 
   return (

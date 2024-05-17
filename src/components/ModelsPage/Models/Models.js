@@ -502,6 +502,15 @@ const Models = ({ fetchModelFeatureVector }) => {
     }
   })
 
+  useTableScroll({
+    content: sortedTableContent,
+    rowHeight: cssVariables.modelsRowHeight,
+    rowHeightExtended: cssVariables.modelsRowHeightExtended,
+    selectedItem: selectedModel,
+    expandedRowsData: selectedRowData,
+    tableRef
+  })
+
   return (
     <ModelsView
       actionsMenu={actionsMenu}

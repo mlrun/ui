@@ -395,6 +395,15 @@ const Datasets = () => {
     }
   })
 
+  useTableScroll({
+    content: sortedTableContent,
+    rowHeight: cssVariables.datasetsRowHeight,
+    rowHeightExtended: cssVariables.datasetsRowHeightExtended,
+    selectedItem: selectedDataset,
+    expandedRowsData: selectedRowData,
+    tableRef
+  })
+
   return (
     <DatasetsView
       actionsMenu={actionsMenu}
