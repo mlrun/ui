@@ -146,7 +146,7 @@ const MetricsSelector = ({ maxSelectionNumber, metrics, name, onSelect, preselec
         />
         <span className="data-ellipsis">
           {metric.name}
-          {/*todo change according to design when ready  */}
+          {/*// todo: metrics - change according to design when ready  */}
           <span style={{ marginLeft: '5px' }}>
             {metric.type === metricsTypes.metric ? ' (M)' : ' (R)'}
           </span>
@@ -228,6 +228,7 @@ const MetricsSelector = ({ maxSelectionNumber, metrics, name, onSelect, preselec
                                           key={metricItem.id}
                                           template={
                                             <TextTooltipTemplate
+                                              // todo: metrics - change according to design when ready
                                               text={`${metricItem.name} ${metricItem.type === metricsTypes.metric ? ' (M)' : ' (R)'}`}
                                             />
                                           }

@@ -53,7 +53,7 @@ import {
 } from '../constants'
 import { generatePods } from '../utils/generatePods'
 import { generateMetricsItems, getMetricColorByFullName } from '../components/DetailsMetrics/detailsMetrics.utils'
-import { getMetrics, getMetricsValues } from '../components/DetailsMetrics/metricsMock' // todo remove after tests and when real API ready with all types
+import { getMetrics, getMetricsValues } from '../components/DetailsMetrics/metricsMock' // todo: metrics - remove after tests and when real API ready with all types
 
 const detailsActions = {
   fetchModelEndpointWithAnalysis: (project, uid) => dispatch => {
@@ -135,7 +135,7 @@ const detailsActions = {
   fetchModelEndpointMetrics: (project, uid) => dispatch => {
     dispatch(detailsActions.fetchEndpointMetricsBegin())
 
-    // todo remove 'results' type and getMetrics() from mock after test and when real API ready with all types
+    // todo: metrics - remove 'results' type and getMetrics() from mock after test and when real API ready with all types
     return detailsApi
       .getModelEndpointMetrics(project, uid, 'results')
       .then(({ data = [] }) => {
@@ -160,14 +160,14 @@ const detailsActions = {
     type: FETCH_ENDPOINT_METRICS_SUCCESS,
     payload
   }),
-  // todo remove mockNamesToFilter after test and when real API ready with all types
+  // todo: metrics - remove mockNamesToFilter after test and when real API ready with all types
   fetchModelEndpointMetricsValues: (project, uid, params, mockNamesToFilter) => dispatch => {
     dispatch(detailsActions.fetchEndpointMetricsValuesBegin())
 
     return detailsApi
       .getModelEndpointMetricsValues(project, uid, params)
       .then(({ data = [] }) => {
-        // todo remove getMetricsValues() with filter after test and when real API ready with all types
+        // todo: metrics - remove getMetricsValues() with filter after test and when real API ready with all types
         const metrics = [...data, ...getMetricsValues().filter(metric => mockNamesToFilter.includes(metric.full_name))].map(metric => {
           return {
             ...metric,
