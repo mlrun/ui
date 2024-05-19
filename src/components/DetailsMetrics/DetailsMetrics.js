@@ -66,7 +66,7 @@ const DetailsMetrics = ({ selectedItem }) => {
         params.name.push(metric.full_name)
       })
 
-       // todo: metrics - remove if block after test and when real API ready with all types (for now metrics type is not supported and it leads to error)
+      // todo: metrics - remove if block after test and when real API ready with all types (for now metrics type is not supported and it leads to error)
       if (isEmpty(params.name))
         params.name.push('for-mock-only.histogram-data-drift.result.hellinger_mean')
 
@@ -91,6 +91,7 @@ const DetailsMetrics = ({ selectedItem }) => {
   }, [dispatch, selectedItem, detailsStore.dates, detailsStore.metricsOptions.selectedByEndpoint])
 
   // todo: metrics - - remove when merge charts
+  /* eslint-disable-next-line no-console */
   console.log(metrics)
 
   return <div className="metrics">Home for Metrics</div>
