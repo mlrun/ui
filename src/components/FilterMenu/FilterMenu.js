@@ -395,7 +395,7 @@ const FilterMenu = ({
           return (
             <DatePicker
               date={filtersStore.dates.value[0]}
-              dateTo={filtersStore.dates.value[1]}
+              dateTo={filtersStore.dates.value[1] || new Date()}
               label={filter.label}
               onChange={handleChangeDates}
               selectedOptionId={filtersStore.dates.initialSelectedOptionId}
