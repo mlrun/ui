@@ -63,6 +63,7 @@ const functionStateLabels = {
   deploying: 'Deploying',
   error: 'Error',
   failed: 'Error',
+  failedToDelete: 'Failed to delete',
   omitted: 'Omitted',
   pending: 'Deploying',
   ready: 'Ready',

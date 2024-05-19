@@ -91,6 +91,7 @@ const FunctionsView = React.forwardRef(
             <div className="table-container">
               <div className="content__action-bar-wrapper">
                 <ActionBar
+                  page={FUNCTIONS_PAGE}
                   expand={expand}
                   filters={functionsFilters}
                   filterMenuName={FUNCTION_FILTERS}
