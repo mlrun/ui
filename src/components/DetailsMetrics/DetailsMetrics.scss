@@ -1,0 +1,243 @@
+@import '~igz-controls/scss/shadows';
+@import '~igz-controls/scss/colors';
+
+.metrics {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+
+  &__card-tmp {
+    z-index: 1;
+    top:0;
+    position: sticky !important;
+    box-sizing: border-box;
+    border: 1px solid #00000033;
+    border-radius: 12px !important;
+    background: #FFF;
+    padding-top: 12px !important;
+    width: 100%;
+    transition: 0.1s;
+    animation: ease-in-out;
+  }
+
+  &__card {
+    border-radius: 12px;
+    border: 1px solid rgba(0, 0, 0, 0.2);
+    padding: 16px;
+    transition: ease-in-out;
+    width: 100%;
+
+    &-header {
+      display: flex;
+      flex-direction: row;
+      justify-content: center;
+      gap: 16px;
+
+      &-result-kind {
+        display: flex;
+        width: max-content;
+        justify-content: center;
+        align-self: center;
+        gap: 4px;
+        overflow: hidden;
+        color: #7f7989;
+        text-overflow: ellipsis;
+        font-family: Roboto;
+        font-size: 14px;
+        font-style: normal;
+        font-weight: 500;
+        line-height: normal;
+      }
+
+      &-data {
+        color: #4b4760;
+        text-align: center;
+        leading-trim: both;
+        text-edge: cap;
+        font-weight: 700;
+        font-size: 24px;
+      }
+
+      &-label {
+        font-size: 14px;
+      }
+
+    }
+
+    &-body {
+      display: flex;
+      flex: 1;
+      align-self: stretch;
+      width: 100%;
+      aspect-ratio: 4;
+      gap: 20px;
+      align-items: stretch;
+      position: relative;
+      box-sizing: border-box;
+      transition: 0.3s;
+      animation: ease-in-out;
+
+      .chart-item {
+        flex: 1;
+      }
+
+      &-bar {
+        @extend .chart-item;
+        max-width: 25%;
+        canvas.hidden {
+          position: absolute;
+          opacity: 0;
+          left: 0;
+          top: 0;
+        }
+      }
+
+      &-line {
+        @extend .chart-item;
+        max-width: 75%;
+        canvas.hidden {
+          position: absolute;
+          opacity: 0;
+          left: 0;
+          top: 0;
+        }
+      }
+
+      &-invocation {
+        @extend .chart-item;
+        flex: 1;
+        max-width: 100%;
+        canvas.hidden {
+          position: absolute;
+          opacity: 0;
+          left: 0;
+          top: 0;
+        }
+      }
+    }
+  }
+}
+
+.max-width-60 {
+  max-width: 70%;
+}
+
+
+
+.gradient-card-2 {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  height: 200px;
+  gap: 20px;
+  transition: 0.3s;
+  animation: ease-in-out;
+  width: 100%;
+}
+
+
+
+.header-2{
+  flex: 0 2 auto;
+  width: 170px;
+  font-size: 18px;
+  margin-left: 20px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: normal;
+}
+
+.gradient-graph {
+  //flex: 1 4 60%;
+  flex: 1;
+  height: 100%;
+  width: 100%;
+  canvas.hidden {
+    position: absolute;
+    opacity: 0;
+    left: 0;
+    top: 0;
+  }
+}
+
+.percentage{
+  color: #EA336A;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: normal;
+  padding-right: 5px;
+}
+
+.day{
+  width: max-content;
+  color: #7F7989;
+  font-family: Roboto;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: normal;
+}
+
+.kpi-wrapper{
+  display: flex;
+  flex: 1;
+  max-width: max-content;
+  flex-direction: row;
+  gap: 2px;
+  align-items: center;
+}
+
+.kpi-image{
+  display: flex;
+  align-items: center;
+  justify-items: center;
+
+}
+
+.kpi-value{
+  flex:1;
+  max-width: 70px;
+  font-family: Roboto;
+  font-size: 24px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: normal;
+  color: #4B4760;
+}
+
+
+.card-tmp{
+  z-index: 1;
+  top:0;
+  position: sticky !important;
+  box-sizing: border-box;
+  border: 1px solid #00000033;
+  border-radius: 12px !important;
+  background: #FFF;
+  padding-top: 12px !important;
+  width: 100%;
+  transition: 0.1s;
+}
+
+
+.animate-size {
+  height: 80px;
+  transition: width 0.5s, height 0.5s;
+}
+
+
+.title {
+  font-family: Roboto;
+  font-size: 18px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: normal;
+  color: #4b4760;
+}
+
