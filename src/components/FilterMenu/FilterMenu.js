@@ -256,7 +256,7 @@ const FilterMenu = ({
   }, [dispatch, entities, labels, name])
 
   const handleChangeDates = useCallback(
-    (dates, isPredefined) => {
+    (dates, isPredefined, optionId) => {
       const generatedDates = [...dates]
 
       if (generatedDates.length === 1) {
@@ -267,7 +267,8 @@ const FilterMenu = ({
         setFilters({
           dates: {
             value: generatedDates,
-            isPredefined
+            isPredefined,
+            initialSelectedOptionId: optionId
           }
         })
       )
@@ -357,37 +358,37 @@ const FilterMenu = ({
         case LABELS_FILTER:
           return (
             <Input
-              density='dense'
+              density="dense"
               label={filter.label}
               onChange={setLabels}
               onBlur={onBlur}
               onKeyDown={onKeyDown}
-              placeholder='key1,key2=value,...'
-              type='text'
+              placeholder="key1,key2=value,..."
+              type="text"
               value={labels}
             />
           )
         case NAME_FILTER:
           return (
             <Input
-              density='dense'
+              density="dense"
               label={filter.label}
               onChange={setName}
               onBlur={onBlur}
               onKeyDown={onKeyDown}
-              type='text'
+              type="text"
               value={name}
             />
           )
         case ENTITIES_FILTER:
           return (
             <Input
-              density='dense'
+              density="dense"
               label={filter.label}
               onChange={setEntities}
               onBlur={onBlur}
               onKeyDown={onKeyDown}
-              type='text'
+              type="text"
               value={entities}
             />
           )
@@ -413,7 +414,7 @@ const FilterMenu = ({
         case SHOW_UNTAGGED_FILTER:
           return (
             <CheckBox
-              className='filters-checkbox'
+              className="filters-checkbox"
               item={{ label: filter.label, id: SHOW_UNTAGGED_ITEMS }}
               onChange={handleShowUntagged}
               selectedId={filtersStore.showUntagged}
@@ -422,8 +423,8 @@ const FilterMenu = ({
         case PROJECT_FILTER:
           return (
             <Select
-              density='dense'
-              className=''
+              density="dense"
+              className=""
               label={filter.label}
               onClick={project => handleSelectOption(project, filter)}
               options={filtersStore.projectOptions}
@@ -433,8 +434,8 @@ const FilterMenu = ({
         default:
           return (
             <Select
-              density='dense'
-              className=''
+              density="dense"
+              className=""
               label={`${filter.type.replace(/([A-Z])/g, ' $1')}:`}
               key={filter.type}
               onClick={item => handleSelectOption(item, filter)}
@@ -468,32 +469,32 @@ const FilterMenu = ({
   return (
     !hidden && (
       <>
-        <div className='filters'>
+        <div className="filters">
           {filters.map(filter => {
             if (filter.hidden) return null
 
             return (
-              <div className='filter-column' key={filter.type}>
+              <div className="filter-column" key={filter.type}>
                 {getFilterTemplate(filter)}
               </div>
             )
           })}
         </div>
         {actionButton &&
-          !actionButton.hidden &&
-          (actionButton.getCustomTemplate ? (
-            actionButton.getCustomTemplate(actionButton)
-          ) : (
-            <Button
-              variant={actionButton.variant}
-              label={actionButton.label}
-              tooltip={actionButton.tooltip}
-              disabled={actionButton.disabled}
-              onClick={actionButton.onClick}
-            />
-          ))}
+        !actionButton.hidden &&
+        (actionButton.getCustomTemplate ? (
+          actionButton.getCustomTemplate(actionButton)
+        ) : (
+          <Button
+            variant={actionButton.variant}
+            label={actionButton.label}
+            tooltip={actionButton.tooltip}
+            disabled={actionButton.disabled}
+            onClick={actionButton.onClick}
+          />
+        ))}
 
-        <div className='actions'>
+        <div className="actions">
           {enableAutoRefresh && (
             <CheckBox
               key={AUTO_REFRESH_ID}
@@ -503,15 +504,15 @@ const FilterMenu = ({
             />
           )}
           <RoundedIcon
-            tooltipText='Refresh'
+            tooltipText="Refresh"
             onClick={() => applyChanges(filtersStore, true)}
-            id='refresh'
+            id="refresh"
           >
             <RefreshIcon />
           </RoundedIcon>
           {!withoutExpandButton && filtersStore.groupBy !== GROUP_BY_NONE && (
             <RoundedIcon
-              id='toggle-collapse'
+              id="toggle-collapse"
               tooltipText={expand ? 'Collapse' : 'Expand all'}
               onClick={() => handleExpandAll()}
             >
