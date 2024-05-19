@@ -211,7 +211,7 @@ const ProjectMonitor = ({
         setNotification({
           status: 200,
           id: Math.random(),
-          message: 'Function deployment initiated successfully'
+          message: 'Function was deployed'
         })
       )
 
@@ -231,7 +231,7 @@ const ProjectMonitor = ({
         setNotification({
           status: 200,
           id: Math.random(),
-          message: 'Function deployment initiated successfully'
+          message: 'Function was deployed'
         })
       )
     }
@@ -244,7 +244,7 @@ const ProjectMonitor = ({
     removeNewFunction()
 
     const funcs = await fetchProjectFunctions(params.projectName).catch(error => {
-      showErrorNotification(dispatch, deployError, '', 'Function deployment failed to initiate')
+      showErrorNotification(dispatch, deployError, '', 'Failed to deploy the function')
       showErrorNotification(dispatch, error, '', 'Failed to fetch functions')
     })
 
@@ -257,7 +257,7 @@ const ProjectMonitor = ({
         navigate(`/projects/${params.projectName}/functions/${currentItem.metadata.hash}/overview`)
       }
 
-      showErrorNotification(dispatch, deployError, '', 'Function deployment failed to initiate')
+      showErrorNotification(dispatch, deployError, '', 'Failed to deploy the function')
     }
   }
 

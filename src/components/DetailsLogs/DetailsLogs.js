@@ -25,9 +25,11 @@ import Logs from './Logs'
 import NoData from '../../common/NoData/NoData'
 
 const DetailsLogs = ({
+  additionalLogsTitle,
   functionsStore,
   item,
   jobsStore,
+  logsTitle,
   refreshAdditionalLogs,
   refreshLogs,
   removeAdditionalLogs,
@@ -74,47 +76,57 @@ const DetailsLogs = ({
   ) : (
     <div className="table__item-logs-container">
       {mainLogsAreLoading || detailsLogs.length ? (
-        <Logs
-          isLoading={logsAreLoading}
-          refreshLogs={() => refreshLogs(item, item.project, setDetailsLogs, streamLogsRef)}
-          removeLogs={removeLogs}
-          item={item}
-          ref={streamLogsRef}
-          withLogsRefreshBtn={withLogsRefreshBtn}
-          detailsLogs={detailsLogs}
-          setDetailsLogs={setDetailsLogs}
-        />
+        <>
+          {logsTitle && <h3>{logsTitle}</h3>}
+          <Logs
+            isLoading={logsAreLoading}
+            refreshLogs={() => refreshLogs(item, item.project, setDetailsLogs, streamLogsRef)}
+            removeLogs={removeLogs}
+            item={item}
+            ref={streamLogsRef}
+            withLogsRefreshBtn={withLogsRefreshBtn}
+            detailsLogs={detailsLogs}
+            setDetailsLogs={setDetailsLogs}
+          />
+        </>
       ) : null}
       {refreshAdditionalLogs && (additionalLogsAreLoading || detailsAdditionalLogs.length) ? (
-        <Logs
-          isLoading={logsAreLoading}
-          refreshLogs={() =>
-            refreshAdditionalLogs(
-              item,
-              item.project,
-              setDetailsAdditionalLogs,
-              streamAdditionalLogsRef
-            )
-          }
-          removeLogs={removeAdditionalLogs}
-          item={item}
-          ref={streamAdditionalLogsRef}
-          withLogsRefreshBtn={withLogsRefreshBtn}
-          detailsLogs={detailsAdditionalLogs}
-          setDetailsLogs={setDetailsAdditionalLogs}
-        />
+        <>
+          {additionalLogsTitle && <h3>{additionalLogsTitle}</h3>}
+          <Logs
+            isLoading={logsAreLoading}
+            refreshLogs={() =>
+              refreshAdditionalLogs(
+                item,
+                item.project,
+                setDetailsAdditionalLogs,
+                streamAdditionalLogsRef
+              )
+            }
+            removeLogs={removeAdditionalLogs}
+            item={item}
+            ref={streamAdditionalLogsRef}
+            withLogsRefreshBtn={withLogsRefreshBtn}
+            detailsLogs={detailsAdditionalLogs}
+            setDetailsLogs={setDetailsAdditionalLogs}
+          />
+        </>
       ) : null}
     </div>
   )
 }
 
 DetailsLogs.defaultProps = {
+  additionalLogsTitle: '',
+  logsTitle: '',
   refreshAdditionalLogs: false,
   removeAdditionalLogs: false
 }
 
 DetailsLogs.propTypes = {
+  additionalLogsTitle: PropTypes.string,
   item: PropTypes.object.isRequired,
+  logsTitle: PropTypes.string,
   refreshAdditionalLogs: PropTypes.oneOfType([PropTypes.func, PropTypes.bool]),
   refreshLogs: PropTypes.func.isRequired,
   removeAdditionalLogs: PropTypes.oneOfType([PropTypes.func, PropTypes.bool]),

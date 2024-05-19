@@ -107,7 +107,9 @@ const Projects = () => {
 
     dispatch(projectsAction.removeProjects())
     fetchMinimalProjects()
-    dispatch(projectsAction.fetchProjectsSummary(abortControllerRef.current.signal, refreshProjects))
+    dispatch(
+      projectsAction.fetchProjectsSummary(abortControllerRef.current.signal, refreshProjects)
+    )
 
     dispatch(fetchBackgroundTasks({}))
       .unwrap()
@@ -161,8 +163,8 @@ const Projects = () => {
         .catch(error => {
           const customErrorMsg =
             error.response?.status === FORBIDDEN_ERROR_STATUS_CODE
-              ? `You are not allowed to archive ${project.metadata.name} project`
-              : `Failed to archive ${project.metadata.name} project`
+              ? `You don't have rights to archive project ${project.metadata.name}`
+              : `Failed to archive project ${project.metadata.name}`
 
           showErrorNotification(dispatch, error, '', customErrorMsg, () =>
             handleArchiveProject(project)
@@ -249,8 +251,8 @@ const Projects = () => {
         item: project,
         header: 'Archive project',
         message:
-          "Note that moving a project to archive doesn't stop it from consuming resources. We recommend that " +
-          "before setting the project as archive you'll remove scheduled jobs and suspend Nuclio functions.",
+          'Archived projects continue to consume resources.' +
+          'To stop the project from consuming resources, delete its scheduled jobs and suspend its Nuclio functions.',
         btnConfirmLabel: 'Archive',
         btnConfirmType: PRIMARY_BUTTON,
         rejectHandler: () => {
@@ -267,7 +269,8 @@ const Projects = () => {
       setConfirmData({
         item: project,
         header: 'Delete project?',
-        message: `You try to delete project "${project.metadata.name}". Deleted projects can not be restored.`,
+        message: `You are trying to delete the non-empty project "${project.metadata.name}". Deleting it will also delete all of its resources,
+such as jobs, artifacts, and features.`,
         btnConfirmLabel: 'Delete',
         btnConfirmType: DANGER_BUTTON,
         rejectHandler: () => {

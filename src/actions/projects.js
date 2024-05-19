@@ -81,7 +81,6 @@ import {
   FETCH_PROJECT_SECRETS_BEGIN,
   FETCH_PROJECT_SECRETS_FAILURE,
   FETCH_PROJECT_SECRETS_SUCCESS,
-  SET_PROJECT_SECRETS,
   SET_JOBS_MONITORING_DATA,
   SET_MLRUN_IS_UNHEALTHY,
   SET_MLRUN_UNHEALTHY_RETRYING
@@ -125,9 +124,9 @@ const projectsAction = {
       .catch(error => {
         const message =
           error.response.status === CONFLICT_ERROR_STATUS_CODE
-            ? `Project name "${postData.metadata.name}" already exists`
+            ? `A project named "${postData.metadata.name}" already exists`
             : error.response.status === INTERNAL_SERVER_ERROR_STATUS_CODE
-              ? 'Cannot create more than 200 projects due to resource limitation. Either delete existing projects or contact our customer support for assistance'
+              ? 'The system already has the maximum number of projects. An existing project must be deleted before you can create another.'
               : error.message
 
         dispatch(projectsAction.createProjectFailure(message))
@@ -165,11 +164,11 @@ const projectsAction = {
   deleteProjectSuccess: () => ({
     type: DELETE_PROJECT_SUCCESS
   }),
-  fetchProject: project => dispatch => {
+  fetchProject: (project, params) => dispatch => {
     dispatch(projectsAction.fetchProjectBegin())
 
     return projectsApi
-      .getProject(project)
+      .getProject(project, params)
       .then(response => {
         dispatch(projectsAction.fetchProjectSuccess(response?.data))
 
@@ -558,7 +557,7 @@ const projectsAction = {
           dispatch(projectsAction.setMlrunUnhealthyRetrying(true))
         }
 
-        const threeMinutesPassed = ((new Date - firstServerErrorTimestamp) / 1000) > 180
+        const threeMinutesPassed = (new Date() - firstServerErrorTimestamp) / 1000 > 180
 
         if (mlrunUnhealthyErrors.includes(err.response?.status) && !threeMinutesPassed) {
           setTimeout(() => {
@@ -623,10 +622,6 @@ const projectsAction = {
   setJobsMonitoringData: data => ({
     type: SET_JOBS_MONITORING_DATA,
     payload: data
-  }),
-  setProjectSecrets: secrets => ({
-    type: SET_PROJECT_SECRETS,
-    payload: secrets
   })
 }
 

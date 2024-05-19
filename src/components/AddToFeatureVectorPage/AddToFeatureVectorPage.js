@@ -96,7 +96,7 @@ const AddToFeatureVectorPage = ({
         .catch(error => {
           const customErrorMsg =
             error.response?.status === FORBIDDEN_ERROR_STATUS_CODE
-              ? 'You are not permitted to create new feature vector'
+              ? 'You are not permitted to create a feature vector'
               : 'Feature vector creation failed'
 
           showErrorNotification(dispatch, error, '', customErrorMsg, () =>

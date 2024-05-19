@@ -66,11 +66,20 @@ const DetailsMetrics = () => {
           const labels = obj.values.map(entry => convertTimestampToTime(entry[0]))
           const dataModify = obj.values.map(entry => entry[1])
 
-          return {
+          if (obj.full_name.includes('invocations-rate')) {
+            obj.total = dataModify.reduce((sum, value) => sum + value, 0)
+          } else {
+            const sum = dataModify.reduce((sum, value) => sum + value, 0)
+            obj.avg = (sum / dataModify.length).toFixed(2)
+          }
+
+          const newObj = {
             ...obj,
             labels,
             dataModify
           }
+
+          return newObj
         } else {
           return obj
         }
@@ -84,6 +93,8 @@ const DetailsMetrics = () => {
     const grouped = modifyArray(dummyData).filter(
       obj => !obj.full_name.includes('invocations-rate') && obj.data
     )
+
+    invocationsRate.total = invocationsRate.dataModify.reduce((sum, value) => sum + value, 0)
 
     const noData = dummyData.filter(obj => !obj.data)
     result.push(invocationsRate)
@@ -99,7 +110,9 @@ const DetailsMetrics = () => {
     return result
   }, [])
 
+  console.log(modifiedData)
   const handleResizeCard = useCallback(e => {
+    if (!e.target.classList.contains('item-info')) return
     const card = cardRef.current
     if (e.target.scrollTop > prevScrollPos.current) {
       if (e.target.scrollTop > 5 && card.clientHeight !== 80) {
@@ -109,7 +122,6 @@ const DetailsMetrics = () => {
       }
     } else {
       if (e.target.scrollTop === 0 && card.clientHeight === 80) {
-        console.log(card.parentNode.parentNode)
         card.parentNode.parentNode.style.height -= 80
         card.style.height = '200px'
         toggleExpand(true)
@@ -163,14 +175,16 @@ const DetailsMetrics = () => {
                 <StatsCard.Header title="Endpoint call count">
                   <div
                     style={{
+                      flex: 1,
                       display: 'flex',
-                      justifyContent: 'center',
-                      alignItems: 'center',
-                      gap: '5px'
+                      justifyContent: 'end',
+                      alignItems: 'center'
+                      // gap: '5px'
                     }}
                   >
                     <div className="kpi-value">
-                      <span style={{ fontSize: '14px' }}>Avg.</span>120
+                      <span style={{ fontSize: '14px', margin: '0 10px 0 0' }}>Total</span>
+                      {item.total}
                     </div>
                   </div>
                 </StatsCard.Header>
@@ -237,7 +251,7 @@ const DetailsMetrics = () => {
                     }}
                   >
                     <div>
-                      <img src={noData} />
+                      <img alt="no data" src={noData} />
                     </div>
                     <div>No data to show</div>
                   </div>
@@ -254,7 +268,8 @@ const DetailsMetrics = () => {
                   >
                     <div className="metrics__card-header">
                       <div className="metrics__card-header-data">
-                        <span className="metrics__card-header-label">Avg. </span>12,780
+                        <span className="metrics__card-header-label">Avg. </span>
+                        {subItem.avg}
                       </div>
                     </div>
                   </StatsCard.Header>

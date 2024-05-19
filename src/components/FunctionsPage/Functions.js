@@ -84,6 +84,7 @@ const Functions = ({
   const fetchFunctionNuclioLogsTimeout = useRef(null)
   const tableBodyRef = useRef(null)
   const tableRef = useRef(null)
+  const nameFilterRef = useRef('')
   const { isDemoMode, isStagingMode } = useMode()
   const params = useParams()
   const navigate = useNavigate()
@@ -93,6 +94,7 @@ const Functions = ({
   const fetchData = useCallback(
     filters => {
       abortControllerRef.current = new AbortController()
+      nameFilterRef.current = filters?.name ?? ''
 
       return fetchFunctions(params.projectName, filters, {
         ui: {
@@ -234,13 +236,13 @@ const Functions = ({
             setNotification({
               status: 200,
               id: Math.random(),
-              message: 'Function deleted successfully'
+              message: 'Function was deleted'
             })
           )
           fetchData()
         })
         .catch(error => {
-          showErrorNotification(dispatch, error, 'Function failed to delete', '', () => {
+          showErrorNotification(dispatch, error, 'Failed to delete the function ', '', () => {
             removeFunction(func)
           })
         })
@@ -373,15 +375,13 @@ const Functions = ({
         handleFetchFunctionLogs,
         handleFetchFunctionApplicationLogs,
         handleRemoveLogs,
-        handleRemoveApplicationLogs,
-        isDemoMode
+        handleRemoveApplicationLogs
       ),
     [
       handleFetchFunctionApplicationLogs,
       handleFetchFunctionLogs,
       handleRemoveApplicationLogs,
       handleRemoveLogs,
-      isDemoMode,
       selectedFunction
     ]
   )
@@ -432,7 +432,10 @@ const Functions = ({
   useLayoutEffect(() => {
     const checkFunctionExistence = item => {
       if (!item || Object.keys(item).length === 0) {
-        showErrorNotification(dispatch, {}, 'This function either does not exist or was deleted')
+        if (isEmpty(nameFilterRef.current)) {
+          showErrorNotification(dispatch, {}, 'This function either does not exist or was deleted')
+        }
+        
         navigate(`/projects/${params.projectName}/functions`, { replace: true })
       }
     }
@@ -545,7 +548,7 @@ const Functions = ({
         setNotification({
           status: 200,
           id: Math.random(),
-          message: 'Function deployment initiated successfully'
+          message: 'Function was deployed'
         })
       )
     })
@@ -560,7 +563,7 @@ const Functions = ({
     return fetchData().then(functions => {
       const currentItem = functions.find(func => func.name === name && func.tag === tag)
 
-      showErrorNotification(dispatch, error, '', 'Function deployment failed to initiate')
+      showErrorNotification(dispatch, error, '', 'Failed to deploy the function')
 
       navigate(`/projects/${params.projectName}/functions/${currentItem.hash}/overview`)
     })

@@ -18,7 +18,7 @@ under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
 import { useParams } from 'react-router-dom'
-import { useLayoutEffect, useState, useRef } from 'react'
+import { useEffect, useState, useRef } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { isNil } from 'lodash'
 
@@ -33,12 +33,13 @@ import { getFilterTagOptions, setFilters, setModalFiltersValues } from '../reduc
 
 export const useGetTagOptions = (fetchTags, filters, category, modalFiltersName) => {
   const [urlTagOption, setUrlTagOption] = useState(null)
+  const [largeRequestErrorMessage, setLargeRequestErrorMessage] = useState('')
   const { projectName, tag: paramTag } = useParams()
   const tagOptions = useSelector(store => store.filtersStore.tagOptions)
   const dispatch = useDispatch()
   const abortControllerRef = useRef(new AbortController())
 
-  useLayoutEffect(() => {
+  useEffect(() => {
     if (
       filters.length > 0 &&
       filters.find(filter => filter.type === TAG_FILTER) &&
@@ -61,7 +62,8 @@ export const useGetTagOptions = (fetchTags, filters, category, modalFiltersName)
             category,
             config: {
               ui: {
-                controller: abortControllerRef.current
+                controller: abortControllerRef.current,
+                setLargeRequestErrorMessage
               }
             }
           })
@@ -108,5 +110,5 @@ export const useGetTagOptions = (fetchTags, filters, category, modalFiltersName)
     }
   }, [category, dispatch, fetchTags, filters, modalFiltersName, paramTag, projectName, tagOptions])
 
-  return [urlTagOption, abortControllerRef]
+  return [urlTagOption, abortControllerRef, largeRequestErrorMessage]
 }

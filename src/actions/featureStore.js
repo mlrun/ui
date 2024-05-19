@@ -95,10 +95,10 @@ const featureStoreActions = {
       .catch(error => {
         const message =
           error.response.status === CONFLICT_ERROR_STATUS_CODE
-            ? 'Adding an already-existing FeatureSet'
+            ? 'Cannot create the feature set: the name is already in use.'
             : error.response.status === FORBIDDEN_ERROR_STATUS_CODE
-            ? 'You do not have permission to create a new feature set.'
-            : error.message
+              ? 'You are not permitted to create a feature set.'
+              : error.message
 
         dispatch(featureStoreActions.createNewFeatureSetFailure(message))
 
@@ -241,28 +241,30 @@ const featureStoreActions = {
     type: FETCH_FEATURE_VECTOR_SUCCESS,
     payload: featureSets
   }),
-  fetchFeatureVectors: (project, filters, config = {}, skipErrorNotification) => dispatch => {
-    dispatch(featureStoreActions.fetchFeatureVectorsBegin())
+  fetchFeatureVectors:
+    (project, filters, config = {}, skipErrorNotification) =>
+    dispatch => {
+      dispatch(featureStoreActions.fetchFeatureVectorsBegin())
 
-    return featureStoreApi
-      .getFeatureVectors(project, filters, config)
-      .then(response => {
-        dispatch(
-          featureStoreActions.fetchFeatureVectorsSuccess(
-            parseFeatureVectors(response.data.feature_vectors)
+      return featureStoreApi
+        .getFeatureVectors(project, filters, config)
+        .then(response => {
+          dispatch(
+            featureStoreActions.fetchFeatureVectorsSuccess(
+              parseFeatureVectors(response.data.feature_vectors)
+            )
           )
-        )
 
-        return response.data.feature_vectors
-      })
-      .catch(error => {
-        dispatch(featureStoreActions.fetchFeatureVectorsFailure(error))
+          return response.data.feature_vectors
+        })
+        .catch(error => {
+          dispatch(featureStoreActions.fetchFeatureVectorsFailure(error))
 
-        if (!skipErrorNotification) {
-          largeResponseCatchHandler(error, 'Failed to fetch feature vectors', dispatch)
-        }
-      })
-  },
+          if (!skipErrorNotification) {
+            largeResponseCatchHandler(error, 'Failed to fetch feature vectors', dispatch)
+          }
+        })
+    },
   fetchFeatureVectorsBegin: () => ({
     type: FETCH_FEATURE_VECTORS_BEGIN
   }),
@@ -455,10 +457,10 @@ const featureStoreActions = {
       .catch(error => {
         const message =
           error.response.status === CONFLICT_ERROR_STATUS_CODE
-            ? 'Adding an already-existing FeatureSet'
+            ? 'Cannot create the feature set: the name is already in use.'
             : error.response.status === FORBIDDEN_ERROR_STATUS_CODE
-            ? 'You do not have permission to create a new feature set'
-            : error.message
+              ? 'You do not have permission to create a new feature set.'
+              : error.message
 
         dispatch(featureStoreActions.createNewFeatureSetFailure(message))
 

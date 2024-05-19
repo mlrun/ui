@@ -17,29 +17,29 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
+// The function does not take in to account a target bottom position
+export const isTargetElementInContainerElement = (targetElement, containerElement) => {
+  if (containerElement && targetElement) {
+    const {
+      top: containerElementTop,
+      left: containerElementLeft,
+      right: containerElementRight,
+      bottom: containerElementBottom
+    } = containerElement.getBoundingClientRect()
+    const {
+      top: targetElementTop,
+      left: targetElementLeft,
+      right: targetElementRight
+    } = targetElement.getBoundingClientRect()
 
-import { getArtifactIdentifier } from './getUniqueIdentifier'
+    if (targetElementRight > containerElementRight || targetElementLeft < containerElementLeft)
+      return false
 
-export const parseArtifacts = artifacts =>
-  (artifacts ?? []).map(artifact => {
-    let item = { ...artifact }
+    if (targetElementTop > containerElementBottom || targetElementTop < containerElementTop)
+      return false
 
-    //remove when format=full is by default
-    if (item.status && item.spec && item.metadata) {
-      item = {
-        ...artifact.status,
-        ...artifact.spec,
-        ...artifact.metadata
-      }
-    }
+    return true
+  }
 
-    return {
-      ...item,
-      kind: artifact.kind,
-      ui: {
-        originalContent: artifact,
-        identifier: getArtifactIdentifier(item),
-        identifierUnique: getArtifactIdentifier(item, true)
-      }
-    }
-  })
+  return false
+}

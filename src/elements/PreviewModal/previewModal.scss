@@ -69,6 +69,11 @@
           flex: 1;
           margin-left: 30px;
 
+
+          &__header {
+            font-weight: bold;
+          }
+
           &__name {
             color: $cornflowerBlue;
           }

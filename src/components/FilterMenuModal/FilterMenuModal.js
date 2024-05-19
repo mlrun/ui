@@ -22,13 +22,14 @@ import PropTypes from 'prop-types'
 import classnames from 'classnames'
 import { Form } from 'react-final-form'
 import { createForm } from 'final-form'
-import { has, isEmpty, isEqual, reduce } from 'lodash'
+import { has, isEmpty, isEqual, reduce, throttle } from 'lodash'
 import { useDispatch, useSelector } from 'react-redux'
 import { useParams } from 'react-router-dom'
 
 import { PopUpDialog, RoundedIcon, Button } from 'igz-controls/components'
 
 import { FILTER_MENU_MODAL } from '../../constants'
+import { isTargetElementInContainerElement } from '../../utils/checkElementsPosition.utils'
 import { setModalFiltersInitialValues, setModalFiltersValues } from '../../reducers/filtersReducer'
 
 import { ReactComponent as FilterIcon } from 'igz-controls/images/filter.svg'
@@ -90,20 +91,20 @@ const FilterMenuModal = ({
     if (
       !event.target.closest('.filters-button') &&
       !event.target.closest('.filters-wizard') &&
-      !event.target.parentNode?.previousElementSibling?.classList?.contains('filters-wizard') &&
-      !event.target.parentNode?.nextElementSibling?.classList?.contains('filters-wizard')
+      !isTargetElementInContainerElement(event.target, document.querySelector('.filters-wizard'))
     ) {
       setFiltersWizardIsShown(false)
     }
   }, [])
 
   useEffect(() => {
+    const throttledHideFiltersWizard = throttle(hideFiltersWizard, 500, { leading: true, trailing: true })
     window.addEventListener('click', hideFiltersWizard)
-    window.addEventListener('scroll', hideFiltersWizard, true)
+    window.addEventListener('scroll', throttledHideFiltersWizard, true)
 
     return () => {
       window.removeEventListener('click', hideFiltersWizard)
-      window.removeEventListener('scroll', hideFiltersWizard, true)
+      window.removeEventListener('scroll', throttledHideFiltersWizard, true)
     }
   }, [hideFiltersWizard])
 

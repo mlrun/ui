@@ -95,14 +95,15 @@ export const generateFunctionsPageData = (
   handleFetchFunctionLogs,
   handleFetchFunctionApplicationLogs,
   handleRemoveLogs,
-  handleRemoveApplicationLogs,
-  isDemoMode
+  handleRemoveApplicationLogs
 ) => {
-  const showAdditionalLogs = selectedFunction.type === FUNCTION_TYPE_APPLICATION && isDemoMode
+  const showAdditionalLogs = selectedFunction.type === FUNCTION_TYPE_APPLICATION
 
   return {
     page,
     details: {
+      additionalLogsTitle: 'Function',
+      logsTitle: 'Application',
       menu: generateFunctionsDetailsMenu(selectedFunction),
       infoHeaders: generateFunctionsInfoHeaders(selectedFunction),
       refreshLogs: handleFetchFunctionLogs,

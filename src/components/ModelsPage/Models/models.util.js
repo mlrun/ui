@@ -19,6 +19,7 @@ such restriction.
 */
 import React from 'react'
 import { cloneDeep, isEmpty, omit } from 'lodash'
+import Prism from 'prismjs'
 
 import { PopUpDialog } from 'igz-controls/components'
 
@@ -426,7 +427,21 @@ export const generateActionsMenu = (
   ]
 }
 
-export const handleDeployModelFailure = () => {
+export const handleDeployModelFailure = (projectName, modelName) => {
+  const codeSnippet = `project = mlrun.get_or_create_project("${projectName}", context="./")
+
+# Specify the runtime image: mlrun/mlrun or mlrun/mlrun-gpu
+image = "mlrun/mlrun"
+
+# Use your custom class name
+serving_model_class_name = <Class name>
+
+# Create a serving function
+serving_fn = mlrun.new_function("serving", project="${projectName}", kind="serving", image=image)
+serving_fn.add_model(key="myKey", model_path=project.get_artifact_uri("${modelName}"))
+
+serving_fn.deploy()`
+
   openPopUp(PopUpDialog, {
     children: (
       <>
@@ -450,9 +465,17 @@ export const handleDeployModelFailure = () => {
             https://docs.mlrun.org/en/stable/tutorials/03-model-serving.html
           </a>
         </div>
+        <p>Basic example:</p>
+        <pre>
+          <code
+            dangerouslySetInnerHTML={{
+              __html: Prism.highlight(codeSnippet, Prism.languages.py, 'py')
+            }}
+          />
+        </pre>
       </>
     ),
     className: 'deploy-model-failure-popup',
-    headerText: 'Failed to deploy model'
+    headerText: 'Model cannot be deployed'
   })
 }

@@ -25,8 +25,6 @@ import Download from '../../common/Download/Download'
 import { DATASETS_TAB, MODELS_TAB, TAG_FILTER_LATEST } from '../../constants'
 import { RoundedIcon, TextTooltipTemplate, Tooltip } from 'igz-controls/components'
 import { formatDatetime, parseKeyValues } from '../../utils'
-import { generateArtifactPreviewData } from '../../utils/generateArtifactPreviewData'
-import { parseArtifacts } from '../../utils/parseArtifacts'
 
 import { ReactComponent as DetailsIcon } from 'igz-controls/images/view-details.svg'
 
@@ -38,24 +36,23 @@ export const getJobAccordingIteration = selectedJob => {
   }
 }
 
-export const generateArtifactsPreviewContent = selectedJob => {
-  const parsedArtifacts = parseArtifacts(selectedJob.artifacts)
-
-  if (!parsedArtifacts) return []
-
-  return parsedArtifacts.map(artifact => {
+export const generateArtifactsPreviewContent = (selectedJob, artifacts) => {
+  return artifacts.map(artifact => {
+    const generatedArtifact = { ...artifact }
     let generatedPreviewData = {
       preview: []
     }
 
-    if (artifact.extra_data) {
-      generatedPreviewData = generateArtifactPreviewData(artifact.extra_data)
+    if (generatedArtifact.extra_data) {
+      generatedPreviewData.preview = generatedArtifact.extra_data
     }
 
-    artifact.preview = artifact.schema ? artifact.preview : generatedPreviewData.preview
-    artifact.header = artifact.schema ? artifact.header : null
+    generatedArtifact.preview = generatedArtifact.schema
+      ? generatedArtifact.preview
+      : generatedPreviewData.preview
+    generatedArtifact.header = generatedArtifact.schema ? generatedArtifact.header : null
 
-    artifact.ui = {
+    generatedArtifact.ui = {
       ...artifact.ui,
       date: formatDatetime(selectedJob.startTime),
       size: artifact.size ? prettyBytes(artifact.size) : 'N/A',
@@ -64,7 +61,7 @@ export const generateArtifactsPreviewContent = selectedJob => {
         ?.replace(/(v3io_user|owner): /, '')
     }
 
-    return artifact
+    return generatedArtifact
   })
 }
 

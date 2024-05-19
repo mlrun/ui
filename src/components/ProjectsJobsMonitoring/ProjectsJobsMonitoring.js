@@ -363,20 +363,19 @@ const ProjectsJobsMonitoring = ({ fetchAllJobRuns, fetchJobFunction, fetchJobs }
               onClick={handleTabChange}
               tabs={tabs}
             />
-            <div className="action-bar">
-              {(!params.jobId || !params.workflowId) && (
-                <ActionBar
-                  filterMenuName={selectedTab}
-                  filters={tabData[selectedTab].filters}
-                  handleRefresh={tabData[selectedTab].handleRefresh}
-                  page={JOBS_MONITORING_PAGE}
-                  tab={selectedTab}
-                  withRefreshButton={false}
-                >
-                  {tabData[selectedTab].modalFilters}
-                </ActionBar>
-              )}
-            </div>
+
+            {(!params.jobId || !params.workflowId) && (
+              <ActionBar
+                filterMenuName={selectedTab}
+                filters={tabData[selectedTab].filters}
+                handleRefresh={tabData[selectedTab].handleRefresh}
+                page={JOBS_MONITORING_PAGE}
+                tab={selectedTab}
+                withRefreshButton={false}
+              >
+                {tabData[selectedTab].modalFilters}
+              </ActionBar>
+            )}
           </div>
           <div className="table-container">
             <ProjectJobsMonitoringContext.Provider
