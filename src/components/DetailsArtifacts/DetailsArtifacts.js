@@ -26,6 +26,7 @@ import classnames from 'classnames'
 import ArtifactsPreviewController from '../ArtifactsPreview/ArtifactsPreviewController'
 import NoData from '../../common/NoData/NoData'
 import { TextTooltipTemplate, Tooltip, Tip } from 'igz-controls/components'
+import Loader from '../../common/Loader/Loader'
 
 import jobsActions from '../../actions/jobs'
 import { generateArtifactIndexes } from '../Details/details.util'
@@ -48,7 +49,6 @@ const DetailsArtifacts = ({
   excludeSortBy,
   fetchJob,
   iteration,
-  jobsStore,
   selectedItem,
   setIteration,
   setIterationOption
@@ -67,6 +67,7 @@ const DetailsArtifacts = ({
     )
 
   const dispatch = useDispatch()
+  const artifactsStore = useSelector(store => store.artifactsStore)
 
   const showArtifact = useCallback(
     index => {
@@ -169,14 +170,18 @@ const DetailsArtifacts = ({
     } else if (selectedItem.iterationStats.length === 0) {
       getJobArtifacts(selectedItem)
     }
+  }, [fetchJob, getJobArtifacts, iteration, params.jobId, params.projectName, selectedItem])
 
+  useEffect(() => {
     return () => {
       setArtifactsPreviewContent([])
       setArtifactsIndexes([])
     }
-  }, [fetchJob, getJobArtifacts, iteration, params.jobId, params.projectName, selectedItem])
+  }, [params.jobId, params.projectName])
 
-  return jobsStore.loading ? null : artifactsPreviewContent.length === 0 ? (
+  return artifactsStore.loading ? (
+    <Loader />
+  ) : artifactsPreviewContent.length === 0 ? (
     <NoData />
   ) : (
     <div className="item-artifacts">
@@ -258,4 +263,4 @@ DetailsArtifacts.propTypes = {
   setIterationOption: PropTypes.func.isRequired
 }
 
-export default connect(({ jobsStore }) => ({ jobsStore }), { ...jobsActions })(DetailsArtifacts)
+export default connect(null, { ...jobsActions })(DetailsArtifacts)
