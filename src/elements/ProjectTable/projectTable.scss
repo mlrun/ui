@@ -72,6 +72,7 @@
         }
 
         &_failed,
+        &_failedToDelete,
         &_error,
         &_unhealthy {
           color: $amaranth;

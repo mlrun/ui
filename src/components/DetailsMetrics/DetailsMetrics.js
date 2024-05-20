@@ -17,13 +17,19 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import { memo, useCallback, useEffect, useMemo, useRef, useState } from 'react'
-
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
+import { isEmpty } from 'lodash'
 import classnames from 'classnames'
 
 import GenericMetricChart from '../Cartjs/MetricChart'
 import StatsCard from '../../common/StatsCard/StatsCard'
-import noData from './noData.svg'
+
+import detailsActions from '../../actions/details'
+
+import noData from './noData.svg' // TODO add to igz-controls
+
+import './DetailsMetrics.scss'
 
 import {
   getLineChartMetricConfig,
@@ -32,10 +38,11 @@ import {
 } from '../../utils/getMetricChartConfig'
 import { dummyData } from './tmpData.js'
 
-import './DetailsMetrics.scss'
+const DetailsMetrics = ({ selectedItem }) => {
+  const [metrics, setMetrics] = useState([])
+  const detailsStore = useSelector(store => store.detailsStore)
+  const dispatch = useDispatch()
 
-const DetailsMetrics = () => {
-  // const detailsStore = useSelector(store => store.detailsStore)
   const cardRef = useRef(null)
   const prevScrollPos = useRef(0)
   const lineConfig = useMemo(() => getLineChartMetricConfig(), [])
@@ -44,10 +51,12 @@ const DetailsMetrics = () => {
 
   const [expand, toggleExpand] = useState(true)
 
+  // TODO: check the card style
   const itemClass = classnames('metrics__card-body-invocation', {
     'max-width-60': !expand
   })
 
+  // TODO: move to DetailsMetrics.util file
   const modifiedData = useMemo(() => {
     function convertTimestampToTime(timestamp) {
       const date = new Date(timestamp)
@@ -110,7 +119,8 @@ const DetailsMetrics = () => {
     return result
   }, [])
 
-  console.log(modifiedData)
+  // TODO: refactor the code
+  // TODO: scroll bug
   const handleResizeCard = useCallback(e => {
     if (!e.target.classList.contains('item-info')) return
     const card = cardRef.current
@@ -130,6 +140,7 @@ const DetailsMetrics = () => {
     prevScrollPos.current = e.target.scrollTop
   }, [])
 
+  // TODO: metric render logic check with Jonathan
   const processData = function (data) {
     const valueCounts = {}
     data.forEach(value => {
@@ -165,9 +176,75 @@ const DetailsMetrics = () => {
     return () => window.removeEventListener('scroll', handleResizeCard, true)
   }, [handleResizeCard])
 
+  useEffect(() => {
+    dispatch(
+      detailsActions.fetchModelEndpointMetrics(
+        selectedItem.metadata.project,
+        selectedItem.metadata.uid
+      )
+    )
+  }, [dispatch, selectedItem])
+
+  useEffect(() => {
+    if (
+      selectedItem.metadata?.uid &&
+      !isEmpty(detailsStore.metricsOptions.selectedByEndpoint[selectedItem.metadata?.uid])
+    ) {
+      const selectedMetrics =
+        detailsStore.metricsOptions.selectedByEndpoint[selectedItem.metadata?.uid]
+      const params = { name: [] }
+
+      if (detailsStore.dates.value[0]) {
+        params.start = detailsStore.dates.value[0].getTime()
+      }
+
+      if (detailsStore.dates.value[1]) {
+        params.end = detailsStore.dates.value[1].getTime()
+      }
+
+      // todo: metrics - remove mockNamesToFilter after test and when real API ready with all types (for now metrics type is not supported and it leads to error)
+      const mockNamesToFilter = []
+
+      selectedMetrics.forEach(metric => {
+        // todo: metrics - remove 'if statement and mockNamesToFilter after test and when real API ready with all types (for now metrics type is not supported and it leads to error)
+        mockNamesToFilter.push(metric.full_name)
+        if (metric.type === 'metric') return
+
+        params.name.push(metric.full_name)
+      })
+
+      // todo: metrics - remove if block after test and when real API ready with all types (for now metrics type is not supported and it leads to error)
+      if (isEmpty(params.name))
+        params.name.push('for-mock-only.histogram-data-drift.result.hellinger_mean')
+
+      // todo: metrics - remove mockNamesToFilter after test and when real API ready with all types (for now metrics type is not supported and it leads to error)
+      dispatch(
+        detailsActions.fetchModelEndpointMetricsValues(
+          selectedItem.metadata.project,
+          selectedItem.metadata.uid,
+          params,
+          mockNamesToFilter
+        )
+      ).then(metricsList => {
+        // todo: metrics - remove filter after test and when real API ready with all types (for now metrics type is not supported and it leads to error)
+        setMetrics(
+          metricsList.filter(
+            metric =>
+              metric.full_name !== 'for-mock-only.histogram-data-drift.result.hellinger_mean'
+          )
+        )
+      })
+    }
+  }, [dispatch, selectedItem, detailsStore.dates, detailsStore.metricsOptions.selectedByEndpoint])
+
+  // todo: metrics - - remove when merge charts
+  /* eslint-disable-next-line no-console */
+  console.log(metrics)
+
   return (
     <div className="metrics">
       {modifiedData.map((item, index) => {
+        // TODO: update the render
         if (index === 0) {
           return (
             <StatsCard className="metrics__card-tmp">
@@ -179,7 +256,6 @@ const DetailsMetrics = () => {
                       display: 'flex',
                       justifyContent: 'end',
                       alignItems: 'center'
-                      // gap: '5px'
                     }}
                   >
                     <div className="kpi-value">
@@ -235,6 +311,7 @@ const DetailsMetrics = () => {
             if (!subItem.data) {
               return (
                 <StatsCard className="metrics__card">
+                  {/*TODO: implement the metric name in modifiedData */}
                   <StatsCard.Header
                     title={subItem.full_name
                       .substring(subItem.full_name.lastIndexOf('.') + 1)
@@ -312,4 +389,4 @@ const DetailsMetrics = () => {
   )
 }
 
-export default memo(DetailsMetrics)
+export default DetailsMetrics

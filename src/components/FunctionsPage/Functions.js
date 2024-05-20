@@ -40,7 +40,7 @@ import createFunctionsContent from '../../utils/createFunctionsContent'
 import functionsActions from '../../actions/functions'
 import jobsActions from '../../actions/jobs'
 import { DANGER_BUTTON, LABEL_BUTTON } from 'igz-controls/constants'
-import { generateActionsMenu,filters, generateFunctionsPageData } from './functions.util'
+import { generateActionsMenu, filters, generateFunctionsPageData, pollDeletingFunctions } from './functions.util'
 import { getFunctionIdentifier } from '../../utils/getUniqueIdentifier'
 import { getFunctionNuclioLogs, getFunctionLogs } from '../../utils/getFunctionLogs'
 import { isDetailsTabExists } from '../../utils/isDetailsTabExists'
@@ -48,6 +48,7 @@ import { openPopUp } from 'igz-controls/utils/common.util'
 import { parseFunctions } from '../../utils/parseFunctions'
 import { setFilters } from '../../reducers/filtersReducer'
 import { setNotification } from '../../reducers/notificationReducer'
+import { isBackgroundTaskRunning } from '../../utils/poll.util'
 import { showErrorNotification } from '../../utils/notifications.util'
 import { useGroupContent } from '../../hooks/groupContent.hook'
 import { useMode } from '../../hooks/mode.hook'
@@ -79,20 +80,28 @@ const Functions = ({
   const filtersStore = useSelector(store => store.filtersStore)
   const [selectedRowData, setSelectedRowData] = useState({})
   const [largeRequestErrorMessage, setLargeRequestErrorMessage] = useState('')
+  const [deletingFunctions, setDeletingFunctions] = useState({})
   const abortControllerRef = useRef(new AbortController())
   const fetchFunctionLogsTimeout = useRef(null)
   const fetchFunctionNuclioLogsTimeout = useRef(null)
   const tableBodyRef = useRef(null)
   const tableRef = useRef(null)
   const nameFilterRef = useRef('')
+  const terminatePollRef = useRef(null)
   const { isDemoMode, isStagingMode } = useMode()
   const params = useParams()
   const navigate = useNavigate()
   const location = useLocation()
   const dispatch = useDispatch()
 
+  const terminateDeleteTasksPolling = useCallback(() => {
+    terminatePollRef?.current?.()
+    setDeletingFunctions({})
+  }, [])
+
   const fetchData = useCallback(
     filters => {
+      terminateDeleteTasksPolling()
       abortControllerRef.current = new AbortController()
       nameFilterRef.current = filters?.name ?? ''
 
@@ -104,6 +113,26 @@ const Functions = ({
       }).then(functions => {
         if (functions) {
           const newFunctions = parseFunctions(functions, params.projectName)
+          const deletingFunctions = newFunctions.reduce((acc, func) => {
+            if (func.deletion_task_id && !func.deletion_error && !acc[func.deletion_task_id]) {
+              acc[func.deletion_task_id] = {
+                name: func.name
+              }
+            }
+
+            return acc
+          }, {})
+
+          if (!isEmpty(deletingFunctions)) {
+            setDeletingFunctions(deletingFunctions)
+            pollDeletingFunctions(
+              params.projectName,
+              terminatePollRef,
+              deletingFunctions,
+              () => fetchData(filters),
+              dispatch
+            )
+          }
 
           setFunctions(newFunctions)
 
@@ -111,7 +140,7 @@ const Functions = ({
         }
       })
     },
-    [fetchFunctions, params.projectName]
+    [dispatch, fetchFunctions, params.projectName, terminateDeleteTasksPolling]
   )
 
   const refreshFunctions = useCallback(
@@ -226,30 +255,39 @@ const Functions = ({
   const removeFunction = useCallback(
     func => {
       deleteFunction(func.name, params.projectName)
-        .then(() => {
-          if (!isEmpty(selectedFunction)) {
-            setSelectedFunction({})
-            navigate(`/projects/${params.projectName}/functions`, { replace: true })
-          }
+        .then(response => {
+          if (isBackgroundTaskRunning(response)) {
+            dispatch(
+              setNotification({
+                status: 200,
+                id: Math.random(),
+                message: 'Function deletion in progress'
+              })
+            )
 
-          dispatch(
-            setNotification({
-              status: 200,
-              id: Math.random(),
-              message: 'Function was deleted'
+            setDeletingFunctions(prevDeletingFunctions => {
+              const newDeletingFunctions = {
+                ...prevDeletingFunctions,
+                [response.data.metadata.name]: {
+                  name: func.name
+                }
+              }
+
+              pollDeletingFunctions(params.projectName, terminatePollRef, newDeletingFunctions, fetchData, dispatch)
+
+              return newDeletingFunctions
             })
-          )
-          fetchData()
-        })
-        .catch(error => {
-          showErrorNotification(dispatch, error, 'Failed to delete the function ', '', () => {
-            removeFunction(func)
-          })
+
+            if (!isEmpty(selectedFunction)) {
+              setSelectedFunction({})
+              navigate(`/projects/${params.projectName}/functions`, { replace: true })
+            }
+          }
         })
 
       setConfirmData(null)
     },
-    [deleteFunction, dispatch, navigate, params.projectName, fetchData, selectedFunction]
+    [deleteFunction, params.projectName, dispatch, fetchData, selectedFunction, navigate]
   )
 
   const onRemoveFunction = useCallback(
@@ -398,9 +436,10 @@ const Functions = ({
         setEditableItem,
         onRemoveFunction,
         toggleConvertedYaml,
-        buildAndRunFunc
+        buildAndRunFunc,
+        deletingFunctions
       ),
-    [buildAndRunFunc, dispatch, isDemoMode, isStagingMode, onRemoveFunction, toggleConvertedYaml]
+    [buildAndRunFunc, dispatch, isDemoMode, isStagingMode, onRemoveFunction, toggleConvertedYaml, deletingFunctions]
   )
 
   const functionsFilters = useMemo(() => [filters[0]], [])
@@ -435,7 +474,7 @@ const Functions = ({
         if (isEmpty(nameFilterRef.current)) {
           showErrorNotification(dispatch, {}, 'This function either does not exist or was deleted')
         }
-        
+
         navigate(`/projects/${params.projectName}/functions`, { replace: true })
       }
     }

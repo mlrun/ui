@@ -18,6 +18,7 @@ under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
 import React from 'react'
+import { get } from 'lodash'
 
 import {
   DETAILS_BUILD_LOG_TAB,
@@ -42,6 +43,9 @@ import {
 } from '../../constants'
 import jobsActions from '../../actions/jobs'
 import { showErrorNotification } from '../../utils/notifications.util'
+import { BG_TASK_FAILED, BG_TASK_SUCCEEDED, pollTask } from '../../utils/poll.util'
+import { setNotification } from '../../reducers/notificationReducer'
+import tasksApi from '../../api/tasks-api'
 
 import { ReactComponent as Delete } from 'igz-controls/images/delete.svg'
 import { ReactComponent as Run } from 'igz-controls/images/run.svg'
@@ -189,14 +193,18 @@ export const generateActionsMenu = (
   setEditableItem,
   onRemoveFunction,
   toggleConvertedYaml,
-  buildAndRunFunc
+  buildAndRunFunc,
+  deletingFunctions
 ) => {
+  const functionIsDeleting = isFunctionDeleting(func, deletingFunctions)
+
   return [
     [
       {
         id: 'run',
         label: 'Run',
         icon: <Run />,
+        disabled: functionIsDeleting,
         onClick: func => {
           if (func?.project && func?.name && func?.hash && func?.ui?.originalContent) {
             dispatch(jobsActions.fetchJobFunctionSuccess(func.ui.originalContent))
@@ -212,6 +220,7 @@ export const generateActionsMenu = (
       {
         label: 'Edit',
         icon: <Edit />,
+        disabled: functionIsDeleting,
         onClick: func => {
           setFunctionsPanelIsOpen(true)
           setEditableItem(func)
@@ -225,11 +234,13 @@ export const generateActionsMenu = (
         label: 'Delete',
         icon: <Delete />,
         className: 'danger',
+        disabled: functionIsDeleting,
         onClick: onRemoveFunction
       },
       {
         label: 'View YAML',
         icon: <Yaml />,
+        disabled: functionIsDeleting,
         onClick: toggleConvertedYaml
       }
     ],
@@ -238,6 +249,7 @@ export const generateActionsMenu = (
         id: 'build-and-run',
         label: 'Build and run',
         icon: <DeployIcon />,
+        disabled: functionIsDeleting,
         onClick: func => {
           buildAndRunFunc(func)
         },
@@ -249,6 +261,7 @@ export const generateActionsMenu = (
         id: 'deploy',
         label: 'Deploy',
         icon: <DeployIcon />,
+        disabled: functionIsDeleting,
         onClick: func => {
           setFunctionsPanelIsOpen(true)
           setEditableItem(func)
@@ -257,4 +270,61 @@ export const generateActionsMenu = (
       }
     ]
   ]
+}
+
+export const pollDeletingFunctions = (project, terminatePollRef, deletingFunctions, refresh, dispatch) => {
+  const taskIds = Object.keys(deletingFunctions)
+
+  const pollMethod = () => {
+    if (taskIds.length === 1) {
+      return tasksApi.getProjectBackgroundTask(project, taskIds[0])
+    }
+
+    return tasksApi.getProjectBackgroundTasks(project)
+  }
+
+  const isDone = result => {
+    const tasks = taskIds.length === 1 ? [result.data] : get(result, 'data.background_tasks', [])
+    const finishedTasks = tasks.filter(
+      task =>
+        deletingFunctions?.[task.metadata.name] &&
+        [BG_TASK_SUCCEEDED, BG_TASK_FAILED].includes(task.status?.state)
+    )
+
+    if (finishedTasks.length > 0) {
+      finishedTasks.forEach(task => {
+        if (task.status.state === BG_TASK_SUCCEEDED) {
+          functionDeletingSuccessHandler(dispatch, deletingFunctions[task.metadata.name])
+        } else {
+          showErrorNotification(dispatch, {}, task.status.error || 'Failed to delete the function')
+        }
+      })
+
+      refresh(project)
+    }
+
+    return finishedTasks.length > 0
+  }
+
+  terminatePollRef?.current?.()
+  terminatePollRef.current = null
+
+  pollTask(pollMethod, isDone, { terminatePollRef })
+}
+
+const functionDeletingSuccessHandler = (dispatch, func) => {
+  dispatch(
+    setNotification({
+      status: 200,
+      id: Math.random(),
+      message: `Function ${func.name} is successfully deleted`
+    })
+  )
+}
+
+const isFunctionDeleting = (func, deletingFunctions) => {
+  return Object.values(deletingFunctions).some(deletingFunction => {
+    return deletingFunction.name === func.name
+  })
+
 }

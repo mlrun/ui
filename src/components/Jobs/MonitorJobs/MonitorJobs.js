@@ -184,7 +184,8 @@ const MonitorJobs = ({ fetchAllJobRuns, fetchJobs }) => {
           labels: filtersStore.labels,
           dates: {
             value: dateFilter,
-            isPredefined: false
+            isPredefined: false,
+            initialSelectedOptionId: filtersStore.dates.initialSelectedOptionId
           }
         }
       }

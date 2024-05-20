@@ -21,8 +21,11 @@ import getState from './getState'
 import { page } from '../components/FunctionsPage/functions.util'
 import { getFunctionIdentifier } from './getUniqueIdentifier'
 import { parseKeyValues } from './object'
+import { FUNCTION_FAILED_TO_DELETE_STATE } from '../constants'
 
 export const parseFunction = (func, projectName, customState) => {
+  const state = (func.status?.deletion_error ? FUNCTION_FAILED_TO_DELETE_STATE : customState) || func.status?.state
+
   const item = {
     access_key: func.metadata.credentials?.access_key ?? '',
     application_image: func.status?.application_image ?? '',
@@ -33,6 +36,8 @@ export const parseFunction = (func, projectName, customState) => {
     container_image: func?.status?.container_image ?? '',
     default_class: func.spec?.default_class ?? '',
     default_handler: func.spec?.default_handler ?? '',
+    deletion_error: func.status?.deletion_error ?? '',
+    deletion_task_id: func.status?.deletion_task_id ?? '',
     description: func.spec?.description ?? '',
     disable_auto_mount: func.spec?.disable_auto_mount ?? true,
     env: func.spec?.env ?? [],
@@ -54,7 +59,7 @@ export const parseFunction = (func, projectName, customState) => {
     project: func.metadata?.project || projectName,
     resources: func.spec?.resources ?? {},
     secret_sources: func.spec?.secret_sources ?? [],
-    state: getState(customState || func.status?.state, page, 'function'),
+    state: getState(state, page, 'function'),
     tag: func.metadata?.tag ?? '',
     track_models: func.spec?.track_models ?? false,
     type: func.kind,

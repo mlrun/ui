@@ -27,9 +27,15 @@ import { Button, Tooltip, TextTooltipTemplate, RoundedIcon } from 'igz-controls/
 import LoadButton from '../../../common/LoadButton/LoadButton'
 import Select from '../../../common/Select/Select'
 import ActionsMenu from '../../../common/ActionsMenu/ActionsMenu'
+import MetricsSelector from '../../../elements/MetricsSelector/MetricsSelector'
 import DatePicker from '../../../common/DatePicker/DatePicker'
 
-import { DETAILS_ARTIFACTS_TAB, DETAILS_METRICS_TAB, FULL_VIEW_MODE, JOBS_PAGE } from '../../../constants'
+import {
+  DETAILS_ARTIFACTS_TAB,
+  DETAILS_METRICS_TAB,
+  FULL_VIEW_MODE,
+  JOBS_PAGE
+} from '../../../constants'
 import { formatDatetime } from '../../../utils'
 import { LABEL_BUTTON } from 'igz-controls/constants'
 import { ACTIONS_MENU } from '../../../types'
@@ -56,6 +62,7 @@ const DetailsHeader = ({
   pageData,
   selectedItem,
   setIteration,
+  setSelectedMetricsOptions,
   tab
 }) => {
   const detailsStore = useSelector(store => store.detailsStore)
@@ -133,12 +140,12 @@ const DetailsHeader = ({
                   stateValue === 'aborted' ? 'N/A' : 'Not yet started'
                 )
               : selectedItem?.updated
-              ? formatDatetime(selectedItem?.updated, 'N/A')
-              : selectedItem?.spec?.model.includes(':') // 'model-key:model-tag'
-              ? selectedItem.spec.model.replace(/^.*:/, '') // remove key
-              : selectedItem?.spec?.model
-              ? selectedItem?.metadata?.uid
-              : ''}
+                ? formatDatetime(selectedItem?.updated, 'N/A')
+                : selectedItem?.spec?.model.includes(':') // 'model-key:model-tag'
+                  ? selectedItem.spec.model.replace(/^.*:/, '') // remove key
+                  : selectedItem?.spec?.model
+                    ? selectedItem?.metadata?.uid
+                    : ''}
           </span>
           {stateValue && stateLabel && (
             <Tooltip className="state" template={<TextTooltipTemplate text={stateLabel} />}>
@@ -192,20 +199,6 @@ const DetailsHeader = ({
             </Tooltip>
           </>
         )}
-        {params.tab === DETAILS_METRICS_TAB && (
-          <>
-            <DatePicker
-              className="details-date-picker"
-              date={detailsStore.dates.value[0]}
-              dateTo={detailsStore.dates.value[1]}
-              selectedOptionId={PAST_24_HOUR_DATE_OPTION}
-              label=""
-              onChange={handleChangeDates}
-              type="date-range-time"
-              withLabels
-            />
-          </>
-        )}
         {params.tab === DETAILS_ARTIFACTS_TAB && detailsStore.iteration && (
           <Select
             density="dense"
@@ -217,6 +210,28 @@ const DetailsHeader = ({
             options={detailsStore.iterationOptions}
             selectedId={detailsStore.iteration}
           />
+        )}
+        {params.tab === DETAILS_METRICS_TAB && (
+          <>
+            <MetricsSelector
+              name="metrics"
+              metrics={detailsStore.metricsOptions.all}
+              onSelect={metrics =>
+                setSelectedMetricsOptions({ endpointUid: selectedItem.metadata.uid, metrics })
+              }
+              preselectedMetrics={detailsStore.metricsOptions.preselected}
+            />
+            <DatePicker
+              className="details-date-picker"
+              date={detailsStore.dates.value[0]}
+              dateTo={detailsStore.dates.value[1]}
+              selectedOptionId={PAST_24_HOUR_DATE_OPTION}
+              label=""
+              onChange={handleChangeDates}
+              type="date-range-time"
+              withLabels
+            />
+          </>
         )}
         {actionButton && !actionButton.hidden && (
           <Button
@@ -290,6 +305,7 @@ const DetailsHeader = ({
 
 DetailsHeader.defaultProps = {
   handleCancel: null,
+  setSelectedMetricsOptions: () => {},
   handleChangeDates: () => {}
 }
 
@@ -305,6 +321,7 @@ DetailsHeader.propTypes = {
   pageData: PropTypes.shape({}).isRequired,
   selectedItem: PropTypes.shape({}).isRequired,
   setIteration: PropTypes.func.isRequired,
+  setSelectedMetricsOptions: PropTypes.func,
   tab: PropTypes.string
 }
 
