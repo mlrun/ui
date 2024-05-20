@@ -31,6 +31,7 @@ import {
   set,
   some
 } from 'lodash'
+
 import {
   ADVANCED_STEP,
   CONFIG_MAP_VOLUME_TYPE,
@@ -44,6 +45,7 @@ import {
   LIST_TUNING_STRATEGY,
   MAX_SELECTOR_CRITERIA,
   PANEL_DEFAULT_ACCESS_KEY,
+  PANEL_RERUN_MODE,
   PARAMETERS_FROM_FILE_VALUE,
   PARAMETERS_FROM_UI_VALUE,
   PARAMETERS_STEP,
@@ -1033,13 +1035,18 @@ export const generateJobRequestData = (
     formData[RUN_DETAILS_STEP].version
   )
   const [volume_mounts, volumes] = generateVolumes(formData[RESOURCES_STEP].volumesTable)
+  let labels = [...formData[RUN_DETAILS_STEP].labels]
+
+  if (mode === PANEL_RERUN_MODE) {
+    labels = labels.filter(label => label.key !== 'workflow')
+  }
 
   const postData = {
     task: {
       metadata: {
         project: params.projectName,
         name: formData[RUN_DETAILS_STEP].runName,
-        labels: convertChipsData(formData[RUN_DETAILS_STEP].labels)
+        labels: convertChipsData(labels)
       },
       spec: {
         inputs: generateDataInputs(formData[DATA_INPUTS_STEP].dataInputsTable),
