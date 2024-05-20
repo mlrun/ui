@@ -30,6 +30,7 @@ import { BG_TASK_FAILED, BG_TASK_SUCCEEDED, pollTask } from '../../utils/poll.ut
 import { DANGER_BUTTON, FORBIDDEN_ERROR_STATUS_CODE } from 'igz-controls/constants'
 import { setNotification } from '../../reducers/notificationReducer'
 import { showErrorNotification } from '../../utils/notifications.util'
+import projectsAction from '../../actions/projects'
 
 import { ReactComponent as ArchiveIcon } from 'igz-controls/images/archive-icon.svg'
 import { ReactComponent as Delete } from 'igz-controls/images/delete.svg'
@@ -210,4 +211,46 @@ export const pollDeletingProjects = (terminatePollRef, deletingProjects, refresh
   return pollTask(() => tasksApi.getBackgroundTasks(), isDone, {
     terminatePollRef
   })
+}
+
+export const generateMonitoringCounters = (data, dispatch) => {
+  const monitoringCounters = {
+    jobs: {
+      all: 0,
+      completed: 0,
+      failed: 0,
+      running: 0
+    },
+    workflows: {
+      all: 0,
+      completed: 0,
+      failed: 0,
+      running: 0
+    },
+    scheduled: {
+      jobs: 0,
+      workflows: 0
+    }
+  }
+
+  data.forEach(project => {
+    monitoringCounters.jobs.all +=
+      project.runs_completed_recent_count +
+      project.runs_failed_recent_count +
+      project.runs_running_count
+    monitoringCounters.jobs.completed += project.runs_completed_recent_count
+    monitoringCounters.jobs.failed += project.runs_failed_recent_count
+    monitoringCounters.jobs.running += project.runs_running_count
+    monitoringCounters.workflows.all +=
+      project.pipelines_completed_recent_count +
+      project.pipelines_failed_recent_count +
+      project.pipelines_running_count
+    monitoringCounters.workflows.completed += project.pipelines_completed_recent_count
+    monitoringCounters.workflows.failed += project.pipelines_failed_recent_count
+    monitoringCounters.workflows.running += project.pipelines_running_count
+    monitoringCounters.scheduled.jobs += project.distinct_scheduled_jobs_pending_count
+    monitoringCounters.scheduled.workflows += project.distinct_scheduled_pipelines_pending_count
+  })
+
+  dispatch(projectsAction.setJobsMonitoringData(monitoringCounters))
 }

@@ -17,24 +17,16 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import React, { useCallback, useEffect, useMemo, useState } from 'react'
+import React, { useMemo } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 import { upperFirst } from 'lodash'
-import moment from 'moment'
 
 import Loader from '../../common/Loader/Loader'
 import StatsCard from '../../common/StatsCard/StatsCard'
 
-import projectsAction from '../../actions/projects'
-import workflowActions from '../../actions/workflow'
-
-import {
-  generateMonitoringGroupedData,
-  generateMonitoringStats
-} from '../../utils/generateMonitoringData'
-import { useFetchData } from '../../hooks/useFetchData.hook'
-import { GROUP_BY_WORKFLOW, JOBS_MONITORING_WORKFLOWS_TAB, FILTER_ALL_ITEMS } from '../../constants'
+import { generateMonitoringStats } from '../../utils/generateMonitoringData'
+import { JOBS_MONITORING_WORKFLOWS_TAB } from '../../constants'
 
 import { ReactComponent as ClockIcon } from 'igz-controls/images/clock.svg'
 
@@ -43,72 +35,17 @@ import './projectsMonitoringCounters.scss'
 const WorkflowsCounters = () => {
   const dispatch = useDispatch()
   const navigate = useNavigate()
-  const [filter] = useState({
-    groupBy: GROUP_BY_WORKFLOW,
-    dates: {
-      value: [new Date(moment().add(-1, 'days'))]
-    },
-    state: FILTER_ALL_ITEMS
-  })
-  const [groupedWorkflowsData, setGroupedWorkflowsData] = useState({
-    all: [],
-    running: [],
-    failed: [],
-    completed: []
-  })
-  const { loading: workflowsLoading } = useFetchData({
-    filter,
-    action: workflowActions.fetchWorkflows
-  })
-  const { data: workflows } = useSelector(store => store.workflowsStore.workflows)
-
-  // const handleDateSelection = dates => {
-  //   const generatedDates = [...dates]
-
-  //   if (generatedDates.length === 1) {
-  //     generatedDates.push(new Date())
-  //   }
-
-  //   setFilter(filters => ({ ...filters, dates: { value: generatedDates } }))
-  // }
+  const projectStore = useSelector(store => store.projectStore)
 
   const workflowsStats = useMemo(
     () =>
       generateMonitoringStats(
-        groupedWorkflowsData,
+        projectStore.jobsMonitoringData.workflows,
         navigate,
         dispatch,
         JOBS_MONITORING_WORKFLOWS_TAB
       ),
-    [dispatch, groupedWorkflowsData, navigate]
-  )
-
-  useEffect(() => {
-    generateMonitoringGroupedData(workflows, setGroupedWorkflowsData, data =>
-      dispatch(projectsAction.setJobsMonitoringData({ workflows: data }))
-    )
-  }, [dispatch, workflows])
-
-  const getCounterTemplate = useCallback(
-    type => {
-      return (
-        <>
-          <h6 className="stats__subtitle">{upperFirst(type)}</h6>
-          <span className="stats__counter">
-            {workflowsLoading ? <Loader section small secondary /> : workflowsStats.all.counter}
-          </span>
-          <ul className="projects-monitoring-legend__status">
-            {workflowsStats.counters.map(({ counter, link, statusClass }) => (
-              <li className="link" onClick={link} key={`${statusClass}-jobs`}>
-                {workflowsLoading ? <Loader section small secondary /> : counter}
-                <i className={`state-${statusClass}`} />
-              </li>
-            ))}
-          </ul>
-        </>
-      )
-    },
-    [workflowsStats, workflowsLoading]
+    [dispatch, navigate, projectStore.jobsMonitoringData.workflows]
   )
 
   return (
@@ -130,7 +67,28 @@ const WorkflowsCounters = () => {
         /> */}
       </StatsCard.Header>
       <StatsCard.Row>
-        <StatsCard.Col>{getCounterTemplate(JOBS_MONITORING_WORKFLOWS_TAB)}</StatsCard.Col>
+        <StatsCard.Col>
+          <h6 className="stats__subtitle">{upperFirst(JOBS_MONITORING_WORKFLOWS_TAB)}</h6>
+          <span className="stats__counter">
+            {projectStore.projectsSummary.loading ? (
+              <Loader section small secondary />
+            ) : (
+              workflowsStats.all.counter
+            )}
+          </span>
+          <ul className="projects-monitoring-legend__status">
+            {workflowsStats.counters.map(({ counter, link, statusClass }) => (
+              <li className="link" onClick={link} key={`${statusClass}-jobs`}>
+                {projectStore.projectsSummary.loading ? (
+                  <Loader section small secondary />
+                ) : (
+                  counter
+                )}
+                <i className={`state-${statusClass}`} />
+              </li>
+            ))}
+          </ul>
+        </StatsCard.Col>
       </StatsCard.Row>
       <StatsCard.Row>
         <StatsCard.Col>

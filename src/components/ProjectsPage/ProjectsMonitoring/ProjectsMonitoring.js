@@ -44,7 +44,6 @@ const ProjectsMonitoring = () => {
         <JobsCounters />
         {/* Todo: Delete WorkflowsCounters after ML-5460 is impplemented */}
         <WorkflowsCounters />
-
         <ScheduledJobsCounters />
         {/* Todo: implement as part of ML-5460
         <ModelEndpointsCounters /> */}
