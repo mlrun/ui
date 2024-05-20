@@ -54,7 +54,6 @@ export const NEXT_YEAR_DATE_OPTION = 'nextYear'
 export const CUSTOM_RANGE_DATE_OPTION = 'customRange'
 
 export const TIME_FRAME_LIMITS = {
-  CUSTOM: 0,
   HOUR: 3600000,
   '24_HOURS': 86400000,
   WEEK: 604800000,
@@ -67,7 +66,7 @@ export const datePickerPastOptions = [
     id: ANY_TIME_DATE_OPTION,
     label: ANY_TIME,
     handler: () => DATE_FILTER_ANY_TIME,
-    millisecondsValue: Infinity
+    timeFrameMilliseconds: Infinity
   },
   {
     id: PAST_HOUR_DATE_OPTION,
@@ -78,7 +77,7 @@ export const datePickerPastOptions = [
         fromDate.setHours(toDate.getHours() - 1)
       })
     },
-    millisecondsValue: TIME_FRAME_LIMITS.HOUR
+    timeFrameMilliseconds: TIME_FRAME_LIMITS.HOUR
   },
   {
     id: PAST_24_HOUR_DATE_OPTION,
@@ -89,7 +88,7 @@ export const datePickerPastOptions = [
         fromDate.setDate(toDate.getDate() - 1)
       })
     },
-    millisecondsValue: TIME_FRAME_LIMITS['24_HOURS']
+    timeFrameMilliseconds: TIME_FRAME_LIMITS['24_HOURS']
   },
   {
     id: PAST_WEEK_DATE_OPTION,
@@ -100,7 +99,7 @@ export const datePickerPastOptions = [
         fromDate.setDate(toDate.getDate() - 7)
       })
     },
-    millisecondsValue: TIME_FRAME_LIMITS.WEEK
+    timeFrameMilliseconds: TIME_FRAME_LIMITS.WEEK
   },
   {
     id: PAST_MONTH_DATE_OPTION,
@@ -111,7 +110,7 @@ export const datePickerPastOptions = [
         fromDate.setMonth(toDate.getMonth() - 1)
       })
     },
-    millisecondsValue: TIME_FRAME_LIMITS.MONTH
+    timeFrameMilliseconds: TIME_FRAME_LIMITS.MONTH
   },
   {
     id: PAST_YEAR_DATE_OPTION,
@@ -122,13 +121,13 @@ export const datePickerPastOptions = [
         fromDate.setFullYear(toDate.getFullYear() - 1)
       })
     },
-    millisecondsValue: TIME_FRAME_LIMITS.YEAR
+    timeFrameMilliseconds: TIME_FRAME_LIMITS.YEAR
   },
   {
     id: CUSTOM_RANGE_DATE_OPTION,
     label: 'Custom range',
     handler: null,
-    millisecondsValue: 0
+    timeFrameMilliseconds: 0
   }
 ]
 
@@ -137,7 +136,7 @@ export const datePickerFutureOptions = [
     id: ANY_TIME_DATE_OPTION,
     label: 'Any time',
     handler: () => DATE_FILTER_ANY_TIME,
-    millisecondsValue: Infinity
+    timeFrameMilliseconds: Infinity
   },
   {
     id: NEXT_HOUR_DATE_OPTION,
@@ -148,7 +147,7 @@ export const datePickerFutureOptions = [
         fromDate.setHours(toDate.getHours() + 1)
       })
     },
-    millisecondsValue: TIME_FRAME_LIMITS.HOUR
+    timeFrameMilliseconds: TIME_FRAME_LIMITS.HOUR
   },
   {
     id: NEXT_24_HOUR_DATE_OPTION,
@@ -159,7 +158,7 @@ export const datePickerFutureOptions = [
         fromDate.setDate(toDate.getDate() + 1)
       })
     },
-    millisecondsValue: TIME_FRAME_LIMITS['24_HOURS']
+    timeFrameMilliseconds: TIME_FRAME_LIMITS['24_HOURS']
   },
   {
     id: NEXT_WEEK_DATE_OPTION,
@@ -170,7 +169,7 @@ export const datePickerFutureOptions = [
         fromDate.setDate(toDate.getDate() + 7)
       })
     },
-    millisecondsValue: TIME_FRAME_LIMITS.WEEK
+    timeFrameMilliseconds: TIME_FRAME_LIMITS.WEEK
   },
   {
     id: NEXT_MONTH_DATE_OPTION,
@@ -181,7 +180,7 @@ export const datePickerFutureOptions = [
         fromDate.setMonth(toDate.getMonth() + 1)
       })
     },
-    millisecondsValue: TIME_FRAME_LIMITS.MONTH
+    timeFrameMilliseconds: TIME_FRAME_LIMITS.MONTH
   },
   {
     id: NEXT_YEAR_DATE_OPTION,
@@ -192,13 +191,13 @@ export const datePickerFutureOptions = [
         fromDate.setFullYear(toDate.getFullYear() + 1)
       })
     },
-    millisecondsValue: TIME_FRAME_LIMITS.YEAR
+    timeFrameMilliseconds: TIME_FRAME_LIMITS.YEAR
   },
   {
     id: CUSTOM_RANGE_DATE_OPTION,
     label: 'Custom range',
     handler: null,
-    millisecondsValue: 0
+    timeFrameMilliseconds: 0
   }
 ]
 

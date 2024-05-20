@@ -58,7 +58,7 @@ const initialState = {
     data: {}
   },
   dates: {
-    value: ['', ''],
+    value: DATE_FILTER_ANY_TIME,
     isPredefined: false
   },
   editMode: false,

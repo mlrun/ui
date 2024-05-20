@@ -29,7 +29,7 @@ import { Button, Tip, Tooltip, TextTooltipTemplate, PopUpDialog } from 'igz-cont
 import { SelectOption } from 'igz-controls/elements'
 
 import { SECONDARY_BUTTON } from 'igz-controls/constants'
-import { CUSTOM_RANGE_DATE_OPTION } from '../../utils/datePicker.util'
+import { CUSTOM_RANGE_DATE_OPTION, TIME_FRAME_LIMITS } from '../../utils/datePicker.util'
 
 import { ReactComponent as Arrow } from 'igz-controls/images/arrow.svg'
 import { ReactComponent as CaretIcon } from 'igz-controls/images/dropdown.svg'
@@ -52,7 +52,7 @@ const DatePickerView = React.forwardRef(
       invalidText,
       isDatePickerOpened,
       isDatePickerOptionsOpened,
-      isInvalid,
+      isInputInvalid,
       isRange,
       isRangeDateValid,
       isSameDate,
@@ -88,13 +88,13 @@ const DatePickerView = React.forwardRef(
     )
     const inputClassNames = classnames(
       'input',
-      'input-short',
+      !isRange && 'input-short',
       'date-picker__input',
       'active-input',
       isRange && 'long-input',
       isValueEmpty && 'date-picker__input_empty',
       disabled && 'date-picker__input_disabled',
-      isInvalid && 'input_invalid'
+      isInputInvalid && 'input_invalid'
     )
     const inputLabelClassNames = classnames('input__label', label && 'active-label')
 
@@ -139,7 +139,7 @@ const DatePickerView = React.forwardRef(
             {label}
             {required && <span className="input__label-mandatory"> *</span>}
           </span>
-          {isInvalid && (
+          {isInputInvalid && (
             <Tooltip
               className="input__warning"
               template={
@@ -147,7 +147,7 @@ const DatePickerView = React.forwardRef(
                   text={
                     required && getInputValueValidity(valueDatePickerInput)
                       ? requiredText
-                      : invalidText
+                      : invalidMessage || invalidText
                   }
                   warning
                 />
@@ -309,7 +309,7 @@ DatePickerView.propTypes = {
   invalidMessage: PropTypes.string.isRequired,
   isDatePickerOpened: PropTypes.bool.isRequired,
   isDatePickerOptionsOpened: PropTypes.bool.isRequired,
-  isInvalid: PropTypes.bool.isRequired,
+  isInputInvalid: PropTypes.bool.isRequired,
   isRange: PropTypes.bool.isRequired,
   isRangeDateValid: PropTypes.func.isRequired,
   isSameDate: PropTypes.func.isRequired,
@@ -329,7 +329,13 @@ DatePickerView.propTypes = {
   requiredText: PropTypes.string.isRequired,
   selectedOption: PropTypes.object,
   setSelectedDate: PropTypes.func.isRequired,
-  timeFrameLimit: PropTypes.number.isRequired,
+  timeFrameLimit: PropTypes.oneOf([
+    TIME_FRAME_LIMITS.HOUR,
+    TIME_FRAME_LIMITS['24_HOURS'],
+    TIME_FRAME_LIMITS.WEEK,
+    TIME_FRAME_LIMITS.MONTH,
+    TIME_FRAME_LIMITS.YEAR
+  ]),
   tip: PropTypes.string.isRequired,
   valueDatePickerInput: PropTypes.string.isRequired,
   weekDay: PropTypes.array.isRequired,

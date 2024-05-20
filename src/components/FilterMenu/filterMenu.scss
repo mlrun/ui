@@ -24,6 +24,10 @@
 
         &.long-input {
           width: 330px;
+
+          &.input_invalid {
+            width: 350px;
+          }
         }
       }
     }

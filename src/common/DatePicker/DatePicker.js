@@ -46,7 +46,8 @@ import {
   months,
   ANY_TIME_DATE_OPTION,
   getTimeFrameWarningMsg,
-  CUSTOM_RANGE_DATE_OPTION
+  CUSTOM_RANGE_DATE_OPTION,
+  TIME_FRAME_LIMITS
 } from '../../utils/datePicker.util'
 import { initialState, datePickerActions, datePickerReducer } from './datePickerReducer'
 
@@ -83,7 +84,7 @@ const DatePicker = ({
   const [valueDatePickerInput, setValueDatePickerInput] = useState(
     formatDate(isRange, isTime, splitCharacter, date, dateTo)
   )
-  const [isInvalid, setIsInvalid] = useState(false)
+  const [isInputInvalid, setInputIsInvalid] = useState(false)
 
   const datePickerRef = useRef()
   const datePickerViewRef = useRef()
@@ -98,11 +99,9 @@ const DatePicker = ({
 
   const datePickerOptions = useMemo(() => {
     return (hasFutureOptions ? datePickerFutureOptions : datePickerPastOptions).filter(
-      option => option.millisecondsValue <= timeFrameLimit
+      option => option.timeFrameMilliseconds <= timeFrameLimit
     )
   }, [hasFutureOptions, timeFrameLimit])
-
-  window.optiiions = datePickerOptions
 
   const handleCloseDatePickerOutside = useCallback(
     event => {
@@ -185,41 +184,49 @@ const DatePicker = ({
     isInputValueEmpty && setIsDatePickerOpened(false)
   }, [getInputValueValidity, valueDatePickerInput, datePickerOptions])
 
-  useEffect(() => {
-    let invalidMessage = ''
-    let timeRangeIsNegative = false
+  const validateTimeRange = useCallback(
+    ([dateFrom, dateTo]) => {
+      let invalidMessage = ''
+      let isTimeRangeInvalid = false
+      let timeRangeIsNegative = false
 
-    if (
-      isRange &&
-      datePickerState.configFrom.selectedDate &&
+      if (isRange && dateTo && dateFrom) {
+        if (dateFrom.getTime() > dateTo.getTime()) {
+          invalidMessage = '“To” must be later than “From”'
+          timeRangeIsNegative = true
+          isTimeRangeInvalid = true
+        } else if (dateTo.getTime() - dateFrom.getTime() > timeFrameLimit) {
+          invalidMessage = getTimeFrameWarningMsg(timeFrameLimit)
+          isTimeRangeInvalid = true
+        }
+      } else if (!isRange && dateFrom) {
+        if (Date.now() - dateFrom.getTime() > timeFrameLimit) {
+          invalidMessage = getTimeFrameWarningMsg(timeFrameLimit)
+          isTimeRangeInvalid = true
+        }
+      }
+
+      return {
+        invalidMessage,
+        isTimeRangeInvalid,
+        timeRangeIsNegative
+      }
+    },
+    [isRange, timeFrameLimit]
+  )
+
+  useEffect(() => {
+    const { invalidMessage, timeRangeIsNegative } = validateTimeRange([
+      datePickerState.configFrom.selectedDate,
       datePickerState.configTo.selectedDate
-    ) {
-      if (
-        datePickerState.configFrom.selectedDate.getTime() >
-        datePickerState.configTo.selectedDate.getTime()
-      ) {
-        invalidMessage = '“To” must be later than “From”'
-        timeRangeIsNegative = true
-      } else if (
-        datePickerState.configTo.selectedDate.getTime() -
-          datePickerState.configFrom.selectedDate.getTime() >
-        timeFrameLimit
-      ) {
-        invalidMessage = getTimeFrameWarningMsg(timeFrameLimit)
-      }
-    } else if (datePickerState.configFrom.selectedDate) {
-      if (Date.now() - datePickerState.configFrom.selectedDate.getTime() > timeFrameLimit) {
-        invalidMessage = getTimeFrameWarningMsg(timeFrameLimit)
-      }
-    }
+    ])
 
     setIsTimeRangeNegative(timeRangeIsNegative)
     setInvalidMessage(invalidMessage)
   }, [
     datePickerState.configFrom.selectedDate,
     datePickerState.configTo.selectedDate,
-    isRange,
-    timeFrameLimit
+    validateTimeRange
   ])
 
   useEffect(() => {
@@ -248,15 +255,15 @@ const DatePicker = ({
   }, [handleCloseDatePickerOutside, isDatePickerOpened, isDatePickerOptionsOpened])
 
   useEffect(() => {
-    if (isInvalid !== invalid) {
+    if (isInputInvalid !== invalid) {
       if (required && getInputValueValidity(valueDatePickerInput)) {
-        setIsInvalid(true)
-        setInvalid && setInvalid(false)
-      } else {
-        setIsInvalid(invalid)
+        setInputIsInvalid(true)
+        setInvalid(false)
+      } else if (invalid !== undefined) {
+        setInputIsInvalid(invalid)
       }
     }
-  }, [getInputValueValidity, invalid, isInvalid, required, setInvalid, valueDatePickerInput])
+  }, [getInputValueValidity, invalid, isInputInvalid, required, setInvalid, valueDatePickerInput])
 
   const isRangeDateValid = day => {
     const dateFromMs = new Date(datePickerState.configFrom.selectedDate).setHours(0, 0, 0, 0)
@@ -315,8 +322,8 @@ const DatePicker = ({
       )
     )
     setIsDatePickerOpened(false)
-    setIsInvalid(false)
-    setInvalid && setInvalid(true)
+    setInputIsInvalid(false)
+    setInvalid(true)
 
     let dates = [new Date(datePickerState.configFrom.selectedDate)]
 
@@ -327,21 +334,6 @@ const DatePicker = ({
     onChange(dates)
   }
 
-  const isOutOfTimeFrame = ([dateFrom, dateTo]) => {
-    if (isRange && dateTo && dateFrom) {
-      if (dateFrom.getTime() > dateTo.getTime()) {
-        return true
-      } else if (dateTo.getTime() - dateFrom.getTime() > timeFrameLimit) {
-        return true
-      }
-    } else if (!isRange && dateFrom) {
-      if (Date.now() - dateFrom.getTime() > timeFrameLimit) {
-        return true
-      }
-    }
-    return false
-  }
-
   const onInputDatePickerChange = event => {
     setValueDatePickerInput(event.target.value)
     isDatePickerOptionsOpened && setIsDatePickerOptionsOpened(false)
@@ -350,29 +342,32 @@ const DatePicker = ({
     if (new RegExp(dateRegEx).test(event.target.value) || isValueEmpty) {
       let dates = timeFrameLimit === Infinity ? DATE_FILTER_ANY_TIME : null
 
-      const anyTimeDate = datePickerOptions.find(option => option.id === ANY_TIME_DATE_OPTION)
-      const customRange = datePickerOptions.find(option => option.id === CUSTOM_RANGE_DATE_OPTION)
+      const anyTimeOption = datePickerOptions.find(option => option.id === ANY_TIME_DATE_OPTION)
+      const customRangeOption = datePickerOptions.find(
+        option => option.id === CUSTOM_RANGE_DATE_OPTION
+      )
 
       if (isValueEmpty) {
-        setSelectedOption(anyTimeDate || customRange)
+        setSelectedOption(anyTimeOption || customRangeOption)
       } else {
-        setSelectedOption(customRange)
+        setSelectedOption(customRangeOption)
       }
 
       if (!isValueEmpty) {
         dates = event.target.value.split(datesDivider).map(date => new Date(date))
 
-        setIsInvalid(false)
-        setInvalid && setInvalid(true)
-
-        if (isOutOfTimeFrame(dates)) {
+        if (validateTimeRange(dates).isTimeRangeInvalid) {
           dates = null
+          setInputIsInvalid(true)
+          setInvalid(false)
+        } else {
+          setInputIsInvalid(false)
+          setInvalid(true)
         }
       } else if (required) {
-        setIsInvalid(true)
-        setInvalid && setInvalid(false)
+        setInputIsInvalid(true)
+        setInvalid(false)
       }
-
 
       if (dates) onChange(dates)
     }
@@ -387,7 +382,7 @@ const DatePicker = ({
       if (!isValueEmpty) {
         dates = event.target.value.split(datesDivider).map(date => new Date(date))
 
-        if (isOutOfTimeFrame(dates)) {
+        if (validateTimeRange(dates).isTimeRangeInvalid) {
           setSelectedDate('configFrom', dates[0])
           datePickerDispatch({
             type: datePickerActions.UPDATE_VISIBLE_DATE_FROM,
@@ -401,16 +396,9 @@ const DatePicker = ({
               payload: dates[1]
             })
           }
-          setTimeout(
-            () =>
-              !isDatePickerOptionsOpened &&
-              onSelectOption(
-                datePickerOptions.find(option => option.id === CUSTOM_RANGE_DATE_OPTION)
-              ),
-            100
-          )
-          setIsInvalid(true)
-          setInvalid && setInvalid(false)
+
+          setInputIsInvalid(true)
+          setInvalid(false)
 
           dates = null
         }
@@ -465,6 +453,9 @@ const DatePicker = ({
   const onSelectOption = option => {
     if (option.handler) {
       onChange(option.handler(), option.isPredefined, option.id)
+      if (invalid === undefined) {
+        setInputIsInvalid(false)
+      }
     } else {
       setIsDatePickerOpened(true)
     }
@@ -509,7 +500,7 @@ const DatePicker = ({
       invalidText={invalidText}
       isDatePickerOpened={isDatePickerOpened}
       isDatePickerOptionsOpened={isDatePickerOptionsOpened}
-      isInvalid={isInvalid}
+      isInputInvalid={isInputInvalid}
       isRange={isRange}
       isRangeDateValid={isRangeDateValid}
       isSameDate={isSameDate}
@@ -543,7 +534,7 @@ DatePicker.defaultProps = {
   dateTo: new Date(),
   disabled: false,
   hasFutureOptions: false,
-  invalid: false,
+  invalid: undefined,
   invalidText: 'This field is invalid',
   label: 'Date',
   onBlur: () => {},
@@ -574,7 +565,13 @@ DatePicker.propTypes = {
   selectedOptionId: PropTypes.string,
   setInvalid: PropTypes.func,
   splitCharacter: PropTypes.oneOf(['/', '.']),
-  timeFrameLimit: PropTypes.number,
+  timeFrameLimit: PropTypes.oneOf([
+    TIME_FRAME_LIMITS.HOUR,
+    TIME_FRAME_LIMITS['24_HOURS'],
+    TIME_FRAME_LIMITS.WEEK,
+    TIME_FRAME_LIMITS.MONTH,
+    TIME_FRAME_LIMITS.YEAR
+  ]),
   tip: PropTypes.oneOfType([PropTypes.string, PropTypes.element]),
   type: PropTypes.oneOf(['date', 'date-time', 'date-range', 'date-range-time']),
   withLabels: PropTypes.bool
