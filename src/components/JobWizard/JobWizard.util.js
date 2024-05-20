@@ -1037,7 +1037,9 @@ export const generateJobRequestData = (
       metadata: {
         project: params.projectName,
         name: formData[RUN_DETAILS_STEP].runName,
-        labels: convertChipsData(formData[RUN_DETAILS_STEP].labels)
+        labels: convertChipsData(
+          formData[RUN_DETAILS_STEP].labels.filter(label => label.key !== 'workflow')
+        )
       },
       spec: {
         inputs: generateDataInputs(formData[DATA_INPUTS_STEP].dataInputsTable),
