@@ -17,22 +17,14 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import React, { useEffect, useMemo, useState } from 'react'
+import React, { useMemo } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
-import moment from 'moment'
 
 import StatsCard from '../../common/StatsCard/StatsCard'
 import Loader from '../../common/Loader/Loader'
 
-import projectsAction from '../../actions/projects'
-import jobsActions from '../../actions/jobs'
-
-import {
-  generateMonitoringStats,
-  generateScheduledMonitoringGroupedData
-} from '../../utils/generateMonitoringData'
-import { useFetchData } from '../../hooks/useFetchData.hook'
+import { generateMonitoringStats } from '../../utils/generateMonitoringData'
 import { JOBS_MONITORING_SCHEDULED_TAB } from '../../constants'
 
 import { ReactComponent as ClockIcon } from 'igz-controls/images/clock.svg'
@@ -42,50 +34,18 @@ import './projectsMonitoringCounters.scss'
 const ScheduledJobsCounters = () => {
   const dispatch = useDispatch()
   const navigate = useNavigate()
-  const [filter] = useState({
-    dates: {
-      value: [new Date(), new Date(moment().add(1, 'days'))]
-    }
-  })
+  const projectStore = useSelector(store => store.projectStore)
 
-  const [groupedScheduledData, setGroupedScheduledData] = useState({
-    all: [],
-    jobs: [],
-    workflows: []
-  })
-
-  const { loading } = useFetchData({
-    filter: filter,
-    action: jobsActions.fetchScheduledJobs
-  })
-
-  const { scheduled: scheduledJobs } = useSelector(store => store.jobsStore)
   const scheduledStats = useMemo(
     () =>
       generateMonitoringStats(
-        groupedScheduledData,
+        projectStore.jobsMonitoringData.scheduled,
         navigate,
         dispatch,
         JOBS_MONITORING_SCHEDULED_TAB
       ),
-    [groupedScheduledData, navigate, dispatch]
+    [dispatch, navigate, projectStore.jobsMonitoringData.scheduled]
   )
-
-  // const handleDateSelection = dates => {
-  //   const generatedDates = [...dates]
-
-  //   if (generatedDates.length === 1) {
-  //     generatedDates.unshift(new Date())
-  //   }
-
-  //   setFilter(filters => ({ ...filters, dates: { value: generatedDates } }))
-  // }
-
-  useEffect(() => {
-    generateScheduledMonitoringGroupedData(scheduledJobs, filter, setGroupedScheduledData, data =>
-      projectsAction.setJobsMonitoringData({ scheduled: data })
-    )
-  }, [dispatch, filter, scheduledJobs])
 
   return (
     <StatsCard className="monitoring-stats">
@@ -111,13 +71,21 @@ const ScheduledJobsCounters = () => {
         <StatsCard.Col>
           <h6 className="stats__subtitle">Jobs</h6>
           <span className="stats__counter">
-            {loading ? <Loader section small secondary /> : scheduledStats.jobs.counter}
+            {projectStore.projectsSummary.loading ? (
+              <Loader section small secondary />
+            ) : (
+              scheduledStats.jobs.counter
+            )}
           </span>
         </StatsCard.Col>
         <StatsCard.Col>
           <h6 className="stats__subtitle">Workflows</h6>
           <span className="stats__counter">
-            {loading ? <Loader section small secondary /> : scheduledStats.workflows.counter}
+            {projectStore.projectsSummary.loading ? (
+              <Loader section small secondary />
+            ) : (
+              scheduledStats.workflows.counter
+            )}
           </span>
         </StatsCard.Col>
       </StatsCard.Row>

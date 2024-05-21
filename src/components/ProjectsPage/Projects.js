@@ -26,6 +26,7 @@ import yaml from 'js-yaml'
 import ProjectsView from './ProjectsView'
 
 import {
+  generateMonitoringCounters,
   generateProjectActionsMenu,
   handleDeleteProjectError,
   pollDeletingProjects,
@@ -109,7 +110,11 @@ const Projects = () => {
     fetchMinimalProjects()
     dispatch(
       projectsAction.fetchProjectsSummary(abortControllerRef.current.signal, refreshProjects)
-    )
+    ).then(result => {
+      if (result) {
+        generateMonitoringCounters(result, dispatch)
+      }
+    })
 
     dispatch(fetchBackgroundTasks({}))
       .unwrap()
