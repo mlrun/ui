@@ -53,7 +53,6 @@ import {
 } from '../constants'
 import { generatePods } from '../utils/generatePods'
 import { generateMetricsItems, getMetricColorByFullName } from '../components/DetailsMetrics/detailsMetrics.utils'
-import { getMetrics, getMetricsValues } from '../components/DetailsMetrics/metricsMock' // todo: metrics - remove after tests and when real API ready with all types
 
 const detailsActions = {
   fetchModelEndpointWithAnalysis: (project, uid) => dispatch => {
@@ -135,11 +134,10 @@ const detailsActions = {
   fetchModelEndpointMetrics: (project, uid) => dispatch => {
     dispatch(detailsActions.fetchEndpointMetricsBegin())
 
-    // todo: metrics - remove 'results' type and getMetrics() from mock after test and when real API ready with all types
     return detailsApi
-      .getModelEndpointMetrics(project, uid, 'results')
+      .getModelEndpointMetrics(project, uid)
       .then(({ data = [] }) => {
-        const metrics = generateMetricsItems([...data, ...getMetrics()])
+        const metrics = generateMetricsItems(data)
 
         dispatch(detailsActions.fetchEndpointMetricsSuccess({ endpointUid: uid, metrics }))
 
@@ -160,15 +158,13 @@ const detailsActions = {
     type: FETCH_ENDPOINT_METRICS_SUCCESS,
     payload
   }),
-  // todo: metrics - remove mockNamesToFilter after test and when real API ready with all types
-  fetchModelEndpointMetricsValues: (project, uid, params, mockNamesToFilter) => dispatch => {
+  fetchModelEndpointMetricsValues: (project, uid, params) => dispatch => {
     dispatch(detailsActions.fetchEndpointMetricsValuesBegin())
 
     return detailsApi
       .getModelEndpointMetricsValues(project, uid, params)
       .then(({ data = [] }) => {
-        // todo: metrics - remove getMetricsValues() with filter after test and when real API ready with all types
-        const metrics = [...data, ...getMetricsValues().filter(metric => mockNamesToFilter.includes(metric.full_name))].map(metric => {
+        const metrics = data.map(metric => {
           return {
             ...metric,
             color: getMetricColorByFullName(metric.full_name)
