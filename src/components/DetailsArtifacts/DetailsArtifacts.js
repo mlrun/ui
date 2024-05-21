@@ -32,8 +32,7 @@ import jobsActions from '../../actions/jobs'
 import { generateArtifactIndexes } from '../Details/details.util'
 import {
   generateArtifactsPreviewContent,
-  generateArtifactsTabContent,
-  getJobAccordingIteration
+  generateArtifactsTabContent
 } from './detailsArtifacts.util'
 import { useSortTable } from '../../hooks/useSortTable.hook'
 import { ALLOW_SORT_BY, DEFAULT_SORT_BY, EXCLUDE_SORT_BY } from 'igz-controls/types'
@@ -133,7 +132,7 @@ const DetailsArtifacts = ({
   }, [bestIteration, setIteration, selectedItem.iterationStats, iterationOptions])
 
   const getJobArtifacts = useCallback(
-    job => {
+    (job, iteration) => {
       const workflowLabel = job.labels.find(label => label.includes('workflow:'))
       const { chipValue: workflowId } = getChipLabelAndValue({ value: workflowLabel ?? '' })
       const config = {
@@ -143,6 +142,10 @@ const DetailsArtifacts = ({
       if (workflowId) {
         config.params.tree = workflowId.trim()
         config.params.producer_uri = `${params.projectName}/${job.uid}`
+      }
+
+      if (iteration) {
+        config.params.iter = iteration
       }
 
       dispatch(
@@ -162,13 +165,9 @@ const DetailsArtifacts = ({
 
   useEffect(() => {
     if (selectedItem.iterationStats.length > 0 && iteration) {
-      fetchJob(params.projectName, params.jobId, iteration).then(job => {
-        const selectedJob = getJobAccordingIteration(job)
-
-        getJobArtifacts(selectedJob)
-      })
+      getJobArtifacts(selectedItem, iteration)
     } else if (selectedItem.iterationStats.length === 0) {
-      getJobArtifacts(selectedItem)
+      getJobArtifacts(selectedItem, null)
     }
   }, [fetchJob, getJobArtifacts, iteration, params.jobId, params.projectName, selectedItem])
 
