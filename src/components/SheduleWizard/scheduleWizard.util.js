@@ -68,6 +68,10 @@ export const getDefaultSchedule = defaultCron => {
   let cron = defaultCron.split(' ')
   let scheduleData = { ...scheduleDataInitialState, defaultCron }
 
+  if (defaultCron) {
+    scheduleData.cron = defaultCron
+  }
+
   if (cron[4] !== '*') {
     const weekDays = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
 
