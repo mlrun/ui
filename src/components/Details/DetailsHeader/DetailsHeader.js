@@ -40,7 +40,7 @@ import { formatDatetime } from '../../../utils'
 import { LABEL_BUTTON } from 'igz-controls/constants'
 import { ACTIONS_MENU } from '../../../types'
 import { getViewMode } from '../../../utils/helper'
-import { PAST_24_HOUR_DATE_OPTION } from '../../../utils/datePicker.util'
+import { PAST_24_HOUR_DATE_OPTION, TIME_FRAME_LIMITS } from '../../../utils/datePicker.util'
 
 import { ReactComponent as Close } from 'igz-controls/images/close.svg'
 import { ReactComponent as Back } from 'igz-controls/images/back-arrow.svg'
@@ -229,6 +229,7 @@ const DetailsHeader = ({
               label=""
               onChange={handleChangeDates}
               type="date-range-time"
+              timeFrameLimit={TIME_FRAME_LIMITS.MONTH}
               withLabels
             />
           </>
