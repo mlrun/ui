@@ -1,8 +1,11 @@
 import { useEffect, useRef, useState } from 'react'
 import { Chart } from 'chart.js/auto'
+import classnames from 'classnames'
+
 import Loader from '../../common/Loader/Loader'
 
-import classnames from 'classnames'
+import { formatNumber } from '../DetailsMetrics/detailsMetrics.utils'
+import { calculateMaxTicksLimit, formattYaxisForBarChart, hexToRGB } from './metricChart.util'
 
 const GenericMetricChart = ({ chartConfig, showGrid }) => {
   const chartRef = useRef(null)
@@ -10,35 +13,54 @@ const GenericMetricChart = ({ chartConfig, showGrid }) => {
   const [isLoading, setIsLoading] = useState(true)
   const canvasClassNames = classnames(isLoading && 'hidden')
 
-  const hexToRGB = (hex, alpha = 0) => {
-    if (typeof hex !== 'string') return
-    const r = parseInt(hex.substring(1, 3), 16)
-    const g = parseInt(hex.substring(3, 5), 16)
-    const b = parseInt(hex.substring(5, 7), 16)
-    return `rgba(${r}, ${g}, ${b}, ${alpha})`
-  }
-
   useEffect(() => {
     const ctx = chartRef.current.getContext('2d')
-
     if (ctx) {
       if (chartInstance.current) {
         chartInstance.current.destroy()
       }
+      const container = chartRef.current
+      const maxTicksLimit = calculateMaxTicksLimit(container)
       chartInstance.current = new Chart(ctx, {
         type: chartConfig.type,
         data: chartConfig.data,
         options: {
           ...chartConfig.options,
+          scales: {
+            ...chartConfig.options.scales,
+            x: {
+              ...chartConfig.options.scales?.x,
+              ticks: {
+                ...chartConfig.options.scales?.x?.ticks,
+                maxTicksLimit
+              }
+            },
+            y: {
+              ...chartConfig.options.scales?.y,
+              min: chartConfig.type === 'bar' ? 0 : undefined,
+              max: chartConfig.type === 'bar' ? 1 : undefined,
+              ticks: {
+                ...chartConfig.options.scales?.y?.ticks,
+                maxTicksLimit,
+                callback: value => {
+                  if (chartConfig.type === 'line') {
+                    return formatNumber(value)
+                  } else if (chartConfig.type === 'bar') {
+                    return formattYaxisForBarChart(value)
+                  } else {
+                    return value
+                  }
+                }
+              }
+            }
+          },
           animation: {
             onComplete: () => setIsLoading(false)
-          },
-          className: 'hidden'
+          }
         }
       })
 
       if (chartConfig.gradient) {
-        // const canvasHeight = chartRef.current.clientHeight
         const canvasHeight = showGrid ? 200 : 80
         if (chartInstance.current.options.scales.x.grid.display !== showGrid) {
           chartInstance.current.options.scales.x.grid.display = showGrid
@@ -69,6 +91,22 @@ const GenericMetricChart = ({ chartConfig, showGrid }) => {
     }
   }, [showGrid, chartConfig.data, chartConfig.type, chartConfig.gradient, chartConfig.options])
 
+  useEffect(() => {
+    const handleResize = () => {
+      if (chartInstance.current) {
+        const container = chartRef.current
+        const maxTicksLimit = calculateMaxTicksLimit(container)
+        chartInstance.current.options.scales.x.ticks.maxTicksLimit = maxTicksLimit
+        chartInstance.current.options.scales.y.ticks.maxTicksLimit = maxTicksLimit
+        chartInstance.current.update()
+      }
+    }
+    window.addEventListener('resize', handleResize)
+    return () => {
+      window.removeEventListener('resize', handleResize)
+    }
+  }, [])
+
   return (
     <>
       {isLoading && <Loader section secondary />}
@@ -76,4 +114,5 @@ const GenericMetricChart = ({ chartConfig, showGrid }) => {
     </>
   )
 }
+
 export default GenericMetricChart

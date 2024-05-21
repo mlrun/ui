@@ -89,3 +89,70 @@ export const generateMetricsItems = metrics => {
     })
     .value()
 }
+
+export const getTitle = fullName =>
+  fullName.substring(fullName.lastIndexOf('.') + 1).replace(/-/g, ' ')
+
+function formatTime(dates) {
+  const options = {
+    hour: 'numeric',
+    minute: '2-digit',
+    hour12: true
+  }
+  return dates.map(date => new Date(date).toLocaleTimeString('en-US', options))
+}
+
+function formatDate(dates) {
+  const options = {
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit'
+  }
+  return dates.map(date => new Date(date).toLocaleDateString('en-US', options).replace(/\//g, '.'))
+}
+
+// TODO: add support for Any time selction
+function isRangeOverOneDay(values, dateRange) {
+  const dates = values.map(([date]) => date)
+  const startDate = new Date(dateRange.start)
+  const endDate = new Date(dateRange.end)
+  const differenceInDays = Math.abs((endDate - startDate) / (1000 * 60 * 60 * 24))
+  return differenceInDays > 1 ? formatDate(dates) : formatTime(dates)
+}
+
+export const formatNumber = num => {
+  if (num >= 1e6) {
+    return (num / 1e6).toFixed(0) + 'M'
+  } else if (num >= 1e3) {
+    return (num / 1e3).toFixed(0) + 'k'
+  } else {
+    return num.toString()
+  }
+}
+
+export const modifyMetric = (metric, params) => {
+  const { full_name, values } = metric
+
+  if (!metric.data || !metric.values || !Array.isArray(metric.values)) {
+    return {
+      metric,
+      title: getTitle(full_name)
+    }
+  }
+  const points = values.map(([_date, value]) => value)
+  const isInvocationsRate = full_name.includes('invocations')
+  const totalOrAvg = isInvocationsRate
+    ? formatNumber(points.reduce((sum, value) => sum + value, 0))
+    : formatNumber((points.reduce((sum, value) => sum + value, 0) / points.length).toFixed(2))
+
+  const modifiedMetric = {
+    ...metric,
+    title: getTitle(full_name),
+    color: getMetricColorByFullName(full_name),
+    labels: isRangeOverOneDay(values, params),
+    points,
+    [isInvocationsRate ? 'total' : 'avg']: totalOrAvg
+  }
+
+  return modifiedMetric
+}

@@ -16,43 +16,6 @@ such restriction.
 */
 
 // todo: metrics - remove when use real APi
-export const getMetrics = () => [
-  {
-    app: 'mlrun-infra',
-    name: 'invocations-rate_mock',
-    type: 'metric',
-    project: 'infer-model-tsdb-t3',
-    full_name: 'infer-model-tsdb-t3.mlrun-infra.metric.invocations-rate_mock'
-  },
-  {
-    app: 'histogram-data-drift',
-    name: 'hellinger_mean_mock',
-    type: 'metric',
-    project: 'infer-model-tsdb-t3',
-    full_name: 'infer-model-tsdb-t3.histogram-data-drift.metric.hellinger_mean_mock'
-  },
-  {
-    app: 'histogram-data-drift',
-    name: 'kld_mean_mock',
-    type: 'metric',
-    project: 'infer-model-tsdb-t3',
-    full_name: 'infer-model-tsdb-t3.histogram-data-drift.metric.kld_mean_mock'
-  },
-  {
-    app: 'histogram-data-drift',
-    name: 'tvd_mean_mock',
-    type: 'metric',
-    project: 'infer-model-tsdb-t3',
-    full_name: 'infer-model-tsdb-t3.histogram-data-drift.metric.tvd_mean_mock'
-  },
-  {
-    app: 'histogram-data-drift',
-    name: 'general_drift_mock',
-    type: 'result',
-    project: 'infer-model-tsdb-t3',
-    full_name: 'infer-model-tsdb-t3.histogram-data-drift.result.general_drift_mock'
-  }
-]
 
 export const getMetricsValues = () => [
   {
@@ -344,5 +307,5 @@ export const getMetricsValues = () => [
       ['2021-09-01T04:55:00+00:00', 1600000],
       ['2021-09-01T05:00:00+00:00', 1650000]
     ]
-  },
+  }
 ]

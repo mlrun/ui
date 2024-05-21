@@ -5,6 +5,7 @@
   display: flex;
   flex-wrap: wrap;
   gap: 16px;
+  height: fit-content;
 
   &__card-tmp {
     z-index: 1;
@@ -18,6 +19,7 @@
     width: 100%;
     transition: 0.1s;
     animation: ease-in-out;
+    max-height: 110px;
   }
 
   &__card {
@@ -79,11 +81,20 @@
 
       .chart-item {
         flex: 1;
+        canvas {
+          width: 100% !important;
+          height: 100% !important;
+        }
       }
 
       &-bar {
-        @extend .chart-item;
-        max-width: 25%;
+        //@extend .chart-item;
+        flex: 0 1 25%;
+        //max-width: 25%;
+        canvas {
+          width: 100% !important;
+          height: 100% !important;
+        }
         canvas.hidden {
           position: absolute;
           opacity: 0;
@@ -93,8 +104,14 @@
       }
 
       &-line {
-        @extend .chart-item;
-        max-width: 75%;
+        //@extend .chart-item;
+        //max-width: 75%;
+        flex: 0 1 70%;
+        canvas {
+          width: 100% !important;
+          height: 100% !important;
+        }
+
         canvas.hidden {
           position: absolute;
           opacity: 0;
@@ -104,9 +121,13 @@
       }
 
       &-invocation {
-        @extend .chart-item;
-        flex: 1;
-        max-width: 100%;
+        width: auto;
+        border: 1px solid transparent;
+        flex: 1 1 auto;
+        canvas {
+          width: 100% !important;
+          height: 100% !important;
+        }
         canvas.hidden {
           position: absolute;
           opacity: 0;
@@ -116,10 +137,27 @@
       }
     }
   }
+
+  &__empty-card{
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap:25px
+  }
+
+  &__empty-select{
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap:25px
+  }
 }
 
 .max-width-60 {
-  max-width: 70%;
+  max-width: inherit;
 }
 
 

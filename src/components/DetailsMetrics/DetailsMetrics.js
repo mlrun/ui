@@ -17,10 +17,10 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import React, { useEffect, useMemo, useRef, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { isEmpty } from 'lodash'
-import classnames from 'classnames'
+// import classnames from 'classnames'
 
 import GenericMetricChart from '../Cartjs/MetricChart'
 import StatsCard from '../../common/StatsCard/StatsCard'
@@ -28,6 +28,7 @@ import StatsCard from '../../common/StatsCard/StatsCard'
 import detailsActions from '../../actions/details'
 
 import noData from './noData.svg' // TODO add to igz-controls
+import Data from './Data.svg'
 
 import './DetailsMetrics.scss'
 
@@ -36,145 +37,43 @@ import {
   getBarChartMetricConfig,
   getGradientLineChart
 } from '../../utils/getMetricChartConfig'
-import { dummyData } from './tmpData.js'
 
 const DetailsMetrics = ({ selectedItem }) => {
   const [metrics, setMetrics] = useState([])
   const detailsStore = useSelector(store => store.detailsStore)
   const dispatch = useDispatch()
-
   const cardRef = useRef(null)
-  const prevScrollPos = useRef(0)
+  // const prevScrollPos = useRef(0)
   const lineConfig = useMemo(() => getLineChartMetricConfig(), [])
   const barConfig = useMemo(() => getBarChartMetricConfig(), [])
   const invocationsConfig = useMemo(() => getGradientLineChart(), [])
 
-  const [expand, toggleExpand] = useState(true)
+  const [expand] = useState(false)
 
-  // TODO: check the card style
-  const itemClass = classnames('metrics__card-body-invocation', {
-    'max-width-60': !expand
-  })
-
-  // TODO: move to DetailsMetrics.util file
-  const modifiedData = useMemo(() => {
-    function convertTimestampToTime(timestamp) {
-      const date = new Date(timestamp)
-      let hours = date.getUTCHours()
-      const minutes = date.getUTCMinutes().toString().padStart(2, '0')
-      let ampm = hours >= 12 ? 'PM' : 'AM'
-      hours = hours % 12
-      hours = hours ? hours : 12
-      hours = hours.toString().padStart(2, '0')
-      return `${hours}:${minutes} ${ampm}`
-    }
-
-    function modifyArray(arr) {
-      return arr.map(obj => {
-        if (obj.values && Array.isArray(obj.values)) {
-          const labels = obj.values.map(entry => convertTimestampToTime(entry[0]))
-          const dataModify = obj.values.map(entry => entry[1])
-
-          if (obj.full_name.includes('invocations-rate')) {
-            obj.total = dataModify.reduce((sum, value) => sum + value, 0)
-          } else {
-            const sum = dataModify.reduce((sum, value) => sum + value, 0)
-            obj.avg = (sum / dataModify.length).toFixed(2)
-          }
-
-          const newObj = {
-            ...obj,
-            labels,
-            dataModify
-          }
-
-          return newObj
-        } else {
-          return obj
-        }
-      })
-    }
-
-    const result = []
-    const [invocationsRate] = modifyArray(dummyData).filter(obj =>
-      obj.full_name.includes('invocations-rate')
-    )
-    const grouped = modifyArray(dummyData).filter(
-      obj => !obj.full_name.includes('invocations-rate') && obj.data
-    )
-
-    invocationsRate.total = invocationsRate.dataModify.reduce((sum, value) => sum + value, 0)
-
-    const noData = dummyData.filter(obj => !obj.data)
-    result.push(invocationsRate)
-
-    if (noData) {
-      result.push(noData)
-    }
-
-    if (grouped.length > 0) {
-      result.push(grouped)
-    }
-
-    return result
-  }, [])
-
-  // TODO: refactor the code
-  // TODO: scroll bug
-  const handleResizeCard = useCallback(e => {
-    if (!e.target.classList.contains('item-info')) return
-    const card = cardRef.current
-    if (e.target.scrollTop > prevScrollPos.current) {
-      if (e.target.scrollTop > 5 && card.clientHeight !== 80) {
-        card.parentNode.parentNode.style.height += 173
-        card.style.height = '80px'
-        toggleExpand(false)
-      }
-    } else {
-      if (e.target.scrollTop === 0 && card.clientHeight === 80) {
-        card.parentNode.parentNode.style.height -= 80
-        card.style.height = '200px'
-        toggleExpand(true)
-      }
-    }
-    prevScrollPos.current = e.target.scrollTop
-  }, [])
-
-  // TODO: metric render logic check with Jonathan
-  const processData = function (data) {
-    const valueCounts = {}
-    data.forEach(value => {
-      if (valueCounts[value]) {
-        valueCounts[value]++
-      } else {
-        valueCounts[value] = 1
-      }
-    })
-
-    const counts = Object.values(valueCounts)
-    const labels = Object.keys(valueCounts)
-    return {
-      labels: labels,
-      datasets: [
-        {
-          label: 'Value Counts',
-          data: counts,
-          borderWidth: 1,
-          barThickness: 'flex',
-          borderRadius: 6,
-          maxBarThickness: 32,
-          barPercentage: 1,
-          backgroundColor: '#13BBB1',
-          borderColor: '#13BBB1'
-        }
-      ]
-    }
-  }
-
-  useEffect(() => {
-    window.addEventListener('scroll', handleResizeCard, true)
-    return () => window.removeEventListener('scroll', handleResizeCard, true)
-  }, [handleResizeCard])
+  // TODO: scroll bug, refactor the code
+  // const handleResizeCard = useCallback(e => {
+  //   if (!e.target.classList.contains('item-info')) return
+  //   const card = cardRef.current
+  //   if (e.target.scrollTop > prevScrollPos.current) {
+  //     if (e.target.scrollTop > 5 && card.clientHeight !== 80) {
+  //       card.parentNode.parentNode.style.height += 173
+  //       card.style.height = '80px'
+  //       toggleExpand(false)
+  //     }
+  //   } else {
+  //     if (e.target.scrollTop === 0 && card.clientHeight === 80) {
+  //       card.parentNode.parentNode.style.height -= 80
+  //       card.style.height = '200px'
+  //       toggleExpand(true)
+  //     }
+  //   }
+  //   prevScrollPos.current = e.target.scrollTop
+  // }, [])
+  // TODO: will be add after the invocations implementation request
+  // useEffect(() => {
+  //   window.addEventListener('scroll', handleResizeCard, true)
+  //   return () => window.removeEventListener('scroll', handleResizeCard, true)
+  // }, [handleResizeCard])
 
   useEffect(() => {
     dispatch(
@@ -216,7 +115,6 @@ const DetailsMetrics = ({ selectedItem }) => {
       // todo: metrics - remove if block after test and when real API ready with all types (for now metrics type is not supported and it leads to error)
       if (isEmpty(params.name))
         params.name.push('for-mock-only.histogram-data-drift.result.hellinger_mean')
-
       // todo: metrics - remove mockNamesToFilter after test and when real API ready with all types (for now metrics type is not supported and it leads to error)
       dispatch(
         detailsActions.fetchModelEndpointMetricsValues(
@@ -237,15 +135,43 @@ const DetailsMetrics = ({ selectedItem }) => {
     }
   }, [dispatch, selectedItem, detailsStore.dates, detailsStore.metricsOptions.selectedByEndpoint])
 
-  // todo: metrics - - remove when merge charts
-  /* eslint-disable-next-line no-console */
-  console.log(metrics)
-
+  if (metrics.length === 0) {
+    return (
+      <StatsCard className="metrics__empty-select">
+        <div
+          style={{
+            width: '100%',
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            flexDirection: 'column',
+            gap: '25px'
+          }}
+        >
+          <div>
+            <img alt="no data" src={Data} />
+          </div>
+          <div>Choose metrics to view endpoint’s data</div>
+        </div>
+      </StatsCard>
+    )
+  }
   return (
     <div className="metrics">
-      {modifiedData.map((item, index) => {
-        // TODO: update the render
-        if (index === 0) {
+      {metrics.map((item, index) => {
+        if (!item.data) {
+          return (
+            <StatsCard className="metrics__card">
+              <StatsCard.Header title={item.title}></StatsCard.Header>
+              <div className="metrics__empty-card">
+                <div>
+                  <img alt="no data" src={noData} />
+                </div>
+                <div>No data to show</div>
+              </div>
+            </StatsCard>
+          )
+        } else if (item.title.includes('invocation')) {
           return (
             <StatsCard className="metrics__card-tmp">
               {expand && (
@@ -265,24 +191,26 @@ const DetailsMetrics = ({ selectedItem }) => {
                   </div>
                 </StatsCard.Header>
               )}
-              <div ref={cardRef} className="metrics__card-body">
+              <div style={{ height: '80px' }} ref={cardRef} className="metrics__card-body">
                 {!expand && (
                   <div
                     style={{
+                      flex: '0 1 27%',
                       display: 'flex',
                       justifyContent: 'center',
                       alignItems: 'center',
-                      gap: '15px',
-                      maxWidth: '30%'
+                      width: '27%',
+                      gap: '15px'
                     }}
                   >
                     <div className="title">Endpoint call count</div>
                     <div className="kpi-value">
-                      <span style={{ fontSize: '14px' }}>Total</span>120
+                      <span style={{ fontSize: '14px', marginRight: '5px' }}>Total</span>
+                      {item.total}
                     </div>
                   </div>
                 )}
-                <div className={itemClass}>
+                <div className="metrics__card-body-invocation">
                   <GenericMetricChart
                     showGrid={expand}
                     chartConfig={{
@@ -292,10 +220,11 @@ const DetailsMetrics = ({ selectedItem }) => {
                         labels: item.labels,
                         datasets: [
                           {
-                            data: item.dataModify,
+                            data: item.points,
                             fill: true,
-                            backgroundColor: '#5871F4',
-                            borderColor: '#5871F4',
+                            backgroundColor: item.color,
+                            borderColor: item.color,
+                            borderWidth: 1,
                             tension: 0.4
                           }
                         ]
@@ -307,86 +236,62 @@ const DetailsMetrics = ({ selectedItem }) => {
             </StatsCard>
           )
         } else {
-          return item.map((subItem, subIndex) => {
-            if (!subItem.data) {
-              return (
-                <StatsCard className="metrics__card">
-                  {/*TODO: implement the metric name in modifiedData */}
-                  <StatsCard.Header
-                    title={subItem.full_name
-                      .substring(subItem.full_name.lastIndexOf('.') + 1)
-                      .replace(/-/g, ' ')
-                      .replace(/^\w|-\w/g, c => c.toUpperCase())}
-                  ></StatsCard.Header>
-                  <div
-                    style={{
-                      width: '100%',
-                      display: 'flex',
-                      justifyContent: 'center',
-                      alignItems: 'center',
-                      gap: '25px'
-                    }}
-                  >
-                    <div>
-                      <img alt="no data" src={noData} />
-                    </div>
-                    <div>No data to show</div>
+          return (
+            <StatsCard className="metrics__card">
+              <StatsCard.Header title={item.title}>
+                <div className="metrics__card-header">
+                  <div className="metrics__card-header-data">
+                    <span className="metrics__card-header-label">Avg. </span>
+                    {item.avg}
                   </div>
-                </StatsCard>
-              )
-            } else {
-              return (
-                <StatsCard className="metrics__card" key={subIndex}>
-                  <StatsCard.Header
-                    title={subItem.full_name
-                      .substring(subItem.full_name.lastIndexOf('.') + 1)
-                      .replace(/-/g, ' ')
-                      .replace(/^\w|-\w/g, c => c.toUpperCase())}
-                  >
-                    <div className="metrics__card-header">
-                      <div className="metrics__card-header-data">
-                        <span className="metrics__card-header-label">Avg. </span>
-                        {subItem.avg}
-                      </div>
-                    </div>
-                  </StatsCard.Header>
-                  <div className="metrics__card-body">
-                    <div className="metrics__card-body-bar">
-                      <GenericMetricChart
-                        chartConfig={{
-                          ...barConfig,
-                          data: processData(subItem.dataModify)
-                        }}
-                      />
-                    </div>
-                    <div className="metrics__card-body-line">
-                      <GenericMetricChart
-                        chartConfig={{
-                          ...lineConfig,
-                          data: {
-                            labels: subItem.labels,
-                            datasets: [
-                              {
-                                data: subItem.dataModify,
-                                tension: 0.2,
-                                borderWidth: 2,
-                                backgroundColor: '#13BBB1',
-                                borderColor: '#13BBB1'
-                              }
-                            ]
+                </div>
+              </StatsCard.Header>
+              <div className="metrics__card-body">
+                <div className="metrics__card-body-bar">
+                  <GenericMetricChart
+                    chartConfig={{
+                      ...barConfig,
+                      data: {
+                        labels: item.points,
+                        datasets: [
+                          {
+                            data: item.points,
+                            tension: 0.2,
+                            borderWidth: 2,
+                            backgroundColor: item.color,
+                            borderColor: item.color
                           }
-                        }}
-                      />
-                    </div>
-                  </div>
-                </StatsCard>
-              )
-            }
-          })
+                        ]
+                      }
+                    }}
+                  />
+                </div>
+                <div className="metrics__card-body-line">
+                  <GenericMetricChart
+                    chartConfig={{
+                      ...lineConfig,
+                      data: {
+                        labels: item.labels,
+                        datasets: [
+                          {
+                            data: item.points,
+                            tension: 0.2,
+                            borderWidth: 2,
+                            backgroundColor: item.color,
+                            borderColor: item.color
+                          }
+                        ]
+                      }
+                    }}
+                  />
+                </div>
+              </div>
+            </StatsCard>
+          )
         }
       })}
     </div>
   )
 }
 
-export default DetailsMetrics
+export default React.memo(DetailsMetrics)

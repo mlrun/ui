@@ -25,6 +25,7 @@ export const getLineChartMetricConfig = () => {
         padding: 0
       },
       maintainAspectRatio: false,
+      animation: false,
       responsive: true,
       plugins: {
         legend: {
@@ -91,8 +92,9 @@ export const getBarChartMetricConfig = () => {
       layout: {
         padding: 0
       },
-      barThickness: 10,
+      barThickness: 5,
       maintainAspectRatio: false,
+      animation: false,
       responsive: true,
       plugins: {
         legend: {
@@ -120,7 +122,7 @@ export const getBarChartMetricConfig = () => {
           },
           ticks: {
             color: '#4B4760',
-            align: 'end',
+            align: 'start',
             maxTicksLimit: 4
           },
           grid: {
@@ -131,16 +133,13 @@ export const getBarChartMetricConfig = () => {
           }
         },
         y: {
-          // max: 100,
           step: 10,
           title: {
             display: true,
             text: 'Percentage',
-            font: 10,
-            color: '#4B4760'
+            font: 10
           },
           ticks: {
-            color: '#4B4760',
             maxTicksLimit: 10
           },
           grid: {
@@ -162,6 +161,7 @@ export const getGradientLineChart = () => {
         padding: 0
       },
       maintainAspectRatio: false,
+      animation: false,
       responsive: true,
       plugins: {
         legend: {
