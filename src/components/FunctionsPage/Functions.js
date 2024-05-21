@@ -40,7 +40,12 @@ import createFunctionsContent from '../../utils/createFunctionsContent'
 import functionsActions from '../../actions/functions'
 import jobsActions from '../../actions/jobs'
 import { DANGER_BUTTON, LABEL_BUTTON } from 'igz-controls/constants'
-import { generateActionsMenu, filters, generateFunctionsPageData, pollDeletingFunctions } from './functions.util'
+import {
+  generateActionsMenu,
+  filters,
+  generateFunctionsPageData,
+  pollDeletingFunctions
+} from './functions.util'
 import { getFunctionIdentifier } from '../../utils/getUniqueIdentifier'
 import { getFunctionNuclioLogs, getFunctionLogs } from '../../utils/getFunctionLogs'
 import { isDetailsTabExists } from '../../utils/isDetailsTabExists'
@@ -60,6 +65,7 @@ import cssVariables from './functions.scss'
 const Functions = ({
   deleteFunction,
   deployFunction,
+  fetchApiGateways,
   fetchFunctionNuclioLogs,
   fetchFunctionLogs,
   fetchFunctions,
@@ -104,43 +110,47 @@ const Functions = ({
       terminateDeleteTasksPolling()
       abortControllerRef.current = new AbortController()
       nameFilterRef.current = filters?.name ?? ''
-
-      return fetchFunctions(params.projectName, filters, {
+      const fetchFunctionsPromise = fetchFunctions(params.projectName, filters, {
         ui: {
           controller: abortControllerRef.current,
           setLargeRequestErrorMessage
         }
-      }).then(functions => {
-        if (functions) {
-          const newFunctions = parseFunctions(functions, params.projectName)
-          const deletingFunctions = newFunctions.reduce((acc, func) => {
-            if (func.deletion_task_id && !func.deletion_error && !acc[func.deletion_task_id]) {
-              acc[func.deletion_task_id] = {
-                name: func.name
+      })
+      const fetchApiGatewaysPromise = fetchApiGateways(params.projectName)
+
+      return Promise.allSettled([fetchFunctionsPromise, fetchApiGatewaysPromise]).then(
+        ([functions, apiGateways]) => {
+          if (functions.value) {
+            const newFunctions = parseFunctions(functions.value, params.projectName, apiGateways.value)
+            const deletingFunctions = newFunctions.reduce((acc, func) => {
+              if (func.deletion_task_id && !func.deletion_error && !acc[func.deletion_task_id]) {
+                acc[func.deletion_task_id] = {
+                  name: func.name
+                }
               }
+
+              return acc
+            }, {})
+
+            if (!isEmpty(deletingFunctions)) {
+              setDeletingFunctions(deletingFunctions)
+              pollDeletingFunctions(
+                params.projectName,
+                terminatePollRef,
+                deletingFunctions,
+                () => fetchData(filters),
+                dispatch
+              )
             }
 
-            return acc
-          }, {})
+            setFunctions(newFunctions)
 
-          if (!isEmpty(deletingFunctions)) {
-            setDeletingFunctions(deletingFunctions)
-            pollDeletingFunctions(
-              params.projectName,
-              terminatePollRef,
-              deletingFunctions,
-              () => fetchData(filters),
-              dispatch
-            )
+            return newFunctions
           }
-
-          setFunctions(newFunctions)
-
-          return newFunctions
         }
-      })
+      )
     },
-    [dispatch, fetchFunctions, params.projectName, terminateDeleteTasksPolling]
+    [dispatch, fetchApiGateways, fetchFunctions, params.projectName, terminateDeleteTasksPolling]
   )
 
   const refreshFunctions = useCallback(
@@ -254,36 +264,41 @@ const Functions = ({
 
   const removeFunction = useCallback(
     func => {
-      deleteFunction(func.name, params.projectName)
-        .then(response => {
-          if (isBackgroundTaskRunning(response)) {
-            dispatch(
-              setNotification({
-                status: 200,
-                id: Math.random(),
-                message: 'Function deletion in progress'
-              })
+      deleteFunction(func.name, params.projectName).then(response => {
+        if (isBackgroundTaskRunning(response)) {
+          dispatch(
+            setNotification({
+              status: 200,
+              id: Math.random(),
+              message: 'Function deletion in progress'
+            })
+          )
+
+          setDeletingFunctions(prevDeletingFunctions => {
+            const newDeletingFunctions = {
+              ...prevDeletingFunctions,
+              [response.data.metadata.name]: {
+                name: func.name
+              }
+            }
+
+            pollDeletingFunctions(
+              params.projectName,
+              terminatePollRef,
+              newDeletingFunctions,
+              fetchData,
+              dispatch
             )
 
-            setDeletingFunctions(prevDeletingFunctions => {
-              const newDeletingFunctions = {
-                ...prevDeletingFunctions,
-                [response.data.metadata.name]: {
-                  name: func.name
-                }
-              }
+            return newDeletingFunctions
+          })
 
-              pollDeletingFunctions(params.projectName, terminatePollRef, newDeletingFunctions, fetchData, dispatch)
-
-              return newDeletingFunctions
-            })
-
-            if (!isEmpty(selectedFunction)) {
-              setSelectedFunction({})
-              navigate(`/projects/${params.projectName}/functions`, { replace: true })
-            }
+          if (!isEmpty(selectedFunction)) {
+            setSelectedFunction({})
+            navigate(`/projects/${params.projectName}/functions`, { replace: true })
           }
-        })
+        }
+      })
 
       setConfirmData(null)
     },
@@ -439,7 +454,15 @@ const Functions = ({
         buildAndRunFunc,
         deletingFunctions
       ),
-    [buildAndRunFunc, dispatch, isDemoMode, isStagingMode, onRemoveFunction, toggleConvertedYaml, deletingFunctions]
+    [
+      buildAndRunFunc,
+      dispatch,
+      isDemoMode,
+      isStagingMode,
+      onRemoveFunction,
+      toggleConvertedYaml,
+      deletingFunctions
+    ]
   )
 
   const functionsFilters = useMemo(() => [filters[0]], [])
