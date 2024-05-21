@@ -25,23 +25,28 @@ import { createForm } from 'final-form'
 import arrayMutators from 'final-form-arrays'
 import PropTypes from 'prop-types'
 
-import { ConfirmDialog, FormRadio, FormKeyValueTable } from 'igz-controls/components'
+import { ConfirmDialog, FormRadio, FormKeyValueTable, FormCheckBox } from 'igz-controls/components'
 import { TERTIARY_BUTTON, DANGER_BUTTON } from 'igz-controls/constants'
+import FormOnChange from '../../common/FormOnChange/FormOnChange'
 
 import { handleDeleteArtifact } from '../../utils/handleDeleteArtifact'
 import { getValidationRules } from 'igz-controls/utils/validation.util'
 import { setFieldState } from 'igz-controls/utils/form.util'
 
+import { ReactComponent as AlertIcon } from 'igz-controls/images/alert-yellow.svg'
+
 import './deleteArtifactPopUp.scss'
 
 const DeleteArtifactPopUp = ({ artifact, artifactType, category, filters, handleRefresh }) => {
   const [isConfirmDialogOpen, setIsConfirmDialogOpen] = useState(true)
+  const [disableConfirmButton, setDisableConfirmButton] = useState(false)
   const dispatch = useDispatch()
   const params = useParams()
   const formRef = React.useRef(
     createForm({
       initialValues: {
         deletion_strategy: 'metadata-only',
+        extended_deletion_strategy: false,
         secrets: []
       },
       mutators: { ...arrayMutators, setFieldState },
@@ -88,6 +93,20 @@ const DeleteArtifactPopUp = ({ artifact, artifactType, category, filters, handle
     params.projectName
   ])
 
+  const toggleExtendedDeletionStrategy = value => {
+    formRef.current.change('deletion_strategy', value ? '' : 'metadata-only')
+
+    if (formRef.current.getState().values.secrets.length > 0) {
+      formRef.current.change('secrets', [])
+    }
+
+    setDisableConfirmButton(value)
+  }
+
+  const onDeletionStrategyChange = () => {
+    setDisableConfirmButton(false)
+  }
+
   return (
     <ConfirmDialog
       cancelButton={{
@@ -99,47 +118,63 @@ const DeleteArtifactPopUp = ({ artifact, artifactType, category, filters, handle
       confirmButton={{
         handler: () => handleDelete(),
         label: 'Delete',
-        variant: DANGER_BUTTON
+        variant: DANGER_BUTTON,
+        disabled: disableConfirmButton
       }}
       header={`Delete ${artifactType}?`}
       isOpen={isConfirmDialogOpen}
-      message={`Do you want to delete the ${artifactType} "${artifact.db_key}"? Deleted ${artifactType} can not be restored.`}
+      message={`Are you sure you want to delete the ${artifactType} "${artifact.db_key}" metadata? Deleted metadata can not be restored.`}
     >
       <Form form={formRef.current} onSubmit={() => {}}>
         {formState => {
+          const extended_deletion_strategy = formState.values.extended_deletion_strategy
+
           return (
             <>
-              <FormRadio
-                label="metadata-only"
-                name="deletion_strategy"
-                value="metadata-only"
-                tooltip="Delete only the artifact object. The related artifact data remains."
+              <FormCheckBox
+                label="Delete artifact data, not only the artifact metadata."
+                name="extended_deletion_strategy"
               />
-              <FormRadio
-                label="data-optional"
-                name="deletion_strategy"
-                value="data-optional"
-                tooltip="Delete the artifact object and the data. If data deletion is unsuccessful, deletes only the object."
+              <FormOnChange
+                handler={toggleExtendedDeletionStrategy}
+                name="extended_deletion_strategy"
               />
-              <FormRadio
-                label="data-force"
-                name="deletion_strategy"
-                value="data-force"
-                tooltip="Delete the artifact object and the data. If data deletion is unsuccessful,  does not delete the object either."
-              />
-              <div className="secrets-table">
-                {formState.values.deletion_strategy !== 'metadata-only' && (
-                  <FormKeyValueTable
-                    addNewItemLabel="Add secret"
-                    isKeyEditable={false}
-                    isValuePassword={true}
-                    valueType="password"
-                    keyValidationRules={getValidationRules('project.secrets.key')}
-                    fieldsPath="secrets"
-                    formState={formState}
-                  />
-                )}
-              </div>
+              {extended_deletion_strategy && (
+                <>
+                  <div className="warning">
+                    <AlertIcon className="warning__icon" />
+                    This action will permanently remove the data associated with the artifact
+                  </div>
+                  <div className="delete-artifact-pop-up__extended-data">
+                    <h4>If data deletion fails:</h4>
+                    <FormRadio
+                      label="Do not delete the artifact metadata."
+                      name="deletion_strategy"
+                      value="data-force"
+                    />
+                    <FormOnChange handler={onDeletionStrategyChange} name="deletion_strategy" />
+                    <FormRadio
+                      label="Delete the artifact metadata, even if the data deletion fails."
+                      name="deletion_strategy"
+                      value="data-optional"
+                    />
+                    <FormOnChange handler={onDeletionStrategyChange} name="deletion_strategy" />
+                    <div className="secrets-table">
+                      {formState.values.deletion_strategy !== 'metadata-only' && (
+                        <FormKeyValueTable
+                          addNewItemLabel="Add secret"
+                          isKeyEditable={false}
+                          isValuePassword={true}
+                          valueType="password"
+                          keyValidationRules={getValidationRules('project.secrets.key')}
+                          fieldsPath="secrets"
+                          formState={formState}
+                        />
+                      )}
+                    </div>
+                  </div>
+                </>
+              )}
             </>
           )
         }}
