@@ -24,7 +24,7 @@
     "final-form-arrays": "^3.1.0",
     "fs-extra": "^10.0.0",
     "identity-obj-proxy": "^3.0.0",
-    "iguazio.dashboard-react-controls": "2.0.7",
+    "iguazio.dashboard-react-controls": "2.0.8",
     "is-wsl": "^1.1.0",
     "js-base64": "^2.5.2",
     "js-yaml": "^4.1.0",
