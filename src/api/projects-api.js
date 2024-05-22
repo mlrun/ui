@@ -39,7 +39,10 @@ const projectsApi = {
   editProject: (project, data) => mainHttpClient.put(`/projects/${project}`, data),
   getJobsAndWorkflows: (project, params) =>
     mainHttpClient.get(`/projects/${project}/runs`, { params }),
-  getProject: project => mainHttpClient.get(`/projects/${project}`),
+  getProject: (project, params) =>
+    mainHttpClient.get(`/projects/${project}`, {
+      params
+    }),
   getProjectDataSets: project =>
     mainHttpClient.get(`/projects/${project}/artifacts?category=dataset`),
   getProjectFailedJobs: (project, signal) =>

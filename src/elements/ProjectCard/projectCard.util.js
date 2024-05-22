@@ -53,8 +53,8 @@ export const generateProjectStatistic = (
         fetchProjectsSummaryFailure || fetchNuclioFunctionsFailure
           ? 'N/A'
           : isEmpty(projectSummary)
-          ? '-'
-          : projectSummary.runs_running_count + runningNuclioFunctions
+            ? '-'
+            : projectSummary.runs_running_count + runningNuclioFunctions
     },
     failedJobs: {
       className:
@@ -71,8 +71,8 @@ export const generateProjectStatistic = (
         fetchProjectsSummaryFailure || fetchNuclioFunctionsFailure
           ? 'N/A'
           : isEmpty(projectSummary)
-          ? '-'
-          : projectSummary.runs_failed_recent_count + failedNuclioFunctions
+            ? '-'
+            : projectSummary.runs_failed_recent_count + failedNuclioFunctions
     }
     // models: {
     //   className: 'default',

@@ -75,7 +75,7 @@ const ActionBar = ({
   const formInitialValues = useMemo(() => {
     const values = {}
 
-    filters.map(filter => (values[filter.type] = filter.initialValue))
+    filters.forEach(filter => (values[filter.type] = filter.initialValue))
 
     return values
   }, [filters])
@@ -186,10 +186,13 @@ const ActionBar = ({
   }
 
   useEffect(() => {
+    const formState = formRef.current
+
     return () => {
+      formState?.reset?.(formInitialValues)
       dispatch(removeFilters())
     }
-  }, [params.projectName, params.name, page, tab, dispatch])
+  }, [params.projectName, params.name, page, tab, dispatch, formInitialValues])
 
   return (
     <Form form={formRef.current} onSubmit={() => {}}>
@@ -201,7 +204,7 @@ const ActionBar = ({
                 case NAME_FILTER:
                   return (
                     !filter.hidden && (
-                      <div className="action-bar__filters-item" key={filter.type}>
+                      <div key={filter.type} className="action-bar__filters-item">
                         <NameFilter
                           applyChanges={value =>
                             applyChanges(
@@ -215,7 +218,7 @@ const ActionBar = ({
                   )
                 case 'dates':
                   return (
-                    <div className="action-bar__filters-item" key={filter.type}>
+                    <div key={filter.type} className="action-bar__filters-item">
                       <Field name={'dates'}>
                         {({ input }) => {
                           return (
@@ -224,7 +227,11 @@ const ActionBar = ({
                               date={input.value.value[0]}
                               dateTo={input.value.value[1]}
                               hasFutureOptions={filter.isFuture}
-                              selectedOptionId={filter.isFuture ? NEXT_24_HOUR_DATE_OPTION : PAST_24_HOUR_DATE_OPTION}
+                              selectedOptionId={
+                                filter.isFuture
+                                  ? NEXT_24_HOUR_DATE_OPTION
+                                  : PAST_24_HOUR_DATE_OPTION
+                              }
                               label=""
                               onChange={(dates, isPredefined) =>
                                 handleDateChange(dates, isPredefined, input, formState)
@@ -241,18 +248,18 @@ const ActionBar = ({
                   return null
               }
             })}
-            {filterMenuModal && (
-              <FilterMenuModal
-                applyChanges={filterMenuModal => applyChanges(formState.values, filterMenuModal)}
-                filterMenuName={filterMenuName}
-                initialValues={filterMenuModalInitialState}
-                restartFormTrigger={tab}
-                values={filterMenuModal.values}
-              >
-                {children}
-              </FilterMenuModal>
-            )}
           </div>
+          {filterMenuModal && (
+            <FilterMenuModal
+              applyChanges={filterMenuModal => applyChanges(formState.values, filterMenuModal)}
+              filterMenuName={filterMenuName}
+              initialValues={filterMenuModalInitialState}
+              restartFormTrigger={tab}
+              values={filterMenuModal.values}
+            >
+              {children}
+            </FilterMenuModal>
+          )}
           {(withRefreshButton || !isEmpty(actionButtons)) && (
             <div className="action-bar__actions">
               {actionButtons.map(

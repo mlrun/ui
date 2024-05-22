@@ -90,28 +90,27 @@ const FunctionsView = React.forwardRef(
           <div className="content">
             <div className="table-container">
               <div className="content__action-bar-wrapper">
-                <div className="action-bar">
-                  <ActionBar
-                    expand={expand}
-                    filters={functionsFilters}
-                    filterMenuName={FUNCTION_FILTERS}
-                    handleExpandAll={handleExpandAll}
-                    handleRefresh={filtersChangeCallback}
-                    actionButtons={[
-                      {
-                        className: 'action-button',
-                        hidden: !isDemoMode,
-                        label: 'New',
-                        onClick: getPopUpTemplate,
-                        variant: SECONDARY_BUTTON
-                      }
-                    ]}
-                  >
-                    <FunctionsFilters />
-                  </ActionBar>
-                </div>
+                <ActionBar
+                  page={FUNCTIONS_PAGE}
+                  expand={expand}
+                  filters={functionsFilters}
+                  filterMenuName={FUNCTION_FILTERS}
+                  handleExpandAll={handleExpandAll}
+                  handleRefresh={filtersChangeCallback}
+                  actionButtons={[
+                    {
+                      className: 'action-button',
+                      hidden: !isDemoMode,
+                      label: 'New',
+                      onClick: getPopUpTemplate,
+                      variant: SECONDARY_BUTTON
+                    }
+                  ]}
+                >
+                  <FunctionsFilters />
+                </ActionBar>
               </div>
-              {functionsStore.loading ? (
+              {functionsStore.loading || functionsStore.apiGateways.loading ? (
                 <Loader />
               ) : taggedFunctions.length === 0 ? (
                 <NoData

@@ -17,22 +17,31 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
+import { isEmpty } from 'lodash'
 import getState from './getState'
-import { page } from '../components/FunctionsPage/functions.util'
+import { FUNCTION_FAILED_TO_DELETE_STATE, FUNCTION_TYPE_APPLICATION } from '../constants'
 import { getFunctionIdentifier } from './getUniqueIdentifier'
+import { page } from '../components/FunctionsPage/functions.util'
 import { parseKeyValues } from './object'
 
-export const parseFunction = (func, projectName, customState) => {
+export const parseFunction = (func, projectName, customState, apiGateway) => {
+  const state = (func.status?.deletion_error ? FUNCTION_FAILED_TO_DELETE_STATE : customState) || func.status?.state
+  const command = func.kind === FUNCTION_TYPE_APPLICATION && !isEmpty(apiGateway)
+    ? `${window.location.protocol}//${apiGateway.spec.host}${apiGateway.spec.path}`
+    : func.spec?.command
+
   const item = {
     access_key: func.metadata.credentials?.access_key ?? '',
     application_image: func.status?.application_image ?? '',
     args: func.spec?.args ?? [],
     base_spec: func.spec?.base_spec ?? {},
     build: func.spec?.build ?? {},
-    command: func.spec?.command,
+    command,
     container_image: func?.status?.container_image ?? '',
     default_class: func.spec?.default_class ?? '',
     default_handler: func.spec?.default_handler ?? '',
+    deletion_error: func.status?.deletion_error ?? '',
+    deletion_task_id: func.status?.deletion_task_id ?? '',
     description: func.spec?.description ?? '',
     disable_auto_mount: func.spec?.disable_auto_mount ?? true,
     env: func.spec?.env ?? [],
@@ -54,7 +63,7 @@ export const parseFunction = (func, projectName, customState) => {
     project: func.metadata?.project || projectName,
     resources: func.spec?.resources ?? {},
     secret_sources: func.spec?.secret_sources ?? [],
-    state: getState(customState || func.status?.state, page, 'function'),
+    state: getState(state, page, 'function'),
     tag: func.metadata?.tag ?? '',
     track_models: func.spec?.track_models ?? false,
     type: func.kind,

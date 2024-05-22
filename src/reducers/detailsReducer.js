@@ -27,6 +27,12 @@ import {
   FETCH_MODEL_FEATURE_VECTOR_BEGIN,
   FETCH_MODEL_FEATURE_VECTOR_FAILURE,
   FETCH_MODEL_FEATURE_VECTOR_SUCCESS,
+  FETCH_ENDPOINT_METRICS_BEGIN,
+  FETCH_ENDPOINT_METRICS_SUCCESS,
+  FETCH_ENDPOINT_METRICS_FAILURE,
+  FETCH_ENDPOINT_METRICS_VALUES_BEGIN,
+  FETCH_ENDPOINT_METRICS_VALUES_SUCCESS,
+  FETCH_ENDPOINT_METRICS_VALUES_FAILURE,
   REMOVE_MODEL_FEATURE_VECTOR,
   SET_CHANGES_COUNTER,
   SET_CHANGES,
@@ -41,6 +47,7 @@ import {
   SET_EDIT_MODE,
   FETCH_JOB_PODS_BEGIN,
   REMOVE_MODEL_ENDPOINT,
+  SET_SELECTED_METRICS_OPTIONS,
   DATE_FILTER_ANY_TIME,
   SET_DETAILS_DATES
 } from '../constants'
@@ -71,7 +78,13 @@ const initialState = {
     podsTooltip: []
   },
   filtersWasHandled: false,
-  showWarning: false
+  showWarning: false,
+  metricsOptions: {
+    all: [],
+    lastSelected: [],
+    preselected: [],
+    selectedByEndpoint: {}
+  }
 }
 
 const detailsReducer = (state = initialState, { type, payload }) => {
@@ -163,6 +176,67 @@ const detailsReducer = (state = initialState, { type, payload }) => {
           data: payload
         }
       }
+    case FETCH_ENDPOINT_METRICS_BEGIN:
+      return {
+        ...state,
+        loading: true,
+        metricsOptions: {
+          ...state.metricsOptions,
+        }
+      }
+    case FETCH_ENDPOINT_METRICS_SUCCESS: {
+      const selectedMetrics = state.metricsOptions.selectedByEndpoint[payload.endpointUid]?.length
+        ? state.metricsOptions.selectedByEndpoint[payload.endpointUid]
+        : payload.metrics.filter(metric => {
+            return state.metricsOptions.lastSelected.find(
+              selectedMetric =>
+                selectedMetric.name === metric.name &&
+                selectedMetric.app === metric.app &&
+                selectedMetric.type === metric.type
+            )
+          })
+      return {
+        ...state,
+        error: null,
+        loading: false,
+        metricsOptions: {
+          all: payload.metrics,
+          lastSelected: selectedMetrics,
+          preselected: selectedMetrics,
+          selectedByEndpoint: {
+            ...state.metricsOptions.selectedByEndpoint,
+            [payload.endpointUid]: selectedMetrics
+          }
+        }
+      }
+    }
+    case FETCH_ENDPOINT_METRICS_FAILURE:
+      return {
+        ...state,
+        error: payload,
+        loading: false,
+        metricsOptions: {
+          ...initialState.metricsOptions,
+          all: [],
+        }
+      }
+    case FETCH_ENDPOINT_METRICS_VALUES_BEGIN:
+      return {
+        ...state,
+        loading: true
+      }
+    case FETCH_ENDPOINT_METRICS_VALUES_SUCCESS:
+      return {
+        ...state,
+        error: null,
+        loading: false
+      }
+    case FETCH_ENDPOINT_METRICS_VALUES_FAILURE:
+      return {
+        ...state,
+        error: payload,
+        loading: false
+      }
     case REMOVE_INFO_CONTENT:
       return {
         ...state,
@@ -228,6 +302,18 @@ const detailsReducer = (state = initialState, { type, payload }) => {
       return {
         ...state,
         showWarning: payload
+      }
+    case SET_SELECTED_METRICS_OPTIONS:
+      return {
+        ...state,
+        metricsOptions: {
+          ...state.metricsOptions,
+          lastSelected: payload.metrics,
+          selectedByEndpoint: {
+            ...state.metricsOptions.selectedByEndpoint,
+            [payload.endpointUid]: payload.metrics
+          }
+        }
       }
     default:
       return state

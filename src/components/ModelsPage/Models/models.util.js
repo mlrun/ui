@@ -428,7 +428,7 @@ export const generateActionsMenu = (
 }
 
 export const handleDeployModelFailure = (projectName, modelName) => {
-  const codeSnippet = `project = mlrun.get_or_create_project(${projectName}, context="./")
+  const codeSnippet = `project = mlrun.get_or_create_project("${projectName}", context="./")
 
 # Specify the runtime image: mlrun/mlrun or mlrun/mlrun-gpu
 image = "mlrun/mlrun"
@@ -437,7 +437,7 @@ image = "mlrun/mlrun"
 serving_model_class_name = <Class name>
 
 # Create a serving function
-serving_fn = mlrun.new_function("serving", project=${projectName}, kind="serving", image=image)
+serving_fn = mlrun.new_function("serving", project="${projectName}", kind="serving", image=image)
 serving_fn.add_model(key="myKey", model_path=project.get_artifact_uri("${modelName}"))
 
 serving_fn.deploy()`

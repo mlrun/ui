@@ -82,6 +82,7 @@ const Details = ({
   setInfoContent,
   setIteration,
   setIterationOption,
+  setSelectedMetricsOptions,
   setFiltersWasHandled,
   showWarning,
   tab
@@ -291,6 +292,7 @@ const Details = ({
               pageData={pageData}
               selectedItem={selectedItem}
               setIteration={setIteration}
+              setSelectedMetricsOptions={setSelectedMetricsOptions}
               tab={tab}
             />
             <TabsSlider tabsList={detailsMenu} initialTab={params.tab} />

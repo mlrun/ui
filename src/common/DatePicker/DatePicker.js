@@ -370,7 +370,7 @@ const DatePicker = ({
 
   const onSelectOption = option => {
     if (option.handler) {
-      onChange(option.handler(), option.isPredefined)
+      onChange(option.handler(), option.isPredefined, option.id)
     } else {
       setIsDatePickerOpened(true)
     }

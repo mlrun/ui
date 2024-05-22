@@ -17,17 +17,65 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import React from 'react'
-// import { useSelector } from 'react-redux'
+import React, { useEffect, useState } from 'react'
+import { useSelector } from 'react-redux'
+import { useDispatch } from 'react-redux'
+import { isEmpty } from 'lodash'
 
-const DetailsMetrics = () => {
-  // const detailsStore = useSelector(store => store.detailsStore)
+import detailsActions from '../../actions/details'
 
-  return (
-    <div className="metrics">
-      Home for Metrics
-    </div>
-  )
+const DetailsMetrics = ({ selectedItem }) => {
+  const [metrics, setMetrics] = useState([])
+  const detailsStore = useSelector(store => store.detailsStore)
+  const dispatch = useDispatch()
+
+  useEffect(() => {
+    dispatch(
+      detailsActions.fetchModelEndpointMetrics(
+        selectedItem.metadata.project,
+        selectedItem.metadata.uid
+      )
+    )
+  }, [dispatch, selectedItem])
+
+  useEffect(() => {
+    if (
+      selectedItem.metadata?.uid &&
+      !isEmpty(detailsStore.metricsOptions.selectedByEndpoint[selectedItem.metadata?.uid])
+    ) {
+      const selectedMetrics =
+        detailsStore.metricsOptions.selectedByEndpoint[selectedItem.metadata?.uid]
+      const params = { name: [] }
+
+      if (detailsStore.dates.value[0]) {
+        params.start = detailsStore.dates.value[0].getTime()
+      }
+
+      if (detailsStore.dates.value[1]) {
+        params.end = detailsStore.dates.value[1].getTime()
+      }
+
+      selectedMetrics.forEach(metric => {
+        params.name.push(metric.full_name)
+      })
+
+      dispatch(
+        detailsActions.fetchModelEndpointMetricsValues(
+          selectedItem.metadata.project,
+          selectedItem.metadata.uid,
+          params
+        )
+      ).then(metricsList => {
+        setMetrics(metricsList)
+      })
+    }
+  }, [dispatch, selectedItem, detailsStore.dates, detailsStore.metricsOptions.selectedByEndpoint])
+
+  // todo: metrics - - remove when merge charts
+  /* eslint-disable-next-line no-console */
+  console.log(metrics)
+
+  return <div className="metrics">Home for Metrics</div>
 }
 
 export default DetailsMetrics

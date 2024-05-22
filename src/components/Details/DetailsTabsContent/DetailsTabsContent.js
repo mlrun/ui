@@ -113,7 +113,7 @@ const DetailsTabsContent = ({
     case DETAILS_FEATURES_ANALYSIS_TAB:
       return <DetailsFeatureAnalysis />
     case DETAILS_METRICS_TAB:
-      return <DetailsMetrics />
+      return <DetailsMetrics selectedItem={selectedItem} />
     case DETAILS_PREVIEW_TAB:
       return <DetailsPreview artifact={selectedItem} handlePreview={handlePreview} />
     case DETAILS_INPUTS_TAB:

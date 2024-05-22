@@ -17,15 +17,29 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import { mainHttpClient } from '../httpClient'
+import { chain, isEmpty } from 'lodash'
 
-const mlrunNuclioApi = {
-  getApiGateways: (projectName, config) => {
-    return mainHttpClient.get(`/projects/${projectName}/api-gateways`, config)
-  },
-  getDeployLogs: (projectName, functionName, config) => {
-    return mainHttpClient.get(`/projects/${projectName}/nuclio/${functionName}/deploy`, config)
-  }
+export const metricsTypes = {
+  metric: 'metric',
+  result: 'result'
 }
 
-export default mlrunNuclioApi
+export const filterMetrics = (metricsByApplication, nameFilter) => {
+  return metricsByApplication.reduce((metricsList, [app, metrics]) => {
+    const filteredMetrics = metrics.filter(metric => {
+      return metric.name.toLowerCase().includes(nameFilter.toLowerCase())
+    })
+
+    if (!isEmpty(filteredMetrics)) metricsList.push({ app, metrics: filteredMetrics })
+
+    return metricsList
+  }, [])
+}
+
+export const groupMetricByApplication = (metrics) => {
+  return chain(metrics)
+    .groupBy(metric => metric.app)
+    .toPairs()
+    .sortBy(([app]) => app)
+    .value()
+}

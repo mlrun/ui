@@ -164,11 +164,11 @@ const projectsAction = {
   deleteProjectSuccess: () => ({
     type: DELETE_PROJECT_SUCCESS
   }),
-  fetchProject: project => dispatch => {
+  fetchProject: (project, params) => dispatch => {
     dispatch(projectsAction.fetchProjectBegin())
 
     return projectsApi
-      .getProject(project)
+      .getProject(project, params)
       .then(response => {
         dispatch(projectsAction.fetchProjectSuccess(response?.data))
 
@@ -544,11 +544,13 @@ const projectsAction = {
           refresh()
         }
 
-        dispatch(projectsAction.fetchProjectsSummarySuccess(parseSummaryData(project_summaries)))
+        const summaryData = parseSummaryData(project_summaries)
+
+        dispatch(projectsAction.fetchProjectsSummarySuccess(summaryData))
         dispatch(projectsAction.setMlrunIsUnhealthy(false))
         dispatch(projectsAction.setMlrunUnhealthyRetrying(false))
 
-        return parseSummaryData(project_summaries)
+        return summaryData
       })
       .catch(err => {
         if (!firstServerErrorTimestamp) {

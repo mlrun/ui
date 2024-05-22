@@ -28,7 +28,11 @@ import TableTop from '../../../elements/TableTop/TableTop'
 import { ProjectJobsMonitoringContext } from '../ProjectsJobsMonitoring'
 import { createJobsMonitoringContent } from '../../../utils/createJobsContent'
 import { useMode } from '../../../hooks/mode.hook'
-import { JOBS_MONITORING_JOBS_TAB, JOBS_MONITORING_PAGE } from '../../../constants'
+import {
+  FILTER_ALL_ITEMS,
+  JOBS_MONITORING_JOBS_TAB,
+  JOBS_MONITORING_PAGE
+} from '../../../constants'
 import { datePickerPastOptions, PAST_24_HOUR_DATE_OPTION } from '../../../utils/datePicker.util'
 
 const JobsMonitoring = () => {
@@ -75,7 +79,8 @@ const JobsMonitoring = () => {
           isPredefined: past24HourOption.isPredefined,
           initialSelectedOptionId: past24HourOption.id
         },
-        state: filtersStore.state
+        state:
+          filtersStore.filterMenuModal[JOBS_MONITORING_JOBS_TAB].values.state || FILTER_ALL_ITEMS
       })
       setDataIsLoaded(true)
     }
@@ -83,7 +88,7 @@ const JobsMonitoring = () => {
     dataIsLoaded,
     dispatch,
     filtersStore.dates,
-    filtersStore.state,
+    filtersStore.filterMenuModal,
     isJobDataEmpty,
     params.jobId,
     params.jobName,

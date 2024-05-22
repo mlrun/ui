@@ -17,15 +17,29 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import { mainHttpClient } from '../httpClient'
+// The function does not take in to account a target bottom position
+export const isTargetElementInContainerElement = (targetElement, containerElement) => {
+  if (containerElement && targetElement) {
+    const {
+      top: containerElementTop,
+      left: containerElementLeft,
+      right: containerElementRight,
+      bottom: containerElementBottom
+    } = containerElement.getBoundingClientRect()
+    const {
+      top: targetElementTop,
+      left: targetElementLeft,
+      right: targetElementRight
+    } = targetElement.getBoundingClientRect()
 
-const mlrunNuclioApi = {
-  getApiGateways: (projectName, config) => {
-    return mainHttpClient.get(`/projects/${projectName}/api-gateways`, config)
-  },
-  getDeployLogs: (projectName, functionName, config) => {
-    return mainHttpClient.get(`/projects/${projectName}/nuclio/${functionName}/deploy`, config)
+    if (targetElementRight > containerElementRight || targetElementLeft < containerElementLeft)
+      return false
+
+    if (targetElementTop > containerElementBottom || targetElementTop < containerElementTop)
+      return false
+
+    return true
   }
-}
 
-export default mlrunNuclioApi
+  return false
+}

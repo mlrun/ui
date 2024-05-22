@@ -28,6 +28,12 @@ import {
   FETCH_MODEL_FEATURE_VECTOR_BEGIN,
   FETCH_MODEL_FEATURE_VECTOR_FAILURE,
   FETCH_MODEL_FEATURE_VECTOR_SUCCESS,
+  FETCH_ENDPOINT_METRICS_BEGIN,
+  FETCH_ENDPOINT_METRICS_SUCCESS,
+  FETCH_ENDPOINT_METRICS_FAILURE,
+  FETCH_ENDPOINT_METRICS_VALUES_BEGIN,
+  FETCH_ENDPOINT_METRICS_VALUES_SUCCESS,
+  FETCH_ENDPOINT_METRICS_VALUES_FAILURE,
   REMOVE_INFO_CONTENT,
   REMOVE_JOB_PODS,
   REMOVE_MODEL_ENDPOINT,
@@ -42,9 +48,11 @@ import {
   SET_INFO_CONTENT,
   SET_ITERATION,
   SET_ITERATION_OPTIONS,
+  SET_SELECTED_METRICS_OPTIONS,
   SHOW_WARNING
 } from '../constants'
 import { generatePods } from '../utils/generatePods'
+import { generateMetricsItems, getMetricColorByFullName } from '../components/DetailsMetrics/detailsMetrics.utils'
 
 const detailsActions = {
   fetchModelEndpointWithAnalysis: (project, uid) => dispatch => {
@@ -123,6 +131,64 @@ const detailsActions = {
     type: FETCH_JOB_PODS_SUCCESS,
     payload: pods
   }),
+  fetchModelEndpointMetrics: (project, uid) => dispatch => {
+    dispatch(detailsActions.fetchEndpointMetricsBegin())
+
+    return detailsApi
+      .getModelEndpointMetrics(project, uid)
+      .then(({ data = [] }) => {
+        const metrics = generateMetricsItems(data)
+
+        dispatch(detailsActions.fetchEndpointMetricsSuccess({ endpointUid: uid, metrics }))
+
+        return metrics
+      })
+      .catch(error => {
+        dispatch(detailsActions.fetchEndpointMetricsFailure(error))
+      })
+  },
+  fetchEndpointMetricsBegin: () => ({
+    type: FETCH_ENDPOINT_METRICS_BEGIN
+  }),
+  fetchEndpointMetricsFailure: error => ({
+    type: FETCH_ENDPOINT_METRICS_FAILURE,
+    payload: error
+  }),
+  fetchEndpointMetricsSuccess: payload => ({
+    type: FETCH_ENDPOINT_METRICS_SUCCESS,
+    payload
+  }),
+  fetchModelEndpointMetricsValues: (project, uid, params) => dispatch => {
+    dispatch(detailsActions.fetchEndpointMetricsValuesBegin())
+
+    return detailsApi
+      .getModelEndpointMetricsValues(project, uid, params)
+      .then(({ data = [] }) => {
+        const metrics = data.map(metric => {
+          return {
+            ...metric,
+            color: getMetricColorByFullName(metric.full_name)
+          }
+        })
+
+        dispatch(detailsActions.fetchEndpointMetricsValuesSuccess())
+
+        return metrics
+      })
+      .catch(error => {
+        dispatch(detailsActions.fetchEndpointMetricsValuesFailure(error))
+      })
+  },
+  fetchEndpointMetricsValuesBegin: () => ({
+    type: FETCH_ENDPOINT_METRICS_VALUES_BEGIN
+  }),
+  fetchEndpointMetricsValuesFailure: error => ({
+    type: FETCH_ENDPOINT_METRICS_VALUES_FAILURE,
+    payload: error
+  }),
+  fetchEndpointMetricsValuesSuccess: () => ({
+    type: FETCH_ENDPOINT_METRICS_VALUES_SUCCESS
+  }),
   removeInfoContent: () => ({
     type: REMOVE_INFO_CONTENT
   }),
@@ -177,6 +243,10 @@ const detailsActions = {
   showWarning: show => ({
     type: SHOW_WARNING,
     payload: show
+  }),
+  setSelectedMetricsOptions: payload => ({
+    type: SET_SELECTED_METRICS_OPTIONS,
+    payload
   })
 }
 
