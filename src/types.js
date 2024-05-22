@@ -30,6 +30,7 @@ import {
 } from './constants'
 
 import { BUTTON_VARIANTS } from 'igz-controls/types'
+import { TIME_FRAME_LIMITS } from './utils/datePicker.util'
 
 export const COMBOBOX_MATCHES = PropTypes.arrayOf(
   PropTypes.shape({
@@ -236,3 +237,12 @@ export const METRICS_SELECTOR_OPTIONS = PropTypes.arrayOf(
     project: PropTypes.string
   })
 )
+
+export const DATE_PICKER_TIME_FRAME_LIMITS = PropTypes.oneOf([
+  TIME_FRAME_LIMITS.HOUR,
+  TIME_FRAME_LIMITS['24_HOURS'],
+  TIME_FRAME_LIMITS.WEEK,
+  TIME_FRAME_LIMITS.MONTH,
+  TIME_FRAME_LIMITS.YEAR,
+  Infinity
+])

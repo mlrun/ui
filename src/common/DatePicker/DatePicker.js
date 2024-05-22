@@ -48,9 +48,9 @@ import {
   ANY_TIME_DATE_OPTION,
   getTimeFrameWarningMsg,
   CUSTOM_RANGE_DATE_OPTION,
-  TIME_FRAME_LIMITS
 } from '../../utils/datePicker.util'
 import { initialState, datePickerActions, datePickerReducer } from './datePickerReducer'
+import { DATE_PICKER_TIME_FRAME_LIMITS } from '../../types'
 
 const DatePicker = ({
   className,
@@ -58,7 +58,7 @@ const DatePicker = ({
   dateTo,
   disabled,
   externalInvalid,
-  externalInvalidText,
+  externalInvalidMessage,
   hasFutureOptions,
   label,
   onBlur,
@@ -507,7 +507,7 @@ const DatePicker = ({
       disabled={disabled}
       getInputValueValidity={getInputValueValidity}
       invalidMessage={invalidMessage}
-      externalInvalidText={externalInvalidText}
+      externalInvalidMessage={externalInvalidMessage}
       isDatePickerOpened={isDatePickerOpened}
       isDatePickerOptionsOpened={isDatePickerOptionsOpened}
       isInputInvalid={isInputInvalid}
@@ -544,7 +544,7 @@ DatePicker.defaultProps = {
   dateTo: new Date(),
   disabled: false,
   externalInvalid: null,
-  externalInvalidText: 'This field is invalid',
+  externalInvalidMessage: 'This field is invalid',
   hasFutureOptions: false,
   label: 'Date',
   onBlur: () => {},
@@ -565,7 +565,7 @@ DatePicker.propTypes = {
   dateTo: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.string]),
   disabled: PropTypes.bool,
   externalInvalid: PropTypes.bool,
-  externalInvalidText: PropTypes.string,
+  externalInvalidMessage: PropTypes.string,
   hasFutureOptions: PropTypes.bool,
   label: PropTypes.string,
   onBlur: PropTypes.func,
@@ -575,14 +575,7 @@ DatePicker.propTypes = {
   selectedOptionId: PropTypes.string,
   setExternalInvalid: PropTypes.func,
   splitCharacter: PropTypes.oneOf(['/', '.']),
-  timeFrameLimit: PropTypes.oneOf([
-    TIME_FRAME_LIMITS.HOUR,
-    TIME_FRAME_LIMITS['24_HOURS'],
-    TIME_FRAME_LIMITS.WEEK,
-    TIME_FRAME_LIMITS.MONTH,
-    TIME_FRAME_LIMITS.YEAR,
-    Infinity
-  ]),
+  timeFrameLimit: DATE_PICKER_TIME_FRAME_LIMITS,
   tip: PropTypes.oneOfType([PropTypes.string, PropTypes.element]),
   type: PropTypes.oneOf(['date', 'date-time', 'date-range', 'date-range-time']),
   withLabels: PropTypes.bool

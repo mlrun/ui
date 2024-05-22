@@ -130,10 +130,10 @@ const MetricsSelector = ({ maxSelectionNumber, metrics, name, onSelect, preselec
       return 'Chose Metrics...'
     }
 
-    if (selectedMetrics.length <= 2) {
-      return selectedMetrics
-        .map(selectedMetric => metrics.find(metric => metric.full_name === selectedMetric).name)
-        .join(', ')
+    if (selectedMetrics.length === 1) {
+      return (
+        metrics.find(metric => metric.full_name === selectedMetrics[0])?.name || '1 metric selected'
+      )
     }
 
     return `${selectedMetrics.length} metrics selected`

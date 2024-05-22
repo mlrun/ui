@@ -175,7 +175,7 @@ const FilterParameters = ({
           className="data-source__inputs-item"
           date={data.startTime}
           externalInvalid={!validation.isStartTimeValid}
-          externalInvalidText="Start time is invalid"
+          externalInvalidMessage="Start time is invalid"
           label="Start time"
           onChange={date => handleChangeDates(date, START_TIME)}
           required={Boolean((data.timeField || data.endTime) && !data.startTime)}
@@ -192,7 +192,7 @@ const FilterParameters = ({
           className="data-source__inputs-item"
           date={data.endTime}
           externalInvalid={!validation.isEndTimeValid}
-          externalInvalidText="End time is invalid"
+          externalInvalidMessage="End time is invalid"
           label="End time"
           onChange={date => handleChangeDates(date, END_TIME)}
           required={Boolean((data.timeField || data.startTime) && !data.endTime)}

@@ -29,7 +29,8 @@ import { Button, Tip, Tooltip, TextTooltipTemplate, PopUpDialog } from 'igz-cont
 import { SelectOption } from 'igz-controls/elements'
 
 import { SECONDARY_BUTTON } from 'igz-controls/constants'
-import { CUSTOM_RANGE_DATE_OPTION, TIME_FRAME_LIMITS } from '../../utils/datePicker.util'
+import { CUSTOM_RANGE_DATE_OPTION } from '../../utils/datePicker.util'
+import { DATE_PICKER_TIME_FRAME_LIMITS } from '../../types'
 
 import { ReactComponent as Arrow } from 'igz-controls/images/arrow.svg'
 import { ReactComponent as CaretIcon } from 'igz-controls/images/dropdown.svg'
@@ -47,7 +48,7 @@ const DatePickerView = React.forwardRef(
       datePickerInputOnBlur,
       datePickerOptions,
       disabled,
-      externalInvalidText,
+      externalInvalidMessage,
       getInputValueValidity,
       invalidMessage,
       isDatePickerOpened,
@@ -147,7 +148,7 @@ const DatePickerView = React.forwardRef(
                   text={
                     required && getInputValueValidity(valueDatePickerInput)
                       ? requiredText
-                      : invalidMessage || externalInvalidText
+                      : invalidMessage || externalInvalidMessage
                   }
                   warning
                 />
@@ -303,7 +304,7 @@ DatePickerView.propTypes = {
   datePickerInputOnBlur: PropTypes.func.isRequired,
   datePickerOptions: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
   disabled: PropTypes.bool.isRequired,
-  externalInvalidText: PropTypes.string.isRequired,
+  externalInvalidMessage: PropTypes.string.isRequired,
   getInputValueValidity: PropTypes.func.isRequired,
   floatingLabel: PropTypes.bool,
   invalidMessage: PropTypes.string.isRequired,
@@ -329,14 +330,7 @@ DatePickerView.propTypes = {
   requiredText: PropTypes.string.isRequired,
   selectedOption: PropTypes.object,
   setSelectedDate: PropTypes.func.isRequired,
-  timeFrameLimit: PropTypes.oneOf([
-    TIME_FRAME_LIMITS.HOUR,
-    TIME_FRAME_LIMITS['24_HOURS'],
-    TIME_FRAME_LIMITS.WEEK,
-    TIME_FRAME_LIMITS.MONTH,
-    TIME_FRAME_LIMITS.YEAR,
-    Infinity
-  ]),
+  timeFrameLimit: DATE_PICKER_TIME_FRAME_LIMITS,
   tip: PropTypes.string.isRequired,
   valueDatePickerInput: PropTypes.string.isRequired,
   weekDay: PropTypes.array.isRequired,

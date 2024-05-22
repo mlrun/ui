@@ -66,7 +66,7 @@ const DetailsHeader = ({
   setSelectedMetricsOptions,
   tab
 }) => {
-  const [isHeaderMultiline, setIsHeaderMultiline] = useState(false)
+  const [headerIsMultiline, setHeaderIsMultiline] = useState(false)
   const detailsStore = useSelector(store => store.detailsStore)
   const location = useLocation()
   const params = useParams()
@@ -101,12 +101,13 @@ const DetailsHeader = ({
     let prevHeaderHeight = 0
     const resizeObserver = new ResizeObserver(entries => {
       for (let entry of entries) {
+
         if (entry.contentRect.height !== prevHeaderHeight) {
           prevHeaderHeight = entry.contentRect.height
           if (entry.contentRect.height > 100) {
-            setIsHeaderMultiline(true)
+            setHeaderIsMultiline(true)
           } else {
-            setIsHeaderMultiline(false)
+            setHeaderIsMultiline(false)
           }
         }
       }
@@ -119,7 +120,7 @@ const DetailsHeader = ({
 
   return (
     <div
-      className={classNames('item-header', isHeaderMultiline && 'item-header__multiline')}
+      className={classNames('item-header', headerIsMultiline && 'item-header_multiline')}
       ref={headerRef}
     >
       <div className="item-header__data">
