@@ -5,6 +5,7 @@ Feature: Models Page
   @MLM
   #TODO: Register_Model_Button hidden from 1.4.0, running on demo mode
   @passive
+  @smoke
   Scenario: MLM001 - Check all mandatory components on Models tab
     Given open url
     And turn on demo mode
@@ -46,8 +47,7 @@ Feature: Models Page
 
   @MLM
   @passive
-  @FAILED_TODO
-  #TODO: Bug - UI crash upon navigating to model endpoints tab ML-5919 (fixed on rc6)
+  @smoke
   Scenario: MLM002 - Check all mandatory components on Model Endpoints tab
     Given open url
     And wait load page
@@ -76,6 +76,7 @@ Feature: Models Page
 
   @MLM
   @passive
+  @smoke
   Scenario: MLM003 - Check all mandatory components on Real-Time Pipelines tab
     Given open url
     And wait load page
@@ -96,6 +97,7 @@ Feature: Models Page
 
   @MLM
   @passive
+  @smoke
   Scenario: MLM004 - Verify filtering by model name on Models tab
     Given open url
     And wait load page
@@ -113,6 +115,7 @@ Feature: Models Page
 
   @MLM
   @passive
+  @smoke
   Scenario: MLM005 - Verify behaviour of Show iterations checkbox on Models tab
     Given open url
     And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
@@ -128,7 +131,7 @@ Feature: Models Page
     And wait load page
     Then click on "Table_FilterBy_Button" element on "Models" wizard
     Then "Show_Iterations_Checkbox" element should be unchecked on "Artifacts_FilterBy_Popup" wizard
-    Then check "expand_btn" visibility in "Models_Table" on "Models" wizard
+    Then check "expand_btn" visibility in "Models_Table" on "Models" wizard with 0 offset
     Then click on cell with row index 1 in "expand_btn" column in "Models_Table" table on "Models" wizard
     And wait load page
     Then click on cell with row index 1 in "name" column in "Models_Table" table on "Models" wizard
@@ -143,6 +146,7 @@ Feature: Models Page
 
   @MLM
   @passive
+  @smoke
   Scenario: MLM006 - Verify filtering by name on Real-Time Pipelines tab
     Given open url
     And wait load page
@@ -166,6 +170,7 @@ Feature: Models Page
 
   @MLM
   @passive
+  @smoke
   Scenario: MLM007 - Verify filtering by label with key on Models tab
     Given open url
     And wait load page
@@ -193,8 +198,7 @@ Feature: Models Page
 
   @MLM
   @passive
-  @FAILED_TODO
-  #TODO: Bug - UI crash upon navigating to model endpoints tab ML-5919 (fixed on rc6)
+  @smoke
   Scenario: MLM008 - Verify filtering by label on Model Endpoints tab
     Given open url
     And wait load page
@@ -221,8 +225,10 @@ Feature: Models Page
     And verify "No_Data_Message" element visibility on "commonPagesHeader" wizard
 
   @MLM
+  @FAILED_TODO
+  @smoke
   #TODO: Register_Model_Button hidden from 1.4.0, running on demo mode
-  @passive
+  #TODO: bug - Back and forward browser navigation does not automatically close the form  ML-6239
   Scenario: MLM009 - Check all mandatory components on Register Model Popup
     Given open url
     And turn on demo mode
@@ -313,6 +319,7 @@ Feature: Models Page
     Then verify "Title" element not exists on "Register_Model_Popup" wizard
 
   @MLM
+  @smoke
   #TODO: Register_Model_Button hidden from 1.4.0, running on demo mode
   Scenario: MLM010 - Verify behaviour on Register new Model
     * set tear-down property "model" created in "default" project with "automation-model" value
@@ -341,6 +348,7 @@ Feature: Models Page
 
   @MLM
   @passive
+  @smoke
   Scenario: MLM011 - Check MLRun logo redirection
     Given open url
     And wait load page
@@ -356,6 +364,7 @@ Feature: Models Page
 
   @MLM
   @passive
+  @smoke
   Scenario: MLM012 - Verify action menu list, Downloads action,  View YAML action
     Given open url
     And wait load page
@@ -393,6 +402,7 @@ Feature: Models Page
 
   @MLM
   @passive
+  @smoke
   Scenario: MLM013 - Verify View YAML action in Item infopane
     Given open url
     And wait load page
@@ -411,6 +421,7 @@ Feature: Models Page
 
   @MLM
   @passive
+  @smoke
   Scenario: MLM014 - Check all mandatory components in Item infopane on Overview tab table
     Given open url
     And wait load page
@@ -463,6 +474,7 @@ Feature: Models Page
     Then verify "Cross_Close_Button" element visibility on "Models_Info_Pane" wizard
 
   @MLM
+  @smoke
   Scenario: MLM026 - Verify the Delete option state in Models table and Overview details action menu 
     Given open url
     And wait load page
@@ -497,6 +509,9 @@ Feature: Models Page
 
   @MLM
   @passive
+  @FAILED_TODO
+  @smoke
+  #TODO: Bug ML-6217 - [Breadcrumbs] request is not sent when changing project
   Scenario: MLM025 - Verify Preview, Deploy option, view Preview, Deploy action, Preview tab
       Given open url
       And wait load page
@@ -538,9 +553,9 @@ Feature: Models Page
       Then verify "Pop_Out_Button" element visibility on "Models_Info_Pane" wizard 
       Then click on "Pop_Out_Button" element on "Models_Info_Pane" wizard
       And wait load page
-      Then verify "Preview_Header" element visibility on "Artifact_Preview_Popup" wizard
+      Then verify "Preview_Row" element visibility on "Artifact_Preview_Popup" wizard
       Then verify "Cross_Cancel_Button" element visibility on "Artifact_Preview_Popup" wizard
-      Then check "download_btn" visibility in "Preview_Header" on "Artifact_Preview_Popup" wizard
+      Then check "download_btn" visibility in "Preview_Row" on "Artifact_Preview_Popup" wizard with 1 offset
       Then click on "Download_Button" element on "Artifact_Preview_Popup" wizard
       And wait load page
       And wait load page
@@ -564,8 +579,8 @@ Feature: Models Page
       Then click on "Cross_Cancel_Button" element on "Deploy_Model_Popup" wizard
 
   @MLM
+  @smoke
   Scenario: MLM015 - Check Labels table components in Item infopane on Overview tab table
-    * set tear-down property "model" created in "default" project with "test-model" value
     * create "test-model" Model with "latest" tag in "default" project with code 200
     Given open url
     And wait load page
@@ -611,6 +626,8 @@ Feature: Models Page
     Then click on "Labels_Apply_Button" element on "Models_Info_Pane" wizard
     Then click on "Apply_Changes_Button" element on "Models_Info_Pane" wizard
     And wait load page
+    And hover "Labels_Field" component on "Models_Info_Pane" wizard
+    And wait load page
     When add rows to "Labels_Table" table on "Models_Info_Pane" wizard
             | key_input | value_input |
             |    key3   |    value3   |
@@ -625,8 +642,7 @@ Feature: Models Page
     
   @MLM
   @passive
-  @FAILED_TODO
-  #TODO: Bug - UI crash upon navigating to model endpoints tab ML-5919 (fixed on rc6)
+  @smoke
   Scenario: MLM016 - Check all mandatory components in Item infopane on Overview tab table on Model Endpoints tab
     Given open url
     And wait load page
@@ -651,6 +667,7 @@ Feature: Models Page
 
   @MLM
   @passive
+  @smoke
   Scenario: MLM027 - Check Details panel still active on page refresh
     * set tear-down property "model" created in "default" project with "test-model" value
     * create "test-model" Model with "v1" tag in "default" project with code 200
@@ -678,6 +695,7 @@ Feature: Models Page
   @MLM
   @passive
   @inProgress
+  @smoke
   Scenario: MLM028 - Check tab list compontnts on Model Item infopane
     Given open url
     And wait load page
@@ -695,6 +713,9 @@ Feature: Models Page
 
   @MLM
   @passive
+  @smoke
+  @FAILED_TODO
+  #TODO: bug - Back and forward browser navigation does not automatically close the form  ML-6239
   Scenario: MLM029 - Check components on Deploy Model Popup
     * set tear-down property "function" created in "default" project with "automation-test-function-1" value
     * set tear-down property "function" created in "default" project with "automation-test-function-2" value
@@ -774,6 +795,7 @@ Feature: Models Page
     Then verify "Title" element not exists on "Deploy_Model_Popup" wizard
 
     @MLM
+    @smoke
     Scenario: MLM030 - Verify behaviour of key-value table on Deploy Model Popup
      Given open url
      And wait load page
@@ -840,6 +862,7 @@ Feature: Models Page
   @MLM
   #TODO: arrow lines position - y not found
   @passive
+  @smoke
   Scenario: MLM031 - Verify behaviour of Real-Time Pipelines table
     Given open url
     And wait load page
@@ -857,7 +880,7 @@ Feature: Models Page
     And select "Real-Time Pipelines" tab in "Models_Tab_Selector" on "Models" wizard
     And wait load page
     Then verify "Real-Time Pipelines" tab is active in "Models_Tab_Selector" on "Models" wizard
-    Then check "expand_btn" visibility in "Real_Time_Pipelines_Table" on "Real_Time_Pipelines" wizard
+    Then check "expand_btn" visibility in "Real_Time_Pipelines_Table" on "Real_Time_Pipelines" wizard with 0 offset
     Then save to context "name" column and "href" attribute on 1 row from "Real_Time_Pipelines_Table" table on "Real_Time_Pipelines" wizard
     When click on cell with row index 1 in "name" column in "Real_Time_Pipelines_Table" table on "Real_Time_Pipelines" wizard
     And wait load page
@@ -878,8 +901,7 @@ Feature: Models Page
     Then compare "Header" element value on "ML_Function_Info_Pane" wizard with test "function" context value
 
   @MLM
-  @FAILED_TODO
-  #TODO: Bug - UI crash upon navigating to model endpoints tab ML-5919 (fixed on rc6)
+  @smoke
   Scenario: MLM032 - Check broken link redirection
     Given open url
     And wait load page
@@ -921,8 +943,7 @@ Feature: Models Page
     Then verify redirection from "projects/INVALID/models/real-time-pipelines" to "projects"
   
   @MLM
-  @FAILED_TODO
-  #TODO: Bug - UI crash upon navigating to model endpoints tab ML-5919 (fixed on rc6)
+  @smoke
   Scenario: MLM033 - Check active/highlited items with details panel on Model Endpoints tab
     Given open url
     And wait load page
@@ -953,6 +974,7 @@ Feature: Models Page
     Then compare "Header" element value on "Models_Info_Pane" wizard with test "name" context value
 
   @MLM
+  @smoke
   Scenario: MLM034 - Check active/highlited items with details panel on Models tab
     Given open url
     And wait load page
@@ -978,7 +1000,8 @@ Feature: Models Page
     Then save to context "name" column on 2 row from "Models_Table" table on "Models" wizard
     Then compare "Header" element value on "Models_Info_Pane" wizard with test "name" context value
 
-  @MLM  
+  @MLM
+  @smoke
   Scenario: MLM020 - Check that version tag is filled when edit it in table view and full view on Overview tab table on Models page
     Given open url
     And wait load page
@@ -1003,6 +1026,7 @@ Feature: Models Page
     Then verify "Cross_Close_Button" element visibility on "Models_Info_Pane" wizard
 
   @MLM
+  @smoke
   Scenario: MLM021 - Check that version tag dropdown shows all tags on filters wizard on Models page
     Given open url
     And wait load page
@@ -1030,6 +1054,7 @@ Feature: Models Page
     Then check "newTag" value in "tag" column in "Models_Table" table on "Models" wizard
 
   @MLM
+  @smoke
   Scenario: MLM023 - Check that version tag has "Click to add" status when it's empty after edited
     Given open url
     And wait load page
@@ -1057,6 +1082,7 @@ Feature: Models Page
     Then "Version_Tag_Input_Placeholder" element on "Models_Info_Pane" should contains "Click to add" value
 
   @MLM
+  @smoke
   Scenario: MLM024 - Check filter by "All" tag is performed when version tag was edited
     Given open url
     And wait load page
