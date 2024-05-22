@@ -9,31 +9,43 @@
 
   &__card-tmp {
     z-index: 1;
-    top:0;
+    top: 0;
     position: sticky !important;
     box-sizing: border-box;
     border: 1px solid #00000033;
     border-radius: 12px !important;
-    background: #FFF;
+    background: #fff;
     padding-top: 12px !important;
     width: 100%;
     transition: 0.1s;
     animation: ease-in-out;
-    max-height: 110px;
+    max-height: 140px;
   }
 
   &__card {
     border-radius: 12px;
     border: 1px solid rgba(0, 0, 0, 0.2);
-    padding: 16px;
+    padding: 6px 16px 35px;
     transition: ease-in-out;
     width: 100%;
+
+    &-drift-status {
+      margin-left: 8px;
+      border-radius: 50%;
+      height: 10px;
+      width: 10px;
+      display: inline-block;
+    }
 
     &-header {
       display: flex;
       flex-direction: row;
-      justify-content: center;
-      gap: 16px;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
+      padding-bottom: 10px;
+      padding-left: 5px;
+      font-weight: 500;
 
       &-result-kind {
         display: flex;
@@ -52,18 +64,17 @@
       }
 
       &-data {
-        color: #4b4760;
+        color: #7f7989;
         text-align: center;
         leading-trim: both;
         text-edge: cap;
         font-weight: 700;
-        font-size: 24px;
+        font-size: 18px;
       }
 
       &-label {
         font-size: 14px;
       }
-
     }
 
     &-body {
@@ -71,7 +82,7 @@
       flex: 1;
       align-self: stretch;
       width: 100%;
-      aspect-ratio: 4;
+      aspect-ratio: 5.5;
       gap: 20px;
       align-items: stretch;
       position: relative;
@@ -88,9 +99,7 @@
       }
 
       &-bar {
-        //@extend .chart-item;
         flex: 0 1 25%;
-        //max-width: 25%;
         canvas {
           width: 100% !important;
           height: 100% !important;
@@ -104,8 +113,6 @@
       }
 
       &-line {
-        //@extend .chart-item;
-        //max-width: 75%;
         flex: 0 1 70%;
         canvas {
           width: 100% !important;
@@ -136,144 +143,47 @@
         }
       }
     }
+
+    &-invocation-content {
+      flex: 0 1 27%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      width: 27%;
+      gap: 8px;
+
+      &-title {
+        font-size: 18px;
+        font-weight: 700;
+        color: #4b4760;
+      }
+      &-content-data {
+        font-size: 24px;
+        font-weight: 700;
+        line-height: normal;
+        color: #4b4760;
+        & span {
+          font-size: 14px;
+          margin-right: 5px;
+        }
+      }
+    }
   }
 
-  &__empty-card{
+  &__empty-card {
     width: 100%;
     display: flex;
     justify-content: center;
     align-items: center;
-    gap:25px
+    gap: 25px;
   }
 
-  &__empty-select{
+  &__empty-select {
     width: 100%;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    gap:25px
+    gap: 25px;
   }
 }
-
-.max-width-60 {
-  max-width: inherit;
-}
-
-
-
-.gradient-card-2 {
-  position: sticky;
-  top: 0;
-  z-index: 1;
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: space-between;
-  width: 100%;
-  height: 200px;
-  gap: 20px;
-  transition: 0.3s;
-  animation: ease-in-out;
-  width: 100%;
-}
-
-
-
-.header-2{
-  flex: 0 2 auto;
-  width: 170px;
-  font-size: 18px;
-  margin-left: 20px;
-  font-style: normal;
-  font-weight: 700;
-  line-height: normal;
-}
-
-.gradient-graph {
-  //flex: 1 4 60%;
-  flex: 1;
-  height: 100%;
-  width: 100%;
-  canvas.hidden {
-    position: absolute;
-    opacity: 0;
-    left: 0;
-    top: 0;
-  }
-}
-
-.percentage{
-  color: #EA336A;
-  font-size: 14px;
-  font-style: normal;
-  font-weight: 500;
-  line-height: normal;
-  padding-right: 5px;
-}
-
-.day{
-  width: max-content;
-  color: #7F7989;
-  font-family: Roboto;
-  font-size: 14px;
-  font-style: normal;
-  font-weight: 500;
-  line-height: normal;
-}
-
-.kpi-wrapper{
-  display: flex;
-  flex: 1;
-  max-width: max-content;
-  flex-direction: row;
-  gap: 2px;
-  align-items: center;
-}
-
-.kpi-image{
-  display: flex;
-  align-items: center;
-  justify-items: center;
-
-}
-
-.kpi-value{
-  font-family: Roboto;
-  font-size: 24px;
-  font-style: normal;
-  font-weight: 700;
-  line-height: normal;
-  color: #4B4760;
-}
-
-
-.card-tmp{
-  z-index: 1;
-  top:0;
-  position: sticky !important;
-  box-sizing: border-box;
-  border: 1px solid #00000033;
-  border-radius: 12px !important;
-  background: #FFF;
-  padding-top: 12px !important;
-  width: 100%;
-  transition: 0.1s;
-}
-
-
-.animate-size {
-  height: 80px;
-  transition: width 0.5s, height 0.5s;
-}
-
-
-.title {
-  font-family: Roboto;
-  font-size: 18px;
-  font-style: normal;
-  font-weight: 700;
-  line-height: normal;
-  color: #4b4760;
-}
-

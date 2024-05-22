@@ -75,7 +75,7 @@ const ActionBar = ({
   const formInitialValues = useMemo(() => {
     const values = {}
 
-    filters.map(filter => (values[filter.type] = filter.initialValue))
+    filters.forEach(filter => (values[filter.type] = filter.initialValue))
 
     return values
   }, [filters])

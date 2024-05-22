@@ -17,10 +17,9 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import React, { useEffect, useMemo, useRef, useState } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { isEmpty } from 'lodash'
-// import classnames from 'classnames'
 
 import GenericMetricChart from '../Cartjs/MetricChart'
 import StatsCard from '../../common/StatsCard/StatsCard'
@@ -28,7 +27,7 @@ import StatsCard from '../../common/StatsCard/StatsCard'
 import detailsActions from '../../actions/details'
 
 import noData from './noData.svg' // TODO add to igz-controls
-import Data from './Data.svg'
+import Data from './Data.svg' // TODO add to igz-controls
 
 import './DetailsMetrics.scss'
 
@@ -42,38 +41,13 @@ const DetailsMetrics = ({ selectedItem }) => {
   const [metrics, setMetrics] = useState([])
   const detailsStore = useSelector(store => store.detailsStore)
   const dispatch = useDispatch()
-  const cardRef = useRef(null)
-  // const prevScrollPos = useRef(0)
+  const gradientConfig = useMemo(() => getGradientLineChart(), [])
   const lineConfig = useMemo(() => getLineChartMetricConfig(), [])
   const barConfig = useMemo(() => getBarChartMetricConfig(), [])
-  const invocationsConfig = useMemo(() => getGradientLineChart(), [])
 
   const [expand] = useState(false)
 
-  // TODO: scroll bug, refactor the code
-  // const handleResizeCard = useCallback(e => {
-  //   if (!e.target.classList.contains('item-info')) return
-  //   const card = cardRef.current
-  //   if (e.target.scrollTop > prevScrollPos.current) {
-  //     if (e.target.scrollTop > 5 && card.clientHeight !== 80) {
-  //       card.parentNode.parentNode.style.height += 173
-  //       card.style.height = '80px'
-  //       toggleExpand(false)
-  //     }
-  //   } else {
-  //     if (e.target.scrollTop === 0 && card.clientHeight === 80) {
-  //       card.parentNode.parentNode.style.height -= 80
-  //       card.style.height = '200px'
-  //       toggleExpand(true)
-  //     }
-  //   }
-  //   prevScrollPos.current = e.target.scrollTop
-  // }, [])
-  // TODO: will be add after the invocations implementation request
-  // useEffect(() => {
-  //   window.addEventListener('scroll', handleResizeCard, true)
-  //   return () => window.removeEventListener('scroll', handleResizeCard, true)
-  // }, [handleResizeCard])
+  // TODO: add resize invocation card on scroll
 
   useEffect(() => {
     dispatch(
@@ -101,58 +75,29 @@ const DetailsMetrics = ({ selectedItem }) => {
         params.end = detailsStore.dates.value[1].getTime()
       }
 
-      // todo: metrics - remove mockNamesToFilter after test and when real API ready with all types (for now metrics type is not supported and it leads to error)
-      const mockNamesToFilter = []
-
       selectedMetrics.forEach(metric => {
-        // todo: metrics - remove 'if statement and mockNamesToFilter after test and when real API ready with all types (for now metrics type is not supported and it leads to error)
-        mockNamesToFilter.push(metric.full_name)
-        if (metric.type === 'metric') return
-
         params.name.push(metric.full_name)
       })
 
-      // todo: metrics - remove if block after test and when real API ready with all types (for now metrics type is not supported and it leads to error)
-      if (isEmpty(params.name))
-        params.name.push('for-mock-only.histogram-data-drift.result.hellinger_mean')
-      // todo: metrics - remove mockNamesToFilter after test and when real API ready with all types (for now metrics type is not supported and it leads to error)
       dispatch(
         detailsActions.fetchModelEndpointMetricsValues(
           selectedItem.metadata.project,
           selectedItem.metadata.uid,
-          params,
-          mockNamesToFilter
+          params
         )
       ).then(metricsList => {
-        // todo: metrics - remove filter after test and when real API ready with all types (for now metrics type is not supported and it leads to error)
-        setMetrics(
-          metricsList.filter(
-            metric =>
-              metric.full_name !== 'for-mock-only.histogram-data-drift.result.hellinger_mean'
-          )
-        )
+        setMetrics(metricsList)
       })
+    } else if (selectedItem.metadata?.uid) {
+      setMetrics([])
     }
   }, [dispatch, selectedItem, detailsStore.dates, detailsStore.metricsOptions.selectedByEndpoint])
 
   if (metrics.length === 0) {
     return (
       <StatsCard className="metrics__empty-select">
-        <div
-          style={{
-            width: '100%',
-            display: 'flex',
-            justifyContent: 'center',
-            alignItems: 'center',
-            flexDirection: 'column',
-            gap: '25px'
-          }}
-        >
-          <div>
-            <img alt="no data" src={Data} />
-          </div>
-          <div>Choose metrics to view endpoint’s data</div>
-        </div>
+        <img alt="metrics" src={Data} />
+        <div>Choose metrics to view endpoint’s data</div>
       </StatsCard>
     )
   }
@@ -174,48 +119,21 @@ const DetailsMetrics = ({ selectedItem }) => {
         } else if (item.title.includes('invocation')) {
           return (
             <StatsCard className="metrics__card-tmp">
-              {expand && (
-                <StatsCard.Header title="Endpoint call count">
-                  <div
-                    style={{
-                      flex: 1,
-                      display: 'flex',
-                      justifyContent: 'end',
-                      alignItems: 'center'
-                    }}
-                  >
-                    <div className="kpi-value">
-                      <span style={{ fontSize: '14px', margin: '0 10px 0 0' }}>Total</span>
-                      {item.total}
-                    </div>
+              <div style={{ height: '80px' }} className="metrics__card-body">
+                <div className="metrics__card-invocation-content">
+                  <div className="metrics__card-invocation-content-title">Endpoint call count</div>
+                  <div className="metrics__card-invocation-content-content-data">
+                    <span>Total</span>
+                    {item.total}
                   </div>
-                </StatsCard.Header>
-              )}
-              <div style={{ height: '80px' }} ref={cardRef} className="metrics__card-body">
-                {!expand && (
-                  <div
-                    style={{
-                      flex: '0 1 27%',
-                      display: 'flex',
-                      justifyContent: 'center',
-                      alignItems: 'center',
-                      width: '27%',
-                      gap: '15px'
-                    }}
-                  >
-                    <div className="title">Endpoint call count</div>
-                    <div className="kpi-value">
-                      <span style={{ fontSize: '14px', marginRight: '5px' }}>Total</span>
-                      {item.total}
-                    </div>
-                  </div>
-                )}
+                </div>
                 <div className="metrics__card-body-invocation">
                   <GenericMetricChart
                     showGrid={expand}
                     chartConfig={{
                       gradient: true,
-                      ...invocationsConfig,
+                      ...gradientConfig,
+                      type: 'line',
                       data: {
                         labels: item.labels,
                         datasets: [
@@ -239,15 +157,27 @@ const DetailsMetrics = ({ selectedItem }) => {
           return (
             <StatsCard className="metrics__card">
               <StatsCard.Header title={item.title}>
-                <div className="metrics__card-header">
-                  <div className="metrics__card-header-data">
-                    <span className="metrics__card-header-label">Avg. </span>
-                    {item.avg}
+                {item.totalDriftStatus && (
+                  <div>
+                    {item.totalDriftStatus.text}
+                    <span
+                      className="metrics__card-drift-status"
+                      style={{
+                        backgroundColor: item.totalDriftStatus.color
+                      }}
+                    ></span>
                   </div>
-                </div>
+                )}
               </StatsCard.Header>
               <div className="metrics__card-body">
                 <div className="metrics__card-body-bar">
+                  <div className="metrics__card-header">
+                    <div>Value distribution</div>
+                    <div className="metrics__card-header-data">
+                      <span className="metrics__card-header-label">Avg. </span>
+                      {item.avg}
+                    </div>
+                  </div>
                   <GenericMetricChart
                     chartConfig={{
                       ...barConfig,
@@ -267,6 +197,7 @@ const DetailsMetrics = ({ selectedItem }) => {
                   />
                 </div>
                 <div className="metrics__card-body-line">
+                  <div className="metrics__card-header">Value over time</div>
                   <GenericMetricChart
                     chartConfig={{
                       ...lineConfig,
@@ -275,9 +206,10 @@ const DetailsMetrics = ({ selectedItem }) => {
                         datasets: [
                           {
                             data: item.points,
+                            metricType: item.type,
+                            driftStatus: item.driftStatus || [],
                             tension: 0.2,
-                            borderWidth: 2,
-                            backgroundColor: item.color,
+                            borderWidth: 1,
                             borderColor: item.color
                           }
                         ]

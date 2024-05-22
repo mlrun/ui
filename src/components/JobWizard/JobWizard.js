@@ -139,8 +139,8 @@ const JobWizard = ({
 
   useEffect(() => {
     if (!isEditMode) {
-      dispatch(projectsAction.fetchProject(params.projectName, { format: 'minimal' })).then(project =>
-        setCurrentProject(project)
+      dispatch(projectsAction.fetchProject(params.projectName, { format: 'minimal' })).then(
+        project => setCurrentProject(project)
       )
     }
   }, [dispatch, isEditMode, params.projectName])

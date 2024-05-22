@@ -111,7 +111,7 @@ function formatDate(dates) {
   return dates.map(date => new Date(date).toLocaleDateString('en-US', options).replace(/\//g, '.'))
 }
 
-// TODO: add support for Any time selction
+// TODO: add support for Any time selection
 function isRangeOverOneDay(values, dateRange) {
   const dates = values.map(([date]) => date)
   const startDate = new Date(dateRange.start)
@@ -130,17 +130,56 @@ export const formatNumber = num => {
   }
 }
 
-export const modifyMetric = (metric, params) => {
-  const { full_name, values } = metric
+// TODO: verify with Jonathan the drift status option
+const driftStatusConfig = {
+  0: {
+    color: '#00FF00',
+    text: 'No drift'
+  },
+  1: {
+    color: '#FFD077',
+    text: 'Possible drift'
+  },
+  2: {
+    color: '#FF0000',
+    text: 'Drift detected'
+  }
+}
 
-  if (!metric.data || !metric.values || !Array.isArray(metric.values)) {
+export const formatMetric = (metric, params) => {
+  const { full_name, values, type } = metric
+
+  if (!metric.data || !values || !Array.isArray(values)) {
     return {
       metric,
       title: getTitle(full_name)
     }
   }
-  const points = values.map(([_date, value]) => value)
+
+  const getStatus = dataArray => {
+    let status = 'No drift'
+    for (const item of dataArray) {
+      if (item.text === 'Drift detected') {
+        status = driftStatusConfig[2]
+        break
+      } else if (item.text === 'Possible drift' && status !== 'Drift detected') {
+        status = driftStatusConfig[1]
+      }
+    }
+    return status
+  }
+
+  const points = values.map(([_, value]) => parseFloat(value.toFixed(2)))
+
+  let driftStatus = []
+  if (type === 'result') {
+    driftStatus = values.map(([_, __, driftStatus]) => driftStatusConfig[driftStatus])
+    metric.driftStatus = driftStatus
+    metric.totalDriftStatus = getStatus(driftStatus)
+  }
+
   const isInvocationsRate = full_name.includes('invocations')
+
   const totalOrAvg = isInvocationsRate
     ? formatNumber(points.reduce((sum, value) => sum + value, 0))
     : formatNumber((points.reduce((sum, value) => sum + value, 0) / points.length).toFixed(2))

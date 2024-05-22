@@ -17,6 +17,7 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
+// TODO: Combine getLineChartMetricConfig, getBarChartMetricConfig, and getGradientLineChart into one function.
 export const getLineChartMetricConfig = () => {
   return {
     type: 'line',
@@ -30,16 +31,6 @@ export const getLineChartMetricConfig = () => {
       plugins: {
         legend: {
           display: false
-        },
-        tooltip: {
-          enabled: true,
-          intersect: false,
-          mode: 'index',
-          callbacks: {
-            label: function (label) {
-              return JSON.stringify(label.parsed, null, 2)
-            }
-          }
         }
       },
       scales: {
@@ -48,11 +39,9 @@ export const getLineChartMetricConfig = () => {
           title: {
             display: true,
             text: '',
-            font: 10,
-            color: '#4B4760'
+            font: 10
           },
           ticks: {
-            color: '#4B4760',
             autoSkip: true,
             align: 'start',
             maxTicksLimit: 10
@@ -60,19 +49,15 @@ export const getLineChartMetricConfig = () => {
           grid: {
             drawOnChartArea: true,
             borderWidth: 2,
-            color: '#E9E8EB',
             lineWidth: 1
           }
         },
         y: {
           ticks: {
-            color: '#4B4760',
             stepSize: 10
           },
           grid: {
-            drawBorder: false,
-            color: '#E9E8EB',
-            borderColor: 'E9E8EB'
+            drawBorder: false
           }
         }
       },
@@ -103,12 +88,7 @@ export const getBarChartMetricConfig = () => {
         tooltip: {
           enabled: true,
           intersect: false,
-          mode: 'index',
-          callbacks: {
-            label: function (label) {
-              return JSON.stringify(label.parsed, null, 2)
-            }
-          }
+          mode: 'index'
         }
       },
       scales: {
@@ -117,18 +97,15 @@ export const getBarChartMetricConfig = () => {
           title: {
             display: true,
             text: 'Value',
-            font: 10,
-            color: '#4B4760'
+            font: 10
           },
           ticks: {
-            color: '#4B4760',
             align: 'start',
             maxTicksLimit: 4
           },
           grid: {
             drawOnChartArea: false,
             borderWidth: 2,
-            color: '#E9E8EB',
             lineWidth: 1
           }
         },
@@ -144,7 +121,6 @@ export const getBarChartMetricConfig = () => {
           },
           grid: {
             drawBorder: false,
-            color: '#E9E8EB',
             borderColor: 'E9E8EB'
           }
         }
@@ -170,12 +146,7 @@ export const getGradientLineChart = () => {
         tooltip: {
           enabled: true,
           intersect: false,
-          mode: 'index',
-          callbacks: {
-            label: function (label) {
-              return JSON.stringify(label.parsed, null, 2)
-            }
-          }
+          mode: 'index'
         }
       },
       scales: {
@@ -185,7 +156,6 @@ export const getGradientLineChart = () => {
             display: true
           },
           ticks: {
-            color: '#4B4760',
             align: 'start',
             maxTicksLimit: 5
           }

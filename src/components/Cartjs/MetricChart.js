@@ -1,17 +1,57 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import { Chart } from 'chart.js/auto'
 import classnames from 'classnames'
 
 import Loader from '../../common/Loader/Loader'
 
 import { formatNumber } from '../DetailsMetrics/detailsMetrics.utils'
-import { calculateMaxTicksLimit, formattYaxisForBarChart, hexToRGB } from './metricChart.util'
+import {
+  calculateMaxTicksLimit,
+  customTooltip,
+  formatYaxisForBarChart,
+  hexToRGB
+} from './metricChart.util'
 
 const GenericMetricChart = ({ chartConfig, showGrid }) => {
   const chartRef = useRef(null)
   const chartInstance = useRef(null)
   const [isLoading, setIsLoading] = useState(true)
   const canvasClassNames = classnames(isLoading && 'hidden')
+  const customPoints = useMemo(() => {
+    return {
+      radius: function () {
+        if (
+          chartConfig.data.datasets[0]?.driftStatus &&
+          chartConfig.data.datasets[0]?.driftStatus.length !== 0
+        ) {
+          return 2
+        } else {
+          return 0
+        }
+      },
+      pointStyle: function () {
+        if (
+          chartConfig.data.datasets[0]?.driftStatus &&
+          chartConfig.data.datasets[0]?.driftStatus.length !== 0
+        ) {
+          return 'rect'
+        } else {
+          return 'none'
+        }
+      },
+      backgroundColor: function () {
+        if (
+          chartConfig.data.datasets[0]?.driftStatus &&
+          chartConfig.data.datasets[0]?.driftStatus.length !== 0
+        ) {
+          return 'black'
+        }
+      },
+      borderColor: function () {
+        return 'white'
+      }
+    }
+  }, [chartConfig])
 
   useEffect(() => {
     const ctx = chartRef.current.getContext('2d')
@@ -46,7 +86,7 @@ const GenericMetricChart = ({ chartConfig, showGrid }) => {
                   if (chartConfig.type === 'line') {
                     return formatNumber(value)
                   } else if (chartConfig.type === 'bar') {
-                    return formattYaxisForBarChart(value)
+                    return formatYaxisForBarChart(value)
                   } else {
                     return value
                   }
@@ -56,6 +96,20 @@ const GenericMetricChart = ({ chartConfig, showGrid }) => {
           },
           animation: {
             onComplete: () => setIsLoading(false)
+          },
+          plugins: {
+            legend: {
+              display: false
+            },
+            tooltip: {
+              enabled: false,
+              intersect: false,
+              mode: 'index',
+              external: customTooltip
+            }
+          },
+          elements: {
+            point: customPoints
           }
         }
       })
@@ -89,7 +143,14 @@ const GenericMetricChart = ({ chartConfig, showGrid }) => {
         chartInstance.current.destroy()
       }
     }
-  }, [showGrid, chartConfig.data, chartConfig.type, chartConfig.gradient, chartConfig.options])
+  }, [
+    showGrid,
+    chartConfig.data,
+    chartConfig.type,
+    chartConfig.gradient,
+    chartConfig.options,
+    customPoints
+  ])
 
   useEffect(() => {
     const handleResize = () => {

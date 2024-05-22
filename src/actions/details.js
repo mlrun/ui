@@ -54,9 +54,8 @@ import {
 import { generatePods } from '../utils/generatePods'
 import {
   generateMetricsItems,
-  modifyMetric
+  formatMetric
 } from '../components/DetailsMetrics/detailsMetrics.utils'
-import { getMetricsValues } from '../components/DetailsMetrics/metricsMock' // todo: metrics - remove after tests and when real API ready with all types
 
 const detailsActions = {
   fetchModelEndpointWithAnalysis: (project, uid) => dispatch => {
@@ -141,7 +140,7 @@ const detailsActions = {
     return detailsApi
       .getModelEndpointMetrics(project, uid)
       .then(({ data = [] }) => {
-        const metrics = generateMetricsItems([...data])
+        const metrics = generateMetricsItems(data)
 
         dispatch(detailsActions.fetchEndpointMetricsSuccess({ endpointUid: uid, metrics }))
 
@@ -168,7 +167,7 @@ const detailsActions = {
     return detailsApi
       .getModelEndpointMetricsValues(project, uid, params)
       .then(({ data = [] }) => {
-        const metrics = [...data, ...getMetricsValues()].map(metric => modifyMetric(metric, params))
+        const metrics = data.map(metric => formatMetric(metric, params))
 
         metrics.sort((a, b) => {
           const aHasMockString = a.full_name && a.full_name.includes('invocations')

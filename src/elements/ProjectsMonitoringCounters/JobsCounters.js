@@ -17,24 +17,16 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import React, { useEffect, useMemo, useState } from 'react'
+import React, { useMemo } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 import { upperFirst } from 'lodash'
-import moment from 'moment'
 
 import Loader from '../../common/Loader/Loader'
 import StatsCard from '../../common/StatsCard/StatsCard'
 
-import jobsActions from '../../actions/jobs'
-import projectsAction from '../../actions/projects'
-
-import {
-  generateMonitoringStats,
-  generateMonitoringGroupedData
-} from '../../utils/generateMonitoringData'
-import { useFetchData } from '../../hooks/useFetchData.hook'
-import { GROUP_BY_WORKFLOW, JOBS_MONITORING_JOBS_TAB, FILTER_ALL_ITEMS } from '../../constants'
+import { generateMonitoringStats } from '../../utils/generateMonitoringData'
+import { JOBS_MONITORING_JOBS_TAB } from '../../constants'
 
 import { ReactComponent as ClockIcon } from 'igz-controls/images/clock.svg'
 
@@ -43,110 +35,18 @@ import './projectsMonitoringCounters.scss'
 const JobsCounters = () => {
   const dispatch = useDispatch()
   const navigate = useNavigate()
-  const [filter] = useState({
-    groupBy: GROUP_BY_WORKFLOW,
-    dates: {
-      value: [new Date(moment().add(-1, 'days'))]
-    },
-    state: FILTER_ALL_ITEMS
-  })
-  const [groupedJobsData, setGroupedJobsData] = useState({
-    all: [],
-    running: [],
-    failed: [],
-    completed: []
-  })
-  const { loading: jobsLoading } = useFetchData({
-    filter,
-    action: jobsActions.fetchJobs
-  })
-  // const { loading: workflowsLoading } = useFetchData({
-  //   filter,
-  //   action: workflowActions.fetchWorkflows
-  // })
-  const { jobs } = useSelector(store => store.jobsStore)
-  // const { data: workflows } = useSelector(store => store.workflowsStore.workflows)
-
-  // const handleDateSelection = dates => {
-  //   const generatedDates = [...dates]
-
-  //   if (generatedDates.length === 1) {
-  //     generatedDates.push(new Date())
-  //   }
-
-  //   setFilter(filters => ({ ...filters, dates: { value: generatedDates } }))
-  // }
+  const projectStore = useSelector(store => store.projectStore)
 
   const jobStats = useMemo(
-    () => generateMonitoringStats(groupedJobsData, navigate, dispatch, JOBS_MONITORING_JOBS_TAB),
-    [dispatch, groupedJobsData, navigate]
+    () =>
+      generateMonitoringStats(
+        projectStore.jobsMonitoringData.jobs,
+        navigate,
+        dispatch,
+        JOBS_MONITORING_JOBS_TAB
+      ),
+    [dispatch, navigate, projectStore.jobsMonitoringData.jobs]
   )
-
-  useEffect(() => {
-    generateMonitoringGroupedData(jobs, setGroupedJobsData, data =>
-      dispatch(projectsAction.setJobsMonitoringData({ jobs: data }))
-    )
-  }, [dispatch, jobs])
-
-  /* todo: Un-hide the code below after  ML-5460 is impplemented
-  const workflowsStats = useMemo(
-    () => ({
-      all: {
-        counter: workflows.length,
-        link: () => navigate('/projects/jobs-monitoring/workflows')
-      },
-      counters: [
-        {
-          counter: workflows.filter(workflow => workflow.state?.value === 'running').length,
-          link: () => navigate('/projects/jobs-monitoring/workflows'),
-          statusClass: 'running'
-        },
-        {
-          counter: workflows.filter(workflow => ['error', 'failed'].includes(workflow.state?.value))
-            .length,
-          link: () => navigate('/projects/jobs-monitoring/workflows'),
-          statusClass: 'failed'
-        },
-        {
-          counter: workflows.filter(workflow =>
-            ['completed', 'succeeded'].includes(workflow.state?.value)
-          ).length,
-          link: () => navigate('/projects/jobs-monitoring/workflows'),
-          statusClass: 'completed'
-        }
-      ]
-    }),
-    [workflows, navigate]
-  )
-
-  const getCounterTemplate = useCallback(
-    type => {
-      const stats = type === 'jobs' ? jobStats : workflowsStats
-
-      return (
-        <>
-          <h6 className="stats__subtitle">{upperFirst(type)}</h6>
-          <span className="stats__counter">
-            {jobsLoading || workflowsLoading ? (
-              <Loader section small secondary />
-            ) : (
-              stats.all.counter
-            )}
-          </span>
-          <ul className="projects-monitoring-legend__status">
-            {stats.counters.map(({ counter, link, statusClass }) => (
-              <li className="link" onClick={link} key={`${statusClass}-jobs`}>
-                {jobsLoading || workflowsLoading ? <Loader section small secondary /> : counter}
-                <i className={`state-${statusClass}`}></i>
-              </li>
-            ))}
-          </ul>
-        </>
-      )
-    },
-    [jobStats, jobsLoading, workflowsStats, workflowsLoading]
-  )
-  */
 
   return (
     <StatsCard className="monitoring-stats">
@@ -155,28 +55,26 @@ const JobsCounters = () => {
           <ClockIcon className="project-card__info-icon" />
           <span>Past 24 hours</span>
         </div>
-        {/* Todo: Use in the future
-        <DatePicker
-          date={filter.dates.value[0]}
-          dateTo={filter.dates.value[1]}
-          selectedOptionId={PAST_24_HOUR_DATE_OPTION}
-          label=""
-          onChange={handleDateSelection}
-          type="date-range-time"
-          withLabels
-        /> */}
       </StatsCard.Header>
       <StatsCard.Row>
         <StatsCard.Col>
           <>
             <h6 className="stats__subtitle">{upperFirst(JOBS_MONITORING_JOBS_TAB)}</h6>
             <span className="stats__counter">
-              {jobsLoading ? <Loader section small secondary /> : jobStats.all.counter}
+              {projectStore.projectsSummary.loading ? (
+                <Loader section small secondary />
+              ) : (
+                jobStats.all.counter
+              )}
             </span>
             <ul className="projects-monitoring-legend__status">
               {jobStats.counters.map(({ counter, link, statusClass }) => (
                 <li className="link" onClick={link} key={`${statusClass}-jobs`}>
-                  {jobsLoading ? <Loader section small secondary /> : counter}
+                  {projectStore.projectsSummary.loading ? (
+                    <Loader section small secondary />
+                  ) : (
+                    counter
+                  )}
                   <i className={`state-${statusClass}`} />
                 </li>
               ))}
