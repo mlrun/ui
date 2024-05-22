@@ -20,9 +20,18 @@ such restriction.
 import { chain } from 'lodash'
 import { parseFunction } from './parseFunction'
 
-export const parseFunctions = (functions, projectName) => {
+export const parseFunctions = (functions, projectName, apiGateways) => {
   return chain(functions)
     .orderBy('metadata.updated', 'desc')
-    .map(func => parseFunction(func, projectName))
+    .map(func => {
+      const functionApiGatewayName = func.status?.api_gateway_name
+      let functionApiGateway = null
+
+      if (apiGateways && functionApiGatewayName && apiGateways[functionApiGatewayName]) {
+        functionApiGateway = apiGateways[functionApiGatewayName]
+      }
+
+      return parseFunction(func, projectName, null, functionApiGateway)
+    })
     .value()
 }
