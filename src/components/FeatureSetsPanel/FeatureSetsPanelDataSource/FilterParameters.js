@@ -174,12 +174,12 @@ const FilterParameters = ({
         <DatePicker
           className="data-source__inputs-item"
           date={data.startTime}
-          invalid={!validation.isStartTimeValid}
-          invalidText="Start time is invalid"
+          externalInvalid={!validation.isStartTimeValid}
+          externalInvalidText="Start time is invalid"
           label="Start time"
           onChange={date => handleChangeDates(date, START_TIME)}
           required={Boolean((data.timeField || data.endTime) && !data.startTime)}
-          setInvalid={value =>
+          setExternalInvalid={value =>
             setValidation(state => ({
               ...state,
               isStartTimeValid: value
@@ -191,12 +191,12 @@ const FilterParameters = ({
         <DatePicker
           className="data-source__inputs-item"
           date={data.endTime}
-          invalid={!validation.isEndTimeValid}
-          invalidText="End time is invalid"
+          externalInvalid={!validation.isEndTimeValid}
+          externalInvalidText="End time is invalid"
           label="End time"
           onChange={date => handleChangeDates(date, END_TIME)}
           required={Boolean((data.timeField || data.startTime) && !data.endTime)}
-          setInvalid={value =>
+          setExternalInvalid={value =>
             setValidation(state => ({
               ...state,
               isEndTimeValid: value

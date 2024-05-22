@@ -17,11 +17,12 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import React, { useCallback } from 'react'
+import React, { useCallback, useRef, useEffect, useState } from 'react'
 import PropTypes from 'prop-types'
 import { Link, useLocation, useNavigate, useParams } from 'react-router-dom'
 import { isEmpty } from 'lodash'
 import { useSelector } from 'react-redux'
+import classNames from 'classnames'
 
 import { Button, Tooltip, TextTooltipTemplate, RoundedIcon } from 'igz-controls/components'
 import LoadButton from '../../../common/LoadButton/LoadButton'
@@ -65,12 +66,14 @@ const DetailsHeader = ({
   setSelectedMetricsOptions,
   tab
 }) => {
+  const [isHeaderMultiline, setIsHeaderMultiline] = useState(false)
   const detailsStore = useSelector(store => store.detailsStore)
   const location = useLocation()
   const params = useParams()
   const navigate = useNavigate()
   const viewMode = getViewMode(window.location.search)
   const { actionButton, withToggleViewBtn } = pageData.details
+  const headerRef = useRef()
 
   const {
     value: stateValue,
@@ -92,8 +95,33 @@ const DetailsHeader = ({
     }
   }, [detailsStore.changes.counter, handleCancel])
 
+  useEffect(() => {
+    if (!headerRef.current) return
+
+    let prevHeaderHeight = 0
+    const resizeObserver = new ResizeObserver(entries => {
+      for (let entry of entries) {
+        if (entry.contentRect.height !== prevHeaderHeight) {
+          prevHeaderHeight = entry.contentRect.height
+          if (entry.contentRect.height > 100) {
+            setIsHeaderMultiline(true)
+          } else {
+            setIsHeaderMultiline(false)
+          }
+        }
+      }
+    },)
+
+    resizeObserver.observe(headerRef.current)
+
+    return () => resizeObserver.disconnect()
+  }, [])
+
   return (
-    <div className="item-header">
+    <div
+      className={classNames('item-header', isHeaderMultiline && 'item-header__multiline')}
+      ref={headerRef}
+    >
       <div className="item-header__data">
         <h3 className="item-header__title">
           {isDetailsScreen && !pageData.details.hideBackBtn && (
@@ -170,6 +198,43 @@ const DetailsHeader = ({
           )}
         </div>
       </div>
+      <div className="item-header__custom-elements">
+        {params.tab === DETAILS_METRICS_TAB && (
+          <>
+            <MetricsSelector
+              name="metrics"
+              metrics={detailsStore.metricsOptions.all}
+              onSelect={metrics =>
+                setSelectedMetricsOptions({ endpointUid: selectedItem.metadata.uid, metrics })
+              }
+              preselectedMetrics={detailsStore.metricsOptions.preselected}
+            />
+            <DatePicker
+              className="details-date-picker"
+              date={detailsStore.dates.value[0]}
+              dateTo={detailsStore.dates.value[1]}
+              selectedOptionId={PAST_24_HOUR_DATE_OPTION}
+              label=""
+              onChange={handleChangeDates}
+              type="date-range-time"
+              timeFrameLimit={TIME_FRAME_LIMITS.MONTH}
+              withLabels
+            />
+          </>
+        )}
+        {params.tab === DETAILS_ARTIFACTS_TAB && detailsStore.iteration && (
+          <Select
+            density="dense"
+            key="Iteration"
+            label="Iteration:"
+            onClick={option => {
+              setIteration(option)
+            }}
+            options={detailsStore.iterationOptions}
+            selectedId={detailsStore.iteration}
+          />
+        )}
+      </div>
       <div className="item-header__buttons">
         {detailsStore.changes.counter > 0 && (
           <>
@@ -197,41 +262,6 @@ const DetailsHeader = ({
                 disabled={detailsStore.changes.counter === 0 || detailsStore.editMode}
               />
             </Tooltip>
-          </>
-        )}
-        {params.tab === DETAILS_ARTIFACTS_TAB && detailsStore.iteration && (
-          <Select
-            density="dense"
-            key="Iteration"
-            label="Iteration:"
-            onClick={option => {
-              setIteration(option)
-            }}
-            options={detailsStore.iterationOptions}
-            selectedId={detailsStore.iteration}
-          />
-        )}
-        {params.tab === DETAILS_METRICS_TAB && (
-          <>
-            <MetricsSelector
-              name="metrics"
-              metrics={detailsStore.metricsOptions.all}
-              onSelect={metrics =>
-                setSelectedMetricsOptions({ endpointUid: selectedItem.metadata.uid, metrics })
-              }
-              preselectedMetrics={detailsStore.metricsOptions.preselected}
-            />
-            <DatePicker
-              className="details-date-picker"
-              date={detailsStore.dates.value[0]}
-              dateTo={detailsStore.dates.value[1]}
-              selectedOptionId={PAST_24_HOUR_DATE_OPTION}
-              label=""
-              onChange={handleChangeDates}
-              type="date-range-time"
-              timeFrameLimit={TIME_FRAME_LIMITS.MONTH}
-              withLabels
-            />
           </>
         )}
         {actionButton && !actionButton.hidden && (

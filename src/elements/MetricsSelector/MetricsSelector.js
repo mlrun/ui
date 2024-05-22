@@ -130,8 +130,10 @@ const MetricsSelector = ({ maxSelectionNumber, metrics, name, onSelect, preselec
       return 'Chose Metrics...'
     }
 
-    if (selectedMetrics.length === 1) {
-      return '1 metric selected'
+    if (selectedMetrics.length <= 2) {
+      return selectedMetrics
+        .map(selectedMetric => metrics.find(metric => metric.full_name === selectedMetric).name)
+        .join(', ')
     }
 
     return `${selectedMetrics.length} metrics selected`
@@ -144,12 +146,10 @@ const MetricsSelector = ({ maxSelectionNumber, metrics, name, onSelect, preselec
           className="metrics-selector-color-indicator"
           style={{ backgroundColor: metric.color }}
         />
-        <span className="data-ellipsis">
-          {metric.name}
-          {/*// todo: metrics - change according to design when ready  */}
-          <span style={{ marginLeft: '5px' }}>
-            {metric.type === metricsTypes.metric ? ' (M)' : ' (R)'}
-          </span>
+        <span className="data-ellipsis">{metric.name}</span>
+        {/*// todo: metrics - change according to design when ready  */}
+        <span style={{ marginLeft: '5px' }}>
+          {metric.type === metricsTypes.metric ? ' (M)' : ' (R)'}
         </span>
       </>
     )
@@ -226,12 +226,7 @@ const MetricsSelector = ({ maxSelectionNumber, metrics, name, onSelect, preselec
                                       return (
                                         <Tooltip
                                           key={metricItem.id}
-                                          template={
-                                            <TextTooltipTemplate
-                                              // todo: metrics - change according to design when ready
-                                              text={`${metricItem.name} ${metricItem.type === metricsTypes.metric ? ' (M)' : ' (R)'}`}
-                                            />
-                                          }
+                                          template={<TextTooltipTemplate text={metricItem.name} />}
                                         >
                                           <SelectOption
                                             item={{

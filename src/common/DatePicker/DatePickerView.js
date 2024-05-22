@@ -47,9 +47,9 @@ const DatePickerView = React.forwardRef(
       datePickerInputOnBlur,
       datePickerOptions,
       disabled,
+      externalInvalidText,
       getInputValueValidity,
       invalidMessage,
-      invalidText,
       isDatePickerOpened,
       isDatePickerOptionsOpened,
       isInputInvalid,
@@ -147,7 +147,7 @@ const DatePickerView = React.forwardRef(
                   text={
                     required && getInputValueValidity(valueDatePickerInput)
                       ? requiredText
-                      : invalidMessage || invalidText
+                      : invalidMessage || externalInvalidText
                   }
                   warning
                 />
@@ -303,8 +303,8 @@ DatePickerView.propTypes = {
   datePickerInputOnBlur: PropTypes.func.isRequired,
   datePickerOptions: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
   disabled: PropTypes.bool.isRequired,
+  externalInvalidText: PropTypes.string.isRequired,
   getInputValueValidity: PropTypes.func.isRequired,
-  invalidText: PropTypes.string.isRequired,
   floatingLabel: PropTypes.bool,
   invalidMessage: PropTypes.string.isRequired,
   isDatePickerOpened: PropTypes.bool.isRequired,
@@ -334,7 +334,8 @@ DatePickerView.propTypes = {
     TIME_FRAME_LIMITS['24_HOURS'],
     TIME_FRAME_LIMITS.WEEK,
     TIME_FRAME_LIMITS.MONTH,
-    TIME_FRAME_LIMITS.YEAR
+    TIME_FRAME_LIMITS.YEAR,
+    Infinity
   ]),
   tip: PropTypes.string.isRequired,
   valueDatePickerInput: PropTypes.string.isRequired,

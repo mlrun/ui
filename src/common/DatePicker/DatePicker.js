@@ -27,6 +27,7 @@ import React, {
   useMemo
 } from 'react'
 import PropTypes from 'prop-types'
+import { isNil } from 'lodash'
 
 import DatePickerView from './DatePickerView'
 import { DATE_FILTER_ANY_TIME } from '../../constants'
@@ -56,16 +57,16 @@ const DatePicker = ({
   date,
   dateTo,
   disabled,
+  externalInvalid,
+  externalInvalidText,
   hasFutureOptions,
-  invalid,
-  invalidText,
   label,
   onBlur,
   onChange,
   required,
   requiredText,
   selectedOptionId,
-  setInvalid,
+  setExternalInvalid,
   splitCharacter,
   timeFrameLimit,
   tip,
@@ -186,28 +187,28 @@ const DatePicker = ({
 
   const validateTimeRange = useCallback(
     ([dateFrom, dateTo]) => {
-      let invalidMessage = ''
+      let timeRangeInvalidMessage = ''
       let isTimeRangeInvalid = false
       let timeRangeIsNegative = false
 
       if (isRange && dateTo && dateFrom) {
         if (dateFrom.getTime() > dateTo.getTime()) {
-          invalidMessage = '“To” must be later than “From”'
+          timeRangeInvalidMessage = '“To” must be later than “From”'
           timeRangeIsNegative = true
           isTimeRangeInvalid = true
         } else if (dateTo.getTime() - dateFrom.getTime() > timeFrameLimit) {
-          invalidMessage = getTimeFrameWarningMsg(timeFrameLimit)
+          timeRangeInvalidMessage = getTimeFrameWarningMsg(timeFrameLimit)
           isTimeRangeInvalid = true
         }
       } else if (!isRange && dateFrom) {
         if (Date.now() - dateFrom.getTime() > timeFrameLimit) {
-          invalidMessage = getTimeFrameWarningMsg(timeFrameLimit)
+          timeRangeInvalidMessage = getTimeFrameWarningMsg(timeFrameLimit)
           isTimeRangeInvalid = true
         }
       }
 
       return {
-        invalidMessage,
+        timeRangeInvalidMessage,
         isTimeRangeInvalid,
         timeRangeIsNegative
       }
@@ -216,13 +217,13 @@ const DatePicker = ({
   )
 
   useEffect(() => {
-    const { invalidMessage, timeRangeIsNegative } = validateTimeRange([
+    const { timeRangeInvalidMessage, timeRangeIsNegative } = validateTimeRange([
       datePickerState.configFrom.selectedDate,
       datePickerState.configTo.selectedDate
     ])
 
     setIsTimeRangeNegative(timeRangeIsNegative)
-    setInvalidMessage(invalidMessage)
+    setInvalidMessage(timeRangeInvalidMessage)
   }, [
     datePickerState.configFrom.selectedDate,
     datePickerState.configTo.selectedDate,
@@ -255,15 +256,22 @@ const DatePicker = ({
   }, [handleCloseDatePickerOutside, isDatePickerOpened, isDatePickerOptionsOpened])
 
   useEffect(() => {
-    if (isInputInvalid !== invalid) {
+    if (isInputInvalid !== externalInvalid) {
       if (required && getInputValueValidity(valueDatePickerInput)) {
         setInputIsInvalid(true)
-        setInvalid(false)
-      } else if (invalid !== undefined) {
-        setInputIsInvalid(invalid)
+        setExternalInvalid(false)
+      } else if (!isNil(externalInvalid)) {
+        setInputIsInvalid(externalInvalid)
       }
     }
-  }, [getInputValueValidity, invalid, isInputInvalid, required, setInvalid, valueDatePickerInput])
+  }, [
+    getInputValueValidity,
+    externalInvalid,
+    isInputInvalid,
+    required,
+    setExternalInvalid,
+    valueDatePickerInput
+  ])
 
   const isRangeDateValid = day => {
     const dateFromMs = new Date(datePickerState.configFrom.selectedDate).setHours(0, 0, 0, 0)
@@ -323,7 +331,7 @@ const DatePicker = ({
     )
     setIsDatePickerOpened(false)
     setInputIsInvalid(false)
-    setInvalid(true)
+    setExternalInvalid(true)
 
     let dates = [new Date(datePickerState.configFrom.selectedDate)]
 
@@ -355,18 +363,20 @@ const DatePicker = ({
 
       if (!isValueEmpty) {
         dates = event.target.value.split(datesDivider).map(date => new Date(date))
+        const { isTimeRangeInvalid, timeRangeInvalidMessage } = validateTimeRange(dates)
 
-        if (validateTimeRange(dates).isTimeRangeInvalid) {
+        if (isTimeRangeInvalid) {
           dates = null
           setInputIsInvalid(true)
-          setInvalid(false)
+          setExternalInvalid(false)
+          setInvalidMessage(timeRangeInvalidMessage)
         } else {
           setInputIsInvalid(false)
-          setInvalid(true)
+          setExternalInvalid(true)
         }
       } else if (required) {
         setInputIsInvalid(true)
-        setInvalid(false)
+        setExternalInvalid(false)
       }
 
       if (dates) onChange(dates)
@@ -398,7 +408,7 @@ const DatePicker = ({
           }
 
           setInputIsInvalid(true)
-          setInvalid(false)
+          setExternalInvalid(false)
 
           dates = null
         }
@@ -453,7 +463,7 @@ const DatePicker = ({
   const onSelectOption = option => {
     if (option.handler) {
       onChange(option.handler(), option.isPredefined, option.id)
-      if (invalid === undefined) {
+      if (isNil(externalInvalid)) {
         setInputIsInvalid(false)
       }
     } else {
@@ -497,7 +507,7 @@ const DatePicker = ({
       disabled={disabled}
       getInputValueValidity={getInputValueValidity}
       invalidMessage={invalidMessage}
-      invalidText={invalidText}
+      externalInvalidText={externalInvalidText}
       isDatePickerOpened={isDatePickerOpened}
       isDatePickerOptionsOpened={isDatePickerOptionsOpened}
       isInputInvalid={isInputInvalid}
@@ -533,15 +543,15 @@ DatePicker.defaultProps = {
   className: '',
   dateTo: new Date(),
   disabled: false,
+  externalInvalid: null,
+  externalInvalidText: 'This field is invalid',
   hasFutureOptions: false,
-  invalid: undefined,
-  invalidText: 'This field is invalid',
   label: 'Date',
   onBlur: () => {},
   required: false,
   requiredText: 'This field is required',
   selectedOptionId: '',
-  setInvalid: () => {},
+  setExternalInvalid: () => {},
   splitCharacter: '/',
   timeFrameLimit: Infinity,
   tip: '',
@@ -554,23 +564,24 @@ DatePicker.propTypes = {
   date: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.string]).isRequired,
   dateTo: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.string]),
   disabled: PropTypes.bool,
+  externalInvalid: PropTypes.bool,
+  externalInvalidText: PropTypes.string,
   hasFutureOptions: PropTypes.bool,
-  invalid: PropTypes.bool,
-  invalidText: PropTypes.string,
   label: PropTypes.string,
   onBlur: PropTypes.func,
   onChange: PropTypes.func.isRequired,
   required: PropTypes.bool,
   requiredText: PropTypes.string,
   selectedOptionId: PropTypes.string,
-  setInvalid: PropTypes.func,
+  setExternalInvalid: PropTypes.func,
   splitCharacter: PropTypes.oneOf(['/', '.']),
   timeFrameLimit: PropTypes.oneOf([
     TIME_FRAME_LIMITS.HOUR,
     TIME_FRAME_LIMITS['24_HOURS'],
     TIME_FRAME_LIMITS.WEEK,
     TIME_FRAME_LIMITS.MONTH,
-    TIME_FRAME_LIMITS.YEAR
+    TIME_FRAME_LIMITS.YEAR,
+    Infinity
   ]),
   tip: PropTypes.oneOfType([PropTypes.string, PropTypes.element]),
   type: PropTypes.oneOf(['date', 'date-time', 'date-range', 'date-range-time']),
