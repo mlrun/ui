@@ -4,6 +4,7 @@ Feature: Datasets Page
     
   @MLD
   @passive
+  @smoke
   Scenario: MLD001 - Check components on Datasets page
     Given open url
     And click on row root with value "getting-started-tutorial-admin" in "name" column in "Projects_Table" table on "Projects" wizard
@@ -45,6 +46,7 @@ Feature: Datasets Page
 
   @MLD
   @passive
+  @smoke
   Scenario: MLD002 - Verify behaviour of Show iterations checkbox on Datasets page
     Given open url
     And click on row root with value "churn-project-admin" in "name" column in "Projects_Table" table on "Projects" wizard
@@ -67,7 +69,7 @@ Feature: Datasets Page
     And wait load page
     Then click on "Table_FilterBy_Button" element on "Datasets" wizard
     Then "Show_Iterations_Checkbox" element should be unchecked on "Artifacts_FilterBy_Popup" wizard
-    Then check "expand_btn" visibility in "Datasets_Table" on "Datasets" wizard
+    Then check "expand_btn" visibility in "Datasets_Table" on "Datasets" wizard with 0 offset
     Then click on cell with row index 1 in "expand_btn" column in "Datasets_Table" table on "Datasets" wizard
     And wait load page
     Then click on cell with row index 2 in "name" column in "Datasets_Table" table on "Datasets" wizard
@@ -83,6 +85,7 @@ Feature: Datasets Page
 
   @MLD
   @passive
+  @smoke
   Scenario: MLD003 - Check all mandatory components in Item infopane on Overview tab table on Datasets page
     Given open url
     And wait load page
@@ -135,6 +138,7 @@ Feature: Datasets Page
   
   @MLD
   @passive
+  @smoke
   Scenario: MLD005 - Check Details panel still active on page refresh
     * set tear-down property "dataset" created in "automation-test" project with "test-file" value
     * create "test-dataset" Dataset with "v1" tag in "default" project with code 200
@@ -169,6 +173,7 @@ Feature: Datasets Page
   
   @MLD
   @passive
+  @smoke
   Scenario: MLD006 - Check all mandatory components on Register Dataset form
     Given open url
     And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
@@ -178,7 +183,7 @@ Feature: Datasets Page
     Then "Register_Dataset_Button" element on "Datasets" should contains "Register dataset" value
     Then click on "Register_Dataset_Button" element on "Datasets" wizard
     Then verify if "Register_Dataset" popup dialog appears
-                Then verify options in "Path_Scheme_Combobox" combobox in "Target_Path" on "Register_Dataset" wizard should contains "Register_Dataset"."Combobox_Options"
+    Then verify options in "Path_Scheme_Combobox" combobox in "Target_Path" on "Register_Dataset" wizard should contains "Register_Dataset"."Combobox_Options"
     Then navigate back
     Then verify "Title" element not exists on "Register_Dataset" wizard
     Then navigate forward
@@ -192,7 +197,7 @@ Feature: Datasets Page
     Then type value " " to "Name_Input" field on "Register_Dataset" wizard
     And wait load page
     Then verify "Name_Input" on "Register_Dataset" wizard should display options "Input_Hint"."Artifact_Name_Hint"
-                Then verify "Name_Input" options rules on form "Register_Dataset" wizard
+    Then verify "Name_Input" options rules on form "Register_Dataset" wizard
     When select "V3IO" option in "Path_Scheme_Combobox" combobox on "Target_Path" accordion on "Register_Dataset" wizard
     When type value "  " to "Path_Scheme_Combobox" field on "Target_Path" on "Register_Dataset" wizard
     Then verify "Path_Scheme_Combobox" element in "Target_Path" on "Register_Dataset" wizard should display warning "Input_Hint"."V3IO_Path_Hint"
@@ -240,6 +245,7 @@ Feature: Datasets Page
     Then verify "Title" element not exists on "Register_Dataset" wizard
   
   @MLD
+  @smoke
   Scenario: MLD007 - Verify behaviour on Register new Dataset
     Given open url
     And wait load page
@@ -267,11 +273,20 @@ Feature: Datasets Page
     When select "V3IO" option in "Path_Scheme_Combobox" combobox on "Target_Path" accordion on "Register_Dataset" wizard
     When type value "target/path" to "Path_Scheme_Combobox" field on "Target_Path" on "Register_Dataset" wizard
     Then click on "Register_Button" element on "Register_Dataset" wizard
-    And wait load page
-    Then "Register_Error_Message" component on "Register_Dataset" should be equal "Register_Artifact"."Register_Error_Message"
+    Then verify if "Confirm_Popup" popup dialog appears
+    Then "Title" element on "Confirm_Popup" should contains "Overwrite dataset?" value
+    Then verify "Cross_Cancel_Button" element visibility on "Confirm_Popup" wizard
+    Then verify "Confirm_Dialog_Message" element visibility on "Confirm_Popup" wizard
+    Then "Confirm_Dialog_Message" component on "Confirm_Popup" should be equal "Register_Artifact"."Register_Error_Message"
+    Then verify "Cancel_Button" element visibility on "Confirm_Popup" wizard
+    Then "Cancel_Button" element on "Confirm_Popup" should contains "Cancel" value
+    Then verify "Overwrite_Button" element visibility on "Confirm_Popup" wizard
+    Then "Overwrite_Button" element on "Confirm_Popup" should contains "Overwrite" value
+    When click on "Cancel_Button" element on "Confirm_Popup" wizard
   
   @MLD
   @passive
+  @smoke
   Scenario: MLD014 - Check filtering by name on Datasets page
     Given open url
     And click on row root with value "churn-project-admin" in "name" column in "Projects_Table" table on "Projects" wizard
@@ -288,6 +303,7 @@ Feature: Datasets Page
   
   @MLD
   @passive
+  @smoke
   Scenario: MLD004 - Verify filtering by label on Datasets page
     Given open url
     And wait load page
@@ -317,6 +333,7 @@ Feature: Datasets Page
   
   @MLD
   @passive
+  @smoke
   Scenario: MLD015 - Verify action menu list, Downloads action,  View YAML action
     Given open url
     And wait load page
@@ -353,6 +370,7 @@ Feature: Datasets Page
     Then verify "YAML_Modal_Container" element visibility on "View_YAML" wizard
 
   @MLD
+  @smoke
   Scenario: MLD018 - Verify the Delete option state in Datasets table and Overview details action menu 
     Given open url
     And wait load page
@@ -387,6 +405,7 @@ Feature: Datasets Page
   
   @MLD
   @passive
+  @smoke
   Scenario: MLD013 - Check components on Artifact Preview on Datasets page
     Given open url
     And wait load page
@@ -397,9 +416,9 @@ Feature: Datasets Page
     Then hover on cell with row index 2 in "name" column in "Datasets_Table" table on "Datasets" wizard
     When click on cell with row index 2 in "artifact_preview_btn" column in "Datasets_Table" table on "Datasets" wizard
     And wait load page
-    Then verify "Preview_Header" element visibility on "Artifact_Preview_Popup" wizard
+    Then verify "Preview_Row" element visibility on "Artifact_Preview_Popup" wizard
     Then verify "Cross_Cancel_Button" element visibility on "Artifact_Preview_Popup" wizard
-    Then check "download_btn" visibility in "Preview_Header" on "Artifact_Preview_Popup" wizard
+    Then check "download_btn" visibility in "Preview_Row" on "Artifact_Preview_Popup" wizard with 1 offset
     Then click on "Download_Button" element on "Artifact_Preview_Popup" wizard
     And wait load page
     And wait load page
@@ -417,9 +436,9 @@ Feature: Datasets Page
     Then verify "Pop_Out_Button" element visibility on "Datasets_Info_Pane" wizard 
     Then click on "Pop_Out_Button" element on "Datasets_Info_Pane" wizard
     And wait load page
-    Then verify "Preview_Header" element visibility on "Artifact_Preview_Popup" wizard
+    Then verify "Preview_Row" element visibility on "Artifact_Preview_Popup" wizard
     Then verify "Cross_Cancel_Button" element visibility on "Artifact_Preview_Popup" wizard
-    Then check "download_btn" visibility in "Preview_Header" on "Artifact_Preview_Popup" wizard
+    Then check "download_btn" visibility in "Preview_Row" on "Artifact_Preview_Popup" wizard with 1 offset
     Then click on "Download_Button" element on "Artifact_Preview_Popup" wizard
     And wait load page
     And wait load page
@@ -432,7 +451,8 @@ Feature: Datasets Page
     Then click on "Download_Pop_Up_Cross_Cancel_Button" element on "Downloads_Popup" wizard
     Then click on "Cross_Cancel_Button" element on "Artifact_Preview_Popup" wizard
   
-  @MLD 
+  @MLD
+  @smoke 
   Scenario: MLD016 - Check broken link redirection
     Given open url
     And wait load page
@@ -482,6 +502,7 @@ Feature: Datasets Page
     Then compare "Header" element value on "Datasets_Info_Pane" wizard with test "name" context value
   
   @MLD
+  @smoke
   Scenario: MLD009 - Check that version tag is filled when edit it in table view and full view on Overview tab table on Datasets page
     Given open url
     And wait load page
@@ -506,6 +527,7 @@ Feature: Datasets Page
     Then verify "Cross_Close_Button" element visibility on "Datasets_Info_Pane" wizard
 
   @MLD
+  @smoke
   Scenario: MLD010 - Check that version tag dropdown shows all tags on filters wizard on Datasets page
     Given open url
     And wait load page
@@ -533,6 +555,7 @@ Feature: Datasets Page
     Then check "newTag" value in "tag" column in "Datasets_Table" table on "Datasets" wizard
 
   @MLD
+  @smoke
   Scenario: MLD011 - Check that version tag has "Click to add" status when it's empty after edited
     Given open url
     And wait load page
@@ -560,6 +583,7 @@ Feature: Datasets Page
     Then "Version_Tag_Input_Placeholder" element on "Datasets_Info_Pane" should contains "Click to add" value
 
   @MLD
+  @smoke
   Scenario: MLD012 - Check filter by "All" tag is performed when version tag was edited
     Given open url
     And wait load page
@@ -589,6 +613,7 @@ Feature: Datasets Page
     Then compare "Header" element value on "Datasets_Info_Pane" wizard with test "name" context value
 
   @MLD
+  @smoke
   Scenario: MLD019 - Check steps, buttons components on Train Model wizard
     Given open url
     And wait load page
@@ -719,6 +744,7 @@ Feature: Datasets Page
             | model_class           |                str                   |              |
 
   @MLD
+  @smoke
   Scenario: MLD020 - Check Run Details components on Train Model wizard
     Given open url
     And wait load page
@@ -761,6 +787,7 @@ Feature: Datasets Page
     Then "Image_Name_Text_Run_Details" component on "Modal_Wizard_Form" should contains "Modal_Wizard_Form"."Image_Name_Text"
 
   @MLD
+  @smoke
   Scenario: MLD021 - Check Data Inputs components on Train Model wizard
     Given open url
     And wait load page
@@ -815,6 +842,7 @@ Feature: Datasets Page
             | name2edited |         v3io:///container-name/fileedited             |
 
   @MLD
+  @smoke
   Scenario: MLD022 - Check Parameters components on Train Model wizard
     Given open url
     And wait load page
@@ -890,8 +918,11 @@ Feature: Datasets Page
             | name2edited           |                int                   |     1234     |
 
   @MLD
+  @smoke
   Scenario: MLD023 - Check Resources components on Train Model wizard
     Given open url
+    And wait load page
+    Then turn Off MLRun CE mode
     And wait load page
     And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
     And wait load page
@@ -1029,6 +1060,7 @@ Feature: Datasets Page
     When click on "Delete_New_Row_Button" element in "Resources_Accordion" on "Modal_Wizard_Form" wizard
 
   @MLD
+  @smoke
   Scenario: MLD024 - Check Advanced components on Train Model wizard
     Given open url
     And wait load page
@@ -1071,6 +1103,7 @@ Feature: Datasets Page
             |    name3    |        secret        | sectretName2:sectretKey2 |
 
   @MLD
+  @smoke
   Scenario: MLD025 - Check Hyperparameter strategy components on Train Model wizard
     Given open url
     And wait load page
@@ -1116,6 +1149,7 @@ Feature: Datasets Page
     Then "Teardown_Checkbox" element should be checked on "Modal_Wizard_Form" wizard
 
   @MLD
+  @smoke
   Scenario: MLD026 - Verify dataset elements visibility on Datasets Table with low number of rows
     Given open url
     And wait load page
@@ -1134,7 +1168,7 @@ Feature: Datasets Page
     Then select "All" option in "Table_Tree_Filter_Dropdown" dropdown on "Artifacts_FilterBy_Popup" wizard
     Then click on "Apply_Button" element on "Artifacts_FilterBy_Popup" wizard
     And wait load page
-    Then check "expand_btn" visibility in "Datasets_Table" on "Datasets" wizard
+    Then check "expand_btn" visibility in "Datasets_Table" on "Datasets" wizard with 0 offset
     Then verify that 9 row elements are displayed in "Datasets_Table" on "Datasets" wizard
     Then click on cell with row index 1 in "expand_btn" column in "Datasets_Table" table on "Datasets" wizard
     Then verify that 10 row elements are displayed in "Datasets_Table" on "Datasets" wizard
@@ -1154,6 +1188,7 @@ Feature: Datasets Page
   @MLD
   @inProgress
   @FAILED_TODO
+  @smoke
   #TODO: Bug ML-6022 - [Artifacts, Functions] selected item is missing from the list of visible items
 # Run this test case only on full screen
   Scenario: MLD027 - Verify dataset elements visibility on Datasets Table with high number of rows
@@ -1235,4 +1270,3 @@ Feature: Datasets Page
     Then verify that 20 row elements are displayed in "Datasets_Table" on "Datasets" wizard
     Then click on "Cross_Close_Button" element on "Datasets_Info_Pane" wizard
     And wait load page
-

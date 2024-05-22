@@ -141,7 +141,7 @@ module.exports = {
       'Version tag:',
       'Code origin:',
       'Updated:',
-      'Command:',
+      'Code Entry Point:',
       'Default handler:',
       'Image:',
       'Description:'
@@ -290,7 +290,7 @@ module.exports = {
       'Google storage',
       'Databricks filesystem'
     ],
-    Register_Error_Message: /That combination of (artifact|dataset) name and (artifact|dataset) tag is already in use\. Assign a unique combination of (artifact|dataset) name and (artifact|dataset) tag\./  
+    Register_Error_Message: /That combination of (artifact|dataset) name and (artifact|dataset) tag is already in use\. If you continue, the current (artifact|dataset) will be overwritten\./  
   },
   Register_Dataset: {
     Type_Options: ['General', 'Chart', 'Plot', 'Table'],
@@ -543,5 +543,8 @@ module.exports = {
     No_Datasets_data: 'No data matches the filter: "Version tag: latest, Labels: v3io_user=123, Show best iteration only: true"',
     No_Files_data: 'No data matches the filter: "Version tag: latest, Labels: v3io_user=123, Show best iteration only: true"',
     No_Models_data: 'No data matches the filter: "Version tag: latest, Labels: MY-KEY, Show best iteration only: true"'
+  },
+  Preview_Pop_Up: {
+    Table_Header: ['Name', 'Path', 'Size', 'Updated']
   }
 }

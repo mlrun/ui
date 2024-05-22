@@ -43,7 +43,7 @@ const labelsTable = {
   header: {},
   body: {
     root: '.chips-wrapper',
-    add_row_btn: 'button.button-add',
+    add_row_btn: '[data-testid="labels-add-chip"]',
     row: {
       root: '.chip-block',
       fields: {
@@ -51,7 +51,7 @@ const labelsTable = {
         value_input: 'input.input-label-value',
         key_verify: '.edit-chip-container input.input-label-key',
         value_verify: '.edit-chip-container input.input-label-value',
-        remove_btn: '.edit-chip__icon-close'
+        remove_btn: '.item-icon-close'
       }
     }
   }
