@@ -25,6 +25,7 @@ import { isPlainObject } from 'lodash'
 import {
   FormCheckBox,
   FormInput,
+  FormOnChange,
   FormRadio,
   FormSelect,
   FormToggle,
@@ -33,7 +34,6 @@ import {
   Tooltip
 } from 'igz-controls/components'
 import { FormRowActions } from 'igz-controls/elements'
-import FormOnChange from '../../../common/FormOnChange/FormOnChange'
 
 import {
   parameterTypeList,

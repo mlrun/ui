@@ -25,9 +25,14 @@ import { createForm } from 'final-form'
 import arrayMutators from 'final-form-arrays'
 import PropTypes from 'prop-types'
 
-import { ConfirmDialog, FormRadio, FormKeyValueTable, FormCheckBox } from 'igz-controls/components'
+import {
+  ConfirmDialog,
+  FormRadio,
+  FormKeyValueTable,
+  FormCheckBox,
+  FormOnChange
+} from 'igz-controls/components'
 import { TERTIARY_BUTTON, DANGER_BUTTON } from 'igz-controls/constants'
-import FormOnChange from '../../common/FormOnChange/FormOnChange'
 
 import { handleDeleteArtifact } from '../../utils/handleDeleteArtifact'
 import { getValidationRules } from 'igz-controls/utils/validation.util'

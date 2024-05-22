@@ -21,9 +21,15 @@ import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import classnames from 'classnames'
 import PropTypes from 'prop-types'
 
-import { FormInput, FormSelect, TextTooltipTemplate, Tip, Tooltip } from 'igz-controls/components'
+import {
+  FormInput,
+  FormOnChange,
+  FormSelect,
+  TextTooltipTemplate,
+  Tip,
+  Tooltip
+} from 'igz-controls/components'
 import { FormRowActions } from 'igz-controls/elements'
-import FormOnChange from '../../../common/FormOnChange/FormOnChange'
 
 import { environmentVariablesTypeOptions } from '../formEnvironmentVariablesTable.util'
 import { getValidationRules } from 'igz-controls/utils/validation.util'

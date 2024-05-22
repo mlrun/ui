@@ -21,9 +21,8 @@ import React from 'react'
 import { useForm } from 'react-final-form'
 import PropTypes from 'prop-types'
 
-import { FormInput, FormCheckBox } from 'igz-controls/components'
+import { FormInput, FormCheckBox, FormOnChange } from 'igz-controls/components'
 import FormTagFilter from '../../common/FormTagFilter/FormTagFilter'
-import FormOnChange from '../../common/FormOnChange/FormOnChange'
 
 import { ITERATIONS_FILTER, LABELS_FILTER, SHOW_ITERATIONS, TAG_FILTER } from '../../constants'
 
@@ -44,7 +43,7 @@ const ArtifactsFilters = ({ artifacts }) => {
     <div className="artifacts-filters">
       <div className="form-row">
         <FormInput label="Labels" name={LABELS_FILTER} placeholder="key1,key2=value,..." />
-        <FormOnChange name={LABELS_FILTER}  handler={handleLabelsChange}/>
+        <FormOnChange name={LABELS_FILTER} handler={handleLabelsChange} />
       </div>
       <div className="form-row">
         <FormTagFilter content={artifacts} label="Version tag" name={TAG_FILTER} />
@@ -55,7 +54,7 @@ const ArtifactsFilters = ({ artifacts }) => {
           label="Show best iteration only"
           name={ITERATIONS_FILTER}
         />
-        <FormOnChange name={ITERATIONS_FILTER} handler={handleIter}/>
+        <FormOnChange name={ITERATIONS_FILTER} handler={handleIter} />
       </div>
     </div>
   )

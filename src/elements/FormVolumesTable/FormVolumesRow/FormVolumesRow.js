@@ -22,9 +22,14 @@ import PropTypes from 'prop-types'
 import classnames from 'classnames'
 import { isEmpty, pick } from 'lodash'
 
-import { FormSelect, FormInput, TextTooltipTemplate, Tooltip } from 'igz-controls/components'
+import {
+  FormSelect,
+  FormInput,
+  FormOnChange,
+  TextTooltipTemplate,
+  Tooltip
+} from 'igz-controls/components'
 import { FormRowActions } from 'igz-controls/elements'
-import FormOnChange from '../../../common/FormOnChange/FormOnChange'
 
 import { FORM_TABLE_EDITING_ITEM } from 'igz-controls/types'
 import { generateVolumeInputsData } from '../formVolumesTable.util'

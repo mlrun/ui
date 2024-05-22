@@ -28,6 +28,7 @@ import {
   FILTER_MENU_MODAL,
   FUNCTION_FILTERS,
   GROUP_BY_NAME,
+  JOB_KIND_JOB,
   JOBS_MONITORING_JOBS_TAB,
   MODEL_TYPE,
   MODELS_FILTERS,
@@ -79,13 +80,13 @@ const initialState = {
       initialValues: {
         labels: '',
         project: '',
-        state: FILTER_ALL_ITEMS,
+        state: [FILTER_ALL_ITEMS],
         type: FILTER_ALL_ITEMS
       },
       values: {
         labels: '',
         project: '',
-        state: FILTER_ALL_ITEMS,
+        state: [FILTER_ALL_ITEMS],
         type: FILTER_ALL_ITEMS
       }
     },
@@ -93,24 +94,24 @@ const initialState = {
       initialValues: {
         labels: '',
         project: '',
-        type: FILTER_ALL_ITEMS
+        type: JOB_KIND_JOB
       },
       values: {
         labels: '',
         project: '',
-        type: FILTER_ALL_ITEMS
+        type: JOB_KIND_JOB
       }
     },
     [JOBS_MONITORING_WORKFLOWS_TAB]: {
       initialValues: {
         labels: '',
         project: '',
-        state: FILTER_ALL_ITEMS
+        state: [FILTER_ALL_ITEMS]
       },
       values: {
         labels: '',
         project: '',
-        state: FILTER_ALL_ITEMS
+        state: [FILTER_ALL_ITEMS]
       }
     }
   }

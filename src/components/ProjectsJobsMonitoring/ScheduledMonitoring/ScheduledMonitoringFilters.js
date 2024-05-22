@@ -20,8 +20,7 @@ such restriction.
 import React from 'react'
 import { useForm } from 'react-final-form'
 
-import { FormInput, FormSelect } from 'igz-controls/components'
-import FormOnChange from '../../../common/FormOnChange/FormOnChange'
+import { FormInput, FormOnChange, FormSelect } from 'igz-controls/components'
 
 import { LABELS_FILTER, PROJECT_FILTER } from '../../../constants'
 import { filterScheduledTypeOptions } from '../../FilterMenu/filterMenu.settings'
