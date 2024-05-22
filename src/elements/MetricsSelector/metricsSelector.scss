@@ -63,6 +63,10 @@
             font-size: 15px;
             white-space: nowrap;
             text-overflow: ellipsis;
+
+            svg {
+              margin-left: auto;
+            }
           }
 
           .metrics-selector-color-indicator {
@@ -73,6 +77,20 @@
             margin: 0 5px 0 10px;
             background-color: transparent;
             border-radius: 50%;
+          }
+
+          &.disabled {
+            label {
+              .metrics-selector-color-indicator {
+                opacity: 0.3;
+              }
+
+              svg {
+                path {
+                  fill: $spunPearl;
+                }
+              }
+            }
           }
         }
       }

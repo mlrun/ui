@@ -37,6 +37,8 @@ import { METRICS_SELECTOR_OPTIONS } from '../../types'
 
 import { ReactComponent as Arrow } from 'igz-controls/images/arrow.svg'
 import { ReactComponent as SearchIcon } from 'igz-controls/images/search.svg'
+import { ReactComponent as MetricIcon } from 'igz-controls/images/circled-M.svg'
+import { ReactComponent as ResultIcon } from 'igz-controls/images/circled-R.svg'
 
 import './metricsSelector.scss'
 
@@ -146,10 +148,7 @@ const MetricsSelector = ({ maxSelectionNumber, metrics, name, onSelect, preselec
           style={{ backgroundColor: metric.color }}
         />
         <span className="data-ellipsis">{metric.name}</span>
-        {/*// todo: metrics - change according to design when ready  */}
-        <span style={{ marginLeft: '5px' }}>
-          {metric.type === metricsTypes.metric ? ' (M)' : ' (R)'}
-        </span>
+        {metric.type === metricsTypes.metric ? <MetricIcon /> : <ResultIcon />}
       </>
     )
   }
