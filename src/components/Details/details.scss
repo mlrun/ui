@@ -32,7 +32,7 @@
       &-header {
         display: flex;
         flex-wrap: wrap;
-        align-items: center;
+        align-items: flex-start;
         justify-content: flex-end;
         margin: 0 0 26px 0;
 
@@ -156,6 +156,7 @@
         &_multiline {
           .item-header__buttons {
             order: 2;
+            margin-bottom: 10px;
           }
 
           .item-header__custom-elements {
