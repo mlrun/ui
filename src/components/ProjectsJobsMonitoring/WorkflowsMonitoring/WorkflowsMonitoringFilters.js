@@ -20,10 +20,9 @@ such restriction.
 import React from 'react'
 import { useForm } from 'react-final-form'
 
-import { FormInput, FormSelect } from 'igz-controls/components'
-import FormOnChange from '../../../common/FormOnChange/FormOnChange'
+import { FormInput, FormOnChange, FormSelect } from 'igz-controls/components'
 
-import { LABELS_FILTER, PROJECT_FILTER } from '../../../constants'
+import { JOBS_MONITORING_WORKFLOWS_TAB, LABELS_FILTER, PROJECT_FILTER } from '../../../constants'
 import { generateStatusFilter } from '../../FilterMenu/filterMenu.settings'
 
 const WorkflowsMonitoringFilters = () => {
@@ -43,7 +42,12 @@ const WorkflowsMonitoringFilters = () => {
         />
       </div>
       <div className="form-row">
-        <FormSelect label="Status" name="state" options={generateStatusFilter(false)} />
+        <FormSelect
+          label="Status"
+          name="state"
+          options={generateStatusFilter(false, JOBS_MONITORING_WORKFLOWS_TAB)}
+          multiple
+        />
       </div>
       <div className="form-row">
         <FormInput label="Labels" name={LABELS_FILTER} placeholder="key1,key2=value,..." />

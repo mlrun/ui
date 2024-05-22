@@ -31,6 +31,8 @@ import {
   JOB_KIND_REMOTE,
   JOB_KIND_SPARK,
   JOB_KIND_WORKFLOW,
+  JOBS_MONITORING_JOBS_TAB,
+  JOBS_MONITORING_WORKFLOWS_TAB,
   PROJECT_FILTER,
   SORT_BY,
   FILTER_ALL_ITEMS,
@@ -39,17 +41,44 @@ import {
   TAG_FILTER_LATEST
 } from '../../constants'
 
-export const generateStatusFilter = useFailedStatus => {
+const jobsStatus = [
+  { label: 'All', id: FILTER_ALL_ITEMS, status: 'all' },
+  { label: 'Aborted', id: 'aborted', status: 'aborted' },
+  { label: 'Aborting', id: 'aborting', status: 'aborting' },
+  { label: 'Completed', id: 'completed', status: 'completed' },
+  { label: 'Created', id: 'created', status: 'created' },
+  { label: 'Error', id: 'error', status: 'error' },
+  { label: 'Running', id: 'running', status: 'running' },
+  { label: 'Pending', id: 'pending', status: 'pending' },
+  { label: 'Unknown', id: 'unknown', status: 'unknown' }
+]
+
+const workflowsStatus = [
+  { label: 'All', id: FILTER_ALL_ITEMS, status: 'all' },
+  { label: 'Error', id: 'error', status: 'error' },
+  { label: 'Failed', id: 'failed', status: 'failed' },
+  { label: 'Running', id: 'running', status: 'running' },
+  { label: 'Skipped', id: 'skipped', status: 'skipped' },
+  { label: 'Succeeded', id: 'succeeded', status: 'succeeded' }
+]
+
+export const generateStatusFilter = (useFailedStatus, tab) => {
   const status = useFailedStatus ? 'failed' : 'error'
 
-  return [
-    { label: 'All', id: FILTER_ALL_ITEMS, status: 'all' },
-    { label: 'Completed', id: 'completed', status: 'completed' },
-    { label: 'Running', id: 'running', status: 'running' },
-    { label: 'Pending', id: 'pending', status: 'pending' },
-    { label: 'Error', id: status, status: status },
-    { label: 'Aborted', id: 'aborted', status: 'aborted' }
-  ]
+  if (tab === JOBS_MONITORING_JOBS_TAB) {
+    return jobsStatus
+  } else if (tab === JOBS_MONITORING_WORKFLOWS_TAB) {
+    return workflowsStatus
+  } else {
+    return [
+      { label: 'All', id: FILTER_ALL_ITEMS, status: 'all' },
+      { label: 'Completed', id: 'completed', status: 'completed' },
+      { label: 'Running', id: 'running', status: 'running' },
+      { label: 'Pending', id: 'pending', status: 'pending' },
+      { label: 'Error', id: status, status: status },
+      { label: 'Aborted', id: 'aborted', status: 'aborted' }
+    ]
+  }
 }
 
 export const generateTypeFilter = () => {
@@ -84,7 +113,6 @@ export const tagFilterOptions = [
 ]
 
 export const filterScheduledTypeOptions = [
-  { label: 'All', id: FILTER_ALL_ITEMS },
   { label: 'Jobs', id: JOB_KIND_JOB },
   { label: 'Workflows', id: JOB_KIND_WORKFLOW }
 ]

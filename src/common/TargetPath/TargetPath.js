@@ -22,8 +22,7 @@ import { useDispatch } from 'react-redux'
 import { get, isNil } from 'lodash'
 import PropTypes from 'prop-types'
 
-import { FormCombobox } from 'igz-controls/components'
-import FormOnChange from '../FormOnChange/FormOnChange'
+import { FormCombobox, FormOnChange } from 'igz-controls/components'
 
 import {
   generateComboboxMatchesList,

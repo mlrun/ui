@@ -55,6 +55,7 @@ import jobsActions from '../../actions/jobs'
 import workflowActions from '../../actions/workflow'
 
 import './projectsJobsMonitoring.scss'
+import { removeFilters } from '../../reducers/filtersReducer'
 
 export const ProjectJobsMonitoringContext = React.createContext({})
 
@@ -135,6 +136,7 @@ const ProjectsJobsMonitoring = ({ fetchAllJobRuns, fetchJobFunction, fetchJobs }
     setSelectedCard(STATS_TOTAL_CARD)
     setSelectedTab(tabName)
     navigate(`/projects/${JOBS_MONITORING_PAGE}/${tabName}`)
+    dispatch(removeFilters())
   }
 
   const handleRerunJob = useCallback(
@@ -154,7 +156,7 @@ const ProjectsJobsMonitoring = ({ fetchAllJobRuns, fetchJobFunction, fetchJobs }
     setAbortingJobs({})
   }, [])
 
-  const refreshJobsTabJobs = useCallback(
+  const refreshJobs = useCallback(
     filters => {
       if (params.jobName) {
         setJobRuns([])
@@ -214,7 +216,7 @@ const ProjectsJobsMonitoring = ({ fetchAllJobRuns, fetchJobFunction, fetchJobs }
               '*',
               abortJobRef,
               responseAbortingJobs,
-              () => refreshJobsTabJobs(filters),
+              () => refreshJobs(filters),
               dispatch
             )
           }
@@ -237,7 +239,7 @@ const ProjectsJobsMonitoring = ({ fetchAllJobRuns, fetchJobFunction, fetchJobs }
     ]
   )
 
-  const refreshScheduledTabJobs = useCallback(
+  const refreshScheduled = useCallback(
     filters => {
       setJobs([])
       abortControllerRef.current = new AbortController()
@@ -319,7 +321,7 @@ const ProjectsJobsMonitoring = ({ fetchAllJobRuns, fetchJobFunction, fetchJobs }
     return {
       [JOBS_MONITORING_JOBS_TAB]: {
         filters: jobsFilters,
-        handleRefresh: refreshJobsTabJobs,
+        handleRefresh: refreshJobs,
         modalFilters: <JobsMonitoringFilters />
       },
       [JOBS_MONITORING_WORKFLOWS_TAB]: {
@@ -329,18 +331,11 @@ const ProjectsJobsMonitoring = ({ fetchAllJobRuns, fetchJobFunction, fetchJobs }
       },
       [JOBS_MONITORING_SCHEDULED_TAB]: {
         filters: scheduledFilters,
-        handleRefresh: refreshScheduledTabJobs,
+        handleRefresh: refreshScheduled,
         modalFilters: <ScheduledMonitoringFilters />
       }
     }
-  }, [
-    getWorkflows,
-    jobsFilters,
-    refreshJobsTabJobs,
-    refreshScheduledTabJobs,
-    scheduledFilters,
-    workflowsFilters
-  ])
+  }, [getWorkflows, jobsFilters, refreshJobs, refreshScheduled, scheduledFilters, workflowsFilters])
 
   return (
     <>
@@ -385,8 +380,8 @@ const ProjectsJobsMonitoring = ({ fetchAllJobRuns, fetchJobFunction, fetchJobs }
                 jobWizardIsOpened,
                 jobWizardMode,
                 jobs,
-                refreshJobsTabJobs,
-                refreshScheduledTabJobs,
+                refreshJobs,
+                refreshScheduled,
                 selectedCard,
                 setAbortingJobs,
                 setConfirmData,

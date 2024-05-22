@@ -20,8 +20,7 @@ such restriction.
 import React from 'react'
 import { useForm } from 'react-final-form'
 
-import { FormCheckBox } from 'igz-controls/components'
-import FormOnChange from '../../common/FormOnChange/FormOnChange'
+import { FormCheckBox, FormOnChange } from 'igz-controls/components'
 
 import { SHOW_UNTAGGED_FILTER, SHOW_UNTAGGED_ITEMS } from '../../constants'
 

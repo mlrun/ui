@@ -17,20 +17,46 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import React from 'react'
+import React, { useMemo } from 'react'
 import { useForm } from 'react-final-form'
 
-import { FormInput, FormSelect } from 'igz-controls/components'
-import FormOnChange from '../../../common/FormOnChange/FormOnChange'
+import { FormInput, FormOnChange, FormSelect } from 'igz-controls/components'
 
-import { LABELS_FILTER, PROJECT_FILTER } from '../../../constants'
+import {
+  FILTER_ALL_ITEMS,
+  JOBS_MONITORING_JOBS_TAB,
+  LABELS_FILTER,
+  PROJECT_FILTER
+} from '../../../constants'
 import { generateStatusFilter, generateTypeFilter } from '../../FilterMenu/filterMenu.settings'
 
 const JobsMonitoringFilters = () => {
   const form = useForm()
 
+  const options = useMemo(() => generateStatusFilter(false, JOBS_MONITORING_JOBS_TAB), [])
+
   const handleInputChange = (value, inputName) => {
     form.change(inputName, value || '')
+  }
+
+  const handleStateChange = (selectedValue, currentValue) => {
+    if (
+      selectedValue.length > 1 &&
+      selectedValue.includes(FILTER_ALL_ITEMS) &&
+      selectedValue.indexOf('all') === 0
+    ) {
+      form.change(
+        'state',
+        selectedValue.filter(value => value !== FILTER_ALL_ITEMS)
+      )
+    } else if (
+      (!currentValue.includes('all') &&
+        selectedValue.includes('all') &&
+        selectedValue.indexOf('all') > 0) ||
+      options.filter(option => option.id !== 'all').length === selectedValue.length
+    ) {
+      form.change('state', ['all'])
+    }
   }
 
   return (
@@ -43,7 +69,8 @@ const JobsMonitoringFilters = () => {
         />
       </div>
       <div className="form-row">
-        <FormSelect label="Status" name="state" options={generateStatusFilter(false)} />
+        <FormSelect label="Status" name="state" options={options} multiple />
+        <FormOnChange handler={(value, some) => handleStateChange(value, some)} name="state" />
       </div>
       <div className="form-row">
         <FormSelect label="Type" name="type" options={generateTypeFilter()} />

@@ -26,12 +26,11 @@ import { Form } from 'react-final-form'
 import arrayMutators from 'final-form-arrays'
 import { createForm } from 'final-form'
 
-import { PopUpDialog, FormInput } from 'igz-controls/components'
+import { PopUpDialog, FormInput, FormOnChange } from 'igz-controls/components'
 import { SelectOption } from 'igz-controls/elements'
 import { TextTooltipTemplate, Tooltip } from 'iguazio.dashboard-react-controls/dist/components'
 import { ReactComponent as Caret } from 'igz-controls/images/dropdown.svg'
 import Accordion from '../../common/Accordion/Accordion'
-import FormOnChange from '../../common/FormOnChange/FormOnChange'
 
 import { filterMetrics, groupMetricByApplication, metricsTypes } from './metricsSelector.utils'
 import { METRICS_SELECTOR_OPTIONS } from '../../types'

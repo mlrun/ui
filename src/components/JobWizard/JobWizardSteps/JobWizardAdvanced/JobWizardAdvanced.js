@@ -21,8 +21,7 @@ import React, { useState } from 'react'
 import PropTypes from 'prop-types'
 
 import FormEnvironmentVariablesTable from '../../../../elements/FormEnvironmentVariablesTable/FormEnvironmentVariablesTable'
-import { FormCheckBox, FormInput, FormKeyValueTable } from 'igz-controls/components'
-import FormOnChange from '../../../../common/FormOnChange/FormOnChange'
+import { FormCheckBox, FormInput, FormKeyValueTable, FormOnChange } from 'igz-controls/components'
 
 import { ADVANCED_STEP } from '../../../../constants'
 import { secretsKindOptions } from './JobWizardAdvanced.util'

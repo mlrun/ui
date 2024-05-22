@@ -28,9 +28,9 @@ import {
   Tooltip,
   TextTooltipTemplate,
   RoundedIcon,
-  FormInput
+  FormInput,
+  FormOnChange
 } from 'igz-controls/components'
-import FormOnChange from '../../common/FormOnChange/FormOnChange'
 
 import { headers } from './detailsRequestedFeatures.utils'
 import { parseFeatureTemplate } from '../../utils/parseFeatureTemplate'
