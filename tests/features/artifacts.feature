@@ -293,8 +293,8 @@ Feature: Files Page
   @passive
   @smoke
   Scenario: MLA013 - Check Details panel still active on page refresh
-    * set tear-down property "project" created with "automation-test" value
-    * set tear-down property "file" created in "automation-test" project with "test-file" value
+    # * set tear-down property "project" created with "automation-test" value
+    # * set tear-down property "file" created in "automation-test" project with "test-file" value
     * create "automation-test" MLRun Project with code 201
     * create "test-file" File with "test" tag in "automation-test" project with code 200
     Given open url
@@ -323,6 +323,7 @@ Feature: Files Page
     Then verify "Header" element visibility on "Files_Info_Pane" wizard
     Then "Header" element on "Files_Info_Pane" should contains "test-file" value
     Then refresh a page
+    And wait load page
     Then verify "Header" element visibility on "Files_Info_Pane" wizard
     Then "Header" element on "Files_Info_Pane" should contains "test-file" value
 
@@ -400,7 +401,7 @@ Feature: Files Page
     Then select "All" option in "Table_Tree_Filter_Dropdown" dropdown on "Artifacts_FilterBy_Popup" wizard
     Then click on "Apply_Button" element on "Artifacts_FilterBy_Popup" wizard
     And wait load page
-    Then verify action menu on "Files" wizard in "Files_Table" table with "survival-curves_km-survival" value in "name" column should contains "Common_Lists"."Action_Menu_List"
+    Then verify action menu on "Files" wizard in "Files_Table" table with "survival-curves_km-survival" value in "name" column should contains "Common_Lists"."Action_Menu_List_Expanded"
     Then verify that in action menu on "Files" wizard in "Files_Table" table with "survival-curves_km-survival" value in "name" column "Delete" option is disabled
     When click on cell with row index 2 in "name" column in "Files_Table" table on "Files" wizard
     Then check "Click to add" value in "tag" column in "Overview_Table" table on "Files_Info_Pane" wizard

@@ -599,7 +599,7 @@ module.exports = {
     ),
     Overview_UID_Header: labelComponent(
       generateLabelGroup(
-        '.item-info__details:nth-of-type(1) .details-item:nth-of-type(9) .details-item__header',
+        '.item-info__details-wrapper:nth-of-type(2) .item-info__details .details-item:nth-of-type(6) .details-item__header',
         false,
         true
       )
@@ -727,7 +727,7 @@ module.exports = {
     ),
     Overview_UID_Header: labelComponent(
       generateLabelGroup(
-        '.item-info__details:nth-of-type(1) .details-item:nth-of-type(8) .details-item__header',
+        '.item-info__details-wrapper:nth-of-type(2) .item-info__details .details-item:nth-of-type(5) .details-item__header',
         false,
         true
       )

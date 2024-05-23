@@ -343,6 +343,13 @@ Then(
 )
 
 Then(
+  'verify checkbox {string} element in {string} on {string} wizard is disabled',
+  async function (elementName, accordionName, wizardName) {
+    await verifyCheckboxDisabled(this.driver, pageObjects[wizardName][accordionName][elementName].root)
+  }
+)
+
+Then(
   'verify {string} element in {string} on {string} wizard is enabled',
   async function(inputField, accordionName, wizardName) {
     await verifyInputEnabled(

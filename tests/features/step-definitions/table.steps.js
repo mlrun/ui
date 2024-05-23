@@ -145,12 +145,13 @@ Then(
       value
     )
     const indx = arr[0]
-    const actionMenuSel = await getCellByIndexColumn(
-      this.driver,
-      pageObjects[wizard][table],
-      indx,
-      'action_menu'
-    )
+    const menuType = (column === 'name_expand_btn') ? 'action_menu_expand' : 'action_menu'
+    const actionMenuSel =  await getCellByIndexColumn(
+        this.driver,
+        pageObjects[wizard][table],
+        indx,
+        menuType
+      )
     await hoverComponent(
       this.driver,
       pageObjects[wizard][table]['tableFields'][column](indx),
