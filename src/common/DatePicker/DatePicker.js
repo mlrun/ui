@@ -107,7 +107,8 @@ const DatePicker = ({
   const handleCloseDatePickerOutside = useCallback(
     event => {
       if (
-        !event.target.closest('.date-picker__pop-up-wrapper') &&
+        datePickerRef.current &&
+        !datePickerRef.current.contains(event.target) &&
         datePickerViewRef.current &&
         !datePickerViewRef.current.contains(event.target)
       ) {
