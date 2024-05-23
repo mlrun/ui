@@ -563,7 +563,7 @@ Feature: Feature Store Page
         When type searchable fragment "clean" into "URL_Combobox" combobox input in "Data_Source_Accordion" on "New_Feature_Set" wizard
         Then searchable fragment "clean" should be in every suggested option into "URL_Combobox" combobox input in "Data_Source_Accordion" on "New_Feature_Set" wizard
         When type value "  " to "URL_Combobox" field on "Data_Source_Accordion" on "New_Feature_Set" wizard
-        Then click on "Accordion_Header" element in "Data_Source_Accordion" on "New_Feature_Set" wizard
+        Then click on "Apply_Combobox_Button" element in "Data_Source_Accordion" on "New_Feature_Set" wizard
         Then verify "URL_Combobox" element in "Data_Source_Accordion" on "New_Feature_Set" wizard should display warning "Input_Hint"."MLRun_Store_Path_Hint"
         When type value "artifacts/stocks" to "URL_Combobox" field on "Data_Source_Accordion" on "New_Feature_Set" wizard
         Then searchable fragment "stocks" should be in every suggested option into "URL_Combobox" combobox input in "Data_Source_Accordion" on "New_Feature_Set" wizard
@@ -571,15 +571,15 @@ Feature: Feature Store Page
         Then searchable fragment "raw-data" should be in every suggested option into "URL_Combobox" combobox input in "Data_Source_Accordion" on "New_Feature_Set" wizard
         Then select "V3IO" option in "URL_Combobox" combobox on "Data_Source_Accordion" accordion on "New_Feature_Set" wizard
         Then type value "  " to "URL_Combobox" field on "Data_Source_Accordion" on "New_Feature_Set" wizard
-        Then click on "Accordion_Header" element in "Data_Source_Accordion" on "New_Feature_Set" wizard
+        Then click on "Apply_Combobox_Button" element in "Data_Source_Accordion" on "New_Feature_Set" wizard
         Then verify "URL_Combobox" element in "Data_Source_Accordion" on "New_Feature_Set" wizard should display warning "Input_Hint"."V3IO_Path_Hint_Feature_Store"
         Then select "S3" option in "URL_Combobox" combobox on "Data_Source_Accordion" accordion on "New_Feature_Set" wizard
         Then type value "@!$&" to "URL_Combobox" field on "Data_Source_Accordion" on "New_Feature_Set" wizard
-        Then click on "Accordion_Header" element in "Data_Source_Accordion" on "New_Feature_Set" wizard
+        Then click on "Apply_Combobox_Button" element in "Data_Source_Accordion" on "New_Feature_Set" wizard
         Then verify "URL_Combobox" element in "Data_Source_Accordion" on "New_Feature_Set" wizard should display warning "Input_Hint"."S3_Path_Hint"
         Then select "Azure storage" option in "URL_Combobox" combobox on "Data_Source_Accordion" accordion on "New_Feature_Set" wizard
         Then type value "__" to "URL_Combobox" field on "Data_Source_Accordion" on "New_Feature_Set" wizard
-        Then click on "Accordion_Header" element in "Data_Source_Accordion" on "New_Feature_Set" wizard
+        Then click on "Apply_Combobox_Button" element in "Data_Source_Accordion" on "New_Feature_Set" wizard
         Then verify "URL_Combobox" element in "Data_Source_Accordion" on "New_Feature_Set" wizard should display warning "Input_Hint"."Azure_Storage_Path_Hint"
 
     @MLFS
@@ -794,9 +794,12 @@ Feature: Feature Store Page
         When uncheck "Offline_Checkbox" element in "Target_Store_Accordion" on "New_Feature_Set" wizard
         When check "External_Offline_Checkbox" element in "Target_Store_Accordion" on "New_Feature_Set" wizard
         Then verify "File_Type_Dropdown" element visibility in "Target_Store_Accordion" on "New_Feature_Set" wizard
-        Then verify "URL_Input" element visibility in "Target_Store_Accordion" on "New_Feature_Set" wizard
+        Then verify "URL_Combobox" element visibility in "Target_Store_Accordion" on "New_Feature_Set" wizard
         When select "Parquet" option in "File_Type_Dropdown" dropdown on "Target_Store_Accordion" on "New_Feature_Set" wizard
-        Then "External_Offline_Partition_Checkbox" element should be unchecked in "Target_Store_Accordion" on "New_Feature_Set" wizard
+        Then verify checkbox "External_Offline_Partition_Checkbox" element in "Target_Store_Accordion" on "New_Feature_Set" wizard is disabled
+        Then select "S3" option in "URL_Combobox" combobox on "Target_Store_Accordion" accordion on "New_Feature_Set" wizard
+        Then type value "bucket/path " to "URL_Combobox" field on "Target_Store_Accordion" on "New_Feature_Set" wizard
+        Then click on "Apply_Combobox_Button" element in "Target_Store_Accordion" on "New_Feature_Set" wizard
         When check "External_Offline_Partition_Checkbox" element in "Target_Store_Accordion" on "New_Feature_Set" wizard
         Then verify "External_Offline_Partition_ShowHide_Link" element visibility in "Target_Store_Accordion" on "New_Feature_Set" wizard
         When click on "External_Offline_Partition_ShowHide_Link" element in "Target_Store_Accordion" on "New_Feature_Set" wizard
@@ -912,7 +915,12 @@ Feature: Feature Store Page
         Then is "Offline_Partition_Number_Of_Buckets_Radiobutton" in "Target_Store_Accordion" on "New_Feature_Set" selected
         When check "External_Offline_Checkbox" element in "Target_Store_Accordion" on "New_Feature_Set" wizard
         When uncheck "Offline_Partition_Checkbox" element in "Target_Store_Accordion" on "New_Feature_Set" wizard
+        Then verify "URL_Combobox" element visibility in "Target_Store_Accordion" on "New_Feature_Set" wizard
         When select "Parquet" option in "File_Type_Dropdown" dropdown on "Target_Store_Accordion" on "New_Feature_Set" wizard
+        Then verify checkbox "External_Offline_Partition_Checkbox" element in "Target_Store_Accordion" on "New_Feature_Set" wizard is disabled
+        Then select "S3" option in "URL_Combobox" combobox on "Target_Store_Accordion" accordion on "New_Feature_Set" wizard
+        Then type value "bucket/path " to "URL_Combobox" field on "Target_Store_Accordion" on "New_Feature_Set" wizard
+        Then click on "Apply_Combobox_Button" element in "Target_Store_Accordion" on "New_Feature_Set" wizard
         When check "External_Offline_Partition_Checkbox" element in "Target_Store_Accordion" on "New_Feature_Set" wizard
         When click on "External_Offline_Partition_ShowHide_Link" element in "Target_Store_Accordion" on "New_Feature_Set" wizard
         When check "External_Offline_Partition_By_Key_Checkbox" element in "Target_Store_Accordion" on "New_Feature_Set" wizard
@@ -972,11 +980,8 @@ Feature: Feature Store Page
         And verify "Feature_Store_Tab_Selector" on "Feature_Store_Feature_Sets_Tab" wizard should contains "Feature_Store"."Tab_List"
         And verify "Feature Sets" tab is active in "Feature_Store_Tab_Selector" on "Feature_Store_Feature_Sets_Tab" wizard
         And click on "Create_Set_Button" element on "Feature_Store_Feature_Sets_Tab" wizard
-        Then click on "Save_Button" element on "New_Feature_Set" wizard
         Then verify "Save_Button" element on "New_Feature_Set" wizard is disabled
         Then verify "Save_And_Ingest_Button" element on "New_Feature_Set" wizard is disabled
-        Then verify "URL_Combobox" element in "Data_Source_Accordion" on "New_Feature_Set" wizard should display warning "Input_Hint"."Input_Field_Require"
-        Then verify "Entities_Input" element in "Schema_Accordion" on "New_Feature_Set" wizard should display warning "Input_Hint"."Input_Field_Require"
         Then type value "demo_feature_set" to "Feature_Set_Name_Input" field on "New_Feature_Set" wizard
         Then type value "latest" to "Version_Input" field on "New_Feature_Set" wizard
         Then check "Description_Input" textarea counter on "New_Feature_Set" wizard
@@ -998,7 +1003,7 @@ Feature: Feature Store Page
         When collapse "Target_Store_Accordion" on "New_Feature_Set" wizard
         When select "MLRun store" option in "URL_Combobox" combobox on "Data_Source_Accordion" accordion on "New_Feature_Set" wizard
         When type value "artifacts/automation-test-name3/artifact" to "URL_Combobox" field on "Data_Source_Accordion" on "New_Feature_Set" wizard
-        When click on "Accordion_Header" element in "Data_Source_Accordion" on "New_Feature_Set" wizard
+        Then click on "Apply_Combobox_Button" element in "Data_Source_Accordion" on "New_Feature_Set" wizard
         Then verify "Save_Button" element on "New_Feature_Set" wizard is enabled
         Then verify "Save_And_Ingest_Button" element on "New_Feature_Set" wizard is enabled
         Then click on "Save_Button" element on "New_Feature_Set" wizard
@@ -1707,7 +1712,7 @@ Feature: Feature Store Page
         Then type value "new-feature-set-1" to "Feature_Set_Name_Input" field on "New_Feature_Set" wizard
         Then select "V3IO" option in "URL_Combobox" combobox on "Data_Source_Accordion" accordion on "New_Feature_Set" wizard
         When type value "target/path" to "URL_Combobox" field on "Data_Source_Accordion" on "New_Feature_Set" wizard
-        Then click on "Accordion_Header" element in "Data_Source_Accordion" on "New_Feature_Set" wizard
+        Then click on "Apply_Combobox_Button" element in "Data_Source_Accordion" on "New_Feature_Set" wizard
         Then type value "text" to "Entities_Input" field on "Schema_Accordion" on "New_Feature_Set" wizard
         Then click on "Save_Button" element on "New_Feature_Set" wizard
         Then click on "Confirm_Button" element on "Common_Popup" wizard
@@ -1746,7 +1751,7 @@ Feature: Feature Store Page
         Then type value "new-feature-set-2" to "Feature_Set_Name_Input" field on "New_Feature_Set" wizard
         Then select "V3IO" option in "URL_Combobox" combobox on "Data_Source_Accordion" accordion on "New_Feature_Set" wizard
         When type value "target/path" to "URL_Combobox" field on "Data_Source_Accordion" on "New_Feature_Set" wizard
-        Then click on "Accordion_Header" element in "Data_Source_Accordion" on "New_Feature_Set" wizard
+        Then click on "Apply_Combobox_Button" element in "Data_Source_Accordion" on "New_Feature_Set" wizard
         Then type value "text" to "Entities_Input" field on "Schema_Accordion" on "New_Feature_Set" wizard
         Then click on "Save_Button" element on "New_Feature_Set" wizard
         Then click on "Confirm_Button" element on "Common_Popup" wizard
@@ -1787,7 +1792,7 @@ Feature: Feature Store Page
         Then type value "new-feature-set-3" to "Feature_Set_Name_Input" field on "New_Feature_Set" wizard
         Then select "V3IO" option in "URL_Combobox" combobox on "Data_Source_Accordion" accordion on "New_Feature_Set" wizard
         When type value "target/path" to "URL_Combobox" field on "Data_Source_Accordion" on "New_Feature_Set" wizard
-        Then click on "Accordion_Header" element in "Data_Source_Accordion" on "New_Feature_Set" wizard
+        Then click on "Apply_Combobox_Button" element in "Data_Source_Accordion" on "New_Feature_Set" wizard
         Then type value "text" to "Entities_Input" field on "Schema_Accordion" on "New_Feature_Set" wizard
         Then click on "Save_Button" element on "New_Feature_Set" wizard
         Then click on "Confirm_Button" element on "Common_Popup" wizard
@@ -1810,7 +1815,7 @@ Feature: Feature Store Page
         Then type value "new-feature-set-4" to "Feature_Set_Name_Input" field on "New_Feature_Set" wizard
         Then select "V3IO" option in "URL_Combobox" combobox on "Data_Source_Accordion" accordion on "New_Feature_Set" wizard
         When type value "target/path" to "URL_Combobox" field on "Data_Source_Accordion" on "New_Feature_Set" wizard
-        Then click on "Accordion_Header" element in "Data_Source_Accordion" on "New_Feature_Set" wizard
+        Then click on "Apply_Combobox_Button" element in "Data_Source_Accordion" on "New_Feature_Set" wizard
         Then type value "text" to "Entities_Input" field on "Schema_Accordion" on "New_Feature_Set" wizard
         Then verify "Passthrough_Checkbox" element visibility on "New_Feature_Set" wizard
         Then verify checkbox "Passthrough_Checkbox_State" element on "New_Feature_Set" wizard is enabled
@@ -1831,6 +1836,11 @@ Feature: Feature Store Page
         Then verify "Save_And_Ingest_Button" element on "New_Feature_Set" wizard is disabled
         Then click on "Cancel_Button" element on "New_Feature_Set" wizard
         And click on "Create_Set_Button" element on "Feature_Store_Feature_Sets_Tab" wizard 
+        Then type value "new-feature-set-4" to "Feature_Set_Name_Input" field on "New_Feature_Set" wizard
+        Then select "V3IO" option in "URL_Combobox" combobox on "Data_Source_Accordion" accordion on "New_Feature_Set" wizard
+        When type value "target/path" to "URL_Combobox" field on "Data_Source_Accordion" on "New_Feature_Set" wizard
+        Then click on "Apply_Combobox_Button" element in "Data_Source_Accordion" on "New_Feature_Set" wizard
+        Then type value "text" to "Entities_Input" field on "Schema_Accordion" on "New_Feature_Set" wizard
         Then verify "Passthrough_Checkbox" element visibility on "New_Feature_Set" wizard
         Then verify checkbox "Passthrough_Checkbox_State" element on "New_Feature_Set" wizard is enabled
         Then "Passthrough_Checkbox" element should be unchecked on "New_Feature_Set" wizard
@@ -1846,13 +1856,23 @@ Feature: Feature Store Page
         Then verify "Save_And_Ingest_Button" element on "New_Feature_Set" wizard is enabled
         Then click on "Cancel_Button" element on "New_Feature_Set" wizard
         And click on "Create_Set_Button" element on "Feature_Store_Feature_Sets_Tab" wizard 
+        Then type value "new-feature-set-4" to "Feature_Set_Name_Input" field on "New_Feature_Set" wizard
+        Then select "V3IO" option in "URL_Combobox" combobox on "Data_Source_Accordion" accordion on "New_Feature_Set" wizard
+        When type value "target/path" to "URL_Combobox" field on "Data_Source_Accordion" on "New_Feature_Set" wizard
+        Then click on "Apply_Combobox_Button" element in "Data_Source_Accordion" on "New_Feature_Set" wizard
+        Then type value "text" to "Entities_Input" field on "Schema_Accordion" on "New_Feature_Set" wizard
         Then verify "Passthrough_Checkbox" element visibility on "New_Feature_Set" wizard
         Then verify checkbox "Passthrough_Checkbox_State" element on "New_Feature_Set" wizard is enabled
         Then "Passthrough_Checkbox" element should be unchecked on "New_Feature_Set" wizard
         Then check "External_Offline_Checkbox" element in "Target_Store_Accordion" on "New_Feature_Set" wizard
         When select "Parquet" option in "File_Type_Dropdown" dropdown on "Target_Store_Accordion" on "New_Feature_Set" wizard
+        Then verify checkbox "External_Offline_Partition_Checkbox" element in "Target_Store_Accordion" on "New_Feature_Set" wizard is disabled
+        Then select "S3" option in "URL_Combobox" combobox on "Target_Store_Accordion" accordion on "New_Feature_Set" wizard
+        Then type value "text/text" to "URL_Combobox" field on "Target_Store_Accordion" on "New_Feature_Set" wizard
+        Then click on "Apply_Combobox_Button" element in "Target_Store_Accordion" on "New_Feature_Set" wizard
         Then "External_Offline_Partition_Checkbox" element should be unchecked in "Target_Store_Accordion" on "New_Feature_Set" wizard
         When check "External_Offline_Partition_Checkbox" element in "Target_Store_Accordion" on "New_Feature_Set" wizard
+        And wait load page
         Then verify "External_Offline_Partition_ShowHide_Link" element visibility in "Target_Store_Accordion" on "New_Feature_Set" wizard
         When click on "External_Offline_Partition_ShowHide_Link" element in "Target_Store_Accordion" on "New_Feature_Set" wizard
         When uncheck "External_Offline_Partition_By_Time_Checkbox" element in "Target_Store_Accordion" on "New_Feature_Set" wizard
@@ -1860,6 +1880,7 @@ Feature: Feature Store Page
         Then verify "Save_Button" element on "New_Feature_Set" wizard is disabled
         Then verify "Save_And_Ingest_Button" element on "New_Feature_Set" wizard is disabled
         When uncheck "External_Offline_Partition_Checkbox" element in "Target_Store_Accordion" on "New_Feature_Set" wizard
+        And wait load page
         Then verify "Save_Button" element on "New_Feature_Set" wizard is enabled
         Then verify "Save_And_Ingest_Button" element on "New_Feature_Set" wizard is enabled
 
@@ -1880,7 +1901,7 @@ Feature: Feature Store Page
         Then type value "new-feature-set-5" to "Feature_Set_Name_Input" field on "New_Feature_Set" wizard
         Then select "V3IO" option in "URL_Combobox" combobox on "Data_Source_Accordion" accordion on "New_Feature_Set" wizard
         When type value "target/path" to "URL_Combobox" field on "Data_Source_Accordion" on "New_Feature_Set" wizard
-        Then click on "Accordion_Header" element in "Data_Source_Accordion" on "New_Feature_Set" wizard
+        Then click on "Apply_Combobox_Button" element in "Data_Source_Accordion" on "New_Feature_Set" wizard
         Then type value "text" to "Entities_Input" field on "Schema_Accordion" on "New_Feature_Set" wizard
         Then check "Offline_Partition_Checkbox" element in "Target_Store_Accordion" on "New_Feature_Set" wizard
         Then click on "Save_Button" element on "New_Feature_Set" wizard
@@ -1898,16 +1919,16 @@ Feature: Feature Store Page
         Then type value "new-feature-set-6" to "Feature_Set_Name_Input" field on "New_Feature_Set" wizard
         Then select "V3IO" option in "URL_Combobox" combobox on "Data_Source_Accordion" accordion on "New_Feature_Set" wizard
         When type value "target/path" to "URL_Combobox" field on "Data_Source_Accordion" on "New_Feature_Set" wizard
-        Then click on "Accordion_Header" element in "Data_Source_Accordion" on "New_Feature_Set" wizard
+        Then click on "Apply_Combobox_Button" element in "Data_Source_Accordion" on "New_Feature_Set" wizard
         Then type value "text" to "Entities_Input" field on "Schema_Accordion" on "New_Feature_Set" wizard
         Then check "External_Offline_Checkbox" element in "Target_Store_Accordion" on "New_Feature_Set" wizard
         When select "Parquet" option in "File_Type_Dropdown" dropdown on "Target_Store_Accordion" on "New_Feature_Set" wizard
-        Then "External_Offline_Partition_Checkbox" element should be unchecked in "Target_Store_Accordion" on "New_Feature_Set" wizard
-        When check "External_Offline_Partition_Checkbox" element in "Target_Store_Accordion" on "New_Feature_Set" wizard
-        Then verify "URL_Input" element visibility in "Target_Store_Accordion" on "New_Feature_Set" wizard
+        Then verify checkbox "External_Offline_Partition_Checkbox" element in "Target_Store_Accordion" on "New_Feature_Set" wizard is disabled
         Then select "S3" option in "URL_Combobox" combobox on "Target_Store_Accordion" accordion on "New_Feature_Set" wizard
         Then type value "text/text" to "URL_Combobox" field on "Target_Store_Accordion" on "New_Feature_Set" wizard
-        Then click on "Accordion_Header" element in "Target_Store_Accordion" on "New_Feature_Set" wizard
+        Then click on "Apply_Combobox_Button" element in "Target_Store_Accordion" on "New_Feature_Set" wizard
+        Then "External_Offline_Partition_Checkbox" element should be unchecked in "Target_Store_Accordion" on "New_Feature_Set" wizard
+        When check "External_Offline_Partition_Checkbox" element in "Target_Store_Accordion" on "New_Feature_Set" wizard
         Then click on "Save_Button" element on "New_Feature_Set" wizard
         Then verify "Save_Button" element on "New_Feature_Set" wizard is disabled
         Then verify "Save_And_Ingest_Button" element on "New_Feature_Set" wizard is disabled
@@ -1938,6 +1959,7 @@ Feature: Feature Store Page
         And wait load page
         Then type value "   " to "Feature_Set_Name_Input" field on "New_Feature_Set" wizard
         Then verify "Feature_Set_Name_Input" on "New_Feature_Set" wizard should display options "Input_Hint"."Feature_Set_Name_Hint"
+        Then click on "Apply_Combobox_Button" element in "Data_Source_Accordion" on "New_Feature_Set" wizard
         Then verify "URL_Combobox" element in "Data_Source_Accordion" on "New_Feature_Set" wizard should display warning "Input_Hint"."Input_Field_Require"
         Then verify "Entities_Input" element in "Schema_Accordion" on "New_Feature_Set" wizard should display warning "Input_Hint"."Input_Field_Require"
         Then verify "Save_Button" element on "New_Feature_Set" wizard is disabled
@@ -1945,7 +1967,7 @@ Feature: Feature Store Page
 
     @MLFS
     @FAILED_TODO
-    #TODO: ingest isn't implemented for scheduling - ML-3626
+    #TODO: ingest isn't implemented on mock, ingest isn't implemented for scheduling - ML-3626
     @inProgress
     Scenario: MLFS056 - Save feature set with 'Save And Ingest' button
         Given open url

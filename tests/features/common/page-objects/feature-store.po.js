@@ -52,6 +52,14 @@ const actionMenuStructure = {
   }
 }
 
+const actionMenuStructureExpand = {
+  root: '.table-body__cell:nth-of-type(2) .actions-menu__container',
+  menuElements: {
+    open_button: '[data-testid="actions-menu"] button',
+    options: '.actions-menu__body .actions-menu__option'
+  }
+}
+
 const labelsTable = {
   root: '.table-body__cell:nth-of-type(3)',
   header: {},
@@ -108,6 +116,10 @@ const featureSetsTable = {
         action_menu: {
           componentType: actionMenu,
           structure: actionMenuStructure
+        },
+        action_menu_expand: {
+          componentType: actionMenu,
+          structure: actionMenuStructureExpand
         }
       }
     }
@@ -204,6 +216,10 @@ const featureVectorTable = {
         action_menu: {
           componentType: actionMenu,
           structure: actionMenuStructure
+        },
+        action_menu_expand: {
+          componentType: actionMenu,
+          structure: actionMenuStructureExpand
         }
       }
     }
@@ -311,6 +327,10 @@ const datasetsTable = {
               options: '.actions-menu__body .actions-menu__option'
             }
           }
+        },
+        action_menu_expand: {
+          componentType: actionMenu,
+          structure: actionMenuStructureExpand
         }
       }
     }

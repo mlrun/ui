@@ -140,7 +140,7 @@ Feature: Datasets Page
   @passive
   @smoke
   Scenario: MLD005 - Check Details panel still active on page refresh
-    * set tear-down property "dataset" created in "automation-test" project with "test-file" value
+#     * set tear-down property "dataset" created in "automation-test" project with "test-file" value
     * create "test-dataset" Dataset with "v1" tag in "default" project with code 200
     Given open url
     And wait load page
@@ -396,7 +396,7 @@ Feature: Datasets Page
     Then select "All" option in "Table_Tree_Filter_Dropdown" dropdown on "Artifacts_FilterBy_Popup" wizard
     Then click on "Apply_Button" element on "Artifacts_FilterBy_Popup" wizard
     And wait load page
-    Then verify action menu on "Datasets" wizard in "Datasets_Table" table with "test-regressor_cox-test-summary" value in "name" column should contains "Common_Lists"."Action_Menu_List"
+    Then verify action menu on "Datasets" wizard in "Datasets_Table" table with "test-regressor_cox-test-summary" value in "name" column should contains "Common_Lists"."Action_Menu_List_Expanded"
     Then verify that in action menu on "Datasets" wizard in "Datasets_Table" table with "test-regressor_cox-test-summary" value in "name" column "Delete" option is disabled
     When click on cell with row index 1 in "name" column in "Datasets_Table" table on "Datasets" wizard
     Then check "Click to add" value in "tag" column in "Overview_Table" table on "Datasets_Info_Pane" wizard

@@ -97,6 +97,7 @@ module.exports = {
   },
   Common_Lists: {
     Action_Menu_List: ['Add a tag', 'Download', 'Copy URI', 'View YAML', 'Delete'],
+    Action_Menu_List_Expanded: ['Add a tag', 'Download', 'Copy URI', 'View YAML', 'Delete all'],
     Handler_List: ['train'],
     Pods_Priority_List: ['Low','Medium', 'High'],
     Ranking_Criteria_List: ['Min','Max']
@@ -121,7 +122,8 @@ module.exports = {
       'Kind:',
       'URI:',
       'Owner:',
-      'Workflow:'
+      'Workflow:',
+      'UID:'
     ],
     Overview_Sources_Headers: [
       'Name:',
@@ -165,7 +167,8 @@ module.exports = {
       'Name:',
       'Kind:',
       'URI:',
-      'Owner:'
+      'Owner:',
+      'UID:'
     ],
     Overview_Sources_Headers: [
       'Name:',
@@ -538,7 +541,7 @@ module.exports = {
     Common_Message_Feature_Vector: 'No data matches the filter: "Version Tag: latest"',
     Common_Message_Feature_Sets: 'No data matches the filter: "Version Tag: latest"',
     No_Data: 'No data to show',
-    No_Features_Yet: 'No features yet. Go to "Feature Sets" tab to create your first Feature Set.',
+    No_Features_Yet: 'No features found.',
     No_Consumer_Group_Yet: 'You haven’t created any consumer group yet',
     No_Datasets_data: 'No data matches the filter: "Version tag: latest, Labels: v3io_user=123, Show best iteration only: true"',
     No_Files_data: 'No data matches the filter: "Version tag: latest, Labels: v3io_user=123, Show best iteration only: true"',
