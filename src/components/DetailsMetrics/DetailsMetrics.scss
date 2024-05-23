@@ -1,4 +1,3 @@
-@import '~igz-controls/scss/shadows';
 @import '~igz-controls/scss/colors';
 
 .metrics {
@@ -6,16 +5,17 @@
   flex-wrap: wrap;
   gap: 16px;
   height: fit-content;
+  margin-bottom: 30px;
 
   &__card-tmp {
     z-index: 1;
     top: 0;
-    position: sticky !important;
+    position: sticky;
     box-sizing: border-box;
     border: 1px solid #00000033;
-    border-radius: 12px !important;
+    border-radius: 12px;
     background: #fff;
-    padding-top: 12px !important;
+    padding-top: 12px;
     width: 100%;
     transition: 0.1s;
     animation: ease-in-out;
@@ -24,7 +24,7 @@
 
   &__card {
     border-radius: 12px;
-    border: 1px solid rgba(0, 0, 0, 0.2);
+    border: 1px solid #00000033;
     padding: 6px 16px 35px;
     transition: ease-in-out;
     width: 100%;
@@ -43,7 +43,6 @@
       justify-content: space-between;
       align-items: center;
       gap: 8px;
-      padding-bottom: 10px;
       padding-left: 5px;
       font-weight: 500;
 
@@ -82,7 +81,7 @@
       flex: 1;
       align-self: stretch;
       width: 100%;
-      aspect-ratio: 5.5;
+      aspect-ratio: 5;
       gap: 20px;
       align-items: stretch;
       position: relative;
@@ -92,6 +91,7 @@
 
       .chart-item {
         flex: 1;
+
         canvas {
           width: 100% !important;
           height: 100% !important;
@@ -100,10 +100,15 @@
 
       &-bar {
         flex: 0 1 25%;
+        @media (min-width: 768px) and (max-width: 1299px) {
+          flex-basis: 40%;
+        }
+
         canvas {
           width: 100% !important;
           height: 100% !important;
         }
+
         canvas.hidden {
           position: absolute;
           opacity: 0;
@@ -113,7 +118,9 @@
       }
 
       &-line {
-        flex: 0 1 70%;
+        flex: 1 1 auto;
+        margin-top: 4px;
+
         canvas {
           width: 100% !important;
           height: 100% !important;
@@ -131,10 +138,12 @@
         width: auto;
         border: 1px solid transparent;
         flex: 1 1 auto;
+
         canvas {
           width: 100% !important;
           height: 100% !important;
         }
+
         canvas.hidden {
           position: absolute;
           opacity: 0;
@@ -157,11 +166,13 @@
         font-weight: 700;
         color: #4b4760;
       }
+
       &-content-data {
         font-size: 24px;
         font-weight: 700;
         line-height: normal;
         color: #4b4760;
+
         & span {
           font-size: 14px;
           margin-right: 5px;
@@ -170,6 +181,7 @@
     }
   }
 
+  //TODO: add to card class
   &__empty-card {
     width: 100%;
     display: flex;
@@ -178,6 +190,7 @@
     gap: 25px;
   }
 
+  //TODO: add to card class
   &__empty-select {
     width: 100%;
     display: flex;
@@ -186,4 +199,12 @@
     align-items: center;
     gap: 25px;
   }
+}
+//TODO: add to card class
+.app {
+  font-size: 20px;
+  font-style: normal;
+  font-weight: 700;
+  color: #4b4760;
+  line-height: normal;
 }

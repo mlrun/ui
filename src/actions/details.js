@@ -54,7 +54,7 @@ import {
 import { generatePods } from '../utils/generatePods'
 import {
   generateMetricsItems,
-  formatMetric
+  parseMetrics
 } from '../components/DetailsMetrics/detailsMetrics.utils'
 
 const detailsActions = {
@@ -167,17 +167,8 @@ const detailsActions = {
     return detailsApi
       .getModelEndpointMetricsValues(project, uid, params)
       .then(({ data = [] }) => {
-        const metrics = data.map(metric => formatMetric(metric, params))
+        const metrics = data.map((metric, index) => parseMetrics(metric, params, index))
 
-        metrics.sort((a, b) => {
-          const aHasMockString = a.full_name && a.full_name.includes('invocations')
-          const bHasMockString = b.full_name && b.full_name.includes('invocations')
-          if (aHasMockString && !bHasMockString) return -1
-          if (!aHasMockString && bHasMockString) return 1
-          if (a.metric && !a.metric.data) return 1
-          if (b.metric && !b.metric.data) return -1
-          return 0
-        })
         dispatch(detailsActions.fetchEndpointMetricsValuesSuccess())
 
         return metrics

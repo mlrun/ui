@@ -38,18 +38,13 @@ export const calculateMaxTicksLimit = container => {
     return 10
   } else if (parent.classList.contains('metrics__card-body-bar')) {
     const containerWidth = parent.clientWidth
-    if (containerWidth < 150) return 1
-    if (containerWidth < 220) return 2
-    if (containerWidth < 400) return 3
+    if (containerWidth < 170) return 3
+    if (containerWidth < 220) return 5
     if (containerWidth < 900) return 5
     return 1
   } else {
     return 10
   }
-}
-
-export const formatYaxisForBarChart = value => {
-  return `${Math.round(value * 100)}`
 }
 
 // TODO: refactore customTooltip function, remove style, add class
@@ -69,7 +64,6 @@ export const customTooltip = context => {
   }
   if (tooltipModel.body) {
     const bodyLines = tooltipModel.body.map(b => b.lines)
-
     let innerHtml =
       '<div style="background: #4B4760; font-family: Roboto; font-size: 12px; font-weight: 400; padding: 8px">'
     let drift =
@@ -77,9 +71,10 @@ export const customTooltip = context => {
       context.tooltip.dataPoints[0].dataset.metricType === 'result'
         ? true
         : false
-
+    const tooltipDataType = context.tooltip.dataPoints[0].dataset.chartType === 'bar' ? '%' : ''
     const valueMargin = drift ? '5px' : '0px'
-    innerHtml += `<div style="margin-left:${valueMargin}">Value: ${context.tooltip.dataPoints[0].raw}</div>`
+
+    innerHtml += `<div style="margin-left:${valueMargin}">Value: ${context.tooltip.dataPoints[0].raw} ${tooltipDataType}</div>`
 
     if (drift) {
       bodyLines.forEach((body, i) => {

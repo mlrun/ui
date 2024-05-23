@@ -23,6 +23,22 @@ const mlrunInfra = 'mlrun-infra'
 const metricsColorsByFullName = {}
 const usedColors = new Set()
 
+// TODO: verify with Jonathan the drift status option
+const driftStatusConfig = {
+  0: {
+    color: '#00FF00',
+    text: 'No drift'
+  },
+  1: {
+    color: '#FFD077',
+    text: 'Possible drift'
+  },
+  2: {
+    color: '#FF0000',
+    text: 'Drift detected'
+  }
+}
+
 const hslToHex = (hue, saturation, lightness) => {
   const normalizedLightness = lightness / 100
   const chroma = (saturation * Math.min(normalizedLightness, 1 - normalizedLightness)) / 100
@@ -90,10 +106,9 @@ export const generateMetricsItems = metrics => {
     .value()
 }
 
-export const getTitle = fullName =>
-  fullName.substring(fullName.lastIndexOf('.') + 1).replace(/-/g, ' ')
+const getTitle = fullName => fullName.substring(fullName.lastIndexOf('.') + 1).replace(/-/g, ' ')
 
-function formatTime(dates) {
+const formatMetricsTime = dates => {
   const options = {
     hour: 'numeric',
     minute: '2-digit',
@@ -102,22 +117,20 @@ function formatTime(dates) {
   return dates.map(date => new Date(date).toLocaleTimeString('en-US', options))
 }
 
-function formatDate(dates) {
+const formatMetricsDate = dates => {
   const options = {
     year: 'numeric',
     month: '2-digit',
     day: '2-digit'
   }
-  return dates.map(date => new Date(date).toLocaleDateString('en-US', options).replace(/\//g, '.'))
+  return dates.map(date => new Date(date).toLocaleDateString('en-US', options))
 }
 
-// TODO: add support for Any time selection
-function isRangeOverOneDay(values, dateRange) {
+const getMetricLabels = (values, dateRange) => {
   const dates = values.map(([date]) => date)
-  const startDate = new Date(dateRange.start)
-  const endDate = new Date(dateRange.end)
-  const differenceInDays = Math.abs((endDate - startDate) / (1000 * 60 * 60 * 24))
-  return differenceInDays > 1 ? formatDate(dates) : formatTime(dates)
+  const oneDayInMillis = 86400000
+  const differenceInDays = dateRange.end - dateRange.start
+  return differenceInDays > oneDayInMillis ? formatMetricsDate(dates) : formatMetricsTime(dates)
 }
 
 export const formatNumber = num => {
@@ -130,28 +143,27 @@ export const formatNumber = num => {
   }
 }
 
-// TODO: verify with Jonathan the drift status option
-const driftStatusConfig = {
-  0: {
-    color: '#00FF00',
-    text: 'No drift'
-  },
-  1: {
-    color: '#FFD077',
-    text: 'Possible drift'
-  },
-  2: {
-    color: '#FF0000',
-    text: 'Drift detected'
+const getAppName = inputString => {
+  const firstDotIndex = inputString.indexOf('.')
+  if (firstDotIndex !== -1) {
+    const secondDotIndex = inputString.indexOf('.', firstDotIndex + 1)
+    if (secondDotIndex !== -1) {
+      return inputString.substring(firstDotIndex + 1, secondDotIndex)
+    } else {
+      return ''
+    }
+  } else {
+    return ''
   }
 }
 
-export const formatMetric = (metric, params) => {
+export const parseMetrics = (metric, params, id) => {
   const { full_name, values, type } = metric
 
   if (!metric.data || !values || !Array.isArray(values)) {
     return {
       metric,
+      app: getAppName(full_name),
       title: getTitle(full_name)
     }
   }
@@ -170,9 +182,9 @@ export const formatMetric = (metric, params) => {
   }
 
   const points = values.map(([_, value]) => parseFloat(value.toFixed(2)))
-
   let driftStatus = []
   if (type === 'result') {
+    values.map(([_, __, driftStatus]) => driftStatus)
     driftStatus = values.map(([_, __, driftStatus]) => driftStatusConfig[driftStatus])
     metric.driftStatus = driftStatus
     metric.totalDriftStatus = getStatus(driftStatus)
@@ -186,9 +198,11 @@ export const formatMetric = (metric, params) => {
 
   const modifiedMetric = {
     ...metric,
+    id,
     title: getTitle(full_name),
+    app: getAppName(full_name),
     color: getMetricColorByFullName(full_name),
-    labels: isRangeOverOneDay(values, params),
+    labels: getMetricLabels(values, params),
     points,
     [isInvocationsRate ? 'total' : 'avg']: totalOrAvg
   }

@@ -4,13 +4,7 @@ import classnames from 'classnames'
 
 import Loader from '../../common/Loader/Loader'
 
-import { formatNumber } from '../DetailsMetrics/detailsMetrics.utils'
-import {
-  calculateMaxTicksLimit,
-  customTooltip,
-  formatYaxisForBarChart,
-  hexToRGB
-} from './metricChart.util'
+import { calculateMaxTicksLimit, customTooltip, hexToRGB } from './metricChart.util'
 
 const GenericMetricChart = ({ chartConfig, showGrid }) => {
   const chartRef = useRef(null)
@@ -24,7 +18,7 @@ const GenericMetricChart = ({ chartConfig, showGrid }) => {
           chartConfig.data.datasets[0]?.driftStatus &&
           chartConfig.data.datasets[0]?.driftStatus.length !== 0
         ) {
-          return 2
+          return 1
         } else {
           return 0
         }
@@ -73,25 +67,36 @@ const GenericMetricChart = ({ chartConfig, showGrid }) => {
               ticks: {
                 ...chartConfig.options.scales?.x?.ticks,
                 maxTicksLimit
-              }
+              },
+              title:
+                chartConfig.type === 'bar'
+                  ? {
+                      display: true,
+                      text: 'Value',
+                      font: 10
+                    }
+                  : {
+                      display: true,
+                      text: '',
+                      font: 0
+                    }
             },
             y: {
               ...chartConfig.options.scales?.y,
               min: chartConfig.type === 'bar' ? 0 : undefined,
-              max: chartConfig.type === 'bar' ? 1 : undefined,
-              ticks: {
-                ...chartConfig.options.scales?.y?.ticks,
-                maxTicksLimit,
-                callback: value => {
-                  if (chartConfig.type === 'line') {
-                    return formatNumber(value)
-                  } else if (chartConfig.type === 'bar') {
-                    return formatYaxisForBarChart(value)
-                  } else {
-                    return value
-                  }
-                }
-              }
+              max: chartConfig.type === 'bar' ? 100 : undefined,
+              grid: {
+                drawBorder: true,
+                borderColor: 'E9E8EB'
+              },
+              title:
+                chartConfig.type === 'bar'
+                  ? {
+                      display: true,
+                      text: 'Percentage',
+                      font: 10
+                    }
+                  : undefined
             }
           },
           animation: {

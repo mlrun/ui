@@ -38,7 +38,6 @@ export const getLineChartMetricConfig = () => {
           display: true,
           title: {
             display: true,
-            text: '',
             font: 10
           },
           ticks: {
@@ -53,6 +52,7 @@ export const getLineChartMetricConfig = () => {
           }
         },
         y: {
+          max: 2,
           ticks: {
             stepSize: 10
           },
@@ -77,7 +77,7 @@ export const getBarChartMetricConfig = () => {
       layout: {
         padding: 0
       },
-      barThickness: 5,
+      barThickness: 20,
       maintainAspectRatio: false,
       animation: false,
       responsive: true,
@@ -96,12 +96,12 @@ export const getBarChartMetricConfig = () => {
           display: true,
           title: {
             display: true,
-            text: 'Value',
             font: 10
           },
           ticks: {
-            align: 'start',
-            maxTicksLimit: 4
+            align: 'left',
+            maxTicksLimit: 4,
+            offset: -20
           },
           grid: {
             drawOnChartArea: false,
@@ -110,15 +110,6 @@ export const getBarChartMetricConfig = () => {
           }
         },
         y: {
-          step: 10,
-          title: {
-            display: true,
-            text: 'Percentage',
-            font: 10
-          },
-          ticks: {
-            maxTicksLimit: 10
-          },
           grid: {
             drawBorder: false,
             borderColor: 'E9E8EB'

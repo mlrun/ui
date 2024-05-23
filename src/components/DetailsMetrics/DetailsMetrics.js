@@ -17,37 +17,110 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import React, { useEffect, useMemo, useState } from 'react'
+import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { isEmpty } from 'lodash'
 
-import GenericMetricChart from '../Cartjs/MetricChart'
+import GenericMetricChart from '../MetricChart/MetricChart'
 import StatsCard from '../../common/StatsCard/StatsCard'
 
 import detailsActions from '../../actions/details'
+
+import { getBarChartMetricConfig, getLineChartMetricConfig } from '../../utils/getMetricChartConfig'
+import { groupMetricByApplication } from '../../elements/MetricsSelector/metricsSelector.utils'
 
 import noData from './noData.svg' // TODO add to igz-controls
 import Data from './Data.svg' // TODO add to igz-controls
 
 import './DetailsMetrics.scss'
 
-import {
-  getLineChartMetricConfig,
-  getBarChartMetricConfig,
-  getGradientLineChart
-} from '../../utils/getMetricChartConfig'
-
 const DetailsMetrics = ({ selectedItem }) => {
   const [metrics, setMetrics] = useState([])
   const detailsStore = useSelector(store => store.detailsStore)
   const dispatch = useDispatch()
-  const gradientConfig = useMemo(() => getGradientLineChart(), [])
   const lineConfig = useMemo(() => getLineChartMetricConfig(), [])
   const barConfig = useMemo(() => getBarChartMetricConfig(), [])
 
-  const [expand] = useState(false)
+  // TODO: refactor the calculateHistogram
+  const calculateHistogram = useCallback((data, item) => {
+    const numberOfBins = 5
+    const min = Math.min(...data)
+    const max = Math.max(...data)
+    const range = max - min === 0 ? 1 : max - min
+    const binSize = range / numberOfBins
+
+    const bins = Array(numberOfBins).fill(0)
+    data.forEach(value => {
+      const binIndex = Math.min(Math.floor((value - min) / binSize), numberOfBins - 1)
+      bins[binIndex]++
+    })
+
+    const totalCount = data.length
+    const binPercentages = bins.map(count => ((count / totalCount) * 100).toFixed(1))
+    const binLabels = Array.from({ length: numberOfBins }, (_, i) => {
+      const rangeStart = (min + i * binSize).toFixed(2)
+      const rangeEnd =
+        i === numberOfBins - 1 ? max.toFixed(2) : (min + (i + 1) * binSize).toFixed(2)
+      return `${rangeStart} - ${rangeEnd}`
+    })
+
+    const calculateAverages = data => {
+      return data.map(item => {
+        if (max === min) return max
+        const [num1, num2] = item.split(' - ').map(parseFloat)
+        const average = (num1 + num2) / 2
+        return (Math.abs(average * 100) / 100).toFixed(1)
+      })
+    }
+
+    let averageValue = calculateAverages(binLabels)
+    const adjustArray = (binPercentages, averageValue) => {
+      return binPercentages.map((value, index) => {
+        return parseFloat(averageValue[index]) !== 0 ? value : ''
+      })
+    }
+    if (max === min) {
+      averageValue = adjustArray(averageValue, binPercentages)
+    }
+
+    return {
+      labels: averageValue,
+      datasets: [
+        {
+          data: binPercentages,
+          chartType: 'bar',
+          tension: 0.2,
+          borderWidth: 2,
+          backgroundColor: item.color,
+          borderColor: item.color
+        }
+      ],
+      options: {
+        scales: {
+          y: {
+            step: 10,
+            title: {
+              display: true,
+              text: 'Percentage',
+              font: 10
+            }
+          },
+          x: {
+            title: {
+              text: 'Value',
+              font: 10
+            }
+          }
+        }
+      }
+    }
+  }, [])
 
   // TODO: add resize invocation card on scroll
+
+  const generatedMetrics = useMemo(() => {
+    return groupMetricByApplication(metrics)
+  }, [metrics])
 
   useEffect(() => {
     dispatch(
@@ -92,8 +165,7 @@ const DetailsMetrics = ({ selectedItem }) => {
       setMetrics([])
     }
   }, [dispatch, selectedItem, detailsStore.dates, detailsStore.metricsOptions.selectedByEndpoint])
-
-  if (metrics.length === 0) {
+  if (generatedMetrics.length === 0) {
     return (
       <StatsCard className="metrics__empty-select">
         <img alt="metrics" src={Data} />
@@ -102,127 +174,86 @@ const DetailsMetrics = ({ selectedItem }) => {
     )
   }
   return (
-    <div className="metrics">
-      {metrics.map((item, index) => {
-        if (!item.data) {
-          return (
-            <StatsCard className="metrics__card">
-              <StatsCard.Header title={item.title}></StatsCard.Header>
-              <div className="metrics__empty-card">
-                <div>
-                  <img alt="no data" src={noData} />
-                </div>
-                <div>No data to show</div>
-              </div>
-            </StatsCard>
-          )
-        } else if (item.title.includes('invocation')) {
-          return (
-            <StatsCard className="metrics__card-tmp">
-              <div style={{ height: '80px' }} className="metrics__card-body">
-                <div className="metrics__card-invocation-content">
-                  <div className="metrics__card-invocation-content-title">Endpoint call count</div>
-                  <div className="metrics__card-invocation-content-content-data">
-                    <span>Total</span>
-                    {item.total}
-                  </div>
-                </div>
-                <div className="metrics__card-body-invocation">
-                  <GenericMetricChart
-                    showGrid={expand}
-                    chartConfig={{
-                      gradient: true,
-                      ...gradientConfig,
-                      type: 'line',
-                      data: {
-                        labels: item.labels,
-                        datasets: [
-                          {
-                            data: item.points,
-                            fill: true,
-                            backgroundColor: item.color,
-                            borderColor: item.color,
-                            borderWidth: 1,
-                            tension: 0.4
-                          }
-                        ]
-                      }
-                    }}
-                  />
-                </div>
-              </div>
-            </StatsCard>
-          )
-        } else {
-          return (
-            <StatsCard className="metrics__card">
-              <StatsCard.Header title={item.title}>
-                {item.totalDriftStatus && (
-                  <div>
-                    {item.totalDriftStatus.text}
-                    <span
-                      className="metrics__card-drift-status"
-                      style={{
-                        backgroundColor: item.totalDriftStatus.color
-                      }}
-                    ></span>
-                  </div>
-                )}
-              </StatsCard.Header>
-              <div className="metrics__card-body">
-                <div className="metrics__card-body-bar">
-                  <div className="metrics__card-header">
-                    <div>Value distribution</div>
-                    <div className="metrics__card-header-data">
-                      <span className="metrics__card-header-label">Avg. </span>
-                      {item.avg}
+    <>
+      {generatedMetrics.map(([name, app]) => {
+        return (
+          <div className="metrics">
+            <div className="app">{name}</div>
+            {app.map(item => {
+              if (!item.data) {
+                return (
+                  <StatsCard className="metrics__card" key={item.id}>
+                    <StatsCard.Header title={item.title}></StatsCard.Header>
+                    <div className="metrics__empty-card">
+                      <div>
+                        <img alt="no data" src={noData} />
+                      </div>
+                      <div>No data to show</div>
                     </div>
-                  </div>
-                  <GenericMetricChart
-                    chartConfig={{
-                      ...barConfig,
-                      data: {
-                        labels: item.points,
-                        datasets: [
-                          {
-                            data: item.points,
-                            tension: 0.2,
-                            borderWidth: 2,
-                            backgroundColor: item.color,
-                            borderColor: item.color
-                          }
-                        ]
-                      }
-                    }}
-                  />
-                </div>
-                <div className="metrics__card-body-line">
-                  <div className="metrics__card-header">Value over time</div>
-                  <GenericMetricChart
-                    chartConfig={{
-                      ...lineConfig,
-                      data: {
-                        labels: item.labels,
-                        datasets: [
-                          {
-                            data: item.points,
-                            metricType: item.type,
-                            driftStatus: item.driftStatus || [],
-                            tension: 0.2,
-                            borderWidth: 1,
-                            borderColor: item.color
-                          }
-                        ]
-                      }
-                    }}
-                  />
-                </div>
-              </div>
-            </StatsCard>
-          )
-        }
+                  </StatsCard>
+                )
+              } else {
+                return (
+                  <StatsCard className="metrics__card" key={item.id}>
+                    <StatsCard.Header title={item.title}>
+                      {item.totalDriftStatus && (
+                        <div>
+                          {item.totalDriftStatus.text}
+                          <span
+                            className="metrics__card-drift-status"
+                            style={{
+                              backgroundColor: item.totalDriftStatus.color
+                            }}
+                          ></span>
+                        </div>
+                      )}
+                    </StatsCard.Header>
+                    <div className="metrics__card-body">
+                      <div className="metrics__card-body-bar">
+                        <div className="metrics__card-header">
+                          <div>Value distribution</div>
+                          <div className="metrics__card-header-data">
+                            <span className="metrics__card-header-label">Avg. </span>
+                            {item.avg}
+                          </div>
+                        </div>
+                        <GenericMetricChart
+                          chartConfig={{
+                            ...barConfig,
+                            data: calculateHistogram(item.points, item)
+                          }}
+                        />
+                      </div>
+                      <div className="metrics__card-body-line">
+                        <div className="metrics__card-header">Value over time</div>
+                        <GenericMetricChart
+                          chartConfig={{
+                            ...lineConfig,
+                            data: {
+                              labels: item.labels,
+                              datasets: [
+                                {
+                                  data: item.points,
+                                  metricType: item.type,
+                                  driftStatus: item.driftStatus || [],
+                                  tension: 0.2,
+                                  borderWidth: 1,
+                                  borderColor: item.color
+                                }
+                              ]
+                            }
+                          }}
+                        />
+                      </div>
+                    </div>
+                  </StatsCard>
+                )
+              }
+            })}
+          </div>
+        )
       })}
-    </div>
+    </>
   )
 }
 
