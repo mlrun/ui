@@ -37,8 +37,8 @@ import { METRICS_SELECTOR_OPTIONS } from '../../types'
 
 import { ReactComponent as Arrow } from 'igz-controls/images/arrow.svg'
 import { ReactComponent as SearchIcon } from 'igz-controls/images/search.svg'
-import { ReactComponent as MetricIcon } from 'igz-controls/images/circled-M.svg'
-import { ReactComponent as ResultIcon } from 'igz-controls/images/circled-R.svg'
+import { ReactComponent as MetricIcon } from 'igz-controls/images/circled-m.svg'
+import { ReactComponent as ResultIcon } from 'igz-controls/images/circled-r.svg'
 
 import './metricsSelector.scss'
 
