@@ -378,23 +378,35 @@ const WorkflowsTable = React.forwardRef(
       [modifyAndSelectRun, params.jobName]
     )
 
-    const findSelectedWorkflowFunction = useCallback(() => {
+    const findSelectedWorkflowFunction = useCallback((withoutRunType) => {
       if (workflowsStore.activeWorkflow?.data) {
         const workflow = { ...workflowsStore.activeWorkflow.data }
 
         return find(workflow.graph, workflowItem => {
-          return (
+          let workflowItemIsFound = (
             workflowItem.function?.includes(`${params.functionName}@${params.functionHash}`) ||
             workflowItem.function?.includes(params.functionName) ||
             workflowItem.function?.includes(params.jobId)
           )
+
+          if (withoutRunType) {
+            workflowItemIsFound = workflowItemIsFound && workflowItem.run_type !== 'run'
+          }
+
+          return workflowItemIsFound
         })
       }
     }, [params.functionName, params.functionHash, params.jobId, workflowsStore.activeWorkflow.data])
 
     const checkIfWorkflowItemIsJob = useCallback(() => {
       if (workflowsStore.activeWorkflow?.data?.graph) {
-        return !['deploy', 'build'].includes(findSelectedWorkflowFunction()?.run_type)
+        let selectedWorkflowItem = findSelectedWorkflowFunction(true)
+
+        if (isEmpty(selectedWorkflowItem)) {
+          selectedWorkflowItem = findSelectedWorkflowFunction(false)
+        }
+
+        return !['deploy', 'build'].includes(selectedWorkflowItem?.run_type)
       }
     }, [workflowsStore.activeWorkflow.data.graph, findSelectedWorkflowFunction])
 
@@ -436,7 +448,7 @@ const WorkflowsTable = React.forwardRef(
     }, [fetchRun, params.jobId, selectedJob, checkIfWorkflowItemIsJob])
 
     useEffect(() => {
-      const functionToBeSelected = findSelectedWorkflowFunction()
+      const functionToBeSelected = findSelectedWorkflowFunction(true)
 
       if (isWorkflowStepExecutable(functionToBeSelected)) {
         const workflow = { ...workflowsStore.activeWorkflow?.data }
@@ -472,7 +484,7 @@ const WorkflowsTable = React.forwardRef(
         } else if (
           workflow.graph &&
           params.jobId &&
-          isEmpty(selectedFunction) &&
+          (isEmpty(selectedFunction) || params.jobId !== selectedFunction.name) &&
           !checkIfWorkflowItemIsJob()
         ) {
           const customFunctionState = functionToBeSelected?.phase?.toLowerCase()
