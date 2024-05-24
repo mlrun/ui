@@ -119,18 +119,24 @@ function RegisterModelModal({ actions, isOpen, onResolve, params, refresh }) {
       .then(response => {
         if (response?.data) {
           if (!isEmpty(response.data.artifacts)) {
-            openPopUp(ConfirmDialog, {
-              confirmButton: {
-                label: 'Overwrite',
-                variant: PRIMARY_BUTTON,
-                handler: handleRegisterModel
-              },
-              cancelButton: {
-                label: 'Cancel',
-                variant: TERTIARY_BUTTON
-              },
-              header: createModelMessages.overwriteConfirmTitle,
-              message: createModelMessages.getOverwriteConfirmMessage(response.data.artifacts[0].kind)
+            return new Promise((resolve, reject) => {
+              openPopUp(ConfirmDialog, {
+                confirmButton: {
+                  label: 'Overwrite',
+                  variant: PRIMARY_BUTTON,
+                  handler: (...args) => {
+                    handleRegisterModel(...args).then(resolve).catch(reject)
+                  }
+                },
+                cancelButton: {
+                  label: 'Cancel',
+                  variant: TERTIARY_BUTTON,
+                  handler: () => reject()
+                },
+                closePopUp: () => reject(),
+                header: createModelMessages.overwriteConfirmTitle,
+                message: createModelMessages.getOverwriteConfirmMessage(response.data.artifacts[0].kind)
+              })
             })
           } else {
             return handleRegisterModel()
@@ -138,10 +144,12 @@ function RegisterModelModal({ actions, isOpen, onResolve, params, refresh }) {
         }
       })
       .catch(error => {
-        showErrorNotification(dispatch, error, '', 'Model failed to initiate', () =>
-          registerModel(values)
-        )
-        resolveModal()
+        if (error) {
+          showErrorNotification(dispatch, error, '', 'Model failed to initiate', () =>
+            registerModel(values)
+          )
+          resolveModal()
+        }
       })
   }
 
