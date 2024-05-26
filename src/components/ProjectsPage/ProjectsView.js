@@ -55,7 +55,6 @@ const ProjectsView = ({
   handleSearchOnFocus,
   handleSelectSortOption,
   isDescendingOrder,
-  isDemoMode,
   projectStore,
   refreshProjects,
   removeNewProjectError,
@@ -75,15 +74,15 @@ const ProjectsView = ({
 
   return (
     <div className={projectsClassNames}>
-      {(projectStore.loading || projectStore.project.loading || projectStore.projectsSummary.loading || tasksStore.loading) &&
-      <Loader />}
-      {
-        projectStore.mlrunUnhealthy.isUnhealthy && (
-          <PopUpDialog headerIsHidden>
-            MLRun seems to be down. Try again in a few minutes.
-          </PopUpDialog>
-        )
-      }
+      {(projectStore.loading ||
+        projectStore.project.loading ||
+        projectStore.projectsSummary.loading ||
+        tasksStore.loading) && <Loader />}
+      {projectStore.mlrunUnhealthy.isUnhealthy && (
+        <PopUpDialog headerIsHidden>
+          MLRun seems to be down. Try again in a few minutes.
+        </PopUpDialog>
+      )}
       {createProject && (
         <CreateProjectDialog
           closeNewProjectPopUp={closeNewProjectPopUp}
@@ -110,7 +109,7 @@ const ProjectsView = ({
         />
       )}
       <div className="projects__wrapper">
-        {projectStore.projects.length > 0 && isDemoMode && <ProjectsMonitoring />}
+        {projectStore.projects.length > 0 && <ProjectsMonitoring />}
         <PageHeader title="Projects" />
         <div className="projects-content-header">
           <div className="projects-content-header__row">
@@ -190,7 +189,12 @@ const ProjectsView = ({
           )
         ) : projectStore.loading ? null : (
           <NoData
-            message={projectStore.mlrunUnhealthy.retrying ? 'Retrieving projects.' : 'Your projects list is empty.'} />
+            message={
+              projectStore.mlrunUnhealthy.retrying
+                ? 'Retrieving projects.'
+                : 'Your projects list is empty.'
+            }
+          />
         )}
       </div>
       {convertedYaml.length > 0 && (
