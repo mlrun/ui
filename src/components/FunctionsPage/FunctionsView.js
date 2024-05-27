@@ -110,7 +110,7 @@ const FunctionsView = React.forwardRef(
                   <FunctionsFilters />
                 </ActionBar>
               </div>
-              {functionsStore.loading ? (
+              {functionsStore.loading || functionsStore.apiGateways.loading ? (
                 <Loader />
               ) : taggedFunctions.length === 0 ? (
                 <NoData

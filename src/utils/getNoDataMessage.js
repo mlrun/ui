@@ -179,7 +179,7 @@ const getChangedFiltersList = (filters, filtersStore, filtersStoreKey) => {
       ((type === NAME_FILTER || type === LABELS_FILTER || type === ENTITIES_FILTER) &&
         filtersStore[type].length > 0) ||
       (type === STATUS_FILTER && filtersStore.state !== FILTER_ALL_ITEMS) ||
-      type === DATE_RANGE_TIME_FILTER ||
+      (type === DATE_RANGE_TIME_FILTER && !isEqual(filtersStore.dates.value, DATE_FILTER_ANY_TIME)) ||
       (type === ITERATIONS_FILTER && isIterChanged) ||
       (type === SHOW_UNTAGGED_FILTER && filtersStore.showUntagged === SHOW_UNTAGGED_ITEMS) ||
       (type === GROUP_BY_FILTER && filtersStore.groupBy !== GROUP_BY_NONE)

@@ -28,12 +28,12 @@ import {
   Button,
   FormChipCell,
   FormInput,
+  FormOnChange,
   FormTextarea,
   PopUpDialog,
   TextTooltipTemplate,
   Tooltip
 } from 'igz-controls/components'
-import FormOnChange from '../../common/FormOnChange/FormOnChange'
 
 import { getValidationRules } from 'igz-controls/utils/validation.util'
 import { setFieldState } from 'igz-controls/utils/form.util'

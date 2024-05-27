@@ -17,7 +17,7 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import React, { useEffect, useMemo } from 'react'
+import React, { useMemo } from 'react'
 import { Form } from 'react-final-form'
 import { useDispatch, useSelector } from 'react-redux'
 import { isEmpty } from 'lodash'
@@ -33,7 +33,7 @@ import { RoundedIcon, Button } from 'igz-controls/components'
 import DatePicker from '../../common/DatePicker/DatePicker'
 
 import { setFieldState } from 'igz-controls/utils/form.util'
-import { removeFilters, setFilters } from '../../reducers/filtersReducer'
+import { setFilters } from '../../reducers/filtersReducer'
 import detailsActions from '../../actions/details'
 import {
   GROUP_BY_NAME,
@@ -184,15 +184,6 @@ const ActionBar = ({
       isPredefined
     })
   }
-
-  useEffect(() => {
-    const formState = formRef.current
-
-    return () => {
-      formState?.reset?.(formInitialValues)
-      dispatch(removeFilters())
-    }
-  }, [params.projectName, params.name, page, tab, dispatch, formInitialValues])
 
   return (
     <Form form={formRef.current} onSubmit={() => {}}>

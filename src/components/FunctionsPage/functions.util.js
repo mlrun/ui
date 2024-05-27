@@ -326,5 +326,4 @@ const isFunctionDeleting = (func, deletingFunctions) => {
   return Object.values(deletingFunctions).some(deletingFunction => {
     return deletingFunction.name === func.name
   })
-
 }

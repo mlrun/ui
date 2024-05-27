@@ -38,6 +38,14 @@ const actionMenuStructure = {
   }
 }
 
+const actionMenuStructureExpand = {
+  root: '.table-body__cell:nth-of-type(2) .actions-menu__container',
+  menuElements: {
+    open_button: '[data-testid="actions-menu"] button',
+    options: '.actions-menu__body .actions-menu__option'
+  }
+}
+
 const tabSelector = {
   root: '.content .content-menu',
   header: {},
@@ -97,6 +105,10 @@ const modelsTable = {
         action_menu: {
           componentType: actionMenu,
           structure: actionMenuStructure
+        },
+        action_menu_expand: {
+          componentType: actionMenu,
+          structure: actionMenuStructureExpand
         }
       }
     }
@@ -265,7 +277,7 @@ module.exports = {
     ),
     Table_Sort_By_Filter: dropdownComponent(
       generateDropdownGroup(
-        '.content__action-bar-wrapper .filters .select:nth-of-type(2)',
+        '.content__action-bar-wrapper .filters .filter-column:nth-of-type(2) .select',
         '.select__header',
         '.select__body .select__item',
         '.data-ellipsis .data-ellipsis'

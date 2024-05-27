@@ -27,12 +27,12 @@ import {
   FormCheckBox,
   FormChipCell,
   FormInput,
+  FormOnChange,
   FormSelect,
   FormTextarea,
   Tooltip,
   TextTooltipTemplate
 } from 'igz-controls/components'
-import FormOnChange from '../../../../common/FormOnChange/FormOnChange'
 
 import {
   DATA_INPUTS_STEP,

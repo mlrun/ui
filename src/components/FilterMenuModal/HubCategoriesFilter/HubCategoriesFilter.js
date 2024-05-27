@@ -24,8 +24,7 @@ import { useSelector } from 'react-redux'
 import { useForm } from 'react-final-form'
 
 import { FilterMenuWizardContext } from '../FilterMenuModal'
-import { FormCheckBox } from 'igz-controls/components'
-import FormOnChange from '../../../common/FormOnChange/FormOnChange'
+import { FormCheckBox, FormOnChange } from 'igz-controls/components'
 
 import { FILTER_MENU_MODAL, HUB_CATEGORIES_FILTER } from '../../../constants'
 

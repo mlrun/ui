@@ -21,6 +21,7 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import MaskedInput from 'react-text-mask'
 import classnames from 'classnames'
+import { isEmpty } from 'lodash'
 
 import ErrorMessage from '../ErrorMessage/ErrorMessage'
 import TimePicker from '../TimePicker/TimePicker'
@@ -29,6 +30,7 @@ import { SelectOption } from 'igz-controls/elements'
 
 import { SECONDARY_BUTTON } from 'igz-controls/constants'
 import { CUSTOM_RANGE_DATE_OPTION } from '../../utils/datePicker.util'
+import { DATE_PICKER_TIME_FRAME_LIMITS } from '../../types'
 
 import { ReactComponent as Arrow } from 'igz-controls/images/arrow.svg'
 import { ReactComponent as CaretIcon } from 'igz-controls/images/dropdown.svg'
@@ -46,16 +48,17 @@ const DatePickerView = React.forwardRef(
       datePickerInputOnBlur,
       datePickerOptions,
       disabled,
+      externalInvalidMessage,
       getInputValueValidity,
-      invalidText,
-      isCalendarInvalid,
+      invalidMessage,
       isDatePickerOpened,
       isDatePickerOptionsOpened,
-      isInvalid,
+      isInputInvalid,
       isRange,
       isRangeDateValid,
       isSameDate,
       isTime,
+      isTimeRangeNegative,
       isValueEmpty,
       label,
       months,
@@ -70,6 +73,7 @@ const DatePickerView = React.forwardRef(
       requiredText,
       selectedOption,
       setSelectedDate,
+      timeFrameLimit,
       tip,
       valueDatePickerInput,
       weekDay,
@@ -80,17 +84,18 @@ const DatePickerView = React.forwardRef(
     const datePickerClassNames = classnames(
       'date-picker-container',
       className,
-      withLabels && 'date-picker-container__with-labels'
+      withLabels && 'date-picker-container__with-labels',
+      selectedOption?.id === CUSTOM_RANGE_DATE_OPTION && 'date-picker-container__custom-range'
     )
     const inputClassNames = classnames(
       'input',
-      'input-short',
+      !isRange && 'input-short',
       'date-picker__input',
       'active-input',
       isRange && 'long-input',
       isValueEmpty && 'date-picker__input_empty',
       disabled && 'date-picker__input_disabled',
-      isInvalid && 'input_invalid'
+      isInputInvalid && 'input_invalid'
     )
     const inputLabelClassNames = classnames('input__label', label && 'active-label')
 
@@ -126,7 +131,7 @@ const DatePickerView = React.forwardRef(
                 pipe={autoCorrectedDatePipe}
                 value={valueDatePickerInput}
               />
-              {isValueEmpty && (
+              {isValueEmpty && timeFrameLimit === Infinity && (
                 <span className="input__label input__label-empty">&nbsp;Any time</span>
               )}
             </>
@@ -135,7 +140,7 @@ const DatePickerView = React.forwardRef(
             {label}
             {required && <span className="input__label-mandatory"> *</span>}
           </span>
-          {isInvalid && (
+          {isInputInvalid && (
             <Tooltip
               className="input__warning"
               template={
@@ -143,7 +148,7 @@ const DatePickerView = React.forwardRef(
                   text={
                     required && getInputValueValidity(valueDatePickerInput)
                       ? requiredText
-                      : invalidText
+                      : invalidMessage || externalInvalidMessage
                   }
                   warning
                 />
@@ -238,7 +243,7 @@ const DatePickerView = React.forwardRef(
                               isSameDate(config[0].selectedDate, day) && 'selected-from',
                               isRange && isSameDate(config[1].selectedDate, day) && 'selected-to',
                               isRangeDateValid(day) && 'in-range',
-                              isCalendarInvalid && 'invalid'
+                              isTimeRangeNegative && 'negative-range'
                             )}
                             onClick={() => {
                               item.visibleDate.getMonth() === day.getMonth() &&
@@ -263,14 +268,19 @@ const DatePickerView = React.forwardRef(
                   </div>
                 ))}
               </div>
-              <div className="date-picker__footer">
-                {isCalendarInvalid && <ErrorMessage message="“To” must be later than “From”" />}
+              <div
+                className={classnames(
+                  'date-picker__footer',
+                  isRange && 'date-picker__footer-range'
+                )}
+              >
+                {!isEmpty(invalidMessage) && <ErrorMessage message={invalidMessage} />}
                 <Button
                   variant={SECONDARY_BUTTON}
                   label="Apply"
                   onClick={onApplyChanges}
                   className="date-picker__apply-btn"
-                  disabled={isCalendarInvalid}
+                  disabled={!isEmpty(invalidMessage)}
                 />
               </div>
             </div>
@@ -294,17 +304,18 @@ DatePickerView.propTypes = {
   datePickerInputOnBlur: PropTypes.func.isRequired,
   datePickerOptions: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
   disabled: PropTypes.bool.isRequired,
+  externalInvalidMessage: PropTypes.string.isRequired,
   getInputValueValidity: PropTypes.func.isRequired,
-  invalidText: PropTypes.string.isRequired,
   floatingLabel: PropTypes.bool,
-  isCalendarInvalid: PropTypes.bool.isRequired,
+  invalidMessage: PropTypes.string.isRequired,
   isDatePickerOpened: PropTypes.bool.isRequired,
   isDatePickerOptionsOpened: PropTypes.bool.isRequired,
-  isInvalid: PropTypes.bool.isRequired,
+  isInputInvalid: PropTypes.bool.isRequired,
   isRange: PropTypes.bool.isRequired,
   isRangeDateValid: PropTypes.func.isRequired,
   isSameDate: PropTypes.func.isRequired,
   isTime: PropTypes.bool.isRequired,
+  isTimeRangeNegative: PropTypes.bool.isRequired,
   isValueEmpty: PropTypes.bool.isRequired,
   label: PropTypes.string,
   months: PropTypes.array.isRequired,
@@ -319,6 +330,7 @@ DatePickerView.propTypes = {
   requiredText: PropTypes.string.isRequired,
   selectedOption: PropTypes.object,
   setSelectedDate: PropTypes.func.isRequired,
+  timeFrameLimit: DATE_PICKER_TIME_FRAME_LIMITS,
   tip: PropTypes.string.isRequired,
   valueDatePickerInput: PropTypes.string.isRequired,
   weekDay: PropTypes.array.isRequired,

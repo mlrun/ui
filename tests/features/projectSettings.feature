@@ -5,6 +5,7 @@ Feature: Project Settings page
 
     @MLPS
     @inProgress
+    @smoke
     Scenario: MLPS001 - Verify all mandatory components on General Tab
         Given open url
         And click on row root with value "cat-vs-dog-classification" in "name" column in "Projects_Table" table on "Projects" wizard
@@ -47,6 +48,7 @@ Feature: Project Settings page
             | labelKeyTest2 | labelValueTest2 |
 
     @MLPS
+    @smoke
     Scenario: MLPS002 - Verify behaviour of editing labels on General tab
         Given open url
         Then type value "cat-vs-dog-classification" to "Search_Projects_Input" field on "Projects" wizard
@@ -63,11 +65,15 @@ Feature: Project Settings page
         And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
         Then click on "Project_Settings_Button" element on "commonPagesHeader" wizard
         And hover "MLRun_Logo" component on "commonPagesHeader" wizard
+        Then type value "   " to "Source_URL_Input" field on "Project_Settings_General_Tab" wizard
+        Then verify "Source_URL_Input" on "Project_Settings_General_Tab" wizard should display warning "Input_Hint"."Input_Field_Invalid"
         When add rows to "Labels_Table" table on "Project_Settings_General_Tab" wizard
             | key_input | value_input |
             | a         | b           |
             | c         | d           |
             | e         | f           |
+        Then type value "test" to "Source_URL_Input" field on "Project_Settings_General_Tab" wizard
+        And wait load page
         And click on "MLRun_Logo" element on "commonPagesHeader" wizard
         And wait load page
         Then type value "cat-vs-dog-classification" to "Search_Projects_Input" field on "Projects" wizard
@@ -75,6 +81,7 @@ Feature: Project Settings page
         Then click on "Active_Projects_Button" element on "Projects" wizard
         Then value in "labels" column with "dropdowns" in "Projects_Table" on "Projects" wizard should contains "e=f" in "Overlay"
         And click on row root with value "cat-vs-dog-classification" in "name" column in "Projects_Table" table on "Projects" wizard
+        And wait load page
         And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
         Then click on "Project_Settings_Button" element on "commonPagesHeader" wizard
         And wait load page
@@ -84,11 +91,14 @@ Feature: Project Settings page
             |     a      |
             |     c      |
             |     e      |
+        Then type value "   " to "Source_URL_Input" field on "Project_Settings_General_Tab" wizard
+        Then verify "Source_URL_Input" on "Project_Settings_General_Tab" wizard should display warning "Input_Hint"."Input_Field_Invalid"
         When add rows to "Labels_Table" table on "Project_Settings_General_Tab" wizard
             | key_input         | value_input         |
             | a                 | b                   |
             | project_label_key | project_label_value |
             | a12345            | b54321              |
+        Then type value "test" to "Source_URL_Input" field on "Project_Settings_General_Tab" wizard
         And click on "MLRun_Logo" element on "commonPagesHeader" wizard
         And wait load page
         Then type value "cat-vs-dog-classification" to "Search_Projects_Input" field on "Projects" wizard
@@ -97,6 +107,7 @@ Feature: Project Settings page
         Then value in "labels" column with "dropdowns" in "Projects_Table" on "Projects" wizard should contains "a12345=b54321" in "Overlay"
         Then click on "Active_Projects_Button" element on "Projects" wizard
         And click on row root with value "cat-vs-dog-classification" in "name" column in "Projects_Table" table on "Projects" wizard
+        And wait load page
         And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
         Then click on "Project_Settings_Button" element on "commonPagesHeader" wizard
         And wait load page
@@ -116,6 +127,7 @@ Feature: Project Settings page
 
     @MLPS
     @inProgress
+    @smoke
     Scenario: MLPS003 - Verify Parameters Table on General Tab
         Given open url
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
@@ -161,6 +173,7 @@ Feature: Project Settings page
 
     @MLPS
     @passive
+    @smoke
     Scenario: MLPS006 - Check MLRun logo redirection
         Given open url
         And wait load page
@@ -175,6 +188,7 @@ Feature: Project Settings page
 
     @MLPS
     @passive
+    @smoke
     Scenario: MLPS007 - Verify all mandatory components on Secrets tab
         Given open url
         And wait load page
@@ -198,6 +212,7 @@ Feature: Project Settings page
 
     @MLPS
     @inProgress
+    @smoke
     Scenario: MLPS008 - Verify Secrets table on Secrets tab
         Given open url
         And wait load page
@@ -234,6 +249,7 @@ Feature: Project Settings page
     @passive
     @inProgress
     @enabledProjectMembership
+    @smoke
     Scenario: MLPS009 - Check all mandatory components on Project Owner
         Given open url
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
@@ -254,6 +270,7 @@ Feature: Project Settings page
     @passive
     @inProgress
     @enabledProjectMembership
+    @smoke
     Scenario: MLPS010 - Check all mandatory components on Members tab
         Given open url
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
@@ -355,6 +372,7 @@ Feature: Project Settings page
         And remove "automation-test" MLRun Project with code 204
 
     @MLPS
+    @smoke
     Scenario: MLPS005 - Check broken link redirection
         Given open url
         And wait load page

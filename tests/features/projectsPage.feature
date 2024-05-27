@@ -4,6 +4,7 @@ Feature: MLRun Projects Page
 
     @MLPr
     @passive
+    @smoke
     #TODO: last two steps are unstable on small screen extensions because scroll change the screen coordinates, it needs another solution
     Scenario: MLPr001 - Check all mandatory components
         Given open url
@@ -23,6 +24,7 @@ Feature: MLRun Projects Page
 
     @MLPr
     @passive
+    @smoke
     Scenario: MLPr002 - Verify searching by project name
         Given open url
         And wait load page
@@ -49,6 +51,7 @@ Feature: MLRun Projects Page
 
     @MLPr
     @passive
+    @smoke
     Scenario: MLPr003 - Sort projects in ascending and descending order
         Given open url
         And wait load page
@@ -60,6 +63,7 @@ Feature: MLRun Projects Page
 
     @MLPr
     @passive
+    @smoke
     Scenario: MLPr004 - Verify all mandatory components on Create new ML Project
         Given open url
         And wait load page
@@ -81,6 +85,7 @@ Feature: MLRun Projects Page
 
     @MLPr
     @passive
+    @smoke
     Scenario: MLPr005 - Verify all mandatory components on Archive ML Project
         Given open url
         And wait load page
@@ -94,6 +99,7 @@ Feature: MLRun Projects Page
 
     @MLPr
     @passive
+    @smoke
     Scenario: MLPr006 - Verify all mandatory components on Delete existing ML Project
         Given open url
         And wait load page
@@ -107,6 +113,7 @@ Feature: MLRun Projects Page
 
     @MLPr
     @sanity
+    @smoke
     Scenario: MLPr007 - Create new ML Project with description
         Given open url
         And wait load page
@@ -133,6 +140,7 @@ Feature: MLRun Projects Page
     
     @MLPr
     @passive
+    @smoke
     Scenario: MLPr008 - Archive ML Project
         * set tear-down property "project" created with "automation-test-name1" value
         * create "automation-test-name1" MLRun Project with code 201
@@ -148,6 +156,7 @@ Feature: MLRun Projects Page
     
     @MLPr
     @passive
+    @smoke
     Scenario: MLPr009 - Delete existing ML Project
         * set tear-down property "project" created with "automation-test-name2" value
         * create "automation-test-name2" MLRun Project with code 201
@@ -175,6 +184,7 @@ Feature: MLRun Projects Page
     
     @MLPr
     @passive
+    @smoke
     Scenario: MLPr010 - Unarchive ML Project
         * set tear-down property "project" created with "automation-test-name7" value
         * create "automation-test-name7" MLRun Project with code 201
@@ -200,6 +210,7 @@ Feature: MLRun Projects Page
     
     @MLPr
     @passive
+    @smoke
     Scenario: MLPr011 - Verify View YAML action
         Given open url
         And wait load page
@@ -214,6 +225,7 @@ Feature: MLRun Projects Page
     
     @MLPr    
     @danger
+    @smoke
 #   Run this test case only with mocked backend!!!
     Scenario: MLPr012 - Check projects limit message
         Then create up to limit projects with code 201
@@ -226,6 +238,9 @@ Feature: MLRun Projects Page
 
     @MLPr
     @passive
+    @smoke
+    @FAILED_TODO
+    #TODO: change mock api getIguazioProjects for owner
     Scenario: MLPr013 - Create new ML Project and check navigation through project navigation menu
         Given open url
         And wait load page
@@ -269,7 +284,7 @@ Feature: MLRun Projects Page
         Then verify breadcrumbs "tab" label should be equal "Settings" value
 
     @MLPr
-    @uniqueTag
+    @smoke
     Scenario: MLPr015 - Check components on Monitoring container on Projects page
         Given open url
         And wait load page
@@ -311,7 +326,7 @@ Feature: MLRun Projects Page
         Then verify "Monitoring_Scheduled_Box" element visibility in "Projects_Monitoring_Container" on "Projects" wizard
 
     @MLPr
-    @uniqueTag
+    @smoke
     Scenario: MLPr016 - Check components on Jobs counter box
         Given open url
         And wait load page
@@ -363,7 +378,7 @@ Feature: MLRun Projects Page
         Then verify "Monitoring_Container" element visibility in "Projects_Monitoring_Container" on "Projects" wizard
 
     @MLPr
-    @uniqueTag
+    @smoke
     Scenario: MLPr017 - Check components on Workflows counter box
         Given open url
         And wait load page
@@ -414,7 +429,7 @@ Feature: MLRun Projects Page
         Then verify "Monitoring_Container" element visibility in "Projects_Monitoring_Container" on "Projects" wizard
 
     @MLPr
-    @uniqueTag
+    @smoke
     Scenario: MLPr018 - Check components on Sheduled counter box
         Given open url
         And wait load page

@@ -53,11 +53,20 @@ export const NEXT_YEAR_DATE_OPTION = 'nextYear'
 
 export const CUSTOM_RANGE_DATE_OPTION = 'customRange'
 
+export const TIME_FRAME_LIMITS = {
+  HOUR: 3600000,
+  '24_HOURS': 86400000,
+  WEEK: 604800000,
+  MONTH: 2678400000, // 31 day
+  YEAR: 31536000000  // 365 days
+}
+
 export const datePickerPastOptions = [
   {
     id: ANY_TIME_DATE_OPTION,
     label: ANY_TIME,
-    handler: () => DATE_FILTER_ANY_TIME
+    handler: () => DATE_FILTER_ANY_TIME,
+    timeFrameMilliseconds: Infinity
   },
   {
     id: PAST_HOUR_DATE_OPTION,
@@ -67,7 +76,8 @@ export const datePickerPastOptions = [
       return getDates((fromDate, toDate) => {
         fromDate.setHours(toDate.getHours() - 1)
       })
-    }
+    },
+    timeFrameMilliseconds: TIME_FRAME_LIMITS.HOUR
   },
   {
     id: PAST_24_HOUR_DATE_OPTION,
@@ -77,7 +87,8 @@ export const datePickerPastOptions = [
       return getDates((fromDate, toDate) => {
         fromDate.setDate(toDate.getDate() - 1)
       })
-    }
+    },
+    timeFrameMilliseconds: TIME_FRAME_LIMITS['24_HOURS']
   },
   {
     id: PAST_WEEK_DATE_OPTION,
@@ -87,7 +98,8 @@ export const datePickerPastOptions = [
       return getDates((fromDate, toDate) => {
         fromDate.setDate(toDate.getDate() - 7)
       })
-    }
+    },
+    timeFrameMilliseconds: TIME_FRAME_LIMITS.WEEK
   },
   {
     id: PAST_MONTH_DATE_OPTION,
@@ -97,7 +109,8 @@ export const datePickerPastOptions = [
       return getDates((fromDate, toDate) => {
         fromDate.setMonth(toDate.getMonth() - 1)
       })
-    }
+    },
+    timeFrameMilliseconds: TIME_FRAME_LIMITS.MONTH
   },
   {
     id: PAST_YEAR_DATE_OPTION,
@@ -107,12 +120,14 @@ export const datePickerPastOptions = [
       return getDates((fromDate, toDate) => {
         fromDate.setFullYear(toDate.getFullYear() - 1)
       })
-    }
+    },
+    timeFrameMilliseconds: TIME_FRAME_LIMITS.YEAR
   },
   {
     id: CUSTOM_RANGE_DATE_OPTION,
     label: 'Custom range',
-    handler: null
+    handler: null,
+    timeFrameMilliseconds: 0
   }
 ]
 
@@ -120,7 +135,8 @@ export const datePickerFutureOptions = [
   {
     id: ANY_TIME_DATE_OPTION,
     label: 'Any time',
-    handler: () => DATE_FILTER_ANY_TIME
+    handler: () => DATE_FILTER_ANY_TIME,
+    timeFrameMilliseconds: Infinity
   },
   {
     id: NEXT_HOUR_DATE_OPTION,
@@ -130,7 +146,8 @@ export const datePickerFutureOptions = [
       return getDates((fromDate, toDate) => {
         fromDate.setHours(toDate.getHours() + 1)
       })
-    }
+    },
+    timeFrameMilliseconds: TIME_FRAME_LIMITS.HOUR
   },
   {
     id: NEXT_24_HOUR_DATE_OPTION,
@@ -140,7 +157,8 @@ export const datePickerFutureOptions = [
       return getDates((fromDate, toDate) => {
         fromDate.setDate(toDate.getDate() + 1)
       })
-    }
+    },
+    timeFrameMilliseconds: TIME_FRAME_LIMITS['24_HOURS']
   },
   {
     id: NEXT_WEEK_DATE_OPTION,
@@ -150,7 +168,8 @@ export const datePickerFutureOptions = [
       return getDates((fromDate, toDate) => {
         fromDate.setDate(toDate.getDate() + 7)
       })
-    }
+    },
+    timeFrameMilliseconds: TIME_FRAME_LIMITS.WEEK
   },
   {
     id: NEXT_MONTH_DATE_OPTION,
@@ -160,7 +179,8 @@ export const datePickerFutureOptions = [
       return getDates((fromDate, toDate) => {
         fromDate.setMonth(toDate.getMonth() + 1)
       })
-    }
+    },
+    timeFrameMilliseconds: TIME_FRAME_LIMITS.MONTH
   },
   {
     id: NEXT_YEAR_DATE_OPTION,
@@ -170,12 +190,14 @@ export const datePickerFutureOptions = [
       return getDates((fromDate, toDate) => {
         fromDate.setFullYear(toDate.getFullYear() + 1)
       })
-    }
+    },
+    timeFrameMilliseconds: TIME_FRAME_LIMITS.YEAR
   },
   {
     id: CUSTOM_RANGE_DATE_OPTION,
     label: 'Custom range',
-    handler: null
+    handler: null,
+    timeFrameMilliseconds: 0
   }
 ]
 
@@ -318,4 +340,16 @@ export const decodeLocale = locale => {
   return locale.match(
     /^([a-zA-Z]{2,3})(?:[_-]+([a-zA-Z]{3})(?=$|[_-]+))?(?:[_-]+([a-zA-Z]{4})(?=$|[_-]+))?(?:[_-]+([a-zA-Z]{2}|\d{3})(?=$|[_-]+))?/
   )[4]
+}
+
+export const getTimeFrameWarningMsg = (timeFrameLimit) => {
+  const mappedTime = {
+    [TIME_FRAME_LIMITS.HOUR]: '1 hour',
+    [TIME_FRAME_LIMITS['24_HOURS']]: '24 hours',
+    [TIME_FRAME_LIMITS.WEEK]: '7 days',
+    [TIME_FRAME_LIMITS.MONTH]: '31 days',
+    [TIME_FRAME_LIMITS.YEAR]: '365 days'
+  }
+
+  return `Maximum time range is ${mappedTime[timeFrameLimit]}`
 }

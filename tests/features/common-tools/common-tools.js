@@ -174,7 +174,7 @@ module.exports = {
         case 'featureSet':
           return deleteAPIFeatureSet(item.project, item.name, 204)
         case 'featureVector':
-          return deleteAPIFeatureVector(item.project, item.name, 204)
+          return deleteAPIFeatureVector(item.project, item.name, 200)
         case 'function':
           return deleteAPIFunction(item.project, item.name, 204)
         case 'schedule':

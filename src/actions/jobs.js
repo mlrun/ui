@@ -100,7 +100,11 @@ const generateRequestParams = filters => {
     params.name = `~${filters.name}`
   }
 
-  if (filters?.state && filters.state !== FILTER_ALL_ITEMS) {
+  if (
+    filters?.state &&
+    filters.state !== FILTER_ALL_ITEMS &&
+    !filters.state.includes(FILTER_ALL_ITEMS)
+  ) {
     params.state = filters.state
   }
 

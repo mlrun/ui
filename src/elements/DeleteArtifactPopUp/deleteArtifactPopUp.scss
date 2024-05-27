@@ -1,0 +1,38 @@
+@import '~igz-controls/scss/colors';
+
+.delete-artifact-pop-up {
+  .pop-up-dialog {
+    min-width: 600px;
+
+    &__header {
+      text-align: center;
+    }
+  }
+
+  .warning {
+    margin-top: 10px;
+    padding: 10px;
+    background-color: $grandisTwo;
+    border-radius: 4px;
+
+    &__icon {
+      margin-right: 10px;
+    }
+  }
+
+  &__extended-data {
+    margin-top: 20px;
+
+    h4 {
+      margin-bottom: 10px;
+    }
+
+    .form-field-radio {
+      margin-bottom: 10px;
+    }
+  }
+
+  .secrets-table {
+    margin-top: 20px;
+  }
+}

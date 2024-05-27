@@ -145,12 +145,13 @@ Then(
       value
     )
     const indx = arr[0]
-    const actionMenuSel = await getCellByIndexColumn(
-      this.driver,
-      pageObjects[wizard][table],
-      indx,
-      'action_menu'
-    )
+    const menuType = (column === 'name_expand_btn') ? 'action_menu_expand' : 'action_menu'
+    const actionMenuSel =  await getCellByIndexColumn(
+        this.driver,
+        pageObjects[wizard][table],
+        indx,
+        menuType
+      )
     await hoverComponent(
       this.driver,
       pageObjects[wizard][table]['tableFields'][column](indx),
@@ -180,7 +181,7 @@ When('add rows to {string} table on {string} wizard', async function (table, wiz
       )
     }
     await clickNearComponent(this.driver, pageObjects[wizard][table]['root'])
-    await this.driver.sleep(100)
+    await this.driver.sleep(250)
   }
 })
 
@@ -1709,13 +1710,13 @@ Then(
 )
 
 Then(
-  'check {string} visibility in {string} on {string} wizard',
-  async function (cellName, tableName, wizardName) {
+  'check {string} visibility in {string} on {string} wizard with {int} offset',
+  async function (cellName, tableName, wizardName, indexOffset) {
     const rowsNumber = await getTableRows(this.driver, pageObjects[wizardName][tableName])
     for (let i = 0; i < rowsNumber; i++) {
       await componentIsVisible(
         this.driver,
-        pageObjects[wizardName][tableName].tableFields[cellName](i + 1)
+        pageObjects[wizardName][tableName].tableFields[cellName](i + 1 + indexOffset)
       )
     }
   }

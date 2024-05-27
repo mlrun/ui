@@ -21,8 +21,7 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import classnames from 'classnames'
 
-import { RoundedIcon, FormChipCell } from 'igz-controls/components'
-import FormOnChange from '../../common/FormOnChange/FormOnChange'
+import { RoundedIcon, FormChipCell, FormOnChange } from 'igz-controls/components'
 
 import { getValidationRules } from 'igz-controls/utils/validation.util'
 import { detailsInfoActions } from '../../components/DetailsInfo/detailsInfoReducer'

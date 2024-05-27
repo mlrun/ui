@@ -29,8 +29,7 @@ import FunctionCardTemplate from '../../../../elements/FunctionCardTemplate/Func
 import HubCategoriesFilter from '../../../FilterMenuModal/HubCategoriesFilter/HubCategoriesFilter'
 import NoData from '../../../../common/NoData/NoData'
 import Search from '../../../../common/Search/Search'
-import { FormSelect } from 'igz-controls/components'
-import FormOnChange from '../../../../common/FormOnChange/FormOnChange'
+import { FormOnChange, FormSelect } from 'igz-controls/components'
 
 import functionsActions from '../../../../actions/functions'
 import projectsAction from '../../../../actions/projects'

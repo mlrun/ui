@@ -28,9 +28,8 @@ import ChipCell from '../../common/ChipCell/ChipCell'
 import CopyToClipboard from '../../common/CopyToClipboard/CopyToClipboard'
 import Input from '../../common/Input/Input'
 import { Tooltip, TextTooltipTemplate, RoundedIcon } from 'igz-controls/components'
-import { FormInput, FormTextarea } from 'igz-controls/components'
+import { FormInput, FormOnChange, FormTextarea } from 'igz-controls/components'
 import DetailsInfoItemChip from '../DetailsInfoItemChip/DetailsInfoItemChip'
-import FormOnChange from '../../common/FormOnChange/FormOnChange'
 
 import { CHIP_OPTIONS } from '../../types'
 import { getValidationRules } from 'igz-controls/utils/validation.util'
@@ -223,11 +222,13 @@ const DetailsInfoItem = React.forwardRef(
           <Tooltip template={<TextTooltipTemplate text={info} />}>{info}</Tooltip>
         </Link>
       ) : (
-        <a className="details-item__data details-item__link" href={info} target="_blank" rel="noreferrer">
-          <Tooltip
-            className="link"
-            template={<TextTooltipTemplate text={info} />}
-          >
+        <a
+          className="details-item__data details-item__link"
+          href={info}
+          target="_blank"
+          rel="noreferrer"
+        >
+          <Tooltip className="link" template={<TextTooltipTemplate text={info} />}>
             {info}
           </Tooltip>
         </a>

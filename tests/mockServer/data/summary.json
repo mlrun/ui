@@ -5,9 +5,14 @@
       "files_count": 2,
       "feature_sets_count": 0,
       "models_count": 0,
+      "runs_completed_recent_count": 0,
       "runs_failed_recent_count": 0,
       "runs_running_count": 3,
-      "schedules_count": 1,
+      "distinct_schedules_count": 1,
+      "distinct_scheduled_jobs_pending_count": 0,
+      "distinct_scheduled_pipelines_pending_count": 0,
+      "pipelines_completed_recent_count": 0,
+      "pipelines_failed_recent_count": 0,
       "pipelines_running_count": 0
     },
     {
@@ -15,9 +20,14 @@
       "files_count": 7,
       "feature_sets_count": 1,
       "models_count": 5,
+      "runs_completed_recent_count": 0,
       "runs_failed_recent_count": 0,
       "runs_running_count": 0,
-      "schedules_count": 2,
+      "distinct_schedules_count": 2,
+      "distinct_scheduled_jobs_pending_count": 0,
+      "distinct_scheduled_pipelines_pending_count": 0,
+      "pipelines_completed_recent_count": 0,
+      "pipelines_failed_recent_count": 0,
       "pipelines_running_count": 0
     },
     {
@@ -25,9 +35,14 @@
       "files_count": 2,
       "feature_sets_count": 23,
       "models_count": 1,
+      "runs_completed_recent_count": 0,
       "runs_failed_recent_count": 1,
       "runs_running_count": 7,
-      "schedules_count": 2,
+      "distinct_schedules_count": 2,
+      "distinct_scheduled_jobs_pending_count": 0,
+      "distinct_scheduled_pipelines_pending_count": 0,
+      "pipelines_completed_recent_count": 0,
+      "pipelines_failed_recent_count": 0,
       "pipelines_running_count": 0
     },
     {
@@ -37,7 +52,11 @@
       "models_count": 0,
       "runs_failed_recent_count": 0,
       "runs_running_count": 0,
-      "schedules_count": 0,
+      "distinct_schedules_count": 0,
+      "distinct_scheduled_jobs_pending_count": 0,
+      "distinct_scheduled_pipelines_pending_count": 0,
+      "pipelines_completed_recent_count": 0,
+      "pipelines_failed_recent_count": 0,
       "pipelines_running_count": 0
     },
     {
@@ -47,7 +66,11 @@
       "models_count": 0,
       "runs_failed_recent_count": 0,
       "runs_running_count": 0,
-      "schedules_count": 0,
+      "distinct_schedules_count": 0,
+      "distinct_scheduled_jobs_pending_count": 0,
+      "distinct_scheduled_pipelines_pending_count": 0,
+      "pipelines_completed_recent_count": 0,
+      "pipelines_failed_recent_count": 0,
       "pipelines_running_count": 0
     },
     {
@@ -57,7 +80,11 @@
       "models_count": 2,
       "runs_failed_recent_count": 0,
       "runs_running_count": 1,
-      "schedules_count": 1,
+      "distinct_schedules_count": 1,
+      "distinct_scheduled_jobs_pending_count": 0,
+      "distinct_scheduled_pipelines_pending_count": 0,
+      "pipelines_completed_recent_count": 0,
+      "pipelines_failed_recent_count": 0,
       "pipelines_running_count": 0
     },
     {
@@ -67,7 +94,11 @@
       "models_count": 0,
       "runs_failed_recent_count": 0,
       "runs_running_count": 0,
-      "schedules_count": 0,
+      "distinct_schedules_count": 0,
+      "distinct_scheduled_jobs_pending_count": 0,
+      "distinct_scheduled_pipelines_pending_count": 0,
+      "pipelines_completed_recent_count": 0,
+      "pipelines_failed_recent_count": 0,
       "pipelines_running_count": 0
     },
     {
@@ -77,7 +108,11 @@
       "models_count": 0,
       "runs_failed_recent_count": 0,
       "runs_running_count": 0,
-      "schedules_count": 0,
+      "distinct_schedules_count": 0,
+      "distinct_scheduled_jobs_pending_count": 0,
+      "distinct_scheduled_pipelines_pending_count": 0,
+      "pipelines_completed_recent_count": 0,
+      "pipelines_failed_recent_count": 0,
       "pipelines_running_count": 0
     },
     {
@@ -87,7 +122,11 @@
       "models_count": 0,
       "runs_failed_recent_count": 0,
       "runs_running_count": 0,
-      "schedules_count": 0,
+      "distinct_schedules_count": 0,
+      "distinct_scheduled_jobs_pending_count": 0,
+      "distinct_scheduled_pipelines_pending_count": 0,
+      "pipelines_completed_recent_count": 0,
+      "pipelines_failed_recent_count": 0,
       "pipelines_running_count": 0
     },
     {
@@ -97,7 +136,11 @@
       "models_count": 0,
       "runs_failed_recent_count": 0,
       "runs_running_count": 2,
-      "schedules_count": 0,
+      "distinct_schedules_count": 0,
+      "distinct_scheduled_jobs_pending_count": 0,
+      "distinct_scheduled_pipelines_pending_count": 0,
+      "pipelines_completed_recent_count": 0,
+      "pipelines_failed_recent_count": 0,
       "pipelines_running_count": 0
     },
     {
@@ -107,7 +150,11 @@
       "models_count": 0,
       "runs_failed_recent_count": 0,
       "runs_running_count": 0,
-      "schedules_count": 0,
+      "distinct_schedules_count": 0,
+      "distinct_scheduled_jobs_pending_count": 0,
+      "distinct_scheduled_pipelines_pending_count": 0,
+      "pipelines_completed_recent_count": 0,
+      "pipelines_failed_recent_count": 0,
       "pipelines_running_count": 0
     },
     {
@@ -117,7 +164,11 @@
       "models_count": 6,
       "runs_failed_recent_count": 0,
       "runs_running_count": 3,
-      "schedules_count": 0,
+      "distinct_schedules_count": 0,
+      "distinct_scheduled_jobs_pending_count": 0,
+      "distinct_scheduled_pipelines_pending_count": 0,
+      "pipelines_completed_recent_count": 0,
+      "pipelines_failed_recent_count": 0,
       "pipelines_running_count": 0
     },
     {
@@ -127,7 +178,11 @@
       "models_count": 3,
       "runs_failed_recent_count": 0,
       "runs_running_count": 1,
-      "schedules_count": 1,
+      "distinct_schedules_count": 1,
+      "distinct_scheduled_jobs_pending_count": 0,
+      "distinct_scheduled_pipelines_pending_count": 0,
+      "pipelines_completed_recent_count": 0,
+      "pipelines_failed_recent_count": 0,
       "pipelines_running_count": 0
     },
     {
@@ -137,7 +192,11 @@
       "models_count": 0,
       "runs_failed_recent_count": 0,
       "runs_running_count": 0,
-      "schedules_count": 0,
+      "distinct_schedules_count": 0,
+      "distinct_scheduled_jobs_pending_count": 0,
+      "distinct_scheduled_pipelines_pending_count": 0,
+      "pipelines_completed_recent_count": 0,
+      "pipelines_failed_recent_count": 0,
       "pipelines_running_count": 0
     },
     {
@@ -147,7 +206,11 @@
       "models_count": 0,
       "runs_failed_recent_count": 0,
       "runs_running_count": 0,
-      "schedules_count": 0,
+      "distinct_schedules_count": 0,
+      "distinct_scheduled_jobs_pending_count": 0,
+      "distinct_scheduled_pipelines_pending_count": 0,
+      "pipelines_completed_recent_count": 0,
+      "pipelines_failed_recent_count": 0,
       "pipelines_running_count": 0
     },
     {
@@ -157,7 +220,11 @@
       "models_count": 0,
       "runs_failed_recent_count": 0,
       "runs_running_count": 0,
-      "schedules_count": 0,
+      "distinct_schedules_count": 0,
+      "distinct_scheduled_jobs_pending_count": 0,
+      "distinct_scheduled_pipelines_pending_count": 0,
+      "pipelines_completed_recent_count": 0,
+      "pipelines_failed_recent_count": 0,
       "pipelines_running_count": 0
     }
   ]

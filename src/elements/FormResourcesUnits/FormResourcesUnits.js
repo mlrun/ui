@@ -20,8 +20,7 @@ such restriction.
 import React, { useEffect, useMemo } from 'react'
 import PropTypes from 'prop-types'
 
-import { FormInput, FormSelect } from 'igz-controls/components'
-import FormOnChange from '../../common/FormOnChange/FormOnChange'
+import { FormInput, FormOnChange, FormSelect } from 'igz-controls/components'
 
 import {
   getLimitsGpuType,

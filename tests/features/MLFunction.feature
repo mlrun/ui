@@ -4,6 +4,7 @@ Feature: ML Functions
 
     @MLF
     @passive
+    @smoke
     #TODO: ML-5137 - move create/edit 'function panel' to UI Demo mode
     Scenario: MLF005 - Check all mandatory components on ML Functions Page
         Given open url
@@ -35,6 +36,7 @@ Feature: ML Functions
 
     @MLF
     @passive
+    @smoke
     Scenario: MLF006 - Verify filtering by function name on Functions page
         Given open url
         And wait load page
@@ -59,6 +61,7 @@ Feature: ML Functions
 
     @MLF
     @passive
+    @smoke
     Scenario: MLF007 - Check all mandatory components in Item infopane on Overview tab table
         Given open url
         And wait load page
@@ -79,6 +82,7 @@ Feature: ML Functions
 
     @MLF
     @passive
+    @smoke
     Scenario: MLF008 - Verify all mandatory components on Delete existing function
         Given open url
         And wait load page
@@ -99,6 +103,7 @@ Feature: ML Functions
 
     @MLF
     @passive
+    @smoke
     Scenario: MLF009 - Verify all mandatory components on Delete existing function in Item infopane
         Given open url
         And wait load page
@@ -121,6 +126,7 @@ Feature: ML Functions
 
     @MLF
     @passive
+    @smoke
     #TODO: ML-5137 - move create/edit 'function panel' to UI Demo mode
     Scenario: MLF003 - Check all mandatory components on Create ML Function Popup
         Given open url
@@ -151,6 +157,7 @@ Feature: ML Functions
 
     @MLF
     @passive
+    @smoke
     #TODO: ML-5137 - move create/edit 'function panel' to UI Demo mode
     Scenario: MLF010 - Check all mandatory components in General Accordion on create New Function page
         Given open url
@@ -196,6 +203,7 @@ Feature: ML Functions
 
     @MLF
     @passive
+    @smoke
     #TODO: ML-5137 - move create/edit 'function panel' to UI Demo mode
     Scenario: MLF011 - Check all mandatory components in Code Accordion on create New Function page
         Given open url
@@ -241,6 +249,7 @@ Feature: ML Functions
 
     @MLF
     @passive
+    @smoke
     #TODO: ML-5137 - move create/edit 'function panel' to UI Demo mode
     Scenario: MLF012 - Check all mandatory components in Resources Accordion on create New Function page
         Given open url
@@ -331,6 +340,7 @@ Feature: ML Functions
 
     @MLF
     @passive
+    @smoke
     #TODO: ML-5137 - move create/edit 'function panel' to UI Demo mode
     Scenario: MLF013 - Verify behaviour of Volume Paths Table in Resources Accordion on create New Function page
         Given open url
@@ -435,6 +445,7 @@ Feature: ML Functions
 
     @MLF
     @passive
+    @smoke
     #TODO: ML-5137 - move create/edit 'function panel' to UI Demo mode
     Scenario: MLF014 - Check all mandatory components in Resources Accordion on create New Function page
         Given open url
@@ -558,6 +569,7 @@ Feature: ML Functions
         Then verify "Deploy_Button" element on "New_Function" wizard is disabled
 
     @MLF
+    @smoke
     #TODO: ML-5137 - move create/edit 'function panel' to UI Demo mode
     Scenario: MLF015 - Save new ml-function
         * set tear-down property "function" created in "default" project with "new-aqa-function-00" value
@@ -628,6 +640,7 @@ Feature: ML Functions
         Then verify "GPU_Limit_Number_Input" input should contains "15" value in "Resources_Accordion" on "New_Function" wizard
 
     @MLF
+    @smoke
     #TODO: ML-5137 - move create/edit 'function panel' to UI Demo mode
     Scenario: MLF016 - Deploy new ml-function with build new image option
         Given open url
@@ -656,6 +669,7 @@ Feature: ML Functions
         Then check "new-aqa-function-01" value in "name" column in "Functions_Table" table on "ML_Functions" wizard
 
     @MLF
+    @smoke
     Scenario: MLF017 - Delete ml-function
         * set tear-down property "function" created with "new-aqa-function-01" value
         * set tear-down property "project" created with "automation-test-name07" value
@@ -677,6 +691,7 @@ Feature: ML Functions
 
     @MLF
     @passive
+    @smoke
     #TODO: ML-5137 - move create/edit 'function panel' to UI Demo mode
     Scenario: MLF018 - Check all mandatory components in Serving Runtime Configuration Accordion on create New Serving Function page
         Given open url
@@ -709,6 +724,7 @@ Feature: ML Functions
 
     @MLF
     @passive
+    @smoke
     #TODO: ML-5137 - move create/edit 'function panel' to UI Demo mode
     Scenario: MLF019 - Check Model Table in Serving Runtime Configuration Accordion on create New Serving Function page
         Given open url
@@ -780,6 +796,7 @@ Feature: ML Functions
 
     @MLF
     @passive
+    @smoke
     #TODO: ML-5137 - move create/edit 'function panel' to UI Demo mode
     Scenario: MLF020 - Check Secret Table in Serving Runtime Configuration Accordion on create New Serving Function page
         Given open url
@@ -836,6 +853,7 @@ Feature: ML Functions
 
     @MLF
     @passive
+    @smoke
     #TODO: ML-5137 - move create/edit 'function panel' to UI Demo mode
     Scenario: MLF021 - Check Parameters Table in Serving Runtime Configuration Accordion on create New Serving Function page
         Given open url
@@ -903,6 +921,7 @@ Feature: ML Functions
 
     @MLF
     @passive
+    @smoke
     #TODO: ML-5137 - move create/edit 'function panel' to UI Demo mode
     Scenario: MLF022 - Verify non-unique value input hint on Create New Function page
         Given open url
@@ -930,6 +949,7 @@ Feature: ML Functions
 
     @MLF
     @passive
+    @smoke
     #TODO: ML-5137 - move create/edit 'function panel' to UI Demo mode
     Scenario: MLF023 - Verify non-unique value input hint on Create New Serving Function page
         Given open url
@@ -976,6 +996,7 @@ Feature: ML Functions
 
     @MLF
     @passive
+    @smoke
     Scenario: MLF024 - Check MLRun logo redirection
         Given open url
         And wait load page
@@ -991,6 +1012,7 @@ Feature: ML Functions
 
     @MLF
     @passive
+    @smoke
     Scenario: MLF025 - Verify View YAML action
         Given open url
         And wait load page
@@ -1013,6 +1035,7 @@ Feature: ML Functions
 
     @MLF
     @passive
+    @smoke
     Scenario: MLF026 - Verify View YAML action in Item infopane
         Given open url
         And wait load page
@@ -1031,6 +1054,7 @@ Feature: ML Functions
 
     @MLF
     @passive
+    @smoke
     #TODO: ML-5137 - move create/edit 'function panel' to UI Demo mode
     Scenario: MLF027 - Verify Edit action visibility in action menu
         Given open url
@@ -1049,6 +1073,7 @@ Feature: ML Functions
 
     @MLF
     @passive
+    @smoke
     #TODO: ML-5137 - move create/edit 'function panel' to UI Demo mode
     Scenario: MLF028 - Verify Edit action visibility in Item infopane for Job function
         Given open url
@@ -1067,6 +1092,7 @@ Feature: ML Functions
 
     @MLF
     @passive
+    @smoke
     #TODO: ML-5137 - move create/edit 'function panel' to UI Demo mode
     Scenario: MLF029 - Verify Edit action visibility in Item infopane for Serving function
         Given open url
@@ -1086,6 +1112,7 @@ Feature: ML Functions
 
     @MLF
     @passive
+    @smoke
     #TODO: ML-5137 - move create/edit 'function panel' to UI Demo mode
     Scenario: MLF030 - Verify all mandatory component on Edit Function sidebar
         * set tear-down property "project" created with "automation-test" value
@@ -1155,6 +1182,7 @@ Feature: ML Functions
         Then "Deploy_Button" element on "New_Function" should contains "Create" value
 
     @MLF
+    @smoke
     #TODO: ML-5137 - move create/edit 'function panel' to UI Demo mode
     Scenario: MLF033 - Verify Resources values on Function Deploy and Run
         * set tear-down property "project" created with "automation-test" value
@@ -1208,6 +1236,7 @@ Feature: ML Functions
         Then verify "GPU_Limit_Number_Input" input should contains "99" value in "Resources_Accordion" on "Modal_Wizard_Form" wizard
 
     @MLF
+    @smoke
     Scenario: MLF032 - Check broken link redirection
         Given open url
         And wait load page
@@ -1231,6 +1260,7 @@ Feature: ML Functions
         Then verify redirection from "projects/default/INVALID/85957751e571a92e07213781f5e0c35bfbe42c64/overview" to "projects"
 
     @MLF
+    @smoke
     Scenario: MLF031 - Check active/highlited items with details panel on ML Function Info Pane
         Given open url
         And wait load page
@@ -1260,6 +1290,7 @@ Feature: ML Functions
         Then compare "Header" element value on "ML_Function_Info_Pane" wizard with test "name" context value
 
     @MLF
+    @smoke
     #TODO: ML-5137 - move create/edit 'function panel' to UI Demo mode
     Scenario: MLF002 - Check requirements field in Code Accordion on Create New Function page
         Given open url
@@ -1298,6 +1329,7 @@ Feature: ML Functions
 
     @MLF
     @passive
+    @smoke
     #TODO: ML-5718 - move 'Deploy' button for "Serving" function to demo mode
     Scenario: MLF034 - Verify Deploy option for serving kind functions
         Given open url

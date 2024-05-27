@@ -26,10 +26,8 @@ import {
   generateInputGroup,
   generateLabelGroup,
   generateDropdownGroup,
-  generateCheckboxGroup
 } from '../../common-tools/common-tools'
 import inputGroup from '../components/input-group.component'
-import checkboxComponent from '../components/checkbox.component'
 
 const createNewObject = dropdownComponent(
   generateDropdownGroup(
@@ -298,52 +296,6 @@ const shardLagsTable = {
   }
 }
 
-const advancedEnvironmentVariablesTable = {
-  root: '.wizard-form__content .form-table',
-  header: {},
-  body: {
-    add_row_btn: '.form-table__action-row button',
-    row: {
-      root: '.form-table__row',
-      fields: {
-        edit_btn: '.form-table__actions-cell .round-icon-cp:nth-of-type(1)',
-        apply_btn: '.form-table__actions-cell .round-icon-cp:nth-of-type(1)',
-        delete_btn: '.form-table__actions-cell .round-icon-cp:nth-of-type(2)',
-        discard_btn: '.form-table__actions-cell .round-icon-cp:nth-of-type(2)',
-        checkbox: '.form-field-checkbox input',
-        name_input: '.form-field-input input',
-        name_verify: '.form-table__cell_2',
-        type_dropdown: {
-          componentType: dropdownComponent,
-          structure: generateDropdownGroup(
-            '.form-table__cell_1 .form-field-select', 
-            '.form-field__icons', 
-            '.pop-up-dialog .options-list__body .select__item', 
-            false, 
-            false)  
-        },
-        type_dropdown_verify: '.form-table__cell_1 .data-ellipsis', 
-        value_input: '.form-table__cell_3 .form-field__control input',
-        value_verify: '.form-table__cell_3 .data-ellipsis',
-        value_input_key: '.form-table__cell_3 .form-field-input:nth-of-type(2) .form-field__control input' 
-      }
-    }
-  }
-}
-
-const commonAccessKeyCheckbox = checkboxComponent(
-  generateCheckboxGroup('.job-wizard__advanced .access-key-checkbox input', false, false, false)
-)
-
-const commonAccessKeyInput = inputGroup(
-  generateInputGroup(
-    '.align-stretch .form-field-input',
-    true,
-    false,
-    '.tooltip-wrapper svg'
-  )
-)
-
 module.exports = {
   project: {
     Create_New: createNewObject,
@@ -352,6 +304,7 @@ module.exports = {
       projectDashboardRealtimeFunctionsTable
     ),
     Jobs_And_Workflows: commonTable(projectJobsAndWorkflows),
+    Recent_text: By.css('.project-data-card .project-data-card__recent-text'), 
     See_All_Jobs_Link: By.css(
       '.project-data-card:nth-of-type(1) .project-data-card__see-all-link'
     ),

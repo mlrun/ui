@@ -26,8 +26,14 @@ import { createForm } from 'final-form'
 import arrayMutators from 'final-form-arrays'
 import { useLocation } from 'react-router-dom'
 
-import { Button, FormInput, FormKeyValueTable, FormSelect, Modal } from 'igz-controls/components'
-import FormOnChange from '../../common/FormOnChange/FormOnChange'
+import {
+  Button,
+  FormInput,
+  FormKeyValueTable,
+  FormSelect,
+  Modal,
+  FormOnChange
+} from 'igz-controls/components'
 
 import { MODELS_TAB } from '../../constants'
 import { MODAL_SM, SECONDARY_BUTTON, TERTIARY_BUTTON } from 'igz-controls/constants'
