@@ -30,7 +30,7 @@ export const generateMonitoringStats = (data, navigate, dispatch, tab) => {
     ? {
         all: {
           counter: data.all,
-          link: () => navigateToJobsMonitoringPage('')
+          link: () => navigateToJobsMonitoringPage(['all'])
         },
         counters: [
           {
@@ -61,7 +61,7 @@ export const generateMonitoringStats = (data, navigate, dispatch, tab) => {
       ? {
           all: {
             counter: data.all,
-            link: () => navigateToJobsMonitoringPage('')
+            link: () => navigateToJobsMonitoringPage(['all'])
           },
           counters: [
             {
