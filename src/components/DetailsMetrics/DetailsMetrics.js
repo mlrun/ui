@@ -25,12 +25,12 @@ import GenericMetricChart from '../MetricChart/MetricChart'
 import StatsCard from '../../common/StatsCard/StatsCard'
 
 import detailsActions from '../../actions/details'
-
-import { getBarChartMetricConfig, getLineChartMetricConfig } from '../../utils/getMetricChartConfig'
 import { groupMetricByApplication } from '../../elements/MetricsSelector/metricsSelector.utils'
+import { getBarChartMetricConfig, getLineChartMetricConfig } from '../../utils/getMetricChartConfig'
 
-import noData from './noData.svg' // TODO add to igz-controls
-import Data from './Data.svg' // TODO add to igz-controls
+import { TextTooltipTemplate, Tooltip } from 'iguazio.dashboard-react-controls/dist/components'
+import { ReactComponent as NoData } from 'igz-controls/images/no-data-metric-icon.svg'
+import { ReactComponent as Metrics } from 'igz-controls/images/metrics-icon.svg'
 
 import './DetailsMetrics.scss'
 
@@ -168,7 +168,7 @@ const DetailsMetrics = ({ selectedItem }) => {
   if (generatedMetrics.length === 0) {
     return (
       <StatsCard className="metrics__empty-select">
-        <img alt="metrics" src={Data} />
+        <Metrics />
         <div>Choose metrics to view endpoint’s data</div>
       </StatsCard>
     )
@@ -186,7 +186,7 @@ const DetailsMetrics = ({ selectedItem }) => {
                     <StatsCard.Header title={item.title}></StatsCard.Header>
                     <div className="metrics__empty-card">
                       <div>
-                        <img alt="no data" src={noData} />
+                        <NoData />
                       </div>
                       <div>No data to show</div>
                     </div>
@@ -197,15 +197,25 @@ const DetailsMetrics = ({ selectedItem }) => {
                   <StatsCard className="metrics__card" key={item.id}>
                     <StatsCard.Header title={item.title}>
                       {item.totalDriftStatus && (
-                        <div>
-                          {item.totalDriftStatus.text}
-                          <span
-                            className="metrics__card-drift-status"
-                            style={{
-                              backgroundColor: item.totalDriftStatus.color
-                            }}
-                          ></span>
-                        </div>
+                        <Tooltip
+                          template={
+                            <TextTooltipTemplate
+                              text={
+                                <div className="total-drift-status">
+                                  <div>Date: {item.labels[item.totalDriftStatus.index]}</div>
+                                  <div>Value:{item.points[item.totalDriftStatus.index]}</div>
+                                </div>
+                              }
+                            />
+                          }
+                        >
+                          <div>
+                            <span>{item.totalDriftStatus.text}</span>
+                            <span
+                              className={`metrics__card-drift-status metrics__card-drift-${item.totalDriftStatus.color}`}
+                            ></span>
+                          </div>
+                        </Tooltip>
                       )}
                     </StatsCard.Header>
                     <div className="metrics__card-body">
@@ -235,7 +245,7 @@ const DetailsMetrics = ({ selectedItem }) => {
                                 {
                                   data: item.points,
                                   metricType: item.type,
-                                  driftStatus: item.driftStatus || [],
+                                  driftStatusList: item.driftStatusList || [],
                                   tension: 0.2,
                                   borderWidth: 1,
                                   borderColor: item.color

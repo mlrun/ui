@@ -23,19 +23,22 @@ const mlrunInfra = 'mlrun-infra'
 const metricsColorsByFullName = {}
 const usedColors = new Set()
 
-// TODO: verify with Jonathan the drift status option
 const driftStatusConfig = {
   0: {
-    color: '#00FF00',
+    color: 'no_drift',
     text: 'No drift'
   },
   1: {
-    color: '#FFD077',
+    color: 'possible_drift',
     text: 'Possible drift'
   },
   2: {
-    color: '#FF0000',
+    color: 'drift_detected',
     text: 'Drift detected'
+  },
+  '-1': {
+    color: 'no_status',
+    text: 'No status'
   }
 }
 
@@ -106,31 +109,30 @@ export const generateMetricsItems = metrics => {
     .value()
 }
 
-const getTitle = fullName => fullName.substring(fullName.lastIndexOf('.') + 1).replace(/-/g, ' ')
+const getMetricTitle = fullName =>
+  fullName.substring(fullName.lastIndexOf('.') + 1).replace(/-/g, ' ')
 
-const formatMetricsTime = dates => {
-  const options = {
-    hour: 'numeric',
-    minute: '2-digit',
-    hour12: true
+const timeFormatters = {
+  hours: {
+    formatMetricsTime: dates => {
+      const options = {
+        hour: 'numeric',
+        minute: '2-digit',
+        hour12: true
+      }
+      return dates.map(([date]) => new Date(date).toLocaleTimeString('en-US', options))
+    }
+  },
+  days: {
+    formatMetricsTime: dates => {
+      const options = {
+        year: '2-digit',
+        month: '2-digit',
+        day: '2-digit'
+      }
+      return dates.map(([date]) => new Date(date).toLocaleDateString('en-US', options))
+    }
   }
-  return dates.map(date => new Date(date).toLocaleTimeString('en-US', options))
-}
-
-const formatMetricsDate = dates => {
-  const options = {
-    year: 'numeric',
-    month: '2-digit',
-    day: '2-digit'
-  }
-  return dates.map(date => new Date(date).toLocaleDateString('en-US', options))
-}
-
-const getMetricLabels = (values, dateRange) => {
-  const dates = values.map(([date]) => date)
-  const oneDayInMillis = 86400000
-  const differenceInDays = dateRange.end - dateRange.start
-  return differenceInDays > oneDayInMillis ? formatMetricsDate(dates) : formatMetricsTime(dates)
 }
 
 export const formatNumber = num => {
@@ -157,54 +159,43 @@ const getAppName = inputString => {
   }
 }
 
-export const parseMetrics = (metric, params, id) => {
+export const parseMetrics = (metric, timeUnit, id) => {
   const { full_name, values, type } = metric
 
   if (!metric.data || !values || !Array.isArray(values)) {
     return {
       metric,
       app: getAppName(full_name),
-      title: getTitle(full_name)
+      title: getMetricTitle(full_name)
     }
-  }
-
-  const getStatus = dataArray => {
-    let status = 'No drift'
-    for (const item of dataArray) {
-      if (item.text === 'Drift detected') {
-        status = driftStatusConfig[2]
-        break
-      } else if (item.text === 'Possible drift' && status !== 'Drift detected') {
-        status = driftStatusConfig[1]
-      }
-    }
-    return status
   }
 
   const points = values.map(([_, value]) => parseFloat(value.toFixed(2)))
-  let driftStatus = []
   if (type === 'result') {
-    values.map(([_, __, driftStatus]) => driftStatus)
-    driftStatus = values.map(([_, __, driftStatus]) => driftStatusConfig[driftStatus])
-    metric.driftStatus = driftStatus
-    metric.totalDriftStatus = getStatus(driftStatus)
+    let drift = { status: -1 }
+    const driftStatusList = values.map(([date, __, driftStatus], index) => {
+      if (drift.status < driftStatus) drift = { driftStatus, index }
+      return driftStatusConfig[driftStatus]
+    })
+    metric.driftStatusList = driftStatusList
+    metric.totalDriftStatus = { ...driftStatusConfig[drift.driftStatus], index: drift.index }
   }
 
-  const isInvocationsRate = full_name.includes('invocations')
+  const withInvocationRate = full_name.includes('invocations')
 
-  const totalOrAvg = isInvocationsRate
+  const totalOrAvg = withInvocationRate
     ? formatNumber(points.reduce((sum, value) => sum + value, 0))
     : formatNumber((points.reduce((sum, value) => sum + value, 0) / points.length).toFixed(2))
 
   const modifiedMetric = {
     ...metric,
-    id,
-    title: getTitle(full_name),
     app: getAppName(full_name),
     color: getMetricColorByFullName(full_name),
-    labels: getMetricLabels(values, params),
+    id,
+    labels: timeFormatters[timeUnit].formatMetricsTime(values),
     points,
-    [isInvocationsRate ? 'total' : 'avg']: totalOrAvg
+    title: getMetricTitle(full_name),
+    [withInvocationRate ? 'total' : 'avg']: totalOrAvg
   }
 
   return modifiedMetric

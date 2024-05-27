@@ -167,7 +167,10 @@ const detailsActions = {
     return detailsApi
       .getModelEndpointMetricsValues(project, uid, params)
       .then(({ data = [] }) => {
-        const metrics = data.map((metric, index) => parseMetrics(metric, params, index))
+        const MILLISECONDS_IN_ONE_DAY = 86400000
+        const differenceInDays = params.end - params.start
+        const timeUnit = differenceInDays > MILLISECONDS_IN_ONE_DAY ? 'days' : 'hours'
+        const metrics = data.map((metric, index) => parseMetrics(metric, timeUnit, index))
 
         dispatch(detailsActions.fetchEndpointMetricsValuesSuccess())
 

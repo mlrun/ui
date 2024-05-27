@@ -10,13 +10,13 @@ const GenericMetricChart = ({ chartConfig, showGrid }) => {
   const chartRef = useRef(null)
   const chartInstance = useRef(null)
   const [isLoading, setIsLoading] = useState(true)
-  const canvasClassNames = classnames(isLoading && 'hidden')
+  const canvasClassNames = classnames(isLoading && 'off-screen')
   const customPoints = useMemo(() => {
     return {
       radius: function () {
         if (
-          chartConfig.data.datasets[0]?.driftStatus &&
-          chartConfig.data.datasets[0]?.driftStatus.length !== 0
+          chartConfig.data.datasets[0]?.driftStatusList &&
+          chartConfig.data.datasets[0]?.driftStatusList.length !== 0
         ) {
           return 1
         } else {
@@ -25,8 +25,8 @@ const GenericMetricChart = ({ chartConfig, showGrid }) => {
       },
       pointStyle: function () {
         if (
-          chartConfig.data.datasets[0]?.driftStatus &&
-          chartConfig.data.datasets[0]?.driftStatus.length !== 0
+          chartConfig.data.datasets[0]?.driftStatusList &&
+          chartConfig.data.datasets[0]?.driftStatusList.length !== 0
         ) {
           return 'rect'
         } else {
@@ -35,8 +35,8 @@ const GenericMetricChart = ({ chartConfig, showGrid }) => {
       },
       backgroundColor: function () {
         if (
-          chartConfig.data.datasets[0]?.driftStatus &&
-          chartConfig.data.datasets[0]?.driftStatus.length !== 0
+          chartConfig.data.datasets[0]?.driftStatusList &&
+          chartConfig.data.datasets[0]?.driftStatusList.length !== 0
         ) {
           return 'black'
         }
