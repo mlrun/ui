@@ -23,6 +23,7 @@ export const metricsTypes = {
   metric: 'metric',
   result: 'result'
 }
+const mlrunInfra = 'mlrun-infra'
 
 export const filterMetrics = (metricsByApplication, nameFilter) => {
   return metricsByApplication.reduce((metricsList, [app, metrics]) => {
@@ -36,8 +37,9 @@ export const filterMetrics = (metricsByApplication, nameFilter) => {
   }, [])
 }
 
-export const groupMetricByApplication = (metrics) => {
+export const groupMetricByApplication = (metrics, filterInfra = false) => {
   return chain(metrics)
+    .filter(metric => (filterInfra ? metric.app !== mlrunInfra : metric.app))
     .groupBy(metric => metric.app)
     .toPairs()
     .sortBy(([app]) => app)

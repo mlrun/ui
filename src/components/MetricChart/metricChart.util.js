@@ -62,6 +62,14 @@ export const customTooltip = context => {
     tooltipEl.style.opacity = '0'
     return
   }
+
+  if (
+    context.tooltip.dataPoints[0].dataset.metricType &&
+    context.tooltip.dataPoints[0].dataset.metricType === 'invocation'
+  ) {
+    return
+  }
+
   if (tooltipModel.body) {
     const bodyLines = tooltipModel.body.map(b => b.lines)
     let innerHtml = '<div class="tooltip-container">'

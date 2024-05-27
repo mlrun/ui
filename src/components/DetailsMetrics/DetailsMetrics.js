@@ -17,7 +17,7 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import React, { useCallback, useEffect, useMemo, useState } from 'react'
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { isEmpty } from 'lodash'
 
@@ -26,20 +26,33 @@ import StatsCard from '../../common/StatsCard/StatsCard'
 
 import detailsActions from '../../actions/details'
 import { groupMetricByApplication } from '../../elements/MetricsSelector/metricsSelector.utils'
-import { getBarChartMetricConfig, getLineChartMetricConfig } from '../../utils/getMetricChartConfig'
+import {
+  getGradientLineChart,
+  getBarChartMetricConfig,
+  getLineChartMetricConfig
+} from '../../utils/getMetricChartConfig'
 
 import { TextTooltipTemplate, Tooltip } from 'iguazio.dashboard-react-controls/dist/components'
-import { ReactComponent as NoData } from 'igz-controls/images/no-data-metric-icon.svg'
-import { ReactComponent as Metrics } from 'igz-controls/images/metrics-icon.svg'
+// import { ReactComponent as NoData } from 'igz-controls/images/no-data-metric-icon.svg'
+// import { ReactComponent as Metrics } from 'igz-controls/images/metrics-icon.svg'
+
+import { ReactComponent as NoData } from './nodata.svg'
+import { ReactComponent as Metrics } from './metric.svg'
 
 import './DetailsMetrics.scss'
 
 const DetailsMetrics = ({ selectedItem }) => {
   const [metrics, setMetrics] = useState([])
+  const prevScrollPos = useRef(0)
+
+  const [expand, toggleExpand] = useState(true)
+  const cardRef = useRef(null)
+
   const detailsStore = useSelector(store => store.detailsStore)
   const dispatch = useDispatch()
   const lineConfig = useMemo(() => getLineChartMetricConfig(), [])
   const barConfig = useMemo(() => getBarChartMetricConfig(), [])
+  const gradientConfig = useMemo(() => getGradientLineChart(), [])
 
   // TODO: refactor the calculateHistogram
   const calculateHistogram = useCallback((data, item) => {
@@ -118,8 +131,39 @@ const DetailsMetrics = ({ selectedItem }) => {
 
   // TODO: add resize invocation card on scroll
 
+  const handleResizeCard = useCallback(e => {
+    if (!e.target.classList.contains('item-info')) return
+    const card = cardRef.current
+    console.log(card)
+    if (e.target.scrollTop > prevScrollPos.current) {
+      if (e.target.scrollTop > 5 && card.clientHeight !== 80) {
+        card.parentNode.parentNode.style.height += 173
+        card.style.height = '80px'
+        toggleExpand(false)
+      }
+    } else {
+      if (e.target.scrollTop === 0 && card.clientHeight === 80) {
+        // card.parentNode.parentNode.style.height -= 80
+        // card.style.height = '200px'
+        toggleExpand(true)
+      }
+    }
+    prevScrollPos.current = e.target.scrollTop
+  }, [])
+  // TODO: will be add after the invocations implementation request
+  useEffect(() => {
+    window.addEventListener('scroll', handleResizeCard, true)
+    return () => window.removeEventListener('scroll', handleResizeCard, true)
+  }, [handleResizeCard])
+
   const generatedMetrics = useMemo(() => {
-    return groupMetricByApplication(metrics)
+    const list = groupMetricByApplication(metrics, false)
+
+    return list.sort(([a], [b]) => {
+      if (a === 'mlrun-infra') return -1
+      if (b === 'mlrun-infra') return 1
+      return 0
+    })
   }, [metrics])
 
   useEffect(() => {
@@ -136,8 +180,12 @@ const DetailsMetrics = ({ selectedItem }) => {
       selectedItem.metadata?.uid &&
       !isEmpty(detailsStore.metricsOptions.selectedByEndpoint[selectedItem.metadata?.uid])
     ) {
+      let metrics = detailsStore.metricsOptions.all
+      const invocation = metrics.filter(item => item.app === 'mlrun-infra')
+
       const selectedMetrics =
         detailsStore.metricsOptions.selectedByEndpoint[selectedItem.metadata?.uid]
+      // console.log(selectedMetrics)
       const params = { name: [] }
 
       if (detailsStore.dates.value[0]) {
@@ -148,10 +196,32 @@ const DetailsMetrics = ({ selectedItem }) => {
         params.end = detailsStore.dates.value[1].getTime()
       }
 
-      selectedMetrics.forEach(metric => {
+      ;[...selectedMetrics, ...invocation].forEach(metric => {
         params.name.push(metric.full_name)
       })
+      console.log(params.name)
+      dispatch(
+        detailsActions.fetchModelEndpointMetricsValues(
+          selectedItem.metadata.project,
+          selectedItem.metadata.uid,
+          params
+        )
+      ).then(metricsList => {
+        setMetrics(metricsList)
+      })
+    } else if (detailsStore.metricsOptions.all.length !== 0) {
+      const params = { name: [] }
 
+      if (detailsStore.dates.value[0]) {
+        params.start = detailsStore.dates.value[0].getTime()
+      }
+
+      if (detailsStore.dates.value[1]) {
+        params.end = detailsStore.dates.value[1].getTime()
+      }
+      let metrics = detailsStore.metricsOptions.all
+      const [invocation] = metrics.filter(item => item.app === 'mlrun-infra')
+      params.name.push(invocation.full_name)
       dispatch(
         detailsActions.fetchModelEndpointMetricsValues(
           selectedItem.metadata.project,
@@ -164,7 +234,14 @@ const DetailsMetrics = ({ selectedItem }) => {
     } else if (selectedItem.metadata?.uid) {
       setMetrics([])
     }
-  }, [dispatch, selectedItem, detailsStore.dates, detailsStore.metricsOptions.selectedByEndpoint])
+  }, [
+    dispatch,
+    selectedItem,
+    detailsStore.dates,
+    detailsStore.metricsOptions.all,
+    detailsStore.metricsOptions.selectedByEndpoint
+  ])
+
   if (generatedMetrics.length === 0) {
     return (
       <StatsCard className="metrics__empty-select">
@@ -173,14 +250,87 @@ const DetailsMetrics = ({ selectedItem }) => {
       </StatsCard>
     )
   }
+
   return (
-    <>
+    <div className="metrics">
       {generatedMetrics.map(([name, app]) => {
         return (
-          <div className="metrics">
-            <div className="app">{name}</div>
+          <>
             {app.map(item => {
-              if (!item.data) {
+              if (item.app === 'mlrun-infra') {
+                if (!item.data) return <div>no data</div>
+                return (
+                  <StatsCard className="metrics__card-tmp">
+                    {expand && (
+                      <StatsCard.Header title="Endpoint call count">
+                        <div
+                          style={{
+                            flex: 1,
+                            fontSize: '18px',
+                            fontWeight: '700',
+                            display: 'flex',
+                            justifyContent: 'end',
+                            alignItems: 'center'
+                          }}
+                        >
+                          <div className="kpi-value">
+                            <span style={{ fontSize: '14px', margin: '0 10px 0 0' }}>Total</span>
+                            {item.total}
+                          </div>
+                        </div>
+                      </StatsCard.Header>
+                    )}
+                    <div style={{ height: '80px' }} ref={cardRef} className="metrics__card-body">
+                      {!expand && (
+                        <div
+                          style={{
+                            flex: '0 1 27%',
+                            display: 'flex',
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                            fontSize: '18px',
+                            fontWeight: '700',
+                            width: '27%',
+                            gap: '15px'
+                          }}
+                        >
+                          <div className="title">Endpoint call count</div>
+                          <div className="kpi-value">
+                            <span style={{ fontSize: '14px', marginRight: '5px' }}>Total</span>
+                            {item.total}
+                          </div>
+                        </div>
+                      )}
+                      <div className="metrics__card-body-invocation">
+                        <GenericMetricChart
+                          showGrid={expand}
+                          chartConfig={{
+                            gradient: true,
+                            ...gradientConfig,
+                            type: 'line',
+                            data: {
+                              labels: item.labels,
+                              datasets: [
+                                {
+                                  data: item.points,
+                                  fill: true,
+                                  metricType: 'invocation',
+                                  driftStatusList: [],
+                                  backgroundColor: '#5871F4',
+                                  borderColor: '#5871F4',
+                                  borderWidth: 1,
+                                  tension: 0.4
+                                }
+                              ]
+                            }
+                          }}
+                        />
+                      </div>
+                    </div>
+                  </StatsCard>
+                )
+              } else if (!item.data) {
+                console.log('no data')
                 return (
                   <StatsCard className="metrics__card" key={item.id}>
                     <StatsCard.Header title={item.title}></StatsCard.Header>
@@ -260,10 +410,10 @@ const DetailsMetrics = ({ selectedItem }) => {
                 )
               }
             })}
-          </div>
+          </>
         )
       })}
-    </>
+    </div>
   )
 }
 

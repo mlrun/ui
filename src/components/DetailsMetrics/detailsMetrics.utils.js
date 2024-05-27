@@ -19,7 +19,7 @@ such restriction.
 */
 import { chain } from 'lodash'
 
-const mlrunInfra = 'mlrun-infra'
+// const mlrunInfra = 'mlrun-infra'
 const metricsColorsByFullName = {}
 const usedColors = new Set()
 
@@ -96,17 +96,19 @@ export const getMetricColorByFullName = name => {
 }
 
 export const generateMetricsItems = metrics => {
-  return chain(metrics)
-    .filter(metric => metric.app !== mlrunInfra)
-    .sortBy(metric => metric.label)
-    .map(metric => {
-      return {
-        ...metric,
-        color: getMetricColorByFullName(metric.full_name),
-        id: metric.full_name
-      }
-    })
-    .value()
+  return (
+    chain(metrics)
+      // .filter(metric => metric.app !== mlrunInfra)
+      .sortBy(metric => metric.label)
+      .map(metric => {
+        return {
+          ...metric,
+          color: getMetricColorByFullName(metric.full_name),
+          id: metric.full_name
+        }
+      })
+      .value()
+  )
 }
 
 const getMetricTitle = fullName =>

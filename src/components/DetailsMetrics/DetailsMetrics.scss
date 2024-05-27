@@ -43,7 +43,8 @@
     }
 
     &-drift-drift_detected {
-      background-color: $crimson;
+      //background-color: $crimson;
+      background-color: red;
     }
 
     &-drift-no_drift {
@@ -152,6 +153,7 @@
       }
 
       &-invocation {
+        aspect-ratio: 4;
         width: auto;
         border: 1px solid transparent;
         flex: 1 1 auto;
@@ -275,7 +277,8 @@
     }
 
     &-drift-drift_detected {
-      background-color: $crimson;
+      //background-color: $crimson;
+      background-color: red;
     }
 
     &-drift-no_drift {
