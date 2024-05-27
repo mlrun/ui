@@ -64,6 +64,7 @@ import { getValidationRules } from 'igz-controls/utils/validation.util'
 import { parseChipsData, convertChipsData } from '../../utils/convertChipsData'
 import { setNotification } from '../../reducers/notificationReducer'
 import { showErrorNotification } from '../../utils/notifications.util'
+import { isNodeSelectorsSupported } from './projectSettingsGeneral.utils'
 
 import './projectSettingsGeneral.scss'
 
@@ -103,6 +104,10 @@ const ProjectSettingsGeneral = ({
             [PARAMS]: parseObjectToKeyValue(projectResponse.spec[PARAMS]),
             [NODE_SELECTORS]: parseObjectToKeyValue(projectResponse.spec[NODE_SELECTORS]),
             [LABELS]: parseChipsData(projectResponse.metadata[LABELS])
+          }
+
+          if (isNodeSelectorsSupported) {
+            newInitial[NODE_SELECTORS] = parseObjectToKeyValue(projectResponse.spec[NODE_SELECTORS])
           }
 
           setLastEditedProjectValues(newInitial)
@@ -171,13 +176,18 @@ const ProjectSettingsGeneral = ({
             [DEFAULT_IMAGE]: formStateLocal.values[DEFAULT_IMAGE] ?? '',
             [DESCRIPTION]: formStateLocal.values[DESCRIPTION] ?? '',
             [GOALS]: formStateLocal.values[GOALS] ?? '',
-            [NODE_SELECTORS]: generateObjectFromKeyValue(formStateLocal.values[NODE_SELECTORS]),
             [PARAMS]: generateObjectFromKeyValue(formStateLocal.values[PARAMS])
           },
           metadata: {
             ...newProjectData.metadata,
             [LABELS]: convertChipsData(formStateLocal.values[LABELS])
           }
+        }
+
+        if (isNodeSelectorsSupported) {
+          newProjectData.spec[NODE_SELECTORS] = generateObjectFromKeyValue(
+            formStateLocal.values[NODE_SELECTORS]
+          )
         }
 
         setLastEditedProjectValues(formStateLocal.values)
@@ -295,17 +305,19 @@ const ProjectSettingsGeneral = ({
                       }}
                     />
                   </div>
-                  <div>
-                    <p className="settings__card-title">Node Selectors</p>
-                    <FormKeyValueTable
-                      addNewItemLabel="Add node selector"
-                      keyValidationRules={getValidationRules('nodeSelectors.key')}
-                      valueValidationRules={getValidationRules('nodeSelectors.value')}
-                      onExitEditModeCallback={updateProjectData}
-                      fieldsPath={NODE_SELECTORS}
-                      formState={formState}
-                    />
-                  </div>
+                  {isNodeSelectorsSupported && (
+                    <div>
+                      <p className="settings__card-title">Node Selectors</p>
+                      <FormKeyValueTable
+                        addNewItemLabel="Add node selector"
+                        keyValidationRules={getValidationRules('nodeSelectors.key')}
+                        valueValidationRules={getValidationRules('nodeSelectors.value')}
+                        onExitEditModeCallback={updateProjectData}
+                        fieldsPath={NODE_SELECTORS}
+                        formState={formState}
+                      />
+                    </div>
+                  )}
                 </div>
                 <div className="settings__card-content-col">
                   <div className="settings__owner">
