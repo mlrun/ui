@@ -287,7 +287,7 @@ const ModelEndpoints = () => {
                       <ArtifactsTableRow
                         actionsMenu={actionsMenu}
                         handleSelectItem={handleSelectItem}
-                        key={index}
+                        key={tableItem.data.ui.identifier}
                         rowIndex={index}
                         rowItem={tableItem}
                         selectedItem={selectedModelEndpoint}
