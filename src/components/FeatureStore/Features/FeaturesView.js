@@ -100,7 +100,7 @@ const FeaturesView = React.forwardRef(
                       <FeatureStoreTableRow
                         actionsMenu={actionsMenu}
                         handleExpandRow={handleExpandRow}
-                        key={index}
+                        key={tableItem.data.ui.identifier}
                         hideActionsMenu={tableStore.isTablePanelOpen}
                         mainRowItemsCount={2}
                         pageTab={FEATURES_TAB}
