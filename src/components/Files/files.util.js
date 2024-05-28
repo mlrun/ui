@@ -238,6 +238,7 @@ export const generateActionsMenu = (
       {
         label: 'Download',
         hidden: menuPosition === ACTION_MENU_PARENT_ROW_EXPANDED,
+        disabled: !isTargetPathValid,
         icon: <DownloadIcon />,
         onClick: file => {
           dispatch(
