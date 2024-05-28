@@ -4,7 +4,7 @@ import classnames from 'classnames'
 
 import Loader from '../../common/Loader/Loader'
 
-import { calculateMaxTicksLimit, customTooltip, hexToRGB } from './metricChart.util'
+import { calculateMaxTicksLimit, generateMetricChartTooltip, hexToRGB } from './metricChart.util'
 
 const GenericMetricChart = ({ chartConfig, showGrid }) => {
   const chartRef = useRef(null)
@@ -12,43 +12,19 @@ const GenericMetricChart = ({ chartConfig, showGrid }) => {
   const [isLoading, setIsLoading] = useState(true)
   const canvasClassNames = classnames(isLoading && 'off-screen')
   const customPoints = useMemo(() => {
+    const hasDriftStatusList = chartConfig.data.datasets[0]?.driftStatusList?.length !== 0
+
     return {
-      radius: function () {
-        if (
-          chartConfig.data.datasets[0]?.driftStatusList &&
-          chartConfig.data.datasets[0]?.driftStatusList.length !== 0
-        ) {
-          return 1
-        } else {
-          return 0
-        }
-      },
-      pointStyle: function () {
-        if (
-          chartConfig.data.datasets[0]?.driftStatusList &&
-          chartConfig.data.datasets[0]?.driftStatusList.length !== 0
-        ) {
-          return 'rect'
-        } else {
-          return 'none'
-        }
-      },
-      backgroundColor: function () {
-        if (
-          chartConfig.data.datasets[0]?.driftStatusList &&
-          chartConfig.data.datasets[0]?.driftStatusList.length !== 0
-        ) {
-          return 'black'
-        }
-      },
-      borderColor: function () {
-        return 'white'
-      }
+      radius: () => (hasDriftStatusList ? 1 : 0),
+      pointStyle: () => (hasDriftStatusList ? 'rect' : 'none'),
+      backgroundColor: () => (hasDriftStatusList ? 'black' : undefined),
+      borderColor: () => 'white'
     }
   }, [chartConfig])
 
   useEffect(() => {
     const ctx = chartRef.current.getContext('2d')
+
     if (ctx) {
       if (chartInstance.current) {
         chartInstance.current.destroy()
@@ -83,8 +59,6 @@ const GenericMetricChart = ({ chartConfig, showGrid }) => {
             },
             y: {
               ...chartConfig.options.scales?.y,
-              min: chartConfig.type === 'bar' ? 0 : undefined,
-              max: chartConfig.type === 'bar' ? 100 : undefined,
               grid: {
                 drawBorder: true,
                 borderColor: 'E9E8EB'
@@ -100,6 +74,7 @@ const GenericMetricChart = ({ chartConfig, showGrid }) => {
             }
           },
           animation: {
+            duration: 0,
             onComplete: () => setIsLoading(false)
           },
           plugins: {
@@ -110,7 +85,7 @@ const GenericMetricChart = ({ chartConfig, showGrid }) => {
               enabled: false,
               intersect: false,
               mode: 'index',
-              external: customTooltip
+              external: generateMetricChartTooltip
             }
           },
           elements: {
@@ -168,6 +143,7 @@ const GenericMetricChart = ({ chartConfig, showGrid }) => {
       }
     }
     window.addEventListener('resize', handleResize)
+
     return () => {
       window.removeEventListener('resize', handleResize)
     }

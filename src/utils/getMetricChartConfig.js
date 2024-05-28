@@ -52,12 +52,11 @@ export const getLineChartMetricConfig = () => {
           }
         },
         y: {
-          max: 2,
-          ticks: {
-            stepSize: 10
-          },
           grid: {
-            drawBorder: false
+            drawBorder: true
+          },
+          title: {
+            display: false
           }
         }
       },
@@ -113,6 +112,9 @@ export const getBarChartMetricConfig = () => {
           grid: {
             drawBorder: false,
             borderColor: 'E9E8EB'
+          },
+          title: {
+            display: true
           }
         }
       }

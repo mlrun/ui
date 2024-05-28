@@ -56,6 +56,7 @@ import {
   generateMetricsItems,
   parseMetrics
 } from '../components/DetailsMetrics/detailsMetrics.utils'
+import { TIME_FRAME_LIMITS } from '../utils/datePicker.util'
 
 const detailsActions = {
   fetchModelEndpointWithAnalysis: (project, uid) => dispatch => {
@@ -167,9 +168,8 @@ const detailsActions = {
     return detailsApi
       .getModelEndpointMetricsValues(project, uid, params)
       .then(({ data = [] }) => {
-        const MILLISECONDS_IN_ONE_DAY = 86400000
         const differenceInDays = params.end - params.start
-        const timeUnit = differenceInDays > MILLISECONDS_IN_ONE_DAY ? 'days' : 'hours'
+        const timeUnit = differenceInDays > TIME_FRAME_LIMITS['24_HOURS'] ? 'days' : 'hours'
         const metrics = data.map((metric, index) => parseMetrics(metric, timeUnit, index))
 
         dispatch(detailsActions.fetchEndpointMetricsValuesSuccess())

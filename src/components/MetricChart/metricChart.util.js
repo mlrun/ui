@@ -47,8 +47,8 @@ export const calculateMaxTicksLimit = container => {
   }
 }
 
-// TODO: refactor customTooltip function with generateCustomTooltip
-export const customTooltip = context => {
+// TODO: refactor generateMetricChartTooltip function with generateCustomTooltip
+export const generateMetricChartTooltip = context => {
   let tooltipEl = document.getElementById('chartjs-tooltip')
 
   if (!tooltipEl) {
@@ -58,10 +58,12 @@ export const customTooltip = context => {
     document.body.appendChild(tooltipEl)
   }
   const tooltipModel = context.tooltip
+
   if (tooltipModel.opacity === 0) {
     tooltipEl.style.opacity = '0'
     return
   }
+
   if (tooltipModel.body) {
     const bodyLines = tooltipModel.body.map(b => b.lines)
     let innerHtml = '<div class="tooltip-container">'
@@ -70,12 +72,22 @@ export const customTooltip = context => {
       context.tooltip.dataPoints[0].dataset.metricType === 'result'
         ? true
         : false
-    const tooltipDataType = context.tooltip.dataPoints[0].dataset.chartType === 'bar' ? '%' : ''
+    const tooltipType = {
+      bar: {
+        title: '',
+        format: '%'
+      },
+      line: {
+        title: 'Value:',
+        format: ''
+      }
+    }
+    const chartType = context.tooltip.dataPoints[0].dataset.chartType
+    innerHtml += `<div class="tooltip-container-value">${tooltipType[chartType].title} ${context.tooltip.dataPoints[0].raw} ${tooltipType[chartType].format}</div>`
 
-    innerHtml += `<div class="tooltip-container-value">Value: ${context.tooltip.dataPoints[0].raw} ${tooltipDataType}</div>`
     if (drift) {
       bodyLines.forEach((body, i) => {
-        const driftBackground = `tooltip-drift-status-drift-${context.tooltip.dataPoints[0].dataset.driftStatusList[context.tooltip.dataPoints[0].dataIndex].color}`
+        const driftBackground = `tooltip-drift-status-drift-${context.tooltip.dataPoints[0].dataset.driftStatusList[context.tooltip.dataPoints[0].dataIndex].className}`
         innerHtml += `<div class="tooltip-drift-content">
                       <div class="tooltip-drift-content-text">${context.tooltip.dataPoints[0].dataset.driftStatusList[context.tooltip.dataPoints[0].dataIndex].text}</div>
                       <div class="tooltip-drift-status + ${driftBackground}"></div>

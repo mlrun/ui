@@ -21,7 +21,7 @@ import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { isEmpty } from 'lodash'
 
-import GenericMetricChart from '../MetricChart/MetricChart'
+import MetricChart from '../MetricChart/MetricChart'
 import StatsCard from '../../common/StatsCard/StatsCard'
 
 import detailsActions from '../../actions/details'
@@ -29,8 +29,11 @@ import { groupMetricByApplication } from '../../elements/MetricsSelector/metrics
 import { getBarChartMetricConfig, getLineChartMetricConfig } from '../../utils/getMetricChartConfig'
 
 import { TextTooltipTemplate, Tooltip } from 'iguazio.dashboard-react-controls/dist/components'
-import { ReactComponent as NoData } from 'igz-controls/images/no-data-metric-icon.svg'
-import { ReactComponent as Metrics } from 'igz-controls/images/metrics-icon.svg'
+// import { ReactComponent as NoDataIcon } from 'igz-controls/images/no-data-metric-icon.svg'
+// import { ReactComponent as MetricsIcon } from 'igz-controls/images/metrics-icon.svg'
+
+import metric from './metric.svg'
+import noData from './nodata.svg'
 
 import './DetailsMetrics.scss'
 
@@ -147,6 +150,13 @@ const DetailsMetrics = ({ selectedItem }) => {
       if (detailsStore.dates.value[1]) {
         params.end = detailsStore.dates.value[1].getTime()
       }
+      // const itemsToFetch2 = selectedMetrics.filter(item => {
+      //   // console.log(item.name)
+      //   // console.log(metrics)
+      //   return !metrics.some(responseItem => responseItem.title === item.name) && item.name !== ''
+      // })
+      // // console.log(itemsToFetch2)
+      // if (itemsToFetch2.length === 0) return
 
       selectedMetrics.forEach(metric => {
         params.name.push(metric.full_name)
@@ -165,10 +175,13 @@ const DetailsMetrics = ({ selectedItem }) => {
       setMetrics([])
     }
   }, [dispatch, selectedItem, detailsStore.dates, detailsStore.metricsOptions.selectedByEndpoint])
+
   if (generatedMetrics.length === 0) {
     return (
       <StatsCard className="metrics__empty-select">
-        <Metrics />
+        {/*<MetricsIcon />*/}
+        <img src={metric} />
+
         <div>Choose metrics to view endpoint’s data</div>
       </StatsCard>
     )
@@ -179,14 +192,15 @@ const DetailsMetrics = ({ selectedItem }) => {
         return (
           <div className="metrics">
             <div className="app">{name}</div>
-            {app.map(item => {
-              if (!item.data) {
+            {app.map(metric => {
+              if (!metric.data) {
                 return (
-                  <StatsCard className="metrics__card" key={item.id}>
-                    <StatsCard.Header title={item.title}></StatsCard.Header>
+                  <StatsCard className="metrics__card" key={metric.id}>
+                    <StatsCard.Header title={metric.title}></StatsCard.Header>
                     <div className="metrics__empty-card">
                       <div>
-                        <NoData />
+                        {/*<NoDataIcon />*/}
+                        <img src={noData} />
                       </div>
                       <div>No data to show</div>
                     </div>
@@ -194,25 +208,25 @@ const DetailsMetrics = ({ selectedItem }) => {
                 )
               } else {
                 return (
-                  <StatsCard className="metrics__card" key={item.id}>
-                    <StatsCard.Header title={item.title}>
-                      {item.totalDriftStatus && (
+                  <StatsCard className="metrics__card" key={metric.id}>
+                    <StatsCard.Header title={metric.title}>
+                      {metric.totalDriftStatus && (
                         <Tooltip
                           template={
                             <TextTooltipTemplate
                               text={
                                 <div className="total-drift-status">
-                                  <div>Date: {item.labels[item.totalDriftStatus.index]}</div>
-                                  <div>Value:{item.points[item.totalDriftStatus.index]}</div>
+                                  <div>Date: {metric.labels[metric.totalDriftStatus.index]}</div>
+                                  <div>Value:{metric.points[metric.totalDriftStatus.index]}</div>
                                 </div>
                               }
                             />
                           }
                         >
                           <div>
-                            <span>{item.totalDriftStatus.text}</span>
+                            <span>{metric.totalDriftStatus.text}</span>
                             <span
-                              className={`metrics__card-drift-status metrics__card-drift-${item.totalDriftStatus.color}`}
+                              className={`metrics__card-drift-status metrics__card-drift-${metric.totalDriftStatus.className}`}
                             ></span>
                           </div>
                         </Tooltip>
@@ -224,31 +238,32 @@ const DetailsMetrics = ({ selectedItem }) => {
                           <div>Value distribution</div>
                           <div className="metrics__card-header-data">
                             <span className="metrics__card-header-label">Avg. </span>
-                            {item.avg}
+                            {metric.avg}
                           </div>
                         </div>
-                        <GenericMetricChart
+                        <MetricChart
                           chartConfig={{
                             ...barConfig,
-                            data: calculateHistogram(item.points, item)
+                            data: calculateHistogram(metric.points, metric)
                           }}
                         />
                       </div>
                       <div className="metrics__card-body-line">
                         <div className="metrics__card-header">Value over time</div>
-                        <GenericMetricChart
+                        <MetricChart
                           chartConfig={{
                             ...lineConfig,
                             data: {
-                              labels: item.labels,
+                              labels: metric.labels,
                               datasets: [
                                 {
-                                  data: item.points,
-                                  metricType: item.type,
-                                  driftStatusList: item.driftStatusList || [],
+                                  data: metric.points,
+                                  chartType: 'line',
+                                  metricType: metric.type,
+                                  driftStatusList: metric.driftStatusList || [],
                                   tension: 0.2,
                                   borderWidth: 1,
-                                  borderColor: item.color
+                                  borderColor: metric.color
                                 }
                               ]
                             }

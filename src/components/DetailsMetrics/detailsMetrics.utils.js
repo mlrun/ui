@@ -24,21 +24,21 @@ const metricsColorsByFullName = {}
 const usedColors = new Set()
 
 const driftStatusConfig = {
+  '-1': {
+    className: 'no_status',
+    text: 'No status'
+  },
   0: {
-    color: 'no_drift',
+    className: 'no_drift',
     text: 'No drift'
   },
   1: {
-    color: 'possible_drift',
+    className: 'possible_drift',
     text: 'Possible drift'
   },
   2: {
-    color: 'drift_detected',
+    className: 'drift_detected',
     text: 'Drift detected'
-  },
-  '-1': {
-    color: 'no_status',
-    text: 'No status'
   }
 }
 
@@ -164,21 +164,29 @@ export const parseMetrics = (metric, timeUnit, id) => {
 
   if (!metric.data || !values || !Array.isArray(values)) {
     return {
-      metric,
+      ...metric,
       app: getAppName(full_name),
       title: getMetricTitle(full_name)
     }
   }
 
   const points = values.map(([_, value]) => parseFloat(value.toFixed(2)))
+
+  let driftStatusList = []
+  let totalDriftStatus = null
+
   if (type === 'result') {
-    let drift = { status: -1 }
-    const driftStatusList = values.map(([date, __, driftStatus], index) => {
-      if (drift.status < driftStatus) drift = { driftStatus, index }
+    let highestDrift = { status: -1 }
+
+    driftStatusList = values.map(([date, __, driftStatus], index) => {
+      if (highestDrift.status < driftStatus) highestDrift = { status: driftStatus, index }
       return driftStatusConfig[driftStatus]
     })
-    metric.driftStatusList = driftStatusList
-    metric.totalDriftStatus = { ...driftStatusConfig[drift.driftStatus], index: drift.index }
+
+    totalDriftStatus = {
+      ...driftStatusConfig[highestDrift.status],
+      index: highestDrift.index
+    }
   }
 
   const withInvocationRate = full_name.includes('invocations')
@@ -187,7 +195,7 @@ export const parseMetrics = (metric, timeUnit, id) => {
     ? formatNumber(points.reduce((sum, value) => sum + value, 0))
     : formatNumber((points.reduce((sum, value) => sum + value, 0) / points.length).toFixed(2))
 
-  const modifiedMetric = {
+  return {
     ...metric,
     app: getAppName(full_name),
     color: getMetricColorByFullName(full_name),
@@ -195,8 +203,8 @@ export const parseMetrics = (metric, timeUnit, id) => {
     labels: timeFormatters[timeUnit].formatMetricsTime(values),
     points,
     title: getMetricTitle(full_name),
+    driftStatusList,
+    totalDriftStatus,
     [withInvocationRate ? 'total' : 'avg']: totalOrAvg
   }
-
-  return modifiedMetric
 }
