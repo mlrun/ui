@@ -36,7 +36,6 @@ import {
   MODELS_PAGE,
   REQUEST_CANCELED
 } from '../../../constants'
-import { useMode } from '../../../hooks/mode.hook'
 import { createModelEndpointsRowData } from '../../../utils/createArtifactsContent'
 import { fetchModelEndpoints, removeModelEndpoints } from '../../../reducers/artifactsReducer'
 import { filters, generatePageData } from './modelEndpoints.util'
@@ -58,7 +57,6 @@ const ModelEndpoints = () => {
   const frontendSpec = useSelector(store => store.appStore.frontendSpec)
   const artifactsStore = useSelector(store => store.artifactsStore)
   const filtersStore = useSelector(store => store.filtersStore)
-  const { isDemoMode } = useMode()
   const params = useParams()
   const navigate = useNavigate()
   const location = useLocation()
@@ -75,15 +73,9 @@ const ModelEndpoints = () => {
       generatePageData(
         selectedModelEndpoint,
         frontendSpec.model_monitoring_dashboard_url,
-        handleMonitoring,
-        isDemoMode
+        handleMonitoring
       ),
-    [
-      frontendSpec.model_monitoring_dashboard_url,
-      handleMonitoring,
-      isDemoMode,
-      selectedModelEndpoint
-    ]
+    [frontendSpec.model_monitoring_dashboard_url, handleMonitoring, selectedModelEndpoint]
   )
 
   const actionsMenu = useMemo(
