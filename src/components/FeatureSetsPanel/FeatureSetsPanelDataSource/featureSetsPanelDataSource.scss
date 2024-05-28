@@ -27,6 +27,12 @@
           padding: 15px 5px 15px 0;
         }
       }
+
+      &.combobox_invalid {
+        .combobox-input {
+          padding-right: 30px;
+        }
+      }
     }
 
     .select {
