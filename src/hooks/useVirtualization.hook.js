@@ -149,7 +149,7 @@ export const useVirtualization = ({
       })
 
       const lastRowExceedsScrollHeight = rowsSizesLocal
-        .slice(firstVisibleItemIndex)
+        .slice(firstVisibleItemIndex + 1)
         .some((nextElementHeight, index) => {
           if (heightToLastVisibleItem >= scrollClientHeight) return true
 
