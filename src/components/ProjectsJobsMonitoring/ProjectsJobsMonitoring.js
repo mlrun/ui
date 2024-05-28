@@ -352,7 +352,7 @@ const ProjectsJobsMonitoring = ({ fetchAllJobRuns, fetchJobFunction, fetchJobs }
               tabs={tabs}
             />
 
-            {(!params.jobId || !params.workflowId) && (
+            {(!params.jobId && !params.workflowId) && (
               <ActionBar
                 filterMenuName={selectedTab}
                 filters={tabData[selectedTab].filters}
