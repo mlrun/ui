@@ -157,6 +157,7 @@ const Functions = ({
     filters => {
       setFunctions([])
       setSelectedFunction({})
+      setSelectedRowData({})
 
       return fetchData(filters)
     },
