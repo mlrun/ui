@@ -59,6 +59,7 @@ const initialState = {
   },
   dates: {
     value: DATE_FILTER_ANY_TIME,
+    selectedOptionId : '',
     isPredefined: false
   },
   editMode: false,
