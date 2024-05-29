@@ -19,7 +19,7 @@ such restriction.
 */
 import { isIgzVersionCompatible } from '../../utils/isIgzVersionCompatible'
 
-const requiredIgzVersionForNodeSelectors = '3.5.5'
+const REQUIRED_IGZ_VERSION_FOR_NODE_SELECTORS = '3.5.5'
 
 export const initialEditProjectData = {
   artifact_path: {
@@ -44,4 +44,4 @@ export const initialEditProjectData = {
   }
 }
 
-export const areNodeSelectorsSupported = isIgzVersionCompatible(requiredIgzVersionForNodeSelectors)
+export const areNodeSelectorsSupported = isIgzVersionCompatible(REQUIRED_IGZ_VERSION_FOR_NODE_SELECTORS)
