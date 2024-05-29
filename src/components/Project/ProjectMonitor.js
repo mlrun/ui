@@ -47,7 +47,6 @@ import { showErrorNotification } from '../../utils/notifications.util'
 import { useNuclioMode } from '../../hooks/nuclioMode.hook'
 
 const ProjectMonitor = ({
-  featureStore,
   fetchNuclioV3ioStreams,
   fetchProject,
   fetchProjectFunctions,
@@ -56,7 +55,6 @@ const ProjectMonitor = ({
   functionsStore,
   nuclioStore,
   projectStore,
-  removeFeatureStoreError,
   removeFunctionsError,
   removeNewFeatureSet,
   removeNewFunction,
@@ -164,10 +162,6 @@ const ProjectMonitor = ({
   const closeFeatureSetPanel = () => {
     setCreateFeatureSetPanelIsOpen(false)
     removeNewFeatureSet()
-
-    if (featureStore.error) {
-      removeFeatureStoreError()
-    }
   }
 
   const closeFunctionsPanel = () => {
