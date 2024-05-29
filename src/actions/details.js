@@ -170,7 +170,7 @@ const detailsActions = {
       .then(({ data = [] }) => {
         const differenceInDays = params.end - params.start
         const timeUnit = differenceInDays > TIME_FRAME_LIMITS['24_HOURS'] ? 'days' : 'hours'
-        const metrics = data.map((metric, index) => parseMetrics(metric, timeUnit, index))
+        const metrics = parseMetrics(data, timeUnit)
 
         dispatch(detailsActions.fetchEndpointMetricsValuesSuccess())
 

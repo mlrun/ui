@@ -159,52 +159,54 @@ const getAppName = inputString => {
   }
 }
 
-export const parseMetrics = (metric, timeUnit, id) => {
-  const { full_name, values, type } = metric
+export const parseMetrics = (data, timeUnit) => {
+  return data.map((metric, index) => {
+    const { full_name, values, type } = metric
 
-  if (!metric.data || !values || !Array.isArray(values)) {
+    if (!metric.data || !values || !Array.isArray(values)) {
+      return {
+        ...metric,
+        app: getAppName(full_name),
+        title: getMetricTitle(full_name)
+      }
+    }
+
+    const points = values.map(([_, value]) => parseFloat(value.toFixed(2)))
+
+    let driftStatusList = []
+    let totalDriftStatus = null
+
+    if (type === 'result') {
+      let highestDrift = { status: -1 }
+
+      driftStatusList = values.map(([date, __, driftStatus], index) => {
+        if (highestDrift.status < driftStatus) highestDrift = { status: driftStatus, index }
+        return driftStatusConfig[driftStatus]
+      })
+
+      totalDriftStatus = {
+        ...driftStatusConfig[highestDrift.status],
+        index: highestDrift.index
+      }
+    }
+
+    const withInvocationRate = full_name.includes('invocations')
+
+    const totalOrAvg = withInvocationRate
+      ? formatNumber(points.reduce((sum, value) => sum + value, 0))
+      : formatNumber((points.reduce((sum, value) => sum + value, 0) / points.length).toFixed(2))
+
     return {
       ...metric,
       app: getAppName(full_name),
-      title: getMetricTitle(full_name)
+      color: getMetricColorByFullName(full_name),
+      id: index,
+      labels: timeFormatters[timeUnit].formatMetricsTime(values),
+      points,
+      title: getMetricTitle(full_name),
+      driftStatusList,
+      totalDriftStatus,
+      [withInvocationRate ? 'total' : 'avg']: totalOrAvg
     }
-  }
-
-  const points = values.map(([_, value]) => parseFloat(value.toFixed(2)))
-
-  let driftStatusList = []
-  let totalDriftStatus = null
-
-  if (type === 'result') {
-    let highestDrift = { status: -1 }
-
-    driftStatusList = values.map(([date, __, driftStatus], index) => {
-      if (highestDrift.status < driftStatus) highestDrift = { status: driftStatus, index }
-      return driftStatusConfig[driftStatus]
-    })
-
-    totalDriftStatus = {
-      ...driftStatusConfig[highestDrift.status],
-      index: highestDrift.index
-    }
-  }
-
-  const withInvocationRate = full_name.includes('invocations')
-
-  const totalOrAvg = withInvocationRate
-    ? formatNumber(points.reduce((sum, value) => sum + value, 0))
-    : formatNumber((points.reduce((sum, value) => sum + value, 0) / points.length).toFixed(2))
-
-  return {
-    ...metric,
-    app: getAppName(full_name),
-    color: getMetricColorByFullName(full_name),
-    id,
-    labels: timeFormatters[timeUnit].formatMetricsTime(values),
-    points,
-    title: getMetricTitle(full_name),
-    driftStatusList,
-    totalDriftStatus,
-    [withInvocationRate ? 'total' : 'avg']: totalOrAvg
-  }
+  })
 }
