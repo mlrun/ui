@@ -64,7 +64,7 @@ import { getValidationRules } from 'igz-controls/utils/validation.util'
 import { parseChipsData, convertChipsData } from '../../utils/convertChipsData'
 import { setNotification } from '../../reducers/notificationReducer'
 import { showErrorNotification } from '../../utils/notifications.util'
-import { isNodeSelectorsSupported } from './projectSettingsGeneral.utils'
+import { areNodeSelectorsSupported } from './projectSettingsGeneral.utils'
 
 import './projectSettingsGeneral.scss'
 
@@ -102,11 +102,10 @@ const ProjectSettingsGeneral = ({
             [DESCRIPTION]: projectResponse.spec[DESCRIPTION],
             [GOALS]: projectResponse.spec[GOALS],
             [PARAMS]: parseObjectToKeyValue(projectResponse.spec[PARAMS]),
-            [NODE_SELECTORS]: parseObjectToKeyValue(projectResponse.spec[NODE_SELECTORS]),
             [LABELS]: parseChipsData(projectResponse.metadata[LABELS])
           }
 
-          if (isNodeSelectorsSupported) {
+          if (areNodeSelectorsSupported) {
             newInitial[NODE_SELECTORS] = parseObjectToKeyValue(projectResponse.spec[NODE_SELECTORS])
           }
 
@@ -184,7 +183,7 @@ const ProjectSettingsGeneral = ({
           }
         }
 
-        if (isNodeSelectorsSupported) {
+        if (areNodeSelectorsSupported) {
           newProjectData.spec[NODE_SELECTORS] = generateObjectFromKeyValue(
             formStateLocal.values[NODE_SELECTORS]
           )
@@ -305,7 +304,7 @@ const ProjectSettingsGeneral = ({
                       }}
                     />
                   </div>
-                  {isNodeSelectorsSupported && (
+                  {areNodeSelectorsSupported && (
                     <div>
                       <p className="settings__card-title">Node Selectors</p>
                       <FormKeyValueTable
