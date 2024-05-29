@@ -17,6 +17,7 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
+import { isEmpty } from 'lodash'
 import {
   FETCH_JOB_PODS_SUCCESS,
   FETCH_JOB_PODS_FAILURE,
@@ -81,6 +82,7 @@ const initialState = {
   filtersWasHandled: false,
   showWarning: false,
   metricsOptions: {
+    loading: false,
     all: [],
     lastSelected: [],
     preselected: [],
@@ -180,13 +182,16 @@ const detailsReducer = (state = initialState, { type, payload }) => {
     case FETCH_ENDPOINT_METRICS_BEGIN:
       return {
         ...state,
-        loading: true,
         metricsOptions: {
           ...state.metricsOptions,
+          loading: true,
         }
       }
     case FETCH_ENDPOINT_METRICS_SUCCESS: {
-      const selectedMetrics = state.metricsOptions.selectedByEndpoint[payload.endpointUid]?.length
+      const areMetricsSelectedForEndpoint = !isEmpty(
+        state.metricsOptions.selectedByEndpoint[payload.endpointUid]
+      )
+      const selectedMetrics = areMetricsSelectedForEndpoint
         ? state.metricsOptions.selectedByEndpoint[payload.endpointUid]
         : payload.metrics.filter(metric => {
             return state.metricsOptions.lastSelected.find(
@@ -196,18 +201,21 @@ const detailsReducer = (state = initialState, { type, payload }) => {
                 selectedMetric.type === metric.type
             )
           })
+
       return {
         ...state,
         error: null,
-        loading: false,
         metricsOptions: {
           all: payload.metrics,
+          loading: false,
           lastSelected: selectedMetrics,
           preselected: selectedMetrics,
-          selectedByEndpoint: {
-            ...state.metricsOptions.selectedByEndpoint,
-            [payload.endpointUid]: selectedMetrics
-          }
+          selectedByEndpoint: areMetricsSelectedForEndpoint
+            ? state.metricsOptions.selectedByEndpoint
+            : {
+                ...state.metricsOptions.selectedByEndpoint,
+                [payload.endpointUid]: selectedMetrics
+              }
         }
       }
     }
@@ -215,10 +223,10 @@ const detailsReducer = (state = initialState, { type, payload }) => {
       return {
         ...state,
         error: payload,
-        loading: false,
         metricsOptions: {
-          ...initialState.metricsOptions,
+          ...state.metricsOptions,
           all: [],
+          loading: false,
         }
       }
     case FETCH_ENDPOINT_METRICS_VALUES_BEGIN:
