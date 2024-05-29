@@ -40,7 +40,6 @@ const FeatureSetsPanel = ({
   createNewFeatureSet,
   featureStore,
   project,
-  removeFeatureStoreError,
   setNewFeatureSetCredentialsAccessKey,
   startFeatureSetIngest
 }) => {
@@ -98,10 +97,6 @@ const FeatureSetsPanel = ({
     }
 
     delete data.credentials
-
-    if (featureStore.error) {
-      removeFeatureStoreError()
-    }
 
     createNewFeatureSet(project, data)
       .then(result => {
@@ -166,13 +161,11 @@ const FeatureSetsPanel = ({
       closePanel={closePanel}
       confirmDialog={confirmDialog}
       disableButtons={disableButtons}
-      error={featureStore.error}
       featureStore={featureStore}
       handleSave={handleSave}
       handleSaveOnClick={handleSaveOnClick}
       loading={featureStore.loading}
       project={project}
-      removeFeatureStoreError={removeFeatureStoreError}
       setConfirmDialog={setConfirmDialog}
       setDisableButtons={setDisableButtons}
       setNewFeatureSetCredentialsAccessKey={setNewFeatureSetCredentialsAccessKey}
