@@ -8,6 +8,12 @@
   height: fit-content;
   margin-bottom: 30px;
 
+  &__app-name {
+    font-size: 20px;
+    font-weight: 700;
+    color: $primary;
+  }
+
   &__card-tmp {
     z-index: 1;
     top: 0;
@@ -38,15 +44,15 @@
       display: inline-block;
     }
 
-    &-drift-possible_drift {
+    &-drift-status-possible_drift {
       background-color: $grandis;
     }
 
-    &-drift-drift_detected {
+    &-drift-status-drift_detected {
       background-color: $ceriseRed;
     }
 
-    &-drift-no_drift {
+    &-drift-status-no_drift {
       background-color: $brightTurquoise;
     }
 
@@ -124,7 +130,7 @@
           height: 100% ;
         }
 
-        canvas.off-screen {
+        canvas.hidden-canvas {
           position: absolute;
           opacity: 0;
           left: 0;
@@ -141,7 +147,7 @@
           height: 100% !important;
         }
 
-        canvas.off-screen {
+        canvas.hidden-canvas {
           position: absolute;
           opacity: 0;
           left: 0;
@@ -159,7 +165,7 @@
           height: 100% !important;
         }
 
-        canvas.off-screen {
+        canvas.hidden-canvas {
           position: absolute;
           opacity: 0;
           left: 0;
@@ -215,16 +221,7 @@
     gap: 25px;
   }
 }
-//TODO: add to card class
-.app {
-  font-size: 20px;
-  font-style: normal;
-  font-weight: 700;
-  color: $primary;
-  line-height: normal;
-}
 
-//TODO: shall be part of generic chart-js instance
 #chartjs-tooltip {
   background: $primary;
   padding: 6px 8px;
@@ -286,7 +283,7 @@
   }
 }
 
-.total-drift-status {
+.total-drift-status-tooltip {
   cursor: default;
   font-size: 12px;
   font-weight: 700;

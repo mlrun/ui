@@ -21,19 +21,18 @@ import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { isEmpty } from 'lodash'
 
+import { TextTooltipTemplate, Tooltip } from 'iguazio.dashboard-react-controls/dist/components'
 import MetricChart from '../MetricChart/MetricChart'
 import StatsCard from '../../common/StatsCard/StatsCard'
+
+import { CHART_TYPE_BAR, CHART_TYPE_LINE } from '../../constants'
+
+import { ReactComponent as NoDataIcon } from 'igz-controls/images/no-data-metric-icon.svg'
+import { ReactComponent as MetricsIcon } from 'igz-controls/images/metrics-icon.svg'
 
 import detailsActions from '../../actions/details'
 import { groupMetricByApplication } from '../../elements/MetricsSelector/metricsSelector.utils'
 import { getBarChartMetricConfig, getLineChartMetricConfig } from '../../utils/getMetricChartConfig'
-
-import { TextTooltipTemplate, Tooltip } from 'iguazio.dashboard-react-controls/dist/components'
-// import { ReactComponent as NoDataIcon } from 'igz-controls/images/no-data-metric-icon.svg'
-// import { ReactComponent as MetricsIcon } from 'igz-controls/images/metrics-icon.svg'
-
-import metric from './metric.svg'
-import noData from './nodata.svg'
 
 import './DetailsMetrics.scss'
 
@@ -97,7 +96,7 @@ const DetailsMetrics = ({ selectedItem }) => {
       datasets: [
         {
           data: binPercentages,
-          chartType: 'bar',
+          chartType: CHART_TYPE_BAR,
           tension: 0.2,
           borderWidth: 2,
           backgroundColor: metric.color,
@@ -160,28 +159,27 @@ const DetailsMetrics = ({ selectedItem }) => {
   if (generatedMetrics.length === 0) {
     return (
       <StatsCard className="metrics__empty-select">
-        {/*<MetricsIcon />*/}
-        <img src={metric} />
+        <MetricsIcon />
 
         <div>Choose metrics to view endpoint’s data</div>
       </StatsCard>
     )
   }
+
   return (
     <>
-      {generatedMetrics.map(([name, app]) => {
+      {generatedMetrics.map(([applicationName, applicationMetrics]) => {
         return (
           <div className="metrics">
-            <div className="app">{name}</div>
-            {app.map(metric => {
+            <div className="metrics__app-name">{applicationName}</div>
+            {applicationMetrics.map(metric => {
               if (!metric.data) {
                 return (
                   <StatsCard className="metrics__card" key={metric.id}>
                     <StatsCard.Header title={metric.title}></StatsCard.Header>
                     <div className="metrics__empty-card">
                       <div>
-                        {/*<NoDataIcon />*/}
-                        <img src={noData} />
+                        <NoDataIcon />
                       </div>
                       <div>No data to show</div>
                     </div>
@@ -196,7 +194,7 @@ const DetailsMetrics = ({ selectedItem }) => {
                           template={
                             <TextTooltipTemplate
                               text={
-                                <div className="total-drift-status">
+                                <div className="total-drift-status-tooltip">
                                   <div>Date: {metric.labels[metric.totalDriftStatus.index]}</div>
                                   <div>Value:{metric.points[metric.totalDriftStatus.index]}</div>
                                 </div>
@@ -207,7 +205,7 @@ const DetailsMetrics = ({ selectedItem }) => {
                           <div>
                             <span>{metric.totalDriftStatus.text}</span>
                             <span
-                              className={`metrics__card-drift-status metrics__card-drift-${metric.totalDriftStatus.className}`}
+                              className={`metrics__card-drift-status metrics__card-drift-status-${metric.totalDriftStatus.className}`}
                             ></span>
                           </div>
                         </Tooltip>
@@ -239,7 +237,7 @@ const DetailsMetrics = ({ selectedItem }) => {
                               datasets: [
                                 {
                                   data: metric.points,
-                                  chartType: 'line',
+                                  chartType: CHART_TYPE_LINE,
                                   metricType: metric.type,
                                   driftStatusList: metric.driftStatusList || [],
                                   tension: 0.2,

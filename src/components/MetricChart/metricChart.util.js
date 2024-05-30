@@ -17,30 +17,36 @@
 // under the Apache 2.0 license is conditioned upon your compliance with
 // such restriction.
 // */
-export const hexToRGB = (hex, alpha = 0) => {
-  if (typeof hex !== 'string') return
-  const r = parseInt(hex.substring(1, 3), 16)
-  const g = parseInt(hex.substring(3, 5), 16)
-  const b = parseInt(hex.substring(5, 7), 16)
-  return `rgba(${r}, ${g}, ${b}, ${alpha})`
-}
+import { CHART_TYPE_BAR, CHART_TYPE_LINE } from '../../constants'
 
-export const calculateMaxTicksLimit = container => {
+// TODO: will be uncomment in PR-6528
+// export const hexToRGB = (hex, alpha = 0) => {
+//   if (typeof hex !== 'string') return
+//   const r = parseInt(hex.substring(1, 3), 16)
+//   const g = parseInt(hex.substring(3, 5), 16)
+//   const b = parseInt(hex.substring(5, 7), 16)
+//
+//   return `rgba(${r}, ${g}, ${b}, ${alpha})`
+// }
+
+export const calculateMaxTicksLimit = (container, type) => {
   const parent = container.parentNode
-  if (
-    parent.classList.contains('metrics__card-body-line') ||
-    parent.classList.contains('metrics__card-body-invocation')
-  ) {
+
+  if (type === CHART_TYPE_LINE) {
     const containerWidth = parent.clientWidth
+
     if (containerWidth < 290) return 3
     if (containerWidth < 500) return 5
     if (containerWidth < 800) return 8
+
     return 10
-  } else if (parent.classList.contains('metrics__card-body-bar')) {
+  } else if (type === CHART_TYPE_BAR) {
     const containerWidth = parent.clientWidth
+
     if (containerWidth < 170) return 3
     if (containerWidth < 220) return 5
     if (containerWidth < 900) return 8
+
     return 10
   } else {
     return 10

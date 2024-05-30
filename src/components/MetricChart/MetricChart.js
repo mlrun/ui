@@ -4,13 +4,15 @@ import classnames from 'classnames'
 
 import Loader from '../../common/Loader/Loader'
 
-import { calculateMaxTicksLimit, generateMetricChartTooltip, hexToRGB } from './metricChart.util'
+import { CHART_TYPE_BAR } from '../../constants'
+
+import { calculateMaxTicksLimit, generateMetricChartTooltip } from './metricChart.util'
 
 const GenericMetricChart = ({ chartConfig, showGrid }) => {
   const chartRef = useRef(null)
   const chartInstance = useRef(null)
   const [isLoading, setIsLoading] = useState(true)
-  const canvasClassNames = classnames(isLoading && 'off-screen')
+  const canvasClassNames = classnames(isLoading && 'hidden-canvas')
   const customPoints = useMemo(() => {
     const hasDriftStatusList = chartConfig.data.datasets[0]?.driftStatusList?.length !== 0
     const totalDriftIndex = chartConfig.data.datasets[0]?.totalDriftStatus?.index
@@ -34,7 +36,7 @@ const GenericMetricChart = ({ chartConfig, showGrid }) => {
         chartInstance.current.destroy()
       }
       const container = chartRef.current
-      const maxTicksLimit = calculateMaxTicksLimit(container)
+      const maxTicksLimit = calculateMaxTicksLimit(container, chartConfig.type)
       chartInstance.current = new Chart(ctx, {
         type: chartConfig.type,
         data: chartConfig.data,
@@ -49,7 +51,7 @@ const GenericMetricChart = ({ chartConfig, showGrid }) => {
                 maxTicksLimit
               },
               title:
-                chartConfig.type === 'bar'
+                chartConfig.type === CHART_TYPE_BAR
                   ? {
                       display: true,
                       text: 'Value',
@@ -68,7 +70,7 @@ const GenericMetricChart = ({ chartConfig, showGrid }) => {
                 borderColor: 'E9E8EB'
               },
               title:
-                chartConfig.type === 'bar'
+                chartConfig.type === CHART_TYPE_BAR
                   ? {
                       display: true,
                       text: 'Percentage',
@@ -97,29 +99,6 @@ const GenericMetricChart = ({ chartConfig, showGrid }) => {
           }
         }
       })
-
-      if (chartConfig.gradient) {
-        const canvasHeight = showGrid ? 200 : 80
-        if (chartInstance.current.options.scales.x.grid.display !== showGrid) {
-          chartInstance.current.options.scales.x.grid.display = showGrid
-          chartInstance.current.options.scales.y.grid.display = showGrid
-
-          chartInstance.current.options.scales.y.display = showGrid
-
-          chartInstance.current.options.scales.x.grid.ticks = true
-          chartInstance.current.options.scales.y.grid.ticks = true
-        }
-        const gradient = ctx.createLinearGradient(0, 0, 0, canvasHeight)
-        gradient.addColorStop(
-          0,
-          hexToRGB(chartConfig?.data?.datasets[0].backgroundColor || '#FFF', 0.7)
-        )
-        gradient.addColorStop(1, hexToRGB(chartConfig?.data?.datasets[0].backgroundColor))
-        chartInstance.current.data.datasets.forEach(dataset => {
-          dataset.backgroundColor = gradient
-        })
-        chartInstance.current.update()
-      }
     }
 
     return () => {
@@ -140,7 +119,7 @@ const GenericMetricChart = ({ chartConfig, showGrid }) => {
     const handleResize = () => {
       if (chartInstance.current) {
         const container = chartRef.current
-        const maxTicksLimit = calculateMaxTicksLimit(container)
+        const maxTicksLimit = calculateMaxTicksLimit(container, chartConfig.type)
         chartInstance.current.options.scales.x.ticks.maxTicksLimit = maxTicksLimit
         chartInstance.current.options.scales.y.ticks.maxTicksLimit = maxTicksLimit
         chartInstance.current.update()
@@ -151,7 +130,7 @@ const GenericMetricChart = ({ chartConfig, showGrid }) => {
     return () => {
       window.removeEventListener('resize', handleResize)
     }
-  }, [])
+  }, [chartConfig.type])
 
   return (
     <>
