@@ -641,7 +641,3 @@ export const VIEWER_ROLE = 'Viewer'
 /*=========== ACTIONS MENU POSITION =============*/
 export const ACTION_MENU_PARENT_ROW = 'action-menu_parent-row'
 export const ACTION_MENU_PARENT_ROW_EXPANDED = 'action-menu_parent-row-expanded'
-
-/*=========== Chart =============*/
-export const CHART_TYPE_LINE = 'line'
-export const CHART_TYPE_BAR = 'bar'

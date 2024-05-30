@@ -3,8 +3,7 @@ import { Chart } from 'chart.js/auto'
 import classnames from 'classnames'
 
 import Loader from '../../common/Loader/Loader'
-
-import { CHART_TYPE_BAR } from '../../constants'
+import { CHART_TYPE_BAR } from '../../utils/getHistogramChartConfig'
 
 import { calculateMaxTicksLimit, generateMetricChartTooltip } from './metricChart.util'
 

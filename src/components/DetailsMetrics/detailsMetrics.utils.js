@@ -56,9 +56,7 @@ const generateResultMessage = (driftStatus, resultKind) => {
 
   if (driftStatus === 0) {
     return `No ${resultKindMessage}`
-  }
-
-  if (driftStatus === -1) {
+  } else if (driftStatus === -1) {
     return `${text} ${resultKindMessage}`
   }
 

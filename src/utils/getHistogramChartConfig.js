@@ -19,6 +19,9 @@ such restriction.
 */
 import { round } from 'lodash'
 
+export const CHART_TYPE_LINE = 'line'
+export const CHART_TYPE_BAR = 'bar'
+
 const generateCustomTooltip = context => {
   // Tooltip Element
   let tooltipEl = document.getElementById('chartjs-tooltip')
@@ -45,18 +48,12 @@ const generateCustomTooltip = context => {
   if (tooltipModel.dataPoints) {
     const labels = context.chart.config._config.data?.labels
     const dataPoints = tooltipModel.dataPoints.map(dataPoint => {
-      const labelFormatted = isFinite(dataPoint.label)
-        ? round(dataPoint.label, 2)
-        : dataPoint.label
+      const labelFormatted = isFinite(dataPoint.label) ? round(dataPoint.label, 2) : dataPoint.label
       const nextLabel = labels?.[dataPoint.dataIndex + 1]
-      const nextLabelFormatted = isFinite(nextLabel)
-        ? round(nextLabel, 2)
-        : nextLabel
+      const nextLabelFormatted = isFinite(nextLabel) ? round(nextLabel, 2) : nextLabel
 
       return {
-        x: nextLabelFormatted
-          ? [labelFormatted, nextLabelFormatted]
-          : labelFormatted,
+        x: nextLabelFormatted ? [labelFormatted, nextLabelFormatted] : labelFormatted,
         y: dataPoint.formattedValue
       }
     })
@@ -83,11 +80,9 @@ const generateCustomTooltip = context => {
   let chartEl = tooltipModel.dataPoints[0].element
 
   // Display, position, and set styles for font
-  tooltipEl.style.left =
-    canvasRect.left + window.pageXOffset + tooltipModel.caretX + 'px'
+  tooltipEl.style.left = canvasRect.left + window.pageXOffset + tooltipModel.caretX + 'px'
   tooltipEl.style.top = canvasRect.top + window.pageYOffset + chartEl.y + 'px'
-  tooltipEl.style.padding =
-    tooltipModel.padding + 'px ' + tooltipModel.padding + 'px'
+  tooltipEl.style.padding = tooltipModel.padding + 'px ' + tooltipModel.padding + 'px'
 
   tooltipEl.classList.remove('hidden')
 }

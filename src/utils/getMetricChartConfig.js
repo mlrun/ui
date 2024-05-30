@@ -17,7 +17,7 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import { CHART_TYPE_BAR, CHART_TYPE_LINE } from '../constants'
+import { CHART_TYPE_BAR, CHART_TYPE_LINE } from './getHistogramChartConfig'
 
 // TODO: Combine getLineChartMetricConfig, getBarChartMetricConfig, and getGradientLineChart into one function.
 export const getLineChartMetricConfig = () => {

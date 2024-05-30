@@ -25,8 +25,7 @@ import { TextTooltipTemplate, Tooltip } from 'iguazio.dashboard-react-controls/d
 import MetricChart from '../MetricChart/MetricChart'
 import StatsCard from '../../common/StatsCard/StatsCard'
 
-import { CHART_TYPE_BAR, CHART_TYPE_LINE } from '../../constants'
-
+import { CHART_TYPE_BAR, CHART_TYPE_LINE } from '../../utils/getHistogramChartConfig'
 import { ReactComponent as NoDataIcon } from 'igz-controls/images/no-data-metric-icon.svg'
 import { ReactComponent as MetricsIcon } from 'igz-controls/images/metrics-icon.svg'
 
@@ -160,7 +159,6 @@ const DetailsMetrics = ({ selectedItem }) => {
     return (
       <StatsCard className="metrics__empty-select">
         <MetricsIcon />
-
         <div>Choose metrics to view endpoint’s data</div>
       </StatsCard>
     )

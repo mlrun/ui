@@ -17,7 +17,7 @@
 // under the Apache 2.0 license is conditioned upon your compliance with
 // such restriction.
 // */
-import { CHART_TYPE_BAR, CHART_TYPE_LINE } from '../../constants'
+import { CHART_TYPE_BAR, CHART_TYPE_LINE } from '../../utils/getHistogramChartConfig'
 
 // TODO: will be uncomment in PR-6528
 // export const hexToRGB = (hex, alpha = 0) => {
