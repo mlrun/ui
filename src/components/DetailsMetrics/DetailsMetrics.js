@@ -17,17 +17,19 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { useSelector } from 'react-redux'
 import { useDispatch } from 'react-redux'
 import { isEmpty } from 'lodash'
 
 import detailsActions from '../../actions/details'
+import { REQUEST_CANCELED } from '../../constants'
 
 const DetailsMetrics = ({ selectedItem }) => {
   const [metrics, setMetrics] = useState([])
   const detailsStore = useSelector(store => store.detailsStore)
   const dispatch = useDispatch()
+  const metricsValuesAbortController = useRef(new AbortController())
 
   useEffect(() => {
     dispatch(
@@ -59,17 +61,33 @@ const DetailsMetrics = ({ selectedItem }) => {
         params.name.push(metric.full_name)
       })
 
-      dispatch(
-        detailsActions.fetchModelEndpointMetricsValues(
-          selectedItem.metadata.project,
-          selectedItem.metadata.uid,
-          params
-        )
-      ).then(metricsList => {
-        setMetrics(metricsList)
+      metricsValuesAbortController.current = new AbortController()
+
+      setTimeout(() => {
+        dispatch(
+          detailsActions.fetchModelEndpointMetricsValues(
+            selectedItem.metadata.project,
+            selectedItem.metadata.uid,
+            params,
+            metricsValuesAbortController.current.signal
+          )
+        ).then(metricsList => {
+          setMetrics(metricsList)
+        })
       })
+    } else {
+      setMetrics([])
     }
-  }, [dispatch, selectedItem, detailsStore.dates, detailsStore.metricsOptions.selectedByEndpoint])
+
+    return () => {
+      metricsValuesAbortController.current?.abort(REQUEST_CANCELED)
+    }
+  }, [
+    dispatch,
+    selectedItem,
+    detailsStore.dates.value,
+    detailsStore.metricsOptions.selectedByEndpoint
+  ])
 
   // todo: metrics - - remove when merge charts
   /* eslint-disable-next-line no-console */

@@ -37,10 +37,17 @@ const detailsApi = {
     mainHttpClient.get(`/projects/${project}/feature-vectors/${name}/references/${reference}`),
   getModelEndpointMetrics: (project, uid, type = 'all') =>
     mainHttpClient.get(`/projects/${project}/model-endpoints/${uid}/metrics?type=${type}`), // type=results/metrics/all
-  getModelEndpointMetricsValues: (project, uid, params) =>
-    mainHttpClient.get(`/projects/${project}/model-endpoints/${uid}/metrics-values`, {
+  getModelEndpointMetricsValues: (project, uid, params, signal) => {
+    const config = {
       params
-    })
+    }
+
+    if (signal) {
+      config.signal = signal
+    }
+
+    return mainHttpClient.get(`/projects/${project}/model-endpoints/${uid}/metrics-values`, config)
+  }
 }
 
 export default detailsApi

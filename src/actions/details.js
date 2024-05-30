@@ -49,7 +49,8 @@ import {
   SET_ITERATION,
   SET_ITERATION_OPTIONS,
   SET_SELECTED_METRICS_OPTIONS,
-  SHOW_WARNING
+  SHOW_WARNING,
+  DEFAULT_ABORT_MSG
 } from '../constants'
 import { generatePods } from '../utils/generatePods'
 import { generateMetricsItems, getMetricColorByFullName } from '../components/DetailsMetrics/detailsMetrics.utils'
@@ -158,11 +159,11 @@ const detailsActions = {
     type: FETCH_ENDPOINT_METRICS_SUCCESS,
     payload
   }),
-  fetchModelEndpointMetricsValues: (project, uid, params) => dispatch => {
+  fetchModelEndpointMetricsValues: (project, uid, params, signal) => dispatch => {
     dispatch(detailsActions.fetchEndpointMetricsValuesBegin())
 
     return detailsApi
-      .getModelEndpointMetricsValues(project, uid, params)
+      .getModelEndpointMetricsValues(project, uid, params, signal)
       .then(({ data = [] }) => {
         const metrics = data.map(metric => {
           return {
@@ -176,7 +177,11 @@ const detailsActions = {
         return metrics
       })
       .catch(error => {
-        dispatch(detailsActions.fetchEndpointMetricsValuesFailure(error))
+        dispatch(
+          detailsActions.fetchEndpointMetricsValuesFailure(
+            error?.message === DEFAULT_ABORT_MSG ? null : error
+          )
+        )
       })
   },
   fetchEndpointMetricsValuesBegin: () => ({
