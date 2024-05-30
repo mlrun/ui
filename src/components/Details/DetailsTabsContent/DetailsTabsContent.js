@@ -146,6 +146,7 @@ const DetailsTabsContent = ({
           additionalLogsTitle={pageData.details.additionalLogsTitle}
           item={selectedItem}
           logsTitle={pageData.details.logsTitle}
+          noDataMessage={pageData.details.logsNoDataMessage}
           refreshAdditionalLogs={pageData.details.refreshAdditionalLogs}
           refreshLogs={pageData.details.refreshLogs}
           removeAdditionalLogs={pageData.details.removeAdditionalLogs}

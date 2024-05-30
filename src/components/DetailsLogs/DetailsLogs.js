@@ -25,14 +25,15 @@ import Logs from './Logs'
 import NoData from '../../common/NoData/NoData'
 
 const DetailsLogs = ({
-  additionalLogsTitle,
+  additionalLogsTitle = '',
   functionsStore,
   item,
   jobsStore,
-  logsTitle,
-  refreshAdditionalLogs,
+  logsTitle = '',
+  noDataMessage = '',
+  refreshAdditionalLogs = false,
   refreshLogs,
-  removeAdditionalLogs,
+  removeAdditionalLogs = false,
   removeLogs,
   withLogsRefreshBtn
 }) => {
@@ -53,11 +54,13 @@ const DetailsLogs = ({
   }, [functionsStore.nuclioLogs.loading])
 
   useEffect(() => {
-    refreshLogs(item, item.project, setDetailsLogs, streamLogsRef)
+    if (refreshLogs) {
+      refreshLogs(item, item.project, setDetailsLogs, streamLogsRef)
 
-    return () => {
-      setDetailsLogs('')
-      removeLogs()
+      return () => {
+        setDetailsLogs('')
+        removeLogs()
+      }
     }
   }, [item, refreshLogs, removeLogs, withLogsRefreshBtn])
 
@@ -72,7 +75,7 @@ const DetailsLogs = ({
   }, [item, withLogsRefreshBtn, refreshAdditionalLogs, removeAdditionalLogs])
 
   return !detailsLogs.length && !detailsAdditionalLogs.length && !logsAreLoading ? (
-    <NoData />
+    <NoData message={noDataMessage} />
   ) : (
     <div className="table__item-logs-container">
       {mainLogsAreLoading || detailsLogs.length ? (
@@ -116,19 +119,13 @@ const DetailsLogs = ({
   )
 }
 
-DetailsLogs.defaultProps = {
-  additionalLogsTitle: '',
-  logsTitle: '',
-  refreshAdditionalLogs: false,
-  removeAdditionalLogs: false
-}
-
 DetailsLogs.propTypes = {
   additionalLogsTitle: PropTypes.string,
   item: PropTypes.object.isRequired,
   logsTitle: PropTypes.string,
+  noDataMessage: PropTypes.string,
   refreshAdditionalLogs: PropTypes.oneOfType([PropTypes.func, PropTypes.bool]),
-  refreshLogs: PropTypes.func.isRequired,
+  refreshLogs: PropTypes.oneOfType([PropTypes.func, PropTypes.bool]),
   removeAdditionalLogs: PropTypes.oneOfType([PropTypes.func, PropTypes.bool]),
   removeLogs: PropTypes.func.isRequired,
   withLogsRefreshBtn: PropTypes.bool.isRequired
