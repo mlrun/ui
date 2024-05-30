@@ -80,7 +80,7 @@ function ArtifactsActionBar({
     return () => {
       dispatch(removeFilters())
     }
-  }, [params.pageTab, params.projectName, page, tab, dispatch])
+  }, [params.projectName, page, tab, dispatch])
 
   const applyChanges = async (name, filterMenuModal) => {
     const filtersHelperResult = await filtersHelper(changes, dispatch)
