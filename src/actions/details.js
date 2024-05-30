@@ -53,7 +53,11 @@ import {
   DEFAULT_ABORT_MSG
 } from '../constants'
 import { generatePods } from '../utils/generatePods'
-import { generateMetricsItems, getMetricColorByFullName } from '../components/DetailsMetrics/detailsMetrics.utils'
+import {
+  generateMetricsItems,
+  parseMetrics
+} from '../components/DetailsMetrics/detailsMetrics.utils'
+import { TIME_FRAME_LIMITS } from '../utils/datePicker.util'
 
 const detailsActions = {
   fetchModelEndpointWithAnalysis: (project, uid) => dispatch => {
@@ -165,12 +169,9 @@ const detailsActions = {
     return detailsApi
       .getModelEndpointMetricsValues(project, uid, params, signal)
       .then(({ data = [] }) => {
-        const metrics = data.map(metric => {
-          return {
-            ...metric,
-            color: getMetricColorByFullName(metric.full_name)
-          }
-        })
+        const differenceInDays = params.end - params.start
+        const timeUnit = differenceInDays > TIME_FRAME_LIMITS['24_HOURS'] ? 'days' : 'hours'
+        const metrics = parseMetrics(data, timeUnit)
 
         dispatch(detailsActions.fetchEndpointMetricsValuesSuccess())
 
