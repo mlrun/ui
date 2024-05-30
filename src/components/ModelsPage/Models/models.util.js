@@ -288,7 +288,7 @@ export const checkForSelectedModel = (
         )
 
         if (!searchItem) {
-          navigate(`/projects/${projectName}/models/models}`, { replace: true })
+          navigate(`/projects/${projectName}/models/models`)
         } else {
           setSelectedModel(searchItem)
         }
