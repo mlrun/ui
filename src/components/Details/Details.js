@@ -249,7 +249,7 @@ const Details = ({
   ])
 
   const handleChangeDates = useCallback(
-    (dates, isPredefined) => {
+    (dates, isPredefined, selectedOptionId) => {
       const generatedDates = [...dates]
 
       if (generatedDates.length === 1) {
@@ -257,6 +257,7 @@ const Details = ({
       }
       setDetailsDates({
         value: generatedDates,
+        selectedOptionId,
         isPredefined
       })
     },
@@ -268,7 +269,7 @@ const Details = ({
       option => option.id === PAST_24_HOUR_DATE_OPTION
     )
 
-    handleChangeDates(past24hoursOption.handler(), true)
+    handleChangeDates(past24hoursOption.handler(), true, PAST_24_HOUR_DATE_OPTION)
   }, [handleChangeDates])
 
   return (

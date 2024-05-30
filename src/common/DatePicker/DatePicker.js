@@ -339,7 +339,7 @@ const DatePicker = ({
       dates.push(new Date(datePickerState.configTo.selectedDate))
     }
 
-    onChange(dates)
+    onChange(dates, false, CUSTOM_RANGE_DATE_OPTION)
   }
 
   const onInputDatePickerChange = event => {

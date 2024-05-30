@@ -427,7 +427,6 @@ such as jobs, artifacts, and features.`,
       handleSearchOnFocus={handleSearchOnFocus}
       handleSelectSortOption={handleSelectSortOption}
       isDescendingOrder={isDescendingOrder}
-      isDemoMode={isDemoMode}
       projectStore={projectStore}
       refreshProjects={refreshProjects}
       removeNewProjectError={removeNewProjectError}

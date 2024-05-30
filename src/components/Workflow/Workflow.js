@@ -99,7 +99,8 @@ const Workflow = ({
   const tableContent = useMemo(() => {
     return createJobsWorkflowContent(
       jobsContent,
-      params.workflowProjectName || params.projectName,
+      params.projectName,
+      params.workflowProjectName,
       params.workflowId,
       isStagingMode,
       !isEmpty(selectedJob)
@@ -108,8 +109,8 @@ const Workflow = ({
     isStagingMode,
     jobsContent,
     params.projectName,
-    params.workflowId,
     params.workflowProjectName,
+    params.workflowId,
     selectedJob
   ])
 
