@@ -324,6 +324,6 @@ const functionDeletingSuccessHandler = (dispatch, func) => {
 
 const isFunctionDeleting = (func, deletingFunctions) => {
   return Object.values(deletingFunctions).some(deletingFunction => {
-    return deletingFunction.name === func.name
+    return deletingFunction.name === func?.name
   })
 }

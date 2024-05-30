@@ -59,7 +59,6 @@ const FeatureSets = ({
   fetchFeatureSetsTags,
   removeFeatureSet,
   removeFeatureSets,
-  removeFeatureStoreError,
   removeNewFeatureSet,
   updateFeatureStoreData
 }) => {
@@ -275,10 +274,6 @@ const FeatureSets = ({
   const closePanel = () => {
     setFeatureSetsPanelIsOpen(false)
     removeNewFeatureSet()
-
-    if (featureStore.error) {
-      removeFeatureStoreError()
-    }
   }
 
   useEffect(() => {

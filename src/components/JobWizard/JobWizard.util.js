@@ -168,7 +168,7 @@ export const generateJobWizardData = (
       inputPath: null,
       outputPath:
         currentProject?.spec?.artifact_path ||
-        frontendSpec.default_artifact_path ||
+        (frontendSpec.ce?.version && frontendSpec.default_artifact_path) ||
         JOB_DEFAULT_OUTPUT_PATH,
       accessKey: true,
       accessKeyInput: '',

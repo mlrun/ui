@@ -21,7 +21,6 @@ import React from 'react'
 import PropTypes from 'prop-types'
 
 import Accordion from '../../common/Accordion/Accordion'
-import ErrorMessage from '../../common/ErrorMessage/ErrorMessage'
 import FeatureSetsPanelDataSource from './FeatureSetsPanelDataSource/FeatureSetsPanelDataSource'
 import FeatureSetsPanelSchema from './FeatureSetsPanelSchema/FeatureSetsPanelSchema'
 import FeatureSetsPanelTargetStore from './FeatureSetsPanelTargetStore/FeatureSetsPanelTargetStore'
@@ -41,13 +40,11 @@ const FeatureSetsPanelView = ({
   closePanel,
   confirmDialog,
   disableButtons,
-  error,
   featureStore,
   handleSave,
   handleSaveOnClick,
   loading,
   project,
-  removeFeatureStoreError,
   setConfirmDialog,
   setDisableButtons,
   setNewFeatureSetCredentialsAccessKey,
@@ -122,16 +119,6 @@ const FeatureSetsPanelView = ({
             validation={validation}
           />
           <div className="new-item-side-panel__buttons-container">
-            {error && (
-              <ErrorMessage
-                closeError={() => {
-                  if (error) {
-                    removeFeatureStoreError()
-                  }
-                }}
-                message={error}
-              />
-            )}
             <Button
               variant={TERTIARY_BUTTON}
               label="Cancel"
@@ -164,8 +151,7 @@ const FeatureSetsPanelView = ({
 
 FeatureSetsPanelView.defaultProps = {
   confirmDialog: null,
-  defaultData: null,
-  error: false
+  defaultData: null
 }
 
 FeatureSetsPanelView.propTypes = {
@@ -173,13 +159,11 @@ FeatureSetsPanelView.propTypes = {
   closePanel: PropTypes.func.isRequired,
   confirmDialog: PropTypes.shape({ action: PropTypes.string.isRequired }),
   disableButtons: PropTypes.shape({}).isRequired,
-  error: PropTypes.oneOfType([PropTypes.string, PropTypes.bool]),
   featureStore: PropTypes.shape({}).isRequired,
   handleSave: PropTypes.func.isRequired,
   handleSaveOnClick: PropTypes.func.isRequired,
   loading: PropTypes.bool.isRequired,
   project: PropTypes.string.isRequired,
-  removeFeatureStoreError: PropTypes.func.isRequired,
   setConfirmDialog: PropTypes.func.isRequired,
   setDisableButtons: PropTypes.func.isRequired,
   setNewFeatureSetCredentialsAccessKey: PropTypes.func.isRequired,

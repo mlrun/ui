@@ -17,7 +17,7 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import React, { useCallback, useEffect, useMemo, useState } from 'react'
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { isEmpty } from 'lodash'
 
@@ -30,6 +30,7 @@ import { ReactComponent as NoDataIcon } from 'igz-controls/images/no-data-metric
 import { ReactComponent as MetricsIcon } from 'igz-controls/images/metrics-icon.svg'
 
 import detailsActions from '../../actions/details'
+import { REQUEST_CANCELED } from '../../constants'
 import { groupMetricByApplication } from '../../elements/MetricsSelector/metricsSelector.utils'
 import { getBarChartMetricConfig, getLineChartMetricConfig } from '../../utils/getMetricChartConfig'
 
@@ -39,6 +40,7 @@ const DetailsMetrics = ({ selectedItem }) => {
   const [metrics, setMetrics] = useState([])
   const detailsStore = useSelector(store => store.detailsStore)
   const dispatch = useDispatch()
+  const metricsValuesAbortController = useRef(new AbortController())
   const lineConfig = useMemo(() => getLineChartMetricConfig(), [])
   const barConfig = useMemo(() => getBarChartMetricConfig(), [])
 
@@ -141,19 +143,33 @@ const DetailsMetrics = ({ selectedItem }) => {
         params.name.push(metric.full_name)
       })
 
-      dispatch(
-        detailsActions.fetchModelEndpointMetricsValues(
-          selectedItem.metadata.project,
-          selectedItem.metadata.uid,
-          params
-        )
-      ).then(metricsList => {
-        setMetrics(metricsList)
+      metricsValuesAbortController.current = new AbortController()
+
+      setTimeout(() => {
+        dispatch(
+          detailsActions.fetchModelEndpointMetricsValues(
+            selectedItem.metadata.project,
+            selectedItem.metadata.uid,
+            params,
+            metricsValuesAbortController.current.signal
+          )
+        ).then(metricsList => {
+          setMetrics(metricsList)
+        })
       })
-    } else if (selectedItem.metadata?.uid) {
+    } else {
       setMetrics([])
     }
-  }, [dispatch, selectedItem, detailsStore.dates, detailsStore.metricsOptions.selectedByEndpoint])
+
+    return () => {
+      metricsValuesAbortController.current?.abort(REQUEST_CANCELED)
+    }
+  }, [
+    dispatch,
+    selectedItem,
+    detailsStore.dates.value,
+    detailsStore.metricsOptions.selectedByEndpoint
+  ])
 
   if (generatedMetrics.length === 0) {
     return (
