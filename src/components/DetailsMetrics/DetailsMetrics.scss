@@ -222,8 +222,14 @@
   }
 }
 
-#chartjs-tooltip {
-  background: $primary;
+#chartjs-tooltip-metric {
+  position: fixed;
+  z-index: 5;
+  color: $white;
+  border-radius: 4px;
+  transform: translate(-50%, calc(-100% - 10px));
+  transition: all 0.1s linear;
+  background-color: $primary;
   padding: 6px 8px;
   family: Roboto;
   letter-spacing: 0.5px;
@@ -281,10 +287,4 @@
       background-color: $doveGray;
     }
   }
-}
-
-.total-drift-status-tooltip {
-  cursor: default;
-  font-size: 12px;
-  font-weight: 700;
 }
