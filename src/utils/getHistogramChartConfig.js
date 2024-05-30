@@ -18,9 +18,7 @@ under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
 import { round } from 'lodash'
-
-export const CHART_TYPE_LINE = 'line'
-export const CHART_TYPE_BAR = 'bar'
+import { CHART_TYPE_BAR } from '../constants'
 
 const generateCustomTooltip = context => {
   // Tooltip Element
@@ -89,7 +87,7 @@ const generateCustomTooltip = context => {
 
 export const getHistogramChartConfig = () => {
   return {
-    type: 'bar',
+    type: CHART_TYPE_BAR,
     options: {
       responsive: true,
       maintainAspectRatio: false,
