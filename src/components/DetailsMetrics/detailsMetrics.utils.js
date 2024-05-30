@@ -187,6 +187,7 @@ export const parseMetrics = (data, timeUnit) => {
     if (!metric.data || !values || !Array.isArray(values)) {
       return {
         ...metric,
+        id: index,
         app: getAppName(full_name),
         title: getMetricTitle(full_name)
       }

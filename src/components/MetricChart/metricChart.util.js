@@ -64,6 +64,7 @@ export const generateMetricChartTooltip = context => {
     document.body.appendChild(tooltipEl)
   }
   const tooltipModel = context.tooltip
+
   if (tooltipModel.opacity === 0) {
     tooltipEl.style.opacity = '0'
     return
