@@ -87,6 +87,9 @@ const initialState = {
     lastSelected: [],
     preselected: [],
     selectedByEndpoint: {}
+  },
+  metricsValues: {
+    loading: false
   }
 }
 
@@ -182,6 +185,7 @@ const detailsReducer = (state = initialState, { type, payload }) => {
     case FETCH_ENDPOINT_METRICS_BEGIN:
       return {
         ...state,
+        loading: true,
         metricsOptions: {
           ...state.metricsOptions,
           loading: true,
@@ -205,6 +209,7 @@ const detailsReducer = (state = initialState, { type, payload }) => {
       return {
         ...state,
         error: null,
+        loading: state.metricsValues.loading,
         metricsOptions: {
           all: payload.metrics,
           loading: false,
@@ -223,6 +228,7 @@ const detailsReducer = (state = initialState, { type, payload }) => {
       return {
         ...state,
         error: payload,
+        loading: state.metricsValues.loading,
         metricsOptions: {
           ...state.metricsOptions,
           all: [],
@@ -232,19 +238,31 @@ const detailsReducer = (state = initialState, { type, payload }) => {
     case FETCH_ENDPOINT_METRICS_VALUES_BEGIN:
       return {
         ...state,
-        loading: true
+        loading: true,
+        metricsValues: {
+          ...state.metricsValues,
+          loading: true
+        }
       }
     case FETCH_ENDPOINT_METRICS_VALUES_SUCCESS:
       return {
         ...state,
         error: null,
-        loading: false
+        loading: state.metricsOptions.loading,
+        metricsValues: {
+          ...state.metricsValues,
+          loading: false
+        }
       }
     case FETCH_ENDPOINT_METRICS_VALUES_FAILURE:
       return {
         ...state,
         error: payload,
-        loading: false
+        loading: state.metricsOptions.loading,
+        metricsValues: {
+          ...state.metricsValues,
+          loading: false
+        }
       }
     case REMOVE_INFO_CONTENT:
       return {

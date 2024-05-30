@@ -276,7 +276,7 @@ const Details = ({
     <Form form={formRef.current} onSubmit={() => {}}>
       {formState => (
         <div className={detailsPanelClassNames} ref={detailsRef} data-testid="detailsPanel">
-          {(detailsStore.loading || detailsStore.metricsOptions.loading) && <Loader />}
+          {detailsStore.loading && <Loader />}
           {detailsStore.error && <ErrorMessage message={detailsStore.error.message} />}
           <div className="item-header-wrapper">
             <DetailsHeader
