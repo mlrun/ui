@@ -168,7 +168,7 @@ const DetailsMetrics = ({ selectedItem }) => {
     <>
       {generatedMetrics.map(([applicationName, applicationMetrics]) => {
         return (
-          <div className="metrics">
+          <div key={applicationName} className="metrics">
             <div className="metrics__app-name">{applicationName}</div>
             {applicationMetrics.map(metric => {
               if (!metric.data) {
