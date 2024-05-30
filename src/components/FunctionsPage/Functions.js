@@ -242,10 +242,10 @@ const Functions = ({
         item.tag,
         setDetailsLogs,
         navigate,
-        fetchData
+        () => fetchData(filtersStore)
       )
     },
-    [fetchFunctionLogs, navigate, fetchData]
+    [filtersStore, fetchFunctionLogs, navigate, fetchData]
   )
 
   const handleFetchFunctionApplicationLogs = useCallback(
