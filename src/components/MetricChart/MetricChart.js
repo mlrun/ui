@@ -13,10 +13,14 @@ const GenericMetricChart = ({ chartConfig, showGrid }) => {
   const canvasClassNames = classnames(isLoading && 'off-screen')
   const customPoints = useMemo(() => {
     const hasDriftStatusList = chartConfig.data.datasets[0]?.driftStatusList?.length !== 0
+    const totalDriftIndex = chartConfig.data.datasets[0]?.totalDriftStatus?.index
 
     return {
-      radius: () => (hasDriftStatusList ? 1 : 0),
-      pointStyle: () => (hasDriftStatusList ? 'rect' : 'none'),
+      radius: context => {
+        const isCurrentIndexTotalDriftIndex = context.dataIndex === totalDriftIndex
+        return hasDriftStatusList && isCurrentIndexTotalDriftIndex ? 2 : 0
+      },
+      pointStyle: context => (hasDriftStatusList ? 'circle' : 'none'),
       backgroundColor: () => (hasDriftStatusList ? 'black' : undefined),
       borderColor: () => 'white'
     }

@@ -44,33 +44,38 @@ const DetailsMetrics = ({ selectedItem }) => {
   const lineConfig = useMemo(() => getLineChartMetricConfig(), [])
   const barConfig = useMemo(() => getBarChartMetricConfig(), [])
 
-  // TODO: refactor the calculateHistogram
-  const calculateHistogram = useCallback((data, item) => {
+  const calculateHistogram = useCallback((points, metric) => {
     const numberOfBins = 5
-    const min = Math.min(...data)
-    const max = Math.max(...data)
-    const range = max - min === 0 ? 1 : max - min
-    const binSize = range / numberOfBins
+    const minPointValue = Math.min(...points)
+    const maxPointValue = Math.max(...points)
 
+    const range = maxPointValue - minPointValue === 0 ? 1 : maxPointValue - minPointValue
+    const binSize = range / numberOfBins
     const bins = Array(numberOfBins).fill(0)
-    data.forEach(value => {
-      const binIndex = Math.min(Math.floor((value - min) / binSize), numberOfBins - 1)
+
+    points.forEach(value => {
+      const binIndex = Math.min(Math.floor((value - minPointValue) / binSize), numberOfBins - 1)
       bins[binIndex]++
     })
 
-    const totalCount = data.length
+    const totalCount = points.length
+
     const binPercentages = bins.map(count => ((count / totalCount) * 100).toFixed(1))
+
     const binLabels = Array.from({ length: numberOfBins }, (_, i) => {
-      const rangeStart = (min + i * binSize).toFixed(2)
+      const rangeStart = (minPointValue + i * binSize).toFixed(2)
       const rangeEnd =
-        i === numberOfBins - 1 ? max.toFixed(2) : (min + (i + 1) * binSize).toFixed(2)
+        i === numberOfBins - 1
+          ? maxPointValue.toFixed(2)
+          : (minPointValue + (i + 1) * binSize).toFixed(2)
+
       return `${rangeStart} - ${rangeEnd}`
     })
 
-    const calculateAverages = data => {
-      return data.map(item => {
-        if (max === min) return max
-        const [num1, num2] = item.split(' - ').map(parseFloat)
+    const calculateAverages = binLabels => {
+      return binLabels.map(binLabel => {
+        if (maxPointValue === minPointValue) return maxPointValue
+        const [num1, num2] = binLabel.split(' - ').map(parseFloat)
         const average = (num1 + num2) / 2
         return (Math.abs(average * 100) / 100).toFixed(1)
       })
@@ -82,7 +87,8 @@ const DetailsMetrics = ({ selectedItem }) => {
         return parseFloat(averageValue[index]) !== 0 ? value : ''
       })
     }
-    if (max === min) {
+
+    if (maxPointValue === minPointValue) {
       averageValue = adjustArray(averageValue, binPercentages)
     }
 
@@ -94,28 +100,10 @@ const DetailsMetrics = ({ selectedItem }) => {
           chartType: 'bar',
           tension: 0.2,
           borderWidth: 2,
-          backgroundColor: item.color,
-          borderColor: item.color
+          backgroundColor: metric.color,
+          borderColor: metric.color
         }
-      ],
-      options: {
-        scales: {
-          y: {
-            step: 10,
-            title: {
-              display: true,
-              text: 'Percentage',
-              font: 10
-            }
-          },
-          x: {
-            title: {
-              text: 'Value',
-              font: 10
-            }
-          }
-        }
-      }
+      ]
     }
   }, [])
 
@@ -150,13 +138,6 @@ const DetailsMetrics = ({ selectedItem }) => {
       if (detailsStore.dates.value[1]) {
         params.end = detailsStore.dates.value[1].getTime()
       }
-      // const itemsToFetch2 = selectedMetrics.filter(item => {
-      //   // console.log(item.name)
-      //   // console.log(metrics)
-      //   return !metrics.some(responseItem => responseItem.title === item.name) && item.name !== ''
-      // })
-      // // console.log(itemsToFetch2)
-      // if (itemsToFetch2.length === 0) return
 
       selectedMetrics.forEach(metric => {
         params.name.push(metric.full_name)
@@ -262,6 +243,7 @@ const DetailsMetrics = ({ selectedItem }) => {
                                   metricType: metric.type,
                                   driftStatusList: metric.driftStatusList || [],
                                   tension: 0.2,
+                                  totalDriftStatus: metric.totalDriftStatus,
                                   borderWidth: 1,
                                   borderColor: metric.color
                                 }

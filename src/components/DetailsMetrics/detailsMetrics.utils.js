@@ -17,11 +17,19 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import { chain } from 'lodash'
+import { capitalize, chain } from 'lodash'
 
 const mlrunInfra = 'mlrun-infra'
 const metricsColorsByFullName = {}
 const usedColors = new Set()
+
+const resultKindConfig = {
+  0: 'data drift',
+  1: 'concept drift',
+  2: 'model performance drift',
+  3: 'system performance drift',
+  4: 'custom-defined anomaly'
+}
 
 const driftStatusConfig = {
   '-1': {
@@ -40,6 +48,21 @@ const driftStatusConfig = {
     className: 'drift_detected',
     text: 'Drift detected'
   }
+}
+
+const generateResultMessage = (driftStatus, resultKind) => {
+  const resultKindMessage = resultKindConfig[resultKind]
+  const { text } = driftStatusConfig[driftStatus]
+
+  if (driftStatus === 0) {
+    return `No ${resultKindMessage}`
+  }
+
+  if (driftStatus === -1) {
+    return `${text} ${resultKindMessage}`
+  }
+
+  return `${capitalize(resultKindMessage)} ${text.toLowerCase().replace('drift', '').trim()}`
 }
 
 const hslToHex = (hue, saturation, lightness) => {
@@ -161,7 +184,7 @@ const getAppName = inputString => {
 
 export const parseMetrics = (data, timeUnit) => {
   return data.map((metric, index) => {
-    const { full_name, values, type } = metric
+    const { full_name, result_kind: resultKind, values, type } = metric
 
     if (!metric.data || !values || !Array.isArray(values)) {
       return {
@@ -186,7 +209,8 @@ export const parseMetrics = (data, timeUnit) => {
 
       totalDriftStatus = {
         ...driftStatusConfig[highestDrift.status],
-        index: highestDrift.index
+        index: highestDrift.index,
+        text: generateResultMessage(highestDrift.status, resultKind)
       }
     }
 
