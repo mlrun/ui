@@ -33,7 +33,8 @@ import {
   clamp,
   find,
   set,
-  omit
+  omit,
+  forEach
 } from 'lodash'
 
 import frontendSpec from './data/frontendSpec.json'
@@ -687,7 +688,7 @@ function getFunctionTemplate(req, res) {
 }
 
 function getProjectsSchedules(req, res) {
-  //get schedules for Projects Monitoring page  
+  //get schedules for Projects Monitoring page
   if (req.params['project'] === '*') {
     let collectedSchedules = schedules.schedules
 
@@ -1154,7 +1155,7 @@ function getPipelines(req, res) {
           pipeline => Date.parse(pipeline.created_at) <= Date.parse(JSON.parse(req.query.filter).predicates[1].timestamp_value)  //start time to
         )
       }
-    } 
+    }
 
     res.send({ runs: collectedMonitoringPipelines, total_size : collectedMonitoringPipelines.length, next_page_token : null })
   }
@@ -1274,16 +1275,36 @@ function deleteFunc(req, res) {
     .filter(func => func.metadata.name === req.params.func)
 
   if (collectedFunc.length) {
-    remove(
-      funcs.funcs,
-      func => func.metadata.project === req.params.project && func.metadata.name === req.params.func
-    )
-    res.statusCode = 204
+    const taskFunc = id => {
+      forEach(collectedFunc, func => {
+        set(func, 'status.deletion_task_id', id)
+      })
+
+      return new Promise(resolve => {
+        setTimeout(() => {
+          forEach(collectedFunc, func => {
+            delete func.status.deletion_task_id
+          })
+
+          remove(
+            funcs.funcs,
+            func => func.metadata.project === req.params.project && func.metadata.name === req.params.func
+          )
+          resolve()
+        }, random(3000, 10000))
+      })
+    }
+
+    const task = createTask(req.params['project'], { taskFunc })
+
+    res.status = 204
+
+    res.send(task)
   } else {
     res.statusCode = 500
-  }
 
-  res.send()
+    res.send()
+  }
 }
 
 function getBuildStatus(req, res) {
@@ -2074,7 +2095,7 @@ app.get(
   getProjectsFeatureArtifactTags
 )
 
-app.delete(`${mlrunAPIIngress}/projects/:project/functions/:func`, deleteFunc)
+app.delete(`${mlrunAPIIngressV2}/projects/:project/functions/:func`, deleteFunc)
 
 app.get(`${mlrunAPIIngress}/build/status`, getBuildStatus)
 app.post(`${mlrunAPIIngress}/build/function`, deployMLFunction)
