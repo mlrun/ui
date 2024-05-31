@@ -105,7 +105,8 @@ const WorkflowsMonitoring = ({ fetchFunctionLogs }) => {
           const filters = {
             dates: {
               value: generatedDates,
-              isPredefined: past24HourOption.isPredefined
+              isPredefined: past24HourOption.isPredefined,
+              initialSelectedOptionId: past24HourOption.id
             },
             state: FILTER_ALL_ITEMS
           }
