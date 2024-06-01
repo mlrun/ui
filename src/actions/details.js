@@ -49,13 +49,15 @@ import {
   SET_ITERATION,
   SET_ITERATION_OPTIONS,
   SET_SELECTED_METRICS_OPTIONS,
-  SHOW_WARNING
+  SHOW_WARNING,
+  DEFAULT_ABORT_MSG
 } from '../constants'
 import { generatePods } from '../utils/generatePods'
 import {
   generateMetricsItems,
   parseMetrics
 } from '../components/DetailsMetrics/detailsMetrics.utils'
+import { TIME_FRAME_LIMITS } from '../utils/datePicker.util'
 
 const detailsActions = {
   fetchModelEndpointWithAnalysis: (project, uid) => dispatch => {
@@ -161,23 +163,26 @@ const detailsActions = {
     type: FETCH_ENDPOINT_METRICS_SUCCESS,
     payload
   }),
-  fetchModelEndpointMetricsValues: (project, uid, params) => dispatch => {
+  fetchModelEndpointMetricsValues: (project, uid, params, signal) => dispatch => {
     dispatch(detailsActions.fetchEndpointMetricsValuesBegin())
 
     return detailsApi
-      .getModelEndpointMetricsValues(project, uid, params)
+      .getModelEndpointMetricsValues(project, uid, params, signal)
       .then(({ data = [] }) => {
-        const MILLISECONDS_IN_ONE_DAY = 86400000
         const differenceInDays = params.end - params.start
-        const timeUnit = differenceInDays > MILLISECONDS_IN_ONE_DAY ? 'days' : 'hours'
-        const metrics = data.map((metric, index) => parseMetrics(metric, timeUnit, index))
+        const timeUnit = differenceInDays > TIME_FRAME_LIMITS['24_HOURS'] ? 'days' : 'hours'
+        const metrics = parseMetrics(data, timeUnit)
 
         dispatch(detailsActions.fetchEndpointMetricsValuesSuccess())
 
         return metrics
       })
       .catch(error => {
-        dispatch(detailsActions.fetchEndpointMetricsValuesFailure(error))
+        dispatch(
+          detailsActions.fetchEndpointMetricsValuesFailure(
+            error?.message === DEFAULT_ABORT_MSG ? null : error
+          )
+        )
       })
   },
   fetchEndpointMetricsValuesBegin: () => ({

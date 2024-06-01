@@ -42,7 +42,6 @@ import {
   REMOVE_ENTITY,
   REMOVE_FEATURE,
   REMOVE_FEATURES,
-  REMOVE_FEATURES_ERROR,
   REMOVE_FEATURE_SET,
   REMOVE_FEATURE_SETS,
   REMOVE_FEATURE_VECTOR,
@@ -80,6 +79,7 @@ import {
 } from '../utils/getUniqueIdentifier'
 import { parseFeatureSets } from '../utils/parseFeatureSets'
 import { largeResponseCatchHandler } from '../utils/largeResponseCatchHandler'
+import { showErrorNotification } from '../utils/notifications.util'
 
 const featureStoreActions = {
   createNewFeatureSet: (project, data) => dispatch => {
@@ -100,7 +100,8 @@ const featureStoreActions = {
               ? 'You are not permitted to create a feature set.'
               : error.message
 
-        dispatch(featureStoreActions.createNewFeatureSetFailure(message))
+        showErrorNotification(dispatch, error, '', message)
+        dispatch(featureStoreActions.createNewFeatureSetFailure())
 
         throw error
       })
@@ -361,9 +362,6 @@ const featureStoreActions = {
   }),
   removeFeatures: () => ({
     type: REMOVE_FEATURES
-  }),
-  removeFeatureStoreError: () => ({
-    type: REMOVE_FEATURES_ERROR
   }),
   removeNewFeatureSet: () => ({
     type: REMOVE_NEW_FEATURE_SET

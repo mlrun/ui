@@ -55,7 +55,6 @@ import jobsActions from '../../actions/jobs'
 import workflowActions from '../../actions/workflow'
 
 import './projectsJobsMonitoring.scss'
-import { removeFilters } from '../../reducers/filtersReducer'
 
 export const ProjectJobsMonitoringContext = React.createContext({})
 
@@ -136,7 +135,6 @@ const ProjectsJobsMonitoring = ({ fetchAllJobRuns, fetchJobFunction, fetchJobs }
     setSelectedCard(STATS_TOTAL_CARD)
     setSelectedTab(tabName)
     navigate(`/projects/${JOBS_MONITORING_PAGE}/${tabName}`)
-    dispatch(removeFilters())
   }
 
   const handleRerunJob = useCallback(
@@ -352,7 +350,7 @@ const ProjectsJobsMonitoring = ({ fetchAllJobRuns, fetchJobFunction, fetchJobs }
               tabs={tabs}
             />
 
-            {(!params.jobId || !params.workflowId) && (
+            {(!params.jobId && !params.workflowId) && (
               <ActionBar
                 filterMenuName={selectedTab}
                 filters={tabData[selectedTab].filters}

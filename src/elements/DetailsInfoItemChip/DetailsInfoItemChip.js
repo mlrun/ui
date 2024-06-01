@@ -20,11 +20,13 @@ such restriction.
 import React from 'react'
 import PropTypes from 'prop-types'
 import classnames from 'classnames'
+import { useDispatch } from 'react-redux'
 
 import { RoundedIcon, FormChipCell, FormOnChange } from 'igz-controls/components'
 
 import { getValidationRules } from 'igz-controls/utils/validation.util'
 import { detailsInfoActions } from '../../components/DetailsInfo/detailsInfoReducer'
+import detailsActions from '../../actions/details'
 
 import { ReactComponent as Checkmark } from 'igz-controls/images/checkmark2.svg'
 
@@ -39,6 +41,7 @@ const DetailsInfoItemChip = ({
   item,
   formState
 }) => {
+  const dispatch = useDispatch()
   const chipFieldClassName = classnames(
     'details-item__data',
     'details-item__data-chips',
@@ -54,6 +57,7 @@ const DetailsInfoItemChip = ({
           fieldType: item?.editModeType
         }
       })
+      dispatch(detailsActions.setEditMode(true))
     } else if (formState.pristine) {
       handleFinishEdit(item.fieldData.name)
     }

@@ -24,24 +24,25 @@ import { defaultCloseModalHandler } from '../utils/defaultCloseModalHandler'
 import { areFormValuesChanged } from 'igz-controls/utils/form.util'
 
 export const useModalBlockHistory = (closeModal, form) => {
-  let blocker = useBlocker(
-    () => {
-      const { initialValues, values } = form.getState()
+  const shouldBlock = useCallback(() => {
+    const { initialValues, values } = form.getState()
 
-      const isFormDirty =  areFormValuesChanged(initialValues, values)
+    const isFormDirty =  areFormValuesChanged(initialValues, values)
 
-      if (!isFormDirty) {
-        closeModal()
-      }
-
-      return isFormDirty
+    if (!isFormDirty) {
+      closeModal()
     }
-  )
+
+    return isFormDirty
+  }, [closeModal, form])
+
+  let blocker = useBlocker(shouldBlock)
 
   const resolveModal = useCallback(() => {
     closeModal()
+    form.reset(form.initialValues)
     blocker.proceed?.()
-  }, [blocker, closeModal])
+  }, [blocker, closeModal, form])
 
   const handleRejectConfirmation = useCallback(() => {
     blocker.reset?.()

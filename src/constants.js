@@ -360,7 +360,6 @@ export const REMOVE_ENTITIES = 'REMOVE_ENTITIES'
 export const REMOVE_ENTITY = 'REMOVE_ENTITY'
 export const REMOVE_FEATURE = 'REMOVE_FEATURE'
 export const REMOVE_FEATURES = 'REMOVE_FEATURES'
-export const REMOVE_FEATURES_ERROR = 'REMOVE_FEATURES_ERROR'
 export const REMOVE_FEATURE_SET = 'REMOVE_FEATURE_SET'
 export const REMOVE_FEATURE_SETS = 'REMOVE_FEATURE_SETS'
 export const REMOVE_FEATURE_VECTOR = 'REMOVE_FEATURE_VECTOR'
@@ -641,3 +640,7 @@ export const VIEWER_ROLE = 'Viewer'
 /*=========== ACTIONS MENU POSITION =============*/
 export const ACTION_MENU_PARENT_ROW = 'action-menu_parent-row'
 export const ACTION_MENU_PARENT_ROW_EXPANDED = 'action-menu_parent-row-expanded'
+
+/*=========== Chart =============*/
+export const CHART_TYPE_LINE = 'line'
+export const CHART_TYPE_BAR = 'bar'

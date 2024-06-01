@@ -19,13 +19,12 @@ such restriction.
 */
 import { isEmpty } from 'lodash'
 import getState from './getState'
-import { FUNCTION_FAILED_TO_DELETE_STATE, FUNCTION_TYPE_APPLICATION } from '../constants'
+import { FUNCTION_TYPE_APPLICATION } from '../constants'
 import { getFunctionIdentifier } from './getUniqueIdentifier'
 import { page } from '../components/FunctionsPage/functions.util'
 import { parseKeyValues } from './object'
 
 export const parseFunction = (func, projectName, customState, apiGateway) => {
-  const state = (func.status?.deletion_error ? FUNCTION_FAILED_TO_DELETE_STATE : customState) || func.status?.state
   const command = func.kind === FUNCTION_TYPE_APPLICATION && !isEmpty(apiGateway)
     ? `${window.location.protocol}//${apiGateway.spec.host}${apiGateway.spec.path}`
     : func.spec?.command
@@ -63,7 +62,7 @@ export const parseFunction = (func, projectName, customState, apiGateway) => {
     project: func.metadata?.project || projectName,
     resources: func.spec?.resources ?? {},
     secret_sources: func.spec?.secret_sources ?? [],
-    state: getState(state, page, 'function'),
+    state: getState(customState || func.status?.state, page, 'function'),
     tag: func.metadata?.tag ?? '',
     track_models: func.spec?.track_models ?? false,
     type: func.kind,

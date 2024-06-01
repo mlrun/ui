@@ -43,7 +43,7 @@ const infoHeaders = [
   { label: 'Stream path', id: 'stream_path' }
 ]
 
-const detailsMenu = isDemoMode => [
+const detailsMenu = [
   {
     label: 'overview',
     id: 'overview'
@@ -55,21 +55,19 @@ const detailsMenu = isDemoMode => [
   },
   {
     label: 'metrics',
-    id: 'metrics',
-    hidden: !isDemoMode
+    id: 'metrics'
   }
 ]
 
 export const generatePageData = (
   selectedItem,
   model_monitoring_dashboard_url,
-  handleMonitoring,
-  isDemoMode
+  handleMonitoring
 ) => ({
   page: MODELS_PAGE,
   hidePageActionMenu: true,
   details: {
-    menu: detailsMenu(isDemoMode),
+    menu: detailsMenu,
     infoHeaders,
     type: MODEL_ENDPOINTS_TAB,
     actionButton: {

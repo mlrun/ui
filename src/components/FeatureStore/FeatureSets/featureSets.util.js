@@ -93,7 +93,6 @@ export const featureSetsActionCreator = {
   fetchFeatureSetsTags: featureStoreActions.fetchFeatureSetsTags,
   removeFeatureSet: featureStoreActions.removeFeatureSet,
   removeFeatureSets: featureStoreActions.removeFeatureSets,
-  removeFeatureStoreError: featureStoreActions.removeFeatureStoreError,
   removeNewFeatureSet: featureStoreActions.removeNewFeatureSet,
   updateFeatureStoreData: featureStoreActions.updateFeatureStoreData
 }

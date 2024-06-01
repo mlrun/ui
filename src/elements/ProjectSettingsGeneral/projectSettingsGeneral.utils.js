@@ -17,6 +17,10 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
+import { isIgzVersionCompatible } from '../../utils/isIgzVersionCompatible'
+
+const REQUIRED_IGZ_VERSION_FOR_NODE_SELECTORS = '3.5.5'
+
 export const initialEditProjectData = {
   artifact_path: {
     value: null,
@@ -39,3 +43,5 @@ export const initialEditProjectData = {
     isEdit: true
   }
 }
+
+export const areNodeSelectorsSupported = isIgzVersionCompatible(REQUIRED_IGZ_VERSION_FOR_NODE_SELECTORS)

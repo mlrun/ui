@@ -110,8 +110,12 @@ export const generateFunctionsPageData = (
       logsTitle: 'Application',
       menu: generateFunctionsDetailsMenu(selectedFunction),
       infoHeaders: generateFunctionsInfoHeaders(selectedFunction),
-      refreshLogs: handleFetchFunctionLogs,
-      refreshAdditionalLogs: showAdditionalLogs && handleFetchFunctionApplicationLogs,
+      logsNoDataMessage: selectedFunction.tag
+        ? 'No data to show'
+        : 'Cannot show build logs for an untagged function.',
+      refreshLogs: Boolean(selectedFunction.tag) && handleFetchFunctionLogs,
+      refreshAdditionalLogs:
+        showAdditionalLogs && Boolean(selectedFunction.tag) && handleFetchFunctionApplicationLogs,
       removeLogs: handleRemoveLogs,
       removeAdditionalLogs: showAdditionalLogs && handleRemoveApplicationLogs,
       withLogsRefreshBtn: false,
@@ -272,7 +276,13 @@ export const generateActionsMenu = (
   ]
 }
 
-export const pollDeletingFunctions = (project, terminatePollRef, deletingFunctions, refresh, dispatch) => {
+export const pollDeletingFunctions = (
+  project,
+  terminatePollRef,
+  deletingFunctions,
+  refresh,
+  dispatch
+) => {
   const taskIds = Object.keys(deletingFunctions)
 
   const pollMethod = () => {
@@ -324,6 +334,6 @@ const functionDeletingSuccessHandler = (dispatch, func) => {
 
 const isFunctionDeleting = (func, deletingFunctions) => {
   return Object.values(deletingFunctions).some(deletingFunction => {
-    return deletingFunction.name === func.name
+    return deletingFunction.name === func?.name
   })
 }

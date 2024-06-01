@@ -40,7 +40,6 @@ import {
   REMOVE_ENTITY,
   REMOVE_FEATURE,
   REMOVE_FEATURES,
-  REMOVE_FEATURES_ERROR,
   REMOVE_FEATURE_SET,
   REMOVE_FEATURE_SETS,
   REMOVE_FEATURE_VECTOR,
@@ -155,7 +154,6 @@ const featureStoreReducer = (state = initialState, { type, payload }) => {
     case CREATE_NEW_FEATURE_SET_FAILURE:
       return {
         ...state,
-        error: payload,
         loading: false
       }
     case CREATE_NEW_FEATURE_SET_SUCCESS:
@@ -661,11 +659,6 @@ const featureStoreReducer = (state = initialState, { type, payload }) => {
       return {
         ...state,
         loading: false,
-        error: null
-      }
-    case REMOVE_FEATURES_ERROR:
-      return {
-        ...state,
         error: null
       }
     default:

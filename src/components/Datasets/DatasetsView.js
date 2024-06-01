@@ -134,7 +134,7 @@ const DatasetsView = React.forwardRef(
                           <ArtifactsTableRow
                             actionsMenu={actionsMenu}
                             handleExpandRow={handleExpandRow}
-                            key={index}
+                            key={tableItem.data.ui.identifier}
                             rowIndex={index}
                             rowItem={tableItem}
                             selectedItem={selectedDataset}

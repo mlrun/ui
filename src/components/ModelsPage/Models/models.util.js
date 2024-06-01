@@ -288,7 +288,7 @@ export const checkForSelectedModel = (
         )
 
         if (!searchItem) {
-          navigate(`/projects/${projectName}/models/models}`, { replace: true })
+          navigate(`/projects/${projectName}/models/models`)
         } else {
           setSelectedModel(searchItem)
         }
@@ -325,6 +325,7 @@ export const generateActionsMenu = (
       {
         label: 'Download',
         hidden: menuPosition === ACTION_MENU_PARENT_ROW_EXPANDED,
+        disabled: !isTargetPathValid,
         icon: <DownloadIcon />,
         onClick: model => {
           dispatch(

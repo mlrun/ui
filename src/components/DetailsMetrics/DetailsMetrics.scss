@@ -8,6 +8,12 @@
   height: fit-content;
   margin-bottom: 30px;
 
+  &__app-name {
+    font-size: 20px;
+    font-weight: 700;
+    color: $primary;
+  }
+
   &__card-tmp {
     z-index: 1;
     top: 0;
@@ -38,16 +44,15 @@
       display: inline-block;
     }
 
-    &-drift-possible_drift {
+    &-drift-status-possible_drift {
       background-color: $grandis;
     }
 
-    &-drift-drift_detected {
-      //background-color: $crimson;
-      background-color: red;
+    &-drift-status-drift_detected {
+      background-color: $ceriseRed;
     }
 
-    &-drift-no_drift {
+    &-drift-status-no_drift {
       background-color: $brightTurquoise;
     }
 
@@ -111,23 +116,21 @@
         flex: 1;
 
         canvas {
-          width: 100% !important;
-          height: 100% !important;
+          width: 100%;
+          height: 100%;
         }
       }
 
       &-bar {
         flex: 0 1 25%;
-        @media (min-width: 768px) and (max-width: 1299px) {
-          flex-basis: 55%;
-        }
+        min-width: 210px;
 
         canvas {
-          width: 100% !important;
-          height: 100% !important;
+          width: 100% ;
+          height: 100% ;
         }
 
-        canvas.off-screen {
+        canvas.hidden-canvas {
           position: absolute;
           opacity: 0;
           left: 0;
@@ -136,7 +139,7 @@
       }
 
       &-line {
-        flex: 1 1 auto;
+        flex: 1 1 0;
         margin-top: 4px;
 
         canvas {
@@ -144,7 +147,7 @@
           height: 100% !important;
         }
 
-        canvas.off-screen {
+        canvas.hidden-canvas {
           position: absolute;
           opacity: 0;
           left: 0;
@@ -153,7 +156,6 @@
       }
 
       &-invocation {
-        aspect-ratio: 4;
         width: auto;
         border: 1px solid transparent;
         flex: 1 1 auto;
@@ -163,7 +165,7 @@
           height: 100% !important;
         }
 
-        canvas.off-screen {
+        canvas.hidden-canvas {
           position: absolute;
           opacity: 0;
           left: 0;
@@ -219,18 +221,15 @@
     gap: 25px;
   }
 }
-//TODO: add to card class
-.app {
-  font-size: 20px;
-  font-style: normal;
-  font-weight: 700;
-  color: $primary;
-  line-height: normal;
-}
 
-//TODO: shall be part of generic chart-js instance
-#chartjs-tooltip {
-  background: $primary;
+#chartjs-tooltip-metric {
+  position: fixed;
+  z-index: 5;
+  color: $white;
+  border-radius: 4px;
+  transform: translate(-50%, calc(-100% - 10px));
+  transition: all 0.1s linear;
+  background-color: $primary;
   padding: 6px 8px;
   family: Roboto;
   letter-spacing: 0.5px;
@@ -277,8 +276,7 @@
     }
 
     &-drift-drift_detected {
-      //background-color: $crimson;
-      background-color: red;
+      background-color: $ceriseRed;
     }
 
     &-drift-no_drift {
@@ -289,10 +287,4 @@
       background-color: $doveGray;
     }
   }
-}
-
-.total-drift-status {
-  cursor: default;
-  font-size: 10px;
-  font-weight: 700;
 }

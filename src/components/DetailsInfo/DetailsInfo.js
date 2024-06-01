@@ -50,23 +50,20 @@ const DetailsInfo = React.forwardRef(
           detailsInfoDispatch({
             type: detailsInfoActions.RESET_EDIT_MODE
           })
+          dispatch(detailsActions.setEditMode(false))
         }
       },
-      [applyChangesRef]
+      [applyChangesRef, dispatch]
     )
-
-    useEffect(() => {
-      dispatch(detailsActions.setEditMode(!isEveryObjectValueEmpty(detailsInfoState.editMode)))
-    }, [detailsInfoState.editMode, dispatch])
-
 
     useEffect(() => {
       return () => {
         detailsInfoDispatch({
           type: detailsInfoActions.RESET_EDIT_MODE
         })
+        dispatch(detailsActions.setEditMode(false))
       }
-    }, [detailsInfoDispatch, params.name])
+    }, [detailsInfoDispatch, dispatch, params.name])
 
     useEffect(() => {
       window.addEventListener('click', onApplyChanges)
@@ -80,7 +77,8 @@ const DetailsInfo = React.forwardRef(
       detailsInfoDispatch({
         type: detailsInfoActions.RESET_EDIT_MODE
       })
-    }, [])
+      dispatch(detailsActions.setEditMode(false))
+    }, [dispatch])
 
     const handleInfoItemClick = useCallback(
       (field, fieldType) => {
@@ -92,9 +90,10 @@ const DetailsInfo = React.forwardRef(
               fieldType
             }
           })
+          dispatch(detailsActions.setEditMode(true))
         }
       },
-      [detailsInfoState.editMode]
+      [detailsInfoState.editMode, dispatch]
     )
 
     const sources = useMemo(
@@ -124,6 +123,8 @@ const DetailsInfo = React.forwardRef(
 
     const finishEdit = useCallback(
       currentField => {
+        dispatch(detailsActions.setEditMode(false))
+
         return handleFinishEdit(
           detailsStore.changes,
           detailsInfoActions,
@@ -134,7 +135,7 @@ const DetailsInfo = React.forwardRef(
           formState
         )
       },
-      [detailsStore.changes, formState, setChangesCounter, setChangesData]
+      [detailsStore.changes, dispatch, formState, setChangesCounter, setChangesData]
     )
 
     return (

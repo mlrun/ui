@@ -17,10 +17,12 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
+import { CHART_TYPE_BAR, CHART_TYPE_LINE } from '../constants'
+
 // TODO: Combine getLineChartMetricConfig, getBarChartMetricConfig, and getGradientLineChart into one function.
 export const getLineChartMetricConfig = () => {
   return {
-    type: 'line',
+    type: CHART_TYPE_LINE,
     options: {
       layout: {
         padding: 0
@@ -52,12 +54,11 @@ export const getLineChartMetricConfig = () => {
           }
         },
         y: {
-          max: 2,
-          ticks: {
-            stepSize: 10
-          },
           grid: {
-            drawBorder: false
+            drawBorder: true
+          },
+          title: {
+            display: false
           }
         }
       },
@@ -72,7 +73,7 @@ export const getLineChartMetricConfig = () => {
 
 export const getBarChartMetricConfig = () => {
   return {
-    type: 'bar',
+    type: CHART_TYPE_BAR,
     options: {
       layout: {
         padding: 0
@@ -113,6 +114,9 @@ export const getBarChartMetricConfig = () => {
           grid: {
             drawBorder: false,
             borderColor: 'E9E8EB'
+          },
+          title: {
+            display: true
           }
         }
       }
@@ -122,7 +126,7 @@ export const getBarChartMetricConfig = () => {
 
 export const getGradientLineChart = () => {
   return {
-    type: 'line',
+    type: CHART_TYPE_LINE,
     options: {
       layout: {
         padding: 0

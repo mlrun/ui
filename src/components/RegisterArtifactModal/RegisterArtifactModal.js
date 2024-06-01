@@ -129,35 +129,40 @@ const RegisterArtifactModal = ({
       .then(response => {
         if (response?.data) {
           if (!isEmpty(response.data.artifacts)) {
-            openPopUp(ConfirmDialog, {
-              confirmButton: {
-                label: 'Overwrite',
-                variant: PRIMARY_BUTTON,
-                handler: handleRegisterArtifact
-              },
-              cancelButton: {
-                label: 'Cancel',
-                variant: TERTIARY_BUTTON
-              },
-              header: messagesByKind.overwriteConfirmTitle,
-              message: messagesByKind.getOverwriteConfirmMessage(response.data.artifacts[0].kind)
+            return new Promise((resolve, reject) => {
+              openPopUp(ConfirmDialog, {
+                confirmButton: {
+                  label: 'Overwrite',
+                  variant: PRIMARY_BUTTON,
+                  handler: (...args) => {
+                    handleRegisterArtifact(...args).then(resolve).catch(reject)
+                  }
+                },
+                cancelButton: {
+                  label: 'Cancel',
+                  variant: TERTIARY_BUTTON,
+                  handler: () => reject()
+                },
+                closePopUp: () => reject(),
+                header: messagesByKind.overwriteConfirmTitle,
+                message: messagesByKind.getOverwriteConfirmMessage(response.data.artifacts[0].kind)
+              })
             })
-
-            return null
           } else {
             return handleRegisterArtifact()
           }
         }
       })
       .catch(error => {
-        const customErrorMsg =
-          error.response.status === FORBIDDEN_ERROR_STATUS_CODE
-            ? 'You are not permitted to create a new resource'
-            : `${title} failed to initiate`
+        if (error) {
+          const customErrorMsg =
+            error.response.status === FORBIDDEN_ERROR_STATUS_CODE
+              ? 'You are not permitted to create a new resource'
+              : `${title} failed to initiate`
 
-        showErrorNotification(dispatch, error, '', customErrorMsg, () => registerArtifact(values))
-
-        resolveModal()
+          showErrorNotification(dispatch, error, '', customErrorMsg, () => registerArtifact(values))
+          resolveModal()
+        }
       })
   }
 

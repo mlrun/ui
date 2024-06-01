@@ -336,6 +336,7 @@ export const createJobsWorkflowsTabContent = (jobs, projectName, isStagingMode, 
 export const createJobsWorkflowContent = (
   jobs,
   projectName,
+  workflowProjectName,
   workflowId,
   isStagingMode,
   isSelectedItem
@@ -362,13 +363,18 @@ export const createJobsWorkflowContent = (
           className: 'table-cell-name',
           type: 'link',
           getLink: tab => {
-            return getWorkflowDetailsLink(
-              projectName,
-              workflowId,
-              job.customData,
-              tab,
-              MONITOR_WORKFLOWS_TAB
-            )
+            return workflowProjectName ?
+              getWorkflowMonitoringDetailsLink(
+                workflowProjectName,
+                workflowId,
+                job.customData
+              ) : getWorkflowDetailsLink(
+                projectName,
+                workflowId,
+                job.customData,
+                tab,
+                MONITOR_WORKFLOWS_TAB
+              )
           },
           showStatus: true,
           showUidRow: true
