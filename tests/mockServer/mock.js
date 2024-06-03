@@ -1768,7 +1768,6 @@ function getMetrics(req, res) {
 }
 
 function getMetricsValues(req, res) {
-
   const start = req.query.start || new Date() - 86400000 // past 24 hours
   const end = req.query.end || new Date()
   const names = req.query.name
