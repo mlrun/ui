@@ -24,7 +24,7 @@ import classnames from 'classnames'
 import Loader from '../../common/Loader/Loader'
 import { CHART_TYPE_BAR } from '../../constants'
 
-import { calculateMaxTicksLimit, generateMetricChartTooltip } from './metricChart.util'
+import { calculateMaxTicksLimit, generateMetricChartTooltip, hexToRGB } from './metricChart.util'
 
 const GenericMetricChart = ({ chartConfig, showGrid }) => {
   const chartRef = useRef(null)
@@ -117,6 +117,29 @@ const GenericMetricChart = ({ chartConfig, showGrid }) => {
           }
         }
       })
+    }
+
+    if (chartConfig.gradient) {
+      const canvasHeight = showGrid ? 200 : 80
+      if (chartInstance.current.options.scales.x.grid.display !== showGrid) {
+        chartInstance.current.options.scales.x.grid.display = showGrid
+        chartInstance.current.options.scales.y.grid.display = showGrid
+
+        chartInstance.current.options.scales.y.display = showGrid
+
+        chartInstance.current.options.scales.x.grid.ticks = true
+        chartInstance.current.options.scales.y.grid.ticks = true
+      }
+      const gradient = ctx.createLinearGradient(0, 0, 0, canvasHeight)
+      gradient.addColorStop(
+        0,
+        hexToRGB(chartConfig?.data?.datasets[0].backgroundColor || '#FFF', 0.7)
+      )
+      gradient.addColorStop(1, hexToRGB(chartConfig?.data?.datasets[0].backgroundColor))
+      chartInstance.current.data.datasets.forEach(dataset => {
+        dataset.backgroundColor = gradient
+      })
+      chartInstance.current.update()
     }
 
     return () => {

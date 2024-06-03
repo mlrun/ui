@@ -26,28 +26,82 @@ import MetricChart from '../MetricChart/MetricChart'
 import StatsCard from '../../common/StatsCard/StatsCard'
 
 import { CHART_TYPE_BAR, CHART_TYPE_LINE } from '../../constants'
-import { ReactComponent as NoDataIcon } from 'igz-controls/images/no-data-metric-icon.svg'
+import { ReactComponent as ArrowUp } from 'igz-controls/images/arrow-up.svg'
+import { ReactComponent as ArrowDown } from 'igz-controls/images/arrow-down.svg'
 import { ReactComponent as MetricsIcon } from 'igz-controls/images/metrics-icon.svg'
 
 import detailsActions from '../../actions/details'
 import { REQUEST_CANCELED } from '../../constants'
-import { groupMetricByApplication } from '../../elements/MetricsSelector/metricsSelector.utils'
-import { getBarChartMetricConfig, getLineChartMetricConfig } from '../../utils/getMetricChartConfig'
+import {
+  groupMetricByApplication,
+  mlrunInfra
+} from '../../elements/MetricsSelector/metricsSelector.utils'
+import {
+  getBarChartMetricConfig,
+  getGradientLineChart,
+  getLineChartMetricConfig
+} from '../../utils/getMetricChartConfig'
 
 import './DetailsMetrics.scss'
+import GenericMetricChart from '../MetricChart/MetricChart'
+import { NoMetricData } from './NoMetricData'
+import {
+  calculatePercentageDrift,
+  getDateRangeBefore,
+  timeRangeMapping
+} from './detailsMetrics.utils'
 
 const DetailsMetrics = ({ selectedItem }) => {
   const [metrics, setMetrics] = useState([])
-  // const prevScrollPos = useRef(0)
-  //
-  // const [expand, toggleExpand] = useState(true)
-  // const cardRef = useRef(null)
+  const [expand, toggleExpand] = useState(true)
+  const prevScrollPos = useRef(0)
+  const cardRef = useRef(null)
+
+  const [selectedDate, setSelectedDate] = useState('')
+  const [previousTotalInvocation, setPreviousTotalInvocation] = useState(0)
 
   const detailsStore = useSelector(store => store.detailsStore)
   const dispatch = useDispatch()
   const metricsValuesAbortController = useRef(new AbortController())
   const lineConfig = useMemo(() => getLineChartMetricConfig(), [])
   const barConfig = useMemo(() => getBarChartMetricConfig(), [])
+  const gradientConfig = useMemo(() => getGradientLineChart(), [])
+
+  const handleResizeCard = useCallback(e => {
+    if (!e.target && !e.target.classList?.contains('item-info')) return
+    const card = cardRef.current
+
+    if (!card) return
+
+    const metrics = document.querySelector('.metrics')
+    const content = document.querySelector('.metrics__card-invocation-content')
+    const invocationHeader = document.querySelector('.stats-card__row')
+    e.preventDefault()
+    metrics.scrollBy({
+      top: e.deltaY * 0.1,
+      left: 0,
+      behavior: 'smooth'
+    })
+
+    if (
+      e.target.scrollTop > prevScrollPos.current &&
+      e.target.scrollTop > 5 &&
+      card.clientHeight !== 80
+    ) {
+      card.parentNode.parentNode.style.height += 173
+      card.style.height = '80px'
+      content.style.display = 'flex'
+      invocationHeader.style.display = 'none'
+      toggleExpand(false)
+    } else if (e.target.scrollTop === 0 && card.clientHeight === 80) {
+      card.parentNode.parentNode.style.height -= 80
+      card.style.height = '200px'
+      content.style.display = 'none'
+      invocationHeader.style.display = 'flex'
+      toggleExpand(true)
+    }
+    prevScrollPos.current = e.target.scrollTop
+  }, [])
 
   const calculateHistogram = useCallback((points, metric) => {
     const numberOfBins = 5
@@ -112,11 +166,18 @@ const DetailsMetrics = ({ selectedItem }) => {
     }
   }, [])
 
-  // TODO: add resize invocation card on scroll
-
   const generatedMetrics = useMemo(() => {
-    return groupMetricByApplication(metrics)
+    return groupMetricByApplication(metrics, false).sort((a, b) => {
+      if (a[0] === 'mlrun-infra') return -1
+      if (b[0] === 'mlrun-infra') return 1
+      return 0
+    })
   }, [metrics])
+
+  useEffect(() => {
+    window.addEventListener('scroll', handleResizeCard, true)
+    return () => window.removeEventListener('scroll', handleResizeCard, true)
+  }, [handleResizeCard])
 
   useEffect(() => {
     dispatch(
@@ -128,12 +189,60 @@ const DetailsMetrics = ({ selectedItem }) => {
   }, [dispatch, selectedItem])
 
   useEffect(() => {
+    const selectedDate = detailsStore.dates.selectedOptionId
+    if (!selectedDate || !(selectedDate in timeRangeMapping)) return
+
+    setSelectedDate(timeRangeMapping[selectedDate])
+  }, [detailsStore.dates.selectedOptionId])
+
+  const fetchData = useCallback(
+    (params, params2, selectedItem) => {
+      metricsValuesAbortController.current = new AbortController()
+
+      return Promise.all([
+        dispatch(
+          detailsActions.fetchModelEndpointMetricsValues(
+            selectedItem.metadata.project,
+            selectedItem.metadata.uid,
+            params,
+            metricsValuesAbortController.current.signal
+          )
+        ),
+        dispatch(
+          detailsActions.fetchModelEndpointMetricsValues(
+            selectedItem.metadata.project,
+            selectedItem.metadata.uid,
+            params2,
+            metricsValuesAbortController.current.signal
+          )
+        )
+      ])
+        .then(([metrics, previousInvocation]) => {
+          setMetrics(metrics)
+
+          if (previousInvocation.length !== 0 && previousInvocation[0].data === true) {
+            setPreviousTotalInvocation(previousInvocation[0].rawDataTotal)
+          }
+        })
+        .catch(error => {
+          console.error(error.message)
+        })
+    },
+    [dispatch, setMetrics, metricsValuesAbortController]
+  )
+
+  useEffect(() => {
     if (
       selectedItem.metadata?.uid &&
       !isEmpty(detailsStore.metricsOptions.selectedByEndpoint[selectedItem.metadata?.uid])
     ) {
       const selectedMetrics =
         detailsStore.metricsOptions.selectedByEndpoint[selectedItem.metadata?.uid]
+
+      const invocationMetric = detailsStore.metricsOptions.all.filter(
+        metric => metric.app === 'mlrun-infra'
+      )
+
       const params = { name: [] }
 
       if (detailsStore.dates.value[0]) {
@@ -144,24 +253,41 @@ const DetailsMetrics = ({ selectedItem }) => {
         params.end = detailsStore.dates.value[1].getTime()
       }
 
-      selectedMetrics.forEach(metric => {
+      ;[...invocationMetric, ...selectedMetrics].forEach(metric => {
         params.name.push(metric.full_name)
       })
 
-      metricsValuesAbortController.current = new AbortController()
+      const newRange = getDateRangeBefore(params)
 
-      setTimeout(() => {
-        dispatch(
-          detailsActions.fetchModelEndpointMetricsValues(
-            selectedItem.metadata.project,
-            selectedItem.metadata.uid,
-            params,
-            metricsValuesAbortController.current.signal
-          )
-        ).then(metricsList => {
-          setMetrics(metricsList)
-        })
-      })
+      const params2 = { name: [] }
+      params2.start = newRange.start
+      params2.end = newRange.end
+      const [{ full_name }] = detailsStore.metricsOptions.all.filter(
+        metric => metric.app === 'mlrun-infra'
+      )
+      params2.name.push(full_name)
+
+      fetchData(params, params2, selectedItem).then()
+    } else if (detailsStore.metricsOptions.all.length !== 0) {
+      const params1 = { name: [] }
+      params1.start =
+        detailsStore.dates?.value[0] === '' ? '' : detailsStore.dates?.value[0].getTime()
+      params1.end =
+        detailsStore.dates?.value[0] === '' ? '' : detailsStore.dates?.value[1].getTime()
+
+      const newRange = getDateRangeBefore(params1)
+      const params2 = { name: [] }
+
+      params2.start = newRange.start
+      params2.end = newRange.end
+
+      const [{ full_name }] = detailsStore.metricsOptions.all.filter(
+        metric => metric.app === 'mlrun-infra'
+      )
+      params1.name.push(full_name)
+      params2.name.push(full_name)
+
+      fetchData(params1, params2, selectedItem).then()
     } else {
       setMetrics([])
     }
@@ -170,10 +296,13 @@ const DetailsMetrics = ({ selectedItem }) => {
       metricsValuesAbortController.current?.abort(REQUEST_CANCELED)
     }
   }, [
-    dispatch,
+    fetchData,
     selectedItem,
     detailsStore.dates.value,
-    detailsStore.metricsOptions.selectedByEndpoint
+    detailsStore.metricsOptions.all,
+    detailsStore.metricsOptions.selectedByEndpoint,
+    setMetrics,
+    metricsValuesAbortController
   ])
 
   if (generatedMetrics.length === 0) {
@@ -186,24 +315,98 @@ const DetailsMetrics = ({ selectedItem }) => {
   }
 
   return (
-    <>
+    <div className="metrics">
       {generatedMetrics.map(([applicationName, applicationMetrics]) => {
         return (
-          <div key={applicationName} className="metrics">
-            <div className="metrics__app-name">{applicationName}</div>
+          <>
+            <div key={applicationName} className="metrics__app-name">
+              {applicationName === mlrunInfra ? '' : applicationName}
+            </div>
             {applicationMetrics.map(metric => {
-              if (!metric.data) {
+              if (applicationName === mlrunInfra) {
+                if (!metric.data) return <NoMetricData id={metric.id} title={metric.title} />
+                const resultPercentageDrift = calculatePercentageDrift(
+                  previousTotalInvocation,
+                  metric.rawDataTotal
+                )
+
                 return (
-                  <StatsCard className="metrics__card" key={metric.id}>
-                    <StatsCard.Header title={metric.title}></StatsCard.Header>
-                    <div className="metrics__empty-card">
-                      <div>
-                        <NoDataIcon />
+                  <StatsCard className="metrics__card metrics__card-invocations" key={metric.id}>
+                    <StatsCard.Header title="Endpoint call count">
+                      <div className="metrics__card-invocation-header">
+                        <div className="metrics__card-invocation-header_drift_icon_contrainer">
+                          {resultPercentageDrift.positive ? <ArrowUp /> : <ArrowDown />}
+                        </div>
+                        <div
+                          className={`metrics__card-invocation-header_${resultPercentageDrift.className}`}
+                        >
+                          {resultPercentageDrift.percentageChange}
+                        </div>
+                        <div className="metrics__card-invocation-header_selected_date">
+                          {selectedDate}
+                        </div>
+                        <div className="metrics__card-invocation-header_total_title">Total</div>
+                        <div className="metrics__card-invocation-header_total_score">
+                          {metric.total}
+                        </div>
                       </div>
-                      <div>No data to show</div>
+                    </StatsCard.Header>
+                    <div ref={cardRef} className="metrics__card-body">
+                      <div className="metrics__card-invocation-content">
+                        <div className="metrics__card-invocation-content-title">
+                          Endpoint call count
+                        </div>
+                        <div className="metrics__card-invocation-content_container">
+                          <div className="metrics__card-invocation-content_container_drift_icon">
+                            {resultPercentageDrift.positive ? <ArrowUp /> : <ArrowDown />}
+                          </div>
+                          <div
+                            className={`metrics__card-invocation-content_container_${resultPercentageDrift.className}`}
+                          >
+                            {resultPercentageDrift.percentageChange}
+                          </div>
+                          <div>{selectedDate}</div>
+                        </div>
+                        <div className="metrics__card-invocation-content-data">
+                          <div className="metrics__card-invocation-content-data_total_title">
+                            Total
+                          </div>
+                          <div className="metrics__card-invocation-content-data_total_score">
+                            {' '}
+                            {metric.total}
+                          </div>
+                        </div>
+                      </div>
+                      <div className="metrics__card-body-invocation">
+                        <GenericMetricChart
+                          showGrid={expand}
+                          chartConfig={{
+                            gradient: true,
+                            ...gradientConfig,
+                            data: {
+                              labels: metric.labels,
+                              datasets: [
+                                {
+                                  data: metric.points,
+                                  chartType: CHART_TYPE_LINE,
+                                  fill: true,
+                                  metricType: metric.type,
+                                  driftStatusList: [],
+                                  backgroundColor: '#5871F4',
+                                  borderColor: '#5871F4',
+                                  borderWidth: 1,
+                                  tension: 0.4
+                                }
+                              ]
+                            }
+                          }}
+                        />
+                      </div>
                     </div>
                   </StatsCard>
                 )
+              } else if (!metric.data) {
+                return <NoMetricData id={metric.id} title={metric.title} />
               } else {
                 return (
                   <StatsCard className="metrics__card" key={metric.id}>
@@ -274,10 +477,10 @@ const DetailsMetrics = ({ selectedItem }) => {
                 )
               }
             })}
-          </div>
+          </>
         )
       })}
-    </>
+    </div>
   )
 }
 

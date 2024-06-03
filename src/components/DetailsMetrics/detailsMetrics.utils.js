@@ -19,9 +19,34 @@ such restriction.
 */
 import { capitalize, chain } from 'lodash'
 
-const mlrunInfra = 'mlrun-infra'
 const metricsColorsByFullName = {}
 const usedColors = new Set()
+
+export const timeRangeMapping = {
+  past24hours: 'last 24 day',
+  pastWeek: 'last week',
+  pastMonth: 'last month',
+  pastHour: 'last hour',
+  customRange: 'custom range'
+}
+
+export const calculatePercentageDrift = (previousTotalInvocation, currentTotalInvocation) => {
+  if (!previousTotalInvocation)
+    return {
+      className: 'drift_up',
+      percentageChange: 'N/A',
+      positive: true
+    }
+
+  const result =
+    ((currentTotalInvocation - previousTotalInvocation) / Math.abs(previousTotalInvocation)) * 100
+
+  return {
+    className: result > 0 ? 'drift_up' : 'drift_down',
+    percentageChange: `${result.toFixed(0)}%`,
+    positive: result > 0 ? true : false
+  }
+}
 
 const resultKindConfig = {
   0: 'data drift',
@@ -118,7 +143,6 @@ export const getMetricColorByFullName = name => {
 
 export const generateMetricsItems = metrics => {
   return chain(metrics)
-    .filter(metric => metric.app !== mlrunInfra)
     .sortBy(metric => metric.label)
     .map(metric => {
       return {
@@ -128,6 +152,17 @@ export const generateMetricsItems = metrics => {
       }
     })
     .value()
+}
+
+export const getDateRangeBefore = range => {
+  const rangeDuration = range.end - range.start
+  const newStart = range.start - rangeDuration
+  const newEnd = range.end - rangeDuration
+
+  return {
+    start: newStart,
+    end: newEnd
+  }
 }
 
 const getMetricTitle = fullName =>
@@ -157,12 +192,17 @@ const timeFormatters = {
 }
 
 export const formatNumber = num => {
+  let result
   if (num >= 1e6) {
-    return (num / 1e6).toFixed(0) + 'M'
+    result = (num / 1e6).toFixed(0) + 'M'
   } else if (num >= 1e3) {
-    return (num / 1e3).toFixed(0) + 'k'
+    result = (num / 1e3).toFixed(0) + 'k'
   } else {
-    return num.toString()
+    result = num.toString()
+  }
+  return {
+    formattedResult: result,
+    rawResult: num
   }
 }
 
@@ -229,7 +269,8 @@ export const parseMetrics = (data, timeUnit) => {
       title: getMetricTitle(full_name),
       driftStatusList,
       totalDriftStatus,
-      [withInvocationRate ? 'total' : 'avg']: totalOrAvg
+      [withInvocationRate ? 'total' : 'avg']: totalOrAvg.formattedResult,
+      [withInvocationRate ? 'rawDataTotal' : 'avgRaw']: totalOrAvg.rawResult
     }
   })
 }

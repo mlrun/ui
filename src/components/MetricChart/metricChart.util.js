@@ -19,15 +19,14 @@ such restriction.
 */
 import { CHART_TYPE_BAR, CHART_TYPE_LINE } from '../../constants'
 
-// TODO: will be uncomment in PR-6528
-// export const hexToRGB = (hex, alpha = 0) => {
-//   if (typeof hex !== 'string') return
-//   const r = parseInt(hex.substring(1, 3), 16)
-//   const g = parseInt(hex.substring(3, 5), 16)
-//   const b = parseInt(hex.substring(5, 7), 16)
-//
-//   return `rgba(${r}, ${g}, ${b}, ${alpha})`
-// }
+export const hexToRGB = (hex, alpha = 0) => {
+  if (typeof hex !== 'string') return
+  const r = parseInt(hex.substring(1, 3), 16)
+  const g = parseInt(hex.substring(3, 5), 16)
+  const b = parseInt(hex.substring(5, 7), 16)
+
+  return `rgba(${r}, ${g}, ${b}, ${alpha})`
+}
 
 export const calculateMaxTicksLimit = (container, type) => {
   const parent = container.parentNode

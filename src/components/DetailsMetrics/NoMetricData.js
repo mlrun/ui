@@ -17,31 +17,32 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import { chain, isEmpty } from 'lodash'
+import StatsCard from '../../common/StatsCard/StatsCard'
+import { ReactComponent as NoDataIcon } from 'igz-controls/images/no-data-metric-icon.svg'
+import PropTypes from 'prop-types'
 
-export const metricsTypes = {
-  metric: 'metric',
-  result: 'result'
-}
-export const mlrunInfra = 'mlrun-infra'
-
-export const filterMetrics = (metricsByApplication, nameFilter) => {
-  return metricsByApplication.reduce((metricsList, [app, metrics]) => {
-    const filteredMetrics = metrics.filter(metric => {
-      return metric.name.toLowerCase().includes(nameFilter.toLowerCase())
-    })
-
-    if (!isEmpty(filteredMetrics)) metricsList.push({ app, metrics: filteredMetrics })
-
-    return metricsList
-  }, [])
+export const NoMetricData = ({ title, message, className }) => {
+  return (
+    <StatsCard className={`metrics__card ${className}`}>
+      <StatsCard.Header title={title}></StatsCard.Header>
+      <div className="metrics__empty-card">
+        <div>
+          <NoDataIcon />
+        </div>
+        <div>{message}</div>
+      </div>
+    </StatsCard>
+  )
 }
 
-export const groupMetricByApplication = (metrics, filterInfra = true) => {
-  return chain(metrics)
-    .filter(metric => (filterInfra ? metric.app !== mlrunInfra : metric.app))
-    .groupBy(metric => metric.app)
-    .toPairs()
-    .sortBy(([app]) => app)
-    .value()
+NoMetricData.defaultProps = {
+  className: '',
+  title: '',
+  message: 'No data to show'
+}
+
+NoMetricData.propTypes = {
+  className: PropTypes.string,
+  message: PropTypes.string,
+  title: PropTypes.string
 }
