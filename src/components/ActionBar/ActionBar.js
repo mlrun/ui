@@ -272,6 +272,7 @@ const ActionBar = ({
                 (actionButton, index) =>
                   actionButton &&
                   !actionButton.hidden && (
+                    actionButton.template ||
                     <Button
                       key={index}
                       variant={actionButton.variant}
