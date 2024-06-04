@@ -68,7 +68,7 @@ const DetailsMetrics = ({ selectedItem }) => {
   const gradientConfig = useMemo(() => getGradientLineChart(), [])
 
   const handleResizeCard = useCallback(e => {
-    if (!e.target && !e.target.classList?.contains('item-info')) return
+    if (e.target && !e.target.classList?.contains('item-info')) return
     const card = cardRef.current
 
     if (!card) return
@@ -88,13 +88,11 @@ const DetailsMetrics = ({ selectedItem }) => {
       e.target.scrollTop > 5 &&
       card.clientHeight !== 80
     ) {
-      card.parentNode.parentNode.style.height += 173
       card.style.height = '80px'
       content.style.display = 'flex'
       invocationHeader.style.display = 'none'
       toggleExpand(false)
     } else if (e.target.scrollTop === 0 && card.clientHeight === 80) {
-      card.parentNode.parentNode.style.height -= 80
       card.style.height = '200px'
       content.style.display = 'none'
       invocationHeader.style.display = 'flex'
@@ -218,9 +216,9 @@ const DetailsMetrics = ({ selectedItem }) => {
         )
       ])
         .then(([metrics, previousInvocation]) => {
-          setMetrics(metrics)
+          if (metrics) setMetrics(metrics)
 
-          if (previousInvocation.length !== 0 && previousInvocation[0].data === true) {
+          if (!!previousInvocation && previousInvocation.length !== 0) {
             setPreviousTotalInvocation(previousInvocation[0].rawDataTotal)
           }
         })

@@ -34,7 +34,8 @@
       padding-top: 12px;
       padding-bottom: 0;
       width: 100%;
-      animation: ease-in-out;
+      animation: linear;
+      //animation-delay: 1s;
       transition:
         width 0.1s,
         height 0.1s;
@@ -114,6 +115,7 @@
       position: relative;
       box-sizing: border-box;
       animation: ease-in-out;
+      animation-delay: 0.2s;
       transition:
         width 1s,
         height 1s;
@@ -168,10 +170,13 @@
         transition:
           width 0.5s,
           height 0.5s;
+        animation-delay: 1s;
 
         canvas {
           width: 100% !important;
           height: 100% !important;
+          animation-delay: 1s;
+
         }
 
         canvas.hidden-canvas {
@@ -240,8 +245,10 @@
       font-size: 18px;
       font-weight: 700;
       transition:
-        width 0.5s,
-        height 0.5s;
+        width 2s,
+        height 2s;
+      animation-delay: 1s;
+
 
       &-title {
         text-align: center;
