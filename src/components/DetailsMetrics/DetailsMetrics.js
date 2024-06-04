@@ -318,13 +318,21 @@ const DetailsMetrics = ({ selectedItem }) => {
     <div className="metrics">
       {generatedMetrics.map(([applicationName, applicationMetrics]) => {
         return (
-          <>
-            <div key={applicationName} className="metrics__app-name">
+          <React.Fragment key={applicationName}>
+            <div className="metrics__app-name">
               {applicationName === mlrunInfra ? '' : applicationName}
             </div>
             {applicationMetrics.map(metric => {
               if (applicationName === mlrunInfra) {
-                if (!metric.data) return <NoMetricData id={metric.id} title={metric.title} />
+                if (!metric.data)
+                  return (
+                    <NoMetricData
+                      className="empty-invocation-card-sticky"
+                      key={metric.id}
+                      title="Endpoint call count"
+                    />
+                  )
+
                 const resultPercentageDrift = calculatePercentageDrift(
                   previousTotalInvocation,
                   metric.rawDataTotal
@@ -406,7 +414,7 @@ const DetailsMetrics = ({ selectedItem }) => {
                   </StatsCard>
                 )
               } else if (!metric.data) {
-                return <NoMetricData id={metric.id} title={metric.title} />
+                return <NoMetricData key={metric.id} title={metric.title} />
               } else {
                 return (
                   <StatsCard className="metrics__card" key={metric.id}>
@@ -477,7 +485,7 @@ const DetailsMetrics = ({ selectedItem }) => {
                 )
               }
             })}
-          </>
+          </React.Fragment>
         )
       })}
     </div>
