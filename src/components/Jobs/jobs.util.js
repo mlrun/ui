@@ -408,7 +408,7 @@ export const pollAbortingJobs = (project, terminatePollRef, abortingJobs, refres
   const taskIds = Object.keys(abortingJobs)
 
   const pollMethod = () => {
-    if (taskIds.length === 1) {
+    if (taskIds.length === 1 && project !== '*') {
       return tasksApi.getProjectBackgroundTask(project, taskIds[0])
     }
 
@@ -427,7 +427,7 @@ export const pollAbortingJobs = (project, terminatePollRef, abortingJobs, refres
         if (task.status.state === BG_TASK_SUCCEEDED) {
           abortJobSuccessHandler(dispatch, abortingJobs[task.metadata.name])
         } else {
-          showErrorNotification(dispatch, {}, task.status.error || 'Failed to abort job')
+          showErrorNotification(dispatch, {}, task.status.error || 'Failed to abort job.')
         }
       })
 
@@ -440,7 +440,11 @@ export const pollAbortingJobs = (project, terminatePollRef, abortingJobs, refres
   terminatePollRef?.current?.()
   terminatePollRef.current = null
 
-  pollTask(pollMethod, isDone, { terminatePollRef })
+  pollTask(pollMethod, isDone, { terminatePollRef }).catch(error => {
+    const message = 'Failed to abort job. ' + (error.message ? error.message : '')
+
+    showErrorNotification(dispatch, {}, message)
+  })
 }
 
 const abortJobSuccessHandler = (dispatch, job) => {
