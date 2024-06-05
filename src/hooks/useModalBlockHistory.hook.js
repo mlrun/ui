@@ -17,7 +17,7 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import { useCallback } from 'react'
+import { useCallback, useEffect } from 'react'
 import { useBlocker } from 'react-router-dom'
 
 import { defaultCloseModalHandler } from '../utils/defaultCloseModalHandler'
@@ -59,6 +59,12 @@ export const useModalBlockHistory = (closeModal, form) => {
       handleRejectConfirmation
     )
   }, [form, resolveModal, handleRejectConfirmation])
+
+  useEffect(() => {
+    if (blocker.state === 'blocked') {
+      handleCloseModal()
+    }
+  }, [blocker, handleCloseModal])
 
   return { handleCloseModal, resolveModal }
 }
