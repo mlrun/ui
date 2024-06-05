@@ -199,6 +199,7 @@ const timeFormatters = {
 
 export const formatNumber = num => {
   let result
+
   if (num >= 1e6) {
     result = (num / 1e6).toFixed(0) + 'M'
   } else if (num >= 1e3) {

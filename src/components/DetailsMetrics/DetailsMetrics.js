@@ -21,17 +21,14 @@ import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { isEmpty } from 'lodash'
 
-import { TextTooltipTemplate, Tooltip } from 'iguazio.dashboard-react-controls/dist/components'
+import GenericMetricChart from '../MetricChart/MetricChart'
 import MetricChart from '../MetricChart/MetricChart'
+import NoMetricData from './NoMetricData'
 import StatsCard from '../../common/StatsCard/StatsCard'
+import { TextTooltipTemplate, Tooltip } from 'iguazio.dashboard-react-controls/dist/components'
 
-import { CHART_TYPE_BAR, CHART_TYPE_LINE } from '../../constants'
-import { ReactComponent as ArrowUp } from 'igz-controls/images/arrow-up.svg'
-import { ReactComponent as ArrowDown } from 'igz-controls/images/arrow-down.svg'
-import { ReactComponent as MetricsIcon } from 'igz-controls/images/metrics-icon.svg'
-
+import { CHART_TYPE_LINE, CHART_TYPE_BAR, REQUEST_CANCELED } from '../../constants'
 import detailsActions from '../../actions/details'
-import { REQUEST_CANCELED } from '../../constants'
 import {
   groupMetricByApplication,
   ML_RUN_INFRA
@@ -42,13 +39,15 @@ import {
   getLineChartMetricConfig
 } from '../../utils/getMetricChartConfig'
 
-import GenericMetricChart from '../MetricChart/MetricChart'
-import { NoMetricData } from './NoMetricData'
 import {
   calculatePercentageDrift,
   getDateRangeBefore,
   timeRangeMapping
 } from './detailsMetrics.utils'
+
+import { ReactComponent as ArrowUp } from 'igz-controls/images/arrow-up.svg'
+import { ReactComponent as ArrowDown } from 'igz-controls/images/arrow-down.svg'
+import { ReactComponent as MetricsIcon } from 'igz-controls/images/metrics-icon.svg'
 
 import './DetailsMetrics.scss'
 import colors from 'igz-controls/scss/colors.scss'
@@ -279,7 +278,7 @@ const DetailsMetrics = ({ selectedItem }) => {
       selectedMetricsParams.name.push(full_name)
       preInvocMetricParams.name.push(full_name)
 
-      fetchData(selectedMetricsParams, preInvocMetricParams, selectedItem).then()
+      fetchData(selectedMetricsParams, preInvocMetricParams, selectedItem)
     } else {
       setMetrics([])
     }
@@ -319,7 +318,7 @@ const DetailsMetrics = ({ selectedItem }) => {
                 if (!metric.data) {
                   return (
                     <NoMetricData
-                      className="empty-invocation-card-sticky"
+                      className="empty-invocation-card"
                       key={metric.id}
                       title="Endpoint call count"
                     />

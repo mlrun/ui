@@ -21,7 +21,7 @@ import StatsCard from '../../common/StatsCard/StatsCard'
 import { ReactComponent as NoDataIcon } from 'igz-controls/images/no-data-metric-icon.svg'
 import PropTypes from 'prop-types'
 
-export const NoMetricData = ({ title, message, className }) => {
+const NoMetricData = ({ title, message, className }) => {
   return (
     <StatsCard className={`metrics__card ${className}`}>
       <StatsCard.Header title={title}></StatsCard.Header>
@@ -46,3 +46,5 @@ NoMetricData.propTypes = {
   message: PropTypes.string,
   title: PropTypes.string
 }
+
+export default NoMetricData
