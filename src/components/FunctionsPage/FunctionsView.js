@@ -99,11 +99,12 @@ const FunctionsView = React.forwardRef(
                   handleRefresh={filtersChangeCallback}
                   actionButtons={[
                     {
-                      className: 'action-button',
                       hidden: !isDemoMode,
-                      label: 'New',
-                      onClick: getPopUpTemplate,
-                      variant: SECONDARY_BUTTON
+                      template: getPopUpTemplate({
+                        className: 'action-button',
+                        label: 'New',
+                        variant: SECONDARY_BUTTON
+                      }),
                     }
                   ]}
                 >
