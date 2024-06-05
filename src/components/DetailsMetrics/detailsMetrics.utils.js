@@ -164,12 +164,10 @@ export const generateMetricsItems = metrics => {
 
 export const getDateRangeBefore = range => {
   const rangeDuration = range.end - range.start
-  const newStart = range.start - rangeDuration
-  const newEnd = range.end - rangeDuration
 
   return {
-    start: newStart,
-    end: newEnd
+    start: range.start - rangeDuration,
+    end: range.end - rangeDuration
   }
 }
 

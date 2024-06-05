@@ -42,7 +42,6 @@ import {
   getLineChartMetricConfig
 } from '../../utils/getMetricChartConfig'
 
-import './DetailsMetrics.scss'
 import GenericMetricChart from '../MetricChart/MetricChart'
 import { NoMetricData } from './NoMetricData'
 import {
@@ -50,6 +49,9 @@ import {
   getDateRangeBefore,
   timeRangeMapping
 } from './detailsMetrics.utils'
+
+import './DetailsMetrics.scss'
+import colors from 'igz-controls/scss/colors.scss'
 
 const DetailsMetrics = ({ selectedItem }) => {
   const [isInvocationCardCollapsed, setIsInvocationCardCollapsed] = useState(true)
@@ -332,7 +334,7 @@ const DetailsMetrics = ({ selectedItem }) => {
                     <StatsCard className="metrics__card metrics__card-invocations" key={metric.id}>
                       <StatsCard.Header title="Endpoint call count">
                         <div className="metrics__card-invocation-header">
-                          <div className="metrics__card-invocation-header_drift_icon_contrainer">
+                          <div className="metrics__card-invocation-header_drift-icon-contrainer">
                             {resultPercentageDrift.positive ? <ArrowUp /> : <ArrowDown />}
                           </div>
                           <div
@@ -390,8 +392,8 @@ const DetailsMetrics = ({ selectedItem }) => {
                                     fill: true,
                                     metricType: metric.type,
                                     driftStatusList: [],
-                                    backgroundColor: '#5871F4',
-                                    borderColor: '#5871F4',
+                                    backgroundColor: colors.cornflowerBlueTwo,
+                                    borderColor: colors.cornflowerBlueTwo,
                                     borderWidth: 1,
                                     tension: 0.4
                                   }
