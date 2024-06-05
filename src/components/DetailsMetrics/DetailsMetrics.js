@@ -34,11 +34,11 @@ import detailsActions from '../../actions/details'
 import { REQUEST_CANCELED } from '../../constants'
 import {
   groupMetricByApplication,
-  mlrunInfra
+  ML_RUN_INFRA
 } from '../../elements/MetricsSelector/metricsSelector.utils'
 import {
   getBarChartMetricConfig,
-  getGradientLineChart,
+  getGradientLineChartConfig,
   getLineChartMetricConfig
 } from '../../utils/getMetricChartConfig'
 
@@ -65,9 +65,9 @@ const DetailsMetrics = ({ selectedItem }) => {
   const metricsValuesAbortController = useRef(new AbortController())
   const lineConfig = useMemo(() => getLineChartMetricConfig(), [])
   const barConfig = useMemo(() => getBarChartMetricConfig(), [])
-  const gradientConfig = useMemo(() => getGradientLineChart(), [])
+  const gradientConfig = useMemo(() => getGradientLineChartConfig(), [])
 
-  const handleResizeCard = useCallback(e => {
+  const handleWindowResize = useCallback(e => {
     if (e.target && !e.target.classList?.contains('item-info')) return
     const card = cardRef.current
 
@@ -173,9 +173,9 @@ const DetailsMetrics = ({ selectedItem }) => {
   }, [metrics])
 
   useEffect(() => {
-    window.addEventListener('scroll', handleResizeCard, true)
-    return () => window.removeEventListener('scroll', handleResizeCard, true)
-  }, [handleResizeCard])
+    window.addEventListener('scroll', handleWindowResize, true)
+    return () => window.removeEventListener('scroll', handleWindowResize, true)
+  }, [handleWindowResize])
 
   useEffect(() => {
     dispatch(
@@ -318,10 +318,10 @@ const DetailsMetrics = ({ selectedItem }) => {
         return (
           <React.Fragment key={applicationName}>
             <div className="metrics__app-name">
-              {applicationName === mlrunInfra ? '' : applicationName}
+              {applicationName === ML_RUN_INFRA ? '' : applicationName}
             </div>
             {applicationMetrics.map(metric => {
-              if (applicationName === mlrunInfra) {
+              if (applicationName === ML_RUN_INFRA) {
                 if (!metric.data)
                   return (
                     <NoMetricData

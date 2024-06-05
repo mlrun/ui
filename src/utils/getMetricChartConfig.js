@@ -124,7 +124,7 @@ export const getBarChartMetricConfig = () => {
   }
 }
 
-export const getGradientLineChart = () => {
+export const getGradientLineChartConfig = () => {
   return {
     type: CHART_TYPE_LINE,
     options: {
