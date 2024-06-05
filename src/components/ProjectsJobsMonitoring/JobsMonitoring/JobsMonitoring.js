@@ -122,7 +122,12 @@ const JobsMonitoring = () => {
         jobs={jobs}
         largeRequestErrorMessage={largeRequestErrorMessage}
         navigateLink={`/projects/${JOBS_MONITORING_PAGE}/${JOBS_MONITORING_JOBS_TAB}`}
-        refreshJobs={refreshJobs}
+        refreshJobs={() =>
+          refreshJobs({
+            ...filtersStore,
+            ...filtersStore.filterMenuModal[JOBS_MONITORING_JOBS_TAB].values
+          })
+        }
         selectedJob={selectedJob}
         setAbortingJobs={setAbortingJobs}
         setJobRuns={setJobRuns}

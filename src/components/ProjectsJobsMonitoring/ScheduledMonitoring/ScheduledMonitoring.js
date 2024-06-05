@@ -18,7 +18,7 @@ under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
 import React, { useEffect, useMemo, useState } from 'react'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 
 import ScheduledJobsTable from '../../../elements/ScheduledJobsTable/ScheduledJobsTable'
 import { ProjectJobsMonitoringContext } from '../ProjectsJobsMonitoring'
@@ -26,10 +26,12 @@ import { ProjectJobsMonitoringContext } from '../ProjectsJobsMonitoring'
 import { createScheduleJobsMonitoringContent } from '../../../utils/createJobsContent'
 import { datePickerFutureOptions, NEXT_24_HOUR_DATE_OPTION } from '../../../utils/datePicker.util'
 import { setFilters } from '../../../reducers/filtersReducer'
+import { JOBS_MONITORING_SCHEDULED_TAB } from '../../../constants'
 
 const ScheduledMonitoring = () => {
   const [dataIsLoaded, setDataIsLoaded] = useState(false)
   const dispatch = useDispatch()
+  const filtersStore = useSelector(store => store.filtersStore)
   const { jobs, largeRequestErrorMessage, refreshScheduled } = React.useContext(
     ProjectJobsMonitoringContext
   )
@@ -43,23 +45,21 @@ const ScheduledMonitoring = () => {
       const next24HourOption = datePickerFutureOptions.find(
         option => option.id === NEXT_24_HOUR_DATE_OPTION
       )
-      const dateFilter = {
-        value: next24HourOption.handler(),
-        isPredefined: next24HourOption.isPredefined,
-        initialSelectedOptionId: next24HourOption.id
+
+      const filters = {
+        dates: {
+          value: next24HourOption.handler(),
+          isPredefined: next24HourOption.isPredefined,
+          initialSelectedOptionId: next24HourOption.id
+        },
+        type: filtersStore.filterMenuModal[JOBS_MONITORING_SCHEDULED_TAB].values.type
       }
 
-      dispatch(
-        setFilters({
-          dates: dateFilter
-        })
-      )
-      refreshScheduled({
-        dates: dateFilter
-      })
+      dispatch(setFilters({ dates: filters.dates }))
+      refreshScheduled(filters)
       setDataIsLoaded(true)
     }
-  }, [dataIsLoaded, dispatch, refreshScheduled])
+  }, [filtersStore, dataIsLoaded, dispatch, refreshScheduled])
 
   useEffect(() => {
     return () => {
@@ -72,7 +72,12 @@ const ScheduledMonitoring = () => {
       context={ProjectJobsMonitoringContext}
       jobs={jobs}
       largeRequestErrorMessage={largeRequestErrorMessage}
-      refreshJobs={refreshScheduled}
+      refreshJobs={() =>
+        refreshScheduled({
+          ...filtersStore,
+          ...filtersStore.filterMenuModal[JOBS_MONITORING_SCHEDULED_TAB].values
+        })
+      }
       tableContent={tableContent}
     />
   )
