@@ -18,16 +18,24 @@ under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
 import { capitalize, chain } from 'lodash'
+import {
+  CUSTOM_RANGE_DATE_OPTION,
+  PAST_24_HOUR_DATE_OPTION,
+  PAST_HOUR_DATE_OPTION,
+  PAST_MONTH_DATE_OPTION,
+  PAST_WEEK_DATE_OPTION
+} from '../../utils/datePicker.util'
+import { AVG, AVG_RAW, RAW_DATA_TOTAL, TOTAL } from '../../constants'
 
 const metricsColorsByFullName = {}
 const usedColors = new Set()
 
 export const timeRangeMapping = {
-  past24hours: 'last 24 day',
-  pastWeek: 'last week',
-  pastMonth: 'last month',
-  pastHour: 'last hour',
-  customRange: 'custom range'
+  [PAST_24_HOUR_DATE_OPTION]: 'last 24 day',
+  [PAST_WEEK_DATE_OPTION]: 'last week',
+  [PAST_MONTH_DATE_OPTION]: 'last month',
+  [PAST_HOUR_DATE_OPTION]: 'last hour',
+  [CUSTOM_RANGE_DATE_OPTION]: 'custom range'
 }
 
 export const calculatePercentageDrift = (previousTotalInvocation, currentTotalInvocation) => {
@@ -200,6 +208,7 @@ export const formatNumber = num => {
   } else {
     result = num.toString()
   }
+
   return {
     formattedResult: result,
     rawResult: num
@@ -269,8 +278,8 @@ export const parseMetrics = (data, timeUnit) => {
       title: getMetricTitle(full_name),
       driftStatusList,
       totalDriftStatus,
-      [withInvocationRate ? 'total' : 'avg']: totalOrAvg.formattedResult,
-      [withInvocationRate ? 'rawDataTotal' : 'avgRaw']: totalOrAvg.rawResult
+      [withInvocationRate ? TOTAL : AVG]: totalOrAvg.formattedResult,
+      [withInvocationRate ? RAW_DATA_TOTAL : AVG_RAW]: totalOrAvg.rawResult
     }
   })
 }

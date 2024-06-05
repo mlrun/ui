@@ -121,15 +121,15 @@ const GenericMetricChart = ({ chartConfig, showGrid }) => {
 
     if (chartConfig.gradient) {
       const canvasHeight = showGrid ? 200 : 80
+
       if (chartInstance.current.options.scales.x.grid.display !== showGrid) {
         chartInstance.current.options.scales.x.grid.display = showGrid
         chartInstance.current.options.scales.y.grid.display = showGrid
-
         chartInstance.current.options.scales.y.display = showGrid
-
         chartInstance.current.options.scales.x.grid.ticks = true
         chartInstance.current.options.scales.y.grid.ticks = true
       }
+
       const gradient = ctx.createLinearGradient(0, 0, 0, canvasHeight)
       gradient.addColorStop(
         0,

@@ -52,13 +52,12 @@ import {
 } from './detailsMetrics.utils'
 
 const DetailsMetrics = ({ selectedItem }) => {
+  const [isInvocationCardCollapsed, setIsInvocationCardCollapsed] = useState(true)
   const [metrics, setMetrics] = useState([])
-  const [expand, toggleExpand] = useState(true)
-  const prevScrollPositionRef = useRef(0)
-  const cardRef = useRef(null)
-
   const [selectedDate, setSelectedDate] = useState('')
   const [previousTotalInvocation, setPreviousTotalInvocation] = useState(0)
+  const prevScrollPositionRef = useRef(0)
+  const invocationBodyCardRef = useRef(null)
 
   const detailsStore = useSelector(store => store.detailsStore)
   const dispatch = useDispatch()
@@ -69,7 +68,7 @@ const DetailsMetrics = ({ selectedItem }) => {
 
   const handleWindowResize = useCallback(e => {
     if (e.target && !e.target.classList?.contains('item-info')) return
-    const card = cardRef.current
+    const card = invocationBodyCardRef.current
 
     if (!card) return
 
@@ -91,12 +90,12 @@ const DetailsMetrics = ({ selectedItem }) => {
       card.style.height = '80px'
       content.style.display = 'flex'
       invocationHeader.style.display = 'none'
-      toggleExpand(false)
+      setIsInvocationCardCollapsed(false)
     } else if (e.target.scrollTop === 0 && card.clientHeight === 80) {
       card.style.height = '200px'
       content.style.display = 'none'
       invocationHeader.style.display = 'flex'
-      toggleExpand(true)
+      setIsInvocationCardCollapsed(true)
     }
     prevScrollPositionRef.current = e.target.scrollTop
   }, [])
@@ -190,7 +189,7 @@ const DetailsMetrics = ({ selectedItem }) => {
   }, [detailsStore.dates.selectedOptionId])
 
   const fetchData = useCallback(
-    (params, params2, selectedItem) => {
+    (selectedMetricsParams, preInvocationMetricParams, selectedItem) => {
       metricsValuesAbortController.current = new AbortController()
 
       return Promise.all([
@@ -198,7 +197,7 @@ const DetailsMetrics = ({ selectedItem }) => {
           detailsActions.fetchModelEndpointMetricsValues(
             selectedItem.metadata.project,
             selectedItem.metadata.uid,
-            params,
+            selectedMetricsParams,
             metricsValuesAbortController.current.signal
           )
         ),
@@ -206,21 +205,17 @@ const DetailsMetrics = ({ selectedItem }) => {
           detailsActions.fetchModelEndpointMetricsValues(
             selectedItem.metadata.project,
             selectedItem.metadata.uid,
-            params2,
+            preInvocationMetricParams,
             metricsValuesAbortController.current.signal
           )
         )
-      ])
-        .then(([metrics, previousInvocation]) => {
-          if (metrics) setMetrics(metrics)
+      ]).then(([metrics, previousInvocation]) => {
+        if (metrics) setMetrics(metrics)
 
-          if (!!previousInvocation && previousInvocation.length !== 0) {
-            setPreviousTotalInvocation(previousInvocation[0].rawDataTotal)
-          }
-        })
-        .catch(error => {
-          console.error(error.message)
-        })
+        if (!!previousInvocation && previousInvocation.length !== 0) {
+          setPreviousTotalInvocation(previousInvocation[0].rawDataTotal)
+        }
+      })
     },
     [dispatch, setMetrics, metricsValuesAbortController]
   )
@@ -233,7 +228,7 @@ const DetailsMetrics = ({ selectedItem }) => {
       const selectedMetrics =
         detailsStore.metricsOptions.selectedByEndpoint[selectedItem.metadata?.uid]
 
-      const invocationMetric = detailsStore.metricsOptions.all.filter(
+      const invocationMetric = detailsStore.metricsOptions.all.find(
         metric => metric.app === 'mlrun-infra'
       )
 
@@ -247,41 +242,42 @@ const DetailsMetrics = ({ selectedItem }) => {
         params.end = detailsStore.dates.value[1].getTime()
       }
 
-      ;[...invocationMetric, ...selectedMetrics].forEach(metric => {
+      ;[invocationMetric, ...selectedMetrics].forEach(metric => {
         params.name.push(metric.full_name)
       })
 
       const newRange = getDateRangeBefore(params)
 
-      const params2 = { name: [] }
-      params2.start = newRange.start
-      params2.end = newRange.end
+      const preInvocationMetricParams = { name: [] }
+      preInvocationMetricParams.start = newRange.start
+      preInvocationMetricParams.end = newRange.end
       const [{ full_name }] = detailsStore.metricsOptions.all.filter(
         metric => metric.app === 'mlrun-infra'
       )
-      params2.name.push(full_name)
+      preInvocationMetricParams.name.push(full_name)
 
-      fetchData(params, params2, selectedItem).then()
+      fetchData(params, preInvocationMetricParams, selectedItem)
     } else if (detailsStore.metricsOptions.all.length !== 0) {
-      const params1 = { name: [] }
-      params1.start =
+      const selectedMetricsParams = { name: [] }
+      selectedMetricsParams.start =
         detailsStore.dates?.value[0] === '' ? '' : detailsStore.dates?.value[0].getTime()
-      params1.end =
+      selectedMetricsParams.end =
         detailsStore.dates?.value[0] === '' ? '' : detailsStore.dates?.value[1].getTime()
 
-      const newRange = getDateRangeBefore(params1)
-      const params2 = { name: [] }
+      const newRange = getDateRangeBefore(selectedMetricsParams)
+      const preInvocMetricParams = { name: [] }
 
-      params2.start = newRange.start
-      params2.end = newRange.end
+      preInvocMetricParams.start = newRange.start
+      preInvocMetricParams.end = newRange.end
 
-      const [{ full_name }] = detailsStore.metricsOptions.all.filter(
+      const { full_name } = detailsStore.metricsOptions.all.find(
         metric => metric.app === 'mlrun-infra'
       )
-      params1.name.push(full_name)
-      params2.name.push(full_name)
 
-      fetchData(params1, params2, selectedItem).then()
+      selectedMetricsParams.name.push(full_name)
+      preInvocMetricParams.name.push(full_name)
+
+      fetchData(selectedMetricsParams, preInvocMetricParams, selectedItem).then()
     } else {
       setMetrics([])
     }
@@ -318,7 +314,7 @@ const DetailsMetrics = ({ selectedItem }) => {
             </div>
             {applicationMetrics.map(metric => {
               if (applicationName === ML_RUN_INFRA) {
-                if (!metric.data)
+                if (!metric.data) {
                   return (
                     <NoMetricData
                       className="empty-invocation-card-sticky"
@@ -326,87 +322,88 @@ const DetailsMetrics = ({ selectedItem }) => {
                       title="Endpoint call count"
                     />
                   )
+                } else {
+                  const resultPercentageDrift = calculatePercentageDrift(
+                    previousTotalInvocation,
+                    metric.rawDataTotal
+                  )
 
-                const resultPercentageDrift = calculatePercentageDrift(
-                  previousTotalInvocation,
-                  metric.rawDataTotal
-                )
-
-                return (
-                  <StatsCard className="metrics__card metrics__card-invocations" key={metric.id}>
-                    <StatsCard.Header title="Endpoint call count">
-                      <div className="metrics__card-invocation-header">
-                        <div className="metrics__card-invocation-header_drift_icon_contrainer">
-                          {resultPercentageDrift.positive ? <ArrowUp /> : <ArrowDown />}
-                        </div>
-                        <div
-                          className={`metrics__card-invocation-header_${resultPercentageDrift.className}`}
-                        >
-                          {resultPercentageDrift.percentageChange}
-                        </div>
-                        <div className="metrics__card-invocation-header_selected_date">
-                          {selectedDate}
-                        </div>
-                        <div className="metrics__card-invocation-header_total_title">Total</div>
-                        <div className="metrics__card-invocation-header_total_score">
-                          {metric.total}
-                        </div>
-                      </div>
-                    </StatsCard.Header>
-                    <div ref={cardRef} className="metrics__card-body">
-                      <div className="metrics__card-invocation-content">
-                        <div className="metrics__card-invocation-content-title">
-                          Endpoint call count
-                        </div>
-                        <div className="metrics__card-invocation-content_container">
-                          <div className="metrics__card-invocation-content_container_drift_icon">
+                  return (
+                    <StatsCard className="metrics__card metrics__card-invocations" key={metric.id}>
+                      <StatsCard.Header title="Endpoint call count">
+                        <div className="metrics__card-invocation-header">
+                          <div className="metrics__card-invocation-header_drift_icon_contrainer">
                             {resultPercentageDrift.positive ? <ArrowUp /> : <ArrowDown />}
                           </div>
                           <div
-                            className={`metrics__card-invocation-content_container_${resultPercentageDrift.className}`}
+                            className={`metrics__card-invocation-header_${resultPercentageDrift.className}`}
                           >
                             {resultPercentageDrift.percentageChange}
                           </div>
-                          <div>{selectedDate}</div>
-                        </div>
-                        <div className="metrics__card-invocation-content-data">
-                          <div className="metrics__card-invocation-content-data_total_title">
-                            Total
+                          <div className="metrics__card-invocation-header_selected_date">
+                            {selectedDate}
                           </div>
-                          <div className="metrics__card-invocation-content-data_total_score">
-                            {' '}
+                          <div className="metrics__card-invocation-header_total_title">Total</div>
+                          <div className="metrics__card-invocation-header_total_score">
                             {metric.total}
                           </div>
                         </div>
+                      </StatsCard.Header>
+                      <div ref={invocationBodyCardRef} className="metrics__card-body">
+                        <div className="metrics__card-invocation-content">
+                          <div className="metrics__card-invocation-content-title">
+                            Endpoint call count
+                          </div>
+                          <div className="metrics__card-invocation-content_container">
+                            <div className="metrics__card-invocation-content_container_drift_icon">
+                              {resultPercentageDrift.positive ? <ArrowUp /> : <ArrowDown />}
+                            </div>
+                            <div
+                              className={`metrics__card-invocation-content_container_${resultPercentageDrift.className}`}
+                            >
+                              {resultPercentageDrift.percentageChange}
+                            </div>
+                            <div>{selectedDate}</div>
+                          </div>
+                          <div className="metrics__card-invocation-content-data">
+                            <div className="metrics__card-invocation-content-data_total_title">
+                              Total
+                            </div>
+                            <div className="metrics__card-invocation-content-data_total_score">
+                              {' '}
+                              {metric.total}
+                            </div>
+                          </div>
+                        </div>
+                        <div className="metrics__card-body-invocation">
+                          <GenericMetricChart
+                            showGrid={isInvocationCardCollapsed}
+                            chartConfig={{
+                              gradient: true,
+                              ...gradientConfig,
+                              data: {
+                                labels: metric.labels,
+                                datasets: [
+                                  {
+                                    data: metric.points,
+                                    chartType: CHART_TYPE_LINE,
+                                    fill: true,
+                                    metricType: metric.type,
+                                    driftStatusList: [],
+                                    backgroundColor: '#5871F4',
+                                    borderColor: '#5871F4',
+                                    borderWidth: 1,
+                                    tension: 0.4
+                                  }
+                                ]
+                              }
+                            }}
+                          />
+                        </div>
                       </div>
-                      <div className="metrics__card-body-invocation">
-                        <GenericMetricChart
-                          showGrid={expand}
-                          chartConfig={{
-                            gradient: true,
-                            ...gradientConfig,
-                            data: {
-                              labels: metric.labels,
-                              datasets: [
-                                {
-                                  data: metric.points,
-                                  chartType: CHART_TYPE_LINE,
-                                  fill: true,
-                                  metricType: metric.type,
-                                  driftStatusList: [],
-                                  backgroundColor: '#5871F4',
-                                  borderColor: '#5871F4',
-                                  borderWidth: 1,
-                                  tension: 0.4
-                                }
-                              ]
-                            }
-                          }}
-                        />
-                      </div>
-                    </div>
-                  </StatsCard>
-                )
+                    </StatsCard>
+                  )
+                }
               } else if (!metric.data) {
                 return <NoMetricData key={metric.id} title={metric.title} />
               } else {
