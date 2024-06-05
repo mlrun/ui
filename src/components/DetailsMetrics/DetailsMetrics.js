@@ -54,7 +54,7 @@ import {
 const DetailsMetrics = ({ selectedItem }) => {
   const [metrics, setMetrics] = useState([])
   const [expand, toggleExpand] = useState(true)
-  const prevScrollPos = useRef(0)
+  const prevScrollPositionRef = useRef(0)
   const cardRef = useRef(null)
 
   const [selectedDate, setSelectedDate] = useState('')
@@ -84,7 +84,7 @@ const DetailsMetrics = ({ selectedItem }) => {
     })
 
     if (
-      e.target.scrollTop > prevScrollPos.current &&
+      e.target.scrollTop > prevScrollPositionRef.current &&
       e.target.scrollTop > 5 &&
       card.clientHeight !== 80
     ) {
@@ -98,7 +98,7 @@ const DetailsMetrics = ({ selectedItem }) => {
       invocationHeader.style.display = 'flex'
       toggleExpand(true)
     }
-    prevScrollPos.current = e.target.scrollTop
+    prevScrollPositionRef.current = e.target.scrollTop
   }, [])
 
   const calculateHistogram = useCallback((points, metric) => {
@@ -165,11 +165,7 @@ const DetailsMetrics = ({ selectedItem }) => {
   }, [])
 
   const generatedMetrics = useMemo(() => {
-    return groupMetricByApplication(metrics, false).sort((a, b) => {
-      if (a[0] === 'mlrun-infra') return -1
-      if (b[0] === 'mlrun-infra') return 1
-      return 0
-    })
+    return groupMetricByApplication(metrics, true)
   }, [metrics])
 
   useEffect(() => {

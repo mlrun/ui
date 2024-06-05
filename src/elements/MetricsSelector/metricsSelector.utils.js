@@ -37,11 +37,17 @@ export const filterMetrics = (metricsByApplication, nameFilter) => {
   }, [])
 }
 
-export const groupMetricByApplication = (metrics, filterInfra = true) => {
+export const groupMetricByApplication = (metrics, includeInfra = false) => {
   return chain(metrics)
-    .filter(metric => (filterInfra ? metric.app !== ML_RUN_INFRA : metric.app))
+    .filter(metric => (includeInfra ? metric.app : metric.app !== ML_RUN_INFRA))
     .groupBy(metric => metric.app)
     .toPairs()
-    .sortBy(([app]) => app)
+    .sort(([appA], [appB]) => {
+      if (includeInfra) {
+        if (appA === ML_RUN_INFRA) return -1
+        if (appB === ML_RUN_INFRA) return 1
+      }
+      return appA.localeCompare(appB)
+    })
     .value()
 }
