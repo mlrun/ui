@@ -243,10 +243,10 @@ const Functions = ({
         item.tag,
         setDetailsLogs,
         navigate,
-        fetchData
+        () => fetchData(filtersStore)
       )
     },
-    [fetchFunctionLogs, navigate, fetchData]
+    [filtersStore, fetchFunctionLogs, navigate, fetchData]
   )
 
   const handleFetchFunctionApplicationLogs = useCallback(
@@ -287,7 +287,7 @@ const Functions = ({
               params.projectName,
               terminatePollRef,
               newDeletingFunctions,
-              fetchData,
+              () => fetchData(filtersStore),
               dispatch
             )
 
@@ -303,7 +303,15 @@ const Functions = ({
 
       setConfirmData(null)
     },
-    [deleteFunction, params.projectName, dispatch, fetchData, selectedFunction, navigate]
+    [
+      deleteFunction,
+      params.projectName,
+      dispatch,
+      fetchData,
+      selectedFunction,
+      navigate,
+      filtersStore
+    ]
   )
 
   const onRemoveFunction = useCallback(
@@ -469,14 +477,14 @@ const Functions = ({
   const functionsFilters = useMemo(() => [filters[0]], [])
 
   useEffect(() => {
-    fetchData(filtersStore.filters)
+    fetchData()
 
     return () => {
       setSelectedFunction({})
       setFunctions([])
       abortControllerRef.current.abort(REQUEST_CANCELED)
     }
-  }, [filtersStore.filters, params.projectName, fetchData])
+  }, [params.projectName, fetchData])
 
   useEffect(() => {
     setTaggedFunctions(
