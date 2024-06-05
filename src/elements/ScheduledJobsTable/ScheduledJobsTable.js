@@ -27,6 +27,7 @@ import YamlModal from '../../common/YamlModal/YamlModal'
 import JobsTableRow from '../JobsTableRow/JobsTableRow'
 import Table from '../../components/Table/Table'
 import NoData from '../../common/NoData/NoData'
+import Loader from '../../common/Loader/Loader'
 
 import { JOB_KIND_WORKFLOW, JOBS_PAGE, PANEL_EDIT_MODE, SCHEDULE_TAB } from '../../constants'
 import { isRowRendered, useVirtualization } from '../../hooks/useVirtualization.hook'
@@ -250,6 +251,7 @@ const ScheduledJobsTable = ({
 
   return (
     <>
+      {jobsStore.loading && <Loader />}
       {jobsStore.loading ? null : jobs.length === 0 ? (
         <NoData
           message={getNoDataMessage(
