@@ -56,6 +56,7 @@ import artifactTags from './data/artifactsTags.json'
 import funcs from './data/funcs.json'
 import logs from './data/logs.json'
 import modelEndpoints from './data/modelEndpoints.json'
+import metricsData from './data/metrics.json'
 
 import iguazioProjects from './data/iguazioProjects.json'
 import iguazioUserGrops from './data/iguazioUserGroups.json'
@@ -435,11 +436,14 @@ function deleteProject(req, res) {
 function deleteProjectV2(req, res) {
   const taskFunc = () => {
     return new Promise(resolve => {
-      setTimeout(() => {
-        deleteProjectHandler(req, res, true)
+      setTimeout(
+        () => {
+          deleteProjectHandler(req, res, true)
 
-        resolve()
-      }, random(5000, 10000))
+          resolve()
+        },
+        random(5000, 10000)
+      )
     })
   }
   const task = createTask(null, {
@@ -626,19 +630,22 @@ function abortRun(req, res) {
     currentRun.status.abort_task_id = id
 
     return new Promise(resolve => {
-      setTimeout(() => {
-        const collectedPipeline = getGraphById(req.params.uid)
+      setTimeout(
+        () => {
+          const collectedPipeline = getGraphById(req.params.uid)
 
-        currentRun.status.state = 'aborted'
+          currentRun.status.state = 'aborted'
 
-        if (collectedPipeline) {
-          collectedPipeline.phase = 'Error'
-        }
+          if (collectedPipeline) {
+            collectedPipeline.phase = 'Error'
+          }
 
-        delete currentRun.status.abort_task_id
+          delete currentRun.status.abort_task_id
 
-        resolve()
-      }, random(3000, 10000))
+          resolve()
+        },
+        random(3000, 10000)
+      )
     })
   }
 
@@ -1147,17 +1154,25 @@ function getPipelines(req, res) {
     if (JSON.parse(req.query.filter).predicates.length >= 1) {
       if (JSON.parse(req.query.filter).predicates[0]) {
         collectedMonitoringPipelines = collectedMonitoringPipelines.filter(
-          pipeline => Date.parse(pipeline.created_at) >= Date.parse(JSON.parse(req.query.filter).predicates[0].timestamp_value)  //start time from
+          pipeline =>
+            Date.parse(pipeline.created_at) >=
+            Date.parse(JSON.parse(req.query.filter).predicates[0].timestamp_value) //start time from
         )
       }
       if (JSON.parse(req.query.filter).predicates[1]) {
         collectedMonitoringPipelines = collectedMonitoringPipelines.filter(
-          pipeline => Date.parse(pipeline.created_at) <= Date.parse(JSON.parse(req.query.filter).predicates[1].timestamp_value)  //start time to
+          pipeline =>
+            Date.parse(pipeline.created_at) <=
+            Date.parse(JSON.parse(req.query.filter).predicates[1].timestamp_value) //start time to
         )
       }
     }
 
-    res.send({ runs: collectedMonitoringPipelines, total_size : collectedMonitoringPipelines.length, next_page_token : null })
+    res.send({
+      runs: collectedMonitoringPipelines,
+      total_size: collectedMonitoringPipelines.length,
+      next_page_token: null
+    })
   }
   //get pipelines for Jobs and workflows page Monitor Workflows tab
   const collectedPipelines = { ...pipelines[req.params.project] }
@@ -1688,19 +1703,19 @@ function postArtifact(req, res) {
 }
 
 function putArtifact(req, res) {
-  const collectedArtifacts = artifacts.artifacts
-    .filter (artifact => {
-      const artifactMetaData = artifact.metadata ?? artifact
-      const artifactSpecData = artifact.spec ?? artifact
-      const artifactBodyData = req.body.metadata ?? req.body
+  const collectedArtifacts = artifacts.artifacts.filter(artifact => {
+    const artifactMetaData = artifact.metadata ?? artifact
+    const artifactSpecData = artifact.spec ?? artifact
+    const artifactBodyData = req.body.metadata ?? req.body
 
-      return artifactMetaData?.project === req.params.project
-        && artifactMetaData?.tree === artifactBodyData?.tree
-        && artifactSpecData?.db_key === req.params.key
-    }
-  )
+    return (
+      artifactMetaData?.project === req.params.project &&
+      artifactMetaData?.tree === artifactBodyData?.tree &&
+      artifactSpecData?.db_key === req.params.key
+    )
+  })
   if (collectedArtifacts?.length > 0) {
-    collectedArtifacts.forEach (collectedArtifact => {
+    collectedArtifacts.forEach(collectedArtifact => {
       const artifactMetaData = collectedArtifact.metadata ?? collectedArtifact
       const artifactBodyData = req.body.metadata ?? req.body
 
@@ -1759,6 +1774,71 @@ function getModelEndpoint(req, res) {
   )
 
   res.send(endpoint)
+}
+
+function getMetrics(req, res) {
+  let metricsOptions = metricsData.metrics.find(
+    item => item.project === req.params.project && item.modelEndpointUID === req.params.uid
+  )?.metricsOptions || []
+
+  if (req.query.type && req.query.type !== 'all') {
+    metricsOptions = metricsOptions.filter(item => (item.type = req.query.type))
+  }
+
+  res.send(metricsOptions)
+}
+
+function getMetricsValues(req, res) {
+  const start = req.query.start || new Date() - 86400000 // past 24 hours
+  const end = req.query.end || new Date()
+  const names = req.query.name
+
+  function generateSineSequence(length) {
+    const result = []
+    const step = (length >= 60 ? Math.ceil(Math.random() * 10) : 1) / (length - 1)
+
+    for (let i = 0; i < length; i++) {
+        const x = i * step
+        const y = (Math.sin(2 * Math.PI * x) + 1) / 2 + (Math.random() / 10)
+        result.push(y)
+    }
+
+    return result
+}
+
+  let metricsValues =
+    metricsData.metrics.find(
+      item => item.project === req.params.project && item.modelEndpointUID === req.params.uid
+    )?.metricsValues || []
+
+  metricsValues = metricsValues
+    .filter(item => names.includes(item.full_name))
+    .map(item => {
+      if (!item.data) return item
+
+      const intervalInMls = item.values[0] * 60000
+      const numberOfDataPoints = Math.floor((end - start) / intervalInMls)
+      const sineSequence = generateSineSequence(numberOfDataPoints)
+      const values = Array.from({ length: numberOfDataPoints }, (_, index) => {
+        const date = new Date(+start + intervalInMls * (index + 1)).toISOString()
+        const value = sineSequence[index]
+        const drift = item.type === 'result' ? Math.round(Math.random() * 3) - 1 : null
+        const valueArr = [date, value]
+
+        if (drift !== null) {
+          valueArr.push(drift)
+        }
+
+        return valueArr
+      })
+
+      return {
+        ...item,
+        values
+      }
+    })
+
+  res.send(metricsValues)
 }
 
 function getNuclioFunctions(req, res) {
@@ -2108,6 +2188,11 @@ app.get(`${mlrunAPIIngress}/projects/:project/runtime-resources`, getRuntimeReso
 
 app.get(`${mlrunAPIIngress}/projects/:project/model-endpoints`, getModelEndpoints)
 app.get(`${mlrunAPIIngress}/projects/:project/model-endpoints/:uid`, getModelEndpoint)
+app.get(`${mlrunAPIIngress}/projects/:project/model-endpoints/:uid/metrics`, getMetrics)
+app.get(
+  `${mlrunAPIIngress}/projects/:project/model-endpoints/:uid/metrics-values`,
+  getMetricsValues
+)
 
 app.get(`${mlrunAPIIngress}/projects/:project/:artifact`, getProjectsFeaturesEntities)
 
