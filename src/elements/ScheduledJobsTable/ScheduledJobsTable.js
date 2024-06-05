@@ -209,7 +209,10 @@ const ScheduledJobsTable = ({
   useEffect(() => {
     if (jobWizardMode && !jobWizardIsOpened) {
       openPopUp(JobWizard, {
-        params,
+        params: {
+          ...params,
+          projectName: editableItem?.project || params.projectName
+        },
         onWizardClose: () => {
           setEditableItem(null)
           setJobWizardMode(null)
@@ -224,6 +227,7 @@ const ScheduledJobsTable = ({
       setJobWizardIsOpened(true)
     }
   }, [
+    editableItem?.project,
     editableItem?.scheduled_object,
     filtersStore,
     jobWizardIsOpened,
