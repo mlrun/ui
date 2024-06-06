@@ -33,6 +33,7 @@ const generateQueryParams = (project, filter, config) => {
   const queryParams = {
     predicates: []
   }
+  const stateFilter = Array.isArray(filter.state) ? filter.state : [filter.state]
 
   if (project !== '*') {
     queryParams.predicates.push({
@@ -52,11 +53,13 @@ const generateQueryParams = (project, filter, config) => {
     set(config, ['params', 'name-contains'], filter.name)
   }
 
-  if (filter.state !== FILTER_ALL_ITEMS) {
+  if (!filter.state.includes(FILTER_ALL_ITEMS)) {
     queryParams.predicates.push({
       key: 'status',
-      op: 1,
-      string_value: filter.state === 'completed' ? 'Succeeded' : capitalize(filter.state)
+      op: 8,
+      string_values: {
+        values: stateFilter.map(state => state === 'completed' ? 'Succeeded' : capitalize(state))
+      }
     })
   }
 

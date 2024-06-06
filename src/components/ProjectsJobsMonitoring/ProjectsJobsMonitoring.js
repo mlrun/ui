@@ -84,18 +84,19 @@ const ProjectsJobsMonitoring = ({ fetchAllJobRuns, fetchJobFunction, fetchJobs }
 
   const jobsFilters = useMemo(
     () => [
-      { type: NAME_FILTER, label: 'Name:', initialValue: '', hidden: params.jobName },
+      { type: NAME_FILTER, label: 'Name:', initialValue: '' },
       {
         type: 'dates',
         initialValue: {
           value: datePickerPastOptions
             .find(option => option.id === PAST_24_HOUR_DATE_OPTION)
             .handler(),
-          isPredefined: true
+          isPredefined: true,
+          initialSelectedOptionId: PAST_24_HOUR_DATE_OPTION
         }
       }
     ],
-    [params.jobName]
+    []
   )
 
   const scheduledFilters = useMemo(
@@ -107,7 +108,8 @@ const ProjectsJobsMonitoring = ({ fetchAllJobRuns, fetchJobFunction, fetchJobs }
           value: datePickerFutureOptions
             .find(option => option.id === NEXT_24_HOUR_DATE_OPTION)
             .handler(),
-          isPredefined: true
+          isPredefined: true,
+          initialSelectedOptionId: NEXT_24_HOUR_DATE_OPTION
         },
         isFuture: true
       }
@@ -124,7 +126,8 @@ const ProjectsJobsMonitoring = ({ fetchAllJobRuns, fetchJobFunction, fetchJobs }
           value: datePickerPastOptions
             .find(option => option.id === PAST_24_HOUR_DATE_OPTION)
             .handler(),
-          isPredefined: true
+          isPredefined: true,
+          initialSelectedOptionId: PAST_24_HOUR_DATE_OPTION
         }
       }
     ],
@@ -349,19 +352,18 @@ const ProjectsJobsMonitoring = ({ fetchAllJobRuns, fetchJobFunction, fetchJobs }
               onClick={handleTabChange}
               tabs={tabs}
             />
-
-            {(!params.jobId && !params.workflowId) && (
-              <ActionBar
-                filterMenuName={selectedTab}
-                filters={tabData[selectedTab].filters}
-                handleRefresh={tabData[selectedTab].handleRefresh}
-                page={JOBS_MONITORING_PAGE}
-                tab={selectedTab}
-                withRefreshButton={false}
-              >
-                {tabData[selectedTab].modalFilters}
-              </ActionBar>
-            )}
+            <ActionBar
+              filterMenuName={selectedTab}
+              nameIsHidden={params.jobName}
+              filters={tabData[selectedTab].filters}
+              handleRefresh={tabData[selectedTab].handleRefresh}
+              hidden={params.jobId || params.workflowId}
+              page={JOBS_MONITORING_PAGE}
+              tab={selectedTab}
+              withRefreshButton={false}
+            >
+              {tabData[selectedTab].modalFilters}
+            </ActionBar>
           </div>
           <div className="table-container">
             <ProjectJobsMonitoringContext.Provider

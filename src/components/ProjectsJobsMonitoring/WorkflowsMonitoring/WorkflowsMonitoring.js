@@ -96,7 +96,7 @@ const WorkflowsMonitoring = ({ fetchFunctionLogs }) => {
       if (params.workflowId) {
         dispatch(setFilters({ groupBy: GROUP_BY_NONE }))
       } else {
-        if (workflowsStore.workflows.data.length === 0) {
+        if (workflowsStore.workflows.data.length === 0 && !filtersStore.saveFilters) {
           const past24HourOption = datePickerPastOptions.find(
             option => option.id === PAST_24_HOUR_DATE_OPTION
           )
@@ -114,17 +114,8 @@ const WorkflowsMonitoring = ({ fetchFunctionLogs }) => {
           dispatch(setFilters({ ...filters }))
           getWorkflows(filters)
         } else {
-          const past24HourOption = datePickerPastOptions.find(
-            option => option.id === PAST_24_HOUR_DATE_OPTION
-          )
-
           getWorkflows({
             ...filtersStore,
-            dates: {
-              value: past24HourOption.handler(),
-              isPredefined: past24HourOption.isPredefined,
-              initialSelectedOptionId: past24HourOption.id
-            },
             state:
               filtersStore.filterMenuModal[JOBS_MONITORING_WORKFLOWS_TAB].values.state ||
               FILTER_ALL_ITEMS

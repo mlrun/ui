@@ -17,7 +17,7 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import React, { useState, useCallback, useMemo, useEffect } from 'react'
+import React, { useState, useMemo, useEffect } from 'react'
 import { useParams } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 import { isEmpty } from 'lodash'
@@ -33,7 +33,6 @@ import {
   JOBS_MONITORING_JOBS_TAB,
   JOBS_MONITORING_PAGE
 } from '../../../constants'
-import { datePickerPastOptions, PAST_24_HOUR_DATE_OPTION } from '../../../utils/datePicker.util'
 import { setFilters } from '../../../reducers/filtersReducer'
 
 const JobsMonitoring = () => {
@@ -63,24 +62,11 @@ const JobsMonitoring = () => {
     [isStagingMode, jobRuns, jobs, params.jobName]
   )
 
-  const isJobDataEmpty = useCallback(
-    () => jobs.length === 0 && ((!params.jobName && jobRuns.length === 0) || params.jobName),
-    [jobRuns.length, jobs.length, params.jobName]
-  )
-
   useEffect(() => {
     if (isEmpty(selectedJob) && !params.jobId && !dataIsLoaded) {
-      const past24HourOption = datePickerPastOptions.find(
-        option => option.id === PAST_24_HOUR_DATE_OPTION
-      )
       const filters = {
-        dates: {
-          value: past24HourOption.handler(),
-          isPredefined: past24HourOption.isPredefined,
-          initialSelectedOptionId: past24HourOption.id
-        },
-        state:
-          filtersStore.filterMenuModal[JOBS_MONITORING_JOBS_TAB].values.state || FILTER_ALL_ITEMS
+        ...filtersStore,
+        state: filtersStore.filterMenuModal[JOBS_MONITORING_JOBS_TAB].values.state || FILTER_ALL_ITEMS
       }
 
       dispatch(setFilters({ ...filters }))
@@ -90,9 +76,7 @@ const JobsMonitoring = () => {
   }, [
     dataIsLoaded,
     dispatch,
-    filtersStore.dates,
-    filtersStore.filterMenuModal,
-    isJobDataEmpty,
+    filtersStore,
     params.jobId,
     params.jobName,
     refreshJobs,
