@@ -173,8 +173,6 @@ const detailsActions = {
         const timeUnit = differenceInDays > TIME_FRAME_LIMITS['24_HOURS'] ? 'days' : 'hours'
         const metrics = parseMetrics(data, timeUnit)
 
-        dispatch(detailsActions.fetchEndpointMetricsValuesSuccess())
-
         return metrics
       })
       .catch(error => {

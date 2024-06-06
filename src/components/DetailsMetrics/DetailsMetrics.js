@@ -45,12 +45,14 @@ const DetailsMetrics = ({ selectedItem }) => {
   const [metrics, setMetrics] = useState([])
   const [selectedDate, setSelectedDate] = useState('')
   const [previousTotalInvocation, setPreviousTotalInvocation] = useState(0)
-  const prevScrollPositionRef = useRef(0)
+  const enableScrollRef = useRef(true)
   const invocationBodyCardRef = useRef(null)
+  const metricsContainerRef = useRef(null)
+  const metricsValuesAbortController = useRef(new AbortController())
+  const prevScrollPositionRef = useRef(0)
 
   const detailsStore = useSelector(store => store.detailsStore)
   const dispatch = useDispatch()
-  const metricsValuesAbortController = useRef(new AbortController())
   const lineConfig = useMemo(() => getLineChartMetricConfig(), [])
   const barConfig = useMemo(() => getBarChartMetricConfig(), [])
 
@@ -60,7 +62,7 @@ const DetailsMetrics = ({ selectedItem }) => {
 
     if (!card) return
 
-    const metrics = document.querySelector('.metrics')
+    const metrics = metricsContainerRef.current
     const content = document.querySelector('.metrics__card-invocation-content')
     const invocationHeader = document.querySelector('.stats-card__row')
     e.preventDefault()
@@ -73,13 +75,19 @@ const DetailsMetrics = ({ selectedItem }) => {
     if (
       e.target.scrollTop > prevScrollPositionRef.current &&
       e.target.scrollTop > 5 &&
-      card.clientHeight !== 80
+      card.clientHeight !== 80 &&
+      enableScrollRef.current
     ) {
       card.style.height = '80px'
+      metricsContainerRef.current.style.height = '550px'
       content.style.display = 'flex'
       invocationHeader.style.display = 'none'
+      enableScrollRef.current = false
       setIsInvocationCardCollapsed(false)
-    } else if (e.target.scrollTop === 0 && card.clientHeight === 80) {
+      setTimeout(() => {
+        enableScrollRef.current = true
+      }, [1000])
+    } else if (e.target.scrollTop === 0 && card.clientHeight < 180 && enableScrollRef.current) {
       card.style.height = '200px'
       content.style.display = 'none'
       invocationHeader.style.display = 'flex'
@@ -203,6 +211,8 @@ const DetailsMetrics = ({ selectedItem }) => {
         if (!!previousInvocation && previousInvocation.length !== 0) {
           setPreviousTotalInvocation(previousInvocation[0].rawDataTotal)
         }
+
+        dispatch(detailsActions.fetchEndpointMetricsValuesSuccess())
       })
     },
     [dispatch, setMetrics, metricsValuesAbortController]
@@ -293,7 +303,7 @@ const DetailsMetrics = ({ selectedItem }) => {
   }
 
   return (
-    <div className="metrics">
+    <div ref={metricsContainerRef} className="metrics">
       {generatedMetrics.map(([applicationName, applicationMetrics]) => {
         return (
           <React.Fragment key={applicationName}>

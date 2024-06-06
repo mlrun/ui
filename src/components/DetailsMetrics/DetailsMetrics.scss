@@ -4,13 +4,11 @@
 .metrics {
   display: flex;
   flex-wrap: wrap;
+  align-content: flex-start;
   gap: 16px;
   margin-top: -16px;
   height: fit-content;
   margin-bottom: 30px;
-  transition:
-    width 0.5s,
-    height 0.5s;
 
   &__app-name {
     font-size: 20px;
@@ -26,6 +24,7 @@
 
     &-invocations {
       z-index: 1;
+      align-self: baseline;
       top: 0;
       position: sticky;
       box-shadow: 0 -10px 0 0 $white;
@@ -35,10 +34,6 @@
       padding-bottom: 0;
       width: 100%;
       animation: linear;
-      //animation-delay: 1s;
-      transition:
-        width 0.1s,
-        height 0.1s;
     }
 
     &-drift-status {
@@ -114,8 +109,6 @@
       align-items: stretch;
       position: relative;
       box-sizing: border-box;
-      animation: ease-in-out;
-      animation-delay: 0.2s;
       transition:
         width 1s,
         height 1s;
@@ -167,16 +160,10 @@
         width: auto;
         border: 1px solid transparent;
         flex: 1 1 auto;
-        transition:
-          width 0.5s,
-          height 0.5s;
-        animation-delay: 1s;
 
         canvas {
           width: 100% !important;
           height: 100% !important;
-          animation-delay: 1s;
-
         }
 
         canvas.hidden-canvas {
@@ -244,9 +231,6 @@
       align-content: center;
       font-size: 18px;
       font-weight: 700;
-      transition:
-        width 2s,
-        height 2s;
       animation-delay: 1s;
 
 
