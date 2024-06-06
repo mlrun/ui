@@ -19,7 +19,6 @@ such restriction.
 */
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { isEmpty } from 'lodash'
 
 import InvocationMetricCard from './IncvocationMetricCard'
 import MetricChart from '../MetricChart/MetricChart'
@@ -221,11 +220,10 @@ const DetailsMetrics = ({ selectedItem }) => {
   useEffect(() => {
     if (
       selectedItem.metadata?.uid &&
-      !isEmpty(detailsStore.metricsOptions.selectedByEndpoint[selectedItem.metadata?.uid])
+      detailsStore.metricsOptions.selectedByEndpoint[selectedItem.metadata?.uid]
     ) {
       const selectedMetrics =
         detailsStore.metricsOptions.selectedByEndpoint[selectedItem.metadata?.uid]
-
       const invocationMetric = detailsStore.metricsOptions.all.find(
         metric => metric.app === 'mlrun-infra'
       )
@@ -253,29 +251,7 @@ const DetailsMetrics = ({ selectedItem }) => {
         metric => metric.app === 'mlrun-infra'
       )
       preInvocationMetricParams.name.push(full_name)
-
       fetchData(params, preInvocationMetricParams, selectedItem)
-    } else if (detailsStore.metricsOptions.all.length !== 0) {
-      const selectedMetricsParams = { name: [] }
-      selectedMetricsParams.start =
-        detailsStore.dates?.value[0] === '' ? '' : detailsStore.dates?.value[0].getTime()
-      selectedMetricsParams.end =
-        detailsStore.dates?.value[0] === '' ? '' : detailsStore.dates?.value[1].getTime()
-
-      const newRange = getDateRangeBefore(selectedMetricsParams)
-      const preInvocMetricParams = { name: [] }
-
-      preInvocMetricParams.start = newRange.start
-      preInvocMetricParams.end = newRange.end
-
-      const { full_name } = detailsStore.metricsOptions.all.find(
-        metric => metric.app === 'mlrun-infra'
-      )
-
-      selectedMetricsParams.name.push(full_name)
-      preInvocMetricParams.name.push(full_name)
-
-      fetchData(selectedMetricsParams, preInvocMetricParams, selectedItem)
     } else {
       setMetrics([])
     }
