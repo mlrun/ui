@@ -21,7 +21,7 @@ import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { isEmpty } from 'lodash'
 
-import GenericMetricChart from '../MetricChart/MetricChart'
+import InvocationMetricCard from './IncvocationMetricCard'
 import MetricChart from '../MetricChart/MetricChart'
 import NoMetricData from './NoMetricData'
 import StatsCard from '../../common/StatsCard/StatsCard'
@@ -33,24 +33,12 @@ import {
   groupMetricByApplication,
   ML_RUN_INFRA
 } from '../../elements/MetricsSelector/metricsSelector.utils'
-import {
-  getBarChartMetricConfig,
-  getGradientLineChartConfig,
-  getLineChartMetricConfig
-} from '../../utils/getMetricChartConfig'
+import { getBarChartMetricConfig, getLineChartMetricConfig } from '../../utils/getMetricChartConfig'
+import { getDateRangeBefore, timeRangeMapping } from './detailsMetrics.utils'
 
-import {
-  calculatePercentageDrift,
-  getDateRangeBefore,
-  timeRangeMapping
-} from './detailsMetrics.utils'
-
-import { ReactComponent as ArrowUp } from 'igz-controls/images/arrow-up.svg'
-import { ReactComponent as ArrowDown } from 'igz-controls/images/arrow-down.svg'
 import { ReactComponent as MetricsIcon } from 'igz-controls/images/metrics-icon.svg'
 
 import './DetailsMetrics.scss'
-import colors from 'igz-controls/scss/colors.scss'
 
 const DetailsMetrics = ({ selectedItem }) => {
   const [isInvocationCardCollapsed, setIsInvocationCardCollapsed] = useState(true)
@@ -65,7 +53,6 @@ const DetailsMetrics = ({ selectedItem }) => {
   const metricsValuesAbortController = useRef(new AbortController())
   const lineConfig = useMemo(() => getLineChartMetricConfig(), [])
   const barConfig = useMemo(() => getBarChartMetricConfig(), [])
-  const gradientConfig = useMemo(() => getGradientLineChartConfig(), [])
 
   const handleWindowResize = useCallback(e => {
     if (e.target && !e.target.classList?.contains('item-info')) return
@@ -324,85 +311,15 @@ const DetailsMetrics = ({ selectedItem }) => {
                     />
                   )
                 } else {
-                  const resultPercentageDrift = calculatePercentageDrift(
-                    previousTotalInvocation,
-                    metric.rawDataTotal
-                  )
-
                   return (
-                    <StatsCard className="metrics__card metrics__card-invocations" key={metric.id}>
-                      <StatsCard.Header title="Endpoint call count">
-                        <div className="metrics__card-invocation-header">
-                          <div className="metrics__card-invocation-header_drift-icon-contrainer">
-                            {resultPercentageDrift.positive ? <ArrowUp /> : <ArrowDown />}
-                          </div>
-                          <div
-                            className={`metrics__card-invocation-header_${resultPercentageDrift.className}`}
-                          >
-                            {resultPercentageDrift.percentageChange}
-                          </div>
-                          <div className="metrics__card-invocation-header_selected_date">
-                            {selectedDate}
-                          </div>
-                          <div className="metrics__card-invocation-header_total_title">Total</div>
-                          <div className="metrics__card-invocation-header_total_score">
-                            {metric.total}
-                          </div>
-                        </div>
-                      </StatsCard.Header>
-                      <div ref={invocationBodyCardRef} className="metrics__card-body">
-                        <div className="metrics__card-invocation-content">
-                          <div className="metrics__card-invocation-content-title">
-                            Endpoint call count
-                          </div>
-                          <div className="metrics__card-invocation-content_container">
-                            <div className="metrics__card-invocation-content_container_drift_icon">
-                              {resultPercentageDrift.positive ? <ArrowUp /> : <ArrowDown />}
-                            </div>
-                            <div
-                              className={`metrics__card-invocation-content_container_${resultPercentageDrift.className}`}
-                            >
-                              {resultPercentageDrift.percentageChange}
-                            </div>
-                            <div>{selectedDate}</div>
-                          </div>
-                          <div className="metrics__card-invocation-content-data">
-                            <div className="metrics__card-invocation-content-data_total_title">
-                              Total
-                            </div>
-                            <div className="metrics__card-invocation-content-data_total_score">
-                              {' '}
-                              {metric.total}
-                            </div>
-                          </div>
-                        </div>
-                        <div className="metrics__card-body-invocation">
-                          <GenericMetricChart
-                            showGrid={isInvocationCardCollapsed}
-                            chartConfig={{
-                              gradient: true,
-                              ...gradientConfig,
-                              data: {
-                                labels: metric.labels,
-                                datasets: [
-                                  {
-                                    data: metric.points,
-                                    chartType: CHART_TYPE_LINE,
-                                    fill: true,
-                                    metricType: metric.type,
-                                    driftStatusList: [],
-                                    backgroundColor: colors.cornflowerBlueTwo,
-                                    borderColor: colors.cornflowerBlueTwo,
-                                    borderWidth: 1,
-                                    tension: 0.4
-                                  }
-                                ]
-                              }
-                            }}
-                          />
-                        </div>
-                      </div>
-                    </StatsCard>
+                    <InvocationMetricCard
+                      ref={invocationBodyCardRef}
+                      isInvocationCardCollapsed={isInvocationCardCollapsed}
+                      key={metric.id}
+                      metric={metric}
+                      previousTotalInvocation={previousTotalInvocation}
+                      selectedDate={selectedDate}
+                    />
                   )
                 }
               } else if (!metric.data) {
