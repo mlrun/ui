@@ -220,6 +220,7 @@ const DetailsMetrics = ({ selectedItem }) => {
   useEffect(() => {
     if (
       selectedItem.metadata?.uid &&
+      !detailsStore.metricsOptions.loading &&
       detailsStore.metricsOptions.selectedByEndpoint[selectedItem.metadata?.uid]
     ) {
       const selectedMetrics =
@@ -264,6 +265,7 @@ const DetailsMetrics = ({ selectedItem }) => {
     selectedItem,
     detailsStore.dates.value,
     detailsStore.metricsOptions.all,
+    detailsStore.metricsOptions.loading,
     detailsStore.metricsOptions.selectedByEndpoint,
     setMetrics,
     metricsValuesAbortController
