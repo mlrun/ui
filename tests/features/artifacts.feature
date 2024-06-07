@@ -125,7 +125,7 @@ Feature: Files Page
   @inProgress
   @FAILED_TODO
   @smoke
-  #TODO: bug - Back and forward browser navigation does not automatically close the form  ML-6239
+  #TODO: bug - ML-6457 [Modal wizards] The "Are you sure?" pop-up does not appear on the browser's back navigation
   Scenario: MLA005 - Check all mandatory components on Register Artifacts Popup
     Given open url
     And wait load page
@@ -221,7 +221,8 @@ Feature: Files Page
     Then select "Table" option in "New_File_Type_Dropdown" dropdown on "Register_File_Popup" wizard
     Then click on "Register_Button" element on "Register_File_Popup" wizard
     And wait load page
-    Then value in "n" column with "text" in "Files_Table" on "Files" wizard should contains "table"
+    Then value in "name" column with "text" in "Files_Table" on "Files" wizard should contains "test-artifact"
+    Then value in "type" column with "text" in "Files_Table" on "Files" wizard should contains "table"
     Then click on cell with value "test-artifact" in "name" column in "Files_Table" table on "Files" wizard
     Then "Header" element on "Files_Info_Pane" should contains "test-artifact" value
     Then check "test-artifact" value in "key" column in "Overview_Table" table on "Files_Info_Pane" wizard
@@ -456,8 +457,8 @@ Feature: Files Page
     And click on cell with value "Artifacts" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
     And hover "MLRun_Logo" component on "commonPagesHeader" wizard
     And wait load page
-    Then verify action menu on "Files" wizard in "Files_Table" table with "test-i" value in "name" column should contains "Common_Lists"."Action_Menu_List"
-    Then select "Download" option in action menu on "Files" wizard in "Files_Table" table at row with "test-i" value in "name" column
+    Then verify action menu on "Files" wizard in "Files_Table" table with "training_iteration_results" value in "name" column should contains "Common_Lists"."Action_Menu_List"
+    Then select "Download" option in action menu on "Files" wizard in "Files_Table" table at row with "training_iteration_results" value in "name" column
     And wait load page
     And wait load page
     Then verify "Download_Pop_Up" element visibility on "Downloads_Popup" wizard
@@ -467,7 +468,7 @@ Feature: Files Page
     Then verify "Header_Download_Pop_Up" element visibility on "Downloads_Popup" wizard
     Then "Header_Download_Pop_Up" element on "Downloads_Popup" should contains "Downloads" value
     Then click on "Download_Pop_Up_Cross_Cancel_Button" element on "Downloads_Popup" wizard
-    Then select "View YAML" option in action menu on "Files" wizard in "Files_Table" table at row with "test-i" value in "name" column
+    Then select "View YAML" option in action menu on "Files" wizard in "Files_Table" table at row with "training_iteration_results" value in "name" column
     Then verify if "View_YAML" popup dialog appears
     Then verify "Cross_Cancel_Button" element visibility on "View_YAML" wizard
     Then verify "YAML_Modal_Container" element visibility on "View_YAML" wizard

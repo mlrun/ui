@@ -676,7 +676,7 @@ module.exports = {
     Overview_Headers: commonTable(infoPaneOverviewHeaders),
 
     // Logs tab.
-    Logs_Text_container: By.css('.table__item .table__item_logs-content'),
+    Logs_Text_container: By.css('.table__item .table__item-logs-content'),
     Logs_Refresh_Button: By.css('.table__item .logs-refresh')
   },
   workflowsMonitorTabInfoPane: {
@@ -689,7 +689,7 @@ module.exports = {
     Overview_Headers: commonTable(infoPaneOverviewHeaders),
 
     // Logs tab.
-    Logs_Text_container: By.css('.table__item .table__item_logs-content'),
+    Logs_Text_container: By.css('.table__item .table__item-logs-content'),
     Logs_Refresh_Button: By.css('.table__item .logs-refresh')
   },
   inputsInfoPane: {
@@ -698,7 +698,7 @@ module.exports = {
   artifactsInfoPane: {
     Artifacts_Table: commonTable(artifactsTable),
     Artifact_Preview_Button: By.css('.item-artifacts .artifacts__preview .data-ellipsis svg'),
-    Iterations_Dropdown: dropdownComponent(generateDropdownGroup('.item-header__buttons .select'))
+    Iterations_Dropdown: dropdownComponent(generateDropdownGroup('.item-header-wrapper .select'))
   },
   resultsInfoPane: {
     Results_Table: commonTable(resultsTable)
@@ -765,7 +765,7 @@ module.exports = {
     ),
     Overview_UID_Header: labelComponent(
       generateLabelGroup(
-        '.item-info__details:nth-of-type(1) .details-item:nth-of-type(11) .details-item__header',
+        '.item-info__details-wrapper:nth-of-type(2) .item-info__details .details-item:nth-of-type(6) .details-item__header',
         false,
         true
       )
@@ -774,7 +774,7 @@ module.exports = {
     Overview_Table: commonTable(modelsOverviewTable),
     Info_Sources_Table: commonTable(filesInfoSourcesTable),
     Labels_Field: By.css(
-      '.item-info__details-wrapper .details-item:nth-of-type(15) .button-add-density_dense'
+      '.item-info__details-wrapper .details-item:nth-of-type(14) [data-testid="labels-add-chip"]'
     ),
     Labels_Table: commonTable(featureSetsInfoPaneLabelsTable),
     Apply_Button: By.css('.item-info__details .round-icon-cp:nth-of-type(2) button'),

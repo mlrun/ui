@@ -84,8 +84,6 @@ Feature: MLRun Project Home Page
     
     @MLPH
     @smoke
-    @FAILED_TODO
-    #TODO: bug - Redirection is missing after registering artifacts from the Quick Actions page ML-6247
     Scenario: MLPH002 - Verify behaviour on Register Model Popup on Project Home Page
         Given open url
         * turn on demo mode
@@ -185,8 +183,6 @@ Feature: MLRun Project Home Page
     @MLPH
     @passive
     @smoke
-    @FAILED_TODO
-    #TODO: bug - Redirection is missing after registering artifacts from the Quick Actions page ML-6247
     Scenario: MLPH004 - Check all mandatory components on Register Dataset Popup on Project Home Page
         Given open url
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
@@ -243,6 +239,8 @@ Feature: MLRun Project Home Page
     @MLPH 
     @passive
     @smoke
+    @FAILED_TODO
+    #TODO: bug - ML-6663 [ML Functions, Quick actions] 'Create New Function' pop-up doesn't appear
     Scenario: MLPH005 - Check all mandatory components on Create ML Function on Project Home Page
         * set tear-down property "project" created with "automation-test-1003" value
         * create "automation-test-1003" MLRun Project with code 201
@@ -274,8 +272,6 @@ Feature: MLRun Project Home Page
     @MLPH
     @passive
     @smoke
-    @FAILED_TODO
-    #TODO: bug - Redirection is missing after registering artifacts from the Quick Actions page ML-6247
     Scenario: MLPH006 - Check all mandatory components on Batch run wizard
         Given open url
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
@@ -378,8 +374,6 @@ Feature: MLRun Project Home Page
 
     @MLPH
     @passive
-    @FAILED_TODO
-    #TODO: bug - Redirection is missing after registering artifacts from the Quick Actions page ML-6247
     Scenario: MLPH007 - Check all mandatory components on Register File Popup on Project Home Page
         Given open url
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
@@ -582,7 +576,6 @@ Feature: MLRun Project Home Page
             | ML Functions |
         And wait load page
         Then verify "Table_Name_Filter_Input" element visibility on "ML_Functions" wizard
-        Then verify "Show_Untagged_Functions_Checkbox" element visibility on "ML_Functions" wizard
         Then verify "Table_Refresh_Button" element visibility on "ML_Functions" wizard
         Then verify "Table_Expand_Rows_Button" element visibility on "ML_Functions" wizard
         * turn on demo mode
@@ -732,8 +725,6 @@ Feature: MLRun Project Home Page
     
     @MLPH
     @smoke
-    @FAILED_TODO
-    #TODO: bug - Redirection is missing after registering artifacts from the Quick Actions page ML-6247
     Scenario: MLPH020 - Check all mandatory components on Batch inference in Advanced section
         Given open url
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard

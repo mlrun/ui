@@ -25,7 +25,6 @@ Feature: ML Functions
         And hover "MLRun_Logo" component on "commonPagesHeader" wizard
         And wait load page
         Then verify "Table_Name_Filter_Input" element visibility on "ML_Functions" wizard
-        Then verify "Show_Untagged_Functions_Checkbox" element visibility on "ML_Functions" wizard
         And turn on demo mode
         And wait load page
         Then verify "New_Function_Button" element visibility on "ML_Functions" wizard
@@ -1331,6 +1330,7 @@ Feature: ML Functions
     @passive
     @smoke
     #TODO: ML-5718 - move 'Deploy' button for "Serving" function to demo mode
+    #TODO: Bug - the tooltip hangs (doesn't appear on findElements)
     Scenario: MLF034 - Verify Deploy option for serving kind functions
         Given open url
         And wait load page

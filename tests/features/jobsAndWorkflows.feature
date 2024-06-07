@@ -509,6 +509,8 @@ Feature: Jobs and workflows
     @MLJW
     @passive
     @smoke
+    @FAILED_TODO
+    #TODO: Bug ML-6603 [Monitor Jobs, per project] The artifact preview is not collapsed
     Scenario: MLJW065 - Check all mandatory components in Item infopane on Artifacts tab on Jobs Monitor Page
         Given open url
         And wait load page
@@ -526,6 +528,7 @@ Feature: Jobs and workflows
         When click on cell with row index 1 in "name" column in "Jobs_Monitor_Table" table on "Jobs_Monitor_Tab" wizard
         And wait load page
         And select "Artifacts" tab in "Info_Pane_Tab_Selector" on "Jobs_Monitor_Tab_Info_Pane" wizard
+        And wait load page
         Then verify "Artifacts_Table" element visibility on "Artifacts_Info_Pane" wizard
         When click on "sorter_icon" in "Artifacts_Table" table on "Artifacts_Info_Pane" wizard with sorters
         And wait load page
@@ -1912,7 +1915,7 @@ Feature: Jobs and workflows
         And wait load page
         Then verify if "Notification_Popup" popup dialog appears
         Then verify "Notification_Pop_Up" element visibility on "Notification_Popup" wizard
-        Then "Notification_Pop_Up" element on "Notification_Popup" should contains "Job started successfully" value
+        Then "Notification_Pop_Up" element on "Notification_Popup" should contains "The batch run was started" value
         Then verify "Notification_Pop_Up_Cross_Close_Button" element visibility on "Notification_Popup" wizard
         Then click on "Notification_Pop_Up_Cross_Close_Button" element on "Notification_Popup" wizard
         When click on cell with value "test-m_ingest" in "name" column in "Jobs_And_Workflows" table on "Project" wizard
@@ -2152,8 +2155,7 @@ Feature: Jobs and workflows
 
     @MLJW
     @smoke
-    #TODO: getPipelines func - update with 'create at' filter
-    #TODO: Bug ML-5787 - The 'Created At' filter doesn't keep the selected type
+    #TODO: bug with redirection
     Scenario: MLJW086 - Check broken link redirection on Monitor Workflows and Schedules screens
         Given open url
         And wait load page

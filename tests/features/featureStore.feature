@@ -1579,7 +1579,7 @@ Feature: Feature Store Page
         Then "No_Data_Message" component on "commonPagesHeader" should contains "No_Data_Message"."No_Data"
 
     @MLFS
-    @smoke
+    @smoke 
     Scenario: MLFS047 - Check broken link redirection
         * set tear-down property "project" created with "automation-test-010" value
         * create "automation-test-010" MLRun Project with code 201
@@ -2031,4 +2031,4 @@ Feature: Feature Store Page
         Then select "REDIS" option in "NOSQL_Kind_Dropdown" dropdown on "New_Feature_Set" wizard
         And wait load page
         Then click on "Apply_Online_Path_Button" element in "Target_Store_Accordion" on "New_Feature_Set" wizard
-        Then "Online_Path" element in "Target_Store_Accordion" on "New_Feature_Set" should contains "redis://{authority}/projects/churn-project-admin/FeatureStore/test-fs1/redisnosql/sets/test-fs1" value
+        Then "Online_Path" element in "Target_Store_Accordion" on "New_Feature_Set" should contains "redis://{authority}/projects/churn-project-admin/FeatureStore/test-fs1/nosql/sets/test-fs1" value

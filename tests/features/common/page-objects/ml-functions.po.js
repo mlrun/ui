@@ -19,11 +19,9 @@ such restriction.
 */
 import { By } from 'selenium-webdriver'
 import inputGroup from '../components/input-group.component'
-import checkboxComponent from '../components/checkbox.component'
 import commonTable from '../components/table.component'
 import actionMenu from '../components/action-menu.component'
 import {
-  generateCheckboxGroup,
   generateInputGroup,
   generateLabelGroup
 } from '../../common-tools/common-tools'
@@ -89,25 +87,17 @@ module.exports = {
   mlFunctions: {
     Table_Name_Filter_Input: inputGroup(
       generateInputGroup(
-        '.content .content__action-bar-wrapper .filters .input-wrapper',
+        '.content .content__action-bar-wrapper [data-testid="name-form-field-input"]',
         true,
         false
       )
     ),
-    Show_Untagged_Functions_Checkbox: checkboxComponent(
-      generateCheckboxGroup(
-        '.content .content__action-bar-wrapper .checkbox.filters-checkbox',
-        true,
-        false,
-        false
-      )
-    ),
-    New_Function_Button: By.css('.content .new-function button'),
+    New_Function_Button: By.css('.content [data-testid="btn"]'),
     Table_Refresh_Button: By.css(
-      '.content .content__action-bar-wrapper .actions .data-ellipsis:nth-of-type(1) button'
+      '.content [data-testid="refresh-tooltip-wrapper"]'
     ),
     Table_Expand_Rows_Button: By.css(
-      '.content .content__action-bar-wrapper .actions .data-ellipsis:nth-of-type(1) button'
+      '.content [data-testid="toggle-collapse"]'
     ),
     Functions_Table: commonTable(functionsTable)
   }

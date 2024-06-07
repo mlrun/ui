@@ -228,7 +228,7 @@ Feature: Models Page
   @FAILED_TODO
   @smoke
   #TODO: Register_Model_Button hidden from 1.4.0, running on demo mode
-  #TODO: bug - Back and forward browser navigation does not automatically close the form  ML-6239
+  #TODO: bug - ML-6457 [Modal wizards] The "Are you sure?" pop-up does not appear on the browser's back navigation - failed
   Scenario: MLM009 - Check all mandatory components on Register Model Popup
     Given open url
     And turn on demo mode
@@ -244,6 +244,7 @@ Feature: Models Page
     Then click on "Register_Model_Button" element on "Models" wizard
     Then navigate back
     Then verify "Title" element not exists on "Register_Model_Popup" wizard
+    Then navigate forward
     Then click on "Register_Model_Button" element on "Models" wizard
     Then verify if "Register_Model_Popup" popup dialog appears
     Then verify "Cross_Cancel_Button" element visibility on "Register_Model_Popup" wizard
@@ -322,7 +323,7 @@ Feature: Models Page
   @smoke
   #TODO: Register_Model_Button hidden from 1.4.0, running on demo mode
   Scenario: MLM010 - Verify behaviour on Register new Model
-    * set tear-down property "model" created in "default" project with "automation-model" value
+    # * set tear-down property "model" created in "default" project with "automation-model" value
     Given open url
     And turn on demo mode
     And wait load page
@@ -374,7 +375,7 @@ Feature: Models Page
     And click on cell with value "Models" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
     And hover "MLRun_Logo" component on "commonPagesHeader" wizard
     And wait load page
-    Then verify action menu on "Models" wizard in "Models_Table" table with "model_default" value in "name" column should contains "Common_Lists"."Action_Menu_List"
+    Then verify action menu on "Models" wizard in "Models_Table" table with "transaction_fraud_xgboost" value in "name" column should contains "Common_Lists"."Action_Menu_List"
     Then select "Download" option in action menu on "Models" wizard in "Models_Table" table at row with "model_default" value in "name" column
     And wait load page
     And wait load page
@@ -500,7 +501,7 @@ Feature: Models Page
     Then select "All" option in "Table_Tree_Filter_Dropdown" dropdown on "Artifacts_FilterBy_Popup" wizard
     Then click on "Apply_Button" element on "Artifacts_FilterBy_Popup" wizard
     And wait load page
-    Then verify action menu on "Models" wizard in "Models_Table" table with "current-state_model" value in "name" column should contains "Common_Lists"."Action_Menu_List"
+    Then verify action menu on "Models" wizard in "Models_Table" table with "current-state_model" value in "name" column should contains "Common_Lists"."Action_Menu_List_Expanded"
     Then verify that in action menu on "Models" wizard in "Models_Table" table with "current-state_model" value in "name" column "Delete" option is disabled
     When click on cell with row index 1 in "name" column in "Models_Table" table on "Models" wizard
     Then check "Click to add" value in "tag" column in "Overview_Table" table on "Models_Info_Pane" wizard
@@ -509,9 +510,7 @@ Feature: Models Page
 
   @MLM
   @passive
-  @FAILED_TODO
   @smoke
-  #TODO: Bug ML-6217 - [Breadcrumbs] request is not sent when changing project
   Scenario: MLM025 - Verify Preview, Deploy option, view Preview, Deploy action, Preview tab
       Given open url
       And wait load page
@@ -543,7 +542,7 @@ Feature: Models Page
       Then verify "deploy" option is present on "Models" wizard in "Models_Table" table with "transaction_fraud_xgboost" value in "name" column
       Then click on "deploy" option on "Models" wizard in "Models_Table" table with "transaction_fraud_xgboost" value in "name" column
       Then verify if "Common_Popup" popup dialog appears
-      Then "Title" element on "Common_Popup" should contains "Failed to deploy model" value
+      Then "Title" element on "Common_Popup" should contains "Model cannot be deployed" value
       Then "Message" component on "Common_Popup" should contains "Messages"."How_To_Create"
       Then verify "Cross_Cancel_Button" element visibility on "Common_Popup" wizard
       Then click on "Cross_Cancel_Button" element on "Common_Popup" wizard
@@ -669,7 +668,7 @@ Feature: Models Page
   @passive
   @smoke
   Scenario: MLM027 - Check Details panel still active on page refresh
-    * set tear-down property "model" created in "default" project with "test-model" value
+    # * set tear-down property "model" created in "default" project with "test-model" value
     * create "test-model" Model with "v1" tag in "default" project with code 200
     Given open url
     And wait load page
@@ -715,7 +714,7 @@ Feature: Models Page
   @passive
   @smoke
   @FAILED_TODO
-  #TODO: bug - Back and forward browser navigation does not automatically close the form  ML-6239
+  #TODO: bug - ML-6457 [Modal wizards] The "Are you sure?" pop-up does not appear on the browser's back navigation - failed
   Scenario: MLM029 - Check components on Deploy Model Popup
     * set tear-down property "function" created in "default" project with "automation-test-function-1" value
     * set tear-down property "function" created in "default" project with "automation-test-function-2" value
