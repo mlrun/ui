@@ -166,6 +166,7 @@ export const monitorWorkflowsActionCreator = {
   abortJob: jobsActions.abortJob,
   deleteJob: jobsActions.deleteJob,
   deleteWorkflows: workflowsActions.deleteWorkflows,
+  fetchFunction: functionsActions.fetchFunction,
   fetchFunctionLogs: functionsActions.fetchFunctionLogs,
   fetchJob: jobsActions.fetchJob,
   fetchJobFunctions: jobsActions.fetchJobFunctions,
@@ -173,7 +174,6 @@ export const monitorWorkflowsActionCreator = {
   fetchJobPods: detailsActions.fetchJobPods,
   fetchWorkflow: workflowsActions.fetchWorkflow,
   fetchWorkflows: workflowsActions.fetchWorkflows,
-  getFunction: functionsActions.getFunction,
   removePods: detailsActions.removePods,
   resetWorkflow: workflowsActions.resetWorkflow
 }
