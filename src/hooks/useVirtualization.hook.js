@@ -19,8 +19,14 @@ such restriction.
 */
 import { useLayoutEffect, useMemo, useState } from 'react'
 import { isEmpty, isEqual, sum, throttle } from 'lodash'
+import { MAIN_TABLE_ID, MAIN_TABLE_BODY_ID } from '../constants'
 
 const HIDDEN_RENDER_ITEMS_LENGTH = 5
+const virtualizationConfigInitialState = {
+  startIndex: -1,
+  endIndex: -1,
+  tableBodyPaddingTop: 0
+}
 
 /**
  * Checks if a row is rendered based on the provided virtualization configuration and row index.
@@ -68,8 +74,7 @@ export const getRowsSizes = (
 /**
  * Hook for virtualizing a table.
  * @param {Object} options - Options object.
- * @param {React.RefObject} options.tableRef - Ref object for the table element.
- * @param {React.RefObject} options.tableBodyRef - Ref object for the table body element.
+ * @param {any} [options.renderTriggerItem] - item that will trigger calculation of the virtualization config.
  * @param {number[]} [options.rowsSizes=[]] - Array containing the heights of each row.
  * @param {Object} [options.rowsData={}] - Object containing data related to rows.
  * @param {Object[]} options.rowsData.content - Array containing content for each row.
@@ -82,32 +87,27 @@ export const getRowsSizes = (
  * @returns {Object} - Object containing virtualization configuration.
  */
 export const useVirtualization = ({
-  tableRef,
-  tableBodyRef,
+  renderTriggerItem,
   rowsSizes = [],
-  rowsData = {},
+  rowsData = {
+    content: []
+  },
   heightData: { rowHeight, rowHeightExtended, headerRowHeight }
 }) => {
-  const [virtualizationConfig, setVirtualizationConfig] = useState({
-    startIndex: -1,
-    endIndex: -1,
-    tableBodyPaddingTop: 0
-  })
+  const [virtualizationConfig, setVirtualizationConfig] = useState(virtualizationConfigInitialState)
   const [rowsSizesLocal, setRowsSizesLocal] = useState(rowsSizes)
-  const tableRefEl = tableRef.current
-  const tableBodyRefEl = tableBodyRef.current
   const rowHeightLocal = useMemo(() => parseInt(rowHeight), [rowHeight])
   const extendedRowHeightLocal = useMemo(() => parseInt(rowHeightExtended), [rowHeightExtended])
   const headerRowHeightLocal = useMemo(() => parseInt(headerRowHeight), [headerRowHeight])
 
   useLayoutEffect(() => {
-    if (isEmpty(rowsData) && !isEqual(rowsSizes, rowsSizesLocal)) {
+    if (isEmpty(rowsData.content) && !isEqual(rowsSizes, rowsSizesLocal)) {
       setRowsSizesLocal(rowsSizes)
     }
   }, [rowsSizesLocal, rowsData, rowsSizes])
 
   useLayoutEffect(() => {
-    if (!isEmpty(rowsData)) {
+    if (!isEmpty(rowsData.content)) {
       const newRowsSizes = getRowsSizes(
         rowsData.content,
         rowsData.selectedItem,
@@ -120,14 +120,23 @@ export const useVirtualization = ({
         setRowsSizesLocal(newRowsSizes)
       }
     }
-  }, [extendedRowHeightLocal, rowsSizesLocal, rowHeightLocal, rowsData])
+  }, [
+    extendedRowHeightLocal,
+    rowsSizesLocal,
+    rowHeightLocal,
+    rowsData.content,
+    rowsData.selectedItem,
+    rowsData.expandedRowsData
+  ])
 
   useLayoutEffect(() => {
+    const tableElement = document.querySelector(`#${MAIN_TABLE_ID}`)
+    const tableBodyElement = document.querySelector(`#${MAIN_TABLE_BODY_ID}`)
     const elementsHeight = sum(rowsSizesLocal)
 
     const calculateVirtualizationConfig = throttle(() => {
       const scrollClientHeight = parseInt(
-        tableRefEl.scrollTop + tableRefEl.clientHeight - headerRowHeightLocal
+        tableElement.scrollTop + tableElement.clientHeight - headerRowHeightLocal
       )
       let firstVisibleItemIndex = 0
       let heightToFirstVisibleItem = 0
@@ -137,7 +146,7 @@ export const useVirtualization = ({
       rowsSizesLocal.some((nextElementHeight, index) => {
         heightToFirstVisibleItem += nextElementHeight
 
-        if (heightToFirstVisibleItem > tableRefEl.scrollTop) {
+        if (heightToFirstVisibleItem > tableElement.scrollTop) {
           firstVisibleItemIndex = index
           lastVisibleItemIndex = firstVisibleItemIndex
           heightToLastVisibleItem = heightToFirstVisibleItem
@@ -176,7 +185,7 @@ export const useVirtualization = ({
       const tableBodyPaddingTop = Math.max(
         Math.min(
           sum(rowsSizesLocal.slice(0, firstRenderIndex)),
-          elementsHeight - tableRefEl.clientHeight
+          elementsHeight - tableElement.clientHeight
         ),
         0
       )
@@ -190,23 +199,25 @@ export const useVirtualization = ({
       })
     }, 150)
 
-    if (tableRefEl && tableBodyRefEl) {
-      tableBodyRefEl.style.minHeight = `${elementsHeight}px`
-      tableBodyRefEl.style.maxHeight = `${elementsHeight}px`
+    if (!isEmpty(tableElement) && !isEmpty(tableBodyElement)) {
+      tableBodyElement.style.minHeight = `${elementsHeight}px`
+      tableBodyElement.style.maxHeight = `${elementsHeight}px`
 
-      calculateVirtualizationConfig(null)
+      calculateVirtualizationConfig()
 
-      tableRefEl.addEventListener('scroll', calculateVirtualizationConfig)
+      tableElement.addEventListener('scroll', calculateVirtualizationConfig)
       window.addEventListener('resize', calculateVirtualizationConfig)
+    } else {
+      setVirtualizationConfig(virtualizationConfigInitialState)
     }
 
     return () => {
-      if (tableRefEl) {
-        tableRefEl.removeEventListener('scroll', calculateVirtualizationConfig)
+      if (tableElement) {
+        tableElement.removeEventListener('scroll', calculateVirtualizationConfig)
         window.removeEventListener('resize', calculateVirtualizationConfig)
       }
     }
-  }, [headerRowHeightLocal, rowsSizesLocal, tableBodyRefEl, tableRefEl])
+  }, [renderTriggerItem, headerRowHeightLocal, rowsSizesLocal, rowsData.content])
 
   return virtualizationConfig
 }

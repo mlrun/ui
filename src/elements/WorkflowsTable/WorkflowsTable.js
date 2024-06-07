@@ -97,8 +97,6 @@ const WorkflowsTable = React.forwardRef(
     const location = useLocation()
     const fetchJobFunctionsPromiseRef = useRef()
     let fetchFunctionLogsTimeout = useRef(null)
-    const tableBodyRef = useRef(null)
-    const tableRef = useRef(null)
 
     const {
       editableItem,
@@ -410,19 +408,6 @@ const WorkflowsTable = React.forwardRef(
       }
     }, [workflowsStore.activeWorkflow.data.graph, findSelectedWorkflowFunction])
 
-    const virtualizationConfig = useVirtualization({
-      tableRef,
-      tableBodyRef,
-      rowsData: {
-        content: tableContent
-      },
-      heightData: {
-        headerRowHeight: cssVariables.monitorWorkflowsHeaderRowHeight,
-        rowHeight: cssVariables.monitorWorkflowsRowHeight,
-        rowHeightExtended: cssVariables.monitorWorkflowsRowHeightExtended
-      }
-    })
-
     const handleCatchRequest = useCallback(
       (error, message) => {
         showErrorNotification(dispatch, error, message, '')
@@ -622,6 +607,17 @@ const WorkflowsTable = React.forwardRef(
       }
     }, [params.functionHash, params.jobId, setItemIsSelected, setSelectedFunction, setSelectedJob])
 
+    const virtualizationConfig = useVirtualization({
+      rowsData: {
+        content: tableContent
+      },
+      heightData: {
+        headerRowHeight: cssVariables.monitorWorkflowsHeaderRowHeight,
+        rowHeight: cssVariables.monitorWorkflowsRowHeight,
+        rowHeightExtended: cssVariables.monitorWorkflowsRowHeightExtended
+      }
+    })
+
     return (
       <>
         {workflowsStore.workflows.loading && <Loader />}
@@ -662,7 +658,6 @@ const WorkflowsTable = React.forwardRef(
                 handleCancel={handleCancel}
                 handleSelectItem={handleSelectRun}
                 pageData={pageData}
-                ref={{ tableRef, tableBodyRef }}
                 retryRequest={getWorkflows}
                 selectedItem={selectedJob}
                 tab={MONITOR_JOBS_TAB}

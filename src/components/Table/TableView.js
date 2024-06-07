@@ -26,6 +26,7 @@ import Details from '../Details/Details'
 import TableHead from './TableHead'
 
 import { ACTIONS_MENU, VIRTUALIZATION_CONFIG } from '../../types'
+import { MAIN_TABLE_BODY_ID, MAIN_TABLE_ID } from '../../constants'
 import { SORT_PROPS } from 'igz-controls/types'
 
 const TableView = ({
@@ -64,7 +65,13 @@ const TableView = ({
     <div className="table__flex">
       <div className="table__content" id="table-content" ref={tableContentRef}>
         <div className="table__wrapper">
-          <table className={tableClass} cellPadding="0" cellSpacing="0" ref={tableRef}>
+          <table
+            id={MAIN_TABLE_ID}
+            className={tableClass}
+            cellPadding="0"
+            cellSpacing="0"
+            ref={tableRef}
+          >
             {tableHeaders?.length > 0 && (
               <TableHead
                 content={tableHeaders}
@@ -77,6 +84,7 @@ const TableView = ({
             )}
             <tbody
               className="table-body"
+              id={MAIN_TABLE_BODY_ID}
               style={{ paddingTop: virtualizationConfig.tableBodyPaddingTop }}
               ref={tableBodyRef}
             >

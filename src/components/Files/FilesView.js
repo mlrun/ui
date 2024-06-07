@@ -68,7 +68,7 @@ const FilesView = React.forwardRef(
       viewMode,
       virtualizationConfig
     },
-    { filesRef, tableRef, tableBodyRef }
+    { filesRef }
   ) => {
     return (
       <>
@@ -120,7 +120,6 @@ const FilesView = React.forwardRef(
                     detailsFormInitialValues={detailsFormInitialValues}
                     handleCancel={() => setSelectedFile({})}
                     pageData={pageData}
-                    ref={{ tableRef, tableBodyRef }}
                     retryRequest={handleRefresh}
                     selectedItem={selectedFile}
                     sortProps={sortProps}

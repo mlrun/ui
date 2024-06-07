@@ -66,7 +66,7 @@ const ModelsView = React.forwardRef(
       viewMode,
       virtualizationConfig
     },
-    { modelsRef, tableRef, tableBodyRef }
+    { modelsRef }
   ) => {
     return (
       <>
@@ -123,7 +123,6 @@ const ModelsView = React.forwardRef(
                   detailsFormInitialValues={detailsFormInitialValues}
                   handleCancel={() => setSelectedModel({})}
                   pageData={pageData}
-                  ref={{ tableRef, tableBodyRef }}
                   retryRequest={handleRefresh}
                   selectedItem={selectedModel}
                   sortProps={sortProps}
