@@ -18,7 +18,7 @@ under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
 import React from 'react'
-import { get } from 'lodash'
+import { debounce, get, isEmpty } from 'lodash'
 
 import {
   DETAILS_BUILD_LOG_TAB,
@@ -42,10 +42,11 @@ import {
   SHOW_UNTAGGED_FILTER
 } from '../../constants'
 import jobsActions from '../../actions/jobs'
-import { showErrorNotification } from '../../utils/notifications.util'
-import { BG_TASK_FAILED, BG_TASK_SUCCEEDED, pollTask } from '../../utils/poll.util'
-import { setNotification } from '../../reducers/notificationReducer'
 import tasksApi from '../../api/tasks-api'
+import { BG_TASK_FAILED, BG_TASK_SUCCEEDED, pollTask } from '../../utils/poll.util'
+import { parseFunction } from '../../utils/parseFunction'
+import { setNotification } from '../../reducers/notificationReducer'
+import { showErrorNotification } from '../../utils/notifications.util'
 
 import { ReactComponent as Delete } from 'igz-controls/images/delete.svg'
 import { ReactComponent as Run } from 'igz-controls/images/run.svg'
@@ -187,6 +188,17 @@ export const getFunctionImage = func => {
     : func.image
 }
 
+export const getFunctionApiGateway = (func, apiGateways) => {
+  const functionApiGatewayName = func.status?.api_gateway_name
+  let functionApiGateway = null
+
+  if (!isEmpty(apiGateways) && functionApiGatewayName && apiGateways[functionApiGatewayName]) {
+    functionApiGateway = apiGateways[functionApiGatewayName]
+  }
+
+  return functionApiGateway
+}
+
 export const generateActionsMenu = (
   dispatch,
   func,
@@ -198,9 +210,21 @@ export const generateActionsMenu = (
   onRemoveFunction,
   toggleConvertedYaml,
   buildAndRunFunc,
-  deletingFunctions
+  deletingFunctions,
+  selectedFunction,
+  fetchFunction,
+  apiGateways
 ) => {
   const functionIsDeleting = isFunctionDeleting(func, deletingFunctions)
+  const getFullFunction = (funcMin) => {
+    return chooseOrFetchFunction(
+      selectedFunction,
+      dispatch,
+      fetchFunction,
+      funcMin,
+      apiGateways
+    )
+  }
 
   return [
     [
@@ -209,13 +233,15 @@ export const generateActionsMenu = (
         label: 'Run',
         icon: <Run />,
         disabled: functionIsDeleting,
-        onClick: func => {
-          if (func?.project && func?.name && func?.hash && func?.ui?.originalContent) {
-            dispatch(jobsActions.fetchJobFunctionSuccess(func.ui.originalContent))
-            setJobWizardMode(PANEL_FUNCTION_CREATE_MODE)
-          } else {
-            showErrorNotification(dispatch, {}, '', 'Failed to retrieve function data')
-          }
+        onClick: funcMin => {
+          getFullFunction(funcMin).then(func => {
+            if (func?.project && func?.name && func?.hash && func?.ui?.originalContent) {
+              dispatch(jobsActions.fetchJobFunctionSuccess(func.ui.originalContent))
+              setJobWizardMode(PANEL_FUNCTION_CREATE_MODE)
+            } else {
+              showErrorNotification(dispatch, {}, '', 'Failed to retrieve function data')
+            }
+          })
         },
         hidden:
           !FUNCTION_RUN_KINDS.includes(func?.type) ||
@@ -225,9 +251,11 @@ export const generateActionsMenu = (
         label: 'Edit',
         icon: <Edit />,
         disabled: functionIsDeleting,
-        onClick: func => {
-          setFunctionsPanelIsOpen(true)
-          setEditableItem(func)
+        onClick: funcMin => {
+          getFullFunction(funcMin).then(func => {
+            setFunctionsPanelIsOpen(true)
+            setEditableItem(func)
+          })
         },
         hidden:
           !isDemoMode ||
@@ -245,7 +273,7 @@ export const generateActionsMenu = (
         label: 'View YAML',
         icon: <Yaml />,
         disabled: functionIsDeleting,
-        onClick: toggleConvertedYaml
+        onClick: (funcMin) => getFullFunction(funcMin).then((func) => toggleConvertedYaml(func))
       }
     ],
     [
@@ -254,9 +282,7 @@ export const generateActionsMenu = (
         label: 'Build and run',
         icon: <DeployIcon />,
         disabled: functionIsDeleting,
-        onClick: func => {
-          buildAndRunFunc(func)
-        },
+        onClick: funcMin => getFullFunction(funcMin).then(func => buildAndRunFunc(func)),
         hidden:
           func?.type !== FUNCTION_TYPE_JOB ||
           (func?.type === FUNCTION_TYPE_JOB && func?.state?.value !== FUNCTION_INITIALIZED_STATE)
@@ -266,9 +292,11 @@ export const generateActionsMenu = (
         label: 'Deploy',
         icon: <DeployIcon />,
         disabled: functionIsDeleting,
-        onClick: func => {
-          setFunctionsPanelIsOpen(true)
-          setEditableItem(func)
+        onClick: funcMin => {
+          getFullFunction(funcMin).then(func => {
+            setFunctionsPanelIsOpen(true)
+            setEditableItem(func)
+          })
         },
         hidden: func?.type !== FUNCTION_TYPE_SERVING
       }
@@ -322,6 +350,34 @@ export const pollDeletingFunctions = (
   pollTask(pollMethod, isDone, { terminatePollRef })
 }
 
+export const setFullSelectedFunction = debounce(
+  (dispatch, fetchFunction, selectedFunctionMin, setSelectedFunction, apiGateways, projectName) => {
+    if (isEmpty(selectedFunctionMin)) {
+      setSelectedFunction({})
+    } else {
+      const { name, hash, tag } = selectedFunctionMin
+
+      fetchAndParseFunction(
+        dispatch,
+        fetchFunction,
+        projectName,
+        name,
+        hash,
+        tag,
+        apiGateways,
+        true
+      )
+        .then(parsedFunction => {
+          setSelectedFunction(parsedFunction)
+        })
+        .catch(error => {
+          setSelectedFunction({})
+        })
+    }
+  },
+  10
+)
+
 const functionDeletingSuccessHandler = (dispatch, func) => {
   dispatch(
     setNotification({
@@ -336,4 +392,43 @@ const isFunctionDeleting = (func, deletingFunctions) => {
   return Object.values(deletingFunctions).some(deletingFunction => {
     return deletingFunction.name === func?.name
   })
+}
+
+const fetchAndParseFunction = (
+  dispatch,
+  fetchFunction,
+  projectName,
+  funcName,
+  funcHash,
+  funcTag,
+  apiGateways,
+  returnError
+) => {
+  return fetchFunction(projectName, funcName, funcHash, funcTag)
+    .then(func => {
+      const funcApiGateway = !isEmpty(apiGateways) ? getFunctionApiGateway(func, apiGateways) : null
+
+      return parseFunction(func, projectName, null, funcApiGateway)
+    })
+    .catch(error => {
+      showErrorNotification(dispatch, error, '', 'Failed to retrieve function data')
+
+      if (returnError) {
+        return Promise.reject(error)
+      }
+    })
+}
+
+const chooseOrFetchFunction = (selectedFunction, dispatch, fetchFunction, funcMin, apiGateways) => {
+  if (!isEmpty(selectedFunction)) return Promise.resolve(selectedFunction)
+
+  return fetchAndParseFunction(
+    dispatch,
+    fetchFunction,
+    funcMin?.project,
+    funcMin?.name,
+    funcMin?.hash,
+    funcMin?.tag,
+    apiGateways
+  )
 }

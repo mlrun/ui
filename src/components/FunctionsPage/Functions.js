@@ -44,7 +44,8 @@ import {
   generateActionsMenu,
   filters,
   generateFunctionsPageData,
-  pollDeletingFunctions
+  pollDeletingFunctions,
+  setFullSelectedFunction
 } from './functions.util'
 import { getFunctionIdentifier } from '../../utils/getUniqueIdentifier'
 import { getFunctionNuclioLogs, getFunctionLogs } from '../../utils/getFunctionLogs'
@@ -66,8 +67,9 @@ const Functions = ({
   deleteFunction,
   deployFunction,
   fetchApiGateways,
-  fetchFunctionNuclioLogs,
+  fetchFunction,
   fetchFunctionLogs,
+  fetchFunctionNuclioLogs,
   fetchFunctions,
   functionsStore,
   removeFunctionsError,
@@ -77,6 +79,8 @@ const Functions = ({
   const [confirmData, setConfirmData] = useState(null)
   const [convertedYaml, toggleConvertedYaml] = useYaml('')
   const [functions, setFunctions] = useState([])
+  const [apiGateways, setApiGateways] = useState([])
+  const [selectedFunctionMin, setSelectedFunctionMin] = useState({})
   const [selectedFunction, setSelectedFunction] = useState({})
   const [editableItem, setEditableItem] = useState(null)
   const [taggedFunctions, setTaggedFunctions] = useState([])
@@ -114,6 +118,9 @@ const Functions = ({
         ui: {
           controller: abortControllerRef.current,
           setLargeRequestErrorMessage
+        },
+        params: {
+          format: 'minimal'
         }
       })
       const fetchApiGatewaysPromise = fetchApiGateways(params.projectName)
@@ -121,7 +128,11 @@ const Functions = ({
       return Promise.allSettled([fetchFunctionsPromise, fetchApiGatewaysPromise]).then(
         ([functions, apiGateways]) => {
           if (functions.value) {
-            const newFunctions = parseFunctions(functions.value, params.projectName, apiGateways.value)
+            const newFunctions = parseFunctions(
+              functions.value,
+              params.projectName,
+              apiGateways.value
+            )
             const deletingFunctions = newFunctions.reduce((acc, func) => {
               if (func.deletion_task_id && !func.deletion_error && !acc[func.deletion_task_id]) {
                 acc[func.deletion_task_id] = {
@@ -147,6 +158,10 @@ const Functions = ({
 
             return newFunctions
           }
+
+          if (apiGateways.value) {
+            setApiGateways(apiGateways.value)
+          }
         }
       )
     },
@@ -156,7 +171,7 @@ const Functions = ({
   const refreshFunctions = useCallback(
     filters => {
       setFunctions([])
-      setSelectedFunction({})
+      setSelectedFunctionMin({})
       setSelectedRowData({})
 
       return fetchData(filters)
@@ -295,7 +310,7 @@ const Functions = ({
           })
 
           if (!isEmpty(selectedFunction)) {
-            setSelectedFunction({})
+            setSelectedFunctionMin({})
             navigate(`/projects/${params.projectName}/functions`, { replace: true })
           }
         }
@@ -461,26 +476,43 @@ const Functions = ({
         onRemoveFunction,
         toggleConvertedYaml,
         buildAndRunFunc,
-        deletingFunctions
+        deletingFunctions,
+        selectedFunction,
+        fetchFunction,
+        apiGateways
       ),
     [
-      buildAndRunFunc,
       dispatch,
       isDemoMode,
       isStagingMode,
       onRemoveFunction,
       toggleConvertedYaml,
-      deletingFunctions
+      buildAndRunFunc,
+      deletingFunctions,
+      selectedFunction,
+      fetchFunction,
+      apiGateways
     ]
   )
 
   const functionsFilters = useMemo(() => [filters[0]], [])
 
   useEffect(() => {
+    setFullSelectedFunction(
+      dispatch,
+      fetchFunction,
+      selectedFunctionMin,
+      setSelectedFunction,
+      apiGateways,
+      params.projectName
+    )
+  }, [apiGateways, dispatch, fetchFunction, params.projectName, selectedFunctionMin])
+
+  useEffect(() => {
     fetchData()
 
     return () => {
-      setSelectedFunction({})
+      setSelectedFunctionMin({})
       setFunctions([])
       abortControllerRef.current.abort(REQUEST_CANCELED)
     }
@@ -535,7 +567,7 @@ const Functions = ({
       checkFunctionExistence(item)
     }
 
-    setSelectedFunction(item ?? {})
+    setSelectedFunctionMin(item ?? {})
   }, [
     dispatch,
     functions,
@@ -571,7 +603,7 @@ const Functions = ({
     }
 
     queueMicrotask(() => {
-      setSelectedFunction(item)
+      setSelectedFunctionMin(item)
     })
   }
 
@@ -655,7 +687,7 @@ const Functions = ({
   )
 
   const handleCancel = () => {
-    setSelectedFunction({})
+    setSelectedFunctionMin({})
   }
 
   useEffect(() => {

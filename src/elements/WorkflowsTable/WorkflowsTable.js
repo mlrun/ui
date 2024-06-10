@@ -462,7 +462,7 @@ const WorkflowsTable = React.forwardRef(
 
           if (params.functionName !== selectedFunction.name) {
             dispatch(
-              functionsActions.getFunction(
+              functionsActions.fetchFunction(
                 params.workflowProjectName || params.projectName,
                 params.functionName,
                 params.functionHash === 'latest' ? '' : params.functionHash
@@ -490,7 +490,7 @@ const WorkflowsTable = React.forwardRef(
           const customFunctionState = functionToBeSelected?.phase?.toLowerCase()
 
           dispatch(
-            functionsActions.getFunction(
+            functionsActions.fetchFunction(
               params.workflowProjectName || params.projectName,
               params.jobId
             )

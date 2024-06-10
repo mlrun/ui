@@ -125,6 +125,7 @@ const FunctionsView = React.forwardRef(
                 />
               ) : (
                 <>
+                  {functionsStore.funcLoading && <Loader />}
                   <Table
                     actionsMenu={actionsMenu}
                     handleCancel={handleCancel}
