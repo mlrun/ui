@@ -84,7 +84,8 @@ const JobsPanel = ({
     isMemoryLimitValid: true,
     isCpuLimitValid: true,
     isGpuLimitValid: true,
-    isAccessKeyValid: true
+    isAccessKeyValid: true,
+    isLabelsValid: true
   })
   const navigate = useNavigate()
   const params = useParams()
@@ -117,7 +118,12 @@ const JobsPanel = ({
 
   useEffect(() => {
     if (!functionsStore.template.name && functionsStore.error) {
-      showErrorNotification(dispatch, functionsStore.error, '', 'Function template could not be loaded')
+      showErrorNotification(
+        dispatch,
+        functionsStore.error,
+        '',
+        'Function template could not be loaded'
+      )
       closePanel()
       removeFunctionsError()
     }
@@ -341,10 +347,10 @@ const JobsPanel = ({
     const selectedFunction = functionsStore.template.name
       ? functionsStore.template.functions[0]
       : !isEmpty(groupedFunctions.functions)
-      ? groupedFunctions.functions.find(
-          func => func.metadata.tag === panelState.currentFunctionInfo.version
-        ) ?? groupedFunctions.functions[0]
-      : defaultData?.task
+        ? groupedFunctions.functions.find(
+            func => func.metadata.tag === panelState.currentFunctionInfo.version
+          ) ?? groupedFunctions.functions[0]
+        : defaultData?.task
     const isFunctionTemplate = !isEmpty(functionsStore.template)
     const labels = {}
 

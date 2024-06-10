@@ -102,7 +102,7 @@ const ProjectSettingsGeneral = ({
             [DESCRIPTION]: projectResponse.spec[DESCRIPTION],
             [GOALS]: projectResponse.spec[GOALS],
             [PARAMS]: parseObjectToKeyValue(projectResponse.spec[PARAMS]),
-            [LABELS]: parseChipsData(projectResponse.metadata[LABELS])
+            [LABELS]: parseChipsData(projectResponse.metadata[LABELS], frontendSpec.internal_labels)
           }
 
           if (areNodeSelectorsSupported) {
@@ -125,7 +125,14 @@ const ProjectSettingsGeneral = ({
     return () => {
       removeProjectData()
     }
-  }, [removeProjectData, params.pageTab, params.projectName, fetchProject, dispatch])
+  }, [
+    removeProjectData,
+    params.pageTab,
+    params.projectName,
+    fetchProject,
+    dispatch,
+    frontendSpec.internal_labels
+  ])
 
   const sendProjectSettingsData = useCallback(
     projectData => {
@@ -299,7 +306,11 @@ const ProjectSettingsGeneral = ({
                       onExitEditModeCallback={updateProjectData}
                       visibleChipsMaxLength="all"
                       validationRules={{
-                        key: getValidationRules('project.labels.key'),
+                        key: getValidationRules(
+                          'project.labels.key',
+                          [],
+                          frontendSpec.internal_labels
+                        ),
                         value: getValidationRules('project.labels.value')
                       }}
                     />

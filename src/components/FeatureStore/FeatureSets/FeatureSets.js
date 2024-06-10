@@ -79,13 +79,14 @@ const FeatureSets = ({
   const navigate = useNavigate()
   const location = useLocation()
   const dispatch = useDispatch()
+  const frontendSpec = useSelector(store => store.appStore.frontendSpec)
 
   const detailsFormInitialValues = useMemo(
     () => ({
       description: selectedFeatureSet.description,
-      labels: parseChipsData(selectedFeatureSet.labels)
+      labels: parseChipsData(selectedFeatureSet.labels, frontendSpec.internal_labels)
     }),
-    [selectedFeatureSet.description, selectedFeatureSet.labels]
+    [frontendSpec.internal_labels, selectedFeatureSet.description, selectedFeatureSet.labels]
   )
 
   const { featureSetsPanelIsOpen, setFeatureSetsPanelIsOpen, toggleConvertedYaml } =

@@ -65,12 +65,12 @@ const JobsPanelView = ({
           closePanel={closePanel}
           editModeEnabled={!defaultData}
           functionData={functionData}
-          isNameValid={validation.isNameValid}
           openScheduleJob={openScheduleJob}
           panelState={panelState}
           panelDispatch={panelDispatch}
-          setNameValid={setValidation}
           setOpenScheduleJob={setOpenScheduleJob}
+          setValidation={setValidation}
+          validation={validation}
         />
         {!openScheduleJob ? (
           <div className="new-item-side-panel__body">

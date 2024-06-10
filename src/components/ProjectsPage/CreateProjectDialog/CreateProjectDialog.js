@@ -41,6 +41,7 @@ const CreateProjectDialog = ({
   removeNewProjectError
 }) => {
   const projectStore = useSelector(store => store.projectStore)
+  const frontendSpec = useSelector(store => store.appStore.frontendSpec)
   const initialValues = {
     name: '',
     description: '',
@@ -87,7 +88,7 @@ const CreateProjectDialog = ({
                   shortChips
                   visibleChipsMaxLength="2"
                   validationRules={{
-                    key: getValidationRules('project.labels.key'),
+                    key: getValidationRules('project.labels.key', [], frontendSpec.internal_labels),
                     value: getValidationRules('project.labels.value')
                   }}
                 />
@@ -117,7 +118,7 @@ const CreateProjectDialog = ({
                   disabled={projectStore.loading || !formState.values.name || formState.invalid}
                   variant={SECONDARY_BUTTON}
                   label="Create"
-                  onClick={(event) => handleCreateProject(event, formState)}
+                  onClick={event => handleCreateProject(event, formState)}
                 />
               </div>
             </>

@@ -47,6 +47,7 @@ const ChipCellView = React.forwardRef(
       isEditMode,
       setChipsSizes,
       setEditConfig,
+      setValidation = null,
       shortChips,
       showChips,
       showHiddenChips
@@ -85,6 +86,7 @@ const ChipCellView = React.forwardRef(
                       ref={{ chipsCellRef, hiddenChipsCounterRef }}
                       setChipsSizes={setChipsSizes}
                       setEditConfig={setEditConfig}
+                      setValidation={setValidation}
                       shortChip={shortChips}
                       showChips={showChips}
                       textOverflowEllipsis
@@ -150,6 +152,7 @@ ChipCellView.propTypes = {
   isEditMode: PropTypes.bool,
   setChipsSizes: PropTypes.func,
   setEditConfig: PropTypes.func,
+  setValidation: PropTypes.func,
   shortChips: PropTypes.bool,
   showChips: PropTypes.bool.isRequired,
   showHiddenChips: PropTypes.bool.isRequired

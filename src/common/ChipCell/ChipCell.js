@@ -38,6 +38,7 @@ const ChipCell = ({
   onClick,
   removeChip,
   shortChips,
+  setValidation = null,
   visibleChipsMaxLength
 }) => {
   const {
@@ -52,7 +53,6 @@ const ChipCell = ({
     showHiddenChips,
     visibleChipsCount
   } = useChipCell(isEditMode, visibleChipsMaxLength)
-
   const [editConfig, setEditConfig] = useState({
     chipIndex: null,
     isEdit: false,
@@ -211,6 +211,7 @@ const ChipCell = ({
       ref={{ chipsCellRef, chipsWrapperRef, hiddenChipsCounterRef, hiddenChipsPopUpRef }}
       setChipsSizes={setChipsSizes}
       setEditConfig={setEditConfig}
+      setValidation={setValidation}
       shortChips={shortChips}
       showChips={showChips}
       showHiddenChips={showHiddenChips}
@@ -248,6 +249,7 @@ ChipCell.propTypes = {
   isEditMode: PropTypes.bool,
   onClick: PropTypes.func,
   removeChip: PropTypes.func,
+  setValidation: PropTypes.func,
   shortChips: PropTypes.bool,
   visibleChipsMaxLength: PropTypes.oneOfType([PropTypes.string, PropTypes.number])
 }

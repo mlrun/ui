@@ -268,7 +268,7 @@ const JobWizardRunDetails = ({
             shortChips
             visibleChipsMaxLength="all"
             validationRules={{
-              key: getValidationRules('job.label.key'),
+              key: getValidationRules('job.label.key', [], frontendSpec.internal_labels),
               value: getValidationRules('job.label.value')
             }}
           />
