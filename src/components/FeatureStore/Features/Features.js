@@ -41,7 +41,6 @@ import { createFeaturesRowData } from '../../../utils/createFeatureStoreContent'
 import { featuresActionCreator, featuresFilters } from './features.util'
 import { getFeatureIdentifier } from '../../../utils/getUniqueIdentifier'
 import { getFilterTagOptions, setFilters } from '../../../reducers/filtersReducer'
-import { parseFeatures } from '../../../utils/parseFeatures'
 import { setTablePanelOpen } from '../../../reducers/tableReducer'
 import { showLargeResponsePopUp } from '../../../httpClient'
 import { useGetTagOptions } from '../../../hooks/useGetTagOptions.hook'
@@ -137,7 +136,7 @@ const Features = ({
               showLargeResponsePopUp(setLargeRequestErrorMessage)
               setFeatures([])
             } else {
-              setFeatures(parseFeatures(features))
+              setFeatures(features)
               setLargeRequestErrorMessage('')
 
               return features
@@ -202,7 +201,7 @@ const Features = ({
       fetchData(feature.metadata.project, feature.name, feature.metadata.name)
         .then(result => {
           if (result?.length > 0) {
-            const content = [...parseFeatures(result)].map(contentItem =>
+            const content = [...result].map(contentItem =>
               createFeaturesRowData(contentItem, tableStore.isTablePanelOpen)
             )
             setSelectedRowData(state => ({

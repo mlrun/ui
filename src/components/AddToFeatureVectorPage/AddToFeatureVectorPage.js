@@ -38,7 +38,6 @@ import { createFeaturesRowData } from '../../utils/createFeatureStoreContent'
 import { filters } from './addToFeatureVectorPage.util'
 import { getFeatureIdentifier } from '../../utils/getUniqueIdentifier'
 import { isEveryObjectValueEmpty } from '../../utils/isEveryObjectValueEmpty'
-import { parseFeatures } from '../../utils/parseFeatures'
 import { setFilters } from '../../reducers/filtersReducer'
 import { setNotification } from '../../reducers/notificationReducer'
 import { setTablePanelOpen } from '../../reducers/tableReducer'
@@ -148,7 +147,7 @@ const AddToFeatureVectorPage = ({
 
       fetchFeatures(filters.project, filters, config).then(result => {
         if (result) {
-          setContent(parseFeatures(result))
+          setContent(result)
         }
 
         return result
@@ -187,7 +186,7 @@ const AddToFeatureVectorPage = ({
       fetchFeature(feature.metadata.project, feature.name, feature.metadata.name)
         .then(result => {
           if (result?.length > 0) {
-            const content = [...parseFeatures(result)].map(contentItem =>
+            const content = [...result].map(contentItem =>
               createFeaturesRowData(contentItem, tableStore.isTablePanelOpen)
             )
             setSelectedRowData(state => ({

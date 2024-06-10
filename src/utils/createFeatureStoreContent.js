@@ -207,7 +207,7 @@ export const createFeaturesRowData = (feature, isTablePanelOpen, showExpandButto
         headerId: 'entities',
         headerLabel: 'Entities',
         type: 'labels',
-        value: feature.spec?.entities.map(entity => entity.name) || '',
+        value: feature.spec?.entities?.map(entity => entity.name) || '',
         className: 'table-cell-2'
       },
       {

@@ -849,6 +849,9 @@ function invokeSchedule(req, res) {
 function getProjectsFeaturesEntities(req, res) {
   const artifact = req.params.artifact
   let collectedArtifacts = []
+  let collectedFeatureSetDigests = []
+  const findDigestByFeatureSetIndex = index =>
+    collectedFeatureSetDigests.find(digest => digest.feature_set_index === index)
 
   if (artifact === 'feature-vectors') {
     collectedArtifacts = featureVectors.feature_vectors.filter(
@@ -856,13 +859,18 @@ function getProjectsFeaturesEntities(req, res) {
     )
   }
   if (artifact === 'features') {
+    // todo feature, when BE done for features add same logic as for entities
     collectedArtifacts = features.features.filter(
       item => item.feature_set_digest.metadata.project === req.params.project
     )
   }
   if (artifact === 'entities') {
+    collectedFeatureSetDigests = entities.feature_set_digests.filter(
+      item => item.metadata.project === req.params.project
+    )
     collectedArtifacts = entities.entities.filter(
-      item => item.feature_set_digest.metadata.project === req.params.project
+      item =>
+        findDigestByFeatureSetIndex(item.feature_set_index)?.metadata.project === req.params.project
     )
   }
 
@@ -870,7 +878,10 @@ function getProjectsFeaturesEntities(req, res) {
     if (req.query['tag']) {
       collectedArtifacts = collectedArtifacts.filter(item => {
         let tag = ''
-        if (artifact === 'features' || artifact === 'entities') {
+        if (artifact === 'entities') {
+          tag = findDigestByFeatureSetIndex(item.feature_set_index)?.metadata.tag
+        } else if (artifact === 'features') {
+          // todo feature, when BE done for features move remove this condition block and and (artifact === 'features' || artifact === 'entities') in if above
           tag = item.feature_set_digest.metadata.tag
         } else {
           tag = item.metadata.tag
@@ -886,17 +897,19 @@ function getProjectsFeaturesEntities(req, res) {
           if (artifact === 'feature-vectors') {
             return feature.metadata.name.includes(req.query['name'].slice(1))
           } else if (artifact === 'features') {
+            // todo feature, when BE done for features change as for entities below
             return feature.feature.name.includes(req.query['name'].slice(1))
           } else if (artifact === 'entities') {
-            return feature.entity.name.includes(req.query['name'].slice(1))
+            return feature.name.includes(req.query['name'].slice(1))
           }
         } else {
           if (artifact === 'feature-vectors') {
             return feature.metadata.name.includes(req.query['name'].slice(1))
           } else if (artifact === 'features') {
+            // todo feature, when BE done for features change as for entities below
             return feature.feature.name === req.query['name']
           } else if (artifact === 'entities') {
-            return feature.entity.name === req.query['name']
+            return feature.name === req.query['name']
           }
         }
       })
@@ -909,9 +922,10 @@ function getProjectsFeaturesEntities(req, res) {
         if (artifact === 'feature-vectors' && item.metadata.labels) {
           return item.metadata.labels[key]
         } else if (item.feature?.labels) {
+          // todo feature, when BE done for features change condition and return as for entities below
           return item.feature.labels[key]
-        } else if (item.entity?.labels) {
-          return item.entity.labels[key]
+        } else if (artifact === 'entities' && item.labels) {
+          return item.labels[key]
         }
       })
 
@@ -921,9 +935,10 @@ function getProjectsFeaturesEntities(req, res) {
             return item.metadata.labels[key] === value
           }
           if (artifact === 'features') {
+            // todo feature, when BE done for features change as for entities below
             return item.feature.labels[key] === value
           } else if (artifact === 'entities') {
-            return item.entity.labels[key] === value
+            return item.labels[key] === value
           }
         })
       }
@@ -931,7 +946,7 @@ function getProjectsFeaturesEntities(req, res) {
 
     if (req.query['entity']) {
       collectedArtifacts = collectedArtifacts.filter(feature => {
-        return feature.feature_set_digest.spec.entities.some(
+        return findDigestByFeatureSetIndex(feature.feature_set_index)?.spec?.entities.some(
           item => item.name === req.query['entity']
         )
       })
@@ -943,10 +958,11 @@ function getProjectsFeaturesEntities(req, res) {
     result = { feature_vectors: collectedArtifacts }
   }
   if (artifact === 'features') {
+   // todo feature, when BE done for features todo the same as fow entities below
     result = { features: collectedArtifacts }
   }
   if (artifact === 'entities') {
-    result = { entities: collectedArtifacts }
+    result = { entities: collectedArtifacts, feature_set_digests: collectedFeatureSetDigests }
   }
 
   res.send(result)

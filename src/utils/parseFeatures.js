@@ -19,9 +19,36 @@ such restriction.
 */
 import { getFeatureIdentifier } from './getUniqueIdentifier'
 
-export const parseFeatures = features => {
+export const parseFeatures = (featuresResp, filterByName) => {
+  const type = featuresResp.features ? 'feature' : 'entity' 
+  const typePlural = type === 'feature' ? 'features' : 'entities'
+  let features = featuresResp[typePlural] // todo feature, when BE done for features remove line
+
+  if (type === 'entity') { // todo feature, when BE done for features remove condition
+    const groupedDigests = featuresResp.feature_set_digests.reduce((digests, digestItem) => {
+      digests[
+        digestItem.feature_set_index
+      ] = digestItem
+  
+      return digests
+    }, {})
+    let filteredFeatures = featuresResp[typePlural]
+  
+    if (filterByName) {
+      filteredFeatures = filteredFeatures.filter(feature => {
+        return groupedDigests[feature.feature_set_index]?.metadata?.name === filterByName
+      })
+    }
+  
+    features = filteredFeatures.map(feature => ({
+      [type]: feature,
+      feature_set_digest:
+        groupedDigests[feature.feature_set_index] || {}
+    }))
+  }
+  
+
   return features.map(feature => {
-    const type = feature.feature ? 'feature' : 'entity'
     const item = {
       ...feature[type],
       ...feature.feature_set_digest,
