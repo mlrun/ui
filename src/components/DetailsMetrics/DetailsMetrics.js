@@ -256,8 +256,6 @@ const DetailsMetrics = ({ selectedItem }) => {
         if (!!previousInvocation && previousInvocation.length !== 0) {
           setPreviousTotalInvocation(previousInvocation[0].rawDataTotal)
         }
-
-        dispatch(detailsActions.fetchEndpointMetricsValuesSuccess())
       })
     },
     [dispatch, setMetrics, metricsValuesAbortController]
