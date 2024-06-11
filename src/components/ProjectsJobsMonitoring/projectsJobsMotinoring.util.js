@@ -118,18 +118,18 @@ export const handleFilterStateChange = (selectedValue, currentValue, form, optio
   if (
     selectedValue.length > 1 &&
     selectedValue.includes(FILTER_ALL_ITEMS) &&
-    selectedValue.indexOf('all') === 0
+    selectedValue.indexOf(FILTER_ALL_ITEMS) === 0
   ) {
     form.change(
       'state',
       selectedValue.filter(value => value !== FILTER_ALL_ITEMS)
     )
   } else if (
-    (!currentValue.includes('all') &&
-      selectedValue.includes('all') &&
-      selectedValue.indexOf('all') > 0) ||
-    options.filter(option => option.id !== 'all').length === selectedValue.length
+    (!currentValue.includes(FILTER_ALL_ITEMS) &&
+      selectedValue.includes(FILTER_ALL_ITEMS) &&
+      selectedValue.indexOf(FILTER_ALL_ITEMS) > 0) ||
+    options.filter(option => option.id !== FILTER_ALL_ITEMS).length === selectedValue.length
   ) {
-    form.change('state', ['all'])
+    form.change('state', [FILTER_ALL_ITEMS])
   }
 }

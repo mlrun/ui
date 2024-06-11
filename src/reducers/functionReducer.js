@@ -94,6 +94,7 @@ const initialState = {
   hubFunctionsCatalog: [],
   functions: [],
   func: {},
+  funcLoading: false,
   apiGateways: {
     loading: false,
     error: null
@@ -331,20 +332,20 @@ const functionReducer = (state = initialState, { type, payload }) => {
     case GET_FUNCTION_BEGIN:
       return {
         ...state,
-        loading: true
+        funcLoading: true
       }
     case GET_FUNCTION_FAILURE:
       return {
         ...state,
-        loading: false,
+        funcLoading: false,
         func: {},
         error: payload
       }
     case GET_FUNCTION_SUCCESS:
       return {
         ...state,
-        loading: false,
-        template: payload,
+        funcLoading: false,
+        func: payload,
         error: null
       }
     case REMOVE_FUNCTION:

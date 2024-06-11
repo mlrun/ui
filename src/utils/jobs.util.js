@@ -61,13 +61,13 @@ export const handleAbortJob = (
             }
           }
 
-          pollAbortingJobs(job.projectName, abortJobRef, newAbortingJobs, refreshJobs, dispatch)
+          pollAbortingJobs(job.project, abortJobRef, newAbortingJobs, refreshJobs, dispatch)
 
           return newAbortingJobs
         })
       } else {
         pollAbortingJobs(
-          job.projectName,
+          job.project,
           abortJobRef,
           {
             [abortTaskId]: {

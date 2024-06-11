@@ -17,7 +17,7 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import React, { useState, useMemo, useEffect } from 'react'
+import React, { useState, useMemo, useEffect, useCallback } from 'react'
 import { useParams } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 import { isEmpty } from 'lodash'
@@ -31,9 +31,11 @@ import { useMode } from '../../../hooks/mode.hook'
 import {
   FILTER_ALL_ITEMS,
   JOBS_MONITORING_JOBS_TAB,
-  JOBS_MONITORING_PAGE
+  JOBS_MONITORING_PAGE,
+  REQUEST_CANCELED
 } from '../../../constants'
-import { setFilters } from '../../../reducers/filtersReducer'
+import { setFilters, setModalFiltersValues } from '../../../reducers/filtersReducer'
+import { datePickerPastOptions, PAST_24_HOUR_DATE_OPTION } from '../../../utils/datePicker.util'
 
 const JobsMonitoring = () => {
   const [selectedJob, setSelectedJob] = useState({})
@@ -43,6 +45,7 @@ const JobsMonitoring = () => {
   const { isStagingMode } = useMode()
   const filtersStore = useSelector(store => store.filtersStore)
   const {
+    abortControllerRef,
     abortJobRef,
     abortingJobs,
     jobRuns,
@@ -62,18 +65,49 @@ const JobsMonitoring = () => {
     [isStagingMode, jobRuns, jobs, params.jobName]
   )
 
+  const isJobDataEmpty = useCallback(
+    () => jobs.length === 0 && ((!params.jobName && jobRuns.length === 0) || params.jobName),
+    [jobRuns.length, jobs.length, params.jobName]
+  )
+
   useEffect(() => {
     if (isEmpty(selectedJob) && !params.jobId && !dataIsLoaded) {
-      const filters = {
-        ...filtersStore,
-        state: filtersStore.filterMenuModal[JOBS_MONITORING_JOBS_TAB].values.state || FILTER_ALL_ITEMS
+      let filters = {}
+
+      if (filtersStore.saveFilters || !isJobDataEmpty()) {
+        filters = {
+          ...filtersStore,
+          state: filtersStore.filterMenuModal[JOBS_MONITORING_JOBS_TAB].values.state
+        }
+
+        dispatch(setModalFiltersValues({
+          name: JOBS_MONITORING_JOBS_TAB,
+          value: { state: filters.state }
+        }))
+        dispatch(setFilters({ ...filtersStore, saveFilters: false }))
+      } else {
+        const past24HourOption = datePickerPastOptions.find(
+          option => option.id === PAST_24_HOUR_DATE_OPTION
+        )
+        const generatedDates = [...past24HourOption.handler()]
+
+        filters = {
+          dates: {
+            value: generatedDates,
+            isPredefined: past24HourOption.isPredefined,
+            initialSelectedOptionId: past24HourOption.id
+          },
+          state: FILTER_ALL_ITEMS
+        }
+
+        dispatch(setFilters({ dates: filters.dates }))
       }
 
-      dispatch(setFilters({ ...filters }))
       refreshJobs(filters)
       setDataIsLoaded(true)
     }
   }, [
+    isJobDataEmpty,
     dataIsLoaded,
     dispatch,
     filtersStore,
@@ -82,6 +116,15 @@ const JobsMonitoring = () => {
     refreshJobs,
     selectedJob
   ])
+
+  useEffect(() => {
+    return () => {
+      setJobs([])
+      setJobRuns([])
+      abortControllerRef.current.abort(REQUEST_CANCELED)
+      terminateAbortTasksPolling()
+    }
+  }, [abortControllerRef, setJobRuns, setJobs, terminateAbortTasksPolling])
 
   useEffect(() => {
     return () => {

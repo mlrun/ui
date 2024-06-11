@@ -48,22 +48,21 @@ import { ReactComponent as ExpandIcon } from 'igz-controls/images/expand.svg'
 import { ReactComponent as RefreshIcon } from 'igz-controls/images/refresh.svg'
 
 const ActionBar = ({
-  actionButtons,
-  cancelRequest,
+  actionButtons = [],
+  cancelRequest = null,
   children,
   expand,
   filterMenuName,
   filters,
   handleExpandAll,
   handleRefresh,
-  hidden,
-  nameIsHidden,
+  hidden = false,
   navigateLink,
   page,
-  removeSelectedItem,
-  setSelectedRowData,
-  tab,
-  withRefreshButton,
+  removeSelectedItem = null,
+  setSelectedRowData = null,
+  tab = '',
+  withRefreshButton = true,
   withoutExpandButton
 }) => {
   const filtersStore = useSelector(store => store.filtersStore)
@@ -76,10 +75,12 @@ const ActionBar = ({
   const formInitialValues = useMemo(() => {
     const values = {}
 
-    filters.forEach(filter => (values[filter.type] = filter.initialValue))
+    filters.forEach(filter => {
+      values[filter.type] = filtersStore[filter.type] || filter.initialValue
+    })
 
     return values
-  }, [filters])
+  }, [filters, filtersStore])
 
   const formRef = React.useRef(
     createForm({
@@ -184,17 +185,10 @@ const ActionBar = ({
   }
 
   useEffect(() => {
-    const formState = formRef.current
-
     return () => {
-      if (!filtersStore.saveFilters) {
-        dispatch(removeFilters())
-        formState?.reset?.(formInitialValues)
-      } else {
-        dispatch(setFilters({ saveFilters: false }))
-      }
+      dispatch(removeFilters())
     }
-  }, [params.projectName, params.name, page, tab, dispatch, formInitialValues, filtersStore.saveFilters, filters])
+  }, [params.projectName, params.name, page, tab, dispatch])
 
   useEffect(() => {
     formRef.current?.reset?.(formInitialValues)
@@ -209,7 +203,7 @@ const ActionBar = ({
               switch (filter.type) {
                 case NAME_FILTER:
                   return (
-                    !nameIsHidden && (
+                    !filter.hidden && (
                       <div key={filter.type} className="action-bar__filters-item">
                         <NameFilter
                           applyChanges={value =>
@@ -302,17 +296,6 @@ const ActionBar = ({
   ))
 }
 
-ActionBar.defaultProps = {
-  actionButtons: [],
-  cancelRequest: null,
-  hidden: false,
-  nameIsHidden: false,
-  removeSelectedItem: null,
-  setSelectedRowData: null,
-  tab: '',
-  withRefreshButton: true
-}
-
 ActionBar.propTypes = {
   actionButtons: PropTypes.arrayOf(
     PropTypes.shape({
@@ -330,7 +313,6 @@ ActionBar.propTypes = {
   handleExpandAll: PropTypes.func,
   handleRefresh: PropTypes.func.isRequired,
   hidden: PropTypes.bool,
-  nameIsHidden: PropTypes.bool,
   navigateLink: PropTypes.string,
   page: PropTypes.string.isRequired,
   removeSelectedItem: PropTypes.func,

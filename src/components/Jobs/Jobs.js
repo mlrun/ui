@@ -140,7 +140,8 @@ const Jobs = ({ fetchJobFunction }) => {
             {(jobsStore.loading ||
               workflowsStore.workflows.loading ||
               workflowsStore.activeWorkflow.loading ||
-              functionsStore.loading) && <Loader />}
+              functionsStore.loading ||
+              functionsStore.funcLoading) && <Loader />}
           </div>
         </div>
       </div>

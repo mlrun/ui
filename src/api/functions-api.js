@@ -33,7 +33,9 @@ const functionsApi = {
   getFunctions: (project, filters, config = {}, hash) => {
     const newConfig = {
       ...config,
-      params: {}
+      params: {
+        ...config.params
+      }
     }
 
     if (filters?.name) {
