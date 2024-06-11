@@ -392,16 +392,8 @@ const Datasets = () => {
       headerRowHeight: cssVariables.datasetsHeaderRowHeight,
       rowHeight: cssVariables.datasetsRowHeight,
       rowHeightExtended: cssVariables.datasetsRowHeightExtended
-    }
-  })
-
-  useTableScroll({
-    content: sortedTableContent,
-    rowHeight: cssVariables.datasetsRowHeight,
-    rowHeightExtended: cssVariables.datasetsRowHeightExtended,
-    selectedItem: selectedDataset,
-    expandedRowsData: selectedRowData,
-    tableRef
+    },
+    activateTableScroll: true
   })
 
   return (

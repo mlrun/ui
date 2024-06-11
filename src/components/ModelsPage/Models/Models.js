@@ -499,17 +499,10 @@ const Models = ({ fetchModelFeatureVector }) => {
       headerRowHeight: cssVariables.modelsHeaderRowHeight,
       rowHeight: cssVariables.modelsRowHeight,
       rowHeightExtended: cssVariables.modelsRowHeightExtended
-    }
+    },
+    activateTableScroll: true
   })
 
-  useTableScroll({
-    content: sortedTableContent,
-    rowHeight: cssVariables.modelsRowHeight,
-    rowHeightExtended: cssVariables.modelsRowHeightExtended,
-    selectedItem: selectedModel,
-    expandedRowsData: selectedRowData,
-    tableRef
-  })
 
   return (
     <ModelsView

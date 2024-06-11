@@ -70,7 +70,6 @@ import { useYaml } from '../../hooks/yaml.hook'
 
 import './files.scss'
 import cssVariables from './files.scss'
-import { useTableScroll } from '../../hooks/useTableScroll.hook'
 
 const Files = () => {
   const [files, setFiles] = useState([])
@@ -385,17 +384,10 @@ const Files = () => {
       headerRowHeight: cssVariables.filesHeaderRowHeight,
       rowHeight: cssVariables.filesRowHeight,
       rowHeightExtended: cssVariables.filesRowHeightExtended
-    }
+    },
+    activateTableScroll: true
   })
 
-  useTableScroll({
-    content: sortedTableContent,
-    rowHeight: cssVariables.filesRowHeight,
-    rowHeightExtended: cssVariables.filesRowHeightExtended,
-    selectedItem: selectedFile,
-    expandedRowsData: selectedRowData,
-    tableRef
-  })
 
   return (
     <FilesView

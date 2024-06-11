@@ -17,7 +17,7 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import { useLayoutEffect, useMemo, useState } from 'react'
+import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react'
 import { isEmpty, isEqual, sum, throttle } from 'lodash'
 import { MAIN_TABLE_ID, MAIN_TABLE_BODY_ID } from '../constants'
 
@@ -72,9 +72,98 @@ export const getRowsSizes = (
 }
 
 /**
+ * Hook for scrolling a table to a selected item.
+ * @param {Object} options - Options object.
+ * @param {React.RefObject} options.tableRef - Ref object for the table element.
+ * @param {Object[]} options.content - Array containing content for each row.
+ * @param {Object{}} options.selectedItem - Object representing the currently selected item.
+ * @param {Object} options.expandedRowsData - Object containing data for expanded rows.
+ * @param {string|number} options.rowHeight - Height of a regular row.
+ * @param {string|number} options.rowHeightExtended - Height of an extended row.
+ * @param {string|number} options.headerRowHeight - Height of an table header.
+ * @param {boolean} options.useHook - Bool indicate if trigger the hooks logic.
+ * @returns {void}
+ */
+const useTableScroll = ({
+  rowHeight,
+  rowHeightExtended,
+  headerRowHeight,
+  selectedItem,
+  expandedRowsData,
+  content,
+  tableRef,
+  activateHook
+}) => {
+  const lastSelectedItemDataRef = useRef(null)
+
+  const getSpaceToSelectedItem = useCallback(
+    lastSelectedItemData => {
+      const baseRowHeight = isEmpty(selectedItem) ? rowHeight : rowHeightExtended
+      const tableHeight = tableRef.current?.offsetHeight
+      const rowsSizes = getRowsSizes(
+        content,
+        selectedItem,
+        expandedRowsData,
+        rowHeight,
+        rowHeightExtended
+      )
+      let spaceToSelectedItem =
+        sum(rowsSizes.slice(0, lastSelectedItemData.index)) -
+        (tableHeight ? (tableHeight - headerRowHeight) / 2 - baseRowHeight / 2 : 0)
+
+      if (!isEmpty(lastSelectedItemData?.expandedRowData?.content)) {
+        const selectedChildItemPosition =
+          lastSelectedItemData?.expandedRowData?.content.findIndex(
+            item => item.data.ui.identifierUnique === lastSelectedItemData.identifierUnique
+          ) + 1
+
+        if (selectedChildItemPosition > 0) {
+          const diffBetweenParentRowAndOtherMainRows = baseRowHeight - rowHeight
+          spaceToSelectedItem +=
+            baseRowHeight * selectedChildItemPosition - diffBetweenParentRowAndOtherMainRows
+        }
+      }
+
+      return spaceToSelectedItem
+    },
+    [content, expandedRowsData, headerRowHeight, rowHeight, rowHeightExtended, selectedItem, tableRef]
+  )
+
+  useEffect(() => {
+    if (!activateHook) return
+
+    try {
+      if (!lastSelectedItemDataRef.current && !isEmpty(selectedItem)) {
+        const selectedItemIndex = content.findIndex(
+          item => item.data.ui.identifier === selectedItem?.ui?.identifier
+        )
+
+        const lastSelectedItemData = {
+          ...selectedItem?.ui,
+          index: selectedItemIndex,
+          expandedRowData: expandedRowsData[selectedItem?.ui?.identifier]
+        }
+
+        if (selectedItemIndex >= 0) {
+          requestAnimationFrame(() => {
+            tableRef.current?.scroll({ top: getSpaceToSelectedItem(lastSelectedItemData) })
+          })
+          lastSelectedItemDataRef.current = lastSelectedItemData
+        }
+      } else if (lastSelectedItemDataRef.current && isEmpty(selectedItem)) {
+        tableRef.current?.scroll({ top: getSpaceToSelectedItem(lastSelectedItemDataRef.current) })
+        lastSelectedItemDataRef.current = null
+      }
+    } catch (e) {
+      console.warn('useTableScrollHook:: Error during table scroll attempt', e)
+    }
+  }, [content, getSpaceToSelectedItem, selectedItem, tableRef, expandedRowsData, activateHook])
+}
+
+/**
  * Hook for virtualizing a table.
  * @param {Object} options - Options object.
- * @param {any} [options.renderTriggerItem] - item that will trigger calculation of the virtualization config.
+ *  @param {any} [options.renderTriggerItem] - item that will trigger calculation of the virtualization config.
  * @param {number[]} [options.rowsSizes=[]] - Array containing the heights of each row.
  * @param {Object} [options.rowsData={}] - Object containing data related to rows.
  * @param {Object[]} options.rowsData.content - Array containing content for each row.
@@ -84,6 +173,7 @@ export const getRowsSizes = (
  * @param {string|number} options.heightData.rowHeight - Height of a regular row.
  * @param {string|number} options.heightData.rowHeightExtended - Height of an extended row.
  * @param {string|number} options.heightData.headerRowHeight - Height of the table header row.
+ * @param {boolean} options.activateTableScroll - Boolean indicator for useTableScroll hook.
  * @returns {Object} - Object containing virtualization configuration.
  */
 export const useVirtualization = ({
@@ -92,7 +182,8 @@ export const useVirtualization = ({
   rowsData = {
     content: []
   },
-  heightData: { rowHeight, rowHeightExtended, headerRowHeight }
+  heightData: { rowHeight, rowHeightExtended, headerRowHeight },
+  activateTableScroll = false
 }) => {
   const [virtualizationConfig, setVirtualizationConfig] = useState(virtualizationConfigInitialState)
   const [rowsSizesLocal, setRowsSizesLocal] = useState(rowsSizes)
@@ -218,6 +309,17 @@ export const useVirtualization = ({
       }
     }
   }, [renderTriggerItem, headerRowHeightLocal, rowsSizesLocal, rowsData.content])
+
+  useTableScroll({
+    rowHeight: rowHeightLocal,
+    rowHeightExtended: extendedRowHeightLocal,
+    headerRowHeight: headerRowHeightLocal,
+    selectedItem: rowsData.selectedItem,
+    expandedRowsData: rowsData.expandedRowsData,
+    content: rowsData.content,
+    activateHook: activateTableScroll,
+    tableRef
+  })
 
   return virtualizationConfig
 }
