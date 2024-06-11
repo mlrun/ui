@@ -40,7 +40,6 @@ import { ReactComponent as MetricsIcon } from 'igz-controls/images/metrics-icon.
 import './DetailsMetrics.scss'
 
 const DetailsMetrics = ({ selectedItem }) => {
-  const [isInvocationCardCollapsed, setIsInvocationCardCollapsed] = useState(true)
   const [metrics, setMetrics] = useState([])
   const [selectedDate, setSelectedDate] = useState('')
   const [previousTotalInvocation, setPreviousTotalInvocation] = useState(0)
@@ -55,45 +54,92 @@ const DetailsMetrics = ({ selectedItem }) => {
   const lineConfig = useMemo(() => getLineChartMetricConfig(), [])
   const barConfig = useMemo(() => getBarChartMetricConfig(), [])
 
-  const handleWindowResize = useCallback(e => {
-    if (e.target && !e.target.classList?.contains('item-info')) return
+  const expandCard = useCallback((card, invocationHeader, content) => {
+    content.classList.remove('content-visible')
+    invocationHeader.classList.remove('header-hidden', 'header-visible')
+    card.classList.remove('collapse-card-height')
+    card.classList.add('expand-card-height')
+    invocationHeader.classList.add('header-visible')
+  }, [])
+
+  const collapseCard = useCallback((card, invocationHeader, content) => {
+    content.classList.add('content-visible')
+    invocationHeader.classList.remove('header-visible')
+    invocationHeader.classList.add('header-hidden')
+    card.classList.remove('expand-card-height')
+    card.classList.add('collapse-card-height')
+  }, [])
+
+  const checkForScrollbars = useCallback(() => {
     const card = invocationBodyCardRef.current
-
-    if (!card) return
-
     const metrics = metricsContainerRef.current
     const content = document.querySelector('.metrics__card-invocation-content')
     const invocationHeader = document.querySelector('.stats-card__row')
-    e.preventDefault()
-    metrics.scrollBy({
-      top: e.deltaY * 0.1,
-      left: 0,
-      behavior: 'smooth'
-    })
 
-    if (
-      e.target.scrollTop > prevScrollPositionRef.current &&
-      e.target.scrollTop > 5 &&
-      card.clientHeight !== 80 &&
-      enableScrollRef.current
-    ) {
-      card.style.height = '80px'
-      metricsContainerRef.current.style.height = '550px'
-      content.style.display = 'flex'
-      invocationHeader.style.display = 'none'
-      enableScrollRef.current = false
-      setIsInvocationCardCollapsed(false)
-      setTimeout(() => {
-        enableScrollRef.current = true
-      }, [1000])
-    } else if (e.target.scrollTop === 0 && card.clientHeight < 180 && enableScrollRef.current) {
-      card.style.height = '200px'
-      content.style.display = 'none'
-      invocationHeader.style.display = 'flex'
-      setIsInvocationCardCollapsed(true)
+    const containerOverflow = metrics.parentNode.scrollHeight !== metrics.parentNode.clientHeight
+
+    if (containerOverflow) {
+      if (card.clientHeight > 120) {
+        expandCard(card, invocationHeader, content)
+      } else {
+        collapseCard(card, invocationHeader, content)
+      }
+    } else {
+      expandCard(card, invocationHeader, content)
     }
-    prevScrollPositionRef.current = e.target.scrollTop
-  }, [])
+  }, [expandCard, collapseCard, invocationBodyCardRef, metricsContainerRef])
+
+  const handleWindowResize = useCallback(
+    e => {
+      if (e.target && !e.target.classList?.contains('item-info')) return
+
+      const card = invocationBodyCardRef.current
+      if (!card) return
+
+      const content = document.querySelector('.metrics__card-invocation-content')
+      const invocationHeader = document.querySelector('.stats-card__row')
+      const metrics = metricsContainerRef.current
+
+      const selectedMetrics =
+        detailsStore.metricsOptions.selectedByEndpoint[selectedItem.metadata?.uid]
+      e.preventDefault()
+
+      metrics.scrollBy({
+        top: e.deltaY * 0.1,
+        left: 0,
+        behavior: 'smooth'
+      })
+
+      if (
+        e.target.scrollTop > prevScrollPositionRef.current &&
+        e.target.scrollTop > 5 &&
+        card.clientHeight !== 80 &&
+        enableScrollRef.current &&
+        selectedMetrics.length > 0
+      ) {
+        collapseCard(card, invocationHeader, content)
+        enableScrollRef.current = false
+        content.classList.add('content-visible')
+        setTimeout(() => {
+          enableScrollRef.current = true
+        }, [500])
+      } else if (e.target.scrollTop === 0 && card.clientHeight < 180 && enableScrollRef.current) {
+        expandCard(card, invocationHeader, content)
+        content.classList.remove('content-visible')
+        card.parentNode.style.paddingTop = '12px'
+      }
+      prevScrollPositionRef.current = e.target.scrollTop
+    },
+    [expandCard, collapseCard, detailsStore.metricsOptions.selectedByEndpoint, selectedItem]
+  )
+
+  useEffect(() => {
+    const content = document.querySelector('.metrics__card-invocation-content')
+    const invocationHeader = document.querySelector('.stats-card__row')
+    if (!invocationHeader || !content) return
+
+    checkForScrollbars(invocationHeader, content)
+  }, [metrics, checkForScrollbars])
 
   const calculateHistogram = useCallback((points, metric) => {
     const numberOfBins = 5
@@ -221,6 +267,7 @@ const DetailsMetrics = ({ selectedItem }) => {
     if (
       selectedItem.metadata?.uid &&
       !detailsStore.metricsOptions.loading &&
+      detailsStore.metricsOptions.all.length !== 0 &&
       detailsStore.metricsOptions.selectedByEndpoint[selectedItem.metadata?.uid]
     ) {
       const selectedMetrics =
@@ -302,7 +349,6 @@ const DetailsMetrics = ({ selectedItem }) => {
                   return (
                     <InvocationMetricCard
                       ref={invocationBodyCardRef}
-                      isInvocationCardCollapsed={isInvocationCardCollapsed}
                       key={metric.id}
                       metric={metric}
                       previousTotalInvocation={previousTotalInvocation}

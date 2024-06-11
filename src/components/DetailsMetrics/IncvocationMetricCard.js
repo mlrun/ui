@@ -18,6 +18,7 @@ under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
 import { forwardRef, useMemo } from 'react'
+import PropTypes from 'prop-types'
 
 import StatsCard from '../../common/StatsCard/StatsCard'
 import MetricChart from '../MetricChart/MetricChart'
@@ -32,10 +33,7 @@ import { ReactComponent as ArrowDown } from 'igz-controls/images/arrow-down.svg'
 import colors from 'igz-controls/scss/colors.scss'
 
 const InvocationMetricCard = forwardRef(
-  (
-    { isInvocationCardCollapsed, metric, previousTotalInvocation, selectedDate },
-    invocationBodyCardRef
-  ) => {
+  ({ metric, previousTotalInvocation, selectedDate }, invocationBodyCardRef) => {
     const gradientConfig = useMemo(() => getGradientLineChartConfig(), [])
     const resultPercentageDrift = calculatePercentageDrift(
       previousTotalInvocation,
@@ -81,7 +79,6 @@ const InvocationMetricCard = forwardRef(
           </div>
           <div className="metrics__card-body-invocation">
             <MetricChart
-              showGrid={isInvocationCardCollapsed}
               chartConfig={{
                 gradient: true,
                 ...gradientConfig,
@@ -109,5 +106,11 @@ const InvocationMetricCard = forwardRef(
     )
   }
 )
+
+InvocationMetricCard.propTypes = {
+  metric: PropTypes.object.isRequired,
+  previousTotalInvocation: PropTypes.number,
+  selectedDate: PropTypes.string.isRequired
+}
 
 export default InvocationMetricCard

@@ -26,7 +26,7 @@ import { CHART_TYPE_BAR } from '../../constants'
 
 import { calculateMaxTicksLimit, generateMetricChartTooltip, hexToRGB } from './metricChart.util'
 
-const GenericMetricChart = ({ chartConfig, showGrid }) => {
+const GenericMetricChart = ({ chartConfig }) => {
   const chartRef = useRef(null)
   const chartInstance = useRef(null)
   const [isLoading, setIsLoading] = useState(true)
@@ -120,7 +120,8 @@ const GenericMetricChart = ({ chartConfig, showGrid }) => {
     }
 
     if (chartConfig.gradient) {
-      const canvasHeight = showGrid ? 200 : 80
+      const canvasHeight = chartInstance.current.height
+      const showGrid = canvasHeight > 70 ? true : false
 
       if (chartInstance.current.options.scales.x.grid.display !== showGrid) {
         chartInstance.current.options.scales.x.grid.display = showGrid
@@ -147,14 +148,7 @@ const GenericMetricChart = ({ chartConfig, showGrid }) => {
         chartInstance.current.destroy()
       }
     }
-  }, [
-    showGrid,
-    chartConfig.data,
-    chartConfig.type,
-    chartConfig.gradient,
-    chartConfig.options,
-    customPoints
-  ])
+  }, [chartConfig.data, chartConfig.type, chartConfig.gradient, chartConfig.options, customPoints])
 
   useEffect(() => {
     const handleResize = () => {
