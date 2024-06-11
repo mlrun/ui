@@ -25,7 +25,12 @@ import {
   PAST_MONTH_DATE_OPTION,
   PAST_WEEK_DATE_OPTION
 } from '../../utils/datePicker.util'
-import { AVG, AVG_RAW, RAW_DATA_TOTAL, TOTAL } from '../../constants'
+
+export const AVG = 'avg'
+export const AVG_RAW = 'avgRaw'
+export const ML_RUN_INFRA = 'mlrun-infra'
+export const RAW_DATA_TOTAL = 'rawDataTotal'
+export const TOTAL = 'total'
 
 const metricsColorsByFullName = {}
 const usedColors = new Set()

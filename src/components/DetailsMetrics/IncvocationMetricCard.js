@@ -58,12 +58,12 @@ const InvocationMetricCard = forwardRef(
         <div ref={invocationBodyCardRef} className="metrics__card-body">
           <div className="metrics__card-invocation-content">
             <div className="metrics__card-invocation-content-title">Endpoint call count</div>
-            <div className="metrics__card-invocation-content_container">
-              <div className="metrics__card-invocation-content_container_drift_icon">
+            <div className="metrics__card-invocation-content-container">
+              <div className="metrics__card-invocation-content-container_drift_icon">
                 {resultPercentageDrift.positive ? <ArrowUp /> : <ArrowDown />}
               </div>
               <div
-                className={`metrics__card-invocation-content_container_${resultPercentageDrift.className}`}
+                className={`metrics__card-invocation-content-container_${resultPercentageDrift.className}`}
               >
                 {resultPercentageDrift.percentageChange}
               </div>

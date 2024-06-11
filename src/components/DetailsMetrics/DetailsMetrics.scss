@@ -154,7 +154,6 @@
       }
 
       &-invocation {
-        width: auto;
         border: 1px solid transparent;
         flex: 1;
 
@@ -238,7 +237,7 @@
         color: $primary;
       }
 
-      &_container {
+      &-container {
         display: flex;
         align-items: baseline;
         gap: 2px;
@@ -386,25 +385,28 @@
   margin-bottom: 0 !important;
 }
 
-.header-visible{
+.header-visible {
   transition: all 0.2s linear;
 }
 
-.collapse-card-height{
+.collapse-card-height {
   height: 80px;
   transition: all 0.1s ease-in-out;
 }
 
-.expand-card-height{
+.expand-card-height {
   height: 200px;
   transition: all 0.1s ease-in-out;
 }
 
-.content-visible{
+.content-visible {
   display: flex;
-  flex: 2;
-  max-width: 50%;
+  flex: 0 1 auto;
   opacity: 1;
-  transition: flex 0.2s, visibility 0s, opacity 1s;
+  transition:
+    flex 0.2s,
+    visibility 0s,
+    opacity 1s;
   visibility: visible;
+  width: fit-content;
 }

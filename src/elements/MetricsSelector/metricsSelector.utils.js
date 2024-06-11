@@ -18,12 +18,12 @@ under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
 import { chain, isEmpty } from 'lodash'
+import { ML_RUN_INFRA } from '../../components/DetailsMetrics/detailsMetrics.utils'
 
 export const metricsTypes = {
   metric: 'metric',
   result: 'result'
 }
-export const ML_RUN_INFRA = 'mlrun-infra'
 
 export const filterMetrics = (metricsByApplication, nameFilter) => {
   return metricsByApplication.reduce((metricsList, [app, metrics]) => {

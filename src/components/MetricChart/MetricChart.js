@@ -146,6 +146,10 @@ const GenericMetricChart = ({ chartConfig }) => {
     return () => {
       if (chartInstance.current) {
         chartInstance.current.destroy()
+        const tooltipEl = document.querySelector('#chartjs-tooltip-metric')
+        if (tooltipEl) {
+          tooltipEl.style.opacity = 0
+        }
       }
     }
   }, [chartConfig.data, chartConfig.type, chartConfig.gradient, chartConfig.options, customPoints])

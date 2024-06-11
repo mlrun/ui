@@ -28,12 +28,9 @@ import { TextTooltipTemplate, Tooltip } from 'iguazio.dashboard-react-controls/d
 
 import { CHART_TYPE_LINE, CHART_TYPE_BAR, REQUEST_CANCELED } from '../../constants'
 import detailsActions from '../../actions/details'
-import {
-  groupMetricByApplication,
-  ML_RUN_INFRA
-} from '../../elements/MetricsSelector/metricsSelector.utils'
+import { groupMetricByApplication } from '../../elements/MetricsSelector/metricsSelector.utils'
 import { getBarChartMetricConfig, getLineChartMetricConfig } from '../../utils/getMetricChartConfig'
-import { getDateRangeBefore, timeRangeMapping } from './detailsMetrics.utils'
+import { getDateRangeBefore, ML_RUN_INFRA, timeRangeMapping } from './detailsMetrics.utils'
 
 import { ReactComponent as MetricsIcon } from 'igz-controls/images/metrics-icon.svg'
 
