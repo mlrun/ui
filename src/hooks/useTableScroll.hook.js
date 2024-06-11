@@ -42,7 +42,6 @@ export const useTableScroll = ({
   tableRef
 }) => {
   const lastSelectedItemDataRef = useRef(null)
-  const selectedItemTopPositionBeforeRerender = useRef(null)
   const rowHeightLocal = useMemo(() => parseInt(rowHeight), [rowHeight])
   const extendedRowHeightLocal = useMemo(() => parseInt(rowHeightExtended), [rowHeightExtended])
 
@@ -55,50 +54,30 @@ export const useTableScroll = ({
         rowHeightLocal,
         extendedRowHeightLocal
       )
-      let spaceFromSelectedItemToHeader = 0
-
-      if (selectedItemTopPositionBeforeRerender.current) {
-        const headerBottomPosition = tableRef.current
-          .querySelector('thead')
-          ?.getBoundingClientRect().bottom
-
-        if (headerBottomPosition) {
-          spaceFromSelectedItemToHeader =
-            selectedItemTopPositionBeforeRerender.current - headerBottomPosition
-        }
-      }
-
-      let spaceToRow =
-        sum(rowsSizes.slice(0, lastSelectedItemData.index)) - spaceFromSelectedItemToHeader
+      const baseRowHeight = isEmpty(selectedItem) ? rowHeightLocal : extendedRowHeightLocal
+      const tableHeight = tableRef.current?.offsetHeight
+      const tableHeaderHeight = tableRef.current?.querySelector('thead')?.offsetHeight || 0
+      let spaceToSelectedItem =
+        sum(rowsSizes.slice(0, lastSelectedItemData.index)) -
+        (tableHeight ? (tableHeight - tableHeaderHeight) / 2 - baseRowHeight / 2 : 0)
 
       if (!isEmpty(lastSelectedItemData?.expandedRowData?.content)) {
-        const selectedItemPosition =
+        const selectedChildItemPosition =
           lastSelectedItemData?.expandedRowData?.content.findIndex(
             item => item.data.ui.identifierUnique === lastSelectedItemData.identifierUnique
           ) + 1
 
-        if (selectedItemPosition > 0) {
-          const baseRowHeight = isEmpty(selectedItem) ? rowHeightLocal : extendedRowHeightLocal
+        if (selectedChildItemPosition > 0) {
           const diffBetweenParentRowAndOtherMainRows = baseRowHeight - rowHeightLocal
-          spaceToRow += baseRowHeight * selectedItemPosition - diffBetweenParentRowAndOtherMainRows
+          spaceToSelectedItem +=
+            baseRowHeight * selectedChildItemPosition - diffBetweenParentRowAndOtherMainRows
         }
       }
 
-      return spaceToRow
+      return spaceToSelectedItem
     },
     [content, expandedRowsData, extendedRowHeightLocal, rowHeightLocal, selectedItem, tableRef]
   )
-
-  useEffect(() => {
-    const itemSelectHandler = event => {
-      selectedItemTopPositionBeforeRerender.current = event.detail?.top
-    }
-    window.addEventListener('selectedTableRow', itemSelectHandler)
-
-    return () => {
-      window.removeEventListener('selectedTableRow', itemSelectHandler)
-    }
-  }, [selectedItem])
 
   useEffect(() => {
     try {
@@ -127,14 +106,4 @@ export const useTableScroll = ({
       console.warn('useTableScrollHook:: Error during table scroll attempt', e)
     }
   }, [content, getSpaceToTableTop, selectedItem, tableRef, expandedRowsData])
-}
-
-/**
- * Function that dispatches custom event with selected table row position
- * @param {Object}  - Event object.
- * @returns {void}
- */
-export const dispatchItemSelectEvent = event => {
-  const selectedItemRect = event.target?.closest('tr')?.getBoundingClientRect()
-  window.dispatchEvent(new CustomEvent('selectedTableRow', { detail: selectedItemRect }))
 }

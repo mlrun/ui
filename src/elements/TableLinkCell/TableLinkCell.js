@@ -69,7 +69,7 @@ const TableLinkCell = ({
           </a>
         </span>
       ) : (
-        <Link to={link} onClick={(event) => selectItem(item, event)} className="data-ellipsis">
+        <Link to={link} onClick={() => selectItem(item)} className="data-ellipsis">
           <div className="name-wrapper">
             <div className="link">
               <Tooltip

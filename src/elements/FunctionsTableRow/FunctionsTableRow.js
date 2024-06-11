@@ -31,12 +31,11 @@ import { DETAILS_OVERVIEW_TAB } from '../../constants'
 import { generateTableRowTestId } from '../../utils/generateTableRowTestId'
 import { getFunctionIdentifier } from '../../utils/getUniqueIdentifier'
 import { isRowExpanded, PARENT_ROW_EXPANDED_CLASS } from '../../utils/tableRows.util'
-import { dispatchItemSelectEvent } from '../../hooks/useTableScroll.hook'
 
 const FunctionsTableRow = ({
   actionsMenu,
   handleExpandRow,
-  handleSelectItem: handleSelectItemExternal,
+  handleSelectItem,
   mainRowItemsCount,
   rowIndex,
   rowItem,
@@ -59,11 +58,6 @@ const FunctionsTableRow = ({
       'table-row_active',
     rowIsExpanded && PARENT_ROW_EXPANDED_CLASS
   )
-
-  const handleSelectItem = (item, event) => {
-    dispatchItemSelectEvent(event)
-    handleSelectItemExternal(item)
-  }
 
   return (
     <tr className={rowClassNames} ref={parent}>
