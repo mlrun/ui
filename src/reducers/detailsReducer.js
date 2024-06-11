@@ -68,7 +68,7 @@ const initialState = {
   infoContent: {},
   iteration: '',
   iterationOptions: [],
-  loading: false,
+  loadingCounter: 0,
   modelEndpoint: {
     data: {}
   },
@@ -82,14 +82,10 @@ const initialState = {
   filtersWasHandled: false,
   showWarning: false,
   metricsOptions: {
-    loading: false,
     all: [],
     lastSelected: [],
     preselected: [],
     selectedByEndpoint: {}
-  },
-  metricsValues: {
-    loading: false
   }
 }
 
@@ -124,13 +120,13 @@ const detailsReducer = (state = initialState, { type, payload }) => {
     case FETCH_MODEL_FEATURE_VECTOR_BEGIN:
       return {
         ...state,
-        loading: true
+        loadingCounter: state.loadingCounter + 1
       }
     case FETCH_MODEL_FEATURE_VECTOR_SUCCESS:
       return {
         ...state,
         error: null,
-        loading: false,
+        loadingCounter: state.loadingCounter - 1,
         modelFeatureVectorData: {
           ...payload
         }
@@ -139,7 +135,7 @@ const detailsReducer = (state = initialState, { type, payload }) => {
       return {
         ...state,
         error: payload,
-        loading: false,
+        loadingCounter: state.loadingCounter - 1,
         modelFeatureVectorData: {
           ...initialState.modelFeatureVectorData
         }
@@ -162,13 +158,13 @@ const detailsReducer = (state = initialState, { type, payload }) => {
     case FETCH_MODEL_ENDPOINT_WITH_ANALYSIS_BEGIN:
       return {
         ...state,
-        loading: true
+        loadingCounter: state.loadingCounter + 1
       }
     case FETCH_MODEL_ENDPOINT_WITH_ANALYSIS_FAILURE:
       return {
         ...state,
         error: payload,
-        loading: false,
+        loadingCounter: state.loadingCounter - 1,
         modelEndpoint: {
           data: {}
         }
@@ -177,7 +173,7 @@ const detailsReducer = (state = initialState, { type, payload }) => {
       return {
         ...state,
         error: null,
-        loading: false,
+        loadingCounter: state.loadingCounter - 1,
         modelEndpoint: {
           data: payload
         }
@@ -185,11 +181,7 @@ const detailsReducer = (state = initialState, { type, payload }) => {
     case FETCH_ENDPOINT_METRICS_BEGIN:
       return {
         ...state,
-        loading: true,
-        metricsOptions: {
-          ...state.metricsOptions,
-          loading: true,
-        }
+        loadingCounter: state.loadingCounter + 1,
       }
     case FETCH_ENDPOINT_METRICS_SUCCESS: {
       const areMetricsSelectedForEndpoint = !isEmpty(
@@ -209,10 +201,9 @@ const detailsReducer = (state = initialState, { type, payload }) => {
       return {
         ...state,
         error: null,
-        loading: state.metricsValues.loading,
+        loadingCounter: state.loadingCounter - 1,
         metricsOptions: {
           all: payload.metrics,
-          loading: false,
           lastSelected: selectedMetrics,
           preselected: selectedMetrics,
           selectedByEndpoint: areMetricsSelectedForEndpoint
@@ -228,41 +219,28 @@ const detailsReducer = (state = initialState, { type, payload }) => {
       return {
         ...state,
         error: payload,
-        loading: state.metricsValues.loading,
+        loadingCounter: state.loadingCounter - 1,
         metricsOptions: {
           ...state.metricsOptions,
           all: [],
-          loading: false,
         }
       }
     case FETCH_ENDPOINT_METRICS_VALUES_BEGIN:
       return {
         ...state,
-        loading: true,
-        metricsValues: {
-          ...state.metricsValues,
-          loading: true
-        }
+        loadingCounter: state.loadingCounter + 1,
       }
     case FETCH_ENDPOINT_METRICS_VALUES_SUCCESS:
       return {
         ...state,
         error: null,
-        loading: state.metricsOptions.loading,
-        metricsValues: {
-          ...state.metricsValues,
-          loading: false
-        }
+        loadingCounter: state.loadingCounter - 1,
       }
     case FETCH_ENDPOINT_METRICS_VALUES_FAILURE:
       return {
         ...state,
         error: payload,
-        loading: state.metricsOptions.loading,
-        metricsValues: {
-          ...state.metricsValues,
-          loading: false
-        }
+        loadingCounter: state.loadingCounter - 1,
       }
     case REMOVE_INFO_CONTENT:
       return {

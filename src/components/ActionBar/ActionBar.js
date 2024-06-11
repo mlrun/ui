@@ -199,6 +199,10 @@ const ActionBar = ({
     }
   }, [params.projectName, params.name, page, tab, dispatch, formInitialValues, filtersStore.saveFilters, filters])
 
+  useEffect(() => {
+    formRef.current?.reset?.(formInitialValues)
+  }, [formInitialValues])
+
   return (
     <Form form={formRef.current} onSubmit={() => {}}>
       {formState => (
@@ -272,6 +276,7 @@ const ActionBar = ({
                 (actionButton, index) =>
                   actionButton &&
                   !actionButton.hidden && (
+                    actionButton.template ||
                     <Button
                       key={index}
                       variant={actionButton.variant}

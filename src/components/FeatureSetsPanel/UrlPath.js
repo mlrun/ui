@@ -80,7 +80,7 @@ const UrlPath = ({
   const [urlArtifactReferencePathEntered, setUrlArtifactReferencePathEntered] = useState(false)
   const [inputDefaultValue, setInputDefaultValue] = useState('')
   const [editMode, setEditMode] = useState({
-    isActive: isEmpty(defaultPath.path),
+    isActive: false,
     savedUrlData: {
       artifact: '',
       artifactReference: '',

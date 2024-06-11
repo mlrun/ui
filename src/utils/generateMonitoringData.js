@@ -17,12 +17,18 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import { JOBS_MONITORING_JOBS_TAB, JOBS_MONITORING_WORKFLOWS_TAB } from '../constants'
-import { setModalFiltersValues } from '../reducers/filtersReducer'
+import {
+  JOBS_MONITORING_JOBS_TAB,
+  JOBS_MONITORING_WORKFLOWS_TAB,
+  JOB_KIND_JOB,
+  JOB_KIND_WORKFLOW
+} from '../constants'
+import { setFilters, setModalFiltersValues } from '../reducers/filtersReducer'
 
 export const generateMonitoringStats = (data, navigate, dispatch, tab) => {
-  const navigateToJobsMonitoringPage = status => {
-    dispatch(setModalFiltersValues({ name: tab, value: { state: status } }))
+  const navigateToJobsMonitoringPage = value => {
+    dispatch(setFilters({ saveFilters: true }))
+    dispatch(setModalFiltersValues({ name: tab, value }))
     navigate(`/projects/jobs-monitoring/${tab}`)
   }
 
@@ -30,29 +36,25 @@ export const generateMonitoringStats = (data, navigate, dispatch, tab) => {
     ? {
         all: {
           counter: data.all,
-          link: () => navigateToJobsMonitoringPage(['all'])
+          link: () => navigateToJobsMonitoringPage({ state: ['all'] })
         },
         counters: [
           {
             counter: data.running,
             link: () =>
-              navigateToJobsMonitoringPage([
-                'running',
-                'created',
-                'pending',
-                'unknown',
-                'aborting'
-              ]),
+              navigateToJobsMonitoringPage({
+                state: ['running', 'created', 'pending', 'unknown', 'aborting']
+              }),
             statusClass: 'running'
           },
           {
             counter: data.failed,
-            link: () => navigateToJobsMonitoringPage(['error', 'aborted']),
+            link: () => navigateToJobsMonitoringPage({ state: ['error', 'aborted'] }),
             statusClass: 'failed'
           },
           {
             counter: data.completed,
-            link: () => navigateToJobsMonitoringPage(['completed']),
+            link: () => navigateToJobsMonitoringPage({ state: ['completed'] }),
             statusClass: 'completed'
           }
         ]
@@ -61,22 +63,22 @@ export const generateMonitoringStats = (data, navigate, dispatch, tab) => {
       ? {
           all: {
             counter: data.all,
-            link: () => navigateToJobsMonitoringPage(['all'])
+            link: () => navigateToJobsMonitoringPage({ state: ['all'] })
           },
           counters: [
             {
               counter: data.running,
-              link: () => navigateToJobsMonitoringPage(['running']),
+              link: () => navigateToJobsMonitoringPage({ state: ['running'] }),
               statusClass: 'running'
             },
             {
               counter: data.failed,
-              link: () => navigateToJobsMonitoringPage(['error', 'failed']),
+              link: () => navigateToJobsMonitoringPage({ state: ['error', 'failed'] }),
               statusClass: 'failed'
             },
             {
               counter: data.completed,
-              link: () => navigateToJobsMonitoringPage(['succeeded']),
+              link: () => navigateToJobsMonitoringPage({ state: ['succeeded'] }),
               statusClass: 'completed'
             }
           ]
@@ -84,11 +86,11 @@ export const generateMonitoringStats = (data, navigate, dispatch, tab) => {
       : {
           jobs: {
             counter: data.jobs,
-            link: () => navigateToJobsMonitoringPage('jobs')
+            link: () => navigateToJobsMonitoringPage({ type: JOB_KIND_JOB })
           },
           workflows: {
             counter: data.workflows,
-            link: () => navigateToJobsMonitoringPage('workflows')
+            link: () => navigateToJobsMonitoringPage({ type: JOB_KIND_WORKFLOW })
           }
         }
 }

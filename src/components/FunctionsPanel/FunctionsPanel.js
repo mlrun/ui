@@ -38,17 +38,17 @@ import { LABEL_BUTTON, NOTFOUND_ERROR_STATUS_CODE, SECONDARY_BUTTON } from 'igz-
 
 const FunctionsPanel = ({
   appStore,
-  functionsStore,
   closePanel,
   createFunctionSuccess,
+  createNewFunction,
   defaultData,
   deployFunction,
-  getFunction,
+  fetchFunction,
+  functionsStore,
   handleDeployFunctionFailure,
   handleDeployFunctionSuccess,
   mode,
   removeFunctionsError,
-  createNewFunction,
   setNewFunction,
   setNewFunctionCredentialsAccessKey,
   setNewFunctionProject
@@ -216,7 +216,7 @@ const FunctionsPanel = ({
       }
 
       if (mode === PANEL_CREATE_MODE) {
-        getFunction(
+        fetchFunction(
           params.projectName,
           functionsStore.newFunction.metadata.name,
           null,
@@ -274,7 +274,7 @@ const FunctionsPanel = ({
       functionsStore={functionsStore}
       handleSave={handleSave}
       imageType={imageType}
-      loading={functionsStore.loading}
+      loading={functionsStore.loading || functionsStore.funcLoading}
       mode={mode}
       newFunction={functionsStore.newFunction}
       removeFunctionsError={removeFunctionsError}

@@ -27,6 +27,7 @@ import YamlModal from '../../common/YamlModal/YamlModal'
 import JobsTableRow from '../JobsTableRow/JobsTableRow'
 import Table from '../../components/Table/Table'
 import NoData from '../../common/NoData/NoData'
+import Loader from '../../common/Loader/Loader'
 
 import { JOB_KIND_WORKFLOW, JOBS_PAGE, PANEL_EDIT_MODE, SCHEDULE_TAB } from '../../constants'
 import { isRowRendered, useVirtualization } from '../../hooks/useVirtualization.hook'
@@ -209,7 +210,10 @@ const ScheduledJobsTable = ({
   useEffect(() => {
     if (jobWizardMode && !jobWizardIsOpened) {
       openPopUp(JobWizard, {
-        params,
+        params: {
+          ...params,
+          projectName: editableItem?.project || params.projectName
+        },
         onWizardClose: () => {
           setEditableItem(null)
           setJobWizardMode(null)
@@ -224,6 +228,7 @@ const ScheduledJobsTable = ({
       setJobWizardIsOpened(true)
     }
   }, [
+    editableItem?.project,
     editableItem?.scheduled_object,
     filtersStore,
     jobWizardIsOpened,
@@ -250,6 +255,7 @@ const ScheduledJobsTable = ({
 
   return (
     <>
+      {jobsStore.loading && <Loader />}
       {jobsStore.loading ? null : jobs.length === 0 ? (
         <NoData
           message={getNoDataMessage(

@@ -376,7 +376,10 @@ const JobsTable = React.forwardRef(
           jobWizardMode !== PANEL_RERUN_MODE)
       ) {
         openPopUp(JobWizard, {
-          params,
+          params: {
+            ...params,
+            projectName: editableItem?.rerun_object?.task?.metadata?.project || params.projectName
+          },
           onWizardClose: () => {
             setEditableItem(null)
             setJobWizardMode(null)
