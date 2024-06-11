@@ -953,12 +953,18 @@ function getProjectsFeaturesEntities(req, res) {
     }
   }
 
+  collectedFeatureSetDigests = collectedFeatureSetDigests.filter(featureSetDigest =>
+    collectedArtifacts.find(
+      artifact => artifact.feature_set_index === featureSetDigest.feature_set_index
+    )
+  )
+
   let result = {}
   if (artifact === 'feature-vectors') {
     result = { feature_vectors: collectedArtifacts }
   }
   if (artifact === 'features') {
-   // todo feature, when BE done for features todo the same as fow entities below
+    // todo feature, when BE done for features todo the same as fow entities below
     result = { features: collectedArtifacts }
   }
   if (artifact === 'entities') {

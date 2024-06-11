@@ -17,33 +17,27 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
+import { keyBy } from 'lodash'
 import { getFeatureIdentifier } from './getUniqueIdentifier'
 
-export const parseFeatures = (featuresResp, filterByName) => {
+export const parseFeatures = (featuresResp, filterByFeatureSetName) => {
   const type = featuresResp.features ? 'feature' : 'entity' 
-  const typePlural = type === 'feature' ? 'features' : 'entities'
-  let features = featuresResp[typePlural] // todo feature, when BE done for features remove line
+  let features = featuresResp[type === 'feature' ? 'features' : 'entities']
 
   if (type === 'entity') { // todo feature, when BE done for features remove condition
-    const groupedDigests = featuresResp.feature_set_digests.reduce((digests, digestItem) => {
-      digests[
-        digestItem.feature_set_index
-      ] = digestItem
+    const groupedFeatureSets = keyBy(featuresResp.feature_set_digests, 'feature_set_index')
   
-      return digests
-    }, {})
-    let filteredFeatures = featuresResp[typePlural]
-  
-    if (filterByName) {
-      filteredFeatures = filteredFeatures.filter(feature => {
-        return groupedDigests[feature.feature_set_index]?.metadata?.name === filterByName
+    if (filterByFeatureSetName) {
+      features = features.filter(feature => {
+        return groupedFeatureSets[feature.feature_set_index]?.metadata?.name === filterByFeatureSetName
       })
     }
   
-    features = filteredFeatures.map(feature => ({
+    // todo feature, when BE done for features merge logic with the last map
+    features = features.map(feature => ({
       [type]: feature,
       feature_set_digest:
-        groupedDigests[feature.feature_set_index] || {}
+      groupedFeatureSets[feature.feature_set_index] || {}
     }))
   }
   
