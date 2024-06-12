@@ -21,34 +21,28 @@ import { keyBy } from 'lodash'
 import { getFeatureIdentifier } from './getUniqueIdentifier'
 
 export const parseFeatures = (featuresResp, filterByFeatureSetName) => {
-  const type = featuresResp.features ? 'feature' : 'entity' 
-  let features = featuresResp[type === 'feature' ? 'features' : 'entities']
+  const type = featuresResp.features ? 'feature' : 'entity'
+  const groupedFeatureSets = keyBy(featuresResp.feature_set_digests, 'feature_set_index')
+  let features = featuresResp[type === 'feature' ? 'features' : 'entities'] || []
 
-  if (type === 'entity') { // todo feature, when BE done for features remove condition
-    const groupedFeatureSets = keyBy(featuresResp.feature_set_digests, 'feature_set_index')
-  
-    if (filterByFeatureSetName) {
-      features = features.filter(feature => {
-        return groupedFeatureSets[feature.feature_set_index]?.metadata?.name === filterByFeatureSetName
-      })
-    }
-  
-    // todo feature, when BE done for features merge logic with the last map
-    features = features.map(feature => ({
-      [type]: feature,
-      feature_set_digest:
-      groupedFeatureSets[feature.feature_set_index] || {}
-    }))
+  if (filterByFeatureSetName) {
+    features = features.filter(feature => {
+      return (
+        groupedFeatureSets[feature.feature_set_index]?.metadata?.name === filterByFeatureSetName
+      )
+    })
   }
-  
 
   return features.map(feature => {
     const item = {
-      ...feature[type],
-      ...feature.feature_set_digest,
+      ...feature,
+      ...(groupedFeatureSets[feature.feature_set_index] || {}),
       ui: {
         type: type,
-        originalContent: feature
+        originalContent: {
+          [type]: feature,
+          feature_set_digest: groupedFeatureSets[feature.feature_set_index] || {}
+        }
       }
     }
 

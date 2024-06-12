@@ -17,7 +17,7 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import { mainHttpClient } from '../httpClient'
+import { mainHttpClient, mainHttpClientV2 } from '../httpClient'
 import {
   FEATURE_SETS_TAB,
   FEATURE_VECTORS_TAB,
@@ -26,8 +26,9 @@ import {
   TAG_FILTER_LATEST
 } from '../constants'
 
-const fetchFeatureStoreContent = (path, filters, config = {}, withLatestTag) => {
+const fetchFeatureStoreContent = (path, filters, config = {}, withLatestTag, apiV2) => {
   const params = {}
+  const httpClient = apiV2 ? mainHttpClientV2 : mainHttpClient
 
   if (filters?.labels) {
     params.label = filters.labels?.split(',')
@@ -49,7 +50,7 @@ const fetchFeatureStoreContent = (path, filters, config = {}, withLatestTag) => 
     params.name = `~${filters.name}`
   }
 
-  return mainHttpClient.get(path, {
+  return httpClient.get(path, {
     ...config,
     params: { ...config.params, ...params }
   })
@@ -69,11 +70,11 @@ const featureStoreApi = {
   fetchFeatureVectorsTags: project =>
     mainHttpClient.get(`/projects/${project}/feature-vectors/*/tags`),
   getEntity: (project, entity) =>
-    mainHttpClient.get(`/projects/${project}/entities`, {
+    mainHttpClientV2.get(`/projects/${project}/entities`, {
       params: { name: entity }
     }),
   getEntities: (project, filters, config) =>
-    fetchFeatureStoreContent(`/projects/${project}/entities`, filters, config ?? {}, true),
+    fetchFeatureStoreContent(`/projects/${project}/entities`, filters, config ?? {}, true, true),
   getFeatureSet: (project, featureSet, tag) => {
     const params = {
       name: featureSet
@@ -117,11 +118,11 @@ const featureStoreApi = {
     )
   },
   getFeature: (project, feature) =>
-    mainHttpClient.get(`/projects/${project}/features`, {
+    mainHttpClientV2.get(`/projects/${project}/features`, {
       params: { name: feature }
     }),
   getFeatures: (project, filters, config) =>
-    fetchFeatureStoreContent(`/projects/${project}/${FEATURES_TAB}`, filters, config ?? {}, true),
+    fetchFeatureStoreContent(`/projects/${project}/${FEATURES_TAB}`, filters, config ?? {}, true, true),
   startIngest: (project, featureSet, reference, data) =>
     mainHttpClient.post(
       `/projects/${project}/feature-sets/${featureSet}/references/${reference}/ingest`,

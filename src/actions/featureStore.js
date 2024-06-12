@@ -280,12 +280,7 @@ const featureStoreActions = {
     return featureStoreApi
       .getFeature(project, featureName)
       .then(response => {
-        const filteredFeatures = response.data.features.filter(
-          // todo feature, when BE done for features remove filter call
-          responseItem => responseItem.feature_set_digest.metadata.name === featureMetadataName
-        )
-         // todo feature, when BE done for features first param is just response.data and use featureMetadataName as second param
-        const parsedFeatures = parseFeatures({ features: filteredFeatures })
+        const parsedFeatures = parseFeatures(response.data, featureMetadataName)
 
         dispatch(
           featureStoreActions.fetchFeatureSuccess({

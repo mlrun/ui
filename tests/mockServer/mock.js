@@ -847,7 +847,7 @@ function invokeSchedule(req, res) {
 }
 
 function getProjectsFeaturesEntities(req, res) {
-  const artifact = req.params.artifact
+  const artifact = req.path.substring(req.path.lastIndexOf('/') + 1)
   let collectedArtifacts = []
   let collectedFeatureSetDigests = []
   const findDigestByFeatureSetIndex = index =>
@@ -859,9 +859,12 @@ function getProjectsFeaturesEntities(req, res) {
     )
   }
   if (artifact === 'features') {
-    // todo feature, when BE done for features add same logic as for entities
+    collectedFeatureSetDigests = features.feature_set_digests.filter(
+      item => item.metadata.project === req.params.project
+    )
     collectedArtifacts = features.features.filter(
-      item => item.feature_set_digest.metadata.project === req.params.project
+      item =>
+        findDigestByFeatureSetIndex(item.feature_set_index)?.metadata.project === req.params.project
     )
   }
   if (artifact === 'entities') {
@@ -878,11 +881,8 @@ function getProjectsFeaturesEntities(req, res) {
     if (req.query['tag']) {
       collectedArtifacts = collectedArtifacts.filter(item => {
         let tag = ''
-        if (artifact === 'entities') {
+        if (artifact === 'features' || artifact === 'entities') {
           tag = findDigestByFeatureSetIndex(item.feature_set_index)?.metadata.tag
-        } else if (artifact === 'features') {
-          // todo feature, when BE done for features move remove this condition block and and (artifact === 'features' || artifact === 'entities') in if above
-          tag = item.feature_set_digest.metadata.tag
         } else {
           tag = item.metadata.tag
         }
@@ -896,19 +896,13 @@ function getProjectsFeaturesEntities(req, res) {
         if (req.query['name'].includes('~')) {
           if (artifact === 'feature-vectors') {
             return feature.metadata.name.includes(req.query['name'].slice(1))
-          } else if (artifact === 'features') {
-            // todo feature, when BE done for features change as for entities below
-            return feature.feature.name.includes(req.query['name'].slice(1))
-          } else if (artifact === 'entities') {
+          } else if (artifact === 'features' || artifact === 'entities') {
             return feature.name.includes(req.query['name'].slice(1))
           }
         } else {
           if (artifact === 'feature-vectors') {
             return feature.metadata.name.includes(req.query['name'].slice(1))
-          } else if (artifact === 'features') {
-            // todo feature, when BE done for features change as for entities below
-            return feature.feature.name === req.query['name']
-          } else if (artifact === 'entities') {
+          } else if (artifact === 'features' || artifact === 'entities') {
             return feature.name === req.query['name']
           }
         }
@@ -921,10 +915,7 @@ function getProjectsFeaturesEntities(req, res) {
       collectedArtifacts = collectedArtifacts.filter(item => {
         if (artifact === 'feature-vectors' && item.metadata.labels) {
           return item.metadata.labels[key]
-        } else if (item.feature?.labels) {
-          // todo feature, when BE done for features change condition and return as for entities below
-          return item.feature.labels[key]
-        } else if (artifact === 'entities' && item.labels) {
+        } else if ((artifact === 'features' || artifact === 'entities') && item.labels) {
           return item.labels[key]
         }
       })
@@ -933,11 +924,7 @@ function getProjectsFeaturesEntities(req, res) {
         collectedArtifacts = collectedArtifacts.filter(item => {
           if (artifact === 'feature-vectors' && item.metadata.labels) {
             return item.metadata.labels[key] === value
-          }
-          if (artifact === 'features') {
-            // todo feature, when BE done for features change as for entities below
-            return item.feature.labels[key] === value
-          } else if (artifact === 'entities') {
+          } else if (artifact === 'features' || artifact === 'entities') {
             return item.labels[key] === value
           }
         })
@@ -964,8 +951,7 @@ function getProjectsFeaturesEntities(req, res) {
     result = { feature_vectors: collectedArtifacts }
   }
   if (artifact === 'features') {
-    // todo feature, when BE done for features todo the same as fow entities below
-    result = { features: collectedArtifacts }
+    result = { features: collectedArtifacts, feature_set_digests: collectedFeatureSetDigests }
   }
   if (artifact === 'entities') {
     result = { entities: collectedArtifacts, feature_set_digests: collectedFeatureSetDigests }
@@ -1318,17 +1304,22 @@ function deleteFunc(req, res) {
       })
 
       return new Promise(resolve => {
-        setTimeout(() => {
-          forEach(collectedFunc, func => {
-            delete func.status.deletion_task_id
-          })
+        setTimeout(
+          () => {
+            forEach(collectedFunc, func => {
+              delete func.status.deletion_task_id
+            })
 
-          remove(
-            funcs.funcs,
-            func => func.metadata.project === req.params.project && func.metadata.name === req.params.func
-          )
-          resolve()
-        }, random(3000, 10000))
+            remove(
+              funcs.funcs,
+              func =>
+                func.metadata.project === req.params.project &&
+                func.metadata.name === req.params.func
+            )
+            resolve()
+          },
+          random(3000, 10000)
+        )
       })
     }
 
@@ -1799,9 +1790,10 @@ function getModelEndpoint(req, res) {
 }
 
 function getMetrics(req, res) {
-  let metricsOptions = metricsData.metrics.find(
-    item => item.project === req.params.project && item.modelEndpointUID === req.params.uid
-  )?.metricsOptions || []
+  let metricsOptions =
+    metricsData.metrics.find(
+      item => item.project === req.params.project && item.modelEndpointUID === req.params.uid
+    )?.metricsOptions || []
 
   if (req.query.type && req.query.type !== 'all') {
     metricsOptions = metricsOptions.filter(item => (item.type = req.query.type))
@@ -1820,13 +1812,13 @@ function getMetricsValues(req, res) {
     const step = (length >= 60 ? Math.ceil(Math.random() * 10) : 1) / (length - 1)
 
     for (let i = 0; i < length; i++) {
-        const x = i * step
-        const y = (Math.sin(2 * Math.PI * x) + 1) / 2 + (Math.random() / 10)
-        result.push(y)
+      const x = i * step
+      const y = (Math.sin(2 * Math.PI * x) + 1) / 2 + Math.random() / 10
+      result.push(y)
     }
 
     return result
-}
+  }
 
   let metricsValues =
     metricsData.metrics.find(
@@ -2215,8 +2207,9 @@ app.get(
   `${mlrunAPIIngress}/projects/:project/model-endpoints/:uid/metrics-values`,
   getMetricsValues
 )
-
-app.get(`${mlrunAPIIngress}/projects/:project/:artifact`, getProjectsFeaturesEntities)
+app.get(`${mlrunAPIIngressV2}/projects/:project/features`, getProjectsFeaturesEntities)
+app.get(`${mlrunAPIIngressV2}/projects/:project/entities`, getProjectsFeaturesEntities)
+app.get(`${mlrunAPIIngress}/projects/:project/feature-vectors`, getProjectsFeaturesEntities)
 
 app.post(`${mlrunAPIIngress}/submit_job`, postSubmitJob)
 
