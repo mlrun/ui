@@ -155,7 +155,7 @@ const DetailsArtifacts = ({
 
       dispatch(
         fetchArtifacts({
-          project: params.projectName,
+          project: job.project || params.projectName,
           filters: {},
           config
         })
