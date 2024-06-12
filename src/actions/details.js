@@ -56,7 +56,7 @@ import { generatePods } from '../utils/generatePods'
 import {
   generateMetricsItems,
   parseMetrics
-} from '../components/DetailsMetrics/detailsMetrics.utils'
+} from '../components/DetailsMetrics/detailsMetrics.util'
 import { TIME_FRAME_LIMITS } from '../utils/datePicker.util'
 
 const detailsActions = {

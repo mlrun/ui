@@ -23,7 +23,7 @@ import PropTypes from 'prop-types'
 import StatsCard from '../../common/StatsCard/StatsCard'
 import MetricChart from '../MetricChart/MetricChart'
 
-import { calculatePercentageDrift } from './detailsMetrics.utils'
+import { calculatePercentageDrift } from './detailsMetrics.util'
 import { getGradientLineChartConfig } from '../../utils/getMetricChartConfig'
 import { CHART_TYPE_LINE } from '../../constants'
 

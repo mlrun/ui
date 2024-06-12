@@ -30,7 +30,7 @@ import { CHART_TYPE_LINE, CHART_TYPE_BAR, REQUEST_CANCELED } from '../../constan
 import detailsActions from '../../actions/details'
 import { groupMetricByApplication } from '../../elements/MetricsSelector/metricsSelector.utils'
 import { getBarChartMetricConfig, getLineChartMetricConfig } from '../../utils/getMetricChartConfig'
-import { getDateRangeBefore, ML_RUN_INFRA, timeRangeMapping } from './detailsMetrics.utils'
+import { getDateRangeBefore, ML_RUN_INFRA, timeRangeMapping } from './detailsMetrics.util'
 
 import { ReactComponent as MetricsIcon } from 'igz-controls/images/metrics-icon.svg'
 
@@ -67,7 +67,7 @@ const DetailsMetrics = ({ selectedItem }) => {
     card.classList.add('collapse-card-height')
   }, [])
 
-  const checkForScrollbars = useCallback(() => {
+  const expandOrCollapseInvocationCard = useCallback(() => {
     const card = invocationBodyCardRef.current
     const metrics = metricsContainerRef.current
     const content = document.querySelector('.metrics__card-invocation-content')
@@ -135,8 +135,8 @@ const DetailsMetrics = ({ selectedItem }) => {
     const invocationHeader = document.querySelector('.stats-card__row')
     if (!invocationHeader || !content) return
 
-    checkForScrollbars(invocationHeader, content)
-  }, [metrics, checkForScrollbars])
+    expandOrCollapseInvocationCard(invocationHeader, content)
+  }, [metrics, expandOrCollapseInvocationCard])
 
   const calculateHistogram = useCallback((points, metric) => {
     const numberOfBins = 5
@@ -268,7 +268,7 @@ const DetailsMetrics = ({ selectedItem }) => {
       const selectedMetrics =
         detailsStore.metricsOptions.selectedByEndpoint[selectedItem.metadata?.uid]
       const invocationMetric = detailsStore.metricsOptions.all.find(
-        metric => metric.app === 'mlrun-infra'
+        metric => metric.app === ML_RUN_INFRA
       )
 
       const params = { name: [] }
@@ -291,7 +291,7 @@ const DetailsMetrics = ({ selectedItem }) => {
       preInvocationMetricParams.start = newRange.start
       preInvocationMetricParams.end = newRange.end
       const [{ full_name }] = detailsStore.metricsOptions.all.filter(
-        metric => metric.app === 'mlrun-infra'
+        metric => metric.app === ML_RUN_INFRA
       )
       preInvocationMetricParams.name.push(full_name)
       fetchData(params, preInvocationMetricParams, selectedItem)
