@@ -58,7 +58,7 @@ const ScheduledMonitoring = () => {
 
         filters = {
           dates: {
-            value: next24HourOption.handler(),
+            value: next24HourOption.handler(true),
             isPredefined: next24HourOption.isPredefined,
             initialSelectedOptionId: next24HourOption.id
           },

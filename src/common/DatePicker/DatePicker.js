@@ -163,14 +163,14 @@ const DatePicker = ({
   useEffect(() => {
     datePickerDispatch({
       type: datePickerActions.UPDATE_DATE_FROM,
-      payload: date || new Date()
+      payload: date || new Date(new Date().setSeconds(0,0))
     })
   }, [date])
 
   useEffect(() => {
     datePickerDispatch({
       type: datePickerActions.UPDATE_DATE_TO,
-      payload: dateTo || new Date()
+      payload: dateTo || new Date(new Date().setSeconds(0,0))
     })
   }, [dateTo])
 
@@ -463,7 +463,7 @@ const DatePicker = ({
 
   const onSelectOption = option => {
     if (option.handler) {
-      onChange(option.handler(), option.isPredefined, option.id)
+      onChange(option.handler(isRange), option.isPredefined, option.id)
       if (isNil(externalInvalid)) {
         setInputIsInvalid(false)
       }
@@ -542,6 +542,7 @@ const DatePicker = ({
 }
 DatePicker.defaultProps = {
   className: '',
+  date: new Date(),
   dateTo: new Date(),
   disabled: false,
   externalInvalid: null,
@@ -562,7 +563,7 @@ DatePicker.defaultProps = {
 
 DatePicker.propTypes = {
   className: PropTypes.string,
-  date: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.string]).isRequired,
+  date: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.string]),
   dateTo: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.string]),
   disabled: PropTypes.bool,
   externalInvalid: PropTypes.bool,
