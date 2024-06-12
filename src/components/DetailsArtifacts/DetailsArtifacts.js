@@ -32,7 +32,8 @@ import jobsActions from '../../actions/jobs'
 import { generateArtifactIdentifiers } from '../Details/details.util'
 import {
   generateArtifactsPreviewContent,
-  generateArtifactsTabContent
+  generateArtifactsTabContent,
+  getJobAccordingIteration
 } from './detailsArtifacts.util'
 import { useSortTable } from '../../hooks/useSortTable.hook'
 import { ALLOW_SORT_BY, DEFAULT_SORT_BY, EXCLUDE_SORT_BY } from 'igz-controls/types'
@@ -139,8 +140,13 @@ const DetailsArtifacts = ({
       }
 
       if (workflowId) {
-        config.params.tree = workflowId.trim()
-        config.params.producer_uri = `${params.projectName}/${job.uid}`
+        return fetchJob(params.projectName, params.jobId, iteration).then(job => {
+          const selectedJob = getJobAccordingIteration(job)
+
+          setArtifactsPreviewContent(
+            generateArtifactsPreviewContent(selectedJob, selectedJob.artifacts)
+          )
+        })
       }
 
       if (iteration) {
@@ -159,7 +165,7 @@ const DetailsArtifacts = ({
           setArtifactsPreviewContent(generateArtifactsPreviewContent(job, result))
         })
     },
-    [dispatch, params.projectName]
+    [dispatch, fetchJob, params.jobId, params.projectName]
   )
 
   useEffect(() => {
@@ -168,7 +174,7 @@ const DetailsArtifacts = ({
     } else if (selectedItem.iterationStats.length === 0) {
       getJobArtifacts(selectedItem, null)
     }
-  }, [fetchJob, getJobArtifacts, iteration, params.jobId, params.projectName, selectedItem])
+  }, [getJobArtifacts, iteration, params.jobId, params.projectName, selectedItem])
 
   useEffect(() => {
     return () => {
