@@ -17,7 +17,7 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import React, { useMemo } from 'react'
+import React, { useEffect, useMemo } from 'react'
 import { Form } from 'react-final-form'
 import { useDispatch, useSelector } from 'react-redux'
 import { isEmpty } from 'lodash'
@@ -33,7 +33,7 @@ import { RoundedIcon, Button } from 'igz-controls/components'
 import DatePicker from '../../common/DatePicker/DatePicker'
 
 import { setFieldState } from 'igz-controls/utils/form.util'
-import { setFilters } from '../../reducers/filtersReducer'
+import { removeFilters, setFilters } from '../../reducers/filtersReducer'
 import detailsActions from '../../actions/details'
 import {
   GROUP_BY_NAME,
@@ -154,7 +154,7 @@ const ActionBar = ({
     }
   }
 
-  const handleDateChange = (dates, isPredefined, input, formState) => {
+  const handleDateChange = (dates, isPredefined, optionId, input, formState) => {
     const generatedDates = [...dates]
 
     if (generatedDates.length === 1) {
@@ -165,7 +165,8 @@ const ActionBar = ({
       setFilters({
         dates: {
           value: generatedDates,
-          isPredefined
+          isPredefined,
+          initialSelectedOptionId: optionId
         }
       })
     )
@@ -184,6 +185,23 @@ const ActionBar = ({
       isPredefined
     })
   }
+
+  useEffect(() => {
+    const formState = formRef.current
+
+    return () => {
+      if (!filtersStore.saveFilters) {
+        dispatch(removeFilters())
+        formState?.reset?.(formInitialValues)
+      } else {
+        dispatch(setFilters({ saveFilters: false }))
+      }
+    }
+  }, [params.projectName, params.name, page, tab, dispatch, formInitialValues, filtersStore.saveFilters, filters])
+
+  useEffect(() => {
+    formRef.current?.reset?.(formInitialValues)
+  }, [formInitialValues])
 
   return (
     <Form form={formRef.current} onSubmit={() => {}}>
@@ -214,6 +232,7 @@ const ActionBar = ({
                         {({ input }) => {
                           return (
                             <DatePicker
+                              key={tab}
                               className="details-date-picker"
                               date={input.value.value[0]}
                               dateTo={input.value.value[1]}
@@ -224,8 +243,8 @@ const ActionBar = ({
                                   : PAST_24_HOUR_DATE_OPTION
                               }
                               label=""
-                              onChange={(dates, isPredefined) =>
-                                handleDateChange(dates, isPredefined, input, formState)
+                              onChange={(dates, isPredefined, optionId) =>
+                                handleDateChange(dates, isPredefined, optionId, input, formState)
                               }
                               type="date-range-time"
                               withLabels
@@ -257,6 +276,7 @@ const ActionBar = ({
                 (actionButton, index) =>
                   actionButton &&
                   !actionButton.hidden && (
+                    actionButton.template ||
                     <Button
                       key={index}
                       variant={actionButton.variant}

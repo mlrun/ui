@@ -131,7 +131,7 @@ const Features = ({
             }, [])
 
             if (
-              features.length > 1500 ||
+              features.length > 10000 ||
               abortControllerRef.current?.signal?.reason === LARGE_REQUEST_CANCELED
             ) {
               showLargeResponsePopUp(setLargeRequestErrorMessage)

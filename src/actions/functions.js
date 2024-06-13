@@ -353,7 +353,7 @@ const functionsActions = {
     type: FETCH_HUB_FUNCTIONS_FAILURE,
     payload: err
   }),
-  getFunction: (project, name, hash, tag) => dispatch => {
+  fetchFunction: (project, name, hash, tag) => dispatch => {
     dispatch(functionsActions.getFunctionBegin())
 
     return functionsApi

@@ -531,7 +531,7 @@ const JobWizard = ({
               />
             )}
             <FormDirtySpy />
-            {(functionsStore.loading || jobsStore.loading || projectIsLoading) && <Loader />}
+            {(functionsStore.loading || functionsStore.funcLoading || jobsStore.loading || projectIsLoading) && <Loader />}
           </>
         )
       }}

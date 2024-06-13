@@ -31,7 +31,7 @@ export const usePods = (dispatch, fetchJobPods, removePods, selectedJob) => {
     if (!isEmpty(selectedJob) && !arePodsHidden(selectedJob?.labels)) {
       dispatch(
         fetchJobPods(
-          params.projectName,
+          params.projectName || selectedJob?.project,
           selectedJob.uid,
           get(selectedJob, 'ui.originalContent.metadata.labels.kind', JOB_KIND_JOB)
         )
@@ -40,7 +40,7 @@ export const usePods = (dispatch, fetchJobPods, removePods, selectedJob) => {
       const interval = setInterval(() => {
         dispatch(
           fetchJobPods(
-            params.projectName,
+            params.projectName || selectedJob?.project,
             selectedJob.uid,
             get(selectedJob, 'ui.originalContent.metadata.labels.kind', JOB_KIND_JOB)
           )

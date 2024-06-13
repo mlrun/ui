@@ -21,7 +21,7 @@ import React, { useMemo, useRef, useState, useEffect, useCallback } from 'react'
 import PropTypes from 'prop-types'
 import { FieldArray } from 'react-final-form-arrays'
 import classNames from 'classnames'
-import { debounce, isEmpty } from 'lodash'
+import { capitalize, debounce, isEmpty } from 'lodash'
 import { Form } from 'react-final-form'
 import arrayMutators from 'final-form-arrays'
 import { createForm } from 'final-form'
@@ -37,6 +37,8 @@ import { METRICS_SELECTOR_OPTIONS } from '../../types'
 
 import { ReactComponent as Arrow } from 'igz-controls/images/arrow.svg'
 import { ReactComponent as SearchIcon } from 'igz-controls/images/search.svg'
+import { ReactComponent as MetricIcon } from 'igz-controls/images/circled-m.svg'
+import { ReactComponent as ResultIcon } from 'igz-controls/images/circled-r.svg'
 
 import './metricsSelector.scss'
 
@@ -141,15 +143,23 @@ const MetricsSelector = ({ maxSelectionNumber, metrics, name, onSelect, preselec
   const getMetricsLabel = metric => {
     return (
       <>
-        <span
-          className="metrics-selector-color-indicator"
-          style={{ backgroundColor: metric.color }}
-        />
-        <span className="data-ellipsis">{metric.name}</span>
-        {/*// todo: metrics - change according to design when ready  */}
-        <span style={{ marginLeft: '5px' }}>
-          {metric.type === metricsTypes.metric ? ' (M)' : ' (R)'}
-        </span>
+        <Tooltip
+          className="metrics-selector-name"
+          template={<TextTooltipTemplate text={metric.name} />}
+        >
+          <span
+            className="metrics-selector-color-indicator"
+            style={{ backgroundColor: metric.color }}
+          />
+          <span className="data-ellipsis">{metric.name}</span>
+        </Tooltip>
+
+        <Tooltip
+          className="metrics-selector-icon-type"
+          template={<TextTooltipTemplate text={capitalize(metric.type)} />}
+        >
+          {metric.type === metricsTypes.metric ? <MetricIcon /> : <ResultIcon />}
+        </Tooltip>
       </>
     )
   }
@@ -223,22 +233,18 @@ const MetricsSelector = ({ maxSelectionNumber, metrics, name, onSelect, preselec
                                   <ul className="metrics-selector-options">
                                     {metricsGroup.metrics.map(metricItem => {
                                       return (
-                                        <Tooltip
+                                        <SelectOption
                                           key={metricItem.id}
-                                          template={<TextTooltipTemplate text={metricItem.name} />}
-                                        >
-                                          <SelectOption
-                                            item={{
-                                              ...metricItem,
-                                              label: getMetricsLabel(metricItem),
-                                              disabled:
-                                                fields.value?.length >= maxSelectionNumber &&
-                                                !fields.value.includes(metricItem.id)
-                                            }}
-                                            name={name}
-                                            multiple
-                                          />
-                                        </Tooltip>
+                                          item={{
+                                            ...metricItem,
+                                            label: getMetricsLabel(metricItem),
+                                            disabled:
+                                              fields.value?.length >= maxSelectionNumber &&
+                                              !fields.value.includes(metricItem.id)
+                                          }}
+                                          name={name}
+                                          multiple
+                                        />
                                       )
                                     })}
                                   </ul>

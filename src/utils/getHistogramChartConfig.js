@@ -18,6 +18,7 @@ under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
 import { round } from 'lodash'
+import { CHART_TYPE_BAR } from '../constants'
 
 const generateCustomTooltip = context => {
   // Tooltip Element
@@ -45,18 +46,12 @@ const generateCustomTooltip = context => {
   if (tooltipModel.dataPoints) {
     const labels = context.chart.config._config.data?.labels
     const dataPoints = tooltipModel.dataPoints.map(dataPoint => {
-      const labelFormatted = isFinite(dataPoint.label)
-        ? round(dataPoint.label, 2)
-        : dataPoint.label
+      const labelFormatted = isFinite(dataPoint.label) ? round(dataPoint.label, 2) : dataPoint.label
       const nextLabel = labels?.[dataPoint.dataIndex + 1]
-      const nextLabelFormatted = isFinite(nextLabel)
-        ? round(nextLabel, 2)
-        : nextLabel
+      const nextLabelFormatted = isFinite(nextLabel) ? round(nextLabel, 2) : nextLabel
 
       return {
-        x: nextLabelFormatted
-          ? [labelFormatted, nextLabelFormatted]
-          : labelFormatted,
+        x: nextLabelFormatted ? [labelFormatted, nextLabelFormatted] : labelFormatted,
         y: dataPoint.formattedValue
       }
     })
@@ -83,18 +78,16 @@ const generateCustomTooltip = context => {
   let chartEl = tooltipModel.dataPoints[0].element
 
   // Display, position, and set styles for font
-  tooltipEl.style.left =
-    canvasRect.left + window.pageXOffset + tooltipModel.caretX + 'px'
+  tooltipEl.style.left = canvasRect.left + window.pageXOffset + tooltipModel.caretX + 'px'
   tooltipEl.style.top = canvasRect.top + window.pageYOffset + chartEl.y + 'px'
-  tooltipEl.style.padding =
-    tooltipModel.padding + 'px ' + tooltipModel.padding + 'px'
+  tooltipEl.style.padding = tooltipModel.padding + 'px ' + tooltipModel.padding + 'px'
 
   tooltipEl.classList.remove('hidden')
 }
 
 export const getHistogramChartConfig = () => {
   return {
-    type: 'bar',
+    type: CHART_TYPE_BAR,
     options: {
       responsive: true,
       maintainAspectRatio: false,

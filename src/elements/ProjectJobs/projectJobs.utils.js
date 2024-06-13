@@ -54,7 +54,7 @@ export const getJobsStatistics = (projectCounter, projectName) => {
       link: `/projects/${projectName}/jobs/${MONITOR_JOBS_TAB}`
     },
     scheduled: {
-      value: projectCounter.error ? 'N/A' : projectCounter.data.schedules_count,
+      value: projectCounter.error ? 'N/A' : projectCounter.data.distinct_schedules_count,
       label: 'Scheduled',
       className:
         projectCounter.error || projectCounter.data.schedules_count === 0 ? 'default' : 'scheduled',

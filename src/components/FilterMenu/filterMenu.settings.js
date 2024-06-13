@@ -113,6 +113,7 @@ export const tagFilterOptions = [
 ]
 
 export const filterScheduledTypeOptions = [
+  { label: 'All', id: FILTER_ALL_ITEMS },
   { label: 'Jobs', id: JOB_KIND_JOB },
   { label: 'Workflows', id: JOB_KIND_WORKFLOW }
 ]

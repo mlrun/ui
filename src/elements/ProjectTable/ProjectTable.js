@@ -58,6 +58,10 @@ const ProjectTable = ({ params, table }) => {
                       !Array.isArray(body[key].value) &&
                       `status_${body[key].value.toLowerCase()} capitalize`
                   )
+                  const name = body[key].value.startsWith(params.projectName)
+                    ? body[key].value.slice(params.projectName.length + 1)
+                    : body[key].value
+
                   return key === 'type' ? (
                     <TableTypeCell key={body[key].value + index} data={body[key]} />
                   ) : (
@@ -69,13 +73,8 @@ const ProjectTable = ({ params, table }) => {
                             target="_top"
                             className="link project-data-card__table-link"
                           >
-                            <Tooltip
-                              template={<TextTooltipTemplate text={body[key].value} />}
-                              textShow={true}
-                            >
-                              {body[key].value.startsWith(params.projectName)
-                                ? body[key].value.slice(params.projectName.length + 1)
-                                : body[key].value}
+                            <Tooltip template={<TextTooltipTemplate text={name} />} textShow={true}>
+                              {name}
                             </Tooltip>
                           </a>
                         ) : (

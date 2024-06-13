@@ -34,6 +34,7 @@ import {
   JOBS_MONITORING_PAGE
 } from '../../../constants'
 import { datePickerPastOptions, PAST_24_HOUR_DATE_OPTION } from '../../../utils/datePicker.util'
+import { setFilters } from '../../../reducers/filtersReducer'
 
 const JobsMonitoring = () => {
   const [selectedJob, setSelectedJob] = useState({})
@@ -72,8 +73,7 @@ const JobsMonitoring = () => {
       const past24HourOption = datePickerPastOptions.find(
         option => option.id === PAST_24_HOUR_DATE_OPTION
       )
-
-      refreshJobs({
+      const filters = {
         dates: {
           value: past24HourOption.handler(),
           isPredefined: past24HourOption.isPredefined,
@@ -81,7 +81,10 @@ const JobsMonitoring = () => {
         },
         state:
           filtersStore.filterMenuModal[JOBS_MONITORING_JOBS_TAB].values.state || FILTER_ALL_ITEMS
-      })
+      }
+
+      dispatch(setFilters({ ...filters }))
+      refreshJobs(filters)
       setDataIsLoaded(true)
     }
   }, [
@@ -119,7 +122,12 @@ const JobsMonitoring = () => {
         jobs={jobs}
         largeRequestErrorMessage={largeRequestErrorMessage}
         navigateLink={`/projects/${JOBS_MONITORING_PAGE}/${JOBS_MONITORING_JOBS_TAB}`}
-        refreshJobs={refreshJobs}
+        refreshJobs={() =>
+          refreshJobs({
+            ...filtersStore,
+            ...filtersStore.filterMenuModal[JOBS_MONITORING_JOBS_TAB].values
+          })
+        }
         selectedJob={selectedJob}
         setAbortingJobs={setAbortingJobs}
         setJobRuns={setJobRuns}
