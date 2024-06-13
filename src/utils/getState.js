@@ -60,6 +60,7 @@ const commonStateLabels = {
 
 const functionStateLabels = {
   build: 'Deploying',
+  building: 'Deploying',
   deploying: 'Deploying',
   error: 'Error',
   failed: 'Error',
