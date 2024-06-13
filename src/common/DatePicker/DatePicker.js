@@ -163,14 +163,14 @@ const DatePicker = ({
   useEffect(() => {
     datePickerDispatch({
       type: datePickerActions.UPDATE_DATE_FROM,
-      payload: date || new Date(new Date().setSeconds(0,0))
+      payload: date || new Date(new Date().setSeconds(0, 0))
     })
   }, [date])
 
   useEffect(() => {
     datePickerDispatch({
       type: datePickerActions.UPDATE_DATE_TO,
-      payload: dateTo || new Date(new Date().setSeconds(0,0))
+      payload: dateTo || new Date(new Date().setSeconds(59, 999))
     })
   }, [dateTo])
 
@@ -334,10 +334,10 @@ const DatePicker = ({
     setInputIsInvalid(false)
     setExternalInvalid(true)
 
-    let dates = [new Date(datePickerState.configFrom.selectedDate)]
+    let dates = [new Date(new Date(datePickerState.configFrom.selectedDate.setSeconds(0, 0)))]
 
     if (isRange) {
-      dates.push(new Date(datePickerState.configTo.selectedDate))
+      dates.push(new Date(new Date(datePickerState.configTo.selectedDate.setSeconds(59, 999))))
     }
 
     onChange(dates, false, CUSTOM_RANGE_DATE_OPTION)
@@ -363,7 +363,11 @@ const DatePicker = ({
       }
 
       if (!isValueEmpty) {
-        dates = event.target.value.split(datesDivider).map(date => new Date(date))
+        dates = event.target.value
+          .split(datesDivider)
+          .map(
+            (date, index) => new Date(new Date(date).setSeconds(index === 0 ? 0 : 59, index === 0 ? 0 : 999))
+          )
         const { isTimeRangeInvalid, timeRangeInvalidMessage } = validateTimeRange(dates)
 
         if (isTimeRangeInvalid) {
@@ -437,13 +441,13 @@ const DatePicker = ({
         setIsDatePickerOpened(state => !state)
         datePickerDispatch({
           type: datePickerActions.UPDATE_SELECTED_DATE_FROM,
-          payload: date || new Date()
+          payload: new Date((date || new Date()).setSeconds(0, 0))
         })
 
         if (isRange) {
           datePickerDispatch({
             type: datePickerActions.UPDATE_SELECTED_DATE_TO,
-            payload: dateTo || new Date()
+            payload: new Date((dateTo || new Date()).setSeconds(59, 999))
           })
         }
       }
