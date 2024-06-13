@@ -32,6 +32,7 @@ export const generateArtifacts = (artifacts, tab, originalContent) => {
         if (artifact.data.length > 0) {
           generatedArtifacts = artifact.data.map(generatedArtifact => {
             let item = { ...generatedArtifact }
+            item.kind = !item.kind ? 'artifact' : item.kind
 
             if (item.producer && !item.producer.name) {
               item.producer.name =
