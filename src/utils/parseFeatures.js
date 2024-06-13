@@ -17,17 +17,32 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
+import { keyBy } from 'lodash'
 import { getFeatureIdentifier } from './getUniqueIdentifier'
 
-export const parseFeatures = features => {
+export const parseFeatures = (featuresResp, filterByFeatureSetName) => {
+  const type = featuresResp.features ? 'feature' : 'entity'
+  const groupedFeatureSets = keyBy(featuresResp.feature_set_digests, 'feature_set_index')
+  let features = featuresResp[type === 'feature' ? 'features' : 'entities'] || []
+
+  if (filterByFeatureSetName) {
+    features = features.filter(feature => {
+      return (
+        groupedFeatureSets[feature.feature_set_index]?.metadata?.name === filterByFeatureSetName
+      )
+    })
+  }
+
   return features.map(feature => {
-    const type = feature.feature ? 'feature' : 'entity'
     const item = {
-      ...feature[type],
-      ...feature.feature_set_digest,
+      ...feature,
+      ...(groupedFeatureSets[feature.feature_set_index] || {}),
       ui: {
         type: type,
-        originalContent: feature
+        originalContent: {
+          [type]: feature,
+          feature_set_digest: groupedFeatureSets[feature.feature_set_index] || {}
+        }
       }
     }
 

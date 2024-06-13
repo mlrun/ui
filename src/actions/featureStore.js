@@ -124,10 +124,7 @@ const featureStoreActions = {
     return featureStoreApi
       .getEntity(project, entityName)
       .then(response => {
-        const filteredEntities = response.data.entities.filter(
-          responseItem => responseItem.feature_set_digest.metadata.name === entityMetadataName
-        )
-        const parsedEntities = parseFeatures(filteredEntities)
+        const parsedEntities = parseFeatures(response.data, entityMetadataName)
 
         dispatch(
           featureStoreActions.fetchEntitySuccess({
@@ -135,7 +132,7 @@ const featureStoreActions = {
           })
         )
 
-        return filteredEntities
+        return parsedEntities
       })
       .catch(error => {
         throw error
@@ -151,9 +148,11 @@ const featureStoreActions = {
     return featureStoreApi
       .getEntities(project, filters, config)
       .then(response => {
-        dispatch(featureStoreActions.fetchEntitiesSuccess(response.data.entities))
+        const entities = parseFeatures(response.data)
 
-        return response.data.entities
+        dispatch(featureStoreActions.fetchEntitiesSuccess(entities))
+
+        return entities
       })
       .catch(err => {
         dispatch(featureStoreActions.fetchEntitiesFailure(err))
@@ -281,10 +280,7 @@ const featureStoreActions = {
     return featureStoreApi
       .getFeature(project, featureName)
       .then(response => {
-        const filteredFeatures = response.data.features.filter(
-          responseItem => responseItem.feature_set_digest.metadata.name === featureMetadataName
-        )
-        const parsedFeatures = parseFeatures(filteredFeatures)
+        const parsedFeatures = parseFeatures(response.data, featureMetadataName)
 
         dispatch(
           featureStoreActions.fetchFeatureSuccess({
@@ -292,7 +288,7 @@ const featureStoreActions = {
           })
         )
 
-        return filteredFeatures
+        return parsedFeatures
       })
       .catch(error => {
         throw error
@@ -308,9 +304,11 @@ const featureStoreActions = {
     return featureStoreApi
       .getFeatures(project, filters, config)
       .then(response => {
-        dispatch(featureStoreActions.fetchFeaturesSuccess(response.data.features))
+        const features = parseFeatures(response.data)
 
-        return response.data.features
+        dispatch(featureStoreActions.fetchFeaturesSuccess(features))
+
+        return features
       })
       .catch(err => {
         dispatch(featureStoreActions.fetchFeaturesFailure(err))

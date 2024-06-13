@@ -847,8 +847,11 @@ function invokeSchedule(req, res) {
 }
 
 function getProjectsFeaturesEntities(req, res) {
-  const artifact = req.params.artifact
+  const artifact = req.path.substring(req.path.lastIndexOf('/') + 1)
   let collectedArtifacts = []
+  let collectedFeatureSetDigests = []
+  const findDigestByFeatureSetIndex = index =>
+    collectedFeatureSetDigests.find(digest => digest.feature_set_index === index)
 
   if (artifact === 'feature-vectors') {
     collectedArtifacts = featureVectors.feature_vectors.filter(
@@ -856,13 +859,21 @@ function getProjectsFeaturesEntities(req, res) {
     )
   }
   if (artifact === 'features') {
+    collectedFeatureSetDigests = features.feature_set_digests.filter(
+      item => item.metadata.project === req.params.project
+    )
     collectedArtifacts = features.features.filter(
-      item => item.feature_set_digest.metadata.project === req.params.project
+      item =>
+        findDigestByFeatureSetIndex(item.feature_set_index)?.metadata.project === req.params.project
     )
   }
   if (artifact === 'entities') {
+    collectedFeatureSetDigests = entities.feature_set_digests.filter(
+      item => item.metadata.project === req.params.project
+    )
     collectedArtifacts = entities.entities.filter(
-      item => item.feature_set_digest.metadata.project === req.params.project
+      item =>
+        findDigestByFeatureSetIndex(item.feature_set_index)?.metadata.project === req.params.project
     )
   }
 
@@ -871,7 +882,7 @@ function getProjectsFeaturesEntities(req, res) {
       collectedArtifacts = collectedArtifacts.filter(item => {
         let tag = ''
         if (artifact === 'features' || artifact === 'entities') {
-          tag = item.feature_set_digest.metadata.tag
+          tag = findDigestByFeatureSetIndex(item.feature_set_index)?.metadata.tag
         } else {
           tag = item.metadata.tag
         }
@@ -885,18 +896,14 @@ function getProjectsFeaturesEntities(req, res) {
         if (req.query['name'].includes('~')) {
           if (artifact === 'feature-vectors') {
             return feature.metadata.name.includes(req.query['name'].slice(1))
-          } else if (artifact === 'features') {
-            return feature.feature.name.includes(req.query['name'].slice(1))
-          } else if (artifact === 'entities') {
-            return feature.entity.name.includes(req.query['name'].slice(1))
+          } else if (artifact === 'features' || artifact === 'entities') {
+            return feature.name.includes(req.query['name'].slice(1))
           }
         } else {
           if (artifact === 'feature-vectors') {
             return feature.metadata.name.includes(req.query['name'].slice(1))
-          } else if (artifact === 'features') {
-            return feature.feature.name === req.query['name']
-          } else if (artifact === 'entities') {
-            return feature.entity.name === req.query['name']
+          } else if (artifact === 'features' || artifact === 'entities') {
+            return feature.name === req.query['name']
           }
         }
       })
@@ -908,10 +915,8 @@ function getProjectsFeaturesEntities(req, res) {
       collectedArtifacts = collectedArtifacts.filter(item => {
         if (artifact === 'feature-vectors' && item.metadata.labels) {
           return item.metadata.labels[key]
-        } else if (item.feature?.labels) {
-          return item.feature.labels[key]
-        } else if (item.entity?.labels) {
-          return item.entity.labels[key]
+        } else if ((artifact === 'features' || artifact === 'entities') && item.labels) {
+          return item.labels[key]
         }
       })
 
@@ -919,11 +924,8 @@ function getProjectsFeaturesEntities(req, res) {
         collectedArtifacts = collectedArtifacts.filter(item => {
           if (artifact === 'feature-vectors' && item.metadata.labels) {
             return item.metadata.labels[key] === value
-          }
-          if (artifact === 'features') {
-            return item.feature.labels[key] === value
-          } else if (artifact === 'entities') {
-            return item.entity.labels[key] === value
+          } else if (artifact === 'features' || artifact === 'entities') {
+            return item.labels[key] === value
           }
         })
       }
@@ -931,22 +933,28 @@ function getProjectsFeaturesEntities(req, res) {
 
     if (req.query['entity']) {
       collectedArtifacts = collectedArtifacts.filter(feature => {
-        return feature.feature_set_digest.spec.entities.some(
+        return findDigestByFeatureSetIndex(feature.feature_set_index)?.spec?.entities.some(
           item => item.name === req.query['entity']
         )
       })
     }
   }
 
+  collectedFeatureSetDigests = collectedFeatureSetDigests.filter(featureSetDigest =>
+    collectedArtifacts.find(
+      artifact => artifact.feature_set_index === featureSetDigest.feature_set_index
+    )
+  )
+
   let result = {}
   if (artifact === 'feature-vectors') {
     result = { feature_vectors: collectedArtifacts }
   }
   if (artifact === 'features') {
-    result = { features: collectedArtifacts }
+    result = { features: collectedArtifacts, feature_set_digests: collectedFeatureSetDigests }
   }
   if (artifact === 'entities') {
-    result = { entities: collectedArtifacts }
+    result = { entities: collectedArtifacts, feature_set_digests: collectedFeatureSetDigests }
   }
 
   res.send(result)
@@ -1296,17 +1304,22 @@ function deleteFunc(req, res) {
       })
 
       return new Promise(resolve => {
-        setTimeout(() => {
-          forEach(collectedFunc, func => {
-            delete func.status.deletion_task_id
-          })
+        setTimeout(
+          () => {
+            forEach(collectedFunc, func => {
+              delete func.status.deletion_task_id
+            })
 
-          remove(
-            funcs.funcs,
-            func => func.metadata.project === req.params.project && func.metadata.name === req.params.func
-          )
-          resolve()
-        }, random(3000, 10000))
+            remove(
+              funcs.funcs,
+              func =>
+                func.metadata.project === req.params.project &&
+                func.metadata.name === req.params.func
+            )
+            resolve()
+          },
+          random(3000, 10000)
+        )
       })
     }
 
@@ -1777,9 +1790,10 @@ function getModelEndpoint(req, res) {
 }
 
 function getMetrics(req, res) {
-  let metricsOptions = metricsData.metrics.find(
-    item => item.project === req.params.project && item.modelEndpointUID === req.params.uid
-  )?.metricsOptions || []
+  let metricsOptions =
+    metricsData.metrics.find(
+      item => item.project === req.params.project && item.modelEndpointUID === req.params.uid
+    )?.metricsOptions || []
 
   if (req.query.type && req.query.type !== 'all') {
     metricsOptions = metricsOptions.filter(item => (item.type = req.query.type))
@@ -1798,13 +1812,13 @@ function getMetricsValues(req, res) {
     const step = (length >= 60 ? Math.ceil(Math.random() * 10) : 1) / (length - 1)
 
     for (let i = 0; i < length; i++) {
-        const x = i * step
-        const y = (Math.sin(2 * Math.PI * x) + 1) / 2 + (Math.random() / 10)
-        result.push(y)
+      const x = i * step
+      const y = (Math.sin(2 * Math.PI * x) + 1) / 2 + Math.random() / 10
+      result.push(y)
     }
 
     return result
-}
+  }
 
   let metricsValues =
     metricsData.metrics.find(
@@ -2193,8 +2207,9 @@ app.get(
   `${mlrunAPIIngress}/projects/:project/model-endpoints/:uid/metrics-values`,
   getMetricsValues
 )
-
-app.get(`${mlrunAPIIngress}/projects/:project/:artifact`, getProjectsFeaturesEntities)
+app.get(`${mlrunAPIIngressV2}/projects/:project/features`, getProjectsFeaturesEntities)
+app.get(`${mlrunAPIIngressV2}/projects/:project/entities`, getProjectsFeaturesEntities)
+app.get(`${mlrunAPIIngress}/projects/:project/feature-vectors`, getProjectsFeaturesEntities)
 
 app.post(`${mlrunAPIIngress}/submit_job`, postSubmitJob)
 
