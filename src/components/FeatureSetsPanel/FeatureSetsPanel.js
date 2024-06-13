@@ -61,7 +61,8 @@ const FeatureSetsPanel = ({
     isExternalOfflinePartitionColumnsValid: true,
     isTargetStoreValid: true,
     isTimestampKeyValid: true,
-    isAccessKeyValid: true
+    isAccessKeyValid: true,
+    isLabelsValid: true
   })
   const [disableButtons, setDisableButtons] = useState({
     isExternalOfflineTargetPathEditModeClosed: true,

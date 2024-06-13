@@ -212,12 +212,12 @@ export const generateJobWizardDefaultData = (
   selectedFunctionData,
   defaultData,
   currentProjectName,
-  isEditMode
+  isEditMode,
+  internalLabels
 ) => {
   if (isEmpty(defaultData)) return [{}, {}]
   const selectedFunction = selectedFunctionData?.functions[0] ?? {}
-
-  const runInfo = getRunDefaultInfo(defaultData, selectedFunction)
+  const runInfo = getRunDefaultInfo(defaultData, selectedFunction, internalLabels)
   const functionParameters = getFunctionDefaultParameters(selectedFunction, runInfo.handler)
   const [predefinedParameters, customParameters] = parseDefaultParameters(
     functionParameters,
@@ -342,9 +342,9 @@ const getFunctionInfo = (selectedFunctionData, preSelectedVersion, isTrain) => {
   }
 }
 
-const getRunDefaultInfo = (defaultData, selectedFunction) => {
+const getRunDefaultInfo = (defaultData, selectedFunction, internalLabels) => {
   return {
-    labels: parseChipsData(defaultData.task?.metadata?.labels),
+    labels: parseChipsData(defaultData.task?.metadata?.labels, internalLabels),
     name: defaultData.task?.metadata?.name || '',
     handler: defaultData.task?.spec?.handler,
     handlerData: getHandlerData(selectedFunction, defaultData.task?.spec?.handler),

@@ -123,9 +123,9 @@ const Models = ({ fetchModelFeatureVector }) => {
   const detailsFormInitialValues = useMemo(
     () => ({
       tag: selectedModel.tag ?? '',
-      labels: parseChipsData(selectedModel.labels ?? {})
+      labels: parseChipsData(selectedModel.labels ?? {}, frontendSpec.internal_labels)
     }),
-    [selectedModel.labels, selectedModel.tag]
+    [frontendSpec.internal_labels, selectedModel.labels, selectedModel.tag]
   )
 
   const fetchData = useCallback(

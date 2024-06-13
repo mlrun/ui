@@ -41,6 +41,7 @@ const FeatureSetsPanelTitleView = ({
   handleCheckPassthrough,
   handleNameOnBlur,
   setData,
+  setLabelsValidation,
   setNewFeatureSetDescription,
   setNewFeatureSetVersion,
   setValidation,
@@ -119,6 +120,7 @@ const FeatureSetsPanelTitleView = ({
               elements={data.labels}
               isEditMode
               removeChip={handleChangeLabels}
+              setValidation={setLabelsValidation}
             />
           </div>
         </div>
@@ -154,6 +156,7 @@ FeatureSetsPanelTitleView.propTypes = {
   handleChangeLabels: PropTypes.func.isRequired,
   handleNameOnBlur: PropTypes.func.isRequired,
   setData: PropTypes.func.isRequired,
+  setLabelsValidation: PropTypes.func.isRequired,
   setNewFeatureSetDescription: PropTypes.func.isRequired,
   setNewFeatureSetVersion: PropTypes.func.isRequired,
   setValidation: PropTypes.func.isRequired,

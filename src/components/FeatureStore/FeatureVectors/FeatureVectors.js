@@ -91,7 +91,7 @@ const FeatureVectors = ({
     setConfirmData,
     toggleConvertedYaml
   } = React.useContext(FeatureStoreContext)
-
+  const frontendSpec = useSelector(store => store.appStore.frontendSpec)
   const pageData = useMemo(() => generatePageData(selectedFeatureVector), [selectedFeatureVector])
 
   const detailsFormInitialValues = useMemo(
@@ -100,9 +100,10 @@ const FeatureVectors = ({
         return { ...parseFeatureTemplate(featureData) }
       }),
       description: selectedFeatureVector.description,
-      labels: parseChipsData(selectedFeatureVector.labels)
+      labels: parseChipsData(selectedFeatureVector.labels, frontendSpec.internal_labels)
     }),
     [
+      frontendSpec.internal_labels,
       selectedFeatureVector.description,
       selectedFeatureVector.labels,
       selectedFeatureVector.specFeatures

@@ -20,7 +20,7 @@ such restriction.
 import React from 'react'
 import PropTypes from 'prop-types'
 import classnames from 'classnames'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 
 import { RoundedIcon, FormChipCell, FormOnChange } from 'igz-controls/components'
 
@@ -41,6 +41,7 @@ const DetailsInfoItemChip = ({
   item,
   formState
 }) => {
+  const frontendSpec = useSelector(store => store.appStore.frontendSpec)
   const dispatch = useDispatch()
   const chipFieldClassName = classnames(
     'details-item__data',
@@ -74,7 +75,10 @@ const DetailsInfoItemChip = ({
         shortChips
         visibleChipsMaxLength="all"
         validationRules={{
-          key: getValidationRules('common.tag'),
+          key: getValidationRules(
+            'common.tag',
+            getValidationRules('common.labels', [], frontendSpec.internal_labels)
+          ),
           value: getValidationRules('common.tag')
         }}
       />

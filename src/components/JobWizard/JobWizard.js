@@ -209,7 +209,8 @@ const JobWizard = ({
         selectedFunctionData,
         defaultData,
         params.projectName,
-        isEditMode
+        isEditMode,
+        frontendSpec.internal_labels
       )
       setJobData(formStateRef.current, jobFormData, jobAdditionalData)
     } else if (

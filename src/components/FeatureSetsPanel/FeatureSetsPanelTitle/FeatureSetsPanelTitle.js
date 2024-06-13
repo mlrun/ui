@@ -17,7 +17,7 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import React, { useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 
@@ -94,6 +94,13 @@ const FeatureSetsPanelTitle = ({
     }
   }, [data.passthrough, featureStore.newFeatureSet.spec.passthrough])
 
+  const setLabelsValidation = useCallback(
+    value => {
+      setValidation(state => ({ ...state, isLabelsValid: value }))
+    },
+    [setValidation]
+  )
+
   return (
     <FeatureSetsPanelTitleView
       closePanel={closePanel}
@@ -104,6 +111,7 @@ const FeatureSetsPanelTitle = ({
       handleCheckPassthrough={handleCheckPassthrough}
       handleNameOnBlur={handleNameOnBlur}
       setData={setData}
+      setLabelsValidation={setLabelsValidation}
       setNewFeatureSetDescription={setNewFeatureSetDescription}
       setNewFeatureSetVersion={setNewFeatureSetVersion}
       setValidation={setValidation}

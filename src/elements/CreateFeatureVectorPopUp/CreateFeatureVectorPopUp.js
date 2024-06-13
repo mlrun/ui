@@ -23,6 +23,7 @@ import arrayMutators from 'final-form-arrays'
 import { Form } from 'react-final-form'
 import { createForm } from 'final-form'
 import { isEmpty } from 'lodash'
+import { useSelector } from 'react-redux'
 
 import {
   Button,
@@ -46,11 +47,12 @@ import './createFeatureVectorPopUp.scss'
 
 const CreateFeatureVectorPopUp = ({ closePopUp, createFeatureVector, featureVectorData }) => {
   const [tagTooltipIsHidden, setTagTooltipIsHidden] = useState(false)
+  const frontendSpec = useSelector(store => store.appStore.frontendSpec)
   const initialValues = {
     name: featureVectorData.name,
     tag: featureVectorData.tag || TAG_LATEST,
     description: featureVectorData.description,
-    labels: parseChipsData(featureVectorData.labels)
+    labels: parseChipsData(featureVectorData.labels, frontendSpec.internal_labels)
   }
   const formRef = React.useRef(
     createForm({
@@ -127,7 +129,10 @@ const CreateFeatureVectorPopUp = ({ closePopUp, createFeatureVector, featureVect
                   shortChips
                   visibleChipsMaxLength="2"
                   validationRules={{
-                    key: getValidationRules('common.tag'),
+                    key: getValidationRules(
+                      'common.tag',
+                      getValidationRules('common.labels', [], frontendSpec.internal_labels)
+                    ),
                     value: getValidationRules('common.tag')
                   }}
                 />
