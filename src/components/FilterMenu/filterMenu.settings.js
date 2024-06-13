@@ -46,11 +46,9 @@ const jobsStatus = [
   { label: 'Aborted', id: 'aborted', status: 'aborted' },
   { label: 'Aborting', id: 'aborting', status: 'aborting' },
   { label: 'Completed', id: 'completed', status: 'completed' },
-  { label: 'Created', id: 'created', status: 'created' },
   { label: 'Error', id: 'error', status: 'error' },
   { label: 'Running', id: 'running', status: 'running' },
   { label: 'Pending', id: 'pending', status: 'pending' },
-  { label: 'Unknown', id: 'unknown', status: 'unknown' }
 ]
 
 const workflowsStatus = [
@@ -58,8 +56,7 @@ const workflowsStatus = [
   { label: 'Error', id: 'error', status: 'error' },
   { label: 'Failed', id: 'failed', status: 'failed' },
   { label: 'Running', id: 'running', status: 'running' },
-  { label: 'Skipped', id: 'skipped', status: 'skipped' },
-  { label: 'Succeeded', id: 'succeeded', status: 'succeeded' }
+  { label: 'Completed', id: 'completed', status: 'completed' },
 ]
 
 export const generateStatusFilter = (useFailedStatus, tab) => {
