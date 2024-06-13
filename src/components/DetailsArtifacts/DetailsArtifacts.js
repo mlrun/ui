@@ -169,7 +169,7 @@ const DetailsArtifacts = ({
     } else if (selectedItem.iterationStats.length === 0) {
       getJobArtifacts(selectedItem, null)
     }
-  }, [fetchJob, getJobArtifacts, iteration, params.jobId, params.projectName, selectedItem])
+  }, [getJobArtifacts, iteration, params.jobId, params.projectName, selectedItem])
 
   useEffect(() => {
     return () => {
