@@ -181,7 +181,7 @@ const DetailsArtifacts = ({
       setArtifactsPreviewContent([])
       setArtifactsIds([])
     }
-  }, [params.jobId, params.projectName])
+  }, [params.jobId, params.projectName, selectedItem, iteration])
 
   return artifactsStore.loading ? (
     <Loader />
