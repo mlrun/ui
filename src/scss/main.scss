@@ -497,6 +497,7 @@ main {
 }
 
 [class^='state-build'],
+[class^='state-building'],
 [class^='state-deploying'],
 [class^='state-pending'],
 [class^='state-running'] {
