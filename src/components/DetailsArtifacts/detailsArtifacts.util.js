@@ -25,12 +25,13 @@ import Download from '../../common/Download/Download'
 import { DATASETS_TAB, MODELS_TAB, TAG_FILTER_LATEST } from '../../constants'
 import { RoundedIcon, TextTooltipTemplate, Tooltip } from 'igz-controls/components'
 import { formatDatetime, parseKeyValues } from '../../utils'
+import { parseArtifacts } from '../../utils/parseArtifacts'
 
 import { ReactComponent as DetailsIcon } from 'igz-controls/images/view-details.svg'
 
 export const getJobAccordingIteration = selectedJob => {
   return {
-    artifacts: selectedJob.status?.artifacts || [],
+    artifacts: parseArtifacts(selectedJob.status?.artifacts || []),
     startTime: new Date(selectedJob.status?.start_time),
     labels: parseKeyValues(selectedJob.metadata?.labels || {})
   }
