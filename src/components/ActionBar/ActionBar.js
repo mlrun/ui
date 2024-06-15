@@ -42,28 +42,28 @@ import {
   REQUEST_CANCELED,
   TAG_FILTER_ALL_ITEMS
 } from '../../constants'
-import { NEXT_24_HOUR_DATE_OPTION, PAST_24_HOUR_DATE_OPTION } from '../../utils/datePicker.util'
 
 import { ReactComponent as CollapseIcon } from 'igz-controls/images/collapse.svg'
 import { ReactComponent as ExpandIcon } from 'igz-controls/images/expand.svg'
 import { ReactComponent as RefreshIcon } from 'igz-controls/images/refresh.svg'
 
 const ActionBar = ({
-  actionButtons,
-  cancelRequest,
+  actionButtons = [],
+  cancelRequest = null,
   children,
   expand,
   filterMenuName,
   filters,
   handleExpandAll,
   handleRefresh,
+  hidden = false,
   navigateLink,
   page,
-  removeSelectedItem,
-  setSelectedRowData,
-  tab,
-  withoutExpandButton,
-  withRefreshButton
+  removeSelectedItem = null,
+  setSelectedRowData = null,
+  tab = '',
+  withRefreshButton = true,
+  withoutExpandButton
 }) => {
   const filtersStore = useSelector(store => store.filtersStore)
   const filterMenuModal = useSelector(store => store.filtersStore.filterMenuModal?.[filterMenuName])
@@ -75,10 +75,12 @@ const ActionBar = ({
   const formInitialValues = useMemo(() => {
     const values = {}
 
-    filters.forEach(filter => (values[filter.type] = filter.initialValue))
+    filters.forEach(filter => {
+      values[filter.type] = filtersStore[filter.type] || filter.initialValue
+    })
 
     return values
-  }, [filters])
+  }, [filters, filtersStore])
 
   const formRef = React.useRef(
     createForm({
@@ -161,49 +163,38 @@ const ActionBar = ({
       generatedDates.push(new Date())
     }
 
+    const selectedDate = {
+      value: generatedDates,
+      isPredefined,
+      initialSelectedOptionId: optionId
+    }
+
     dispatch(
       setFilters({
-        dates: {
-          value: generatedDates,
-          isPredefined,
-          initialSelectedOptionId: optionId
-        }
+        dates: selectedDate
       })
     )
     applyChanges(
       {
         ...formState.values,
-        dates: {
-          value: generatedDates,
-          isPredefined
-        }
+        dates: selectedDate
       },
       filterMenuModal.values
     )
-    input.onChange({
-      value: generatedDates,
-      isPredefined
-    })
+    input.onChange(selectedDate)
   }
 
   useEffect(() => {
-    const formState = formRef.current
-
     return () => {
-      if (!filtersStore.saveFilters) {
-        dispatch(removeFilters())
-        formState?.reset?.(formInitialValues)
-      } else {
-        dispatch(setFilters({ saveFilters: false }))
-      }
+      dispatch(removeFilters())
     }
-  }, [params.projectName, params.name, page, tab, dispatch, formInitialValues, filtersStore.saveFilters, filters])
+  }, [params.projectName, params.name, page, tab, dispatch])
 
   useEffect(() => {
     formRef.current?.reset?.(formInitialValues)
   }, [formInitialValues])
 
-  return (
+  return (!hidden && (
     <Form form={formRef.current} onSubmit={() => {}}>
       {formState => (
         <div className="action-bar">
@@ -237,11 +228,7 @@ const ActionBar = ({
                               date={input.value.value[0]}
                               dateTo={input.value.value[1]}
                               hasFutureOptions={filter.isFuture}
-                              selectedOptionId={
-                                filter.isFuture
-                                  ? NEXT_24_HOUR_DATE_OPTION
-                                  : PAST_24_HOUR_DATE_OPTION
-                              }
+                              selectedOptionId={input.value.initialSelectedOptionId}
                               label=""
                               onChange={(dates, isPredefined, optionId) =>
                                 handleDateChange(dates, isPredefined, optionId, input, formState)
@@ -306,16 +293,7 @@ const ActionBar = ({
         </div>
       )}
     </Form>
-  )
-}
-
-ActionBar.defaultProps = {
-  actionButtons: [],
-  cancelRequest: null,
-  removeSelectedItem: null,
-  setSelectedRowData: null,
-  tab: '',
-  withRefreshButton: true
+  ))
 }
 
 ActionBar.propTypes = {
@@ -330,17 +308,18 @@ ActionBar.propTypes = {
   ),
   cancelRequest: PropTypes.func,
   expand: PropTypes.bool,
-  filters: PropTypes.arrayOf(PropTypes.object).isRequired,
   filterMenuName: PropTypes.string.isRequired,
+  filters: PropTypes.arrayOf(PropTypes.object).isRequired,
   handleExpandAll: PropTypes.func,
   handleRefresh: PropTypes.func.isRequired,
+  hidden: PropTypes.bool,
   navigateLink: PropTypes.string,
   page: PropTypes.string.isRequired,
   removeSelectedItem: PropTypes.func,
   setSelectedRowData: PropTypes.func,
   tab: PropTypes.string,
-  withoutExpandButton: PropTypes.bool,
-  withRefreshButton: PropTypes.bool
+  withRefreshButton: PropTypes.bool,
+  withoutExpandButton: PropTypes.bool
 }
 
 export default ActionBar

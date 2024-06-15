@@ -222,7 +222,10 @@ const jobsActions = {
       params: {
         ...config?.params,
         name: jobName,
-        ...generateRequestParams(filters)
+        ...generateRequestParams({
+          ...filters,
+          name: jobName
+        })
       }
     }
 

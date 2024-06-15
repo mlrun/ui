@@ -141,7 +141,7 @@ const MonitorWorkflows = ({ deleteWorkflows, fetchFunctionLogs, fetchWorkflows }
             groupBy: GROUP_BY_WORKFLOW
           }
 
-          dispatch(setFilters({ ...filters }))
+          dispatch(setFilters(filters))
           getWorkflows(filters)
         } else {
           getWorkflows({ ...filtersStore, groupBy: GROUP_BY_WORKFLOW })
@@ -175,7 +175,6 @@ const MonitorWorkflows = ({ deleteWorkflows, fetchFunctionLogs, fetchWorkflows }
               filters={filters}
               onChange={getWorkflows}
               page={JOBS_PAGE}
-              saveFilterOnProjectChange
               tab={MONITOR_WORKFLOWS_TAB}
               withoutExpandButton
               hidden={Boolean(params.workflowId)}

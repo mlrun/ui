@@ -32,30 +32,42 @@ const ScheduledMonitoring = () => {
   const [dataIsLoaded, setDataIsLoaded] = useState(false)
   const dispatch = useDispatch()
   const filtersStore = useSelector(store => store.filtersStore)
-  const { jobs, largeRequestErrorMessage, refreshScheduled } = React.useContext(
+  const { scheduledJobs, setScheduledJobs, largeRequestErrorMessage, refreshScheduled } = React.useContext(
     ProjectJobsMonitoringContext
   )
 
   const tableContent = useMemo(() => {
-    return createScheduleJobsMonitoringContent(jobs)
-  }, [jobs])
+    return createScheduleJobsMonitoringContent(scheduledJobs)
+  }, [scheduledJobs])
 
   useEffect(() => {
     if (!dataIsLoaded) {
-      const next24HourOption = datePickerFutureOptions.find(
-        option => option.id === NEXT_24_HOUR_DATE_OPTION
-      )
+      let filters = {}
 
-      const filters = {
-        dates: {
-          value: next24HourOption.handler(),
-          isPredefined: next24HourOption.isPredefined,
-          initialSelectedOptionId: next24HourOption.id
-        },
-        type: filtersStore.filterMenuModal[JOBS_MONITORING_SCHEDULED_TAB].values.type
+      if (filtersStore.saveFilters) {
+        filters = {
+          dates: filtersStore.dates,
+          type: filtersStore.filterMenuModal[JOBS_MONITORING_SCHEDULED_TAB].values.type
+        }
+
+        dispatch(setFilters({ saveFilters: false }))
+      } else {
+        const next24HourOption = datePickerFutureOptions.find(
+          option => option.id === NEXT_24_HOUR_DATE_OPTION
+        )
+
+        filters = {
+          dates: {
+            value: next24HourOption.handler(),
+            isPredefined: next24HourOption.isPredefined,
+            initialSelectedOptionId: next24HourOption.id
+          },
+          type: filtersStore.filterMenuModal[JOBS_MONITORING_SCHEDULED_TAB].values.type
+        }
+
+        dispatch(setFilters({ dates: filters.dates }))
       }
 
-      dispatch(setFilters({ dates: filters.dates }))
       refreshScheduled(filters)
       setDataIsLoaded(true)
     }
@@ -64,13 +76,14 @@ const ScheduledMonitoring = () => {
   useEffect(() => {
     return () => {
       setDataIsLoaded(false)
+      setScheduledJobs([])
     }
-  }, [])
+  }, [setScheduledJobs])
 
   return (
     <ScheduledJobsTable
       context={ProjectJobsMonitoringContext}
-      jobs={jobs}
+      jobs={scheduledJobs}
       largeRequestErrorMessage={largeRequestErrorMessage}
       refreshJobs={() =>
         refreshScheduled({

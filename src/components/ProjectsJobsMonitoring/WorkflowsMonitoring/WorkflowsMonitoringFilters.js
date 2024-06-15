@@ -17,16 +17,23 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import React from 'react'
+import React, { useMemo } from 'react'
 import { useForm } from 'react-final-form'
 
 import { FormInput, FormOnChange, FormSelect } from 'igz-controls/components'
 
 import { JOBS_MONITORING_WORKFLOWS_TAB, LABELS_FILTER, PROJECT_FILTER } from '../../../constants'
 import { generateStatusFilter } from '../../FilterMenu/filterMenu.settings'
+import { handleFilterStateChange } from '../projectsJobsMotinoring.util'
 
 const WorkflowsMonitoringFilters = () => {
   const form = useForm()
+
+  const statusList = useMemo(() => generateStatusFilter(false, JOBS_MONITORING_WORKFLOWS_TAB), [])
+
+  const handleStateChange = (selectedValue, currentValue) => {
+    handleFilterStateChange(selectedValue, currentValue, form, statusList)
+  }
 
   const handleInputChange = (value, inputName) => {
     form.change(inputName, value || '')
@@ -42,12 +49,8 @@ const WorkflowsMonitoringFilters = () => {
         />
       </div>
       <div className="form-row">
-        <FormSelect
-          label="Status"
-          name="state"
-          options={generateStatusFilter(false, JOBS_MONITORING_WORKFLOWS_TAB)}
-          multiple
-        />
+        <FormSelect label="Status" name="state" options={statusList} multiple />
+        <FormOnChange handler={(value, some) => handleStateChange(value, some)} name="state" />
       </div>
       <div className="form-row">
         <FormInput label="Labels" name={LABELS_FILTER} placeholder="key1,key2=value,..." />

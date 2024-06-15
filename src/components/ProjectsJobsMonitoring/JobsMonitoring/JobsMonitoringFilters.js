@@ -23,40 +23,24 @@ import { useForm } from 'react-final-form'
 import { FormInput, FormOnChange, FormSelect } from 'igz-controls/components'
 
 import {
-  FILTER_ALL_ITEMS,
   JOBS_MONITORING_JOBS_TAB,
   LABELS_FILTER,
   PROJECT_FILTER
 } from '../../../constants'
 import { generateStatusFilter, generateTypeFilter } from '../../FilterMenu/filterMenu.settings'
+import { handleFilterStateChange } from '../projectsJobsMotinoring.util'
 
 const JobsMonitoringFilters = () => {
   const form = useForm()
 
-  const options = useMemo(() => generateStatusFilter(false, JOBS_MONITORING_JOBS_TAB), [])
+  const statusList = useMemo(() => generateStatusFilter(false, JOBS_MONITORING_JOBS_TAB), [])
 
   const handleInputChange = (value, inputName) => {
     form.change(inputName, value || '')
   }
 
   const handleStateChange = (selectedValue, currentValue) => {
-    if (
-      selectedValue.length > 1 &&
-      selectedValue.includes(FILTER_ALL_ITEMS) &&
-      selectedValue.indexOf('all') === 0
-    ) {
-      form.change(
-        'state',
-        selectedValue.filter(value => value !== FILTER_ALL_ITEMS)
-      )
-    } else if (
-      (!currentValue.includes('all') &&
-        selectedValue.includes('all') &&
-        selectedValue.indexOf('all') > 0) ||
-      options.filter(option => option.id !== 'all').length === selectedValue.length
-    ) {
-      form.change('state', ['all'])
-    }
+    handleFilterStateChange(selectedValue, currentValue, form, statusList)
   }
 
   return (
@@ -69,7 +53,7 @@ const JobsMonitoringFilters = () => {
         />
       </div>
       <div className="form-row">
-        <FormSelect label="Status" name="state" options={options} multiple />
+        <FormSelect label="Status" name="state" options={statusList} multiple />
         <FormOnChange handler={(value, some) => handleStateChange(value, some)} name="state" />
       </div>
       <div className="form-row">
