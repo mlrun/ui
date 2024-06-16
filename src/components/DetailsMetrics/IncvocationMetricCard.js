@@ -23,7 +23,11 @@ import PropTypes from 'prop-types'
 import StatsCard from '../../common/StatsCard/StatsCard'
 import MetricChart from '../MetricChart/MetricChart'
 
-import { calculatePercentageDrift } from './detailsMetrics.util'
+import {
+  calculatePercentageDrift,
+  METRIC_COMPUTED_TOTAL_POINTS,
+  METRIC_RAW_TOTAL_POINTS
+} from './detailsMetrics.util'
 import { getGradientLineChartConfig } from '../../utils/getMetricChartConfig'
 import { CHART_TYPE_LINE } from '../../constants'
 
@@ -33,15 +37,20 @@ import { ReactComponent as ArrowDown } from 'igz-controls/images/arrow-down.svg'
 import colors from 'igz-controls/scss/colors.scss'
 
 const InvocationMetricCard = forwardRef(
-  ({ metric, previousTotalInvocation, selectedDate }, invocationBodyCardRef) => {
+  (
+    { isInvocationCardExpanded, metric, previousTotalInvocation, selectedDate },
+    invocationBodyCardRef
+  ) => {
     const gradientConfig = useMemo(() => getGradientLineChartConfig(), [])
     const resultPercentageDrift = calculatePercentageDrift(
       previousTotalInvocation,
-      metric.rawDataTotal
+      metric[METRIC_RAW_TOTAL_POINTS]
     )
-
     return (
-      <StatsCard className="metrics__card metrics__card-invocations" key={metric.id}>
+      <StatsCard
+        className={`metrics__card metrics__card-invocations  ${!isInvocationCardExpanded ? 'metrics__card-invocations-header-hidden' : 'metrics__card-invocations-header-visible'}`}
+        key={metric.id}
+      >
         <StatsCard.Header title="Endpoint call count">
           <div className="metrics__card-invocation-header">
             <div className="metrics__card-invocation-header_drift-icon-contrainer">
@@ -50,13 +59,20 @@ const InvocationMetricCard = forwardRef(
             <div className={`metrics__card-invocation-header_${resultPercentageDrift.className}`}>
               {resultPercentageDrift.percentageChange}
             </div>
-            <div className="metrics__card-invocation-header_selected_date">{selectedDate}</div>
-            <div className="metrics__card-invocation-header_total_title">Total</div>
-            <div className="metrics__card-invocation-header_total_score">{metric.total}</div>
+            <div className="metrics__card-invocation-header-selected-date">{selectedDate}</div>
+            <div className="metrics__card-invocation-header-total-title">Total</div>
+            <div className="metrics__card-invocation-header-total-score">
+              {metric[METRIC_COMPUTED_TOTAL_POINTS]}
+            </div>
           </div>
         </StatsCard.Header>
-        <div ref={invocationBodyCardRef} className="metrics__card-body">
-          <div className="metrics__card-invocation-content">
+        <div
+          ref={invocationBodyCardRef}
+          className={`metrics__card-body ${isInvocationCardExpanded ? 'metrics__card-body-expanded' : 'metrics__card-body-collapsed'}`}
+        >
+          <div
+            className={`metrics__card-invocation-content ${!isInvocationCardExpanded && 'content-visible'}`}
+          >
             <div className="metrics__card-invocation-content-title">Endpoint call count</div>
             <div className="metrics__card-invocation-content-container">
               <div className="metrics__card-invocation-content-container_drift_icon">
@@ -71,14 +87,15 @@ const InvocationMetricCard = forwardRef(
             </div>
             <div className="metrics__card-invocation-content-data">
               <div className="metrics__card-invocation-content-data_total_title">Total</div>
-              <div className="metrics__card-invocation-content-data_total_score">
+              <div className="metrics__card-invocation-content-data-total-score">
                 {' '}
-                {metric.total}
+                {metric[METRIC_COMPUTED_TOTAL_POINTS]}
               </div>
             </div>
           </div>
           <div className="metrics__card-body-invocation">
             <MetricChart
+              isInvocationCardExpanded={isInvocationCardExpanded}
               chartConfig={{
                 gradient: true,
                 ...gradientConfig,
@@ -108,6 +125,7 @@ const InvocationMetricCard = forwardRef(
 )
 
 InvocationMetricCard.propTypes = {
+  isInvocationCardExpanded: PropTypes.bool.isRequired,
   metric: PropTypes.object.isRequired,
   previousTotalInvocation: PropTypes.number,
   selectedDate: PropTypes.string.isRequired

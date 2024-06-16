@@ -26,7 +26,7 @@ import { CHART_TYPE_BAR } from '../../constants'
 
 import { calculateMaxTicksLimit, generateMetricChartTooltip, hexToRGB } from './metricChart.util'
 
-const GenericMetricChart = ({ chartConfig }) => {
+const GenericMetricChart = ({ chartConfig, isInvocationCardExpanded }) => {
   const chartRef = useRef(null)
   const chartInstance = useRef(null)
   const [isLoading, setIsLoading] = useState(true)
@@ -120,13 +120,11 @@ const GenericMetricChart = ({ chartConfig }) => {
     }
 
     if (chartConfig.gradient) {
-      const canvasHeight = chartInstance.current.height
-      const showGrid = canvasHeight > 70 ? true : false
-
-      if (chartInstance.current.options.scales.x.grid.display !== showGrid) {
-        chartInstance.current.options.scales.x.grid.display = showGrid
-        chartInstance.current.options.scales.y.grid.display = showGrid
-        chartInstance.current.options.scales.y.display = showGrid
+      const canvasHeight = isInvocationCardExpanded ? 200 : 80
+      if (chartInstance.current.options.scales.x.grid.display !== isInvocationCardExpanded) {
+        chartInstance.current.options.scales.x.grid.display = isInvocationCardExpanded
+        chartInstance.current.options.scales.y.grid.display = isInvocationCardExpanded
+        chartInstance.current.options.scales.y.display = isInvocationCardExpanded
         chartInstance.current.options.scales.x.grid.ticks = true
         chartInstance.current.options.scales.y.grid.ticks = true
       }
@@ -152,7 +150,14 @@ const GenericMetricChart = ({ chartConfig }) => {
         }
       }
     }
-  }, [chartConfig.data, chartConfig.type, chartConfig.gradient, chartConfig.options, customPoints])
+  }, [
+    chartConfig.data,
+    chartConfig.type,
+    chartConfig.gradient,
+    chartConfig.options,
+    isInvocationCardExpanded,
+    customPoints
+  ])
 
   useEffect(() => {
     const handleResize = () => {

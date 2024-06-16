@@ -17,9 +17,11 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import StatsCard from '../../common/StatsCard/StatsCard'
-import { ReactComponent as NoDataIcon } from 'igz-controls/images/no-data-metric-icon.svg'
 import PropTypes from 'prop-types'
+
+import StatsCard from '../../common/StatsCard/StatsCard'
+
+import { ReactComponent as NoDataIcon } from 'igz-controls/images/no-data-metric-icon.svg'
 
 const NoMetricData = ({ title, message, className }) => {
   return (

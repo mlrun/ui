@@ -5,11 +5,10 @@
   display: flex;
   flex-wrap: wrap;
   align-content: flex-start;
-  gap: 16px;
-  margin-top: -16px;
+  row-gap: 16px;
   height: fit-content;
   margin-bottom: 30px;
-  transition: 1ms;
+
   &__app-name {
     font-size: 20px;
     font-weight: 700;
@@ -33,6 +32,31 @@
       padding-top: 12px;
       padding-bottom: 0;
       width: 100%;
+
+      &-header-hidden .stats-card__row {
+        height: 0;
+        min-height: 0 !important;
+        visibility: hidden !important;
+        transition: all 0.2s ease-in-out;
+        margin-bottom: 0 !important;
+      }
+
+      &-header-visible .stats-card__row {
+        height: 40px;
+        transition: all 0.2s ease-in-out;
+      }
+
+      .content-visible {
+        display: flex;
+        flex: 0 1 auto;
+        opacity: 1;
+        transition:
+          flex 0.2s,
+          visibility 0s,
+          opacity 1s;
+        visibility: visible;
+        width: fit-content;
+      }
     }
 
     &-drift-status {
@@ -109,6 +133,16 @@
       align-items: stretch;
       position: relative;
       box-sizing: border-box;
+
+      &-collapsed {
+        height: 80px;
+        transition: all 0.3s ease-in-out;
+      }
+
+      &-expanded {
+        height: 200px;
+        transition: all 0.3s ease-in-out;
+      }
 
       .chart-item {
         flex: 1;
@@ -201,17 +235,17 @@
         color: $ceriseRed;
       }
 
-      &_selected_date {
+      &-selected-date {
         margin-left: 4px;
         color: $topaz;
       }
 
-      &_total_title {
+      &-total-title {
         margin: 0 6px 0 12px;
         font-weight: 700;
       }
 
-      &_total_score {
+      &-total-score {
         font-size: 24px;
         font-weight: 700;
       }
@@ -375,38 +409,4 @@
       background-color: $doveGray;
     }
   }
-}
-
-.header-hidden {
-  height: 0;
-  min-height: 0 !important;
-  visibility: hidden !important;
-  transition: all 0.2s linear;
-  margin-bottom: 0 !important;
-}
-
-.header-visible {
-  transition: all 0.2s linear;
-}
-
-.collapse-card-height {
-  height: 80px;
-  transition: all 0.1s ease-in-out;
-}
-
-.expand-card-height {
-  height: 200px;
-  transition: all 0.1s ease-in-out;
-}
-
-.content-visible {
-  display: flex;
-  flex: 0 1 auto;
-  opacity: 1;
-  transition:
-    flex 0.2s,
-    visibility 0s,
-    opacity 1s;
-  visibility: visible;
-  width: fit-content;
 }

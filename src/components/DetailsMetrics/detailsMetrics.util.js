@@ -26,11 +26,15 @@ import {
   PAST_WEEK_DATE_OPTION
 } from '../../utils/datePicker.util'
 
-export const AVG = 'avg'
-export const AVG_RAW = 'avgRaw'
+export const METRIC_COMPUTED_AVG_POINTS = 'metric_computed_avg_points'
+export const METRIC_RAW_AVG_POINTS = 'metric_raw_avg_points'
+export const DRIFT_UP = 'drift_up'
+export const INVOCATION_CARD_SCROLL_THRESHOLD = 20
+export const INVOCATION_CARD_SCROLL_DELAY = 1000
 export const ML_RUN_INFRA = 'mlrun-infra'
-export const RAW_DATA_TOTAL = 'rawDataTotal'
-export const TOTAL = 'total'
+export const METRIC_RAW_TOTAL_POINTS = 'metric_raw_total_points'
+export const METRIC_COMPUTED_TOTAL_POINTS = 'metric_computed_total_points'
+export const TWO_DIGIT = '2-digit'
 
 const metricsColorsByFullName = {}
 const usedColors = new Set()
@@ -46,18 +50,19 @@ export const timeRangeMapping = {
 export const calculatePercentageDrift = (previousTotalInvocation, currentTotalInvocation) => {
   if (!previousTotalInvocation)
     return {
-      className: 'drift_up',
+      className: DRIFT_UP,
       percentageChange: 'N/A',
       positive: true
     }
 
-  const result =
+  const percentageChangeResult =
     ((currentTotalInvocation - previousTotalInvocation) / Math.abs(previousTotalInvocation)) * 100
+  const isPositive = percentageChangeResult > 0
 
   return {
-    className: result > 0 ? 'drift_up' : 'drift_down',
-    percentageChange: `${result.toFixed(0)}%`,
-    positive: result > 0 ? true : false
+    className: isPositive ? DRIFT_UP : 'drift_down',
+    percentageChange: `${percentageChangeResult.toFixed(0)}%`,
+    positive: isPositive
   }
 }
 
@@ -184,7 +189,7 @@ const timeFormatters = {
     formatMetricsTime: dates => {
       const options = {
         hour: 'numeric',
-        minute: '2-digit',
+        minute: TWO_DIGIT,
         hour12: true
       }
       return dates.map(([date]) => new Date(date).toLocaleTimeString('en-US', options))
@@ -193,9 +198,9 @@ const timeFormatters = {
   days: {
     formatMetricsTime: dates => {
       const options = {
-        year: '2-digit',
-        month: '2-digit',
-        day: '2-digit'
+        year: TWO_DIGIT,
+        month: TWO_DIGIT,
+        day: TWO_DIGIT
       }
       return dates.map(([date]) => new Date(date).toLocaleDateString('en-US', options))
     }
@@ -282,8 +287,9 @@ export const parseMetrics = (data, timeUnit) => {
       title: getMetricTitle(full_name),
       driftStatusList,
       totalDriftStatus,
-      [withInvocationRate ? TOTAL : AVG]: totalOrAvg.formattedResult,
-      [withInvocationRate ? RAW_DATA_TOTAL : AVG_RAW]: totalOrAvg.rawResult
+      [withInvocationRate ? METRIC_COMPUTED_TOTAL_POINTS : METRIC_COMPUTED_AVG_POINTS]:
+        totalOrAvg.formattedResult,
+      [withInvocationRate ? METRIC_RAW_TOTAL_POINTS : METRIC_RAW_AVG_POINTS]: totalOrAvg.rawResult
     }
   })
 }
