@@ -58,9 +58,11 @@ const ProjectTable = ({ params, table }) => {
                       !Array.isArray(body[key].value) &&
                       `status_${body[key].value.toLowerCase()} capitalize`
                   )
-                  const name = body[key].value.startsWith(params.projectName)
-                    ? body[key].value.slice(params.projectName.length + 1)
-                    : body[key].value
+
+                  const name =
+                    key === 'name' && body[key].value.startsWith(params.projectName)
+                      ? body[key].value.slice(params.projectName.length + 1)
+                      : body[key].value
 
                   return key === 'type' ? (
                     <TableTypeCell key={body[key].value + index} data={body[key]} />
