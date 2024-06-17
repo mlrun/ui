@@ -4,7 +4,8 @@
 .metrics {
   display: flex;
   flex-wrap: wrap;
-  gap: 16px;
+  align-content: flex-start;
+  row-gap: 16px;
   height: fit-content;
   margin-bottom: 30px;
 
@@ -14,27 +15,37 @@
     color: $primary;
   }
 
-  &__card-tmp {
-    z-index: 1;
-    top: 0;
-    position: sticky;
-    box-sizing: border-box;
-    border: $primaryBorder;
-    border-radius: 12px;
-    background: $white;
-    padding-top: 12px;
-    width: 100%;
-    transition: 0.1s;
-    animation: ease-in-out;
-    max-height: 140px;
-  }
-
   &__card {
     border-radius: 12px;
     border: $primaryBorder;
     padding: 6px 16px 35px;
-    transition: ease-in-out;
     width: 100%;
+
+    &-invocations {
+      z-index: 1;
+      align-self: baseline;
+      top: 0;
+      position: sticky;
+      box-shadow: 0 -10px 0 0 $white;
+      border-radius: 12px;
+      background: $white;
+      padding-top: 12px;
+      padding-bottom: 0;
+      width: 100%;
+
+      &-header-hidden .stats-card__row {
+        height: 0;
+        min-height: 0 !important;
+        visibility: hidden !important;
+        transition: all 0.2s ease-in-out;
+        margin-bottom: 0 !important;
+      }
+
+      &-header-visible .stats-card__row {
+        height: 40px;
+        transition: all 0.2s ease-in-out;
+      }
+    }
 
     &-drift-status {
       margin-left: 8px;
@@ -68,6 +79,7 @@
       gap: 8px;
       padding-left: 5px;
       font-weight: 500;
+      transition: all 0.2s linear;
 
       &-result-kind {
         display: flex;
@@ -109,8 +121,16 @@
       align-items: stretch;
       position: relative;
       box-sizing: border-box;
-      transition: 0.3s;
-      animation: ease-in-out;
+
+      &-collapsed {
+        height: 80px;
+        transition: all 0.3s ease-in-out;
+      }
+
+      &-expanded {
+        height: 200px;
+        transition: all 0.3s ease-in-out;
+      }
 
       .chart-item {
         flex: 1;
@@ -126,8 +146,8 @@
         min-width: 210px;
 
         canvas {
-          width: 100% ;
-          height: 100% ;
+          width: 100%;
+          height: 100%;
         }
 
         canvas.hidden-canvas {
@@ -156,9 +176,8 @@
       }
 
       &-invocation {
-        width: auto;
         border: 1px solid transparent;
-        flex: 1 1 auto;
+        flex: 1;
 
         canvas {
           width: 100% !important;
@@ -174,35 +193,131 @@
       }
     }
 
-    &-invocation-content {
-      flex: 0 1 27%;
+    &-invocation-header {
       display: flex;
+      flex: 1;
+      justify-content: end;
+      align-items: baseline;
+      font-size: 14px;
+      font-weight: 500;
+      color: $primary;
+      height: 40px;
+
+      &_drift-icon-contrainer {
+        align-self: stretch;
+        margin-right: 2px;
+
+        svg {
+          box-sizing: content-box;
+          padding-top: 8px;
+          width: 17px;
+          height: 17px;
+        }
+      }
+
+      &_drift_up {
+        color: $brightTurquoise;
+      }
+
+      &_drift_down {
+        color: $ceriseRed;
+      }
+
+      &-selected-date {
+        margin-left: 4px;
+        color: $topaz;
+      }
+
+      &-total-title {
+        margin: 0 6px 0 12px;
+        font-weight: 700;
+      }
+
+      &-total-score {
+        font-size: 24px;
+        font-weight: 700;
+      }
+    }
+
+    &-invocation-content {
+      flex: 0 0 0;
+      transition: flex 0.2s;
+      opacity: 0;
+      visibility: hidden;
+      width: 0;
+      flex-wrap: wrap;
       justify-content: center;
-      align-items: center;
-      width: 27%;
-      gap: 8px;
+      align-items: baseline;
+      align-content: center;
+      font-size: 18px;
+      font-weight: 700;
+
+      &-visible {
+        display: flex;
+        flex: 0 1 auto;
+        opacity: 1;
+        transition:
+          flex 0.2s,
+          visibility 0s,
+          opacity 1s;
+        visibility: visible;
+        width: fit-content;
+      }
 
       &-title {
+        text-align: center;
         font-size: 18px;
-        font-weight: 700;
+        margin-right: 24px;
         color: $primary;
       }
 
-      &-content-data {
-        font-size: 24px;
+      &-container {
+        display: flex;
+        align-items: baseline;
+        gap: 2px;
+        font-size: 14px;
         font-weight: 700;
-        line-height: normal;
-        color: $primary;
 
-        & span {
+        &_drift_icon {
+          align-self: stretch;
+
+          svg {
+            box-sizing: content-box;
+            width: 17px;
+            height: 17px;
+          }
+        }
+
+        &_drift_up {
+          color: $brightTurquoise;
+          margin-right: 4px;
+        }
+
+        &_drift_down {
+          color: $ceriseRed;
+          margin-right: 4px;
+        }
+      }
+
+      &-data {
+        display: flex;
+        align-items: baseline;
+        margin-left: 15px;
+
+        &_total_title {
+          margin-right: 7px;
           font-size: 14px;
-          margin-right: 5px;
+          font-weight: 700;
+        }
+
+        &_total_score {
+          font-size: 24px;
+          font-weight: 700;
         }
       }
     }
   }
 
-  //TODO: add to card class
   &__empty-card {
     width: 100%;
     display: flex;
@@ -211,7 +326,6 @@
     gap: 25px;
   }
 
-  //TODO: add to card class
   &__empty-select {
     width: 100%;
     display: flex;
@@ -220,6 +334,13 @@
     align-items: center;
     gap: 25px;
   }
+}
+
+.empty-invocation-card {
+  position: sticky;
+  box-shadow: 0 -10px 0 0 $white;
+  top: 0;
+  z-index: 1;
 }
 
 #chartjs-tooltip-metric {

@@ -32,7 +32,7 @@ import { TextTooltipTemplate, Tooltip } from 'iguazio.dashboard-react-controls/d
 import { ReactComponent as Caret } from 'igz-controls/images/dropdown.svg'
 import Accordion from '../../common/Accordion/Accordion'
 
-import { filterMetrics, groupMetricByApplication, metricsTypes } from './metricsSelector.utils'
+import { filterMetrics, groupMetricByApplication, metricsTypes } from './metricsSelector.util'
 import { METRICS_SELECTOR_OPTIONS } from '../../types'
 
 import { ReactComponent as Arrow } from 'igz-controls/images/arrow.svg'

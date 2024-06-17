@@ -17,29 +17,36 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import { chain, isEmpty } from 'lodash'
+import PropTypes from 'prop-types'
 
-export const metricsTypes = {
-  metric: 'metric',
-  result: 'result'
+import StatsCard from '../../common/StatsCard/StatsCard'
+
+import { ReactComponent as NoDataIcon } from 'igz-controls/images/no-data-metric-icon.svg'
+
+const NoMetricData = ({ title, message, className }) => {
+  return (
+    <StatsCard className={`metrics__card ${className}`}>
+      <StatsCard.Header title={title}></StatsCard.Header>
+      <div className="metrics__empty-card">
+        <div>
+          <NoDataIcon />
+        </div>
+        <div>{message}</div>
+      </div>
+    </StatsCard>
+  )
 }
 
-export const filterMetrics = (metricsByApplication, nameFilter) => {
-  return metricsByApplication.reduce((metricsList, [app, metrics]) => {
-    const filteredMetrics = metrics.filter(metric => {
-      return metric.name.toLowerCase().includes(nameFilter.toLowerCase())
-    })
-
-    if (!isEmpty(filteredMetrics)) metricsList.push({ app, metrics: filteredMetrics })
-
-    return metricsList
-  }, [])
+NoMetricData.defaultProps = {
+  className: '',
+  title: '',
+  message: 'No data to show'
 }
 
-export const groupMetricByApplication = (metrics) => {
-  return chain(metrics)
-    .groupBy(metric => metric.app)
-    .toPairs()
-    .sortBy(([app]) => app)
-    .value()
+NoMetricData.propTypes = {
+  className: PropTypes.string,
+  message: PropTypes.string,
+  title: PropTypes.string
 }
+
+export default NoMetricData

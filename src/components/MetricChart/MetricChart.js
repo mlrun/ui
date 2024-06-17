@@ -24,9 +24,9 @@ import classnames from 'classnames'
 import Loader from '../../common/Loader/Loader'
 import { CHART_TYPE_BAR } from '../../constants'
 
-import { calculateMaxTicksLimit, generateMetricChartTooltip } from './metricChart.util'
+import { calculateMaxTicksLimit, generateMetricChartTooltip, hexToRGB } from './metricChart.util'
 
-const GenericMetricChart = ({ chartConfig, showGrid }) => {
+const GenericMetricChart = ({ chartConfig, isInvocationCardExpanded }) => {
   const chartRef = useRef(null)
   const chartInstance = useRef(null)
   const [isLoading, setIsLoading] = useState(true)
@@ -119,17 +119,43 @@ const GenericMetricChart = ({ chartConfig, showGrid }) => {
       })
     }
 
+    if (chartConfig.gradient) {
+      const canvasHeight = isInvocationCardExpanded ? 200 : 80
+      if (chartInstance.current.options.scales.x.grid.display !== isInvocationCardExpanded) {
+        chartInstance.current.options.scales.x.grid.display = isInvocationCardExpanded
+        chartInstance.current.options.scales.y.grid.display = isInvocationCardExpanded
+        chartInstance.current.options.scales.y.display = isInvocationCardExpanded
+        chartInstance.current.options.scales.x.grid.ticks = true
+        chartInstance.current.options.scales.y.grid.ticks = true
+      }
+
+      const gradient = ctx.createLinearGradient(0, 0, 0, canvasHeight)
+      gradient.addColorStop(
+        0,
+        hexToRGB(chartConfig?.data?.datasets[0].backgroundColor || '#FFF', 0.7)
+      )
+      gradient.addColorStop(1, hexToRGB(chartConfig?.data?.datasets[0].backgroundColor))
+      chartInstance.current.data.datasets.forEach(dataset => {
+        dataset.backgroundColor = gradient
+      })
+      chartInstance.current.update()
+    }
+
     return () => {
       if (chartInstance.current) {
         chartInstance.current.destroy()
+        const tooltipEl = document.querySelector('#chartjs-tooltip-metric')
+        if (tooltipEl) {
+          tooltipEl.style.opacity = 0
+        }
       }
     }
   }, [
-    showGrid,
     chartConfig.data,
     chartConfig.type,
     chartConfig.gradient,
     chartConfig.options,
+    isInvocationCardExpanded,
     customPoints
   ])
 

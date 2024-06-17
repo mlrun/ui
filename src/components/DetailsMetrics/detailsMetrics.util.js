@@ -18,10 +18,53 @@ under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
 import { capitalize, chain } from 'lodash'
+import {
+  CUSTOM_RANGE_DATE_OPTION,
+  PAST_24_HOUR_DATE_OPTION,
+  PAST_HOUR_DATE_OPTION,
+  PAST_MONTH_DATE_OPTION,
+  PAST_WEEK_DATE_OPTION
+} from '../../utils/datePicker.util'
 
-const mlrunInfra = 'mlrun-infra'
+export const METRIC_COMPUTED_AVG_POINTS = 'metric_computed_avg_points'
+export const METRIC_RAW_AVG_POINTS = 'metric_raw_avg_points'
+export const DRIFT_UP = 'drift_up'
+export const INVOCATION_CARD_SCROLL_THRESHOLD = 20
+export const INVOCATION_CARD_SCROLL_DELAY = 1000
+export const ML_RUN_INFRA = 'mlrun-infra'
+export const METRIC_RAW_TOTAL_POINTS = 'metric_raw_total_points'
+export const METRIC_COMPUTED_TOTAL_POINTS = 'metric_computed_total_points'
+export const TWO_DIGIT = '2-digit'
+
 const metricsColorsByFullName = {}
 const usedColors = new Set()
+
+export const timeRangeMapping = {
+  [PAST_24_HOUR_DATE_OPTION]: 'last 24 day',
+  [PAST_WEEK_DATE_OPTION]: 'last week',
+  [PAST_MONTH_DATE_OPTION]: 'last month',
+  [PAST_HOUR_DATE_OPTION]: 'last hour',
+  [CUSTOM_RANGE_DATE_OPTION]: 'custom range'
+}
+
+export const calculatePercentageDrift = (previousTotalInvocation, currentTotalInvocation) => {
+  if (!previousTotalInvocation)
+    return {
+      className: DRIFT_UP,
+      percentageChange: 'N/A',
+      positive: true
+    }
+
+  const percentageChangeResult =
+    ((currentTotalInvocation - previousTotalInvocation) / Math.abs(previousTotalInvocation)) * 100
+  const isPositive = percentageChangeResult > 0
+
+  return {
+    className: isPositive ? DRIFT_UP : 'drift_down',
+    percentageChange: `${percentageChangeResult.toFixed(0)}%`,
+    positive: isPositive
+  }
+}
 
 const resultKindConfig = {
   0: 'data drift',
@@ -118,7 +161,6 @@ export const getMetricColorByFullName = name => {
 
 export const generateMetricsItems = metrics => {
   return chain(metrics)
-    .filter(metric => metric.app !== mlrunInfra)
     .sortBy(metric => metric.label)
     .map(metric => {
       return {
@@ -130,6 +172,15 @@ export const generateMetricsItems = metrics => {
     .value()
 }
 
+export const getDateRangeBefore = range => {
+  const rangeDuration = range.end - range.start
+
+  return {
+    start: range.start - rangeDuration,
+    end: range.end - rangeDuration
+  }
+}
+
 const getMetricTitle = fullName =>
   fullName.substring(fullName.lastIndexOf('.') + 1).replace(/-/g, ' ')
 
@@ -138,7 +189,7 @@ const timeFormatters = {
     formatMetricsTime: dates => {
       const options = {
         hour: 'numeric',
-        minute: '2-digit',
+        minute: TWO_DIGIT,
         hour12: true
       }
       return dates.map(([date]) => new Date(date).toLocaleTimeString('en-US', options))
@@ -147,9 +198,9 @@ const timeFormatters = {
   days: {
     formatMetricsTime: dates => {
       const options = {
-        year: '2-digit',
-        month: '2-digit',
-        day: '2-digit'
+        year: TWO_DIGIT,
+        month: TWO_DIGIT,
+        day: TWO_DIGIT
       }
       return dates.map(([date]) => new Date(date).toLocaleDateString('en-US', options))
     }
@@ -157,12 +208,19 @@ const timeFormatters = {
 }
 
 export const formatNumber = num => {
+  let result
+
   if (num >= 1e6) {
-    return (num / 1e6).toFixed(0) + 'M'
+    result = (num / 1e6).toFixed(0) + 'M'
   } else if (num >= 1e3) {
-    return (num / 1e3).toFixed(0) + 'k'
+    result = (num / 1e3).toFixed(0) + 'k'
   } else {
-    return num.toString()
+    result = num.toString()
+  }
+
+  return {
+    formattedResult: result,
+    rawResult: num
   }
 }
 
@@ -229,7 +287,9 @@ export const parseMetrics = (data, timeUnit) => {
       title: getMetricTitle(full_name),
       driftStatusList,
       totalDriftStatus,
-      [withInvocationRate ? 'total' : 'avg']: totalOrAvg
+      [withInvocationRate ? METRIC_COMPUTED_TOTAL_POINTS : METRIC_COMPUTED_AVG_POINTS]:
+        totalOrAvg.formattedResult,
+      [withInvocationRate ? METRIC_RAW_TOTAL_POINTS : METRIC_RAW_AVG_POINTS]: totalOrAvg.rawResult
     }
   })
 }
