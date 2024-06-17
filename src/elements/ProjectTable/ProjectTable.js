@@ -59,7 +59,7 @@ const ProjectTable = ({ params, table }) => {
                       `status_${body[key].value.toLowerCase()} capitalize`
                   )
 
-                  const name =
+                  const extractedProjectName =
                     key === 'name' && body[key].value.startsWith(params.projectName)
                       ? body[key].value.slice(params.projectName.length + 1)
                       : body[key].value
@@ -75,8 +75,11 @@ const ProjectTable = ({ params, table }) => {
                             target="_top"
                             className="link project-data-card__table-link"
                           >
-                            <Tooltip template={<TextTooltipTemplate text={name} />} textShow={true}>
-                              {name}
+                            <Tooltip
+                              template={<TextTooltipTemplate text={extractedProjectName} />}
+                              textShow={true}
+                            >
+                              {extractedProjectName}
                             </Tooltip>
                           </a>
                         ) : (
