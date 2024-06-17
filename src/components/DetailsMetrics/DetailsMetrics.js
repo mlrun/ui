@@ -136,7 +136,7 @@ const DetailsMetrics = ({ selectedItem }) => {
       metricsContainer.parentNode.scrollHeight !== metricsContainer.parentNode.clientHeight
 
     if (containerOverflow) {
-      if (invocationBodyCard.clientHeight > 120) {
+      if (isInvocationCardExpanded) {
         setIsInvocationCardExpanded(true)
       } else {
         setIsInvocationCardExpanded(false)
@@ -144,7 +144,7 @@ const DetailsMetrics = ({ selectedItem }) => {
     } else if (generatedMetrics.length === 1) {
       setIsInvocationCardExpanded(true)
     }
-  }, [generatedMetrics, invocationBodyCardRef, metricsContainerRef])
+  }, [generatedMetrics, invocationBodyCardRef, isInvocationCardExpanded, metricsContainerRef])
 
   const handleWindowScroll = useCallback(
     e => {
@@ -249,8 +249,7 @@ const DetailsMetrics = ({ selectedItem }) => {
   useEffect(() => {
     if (
       selectedItem.metadata?.uid &&
-      !detailsStore.metricsOptions.loading &&
-      detailsStore.metricsOptions.all.length !== 0 &&
+      detailsStore.metricsOptions.all.length > 0 &&
       detailsStore.metricsOptions.selectedByEndpoint[selectedItem.metadata?.uid]
     ) {
       const selectedMetrics =
@@ -261,11 +260,8 @@ const DetailsMetrics = ({ selectedItem }) => {
 
       const params = { name: [] }
 
-      if (detailsStore.dates.value[0]) {
+      if (detailsStore.dates.value[0] && detailsStore.dates.value[1]) {
         params.start = detailsStore.dates.value[0].getTime()
-      }
-
-      if (detailsStore.dates.value[1]) {
         params.end = detailsStore.dates.value[1].getTime()
       }
 
