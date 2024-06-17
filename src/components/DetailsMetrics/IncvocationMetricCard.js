@@ -71,7 +71,7 @@ const InvocationMetricCard = forwardRef(
           className={`metrics__card-body ${isInvocationCardExpanded ? 'metrics__card-body-expanded' : 'metrics__card-body-collapsed'}`}
         >
           <div
-            className={`metrics__card-invocation-content ${!isInvocationCardExpanded && 'content-visible'}`}
+            className={`metrics__card-invocation-content ${!isInvocationCardExpanded && 'metrics__card-invocation-content-visible'}`}
           >
             <div className="metrics__card-invocation-content-title">Endpoint call count</div>
             <div className="metrics__card-invocation-content-container">

@@ -45,18 +45,6 @@
         height: 40px;
         transition: all 0.2s ease-in-out;
       }
-
-      .content-visible {
-        display: flex;
-        flex: 0 1 auto;
-        opacity: 1;
-        transition:
-          flex 0.2s,
-          visibility 0s,
-          opacity 1s;
-        visibility: visible;
-        width: fit-content;
-      }
     }
 
     &-drift-status {
@@ -263,6 +251,18 @@
       align-content: center;
       font-size: 18px;
       font-weight: 700;
+
+      &-visible {
+        display: flex;
+        flex: 0 1 auto;
+        opacity: 1;
+        transition:
+          flex 0.2s,
+          visibility 0s,
+          opacity 1s;
+        visibility: visible;
+        width: fit-content;
+      }
 
       &-title {
         text-align: center;
