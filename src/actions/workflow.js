@@ -28,6 +28,8 @@ import {
   FETCH_WORKFLOWS_BEGIN,
   FETCH_WORKFLOWS_FAILURE,
   FETCH_WORKFLOWS_SUCCESS,
+  JOBS_MONITORING_WORKFLOWS_TAB,
+  MONITOR_WORKFLOWS_TAB,
   RESET_WORKFLOW
 } from '../constants'
 import { parseWorkflows } from '../utils/parseWorkflows'
@@ -66,6 +68,8 @@ const workflowActions = {
     payload: error
   }),
   fetchWorkflows: (project, filter, config, withPagination) => async dispatch => {
+    const page = project === '*' ? JOBS_MONITORING_WORKFLOWS_TAB : MONITOR_WORKFLOWS_TAB
+
     dispatch(workflowActions.fetchWorkflowsBegin())
 
     if (withPagination) {
@@ -88,14 +92,14 @@ const workflowActions = {
         result = result.filter(workflow => workflow.project.includes(filter.project.toLowerCase()))
       }
 
-      dispatch(workflowActions.fetchWorkflowsSuccess(parseWorkflows(result)))
+      dispatch(workflowActions.fetchWorkflowsSuccess(parseWorkflows(result, page)))
 
       return result
     } else {
       return workflowApi
         .getWorkflows(project, filter, config)
         .then(response => {
-          dispatch(workflowActions.fetchWorkflowsSuccess(parseWorkflows(response.data.runs)))
+          dispatch(workflowActions.fetchWorkflowsSuccess(parseWorkflows(response.data.runs, page)))
           return response.data.runs
         })
         .catch(error => {
