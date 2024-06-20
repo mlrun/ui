@@ -24,7 +24,7 @@ import { useDispatch, useSelector } from 'react-redux'
 
 import { RoundedIcon, FormChipCell, FormOnChange } from 'igz-controls/components'
 
-import { getValidationRules } from 'igz-controls/utils/validation.util'
+import { getValidationRules, getInternalLabelsValidationRule } from 'igz-controls/utils/validation.util'
 import { detailsInfoActions } from '../../components/DetailsInfo/detailsInfoReducer'
 import detailsActions from '../../actions/details'
 
@@ -77,7 +77,7 @@ const DetailsInfoItemChip = ({
         validationRules={{
           key: getValidationRules(
             'common.tag',
-            getValidationRules('common.labels', [], frontendSpec.internal_labels)
+            getInternalLabelsValidationRule(frontendSpec.internal_labels)
           ),
           value: getValidationRules('common.tag')
         }}

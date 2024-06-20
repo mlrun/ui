@@ -36,7 +36,7 @@ import {
   Tooltip
 } from 'igz-controls/components'
 
-import { getValidationRules } from 'igz-controls/utils/validation.util'
+import { getValidationRules, getInternalLabelsValidationRule } from 'igz-controls/utils/validation.util'
 import { setFieldState } from 'igz-controls/utils/form.util'
 import { TAG_LATEST } from '../../constants'
 import { LABEL_BUTTON, PRIMARY_BUTTON } from 'igz-controls/constants'
@@ -131,7 +131,7 @@ const CreateFeatureVectorPopUp = ({ closePopUp, createFeatureVector, featureVect
                   validationRules={{
                     key: getValidationRules(
                       'common.tag',
-                      getValidationRules('common.labels', [], frontendSpec.internal_labels)
+                      getInternalLabelsValidationRule(frontendSpec.internal_labels)
                     ),
                     value: getValidationRules('common.tag')
                   }}

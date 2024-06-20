@@ -118,10 +118,12 @@ const JobsMonitoring = () => {
   ])
 
   useEffect(() => {
+    const abortController = abortControllerRef.current
+
     return () => {
       setJobs([])
       setJobRuns([])
-      abortControllerRef.current.abort(REQUEST_CANCELED)
+      abortController.abort(REQUEST_CANCELED)
       terminateAbortTasksPolling()
     }
   }, [abortControllerRef, setJobRuns, setJobs, terminateAbortTasksPolling])

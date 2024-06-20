@@ -1037,7 +1037,7 @@ export const generateJobRequestData = (
     formData[RUN_DETAILS_STEP].version
   )
   const [volume_mounts, volumes] = generateVolumes(formData[RESOURCES_STEP].volumesTable)
-  let labels = [...formData[RUN_DETAILS_STEP].labels]
+  let labels = formData[RUN_DETAILS_STEP].labels ? [...formData[RUN_DETAILS_STEP].labels] : []
 
   if (mode === PANEL_RERUN_MODE) {
     labels = labels.filter(label => label.key !== 'workflow')

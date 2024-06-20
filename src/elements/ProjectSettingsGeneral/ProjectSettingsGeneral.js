@@ -60,7 +60,7 @@ import { FORBIDDEN_ERROR_STATUS_CODE } from 'igz-controls/constants'
 import { KEY_CODES } from '../../constants'
 import { getChipOptions } from '../../utils/getChipOptions'
 import { getErrorMsg } from 'igz-controls/utils/common.util'
-import { getValidationRules } from 'igz-controls/utils/validation.util'
+import { getValidationRules, getInternalLabelsValidationRule } from 'igz-controls/utils/validation.util'
 import { parseChipsData, convertChipsData } from '../../utils/convertChipsData'
 import { setNotification } from '../../reducers/notificationReducer'
 import { showErrorNotification } from '../../utils/notifications.util'
@@ -308,8 +308,7 @@ const ProjectSettingsGeneral = ({
                       validationRules={{
                         key: getValidationRules(
                           'project.labels.key',
-                          [],
-                          frontendSpec.internal_labels
+                          getInternalLabelsValidationRule(frontendSpec.internal_labels)
                         ),
                         value: getValidationRules('project.labels.value')
                       }}
