@@ -363,6 +363,7 @@ const ProjectsJobsMonitoring = ({ fetchAllJobRuns, fetchJobFunction, fetchJobs }
                   page={JOBS_MONITORING_PAGE}
                   tab={selectedTab}
                   withRefreshButton={false}
+                  key={selectedTab}
                 >
                   {tabData[selectedTab].modalFilters}
                 </ActionBar>
