@@ -139,13 +139,13 @@ module.exports = {
     Overview_Headers: [
       'Name:',
       'Kind:',
-      'Hash:',
+      'Code entry point:',
+      'Image:',
       'Version tag:',
+      'Hash:',
       'Code origin:',
       'Updated:',
-      'Code Entry Point:',
       'Default handler:',
-      'Image:',
       'Description:'
     ]
   },
@@ -202,7 +202,8 @@ module.exports = {
       'Kind:',
       'URI:',
       'Owner:',
-      'Workflow:'
+      'Workflow:',
+      'UID:'
     ],
     Overview_Sources_Headers: [
       'Name:',
@@ -210,7 +211,7 @@ module.exports = {
     ]
   },
   Models_Endpoints_Info_Pane: {
-    Tab_List: ['Overview', 'Features Analysis'],
+    Tab_List: ['Overview', 'Features Analysis', 'Metrics'],
     Overview_General_Headers: [
       'UID:',
       'Model class:',
@@ -293,7 +294,7 @@ module.exports = {
       'Google storage',
       'Databricks filesystem'
     ],
-    Register_Error_Message: /That combination of (artifact|dataset) name and (artifact|dataset) tag is already in use\. If you continue, the current (artifact|dataset) will be overwritten\./  
+    Register_Error_Message: /That combination of name and tag is already in use in an existing (artifact|dataset|plotly|table)\. If you proceed, the existing (artifact|dataset|plotly|table) will be overwritten/  
   },
   Register_Dataset: {
     Type_Options: ['General', 'Chart', 'Plot', 'Table'],
@@ -430,13 +431,12 @@ module.exports = {
   },
   Descriptions: {
     Archive_Project:
-      "Note that moving a project to archive doesn't stop it from consuming resources. We recommend that before " +
-      "setting the project as archive you'll remove scheduled jobs and suspend Nuclio functions.",
-    Delete_Project: /You try to delete project "[^"]+[$"]\. Deleted projects can not be restored\./,
+      'Archived projects continue to consume resources.To stop the project from consuming resources, delete its scheduled jobs and suspend its Nuclio functions.',
+    Delete_Project: /You are trying to delete the non-empty project "[^"]+[$"]\. Deleting it will also delete all of its resources, such as jobs, artifacts, and features\./,
     Delete_Function:
       /You try to delete function "[^"]+[$"]\. Deleted functions cannot be restored\./,
     Delete_Scheduled_Job:
-      /You try to delete scheduled job "[^"]+[$"]\. Deleted scheduled jobs can not be restored\./,
+      /Are you sure you want to delete the scheduled job "[^"]+[$"]\? Deleted scheduled jobs can not be restored\./,
     Delete_Feature:
       /You try to delete feature "[^"]+[$"] from vector "[^"]+[$"]\. The feature could be added back later./
   },
@@ -486,9 +486,9 @@ module.exports = {
     Error_Message: '“To” must be later than “From”'
   },
   Error_Messages: {
-    Project_Already_Exists: /Project name "[^"]+[$"] already exists/,
+    Project_Already_Exists: /A project named "[^"]+[$"] already exists/,
     Projects_Limit_Reached:
-      'Cannot create more than 200 projects due to resource limitation. Either delete existing projects or contact our customer support for assistance',
+      'The system already has the maximum number of projects. An existing project must be deleted before you can create another.',
     Must_Select_One: 'Must select at least one',
     Must_Select_One_Partition: 'Must select at least one partitioning option',
     Already_Scheduled: 'This job is already scheduled',

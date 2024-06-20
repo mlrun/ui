@@ -1293,7 +1293,8 @@ Then(
       indx,
       kind
     )
-    await verifyText(this.driver, tabelCell['label'], type)
+    await hoverComponent(this.driver, tabelCell['label'])
+    await verifyText(this.driver, tabelCell['hint'], type)
   }
 )
 

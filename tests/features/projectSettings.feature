@@ -205,10 +205,10 @@ Feature: Project Settings page
         Then click on "Add_Secret_Button" element on "Projects_Settings_Secret_Tab" wizard
         Then verify "New_Secret_Key_Input" element visibility on "Create_New_Secret_Popup" wizard
         Then type value "   " to "New_Secret_Key_Input" field on "Create_New_Secret_Popup" wizard
-        Then verify "New_Secret_Key_Input" on "Create_New_Secret_Popup" wizard should display warning "Input_Hint"."Input_Field_Invalid"
+        Then verify "New_Secret_Key_Input" on "Create_New_Secret_Popup" wizard should display warning "Input_Hint"."Input_Field_Require"
         Then verify "New_Secret_Value_Input" element visibility on "Create_New_Secret_Popup" wizard
         Then type value "   " to "New_Secret_Value_Input" field on "Create_New_Secret_Popup" wizard
-        Then verify "New_Secret_Value_Input" on "Create_New_Secret_Popup" wizard should display warning "Input_Hint"."Input_Field_Invalid"
+        Then verify "New_Secret_Value_Input" on "Create_New_Secret_Popup" wizard should display warning "Input_Hint"."Input_Field_Require"
 
     @MLPS
     @inProgress

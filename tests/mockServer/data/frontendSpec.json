@@ -1,5 +1,6 @@
 {
     "jobs_dashboard_url": null,
+    "model_monitoring_dashboard_url": null,
     "abortable_function_kinds": [
         "job",
         "spark",
@@ -28,7 +29,8 @@
         "nuclio": "mlrun/mlrun",
         "remote": "mlrun/mlrun",
         "dask": "mlrun/ml-base",
-        "mpijob": "mlrun/mlrun"
+        "mpijob": "mlrun/mlrun",
+        "application": "python:3.9-slim"
     },
     "function_deployment_target_image_template": "docker-registry.default-tenant.app.vmdev36.lab.iguazeng.com:80/mlrun/func-{project}-{name}:{tag}",
     "function_deployment_target_image_name_prefix_template": "func-{project}-{name}",
@@ -36,7 +38,7 @@
         ".mlrun/",
         "docker-registry.default-tenant.app.vmdev36.lab.iguazeng.com:80/mlrun/"
     ],
-    "function_deployment_mlrun_requirement": "mlrun[complete]==1.6.0-rc2",
+    "function_deployment_mlrun_requirement": "mlrun[complete]==1.7.0-rc18",
     "auto_mount_type": "auto",
     "auto_mount_params": {},
     "default_artifact_path": "v3io:///projects/{{run.project}}/artifacts",
@@ -55,8 +57,9 @@
     "default_function_preemption_mode": "prevent",
     "feature_store_data_prefixes": {
         "default": "v3io:///projects/{project}/FeatureStore/{name}/{kind}",
-        "nosql": "v3io:///projects/{project}/FeatureStore/{name}/{kind}",
-        "redisnosql": "redis://{authority}/projects/{project}/FeatureStore/{name}/{kind}"
+        "nosql": "v3io:///projects/{project}/FeatureStore/{name}/nosql",
+        "redisnosql": "redis://{authority}/projects/{project}/FeatureStore/{name}/nosql",
+        "dsnosql": "ds://{ds_profile_name}/projects/{project}/FeatureStore/{name}/{kind}"
     },
     "allowed_artifact_path_prefixes_list": [
         "s3://",
@@ -64,9 +67,9 @@
         "gs://",
         "az://",
         "dbfs://",
+        "ds://",
         "v3io://"
     ],
-    "ce_mode": "",
     "ce": {
         "mode": "",
         "release": ""

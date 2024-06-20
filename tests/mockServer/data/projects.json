@@ -336,7 +336,7 @@
         "functions": null,
         "workflows": null,
         "artifacts": null,
-        "artifact_path": "aadsad112",
+        "artifact_path": "v3io:///projects/{{run.project}}/artifacts",
         "conda": null,
         "source": "https://github.com/mlrun/ui",
         "subpath": null,

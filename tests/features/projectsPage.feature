@@ -343,13 +343,13 @@ Feature: MLRun Projects Page
         Then verify "Total_Counter_Title" element visibility in "Monitoring_Jobs_Box" on "Projects" wizard
         Then "Total_Counter_Title" element in "Monitoring_Jobs_Box" on "Projects" should contains "Jobs" value
         Then verify "Total_Counter_Number" element visibility in "Monitoring_Jobs_Box" on "Projects" wizard
-        Then "Total_Counter_Number" element in "Monitoring_Jobs_Box" on "Projects" should contains "0" value
+        Then "Total_Counter_Number" element in "Monitoring_Jobs_Box" on "Projects" should contains "18" value
         Then verify "Counter_Running_Status_Number" element visibility in "Monitoring_Jobs_Box" on "Projects" wizard
         Then verify "Counter_Running_Status_Icon" element visibility in "Monitoring_Jobs_Box" on "Projects" wizard
-        Then "Counter_Running_Status_Number" element in "Monitoring_Jobs_Box" on "Projects" should contains "0" value
+        Then "Counter_Running_Status_Number" element in "Monitoring_Jobs_Box" on "Projects" should contains "17" value
         Then verify "Counter_Failed_Status_Number" element visibility in "Monitoring_Jobs_Box" on "Projects" wizard
         Then verify "Counter_Failed_Status_Icon" element visibility in "Monitoring_Jobs_Box" on "Projects" wizard
-        Then "Counter_Failed_Status_Number" element in "Monitoring_Jobs_Box" on "Projects" should contains "0" value
+        Then "Counter_Failed_Status_Number" element in "Monitoring_Jobs_Box" on "Projects" should contains "1" value
         Then verify "Counter_Completed_Status_Number" element visibility in "Monitoring_Jobs_Box" on "Projects" wizard
         Then verify "Counter_Completed_Status_Icon" element visibility in "Monitoring_Jobs_Box" on "Projects" wizard
         Then "Counter_Completed_Status_Number" element in "Monitoring_Jobs_Box" on "Projects" should contains "0" value
@@ -448,7 +448,7 @@ Feature: MLRun Projects Page
         Then verify "Total_Workflows_Counter_Title" element visibility in "Monitoring_Scheduled_Box" on "Projects" wizard
         Then "Total_Workflows_Counter_Title" element in "Monitoring_Scheduled_Box" on "Projects" should contains "Workflows" value
         Then verify "Total_Job_Counter_Number" element visibility in "Monitoring_Scheduled_Box" on "Projects" wizard
-        Then "Total_Job_Counter_Number" element in "Monitoring_Scheduled_Box" on "Projects" should contains "0" value
+        Then "Total_Job_Counter_Number" element in "Monitoring_Scheduled_Box" on "Projects" should contains "7" value
         Then verify "Total_Workflows_Counter_Number" element visibility in "Monitoring_Scheduled_Box" on "Projects" wizard
         Then "Total_Workflows_Counter_Number" element in "Monitoring_Scheduled_Box" on "Projects" should contains "0" value
         Then verify "Jobs_See_All_Link" element visibility in "Monitoring_Scheduled_Box" on "Projects" wizard

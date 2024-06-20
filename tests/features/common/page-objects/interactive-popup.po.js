@@ -181,7 +181,7 @@ const artifactsLabelsTable = {
         value_input: 'input.input-label-value',
         key_verify: '.edit-chip-container input.input-label-key',
         value_verify: '.edit-chip-container input.input-label-value',
-        remove_btn: '.edit-chip__icon-close'
+        remove_btn: '.item-icon-close'
       }
     }
   }
@@ -1396,10 +1396,10 @@ module.exports = {
     Title: commonTitle,
     Cross_Cancel_Button: commonCrossCancelButton,
     New_Secret_Key_Input: inputGroup(
-      generateInputGroup('.settings__secrets .table-cell__key .input-wrapper', true, false, true)
+      generateInputGroup('[data-testid="secrets"] .form-table__row_active .form-table__cell_1:nth-of-type(1)', true, false, '.form-field__warning svg')
     ),
     New_Secret_Value_Input: inputGroup(
-      generateInputGroup('.settings__secrets .table-cell__value .input-wrapper', true, false, true)
+      generateInputGroup('[data-testid="secrets"] .form-table__row_active .form-table__cell_1:nth-of-type(2)', true, false, '.form-field__warning svg')
     ),
     Cancel_Button: By.css('.pop-up-dialog .btn-label'),
     Save_Button: By.css('.pop-up-dialog .secrets__footer-container .btn.btn-primary')

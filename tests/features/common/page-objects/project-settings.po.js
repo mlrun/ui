@@ -97,7 +97,7 @@ const parametersTableVerify = {
 }
 
 const secretsTable = {
-  root: '.settings__secrets',
+  root: '.settings__card-content',
   header: {
     root: '.table-row__header',
     sorters: {
@@ -106,17 +106,17 @@ const secretsTable = {
     }
   },
   body: {
-    add_row_btn: '.add-new-item-btn',
-    save_row_btn: '.btn-add',
+    add_row_btn: '[data-testid="secrets-add-btn"]',
+    save_row_btn: '[data-testid="apply-btn"]',
     row: {
-      root: '.table-row:not(.table-row__header)',
+      root: '.form-table__row:not(.table-row__header)',
       fields: {
-        key: '.table-cell__key',
+        key: '.form-table__cell_1:nth-of-type(1)',
         value: '.table-cell__value',
-        key_input: '.table-cell__key input',
-        value_input: '.table-cell__value input',
-        edit_btn: '.table-cell__actions .key-value-table__btn:nth-of-type(1)',
-        remove_btn: '.table-cell__actions .key-value-table__btn:nth-of-type(2)'
+        key_input: '.form-table__cell_1:nth-of-type(1) input',
+        value_input: '.form-table__cell_1:nth-of-type(2) input',
+        edit_btn: '.form-table__actions-cell [data-testid="edit-btn"]',
+        remove_btn: '.form-table__actions-cell [data-testid="delete-btn"]'
       }
     }
   }
@@ -188,7 +188,7 @@ module.exports = {
   },
   secretsTab: {
     Secrets_Table: commonTable(secretsTable),
-    Add_Secret_Button: By.css('.table-row__last .add-new-item-btn'),
+    Add_Secret_Button: By.css('[data-testid="secrets-add-btn"]'),
     Secrets_Hint: By.css('.settings__card-subtitle')
   }
 }
