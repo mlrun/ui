@@ -2155,7 +2155,6 @@ Feature: Jobs and workflows
 
     @MLJW
     @smoke
-    #TODO: bug with redirection
     Scenario: MLJW086 - Check broken link redirection on Monitor Workflows and Schedules screens
         Given open url
         And wait load page

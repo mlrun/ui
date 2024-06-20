@@ -69,6 +69,10 @@ import iguazioProjectsRelations from './data/iguazioProjectsRelations.json'
 import nuclioFunctions from './data/nuclioFunctions.json'
 import nuclioAPIGateways from './data/nuclioAPIGateways.json'
 import nuclioStreams from './data/nuclioStreams.json'
+import { updateRuns } from './dateSynchronization.js'
+
+//updating values in files with synthetic data 
+updateRuns(runs)
 
 // Here we are configuring express to use body-parser as middle-ware.
 const app = express()
@@ -514,6 +518,80 @@ function deleteSecretKeys(req, res) {
 }
 
 function getProjectsSummaries(req, res) {
+  const currentDate = new Date()
+  const last24Hours = new Date(currentDate.getTime() - 24 * 60 * 60 * 1000)
+  const next24Hours = new Date(currentDate.getTime() + 24 * 60 * 60 * 1000)
+
+  // Pipelines
+  const possibleStatuses = ['Succeeded', 'Failed', 'Running']
+  const filteredPipelines24Hours = {}
+  for (const project in pipelines) {
+    const runs = pipelines[project].runs.filter(run => new Date(run.finished_at) > last24Hours)
+    if (runs.length > 0) {
+      const statusCounts = runs.reduce((counts, run) => {
+        counts[run.status] = (counts[run.status] || 0) + 1
+
+        return counts
+      }, {})
+
+      possibleStatuses.forEach(status => {
+        statusCounts[status] = statusCounts[status] || 0
+      })
+      filteredPipelines24Hours[project] = statusCounts
+    }
+  }
+
+  // Runs
+  const projectData = runs.runs
+    .filter(run => run.kind === 'run' && new Date(run.status.last_update) > last24Hours)
+    .reduce((acc, run) => {
+      const project = run.metadata.project
+      const state = run.status.state
+      if (!acc[project]) {
+        acc[project] = { pending: 0, running: 0, error: 0, aborted: 0, completed: 0 }
+      }
+      acc[project][state] = (acc[project][state] || 0) + 1
+
+      return acc
+    }, {})
+
+  // Schedules
+  const jobsCounts = {}
+  const pipelineCounts = {}
+
+  schedules.schedules.forEach(item => {
+    const nextRunTime = new Date(item.next_run_time)
+
+    if (nextRunTime >= currentDate && nextRunTime <= next24Hours) {
+      const projectName = item.project
+      if (item.scheduled_object.task.metadata.labels['job-type'] !== 'workflow-runner') {
+        jobsCounts[projectName] = (jobsCounts[projectName] || 0) + 1
+      } else {
+        pipelineCounts[projectName] = (pipelineCounts[projectName] || 0) + 1
+      }
+    }
+  })
+
+  // Update projectsSummary
+  projectsSummary.project_summaries.forEach(project => {
+    const projectName = project.name
+
+    project.runs_completed_recent_count = projectData[projectName]?.completed || 0
+    const abortedCount = projectData[projectName]?.aborted || 0
+    const errorCount = projectData[projectName]?.error || 0
+    project.runs_failed_recent_count = errorCount + abortedCount
+    const pendingCount = projectData[projectName]?.pending || 0
+    const runningCount = projectData[projectName]?.running || 0
+    project.runs_running_count = pendingCount + runningCount
+
+    project.pipelines_completed_recent_count = filteredPipelines24Hours[projectName]?.Succeeded || 0
+    project.pipelines_failed_recent_count = filteredPipelines24Hours[projectName]?.Failed || 0
+    project.pipelines_running_count = filteredPipelines24Hours[projectName]?.Running || 0
+
+    project.distinct_scheduled_jobs_pending_count = jobsCounts[projectName] || 0
+    project.distinct_scheduled_pipelines_pending_count = pipelineCounts[projectName] || 0
+  })
+
   res.send(projectsSummary)
 }
 
@@ -544,18 +622,24 @@ function getProjectSummary(req, res) {
 function getRuns(req, res) {
   //get runs for Projects Monitoring page
   if (req.params['project'] === '*') {
-    let collectedMonitoringRuns = runs.runs
+    const { start_time_from, state } = req.query
+    let collectedMonitoringRuns = runs.runs.filter(run => {
+      const runStartTime = new Date(run.status.start_time)
 
-    if (req.query['start_time_from']) {
-      collectedMonitoringRuns = collectedMonitoringRuns.filter(
-        run => Date.parse(run.status.start_time) >= Date.parse(req.query['start_time_from'])
-      )
-    }
-    if (req.query['start_time_to']) {
-      collectedMonitoringRuns = collectedMonitoringRuns.filter(
-        run => Date.parse(run.status.start_time) <= Date.parse(req.query['start_time_to'])
-      )
-    }
+      if (!start_time_from || runStartTime >= new Date(start_time_from)) {
+        if (state) {
+          if (Array.isArray(state)) {
+            return state.includes(run.status.state)
+          } else {
+            return run.status.state === state
+          }
+        } else {
+          return true
+        }
+      }
+
+      return false
+    })
 
     res.send({ runs: collectedMonitoringRuns })
   }

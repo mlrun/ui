@@ -1396,10 +1396,10 @@ module.exports = {
     Title: commonTitle,
     Cross_Cancel_Button: commonCrossCancelButton,
     New_Secret_Key_Input: inputGroup(
-      generateInputGroup('.form-key-value-table .form-table__row_active .form-table__cell_1:nth-of-type(1)', true, false, '.form-field__warning svg')
+      generateInputGroup('[data-testid="secrets"] .form-table__row_active .form-table__cell_1:nth-of-type(1)', true, false, '.form-field__warning svg')
     ),
     New_Secret_Value_Input: inputGroup(
-      generateInputGroup('.form-key-value-table .form-table__row_active .form-table__cell_1:nth-of-type(2)', true, false, '.form-field__warning svg')
+      generateInputGroup('[data-testid="secrets"] .form-table__row_active .form-table__cell_1:nth-of-type(2)', true, false, '.form-field__warning svg')
     ),
     Cancel_Button: By.css('.pop-up-dialog .btn-label'),
     Save_Button: By.css('.pop-up-dialog .secrets__footer-container .btn.btn-primary')

@@ -361,6 +361,7 @@ Feature: ML Functions
         Then verify "Pods_Priority_Dropdown" element visibility in "Resources_Accordion" on "New_Function" wizard
         Then verify "Pods_Priority_Dropdown" element in "Resources_Accordion" on "New_Function" wizard should contains "Dropdown_Options"."Pods_Priority"
         When select "Manual" option in "New_Function_Volume_Mount_Dropdown" dropdown on "Resources_Accordion" on "New_Function" wizard
+        When collapse "Environment_Variables_Accordion" on "New_Function" wizard
         When add new volume rows to "Volume_Paths_Table" table in "Resources_Accordion" on "New_Function" wizard using nontable inputs
             | Volume_Paths_Table_Type_Dropdown | Volume_Paths_Table_Volume_Name_Input | Volume_Paths_Table_Path_Input | Volume_Paths_Table_Container_Input | Volume_Paths_Table_Access_Key_Input | Volume_Paths_Table_Resource_Path_Input | Add_New_Row_Button |
             |             V3IO                 |                                      |                               |                                    |                                     |                                        |         yes        |
@@ -1330,7 +1331,6 @@ Feature: ML Functions
     @passive
     @smoke
     #TODO: ML-5718 - move 'Deploy' button for "Serving" function to demo mode
-    #TODO: Bug - the tooltip hangs (doesn't appear on findElements)
     Scenario: MLF034 - Verify Deploy option for serving kind functions
         Given open url
         And wait load page
@@ -1343,7 +1343,7 @@ Feature: ML Functions
         And click on cell with value "ML functions" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
         And hover "MLRun_Logo" component on "commonPagesHeader" wizard
         And wait load page
-        Then value in "kind" column with "text" in "Functions_Table" on "ML_Functions" wizard should contains "Serving"
+        Then value in "kind" column with "tooltip" in "Functions_Table" on "ML_Functions" wizard should contains "Serving"
         Then verify that "Serving" type is displayed in "kind" kind on "ML_Functions" wizard in "Functions_Table" table with "churn-server" value in "name" column
         Then verify "deploy" option is present on "ML_Functions" wizard in "Functions_Table" table with "churn-server" value in "name" column
         Then click on "deploy" option on "ML_Functions" wizard in "Functions_Table" table with "churn-server" value in "name" column
