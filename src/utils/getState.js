@@ -19,7 +19,7 @@ such restriction.
 */
 
 import { isEmpty } from 'lodash'
-import { FUNCTION_INITIALIZED_STATE, FUNCTIONS_PAGE } from '../constants'
+import { FUNCTION_INITIALIZED_STATE, FUNCTIONS_PAGE, JOBS_MONITORING_WORKFLOWS_TAB } from '../constants'
 
 const getState = (state, page, kind) => {
   const stateExists = !isEmpty(state)
@@ -35,27 +35,30 @@ const getState = (state, page, kind) => {
   } else {
     return {
       value: state ?? null,
-      label: state ? commonStateLabels[state] : '',
+      label: state ? commonStateLabels(page === JOBS_MONITORING_WORKFLOWS_TAB)[state] : '',
       className: `state${state ? '-' + state : ''}${kind ? '-' + kind : ''}`
     }
   }
 }
 
-const commonStateLabels = {
-  aborted: 'Aborted',
-  aborting: 'Aborting',
-  active: 'Active',
-  completed: 'Completed',
-  created: 'Created',
-  creating: 'Creating',
-  error: 'Error',
-  fail: 'Error',
-  failed: 'Error',
-  omitted: 'Omitted',
-  pending: 'Pending',
-  ready: 'Ready',
-  running: 'Running',
-  succeeded: 'Completed'
+const commonStateLabels = withFailedState => {
+  return {
+    aborted: 'Aborted',
+    aborting: 'Aborting',
+    active: 'Active',
+    completed: 'Completed',
+    created: 'Created',
+    creating: 'Creating',
+    error: 'Error',
+    fail: 'Error',
+    failed: withFailedState ? 'Failed' : 'Error',
+    omitted: 'Omitted',
+    pending: 'Pending',
+    ready: 'Ready',
+    running: 'Running',
+    skipped: 'Skipped',
+    succeeded: 'Completed'
+  }
 }
 
 const functionStateLabels = {

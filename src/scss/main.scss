@@ -481,19 +481,19 @@ main {
 [class^='state-online'],
 [class^='state-ready'],
 [class^='state-succeeded'] {
-  @include statusState($brightTurquoise);
+  @include statusState($brightTurquoise, false);
 }
 
 [class^='state-all'] {
-  @include statusState(transparent);
+  @include statusState(transparent, false);
 }
 
 [class^='state-initialized'] {
-  @include statusState($chateauGreen);
+  @include statusState($chateauGreen, false);
 }
 
 [class^='state-warn'] {
-  @include statusState($grandis);
+  @include statusState($grandis, false);
 }
 
 [class^='state-build'],
@@ -501,37 +501,44 @@ main {
 [class^='state-deploying'],
 [class^='state-pending'],
 [class^='state-running'] {
-  @include statusState($pictonBlue);
+  @include statusState($pictonBlue, false);
 }
 
 [class^='state-aborted'] {
-  @include statusState($babyPink);
+  @include statusState($babyPink, false);
 }
 
 [class^='state-broken'],
-[class^='state-error'],
 [class^='state-fail'],
 [class^='state-failed'] {
-  @include statusState($burntSienna);
+  @include statusState($burntSienna, false);
+}
+
+[class^='state-error'] {
+  @include statusState($sorbus, false);
+}
+
+[class^='state-skipped'] {
+  @include statusState($topaz, true);
 }
 
 [class^='state-aborting'] {
-  @include statusState($burntSiennaTwo);
+  @include statusState($burntSiennaTwo, false);
 }
 
 [class^='state-omitted'] {
-  @include statusState($silver);
+  @include statusState($silver, false);
 }
 
 [class^='state-archived'] {
-  @include statusState($topaz);
+  @include statusState($topaz, false);
 }
 
 .state-created-job,
 .state-created-function,
 .state-creating-function,
 .state-pending-job {
-  @include statusState($topaz);
+  @include statusState($topaz, false);
 }
 
 /*=========== ERROR =============*/
