@@ -24,6 +24,23 @@ import Download from '../common/Download/Download'
 import api from '../api/artifacts-api'
 import { createArtifactPreviewContent } from './createArtifactPreviewContent'
 
+const fileSizes = {
+  '1MB': 1048576,
+  '10MB': 10485760,
+  '20BM': 20971520,
+  '50MB': 52428800
+}
+const limitsByFormat = {
+  json: fileSizes['1MB'],
+  yaml: fileSizes['1MB'],
+  yml: fileSizes['1MB'],
+  txt: fileSizes['10MB'],
+  html: fileSizes['20MB'],
+  png: fileSizes['50MB'],
+  jpg: fileSizes['50MB'],
+  jpeg: fileSizes['50MB']
+}
+
 export const setArtifactPreviewFromSchema = (artifact, noData, setNoData, setPreview) => {
   if (noData) {
     setNoData(false)
@@ -146,32 +163,52 @@ export const fetchArtifactPreviewFromTargetPath = (
   setNoData,
   setPreview
 ) => {
-  fetchArtifactPreview(
-    projectName,
-    artifact.target_path,
-    artifact.target_path.startsWith('/User') && (artifact.user || artifact.producer?.owner),
-    artifact.target_path.replace(/.*\./g, ''),
-    artifact.db_key
-  )
-    .then(content => {
-      setPreview([content])
+  const fileFormat = artifact.target_path.replace(/.*\./g, '')
 
-      if (noData) {
-        setNoData(false)
+  if (
+    fileFormat &&
+    fileFormat !== artifact.target_path &&
+    ((limitsByFormat[fileFormat] && artifact.size > limitsByFormat[fileFormat]) ||
+      (!limitsByFormat[fileFormat] && artifact.size > fileSizes['10MB']))
+  ) {
+    setPreview([
+      {
+        error: {
+          text: 'The artifact is too large to preview, use the download option instead',
+          body: ''
+        },
+        content: [],
+        type: 'error'
       }
-    })
-    .catch(err => {
-      setPreview([
-        {
-          error: {
-            text: `${err.response.status} ${err.response.statusText}`,
-            body: JSON.stringify(err.response, null, 2)
-          },
-          content: [],
-          type: 'error'
+    ])
+  } else {
+    fetchArtifactPreview(
+      projectName,
+      artifact.target_path,
+      artifact.target_path.startsWith('/User') && (artifact.user || artifact.producer?.owner),
+      fileFormat,
+      artifact.db_key
+    )
+      .then(content => {
+        setPreview([content])
+
+        if (noData) {
+          setNoData(false)
         }
-      ])
-    })
+      })
+      .catch(err => {
+        setPreview([
+          {
+            error: {
+              text: `${err.response.status} ${err.response.statusText}`,
+              body: JSON.stringify(err.response, null, 2)
+            },
+            content: [],
+            type: 'error'
+          }
+        ])
+      })
+  }
 }
 
 export const fetchArtifactPreview = (
