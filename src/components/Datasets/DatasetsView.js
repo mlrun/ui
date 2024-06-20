@@ -29,6 +29,7 @@ import Loader from '../../common/Loader/Loader'
 import ArtifactsActionBar from '../ArtifactsActionBar/ArtifactsActionBar'
 import NoData from '../../common/NoData/NoData'
 import Details from '../Details/Details'
+import WarningMessage from '../../common/WarningMessage/WarningMessage'
 
 import { DATASETS_FILTERS, DATASETS_PAGE, FULL_VIEW_MODE } from '../../constants'
 import { getNoDataMessage } from '../../utils/getNoDataMessage'
@@ -53,18 +54,20 @@ const DatasetsView = React.forwardRef(
       handleRefresh,
       handleRegisterDataset,
       largeRequestErrorMessage,
+      maxArtifactsErrorIsShown,
       pageData,
       selectedDataset,
       selectedRowData,
       setDatasets,
+      setMaxArtifactsErrorIsShown,
       setSelectedDataset,
       setSelectedRowData,
       sortProps,
       tableContent,
       tableHeaders,
       toggleConvertedYaml,
-      urlTagOption,
-      viewMode
+      urlTagOption = null,
+      viewMode = null
     },
     ref
   ) => {
@@ -111,6 +114,12 @@ const DatasetsView = React.forwardRef(
               ) : (
                 <>
                   {selectedRowData.loading && <Loader />}
+                  {maxArtifactsErrorIsShown && (
+                    <WarningMessage
+                      message="The query response displays up to 1000 items. Use filters to narrow down the results."
+                      handleClose={() => setMaxArtifactsErrorIsShown(false)}
+                    />
+                  )}
                   <Table
                     applyDetailsChanges={applyDetailsChanges}
                     applyDetailsChangesCallback={applyDetailsChangesCallback}
@@ -164,11 +173,6 @@ const DatasetsView = React.forwardRef(
   }
 )
 
-DatasetsView.defaultProps = {
-  viewMode: null,
-  urlTagOption: null
-}
-
 DatasetsView.propTypes = {
   actionsMenu: ACTIONS_MENU.isRequired,
   applyDetailsChanges: PropTypes.func.isRequired,
@@ -182,10 +186,12 @@ DatasetsView.propTypes = {
   handleRefresh: PropTypes.func.isRequired,
   handleRegisterDataset: PropTypes.func.isRequired,
   largeRequestErrorMessage: PropTypes.string.isRequired,
+  maxArtifactsErrorIsShown: PropTypes.bool.isRequired,
   pageData: PropTypes.object.isRequired,
   selectedDataset: PropTypes.object.isRequired,
   selectedRowData: PropTypes.object.isRequired,
   setDatasets: PropTypes.func.isRequired,
+  setMaxArtifactsErrorIsShown: PropTypes.func.isRequired,
   setSelectedDataset: PropTypes.func.isRequired,
   setSelectedRowData: PropTypes.func.isRequired,
   sortProps: SORT_PROPS,

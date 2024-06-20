@@ -1,0 +1,29 @@
+@import '~igz-controls/scss/borders';
+
+.warning {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 10px;
+  padding: 10px 14px;
+  color: $sorbus;
+  background-color: rgba($sorbus, 0.1);
+  border: $parametersBorder;
+
+  &__data {
+    display: flex;
+    align-items: center;
+  }
+
+  &__message {
+    margin-right: 10px;
+  }
+
+  &__icon {
+    width: 22px;
+    height: 22px;
+    margin-right: 10px;
+    padding: 5px;
+    background-color: $sorbus;
+    border-radius: 50%;
+  }
+}
