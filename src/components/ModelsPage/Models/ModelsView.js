@@ -27,6 +27,7 @@ import ModelsPageTabs from '../ModelsPageTabs/ModelsPageTabs'
 import NoData from '../../../common/NoData/NoData'
 import Table from '../../Table/Table'
 import Details from '../../Details/Details'
+import WarningMessage from '../../../common/WarningMessage/WarningMessage'
 
 import { FULL_VIEW_MODE, MODELS_FILTERS, MODELS_PAGE, MODELS_TAB } from '../../../constants'
 import { SORT_PROPS } from 'igz-controls/types'
@@ -51,18 +52,20 @@ const ModelsView = React.forwardRef(
       handleTrainModel,
       isDemoMode,
       largeRequestErrorMessage,
+      maxArtifactsErrorIsShown,
       models,
       pageData,
       selectedModel,
       selectedRowData,
+      setMaxArtifactsErrorIsShown,
       setModels,
       setSelectedModel,
       setSelectedRowData,
-      sortProps,
+      sortProps = null,
       tableContent,
       tableHeaders,
-      viewMode,
-      urlTagOption
+      urlTagOption = null,
+      viewMode = null
     },
     ref
   ) => {
@@ -114,6 +117,12 @@ const ModelsView = React.forwardRef(
             ) : (
               <>
                 {selectedRowData.loading && <Loader />}
+                {maxArtifactsErrorIsShown && (
+                  <WarningMessage
+                    message="The query response displays up to 1000 items. Use filters to narrow down the results."
+                    handleClose={() => setMaxArtifactsErrorIsShown(false)}
+                  />
+                )}
                 <Table
                   actionsMenu={actionsMenu}
                   applyDetailsChanges={applyDetailsChanges}
@@ -165,12 +174,6 @@ const ModelsView = React.forwardRef(
   }
 )
 
-ModelsView.defaultProps = {
-  sortProps: null,
-  viewMode: null,
-  urlTagOption: null
-}
-
 ModelsView.propTypes = {
   actionsMenu: ACTIONS_MENU.isRequired,
   applyDetailsChanges: PropTypes.func.isRequired,
@@ -183,18 +186,20 @@ ModelsView.propTypes = {
   handleTrainModel: PropTypes.func.isRequired,
   isDemoMode: PropTypes.bool.isRequired,
   largeRequestErrorMessage: PropTypes.string.isRequired,
+  maxArtifactsErrorIsShown: PropTypes.bool.isRequired,
   models: PropTypes.arrayOf(PropTypes.object).isRequired,
   pageData: PropTypes.object.isRequired,
   selectedModel: PropTypes.object.isRequired,
   selectedRowData: PropTypes.object.isRequired,
   setModels: PropTypes.func.isRequired,
+  setMaxArtifactsErrorIsShown: PropTypes.func.isRequired,
   setSelectedModel: PropTypes.func.isRequired,
   setSelectedRowData: PropTypes.func.isRequired,
   sortProps: SORT_PROPS,
   tableContent: PropTypes.arrayOf(PropTypes.object).isRequired,
   tableHeaders: PropTypes.arrayOf(PropTypes.object).isRequired,
-  viewMode: PropTypes.string,
-  urlTagOption: PropTypes.string
+  urlTagOption: PropTypes.string,
+  viewMode: PropTypes.string
 }
 
 export default ModelsView

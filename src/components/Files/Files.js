@@ -70,6 +70,7 @@ const Files = () => {
   const [selectedFile, setSelectedFile] = useState({})
   const [selectedRowData, setSelectedRowData] = useState({})
   const [largeRequestErrorMessage, setLargeRequestErrorMessage] = useState('')
+  const [maxArtifactsErrorIsShown, setMaxArtifactsErrorIsShown] = useState(false)
   const [convertedYaml, toggleConvertedYaml] = useYaml('')
   const [urlTagOption] = useGetTagOptions(
     fetchArtifactTags,
@@ -120,6 +121,7 @@ const Files = () => {
         .then(result => {
           if (result) {
             setFiles(result)
+            setMaxArtifactsErrorIsShown(result.length === 1000)
           }
 
           return result
@@ -350,10 +352,12 @@ const Files = () => {
       handleRefresh={handleRefresh}
       handleRegisterArtifact={handleRegisterArtifact}
       largeRequestErrorMessage={largeRequestErrorMessage}
+      maxArtifactsErrorIsShown={maxArtifactsErrorIsShown}
       pageData={pageData}
       ref={filesRef}
       selectedFile={selectedFile}
       selectedRowData={selectedRowData}
+      setMaxArtifactsErrorIsShown={setMaxArtifactsErrorIsShown}
       setFiles={setFiles}
       setSelectedFile={setSelectedFile}
       setSelectedRowData={setSelectedRowData}

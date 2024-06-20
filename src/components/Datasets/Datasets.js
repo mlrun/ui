@@ -69,6 +69,7 @@ const Datasets = () => {
   const [selectedDataset, setSelectedDataset] = useState({})
   const [selectedRowData, setSelectedRowData] = useState({})
   const [largeRequestErrorMessage, setLargeRequestErrorMessage] = useState('')
+  const [maxArtifactsErrorIsShown, setMaxArtifactsErrorIsShown] = useState(false)
   const [convertedYaml, toggleConvertedYaml] = useYaml('')
   const [urlTagOption] = useGetTagOptions(
     fetchArtifactTags,
@@ -125,6 +126,7 @@ const Datasets = () => {
         .then(result => {
           if (result) {
             setDatasets(result)
+            setMaxArtifactsErrorIsShown(result.length === 1000)
           }
 
           return result
@@ -362,11 +364,13 @@ const Datasets = () => {
       handleRefresh={handleRefresh}
       handleRegisterDataset={handleRegisterDataset}
       largeRequestErrorMessage={largeRequestErrorMessage}
+      maxArtifactsErrorIsShown={maxArtifactsErrorIsShown}
       pageData={pageData}
       ref={datasetsRef}
       selectedDataset={selectedDataset}
       selectedRowData={selectedRowData}
       setDatasets={setDatasets}
+      setMaxArtifactsErrorIsShown={setMaxArtifactsErrorIsShown}
       setSelectedDataset={setSelectedDataset}
       setSelectedRowData={setSelectedRowData}
       sortProps={{ sortTable, selectedColumnName, getSortingIcon }}

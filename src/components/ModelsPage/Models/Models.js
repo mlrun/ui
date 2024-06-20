@@ -77,6 +77,7 @@ import { useMode } from '../../../hooks/mode.hook'
 const Models = ({ fetchModelFeatureVector }) => {
   const [models, setModels] = useState([])
   const [largeRequestErrorMessage, setLargeRequestErrorMessage] = useState('')
+  const [maxArtifactsErrorIsShown, setMaxArtifactsErrorIsShown] = useState(false)
   const [selectedModel, setSelectedModel] = useState({})
   const [selectedRowData, setSelectedRowData] = useState({})
   //temporarily commented till ML-5606 will be done
@@ -136,6 +137,7 @@ const Models = ({ fetchModelFeatureVector }) => {
         .then(result => {
           if (result) {
             setModels(result)
+            setMaxArtifactsErrorIsShown(result.length === 1000)
           }
 
           return result
@@ -462,11 +464,13 @@ const Models = ({ fetchModelFeatureVector }) => {
       handleTrainModel={handleTrainModel}
       isDemoMode={isDemoMode}
       largeRequestErrorMessage={largeRequestErrorMessage}
+      maxArtifactsErrorIsShown={maxArtifactsErrorIsShown}
       models={models}
       pageData={pageData}
       ref={modelsRef}
       selectedModel={selectedModel}
       selectedRowData={selectedRowData}
+      setMaxArtifactsErrorIsShown={setMaxArtifactsErrorIsShown}
       setModels={setModels}
       setSelectedModel={setSelectedModel}
       setSelectedRowData={setSelectedRowData}
