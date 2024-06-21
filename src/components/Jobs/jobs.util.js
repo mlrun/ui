@@ -322,23 +322,6 @@ export const handleAbortJob = (
   setConfirmData(null)
 }
 
-export const handleDeleteJob = (deleteJob, job, projectName, refreshJobs, filters, dispatch) => {
-  return deleteJob(projectName, job)
-    .then(() => {
-      refreshJobs(filters)
-      dispatch(
-        setNotification({
-          status: 200,
-          id: Math.random(),
-          message: 'Job is successfully deleted'
-        })
-      )
-    })
-    .catch(error => {
-      showErrorNotification(dispatch, error, 'Deleting job failed', '', () => handleDeleteJob(job))
-    })
-}
-
 export const monitorJob = (jobs_dashboard_url, item, projectName) => {
   let redirectUrl = jobs_dashboard_url
     .replace('{filter_name}', item ? 'uid' : 'project')

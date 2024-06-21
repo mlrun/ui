@@ -44,10 +44,10 @@ import {
   generateActionsMenu,
   generatePageData
 } from '../../components/Jobs/MonitorWorkflows/monitorWorkflows.util'
-import { handleDeleteJob, isJobKindLocal, pollAbortingJobs } from '../../components/Jobs/jobs.util'
+import { isJobKindLocal, pollAbortingJobs } from '../../components/Jobs/jobs.util'
 import { DANGER_BUTTON } from 'igz-controls/constants'
 import { setNotification } from '../../reducers/notificationReducer'
-import { enrichRunWithFunctionFields, handleAbortJob } from '../../utils/jobs.util'
+import { enrichRunWithFunctionFields, handleAbortJob, handleDeleteJob } from '../../utils/jobs.util'
 import jobsActions from '../../actions/jobs'
 import workflowsActions from '../../actions/workflow'
 import { parseJob } from '../../utils/parseJob'
