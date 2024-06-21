@@ -47,12 +47,13 @@ const MonitorJobs = ({ fetchAllJobRuns, fetchJobs }) => {
   const [dataIsLoaded, setDataIsLoaded] = useState(false)
   const appStore = useSelector(store => store.appStore)
   const filtersStore = useSelector(store => store.filtersStore)
+  const jobsStore = useSelector(store => store.jobsStore)
   const [largeRequestErrorMessage, setLargeRequestErrorMessage] = useState('')
   const params = useParams()
   const dispatch = useDispatch()
   const { isStagingMode } = useMode()
   const abortJobRef = useRef(null)
-  const { handleMonitoring } = React.useContext(JobsContext)
+  const { handleMonitoring, jobWizardIsOpened } = React.useContext(JobsContext)
   const abortControllerRef = useRef(new AbortController())
 
   const filters = useMemo(() => {
@@ -247,13 +248,15 @@ const MonitorJobs = ({ fetchAllJobRuns, fetchJobs }) => {
               disabled: !appStore.frontendSpec.jobs_dashboard_url,
               onClick: () => handleMonitoring()
             }}
+            autoRefreshIsEnabled
+            autoRefreshIsStopped={jobWizardIsOpened || jobsStore.loading}
             filters={filters}
             hidden={Boolean(params.jobId)}
             onChange={refreshJobs}
             page={JOBS_PAGE}
+
             tab={MONITOR_JOBS_TAB}
             withoutExpandButton
-            enableAutoRefresh
           />
         </div>
       </div>
