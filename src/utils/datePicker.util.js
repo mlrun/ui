@@ -357,6 +357,9 @@ export const getTimeFrameWarningMsg = (timeFrameLimit) => {
 }
 
 
-export const setSecondsForDate = (date = new Date(), seconds = 0, milliseconds = 0) => {
+export const roundSeconds = (date = new Date(), top = false) => {
+  const seconds = top ? 59 : 0
+  const milliseconds = top ? 999 : 0
+
   return new Date(new Date(date).setSeconds(seconds, milliseconds))
 }
