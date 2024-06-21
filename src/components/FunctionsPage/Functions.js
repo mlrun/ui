@@ -500,13 +500,14 @@ const Functions = ({
   useEffect(() => {
     setFullSelectedFunction(
       dispatch,
+      navigate,
       fetchFunction,
       selectedFunctionMin,
       setSelectedFunction,
       apiGateways,
       params.projectName
     )
-  }, [apiGateways, dispatch, fetchFunction, params.projectName, selectedFunctionMin])
+  }, [apiGateways, dispatch, fetchFunction, navigate, params.projectName, selectedFunctionMin])
 
   useEffect(() => {
     fetchData()

@@ -26,9 +26,10 @@ import AddArtifactTagPopUp from '../../elements/AddArtifactTagPopUp/AddArtifactT
 import RegisterArtifactModal from '../RegisterArtifactModal/RegisterArtifactModal'
 
 import {
-  DATASET_TYPE,
   DATASETS_FILTERS,
   DATASETS_PAGE,
+  DATASETS_TAB,
+  DATASET_TYPE,
   FILTER_MENU_MODAL,
   GROUP_BY_NAME,
   GROUP_BY_NONE,
@@ -38,8 +39,8 @@ import {
 } from '../../constants'
 import {
   fetchArtifactTags,
-  fetchDataSet,
   fetchDataSets,
+  fetchExpandedDataSet,
   removeDataSet,
   removeDataSets
 } from '../../reducers/artifactsReducer'
@@ -58,6 +59,7 @@ import { getFilterTagOptions, setFilters } from '../../reducers/filtersReducer'
 import { getViewMode } from '../../utils/helper'
 import { isDetailsTabExists } from '../../utils/isDetailsTabExists'
 import { openPopUp } from 'igz-controls/utils/common.util'
+import { setFullSelectedArtifact } from '../../utils/artifacts.util'
 import { setNotification } from '../../reducers/notificationReducer'
 import { useGetTagOptions } from '../../hooks/useGetTagOptions.hook'
 import { useGroupContent } from '../../hooks/groupContent.hook'
@@ -71,6 +73,7 @@ import cssVariables from './datasets.scss'
 const Datasets = () => {
   const [datasets, setDatasets] = useState([])
   const [selectedDataset, setSelectedDataset] = useState({})
+  const [selectedDatasetMin, setSelectedDatasetMin] = useState({})
   const [selectedRowData, setSelectedRowData] = useState({})
   const [largeRequestErrorMessage, setLargeRequestErrorMessage] = useState('')
   const [convertedYaml, toggleConvertedYaml] = useYaml('')
@@ -113,6 +116,17 @@ const Datasets = () => {
     [selectedDataset.tag]
   )
 
+  useEffect(() => {
+    setFullSelectedArtifact(
+      DATASETS_TAB,
+      dispatch,
+      navigate,
+      selectedDatasetMin,
+      setSelectedDataset,
+      params.projectName
+    )
+  }, [dispatch, navigate, params.projectName, selectedDatasetMin])
+
   const fetchData = useCallback(
     filters => {
       abortControllerRef.current = new AbortController()
@@ -125,6 +139,9 @@ const Datasets = () => {
             ui: {
               controller: abortControllerRef.current,
               setLargeRequestErrorMessage
+            },
+            params: {
+              format: 'minimal'
             }
           }
         })
@@ -171,7 +188,7 @@ const Datasets = () => {
         artifact,
         onAddTag: () => handleRefresh(datasetsFilters),
         getArtifact: () =>
-          fetchDataSet({
+          fetchExpandedDataSet({
             project: params.projectName,
             dataSet: artifact.db_key,
             iter: true,
@@ -184,9 +201,9 @@ const Datasets = () => {
   )
 
   const actionsMenu = useMemo(
-    () => (dataset, menuPosition) =>
+    () => (datasetMin, menuPosition) =>
       generateActionsMenu(
-        dataset,
+        datasetMin,
         frontendSpec,
         dispatch,
         toggleConvertedYaml,
@@ -194,7 +211,8 @@ const Datasets = () => {
         params.projectName,
         handleRefresh,
         datasetsFilters,
-        menuPosition
+        menuPosition,
+        selectedDataset
       ),
     [
       datasetsFilters,
@@ -203,6 +221,7 @@ const Datasets = () => {
       handleAddTag,
       handleRefresh,
       params.projectName,
+      selectedDataset,
       toggleConvertedYaml
     ]
   )
@@ -329,7 +348,7 @@ const Datasets = () => {
       params.iter,
       params.uid,
       params.projectName,
-      setSelectedDataset,
+      setSelectedDatasetMin,
       navigate
     )
   }, [
@@ -349,7 +368,7 @@ const Datasets = () => {
     return () => {
       setDatasets([])
       dispatch(removeDataSets())
-      setSelectedDataset({})
+      setSelectedDatasetMin({})
       abortControllerRef.current.abort(REQUEST_CANCELED)
       tagAbortControllerCurrent.abort(REQUEST_CANCELED)
     }
@@ -400,7 +419,7 @@ const Datasets = () => {
       selectedDataset={selectedDataset}
       selectedRowData={selectedRowData}
       setDatasets={setDatasets}
-      setSelectedDataset={setSelectedDataset}
+      setSelectedDatasetMin={setSelectedDatasetMin}
       setSelectedRowData={setSelectedRowData}
       sortProps={{ sortTable, selectedColumnName, getSortingIcon }}
       tableContent={sortedTableContent}

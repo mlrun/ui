@@ -57,7 +57,7 @@ const ModelsView = React.forwardRef(
       selectedModel,
       selectedRowData,
       setModels,
-      setSelectedModel,
+      setSelectedModelMin,
       setSelectedRowData,
       sortProps,
       tableContent,
@@ -115,13 +115,13 @@ const ModelsView = React.forwardRef(
               />
             ) : (
               <>
-                {selectedRowData.loading && <Loader />}
+                {(selectedRowData.loading || artifactsStore.models.modelLoading) && <Loader />}
                 <Table
                   actionsMenu={actionsMenu}
                   applyDetailsChanges={applyDetailsChanges}
                   applyDetailsChangesCallback={applyDetailsChangesCallback}
                   detailsFormInitialValues={detailsFormInitialValues}
-                  handleCancel={() => setSelectedModel({})}
+                  handleCancel={() => setSelectedModelMin({})}
                   pageData={pageData}
                   ref={{ tableRef, tableBodyRef }}
                   retryRequest={handleRefresh}
@@ -160,7 +160,6 @@ const ModelsView = React.forwardRef(
                 isDetailsScreen
                 pageData={pageData}
                 selectedItem={selectedModel}
-                setSelectedItem={setSelectedModel}
                 tab={MODELS_TAB}
               />
             )}
@@ -194,7 +193,7 @@ ModelsView.propTypes = {
   selectedModel: PropTypes.object.isRequired,
   selectedRowData: PropTypes.object.isRequired,
   setModels: PropTypes.func.isRequired,
-  setSelectedModel: PropTypes.func.isRequired,
+  setSelectedModelMin: PropTypes.func.isRequired,
   setSelectedRowData: PropTypes.func.isRequired,
   sortProps: SORT_PROPS,
   tableContent: PropTypes.arrayOf(PropTypes.object).isRequired,

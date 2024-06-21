@@ -18,7 +18,7 @@ under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
 import React from 'react'
-import { cloneDeep, isEmpty, omit } from 'lodash'
+import { cloneDeep, isEmpty, isEqual, omit } from 'lodash'
 import Prism from 'prismjs'
 
 import { PopUpDialog } from 'igz-controls/components'
@@ -37,12 +37,12 @@ import {
   ACTION_MENU_PARENT_ROW_EXPANDED
 } from '../../../constants'
 import {
-  fetchModel,
+  fetchExpandedModel,
   showArtifactsPreview,
   updateArtifact
 } from '../../../reducers/artifactsReducer'
 import { FORBIDDEN_ERROR_STATUS_CODE } from 'igz-controls/constants'
-import { applyTagChanges } from '../../../utils/artifacts.util'
+import { applyTagChanges, chooseOrFetchArtifact } from '../../../utils/artifacts.util'
 import { convertChipsData } from '../../../utils/convertChipsData'
 import { copyToClipboard } from '../../../utils/copyToClipboard'
 import { createModelsRowData, getIsTargetPathValid } from '../../../utils/createArtifactsContent'
@@ -111,7 +111,7 @@ export const fetchModelsRowData = async (
     loading: true
   }))
 
-  dispatch(fetchModel({ project: model.project, model: model.db_key, iter, tag }))
+  dispatch(fetchExpandedModel({ project: model.project, model: model.db_key, iter, tag }))
     .unwrap()
     .then(result => {
       if (result?.length > 0) {
@@ -290,7 +290,9 @@ export const checkForSelectedModel = (
         if (!searchItem) {
           navigate(`/projects/${projectName}/models/models`)
         } else {
-          setSelectedModel(searchItem)
+          setSelectedModel(prevState => {
+            return isEqual(prevState, searchItem) ? prevState : searchItem
+          })
         }
       }
     } else {
@@ -300,7 +302,7 @@ export const checkForSelectedModel = (
 }
 
 export const generateActionsMenu = (
-  model,
+  modelMin,
   frontendSpec,
   dispatch,
   toggleConvertedYaml,
@@ -309,10 +311,14 @@ export const generateActionsMenu = (
   handleRefresh,
   modelsFilters,
   handleDeployModel,
-  menuPosition
+  menuPosition,
+  selectedModel
 ) => {
-  const isTargetPathValid = getIsTargetPathValid(model ?? {}, frontendSpec)
-  const downloadPath = `${model?.target_path}${model?.model_file || ''}`
+  const isTargetPathValid = getIsTargetPathValid(modelMin ?? {}, frontendSpec)
+
+  const getFullModel = modelMin => {
+    return chooseOrFetchArtifact(dispatch, MODELS_TAB, selectedModel, modelMin)
+  }
 
   return [
     [
@@ -327,15 +333,18 @@ export const generateActionsMenu = (
         hidden: menuPosition === ACTION_MENU_PARENT_ROW_EXPANDED,
         disabled: !isTargetPathValid,
         icon: <DownloadIcon />,
-        onClick: model => {
-          dispatch(
-            setDownloadItem({
-              path: downloadPath,
-              user: model.producer?.owner,
-              id: downloadPath
-            })
-          )
-          dispatch(setShowDownloadsList(true))
+        onClick: modelMin => {
+          getFullModel(modelMin).then(model => {
+            const downloadPath = `${model?.target_path}${model?.model_file || ''}`
+            dispatch(
+              setDownloadItem({
+                path: downloadPath,
+                user: model.producer?.owner,
+                id: downloadPath
+              })
+            )
+            dispatch(setShowDownloadsList(true))
+          })
         }
       },
       {
@@ -348,28 +357,28 @@ export const generateActionsMenu = (
         label: 'View YAML',
         hidden: menuPosition === ACTION_MENU_PARENT_ROW_EXPANDED,
         icon: <YamlIcon />,
-        onClick: toggleConvertedYaml
+        onClick: modelMin => getFullModel(modelMin).then(toggleConvertedYaml)
       },
       {
         label: 'Delete',
         icon: <Delete />,
         className: 'danger',
-        disabled: !model?.tag,
+        disabled: !modelMin?.tag,
         hidden: [ACTION_MENU_PARENT_ROW, ACTION_MENU_PARENT_ROW_EXPANDED].includes(menuPosition),
-        tooltip: !model?.tag
+        tooltip: !modelMin?.tag
           ? 'A tag is required to delete a model. Open the model, click on the edit icon, and assign a tag before proceeding with the deletion'
           : '',
         onClick: () =>
           openDeleteConfirmPopUp(
             'Delete model?',
-            `Do you want to delete the model "${model.db_key}"? Deleted models can not be restored.`,
+            `Do you want to delete the model "${modelMin.db_key}"? Deleted models can not be restored.`,
             () => {
               handleDeleteArtifact(
                 dispatch,
                 projectName,
-                model.db_key,
-                model.tag,
-                model.tree,
+                modelMin.db_key,
+                modelMin.tag,
+                modelMin.tree,
                 handleRefresh,
                 modelsFilters,
                 MODEL_TYPE
@@ -385,14 +394,14 @@ export const generateActionsMenu = (
         onClick: () =>
           openDeleteConfirmPopUp(
             'Delete dataset?',
-            `Do you want to delete all versions of the dataset "${model.db_key}"? Deleted datasets can not be restored.`,
+            `Do you want to delete all versions of the dataset "${modelMin.db_key}"? Deleted datasets can not be restored.`,
             () => {
               handleDeleteArtifact(
                 dispatch,
                 projectName,
-                model.db_key,
-                model.tag,
-                model.tree,
+                modelMin.db_key,
+                modelMin.tag,
+                modelMin.tree,
                 handleRefresh,
                 modelsFilters,
                 MODEL_TYPE,
@@ -405,22 +414,24 @@ export const generateActionsMenu = (
     ],
     [
       {
-        disabled: !isTargetPathValid,
-        id: 'model-preview',
         label: 'Preview',
+        id: 'model-preview',
+        disabled: !isTargetPathValid,
         icon: <ArtifactView />,
-        onClick: model => {
-          dispatch(
-            showArtifactsPreview({
-              isPreview: true,
-              selectedItem: model
-            })
-          )
+        onClick: modelMin => {
+          getFullModel(modelMin).then(model => {
+            dispatch(
+              showArtifactsPreview({
+                isPreview: true,
+                selectedItem: model
+              })
+            )
+          })
         }
       },
       {
-        id: 'model-deploy',
         label: 'Deploy',
+        id: 'model-deploy',
         icon: <DeployIcon />,
         onClick: handleDeployModel
       }

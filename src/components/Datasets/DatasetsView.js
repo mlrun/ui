@@ -58,7 +58,7 @@ const DatasetsView = React.forwardRef(
       selectedDataset,
       selectedRowData,
       setDatasets,
-      setSelectedDataset,
+      setSelectedDatasetMin,
       setSelectedRowData,
       sortProps,
       tableContent,
@@ -112,13 +112,13 @@ const DatasetsView = React.forwardRef(
                 />
               ) : (
                 <>
-                  {selectedRowData.loading && <Loader />}
+                  {(selectedRowData.loading || artifactsStore.dataSets.datasetLoading) && <Loader />}
                   <Table
                     actionsMenu={actionsMenu}
                     applyDetailsChanges={applyDetailsChanges}
                     applyDetailsChangesCallback={applyDetailsChangesCallback}
                     detailsFormInitialValues={detailsFormInitialValues}
-                    handleCancel={() => setSelectedDataset({})}
+                    handleCancel={() => setSelectedDatasetMin({})}
                     pageData={pageData}
                     ref={{ tableRef, tableBodyRef }}
                     retryRequest={handleRefresh}
@@ -194,7 +194,7 @@ DatasetsView.propTypes = {
   selectedDataset: PropTypes.object.isRequired,
   selectedRowData: PropTypes.object.isRequired,
   setDatasets: PropTypes.func.isRequired,
-  setSelectedDataset: PropTypes.func.isRequired,
+  setSelectedDatasetMin: PropTypes.func.isRequired,
   setSelectedRowData: PropTypes.func.isRequired,
   sortProps: SORT_PROPS,
   tableContent: PropTypes.arrayOf(PropTypes.object).isRequired,
