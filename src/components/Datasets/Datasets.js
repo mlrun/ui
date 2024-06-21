@@ -33,7 +33,6 @@ import {
   GROUP_BY_NAME,
   GROUP_BY_NONE,
   REQUEST_CANCELED,
-  SHOW_ITERATIONS,
   TAG_FILTER_ALL_ITEMS
 } from '../../constants'
 import {
@@ -63,6 +62,7 @@ import { useGetTagOptions } from '../../hooks/useGetTagOptions.hook'
 import { useGroupContent } from '../../hooks/groupContent.hook'
 import { useSortTable } from '../../hooks/useSortTable.hook'
 import { useYaml } from '../../hooks/yaml.hook'
+import { useInitialArtifactsFetch } from '../../hooks/artifacts.hook'
 
 const Datasets = () => {
   const [datasets, setDatasets] = useState([])
@@ -109,7 +109,7 @@ const Datasets = () => {
     filters => {
       abortControllerRef.current = new AbortController()
 
-      dispatch(
+      return dispatch(
         fetchDataSets({
           project: params.projectName,
           filters,
@@ -286,20 +286,19 @@ const Datasets = () => {
       }
     })
 
+  useInitialArtifactsFetch(
+    fetchData,
+    urlTagOption,
+    datasets.length,
+    setSelectedRowData,
+    createDatasetsRowData
+  )
+
   useEffect(() => {
     if (params.name && params.tag && pageData.details.menu.length > 0) {
       isDetailsTabExists(params.tab, pageData.details.menu, navigate, location)
     }
   }, [location, navigate, pageData.details.menu, params.name, params.tab, params.tag])
-
-  useEffect(() => {
-    if (urlTagOption && datasets.length === 0) {
-      fetchData({
-        tag: urlTagOption,
-        iter: SHOW_ITERATIONS
-      })
-    }
-  }, [datasets.length, fetchData, urlTagOption])
 
   useEffect(() => {
     dispatch(setFilters({ groupBy: GROUP_BY_NONE }))

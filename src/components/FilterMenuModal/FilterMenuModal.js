@@ -80,6 +80,16 @@ const FilterMenuModal = ({
     }
   }, [dispatch, filtersData, filterMenuName, values])
 
+  useEffect(() => {
+    if (!isEqual(initialValues, values)) {
+      formRef.current?.batch(() => {
+        for (const filterName in values) {
+          formRef.current?.change(filterName, values[filterName])
+        }
+      })
+    }
+  }, [initialValues, values])
+
   const hideFiltersWizard = useCallback(event => {
     if (
       !event.target.closest('.filters-button') &&

@@ -46,7 +46,6 @@ import {
   MODELS_FILTERS,
   REQUEST_CANCELED,
   MODEL_TYPE,
-  SHOW_ITERATIONS,
   FUNCTION_TYPE_SERVING
 } from '../../../constants'
 import {
@@ -73,6 +72,7 @@ import { useSortTable } from '../../../hooks/useSortTable.hook'
 import { useGetTagOptions } from '../../../hooks/useGetTagOptions.hook'
 import { getViewMode } from '../../../utils/helper'
 import { useMode } from '../../../hooks/mode.hook'
+import { useInitialArtifactsFetch } from '../../../hooks/artifacts.hook'
 
 const Models = ({ fetchModelFeatureVector }) => {
   const [models, setModels] = useState([])
@@ -326,20 +326,19 @@ const Models = ({ fetchModelFeatureVector }) => {
     handleRefresh(modelsFilters)
   }
 
+  useInitialArtifactsFetch(
+    fetchData,
+    urlTagOption,
+    models.length,
+    setSelectedRowData,
+    createModelsRowData
+  )
+
   useEffect(() => {
     if (params.name && params.tag && pageData.details.menu.length > 0) {
       isDetailsTabExists(params.tab, pageData.details.menu, navigate, location)
     }
   }, [navigate, location, pageData.details.menu, params.name, params.tag, params.tab])
-
-  useEffect(() => {
-    if (urlTagOption) {
-      fetchData({
-        tag: urlTagOption,
-        iter: SHOW_ITERATIONS
-      })
-    }
-  }, [fetchData, urlTagOption])
 
   useEffect(() => {
     return () => {
