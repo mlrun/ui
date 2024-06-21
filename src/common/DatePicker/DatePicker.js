@@ -48,6 +48,7 @@ import {
   ANY_TIME_DATE_OPTION,
   getTimeFrameWarningMsg,
   CUSTOM_RANGE_DATE_OPTION,
+  setSecondsForDate,
 } from '../../utils/datePicker.util'
 import { initialState, datePickerActions, datePickerReducer } from './datePickerReducer'
 import { DATE_PICKER_TIME_FRAME_LIMITS } from '../../types'
@@ -163,14 +164,14 @@ const DatePicker = ({
   useEffect(() => {
     datePickerDispatch({
       type: datePickerActions.UPDATE_DATE_FROM,
-      payload: date || new Date(new Date().setSeconds(0, 0))
+      payload: date || setSecondsForDate(new Date(), 0, 0)
     })
   }, [date])
 
   useEffect(() => {
     datePickerDispatch({
       type: datePickerActions.UPDATE_DATE_TO,
-      payload: dateTo || new Date(new Date().setSeconds(59, 999))
+      payload: dateTo || setSecondsForDate(new Date(), 59, 999)
     })
   }, [dateTo])
 
@@ -334,10 +335,10 @@ const DatePicker = ({
     setInputIsInvalid(false)
     setExternalInvalid(true)
 
-    let dates = [new Date(new Date(datePickerState.configFrom.selectedDate.setSeconds(0, 0)))]
+    let dates = [setSecondsForDate(datePickerState.configFrom.selectedDate, 0, 0)]
 
     if (isRange) {
-      dates.push(new Date(new Date(datePickerState.configTo.selectedDate.setSeconds(59, 999))))
+      dates.push(setSecondsForDate(datePickerState.configTo.selectedDate, 59, 999))
     }
 
     onChange(dates, false, CUSTOM_RANGE_DATE_OPTION)
@@ -366,7 +367,7 @@ const DatePicker = ({
         dates = event.target.value
           .split(datesDivider)
           .map(
-            (date, index) => new Date(new Date(date).setSeconds(index === 0 ? 0 : 59, index === 0 ? 0 : 999))
+            (date, index) => setSecondsForDate(date, index === 0 ? 0 : 59, index === 0 ? 0 : 999)
           )
         const { isTimeRangeInvalid, timeRangeInvalidMessage } = validateTimeRange(dates)
 
@@ -441,13 +442,13 @@ const DatePicker = ({
         setIsDatePickerOpened(state => !state)
         datePickerDispatch({
           type: datePickerActions.UPDATE_SELECTED_DATE_FROM,
-          payload: new Date((date || new Date()).setSeconds(0, 0))
+          payload: date || setSecondsForDate(new Date(), 0, 0)
         })
 
         if (isRange) {
           datePickerDispatch({
             type: datePickerActions.UPDATE_SELECTED_DATE_TO,
-            payload: new Date((dateTo || new Date()).setSeconds(59, 999))
+            payload: dateTo || setSecondsForDate(new Date(), 59, 999)
           })
         }
       }

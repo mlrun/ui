@@ -355,3 +355,8 @@ export const getTimeFrameWarningMsg = (timeFrameLimit) => {
 
   return `Maximum time range is ${mappedTime[timeFrameLimit]}`
 }
+
+
+export const setSecondsForDate = (date = new Date(), seconds = 0, milliseconds = 0) => {
+  return new Date(new Date(date).setSeconds(seconds, milliseconds))
+}
