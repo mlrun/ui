@@ -34,7 +34,6 @@ import {
   GROUP_BY_NAME,
   GROUP_BY_NONE,
   REQUEST_CANCELED,
-  SHOW_ITERATIONS,
   TAG_FILTER_ALL_ITEMS
 } from '../../constants'
 import {
@@ -63,6 +62,7 @@ import { setNotification } from '../../reducers/notificationReducer'
 import { useGetTagOptions } from '../../hooks/useGetTagOptions.hook'
 import { useGroupContent } from '../../hooks/groupContent.hook'
 import { useSortTable } from '../../hooks/useSortTable.hook'
+import { useInitialArtifactsFetch } from '../../hooks/artifacts.hook'
 import { useVirtualization } from '../../hooks/useVirtualization.hook'
 import { useYaml } from '../../hooks/yaml.hook'
 
@@ -113,7 +113,7 @@ const Files = () => {
     filters => {
       abortControllerRef.current = new AbortController()
 
-      dispatch(
+      return dispatch(
         fetchFiles({
           project: params.projectName,
           filters,
@@ -292,6 +292,14 @@ const Files = () => {
 
     handleRefresh(filesFilters)
   }
+
+  useInitialArtifactsFetch(
+    fetchData,
+    urlTagOption,
+    files.length,
+    setSelectedRowData,
+    createFilesRowData
+  )
 
   useEffect(() => {
     if (params.name && params.tag && pageData.details.menu.length > 0) {
