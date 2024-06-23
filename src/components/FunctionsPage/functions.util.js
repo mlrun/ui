@@ -245,17 +245,17 @@ export const generateActionsMenu = (
           !FUNCTIONS_EDITABLE_STATES.includes(func?.state?.value)
       },
       {
+        label: 'View YAML',
+        icon: <Yaml />,
+        disabled: functionIsDeleting,
+        onClick: funcMin => getFullFunction(funcMin).then(toggleConvertedYaml)
+      },
+      {
         label: 'Delete',
         icon: <Delete />,
         className: 'danger',
         disabled: functionIsDeleting,
         onClick: onRemoveFunction
-      },
-      {
-        label: 'View YAML',
-        icon: <Yaml />,
-        disabled: functionIsDeleting,
-        onClick: funcMin => getFullFunction(funcMin).then(toggleConvertedYaml)
       }
     ],
     [
@@ -339,15 +339,7 @@ export const setFullSelectedFunction = debounce(
     } else {
       const { name, hash, tag } = selectedFunctionMin
 
-      fetchAndParseFunction(
-        dispatch,
-        fetchFunction,
-        projectName,
-        name,
-        hash,
-        tag,
-        true
-      )
+      fetchAndParseFunction(dispatch, fetchFunction, projectName, name, hash, tag, true)
         .then(parsedFunction => {
           setSelectedFunction(parsedFunction)
         })

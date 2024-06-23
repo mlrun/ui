@@ -27,11 +27,13 @@ import { Form } from 'react-final-form'
 import { isEqual, pickBy } from 'lodash'
 import classnames from 'classnames'
 
-import DetailsTabsContent from './DetailsTabsContent/DetailsTabsContent'
 import { ConfirmDialog } from 'igz-controls/components'
-import Loader from '../../common/Loader/Loader'
 import ErrorMessage from '../../common/ErrorMessage/ErrorMessage'
+import DetailsTabsContent from './DetailsTabsContent/DetailsTabsContent'
+import DatePicker from '../../common/DatePicker/DatePicker'
 import DetailsHeader from './DetailsHeader/DetailsHeader'
+import Loader from '../../common/Loader/Loader'
+import MetricsSelector from '../../elements/MetricsSelector/MetricsSelector'
 import TabsSlider from '../../common/TabsSlider/TabsSlider'
 
 import { TERTIARY_BUTTON, PRIMARY_BUTTON } from 'igz-controls/constants'
@@ -39,6 +41,7 @@ import detailsActions from '../../actions/details'
 import {
   ARTIFACTS_PAGE,
   DATASETS_TAB,
+  DETAILS_METRICS_TAB,
   FILES_TAB,
   FUNCTIONS_PAGE,
   JOBS_PAGE,
@@ -55,7 +58,11 @@ import {
 import { isEveryObjectValueEmpty } from '../../utils/isEveryObjectValueEmpty'
 import { showArtifactsPreview } from '../../reducers/artifactsReducer'
 import { setFieldState } from 'igz-controls/utils/form.util'
-import { datePickerPastOptions, PAST_24_HOUR_DATE_OPTION } from '../../utils/datePicker.util'
+import {
+  datePickerPastOptions,
+  PAST_24_HOUR_DATE_OPTION,
+  TIME_FRAME_LIMITS
+} from '../../utils/datePicker.util'
 
 import './details.scss'
 
@@ -297,6 +304,29 @@ const Details = ({
               tab={tab}
             />
             <TabsSlider tabsList={detailsMenu} initialTab={params.tab} />
+            {params.tab === DETAILS_METRICS_TAB && (
+              <div className="item-header__custom-filters">
+                <MetricsSelector
+                  name="metrics"
+                  metrics={detailsStore.metricsOptions.all}
+                  onSelect={metrics =>
+                    setSelectedMetricsOptions({ endpointUid: selectedItem.metadata.uid, metrics })
+                  }
+                  preselectedMetrics={detailsStore.metricsOptions.preselected}
+                />
+                <DatePicker
+                  className="details-date-picker"
+                  date={detailsStore.dates.value[0]}
+                  dateTo={detailsStore.dates.value[1]}
+                  selectedOptionId={detailsStore.dates.selectedOptionId}
+                  label=""
+                  onChange={handleChangeDates}
+                  type="date-range-time"
+                  timeFrameLimit={TIME_FRAME_LIMITS.MONTH}
+                  withLabels
+                />
+              </div>
+            )}
           </div>
           <div className="item-info">
             <DetailsTabsContent
