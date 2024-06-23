@@ -48,6 +48,7 @@ import {
   ANY_TIME_DATE_OPTION,
   getTimeFrameWarningMsg,
   CUSTOM_RANGE_DATE_OPTION,
+  roundSeconds,
 } from '../../utils/datePicker.util'
 import { initialState, datePickerActions, datePickerReducer } from './datePickerReducer'
 import { DATE_PICKER_TIME_FRAME_LIMITS } from '../../types'
@@ -163,14 +164,14 @@ const DatePicker = ({
   useEffect(() => {
     datePickerDispatch({
       type: datePickerActions.UPDATE_DATE_FROM,
-      payload: date || new Date()
+      payload: date || roundSeconds(new Date())
     })
   }, [date])
 
   useEffect(() => {
     datePickerDispatch({
       type: datePickerActions.UPDATE_DATE_TO,
-      payload: dateTo || new Date()
+      payload: dateTo || roundSeconds(new Date(), true)
     })
   }, [dateTo])
 
@@ -334,10 +335,10 @@ const DatePicker = ({
     setInputIsInvalid(false)
     setExternalInvalid(true)
 
-    let dates = [new Date(datePickerState.configFrom.selectedDate)]
+    let dates = [roundSeconds(datePickerState.configFrom.selectedDate)]
 
     if (isRange) {
-      dates.push(new Date(datePickerState.configTo.selectedDate))
+      dates.push(roundSeconds(datePickerState.configTo.selectedDate, true))
     }
 
     onChange(dates, false, CUSTOM_RANGE_DATE_OPTION)
@@ -363,7 +364,11 @@ const DatePicker = ({
       }
 
       if (!isValueEmpty) {
-        dates = event.target.value.split(datesDivider).map(date => new Date(date))
+        dates = event.target.value
+          .split(datesDivider)
+          .map(
+            (date, index) => roundSeconds(date, index > 0)
+          )
         const { isTimeRangeInvalid, timeRangeInvalidMessage } = validateTimeRange(dates)
 
         if (isTimeRangeInvalid) {
@@ -437,13 +442,13 @@ const DatePicker = ({
         setIsDatePickerOpened(state => !state)
         datePickerDispatch({
           type: datePickerActions.UPDATE_SELECTED_DATE_FROM,
-          payload: date || new Date()
+          payload: date || roundSeconds(new Date())
         })
 
         if (isRange) {
           datePickerDispatch({
             type: datePickerActions.UPDATE_SELECTED_DATE_TO,
-            payload: dateTo || new Date()
+            payload: dateTo || roundSeconds(new Date(), true)
           })
         }
       }
@@ -463,7 +468,7 @@ const DatePicker = ({
 
   const onSelectOption = option => {
     if (option.handler) {
-      onChange(option.handler(), option.isPredefined, option.id)
+      onChange(option.handler(isRange), option.isPredefined, option.id)
       if (isNil(externalInvalid)) {
         setInputIsInvalid(false)
       }
@@ -542,6 +547,7 @@ const DatePicker = ({
 }
 DatePicker.defaultProps = {
   className: '',
+  date: new Date(),
   dateTo: new Date(),
   disabled: false,
   externalInvalid: null,
@@ -562,7 +568,7 @@ DatePicker.defaultProps = {
 
 DatePicker.propTypes = {
   className: PropTypes.string,
-  date: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.string]).isRequired,
+  date: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.string]),
   dateTo: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.string]),
   disabled: PropTypes.bool,
   externalInvalid: PropTypes.bool,
