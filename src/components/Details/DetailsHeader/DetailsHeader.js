@@ -28,20 +28,12 @@ import { Button, Tooltip, TextTooltipTemplate, RoundedIcon } from 'igz-controls/
 import LoadButton from '../../../common/LoadButton/LoadButton'
 import Select from '../../../common/Select/Select'
 import ActionsMenu from '../../../common/ActionsMenu/ActionsMenu'
-import MetricsSelector from '../../../elements/MetricsSelector/MetricsSelector'
-import DatePicker from '../../../common/DatePicker/DatePicker'
 
-import {
-  DETAILS_ARTIFACTS_TAB,
-  DETAILS_METRICS_TAB,
-  FULL_VIEW_MODE,
-  JOBS_PAGE
-} from '../../../constants'
+import { DETAILS_ARTIFACTS_TAB, FULL_VIEW_MODE, JOBS_PAGE } from '../../../constants'
 import { formatDatetime } from '../../../utils'
 import { LABEL_BUTTON } from 'igz-controls/constants'
 import { ACTIONS_MENU } from '../../../types'
 import { getViewMode } from '../../../utils/helper'
-import { TIME_FRAME_LIMITS } from '../../../utils/datePicker.util'
 
 import { ReactComponent as Close } from 'igz-controls/images/close.svg'
 import { ReactComponent as Back } from 'igz-controls/images/back-arrow.svg'
@@ -199,29 +191,6 @@ const DetailsHeader = ({
         </div>
       </div>
       <div className="item-header__custom-elements">
-        {params.tab === DETAILS_METRICS_TAB && (
-          <>
-            <MetricsSelector
-              name="metrics"
-              metrics={detailsStore.metricsOptions.all}
-              onSelect={metrics =>
-                setSelectedMetricsOptions({ endpointUid: selectedItem.metadata.uid, metrics })
-              }
-              preselectedMetrics={detailsStore.metricsOptions.preselected}
-            />
-            <DatePicker
-              className="details-date-picker"
-              date={detailsStore.dates.value[0]}
-              dateTo={detailsStore.dates.value[1]}
-              selectedOptionId={detailsStore.dates.selectedOptionId}
-              label=""
-              onChange={handleChangeDates}
-              type="date-range-time"
-              timeFrameLimit={TIME_FRAME_LIMITS.MONTH}
-              withLabels
-            />
-          </>
-        )}
         {params.tab === DETAILS_ARTIFACTS_TAB && detailsStore.iteration && (
           <Select
             density="dense"

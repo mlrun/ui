@@ -247,18 +247,17 @@ export const generateActionsMenu = (
           !FUNCTIONS_EDITABLE_STATES.includes(func?.state?.value)
       },
       {
+        label: 'View YAML',
+        icon: <Yaml />,
+        disabled: functionIsDeleting,
+        onClick: funcMin => getFullFunction(funcMin).then(toggleConvertedYaml)
+      },
+      {
         label: 'Delete',
         icon: <Delete />,
         className: 'danger',
         disabled: functionIsDeleting,
         onClick: onRemoveFunction
-      },
-      {
-        label: 'View YAML',
-        icon: <Yaml />,
-        disabled: functionIsDeleting,
-        onClick: funcMin =>
-          getFullFunction(funcMin).then(func => !isEmpty(func) && toggleConvertedYaml(func))
       }
     ],
     [
