@@ -145,7 +145,7 @@ const RegisterArtifactModal = ({
                 },
                 closePopUp: () => reject(),
                 header: messagesByKind.overwriteConfirmTitle,
-                message: messagesByKind.getOverwriteConfirmMessage(response.data.artifacts[0].kind)
+                message: messagesByKind.getOverwriteConfirmMessage(response.data.artifacts[0].kind || ARTIFACT_TYPE)
               })
             })
           } else {

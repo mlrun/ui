@@ -21,7 +21,7 @@ import { flatten, isEmpty } from 'lodash'
 
 import { generateArtifactPreviewData } from './generateArtifactPreviewData'
 import { generateUri } from './resources'
-import { TAG_LATEST } from '../constants'
+import { ARTIFACT_TYPE, TAG_LATEST } from '../constants'
 
 export const generateArtifacts = (artifacts, tab, originalContent) => {
   return flatten(
@@ -32,6 +32,7 @@ export const generateArtifacts = (artifacts, tab, originalContent) => {
         if (artifact.data.length > 0) {
           generatedArtifacts = artifact.data.map(generatedArtifact => {
             let item = { ...generatedArtifact }
+            item.kind = item.kind || ARTIFACT_TYPE
 
             if (item.producer && !item.producer.name) {
               item.producer.name =
