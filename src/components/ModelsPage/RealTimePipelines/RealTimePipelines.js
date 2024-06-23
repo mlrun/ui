@@ -59,8 +59,6 @@ const RealTimePipelines = () => {
   const dispatch = useDispatch()
   const abortControllerRef = useRef(new AbortController())
   const pipelinesRef = useRef(null)
-  const tableBodyRef = useRef(null)
-  const tableRef = useRef(null)
   const pageData = useMemo(() => generatePageData(params.pipelineId), [params.pipelineId])
   const { toggleConvertedYaml } = useModelsPage()
 
@@ -151,11 +149,10 @@ const RealTimePipelines = () => {
   }, [navigate, params.pipelineId, params.projectName, pipelines])
 
   const virtualizationConfig = useVirtualization({
-    tableRef,
-    tableBodyRef,
     rowsData: {
       content: tableContent
     },
+    renderTriggerItem: params.pipelineId,
     heightData: {
       headerRowHeight: cssVariables.pipelinesHeaderRowHeight,
       rowHeight: cssVariables.pipelinesRowHeight,
@@ -198,7 +195,6 @@ const RealTimePipelines = () => {
               <Table
                 actionsMenu={actionsMenu}
                 pageData={pageData}
-                ref={{ tableRef, tableBodyRef }}
                 retryRequest={fetchData}
                 selectedItem={{}}
                 tab={REAL_TIME_PIPELINES_TAB}

@@ -56,7 +56,7 @@ const FeatureSetsView = React.forwardRef(
       tableContent,
       virtualizationConfig
     },
-    { featureStoreRef, tableRef, tableBodyRef }
+    { featureStoreRef }
   ) => {
     const params = useParams()
 
@@ -92,7 +92,6 @@ const FeatureSetsView = React.forwardRef(
               detailsFormInitialValues={detailsFormInitialValues}
               handleCancel={() => setSelectedFeatureSet({})}
               pageData={pageData}
-              ref={{ tableRef, tableBodyRef }}
               retryRequest={handleRefresh}
               selectedItem={selectedFeatureSet}
               tab={FEATURE_SETS_TAB}

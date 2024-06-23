@@ -63,8 +63,6 @@ const ModelEndpoints = () => {
   const dispatch = useDispatch()
   const abortControllerRef = useRef(new AbortController())
   const modelEndpointsRef = useRef(null)
-  const tableBodyRef = useRef(null)
-  const tableRef = useRef(null)
 
   const { handleMonitoring, toggleConvertedYaml } = useModelsPage()
 
@@ -219,8 +217,6 @@ const ModelEndpoints = () => {
   }, [params.projectName, sortedContent])
 
   const virtualizationConfig = useVirtualization({
-    tableRef,
-    tableBodyRef,
     rowsData: {
       content: tableContent,
       selectedItem: selectedModelEndpoint
@@ -265,7 +261,6 @@ const ModelEndpoints = () => {
                 actionsMenu={actionsMenu}
                 handleCancel={() => handleSelectItem({})}
                 pageData={pageData}
-                ref={{ tableRef, tableBodyRef }}
                 retryRequest={fetchData}
                 selectedItem={selectedModelEndpoint}
                 tab={MODEL_ENDPOINTS_TAB}

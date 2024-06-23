@@ -68,7 +68,7 @@ const DatasetsView = React.forwardRef(
       viewMode,
       virtualizationConfig
     },
-    { datasetsRef, tableRef, tableBodyRef }
+    { datasetsRef }
   ) => {
     return (
       <>
@@ -120,7 +120,6 @@ const DatasetsView = React.forwardRef(
                     detailsFormInitialValues={detailsFormInitialValues}
                     handleCancel={() => setSelectedDataset({})}
                     pageData={pageData}
-                    ref={{ tableRef, tableBodyRef }}
                     retryRequest={handleRefresh}
                     selectedItem={selectedDataset}
                     sortProps={sortProps}

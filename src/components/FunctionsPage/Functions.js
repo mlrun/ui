@@ -94,8 +94,6 @@ const Functions = ({
   const abortControllerRef = useRef(new AbortController())
   const fetchFunctionLogsTimeout = useRef(null)
   const fetchFunctionNuclioLogsTimeout = useRef(null)
-  const tableBodyRef = useRef(null)
-  const tableRef = useRef(null)
   const nameFilterRef = useRef('')
   const terminatePollRef = useRef(null)
   const { isDemoMode, isStagingMode } = useMode()
@@ -706,8 +704,6 @@ const Functions = ({
   }, [editableItem, jobWizardIsOpened, jobWizardMode, params])
 
   const virtualizationConfig = useVirtualization({
-    tableRef,
-    tableBodyRef,
     rowsData: {
       content: tableContent,
       expandedRowsData: selectedRowData,
@@ -744,7 +740,6 @@ const Functions = ({
       isDemoMode={isDemoMode}
       largeRequestErrorMessage={largeRequestErrorMessage}
       pageData={pageData}
-      ref={{ tableRef, tableBodyRef }}
       refreshFunctions={refreshFunctions}
       selectedFunction={selectedFunction}
       selectedRowData={selectedRowData}
