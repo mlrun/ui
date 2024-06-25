@@ -58,7 +58,7 @@ const ProjectFunctions = ({ fetchApiGateways, fetchNuclioFunctions, nuclioStore 
       0
     )
     const functionsFailed = groupeFunctionsRunning.reduce(
-      (prev, curr) => (curr.status.state === 'error' ? (prev += 1) : prev),
+      (prev, curr) => (['error', 'unhealthy'].includes(curr.status.state) ? (prev += 1) : prev),
       0
     )
 
