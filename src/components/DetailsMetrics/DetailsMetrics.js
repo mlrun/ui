@@ -330,14 +330,18 @@ const DetailsMetrics = ({ selectedItem }) => {
                   )
                 } else {
                   return (
-                    <InvocationMetricCard
-                      ref={invocationBodyCardRef}
-                      isInvocationCardExpanded={isInvocationCardExpanded}
-                      key={metric.id}
-                      metric={metric}
-                      previousTotalInvocation={previousTotalInvocation}
-                      selectedDate={selectedDate}
-                    />
+                    <div
+                      className={`metrics__card-invocations  ${!isInvocationCardExpanded ? 'metrics__card-invocations-header-hidden' : 'metrics__card-invocations-header-visible'}`}
+                    >
+                      <InvocationMetricCard
+                        ref={invocationBodyCardRef}
+                        isInvocationCardExpanded={isInvocationCardExpanded}
+                        key={metric.id}
+                        metric={metric}
+                        previousTotalInvocation={previousTotalInvocation}
+                        selectedDate={selectedDate}
+                      />
+                    </div>
                   )
                 }
               } else if (!metric.data) {

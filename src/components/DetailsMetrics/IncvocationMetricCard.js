@@ -47,10 +47,7 @@ const InvocationMetricCard = forwardRef(
       metric[METRIC_RAW_TOTAL_POINTS]
     )
     return (
-      <StatsCard
-        className={`metrics__card metrics__card-invocations  ${!isInvocationCardExpanded ? 'metrics__card-invocations-header-hidden' : 'metrics__card-invocations-header-visible'}`}
-        key={metric.id}
-      >
+      <StatsCard key={metric.id} className="metrics__card">
         <StatsCard.Header title="Endpoint call count">
           <div className="metrics__card-invocation-header">
             <div className="metrics__card-invocation-header_drift-icon-contrainer">
