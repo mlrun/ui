@@ -54,7 +54,7 @@ const DetailsMetrics = ({ selectedItem }) => {
   const metricsContainerRef = useRef(null)
   const metricsValuesAbortController = useRef(new AbortController())
   const prevScrollPositionRef = useRef(0)
-
+  const prevSelectedEndPointNameRef = useRef('')
   const detailsStore = useSelector(store => store.detailsStore)
   const dispatch = useDispatch()
   const lineConfig = useMemo(() => getLineChartMetricConfig(), [])
@@ -247,6 +247,11 @@ const DetailsMetrics = ({ selectedItem }) => {
   )
 
   useEffect(() => {
+    if (selectedItem.name !== prevSelectedEndPointNameRef.current) {
+      prevSelectedEndPointNameRef.current = selectedItem.name
+      setMetrics([])
+      return
+    }
     if (
       selectedItem.metadata?.uid &&
       detailsStore.metricsOptions.all.length > 0 &&
