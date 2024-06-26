@@ -65,18 +65,9 @@
 
           .metrics-selector-name {
             display: flex;
-            align-items: center;
             flex: 1;
+            align-items: center;
             margin-right: 5px;
-          }
-
-          .metrics-selector-color-indicator {
-            width: 8px;
-            min-width: 8px;
-            height: 8px;
-            margin: 0 5px;
-            background-color: transparent;
-            border-radius: 50%;
           }
 
           .metrics-selector-icon-type {

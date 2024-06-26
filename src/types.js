@@ -232,7 +232,6 @@ export const METRICS_SELECTOR_OPTIONS = PropTypes.arrayOf(
     name: PropTypes.string.isRequired,
     type: PropTypes.string.isRequired,
     id: PropTypes.string.isRequired,
-    color: PropTypes.string.isRequired,
     full_name: PropTypes.string.isRequired,
     project: PropTypes.string
   })
