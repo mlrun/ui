@@ -15,23 +15,34 @@
     color: $primary;
   }
 
+  .ilan {
+    position: sticky;
+    top: 0;
+    width: 100%;
+    background: $white;
+    padding-bottom: 25px;
+    z-index: 1;
+  }
+
   &__card {
-    border-radius: 12px;
     border: $primaryBorder;
     padding: 6px 16px 35px;
     width: 100%;
+    box-shadow: none;
 
     &-invocations {
-      z-index: 1;
-      align-self: baseline;
-      top: 0;
       position: sticky;
-      box-shadow: 0 -10px 0 0 $white;
-      border-radius: 12px;
-      background: $white;
-      padding-top: 12px;
-      padding-bottom: 0;
+      top: 0;
       width: 100%;
+      align-self: baseline;
+      background: $white;
+      padding-bottom: 25px;
+      z-index: 1;
+
+      .metrics__card {
+        padding-top: 12px;
+        padding-bottom: 0;
+      }
 
       &-header-hidden .stats-card__row {
         height: 0;
