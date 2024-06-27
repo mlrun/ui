@@ -64,6 +64,17 @@ const DetailsMetrics = ({ selectedItem }) => {
     return groupMetricByApplication(metrics, true)
   }, [metrics])
 
+  const chooseMetricsDataCard = useMemo(() => {
+    return (
+      generatedMetrics.length === 1 && (
+        <StatsCard className="metrics__empty-select">
+          <MetricsIcon />
+          <div>Choose metrics to view endpoint’s data</div>
+        </StatsCard>
+      )
+    )
+  }, [generatedMetrics.length])
+
   const calculateHistogram = useCallback((points, metric) => {
     const numberOfBins = 5
     const minPointValue = Math.min(...points)
@@ -322,22 +333,28 @@ const DetailsMetrics = ({ selectedItem }) => {
               if (applicationName === ML_RUN_INFRA) {
                 if (!metric.data) {
                   return (
-                    <NoMetricData
-                      className="empty-invocation-card"
-                      key={metric.id}
-                      title="Endpoint call count"
-                    />
+                    <>
+                      <NoMetricData
+                        className="empty-invocation-card"
+                        key={metric.id}
+                        title="Endpoint call count"
+                      />
+                      {chooseMetricsDataCard}
+                    </>
                   )
                 } else {
                   return (
-                    <InvocationMetricCard
-                      ref={invocationBodyCardRef}
-                      isInvocationCardExpanded={isInvocationCardExpanded}
-                      key={metric.id}
-                      metric={metric}
-                      previousTotalInvocation={previousTotalInvocation}
-                      selectedDate={selectedDate}
-                    />
+                    <>
+                      <InvocationMetricCard
+                        ref={invocationBodyCardRef}
+                        isInvocationCardExpanded={isInvocationCardExpanded}
+                        key={metric.id}
+                        metric={metric}
+                        previousTotalInvocation={previousTotalInvocation}
+                        selectedDate={selectedDate}
+                      />
+                      {chooseMetricsDataCard}
+                    </>
                   )
                 }
               } else if (!metric.data) {
