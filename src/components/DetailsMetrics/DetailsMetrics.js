@@ -333,18 +333,18 @@ const DetailsMetrics = ({ selectedItem }) => {
               if (applicationName === ML_RUN_INFRA) {
                 if (!metric.data) {
                   return (
-                    <>
+                    <React.Fragment key={metric.id}>
                       <NoMetricData
                         className="empty-invocation-card"
                         key={metric.id}
                         title="Endpoint call count"
                       />
                       {chooseMetricsDataCard}
-                    </>
+                    </React.Fragment>
                   )
                 } else {
                   return (
-                    <>
+                    <React.Fragment key={metric.id}>
                       <InvocationMetricCard
                         ref={invocationBodyCardRef}
                         isInvocationCardExpanded={isInvocationCardExpanded}
@@ -354,7 +354,7 @@ const DetailsMetrics = ({ selectedItem }) => {
                         selectedDate={selectedDate}
                       />
                       {chooseMetricsDataCard}
-                    </>
+                    </React.Fragment>
                   )
                 }
               } else if (!metric.data) {
