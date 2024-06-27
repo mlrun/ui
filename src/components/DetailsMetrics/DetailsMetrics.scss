@@ -15,15 +15,6 @@
     color: $primary;
   }
 
-  .ilan {
-    position: sticky;
-    top: 0;
-    width: 100%;
-    background: $white;
-    padding-bottom: 25px;
-    z-index: 1;
-  }
-
   &__card {
     border: $primaryBorder;
     padding: 6px 16px 35px;
@@ -393,7 +384,7 @@
 
     &-text {
       font-size: 10px;
-      weight: 400;
+      font-weight: 400;
     }
   }
 

@@ -19,6 +19,7 @@ such restriction.
 */
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
+import classNames from 'classnames'
 
 import InvocationMetricCard from './IncvocationMetricCard'
 import MetricChart from '../MetricChart/MetricChart'
@@ -63,6 +64,13 @@ const DetailsMetrics = ({ selectedItem }) => {
   const generatedMetrics = useMemo(() => {
     return groupMetricByApplication(metrics, true)
   }, [metrics])
+
+  const invocationCardClassnames = classNames(
+    'metrics__card-invocations',
+    !isInvocationCardExpanded
+      ? 'metrics__card-invocations-header-hidden'
+      : 'metrics__card-invocations-header-visible'
+  )
 
   const calculateHistogram = useCallback((points, metric) => {
     const numberOfBins = 5
@@ -330,9 +338,7 @@ const DetailsMetrics = ({ selectedItem }) => {
                   )
                 } else {
                   return (
-                    <div
-                      className={`metrics__card-invocations  ${!isInvocationCardExpanded ? 'metrics__card-invocations-header-hidden' : 'metrics__card-invocations-header-visible'}`}
-                    >
+                    <div className={invocationCardClassnames}>
                       <InvocationMetricCard
                         ref={invocationBodyCardRef}
                         isInvocationCardExpanded={isInvocationCardExpanded}
