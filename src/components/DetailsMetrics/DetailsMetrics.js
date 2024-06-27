@@ -41,6 +41,7 @@ import {
 } from './detailsMetrics.util'
 
 import { ReactComponent as MetricsIcon } from 'igz-controls/images/metrics-icon.svg'
+import colors from 'igz-controls/scss/colors.scss'
 
 import './DetailsMetrics.scss'
 
@@ -119,8 +120,8 @@ const DetailsMetrics = ({ selectedItem }) => {
           chartType: CHART_TYPE_BAR,
           tension: 0.2,
           borderWidth: 2,
-          backgroundColor: metric.color,
-          borderColor: metric.color
+          backgroundColor: colors.java,
+          borderColor: colors.java
         }
       ]
     }
@@ -404,7 +405,7 @@ const DetailsMetrics = ({ selectedItem }) => {
                                   tension: 0.2,
                                   totalDriftStatus: metric.totalDriftStatus,
                                   borderWidth: 1,
-                                  borderColor: metric.color
+                                  borderColor: metric.totalDriftStatus?.chartColor || colors.java
                                 }
                               ]
                             }

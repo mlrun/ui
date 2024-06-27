@@ -147,13 +147,8 @@ const MetricsSelector = ({ maxSelectionNumber, metrics, name, onSelect, preselec
           className="metrics-selector-name"
           template={<TextTooltipTemplate text={metric.name} />}
         >
-          <span
-            className="metrics-selector-color-indicator"
-            style={{ backgroundColor: metric.color }}
-          />
           <span className="data-ellipsis">{metric.name}</span>
         </Tooltip>
-
         <Tooltip
           className="metrics-selector-icon-type"
           template={<TextTooltipTemplate text={capitalize(metric.type)} />}

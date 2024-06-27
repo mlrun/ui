@@ -510,7 +510,8 @@ main {
 
 [class^='state-broken'],
 [class^='state-fail'],
-[class^='state-failed'] {
+[class^='state-failed'],
+[class^='state-unhealthy'] {
   @include statusState($burntSienna, false);
 }
 
