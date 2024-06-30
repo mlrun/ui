@@ -48,14 +48,14 @@ const MetricsSelector = ({
   name,
   onSelect,
   preselectedMetrics,
-  uuid
+  modelEndpointUid
 }) => {
   const [nameFilter, setNameFilter] = useState('')
   const [isOpen, setIsOpen] = useState(false)
+  const [preAppliedMetrics, setPreAppliedMetricsRef] = useState([])
+  const appliedMetricsRef = useRef([])
   const selectorFieldRef = useRef()
-  const finalMetricsRef = useRef([])
-  const [tmp, setTmp] = useState([])
-  const uuidRef = useRef('')
+  const selectedModelEndpointUid = useRef('')
   const formRef = React.useRef(
     createForm({
       initialValues: {
@@ -88,15 +88,15 @@ const MetricsSelector = ({
   )
 
   useEffect(() => {
-    if (!uuid) return
-    uuidRef.current = uuid
-    finalMetricsRef.current = preselectedMetrics
-  }, [uuid, preselectedMetrics])
+    if (!modelEndpointUid) return
+    selectedModelEndpointUid.current = modelEndpointUid
+    appliedMetricsRef.current = preselectedMetrics
+  }, [modelEndpointUid, preselectedMetrics])
 
   useEffect(() => {
     if (isOpen) {
       formRef.current.reset({
-        metrics: finalMetricsRef.current.map(metricItem => metricItem.full_name)
+        metrics: appliedMetricsRef.current.map(metricItem => metricItem.full_name)
       })
     }
   }, [isOpen])
@@ -143,31 +143,31 @@ const MetricsSelector = ({
   }, [windowClickHandler, windowScrollHandler, isOpen])
 
   const handleOnChange = selectedMetrics => {
-    setTmp(selectedMetrics)
+    setPreAppliedMetricsRef(selectedMetrics)
   }
 
   const handleApply = () => {
-    const result = tmp.map(metricFullName => {
+    const matchedMetrics = preAppliedMetrics.map(metricFullName => {
       return metrics.find(metric => metric.full_name === metricFullName)
     })
-    onSelect(result)
-    finalMetricsRef.current = result
+    onSelect(matchedMetrics)
+    appliedMetricsRef.current = matchedMetrics
     setIsOpen(false)
   }
 
   const getSelectValue = (selectedMetrics = []) => {
-    if (isEmpty(finalMetricsRef.current)) {
+    if (isEmpty(appliedMetricsRef.current)) {
       return 'Chose Metrics...'
     }
 
-    if (finalMetricsRef.current.length === 1) {
+    if (appliedMetricsRef.current.length === 1) {
       return (
-        metrics.find(metric => metric.full_name === finalMetricsRef.current[0])?.name ||
+        metrics.find(metric => metric.full_name === appliedMetricsRef.current[0])?.name ||
         '1 metric selected'
       )
     }
 
-    return `${finalMetricsRef.current.length} metrics selected`
+    return `${appliedMetricsRef.current.length} metrics selected`
   }
 
   const getMetricsLabel = metric => {
@@ -288,23 +288,14 @@ const MetricsSelector = ({
                   </FieldArray>
                 </ul>
                 <FormOnChange name={name} handler={handleOnChange} />
-                <div
-                  style={{
-                    padding: '20px 10px 10px',
-                    marginLeft: '10px',
-                    display: 'flex',
-                    gap: '10px',
-                    alignItems: 'flex-end'
-                  }}
-                >
+                <div className="metrics-selector__footer">
                   <div data-testid="metrics-selector-counter" className="metrics-selector-counter">
                     {`${formState.values.metrics?.length ?? 0}/${maxSelectionNumber}`}
                   </div>
                   <Button
-                    key={1}
-                    variant="primary"
+                    id="metrics-selector-apply-btn"
+                    variant="secondary"
                     label="Apply"
-                    className=""
                     onClick={handleApply}
                   />
                 </div>
@@ -328,7 +319,8 @@ MetricsSelector.propTypes = {
   metrics: METRICS_SELECTOR_OPTIONS.isRequired,
   name: PropTypes.string.isRequired,
   onSelect: PropTypes.func,
-  preselectedMetrics: PropTypes.arrayOf(PropTypes.shape({ id: PropTypes.string.isRequired }))
+  preselectedMetrics: PropTypes.arrayOf(PropTypes.shape({ id: PropTypes.string.isRequired })),
+  modelEndpointUid: PropTypes.string.isRequired
 }
 
 export default MetricsSelector
