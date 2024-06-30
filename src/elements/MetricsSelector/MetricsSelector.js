@@ -26,7 +26,7 @@ import { Form } from 'react-final-form'
 import arrayMutators from 'final-form-arrays'
 import { createForm } from 'final-form'
 
-import { PopUpDialog, FormInput, FormOnChange } from 'igz-controls/components'
+import { Button, PopUpDialog, FormInput, FormOnChange } from 'igz-controls/components'
 import { SelectOption } from 'igz-controls/elements'
 import { TextTooltipTemplate, Tooltip } from 'iguazio.dashboard-react-controls/dist/components'
 import { ReactComponent as Caret } from 'igz-controls/images/dropdown.svg'
@@ -42,10 +42,20 @@ import { ReactComponent as ResultIcon } from 'igz-controls/images/circled-r.svg'
 
 import './metricsSelector.scss'
 
-const MetricsSelector = ({ maxSelectionNumber, metrics, name, onSelect, preselectedMetrics }) => {
+const MetricsSelector = ({
+  maxSelectionNumber,
+  metrics,
+  name,
+  onSelect,
+  preselectedMetrics,
+  uuid
+}) => {
   const [nameFilter, setNameFilter] = useState('')
   const [isOpen, setIsOpen] = useState(false)
   const selectorFieldRef = useRef()
+  const finalMetricsRef = useRef([])
+  const [tmp, setTmp] = useState([])
+  const uuidRef = useRef('')
   const formRef = React.useRef(
     createForm({
       initialValues: {
@@ -76,6 +86,20 @@ const MetricsSelector = ({ maxSelectionNumber, metrics, name, onSelect, preselec
     'metrics-selector-header',
     isOpen && 'metrics-selector-header_open'
   )
+
+  useEffect(() => {
+    if (!uuid) return
+    uuidRef.current = uuid
+    finalMetricsRef.current = preselectedMetrics
+  }, [uuid, preselectedMetrics])
+
+  useEffect(() => {
+    if (isOpen) {
+      formRef.current.reset({
+        metrics: finalMetricsRef.current.map(metricItem => metricItem.full_name)
+      })
+    }
+  }, [isOpen])
 
   useEffect(() => {
     if (preselectedMetrics) {
@@ -119,25 +143,31 @@ const MetricsSelector = ({ maxSelectionNumber, metrics, name, onSelect, preselec
   }, [windowClickHandler, windowScrollHandler, isOpen])
 
   const handleOnChange = selectedMetrics => {
-    onSelect(
-      selectedMetrics.map(metricFullName => {
-        return metrics.find(metric => metric.full_name === metricFullName)
-      })
-    )
+    setTmp(selectedMetrics)
+  }
+
+  const handleApply = () => {
+    const result = tmp.map(metricFullName => {
+      return metrics.find(metric => metric.full_name === metricFullName)
+    })
+    onSelect(result)
+    finalMetricsRef.current = result
+    setIsOpen(false)
   }
 
   const getSelectValue = (selectedMetrics = []) => {
-    if (isEmpty(selectedMetrics)) {
+    if (isEmpty(finalMetricsRef.current)) {
       return 'Chose Metrics...'
     }
 
-    if (selectedMetrics.length === 1) {
+    if (finalMetricsRef.current.length === 1) {
       return (
-        metrics.find(metric => metric.full_name === selectedMetrics[0])?.name || '1 metric selected'
+        metrics.find(metric => metric.full_name === finalMetricsRef.current[0])?.name ||
+        '1 metric selected'
       )
     }
 
-    return `${selectedMetrics.length} metrics selected`
+    return `${finalMetricsRef.current.length} metrics selected`
   }
 
   const getMetricsLabel = metric => {
@@ -258,8 +288,25 @@ const MetricsSelector = ({ maxSelectionNumber, metrics, name, onSelect, preselec
                   </FieldArray>
                 </ul>
                 <FormOnChange name={name} handler={handleOnChange} />
-                <div data-testid="metrics-selector-counter" className="metrics-selector-counter">
-                  {`${formState.values.metrics?.length ?? 0}/${maxSelectionNumber}`}
+                <div
+                  style={{
+                    padding: '20px 10px 10px',
+                    marginLeft: '10px',
+                    display: 'flex',
+                    gap: '10px',
+                    alignItems: 'flex-end'
+                  }}
+                >
+                  <div data-testid="metrics-selector-counter" className="metrics-selector-counter">
+                    {`${formState.values.metrics?.length ?? 0}/${maxSelectionNumber}`}
+                  </div>
+                  <Button
+                    key={1}
+                    variant="primary"
+                    label="Apply"
+                    className=""
+                    onClick={handleApply}
+                  />
                 </div>
               </PopUpDialog>
             )}
