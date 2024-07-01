@@ -53,7 +53,9 @@ const ArtifactsTableRow = ({
       getArtifactIdentifier(selectedItem, true) === rowItem.data.ui.identifierUnique &&
       !parent.current?.classList.value.includes('parent-row_expanded') &&
       'table-row_active',
-    parent.current?.classList.value.includes('parent-row_expanded') && 'parent-row_expanded'
+    (parent.current?.classList.value.includes('parent-row_expanded') ||
+      (selectedRowData && rowItem.data.ui.identifier in selectedRowData)) &&
+      'parent-row_expanded'
   )
 
   return (
