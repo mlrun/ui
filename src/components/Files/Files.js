@@ -308,12 +308,6 @@ const Files = () => {
   }, [navigate, location, pageData.details.menu, params.name, params.tag, params.tab])
 
   useEffect(() => {
-    if (urlTagOption) {
-      fetchData({ tag: urlTagOption, iter: SHOW_ITERATIONS })
-    }
-  }, [fetchData, urlTagOption])
-
-  useEffect(() => {
     const tagAbortControllerCurrent = tagAbortControllerRef.current
 
     return () => {
