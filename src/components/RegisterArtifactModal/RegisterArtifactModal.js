@@ -101,6 +101,7 @@ const RegisterArtifactModal = ({
         db_key: values.metadata.key,
         producer: {
           kind: 'api',
+          name: 'UI',
           uri: window.location.host
         },
         target_path: values.spec.target_path.path
