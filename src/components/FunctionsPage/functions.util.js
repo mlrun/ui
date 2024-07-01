@@ -267,7 +267,7 @@ export const generateActionsMenu = (
         label: 'View YAML',
         icon: <Yaml />,
         disabled: functionIsDeleting,
-        onClick: funcMin => getFullFunction(funcMin).then(toggleConvertedYaml(func))
+        onClick: funcMin => getFullFunction(funcMin).then(toggleConvertedYaml)
       }
     ],
     [
