@@ -45,10 +45,10 @@ import './metricsSelector.scss'
 const MetricsSelector = ({
   maxSelectionNumber,
   metrics,
+  modelEndpointUid,
   name,
   onSelect,
-  preselectedMetrics,
-  modelEndpointUid
+  preselectedMetrics
 }) => {
   const [nameFilter, setNameFilter] = useState('')
   const [isOpen, setIsOpen] = useState(false)
