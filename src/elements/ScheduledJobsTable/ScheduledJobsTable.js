@@ -17,7 +17,7 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import React, { useCallback, useEffect, useMemo, useRef } from 'react'
+import React, { useCallback, useEffect, useMemo } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useParams } from 'react-router-dom'
 import PropTypes from 'prop-types'
@@ -58,8 +58,6 @@ const ScheduledJobsTable = ({
 }) => {
   const dispatch = useDispatch()
   const params = useParams()
-  const tableBodyRef = useRef(null)
-  const tableRef = useRef(null)
   const jobsStore = useSelector(store => store.jobsStore)
   const filtersStore = useSelector(store => store.filtersStore)
   const [convertedYaml, toggleConvertedYaml] = useYaml('')
@@ -241,8 +239,6 @@ const ScheduledJobsTable = ({
   ])
 
   const virtualizationConfig = useVirtualization({
-    tableRef,
-    tableBodyRef,
     rowsData: {
       content: tableContent
     },
@@ -271,7 +267,6 @@ const ScheduledJobsTable = ({
           <Table
             actionsMenu={actionsMenu}
             pageData={pageData}
-            ref={{ tableRef, tableBodyRef }}
             retryRequest={refreshJobs}
             tab={SCHEDULE_TAB}
             tableClassName="scheduled-jobs-table"

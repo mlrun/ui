@@ -142,10 +142,10 @@ export const datePickerFutureOptions = [
     id: NEXT_HOUR_DATE_OPTION,
     label: 'Next hour',
     isPredefined: true,
-    handler: () => {
+    handler: (isRange) => {
       return getDates((fromDate, toDate) => {
         fromDate.setHours(toDate.getHours() + 1)
-      })
+      }, true, isRange)
     },
     timeFrameMilliseconds: TIME_FRAME_LIMITS.HOUR
   },
@@ -153,10 +153,10 @@ export const datePickerFutureOptions = [
     id: NEXT_24_HOUR_DATE_OPTION,
     label: 'Next 24 hours',
     isPredefined: true,
-    handler: () => {
+    handler: (isRange) => {
       return getDates((fromDate, toDate) => {
         fromDate.setDate(toDate.getDate() + 1)
-      })
+      }, true, isRange)
     },
     timeFrameMilliseconds: TIME_FRAME_LIMITS['24_HOURS']
   },
@@ -164,10 +164,10 @@ export const datePickerFutureOptions = [
     id: NEXT_WEEK_DATE_OPTION,
     label: 'Next week',
     isPredefined: true,
-    handler: () => {
+    handler: (isRange) => {
       return getDates((fromDate, toDate) => {
         fromDate.setDate(toDate.getDate() + 7)
-      })
+      }, true, isRange)
     },
     timeFrameMilliseconds: TIME_FRAME_LIMITS.WEEK
   },
@@ -175,10 +175,10 @@ export const datePickerFutureOptions = [
     id: NEXT_MONTH_DATE_OPTION,
     label: 'Next month',
     isPredefined: true,
-    handler: () => {
+    handler: (isRange) => {
       return getDates((fromDate, toDate) => {
         fromDate.setMonth(toDate.getMonth() + 1)
-      })
+      }, true, isRange)
     },
     timeFrameMilliseconds: TIME_FRAME_LIMITS.MONTH
   },
@@ -186,10 +186,10 @@ export const datePickerFutureOptions = [
     id: NEXT_YEAR_DATE_OPTION,
     label: 'Next year',
     isPredefined: true,
-    handler: () => {
+    handler: (isRange) => {
       return getDates((fromDate, toDate) => {
         fromDate.setFullYear(toDate.getFullYear() + 1)
-      })
+      }, true, isRange)
     },
     timeFrameMilliseconds: TIME_FRAME_LIMITS.YEAR
   },
@@ -201,11 +201,13 @@ export const datePickerFutureOptions = [
   }
 ]
 
-const getDates = setDate => {
+const getDates = (setDate, isFutureTime, isRange) => {
   let fromDate = new Date()
   let toDate = new Date()
 
   setDate(fromDate, toDate)
+
+  if (isFutureTime && isRange) return [null, fromDate]
 
   return [fromDate]
 }
@@ -352,4 +354,12 @@ export const getTimeFrameWarningMsg = (timeFrameLimit) => {
   }
 
   return `Maximum time range is ${mappedTime[timeFrameLimit]}`
+}
+
+
+export const roundSeconds = (date = new Date(), top = false) => {
+  const seconds = top ? 59 : 0
+  const milliseconds = top ? 999 : 0
+
+  return new Date(new Date(date).setSeconds(seconds, milliseconds))
 }

@@ -108,8 +108,6 @@ const Models = ({ fetchModelFeatureVector }) => {
 
   const abortControllerRef = useRef(new AbortController())
   const modelsRef = useRef(null)
-  const tableBodyRef = useRef(null)
-  const tableRef = useRef(null)
 
   const modelsFilters = useMemo(
     () => ({ name: filtersStore.name, ...filtersStore[FILTER_MENU_MODAL][MODELS_FILTERS].values }),
@@ -493,8 +491,6 @@ const Models = ({ fetchModelFeatureVector }) => {
   }
 
   const virtualizationConfig = useVirtualization({
-    tableRef,
-    tableBodyRef,
     rowsData: {
       content: sortedTableContent,
       expandedRowsData: selectedRowData,
@@ -523,7 +519,7 @@ const Models = ({ fetchModelFeatureVector }) => {
       largeRequestErrorMessage={largeRequestErrorMessage}
       models={models}
       pageData={pageData}
-      ref={{ modelsRef, tableRef, tableBodyRef }}
+      ref={{ modelsRef }}
       selectedModel={selectedModel}
       selectedRowData={selectedRowData}
       setModels={setModels}

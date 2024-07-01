@@ -72,8 +72,6 @@ const Features = ({
   const filtersStore = useSelector(store => store.filtersStore)
   const tableStore = useSelector(store => store.tableStore)
   const featureStoreRef = useRef(null)
-  const tableBodyRef = useRef(null)
-  const tableRef = useRef(null)
   const abortControllerRef = useRef(new AbortController())
   const dispatch = useDispatch()
 
@@ -295,8 +293,6 @@ const Features = ({
   }, [removeEntities, removeEntity, removeFeature, removeFeatures, params.projectName])
 
   const virtualizationConfig = useVirtualization({
-    tableRef,
-    tableBodyRef,
     rowsData: {
       content: tableContent,
       expandedRowsData: selectedRowData
@@ -319,7 +315,7 @@ const Features = ({
       handleRefresh={handleRefresh}
       largeRequestErrorMessage={largeRequestErrorMessage}
       pageData={pageData}
-      ref={{ featureStoreRef, tableRef, tableBodyRef }}
+      ref={{ featureStoreRef }}
       selectedRowData={selectedRowData}
       tableContent={tableContent}
       tableStore={tableStore}

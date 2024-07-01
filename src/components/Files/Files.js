@@ -95,8 +95,6 @@ const Files = () => {
 
   const abortControllerRef = useRef(new AbortController())
   const filesRef = useRef(null)
-  const tableRef = useRef(null)
-  const tableBodyRef = useRef(null)
 
   const pageData = useMemo(() => generatePageData(viewMode), [viewMode])
 
@@ -375,8 +373,6 @@ const Files = () => {
   }, [handleRefresh, params, filesFilters])
 
   const virtualizationConfig = useVirtualization({
-    tableRef,
-    tableBodyRef,
     rowsData: {
       content: sortedTableContent,
       expandedRowsData: selectedRowData,
@@ -404,7 +400,7 @@ const Files = () => {
       handleRegisterArtifact={handleRegisterArtifact}
       largeRequestErrorMessage={largeRequestErrorMessage}
       pageData={pageData}
-      ref={{ filesRef, tableRef, tableBodyRef }}
+      ref={{ filesRef }}
       selectedFile={selectedFile}
       selectedRowData={selectedRowData}
       setFiles={setFiles}

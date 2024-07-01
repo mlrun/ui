@@ -62,17 +62,18 @@ import detailsActions from '../../actions/details'
 import './filterMenu.scss'
 
 const FilterMenu = ({
-  actionButton,
-  cancelRequest,
-  enableAutoRefresh,
-  expand,
+  actionButton = null,
+  autoRefreshIsEnabled = false,
+  autoRefreshIsStopped = false,
+  cancelRequest = () => {},
+  expand = false,
   filters,
-  handleExpandAll,
-  hidden,
+  handleExpandAll = () => {},
+  hidden = false,
   onChange,
   page,
-  tab,
-  withoutExpandButton
+  tab = '',
+  withoutExpandButton = false
 }) => {
   const [labels, setLabels] = useState('')
   const [name, setName] = useState('')
@@ -334,13 +335,16 @@ const FilterMenu = ({
   }, [params.pageTab, params.projectName, page, dispatch])
 
   useEffect(() => {
-    if (enableAutoRefresh && autoRefresh === AUTO_REFRESH_ID && !hidden) {
+    if (autoRefreshIsEnabled && autoRefresh === AUTO_REFRESH_ID && !hidden) {
       const intervalId = setInterval(() => {
-        applyChanges(filtersStore, true)
+        if (!autoRefreshIsStopped) {
+          applyChanges(filtersStore, true)
+        }
       }, 30000)
+
       return () => clearInterval(intervalId)
     }
-  }, [autoRefresh, hidden, enableAutoRefresh, filtersStore, applyChanges])
+  }, [autoRefresh, hidden, autoRefreshIsEnabled, filtersStore, applyChanges, autoRefreshIsStopped])
 
   const getFilterTemplate = useCallback(
     filter => {
@@ -495,7 +499,7 @@ const FilterMenu = ({
         ))}
 
         <div className="actions">
-          {enableAutoRefresh && (
+          {autoRefreshIsEnabled && (
             <CheckBox
               key={AUTO_REFRESH_ID}
               item={{ label: AUTO_REFRESH, id: AUTO_REFRESH_ID }}
@@ -525,23 +529,11 @@ const FilterMenu = ({
   )
 }
 
-FilterMenu.defaultProps = {
-  actionButton: null,
-  cancelRequest: () => {},
-  changes: {},
-  enableAutoRefresh: false,
-  expand: false,
-  handleExpandAll: () => {},
-  hidden: false,
-  tab: '',
-  withoutExpandButton: false
-}
-
 FilterMenu.propTypes = {
   actionButton: PropTypes.shape({}),
+  autoRefreshIsEnabled: PropTypes.bool,
+  autoRefreshIsStopped: PropTypes.bool,
   cancelRequest: PropTypes.func,
-  changes: PropTypes.shape({}),
-  enableAutoRefresh: PropTypes.bool,
   expand: PropTypes.bool,
   filters: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
   handleExpandAll: PropTypes.func,

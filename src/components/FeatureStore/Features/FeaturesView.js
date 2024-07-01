@@ -49,7 +49,7 @@ const FeaturesView = React.forwardRef(
       tableStore,
       virtualizationConfig
     },
-    { featureStoreRef, tableRef, tableBodyRef }
+    { featureStoreRef }
   ) => {
     return (
       <div className="feature-store" ref={featureStoreRef}>
@@ -86,7 +86,6 @@ const FeaturesView = React.forwardRef(
               actionsMenu={actionsMenu}
               hideActionsMenu={tableStore.isTablePanelOpen}
               pageData={pageData}
-              ref={{ tableRef, tableBodyRef }}
               retryRequest={handleRefresh}
               tab={FEATURES_TAB}
               tableClassName="features-table"

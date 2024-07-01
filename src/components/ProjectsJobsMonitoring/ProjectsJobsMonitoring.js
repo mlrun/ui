@@ -108,7 +108,7 @@ const ProjectsJobsMonitoring = ({ fetchAllJobRuns, fetchJobFunction, fetchJobs }
         initialValue: {
           value: datePickerFutureOptions
             .find(option => option.id === NEXT_24_HOUR_DATE_OPTION)
-            .handler(),
+            .handler(true),
           isPredefined: true,
           initialSelectedOptionId: NEXT_24_HOUR_DATE_OPTION
         },
@@ -261,8 +261,8 @@ const ProjectsJobsMonitoring = ({ fetchAllJobRuns, fetchJobFunction, fetchJobs }
               let inDateRange = true
 
               if (filters.dates) {
-                const timeTo = filters.dates.value[0]?.getTime?.() || ''
-                const timeFrom = filters.dates.value[1]?.getTime?.() || ''
+                const timeTo = filters.dates.value[1]?.getTime?.() || ''
+                const timeFrom = filters.dates.value[0]?.getTime?.() || ''
                 const nextRun = job.nextRun.getTime()
 
                 if (timeFrom) {

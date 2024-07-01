@@ -25,6 +25,7 @@ import {
   PAST_MONTH_DATE_OPTION,
   PAST_WEEK_DATE_OPTION
 } from '../../utils/datePicker.util'
+import colors from 'igz-controls/scss/colors.scss'
 
 export const METRIC_COMPUTED_AVG_POINTS = 'metric_computed_avg_points'
 export const METRIC_RAW_AVG_POINTS = 'metric_raw_avg_points'
@@ -35,9 +36,6 @@ export const ML_RUN_INFRA = 'mlrun-infra'
 export const METRIC_RAW_TOTAL_POINTS = 'metric_raw_total_points'
 export const METRIC_COMPUTED_TOTAL_POINTS = 'metric_computed_total_points'
 export const TWO_DIGIT = '2-digit'
-
-const metricsColorsByFullName = {}
-const usedColors = new Set()
 
 export const timeRangeMapping = {
   [PAST_24_HOUR_DATE_OPTION]: 'last 24 day',
@@ -77,19 +75,23 @@ const resultKindConfig = {
 const driftStatusConfig = {
   '-1': {
     className: 'no_status',
-    text: 'No status'
+    text: 'No status',
+    chartColor: colors.doveGray
   },
   0: {
     className: 'no_drift',
-    text: 'No drift'
+    text: 'No drift',
+    chartColor: colors.brightTurquoise
   },
   1: {
     className: 'possible_drift',
-    text: 'Possible drift'
+    text: 'Possible drift',
+    chartColor: colors.grandis
   },
   2: {
     className: 'drift_detected',
-    text: 'Drift detected'
+    text: 'Drift detected',
+    chartColor: colors.ceriseRed
   }
 }
 
@@ -106,66 +108,12 @@ const generateResultMessage = (driftStatus, resultKind) => {
   return `${capitalize(resultKindMessage)} ${text.toLowerCase().replace('drift', '').trim()}`
 }
 
-const hslToHex = (hue, saturation, lightness) => {
-  const normalizedLightness = lightness / 100
-  const chroma = (saturation * Math.min(normalizedLightness, 1 - normalizedLightness)) / 100
-
-  const calculateColorComponent = step => {
-    const rotation = (step + hue / 30) % 12
-    const color =
-      normalizedLightness - chroma * Math.max(Math.min(rotation - 3, 9 - rotation, 1), -1)
-
-    return Math.round(255 * color)
-      .toString(16)
-      .padStart(2, '0')
-  }
-
-  return `#${calculateColorComponent(0)}${calculateColorComponent(8)}${calculateColorComponent(4)}`
-}
-
-const getRandomHexColor = () => {
-  const hue = Math.floor(Math.random() * 361)
-  const saturation = Math.floor(Math.random() * 56) + 45
-  const lightness = Math.floor(Math.random() * 71)
-
-  return hslToHex(hue, saturation, lightness)
-}
-
-const setMetricColorByFullName = (name, color) => {
-  metricsColorsByFullName[name] = color
-}
-
-const generateUniqueColor = () => {
-  for (;;) {
-    let color = getRandomHexColor()
-
-    if (!usedColors.has(color)) {
-      usedColors.add(color)
-
-      return color
-    }
-  }
-}
-
-export const getMetricColorByFullName = name => {
-  if (metricsColorsByFullName[name]) {
-    return metricsColorsByFullName[name]
-  } else {
-    const newColor = generateUniqueColor()
-
-    setMetricColorByFullName(name, newColor)
-
-    return newColor
-  }
-}
-
 export const generateMetricsItems = metrics => {
   return chain(metrics)
     .sortBy(metric => metric.label)
     .map(metric => {
       return {
         ...metric,
-        color: getMetricColorByFullName(metric.full_name),
         id: metric.full_name
       }
     })
@@ -280,7 +228,6 @@ export const parseMetrics = (data, timeUnit) => {
     return {
       ...metric,
       app: getAppName(full_name),
-      color: getMetricColorByFullName(full_name),
       id: index,
       labels: timeFormatters[timeUnit].formatMetricsTime(values),
       points,

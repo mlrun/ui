@@ -71,7 +71,8 @@ const functionStateLabels = {
   pending: 'Deploying',
   ready: 'Ready',
   running: 'Running',
-  succeeded: 'Succeeded'
+  succeeded: 'Succeeded',
+  unhealthy: 'Unhealthy'
 }
 
 export default getState

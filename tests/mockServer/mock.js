@@ -71,7 +71,7 @@ import nuclioAPIGateways from './data/nuclioAPIGateways.json'
 import nuclioStreams from './data/nuclioStreams.json'
 import { updateRuns } from './dateSynchronization.js'
 
-//updating values in files with synthetic data 
+//updating values in files with synthetic data
 updateRuns(runs)
 
 // Here we are configuring express to use body-parser as middle-ware.

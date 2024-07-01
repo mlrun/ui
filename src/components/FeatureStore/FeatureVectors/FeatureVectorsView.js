@@ -54,7 +54,7 @@ const FeatureVectorsView = React.forwardRef(
       tableContent,
       virtualizationConfig
     },
-    { featureStoreRef, tableRef, tableBodyRef }
+    { featureStoreRef }
   ) => {
     return (
       <div className="feature-store" ref={featureStoreRef}>
@@ -87,7 +87,6 @@ const FeatureVectorsView = React.forwardRef(
               detailsFormInitialValues={detailsFormInitialValues}
               handleCancel={() => setSelectedFeatureVector({})}
               pageData={pageData}
-              ref={{ tableRef, tableBodyRef }}
               retryRequest={handleRefresh}
               selectedItem={selectedFeatureVector}
               tab={FEATURE_VECTORS_TAB}

@@ -94,8 +94,6 @@ const Datasets = () => {
 
   const abortControllerRef = useRef(new AbortController())
   const datasetsRef = useRef(null)
-  const tableBodyRef = useRef(null)
-  const tableRef = useRef(null)
 
   const datasetsFilters = useMemo(
     () => ({
@@ -386,8 +384,6 @@ const Datasets = () => {
   useEffect(() => setDatasets([]), [filtersStore.tag])
 
   const virtualizationConfig = useVirtualization({
-    tableRef,
-    tableBodyRef,
     rowsData: {
       content: sortedTableContent,
       expandedRowsData: selectedRowData,
@@ -415,7 +411,7 @@ const Datasets = () => {
       handleRegisterDataset={handleRegisterDataset}
       largeRequestErrorMessage={largeRequestErrorMessage}
       pageData={pageData}
-      ref={{ datasetsRef, tableRef, tableBodyRef }}
+      ref={{ datasetsRef }}
       selectedDataset={selectedDataset}
       selectedRowData={selectedRowData}
       setDatasets={setDatasets}

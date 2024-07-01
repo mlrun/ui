@@ -77,8 +77,7 @@ const FunctionsView = React.forwardRef(
       taggedFunctions,
       toggleConvertedYaml,
       virtualizationConfig
-    },
-    { tableRef, tableBodyRef }
+    }
   ) => {
     const params = useParams()
     return (
@@ -130,7 +129,6 @@ const FunctionsView = React.forwardRef(
                     actionsMenu={actionsMenu}
                     handleCancel={handleCancel}
                     pageData={pageData}
-                    ref={{ tableRef, tableBodyRef }}
                     retryRequest={refreshFunctions}
                     selectedItem={selectedFunction}
                     tableClassName="functions-table"

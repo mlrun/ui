@@ -92,8 +92,6 @@ const JobsTable = React.forwardRef(
     const navigate = useNavigate()
     const location = useLocation()
     const fetchJobFunctionsPromiseRef = useRef()
-    const tableBodyRef = useRef(null)
-    const tableRef = useRef(null)
     const {
       editableItem,
       handleMonitoring,
@@ -451,8 +449,6 @@ const JobsTable = React.forwardRef(
     }, [params.jobId, selectedJob, setSelectedJob])
 
     const virtualizationConfig = useVirtualization({
-      tableRef,
-      tableBodyRef,
       rowsData: {
         content: tableContent
       },
@@ -484,7 +480,6 @@ const JobsTable = React.forwardRef(
               handleCancel={() => setSelectedJob({})}
               handleSelectItem={handleSelectRun}
               pageData={pageData}
-              ref={{ tableRef, tableBodyRef }}
               retryRequest={refreshJobs}
               selectedItem={selectedJob}
               tab={MONITOR_JOBS_TAB}

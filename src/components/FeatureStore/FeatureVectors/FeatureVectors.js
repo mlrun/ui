@@ -78,8 +78,6 @@ const FeatureVectors = ({
   const featureStore = useSelector(store => store.featureStore)
   const filtersStore = useSelector(store => store.filtersStore)
   const featureStoreRef = useRef(null)
-  const tableBodyRef = useRef(null)
-  const tableRef = useRef(null)
   const abortControllerRef = useRef(new AbortController())
   const navigate = useNavigate()
   const location = useLocation()
@@ -435,8 +433,6 @@ const FeatureVectors = ({
   }, [removeFeatureVector, removeFeatureVectors, setCreateVectorPopUpIsOpen, params.projectName])
 
   const virtualizationConfig = useVirtualization({
-    tableRef,
-    tableBodyRef,
     rowsData: {
       content: tableContent,
       expandedRowsData: selectedRowData,
@@ -463,7 +459,7 @@ const FeatureVectors = ({
       handleRefresh={handleRefresh}
       largeRequestErrorMessage={largeRequestErrorMessage}
       pageData={pageData}
-      ref={{ featureStoreRef, tableRef, tableBodyRef }}
+      ref={{ featureStoreRef }}
       selectedFeatureVector={selectedFeatureVector}
       selectedRowData={selectedRowData}
       setCreateVectorPopUpIsOpen={setCreateVectorPopUpIsOpen}

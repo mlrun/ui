@@ -44,10 +44,10 @@ import {
   generateActionsMenu,
   generatePageData
 } from '../../components/Jobs/MonitorWorkflows/monitorWorkflows.util'
-import { handleDeleteJob, isJobKindLocal, pollAbortingJobs } from '../../components/Jobs/jobs.util'
+import { isJobKindLocal, pollAbortingJobs } from '../../components/Jobs/jobs.util'
 import { DANGER_BUTTON } from 'igz-controls/constants'
 import { setNotification } from '../../reducers/notificationReducer'
-import { enrichRunWithFunctionFields, handleAbortJob } from '../../utils/jobs.util'
+import { enrichRunWithFunctionFields, handleAbortJob, handleDeleteJob } from '../../utils/jobs.util'
 import jobsActions from '../../actions/jobs'
 import workflowsActions from '../../actions/workflow'
 import { parseJob } from '../../utils/parseJob'
@@ -97,8 +97,6 @@ const WorkflowsTable = React.forwardRef(
     const location = useLocation()
     const fetchJobFunctionsPromiseRef = useRef()
     let fetchFunctionLogsTimeout = useRef(null)
-    const tableBodyRef = useRef(null)
-    const tableRef = useRef(null)
 
     const {
       editableItem,
@@ -410,19 +408,6 @@ const WorkflowsTable = React.forwardRef(
       }
     }, [workflowsStore.activeWorkflow.data.graph, findSelectedWorkflowFunction])
 
-    const virtualizationConfig = useVirtualization({
-      tableRef,
-      tableBodyRef,
-      rowsData: {
-        content: tableContent
-      },
-      heightData: {
-        headerRowHeight: cssVariables.monitorWorkflowsHeaderRowHeight,
-        rowHeight: cssVariables.monitorWorkflowsRowHeight,
-        rowHeightExtended: cssVariables.monitorWorkflowsRowHeightExtended
-      }
-    })
-
     const handleCatchRequest = useCallback(
       (error, message) => {
         showErrorNotification(dispatch, error, message, '')
@@ -622,6 +607,17 @@ const WorkflowsTable = React.forwardRef(
       }
     }, [params.functionHash, params.jobId, setItemIsSelected, setSelectedFunction, setSelectedJob])
 
+    const virtualizationConfig = useVirtualization({
+      rowsData: {
+        content: tableContent
+      },
+      heightData: {
+        headerRowHeight: cssVariables.monitorWorkflowsHeaderRowHeight,
+        rowHeight: cssVariables.monitorWorkflowsRowHeight,
+        rowHeightExtended: cssVariables.monitorWorkflowsRowHeightExtended
+      }
+    })
+
     return (
       <>
         {workflowsStore.workflows.loading && <Loader />}
@@ -662,7 +658,6 @@ const WorkflowsTable = React.forwardRef(
                 handleCancel={handleCancel}
                 handleSelectItem={handleSelectRun}
                 pageData={pageData}
-                ref={{ tableRef, tableBodyRef }}
                 retryRequest={getWorkflows}
                 selectedItem={selectedJob}
                 tab={MONITOR_JOBS_TAB}
