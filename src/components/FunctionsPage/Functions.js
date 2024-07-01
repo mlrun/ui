@@ -66,7 +66,6 @@ import cssVariables from './functions.scss'
 const Functions = ({
   deleteFunction,
   deployFunction,
-  fetchApiGateways,
   fetchFunction,
   fetchFunctionLogs,
   fetchFunctionNuclioLogs,
@@ -79,7 +78,6 @@ const Functions = ({
   const [confirmData, setConfirmData] = useState(null)
   const [convertedYaml, toggleConvertedYaml] = useYaml('')
   const [functions, setFunctions] = useState([])
-  const [apiGateways, setApiGateways] = useState([])
   const [selectedFunctionMin, setSelectedFunctionMin] = useState({})
   const [selectedFunction, setSelectedFunction] = useState({})
   const [editableItem, setEditableItem] = useState(null)
@@ -112,7 +110,8 @@ const Functions = ({
       terminateDeleteTasksPolling()
       abortControllerRef.current = new AbortController()
       nameFilterRef.current = filters?.name ?? ''
-      const fetchFunctionsPromise = fetchFunctions(params.projectName, filters, {
+
+      return fetchFunctions(params.projectName, filters, {
         ui: {
           controller: abortControllerRef.current,
           setLargeRequestErrorMessage
@@ -120,50 +119,37 @@ const Functions = ({
         params: {
           format: 'minimal'
         }
-      })
-      const fetchApiGatewaysPromise = fetchApiGateways(params.projectName)
-
-      return Promise.allSettled([fetchFunctionsPromise, fetchApiGatewaysPromise]).then(
-        ([functions, apiGateways]) => {
-          if (functions.value) {
-            const newFunctions = parseFunctions(
-              functions.value,
-              params.projectName,
-              apiGateways.value
-            )
-            const deletingFunctions = newFunctions.reduce((acc, func) => {
-              if (func.deletion_task_id && !func.deletion_error && !acc[func.deletion_task_id]) {
-                acc[func.deletion_task_id] = {
-                  name: func.name
-                }
+      }).then(functions => {
+        if (functions) {
+          const newFunctions = parseFunctions(functions, params.projectName)
+          const deletingFunctions = newFunctions.reduce((acc, func) => {
+            if (func.deletion_task_id && !func.deletion_error && !acc[func.deletion_task_id]) {
+              acc[func.deletion_task_id] = {
+                name: func.name
               }
-
-              return acc
-            }, {})
-
-            if (!isEmpty(deletingFunctions)) {
-              setDeletingFunctions(deletingFunctions)
-              pollDeletingFunctions(
-                params.projectName,
-                terminatePollRef,
-                deletingFunctions,
-                () => fetchData(filters),
-                dispatch
-              )
             }
 
-            setFunctions(newFunctions)
+            return acc
+          }, {})
 
-            return newFunctions
+          if (!isEmpty(deletingFunctions)) {
+            setDeletingFunctions(deletingFunctions)
+            pollDeletingFunctions(
+              params.projectName,
+              terminatePollRef,
+              deletingFunctions,
+              () => fetchData(filters),
+              dispatch
+            )
           }
 
-          if (apiGateways.value) {
-            setApiGateways(apiGateways.value)
-          }
+          setFunctions(newFunctions)
+
+          return newFunctions
         }
-      )
+      })
     },
-    [dispatch, fetchApiGateways, fetchFunctions, params.projectName, terminateDeleteTasksPolling]
+    [dispatch, fetchFunctions, params.projectName, terminateDeleteTasksPolling]
   )
 
   const refreshFunctions = useCallback(
@@ -475,9 +461,7 @@ const Functions = ({
         toggleConvertedYaml,
         buildAndRunFunc,
         deletingFunctions,
-        selectedFunction,
-        fetchFunction,
-        apiGateways
+        selectedFunction
       ),
     [
       dispatch,
@@ -487,9 +471,7 @@ const Functions = ({
       toggleConvertedYaml,
       buildAndRunFunc,
       deletingFunctions,
-      selectedFunction,
-      fetchFunction,
-      apiGateways
+      selectedFunction
     ]
   )
 
@@ -501,10 +483,9 @@ const Functions = ({
       fetchFunction,
       selectedFunctionMin,
       setSelectedFunction,
-      apiGateways,
       params.projectName
     )
-  }, [apiGateways, dispatch, fetchFunction, params.projectName, selectedFunctionMin])
+  }, [dispatch, fetchFunction, params.projectName, selectedFunctionMin])
 
   useEffect(() => {
     fetchData()
@@ -674,6 +655,7 @@ const Functions = ({
     action => {
       return (
         <NewFunctionPopUp
+          key={action}
           action={action}
           currentProject={params.projectName}
           isCustomPosition
@@ -743,7 +725,6 @@ const Functions = ({
       refreshFunctions={refreshFunctions}
       selectedFunction={selectedFunction}
       selectedRowData={selectedRowData}
-      setSelectedRowData={setSelectedRowData}
       tableContent={tableContent}
       taggedFunctions={taggedFunctions}
       toggleConvertedYaml={toggleConvertedYaml}
