@@ -19,27 +19,30 @@ such restriction.
 */
 
 import { getArtifactIdentifier } from './getUniqueIdentifier'
+import { isEmpty } from 'lodash'
 
 export const parseArtifacts = artifacts =>
   (artifacts ?? []).map(artifact => {
-    let item = { ...artifact }
+    if (!isEmpty(artifact)) {
+      let item = { ...artifact }
 
-    //remove when format=full is by default
-    if (item.status && item.spec && item.metadata) {
-      item = {
-        ...artifact.status,
-        ...artifact.spec,
-        ...artifact.metadata
+      //remove when format=full is by default
+      if (item.status && item.spec && item.metadata) {
+        item = {
+          ...artifact.status,
+          ...artifact.spec,
+          ...artifact.metadata
+        }
       }
-    }
 
-    return {
-      ...item,
-      kind: artifact.kind,
-      ui: {
-        originalContent: artifact,
-        identifier: getArtifactIdentifier(item),
-        identifierUnique: getArtifactIdentifier(item, true)
+      return {
+        ...item,
+        kind: artifact.kind,
+        ui: {
+          originalContent: artifact,
+          identifier: getArtifactIdentifier(item),
+          identifierUnique: getArtifactIdentifier(item, true)
+        }
       }
     }
   })

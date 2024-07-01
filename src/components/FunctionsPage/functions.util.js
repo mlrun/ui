@@ -345,7 +345,7 @@ export const pollDeletingFunctions = (
 }
 
 export const setFullSelectedFunction = debounce(
-  (dispatch, fetchFunction, selectedFunctionMin, setSelectedFunction, apiGateways, projectName) => {
+  (dispatch, navigate, fetchFunction, selectedFunctionMin, setSelectedFunction, apiGateways, projectName) => {
     if (isEmpty(selectedFunctionMin)) {
       setSelectedFunction({})
     } else {
@@ -366,6 +366,7 @@ export const setFullSelectedFunction = debounce(
         })
         .catch(error => {
           setSelectedFunction({})
+          navigate(`/projects/${projectName}/functions`, { replace: true })
         })
     }
   },

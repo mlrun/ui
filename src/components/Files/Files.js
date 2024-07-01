@@ -30,6 +30,7 @@ import {
   ARTIFACT_TYPE,
   FILES_FILTERS,
   FILES_PAGE,
+  FILES_TAB,
   FILTER_MENU_MODAL,
   GROUP_BY_NAME,
   GROUP_BY_NONE,
@@ -48,7 +49,7 @@ import {
 import { createFilesRowData } from '../../utils/createArtifactsContent'
 import {
   fetchArtifactTags,
-  fetchFile,
+  fetchExpandedFile,
   fetchFiles,
   removeFile,
   removeFiles
@@ -58,6 +59,7 @@ import { getFilterTagOptions, setFilters } from '../../reducers/filtersReducer'
 import { getViewMode } from '../../utils/helper'
 import { isDetailsTabExists } from '../../utils/isDetailsTabExists'
 import { openPopUp } from 'igz-controls/utils/common.util'
+import { setFullSelectedArtifact } from '../../utils/artifacts.util'
 import { setNotification } from '../../reducers/notificationReducer'
 import { useGetTagOptions } from '../../hooks/useGetTagOptions.hook'
 import { useGroupContent } from '../../hooks/groupContent.hook'
@@ -72,6 +74,7 @@ import cssVariables from './files.scss'
 const Files = () => {
   const [files, setFiles] = useState([])
   const [selectedFile, setSelectedFile] = useState({})
+  const [selectedFileMin, setSelectedFileMin] = useState({})
   const [selectedRowData, setSelectedRowData] = useState({})
   const [largeRequestErrorMessage, setLargeRequestErrorMessage] = useState('')
   const [convertedYaml, toggleConvertedYaml] = useYaml('')
@@ -107,6 +110,17 @@ const Files = () => {
     [selectedFile.tag]
   )
 
+  useEffect(() => {
+    setFullSelectedArtifact(
+      FILES_TAB,
+      dispatch,
+      navigate,
+      selectedFileMin,
+      setSelectedFile,
+      params.projectName
+    )
+  }, [dispatch, navigate, params.projectName, selectedFileMin])
+
   const fetchData = useCallback(
     filters => {
       abortControllerRef.current = new AbortController()
@@ -119,6 +133,9 @@ const Files = () => {
             ui: {
               controller: abortControllerRef.current,
               setLargeRequestErrorMessage
+            },
+            params: {
+              format: 'minimal'
             }
           }
         })
@@ -165,7 +182,7 @@ const Files = () => {
         artifact,
         onAddTag: () => handleRefresh(filesFilters),
         getArtifact: () =>
-          fetchFile({
+          fetchExpandedFile({
             project: params.projectName,
             file: artifact.db_key,
             iter: true,
@@ -178,9 +195,9 @@ const Files = () => {
   )
 
   const actionsMenu = useMemo(
-    () => (file, menuPosition) =>
+    () => (fileMin, menuPosition) =>
       generateActionsMenu(
-        file,
+        fileMin,
         frontendSpec,
         dispatch,
         toggleConvertedYaml,
@@ -188,7 +205,8 @@ const Files = () => {
         params.projectName,
         handleRefresh,
         filesFilters,
-        menuPosition
+        menuPosition,
+        selectedFile
       ),
     [
       dispatch,
@@ -197,7 +215,8 @@ const Files = () => {
       handleAddTag,
       handleRefresh,
       params.projectName,
-      toggleConvertedYaml
+      toggleConvertedYaml,
+      selectedFile
     ]
   )
 
@@ -311,7 +330,7 @@ const Files = () => {
     return () => {
       setFiles([])
       dispatch(removeFiles())
-      setSelectedFile({})
+      setSelectedFileMin({})
       abortControllerRef.current.abort(REQUEST_CANCELED)
       tagAbortControllerCurrent.abort(REQUEST_CANCELED)
     }
@@ -333,7 +352,7 @@ const Files = () => {
       params.uid,
       navigate,
       params.projectName,
-      setSelectedFile
+      setSelectedFileMin
     )
   }, [
     files,
@@ -387,7 +406,7 @@ const Files = () => {
       selectedFile={selectedFile}
       selectedRowData={selectedRowData}
       setFiles={setFiles}
-      setSelectedFile={setSelectedFile}
+      setSelectedFileMin={setSelectedFileMin}
       setSelectedRowData={setSelectedRowData}
       sortProps={{ sortTable, selectedColumnName, getSortingIcon }}
       tableContent={sortedTableContent}
