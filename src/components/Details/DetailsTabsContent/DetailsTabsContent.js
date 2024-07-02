@@ -67,7 +67,6 @@ import {
 const DetailsTabsContent = ({
   applyChangesRef,
   formState,
-  handleChangeDates,
   handlePreview,
   pageData,
   selectedItem,
@@ -75,8 +74,7 @@ const DetailsTabsContent = ({
   setChangesCounter,
   setChangesData,
   setIteration,
-  setIterationOption,
-  setSelectedMetricsOptions
+  setIterationOption
 }) => {
   const detailsStore = useSelector(store => store.detailsStore)
   const params = useParams()
@@ -115,13 +113,7 @@ const DetailsTabsContent = ({
     case DETAILS_FEATURES_ANALYSIS_TAB:
       return <DetailsFeatureAnalysis />
     case DETAILS_METRICS_TAB:
-      return (
-        <DetailsMetrics
-          handleChangeDates={handleChangeDates}
-          selectedItem={selectedItem}
-          setSelectedMetricsOptions={setSelectedMetricsOptions}
-        />
-      )
+      return <DetailsMetrics selectedItem={selectedItem} />
     case DETAILS_PREVIEW_TAB:
       return <DetailsPreview artifact={selectedItem} handlePreview={handlePreview} />
     case DETAILS_INPUTS_TAB:
@@ -234,8 +226,7 @@ const DetailsTabsContent = ({
 }
 
 DetailsTabsContent.defaultProps = {
-  handleChangeDates: () => {},
-  setSelectedMetricsOptions: () => {}
+  handleChangeDates: () => {}
 }
 
 DetailsTabsContent.propTypes = {
@@ -247,8 +238,7 @@ DetailsTabsContent.propTypes = {
   setChangesCounter: PropTypes.func.isRequired,
   setChangesData: PropTypes.func.isRequired,
   setIteration: PropTypes.func.isRequired,
-  setIterationOption: PropTypes.func.isRequired,
-  setSelectedMetricsOptions: PropTypes.func
+  setIterationOption: PropTypes.func.isRequired
 }
 
 export default React.memo(DetailsTabsContent)

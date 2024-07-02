@@ -43,14 +43,18 @@ import {
   timeRangeMapping
 } from './detailsMetrics.util'
 
-import { TIME_FRAME_LIMITS } from '../../utils/datePicker.util'
+import {
+  datePickerPastOptions,
+  PAST_24_HOUR_DATE_OPTION,
+  TIME_FRAME_LIMITS
+} from '../../utils/datePicker.util'
 
 import { ReactComponent as MetricsIcon } from 'igz-controls/images/metrics-icon.svg'
 import colors from 'igz-controls/scss/colors.scss'
 
 import './DetailsMetrics.scss'
 
-const DetailsMetrics = ({ handleChangeDates, selectedItem, setSelectedMetricsOptions }) => {
+const DetailsMetrics = ({ selectedItem, setSelectedMetricsOptions }) => {
   const [metrics, setMetrics] = useState([])
   const [selectedDate, setSelectedDate] = useState('')
   const [previousTotalInvocation, setPreviousTotalInvocation] = useState(0)
@@ -202,6 +206,33 @@ const DetailsMetrics = ({ handleChangeDates, selectedItem, setSelectedMetricsOpt
     [isInvocationCardExpanded, detailsStore.metricsOptions.selectedByEndpoint, selectedItem]
   )
 
+  const handleChangeDates = useCallback(
+    (dates, isPredefined, selectedOptionId) => {
+      const generatedDates = [...dates]
+
+      if (generatedDates.length === 1) {
+        generatedDates.push(new Date())
+      }
+
+      dispatch(
+        detailsActions.setDetailsDates({
+          value: generatedDates,
+          selectedOptionId,
+          isPredefined
+        })
+      )
+    },
+    [dispatch]
+  )
+
+  useEffect(() => {
+    const past24hoursOption = datePickerPastOptions.find(
+      option => option.id === PAST_24_HOUR_DATE_OPTION
+    )
+
+    handleChangeDates(past24hoursOption.handler(), true, PAST_24_HOUR_DATE_OPTION)
+  }, [handleChangeDates])
+
   useEffect(() => {
     expandOrCollapseInvocationCard()
   }, [metrics, expandOrCollapseInvocationCard])
@@ -329,7 +360,12 @@ const DetailsMetrics = ({ handleChangeDates, selectedItem, setSelectedMetricsOpt
           name="metrics"
           metrics={detailsStore.metricsOptions.all}
           onSelect={metrics =>
-            setSelectedMetricsOptions({ endpointUid: selectedItem.metadata.uid, metrics })
+            dispatch(
+              detailsActions.setSelectedMetricsOptions({
+                endpointUid: selectedItem.metadata.uid,
+                metrics
+              })
+            )
           }
           preselectedMetrics={detailsStore.metricsOptions.preselected}
         />
