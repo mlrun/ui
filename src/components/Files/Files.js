@@ -388,7 +388,6 @@ const Files = () => {
     activateTableScroll: true
   })
 
-
   return (
     <FilesView
       actionsMenu={actionsMenu}

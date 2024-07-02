@@ -503,7 +503,6 @@ const Models = ({ fetchModelFeatureVector }) => {
     activateTableScroll: true
   })
 
-
   return (
     <ModelsView
       actionsMenu={actionsMenu}

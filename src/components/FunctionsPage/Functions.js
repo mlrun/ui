@@ -700,7 +700,6 @@ const Functions = ({
     activateTableScroll: true
   })
 
-
   return (
     <FunctionsView
       actionsMenu={actionsMenu}
