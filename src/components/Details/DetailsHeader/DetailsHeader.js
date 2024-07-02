@@ -101,7 +101,6 @@ const DetailsHeader = ({
     let prevHeaderHeight = 0
     const resizeObserver = new ResizeObserver(entries => {
       for (let entry of entries) {
-
         if (entry.contentRect.height !== prevHeaderHeight) {
           prevHeaderHeight = entry.contentRect.height
           if (entry.contentRect.height > 100) {
@@ -111,7 +110,7 @@ const DetailsHeader = ({
           }
         }
       }
-    },)
+    })
 
     resizeObserver.observe(headerRef.current)
 

@@ -26,7 +26,7 @@ import { Form } from 'react-final-form'
 import arrayMutators from 'final-form-arrays'
 import { createForm } from 'final-form'
 
-import { PopUpDialog, FormInput, FormOnChange } from 'igz-controls/components'
+import { Button, PopUpDialog, FormInput, FormOnChange } from 'igz-controls/components'
 import { SelectOption } from 'igz-controls/elements'
 import { TextTooltipTemplate, Tooltip } from 'iguazio.dashboard-react-controls/dist/components'
 import { ReactComponent as Caret } from 'igz-controls/images/dropdown.svg'
@@ -45,6 +45,8 @@ import './metricsSelector.scss'
 const MetricsSelector = ({ maxSelectionNumber, metrics, name, onSelect, preselectedMetrics }) => {
   const [nameFilter, setNameFilter] = useState('')
   const [isOpen, setIsOpen] = useState(false)
+  const [preAppliedMetrics, setPreAppliedMetrics] = useState([])
+  const [appliedMetrics, setAppliedMetrics] = useState([])
   const selectorFieldRef = useRef()
   const formRef = React.useRef(
     createForm({
@@ -76,6 +78,19 @@ const MetricsSelector = ({ maxSelectionNumber, metrics, name, onSelect, preselec
     'metrics-selector-header',
     isOpen && 'metrics-selector-header_open'
   )
+
+  useEffect(() => {
+    setAppliedMetrics(preselectedMetrics)
+  }, [preselectedMetrics])
+
+  useEffect(() => {
+    if (!isOpen) {
+      formRef.current.change(
+        'metrics',
+        appliedMetrics.map(metricItem => metricItem.full_name)
+      )
+    }
+  }, [appliedMetrics, isOpen])
 
   useEffect(() => {
     if (preselectedMetrics) {
@@ -119,25 +134,30 @@ const MetricsSelector = ({ maxSelectionNumber, metrics, name, onSelect, preselec
   }, [windowClickHandler, windowScrollHandler, isOpen])
 
   const handleOnChange = selectedMetrics => {
-    onSelect(
-      selectedMetrics.map(metricFullName => {
-        return metrics.find(metric => metric.full_name === metricFullName)
-      })
-    )
+    setPreAppliedMetrics(selectedMetrics)
   }
 
-  const getSelectValue = (selectedMetrics = []) => {
-    if (isEmpty(selectedMetrics)) {
+  const handleApply = () => {
+    const newAppliedMetrics = preAppliedMetrics.map(metricFullName => {
+      return metrics.find(metric => metric.full_name === metricFullName)
+    })
+    onSelect(newAppliedMetrics)
+    setAppliedMetrics(newAppliedMetrics)
+    setIsOpen(false)
+  }
+
+  const getSelectValue = () => {
+    if (isEmpty(appliedMetrics)) {
       return 'Chose Metrics...'
     }
 
-    if (selectedMetrics.length === 1) {
+    if (appliedMetrics.length === 1) {
       return (
-        metrics.find(metric => metric.full_name === selectedMetrics[0])?.name || '1 metric selected'
+        metrics.find(metric => metric.full_name === appliedMetrics[0])?.name || '1 metric selected'
       )
     }
 
-    return `${selectedMetrics.length} metrics selected`
+    return `${appliedMetrics.length} metrics selected`
   }
 
   const getMetricsLabel = metric => {
@@ -253,8 +273,11 @@ const MetricsSelector = ({ maxSelectionNumber, metrics, name, onSelect, preselec
                   </FieldArray>
                 </ul>
                 <FormOnChange name={name} handler={handleOnChange} />
-                <div data-testid="metrics-selector-counter" className="metrics-selector-counter">
-                  {`${formState.values.metrics?.length ?? 0}/${maxSelectionNumber}`}
+                <div className="metrics-selector__footer">
+                  <div data-testid="metrics-selector-counter" className="metrics-selector-counter">
+                    {`${formState.values.metrics?.length ?? 0}/${maxSelectionNumber}`}
+                  </div>
+                  <Button variant="secondary" label="Apply" onClick={handleApply} />
                 </div>
               </PopUpDialog>
             )}
