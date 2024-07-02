@@ -106,22 +106,6 @@
           margin-right: 10px;
         }
 
-        &__custom-filters {
-          display: flex;
-          flex-wrap: wrap;
-          justify-content: flex-end;
-          align-items: center;
-          margin-bottom: 15px;
-
-          > * {
-            margin: 0 0 15px 0;
-          }
-
-          .details-date-picker {
-            margin-left: 15px;
-          }
-        }
-
         &__buttons {
           z-index: 7;
           display: flex;
