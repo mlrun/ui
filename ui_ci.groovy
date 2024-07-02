@@ -1,8 +1,7 @@
 @Library('pipelinex@development') _
-import com.iguazio.pipelinex.DockerRepo
 
 pipeline {
-    agent { label '192.168.201.57-ubuntu-ui-runner' } // Specify the runner here
+    agent { label 'ubuntu_ui_runner' } // Specify the runner here
 
     environment {
         REACT_APP_FUNCTION_CATALOG_URL = 'https://raw.githubusercontent.com/mlrun/functions/master'
@@ -16,12 +15,9 @@ pipeline {
         SLACK_CHANNEL = '#your-slack-channel'
     }
 
-
-
-
- //  triggers {
- //      cron('H 0 * * *') // Run the job nightly at midnight
- //  }
+  //  triggers {
+  //      cron('H 0 * * *') // Run the job nightly at midnight
+  //  }
 
     stages {
         stage('Pull Latest Changes') {
