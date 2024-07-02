@@ -138,12 +138,11 @@ const MetricsSelector = ({ maxSelectionNumber, metrics, name, onSelect, preselec
   }
 
   const handleApply = () => {
-    const matchedMetrics = preAppliedMetrics.map(metricFullName => {
+    const newAppliedMetrics = preAppliedMetrics.map(metricFullName => {
       return metrics.find(metric => metric.full_name === metricFullName)
     })
-    onSelect(matchedMetrics)
-    setAppliedMetrics(matchedMetrics)
-    formRef.current.change('metrics', preAppliedMetrics)
+    onSelect(newAppliedMetrics)
+    setAppliedMetrics(newAppliedMetrics)
     setIsOpen(false)
   }
 
