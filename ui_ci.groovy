@@ -11,16 +11,14 @@ common.main {
             stage('UI CI Test') {
 
                 common.conditional_stage('Pull Latest Changes', true) {
-                    dir('/home/jenkins/ui') { // Changed directory to /home/jenkins/ui
-                        deleteDir()
+                     { // Changed directory to /home/jenkins/ui
                         checkout scm
                         sh 'git pull'
                     }
                 }
 
                 common.conditional_stage('Set up Environment', true) {
-                    dir('/home/jenkins/ui') { // Changed directory to /home/jenkins/ui
-                        // Uncomment the following line if npm install is needed
+                     {
                         // sh 'npm install'
                         sh '''
                             export REACT_APP_FUNCTION_CATALOG_URL=${REACT_APP_FUNCTION_CATALOG_URL}
@@ -32,7 +30,7 @@ common.main {
                 }
 
                 common.conditional_stage('Start Services', true) {
-                    dir('/home/jenkins/ui') { // Changed directory to /home/jenkins/ui
+                     { // Changed directory to /home/jenkins/ui
                         // Start mock-server and application in the background
                         sh 'npm run mock-server &'
                         sh 'npm start &'
