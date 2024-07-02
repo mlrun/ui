@@ -5,14 +5,12 @@ import com.iguazio.pipelinex.JobException
 
 def node_label = 'ubuntu_ui_runner'
 
-common.set_current_display_name("UI_Tests")
+common.set_current_display_name("UI_CI_Test")
 
 common.main {
     timestamps {
         nodes.runner(node_label) {
-            withCredentials([
-                    usernamePassword(credentialsId: 'iguazio-credentials', usernameVariable: 'RUNNER_USER', passwordVariable: 'RUNNER_PASSWORD')
-            ]) {
+    {
 
                 common.conditional_stage('Pull Latest Changes', true) {
                     dir('/root/ui') {
