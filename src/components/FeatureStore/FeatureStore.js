@@ -75,18 +75,21 @@ const FeatureStore = () => {
             }
           />
         </div>
+
         <div className="content">
-          <ContentMenu
-            activeTab={
-              location.pathname.includes(FEATURE_SETS_TAB)
-                ? FEATURE_SETS_TAB
-                : location.pathname.includes(FEATURE_VECTORS_TAB)
-                ? FEATURE_VECTORS_TAB
-                : FEATURES_TAB
-            }
-            screen={FEATURE_STORE_PAGE}
-            tabs={tabs}
-          />
+          <div className="content__action-bar-wrapper">
+            <ContentMenu
+              activeTab={
+                location.pathname.includes(FEATURE_SETS_TAB)
+                  ? FEATURE_SETS_TAB
+                  : location.pathname.includes(FEATURE_VECTORS_TAB)
+                    ? FEATURE_VECTORS_TAB
+                    : FEATURES_TAB
+              }
+              screen={FEATURE_STORE_PAGE}
+              tabs={tabs}
+            />
+          </div>
           <div className={TABLE_CONTAINER}>
             <FeatureStoreContext.Provider
               value={{

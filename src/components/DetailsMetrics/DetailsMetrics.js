@@ -19,10 +19,13 @@ such restriction.
 */
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
+import classNames from 'classnames'
 
 import InvocationMetricCard from './IncvocationMetricCard'
 import MetricChart from '../MetricChart/MetricChart'
 import NoMetricData from './NoMetricData'
+import DatePicker from '../../common/DatePicker/DatePicker'
+import MetricsSelector from '../../elements/MetricsSelector/MetricsSelector'
 import StatsCard from '../../common/StatsCard/StatsCard'
 import { TextTooltipTemplate, Tooltip } from 'iguazio.dashboard-react-controls/dist/components'
 
@@ -40,12 +43,18 @@ import {
   timeRangeMapping
 } from './detailsMetrics.util'
 
+import {
+  datePickerPastOptions,
+  PAST_24_HOUR_DATE_OPTION,
+  TIME_FRAME_LIMITS
+} from '../../utils/datePicker.util'
+
 import { ReactComponent as MetricsIcon } from 'igz-controls/images/metrics-icon.svg'
 import colors from 'igz-controls/scss/colors.scss'
 
 import './DetailsMetrics.scss'
 
-const DetailsMetrics = ({ selectedItem }) => {
+const DetailsMetrics = ({ selectedItem, setSelectedMetricsOptions }) => {
   const [metrics, setMetrics] = useState([])
   const [selectedDate, setSelectedDate] = useState('')
   const [previousTotalInvocation, setPreviousTotalInvocation] = useState(0)
@@ -63,6 +72,13 @@ const DetailsMetrics = ({ selectedItem }) => {
   const generatedMetrics = useMemo(() => {
     return groupMetricByApplication(metrics, true)
   }, [metrics])
+
+  const invocationCardClassnames = classNames(
+    'metrics__card-invocations',
+    !isInvocationCardExpanded
+      ? 'metrics__card-invocations-header-hidden'
+      : 'metrics__card-invocations-header-visible'
+  )
 
   const calculateHistogram = useCallback((points, metric) => {
     const numberOfBins = 5
@@ -190,6 +206,33 @@ const DetailsMetrics = ({ selectedItem }) => {
     [isInvocationCardExpanded, detailsStore.metricsOptions.selectedByEndpoint, selectedItem]
   )
 
+  const handleChangeDates = useCallback(
+    (dates, isPredefined, selectedOptionId) => {
+      const generatedDates = [...dates]
+
+      if (generatedDates.length === 1) {
+        generatedDates.push(new Date())
+      }
+
+      dispatch(
+        detailsActions.setDetailsDates({
+          value: generatedDates,
+          selectedOptionId,
+          isPredefined
+        })
+      )
+    },
+    [dispatch]
+  )
+
+  useEffect(() => {
+    const past24hoursOption = datePickerPastOptions.find(
+      option => option.id === PAST_24_HOUR_DATE_OPTION
+    )
+
+    handleChangeDates(past24hoursOption.handler(), true, PAST_24_HOUR_DATE_OPTION)
+  }, [handleChangeDates])
+
   useEffect(() => {
     expandOrCollapseInvocationCard()
   }, [metrics, expandOrCollapseInvocationCard])
@@ -311,110 +354,141 @@ const DetailsMetrics = ({ selectedItem }) => {
   }
 
   return (
-    <div ref={metricsContainerRef} className="metrics">
-      {generatedMetrics.map(([applicationName, applicationMetrics]) => {
-        return (
-          <React.Fragment key={applicationName}>
-            <div className="metrics__app-name">
-              {applicationName === ML_RUN_INFRA ? '' : applicationName}
-            </div>
-            {applicationMetrics.map(metric => {
-              if (applicationName === ML_RUN_INFRA) {
-                if (!metric.data) {
-                  return (
-                    <NoMetricData
-                      className="empty-invocation-card"
-                      key={metric.id}
-                      title="Endpoint call count"
-                    />
-                  )
+    <div className="metrics-wrapper">
+      <div className="metrics__custom-filters">
+        <MetricsSelector
+          name="metrics"
+          metrics={detailsStore.metricsOptions.all}
+          onSelect={metrics =>
+            dispatch(
+              detailsActions.setSelectedMetricsOptions({
+                endpointUid: selectedItem.metadata.uid,
+                metrics
+              })
+            )
+          }
+          preselectedMetrics={detailsStore.metricsOptions.preselected}
+        />
+        <DatePicker
+          className="details-date-picker"
+          date={detailsStore.dates.value[0]}
+          dateTo={detailsStore.dates.value[1]}
+          selectedOptionId={detailsStore.dates.selectedOptionId}
+          label=""
+          onChange={handleChangeDates}
+          type="date-range-time"
+          timeFrameLimit={TIME_FRAME_LIMITS.MONTH}
+          withLabels
+        />
+      </div>
+
+      <div ref={metricsContainerRef} className="metrics">
+        {generatedMetrics.map(([applicationName, applicationMetrics]) => {
+          return (
+            <React.Fragment key={applicationName}>
+              <div className="metrics__app-name">
+                {applicationName === ML_RUN_INFRA ? '' : applicationName}
+              </div>
+              {applicationMetrics.map(metric => {
+                if (applicationName === ML_RUN_INFRA) {
+                  if (!metric.data) {
+                    return (
+                      <NoMetricData
+                        className="empty-invocation-card"
+                        key={metric.id}
+                        title="Endpoint call count"
+                      />
+                    )
+                  } else {
+                    return (
+                      <div className={invocationCardClassnames}>
+                        <InvocationMetricCard
+                          ref={invocationBodyCardRef}
+                          isInvocationCardExpanded={isInvocationCardExpanded}
+                          key={metric.id}
+                          metric={metric}
+                          previousTotalInvocation={previousTotalInvocation}
+                          selectedDate={selectedDate}
+                        />
+                      </div>
+                    )
+                  }
+                } else if (!metric.data) {
+                  return <NoMetricData key={metric.id} title={metric.title} />
                 } else {
                   return (
-                    <InvocationMetricCard
-                      ref={invocationBodyCardRef}
-                      isInvocationCardExpanded={isInvocationCardExpanded}
-                      key={metric.id}
-                      metric={metric}
-                      previousTotalInvocation={previousTotalInvocation}
-                      selectedDate={selectedDate}
-                    />
+                    <StatsCard className="metrics__card" key={metric.id}>
+                      <StatsCard.Header title={metric.title}>
+                        {metric.totalDriftStatus && (
+                          <Tooltip
+                            template={
+                              <TextTooltipTemplate
+                                text={
+                                  <div className="total-drift-status-tooltip">
+                                    <div>Date: {metric.labels[metric.totalDriftStatus.index]}</div>
+                                    <div>Value:{metric.points[metric.totalDriftStatus.index]}</div>
+                                  </div>
+                                }
+                              />
+                            }
+                          >
+                            <div>
+                              <span>{metric.totalDriftStatus.text}</span>
+                              <span
+                                className={`metrics__card-drift-status metrics__card-drift-status-${metric.totalDriftStatus.className}`}
+                              ></span>
+                            </div>
+                          </Tooltip>
+                        )}
+                      </StatsCard.Header>
+                      <div className="metrics__card-body">
+                        <div className="metrics__card-body-bar">
+                          <div className="metrics__card-header">
+                            <div>Value distribution</div>
+                            <div className="metrics__card-header-data">
+                              <span className="metrics__card-header-label">Avg. </span>
+                              {metric[METRIC_COMPUTED_AVG_POINTS]}
+                            </div>
+                          </div>
+                          <MetricChart
+                            chartConfig={{
+                              ...barConfig,
+                              data: calculateHistogram(metric.points, metric)
+                            }}
+                          />
+                        </div>
+                        <div className="metrics__card-body-line">
+                          <div className="metrics__card-header">Value over time</div>
+                          <MetricChart
+                            chartConfig={{
+                              ...lineConfig,
+                              data: {
+                                labels: metric.labels,
+                                datasets: [
+                                  {
+                                    data: metric.points,
+                                    chartType: CHART_TYPE_LINE,
+                                    metricType: metric.type,
+                                    driftStatusList: metric.driftStatusList || [],
+                                    tension: 0.2,
+                                    totalDriftStatus: metric.totalDriftStatus,
+                                    borderWidth: 1,
+                                    borderColor: metric.totalDriftStatus?.chartColor || colors.java
+                                  }
+                                ]
+                              }
+                            }}
+                          />
+                        </div>
+                      </div>
+                    </StatsCard>
                   )
                 }
-              } else if (!metric.data) {
-                return <NoMetricData key={metric.id} title={metric.title} />
-              } else {
-                return (
-                  <StatsCard className="metrics__card" key={metric.id}>
-                    <StatsCard.Header title={metric.title}>
-                      {metric.totalDriftStatus && (
-                        <Tooltip
-                          template={
-                            <TextTooltipTemplate
-                              text={
-                                <div className="total-drift-status-tooltip">
-                                  <div>Date: {metric.labels[metric.totalDriftStatus.index]}</div>
-                                  <div>Value:{metric.points[metric.totalDriftStatus.index]}</div>
-                                </div>
-                              }
-                            />
-                          }
-                        >
-                          <div>
-                            <span>{metric.totalDriftStatus.text}</span>
-                            <span
-                              className={`metrics__card-drift-status metrics__card-drift-status-${metric.totalDriftStatus.className}`}
-                            ></span>
-                          </div>
-                        </Tooltip>
-                      )}
-                    </StatsCard.Header>
-                    <div className="metrics__card-body">
-                      <div className="metrics__card-body-bar">
-                        <div className="metrics__card-header">
-                          <div>Value distribution</div>
-                          <div className="metrics__card-header-data">
-                            <span className="metrics__card-header-label">Avg. </span>
-                            {metric[METRIC_COMPUTED_AVG_POINTS]}
-                          </div>
-                        </div>
-                        <MetricChart
-                          chartConfig={{
-                            ...barConfig,
-                            data: calculateHistogram(metric.points, metric)
-                          }}
-                        />
-                      </div>
-                      <div className="metrics__card-body-line">
-                        <div className="metrics__card-header">Value over time</div>
-                        <MetricChart
-                          chartConfig={{
-                            ...lineConfig,
-                            data: {
-                              labels: metric.labels,
-                              datasets: [
-                                {
-                                  data: metric.points,
-                                  chartType: CHART_TYPE_LINE,
-                                  metricType: metric.type,
-                                  driftStatusList: metric.driftStatusList || [],
-                                  tension: 0.2,
-                                  totalDriftStatus: metric.totalDriftStatus,
-                                  borderWidth: 1,
-                                  borderColor: metric.totalDriftStatus?.chartColor || colors.java
-                                }
-                              ]
-                            }
-                          }}
-                        />
-                      </div>
-                    </div>
-                  </StatsCard>
-                )
-              }
-            })}
-          </React.Fragment>
-        )
-      })}
+              })}
+            </React.Fragment>
+          )
+        })}
+      </div>
     </div>
   )
 }
