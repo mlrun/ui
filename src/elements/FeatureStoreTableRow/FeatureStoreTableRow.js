@@ -74,7 +74,7 @@ const FeatureStoreTableRow = ({
             className={`table-body__cell
               ${rowIsExpanded && 'row_grouped-by'}`}
           >
-            <table cellPadding="0" cellSpacing="0" className="table">
+            <table cellPadding="0" cellSpacing="0" className="table table-fixed">
               <tbody className="table-body">
                 <tr className="table-row">
                   {rowItem.content.map((data, index) => {
@@ -103,7 +103,7 @@ const FeatureStoreTableRow = ({
                       )
                     )
                   })}
-                  <td className="table-body__cell table-cell-icon" />
+                  {!hideActionsMenu && <td className="table-body__cell table-cell-icon" />}
                 </tr>
               </tbody>
             </table>
@@ -132,7 +132,7 @@ const FeatureStoreTableRow = ({
                   className="table-body__cell"
                   key={index}
                 >
-                  <table cellPadding="0" cellSpacing="0" className="table">
+                  <table cellPadding="0" cellSpacing="0" className="table table-fixed">
                     <tbody className="table-body">
                       <tr className={subRowClassNames}>
                         {
