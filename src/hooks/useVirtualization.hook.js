@@ -91,15 +91,14 @@ const useTableScroll = ({
   selectedItem,
   expandedRowsData,
   content,
-  tableRef,
   activateHook
 }) => {
   const lastSelectedItemDataRef = useRef(null)
 
   const getSpaceToSelectedItem = useCallback(
-    lastSelectedItemData => {
+    (lastSelectedItemData, tableElement) => {
       const baseRowHeight = isEmpty(selectedItem) ? rowHeight : rowHeightExtended
-      const tableHeight = tableRef.current?.offsetHeight
+      const tableHeight = tableElement?.offsetHeight
       const rowsSizes = getRowsSizes(
         content,
         selectedItem,
@@ -126,38 +125,64 @@ const useTableScroll = ({
 
       return spaceToSelectedItem
     },
-    [content, expandedRowsData, headerRowHeight, rowHeight, rowHeightExtended, selectedItem, tableRef]
+    [content, expandedRowsData, headerRowHeight, rowHeight, rowHeightExtended, selectedItem]
   )
+
+  const handleSelectItemChanges = useCallback((identifier, content, getSpaceToSelectedItem, async = false) => {
+    const selectedItemIndex = content.findIndex(
+      item => item.data.ui.identifier === identifier
+    )
+    const triggerScroll = () => {
+      const tableElement = document.getElementById(MAIN_TABLE_ID)
+
+      tableElement?.scroll({
+        top: getSpaceToSelectedItem(
+          {
+            ...lastSelectedItemDataRef.current,
+            index: selectedItemIndex
+          },
+          tableElement
+        )
+      })
+    }
+    if (selectedItemIndex >= 0) {
+      if (async) {
+        requestAnimationFrame(() => {
+          triggerScroll()
+        })
+      } else {
+        triggerScroll()
+      }
+    }
+  }, [])
 
   useEffect(() => {
     if (!activateHook) return
 
     try {
-      if (!lastSelectedItemDataRef.current && !isEmpty(selectedItem)) {
-        const selectedItemIndex = content.findIndex(
-          item => item.data.ui.identifier === selectedItem?.ui?.identifier
-        )
-
-        const lastSelectedItemData = {
-          ...selectedItem?.ui,
-          index: selectedItemIndex,
-          expandedRowData: expandedRowsData[selectedItem?.ui?.identifier]
-        }
-
-        if (selectedItemIndex >= 0) {
-          requestAnimationFrame(() => {
-            tableRef.current?.scroll({ top: getSpaceToSelectedItem(lastSelectedItemData) })
-          })
-          lastSelectedItemDataRef.current = lastSelectedItemData
+      if (!isEmpty(selectedItem)) {
+        if (!lastSelectedItemDataRef.current) {
+          lastSelectedItemDataRef.current = {
+            ...selectedItem?.ui,
+            expandedRowData: expandedRowsData[selectedItem?.ui?.identifier]
+          }
+          handleSelectItemChanges(selectedItem?.ui?.identifier, content, getSpaceToSelectedItem, true)
+        } else {
+          lastSelectedItemDataRef.current = {
+            ...selectedItem?.ui,
+            expandedRowData: expandedRowsData[selectedItem?.ui?.identifier]
+          }
         }
       } else if (lastSelectedItemDataRef.current && isEmpty(selectedItem)) {
-        tableRef.current?.scroll({ top: getSpaceToSelectedItem(lastSelectedItemDataRef.current) })
+        handleSelectItemChanges(lastSelectedItemDataRef.current?.identifier, content, getSpaceToSelectedItem)
+        
         lastSelectedItemDataRef.current = null
       }
     } catch (e) {
+      lastSelectedItemDataRef.current = null
       console.warn('useTableScrollHook:: Error during table scroll attempt', e)
     }
-  }, [content, getSpaceToSelectedItem, selectedItem, tableRef, expandedRowsData, activateHook])
+  }, [content, getSpaceToSelectedItem, selectedItem, expandedRowsData, activateHook, handleSelectItemChanges])
 }
 
 /**
@@ -221,8 +246,8 @@ export const useVirtualization = ({
   ])
 
   useLayoutEffect(() => {
-    const tableElement = document.querySelector(`#${MAIN_TABLE_ID}`)
-    const tableBodyElement = document.querySelector(`#${MAIN_TABLE_BODY_ID}`)
+    const tableElement = document.getElementById(MAIN_TABLE_ID)
+    const tableBodyElement = document.getElementById(MAIN_TABLE_BODY_ID)
     const elementsHeight = sum(rowsSizesLocal)
 
     const calculateVirtualizationConfig = throttle(() => {
@@ -317,8 +342,7 @@ export const useVirtualization = ({
     selectedItem: rowsData.selectedItem,
     expandedRowsData: rowsData.expandedRowsData,
     content: rowsData.content,
-    activateHook: activateTableScroll,
-    tableRef
+    activateHook: activateTableScroll
   })
 
   return virtualizationConfig
