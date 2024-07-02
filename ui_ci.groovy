@@ -10,7 +10,7 @@ common.set_current_display_name("UI_CI_Test")
 common.main {
     timestamps {
         nodes.runner(node_label) {
-    {
+            stage('UI CI Test')   {
 
                 common.conditional_stage('Pull Latest Changes', true) {
                     dir('/root/ui') {
