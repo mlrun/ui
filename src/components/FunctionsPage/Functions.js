@@ -480,12 +480,13 @@ const Functions = ({
   useEffect(() => {
     setFullSelectedFunction(
       dispatch,
+      navigate,
       fetchFunction,
       selectedFunctionMin,
       setSelectedFunction,
       params.projectName
     )
-  }, [dispatch, fetchFunction, params.projectName, selectedFunctionMin])
+  }, [dispatch, fetchFunction, navigate, params.projectName, selectedFunctionMin])
 
   useEffect(() => {
     fetchData()

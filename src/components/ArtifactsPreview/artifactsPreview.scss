@@ -35,6 +35,12 @@
       overflow: auto;
     }
 
+    &__text {
+      width: fit-content;
+      max-width: 10000px;
+      overflow-wrap: break-word;
+    }
+
     .json-content {
       white-space: pre-wrap;
     }

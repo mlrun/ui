@@ -204,13 +204,8 @@ export const generateActionsMenu = (
   fetchFunction
 ) => {
   const functionIsDeleting = isFunctionDeleting(func, deletingFunctions)
-  const getFullFunction = (funcMin) => {
-    return chooseOrFetchFunction(
-      selectedFunction,
-      dispatch,
-      fetchFunction,
-      funcMin
-    )
+  const getFullFunction = funcMin => {
+    return chooseOrFetchFunction(selectedFunction, dispatch, fetchFunction, funcMin)
   }
 
   return [
@@ -260,7 +255,7 @@ export const generateActionsMenu = (
         label: 'View YAML',
         icon: <Yaml />,
         disabled: functionIsDeleting,
-        onClick: (funcMin) => getFullFunction(funcMin).then((func) => toggleConvertedYaml(func))
+        onClick: funcMin => getFullFunction(funcMin).then(toggleConvertedYaml)
       }
     ],
     [
@@ -285,7 +280,7 @@ export const generateActionsMenu = (
             setEditableItem(func)
           })
         },
-        hidden: func?.type !== FUNCTION_TYPE_SERVING
+        hidden: !isDemoMode || func?.type !== FUNCTION_TYPE_SERVING
       }
     ]
   ]
@@ -338,7 +333,7 @@ export const pollDeletingFunctions = (
 }
 
 export const setFullSelectedFunction = debounce(
-  (dispatch, fetchFunction, selectedFunctionMin, setSelectedFunction, projectName) => {
+  (dispatch, navigate, fetchFunction, selectedFunctionMin, setSelectedFunction, projectName) => {
     if (isEmpty(selectedFunctionMin)) {
       setSelectedFunction({})
     } else {
@@ -358,6 +353,7 @@ export const setFullSelectedFunction = debounce(
         })
         .catch(error => {
           setSelectedFunction({})
+          navigate(`/projects/${projectName}/functions`, { replace: true })
         })
     }
   },

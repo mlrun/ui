@@ -458,6 +458,7 @@ const featureStoreActions = {
               ? 'You do not have permission to create a new feature set.'
               : error.message
 
+        showErrorNotification(dispatch, error, '', message)
         dispatch(featureStoreActions.createNewFeatureSetFailure(message))
 
         throw error
