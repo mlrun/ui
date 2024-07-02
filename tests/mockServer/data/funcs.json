@@ -5577,15 +5577,15 @@
     {
       "kind": "job",
       "metadata": {
-        "name": "test-m_ingest", 
-        "project": "churn-project-admin", 
+        "name": "test-m_ingest",
+        "project": "churn-project-admin",
         "categories": [],
         "credentials": {
           "access_key": "$generate"
         },
         "tag": "latest",
-        "hash": "e0f808c23bf528ecc33e6f40050dd42b4df6c2de", 
-        "updated": "2022-08-07T10:34:49.002606+00:00" 
+        "hash": "e0f808c23bf528ecc33e6f40050dd42b4df6c2de",
+        "updated": "2022-08-07T10:34:49.002606+00:00"
       },
       "spec": {
         "command": "",
@@ -5611,7 +5611,7 @@
             "value": "http://framesd:8080"
           }
         ],
-        "default_handler": "train", 
+        "default_handler": "train",
         "description": "",
         "build": {
           "functionSourceCode": "CmZyb20gbWxydW4uZmVhdHVyZV9zdG9yZS5hcGkgaW1wb3J0IGluZ2VzdApkZWYgaGFuZGxlcihjb250ZXh0KToKICAgIGluZ2VzdChtbHJ1bl9jb250ZXh0PWNvbnRleHQpCg==",

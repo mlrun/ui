@@ -83,10 +83,7 @@ import {
   SET_NEW_FUNCTION_TAG,
   SET_NEW_FUNCTION_TRACK_MODELS,
   SET_NEW_FUNCTION_VOLUMES,
-  SET_NEW_FUNCTION_VOLUME_MOUNTS,
-  FETCH_FUNCTION_API_GATEWAYS_BEGIN,
-  FETCH_FUNCTION_API_GATEWAYS_FAILURE,
-  FETCH_FUNCTION_API_GATEWAYS_SUCCESS
+  SET_NEW_FUNCTION_VOLUME_MOUNTS
 } from '../constants'
 import { FORBIDDEN_ERROR_STATUS_CODE } from 'igz-controls/constants'
 import { generateCategories, generateHubCategories } from '../utils/generateTemplatesCategories'
@@ -152,30 +149,6 @@ const functionsActions = {
   }),
   deployFunctionSuccess: () => ({
     type: DEPLOY_FUNCTION_SUCCESS
-  }),
-  fetchApiGateways: project => dispatch => {
-    dispatch(functionsActions.fetchApiGatewaysBegin())
-
-    return mlrunNuclioApi
-      .getApiGateways(project)
-      .then(({ data }) => {
-        dispatch(functionsActions.fetchApiGatewaysSuccess())
-
-        return data?.api_gateways
-      })
-      .catch(error => {
-        dispatch(functionsActions.fetchApiGatewaysFailure(error))
-      })
-  },
-  fetchApiGatewaysBegin: () => ({
-    type: FETCH_FUNCTION_API_GATEWAYS_BEGIN
-  }),
-  fetchApiGatewaysFailure: error => ({
-    type: FETCH_FUNCTION_API_GATEWAYS_FAILURE,
-    payload: error
-  }),
-  fetchApiGatewaysSuccess: () => ({
-    type: FETCH_FUNCTION_API_GATEWAYS_SUCCESS
   }),
   fetchFunctionLogs: (project, name, tag) => dispatch => {
     dispatch(functionsActions.fetchFunctionLogsBegin())
@@ -247,7 +220,7 @@ const functionsActions = {
       })
       .catch(error => {
         dispatch(functionsActions.fetchFunctionTemplateFailure(error))
-        showErrorNotification(dispatch, error, 'Function\'s template failed to load')
+        showErrorNotification(dispatch, error, "Function's template failed to load")
       })
   },
   fetchFunctionTemplateSuccess: selectFunction => ({
