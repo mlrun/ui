@@ -48,7 +48,6 @@ const DetailsHeader = ({
   cancelChanges,
   getCloseDetailsLink,
   handleCancel,
-  handleChangeDates,
   handleRefresh,
   handleShowWarning,
   isDetailsScreen,
@@ -304,9 +303,7 @@ const DetailsHeader = ({
 }
 
 DetailsHeader.defaultProps = {
-  handleCancel: null,
-  setSelectedMetricsOptions: () => {},
-  handleChangeDates: () => {}
+  handleCancel: null
 }
 
 DetailsHeader.propTypes = {
@@ -314,14 +311,12 @@ DetailsHeader.propTypes = {
   applyChanges: PropTypes.func.isRequired,
   cancelChanges: PropTypes.func.isRequired,
   handleCancel: PropTypes.func,
-  handleChangeDates: PropTypes.func,
   handleRefresh: PropTypes.func,
   handleShowWarning: PropTypes.func.isRequired,
   isDetailsScreen: PropTypes.bool.isRequired,
   pageData: PropTypes.shape({}).isRequired,
   selectedItem: PropTypes.shape({}).isRequired,
   setIteration: PropTypes.func.isRequired,
-  setSelectedMetricsOptions: PropTypes.func,
   tab: PropTypes.string
 }
 

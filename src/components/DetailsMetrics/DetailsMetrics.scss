@@ -1,6 +1,8 @@
 @import '~igz-controls/scss/colors';
 @import '~igz-controls/scss/borders';
 
+$stickyHeaderHeight: 55px;
+
 .metrics {
   display: flex;
   flex-wrap: wrap;
@@ -8,6 +10,26 @@
   row-gap: 16px;
   height: fit-content;
   margin-bottom: 30px;
+
+  &__custom-filters {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    position: sticky;
+    top: 0;
+    height: $stickyHeaderHeight;
+    align-items: center;
+    background-color: $white;
+    z-index: 2;
+
+    > * {
+      margin: 0 0 15px 0;
+    }
+
+    .details-date-picker {
+      margin-left: 15px;
+    }
+  }
 
   &__app-name {
     font-size: 20px;
@@ -23,7 +45,7 @@
 
     &-invocations {
       position: sticky;
-      top: 0;
+      top: $stickyHeaderHeight;
       width: 100%;
       align-self: baseline;
       background: $white;
@@ -341,7 +363,7 @@
 .empty-invocation-card {
   position: sticky;
   box-shadow: 0 -10px 0 0 $white;
-  top: 0;
+  top: $stickyHeaderHeight;
   z-index: 1;
 }
 
@@ -354,7 +376,7 @@
   transition: all 0.1s linear;
   background-color: $primary;
   padding: 6px 8px;
-  family: Roboto;
+  font-family: Roboto;
   letter-spacing: 0.5px;
 
   &::after {
