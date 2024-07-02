@@ -11,38 +11,30 @@ common.main {
             stage('UI CI Test') {
 
                 common.conditional_stage('Pull Latest Changes', true) {
-                     {
-                        checkout scm
-                        sh 'git pull'
-                    }
+                    checkout scm
+                    sh 'git pull'
                 }
 
                 common.conditional_stage('Set up Environment', true) {
-                     {
-                        // sh 'npm install'
-                        sh '''
-                            export REACT_APP_FUNCTION_CATALOG_URL=${REACT_APP_FUNCTION_CATALOG_URL}
-                            export REACT_APP_MLRUN_API_URL=${REACT_APP_MLRUN_API_URL}
-                            export REACT_APP_NUCLIO_API_URL=${REACT_APP_NUCLIO_API_URL}
-                            export REACT_APP_IGUAZIO_API_URL=${REACT_APP_IGUAZIO_API_URL}
-                        '''
-                    }
+                    // sh 'npm install'
+                    sh '''
+                        export REACT_APP_FUNCTION_CATALOG_URL=${REACT_APP_FUNCTION_CATALOG_URL}
+                        export REACT_APP_MLRUN_API_URL=${REACT_APP_MLRUN_API_URL}
+                        export REACT_APP_NUCLIO_API_URL=${REACT_APP_NUCLIO_API_URL}
+                        export REACT_APP_IGUAZIO_API_URL=${REACT_APP_IGUAZIO_API_URL}
+                    '''
                 }
 
                 common.conditional_stage('Start Services', true) {
-                     { // Changed directory to /home/jenkins/ui
-                        // Start mock-server and application in the background
-                        sh 'npm run mock-server &'
-                        sh 'npm start &'
-                    }
+                    // Start mock-server and application in the background
+                    sh 'npm run mock-server &'
+                    sh 'npm start &'
                 }
 
                 // Uncomment this stage if needed
                 // common.conditional_stage('Run Regression Tests', true) {
-                //     dir('/home/jenkins/ui') { // Changed directory to /home/jenkins/ui
-                //         // Run cucumber-js tests
-                //         sh './node_modules/.bin/cucumber-js --require-module @babel/register --require-module @babel/polyfill -f json:tests/reports/cucumber_report.json -f html:tests/reports/cucumber_report_default.html tests -t \'@smoke\''
-                //     }
+                //     // Run cucumber-js tests
+                //     sh './node_modules/.bin/cucumber-js --require-module @babel/register --require-module @babel/polyfill -f json:tests/reports/cucumber_report.json -f html:tests/reports/cucumber_report_default.html tests -t \'@smoke\''
                 // }
 
                 common.conditional_stage('Post-Test Cleanup', true) {
@@ -51,23 +43,21 @@ common.main {
                 }
 
                 common.conditional_stage('Upload Artifacts', true) {
-                    dir('/home/jenkins/ui') { // Changed directory to /home/jenkins/ui
-                        sh '''
-                            # Environment variables
-                            ART_URL="http://artifactory.iguazeng.com:8082/artifactory/ui-ci-reports"
-                            AUTH="${ARTIFACTORY_USER}:${ARTIFACTORY_PASSWORD}"
-                            LOCAL_FILE="tests/reports/cucumber_report_default.html"
+                    sh '''
+                        # Environment variables
+                        ART_URL="http://artifactory.iguazeng.com:8082/artifactory/ui-ci-reports"
+                        AUTH="${ARTIFACTORY_USER}:${ARTIFACTORY_PASSWORD}"
+                        LOCAL_FILE="tests/reports/cucumber_report_default.html"
 
-                            # Generate the Artifactory path with the build number
-                            ARTIFACTORY_PATH="cucumber_report_default_${env.BUILD_NUMBER}.html"
+                        # Generate the Artifactory path with the build number
+                        ARTIFACTORY_PATH="cucumber_report_default_${env.BUILD_NUMBER}.html"
 
-                            # Construct the full URL
-                            URL="${ART_URL}/${ARTIFACTORY_PATH}"
+                        # Construct the full URL
+                        URL="${ART_URL}/${ARTIFACTORY_PATH}"
 
-                            # Upload the file to Artifactory
-                            curl -X PUT -u ${AUTH} "${URL}" --data-binary @"${LOCAL_FILE}"
-                        '''
-                    }
+                        # Upload the file to Artifactory
+                        curl -X PUT -u ${AUTH} "${URL}" --data-binary @"${LOCAL_FILE}"
+                    '''
                 }
 
                 // Uncomment this stage if needed
