@@ -203,7 +203,6 @@ const DetailsHeader = ({
           <>
             <MetricsSelector
               name="metrics"
-              modelEndpointUid={detailsStore.modelEndpoint.data?.metadata?.uid}
               metrics={detailsStore.metricsOptions.all}
               onSelect={metrics =>
                 setSelectedMetricsOptions({ endpointUid: selectedItem.metadata.uid, metrics })

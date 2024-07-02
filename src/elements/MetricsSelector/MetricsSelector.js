@@ -42,20 +42,12 @@ import { ReactComponent as ResultIcon } from 'igz-controls/images/circled-r.svg'
 
 import './metricsSelector.scss'
 
-const MetricsSelector = ({
-  maxSelectionNumber,
-  metrics,
-  modelEndpointUid,
-  name,
-  onSelect,
-  preselectedMetrics
-}) => {
+const MetricsSelector = ({ maxSelectionNumber, metrics, name, onSelect, preselectedMetrics }) => {
   const [nameFilter, setNameFilter] = useState('')
   const [isOpen, setIsOpen] = useState(false)
-  const [preAppliedMetrics, setPreAppliedMetricsRef] = useState([])
-  const appliedMetricsRef = useRef([])
+  const [preAppliedMetrics, setPreAppliedMetrics] = useState([])
+  const [appliedMetrics, setAppliedMetrics] = useState([])
   const selectorFieldRef = useRef()
-  const selectedModelEndpointUid = useRef('')
   const formRef = React.useRef(
     createForm({
       initialValues: {
@@ -88,18 +80,17 @@ const MetricsSelector = ({
   )
 
   useEffect(() => {
-    if (!modelEndpointUid) return
-    selectedModelEndpointUid.current = modelEndpointUid
-    appliedMetricsRef.current = preselectedMetrics
-  }, [modelEndpointUid, preselectedMetrics])
+    setAppliedMetrics(preselectedMetrics)
+  }, [preselectedMetrics])
 
   useEffect(() => {
-    if (isOpen) {
-      formRef.current.reset({
-        metrics: appliedMetricsRef.current.map(metricItem => metricItem.full_name)
-      })
+    if (!isOpen) {
+      formRef.current.change(
+        'metrics',
+        appliedMetrics.map(metricItem => metricItem.full_name)
+      )
     }
-  }, [isOpen])
+  }, [appliedMetrics, isOpen])
 
   useEffect(() => {
     if (preselectedMetrics) {
@@ -143,7 +134,7 @@ const MetricsSelector = ({
   }, [windowClickHandler, windowScrollHandler, isOpen])
 
   const handleOnChange = selectedMetrics => {
-    setPreAppliedMetricsRef(selectedMetrics)
+    setPreAppliedMetrics(selectedMetrics)
   }
 
   const handleApply = () => {
@@ -151,23 +142,23 @@ const MetricsSelector = ({
       return metrics.find(metric => metric.full_name === metricFullName)
     })
     onSelect(matchedMetrics)
-    appliedMetricsRef.current = matchedMetrics
+    setAppliedMetrics(matchedMetrics)
+    formRef.current.change('metrics', preAppliedMetrics)
     setIsOpen(false)
   }
 
-  const getSelectValue = (selectedMetrics = []) => {
-    if (isEmpty(appliedMetricsRef.current)) {
+  const getSelectValue = () => {
+    if (isEmpty(appliedMetrics)) {
       return 'Chose Metrics...'
     }
 
-    if (appliedMetricsRef.current.length === 1) {
+    if (appliedMetrics.length === 1) {
       return (
-        metrics.find(metric => metric.full_name === appliedMetricsRef.current[0])?.name ||
-        '1 metric selected'
+        metrics.find(metric => metric.full_name === appliedMetrics[0])?.name || '1 metric selected'
       )
     }
 
-    return `${appliedMetricsRef.current.length} metrics selected`
+    return `${appliedMetrics.length} metrics selected`
   }
 
   const getMetricsLabel = metric => {
@@ -292,12 +283,7 @@ const MetricsSelector = ({
                   <div data-testid="metrics-selector-counter" className="metrics-selector-counter">
                     {`${formState.values.metrics?.length ?? 0}/${maxSelectionNumber}`}
                   </div>
-                  <Button
-                    id="metrics-selector-apply-btn"
-                    variant="secondary"
-                    label="Apply"
-                    onClick={handleApply}
-                  />
+                  <Button variant="secondary" label="Apply" onClick={handleApply} />
                 </div>
               </PopUpDialog>
             )}
@@ -319,8 +305,7 @@ MetricsSelector.propTypes = {
   metrics: METRICS_SELECTOR_OPTIONS.isRequired,
   name: PropTypes.string.isRequired,
   onSelect: PropTypes.func,
-  preselectedMetrics: PropTypes.arrayOf(PropTypes.shape({ id: PropTypes.string.isRequired })),
-  modelEndpointUid: PropTypes.string.isRequired
+  preselectedMetrics: PropTypes.arrayOf(PropTypes.shape({ id: PropTypes.string.isRequired }))
 }
 
 export default MetricsSelector
