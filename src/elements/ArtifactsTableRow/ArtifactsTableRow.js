@@ -83,6 +83,7 @@ const ArtifactsTableRow = ({
                     const cellClassName = classnames(
                       index >= mainRowItemsCount && 'table-body__cell_hidden'
                     )
+
                     return (
                       !data.hidden && (
                         <TableCell

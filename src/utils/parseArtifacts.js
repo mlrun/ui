@@ -22,7 +22,7 @@ import { getArtifactIdentifier } from './getUniqueIdentifier'
 import { isEmpty } from 'lodash'
 
 export const parseArtifacts = artifacts =>
-  (artifacts ?? []).map(artifact => {
+  (artifacts ?? []).reduce((parsedArtifacts, artifact) => {
     if (!isEmpty(artifact)) {
       let item = { ...artifact }
 
@@ -35,7 +35,7 @@ export const parseArtifacts = artifacts =>
         }
       }
 
-      return {
+      parsedArtifacts.push({
         ...item,
         kind: artifact.kind,
         ui: {
@@ -43,6 +43,8 @@ export const parseArtifacts = artifacts =>
           identifier: getArtifactIdentifier(item),
           identifierUnique: getArtifactIdentifier(item, true)
         }
-      }
+      })
     }
-  })
+
+    return parsedArtifacts
+  }, [])

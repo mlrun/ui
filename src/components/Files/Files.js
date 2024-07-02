@@ -384,7 +384,8 @@ const Files = () => {
       headerRowHeight: cssVariables.filesHeaderRowHeight,
       rowHeight: cssVariables.filesRowHeight,
       rowHeightExtended: cssVariables.filesRowHeightExtended
-    }
+    },
+    activateTableScroll: true
   })
 
   return (

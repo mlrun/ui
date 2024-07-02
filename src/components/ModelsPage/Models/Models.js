@@ -499,7 +499,8 @@ const Models = ({ fetchModelFeatureVector }) => {
       headerRowHeight: cssVariables.modelsHeaderRowHeight,
       rowHeight: cssVariables.modelsRowHeight,
       rowHeightExtended: cssVariables.modelsRowHeightExtended
-    }
+    },
+    activateTableScroll: true
   })
 
   return (

@@ -392,7 +392,8 @@ const Datasets = () => {
       headerRowHeight: cssVariables.datasetsHeaderRowHeight,
       rowHeight: cssVariables.datasetsRowHeight,
       rowHeightExtended: cssVariables.datasetsRowHeightExtended
-    }
+    },
+    activateTableScroll: true
   })
 
   return (

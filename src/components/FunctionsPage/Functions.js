@@ -696,7 +696,8 @@ const Functions = ({
       headerRowHeight: cssVariables.functionsHeaderRowHeight,
       rowHeight: cssVariables.functionsRowHeight,
       rowHeightExtended: cssVariables.functionsRowHeightExtended
-    }
+    },
+    activateTableScroll: true
   })
 
   return (
