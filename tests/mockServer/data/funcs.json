@@ -24313,6 +24313,132 @@
       "verbose": false
     },
     {
+      "kind": "application",
+      "spec": {
+        "image": "mlrun/mlrun",
+        "config": {
+          "spec.sidecars": [
+            {
+              "name": "vizro-sidecar",
+              "image": "mallonn/vizro-demo",
+              "ports": [
+                {
+                  "name": "http",
+                  "containerPort": 8050,
+                  "protocol": "TCP"
+                }
+              ]
+            }
+          ]
+        },
+        "base_image_pull": false,
+        "build": {
+          "origin_filename": "/User/.pythonlibs/mlrun-base/lib/python3.9/site-packages/mlrun/runtimes/nuclio/application/reverse_proxy.go",
+          "code_origin": "/User/.pythonlibs/mlrun-base/lib/python3.9/site-packages/mlrun/runtimes/nuclio/application/reverse_proxy.go",
+          "functionSourceCode": "Ly8gQ29weXJpZ2h0IDIwMjQgSWd1YXppbwovLwovLyBMaWNlbnNlZCB1bmRlciB0aGUgQXBhY2hlIExpY2Vuc2UsIFZlcnNpb24gMi4wICh0aGUgIkxpY2Vuc2UiKTsKLy8geW91IG1heSBub3QgdXNlIHRoaXMgZmlsZSBleGNlcHQgaW4gY29tcGxpYW5jZSB3aXRoIHRoZSBMaWNlbnNlLgovLyBZb3UgbWF5IG9idGFpbiBhIGNvcHkgb2YgdGhlIExpY2Vuc2UgYXQKLy8KLy8gICBodHRwOi8vd3d3LmFwYWNoZS5vcmcvbGljZW5zZXMvTElDRU5TRS0yLjAKLy8KLy8gVW5sZXNzIHJlcXVpcmVkIGJ5IGFwcGxpY2FibGUgbGF3IG9yIGFncmVlZCB0byBpbiB3cml0aW5nLCBzb2Z0d2FyZQovLyBkaXN0cmlidXRlZCB1bmRlciB0aGUgTGljZW5zZSBpcyBkaXN0cmlidXRlZCBvbiBhbiAiQVMgSVMiIEJBU0lTLAovLyBXSVRIT1VUIFdBUlJBTlRJRVMgT1IgQ09ORElUSU9OUyBPRiBBTlkgS0lORCwgZWl0aGVyIGV4cHJlc3Mgb3IgaW1wbGllZC4KLy8gU2VlIHRoZSBMaWNlbnNlIGZvciB0aGUgc3BlY2lmaWMgbGFuZ3VhZ2UgZ292ZXJuaW5nIHBlcm1pc3Npb25zIGFuZAovLyBsaW1pdGF0aW9ucyB1bmRlciB0aGUgTGljZW5zZS4KcGFja2FnZSBtYWluCgppbXBvcnQgKAogICAgImJ5dGVzIgogICAgImZtdCIKICAgICJuZXQvaHR0cCIKICAgICJuZXQvaHR0cC9odHRwdGVzdCIKICAgICJuZXQvaHR0cC9odHRwdXRpbCIKICAgICJuZXQvdXJsIgogICAgIm9zIgogICAgInN0cmluZ3MiCgogICAgbnVjbGlvICJnaXRodWIuY29tL251Y2xpby9udWNsaW8tc2RrLWdvIgopCgpmdW5jIEhhbmRsZXIoY29udGV4dCAqbnVjbGlvLkNvbnRleHQsIGV2ZW50IG51Y2xpby5FdmVudCkgKGludGVyZmFjZXt9LCBlcnJvcikgewogICAgcmV2ZXJzZVByb3h5IDo9IGNvbnRleHQuVXNlckRhdGEuKG1hcFtzdHJpbmddaW50ZXJmYWNle30pWyJyZXZlcnNlUHJveHkiXS4oKmh0dHB1dGlsLlJldmVyc2VQcm94eSkKICAgIHNpZGVjYXJVcmwgOj0gY29udGV4dC5Vc2VyRGF0YS4obWFwW3N0cmluZ11pbnRlcmZhY2V7fSlbInNlcnZlciJdLihzdHJpbmcpCgogICAgLy8gcG9wdWxhdGUgcmV2ZXJzZSBwcm94eSBodHRwIHJlcXVlc3QKICAgIGh0dHBSZXF1ZXN0LCBlcnIgOj0gaHR0cC5OZXdSZXF1ZXN0KGV2ZW50LkdldE1ldGhvZCgpLCBldmVudC5HZXRQYXRoKCksIGJ5dGVzLk5ld1JlYWRlcihldmVudC5HZXRCb2R5KCkpKQogICAgaWYgZXJyICE9IG5pbCB7CiAgICAgICAgY29udGV4dC5Mb2dnZXIuRXJyb3JXaXRoKCJGYWlsZWQgdG8gY3JlYXRlIGEgcmV2ZXJzZSBwcm94eSByZXF1ZXN0IikKICAgICAgICByZXR1cm4gbmlsLCBlcnIKICAgIH0KICAgIGZvciBrLCB2IDo9IHJhbmdlIGV2ZW50LkdldEhlYWRlcnMoKSB7CiAgICAgICAgaHR0cFJlcXVlc3QuSGVhZGVyW2tdID0gW11zdHJpbmd7di4oc3RyaW5nKX0KICAgIH0KICAgIHJlY29yZGVyIDo9IGh0dHB0ZXN0Lk5ld1JlY29yZGVyKCkKICAgIHJldmVyc2VQcm94eS5TZXJ2ZUhUVFAocmVjb3JkZXIsIGh0dHBSZXF1ZXN0KQoKICAgIC8vIHNlbmQgcmVxdWVzdCB0byBzaWRlY2FyCiAgICBjb250ZXh0LkxvZ2dlci5JbmZvV2l0aCgiRm9yd2FyZGluZyByZXF1ZXN0IHRvIHNpZGVjYXIiLCAic2lkZWNhclVybCIsIHNpZGVjYXJVcmwpCiAgICByZXNwb25zZSA6PSByZWNvcmRlci5SZXN1bHQoKQoKICAgIGhlYWRlcnMgOj0gbWFrZShtYXBbc3RyaW5nXWludGVyZmFjZXt9KQogICAgZm9yIGtleSwgdmFsdWUgOj0gcmFuZ2UgcmVzcG9uc2UuSGVhZGVyIHsKICAgICAgICBoZWFkZXJzW2tleV0gPSB2YWx1ZVswXQogICAgfQoKICAgIC8vIGxldCB0aGUgcHJvY2Vzc29yIGNhbGN1bGF0ZSB0aGUgY29udGVudCBsZW5ndGgKICAgIGRlbGV0ZShoZWFkZXJzLCAiQ29udGVudC1MZW5ndGgiKQogICAgcmV0dXJuIG51Y2xpby5SZXNwb25zZXsKICAgICAgICBTdGF0dXNDb2RlOiAgcmVzcG9uc2UuU3RhdHVzQ29kZSwKICAgICAgICBCb2R5OiAgICAgICAgcmVjb3JkZXIuQm9keS5CeXRlcygpLAogICAgICAgIENvbnRlbnRUeXBlOiByZXNwb25zZS5IZWFkZXIuR2V0KCJDb250ZW50LVR5cGUiKSwKICAgICAgICBIZWFkZXJzOiAgICAgaGVhZGVycywKICAgIH0sIG5pbAp9CgpmdW5jIEluaXRDb250ZXh0KGNvbnRleHQgKm51Y2xpby5Db250ZXh0KSBlcnJvciB7CiAgICBzaWRlY2FySG9zdCA6PSBvcy5HZXRlbnYoIlNJREVDQVJfSE9TVCIpCiAgICBzaWRlY2FyUG9ydCA6PSBvcy5HZXRlbnYoIlNJREVDQVJfUE9SVCIpCiAgICBpZiBzaWRlY2FySG9zdCA9PSAiIiB7CiAgICAgICAgc2lkZWNhckhvc3QgPSAiaHR0cDovL2xvY2FsaG9zdCIKICAgIH0gZWxzZSBpZiAhc3RyaW5ncy5Db250YWlucyhzaWRlY2FySG9zdCwgIjovLyIpIHsKICAgICAgICBzaWRlY2FySG9zdCA9IGZtdC5TcHJpbnRmKCJodHRwOi8vJXMiLCBzaWRlY2FySG9zdCkKICAgIH0KCiAgICAvLyB1cmwgZm9yIHJlcXVlc3QgZm9yd2FyZGluZwogICAgc2lkZWNhclVybCA6PSBmbXQuU3ByaW50ZigiJXM6JXMiLCBzaWRlY2FySG9zdCwgc2lkZWNhclBvcnQpCiAgICBwYXJzZWRVUkwsIGVyciA6PSB1cmwuUGFyc2Uoc2lkZWNhclVybCkKICAgIGlmIGVyciAhPSBuaWwgewogICAgICAgIGNvbnRleHQuTG9nZ2VyLkVycm9yV2l0aCgiRmFpbGVkIHRvIHBhcnNlIHNpZGVjYXIgdXJsIiwgInNpZGVjYXJVcmwiLCBzaWRlY2FyVXJsKQogICAgICAgIHJldHVybiBlcnIKICAgIH0KICAgIHJldmVyc2VQcm94eSA6PSBodHRwdXRpbC5OZXdTaW5nbGVIb3N0UmV2ZXJzZVByb3h5KHBhcnNlZFVSTCkKCiAgICBjb250ZXh0LlVzZXJEYXRhID0gbWFwW3N0cmluZ11pbnRlcmZhY2V7fXsKICAgICAgICAic2VydmVyIjogICAgICAgc2lkZWNhclVybCwKICAgICAgICAicmV2ZXJzZVByb3h5IjogcmV2ZXJzZVByb3h5LAogICAgfQogICAgcmV0dXJuIG5pbAp9Cg=="
+        },
+        "max_replicas": 4,
+        "description": "Rolling aggregation over Metrics and Lables according to specifications\n",
+        "default_handler": "handler",
+        "source": "",
+        "priority_class_name": "igz-workload-medium",
+        "internal_application_port": 8050,
+        "min_replicas": 1,
+        "nuclio_runtime": "golang",
+        "disable_auto_mount": true,
+        "function_handler": "reverse_proxy:Handler",
+        "preemption_mode": "prevent",
+        "command": "http://app-demo-vizro.default-tenant.app.vmdev17.lab.iguazeng.com/",
+        "node_selector": {
+          "key1": "value1",
+          "key2": "value2",
+          "key3": "value3"
+        },
+        "affinity": null,
+        "tolerations": null,
+        "env": [
+          {
+            "name": "MLRUN_HTTPDB__NUCLIO__EXPLICIT_ACK",
+            "value": "enabled"
+          },
+          {
+            "name": "SIDECAR_PORT",
+            "value": "8050"
+          },
+          {
+            "name": "SIDECAR_HOST",
+            "value": "http://localhost"
+          },
+          {
+            "name": "V3IO_API",
+            "value": "v3io-webapi.default-tenant.svc:8081"
+          },
+          {
+            "name": "V3IO_USERNAME",
+            "value": "admin"
+          },
+          {
+            "name": "V3IO_FRAMESD",
+            "value": "framesd:8081"
+          },
+          {
+            "name": "V3IO_ACCESS_KEY",
+            "valueFrom": {
+              "secretKeyRef": {
+                "key": "accessKey",
+                "name": "mlrun-auth-secrets.6e9de48945a8f776470f6dab4b5646db1d7e0c6e938c80cdaf476316"
+              }
+            }
+          },
+          {
+            "name": "MLRUN_AUTH_SESSION",
+            "valueFrom": {
+              "secretKeyRef": {
+                "key": "accessKey",
+                "name": "mlrun-auth-secrets.4940a9f520daa780f3b40894678b3ff75a55d54155101d3fa2a04023"
+              }
+            }
+          }
+        ],
+        "resources": {
+          "requests": {
+            "memory": "1Mi",
+            "cpu": "25m"
+          },
+          "limits": {
+            "memory": "20Gi",
+            "cpu": "2",
+            "gpu": "3"
+          }
+        }
+      },
+      "metadata": {
+        "project": "default",
+        "tag": "latest",
+        "credentials": {
+          "access_key": "$ref:mlrun-auth-secrets.4940a9f520daa780f3b40894678b3ff75a55d54155101d3fa2a04023"
+        },
+        "name": "vizro",
+        "hash": "69200c7de5447f61f15bd28913714c5970b831eb",
+        "updated": "2024-04-14T14:01:44.251161+00:00"
+      },
+      "verbose": false,
+      "status": {
+        "nuclio_name": "app-demo-vizro",
+        "sidecar_name": "vizro-sidecar",
+        "application_image": "mallonn/vizro-demo",
+        "external_invocation_urls": [
+          "app-demo-vizro.default-tenant.app.vmdev17.lab.iguazeng.com/"
+        ],
+        "address": "app-demo-vizro.default-tenant.app.vmdev17.lab.iguazeng.com/",
+        "container_image": "docker-registry.default-tenant.app.vmdev17.lab.iguazeng.com:80/nuclio/app-demo-app-demo-vizro-processor:latest",
+        "state": "ready",
+        "internal_invocation_urls": [
+          "nuclio-app-demo-vizro.default-tenant.svc.cluster.local:8080"
+        ]
+      }
+    },
+    {
       "kind": "job",
       "metadata": {
         "name": "concept-drift",
