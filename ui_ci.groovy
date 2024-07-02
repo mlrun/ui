@@ -11,7 +11,7 @@ common.main {
             stage('UI CI Test') {
 
                 common.conditional_stage('Pull Latest Changes', true) {
-                     { // Changed directory to /home/jenkins/ui
+                     {
                         checkout scm
                         sh 'git pull'
                     }
