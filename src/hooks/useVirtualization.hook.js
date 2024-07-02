@@ -145,6 +145,7 @@ const useTableScroll = ({
         )
       })
     }
+    
     if (selectedItemIndex >= 0) {
       if (async) {
         requestAnimationFrame(() => {
@@ -188,7 +189,7 @@ const useTableScroll = ({
 /**
  * Hook for virtualizing a table.
  * @param {Object} options - Options object.
- *  @param {any} [options.renderTriggerItem] - item that will trigger calculation of the virtualization config.
+ * @param {any} [options.renderTriggerItem] - item that will trigger calculation of the virtualization config.
  * @param {number[]} [options.rowsSizes=[]] - Array containing the heights of each row.
  * @param {Object} [options.rowsData={}] - Object containing data related to rows.
  * @param {Object[]} options.rowsData.content - Array containing content for each row.
