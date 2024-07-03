@@ -15,6 +15,7 @@ common.main {
                 }
 
                 common.conditional_stage('Set up Environment', true) {
+
                     sh '''
                         export REACT_APP_FUNCTION_CATALOG_URL=https://raw.githubusercontent.com/mlrun/functions/master
                         export REACT_APP_MLRUN_API_URL=http://localhost:30000/mlrun-api-ingress.default-tenant.app.vmdev36.lab.iguazeng.com
@@ -30,8 +31,8 @@ common.main {
                         # Check if the port 30000 is in use and kill the process if it is
                         PID=$(lsof -t -i:30000)
                         if [ -n "$PID" ]; then
-                          echo "Port 30000 is in use by PID $PID. Terminating process."
-                          kill -9 $PID
+                            echo "Port 30000 is in use by PID $PID. Terminating process."
+                            kill -9 $PID
                         fi
 
                         # Start mock-server and application in the background
@@ -47,8 +48,12 @@ common.main {
                 // }
 
                 common.conditional_stage('Post-Test Cleanup', true) {
-                    sh 'kill %1 || true'
-                    sh 'kill %2 || true'
+                    sh '''
+                        kill %1 || true
+                        kill %2 || true
+                        # Ensure any remaining background processes are terminated
+                        pkill -f npm || true
+                    '''
                 }
 
                 common.conditional_stage('Upload Artifacts', true) {
