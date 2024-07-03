@@ -167,7 +167,12 @@ const useTableScroll = ({
             ...selectedItem?.ui,
             expandedRowData: expandedRowsData[selectedItem?.ui?.identifier]
           }
-          handleSelectItemChanges(selectedItem?.ui?.identifier, content, getSpaceToSelectedItem, true)
+          handleSelectItemChanges(
+            selectedItem?.ui?.identifier,
+            content,
+            getSpaceToSelectedItem,
+            true
+          )
         } else {
           lastSelectedItemDataRef.current = {
             ...selectedItem?.ui,
@@ -175,13 +180,16 @@ const useTableScroll = ({
           }
         }
       } else if (lastSelectedItemDataRef.current && isEmpty(selectedItem)) {
-        handleSelectItemChanges(lastSelectedItemDataRef.current?.identifier, content, getSpaceToSelectedItem)
-        
+        handleSelectItemChanges(
+          lastSelectedItemDataRef.current?.identifier,
+          content,
+          getSpaceToSelectedItem
+        )
+
         lastSelectedItemDataRef.current = null
       }
-    } catch (e) {
+    } catch {
       lastSelectedItemDataRef.current = null
-      console.warn('useTableScrollHook:: Error during table scroll attempt', e)
     }
   }, [content, getSpaceToSelectedItem, selectedItem, expandedRowsData, activateHook, handleSelectItemChanges])
 }
