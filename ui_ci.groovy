@@ -26,7 +26,7 @@ common.main {
                     '''
                 }
 
-                common.conditional_stage('Run Regression Tests', false) {
+                common.conditional_stage('Run Regression Tests', true) {
                     // Run cucumber-js tests
                     sh './node_modules/.bin/cucumber-js --require-module @babel/register --require-module @babel/polyfill -f json:tests/reports/cucumber_report.json -f html:tests/reports/cucumber_report_default.html tests -t \'@smoke\''
                 }
@@ -42,7 +42,6 @@ common.main {
 
                 common.conditional_stage('Upload Artifacts', true) {
                     sh '''
-
                         # touch tests/reports/cucumber_report_default.html
                         # Environment variables
                         ART_URL="http://artifactory.iguazeng.com:8082/artifactory/ui-ci-reports"
@@ -60,42 +59,22 @@ common.main {
                     '''
                 }
 
-                // Uncomment this stage if needed
-                // common.conditional_stage('Send Report Link to Slack', true) {
-                //     script {
-                //         def report_url = "http://artifactory.iguazeng.com:8082/artifactory/ui-ci-reports/cucumber_report_default_${env.BUILD_NUMBER}.html"
-                //         // Send the link to Slack
-                //         sh """
-                //             curl -X POST -H 'Content-type: application/json' --data '{"channel": "${SLACK_CHANNEL}", "text": "Here is the latest regression test report: ${report_url}"}' \
-                //             -H "Authorization: Bearer ${SLACK_TOKEN}" https://slack.com/api/chat.postMessage
-                //         """
-                //     }
-                // }
-            }
-        }
-    }
-}
+                common.conditional_stage('Cleaning up', true) {
+                    sh '''
+                        pkill -f npm || true
+                    '''
+                }
 
-post {
-    always {
-        script {
-            // Ensure any remaining background processes are terminated
-            sh 'pkill -f npm || true'
-        }
-    }
-    success {
-        script {
-            echo 'Build was successful!'
-        }
-    }
-    failure {
-        script {
-            echo 'Build failed!'
-        }
-    }
-    cleanup {
-        script {
-            echo 'Cleaning up...'
+                common.conditional_stage('Build Status', true) {
+                    script {
+                        if (currentBuild.currentResult == 'SUCCESS') {
+                            echo 'Build was successful!'
+                        } else {
+                            echo 'Build failed!'
+                        }
+                    }
+                }
+            }
         }
     }
 }
