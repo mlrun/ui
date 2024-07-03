@@ -43,7 +43,7 @@ common.main {
                 common.conditional_stage('Upload Artifacts', true) {
                     sh '''
 
-                        touch tests/reports/cucumber_report_default.html
+                        # touch tests/reports/cucumber_report_default.html
                         # Environment variables
                         ART_URL="http://artifactory.iguazeng.com:8082/artifactory/ui-ci-reports"
                         AUTH="${ARTIFACTORY_CRED}"
