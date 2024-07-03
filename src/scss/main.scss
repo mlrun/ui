@@ -425,6 +425,10 @@ main {
       max-width: 240px;
     }
   }
+
+  &-fixed {
+    table-layout: fixed;
+  }
 }
 
 /*=========== SORT =============*/
