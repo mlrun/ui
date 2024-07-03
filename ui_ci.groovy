@@ -50,7 +50,7 @@ common.main {
                         LOCAL_FILE="tests/reports/cucumber_report_default.html"
 
                         # Generate the Artifactory path with the build number
-                        ARTIFACTORY_PATH="cucumber_report_default_${env.BUILD_NUMBER}.html"
+                        ARTIFACTORY_PATH="cucumber_report_default_${BUILD_NUMBER}.html"
 
                         # Construct the full URL
                         URL="${ART_URL}/${ARTIFACTORY_PATH}"
