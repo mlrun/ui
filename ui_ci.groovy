@@ -1,7 +1,7 @@
 @Library('pipelinex@development')
 import com.iguazio.pipelinex.JobException
 
-def node_label = 'ubuntu_ui_runner'
+def node_label = 'ubuntu-ui-runner'
 
 common.set_current_display_name("UI_CI_Test")
 
