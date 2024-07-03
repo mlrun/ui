@@ -16,12 +16,12 @@ common.main {
                 }
 
                 common.conditional_stage('Set up Environment', true) {
-                    // sh 'npm install'
+                    sh 'npm install'
                     sh '''
-                        export REACT_APP_FUNCTION_CATALOG_URL=${REACT_APP_FUNCTION_CATALOG_URL}
-                        export REACT_APP_MLRUN_API_URL=${REACT_APP_MLRUN_API_URL}
-                        export REACT_APP_NUCLIO_API_URL=${REACT_APP_NUCLIO_API_URL}
-                        export REACT_APP_IGUAZIO_API_URL=${REACT_APP_IGUAZIO_API_URL}
+                        export REACT_APP_FUNCTION_CATALOG_URL=https://raw.githubusercontent.com/mlrun/functions/master
+                        export REACT_APP_MLRUN_API_URL=http://localhost:30000/mlrun-api-ingress.default-tenant.app.vmdev36.lab.iguazeng.com
+                        export REACT_APP_NUCLIO_API_URL=http://localhost:30000/nuclio-ingress.default-tenant.app.vmdev36.lab.iguazeng.com
+                        export REACT_APP_IGUAZIO_API_URL=http://localhost:30000/platform-api.default-tenant.app.vmdev36.lab.iguazeng.com
                     '''
                 }
 
