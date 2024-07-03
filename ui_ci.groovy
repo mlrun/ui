@@ -12,34 +12,45 @@ common.main {
 
                 common.conditional_stage('Pull Latest Changes', true) {
                     checkout scm
-                    sh 'git pull'
                 }
 
                 common.conditional_stage('Set up Environment', true) {
-                    sh 'npm install'
+
                     sh '''
                         export REACT_APP_FUNCTION_CATALOG_URL=https://raw.githubusercontent.com/mlrun/functions/master
                         export REACT_APP_MLRUN_API_URL=http://localhost:30000/mlrun-api-ingress.default-tenant.app.vmdev36.lab.iguazeng.com
                         export REACT_APP_NUCLIO_API_URL=http://localhost:30000/nuclio-ingress.default-tenant.app.vmdev36.lab.iguazeng.com
                         export REACT_APP_IGUAZIO_API_URL=http://localhost:30000/platform-api.default-tenant.app.vmdev36.lab.iguazeng.com
                     '''
+
+                    sh 'npm install'
                 }
 
                 common.conditional_stage('Start Services', true) {
-                    // Start mock-server and application in the background
-                    sh 'npm run mock-server &'
-                    sh 'npm start &'
+                    sh '''
+                        # Check if the mock server is already running
+                        if lsof -i:30000 -t >/dev/null; then
+                            echo "Mock server already running on port 30000"
+                        else
+                            # Start mock-server and application in the background
+                            npm run mock-server &
+                            npm start &
+                        fi
+                    '''
                 }
 
-                // Uncomment this stage if needed
-                // common.conditional_stage('Run Regression Tests', true) {
-                //     // Run cucumber-js tests
-                //     sh './node_modules/.bin/cucumber-js --require-module @babel/register --require-module @babel/polyfill -f json:tests/reports/cucumber_report.json -f html:tests/reports/cucumber_report_default.html tests -t \'@smoke\''
-                // }
+                 common.conditional_stage('Run Regression Tests', true) {
+                     // Run cucumber-js tests
+                     sh './node_modules/.bin/cucumber-js --require-module @babel/register --require-module @babel/polyfill -f json:tests/reports/cucumber_report.json -f html:tests/reports/cucumber_report_default.html tests -t \'@smoke\''
+                 }
 
                 common.conditional_stage('Post-Test Cleanup', true) {
-                    sh 'kill %1 || true'
-                    sh 'kill %2 || true'
+                    sh '''
+                        kill %1 || true
+                        kill %2 || true
+                        # Ensure any remaining background processes are terminated
+                        pkill -f npm || true
+                    '''
                 }
 
                 common.conditional_stage('Upload Artifacts', true) {
