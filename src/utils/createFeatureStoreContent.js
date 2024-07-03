@@ -226,10 +226,6 @@ export const createFeaturesRowData = (feature, isTablePanelOpen, showExpandButto
         type: 'labels'
       },
       {
-        ...getFeatureSetTargetCellValue(feature.targets),
-        hidden: isTablePanelOpen
-      },
-      {
         id: `validator.${feature.ui.identifierUnique}`,
         headerId: 'validator',
         headerLabel: 'Validator',
