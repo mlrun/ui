@@ -33,7 +33,6 @@ common.main {
                     '''
                 }
 
-                Uncomment this stage if needed
                 common.conditional_stage('Run Regression Tests', true) {
                     // Run cucumber-js tests
                     sh './node_modules/.bin/cucumber-js --require-module @babel/register --require-module @babel/polyfill -f json:tests/reports/cucumber_report.json -f html:tests/reports/cucumber_report_default.html tests -t \'@smoke\''
