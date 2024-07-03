@@ -173,7 +173,7 @@ const ModelEndpoints = () => {
       setSelectedModelEndpoint({})
       abortControllerRef.current.abort(REQUEST_CANCELED)
     }
-  }, [dispatch])
+  }, [dispatch, params.projectName, setModelEndpoints])
 
   useEffect(() => {
     if (params.name && modelEndpoints.length > 0) {
