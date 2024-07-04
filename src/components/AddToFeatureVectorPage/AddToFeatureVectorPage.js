@@ -44,9 +44,12 @@ import { setTablePanelOpen } from '../../reducers/tableReducer'
 import { showErrorNotification } from '../../utils/notifications.util'
 import { useGetTagOptions } from '../../hooks/useGetTagOptions.hook'
 import { useGroupContent } from '../../hooks/groupContent.hook'
+import { useVirtualization } from '../../hooks/useVirtualization.hook'
 import { useYaml } from '../../hooks/yaml.hook'
 
 import { ReactComponent as Yaml } from 'igz-controls/images/yaml.svg'
+
+import cssVariables from '../FeatureStore/Features/features.scss'
 
 const AddToFeatureVectorPage = ({
   createNewFeatureVector,
@@ -274,6 +277,19 @@ const AddToFeatureVectorPage = ({
     }
   }, [dispatch])
 
+  const virtualizationConfig = useVirtualization({
+    rowsData: {
+      content: tableContent,
+      expandedRowsData: selectedRowData
+    },
+    heightData: {
+      headerRowHeight: cssVariables.featuresHeaderRowHeight,
+      rowHeight: cssVariables.featuresRowHeight,
+      rowHeightExtended: cssVariables.featuresRowHeightExtended
+    }
+  })
+  console.log('virtualizationConfig', virtualizationConfig)
+
   return (
     <AddToFeatureVectorView
       actionsMenu={actionsMenu}
@@ -289,6 +305,7 @@ const AddToFeatureVectorPage = ({
       tableContent={tableContent}
       tableStore={tableStore}
       toggleConvertedYaml={toggleConvertedYaml}
+      virtualizationConfig={virtualizationConfig}
     />
   )
 }
