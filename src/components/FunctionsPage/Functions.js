@@ -461,7 +461,8 @@ const Functions = ({
         toggleConvertedYaml,
         buildAndRunFunc,
         deletingFunctions,
-        selectedFunction
+        selectedFunction,
+        fetchFunction
       ),
     [
       dispatch,
@@ -471,7 +472,8 @@ const Functions = ({
       toggleConvertedYaml,
       buildAndRunFunc,
       deletingFunctions,
-      selectedFunction
+      selectedFunction,
+      fetchFunction
     ]
   )
 
