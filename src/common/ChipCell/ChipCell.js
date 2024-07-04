@@ -38,7 +38,7 @@ const ChipCell = ({
   onClick,
   removeChip,
   shortChips,
-  setValidation = null,
+  setValidation = () => {},
   visibleChipsMaxLength
 }) => {
   const {
