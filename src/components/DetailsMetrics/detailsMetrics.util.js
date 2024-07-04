@@ -132,27 +132,46 @@ export const getDateRangeBefore = range => {
 const getMetricTitle = fullName =>
   fullName.substring(fullName.lastIndexOf('.') + 1).replace(/-/g, ' ')
 
-const timeFormatters = {
-  hours: {
-    formatMetricsTime: dates => {
-      const options = {
-        hour: 'numeric',
-        minute: TWO_DIGIT,
-        hour12: true
-      }
-      return dates.map(([date]) => new Date(date).toLocaleTimeString('en-US', options))
-    }
-  },
-  days: {
-    formatMetricsTime: dates => {
-      const options = {
-        year: TWO_DIGIT,
-        month: TWO_DIGIT,
-        day: TWO_DIGIT
-      }
-      return dates.map(([date]) => new Date(date).toLocaleDateString('en-US', options))
+const formatMetricsTime = (timeUnit, dates) => {
+  const timeFormatters = {
+    hours: {
+      handler: date =>
+        new Date(date).toLocaleTimeString('en-US', {
+          hour: 'numeric',
+          minute: TWO_DIGIT,
+          hour12: true
+        })
+    },
+    days: {
+      handler: date =>
+        new Date(date).toLocaleDateString('en-US', {
+          year: TWO_DIGIT,
+          month: TWO_DIGIT,
+          day: TWO_DIGIT
+        })
+    },
+    full: {
+      handler: date =>
+        new Date(date).toLocaleDateString('en-US', {
+          year: TWO_DIGIT,
+          month: TWO_DIGIT,
+          day: TWO_DIGIT,
+          hour: 'numeric',
+          minute: TWO_DIGIT,
+          hour12: true
+        })
     }
   }
+
+  return dates.reduce(
+    (dates, [date]) => {
+      dates.labels.push(timeFormatters[timeUnit].handler(date))
+      dates.fullDates.push(timeFormatters['full'].handler(date))
+      
+      return dates
+    },
+    { fullDates: [], labels: [] }
+  )
 }
 
 export const formatNumber = num => {
@@ -224,12 +243,14 @@ export const parseMetrics = (data, timeUnit) => {
     const totalOrAvg = withInvocationRate
       ? formatNumber(points.reduce((sum, value) => sum + value, 0))
       : formatNumber((points.reduce((sum, value) => sum + value, 0) / points.length).toFixed(2))
+    const formattedMetricsTime = formatMetricsTime(timeUnit, values)
 
     return {
       ...metric,
       app: getAppName(full_name),
       id: index,
-      labels: timeFormatters[timeUnit].formatMetricsTime(values),
+      labels: formattedMetricsTime.labels,
+      dates: formattedMetricsTime.fullDates,
       points,
       title: getMetricTitle(full_name),
       driftStatusList,

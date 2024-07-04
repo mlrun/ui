@@ -302,7 +302,7 @@ const DetailsMetrics = ({ selectedItem }) => {
         params.end = detailsStore.dates.value[1].getTime()
       }
 
-      ;[invocationMetric, ...selectedMetrics].forEach(metric => {
+      [invocationMetric, ...selectedMetrics].forEach(metric => {
         params.name.push(metric.full_name)
       })
 
@@ -416,7 +416,7 @@ const DetailsMetrics = ({ selectedItem }) => {
                               <TextTooltipTemplate
                                 text={
                                   <div className="total-drift-status-tooltip">
-                                    <div>Date: {metric.labels[metric.totalDriftStatus.index]}</div>
+                                    <div>Date: {metric.dates[metric.totalDriftStatus.index]}</div>
                                     <div>Value:{metric.points[metric.totalDriftStatus.index]}</div>
                                   </div>
                                 }
@@ -458,6 +458,7 @@ const DetailsMetrics = ({ selectedItem }) => {
                                 datasets: [
                                   {
                                     data: metric.points,
+                                    dates: metric.dates,
                                     chartType: CHART_TYPE_LINE,
                                     metricType: metric.type,
                                     driftStatusList: metric.driftStatusList || [],
