@@ -494,6 +494,7 @@ const Functions = ({
     return () => {
       setSelectedFunctionMin({})
       setFunctions([])
+      setSelectedRowData({})
       abortControllerRef.current.abort(REQUEST_CANCELED)
     }
   }, [params.projectName, fetchData])

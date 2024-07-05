@@ -331,6 +331,7 @@ const Files = () => {
       setFiles([])
       dispatch(removeFiles())
       setSelectedFileMin({})
+      setSelectedRowData({})
       abortControllerRef.current.abort(REQUEST_CANCELED)
       tagAbortControllerCurrent.abort(REQUEST_CANCELED)
     }
