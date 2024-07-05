@@ -1518,7 +1518,7 @@ function deployMLFunction(req, res) {
 
 function getFile(req, res) {
   const dataRoot = mockHome + '/data/'
-  const filePath = dataRoot + req.query['path'].substring(8)
+  const filePath = dataRoot + req.query['path'].split('://')[1]
 
   res.sendFile(filePath)
 }
@@ -2297,7 +2297,7 @@ app.get(`${mlrunAPIIngress}/projects/:project/nuclio/:func/deploy`, getNuclioLog
 app.get(`${mlrunAPIIngress}/build/status`, getBuildStatus)
 app.post(`${mlrunAPIIngress}/build/function`, deployMLFunction)
 
-app.get(`${mlrunAPIIngress}/files`, getFile)
+app.get(`${mlrunAPIIngress}/projects/:project/files`, getFile)
 
 app.get(`${mlrunAPIIngress}/log/:project/:uid`, getLog)
 
