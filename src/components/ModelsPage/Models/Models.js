@@ -386,6 +386,7 @@ const Models = ({ fetchModelFeatureVector }) => {
       setModels([])
       dispatch(removeModels())
       setSelectedModelMin({})
+      setSelectedRowData({})
       //temporarily commented till ML-5606 will be done
       // setTableHeaders([])
       // setDataIsLoaded(false)
