@@ -1419,13 +1419,31 @@ function deleteFunc(req, res) {
   }
 }
 
+function getNuclioLogs(req, res) {
+  sendLogsData({
+    project: req.params.project,
+    name: req.params.func,
+    tag: req.query.tag,
+    type: 'Function'
+  }, res)
+}
+
 function getBuildStatus(req, res) {
+  sendLogsData({
+    project: req.query.name,
+    name: req.query.name,
+    tag: req.query.tag,
+    type: 'Application'
+  }, res)
+}
+
+function sendLogsData(data, res) {
   const dt = parseInt(Date.now())
 
   const collectedFunc = funcs.funcs
-    .filter(func => func.metadata.project === req.query.project)
-    .filter(func => func.metadata.name === req.query.name)
-    .filter(func => func.metadata.tag === req.query.tag)
+    .filter(func => func.metadata.project === data.project)
+    .filter(func => func.metadata.name === data.name)
+    .filter(func => func.metadata.tag === data.tag)
     .filter(func => Date.parse(func.metadata.updated) > dt)
 
   let logText = ''
@@ -1434,7 +1452,7 @@ function getBuildStatus(req, res) {
       function_status: 'ready',
       'x-mlrun-function-status': 'ready'
     })
-    logText = `ML Run mock log message for "${req.query.name}" function in "${req.query.project}" project`
+    logText = `${data.type} MLRun mock log message for "${data.name}" function in "${data.project}" project`
   } else {
     res.set({
       function_status: 'running',
@@ -1500,7 +1518,7 @@ function deployMLFunction(req, res) {
 
 function getFile(req, res) {
   const dataRoot = mockHome + '/data/'
-  const filePath = dataRoot + req.query['path'].substring(8)
+  const filePath = dataRoot + req.query['path'].split('://')[1]
 
   res.sendFile(filePath)
 }
@@ -2275,10 +2293,11 @@ app.get(
 
 app.delete(`${mlrunAPIIngressV2}/projects/:project/functions/:func`, deleteFunc)
 
+app.get(`${mlrunAPIIngress}/projects/:project/nuclio/:func/deploy`, getNuclioLogs)
 app.get(`${mlrunAPIIngress}/build/status`, getBuildStatus)
 app.post(`${mlrunAPIIngress}/build/function`, deployMLFunction)
 
-app.get(`${mlrunAPIIngress}/files`, getFile)
+app.get(`${mlrunAPIIngress}/projects/:project/files`, getFile)
 
 app.get(`${mlrunAPIIngress}/log/:project/:uid`, getLog)
 

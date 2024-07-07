@@ -78,6 +78,7 @@ const ProjectSettingsGeneral = ({
   projectOwnerIsShown,
   removeProjectData
 }) => {
+  const [projectIsInitialized, setProjectIsInitialized] = useState(false)
   const [lastEditedProjectValues, setLastEditedProjectValues] = useState({})
   const formRef = React.useRef(
     createForm({
@@ -90,49 +91,52 @@ const ProjectSettingsGeneral = ({
   const params = useParams()
   const dispatch = useDispatch()
 
+  useEffect(
+    () => {
+      if (!projectIsInitialized) {
+        setProjectIsInitialized(true)
+
+        fetchProject(params.projectName)
+          .then(projectResponse => {
+            setTimeout(() => {
+              const newInitial = {
+                [SOURCE_URL]: projectResponse.spec[SOURCE_URL],
+                [ARTIFACT_PATH]: projectResponse.spec[ARTIFACT_PATH],
+                [LOAD_SOURCE_ON_RUN]: projectResponse.spec[LOAD_SOURCE_ON_RUN],
+                [DEFAULT_IMAGE]: projectResponse.spec[DEFAULT_IMAGE],
+                [DESCRIPTION]: projectResponse.spec[DESCRIPTION],
+                [GOALS]: projectResponse.spec[GOALS],
+                [PARAMS]: parseObjectToKeyValue(projectResponse.spec[PARAMS]),
+                [LABELS]: parseChipsData(projectResponse.metadata[LABELS], frontendSpec.internal_labels || [])
+              }
+
+              if (areNodeSelectorsSupported) {
+                newInitial[NODE_SELECTORS] = parseObjectToKeyValue(projectResponse.spec[NODE_SELECTORS])
+              }
+
+              setLastEditedProjectValues(newInitial)
+              formStateRef.current.form.restart(newInitial)
+            }, 10)
+          })
+          .catch(error => {
+            const customErrorMsg =
+              error.response?.status === FORBIDDEN_ERROR_STATUS_CODE
+                ? 'Permission denied'
+                : getErrorMsg(error, 'Failed to fetch project data')
+
+            showErrorNotification(dispatch, error, '', customErrorMsg)
+          })
+      }
+    },
+    [params.pageTab, params.projectName, fetchProject, dispatch, frontendSpec.internal_labels, projectIsInitialized]
+  )
+
   useEffect(() => {
-    fetchProject(params.projectName)
-      .then(projectResponse => {
-        setTimeout(() => {
-          const newInitial = {
-            [SOURCE_URL]: projectResponse.spec[SOURCE_URL],
-            [ARTIFACT_PATH]: projectResponse.spec[ARTIFACT_PATH],
-            [LOAD_SOURCE_ON_RUN]: projectResponse.spec[LOAD_SOURCE_ON_RUN],
-            [DEFAULT_IMAGE]: projectResponse.spec[DEFAULT_IMAGE],
-            [DESCRIPTION]: projectResponse.spec[DESCRIPTION],
-            [GOALS]: projectResponse.spec[GOALS],
-            [PARAMS]: parseObjectToKeyValue(projectResponse.spec[PARAMS]),
-            [LABELS]: parseChipsData(projectResponse.metadata[LABELS], frontendSpec.internal_labels)
-          }
-
-          if (areNodeSelectorsSupported) {
-            newInitial[NODE_SELECTORS] = parseObjectToKeyValue(projectResponse.spec[NODE_SELECTORS])
-          }
-
-          setLastEditedProjectValues(newInitial)
-          formStateRef.current.form.restart(newInitial)
-        }, 10)
-      })
-      .catch(error => {
-        const customErrorMsg =
-          error.response?.status === FORBIDDEN_ERROR_STATUS_CODE
-            ? 'Permission denied'
-            : getErrorMsg(error, 'Failed to fetch project data')
-
-        showErrorNotification(dispatch, error, '', customErrorMsg)
-      })
-
     return () => {
       removeProjectData()
+      setProjectIsInitialized(false)
     }
-  }, [
-    removeProjectData,
-    params.pageTab,
-    params.projectName,
-    fetchProject,
-    dispatch,
-    frontendSpec.internal_labels
-  ])
+  }, [removeProjectData])
 
   const sendProjectSettingsData = useCallback(
     projectData => {
@@ -308,7 +312,7 @@ const ProjectSettingsGeneral = ({
                       validationRules={{
                         key: getValidationRules(
                           'project.labels.key',
-                          getInternalLabelsValidationRule(frontendSpec.internal_labels)
+                          getInternalLabelsValidationRule(frontendSpec.internal_labels || [])
                         ),
                         value: getValidationRules('project.labels.value')
                       }}
@@ -335,7 +339,7 @@ const ProjectSettingsGeneral = ({
                         <span className="row-label">Owner:</span>
                         <span className="row-name">
                           {membersState.projectInfo?.owner?.username ||
-                            projectStore.project.data?.spec?.owner}
+                          projectStore.project.data?.spec?.owner}
                         </span>
                       </div>
                     </div>

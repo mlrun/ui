@@ -44,7 +44,7 @@ export const generateMonitoringStats = (data, navigate, dispatch, tab) => {
         ...filters,
         saveFilters: true,
         dates: {
-          value: date.handler(),
+          value: date.handler(dateFutureOption),
           isPredefined: date.isPredefined,
           initialSelectedOptionId: date.id
         }

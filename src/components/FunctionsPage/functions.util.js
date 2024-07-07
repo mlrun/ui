@@ -188,17 +188,6 @@ export const getFunctionImage = func => {
     : func.image
 }
 
-export const getFunctionApiGateway = (func, apiGateways) => {
-  const functionApiGatewayName = func.status?.api_gateway_name
-  let functionApiGateway = null
-
-  if (!isEmpty(apiGateways) && functionApiGatewayName && apiGateways[functionApiGatewayName]) {
-    functionApiGateway = apiGateways[functionApiGatewayName]
-  }
-
-  return functionApiGateway
-}
-
 export const generateActionsMenu = (
   dispatch,
   func,
@@ -212,18 +201,11 @@ export const generateActionsMenu = (
   buildAndRunFunc,
   deletingFunctions,
   selectedFunction,
-  fetchFunction,
-  apiGateways
+  fetchFunction
 ) => {
   const functionIsDeleting = isFunctionDeleting(func, deletingFunctions)
-  const getFullFunction = (funcMin) => {
-    return chooseOrFetchFunction(
-      selectedFunction,
-      dispatch,
-      fetchFunction,
-      funcMin,
-      apiGateways
-    )
+  const getFullFunction = funcMin => {
+    return chooseOrFetchFunction(selectedFunction, dispatch, fetchFunction, funcMin)
   }
 
   return [
@@ -273,7 +255,7 @@ export const generateActionsMenu = (
         label: 'View YAML',
         icon: <Yaml />,
         disabled: functionIsDeleting,
-        onClick: (funcMin) => getFullFunction(funcMin).then((func) => toggleConvertedYaml(func))
+        onClick: funcMin => getFullFunction(funcMin).then(toggleConvertedYaml)
       }
     ],
     [
@@ -298,7 +280,7 @@ export const generateActionsMenu = (
             setEditableItem(func)
           })
         },
-        hidden: func?.type !== FUNCTION_TYPE_SERVING
+        hidden: !isDemoMode || func?.type !== FUNCTION_TYPE_SERVING
       }
     ]
   ]
@@ -351,7 +333,7 @@ export const pollDeletingFunctions = (
 }
 
 export const setFullSelectedFunction = debounce(
-  (dispatch, fetchFunction, selectedFunctionMin, setSelectedFunction, apiGateways, projectName) => {
+  (dispatch, navigate, fetchFunction, selectedFunctionMin, setSelectedFunction, projectName) => {
     if (isEmpty(selectedFunctionMin)) {
       setSelectedFunction({})
     } else {
@@ -364,7 +346,6 @@ export const setFullSelectedFunction = debounce(
         name,
         hash,
         tag,
-        apiGateways,
         true
       )
         .then(parsedFunction => {
@@ -372,6 +353,7 @@ export const setFullSelectedFunction = debounce(
         })
         .catch(error => {
           setSelectedFunction({})
+          navigate(`/projects/${projectName}/functions`, { replace: true })
         })
     }
   },
@@ -401,14 +383,11 @@ const fetchAndParseFunction = (
   funcName,
   funcHash,
   funcTag,
-  apiGateways,
   returnError
 ) => {
   return fetchFunction(projectName, funcName, funcHash, funcTag)
     .then(func => {
-      const funcApiGateway = !isEmpty(apiGateways) ? getFunctionApiGateway(func, apiGateways) : null
-
-      return parseFunction(func, projectName, null, funcApiGateway)
+      return parseFunction(func, projectName)
     })
     .catch(error => {
       showErrorNotification(dispatch, error, '', 'Failed to retrieve function data')
@@ -419,7 +398,7 @@ const fetchAndParseFunction = (
     })
 }
 
-const chooseOrFetchFunction = (selectedFunction, dispatch, fetchFunction, funcMin, apiGateways) => {
+const chooseOrFetchFunction = (selectedFunction, dispatch, fetchFunction, funcMin) => {
   if (!isEmpty(selectedFunction)) return Promise.resolve(selectedFunction)
 
   return fetchAndParseFunction(
@@ -428,7 +407,6 @@ const chooseOrFetchFunction = (selectedFunction, dispatch, fetchFunction, funcMi
     funcMin?.project,
     funcMin?.name,
     funcMin?.hash,
-    funcMin?.tag,
-    apiGateways
+    funcMin?.tag
   )
 }

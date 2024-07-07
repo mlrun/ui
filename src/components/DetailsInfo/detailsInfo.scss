@@ -76,6 +76,12 @@
 
         &_multiline {
           display: inline-block;
+
+          * {
+            &:not(:last-child) {
+              margin-bottom: 5px;
+            }
+          }
         }
 
         &-btn-edit {

@@ -298,13 +298,19 @@ const ActionBar = ({
 
 ActionBar.propTypes = {
   actionButtons: PropTypes.arrayOf(
-    PropTypes.shape({
-      className: PropTypes.string,
-      hidden: PropTypes.bool,
-      label: PropTypes.string.isRequired,
-      onClick: PropTypes.func.isRequired,
-      variant: PropTypes.string.isRequired
-    })
+    PropTypes.oneOfType([
+      PropTypes.shape({
+        className: PropTypes.string,
+        hidden: PropTypes.bool,
+        label: PropTypes.string.isRequired,
+        onClick: PropTypes.func.isRequired,
+        variant: PropTypes.string
+      }),
+      PropTypes.shape({
+        hidden: PropTypes.bool.isRequired,
+        template: PropTypes.object.isRequired,
+      })
+    ])
   ),
   cancelRequest: PropTypes.func,
   expand: PropTypes.bool,

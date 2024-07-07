@@ -149,13 +149,18 @@ const DetailsInfoItem = React.forwardRef(
       )
     } else if (item?.copyToClipboard && info) {
       return (
-        <CopyToClipboard
-          className="details-item__data details-item__copy-to-clipboard"
-          textToCopy={info}
-          tooltipText="Click to copy"
-        >
-          {info}
-        </CopyToClipboard>
+        <div className="details-item__data details-item__data_multiline">
+          {(Array.isArray(info) ? info : [info]).map((infoItem, index) => {
+            return <CopyToClipboard
+              key={index}
+              className="details-item__data details-item__copy-to-clipboard"
+              textToCopy={infoItem}
+              tooltipText="Click to copy"
+            >
+              {infoItem}
+            </CopyToClipboard>
+          })}
+        </div>
       )
     } else if (currentField === 'usage_example') {
       return (
@@ -217,22 +222,29 @@ const DetailsInfoItem = React.forwardRef(
         </Tooltip>
       )
     } else if ((item.link || item.externalLink) && info) {
-      return item.link ? (
-        <Link className="link details-item__data details-item__link" to={item.link}>
-          <Tooltip template={<TextTooltipTemplate text={info} />}>{info}</Tooltip>
-        </Link>
-      ) : (
-        <a
-          className="details-item__data details-item__link"
-          href={info}
-          target="_blank"
-          rel="noreferrer"
-        >
-          <Tooltip className="link" template={<TextTooltipTemplate text={info} />}>
-            {info}
-          </Tooltip>
-        </a>
-      )
+      return <div className="details-item__data details-item__data_multiline">
+        {
+          (Array.isArray(info) ? info : [info]).map((infoItem, index) => {
+            return item.link ? (
+              <Link className="link details-item__data details-item__link" to={item.link} key={index}>
+                <Tooltip template={<TextTooltipTemplate text={infoItem} />}>{infoItem}</Tooltip>
+              </Link>
+            ) : (
+              <a
+                key={index}
+                className="details-item__data details-item__link"
+                href={infoItem}
+                target="_blank"
+                rel="noreferrer"
+              >
+                <Tooltip className="link" template={<TextTooltipTemplate text={infoItem} />}>
+                  {infoItem}
+                </Tooltip>
+              </a>
+            )
+          })
+        }
+      </div>
     } else if ((typeof info !== 'object' || Array.isArray(info)) && item?.editModeEnabled) {
       return (
         <div className="details-item__data">

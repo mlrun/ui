@@ -1,5 +1,4 @@
-/*
-Copyright 2019 Iguazio Systems Ltd.
+<!-- Copyright 2019 Iguazio Systems Ltd.
 
 Licensed under the Apache License, Version 2.0 (the "License") with
 an addition restriction as set forth herein. You may not use this
@@ -15,14 +14,24 @@ permissions and limitations under the License.
 In addition, you may not use the software for any purposes that are
 illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
-such restriction.
-*/
-import { mainHttpClient } from '../httpClient'
+such restriction. -->
+<!DOCTYPE html>
+<html lang="en">
 
-const mlrunNuclioApi = {
-  getDeployLogs: (projectName, functionName, config) => {
-    return mainHttpClient.get(`/projects/${projectName}/nuclio/${functionName}/deploy`, config)
-  }
-}
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simple HTML Page</title>
+</head>
 
-export default mlrunNuclioApi
+<body>
+    <h1>Welcome to HTML</h1>
+    <p>This is a paragraph on a simple HTML page.</p>
+    <ul>
+        <li>Home</li>
+        <li>About</li>
+        <li>Contact</li>
+    </ul>
+</body>
+
+</html>

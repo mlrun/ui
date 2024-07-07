@@ -44,155 +44,150 @@ import { filters } from './functions.util'
 import { getNoDataMessage } from '../../utils/getNoDataMessage'
 import { isRowRendered } from '../../hooks/useVirtualization.hook'
 
-const FunctionsView = React.forwardRef(
-  (
-    {
-      actionsMenu,
-      closePanel,
-      confirmData,
-      convertedYaml,
-      createFunctionSuccess,
-      editableItem,
-      expand,
-      filtersChangeCallback,
-      filtersStore,
-      functionsFilters,
-      functionsPanelIsOpen,
-      functionsStore,
-      getPopUpTemplate,
-      handleCancel,
-      handleDeployFunctionFailure,
-      handleDeployFunctionSuccess,
-      handleExpandAll,
-      handleExpandRow,
-      handleSelectFunction,
-      isDemoMode,
-      largeRequestErrorMessage,
-      pageData,
-      refreshFunctions,
-      selectedFunction,
-      selectedRowData,
-      setSelectedRowData,
-      tableContent,
-      taggedFunctions,
-      toggleConvertedYaml,
-      virtualizationConfig
-    }
-  ) => {
-    const params = useParams()
-    return (
-      <>
-        <div className="content-wrapper">
-          <div className="content__header">
-            <Breadcrumbs />
-          </div>
-          <div className="content">
-            <div className="table-container">
-              <div className="content__action-bar-wrapper">
-                <ActionBar
-                  page={FUNCTIONS_PAGE}
-                  expand={expand}
-                  filters={functionsFilters}
-                  filterMenuName={FUNCTION_FILTERS}
-                  handleExpandAll={handleExpandAll}
-                  handleRefresh={filtersChangeCallback}
-                  actionButtons={[
-                    {
-                      hidden: !isDemoMode,
-                      template: getPopUpTemplate({
-                        className: 'action-button',
-                        label: 'New',
-                        variant: SECONDARY_BUTTON
-                      }),
-                    }
-                  ]}
-                >
-                  <FunctionsFilters />
-                </ActionBar>
-              </div>
-              {functionsStore.loading || functionsStore.apiGateways.loading ? (
-                <Loader />
-              ) : taggedFunctions.length === 0 ? (
-                <NoData
-                  message={getNoDataMessage(
-                    filtersStore,
-                    filters,
-                    largeRequestErrorMessage,
-                    FUNCTIONS_PAGE,
-                    FUNCTION_FILTERS
-                  )}
-                />
-              ) : (
-                <>
-                  {functionsStore.funcLoading && <Loader />}
-                  <Table
-                    actionsMenu={actionsMenu}
-                    handleCancel={handleCancel}
-                    pageData={pageData}
-                    retryRequest={refreshFunctions}
-                    selectedItem={selectedFunction}
-                    tableClassName="functions-table"
-                    tableHeaders={tableContent[0]?.content ?? []}
-                    virtualizationConfig={virtualizationConfig}
-                  >
-                    {tableContent.map(
-                      (tableItem, index) =>
-                        isRowRendered(virtualizationConfig, index) && (
-                          <FunctionsTableRow
-                            actionsMenu={actionsMenu}
-                            handleExpandRow={handleExpandRow}
-                            handleSelectItem={handleSelectFunction}
-                            rowIndex={index}
-                            key={tableItem.data.ui.identifier}
-                            rowItem={tableItem}
-                            selectedItem={selectedFunction}
-                            selectedRowData={selectedRowData}
-                            withQuickActions
-                          />
-                        )
-                    )}
-                  </Table>
-                </>
-              )}
+const FunctionsView = ({
+  actionsMenu,
+  closePanel,
+  confirmData,
+  convertedYaml,
+  createFunctionSuccess,
+  editableItem,
+  expand,
+  filtersChangeCallback,
+  filtersStore,
+  functionsFilters,
+  functionsPanelIsOpen,
+  functionsStore,
+  getPopUpTemplate,
+  handleCancel,
+  handleDeployFunctionFailure,
+  handleDeployFunctionSuccess,
+  handleExpandAll,
+  handleExpandRow,
+  handleSelectFunction,
+  isDemoMode,
+  largeRequestErrorMessage,
+  pageData,
+  refreshFunctions,
+  selectedFunction,
+  selectedRowData,
+  tableContent,
+  taggedFunctions,
+  toggleConvertedYaml,
+  virtualizationConfig
+}) => {
+  const params = useParams()
+  return (
+    <>
+      <div className="content-wrapper">
+        <div className="content__header">
+          <Breadcrumbs />
+        </div>
+        <div className="content">
+          <div className="table-container">
+            <div className="content__action-bar-wrapper">
+              <ActionBar
+                page={FUNCTIONS_PAGE}
+                expand={expand}
+                filters={functionsFilters}
+                filterMenuName={FUNCTION_FILTERS}
+                handleExpandAll={handleExpandAll}
+                handleRefresh={filtersChangeCallback}
+                actionButtons={[
+                  {
+                    hidden: !isDemoMode,
+                    template: getPopUpTemplate({
+                      className: 'action-button',
+                      label: 'New',
+                      variant: SECONDARY_BUTTON
+                    }),
+                  }
+                ]}
+              >
+                <FunctionsFilters />
+              </ActionBar>
             </div>
+            {functionsStore.loading ? (
+              <Loader />
+            ) : taggedFunctions.length === 0 ? (
+              <NoData
+                message={getNoDataMessage(
+                  filtersStore,
+                  filters,
+                  largeRequestErrorMessage,
+                  FUNCTIONS_PAGE,
+                  FUNCTION_FILTERS
+                )}
+              />
+            ) : (
+              <>
+                {functionsStore.funcLoading && <Loader />}
+                <Table
+                  actionsMenu={actionsMenu}
+                  handleCancel={handleCancel}
+                  pageData={pageData}
+                  retryRequest={refreshFunctions}
+                  selectedItem={selectedFunction}
+                  tableClassName="functions-table"
+                  tableHeaders={tableContent[0]?.content ?? []}
+                  virtualizationConfig={virtualizationConfig}
+                >
+                  {tableContent.map(
+                    (tableItem, index) =>
+                      isRowRendered(virtualizationConfig, index) && (
+                        <FunctionsTableRow
+                          actionsMenu={actionsMenu}
+                          handleExpandRow={handleExpandRow}
+                          handleSelectItem={handleSelectFunction}
+                          rowIndex={index}
+                          key={tableItem.data.ui.identifier}
+                          rowItem={tableItem}
+                          selectedItem={selectedFunction}
+                          selectedRowData={selectedRowData}
+                          withQuickActions
+                        />
+                      )
+                  )}
+                </Table>
+              </>
+            )}
           </div>
         </div>
-        {functionsPanelIsOpen && (
-          <FunctionsPanel
-            closePanel={closePanel}
-            createFunctionSuccess={createFunctionSuccess}
-            defaultData={editableItem}
-            handleDeployFunctionFailure={handleDeployFunctionFailure}
-            handleDeployFunctionSuccess={handleDeployFunctionSuccess}
-            mode={editableItem ? PANEL_EDIT_MODE : PANEL_CREATE_MODE}
-            project={params.projectName}
-          />
-        )}
-        {confirmData && (
-          <ConfirmDialog
-            cancelButton={{
-              handler: confirmData.rejectHandler,
-              label: confirmData.btnCancelLabel,
-              variant: confirmData.btnCancelVariant
-            }}
-            closePopUp={confirmData.rejectHandler}
-            confirmButton={{
-              handler: () => confirmData.confirmHandler(confirmData.item),
-              label: confirmData.btnConfirmLabel,
-              variant: confirmData.btnConfirmVariant
-            }}
-            header={confirmData.header}
-            isOpen={confirmData}
-            message={confirmData.message}
-          />
-        )}
-        {convertedYaml.length > 0 && (
-          <YamlModal convertedYaml={convertedYaml} toggleConvertToYaml={toggleConvertedYaml} />
-        )}
-      </>
-    )
-  }
-)
+      </div>
+      {functionsPanelIsOpen && (
+        <FunctionsPanel
+          closePanel={closePanel}
+          createFunctionSuccess={createFunctionSuccess}
+          defaultData={editableItem}
+          handleDeployFunctionFailure={handleDeployFunctionFailure}
+          handleDeployFunctionSuccess={handleDeployFunctionSuccess}
+          mode={editableItem ? PANEL_EDIT_MODE : PANEL_CREATE_MODE}
+          project={params.projectName}
+        />
+      )}
+      {confirmData && (
+        <ConfirmDialog
+          cancelButton={{
+            handler: confirmData.rejectHandler,
+            label: confirmData.btnCancelLabel,
+            variant: confirmData.btnCancelVariant
+          }}
+          closePopUp={confirmData.rejectHandler}
+          confirmButton={{
+            handler: () => confirmData.confirmHandler(confirmData.item),
+            label: confirmData.btnConfirmLabel,
+            variant: confirmData.btnConfirmVariant
+          }}
+          header={confirmData.header}
+          isOpen={confirmData}
+          message={confirmData.message}
+        />
+      )}
+      {convertedYaml.length > 0 && (
+        <YamlModal convertedYaml={convertedYaml} toggleConvertToYaml={toggleConvertedYaml} />
+      )}
+    </>
+  )
+}
 
 FunctionsView.defaultPropTypes = {
   confirmData: null,
@@ -224,7 +219,6 @@ FunctionsView.propTypes = {
   refreshFunctions: PropTypes.func.isRequired,
   selectedFunction: PropTypes.object.isRequired,
   selectedRowData: PropTypes.object.isRequired,
-  setSelectedRowData: PropTypes.func.isRequired,
   tableContent: PropTypes.arrayOf(PropTypes.object).isRequired,
   taggedFunctions: PropTypes.arrayOf(PropTypes.object).isRequired,
   toggleConvertedYaml: PropTypes.func.isRequired,

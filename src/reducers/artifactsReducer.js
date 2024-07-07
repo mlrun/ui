@@ -42,6 +42,7 @@ const initialState = {
     allData: [],
     filteredData: [],
     loading: false,
+    datasetLoading: false,
     selectedRowData: {
       content: {},
       error: null,
@@ -53,6 +54,7 @@ const initialState = {
     allData: [],
     filteredData: [],
     loading: false,
+    fileLoading: false,
     selectedRowData: {
       content: {},
       error: null,
@@ -68,6 +70,7 @@ const initialState = {
     allData: [],
     filteredData: [],
     loading: false,
+    modelLoading: false,
     selectedRowData: {
       content: {},
       error: null,
@@ -110,7 +113,7 @@ export const editTag = createAsyncThunk('editTag', ({ project, oldTag, tag, data
   })
 })
 export const fetchArtifact = createAsyncThunk('fetchArtifact', ({ project, artifact }) => {
-  return artifactsApi.getArtifact(project, artifact).then(({ data }) => {
+  return artifactsApi.getExpandedArtifact(project, artifact).then(({ data }) => {
     const result = parseArtifacts(data.artifacts)
 
     return filterArtifacts(result)
@@ -131,13 +134,26 @@ export const fetchArtifactTags = createAsyncThunk(
       .catch(error => largeResponseCatchHandler(error, 'Failed to fetch tags', thunkAPI.dispatch))
   }
 )
-export const fetchDataSet = createAsyncThunk('fetchDataSet', ({ project, dataSet, iter, tag }) => {
-  return artifactsApi.getDataSet(project, dataSet, iter, tag).then(response => {
-    const result = parseArtifacts(response.data.artifacts)
+export const fetchExpandedDataSet = createAsyncThunk(
+  'fetchExpandedDataSet',
+  ({ project, dataSet, iter, tag }) => {
+    return artifactsApi.getExpandedDataSet(project, dataSet, iter, tag).then(response => {
+      const result = parseArtifacts(response.data.artifacts)
 
-    return generateArtifacts(filterArtifacts(result), DATASETS_TAB, response.data.artifacts)
-  })
-})
+      return generateArtifacts(filterArtifacts(result), DATASETS_TAB, response.data.artifacts)
+    })
+  }
+)
+export const fetchDataSet = createAsyncThunk(
+  'fetchDataSet',
+  ({ projectName, artifactName, tree, tag, iter }) => {
+    return artifactsApi.getArtifact(projectName, artifactName, tree, tag, iter).then(response => {
+      const result = parseArtifacts([response.data])
+
+      return generateArtifacts(filterArtifacts(result), DATASETS_TAB, [response.data])?.[0]
+    })
+  }
+)
 export const fetchDataSets = createAsyncThunk(
   'fetchDataSets',
   ({ project, filters, config }, thunkAPI) => {
@@ -153,13 +169,26 @@ export const fetchDataSets = createAsyncThunk(
       )
   }
 )
-export const fetchFile = createAsyncThunk('fetchFile', ({ project, file, iter, tag }) => {
-  return artifactsApi.getFile(project, file, iter, tag).then(response => {
-    const result = parseArtifacts(response.data.artifacts)
+export const fetchExpandedFile = createAsyncThunk(
+  'fetchExpandedFile',
+  ({ project, file, iter, tag }) => {
+    return artifactsApi.getExpandedFile(project, file, iter, tag).then(response => {
+      const result = parseArtifacts(response.data.artifacts)
 
-    return generateArtifacts(filterArtifacts(result), ARTIFACTS_TAB, response.data.artifacts)
-  })
-})
+      return generateArtifacts(filterArtifacts(result), ARTIFACTS_TAB, response.data.artifacts)
+    })
+  }
+)
+export const fetchFile = createAsyncThunk(
+  'fetchFile',
+  ({ projectName, artifactName, tree, tag, iter }) => {
+    return artifactsApi.getArtifact(projectName, artifactName, tree, tag, iter).then(response => {
+      const result = parseArtifacts([response.data])
+
+      return generateArtifacts(filterArtifacts(result), ARTIFACTS_TAB, [response.data])?.[0]
+    })
+  }
+)
 export const fetchFiles = createAsyncThunk(
   'fetchFiles',
   ({ project, filters, config }, thunkAPI) => {
@@ -198,13 +227,26 @@ export const fetchModelEndpoints = createAsyncThunk(
       )
   }
 )
-export const fetchModel = createAsyncThunk('fetchModel', ({ project, model, iter, tag }) => {
-  return artifactsApi.getModel(project, model, iter, tag).then(response => {
-    const result = parseArtifacts(response.data.artifacts)
+export const fetchExpandedModel = createAsyncThunk(
+  'fetchExpandedModel',
+  ({ project, model, iter, tag }) => {
+    return artifactsApi.getExpandedModel(project, model, iter, tag).then(response => {
+      const result = parseArtifacts(response.data.artifacts)
 
-    return generateArtifacts(filterArtifacts(result), MODELS_TAB, response.data.artifacts)
-  })
-})
+      return generateArtifacts(filterArtifacts(result), MODELS_TAB, response.data.artifacts)
+    })
+  }
+)
+export const fetchModel = createAsyncThunk(
+  'fetchModel',
+  ({ projectName, artifactName, tree, tag, iter }) => {
+    return artifactsApi.getArtifact(projectName, artifactName, tree, tag, iter).then(response => {
+      const result = parseArtifacts([response.data])
+
+      return generateArtifacts(filterArtifacts(result), MODELS_TAB, [response.data])?.[0]
+    })
+  }
+)
 export const fetchModels = createAsyncThunk(
   'fetchModels',
   ({ project, filters, config }, thunkAPI) => {
@@ -313,9 +355,18 @@ const artifactsSlice = createSlice({
     builder.addCase(fetchArtifactsFunctions.rejected, state => {
       state.pipelines.loading = false
     })
-    builder.addCase(fetchDataSet.fulfilled, (state, action) => {
+    builder.addCase(fetchExpandedDataSet.fulfilled, (state, action) => {
       state.dataSets.selectedRowData.content[getArtifactIdentifier(action.payload[0])] =
         action.payload
+    })
+    builder.addCase(fetchDataSet.pending, state => {
+      state.dataSets.datasetLoading = true
+    })
+    builder.addCase(fetchDataSet.fulfilled, state => {
+      state.dataSets.datasetLoading = false
+    })
+    builder.addCase(fetchDataSet.rejected, state => {
+      state.dataSets.datasetLoading = false
     })
     builder.addCase(fetchDataSets.pending, state => {
       state.dataSets.loading = true
@@ -324,15 +375,24 @@ const artifactsSlice = createSlice({
     builder.addCase(fetchDataSets.fulfilled, (state, action) => {
       state.error = null
       state.dataSets.allData = action.payload
-      state.loading = false
+      state.dataSets.loading = false
       state.loading = state.models.loading || state.files.loading
     })
     builder.addCase(fetchDataSets.rejected, state => {
       state.dataSets.loading = false
       state.loading = state.models.loading || state.files.loading
     })
-    builder.addCase(fetchFile.fulfilled, (state, action) => {
+    builder.addCase(fetchExpandedFile.fulfilled, (state, action) => {
       state.files.selectedRowData.content[getArtifactIdentifier(action.payload[0])] = action.payload
+    })
+    builder.addCase(fetchFile.pending, state => {
+      state.files.fileLoading = true
+    })
+    builder.addCase(fetchFile.fulfilled, state => {
+      state.files.fileLoading = false
+    })
+    builder.addCase(fetchFile.rejected, state => {
+      state.files.fileLoading = false
     })
     builder.addCase(fetchFiles.pending, state => {
       state.files.loading = true
@@ -348,25 +408,34 @@ const artifactsSlice = createSlice({
       state.files.loading = false
       state.loading = state.models.loading || state.dataSets.loading
     })
-    builder.addCase(fetchModel.pending, (state, action) => {
+    builder.addCase(fetchExpandedModel.pending, (state, action) => {
       state.models.selectedRowData = {
         content: initialState.models.selectedRowData.content,
         error: null,
         loading: true
       }
     })
-    builder.addCase(fetchModel.fulfilled, (state, action) => {
+    builder.addCase(fetchExpandedModel.fulfilled, (state, action) => {
       state.models.selectedRowData.error = null
       state.models.selectedRowData.content[getArtifactIdentifier(action.payload[0])] =
         action.payload
       state.models.selectedRowData.loading = false
     })
-    builder.addCase(fetchModel.rejected, (state, action) => {
+    builder.addCase(fetchExpandedModel.rejected, (state, action) => {
       state.models.selectedRowData.error = {
         content: initialState.models.selectedRowData.content,
         error: action.payload,
         loading: true
       }
+    })
+    builder.addCase(fetchModel.pending, state => {
+      state.models.modelLoading = true
+    })
+    builder.addCase(fetchModel.fulfilled, state => {
+      state.models.modelLoading = false
+    })
+    builder.addCase(fetchModel.rejected, state => {
+      state.models.modelLoading = false
     })
     builder.addCase(fetchModelEndpoints.pending, state => {
       state.modelEndpoints.loading = true

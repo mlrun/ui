@@ -73,10 +73,10 @@ export const generateArtifactsTabContent = (artifacts, params, iteration, showAr
         artifact.db_key || artifact.key
       }/${artifact.tag ? artifact.tag : artifact.tree ?? TAG_FILTER_LATEST}${
         iteration ? `/${iteration}` : ''
-      }/overview`,
+      }/overview?useUrlParamsAsFilter=true`,
       dataset: `/projects/${params.projectName}/${DATASETS_TAB}/${artifact.db_key || artifact.key}/${
         artifact.tag ? artifact.tag : artifact.tree ?? TAG_FILTER_LATEST
-      }${iteration ? `/${iteration}` : ''}/overview`
+      }${iteration ? `/${iteration}` : ''}/overview?useUrlParamsAsFilter=true`
     }
 
     return [
@@ -125,7 +125,7 @@ export const generateArtifactsTabContent = (artifacts, params, iteration, showAr
                   artifactScreenLinks[artifact.kind] ??
                   `/projects/${params.projectName}/files/${artifact.db_key || artifact.key}/${
                     artifact.tag ? artifact.tag : artifact.tree ?? TAG_FILTER_LATEST
-                  }${iteration ? `/${iteration}` : ''}/overview`
+                  }${iteration ? `/${iteration}` : ''}/overview?useUrlParamsAsFilter=true`
                 }
               >
                 <DetailsIcon />
