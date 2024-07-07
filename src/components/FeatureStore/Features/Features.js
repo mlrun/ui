@@ -38,11 +38,10 @@ import {
   TAG_FILTER_ALL_ITEMS
 } from '../../../constants'
 import { createFeaturesRowData } from '../../../utils/createFeatureStoreContent'
-import { featuresActionCreator, featuresFilters } from './features.util'
+import { featuresActionCreator, featuresFilters, handleFeaturesResponse } from './features.util'
 import { getFeatureIdentifier } from '../../../utils/getUniqueIdentifier'
 import { getFilterTagOptions, setFilters } from '../../../reducers/filtersReducer'
 import { setTablePanelOpen } from '../../../reducers/tableReducer'
-import { showLargeResponsePopUp } from '../../../httpClient'
 import { useGetTagOptions } from '../../../hooks/useGetTagOptions.hook'
 import { useGroupContent } from '../../../hooks/groupContent.hook'
 import { useVirtualization } from '../../../hooks/useVirtualization.hook'
@@ -127,18 +126,12 @@ const Features = ({
               return nextValue.value ? prevValue.concat(nextValue.value) : prevValue
             }, [])
 
-            if (
-              features.length > 10000 ||
-              abortControllerRef.current?.signal?.reason === LARGE_REQUEST_CANCELED
-            ) {
-              showLargeResponsePopUp(setLargeRequestErrorMessage)
-              setFeatures([])
-            } else {
-              setFeatures(features)
-              setLargeRequestErrorMessage('')
-
-              return features
-            }
+            return handleFeaturesResponse(
+              features,
+              setFeatures,
+              abortControllerRef,
+              setLargeRequestErrorMessage
+            )
           }
 
           return result

@@ -30,13 +30,16 @@ import {
   GROUP_BY_NAME,
   GROUP_BY_NONE,
   TAG_FILTER_ALL_ITEMS,
-  REQUEST_CANCELED
+  REQUEST_CANCELED,
+  LARGE_REQUEST_CANCELED,
+  CANCEL_REQUEST_TIMEOUT
 } from '../../constants'
 import featureStoreActions from '../../actions/featureStore'
 import { FORBIDDEN_ERROR_STATUS_CODE } from 'igz-controls/constants'
 import { createFeaturesRowData } from '../../utils/createFeatureStoreContent'
 import { filters } from './addToFeatureVectorPage.util'
 import { getFeatureIdentifier } from '../../utils/getUniqueIdentifier'
+import { handleFeaturesResponse } from '../FeatureStore/Features/features.util'
 import { isEveryObjectValueEmpty } from '../../utils/isEveryObjectValueEmpty'
 import { setFilters } from '../../reducers/filtersReducer'
 import { setNotification } from '../../reducers/notificationReducer'
@@ -59,6 +62,7 @@ const AddToFeatureVectorPage = ({
 }) => {
   const [content, setContent] = useState([])
   const [selectedRowData, setSelectedRowData] = useState({})
+  const [largeRequestErrorMessage, setLargeRequestErrorMessage] = useState('')
   const [convertedYaml, toggleConvertedYaml] = useYaml('')
   const addToFeatureVectorPageRef = useRef(null)
   const abortControllerRef = useRef(new AbortController())
@@ -141,17 +145,24 @@ const AddToFeatureVectorPage = ({
     async filters => {
       abortControllerRef.current = new AbortController()
 
+      const cancelRequestTimeout = setTimeout(() => {
+        abortControllerRef.current.abort(LARGE_REQUEST_CANCELED)
+      }, CANCEL_REQUEST_TIMEOUT)
+
       const config = {
         signal: abortControllerRef.current.signal
       }
 
-      fetchFeatures(filters.project, filters, config).then(result => {
-        if (result) {
-          setContent(result)
-        }
-
-        return result
-      })
+      fetchFeatures(filters.project, filters, config)
+        .then(features => {
+          return handleFeaturesResponse(
+            features,
+            setContent,
+            abortControllerRef,
+            setLargeRequestErrorMessage
+          )
+        })
+        .finally(() => clearTimeout(cancelRequestTimeout))
     },
     [fetchFeatures]
   )
@@ -283,6 +294,7 @@ const AddToFeatureVectorPage = ({
       fetchData={fetchData}
       filtersStore={filtersStore}
       handleExpandRow={handleExpandRow}
+      largeRequestErrorMessage={largeRequestErrorMessage}
       pageData={pageData}
       ref={addToFeatureVectorPageRef}
       selectedRowData={selectedRowData}
