@@ -14,7 +14,7 @@ pipeline {
         label node_label
     }
     triggers {
-        cron('7 20 * * *')
+        cron('H 0 * * *')
     }
     stages {
         stage('Pull Latest Changes') {
