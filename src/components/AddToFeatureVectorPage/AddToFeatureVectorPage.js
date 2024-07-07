@@ -299,7 +299,6 @@ const AddToFeatureVectorPage = ({
       rowHeightExtended: cssVariables.featuresRowHeightExtended
     }
   })
-  console.log('virtualizationConfig', virtualizationConfig)
 
   return (
     <AddToFeatureVectorView
