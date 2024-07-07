@@ -13,6 +13,9 @@ pipeline {
     agent {
         label node_label
     }
+    triggers {
+        cron('H 0 * * *')
+    }
     stages {
         stage('Pull Latest Changes') {
             steps {
@@ -97,7 +100,7 @@ pipeline {
                         def files = ["cucumber_report_default.html", "cucumber_report.html", "cucumber_report.json"]
                         for (file in files) {
                             def local_file = "tests/reports/${file}"
-                            def artifact_path = "${file}_${currentDate}"
+                            def artifact_path = file.replace(".html", "_${currentDate}.html").replace(".json", "_${currentDate}.json")
                             def url = "${baseUrl}/${artifact_path}"
                             sh """
                                 curl -X PUT -u ${ARTIFACTORY_CRED} "${url}" --data-binary @"${local_file}"
