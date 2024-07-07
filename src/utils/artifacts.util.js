@@ -225,7 +225,7 @@ export const chooseOrFetchArtifact = (dispatch, tab, selectedArtifact, artifactM
   return dispatch(
     fetchArtifactData({
       projectName: artifactMin.project,
-      dataSetName: artifactMin.db_key,
+      artifactName: artifactMin.db_key,
       tree: artifactMin.tree,
       tag: artifactMin.tag,
       iter: artifactMin.iter
