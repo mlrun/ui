@@ -17,18 +17,18 @@ pipeline {
         stage('Pull Latest Changes') {
             steps {
                 script {
-                    common.conditional_stage('Pull Latest Changes', true) {
-                        checkout scm
-                    }
+                common.conditional_stage('Pull Latest Changes', true) {
+                    checkout scm
+                }
                 }
             }
         }
         stage('Set up Environment') {
             steps {
                 script {
-                    common.conditional_stage('Set up Environment', true) {
-                        sh 'npm install'
-                    }
+                common.conditional_stage('Set up Environment', true) {
+                    sh 'npm install'
+                }
                 }
             }
         }
@@ -42,12 +42,12 @@ pipeline {
         stage('Start Services') {
             steps {
                 script {
-                    common.conditional_stage('Start Services', true) {
-                        sh '''
-                            npm run mock-server &
-                            npm start &
-                        '''
-                    }
+                common.conditional_stage('Start Services', true) {
+                    sh '''
+                        npm run mock-server &
+                        npm start &
+                    '''
+                }
                 }
             }
         }
@@ -66,7 +66,7 @@ pipeline {
         stage('Run Regression Tests') {
             steps {
                 script {
-                    common.conditional_stage('Run Regression Tests', true) {
+                common.conditional_stage('Run Regression Tests', true) {
                         sh '''
                             npm run test:regression -- --chrome-options='--headless --no-sandbox --disable-dev-shm-usage --remote-debugging-port=9222 --disable-gpu --window-size=1920,1080 --disable-software-rasterizer --verbose --log-path=$TMPDIR/chrome.log'
                         '''
@@ -77,18 +77,18 @@ pipeline {
         stage('Post-Test Cleanup') {
             steps {
                 script {
-                    common.conditional_stage('Post-Test Cleanup', true) {
-                        sh '''
-                            pkill -f npm || true
-                        '''
-                    }
+                common.conditional_stage('Post-Test Cleanup', true) {
+                    sh '''
+                        pkill -f npm || true
+                    '''
+                }
                 }
             }
         }
         stage('Upload Artifacts') {
             steps {
                 script {
-                    common.conditional_stage('Upload Artifacts', true) {
+                common.conditional_stage('Upload Artifacts', true) {
                         def files = ["cucumber_report_default.html", "cucumber_report.html"]
                         for (file in files) {
                             def local_file = "tests/reports/${file}"
@@ -100,23 +100,23 @@ pipeline {
                         }
                     }
                 }
-            }
+                }
         }
         stage('Cleaning up') {
             steps {
                 script {
-                    common.conditional_stage('Cleaning up', true) {
-                        sh '''
-                            pkill -f npm || true
-                        '''
-                    }
+                common.conditional_stage('Cleaning up', true) {
+                    sh '''
+                        pkill -f npm || true
+                    '''
+                }
                 }
             }
         }
         stage('Build Status') {
             steps {
                 script {
-                    common.conditional_stage('Build Status', true) {
+                common.conditional_stage('Build Status', true) {
                         if (currentBuild.currentResult == 'SUCCESS') {
                             echo 'Build was successful!'
                         } else {
