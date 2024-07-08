@@ -235,8 +235,10 @@ export const generateActionsMenu = (
         disabled: functionIsDeleting,
         onClick: funcMin => {
           getFullFunction(funcMin).then(func => {
-            setFunctionsPanelIsOpen(true)
-            setEditableItem(func)
+            if (!isEmpty(func)) {
+              setFunctionsPanelIsOpen(true)
+              setEditableItem(func)
+            }
           })
         },
         hidden:
@@ -255,7 +257,8 @@ export const generateActionsMenu = (
         label: 'View YAML',
         icon: <Yaml />,
         disabled: functionIsDeleting,
-        onClick: funcMin => getFullFunction(funcMin).then(toggleConvertedYaml)
+        onClick: funcMin =>
+          getFullFunction(funcMin).then(func => !isEmpty(func) && toggleConvertedYaml(func))
       }
     ],
     [
@@ -264,7 +267,8 @@ export const generateActionsMenu = (
         label: 'Build and run',
         icon: <DeployIcon />,
         disabled: functionIsDeleting,
-        onClick: funcMin => getFullFunction(funcMin).then(func => buildAndRunFunc(func)),
+        onClick: funcMin =>
+          getFullFunction(funcMin).then(func => !isEmpty(func) && buildAndRunFunc(func)),
         hidden:
           func?.type !== FUNCTION_TYPE_JOB ||
           (func?.type === FUNCTION_TYPE_JOB && func?.state?.value !== FUNCTION_INITIALIZED_STATE)
@@ -276,8 +280,10 @@ export const generateActionsMenu = (
         disabled: functionIsDeleting,
         onClick: funcMin => {
           getFullFunction(funcMin).then(func => {
-            setFunctionsPanelIsOpen(true)
-            setEditableItem(func)
+            if (!isEmpty(func)) {
+              setFunctionsPanelIsOpen(true)
+              setEditableItem(func)
+            }
           })
         },
         hidden: !isDemoMode || func?.type !== FUNCTION_TYPE_SERVING
@@ -339,15 +345,7 @@ export const setFullSelectedFunction = debounce(
     } else {
       const { name, hash, tag } = selectedFunctionMin
 
-      fetchAndParseFunction(
-        dispatch,
-        fetchFunction,
-        projectName,
-        name,
-        hash,
-        tag,
-        true
-      )
+      fetchAndParseFunction(dispatch, fetchFunction, projectName, name, hash, tag, true)
         .then(parsedFunction => {
           setSelectedFunction(parsedFunction)
         })
