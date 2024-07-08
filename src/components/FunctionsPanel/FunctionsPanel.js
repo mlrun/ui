@@ -19,10 +19,13 @@ such restriction.
 */
 import React, { useEffect, useState } from 'react'
 import PropTypes from 'prop-types'
-import { connect } from 'react-redux'
+import { connect, useSelector } from 'react-redux'
 import { useNavigate, useParams } from 'react-router-dom'
 import { createPortal } from 'react-dom'
-import { chain } from 'lodash'
+import { chain, cloneDeep } from 'lodash'
+import { Form } from 'react-final-form'
+import { createForm } from 'final-form'
+import arrayMutators from 'final-form-arrays'
 
 import FunctionsPanelView from './FunctionsPanelView'
 
@@ -33,6 +36,8 @@ import {
   EXISTING_IMAGE,
   NEW_IMAGE
 } from '../../elements/FunctionsPanelCode/functionsPanelCode.util'
+import { setFieldState } from 'igz-controls/utils/form.util'
+import { convertChipsData, parseChipsData } from '../../utils/convertChipsData'
 import { FUNCTION_TYPE_SERVING, PANEL_CREATE_MODE, PANEL_DEFAULT_ACCESS_KEY } from '../../constants'
 import { LABEL_BUTTON, NOTFOUND_ERROR_STATUS_CODE, SECONDARY_BUTTON } from 'igz-controls/constants'
 
@@ -53,6 +58,7 @@ const FunctionsPanel = ({
   setNewFunctionCredentialsAccessKey,
   setNewFunctionProject
 }) => {
+  const frontendSpec = useSelector(store => store.appStore.frontendSpec)
   const [confirmData, setConfirmData] = useState(null)
   const [validation, setValidation] = useState({
     isHandlerValid: true,
@@ -80,6 +86,13 @@ const FunctionsPanel = ({
   )
   const params = useParams()
   const navigate = useNavigate()
+  const formRef = React.useRef(
+    createForm({
+      initialValues: { labels: parseChipsData(defaultData?.labels || {}, frontendSpec.internal_labels) },
+      mutators: { ...arrayMutators, setFieldState },
+      onSubmit: () => {}
+    })
+  )
 
   useEffect(() => {
     if (defaultData) {
@@ -151,7 +164,11 @@ const FunctionsPanel = ({
   }, [functionsStore.newFunction.metadata.project, params.projectName, setNewFunctionProject])
 
   const createFunction = deploy => {
-    createNewFunction(params.projectName, functionsStore.newFunction).then(result => {
+    const functionPayload = cloneDeep(functionsStore.newFunction)
+
+    functionPayload.labels = convertChipsData(formRef.current.getFieldState('labels')?.value)
+
+    createNewFunction(params.projectName, functionPayload).then(result => {
       if (deploy) {
         const with_mlrun = functionsStore.newFunction.spec.build.requirements.includes(
           appStore.frontendSpec?.function_deployment_mlrun_requirement
@@ -170,6 +187,10 @@ const FunctionsPanel = ({
                     ? []
                     : functionsStore.newFunction.spec.build.requirements
               }
+            },
+            metadata: {
+              ...functionsStore.newFunction.metadata,
+              labels: convertChipsData(formRef.current.getFieldState('labels')?.value),
             }
           },
           skip_deployed,
@@ -261,28 +282,38 @@ const FunctionsPanel = ({
   }
 
   const checkValidation = () => {
-    return Object.values(validation).every(value => value)
+    return Object.values(validation).every(value => value) && formRef.current.getFieldState('labels')?.valid
   }
 
   return createPortal(
-    <FunctionsPanelView
-      checkValidation={checkValidation}
-      closePanel={closePanel}
-      confirmData={confirmData}
-      defaultData={defaultData ?? {}}
-      error={functionsStore.error}
-      functionsStore={functionsStore}
-      handleSave={handleSave}
-      imageType={imageType}
-      loading={functionsStore.loading || functionsStore.funcLoading}
-      mode={mode}
-      newFunction={functionsStore.newFunction}
-      removeFunctionsError={removeFunctionsError}
-      setImageType={setImageType}
-      setNewFunctionCredentialsAccessKey={setNewFunctionCredentialsAccessKey}
-      setValidation={setValidation}
-      validation={validation}
-    />,
+    <Form form={formRef.current} onSubmit={() => {}}>
+      {formState => {
+        return (
+          <FunctionsPanelView
+            checkValidation={checkValidation}
+            closePanel={closePanel}
+            confirmData={confirmData}
+            defaultData={defaultData ?? {}}
+            error={functionsStore.error}
+            formState={formState}
+            frontendSpec={frontendSpec}
+            functionsStore={functionsStore}
+            handleSave={handleSave}
+            imageType={imageType}
+            loading={functionsStore.loading || functionsStore.funcLoading}
+            mode={mode}
+            newFunction={functionsStore.newFunction}
+            removeFunctionsError={removeFunctionsError}
+            setImageType={setImageType}
+            setNewFunctionCredentialsAccessKey={setNewFunctionCredentialsAccessKey}
+            setValidation={setValidation}
+            validation={validation}
+          />
+        )
+      }
+      }
+    </Form>
+    ,
     document.getElementById('overlay_container')
   )
 }
