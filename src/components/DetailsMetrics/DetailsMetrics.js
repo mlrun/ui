@@ -31,6 +31,7 @@ import { TextTooltipTemplate, Tooltip } from 'iguazio.dashboard-react-controls/d
 
 import { CHART_TYPE_LINE, CHART_TYPE_BAR, REQUEST_CANCELED } from '../../constants'
 import detailsActions from '../../actions/details'
+import modelEndpointsActions from '../../actions/modelEndpoints'
 import { groupMetricByApplication } from '../../elements/MetricsSelector/metricsSelector.util'
 import { getBarChartMetricConfig, getLineChartMetricConfig } from '../../utils/getMetricChartConfig'
 import {
@@ -54,7 +55,7 @@ import colors from 'igz-controls/scss/colors.scss'
 
 import './DetailsMetrics.scss'
 
-const DetailsMetrics = ({ selectedItem, setSelectedMetricsOptions }) => {
+const DetailsMetrics = ({ selectedItem }) => {
   const [metrics, setMetrics] = useState([])
   const [selectedDate, setSelectedDate] = useState('')
   const [previousTotalInvocation, setPreviousTotalInvocation] = useState(0)
@@ -244,7 +245,7 @@ const DetailsMetrics = ({ selectedItem, setSelectedMetricsOptions }) => {
 
   useEffect(() => {
     dispatch(
-      detailsActions.fetchModelEndpointMetrics(
+      modelEndpointsActions.fetchModelEndpointMetrics(
         selectedItem.metadata.project,
         selectedItem.metadata.uid
       )
@@ -264,7 +265,7 @@ const DetailsMetrics = ({ selectedItem, setSelectedMetricsOptions }) => {
 
       return Promise.all([
         dispatch(
-          detailsActions.fetchModelEndpointMetricsValues(
+          modelEndpointsActions.fetchModelEndpointMetricsValues(
             selectedItem.metadata.project,
             selectedItem.metadata.uid,
             selectedMetricsParams,
@@ -272,7 +273,7 @@ const DetailsMetrics = ({ selectedItem, setSelectedMetricsOptions }) => {
           )
         ),
         dispatch(
-          detailsActions.fetchModelEndpointMetricsValues(
+          modelEndpointsActions.fetchModelEndpointMetricsValues(
             selectedItem.metadata.project,
             selectedItem.metadata.uid,
             preInvocationMetricParams,
@@ -361,7 +362,7 @@ const DetailsMetrics = ({ selectedItem, setSelectedMetricsOptions }) => {
           metrics={detailsStore.metricsOptions.all}
           onSelect={metrics =>
             dispatch(
-              detailsActions.setSelectedMetricsOptions({
+              modelEndpointsActions.setSelectedMetricsOptions({
                 endpointUid: selectedItem.metadata.uid,
                 metrics
               })

@@ -81,7 +81,6 @@ const Details = ({
   setInfoContent,
   setIteration,
   setIterationOption,
-  setSelectedMetricsOptions,
   setFiltersWasHandled,
   showWarning,
   tab

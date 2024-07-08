@@ -201,18 +201,6 @@ const artifactsApi = {
       }
     )
   },
-  getModelEndpoints: (project, filters, config = {}, params = {}) => {
-    const newConfig = {
-      ...config,
-      params
-    }
-
-    if (filters?.labels) {
-      newConfig.params.label = filters.labels?.split(',')
-    }
-
-    return mainHttpClient.get(`/projects/${project}/model-endpoints`, newConfig)
-  },
   getModels: (project, filters, config = {}) => {
     const newConfig = {
       ...config,

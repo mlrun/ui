@@ -54,7 +54,6 @@ const DetailsHeader = ({
   pageData,
   selectedItem,
   setIteration,
-  setSelectedMetricsOptions,
   tab
 }) => {
   const [headerIsMultiline, setHeaderIsMultiline] = useState(false)
