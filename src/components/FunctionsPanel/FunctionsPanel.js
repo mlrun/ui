@@ -23,7 +23,7 @@ import { connect, useSelector } from 'react-redux'
 import { useNavigate, useParams } from 'react-router-dom'
 import { createPortal } from 'react-dom'
 import { chain, cloneDeep } from 'lodash'
-import { Form } from 'react-final-form'
+import { Form, FormSpy } from 'react-final-form'
 import { createForm } from 'final-form'
 import arrayMutators from 'final-form-arrays'
 
@@ -61,6 +61,7 @@ const FunctionsPanel = ({
   const frontendSpec = useSelector(store => store.appStore.frontendSpec)
   const [confirmData, setConfirmData] = useState(null)
   const [validation, setValidation] = useState({
+    areLabelsValid: true,
     isHandlerValid: true,
     isDefaultCLassValid: true,
     isCodeImageValid: true,
@@ -80,7 +81,7 @@ const FunctionsPanel = ({
     (defaultData?.build?.image ||
       defaultData?.build?.base_image ||
       defaultData?.build?.commands?.length > 0) &&
-      defaultData.image?.length === 0
+    defaultData.image?.length === 0
       ? NEW_IMAGE
       : ''
   )
@@ -282,33 +283,44 @@ const FunctionsPanel = ({
   }
 
   const checkValidation = () => {
-    return Object.values(validation).every(value => value) && formRef.current.getFieldState('labels')?.valid
+    return Object.values(validation).every(value => value)
   }
 
   return createPortal(
     <Form form={formRef.current} onSubmit={() => {}}>
       {formState => {
         return (
-          <FunctionsPanelView
-            checkValidation={checkValidation}
-            closePanel={closePanel}
-            confirmData={confirmData}
-            defaultData={defaultData ?? {}}
-            error={functionsStore.error}
-            formState={formState}
-            frontendSpec={frontendSpec}
-            functionsStore={functionsStore}
-            handleSave={handleSave}
-            imageType={imageType}
-            loading={functionsStore.loading || functionsStore.funcLoading}
-            mode={mode}
-            newFunction={functionsStore.newFunction}
-            removeFunctionsError={removeFunctionsError}
-            setImageType={setImageType}
-            setNewFunctionCredentialsAccessKey={setNewFunctionCredentialsAccessKey}
-            setValidation={setValidation}
-            validation={validation}
-          />
+          <>
+            <FunctionsPanelView
+              checkValidation={checkValidation}
+              closePanel={closePanel}
+              confirmData={confirmData}
+              defaultData={defaultData ?? {}}
+              error={functionsStore.error}
+              formState={formState}
+              frontendSpec={frontendSpec}
+              functionsStore={functionsStore}
+              handleSave={handleSave}
+              imageType={imageType}
+              loading={functionsStore.loading || functionsStore.funcLoading}
+              mode={mode}
+              newFunction={functionsStore.newFunction}
+              removeFunctionsError={removeFunctionsError}
+              setImageType={setImageType}
+              setNewFunctionCredentialsAccessKey={setNewFunctionCredentialsAccessKey}
+              setValidation={setValidation}
+              validation={validation}
+            />
+            <FormSpy
+              subscription={{ valid: true }}
+              onChange={() => {
+                setValidation(prevState => ({
+                  ...prevState,
+                  areLabelsValid: formRef.current?.getFieldState?.('labels')?.valid
+                }))
+              }}
+            />
+          </>
         )
       }
       }

@@ -70,7 +70,6 @@ import {
   SET_NEW_FUNCTION_HANDLER,
   SET_NEW_FUNCTION_IMAGE,
   SET_NEW_FUNCTION_KIND,
-  SET_NEW_FUNCTION_LABELS,
   SET_NEW_FUNCTION_NAME,
   SET_NEW_FUNCTION_PARAMETERS,
   SET_NEW_FUNCTION_PREEMTION_MODE,
@@ -441,10 +440,6 @@ const functionsActions = {
   setNewFunctionKind: kind => ({
     type: SET_NEW_FUNCTION_KIND,
     payload: kind
-  }),
-  setNewFunctionLabels: labels => ({
-    type: SET_NEW_FUNCTION_LABELS,
-    payload: labels
   }),
   setNewFunctionCredentialsAccessKey: accessKey => ({
     type: SET_NEW_FUNCTION_CREDENTIALS_ACCESS_KEY,

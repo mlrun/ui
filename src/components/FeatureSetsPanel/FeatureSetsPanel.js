@@ -22,7 +22,7 @@ import PropTypes from 'prop-types'
 import { useDispatch, connect, useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 import { createPortal } from 'react-dom'
-import { Form } from 'react-final-form'
+import { Form, FormSpy } from 'react-final-form'
 import { createForm } from 'final-form'
 import arrayMutators from 'final-form-arrays'
 
@@ -133,7 +133,7 @@ const FeatureSetsPanel = ({
       checkValidation(
         featureStore.newFeatureSet,
         setValidation,
-        { ...validation, areLabelsValid: formRef.current.getFieldState('labels')?.valid },
+        validation,
         startIngestion,
         setAccessKeyRequired
       )
@@ -174,27 +174,35 @@ const FeatureSetsPanel = ({
     <Form form={formRef.current} onSubmit={() => {}}>
       {formState => {
         return (
-          <FeatureSetsPanelView
-            accessKeyRequired={accessKeyRequired}
-            closePanel={closePanel}
-            confirmDialog={confirmDialog}
-            disableButtons={disableButtons}
-            formState={formState}
-            frontendSpec={frontendSpec}
-            featureStore={featureStore}
-            handleSave={handleSave}
-            handleSaveOnClick={handleSaveOnClick}
-            loading={featureStore.loading}
-            project={project}
-            setConfirmDialog={setConfirmDialog}
-            setDisableButtons={setDisableButtons}
-            setNewFeatureSetCredentialsAccessKey={setNewFeatureSetCredentialsAccessKey}
-            setValidation={setValidation}
-            validation={{
-              ...validation,
-              areLabelsValid: formState.valid
-            }}
-          />
+          <>
+            <FeatureSetsPanelView
+              accessKeyRequired={accessKeyRequired}
+              closePanel={closePanel}
+              confirmDialog={confirmDialog}
+              disableButtons={disableButtons}
+              formState={formState}
+              frontendSpec={frontendSpec}
+              featureStore={featureStore}
+              handleSave={handleSave}
+              handleSaveOnClick={handleSaveOnClick}
+              loading={featureStore.loading}
+              project={project}
+              setConfirmDialog={setConfirmDialog}
+              setDisableButtons={setDisableButtons}
+              setNewFeatureSetCredentialsAccessKey={setNewFeatureSetCredentialsAccessKey}
+              setValidation={setValidation}
+              validation={validation}
+            />
+            <FormSpy
+              subscription={{ valid: true }}
+              onChange={() => {
+                setValidation(prevState => ({
+                  ...prevState,
+                  areLabelsValid: formRef.current?.getFieldState?.('labels')?.valid
+                }))
+              }}
+            />
+          </>
         )
       }}
     </Form>
