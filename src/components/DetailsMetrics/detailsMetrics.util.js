@@ -95,6 +95,36 @@ const driftStatusConfig = {
   }
 }
 
+const timeFormatters = {
+  hours: {
+    handler: date =>
+      new Date(date).toLocaleTimeString('en-US', {
+        hour: 'numeric',
+        minute: TWO_DIGIT,
+        hour12: true
+      })
+  },
+  days: {
+    handler: date =>
+      new Date(date).toLocaleDateString('en-US', {
+        year: TWO_DIGIT,
+        month: TWO_DIGIT,
+        day: TWO_DIGIT
+      })
+  },
+  full: {
+    handler: date =>
+      new Date(date).toLocaleDateString('en-US', {
+        year: TWO_DIGIT,
+        month: TWO_DIGIT,
+        day: TWO_DIGIT,
+        hour: 'numeric',
+        minute: TWO_DIGIT,
+        hour12: true
+      })
+  }
+}
+
 const generateResultMessage = (driftStatus, resultKind) => {
   const resultKindMessage = resultKindConfig[resultKind]
   const { text } = driftStatusConfig[driftStatus]
@@ -133,36 +163,6 @@ const getMetricTitle = fullName =>
   fullName.substring(fullName.lastIndexOf('.') + 1).replace(/-/g, ' ')
 
 const formatMetricsTime = (timeUnit, dates) => {
-  const timeFormatters = {
-    hours: {
-      handler: date =>
-        new Date(date).toLocaleTimeString('en-US', {
-          hour: 'numeric',
-          minute: TWO_DIGIT,
-          hour12: true
-        })
-    },
-    days: {
-      handler: date =>
-        new Date(date).toLocaleDateString('en-US', {
-          year: TWO_DIGIT,
-          month: TWO_DIGIT,
-          day: TWO_DIGIT
-        })
-    },
-    full: {
-      handler: date =>
-        new Date(date).toLocaleDateString('en-US', {
-          year: TWO_DIGIT,
-          month: TWO_DIGIT,
-          day: TWO_DIGIT,
-          hour: 'numeric',
-          minute: TWO_DIGIT,
-          hour12: true
-        })
-    }
-  }
-
   return dates.reduce(
     (dates, [date]) => {
       dates.labels.push(timeFormatters[timeUnit].handler(date))
