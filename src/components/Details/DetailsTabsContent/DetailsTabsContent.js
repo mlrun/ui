@@ -225,12 +225,7 @@ const DetailsTabsContent = ({
   }
 }
 
-DetailsTabsContent.defaultProps = {
-  handleChangeDates: () => {}
-}
-
 DetailsTabsContent.propTypes = {
-  handleChangeDates: PropTypes.func,
   handlePreview: PropTypes.func.isRequired,
   pageData: PropTypes.shape({}).isRequired,
   selectedItem: PropTypes.shape({}).isRequired,

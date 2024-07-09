@@ -250,7 +250,8 @@ export const generateActionsMenu = (
         label: 'View YAML',
         icon: <Yaml />,
         disabled: functionIsDeleting,
-        onClick: funcMin => getFullFunction(funcMin).then(toggleConvertedYaml)
+        onClick: funcMin =>
+          getFullFunction(funcMin).then(func => !isEmpty(func) && toggleConvertedYaml(func))
       },
       {
         label: 'Delete',
