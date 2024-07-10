@@ -45,7 +45,6 @@ import './metricsSelector.scss'
 const MetricsSelector = ({ maxSelectionNumber, metrics, name, onSelect, preselectedMetrics }) => {
   const [nameFilter, setNameFilter] = useState('')
   const [isOpen, setIsOpen] = useState(false)
-  const [preAppliedMetrics, setPreAppliedMetrics] = useState([])
   const [appliedMetrics, setAppliedMetrics] = useState([])
   const selectorFieldRef = useRef()
   const formRef = React.useRef(
@@ -80,8 +79,8 @@ const MetricsSelector = ({ maxSelectionNumber, metrics, name, onSelect, preselec
   )
 
   useEffect(() => {
-    setAppliedMetrics(preselectedMetrics)
-  }, [preselectedMetrics])
+    setNameFilter('')
+  }, [metrics])
 
   useEffect(() => {
     if (!isOpen) {
@@ -97,6 +96,7 @@ const MetricsSelector = ({ maxSelectionNumber, metrics, name, onSelect, preselec
       formRef.current.reset({
         metrics: preselectedMetrics.map(metricItem => metricItem.full_name)
       })
+      setAppliedMetrics(preselectedMetrics)
     }
   }, [preselectedMetrics])
 
@@ -133,14 +133,11 @@ const MetricsSelector = ({ maxSelectionNumber, metrics, name, onSelect, preselec
     }
   }, [windowClickHandler, windowScrollHandler, isOpen])
 
-  const handleOnChange = selectedMetrics => {
-    setPreAppliedMetrics(selectedMetrics)
-  }
-
   const handleApply = () => {
-    const newAppliedMetrics = preAppliedMetrics.map(metricFullName => {
+    const newAppliedMetrics = formRef.current?.getFieldState('metrics')?.value?.map(metricFullName => {
       return metrics.find(metric => metric.full_name === metricFullName)
-    })
+    }) || []
+
     onSelect(newAppliedMetrics)
     setAppliedMetrics(newAppliedMetrics)
     setIsOpen(false)
@@ -272,7 +269,6 @@ const MetricsSelector = ({ maxSelectionNumber, metrics, name, onSelect, preselec
                     }}
                   </FieldArray>
                 </ul>
-                <FormOnChange name={name} handler={handleOnChange} />
                 <div className="metrics-selector__footer">
                   <div data-testid="metrics-selector-counter" className="metrics-selector-counter">
                     {`${formState.values.metrics?.length ?? 0}/${maxSelectionNumber}`}

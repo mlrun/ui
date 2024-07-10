@@ -19,9 +19,12 @@ such restriction.
 */
 import React, { useState } from 'react'
 import PropTypes from 'prop-types'
-import { useDispatch, connect } from 'react-redux'
+import { useDispatch, connect, useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 import { createPortal } from 'react-dom'
+import { Form, FormSpy } from 'react-final-form'
+import { createForm } from 'final-form'
+import arrayMutators from 'final-form-arrays'
 
 import FeatureSetsPanelView from './FeatureSetsPanelView'
 
@@ -29,10 +32,12 @@ import { FEATURE_SETS_TAB, TAG_FILTER_LATEST } from '../../constants'
 import featureStoreActions from '../../actions/featureStore'
 import { setNotification } from '../../reducers/notificationReducer'
 import { checkValidation } from './featureSetPanel.util'
+import { setFieldState } from 'igz-controls/utils/form.util'
 import {
   EXTERNAL_OFFLINE,
   PARQUET
 } from './FeatureSetsPanelTargetStore/featureSetsPanelTargetStore.util'
+import { convertChipsData } from '../../utils/convertChipsData'
 
 const FeatureSetsPanel = ({
   closePanel,
@@ -43,7 +48,9 @@ const FeatureSetsPanel = ({
   setNewFeatureSetCredentialsAccessKey,
   startFeatureSetIngest
 }) => {
+  const frontendSpec = useSelector(store => store.appStore.frontendSpec)
   const [validation, setValidation] = useState({
+    areLabelsValid: true,
     isNameValid: true,
     isTagValid: true,
     isUrlValid: true,
@@ -61,8 +68,7 @@ const FeatureSetsPanel = ({
     isExternalOfflinePartitionColumnsValid: true,
     isTargetStoreValid: true,
     isTimestampKeyValid: true,
-    isAccessKeyValid: true,
-    isLabelsValid: true
+    isAccessKeyValid: true
   })
   const [disableButtons, setDisableButtons] = useState({
     isExternalOfflineTargetPathEditModeClosed: true,
@@ -74,6 +80,13 @@ const FeatureSetsPanel = ({
   const [accessKeyRequired, setAccessKeyRequired] = useState(false)
   const navigate = useNavigate()
   const dispatch = useDispatch()
+  const formRef = React.useRef(
+    createForm({
+      initialValues: { labels: [] },
+      mutators: { ...arrayMutators, setFieldState },
+      onSubmit: () => {}
+    })
+  )
 
   const handleSave = () => {
     let data = {
@@ -81,6 +94,7 @@ const FeatureSetsPanel = ({
       ...featureStore.newFeatureSet,
       metadata: {
         ...featureStore.newFeatureSet.metadata,
+        labels: convertChipsData(formRef.current.getFieldState('labels')?.value),
         tag: featureStore.newFeatureSet.metadata.tag || TAG_FILTER_LATEST
       }
     }
@@ -157,22 +171,42 @@ const FeatureSetsPanel = ({
   }
 
   return createPortal(
-    <FeatureSetsPanelView
-      accessKeyRequired={accessKeyRequired}
-      closePanel={closePanel}
-      confirmDialog={confirmDialog}
-      disableButtons={disableButtons}
-      featureStore={featureStore}
-      handleSave={handleSave}
-      handleSaveOnClick={handleSaveOnClick}
-      loading={featureStore.loading}
-      project={project}
-      setConfirmDialog={setConfirmDialog}
-      setDisableButtons={setDisableButtons}
-      setNewFeatureSetCredentialsAccessKey={setNewFeatureSetCredentialsAccessKey}
-      setValidation={setValidation}
-      validation={validation}
-    />,
+    <Form form={formRef.current} onSubmit={() => {}}>
+      {formState => {
+        return (
+          <>
+            <FeatureSetsPanelView
+              accessKeyRequired={accessKeyRequired}
+              closePanel={closePanel}
+              confirmDialog={confirmDialog}
+              disableButtons={disableButtons}
+              formState={formState}
+              frontendSpec={frontendSpec}
+              featureStore={featureStore}
+              handleSave={handleSave}
+              handleSaveOnClick={handleSaveOnClick}
+              loading={featureStore.loading}
+              project={project}
+              setConfirmDialog={setConfirmDialog}
+              setDisableButtons={setDisableButtons}
+              setNewFeatureSetCredentialsAccessKey={setNewFeatureSetCredentialsAccessKey}
+              setValidation={setValidation}
+              validation={validation}
+            />
+            <FormSpy
+              subscription={{ valid: true }}
+              onChange={() => {
+                setValidation(prevState => ({
+                  ...prevState,
+                  areLabelsValid: formRef.current?.getFieldState?.('labels')?.valid
+                }))
+              }}
+            />
+          </>
+        )
+      }}
+    </Form>
+    ,
     document.getElementById('overlay_container')
   )
 }

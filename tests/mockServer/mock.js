@@ -34,7 +34,9 @@ import {
   find,
   set,
   omit,
-  forEach
+  forEach,
+  pick,
+  isNil
 } from 'lodash'
 
 import frontendSpec from './data/frontendSpec.json'
@@ -168,7 +170,7 @@ const iguazioApiUrl = '/platform-api.default-tenant.app.vmdev36.lab.iguazeng.com
 const port = 30000
 
 // Support function
-function createTask(projectName, config) {
+function createTask (projectName, config) {
   const newTask = cloneDeep(backgroundTaskTemplate)
   const now = new Date().toISOString()
 
@@ -243,11 +245,11 @@ function createTask(projectName, config) {
   return newTask
 }
 
-function generateHash(txt) {
+function generateHash (txt) {
   return crypto.createHash('sha1').update(JSON.stringify(txt)).digest('hex')
 }
 
-function getGraphById(targetId) {
+function getGraphById (targetId) {
   let foundGraph = null
 
   find(pipelineIDs, item => {
@@ -257,7 +259,7 @@ function getGraphById(targetId) {
   return foundGraph
 }
 
-function makeUID(length) {
+function makeUID (length) {
   let result = ''
   const characters = 'abcdef0123456789'
   const charactersLength = characters.length
@@ -269,7 +271,7 @@ function makeUID(length) {
   return result
 }
 
-function deleteProjectHandler(req, res, omitResponse) {
+function deleteProjectHandler (req, res, omitResponse) {
   //todo: Improve this handler according to the real roles of deleting. Add 412 response (if project has resources)
 
   const collectedProject = projects.projects.filter(
@@ -297,31 +299,31 @@ function deleteProjectHandler(req, res, omitResponse) {
 }
 
 // Request Handlers
-function getFrontendSpec(req, res) {
+function getFrontendSpec (req, res) {
   res.send(frontendSpec)
 }
 
-function getProjectTask(req, res) {
+function getProjectTask (req, res) {
   res.send(get(projectBackgroundTasks, [req.params.project, req.params.taskId], {}))
 }
 
-function getProjectTasks(req, res) {
+function getProjectTasks (req, res) {
   res.send({
     background_tasks: Object.values(get(projectBackgroundTasks, req.params.project, []))
   })
 }
 
-function getTask(req, res) {
+function getTask (req, res) {
   res.send(get(backgroundTasks, req.params.taskId, {}))
 }
 
-function getTasks(req, res) {
+function getTasks (req, res) {
   res.send({
     background_tasks: Object.values(backgroundTasks) ?? []
   })
 }
 
-function getFeatureSet(req, res) {
+function getFeatureSet (req, res) {
   let collectedFeatureSets = featureSets.feature_sets.filter(
     featureSet => featureSet.metadata.project === req.params['project']
   )
@@ -357,7 +359,7 @@ function getFeatureSet(req, res) {
   res.send({ feature_sets: collectedFeatureSets })
 }
 
-function createProjectsFeatureSet(req, res) {
+function createProjectsFeatureSet (req, res) {
   const currentDate = new Date()
   let featureSet = req.body
   featureSet.metadata['project'] = req.params['project']
@@ -369,7 +371,7 @@ function createProjectsFeatureSet(req, res) {
   res.send(featureSet)
 }
 
-function deleteFeatureSet(req, res) {
+function deleteFeatureSet (req, res) {
   const collecledFeatureSet = featureSets.feature_sets
     .filter(featureSet => featureSet.metadata.project === req.params.project)
     .filter(featureSet => featureSet.metadata.name === req.params.featureSet)
@@ -383,11 +385,11 @@ function deleteFeatureSet(req, res) {
   res.send()
 }
 
-function getProject(req, res) {
+function getProject (req, res) {
   res.send(projects.projects.find(project => project.metadata.name === req.params['project']))
 }
 
-function getProjects(req, res) {
+function getProjects (req, res) {
   let data = projects
 
   switch (req.query['format']) {
@@ -404,7 +406,7 @@ function getProjects(req, res) {
   res.send(data)
 }
 
-function createNewProject(req, res) {
+function createNewProject (req, res) {
   const currentDate = new Date()
   let data = {}
   const collectedProjects = projects.projects.filter(
@@ -433,11 +435,11 @@ function createNewProject(req, res) {
   res.send(data)
 }
 
-function deleteProject(req, res) {
+function deleteProject (req, res) {
   deleteProjectHandler(req, res)
 }
 
-function deleteProjectV2(req, res) {
+function deleteProjectV2 (req, res) {
   const taskFunc = () => {
     return new Promise(resolve => {
       setTimeout(
@@ -460,7 +462,7 @@ function deleteProjectV2(req, res) {
   res.send(task)
 }
 
-function patchProject(req, res) {
+function patchProject (req, res) {
   const project = projects.projects.find(project => project.metadata.name === req.params['project'])
 
   switch (req.body.spec['desired_state']) {
@@ -487,7 +489,7 @@ function patchProject(req, res) {
   res.send(project)
 }
 
-function putProject(req, res) {
+function putProject (req, res) {
   for (const i in projects.projects) {
     if (projects.projects[i].metadata.name === req.body.metadata.name) {
       projects.projects[i] = req.body
@@ -497,27 +499,27 @@ function putProject(req, res) {
   res.send(projects.projects.find(project => project.metadata.name === req.params['project']))
 }
 
-function getSecretKeys(req, res) {
+function getSecretKeys (req, res) {
   res.send(secretKeys[req.params['project']])
 }
 
-function postSecretKeys(req, res) {
+function postSecretKeys (req, res) {
   secretKeys[req.params['project']].secret_keys.push(Object.keys(req.body.secrets)[0])
 
   res.statusCode = 201
   res.send('')
 }
 
-function deleteSecretKeys(req, res) {
+function deleteSecretKeys (req, res) {
   secretKeys[req.params['project']].secret_keys = secretKeys[
     req.params['project']
-  ].secret_keys.filter(item => item !== req.query.secret)
+    ].secret_keys.filter(item => item !== req.query.secret)
 
   res.statusCode = 204
   res.send('')
 }
 
-function getProjectsSummaries(req, res) {
+function getProjectsSummaries (req, res) {
   const currentDate = new Date()
   const last24Hours = new Date(currentDate.getTime() - 24 * 60 * 60 * 1000)
   const next24Hours = new Date(currentDate.getTime() + 24 * 60 * 60 * 1000)
@@ -595,14 +597,14 @@ function getProjectsSummaries(req, res) {
   res.send(projectsSummary)
 }
 
-function getFunctionItem(req, res) {
+function getFunctionItem (req, res) {
   const funcName = req.params.uid === 'batch_inference_v2' ? 'batch-inference-v2' : req.params.uid
   const hubItem = itemsCatalog.catalog.find(item => item.metadata.name === funcName)
 
   res.send(hubItem)
 }
 
-function getFunctionObject(req, res) {
+function getFunctionObject (req, res) {
   const urlParams = req.query.url
   const urlArray = urlParams.split('/')
   const funcYAMLPath = `./tests/mockServer/data/mlrun/functions/${urlArray[6]}/${urlArray[6]}.yaml`
@@ -611,7 +613,7 @@ function getFunctionObject(req, res) {
   res.send(funcObject)
 }
 
-function getProjectSummary(req, res) {
+function getProjectSummary (req, res) {
   const collectedProject = projectsSummary.project_summaries.find(
     item => item.name === req.params['project']
   )
@@ -619,7 +621,7 @@ function getProjectSummary(req, res) {
   res.send(collectedProject)
 }
 
-function getRuns(req, res) {
+function getRuns (req, res) {
   //get runs for Projects Monitoring page
   if (req.params['project'] === '*') {
     const { start_time_from, state } = req.query
@@ -686,7 +688,7 @@ function getRuns(req, res) {
   res.send({ runs: collectedRuns })
 }
 
-function getRun(req, res) {
+function getRun (req, res) {
   const run_prj_uid = runs.runs.find(
     item =>
       item.metadata.project === req.params['project'] && item.metadata.uid === req.params['uid']
@@ -695,7 +697,7 @@ function getRun(req, res) {
   res.send({ data: run_prj_uid })
 }
 
-function patchRun(req, res) {
+function patchRun (req, res) {
   const collectedRun = runs.runs
     .filter(run => run.metadata.project === req.params.project)
     .filter(run => run.metadata.uid === req.params.uid)
@@ -705,7 +707,7 @@ function patchRun(req, res) {
   res.send()
 }
 
-function abortRun(req, res) {
+function abortRun (req, res) {
   const currentRun = runs.runs.find(run => run.metadata.uid === req.params.uid)
 
   currentRun.status.state = 'aborting'
@@ -740,7 +742,7 @@ function abortRun(req, res) {
   res.send(task)
 }
 
-function deleteRun(req, res) {
+function deleteRun (req, res) {
   const collectedRun = runs.runs.find(
     run => run.metadata.project === req.params.project && run.metadata.uid === req.params.uid
   )
@@ -755,7 +757,7 @@ function deleteRun(req, res) {
   res.send()
 }
 
-function deleteRuns(req, res) {
+function deleteRuns (req, res) {
   const collectedRuns = runs.runs.filter(
     run => run.metadata.project === req.params.project && run.metadata.name === req.query.name
   )
@@ -767,18 +769,18 @@ function deleteRuns(req, res) {
   res.send()
 }
 
-function getFunctionCatalog(req, res) {
+function getFunctionCatalog (req, res) {
   res.send(itemsCatalog)
 }
 
-function getFunctionTemplate(req, res) {
+function getFunctionTemplate (req, res) {
   const funcYAMLPath = `./tests/mockServer/data/mlrun/functions/${req.params.function}/${req.params.function}.yaml`
   const funcObject = fs.readFileSync(funcYAMLPath, 'utf8')
 
   res.send(funcObject)
 }
 
-function getProjectsSchedules(req, res) {
+function getProjectsSchedules (req, res) {
   //get schedules for Projects Monitoring page
   if (req.params['project'] === '*') {
     let collectedSchedules = schedules.schedules
@@ -808,13 +810,13 @@ function getProjectsSchedules(req, res) {
   res.send({ schedules: collectedSchedules })
 }
 
-function getProjectsSchedule(req, res) {
+function getProjectsSchedule (req, res) {
   const collectedSchedule = schedules.schedules.find(item => item.name === req.params['schedule'])
 
   res.send(collectedSchedule)
 }
 
-function invokeSchedule(req, res) {
+function invokeSchedule (req, res) {
   const currentDate = new Date()
   const runUID = makeUID(32)
   const { project: runProject, name: runName, labels } = req.body.task.metadata
@@ -930,7 +932,7 @@ function invokeSchedule(req, res) {
   res.send(respTemplate)
 }
 
-function getProjectsFeaturesEntities(req, res) {
+function getProjectsFeaturesEntities (req, res) {
   const artifact = req.path.substring(req.path.lastIndexOf('/') + 1)
   let collectedArtifacts = []
   let collectedFeatureSetDigests = []
@@ -1044,7 +1046,7 @@ function getProjectsFeaturesEntities(req, res) {
   res.send(result)
 }
 
-function getProjectsFeatureArtifactTags(req, res) {
+function getProjectsFeatureArtifactTags (req, res) {
   let featureArtifactTags = []
 
   if (req.params.featureArtifact === 'feature-vectors') {
@@ -1065,13 +1067,13 @@ function getProjectsFeatureArtifactTags(req, res) {
   res.send({ tags: featureArtifactTags })
 }
 
-function getProjectsArtifactTags(req, res) {
+function getProjectsArtifactTags (req, res) {
   let artifactTag = artifactTags.find(aTag => aTag.project === req.params['project'])
 
   res.send(artifactTag)
 }
 
-function getArtifacts(req, res) {
+function getArtifacts (req, res) {
   const categories = {
     dataset: ['dataset'],
     model: ['model'],
@@ -1140,7 +1142,7 @@ function getArtifacts(req, res) {
   res.send({ artifacts: collectedArtifacts })
 }
 
-function getProjectsFeatureSets(req, res) {
+function getProjectsFeatureSets (req, res) {
   const featureArtifactTags = featureSets.feature_sets
     .filter(artifact => artifact.metadata.project === req.params.project)
     .filter(artifact => artifact.metadata.name === req.params.name)
@@ -1149,7 +1151,7 @@ function getProjectsFeatureSets(req, res) {
   res.send(featureArtifactTags[0])
 }
 
-function patchProjectsFeatureSets(req, res) {
+function patchProjectsFeatureSets (req, res) {
   const featureArtifactTags = featureSets.feature_sets
     .filter(artifact => artifact.metadata.project === req.params.project)
     .filter(artifact => artifact.metadata.name === req.params.name)
@@ -1161,7 +1163,7 @@ function patchProjectsFeatureSets(req, res) {
   res.send(featureArtifactTags[0])
 }
 
-function postProjectsFeatureVectors(req, res) {
+function postProjectsFeatureVectors (req, res) {
   const collectedFV = featureVectors.feature_vectors.filter(
     item => item.metadata.name === req.body.metadata.name
   )
@@ -1187,7 +1189,7 @@ function postProjectsFeatureVectors(req, res) {
   }
 }
 
-function putProjectsFeatureVectors(req, res) {
+function putProjectsFeatureVectors (req, res) {
   const collectedFV = featureVectors.feature_vectors
     .filter(item => item.metadata.project === req.body.metadata.project)
     .filter(item => item.metadata.name === req.body.metadata.name)
@@ -1198,7 +1200,7 @@ function putProjectsFeatureVectors(req, res) {
   res.send(req.body)
 }
 
-function patchProjectsFeatureVectors(req, res) {
+function patchProjectsFeatureVectors (req, res) {
   const currentDate = new Date()
 
   const collectedFV = featureVectors.feature_vectors
@@ -1220,7 +1222,7 @@ function patchProjectsFeatureVectors(req, res) {
   res.send('')
 }
 
-function deleteProjectsFeatureVectors(req, res) {
+function deleteProjectsFeatureVectors (req, res) {
   const collectedFV = featureVectors.feature_vectors
     .filter(item => item.metadata.project === req.params.project)
     .filter(item => item.metadata.name === req.params.name)
@@ -1237,7 +1239,7 @@ function deleteProjectsFeatureVectors(req, res) {
   res.send('')
 }
 
-function getPipelines(req, res) {
+function getPipelines (req, res) {
   //get pipelines for Projects Monitoring page
   if (req.params['project'] === '*') {
     let collectedMonitoringPipelines = pipelineIDs.map(pipeline => {
@@ -1289,13 +1291,13 @@ function getPipelines(req, res) {
   res.send(collectedPipelines)
 }
 
-function getPipeline(req, res) {
+function getPipeline (req, res) {
   const collectedPipeline = pipelineIDs.find(item => item.run.id === req.params.pipelineID)
 
   res.send(collectedPipeline)
 }
 
-function getFuncs(req, res) {
+function getFuncs (req, res) {
   const dt = parseInt(Date.now())
 
   const collectedFuncsByPrjTime = funcs.funcs
@@ -1337,10 +1339,31 @@ function getFuncs(req, res) {
     })
   }
 
+  if (req.query['format'] === 'minimal') {
+    collectedFuncs = collectedFuncs.map(func => {
+      const specFields = [
+        'description',
+        'command',
+        'image',
+        'default_handler',
+        'default_class',
+        'graph',
+        'preemption_mode',
+        'node_selector',
+        'priority_class_name'
+      ].map(fieldName => `spec.${fieldName}`)
+
+      return pick(
+        func,
+        ['kind', 'metadata', 'status', ...specFields]
+      )
+    })
+  }
+
   res.send({ funcs: collectedFuncs })
 }
 
-function getFunc(req, res) {
+function getFunc (req, res) {
   const collectedFunc = funcs.funcs
     .filter(func => func.metadata.project === req.params['project'])
     .filter(func => func.metadata.name === req.params['func'])
@@ -1361,7 +1384,7 @@ function getFunc(req, res) {
   res.send(respBody)
 }
 
-function postFunc(req, res) {
+function postFunc (req, res) {
   const hashPwd = generateHash(req.body)
 
   const dt0 = parseInt(Date.now())
@@ -1376,7 +1399,7 @@ function postFunc(req, res) {
   res.send({ hash_key: hashPwd })
 }
 
-function deleteFunc(req, res) {
+function deleteFunc (req, res) {
   const collectedFunc = funcs.funcs
     .filter(func => func.metadata.project === req.params.project)
     .filter(func => func.metadata.name === req.params.func)
@@ -1419,25 +1442,31 @@ function deleteFunc(req, res) {
   }
 }
 
-function getNuclioLogs(req, res) {
-  sendLogsData({
-    project: req.params.project,
-    name: req.params.func,
-    tag: req.query.tag,
-    type: 'Function'
-  }, res)
+function getNuclioLogs (req, res) {
+  sendLogsData(
+    {
+      project: req.params.project,
+      name: req.params.func,
+      tag: req.query.tag,
+      type: 'Function'
+    },
+    res
+  )
 }
 
-function getBuildStatus(req, res) {
-  sendLogsData({
-    project: req.query.name,
-    name: req.query.name,
-    tag: req.query.tag,
-    type: 'Application'
-  }, res)
+function getBuildStatus (req, res) {
+  sendLogsData(
+    {
+      project: req.query.name,
+      name: req.query.name,
+      tag: req.query.tag,
+      type: 'Application'
+    },
+    res
+  )
 }
 
-function sendLogsData(data, res) {
+function sendLogsData (data, res) {
   const dt = parseInt(Date.now())
 
   const collectedFunc = funcs.funcs
@@ -1463,7 +1492,7 @@ function sendLogsData(data, res) {
   res.send(logText)
 }
 
-function deployMLFunction(req, res) {
+function deployMLFunction (req, res) {
   const respBody = { data: cloneDeep(req.body.function) }
   respBody.data.metadata.categories = []
   delete respBody.data.spec.secret_sources
@@ -1516,14 +1545,14 @@ function deployMLFunction(req, res) {
   setTimeout(() => res.send(respBody), 1050)
 }
 
-function getFile(req, res) {
+function getFile (req, res) {
   const dataRoot = mockHome + '/data/'
   const filePath = dataRoot + req.query['path'].split('://')[1]
 
   res.sendFile(filePath)
 }
 
-function deleteSchedule(req, res) {
+function deleteSchedule (req, res) {
   const collectedSchedule = schedules.schedules
     .filter(schedule => schedule.project === req.params.project)
     .filter(schedule => schedule.name === req.params.schedule)
@@ -1538,16 +1567,16 @@ function deleteSchedule(req, res) {
   res.send()
 }
 
-function getLog(req, res) {
+function getLog (req, res) {
   const collectedLog = logs.find(log => log.uid === req.params['uid'])
   res.send(collectedLog.log)
 }
 
-function getRuntimeResources(req, res) {
+function getRuntimeResources (req, res) {
   res.send({})
 }
 
-function postSubmitJob(req, res) {
+function postSubmitJob (req, res) {
   const currentDate = new Date()
 
   let respTemplate = {
@@ -1687,7 +1716,7 @@ function postSubmitJob(req, res) {
   res.send(respTemplate)
 }
 
-function putTags(req, res) {
+function putTags (req, res) {
   const tagName = req.params.tag
   const projectName = req.params.project
   const tagObject = artifactTags.find(
@@ -1728,7 +1757,7 @@ function putTags(req, res) {
   })
 }
 
-function deleteTags(req, res) {
+function deleteTags (req, res) {
   const collectedArtifacts = artifacts.artifacts.filter(artifact => {
     const artifactMetaData = artifact.metadata ?? artifact
     const artifactSpecData = artifact.spec ?? artifact
@@ -1756,7 +1785,32 @@ function deleteTags(req, res) {
   res.send()
 }
 
-function postArtifact(req, res) {
+function getArtifact (req, res) {
+  let resData
+  let requestedArtifact = artifacts.artifacts.find(
+    artifact =>
+      (artifact.metadata?.project === req.params.project || artifact.project === req.params.project) &&
+      (artifact.spec?.db_key === req.params.key || artifact?.db_key === req.params.key) &&
+      (isNil(req.query.iter) || +req.query.iter === artifact?.iter || +req.query.iter === artifact.metadata?.iter) &&
+      (isNil(req.query.tag) || artifact.metadata?.tag === req.query.tag || artifact?.tag === req.query.tag) &&
+      (isNil(req.query.tree) || artifact.metadata?.tree === req.query.tree || artifact?.tree === req.query.tree)
+  )
+
+  if (requestedArtifact) {
+    resData = requestedArtifact
+  } else {
+    res.statusCode = 404
+    resData = {
+      detail: {
+        reason: `MLRunNotFoundError('Artifact not found ${req.params.project}/${req.params.key}')`
+      }
+    }
+  }
+
+  res.send(resData)
+}
+
+function postArtifact (req, res) {
   const currentDate = new Date()
   const artifactTag = req.body.metadata.tag || 'latest'
   const tagObject = artifactTags.find(
@@ -1817,7 +1871,7 @@ function postArtifact(req, res) {
   res.send()
 }
 
-function putArtifact(req, res) {
+function putArtifact (req, res) {
   const collectedArtifacts = artifacts.artifacts.filter(artifact => {
     const artifactMetaData = artifact.metadata ?? artifact
     const artifactSpecData = artifact.spec ?? artifact
@@ -1841,7 +1895,7 @@ function putArtifact(req, res) {
   res.send(collectedArtifacts)
 }
 
-function deleteArtifact(req, res) {
+function deleteArtifact (req, res) {
   const collectedArtifacts = artifacts.artifacts.filter(artifact => {
     const artifactMetaData = artifact.metadata ?? artifact
     const artifactSpecData = artifact.spec ?? artifact
@@ -1859,7 +1913,7 @@ function deleteArtifact(req, res) {
   res.send({})
 }
 
-function getModelEndpoints(req, res) {
+function getModelEndpoints (req, res) {
   let collectedEndpoints = modelEndpoints.endpoints
     .filter(endpoint => endpoint.metadata.project === req.params.project)
     .map(endpoint => ({
@@ -1883,7 +1937,7 @@ function getModelEndpoints(req, res) {
   res.send({ endpoints: collectedEndpoints })
 }
 
-function getModelEndpoint(req, res) {
+function getModelEndpoint (req, res) {
   const endpoint = modelEndpoints.endpoints.find(
     item => item.metadata.project === req.params.project && item.metadata.uid === req.params.uid
   )
@@ -1891,7 +1945,7 @@ function getModelEndpoint(req, res) {
   res.send(endpoint)
 }
 
-function getMetrics(req, res) {
+function getMetrics (req, res) {
   let metricsOptions =
     metricsData.metrics.find(
       item => item.project === req.params.project && item.modelEndpointUID === req.params.uid
@@ -1904,19 +1958,20 @@ function getMetrics(req, res) {
   res.send(metricsOptions)
 }
 
-function getMetricsValues(req, res) {
+function getMetricsValues (req, res) {
   const start = req.query.start || new Date() - 86400000 // past 24 hours
   const end = req.query.end || new Date()
   const names = req.query.name
 
-  function generateSineSequence(length) {
+  function generateSineSequence(length, isInvocation) {
     const result = []
     const step = (length >= 60 ? Math.ceil(Math.random() * 10) : 1) / (length - 1)
+    const multiplayerForInvocations = Math.round(Math.random() * 10 + 5)
 
     for (let i = 0; i < length; i++) {
       const x = i * step
       const y = (Math.sin(2 * Math.PI * x) + 1) / 2 + Math.random() / 10
-      result.push(y)
+      result.push(isInvocation ? Math.round(y * multiplayerForInvocations) : y)
     }
 
     return result
@@ -1933,8 +1988,9 @@ function getMetricsValues(req, res) {
       if (!item.data) return item
 
       const intervalInMls = item.values[0] * 60000
+      const isInvocation = item.values[1]
       const numberOfDataPoints = Math.floor((end - start) / intervalInMls)
-      const sineSequence = generateSineSequence(numberOfDataPoints)
+      const sineSequence = generateSineSequence(numberOfDataPoints, isInvocation)
       const values = Array.from({ length: numberOfDataPoints }, (_, index) => {
         const date = new Date(+start + intervalInMls * (index + 1)).toISOString()
         const value = sineSequence[index]
@@ -1957,16 +2013,16 @@ function getMetricsValues(req, res) {
   res.send(metricsValues)
 }
 
-function getNuclioFunctions(req, res) {
+function getNuclioFunctions (req, res) {
   res.send(nuclioFunctions)
 }
 
-function getNuclioAPIGateways(req, res) {
+function getNuclioAPIGateways (req, res) {
   res.send(nuclioAPIGateways)
 }
 
 // Iguazio
-function getIguazioProjects(req, res) {
+function getIguazioProjects (req, res) {
   let resultTemplate = cloneDeep(iguazioProjects)
 
   let filteredProject = {}
@@ -2009,15 +2065,15 @@ function getIguazioProjects(req, res) {
   res.send(resultTemplate)
 }
 
-function getIguazioAuthorization(req, res) {
+function getIguazioAuthorization (req, res) {
   res.send({ data: [], meta: { ctx: 11661436569072727632 } })
 }
 
-function getIguazioSelf(req, res) {
+function getIguazioSelf (req, res) {
   res.send(iguazioSelf)
 }
 
-function getIguazioProject(req, res) {
+function getIguazioProject (req, res) {
   let filteredProject = iguazioProjects.data.find(item => item.id === req.params.id)
 
   let filteredAuthRoles = []
@@ -2082,7 +2138,7 @@ function getIguazioProject(req, res) {
   })
 }
 
-function putIguazioProject(req, res) {
+function putIguazioProject (req, res) {
   const prevOwner = req.params.id
   const newOwner = req.body.data.relationships.owner.data.id
   const filteredProject = iguazioProjects.data.find(item => item.id === req.params.id)
@@ -2112,7 +2168,7 @@ function putIguazioProject(req, res) {
   })
 }
 
-function postProjectMembers(req, res) {
+function postProjectMembers (req, res) {
   const projectId = req.body.data.attributes.metadata.project_ids[0]
   const items = req.body.data.attributes.requests
   const projectRelations = cloneDeep(iguazioProjectsRelations[projectId])
@@ -2154,19 +2210,19 @@ function postProjectMembers(req, res) {
   })
 }
 
-function getIguazioUserGrops(req, res) {
+function getIguazioUserGrops (req, res) {
   res.send(iguazioUserGrops)
 }
 
-function getIguazioUsers(req, res) {
+function getIguazioUsers (req, res) {
   res.send(iguazioUsers)
 }
 
-function getNuclioStreams(req, res) {
+function getNuclioStreams (req, res) {
   res.send(nuclioStreams[req.headers['x-nuclio-project-name']])
 }
 
-function getNuclioShardLags(req, res) {
+function getNuclioShardLags (req, res) {
   res.send({
     [`${req.body.containerName}${req.body.streamPath}`]: {
       [req.body.consumerGroup]: {
@@ -2185,7 +2241,7 @@ function getNuclioShardLags(req, res) {
   })
 }
 
-function getIguazioJob(req, res) {
+function getIguazioJob (req, res) {
   res.send({
     data: {
       attributes: {
@@ -2252,6 +2308,7 @@ app.get(`${mlrunAPIIngress}/projects/:project/pipelines/:pipelineID`, getPipelin
 
 app.get(`${mlrunAPIIngress}/projects/:project/artifact-tags`, getProjectsArtifactTags)
 app.get(`${mlrunAPIIngressV2}/projects/:project/artifacts`, getArtifacts)
+app.get(`${mlrunAPIIngressV2}/projects/:project/artifacts/:key`, getArtifact)
 app.post(`${mlrunAPIIngressV2}/projects/:project/artifacts`, postArtifact)
 app.put(`${mlrunAPIIngressV2}/projects/:project/artifacts/:key`, putArtifact)
 app.delete(`${mlrunAPIIngressV2}/projects/:project/artifacts/:key`, deleteArtifact)

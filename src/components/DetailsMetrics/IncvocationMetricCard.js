@@ -19,6 +19,7 @@ such restriction.
 */
 import { forwardRef, useMemo } from 'react'
 import PropTypes from 'prop-types'
+import classNames from 'classnames'
 
 import StatsCard from '../../common/StatsCard/StatsCard'
 import MetricChart from '../MetricChart/MetricChart'
@@ -49,94 +50,101 @@ const InvocationMetricCard = forwardRef(
     },
     invocationBodyCardRef
   ) => {
+    const invocationCardClassnames = classNames(
+      'metrics__card-invocations',
+      !isInvocationCardExpanded
+        ? 'metrics__card-invocations_collapsed'
+        : 'metrics__card-invocations_expanded'
+    )
+
     const gradientConfig = useMemo(() => getGradientLineChartConfig(), [])
     const resultPercentageDrift = calculatePercentageDrift(
       previousTotalInvocation,
       metric[METRIC_RAW_TOTAL_POINTS]
     )
     return (
-      <StatsCard
-        className={`metrics__card metrics__card-invocations  ${!isInvocationCardExpanded ? 'metrics__card-invocations-header-hidden' : 'metrics__card-invocations-header-visible'}`}
-        key={metric.id}
-      >
-        <StatsCard.Header title="Endpoint call count">
-          <div className="metrics__card-invocation-header">
-            <div className="metrics__card-invocation-header_drift-icon-contrainer">
-              {resultPercentageDrift.positive ? <ArrowUp /> : <ArrowDown />}
-            </div>
-            <div className={`metrics__card-invocation-header_${resultPercentageDrift.className}`}>
-              {resultPercentageDrift.percentageChange}
-            </div>
-            <div className="metrics__card-invocation-header-selected-date">{selectedDate}</div>
-            <div className="metrics__card-invocation-header-total-title">Total</div>
-            <div className="metrics__card-invocation-header-total-score">
-              {metric[METRIC_COMPUTED_TOTAL_POINTS]}
-            </div>
-          </div>
-        </StatsCard.Header>
-        <div
-          ref={invocationBodyCardRef}
-          className={`metrics__card-body ${isInvocationCardExpanded ? 'metrics__card-body-expanded' : 'metrics__card-body-collapsed'}`}
-        >
-          {!isInvocationCardExpanded && (
-            <RoundedIcon
-              className="metrics__card-pin-icon"
-              onClick={() => expandInvocationCard(true)}
-              tooltipText={'Expand Invocation Card'}
-            >
-              <UnpinIcon />
-            </RoundedIcon>
-          )}
-          <div
-            className={`metrics__card-invocation-content ${!isInvocationCardExpanded && 'metrics__card-invocation-content-visible'}`}
-          >
-            <div className="metrics__card-invocation-content-title">Endpoint call count</div>
-            <div className="metrics__card-invocation-content-container">
-              <div className="metrics__card-invocation-content-container_drift_icon">
+      <div className={invocationCardClassnames}>
+        <StatsCard key={metric.id} className="metrics__card">
+          <StatsCard.Header title="Endpoint call count">
+            <div className="metrics__card-invocation-header">
+              <div className="metrics__card-invocation-header_drift-icon-contrainer">
                 {resultPercentageDrift.positive ? <ArrowUp /> : <ArrowDown />}
               </div>
-              <div
-                className={`metrics__card-invocation-content-container_${resultPercentageDrift.className}`}
-              >
+              <div className={`metrics__card-invocation-header_${resultPercentageDrift.className}`}>
                 {resultPercentageDrift.percentageChange}
               </div>
-              <div>{selectedDate}</div>
-            </div>
-            <div className="metrics__card-invocation-content-data">
-              <div className="metrics__card-invocation-content-data_total_title">Total</div>
-              <div className="metrics__card-invocation-content-data-total-score">
-                {' '}
+              <div className="metrics__card-invocation-header-selected-date">{selectedDate}</div>
+              <div className="metrics__card-invocation-header-total-title">Total</div>
+              <div className="metrics__card-invocation-header-total-score">
                 {metric[METRIC_COMPUTED_TOTAL_POINTS]}
               </div>
             </div>
-          </div>
-          <div className="metrics__card-body-invocation">
-            <MetricChart
-              isInvocationCardExpanded={isInvocationCardExpanded}
-              chartConfig={{
-                gradient: true,
-                ...gradientConfig,
-                data: {
-                  labels: metric.labels,
-                  datasets: [
-                    {
-                      data: metric.points,
+          </StatsCard.Header>
+          <div
+            ref={invocationBodyCardRef}
+            className={`metrics__card-body ${isInvocationCardExpanded ? 'metrics__card-body-expanded' : 'metrics__card-body-collapsed'}`}
+          >
+              {!isInvocationCardExpanded && (
+                  <RoundedIcon
+                      className="metrics__card-pin-icon"
+                      onClick={() => expandInvocationCard(true)}
+                      tooltipText={'Expand Invocation Card'}
+                  >
+                      <UnpinIcon />
+                  </RoundedIcon>
+              )}
+            <div
+              className={`metrics__card-invocation-content ${!isInvocationCardExpanded && 'metrics__card-invocation-content-visible'}`}
+            >
+              <div className="metrics__card-invocation-content-title">Endpoint call count</div>
+              <div className="metrics__card-invocation-content-container">
+                <div className="metrics__card-invocation-content-container_drift_icon">
+                  {resultPercentageDrift.positive ? <ArrowUp /> : <ArrowDown />}
+                </div>
+                <div
+                  className={`metrics__card-invocation-content-container_${resultPercentageDrift.className}`}
+                >
+                  {resultPercentageDrift.percentageChange}
+                </div>
+                <div>{selectedDate}</div>
+              </div>
+              <div className="metrics__card-invocation-content-data">
+                <div className="metrics__card-invocation-content-data_total_title">Total</div>
+                <div className="metrics__card-invocation-content-data-total-score">
+                  {' '}
+                  {metric[METRIC_COMPUTED_TOTAL_POINTS]}
+                </div>
+              </div>
+            </div>
+            <div className="metrics__card-body-invocation">
+              <MetricChart
+                isInvocationCardExpanded={isInvocationCardExpanded}
+                chartConfig={{
+                  gradient: true,
+                  ...gradientConfig,
+                  data: {
+                    labels: metric.labels,
+                    datasets: [
+                      {
+                        data: metric.points,
+                        dates: metric.dates,
                       chartType: CHART_TYPE_LINE,
-                      fill: true,
-                      metricType: metric.type,
-                      driftStatusList: [],
-                      backgroundColor: colors.cornflowerBlueTwo,
-                      borderColor: colors.cornflowerBlueTwo,
-                      borderWidth: 1,
-                      tension: 0.4
-                    }
-                  ]
-                }
-              }}
-            />
+                        fill: true,
+                        metricType: metric.type,
+                        driftStatusList: [],
+                        backgroundColor: colors.cornflowerBlueTwo,
+                        borderColor: colors.cornflowerBlueTwo,
+                        borderWidth: 1,
+                        tension: 0.4
+                      }
+                    ]
+                  }
+                }}
+              />
+            </div>
           </div>
-        </div>
-      </StatsCard>
+        </StatsCard>
+      </div>
     )
   }
 )

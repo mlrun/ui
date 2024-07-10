@@ -127,6 +127,7 @@ const ActionsMenu = ({ dataItem, menu, menuPosition, time, withQuickActions }) =
             setIsShowMenu(prevValue => !prevValue)
           }}
           ref={actionMenuBtnRef}
+          tooltipText="More actions"
         >
           <ActionMenuIcon />
         </RoundedIcon>
