@@ -30,7 +30,7 @@ export const showErrorNotification = (dispatch, error, defaultErrorMsg, customEr
     error
   }
 
-  if (retryCallback && error.response.status !== FORBIDDEN_ERROR_STATUS_CODE) {
+  if (retryCallback && error?.response?.status !== FORBIDDEN_ERROR_STATUS_CODE) {
     notificationData.retry = retryCallback
   }
 

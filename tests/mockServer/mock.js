@@ -35,7 +35,8 @@ import {
   set,
   omit,
   forEach,
-  pick
+  pick,
+  isNil
 } from 'lodash'
 
 import frontendSpec from './data/frontendSpec.json'
@@ -1784,6 +1785,31 @@ function deleteTags (req, res) {
   res.send()
 }
 
+function getArtifact (req, res) {
+  let resData
+  let requestedArtifact = artifacts.artifacts.find(
+    artifact =>
+      (artifact.metadata?.project === req.params.project || artifact.project === req.params.project) &&
+      (artifact.spec?.db_key === req.params.key || artifact?.db_key === req.params.key) &&
+      (isNil(req.query.iter) || +req.query.iter === artifact?.iter || +req.query.iter === artifact.metadata?.iter) &&
+      (isNil(req.query.tag) || artifact.metadata?.tag === req.query.tag || artifact?.tag === req.query.tag) &&
+      (isNil(req.query.tree) || artifact.metadata?.tree === req.query.tree || artifact?.tree === req.query.tree)
+  )
+
+  if (requestedArtifact) {
+    resData = requestedArtifact
+  } else {
+    res.statusCode = 404
+    resData = {
+      detail: {
+        reason: `MLRunNotFoundError('Artifact not found ${req.params.project}/${req.params.key}')`
+      }
+    }
+  }
+
+  res.send(resData)
+}
+
 function postArtifact (req, res) {
   const currentDate = new Date()
   const artifactTag = req.body.metadata.tag || 'latest'
@@ -1937,14 +1963,15 @@ function getMetricsValues (req, res) {
   const end = req.query.end || new Date()
   const names = req.query.name
 
-  function generateSineSequence (length) {
+  function generateSineSequence(length, isInvocation) {
     const result = []
     const step = (length >= 60 ? Math.ceil(Math.random() * 10) : 1) / (length - 1)
+    const multiplayerForInvocations = Math.round(Math.random() * 10 + 5)
 
     for (let i = 0; i < length; i++) {
       const x = i * step
       const y = (Math.sin(2 * Math.PI * x) + 1) / 2 + Math.random() / 10
-      result.push(y)
+      result.push(isInvocation ? Math.round(y * multiplayerForInvocations) : y)
     }
 
     return result
@@ -1961,8 +1988,9 @@ function getMetricsValues (req, res) {
       if (!item.data) return item
 
       const intervalInMls = item.values[0] * 60000
+      const isInvocation = item.values[1]
       const numberOfDataPoints = Math.floor((end - start) / intervalInMls)
-      const sineSequence = generateSineSequence(numberOfDataPoints)
+      const sineSequence = generateSineSequence(numberOfDataPoints, isInvocation)
       const values = Array.from({ length: numberOfDataPoints }, (_, index) => {
         const date = new Date(+start + intervalInMls * (index + 1)).toISOString()
         const value = sineSequence[index]
@@ -2280,6 +2308,7 @@ app.get(`${mlrunAPIIngress}/projects/:project/pipelines/:pipelineID`, getPipelin
 
 app.get(`${mlrunAPIIngress}/projects/:project/artifact-tags`, getProjectsArtifactTags)
 app.get(`${mlrunAPIIngressV2}/projects/:project/artifacts`, getArtifacts)
+app.get(`${mlrunAPIIngressV2}/projects/:project/artifacts/:key`, getArtifact)
 app.post(`${mlrunAPIIngressV2}/projects/:project/artifacts`, postArtifact)
 app.put(`${mlrunAPIIngressV2}/projects/:project/artifacts/:key`, putArtifact)
 app.delete(`${mlrunAPIIngressV2}/projects/:project/artifacts/:key`, deleteArtifact)

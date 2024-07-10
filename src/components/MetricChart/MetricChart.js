@@ -33,15 +33,16 @@ const GenericMetricChart = ({ chartConfig, isInvocationCardExpanded }) => {
   const canvasClassNames = classnames(isLoading && 'hidden-canvas')
   const customPoints = useMemo(() => {
     const hasDriftStatusList = chartConfig.data.datasets[0]?.driftStatusList?.length !== 0
+    const isOnlyOnePoint = chartConfig?.data?.datasets[0]?.data?.length === 1
     const totalDriftIndex = chartConfig.data.datasets[0]?.totalDriftStatus?.index
 
     return {
       radius: context => {
         const isCurrentIndexTotalDriftIndex = context.dataIndex === totalDriftIndex
-        return hasDriftStatusList && isCurrentIndexTotalDriftIndex ? 2 : 0
+        return (hasDriftStatusList && isCurrentIndexTotalDriftIndex) || isOnlyOnePoint ? 2 : 0
       },
-      pointStyle: context => (hasDriftStatusList ? 'circle' : 'none'),
-      backgroundColor: () => (hasDriftStatusList ? 'black' : undefined),
+      pointStyle: context => (hasDriftStatusList || isOnlyOnePoint ? 'circle' : 'none'),
+      backgroundColor: () => (hasDriftStatusList || isOnlyOnePoint ? 'black' : undefined),
       borderColor: () => 'white'
     }
   }, [chartConfig])

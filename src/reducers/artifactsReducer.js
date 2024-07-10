@@ -27,6 +27,7 @@ import {
 } from './redux.util'
 import artifactsApi from '../api/artifacts-api'
 import functionsApi from '../api/functions-api'
+import modelEndpointsApi from '../api/modelEndpoints-api'
 import { ARTIFACTS_TAB, DATASETS_TAB, FUNCTION_TYPE_SERVING, MODELS_TAB } from '../constants'
 import { filterArtifacts } from '../utils/filterArtifacts'
 import { generateArtifacts } from '../utils/generateArtifacts'
@@ -217,7 +218,7 @@ export const fetchArtifactsFunctions = createAsyncThunk(
 export const fetchModelEndpoints = createAsyncThunk(
   'fetchModelEndpoints',
   ({ project, filters, config, params }, thunkAPI) => {
-    return artifactsApi
+    return modelEndpointsApi
       .getModelEndpoints(project, filters, config, params)
       .then(({ data: { endpoints = [] } }) => {
         return generateModelEndpoints(endpoints)

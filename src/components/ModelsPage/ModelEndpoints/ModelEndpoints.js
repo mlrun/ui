@@ -29,7 +29,7 @@ import ModelsPageTabs from '../ModelsPageTabs/ModelsPageTabs'
 import NoData from '../../../common/NoData/NoData'
 import Table from '../../Table/Table'
 
-import detailsActions from '../../../actions/details'
+import modelEndpointsActions from '../../../actions/modelEndpoints'
 import {
   GROUP_BY_NONE,
   MODEL_ENDPOINTS_TAB,
@@ -148,7 +148,7 @@ const ModelEndpoints = () => {
     modelEndpoint => {
       if (!isEmpty(modelEndpoint)) {
         dispatch(
-          detailsActions.fetchModelEndpointWithAnalysis(
+          modelEndpointsActions.fetchModelEndpointWithAnalysis(
             params.projectName,
             modelEndpoint.metadata.uid
           )
@@ -169,7 +169,7 @@ const ModelEndpoints = () => {
     return () => {
       setModelEndpoints([])
       dispatch(removeModelEndpoints())
-      dispatch(detailsActions.removeModelEndpoint())
+      dispatch(modelEndpointsActions.removeModelEndpoint())
       setSelectedModelEndpoint({})
       abortControllerRef.current.abort(REQUEST_CANCELED)
     }

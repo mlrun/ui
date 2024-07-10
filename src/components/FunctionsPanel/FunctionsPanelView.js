@@ -47,6 +47,8 @@ const FunctionsPanelView = ({
   confirmData,
   defaultData,
   error,
+  formState,
+  frontendSpec,
   functionsStore,
   handleSave,
   imageType,
@@ -90,7 +92,7 @@ const FunctionsPanelView = ({
               iconClassName="new-item-side-panel__expand-icon"
               openByDefault
             >
-              <FunctionsPanelGeneral defaultData={defaultData} />
+              <FunctionsPanelGeneral defaultData={defaultData} formState={formState} frontendSpec={frontendSpec} />
             </Accordion>
             <Accordion
               accordionClassName="new-item-side-panel__accordion"
