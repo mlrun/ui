@@ -35,7 +35,8 @@ import {
   set,
   omit,
   forEach,
-  pick
+  pick,
+  isNil
 } from 'lodash'
 
 import frontendSpec from './data/frontendSpec.json'
@@ -1784,6 +1785,31 @@ function deleteTags (req, res) {
   res.send()
 }
 
+function getArtifact (req, res) {
+  let resData
+  let requestedArtifact = artifacts.artifacts.find(
+    artifact =>
+      (artifact.metadata?.project === req.params.project || artifact.project === req.params.project) &&
+      (artifact.spec?.db_key === req.params.key || artifact?.db_key === req.params.key) &&
+      (isNil(req.query.iter) || +req.query.iter === artifact?.iter || +req.query.iter === artifact.metadata?.iter) &&
+      (isNil(req.query.tag) || artifact.metadata?.tag === req.query.tag || artifact?.tag === req.query.tag) &&
+      (isNil(req.query.tree) || artifact.metadata?.tree === req.query.tree || artifact?.tree === req.query.tree)
+  )
+
+  if (requestedArtifact) {
+    resData = requestedArtifact
+  } else {
+    res.statusCode = 404
+    resData = {
+      detail: {
+        reason: `MLRunNotFoundError('Artifact not found ${req.params.project}/${req.params.key}')`
+      }
+    }
+  }
+
+  res.send(resData)
+}
+
 function postArtifact (req, res) {
   const currentDate = new Date()
   const artifactTag = req.body.metadata.tag || 'latest'
@@ -2280,6 +2306,7 @@ app.get(`${mlrunAPIIngress}/projects/:project/pipelines/:pipelineID`, getPipelin
 
 app.get(`${mlrunAPIIngress}/projects/:project/artifact-tags`, getProjectsArtifactTags)
 app.get(`${mlrunAPIIngressV2}/projects/:project/artifacts`, getArtifacts)
+app.get(`${mlrunAPIIngressV2}/projects/:project/artifacts/:key`, getArtifact)
 app.post(`${mlrunAPIIngressV2}/projects/:project/artifacts`, postArtifact)
 app.put(`${mlrunAPIIngressV2}/projects/:project/artifacts/:key`, putArtifact)
 app.delete(`${mlrunAPIIngressV2}/projects/:project/artifacts/:key`, deleteArtifact)

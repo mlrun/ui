@@ -21,6 +21,7 @@ import React from 'react'
 import { isEqual } from 'lodash'
 
 import JobWizard from '../JobWizard/JobWizard'
+import DeleteArtifactPopUp from '../../elements/DeleteArtifactPopUp/DeleteArtifactPopUp'
 
 import {
   ACTION_MENU_PARENT_ROW,
@@ -257,6 +258,7 @@ export const generateActionsMenu = (
   selectedDataset
 ) => {
   const isTargetPathValid = getIsTargetPathValid(datasetMin ?? {}, frontendSpec)
+  const datasetDataCouldBeDeleted = datasetMin?.target_path?.endsWith('.pq') || datasetMin?.target_path?.endsWith('.parquet')
 
   const getFullDataset = datasetMin => {
     return chooseOrFetchArtifact(dispatch, DATASETS_TAB, selectedDataset, datasetMin)
@@ -311,22 +313,30 @@ export const generateActionsMenu = (
           : '',
         className: 'danger',
         onClick: () =>
-          openDeleteConfirmPopUp(
-            'Delete dataset?',
-            `Do you want to delete the dataset "${datasetMin.db_key}"? Deleted datasets can not be restored.`,
-            () => {
-              handleDeleteArtifact(
-                dispatch,
-                projectName,
-                datasetMin.db_key,
-                datasetMin.tag,
-                datasetMin.tree,
-                handleRefresh,
-                datasetsFilters,
-                DATASET_TYPE
-              )
-            }
-          )
+          datasetDataCouldBeDeleted ?
+            openPopUp(DeleteArtifactPopUp, {
+              artifact: datasetMin,
+              artifactType: DATASET_TYPE,
+              category: DATASET_TYPE,
+              filters: datasetsFilters,
+              handleRefresh
+            })
+            : openDeleteConfirmPopUp(
+              'Delete dataset?',
+              `Do you want to delete the dataset "${datasetMin.db_key}"? Deleted datasets can not be restored.`,
+              () => {
+                handleDeleteArtifact(
+                  dispatch,
+                  projectName,
+                  datasetMin.db_key,
+                  datasetMin.tag,
+                  datasetMin.tree,
+                  handleRefresh,
+                  datasetsFilters,
+                  DATASET_TYPE
+                )
+              }
+            )
       },
       {
         label: 'Delete all',
