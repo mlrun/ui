@@ -21,12 +21,13 @@ import React from 'react'
 import PropTypes from 'prop-types'
 
 import CheckBox from '../../../common/CheckBox/CheckBox'
-import ChipCell from '../../../common/ChipCell/ChipCell'
+import { FormChipCell } from 'igz-controls/components'
 import Input from '../../../common/Input/Input'
 import TextArea from '../../../common/TextArea/TextArea'
 import { RoundedIcon, Tip } from 'igz-controls/components'
 
-import { getValidationRules } from 'igz-controls/utils/validation.util'
+import { getValidationRules, getInternalLabelsValidationRule } from 'igz-controls/utils/validation.util'
+import { getChipOptions } from '../../../utils/getChipOptions'
 
 import { ReactComponent as CloseIcon } from 'igz-controls/images/close.svg'
 
@@ -36,12 +37,11 @@ const FeatureSetsPanelTitleView = ({
   closePanel,
   data,
   featureStore,
-  handleAddLabel,
-  handleChangeLabels,
+  formState,
+  frontendSpec,
   handleCheckPassthrough,
   handleNameOnBlur,
   setData,
-  setLabelsValidation,
   setNewFeatureSetDescription,
   setNewFeatureSetVersion,
   setValidation,
@@ -113,14 +113,19 @@ const FeatureSetsPanelTitleView = ({
         <div className="panel-title__labels-container">
           <div className="panel-title__labels-text">Labels</div>
           <div className="panel-title__labels-wrapper">
-            <ChipCell
-              addChip={handleAddLabel}
-              className="panel-title__labels-item"
-              editChip={handleChangeLabels}
-              elements={data.labels}
-              isEditMode
-              removeChip={handleChangeLabels}
-              setValidation={setLabelsValidation}
+            <FormChipCell
+              chipOptions={getChipOptions('labels')}
+              formState={formState}
+              initialValues={formState.initialValues}
+              isEditable
+              label=""
+              name="labels"
+              shortChips
+              visibleChipsMaxLength="all"
+              validationRules={{
+                key: [getInternalLabelsValidationRule(frontendSpec?.internal_labels || [])],
+                value: []
+              }}
             />
           </div>
         </div>
@@ -152,11 +157,8 @@ FeatureSetsPanelTitleView.propTypes = {
   closePanel: PropTypes.func.isRequired,
   data: PropTypes.shape({}).isRequired,
   featureStore: PropTypes.shape({}).isRequired,
-  handleAddLabel: PropTypes.func.isRequired,
-  handleChangeLabels: PropTypes.func.isRequired,
   handleNameOnBlur: PropTypes.func.isRequired,
   setData: PropTypes.func.isRequired,
-  setLabelsValidation: PropTypes.func.isRequired,
   setNewFeatureSetDescription: PropTypes.func.isRequired,
   setNewFeatureSetVersion: PropTypes.func.isRequired,
   setValidation: PropTypes.func.isRequired,

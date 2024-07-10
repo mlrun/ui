@@ -20,10 +20,13 @@ such restriction.
 import React from 'react'
 import PropTypes from 'prop-types'
 
-import ChipCell from '../../common/ChipCell/ChipCell'
+import { FormChipCell } from 'igz-controls/components'
 import PanelSection from '../PanelSection/PanelSection'
 import TextArea from '../../common/TextArea/TextArea'
 import { Tooltip, TextTooltipTemplate } from 'igz-controls/components'
+
+import { getInternalLabelsValidationRule } from 'igz-controls/utils/validation.util'
+import { getChipOptions } from '../../utils/getChipOptions'
 
 import { TAG_LATEST } from '../../constants'
 
@@ -31,8 +34,8 @@ import './functionsPanelGeneral.scss'
 
 const FunctionsPanelGeneralView = ({
   data,
-  handleAddLabel,
-  handleChangeLabels,
+  frontendSpec,
+  formState,
   handleDescriptionOnBlur,
   setData
 }) => {
@@ -72,13 +75,19 @@ const FunctionsPanelGeneralView = ({
         <div className="general__labels-container">
           <div className="general__labels-text">Labels</div>
           <div className="general__labels-wrapper">
-            <ChipCell
-              addChip={handleAddLabel}
-              className="general__labels-item"
-              editChip={handleChangeLabels}
-              elements={data.labels}
-              isEditMode
-              removeChip={handleChangeLabels}
+            <FormChipCell
+              chipOptions={getChipOptions('labels')}
+              formState={formState}
+              initialValues={formState.initialValues}
+              isEditable
+              label=""
+              name="labels"
+              shortChips
+              visibleChipsMaxLength="all"
+              validationRules={{
+                key: [getInternalLabelsValidationRule(frontendSpec?.internal_labels || [])],
+                value: []
+              }}
             />
           </div>
         </div>
@@ -89,8 +98,6 @@ const FunctionsPanelGeneralView = ({
 
 FunctionsPanelGeneralView.propTypes = {
   data: PropTypes.shape({}).isRequired,
-  handleAddLabel: PropTypes.func.isRequired,
-  handleChangeLabels: PropTypes.func.isRequired,
   handleDescriptionOnBlur: PropTypes.func.isRequired,
   setData: PropTypes.func.isRequired,
   setNewFunctionDescription: PropTypes.func.isRequired

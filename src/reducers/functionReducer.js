@@ -70,7 +70,6 @@ import {
   SET_NEW_FUNCTION_HANDLER,
   SET_NEW_FUNCTION_IMAGE,
   SET_NEW_FUNCTION_KIND,
-  SET_NEW_FUNCTION_LABELS,
   SET_NEW_FUNCTION_NAME,
   SET_NEW_FUNCTION_PARAMETERS,
   SET_NEW_FUNCTION_PREEMTION_MODE,
@@ -108,7 +107,6 @@ const initialState = {
       credentials: {
         access_key: PANEL_DEFAULT_ACCESS_KEY
       },
-      labels: {},
       name: '',
       tag: ''
     },
@@ -536,17 +534,6 @@ const functionReducer = (state = initialState, { type, payload }) => {
         newFunction: {
           ...state.newFunction,
           kind: payload
-        }
-      }
-    case SET_NEW_FUNCTION_LABELS:
-      return {
-        ...state,
-        newFunction: {
-          ...state.newFunction,
-          metadata: {
-            ...state.newFunction.metadata,
-            labels: payload
-          }
         }
       }
     case SET_NEW_FUNCTION_CREDENTIALS_ACCESS_KEY:
