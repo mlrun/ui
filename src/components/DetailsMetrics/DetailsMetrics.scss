@@ -1,6 +1,8 @@
 @import '~igz-controls/scss/colors';
 @import '~igz-controls/scss/borders';
 
+$stickyHeaderHeight: 55px;
+
 .metrics {
   display: flex;
   flex-wrap: wrap;
@@ -9,6 +11,26 @@
   height: fit-content;
   margin-bottom: 30px;
 
+  &__custom-filters {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    position: sticky;
+    top: 0;
+    height: $stickyHeaderHeight;
+    align-items: center;
+    background-color: $white;
+    z-index: 2;
+
+    > * {
+      margin: 0 0 15px 0;
+    }
+
+    .details-date-picker {
+      margin-left: 15px;
+    }
+  }
+
   &__app-name {
     font-size: 20px;
     font-weight: 700;
@@ -16,24 +38,26 @@
   }
 
   &__card {
-    border-radius: 12px;
     border: $primaryBorder;
     padding: 6px 16px 35px;
     width: 100%;
+    box-shadow: none;
 
     &-invocations {
-      z-index: 1;
-      align-self: baseline;
-      top: 0;
       position: sticky;
-      box-shadow: 0 -10px 0 0 $white;
-      border-radius: 12px;
-      background: $white;
-      padding-top: 12px;
-      padding-bottom: 0;
+      top: $stickyHeaderHeight;
       width: 100%;
+      align-self: baseline;
+      background: $white;
+      padding-bottom: 25px;
+      z-index: 1;
 
-      &-header-hidden .stats-card__row {
+      .metrics__card {
+        padding-top: 12px;
+        padding-bottom: 0;
+      }
+
+      &_collapsed .stats-card__row {
         height: 0;
         min-height: 0 !important;
         visibility: hidden !important;
@@ -41,7 +65,7 @@
         margin-bottom: 0 !important;
       }
 
-      &-header-visible .stats-card__row {
+      &_expanded.stats-card__row {
         height: 40px;
         transition: all 0.2s ease-in-out;
       }
@@ -339,7 +363,7 @@
 .empty-invocation-card {
   position: sticky;
   box-shadow: 0 -10px 0 0 $white;
-  top: 0;
+  top: $stickyHeaderHeight;
   z-index: 1;
 }
 
@@ -352,7 +376,7 @@
   transition: all 0.1s linear;
   background-color: $primary;
   padding: 6px 8px;
-  family: Roboto;
+  font-family: Roboto;
   letter-spacing: 0.5px;
 
   &::after {
@@ -382,7 +406,7 @@
 
     &-text {
       font-size: 10px;
-      weight: 400;
+      font-weight: 400;
     }
   }
 

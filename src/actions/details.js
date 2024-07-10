@@ -22,21 +22,11 @@ import {
   FETCH_JOB_PODS_BEGIN,
   FETCH_JOB_PODS_FAILURE,
   FETCH_JOB_PODS_SUCCESS,
-  FETCH_MODEL_ENDPOINT_WITH_ANALYSIS_BEGIN,
-  FETCH_MODEL_ENDPOINT_WITH_ANALYSIS_FAILURE,
-  FETCH_MODEL_ENDPOINT_WITH_ANALYSIS_SUCCESS,
   FETCH_MODEL_FEATURE_VECTOR_BEGIN,
   FETCH_MODEL_FEATURE_VECTOR_FAILURE,
   FETCH_MODEL_FEATURE_VECTOR_SUCCESS,
-  FETCH_ENDPOINT_METRICS_BEGIN,
-  FETCH_ENDPOINT_METRICS_SUCCESS,
-  FETCH_ENDPOINT_METRICS_FAILURE,
-  FETCH_ENDPOINT_METRICS_VALUES_BEGIN,
-  FETCH_ENDPOINT_METRICS_VALUES_SUCCESS,
-  FETCH_ENDPOINT_METRICS_VALUES_FAILURE,
   REMOVE_INFO_CONTENT,
   REMOVE_JOB_PODS,
-  REMOVE_MODEL_ENDPOINT,
   REMOVE_MODEL_FEATURE_VECTOR,
   RESET_CHANGES,
   SET_CHANGES,
@@ -48,42 +38,11 @@ import {
   SET_INFO_CONTENT,
   SET_ITERATION,
   SET_ITERATION_OPTIONS,
-  SET_SELECTED_METRICS_OPTIONS,
-  SHOW_WARNING,
-  DEFAULT_ABORT_MSG
+  SHOW_WARNING
 } from '../constants'
 import { generatePods } from '../utils/generatePods'
-import {
-  generateMetricsItems,
-  parseMetrics
-} from '../components/DetailsMetrics/detailsMetrics.util'
-import { TIME_FRAME_LIMITS } from '../utils/datePicker.util'
 
 const detailsActions = {
-  fetchModelEndpointWithAnalysis: (project, uid) => dispatch => {
-    dispatch(detailsActions.fetchModelEndpointWithAnalysisBegin())
-
-    return detailsApi
-      .getModelEndpoint(project, uid)
-      .then(({ data }) => {
-        dispatch(detailsActions.fetchModelEndpointWithAnalysisSuccess(data))
-
-        return data
-      })
-      .catch(err => {
-        dispatch(detailsActions.fetchModelEndpointWithAnalysisFailure(err))
-      })
-  },
-  fetchModelEndpointWithAnalysisBegin: () => ({
-    type: FETCH_MODEL_ENDPOINT_WITH_ANALYSIS_BEGIN
-  }),
-  fetchModelEndpointWithAnalysisFailure: () => ({
-    type: FETCH_MODEL_ENDPOINT_WITH_ANALYSIS_FAILURE
-  }),
-  fetchModelEndpointWithAnalysisSuccess: model => ({
-    type: FETCH_MODEL_ENDPOINT_WITH_ANALYSIS_SUCCESS,
-    payload: model
-  }),
   fetchModelFeatureVector: (project, name, reference) => dispatch => {
     dispatch(detailsActions.fetchModelFeatureVectorBegin())
 
@@ -136,70 +95,8 @@ const detailsActions = {
     type: FETCH_JOB_PODS_SUCCESS,
     payload: pods
   }),
-  fetchModelEndpointMetrics: (project, uid) => dispatch => {
-    dispatch(detailsActions.fetchEndpointMetricsBegin())
-
-    return detailsApi
-      .getModelEndpointMetrics(project, uid)
-      .then(({ data = [] }) => {
-        const metrics = generateMetricsItems(data)
-
-        dispatch(detailsActions.fetchEndpointMetricsSuccess({ endpointUid: uid, metrics }))
-
-        return metrics
-      })
-      .catch(error => {
-        dispatch(detailsActions.fetchEndpointMetricsFailure(error))
-      })
-  },
-  fetchEndpointMetricsBegin: () => ({
-    type: FETCH_ENDPOINT_METRICS_BEGIN
-  }),
-  fetchEndpointMetricsFailure: error => ({
-    type: FETCH_ENDPOINT_METRICS_FAILURE,
-    payload: error
-  }),
-  fetchEndpointMetricsSuccess: payload => ({
-    type: FETCH_ENDPOINT_METRICS_SUCCESS,
-    payload
-  }),
-  fetchModelEndpointMetricsValues: (project, uid, params, signal) => dispatch => {
-    dispatch(detailsActions.fetchEndpointMetricsValuesBegin())
-
-    return detailsApi
-      .getModelEndpointMetricsValues(project, uid, params, signal)
-      .then(({ data = [] }) => {
-        const differenceInDays = params.end - params.start
-        const timeUnit = differenceInDays > TIME_FRAME_LIMITS['24_HOURS'] ? 'days' : 'hours'
-        const metrics = parseMetrics(data, timeUnit)
-
-        dispatch(detailsActions.fetchEndpointMetricsValuesSuccess())
-
-        return metrics
-      })
-      .catch(error => {
-        dispatch(
-          detailsActions.fetchEndpointMetricsValuesFailure(
-            error?.message === DEFAULT_ABORT_MSG ? null : error
-          )
-        )
-      })
-  },
-  fetchEndpointMetricsValuesBegin: () => ({
-    type: FETCH_ENDPOINT_METRICS_VALUES_BEGIN
-  }),
-  fetchEndpointMetricsValuesFailure: error => ({
-    type: FETCH_ENDPOINT_METRICS_VALUES_FAILURE,
-    payload: error
-  }),
-  fetchEndpointMetricsValuesSuccess: () => ({
-    type: FETCH_ENDPOINT_METRICS_VALUES_SUCCESS
-  }),
   removeInfoContent: () => ({
     type: REMOVE_INFO_CONTENT
-  }),
-  removeModelEndpoint: () => ({
-    type: REMOVE_MODEL_ENDPOINT
   }),
   removeModelFeatureVector: () => ({
     type: REMOVE_MODEL_FEATURE_VECTOR
@@ -249,10 +146,6 @@ const detailsActions = {
   showWarning: show => ({
     type: SHOW_WARNING,
     payload: show
-  }),
-  setSelectedMetricsOptions: payload => ({
-    type: SET_SELECTED_METRICS_OPTIONS,
-    payload
   })
 }
 

@@ -86,8 +86,8 @@ const Jobs = ({ fetchJobFunction }) => {
       const pageTab = location.pathname.includes(MONITOR_WORKFLOWS_TAB)
         ? MONITOR_WORKFLOWS_TAB
         : location.pathname.includes(SCHEDULE_TAB)
-        ? SCHEDULE_TAB
-        : MONITOR_JOBS_TAB
+          ? SCHEDULE_TAB
+          : MONITOR_JOBS_TAB
 
       isPageTabValid(
         pageTab,
@@ -110,17 +110,20 @@ const Jobs = ({ fetchJobFunction }) => {
           />
         </div>
         <div className="content">
-          <ContentMenu
-            activeTab={
-              location.pathname.includes(MONITOR_JOBS_TAB)
-                ? MONITOR_JOBS_TAB
-                : location.pathname.includes(SCHEDULE_TAB)
-                ? SCHEDULE_TAB
-                : MONITOR_WORKFLOWS_TAB
-            }
-            screen={JOBS_PAGE}
-            tabs={tabs}
-          />
+          <div className="content__action-bar-wrapper">
+            <ContentMenu
+              activeTab={
+                location.pathname.includes(MONITOR_JOBS_TAB)
+                  ? MONITOR_JOBS_TAB
+                  : location.pathname.includes(SCHEDULE_TAB)
+                    ? SCHEDULE_TAB
+                    : MONITOR_WORKFLOWS_TAB
+              }
+              screen={JOBS_PAGE}
+              tabs={tabs}
+            />
+          </div>
+
           <div className="table-container">
             <JobsContext.Provider
               value={{
