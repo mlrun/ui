@@ -34,6 +34,7 @@ import Accordion from '../../common/Accordion/Accordion'
 
 import { filterMetrics, groupMetricByApplication, metricsTypes } from './metricsSelector.util'
 import { METRICS_SELECTOR_OPTIONS } from '../../types'
+import { SECONDARY_BUTTON, TERTIARY_BUTTON } from 'iguazio.dashboard-react-controls/dist/constants'
 
 import { ReactComponent as Arrow } from 'igz-controls/images/arrow.svg'
 import { ReactComponent as SearchIcon } from 'igz-controls/images/search.svg'
@@ -144,10 +145,7 @@ const MetricsSelector = ({ maxSelectionNumber, metrics, name, onSelect, preselec
   }
 
   const handleClear = () => {
-    formRef.current?.change(
-      'metrics',
-      []
-    )
+    formRef.current?.change('metrics', [])
   }
 
   const getSelectValue = () => {
@@ -281,8 +279,8 @@ const MetricsSelector = ({ maxSelectionNumber, metrics, name, onSelect, preselec
                     {`${formState.values.metrics?.length ?? 0}/${maxSelectionNumber}`}
                   </div>
                   <div data-testid="metrics-selector-buttons" className='metrics-selector__footer-buttons'>
-                    <Button label="Clear" onClick={handleClear} />
-                    <Button variant="secondary" label="Apply" onClick={handleApply} />
+                    <Button variant={TERTIARY_BUTTON} label="Clear" onClick={handleClear} />
+                    <Button variant={SECONDARY_BUTTON} label="Apply" onClick={handleApply} />
                   </div>
                 </div>
               </PopUpDialog>
