@@ -39,18 +39,23 @@
     }
 
     .metrics-selector__footer {
-      align-items: flex-end;
       display: flex;
-      gap: 10px;
+      flex-direction: column;
+      align-items: flex-end;
       margin-left: 10px;
-      padding: 20px 10px 10px;
-    }
+      padding: 5px 10px 10px;
 
-    .metrics-selector-counter {
-      width: 100%;
-      padding: 6px 15px;
-      text-align: left;
-      background-color: inherit;
+      .metrics-selector__footer-counter {
+        width: 100%;
+        padding: 6px 0;
+        text-align: right;
+        background-color: inherit;
+      }
+
+      .metrics-selector__footer-buttons {
+        display: flex;
+        gap: 10px;
+      }
     }
 
     .metrics-selector-options {
@@ -58,7 +63,7 @@
 
       &.options-list {
         width: 100%;
-        max-height: 400px;
+        max-height: 350px;
 
         .select__item {
           height: 50px;

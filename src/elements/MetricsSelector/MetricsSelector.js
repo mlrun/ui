@@ -143,6 +143,13 @@ const MetricsSelector = ({ maxSelectionNumber, metrics, name, onSelect, preselec
     setIsOpen(false)
   }
 
+  const handleClear = () => {
+    formRef.current?.change(
+      'metrics',
+      []
+    )
+  }
+
   const getSelectValue = () => {
     if (isEmpty(appliedMetrics)) {
       return 'Chose Metrics...'
@@ -270,10 +277,13 @@ const MetricsSelector = ({ maxSelectionNumber, metrics, name, onSelect, preselec
                   </FieldArray>
                 </ul>
                 <div className="metrics-selector__footer">
-                  <div data-testid="metrics-selector-counter" className="metrics-selector-counter">
+                  <div data-testid="metrics-selector-counter" className="metrics-selector__footer-counter">
                     {`${formState.values.metrics?.length ?? 0}/${maxSelectionNumber}`}
                   </div>
-                  <Button variant="secondary" label="Apply" onClick={handleApply} />
+                  <div data-testid="metrics-selector-buttons" className='metrics-selector__footer-buttons'>
+                    <Button label="Clear" onClick={handleClear} />
+                    <Button variant="secondary" label="Apply" onClick={handleApply} />
+                  </div>
                 </div>
               </PopUpDialog>
             )}
