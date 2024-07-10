@@ -367,29 +367,25 @@ export const createFilesRowData = (artifact, project, frontendSpec, showExpandBu
 }
 
 const getDriftStatusData = driftStatus => {
-  switch (driftStatus) {
-    case 0:
+  switch (String(driftStatus)) {
     case '0':
     case 'NO_DRIFT':
       return {
         value: <SeverityOk />,
         tooltip: 'No drift'
       }
-    case 1:
     case '1':
     case 'POSSIBLE_DRIFT':
       return {
         value: <SeverityWarning />,
         tooltip: 'Possible drift'
       }
-    case 2:
     case '2':
     case 'DRIFT_DETECTED':
       return {
         value: <SeverityError />,
         tooltip: 'Drift detected'
       }
-    case -1:
     case '-1':
     default:
       return {
@@ -505,9 +501,9 @@ export const createModelEndpointsRowData = (artifact, project) => {
         id: `driftStatus.${artifact.ui.identifierUnique}`,
         headerId: 'drift',
         headerLabel: 'Drift Status',
-        value: getDriftStatusData(artifact.status?.drift_status)?.value,
+        value: getDriftStatusData(artifact.status?.drift_status).value,
         className: 'table-cell-small',
-        tooltip: getDriftStatusData(artifact.status?.drift_status)?.tooltip
+        tooltip: getDriftStatusData(artifact.status?.drift_status).tooltip
       }
     ]
   }
