@@ -80,6 +80,10 @@ const MetricsSelector = ({ maxSelectionNumber, metrics, name, onSelect, preselec
   )
 
   useEffect(() => {
+    setNameFilter('')
+  }, [metrics])
+
+  useEffect(() => {
     setAppliedMetrics(preselectedMetrics)
   }, [preselectedMetrics])
 
