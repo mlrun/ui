@@ -34,7 +34,7 @@ import { CHART_TYPE_LINE } from '../../constants'
 
 import { ReactComponent as ArrowUp } from 'igz-controls/images/arrow-up.svg'
 import { ReactComponent as ArrowDown } from 'igz-controls/images/arrow-down.svg'
-import { ReactComponent as UnPinIcon } from 'igz-controls/images/unpin-icon.svg'
+import { ReactComponent as UnpinIcon } from 'igz-controls/images/unpin-icon.svg'
 
 import colors from 'igz-controls/scss/colors.scss'
 
@@ -84,7 +84,7 @@ const InvocationMetricCard = forwardRef(
               onClick={() => expandInvocationCard(true)}
               tooltipText={'Expand Invocation Card'}
             >
-              <UnPinIcon />
+              <UnpinIcon />
             </RoundedIcon>
           )}
           <div
