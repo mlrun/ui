@@ -127,17 +127,17 @@ const DetailsMetrics = ({ selectedItem }) => {
     }
   }, [])
 
-  const handleInvocationCardExpand = useCallback(
-    (unpinInvocationCard = false) => {
+  const expandInvocationCard = useCallback(
+    (isUnpinAction = false) => {
       const invocationBodyCard = invocationBodyCardRef.current
       const metricsContainer = metricsContainerRef.current
-      const isMetricSelected = generatedMetrics.length === 1
+      const isOnlyOneMetric = generatedMetrics.length === 1
 
       if (!invocationBodyCard || !metricsContainer) return
 
-      if (!unpinInvocationCard && isMetricSelected) {
+      if (!isUnpinAction && isOnlyOneMetric) {
         setIsInvocationCardExpanded(true)
-      } else if (unpinInvocationCard) {
+      } else if (isUnpinAction) {
         enableScrollRef.current = false
         metricsContainer.parentNode.scrollTo({ top: 0, left: 0, behavior: 'smooth' })
         setIsInvocationCardExpanded(true)
@@ -191,8 +191,8 @@ const DetailsMetrics = ({ selectedItem }) => {
   )
 
   useEffect(() => {
-    handleInvocationCardExpand()
-  }, [metrics, handleInvocationCardExpand])
+    expandInvocationCard()
+  }, [metrics, expandInvocationCard])
 
   useEffect(() => {
     window.addEventListener('scroll', handleWindowScroll, true)
@@ -337,7 +337,7 @@ const DetailsMetrics = ({ selectedItem }) => {
                       metric={metric}
                       previousTotalInvocation={previousTotalInvocation}
                       selectedDate={selectedDate}
-                      handleInvocationCardExpand={handleInvocationCardExpand}
+                      expandInvocationCard={expandInvocationCard}
                     />
                   )
                 }

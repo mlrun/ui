@@ -45,7 +45,7 @@ const InvocationMetricCard = forwardRef(
       metric,
       previousTotalInvocation,
       selectedDate,
-      handleInvocationCardExpand
+      expandInvocationCard
     },
     invocationBodyCardRef
   ) => {
@@ -81,7 +81,7 @@ const InvocationMetricCard = forwardRef(
           {!isInvocationCardExpanded && (
             <RoundedIcon
               className="metrics__card-pin-icon"
-              onClick={() => handleInvocationCardExpand(true)}
+              onClick={() => expandInvocationCard(true)}
               tooltipText={'Expand Invocation Card'}
             >
               <UnPinIcon />
@@ -142,7 +142,7 @@ const InvocationMetricCard = forwardRef(
 )
 
 InvocationMetricCard.propTypes = {
-  handleInvocationCardExpand: PropTypes.func.isRequired,
+  expandInvocationCard: PropTypes.func.isRequired,
   isInvocationCardExpanded: PropTypes.bool.isRequired,
   metric: PropTypes.object.isRequired,
   previousTotalInvocation: PropTypes.number,
