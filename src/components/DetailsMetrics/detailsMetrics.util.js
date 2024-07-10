@@ -35,6 +35,7 @@ import colors from 'igz-controls/scss/colors.scss'
 export const METRIC_COMPUTED_AVG_POINTS = 'metric_computed_avg_points'
 export const METRIC_RAW_AVG_POINTS = 'metric_raw_avg_points'
 export const DRIFT_UP = 'drift_up'
+export const DRIFT_DOWN = 'drift_down'
 export const INVOCATION_CARD_SCROLL_THRESHOLD = 20
 export const INVOCATION_CARD_SCROLL_DELAY = 500
 export const ML_RUN_INFRA = 'mlrun-infra'
@@ -59,6 +60,7 @@ export const calculatePercentageDrift = (previousTotalInvocation, currentTotalIn
         icon: <ArrowUp />
       }
     }
+
     return {
       className: '',
       percentageChange: 'N/A',
@@ -79,7 +81,7 @@ export const calculatePercentageDrift = (previousTotalInvocation, currentTotalIn
   const isPositive = percentageChangeResult > 0
 
   return {
-    className: isPositive ? DRIFT_UP : 'drift_down',
+    className: isPositive ? DRIFT_UP : DRIFT_DOWN,
     percentageChange: `${percentageChangeResult.toFixed(0)}%`,
     icon: isPositive ? <ArrowUp /> : <ArrowDown />
   }
