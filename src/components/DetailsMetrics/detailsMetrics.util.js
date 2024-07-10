@@ -25,6 +25,11 @@ import {
   PAST_MONTH_DATE_OPTION,
   PAST_WEEK_DATE_OPTION
 } from '../../utils/datePicker.util'
+
+import { ReactComponent as ArrowUp } from 'igz-controls/images/arrow-up.svg'
+import { ReactComponent as ArrowDown } from 'igz-controls/images/arrow-down.svg'
+import { ReactComponent as DoubleArrow } from 'igz-controls/images/double-arrow.svg'
+
 import colors from 'igz-controls/scss/colors.scss'
 
 export const METRIC_COMPUTED_AVG_POINTS = 'metric_computed_avg_points'
@@ -46,12 +51,28 @@ export const timeRangeMapping = {
 }
 
 export const calculatePercentageDrift = (previousTotalInvocation, currentTotalInvocation) => {
-  if (!previousTotalInvocation)
-    return {
-      className: DRIFT_UP,
-      percentageChange: 'N/A',
-      positive: true
+  if (!previousTotalInvocation) {
+    if (currentTotalInvocation > 0) {
+      return {
+        className: DRIFT_UP,
+        percentageChange: 'N/A',
+        icon: <ArrowUp />
+      }
     }
+    return {
+      className: '',
+      percentageChange: 'N/A',
+      icon: <DoubleArrow />
+    }
+  }
+
+  if (previousTotalInvocation === currentTotalInvocation) {
+    return {
+      className: '',
+      percentageChange: '0%',
+      icon: <DoubleArrow />
+    }
+  }
 
   const percentageChangeResult =
     ((currentTotalInvocation - previousTotalInvocation) / Math.abs(previousTotalInvocation)) * 100
@@ -60,7 +81,7 @@ export const calculatePercentageDrift = (previousTotalInvocation, currentTotalIn
   return {
     className: isPositive ? DRIFT_UP : 'drift_down',
     percentageChange: `${percentageChangeResult.toFixed(0)}%`,
-    positive: isPositive
+    icon: isPositive ? <ArrowUp /> : <ArrowDown />
   }
 }
 
