@@ -23,6 +23,7 @@ import classNames from 'classnames'
 
 import StatsCard from '../../common/StatsCard/StatsCard'
 import MetricChart from '../MetricChart/MetricChart'
+import { RoundedIcon } from 'igz-controls/components'
 
 import {
   calculatePercentageDrift,
@@ -34,12 +35,19 @@ import { CHART_TYPE_LINE } from '../../constants'
 
 import { ReactComponent as ArrowUp } from 'igz-controls/images/arrow-up.svg'
 import { ReactComponent as ArrowDown } from 'igz-controls/images/arrow-down.svg'
+import { ReactComponent as UnpinIcon } from 'igz-controls/images/unpin-icon.svg'
 
 import colors from 'igz-controls/scss/colors.scss'
 
 const InvocationMetricCard = forwardRef(
   (
-    { isInvocationCardExpanded, metric, previousTotalInvocation, selectedDate },
+    {
+      isInvocationCardExpanded,
+      metric,
+      previousTotalInvocation,
+      selectedDate,
+      expandInvocationCard
+    },
     invocationBodyCardRef
   ) => {
     const invocationCardClassnames = classNames(
@@ -76,6 +84,15 @@ const InvocationMetricCard = forwardRef(
             ref={invocationBodyCardRef}
             className={`metrics__card-body ${isInvocationCardExpanded ? 'metrics__card-body-expanded' : 'metrics__card-body-collapsed'}`}
           >
+              {!isInvocationCardExpanded && (
+                  <RoundedIcon
+                      className="metrics__card-pin-icon"
+                      onClick={() => expandInvocationCard(true)}
+                      tooltipText={'Expand Invocation Card'}
+                  >
+                      <UnpinIcon />
+                  </RoundedIcon>
+              )}
             <div
               className={`metrics__card-invocation-content ${!isInvocationCardExpanded && 'metrics__card-invocation-content-visible'}`}
             >
@@ -133,6 +150,7 @@ const InvocationMetricCard = forwardRef(
 )
 
 InvocationMetricCard.propTypes = {
+  expandInvocationCard: PropTypes.func.isRequired,
   isInvocationCardExpanded: PropTypes.bool.isRequired,
   metric: PropTypes.object.isRequired,
   previousTotalInvocation: PropTypes.number,

@@ -217,6 +217,12 @@ $stickyHeaderHeight: 55px;
       }
     }
 
+    &-pin-icon {
+      position: absolute;
+      top: -10px;
+      left: -15px;
+    }
+
     &-invocation-header {
       display: flex;
       flex: 1;
