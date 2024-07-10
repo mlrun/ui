@@ -56,8 +56,7 @@ const DetailsMetrics = ({ selectedItem }) => {
   const metricsValuesAbortController = useRef(new AbortController())
   const prevScrollPositionRef = useRef(0)
   const prevSelectedEndPointNameRef = useRef('')
-  const [isAllowedFetchModelEndpointMetrics, setIsAllowedFetchModelEndpointMetrics] =
-    useState(false)
+  const [metricOptionsAreLoaded, setMetricOptionsAreLoaded] = useState(false)
   const detailsStore = useSelector(store => store.detailsStore)
   const dispatch = useDispatch()
   const lineConfig = useMemo(() => getLineChartMetricConfig(), [])
@@ -202,17 +201,12 @@ const DetailsMetrics = ({ selectedItem }) => {
   }, [handleWindowScroll])
 
   useEffect(() => {
-    const getModelEndpointMetrics = async () => {
-      await dispatch(
-        detailsActions.fetchModelEndpointMetrics(
-          selectedItem.metadata.project,
-          selectedItem.metadata.uid
-        )
+    dispatch(
+      detailsActions.fetchModelEndpointMetrics(
+        selectedItem.metadata.project,
+        selectedItem.metadata.uid
       )
-      setIsAllowedFetchModelEndpointMetrics(true)
-    }
-
-    getModelEndpointMetrics()
+    ).then(() => setMetricOptionsAreLoaded(true))
   }, [dispatch, selectedItem])
 
   useEffect(() => {
@@ -261,7 +255,7 @@ const DetailsMetrics = ({ selectedItem }) => {
       return
     }
     if (
-      isAllowedFetchModelEndpointMetrics &&
+      metricOptionsAreLoaded &&
       selectedItem.metadata?.uid &&
       detailsStore.metricsOptions.all.length > 0 &&
       detailsStore.metricsOptions.selectedByEndpoint[selectedItem.metadata?.uid]
@@ -304,7 +298,7 @@ const DetailsMetrics = ({ selectedItem }) => {
       metricsValuesAbortController.current?.abort(REQUEST_CANCELED)
     }
   }, [
-    isAllowedFetchModelEndpointMetrics,
+    metricOptionsAreLoaded,
     fetchData,
     selectedItem,
     detailsStore.dates.value,
