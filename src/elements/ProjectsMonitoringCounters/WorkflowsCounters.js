@@ -83,7 +83,7 @@ const WorkflowsCounters = () => {
                 {projectStore.projectsSummary.loading ? (
                   <Loader section small secondary />
                 ) : (
-                  <Tooltip template={<TextTooltipTemplate text={tooltip.join(', ')} />}>
+                  <Tooltip template={<TextTooltipTemplate text={tooltip} />}>
                     <span>
                       {counter}
                       <i className={`state-${statusClass}`} />

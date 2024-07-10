@@ -69,19 +69,19 @@ export const generateMonitoringStats = (data, navigate, dispatch, tab) => {
                 state: ['running', 'created', 'pending', 'unknown', 'aborting']
               }),
             statusClass: 'running',
-            tooltip: ['Aborting', 'Pending', 'Running']
+            tooltip: 'Aborting, Pending, Running'
           },
           {
             counter: data.failed,
             link: () => navigateToJobsMonitoringPage({ state: ['error', 'aborted'] }),
             statusClass: 'failed',
-            tooltip: ['Aborted', 'Error']
+            tooltip: 'Aborted, Error'
           },
           {
             counter: data.completed,
             link: () => navigateToJobsMonitoringPage({ state: ['completed'] }),
             statusClass: 'completed',
-            tooltip: ['Completed']
+            tooltip: 'Completed'
           }
         ]
       }
@@ -101,7 +101,7 @@ export const generateMonitoringStats = (data, navigate, dispatch, tab) => {
                   { groupBy: GROUP_BY_WORKFLOW }
                 ),
               statusClass: 'running',
-              tooltip: ['Running']
+              tooltip: 'Running'
             },
             {
               counter: data.failed,
@@ -111,7 +111,7 @@ export const generateMonitoringStats = (data, navigate, dispatch, tab) => {
                   { groupBy: GROUP_BY_WORKFLOW }
                 ),
               statusClass: 'failed',
-              tooltip: ['Error', 'Failed']
+              tooltip: 'Error, Failed'
             },
             {
               counter: data.completed,
@@ -121,7 +121,7 @@ export const generateMonitoringStats = (data, navigate, dispatch, tab) => {
                   { groupBy: GROUP_BY_WORKFLOW }
                 ),
               statusClass: 'completed',
-              tooltip: ['Completed']
+              tooltip: 'Completed'
             }
           ]
         }
