@@ -57,7 +57,7 @@ $stickyHeaderHeight: 55px;
         padding-bottom: 0;
       }
 
-      &-header-hidden .stats-card__row {
+      &_collapsed .stats-card__row {
         height: 0;
         min-height: 0 !important;
         visibility: hidden !important;
@@ -65,7 +65,7 @@ $stickyHeaderHeight: 55px;
         margin-bottom: 0 !important;
       }
 
-      &-header-visible .stats-card__row {
+      &_expanded.stats-card__row {
         height: 40px;
         transition: all 0.2s ease-in-out;
       }

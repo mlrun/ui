@@ -45,8 +45,8 @@ const InvocationMetricCard = forwardRef(
     const invocationCardClassnames = classNames(
       'metrics__card-invocations',
       !isInvocationCardExpanded
-        ? 'metrics__card-invocations-header-hidden'
-        : 'metrics__card-invocations-header-visible'
+        ? 'metrics__card-invocations_collapsed'
+        : 'metrics__card-invocations_expanded'
     )
 
     const gradientConfig = useMemo(() => getGradientLineChartConfig(), [])
