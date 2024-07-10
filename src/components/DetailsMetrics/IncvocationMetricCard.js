@@ -110,7 +110,8 @@ const InvocationMetricCard = forwardRef(
                     datasets: [
                       {
                         data: metric.points,
-                        chartType: CHART_TYPE_LINE,
+                        dates: metric.dates,
+                      chartType: CHART_TYPE_LINE,
                         fill: true,
                         metricType: metric.type,
                         driftStatusList: [],

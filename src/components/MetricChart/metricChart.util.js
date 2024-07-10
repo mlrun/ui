@@ -88,6 +88,12 @@ export const generateMetricChartTooltip = context => {
       }
     }
     const chartType = context.tooltip.dataPoints[0].dataset.chartType
+    const fullDate = context.tooltip.dataPoints[0].dataset?.dates?.[context.tooltip.dataPoints[0].dataIndex]
+
+    if (chartType === CHART_TYPE_LINE && fullDate) {
+      innerHtml += `<div class="tooltip-container-date">Date: ${fullDate}</div>`
+    }
+
     innerHtml += `<div class="tooltip-container-value">${tooltipType[chartType].title} ${context.tooltip.dataPoints[0].raw} ${tooltipType[chartType].format}</div>`
 
     if (drift) {
