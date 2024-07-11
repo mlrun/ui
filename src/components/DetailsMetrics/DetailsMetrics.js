@@ -243,7 +243,7 @@ const DetailsMetrics = ({ selectedItem }) => {
         selectedItem.metadata.uid
       )
     ).then(() => setMetricOptionsAreLoaded(true))
-  }, [dispatch, selectedItem])
+  }, [dispatch, selectedItem.metadata.project, selectedItem.metadata.uid])
 
   useEffect(() => {
     const selectedDate = detailsStore.dates.selectedOptionId
@@ -253,22 +253,22 @@ const DetailsMetrics = ({ selectedItem }) => {
   }, [detailsStore.dates.selectedOptionId])
 
   const fetchData = useCallback(
-    (selectedMetricsParams, preInvocationMetricParams, selectedItem) => {
+    (selectedMetricsParams, preInvocationMetricParams, selectedItemProject, selectedItemUid) => {
       metricsValuesAbortController.current = new AbortController()
 
       return Promise.all([
         dispatch(
           modelEndpointsActions.fetchModelEndpointMetricsValues(
-            selectedItem.metadata.project,
-            selectedItem.metadata.uid,
+            selectedItemProject,
+            selectedItemUid,
             selectedMetricsParams,
             metricsValuesAbortController.current.signal
           )
         ),
         dispatch(
           modelEndpointsActions.fetchModelEndpointMetricsValues(
-            selectedItem.metadata.project,
-            selectedItem.metadata.uid,
+            selectedItemProject,
+            selectedItemUid,
             preInvocationMetricParams,
             metricsValuesAbortController.current.signal
           )
@@ -285,9 +285,8 @@ const DetailsMetrics = ({ selectedItem }) => {
   )
 
   useEffect(() => {
-    if (selectedItem.name !== prevSelectedEndPointNameRef.current) {
-      prevSelectedEndPointNameRef.current = selectedItem.name
-      setMetrics([])
+    if (selectedItem.metadata.uid !== prevSelectedEndPointNameRef.current) {
+      prevSelectedEndPointNameRef.current = selectedItem.metadata.uid
       return
     }
     if (
@@ -309,7 +308,7 @@ const DetailsMetrics = ({ selectedItem }) => {
         params.end = detailsStore.dates.value[1].getTime()
       }
 
-      [invocationMetric, ...selectedMetrics].forEach(metric => {
+      ;[invocationMetric, ...selectedMetrics].forEach(metric => {
         params.name.push(metric.full_name)
       })
 
@@ -325,7 +324,12 @@ const DetailsMetrics = ({ selectedItem }) => {
         metric => metric.app === ML_RUN_INFRA
       )
       preInvocationMetricParams.name.push(full_name)
-      fetchData(params, preInvocationMetricParams, selectedItem)
+      fetchData(
+        params,
+        preInvocationMetricParams,
+        selectedItem.metadata.project,
+        selectedItem.metadata.uid
+      )
     } else {
       setMetrics([])
     }
@@ -336,7 +340,8 @@ const DetailsMetrics = ({ selectedItem }) => {
   }, [
     metricOptionsAreLoaded,
     fetchData,
-    selectedItem,
+    selectedItem.metadata.uid,
+    selectedItem.metadata.project,
     detailsStore.dates.value,
     detailsStore.metricsOptions.all,
     detailsStore.metricsOptions.selectedByEndpoint,
