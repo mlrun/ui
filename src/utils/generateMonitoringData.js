@@ -66,7 +66,7 @@ export const generateMonitoringStats = (data, navigate, dispatch, tab) => {
             counter: data.running,
             link: () =>
               navigateToJobsMonitoringPage({
-                state: ['running', 'created', 'pending', 'unknown', 'aborting']
+                state: ['running', 'pending', 'aborting']
               }),
             statusClass: 'running',
             tooltip: 'Aborting, Pending, Running'
@@ -117,7 +117,7 @@ export const generateMonitoringStats = (data, navigate, dispatch, tab) => {
               counter: data.completed,
               link: () =>
                 navigateToJobsMonitoringPage(
-                  { state: ['succeeded'] },
+                  { state: ['completed'] },
                   { groupBy: GROUP_BY_WORKFLOW }
                 ),
               statusClass: 'completed',
