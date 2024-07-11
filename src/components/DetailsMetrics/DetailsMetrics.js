@@ -137,25 +137,27 @@ const DetailsMetrics = ({ selectedItem }) => {
     }
   }, [])
 
-  const expandOrCollapseInvocationCard = useCallback(() => {
-    const invocationBodyCard = invocationBodyCardRef.current
-    const metricsContainer = metricsContainerRef.current
+  const expandInvocationCard = useCallback(
+    (isUnpinAction = false) => {
+      const invocationBodyCard = invocationBodyCardRef.current
+      const metricsContainer = metricsContainerRef.current
+      const isOnlyOneMetric = generatedMetrics.length === 1
 
-    if (!invocationBodyCard || !metricsContainer) return
+      if (!invocationBodyCard || !metricsContainer) return
 
-    const containerOverflow =
-      metricsContainer.parentNode.scrollHeight !== metricsContainer.parentNode.clientHeight
-
-    if (containerOverflow) {
-      if (isInvocationCardExpanded) {
+      if (!isUnpinAction && isOnlyOneMetric) {
         setIsInvocationCardExpanded(true)
-      } else {
-        setIsInvocationCardExpanded(false)
+      } else if (isUnpinAction) {
+        enableScrollRef.current = false
+        metricsContainer.parentNode.scrollTo({ top: 0, left: 0, behavior: 'smooth' })
+        setIsInvocationCardExpanded(true)
+        setTimeout(() => {
+          enableScrollRef.current = true
+        }, INVOCATION_CARD_SCROLL_DELAY)
       }
-    } else if (generatedMetrics.length === 1) {
-      setIsInvocationCardExpanded(true)
-    }
-  }, [generatedMetrics, invocationBodyCardRef, isInvocationCardExpanded, metricsContainerRef])
+    },
+    [generatedMetrics]
+  )
 
   const handleWindowScroll = useCallback(
     e => {
@@ -191,8 +193,6 @@ const DetailsMetrics = ({ selectedItem }) => {
         setTimeout(() => {
           enableScrollRef.current = true
         }, INVOCATION_CARD_SCROLL_DELAY)
-      } else if (!scrollTopPosition && !isInvocationCardExpanded && enableScrollRef.current) {
-        setIsInvocationCardExpanded(true)
       }
 
       prevScrollPositionRef.current = scrollTopPosition
@@ -228,8 +228,8 @@ const DetailsMetrics = ({ selectedItem }) => {
   }, [handleChangeDates])
 
   useEffect(() => {
-    expandOrCollapseInvocationCard()
-  }, [metrics, expandOrCollapseInvocationCard])
+    expandInvocationCard()
+  }, [metrics, expandInvocationCard])
 
   useEffect(() => {
     window.addEventListener('scroll', handleWindowScroll, true)
@@ -413,6 +413,7 @@ const DetailsMetrics = ({ selectedItem }) => {
                         metric={metric}
                         previousTotalInvocation={previousTotalInvocation}
                         selectedDate={selectedDate}
+                        expandInvocationCard={expandInvocationCard}
                       />
                     )
                   }

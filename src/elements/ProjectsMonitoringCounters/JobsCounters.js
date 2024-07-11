@@ -24,6 +24,7 @@ import { upperFirst } from 'lodash'
 
 import Loader from '../../common/Loader/Loader'
 import StatsCard from '../../common/StatsCard/StatsCard'
+import { Tooltip, TextTooltipTemplate } from 'igz-controls/components'
 
 import { generateMonitoringStats } from '../../utils/generateMonitoringData'
 import { JOBS_MONITORING_JOBS_TAB } from '../../constants'
@@ -68,14 +69,18 @@ const JobsCounters = () => {
               )}
             </span>
             <ul className="projects-monitoring-legend__status">
-              {jobStats.counters.map(({ counter, link, statusClass }) => (
+              {jobStats.counters.map(({ counter, link, statusClass, tooltip }) => (
                 <li className="link" onClick={link} key={`${statusClass}-jobs`}>
                   {projectStore.projectsSummary.loading ? (
                     <Loader section small secondary />
                   ) : (
-                    counter
+                    <Tooltip template={<TextTooltipTemplate text={tooltip} />}>
+                      <span>
+                        {counter}
+                        <i className={`state-${statusClass}`} />
+                      </span>
+                    </Tooltip>
                   )}
-                  <i className={`state-${statusClass}`} />
                 </li>
               ))}
             </ul>

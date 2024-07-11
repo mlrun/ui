@@ -217,6 +217,12 @@ $stickyHeaderHeight: 55px;
       }
     }
 
+    &-pin-icon {
+      position: absolute;
+      top: -10px;
+      left: -15px;
+    }
+
     &-invocation-header {
       display: flex;
       flex: 1;
@@ -227,7 +233,7 @@ $stickyHeaderHeight: 55px;
       font-weight: 500;
       font-size: 14px;
 
-      &_drift-icon-contrainer {
+      &_drift-icon-container {
         align-self: stretch;
         margin-right: 2px;
 
@@ -235,7 +241,7 @@ $stickyHeaderHeight: 55px;
           box-sizing: content-box;
           width: 17px;
           height: 17px;
-          padding-top: 8px;
+          padding-top: 9px;
         }
       }
 
@@ -309,6 +315,7 @@ $stickyHeaderHeight: 55px;
             box-sizing: content-box;
             width: 17px;
             height: 17px;
+            margin-top: -1px;
           }
         }
 

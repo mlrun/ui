@@ -23,6 +23,7 @@ import classNames from 'classnames'
 
 import StatsCard from '../../common/StatsCard/StatsCard'
 import MetricChart from '../MetricChart/MetricChart'
+import { RoundedIcon } from 'igz-controls/components'
 
 import {
   calculatePercentageDrift,
@@ -31,15 +32,19 @@ import {
 } from './detailsMetrics.util'
 import { getGradientLineChartConfig } from '../../utils/getMetricChartConfig'
 import { CHART_TYPE_LINE } from '../../constants'
-
-import { ReactComponent as ArrowUp } from 'igz-controls/images/arrow-up.svg'
-import { ReactComponent as ArrowDown } from 'igz-controls/images/arrow-down.svg'
+import { ReactComponent as UnpinIcon } from 'igz-controls/images/unpin-icon.svg'
 
 import colors from 'igz-controls/scss/colors.scss'
 
 const InvocationMetricCard = forwardRef(
   (
-    { isInvocationCardExpanded, metric, previousTotalInvocation, selectedDate },
+    {
+      isInvocationCardExpanded,
+      metric,
+      previousTotalInvocation,
+      selectedDate,
+      expandInvocationCard
+    },
     invocationBodyCardRef
   ) => {
     const invocationCardClassnames = classNames(
@@ -54,13 +59,14 @@ const InvocationMetricCard = forwardRef(
       previousTotalInvocation,
       metric[METRIC_RAW_TOTAL_POINTS]
     )
+
     return (
       <div className={invocationCardClassnames}>
         <StatsCard key={metric.id} className="metrics__card">
           <StatsCard.Header title="Endpoint call count">
             <div className="metrics__card-invocation-header">
-              <div className="metrics__card-invocation-header_drift-icon-contrainer">
-                {resultPercentageDrift.positive ? <ArrowUp /> : <ArrowDown />}
+              <div className="metrics__card-invocation-header_drift-icon-container">
+                {resultPercentageDrift.icon }
               </div>
               <div className={`metrics__card-invocation-header_${resultPercentageDrift.className}`}>
                 {resultPercentageDrift.percentageChange}
@@ -76,13 +82,22 @@ const InvocationMetricCard = forwardRef(
             ref={invocationBodyCardRef}
             className={`metrics__card-body ${isInvocationCardExpanded ? 'metrics__card-body-expanded' : 'metrics__card-body-collapsed'}`}
           >
+              {!isInvocationCardExpanded && (
+                  <RoundedIcon
+                      className="metrics__card-pin-icon"
+                      onClick={() => expandInvocationCard(true)}
+                      tooltipText={'Expand Invocation Card'}
+                  >
+                      <UnpinIcon />
+                  </RoundedIcon>
+              )}
             <div
               className={`metrics__card-invocation-content ${!isInvocationCardExpanded && 'metrics__card-invocation-content-visible'}`}
             >
               <div className="metrics__card-invocation-content-title">Endpoint call count</div>
               <div className="metrics__card-invocation-content-container">
                 <div className="metrics__card-invocation-content-container_drift_icon">
-                  {resultPercentageDrift.positive ? <ArrowUp /> : <ArrowDown />}
+                  {resultPercentageDrift.icon}
                 </div>
                 <div
                   className={`metrics__card-invocation-content-container_${resultPercentageDrift.className}`}
@@ -133,6 +148,7 @@ const InvocationMetricCard = forwardRef(
 )
 
 InvocationMetricCard.propTypes = {
+  expandInvocationCard: PropTypes.func.isRequired,
   isInvocationCardExpanded: PropTypes.bool.isRequired,
   metric: PropTypes.object.isRequired,
   previousTotalInvocation: PropTypes.number,

@@ -199,7 +199,7 @@ const DetailsInfoView = React.forwardRef(
               )}
               {!isEveryObjectValueEmpty(additionalInfo.drift) && (
                 <>
-                  <h3 className="item-info__header">Drift</h3>
+                  <h3 className="item-info__header">Histogram Data Drift Application</h3>
                   <ul className="item-info__details">{additionalInfo.drift}</ul>
                 </>
               )}

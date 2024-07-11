@@ -36,11 +36,12 @@ export const generateMonitoringStats = (data, navigate, dispatch, tab) => {
   const navigateToJobsMonitoringPage = (modalFilters, filters = {}, dateFutureOption) => {
     const datePickerOptions = dateFutureOption ? datePickerFutureOptions : datePickerPastOptions
     let date = datePickerOptions.find(
-      option => option.id === (dateFutureOption ? NEXT_24_HOUR_DATE_OPTION : PAST_24_HOUR_DATE_OPTION)
+      option =>
+        option.id === (dateFutureOption ? NEXT_24_HOUR_DATE_OPTION : PAST_24_HOUR_DATE_OPTION)
     )
 
-    dispatch(setFilters(
-      {
+    dispatch(
+      setFilters({
         ...filters,
         saveFilters: true,
         dates: {
@@ -48,71 +49,90 @@ export const generateMonitoringStats = (data, navigate, dispatch, tab) => {
           isPredefined: date.isPredefined,
           initialSelectedOptionId: date.id
         }
-      }
-    ))
+      })
+    )
     dispatch(setModalFiltersValues({ name: tab, value: modalFilters }))
     navigate(`/projects/jobs-monitoring/${tab}`)
   }
 
   return tab === JOBS_MONITORING_JOBS_TAB
     ? {
-      all: {
-        counter: data.all,
-        link: () => navigateToJobsMonitoringPage({ state: ['all'] })
-      },
-      counters: [
-        {
-          counter: data.running,
-          link: () =>
-            navigateToJobsMonitoringPage({
-              state: ['running', 'created', 'pending', 'unknown', 'aborting']
-            }),
-          statusClass: 'running'
-        },
-        {
-          counter: data.failed,
-          link: () => navigateToJobsMonitoringPage({ state: ['error', 'aborted'] }),
-          statusClass: 'failed'
-        },
-        {
-          counter: data.completed,
-          link: () => navigateToJobsMonitoringPage({ state: ['completed'] }),
-          statusClass: 'completed'
-        }
-      ]
-    }
-    : tab === JOBS_MONITORING_WORKFLOWS_TAB
-      ? {
         all: {
           counter: data.all,
-          link: () => navigateToJobsMonitoringPage({ state: ['all'] }, { groupBy: GROUP_BY_WORKFLOW })
+          link: () => navigateToJobsMonitoringPage({ state: ['all'] })
         },
         counters: [
           {
             counter: data.running,
-            link: () => navigateToJobsMonitoringPage({ state: ['running'] }, { groupBy: GROUP_BY_WORKFLOW }),
-            statusClass: 'running'
+            link: () =>
+              navigateToJobsMonitoringPage({
+                state: ['running', 'created', 'pending', 'unknown', 'aborting']
+              }),
+            statusClass: 'running',
+            tooltip: 'Aborting, Pending, Running'
           },
           {
             counter: data.failed,
-            link: () => navigateToJobsMonitoringPage({ state: ['error', 'failed'] }, { groupBy: GROUP_BY_WORKFLOW }),
-            statusClass: 'failed'
+            link: () => navigateToJobsMonitoringPage({ state: ['error', 'aborted'] }),
+            statusClass: 'failed',
+            tooltip: 'Aborted, Error'
           },
           {
             counter: data.completed,
-            link: () => navigateToJobsMonitoringPage({ state: ['succeeded'] }, { groupBy: GROUP_BY_WORKFLOW }),
-            statusClass: 'completed'
+            link: () => navigateToJobsMonitoringPage({ state: ['completed'] }),
+            statusClass: 'completed',
+            tooltip: 'Completed'
           }
         ]
       }
-      : {
-        jobs: {
-          counter: data.jobs,
-          link: () => navigateToJobsMonitoringPage({ type: JOB_KIND_JOB }, {}, true)
-        },
-        workflows: {
-          counter: data.workflows,
-          link: () => navigateToJobsMonitoringPage({ type: JOB_KIND_WORKFLOW }, {}, true)
+    : tab === JOBS_MONITORING_WORKFLOWS_TAB
+      ? {
+          all: {
+            counter: data.all,
+            link: () =>
+              navigateToJobsMonitoringPage({ state: ['all'] }, { groupBy: GROUP_BY_WORKFLOW })
+          },
+          counters: [
+            {
+              counter: data.running,
+              link: () =>
+                navigateToJobsMonitoringPage(
+                  { state: ['running'] },
+                  { groupBy: GROUP_BY_WORKFLOW }
+                ),
+              statusClass: 'running',
+              tooltip: 'Running'
+            },
+            {
+              counter: data.failed,
+              link: () =>
+                navigateToJobsMonitoringPage(
+                  { state: ['error', 'failed'] },
+                  { groupBy: GROUP_BY_WORKFLOW }
+                ),
+              statusClass: 'failed',
+              tooltip: 'Error, Failed'
+            },
+            {
+              counter: data.completed,
+              link: () =>
+                navigateToJobsMonitoringPage(
+                  { state: ['succeeded'] },
+                  { groupBy: GROUP_BY_WORKFLOW }
+                ),
+              statusClass: 'completed',
+              tooltip: 'Completed'
+            }
+          ]
         }
-      }
+      : {
+          jobs: {
+            counter: data.jobs,
+            link: () => navigateToJobsMonitoringPage({ type: JOB_KIND_JOB }, {}, true)
+          },
+          workflows: {
+            counter: data.workflows,
+            link: () => navigateToJobsMonitoringPage({ type: JOB_KIND_WORKFLOW }, {}, true)
+          }
+        }
 }
