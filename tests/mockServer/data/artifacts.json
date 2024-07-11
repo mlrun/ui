@@ -5,7 +5,8 @@
       "kind": "",
       "iter": 0,
       "tree": "9723e5a30b0e43b0b7cfda098445c446",
-      "target_path": "/User/demos/image-classification-with-distributed-training/images",
+      "target_path": "v3io://artifacts/image_mock_data.png",
+      "size": 20480,
       "db_key": "download_content",
       "producer": {
         "name": "download",
@@ -44,7 +45,8 @@
       "kind": "",
       "iter": 0,
       "tree": "1f8b29a5-cdab-4b84-aad7-7f9bc20daf0b",
-      "target_path": "/User/demos/image-classification-with-distributed-training/pipe/1f8b29a5-cdab-4b84-aad7-7f9bc20daf0b/images",
+      "target_path": "v3io://artifacts/image_mock_data.png",
+      "size": 20480,
       "db_key": "download_content",
       "producer": {
         "name": "download",
@@ -12011,6 +12013,8 @@
         "kind": "api",
         "uri": "localhost:3000"
       },
+      "target_path": "v3io://artifacts/json_mock_data.json",
+      "size": 13288,
       "labels": {
         "my-key": "my-value",
         "owner": "admin",
@@ -12033,6 +12037,8 @@
         "kind": "api",
         "uri": "localhost:3000"
       },
+      "target_path": "v3io://artifacts/html_mock_data.html",
+      "size": 402,
       "model_file": "path",
       "updated": "2021-09-17T07:09:00.296529+00:00"
     },
@@ -12041,7 +12047,8 @@
       "key": "test-i",
       "db_key": "test-i",
       "tree": "a62ddfca-28c2-4069-9ca4-58d0ef214fc4",
-      "target_path": "path",
+      "target_path": "v3io://artifacts/yaml_mock_data.yaml",
+      "size": 12288,
       "description": "desc",
       "kind": "",
       "project": "default",
@@ -12056,7 +12063,8 @@
       "key": "test-i",
       "db_key": "test-i",
       "tree": "28c14662-1d47-44f0-b8b9-cd35ccda695d",
-      "target_path": "path",
+      "target_path": "v3io://artifacts/yaml_mock_data.yaml",
+      "size": 12288,
       "description": "desc",
       "kind": "dataset",
       "project": "default",
@@ -12071,7 +12079,8 @@
       "key": "test-i",
       "db_key": "test-i",
       "tree": "c5519c5e-adcb-475c-9c79-9d246c5e03b5",
-      "target_path": "path",
+      "target_path": "v3io://artifacts/yaml_mock_data.yaml",
+      "size": 12288,
       "description": "desc",
       "kind": "",
       "project": "default",
@@ -34787,7 +34796,8 @@
               "kind": "api",
               "uri": "localhost:3000"
           },
-          "target_path": "v3io:///ted/tfr"
+          "size": 9,
+          "target_path": "v3io://artifacts/text_mock_data.txt"
       },
       "status": {},
       "uid": "5a44b12b-9ef3-4239-87e8-e0cbdae5827c"
@@ -34809,7 +34819,8 @@
               "kind": "api",
               "uri": "localhost:3000"
           },
-          "target_path": "v3io:///ted/tfr"
+          "target_path": "v3io://artifacts/image_mock_data.png",
+          "size": 20480
       },
       "status": {},
       "uid": "5a44b12b-9ef3-4239-87e8-e0cbdae5828c"

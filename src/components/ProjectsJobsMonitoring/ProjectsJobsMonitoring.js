@@ -172,7 +172,7 @@ const ProjectsJobsMonitoring = ({ fetchAllJobRuns, fetchJobFunction, fetchJobs }
 
       const fetchData = params.jobName ? fetchAllJobRuns : fetchJobs
       const newParams = !params.jobName && {
-        'partition-by': 'name',
+        'partition-by': 'project_and_name',
         'partition-sort-by': 'updated'
       }
 
@@ -359,7 +359,7 @@ const ProjectsJobsMonitoring = ({ fetchAllJobRuns, fetchJobFunction, fetchJobs }
                   filterMenuName={selectedTab}
                   filters={tabData[selectedTab].filters}
                   handleRefresh={tabData[selectedTab].handleRefresh}
-                  hidden={params.jobId || params.workflowId}
+                  hidden={Boolean(params.jobId || params.workflowId)}
                   page={JOBS_MONITORING_PAGE}
                   tab={selectedTab}
                   withRefreshButton={false}

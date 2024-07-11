@@ -17,17 +17,24 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import { isEmpty } from 'lodash'
 import getState from './getState'
-import { FUNCTION_TYPE_APPLICATION } from '../constants'
-import { getFunctionIdentifier } from './getUniqueIdentifier'
 import { page } from '../components/FunctionsPage/functions.util'
+import { getFunctionIdentifier } from './getUniqueIdentifier'
 import { parseKeyValues } from './object'
 
-export const parseFunction = (func, projectName, customState, apiGateway) => {
-  const command = func.kind === FUNCTION_TYPE_APPLICATION && !isEmpty(apiGateway)
-    ? `${window.location.protocol}//${apiGateway.spec.host}${apiGateway.spec.path}`
-    : func.spec?.command
+import {
+  FUNCTION_TYPE_APPLICATION,
+  FUNCTION_TYPE_NUCLIO,
+  FUNCTION_TYPE_REMOTE,
+  FUNCTION_TYPE_SERVING
+} from '../constants'
+
+const nuclioRuntimeKinds = [FUNCTION_TYPE_REMOTE, FUNCTION_TYPE_NUCLIO, FUNCTION_TYPE_SERVING, FUNCTION_TYPE_APPLICATION]
+
+export const parseFunction = (func, projectName, customState) => {
+  const externalInvocationUrls = func.status?.external_invocation_urls ?? []
+  let command = nuclioRuntimeKinds.includes(func.kind) ? externalInvocationUrls.length === 1 ?
+    externalInvocationUrls[0] : externalInvocationUrls : func.spec?.command
 
   const item = {
     access_key: func.metadata.credentials?.access_key ?? '',
@@ -35,7 +42,7 @@ export const parseFunction = (func, projectName, customState, apiGateway) => {
     args: func.spec?.args ?? [],
     base_spec: func.spec?.base_spec ?? {},
     build: func.spec?.build ?? {},
-    command,
+    command: command ?? '',
     container_image: func?.status?.container_image ?? '',
     default_class: func.spec?.default_class ?? '',
     default_handler: func.spec?.default_handler ?? '',

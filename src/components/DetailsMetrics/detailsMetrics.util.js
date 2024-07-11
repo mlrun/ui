@@ -25,13 +25,19 @@ import {
   PAST_MONTH_DATE_OPTION,
   PAST_WEEK_DATE_OPTION
 } from '../../utils/datePicker.util'
+
+import { ReactComponent as ArrowUp } from 'igz-controls/images/arrow-up.svg'
+import { ReactComponent as ArrowDown } from 'igz-controls/images/arrow-down.svg'
+import { ReactComponent as DoubleArrow } from 'igz-controls/images/double-arrow.svg'
+
 import colors from 'igz-controls/scss/colors.scss'
 
 export const METRIC_COMPUTED_AVG_POINTS = 'metric_computed_avg_points'
 export const METRIC_RAW_AVG_POINTS = 'metric_raw_avg_points'
 export const DRIFT_UP = 'drift_up'
+export const DRIFT_DOWN = 'drift_down'
 export const INVOCATION_CARD_SCROLL_THRESHOLD = 20
-export const INVOCATION_CARD_SCROLL_DELAY = 1000
+export const INVOCATION_CARD_SCROLL_DELAY = 500
 export const ML_RUN_INFRA = 'mlrun-infra'
 export const METRIC_RAW_TOTAL_POINTS = 'metric_raw_total_points'
 export const METRIC_COMPUTED_TOTAL_POINTS = 'metric_computed_total_points'
@@ -46,21 +52,38 @@ export const timeRangeMapping = {
 }
 
 export const calculatePercentageDrift = (previousTotalInvocation, currentTotalInvocation) => {
-  if (!previousTotalInvocation)
-    return {
-      className: DRIFT_UP,
-      percentageChange: 'N/A',
-      positive: true
+  if (!previousTotalInvocation) {
+    if (currentTotalInvocation > 0) {
+      return {
+        className: DRIFT_UP,
+        percentageChange: 'N/A',
+        icon: <ArrowUp />
+      }
     }
+
+    return {
+      className: '',
+      percentageChange: 'N/A',
+      icon: <DoubleArrow />
+    }
+  }
+
+  if (previousTotalInvocation === currentTotalInvocation) {
+    return {
+      className: '',
+      percentageChange: '0%',
+      icon: <DoubleArrow />
+    }
+  }
 
   const percentageChangeResult =
     ((currentTotalInvocation - previousTotalInvocation) / Math.abs(previousTotalInvocation)) * 100
   const isPositive = percentageChangeResult > 0
 
   return {
-    className: isPositive ? DRIFT_UP : 'drift_down',
+    className: isPositive ? DRIFT_UP : DRIFT_DOWN,
     percentageChange: `${percentageChangeResult.toFixed(0)}%`,
-    positive: isPositive
+    icon: isPositive ? <ArrowUp /> : <ArrowDown />
   }
 }
 
@@ -92,6 +115,36 @@ const driftStatusConfig = {
     className: 'drift_detected',
     text: 'Drift detected',
     chartColor: colors.ceriseRed
+  }
+}
+
+const timeFormatters = {
+  hours: {
+    handler: date =>
+      new Date(date).toLocaleTimeString('en-US', {
+        hour: 'numeric',
+        minute: TWO_DIGIT,
+        hour12: true
+      })
+  },
+  days: {
+    handler: date =>
+      new Date(date).toLocaleDateString('en-US', {
+        year: TWO_DIGIT,
+        month: TWO_DIGIT,
+        day: TWO_DIGIT
+      })
+  },
+  full: {
+    handler: date =>
+      new Date(date).toLocaleDateString('en-US', {
+        year: TWO_DIGIT,
+        month: TWO_DIGIT,
+        day: TWO_DIGIT,
+        hour: 'numeric',
+        minute: TWO_DIGIT,
+        hour12: true
+      })
   }
 }
 
@@ -132,27 +185,16 @@ export const getDateRangeBefore = range => {
 const getMetricTitle = fullName =>
   fullName.substring(fullName.lastIndexOf('.') + 1).replace(/-/g, ' ')
 
-const timeFormatters = {
-  hours: {
-    formatMetricsTime: dates => {
-      const options = {
-        hour: 'numeric',
-        minute: TWO_DIGIT,
-        hour12: true
-      }
-      return dates.map(([date]) => new Date(date).toLocaleTimeString('en-US', options))
-    }
-  },
-  days: {
-    formatMetricsTime: dates => {
-      const options = {
-        year: TWO_DIGIT,
-        month: TWO_DIGIT,
-        day: TWO_DIGIT
-      }
-      return dates.map(([date]) => new Date(date).toLocaleDateString('en-US', options))
-    }
-  }
+const formatMetricsTime = (timeUnit, dates) => {
+  return dates.reduce(
+    (dates, [date]) => {
+      dates.labels.push(timeFormatters[timeUnit].handler(date))
+      dates.fullDates.push(timeFormatters['full'].handler(date))
+      
+      return dates
+    },
+    { fullDates: [], labels: [] }
+  )
 }
 
 export const formatNumber = num => {
@@ -224,12 +266,14 @@ export const parseMetrics = (data, timeUnit) => {
     const totalOrAvg = withInvocationRate
       ? formatNumber(points.reduce((sum, value) => sum + value, 0))
       : formatNumber((points.reduce((sum, value) => sum + value, 0) / points.length).toFixed(2))
+    const formattedMetricsTime = formatMetricsTime(timeUnit, values)
 
     return {
       ...metric,
       app: getAppName(full_name),
       id: index,
-      labels: timeFormatters[timeUnit].formatMetricsTime(values),
+      labels: formattedMetricsTime.labels,
+      dates: formattedMetricsTime.fullDates,
       points,
       title: getMetricTitle(full_name),
       driftStatusList,

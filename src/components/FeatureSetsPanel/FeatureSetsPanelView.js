@@ -41,6 +41,8 @@ const FeatureSetsPanelView = ({
   confirmDialog,
   disableButtons,
   featureStore,
+  frontendSpec,
+  formState,
   handleSave,
   handleSaveOnClick,
   loading,
@@ -72,6 +74,8 @@ const FeatureSetsPanelView = ({
         )}
         <FeatureSetsPanelTitle
           closePanel={closePanel}
+          formState={formState}
+          frontendSpec={frontendSpec}
           setValidation={setValidation}
           validation={validation}
         />

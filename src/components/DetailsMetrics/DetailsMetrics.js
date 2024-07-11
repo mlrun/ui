@@ -313,7 +313,7 @@ const DetailsMetrics = ({ selectedItem }) => {
         params.end = detailsStore.dates.value[1].getTime()
       }
 
-      ;[invocationMetric, ...selectedMetrics].forEach(metric => {
+      [invocationMetric, ...selectedMetrics].forEach(metric => {
         params.name.push(metric.full_name)
       })
 
