@@ -139,8 +139,6 @@ $stickyHeaderHeight: 55px;
       position: relative;
       display: flex;
       flex: 1;
-      gap: 20px;
-      align-items: stretch;
       align-self: stretch;
       box-sizing: border-box;
       width: 100%;
@@ -358,6 +356,7 @@ $stickyHeaderHeight: 55px;
   }
 
   &__empty-select {
+    box-shadow: none;
     display: flex;
     flex-direction: column;
     gap: 25px;
