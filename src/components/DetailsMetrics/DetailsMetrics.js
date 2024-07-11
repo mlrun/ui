@@ -23,11 +23,14 @@ import { useDispatch, useSelector } from 'react-redux'
 import InvocationMetricCard from './IncvocationMetricCard'
 import MetricChart from '../MetricChart/MetricChart'
 import NoMetricData from './NoMetricData'
+import DatePicker from '../../common/DatePicker/DatePicker'
+import MetricsSelector from '../../elements/MetricsSelector/MetricsSelector'
 import StatsCard from '../../common/StatsCard/StatsCard'
 import { TextTooltipTemplate, Tooltip } from 'iguazio.dashboard-react-controls/dist/components'
 
 import { CHART_TYPE_LINE, CHART_TYPE_BAR, REQUEST_CANCELED } from '../../constants'
 import detailsActions from '../../actions/details'
+import modelEndpointsActions from '../../actions/modelEndpoints'
 import { groupMetricByApplication } from '../../elements/MetricsSelector/metricsSelector.util'
 import { getBarChartMetricConfig, getLineChartMetricConfig } from '../../utils/getMetricChartConfig'
 import {
@@ -39,6 +42,12 @@ import {
   ML_RUN_INFRA,
   timeRangeMapping
 } from './detailsMetrics.util'
+
+import {
+  datePickerPastOptions,
+  PAST_24_HOUR_DATE_OPTION,
+  TIME_FRAME_LIMITS
+} from '../../utils/datePicker.util'
 
 import { ReactComponent as MetricsIcon } from 'igz-controls/images/metrics-icon.svg'
 import colors from 'igz-controls/scss/colors.scss'
@@ -138,25 +147,27 @@ const DetailsMetrics = ({ selectedItem }) => {
     }
   }, [])
 
-  const expandOrCollapseInvocationCard = useCallback(() => {
-    const invocationBodyCard = invocationBodyCardRef.current
-    const metricsContainer = metricsContainerRef.current
+  const expandInvocationCard = useCallback(
+    (isUnpinAction = false) => {
+      const invocationBodyCard = invocationBodyCardRef.current
+      const metricsContainer = metricsContainerRef.current
+      const isOnlyOneMetric = generatedMetrics.length === 1
 
-    if (!invocationBodyCard || !metricsContainer) return
+      if (!invocationBodyCard || !metricsContainer) return
 
-    const containerOverflow =
-      metricsContainer.parentNode.scrollHeight !== metricsContainer.parentNode.clientHeight
-
-    if (containerOverflow) {
-      if (isInvocationCardExpanded) {
+      if (!isUnpinAction && isOnlyOneMetric) {
         setIsInvocationCardExpanded(true)
-      } else {
-        setIsInvocationCardExpanded(false)
+      } else if (isUnpinAction) {
+        enableScrollRef.current = false
+        metricsContainer.parentNode.scrollTo({ top: 0, left: 0, behavior: 'smooth' })
+        setIsInvocationCardExpanded(true)
+        setTimeout(() => {
+          enableScrollRef.current = true
+        }, INVOCATION_CARD_SCROLL_DELAY)
       }
-    } else if (generatedMetrics.length === 1) {
-      setIsInvocationCardExpanded(true)
-    }
-  }, [generatedMetrics, invocationBodyCardRef, isInvocationCardExpanded, metricsContainerRef])
+    },
+    [generatedMetrics]
+  )
 
   const handleWindowScroll = useCallback(
     e => {
@@ -192,8 +203,6 @@ const DetailsMetrics = ({ selectedItem }) => {
         setTimeout(() => {
           enableScrollRef.current = true
         }, INVOCATION_CARD_SCROLL_DELAY)
-      } else if (!scrollTopPosition && !isInvocationCardExpanded && enableScrollRef.current) {
-        setIsInvocationCardExpanded(true)
       }
 
       prevScrollPositionRef.current = scrollTopPosition
@@ -201,9 +210,36 @@ const DetailsMetrics = ({ selectedItem }) => {
     [isInvocationCardExpanded, detailsStore.metricsOptions.selectedByEndpoint, selectedItem]
   )
 
+  const handleChangeDates = useCallback(
+    (dates, isPredefined, selectedOptionId) => {
+      const generatedDates = [...dates]
+
+      if (generatedDates.length === 1) {
+        generatedDates.push(new Date())
+      }
+
+      dispatch(
+        detailsActions.setDetailsDates({
+          value: generatedDates,
+          selectedOptionId,
+          isPredefined
+        })
+      )
+    },
+    [dispatch]
+  )
+
   useEffect(() => {
-    expandOrCollapseInvocationCard()
-  }, [metrics, expandOrCollapseInvocationCard])
+    const past24hoursOption = datePickerPastOptions.find(
+      option => option.id === PAST_24_HOUR_DATE_OPTION
+    )
+
+    handleChangeDates(past24hoursOption.handler(), true, PAST_24_HOUR_DATE_OPTION)
+  }, [handleChangeDates])
+
+  useEffect(() => {
+    expandInvocationCard()
+  }, [metrics, expandInvocationCard])
 
   useEffect(() => {
     window.addEventListener('scroll', handleWindowScroll, true)
@@ -212,7 +248,7 @@ const DetailsMetrics = ({ selectedItem }) => {
 
   useEffect(() => {
     dispatch(
-      detailsActions.fetchModelEndpointMetrics(
+      modelEndpointsActions.fetchModelEndpointMetrics(
         selectedItem.metadata.project,
         selectedItem.metadata.uid
       )
@@ -232,7 +268,7 @@ const DetailsMetrics = ({ selectedItem }) => {
 
       return Promise.all([
         dispatch(
-          detailsActions.fetchModelEndpointMetricsValues(
+          modelEndpointsActions.fetchModelEndpointMetricsValues(
             selectedItem.metadata.project,
             selectedItem.metadata.uid,
             selectedMetricsParams,
@@ -240,7 +276,7 @@ const DetailsMetrics = ({ selectedItem }) => {
           )
         ),
         dispatch(
-          detailsActions.fetchModelEndpointMetricsValues(
+          modelEndpointsActions.fetchModelEndpointMetricsValues(
             selectedItem.metadata.project,
             selectedItem.metadata.uid,
             preInvocationMetricParams,
@@ -322,116 +358,146 @@ const DetailsMetrics = ({ selectedItem }) => {
   }
 
   return (
-    <div ref={metricsContainerRef} className="metrics">
-      {generatedMetrics.map(([applicationName, applicationMetrics]) => {
-        return (
-          <React.Fragment key={applicationName}>
-            <div className="metrics__app-name">
-              {applicationName === ML_RUN_INFRA ? '' : applicationName}
-            </div>
-            {applicationMetrics.map(metric => {
-              if (applicationName === ML_RUN_INFRA) {
-                if (!metric.data) {
-                  return (
-                    <React.Fragment key={metric.id}>
-                      <NoMetricData
-                        className="empty-invocation-card"
-                        key={metric.id}
-                        title="Endpoint call count"
-                      />
-                      {chooseMetricsDataCard}
-                    </React.Fragment>
-                  )
+    <div className="metrics-wrapper">
+      <div className="metrics__custom-filters">
+        <MetricsSelector
+          name="metrics"
+          metrics={detailsStore.metricsOptions.all}
+          onSelect={metrics =>
+            dispatch(
+              modelEndpointsActions.setSelectedMetricsOptions({
+                endpointUid: selectedItem.metadata.uid,
+                metrics
+              })
+            )
+          }
+          preselectedMetrics={detailsStore.metricsOptions.preselected}
+        />
+        <DatePicker
+          className="details-date-picker"
+          date={detailsStore.dates.value[0]}
+          dateTo={detailsStore.dates.value[1]}
+          selectedOptionId={detailsStore.dates.selectedOptionId}
+          label=""
+          onChange={handleChangeDates}
+          type="date-range-time"
+          timeFrameLimit={TIME_FRAME_LIMITS.MONTH}
+          withLabels
+        />
+      </div>
+
+      <div ref={metricsContainerRef} className="metrics">
+        {generatedMetrics.map(([applicationName, applicationMetrics]) => {
+          return (
+            <React.Fragment key={applicationName}>
+              <div className="metrics__app-name">
+                {applicationName === ML_RUN_INFRA ? '' : applicationName}
+              </div>
+              {applicationMetrics.map(metric => {
+                if (applicationName === ML_RUN_INFRA) {
+                  if (!metric.data) {
+                    return (
+                      <React.Fragment key={metric.id}>
+                        <NoMetricData
+                          className="empty-invocation-card"
+                          key={metric.id}
+                          title="Endpoint call count"
+                        />
+                        {chooseMetricsDataCard}
+                      </React.Fragment>
+                    )
+                  } else {
+                    return (
+                      <React.Fragment key={metric.id}>
+                        <InvocationMetricCard
+                          ref={invocationBodyCardRef}
+                          isInvocationCardExpanded={isInvocationCardExpanded}
+                          key={metric.id}
+                          metric={metric}
+                          previousTotalInvocation={previousTotalInvocation}
+                          selectedDate={selectedDate}
+                        />
+                        {chooseMetricsDataCard}
+                      </React.Fragment>
+                    )
+                  }
+                } else if (!metric.data) {
+                  return <NoMetricData key={metric.id} title={metric.title} />
                 } else {
                   return (
-                    <React.Fragment key={metric.id}>
-                      <InvocationMetricCard
-                        ref={invocationBodyCardRef}
-                        isInvocationCardExpanded={isInvocationCardExpanded}
-                        key={metric.id}
-                        metric={metric}
-                        previousTotalInvocation={previousTotalInvocation}
-                        selectedDate={selectedDate}
-                      />
-                      {chooseMetricsDataCard}
-                    </React.Fragment>
+                    <StatsCard className="metrics__card" key={metric.id}>
+                      <StatsCard.Header title={metric.title}>
+                        {metric.totalDriftStatus && (
+                          <Tooltip
+                            template={
+                              <TextTooltipTemplate
+                                text={
+                                  <div className="total-drift-status-tooltip">
+                                    <div>Date: {metric.dates[metric.totalDriftStatus.index]}</div>
+                                    <div>Value:{metric.points[metric.totalDriftStatus.index]}</div>
+                                  </div>
+                                }
+                              />
+                            }
+                          >
+                            <div>
+                              <span>{metric.totalDriftStatus.text}</span>
+                              <span
+                                className={`metrics__card-drift-status metrics__card-drift-status-${metric.totalDriftStatus.className}`}
+                              ></span>
+                            </div>
+                          </Tooltip>
+                        )}
+                      </StatsCard.Header>
+                      <div className="metrics__card-body">
+                        <div className="metrics__card-body-bar">
+                          <div className="metrics__card-header">
+                            <div>Value distribution</div>
+                            <div className="metrics__card-header-data">
+                              <span className="metrics__card-header-label">Avg. </span>
+                              {metric[METRIC_COMPUTED_AVG_POINTS]}
+                            </div>
+                          </div>
+                          <MetricChart
+                            chartConfig={{
+                              ...barConfig,
+                              data: calculateHistogram(metric.points, metric)
+                            }}
+                          />
+                        </div>
+                        <div className="metrics__card-body-line">
+                          <div className="metrics__card-header">Value over time</div>
+                          <MetricChart
+                            chartConfig={{
+                              ...lineConfig,
+                              data: {
+                                labels: metric.labels,
+                                datasets: [
+                                  {
+                                    data: metric.points,
+                                    dates: metric.dates,
+                                    chartType: CHART_TYPE_LINE,
+                                    metricType: metric.type,
+                                    driftStatusList: metric.driftStatusList || [],
+                                    tension: 0.2,
+                                    totalDriftStatus: metric.totalDriftStatus,
+                                    borderWidth: 1,
+                                    borderColor: metric.totalDriftStatus?.chartColor || colors.java
+                                  }
+                                ]
+                              }
+                            }}
+                          />
+                        </div>
+                      </div>
+                    </StatsCard>
                   )
                 }
-              } else if (!metric.data) {
-                return <NoMetricData key={metric.id} title={metric.title} />
-              } else {
-                return (
-                  <StatsCard className="metrics__card" key={metric.id}>
-                    <StatsCard.Header title={metric.title}>
-                      {metric.totalDriftStatus && (
-                        <Tooltip
-                          template={
-                            <TextTooltipTemplate
-                              text={
-                                <div className="total-drift-status-tooltip">
-                                  <div>Date: {metric.labels[metric.totalDriftStatus.index]}</div>
-                                  <div>Value:{metric.points[metric.totalDriftStatus.index]}</div>
-                                </div>
-                              }
-                            />
-                          }
-                        >
-                          <div>
-                            <span>{metric.totalDriftStatus.text}</span>
-                            <span
-                              className={`metrics__card-drift-status metrics__card-drift-status-${metric.totalDriftStatus.className}`}
-                            ></span>
-                          </div>
-                        </Tooltip>
-                      )}
-                    </StatsCard.Header>
-                    <div className="metrics__card-body">
-                      <div className="metrics__card-body-bar">
-                        <div className="metrics__card-header">
-                          <div>Value distribution</div>
-                          <div className="metrics__card-header-data">
-                            <span className="metrics__card-header-label">Avg. </span>
-                            {metric[METRIC_COMPUTED_AVG_POINTS]}
-                          </div>
-                        </div>
-                        <MetricChart
-                          chartConfig={{
-                            ...barConfig,
-                            data: calculateHistogram(metric.points, metric)
-                          }}
-                        />
-                      </div>
-                      <div className="metrics__card-body-line">
-                        <div className="metrics__card-header">Value over time</div>
-                        <MetricChart
-                          chartConfig={{
-                            ...lineConfig,
-                            data: {
-                              labels: metric.labels,
-                              datasets: [
-                                {
-                                  data: metric.points,
-                                  chartType: CHART_TYPE_LINE,
-                                  metricType: metric.type,
-                                  driftStatusList: metric.driftStatusList || [],
-                                  tension: 0.2,
-                                  totalDriftStatus: metric.totalDriftStatus,
-                                  borderWidth: 1,
-                                  borderColor: metric.totalDriftStatus?.chartColor || colors.java
-                                }
-                              ]
-                            }
-                          }}
-                        />
-                      </div>
-                    </div>
-                  </StatsCard>
-                )
-              }
-            })}
-          </React.Fragment>
-        )
-      })}
+              })}
+            </React.Fragment>
+          )
+        })}
+      </div>
     </div>
   )
 }
