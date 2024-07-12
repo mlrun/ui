@@ -74,8 +74,7 @@ const DeleteArtifactPopUp = ({ artifact, artifactType, category, filters, handle
       dispatch,
       params.projectName,
       artifact.db_key,
-      artifact.tag,
-      artifact.tree,
+      artifact.uid,
       handleRefresh,
       filters,
       artifactType,
@@ -88,8 +87,7 @@ const DeleteArtifactPopUp = ({ artifact, artifactType, category, filters, handle
     })
   }, [
     artifact.db_key,
-    artifact.tag,
-    artifact.tree,
+    artifact.uid,
     artifactType,
     category,
     dispatch,

@@ -279,10 +279,6 @@ export const generateActionsMenu = (
         label: 'Delete',
         icon: <Delete />,
         hidden: [ACTION_MENU_PARENT_ROW, ACTION_MENU_PARENT_ROW_EXPANDED].includes(menuPosition),
-        disabled: !fileMin?.tag,
-        tooltip: !fileMin?.tag
-          ? 'A tag is required to delete an artifact. Open the artifact, click on the edit icon, and assign a tag before proceeding with the deletion'
-          : '',
         className: 'danger',
         onClick: () =>
           openPopUp(DeleteArtifactPopUp, {
@@ -307,8 +303,7 @@ export const generateActionsMenu = (
                 dispatch,
                 projectName,
                 fileMin.db_key,
-                fileMin.tag,
-                fileMin.tree,
+                fileMin.uid,
                 handleRefresh,
                 filters,
                 ARTIFACT_TYPE,
