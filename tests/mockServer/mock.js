@@ -1902,10 +1902,14 @@ function deleteArtifact (req, res) {
 
     return (
       artifactMetaData?.project === req.params.project &&
-      artifactMetaData?.tree === req.query.tree &&
-      artifactSpecData?.db_key === req.params.key
+      artifactSpecData?.db_key === req.params.key &&
+      (req.query.tree || req.query.tag || req.query['object-uid']) &&
+      (req.query.tree ? artifactMetaData?.tree === req.query.tree : true) &&
+      (req.query.tag ? artifactMetaData?.tag === req.query.tag : true) &&
+      (req.query['object-uid'] ? artifactMetaData?.uid === req.query['object-uid'] : true)
     )
   })
+
   if (collectedArtifacts?.length > 0) {
     collectedArtifacts.forEach(collectedArtifact => remove(artifacts.artifacts, collectedArtifact))
   }

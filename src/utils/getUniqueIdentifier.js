@@ -34,9 +34,6 @@ export const getArtifactIdentifier = (artifact, unique) => {
   }
 
   if (unique) {
-    if (artifact?.tag) identifier += `.${artifact.tag}`
-    if (artifact?.tree) identifier += `.${artifact.tree}`
-    if (!isNaN(artifact?.iter)) identifier += `.${artifact.iter}`
     if (artifact?.uid) identifier += `.${artifact.uid}`
     if (artifact?.metadata?.uid) identifier += `.${artifact.metadata.uid}`
   }

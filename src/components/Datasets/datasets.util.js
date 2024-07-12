@@ -306,11 +306,7 @@ export const generateActionsMenu = (
       {
         label: 'Delete',
         icon: <Delete />,
-        disabled: !datasetMin?.tag,
         hidden: [ACTION_MENU_PARENT_ROW, ACTION_MENU_PARENT_ROW_EXPANDED].includes(menuPosition),
-        tooltip: !datasetMin?.tag
-          ? 'A tag is required to delete a dataset. Open the dataset, click on the edit icon, and assign a tag before proceeding with the deletion'
-          : '',
         className: 'danger',
         onClick: () =>
           datasetDataCouldBeDeleted ?
@@ -329,8 +325,7 @@ export const generateActionsMenu = (
                   dispatch,
                   projectName,
                   datasetMin.db_key,
-                  datasetMin.tag,
-                  datasetMin.tree,
+                  datasetMin.uid,
                   handleRefresh,
                   datasetsFilters,
                   DATASET_TYPE
@@ -352,8 +347,7 @@ export const generateActionsMenu = (
                 dispatch,
                 projectName,
                 datasetMin.db_key,
-                datasetMin.tag,
-                datasetMin.tree,
+                datasetMin.uid,
                 handleRefresh,
                 datasetsFilters,
                 DATASET_TYPE,

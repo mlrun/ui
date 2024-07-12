@@ -363,11 +363,7 @@ export const generateActionsMenu = (
         label: 'Delete',
         icon: <Delete />,
         className: 'danger',
-        disabled: !modelMin?.tag,
         hidden: [ACTION_MENU_PARENT_ROW, ACTION_MENU_PARENT_ROW_EXPANDED].includes(menuPosition),
-        tooltip: !modelMin?.tag
-          ? 'A tag is required to delete a model. Open the model, click on the edit icon, and assign a tag before proceeding with the deletion'
-          : '',
         onClick: () =>
           openDeleteConfirmPopUp(
             'Delete model?',
@@ -377,8 +373,7 @@ export const generateActionsMenu = (
                 dispatch,
                 projectName,
                 modelMin.db_key,
-                modelMin.tag,
-                modelMin.tree,
+                modelMin.uid,
                 handleRefresh,
                 modelsFilters,
                 MODEL_TYPE
@@ -400,8 +395,7 @@ export const generateActionsMenu = (
                 dispatch,
                 projectName,
                 modelMin.db_key,
-                modelMin.tag,
-                modelMin.tree,
+                modelMin.uid,
                 handleRefresh,
                 modelsFilters,
                 MODEL_TYPE,
