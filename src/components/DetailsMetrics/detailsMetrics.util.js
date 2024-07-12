@@ -44,7 +44,7 @@ export const METRIC_COMPUTED_TOTAL_POINTS = 'metric_computed_total_points'
 export const TWO_DIGIT = '2-digit'
 
 export const timeRangeMapping = {
-  [PAST_24_HOUR_DATE_OPTION]: 'last 24 day',
+  [PAST_24_HOUR_DATE_OPTION]: 'last 24 hours',
   [PAST_WEEK_DATE_OPTION]: 'last week',
   [PAST_MONTH_DATE_OPTION]: 'last month',
   [PAST_HOUR_DATE_OPTION]: 'last hour',

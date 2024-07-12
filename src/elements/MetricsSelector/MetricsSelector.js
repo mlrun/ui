@@ -51,7 +51,8 @@ const MetricsSelector = ({ maxSelectionNumber, metrics, name, onSelect, preselec
   const formRef = React.useRef(
     createForm({
       initialValues: {
-        metrics: []
+        metrics: [],
+        metricSearchName: ''
       },
       mutators: { ...arrayMutators },
       onSubmit: () => {}
@@ -80,15 +81,16 @@ const MetricsSelector = ({ maxSelectionNumber, metrics, name, onSelect, preselec
   )
 
   useEffect(() => {
-    setNameFilter('')
-  }, [metrics])
-
-  useEffect(() => {
     if (!isOpen) {
-      formRef.current.change(
-        'metrics',
-        appliedMetrics.map(metricItem => metricItem.full_name)
-      )
+      formRef.current?.batch(() => {
+        formRef.current.change(
+          'metrics',
+          appliedMetrics.map(metricItem => metricItem.full_name)
+        )
+        formRef.current.change('metricSearchName', '')
+      })
+
+      setNameFilter('')
     }
   }, [appliedMetrics, isOpen])
 

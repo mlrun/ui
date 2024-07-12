@@ -54,7 +54,10 @@ export const calculateMaxTicksLimit = (container, type) => {
 
 // TODO: refactor generateMetricChartTooltip function with generateCustomTooltip
 export const generateMetricChartTooltip = context => {
+  const chartType = context.tooltip.dataPoints[0].dataset.chartType
   let tooltipEl = document.getElementById('chartjs-tooltip-metric')
+
+  if (CHART_TYPE_BAR === chartType && parseFloat(context.tooltip.dataPoints[0].raw) === 0) return
 
   if (!tooltipEl) {
     tooltipEl = document.createElement('div')
@@ -87,8 +90,8 @@ export const generateMetricChartTooltip = context => {
         format: ''
       }
     }
-    const chartType = context.tooltip.dataPoints[0].dataset.chartType
-    const fullDate = context.tooltip.dataPoints[0].dataset?.dates?.[context.tooltip.dataPoints[0].dataIndex]
+    const fullDate =
+      context.tooltip.dataPoints[0].dataset?.dates?.[context.tooltip.dataPoints[0].dataIndex]
 
     if (chartType === CHART_TYPE_LINE && fullDate) {
       innerHtml += `<div class="tooltip-container-date">Date: ${fullDate}</div>`
