@@ -19,6 +19,7 @@ such restriction.
 */
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
+import { isNil } from 'lodash'
 
 import InvocationMetricCard from './IncvocationMetricCard'
 import MetricChart from '../MetricChart/MetricChart'
@@ -77,52 +78,43 @@ const DetailsMetrics = ({ selectedItem }) => {
     const numberOfBins = 5
     const minPointValue = Math.min(...points)
     const maxPointValue = Math.max(...points)
-
     const range = maxPointValue - minPointValue === 0 ? 1 : maxPointValue - minPointValue
     const binSize = range / numberOfBins
-    const bins = Array(numberOfBins).fill(0)
+    const bins = Array(numberOfBins)
+      .fill()
+      .map(() => ({ count: 0, minBinValue: null, maxBinValue: null }))
+    const roundValue = value => Math.round(value * 100) / 100
 
     points.forEach(value => {
       const binIndex = Math.min(Math.floor((value - minPointValue) / binSize), numberOfBins - 1)
-      bins[binIndex]++
+      bins[binIndex].count++
+
+      if (isNil(bins[binIndex].minBinValue) || bins[binIndex].minBinValue > value)
+        bins[binIndex].minBinValue = value
+
+      if (isNil(bins[binIndex].maxBinValue) || bins[binIndex].maxBinValue < value)
+        bins[binIndex].maxBinValue = value
     })
 
     const totalCount = points.length
 
-    const binPercentages = bins.map(count => ((count / totalCount) * 100).toFixed(1))
+    const binPercentages = bins.map(bin => ((bin.count / totalCount) * 100).toFixed(1))
 
     const binLabels = Array.from({ length: numberOfBins }, (_, i) => {
-      const rangeStart = (minPointValue + i * binSize).toFixed(2)
-      const rangeEnd =
-        i === numberOfBins - 1
-          ? maxPointValue.toFixed(2)
-          : (minPointValue + (i + 1) * binSize).toFixed(2)
+      if (parseFloat(binPercentages[i]) === 0) return ''
 
-      return `${rangeStart} - ${rangeEnd}`
+      if (maxPointValue === minPointValue) return `${roundValue(maxPointValue)}`
+
+      const rangeStart = bins[i].minBinValue
+      const rangeEnd = bins[i].maxBinValue
+
+      if (rangeStart === rangeEnd) return String(roundValue(rangeStart))
+
+      return `${roundValue(rangeStart)} - ${roundValue(rangeEnd)}`
     })
 
-    const calculateAverages = binLabels => {
-      return binLabels.map(binLabel => {
-        if (maxPointValue === minPointValue) return maxPointValue
-        const [num1, num2] = binLabel.split(' - ').map(parseFloat)
-        const average = (num1 + num2) / 2
-        return (Math.abs(average * 100) / 100).toFixed(1)
-      })
-    }
-
-    let averageValue = calculateAverages(binLabels)
-    const adjustArray = (binPercentages, averageValue) => {
-      return binPercentages.map((value, index) => {
-        return parseFloat(averageValue[index]) !== 0 ? value : ''
-      })
-    }
-
-    if (maxPointValue === minPointValue) {
-      averageValue = adjustArray(averageValue, binPercentages)
-    }
-
     return {
-      labels: averageValue,
+      labels: binLabels,
       datasets: [
         {
           data: binPercentages,
