@@ -415,6 +415,7 @@ const DetailsMetrics = ({ selectedItem }) => {
                       <React.Fragment key={metric.id}>
                         <InvocationMetricCard
                           ref={invocationBodyCardRef}
+                          expandInvocationCard={expandInvocationCard}
                           isInvocationCardExpanded={isInvocationCardExpanded}
                           key={metric.id}
                           metric={metric}

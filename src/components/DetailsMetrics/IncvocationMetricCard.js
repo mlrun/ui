@@ -32,7 +32,7 @@ import {
 } from './detailsMetrics.util'
 import { getGradientLineChartConfig } from '../../utils/getMetricChartConfig'
 import { CHART_TYPE_LINE } from '../../constants'
-import { ReactComponent as UnpinIcon } from 'igz-controls/images/unpin-icon.svg'
+import { ReactComponent as EnlargeIcon } from 'igz-controls/images/ml-enlarge.svg'
 
 import colors from 'igz-controls/scss/colors.scss'
 
@@ -66,7 +66,7 @@ const InvocationMetricCard = forwardRef(
           <StatsCard.Header title="Endpoint call count">
             <div className="metrics__card-invocation-header">
               <div className="metrics__card-invocation-header_drift-icon-container">
-                {resultPercentageDrift.icon }
+                {resultPercentageDrift.icon}
               </div>
               <div className={`metrics__card-invocation-header_${resultPercentageDrift.className}`}>
                 {resultPercentageDrift.percentageChange}
@@ -82,15 +82,15 @@ const InvocationMetricCard = forwardRef(
             ref={invocationBodyCardRef}
             className={`metrics__card-body ${isInvocationCardExpanded ? 'metrics__card-body-expanded' : 'metrics__card-body-collapsed'}`}
           >
-              {!isInvocationCardExpanded && (
-                  <RoundedIcon
-                      className="metrics__card-pin-icon"
-                      onClick={() => expandInvocationCard(true)}
-                      tooltipText={'Expand Invocation Card'}
-                  >
-                      <UnpinIcon />
-                  </RoundedIcon>
-              )}
+            {!isInvocationCardExpanded && (
+              <RoundedIcon
+                className="metrics__card-pin-icon"
+                onClick={() => expandInvocationCard(true)}
+                tooltipText={'Expand Invocation Card'}
+              >
+                <EnlargeIcon />
+              </RoundedIcon>
+            )}
             <div
               className={`metrics__card-invocation-content ${!isInvocationCardExpanded && 'metrics__card-invocation-content-visible'}`}
             >
@@ -126,7 +126,7 @@ const InvocationMetricCard = forwardRef(
                       {
                         data: metric.points,
                         dates: metric.dates,
-                      chartType: CHART_TYPE_LINE,
+                        chartType: CHART_TYPE_LINE,
                         fill: true,
                         metricType: metric.type,
                         driftStatusList: [],

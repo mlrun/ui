@@ -146,6 +146,7 @@ $stickyHeaderHeight: 55px;
 
       &-collapsed {
         height: 80px;
+        margin-top: 15px;
         transition: all 0.3s ease-in-out;
       }
 
@@ -166,6 +167,7 @@ $stickyHeaderHeight: 55px;
       &-bar {
         flex: 0 1 25%;
         min-width: 210px;
+        margin-right: 15px;
 
         canvas {
           width: 100%;
@@ -182,7 +184,7 @@ $stickyHeaderHeight: 55px;
 
       &-line {
         flex: 1 1 0;
-        margin-top: 4px;
+        margin-top: 3px;
 
         canvas {
           width: 100% !important;
@@ -217,8 +219,8 @@ $stickyHeaderHeight: 55px;
 
     &-pin-icon {
       position: absolute;
-      top: -10px;
-      left: -15px;
+      top: -24px;
+      right: -15px;
     }
 
     &-invocation-header {
@@ -286,6 +288,7 @@ $stickyHeaderHeight: 55px;
         width: fit-content;
         visibility: visible;
         opacity: 1;
+        margin-right: 15px;
         transition:
           flex 0.2s,
           visibility 0s,
