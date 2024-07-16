@@ -198,7 +198,7 @@ const FeatureSetsPanel = ({
               onChange={() => {
                 setValidation(prevState => ({
                   ...prevState,
-                  areLabelsValid: formRef.current?.getFieldState?.('labels')?.valid
+                  areLabelsValid: formRef.current?.getFieldState?.('labels')?.valid ?? true
                 }))
               }}
             />
