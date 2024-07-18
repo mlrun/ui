@@ -169,7 +169,13 @@ export const createModelsRowData = (
       headerId: 'producer',
       headerLabel: 'Producer',
       value: artifact.producer?.name || '',
-      template: <TableProducerCell bodyCellClassName="table-cell-1" id="producer" producer={artifact.producer} />,
+      template: (
+        <TableProducerCell
+          bodyCellClassName="table-cell-1"
+          id="producer"
+          producer={artifact.producer}
+        />
+      ),
       className: 'table-cell-1',
       type: 'producer'
     },
@@ -335,7 +341,11 @@ export const createFilesRowData = (artifact, project, frontendSpec, showExpandBu
         headerLabel: 'Producer',
         value: artifact.producer?.name || '',
         template: (
-          <TableProducerCell bodyCellClassName="table-cell-1" id="producer" producer={artifact.producer} />
+          <TableProducerCell
+            bodyCellClassName="table-cell-1"
+            id="producer"
+            producer={artifact.producer}
+          />
         ),
         className: 'table-cell-1',
         type: 'producer'
@@ -372,25 +382,29 @@ const getDriftStatusData = driftStatus => {
     case 'NO_DRIFT':
       return {
         value: <SeverityOk />,
-        tooltip: 'No drift'
+        tooltip: 'No drift',
+        testId: 'no-drift'
       }
     case '1':
     case 'POSSIBLE_DRIFT':
       return {
         value: <SeverityWarning />,
-        tooltip: 'Possible drift'
+        tooltip: 'Possible drift',
+        testId: 'possible-drift'
       }
     case '2':
     case 'DRIFT_DETECTED':
       return {
         value: <SeverityError />,
-        tooltip: 'Drift detected'
+        tooltip: 'Drift detected',
+        testId: 'drift-detected'
       }
     case '-1':
     default:
       return {
         value: 'N/A',
-        tooltip: 'N/A'
+        tooltip: 'N/A',
+        testId: 'n/a'
       }
   }
 }
@@ -504,7 +518,7 @@ export const createModelEndpointsRowData = (artifact, project) => {
         value: getDriftStatusData(artifact.status?.drift_status).value,
         className: 'table-cell-small',
         tooltip: getDriftStatusData(artifact.status?.drift_status).tooltip,
-        driftStatus: artifact.status?.drift_status.toLowerCase().split('_').join('-') || ''
+        driftTestId: getDriftStatusData(artifact.status?.drift_status).testId
       }
     ]
   }
@@ -565,7 +579,11 @@ export const createDatasetsRowData = (artifact, project, frontendSpec, showExpan
         headerLabel: 'Producer',
         value: artifact.producer?.name || '',
         template: (
-          <TableProducerCell bodyCellClassName="table-cell-1"  id="producer" producer={artifact.producer} />
+          <TableProducerCell
+            bodyCellClassName="table-cell-1"
+            id="producer"
+            producer={artifact.producer}
+          />
         ),
         className: 'table-cell-1',
         type: 'producer'

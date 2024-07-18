@@ -187,7 +187,7 @@ const TableCell = ({
   } else {
     return (
       <td
-        data-testid={data?.headerId + (data?.driftStatus ? ' ' + data.driftStatus : '')}
+        data-testid={data?.headerId + (data?.driftTestId ? ' ' + data.driftTestId : '')}
         className={cellClassNames}
       >
         <Tooltip
