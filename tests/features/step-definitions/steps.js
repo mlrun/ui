@@ -193,7 +193,6 @@ Then('verify redirection to {string}', async function (expectedPath) {
 })
 
 Then('wait load page', async function () {
-  console.log(DRIVER_SLEEP)
   await waitPageLoad(this.driver, pageObjects['commonPagesHeader']['loader'])
   await this.driver.sleep(DRIVER_SLEEP || 500)
 })
