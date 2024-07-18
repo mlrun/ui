@@ -161,7 +161,7 @@ export const getGradientLineChartConfig = () => {
             display: true
           },
           ticks: {
-            display: false
+            display: true
           }
         }
       },
