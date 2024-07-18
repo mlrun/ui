@@ -42,6 +42,7 @@ const FeatureSetsPanelDataSourceView = ({
   handleKindOnChange,
   handleUrlInputOnChange,
   handleUrlOnApply,
+  handleUrlOnDiscard,
   handleUrlOnEditModeChange,
   handleUrlSelectOnChange,
   setData,
@@ -69,6 +70,7 @@ const FeatureSetsPanelDataSourceView = ({
             comboboxSelectList={comboboxSelectList}
             handleUrlInputOnChange={handleUrlInputOnChange}
             handleUrlOnApply={handleUrlOnApply}
+            handleUrlOnDiscard={handleUrlOnDiscard}
             handleUrlOnEditModeChange={handleUrlOnEditModeChange}
             handleUrlSelectOnChange={handleUrlSelectOnChange}
             invalid={!validation.isUrlValid}
@@ -141,6 +143,7 @@ FeatureSetsPanelDataSourceView.propTypes = {
   handleKindOnChange: PropTypes.func.isRequired,
   handleUrlInputOnChange: PropTypes.func.isRequired,
   handleUrlOnApply: PropTypes.func.isRequired,
+  handleUrlOnDiscard: PropTypes.func.isRequired,
   handleUrlOnEditModeChange: PropTypes.func.isRequired,
   handleUrlSelectOnChange: PropTypes.func,
   setData: PropTypes.func.isRequired,

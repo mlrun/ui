@@ -72,6 +72,7 @@ const FeatureSetsPanelTargetStoreView = ({
   handleExternalOfflineKindInputOnChange,
   handleExternalOfflineKindOnEditModeChange,
   handleExternalOfflineKindPathOnApply,
+  handleExternalOfflineKindPathOnDiscard,
   handleExternalOfflineKindSelectOnChange,
   handleExternalOfflineKindTypeChange,
   handleKeyBucketingNumberChange,
@@ -400,6 +401,7 @@ const FeatureSetsPanelTargetStoreView = ({
                   disabled={featureStore.newFeatureSet.spec.passthrough}
                   handleUrlInputOnChange={handleExternalOfflineKindInputOnChange}
                   handleUrlOnApply={handleExternalOfflineKindPathOnApply}
+                  handleUrlOnDiscard={handleExternalOfflineKindPathOnDiscard}
                   handleUrlOnEditModeChange={handleExternalOfflineKindOnEditModeChange}
                   handleUrlSelectOnChange={handleExternalOfflineKindSelectOnChange}
                   invalid={!validation.isExternalOfflineTargetPathValid}
@@ -492,6 +494,7 @@ FeatureSetsPanelTargetStoreView.propTypes = {
   handleExternalOfflineKindInputOnChange: PropTypes.func.isRequired,
   handleExternalOfflineKindOnEditModeChange: PropTypes.func.isRequired,
   handleExternalOfflineKindPathOnApply: PropTypes.func.isRequired,
+  handleExternalOfflineKindPathOnDiscard: PropTypes.func.isRequired,
   handleExternalOfflineKindSelectOnChange: PropTypes.func.isRequired,
   handleExternalOfflineKindTypeChange: PropTypes.func.isRequired,
   handleKeyBucketingNumberChange: PropTypes.func.isRequired,

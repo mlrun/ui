@@ -365,6 +365,13 @@ const FeatureSetsPanelTargetStore = ({
     return isUrlValid
   }
 
+  const handleExternalOfflineKindPathOnDiscard = () => {
+    setValidation(prevState => ({
+      ...prevState,
+      isExternalOfflineTargetPathValid: true
+    }))
+  }
+
   const handleExternalOfflineKindOnEditModeChange = useCallback((isEditModeActive) => {
     setDisableButtons(state => ({
       ...state,
@@ -937,6 +944,7 @@ const FeatureSetsPanelTargetStore = ({
       handleExternalOfflineKindInputOnChange={handleExternalOfflineKindInputOnChange}
       handleExternalOfflineKindOnEditModeChange={handleExternalOfflineKindOnEditModeChange}
       handleExternalOfflineKindPathOnApply={handleExternalOfflineKindPathOnApply}
+      handleExternalOfflineKindPathOnDiscard={handleExternalOfflineKindPathOnDiscard}
       handleExternalOfflineKindSelectOnChange={handleExternalOfflineKindSelectOnChange}
       handleExternalOfflineKindTypeChange={handleExternalOfflineKindTypeChange}
       handleKeyBucketingNumberChange={handleKeyBucketingNumberChange}
