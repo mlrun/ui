@@ -56,7 +56,6 @@ import {
   SET_NEW_FEATURE_SET_DATA_SOURCE_START_TIME,
   SET_NEW_FEATURE_SET_DATA_SOURCE_URL,
   SET_NEW_FEATURE_SET_DESCRIPTION,
-  SET_NEW_FEATURE_SET_LABELS,
   SET_NEW_FEATURE_SET_NAME,
   SET_NEW_FEATURE_SET_PASSTHROUGH,
   SET_NEW_FEATURE_SET_SCHEDULE,
@@ -104,7 +103,6 @@ const initialState = {
       access_key: PANEL_DEFAULT_ACCESS_KEY
     },
     metadata: {
-      labels: {},
       name: '',
       tag: ''
     },
@@ -578,17 +576,6 @@ const featureStoreReducer = (state = initialState, { type, payload }) => {
           spec: {
             ...state.newFeatureSet.spec,
             description: payload
-          }
-        }
-      }
-    case SET_NEW_FEATURE_SET_LABELS:
-      return {
-        ...state,
-        newFeatureSet: {
-          ...state.newFeatureSet,
-          metadata: {
-            ...state.newFeatureSet.metadata,
-            labels: payload
           }
         }
       }

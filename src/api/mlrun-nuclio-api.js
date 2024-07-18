@@ -20,9 +20,6 @@ such restriction.
 import { mainHttpClient } from '../httpClient'
 
 const mlrunNuclioApi = {
-  getApiGateways: (projectName, config) => {
-    return mainHttpClient.get(`/projects/${projectName}/api-gateways`, config)
-  },
   getDeployLogs: (projectName, functionName, config) => {
     return mainHttpClient.get(`/projects/${projectName}/nuclio/${functionName}/deploy`, config)
   }

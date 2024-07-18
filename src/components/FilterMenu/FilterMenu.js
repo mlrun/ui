@@ -17,7 +17,7 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import React, { useCallback, useEffect, useMemo, useState } from 'react'
+import React, { useCallback, useEffect, useLayoutEffect, useMemo, useState } from 'react'
 import PropTypes from 'prop-types'
 import { useNavigate, useParams } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
@@ -328,7 +328,7 @@ const FilterMenu = ({
     setAutoRefresh(prevAutoRefresh => (prevAutoRefresh === itemId ? '' : AUTO_REFRESH_ID))
   }
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     return () => {
       dispatch(removeFilters())
     }

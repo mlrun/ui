@@ -27,8 +27,6 @@ import {
   JOB_KIND_JOB,
   JOB_KIND_LOCAL,
   JOB_KIND_MPIJOB,
-  JOB_KIND_NUCLIO,
-  JOB_KIND_REMOTE,
   JOB_KIND_SPARK,
   JOB_KIND_WORKFLOW,
   JOBS_MONITORING_JOBS_TAB,
@@ -48,7 +46,7 @@ const jobsStatus = [
   { label: 'Completed', id: 'completed', status: 'completed' },
   { label: 'Error', id: 'error', status: 'error' },
   { label: 'Running', id: 'running', status: 'running' },
-  { label: 'Pending', id: 'pending', status: 'pending' },
+  { label: 'Pending', id: 'pending', status: 'pending' }
 ]
 
 const workflowsStatus = [
@@ -56,7 +54,7 @@ const workflowsStatus = [
   { label: 'Error', id: 'error', status: 'error' },
   { label: 'Failed', id: 'failed', status: 'failed' },
   { label: 'Running', id: 'running', status: 'running' },
-  { label: 'Completed', id: 'completed', status: 'completed' },
+  { label: 'Completed', id: 'completed', status: 'completed' }
 ]
 
 export const generateStatusFilter = (useFailedStatus, tab) => {
@@ -87,10 +85,7 @@ export const generateTypeFilter = () => {
     { label: 'Handler', id: JOB_KIND_HANDLER },
     { label: 'Job', id: JOB_KIND_JOB },
     { label: 'Horovod', id: JOB_KIND_MPIJOB },
-    { label: 'Nuclio', id: JOB_KIND_NUCLIO },
-    { label: 'Remote', id: JOB_KIND_REMOTE },
-    { label: 'Spark', id: JOB_KIND_SPARK },
-    { label: 'Workflow', id: JOB_KIND_WORKFLOW }
+    { label: 'Spark', id: JOB_KIND_SPARK }
   ]
 }
 

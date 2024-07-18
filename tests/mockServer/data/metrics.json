@@ -5,6 +5,13 @@
       "project": "default",
       "metricsOptions": [
         {
+          "app": "mlrun-infra",
+          "name": "invocations-rate",
+          "type": "metric",
+          "project": "default",
+          "full_name": "default.mlrun-infra.metric.invocations-rate"
+        },
+        {
           "full_name": "default.histogram-data-drift-1.metric.tvdar_mean_1",
           "type": "metric",
           "app": "histogram-data-drift-1",
@@ -69,6 +76,14 @@
         }
       ],
       "metricsValues": [
+        {
+          "full_name": "default.mlrun-infra.metric.invocations-rate",
+          "type": "metric",
+          "data": "true",
+          "values": [
+            10, true
+          ]
+        },
         {
           "full_name": "default.histogram-data-drift-1.metric.tvdar_mean_1",
           "type": "metric",
@@ -146,6 +161,13 @@
       "modelEndpointUID": "d6df9915e64e9ba9441a82983d9fc7f874550b31",
       "project": "default",
       "metricsOptions": [
+        {
+          "app": "mlrun-infra",
+          "name": "invocations-rate",
+          "type": "metric",
+          "project": "default",
+          "full_name": "default.mlrun-infra.metric.invocations-rate"
+        },
         {
           "full_name": "default.histogram-data-drift-1.metric.tvdar_mean_1",
           "type": "metric",
@@ -309,6 +331,14 @@
         }
       ],
       "metricsValues": [
+        {
+          "full_name": "default.mlrun-infra.metric.invocations-rate",
+          "type": "metric",
+          "data": "true",
+          "values": [
+            1, true
+          ]
+        },
         {
           "full_name": "default.histogram-data-drift-1.metric.tvdar_mean_1",
           "type": "metric",

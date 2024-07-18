@@ -37,6 +37,9 @@ import { getLimitsGpuType } from '../../elements/FormResourcesUnits/formResource
 import { isEveryObjectValueEmpty } from '../../utils/isEveryObjectValueEmpty'
 import { roundFloats } from '../../utils/roundFloats'
 
+const DRIFT_DETECTED_THRESHOLD = 0.7
+const POSSIBLE_DRIFT_THRESHOLD = 0.5
+
 export const generateArtifactsInfoContent = (page, pageTab, selectedItem) => {
   if (pageTab === MODEL_ENDPOINTS_TAB) {
     const { name, tag } =
@@ -152,13 +155,15 @@ const generateModelEndpointDriftContent = modelEndpoint => {
       id: 'drift_detected_threshold',
       label: 'Drift Detected Threshold',
       value:
-        roundFloats(modelEndpoint.spec?.monitor_configuration?.drift_detected_threshold, 2) ?? '-'
+        roundFloats(modelEndpoint.spec?.monitor_configuration?.drift_detected_threshold, 2) ??
+        DRIFT_DETECTED_THRESHOLD
     },
     {
       id: 'possible_drift_threshold',
       label: 'Possible Drift Threshold',
       value:
-        roundFloats(modelEndpoint.spec?.monitor_configuration?.possible_drift_threshold, 2) ?? '-'
+        roundFloats(modelEndpoint.spec?.monitor_configuration?.possible_drift_threshold, 2) ??
+        POSSIBLE_DRIFT_THRESHOLD
     }
   ]
 }

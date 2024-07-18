@@ -22,14 +22,15 @@
     }
 
     &__counter {
-      display: block;
+      display: flex;
       flex: 1;
-      min-height: 45px;
+      min-height: 58px;
       margin: 0 0 5px 0;
       color: $primary;
       font-weight: 700;
       font-size: 48px;
-      text-align: center;
+      align-items: center;
+      justify-content: center;
     }
 
     .link {

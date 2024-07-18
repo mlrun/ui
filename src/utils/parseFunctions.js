@@ -19,13 +19,10 @@ such restriction.
 */
 import { chain } from 'lodash'
 import { parseFunction } from './parseFunction'
-import { getFunctionApiGateway } from '../components/FunctionsPage/functions.util'
 
-export const parseFunctions = (functions, projectName, apiGateways) => {
+export const parseFunctions = (functions, projectName) => {
   return chain(functions)
     .orderBy('metadata.updated', 'desc')
-    .map(func => {
-      return parseFunction(func, projectName, null, getFunctionApiGateway(func, apiGateways))
-    })
+    .map(func => parseFunction(func, projectName))
     .value()
 }

@@ -30,13 +30,13 @@ const ProjectsMonitoring = () => {
         <h5 className="projects-monitoring-legend__title">Monitoring</h5>
         <ul className="projects-monitoring-legend__status">
           <li>
-            Running <i className="state-running"></i>
+            In Process <i className="state-running"></i>
           </li>
           <li>
             Failed <i className="state-failed"></i>
           </li>
           <li>
-            Completed <i className="state-completed"></i>
+            Succeeded <i className="state-completed"></i>
           </li>
         </ul>
       </div>

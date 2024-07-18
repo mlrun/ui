@@ -366,6 +366,7 @@ const Datasets = () => {
       setDatasets([])
       dispatch(removeDataSets())
       setSelectedDatasetMin({})
+      setSelectedRowData({})
       abortControllerRef.current.abort(REQUEST_CANCELED)
       tagAbortControllerCurrent.abort(REQUEST_CANCELED)
     }
@@ -392,7 +393,8 @@ const Datasets = () => {
       headerRowHeight: cssVariables.datasetsHeaderRowHeight,
       rowHeight: cssVariables.datasetsRowHeight,
       rowHeightExtended: cssVariables.datasetsRowHeightExtended
-    }
+    },
+    activateTableScroll: true
   })
 
   return (
