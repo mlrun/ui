@@ -58,7 +58,7 @@ const ProjectFunctions = ({ fetchApiGateways, fetchNuclioFunctions, nuclioStore 
       0
     )
     const functionsFailed = groupeFunctionsRunning.reduce(
-      (prev, curr) => (curr.status.state === 'error' ? (prev += 1) : prev),
+      (prev, curr) => (['error', 'unhealthy'].includes(curr.status.state) ? (prev += 1) : prev),
       0
     )
 
@@ -105,7 +105,9 @@ const ProjectFunctions = ({ fetchApiGateways, fetchNuclioFunctions, nuclioStore 
         return {
           name: {
             value: func.metadata.name,
-            href: generateNuclioLink(`/projects/${params.projectName}/functions/${func.metadata.name}`),
+            href: generateNuclioLink(
+              `/projects/${params.projectName}/functions/${func.metadata.name}`
+            ),
             className: 'table-cell_big'
           },
           status: {
@@ -113,10 +115,10 @@ const ProjectFunctions = ({ fetchApiGateways, fetchNuclioFunctions, nuclioStore 
               func?.status?.state === 'ready' && !func?.spec?.disable
                 ? 'Running'
                 : func?.status?.state === 'ready' && func?.spec?.disable
-                ? 'Standby'
-                : ['error', 'unhealthy', 'imported', 'scaledToZero'].includes(func?.status?.state)
-                ? upperFirst(lowerCase(func.status.state))
-                : 'Building',
+                  ? 'Standby'
+                  : ['error', 'unhealthy', 'imported', 'scaledToZero'].includes(func?.status?.state)
+                    ? upperFirst(lowerCase(func.status.state))
+                    : 'Building',
             className: funcClassName
           }
         }

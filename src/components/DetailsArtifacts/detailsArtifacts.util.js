@@ -22,40 +22,38 @@ import prettyBytes from 'pretty-bytes'
 
 import CopyToClipboard from '../../common/CopyToClipboard/CopyToClipboard'
 import Download from '../../common/Download/Download'
-import { DATASETS, MODELS_TAB, TAG_FILTER_LATEST } from '../../constants'
+import { DATASETS_TAB, MODELS_TAB, TAG_FILTER_LATEST } from '../../constants'
 import { RoundedIcon, TextTooltipTemplate, Tooltip } from 'igz-controls/components'
 import { formatDatetime, parseKeyValues } from '../../utils'
-import { generateArtifactPreviewData } from '../../utils/generateArtifactPreviewData'
 import { parseArtifacts } from '../../utils/parseArtifacts'
 
 import { ReactComponent as DetailsIcon } from 'igz-controls/images/view-details.svg'
 
 export const getJobAccordingIteration = selectedJob => {
   return {
-    artifacts: selectedJob.status?.artifacts || [],
+    artifacts: parseArtifacts(selectedJob.status?.artifacts || []),
     startTime: new Date(selectedJob.status?.start_time),
     labels: parseKeyValues(selectedJob.metadata?.labels || {})
   }
 }
 
-export const generateArtifactsPreviewContent = selectedJob => {
-  const parsedArtifacts = parseArtifacts(selectedJob.artifacts)
-
-  if (!parsedArtifacts) return []
-
-  return parsedArtifacts.map(artifact => {
+export const generateArtifactsPreviewContent = (selectedJob, artifacts) => {
+  return artifacts.map(artifact => {
+    const generatedArtifact = { ...artifact }
     let generatedPreviewData = {
       preview: []
     }
 
-    if (artifact.extra_data) {
-      generatedPreviewData = generateArtifactPreviewData(artifact.extra_data)
+    if (generatedArtifact.extra_data) {
+      generatedPreviewData.preview = generatedArtifact.extra_data
     }
 
-    artifact.preview = artifact.schema ? artifact.preview : generatedPreviewData.preview
-    artifact.header = artifact.schema ? artifact.header : null
+    generatedArtifact.preview = generatedArtifact.schema
+      ? generatedArtifact.preview
+      : generatedPreviewData.preview
+    generatedArtifact.header = generatedArtifact.schema ? generatedArtifact.header : null
 
-    artifact.ui = {
+    generatedArtifact.ui = {
       ...artifact.ui,
       date: formatDatetime(selectedJob.startTime),
       size: artifact.size ? prettyBytes(artifact.size) : 'N/A',
@@ -64,7 +62,7 @@ export const generateArtifactsPreviewContent = selectedJob => {
         ?.replace(/(v3io_user|owner): /, '')
     }
 
-    return artifact
+    return generatedArtifact
   })
 }
 
@@ -75,10 +73,10 @@ export const generateArtifactsTabContent = (artifacts, params, iteration, showAr
         artifact.db_key || artifact.key
       }/${artifact.tag ? artifact.tag : artifact.tree ?? TAG_FILTER_LATEST}${
         iteration ? `/${iteration}` : ''
-      }/overview`,
-      dataset: `/projects/${params.projectName}/${DATASETS}/${artifact.db_key || artifact.key}/${
+      }/overview?useUrlParamsAsFilter=true`,
+      dataset: `/projects/${params.projectName}/${DATASETS_TAB}/${artifact.db_key || artifact.key}/${
         artifact.tag ? artifact.tag : artifact.tree ?? TAG_FILTER_LATEST
-      }${iteration ? `/${iteration}` : ''}/overview`
+      }${iteration ? `/${iteration}` : ''}/overview?useUrlParamsAsFilter=true`
     }
 
     return [
@@ -127,7 +125,7 @@ export const generateArtifactsTabContent = (artifacts, params, iteration, showAr
                   artifactScreenLinks[artifact.kind] ??
                   `/projects/${params.projectName}/files/${artifact.db_key || artifact.key}/${
                     artifact.tag ? artifact.tag : artifact.tree ?? TAG_FILTER_LATEST
-                  }${iteration ? `/${iteration}` : ''}/overview`
+                  }${iteration ? `/${iteration}` : ''}/overview?useUrlParamsAsFilter=true`
                 }
               >
                 <DetailsIcon />

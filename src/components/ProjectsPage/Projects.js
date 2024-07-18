@@ -18,15 +18,15 @@ under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
 import React, { useEffect, useState, useCallback, useRef } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
+import { isEmpty, last, orderBy } from 'lodash'
 import FileSaver from 'file-saver'
 import yaml from 'js-yaml'
-import { connect, useDispatch, useSelector } from 'react-redux'
-import { isEmpty, last, orderBy } from 'lodash'
-import { useParams } from 'react-router-dom'
 
 import ProjectsView from './ProjectsView'
 
 import {
+  generateMonitoringCounters,
   generateProjectActionsMenu,
   handleDeleteProjectError,
   pollDeletingProjects,
@@ -44,19 +44,7 @@ import { showErrorNotification } from '../../utils/notifications.util'
 import { useMode } from '../../hooks/mode.hook'
 import { useNuclioMode } from '../../hooks/nuclioMode.hook'
 
-const Projects = ({
-  changeProjectState,
-  createNewProject,
-  deleteProject,
-  fetchNuclioFunctions,
-  fetchProject,
-  fetchProjects,
-  fetchProjectsNames,
-  fetchProjectsSummary,
-  projectStore,
-  removeNewProjectError,
-  removeProjects
-}) => {
+const Projects = () => {
   const [actionsMenu, setActionsMenu] = useState({})
   const [confirmData, setConfirmData] = useState(null)
   const [convertedYaml, setConvertedYaml] = useState('')
@@ -68,18 +56,19 @@ const Projects = ({
   const [selectedProjectsState, setSelectedProjectsState] = useState('active')
   const [sortProjectId, setSortProjectId] = useState('byName')
   const [deletingProjects, setDeletingProjects] = useState({})
+
   const abortControllerRef = useRef(new AbortController())
   const terminatePollRef = useRef(null)
-  const urlParams = useParams()
+
   const dispatch = useDispatch()
   const { isDemoMode } = useMode()
   const { isNuclioModeDisabled } = useNuclioMode()
-
+  const projectStore = useSelector(store => store.projectStore)
   const tasksStore = useSelector(store => store.tasksStore)
 
   const fetchMinimalProjects = useCallback(() => {
-    fetchProjects({ format: 'minimal' })
-  }, [fetchProjects])
+    dispatch(projectsAction.fetchProjects({ format: 'minimal' }))
+  }, [dispatch])
 
   const isValidProjectState = useCallback(
     project => {
@@ -114,12 +103,18 @@ const Projects = ({
     abortControllerRef.current = new AbortController()
 
     if (!isNuclioModeDisabled) {
-      fetchNuclioFunctions()
+      dispatch(nuclioActions.fetchNuclioFunctions())
     }
 
-    removeProjects()
+    dispatch(projectsAction.removeProjects())
     fetchMinimalProjects()
-    fetchProjectsSummary(abortControllerRef.current.signal)
+    dispatch(
+      projectsAction.fetchProjectsSummary(abortControllerRef.current.signal, refreshProjects)
+    ).then(result => {
+      if (result) {
+        generateMonitoringCounters(result, dispatch)
+      }
+    })
 
     dispatch(fetchBackgroundTasks({}))
       .unwrap()
@@ -147,14 +142,10 @@ const Projects = ({
           pollDeletingProjects(terminatePollRef, newDeletingProjects, refreshProjects, dispatch)
         }
       })
-  }, [
-    isNuclioModeDisabled,
-    removeProjects,
-    fetchMinimalProjects,
-    fetchProjectsSummary,
-    dispatch,
-    fetchNuclioFunctions
-  ])
+      .catch(error => {
+        showErrorNotification(dispatch, error, '')
+      })
+  }, [fetchMinimalProjects, isNuclioModeDisabled, dispatch])
 
   const handleSearchOnFocus = useCallback(() => {
     refreshProjects()
@@ -170,15 +161,15 @@ const Projects = ({
 
   const handleArchiveProject = useCallback(
     project => {
-      changeProjectState(project.metadata.name, 'archived')
+      dispatch(projectsAction.changeProjectState(project.metadata.name, 'archived'))
         .then(() => {
           fetchMinimalProjects()
         })
         .catch(error => {
           const customErrorMsg =
             error.response?.status === FORBIDDEN_ERROR_STATUS_CODE
-              ? `You are not allowed to archive ${project.metadata.name} project`
-              : `Failed to archive ${project.metadata.name} project`
+              ? `You don't have rights to archive project ${project.metadata.name}`
+              : `Failed to archive project ${project.metadata.name}`
 
           showErrorNotification(dispatch, error, '', customErrorMsg, () =>
             handleArchiveProject(project)
@@ -186,14 +177,14 @@ const Projects = ({
         })
       setConfirmData(null)
     },
-    [changeProjectState, dispatch, fetchMinimalProjects]
+    [dispatch, fetchMinimalProjects]
   )
 
   const handleDeleteProject = useCallback(
     (project, deleteNonEmpty) => {
       setConfirmData(null)
 
-      deleteProject(project.metadata.name, deleteNonEmpty)
+      dispatch(projectsAction.deleteProject(project.metadata.name, deleteNonEmpty))
         .then(response => {
           if (isBackgroundTaskRunning(response)) {
             dispatch(
@@ -204,7 +195,7 @@ const Projects = ({
               })
             )
 
-            setDeletingProjects((prevDeletingProjects) => {
+            setDeletingProjects(prevDeletingProjects => {
               const newDeletingProjects = {
                 ...prevDeletingProjects,
                 [response.data.metadata.name]: last(response.data.metadata.kind.split('.'))
@@ -236,16 +227,16 @@ const Projects = ({
           )
         })
     },
-    [deleteProject, dispatch, fetchMinimalProjects, refreshProjects]
+    [dispatch, fetchMinimalProjects, refreshProjects]
   )
 
   const handleUnarchiveProject = useCallback(
     project => {
-      changeProjectState(project.metadata.name, 'online').then(() => {
+      dispatch(projectsAction.changeProjectState(project.metadata.name, 'online')).then(() => {
         fetchMinimalProjects()
       })
     },
-    [changeProjectState, fetchMinimalProjects]
+    [dispatch, fetchMinimalProjects]
   )
 
   const convertToYaml = useCallback(
@@ -265,8 +256,8 @@ const Projects = ({
         item: project,
         header: 'Archive project',
         message:
-          "Note that moving a project to archive doesn't stop it from consuming resources. We recommend that " +
-          "before setting the project as archive you'll remove scheduled jobs and suspend Nuclio functions.",
+          'Archived projects continue to consume resources.' +
+          'To stop the project from consuming resources, delete its scheduled jobs and suspend its Nuclio functions.',
         btnConfirmLabel: 'Archive',
         btnConfirmType: PRIMARY_BUTTON,
         rejectHandler: () => {
@@ -283,7 +274,8 @@ const Projects = ({
       setConfirmData({
         item: project,
         header: 'Delete project?',
-        message: `You try to delete project "${project.metadata.name}". Deleted projects can not be restored.`,
+        message: `You are trying to delete the non-empty project "${project.metadata.name}". Deleting it will also delete all of its resources,
+such as jobs, artifacts, and features.`,
         btnConfirmLabel: 'Delete',
         btnConfirmType: DANGER_BUTTON,
         rejectHandler: () => {
@@ -298,7 +290,7 @@ const Projects = ({
   const exportYaml = useCallback(
     projectMinimal => {
       if (projectMinimal?.metadata?.name) {
-        fetchProject(projectMinimal.metadata.name)
+        dispatch(projectsAction.fetchProject(projectMinimal.metadata.name))
           .then(project => {
             var blob = new Blob([yaml.dump(project, { lineWidth: -1 })])
 
@@ -311,13 +303,13 @@ const Projects = ({
           })
       }
     },
-    [dispatch, fetchProject]
+    [dispatch]
   )
 
   const viewYaml = useCallback(
     projectMinimal => {
       if (projectMinimal?.metadata?.name) {
-        fetchProject(projectMinimal.metadata.name)
+        dispatch(projectsAction.fetchProject(projectMinimal.metadata.name))
           .then(project => {
             convertToYaml(project)
           })
@@ -332,7 +324,12 @@ const Projects = ({
         setConvertedYaml('')
       }
     },
-    [convertToYaml, dispatch, fetchProject]
+    [convertToYaml, dispatch]
+  )
+
+  const removeNewProjectError = useCallback(
+    () => dispatch(projectsAction.removeNewProjectError()),
+    [dispatch]
   )
 
   useEffect(() => {
@@ -344,8 +341,7 @@ const Projects = ({
         viewYaml,
         onArchiveProject,
         handleUnarchiveProject,
-        onDeleteProject,
-        isDemoMode
+        onDeleteProject
       )
     )
   }, [
@@ -392,23 +388,25 @@ const Projects = ({
     e.preventDefault()
 
     if (e.currentTarget.checkValidity() && formState.valid) {
-      createNewProject({
-        metadata: {
-          name: formState.values.name,
-          labels:
-            formState.values.labels?.reduce((acc, labelData) => {
-              acc[labelData.key] = labelData.value
-              return acc
-            }, {}) ?? {}
-        },
-        spec: {
-          description: formState.values.description
-        }
-      }).then(result => {
+      dispatch(
+        projectsAction.createNewProject({
+          metadata: {
+            name: formState.values.name,
+            labels:
+              formState.values.labels?.reduce((acc, labelData) => {
+                acc[labelData.key] = labelData.value
+                return acc
+              }, {}) ?? {}
+          },
+          spec: {
+            description: formState.values.description
+          }
+        })
+      ).then(result => {
         if (result) {
           setCreateProject(false)
           refreshProjects()
-          fetchProjectsNames()
+          dispatch(projectsAction.fetchProjectsNames())
         }
       })
     }
@@ -440,17 +438,8 @@ const Projects = ({
       setSelectedProjectsState={setSelectedProjectsState}
       sortProjectId={sortProjectId}
       tasksStore={tasksStore}
-      urlParams={urlParams}
     />
   )
 }
 
-export default connect(
-  projectStore => ({
-    ...projectStore
-  }),
-  {
-    ...projectsAction,
-    ...nuclioActions
-  }
-)(Projects)
+export default Projects

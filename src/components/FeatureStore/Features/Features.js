@@ -17,9 +17,10 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import React, { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { connect, useDispatch, useSelector } from 'react-redux'
+import { mapValues, map } from 'lodash'
 
 import AddToFeatureVectorPopUp from '../../../elements/AddToFeatureVectorPopUp/AddToFeatureVectorPopUp'
 import FeaturesTablePanel from '../../../elements/FeaturesTablePanel/FeaturesTablePanel'
@@ -37,16 +38,17 @@ import {
   TAG_FILTER_ALL_ITEMS
 } from '../../../constants'
 import { createFeaturesRowData } from '../../../utils/createFeatureStoreContent'
-import { featuresActionCreator, featuresFilters } from './features.util'
+import { featuresActionCreator, featuresFilters, handleFeaturesResponse } from './features.util'
 import { getFeatureIdentifier } from '../../../utils/getUniqueIdentifier'
 import { getFilterTagOptions, setFilters } from '../../../reducers/filtersReducer'
-import { parseFeatures } from '../../../utils/parseFeatures'
 import { setTablePanelOpen } from '../../../reducers/tableReducer'
 import { useGetTagOptions } from '../../../hooks/useGetTagOptions.hook'
 import { useGroupContent } from '../../../hooks/groupContent.hook'
-import { showLargeResponsePopUp } from '../../../httpClient'
+import { useVirtualization } from '../../../hooks/useVirtualization.hook'
 
 import { ReactComponent as Yaml } from 'igz-controls/images/yaml.svg'
+
+import cssVariables from './features.scss'
 
 const Features = ({
   fetchEntity,
@@ -92,6 +94,17 @@ const Features = ({
     [toggleConvertedYaml]
   )
 
+  useLayoutEffect(() => {
+    setSelectedRowData(prevSelectedRowData => {
+      return mapValues(prevSelectedRowData, feature => ({
+        ...feature,
+        content: map(feature.content, contentItem =>
+          createFeaturesRowData(contentItem.data, tableStore.isTablePanelOpen)
+        )
+      }))
+    })
+  }, [tableStore.isTablePanelOpen, setSelectedRowData])
+
   const fetchData = useCallback(
     filters => {
       abortControllerRef.current = new AbortController()
@@ -113,18 +126,12 @@ const Features = ({
               return nextValue.value ? prevValue.concat(nextValue.value) : prevValue
             }, [])
 
-            if (
-              features.length > 1500 ||
-              abortControllerRef.current?.signal?.reason === LARGE_REQUEST_CANCELED
-            ) {
-              showLargeResponsePopUp(setLargeRequestErrorMessage)
-              setFeatures([])
-            } else {
-              setFeatures(parseFeatures(features))
-              setLargeRequestErrorMessage('')
-
-              return features
-            }
+            return handleFeaturesResponse(
+              features,
+              setFeatures,
+              abortControllerRef,
+              setLargeRequestErrorMessage
+            )
           }
 
           return result
@@ -185,7 +192,7 @@ const Features = ({
       fetchData(feature.metadata.project, feature.name, feature.metadata.name)
         .then(result => {
           if (result?.length > 0) {
-            const content = [...parseFeatures(result)].map(contentItem =>
+            const content = [...result].map(contentItem =>
               createFeaturesRowData(contentItem, tableStore.isTablePanelOpen)
             )
             setSelectedRowData(state => ({
@@ -278,21 +285,34 @@ const Features = ({
     }
   }, [removeEntities, removeEntity, removeFeature, removeFeatures, params.projectName])
 
+  const virtualizationConfig = useVirtualization({
+    rowsData: {
+      content: tableContent,
+      expandedRowsData: selectedRowData
+    },
+    heightData: {
+      headerRowHeight: cssVariables.featuresHeaderRowHeight,
+      rowHeight: cssVariables.featuresRowHeight,
+      rowHeightExtended: cssVariables.featuresRowHeightExtended
+    }
+  })
+
   return (
     <FeaturesView
       actionsMenu={actionsMenu}
-      features={features}
       featureStore={featureStore}
+      features={features}
       filtersStore={filtersStore}
       getPopUpTemplate={getPopUpTemplate}
       handleExpandRow={handleExpandRow}
       handleRefresh={handleRefresh}
       largeRequestErrorMessage={largeRequestErrorMessage}
       pageData={pageData}
-      ref={featureStoreRef}
+      ref={{ featureStoreRef }}
       selectedRowData={selectedRowData}
       tableContent={tableContent}
       tableStore={tableStore}
+      virtualizationConfig={virtualizationConfig}
     />
   )
 }

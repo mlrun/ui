@@ -81,7 +81,9 @@ import {
   FETCH_PROJECT_SECRETS_BEGIN,
   FETCH_PROJECT_SECRETS_FAILURE,
   FETCH_PROJECT_SECRETS_SUCCESS,
-  SET_PROJECT_SECRETS
+  SET_JOBS_MONITORING_DATA,
+  SET_MLRUN_IS_UNHEALTHY,
+  SET_MLRUN_UNHEALTHY_RETRYING
 } from '../constants'
 import {
   CONFLICT_ERROR_STATUS_CODE,
@@ -90,6 +92,9 @@ import {
 
 import { parseSummaryData } from '../utils/parseSummaryData'
 import { showErrorNotification } from '../utils/notifications.util'
+import { mlrunUnhealthyErrors } from '../components/ProjectsPage/projects.util'
+
+let firstServerErrorTimestamp = null
 
 const projectsAction = {
   changeProjectState: (project, status) => dispatch => {
@@ -119,10 +124,10 @@ const projectsAction = {
       .catch(error => {
         const message =
           error.response.status === CONFLICT_ERROR_STATUS_CODE
-            ? `Project name "${postData.metadata.name}" already exists`
+            ? `A project named "${postData.metadata.name}" already exists`
             : error.response.status === INTERNAL_SERVER_ERROR_STATUS_CODE
-            ? 'Cannot create more than 200 projects due to resource limitation. Either delete existing projects or contact our customer support for assistance'
-            : error.message
+              ? 'The system already has the maximum number of projects. An existing project must be deleted before you can create another.'
+              : error.message
 
         dispatch(projectsAction.createProjectFailure(message))
       })
@@ -159,11 +164,11 @@ const projectsAction = {
   deleteProjectSuccess: () => ({
     type: DELETE_PROJECT_SUCCESS
   }),
-  fetchProject: project => dispatch => {
+  fetchProject: (project, params) => dispatch => {
     dispatch(projectsAction.fetchProjectBegin())
 
     return projectsApi
-      .getProject(project)
+      .getProject(project, params)
       .then(response => {
         dispatch(projectsAction.fetchProjectSuccess(response?.data))
 
@@ -527,17 +532,46 @@ const projectsAction = {
     type: FETCH_PROJECTS_SUCCESS,
     payload: projectsList
   }),
-  fetchProjectsSummary: signal => dispatch => {
+  fetchProjectsSummary: (signal, refresh) => dispatch => {
     dispatch(projectsAction.fetchProjectsSummaryBegin())
 
     return projectsApi
       .getProjectSummaries(signal)
       .then(({ data: { project_summaries } }) => {
-        dispatch(projectsAction.fetchProjectsSummarySuccess(parseSummaryData(project_summaries)))
+        if (firstServerErrorTimestamp && refresh) {
+          firstServerErrorTimestamp = null
 
-        return parseSummaryData(project_summaries)
+          refresh()
+        }
+
+        const summaryData = parseSummaryData(project_summaries)
+
+        dispatch(projectsAction.fetchProjectsSummarySuccess(summaryData))
+        dispatch(projectsAction.setMlrunIsUnhealthy(false))
+        dispatch(projectsAction.setMlrunUnhealthyRetrying(false))
+
+        return summaryData
       })
       .catch(err => {
+        if (!firstServerErrorTimestamp) {
+          firstServerErrorTimestamp = new Date()
+
+          dispatch(projectsAction.setMlrunUnhealthyRetrying(true))
+        }
+
+        const threeMinutesPassed = (new Date() - firstServerErrorTimestamp) / 1000 > 180
+
+        if (mlrunUnhealthyErrors.includes(err.response?.status) && !threeMinutesPassed) {
+          setTimeout(() => {
+            dispatch(projectsAction.fetchProjectsSummary(signal, refresh))
+          }, 3000)
+        }
+
+        if (threeMinutesPassed) {
+          dispatch(projectsAction.setMlrunIsUnhealthy(true))
+          dispatch(projectsAction.setMlrunUnhealthyRetrying(true))
+        }
+
         dispatch(projectsAction.fetchProjectsSummaryFailure(err))
       })
   },
@@ -579,9 +613,17 @@ const projectsAction = {
   removeProjectData: () => ({ type: REMOVE_PROJECT_DATA }),
   removeProjectSummary: () => ({ type: REMOVE_PROJECT_SUMMARY }),
   removeProjects: () => ({ type: REMOVE_PROJECTS }),
-  setProjectSecrets: secrets => ({
-    type: SET_PROJECT_SECRETS,
-    payload: secrets
+  setMlrunIsUnhealthy: isUnhealthy => ({
+    type: SET_MLRUN_IS_UNHEALTHY,
+    payload: isUnhealthy
+  }),
+  setMlrunUnhealthyRetrying: isRetrying => ({
+    type: SET_MLRUN_UNHEALTHY_RETRYING,
+    payload: isRetrying
+  }),
+  setJobsMonitoringData: data => ({
+    type: SET_JOBS_MONITORING_DATA,
+    payload: data
   })
 }
 

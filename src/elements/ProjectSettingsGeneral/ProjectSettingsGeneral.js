@@ -25,13 +25,13 @@ import { connect, useDispatch } from 'react-redux'
 import { createForm } from 'final-form'
 import { cloneDeep, isBoolean } from 'lodash'
 import { useParams } from 'react-router-dom'
-import { OnChange } from 'react-final-form-listeners'
 
 import {
   FormKeyValueTable,
   FormCheckBox,
   FormChipCell,
   FormInput,
+  FormOnChange,
   FormTextarea
 } from 'igz-controls/components'
 import ChangeOwnerPopUp from '../ChangeOwnerPopUp/ChangeOwnerPopUp'
@@ -46,6 +46,7 @@ import {
   GOALS,
   LABELS,
   LOAD_SOURCE_ON_RUN,
+  NODE_SELECTORS,
   PARAMS,
   SOURCE_URL
 } from '../../constants'
@@ -59,10 +60,11 @@ import { FORBIDDEN_ERROR_STATUS_CODE } from 'igz-controls/constants'
 import { KEY_CODES } from '../../constants'
 import { getChipOptions } from '../../utils/getChipOptions'
 import { getErrorMsg } from 'igz-controls/utils/common.util'
-import { getValidationRules } from 'igz-controls/utils/validation.util'
+import { getValidationRules, getInternalLabelsValidationRule } from 'igz-controls/utils/validation.util'
 import { parseChipsData, convertChipsData } from '../../utils/convertChipsData'
 import { setNotification } from '../../reducers/notificationReducer'
 import { showErrorNotification } from '../../utils/notifications.util'
+import { areNodeSelectorsSupported } from './projectSettingsGeneral.utils'
 
 import './projectSettingsGeneral.scss'
 
@@ -76,6 +78,7 @@ const ProjectSettingsGeneral = ({
   projectOwnerIsShown,
   removeProjectData
 }) => {
+  const [projectIsInitialized, setProjectIsInitialized] = useState(false)
   const [lastEditedProjectValues, setLastEditedProjectValues] = useState({})
   const formRef = React.useRef(
     createForm({
@@ -88,38 +91,52 @@ const ProjectSettingsGeneral = ({
   const params = useParams()
   const dispatch = useDispatch()
 
+  useEffect(
+    () => {
+      if (!projectIsInitialized) {
+        setProjectIsInitialized(true)
+
+        fetchProject(params.projectName)
+          .then(projectResponse => {
+            setTimeout(() => {
+              const newInitial = {
+                [SOURCE_URL]: projectResponse.spec[SOURCE_URL],
+                [ARTIFACT_PATH]: projectResponse.spec[ARTIFACT_PATH],
+                [LOAD_SOURCE_ON_RUN]: projectResponse.spec[LOAD_SOURCE_ON_RUN],
+                [DEFAULT_IMAGE]: projectResponse.spec[DEFAULT_IMAGE],
+                [DESCRIPTION]: projectResponse.spec[DESCRIPTION],
+                [GOALS]: projectResponse.spec[GOALS],
+                [PARAMS]: parseObjectToKeyValue(projectResponse.spec[PARAMS]),
+                [LABELS]: parseChipsData(projectResponse.metadata[LABELS], frontendSpec.internal_labels || [])
+              }
+
+              if (areNodeSelectorsSupported) {
+                newInitial[NODE_SELECTORS] = parseObjectToKeyValue(projectResponse.spec[NODE_SELECTORS])
+              }
+
+              setLastEditedProjectValues(newInitial)
+              formStateRef.current.form.restart(newInitial)
+            }, 10)
+          })
+          .catch(error => {
+            const customErrorMsg =
+              error.response?.status === FORBIDDEN_ERROR_STATUS_CODE
+                ? 'Permission denied'
+                : getErrorMsg(error, 'Failed to fetch project data')
+
+            showErrorNotification(dispatch, error, '', customErrorMsg)
+          })
+      }
+    },
+    [params.pageTab, params.projectName, fetchProject, dispatch, frontendSpec.internal_labels, projectIsInitialized]
+  )
+
   useEffect(() => {
-    fetchProject(params.projectName)
-      .then(projectResponse => {
-        setTimeout(() => {
-          const newInitial = {
-            [SOURCE_URL]: projectResponse.spec[SOURCE_URL],
-            [ARTIFACT_PATH]: projectResponse.spec[ARTIFACT_PATH],
-            [LOAD_SOURCE_ON_RUN]: projectResponse.spec[LOAD_SOURCE_ON_RUN],
-            [DEFAULT_IMAGE]: projectResponse.spec[DEFAULT_IMAGE],
-            [DESCRIPTION]: projectResponse.spec[DESCRIPTION],
-            [GOALS]: projectResponse.spec[GOALS],
-            [PARAMS]: parseObjectToKeyValue(projectResponse.spec[PARAMS]),
-            [LABELS]: parseChipsData(projectResponse.metadata[LABELS])
-          }
-
-          setLastEditedProjectValues(newInitial)
-          formStateRef.current.form.restart(newInitial)
-        })
-      })
-      .catch(error => {
-        const customErrorMsg =
-          error.response?.status === FORBIDDEN_ERROR_STATUS_CODE
-            ? 'Permission denied'
-            : getErrorMsg(error, 'Failed to fetch project data')
-
-        showErrorNotification(dispatch, error, '', customErrorMsg)
-      })
-
     return () => {
       removeProjectData()
+      setProjectIsInitialized(false)
     }
-  }, [removeProjectData, params.pageTab, params.projectName, fetchProject, dispatch])
+  }, [removeProjectData])
 
   const sendProjectSettingsData = useCallback(
     projectData => {
@@ -177,6 +194,12 @@ const ProjectSettingsGeneral = ({
           }
         }
 
+        if (areNodeSelectorsSupported) {
+          newProjectData.spec[NODE_SELECTORS] = generateObjectFromKeyValue(
+            formStateLocal.values[NODE_SELECTORS]
+          )
+        }
+
         setLastEditedProjectValues(formStateLocal.values)
         sendProjectSettingsData(newProjectData)
       }
@@ -221,13 +244,14 @@ const ProjectSettingsGeneral = ({
                       label="Pull at runtime"
                       name={LOAD_SOURCE_ON_RUN}
                     />
-                    <OnChange name={LOAD_SOURCE_ON_RUN}>
-                      {(curr, prev) => {
+                    <FormOnChange
+                      handler={(curr, prev) => {
                         if (isBoolean(prev)) {
                           updateProjectData()
                         }
                       }}
-                    </OnChange>
+                      name={LOAD_SOURCE_ON_RUN}
+                    />
                   </div>
                   <div className="settings__artifact-path">
                     <FormInput
@@ -286,11 +310,27 @@ const ProjectSettingsGeneral = ({
                       onExitEditModeCallback={updateProjectData}
                       visibleChipsMaxLength="all"
                       validationRules={{
-                        key: getValidationRules('project.labels.key'),
+                        key: getValidationRules(
+                          'project.labels.key',
+                          getInternalLabelsValidationRule(frontendSpec.internal_labels || [])
+                        ),
                         value: getValidationRules('project.labels.value')
                       }}
                     />
                   </div>
+                  {areNodeSelectorsSupported && (
+                    <div>
+                      <p className="settings__card-title">Node Selectors</p>
+                      <FormKeyValueTable
+                        addNewItemLabel="Add node selector"
+                        keyValidationRules={getValidationRules('nodeSelectors.key')}
+                        valueValidationRules={getValidationRules('nodeSelectors.value')}
+                        onExitEditModeCallback={updateProjectData}
+                        fieldsPath={NODE_SELECTORS}
+                        formState={formState}
+                      />
+                    </div>
+                  )}
                 </div>
                 <div className="settings__card-content-col">
                   <div className="settings__owner">
@@ -299,7 +339,7 @@ const ProjectSettingsGeneral = ({
                         <span className="row-label">Owner:</span>
                         <span className="row-name">
                           {membersState.projectInfo?.owner?.username ||
-                            projectStore.project.data?.spec?.owner}
+                          projectStore.project.data?.spec?.owner}
                         </span>
                       </div>
                     </div>

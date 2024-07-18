@@ -17,7 +17,7 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import React, { useState } from 'react'
+import React, { useCallback, useState } from 'react'
 import PropTypes from 'prop-types'
 
 import JobsPanelTitleView from './JobsPanelTitleView'
@@ -30,12 +30,12 @@ const JobsPanelTitle = ({
   closePanel,
   editModeEnabled,
   functionData,
-  isNameValid,
   openScheduleJob,
   panelDispatch,
   panelState,
-  setNameValid,
-  setOpenScheduleJob
+  setOpenScheduleJob,
+  setValidation,
+  validation
 }) => {
   const [editTitle, setEditTitle] = useState(false)
 
@@ -46,8 +46,7 @@ const JobsPanelTitle = ({
     })
 
     if (
-      panelState.currentFunctionInfo.method !==
-        panelState.previousPanelData.titleInfo.method &&
+      panelState.currentFunctionInfo.method !== panelState.previousPanelData.titleInfo.method &&
       !cancelEdit
     ) {
       panelDispatch({
@@ -62,7 +61,7 @@ const JobsPanelTitle = ({
           titleInfo: {
             method: panelState.currentFunctionInfo.method,
             version: panelState.currentFunctionInfo.version
-          },
+          }
         }
       })
     } else {
@@ -70,8 +69,7 @@ const JobsPanelTitle = ({
         type: panelActions.SET_CURRENT_FUNCTION_INFO_METHOD,
         payload: {
           method: panelState.previousPanelData.titleInfo.method,
-          methodDescription:
-            panelState.previousPanelData.titleInfo.methodDescription
+          methodDescription: panelState.previousPanelData.titleInfo.methodDescription
         }
       })
       panelDispatch({
@@ -107,9 +105,7 @@ const JobsPanelTitle = ({
         return
       }
 
-      const methodDescription = functionData.methodOptions.find(
-        func => func.id === value
-      )
+      const methodDescription = functionData.methodOptions.find(func => func.id === value)
 
       panelDispatch({
         type: panelActions.SET_CURRENT_FUNCTION_INFO_METHOD,
@@ -135,6 +131,13 @@ const JobsPanelTitle = ({
     })
   }
 
+  const setLabelsValidation = useCallback(
+    value => {
+      setValidation(state => ({ ...state, isLabelsValid: value }))
+    },
+    [setValidation]
+  )
+
   return (
     <JobsPanelTitleView
       closePanel={closePanel}
@@ -144,14 +147,15 @@ const JobsPanelTitle = ({
       editTitle={editTitle}
       handleFinishEdit={handleFinishEdit}
       handleFunctionInfoChange={handleFunctionInfoChange}
-      isNameValid={isNameValid}
       methodOptions={functionData.methodOptions}
       openScheduleJob={openScheduleJob}
       panelDispatch={panelDispatch}
       setEditTitle={setEditTitle}
-      setNameValid={setNameValid}
+      setLabelsValidation={setLabelsValidation}
       setOpenScheduleJob={setOpenScheduleJob}
+      setValidation={setValidation}
       versionOptions={functionData.versionOptions}
+      validation={validation}
     />
   )
 }
@@ -164,12 +168,12 @@ JobsPanelTitle.propTypes = {
   closePanel: PropTypes.func.isRequired,
   editModeEnabled: PropTypes.bool,
   functionData: PropTypes.shape({}).isRequired,
-  isNameValid: PropTypes.bool.isRequired,
   openScheduleJob: PropTypes.bool.isRequired,
   panelDispatch: PropTypes.func.isRequired,
   panelState: PropTypes.shape({}).isRequired,
-  setNameValid: PropTypes.func.isRequired,
-  setOpenScheduleJob: PropTypes.func.isRequired
+  setOpenScheduleJob: PropTypes.func.isRequired,
+  setValidation: PropTypes.func.isRequired,
+  validation: PropTypes.object.isRequired
 }
 
 export default JobsPanelTitle

@@ -17,7 +17,7 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import React, { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react'
+import React, { useCallback, useEffect, useRef, useState } from 'react'
 import PropTypes from 'prop-types'
 import { isEmpty } from 'lodash'
 import classnames from 'classnames'
@@ -31,16 +31,14 @@ import { ReactComponent as ActionMenuIcon } from 'igz-controls/images/elipsis.sv
 
 import './actionsMenu.scss'
 
-const ActionsMenu = ({ dataItem, menu, time, withQuickActions }) => {
+const ActionsMenu = ({ dataItem, menu, menuPosition, time, withQuickActions }) => {
   const [actionMenu, setActionMenu] = useState(menu)
   const [isIconDisplayed, setIsIconDisplayed] = useState(false)
   const [isShowMenu, setIsShowMenu] = useState(false)
-  const [position, setPosition] = useState('bottom-left')
   const actionMenuRef = useRef()
   const actionMenuBtnRef = useRef()
   const dropDownMenuRef = useRef()
   const mainActionsWrapperRef = useRef()
-  const { bottom: actionMenubottom } = actionMenuRef?.current?.getBoundingClientRect() || {}
 
   let idTimeout = null
 
@@ -75,21 +73,11 @@ const ActionsMenu = ({ dataItem, menu, time, withQuickActions }) => {
     if (idTimeout) clearTimeout(idTimeout)
   }
 
-  useLayoutEffect(() => {
-    if (dropDownMenuRef?.current) {
-      const { height } = dropDownMenuRef.current.getBoundingClientRect()
-
-      actionMenubottom + height > window.innerHeight
-        ? setPosition('top-left')
-        : setPosition('bottom-left')
-    }
-  }, [isShowMenu, actionMenubottom])
-
   useEffect(() => {
     if (!isEmpty(dataItem)) {
-      setActionMenu(typeof menu === 'function' ? menu(dataItem) : menu)
+      setActionMenu(typeof menu === 'function' ? menu(dataItem, menuPosition) : menu)
     }
-  }, [dataItem, menu])
+  }, [dataItem, menu, menuPosition])
 
   useEffect(() => {
     setIsIconDisplayed(actionMenu[0].some(menuItem => menuItem.icon))
@@ -139,6 +127,7 @@ const ActionsMenu = ({ dataItem, menu, time, withQuickActions }) => {
             setIsShowMenu(prevValue => !prevValue)
           }}
           ref={actionMenuBtnRef}
+          tooltipText="More actions"
         >
           <ActionMenuIcon />
         </RoundedIcon>
@@ -147,7 +136,8 @@ const ActionsMenu = ({ dataItem, menu, time, withQuickActions }) => {
             className="actions-menu__body"
             customPosition={{
               element: actionMenuBtnRef,
-              position
+              position: 'bottom-left',
+              autoVerticalPosition: true
             }}
             headerIsHidden
             ref={dropDownMenuRef}
@@ -175,6 +165,7 @@ const ActionsMenu = ({ dataItem, menu, time, withQuickActions }) => {
 
 ActionsMenu.defaultProps = {
   dataItem: {},
+  menuPosition: '',
   time: 100,
   withQuickActions: false
 }
@@ -182,6 +173,7 @@ ActionsMenu.defaultProps = {
 ActionsMenu.propTypes = {
   dataItem: PropTypes.oneOfType([PropTypes.shape({}), PropTypes.string]),
   menu: ACTIONS_MENU.isRequired,
+  menuPosition: PropTypes.string,
   time: PropTypes.number,
   withQuickActions: PropTypes.bool
 }

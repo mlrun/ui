@@ -799,6 +799,8 @@ module.exports = {
       URL_Combobox: comboBox(
         '.feature-set-panel .accordion__container:nth-of-type(1) .panel-section__body .combobox'
       ),
+      Apply_Combobox_Button: By.css('.data-source .url-path-actions .round-icon-cp:nth-of-type(1) button'),
+      Discard_Combobox_Button: By.css('.data-source .url-path-actions .round-icon-cp:nth-of-type(2) button'),
       Kind_Dropdown: dropdownComponent(
         generateDropdownGroup(
           '.feature-set-panel .accordion__container:nth-of-type(1) .panel-section__body .select',
@@ -1035,6 +1037,7 @@ module.exports = {
       URL_Combobox: comboBox(
         '.target-store__item .target-store__inputs-container .combobox'
       ),
+      Apply_Combobox_Button: By.css('.target-store__inputs-container .url-path-actions .round-icon-cp:nth-of-type(1) button'),
       URL_Input: inputGroup(
         generateInputGroup(
           '.target-store__item .target-store__inputs-container .url',

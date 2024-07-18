@@ -53,20 +53,7 @@ const ChangeOwnerPopUp = ({ changeOwnerCallback, projectId }) => {
 
   const { width: dropdownWidth } = searchRowRef?.current?.getBoundingClientRect() || {}
 
-  const handleOnClose = () => {
-    setSearchValue('')
-    setNewOwnerId('')
-    setUsersList([])
-    setShowSuggestionList(false)
-  }
-
   useEffect(() => {
-    usersList.forEach(item => {
-      if (item.name === searchValue || item.username === searchValue) {
-        setNewOwnerId(item.id)
-      }
-    })
-
     if (
       usersList.filter(member => {
         return member.label.toLowerCase().includes(searchValue.toLowerCase())
@@ -74,11 +61,14 @@ const ChangeOwnerPopUp = ({ changeOwnerCallback, projectId }) => {
     ) {
       setShowSuggestionList(false)
     }
-
-    return () => {
-      setNewOwnerId('')
-    }
   }, [searchValue, usersList])
+
+  const handleOnClose = () => {
+    setSearchValue('')
+    setNewOwnerId('')
+    setUsersList([])
+    setShowSuggestionList(false)
+  }
 
   const applyChanges = () => {
     if (newOwnerId) {
@@ -123,9 +113,11 @@ const ChangeOwnerPopUp = ({ changeOwnerCallback, projectId }) => {
 
   const generateSuggestionList = debounce(async (memberName, resolve) => {
     const params = {
-      'filter[assigned_policies]': '[$contains_any]Developer,Project Admin'
+      'filter[assigned_policies]': '[$contains_any]Developer,Project Admin',
+      'page[size]': 200
     }
     const requiredIgzVersion = '3.5.3'
+    let formattedUsers = []
 
     if (isIgzVersionCompatible(requiredIgzVersion)) {
       params['filter[username]'] = `[$contains_istr]${memberName}`
@@ -140,22 +132,21 @@ const ChangeOwnerPopUp = ({ changeOwnerCallback, projectId }) => {
         data: { data: users }
       } = response
 
-      setUsersList(
-        users.map(user => {
-          return {
-            name: `${user.attributes.first_name} ${user.attributes.last_name}`,
-            username: user.attributes.username,
-            label: `${user.attributes.first_name} ${user.attributes.last_name} (${user.attributes.username})`,
-            id: user.id,
-            role: ''
-          }
-        })
-      )
+      formattedUsers = users.map(user => {
+        return {
+          name: `${user.attributes.first_name} ${user.attributes.last_name}`,
+          username: user.attributes.username,
+          label: `${user.attributes.first_name} ${user.attributes.last_name} (${user.attributes.username})`,
+          id: user.id,
+          role: ''
+        }
+      })
+      setUsersList(formattedUsers)
     } catch (error) {
       showErrorNotification(dispatch, error, 'Failed to fetch users')
     }
 
-    resolve()
+    resolve(formattedUsers)
   }, 200)
 
   const onSearchChange = memberName => {
@@ -163,8 +154,13 @@ const ChangeOwnerPopUp = ({ changeOwnerCallback, projectId }) => {
     setSearchValue(memberNameEscaped)
 
     if (memberNameEscaped !== '') {
-      generateSuggestionList(memberName, () => {
+      generateSuggestionList(memberName, members => {
         setShowSuggestionList(true)
+        const matchedOwner = members.find(
+          member => member.name === memberNameEscaped || member.username === memberNameEscaped
+        )
+
+        setNewOwnerId(matchedOwner?.id || '')
       })
     } else {
       setNewOwnerId('')

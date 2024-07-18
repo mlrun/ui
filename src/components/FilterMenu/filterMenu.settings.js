@@ -21,43 +21,91 @@ import {
   GROUP_BY_FILTER,
   GROUP_BY_NAME,
   GROUP_BY_NONE,
-  PERIOD_FILTER,
+  JOB_KIND_DASK,
+  JOB_KIND_DATABRICKS,
+  JOB_KIND_HANDLER,
+  JOB_KIND_JOB,
+  JOB_KIND_LOCAL,
+  JOB_KIND_MPIJOB,
+  JOB_KIND_SPARK,
+  JOB_KIND_WORKFLOW,
+  JOBS_MONITORING_JOBS_TAB,
+  JOBS_MONITORING_WORKFLOWS_TAB,
+  PROJECT_FILTER,
   SORT_BY,
-  STATE_FILTER_ALL_ITEMS,
+  FILTER_ALL_ITEMS,
   STATUS_FILTER,
   TAG_FILTER_ALL_ITEMS,
   TAG_FILTER_LATEST
 } from '../../constants'
 
-export const generateStatusFilter = useFailedStatus => {
+const jobsStatus = [
+  { label: 'All', id: FILTER_ALL_ITEMS, status: 'all' },
+  { label: 'Aborted', id: 'aborted', status: 'aborted' },
+  { label: 'Aborting', id: 'aborting', status: 'aborting' },
+  { label: 'Completed', id: 'completed', status: 'completed' },
+  { label: 'Error', id: 'error', status: 'error' },
+  { label: 'Running', id: 'running', status: 'running' },
+  { label: 'Pending', id: 'pending', status: 'pending' }
+]
+
+const workflowsStatus = [
+  { label: 'All', id: FILTER_ALL_ITEMS, status: 'all' },
+  { label: 'Error', id: 'error', status: 'error' },
+  { label: 'Failed', id: 'failed', status: 'failed' },
+  { label: 'Running', id: 'running', status: 'running' },
+  { label: 'Completed', id: 'completed', status: 'completed' }
+]
+
+export const generateStatusFilter = (useFailedStatus, tab) => {
   const status = useFailedStatus ? 'failed' : 'error'
 
+  if (tab === JOBS_MONITORING_JOBS_TAB) {
+    return jobsStatus
+  } else if (tab === JOBS_MONITORING_WORKFLOWS_TAB) {
+    return workflowsStatus
+  } else {
+    return [
+      { label: 'All', id: FILTER_ALL_ITEMS, status: 'all' },
+      { label: 'Completed', id: 'completed', status: 'completed' },
+      { label: 'Running', id: 'running', status: 'running' },
+      { label: 'Pending', id: 'pending', status: 'pending' },
+      { label: 'Error', id: status, status: status },
+      { label: 'Aborted', id: 'aborted', status: 'aborted' }
+    ]
+  }
+}
+
+export const generateTypeFilter = () => {
   return [
-    { label: 'All', id: STATE_FILTER_ALL_ITEMS, status: 'all' },
-    { label: 'Completed', id: 'completed', status: 'completed' },
-    { label: 'Running', id: 'running', status: 'running' },
-    { label: 'Pending', id: 'pending', status: 'pending' },
-    { label: 'Error', id: status, status: status },
-    { label: 'Aborted', id: 'aborted', status: 'aborted' }
+    { label: 'All', id: FILTER_ALL_ITEMS },
+    { label: 'Local', id: JOB_KIND_LOCAL },
+    { label: 'Dask', id: JOB_KIND_DASK },
+    { label: 'Databricks', id: JOB_KIND_DATABRICKS },
+    { label: 'Handler', id: JOB_KIND_HANDLER },
+    { label: 'Job', id: JOB_KIND_JOB },
+    { label: 'Horovod', id: JOB_KIND_MPIJOB },
+    { label: 'Spark', id: JOB_KIND_SPARK }
   ]
 }
 
 export const filterSelectOptions = {
-  [PERIOD_FILTER]: [
-    { label: 'Last 7 days', id: 'last7Days' },
-    { label: 'Last 14 days', id: 'last14Days' },
-    { label: 'Last months', id: 'lastMonths' },
-    { label: 'Last 6 months', id: 'last6Months' }
-  ],
   [STATUS_FILTER]: generateStatusFilter(false),
   [GROUP_BY_FILTER]: [
     { label: 'None', id: GROUP_BY_NONE },
     { label: 'Name', id: GROUP_BY_NAME }
   ],
-  [SORT_BY]: [{ label: 'Name', id: 'name' }]
+  [SORT_BY]: [{ label: 'Name', id: 'name' }],
+  [PROJECT_FILTER]: [{ label: 'Project', id: 'project' }]
 }
 
 export const tagFilterOptions = [
   { label: 'All', id: TAG_FILTER_ALL_ITEMS },
   { label: 'latest', id: TAG_FILTER_LATEST }
+]
+
+export const filterScheduledTypeOptions = [
+  { label: 'All', id: FILTER_ALL_ITEMS },
+  { label: 'Jobs', id: JOB_KIND_JOB },
+  { label: 'Workflows', id: JOB_KIND_WORKFLOW }
 ]

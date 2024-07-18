@@ -58,7 +58,7 @@ const DatasetsView = React.forwardRef(
       selectedDataset,
       selectedRowData,
       setDatasets,
-      setSelectedDataset,
+      setSelectedDatasetMin,
       setSelectedRowData,
       sortProps,
       tableContent,
@@ -68,7 +68,7 @@ const DatasetsView = React.forwardRef(
       viewMode,
       virtualizationConfig
     },
-    { datasetsRef, tableRef, tableBodyRef }
+    { datasetsRef }
   ) => {
     return (
       <>
@@ -112,20 +112,20 @@ const DatasetsView = React.forwardRef(
                 />
               ) : (
                 <>
-                  {selectedRowData.loading && <Loader />}
+                  {(selectedRowData.loading || artifactsStore.dataSets.datasetLoading) && <Loader />}
                   <Table
                     actionsMenu={actionsMenu}
                     applyDetailsChanges={applyDetailsChanges}
                     applyDetailsChangesCallback={applyDetailsChangesCallback}
                     detailsFormInitialValues={detailsFormInitialValues}
-                    handleCancel={() => setSelectedDataset({})}
+                    handleCancel={() => setSelectedDatasetMin({})}
                     pageData={pageData}
-                    ref={{ tableRef, tableBodyRef }}
                     retryRequest={handleRefresh}
                     selectedItem={selectedDataset}
                     sortProps={sortProps}
                     tableClassName="datasets-table"
                     tableHeaders={tableHeaders ?? []}
+                    virtualizationConfig={virtualizationConfig}
                   >
                     {tableContent.map(
                       (tableItem, index) =>
@@ -133,7 +133,7 @@ const DatasetsView = React.forwardRef(
                           <ArtifactsTableRow
                             actionsMenu={actionsMenu}
                             handleExpandRow={handleExpandRow}
-                            key={index}
+                            key={tableItem.data.ui.identifier}
                             rowIndex={index}
                             rowItem={tableItem}
                             selectedItem={selectedDataset}
@@ -193,7 +193,7 @@ DatasetsView.propTypes = {
   selectedDataset: PropTypes.object.isRequired,
   selectedRowData: PropTypes.object.isRequired,
   setDatasets: PropTypes.func.isRequired,
-  setSelectedDataset: PropTypes.func.isRequired,
+  setSelectedDatasetMin: PropTypes.func.isRequired,
   setSelectedRowData: PropTypes.func.isRequired,
   sortProps: SORT_PROPS,
   tableContent: PropTypes.arrayOf(PropTypes.object).isRequired,

@@ -29,7 +29,7 @@ import ModelsPageTabs from '../ModelsPageTabs/ModelsPageTabs'
 import NoData from '../../../common/NoData/NoData'
 import Table from '../../Table/Table'
 
-import detailsActions from '../../../actions/details'
+import modelEndpointsActions from '../../../actions/modelEndpoints'
 import {
   GROUP_BY_NONE,
   MODEL_ENDPOINTS_TAB,
@@ -43,9 +43,12 @@ import { getNoDataMessage } from '../../../utils/getNoDataMessage'
 import { isDetailsTabExists } from '../../../utils/isDetailsTabExists'
 import { setFilters } from '../../../reducers/filtersReducer'
 import { useModelsPage } from '../ModelsPage.context'
+import { isRowRendered, useVirtualization } from '../../../hooks/useVirtualization.hook'
 
 import { ReactComponent as MonitorIcon } from 'igz-controls/images/monitor-icon.svg'
 import { ReactComponent as Yaml } from 'igz-controls/images/yaml.svg'
+
+import cssVariables from './modelEndpoints.scss'
 
 const ModelEndpoints = () => {
   const [largeRequestErrorMessage, setLargeRequestErrorMessage] = useState('')
@@ -145,7 +148,7 @@ const ModelEndpoints = () => {
     modelEndpoint => {
       if (!isEmpty(modelEndpoint)) {
         dispatch(
-          detailsActions.fetchModelEndpointWithAnalysis(
+          modelEndpointsActions.fetchModelEndpointWithAnalysis(
             params.projectName,
             modelEndpoint.metadata.uid
           )
@@ -166,11 +169,11 @@ const ModelEndpoints = () => {
     return () => {
       setModelEndpoints([])
       dispatch(removeModelEndpoints())
-      dispatch(detailsActions.removeModelEndpoint())
+      dispatch(modelEndpointsActions.removeModelEndpoint())
       setSelectedModelEndpoint({})
       abortControllerRef.current.abort(REQUEST_CANCELED)
     }
-  }, [dispatch])
+  }, [dispatch, params.projectName])
 
   useEffect(() => {
     if (params.name && modelEndpoints.length > 0) {
@@ -213,6 +216,18 @@ const ModelEndpoints = () => {
     )
   }, [params.projectName, sortedContent])
 
+  const virtualizationConfig = useVirtualization({
+    rowsData: {
+      content: tableContent,
+      selectedItem: selectedModelEndpoint
+    },
+    heightData: {
+      headerRowHeight: cssVariables.modelEndpointsHeaderRowHeight,
+      rowHeight: cssVariables.modelEndpointsRowHeight,
+      rowHeightExtended: cssVariables.modelEndpointsRowHeightExtended
+    }
+  })
+
   return (
     <>
       {artifactsStore.modelEndpoints.loading && <Loader />}
@@ -249,21 +264,24 @@ const ModelEndpoints = () => {
                 retryRequest={fetchData}
                 selectedItem={selectedModelEndpoint}
                 tab={MODEL_ENDPOINTS_TAB}
+                tableClassName="model-endpoints-table"
                 tableHeaders={tableContent[0]?.content ?? []}
+                virtualizationConfig={virtualizationConfig}
               >
-                {tableContent.map((tableItem, index) => {
-                  return (
-                    <ArtifactsTableRow
-                      actionsMenu={actionsMenu}
-                      handleSelectItem={handleSelectItem}
-                      key={index}
-                      rowIndex={index}
-                      rowItem={tableItem}
-                      selectedItem={selectedModelEndpoint}
-                      tab={MODEL_ENDPOINTS_TAB}
-                    />
-                  )
-                })}
+                {tableContent.map(
+                  (tableItem, index) =>
+                    isRowRendered(virtualizationConfig, index) && (
+                      <ArtifactsTableRow
+                        actionsMenu={actionsMenu}
+                        handleSelectItem={handleSelectItem}
+                        key={tableItem.data.ui.identifier}
+                        rowIndex={index}
+                        rowItem={tableItem}
+                        selectedItem={selectedModelEndpoint}
+                        tab={MODEL_ENDPOINTS_TAB}
+                      />
+                    )
+                )}
               </Table>
             </>
           )}

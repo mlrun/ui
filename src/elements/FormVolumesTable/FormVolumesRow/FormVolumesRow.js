@@ -20,10 +20,15 @@ such restriction.
 import React, { useCallback, useLayoutEffect, useState } from 'react'
 import PropTypes from 'prop-types'
 import classnames from 'classnames'
-import { OnChange } from 'react-final-form-listeners'
 import { isEmpty, pick } from 'lodash'
 
-import { FormSelect, FormInput, TextTooltipTemplate, Tooltip } from 'igz-controls/components'
+import {
+  FormSelect,
+  FormInput,
+  FormOnChange,
+  TextTooltipTemplate,
+  Tooltip
+} from 'igz-controls/components'
 import { FormRowActions } from 'igz-controls/elements'
 
 import { FORM_TABLE_EDITING_ITEM } from 'igz-controls/types'
@@ -68,6 +73,14 @@ const FormVolumesRow = ({
     )
     setFieldData(fields.value[index])
   }, [accessKeyFocusHandler, editingItem, fields, index])
+
+  const handleTypeChange = useCallback(() => {
+    if (isCurrentRowEditing(rowPath)) {
+      const fieldNewData = pick(fields.value[index].data, ['name', 'type', 'mountPath'])
+
+      setFieldValue(`${rowPath}.data`, fieldNewData)
+    }
+  }, [fields.value, index, isCurrentRowEditing, rowPath, setFieldValue])
 
   return (
     <>
@@ -155,15 +168,7 @@ const FormVolumesRow = ({
           )}
         </>
       )}
-      <OnChange name={`${rowPath}.data.type`}>
-        {() => {
-          if (isCurrentRowEditing(rowPath)) {
-            const fieldNewData = pick(fields.value[index].data, ['name', 'type', 'mountPath'])
-
-            setFieldValue(`${rowPath}.data`, fieldNewData)
-          }
-        }}
-      </OnChange>
+      <FormOnChange handler={handleTypeChange} name={`${rowPath}.data.type`} />
     </>
   )
 }

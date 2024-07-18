@@ -37,18 +37,22 @@ import {
 } from '../../common/ReactFlow/mlReactFlow.util'
 import {
   getWorkflowDetailsLink,
-  hiddenWorkflowStepTypes,
-  isWorkflowStepExecutable
+  getWorkflowMonitoringDetailsLink,
+  isWorkflowStepCondition,
+  isWorkflowStepExecutable,
+  isWorkflowStepVisible
 } from './workflow.util'
 import functionsActions from '../../actions/functions'
 import { ACTIONS_MENU } from '../../types'
 import {
   DEFAULT_EDGE,
+  GREY_NODE,
   JOB_KIND_JOB,
   JOBS_PAGE,
   ML_EDGE,
   ML_NODE,
   MONITOR_WORKFLOWS_TAB,
+  OVAL_NODE_SHAPE,
   PRIMARY_NODE,
   WORKFLOW_GRAPH_VIEW,
   WORKFLOW_LIST_VIEW
@@ -66,6 +70,7 @@ import './workflow.scss'
 
 const Workflow = ({
   actionsMenu,
+  backLink,
   handleCancel,
   handleSelectItem,
   itemIsSelected,
@@ -95,11 +100,19 @@ const Workflow = ({
     return createJobsWorkflowContent(
       jobsContent,
       params.projectName,
+      params.workflowProjectName,
       params.workflowId,
       isStagingMode,
       !isEmpty(selectedJob)
     )
-  }, [isStagingMode, jobsContent, params.projectName, params.workflowId, selectedJob])
+  }, [
+    isStagingMode,
+    jobsContent,
+    params.projectName,
+    params.workflowProjectName,
+    params.workflowId,
+    selectedJob
+  ])
 
   const { sortedTableContent } = useSortTable({
     headers: tableContent[0]?.content,
@@ -115,7 +128,7 @@ const Workflow = ({
     forEach(workflow.graph, job => {
       const sourceHandle = getWorkflowSourceHandle(job.phase)
 
-      if (hiddenWorkflowStepTypes.includes(job.type) && !job.ui?.isHiddenJobVisible) return
+      if (!isWorkflowStepVisible(job) && !job.ui?.isHiddenJobVisible) return
 
       const customData = {
         function: job.function,
@@ -123,6 +136,8 @@ const Workflow = ({
         run_type: job.run_type,
         type: job.type
       }
+      const stepIsExecutable = isWorkflowStepExecutable(job)
+      const stepIsCondition = isWorkflowStepCondition(job)
 
       if (job.function) {
         const [, , functionName = '', functionHash = '', functionTag = ''] =
@@ -137,11 +152,12 @@ const Workflow = ({
         type: ML_NODE,
         data: {
           customData,
-          isSelectable: isWorkflowStepExecutable(job),
-          isOpacity: !isWorkflowStepExecutable(job),
+          isSelectable: stepIsExecutable,
+          shape: stepIsCondition ? OVAL_NODE_SHAPE : null,
           label: job.name,
           sourceHandle,
-          subType: PRIMARY_NODE
+          tip: stepIsExecutable || stepIsCondition ? null : 'This step cannot be previewed',
+          subType: !stepIsExecutable || stepIsCondition ? GREY_NODE : PRIMARY_NODE
         },
         className: classnames(
           ((job.run_uid && selectedJob.uid === job.run_uid) ||
@@ -185,13 +201,19 @@ const Workflow = ({
   }, [selectedFunction.hash, selectedFunction.name, selectedJob.uid, workflow.graph])
 
   const onNodeClick = (event, node) => {
-    const detailsLink = getWorkflowDetailsLink(
-      params.projectName,
-      params.workflowId,
-      node.data.customData,
-      null,
-      MONITOR_WORKFLOWS_TAB
-    )
+    const detailsLink = params.workflowProjectName
+      ? getWorkflowMonitoringDetailsLink(
+          params.workflowProjectName,
+          params.workflowId,
+          node.data.customData
+        )
+      : getWorkflowDetailsLink(
+          params.projectName,
+          params.workflowId,
+          node.data.customData,
+          null,
+          MONITOR_WORKFLOWS_TAB
+        )
 
     if (detailsLink) {
       navigate(detailsLink)
@@ -200,10 +222,7 @@ const Workflow = ({
 
   return (
     <div className="workflow-container">
-      <TableTop
-        link={`/projects/${params.projectName}/jobs/${MONITOR_WORKFLOWS_TAB}`}
-        text={workflow?.run?.name.replace(`${params.projectName}-`, '')}
-      >
+      <TableTop link={backLink} text={workflow?.run?.name.replace(`${params.projectName}-`, '')}>
         <div className="actions">
           <Tooltip
             template={
@@ -290,6 +309,7 @@ Workflow.defaultProps = {
 
 Workflow.propTypes = {
   actionsMenu: ACTIONS_MENU.isRequired,
+  backLink: PropTypes.string.isRequired,
   handleCancel: PropTypes.func.isRequired,
   handleSelectItem: PropTypes.func.isRequired,
   itemIsSelected: PropTypes.bool.isRequired,

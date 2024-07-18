@@ -142,6 +142,12 @@ When('turn on staging mode', async function() {
   await navigateToPage(this.driver, `${url}?mode=staging`)
 })
 
+Then('turn Off MLRun CE mode', async function() {
+  await this.driver.executeScript(function() {
+    localStorage.setItem('igzFullVersion', '3.5.5')
+  })
+}) 
+
 Then('additionally redirect by INVALID-TAB', async function() {
   const beforeURL = await this.driver.getCurrentUrl()
   const urlNodesArr = beforeURL.split('/')
@@ -333,6 +339,13 @@ Then(
   'verify checkbox {string} element on {string} wizard is disabled',
   async function (elementName, wizardName) {
     await verifyCheckboxDisabled(this.driver, pageObjects[wizardName][elementName])
+  }
+)
+
+Then(
+  'verify checkbox {string} element in {string} on {string} wizard is disabled',
+  async function (elementName, accordionName, wizardName) {
+    await verifyCheckboxDisabled(this.driver, pageObjects[wizardName][accordionName][elementName].root)
   }
 )
 
@@ -1319,6 +1332,20 @@ Then('verify {string} options rules on form {string} wizard', async function(
   )
 })
 
+Then('verify {string} options rules on {string} wizard with labels', async function(
+  inputField,
+  wizardName
+) {
+  await checkInputAccordingHintText(
+    this.driver,
+    this.attach,
+    pageObjects[wizardName][inputField],
+    pageObjects['commonPagesHeader']['Common_Options'],
+    false,
+    true
+  )
+})
+
 Then(
   'verify breadcrumbs {string} label should be equal {string} value',
   async function(labelType, value) {
@@ -1399,7 +1426,7 @@ When('hover {string} component on {string} wizard', async function(
   await hoverComponent(
     this.driver,
     pageObjects[wizardName][componentName],
-    false
+    true
   )
 })
 

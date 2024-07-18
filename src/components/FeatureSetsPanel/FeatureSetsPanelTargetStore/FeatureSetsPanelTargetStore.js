@@ -305,7 +305,7 @@ const FeatureSetsPanelTargetStore = ({
     )
   }
 
-  const handleUrlSelectOnChange = () => {
+  const handleExternalOfflineKindSelectOnChange = () => {
     setValidation(state => ({
       ...state,
       isExternalOfflineTargetPathValid: true
@@ -322,19 +322,22 @@ const FeatureSetsPanelTargetStore = ({
     )
   }
 
-  const handleExternalOfflineKindPathOnFocus = () => {
-    setDisableButtons(state => ({
+  const handleExternalOfflineKindInputOnChange = path => {
+    setValidation(state => ({
       ...state,
-      isExternalOfflineTargetPathEditModeClosed: false
+      isExternalOfflineTargetPathValid: !isEmpty(path)
     }))
   }
 
-  const handleExternalOfflineKindPathOnBlur = ({ selectValue, inputValue }) => {
+  const handleExternalOfflineKindPathOnApply = ({ selectValue, inputValue }) => {
+    let isUrlValid = true
+
     if (!isUrlInputValid(selectValue, inputValue, data[EXTERNAL_OFFLINE].kind)) {
       setValidation(prevState => ({
         ...prevState,
         isExternalOfflineTargetPathValid: false
       }))
+      isUrlValid = false
     } else {
       if (!validation.isExternalOfflineTargetPathValid) {
         setValidation(prevState => ({
@@ -352,18 +355,22 @@ const FeatureSetsPanelTargetStore = ({
           return targetKind
         })
       )
+
+      setData(state => ({
+        ...state,
+        [EXTERNAL_OFFLINE]: { ...state[EXTERNAL_OFFLINE], path: `${selectValue}${inputValue}` }
+      }))
     }
 
-    setData(state => ({
-      ...state,
-      [EXTERNAL_OFFLINE]: { ...state[EXTERNAL_OFFLINE], path: `${selectValue}${inputValue}` }
-    }))
+    return isUrlValid
+  }
 
+  const handleExternalOfflineKindOnEditModeChange = useCallback((isEditModeActive) => {
     setDisableButtons(state => ({
       ...state,
-      isExternalOfflineTargetPathEditModeClosed: true
+      isExternalOfflineTargetPathEditModeClosed: !isEditModeActive
     }))
-  }
+  }, [setDisableButtons])
 
   const handleDiscardPathChange = kind => {
     const currentStoreType = kind === ONLINE ? NOSQL : kind
@@ -500,14 +507,18 @@ const FeatureSetsPanelTargetStore = ({
           [kindId === PARQUET ? 'isOfflineTargetPathValid' : 'isOnlineTargetPathValid']: true
         }))
 
-        if (
-          kindId === checkboxModels.externalOffline.id &&
-          !validation.isExternalOfflineTargetPathValid
-        ) {
-          setValidation(state => ({
+        if (kindId === checkboxModels.externalOffline.id) {
+          setDisableButtons(state => ({
             ...state,
-            isExternalOfflineTargetPathValid: true
+            isExternalOfflineTargetPathEditModeClosed: true
           }))
+
+          if (!validation.isExternalOfflineTargetPathValid) {
+            setValidation(state => ({
+              ...state,
+              isExternalOfflineTargetPathValid: true
+            }))
+          }
         }
 
         if (kindId === checkboxModels.externalOffline.id || kindId === checkboxModels.parquet.id) {
@@ -920,23 +931,24 @@ const FeatureSetsPanelTargetStore = ({
       disableButtons={disableButtons}
       externalOfflineTarget={externalOfflineTarget}
       featureStore={featureStore}
+      frontendSpecIsNotEmpty={!isEmpty(frontendSpec.feature_store_data_prefixes)}
       handleAdvancedLinkClick={handleAdvancedLinkClick}
       handleDiscardPathChange={handleDiscardPathChange}
-      handleExternalOfflineKindPathOnBlur={handleExternalOfflineKindPathOnBlur}
-      handleExternalOfflineKindPathOnFocus={handleExternalOfflineKindPathOnFocus}
+      handleExternalOfflineKindInputOnChange={handleExternalOfflineKindInputOnChange}
+      handleExternalOfflineKindOnEditModeChange={handleExternalOfflineKindOnEditModeChange}
+      handleExternalOfflineKindPathOnApply={handleExternalOfflineKindPathOnApply}
+      handleExternalOfflineKindSelectOnChange={handleExternalOfflineKindSelectOnChange}
       handleExternalOfflineKindTypeChange={handleExternalOfflineKindTypeChange}
       handleKeyBucketingNumberChange={handleKeyBucketingNumberChange}
       handleOfflineKindPathChange={handleOfflineKindPathChange}
       handleOnlineKindPathChange={handleOnlineKindPathChange}
       handleOnlineKindTypeChange={handleOnlineKindTypeChange}
-      handlePartitionColsOnChange={handlePartitionColsOnChange}
       handlePartitionColsOnBlur={handlePartitionColsOnBlur}
+      handlePartitionColsOnChange={handlePartitionColsOnChange}
       handlePartitionRadioButtonClick={handlePartitionRadioButtonClick}
       handleSelectTargetKind={handleSelectTargetKind}
       handleTimePartitioningGranularityChange={handleTimePartitioningGranularityChange}
-      handleUrlSelectOnChange={handleUrlSelectOnChange}
       partitionRadioButtonsState={partitionRadioButtonsState}
-      frontendSpecIsNotEmpty={!isEmpty(frontendSpec.feature_store_data_prefixes)}
       selectedPartitionKind={selectedPartitionKind}
       selectedTargetKind={selectedTargetKind}
       setData={setData}

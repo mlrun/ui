@@ -20,22 +20,24 @@ such restriction.
 import React from 'react'
 import PropTypes from 'prop-types'
 
+import FeatureStoreTableRow from '../../../elements/FeatureStoreTableRow/FeatureStoreTableRow'
 import FilterMenu from '../../FilterMenu/FilterMenu'
 import NoData from '../../../common/NoData/NoData'
 import Table from '../../Table/Table'
-import FeatureStoreTableRow from '../../../elements/FeatureStoreTableRow/FeatureStoreTableRow'
 
-import { SECONDARY_BUTTON } from 'igz-controls/constants'
-import { featuresFilters } from './features.util'
 import { FEATURE_STORE_PAGE, FEATURES_TAB } from '../../../constants'
+import { SECONDARY_BUTTON } from 'igz-controls/constants'
+import { VIRTUALIZATION_CONFIG } from '../../../types'
+import { featuresFilters } from './features.util'
 import { getNoDataMessage } from '../../../utils/getNoDataMessage'
+import { isRowRendered } from '../../../hooks/useVirtualization.hook'
 
 const FeaturesView = React.forwardRef(
   (
     {
       actionsMenu,
-      features,
       featureStore,
+      features,
       filtersStore,
       getPopUpTemplate,
       handleExpandRow,
@@ -44,12 +46,13 @@ const FeaturesView = React.forwardRef(
       pageData,
       selectedRowData,
       tableContent,
-      tableStore
+      tableStore,
+      virtualizationConfig
     },
-    ref
+    { featureStoreRef }
   ) => {
     return (
-      <div className="feature-store" ref={ref}>
+      <div className="feature-store" ref={featureStoreRef}>
         <div className="content__action-bar-wrapper">
           <div className="action-bar">
             <FilterMenu
@@ -85,22 +88,27 @@ const FeaturesView = React.forwardRef(
               pageData={pageData}
               retryRequest={handleRefresh}
               tab={FEATURES_TAB}
+              tableClassName="features-table"
               tableHeaders={tableContent[0]?.content ?? []}
+              virtualizationConfig={virtualizationConfig}
             >
               <>
-                {tableContent.map((tableItem, index) => (
-                  <FeatureStoreTableRow
-                    actionsMenu={actionsMenu}
-                    handleExpandRow={handleExpandRow}
-                    key={index}
-                    hideActionsMenu={tableStore.isTablePanelOpen}
-                    mainRowItemsCount={2}
-                    pageTab={FEATURES_TAB}
-                    rowIndex={index}
-                    rowItem={tableItem}
-                    selectedRowData={selectedRowData}
-                  />
-                ))}
+                {tableContent.map(
+                  (tableItem, index) =>
+                    isRowRendered(virtualizationConfig, index) && (
+                      <FeatureStoreTableRow
+                        actionsMenu={actionsMenu}
+                        handleExpandRow={handleExpandRow}
+                        key={tableItem.data.ui.identifier}
+                        hideActionsMenu={tableStore.isTablePanelOpen}
+                        mainRowItemsCount={2}
+                        pageTab={FEATURES_TAB}
+                        rowIndex={index}
+                        rowItem={tableItem}
+                        selectedRowData={selectedRowData}
+                      />
+                    )
+                )}
               </>
             </Table>
           </>
@@ -112,8 +120,8 @@ const FeaturesView = React.forwardRef(
 
 FeaturesView.propTypes = {
   actionsMenu: PropTypes.array.isRequired,
-  features: PropTypes.arrayOf(PropTypes.object).isRequired,
   featureStore: PropTypes.object.isRequired,
+  features: PropTypes.arrayOf(PropTypes.object).isRequired,
   filtersStore: PropTypes.object.isRequired,
   getPopUpTemplate: PropTypes.func.isRequired,
   handleExpandRow: PropTypes.func.isRequired,
@@ -122,7 +130,8 @@ FeaturesView.propTypes = {
   pageData: PropTypes.object.isRequired,
   selectedRowData: PropTypes.object.isRequired,
   tableContent: PropTypes.arrayOf(PropTypes.object).isRequired,
-  tableStore: PropTypes.object.isRequired
+  tableStore: PropTypes.object.isRequired,
+  virtualizationConfig: VIRTUALIZATION_CONFIG.isRequired
 }
 
 export default FeaturesView

@@ -116,7 +116,7 @@ const deployModelTable = {
   }
 }
 
-const artifactsPreviewHeader = {
+const artifactsPreviewRow = {
   root: '.pop-up-dialog .preview-body',
   header: {
     root: '',
@@ -136,8 +136,22 @@ const artifactsPreviewHeader = {
   }
 }
 
+const artifactsPreviewHeader = {
+  root: '.pop-up-dialog',  
+  header: {},
+  body: {
+    root: '.preview-body', 
+    row: {
+      root: '.preview-item:nth-of-type(1)',
+      fields: {
+        key: '.item-data'
+      }
+    }
+  }
+}
+
 const createFeatureVectorLabelsTable = {
-  root: '.new-feature-vector__labels-row .chips-cell',
+  root: '[data-testid="labels-chips"] .chips-cell',
   header: {},
   body: {
     root: '.chips-wrapper',
@@ -167,7 +181,7 @@ const artifactsLabelsTable = {
         value_input: 'input.input-label-value',
         key_verify: '.edit-chip-container input.input-label-key',
         value_verify: '.edit-chip-container input.input-label-value',
-        remove_btn: '.edit-chip__icon-close'
+        remove_btn: '.item-icon-close'
       }
     }
   }
@@ -569,7 +583,7 @@ const runDetailsLabelsTable = {
         value_input: 'input.input-label-value',
         key_verify: '.edit-chip-container input.input-label-key',
         value_verify: '.edit-chip-container input.input-label-value',
-        remove_btn: '.edit-chip__icon-close'
+        remove_btn: '.item-icon-close'
       }
     }
   }
@@ -670,16 +684,24 @@ module.exports = {
     Error_Message: By.css('.pop-up-dialog .error__message'),
     New_Project_Labels_Table: commonTable(newProjectLabelsTable),
     Add_Label_Button: By.css('.create-project-dialog .form-row:nth-of-type(4) .chips .chips-wrapper button'),
-    Close_Label_Button: By.css('.create-project-dialog .form-row:nth-of-type(4) .chips .chips-wrapper .edit-chip__icon-close'),
-    Run_Details_Labels_Key: inputGroup(
+    Close_Label_Button: By.css('.create-project-dialog .form-row:nth-of-type(4) .chips .chips-wrapper .item-icon-close'),
+    Labels_Key: inputGroup(
       generateInputGroup(
         '.create-project-dialog .form-row:nth-of-type(4) .chips .chips-wrapper',
         false,
         true,
-        '.pop-up-dialog'
+        false
       )
     ),
-    Run_Details_Labels_Value: By.css ('.create-project-dialog .form-row:nth-of-type(4) .chips-wrapper [id="labels[0].value"]')
+    Labels_Value: inputGroup(
+      generateInputGroup(
+        '.create-project-dialog .form-row:nth-of-type(4) .chips .chips-wrapper',
+        false,
+        true,
+        false,
+        '.input-label-value'
+      )
+    ),
   },
   commonPopup: {
     Title: commonTitle,
@@ -759,7 +781,7 @@ module.exports = {
       )
     ),
     Run_Details_Labels_Value: By.css ('.job-wizard__run-details .form-row:nth-of-type(4) .chips-wrapper [id="runDetails.labels[0].value"]'),
-    Close_Label_Button: By.css('.job-wizard__run-details .form-row:nth-of-type(4) .chips .chips-wrapper .edit-chip__icon-close'),
+    Close_Label_Button: By.css('.job-wizard__run-details .form-row:nth-of-type(4) .chips .chips-wrapper .item-icon-close'),
     Image_Name_Input_Run_Details: inputGroup(
       generateInputGroup(
         '.job-wizard__run-details > div.form-field-input .form-field__wrapper',
@@ -771,14 +793,6 @@ module.exports = {
     Image_Name_Text_Run_Details: By.css('.job-wizard__run-details .warning-text'),
     Data_Inputs_Headers: commonTable(dataInputsHeaders),
     Run_Name_Field: By.css('.form-row .form-field-input .form-field__wrapper input'),
-    Run_Name_Input: inputGroup(
-      generateInputGroup(
-        '.form-row .form-field-input .form-field__wrapper',
-        false,
-        true,
-        '.form-field__icons svg'
-      )
-    ),
     Version_Dropdown: dropdownComponent(
       generateDropdownGroup('.form-col-1:nth-of-type(2)', '.form-field-select', '.form-field__select-value', false, false)
     ),
@@ -786,6 +800,8 @@ module.exports = {
       generateDropdownGroup('.form-col-1:nth-of-type(3)', '.form-field-select', '.select__item-main-label', false, false)
     ),
     Method_Dropdown_Option: By.css('.form-col-1:nth-of-type(3) .form-field-select .form-field__select span'),
+    Method_Dropdown_Label: By.css('[data-testid="runDetails.handler-form-label"]'),
+    Method_Dropdown_Label_Select: By.css('[data-testid="runDetails.handler-form-select-label"]'),
     Run_Details_Labels_Table: commonTable(runDetailsLabelsTable),
     Data_Inputs_Table: commonTable(dataInputsTable),
     Data_Inputs_Inference_Table: commonTable(dataInputsInferenceTable),
@@ -1275,18 +1291,19 @@ module.exports = {
     Cross_Cancel_Button: commonCrossCancelButton,
     YAML_Modal_Container: By.css('.pop-up-dialog .yaml-modal-container pre')
   },
-  deleteConfirmPopup: {
+  confirmPopup: {
     Title: By.css('.pop-up-dialog .pop-up-dialog__header'),
     Cross_Cancel_Button: commonCrossCancelButton,
     Confirm_Dialog_Message: By.css('.confirm-dialog .confirm-dialog__message'),
     Cancel_Button: By.css('.confirm-dialog .pop-up-dialog__btn_cancel'),
-    Delete_Button: By.css('.confirm-dialog .btn-danger')
+    Delete_Button: By.css('.confirm-dialog .btn-danger'),
+    Overwrite_Button: By.css('.confirm-dialog .btn-primary')
   },
   previewPopup:{
     Title: By.css('.pop-up-dialog .pop-up-dialog__header'),
     Cross_Cancel_Button: commonCrossCancelButton,
     Preview_Modal_Container: By.css('.pop-up-dialog .item-artifacts__modal-preview'),
-    Download_Button: By.css('.pop-up-dialog .preview-item .preview-body__download')
+    Download_Button: By.css('.pop-up-dialog .preview-item:nth-of-type(2) .preview-body__download')
   },
   changeProjectOwnerPopup: {
     Cross_Cancel_Button: commonCrossCancelButton,
@@ -1379,10 +1396,10 @@ module.exports = {
     Title: commonTitle,
     Cross_Cancel_Button: commonCrossCancelButton,
     New_Secret_Key_Input: inputGroup(
-      generateInputGroup('.settings__secrets .table-cell__key .input-wrapper', true, false, true)
+      generateInputGroup('[data-testid="secrets"] .form-table__row_active .form-table__cell_1:nth-of-type(1)', true, false, '.form-field__warning svg')
     ),
     New_Secret_Value_Input: inputGroup(
-      generateInputGroup('.settings__secrets .table-cell__value .input-wrapper', true, false, true)
+      generateInputGroup('[data-testid="secrets"] .form-table__row_active .form-table__cell_1:nth-of-type(2)', true, false, '.form-field__warning svg')
     ),
     Cancel_Button: By.css('.pop-up-dialog .btn-label'),
     Save_Button: By.css('.pop-up-dialog .secrets__footer-container .btn.btn-primary')
@@ -1407,12 +1424,12 @@ module.exports = {
     Title: commonTitle,
     Cross_Cancel_Button: commonCrossCancelButton,
     Name_Input: inputGroup(
-      generateInputGroup('.pop-up-dialog .vector-name-wrapper', true, '.input__warning svg', true)
+      generateInputGroup('.pop-up-dialog [data-testid="name-form-field-input"] .form-field__wrapper', true, '.form-field__warning svg', true)
     ),
     Tag_Input: inputGroup(
-      generateInputGroup('.pop-up-dialog .vector-tag-wrapper', true, '.input__warning svg', true)
+      generateInputGroup('.pop-up-dialog [data-testid="tag-form-field-input"] .form-field__wrapper', true, '.form-field__warning svg', true)
     ),
-    Description_Input: textAreaGroup(generateTextAreaGroup('.pop-up-dialog .text-area-wrapper', '.text-area__counter')),
+    Description_Input: textAreaGroup(generateTextAreaGroup('.pop-up-dialog .new-feature-vector__description-row', '.form-field__counter')),
     Labels_Table: commonTable(createFeatureVectorLabelsTable),
     Cancel_Button: commonCancelButton,
     Create_Button: commonConfirmButton
@@ -1431,8 +1448,9 @@ module.exports = {
   },
   artifactPreviewPopup: {
     Cross_Cancel_Button: commonCrossCancelButton,
+    Preview_Row: commonTable(artifactsPreviewRow),
     Preview_Header: commonTable(artifactsPreviewHeader),
-    Download_Button: By.css('.pop-up-dialog .preview-body .preview-item .preview-body__download')
+    Download_Button: By.css('.pop-up-dialog .preview-body .preview-item:nth-of-type(2) .preview-body__download')
   },
   removeMemberPopup: {
     Title: By.css('.delete-member__pop-up .pop-up-dialog__header-text'),

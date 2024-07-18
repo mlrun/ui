@@ -28,7 +28,7 @@ import { OptionsMenu, ValidationTemplate } from 'igz-controls/elements'
 import { checkPatternsValidity } from 'igz-controls/utils/validation.util'
 import { useDetectOutsideClick } from 'igz-controls/hooks'
 
-import { ReactComponent as Invalid } from 'igz-controls/images/invalid.svg'
+import { ReactComponent as ExclamationMarkIcon } from 'igz-controls/images/exclamation-mark.svg'
 import { ReactComponent as WarningIcon } from 'igz-controls/images/warning.svg'
 
 import './textArea.scss'
@@ -243,7 +243,7 @@ const TextArea = React.forwardRef(
               />
             }
           >
-            <Invalid />
+            <ExclamationMarkIcon />
           </Tooltip>
         )}
         {tip && !required && <Tip text={tip} className="text-area__tip" />}

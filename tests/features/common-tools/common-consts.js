@@ -97,6 +97,7 @@ module.exports = {
   },
   Common_Lists: {
     Action_Menu_List: ['Add a tag', 'Download', 'Copy URI', 'View YAML', 'Delete'],
+    Action_Menu_List_Expanded: ['Add a tag', 'Download', 'Copy URI', 'View YAML', 'Delete all'],
     Handler_List: ['train'],
     Pods_Priority_List: ['Low','Medium', 'High'],
     Ranking_Criteria_List: ['Min','Max']
@@ -121,7 +122,8 @@ module.exports = {
       'Kind:',
       'URI:',
       'Owner:',
-      'Workflow:'
+      'Workflow:',
+      'UID:'
     ],
     Overview_Sources_Headers: [
       'Name:',
@@ -137,13 +139,13 @@ module.exports = {
     Overview_Headers: [
       'Name:',
       'Kind:',
-      'Hash:',
+      'Code entry point:',
+      'Image:',
       'Version tag:',
+      'Hash:',
       'Code origin:',
       'Updated:',
-      'Command:',
       'Default handler:',
-      'Image:',
       'Description:'
     ]
   },
@@ -165,7 +167,8 @@ module.exports = {
       'Name:',
       'Kind:',
       'URI:',
-      'Owner:'
+      'Owner:',
+      'UID:'
     ],
     Overview_Sources_Headers: [
       'Name:',
@@ -199,7 +202,8 @@ module.exports = {
       'Kind:',
       'URI:',
       'Owner:',
-      'Workflow:'
+      'Workflow:',
+      'UID:'
     ],
     Overview_Sources_Headers: [
       'Name:',
@@ -207,7 +211,7 @@ module.exports = {
     ]
   },
   Models_Endpoints_Info_Pane: {
-    Tab_List: ['Overview', 'Features Analysis'],
+    Tab_List: ['Overview', 'Features Analysis', 'Metrics'],
     Overview_General_Headers: [
       'UID:',
       'Model class:',
@@ -290,7 +294,7 @@ module.exports = {
       'Google storage',
       'Databricks filesystem'
     ],
-    Register_Error_Message: /That combination of (artifact|dataset) name and (artifact|dataset) tag is already in use\. Assign a unique combination of (artifact|dataset) name and (artifact|dataset) tag\./  
+    Register_Error_Message: /That combination of name and tag is already in use in an existing (artifact|dataset|plotly|table)\. If you proceed, the existing (artifact|dataset|plotly|table) will be overwritten/  
   },
   Register_Dataset: {
     Type_Options: ['General', 'Chart', 'Plot', 'Table'],
@@ -330,8 +334,10 @@ module.exports = {
       'This field is required',
     Labels_Warning_Key: 'Valid characters: a–z, A–Z, 0–9, –, _, .\nMust begin and end with: a–z, A–Z, 0–9\nLength – max: 75\n' +
     'Key must be unique',
-    Projects_Labels_Warning_Key: 'Valid characters: a–z, A–Z, 0–9, –, _, .\nMust begin and end with: a–z, A–Z, 0–9\nLength – max: 56\n' +
-    'Key must be unique',
+    Projects_Labels_Warning_Key: '[Name] Valid characters : a–z, A–Z, 0–9, –, _, .\n[Name] Must begin and end with: a–z, A–Z, 0–9\n[Name] Max length - 63 characters\n' +
+    '[Prefix] Valid characters: a–z, 0–9, –, .\n[Prefix] Must begin and end with: a–z, 0–9\n[Prefix] Max length - 253 characters\n' +
+    '[Prefix] Must not start with \'kubernetes.io\', \'k8s.io\'\nKey must be unique',
+    Projects_Labels_Warning_Value: '[Value] Must begin and end with : a–z, A–Z, 0–9\n[Value] Max length - 63 characters\n[Value] Valid characters: a–z, A–Z, 0–9, –, _, .',
     Labels_Warning_Value: 'Valid characters: a–z, A–Z, 0–9, –, _, .\nMust begin and end with: a–z, A–Z, 0–9\nLength – max: 56',
     Feature_Set_Name_Hint:
       'Valid characters: a–z, A–Z, 0–9, –, _, .\nMust begin and end with: a–z, A–Z, 0–9\nLength – max: 56\n' +
@@ -381,7 +387,7 @@ module.exports = {
     Add_Feature_Vector_Hint: 'Add features from the list on the left to this feature vector',
     Deploy_Model_Name_Hint:
       'After the function is deployed, it will have a URL for calling the model that is based upon this name.',
-    MLRun_Store_Path_Hint: 'Field must be in "models/my-project/my-model:my-tag" or "models/my-project/my-model@my-uid" format',
+    MLRun_Store_Path_Hint: 'Field must be in "<artifact type>/<project>/<artifact name>:<artifact tag>" or "<artifact type>/<project>/<artifact name>@<artifact uid>" format',
     Jobs_MLRun_Store_Path_Hint:
       'Field must be in "artifacts/my-project/my-artifact:my-tag" or "artifacts/my-project/my-artifact@my-uid" format',
     V3IO_Path_Hint: 'Invalid URL. Field must be in "container-name/file" format',
@@ -425,13 +431,12 @@ module.exports = {
   },
   Descriptions: {
     Archive_Project:
-      "Note that moving a project to archive doesn't stop it from consuming resources. We recommend that before " +
-      "setting the project as archive you'll remove scheduled jobs and suspend Nuclio functions.",
-    Delete_Project: /You try to delete project "[^"]+[$"]\. Deleted projects can not be restored\./,
+      'Archived projects continue to consume resources.To stop the project from consuming resources, delete its scheduled jobs and suspend its Nuclio functions.',
+    Delete_Project: /You are trying to delete the non-empty project "[^"]+[$"]\. Deleting it will also delete all of its resources, such as jobs, artifacts, and features\./,
     Delete_Function:
       /You try to delete function "[^"]+[$"]\. Deleted functions cannot be restored\./,
     Delete_Scheduled_Job:
-      /You try to delete scheduled job "[^"]+[$"]\. Deleted scheduled jobs can not be restored\./,
+      /Are you sure you want to delete the scheduled job "[^"]+[$"]\? Deleted scheduled jobs can not be restored\./,
     Delete_Feature:
       /You try to delete feature "[^"]+[$"] from vector "[^"]+[$"]\. The feature could be added back later./
   },
@@ -474,15 +479,16 @@ module.exports = {
     'Past 24 hours': 86400000,
     'Past week': 604800000,
     'Past month': { min: 2419200000, max: 2678400000 },
-    'Past year': 31536000000
+    'Past non-leap year': 31536000000,
+    'Past leap year': 31622400000
   },
   Date_Time_Picker: {
     Error_Message: '“To” must be later than “From”'
   },
   Error_Messages: {
-    Project_Already_Exists: /Project name "[^"]+[$"] already exists/,
+    Project_Already_Exists: /A project named "[^"]+[$"] already exists/,
     Projects_Limit_Reached:
-      'Cannot create more than 200 projects due to resource limitation. Either delete existing projects or contact our customer support for assistance',
+      'The system already has the maximum number of projects. An existing project must be deleted before you can create another.',
     Must_Select_One: 'Must select at least one',
     Must_Select_One_Partition: 'Must select at least one partitioning option',
     Already_Scheduled: 'This job is already scheduled',
@@ -535,10 +541,13 @@ module.exports = {
     Common_Message_Feature_Vector: 'No data matches the filter: "Version Tag: latest"',
     Common_Message_Feature_Sets: 'No data matches the filter: "Version Tag: latest"',
     No_Data: 'No data to show',
-    No_Features_Yet: 'No features yet. Go to "Feature Sets" tab to create your first Feature Set.',
+    No_Features_Yet: 'No features found.',
     No_Consumer_Group_Yet: 'You haven’t created any consumer group yet',
     No_Datasets_data: 'No data matches the filter: "Version tag: latest, Labels: v3io_user=123, Show best iteration only: true"',
     No_Files_data: 'No data matches the filter: "Version tag: latest, Labels: v3io_user=123, Show best iteration only: true"',
     No_Models_data: 'No data matches the filter: "Version tag: latest, Labels: MY-KEY, Show best iteration only: true"'
+  },
+  Preview_Pop_Up: {
+    Table_Header: ['Name', 'Path', 'Size', 'Updated']
   }
 }

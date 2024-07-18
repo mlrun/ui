@@ -21,7 +21,7 @@ import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import PropTypes from 'prop-types'
 import arrayMutators from 'final-form-arrays'
 import { Form } from 'react-final-form'
-import { connect, useDispatch } from 'react-redux'
+import { connect, useDispatch, useSelector } from 'react-redux'
 import { createForm } from 'final-form'
 import { isEmpty, get } from 'lodash'
 import { useLocation, useNavigate } from 'react-router-dom'
@@ -107,6 +107,8 @@ const JobWizard = ({
   )
   const isEditMode = useMemo(() => mode === PANEL_EDIT_MODE || mode === PANEL_RERUN_MODE, [mode])
   const isRunMode = useMemo(() => mode === PANEL_FUNCTION_CREATE_MODE, [mode])
+  const projectIsLoading = useSelector(store => store.projectStore.project.loading)
+  const [currentProject, setCurrentProject] = useState(null)
   const [selectedFunctionData, setSelectedFunctionData] = useState({})
   const [filteredFunctions, setFilteredFunctions] = useState([])
   const [filteredTemplates, setFilteredTemplates] = useState([])
@@ -134,6 +136,14 @@ const JobWizard = ({
   }, [dispatch, onResolve, onWizardClose, removeJobFunction, showSchedule])
 
   const { handleCloseModal, resolveModal } = useModalBlockHistory(closeModal, formRef.current)
+
+  useEffect(() => {
+    if (!isEditMode) {
+      dispatch(projectsAction.fetchProject(params.projectName, { format: 'minimal' })).then(
+        project => setCurrentProject(project)
+      )
+    }
+  }, [dispatch, isEditMode, params.projectName])
 
   useEffect(() => {
     return () => {
@@ -199,20 +209,23 @@ const JobWizard = ({
         selectedFunctionData,
         defaultData,
         params.projectName,
-        isEditMode
+        isEditMode,
+        frontendSpec.internal_labels
       )
       setJobData(formStateRef.current, jobFormData, jobAdditionalData)
     } else if (
       formStateRef.current &&
       (isBatchInference || isTrain || isRunMode) &&
       !isEmpty(selectedFunctionData) &&
-      isEmpty(jobAdditionalData)
+      isEmpty(jobAdditionalData) &&
+      !isEmpty(currentProject)
     ) {
       const [jobFormData, jobAdditionalData] = generateJobWizardData(
         frontendSpec,
         selectedFunctionData,
         null,
         params.projectName,
+        currentProject,
         isEditMode,
         isTrain,
         prePopulatedData,
@@ -221,18 +234,19 @@ const JobWizard = ({
       setJobData(formStateRef.current, jobFormData, jobAdditionalData)
     }
   }, [
-    isTrain,
     defaultData,
     frontendSpec,
     isBatchInference,
     isEditMode,
     isRunMode,
+    isTrain,
     jobAdditionalData,
     params.projectName,
+    prePopulatedData,
+    currentProject,
     selectedFunctionData,
     setJobAdditionalData,
-    setJobData,
-    prePopulatedData
+    setJobData
   ])
 
   const getStepsConfig = useCallback(
@@ -312,7 +326,7 @@ const JobWizard = ({
             setNotification({
               status: 200,
               id: Math.random(),
-              message: isSchedule ? 'Job scheduled successfully' : 'Job started successfully'
+              message: isSchedule ? 'The batch run was scheduled' : 'The batch run was started'
             })
           )
         })
@@ -401,8 +415,8 @@ const JobWizard = ({
           label: isBatchInference
             ? 'Schedule Infer'
             : isTrain
-            ? 'Schedule training job'
-            : 'Schedule for later',
+              ? 'Schedule training job'
+              : 'Schedule for later',
           onClick: () => {
             formState.handleSubmit()
 
@@ -422,10 +436,10 @@ const JobWizard = ({
             mode === PANEL_EDIT_MODE
               ? 'Save'
               : isBatchInference
-              ? 'Infer now'
-              : isTrain
-              ? 'Run training now'
-              : 'Run',
+                ? 'Infer now'
+                : isTrain
+                  ? 'Run training now'
+                  : 'Run',
           onClick: () => {
             submitRequest(formState, false, goToFirstInvalidStep)
           },
@@ -462,6 +476,7 @@ const JobWizard = ({
             >
               <JobWizardFunctionSelection
                 activeTab={activeTab}
+                currentProject={currentProject}
                 defaultData={defaultData}
                 filteredFunctions={filteredFunctions}
                 filteredTemplates={filteredTemplates}
@@ -487,6 +502,7 @@ const JobWizard = ({
                 templatesCategories={templatesCategories}
               />
               <JobWizardRunDetails
+                currentProject={currentProject}
                 formState={formState}
                 frontendSpec={frontendSpec}
                 isBatchInference={isBatchInference}
@@ -515,7 +531,7 @@ const JobWizard = ({
               />
             )}
             <FormDirtySpy />
-            {(functionsStore.loading || jobsStore.loading) && <Loader />}
+            {(functionsStore.loading || functionsStore.funcLoading || jobsStore.loading || projectIsLoading) && <Loader />}
           </>
         )
       }}

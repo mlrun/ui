@@ -26,10 +26,11 @@ import FeatureSetsPanelTitleView from './FeatureSetsPanelTitleView'
 import featureStoreActions from '../../../actions/featureStore'
 
 const FeatureSetsPanelTitle = ({
-  featureStore,
   closePanel,
+  featureStore,
+  formState,
+  frontendSpec,
   setNewFeatureSetDescription,
-  setNewFeatureSetLabels,
   setNewFeatureSetName,
   setNewFeatureSetPassthrough,
   setNewFeatureSetVersion,
@@ -40,39 +41,13 @@ const FeatureSetsPanelTitle = ({
     name: '',
     description: '',
     passthrough: '',
-    version: '',
-    labels: []
+    version: ''
   })
 
   const handleNameOnBlur = () => {
     if (data.name !== featureStore.newFeatureSet.metadata.name) {
       setNewFeatureSetName(data.name)
     }
-  }
-
-  const handleAddLabel = (label, labels) => {
-    const newLabels = {}
-    const labelsArray = [...labels, label]
-
-    labelsArray.forEach(label => (newLabels[label.split(':')[0]] = label.split(':')[1].slice(1)))
-
-    setNewFeatureSetLabels(newLabels)
-    setData(state => ({
-      ...state,
-      labels: [...labels, label]
-    }))
-  }
-
-  const handleChangeLabels = labels => {
-    const newLabels = {}
-
-    labels.forEach(label => (newLabels[label.split(':')[0]] = label.split(':')[1].slice(1)))
-
-    setNewFeatureSetLabels(newLabels)
-    setData(state => ({
-      ...state,
-      labels
-    }))
   }
 
   const handleCheckPassthrough = id => {
@@ -99,8 +74,8 @@ const FeatureSetsPanelTitle = ({
       closePanel={closePanel}
       data={data}
       featureStore={featureStore}
-      handleAddLabel={handleAddLabel}
-      handleChangeLabels={handleChangeLabels}
+      formState={formState}
+      frontendSpec={frontendSpec}
       handleCheckPassthrough={handleCheckPassthrough}
       handleNameOnBlur={handleNameOnBlur}
       setData={setData}

@@ -17,6 +17,7 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
+import { isEmpty } from 'lodash'
 import {
   FETCH_JOB_PODS_SUCCESS,
   FETCH_JOB_PODS_FAILURE,
@@ -27,6 +28,12 @@ import {
   FETCH_MODEL_FEATURE_VECTOR_BEGIN,
   FETCH_MODEL_FEATURE_VECTOR_FAILURE,
   FETCH_MODEL_FEATURE_VECTOR_SUCCESS,
+  FETCH_ENDPOINT_METRICS_BEGIN,
+  FETCH_ENDPOINT_METRICS_SUCCESS,
+  FETCH_ENDPOINT_METRICS_FAILURE,
+  FETCH_ENDPOINT_METRICS_VALUES_BEGIN,
+  FETCH_ENDPOINT_METRICS_VALUES_SUCCESS,
+  FETCH_ENDPOINT_METRICS_VALUES_FAILURE,
   REMOVE_MODEL_FEATURE_VECTOR,
   SET_CHANGES_COUNTER,
   SET_CHANGES,
@@ -40,7 +47,10 @@ import {
   SET_FILTERS_WAS_HANDLED,
   SET_EDIT_MODE,
   FETCH_JOB_PODS_BEGIN,
-  REMOVE_MODEL_ENDPOINT
+  REMOVE_MODEL_ENDPOINT,
+  SET_SELECTED_METRICS_OPTIONS,
+  DATE_FILTER_ANY_TIME,
+  SET_DETAILS_DATES
 } from '../constants'
 
 const initialState = {
@@ -48,12 +58,17 @@ const initialState = {
     counter: 0,
     data: {}
   },
+  dates: {
+    value: DATE_FILTER_ANY_TIME,
+    selectedOptionId : '',
+    isPredefined: false
+  },
   editMode: false,
   error: null,
   infoContent: {},
   iteration: '',
   iterationOptions: [],
-  loading: false,
+  loadingCounter: 0,
   modelEndpoint: {
     data: {}
   },
@@ -65,7 +80,13 @@ const initialState = {
     podsTooltip: []
   },
   filtersWasHandled: false,
-  showWarning: false
+  showWarning: false,
+  metricsOptions: {
+    all: [],
+    lastSelected: [],
+    preselected: [],
+    selectedByEndpoint: {}
+  }
 }
 
 const detailsReducer = (state = initialState, { type, payload }) => {
@@ -99,13 +120,13 @@ const detailsReducer = (state = initialState, { type, payload }) => {
     case FETCH_MODEL_FEATURE_VECTOR_BEGIN:
       return {
         ...state,
-        loading: true
+        loadingCounter: state.loadingCounter + 1
       }
     case FETCH_MODEL_FEATURE_VECTOR_SUCCESS:
       return {
         ...state,
         error: null,
-        loading: false,
+        loadingCounter: state.loadingCounter - 1,
         modelFeatureVectorData: {
           ...payload
         }
@@ -114,7 +135,7 @@ const detailsReducer = (state = initialState, { type, payload }) => {
       return {
         ...state,
         error: payload,
-        loading: false,
+        loadingCounter: state.loadingCounter - 1,
         modelFeatureVectorData: {
           ...initialState.modelFeatureVectorData
         }
@@ -137,13 +158,13 @@ const detailsReducer = (state = initialState, { type, payload }) => {
     case FETCH_MODEL_ENDPOINT_WITH_ANALYSIS_BEGIN:
       return {
         ...state,
-        loading: true
+        loadingCounter: state.loadingCounter + 1
       }
     case FETCH_MODEL_ENDPOINT_WITH_ANALYSIS_FAILURE:
       return {
         ...state,
         error: payload,
-        loading: false,
+        loadingCounter: state.loadingCounter - 1,
         modelEndpoint: {
           data: {}
         }
@@ -152,10 +173,74 @@ const detailsReducer = (state = initialState, { type, payload }) => {
       return {
         ...state,
         error: null,
-        loading: false,
+        loadingCounter: state.loadingCounter - 1,
         modelEndpoint: {
           data: payload
         }
+      }
+    case FETCH_ENDPOINT_METRICS_BEGIN:
+      return {
+        ...state,
+        loadingCounter: state.loadingCounter + 1,
+      }
+    case FETCH_ENDPOINT_METRICS_SUCCESS: {
+      const areMetricsSelectedForEndpoint = !isEmpty(
+        state.metricsOptions.selectedByEndpoint[payload.endpointUid]
+      )
+      const selectedMetrics = areMetricsSelectedForEndpoint
+        ? state.metricsOptions.selectedByEndpoint[payload.endpointUid]
+        : payload.metrics.filter(metric => {
+            return state.metricsOptions.lastSelected.find(
+              selectedMetric =>
+                selectedMetric.name === metric.name &&
+                selectedMetric.app === metric.app &&
+                selectedMetric.type === metric.type
+            )
+          })
+
+      return {
+        ...state,
+        error: null,
+        loadingCounter: state.loadingCounter - 1,
+        metricsOptions: {
+          all: payload.metrics,
+          lastSelected: selectedMetrics,
+          preselected: selectedMetrics,
+          selectedByEndpoint: areMetricsSelectedForEndpoint
+            ? state.metricsOptions.selectedByEndpoint
+            : {
+                ...state.metricsOptions.selectedByEndpoint,
+                [payload.endpointUid]: selectedMetrics
+              }
+        }
+      }
+    }
+    case FETCH_ENDPOINT_METRICS_FAILURE:
+      return {
+        ...state,
+        error: payload,
+        loadingCounter: state.loadingCounter - 1,
+        metricsOptions: {
+          ...state.metricsOptions,
+          all: [],
+        }
+      }
+    case FETCH_ENDPOINT_METRICS_VALUES_BEGIN:
+      return {
+        ...state,
+        loadingCounter: state.loadingCounter + 1,
+      }
+    case FETCH_ENDPOINT_METRICS_VALUES_SUCCESS:
+      return {
+        ...state,
+        error: null,
+        loadingCounter: state.loadingCounter - 1,
+      }
+    case FETCH_ENDPOINT_METRICS_VALUES_FAILURE:
+      return {
+        ...state,
+        error: payload,
+        loadingCounter: state.loadingCounter - 1,
       }
     case REMOVE_INFO_CONTENT:
       return {
@@ -188,6 +273,11 @@ const detailsReducer = (state = initialState, { type, payload }) => {
           data: payload
         }
       }
+    case SET_DETAILS_DATES:
+      return {
+        ...state,
+        dates: payload
+      }
     case SET_EDIT_MODE:
       return {
         ...state,
@@ -217,6 +307,18 @@ const detailsReducer = (state = initialState, { type, payload }) => {
       return {
         ...state,
         showWarning: payload
+      }
+    case SET_SELECTED_METRICS_OPTIONS:
+      return {
+        ...state,
+        metricsOptions: {
+          ...state.metricsOptions,
+          lastSelected: payload.metrics,
+          selectedByEndpoint: {
+            ...state.metricsOptions.selectedByEndpoint,
+            [payload.endpointUid]: payload.metrics
+          }
+        }
       }
     default:
       return state

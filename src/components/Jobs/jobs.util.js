@@ -302,7 +302,7 @@ export const handleAbortJob = (
       }
     })
     .catch(error => {
-      showErrorNotification(dispatch, error, 'Aborting job failed', '', () =>
+      showErrorNotification(dispatch, error, 'Failed to abort job', '', () =>
         handleAbortJob(
           abortJob,
           projectName,
@@ -320,23 +320,6 @@ export const handleAbortJob = (
     })
 
   setConfirmData(null)
-}
-
-export const handleDeleteJob = (deleteJob, job, projectName, refreshJobs, filters, dispatch) => {
-  return deleteJob(projectName, job)
-    .then(() => {
-      refreshJobs(filters)
-      dispatch(
-        setNotification({
-          status: 200,
-          id: Math.random(),
-          message: 'Job is successfully deleted'
-        })
-      )
-    })
-    .catch(error => {
-      showErrorNotification(dispatch, error, 'Deleting job failed', '', () => handleDeleteJob(job))
-    })
 }
 
 export const monitorJob = (jobs_dashboard_url, item, projectName) => {
@@ -408,7 +391,7 @@ export const pollAbortingJobs = (project, terminatePollRef, abortingJobs, refres
   const taskIds = Object.keys(abortingJobs)
 
   const pollMethod = () => {
-    if (taskIds.length === 1) {
+    if (taskIds.length === 1 && project !== '*') {
       return tasksApi.getProjectBackgroundTask(project, taskIds[0])
     }
 
@@ -427,11 +410,11 @@ export const pollAbortingJobs = (project, terminatePollRef, abortingJobs, refres
         if (task.status.state === BG_TASK_SUCCEEDED) {
           abortJobSuccessHandler(dispatch, abortingJobs[task.metadata.name])
         } else {
-          showErrorNotification(dispatch, {}, task.status.error || 'Aborting job failed')
+          showErrorNotification(dispatch, {}, task.status.error || 'Failed to abort job.')
         }
       })
 
-      refresh()
+      refresh(project)
     }
 
     return finishedTasks.length > 0
@@ -440,7 +423,11 @@ export const pollAbortingJobs = (project, terminatePollRef, abortingJobs, refres
   terminatePollRef?.current?.()
   terminatePollRef.current = null
 
-  pollTask(pollMethod, isDone, { terminatePollRef })
+  pollTask(pollMethod, isDone, { terminatePollRef }).catch(error => {
+    const message = 'Failed to abort job. ' + (error.message ? error.message : '')
+
+    showErrorNotification(dispatch, {}, message)
+  })
 }
 
 const abortJobSuccessHandler = (dispatch, job) => {
@@ -448,7 +435,7 @@ const abortJobSuccessHandler = (dispatch, job) => {
     setNotification({
       status: 200,
       id: Math.random(),
-      message: `Job ${job.name} (${truncateUid(job.uid)}) is successfully aborted`
+      message: `Job ${job.name} (${truncateUid(job.uid)}) was aborted`
     })
   )
 }

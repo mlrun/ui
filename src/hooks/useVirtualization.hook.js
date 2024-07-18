@@ -17,8 +17,16 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import { useLayoutEffect, useMemo, useState } from 'react'
+import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react'
 import { isEmpty, isEqual, sum, throttle } from 'lodash'
+import { MAIN_TABLE_ID, MAIN_TABLE_BODY_ID } from '../constants'
+
+const HIDDEN_RENDER_ITEMS_LENGTH = 5
+const virtualizationConfigInitialState = {
+  startIndex: -1,
+  endIndex: -1,
+  tableBodyPaddingTop: 0
+}
 
 /**
  * Checks if a row is rendered based on the provided virtualization configuration and row index.
@@ -34,7 +42,7 @@ export const isRowRendered = (virtualizationConfig, rowIndex) => {
  * Calculates the heights of rows based on the provided table content, selected item, row data, and row heights.
  * @param {Array} tableContent - Array containing content for each row.
  * @param {Object} selectedItem - The selected item.
- * @param {Object} selectedRowData - Object representing the currently selected item.
+ * @param {Object} expandedRowsData - Object representing currently expanded items.
  * @param {number} rowHeight - The height of a regular row.
  * @param {number} rowHeightExtended - The height of an extended row.
  * @returns {Array} An array containing the calculated heights of rows.
@@ -42,17 +50,21 @@ export const isRowRendered = (virtualizationConfig, rowIndex) => {
 export const getRowsSizes = (
   tableContent,
   selectedItem,
-  selectedRowData,
+  expandedRowsData,
   rowHeight,
   rowHeightExtended
 ) => {
-  return tableContent.map(contentItem => {
-    const baseRowHeight = isEmpty(selectedItem) ? rowHeight : rowHeightExtended
+  const baseRowHeight = isEmpty(selectedItem) ? rowHeight : rowHeightExtended
 
-    if (!selectedRowData[contentItem.data.ui.identifier]) {
+  return tableContent.map(contentItem => {
+    const expandedRowData = expandedRowsData?.[contentItem.data.ui.identifier]
+
+    if (!expandedRowData) {
       return baseRowHeight
+    } else if (!expandedRowData.content || expandedRowData.loading) {
+      return rowHeight
     } else {
-      return selectedRowData[contentItem.data.ui.identifier].content.reduce(accumulatedHeight => {
+      return expandedRowData.content.reduce(accumulatedHeight => {
         return (accumulatedHeight += baseRowHeight)
       }, rowHeight)
     }
@@ -60,10 +72,132 @@ export const getRowsSizes = (
 }
 
 /**
- * Hook for virtualizing a table.
+ * Hook for scrolling a table to a selected item.
  * @param {Object} options - Options object.
  * @param {React.RefObject} options.tableRef - Ref object for the table element.
- * @param {React.RefObject} options.tableBodyRef - Ref object for the table body element.
+ * @param {Object[]} options.content - Array containing content for each row.
+ * @param {Object{}} options.selectedItem - Object representing the currently selected item.
+ * @param {Object} options.expandedRowsData - Object containing data for expanded rows.
+ * @param {string|number} options.rowHeight - Height of a regular row.
+ * @param {string|number} options.rowHeightExtended - Height of an extended row.
+ * @param {string|number} options.headerRowHeight - Height of an table header.
+ * @param {boolean} options.useHook - Bool indicate if trigger the hooks logic.
+ * @returns {void}
+ */
+const useTableScroll = ({
+  rowHeight,
+  rowHeightExtended,
+  headerRowHeight,
+  selectedItem,
+  expandedRowsData,
+  content,
+  activateHook
+}) => {
+  const lastSelectedItemDataRef = useRef(null)
+
+  const getSpaceToSelectedItem = useCallback(
+    (lastSelectedItemData, tableElement) => {
+      const baseRowHeight = isEmpty(selectedItem) ? rowHeight : rowHeightExtended
+      const tableHeight = tableElement?.offsetHeight
+      const rowsSizes = getRowsSizes(
+        content,
+        selectedItem,
+        expandedRowsData,
+        rowHeight,
+        rowHeightExtended
+      )
+      let spaceToSelectedItem =
+        sum(rowsSizes.slice(0, lastSelectedItemData.index)) -
+        (tableHeight ? (tableHeight - headerRowHeight) / 2 - baseRowHeight / 2 : 0)
+
+      if (!isEmpty(lastSelectedItemData?.expandedRowData?.content)) {
+        const selectedChildItemPosition =
+          lastSelectedItemData?.expandedRowData?.content.findIndex(
+            item => item.data.ui.identifierUnique === lastSelectedItemData.identifierUnique
+          ) + 1
+
+        if (selectedChildItemPosition > 0) {
+          const diffBetweenParentRowAndOtherMainRows = baseRowHeight - rowHeight
+          spaceToSelectedItem +=
+            baseRowHeight * selectedChildItemPosition - diffBetweenParentRowAndOtherMainRows
+        }
+      }
+
+      return spaceToSelectedItem
+    },
+    [content, expandedRowsData, headerRowHeight, rowHeight, rowHeightExtended, selectedItem]
+  )
+
+  const handleSelectItemChanges = useCallback((identifier, content, getSpaceToSelectedItem, async = false) => {
+    const selectedItemIndex = content.findIndex(
+      item => item.data.ui.identifier === identifier
+    )
+    const triggerScroll = () => {
+      const tableElement = document.getElementById(MAIN_TABLE_ID)
+
+      tableElement?.scroll({
+        top: getSpaceToSelectedItem(
+          {
+            ...lastSelectedItemDataRef.current,
+            index: selectedItemIndex
+          },
+          tableElement
+        )
+      })
+    }
+    
+    if (selectedItemIndex >= 0) {
+      if (async) {
+        requestAnimationFrame(() => {
+          triggerScroll()
+        })
+      } else {
+        triggerScroll()
+      }
+    }
+  }, [])
+
+  useEffect(() => {
+    if (!activateHook) return
+
+    try {
+      if (!isEmpty(selectedItem)) {
+        if (!lastSelectedItemDataRef.current) {
+          lastSelectedItemDataRef.current = {
+            ...selectedItem?.ui,
+            expandedRowData: expandedRowsData[selectedItem?.ui?.identifier]
+          }
+          handleSelectItemChanges(
+            selectedItem?.ui?.identifier,
+            content,
+            getSpaceToSelectedItem,
+            true
+          )
+        } else {
+          lastSelectedItemDataRef.current = {
+            ...selectedItem?.ui,
+            expandedRowData: expandedRowsData[selectedItem?.ui?.identifier]
+          }
+        }
+      } else if (lastSelectedItemDataRef.current && isEmpty(selectedItem)) {
+        handleSelectItemChanges(
+          lastSelectedItemDataRef.current?.identifier,
+          content,
+          getSpaceToSelectedItem
+        )
+
+        lastSelectedItemDataRef.current = null
+      }
+    } catch {
+      lastSelectedItemDataRef.current = null
+    }
+  }, [content, getSpaceToSelectedItem, selectedItem, expandedRowsData, activateHook, handleSelectItemChanges])
+}
+
+/**
+ * Hook for virtualizing a table.
+ * @param {Object} options - Options object.
+ * @param {any} [options.renderTriggerItem] - item that will trigger calculation of the virtualization config.
  * @param {number[]} [options.rowsSizes=[]] - Array containing the heights of each row.
  * @param {Object} [options.rowsData={}] - Object containing data related to rows.
  * @param {Object[]} options.rowsData.content - Array containing content for each row.
@@ -73,38 +207,32 @@ export const getRowsSizes = (
  * @param {string|number} options.heightData.rowHeight - Height of a regular row.
  * @param {string|number} options.heightData.rowHeightExtended - Height of an extended row.
  * @param {string|number} options.heightData.headerRowHeight - Height of the table header row.
+ * @param {boolean} options.activateTableScroll - Boolean indicator for useTableScroll hook.
  * @returns {Object} - Object containing virtualization configuration.
  */
 export const useVirtualization = ({
-  tableRef,
-  tableBodyRef,
+  renderTriggerItem,
   rowsSizes = [],
-  rowsData = {},
-  heightData: {
-    rowHeight,
-    rowHeightExtended,
-    headerRowHeight
+  rowsData = {
+    content: []
   },
+  heightData: { rowHeight, rowHeightExtended, headerRowHeight },
+  activateTableScroll = false
 }) => {
-  const [virtualizationConfig, setVirtualizationConfig] = useState({
-    startIndex: -1,
-    endIndex: -1
-  })
+  const [virtualizationConfig, setVirtualizationConfig] = useState(virtualizationConfigInitialState)
   const [rowsSizesLocal, setRowsSizesLocal] = useState(rowsSizes)
-  const tableRefEl = tableRef.current
-  const tableBodyRefEl = tableBodyRef.current
   const rowHeightLocal = useMemo(() => parseInt(rowHeight), [rowHeight])
   const extendedRowHeightLocal = useMemo(() => parseInt(rowHeightExtended), [rowHeightExtended])
   const headerRowHeightLocal = useMemo(() => parseInt(headerRowHeight), [headerRowHeight])
 
   useLayoutEffect(() => {
-    if (isEmpty(rowsData) && !isEqual(rowsSizes, rowsSizesLocal)) {
+    if (isEmpty(rowsData.content) && !isEqual(rowsSizes, rowsSizesLocal)) {
       setRowsSizesLocal(rowsSizes)
     }
   }, [rowsSizesLocal, rowsData, rowsSizes])
 
   useLayoutEffect(() => {
-    if (!isEmpty(rowsData)) {
+    if (!isEmpty(rowsData.content)) {
       const newRowsSizes = getRowsSizes(
         rowsData.content,
         rowsData.selectedItem,
@@ -117,14 +245,23 @@ export const useVirtualization = ({
         setRowsSizesLocal(newRowsSizes)
       }
     }
-  }, [extendedRowHeightLocal, rowsSizesLocal, rowHeightLocal, rowsData])
+  }, [
+    extendedRowHeightLocal,
+    rowsSizesLocal,
+    rowHeightLocal,
+    rowsData.content,
+    rowsData.selectedItem,
+    rowsData.expandedRowsData
+  ])
 
   useLayoutEffect(() => {
+    const tableElement = document.getElementById(MAIN_TABLE_ID)
+    const tableBodyElement = document.getElementById(MAIN_TABLE_BODY_ID)
     const elementsHeight = sum(rowsSizesLocal)
 
     const calculateVirtualizationConfig = throttle(() => {
       const scrollClientHeight = parseInt(
-        tableRefEl.scrollTop + tableRefEl.clientHeight - headerRowHeightLocal
+        tableElement.scrollTop + tableElement.clientHeight - headerRowHeightLocal
       )
       let firstVisibleItemIndex = 0
       let heightToFirstVisibleItem = 0
@@ -134,10 +271,10 @@ export const useVirtualization = ({
       rowsSizesLocal.some((nextElementHeight, index) => {
         heightToFirstVisibleItem += nextElementHeight
 
-        if (heightToFirstVisibleItem > tableRefEl.scrollTop) {
+        if (heightToFirstVisibleItem > tableElement.scrollTop) {
           firstVisibleItemIndex = index
           lastVisibleItemIndex = firstVisibleItemIndex
-          heightToLastVisibleItem = heightToFirstVisibleItem - nextElementHeight
+          heightToLastVisibleItem = heightToFirstVisibleItem
 
           return true
         }
@@ -145,49 +282,77 @@ export const useVirtualization = ({
         return false
       })
 
-      rowsSizesLocal.slice(firstVisibleItemIndex).some((nextElementHeight, index) => {
-        if (heightToLastVisibleItem > scrollClientHeight) return true
+      const lastRowExceedsScrollHeight = rowsSizesLocal
+        .slice(firstVisibleItemIndex + 1)
+        .some((nextElementHeight, index) => {
+          if (heightToLastVisibleItem >= scrollClientHeight) return true
 
-        heightToLastVisibleItem += nextElementHeight
+          heightToLastVisibleItem += nextElementHeight
 
-        if (heightToLastVisibleItem >= scrollClientHeight) {
-          lastVisibleItemIndex = index + firstVisibleItemIndex
+          if (heightToLastVisibleItem >= scrollClientHeight) {
+            lastVisibleItemIndex = index + firstVisibleItemIndex
 
-          return true
-        }
+            return true
+          }
 
-        return false
-      })
+          return false
+        })
 
-      const firstRenderIndex = Math.max(firstVisibleItemIndex - 5, 0)
-      const lastRenderIndex = Math.min(lastVisibleItemIndex + 5, rowsSizesLocal.length)
-      const tableBodyPaddingTop = Math.min(
-        sum(rowsSizesLocal.slice(0, firstRenderIndex)),
-        elementsHeight - tableRefEl.clientHeight
+      if (!lastRowExceedsScrollHeight) {
+        lastVisibleItemIndex = rowsSizesLocal.length - 1
+      }
+
+      const firstRenderIndex = Math.max(firstVisibleItemIndex - HIDDEN_RENDER_ITEMS_LENGTH, 0)
+      const lastRenderIndex = Math.min(
+        lastVisibleItemIndex + HIDDEN_RENDER_ITEMS_LENGTH,
+        rowsSizesLocal.length - 1
+      )
+      const tableBodyPaddingTop = Math.max(
+        Math.min(
+          sum(rowsSizesLocal.slice(0, firstRenderIndex)),
+          elementsHeight - tableElement.clientHeight
+        ),
+        0
       )
 
-      setVirtualizationConfig({
-        startIndex: firstRenderIndex,
-        endIndex: lastRenderIndex
+      setVirtualizationConfig(() => {
+        return {
+          startIndex: firstRenderIndex,
+          endIndex: lastRenderIndex,
+          tableBodyPaddingTop
+        }
       })
-      tableBodyRefEl.style.paddingTop = `${tableBodyPaddingTop}px`
-    }, 100)
+    }, 150)
 
-    if (tableRefEl && tableBodyRefEl) {
-      tableBodyRefEl.style.minHeight = `${elementsHeight}px`
-      tableBodyRefEl.style.maxHeight = `${elementsHeight}px`
+    if (!isEmpty(tableElement) && !isEmpty(tableBodyElement)) {
+      tableBodyElement.style.minHeight = `${elementsHeight}px`
+      tableBodyElement.style.maxHeight = `${elementsHeight}px`
 
-      calculateVirtualizationConfig(null)
+      calculateVirtualizationConfig()
 
-      tableRefEl.addEventListener('scroll', calculateVirtualizationConfig)
+      tableElement.addEventListener('scroll', calculateVirtualizationConfig)
+      window.addEventListener('resize', calculateVirtualizationConfig)
+    } else {
+      setVirtualizationConfig(virtualizationConfigInitialState)
     }
 
     return () => {
-      if (tableRefEl) {
-        tableRefEl.removeEventListener('scroll', calculateVirtualizationConfig)
+      if (tableElement) {
+        tableElement.removeEventListener('scroll', calculateVirtualizationConfig)
+        window.removeEventListener('resize', calculateVirtualizationConfig)
       }
     }
-  }, [headerRowHeightLocal, rowsSizesLocal, tableBodyRefEl, tableRefEl])
+  }, [renderTriggerItem, headerRowHeightLocal, rowsSizesLocal, rowsData.content])
+
+  useTableScroll({
+    rowHeight: rowHeightLocal,
+    rowHeightExtended: extendedRowHeightLocal,
+    headerRowHeight: headerRowHeightLocal,
+    selectedItem: rowsData.selectedItem,
+    expandedRowsData: rowsData.expandedRowsData,
+    content: rowsData.content,
+    activateHook: activateTableScroll
+  })
 
   return virtualizationConfig
 }

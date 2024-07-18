@@ -1,0 +1,452 @@
+@import '~igz-controls/scss/colors';
+@import '~igz-controls/scss/borders';
+
+$stickyHeaderHeight: 55px;
+
+.metrics {
+  display: flex;
+  flex-wrap: wrap;
+  align-content: flex-start;
+  row-gap: 16px;
+  height: fit-content;
+  margin-bottom: 30px;
+
+  &__custom-filters {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    position: sticky;
+    top: 0;
+    height: $stickyHeaderHeight;
+    align-items: center;
+    background-color: $white;
+    z-index: 2;
+
+    > * {
+      margin: 0 0 15px 0;
+    }
+
+    .details-date-picker {
+      margin-left: 15px;
+    }
+  }
+
+  &__app-name {
+    color: $primary;
+    font-weight: 700;
+    font-size: 20px;
+  }
+
+  &__card {
+    border: $primaryBorder;
+    padding: 6px 16px 35px;
+    width: 100%;
+    box-shadow: none;
+
+    &-invocations {
+      position: sticky;
+      top: $stickyHeaderHeight;
+      width: 100%;
+      align-self: baseline;
+      background: $white;
+      padding-bottom: 25px;
+      z-index: 1;
+
+      .metrics__card {
+        padding-top: 12px;
+        padding-bottom: 0;
+      }
+
+      &_collapsed .stats-card__row {
+        height: 0;
+        min-height: 0 !important;
+        margin-bottom: 0 !important;
+        visibility: hidden !important;
+        transition: all 0.2s ease-in-out;
+      }
+
+      &_expanded.stats-card__row {
+        height: 40px;
+        transition: all 0.2s ease-in-out;
+      }
+    }
+
+    &-drift-status {
+      display: inline-block;
+      width: 10px;
+      height: 10px;
+      margin-left: 8px;
+      border-radius: 50%;
+    }
+
+    &-drift-status-possible_drift {
+      background-color: $grandis;
+    }
+
+    &-drift-status-drift_detected {
+      background-color: $ceriseRed;
+    }
+
+    &-drift-status-no_drift {
+      background-color: $brightTurquoise;
+    }
+
+    &-drift-no_status {
+      background-color: $doveGray;
+    }
+
+    &-header {
+      display: flex;
+      flex-direction: row;
+      gap: 8px;
+      align-items: center;
+      justify-content: space-between;
+      padding-left: 5px;
+      font-weight: 500;
+      transition: all 0.2s linear;
+
+      &-result-kind {
+        display: flex;
+        gap: 4px;
+        align-self: center;
+        justify-content: center;
+        width: max-content;
+        overflow: hidden;
+        color: $topaz;
+        font-weight: 500;
+        font-size: 14px;
+        font-family: Roboto;
+        font-style: normal;
+        line-height: normal;
+        text-overflow: ellipsis;
+      }
+
+      &-data {
+        color: $topaz;
+        font-weight: 700;
+        font-size: 18px;
+        text-align: center;
+        leading-trim: both;
+        text-edge: cap;
+      }
+
+      &-label {
+        font-size: 14px;
+      }
+    }
+
+    &-body {
+      position: relative;
+      display: flex;
+      flex: 1;
+      align-self: stretch;
+      box-sizing: border-box;
+      width: 100%;
+      aspect-ratio: 5;
+
+      &-collapsed {
+        height: 80px;
+        transition: all 0.3s ease-in-out;
+      }
+
+      &-expanded {
+        height: 200px;
+        transition: all 0.3s ease-in-out;
+      }
+
+      .chart-item {
+        flex: 1;
+
+        canvas {
+          width: 100%;
+          height: 100%;
+        }
+      }
+
+      &-bar {
+        flex: 0 1 25%;
+        min-width: 210px;
+
+        canvas {
+          width: 100%;
+          height: 100%;
+        }
+
+        canvas.hidden-canvas {
+          position: absolute;
+          top: 0;
+          left: 0;
+          opacity: 0;
+        }
+      }
+
+      &-line {
+        flex: 1 1 0;
+        margin-top: 4px;
+
+        canvas {
+          width: 100% !important;
+          height: 100% !important;
+        }
+
+        canvas.hidden-canvas {
+          position: absolute;
+          top: 0;
+          left: 0;
+          opacity: 0;
+        }
+      }
+
+      &-invocation {
+        flex: 1;
+        border: 1px solid transparent;
+
+        canvas {
+          width: 100% !important;
+          height: 100% !important;
+        }
+
+        canvas.hidden-canvas {
+          position: absolute;
+          top: 0;
+          left: 0;
+          opacity: 0;
+        }
+      }
+    }
+
+    &-pin-icon {
+      position: absolute;
+      top: -10px;
+      left: -15px;
+    }
+
+    &-invocation-header {
+      display: flex;
+      flex: 1;
+      align-items: baseline;
+      justify-content: end;
+      height: 40px;
+      color: $primary;
+      font-weight: 500;
+      font-size: 14px;
+
+      &_drift-icon-container {
+        align-self: stretch;
+        margin-right: 2px;
+
+        svg {
+          box-sizing: content-box;
+          width: 17px;
+          height: 17px;
+          padding-top: 9px;
+        }
+      }
+
+      &_drift_up {
+        color: $brightTurquoise;
+      }
+
+      &_drift_down {
+        color: $ceriseRed;
+      }
+
+      &-selected-date {
+        margin-left: 4px;
+        color: $topaz;
+      }
+
+      &-total-title {
+        margin: 0 6px 0 12px;
+        font-weight: 700;
+      }
+
+      &-total-score {
+        font-weight: 700;
+        font-size: 24px;
+      }
+    }
+
+    &-invocation-content {
+      flex: 0 0 0;
+      flex-wrap: wrap;
+      align-content: center;
+      align-items: baseline;
+      justify-content: center;
+      width: 0;
+      font-weight: 700;
+      font-size: 18px;
+      visibility: hidden;
+      opacity: 0;
+      transition: flex 0.2s;
+
+      &-visible {
+        display: flex;
+        flex: 0 1 auto;
+        width: fit-content;
+        visibility: visible;
+        opacity: 1;
+        transition:
+          flex 0.2s,
+          visibility 0s,
+          opacity 1s;
+      }
+
+      &-title {
+        margin-right: 24px;
+        color: $primary;
+        font-size: 18px;
+        text-align: center;
+      }
+
+      &-container {
+        display: flex;
+        gap: 2px;
+        align-items: baseline;
+        font-weight: 700;
+        font-size: 14px;
+
+        &_drift_icon {
+          align-self: stretch;
+
+          svg {
+            box-sizing: content-box;
+            width: 17px;
+            height: 17px;
+            margin-top: -1px;
+          }
+        }
+
+        &_drift_up {
+          margin-right: 4px;
+          color: $brightTurquoise;
+        }
+
+        &_drift_down {
+          margin-right: 4px;
+          color: $ceriseRed;
+        }
+      }
+
+      &-data {
+        display: flex;
+        align-items: baseline;
+        margin-left: 15px;
+
+        &_total_title {
+          margin-right: 7px;
+          font-weight: 700;
+          font-size: 14px;
+        }
+
+        &_total_score {
+          font-weight: 700;
+          font-size: 24px;
+        }
+      }
+    }
+  }
+
+  &__empty-card {
+    display: flex;
+    gap: 25px;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+  }
+
+  &__empty-select {
+    box-shadow: none;
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+  }
+}
+
+.empty-invocation-card {
+  position: sticky;
+  box-shadow: 0 -10px 0 0 $white;
+  top: $stickyHeaderHeight;
+  z-index: 1;
+  box-shadow: 0 -10px 0 0 $white;
+}
+
+#chartjs-tooltip-metric {
+  position: fixed;
+  z-index: 5;
+  padding: 6px 8px;
+  color: $white;
+  letter-spacing: 0.5px;
+  background-color: $primary;
+  border-radius: 4px;
+  transform: translate(-50%, calc(-100% - 10px));
+  transition: all 0.1s linear;
+  background-color: $primary;
+  padding: 6px 8px;
+  font-family: Roboto;
+  letter-spacing: 0.5px;
+
+  &::after {
+    display: none;
+  }
+
+  .tooltip-container {
+    display: flex;
+    flex-wrap: nowrap;
+    gap: 5px;
+    align-items: flex-start;
+    justify-content: flex-start;
+    padding: 0;
+    background: inherit;
+
+    &-value,
+    &-date {
+      min-width: fit-content;
+      font-weight: 700;
+      font-size: 12px;
+    }
+
+    &-date {
+      min-width: 150px;
+    }
+  }
+
+  .tooltip-drift-content {
+    display: flex;
+    gap: 5px;
+    align-items: center;
+    justify-content: center;
+    background: inherit;
+
+    &-text {
+      font-size: 10px;
+      font-weight: 400;
+    }
+  }
+
+  .tooltip-drift-status {
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+
+    &-drift-possible_drift {
+      background-color: $grandis;
+    }
+
+    &-drift-drift_detected {
+      background-color: $ceriseRed;
+    }
+
+    &-drift-no_drift {
+      background-color: $brightTurquoise;
+    }
+
+    &-drift-no-status {
+      background-color: $doveGray;
+    }
+  }
+}

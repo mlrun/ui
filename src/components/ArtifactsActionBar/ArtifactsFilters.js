@@ -18,11 +18,10 @@ under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
 import React from 'react'
-import { OnChange } from 'react-final-form-listeners'
 import { useForm } from 'react-final-form'
 import PropTypes from 'prop-types'
 
-import { FormInput, FormCheckBox } from 'igz-controls/components'
+import { FormInput, FormCheckBox, FormOnChange } from 'igz-controls/components'
 import FormTagFilter from '../../common/FormTagFilter/FormTagFilter'
 
 import { ITERATIONS_FILTER, LABELS_FILTER, SHOW_ITERATIONS, TAG_FILTER } from '../../constants'
@@ -44,7 +43,7 @@ const ArtifactsFilters = ({ artifacts }) => {
     <div className="artifacts-filters">
       <div className="form-row">
         <FormInput label="Labels" name={LABELS_FILTER} placeholder="key1,key2=value,..." />
-        <OnChange name={LABELS_FILTER}>{handleLabelsChange}</OnChange>
+        <FormOnChange name={LABELS_FILTER} handler={handleLabelsChange} />
       </div>
       <div className="form-row">
         <FormTagFilter content={artifacts} label="Version tag" name={TAG_FILTER} />
@@ -55,7 +54,7 @@ const ArtifactsFilters = ({ artifacts }) => {
           label="Show best iteration only"
           name={ITERATIONS_FILTER}
         />
-        <OnChange name={ITERATIONS_FILTER}>{handleIter}</OnChange>
+        <FormOnChange name={ITERATIONS_FILTER} handler={handleIter} />
       </div>
     </div>
   )

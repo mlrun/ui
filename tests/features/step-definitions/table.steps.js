@@ -145,12 +145,13 @@ Then(
       value
     )
     const indx = arr[0]
-    const actionMenuSel = await getCellByIndexColumn(
-      this.driver,
-      pageObjects[wizard][table],
-      indx,
-      'action_menu'
-    )
+    const menuType = (column === 'name_expand_btn') ? 'action_menu_expand' : 'action_menu'
+    const actionMenuSel =  await getCellByIndexColumn(
+        this.driver,
+        pageObjects[wizard][table],
+        indx,
+        menuType
+      )
     await hoverComponent(
       this.driver,
       pageObjects[wizard][table]['tableFields'][column](indx),
@@ -180,7 +181,7 @@ When('add rows to {string} table on {string} wizard', async function (table, wiz
       )
     }
     await clickNearComponent(this.driver, pageObjects[wizard][table]['root'])
-    await this.driver.sleep(100)
+    await this.driver.sleep(250)
   }
 })
 
@@ -1277,6 +1278,27 @@ Then(
 )
 
 Then(
+  'verify that {string} type is displayed in {string} kind on {string} wizard in {string} table with {string} value in {string} column',
+  async function (type, kind, wizard, table, value, column) {
+    const arr = await findRowIndexesByColumnValue (
+      this.driver,
+      pageObjects[wizard][table],
+      column,
+      value
+    )
+    const indx = arr[0]
+    const tabelCell = await getCellByIndexColumn (
+      this.driver,
+      pageObjects[wizard][table],
+      indx,
+      kind
+    )
+    await hoverComponent(this.driver, tabelCell['label'])
+    await verifyText(this.driver, tabelCell['hint'], type)
+  }
+)
+
+Then(
   'click on {string} option on {string} wizard in {string} table with {string} value in {string} column',
   async function (option, wizard, table, value, column) {
     const arr = await findRowIndexesByColumnValue(
@@ -1681,13 +1703,21 @@ When(
 )
 
 Then(
-  'check {string} visibility in {string} on {string} wizard',
-  async function (cellName, tableName, wizardName) {
+  'verify that {int} row elements are displayed in {string} on {string} wizard',
+  async function (rowElement, tableName, wizardName) {
+    const rowsNumber = await getTableRows(this.driver, pageObjects[wizardName][tableName])
+    expect(rowsNumber).equal(rowElement, `${rowsNumber} row elements are not equal expected ${rowElement} row elements`)
+  }
+)
+
+Then(
+  'check {string} visibility in {string} on {string} wizard with {int} offset',
+  async function (cellName, tableName, wizardName, indexOffset) {
     const rowsNumber = await getTableRows(this.driver, pageObjects[wizardName][tableName])
     for (let i = 0; i < rowsNumber; i++) {
       await componentIsVisible(
         this.driver,
-        pageObjects[wizardName][tableName].tableFields[cellName](i + 1)
+        pageObjects[wizardName][tableName].tableFields[cellName](i + 1 + indexOffset)
       )
     }
   }

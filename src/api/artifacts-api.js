@@ -17,6 +17,7 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
+import { isNil } from 'lodash'
 import { mainHttpClient, mainHttpClientV2 } from '../httpClient'
 import {
   ARTIFACT_OTHER_TYPE,
@@ -55,15 +56,29 @@ const fetchArtifacts = (project, filters, config = {}, withLatestTag) => {
 const artifactsApi = {
   addTag: (project, tag, data) => mainHttpClient.put(`/projects/${project}/tags/${tag}`, data),
   buildFunction: data => mainHttpClient.post('/build/function', data),
-  deleteArtifact: (project, key, tag, tree) => {
+  deleteArtifact: (project, key, uid, deletion_strategy, secrets) => {
     const config = {
       params: {
-        tag,
-        tree
+        'object-uid': uid
       }
     }
 
+    if (deletion_strategy) {
+      config.params.deletion_strategy = deletion_strategy
+      config.data = { secrets }
+    }
+
     return mainHttpClientV2.delete(`/projects/${project}/artifacts/${key}`, config)
+  },
+  deleteArtifacts: (project, name, category) => {
+    const config = {
+      params: {}
+    }
+
+    if (name) config.params.name = name
+    if (category) config.params.category = category
+
+    return mainHttpClientV2.delete(`/projects/${project}/artifacts`, config)
   },
   deleteTag: (project, tag, data) =>
     mainHttpClient.delete(`/projects/${project}/tags/${tag}`, { data }),
@@ -94,9 +109,10 @@ const artifactsApi = {
         category
       }
     }),
-  getArtifact: (project, artifactName, artifactTag) => {
+  getExpandedArtifact: (project, artifactName, artifactTag) => {
     const params = {
-      name: artifactName
+      name: artifactName,
+      format: 'minimal'
     }
 
     if (artifactTag) {
@@ -105,10 +121,25 @@ const artifactsApi = {
 
     return mainHttpClientV2.get(`/projects/${project}/artifacts`, { params })
   },
+  getArtifact: (projectName, artifactName, tree, tag, iter) => {
+    const newConfig = {
+      params: { tree: tree }
+    }
+
+    if (tag) {
+      newConfig.params.tag = tag
+    }
+
+    if (!isNil(iter)) {
+      newConfig.params.iter = iter
+    }
+
+    return mainHttpClientV2.get(`/projects/${projectName}/artifacts/${artifactName}`, newConfig)
+  },
   getArtifacts: (project, filters, config) => {
     return fetchArtifacts(project, filters, config)
   },
-  getDataSet: (project, dataSet, iter, tag) => {
+  getExpandedDataSet: (project, dataSet, iter, tag) => {
     return fetchArtifacts(
       project,
       {},
@@ -117,7 +148,8 @@ const artifactsApi = {
           category: DATASET_TYPE,
           name: dataSet,
           tag: tag === TAG_FILTER_ALL_ITEMS ? '*' : tag,
-          'best-iteration': Boolean(iter)
+          'best-iteration': Boolean(iter),
+          format: 'minimal'
         }
       }
     )
@@ -125,12 +157,12 @@ const artifactsApi = {
   getDataSets: (project, filters, config = {}) => {
     const newConfig = {
       ...config,
-      params: { category: DATASET_TYPE }
+      params: { ...config.params, category: DATASET_TYPE }
     }
 
     return fetchArtifacts(project, filters, newConfig, true)
   },
-  getFile: (project, file, iter, tag) => {
+  getExpandedFile: (project, file, iter, tag) => {
     return fetchArtifacts(
       project,
       {},
@@ -139,7 +171,8 @@ const artifactsApi = {
           category: ARTIFACT_OTHER_TYPE,
           name: file,
           tag: tag === TAG_FILTER_ALL_ITEMS ? '*' : tag,
-          'best-iteration': Boolean(iter)
+          'best-iteration': Boolean(iter),
+          format: 'minimal'
         }
       }
     )
@@ -147,12 +180,12 @@ const artifactsApi = {
   getFiles: (project, filters, config = {}) => {
     const newConfig = {
       ...config,
-      params: { category: ARTIFACT_OTHER_TYPE, format: 'full' }
+      params: { ...config.params, category: ARTIFACT_OTHER_TYPE }
     }
 
     return fetchArtifacts(project, filters, newConfig, true)
   },
-  getModel: (project, model, iter, tag) => {
+  getExpandedModel: (project, model, iter, tag) => {
     return fetchArtifacts(
       project,
       {},
@@ -161,27 +194,16 @@ const artifactsApi = {
           category: MODEL_TYPE,
           name: model,
           tag: tag === TAG_FILTER_ALL_ITEMS ? '*' : tag,
-          'best-iteration': Boolean(iter)
+          'best-iteration': Boolean(iter),
+          format: 'minimal'
         }
       }
     )
   },
-  getModelEndpoints: (project, filters, config = {}, params = {}) => {
-    const newConfig = {
-      ...config,
-      params
-    }
-
-    if (filters?.labels) {
-      newConfig.params.label = filters.labels?.split(',')
-    }
-
-    return mainHttpClient.get(`/projects/${project}/model-endpoints`, newConfig)
-  },
   getModels: (project, filters, config = {}) => {
     const newConfig = {
       ...config,
-      params: { category: MODEL_TYPE, format: 'full' }
+      params: { ...config.params, category: MODEL_TYPE }
     }
 
     return fetchArtifacts(project, filters, newConfig, true)

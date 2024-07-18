@@ -30,6 +30,7 @@ import {
 } from './constants'
 
 import { BUTTON_VARIANTS } from 'igz-controls/types'
+import { TIME_FRAME_LIMITS } from './utils/datePicker.util'
 
 export const COMBOBOX_MATCHES = PropTypes.arrayOf(
   PropTypes.shape({
@@ -218,8 +219,29 @@ export const JOB_WIZARD_MODE = PropTypes.oneOf([
 
 export const VIRTUALIZATION_CONFIG = PropTypes.shape({
   startIndex: PropTypes.number.isRequired,
-  endIndex: PropTypes.number.isRequired
+  endIndex: PropTypes.number.isRequired,
+  tableBodyPaddingTop: PropTypes.number.isRequired
 })
 
 export const SLIDER_STYLE_1 = 'style1'
 export const SLIDER_STYLE_2 = 'style2'
+
+export const METRICS_SELECTOR_OPTIONS = PropTypes.arrayOf(
+  PropTypes.shape({
+    app: PropTypes.string.isRequired,
+    name: PropTypes.string.isRequired,
+    type: PropTypes.string.isRequired,
+    id: PropTypes.string.isRequired,
+    full_name: PropTypes.string.isRequired,
+    project: PropTypes.string
+  })
+)
+
+export const DATE_PICKER_TIME_FRAME_LIMITS = PropTypes.oneOf([
+  TIME_FRAME_LIMITS.HOUR,
+  TIME_FRAME_LIMITS['24_HOURS'],
+  TIME_FRAME_LIMITS.WEEK,
+  TIME_FRAME_LIMITS.MONTH,
+  TIME_FRAME_LIMITS.YEAR,
+  Infinity
+])

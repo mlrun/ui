@@ -24,11 +24,15 @@ import { useDispatch } from 'react-redux'
 
 import DetailsInfoView from './DetailsInfoView'
 
-import { handleFinishEdit } from '../Details/details.util'
-import { detailsInfoActions, detailsInfoReducer, initialState } from './detailsInfoReducer'
-import { isEveryObjectValueEmpty } from '../../utils/isEveryObjectValueEmpty'
 import detailsActions from '../../actions/details'
-import { generateDriftDetailsInfo, generateProducerDetailsInfo } from './detailsInfo.util'
+import { detailsInfoActions, detailsInfoReducer, initialState } from './detailsInfoReducer'
+import { handleFinishEdit } from '../Details/details.util'
+import { isEveryObjectValueEmpty } from '../../utils/isEveryObjectValueEmpty'
+import {
+  generateConfigurationDetailsInfo,
+  generateDriftDetailsInfo,
+  generateProducerDetailsInfo
+} from './detailsInfo.util'
 
 const DetailsInfo = React.forwardRef(
   (
@@ -46,23 +50,20 @@ const DetailsInfo = React.forwardRef(
           detailsInfoDispatch({
             type: detailsInfoActions.RESET_EDIT_MODE
           })
+          dispatch(detailsActions.setEditMode(false))
         }
       },
-      [applyChangesRef]
+      [applyChangesRef, dispatch]
     )
-
-    useEffect(() => {
-      dispatch(detailsActions.setEditMode(!isEveryObjectValueEmpty(detailsInfoState.editMode)))
-    }, [detailsInfoState.editMode, dispatch])
-
 
     useEffect(() => {
       return () => {
         detailsInfoDispatch({
           type: detailsInfoActions.RESET_EDIT_MODE
         })
+        dispatch(detailsActions.setEditMode(false))
       }
-    }, [detailsInfoDispatch, params.name])
+    }, [detailsInfoDispatch, dispatch, params.name])
 
     useEffect(() => {
       window.addEventListener('click', onApplyChanges)
@@ -76,7 +77,8 @@ const DetailsInfo = React.forwardRef(
       detailsInfoDispatch({
         type: detailsInfoActions.RESET_EDIT_MODE
       })
-    }, [])
+      dispatch(detailsActions.setEditMode(false))
+    }, [dispatch])
 
     const handleInfoItemClick = useCallback(
       (field, fieldType) => {
@@ -88,9 +90,10 @@ const DetailsInfo = React.forwardRef(
               fieldType
             }
           })
+          dispatch(detailsActions.setEditMode(true))
         }
       },
-      [detailsInfoState.editMode]
+      [detailsInfoState.editMode, dispatch]
     )
 
     const sources = useMemo(
@@ -113,8 +116,15 @@ const DetailsInfo = React.forwardRef(
       [detailsStore.modelEndpoint.data]
     )
 
+    const configuration = useMemo(
+      () => generateConfigurationDetailsInfo(selectedItem),
+      [selectedItem]
+    )
+
     const finishEdit = useCallback(
       currentField => {
+        dispatch(detailsActions.setEditMode(false))
+
         return handleFinishEdit(
           detailsStore.changes,
           detailsInfoActions,
@@ -125,12 +135,12 @@ const DetailsInfo = React.forwardRef(
           formState
         )
       },
-      [detailsStore.changes, formState, setChangesCounter, setChangesData]
+      [detailsStore.changes, dispatch, formState, setChangesCounter, setChangesData]
     )
 
     return (
       <DetailsInfoView
-        additionalInfo={{ drift, producer, sources }}
+        additionalInfo={{ configuration, drift, producer, sources }}
         detailsInfoDispatch={detailsInfoDispatch}
         detailsInfoState={detailsInfoState}
         detailsStore={detailsStore}

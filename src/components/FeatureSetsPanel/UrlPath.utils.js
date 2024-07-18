@@ -39,6 +39,7 @@ import { showErrorNotification } from '../../utils/notifications.util'
 import { fetchArtifact, fetchArtifacts } from '../../reducers/artifactsReducer'
 
 export const CSV = 'csv'
+export const URL = 'URL'
 
 const dbfsTargetPathRegex = /^(dbfs):(\/\/\/|\/\/)(?!.*:\/\/)([\w\-._~:/?#[\]%@!$&'()*+,;=]+)$/i
 
@@ -127,10 +128,10 @@ export const projectItemsPathTypes = [
 export const isUrlInputValid = (pathInputType, pathInputValue, dataSourceKind) => {
   const regExp =
     dataSourceKind === CSV
-      ? /^(artifacts|datasets|models)\/(.+?)\/(.+?)(#(.+?))?(:(.+?))?(@(.+))?(?<!\/)$/
-      : /^(artifacts|datasets|models)\/(.+?)\/(.+?)(#(.+?))?(:(.+?))?(@(.+))?$/
+      ? /^(artifacts|datasets|models)\/(\S+?)\/(\S+?)(#(\S+?))?(:(\S+?))?(@(\S+))?(?<!\/)$/
+      : /^(artifacts|datasets|models)\/(\S+?)\/(\S+?)(#(\S+?))?(:(\S+?))?(@(\S+))?$/
   const valueIsNotEmpty = pathInputValue?.trim().length > 0
-  const defaultValidation = valueIsNotEmpty && /.*?\/(.*?)/.test(pathInputValue)
+  const defaultValidation = valueIsNotEmpty && /^[^\s]*\/[^\s]*$/.test(pathInputValue)
 
   switch (pathInputType) {
     case MLRUN_STORAGE_INPUT_PATH_SCHEME:

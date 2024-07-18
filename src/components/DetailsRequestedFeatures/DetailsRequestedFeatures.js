@@ -91,16 +91,14 @@ const DetailsRequestedFeatures = ({
 
     setChangesCounter(countChanges(changesData))
     setChangesData({ ...changesData })
-  },
-    [
-      changes.data,
-      editableItemIndex,
-      formState,
-      labelFeatureIsEditable,
-      setChangesCounter,
-      setChangesData
-    ]
-  )
+  }, [
+    changes.data,
+    editableItemIndex,
+    formState,
+    labelFeatureIsEditable,
+    setChangesCounter,
+    setChangesData
+  ])
 
   const handleDelete = index => {
     const changesData = cloneDeep(changes.data)

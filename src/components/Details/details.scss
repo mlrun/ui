@@ -31,16 +31,17 @@
     .item {
       &-header {
         display: flex;
-        align-items: center;
-        justify-content: space-between;
+        flex-wrap: wrap;
+        align-items: flex-start;
+        justify-content: flex-end;
         margin: 0 0 26px 0;
 
         &-wrapper {
           position: sticky;
           top: 0;
           left: 0;
-          background-color: inherit;
           z-index: 6;
+          background-color: inherit;
         }
 
         &__title {
@@ -65,7 +66,6 @@
 
         &__navigation-buttons {
           display: flex;
-          margin-left: 20px;
         }
 
         &__pods {
@@ -76,7 +76,9 @@
 
         &__data {
           flex: 0 1 100%;
-          max-width: calc(100% - 330px);
+          min-width: 250px;
+          max-width: calc(100% - 900px);
+          margin-right: auto;
 
           h3 {
             margin: 0 0 10px 0;
@@ -95,6 +97,13 @@
           .error-container {
             margin-left: 0;
           }
+        }
+
+        &__custom-elements {
+          z-index: 7;
+          display: flex;
+          align-items: center;
+          margin-right: 10px;
         }
 
         &__buttons {
@@ -137,6 +146,21 @@
               }
             }
           }
+
+          .details-date-picker {
+            margin-right: 12px;
+          }
+        }
+
+        &_multiline {
+          .item-header__buttons {
+            order: 2;
+            margin-bottom: 10px;
+          }
+
+          .item-header__custom-elements {
+            order: 3;
+          }
         }
       }
 
@@ -164,16 +188,27 @@
       }
     }
 
-    &_logs {
-      display: flex;
+    &-logs {
       position: relative;
+      display: flex;
+      flex: 1;
       width: 100%;
-      height: 100%;
+      min-height: 200px;
       padding: 10px 0;
       color: $white;
       font-family: 'Source Code Pro', 'Courier New', monospace;
       white-space: pre-wrap;
       background-color: $black;
+
+      &:not(:last-child) {
+        margin-bottom: 10px;
+      }
+
+      &-container {
+        display: flex;
+        flex-direction: column;
+        height: 100%;
+      }
 
       &-content {
         width: 100%;
@@ -265,8 +300,8 @@
 
       .preview {
         &_popout {
-          padding: 0;
           margin: 0;
+          padding: 0;
           background: $white;
           border: none;
           outline: none;
@@ -291,8 +326,8 @@
     }
 
     &_code {
-      overflow: auto;
       flex: 1;
+      overflow: auto;
 
       h3 {
         text-align: center;

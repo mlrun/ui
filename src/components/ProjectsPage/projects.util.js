@@ -21,10 +21,16 @@ import React from 'react'
 import { get } from 'lodash'
 
 import tasksApi from '../../api/tasks-api'
+import {
+  BAD_GATEWAY_ERROR_STATUS_CODE,
+  SERVICE_UNAVAILABLE_ERROR_STATUS_CODE,
+  GATEWAY_TIMEOUT_STATUS_CODE
+} from 'igz-controls/constants'
 import { BG_TASK_FAILED, BG_TASK_SUCCEEDED, pollTask } from '../../utils/poll.util'
 import { DANGER_BUTTON, FORBIDDEN_ERROR_STATUS_CODE } from 'igz-controls/constants'
 import { setNotification } from '../../reducers/notificationReducer'
 import { showErrorNotification } from '../../utils/notifications.util'
+import projectsAction from '../../actions/projects'
 
 import { ReactComponent as ArchiveIcon } from 'igz-controls/images/archive-icon.svg'
 import { ReactComponent as Delete } from 'igz-controls/images/delete.svg'
@@ -32,6 +38,11 @@ import { ReactComponent as DownloadIcon } from 'igz-controls/images/ml-download.
 import { ReactComponent as UnarchiveIcon } from 'igz-controls/images/unarchive-icon.svg'
 import { ReactComponent as Yaml } from 'igz-controls/images/yaml.svg'
 
+export const mlrunUnhealthyErrors = [
+  BAD_GATEWAY_ERROR_STATUS_CODE,
+  SERVICE_UNAVAILABLE_ERROR_STATUS_CODE,
+  GATEWAY_TIMEOUT_STATUS_CODE
+]
 export const projectDeletionKind = 'project.deletion'
 export const projectDeletionWrapperKind = 'project.deletion.wrapper'
 export const pageData = {
@@ -44,8 +55,7 @@ export const generateProjectActionsMenu = (
   viewYaml,
   archiveProject,
   unarchiveProject,
-  deleteProject,
-  isDemoMode
+  deleteProject
 ) => {
   const deletingProjectNames = Object.values(deletingProjects)
   let actionsMenu = {}
@@ -70,15 +80,6 @@ export const generateProjectActionsMenu = (
           onClick: unarchiveProject
         },
         {
-          label: 'Delete',
-          icon: <Delete />,
-          className: 'danger',
-          hidden:
-            window.mlrunConfig.nuclioMode === 'enabled' && project.metadata.name === 'default',
-          disabled: projectIsDeleting,
-          onClick: deleteProject
-        },
-        {
           label: 'Export YAML',
           icon: <DownloadIcon />,
           disabled: projectIsDeleting,
@@ -89,6 +90,15 @@ export const generateProjectActionsMenu = (
           icon: <Yaml />,
           disabled: projectIsDeleting,
           onClick: viewYaml
+        },
+        {
+          label: 'Delete',
+          icon: <Delete />,
+          className: 'danger',
+          hidden:
+            window.mlrunConfig.nuclioMode === 'enabled' && project.metadata.name === 'default',
+          disabled: projectIsDeleting,
+          onClick: deleteProject
         }
       ]
     ]
@@ -96,6 +106,7 @@ export const generateProjectActionsMenu = (
 
   return actionsMenu
 }
+
 export const projectsStates = [
   {
     id: 'active',
@@ -106,6 +117,7 @@ export const projectsStates = [
     label: 'Archived'
   }
 ]
+
 export const projectsSortOptions = [
   {
     id: 'byName',
@@ -132,7 +144,7 @@ export const handleDeleteProjectError = (
       item: project,
       header: 'Delete project?',
       message:
-        `You try to delete project "${project.metadata.name}". The project is not empty. Deleting it will also delete all of its resources, such as jobs, ` +
+        `You are trying to delete the non-empty project "${project.metadata.name}". Deleting it will also delete all of its resources, such as jobs, ` +
         'artifacts, and features.',
       btnConfirmLabel: 'Delete',
       btnConfirmType: DANGER_BUTTON,
@@ -146,8 +158,8 @@ export const handleDeleteProjectError = (
   } else {
     const customErrorMsg =
       error.response?.status === FORBIDDEN_ERROR_STATUS_CODE
-        ? `You are not allowed to delete ${project.metadata.name} project`
-        : `Failed to delete ${project.metadata.name} project`
+        ? `You do not have permission to delete the project ${project.metadata.name} `
+        : `Failed to delete the project ${project.metadata.name} project`
 
     showErrorNotification(dispatch, error, '', customErrorMsg, () => handleDeleteProject(project))
   }
@@ -181,7 +193,7 @@ export const pollDeletingProjects = (terminatePollRef, deletingProjects, refresh
             get(
               task,
               'status.error',
-              `Failed to delete "${deletingProjects?.[task.metadata.name]}" project`
+              `Failed to delete the project "${deletingProjects?.[task.metadata.name]}"`
             )
           )
         }
@@ -199,4 +211,46 @@ export const pollDeletingProjects = (terminatePollRef, deletingProjects, refresh
   return pollTask(() => tasksApi.getBackgroundTasks(), isDone, {
     terminatePollRef
   })
+}
+
+export const generateMonitoringCounters = (data, dispatch) => {
+  const monitoringCounters = {
+    jobs: {
+      all: 0,
+      completed: 0,
+      failed: 0,
+      running: 0
+    },
+    workflows: {
+      all: 0,
+      completed: 0,
+      failed: 0,
+      running: 0
+    },
+    scheduled: {
+      jobs: 0,
+      workflows: 0
+    }
+  }
+
+  data.forEach(project => {
+    monitoringCounters.jobs.all +=
+      project.runs_completed_recent_count +
+      project.runs_failed_recent_count +
+      project.runs_running_count
+    monitoringCounters.jobs.completed += project.runs_completed_recent_count
+    monitoringCounters.jobs.failed += project.runs_failed_recent_count
+    monitoringCounters.jobs.running += project.runs_running_count
+    monitoringCounters.workflows.all +=
+      project.pipelines_completed_recent_count +
+      project.pipelines_failed_recent_count +
+      project.pipelines_running_count
+    monitoringCounters.workflows.completed += project.pipelines_completed_recent_count
+    monitoringCounters.workflows.failed += project.pipelines_failed_recent_count
+    monitoringCounters.workflows.running += project.pipelines_running_count
+    monitoringCounters.scheduled.jobs += project.distinct_scheduled_jobs_pending_count
+    monitoringCounters.scheduled.workflows += project.distinct_scheduled_pipelines_pending_count
+  })
+
+  dispatch(projectsAction.setJobsMonitoringData(monitoringCounters))
 }

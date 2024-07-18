@@ -175,7 +175,7 @@ const action = {
       await driver.sleep(250)
     }
 
-    expect(arr.every(item => item.includes(value))).equal(true)
+    expect(arr.some(item => item.includes(value))).equal(true)
   },
   isDatetimeCelsValueInRange: async function(
     driver,

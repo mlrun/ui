@@ -4,6 +4,7 @@ Feature: Files Page
 
   @MLA
   @passive
+  @smoke
   Scenario: MLA001 - Check all mandatory components on Artifacts tab
     Given open url
     And wait load page
@@ -35,6 +36,7 @@ Feature: Files Page
 
   @MLA
   @passive
+  @smoke
   Scenario: MLA002 - Verify filtering by file name on Artifacts page
     Given open url
     And wait load page
@@ -61,6 +63,7 @@ Feature: Files Page
 
   @MLA
   @passive
+  @smoke
   Scenario: MLA003 - Verify filtering by file label on Artifacts page
     Given open url
     And wait load page
@@ -87,6 +90,7 @@ Feature: Files Page
 
   @MLA
   @passive
+  @smoke
   Scenario: MLA004 - Verify behaviour of Show iterations checkbox on Artifacts tab
     Given open url
     And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
@@ -102,7 +106,7 @@ Feature: Files Page
     And wait load page
     Then click on "Table_FilterBy_Button" element on "Files" wizard
     Then "Show_Iterations_Checkbox" element should be unchecked on "Artifacts_FilterBy_Popup" wizard
-    Then check "expand_btn" visibility in "Files_Table" on "Files" wizard
+    Then check "expand_btn" visibility in "Files_Table" on "Files" wizard with 0 offset
     Then click on cell with row index 1 in "expand_btn" column in "Files_Table" table on "Files" wizard
     And wait load page
     Then click on cell with row index 1 in "name" column in "Files_Table" table on "Files" wizard
@@ -119,6 +123,9 @@ Feature: Files Page
   @MLA
   @passive
   @inProgress
+  @FAILED_TODO
+  @smoke
+  #TODO: bug - ML-6457 [Modal wizards] The "Are you sure?" pop-up does not appear on the browser's back navigation
   Scenario: MLA005 - Check all mandatory components on Register Artifacts Popup
     Given open url
     And wait load page
@@ -130,6 +137,7 @@ Feature: Files Page
     And wait load page
     Then click on "Register_File_Button" element on "Files" wizard
     Then verify if "Register_File_Popup" popup dialog appears
+    Then verify options in "Path_Scheme_Combobox" combobox in "Target_Path" on "Register_File_Popup" wizard should contains "Register_Artifact"."Combobox_Options"
     Then navigate back
     Then verify "Title" element not exists on "Register_File_Popup" wizard
     Then navigate forward
@@ -144,7 +152,6 @@ Feature: Files Page
     Then type value " " to "New_File_Name_Input" field on "Register_File_Popup" wizard
     Then verify "New_File_Name_Input" on "Register_File_Popup" wizard should display options "Input_Hint"."Artifact_Name_Hint"
     Then verify "New_File_Name_Input" options rules on form "Register_File_Popup" wizard
-    Then verify options in "Path_Scheme_Combobox" combobox in "Target_Path" on "Register_File_Popup" wizard should contains "Register_Artifact"."Combobox_Options"
     When select "V3IO" option in "Path_Scheme_Combobox" combobox on "Target_Path" accordion on "Register_File_Popup" wizard
     When type value "  " to "Path_Scheme_Combobox" field on "Target_Path" on "Register_File_Popup" wizard
     Then verify "Path_Scheme_Combobox" element in "Target_Path" on "Register_File_Popup" wizard should display warning "Input_Hint"."V3IO_Path_Hint"
@@ -195,6 +202,7 @@ Feature: Files Page
     Then verify "Title" element not exists on "Register_File_Popup" wizard
 
   @MLA
+  @smoke
   Scenario: MLA006 - Verify behaviour on Register new Artifact
     * set tear-down property "project" created with "automation-test" value
     * create "automation-test" MLRun Project with code 201
@@ -226,11 +234,21 @@ Feature: Files Page
     When select "V3IO" option in "Path_Scheme_Combobox" combobox on "Target_Path" accordion on "Register_Dataset" wizard
     When type value "target/path" to "Path_Scheme_Combobox" field on "Target_Path" on "Register_Dataset" wizard
     Then click on "Register_Button" element on "Register_File_Popup" wizard
-    Then "Register_Error_Message" component on "Register_File_Popup" should be equal "Register_Artifact"."Register_Error_Message"
+    Then verify if "Confirm_Popup" popup dialog appears
+    Then "Title" element on "Confirm_Popup" should contains "Overwrite artifact?" value
+    Then verify "Cross_Cancel_Button" element visibility on "Confirm_Popup" wizard
+    Then verify "Confirm_Dialog_Message" element visibility on "Confirm_Popup" wizard
+    Then "Confirm_Dialog_Message" component on "Confirm_Popup" should be equal "Register_Artifact"."Register_Error_Message"
+    Then verify "Cancel_Button" element visibility on "Confirm_Popup" wizard
+    Then "Cancel_Button" element on "Confirm_Popup" should contains "Cancel" value
+    Then verify "Overwrite_Button" element visibility on "Confirm_Popup" wizard
+    Then "Overwrite_Button" element on "Confirm_Popup" should contains "Overwrite" value
+    When click on "Cancel_Button" element on "Confirm_Popup" wizard
 
   @MLA
   @passive
   @inProgress
+  @smoke
   Scenario: MLA007 - Check all mandatory components in Item infopane on Overview tab table
     Given open url
     And wait load page
@@ -274,9 +292,10 @@ Feature: Files Page
 
   @MLA
   @passive
+  @smoke
   Scenario: MLA013 - Check Details panel still active on page refresh
-    * set tear-down property "project" created with "automation-test" value
-    * set tear-down property "file" created in "automation-test" project with "test-file" value
+    # * set tear-down property "project" created with "automation-test" value
+    # * set tear-down property "file" created in "automation-test" project with "test-file" value
     * create "automation-test" MLRun Project with code 201
     * create "test-file" File with "test" tag in "automation-test" project with code 200
     Given open url
@@ -305,12 +324,14 @@ Feature: Files Page
     Then verify "Header" element visibility on "Files_Info_Pane" wizard
     Then "Header" element on "Files_Info_Pane" should contains "test-file" value
     Then refresh a page
+    And wait load page
     Then verify "Header" element visibility on "Files_Info_Pane" wizard
     Then "Header" element on "Files_Info_Pane" should contains "test-file" value
 
   @MLA
   @passive
   @inProgress
+  @smoke
   Scenario: MLA016 - Check all mandatory components in Item infopane on Preview tab table
     Given open url
     And click on row root with value "churn-project-admin" in "name" column in "Projects_Table" table on "Projects" wizard
@@ -336,9 +357,10 @@ Feature: Files Page
     Then verify "Pop_Out_Button" element visibility on "Files_Info_Pane" wizard 
     Then click on "Pop_Out_Button" element on "Files_Info_Pane" wizard
     And wait load page
-    Then verify "Preview_Header" element visibility on "Artifact_Preview_Popup" wizard
+    Then verify "Preview_Row" element visibility on "Artifact_Preview_Popup" wizard
     Then verify "Cross_Cancel_Button" element visibility on "Artifact_Preview_Popup" wizard
-    Then check "download_btn" visibility in "Preview_Header" on "Artifact_Preview_Popup" wizard
+    Then verify "Preview_Header" on "Artifact_Preview_Popup" wizard should contains "Preview_Pop_Up"."Table_Header"
+    Then check "download_btn" visibility in "Preview_Row" on "Artifact_Preview_Popup" wizard with 1 offset
     Then click on "Download_Button" element on "Artifact_Preview_Popup" wizard
     And wait load page
     And wait load page
@@ -354,6 +376,7 @@ Feature: Files Page
 #    TO DO: should be implemented mock requests
 
   @MLA
+  @smoke
   Scenario: MLA022 - Verify the Delete option state in Artifacts table and Overview details action menu 
     Given open url
     And wait load page
@@ -379,7 +402,7 @@ Feature: Files Page
     Then select "All" option in "Table_Tree_Filter_Dropdown" dropdown on "Artifacts_FilterBy_Popup" wizard
     Then click on "Apply_Button" element on "Artifacts_FilterBy_Popup" wizard
     And wait load page
-    Then verify action menu on "Files" wizard in "Files_Table" table with "survival-curves_km-survival" value in "name" column should contains "Common_Lists"."Action_Menu_List"
+    Then verify action menu on "Files" wizard in "Files_Table" table with "survival-curves_km-survival" value in "name" column should contains "Common_Lists"."Action_Menu_List_Expanded"
     Then verify that in action menu on "Files" wizard in "Files_Table" table with "survival-curves_km-survival" value in "name" column "Delete" option is disabled
     When click on cell with row index 2 in "name" column in "Files_Table" table on "Files" wizard
     Then check "Click to add" value in "tag" column in "Overview_Table" table on "Files_Info_Pane" wizard
@@ -407,6 +430,7 @@ Feature: Files Page
 
   @MLA
   @passive
+  @smoke
   Scenario: MLA018 - Check MLRun logo redirection
     Given open url
     And wait load page
@@ -422,6 +446,7 @@ Feature: Files Page
 
   @MLA
   @passive
+  @smoke
   Scenario: MLA014 - Verify action menu list, Downloads action,  View YAML action
     Given open url
     And wait load page
@@ -432,8 +457,8 @@ Feature: Files Page
     And click on cell with value "Artifacts" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
     And hover "MLRun_Logo" component on "commonPagesHeader" wizard
     And wait load page
-    Then verify action menu on "Files" wizard in "Files_Table" table with "test-i" value in "name" column should contains "Common_Lists"."Action_Menu_List"
-    Then select "Download" option in action menu on "Files" wizard in "Files_Table" table at row with "test-i" value in "name" column
+    Then verify action menu on "Files" wizard in "Files_Table" table with "training_iteration_results" value in "name" column should contains "Common_Lists"."Action_Menu_List"
+    Then select "Download" option in action menu on "Files" wizard in "Files_Table" table at row with "training_iteration_results" value in "name" column
     And wait load page
     And wait load page
     Then verify "Download_Pop_Up" element visibility on "Downloads_Popup" wizard
@@ -443,7 +468,7 @@ Feature: Files Page
     Then verify "Header_Download_Pop_Up" element visibility on "Downloads_Popup" wizard
     Then "Header_Download_Pop_Up" element on "Downloads_Popup" should contains "Downloads" value
     Then click on "Download_Pop_Up_Cross_Cancel_Button" element on "Downloads_Popup" wizard
-    Then select "View YAML" option in action menu on "Files" wizard in "Files_Table" table at row with "test-i" value in "name" column
+    Then select "View YAML" option in action menu on "Files" wizard in "Files_Table" table at row with "training_iteration_results" value in "name" column
     Then verify if "View_YAML" popup dialog appears
     Then verify "Cross_Cancel_Button" element visibility on "View_YAML" wizard
     Then verify "YAML_Modal_Container" element visibility on "View_YAML" wizard
@@ -460,6 +485,7 @@ Feature: Files Page
 
   @MLA
   @passive
+  @smoke
   Scenario: MLA015 - Verify Preview option, view Preview action
       Given open url
       And wait load page
@@ -491,6 +517,7 @@ Feature: Files Page
       
   @MLA
   @passive
+  @smoke
   Scenario: MLA019 - Verify View YAML action in Item infopane
     Given open url
     And wait load page
@@ -508,6 +535,7 @@ Feature: Files Page
     Then verify "YAML_Modal_Container" element visibility on "View_YAML" wizard
 
   @MLA 
+  @smoke
   Scenario: MLA020 - Check broken link redirection
     Given open url
     And wait load page
@@ -560,6 +588,7 @@ Feature: Files Page
     Then compare "Header" element value on "Files_Info_Pane" wizard with test "name" context value
 
   @MLA
+  @smoke
   Scenario: MLA009 - Check that version tag is filled when edit it in table view and full view on Overview tab table on Artifacts page
     Given open url
     And wait load page
@@ -584,6 +613,7 @@ Feature: Files Page
     Then verify "Cross_Close_Button" element visibility on "Files_Info_Pane" wizard
 
   @MLA
+  @smoke
   Scenario: MLA010 - Check that version tag dropdown shows all tags on filters wizard on Artifacts page
     Given open url
     And wait load page
@@ -611,6 +641,7 @@ Feature: Files Page
     Then check "newTag" value in "tag" column in "Files_Table" table on "Files" wizard
 
   @MLA
+  @smoke
   Scenario: MLA011 - Check that version tag has "Click to add" status when it's empty after edited
     Given open url
     And wait load page
@@ -638,6 +669,7 @@ Feature: Files Page
     Then "Version_Tag_Input_Placeholder" element on "Files_Info_Pane" should contains "Click to add" value
 
   @MLA
+  @smoke
   Scenario: MLA012 - Check filter by "All" tag is performed when version tag was edited
     Given open url
     And wait load page

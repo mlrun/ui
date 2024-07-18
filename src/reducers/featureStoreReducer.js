@@ -40,7 +40,6 @@ import {
   REMOVE_ENTITY,
   REMOVE_FEATURE,
   REMOVE_FEATURES,
-  REMOVE_FEATURES_ERROR,
   REMOVE_FEATURE_SET,
   REMOVE_FEATURE_SETS,
   REMOVE_FEATURE_VECTOR,
@@ -57,7 +56,6 @@ import {
   SET_NEW_FEATURE_SET_DATA_SOURCE_START_TIME,
   SET_NEW_FEATURE_SET_DATA_SOURCE_URL,
   SET_NEW_FEATURE_SET_DESCRIPTION,
-  SET_NEW_FEATURE_SET_LABELS,
   SET_NEW_FEATURE_SET_NAME,
   SET_NEW_FEATURE_SET_PASSTHROUGH,
   SET_NEW_FEATURE_SET_SCHEDULE,
@@ -105,7 +103,6 @@ const initialState = {
       access_key: PANEL_DEFAULT_ACCESS_KEY
     },
     metadata: {
-      labels: {},
       name: '',
       tag: ''
     },
@@ -155,7 +152,6 @@ const featureStoreReducer = (state = initialState, { type, payload }) => {
     case CREATE_NEW_FEATURE_SET_FAILURE:
       return {
         ...state,
-        error: payload,
         loading: false
       }
     case CREATE_NEW_FEATURE_SET_SUCCESS:
@@ -583,17 +579,6 @@ const featureStoreReducer = (state = initialState, { type, payload }) => {
           }
         }
       }
-    case SET_NEW_FEATURE_SET_LABELS:
-      return {
-        ...state,
-        newFeatureSet: {
-          ...state.newFeatureSet,
-          metadata: {
-            ...state.newFeatureSet.metadata,
-            labels: payload
-          }
-        }
-      }
     case SET_NEW_FEATURE_SET_PASSTHROUGH:
       return {
         ...state,
@@ -661,11 +646,6 @@ const featureStoreReducer = (state = initialState, { type, payload }) => {
       return {
         ...state,
         loading: false,
-        error: null
-      }
-    case REMOVE_FEATURES_ERROR:
-      return {
-        ...state,
         error: null
       }
     default:

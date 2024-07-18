@@ -17,12 +17,12 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import { capitalize } from 'lodash'
+import { capitalize, set } from 'lodash'
 
 import { mainHttpClient } from '../httpClient'
-import { GROUP_BY_WORKFLOW, STATE_FILTER_ALL_ITEMS } from '../constants'
+import { GROUP_BY_WORKFLOW, FILTER_ALL_ITEMS } from '../constants'
 
-const generateQueryParams = filter => {
+const generateQueryParams = (project, filter, config) => {
   // Generating encoded JSON query string to send as a value to the filter query param
   // each "predicates" item is a single filter
   // key - type of filter (filter by name, by status, by dates)
@@ -33,6 +33,15 @@ const generateQueryParams = filter => {
   const queryParams = {
     predicates: []
   }
+  const stateFilter = Array.isArray(filter.state) ? filter.state : [filter.state]
+
+  if (project !== '*') {
+    queryParams.predicates.push({
+      key: 'name',
+      op: 9,
+      string_value: project
+    })
+  }
 
   if (filter.name) {
     queryParams.predicates.push({
@@ -40,14 +49,17 @@ const generateQueryParams = filter => {
       op: 9,
       string_value: filter.name
     })
+
+    set(config, ['params', 'name-contains'], filter.name)
   }
 
-  if (filter.state !== STATE_FILTER_ALL_ITEMS) {
+  if (!filter.state.includes(FILTER_ALL_ITEMS)) {
     queryParams.predicates.push({
       key: 'status',
-      op: 1,
-      string_value:
-        filter.state === 'completed' ? 'Succeeded' : capitalize(filter.state)
+      op: 8,
+      string_values: {
+        values: stateFilter.map(state => state === 'completed' ? 'Succeeded' : capitalize(state))
+      }
     })
   }
 
@@ -76,14 +88,21 @@ const workflowsApi = {
   getWorkflow: (project, workflowId) => {
     return mainHttpClient.get(`/projects/${project}/pipelines/${workflowId}`)
   },
-  getWorkflows: (project, filter, config = {}) => {
-    const newConfig = {
-      ...config,
-      params: {}
-    }
+  getWorkflows: (project, filter, config = {}, page_token) => {
+    let newConfig = {}
 
-    if (filter?.groupBy === GROUP_BY_WORKFLOW) {
-      newConfig.params.filter = generateQueryParams(filter)
+    if (page_token) {
+      newConfig.params = { page_token }
+    } else {
+      newConfig = {
+        ...config
+      }
+
+      if (filter?.groupBy === GROUP_BY_WORKFLOW) {
+        set(newConfig, ['params', 'filter'], generateQueryParams(project, filter, config))
+      }
+
+      set(newConfig, ['params', 'sort_by'], 'created_at desc')
     }
 
     return mainHttpClient.get(`/projects/${project}/pipelines`, newConfig)

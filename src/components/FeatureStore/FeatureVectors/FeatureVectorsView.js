@@ -20,15 +20,17 @@ such restriction.
 import React from 'react'
 import PropTypes from 'prop-types'
 
+import CreateFeatureVectorPopUp from '../../../elements/CreateFeatureVectorPopUp/CreateFeatureVectorPopUp'
+import FeatureStoreTableRow from '../../../elements/FeatureStoreTableRow/FeatureStoreTableRow'
 import FilterMenu from '../../FilterMenu/FilterMenu'
 import NoData from '../../../common/NoData/NoData'
 import Table from '../../Table/Table'
-import FeatureStoreTableRow from '../../../elements/FeatureStoreTableRow/FeatureStoreTableRow'
-import CreateFeatureVectorPopUp from '../../../elements/CreateFeatureVectorPopUp/CreateFeatureVectorPopUp'
 
-import { getNoDataMessage } from '../../../utils/getNoDataMessage'
-import { featureVectorsFilters } from './featureVectors.util'
 import { FEATURE_STORE_PAGE, FEATURE_VECTORS_TAB } from '../../../constants'
+import { VIRTUALIZATION_CONFIG } from '../../../types'
+import { featureVectorsFilters } from './featureVectors.util'
+import { getNoDataMessage } from '../../../utils/getNoDataMessage'
+import { isRowRendered } from '../../../hooks/useVirtualization.hook'
 
 const FeatureVectorsView = React.forwardRef(
   (
@@ -49,12 +51,13 @@ const FeatureVectorsView = React.forwardRef(
       selectedRowData,
       setCreateVectorPopUpIsOpen,
       setSelectedFeatureVector,
-      tableContent
+      tableContent,
+      virtualizationConfig
     },
-    ref
+    { featureStoreRef }
   ) => {
     return (
-      <div className="feature-store" ref={ref}>
+      <div className="feature-store" ref={featureStoreRef}>
         <div className="content__action-bar-wrapper">
           <div className="action-bar">
             <FilterMenu
@@ -87,20 +90,25 @@ const FeatureVectorsView = React.forwardRef(
               retryRequest={handleRefresh}
               selectedItem={selectedFeatureVector}
               tab={FEATURE_VECTORS_TAB}
+              tableClassName="feature-vectors-table"
               tableHeaders={tableContent[0]?.content ?? []}
+              virtualizationConfig={virtualizationConfig}
             >
-              {tableContent.map((tableItem, index) => (
-                <FeatureStoreTableRow
-                  actionsMenu={actionsMenu}
-                  handleExpandRow={handleExpandRow}
-                  key={index}
-                  pageTab={FEATURE_VECTORS_TAB}
-                  rowIndex={index}
-                  rowItem={tableItem}
-                  selectedItem={selectedFeatureVector}
-                  selectedRowData={selectedRowData}
-                />
-              ))}
+              {tableContent.map(
+                (tableItem, index) =>
+                  isRowRendered(virtualizationConfig, index) && (
+                    <FeatureStoreTableRow
+                      actionsMenu={actionsMenu}
+                      handleExpandRow={handleExpandRow}
+                      key={index}
+                      pageTab={FEATURE_VECTORS_TAB}
+                      rowIndex={index}
+                      rowItem={tableItem}
+                      selectedItem={selectedFeatureVector}
+                      selectedRowData={selectedRowData}
+                    />
+                  )
+              )}
             </Table>
           </>
         )}
@@ -133,7 +141,8 @@ FeatureVectorsView.propTypes = {
   selectedRowData: PropTypes.object.isRequired,
   setCreateVectorPopUpIsOpen: PropTypes.func.isRequired,
   setSelectedFeatureVector: PropTypes.func.isRequired,
-  tableContent: PropTypes.arrayOf(PropTypes.object).isRequired
+  tableContent: PropTypes.arrayOf(PropTypes.object).isRequired,
+  virtualizationConfig: VIRTUALIZATION_CONFIG.isRequired
 }
 
 export default FeatureVectorsView

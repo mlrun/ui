@@ -30,7 +30,14 @@ import featureStoreActions from '../../actions/featureStore'
 import functionsActions from '../../actions/functions'
 import nuclioAction from '../../actions/nuclio'
 import projectsAction from '../../actions/projects'
-import { DATASET_TYPE, DATASETS, DETAILS_BUILD_LOG_TAB, MODEL_TYPE } from '../../constants'
+import {
+  DATASET_TYPE,
+  DATASETS_TAB,
+  DETAILS_BUILD_LOG_TAB,
+  FILES_TAB,
+  MODELS_TAB,
+  MODEL_TYPE
+} from '../../constants'
 import { areNuclioStreamsEnabled } from '../../utils/helper'
 import { generateCreateNewOptions, handleFetchProjectError } from './project.utils'
 import { openPopUp } from 'igz-controls/utils/common.util'
@@ -40,7 +47,6 @@ import { showErrorNotification } from '../../utils/notifications.util'
 import { useNuclioMode } from '../../hooks/nuclioMode.hook'
 
 const ProjectMonitor = ({
-  featureStore,
   fetchNuclioV3ioStreams,
   fetchProject,
   fetchProjectFunctions,
@@ -49,7 +55,6 @@ const ProjectMonitor = ({
   functionsStore,
   nuclioStore,
   projectStore,
-  removeFeatureStoreError,
   removeFunctionsError,
   removeNewFeatureSet,
   removeNewFunction,
@@ -70,7 +75,11 @@ const ProjectMonitor = ({
   const registerArtifactLink = useCallback(
     artifactKind =>
       `/projects/${params.projectName}/${
-        artifactKind === MODEL_TYPE ? 'models' : artifactKind === DATASET_TYPE ? DATASETS : 'files'
+        artifactKind === MODEL_TYPE
+          ? MODELS_TAB
+          : artifactKind === DATASET_TYPE
+            ? DATASETS_TAB
+            : FILES_TAB
       }`,
     [params.projectName]
   )
@@ -116,12 +125,12 @@ const ProjectMonitor = ({
   }, [isDemoMode, navigate, params, openRegisterArtifactModal, openRegisterModelModal])
 
   const fetchProjectDataAndSummary = useCallback(() => {
-    Promise.all([fetchProject(params.projectName), fetchProjectSummary(params.projectName)]).catch(error => {
-      handleFetchProjectError(error, navigate, setConfirmData)
-    })
+    Promise.all([fetchProject(params.projectName), fetchProjectSummary(params.projectName)]).catch(
+      error => {
+        handleFetchProjectError(error, navigate, setConfirmData)
+      }
+    )
   }, [fetchProject, fetchProjectSummary, navigate, params.projectName])
-
-
 
   const resetProjectData = useCallback(() => {
     removeProjectData()
@@ -134,11 +143,7 @@ const ProjectMonitor = ({
       resetProjectData()
       removeProjectSummary()
     }
-  }, [
-    fetchProjectDataAndSummary,
-    removeProjectSummary,
-    resetProjectData
-  ])
+  }, [fetchProjectDataAndSummary, removeProjectSummary, resetProjectData])
 
   useEffect(() => {
     if (nuclioStreamsAreEnabled && !isNuclioModeDisabled) {
@@ -157,10 +162,6 @@ const ProjectMonitor = ({
   const closeFeatureSetPanel = () => {
     setCreateFeatureSetPanelIsOpen(false)
     removeNewFeatureSet()
-
-    if (featureStore.error) {
-      removeFeatureStoreError()
-    }
   }
 
   const closeFunctionsPanel = () => {
@@ -204,7 +205,7 @@ const ProjectMonitor = ({
         setNotification({
           status: 200,
           id: Math.random(),
-          message: 'Function deployment initiated successfully'
+          message: 'Function was deployed'
         })
       )
 
@@ -224,7 +225,7 @@ const ProjectMonitor = ({
         setNotification({
           status: 200,
           id: Math.random(),
-          message: 'Function deployment initiated successfully'
+          message: 'Function was deployed'
         })
       )
     }
@@ -237,7 +238,7 @@ const ProjectMonitor = ({
     removeNewFunction()
 
     const funcs = await fetchProjectFunctions(params.projectName).catch(error => {
-      showErrorNotification(dispatch, deployError, '', 'Function deployment failed to initiate')
+      showErrorNotification(dispatch, deployError, '', 'Failed to deploy the function')
       showErrorNotification(dispatch, error, '', 'Failed to fetch functions')
     })
 
@@ -250,7 +251,7 @@ const ProjectMonitor = ({
         navigate(`/projects/${params.projectName}/functions/${currentItem.metadata.hash}/overview`)
       }
 
-      showErrorNotification(dispatch, deployError, '', 'Function deployment failed to initiate')
+      showErrorNotification(dispatch, deployError, '', 'Failed to deploy the function')
     }
   }
 

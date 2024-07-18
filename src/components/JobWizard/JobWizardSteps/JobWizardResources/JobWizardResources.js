@@ -27,6 +27,7 @@ import { FormSelect, FormKeyValueTable, Tip } from 'igz-controls/components'
 import { RESOURCES_STEP } from '../../../../constants'
 import { generateFunctionPriorityLabel } from '../../../../utils/generateFunctionPriorityLabel'
 import { volumePreemptionModeOptions } from './JowWizardResources.util'
+import { getValidationRules } from 'igz-controls/utils/validation.util'
 
 import './jobWizardResources.scss'
 
@@ -68,6 +69,8 @@ const JobWizardResources = ({ formState, frontendSpec, stepIsActive }) => {
         <FormKeyValueTable
           actionButtonId="add-node-selector"
           addNewItemLabel="Add node selector"
+          keyValidationRules={getValidationRules('nodeSelectors.key')}
+          valueValidationRules={getValidationRules('nodeSelectors.value')}
           exitEditModeTriggerItem={stepIsActive}
           fieldsPath={`${RESOURCES_STEP}.nodeSelectorTable`}
           formState={formState}

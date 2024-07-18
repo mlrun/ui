@@ -17,9 +17,9 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import React, { useEffect, useCallback, useRef, useState } from 'react'
+import React, { useEffect, useCallback, useRef } from 'react'
 import PropTypes from 'prop-types'
-import { useLocation, useParams } from 'react-router-dom'
+import { useBlocker, useLocation, useParams } from 'react-router-dom'
 import { connect, useDispatch, useSelector } from 'react-redux'
 import { createForm } from 'final-form'
 import arrayMutators from 'final-form-arrays'
@@ -27,19 +27,20 @@ import { Form } from 'react-final-form'
 import { isEqual, pickBy } from 'lodash'
 import classnames from 'classnames'
 
-import DetailsTabsContent from './DetailsTabsContent/DetailsTabsContent'
 import { ConfirmDialog } from 'igz-controls/components'
-import Loader from '../../common/Loader/Loader'
 import ErrorMessage from '../../common/ErrorMessage/ErrorMessage'
+import DetailsTabsContent from './DetailsTabsContent/DetailsTabsContent'
+
 import DetailsHeader from './DetailsHeader/DetailsHeader'
+import Loader from '../../common/Loader/Loader'
 import TabsSlider from '../../common/TabsSlider/TabsSlider'
 
 import { TERTIARY_BUTTON, PRIMARY_BUTTON } from 'igz-controls/constants'
 import detailsActions from '../../actions/details'
 import {
   ARTIFACTS_PAGE,
-  DATASETS,
-  FILES_PAGE,
+  DATASETS_TAB,
+  FILES_TAB,
   FUNCTIONS_PAGE,
   JOBS_PAGE,
   MODEL_ENDPOINTS_TAB,
@@ -53,7 +54,6 @@ import {
   generateJobsContent
 } from './details.util'
 import { isEveryObjectValueEmpty } from '../../utils/isEveryObjectValueEmpty'
-import { useBlockHistory } from '../../hooks/useBlockHistory.hook'
 import { showArtifactsPreview } from '../../reducers/artifactsReducer'
 import { setFieldState } from 'igz-controls/utils/form.util'
 
@@ -89,8 +89,6 @@ const Details = ({
   const dispatch = useDispatch()
   const detailsRef = useRef()
   const params = useParams()
-  const { blockHistory, unblockHistory } = useBlockHistory()
-  const [historyIsBlocked, setHistoryIsBlocked] = useState(false)
   const detailsStore = useSelector(store => store.detailsStore)
   const filtersStore = useSelector(store => store.filtersStore)
   const location = useLocation()
@@ -120,11 +118,9 @@ const Details = ({
 
   useEffect(() => {
     return () => {
-      //TODO
       resetChanges()
-      unblockHistory()
     }
-  }, [resetChanges, unblockHistory])
+  }, [resetChanges])
 
   useEffect(() => {
     if (!isEveryObjectValueEmpty(selectedItem)) {
@@ -132,10 +128,10 @@ const Details = ({
         setInfoContent(generateJobsContent(selectedItem))
       } else if (
         pageData.details.type === ARTIFACTS_PAGE ||
-        pageData.details.type === FILES_PAGE ||
+        pageData.details.type === FILES_TAB ||
         pageData.details.type === MODELS_TAB ||
         pageData.details.type === MODEL_ENDPOINTS_TAB ||
-        pageData.details.type === DATASETS
+        pageData.details.type === DATASETS_TAB
       ) {
         setInfoContent(
           generateArtifactsContent(pageData.details.type, selectedItem, params.projectName)
@@ -150,13 +146,11 @@ const Details = ({
 
   useEffect(() => {
     return () => {
-      //TODO
       if (pageData.details.type === MODELS_TAB) {
         removeModelFeatureVector()
       }
 
       removeInfoContent()
-      setHistoryIsBlocked(false)
     }
   }, [pageData.details.type, removeInfoContent, removeModelFeatureVector, selectedItem])
 
@@ -188,21 +182,17 @@ const Details = ({
     }
   }, [handleRefreshClick])
 
-  useEffect(() => {
-    if (detailsStore.changes.counter > 0 && !historyIsBlocked) {
-      blockHistory(() => handleShowWarning(true))
-      setHistoryIsBlocked(true)
-    } else if (detailsStore.changes.counter === 0 && historyIsBlocked) {
-      unblockHistory()
-      setHistoryIsBlocked(false)
-    }
-  }, [
-    blockHistory,
-    detailsStore.changes.counter,
-    handleShowWarning,
-    unblockHistory,
-    historyIsBlocked
-  ])
+  let blocker = useBlocker(({ currentLocation, nextLocation }) => {
+    const currentLocationPathname = currentLocation.pathname.split('/')
+    const nextLocationPathname = nextLocation.pathname.split('/')
+    currentLocationPathname.pop()
+    nextLocationPathname.pop()
+
+    return (
+      detailsStore.changes.counter > 0 &&
+      currentLocationPathname.join('/') !== nextLocationPathname.join('/')
+    )
+  })
 
   useEffect(() => {
     if (
@@ -214,18 +204,9 @@ const Details = ({
     }
   }, [formInitialValues, detailsStore.changes.counter])
 
-  const detailsMenuClick = useCallback(() => {
-    if (historyIsBlocked) {
-      unblockHistory()
-      setHistoryIsBlocked(false)
-    }
-  }, [historyIsBlocked, unblockHistory])
-
   const applyChanges = useCallback(() => {
     applyDetailsChanges(detailsStore.changes).then(() => {
       resetChanges()
-      unblockHistory()
-      setHistoryIsBlocked(false)
       applyDetailsChangesCallback(detailsStore.changes, selectedItem)
     })
   }, [
@@ -233,18 +214,15 @@ const Details = ({
     applyDetailsChangesCallback,
     detailsStore.changes,
     resetChanges,
-    selectedItem,
-    unblockHistory
+    selectedItem
   ])
 
   const cancelChanges = useCallback(() => {
     if (detailsStore.changes.counter > 0) {
       resetChanges()
-      unblockHistory()
-      setHistoryIsBlocked(false)
       formRef.current.reset(formInitialValues)
     }
-  }, [detailsStore.changes.counter, formInitialValues, resetChanges, unblockHistory])
+  }, [detailsStore.changes.counter, formInitialValues, resetChanges])
 
   const leavePage = useCallback(() => {
     cancelChanges()
@@ -254,25 +232,25 @@ const Details = ({
       retryRequest(filtersStore)
       setFiltersWasHandled(false)
     } else {
-      unblockHistory(true)
+      blocker.proceed?.()
     }
 
     window.dispatchEvent(new CustomEvent('discardChanges'))
   }, [
+    blocker,
     cancelChanges,
     detailsStore.filtersWasHandled,
     filtersStore,
     handleShowWarning,
     retryRequest,
-    setFiltersWasHandled,
-    unblockHistory
+    setFiltersWasHandled
   ])
 
   return (
     <Form form={formRef.current} onSubmit={() => {}}>
       {formState => (
         <div className={detailsPanelClassNames} ref={detailsRef} data-testid="detailsPanel">
-          {detailsStore.loading && <Loader />}
+          {detailsStore.loadingCounter > 0 && <Loader />}
           {detailsStore.error && <ErrorMessage message={detailsStore.error.message} />}
           <div className="item-header-wrapper">
             <DetailsHeader
@@ -290,8 +268,7 @@ const Details = ({
               setIteration={setIteration}
               tab={tab}
             />
-
-            <TabsSlider tabsList={detailsMenu} onClick={detailsMenuClick} initialTab={params.tab} />
+            <TabsSlider tabsList={detailsMenu} initialTab={params.tab} />
           </div>
           <div className="item-info">
             <DetailsTabsContent
@@ -307,19 +284,17 @@ const Details = ({
               setIterationOption={setIterationOption}
             />
           </div>
-          {detailsStore.showWarning && (
+          {blocker.state === 'blocked' && (
             <ConfirmDialog
               cancelButton={{
                 handler: () => {
-                  handleShowWarning(false)
-                  setFiltersWasHandled(false)
+                  blocker.reset?.()
                 },
                 label: detailsStore.filtersWasHandled ? "Don't refresh" : "Don't Leave",
                 variant: TERTIARY_BUTTON
               }}
               closePopUp={() => {
-                handleShowWarning(false)
-                setFiltersWasHandled(false)
+                blocker.proceed?.()
               }}
               confirmButton={{
                 handler: leavePage,
@@ -327,7 +302,7 @@ const Details = ({
                 variant: PRIMARY_BUTTON
               }}
               header="You have unsaved changes."
-              isOpen={detailsStore.showWarning}
+              isOpen={blocker.state === 'blocked'}
               message={`${
                 detailsStore.filtersWasHandled ? 'Refreshing the list' : 'Leaving this page'
               } will discard your changes.`}

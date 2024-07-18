@@ -19,7 +19,6 @@ such restriction.
 */
 import React from 'react'
 import { useSelector } from 'react-redux'
-import { Link } from 'react-router-dom'
 
 import { ReactComponent as Logo } from 'igz-controls/images/mlrun-blue-logo.svg'
 import { ReactComponent as GithubIcon } from 'igz-controls/images/github-icon.svg'
@@ -33,9 +32,7 @@ const Header = () => {
   return (
     <header className="header" data-testid="header">
       <div className="header__brand">
-        <Link to="/">
-          <Logo className="header__logo" alt="MLRun" />
-        </Link>
+        <a href={`${process.env.PUBLIC_URL}/`}><Logo className="header__logo" alt="MLRun" /></a>
         <div>
           <div>The Open Source MLOps</div>
           <div>Orchestration Framework</div>

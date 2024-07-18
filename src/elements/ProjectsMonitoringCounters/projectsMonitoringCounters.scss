@@ -1,0 +1,48 @@
+@import '~igz-controls/scss/colors';
+
+.monitoring-stats {
+  flex-direction: column;
+  flex-wrap: unset;
+  justify-content: flex-start;
+
+  .stats-card__row {
+    flex: unset;
+
+    &:last-child {
+      margin-top: auto;
+    }
+  }
+
+  .stats {
+    &__subtitle {
+      margin: 0 0 5px 0;
+      color: $topaz;
+      font-weight: normal;
+      font-size: 1rem;
+    }
+
+    &__counter {
+      display: flex;
+      flex: 1;
+      min-height: 58px;
+      margin: 0 0 5px 0;
+      color: $primary;
+      font-weight: 700;
+      font-size: 48px;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .link {
+      font-size: 1rem;
+    }
+  }
+
+  .date-picker-container {
+    margin-left: 15px;
+
+    .input-wrapper .input.date-picker__input {
+      padding: 10px;
+    }
+  }
+}

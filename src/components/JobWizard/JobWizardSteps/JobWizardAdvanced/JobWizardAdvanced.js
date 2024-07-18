@@ -19,10 +19,9 @@ such restriction.
 */
 import React, { useState } from 'react'
 import PropTypes from 'prop-types'
-import { OnChange } from 'react-final-form-listeners'
 
 import FormEnvironmentVariablesTable from '../../../../elements/FormEnvironmentVariablesTable/FormEnvironmentVariablesTable'
-import { FormCheckBox, FormInput, FormKeyValueTable } from 'igz-controls/components'
+import { FormCheckBox, FormInput, FormKeyValueTable, FormOnChange } from 'igz-controls/components'
 
 import { ADVANCED_STEP } from '../../../../constants'
 import { secretsKindOptions } from './JobWizardAdvanced.util'
@@ -81,11 +80,11 @@ const JobWizardAdvanced = ({ formState, stepIsActive }) => {
           </div>
         )}
       </div>
-
       {stepIsActive && (
-        <OnChange name={`${ADVANCED_STEP}.accessKey`}>
-          {() => formState.form.change(`${ADVANCED_STEP}.accessKeyInput`, '')}
-        </OnChange>
+        <FormOnChange
+          handler={() => formState.form.change(`${ADVANCED_STEP}.accessKeyInput`, '')}
+          name={`${ADVANCED_STEP}.accessKey`}
+        />
       )}
     </div>
   )

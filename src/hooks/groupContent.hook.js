@@ -18,9 +18,11 @@ under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
 import { useCallback, useState, useEffect } from 'react'
-import { GROUP_BY_NAME, GROUP_BY_NONE } from '../constants'
 import { useParams } from 'react-router-dom'
 import { useSelector } from 'react-redux'
+
+import { GROUP_BY_NAME, GROUP_BY_NONE } from '../constants'
+import { PARENT_ROW_EXPANDED_CLASS } from '../utils/tableRows.util'
 import { generateGroupLatestItem } from '../utils/generateGroupLatestItem'
 
 export const useGroupContent = (
@@ -57,7 +59,7 @@ export const useGroupContent = (
   const handleGroupByNone = useCallback(() => {
     const rows = [...document.getElementsByClassName('parent-row')]
 
-    rows.forEach(row => row.classList.remove('parent-row_expanded'))
+    rows.forEach(row => row.classList.remove(PARENT_ROW_EXPANDED_CLASS))
 
     setExpand(false)
     setGroupedContent({})
@@ -66,14 +68,14 @@ export const useGroupContent = (
   const handleExpandRow = (e, item) => {
     const parentRow = e.target.closest('.parent-row')
 
-    if (parentRow.classList.contains('parent-row_expanded')) {
-      parentRow.classList.remove('parent-row_expanded')
+    if (parentRow.classList.contains(PARENT_ROW_EXPANDED_CLASS)) {
+      parentRow.classList.remove(PARENT_ROW_EXPANDED_CLASS)
       handleRemoveRequestData && handleRemoveRequestData(item)
 
       setExpandedItems(prev => --prev)
     } else {
       parentRow.classList.remove('table-row_active')
-      parentRow.classList.add('parent-row_expanded')
+      parentRow.classList.add(PARENT_ROW_EXPANDED_CLASS)
       handleRequestOnExpand && handleRequestOnExpand(item, groupedContent)
 
       setExpandedItems(prev => ++prev)
@@ -86,12 +88,12 @@ export const useGroupContent = (
         const rows = [...document.getElementsByClassName('parent-row')]
 
         if (collapseRows || expand) {
-          rows.forEach(row => row.classList.remove('parent-row_expanded'))
+          rows.forEach(row => row.classList.remove(PARENT_ROW_EXPANDED_CLASS))
 
           setExpandedItems(0)
           handleExpandAllCallback && handleExpandAllCallback(true)
         } else {
-          rows.forEach(row => row.classList.add('parent-row_expanded'))
+          rows.forEach(row => row.classList.add(PARENT_ROW_EXPANDED_CLASS))
 
           setExpandedItems(Object.keys(groupedContent).length)
           handleExpandAllCallback && handleExpandAllCallback(false, groupedContent)

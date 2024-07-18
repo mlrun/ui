@@ -20,6 +20,7 @@ such restriction.
 
 import { setNotification } from '../reducers/notificationReducer'
 import { getErrorMsg } from 'igz-controls/utils/common.util'
+import { FORBIDDEN_ERROR_STATUS_CODE } from 'igz-controls/constants'
 
 export const showErrorNotification = (dispatch, error, defaultErrorMsg, customErrorMsg, retryCallback) => {
   const notificationData = {
@@ -29,7 +30,7 @@ export const showErrorNotification = (dispatch, error, defaultErrorMsg, customEr
     error
   }
 
-  if (retryCallback) {
+  if (retryCallback && error?.response?.status !== FORBIDDEN_ERROR_STATUS_CODE) {
     notificationData.retry = retryCallback
   }
 

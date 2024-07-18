@@ -42,7 +42,6 @@ import {
   REMOVE_ENTITY,
   REMOVE_FEATURE,
   REMOVE_FEATURES,
-  REMOVE_FEATURES_ERROR,
   REMOVE_FEATURE_SET,
   REMOVE_FEATURE_SETS,
   REMOVE_FEATURE_VECTOR,
@@ -60,7 +59,6 @@ import {
   SET_NEW_FEATURE_SET_DATA_SOURCE_TIMESTAMP_COLUMN,
   SET_NEW_FEATURE_SET_DATA_SOURCE_URL,
   SET_NEW_FEATURE_SET_DESCRIPTION,
-  SET_NEW_FEATURE_SET_LABELS,
   SET_NEW_FEATURE_SET_NAME,
   SET_NEW_FEATURE_SET_PASSTHROUGH,
   SET_NEW_FEATURE_SET_SCHEDULE,
@@ -80,6 +78,7 @@ import {
 } from '../utils/getUniqueIdentifier'
 import { parseFeatureSets } from '../utils/parseFeatureSets'
 import { largeResponseCatchHandler } from '../utils/largeResponseCatchHandler'
+import { showErrorNotification } from '../utils/notifications.util'
 
 const featureStoreActions = {
   createNewFeatureSet: (project, data) => dispatch => {
@@ -95,12 +94,13 @@ const featureStoreActions = {
       .catch(error => {
         const message =
           error.response.status === CONFLICT_ERROR_STATUS_CODE
-            ? 'Adding an already-existing FeatureSet'
+            ? 'Cannot create the feature set: the name is already in use.'
             : error.response.status === FORBIDDEN_ERROR_STATUS_CODE
-            ? 'You are not permitted to create new feature set.'
-            : error.message
+              ? 'You are not permitted to create a feature set.'
+              : error.message
 
-        dispatch(featureStoreActions.createNewFeatureSetFailure(message))
+        showErrorNotification(dispatch, error, '', message)
+        dispatch(featureStoreActions.createNewFeatureSetFailure())
 
         throw error
       })
@@ -123,10 +123,7 @@ const featureStoreActions = {
     return featureStoreApi
       .getEntity(project, entityName)
       .then(response => {
-        const filteredEntities = response.data.entities.filter(
-          responseItem => responseItem.feature_set_digest.metadata.name === entityMetadataName
-        )
-        const parsedEntities = parseFeatures(filteredEntities)
+        const parsedEntities = parseFeatures(response.data, entityMetadataName)
 
         dispatch(
           featureStoreActions.fetchEntitySuccess({
@@ -134,7 +131,7 @@ const featureStoreActions = {
           })
         )
 
-        return filteredEntities
+        return parsedEntities
       })
       .catch(error => {
         throw error
@@ -150,9 +147,11 @@ const featureStoreActions = {
     return featureStoreApi
       .getEntities(project, filters, config)
       .then(response => {
-        dispatch(featureStoreActions.fetchEntitiesSuccess(response.data.entities))
+        const entities = parseFeatures(response.data)
 
-        return response.data.entities
+        dispatch(featureStoreActions.fetchEntitiesSuccess(entities))
+
+        return entities
       })
       .catch(err => {
         dispatch(featureStoreActions.fetchEntitiesFailure(err))
@@ -241,28 +240,30 @@ const featureStoreActions = {
     type: FETCH_FEATURE_VECTOR_SUCCESS,
     payload: featureSets
   }),
-  fetchFeatureVectors: (project, filters, config = {}, skipErrorNotification) => dispatch => {
-    dispatch(featureStoreActions.fetchFeatureVectorsBegin())
+  fetchFeatureVectors:
+    (project, filters, config = {}, skipErrorNotification) =>
+    dispatch => {
+      dispatch(featureStoreActions.fetchFeatureVectorsBegin())
 
-    return featureStoreApi
-      .getFeatureVectors(project, filters, config)
-      .then(response => {
-        dispatch(
-          featureStoreActions.fetchFeatureVectorsSuccess(
-            parseFeatureVectors(response.data.feature_vectors)
+      return featureStoreApi
+        .getFeatureVectors(project, filters, config)
+        .then(response => {
+          dispatch(
+            featureStoreActions.fetchFeatureVectorsSuccess(
+              parseFeatureVectors(response.data.feature_vectors)
+            )
           )
-        )
 
-        return response.data.feature_vectors
-      })
-      .catch(error => {
-        dispatch(featureStoreActions.fetchFeatureVectorsFailure(error))
+          return response.data.feature_vectors
+        })
+        .catch(error => {
+          dispatch(featureStoreActions.fetchFeatureVectorsFailure(error))
 
-        if (!skipErrorNotification) {
-          largeResponseCatchHandler(error, 'Failed to fetch feature vectors', dispatch)
-        }
-      })
-  },
+          if (!skipErrorNotification) {
+            largeResponseCatchHandler(error, 'Failed to fetch feature vectors', dispatch)
+          }
+        })
+    },
   fetchFeatureVectorsBegin: () => ({
     type: FETCH_FEATURE_VECTORS_BEGIN
   }),
@@ -278,10 +279,7 @@ const featureStoreActions = {
     return featureStoreApi
       .getFeature(project, featureName)
       .then(response => {
-        const filteredFeatures = response.data.features.filter(
-          responseItem => responseItem.feature_set_digest.metadata.name === featureMetadataName
-        )
-        const parsedFeatures = parseFeatures(filteredFeatures)
+        const parsedFeatures = parseFeatures(response.data, featureMetadataName)
 
         dispatch(
           featureStoreActions.fetchFeatureSuccess({
@@ -289,7 +287,7 @@ const featureStoreActions = {
           })
         )
 
-        return filteredFeatures
+        return parsedFeatures
       })
       .catch(error => {
         throw error
@@ -305,9 +303,11 @@ const featureStoreActions = {
     return featureStoreApi
       .getFeatures(project, filters, config)
       .then(response => {
-        dispatch(featureStoreActions.fetchFeaturesSuccess(response.data.features))
+        const features = parseFeatures(response.data)
 
-        return response.data.features
+        dispatch(featureStoreActions.fetchFeaturesSuccess(features))
+
+        return features
       })
       .catch(err => {
         dispatch(featureStoreActions.fetchFeaturesFailure(err))
@@ -360,9 +360,6 @@ const featureStoreActions = {
   removeFeatures: () => ({
     type: REMOVE_FEATURES
   }),
-  removeFeatureStoreError: () => ({
-    type: REMOVE_FEATURES_ERROR
-  }),
   removeNewFeatureSet: () => ({
     type: REMOVE_NEW_FEATURE_SET
   }),
@@ -414,10 +411,6 @@ const featureStoreActions = {
     type: SET_NEW_FEATURE_SET_DESCRIPTION,
     payload: description
   }),
-  setNewFeatureSetLabels: labels => ({
-    type: SET_NEW_FEATURE_SET_LABELS,
-    payload: labels
-  }),
   setNewFeatureSetName: name => ({
     type: SET_NEW_FEATURE_SET_NAME,
     payload: name
@@ -455,9 +448,12 @@ const featureStoreActions = {
       .catch(error => {
         const message =
           error.response.status === CONFLICT_ERROR_STATUS_CODE
-            ? 'Adding an already-existing FeatureSet'
-            : error.message
+            ? 'Cannot create the feature set: the name is already in use.'
+            : error.response.status === FORBIDDEN_ERROR_STATUS_CODE
+              ? 'You do not have permission to create a new feature set.'
+              : error.message
 
+        showErrorNotification(dispatch, error, '', message)
         dispatch(featureStoreActions.createNewFeatureSetFailure(message))
 
         throw error

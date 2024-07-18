@@ -17,19 +17,33 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import { cloneDeep } from 'lodash'
+import { cloneDeep, debounce, isEmpty } from 'lodash'
 
 import artifactApi from '../api/artifacts-api'
-import { ARTIFACT_TYPE, DATASET_TYPE, MODEL_TYPE } from '../constants'
+import {
+  ARTIFACT_TYPE,
+  DATASET_TYPE,
+  DATASETS_TAB,
+  FILES_TAB,
+  MODEL_TYPE,
+  MODELS_TAB
+} from '../constants'
 import { TAG_FILTER_ALL_ITEMS, TAG_FILTER_LATEST } from '../constants'
-import { deleteTag, editTag, addTag } from '../reducers/artifactsReducer'
+import {
+  deleteTag,
+  editTag,
+  addTag,
+  fetchDataSet,
+  fetchFile,
+  fetchModel
+} from '../reducers/artifactsReducer'
 import { getArtifactIdentifier } from './getUniqueIdentifier'
 import { parseArtifacts } from './parseArtifacts'
 import { setFilters, setModalFiltersValues } from '../reducers/filtersReducer'
 import { showErrorNotification } from './notifications.util'
 
 export const applyTagChanges = (changes, artifactItem, projectName, dispatch, setNotification) => {
-  let updateTagMsg = 'Tag was updated successfully'
+  let updateTagMsg = 'Tag was updated'
   let updateTagPromise = Promise.resolve()
   artifactItem = cloneDeep(artifactItem)
 
@@ -180,4 +194,68 @@ const generateArtifactTags = artifacts => {
   artifacts.forEach(artifact => uniqueTags.add(artifact.tag))
 
   return Array.from(uniqueTags).filter(Boolean)
+}
+
+export const setFullSelectedArtifact = debounce(
+  (tab, dispatch, navigate, selectedArtifactMin, setSelectedArtifact, projectName) => {
+    if (isEmpty(selectedArtifactMin)) {
+      setSelectedArtifact({})
+    } else {
+      const { db_key, tree, tag, iter } = selectedArtifactMin
+      const fetchArtifactData = getArtifactFetchMethod(tab)
+
+      dispatch(fetchArtifactData({ projectName, artifactName: db_key, tree, tag, iter }))
+        .unwrap()
+        .then(artifact => {
+          setSelectedArtifact(artifact)
+        })
+        .catch(error => {
+          navigate(`/projects/${projectName}/${tab}`, { replace: true })
+          showArtifactErrorNotification(dispatch, error, tab)
+        })
+    }
+  },
+  50
+)
+
+export const chooseOrFetchArtifact = (dispatch, tab, selectedArtifact, artifactMin) => {
+  if (!isEmpty(selectedArtifact)) return Promise.resolve(selectedArtifact)
+  const fetchArtifactData = getArtifactFetchMethod(tab)
+
+  return dispatch(
+    fetchArtifactData({
+      projectName: artifactMin.project,
+      artifactName: artifactMin.db_key,
+      tree: artifactMin.tree,
+      tag: artifactMin.tag,
+      iter: artifactMin.iter
+    })
+  )
+    .unwrap()
+    .catch(error => {
+      showArtifactErrorNotification(dispatch, error, tab)
+    })
+}
+
+const getArtifactFetchMethod = tab => {
+  return tab === DATASETS_TAB
+    ? fetchDataSet
+    : tab === FILES_TAB
+      ? fetchFile
+      : tab === MODELS_TAB
+        ? fetchModel
+        : null
+}
+
+const showArtifactErrorNotification = (dispatch, error, tab) => {
+  const customArtifactErrorMsg =
+    tab === DATASETS_TAB
+      ? 'Failed to retrieve dataset data'
+      : tab === FILES_TAB
+        ? 'Failed to retrieve artifact data'
+        : tab === MODELS_TAB
+          ? 'Failed to retrieve model data'
+          : null
+
+  showErrorNotification(dispatch, error, '', customArtifactErrorMsg)
 }

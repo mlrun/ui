@@ -30,24 +30,29 @@ import {
   GROUP_BY_NAME,
   GROUP_BY_NONE,
   TAG_FILTER_ALL_ITEMS,
-  REQUEST_CANCELED
+  REQUEST_CANCELED,
+  LARGE_REQUEST_CANCELED,
+  CANCEL_REQUEST_TIMEOUT
 } from '../../constants'
 import featureStoreActions from '../../actions/featureStore'
 import { FORBIDDEN_ERROR_STATUS_CODE } from 'igz-controls/constants'
 import { createFeaturesRowData } from '../../utils/createFeatureStoreContent'
 import { filters } from './addToFeatureVectorPage.util'
 import { getFeatureIdentifier } from '../../utils/getUniqueIdentifier'
+import { handleFeaturesResponse } from '../FeatureStore/Features/features.util'
 import { isEveryObjectValueEmpty } from '../../utils/isEveryObjectValueEmpty'
-import { parseFeatures } from '../../utils/parseFeatures'
 import { setFilters } from '../../reducers/filtersReducer'
 import { setNotification } from '../../reducers/notificationReducer'
 import { setTablePanelOpen } from '../../reducers/tableReducer'
 import { showErrorNotification } from '../../utils/notifications.util'
 import { useGetTagOptions } from '../../hooks/useGetTagOptions.hook'
 import { useGroupContent } from '../../hooks/groupContent.hook'
+import { useVirtualization } from '../../hooks/useVirtualization.hook'
 import { useYaml } from '../../hooks/yaml.hook'
 
 import { ReactComponent as Yaml } from 'igz-controls/images/yaml.svg'
+
+import cssVariables from '../FeatureStore/Features/features.scss'
 
 const AddToFeatureVectorPage = ({
   createNewFeatureVector,
@@ -60,6 +65,7 @@ const AddToFeatureVectorPage = ({
 }) => {
   const [content, setContent] = useState([])
   const [selectedRowData, setSelectedRowData] = useState({})
+  const [largeRequestErrorMessage, setLargeRequestErrorMessage] = useState('')
   const [convertedYaml, toggleConvertedYaml] = useYaml('')
   const addToFeatureVectorPageRef = useRef(null)
   const abortControllerRef = useRef(new AbortController())
@@ -96,7 +102,7 @@ const AddToFeatureVectorPage = ({
         .catch(error => {
           const customErrorMsg =
             error.response?.status === FORBIDDEN_ERROR_STATUS_CODE
-              ? 'You are not permitted to create new feature vector'
+              ? 'You are not permitted to create a feature vector'
               : 'Feature vector creation failed'
 
           showErrorNotification(dispatch, error, '', customErrorMsg, () =>
@@ -142,17 +148,24 @@ const AddToFeatureVectorPage = ({
     async filters => {
       abortControllerRef.current = new AbortController()
 
+      const cancelRequestTimeout = setTimeout(() => {
+        abortControllerRef.current.abort(LARGE_REQUEST_CANCELED)
+      }, CANCEL_REQUEST_TIMEOUT)
+
       const config = {
         signal: abortControllerRef.current.signal
       }
 
-      fetchFeatures(filters.project, filters, config).then(result => {
-        if (result) {
-          setContent(parseFeatures(result))
-        }
-
-        return result
-      })
+      fetchFeatures(filters.project, filters, config)
+        .then(features => {
+          return handleFeaturesResponse(
+            features,
+            setContent,
+            abortControllerRef,
+            setLargeRequestErrorMessage
+          )
+        })
+        .finally(() => clearTimeout(cancelRequestTimeout))
     },
     [fetchFeatures]
   )
@@ -187,7 +200,7 @@ const AddToFeatureVectorPage = ({
       fetchFeature(feature.metadata.project, feature.name, feature.metadata.name)
         .then(result => {
           if (result?.length > 0) {
-            const content = [...parseFeatures(result)].map(contentItem =>
+            const content = [...result].map(contentItem =>
               createFeaturesRowData(contentItem, tableStore.isTablePanelOpen)
             )
             setSelectedRowData(state => ({
@@ -275,6 +288,18 @@ const AddToFeatureVectorPage = ({
     }
   }, [dispatch])
 
+  const virtualizationConfig = useVirtualization({
+    rowsData: {
+      content: tableContent,
+      expandedRowsData: selectedRowData
+    },
+    heightData: {
+      headerRowHeight: cssVariables.featuresHeaderRowHeight,
+      rowHeight: cssVariables.featuresRowHeight,
+      rowHeightExtended: cssVariables.featuresRowHeightExtended
+    }
+  })
+
   return (
     <AddToFeatureVectorView
       actionsMenu={actionsMenu}
@@ -284,12 +309,14 @@ const AddToFeatureVectorPage = ({
       fetchData={fetchData}
       filtersStore={filtersStore}
       handleExpandRow={handleExpandRow}
+      largeRequestErrorMessage={largeRequestErrorMessage}
       pageData={pageData}
       ref={addToFeatureVectorPageRef}
       selectedRowData={selectedRowData}
       tableContent={tableContent}
       tableStore={tableStore}
       toggleConvertedYaml={toggleConvertedYaml}
+      virtualizationConfig={virtualizationConfig}
     />
   )
 }

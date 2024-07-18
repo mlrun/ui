@@ -17,24 +17,36 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import { useBlockHistory } from './useBlockHistory.hook'
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useEffect } from 'react'
+import { useBlocker } from 'react-router-dom'
+
 import { defaultCloseModalHandler } from '../utils/defaultCloseModalHandler'
 import { areFormValuesChanged } from 'igz-controls/utils/form.util'
 
 export const useModalBlockHistory = (closeModal, form) => {
-  const { blockHistory, unblockHistory } = useBlockHistory()
-  const [confirmationIsOpened, setConfirmationIsOpened] = useState(false)
+  const shouldBlock = useCallback(() => {
+    const { initialValues, values } = form.getState()
+
+    const isFormDirty =  areFormValuesChanged(initialValues, values)
+
+    if (!isFormDirty) {
+      closeModal()
+    }
+
+    return isFormDirty
+  }, [closeModal, form])
+
+  let blocker = useBlocker(shouldBlock)
 
   const resolveModal = useCallback(() => {
     closeModal()
-    unblockHistory()
-  }, [closeModal, unblockHistory])
+    form.reset(form.initialValues)
+    blocker.proceed?.()
+  }, [blocker, closeModal, form])
 
   const handleRejectConfirmation = useCallback(() => {
-    setConfirmationIsOpened(false)
-    unblockHistory()
-  }, [unblockHistory])
+    blocker.reset?.()
+  }, [blocker])
 
   const handleCloseModal = useCallback(() => {
     const { initialValues, values } = form.getState()
@@ -44,16 +56,15 @@ export const useModalBlockHistory = (closeModal, form) => {
     defaultCloseModalHandler(
       showConfirmation,
       resolveModal,
-      handleRejectConfirmation,
-      setConfirmationIsOpened
+      handleRejectConfirmation
     )
   }, [form, resolveModal, handleRejectConfirmation])
 
   useEffect(() => {
-    if (form) {
-      blockHistory(handleCloseModal, confirmationIsOpened)
+    if (blocker.state === 'blocked') {
+      handleCloseModal()
     }
-  }, [confirmationIsOpened, blockHistory, handleCloseModal, form])
+  }, [blocker, handleCloseModal])
 
   return { handleCloseModal, resolveModal }
 }

@@ -24,7 +24,6 @@ import {
   FUNCTIONS_PAGE,
   JOBS_PAGE,
   NAME_FILTER,
-  PERIOD_FILTER,
   STATUS_FILTER
 } from '../../../constants'
 import {
@@ -55,7 +54,6 @@ import { ReactComponent as Yaml } from 'igz-controls/images/yaml.svg'
 import { ReactComponent as Delete } from 'igz-controls/images/delete.svg'
 
 export const generateFilters = () => [
-  { type: PERIOD_FILTER, label: 'Period:' },
   {
     type: STATUS_FILTER,
     label: 'Status:',
@@ -167,6 +165,8 @@ export const generateActionsMenu = (
 export const monitorWorkflowsActionCreator = {
   abortJob: jobsActions.abortJob,
   deleteJob: jobsActions.deleteJob,
+  deleteWorkflows: workflowsActions.deleteWorkflows,
+  fetchFunction: functionsActions.fetchFunction,
   fetchFunctionLogs: functionsActions.fetchFunctionLogs,
   fetchJob: jobsActions.fetchJob,
   fetchJobFunctions: jobsActions.fetchJobFunctions,
@@ -174,7 +174,6 @@ export const monitorWorkflowsActionCreator = {
   fetchJobPods: detailsActions.fetchJobPods,
   fetchWorkflow: workflowsActions.fetchWorkflow,
   fetchWorkflows: workflowsActions.fetchWorkflows,
-  getFunction: functionsActions.getFunction,
   removePods: detailsActions.removePods,
   resetWorkflow: workflowsActions.resetWorkflow
 }

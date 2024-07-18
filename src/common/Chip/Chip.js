@@ -17,9 +17,11 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import React, { useEffect } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import PropTypes from 'prop-types'
 import classnames from 'classnames'
+import { useSelector } from 'react-redux'
+import { isEmpty } from 'lodash'
 
 import ChipForm from '../ChipForm/ChipForm'
 
@@ -47,12 +49,15 @@ const Chip = React.forwardRef(
       onClick,
       setChipsSizes,
       setEditConfig,
+      setValidation = null,
       shortChip,
       showChips,
       textOverflowEllipsis
     },
     { chipsCellRef, hiddenChipsCounterRef }
   ) => {
+    const [validationRules, setValidationRules] = useState([])
+    const frontendSpec = useSelector(store => store.appStore.frontendSpec)
     const chipRef = React.useRef()
     const { chipLabel, chipValue } = getChipLabelAndValue(chip)
     const { background, boldValue, borderColor, density, font, borderRadius } = chipOptions
@@ -74,13 +79,36 @@ const Chip = React.forwardRef(
     )
     const chipLabelClassNames = classnames(
       'chip__label',
-      (textOverflowEllipsis || isEditMode) && 'data-ellipsis'
+      (textOverflowEllipsis || isEditMode) && 'data-ellipsis',
+      !isEmpty(validationRules) && 'chip__label_invalid'
     )
     const chipValueClassNames = classnames(
       'chip__value',
       (textOverflowEllipsis || isEditMode) && 'data-ellipsis',
       boldValue && 'chip-value_bold'
     )
+
+    const checkValidation = useCallback(
+      chipKey => {
+        if (frontendSpec.internal_labels.includes(chipKey)) {
+          setValidationRules([
+            { name: 'internal label', label: 'System-defined labels cannot be modified.' }
+          ])
+
+          return setValidation(false)
+        }
+
+        setValidationRules([])
+        setValidation(true)
+      },
+      [frontendSpec.internal_labels, setValidation]
+    )
+
+    useEffect(() => {
+      if (setValidation) {
+        checkValidation(chip.value.match(/^(?<key>|.+?):\s?(?<value>|.+?)$/)?.groups?.key)
+      }
+    }, [checkValidation, chip, setValidation])
 
     useEffect(() => {
       if (chipRef.current && setChipsSizes) {
@@ -107,6 +135,8 @@ const Chip = React.forwardRef(
           ref={chipsCellRef}
           setEditConfig={setEditConfig}
           value={chip.value.match(/^(?<key>|.+?):\s?(?<value>|.+?)$/)?.groups}
+          validationRules={validationRules}
+          checkValidation={checkValidation}
         />
       ) : (
         <div
@@ -176,6 +206,7 @@ Chip.propTypes = {
   onClick: PropTypes.func,
   setChipsSizes: PropTypes.func,
   setEditConfig: PropTypes.func,
+  setValidation: PropTypes.func,
   shortChip: PropTypes.bool,
   showChips: PropTypes.bool.isRequired,
   textOverflowEllipsis: PropTypes.bool

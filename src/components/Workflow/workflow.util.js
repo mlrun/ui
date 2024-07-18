@@ -20,9 +20,43 @@ such restriction.
 import { cloneDeep, forEach, isEmpty, set } from 'lodash'
 
 import { page } from '../Jobs/jobs.util'
-import { DETAILS_OVERVIEW_TAB, WORKFLOW_TYPE_SKIPPED } from '../../constants'
+import {
+  DETAILS_OVERVIEW_TAB,
+  JOBS_MONITORING_PAGE,
+  JOBS_MONITORING_WORKFLOWS_TAB,
+  WORKFLOW_TYPE_SKIPPED
+} from '../../constants'
 
-export const hiddenWorkflowStepTypes = ['DAG', 'Retry']
+const DAG_WORFLOW_STEP = 'DAG'
+const SKIPPED_PHASE = 'Skipped'
+const CONDITION_PREFIX = 'condition-'
+
+export const hiddenWorkflowStepTypes = [DAG_WORFLOW_STEP, 'Retry']
+
+/**
+ * Checks if a workflow step is visible based on the job object.
+ * @param {Object} job - The job object representing the workflow step.
+ * @returns {boolean} - True if the workflow step is visible, false otherwise.
+ */
+export const isWorkflowStepVisible = job => {
+  return (
+    !hiddenWorkflowStepTypes.includes(job.type) ||
+    (job.type === DAG_WORFLOW_STEP && job.name?.startsWith(CONDITION_PREFIX))
+  )
+}
+
+/**
+ * Checks if a workflow step represents a condition based on the job object.
+ * @param {Object} job - The job object representing the workflow step.
+ * @returns {boolean} - True if the workflow step represents a condition, false otherwise.
+ */
+export const isWorkflowStepCondition = job => {
+  return (
+    job.name?.startsWith(CONDITION_PREFIX) &&
+    (job.type === DAG_WORFLOW_STEP || job.phase === SKIPPED_PHASE)
+  )
+}
+
 /**
  * Gets Details panel link depending on the item's type
  *
@@ -60,6 +94,46 @@ export const getWorkflowDetailsLink = (projectName, workflowId, job, tab, pageTa
 }
 
 /**
+ * Gets Monitoring Details panel link depending on the item's type
+ *
+ * @param {String} projectName
+ * @param {String} workflowId
+ * @param {Object} job
+ * @param {String} tab
+ * @returns {String}
+ */
+export const getWorkflowMonitoringDetailsLink = (
+  projectName,
+  workflowId,
+  job = null,
+  tab = null
+) => {
+  let jobPath = null
+
+  if (job) {
+    if (job.run_uid) {
+      jobPath = job.run_uid
+    } else if (
+      isFunctionTypeSelectable(job) &&
+      job.functionName &&
+      job?.type !== WORKFLOW_TYPE_SKIPPED
+    ) {
+      if (job.function.includes('@') && job.functionHash) {
+        jobPath = `${job.functionName}/${job.functionHash}`
+      } else {
+        jobPath = `${job.functionName}`
+      }
+    } else {
+      return null
+    }
+  }
+
+  return `/projects/${JOBS_MONITORING_PAGE}/${JOBS_MONITORING_WORKFLOWS_TAB}/workflow/${projectName}/${workflowId}${
+    jobPath ? `/${jobPath}/${tab ?? DETAILS_OVERVIEW_TAB}` : ''
+  }`
+}
+
+/**
  * Checks whether a job's run_type is 'deploy' or 'build', and if it has a function property.
  * @param {Object} job - The job object to check.
  * @returns {boolean} - Whether the function type is selectable.
@@ -91,7 +165,7 @@ export const isWorkflowJobSelected = (job, selectedJob) => {
 export const isWorkflowStepExecutable = job => {
   return Boolean(
     !isEmpty(job) &&
-      !hiddenWorkflowStepTypes.includes(job?.type) &&
+      isWorkflowStepVisible(job) &&
       (job?.run_uid || (isFunctionTypeSelectable(job) && job?.type !== WORKFLOW_TYPE_SKIPPED))
   )
 }
@@ -115,8 +189,8 @@ export const parseWorkflow = workflow => {
     job.children?.forEach(jobChildId => {
       let jobChild = newWorkflow.graph[jobChildId]
 
-      // Check if the jobChild's type is in the hiddenWorkflowStepTypes and the ancestor is a `TaskGroup`
-      if (hiddenWorkflowStepTypes.includes(jobChild.type) && ancestorIsTaskGroup) {
+      // Check if the jobChild isn't visible and the ancestor is a `TaskGroup`
+      if (!isWorkflowStepVisible(jobChild) && ancestorIsTaskGroup) {
         set(jobChild, 'ui.isHiddenJobVisible', true)
       }
 

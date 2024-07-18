@@ -39,7 +39,7 @@
             }
           }
         },
-        "schedule": "0 0 1 * *"
+        "schedule": "0 * * * *"
       },
       "cron_trigger": {
         "year": null,
@@ -65,11 +65,11 @@
       "credentials": {
         "access_key": null
       },
-      "creation_time": "2021-09-03T13:49:55.389926+00:00",
+      "creation_time": "2024-06-10T10:57:32.706000+00:00",
       "project": "cat-vs-dog-classification",
       "last_run_uri": null,
       "state": null,
-      "next_run_time": "2021-12-01T00:00:00+00:00",
+      "next_run_time": "2024-06-11T15:00:00+00:00",
       "last_run": null
     },
     {
@@ -766,6 +766,149 @@
       "state": null,
       "next_run_time": "2021-12-01T00:00:00+00:00",
       "last_run": null
+    },
+    {
+      "name": "main3",
+      "kind": "job",
+      "scheduled_object": {
+        "task": {
+          "spec": {
+            "function": "cat-vs-dog-classification/workflow-runner-main3@8d39c445668512b338eee3c9e38d832ada35006b",
+            "parameters": {
+              "url":" git://github.com/mlrun/mlrun-import-project.git#refs/heads/main",
+              "project_name": "cat-vs-dog-classification",
+              "workflow_name": "main3",
+              "workflow_path": "workflow.py",
+              "workflow_arguments": null,
+              "artifact_path": "v3io:///projects/{{run.project}}/artifacts/{{workflow.uid}}",
+              "workflow_handler": null,
+              "namespace": null,
+              "ttl": null,
+              "engine": "kfp",
+              "local": null,
+              "save": true,
+              "dirty": true,
+              "subpath": null,
+              "wait_for_completion": true
+            },
+            "scrape_metrics": true,
+            "output_path": "v3io:///projects/cat-vs-dog-classification/artifacts/{{workflow.uid}}",
+            "handler": "mlrun.projects.load_and_run"
+          },
+          "metadata": {
+            "uid": "70a90a37775e4e5b818246f3e454fd13",
+            "project": "cat-vs-dog-classification",
+            "labels": {
+              "job-type": "workflow-runner",
+              "workflow": "main3",
+              "kind": "job",
+              "owner": "pipelines"
+            },
+            "name": "main3",
+            "iteration": 0
+          },
+          "status": {
+            "state": "created"
+          }
+      },
+        "schedule": "0 * * * *"
+      },
+      "cron_trigger": {
+        "year": null,
+        "month": "*",
+        "day": "*",
+        "week": null,
+        "day_of_week": "*",
+        "hour": "*",
+        "minute": 0,
+        "second": null,
+        "start_date": null,
+        "end_date": null,
+        "timezone": null,
+        "jitter": null
+      },
+      "desired_state": null,
+      "labels":{
+        "job-type": "workflow-runner",
+        "workflow": "main3",
+        "mlrun/client_version":" 1.7.0-rc22",
+        "mlrun/client_python_version": "3.9.18",
+        "mlrun-auth-key": "mlrun-auth-secrets.7bd0ec2be4d0f3d54bfa0093250f64268fff0f8c7623744602f70c06"
+      },
+      "concurrency_limit": 1,
+      "credentials": {
+        "access_key": null
+      },
+      "creation_time": "2024-06-10T10:57:32.706000+00:00",
+      "project": "cat-vs-dog-classification",
+      "last_run_uri": "cat-vs-dog-classification@6cb91b3b1cac4cf6894e5595b2063bdd#0",
+      "state": null,
+      "next_run_time": "2024-06-11T15:00:00+00:00",
+      "last_run": {
+        "kind": "run",
+        "metadata": {
+          "name": "main3",
+          "uid": "6cb91b3b1cac4cf6894e5595b2063bdd",
+          "iteration": 0,
+          "project": "cat-vs-dog-classification",
+          "labels": {
+            "job-type": "workflow-runner",
+            "workflow": "main3",
+            "kind": "job",
+            "owner": "pipelines",
+            "mlrun/schedule-name": "main3",
+            "v3io_user": "admin",
+            "host": "main3-b4drt"
+          },
+          "annotations": {}
+        },
+        "spec": {
+          "function": "cat-vs-dog-classification/workflow-runner-main3@8d39c445668512b338eee3c9e38d832ada35006b",
+          "log_level": "info",
+          "parameters": {
+            "url": "git://github.com/mlrun/mlrun-import-project.git#refs/heads/main",
+            "project_name": "cat-vs-dog-classification",
+            "workflow_name": "main3",
+            "workflow_path": "workflow.py",
+            "workflow_arguments": null,
+            "artifact_path": "v3io:///projects/{{run.project}}/artifacts/{{workflow.uid}}",
+            "workflow_handler": null,
+            "namespace": null,
+            "ttl": null,
+            "engine": "kfp",
+            "local": null,
+            "save": true,
+            "dirty": true,
+            "subpath": null,
+            "wait_for_completion": true
+          },
+          "handler": "mlrun.projects.load_and_run",
+          "outputs": [],
+          "output_path": "v3io:///projects/illia/artifacts/{{workflow.uid}}",
+          "inputs": {},
+          "notifications": [],
+          "state_thresholds": {
+            "pending_scheduled": "1h",
+            "pending_not_scheduled": "-1",
+            "image_pull_backoff": "1h",
+            "executing": "24h"
+          },
+          "hyperparams": {},
+          "hyper_param_options": {},
+          "data_stores": []
+        },
+        "status":{
+          "results": {
+            "workflow_id": "f8773e87-05f9-43bc-b5eb-2c336097ddf4",
+            "engine": "kfp",
+            "workflow_state": "Succeeded"
+          },
+          "start_time": "2024-06-10T14:00:05.541308+00:00",
+          "last_update": "2024-06-10T14:12:47.987304+00:00",
+          "state": "completed",
+          "artifact_uris": {}
+        }
+      }
     }
   ]
 }

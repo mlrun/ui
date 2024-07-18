@@ -34,7 +34,7 @@ import cssVariables from './models.scss'
 import {
   fetchArtifactsFunctions,
   fetchArtifactTags,
-  fetchModel,
+  fetchExpandedModel,
   fetchModels,
   removeModel,
   removeModels
@@ -49,7 +49,6 @@ import {
   MODELS_FILTERS,
   REQUEST_CANCELED,
   MODEL_TYPE,
-  SHOW_ITERATIONS,
   FUNCTION_TYPE_SERVING
 } from '../../../constants'
 import {
@@ -65,23 +64,26 @@ import {
 import detailsActions from '../../../actions/details'
 import { createModelsRowData } from '../../../utils/createArtifactsContent'
 import { getArtifactIdentifier } from '../../../utils/getUniqueIdentifier'
+import { getFilterTagOptions, setFilters } from '../../../reducers/filtersReducer'
+import { getViewMode } from '../../../utils/helper'
 import { isDetailsTabExists } from '../../../utils/isDetailsTabExists'
 import { openPopUp } from 'igz-controls/utils/common.util'
 import { parseChipsData } from '../../../utils/convertChipsData'
-import { getFilterTagOptions, setFilters } from '../../../reducers/filtersReducer'
+import { setFullSelectedArtifact } from '../../../utils/artifacts.util'
 import { setNotification } from '../../../reducers/notificationReducer'
+import { useGetTagOptions } from '../../../hooks/useGetTagOptions.hook'
 import { useGroupContent } from '../../../hooks/groupContent.hook'
+import { useMode } from '../../../hooks/mode.hook'
 import { useModelsPage } from '../ModelsPage.context'
 import { useSortTable } from '../../../hooks/useSortTable.hook'
-import { useGetTagOptions } from '../../../hooks/useGetTagOptions.hook'
-import { getViewMode } from '../../../utils/helper'
-import { useMode } from '../../../hooks/mode.hook'
 import { useVirtualization } from '../../../hooks/useVirtualization.hook'
+import { useInitialArtifactsFetch } from '../../../hooks/artifacts.hook'
 
 const Models = ({ fetchModelFeatureVector }) => {
   const [models, setModels] = useState([])
   const [largeRequestErrorMessage, setLargeRequestErrorMessage] = useState('')
   const [selectedModel, setSelectedModel] = useState({})
+  const [selectedModelMin, setSelectedModelMin] = useState({})
   const [selectedRowData, setSelectedRowData] = useState({})
   //temporarily commented till ML-5606 will be done
   // const [metricsCounter, setMetricsCounter] = useState(0)
@@ -106,8 +108,6 @@ const Models = ({ fetchModelFeatureVector }) => {
 
   const abortControllerRef = useRef(new AbortController())
   const modelsRef = useRef(null)
-  const tableBodyRef = useRef(null)
-  const tableRef = useRef(null)
 
   const modelsFilters = useMemo(
     () => ({ name: filtersStore.name, ...filtersStore[FILTER_MENU_MODAL][MODELS_FILTERS].values }),
@@ -123,10 +123,21 @@ const Models = ({ fetchModelFeatureVector }) => {
   const detailsFormInitialValues = useMemo(
     () => ({
       tag: selectedModel.tag ?? '',
-      labels: parseChipsData(selectedModel.labels ?? {})
+      labels: parseChipsData(selectedModel.labels ?? {}, frontendSpec.internal_labels)
     }),
-    [selectedModel.labels, selectedModel.tag]
+    [frontendSpec.internal_labels, selectedModel.labels, selectedModel.tag]
   )
+
+  useEffect(() => {
+    setFullSelectedArtifact(
+      MODELS_TAB,
+      dispatch,
+      navigate,
+      selectedModelMin,
+      setSelectedModel,
+      params.projectName
+    )
+  }, [dispatch, navigate, params.projectName, selectedModelMin])
 
   const fetchData = useCallback(
     async filters => {
@@ -140,7 +151,8 @@ const Models = ({ fetchModelFeatureVector }) => {
             ui: {
               controller: abortControllerRef.current,
               setLargeRequestErrorMessage
-            }
+            },
+            params: { format: 'minimal' }
           }
         })
       )
@@ -158,7 +170,13 @@ const Models = ({ fetchModelFeatureVector }) => {
 
   const handleDeployModel = useCallback(
     model => {
-      dispatch(fetchArtifactsFunctions({ project: model.project, filters: {} }))
+      dispatch(
+        fetchArtifactsFunctions({
+          project: model.project,
+          filters: {},
+          config: { params: { format: 'minimal' } }
+        })
+      )
         .unwrap()
         .then(functions => {
           const functionOptions = chain(functions)
@@ -174,11 +192,11 @@ const Models = ({ fetchModelFeatureVector }) => {
               functionOptionList: functionOptions
             })
           } else {
-            handleDeployModelFailure()
+            handleDeployModelFailure(params.projectName, model.db_key)
           }
         })
     },
-    [dispatch]
+    [dispatch, params.projectName]
   )
 
   const handleRefresh = useCallback(
@@ -214,7 +232,7 @@ const Models = ({ fetchModelFeatureVector }) => {
         artifact,
         onAddTag: () => handleRefresh(modelsFilters),
         getArtifact: () =>
-          fetchModel({
+          fetchExpandedModel({
             project: params.projectName,
             model: artifact.db_key,
             iter: true,
@@ -227,9 +245,9 @@ const Models = ({ fetchModelFeatureVector }) => {
   )
 
   const actionsMenu = useMemo(
-    () => model =>
+    () => (modelMin, menuPosition) =>
       generateActionsMenu(
-        model,
+        modelMin,
         frontendSpec,
         dispatch,
         toggleConvertedYaml,
@@ -237,7 +255,9 @@ const Models = ({ fetchModelFeatureVector }) => {
         params.projectName,
         handleRefresh,
         modelsFilters,
-        handleDeployModel
+        handleDeployModel,
+        menuPosition,
+        selectedModel
       ),
     [
       dispatch,
@@ -247,7 +267,8 @@ const Models = ({ fetchModelFeatureVector }) => {
       handleRefresh,
       modelsFilters,
       params.projectName,
-      toggleConvertedYaml
+      toggleConvertedYaml,
+      selectedModel
     ]
   )
 
@@ -344,6 +365,14 @@ const Models = ({ fetchModelFeatureVector }) => {
     handleRefresh(modelsFilters)
   }
 
+  useInitialArtifactsFetch(
+    fetchData,
+    urlTagOption,
+    models.length,
+    setSelectedRowData,
+    createModelsRowData
+  )
+
   useEffect(() => {
     if (params.name && params.tag && pageData.details.menu.length > 0) {
       isDetailsTabExists(params.tab, pageData.details.menu, navigate, location)
@@ -351,21 +380,13 @@ const Models = ({ fetchModelFeatureVector }) => {
   }, [navigate, location, pageData.details.menu, params.name, params.tag, params.tab])
 
   useEffect(() => {
-    if (urlTagOption) {
-      fetchData({
-        tag: urlTagOption,
-        iter: SHOW_ITERATIONS
-      })
-    }
-  }, [fetchData, urlTagOption])
-
-  useEffect(() => {
     const tagAbortControllerCurrent = tagAbortControllerRef.current
 
     return () => {
       setModels([])
       dispatch(removeModels())
-      setSelectedModel({})
+      setSelectedModelMin({})
+      setSelectedRowData({})
       //temporarily commented till ML-5606 will be done
       // setTableHeaders([])
       // setDataIsLoaded(false)
@@ -388,7 +409,7 @@ const Models = ({ fetchModelFeatureVector }) => {
       params.uid,
       navigate,
       params.projectName,
-      setSelectedModel
+      setSelectedModelMin
     )
   }, [
     models,
@@ -470,8 +491,6 @@ const Models = ({ fetchModelFeatureVector }) => {
   }
 
   const virtualizationConfig = useVirtualization({
-    tableRef,
-    tableBodyRef,
     rowsData: {
       content: sortedTableContent,
       expandedRowsData: selectedRowData,
@@ -481,7 +500,8 @@ const Models = ({ fetchModelFeatureVector }) => {
       headerRowHeight: cssVariables.modelsHeaderRowHeight,
       rowHeight: cssVariables.modelsRowHeight,
       rowHeightExtended: cssVariables.modelsRowHeightExtended
-    }
+    },
+    activateTableScroll: true
   })
 
   return (
@@ -500,11 +520,11 @@ const Models = ({ fetchModelFeatureVector }) => {
       largeRequestErrorMessage={largeRequestErrorMessage}
       models={models}
       pageData={pageData}
-      ref={{ modelsRef, tableRef, tableBodyRef }}
+      ref={{ modelsRef }}
       selectedModel={selectedModel}
       selectedRowData={selectedRowData}
       setModels={setModels}
-      setSelectedModel={setSelectedModel}
+      setSelectedModelMin={setSelectedModelMin}
       setSelectedRowData={setSelectedRowData}
       sortProps={{ sortTable, selectedColumnName, getSortingIcon }}
       tableContent={sortedTableContent}

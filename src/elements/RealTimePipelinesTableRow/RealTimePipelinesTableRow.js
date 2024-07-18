@@ -31,7 +31,7 @@ const RealTimePipelinesTableRow = ({ actionsMenu, rowItem }) => {
   const params = useParams()
 
   return (
-    <tr className="table-row parent-row">
+    <tr className="table-row table-body-row parent-row">
       {rowItem.content.map((value, index) => {
         return (
           !value.hidden && (

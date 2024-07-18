@@ -44,7 +44,7 @@ import {
   SHOW_ITERATIONS,
   SHOW_UNTAGGED_FILTER,
   SHOW_UNTAGGED_ITEMS,
-  STATE_FILTER_ALL_ITEMS,
+  FILTER_ALL_ITEMS,
   STATUS_FILTER,
   TAG_FILTER,
   TAG_FILTER_ALL_ITEMS
@@ -52,51 +52,39 @@ import {
 
 const messageNamesList = {
   [ADD_TO_FEATURE_VECTOR_TAB]: {
-    single: 'Feature',
     plural: 'Features'
   },
   [DATASETS_PAGE]: {
-    single: 'Dataset',
     plural: 'Datasets'
   },
   [FEATURE_SETS_TAB]: {
-    single: 'Feature-Set',
     plural: 'Feature-Sets'
   },
   [FEATURE_VECTORS_TAB]: {
-    single: 'Feature-Vector',
     plural: 'Feature-Vectors'
   },
   [FEATURES_TAB]: {
-    single: 'Feature',
     plural: 'Features'
   },
   [FILES_PAGE]: {
-    single: 'File',
     plural: 'Files'
   },
   [FUNCTIONS_PAGE]: {
-    single: 'Function',
     plural: 'Functions'
   },
   [JOBS_PAGE]: {
-    single: 'Job',
     plural: 'Jobs'
   },
   [MODELS_TAB]: {
-    single: 'Model',
     plural: 'Models'
   },
   [MONITOR_WORKFLOWS_TAB]: {
-    single: 'Workflow',
     plural: 'Workflows'
   },
   [MODEL_ENDPOINTS_TAB]: {
-    single: 'Model-endpoint',
-    plural: 'Model-endpoints'
+    plural: 'Model endpoints'
   },
   [REAL_TIME_PIPELINES_TAB]: {
-    single: 'Real-time pipeline',
     plural: 'Real-time pipelines'
   },
   default: ''
@@ -126,24 +114,8 @@ export const getNoDataMessage = (
           messageNames,
           filtersStoreKey
         )
-      : generateEmptyListMessage(messageNames, tab)
+      : `No ${messageNames.plural.toLocaleLowerCase()} found.`
   }
-}
-
-const generateEmptyListMessage = (messageNames, tab) => {
-  if ([MODEL_ENDPOINTS_TAB, REAL_TIME_PIPELINES_TAB].includes(tab)) {
-    return 'No data to show'
-  }
-
-  if ([FEATURES_TAB, ADD_TO_FEATURE_VECTOR_TAB].includes(tab)) {
-    return 'No features yet. Go to "Feature Sets" tab to create your first Feature Set.'
-  }
-
-  if (MONITOR_WORKFLOWS_TAB === tab) {
-    return 'No Workflows created yet.'
-  }
-
-  return `No ${messageNames.plural} yet. Create your first ${messageNames.single} now.`
 }
 
 const getSelectedDateValue = (filter, filtersStore) => {
@@ -171,16 +143,16 @@ const generateNoEntriesFoundMessage = (
     const label = [ITERATIONS_FILTER, SHOW_UNTAGGED_ITEMS].includes(filter.type)
       ? `${filter.label}:`
       : filter.type === DATE_RANGE_TIME_FILTER
-      ? 'Date:'
-      : filter.label
+        ? 'Date:'
+        : filter.label
     const value = [ITERATIONS_FILTER, SHOW_UNTAGGED_ITEMS].includes(filter.type)
       ? 'true'
       : filter.type === DATE_RANGE_TIME_FILTER
-      ? getSelectedDateValue(filter, filtersStore)
-      : filter.type === STATUS_FILTER
-      ? filtersStore['state']
-      : filtersStore.filterMenuModal[filtersStoreKey]?.values?.[filter.type] ??
-        filtersStore[filter.type]
+        ? getSelectedDateValue(filter, filtersStore)
+        : filter.type === STATUS_FILTER
+          ? filtersStore['state']
+          : filtersStore.filterMenuModal[filtersStoreKey]?.values?.[filter.type] ??
+            filtersStore[filter.type]
     const isLastElement = index === changedFilters.length - 1
 
     return message + `${label} ${value}${isLastElement ? '"' : ', '}`
@@ -206,8 +178,8 @@ const getChangedFiltersList = (filters, filtersStore, filtersStoreKey) => {
       (type === TAG_FILTER && isTagChanged) ||
       ((type === NAME_FILTER || type === LABELS_FILTER || type === ENTITIES_FILTER) &&
         filtersStore[type].length > 0) ||
-      (type === STATUS_FILTER && filtersStore.state !== STATE_FILTER_ALL_ITEMS) ||
-      type === DATE_RANGE_TIME_FILTER ||
+      (type === STATUS_FILTER && filtersStore.state !== FILTER_ALL_ITEMS) ||
+      (type === DATE_RANGE_TIME_FILTER && !isEqual(filtersStore.dates.value, DATE_FILTER_ANY_TIME)) ||
       (type === ITERATIONS_FILTER && isIterChanged) ||
       (type === SHOW_UNTAGGED_FILTER && filtersStore.showUntagged === SHOW_UNTAGGED_ITEMS) ||
       (type === GROUP_BY_FILTER && filtersStore.groupBy !== GROUP_BY_NONE)

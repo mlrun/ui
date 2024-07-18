@@ -22,6 +22,10 @@
         &::placeholder {
           color: $spunPearl;
         }
+
+        &_invalid {
+          color: $amaranth;
+        }
       }
 
       &::placeholder {

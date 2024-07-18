@@ -17,14 +17,35 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import { LABELS_FILTER, NAME_FILTER, TAG_FILTER } from '../../../constants'
 import featureStoreActions from '../../../actions/featureStore'
+import { LABELS_FILTER, LARGE_REQUEST_CANCELED, NAME_FILTER, TAG_FILTER } from '../../../constants'
+import { showLargeResponsePopUp } from '../../../httpClient'
 
 export const featuresFilters = [
   { type: TAG_FILTER, label: 'Version Tag:' },
   { type: NAME_FILTER, label: 'Name:' },
   { type: LABELS_FILTER, label: 'Labels:' }
 ]
+
+export const handleFeaturesResponse = (
+  features,
+  setFeatures,
+  abortControllerRef,
+  setLargeRequestErrorMessage
+) => {
+  if (
+    features?.length > 10000 ||
+    abortControllerRef.current?.signal?.reason === LARGE_REQUEST_CANCELED
+  ) {
+    showLargeResponsePopUp(setLargeRequestErrorMessage)
+    setFeatures([])
+  } else if (features) {
+    setFeatures(features)
+    setLargeRequestErrorMessage('')
+  }
+
+  return features
+}
 
 export const featuresActionCreator = {
   fetchEntity: featureStoreActions.fetchEntity,

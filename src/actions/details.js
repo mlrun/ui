@@ -22,20 +22,17 @@ import {
   FETCH_JOB_PODS_BEGIN,
   FETCH_JOB_PODS_FAILURE,
   FETCH_JOB_PODS_SUCCESS,
-  FETCH_MODEL_ENDPOINT_WITH_ANALYSIS_BEGIN,
-  FETCH_MODEL_ENDPOINT_WITH_ANALYSIS_FAILURE,
-  FETCH_MODEL_ENDPOINT_WITH_ANALYSIS_SUCCESS,
   FETCH_MODEL_FEATURE_VECTOR_BEGIN,
   FETCH_MODEL_FEATURE_VECTOR_FAILURE,
   FETCH_MODEL_FEATURE_VECTOR_SUCCESS,
   REMOVE_INFO_CONTENT,
   REMOVE_JOB_PODS,
-  REMOVE_MODEL_ENDPOINT,
   REMOVE_MODEL_FEATURE_VECTOR,
   RESET_CHANGES,
   SET_CHANGES,
   SET_CHANGES_COUNTER,
   SET_CHANGES_DATA,
+  SET_DETAILS_DATES,
   SET_EDIT_MODE,
   SET_FILTERS_WAS_HANDLED,
   SET_INFO_CONTENT,
@@ -46,30 +43,6 @@ import {
 import { generatePods } from '../utils/generatePods'
 
 const detailsActions = {
-  fetchModelEndpointWithAnalysis: (project, uid) => dispatch => {
-    dispatch(detailsActions.fetchModelEndpointWithAnalysisBegin())
-
-    return detailsApi
-      .getModelEndpoint(project, uid)
-      .then(({ data }) => {
-        dispatch(detailsActions.fetchModelEndpointWithAnalysisSuccess(data))
-
-        return data
-      })
-      .catch(err => {
-        dispatch(detailsActions.fetchModelEndpointWithAnalysisFailure(err))
-      })
-  },
-  fetchModelEndpointWithAnalysisBegin: () => ({
-    type: FETCH_MODEL_ENDPOINT_WITH_ANALYSIS_BEGIN
-  }),
-  fetchModelEndpointWithAnalysisFailure: () => ({
-    type: FETCH_MODEL_ENDPOINT_WITH_ANALYSIS_FAILURE
-  }),
-  fetchModelEndpointWithAnalysisSuccess: model => ({
-    type: FETCH_MODEL_ENDPOINT_WITH_ANALYSIS_SUCCESS,
-    payload: model
-  }),
   fetchModelFeatureVector: (project, name, reference) => dispatch => {
     dispatch(detailsActions.fetchModelFeatureVectorBegin())
 
@@ -125,9 +98,6 @@ const detailsActions = {
   removeInfoContent: () => ({
     type: REMOVE_INFO_CONTENT
   }),
-  removeModelEndpoint: () => ({
-    type: REMOVE_MODEL_ENDPOINT
-  }),
   removeModelFeatureVector: () => ({
     type: REMOVE_MODEL_FEATURE_VECTOR
   }),
@@ -147,6 +117,10 @@ const detailsActions = {
   }),
   setChangesData: data => ({
     type: SET_CHANGES_DATA,
+    payload: data
+  }),
+  setDetailsDates: data => ({
+    type: SET_DETAILS_DATES,
     payload: data
   }),
   setEditMode: value => ({

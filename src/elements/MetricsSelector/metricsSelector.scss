@@ -1,0 +1,131 @@
+@import '~igz-controls/scss/colors';
+@import '~igz-controls/scss/borders';
+
+.metrics-selector {
+  &-header {
+    position: relative;
+    display: flex;
+    flex: 1 1;
+    flex-flow: row nowrap;
+    align-items: center;
+    justify-content: space-between;
+    width: 280px;
+    height: 40px;
+    color: $mulledWine;
+    background-color: transparent;
+    border: $primaryBorder;
+    border-radius: 4px;
+    cursor: pointer;
+
+    &_open {
+      background-color: $alabaster;
+    }
+
+    &__icon {
+      display: flex;
+      align-items: center;
+      height: 100%;
+      margin-right: 10px;
+    }
+
+    &__selected-metrics {
+      padding: 0 20px 0 16px;
+    }
+  }
+
+  &-popup {
+    .metrics-selector-search {
+      padding: 8px 12px;
+    }
+
+    .metrics-selector__footer {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      margin-left: 10px;
+      padding: 5px 10px 10px;
+
+      .metrics-selector__footer-counter {
+        width: 100%;
+        padding: 6px 0;
+        text-align: right;
+        background-color: inherit;
+      }
+
+      .metrics-selector__footer-buttons {
+        display: flex;
+        gap: 10px;
+      }
+    }
+
+    .metrics-selector-options {
+      padding-left: 0;
+
+      &.options-list {
+        width: 100%;
+        max-height: 350px;
+
+        .select__item {
+          height: 50px;
+          padding-left: 35px;
+
+          label {
+            overflow: hidden;
+            white-space: nowrap;
+          }
+
+          .metrics-selector-name {
+            display: flex;
+            flex: 1;
+            align-items: center;
+            margin-right: 5px;
+          }
+
+          .metrics-selector-icon-type {
+            display: flex;
+          }
+
+          &.disabled {
+            label {
+              .metrics-selector-color-indicator {
+                opacity: 0.3;
+              }
+
+              svg {
+                path {
+                  fill: $spunPearl;
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+
+  &-accordion {
+    &.accordion__container {
+      height: 50px;
+      overflow-y: hidden;
+      border-bottom: $dividerBorder;
+
+      &:last-child {
+        border: none;
+      }
+
+      &.open {
+        height: 100%;
+      }
+    }
+
+    &-icon {
+      position: absolute;
+      top: 6px;
+    }
+
+    &-title {
+      height: 50px;
+      padding: 15px 0 11px 45px;
+    }
+  }
+}

@@ -58,7 +58,7 @@ const FilesView = React.forwardRef(
       selectedFile,
       selectedRowData,
       setFiles,
-      setSelectedFile,
+      setSelectedFileMin,
       setSelectedRowData,
       sortProps,
       tableContent,
@@ -68,7 +68,7 @@ const FilesView = React.forwardRef(
       viewMode,
       virtualizationConfig
     },
-    { filesRef, tableRef, tableBodyRef }
+    { filesRef }
   ) => {
     return (
       <>
@@ -112,20 +112,20 @@ const FilesView = React.forwardRef(
                 />
               ) : (
                 <>
-                  {selectedRowData.loading && <Loader />}
+                  {(selectedRowData.loading  || artifactsStore.files.fileLoading) && <Loader />}
                   <Table
                     actionsMenu={actionsMenu}
                     applyDetailsChanges={applyDetailsChanges}
                     applyDetailsChangesCallback={applyDetailsChangesCallback}
                     detailsFormInitialValues={detailsFormInitialValues}
-                    handleCancel={() => setSelectedFile({})}
+                    handleCancel={() => setSelectedFileMin({})}
                     pageData={pageData}
-                    ref={{ tableRef, tableBodyRef }}
                     retryRequest={handleRefresh}
                     selectedItem={selectedFile}
                     sortProps={sortProps}
                     tableClassName="files-table"
                     tableHeaders={tableHeaders ?? []}
+                    virtualizationConfig={virtualizationConfig}
                   >
                     {tableContent.map(
                       (tableItem, index) =>
@@ -133,7 +133,7 @@ const FilesView = React.forwardRef(
                           <ArtifactsTableRow
                             actionsMenu={actionsMenu}
                             handleExpandRow={handleExpandRow}
-                            key={index}
+                            key={tableItem.data.ui.identifier}
                             rowIndex={index}
                             rowItem={tableItem}
                             selectedItem={selectedFile}
@@ -192,7 +192,7 @@ FilesView.propTypes = {
   pageData: PropTypes.object.isRequired,
   selectedFile: PropTypes.object.isRequired,
   selectedRowData: PropTypes.object.isRequired,
-  setSelectedFile: PropTypes.func.isRequired,
+  setSelectedFileMin: PropTypes.func.isRequired,
   sortProps: SORT_PROPS,
   tableContent: PropTypes.arrayOf(PropTypes.object).isRequired,
   tableHeaders: PropTypes.arrayOf(PropTypes.object).isRequired,

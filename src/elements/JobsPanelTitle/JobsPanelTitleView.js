@@ -45,14 +45,15 @@ const JobsPanelTitleView = ({
   editTitle,
   handleFinishEdit,
   handleFunctionInfoChange,
-  isNameValid,
   methodOptions,
   openScheduleJob,
   panelDispatch,
   setEditTitle,
-  setNameValid,
+  setLabelsValidation,
   setOpenScheduleJob,
-  versionOptions
+  setValidation,
+  versionOptions,
+  validation
 }) => {
   const accordionIconClassNames = classnames(
     'job-panel__title-edit-icon',
@@ -70,7 +71,7 @@ const JobsPanelTitleView = ({
         <Accordion
           accordionClassName="job-panel__title-accordion"
           alwaysOpened={!editModeEnabled}
-          closeOnBlur={!isNameValid ? null : () => setEditTitle(false)}
+          closeOnBlur={!validation.isNameValid ? null : () => setEditTitle(false)}
           icon={
             editModeEnabled ? (
               <span
@@ -94,7 +95,7 @@ const JobsPanelTitleView = ({
               <Input
                 className="panel-title__input"
                 disabled={!editTitle}
-                invalid={!isNameValid}
+                invalid={!validation.isNameValid}
                 invalidText="This field is invalid"
                 onChange={name =>
                   panelDispatch({
@@ -103,7 +104,7 @@ const JobsPanelTitleView = ({
                   })
                 }
                 validationRules={getValidationRules('common.name')}
-                setInvalid={value => setNameValid(state => ({ ...state, isNameValid: value }))}
+                setInvalid={value => setValidation(state => ({ ...state, isNameValid: value }))}
                 type="text"
                 value={currentFunctionInfo.name}
                 wrapperClassName={!editTitle ? 'panel-title__input-wrapper' : ''}
@@ -135,6 +136,7 @@ const JobsPanelTitleView = ({
                           payload: chips
                         })
                       }
+                      setValidation={setLabelsValidation}
                     />
                   </div>
                 </div>
@@ -199,13 +201,13 @@ JobsPanelTitleView.propTypes = {
   editTitle: PropTypes.bool.isRequired,
   handleFinishEdit: PropTypes.func.isRequired,
   handleFunctionInfoChange: PropTypes.func.isRequired,
-  isNameValid: PropTypes.bool.isRequired,
   methodOptions: PropTypes.array.isRequired,
   openScheduleJob: PropTypes.bool.isRequired,
   panelDispatch: PropTypes.func.isRequired,
   setEditTitle: PropTypes.func.isRequired,
-  setNameValid: PropTypes.func.isRequired,
   setOpenScheduleJob: PropTypes.func.isRequired,
+  setValidation: PropTypes.func.isRequired,
+  validation: PropTypes.object.isRequired,
   versionOptions: PropTypes.array.isRequired
 }
 

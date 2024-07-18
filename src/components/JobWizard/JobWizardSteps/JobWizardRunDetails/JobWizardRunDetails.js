@@ -20,7 +20,6 @@ such restriction.
 import React, { useMemo, useState } from 'react'
 import PropTypes from 'prop-types'
 import { get, isEmpty, omit, set } from 'lodash'
-import { OnChange } from 'react-final-form-listeners'
 import { FieldArray } from 'react-final-form-arrays'
 
 import {
@@ -28,6 +27,7 @@ import {
   FormCheckBox,
   FormChipCell,
   FormInput,
+  FormOnChange,
   FormSelect,
   FormTextarea,
   Tooltip,
@@ -44,7 +44,7 @@ import {
 import { SECONDARY_BUTTON, TERTIARY_BUTTON } from 'igz-controls/constants'
 import { areFormValuesChanged } from 'igz-controls/utils/form.util'
 import { getChipOptions } from '../../../../utils/getChipOptions'
-import { getValidationRules } from 'igz-controls/utils/validation.util'
+import { getValidationRules, getInternalLabelsValidationRule } from 'igz-controls/utils/validation.util'
 import { openPopUp } from 'igz-controls/utils/common.util'
 import {
   generateJobWizardData,
@@ -57,6 +57,7 @@ import {
 import './jobWizardRunDetails.scss'
 
 const JobWizardRunDetails = ({
+  currentProject,
   formState,
   frontendSpec,
   isBatchInference,
@@ -92,6 +93,7 @@ const JobWizardRunDetails = ({
       selectedFunctionData,
       null,
       params.projectName,
+      currentProject,
       isEditMode,
       false,
       null,
@@ -266,7 +268,7 @@ const JobWizardRunDetails = ({
             shortChips
             visibleChipsMaxLength="all"
             validationRules={{
-              key: getValidationRules('job.label.key'),
+              key: getValidationRules('job.label.key', getInternalLabelsValidationRule(frontendSpec.internal_labels)),
               value: getValidationRules('job.label.value')
             }}
           />
@@ -368,19 +370,22 @@ const JobWizardRunDetails = ({
             </div>
           </>
         )}
-
         {stepIsActive && spyOnHandlerChange && (
-          <OnChange name={handlerPath}>{onHandlerChange}</OnChange>
+          <FormOnChange handler={onHandlerChange} name={handlerPath} />
         )}
         {stepIsActive && spyOnVersionChange && (
-          <OnChange name={versionPath}>{onVersionChange}</OnChange>
+          <FormOnChange handler={onVersionChange} name={versionPath} />
         )}
       </div>
     )
   )
 }
+JobWizardRunDetails.defaultProps = {
+  currentProject: null
+}
 
 JobWizardRunDetails.propTypes = {
+  currentProject: PropTypes.shape({}),
   formState: PropTypes.shape({}).isRequired,
   frontendSpec: PropTypes.shape({}).isRequired,
   isBatchInference: PropTypes.bool.isRequired,

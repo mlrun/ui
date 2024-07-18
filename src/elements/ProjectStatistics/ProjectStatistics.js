@@ -27,7 +27,7 @@ import ProjectStatisticsCounter from '../ProjectStatisticsCounter/ProjectStatist
 import { setFilters } from '../../reducers/filtersReducer'
 import {
   ANY_TIME_DATE_OPTION,
-  datePickerOptions,
+  datePickerPastOptions,
   PAST_24_HOUR_DATE_OPTION
 } from '../../utils/datePicker.util'
 
@@ -41,18 +41,19 @@ const ProjectStatistics = ({ statistics }) => {
     let filters = {}
 
     if (['running', 'workflows'].includes(key)) {
-      const anyTimeOption = datePickerOptions.find(option => option.id === ANY_TIME_DATE_OPTION)
+      const anyTimeOption = datePickerPastOptions.find(option => option.id === ANY_TIME_DATE_OPTION)
 
       filters = {
         saveFilters: true,
         state: 'running',
         dates: {
           value: anyTimeOption.handler(),
-          isPredefined: false
+          isPredefined: false,
+          initialSelectedOptionId: anyTimeOption.id
         }
       }
     } else if (key === 'failed') {
-      const past24HourOption = datePickerOptions.find(
+      const past24HourOption = datePickerPastOptions.find(
         option => option.id === PAST_24_HOUR_DATE_OPTION
       )
 
@@ -61,7 +62,8 @@ const ProjectStatistics = ({ statistics }) => {
         state: 'error',
         dates: {
           value: past24HourOption.handler(),
-          isPredefined: past24HourOption.isPredefined
+          isPredefined: past24HourOption.isPredefined,
+          initialSelectedOptionId: past24HourOption.id
         }
       }
     }

@@ -26,20 +26,20 @@ import AddArtifactTagPopUp from '../../elements/AddArtifactTagPopUp/AddArtifactT
 import RegisterArtifactModal from '../RegisterArtifactModal/RegisterArtifactModal'
 
 import {
-  DATASET_TYPE,
   DATASETS_FILTERS,
   DATASETS_PAGE,
+  DATASETS_TAB,
+  DATASET_TYPE,
   FILTER_MENU_MODAL,
   GROUP_BY_NAME,
   GROUP_BY_NONE,
   REQUEST_CANCELED,
-  SHOW_ITERATIONS,
   TAG_FILTER_ALL_ITEMS
 } from '../../constants'
 import {
   fetchArtifactTags,
-  fetchDataSet,
   fetchDataSets,
+  fetchExpandedDataSet,
   removeDataSet,
   removeDataSets
 } from '../../reducers/artifactsReducer'
@@ -58,12 +58,14 @@ import { getFilterTagOptions, setFilters } from '../../reducers/filtersReducer'
 import { getViewMode } from '../../utils/helper'
 import { isDetailsTabExists } from '../../utils/isDetailsTabExists'
 import { openPopUp } from 'igz-controls/utils/common.util'
+import { setFullSelectedArtifact } from '../../utils/artifacts.util'
 import { setNotification } from '../../reducers/notificationReducer'
 import { useGetTagOptions } from '../../hooks/useGetTagOptions.hook'
 import { useGroupContent } from '../../hooks/groupContent.hook'
 import { useSortTable } from '../../hooks/useSortTable.hook'
 import { useVirtualization } from '../../hooks/useVirtualization.hook'
 import { useYaml } from '../../hooks/yaml.hook'
+import { useInitialArtifactsFetch } from '../../hooks/artifacts.hook'
 
 import './datasets.scss'
 import cssVariables from './datasets.scss'
@@ -71,6 +73,7 @@ import cssVariables from './datasets.scss'
 const Datasets = () => {
   const [datasets, setDatasets] = useState([])
   const [selectedDataset, setSelectedDataset] = useState({})
+  const [selectedDatasetMin, setSelectedDatasetMin] = useState({})
   const [selectedRowData, setSelectedRowData] = useState({})
   const [largeRequestErrorMessage, setLargeRequestErrorMessage] = useState('')
   const [convertedYaml, toggleConvertedYaml] = useYaml('')
@@ -91,8 +94,6 @@ const Datasets = () => {
 
   const abortControllerRef = useRef(new AbortController())
   const datasetsRef = useRef(null)
-  const tableBodyRef = useRef(null)
-  const tableRef = useRef(null)
 
   const datasetsFilters = useMemo(
     () => ({
@@ -113,11 +114,22 @@ const Datasets = () => {
     [selectedDataset.tag]
   )
 
+  useEffect(() => {
+    setFullSelectedArtifact(
+      DATASETS_TAB,
+      dispatch,
+      navigate,
+      selectedDatasetMin,
+      setSelectedDataset,
+      params.projectName
+    )
+  }, [dispatch, navigate, params.projectName, selectedDatasetMin])
+
   const fetchData = useCallback(
     filters => {
       abortControllerRef.current = new AbortController()
 
-      dispatch(
+      return dispatch(
         fetchDataSets({
           project: params.projectName,
           filters,
@@ -125,6 +137,9 @@ const Datasets = () => {
             ui: {
               controller: abortControllerRef.current,
               setLargeRequestErrorMessage
+            },
+            params: {
+              format: 'minimal'
             }
           }
         })
@@ -171,7 +186,7 @@ const Datasets = () => {
         artifact,
         onAddTag: () => handleRefresh(datasetsFilters),
         getArtifact: () =>
-          fetchDataSet({
+          fetchExpandedDataSet({
             project: params.projectName,
             dataSet: artifact.db_key,
             iter: true,
@@ -184,16 +199,18 @@ const Datasets = () => {
   )
 
   const actionsMenu = useMemo(
-    () => dataset =>
+    () => (datasetMin, menuPosition) =>
       generateActionsMenu(
-        dataset,
+        datasetMin,
         frontendSpec,
         dispatch,
         toggleConvertedYaml,
         handleAddTag,
         params.projectName,
         handleRefresh,
-        datasetsFilters
+        datasetsFilters,
+        menuPosition,
+        selectedDataset
       ),
     [
       datasetsFilters,
@@ -202,6 +219,7 @@ const Datasets = () => {
       handleAddTag,
       handleRefresh,
       params.projectName,
+      selectedDataset,
       toggleConvertedYaml
     ]
   )
@@ -300,20 +318,19 @@ const Datasets = () => {
       }
     })
 
+  useInitialArtifactsFetch(
+    fetchData,
+    urlTagOption,
+    datasets.length,
+    setSelectedRowData,
+    createDatasetsRowData
+  )
+
   useEffect(() => {
     if (params.name && params.tag && pageData.details.menu.length > 0) {
       isDetailsTabExists(params.tab, pageData.details.menu, navigate, location)
     }
   }, [location, navigate, pageData.details.menu, params.name, params.tab, params.tag])
-
-  useEffect(() => {
-    if (urlTagOption && datasets.length === 0) {
-      fetchData({
-        tag: urlTagOption,
-        iter: SHOW_ITERATIONS
-      })
-    }
-  }, [datasets.length, fetchData, urlTagOption])
 
   useEffect(() => {
     dispatch(setFilters({ groupBy: GROUP_BY_NONE }))
@@ -328,7 +345,7 @@ const Datasets = () => {
       params.iter,
       params.uid,
       params.projectName,
-      setSelectedDataset,
+      setSelectedDatasetMin,
       navigate
     )
   }, [
@@ -348,7 +365,8 @@ const Datasets = () => {
     return () => {
       setDatasets([])
       dispatch(removeDataSets())
-      setSelectedDataset({})
+      setSelectedDatasetMin({})
+      setSelectedRowData({})
       abortControllerRef.current.abort(REQUEST_CANCELED)
       tagAbortControllerCurrent.abort(REQUEST_CANCELED)
     }
@@ -366,8 +384,6 @@ const Datasets = () => {
   useEffect(() => setDatasets([]), [filtersStore.tag])
 
   const virtualizationConfig = useVirtualization({
-    tableRef,
-    tableBodyRef,
     rowsData: {
       content: sortedTableContent,
       expandedRowsData: selectedRowData,
@@ -377,7 +393,8 @@ const Datasets = () => {
       headerRowHeight: cssVariables.datasetsHeaderRowHeight,
       rowHeight: cssVariables.datasetsRowHeight,
       rowHeightExtended: cssVariables.datasetsRowHeightExtended
-    }
+    },
+    activateTableScroll: true
   })
 
   return (
@@ -395,11 +412,11 @@ const Datasets = () => {
       handleRegisterDataset={handleRegisterDataset}
       largeRequestErrorMessage={largeRequestErrorMessage}
       pageData={pageData}
-      ref={{ datasetsRef, tableRef, tableBodyRef }}
+      ref={{ datasetsRef }}
       selectedDataset={selectedDataset}
       selectedRowData={selectedRowData}
       setDatasets={setDatasets}
-      setSelectedDataset={setSelectedDataset}
+      setSelectedDatasetMin={setSelectedDatasetMin}
       setSelectedRowData={setSelectedRowData}
       sortProps={{ sortTable, selectedColumnName, getSortingIcon }}
       tableContent={sortedTableContent}

@@ -17,11 +17,12 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import React, { useCallback } from 'react'
+import React, { useCallback, useRef, useEffect, useState } from 'react'
 import PropTypes from 'prop-types'
 import { Link, useLocation, useNavigate, useParams } from 'react-router-dom'
 import { isEmpty } from 'lodash'
 import { useSelector } from 'react-redux'
+import classNames from 'classnames'
 
 import { Button, Tooltip, TextTooltipTemplate, RoundedIcon } from 'igz-controls/components'
 import LoadButton from '../../../common/LoadButton/LoadButton'
@@ -55,12 +56,14 @@ const DetailsHeader = ({
   setIteration,
   tab
 }) => {
+  const [headerIsMultiline, setHeaderIsMultiline] = useState(false)
   const detailsStore = useSelector(store => store.detailsStore)
   const location = useLocation()
   const params = useParams()
   const navigate = useNavigate()
   const viewMode = getViewMode(window.location.search)
   const { actionButton, withToggleViewBtn } = pageData.details
+  const headerRef = useRef()
 
   const {
     value: stateValue,
@@ -77,15 +80,38 @@ const DetailsHeader = ({
   }, [detailsStore.changes.counter, handleCancel, handleShowWarning])
 
   const handleCancelClick = useCallback(() => {
-    if (detailsStore.changes.counter > 0) {
-      handleShowWarning(true)
-    } else {
+    if (detailsStore.changes.counter === 0) {
       handleCancel()
     }
-  }, [detailsStore.changes.counter, handleCancel, handleShowWarning])
+  }, [detailsStore.changes.counter, handleCancel])
+
+  useEffect(() => {
+    if (!headerRef.current) return
+
+    let prevHeaderHeight = 0
+    const resizeObserver = new ResizeObserver(entries => {
+      for (let entry of entries) {
+        if (entry.contentRect.height !== prevHeaderHeight) {
+          prevHeaderHeight = entry.contentRect.height
+          if (entry.contentRect.height > 100) {
+            setHeaderIsMultiline(true)
+          } else {
+            setHeaderIsMultiline(false)
+          }
+        }
+      }
+    })
+
+    resizeObserver.observe(headerRef.current)
+
+    return () => resizeObserver.disconnect()
+  }, [])
 
   return (
-    <div className="item-header">
+    <div
+      className={classNames('item-header', headerIsMultiline && 'item-header_multiline')}
+      ref={headerRef}
+    >
       <div className="item-header__data">
         <h3 className="item-header__title">
           {isDetailsScreen && !pageData.details.hideBackBtn && (
@@ -123,7 +149,7 @@ const DetailsHeader = ({
         <div className="item-header__status">
           {/*In the Workflow page we display both Jobs and Functions items. The function contains `updated` property.
             The job contains startTime property.*/}
-          <span className="updated">
+          <span className="updated data-ellipsis">
             {Object.keys(selectedItem).length > 0 &&
             pageData.page === JOBS_PAGE &&
             !selectedItem?.updated
@@ -132,12 +158,12 @@ const DetailsHeader = ({
                   stateValue === 'aborted' ? 'N/A' : 'Not yet started'
                 )
               : selectedItem?.updated
-              ? formatDatetime(selectedItem?.updated, 'N/A')
-              : selectedItem?.spec?.model.includes(':') // 'model-key:model-tag'
-              ? selectedItem.spec.model.replace(/^.*:/, '') // remove key
-              : selectedItem?.spec?.model
-              ? selectedItem?.metadata?.uid
-              : ''}
+                ? formatDatetime(selectedItem?.updated, 'N/A')
+                : selectedItem?.spec?.model.includes(':') // 'model-key:model-tag'
+                  ? selectedItem.spec.model.replace(/^.*:/, '') // remove key
+                  : selectedItem?.spec?.model
+                    ? selectedItem?.metadata?.uid
+                    : ''}
           </span>
           {stateValue && stateLabel && (
             <Tooltip className="state" template={<TextTooltipTemplate text={stateLabel} />}>
@@ -161,6 +187,20 @@ const DetailsHeader = ({
             <span className="item-header__pods-error left-margin">Failed to load pods</span>
           )}
         </div>
+      </div>
+      <div className="item-header__custom-elements">
+        {params.tab === DETAILS_ARTIFACTS_TAB && detailsStore.iteration && (
+          <Select
+            density="dense"
+            key="Iteration"
+            label="Iteration:"
+            onClick={option => {
+              setIteration(option)
+            }}
+            options={detailsStore.iterationOptions}
+            selectedId={detailsStore.iteration}
+          />
+        )}
       </div>
       <div className="item-header__buttons">
         {detailsStore.changes.counter > 0 && (
@@ -191,18 +231,6 @@ const DetailsHeader = ({
             </Tooltip>
           </>
         )}
-        {params.tab === DETAILS_ARTIFACTS_TAB && detailsStore.iteration && (
-          <Select
-            density="dense"
-            key="Iteration"
-            label="Iteration:"
-            onClick={option => {
-              setIteration(option)
-            }}
-            options={detailsStore.iterationOptions}
-            selectedId={detailsStore.iteration}
-          />
-        )}
         {actionButton && !actionButton.hidden && (
           <Button
             disabled={actionButton.disabled}
@@ -213,7 +241,11 @@ const DetailsHeader = ({
           />
         )}
         {isDetailsScreen && (
-          <RoundedIcon id="refresh" onClick={handleRefresh} tooltipText="Refresh">
+          <RoundedIcon
+            id="refresh"
+            onClick={() => handleRefresh(selectedItem.project)}
+            tooltipText="Refresh"
+          >
             <Refresh />
           </RoundedIcon>
         )}

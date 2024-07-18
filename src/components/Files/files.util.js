@@ -18,20 +18,28 @@ under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
 import React from 'react'
+import { isEqual } from 'lodash'
+
+import DeleteArtifactPopUp from '../../elements/DeleteArtifactPopUp/DeleteArtifactPopUp'
 
 import {
+  ACTION_MENU_PARENT_ROW,
+  ACTION_MENU_PARENT_ROW_EXPANDED,
+  ARTIFACTS_TAB,
+  ARTIFACT_OTHER_TYPE,
   ARTIFACT_TYPE,
   FILES_PAGE,
+  FILES_TAB,
   FULL_VIEW_MODE,
   ITERATIONS_FILTER,
   LABELS_FILTER,
   NAME_FILTER,
   TAG_FILTER
 } from '../../constants'
-import { applyTagChanges } from '../../utils/artifacts.util'
+import { applyTagChanges, chooseOrFetchArtifact } from '../../utils/artifacts.util'
 import { copyToClipboard } from '../../utils/copyToClipboard'
 import { createFilesRowData, getIsTargetPathValid } from '../../utils/createArtifactsContent'
-import { fetchFile, showArtifactsPreview } from '../../reducers/artifactsReducer'
+import { fetchExpandedFile, showArtifactsPreview } from '../../reducers/artifactsReducer'
 import { generateUri } from '../../utils/resources'
 import { getArtifactIdentifier } from '../../utils/getUniqueIdentifier'
 import { handleDeleteArtifact } from '../../utils/handleDeleteArtifact'
@@ -39,6 +47,7 @@ import { openDeleteConfirmPopUp } from 'igz-controls/utils/common.util'
 import { searchArtifactItem } from '../../utils/searchArtifactItem'
 import { setDownloadItem, setShowDownloadsList } from '../../reducers/downloadReducer'
 import { sortListByDate } from '../../utils'
+import { openPopUp } from 'igz-controls/utils/common.util'
 
 import { ReactComponent as TagIcon } from 'igz-controls/images/tag-icon.svg'
 import { ReactComponent as YamlIcon } from 'igz-controls/images/yaml.svg'
@@ -81,11 +90,6 @@ export const infoHeaders = [
   { label: 'Size', id: 'size' },
   { label: 'Path', id: 'target_path' },
   { label: 'URI', id: 'target_uri' },
-  {
-    label: 'UID',
-    id: 'tree',
-    tip: 'Unique identifier representing the job or the workflow that generated the artifact'
-  },
   { label: 'Updated', id: 'updated' },
   { label: 'Labels', id: 'labels' }
 ]
@@ -94,7 +98,7 @@ export const generatePageData = viewMode => {
   return {
     page: FILES_PAGE,
     details: {
-      type: FILES_PAGE,
+      type: FILES_TAB,
       menu: detailsMenu,
       infoHeaders,
       hideBackBtn: viewMode === FULL_VIEW_MODE,
@@ -127,7 +131,9 @@ export const fetchFilesRowData = (
     loading: true
   }))
 
-  dispatch(fetchFile({ project: file.project ?? projectName, file: file.db_key, iter, tag }))
+  dispatch(
+    fetchExpandedFile({ project: file.project ?? projectName, file: file.db_key, iter, tag })
+  )
     .unwrap()
     .then(result => {
       if (result?.length > 0) {
@@ -201,7 +207,9 @@ export const checkForSelectedFile = (
         if (!searchItem) {
           navigate(`/projects/${projectName}/files`, { replace: true })
         } else {
-          setSelectedFile(searchItem)
+          setSelectedFile(prevState => {
+            return isEqual(prevState, searchItem) ? prevState : searchItem
+          })
         }
       }
     } else {
@@ -211,71 +219,96 @@ export const checkForSelectedFile = (
 }
 
 export const generateActionsMenu = (
-  file,
+  fileMin,
   frontendSpec,
   dispatch,
   toggleConvertedYaml,
   handleAddTag,
   projectName,
   handleRefresh,
-  datasetsFilters
+  filters,
+  menuPosition,
+  selectedFile
 ) => {
-  const isTargetPathValid = getIsTargetPathValid(file ?? {}, frontendSpec)
-  const downloadPath = `${file?.target_path}${file?.model_file || ''}`
+  const isTargetPathValid = getIsTargetPathValid(fileMin ?? {}, frontendSpec)
+
+  const getFullFile = fileMin => {
+    return chooseOrFetchArtifact(dispatch, FILES_TAB, selectedFile, fileMin)
+  }
 
   return [
     [
       {
         label: 'Add a tag',
+        hidden: menuPosition === ACTION_MENU_PARENT_ROW_EXPANDED,
         icon: <TagIcon />,
         onClick: handleAddTag
       },
       {
         label: 'Download',
+        hidden: menuPosition === ACTION_MENU_PARENT_ROW_EXPANDED,
+        disabled: !isTargetPathValid,
         icon: <DownloadIcon />,
-        onClick: file => {
-          dispatch(
-            setDownloadItem({
-              path: downloadPath,
-              user: file.producer?.owner,
-              id: downloadPath
-            })
-          )
-          dispatch(setShowDownloadsList(true))
+        onClick: fileMin => {
+          getFullFile(fileMin).then(file => {
+            const downloadPath = `${fileMin?.target_path}${fileMin?.model_file || ''}`
+            dispatch(
+              setDownloadItem({
+                path: downloadPath,
+                user: file.producer?.owner,
+                id: downloadPath
+              })
+            )
+            dispatch(setShowDownloadsList(true))
+          })
         }
       },
       {
         label: 'Copy URI',
+        hidden: menuPosition === ACTION_MENU_PARENT_ROW_EXPANDED,
         icon: <Copy />,
-        onClick: file => copyToClipboard(generateUri(file, FILES_PAGE), dispatch)
+        onClick: file => copyToClipboard(generateUri(file, ARTIFACTS_TAB), dispatch)
       },
       {
         label: 'View YAML',
+        hidden: menuPosition === ACTION_MENU_PARENT_ROW_EXPANDED,
         icon: <YamlIcon />,
-        onClick: toggleConvertedYaml
+        onClick: fileMin => getFullFile(fileMin).then(toggleConvertedYaml)
       },
       {
         label: 'Delete',
         icon: <Delete />,
-        disabled: !file?.tag,
-        tooltip: !file?.tag
-          ? 'A tag is required to delete an artifact. Open the artifact, click on the edit icon, and assign a tag before proceeding with the deletion'
-          : '',
+        hidden: [ACTION_MENU_PARENT_ROW, ACTION_MENU_PARENT_ROW_EXPANDED].includes(menuPosition),
+        className: 'danger',
+        onClick: () =>
+          openPopUp(DeleteArtifactPopUp, {
+            artifact: fileMin,
+            artifactType: ARTIFACT_TYPE,
+            category: ARTIFACT_OTHER_TYPE,
+            filters,
+            handleRefresh
+          })
+      },
+      {
+        label: 'Delete all',
+        icon: <Delete />,
+        hidden: ![ACTION_MENU_PARENT_ROW, ACTION_MENU_PARENT_ROW_EXPANDED].includes(menuPosition),
         className: 'danger',
         onClick: () =>
           openDeleteConfirmPopUp(
             'Delete artifact?',
-            `Do you want to delete the artifact "${file.db_key}"? Deleted artifacts can not be restored.`,
+            `Do you want to delete all versions of the artifact "${fileMin.db_key}"? Deleted artifacts can not be restored.`,
             () => {
               handleDeleteArtifact(
                 dispatch,
                 projectName,
-                file.db_key,
-                file.tag,
-                file.tree,
+                fileMin.db_key,
+                fileMin.uid,
                 handleRefresh,
-                datasetsFilters,
-                ARTIFACT_TYPE
+                filters,
+                ARTIFACT_TYPE,
+                ARTIFACT_OTHER_TYPE,
+                true
               )
             }
           )
@@ -283,17 +316,19 @@ export const generateActionsMenu = (
     ],
     [
       {
-        disabled: !isTargetPathValid,
-        id: 'artifact-preview',
         label: 'Preview',
+        id: 'artifact-preview',
+        disabled: !isTargetPathValid,
         icon: <ArtifactView />,
-        onClick: file => {
-          dispatch(
-            showArtifactsPreview({
-              isPreview: true,
-              selectedItem: file
-            })
-          )
+        onClick: fileMin => {
+          getFullFile(fileMin).then(file => {
+            dispatch(
+              showArtifactsPreview({
+                isPreview: true,
+                selectedItem: file
+              })
+            )
+          })
         }
       }
     ]

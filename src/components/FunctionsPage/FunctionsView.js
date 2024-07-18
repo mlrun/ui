@@ -21,20 +21,28 @@ import React from 'react'
 import { useParams } from 'react-router-dom'
 import PropTypes from 'prop-types'
 
+import ActionBar from '../ActionBar/ActionBar'
 import Breadcrumbs from '../../common/Breadcrumbs/Breadcrumbs'
-import FilterMenu from '../FilterMenu/FilterMenu'
+import FunctionsFilters from './FunctionsFilters'
+import FunctionsPanel from '../FunctionsPanel/FunctionsPanel'
+import FunctionsTableRow from '../../elements/FunctionsTableRow/FunctionsTableRow'
 import Loader from '../../common/Loader/Loader'
 import NoData from '../../common/NoData/NoData'
 import Table from '../Table/Table'
-import FunctionsTableRow from '../../elements/FunctionsTableRow/FunctionsTableRow'
-import FunctionsPanel from '../FunctionsPanel/FunctionsPanel'
-import { ConfirmDialog } from 'igz-controls/components'
 import YamlModal from '../../common/YamlModal/YamlModal'
+import { ConfirmDialog } from 'igz-controls/components'
 
-import { getNoDataMessage } from '../../utils/getNoDataMessage'
+import {
+  FUNCTIONS_PAGE,
+  FUNCTION_FILTERS,
+  PANEL_CREATE_MODE,
+  PANEL_EDIT_MODE
+} from '../../constants'
 import { SECONDARY_BUTTON } from 'igz-controls/constants'
+import { VIRTUALIZATION_CONFIG } from '../../types'
 import { filters } from './functions.util'
-import { FUNCTIONS_PAGE, PANEL_CREATE_MODE, PANEL_EDIT_MODE } from '../../constants'
+import { getNoDataMessage } from '../../utils/getNoDataMessage'
+import { isRowRendered } from '../../hooks/useVirtualization.hook'
 
 const FunctionsView = ({
   actionsMenu,
@@ -46,6 +54,7 @@ const FunctionsView = ({
   expand,
   filtersChangeCallback,
   filtersStore,
+  functionsFilters,
   functionsPanelIsOpen,
   functionsStore,
   getPopUpTemplate,
@@ -63,7 +72,8 @@ const FunctionsView = ({
   selectedRowData,
   tableContent,
   taggedFunctions,
-  toggleConvertedYaml
+  toggleConvertedYaml,
+  virtualizationConfig
 }) => {
   const params = useParams()
   return (
@@ -75,21 +85,26 @@ const FunctionsView = ({
         <div className="content">
           <div className="table-container">
             <div className="content__action-bar-wrapper">
-              <div className="action-bar">
-                <FilterMenu
-                  actionButton={{
-                    getCustomTemplate: getPopUpTemplate,
+              <ActionBar
+                page={FUNCTIONS_PAGE}
+                expand={expand}
+                filters={functionsFilters}
+                filterMenuName={FUNCTION_FILTERS}
+                handleExpandAll={handleExpandAll}
+                handleRefresh={filtersChangeCallback}
+                actionButtons={[
+                  {
                     hidden: !isDemoMode,
-                    label: 'New',
-                    variant: SECONDARY_BUTTON
-                  }}
-                  expand={expand}
-                  filters={filters}
-                  handleExpandAll={handleExpandAll}
-                  onChange={filtersChangeCallback}
-                  page={FUNCTIONS_PAGE}
-                />
-              </div>
+                    template: getPopUpTemplate({
+                      className: 'action-button',
+                      label: 'New',
+                      variant: SECONDARY_BUTTON
+                    }),
+                  }
+                ]}
+              >
+                <FunctionsFilters />
+              </ActionBar>
             </div>
             {functionsStore.loading ? (
               <Loader />
@@ -99,34 +114,39 @@ const FunctionsView = ({
                   filtersStore,
                   filters,
                   largeRequestErrorMessage,
-                  FUNCTIONS_PAGE
+                  FUNCTIONS_PAGE,
+                  FUNCTION_FILTERS
                 )}
               />
             ) : (
               <>
+                {functionsStore.funcLoading && <Loader />}
                 <Table
                   actionsMenu={actionsMenu}
                   handleCancel={handleCancel}
                   pageData={pageData}
                   retryRequest={refreshFunctions}
                   selectedItem={selectedFunction}
+                  tableClassName="functions-table"
                   tableHeaders={tableContent[0]?.content ?? []}
+                  virtualizationConfig={virtualizationConfig}
                 >
-                  {tableContent.map((tableItem, index) => {
-                    return (
-                      <FunctionsTableRow
-                        actionsMenu={actionsMenu}
-                        handleExpandRow={handleExpandRow}
-                        handleSelectItem={handleSelectFunction}
-                        rowIndex={index}
-                        key={index}
-                        rowItem={tableItem}
-                        selectedItem={selectedFunction}
-                        selectedRowData={selectedRowData}
-                        withQuickActions
-                      />
-                    )
-                  })}
+                  {tableContent.map(
+                    (tableItem, index) =>
+                      isRowRendered(virtualizationConfig, index) && (
+                        <FunctionsTableRow
+                          actionsMenu={actionsMenu}
+                          handleExpandRow={handleExpandRow}
+                          handleSelectItem={handleSelectFunction}
+                          rowIndex={index}
+                          key={tableItem.data.ui.identifier}
+                          rowItem={tableItem}
+                          selectedItem={selectedFunction}
+                          selectedRowData={selectedRowData}
+                          withQuickActions
+                        />
+                      )
+                  )}
                 </Table>
               </>
             )}
@@ -184,6 +204,7 @@ FunctionsView.propTypes = {
   expand: PropTypes.bool.isRequired,
   filtersChangeCallback: PropTypes.func.isRequired,
   filtersStore: PropTypes.object.isRequired,
+  functionsFilters: PropTypes.arrayOf(PropTypes.object).isRequired,
   functionsPanelIsOpen: PropTypes.bool.isRequired,
   functionsStore: PropTypes.object.isRequired,
   getPopUpTemplate: PropTypes.func.isRequired,
@@ -200,7 +221,8 @@ FunctionsView.propTypes = {
   selectedRowData: PropTypes.object.isRequired,
   tableContent: PropTypes.arrayOf(PropTypes.object).isRequired,
   taggedFunctions: PropTypes.arrayOf(PropTypes.object).isRequired,
-  toggleConvertedYaml: PropTypes.func.isRequired
+  toggleConvertedYaml: PropTypes.func.isRequired,
+  virtualizationConfig: VIRTUALIZATION_CONFIG.isRequired
 }
 
 export default FunctionsView

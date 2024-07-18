@@ -26,11 +26,25 @@ import { CONTENT_MENU_TABS } from '../../types'
 
 import './contentMenu.scss'
 
-const ContentMenu = ({ activeTab, screen, tabs, onClick }) => {
+const ContentMenu = ({ activeTab, disabled, screen, tabs, onClick }) => {
   const params = useParams()
   const handleClick = (e, tabId) => {
-    e.preventDefault()
-    onClick(tabId)
+    if (!disabled) {
+      e.preventDefault()
+      onClick(tabId)
+    }
+  }
+
+  const generateRedirectLink = tabId => {
+    if (!disabled) {
+      if (onClick) {
+        return '/'
+      }
+
+      return `/projects${
+        params.projectName ? `/${params.projectName}` : ''
+      }/${screen.toLowerCase()}/${tabId}`
+    }
   }
 
   return (
@@ -39,18 +53,15 @@ const ContentMenu = ({ activeTab, screen, tabs, onClick }) => {
         {tabs.map(tab => {
           const tabClassNames = classnames(
             'content-menu__item',
-            tab.id === activeTab && 'content-menu__item_active'
+            tab.id === activeTab && 'content-menu__item_active',
+            disabled && 'content-menu__item_disabled'
           )
 
           return (
             !tab.hidden && (
               <li data-testid={tab.id} className={tabClassNames} key={tab.id}>
                 <Link
-                  to={
-                    onClick
-                      ? '/'
-                      : `/projects/${params.projectName}/${screen.toLowerCase()}/${tab.id}`
-                  }
+                  to={generateRedirectLink(tab.id)}
                   className={tab.icon && 'content-menu__item-icon'}
                   onClick={onClick && (e => handleClick(e, tab.id))}
                 >
@@ -71,11 +82,13 @@ const ContentMenu = ({ activeTab, screen, tabs, onClick }) => {
 
 ContentMenu.defaultProps = {
   activeTab: '',
+  disabled: false,
   tabs: []
 }
 
 ContentMenu.propTypes = {
   activeTab: PropTypes.string.isRequired,
+  disabled: PropTypes.bool,
   tabs: CONTENT_MENU_TABS.isRequired
 }
 

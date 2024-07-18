@@ -1,57 +1,11 @@
-@import '~igz-controls/scss/variables';
-@import '~igz-controls/scss/borders';
-
 .new-feature-vector__pop-up {
   .pop-up-dialog {
     width: 588px;
   }
 }
 
-.new-feature-vector__row {
-  margin-bottom: 15px;
-}
-
-.new-feature-vector__name-tag-row {
-  display: flex;
-
-  .vector-name-wrapper {
-    width: 70%;
-    margin-right: 15px;
-
-    .vector-name {
-      width: 100%;
-    }
-  }
-
-  .vector-tag-wrapper {
-    width: 30%;
-
-    .vector-tag {
-      width: 100%;
-    }
-  }
-}
-
 .new-feature-vector__description-row {
-  .text-area {
-    width: 100%;
+  textarea {
     height: 164px;
-  }
-}
-
-.new-feature-vector__labels-row {
-  .labels-container {
-    padding: 15px;
-    border: $primaryBorder;
-    border-radius: $mainBorderRadius;
-
-    .labels-container__title {
-      color: $topaz;
-    }
-
-    .chips-wrapper {
-      flex-wrap: wrap;
-      margin-top: 10px;
-    }
   }
 }

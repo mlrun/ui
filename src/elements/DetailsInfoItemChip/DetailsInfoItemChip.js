@@ -20,12 +20,13 @@ such restriction.
 import React from 'react'
 import PropTypes from 'prop-types'
 import classnames from 'classnames'
-import { OnChange } from 'react-final-form-listeners'
+import { useDispatch, useSelector } from 'react-redux'
 
-import { RoundedIcon, FormChipCell } from 'igz-controls/components'
+import { RoundedIcon, FormChipCell, FormOnChange } from 'igz-controls/components'
 
-import { getValidationRules } from 'igz-controls/utils/validation.util'
+import { getValidationRules, getInternalLabelsValidationRule } from 'igz-controls/utils/validation.util'
 import { detailsInfoActions } from '../../components/DetailsInfo/detailsInfoReducer'
+import detailsActions from '../../actions/details'
 
 import { ReactComponent as Checkmark } from 'igz-controls/images/checkmark2.svg'
 
@@ -40,6 +41,8 @@ const DetailsInfoItemChip = ({
   item,
   formState
 }) => {
+  const frontendSpec = useSelector(store => store.appStore.frontendSpec)
+  const dispatch = useDispatch()
   const chipFieldClassName = classnames(
     'details-item__data',
     'details-item__data-chips',
@@ -55,6 +58,7 @@ const DetailsInfoItemChip = ({
           fieldType: item?.editModeType
         }
       })
+      dispatch(detailsActions.setEditMode(true))
     } else if (formState.pristine) {
       handleFinishEdit(item.fieldData.name)
     }
@@ -71,11 +75,14 @@ const DetailsInfoItemChip = ({
         shortChips
         visibleChipsMaxLength="all"
         validationRules={{
-          key: getValidationRules('common.tag'),
+          key: getValidationRules(
+            'common.tag',
+            getInternalLabelsValidationRule(frontendSpec.internal_labels)
+          ),
           value: getValidationRules('common.tag')
         }}
       />
-      <OnChange name={item.fieldData.name}>{setEditMode}</OnChange>
+      <FormOnChange name={item.fieldData.name} handler={setEditMode} />
       {isFieldInEditMode && (
         <div className="details-item__apply-btn-wrapper">
           <RoundedIcon

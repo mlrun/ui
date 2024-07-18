@@ -4,6 +4,7 @@ Feature: MLRun Project Page
 
     @MLPM
     @passive
+    @smoke
     Scenario: MLPM002 - Check all mandatory components
         Given open url
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
@@ -21,11 +22,10 @@ Feature: MLRun Project Page
     
     @MLPM
     @passive
+    @smoke
     Scenario: MLNB001 - Check all mandatory components on Navigation Bar
-        * set tear-down property "project" created with "automation-test-1000" value
-        * create "automation-test-1000" MLRun Project with code 201
         Given open url
-        And click on row root with value "automation-test-1000" in "name" column in "Projects_Table" table on "Projects" wizard
+        And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
         #check the default state of 'Navigation_Bar'
         And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
@@ -119,6 +119,7 @@ Feature: MLRun Project Page
 
     @MLPM
     @passive
+    @smoke
     Scenario: MLPM003 - Check MLRun logo redirection
         Given open url
         And wait load page
@@ -130,6 +131,7 @@ Feature: MLRun Project Page
 
     @MLPM
     @passive
+    @smoke
     Scenario: MLPM004 - Check all mandatory components on Register File Popup
         Given open url
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
@@ -180,6 +182,7 @@ Feature: MLRun Project Page
     @FAILED_TODO
     #TODO: 'Register Model' option is missing in list of 'Create New' dropdown in demo mode
     @passive
+    @smoke
     Scenario: MLPM005 - Check all mandatory components on Register Model Popup
         Given open url
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
@@ -222,6 +225,7 @@ Feature: MLRun Project Page
 
     @MLPM
     @passive
+    @smoke
     Scenario: MLPM006 - Check all mandatory components on Register Dataset Popup
         Given open url
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
@@ -264,6 +268,7 @@ Feature: MLRun Project Page
     
     @MLPM
     @passive
+    @smoke
     Scenario: MLPM007 - Check all mandatory components on Batch run
         Given open url
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
@@ -334,7 +339,7 @@ Feature: MLRun Project Page
         Then verify "Advanced_Environment_Variables_Table" element visibility on "Modal_Wizard_Form" wizard
         Then verify "Default_Input_Path_Input" element visibility in "Advanced_Accordion" on "Modal_Wizard_Form" wizard
         Then verify "Default_Artifact_Path_Input" element visibility in "Advanced_Accordion" on "Modal_Wizard_Form" wizard
-        Then "Default_Artifact_Path_Input" element in "Advanced_Accordion" on "Modal_Wizard_Form" should contains "v3io:///projects/{{run.project}}/artifacts/{{run.uid}}" attribute value
+        Then "Default_Artifact_Path_Input" element in "Advanced_Accordion" on "Modal_Wizard_Form" should contains "v3io:///projects/{{run.project}}/artifacts" attribute value
         Then verify "Access_Key_Checkbox" element visibility on "Modal_Wizard_Form" wizard
         Then uncheck "Access_Key_Checkbox" element on "Modal_Wizard_Form" wizard
         Then verify "Access_Key_Input" element visibility on "Modal_Wizard_Form" wizard
@@ -357,6 +362,7 @@ Feature: MLRun Project Page
     
     @MLPM
     @passive
+    @smoke
     Scenario: MLPM008 - Check all mandatory components on Create ML Function - Job runtime
         Given open url
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
@@ -414,6 +420,7 @@ Feature: MLRun Project Page
 
     @MLPM
     @passive
+    @smoke
     Scenario: MLPM009 - Check all mandatory components on Create ML Function - Serving runtime
         Given open url
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
@@ -479,6 +486,7 @@ Feature: MLRun Project Page
 
     @MLPM
     @passive
+    @smoke
     Scenario: MLPM010 - Check all mandatory components on Create New Feature Set
         Given open url
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
@@ -519,10 +527,9 @@ Feature: MLRun Project Page
 
     @MLPM
     @passive
+    @smoke
     Scenario: MLPM011 - Check Project Counter redirection to Models page
         Given open url
-        And turn on demo mode
-        And wait load page
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
         Then click on cell with value "Models" in "name" column in "Mono_Values_Cards" table on "Project" wizard
@@ -534,11 +541,14 @@ Feature: MLRun Project Page
         Then verify "Show_Iterations_Checkbox" element visibility on "Artifacts_FilterBy_Popup" wizard
         Then verify "Table_Refresh_Button" element visibility on "Models" wizard
         Then verify "Models_Table" element visibility on "Models" wizard
+        And turn on demo mode
+        And wait load page
         Then verify "Register_Model_Button" element visibility on "Models" wizard
         Then "Register_Model_Button" element on "Models" should contains "Register model" value
 
     @MLPM
     @passive
+    @smoke
     Scenario: MLPM012 - Check Project Counter redirection to Feature Sets page
         Given open url
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
@@ -561,6 +571,7 @@ Feature: MLRun Project Page
 
     @MLPM
     @passive
+    @smoke
     Scenario: MLPM013 - Check Project Counter redirection to Artifacts page
         Given open url
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
@@ -579,6 +590,7 @@ Feature: MLRun Project Page
 
     @MLPM
     @passive
+    @smoke
     Scenario: MLPM014 - Check Project Counter redirection to Monitor Jobs tab
         Given open url
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
@@ -595,6 +607,7 @@ Feature: MLRun Project Page
 
     @MLPM
     @passive
+    @smoke
     Scenario: MLPM015 - Check Project Counter redirection to Schedules tab
         Given open url
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
@@ -609,6 +622,7 @@ Feature: MLRun Project Page
 
     @MLPM
     @passive
+    @smoke
     Scenario: MLB003 - Verify behaviour of Breadcrumbs menu
         Given open url
         And click on row root with value "churn-project-admin" in "name" column in "Projects_Table" table on "Projects" wizard
@@ -631,6 +645,7 @@ Feature: MLRun Project Page
 
     @MLPM
     @passive
+    @smoke
     Scenario: MLPM016 - Check redirect to Jobs and workflows page using See All link
         Given open url
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
@@ -654,6 +669,8 @@ Feature: MLRun Project Page
         Then click on "Project_Monitoring_Button" element on "commonPagesHeader" wizard
         And hover "MLRun_Logo" component on "commonPagesHeader" wizard
         And wait load page
+        Then verify "Recent_text" element visibility on "Project" wizard
+        Then verify "Create_New" dropdown element on "Project" wizard should contains "Project"."Create_New_Options"
         Then click on "See_All_Jobs_Link" element on "Project" wizard
         And wait load page
         Then verify breadcrumbs "tab" label should be equal "Jobs and workflows" value
@@ -668,6 +685,7 @@ Feature: MLRun Project Page
 
     @MLPM
     @passive
+    @smoke
     Scenario: MLPM017 - Check redirect to Job Info Pane overview from Project Monitoring Page
         Given open url
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
@@ -688,6 +706,7 @@ Feature: MLRun Project Page
 
     @MLPM
     @passive
+    @smoke
     Scenario: MLPM018 - Check all mandatory components on Consumer Groups tab
         Given open url
         And wait load page
@@ -713,6 +732,7 @@ Feature: MLRun Project Page
 
     @MLPM
     @passive
+    @smoke
     Scenario: MLPM019 - Verify filtering by name on Consumer Groups tab
         Given open url
         And wait load page
@@ -731,6 +751,7 @@ Feature: MLRun Project Page
 
     @MLPM
     @passive
+    @smoke
     Scenario: MLPM020 - Verify all mandatory components on Consumer Groups drill-down
         Given open url
         And wait load page
@@ -760,6 +781,7 @@ Feature: MLRun Project Page
         Then "Description" element on "Consumer_Groups" should contains "This report displays the project's consumer groups for Iguazio v3io streams" value
     
     @MLPM
+    @smoke
     Scenario: MLPM021 - Verify filtering by name on Consumer Groups drill-down
         Given open url
         And wait load page

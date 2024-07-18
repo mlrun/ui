@@ -44,8 +44,9 @@ export const tabs = [
 ]
 
 const joinFeatureTemplate = featureItem => {
-  const { featureSet, feature, alias } = featureItem
-  return `${featureSet ? `${featureSet}.` : ''}${feature}${alias === '' ? '' : ` as ${alias}`}`
+  const { project, featureSet, feature, alias, tag } = featureItem
+
+  return `${project ? `${project}/` : ''}${featureSet ? `${featureSet}${tag ? `:${tag}` : ''}.` : ''}${feature}${alias === '' ? '' : ` as ${alias}`}`
 }
 
 export const handleApplyDetailsChanges = (

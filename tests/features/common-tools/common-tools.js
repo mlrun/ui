@@ -39,9 +39,10 @@ module.exports = {
       return result.join('')
     }
   },
-  generateInputGroup: function (root, label = false, hint = false, warning = false) {
+  generateInputGroup: function (root, label = false, hint = false, warning = false, input = 'input') {
     const structure = { root, elements: {} }
-    structure.elements.input = 'input'
+    structure.elements.input = input
+    
     if (label) {
       structure.elements.label = 'label'
     }
@@ -173,9 +174,9 @@ module.exports = {
         case 'featureSet':
           return deleteAPIFeatureSet(item.project, item.name, 204)
         case 'featureVector':
-          return deleteAPIFeatureVector(item.project, item.name, 204)
+          return deleteAPIFeatureVector(item.project, item.name, 200)
         case 'function':
-          return deleteAPIFunction(item.project, item.name, 204)
+          return deleteAPIFunction(item.project, item.name, 200)
         case 'schedule':
           return deleteAPISchedule(item.project, item.name, 204)
         case 'dataset':

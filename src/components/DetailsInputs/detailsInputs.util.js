@@ -24,7 +24,7 @@ import classnames from 'classnames'
 import CopyToClipboard from '../../common/CopyToClipboard/CopyToClipboard'
 import { RoundedIcon, TextTooltipTemplate, Tooltip } from 'igz-controls/components'
 
-import { DATASETS, MODELS_TAB, TAG_FILTER_LATEST } from '../../constants'
+import { DATASETS_TAB, FILES_TAB, MODELS_TAB, TAG_FILTER_LATEST } from '../../constants'
 
 import { ReactComponent as DetailsIcon } from 'igz-controls/images/view-details.svg'
 
@@ -33,10 +33,10 @@ export const generateArtifactLink = (artifact, projectName) => {
     model: `/projects/${projectName}/models/${MODELS_TAB}/${
       artifact.db_key || artifact.key
     }/${TAG_FILTER_LATEST}${artifact.iter ? `/${artifact.iter}` : ''}/overview`,
-    dataset: `/projects/${projectName}/${DATASETS}/${
+    dataset: `/projects/${projectName}/${DATASETS_TAB}/${
       artifact.db_key || artifact.key
     }/${TAG_FILTER_LATEST}${artifact.iter ? `/${artifact.iter}` : ''}/overview`,
-    files: `/projects/${projectName}/files/${artifact.db_key || artifact.key}/${TAG_FILTER_LATEST}${
+    files: `/projects/${projectName}/${FILES_TAB}/${artifact.db_key || artifact.key}/${TAG_FILTER_LATEST}${
       artifact.iter ? `/${artifact.iter}` : ''
     }/overview`
   }

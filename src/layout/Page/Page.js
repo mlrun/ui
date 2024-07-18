@@ -17,14 +17,17 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import React, { useEffect, useMemo, useRef } from 'react'
+import React, { useEffect, useMemo, useRef, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useParams, Outlet, useNavigate } from 'react-router-dom'
 import classNames from 'classnames'
 import { isEmpty } from 'lodash'
+import { createPortal } from 'react-dom'
+import ModalContainer from 'react-modal-promise'
 
 import Notification from '../../common/Notification/Notification'
 import DownloadContainer from '../../common/Download/DownloadContainer'
+import Navbar from '../Navbar/Navbar'
 
 import { getTransitionEndEventName } from 'igz-controls/utils/common.util'
 import { fetchFrontendSpec } from '../../reducers/appReducer'
@@ -33,7 +36,8 @@ import { isProjectValid } from '../../utils/handleRedirect'
 
 import './Page.scss'
 
-const Page = ({ isNavbarPinned, setProjectName }) => {
+const Page = () => {
+  const [isNavbarPinned, setIsNavbarPinned] = useState(false)
   const { projectName } = useParams()
   const mainRef = useRef()
   const dispatch = useDispatch()
@@ -49,10 +53,6 @@ const Page = ({ isNavbarPinned, setProjectName }) => {
   }
   const { frontendSpec, frontendSpecPopupIsOpened } = useSelector(store => store.appStore)
   const { projectsNames } = useSelector(store => store.projectStore)
-
-  useEffect(() => {
-    setProjectName(projectName)
-  }, [projectName, setProjectName])
 
   useEffect(() => {
     isProjectValid(navigate, projectsNames.data, projectName)
@@ -86,6 +86,7 @@ const Page = ({ isNavbarPinned, setProjectName }) => {
 
   return (
     <>
+      {projectName && <Navbar projectName={projectName} setIsNavbarPinned={setIsNavbarPinned} />}
       <main id="main" className={pinnedClasses} ref={mainRef} style={mainStyles}>
         <div id="main-wrapper">
           <Outlet />
@@ -93,6 +94,7 @@ const Page = ({ isNavbarPinned, setProjectName }) => {
       </main>
       <Notification />
       <DownloadContainer />
+      {createPortal(<ModalContainer />, document.getElementById('overlay_container'))}
     </>
   )
 }

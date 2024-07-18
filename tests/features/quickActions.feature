@@ -3,6 +3,7 @@ Feature: MLRun Project Home Page
     Testcases that verifies functionality on MLRun Project Home Page
 
     @MLPH
+    @smoke
     Scenario: MLPH001 - Check all mandatory components on Project Home
         * set tear-down property "project" created with "automation-test-1002" value
         * create "automation-test-1002" MLRun Project with code 201
@@ -82,6 +83,7 @@ Feature: MLRun Project Home Page
             |     Monitoring      |
     
     @MLPH
+    @smoke
     Scenario: MLPH002 - Verify behaviour on Register Model Popup on Project Home Page
         Given open url
         * turn on demo mode
@@ -133,6 +135,7 @@ Feature: MLRun Project Home Page
         Then check "v3io:///target/" value in "path" column in "Overview_Table" table on "Models_Info_Pane" wizard
     
     @MLPH
+    @smoke
     @passive
     Scenario: MLPH003 - Check all mandatory components on Create New Feature Set on Project Home Page
         Given open url
@@ -179,6 +182,7 @@ Feature: MLRun Project Home Page
     
     @MLPH
     @passive
+    @smoke
     Scenario: MLPH004 - Check all mandatory components on Register Dataset Popup on Project Home Page
         Given open url
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
@@ -234,6 +238,9 @@ Feature: MLRun Project Home Page
     
     @MLPH 
     @passive
+    @smoke
+    @FAILED_TODO
+    #TODO: bug - ML-6663 [ML Functions, Quick actions] 'Create New Function' pop-up doesn't appear
     Scenario: MLPH005 - Check all mandatory components on Create ML Function on Project Home Page
         * set tear-down property "project" created with "automation-test-1003" value
         * create "automation-test-1003" MLRun Project with code 201
@@ -264,6 +271,7 @@ Feature: MLRun Project Home Page
 
     @MLPH
     @passive
+    @smoke
     Scenario: MLPH006 - Check all mandatory components on Batch run wizard
         Given open url
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
@@ -338,7 +346,7 @@ Feature: MLRun Project Home Page
         Then verify "Advanced_Environment_Variables_Table" element visibility on "Modal_Wizard_Form" wizard
         Then verify "Default_Input_Path_Input" element visibility in "Advanced_Accordion" on "Modal_Wizard_Form" wizard
         Then verify "Default_Artifact_Path_Input" element visibility in "Advanced_Accordion" on "Modal_Wizard_Form" wizard
-        Then "Default_Artifact_Path_Input" element in "Advanced_Accordion" on "Modal_Wizard_Form" should contains "v3io:///projects/{{run.project}}/artifacts/{{run.uid}}" attribute value
+        Then "Default_Artifact_Path_Input" element in "Advanced_Accordion" on "Modal_Wizard_Form" should contains "v3io:///projects/{{run.project}}/artifacts" attribute value
         Then verify "Access_Key_Checkbox" element visibility on "Modal_Wizard_Form" wizard
         Then uncheck "Access_Key_Checkbox" element on "Modal_Wizard_Form" wizard
         Then verify "Access_Key_Input" element visibility on "Modal_Wizard_Form" wizard
@@ -426,6 +434,7 @@ Feature: MLRun Project Home Page
     
     @MLPH
     @passive
+    @smoke
     Scenario: MLPH008 - Check all mandatory components on Create a Feature Vector Popup on Project Home Page
         Given open url
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
@@ -442,13 +451,14 @@ Feature: MLRun Project Home Page
         Then verify "Cross_Cancel_Button" element visibility on "Create_Feature_Vector_Popup" wizard
         Then verify "Name_Input" element visibility on "Create_Feature_Vector_Popup" wizard
         Then type value "   " to "Name_Input" field on "Create_Feature_Vector_Popup" wizard
-        Then verify "Name_Input" options rules on "Create_Feature_Vector_Popup" wizard
+        Then verify "Name_Input" options rules on form "Create_Feature_Vector_Popup" wizard
         Then verify "Tag_Input" element visibility on "Create_Feature_Vector_Popup" wizard
         Then verify "Description_Input" element visibility on "Create_Feature_Vector_Popup" wizard
         Then verify "Labels_Table" element visibility on "Create_Feature_Vector_Popup" wizard
 
     @MLPH
     @passive
+    @smoke
     Scenario: MLPH009 - Check all mandatory components on Feature Set tab on Project Home Page
         Given open url
         * turn on demo mode
@@ -480,6 +490,7 @@ Feature: MLRun Project Home Page
 
     @MLPH
     @passive
+    @smoke
     Scenario: MLPH010 - Check all mandatory components on Files tab on Project Home Page
         Given open url
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
@@ -505,6 +516,7 @@ Feature: MLRun Project Home Page
 
     @MLPH
     @passive
+    @smoke
     Scenario: MLPH011 - Check all mandatory components on Datasets tab on Project Home Page
         Given open url
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
@@ -529,6 +541,7 @@ Feature: MLRun Project Home Page
 
     @MLPH
     @passive
+    @smoke
     Scenario: MLPH012 - Check all mandatory components on Feature Vectors tab on Project Home Page
         Given open url
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
@@ -549,6 +562,7 @@ Feature: MLRun Project Home Page
 
     @MLPH
     @passive
+    @smoke
     Scenario: MLPH013 - Check all mandatory components on ML Functions tab on Project Home Page
         Given open url
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
@@ -562,7 +576,6 @@ Feature: MLRun Project Home Page
             | ML Functions |
         And wait load page
         Then verify "Table_Name_Filter_Input" element visibility on "ML_Functions" wizard
-        Then verify "Show_Untagged_Functions_Checkbox" element visibility on "ML_Functions" wizard
         Then verify "Table_Refresh_Button" element visibility on "ML_Functions" wizard
         Then verify "Table_Expand_Rows_Button" element visibility on "ML_Functions" wizard
         * turn on demo mode
@@ -572,6 +585,7 @@ Feature: MLRun Project Home Page
 
     @MLPH
     @passive
+    @smoke
     Scenario: MLPH014 - Check all mandatory components on Monitor Jobs tab on Project Home Page
         Given open url
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
@@ -595,6 +609,7 @@ Feature: MLRun Project Home Page
 
     @MLPH
     @passive
+    @smoke
     Scenario: MLPH015 - Check all mandatory components on Models tab on Project Home Page
         Given open url
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
@@ -623,6 +638,7 @@ Feature: MLRun Project Home Page
 
     @MLPH
     @passive
+    @smoke
     Scenario: MLPH016 - Check all mandatory components on Monitor Workflows tab on Project Home Page
         Given open url
         And click on row root with value "churn-project-admin" in "name" column in "Projects_Table" table on "Projects" wizard
@@ -642,6 +658,7 @@ Feature: MLRun Project Home Page
 
     @MLPH
     @passive
+    @smoke
     Scenario: MLPH017 - Check all mandatory components on Models Endpoint tab on Project Home Page
         Given open url
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
@@ -662,6 +679,7 @@ Feature: MLRun Project Home Page
 
     @MLPH
     @passive
+    @smoke
     Scenario: MLPH018 - Check all mandatory components on Real-Time Piplines tab on Project Home Page
         Given open url
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
@@ -681,6 +699,7 @@ Feature: MLRun Project Home Page
 
     @MLPH
     @passive
+    @smoke
     Scenario: MLPH019 - Check all mandatory components on Monitoring tab on Project Home Page
         Given open url
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
@@ -705,6 +724,7 @@ Feature: MLRun Project Home Page
         Then verify "General_Info_Quick_Links" element visibility on "commonPagesHeader" wizard
     
     @MLPH
+    @smoke
     Scenario: MLPH020 - Check all mandatory components on Batch inference in Advanced section
         Given open url
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
@@ -771,6 +791,7 @@ Feature: MLRun Project Home Page
             |    name5    |        secret        | sectretName3:sectretKey3 |
             |    name7    |        secret        | sectretName4:sectretKey4 |
             |    name8    |        value         |          value4          |
+        And wait load page
         Then edit 1 row in "Advanced_Environment_Variables_Table" key-value table on "Modal_Wizard_Form" wizard
             | name_input | value_input | 
             |   edited   |    edited   |
@@ -781,6 +802,7 @@ Feature: MLRun Project Home Page
             |    name5    |        secret        |    sectretName3:sectretKey3    |
             |    name7    |        secret        |    sectretName4:sectretKey4    |
             |    name8    |        value         |             value4             |
+        And wait load page
         Then edit 5 row in "Advanced_Environment_Variables_Table" key-value table on "Modal_Wizard_Form" wizard
             | name_input | value_input | 
             |   edited   |    edited   |
@@ -791,10 +813,16 @@ Feature: MLRun Project Home Page
             |    name5    |        secret        |    sectretName3:sectretKey3    |
             |    name7    |        secret        |    sectretName4:sectretKey4    |
             | name8edited |        value         |          value4edited          |
+        And wait load page
+        When click on "delete_btn" in "Advanced_Environment_Variables_Table" table on "Modal_Wizard_Form" wizard with offset "false"
+            | name_verify |
+            |    name4    |
+            |    name5    |
+        And wait load page    
         Then verify "Default_Input_Path_Input" element visibility in "Advanced_Accordion" on "Modal_Wizard_Form" wizard
         Then type value "test" to "Default_Input_Path_Input" field on "Advanced_Accordion" on "Modal_Wizard_Form" wizard
         Then verify "Default_Artifact_Path_Input" element visibility in "Advanced_Accordion" on "Modal_Wizard_Form" wizard
-        Then "Default_Artifact_Path_Input" element in "Advanced_Accordion" on "Modal_Wizard_Form" should contains "v3io:///projects/{{run.project}}/artifacts/{{run.uid}}" attribute value
+        Then "Default_Artifact_Path_Input" element in "Advanced_Accordion" on "Modal_Wizard_Form" should contains "v3io:///projects/{{run.project}}/artifacts" attribute value
         Then verify "Access_Key_Checkbox" element visibility on "Modal_Wizard_Form" wizard
         Then uncheck "Access_Key_Checkbox" element on "Modal_Wizard_Form" wizard
         Then verify "Access_Key_Input" element visibility on "Modal_Wizard_Form" wizard
@@ -810,6 +838,7 @@ Feature: MLRun Project Home Page
     
     @MLPH
     @inProgress
+    @smoke
     Scenario: MLPH023 - Check components - batch inference_v2, preview text, path type
         Given open url
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
@@ -835,6 +864,7 @@ Feature: MLRun Project Home Page
         #TODO: check Data Inputs path type (Data_Inputs_Inference_Table)
 
     @MLPH
+    @smoke
     Scenario: MLPH024 - Check Train model wizard opens up
         Given open url
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard

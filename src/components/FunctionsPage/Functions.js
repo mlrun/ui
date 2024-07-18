@@ -27,6 +27,7 @@ import JobWizard from '../JobWizard/JobWizard'
 import NewFunctionPopUp from '../../elements/NewFunctionPopUp/NewFunctionPopUp'
 
 import {
+  FUNCTION_FILTERS,
   FUNCTIONS_PAGE,
   GROUP_BY_NAME,
   SHOW_UNTAGGED_ITEMS,
@@ -35,27 +36,39 @@ import {
   DETAILS_BUILD_LOG_TAB,
   JOB_DEFAULT_OUTPUT_PATH
 } from '../../constants'
-import { detailsMenu, infoHeaders, page, generateActionsMenu } from './functions.util'
 import createFunctionsContent from '../../utils/createFunctionsContent'
 import functionsActions from '../../actions/functions'
+import jobsActions from '../../actions/jobs'
 import { DANGER_BUTTON, LABEL_BUTTON } from 'igz-controls/constants'
+import {
+  generateActionsMenu,
+  filters,
+  generateFunctionsPageData,
+  pollDeletingFunctions,
+  setFullSelectedFunction
+} from './functions.util'
 import { getFunctionIdentifier } from '../../utils/getUniqueIdentifier'
-import { getFunctionLogs } from '../../utils/getFunctionLogs'
+import { getFunctionNuclioLogs, getFunctionLogs } from '../../utils/getFunctionLogs'
 import { isDetailsTabExists } from '../../utils/isDetailsTabExists'
 import { openPopUp } from 'igz-controls/utils/common.util'
 import { parseFunctions } from '../../utils/parseFunctions'
 import { setFilters } from '../../reducers/filtersReducer'
 import { setNotification } from '../../reducers/notificationReducer'
+import { isBackgroundTaskRunning } from '../../utils/poll.util'
 import { showErrorNotification } from '../../utils/notifications.util'
 import { useGroupContent } from '../../hooks/groupContent.hook'
 import { useMode } from '../../hooks/mode.hook'
+import { useVirtualization } from '../../hooks/useVirtualization.hook'
 import { useYaml } from '../../hooks/yaml.hook'
-import jobsActions from '../../actions/jobs'
+
+import cssVariables from './functions.scss'
 
 const Functions = ({
   deleteFunction,
   deployFunction,
+  fetchFunction,
   fetchFunctionLogs,
+  fetchFunctionNuclioLogs,
   fetchFunctions,
   functionsStore,
   removeFunctionsError,
@@ -65,6 +78,7 @@ const Functions = ({
   const [confirmData, setConfirmData] = useState(null)
   const [convertedYaml, toggleConvertedYaml] = useYaml('')
   const [functions, setFunctions] = useState([])
+  const [selectedFunctionMin, setSelectedFunctionMin] = useState({})
   const [selectedFunction, setSelectedFunction] = useState({})
   const [editableItem, setEditableItem] = useState(null)
   const [taggedFunctions, setTaggedFunctions] = useState([])
@@ -74,26 +88,60 @@ const Functions = ({
   const filtersStore = useSelector(store => store.filtersStore)
   const [selectedRowData, setSelectedRowData] = useState({})
   const [largeRequestErrorMessage, setLargeRequestErrorMessage] = useState('')
-  const fetchFunctionLogsTimeout = useRef(null)
+  const [deletingFunctions, setDeletingFunctions] = useState({})
   const abortControllerRef = useRef(new AbortController())
+  const fetchFunctionLogsTimeout = useRef(null)
+  const fetchFunctionNuclioLogsTimeout = useRef(null)
+  const nameFilterRef = useRef('')
+  const terminatePollRef = useRef(null)
   const { isDemoMode, isStagingMode } = useMode()
   const params = useParams()
   const navigate = useNavigate()
   const location = useLocation()
   const dispatch = useDispatch()
 
+  const terminateDeleteTasksPolling = useCallback(() => {
+    terminatePollRef?.current?.()
+    setDeletingFunctions({})
+  }, [])
+
   const fetchData = useCallback(
     filters => {
+      terminateDeleteTasksPolling()
       abortControllerRef.current = new AbortController()
+      nameFilterRef.current = filters?.name ?? ''
 
       return fetchFunctions(params.projectName, filters, {
         ui: {
           controller: abortControllerRef.current,
           setLargeRequestErrorMessage
+        },
+        params: {
+          format: 'minimal'
         }
       }).then(functions => {
         if (functions) {
           const newFunctions = parseFunctions(functions, params.projectName)
+          const deletingFunctions = newFunctions.reduce((acc, func) => {
+            if (func.deletion_task_id && !func.deletion_error && !acc[func.deletion_task_id]) {
+              acc[func.deletion_task_id] = {
+                name: func.name
+              }
+            }
+
+            return acc
+          }, {})
+
+          if (!isEmpty(deletingFunctions)) {
+            setDeletingFunctions(deletingFunctions)
+            pollDeletingFunctions(
+              params.projectName,
+              terminatePollRef,
+              deletingFunctions,
+              () => fetchData(filters),
+              dispatch
+            )
+          }
 
           setFunctions(newFunctions)
 
@@ -101,13 +149,14 @@ const Functions = ({
         }
       })
     },
-    [fetchFunctions, params.projectName]
+    [dispatch, fetchFunctions, params.projectName, terminateDeleteTasksPolling]
   )
 
   const refreshFunctions = useCallback(
     filters => {
       setFunctions([])
-      setSelectedFunction({})
+      setSelectedFunctionMin({})
+      setSelectedRowData({})
 
       return fetchData(filters)
     },
@@ -132,7 +181,7 @@ const Functions = ({
 
   const handleCollapse = useCallback(
     func => {
-      const funcIdentifier = getFunctionIdentifier(func)
+      const funcIdentifier = getFunctionIdentifier(func.data)
       const newPageDataSelectedRowData = { ...selectedRowData }
 
       delete newPageDataSelectedRowData[funcIdentifier]
@@ -178,6 +227,11 @@ const Functions = ({
     fetchFunctionLogsTimeout.current = null
   }, [])
 
+  const handleRemoveApplicationLogs = useCallback(() => {
+    clearTimeout(fetchFunctionNuclioLogsTimeout.current)
+    fetchFunctionNuclioLogsTimeout.current = null
+  }, [])
+
   const handleFetchFunctionLogs = useCallback(
     (item, projectName, setDetailsLogs) => {
       return getFunctionLogs(
@@ -188,39 +242,75 @@ const Functions = ({
         item.tag,
         setDetailsLogs,
         navigate,
-        fetchData
+        () => fetchData(filtersStore)
       )
     },
-    [fetchFunctionLogs, navigate, fetchData]
+    [filtersStore, fetchFunctionLogs, navigate, fetchData]
+  )
+
+  const handleFetchFunctionApplicationLogs = useCallback(
+    (item, projectName, setDetailsLogs) => {
+      return getFunctionNuclioLogs(
+        fetchFunctionNuclioLogs,
+        fetchFunctionNuclioLogsTimeout,
+        projectName,
+        item.name,
+        item.tag,
+        setDetailsLogs
+      )
+    },
+    [fetchFunctionNuclioLogs]
   )
 
   const removeFunction = useCallback(
     func => {
-      deleteFunction(func.name, params.projectName)
-        .then(() => {
-          if (!isEmpty(selectedFunction)) {
-            setSelectedFunction({})
-            navigate(`/projects/${params.projectName}/functions`, { replace: true })
-          }
-
+      deleteFunction(func.name, params.projectName).then(response => {
+        if (isBackgroundTaskRunning(response)) {
           dispatch(
             setNotification({
               status: 200,
               id: Math.random(),
-              message: 'Function deleted successfully'
+              message: 'Function deletion in progress'
             })
           )
-          fetchData()
-        })
-        .catch(error => {
-          showErrorNotification(dispatch, error, 'Function failed to delete', '', () => {
-            removeFunction(func)
+
+          setDeletingFunctions(prevDeletingFunctions => {
+            const newDeletingFunctions = {
+              ...prevDeletingFunctions,
+              [response.data.metadata.name]: {
+                name: func.name
+              }
+            }
+
+            pollDeletingFunctions(
+              params.projectName,
+              terminatePollRef,
+              newDeletingFunctions,
+              () => fetchData(filtersStore),
+              dispatch
+            )
+
+            return newDeletingFunctions
           })
-        })
+
+          if (!isEmpty(selectedFunction)) {
+            setSelectedFunctionMin({})
+            navigate(`/projects/${params.projectName}/functions`, { replace: true })
+          }
+        }
+      })
 
       setConfirmData(null)
     },
-    [deleteFunction, dispatch, navigate, params.projectName, fetchData, selectedFunction]
+    [
+      deleteFunction,
+      params.projectName,
+      dispatch,
+      fetchData,
+      selectedFunction,
+      navigate,
+      filtersStore
+    ]
   )
 
   const onRemoveFunction = useCallback(
@@ -339,17 +429,23 @@ const Functions = ({
     [deployFunction, dispatch, filtersStore, refreshFunctions, runNewJob]
   )
 
-  const pageData = {
-    page,
-    details: {
-      menu: detailsMenu,
-      infoHeaders,
-      refreshLogs: handleFetchFunctionLogs,
-      removeLogs: handleRemoveLogs,
-      withLogsRefreshBtn: false,
-      type: FUNCTIONS_PAGE
-    }
-  }
+  const pageData = useMemo(
+    () =>
+      generateFunctionsPageData(
+        selectedFunction,
+        handleFetchFunctionLogs,
+        handleFetchFunctionApplicationLogs,
+        handleRemoveLogs,
+        handleRemoveApplicationLogs
+      ),
+    [
+      handleFetchFunctionApplicationLogs,
+      handleFetchFunctionLogs,
+      handleRemoveApplicationLogs,
+      handleRemoveLogs,
+      selectedFunction
+    ]
+  )
 
   const actionsMenu = useMemo(
     () => func =>
@@ -363,26 +459,55 @@ const Functions = ({
         setEditableItem,
         onRemoveFunction,
         toggleConvertedYaml,
-        buildAndRunFunc
+        buildAndRunFunc,
+        deletingFunctions,
+        selectedFunction,
+        fetchFunction
       ),
-    [buildAndRunFunc, dispatch, isDemoMode, isStagingMode, onRemoveFunction, toggleConvertedYaml]
+    [
+      dispatch,
+      isDemoMode,
+      isStagingMode,
+      onRemoveFunction,
+      toggleConvertedYaml,
+      buildAndRunFunc,
+      deletingFunctions,
+      selectedFunction,
+      fetchFunction
+    ]
   )
 
+  const functionsFilters = useMemo(() => [filters[0]], [])
+
   useEffect(() => {
-    fetchData(filtersStore.filters)
+    setFullSelectedFunction(
+      dispatch,
+      navigate,
+      fetchFunction,
+      selectedFunctionMin,
+      setSelectedFunction,
+      params.projectName
+    )
+  }, [dispatch, fetchFunction, navigate, params.projectName, selectedFunctionMin])
+
+  useEffect(() => {
+    fetchData()
 
     return () => {
-      setSelectedFunction({})
+      setSelectedFunctionMin({})
       setFunctions([])
+      setSelectedRowData({})
       abortControllerRef.current.abort(REQUEST_CANCELED)
     }
-  }, [filtersStore.filters, params.projectName, fetchData])
+  }, [params.projectName, fetchData])
 
   useEffect(() => {
     setTaggedFunctions(
-      !filtersStore.showUntagged ? functions.filter(func => func.tag.length) : functions
+      !filtersStore.filterMenuModal[FUNCTION_FILTERS].values.showUntagged
+        ? functions.filter(func => func.tag.length)
+        : functions
     )
-  }, [filtersStore.showUntagged, functions])
+  }, [filtersStore.filterMenuModal, functions])
 
   useEffect(() => {
     if (params.hash && pageData.details.menu.length > 0) {
@@ -393,7 +518,10 @@ const Functions = ({
   useLayoutEffect(() => {
     const checkFunctionExistence = item => {
       if (!item || Object.keys(item).length === 0) {
-        showErrorNotification(dispatch, {}, 'This function either does not exist or was deleted')
+        if (isEmpty(nameFilterRef.current)) {
+          showErrorNotification(dispatch, {}, 'This function either does not exist or was deleted')
+        }
+
         navigate(`/projects/${params.projectName}/functions`, { replace: true })
       }
     }
@@ -422,7 +550,7 @@ const Functions = ({
       checkFunctionExistence(item)
     }
 
-    setSelectedFunction(item ?? {})
+    setSelectedFunctionMin(item ?? {})
   }, [
     dispatch,
     functions,
@@ -441,11 +569,13 @@ const Functions = ({
   const filtersChangeCallback = filters => {
     if (
       !filters.showUntagged &&
-      filters.showUntagged !== filtersStore.showUntagged &&
+      filters.showUntagged !== filtersStore.filterMenuModal[FUNCTION_FILTERS].values.showUntagged &&
       selectedFunction.hash
     ) {
       navigate(`/projects/${params.projectName}/functions`)
-    } else if (filters.showUntagged === filtersStore.showUntagged) {
+    } else if (
+      filters.showUntagged === filtersStore.filterMenuModal[FUNCTION_FILTERS].values.showUntagged
+    ) {
       refreshFunctions(filters)
     }
   }
@@ -456,7 +586,7 @@ const Functions = ({
     }
 
     queueMicrotask(() => {
-      setSelectedFunction(item)
+      setSelectedFunctionMin(item)
     })
   }
 
@@ -504,7 +634,7 @@ const Functions = ({
         setNotification({
           status: 200,
           id: Math.random(),
-          message: 'Function deployment initiated successfully'
+          message: 'Function was deployed'
         })
       )
     })
@@ -519,7 +649,7 @@ const Functions = ({
     return fetchData().then(functions => {
       const currentItem = functions.find(func => func.name === name && func.tag === tag)
 
-      showErrorNotification(dispatch, error, '', 'Function deployment failed to initiate')
+      showErrorNotification(dispatch, error, '', 'Failed to deploy the function')
 
       navigate(`/projects/${params.projectName}/functions/${currentItem.hash}/overview`)
     })
@@ -529,6 +659,7 @@ const Functions = ({
     action => {
       return (
         <NewFunctionPopUp
+          key={action}
           action={action}
           currentProject={params.projectName}
           isCustomPosition
@@ -540,7 +671,7 @@ const Functions = ({
   )
 
   const handleCancel = () => {
-    setSelectedFunction({})
+    setSelectedFunctionMin({})
   }
 
   useEffect(() => {
@@ -558,6 +689,20 @@ const Functions = ({
     }
   }, [editableItem, jobWizardIsOpened, jobWizardMode, params])
 
+  const virtualizationConfig = useVirtualization({
+    rowsData: {
+      content: tableContent,
+      expandedRowsData: selectedRowData,
+      selectedItem: selectedFunction
+    },
+    heightData: {
+      headerRowHeight: cssVariables.functionsHeaderRowHeight,
+      rowHeight: cssVariables.functionsRowHeight,
+      rowHeightExtended: cssVariables.functionsRowHeightExtended
+    },
+    activateTableScroll: true
+  })
+
   return (
     <FunctionsView
       actionsMenu={actionsMenu}
@@ -569,6 +714,7 @@ const Functions = ({
       expand={expand}
       filtersChangeCallback={filtersChangeCallback}
       filtersStore={filtersStore}
+      functionsFilters={functionsFilters}
       functionsPanelIsOpen={functionsPanelIsOpen}
       functionsStore={functionsStore}
       getPopUpTemplate={getPopUpTemplate}
@@ -587,6 +733,7 @@ const Functions = ({
       tableContent={tableContent}
       taggedFunctions={taggedFunctions}
       toggleConvertedYaml={toggleConvertedYaml}
+      virtualizationConfig={virtualizationConfig}
     />
   )
 }

@@ -7,6 +7,9 @@
 
   .date-picker__input-wrapper {
     position: relative;
+    display: flex;
+    align-items: center;
+    cursor: pointer;
 
     .date-picker__input {
       &_empty {
@@ -23,7 +26,7 @@
       }
     }
 
-    input:focus {
+    input:not(.input_invalid):focus {
       border: 1px solid $malibu;
     }
   }
@@ -37,6 +40,37 @@
     top: 12px;
     left: 65px;
     font-size: 14px;
+  }
+
+  &__with-labels {
+    .date-picker__input-wrapper {
+      justify-content: space-between;
+      min-width: 180px;
+      height: 40px;
+      padding: 0 8px 0 16px;
+      border: $primaryBorder;
+      border-radius: 4px;
+
+      .date-picker__input {
+        max-width: 390px;
+        height: 40px;
+        padding: 0 8px 0 16px;
+      }
+    }
+
+    &.date-picker-container__custom-range {
+      .date-picker__input-wrapper {
+        padding: 0;
+        border: none;
+      }
+    }
+  }
+}
+
+.date-picker {
+  &__caret {
+    display: inline-flex;
+    margin-left: 5px;
   }
 }
 
@@ -164,7 +198,7 @@
           }
         }
 
-        &:not(.invalid) {
+        &:not(.negative-range) {
           &.selected-to,
           &.selected-from,
           &.in-range {
@@ -189,7 +223,7 @@
   .date-picker__time {
     display: flex;
     justify-content: flex-end;
-    margin-top: 10px;
+    margin-bottom: 20px;
 
     .time-picker-container {
       width: 100px;
@@ -207,10 +241,24 @@
     align-items: center;
     justify-content: flex-end;
     min-height: 45px;
-    margin: 10px 15px 0;
+    margin: 20px 15px 0;
+
+    .error {
+      margin-right: auto;
+    }
 
     .date-picker__apply-btn {
       margin-left: 15px;
+    }
+
+    &:not(.date-picker__footer-range) {
+      flex-direction: column;
+      align-items: flex-end;
+
+      .error {
+        width: 240px;
+        margin-bottom: 10px;
+      }
     }
   }
 }

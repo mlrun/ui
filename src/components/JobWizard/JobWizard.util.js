@@ -31,6 +31,7 @@ import {
   set,
   some
 } from 'lodash'
+
 import {
   ADVANCED_STEP,
   CONFIG_MAP_VOLUME_TYPE,
@@ -44,6 +45,7 @@ import {
   LIST_TUNING_STRATEGY,
   MAX_SELECTOR_CRITERIA,
   PANEL_DEFAULT_ACCESS_KEY,
+  PANEL_RERUN_MODE,
   PARAMETERS_FROM_FILE_VALUE,
   PARAMETERS_FROM_UI_VALUE,
   PARAMETERS_STEP,
@@ -103,6 +105,7 @@ export const generateJobWizardData = (
   selectedFunctionData,
   defaultData,
   currentProjectName,
+  currentProject,
   isEditMode,
   isTrain,
   prePopulatedData,
@@ -163,7 +166,10 @@ export const generateJobWizardData = (
     },
     [ADVANCED_STEP]: {
       inputPath: null,
-      outputPath: JOB_DEFAULT_OUTPUT_PATH,
+      outputPath:
+        currentProject?.spec?.artifact_path ||
+        (frontendSpec.ce?.version && frontendSpec.default_artifact_path) ||
+        JOB_DEFAULT_OUTPUT_PATH,
       accessKey: true,
       accessKeyInput: '',
       environmentVariablesTable: parseEnvironmentVariables(environmentVariables)
@@ -206,12 +212,12 @@ export const generateJobWizardDefaultData = (
   selectedFunctionData,
   defaultData,
   currentProjectName,
-  isEditMode
+  isEditMode,
+  internalLabels
 ) => {
   if (isEmpty(defaultData)) return [{}, {}]
   const selectedFunction = selectedFunctionData?.functions[0] ?? {}
-
-  const runInfo = getRunDefaultInfo(defaultData, selectedFunction)
+  const runInfo = getRunDefaultInfo(defaultData, selectedFunction, internalLabels)
   const functionParameters = getFunctionDefaultParameters(selectedFunction, runInfo.handler)
   const [predefinedParameters, customParameters] = parseDefaultParameters(
     functionParameters,
@@ -336,9 +342,9 @@ const getFunctionInfo = (selectedFunctionData, preSelectedVersion, isTrain) => {
   }
 }
 
-const getRunDefaultInfo = (defaultData, selectedFunction) => {
+const getRunDefaultInfo = (defaultData, selectedFunction, internalLabels) => {
   return {
-    labels: parseChipsData(defaultData.task?.metadata?.labels),
+    labels: parseChipsData(defaultData.task?.metadata?.labels, internalLabels),
     name: defaultData.task?.metadata?.name || '',
     handler: defaultData.task?.spec?.handler,
     handlerData: getHandlerData(selectedFunction, defaultData.task?.spec?.handler),
@@ -1031,13 +1037,18 @@ export const generateJobRequestData = (
     formData[RUN_DETAILS_STEP].version
   )
   const [volume_mounts, volumes] = generateVolumes(formData[RESOURCES_STEP].volumesTable)
+  let labels = formData[RUN_DETAILS_STEP].labels ? [...formData[RUN_DETAILS_STEP].labels] : []
+
+  if (mode === PANEL_RERUN_MODE) {
+    labels = labels.filter(label => label.key !== 'workflow')
+  }
 
   const postData = {
     task: {
       metadata: {
         project: params.projectName,
         name: formData[RUN_DETAILS_STEP].runName,
-        labels: convertChipsData(formData[RUN_DETAILS_STEP].labels)
+        labels: convertChipsData(labels)
       },
       spec: {
         inputs: generateDataInputs(formData[DATA_INPUTS_STEP].dataInputsTable),
@@ -1128,15 +1139,15 @@ export const getNewJobErrorMsg = error => {
   return error.response.status === NOTFOUND_ERROR_STATUS_CODE
     ? 'To run a job, the selected function needs to be built. Make sure to build the function before running the job.'
     : error.response.status === FORBIDDEN_ERROR_STATUS_CODE
-    ? 'You are not permitted to run a new job.'
-    : error.response.status === CONFLICT_ERROR_STATUS_CODE
-    ? 'This job is already scheduled'
-    : getErrorDetail(error) || 'Unable to create a new job.'
+      ? 'You do not have permission to run a new job.'
+      : error.response.status === CONFLICT_ERROR_STATUS_CODE
+        ? 'This job is already scheduled'
+        : getErrorDetail(error) || 'Unable to create a new job.'
 }
 
 export const getSaveJobErrorMsg = error => {
   return error.response.status === FORBIDDEN_ERROR_STATUS_CODE
-    ? 'You are not permitted to run a new job.'
+    ? 'You do not have permission to run a new job.'
     : getErrorDetail(error) || 'Unable to save the job.'
 }
 

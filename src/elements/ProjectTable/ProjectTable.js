@@ -47,6 +47,10 @@ const ProjectTable = ({ params, table }) => {
         </thead>
         <tbody className="project-data-card__table-body">
           {table.body.map((body, index) => {
+            const extractedItemName = body['name'].value.startsWith(params.projectName)
+              ? body['name'].value.slice(params.projectName.length + 1)
+              : body['name'].value
+
             return (
               <tr key={index} className="project-data-card__table-row">
                 {Object.keys(body).map((key, index) => {
@@ -58,6 +62,7 @@ const ProjectTable = ({ params, table }) => {
                       !Array.isArray(body[key].value) &&
                       `status_${body[key].value.toLowerCase()} capitalize`
                   )
+
                   return key === 'type' ? (
                     <TableTypeCell key={body[key].value + index} data={body[key]} />
                   ) : (
@@ -70,12 +75,10 @@ const ProjectTable = ({ params, table }) => {
                             className="link project-data-card__table-link"
                           >
                             <Tooltip
-                              template={<TextTooltipTemplate text={body[key].value} />}
+                              template={<TextTooltipTemplate text={extractedItemName} />}
                               textShow={true}
                             >
-                              {body[key].value.startsWith(params.projectName)
-                                ? body[key].value.slice(params.projectName.length + 1)
-                                : body[key].value}
+                              {extractedItemName}
                             </Tooltip>
                           </a>
                         ) : (

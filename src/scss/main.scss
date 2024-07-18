@@ -50,7 +50,7 @@ body {
 
   @include jobsFlex;
 
-  @media screen and (min-width: 1200px) {
+  @media screen and (min-width: 1300px) {
     padding: 15px 64px 30px;
   }
 
@@ -94,7 +94,7 @@ body {
   &__action-bar-wrapper {
     display: flex;
     align-items: center;
-    padding: 4px 0;
+    padding: 4px 0 15px 0;
 
     &_hidden {
       display: none;
@@ -102,9 +102,17 @@ body {
 
     .action-bar {
       display: flex;
-      align-items: center;
+      align-items: flex-start;
       justify-content: flex-end;
       width: 100%;
+
+      &__filters {
+        &-item {
+          &:not(:last-child) {
+            margin: 0 15px 0 0;
+          }
+        }
+      }
     }
   }
 }
@@ -158,7 +166,7 @@ main {
     .page-actions {
       display: flex;
       justify-content: flex-end;
-      margin: 20px 0;
+      margin: 0 0 20px 0;
 
       .search-container {
         flex: unset;
@@ -217,6 +225,7 @@ main {
             position: sticky;
             left: 0;
             min-width: 250px;
+            padding-right: 10px;
             z-index: 1;
           }
 
@@ -416,6 +425,10 @@ main {
       max-width: 240px;
     }
   }
+
+  &-fixed {
+    table-layout: fixed;
+  }
 }
 
 /*=========== SORT =============*/
@@ -472,53 +485,65 @@ main {
 [class^='state-online'],
 [class^='state-ready'],
 [class^='state-succeeded'] {
-  @include statusState($brightTurquoise);
+  @include statusState($brightTurquoise, false);
 }
 
 [class^='state-all'] {
-  @include statusState(transparent);
+  @include statusState(transparent, false);
 }
 
 [class^='state-initialized'] {
-  @include statusState($chateauGreen);
+  @include statusState($chateauGreen, false);
 }
 
 [class^='state-warn'] {
-  @include statusState($grandis);
+  @include statusState($grandis, false);
 }
 
 [class^='state-build'],
+[class^='state-building'],
 [class^='state-deploying'],
 [class^='state-pending'],
 [class^='state-running'] {
-  @include statusState($pictonBlue);
+  @include statusState($pictonBlue, false);
 }
 
-[class^='state-aborted'],
+[class^='state-aborted'] {
+  @include statusState($babyPink, false);
+}
+
 [class^='state-broken'],
-[class^='state-error'],
 [class^='state-fail'],
-[class^='state-failed'] {
-  @include statusState($burntSienna);
+[class^='state-failed'],
+[class^='state-unhealthy'] {
+  @include statusState($burntSienna, false);
+}
+
+[class^='state-error'] {
+  @include statusState($sorbus, false);
+}
+
+[class^='state-skipped'] {
+  @include statusState($topaz, true);
 }
 
 [class^='state-aborting'] {
-  @include statusState($burntSiennaTwo);
+  @include statusState($burntSiennaTwo, false);
 }
 
 [class^='state-omitted'] {
-  @include statusState($silver);
+  @include statusState($silver, false);
 }
 
 [class^='state-archived'] {
-  @include statusState($topaz);
+  @include statusState($topaz, false);
 }
 
 .state-created-job,
 .state-created-function,
 .state-creating-function,
 .state-pending-job {
-  @include statusState($topaz);
+  @include statusState($topaz, false);
 }
 
 /*=========== ERROR =============*/
@@ -625,6 +650,7 @@ main {
 /*=========== GRAPH =============*/
 
 .graph-container {
+  position: relative;
   display: flex;
   flex: 1 1;
 
@@ -769,14 +795,18 @@ main {
 }
 
 .action-bar {
-  padding: 20px 0;
-
   .filters-button {
     margin-left: 5px;
   }
 
   &__filters {
     display: flex;
+
+    .filter-column {
+      &:not(:last-child) {
+        margin: 0 15px 0 0;
+      }
+    }
   }
 
   &__actions {
@@ -784,7 +814,11 @@ main {
     margin-left: 20px;
 
     .action-button {
-      width: 160px;
+      white-space: nowrap;
+
+      @media screen and (min-width: 1300px) {
+        min-width: 160px;
+      }
 
       &:not(:last-of-type) {
         margin-right: 10px;

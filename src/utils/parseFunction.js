@@ -20,17 +20,34 @@ such restriction.
 import getState from './getState'
 import { page } from '../components/FunctionsPage/functions.util'
 import { getFunctionIdentifier } from './getUniqueIdentifier'
+import { parseKeyValues } from './object'
+
+import {
+  FUNCTION_TYPE_APPLICATION,
+  FUNCTION_TYPE_NUCLIO,
+  FUNCTION_TYPE_REMOTE,
+  FUNCTION_TYPE_SERVING
+} from '../constants'
+
+const nuclioRuntimeKinds = [FUNCTION_TYPE_REMOTE, FUNCTION_TYPE_NUCLIO, FUNCTION_TYPE_SERVING, FUNCTION_TYPE_APPLICATION]
 
 export const parseFunction = (func, projectName, customState) => {
+  const externalInvocationUrls = func.status?.external_invocation_urls ?? []
+  let command = nuclioRuntimeKinds.includes(func.kind) ? externalInvocationUrls.length === 1 ?
+    externalInvocationUrls[0] : externalInvocationUrls : func.spec?.command
+
   const item = {
     access_key: func.metadata.credentials?.access_key ?? '',
+    application_image: func.status?.application_image ?? '',
     args: func.spec?.args ?? [],
     base_spec: func.spec?.base_spec ?? {},
     build: func.spec?.build ?? {},
-    command: func.spec?.command,
+    command: command ?? '',
     container_image: func?.status?.container_image ?? '',
     default_class: func.spec?.default_class ?? '',
     default_handler: func.spec?.default_handler ?? '',
+    deletion_error: func.status?.deletion_error ?? '',
+    deletion_task_id: func.status?.deletion_task_id ?? '',
     description: func.spec?.description ?? '',
     disable_auto_mount: func.spec?.disable_auto_mount ?? true,
     env: func.spec?.env ?? [],
@@ -38,8 +55,13 @@ export const parseFunction = (func, projectName, customState) => {
     graph: func.spec?.graph ?? {},
     hash: func.metadata?.hash ?? '',
     image: func.spec?.image ?? '',
+    internal_invocation_urls: func.status?.internal_invocation_urls ?? [],
+    internal_application_port: func.spec?.internal_application_port ?? '',
     labels: func.metadata?.labels ?? {},
+    max_replicas: func.spec?.max_replicas ?? '',
+    min_replicas: func.spec?.min_replicas ?? '',
     name: func.metadata?.name ?? '',
+    node_selector: parseKeyValues(func.spec?.node_selector || {}),
     nuclio_name: func.status?.nuclio_name ?? '',
     parameters: func.spec?.parameters ?? {},
     preemption_mode: func.spec?.preemption_mode ?? '',
@@ -51,9 +73,9 @@ export const parseFunction = (func, projectName, customState) => {
     tag: func.metadata?.tag ?? '',
     track_models: func.spec?.track_models ?? false,
     type: func.kind,
+    updated: new Date(func.metadata?.updated ?? ''),
     volume_mounts: func.spec?.volume_mounts ?? [],
-    volumes: func.spec?.volumes ?? [],
-    updated: new Date(func.metadata?.updated ?? '')
+    volumes: func.spec?.volumes ?? []
   }
 
   item.ui = {

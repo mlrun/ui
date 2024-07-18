@@ -21,7 +21,6 @@ import { timeout } from '../../../config'
 import { until } from 'selenium-webdriver'
 import { expect } from 'chai'
 import { access, constants } from 'fs'
-import { ConsoleLogEntry } from 'selenium-webdriver/bidi/logentries'
 const path = require('path')
 const os = require('os')
 

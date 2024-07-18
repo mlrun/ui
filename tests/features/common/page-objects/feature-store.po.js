@@ -52,6 +52,14 @@ const actionMenuStructure = {
   }
 }
 
+const actionMenuStructureExpand = {
+  root: '.table-body__cell:nth-of-type(2) .actions-menu__container',
+  menuElements: {
+    open_button: '[data-testid="actions-menu"] button',
+    options: '.actions-menu__body .actions-menu__option'
+  }
+}
+
 const labelsTable = {
   root: '.table-body__cell:nth-of-type(3)',
   header: {},
@@ -108,6 +116,10 @@ const featureSetsTable = {
         action_menu: {
           componentType: actionMenu,
           structure: actionMenuStructure
+        },
+        action_menu_expand: {
+          componentType: actionMenu,
+          structure: actionMenuStructureExpand
         }
       }
     }
@@ -204,6 +216,10 @@ const featureVectorTable = {
         action_menu: {
           componentType: actionMenu,
           structure: actionMenuStructure
+        },
+        action_menu_expand: {
+          componentType: actionMenu,
+          structure: actionMenuStructureExpand
         }
       }
     }
@@ -311,6 +327,10 @@ const datasetsTable = {
               options: '.actions-menu__body .actions-menu__option'
             }
           }
+        },
+        action_menu_expand: {
+          componentType: actionMenu,
+          structure: actionMenuStructureExpand
         }
       }
     }
@@ -324,7 +344,7 @@ const tableFilterByButton = By.css('.content .content__action-bar-wrapper .actio
 const pageHeaderButton = By.css('.content__header .page-actions-container button')
 const commonNameFilterInput = inputGroup(
   generateInputGroup(
-    '.content .content__action-bar-wrapper .filters .input-wrapper:nth-of-type(2)',
+    '.content .content__action-bar-wrapper .filters .filter-column:nth-of-type(2) .input-wrapper',
     true,
     false,
     true
@@ -340,7 +360,7 @@ const commonNameFilterInputDataset = inputGroup(
 )
 const commonLabelFilterInput = inputGroup(
   generateInputGroup(
-    '.content .content__action-bar-wrapper .filters .input-wrapper:nth-of-type(3)',
+    '.content .content__action-bar-wrapper .filters .filter-column:nth-of-type(3) .input-wrapper',
     true,
     false,
     true
@@ -404,7 +424,7 @@ module.exports = {
     Table_Name_Filter_Input: commonNameFilterInput,
     Table_Entity_Filter_Input: inputGroup(
       generateInputGroup(
-        '.content .content__action-bar-wrapper .input-wrapper:nth-of-type(3)',
+        '.content .content__action-bar-wrapper .filter-column:nth-of-type(3) .input-wrapper',
         true,
         false,
         true
@@ -412,7 +432,7 @@ module.exports = {
     ),
     Table_Label_Filter_Input: inputGroup(
       generateInputGroup(
-        '.content .content__action-bar-wrapper .input-wrapper:nth-of-type(3)',
+        '.content .content__action-bar-wrapper .filters .filter-column:nth-of-type(3) .input-wrapper',
         true,
         false,
         true

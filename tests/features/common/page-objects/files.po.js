@@ -31,6 +31,13 @@ const actionMenuStructure = {
     options: '.actions-menu__body .actions-menu__option'
   }
 }
+const actionMenuStructureExpand = {
+  root: '.table-body__cell:nth-of-type(2) .actions-menu__container',
+  menuElements: {
+    open_button: '[data-testid="actions-menu"] button',
+    options: '.actions-menu__body .actions-menu__option'
+  }
+}
 
 const filesTable = {
   root: '.table-container .table__content',
@@ -76,6 +83,10 @@ const filesTable = {
         action_menu: {
           componentType: actionMenu,
           structure: actionMenuStructure
+        },
+        action_menu_expand: {
+          componentType: actionMenu,
+          structure: actionMenuStructureExpand
         }
       }
     }

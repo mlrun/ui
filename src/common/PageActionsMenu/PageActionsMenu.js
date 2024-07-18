@@ -26,6 +26,7 @@ import { PRIMARY_BUTTON } from 'igz-controls/constants'
 
 const PageActionsMenu = ({
   actionsMenuHeader,
+  disabled,
   onClick,
   showActionsMenu,
   variant
@@ -35,6 +36,7 @@ const PageActionsMenu = ({
       {showActionsMenu && (
         <div data-testid="actions-button" className="page-actions-container">
           <Button
+            disabled={disabled}
             variant={variant}
             label={actionsMenuHeader}
             className="btn_register"
@@ -48,6 +50,7 @@ const PageActionsMenu = ({
 
 PageActionsMenu.defaultProps = {
   actionsMenuHeader: '',
+  disabled: false,
   onClick: () => {},
   showActionsMenu: false,
   variant: PRIMARY_BUTTON
@@ -55,6 +58,7 @@ PageActionsMenu.defaultProps = {
 
 PageActionsMenu.propTypes = {
   actionsMenuHeader: PropTypes.string,
+  disabled: PropTypes.bool,
   onClick: PropTypes.func,
   showActionsMenu: PropTypes.bool,
   variant: PropTypes.string

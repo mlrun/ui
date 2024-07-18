@@ -25,7 +25,8 @@ import classnames from 'classnames'
 import Details from '../Details/Details'
 import TableHead from './TableHead'
 
-import { ACTIONS_MENU } from '../../types'
+import { ACTIONS_MENU, VIRTUALIZATION_CONFIG } from '../../types'
+import { MAIN_TABLE_BODY_ID, MAIN_TABLE_ID } from '../../constants'
 import { SORT_PROPS } from 'igz-controls/types'
 
 const TableView = ({
@@ -50,7 +51,8 @@ const TableView = ({
   tableHeadRef,
   tableHeaders,
   tablePanelRef,
-  tableRef
+  tableRef,
+  virtualizationConfig
 }) => {
   const tableClass = classnames(
     'table',
@@ -63,7 +65,13 @@ const TableView = ({
     <div className="table__flex">
       <div className="table__content" id="table-content" ref={tableContentRef}>
         <div className="table__wrapper">
-          <table className={tableClass} cellPadding="0" cellSpacing="0" ref={tableRef}>
+          <table
+            id={MAIN_TABLE_ID}
+            className={tableClass}
+            cellPadding="0"
+            cellSpacing="0"
+            ref={tableRef}
+          >
             {tableHeaders?.length > 0 && (
               <TableHead
                 content={tableHeaders}
@@ -74,7 +82,14 @@ const TableView = ({
                 sortProps={sortProps}
               />
             )}
-            <tbody className="table-body" ref={tableBodyRef}>{children}</tbody>
+            <tbody
+              className="table-body"
+              id={MAIN_TABLE_BODY_ID}
+              style={{ paddingTop: virtualizationConfig.tableBodyPaddingTop }}
+              ref={tableBodyRef}
+            >
+              {children}
+            </tbody>
           </table>
           {isTablePanelOpen && (
             <div className="table__panel-container" ref={tablePanelRef}>
@@ -127,7 +142,8 @@ TableView.propTypes = {
   tableClassName: PropTypes.string.isRequired,
   tableHeadRef: PropTypes.shape({}),
   tableHeaders: PropTypes.array,
-  tablePanelRef: PropTypes.shape({})
+  tablePanelRef: PropTypes.shape({}),
+  virtualizationConfig: VIRTUALIZATION_CONFIG.isRequired
 }
 
 export default TableView

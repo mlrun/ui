@@ -30,7 +30,7 @@ import { Button, FormChipCell, FormInput, FormTextarea, PopUpDialog } from 'igz-
 import { SECONDARY_BUTTON, TERTIARY_BUTTON } from 'igz-controls/constants'
 import { createForm } from 'final-form'
 import { getChipOptions } from '../../../utils/getChipOptions'
-import { getValidationRules } from 'igz-controls/utils/validation.util'
+import { getValidationRules, getInternalLabelsValidationRule } from 'igz-controls/utils/validation.util'
 import { setFieldState } from 'igz-controls/utils/form.util'
 
 import './createProjectDialog.scss'
@@ -41,6 +41,7 @@ const CreateProjectDialog = ({
   removeNewProjectError
 }) => {
   const projectStore = useSelector(store => store.projectStore)
+  const frontendSpec = useSelector(store => store.appStore.frontendSpec)
   const initialValues = {
     name: '',
     description: '',
@@ -87,7 +88,7 @@ const CreateProjectDialog = ({
                   shortChips
                   visibleChipsMaxLength="2"
                   validationRules={{
-                    key: getValidationRules('project.labels.key'),
+                    key: getValidationRules('project.labels.key', getInternalLabelsValidationRule(frontendSpec.internal_labels)),
                     value: getValidationRules('project.labels.value')
                   }}
                 />
@@ -117,7 +118,7 @@ const CreateProjectDialog = ({
                   disabled={projectStore.loading || !formState.values.name || formState.invalid}
                   variant={SECONDARY_BUTTON}
                   label="Create"
-                  onClick={(event) => handleCreateProject(event, formState)}
+                  onClick={event => handleCreateProject(event, formState)}
                 />
               </div>
             </>

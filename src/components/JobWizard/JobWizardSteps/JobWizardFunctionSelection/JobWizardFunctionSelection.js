@@ -19,7 +19,7 @@ such restriction.
 */
 import React, { useState, useEffect, useMemo, useCallback, useRef } from 'react'
 import PropTypes from 'prop-types'
-import { OnChange } from 'react-final-form-listeners'
+// import { OnChange } from 'react-final-form-listeners'
 import { useDispatch, useSelector } from 'react-redux'
 import { includes, isEmpty, intersection, isBoolean, pickBy, keys, uniqBy, cloneDeep } from 'lodash'
 
@@ -29,7 +29,7 @@ import FunctionCardTemplate from '../../../../elements/FunctionCardTemplate/Func
 import HubCategoriesFilter from '../../../FilterMenuModal/HubCategoriesFilter/HubCategoriesFilter'
 import NoData from '../../../../common/NoData/NoData'
 import Search from '../../../../common/Search/Search'
-import { FormSelect } from 'igz-controls/components'
+import { FormOnChange, FormSelect } from 'igz-controls/components'
 
 import functionsActions from '../../../../actions/functions'
 import projectsAction from '../../../../actions/projects'
@@ -57,6 +57,7 @@ import './jobWizardFunctionSelection.scss'
 
 const JobWizardFunctionSelection = ({
   activeTab,
+  currentProject,
   defaultData,
   filteredFunctions,
   filteredTemplates,
@@ -219,6 +220,7 @@ const JobWizardFunctionSelection = ({
         functionData,
         defaultData,
         params.projectName,
+        currentProject,
         isEditMode
       )
 
@@ -261,8 +263,8 @@ const JobWizardFunctionSelection = ({
         setFunctions(groupedFunctions)
 
         if (filterByName.length > 0) {
-          const filteredFunctions = validFunctions.filter(func => {
-            return func.metadata.name.includes(filterByName)
+          const filteredFunctions = groupedFunctions.filter(func => {
+            return func.name.includes(filterByName)
           })
 
           setFilteredFunctions(filteredFunctions)
@@ -484,19 +486,22 @@ const JobWizardFunctionSelection = ({
           )}
         </div>
       )}
-      <OnChange name={`${FUNCTION_SELECTION_STEP}.projectName`}>
-        {onSelectedProjectNameChange}
-      </OnChange>
+      <FormOnChange
+        handler={onSelectedProjectNameChange}
+        name={`${FUNCTION_SELECTION_STEP}.projectName`}
+      />
     </div>
   )
 }
 
 JobWizardFunctionSelection.defaultProps = {
+  currentProject: null,
   stepIsActive: false
 }
 
 JobWizardFunctionSelection.propTypes = {
   activeTab: PropTypes.string.isRequired,
+  currentProject: PropTypes.shape({}),
   defaultData: PropTypes.shape({}).isRequired,
   filteredFunctions: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
   filteredTemplates: PropTypes.arrayOf(PropTypes.shape({})).isRequired,

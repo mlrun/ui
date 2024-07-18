@@ -1,0 +1,538 @@
+{
+  "metrics": [
+    {
+      "modelEndpointUID": "a7c95783e6a726a1a233e581ea898ba33fa7e342",
+      "project": "default",
+      "metricsOptions": [
+        {
+          "app": "mlrun-infra",
+          "name": "invocations-rate",
+          "type": "metric",
+          "project": "default",
+          "full_name": "default.mlrun-infra.metric.invocations-rate"
+        },
+        {
+          "full_name": "default.histogram-data-drift-1.metric.tvdar_mean_1",
+          "type": "metric",
+          "app": "histogram-data-drift-1",
+          "name": "tvdar_mean_1",
+          "project": "default"
+        },
+        {
+          "full_name": "default.histogram-data-drift-1.metric.tvdop_mean_1",
+          "type": "metric",
+          "app": "histogram-data-drift-1",
+          "name": "tvdop_mean_1",
+          "project": "default"
+        },
+        {
+          "full_name": "default.histogram-data-drift-1.metric.tvds_mean_1",
+          "type": "metric",
+          "app": "histogram-data-drift-1",
+          "name": "tvds_mean_1",
+          "project": "default"
+        },
+        {
+          "full_name": "default.evidently-app-test.result.hellinger_mean_1",
+          "type": "result",
+          "app": "evidently-app-test",
+          "name": "hellinger_mean_1",
+          "project": "default"
+        },
+        {
+          "full_name": "default.evidently-app-test-1.metric.data_drift_test_1",
+          "type": "metric",
+          "app": "evidently-app-test-1",
+          "name": "data_drift_test_1",
+          "project": "default"
+        },
+        {
+          "full_name": "default.evidently-app-test-1.metric.general_drift_1",
+          "type": "metric",
+          "app": "evidently-app-test-1",
+          "name": "general_drift_1",
+          "project": "default"
+        },
+        {
+          "full_name": "default.histogram-data-drift-1.result.model_perf_1",
+          "type": "result",
+          "app": "histogram-data-drift-1",
+          "name": "model_perf_1",
+          "project": "default"
+        },
+        {
+          "full_name": "default.histogram-data-drift-1.metric.kld_mean_1",
+          "type": "metric",
+          "app": "histogram-data-drift-1",
+          "name": "kld_mean_1",
+          "project": "default"
+        },
+        {
+          "full_name": "default.monitoring-test-1.metric.kld_mean_1",
+          "type": "metric",
+          "app": "monitoring-test-1",
+          "name": "kld_mean_1",
+          "project": "default"
+        }
+      ],
+      "metricsValues": [
+        {
+          "full_name": "default.mlrun-infra.metric.invocations-rate",
+          "type": "metric",
+          "data": "true",
+          "values": [
+            10, true
+          ]
+        },
+        {
+          "full_name": "default.histogram-data-drift-1.metric.tvdar_mean_1",
+          "type": "metric",
+          "data": "true",
+          "values": [
+            10
+          ]
+        },
+        {
+          "full_name": "default.histogram-data-drift-1.metric.tvdop_mean_1",
+          "type": "metric",
+          "data": "true",
+          "values": [
+            10
+          ]
+        },
+        {
+          "full_name": "default.histogram-data-drift-1.metric.tvds_mean_1",
+          "type": "metric",
+          "data": false
+        },
+        {
+          "full_name": "default.evidently-app-test.result.hellinger_mean_1",
+          "type": "result",
+          "result_kind": 0,
+          "data": "true",
+          "values": [
+            10
+          ]
+        },
+        {
+          "full_name": "default.evidently-app-test-1.metric.data_drift_test_1",
+          "type": "metric",
+          "data": "true",
+          "values": [
+            10
+          ]
+        },
+        {
+          "full_name": "default.evidently-app-test-1.metric.general_drift_1",
+          "type": "metric",
+          "data": "true",
+          "values": [
+            10
+          ]
+        },
+        {
+          "full_name": "default.histogram-data-drift-1.result.model_perf_1",
+          "type": "result",
+          "result_kind": 1,
+          "data": "true",
+          "values": [
+            10
+          ]
+        },
+        {
+          "full_name": "default.histogram-data-drift-1.metric.kld_mean_1",
+          "type": "metric",
+          "data": "true",
+          "values": [
+            10
+          ]
+        },
+        {
+          "full_name": "default.monitoring-test-1.metric.kld_mean_1",
+          "type": "metric",
+          "data": "true",
+          "values": [
+            10
+          ]
+        }
+      ]
+    }, 
+    {
+      "modelEndpointUID": "d6df9915e64e9ba9441a82983d9fc7f874550b31",
+      "project": "default",
+      "metricsOptions": [
+        {
+          "app": "mlrun-infra",
+          "name": "invocations-rate",
+          "type": "metric",
+          "project": "default",
+          "full_name": "default.mlrun-infra.metric.invocations-rate"
+        },
+        {
+          "full_name": "default.histogram-data-drift-1.metric.tvdar_mean_1",
+          "type": "metric",
+          "app": "histogram-data-drift-1",
+          "name": "tvdar_mean_1",
+          "project": "default"
+        },
+        {
+          "full_name": "default.histogram-data-drift-2.metric.tvdop_mean_2",
+          "type": "metric",
+          "app": "histogram-data-drift-2",
+          "name": "tvdop_mean_2",
+          "project": "default"
+        },
+        {
+          "full_name": "default.histogram-data-drift-2.metric.tvds_mean_2",
+          "type": "metric",
+          "app": "histogram-data-drift-2",
+          "name": "tvds_mean_2",
+          "project": "default"
+        },
+        {
+          "full_name": "default.evidently-app-test.result.hellinger_mean_1",
+          "type": "result",
+          "app": "evidently-app-test",
+          "name": "hellinger_mean_1",
+          "project": "default"
+        },
+        {
+          "full_name": "default.evidently-app-test-1.metric.data_drift_test_1",
+          "type": "metric",
+          "app": "evidently-app-test-1",
+          "name": "data_drift_test_1",
+          "project": "default"
+        },
+        {
+          "full_name": "default.evidently-app-test-1.metric.general_drift_1",
+          "type": "metric",
+          "app": "evidently-app-test-1",
+          "name": "general_drift_1",
+          "project": "default"
+        },
+        {
+          "full_name": "default.histogram-data-drift-1.result.model_perf_1",
+          "type": "result",
+          "app": "histogram-data-drift-1",
+          "name": "model_perf_1",
+          "project": "default"
+        },
+        {
+          "full_name": "default.histogram-data-drift-1.metric.kld_mean_1",
+          "type": "metric",
+          "app": "histogram-data-drift-1",
+          "name": "kld_mean_1",
+          "project": "default"
+        },
+        {
+          "full_name": "default.monitoring-test-1.metric.kld_mean_1",
+          "type": "metric",
+          "app": "monitoring-test-1",
+          "name": "kld_mean_1",
+          "project": "default"
+        },
+        {
+          "full_name": "default.histogram-data-drift-3.metric.tvdar_mean_3",
+          "type": "metric",
+          "app": "histogram-data-drift-3",
+          "name": "tvdar_mean_3",
+          "project": "default"
+        },
+        {
+          "full_name": "default.histogram-data-drift-3.metric.tvdop_mean_3",
+          "type": "metric",
+          "app": "histogram-data-drift-3",
+          "name": "tvdop_mean_3",
+          "project": "default"
+        },
+        {
+          "full_name": "default.histogram-data-drift-3.metric.tvds_mean_32",
+          "type": "metric",
+          "app": "histogram-data-drift-3",
+          "name": "tvds_mean_3",
+          "project": "default"
+        },
+        {
+          "full_name": "default.evidently-app-test.result.hellinger_mean_3",
+          "type": "result",
+          "app": "evidently-app-test",
+          "name": "hellinger_mean_3",
+          "project": "default"
+        },
+        {
+          "full_name": "default.evidently-app-test-3.metric.data_drift_test_3",
+          "type": "metric",
+          "app": "evidently-app-test-3",
+          "name": "data_drift_test_3",
+          "project": "default"
+        },
+        {
+          "full_name": "default.evidently-app-test-3.metric.general_drift_3",
+          "type": "metric",
+          "app": "evidently-app-test-3",
+          "name": "general_drift_3",
+          "project": "default"
+        },
+        {
+          "full_name": "default.histogram-data-drift-3.result.model_perf_3",
+          "type": "result",
+          "app": "histogram-data-drift-3",
+          "name": "model_perf_3",
+          "project": "default"
+        },
+        {
+          "full_name": "default.histogram-data-drift-3.metric.kld_mean_3",
+          "type": "metric",
+          "app": "histogram-data-drift-3",
+          "name": "kld_mean_3",
+          "project": "default"
+        },
+        {
+          "full_name": "default.monitoring-test-3.metric.kld_mean_3",
+          "type": "metric",
+          "app": "monitoring-test-3",
+          "name": "kld_mean_3",
+          "project": "default"
+        },
+        {
+          "full_name": "default.results_kinds.result.kind_0",
+          "type": "result",
+          "app": "results_kinds",
+          "name": "kind_0",
+          "project": "default"
+        },
+        {
+          "full_name": "default.results_kinds.result.kind_1",
+          "type": "result",
+          "app": "results_kinds",
+          "name": "kind_1",
+          "project": "default"
+        },
+        {
+          "full_name": "default.results_kinds.result.kind_2",
+          "type": "result",
+          "app": "results_kinds",
+          "name": "kind_2",
+          "project": "default"
+        },
+        {
+          "full_name": "default.results_kinds.result.kind_3",
+          "type": "result",
+          "app": "results_kinds",
+          "name": "kind_3",
+          "project": "default"
+        },
+        {
+          "full_name": "default.results_kinds.result.kind_4",
+          "type": "result",
+          "app": "results_kinds",
+          "name": "kind_4",
+          "project": "default"
+        }
+      ],
+      "metricsValues": [
+        {
+          "full_name": "default.mlrun-infra.metric.invocations-rate",
+          "type": "metric",
+          "data": "true",
+          "values": [
+            1, true
+          ]
+        },
+        {
+          "full_name": "default.histogram-data-drift-1.metric.tvdar_mean_1",
+          "type": "metric",
+          "data": "true",
+          "values": [
+            1
+          ]
+        },
+        {
+          "full_name": "default.histogram-data-drift-2.metric.tvdop_mean_2",
+          "type": "metric",
+          "data": "true",
+          "values": [
+            1
+          ]
+        },
+        {
+          "full_name": "default.histogram-data-drift-2.metric.tvds_mean_2",
+          "type": "metric",
+          "data": "true",
+          "values": [
+            1
+          ]
+        },
+        {
+          "full_name": "default.evidently-app-test.result.hellinger_mean_1",
+          "type": "result",
+          "result_kind": 0,
+          "data": "true",
+          "values": [
+            1
+          ]
+        },
+        {
+          "full_name": "default.evidently-app-test-1.metric.data_drift_test_1",
+          "type": "metric",
+          "data": "true",
+          "values": [
+            1
+          ]
+        },
+        {
+          "full_name": "default.evidently-app-test-1.metric.general_drift_1",
+          "type": "metric",
+          "data": "true",
+          "values": [
+            1
+          ]
+        },
+        {
+          "full_name": "default.histogram-data-drift-1.result.model_perf_1",
+          "type": "result",
+          "result_kind": 0,
+          "data": "true",
+          "values": [
+            1
+          ]
+        },
+        {
+          "full_name": "default.histogram-data-drift-1.metric.kld_mean_1",
+          "type": "metric",
+          "data": "true",
+          "values": [
+            1
+          ]
+        },
+        {
+          "full_name": "default.monitoring-test-1.metric.kld_mean_1",
+          "type": "metric",
+          "data": "true",
+          "values": [
+            1
+          ]
+        },
+        {
+          "full_name": "default.histogram-data-drift-3.metric.tvdar_mean_3",
+          "type": "metric",
+          "data": "true",
+          "values": [
+            1
+          ]
+        },
+        {
+          "full_name": "default.histogram-data-drift-3.metric.tvdop_mean_3",
+          "type": "metric",
+          "data": "true",
+          "values": [
+            1
+          ]
+        },
+        {
+          "full_name": "default.histogram-data-drift-3.metric.tvds_mean_32",
+          "type": "metric",
+          "data": "true",
+          "values": [
+            1
+          ]
+        },
+        {
+          "full_name": "default.evidently-app-test.result.hellinger_mean_3",
+          "type": "result",
+          "result_kind": 2,
+          "data": "true",
+          "values": [
+            1
+          ]
+        },
+        {
+          "full_name": "default.evidently-app-test-3.metric.data_drift_test_3",
+          "type": "metric",
+          "data": "true",
+          "values": [
+            1
+          ]
+        },
+        {
+          "full_name": "default.evidently-app-test-3.metric.general_drift_3",
+          "type": "metric",
+          "data": "true",
+          "values": [
+            1
+          ]
+        },
+        {
+          "full_name": "default.histogram-data-drift-3.result.model_perf_3",
+          "type": "result",
+          "result_kind": 0,
+          "data": "true",
+          "values": [
+            1
+          ]
+        },
+        {
+          "full_name": "default.histogram-data-drift-3.metric.kld_mean_3",
+          "type": "metric",
+          "data": "true",
+          "values": [
+            1
+          ]
+        },
+        {
+          "full_name": "default.monitoring-test-3.metric.kld_mean_3",
+          "type": "metric",
+          "data": "true",
+          "values": [
+            1
+          ]
+        },
+        {
+          "full_name": "default.results_kinds.result.kind_0",
+          "type": "result",
+          "result_kind": 0,
+          "data": "true",
+          "values": [
+            1
+          ]
+        },
+        {
+          "full_name": "default.results_kinds.result.kind_1",
+          "type": "result",
+          "result_kind": 1,
+          "data": "true",
+          "values": [
+            1
+          ]
+        },
+        {
+          "full_name": "default.results_kinds.result.kind_2",
+          "type": "result",
+          "result_kind": 2,
+          "data": "true",
+          "values": [
+            1
+          ]
+        },
+        {
+          "full_name": "default.results_kinds.result.kind_3",
+          "type": "result",
+          "result_kind": 3,
+          "data": "true",
+          "values": [
+            1
+          ]
+        },
+        {
+          "full_name": "default.results_kinds.result.kind_4",
+          "type": "result",
+          "result_kind": 4,
+          "data": "true",
+          "values": [
+            1
+          ]
+        }
+      ]
+    }
+  ]
+}

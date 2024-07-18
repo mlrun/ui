@@ -17,17 +17,22 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import React, { useMemo } from 'react'
+import React from 'react'
 import PropTypes from 'prop-types'
 import { useParams } from 'react-router-dom'
 import { FieldArray } from 'react-final-form-arrays'
-import { OnChange } from 'react-final-form-listeners'
 
 import NoData from '../../common/NoData/NoData'
-import { ConfirmDialog, Tooltip, TextTooltipTemplate, RoundedIcon, FormInput } from 'igz-controls/components'
+import {
+  ConfirmDialog,
+  Tooltip,
+  TextTooltipTemplate,
+  RoundedIcon,
+  FormInput,
+  FormOnChange
+} from 'igz-controls/components'
 
 import { headers } from './detailsRequestedFeatures.utils'
-import { parseFeatureTemplate } from '../../utils/parseFeatureTemplate'
 import { DANGER_BUTTON, TERTIARY_BUTTON } from 'igz-controls/constants'
 import { getValidationRules } from 'igz-controls/utils/validation.util'
 
@@ -52,10 +57,6 @@ const DetailsRequestedFeaturesView = ({
   selectedItem
 }) => {
   const params = useParams()
-  const labelFeature = useMemo(
-    () => parseFeatureTemplate(selectedItem.label_feature ?? '').feature,
-    [selectedItem]
-  )
 
   return formState.values?.features?.length === 0 ? (
     <NoData />
@@ -74,16 +75,17 @@ const DetailsRequestedFeaturesView = ({
         </div>
         <div className="item-requested-features__table-body">
           <FieldArray name="features">
-            {({fields}) => {
+            {({ fields }) => {
               return (
                 <>
                   {fields.map((featureData, index) => {
-                    const { project, featureSet, tag, feature, alias, originalTemplate } = fields.value[index]
+                    const { project, featureSet, tag, feature, alias, originalTemplate } =
+                      fields.value[index]
 
                     return (
                       <div className="item-requested-features__table-row" key={originalTemplate}>
                         <div className="item-requested-features__table-cel cell_icon">
-                          {labelFeature === feature && (
+                          {selectedItem.label_feature === originalTemplate && (
                             <Tooltip
                               className="icon-wrapper"
                               template={<TextTooltipTemplate text="Label column" />}
@@ -93,7 +95,9 @@ const DetailsRequestedFeaturesView = ({
                           )}
                         </div>
                         <div className="item-requested-features__table-cell cell_project-name">
-                          <Tooltip template={<TextTooltipTemplate text={project || params.projectName} />}>
+                          <Tooltip
+                            template={<TextTooltipTemplate text={project || params.projectName} />}
+                          >
                             {project || params.projectName}
                           </Tooltip>
                         </div>
@@ -105,13 +109,15 @@ const DetailsRequestedFeaturesView = ({
                             {featureSet}
                           </Tooltip>
                           {tag && (
-                            <>
+                            <Tooltip template={<TextTooltipTemplate text={featureSet} />}>
                               <span className="cell_tag">: {tag}</span>
-                            </>
+                            </Tooltip>
                           )}
                         </div>
                         <div className="item-requested-features__table-cell cell_feature">
-                          <Tooltip template={<TextTooltipTemplate text={feature} />}>{feature}</Tooltip>
+                          <Tooltip template={<TextTooltipTemplate text={feature} />}>
+                            {feature}
+                          </Tooltip>
                         </div>
                         {editableItemIndex === index && (
                           <>
@@ -122,14 +128,15 @@ const DetailsRequestedFeaturesView = ({
                                   name={`${featureData}.alias`}
                                   validationRules={getValidationRules('feature.vector.alias')}
                                 />
-                                <OnChange name={`${featureData}.alias`}>
-                                  {value => {
+                                <FormOnChange
+                                  handler={value => {
                                     formState.form.change(
                                       `${featureData}.alias`,
                                       value.length === 0 ? '' : value
                                     )
                                   }}
-                                </OnChange>
+                                  name={`${featureData}.alias`}
+                                />
                               </div>
                             </div>
                             <div className="cell_actions cell_actions-visible">
@@ -155,16 +162,13 @@ const DetailsRequestedFeaturesView = ({
                             <div className="item-requested-features__table-cell cell_alias">
                               {alias && (
                                 <div className="cell_alias__input-wrapper">
-                                  <Tooltip template={<TextTooltipTemplate text={alias} />}>{alias}</Tooltip>
+                                  <Tooltip template={<TextTooltipTemplate text={alias} />}>
+                                    {alias}
+                                  </Tooltip>
                                   <RoundedIcon
                                     className={!alias ? 'visibility-hidden' : ''}
                                     onClick={() =>
-                                      handleItemClick(
-                                        'features',
-                                        'input',
-                                        index,
-                                        originalTemplate
-                                      )
+                                      handleItemClick('features', 'input', index, originalTemplate)
                                     }
                                     tooltipText="Click to edit"
                                   >
@@ -177,12 +181,7 @@ const DetailsRequestedFeaturesView = ({
                               <RoundedIcon
                                 className={alias && 'visibility-hidden'}
                                 onClick={() =>
-                                  handleItemClick(
-                                    'features',
-                                    'input',
-                                    index,
-                                    originalTemplate
-                                  )
+                                  handleItemClick('features', 'input', index, originalTemplate)
                                 }
                                 tooltipText="Click to add an alias"
                               >

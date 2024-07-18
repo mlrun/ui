@@ -46,8 +46,8 @@ import { createFeatureVectorsRowData } from '../../../utils/createFeatureStoreCo
 import { getFeatureVectorIdentifier } from '../../../utils/getUniqueIdentifier'
 import { getFilterTagOptions, setFilters } from '../../../reducers/filtersReducer'
 import { isDetailsTabExists } from '../../../utils/isDetailsTabExists'
-import { parseFeatureTemplate } from '../../../utils/parseFeatureTemplate'
 import { parseChipsData } from '../../../utils/convertChipsData'
+import { parseFeatureTemplate } from '../../../utils/parseFeatureTemplate'
 import { parseFeatureVectors } from '../../../utils/parseFeatureVectors'
 import { setFeaturesPanelData } from '../../../reducers/tableReducer'
 import { setNotification } from '../../../reducers/notificationReducer'
@@ -55,6 +55,9 @@ import { showErrorNotification } from '../../../utils/notifications.util'
 import { useGetTagOptions } from '../../../hooks/useGetTagOptions.hook'
 import { useGroupContent } from '../../../hooks/groupContent.hook'
 import { useOpenPanel } from '../../../hooks/openPanel.hook'
+import { useVirtualization } from '../../../hooks/useVirtualization.hook'
+
+import cssVariables from './featureVectors.scss'
 
 const FeatureVectors = ({
   deleteFeatureVector,
@@ -74,7 +77,7 @@ const FeatureVectors = ({
   const params = useParams()
   const featureStore = useSelector(store => store.featureStore)
   const filtersStore = useSelector(store => store.filtersStore)
-  const featureVectorsRef = useRef(null)
+  const featureStoreRef = useRef(null)
   const abortControllerRef = useRef(new AbortController())
   const navigate = useNavigate()
   const location = useLocation()
@@ -86,7 +89,7 @@ const FeatureVectors = ({
     setConfirmData,
     toggleConvertedYaml
   } = React.useContext(FeatureStoreContext)
-
+  const frontendSpec = useSelector(store => store.appStore.frontendSpec)
   const pageData = useMemo(() => generatePageData(selectedFeatureVector), [selectedFeatureVector])
 
   const detailsFormInitialValues = useMemo(
@@ -95,9 +98,14 @@ const FeatureVectors = ({
         return { ...parseFeatureTemplate(featureData) }
       }),
       description: selectedFeatureVector.description,
-      labels: parseChipsData(selectedFeatureVector.labels)
+      labels: parseChipsData(selectedFeatureVector.labels, frontendSpec.internal_labels)
     }),
-    [selectedFeatureVector.description, selectedFeatureVector.labels, selectedFeatureVector.specFeatures]
+    [
+      frontendSpec.internal_labels,
+      selectedFeatureVector.description,
+      selectedFeatureVector.labels,
+      selectedFeatureVector.specFeatures
+    ]
   )
 
   const fetchData = useCallback(
@@ -137,7 +145,7 @@ const FeatureVectors = ({
             setNotification({
               status: 200,
               id: Math.random(),
-              message: 'Feature vector deleted successfully'
+              message: 'Feature vector was deleted'
             })
           )
 
@@ -158,7 +166,7 @@ const FeatureVectors = ({
             })
         })
         .catch(error => {
-          showErrorNotification(dispatch, error, '', 'Feature vector failed to delete', () =>
+          showErrorNotification(dispatch, error, '', 'Failed to delete the feature vector', () =>
             handleDeleteFeatureVector(featureVector)
           )
         })
@@ -183,7 +191,7 @@ const FeatureVectors = ({
       setConfirmData({
         item: featureVector,
         header: 'Delete feature vector?',
-        message: `You try to delete feature vector "${featureVector.name}". Deleted feature vectors cannot be restored.`,
+        message: `Are you sure you want to delete the feature vector "${featureVector.name}"?. You cannot restore a feature vector after deleting it.`,
         btnCancelLabel: 'Cancel',
         btnCancelVariant: LABEL_BUTTON,
         btnConfirmLabel: 'Delete',
@@ -424,6 +432,19 @@ const FeatureVectors = ({
     }
   }, [removeFeatureVector, removeFeatureVectors, setCreateVectorPopUpIsOpen, params.projectName])
 
+  const virtualizationConfig = useVirtualization({
+    rowsData: {
+      content: tableContent,
+      expandedRowsData: selectedRowData,
+      selectedItem: selectedFeatureVector
+    },
+    heightData: {
+      headerRowHeight: cssVariables.featureVectorsHeaderRowHeight,
+      rowHeight: cssVariables.featureVectorsRowHeight,
+      rowHeightExtended: cssVariables.featureVectorsRowHeightExtended
+    }
+  })
+
   return (
     <FeatureVectorsView
       actionsMenu={actionsMenu}
@@ -438,12 +459,13 @@ const FeatureVectors = ({
       handleRefresh={handleRefresh}
       largeRequestErrorMessage={largeRequestErrorMessage}
       pageData={pageData}
-      ref={featureVectorsRef}
+      ref={{ featureStoreRef }}
       selectedFeatureVector={selectedFeatureVector}
       selectedRowData={selectedRowData}
       setCreateVectorPopUpIsOpen={setCreateVectorPopUpIsOpen}
       setSelectedFeatureVector={handleSelectFeatureVector}
       tableContent={tableContent}
+      virtualizationConfig={virtualizationConfig}
     />
   )
 }

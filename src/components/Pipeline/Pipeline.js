@@ -29,12 +29,13 @@ import { Tooltip, TextTooltipTemplate, RoundedIcon } from 'igz-controls/componen
 
 import {
   DEFAULT_EDGE,
-  ERROR_NODE,
   FLOATING_EDGE,
+  GREY_NODE,
   ML_EDGE,
   ML_NODE,
   PRIMARY_NODE,
   REAL_TIME_PIPELINES_TAB,
+  ROUNDED_RECTANGLE_NODE_SHAPE,
   SECONDARY_NODE
 } from '../../constants'
 import { getLayoutedElements } from '../../common/ReactFlow/mlReactFlow.util'
@@ -168,8 +169,8 @@ const Pipeline = ({ content }) => {
                 subType: SECONDARY_NODE,
                 label: routeInnerName,
                 isSelectable: true,
-                isOvalShape: true,
-                isOpacity: true,
+                shape: ROUNDED_RECTANGLE_NODE_SHAPE,
+                withOpacity: true,
                 customData: routeInner
               },
               className: classnames(selectedStep.id === routeInnerName && 'selected'),
@@ -208,7 +209,7 @@ const Pipeline = ({ content }) => {
 
       const errorEdges = map(errorsMap, (target, source) => {
         const errorHandlerElement = newNodes.find(node => node.id === target)
-        errorHandlerElement.data.subType = ERROR_NODE
+        errorHandlerElement.data.subType = GREY_NODE
 
         return {
           type: ML_EDGE,

@@ -18,13 +18,17 @@ under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
 import React from 'react'
+import { isEqual } from 'lodash'
 
 import JobWizard from '../JobWizard/JobWizard'
+import DeleteArtifactPopUp from '../../elements/DeleteArtifactPopUp/DeleteArtifactPopUp'
 
 import {
+  ACTION_MENU_PARENT_ROW,
+  ACTION_MENU_PARENT_ROW_EXPANDED,
   DATASET_TYPE,
-  DATASETS,
   DATASETS_PAGE,
+  DATASETS_TAB,
   FULL_VIEW_MODE,
   ITERATIONS_FILTER,
   LABELS_FILTER,
@@ -32,10 +36,13 @@ import {
   TAG_FILTER
 } from '../../constants'
 import { PRIMARY_BUTTON } from 'igz-controls/constants'
-import { applyTagChanges } from '../../utils/artifacts.util'
+import { applyTagChanges, chooseOrFetchArtifact } from '../../utils/artifacts.util'
 import { copyToClipboard } from '../../utils/copyToClipboard'
 import { createDatasetsRowData, getIsTargetPathValid } from '../../utils/createArtifactsContent'
-import { fetchDataSet, showArtifactsPreview } from '../../reducers/artifactsReducer'
+import {
+  fetchExpandedDataSet,
+  showArtifactsPreview
+} from '../../reducers/artifactsReducer'
 import { generateUri } from '../../utils/resources'
 import { getArtifactIdentifier } from '../../utils/getUniqueIdentifier'
 import { handleDeleteArtifact } from '../../utils/handleDeleteArtifact'
@@ -65,11 +72,6 @@ export const infoHeaders = [
   { label: 'Label column', id: 'label_column' },
   { label: 'Path', id: 'target_path' },
   { label: 'URI', id: 'target_uri' },
-  {
-    label: 'UID',
-    id: 'tree',
-    tip: 'Unique identifier representing the job or the workflow that generated the artifact'
-  },
   { label: 'Updated', id: 'updated' },
   { label: 'Labels', id: 'labels' }
 ]
@@ -109,7 +111,7 @@ export const generatePageData = (selectedItem, viewMode, params) => ({
   details: {
     menu: generateDataSetsDetailsMenu(selectedItem),
     infoHeaders,
-    type: DATASETS,
+    type: DATASETS_TAB,
     hideBackBtn: viewMode === FULL_VIEW_MODE,
     withToggleViewBtn: true,
     actionButton: {
@@ -147,7 +149,14 @@ export const fetchDataSetRowData = async (
     loading: true
   }))
 
-  dispatch(fetchDataSet({ project: dataSet.project, dataSet: dataSet.db_key, iter, tag }))
+  dispatch(
+    fetchExpandedDataSet({
+      project: dataSet.project,
+      dataSet: dataSet.db_key,
+      iter,
+      tag
+    })
+  )
     .unwrap()
     .then(result => {
       if (result?.length > 0) {
@@ -225,7 +234,9 @@ export const checkForSelectedDataset = (
         if (!searchItem) {
           navigate(`/projects/${projectName}/datasets`, { replace: true })
         } else {
-          setSelectedDataset(searchItem)
+          setSelectedDataset(prevState => {
+            return isEqual(prevState, searchItem) ? prevState : searchItem
+          })
         }
       }
     } else {
@@ -235,71 +246,113 @@ export const checkForSelectedDataset = (
 }
 
 export const generateActionsMenu = (
-  dataset,
+  datasetMin,
   frontendSpec,
   dispatch,
   toggleConvertedYaml,
   handleAddTag,
   projectName,
   handleRefresh,
-  datasetsFilters
+  datasetsFilters,
+  menuPosition,
+  selectedDataset
 ) => {
-  const isTargetPathValid = getIsTargetPathValid(dataset ?? {}, frontendSpec)
-  const downloadPath = `${dataset?.target_path}${dataset?.model_file || ''}`
+  const isTargetPathValid = getIsTargetPathValid(datasetMin ?? {}, frontendSpec)
+  const datasetDataCouldBeDeleted = datasetMin?.target_path?.endsWith('.pq') || datasetMin?.target_path?.endsWith('.parquet')
+
+  const getFullDataset = datasetMin => {
+    return chooseOrFetchArtifact(dispatch, DATASETS_TAB, selectedDataset, datasetMin)
+  }
 
   return [
     [
       {
         label: 'Add a tag',
+        hidden: menuPosition === ACTION_MENU_PARENT_ROW_EXPANDED,
         icon: <TagIcon />,
         onClick: handleAddTag
       },
       {
         label: 'Download',
+        hidden: menuPosition === ACTION_MENU_PARENT_ROW_EXPANDED,
+        disabled: !isTargetPathValid,
         icon: <DownloadIcon />,
-        onClick: dataset => {
-          dispatch(
-            setDownloadItem({
-              path: downloadPath,
-              user: dataset.producer?.owner,
-              id: downloadPath
-            })
-          )
-          dispatch(setShowDownloadsList(true))
+        onClick: datasetMin => {
+          getFullDataset(datasetMin).then(dataset => {
+            const downloadPath = `${dataset?.target_path}${dataset?.model_file || ''}`
+            dispatch(
+              setDownloadItem({
+                path: downloadPath,
+                user: dataset.producer?.owner,
+                id: downloadPath
+              })
+            )
+            dispatch(setShowDownloadsList(true))
+          })
         }
       },
       {
         label: 'Copy URI',
+        hidden: menuPosition === ACTION_MENU_PARENT_ROW_EXPANDED,
         icon: <Copy />,
-        onClick: dataset => copyToClipboard(generateUri(dataset, DATASETS_PAGE), dispatch)
+        onClick: datasetMin => copyToClipboard(generateUri(datasetMin, DATASETS_TAB), dispatch)
       },
       {
         label: 'View YAML',
+        hidden: menuPosition === ACTION_MENU_PARENT_ROW_EXPANDED,
         icon: <YamlIcon />,
-        onClick: toggleConvertedYaml
+        onClick: datasetMin => getFullDataset(datasetMin).then(toggleConvertedYaml)
       },
       {
         label: 'Delete',
         icon: <Delete />,
-        disabled: !dataset?.tag,
-        tooltip: !dataset?.tag
-          ? 'A tag is required to delete a dataset. Open the dataset, click on the edit icon, and assign a tag before proceeding with the deletion'
-          : '',
+        hidden: [ACTION_MENU_PARENT_ROW, ACTION_MENU_PARENT_ROW_EXPANDED].includes(menuPosition),
+        className: 'danger',
+        onClick: () =>
+          datasetDataCouldBeDeleted ?
+            openPopUp(DeleteArtifactPopUp, {
+              artifact: datasetMin,
+              artifactType: DATASET_TYPE,
+              category: DATASET_TYPE,
+              filters: datasetsFilters,
+              handleRefresh
+            })
+            : openDeleteConfirmPopUp(
+              'Delete dataset?',
+              `Do you want to delete the dataset "${datasetMin.db_key}"? Deleted datasets can not be restored.`,
+              () => {
+                handleDeleteArtifact(
+                  dispatch,
+                  projectName,
+                  datasetMin.db_key,
+                  datasetMin.uid,
+                  handleRefresh,
+                  datasetsFilters,
+                  DATASET_TYPE
+                )
+              }
+            )
+      },
+      {
+        label: 'Delete all',
+        icon: <Delete />,
+        hidden: ![ACTION_MENU_PARENT_ROW, ACTION_MENU_PARENT_ROW_EXPANDED].includes(menuPosition),
         className: 'danger',
         onClick: () =>
           openDeleteConfirmPopUp(
             'Delete dataset?',
-            `Do you want to delete the dataset "${dataset.db_key}"? Deleted datasets can not be restored.`,
+            `Do you want to delete all versions of the dataset "${datasetMin.db_key}"? Deleted datasets can not be restored.`,
             () => {
               handleDeleteArtifact(
                 dispatch,
                 projectName,
-                dataset.db_key,
-                dataset.tag,
-                dataset.tree,
+                datasetMin.db_key,
+                datasetMin.uid,
                 handleRefresh,
                 datasetsFilters,
-                DATASET_TYPE
+                DATASET_TYPE,
+                DATASET_TYPE,
+                true
               )
             }
           )
@@ -307,17 +360,19 @@ export const generateActionsMenu = (
     ],
     [
       {
-        disabled: !isTargetPathValid,
-        id: 'dataset-preview',
         label: 'Preview',
+        id: 'dataset-preview',
+        disabled: !isTargetPathValid,
         icon: <ArtifactView />,
-        onClick: dataset => {
-          dispatch(
-            showArtifactsPreview({
-              isPreview: true,
-              selectedItem: dataset
-            })
-          )
+        onClick: datasetMin => {
+          getFullDataset(datasetMin).then(dataset => {
+            dispatch(
+              showArtifactsPreview({
+                isPreview: true,
+                selectedItem: dataset
+              })
+            )
+          })
         }
       }
     ]

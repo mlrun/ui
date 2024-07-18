@@ -24,7 +24,7 @@ import { useParams } from 'react-router-dom'
 
 import TableView from './TableView'
 
-import { ACTIONS_MENU } from '../../types'
+import { ACTIONS_MENU, VIRTUALIZATION_CONFIG } from '../../types'
 import { SORT_PROPS } from 'igz-controls/types'
 
 import './table.scss'
@@ -47,7 +47,8 @@ const Table = React.forwardRef(
       sortProps,
       tab,
       tableClassName,
-      tableHeaders
+      tableHeaders,
+      virtualizationConfig
     },
     ref
   ) => {
@@ -132,6 +133,7 @@ const Table = React.forwardRef(
         tableHeaders={tableHeaders}
         tableHeadRef={tableHeadRef}
         tablePanelRef={tablePanelRef}
+        virtualizationConfig={virtualizationConfig}
       >
         {children}
       </TableView>
@@ -155,7 +157,12 @@ Table.defaultProps = {
   sortProps: null,
   tab: '',
   tableClassName: '',
-  tableHeaders: []
+  tableHeaders: [],
+  virtualizationConfig: {
+    tableBodyPaddingTop: 0,
+    startIndex: -1,
+    endIndex: -1
+  }
 }
 
 Table.propTypes = {
@@ -176,7 +183,8 @@ Table.propTypes = {
   sortProps: SORT_PROPS,
   tab: PropTypes.string,
   tableClassName: PropTypes.string,
-  tableHeaders: PropTypes.array
+  tableHeaders: PropTypes.array,
+  virtualizationConfig: VIRTUALIZATION_CONFIG
 }
 
 export default Table

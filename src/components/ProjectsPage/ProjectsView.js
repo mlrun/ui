@@ -26,11 +26,13 @@ import CreateProjectDialog from './CreateProjectDialog/CreateProjectDialog'
 import Loader from '../../common/Loader/Loader'
 import NoData from '../../common/NoData/NoData'
 import PageActionsMenu from '../../common/PageActionsMenu/PageActionsMenu'
+import PageHeader from '../../elements/PageHeader/PageHeader'
 import ProjectCard from '../../elements/ProjectCard/ProjectCard'
+import ProjectsMonitoring from './ProjectsMonitoring/ProjectsMonitoring'
 import Search from '../../common/Search/Search'
 import Sort from '../../common/Sort/Sort'
 import YamlModal from '../../common/YamlModal/YamlModal'
-import { ConfirmDialog, RoundedIcon } from 'igz-controls/components'
+import { ConfirmDialog, RoundedIcon, PopUpDialog } from 'igz-controls/components'
 
 import { projectsSortOptions, projectsStates } from './projects.util'
 import { PRIMARY_BUTTON, TERTIARY_BUTTON } from 'igz-controls/constants'
@@ -72,7 +74,14 @@ const ProjectsView = ({
 
   return (
     <div className={projectsClassNames}>
-      {(projectStore.loading || projectStore.project.loading || tasksStore.loading) && <Loader />}
+      {(projectStore.loading ||
+        projectStore.project.loading ||
+        tasksStore.loading) && <Loader />}
+      {projectStore.mlrunUnhealthy.isUnhealthy && (
+        <PopUpDialog headerIsHidden>
+          MLRun seems to be down. Try again in a few minutes.
+        </PopUpDialog>
+      )}
       {createProject && (
         <CreateProjectDialog
           closeNewProjectPopUp={closeNewProjectPopUp}
@@ -99,50 +108,59 @@ const ProjectsView = ({
         />
       )}
       <div className="projects__wrapper">
+        {projectStore.projects.length > 0 && <ProjectsMonitoring />}
+        <PageHeader title="Projects" />
         <div className="projects-content-header">
-          <div className="projects-content-header__col">
-            <div className="projects-content-header-item">
-              <ContentMenu
-                activeTab={selectedProjectsState}
-                screen="active"
-                tabs={projectsStates}
-                onClick={setSelectedProjectsState}
-              />
+          <div className="projects-content-header__row">
+            <div className="projects-content-header__col">
+              <div className="projects-content-header-item">
+                <ContentMenu
+                  activeTab={selectedProjectsState}
+                  disabled={projectStore.mlrunUnhealthy.retrying}
+                  screen="active"
+                  tabs={projectsStates}
+                  onClick={setSelectedProjectsState}
+                />
 
-              <Sort
-                isDescendingOrder={isDescendingOrder}
-                onSelectOption={handleSelectSortOption}
-                options={projectsSortOptions}
-                selectedId={sortProjectId}
-                setIsDescendingOrder={setIsDescendingOrder}
-              />
+                <Sort
+                  disabled={projectStore.mlrunUnhealthy.retrying}
+                  isDescendingOrder={isDescendingOrder}
+                  onSelectOption={handleSelectSortOption}
+                  options={projectsSortOptions}
+                  selectedId={sortProjectId}
+                  setIsDescendingOrder={setIsDescendingOrder}
+                />
+              </div>
             </div>
-          </div>
-          <div className="projects-content-header__col projects-content-header__col-right">
-            <div className="projects-content-header-item">
-              <Search
-                className="projects-search"
-                matches={filterMatches}
-                onChange={setFilterByName}
-                onFocus={handleSearchOnFocus}
-                placeholder="Search projects..."
-                setMatches={setFilterMatches}
-                value={filterByName}
-              />
-              <PageActionsMenu
-                actionsMenuHeader={'New Project'}
-                onClick={() => setCreateProject(true)}
-                showActionsMenu
-                variant={PRIMARY_BUTTON}
-              />
-              <RoundedIcon
-                onClick={refreshProjects}
-                className="panel-title__btn_close"
-                tooltipText="Refresh"
-                id="pop-up-close-btn"
-              >
-                <RefreshIcon />
-              </RoundedIcon>
+            <div className="projects-content-header__col projects-content-header__col-right">
+              <div className="projects-content-header-item">
+                <Search
+                  className="projects-search"
+                  disabled={projectStore.mlrunUnhealthy.retrying}
+                  matches={filterMatches}
+                  onChange={setFilterByName}
+                  onFocus={handleSearchOnFocus}
+                  placeholder="Search projects..."
+                  setMatches={setFilterMatches}
+                  value={filterByName}
+                />
+                <PageActionsMenu
+                  actionsMenuHeader={'New Project'}
+                  disabled={projectStore.mlrunUnhealthy.retrying}
+                  onClick={() => setCreateProject(true)}
+                  showActionsMenu
+                  variant={PRIMARY_BUTTON}
+                />
+                <RoundedIcon
+                  disabled={projectStore.mlrunUnhealthy.retrying}
+                  onClick={refreshProjects}
+                  className="panel-title__btn_close"
+                  tooltipText="Refresh"
+                  id="pop-up-close-btn"
+                >
+                  <RefreshIcon />
+                </RoundedIcon>
+              </div>
             </div>
           </div>
         </div>
@@ -169,7 +187,13 @@ const ProjectsView = ({
             </div>
           )
         ) : projectStore.loading ? null : (
-          <NoData message="Your projects list is empty." />
+          <NoData
+            message={
+              projectStore.mlrunUnhealthy.retrying
+                ? 'Retrieving projects.'
+                : 'Your projects list is empty.'
+            }
+          />
         )}
       </div>
       {convertedYaml.length > 0 && (
