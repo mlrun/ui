@@ -51,7 +51,7 @@ const CreateProjectDialog = ({
     createForm({
       initialValues,
       mutators: { ...arrayMutators, setFieldState },
-      onSubmit: () => {}
+      onSubmit: handleCreateProject
     })
   )
 
@@ -62,12 +62,13 @@ const CreateProjectDialog = ({
       closePopUp={closeNewProjectPopUp}
     >
       {projectStore.loading && <Loader />}
-      <Form form={formRef.current} onSubmit={() => {}}>
+      <Form form={formRef.current} onSubmit={handleCreateProject}>
         {formState => {
           return (
             <>
               <div className="form-row">
                 <FormInput
+                  async
                   label="Name"
                   name="name"
                   required
@@ -115,10 +116,10 @@ const CreateProjectDialog = ({
                   onClick={closeNewProjectPopUp}
                 />
                 <Button
-                  disabled={projectStore.loading || !formState.values.name || formState.invalid}
+                  disabled={projectStore.loading || (formState.invalid && formState.submitFailed)}
                   variant={SECONDARY_BUTTON}
                   label="Create"
-                  onClick={event => handleCreateProject(event, formState)}
+                  onClick={formState.handleSubmit}
                 />
               </div>
             </>
