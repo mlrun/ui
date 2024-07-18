@@ -55,7 +55,6 @@ const CreateFeatureVectorPopUp = ({ closePopUp, createFeatureVector, featureVect
   }
 
   const handleCreateFeatureVector = (values) => {
-    console.log('asd')
       createFeatureVector({
         name: values.name,
         tag: values.tag,
