@@ -33,7 +33,6 @@ const headers = {
   'Cache-Control': 'no-cache'
 }
 
-console.log('----------- comments ----------')
 // serialize a param with an array value as a repeated param, for example:
 // { label: ['host', 'owner=admin'] } => 'label=host&label=owner%3Dadmin'
 const paramsSerializer = params => qs.stringify(params, { arrayFormat: 'repeat' })
