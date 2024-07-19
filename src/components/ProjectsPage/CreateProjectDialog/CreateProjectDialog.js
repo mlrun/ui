@@ -34,8 +34,7 @@ import {
   getValidationRules,
   getInternalLabelsValidationRule
 } from 'igz-controls/utils/validation.util'
-import { setFieldState } from 'igz-controls/utils/form.util'
-import { checkIfSubmitIsDisabled } from 'igz-controls/utils/form.util'
+import { setFieldState, isSubmitDisabled } from 'igz-controls/utils/form.util'
 
 import './createProjectDialog.scss'
 
@@ -123,7 +122,7 @@ const CreateProjectDialog = ({
                   onClick={closeNewProjectPopUp}
                 />
                 <Button
-                  disabled={projectStore.loading || checkIfSubmitIsDisabled(formState)}
+                  disabled={projectStore.loading || isSubmitDisabled(formState)}
                   variant={SECONDARY_BUTTON}
                   label="Create"
                   onClick={formState.handleSubmit}

@@ -69,11 +69,10 @@ import { JOB_WIZARD_MODE } from '../../types'
 import { MODAL_MAX } from 'igz-controls/constants'
 import { resetModalFilter } from '../../reducers/filtersReducer'
 import { scheduledJobsActionCreator } from '../Jobs/ScheduledJobs/scheduledJobs.util'
-import { setFieldState } from 'igz-controls/utils/form.util'
+import { setFieldState, isSubmitDisabled } from 'igz-controls/utils/form.util'
 import { setNotification } from '../../reducers/notificationReducer'
 import { showErrorNotification } from '../../utils/notifications.util'
 import { useModalBlockHistory } from '../../hooks/useModalBlockHistory.hook'
-import { checkIfSubmitIsDisabled } from 'igz-controls/utils/form.util'
 
 import './jobWizard.scss'
 
@@ -290,7 +289,7 @@ const JobWizard = ({
         }
       ]
 
-      if (checkIfSubmitIsDisabled(formState)) {
+      if (isSubmitDisabled(formState)) {
         stepsConfig.forEach(stepConfig => {
           if (stepConfig.id in formState.errors) {
             stepConfig.invalid = true
@@ -404,6 +403,7 @@ const JobWizard = ({
 
   const getActions = useCallback(
     ({ allStepsAreEnabled, goToFirstInvalidStep }, formState) => {
+      const submitIsDisabled = isSubmitDisabled(formState)
 
       return [
         {
@@ -422,7 +422,7 @@ const JobWizard = ({
               goToFirstInvalidStep()
             }
           },
-          disabled: !allStepsAreEnabled || checkIfSubmitIsDisabled(formState),
+          disabled: !allStepsAreEnabled || submitIsDisabled,
           variant: 'tertiary',
           ref: scheduleButtonRef
         },
@@ -439,7 +439,7 @@ const JobWizard = ({
           onClick: () => {
             submitRequest(formState, false, goToFirstInvalidStep)
           },
-          disabled: !allStepsAreEnabled || checkIfSubmitIsDisabled(formState),
+          disabled: !allStepsAreEnabled || submitIsDisabled,
           variant: 'secondary'
         }
       ]
@@ -527,7 +527,10 @@ const JobWizard = ({
               />
             )}
             <FormDirtySpy />
-            {(functionsStore.loading || functionsStore.funcLoading || jobsStore.loading || projectIsLoading) && <Loader />}
+            {(functionsStore.loading ||
+              functionsStore.funcLoading ||
+              jobsStore.loading ||
+              projectIsLoading) && <Loader />}
           </>
         )
       }}

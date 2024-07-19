@@ -37,11 +37,10 @@ import {
 } from 'igz-controls/components'
 
 import { getValidationRules, getInternalLabelsValidationRule } from 'igz-controls/utils/validation.util'
-import { setFieldState } from 'igz-controls/utils/form.util'
+import { setFieldState, isSubmitDisabled } from 'igz-controls/utils/form.util'
 import { LABEL_BUTTON, PRIMARY_BUTTON } from 'igz-controls/constants'
 import { getChipOptions } from '../../utils/getChipOptions'
 import { convertChipsData, parseChipsData } from '../../utils/convertChipsData'
-import { checkIfSubmitIsDisabled } from 'igz-controls/utils/form.util'
 
 import './createFeatureVectorPopUp.scss'
 
@@ -55,13 +54,13 @@ const CreateFeatureVectorPopUp = ({ closePopUp, createFeatureVector, featureVect
     labels: parseChipsData(featureVectorData.labels, frontendSpec.internal_labels)
   }
 
-  const handleCreateFeatureVector = (values) => {
-      createFeatureVector({
-        name: values.name,
-        tag: values.tag,
-        description: values.description,
-        labels: convertChipsData(values.labels)
-      })
+  const handleCreateFeatureVector = values => {
+    createFeatureVector({
+      name: values.name,
+      tag: values.tag,
+      description: values.description,
+      labels: convertChipsData(values.labels)
+    })
   }
 
   const formRef = React.useRef(
@@ -144,7 +143,7 @@ const CreateFeatureVectorPopUp = ({ closePopUp, createFeatureVector, featureVect
                   onClick={closePopUp}
                 />
                 <Button
-                  disabled={checkIfSubmitIsDisabled(formState)}
+                  disabled={isSubmitDisabled(formState)}
                   variant={PRIMARY_BUTTON}
                   label="Create"
                   onClick={formState.handleSubmit}
