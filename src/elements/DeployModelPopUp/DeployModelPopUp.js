@@ -44,6 +44,7 @@ import { setFieldState } from 'igz-controls/utils/form.util'
 import { setNotification } from '../../reducers/notificationReducer'
 import { showErrorNotification } from '../../utils/notifications.util'
 import { useModalBlockHistory } from '../../hooks/useModalBlockHistory.hook'
+import { checkIfSubmitIsDisabled } from 'igz-controls/utils/form.util'
 
 import { ReactComponent as QuestionMarkIcon } from 'igz-controls/images/question-mark.svg'
 
@@ -166,7 +167,7 @@ const DeployModelPopUp = ({ functionList, functionOptionList, isOpen, model, onR
         variant: TERTIARY_BUTTON
       },
       {
-        disabled: formState.submitting || (formState.invalid && formState.submitFailed),
+        disabled: checkIfSubmitIsDisabled(formState),
         label: 'Deploy',
         onClick: formState.handleSubmit,
         variant: SECONDARY_BUTTON

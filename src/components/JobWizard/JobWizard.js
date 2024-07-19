@@ -73,6 +73,7 @@ import { setFieldState } from 'igz-controls/utils/form.util'
 import { setNotification } from '../../reducers/notificationReducer'
 import { showErrorNotification } from '../../utils/notifications.util'
 import { useModalBlockHistory } from '../../hooks/useModalBlockHistory.hook'
+import { checkIfSubmitIsDisabled } from 'igz-controls/utils/form.util'
 
 import './jobWizard.scss'
 
@@ -289,10 +290,7 @@ const JobWizard = ({
         }
       ]
 
-      const formIsSubmittedAndInvalid =
-        formState.submitting || (formState.invalid && formState.submitFailed)
-
-      if (formIsSubmittedAndInvalid) {
+      if (checkIfSubmitIsDisabled(formState)) {
         stepsConfig.forEach(stepConfig => {
           if (stepConfig.id in formState.errors) {
             stepConfig.invalid = true
@@ -406,8 +404,6 @@ const JobWizard = ({
 
   const getActions = useCallback(
     ({ allStepsAreEnabled, goToFirstInvalidStep }, formState) => {
-      const formIsSubmittedAndInvalid =
-        formState.submitting || (formState.invalid && formState.submitFailed)
 
       return [
         {
@@ -426,7 +422,7 @@ const JobWizard = ({
               goToFirstInvalidStep()
             }
           },
-          disabled: !allStepsAreEnabled || formIsSubmittedAndInvalid,
+          disabled: !allStepsAreEnabled || checkIfSubmitIsDisabled(formState),
           variant: 'tertiary',
           ref: scheduleButtonRef
         },
@@ -443,7 +439,7 @@ const JobWizard = ({
           onClick: () => {
             submitRequest(formState, false, goToFirstInvalidStep)
           },
-          disabled: !allStepsAreEnabled || formIsSubmittedAndInvalid,
+          disabled: !allStepsAreEnabled || checkIfSubmitIsDisabled(formState),
           variant: 'secondary'
         }
       ]

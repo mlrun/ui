@@ -26,6 +26,7 @@ import RegisterModelModal from '../../../elements/RegisterModelModal/RegisterMod
 import { ARTIFACT_TYPE, DATASET_TYPE } from '../../../constants'
 import { SECONDARY_BUTTON, TERTIARY_BUTTON } from 'igz-controls/constants'
 import { generateNuclioLink } from '../../../utils'
+import { checkIfSubmitIsDisabled } from 'igz-controls/utils/form.util'
 
 import { ReactComponent as BatchInferenceIcon } from 'igz-controls/images/ic-batch-inference.svg'
 import { ReactComponent as CreatFunctionIcon } from 'igz-controls/images/ic-create-new-function.svg'
@@ -97,7 +98,7 @@ export const getInitialCards = (params, navigate, isDemoMode) => {
                   variant: TERTIARY_BUTTON
                 },
                 {
-                  disabled: formState.submitting || (formState.invalid && formState.submitFailed),
+                  disabled: checkIfSubmitIsDisabled(formState),
                   label: 'Register',
                   onClick: async () => {
                     const submitSuccess = await formState.handleSubmit()
@@ -111,7 +112,7 @@ export const getInitialCards = (params, navigate, isDemoMode) => {
               ],
               // TODO: un-comment for 1.3
               // [{
-              //   disabled: formState.submitting || (formState.invalid && formState.submitFailed),
+              //   disabled: checkIfSubmitIsDisabled(formState),
               //   label: 'Register and view',
               //   onClick: async () => {
               //   await formState.handleSubmit()
@@ -120,7 +121,7 @@ export const getInitialCards = (params, navigate, isDemoMode) => {
               //   }
               // },
               // {
-              //   disabled: formState.submitting || (formState.invalid && formState.submitFailed),
+              //   disabled: checkIfSubmitIsDisabled(formState),
               //   label: 'Register',
               //   onClick: formState.handleSubmit,
               //   variant: SECONDARY_BUTTON
@@ -151,7 +152,7 @@ export const getInitialCards = (params, navigate, isDemoMode) => {
                   variant: TERTIARY_BUTTON
                 },
                 {
-                  disabled: formState.submitting || (formState.invalid && formState.submitFailed),
+                  disabled: checkIfSubmitIsDisabled(formState),
                   label: 'Register',
                   onClick: async () => {
                     const submitSuccess = await formState.handleSubmit()
@@ -164,7 +165,7 @@ export const getInitialCards = (params, navigate, isDemoMode) => {
                 }
               ],
               // [{
-              //   disabled: formState.submitting || (formState.invalid && formState.submitFailed),
+              //   disabled: checkIfSubmitIsDisabled(formState),
               //   label: 'Register and view',
               // onClick: async () => {
               //   await formState.handleSubmit()
@@ -173,7 +174,7 @@ export const getInitialCards = (params, navigate, isDemoMode) => {
               //   }
               // },
               // {
-              //   disabled: formState.submitting || (formState.invalid && formState.submitFailed),
+              //   disabled: checkIfSubmitIsDisabled(formState),
               //   label: 'Register',
               //   onClick: formState.handleSubmit,
               //   variant: SECONDARY_BUTTON
@@ -276,7 +277,7 @@ export const getInitialCards = (params, navigate, isDemoMode) => {
                   variant: TERTIARY_BUTTON
                 },
                 {
-                  disabled: formState.submitting || (formState.invalid && formState.submitFailed),
+                  disabled: checkIfSubmitIsDisabled(formState),
                   label: 'Register',
                   onClick: async () => {
                     await formState.handleSubmit()
@@ -289,7 +290,7 @@ export const getInitialCards = (params, navigate, isDemoMode) => {
               ],
               // TODO: un-comment for 1.3
               // [{
-              //   disabled: formState.submitting || (formState.invalid && formState.submitFailed),
+              //   disabled: checkIfSubmitIsDisabled(formState),
               //   label: 'Register and view',
               //   onClick: async () => {
               //   await formState.handleSubmit()
@@ -298,7 +299,7 @@ export const getInitialCards = (params, navigate, isDemoMode) => {
               //   }
               // },
               // {
-              //   disabled: formState.submitting || (formState.invalid && formState.submitFailed),
+              //   disabled: checkIfSubmitIsDisabled(formState),
               //   label: 'Register',
               //   onClick: formState.handleSubmit,
               //   variant: SECONDARY_BUTTON

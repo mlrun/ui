@@ -43,6 +43,7 @@ import { setNotification } from '../../reducers/notificationReducer'
 import { showErrorNotification } from '../../utils/notifications.util'
 import { openPopUp } from 'igz-controls/utils/common.util'
 import { useModalBlockHistory } from '../../hooks/useModalBlockHistory.hook'
+import { checkIfSubmitIsDisabled } from 'igz-controls/utils/form.util'
 
 import './RegisterModelModal.scss'
 
@@ -164,7 +165,7 @@ function RegisterModelModal({ actions, isOpen, onResolve, params, refresh }) {
             variant: TERTIARY_BUTTON
           },
           {
-            disabled: formState.submitting || (formState.invalid && formState.submitFailed),
+            disabled: checkIfSubmitIsDisabled(formState),
             label: 'Register',
             onClick: formState.handleSubmit,
             variant: SECONDARY_BUTTON
