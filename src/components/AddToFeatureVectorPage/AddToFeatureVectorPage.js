@@ -41,7 +41,7 @@ import { filters } from './addToFeatureVectorPage.util'
 import { getFeatureIdentifier } from '../../utils/getUniqueIdentifier'
 import { handleFeaturesResponse } from '../FeatureStore/Features/features.util'
 import { isEveryObjectValueEmpty } from '../../utils/isEveryObjectValueEmpty'
-import { setFilters } from '../../reducers/filtersReducer'
+import { getFilterTagOptions, setFilters } from '../../reducers/filtersReducer'
 import { setNotification } from '../../reducers/notificationReducer'
 import { setTablePanelOpen } from '../../reducers/tableReducer'
 import { showErrorNotification } from '../../utils/notifications.util'
@@ -169,6 +169,17 @@ const AddToFeatureVectorPage = ({
     },
     [fetchFeatures]
   )
+
+  const handleRefresh = filters => {
+    dispatch(
+      getFilterTagOptions({ fetchTags: fetchFeatureSetsTags, project: filters.project })
+    )
+
+    setContent([])
+    setSelectedRowData({})
+
+    return fetchData(filters)
+  }
 
   const handleRemoveFeature = useCallback(
     feature => {
@@ -306,9 +317,9 @@ const AddToFeatureVectorPage = ({
       content={content}
       convertedYaml={convertedYaml}
       featureStore={featureStore}
-      fetchData={fetchData}
       filtersStore={filtersStore}
       handleExpandRow={handleExpandRow}
+      handleRefresh={handleRefresh}
       largeRequestErrorMessage={largeRequestErrorMessage}
       pageData={pageData}
       ref={addToFeatureVectorPageRef}
