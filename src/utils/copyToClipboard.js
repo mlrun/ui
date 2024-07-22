@@ -26,7 +26,7 @@ export const copyToClipboard = (textToCopy, dispatch) => {
       dispatch,
       null,
       '',
-      'The URI cannot be copied due to the unsecured connection'
+      'Copy to clipboard failed due to unsecured connection'
     )
   }
 
