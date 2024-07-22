@@ -28,15 +28,12 @@ import {
   FETCH_FUNCTIONS_FAILURE,
   FETCH_FUNCTIONS_SUCCESS,
   FETCH_FUNCTIONS_TEMPLATES_FAILURE,
-  FETCH_FUNCTION_API_GATEWAYS_BEGIN,
-  FETCH_FUNCTION_API_GATEWAYS_FAILURE,
-  FETCH_FUNCTION_API_GATEWAYS_SUCCESS,
-  FETCH_FUNCTION_LOGS_BEGIN,
-  FETCH_FUNCTION_LOGS_FAILURE,
-  FETCH_FUNCTION_LOGS_SUCCESS,
   FETCH_FUNCTION_NUCLIO_LOGS_BEGIN,
   FETCH_FUNCTION_NUCLIO_LOGS_FAILURE,
   FETCH_FUNCTION_NUCLIO_LOGS_SUCCESS,
+  FETCH_FUNCTION_LOGS_BEGIN,
+  FETCH_FUNCTION_LOGS_FAILURE,
+  FETCH_FUNCTION_LOGS_SUCCESS,
   FETCH_FUNCTION_TEMPLATE_BEGIN,
   FETCH_FUNCTION_TEMPLATE_FAILURE,
   FETCH_FUNCTION_TEMPLATE_SUCCESS,
@@ -73,7 +70,6 @@ import {
   SET_NEW_FUNCTION_HANDLER,
   SET_NEW_FUNCTION_IMAGE,
   SET_NEW_FUNCTION_KIND,
-  SET_NEW_FUNCTION_LABELS,
   SET_NEW_FUNCTION_NAME,
   SET_NEW_FUNCTION_PARAMETERS,
   SET_NEW_FUNCTION_PREEMTION_MODE,
@@ -95,10 +91,6 @@ const initialState = {
   functions: [],
   func: {},
   funcLoading: false,
-  apiGateways: {
-    loading: false,
-    error: null
-  },
   logs: {
     loading: false,
     error: null
@@ -115,7 +107,6 @@ const initialState = {
       credentials: {
         access_key: PANEL_DEFAULT_ACCESS_KEY
       },
-      labels: {},
       name: '',
       tag: ''
     },
@@ -201,30 +192,6 @@ const functionReducer = (state = initialState, { type, payload }) => {
         functions: [],
         loading: false,
         error: payload
-      }
-    case FETCH_FUNCTION_API_GATEWAYS_BEGIN:
-      return {
-        ...state,
-        apiGateways: {
-          ...state.apiGateways,
-          loading: true
-        }
-      }
-    case FETCH_FUNCTION_API_GATEWAYS_FAILURE:
-      return {
-        ...state,
-        apiGateways: {
-          loading: false,
-          error: payload
-        }
-      }
-    case FETCH_FUNCTION_API_GATEWAYS_SUCCESS:
-      return {
-        ...state,
-        apiGateways: {
-          loading: false,
-          error: null
-        }
       }
     case FETCH_FUNCTION_LOGS_BEGIN:
       return {
@@ -567,17 +534,6 @@ const functionReducer = (state = initialState, { type, payload }) => {
         newFunction: {
           ...state.newFunction,
           kind: payload
-        }
-      }
-    case SET_NEW_FUNCTION_LABELS:
-      return {
-        ...state,
-        newFunction: {
-          ...state.newFunction,
-          metadata: {
-            ...state.newFunction.metadata,
-            labels: payload
-          }
         }
       }
     case SET_NEW_FUNCTION_CREDENTIALS_ACCESS_KEY:

@@ -21,6 +21,7 @@ import React from 'react'
 import { isEqual } from 'lodash'
 
 import JobWizard from '../JobWizard/JobWizard'
+import DeleteArtifactPopUp from '../../elements/DeleteArtifactPopUp/DeleteArtifactPopUp'
 
 import {
   ACTION_MENU_PARENT_ROW,
@@ -257,6 +258,7 @@ export const generateActionsMenu = (
   selectedDataset
 ) => {
   const isTargetPathValid = getIsTargetPathValid(datasetMin ?? {}, frontendSpec)
+  const datasetDataCouldBeDeleted = datasetMin?.target_path?.endsWith('.pq') || datasetMin?.target_path?.endsWith('.parquet')
 
   const getFullDataset = datasetMin => {
     return chooseOrFetchArtifact(dispatch, DATASETS_TAB, selectedDataset, datasetMin)
@@ -304,29 +306,32 @@ export const generateActionsMenu = (
       {
         label: 'Delete',
         icon: <Delete />,
-        disabled: !datasetMin?.tag,
         hidden: [ACTION_MENU_PARENT_ROW, ACTION_MENU_PARENT_ROW_EXPANDED].includes(menuPosition),
-        tooltip: !datasetMin?.tag
-          ? 'A tag is required to delete a dataset. Open the dataset, click on the edit icon, and assign a tag before proceeding with the deletion'
-          : '',
         className: 'danger',
         onClick: () =>
-          openDeleteConfirmPopUp(
-            'Delete dataset?',
-            `Do you want to delete the dataset "${datasetMin.db_key}"? Deleted datasets can not be restored.`,
-            () => {
-              handleDeleteArtifact(
-                dispatch,
-                projectName,
-                datasetMin.db_key,
-                datasetMin.tag,
-                datasetMin.tree,
-                handleRefresh,
-                datasetsFilters,
-                DATASET_TYPE
-              )
-            }
-          )
+          datasetDataCouldBeDeleted ?
+            openPopUp(DeleteArtifactPopUp, {
+              artifact: datasetMin,
+              artifactType: DATASET_TYPE,
+              category: DATASET_TYPE,
+              filters: datasetsFilters,
+              handleRefresh
+            })
+            : openDeleteConfirmPopUp(
+              'Delete dataset?',
+              `Do you want to delete the dataset "${datasetMin.db_key}"? Deleted datasets can not be restored.`,
+              () => {
+                handleDeleteArtifact(
+                  dispatch,
+                  projectName,
+                  datasetMin.db_key,
+                  datasetMin.uid,
+                  handleRefresh,
+                  datasetsFilters,
+                  DATASET_TYPE
+                )
+              }
+            )
       },
       {
         label: 'Delete all',
@@ -342,8 +347,7 @@ export const generateActionsMenu = (
                 dispatch,
                 projectName,
                 datasetMin.db_key,
-                datasetMin.tag,
-                datasetMin.tree,
+                datasetMin.uid,
                 handleRefresh,
                 datasetsFilters,
                 DATASET_TYPE,

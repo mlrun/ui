@@ -17,15 +17,23 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import { DATASETS_TAB, FEATURE_SETS_TAB, FEATURE_VECTORS_TAB, FEATURES_TAB } from '../constants'
+import {
+  ADD_TO_FEATURE_VECTOR_TAB,
+  FEATURE_SETS_TAB,
+  FEATURE_VECTORS_TAB,
+  FEATURES_TAB
+} from '../constants'
 
 export const getArtifactIdentifier = (artifact, unique) => {
-  let identifier = `${artifact?.db_key || artifact?.spec?.model || ''}`
+  let identifier = ''
+
+  if (artifact?.db_key) {
+    identifier = artifact?.db_key
+  } else if (artifact?.spec?.model) {
+    identifier = `${artifact?.spec?.model}.${artifact?.spec?.function_uri}`
+  }
 
   if (unique) {
-    if (artifact?.tag) identifier += `.${artifact.tag}`
-    if (artifact?.tree) identifier += `.${artifact.tree}`
-    if (!isNaN(artifact?.iter)) identifier += `.${artifact.iter}`
     if (artifact?.uid) identifier += `.${artifact.uid}`
     if (artifact?.metadata?.uid) identifier += `.${artifact.metadata.uid}`
   }
@@ -110,13 +118,12 @@ export const getV3ioStreamShardLagIdentifier = v3ioStream => {
 export const getIdentifierMethod = tab => {
   switch (tab) {
     case FEATURES_TAB:
+    case ADD_TO_FEATURE_VECTOR_TAB:
       return getFeatureIdentifier
     case FEATURE_SETS_TAB:
       return getFeatureSetIdentifier
     case FEATURE_VECTORS_TAB:
       return getFeatureVectorIdentifier
-    case DATASETS_TAB:
-      return getArtifactIdentifier
     default:
       return getFeatureIdentifier
   }

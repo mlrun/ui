@@ -56,11 +56,10 @@ const fetchArtifacts = (project, filters, config = {}, withLatestTag) => {
 const artifactsApi = {
   addTag: (project, tag, data) => mainHttpClient.put(`/projects/${project}/tags/${tag}`, data),
   buildFunction: data => mainHttpClient.post('/build/function', data),
-  deleteArtifact: (project, key, tag, tree, deletion_strategy, secrets) => {
+  deleteArtifact: (project, key, uid, deletion_strategy, secrets) => {
     const config = {
       params: {
-        tag,
-        tree
+        'object-uid': uid
       }
     }
 
@@ -200,18 +199,6 @@ const artifactsApi = {
         }
       }
     )
-  },
-  getModelEndpoints: (project, filters, config = {}, params = {}) => {
-    const newConfig = {
-      ...config,
-      params
-    }
-
-    if (filters?.labels) {
-      newConfig.params.label = filters.labels?.split(',')
-    }
-
-    return mainHttpClient.get(`/projects/${project}/model-endpoints`, newConfig)
   },
   getModels: (project, filters, config = {}) => {
     const newConfig = {

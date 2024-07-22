@@ -76,7 +76,6 @@ const ProjectsView = ({
     <div className={projectsClassNames}>
       {(projectStore.loading ||
         projectStore.project.loading ||
-        projectStore.projectsSummary.loading ||
         tasksStore.loading) && <Loader />}
       {projectStore.mlrunUnhealthy.isUnhealthy && (
         <PopUpDialog headerIsHidden>

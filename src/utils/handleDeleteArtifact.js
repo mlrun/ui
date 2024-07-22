@@ -27,8 +27,7 @@ export const handleDeleteArtifact = (
   dispatch,
   project,
   key,
-  tag,
-  tree,
+  uid,
   refreshArtifacts,
   filters,
   artifactType,
@@ -40,7 +39,7 @@ export const handleDeleteArtifact = (
   return dispatch(
     isDeleteAll
       ? deleteArtifacts({ project, name: key, category })
-      : deleteArtifact({ project, key, tag, tree, deletion_strategy, secrets })
+      : deleteArtifact({ project, key, uid, deletion_strategy, secrets })
   )
     .unwrap()
     .then(() => {
@@ -59,13 +58,14 @@ export const handleDeleteArtifact = (
           dispatch,
           project,
           key,
-          tag,
-          tree,
+          uid,
           refreshArtifacts,
           filters,
           artifactType,
           category,
-          isDeleteAll
+          isDeleteAll,
+          deletion_strategy,
+          secrets
         )
       )
     })

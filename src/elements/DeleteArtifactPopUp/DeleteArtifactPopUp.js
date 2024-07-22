@@ -74,8 +74,7 @@ const DeleteArtifactPopUp = ({ artifact, artifactType, category, filters, handle
       dispatch,
       params.projectName,
       artifact.db_key,
-      artifact.tag,
-      artifact.tree,
+      artifact.uid,
       handleRefresh,
       filters,
       artifactType,
@@ -88,8 +87,7 @@ const DeleteArtifactPopUp = ({ artifact, artifactType, category, filters, handle
     })
   }, [
     artifact.db_key,
-    artifact.tag,
-    artifact.tree,
+    artifact.uid,
     artifactType,
     category,
     dispatch,
@@ -137,7 +135,7 @@ const DeleteArtifactPopUp = ({ artifact, artifactType, category, filters, handle
           return (
             <>
               <FormCheckBox
-                label="Delete artifact data, not only the artifact metadata."
+                label={`Delete ${artifactType} data, not only the ${artifactType} metadata.`}
                 name="extended_deletion_strategy"
               />
               <FormOnChange
@@ -148,18 +146,18 @@ const DeleteArtifactPopUp = ({ artifact, artifactType, category, filters, handle
                 <>
                   <div className="warning">
                     <AlertIcon className="warning__icon" />
-                    This action will permanently remove the data associated with the artifact
+                    This action will permanently remove the data associated with the {artifactType}
                   </div>
                   <div className="delete-artifact-pop-up__extended-data">
                     <h4>If data deletion fails:</h4>
                     <FormRadio
-                      label="Do not delete the artifact metadata."
+                      label={`Do not delete the ${artifactType} metadata.`}
                       name="deletion_strategy"
                       value="data-force"
                     />
                     <FormOnChange handler={onDeletionStrategyChange} name="deletion_strategy" />
                     <FormRadio
-                      label="Delete the artifact metadata, even if the data deletion fails."
+                      label={`Delete the ${artifactType} metadata, even if the data deletion fails.`}
                       name="deletion_strategy"
                       value="data-optional"
                     />

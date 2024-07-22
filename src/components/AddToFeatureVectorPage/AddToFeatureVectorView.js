@@ -29,9 +29,11 @@ import Table from '../Table/Table'
 import FeatureStoreTableRow from '../../elements/FeatureStoreTableRow/FeatureStoreTableRow'
 import YamlModal from '../../common/YamlModal/YamlModal'
 
-import { filters } from './addToFeatureVectorPage.util'
 import { ADD_TO_FEATURE_VECTOR_TAB, FEATURE_STORE_PAGE } from '../../constants'
+import { VIRTUALIZATION_CONFIG } from '../../types'
+import { filters } from './addToFeatureVectorPage.util'
 import { getNoDataMessage } from '../../utils/getNoDataMessage'
+import { isRowRendered } from '../../hooks/useVirtualization.hook'
 
 const AddToFeatureVectorView = React.forwardRef(
   (
@@ -40,14 +42,16 @@ const AddToFeatureVectorView = React.forwardRef(
       content,
       convertedYaml,
       featureStore,
-      fetchData,
       filtersStore,
       handleExpandRow,
+      handleRefresh,
+      largeRequestErrorMessage,
       pageData,
       selectedRowData,
       tableContent,
       tableStore,
-      toggleConvertedYaml
+      toggleConvertedYaml,
+      virtualizationConfig
     },
     ref
   ) => {
@@ -63,7 +67,7 @@ const AddToFeatureVectorView = React.forwardRef(
             <div className="content__action-bar-wrapper">
               <FilterMenu
                 filters={filters}
-                onChange={fetchData}
+                onChange={handleRefresh}
                 page={FEATURE_STORE_PAGE}
                 withoutExpandButton
               />
@@ -73,7 +77,7 @@ const AddToFeatureVectorView = React.forwardRef(
                 message={getNoDataMessage(
                   filtersStore,
                   filters,
-                  null,
+                  largeRequestErrorMessage,
                   FEATURE_STORE_PAGE,
                   ADD_TO_FEATURE_VECTOR_TAB
                 )}
@@ -84,23 +88,28 @@ const AddToFeatureVectorView = React.forwardRef(
                   actionsMenu={actionsMenu}
                   hideActionsMenu={tableStore.isTablePanelOpen}
                   pageData={pageData}
-                  retryRequest={fetchData}
+                  retryRequest={handleRefresh}
                   tab={ADD_TO_FEATURE_VECTOR_TAB}
+                  tableClassName="features-table"
                   tableHeaders={tableContent[0]?.content ?? []}
+                  virtualizationConfig={virtualizationConfig}
                 >
-                  {tableContent.map((tableItem, index) => (
-                    <FeatureStoreTableRow
-                      actionsMenu={actionsMenu}
-                      handleExpandRow={handleExpandRow}
-                      key={index}
-                      hideActionsMenu={tableStore.isTablePanelOpen}
-                      mainRowItemsCount={2}
-                      pageTab={ADD_TO_FEATURE_VECTOR_TAB}
-                      rowIndex={index}
-                      rowItem={tableItem}
-                      selectedRowData={selectedRowData}
-                    />
-                  ))}
+                  {tableContent.map(
+                    (tableItem, index) =>
+                      isRowRendered(virtualizationConfig, index) && (
+                        <FeatureStoreTableRow
+                          actionsMenu={actionsMenu}
+                          handleExpandRow={handleExpandRow}
+                          key={index}
+                          hideActionsMenu={tableStore.isTablePanelOpen}
+                          mainRowItemsCount={2}
+                          pageTab={ADD_TO_FEATURE_VECTOR_TAB}
+                          rowIndex={index}
+                          rowItem={tableItem}
+                          selectedRowData={selectedRowData}
+                        />
+                      )
+                  )}
                 </Table>
               </>
             )}
@@ -119,14 +128,16 @@ AddToFeatureVectorView.propTypes = {
   content: PropTypes.arrayOf(PropTypes.object).isRequired,
   convertedYaml: PropTypes.string.isRequired,
   featureStore: PropTypes.object.isRequired,
-  fetchData: PropTypes.func.isRequired,
   filtersStore: PropTypes.object.isRequired,
   handleExpandRow: PropTypes.func.isRequired,
+  handleRefresh: PropTypes.func.isRequired,
+  largeRequestErrorMessage: PropTypes.string.isRequired,
   pageData: PropTypes.object.isRequired,
   selectedRowData: PropTypes.object.isRequired,
   tableContent: PropTypes.arrayOf(PropTypes.object).isRequired,
   tableStore: PropTypes.object.isRequired,
-  toggleConvertedYaml: PropTypes.func.isRequired
+  toggleConvertedYaml: PropTypes.func.isRequired,
+  virtualizationConfig: VIRTUALIZATION_CONFIG.isRequired
 }
 
 export default AddToFeatureVectorView

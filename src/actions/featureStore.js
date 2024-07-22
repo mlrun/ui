@@ -59,7 +59,6 @@ import {
   SET_NEW_FEATURE_SET_DATA_SOURCE_TIMESTAMP_COLUMN,
   SET_NEW_FEATURE_SET_DATA_SOURCE_URL,
   SET_NEW_FEATURE_SET_DESCRIPTION,
-  SET_NEW_FEATURE_SET_LABELS,
   SET_NEW_FEATURE_SET_NAME,
   SET_NEW_FEATURE_SET_PASSTHROUGH,
   SET_NEW_FEATURE_SET_SCHEDULE,
@@ -411,10 +410,6 @@ const featureStoreActions = {
   setNewFeatureSetDescription: description => ({
     type: SET_NEW_FEATURE_SET_DESCRIPTION,
     payload: description
-  }),
-  setNewFeatureSetLabels: labels => ({
-    type: SET_NEW_FEATURE_SET_LABELS,
-    payload: labels
   }),
   setNewFeatureSetName: name => ({
     type: SET_NEW_FEATURE_SET_NAME,
