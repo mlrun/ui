@@ -21,11 +21,12 @@ import React, { useLayoutEffect } from 'react'
 import Loader from './Loader'
 
 const LoaderForSuspenseFallback = () => {
-
   useLayoutEffect(() => {
+    const savedDisplayStyle = document.getElementById('overlay_container').style.display
     document.getElementById('overlay_container').style.display = 'none'
+
     return () => {
-      document.getElementById('overlay_container').style.display = 'flex'
+      document.getElementById('overlay_container').style.display = savedDisplayStyle
     }
   }, [])
 

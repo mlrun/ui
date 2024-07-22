@@ -296,7 +296,7 @@ const App = () => {
     <div className="ml-app">
       {isHeaderShown && <Header />}
       <div className={mlAppContainerClasses}>
-        <Suspense  fallback={<LoaderForSuspenseFallback />}>
+        <Suspense fallback={<LoaderForSuspenseFallback />}>
           <RouterProvider router={router} />
         </Suspense>
       </div>
