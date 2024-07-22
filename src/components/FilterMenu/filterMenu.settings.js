@@ -57,22 +57,31 @@ const workflowsStatus = [
   { label: 'Completed', id: 'completed', status: 'completed' }
 ]
 
-export const generateStatusFilter = (useFailedStatus, tab) => {
+const mapDisabledOptions = (options = [], disabledOptions = []) => {
+  return options.map(option =>
+    disabledOptions.includes(option.status) ? { ...option, disabled: true } : option
+  )
+}
+
+export const generateStatusFilter = (useFailedStatus, tab, disabledOptions = []) => {
   const status = useFailedStatus ? 'failed' : 'error'
 
   if (tab === JOBS_MONITORING_JOBS_TAB) {
-    return jobsStatus
+    return mapDisabledOptions(jobsStatus, disabledOptions)
   } else if (tab === JOBS_MONITORING_WORKFLOWS_TAB) {
-    return workflowsStatus
+    return mapDisabledOptions(workflowsStatus, disabledOptions)
   } else {
-    return [
-      { label: 'All', id: FILTER_ALL_ITEMS, status: 'all' },
-      { label: 'Completed', id: 'completed', status: 'completed' },
-      { label: 'Running', id: 'running', status: 'running' },
-      { label: 'Pending', id: 'pending', status: 'pending' },
-      { label: 'Error', id: status, status: status },
-      { label: 'Aborted', id: 'aborted', status: 'aborted' }
-    ]
+    return mapDisabledOptions(
+      [
+        { label: 'All', id: FILTER_ALL_ITEMS, status: 'all' },
+        { label: 'Completed', id: 'completed', status: 'completed' },
+        { label: 'Running', id: 'running', status: 'running' },
+        { label: 'Pending', id: 'pending', status: 'pending' },
+        { label: 'Error', id: status, status: status },
+        { label: 'Aborted', id: 'aborted', status: 'aborted' }
+      ],
+      disabledOptions
+    )
   }
 }
 

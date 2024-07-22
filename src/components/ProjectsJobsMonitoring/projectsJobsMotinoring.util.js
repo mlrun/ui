@@ -28,6 +28,7 @@ import {
 } from '../../constants'
 import jobsActions from '../../actions/jobs'
 import functionsActions from '../../actions/functions'
+import { isEmpty } from 'lodash'
 
 export const STATS_TOTAL_CARD = 'total'
 export const STATS_RUNNING_CARD = 'running'
@@ -125,6 +126,7 @@ export const handleFilterStateChange = (selectedValue, currentValue, form, optio
       selectedValue.filter(value => value !== FILTER_ALL_ITEMS)
     )
   } else if (
+    isEmpty(selectedValue) ||
     (!currentValue.includes(FILTER_ALL_ITEMS) &&
       selectedValue.includes(FILTER_ALL_ITEMS) &&
       selectedValue.indexOf(FILTER_ALL_ITEMS) > 0) ||

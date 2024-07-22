@@ -17,22 +17,30 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import React, { useMemo } from 'react'
+import React, { useMemo, useState } from 'react'
 import { useForm } from 'react-final-form'
 
 import { FormInput, FormOnChange, FormSelect } from 'igz-controls/components'
 
-import { JOBS_MONITORING_WORKFLOWS_TAB, LABELS_FILTER, PROJECT_FILTER } from '../../../constants'
+import { FILTER_ALL_ITEMS, JOBS_MONITORING_WORKFLOWS_TAB, LABELS_FILTER, PROJECT_FILTER } from '../../../constants'
 import { generateStatusFilter } from '../../FilterMenu/filterMenu.settings'
 import { handleFilterStateChange } from '../projectsJobsMotinoring.util'
 
 const WorkflowsMonitoringFilters = () => {
   const form = useForm()
+  const [selectedValuesLocal, setSelectedValuesLocal] = useState(form.getState()?.initialValues?.['state'] || [])
 
-  const statusList = useMemo(() => generateStatusFilter(false, JOBS_MONITORING_WORKFLOWS_TAB), [])
+  const statusList = useMemo(() => {
+    return generateStatusFilter(
+      false,
+      JOBS_MONITORING_WORKFLOWS_TAB,
+      selectedValuesLocal?.[0] === FILTER_ALL_ITEMS ? [FILTER_ALL_ITEMS] : []
+    )
+  }, [selectedValuesLocal])
 
   const handleStateChange = (selectedValue, currentValue) => {
     handleFilterStateChange(selectedValue, currentValue, form, statusList)
+    setSelectedValuesLocal(selectedValue)
   }
 
   const handleInputChange = (value, inputName) => {
