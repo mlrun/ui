@@ -136,6 +136,13 @@ const FeatureSetsPanelDataSource = ({
     return isUrlValid
   }
 
+  const handleUrlOnDiscard = () => {
+    setValidation(prevState => ({
+      ...prevState,
+      isUrlValid: true
+    }))
+  }
+
   const handleUrlOnEditModeChange = useCallback((isEditModeActive) => {
     setDisableButtons(state => ({
       ...state,
@@ -157,6 +164,7 @@ const FeatureSetsPanelDataSource = ({
       handleKindOnChange={handleKindOnChange}
       handleUrlInputOnChange={handleUrlInputOnChange}
       handleUrlOnApply={handleUrlOnApply}
+      handleUrlOnDiscard={handleUrlOnDiscard}
       handleUrlOnEditModeChange={handleUrlOnEditModeChange}
       handleUrlSelectOnChange={handleUrlSelectOnChange}
       setData={setData}

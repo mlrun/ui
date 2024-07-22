@@ -95,7 +95,7 @@ const DetailsMetrics = ({ selectedItem }) => {
     const bins = Array(numberOfBins)
       .fill()
       .map(() => ({ count: 0, minBinValue: null, maxBinValue: null }))
-    const roundValue = value => Math.round(value * 100) / 100
+    const roundValue = (value, fraction = 100) => Math.round(value * fraction) / fraction
 
     points.forEach(value => {
       const binIndex = Math.min(Math.floor((value - minPointValue) / binSize), numberOfBins - 1)
@@ -110,7 +110,7 @@ const DetailsMetrics = ({ selectedItem }) => {
 
     const totalCount = points.length
 
-    const binPercentages = bins.map(bin => ((bin.count / totalCount) * 100).toFixed(1))
+    const binPercentages = bins.map(bin => roundValue((bin.count / totalCount) * 100, 1000))
 
     const binLabels = Array.from({ length: numberOfBins }, (_, i) => {
       if (parseFloat(binPercentages[i]) === 0) return ''
@@ -415,6 +415,7 @@ const DetailsMetrics = ({ selectedItem }) => {
                       <React.Fragment key={metric.id}>
                         <InvocationMetricCard
                           ref={invocationBodyCardRef}
+                          expandInvocationCard={expandInvocationCard}
                           isInvocationCardExpanded={isInvocationCardExpanded}
                           key={metric.id}
                           metric={metric}

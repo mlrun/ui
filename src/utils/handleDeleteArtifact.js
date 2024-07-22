@@ -63,7 +63,9 @@ export const handleDeleteArtifact = (
           filters,
           artifactType,
           category,
-          isDeleteAll
+          isDeleteAll,
+          deletion_strategy,
+          secrets
         )
       )
     })
