@@ -19,7 +19,7 @@ such restriction.
 */
 import React, { useCallback, useEffect, useMemo, useState, useRef } from 'react'
 import { connect, useDispatch, useSelector } from 'react-redux'
-import { chain, isEmpty } from 'lodash'
+import { chain, isEmpty, isNil } from 'lodash'
 import { useLocation, useNavigate, useParams } from 'react-router-dom'
 
 import AddArtifactTagPopUp from '../../../elements/AddArtifactTagPopUp/AddArtifactTagPopUp'
@@ -172,29 +172,35 @@ const Models = ({ fetchModelFeatureVector }) => {
 
   const handleDeployModel = useCallback(
     model => {
+      abortControllerRef.current = new AbortController()
       dispatch(
         fetchArtifactsFunctions({
           project: model.project,
           filters: {},
-          config: { params: { format: 'minimal' } }
+          config: {
+            signal: abortControllerRef.current.signal,
+            params: { format: 'minimal' }
+          }
         })
       )
         .unwrap()
         .then(functions => {
-          const functionOptions = chain(functions)
-            .filter(func => func.type === FUNCTION_TYPE_SERVING && func.graph?.kind === 'router')
-            .uniqBy('name')
-            .map(func => ({ label: func.name, id: func.name }))
-            .value()
+          if (!isNil(functions)) {
+            const functionOptions = chain(functions)
+              .filter(func => func.type === FUNCTION_TYPE_SERVING && func.graph?.kind === 'router')
+              .uniqBy('name')
+              .map(func => ({ label: func.name, id: func.name }))
+              .value()
 
-          if (functionOptions.length > 0) {
-            openPopUp(DeployModelPopUp, {
-              model,
-              functionList: functions,
-              functionOptionList: functionOptions
-            })
-          } else {
-            handleDeployModelFailure(params.projectName, model.db_key)
+            if (functionOptions.length > 0) {
+              openPopUp(DeployModelPopUp, {
+                model,
+                functionList: functions,
+                functionOptionList: functionOptions
+              })
+            } else {
+              handleDeployModelFailure(params.projectName, model.db_key)
+            }
           }
         })
     },
