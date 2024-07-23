@@ -17,6 +17,8 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
+import { isEmpty } from 'lodash'
+
 import {
   JOBS_MONITORING_JOBS_TAB,
   JOBS_MONITORING_WORKFLOWS_TAB,
@@ -28,7 +30,6 @@ import {
 } from '../../constants'
 import jobsActions from '../../actions/jobs'
 import functionsActions from '../../actions/functions'
-import { isEmpty } from 'lodash'
 
 export const STATS_TOTAL_CARD = 'total'
 export const STATS_RUNNING_CARD = 'running'
