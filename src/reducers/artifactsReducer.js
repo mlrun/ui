@@ -218,7 +218,7 @@ export const fetchArtifactsFunctions = createAsyncThunk(
         )
       })
       .catch(error => {
-        largeResponseCatchHandler(error, 'Failed to fetch artifacts functions', thunkAPI.dispatch)
+        largeResponseCatchHandler(error, 'Failed to fetch functions', thunkAPI.dispatch)
       })
   }
 )

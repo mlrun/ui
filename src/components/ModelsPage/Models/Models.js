@@ -173,6 +173,7 @@ const Models = ({ fetchModelFeatureVector }) => {
   const handleDeployModel = useCallback(
     model => {
       abortControllerRef.current = new AbortController()
+      
       dispatch(
         fetchArtifactsFunctions({
           project: model.project,
