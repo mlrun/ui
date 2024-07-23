@@ -71,7 +71,6 @@ pipeline {
                 script {
                     common.conditional_stage('Run Regression Tests', true) {
                         sh '''
-                            npm run add-comment-to-http-client
                             npm run test:regression -- --chrome-options='--headless --no-sandbox --disable-dev-shm-usage --remote-debugging-port=9222 --disable-gpu --window-size=1920,1080 --disable-software-rasterizer --verbose --log-path=$TMPDIR/chrome.log'
                         '''
                     }
