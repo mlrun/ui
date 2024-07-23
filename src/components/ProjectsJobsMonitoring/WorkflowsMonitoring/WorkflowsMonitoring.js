@@ -26,16 +26,11 @@ import WorkflowsTable from '../../../elements/WorkflowsTable/WorkflowsTable'
 import { ProjectJobsMonitoringContext } from '../ProjectsJobsMonitoring'
 
 import {
-  FILTER_ALL_ITEMS,
-  GROUP_BY_NONE,
-  GROUP_BY_WORKFLOW,
   JOBS_MONITORING_PAGE,
   JOBS_MONITORING_WORKFLOWS_TAB,
   REQUEST_CANCELED
 } from '../../../constants'
 import { createWorkflowsMonitoringContent } from '../../../utils/createJobsContent'
-import { datePickerPastOptions, PAST_24_HOUR_DATE_OPTION } from '../../../utils/datePicker.util'
-import { setFilters, setModalFiltersValues } from '../../../reducers/filtersReducer'
 import { useMode } from '../../../hooks/mode.hook'
 import { usePods } from '../../../hooks/usePods.hook'
 import detailsActions from '../../../actions/details'
@@ -92,50 +87,15 @@ const WorkflowsMonitoring = ({ fetchFunctionLogs }) => {
   }, [dispatch])
 
   useEffect(() => {
-    if (!workflowsAreLoaded) {
-      if (params.workflowId) {
-        dispatch(setFilters({ groupBy: GROUP_BY_NONE }))
-      } else {
-        if (workflowsStore.workflows.data.length === 0 && !filtersStore.saveFilters) {
-          const past24HourOption = datePickerPastOptions.find(
-            option => option.id === PAST_24_HOUR_DATE_OPTION
-          )
-          const generatedDates = [...past24HourOption.handler()]
+    if (!workflowsAreLoaded && !params.workflowId) {
+      getWorkflows({
+        ...filtersStore.filterMenu[JOBS_MONITORING_WORKFLOWS_TAB],
+        ...filtersStore.filterMenuModal[JOBS_MONITORING_WORKFLOWS_TAB].values
+      })
 
-          const filters = {
-            groupBy: GROUP_BY_WORKFLOW,
-            dates: {
-              value: generatedDates,
-              isPredefined: past24HourOption.isPredefined,
-              initialSelectedOptionId: past24HourOption.id
-            }
-          }
-
-          dispatch(setFilters(filters))
-          dispatch(setModalFiltersValues({
-            name: JOBS_MONITORING_WORKFLOWS_TAB,
-            value: { state: [FILTER_ALL_ITEMS] }
-          }))
-          getWorkflows({
-            ...filters,
-            state: FILTER_ALL_ITEMS
-          })
-        } else {
-          getWorkflows({
-            ...filtersStore,
-            groupBy: filtersStore.groupBy,
-            state:
-              filtersStore.filterMenuModal[JOBS_MONITORING_WORKFLOWS_TAB].values.state ||
-              FILTER_ALL_ITEMS
-          })
-          dispatch(setFilters({ groupBy: GROUP_BY_WORKFLOW, saveFilters: false }))
-        }
-
-        setWorkflowsAreLoaded(true)
-      }
+      setWorkflowsAreLoaded(true)
     }
   }, [
-    dispatch,
     filtersStore,
     getWorkflows,
     params.workflowId,

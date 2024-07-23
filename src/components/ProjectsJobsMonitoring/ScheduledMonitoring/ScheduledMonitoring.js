@@ -24,8 +24,6 @@ import ScheduledJobsTable from '../../../elements/ScheduledJobsTable/ScheduledJo
 import { ProjectJobsMonitoringContext } from '../ProjectsJobsMonitoring'
 
 import { createScheduleJobsMonitoringContent } from '../../../utils/createJobsContent'
-import { datePickerFutureOptions, NEXT_24_HOUR_DATE_OPTION } from '../../../utils/datePicker.util'
-import { setFilters } from '../../../reducers/filtersReducer'
 import { JOBS_MONITORING_SCHEDULED_TAB } from '../../../constants'
 
 const ScheduledMonitoring = () => {
@@ -42,32 +40,10 @@ const ScheduledMonitoring = () => {
 
   useEffect(() => {
     if (!dataIsLoaded) {
-      let filters = {}
-
-      if (filtersStore.saveFilters) {
-        filters = {
-          dates: filtersStore.dates,
-          type: filtersStore.filterMenuModal[JOBS_MONITORING_SCHEDULED_TAB].values.type
-        }
-
-        dispatch(setFilters({ saveFilters: false }))
-      } else {
-        const next24HourOption = datePickerFutureOptions.find(
-          option => option.id === NEXT_24_HOUR_DATE_OPTION
-        )
-
-        filters = {
-          dates: {
-            value: next24HourOption.handler(true),
-            isPredefined: next24HourOption.isPredefined,
-            initialSelectedOptionId: next24HourOption.id
-          },
-          type: filtersStore.filterMenuModal[JOBS_MONITORING_SCHEDULED_TAB].values.type
-        }
-
-        dispatch(setFilters({ dates: filters.dates }))
+      let filters = {
+        ...filtersStore.filterMenu[JOBS_MONITORING_SCHEDULED_TAB],
+        ...filtersStore.filterMenuModal[JOBS_MONITORING_SCHEDULED_TAB].values
       }
-
       refreshScheduled(filters)
       setDataIsLoaded(true)
     }
@@ -87,7 +63,7 @@ const ScheduledMonitoring = () => {
       largeRequestErrorMessage={largeRequestErrorMessage}
       refreshJobs={() =>
         refreshScheduled({
-          ...filtersStore,
+          ...filtersStore.filterMenu[JOBS_MONITORING_SCHEDULED_TAB],
           ...filtersStore.filterMenuModal[JOBS_MONITORING_SCHEDULED_TAB].values
         })
       }

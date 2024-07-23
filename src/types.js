@@ -245,3 +245,11 @@ export const DATE_PICKER_TIME_FRAME_LIMITS = PropTypes.oneOf([
   TIME_FRAME_LIMITS.YEAR,
   Infinity
 ])
+
+export const FILTERS_CONFIG = PropTypes.objectOf(
+  PropTypes.shape({
+    label: PropTypes.string,
+    hidden: PropTypes.string,
+    isFuture: PropTypes.bool
+  })
+)

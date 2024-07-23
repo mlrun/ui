@@ -17,31 +17,35 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import React, { useEffect, useMemo } from 'react'
+import React, { useEffect, useLayoutEffect, useMemo, useRef } from 'react'
 import { Form } from 'react-final-form'
 import { useDispatch, useSelector } from 'react-redux'
-import { isEmpty } from 'lodash'
+import { isEmpty, isEqual } from 'lodash'
 import { createForm } from 'final-form'
 import { Field } from 'react-final-form'
 import arrayMutators from 'final-form-arrays'
 import PropTypes from 'prop-types'
 import { useNavigate, useParams } from 'react-router-dom'
 
+import DatePicker from '../../common/DatePicker/DatePicker'
 import FilterMenuModal from '../FilterMenuModal/FilterMenuModal'
 import NameFilter from '../../common/NameFilter/NameFilter'
 import { RoundedIcon, Button } from 'igz-controls/components'
-import DatePicker from '../../common/DatePicker/DatePicker'
 
-import { setFieldState } from 'igz-controls/utils/form.util'
-import { removeFilters, setFilters } from '../../reducers/filtersReducer'
-import detailsActions from '../../actions/details'
 import {
+  DATES_FILTER,
+  FILTER_MENU,
+  FILTER_MENU_MODAL,
   GROUP_BY_NAME,
   GROUP_BY_NONE,
   NAME_FILTER,
   REQUEST_CANCELED,
   TAG_FILTER_ALL_ITEMS
 } from '../../constants'
+import detailsActions from '../../actions/details'
+import { FILTERS_CONFIG } from '../../types'
+import { resetFilter, setFilters, setFiltersValues } from '../../reducers/filtersReducer'
+import { setFieldState } from 'igz-controls/utils/form.util'
 
 import { ReactComponent as CollapseIcon } from 'igz-controls/images/collapse.svg'
 import { ReactComponent as ExpandIcon } from 'igz-controls/images/expand.svg'
@@ -53,7 +57,7 @@ const ActionBar = ({
   children,
   expand,
   filterMenuName,
-  filters,
+  filtersConfig,
   handleExpandAll,
   handleRefresh,
   hidden = false,
@@ -66,21 +70,28 @@ const ActionBar = ({
   withoutExpandButton
 }) => {
   const filtersStore = useSelector(store => store.filtersStore)
-  const filterMenuModal = useSelector(store => store.filtersStore.filterMenuModal?.[filterMenuName])
+  const filterMenu = useSelector(store => store.filtersStore[FILTER_MENU][filterMenuName])
+  const filterMenuModal = useSelector(
+    store => store.filtersStore[FILTER_MENU_MODAL][filterMenuName]
+  )
+  const filterMenuRef = useRef(null)
   const changes = useSelector(store => store.detailsStore.changes)
   const dispatch = useDispatch()
   const params = useParams()
   const navigate = useNavigate()
 
   const formInitialValues = useMemo(() => {
-    const values = {}
+    const initialValues = {}
 
-    filters.forEach(filter => {
-      values[filter.type] = filtersStore[filter.type] || filter.initialValue
-    })
+    if (!filterMenuRef.current) {
+      for (let filterType in filterMenu) {
+        initialValues[filterType] = filterMenu[filterType]
+      }
+      filterMenuRef.current = filterMenu
+    }
 
-    return values
-  }, [filters, filtersStore])
+    return initialValues
+  }, [filterMenu])
 
   const formRef = React.useRef(
     createForm({
@@ -169,131 +180,133 @@ const ActionBar = ({
       initialSelectedOptionId: optionId
     }
 
+    const newFilterValues =  { ...formState.values, [DATES_FILTER]: selectedDate }
+
     dispatch(
-      setFilters({
-        dates: selectedDate
+      setFiltersValues({
+        name: filterMenuName,
+        value: newFilterValues
       })
     )
+
     applyChanges(
-      {
-        ...formState.values,
-        dates: selectedDate
-      },
+      newFilterValues,
       filterMenuModal.values
     )
     input.onChange(selectedDate)
   }
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     return () => {
-      dispatch(removeFilters())
+      filterMenuRef.current = null
+      dispatch(resetFilter(filterMenuName))
     }
-  }, [params.projectName, params.name, page, tab, dispatch])
+  }, [params.projectName, params.name, page, tab, dispatch, filterMenuName])
 
   useEffect(() => {
-    formRef.current?.reset?.(formInitialValues)
-  }, [formInitialValues])
+    if (!isEqual(formRef.current?.getState().values, filterMenu)) {
+      formRef.current?.batch(() => {
+        for (const filterName in filterMenu) {
+          formRef.current?.change(filterName, filterMenu[filterName])
+        }
+      })
+    }
+  }, [filterMenu])
 
-  return (!hidden && (
-    <Form form={formRef.current} onSubmit={() => {}}>
-      {formState => (
-        <div className="action-bar">
-          <div className="action-bar__filters">
-            {filters.map(filter => {
-              switch (filter.type) {
-                case NAME_FILTER:
-                  return (
-                    !filter.hidden && (
-                      <div key={filter.type} className="action-bar__filters-item">
-                        <NameFilter
-                          applyChanges={value =>
-                            applyChanges(
-                              { ...formState.values, name: value },
-                              filterMenuModal.values
-                            )
+  return (
+    !hidden && (
+      <Form form={formRef.current} onSubmit={() => {}}>
+        {formState => (
+          <div className="action-bar">
+            <div className="action-bar__filters">
+              {NAME_FILTER in filterMenu && !filtersConfig[NAME_FILTER].hidden && (
+                <div key={NAME_FILTER} className="action-bar__filters-item">
+                  <NameFilter
+                    filterMenuName={filterMenuName}
+                    applyChanges={value =>
+                      applyChanges({ ...formState.values, name: value }, filterMenuModal.values)
+                    }
+                  />
+                </div>
+              )}
+              {DATES_FILTER in filterMenu && !filtersConfig[DATES_FILTER].hidden && (
+                <div key={DATES_FILTER} className="action-bar__filters-item">
+                  <Field name={DATES_FILTER}>
+                    {({ input }) => {
+                      return (
+                        <DatePicker
+                          key={tab}
+                          className="details-date-picker"
+                          date={input.value.value[0]}
+                          dateTo={input.value.value[1]}
+                          hasFutureOptions={filtersConfig[DATES_FILTER].isFuture}
+                          selectedOptionId={input.value.initialSelectedOptionId}
+                          label=""
+                          onChange={(dates, isPredefined, optionId) =>
+                            handleDateChange(dates, isPredefined, optionId, input, formState)
                           }
+                          type="date-range-time"
+                          withLabels
                         />
-                      </div>
-                    )
-                  )
-                case 'dates':
-                  return (
-                    <div key={filter.type} className="action-bar__filters-item">
-                      <Field name={'dates'}>
-                        {({ input }) => {
-                          return (
-                            <DatePicker
-                              key={tab}
-                              className="details-date-picker"
-                              date={input.value.value[0]}
-                              dateTo={input.value.value[1]}
-                              hasFutureOptions={filter.isFuture}
-                              selectedOptionId={input.value.initialSelectedOptionId}
-                              label=""
-                              onChange={(dates, isPredefined, optionId) =>
-                                handleDateChange(dates, isPredefined, optionId, input, formState)
-                              }
-                              type="date-range-time"
-                              withLabels
-                            />
-                          )
-                        }}
-                      </Field>
-                    </div>
-                  )
-                default:
-                  return null
-              }
-            })}
-          </div>
-          {filterMenuModal && (
-            <FilterMenuModal
-              applyChanges={filterMenuModal => applyChanges(formState.values, filterMenuModal)}
-              filterMenuName={filterMenuName}
-              initialValues={filterMenuModalInitialState}
-              restartFormTrigger={tab}
-              values={filterMenuModal.values}
-            >
-              {children}
-            </FilterMenuModal>
-          )}
-          {(withRefreshButton || !isEmpty(actionButtons)) && (
-            <div className="action-bar__actions">
-              {actionButtons.map(
-                (actionButton, index) =>
-                  actionButton &&
-                  !actionButton.hidden && (
-                    actionButton.template ||
-                    <Button
-                      key={index}
-                      variant={actionButton.variant}
-                      label={actionButton.label}
-                      className={actionButton.className}
-                      onClick={actionButton.onClick}
-                    />
-                  )
-              )}
-
-              {withRefreshButton && (
-                <RoundedIcon tooltipText="Refresh" onClick={() => refresh(formState)} id="refresh">
-                  <RefreshIcon />
-                </RoundedIcon>
-              )}
-              {!withoutExpandButton && filtersStore.groupBy !== GROUP_BY_NONE && (
-                <RoundedIcon
-                  id="toggle-collapse"
-                  tooltipText={expand ? 'Collapse' : 'Expand all'}
-                  onClick={() => handleExpandAll()}
-                >
-                  {expand ? <CollapseIcon /> : <ExpandIcon />}
-                </RoundedIcon>
+                      )
+                    }}
+                  </Field>
+                </div>
               )}
             </div>
-          )}
-        </div>
-      )}
-    </Form>
-  ))
+            {filterMenuModal && (
+              <FilterMenuModal
+                applyChanges={filterMenuModal => applyChanges(formState.values, filterMenuModal)}
+                filterMenuName={filterMenuName}
+                initialValues={filterMenuModalInitialState}
+                restartFormTrigger={tab}
+                values={filterMenuModal.values}
+              >
+                {children}
+              </FilterMenuModal>
+            )}
+            {(withRefreshButton || !isEmpty(actionButtons)) && (
+              <div className="action-bar__actions">
+                {actionButtons.map(
+                  (actionButton, index) =>
+                    actionButton &&
+                    !actionButton.hidden &&
+                    (actionButton.template || (
+                      <Button
+                        key={index}
+                        variant={actionButton.variant}
+                        label={actionButton.label}
+                        className={actionButton.className}
+                        onClick={actionButton.onClick}
+                      />
+                    ))
+                )}
+
+                {withRefreshButton && (
+                  <RoundedIcon
+                    tooltipText="Refresh"
+                    onClick={() => refresh(formState)}
+                    id="refresh"
+                  >
+                    <RefreshIcon />
+                  </RoundedIcon>
+                )}
+                {!withoutExpandButton && filtersStore.groupBy !== GROUP_BY_NONE && (
+                  <RoundedIcon
+                    id="toggle-collapse"
+                    tooltipText={expand ? 'Collapse' : 'Expand all'}
+                    onClick={() => handleExpandAll()}
+                  >
+                    {expand ? <CollapseIcon /> : <ExpandIcon />}
+                  </RoundedIcon>
+                )}
+              </div>
+            )}
+          </div>
+        )}
+      </Form>
+    )
+  )
 }
 
 ActionBar.propTypes = {
@@ -308,14 +321,14 @@ ActionBar.propTypes = {
       }),
       PropTypes.shape({
         hidden: PropTypes.bool.isRequired,
-        template: PropTypes.object.isRequired,
+        template: PropTypes.object.isRequired
       })
     ])
   ),
   cancelRequest: PropTypes.func,
   expand: PropTypes.bool,
   filterMenuName: PropTypes.string.isRequired,
-  filters: PropTypes.arrayOf(PropTypes.object).isRequired,
+  filtersConfig: FILTERS_CONFIG.isRequired,
   handleExpandAll: PropTypes.func,
   handleRefresh: PropTypes.func.isRequired,
   hidden: PropTypes.bool,
