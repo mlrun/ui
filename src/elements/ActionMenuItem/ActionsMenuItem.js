@@ -25,7 +25,13 @@ import './actionsMenuItem.scss'
 
 import { Tooltip, TextTooltipTemplate } from 'igz-controls/components'
 
-const ActionsMenuItem = ({ dataItem, index, isIconDisplayed, menuItem }) => {
+const ActionsMenuItem = ({
+  dataItem = {},
+  index,
+  isIconDisplayed,
+  menuItem,
+  onClickCallback = () => {}
+}) => {
   const iconClassNames = classnames(
     'actions-menu__icon',
     isIconDisplayed && 'actions-menu__icon_visible'
@@ -45,6 +51,7 @@ const ActionsMenuItem = ({ dataItem, index, isIconDisplayed, menuItem }) => {
 
         if (!menuItem.disabled) {
           menuItem.onClick(dataItem)
+          onClickCallback()
         }
       }}
     >
@@ -60,14 +67,12 @@ const ActionsMenuItem = ({ dataItem, index, isIconDisplayed, menuItem }) => {
   )
 }
 
-ActionsMenuItem.defaultProps = {
-  dataItem: {}
-}
-
 ActionsMenuItem.propTypes = {
   dataItem: PropTypes.oneOfType([PropTypes.shape({}), PropTypes.string]),
+  index: PropTypes.number.isRequired,
   isIconDisplayed: PropTypes.bool.isRequired,
-  menuItem: PropTypes.shape({}).isRequired
+  menuItem: PropTypes.shape({}).isRequired,
+  onClickCallback: PropTypes.func
 }
 
 export default ActionsMenuItem

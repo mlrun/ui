@@ -31,7 +31,13 @@ import { ReactComponent as ActionMenuIcon } from 'igz-controls/images/elipsis.sv
 
 import './actionsMenu.scss'
 
-const ActionsMenu = ({ dataItem, menu, menuPosition, time, withQuickActions }) => {
+const ActionsMenu = ({
+  dataItem = {},
+  menu,
+  menuPosition = '',
+  time = 100,
+  withQuickActions = false
+}) => {
   const [actionMenu, setActionMenu] = useState(menu)
   const [isIconDisplayed, setIsIconDisplayed] = useState(false)
   const [isShowMenu, setIsShowMenu] = useState(false)
@@ -148,10 +154,11 @@ const ActionsMenu = ({ dataItem, menu, menuPosition, time, withQuickActions }) =
                   !menuItem.hidden && (
                     <ActionsMenuItem
                       dataItem={dataItem}
-                      isIconDisplayed={isIconDisplayed}
                       index={idx}
+                      isIconDisplayed={isIconDisplayed}
                       key={menuItem.label}
                       menuItem={menuItem}
+                      onClickCallback={() => setIsShowMenu(false)}
                     />
                   )
               )}
@@ -161,13 +168,6 @@ const ActionsMenu = ({ dataItem, menu, menuPosition, time, withQuickActions }) =
       </div>
     </div>
   )
-}
-
-ActionsMenu.defaultProps = {
-  dataItem: {},
-  menuPosition: '',
-  time: 100,
-  withQuickActions: false
 }
 
 ActionsMenu.propTypes = {
