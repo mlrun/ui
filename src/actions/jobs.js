@@ -87,7 +87,7 @@ import { getNewJobErrorMsg } from '../components/JobWizard/JobWizard.util'
 import { showErrorNotification } from '../utils/notifications.util'
 import { largeResponseCatchHandler } from '../utils/largeResponseCatchHandler'
 
-const generateRequestParams = filters => {
+const generateRequestParams = (filters, jobName) => {
   const params = {
     iter: false
   }
@@ -96,7 +96,9 @@ const generateRequestParams = filters => {
     params.label = filters.labels.split(',')
   }
 
-  if (filters?.name) {
+  if (jobName) {
+    params.name = jobName
+  } else if (filters?.name) {
     params.name = `~${filters.name}`
   }
 
@@ -221,11 +223,7 @@ const jobsActions = {
       ...config,
       params: {
         ...config?.params,
-        name: jobName,
-        ...generateRequestParams({
-          ...filters,
-          name: jobName
-        })
+        ...generateRequestParams(filters, jobName)
       }
     }
 
