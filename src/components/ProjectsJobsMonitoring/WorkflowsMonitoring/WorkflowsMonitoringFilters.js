@@ -28,19 +28,19 @@ import { handleFilterStateChange } from '../projectsJobsMotinoring.util'
 
 const WorkflowsMonitoringFilters = () => {
   const form = useForm()
-  const [selectedStatesLocal, setSelectedStatesLocal] = useState(form.getState()?.initialValues?.state || [])
+  const [selectedStatusesLocal, setSelectedStatusesLocal] = useState(form.getState()?.initialValues?.state || [])
 
   const statusList = useMemo(() => {
     return generateStatusFilter(
       false,
       JOBS_MONITORING_WORKFLOWS_TAB,
-      selectedStatesLocal?.[0] === FILTER_ALL_ITEMS ? [FILTER_ALL_ITEMS] : []
+      selectedStatusesLocal?.[0] === FILTER_ALL_ITEMS ? [FILTER_ALL_ITEMS] : []
     )
-  }, [selectedStatesLocal])
+  }, [selectedStatusesLocal])
 
   const handleStateChange = (selectedValue, currentValue) => {
     handleFilterStateChange(selectedValue, currentValue, form, statusList)
-    setSelectedStatesLocal(selectedValue)
+    setSelectedStatusesLocal(selectedValue)
   }
 
   const handleInputChange = (value, inputName) => {

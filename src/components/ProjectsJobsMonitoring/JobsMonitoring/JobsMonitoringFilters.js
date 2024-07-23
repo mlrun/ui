@@ -33,15 +33,15 @@ import { handleFilterStateChange } from '../projectsJobsMotinoring.util'
 
 const JobsMonitoringFilters = () => {
   const form = useForm()
-  const [selectedStatesLocal, setSelectedStatesLocal] = useState(form.getState()?.initialValues?.state || [])
+  const [selectedStatusesLocal, setSelectedStatusesLocal] = useState(form.getState()?.initialValues?.state || [])
 
   const statusList = useMemo(() => {
     return generateStatusFilter(
       false,
       JOBS_MONITORING_JOBS_TAB,
-      selectedStatesLocal?.[0] === FILTER_ALL_ITEMS ? [FILTER_ALL_ITEMS] : []
+      selectedStatusesLocal?.[0] === FILTER_ALL_ITEMS ? [FILTER_ALL_ITEMS] : []
     )
-  }, [selectedStatesLocal])
+  }, [selectedStatusesLocal])
 
   const handleInputChange = (value, inputName) => {
     form.change(inputName, value || '')
@@ -49,7 +49,7 @@ const JobsMonitoringFilters = () => {
 
   const handleStateChange = (selectedValue, currentValue) => {
     handleFilterStateChange(selectedValue, currentValue, form, statusList)
-    setSelectedStatesLocal(selectedValue)
+    setSelectedStatusesLocal(selectedValue)
   }
 
   return (
