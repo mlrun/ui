@@ -25,10 +25,10 @@ const LoaderForSuspenseFallback = () => {
     const overlayContainer = document.getElementById('overlay_container')
     const savedDisplayStyle = overlayContainer ? overlayContainer.style.display : 'flex'
 
-    if(overlayContainer) overlayContainer.style.display = 'none'
+    if (overlayContainer) overlayContainer.style.display = 'none'
 
     return () => {
-      if(overlayContainer) overlayContainer.style.display = savedDisplayStyle
+      if (overlayContainer) overlayContainer.style.display = savedDisplayStyle
     }
   }, [])
 
