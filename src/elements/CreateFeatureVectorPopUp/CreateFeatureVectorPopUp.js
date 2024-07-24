@@ -37,8 +37,7 @@ import {
 } from 'igz-controls/components'
 
 import { getValidationRules, getInternalLabelsValidationRule } from 'igz-controls/utils/validation.util'
-import { setFieldState } from 'igz-controls/utils/form.util'
-import { TAG_LATEST } from '../../constants'
+import { setFieldState, isSubmitDisabled } from 'igz-controls/utils/form.util'
 import { LABEL_BUTTON, PRIMARY_BUTTON } from 'igz-controls/constants'
 import { getChipOptions } from '../../utils/getChipOptions'
 import { convertChipsData, parseChipsData } from '../../utils/convertChipsData'
@@ -50,30 +49,27 @@ const CreateFeatureVectorPopUp = ({ closePopUp, createFeatureVector, featureVect
   const frontendSpec = useSelector(store => store.appStore.frontendSpec)
   const initialValues = {
     name: featureVectorData.name,
-    tag: featureVectorData.tag || TAG_LATEST,
+    tag: featureVectorData.tag,
     description: featureVectorData.description,
     labels: parseChipsData(featureVectorData.labels, frontendSpec.internal_labels)
   }
+
+  const handleCreateFeatureVector = values => {
+    createFeatureVector({
+      name: values.name,
+      tag: values.tag,
+      description: values.description,
+      labels: convertChipsData(values.labels)
+    })
+  }
+
   const formRef = React.useRef(
     createForm({
       initialValues,
       mutators: { ...arrayMutators, setFieldState },
-      onSubmit: () => {}
+      onSubmit: handleCreateFeatureVector
     })
   )
-
-  const handleCreateFeatureVector = (e, formState) => {
-    e.preventDefault()
-
-    if (formState.valid) {
-      createFeatureVector({
-        name: formState.values.name,
-        tag: formState.values.tag,
-        description: formState.values.description,
-        labels: convertChipsData(formState.values.labels)
-      })
-    }
-  }
 
   return (
     <PopUpDialog
@@ -81,13 +77,14 @@ const CreateFeatureVectorPopUp = ({ closePopUp, createFeatureVector, featureVect
       headerText={`${!featureVectorData.name ? 'Create' : 'Edit'} feature vector`}
       closePopUp={closePopUp}
     >
-      <Form form={formRef.current} onSubmit={() => {}}>
+      <Form form={formRef.current} onSubmit={handleCreateFeatureVector}>
         {formState => {
           return (
             <>
               <div className="form-row">
                 <div className="form-col-2">
                   <FormInput
+                    async
                     label="Vector name"
                     name="name"
                     required
@@ -102,9 +99,9 @@ const CreateFeatureVectorPopUp = ({ closePopUp, createFeatureVector, featureVect
                     <FormInput
                       label="Tag"
                       name="tag"
-                      required
                       validationRules={getValidationRules('common.tag')}
                       onBlur={() => setTagTooltipIsHidden(false)}
+                      placeholder="latest"
                     />
                     <FormOnChange
                       handler={() => {
@@ -146,10 +143,10 @@ const CreateFeatureVectorPopUp = ({ closePopUp, createFeatureVector, featureVect
                   onClick={closePopUp}
                 />
                 <Button
-                  disabled={formState.invalid}
+                  disabled={isSubmitDisabled(formState)}
                   variant={PRIMARY_BUTTON}
                   label="Create"
-                  onClick={event => handleCreateFeatureVector(event, formState)}
+                  onClick={formState.handleSubmit}
                 />
               </div>
             </>

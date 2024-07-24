@@ -38,7 +38,7 @@ import { convertChipsData } from '../../utils/convertChipsData'
 import { getChipOptions } from '../../utils/getChipOptions'
 import { getValidationRules } from 'igz-controls/utils/validation.util'
 import { createModelMessages } from '../../utils/createArtifact.util'
-import { setFieldState } from 'igz-controls/utils/form.util'
+import { setFieldState, isSubmitDisabled } from 'igz-controls/utils/form.util'
 import { setNotification } from '../../reducers/notificationReducer'
 import { showErrorNotification } from '../../utils/notifications.util'
 import { openPopUp } from 'igz-controls/utils/common.util'
@@ -126,7 +126,9 @@ function RegisterModelModal({ actions, isOpen, onResolve, params, refresh }) {
                   label: 'Overwrite',
                   variant: PRIMARY_BUTTON,
                   handler: (...args) => {
-                    handleRegisterModel(...args).then(resolve).catch(reject)
+                    handleRegisterModel(...args)
+                      .then(resolve)
+                      .catch(reject)
                   }
                 },
                 cancelButton: {
@@ -136,7 +138,9 @@ function RegisterModelModal({ actions, isOpen, onResolve, params, refresh }) {
                 },
                 closePopUp: () => reject(),
                 header: createModelMessages.overwriteConfirmTitle,
-                message: createModelMessages.getOverwriteConfirmMessage(response.data.artifacts[0].kind)
+                message: createModelMessages.getOverwriteConfirmMessage(
+                  response.data.artifacts[0].kind
+                )
               })
             })
           } else {
@@ -164,7 +168,7 @@ function RegisterModelModal({ actions, isOpen, onResolve, params, refresh }) {
             variant: TERTIARY_BUTTON
           },
           {
-            disabled: formState.submitting || (formState.invalid && formState.submitFailed),
+            disabled: isSubmitDisabled(formState),
             label: 'Register',
             onClick: formState.handleSubmit,
             variant: SECONDARY_BUTTON
