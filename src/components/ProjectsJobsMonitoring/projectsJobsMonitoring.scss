@@ -8,3 +8,19 @@
     padding: 0;
   }
 }
+
+.filter-job-status {
+  &.form-field-select__options-list {
+    .options-list {
+      max-height: 180px;
+    }
+  }
+}
+
+.filter-scheduled-status {
+  &.form-field-select__options-list {
+    .options-list {
+      max-height: 100px;
+    }
+  }
+}

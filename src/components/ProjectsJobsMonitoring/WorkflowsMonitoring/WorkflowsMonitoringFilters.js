@@ -49,7 +49,13 @@ const WorkflowsMonitoringFilters = () => {
         />
       </div>
       <div className="form-row">
-        <FormSelect label="Status" name="state" options={statusList} multiple />
+        <FormSelect
+          className="filter-scheduled-status"
+          label="Status"
+          name="state"
+          options={statusList}
+          multiple
+        />
         <FormOnChange handler={(value, some) => handleStateChange(value, some)} name="state" />
       </div>
       <div className="form-row">

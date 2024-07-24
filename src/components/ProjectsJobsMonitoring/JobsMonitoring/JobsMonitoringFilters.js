@@ -22,11 +22,7 @@ import { useForm } from 'react-final-form'
 
 import { FormInput, FormOnChange, FormSelect } from 'igz-controls/components'
 
-import {
-  JOBS_MONITORING_JOBS_TAB,
-  LABELS_FILTER,
-  PROJECT_FILTER
-} from '../../../constants'
+import { JOBS_MONITORING_JOBS_TAB, LABELS_FILTER, PROJECT_FILTER } from '../../../constants'
 import { generateStatusFilter, generateTypeFilter } from '../../FilterMenu/filterMenu.settings'
 import { handleFilterStateChange } from '../projectsJobsMotinoring.util'
 
@@ -53,7 +49,13 @@ const JobsMonitoringFilters = () => {
         />
       </div>
       <div className="form-row">
-        <FormSelect label="Status" name="state" options={statusList} multiple />
+        <FormSelect
+          className="filter-job-status"
+          label="Status"
+          name="state"
+          options={statusList}
+          multiple
+        />
         <FormOnChange handler={(value, some) => handleStateChange(value, some)} name="state" />
       </div>
       <div className="form-row">
