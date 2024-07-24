@@ -21,36 +21,13 @@ import {
   JOBS_MONITORING_JOBS_TAB,
   JOBS_MONITORING_WORKFLOWS_TAB,
   JOB_KIND_JOB,
-  JOB_KIND_WORKFLOW,
-  GROUP_BY_WORKFLOW
+  JOB_KIND_WORKFLOW
 } from '../constants'
-import { setFilters, setModalFiltersValues } from '../reducers/filtersReducer'
-import {
-  datePickerFutureOptions,
-  datePickerPastOptions,
-  NEXT_24_HOUR_DATE_OPTION,
-  PAST_24_HOUR_DATE_OPTION
-} from './datePicker.util'
+import { setFiltersValues, setModalFiltersValues } from '../reducers/filtersReducer'
 
 export const generateMonitoringStats = (data, navigate, dispatch, tab) => {
-  const navigateToJobsMonitoringPage = (modalFilters, filters = {}, dateFutureOption) => {
-    const datePickerOptions = dateFutureOption ? datePickerFutureOptions : datePickerPastOptions
-    let date = datePickerOptions.find(
-      option =>
-        option.id === (dateFutureOption ? NEXT_24_HOUR_DATE_OPTION : PAST_24_HOUR_DATE_OPTION)
-    )
-
-    dispatch(
-      setFilters({
-        ...filters,
-        saveFilters: true,
-        dates: {
-          value: date.handler(dateFutureOption),
-          isPredefined: date.isPredefined,
-          initialSelectedOptionId: date.id
-        }
-      })
-    )
+  const navigateToJobsMonitoringPage = (modalFilters, filters = {}) => {
+    dispatch(setFiltersValues({ name: tab, value: filters }))
     dispatch(setModalFiltersValues({ name: tab, value: modalFilters }))
     navigate(`/projects/jobs-monitoring/${tab}`)
   }
@@ -89,37 +66,24 @@ export const generateMonitoringStats = (data, navigate, dispatch, tab) => {
       ? {
           all: {
             counter: data.all,
-            link: () =>
-              navigateToJobsMonitoringPage({ state: ['all'] }, { groupBy: GROUP_BY_WORKFLOW })
+            link: () => navigateToJobsMonitoringPage({ state: ['all'] })
           },
           counters: [
             {
               counter: data.running,
-              link: () =>
-                navigateToJobsMonitoringPage(
-                  { state: ['running'] },
-                  { groupBy: GROUP_BY_WORKFLOW }
-                ),
+              link: () => navigateToJobsMonitoringPage({ state: ['running'] }),
               statusClass: 'running',
               tooltip: 'Running'
             },
             {
               counter: data.failed,
-              link: () =>
-                navigateToJobsMonitoringPage(
-                  { state: ['error', 'failed'] },
-                  { groupBy: GROUP_BY_WORKFLOW }
-                ),
+              link: () => navigateToJobsMonitoringPage({ state: ['error', 'failed'] }),
               statusClass: 'failed',
               tooltip: 'Error, Failed'
             },
             {
               counter: data.completed,
-              link: () =>
-                navigateToJobsMonitoringPage(
-                  { state: ['completed'] },
-                  { groupBy: GROUP_BY_WORKFLOW }
-                ),
+              link: () => navigateToJobsMonitoringPage({ state: ['completed'] }),
               statusClass: 'completed',
               tooltip: 'Completed'
             }
@@ -128,11 +92,11 @@ export const generateMonitoringStats = (data, navigate, dispatch, tab) => {
       : {
           jobs: {
             counter: data.jobs,
-            link: () => navigateToJobsMonitoringPage({ type: JOB_KIND_JOB }, {}, true)
+            link: () => navigateToJobsMonitoringPage({ type: JOB_KIND_JOB }, {})
           },
           workflows: {
             counter: data.workflows,
-            link: () => navigateToJobsMonitoringPage({ type: JOB_KIND_WORKFLOW }, {}, true)
+            link: () => navigateToJobsMonitoringPage({ type: JOB_KIND_WORKFLOW }, {})
           }
         }
 }

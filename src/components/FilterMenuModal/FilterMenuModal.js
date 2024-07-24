@@ -30,7 +30,11 @@ import { PopUpDialog, RoundedIcon, Button } from 'igz-controls/components'
 
 import { FILTER_MENU_MODAL } from '../../constants'
 import { isTargetElementInContainerElement } from '../../utils/checkElementsPosition.utils'
-import { setModalFiltersInitialValues, setModalFiltersValues } from '../../reducers/filtersReducer'
+import {
+  resetModalFilter,
+  setModalFiltersInitialValues,
+  setModalFiltersValues
+} from '../../reducers/filtersReducer'
 
 import { ReactComponent as FilterIcon } from 'igz-controls/images/filter.svg'
 
@@ -68,12 +72,6 @@ const FilterMenuModal = ({
   )
 
   const filtersWizardClassnames = classnames('filters-wizard', wizardClassName)
-
-  useEffect(() => {
-    if (formRef.current && !isEqual(formRef.current.getState().values, values)) {
-      formRef.current.reset(values)
-    }
-  }, [initialValues, values])
 
   useEffect(() => {
     if (!has(filtersData, 'initialValues')) {
@@ -123,8 +121,9 @@ const FilterMenuModal = ({
 
     return () => {
       ref.restart(initialValues)
+      dispatch(resetModalFilter(filterMenuName))
     }
-  }, [params.pageTab, params.projectName, restartFormTrigger, dispatch, initialValues])
+  }, [params.pageTab, params.projectName, restartFormTrigger, dispatch, initialValues, filterMenuName])
 
   const getFilterCounter = formState => {
     const initialValues = applyChanges ? filtersData?.initialValues : formState.initialValues

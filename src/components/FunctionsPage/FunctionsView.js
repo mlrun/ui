@@ -39,8 +39,7 @@ import {
   PANEL_EDIT_MODE
 } from '../../constants'
 import { SECONDARY_BUTTON } from 'igz-controls/constants'
-import { VIRTUALIZATION_CONFIG } from '../../types'
-import { filters } from './functions.util'
+import { FILTERS_CONFIG, VIRTUALIZATION_CONFIG } from '../../types'
 import { getNoDataMessage } from '../../utils/getNoDataMessage'
 import { isRowRendered } from '../../hooks/useVirtualization.hook'
 
@@ -54,7 +53,8 @@ const FunctionsView = ({
   expand,
   filtersChangeCallback,
   filtersStore,
-  functionsFilters,
+  functions,
+  functionsFiltersConfig,
   functionsPanelIsOpen,
   functionsStore,
   getPopUpTemplate,
@@ -71,7 +71,6 @@ const FunctionsView = ({
   selectedFunction,
   selectedRowData,
   tableContent,
-  taggedFunctions,
   toggleConvertedYaml,
   virtualizationConfig
 }) => {
@@ -88,7 +87,7 @@ const FunctionsView = ({
               <ActionBar
                 page={FUNCTIONS_PAGE}
                 expand={expand}
-                filters={functionsFilters}
+                filtersConfig={functionsFiltersConfig}
                 filterMenuName={FUNCTION_FILTERS}
                 handleExpandAll={handleExpandAll}
                 handleRefresh={filtersChangeCallback}
@@ -108,11 +107,11 @@ const FunctionsView = ({
             </div>
             {functionsStore.loading ? (
               <Loader />
-            ) : taggedFunctions.length === 0 ? (
+            ) : functions.length === 0 ? (
               <NoData
                 message={getNoDataMessage(
                   filtersStore,
-                  filters,
+                  [],
                   largeRequestErrorMessage,
                   FUNCTIONS_PAGE,
                   FUNCTION_FILTERS
@@ -197,14 +196,15 @@ FunctionsView.defaultPropTypes = {
 FunctionsView.propTypes = {
   actionsMenu: PropTypes.func.isRequired,
   closePanel: PropTypes.func.isRequired,
-  createFunctionSuccess: PropTypes.func.isRequired,
   confirmData: PropTypes.object,
   convertedYaml: PropTypes.string.isRequired,
+  createFunctionSuccess: PropTypes.func.isRequired,
   editableItem: PropTypes.object,
   expand: PropTypes.bool.isRequired,
   filtersChangeCallback: PropTypes.func.isRequired,
   filtersStore: PropTypes.object.isRequired,
-  functionsFilters: PropTypes.arrayOf(PropTypes.object).isRequired,
+  functions: PropTypes.arrayOf(PropTypes.object).isRequired,
+  functionsFiltersConfig: FILTERS_CONFIG.isRequired,
   functionsPanelIsOpen: PropTypes.bool.isRequired,
   functionsStore: PropTypes.object.isRequired,
   getPopUpTemplate: PropTypes.func.isRequired,
@@ -220,7 +220,6 @@ FunctionsView.propTypes = {
   selectedFunction: PropTypes.object.isRequired,
   selectedRowData: PropTypes.object.isRequired,
   tableContent: PropTypes.arrayOf(PropTypes.object).isRequired,
-  taggedFunctions: PropTypes.arrayOf(PropTypes.object).isRequired,
   toggleConvertedYaml: PropTypes.func.isRequired,
   virtualizationConfig: VIRTUALIZATION_CONFIG.isRequired
 }

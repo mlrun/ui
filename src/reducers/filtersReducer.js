@@ -19,25 +19,35 @@ such restriction.
 */
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
 import { set } from 'lodash'
+
 import {
   ARTIFACT_OTHER_TYPE,
-  DATASET_TYPE,
   DATASETS_FILTERS,
+  DATASET_TYPE,
+  DATES_FILTER,
   DATE_FILTER_ANY_TIME,
   FILES_FILTERS,
+  FILTER_ALL_ITEMS,
+  FILTER_MENU,
   FILTER_MENU_MODAL,
   FUNCTION_FILTERS,
   GROUP_BY_NAME,
   JOBS_MONITORING_JOBS_TAB,
-  MODEL_TYPE,
-  MODELS_FILTERS,
-  SHOW_ITERATIONS,
-  SHOW_UNTAGGED_ITEMS,
-  FILTER_ALL_ITEMS,
-  TAG_FILTER_LATEST,
+  JOBS_MONITORING_SCHEDULED_TAB,
   JOBS_MONITORING_WORKFLOWS_TAB,
-  JOBS_MONITORING_SCHEDULED_TAB
+  MODELS_FILTERS,
+  MODEL_TYPE,
+  NAME_FILTER,
+  SHOW_ITERATIONS,
+  TAG_FILTER_LATEST
 } from '../constants'
+import {
+  NEXT_WEEK_DATE_OPTION,
+  PAST_WEEK_DATE_OPTION,
+  datePickerFutureOptions,
+  datePickerPastOptions,
+  getDatePickerFilterValue
+} from '../utils/datePicker.util'
 
 const initialState = {
   saveFilters: false,
@@ -52,12 +62,29 @@ const initialState = {
   labels: '',
   name: '',
   project: '',
-  showUntagged: '',
   state: FILTER_ALL_ITEMS,
   sortBy: '',
   tag: TAG_FILTER_LATEST,
   tagOptions: null,
   projectOptions: [],
+  [FILTER_MENU]: {
+    [JOBS_MONITORING_JOBS_TAB]: {
+      [NAME_FILTER]: '',
+      [DATES_FILTER]: getDatePickerFilterValue(datePickerPastOptions, PAST_WEEK_DATE_OPTION)
+    },
+    [JOBS_MONITORING_WORKFLOWS_TAB]: {
+      [NAME_FILTER]: '',
+      [DATES_FILTER]: getDatePickerFilterValue(datePickerPastOptions, PAST_WEEK_DATE_OPTION)
+    },
+    [JOBS_MONITORING_SCHEDULED_TAB]: {
+      [NAME_FILTER]: '',
+      [DATES_FILTER]: getDatePickerFilterValue(datePickerFutureOptions, NEXT_WEEK_DATE_OPTION, true)
+    },
+    [FUNCTION_FILTERS]: {
+      [NAME_FILTER]: '',
+      [DATES_FILTER]: getDatePickerFilterValue(datePickerPastOptions, PAST_WEEK_DATE_OPTION)
+    }
+  },
   [FILTER_MENU_MODAL]: {
     [DATASETS_FILTERS]: {
       initialValues: { tag: TAG_FILTER_LATEST, labels: '', iter: SHOW_ITERATIONS },
@@ -67,13 +94,13 @@ const initialState = {
       initialValues: { tag: TAG_FILTER_LATEST, labels: '', iter: SHOW_ITERATIONS },
       values: { tag: TAG_FILTER_LATEST, labels: '', iter: SHOW_ITERATIONS }
     },
-    [FUNCTION_FILTERS]: {
-      initialValues: { showUntagged: SHOW_UNTAGGED_ITEMS },
-      values: { showUntagged: SHOW_UNTAGGED_ITEMS }
-    },
     [MODELS_FILTERS]: {
       initialValues: { tag: TAG_FILTER_LATEST, labels: '', iter: SHOW_ITERATIONS },
       values: { tag: TAG_FILTER_LATEST, labels: '', iter: SHOW_ITERATIONS }
+    },
+    [FUNCTION_FILTERS]: {
+      initialValues: { showUntagged: false },
+      values: { showUntagged: false }
     },
     [JOBS_MONITORING_JOBS_TAB]: {
       initialValues: {
@@ -89,18 +116,6 @@ const initialState = {
         type: FILTER_ALL_ITEMS
       }
     },
-    [JOBS_MONITORING_SCHEDULED_TAB]: {
-      initialValues: {
-        labels: '',
-        project: '',
-        type: FILTER_ALL_ITEMS
-      },
-      values: {
-        labels: '',
-        project: '',
-        type: FILTER_ALL_ITEMS
-      }
-    },
     [JOBS_MONITORING_WORKFLOWS_TAB]: {
       initialValues: {
         labels: '',
@@ -111,6 +126,18 @@ const initialState = {
         labels: '',
         project: '',
         state: [FILTER_ALL_ITEMS]
+      }
+    },
+    [JOBS_MONITORING_SCHEDULED_TAB]: {
+      initialValues: {
+        labels: '',
+        project: '',
+        type: FILTER_ALL_ITEMS
+      },
+      values: {
+        labels: '',
+        project: '',
+        type: FILTER_ALL_ITEMS
       }
     }
   }
@@ -144,13 +171,25 @@ const filtersSlice = createSlice({
     removeFilters() {
       return initialState
     },
+    resetFilter(state, action) {
+      state[FILTER_MENU][action.payload] = initialState[FILTER_MENU][action.payload]
+    },
     resetModalFilter(state, action) {
-      delete state[FILTER_MENU_MODAL][action.payload]
+      state[FILTER_MENU_MODAL][action.payload] = initialState[FILTER_MENU_MODAL][action.payload]
     },
     setFilters(state, action) {
       for (let filterProp in action.payload) {
         state[filterProp] = action.payload[filterProp]
       }
+    },
+    setFiltersValues(state, action) {
+      const payloadValue = action.payload.value ?? {}
+      const newFilterValues = {
+        ...state[FILTER_MENU][action.payload.name],
+        ...payloadValue
+      }
+
+      set(state, [FILTER_MENU, action.payload.name], newFilterValues)
     },
     setModalFiltersValues(state, action) {
       const payloadValue = action.payload.value ?? {}
@@ -183,8 +222,10 @@ const filtersSlice = createSlice({
 
 export const {
   removeFilters,
+  resetFilter,
   resetModalFilter,
   setFilters,
+  setFiltersValues,
   setModalFiltersValues,
   setModalFiltersInitialValues,
   setFilterProjectOptions

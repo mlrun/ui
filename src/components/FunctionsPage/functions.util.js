@@ -37,9 +37,7 @@ import {
   FUNCTION_TYPE_REMOTE,
   FUNCTION_TYPE_SERVING,
   FUNCTIONS_PAGE,
-  NAME_FILTER,
-  PANEL_FUNCTION_CREATE_MODE,
-  SHOW_UNTAGGED_FILTER
+  PANEL_FUNCTION_CREATE_MODE
 } from '../../constants'
 import jobsActions from '../../actions/jobs'
 import tasksApi from '../../api/tasks-api'
@@ -88,10 +86,6 @@ export const infoHeaders = [
   { label: 'Default handler', id: 'defaultHandler' },
   { label: 'Image', id: 'image' },
   { label: 'Description', id: 'description' }
-]
-export const filters = [
-  { type: NAME_FILTER, initialValue: '', label: 'Name:' },
-  { type: SHOW_UNTAGGED_FILTER, label: 'Show untagged' }
 ]
 export const TRANSIENT_FUNCTION_STATUSES = [FUNCTION_PENDINDG_STATE, FUNCTION_RUNNING_STATE]
 

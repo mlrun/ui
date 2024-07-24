@@ -18,6 +18,7 @@ under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
 import { functionTemplatesHttpClient, mainHttpClient, mainHttpClientV2 } from '../httpClient'
+import { DATES_FILTER, NAME_FILTER, SHOW_UNTAGGED_FILTER } from '../constants'
 
 const functionsApi = {
   createNewFunction: (project, data) =>
@@ -37,9 +38,22 @@ const functionsApi = {
         ...config.params
       }
     }
+    const dateFilterValue = filters?.[DATES_FILTER]?.value || {}
 
-    if (filters?.name) {
-      newConfig.params.name = `~${filters.name}`
+    if (filters?.[NAME_FILTER]) {
+      newConfig.params.name = `~${filters[NAME_FILTER]}`
+    }
+
+    if (dateFilterValue[0]) {
+      newConfig.params.since = dateFilterValue[0]
+    }
+
+    if (dateFilterValue[1] && !filters?.[DATES_FILTER]?.isPredefined) {
+      newConfig.params.until = dateFilterValue[1]
+    }
+
+    if (!filters?.[SHOW_UNTAGGED_FILTER]) {
+      newConfig.params.tag = '*'
     }
 
     if (hash) {

@@ -18,7 +18,7 @@ under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
 import { isEqual, isNil } from 'lodash'
-import { formatDate } from '../utils/datePicker.util'
+import { formatDate } from './datePicker.util'
 import {
   ADD_TO_FEATURE_VECTOR_TAB,
   ANY_TIME,
@@ -43,11 +43,11 @@ import {
   REAL_TIME_PIPELINES_TAB,
   SHOW_ITERATIONS,
   SHOW_UNTAGGED_FILTER,
-  SHOW_UNTAGGED_ITEMS,
   FILTER_ALL_ITEMS,
   STATUS_FILTER,
   TAG_FILTER,
-  TAG_FILTER_ALL_ITEMS
+  TAG_FILTER_ALL_ITEMS,
+  DATES_FILTER
 } from '../constants'
 
 const messageNamesList = {
@@ -140,12 +140,8 @@ const generateNoEntriesFoundMessage = (
   filtersStoreKey
 ) => {
   return changedFilters.reduce((message, filter, index) => {
-    const label = [ITERATIONS_FILTER, SHOW_UNTAGGED_ITEMS].includes(filter.type)
-      ? `${filter.label}:`
-      : filter.type === DATE_RANGE_TIME_FILTER
-        ? 'Date:'
-        : filter.label
-    const value = [ITERATIONS_FILTER, SHOW_UNTAGGED_ITEMS].includes(filter.type)
+    const label = filter.type === DATE_RANGE_TIME_FILTER ? 'Date:' : filter.label
+    const value = [ITERATIONS_FILTER, SHOW_UNTAGGED_FILTER].includes(filter.type)
       ? 'true'
       : filter.type === DATE_RANGE_TIME_FILTER
         ? getSelectedDateValue(filter, filtersStore)
@@ -164,6 +160,8 @@ const getChangedFiltersList = (filters, filtersStore, filtersStoreKey) => {
     return []
   }
 
+  // todo: fix displaying message for Functions and Monitoring pages
+
   return filters.filter(({ type }) => {
     const isTagChanged =
       filtersStore.tag !== TAG_FILTER_ALL_ITEMS &&
@@ -179,9 +177,10 @@ const getChangedFiltersList = (filters, filtersStore, filtersStoreKey) => {
       ((type === NAME_FILTER || type === LABELS_FILTER || type === ENTITIES_FILTER) &&
         filtersStore[type].length > 0) ||
       (type === STATUS_FILTER && filtersStore.state !== FILTER_ALL_ITEMS) ||
-      (type === DATE_RANGE_TIME_FILTER && !isEqual(filtersStore.dates.value, DATE_FILTER_ANY_TIME)) ||
+      ((type === DATE_RANGE_TIME_FILTER || type === DATES_FILTER) &&
+        !isEqual(filtersStore.dates.value, DATE_FILTER_ANY_TIME)) ||
       (type === ITERATIONS_FILTER && isIterChanged) ||
-      (type === SHOW_UNTAGGED_FILTER && filtersStore.showUntagged === SHOW_UNTAGGED_ITEMS) ||
+      (type === SHOW_UNTAGGED_FILTER && filtersStore.showUntagged) ||
       (type === GROUP_BY_FILTER && filtersStore.groupBy !== GROUP_BY_NONE)
     )
   })
