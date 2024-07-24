@@ -3,9 +3,13 @@ name: CI
 on:
   pull_request:
     branches:
-    - development
-    - '[0-9]+.[0-9]+.x'
-    - 'feature/**'
+      - development                    # Matches the development branch
+      - 'feature/**'                   # Matches branches like 'feature/***'
+      - '[0-9]+.[0-9]+.x'              # Matches branches like '1.3.x'
+      - '[0-9]+.[0-9]+.[0-9]'          # Matches branches like '1.2.3'
+      - '[0-9]+.[0-9]+.[0-9]+_.*'      # Matches branches like '1.7.0_cpj_mm'
+      - '[0-9]+.[0-9]+.[0-9]+-.*'      # Matches branches like '1.2.3-feature'
+
 
 jobs:
   check-copyright:
@@ -61,3 +65,75 @@ jobs:
           */
 
           "
+
+  build-docker:
+    name: Build Docker
+    runs-on: ubuntu-latest
+    outputs:
+      check_error_failed: ${{ steps.check-error.outputs.check_error_failed }}
+
+    steps:
+      - name: Exit if merge commit
+        if: github.event.pull_request.merged == true
+        run: |
+          echo "Skipping workflow because this is a merge commit."
+          exit 0
+
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Build Docker image
+        id: build
+        run: |
+          docker build -t my-react-app:$GITHUB_SHA . > build.log 2>&1 || (cat build.log; exit 1)
+
+      - name: Check for igz-controls error message
+        id: check-error
+        if: failure()
+        run: |
+          if grep -q "igz-controls/" build.log; then
+            echo -e "\033[31mModule not found: Error: Can't resolve 'igz-controls....'.\033[0m"
+            echo -e "\033[33mPlease check for changes in the 'dashboard-react-controls' repository.\033[0m"
+            echo "::set-output name=check_error_failed::failure"
+            echo "::error::Module not found: Error: Can't resolve 'igz-controls"
+          else
+            echo "::set-output name=check_error_failed::success"
+            echo "check_error_failed=success" >> $GITHUB_ENV
+          fi
+
+  lint-check:
+    name: Lint Check
+    runs-on: ubuntu-latest
+    needs: build-docker
+    if: failure() && needs.build-docker.outputs.check_error_failed == 'failure'
+    steps:
+      - name: Exit if merge commit
+        if: github.event.pull_request.merged == true
+        run: |
+          echo "Skipping workflow because this is a merge commit."
+          exit 0
+
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '16'
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Run ESLint
+        run: |
+          export NODE_ENV=production
+          npx eslint 'src/**/*.js' \
+                 --ignore-pattern 'tests/**' \
+                 --ignore-pattern 'src/stories/**' \
+                 --ignore-pattern 'src/**/*.test.js' \
+                 --ignore-pattern 'src/App.test.js' \
+                 --ignore-pattern 'config/**' \
+                 --ignore-pattern 'scripts/*' \
+                 --ignore-pattern '**/__tests__/**' \
+                 --ignore-pattern 'generate-release-notes.js' \
+                 --ignore-pattern '**/*.stories.js'
