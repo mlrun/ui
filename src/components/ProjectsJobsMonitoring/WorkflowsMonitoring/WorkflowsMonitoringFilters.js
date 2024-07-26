@@ -21,7 +21,7 @@ import React from 'react'
 import { useForm } from 'react-final-form'
 
 import { FormInput, FormOnChange } from 'igz-controls/components'
-import StatusFiler from '../../../common/StatusFilter/StatusFilter'
+import StatusFilter from '../../../common/StatusFilter/StatusFilter'
 
 import { LABELS_FILTER, PROJECT_FILTER, STATUS_FILTER_NAME } from '../../../constants'
 import { workflowsStatuses } from '../../FilterMenu/filterMenu.settings'
@@ -43,7 +43,7 @@ const WorkflowsMonitoringFilters = () => {
         />
       </div>
       <div className="form-row">
-        <StatusFiler statusList={workflowsStatuses} name={STATUS_FILTER_NAME} />
+        <StatusFilter statusList={workflowsStatuses} name={STATUS_FILTER_NAME} />
       </div>
       <div className="form-row">
         <FormInput label="Labels" name={LABELS_FILTER} placeholder="key1,key2=value,..." />

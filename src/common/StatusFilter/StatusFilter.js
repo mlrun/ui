@@ -15,14 +15,14 @@ under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
 import React, { useMemo, memo } from 'react'
-import PropTypes from 'prop-types'
 import { useField, useForm } from 'react-final-form'
 import { isEmpty } from 'lodash'
 
 import { FormOnChange, FormSelect } from 'iguazio.dashboard-react-controls/dist/components'
 import { FILTER_ALL_ITEMS, STATUS_FILTER_NAME } from '../../constants'
+import { STATUS_LIST } from '../../types'
 
-const StatusFiler = ({ statusList, name = STATUS_FILTER_NAME }) => {
+const StatusFilter = ({ statusList, name = STATUS_FILTER_NAME }) => {
   const { input } = useField(name)
   const { change } = useForm()
 
@@ -65,8 +65,8 @@ const StatusFiler = ({ statusList, name = STATUS_FILTER_NAME }) => {
   )
 }
 
-StatusFiler.propTypes = {
-  statusList: PropTypes.array.isRequired
+StatusFilter.propTypes = {
+  statusList: STATUS_LIST.isRequired
 }
 
-export default memo(StatusFiler)
+export default memo(StatusFilter)

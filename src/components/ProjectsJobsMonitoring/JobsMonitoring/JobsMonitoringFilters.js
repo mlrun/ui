@@ -21,10 +21,10 @@ import React from 'react'
 import { useForm } from 'react-final-form'
 
 import { FormInput, FormOnChange, FormSelect } from 'igz-controls/components'
+import StatusFilter from '../../../common/StatusFilter/StatusFilter'
 
 import { LABELS_FILTER, PROJECT_FILTER, STATUS_FILTER_NAME } from '../../../constants'
 import { generateTypeFilter, jobsStatuses } from '../../FilterMenu/filterMenu.settings'
-import StatusFilter from '../../../common/StatusFilter/StatusFilter'
 
 const JobsMonitoringFilters = () => {
   const form = useForm()
