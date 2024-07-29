@@ -87,6 +87,7 @@ const WorkflowsTable = React.forwardRef(
     abortJobRef
   ) => {
     const [convertedYaml, toggleConvertedYaml] = useYaml('')
+    const [dataIsLoading, setDataIsLoading] = useState(false)
     const [workflowsViewMode, setWorkflowsViewMode] = useState(WORKFLOW_GRAPH_VIEW)
     const workflowsStore = useSelector(state => state.workflowsStore)
     const filtersStore = useSelector(state => state.filtersStore)
@@ -426,11 +427,13 @@ const WorkflowsTable = React.forwardRef(
         !fetchJobFunctionsPromiseRef.current &&
         params.jobId &&
         (isEmpty(selectedJob) || params.jobId !== selectedJob.uid) &&
-        checkIfWorkflowItemIsJob()
+        checkIfWorkflowItemIsJob() && !dataIsLoading
       ) {
-        fetchRun()
+        setDataIsLoading(true)
+
+        fetchRun().finally(() => setDataIsLoading(false))
       }
-    }, [fetchRun, params.jobId, selectedJob, checkIfWorkflowItemIsJob])
+    }, [fetchRun, params.jobId, selectedJob, checkIfWorkflowItemIsJob, dataIsLoading])
 
     useEffect(() => {
       const functionToBeSelected = findSelectedWorkflowFunction(true)

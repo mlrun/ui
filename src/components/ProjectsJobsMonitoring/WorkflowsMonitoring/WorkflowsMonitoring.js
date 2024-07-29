@@ -24,6 +24,7 @@ import { isEmpty } from 'lodash'
 
 import WorkflowsTable from '../../../elements/WorkflowsTable/WorkflowsTable'
 import { ProjectJobsMonitoringContext } from '../ProjectsJobsMonitoring'
+import Loader from '../../../common/Loader/Loader'
 
 import {
   JOBS_MONITORING_PAGE,
@@ -45,6 +46,8 @@ const WorkflowsMonitoring = ({ fetchFunctionLogs }) => {
   const [selectedJob, setSelectedJob] = useState({})
   const workflowsStore = useSelector(state => state.workflowsStore)
   const filtersStore = useSelector(state => state.filtersStore)
+  const jobIsLoading = useSelector(store => store.jobsStore.loading)
+  const funcIsLoading = useSelector(store => store.functionsStore.funcLoading)
   const params = useParams()
   const dispatch = useDispatch()
   const { isStagingMode } = useMode()
@@ -105,6 +108,7 @@ const WorkflowsMonitoring = ({ fetchFunctionLogs }) => {
 
   return (
     <>
+      {(jobIsLoading || funcIsLoading || workflowsStore.activeWorkflow.loading) && <Loader />}
       <WorkflowsTable
         backLink={`/projects/${JOBS_MONITORING_PAGE}/${JOBS_MONITORING_WORKFLOWS_TAB}`}
         context={ProjectJobsMonitoringContext}
