@@ -17,18 +17,12 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
+const { execSync } = require('child_process')
 
-const HEADLESS = process.env.HEADLESS === 'true' || false
-
-/* eslint-disable-next-line no-console */
-console.log(`DRIVER_SLEEP: ${HEADLESS}`)
-
-module.exports = {
-  timeout: 60000,
-  browser: 'chrome',
-  headless: HEADLESS,
-  screen_size: { width: 1600, height: 900 },
-  report: 'tests/reports/cucumber_report',
-  test_url: 'localhost',
-  test_port: '3000'
+const cucumberCommand =
+  "./node_modules/.bin/cucumber-js --require-module @babel/register --require-module @babel/polyfill -f json:tests/reports/cucumber_report.json -f html:tests/reports/cucumber_report_default.html tests -t '@smoke1'"
+try {
+  execSync(cucumberCommand, { stdio: 'inherit' })
+} catch (err) {
+  console.log(err.message)
 }
