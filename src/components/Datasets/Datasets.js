@@ -323,7 +323,6 @@ const Datasets = () => {
   useInitialArtifactsFetch(
     fetchData,
     urlTagOption,
-    datasets.length,
     setSelectedRowData,
     createDatasetsRowData
   )

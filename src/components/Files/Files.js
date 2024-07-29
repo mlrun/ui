@@ -315,7 +315,6 @@ const Files = () => {
   useInitialArtifactsFetch(
     fetchData,
     urlTagOption,
-    files.length,
     setSelectedRowData,
     createFilesRowData
   )
