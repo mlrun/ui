@@ -136,6 +136,7 @@ module.exports = {
   },
   ML_Function_Info_Pane: {
     Tab_List: ['Overview', 'Code', 'Build Log'],
+    Tab_List_Application_type: ['Overview', 'Build Log'],
     Overview_Headers: [
       'Name:',
       'Kind:',
@@ -143,6 +144,21 @@ module.exports = {
       'Image:',
       'Version tag:',
       'Hash:',
+      'Code origin:',
+      'Updated:',
+      'Default handler:',
+      'Description:'
+    ],
+    Overview_Headers_Application_type: [
+      'Name:',
+      'Kind:',
+      'Code entry point:',
+      'Internal URL:',
+      'Image:',
+      'Application image:',
+      'Version tag:',
+      'Hash:',
+      'Internal port:',
       'Code origin:',
       'Updated:',
       'Default handler:',

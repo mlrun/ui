@@ -32,13 +32,13 @@
         "mpijob": "mlrun/mlrun",
         "application": "python:3.9-slim"
     },
-    "function_deployment_target_image_template": "docker-registry.default-tenant.app.vmdev36.lab.iguazeng.com:80/mlrun/func-{project}-{name}:{tag}",
+    "function_deployment_target_image_template": "docker-registry.default-tenant.app.vmdev63.lab.iguazeng.com:80/mlrun/func-{project}-{name}:{tag}",
     "function_deployment_target_image_name_prefix_template": "func-{project}-{name}",
     "function_deployment_target_image_registries_to_enforce_prefix": [
         ".mlrun/",
-        "docker-registry.default-tenant.app.vmdev36.lab.iguazeng.com:80/mlrun/"
+        "docker-registry.default-tenant.app.vmdev63.lab.iguazeng.com:80/mlrun/"
     ],
-    "function_deployment_mlrun_requirement": "mlrun[complete]==1.7.0-rc18",
+    "function_deployment_mlrun_requirement": "mlrun[complete]==1.7.0-rc27",
     "auto_mount_type": "auto",
     "auto_mount_params": {},
     "default_artifact_path": "v3io:///projects/{{run.project}}/artifacts",
@@ -102,12 +102,12 @@
         "mlrun/username",
         "mlrun/username_domain",
         "mlrun/task-name",
+        "mlrun/resource_name",
+        "mlrun/created",
         "host",
         "job-type",
         "kind",
         "component",
-        "resource_name",
-        "mlrun-created",
         "owner",
         "v3io_user",
         "workflow",

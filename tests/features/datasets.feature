@@ -1187,9 +1187,7 @@ Feature: Datasets Page
 
   @MLD
   @inProgress
-  @FAILED_TODO
-  @smoke
-  #TODO: Bug ML-6022 - [Artifacts, Functions] selected item is missing from the list of visible items
+  @smoke     
 # Run this test case only on full screen
   Scenario: MLD027 - Verify dataset elements visibility on Datasets Table with high number of rows
     * create "new_dataset_10" Dataset with "set_10" tag in "churn-project-admin" project with code 200
@@ -1216,10 +1214,10 @@ Feature: Datasets Page
     And wait load page
     And hover "MLRun_Logo" component on "commonPagesHeader" wizard
     And wait load page
-    Then verify that 15 row elements are displayed in "Datasets_Table" on "Datasets" wizard
+    Then verify that 16 row elements are displayed in "Datasets_Table" on "Datasets" wizard
     Then check "new_dataset_10" value in "name" column in "Datasets_Table" table on "Datasets" wizard
     Then check "new_dataset_24" value in "name" column in "Datasets_Table" table on "Datasets" wizard
-    Then check "test-regressor_cox-test-summary" value not in "name" column in "Datasets_Table" table on "Datasets" wizard
+    Then check "test-regressor_cox-test-summary" value in "name" column in "Datasets_Table" table on "Datasets" wizard
     Then check "survival-curves_coxhazard-summary" value not in "name" column in "Datasets_Table" table on "Datasets" wizard
     Then check "iris_gen_iris_dataset" value not in "name" column in "Datasets_Table" table on "Datasets" wizard
     Then check "data_clean_cleaned-data" value not in "name" column in "Datasets_Table" table on "Datasets" wizard
