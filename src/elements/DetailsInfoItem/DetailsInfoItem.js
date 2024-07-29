@@ -238,7 +238,7 @@ const DetailsInfoItem = React.forwardRef(
                 key={index}
                 className="details-item__data details-item__link"
                 href={
-                  !infoItem.startWIth?.('http')
+                  !infoItem?.startWIth?.('http')
                     ? `${window.location.protocol}//${infoItem}`
                     : infoItem
                 }
