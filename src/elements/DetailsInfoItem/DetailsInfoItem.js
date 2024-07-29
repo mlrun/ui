@@ -225,6 +225,8 @@ const DetailsInfoItem = React.forwardRef(
       return <div className="details-item__data details-item__data_multiline">
         {
           (Array.isArray(info) ? info : [info]).map((infoItem, index) => {
+            if (!infoItem) return null
+
             return item.link ? (
               <Link
                 className="link details-item__data details-item__link"
@@ -238,7 +240,7 @@ const DetailsInfoItem = React.forwardRef(
                 key={index}
                 className="details-item__data details-item__link"
                 href={
-                  !infoItem?.startWIth?.('http')
+                  !infoItem.startWIth?.('http')
                     ? `${window.location.protocol}//${infoItem}`
                     : infoItem
                 }
