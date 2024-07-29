@@ -105,7 +105,12 @@ pipeline {
                 script {
                     common.conditional_stage('Cleaning up', true) {
                         sh '''
+                            echo "Killing npm processes..."
                             pkill -f npm || true
+                            echo "Cleaning up temporary files..."
+                            def tmpDir = "/home/iguazio/tmp"
+                            sh "sudo rm -rf ${tmpDir}/.[!.]* ${tmpDir}/..?* ${tmpDir}/*"
+                            echo "Temporary files cleaned up."
                         '''
                     }
                 }
