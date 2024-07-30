@@ -53,9 +53,9 @@ import { ReactComponent as CustomIcon } from 'igz-controls/images/custom.svg'
 const FormParametersRow = ({
   applyChanges,
   deleteRow,
-  disabled,
+  disabled = false,
   discardOrDelete,
-  editingItem,
+  editingItem = null,
   enterEditMode,
   fields,
   fieldsPath,
@@ -65,8 +65,8 @@ const FormParametersRow = ({
   isCurrentRowEditing,
   rowPath,
   uniquenessValidator,
-  withHyperparameters,
-  withRequiredParameters
+  withHyperparameters = false,
+  withRequiredParameters = true
 }) => {
   const [fieldData, setFieldData] = useState(fields.value[index])
   const [typeIsChanging, setTypeIsChanging] = useState(false)
@@ -451,13 +451,6 @@ const FormParametersRow = ({
       />
     </>
   )
-}
-
-FormParametersRow.defaultProps = {
-  disabled: false,
-  editingItem: null,
-  withHyperparameters: false,
-  withRequiredParameters: true
 }
 
 FormParametersRow.propTypes = {

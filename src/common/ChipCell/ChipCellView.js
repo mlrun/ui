@@ -35,21 +35,21 @@ import './chipCell.scss'
 const ChipCellView = React.forwardRef(
   (
     {
-      chips,
+      chips = {},
       chipOptions,
-      className,
-      editConfig,
-      handleAddNewChip,
+      className = '',
+      editConfig = {},
+      handleAddNewChip = () => {},
       handleEditChip,
-      handleIsEdit,
+      handleIsEdit = () => {},
       handleRemoveChip,
-      handleShowElements,
-      isEditMode,
-      setChipsSizes,
-      setEditConfig,
+      handleShowElements = () => {},
+      isEditMode = false,
+      setChipsSizes = () => {},
+      setEditConfig = () => {},
       setValidation = null,
       shortChips,
-      showChips,
+      showChips = false,
       showHiddenChips
     },
     { chipsCellRef, chipsWrapperRef, hiddenChipsCounterRef, hiddenChipsPopUpRef }
@@ -123,21 +123,6 @@ const ChipCellView = React.forwardRef(
     )
   }
 )
-
-ChipCellView.defaultProps = {
-  chips: {},
-  className: '',
-  editChip: () => {},
-  editConfig: {},
-  handleAddNewChip: () => {},
-  handleIsEdit: () => {},
-  handleShowElements: () => {},
-  isEditMode: false,
-  removeChip: () => {},
-  setChipsSizes: () => {},
-  setEditConfig: () => {},
-  showChips: false
-}
 
 ChipCellView.propTypes = {
   chips: PropTypes.shape({ visibleChips: CHIPS, hiddenChips: CHIPS }),

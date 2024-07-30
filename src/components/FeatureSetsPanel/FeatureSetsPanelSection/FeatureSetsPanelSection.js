@@ -22,7 +22,7 @@ import PropTypes from 'prop-types'
 
 import './featureSetsPanelSection.scss'
 
-const FeatureSetsPanelSection = ({ children, title, className }) => {
+const FeatureSetsPanelSection = ({ children, title, className = '' }) => {
   return (
     <div className={`panel-section feature-set-panel__section ${className}`}>
       <div className="panel-section__title">
@@ -31,10 +31,6 @@ const FeatureSetsPanelSection = ({ children, title, className }) => {
       {children && <div className="panel-section__body">{children}</div>}
     </div>
   )
-}
-
-FeatureSetsPanelSection.defaultProps = {
-  className: ''
 }
 
 FeatureSetsPanelSection.propTypes = {

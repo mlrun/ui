@@ -36,7 +36,7 @@ const ArtifactsPreviewController = ({
   artifactsIds,
   artifact,
   artifactId,
-  withoutPopout
+  withoutPopout = false
 }) => {
   const [noData, setNoData] = useState(false)
   const [preview, setPreview] = useState({})
@@ -52,7 +52,15 @@ const ArtifactsPreviewController = ({
 
   useEffect(() => {
     if (artifactsIds.length > 0 && !preview[artifactId] && artifactsIds.includes(artifactId)) {
-      getArtifactPreview(params.projectName, artifact, noData, setNoData, setPreview, true, artifactId)
+      getArtifactPreview(
+        params.projectName,
+        artifact,
+        noData,
+        setNoData,
+        setPreview,
+        true,
+        artifactId
+      )
     }
   }, [artifactsIds, setPreview, artifact, noData, params.projectName, preview, artifactId])
 
@@ -82,10 +90,6 @@ const ArtifactsPreviewController = ({
       )}
     </>
   )
-}
-
-ArtifactsPreviewController.defaultProps = {
-  withoutPopout: false
 }
 
 ArtifactsPreviewController.propTypes = {

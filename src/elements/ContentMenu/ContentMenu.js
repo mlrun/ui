@@ -26,7 +26,7 @@ import { CONTENT_MENU_TABS } from '../../types'
 
 import './contentMenu.scss'
 
-const ContentMenu = ({ activeTab, disabled, screen, tabs, onClick }) => {
+const ContentMenu = ({ activeTab = '', disabled = false, screen, tabs = [], onClick }) => {
   const params = useParams()
   const handleClick = (e, tabId) => {
     if (!disabled) {
@@ -78,12 +78,6 @@ const ContentMenu = ({ activeTab, disabled, screen, tabs, onClick }) => {
       </ul>
     </div>
   )
-}
-
-ContentMenu.defaultProps = {
-  activeTab: '',
-  disabled: false,
-  tabs: []
 }
 
 ContentMenu.propTypes = {

@@ -36,7 +36,10 @@ import {
   Tooltip
 } from 'igz-controls/components'
 
-import { getValidationRules, getInternalLabelsValidationRule } from 'igz-controls/utils/validation.util'
+import {
+  getValidationRules,
+  getInternalLabelsValidationRule
+} from 'igz-controls/utils/validation.util'
 import { setFieldState, isSubmitDisabled } from 'igz-controls/utils/form.util'
 import { LABEL_BUTTON, PRIMARY_BUTTON } from 'igz-controls/constants'
 import { getChipOptions } from '../../utils/getChipOptions'
@@ -44,7 +47,16 @@ import { convertChipsData, parseChipsData } from '../../utils/convertChipsData'
 
 import './createFeatureVectorPopUp.scss'
 
-const CreateFeatureVectorPopUp = ({ closePopUp, createFeatureVector, featureVectorData }) => {
+const CreateFeatureVectorPopUp = ({
+  closePopUp,
+  createFeatureVector,
+  featureVectorData = {
+    name: '',
+    tag: '',
+    description: '',
+    labels: {}
+  }
+}) => {
   const [tagTooltipIsHidden, setTagTooltipIsHidden] = useState(false)
   const frontendSpec = useSelector(store => store.appStore.frontendSpec)
   const initialValues = {
@@ -155,15 +167,6 @@ const CreateFeatureVectorPopUp = ({ closePopUp, createFeatureVector, featureVect
       </Form>
     </PopUpDialog>
   )
-}
-
-CreateFeatureVectorPopUp.defaultProps = {
-  featureVectorData: {
-    name: '',
-    tag: '',
-    description: '',
-    labels: {}
-  }
 }
 
 CreateFeatureVectorPopUp.propTypes = {

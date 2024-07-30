@@ -23,7 +23,7 @@ import { Base64 } from 'js-base64'
 
 import NoData from '../../common/NoData/NoData'
 
-const DetailsCode = ({ code }) => {
+const DetailsCode = ({ code = '' }) => {
   const [decoded, setDecoded] = useState('')
 
   const decodeCode = useCallback(() => {
@@ -49,10 +49,6 @@ const DetailsCode = ({ code }) => {
       )}
     </div>
   )
-}
-
-DetailsCode.defaultProps = {
-  code: ''
 }
 
 export default DetailsCode

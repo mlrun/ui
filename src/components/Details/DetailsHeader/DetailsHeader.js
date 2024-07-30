@@ -47,7 +47,7 @@ const DetailsHeader = ({
   applyChangesRef,
   cancelChanges,
   getCloseDetailsLink,
-  handleCancel,
+  handleCancel = null,
   handleRefresh,
   handleShowWarning,
   isDetailsScreen,
@@ -299,10 +299,6 @@ const DetailsHeader = ({
       </div>
     </div>
   )
-}
-
-DetailsHeader.defaultProps = {
-  handleCancel: null
 }
 
 DetailsHeader.propTypes = {

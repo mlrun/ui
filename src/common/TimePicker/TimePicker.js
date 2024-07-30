@@ -26,7 +26,15 @@ import { DENSITY_OPTIONS } from '../../types'
 
 import './timePicker.scss'
 
-const TimePicker = ({ className, density, label, onBlur, onChange, onFocus, value }) => {
+const TimePicker = ({
+  className = '',
+  density = 'normal',
+  label = '',
+  onBlur = () => {},
+  onChange = () => {},
+  onFocus = () => {},
+  value
+}) => {
   const [valueInput, setValueInput] = useState(value)
 
   const wrapperClassNames = classNames('time-picker-container', className)
@@ -74,15 +82,6 @@ const TimePicker = ({ className, density, label, onBlur, onChange, onFocus, valu
       </div>
     </div>
   )
-}
-
-TimePicker.defaultProps = {
-  className: '',
-  density: 'normal',
-  label: '',
-  onBlur: () => {},
-  onChange: () => {},
-  onFocus: () => {}
 }
 
 TimePicker.propTypes = {

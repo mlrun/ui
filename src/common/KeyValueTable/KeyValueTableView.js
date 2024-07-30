@@ -42,17 +42,17 @@ const KeyValueTableView = ({
   handleResetForm,
   isAddNewItem,
   isEditMode,
-  isKeyEditable,
+  isKeyEditable = true,
   isKeyNotUnique,
   isKeyRequired,
   isValueRequired,
   keyHeader,
-  keyLabel,
-  keyOptions,
-  keyType,
+  keyLabel = 'Key',
+  keyOptions = [],
+  keyType = 'input',
   keyValue,
   saveItem,
-  selectedItem,
+  selectedItem = {},
   setEditMode,
   setIsAddNewItem,
   setKey,
@@ -62,9 +62,9 @@ const KeyValueTableView = ({
   tableClassNames,
   validation,
   valueHeader,
-  valueLabel,
-  valueType,
-  withEditMode
+  valueLabel = 'Value',
+  valueType = 'text',
+  withEditMode = false
 }) => {
   const addBtnClassNames = classnames('add-new-item-btn', disabled && 'disabled')
 
@@ -336,17 +336,6 @@ const KeyValueTableView = ({
       )}
     </div>
   )
-}
-
-KeyValueTableView.defaultProps = {
-  isKeyEditable: true,
-  keyLabel: 'Key',
-  keyOptions: [],
-  keyType: 'input',
-  selectedItem: {},
-  valueLabel: 'Value',
-  valueType: 'text',
-  withEditMode: false
 }
 
 KeyValueTableView.propTypes = {

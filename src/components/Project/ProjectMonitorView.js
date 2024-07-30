@@ -44,7 +44,7 @@ import './project.scss'
 const ProjectMonitorView = ({
   closeFeatureSetPanel,
   closeFunctionsPanel,
-  confirmData,
+  confirmData = null,
   createFeatureSetPanelIsOpen,
   createFeatureSetSuccess,
   createFunctionSuccess,
@@ -199,10 +199,6 @@ const ProjectMonitorView = ({
       )}
     </div>
   )
-}
-
-ProjectMonitorView.defaultProps = {
-  confirmData: null
 }
 
 ProjectMonitorView.propTypes = {

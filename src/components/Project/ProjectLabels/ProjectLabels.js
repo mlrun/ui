@@ -27,12 +27,12 @@ import { generateKeyValues, parseKeyValues } from '../../../utils'
 import { getChipOptions } from '../../../utils/getChipOptions'
 
 const ProjectLabels = ({
-  addProjectLabel,
-  isEditMode,
-  labels,
-  shortChips,
-  updateProjectLabel,
-  visibleChipsMaxLength
+  addProjectLabel = () => {},
+  isEditMode = false,
+  labels = {},
+  shortChips = false,
+  updateProjectLabel = () => {},
+  visibleChipsMaxLength = 'all'
 }) => {
   const projectLabels = useMemo(
     () => (!isEmpty(labels) ? parseKeyValues(labels || {}) : []),
@@ -73,25 +73,13 @@ const ProjectLabels = ({
   )
 }
 
-ProjectLabels.defaultProps = {
-  addProjectLabel: () => {},
-  isEditMode: false,
-  labels: {},
-  shortChips: false,
-  updateProjectLabel: () => {},
-  visibleChipsMaxLength: 'all'
-}
-
 ProjectLabels.propTypes = {
   addProjectLabel: PropTypes.func,
   isEditMode: PropTypes.bool,
   labels: PropTypes.object,
   shortChips: PropTypes.bool,
   updateProjectLabel: PropTypes.func,
-  visibleChipsMaxLength: PropTypes.oneOfType([
-    PropTypes.string,
-    PropTypes.number
-  ])
+  visibleChipsMaxLength: PropTypes.oneOfType([PropTypes.string, PropTypes.number])
 }
 
 export default ProjectLabels

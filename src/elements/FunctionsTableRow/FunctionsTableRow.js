@@ -36,12 +36,12 @@ const FunctionsTableRow = ({
   actionsMenu,
   handleExpandRow,
   handleSelectItem,
-  mainRowItemsCount,
+  mainRowItemsCount = 1,
   rowIndex,
   rowItem,
   selectedItem,
   selectedRowData,
-  withQuickActions
+  withQuickActions = false
 }) => {
   const parent = useRef()
   const params = useParams()
@@ -184,11 +184,6 @@ const FunctionsTableRow = ({
       )}
     </tr>
   )
-}
-
-FunctionsTableRow.defaultProps = {
-  mainRowItemsCount: 1,
-  withQuickActions: false
 }
 
 FunctionsTableRow.propTypes = {

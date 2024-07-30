@@ -41,17 +41,17 @@ import {
 import { MLRUN_STORAGE_INPUT_PATH_SCHEME } from '../../constants'
 
 const TargetPath = ({
-  density,
+  density = 'normal',
   formState,
   formStateFieldInfo,
-  hiddenSelectOptionsIds,
-  inputDefaultValue,
-  label,
+  hiddenSelectOptionsIds = [],
+  inputDefaultValue = '',
+  label = '',
   name,
   params,
-  required,
-  selectDefaultValue,
-  selectPlaceholder,
+  required = false,
+  selectDefaultValue = '',
+  selectPlaceholder = '',
   setFieldState
 }) => {
   const [dataInputState, setDataInputState] = useState(targetPathInitialState)
@@ -264,16 +264,6 @@ const TargetPath = ({
       />
     </>
   )
-}
-
-TargetPath.defaultProps = {
-  density: 'normal',
-  hiddenSelectOptionsIds: [],
-  inputDefaultValue: '',
-  label: '',
-  required: false,
-  selectDefaultValue: '',
-  selectPlaceholder: ''
 }
 
 TargetPath.propTypes = {

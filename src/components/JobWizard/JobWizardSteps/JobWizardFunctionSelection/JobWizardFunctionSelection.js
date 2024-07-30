@@ -57,7 +57,7 @@ import './jobWizardFunctionSelection.scss'
 
 const JobWizardFunctionSelection = ({
   activeTab,
-  currentProject,
+  currentProject = null,
   defaultData,
   filteredFunctions,
   filteredTemplates,
@@ -79,7 +79,7 @@ const JobWizardFunctionSelection = ({
   setShowSchedule,
   setTemplates,
   setTemplatesCategories,
-  stepIsActive,
+  stepIsActive = false,
   templates,
   templatesCategories
 }) => {
@@ -492,11 +492,6 @@ const JobWizardFunctionSelection = ({
       />
     </div>
   )
-}
-
-JobWizardFunctionSelection.defaultProps = {
-  currentProject: null,
-  stepIsActive: false
 }
 
 JobWizardFunctionSelection.propTypes = {

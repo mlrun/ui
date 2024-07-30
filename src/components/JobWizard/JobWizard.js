@@ -77,26 +77,26 @@ import { useModalBlockHistory } from '../../hooks/useModalBlockHistory.hook'
 import './jobWizard.scss'
 
 const JobWizard = ({
-  defaultData,
+  defaultData = {},
   editJob,
   fetchFunctionTemplate,
   fetchHubFunction,
   frontendSpec,
   functionsStore,
-  isBatchInference,
+  isBatchInference = false,
   isOpen,
-  isTrain,
+  isTrain = false,
   jobsStore,
-  mode,
+  mode = PANEL_CREATE_MODE,
   onResolve,
-  onSuccessRequest,
-  onWizardClose,
+  onSuccessRequest = () => {},
+  onWizardClose = () => {},
   params,
-  prePopulatedData,
+  prePopulatedData = {},
   removeJobFunction,
   removeHubFunctions,
   runNewJob,
-  wizardTitle
+  wizardTitle = 'Batch run'
 }) => {
   const formRef = React.useRef(
     createForm({
@@ -536,17 +536,6 @@ const JobWizard = ({
       }}
     </Form>
   )
-}
-
-JobWizard.defaultProps = {
-  defaultData: {},
-  isBatchInference: false,
-  isTrain: false,
-  mode: PANEL_CREATE_MODE,
-  onSuccessRequest: () => {},
-  onWizardClose: () => {},
-  prePopulatedData: {},
-  wizardTitle: 'Batch run'
 }
 
 JobWizard.propTypes = {

@@ -31,11 +31,11 @@ const JobsPanelParametersTable = ({
   addNewItem,
   checkParameter,
   children,
-  className,
+  className = '',
   content,
   handleDeleteParameter,
   handleEditParameter,
-  headers,
+  headers = [],
   isPanelEditMode,
   parameterTypeOptions,
   selectedItem,
@@ -100,21 +100,12 @@ const JobsPanelParametersTable = ({
   )
 }
 
-JobsPanelParametersTable.defaultProps = {
-  className: '',
-  handleDeleteItems: null,
-  handleSetSelectedVolume: null,
-  headers: []
-}
-
 JobsPanelParametersTable.propTypes = {
   addNewItem: PropTypes.bool.isRequired,
   checkParameter: PropTypes.func.isRequired,
   className: PropTypes.string,
-  content: PropTypes.oneOfType([
-    PropTypes.arrayOf(PropTypes.shape({})),
-    PropTypes.shape({})
-  ]).isRequired,
+  content: PropTypes.oneOfType([PropTypes.arrayOf(PropTypes.shape({})), PropTypes.shape({})])
+    .isRequired,
   handleDeleteParameter: PropTypes.func,
   handleEditParameter: PropTypes.func.isRequired,
   headers: PropTypes.arrayOf(PropTypes.shape({})),

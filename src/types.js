@@ -280,7 +280,6 @@ export const FILTERS_CONFIG = PropTypes.objectOf(
   })
 )
 
-
 export const STATUS_LIST = PropTypes.arrayOf(
   PropTypes.shape({
     id: PropTypes.string.isRequired,

@@ -25,7 +25,7 @@ import Accordion from '../../../common/Accordion/Accordion'
 import Select from '../../../common/Select/Select'
 import './configTargets.scss'
 
-const ConfigTargets = ({ steps, targets }) => {
+const ConfigTargets = ({ steps = [], targets = [] }) => {
   const onSelectTargetAfterStep = (targetName, stepName) => {
     // TODO
   }
@@ -57,11 +57,6 @@ const ConfigTargets = ({ steps, targets }) => {
       </div>
     </Accordion>
   )
-}
-
-ConfigTargets.defaultProps = {
-  steps: [],
-  targets: []
 }
 
 ConfigTargets.propTypes = {

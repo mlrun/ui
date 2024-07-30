@@ -37,14 +37,14 @@ import { isRowExpanded, PARENT_ROW_EXPANDED_CLASS } from '../../utils/tableRows.
 
 const FeatureStoreTableRow = ({
   actionsMenu,
-  handleExpandRow,
-  handleSelectItem,
-  hideActionsMenu,
-  mainRowItemsCount,
+  handleExpandRow = () => {},
+  handleSelectItem = () => {},
+  hideActionsMenu = false,
+  mainRowItemsCount = 1,
   pageTab,
   rowIndex,
   rowItem,
-  selectedItem,
+  selectedItem = {},
   selectedRowData
 }) => {
   const parent = useRef()
@@ -208,14 +208,6 @@ const FeatureStoreTableRow = ({
       )}
     </tr>
   )
-}
-
-FeatureStoreTableRow.defaultProps = {
-  handleExpandRow: () => {},
-  handleSelectItem: () => {},
-  hideActionsMenu: false,
-  mainRowItemsCount: 1,
-  selectedItem: {}
 }
 
 FeatureStoreTableRow.propTypes = {

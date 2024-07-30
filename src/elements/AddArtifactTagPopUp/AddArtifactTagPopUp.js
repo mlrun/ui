@@ -39,7 +39,7 @@ const AddArtifactTagPopUp = ({
   artifact,
   getArtifact,
   isOpen,
-  onAddTag,
+  onAddTag = () => {},
   onResolve,
   projectName
 }) => {
@@ -169,10 +169,6 @@ const AddArtifactTagPopUp = ({
       }}
     </Form>
   )
-}
-
-AddArtifactTagPopUp.defaultProps = {
-  onAddTag: () => {}
 }
 
 AddArtifactTagPopUp.propTypes = {

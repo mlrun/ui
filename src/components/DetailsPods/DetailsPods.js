@@ -32,7 +32,7 @@ import { generatePods } from './detailsPods.util'
 
 import './detailsPods.scss'
 
-const DetailsPods = ({ detailsStore, noDataMessage }) => {
+const DetailsPods = ({ detailsStore, noDataMessage = '' }) => {
   const [selectedPod, setSelectedPod] = useState(null)
   const [table, setTable] = useState([])
   const params = useParams()
@@ -117,10 +117,6 @@ const DetailsPods = ({ detailsStore, noDataMessage }) => {
       )}
     </>
   )
-}
-
-DetailsPods.defaultProps = {
-  noDataMessage: ''
 }
 
 DetailsPods.propTypes = {

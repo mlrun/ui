@@ -43,10 +43,10 @@ import { getChipLabelAndValue } from '../../utils/getChipLabelAndValue'
 import './detailsArtifacts.scss'
 
 const DetailsArtifacts = ({
-  allowSortBy,
-  defaultSortBy,
-  defaultDirection,
-  excludeSortBy,
+  allowSortBy = null,
+  defaultSortBy = null,
+  defaultDirection = 'desc',
+  excludeSortBy = null,
   fetchJob,
   iteration,
   selectedItem,
@@ -248,13 +248,6 @@ const DetailsArtifacts = ({
       </div>
     </div>
   )
-}
-
-DetailsArtifacts.defaultProps = {
-  allowSortBy: null,
-  defaultSortBy: null,
-  defaultDirection: 'desc',
-  excludeSortBy: null
 }
 
 DetailsArtifacts.propTypes = {

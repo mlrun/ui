@@ -25,12 +25,7 @@ import './actionsMenuItem.scss'
 
 import { Tooltip, TextTooltipTemplate } from 'igz-controls/components'
 
-const ActionsMenuItem = ({
-  dataItem = {},
-  index,
-  isIconDisplayed,
-  menuItem,
-}) => {
+const ActionsMenuItem = ({ dataItem = {}, index, isIconDisplayed, menuItem }) => {
   const iconClassNames = classnames(
     'actions-menu__icon',
     isIconDisplayed && 'actions-menu__icon_visible'

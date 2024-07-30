@@ -47,7 +47,7 @@ import './detailsRequestedFeatures.scss'
 
 const DetailsRequestedFeaturesView = ({
   confirmDialogData,
-  editableItemIndex,
+  editableItemIndex = null,
   formState,
   handleDelete,
   handleDiscardChanges,
@@ -233,10 +233,6 @@ const DetailsRequestedFeaturesView = ({
       )}
     </div>
   )
-}
-
-DetailsRequestedFeaturesView.defaultProps = {
-  editableItemIndex: null
 }
 
 DetailsRequestedFeaturesView.propTypes = {

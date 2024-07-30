@@ -36,11 +36,11 @@ const JobsPanelTableView = ({
   handleEdit,
   headers,
   section,
-  sectionData,
-  sectionDispatch,
-  sectionState,
+  sectionData = {},
+  sectionDispatch = () => {},
+  sectionState = {},
   selectedItem,
-  setEditItem,
+  setEditItem = () => {},
   setSelectedItem,
   setValidation,
   validation
@@ -111,13 +111,6 @@ const JobsPanelTableView = ({
       {children}
     </div>
   )
-}
-
-JobsPanelTableView.defaultProps = {
-  sectionData: {},
-  sectionDispatch: () => {},
-  sectionState: {},
-  setEditItem: () => {}
 }
 
 JobsPanelTableView.propTypes = {

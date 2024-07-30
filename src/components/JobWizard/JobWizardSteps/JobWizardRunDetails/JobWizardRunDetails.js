@@ -44,7 +44,10 @@ import {
 import { SECONDARY_BUTTON, TERTIARY_BUTTON } from 'igz-controls/constants'
 import { areFormValuesChanged } from 'igz-controls/utils/form.util'
 import { getChipOptions } from '../../../../utils/getChipOptions'
-import { getValidationRules, getInternalLabelsValidationRule } from 'igz-controls/utils/validation.util'
+import {
+  getValidationRules,
+  getInternalLabelsValidationRule
+} from 'igz-controls/utils/validation.util'
 import { openPopUp } from 'igz-controls/utils/common.util'
 import {
   generateJobWizardData,
@@ -57,7 +60,7 @@ import {
 import './jobWizardRunDetails.scss'
 
 const JobWizardRunDetails = ({
-  currentProject,
+  currentProject = null,
   formState,
   frontendSpec,
   isBatchInference,
@@ -268,7 +271,10 @@ const JobWizardRunDetails = ({
             shortChips
             visibleChipsMaxLength="all"
             validationRules={{
-              key: getValidationRules('job.label.key', getInternalLabelsValidationRule(frontendSpec.internal_labels)),
+              key: getValidationRules(
+                'job.label.key',
+                getInternalLabelsValidationRule(frontendSpec.internal_labels)
+              ),
               value: getValidationRules('job.label.value')
             }}
           />
@@ -379,9 +385,6 @@ const JobWizardRunDetails = ({
       </div>
     )
   )
-}
-JobWizardRunDetails.defaultProps = {
-  currentProject: null
 }
 
 JobWizardRunDetails.propTypes = {

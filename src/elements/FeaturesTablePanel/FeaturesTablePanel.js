@@ -39,8 +39,8 @@ import { showErrorNotification } from '../../utils/notifications.util'
 const FeaturesTablePanel = ({
   createNewFeatureVector,
   filtersStore,
-  handleCancel,
-  onSubmit,
+  handleCancel = null,
+  onSubmit = null,
   updateFeatureVectorData
 }) => {
   const [isCreateFeaturePopUpOpen, setIsCreateFeaturePopUpOpen] = useState(false)
@@ -170,11 +170,6 @@ const FeaturesTablePanel = ({
       toggleLabelFeature={toggleLabelFeature}
     />
   )
-}
-
-FeaturesTablePanel.defaultProps = {
-  handleCancel: null,
-  onSubmit: null
 }
 
 FeaturesTablePanel.propTypes = {

@@ -27,24 +27,24 @@ import { COMBOBOX_MATCHES } from '../../types'
 import './combobox.scss'
 
 const Combobox = ({
-  comboboxClassName,
-  disabled,
-  hideSearchInput,
-  inputPlaceholder,
-  inputDefaultValue,
+  comboboxClassName = '',
+  disabled = false,
+  hideSearchInput = false,
+  inputPlaceholder = '',
+  inputDefaultValue = '',
   inputOnChange,
-  invalid,
-  invalidText,
+  invalid = false,
+  invalidText = '',
   matches,
-  maxSuggestedMatches,
-  onBlur,
-  onFocus,
-  required,
-  requiredText,
-  selectDefaultValue,
+  maxSuggestedMatches = 1,
+  onBlur = null,
+  onFocus = null,
+  required = false,
+  requiredText = '',
+  selectDefaultValue = null,
   selectDropdownList,
   selectOnChange,
-  selectPlaceholder
+  selectPlaceholder = ''
 }) => {
   const [inputValue, setInputValue] = useState('')
   const [selectValue, setSelectValue] = useState({
@@ -271,23 +271,6 @@ const Combobox = ({
       showSelectDropdown={showSelectDropdown}
     />
   )
-}
-
-Combobox.defaultProps = {
-  comboboxClassName: '',
-  disabled: false,
-  hideSearchInput: false,
-  inputDefaultValue: '',
-  inputPlaceholder: '',
-  invalid: false,
-  invalidText: '',
-  maxSuggestedMatches: 1,
-  onBlur: null,
-  onFocus: null,
-  required: false,
-  requiredText: '',
-  selectDefaultValue: null,
-  selectPlaceholder: ''
 }
 
 Combobox.propTypes = {
