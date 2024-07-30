@@ -388,7 +388,7 @@ Feature: Feature Store Page
         Then type value "type=featureSet" to "Table_Label_Filter_Input" field on "Feature_Store_Feature_Sets_Tab" wizard
         Then click on "Table_Refresh_Button" element on "Feature_Store_Feature_Sets_Tab" wizard
         And wait load page
-        Then value in "labels" column with "dropdowns" in "Feature_Sets_Table" on "Feature_Store_Feature_Sets_Tab" wizard should contains "type=featureSet" in "Overlay"
+        Then value in "labels" column with "text" in "Feature_Sets_Table" on "Feature_Store_Feature_Sets_Tab" wizard should contains "type=featureSet"
         Then type value "v3io_user=123" to "Table_Label_Filter_Input" field on "Feature_Store_Feature_Sets_Tab" wizard
         Then click on "Table_Refresh_Button" element on "Feature_Store_Feature_Sets_Tab" wizard
         And wait load page
@@ -473,7 +473,7 @@ Feature: Feature Store Page
         Then type value "type=featureVector" to "Table_Label_Filter_Input" field on "Feature_Store_Features_Vectors_Tab" wizard
         Then click on "Table_Refresh_Button" element on "Feature_Store_Features_Tab" wizard
         And wait load page
-        Then value in "labels" column with "dropdowns" in "Feature_Vectors_Table" on "Feature_Store_Features_Vectors_Tab" wizard should contains "type=featureVector" in "Overlay"
+        Then value in "labels" column with "text" in "Feature_Vectors_Table" on "Feature_Store_Features_Vectors_Tab" wizard should contains "type=featureVector"
         Then type value "v3io_user=123" to "Table_Label_Filter_Input" field on "Feature_Store_Features_Vectors_Tab" wizard
         Then click on "Table_Refresh_Button" element on "Feature_Store_Features_Vectors_Tab" wizard
         And wait load page
@@ -980,8 +980,8 @@ Feature: Feature Store Page
         And verify "Feature_Store_Tab_Selector" on "Feature_Store_Feature_Sets_Tab" wizard should contains "Feature_Store"."Tab_List"
         And verify "Feature Sets" tab is active in "Feature_Store_Tab_Selector" on "Feature_Store_Feature_Sets_Tab" wizard
         And click on "Create_Set_Button" element on "Feature_Store_Feature_Sets_Tab" wizard
-        Then verify "Save_Button" element on "New_Feature_Set" wizard is disabled
-        Then verify "Save_And_Ingest_Button" element on "New_Feature_Set" wizard is disabled
+        Then verify "Save_Button" element on "New_Feature_Set" wizard is enabled
+        Then verify "Save_And_Ingest_Button" element on "New_Feature_Set" wizard is enabled
         Then type value "demo_feature_set" to "Feature_Set_Name_Input" field on "New_Feature_Set" wizard
         Then type value "latest" to "Version_Input" field on "New_Feature_Set" wizard
         Then check "Description_Input" textarea counter on "New_Feature_Set" wizard

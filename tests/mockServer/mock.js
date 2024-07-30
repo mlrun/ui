@@ -71,10 +71,13 @@ import iguazioProjectsRelations from './data/iguazioProjectsRelations.json'
 import nuclioFunctions from './data/nuclioFunctions.json'
 import nuclioAPIGateways from './data/nuclioAPIGateways.json'
 import nuclioStreams from './data/nuclioStreams.json'
-import { updateRuns } from './dateSynchronization.js'
+import { updateRuns, updatePipelines, updatePipelineIDs, updateSchedules } from './dateSynchronization.js'
 
 //updating values in files with synthetic data
 updateRuns(runs)
+updatePipelines(pipelines)
+updatePipelineIDs(pipelineIDs)
+updateSchedules(schedules)
 
 // Here we are configuring express to use body-parser as middle-ware.
 const app = express()
@@ -1242,28 +1245,38 @@ function deleteProjectsFeatureVectors(req, res) {
 function getPipelines(req, res) {
   //get pipelines for Projects Monitoring page
   if (req.params['project'] === '*') {
-    let collectedMonitoringPipelines = pipelineIDs.map(pipeline => {
-      return pipeline.run
-    })
-    if (JSON.parse(req.query.filter).predicates.length >= 1) {
-      if (JSON.parse(req.query.filter).predicates[0]) {
-        collectedMonitoringPipelines = collectedMonitoringPipelines.filter(
-          pipeline =>
-            Date.parse(pipeline.created_at) >=
-            Date.parse(JSON.parse(req.query.filter).predicates[0].timestamp_value) //start time from
-        )
-      }
-      if (JSON.parse(req.query.filter).predicates[1]) {
-        collectedMonitoringPipelines = collectedMonitoringPipelines.filter(
-          pipeline =>
-            Date.parse(pipeline.created_at) <=
-            Date.parse(JSON.parse(req.query.filter).predicates[1].timestamp_value) //start time to
-        )
-      }
+    const pipelinesRun = pipelineIDs.map(pipeline => pipeline.run)
+    const filter = JSON.parse(req.query.filter)
+    const predicates = filter.predicates
+  
+    if (!predicates.length) {
+      res.send({
+        runs: pipelinesRun,
+        total_size: pipelinesRun.length,
+        next_page_token: null
+      })
     }
 
-    res.send({
-      runs: collectedMonitoringPipelines,
+    let queryTimestampValue, queryStateValue
+
+    if (predicates.length === 1) {
+      queryTimestampValue = predicates[0].timestamp_value
+      queryStateValue = predicates[0].string_values ? predicates[0].string_values.values : null
+    } else {
+      queryTimestampValue = predicates[1].timestamp_value
+      queryStateValue = predicates[0].string_values.values
+    }
+
+    const collectedMonitoringPipelines = pipelinesRun.filter(pipeline => {
+      const pipelineCreatedAt = new Date(pipeline.created_at)
+      const timestampMatch = !queryTimestampValue || pipelineCreatedAt >= new Date(queryTimestampValue)
+      const stateMatch = queryStateValue ? Array.isArray(queryStateValue) ? queryStateValue.includes(pipeline.status) : pipeline.status === queryStateValue : true
+    
+      return timestampMatch && stateMatch
+    })
+      
+    res.send({ 
+      runs: collectedMonitoringPipelines, 
       total_size: collectedMonitoringPipelines.length,
       next_page_token: null
     })
