@@ -118,7 +118,9 @@ const ModelsView = React.forwardRef(
               />
             ) : (
               <>
-                {(selectedRowData.loading || artifactsStore.models.modelLoading) && <Loader />}
+                {(selectedRowData.loading ||
+                  artifactsStore.models.modelLoading ||
+                  artifactsStore.pipelines.loading) && <Loader />}
                 {maxArtifactsErrorIsShown && (
                   <WarningMessage
                     message="The query response displays up to 1000 items. Use filters to narrow down the results."

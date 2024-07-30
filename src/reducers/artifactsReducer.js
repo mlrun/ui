@@ -207,12 +207,19 @@ export const fetchFiles = createAsyncThunk(
 )
 export const fetchArtifactsFunctions = createAsyncThunk(
   'fetchArtifactsFunctions',
-  ({ project, filters, config }) => {
-    return functionsApi.getFunctions(project, filters, config, null).then(({ data }) => {
-      return parseFunctions(
-        data.funcs.filter(func => func.kind === FUNCTION_TYPE_SERVING && func.metadata.tag?.length)
-      )
-    })
+  ({ project, filters, config }, thunkAPI) => {
+    return functionsApi
+      .getFunctions(project, filters, config, null)
+      .then(({ data }) => {
+        return parseFunctions(
+          data.funcs.filter(
+            func => func.kind === FUNCTION_TYPE_SERVING && func.metadata.tag?.length
+          )
+        )
+      })
+      .catch(error => {
+        largeResponseCatchHandler(error, 'Failed to fetch functions', thunkAPI.dispatch)
+      })
   }
 )
 export const fetchModelEndpoints = createAsyncThunk(
