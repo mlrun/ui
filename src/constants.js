@@ -560,6 +560,7 @@ export const TAG_FILTER = 'tag'
 export const AUTO_REFRESH_ID = 'auto-refresh'
 export const AUTO_REFRESH = 'Auto Refresh'
 export const ANY_TIME = 'Any time'
+export const STATUS_FILTER_NAME = 'state'
 
 export const FILTER_MENU = 'filterMenu'
 export const FILTER_MENU_MODAL = 'filterMenuModal'

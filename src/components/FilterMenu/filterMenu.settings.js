@@ -29,8 +29,6 @@ import {
   JOB_KIND_MPIJOB,
   JOB_KIND_SPARK,
   JOB_KIND_WORKFLOW,
-  JOBS_MONITORING_JOBS_TAB,
-  JOBS_MONITORING_WORKFLOWS_TAB,
   PROJECT_FILTER,
   SORT_BY,
   FILTER_ALL_ITEMS,
@@ -39,8 +37,8 @@ import {
   TAG_FILTER_LATEST
 } from '../../constants'
 
-const jobsStatus = [
-  { label: 'All', id: FILTER_ALL_ITEMS, status: 'all' },
+export const jobsStatuses = [
+  { label: 'All', id: FILTER_ALL_ITEMS, status: FILTER_ALL_ITEMS },
   { label: 'Aborted', id: 'aborted', status: 'aborted' },
   { label: 'Aborting', id: 'aborting', status: 'aborting' },
   { label: 'Completed', id: 'completed', status: 'completed' },
@@ -49,31 +47,25 @@ const jobsStatus = [
   { label: 'Pending', id: 'pending', status: 'pending' }
 ]
 
-const workflowsStatus = [
-  { label: 'All', id: FILTER_ALL_ITEMS, status: 'all' },
+export const workflowsStatuses = [
+  { label: 'All', id: FILTER_ALL_ITEMS, status: FILTER_ALL_ITEMS },
   { label: 'Error', id: 'error', status: 'error' },
   { label: 'Failed', id: 'failed', status: 'failed' },
   { label: 'Running', id: 'running', status: 'running' },
   { label: 'Completed', id: 'completed', status: 'completed' }
 ]
 
-export const generateStatusFilter = (useFailedStatus, tab) => {
+export const generateStatusFilter = useFailedStatus => {
   const status = useFailedStatus ? 'failed' : 'error'
 
-  if (tab === JOBS_MONITORING_JOBS_TAB) {
-    return jobsStatus
-  } else if (tab === JOBS_MONITORING_WORKFLOWS_TAB) {
-    return workflowsStatus
-  } else {
-    return [
-      { label: 'All', id: FILTER_ALL_ITEMS, status: 'all' },
-      { label: 'Completed', id: 'completed', status: 'completed' },
-      { label: 'Running', id: 'running', status: 'running' },
-      { label: 'Pending', id: 'pending', status: 'pending' },
-      { label: 'Error', id: status, status: status },
-      { label: 'Aborted', id: 'aborted', status: 'aborted' }
-    ]
-  }
+  return [
+    { label: 'All', id: FILTER_ALL_ITEMS, status: FILTER_ALL_ITEMS },
+    { label: 'Completed', id: 'completed', status: 'completed' },
+    { label: 'Running', id: 'running', status: 'running' },
+    { label: 'Pending', id: 'pending', status: 'pending' },
+    { label: 'Error', id: status, status: status },
+    { label: 'Aborted', id: 'aborted', status: 'aborted' }
+  ]
 }
 
 export const generateTypeFilter = () => {

@@ -253,3 +253,13 @@ export const FILTERS_CONFIG = PropTypes.objectOf(
     isFuture: PropTypes.bool
   })
 )
+
+
+export const STATUS_LIST = PropTypes.arrayOf(
+  PropTypes.shape({
+    id: PropTypes.string.isRequired,
+    label: PropTypes.string.isRequired,
+    status: PropTypes.string.isRequired,
+    disabled: PropTypes.bool
+  })
+)

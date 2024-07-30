@@ -23,8 +23,7 @@ import {
   JOBS_MONITORING_SCHEDULED_TAB,
   NAME_FILTER,
   GROUP_BY_FILTER,
-  DATE_RANGE_TIME_FILTER,
-  FILTER_ALL_ITEMS
+  DATE_RANGE_TIME_FILTER
 } from '../../constants'
 import jobsActions from '../../actions/jobs'
 import functionsActions from '../../actions/functions'
@@ -112,24 +111,4 @@ export const actionCreator = {
   fetchFunctionLogs: functionsActions.fetchFunctionLogs,
   fetchJobFunction: jobsActions.fetchJobFunction,
   fetchJobs: jobsActions.fetchJobs
-}
-
-export const handleFilterStateChange = (selectedValue, currentValue, form, options) => {
-  if (
-    selectedValue.length > 1 &&
-    selectedValue.includes(FILTER_ALL_ITEMS) &&
-    selectedValue.indexOf(FILTER_ALL_ITEMS) === 0
-  ) {
-    form.change(
-      'state',
-      selectedValue.filter(value => value !== FILTER_ALL_ITEMS)
-    )
-  } else if (
-    (!currentValue.includes(FILTER_ALL_ITEMS) &&
-      selectedValue.includes(FILTER_ALL_ITEMS) &&
-      selectedValue.indexOf(FILTER_ALL_ITEMS) > 0) ||
-    options.filter(option => option.id !== FILTER_ALL_ITEMS).length === selectedValue.length
-  ) {
-    form.change('state', [FILTER_ALL_ITEMS])
-  }
 }
