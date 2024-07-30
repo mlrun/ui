@@ -30,7 +30,6 @@ const ActionsMenuItem = ({
   index,
   isIconDisplayed,
   menuItem,
-  onClickCallback = () => {}
 }) => {
   const iconClassNames = classnames(
     'actions-menu__icon',
@@ -47,11 +46,8 @@ const ActionsMenuItem = ({
       data-testid={`actions-menu__option-${index}`}
       className={menuClassNames}
       onClick={event => {
-        event.stopPropagation()
-
         if (!menuItem.disabled) {
           menuItem.onClick(dataItem)
-          onClickCallback()
         }
       }}
     >
@@ -71,8 +67,7 @@ ActionsMenuItem.propTypes = {
   dataItem: PropTypes.oneOfType([PropTypes.shape({}), PropTypes.string]),
   index: PropTypes.number.isRequired,
   isIconDisplayed: PropTypes.bool.isRequired,
-  menuItem: PropTypes.shape({}).isRequired,
-  onClickCallback: PropTypes.func
+  menuItem: PropTypes.shape({}).isRequired
 }
 
 export default ActionsMenuItem

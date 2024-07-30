@@ -56,8 +56,7 @@ const ActionsMenu = ({
 
   const hideActionMenu = useCallback(event => {
     if (
-      !event.target.closest('.actions-menu-button') &&
-      !event.target.closest('.actions-menu__body')
+      !event.target.closest('.actions-menu-button')
     ) {
       setIsShowMenu(false)
     }
@@ -158,7 +157,6 @@ const ActionsMenu = ({
                       isIconDisplayed={isIconDisplayed}
                       key={menuItem.label}
                       menuItem={menuItem}
-                      onClickCallback={() => setIsShowMenu(false)}
                     />
                   )
               )}
