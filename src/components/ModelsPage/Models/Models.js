@@ -377,7 +377,6 @@ const Models = ({ fetchModelFeatureVector }) => {
   useInitialArtifactsFetch(
     fetchData,
     urlTagOption,
-    models.length,
     setSelectedRowData,
     createModelsRowData
   )
