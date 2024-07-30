@@ -225,15 +225,25 @@ const DetailsInfoItem = React.forwardRef(
       return <div className="details-item__data details-item__data_multiline">
         {
           (Array.isArray(info) ? info : [info]).map((infoItem, index) => {
+            if (!infoItem) return null
+
             return item.link ? (
-              <Link className="link details-item__data details-item__link" to={item.link} key={index}>
+              <Link
+                className="link details-item__data details-item__link"
+                to={item.link}
+                key={index}
+              >
                 <Tooltip template={<TextTooltipTemplate text={infoItem} />}>{infoItem}</Tooltip>
               </Link>
             ) : (
               <a
                 key={index}
                 className="details-item__data details-item__link"
-                href={infoItem}
+                href={
+                  !infoItem.startsWith?.('http')
+                    ? `${window.location.protocol}//${infoItem}`
+                    : infoItem
+                }
                 target="_blank"
                 rel="noreferrer"
               >
