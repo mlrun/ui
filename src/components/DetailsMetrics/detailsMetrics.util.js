@@ -17,7 +17,8 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import { capitalize, chain } from 'lodash'
+import { capitalize, chain, isNil } from 'lodash'
+
 import {
   CUSTOM_RANGE_DATE_OPTION,
   PAST_24_HOUR_DATE_OPTION,
@@ -25,6 +26,7 @@ import {
   PAST_MONTH_DATE_OPTION,
   PAST_WEEK_DATE_OPTION
 } from '../../utils/datePicker.util'
+import { CHART_TYPE_BAR } from '../../constants'
 
 import { ReactComponent as ArrowUp } from 'igz-controls/images/arrow-up.svg'
 import { ReactComponent as ArrowDown } from 'igz-controls/images/arrow-down.svg'
@@ -185,18 +187,6 @@ export const getDateRangeBefore = range => {
 const getMetricTitle = fullName =>
   fullName.substring(fullName.lastIndexOf('.') + 1).replace(/-/g, ' ')
 
-const formatMetricsTime = (timeUnit, dates) => {
-  return dates.reduce(
-    (dates, [date]) => {
-      dates.labels.push(timeFormatters[timeUnit].handler(date))
-      dates.fullDates.push(timeFormatters['full'].handler(date))
-      
-      return dates
-    },
-    { fullDates: [], labels: [] }
-  )
-}
-
 export const formatNumber = num => {
   let result
 
@@ -230,7 +220,7 @@ const getAppName = inputString => {
 
 export const parseMetrics = (data, timeUnit) => {
   return data.map((metric, index) => {
-    const { full_name, result_kind: resultKind, values, type } = metric
+    const { full_name, result_kind: resultKind, values, type, data } = metric
 
     if (!metric.data || !values || !Array.isArray(values)) {
       return {
@@ -241,46 +231,123 @@ export const parseMetrics = (data, timeUnit) => {
       }
     }
 
-    const points = values.map(([_, value]) => parseFloat(value.toFixed(2)))
+    const withInvocationRate = full_name.includes('invocations')
+    const parsedMetric = {
+      type,
+      data,
+      full_name,
+      resultKind,
+      app: getAppName(full_name),
+      id: index,
+      labels: [],
+      dates: [],
+      points: [],
+      title: getMetricTitle(full_name),
+      driftStatusList: [],
+      totalDriftStatus: null,
+      minPointValue: null,
+      maxPointValue: null,
+      [withInvocationRate ? METRIC_COMPUTED_TOTAL_POINTS : METRIC_COMPUTED_AVG_POINTS]: '0',
+      [withInvocationRate ? METRIC_RAW_TOTAL_POINTS : METRIC_RAW_AVG_POINTS]: 0
+    }
+    let metricsValueSum = 0
+    let highestDrift = null
 
-    let driftStatusList = []
-    let totalDriftStatus = null
+    values.forEach(([date, value, driftStatus], index) => {
+      const parsedValue = parseFloat(value.toFixed(2))
+      parsedMetric.points.push(parsedValue)
 
-    if (type === 'result') {
-      let highestDrift = { status: -1 }
+      if (isNil(parsedMetric.minPointValue) || parsedMetric.minPointValue > parsedValue)
+        parsedMetric.minPointValue = parsedValue
 
-      driftStatusList = values.map(([date, __, driftStatus], index) => {
-        if (highestDrift.status < driftStatus) highestDrift = { status: driftStatus, index }
-        return driftStatusConfig[driftStatus]
-      })
+      if (isNil(parsedMetric.maxPointValue) || parsedMetric.maxPointValue < parsedValue)
+        parsedMetric.maxPointValue = parsedValue
 
-      totalDriftStatus = {
+      if (type === 'result') {
+        highestDrift = { status: -1 }
+
+        if (highestDrift.status < driftStatus) {
+          highestDrift = { status: driftStatus, index }
+        }
+
+        parsedMetric.driftStatusList.push(driftStatusConfig[driftStatus])
+      }
+
+      metricsValueSum += parsedValue
+      parsedMetric.labels.push(timeFormatters[timeUnit].handler(date))
+      parsedMetric.dates.push(timeFormatters['full'].handler(date))
+    })
+
+    if (highestDrift) {
+      parsedMetric.totalDriftStatus = {
         ...driftStatusConfig[highestDrift.status],
         index: highestDrift.index,
         text: generateResultMessage(highestDrift.status, resultKind)
       }
     }
 
-    const withInvocationRate = full_name.includes('invocations')
-
     const totalOrAvg = withInvocationRate
-      ? formatNumber(points.reduce((sum, value) => sum + value, 0))
-      : formatNumber((points.reduce((sum, value) => sum + value, 0) / points.length).toFixed(2))
-    const formattedMetricsTime = formatMetricsTime(timeUnit, values)
+      ? formatNumber(metricsValueSum)
+      : formatNumber((metricsValueSum / parsedMetric.points.length).toFixed(2))
 
-    return {
-      ...metric,
-      app: getAppName(full_name),
-      id: index,
-      labels: formattedMetricsTime.labels,
-      dates: formattedMetricsTime.fullDates,
-      points,
-      title: getMetricTitle(full_name),
-      driftStatusList,
-      totalDriftStatus,
-      [withInvocationRate ? METRIC_COMPUTED_TOTAL_POINTS : METRIC_COMPUTED_AVG_POINTS]:
-        totalOrAvg.formattedResult,
-      [withInvocationRate ? METRIC_RAW_TOTAL_POINTS : METRIC_RAW_AVG_POINTS]: totalOrAvg.rawResult
-    }
+    parsedMetric[withInvocationRate ? METRIC_COMPUTED_TOTAL_POINTS : METRIC_COMPUTED_AVG_POINTS] =
+      totalOrAvg.formattedResult
+    parsedMetric[withInvocationRate ? METRIC_RAW_TOTAL_POINTS : METRIC_RAW_AVG_POINTS] =
+      totalOrAvg.rawResult
+
+    return parsedMetric
   })
+}
+
+export const calculateHistogram = metric => {
+  const numberOfBins = 5
+  const { maxPointValue = 0, minPointValue = 0 } = metric
+  const range = maxPointValue - minPointValue === 0 ? 1 : maxPointValue - minPointValue
+  const binSize = range / numberOfBins
+  const bins = Array(numberOfBins)
+    .fill()
+    .map(() => ({ count: 0, minBinValue: null, maxBinValue: null }))
+  const roundValue = (value, fraction = 100) => Math.round(value * fraction) / fraction
+
+  metric.points.forEach(value => {
+    const binIndex = Math.min(Math.floor((value - minPointValue) / binSize), numberOfBins - 1)
+    bins[binIndex].count++
+
+    if (isNil(bins[binIndex].minBinValue) || bins[binIndex].minBinValue > value)
+      bins[binIndex].minBinValue = value
+
+    if (isNil(bins[binIndex].maxBinValue) || bins[binIndex].maxBinValue < value)
+      bins[binIndex].maxBinValue = value
+  })
+
+  const totalCount = metric.points.length
+
+  const binPercentages = bins.map(bin => roundValue((bin.count / totalCount) * 100, 1000))
+
+  const binLabels = Array.from({ length: numberOfBins }, (_, i) => {
+    if (parseFloat(binPercentages[i]) === 0) return ''
+
+    if (maxPointValue === minPointValue) return `${roundValue(maxPointValue)}`
+
+    const rangeStart = bins[i].minBinValue
+    const rangeEnd = bins[i].maxBinValue
+
+    if (rangeStart === rangeEnd) return String(roundValue(rangeStart))
+
+    return `${roundValue(rangeStart)} - ${roundValue(rangeEnd)}`
+  })
+
+  return {
+    labels: binLabels,
+    datasets: [
+      {
+        data: binPercentages,
+        chartType: CHART_TYPE_BAR,
+        tension: 0.2,
+        borderWidth: 2,
+        backgroundColor: colors.java,
+        borderColor: colors.java
+      }
+    ]
+  }
 }

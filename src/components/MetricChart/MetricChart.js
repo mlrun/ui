@@ -17,18 +17,24 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import { useEffect, useMemo, useRef, useState } from 'react'
+import { useEffect, useMemo, useRef, useState, memo } from 'react'
 import { Chart } from 'chart.js/auto'
 import classnames from 'classnames'
+import { throttle } from 'lodash'
 
 import Loader from '../../common/Loader/Loader'
 import { CHART_TYPE_BAR } from '../../constants'
 
-import { calculateMaxTicksLimit, generateMetricChartTooltip, hexToRGB } from './metricChart.util'
+import {
+  calculateMaxTicksLimit,
+  generateMetricChartTooltip,
+  setChartGradient
+} from './metricChart.util'
 
 const GenericMetricChart = ({ chartConfig, isInvocationCardExpanded }) => {
   const chartRef = useRef(null)
   const chartInstance = useRef(null)
+  const contextRef = useRef(null)
   const [isLoading, setIsLoading] = useState(true)
   const canvasClassNames = classnames(isLoading && 'hidden-canvas')
   const customPoints = useMemo(() => {
@@ -46,17 +52,20 @@ const GenericMetricChart = ({ chartConfig, isInvocationCardExpanded }) => {
       borderColor: () => 'white'
     }
   }, [chartConfig])
+  const backgroundColor = useMemo(() => {
+    return chartConfig?.data?.datasets[0].backgroundColor
+  }, [chartConfig])
 
   useEffect(() => {
-    const ctx = chartRef.current.getContext('2d')
+    contextRef.current = chartRef.current.getContext('2d')
 
-    if (ctx) {
+    if (contextRef.current) {
       if (chartInstance.current) {
         chartInstance.current.destroy()
       }
       const container = chartRef.current
       const maxTicksLimit = calculateMaxTicksLimit(container, chartConfig.type)
-      chartInstance.current = new Chart(ctx, {
+      chartInstance.current = new Chart(contextRef.current, {
         type: chartConfig.type,
         data: chartConfig.data,
         options: {
@@ -121,24 +130,8 @@ const GenericMetricChart = ({ chartConfig, isInvocationCardExpanded }) => {
     }
 
     if (chartConfig.gradient) {
-      const canvasHeight = isInvocationCardExpanded ? 200 : 80
-      if (chartInstance.current.options.scales.x.grid.display !== isInvocationCardExpanded) {
-        chartInstance.current.options.scales.x.grid.display = isInvocationCardExpanded
-        chartInstance.current.options.scales.y.grid.display = isInvocationCardExpanded
-        chartInstance.current.options.scales.y.display = isInvocationCardExpanded
-        chartInstance.current.options.scales.x.grid.ticks = true
-        chartInstance.current.options.scales.y.grid.ticks = true
-      }
+      setChartGradient(chartInstance.current, contextRef.current, backgroundColor, 200)
 
-      const gradient = ctx.createLinearGradient(0, 0, 0, canvasHeight)
-      gradient.addColorStop(
-        0,
-        hexToRGB(chartConfig?.data?.datasets[0].backgroundColor || '#FFF', 0.7)
-      )
-      gradient.addColorStop(1, hexToRGB(chartConfig?.data?.datasets[0].backgroundColor))
-      chartInstance.current.data.datasets.forEach(dataset => {
-        dataset.backgroundColor = gradient
-      })
       chartInstance.current.update()
     }
 
@@ -152,13 +145,32 @@ const GenericMetricChart = ({ chartConfig, isInvocationCardExpanded }) => {
       }
     }
   }, [
+    backgroundColor,
     chartConfig.data,
-    chartConfig.type,
     chartConfig.gradient,
     chartConfig.options,
-    isInvocationCardExpanded,
+    chartConfig.type,
     customPoints
   ])
+
+  useEffect(() => {
+    if (chartInstance.current) {
+      if (chartInstance.current.options.scales.x.grid.display !== isInvocationCardExpanded) {
+        chartInstance.current.options.scales.x.grid.display = isInvocationCardExpanded
+        chartInstance.current.options.scales.y.grid.display = isInvocationCardExpanded
+        chartInstance.current.options.scales.y.display = isInvocationCardExpanded
+        chartInstance.current.options.scales.x.grid.ticks = true
+        chartInstance.current.options.scales.y.grid.ticks = true
+      }
+
+      if (chartConfig.gradient && contextRef.current) {
+        const canvasHeight = isInvocationCardExpanded ? 200 : 80
+        setChartGradient(chartInstance.current, contextRef.current, backgroundColor, canvasHeight) 
+      }
+
+      chartInstance.current.update()
+    }
+  }, [backgroundColor, chartConfig.gradient, isInvocationCardExpanded])
 
   useEffect(() => {
     const handleResize = () => {
@@ -170,10 +182,12 @@ const GenericMetricChart = ({ chartConfig, isInvocationCardExpanded }) => {
         chartInstance.current.update()
       }
     }
-    window.addEventListener('resize', handleResize)
+    const throttledResizeHandler = throttle(handleResize, 500, { leading: true, trailing: true })
+
+    window.addEventListener('resize', throttledResizeHandler)
 
     return () => {
-      window.removeEventListener('resize', handleResize)
+      window.removeEventListener('resize', throttledResizeHandler)
     }
   }, [chartConfig.type])
 
@@ -185,4 +199,4 @@ const GenericMetricChart = ({ chartConfig, isInvocationCardExpanded }) => {
   )
 }
 
-export default GenericMetricChart
+export default memo(GenericMetricChart)
