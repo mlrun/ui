@@ -54,13 +54,21 @@ const ActionsMenu = ({
     isShowMenu && 'actions-menu__container-active'
   )
 
-  const hideActionMenu = useCallback(event => {
+  const clickHandler = useCallback(event => {
     if (
       !event.target.closest('.actions-menu-button')
     ) {
       setIsShowMenu(false)
     }
-  }, [])
+  }, [setIsShowMenu])
+
+  const scrollHandler = useCallback(event => {
+    if (
+      !event.target.closest('.actions-menu__body')
+    ) {
+      setIsShowMenu(false)
+    }
+  }, [setIsShowMenu])
 
   const onMouseOut = () => {
     if (isShowMenu) {
@@ -89,14 +97,14 @@ const ActionsMenu = ({
   }, [actionMenu])
 
   useEffect(() => {
-    window.addEventListener('click', hideActionMenu)
-    window.addEventListener('scroll', hideActionMenu, true)
+    window.addEventListener('click', clickHandler)
+    window.addEventListener('scroll', scrollHandler, true)
 
     return () => {
-      window.removeEventListener('click', hideActionMenu)
-      window.removeEventListener('scroll', hideActionMenu, true)
+      window.removeEventListener('click', clickHandler)
+      window.removeEventListener('scroll', scrollHandler, true)
     }
-  }, [hideActionMenu])
+  }, [clickHandler, scrollHandler])
 
   return (
     <div
