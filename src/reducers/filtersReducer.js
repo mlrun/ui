@@ -32,17 +32,25 @@ import {
   FILTER_MENU_MODAL,
   FUNCTION_FILTERS,
   GROUP_BY_NAME,
+  ITERATIONS_FILTER,
   JOBS_MONITORING_JOBS_TAB,
   JOBS_MONITORING_SCHEDULED_TAB,
   JOBS_MONITORING_WORKFLOWS_TAB,
+  LABELS_FILTER,
   MODELS_FILTERS,
   MODEL_TYPE,
   NAME_FILTER,
+  PROJECT_FILTER,
   SHOW_ITERATIONS,
-  TAG_FILTER_LATEST
+  SHOW_UNTAGGED_FILTER,
+  STATUS_FILTER,
+  TAG_FILTER,
+  TAG_FILTER_LATEST,
+  TYPE_FILTER
 } from '../constants'
 import {
-  NEXT_WEEK_DATE_OPTION,
+  NEXT_24_HOUR_DATE_OPTION,
+  PAST_24_HOUR_DATE_OPTION,
   PAST_WEEK_DATE_OPTION,
   datePickerFutureOptions,
   datePickerPastOptions,
@@ -70,15 +78,19 @@ const initialState = {
   [FILTER_MENU]: {
     [JOBS_MONITORING_JOBS_TAB]: {
       [NAME_FILTER]: '',
-      [DATES_FILTER]: getDatePickerFilterValue(datePickerPastOptions, PAST_WEEK_DATE_OPTION)
+      [DATES_FILTER]: getDatePickerFilterValue(datePickerPastOptions, PAST_24_HOUR_DATE_OPTION)
     },
     [JOBS_MONITORING_WORKFLOWS_TAB]: {
       [NAME_FILTER]: '',
-      [DATES_FILTER]: getDatePickerFilterValue(datePickerPastOptions, PAST_WEEK_DATE_OPTION)
+      [DATES_FILTER]: getDatePickerFilterValue(datePickerPastOptions, PAST_24_HOUR_DATE_OPTION)
     },
     [JOBS_MONITORING_SCHEDULED_TAB]: {
       [NAME_FILTER]: '',
-      [DATES_FILTER]: getDatePickerFilterValue(datePickerFutureOptions, NEXT_WEEK_DATE_OPTION, true)
+      [DATES_FILTER]: getDatePickerFilterValue(
+        datePickerFutureOptions,
+        NEXT_24_HOUR_DATE_OPTION,
+        true
+      )
     },
     [FUNCTION_FILTERS]: {
       [NAME_FILTER]: '',
@@ -87,57 +99,81 @@ const initialState = {
   },
   [FILTER_MENU_MODAL]: {
     [DATASETS_FILTERS]: {
-      initialValues: { tag: TAG_FILTER_LATEST, labels: '', iter: SHOW_ITERATIONS },
-      values: { tag: TAG_FILTER_LATEST, labels: '', iter: SHOW_ITERATIONS }
+      initialValues: {
+        [TAG_FILTER]: TAG_FILTER_LATEST,
+        [LABELS_FILTER]: '',
+        [ITERATIONS_FILTER]: SHOW_ITERATIONS
+      },
+      values: {
+        [TAG_FILTER]: TAG_FILTER_LATEST,
+        [LABELS_FILTER]: '',
+        [ITERATIONS_FILTER]: SHOW_ITERATIONS
+      }
     },
     [FILES_FILTERS]: {
-      initialValues: { tag: TAG_FILTER_LATEST, labels: '', iter: SHOW_ITERATIONS },
-      values: { tag: TAG_FILTER_LATEST, labels: '', iter: SHOW_ITERATIONS }
+      initialValues: {
+        [TAG_FILTER]: TAG_FILTER_LATEST,
+        [LABELS_FILTER]: '',
+        [ITERATIONS_FILTER]: SHOW_ITERATIONS
+      },
+      values: {
+        [TAG_FILTER]: TAG_FILTER_LATEST,
+        [LABELS_FILTER]: '',
+        [ITERATIONS_FILTER]: SHOW_ITERATIONS
+      }
     },
     [MODELS_FILTERS]: {
-      initialValues: { tag: TAG_FILTER_LATEST, labels: '', iter: SHOW_ITERATIONS },
-      values: { tag: TAG_FILTER_LATEST, labels: '', iter: SHOW_ITERATIONS }
+      initialValues: {
+        [TAG_FILTER]: TAG_FILTER_LATEST,
+        [LABELS_FILTER]: '',
+        [ITERATIONS_FILTER]: SHOW_ITERATIONS
+      },
+      values: {
+        [TAG_FILTER]: TAG_FILTER_LATEST,
+        [LABELS_FILTER]: '',
+        [ITERATIONS_FILTER]: SHOW_ITERATIONS
+      }
     },
     [FUNCTION_FILTERS]: {
-      initialValues: { showUntagged: false },
-      values: { showUntagged: false }
+      initialValues: { [SHOW_UNTAGGED_FILTER]: false },
+      values: { [SHOW_UNTAGGED_FILTER]: false }
     },
     [JOBS_MONITORING_JOBS_TAB]: {
       initialValues: {
-        labels: '',
-        project: '',
-        state: [FILTER_ALL_ITEMS],
-        type: FILTER_ALL_ITEMS
+        [LABELS_FILTER]: '',
+        [PROJECT_FILTER]: '',
+        [STATUS_FILTER]: [FILTER_ALL_ITEMS],
+        [TYPE_FILTER]: FILTER_ALL_ITEMS
       },
       values: {
-        labels: '',
-        project: '',
-        state: [FILTER_ALL_ITEMS],
-        type: FILTER_ALL_ITEMS
+        [LABELS_FILTER]: '',
+        [PROJECT_FILTER]: '',
+        [STATUS_FILTER]: [FILTER_ALL_ITEMS],
+        [TYPE_FILTER]: FILTER_ALL_ITEMS
       }
     },
     [JOBS_MONITORING_WORKFLOWS_TAB]: {
       initialValues: {
-        labels: '',
-        project: '',
-        state: [FILTER_ALL_ITEMS]
+        [LABELS_FILTER]: '',
+        [PROJECT_FILTER]: '',
+        [STATUS_FILTER]: [FILTER_ALL_ITEMS]
       },
       values: {
-        labels: '',
-        project: '',
-        state: [FILTER_ALL_ITEMS]
+        [LABELS_FILTER]: '',
+        [PROJECT_FILTER]: '',
+        [STATUS_FILTER]: [FILTER_ALL_ITEMS]
       }
     },
     [JOBS_MONITORING_SCHEDULED_TAB]: {
       initialValues: {
-        labels: '',
-        project: '',
-        type: FILTER_ALL_ITEMS
+        [LABELS_FILTER]: '',
+        [PROJECT_FILTER]: '',
+        [TYPE_FILTER]: FILTER_ALL_ITEMS
       },
       values: {
-        labels: '',
-        project: '',
-        type: FILTER_ALL_ITEMS
+        [LABELS_FILTER]: '',
+        [PROJECT_FILTER]: '',
+        [TYPE_FILTER]: FILTER_ALL_ITEMS
       }
     }
   }

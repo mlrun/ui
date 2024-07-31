@@ -40,8 +40,12 @@ import {
   JOBS_MONITORING_PAGE,
   JOBS_MONITORING_SCHEDULED_TAB,
   JOBS_MONITORING_WORKFLOWS_TAB,
+  LABELS_FILTER,
   NAME_FILTER,
-  SCHEDULE_TAB
+  PROJECT_FILTER,
+  SCHEDULE_TAB,
+  STATUS_FILTER,
+  TYPE_FILTER
 } from '../../constants'
 import { monitorJob, pollAbortingJobs, rerunJob } from '../Jobs/jobs.util'
 import { TERTIARY_BUTTON } from 'igz-controls/constants'
@@ -81,21 +85,31 @@ const ProjectsJobsMonitoring = ({ fetchAllJobRuns, fetchJobFunction, fetchJobs }
   const jobsFiltersConfig = useMemo(() => {
     return {
       [NAME_FILTER]: { label: 'Name:', hidden: Boolean(params.jobName) },
-      [DATES_FILTER]: { label: 'Started at:' }
+      [DATES_FILTER]: { label: 'Start time:' },
+      [PROJECT_FILTER]: { label: 'Project:' },
+      [STATUS_FILTER]: { label: 'Status:' },
+      [TYPE_FILTER]: { label: 'Type:' },
+      [LABELS_FILTER]: { label: 'Labels:' }
     }
   }, [params.jobName])
 
   const workflowsFiltersConfig = useMemo(() => {
     return {
       [NAME_FILTER]: { label: 'Name:' },
-      [DATES_FILTER]: { label: 'Created at:' }
+      [DATES_FILTER]: { label: 'Created at:' },
+      [PROJECT_FILTER]: { label: 'Project:' },
+      [STATUS_FILTER]: { label: 'Status:' },
+      [LABELS_FILTER]: { label: 'Labels:' }
     }
   }, [])
 
   const scheduledFiltersConfig = useMemo(() => {
     return {
       [NAME_FILTER]: { label: 'Name:' },
-      [DATES_FILTER]: { label: 'Scheduled at:', isFuture: true }
+      [DATES_FILTER]: { label: 'Scheduled at:', isFuture: true },
+      [PROJECT_FILTER]: { label: 'Project:' },
+      [TYPE_FILTER]: { label: 'Type:' },
+      [LABELS_FILTER]: { label: 'Labels:' }
     }
   }, [])
 
@@ -352,10 +366,12 @@ const ProjectsJobsMonitoring = ({ fetchAllJobRuns, fetchJobFunction, fetchJobs }
                   jobWizardIsOpened,
                   jobWizardMode,
                   jobs,
+                  jobsFiltersConfig,
                   jobsMonitoringData,
                   largeRequestErrorMessage,
                   refreshJobs,
                   refreshScheduled,
+                  scheduledFiltersConfig,
                   scheduledJobs,
                   selectedCard,
                   setAbortingJobs,
@@ -368,7 +384,8 @@ const ProjectsJobsMonitoring = ({ fetchAllJobRuns, fetchJobFunction, fetchJobs }
                   setScheduledJobs,
                   setSelectedCard,
                   setSelectedRunProject,
-                  terminateAbortTasksPolling
+                  terminateAbortTasksPolling,
+                  workflowsFiltersConfig
                 }}
               >
                 <Outlet />

@@ -47,6 +47,7 @@ const JobsMonitoring = () => {
     abortingJobs,
     jobRuns,
     jobs,
+    jobsFiltersConfig,
     largeRequestErrorMessage,
     refreshJobs,
     setAbortingJobs,
@@ -112,6 +113,8 @@ const JobsMonitoring = () => {
         abortingJobs={abortingJobs}
         ref={{ abortJobRef }}
         context={ProjectJobsMonitoringContext}
+        filterMenuName={JOBS_MONITORING_JOBS_TAB}
+        filtersConfig={jobsFiltersConfig}
         jobRuns={jobRuns}
         jobs={jobs}
         largeRequestErrorMessage={largeRequestErrorMessage}

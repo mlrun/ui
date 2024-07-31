@@ -17,7 +17,7 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import { capitalize, chain, defaultsDeep, get, isEmpty } from 'lodash'
+import { get } from 'lodash'
 
 import tasksApi from '../../api/tasks-api'
 
@@ -39,8 +39,6 @@ import jobsActions from '../../actions/jobs'
 import { generateKeyValues, truncateUid } from '../../utils'
 import { BG_TASK_FAILED, BG_TASK_SUCCEEDED, pollTask } from '../../utils/poll.util'
 import { setNotification } from '../../reducers/notificationReducer'
-import { generateFunctionPriorityLabel } from '../../utils/generateFunctionPriorityLabel'
-import { parseKeyValues } from '../../utils'
 import { showErrorNotification } from '../../utils/notifications.util'
 
 export const page = JOBS_PAGE
@@ -328,63 +326,6 @@ export const monitorJob = (jobs_dashboard_url, item, projectName) => {
     .replace('{filter_value}', item ? item.uid : projectName)
 
   window.open(redirectUrl, '_blank')
-}
-
-/**
- * Enriches a job run object with the associated function tag(s)
- * @param {Object} jobRun - The job run object to enrich
- * @param {Object} dispatch - dispatch method
- * @param {Function} fetchJobFunctions - The function to fetch job functions from an API
- * @param {Object} fetchJobFunctionsPromiseRef - A ref object used to store a reference to
- * the promise returned by the `fetchJobFunctions` function.
- * @returns {Promise<Object>} A Promise that resolves with the enriched job run object
- */
-export const enrichRunWithFunctionFields = (
-  dispatch,
-  jobRun,
-  fetchJobFunctions,
-  fetchJobFunctionsPromiseRef
-) => {
-  fetchJobFunctionsPromiseRef.current = Promise.resolve()
-
-  if (jobRun?.function) {
-    const [, functionProject = '', functionName = '', functionHash = ''] =
-      jobRun.function?.match?.(/(.+)\/(.+)@(.+)/) || []
-
-    if (functionProject && functionName && functionHash) {
-      fetchJobFunctionsPromiseRef.current = fetchJobFunctions(functionProject, functionHash)
-    }
-  }
-
-  return fetchJobFunctionsPromiseRef.current
-    .then(funcs => {
-      if (!isEmpty(funcs)) {
-        const tagsList = chain(funcs).map('metadata.tag').compact().uniq().value()
-
-        defaultsDeep(jobRun, {
-          ui: {
-            functionTag: tagsList.join(', '),
-            runOnSpot: capitalize(funcs[0].spec.preemption_mode ?? ''),
-            nodeSelectorChips: parseKeyValues(funcs[0].spec.node_selector || {}),
-            priority: generateFunctionPriorityLabel(funcs[0].spec.priority_class_name ?? '')
-          }
-        })
-      } else {
-        defaultsDeep(jobRun, {
-          ui: {
-            functionTag: '',
-            runOnSpot: '',
-            nodeSelectorChips: [],
-            priority: ''
-          }
-        })
-      }
-
-      return jobRun
-    })
-    .catch(error => {
-      showErrorNotification(dispatch, error, 'Failed to fetch function tag', '')
-    })
 }
 
 export const pollAbortingJobs = (project, terminatePollRef, abortingJobs, refresh, dispatch) => {

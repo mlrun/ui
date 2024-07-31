@@ -53,9 +53,8 @@ const WorkflowsMonitoring = ({ fetchFunctionLogs }) => {
   const { isStagingMode } = useMode()
   const abortControllerRef = useRef(new AbortController())
 
-  const { abortJobRef, getWorkflows, largeRequestErrorMessage } = React.useContext(
-    ProjectJobsMonitoringContext
-  )
+  const { abortJobRef, getWorkflows, largeRequestErrorMessage, workflowsFiltersConfig } =
+    React.useContext(ProjectJobsMonitoringContext)
 
   usePods(dispatch, detailsActions.fetchJobPods, detailsActions.removePods, selectedJob)
 
@@ -113,6 +112,8 @@ const WorkflowsMonitoring = ({ fetchFunctionLogs }) => {
         backLink={`/projects/${JOBS_MONITORING_PAGE}/${JOBS_MONITORING_WORKFLOWS_TAB}`}
         context={ProjectJobsMonitoringContext}
         fetchFunctionLogs={fetchFunctionLogs}
+        filterMenuName={JOBS_MONITORING_WORKFLOWS_TAB}
+        filtersConfig={workflowsFiltersConfig}
         getWorkflows={getWorkflows}
         itemIsSelected={itemIsSelected}
         largeRequestErrorMessage={largeRequestErrorMessage}
