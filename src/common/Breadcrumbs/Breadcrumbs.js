@@ -36,7 +36,7 @@ import { ReactComponent as ArrowIcon } from 'igz-controls/images/arrow.svg'
 
 import './breadcrums.scss'
 
-const Breadcrumbs = ({ onClick, projectStore, fetchProjectsNames }) => {
+const Breadcrumbs = ({ onClick = () => {}, projectStore, fetchProjectsNames }) => {
   const [showScreensList, setShowScreensList] = useState(false)
   const [showProjectsList, setShowProjectsList] = useState(false)
   const [searchValue, setSearchValue] = useState('')

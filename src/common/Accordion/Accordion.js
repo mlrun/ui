@@ -26,13 +26,13 @@ import { RoundedIcon } from 'igz-controls/components'
 import './accordion.scss'
 
 const Accordion = ({
-  alwaysOpened,
+  alwaysOpened = false,
   accordionClassName,
   children,
-  closeOnBlur,
-  icon,
+  closeOnBlur = null,
+  icon = null,
   iconClassName,
-  openByDefault
+  openByDefault = false
 }) => {
   const [open, setOpen] = useState(openByDefault)
   const accordionRef = React.createRef()

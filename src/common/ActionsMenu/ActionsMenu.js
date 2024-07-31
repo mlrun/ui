@@ -31,7 +31,13 @@ import { ReactComponent as ActionMenuIcon } from 'igz-controls/images/elipsis.sv
 
 import './actionsMenu.scss'
 
-const ActionsMenu = ({ dataItem = {}, menu, menuPosition, time = 100, withQuickActions }) => {
+const ActionsMenu = ({
+  dataItem = {},
+  menu,
+  menuPosition = '',
+  time = 100,
+  withQuickActions = false
+}) => {
   const [actionMenu, setActionMenu] = useState(menu)
   const [isIconDisplayed, setIsIconDisplayed] = useState(false)
   const [isShowMenu, setIsShowMenu] = useState(false)

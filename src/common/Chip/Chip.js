@@ -36,23 +36,23 @@ const Chip = React.forwardRef(
   (
     {
       chip,
-      chipIndex,
+      chipIndex = null,
       chipOptions,
       className,
       editConfig = {},
       handleEditChip = () => {},
       handleIsEdit = () => {},
       handleRemoveChip = () => {},
-      hiddenChips,
-      isDeleteMode,
-      isEditMode,
+      hiddenChips = false,
+      isDeleteMode = false,
+      isEditMode = false,
       onClick = null,
       setChipsSizes = () => {},
       setEditConfig = () => {},
       setValidation = null,
-      shortChip,
+      shortChip = false,
       showChips,
-      textOverflowEllipsis
+      textOverflowEllipsis = false
     },
     { chipsCellRef, hiddenChipsCounterRef }
   ) => {

@@ -26,7 +26,14 @@ import { ReactComponent as Checkbox } from 'igz-controls/images/checkbox-checked
 
 import './checkBox.scss'
 
-const CheckBox = ({ children, className, disabled, item, onChange, selectedId }) => {
+const CheckBox = ({
+  children,
+  className = '',
+  disabled = false,
+  item,
+  onChange,
+  selectedId = ''
+}) => {
   const checkboxClassName = classnames('checkbox', className, disabled && 'checkbox_disabled')
 
   return (
