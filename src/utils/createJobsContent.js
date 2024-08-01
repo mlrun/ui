@@ -156,7 +156,8 @@ export const createJobsMonitorTabContent = (jobs, jobName, isStagingMode) => {
 export const createJobsScheduleTabContent = jobs => {
   return jobs.map(job => {
     const identifierUnique = getJobIdentifier(job, true)
-    const [, , scheduleJobFunctionUid] = job.func?.match(/\w[\w'-]*/g, '') || []
+    const [, scheduledJobFunctionName, scheduledJobFunctionHash] =
+      job.func?.match(/\w[\w'-]*/g, '') || []
     const [, projectName, jobUid] = job.lastRunUri?.match(/(.+)@(.+)#([^:]+)(?::(.+))?/) || []
     const jobName = job.name
     const lastRunLink = () =>
@@ -183,12 +184,12 @@ export const createJobsScheduleTabContent = jobs => {
           className: 'table-cell-name',
           showStatus: true,
           getLink: tab =>
-            validateArguments(scheduleJobFunctionUid, tab)
+            validateArguments(scheduledJobFunctionHash, tab)
               ? generateLinkToDetailsPanel(
                   job.project,
                   FUNCTIONS_PAGE,
                   null,
-                  scheduleJobFunctionUid,
+                  `${scheduledJobFunctionName}@${scheduledJobFunctionHash}`,
                   null,
                   tab
                 )
@@ -363,18 +364,15 @@ export const createJobsWorkflowContent = (
           className: 'table-cell-name',
           type: 'link',
           getLink: tab => {
-            return workflowProjectName ?
-              getWorkflowMonitoringDetailsLink(
-                workflowProjectName,
-                workflowId,
-                job.customData
-              ) : getWorkflowDetailsLink(
-                projectName,
-                workflowId,
-                job.customData,
-                tab,
-                MONITOR_WORKFLOWS_TAB
-              )
+            return workflowProjectName
+              ? getWorkflowMonitoringDetailsLink(workflowProjectName, workflowId, job.customData)
+              : getWorkflowDetailsLink(
+                  projectName,
+                  workflowId,
+                  job.customData,
+                  tab,
+                  MONITOR_WORKFLOWS_TAB
+                )
           },
           showStatus: true,
           showUidRow: true
@@ -545,7 +543,8 @@ export const createJobsMonitoringContent = (jobs, jobName, isStagingMode) => {
 export const createScheduleJobsMonitoringContent = jobs => {
   return jobs.map(job => {
     const identifierUnique = getJobIdentifier(job, true)
-    const [, , scheduleJobFunctionUid] = job.func?.match(/\w[\w'-]*/g, '') || []
+    const [, scheduledJobFunctionName, scheduledJobFunctionHash] =
+      job.func?.match(/\w[\w'-]*/g, '') || []
     const [, projectName, jobUid] = job.lastRunUri?.match(/(.+)@(.+)#([^:]+)(?::(.+))?/) || []
     const jobName = job.name
     const lastRunLink = () =>
@@ -572,12 +571,12 @@ export const createScheduleJobsMonitoringContent = jobs => {
           className: 'table-cell-name',
           showStatus: true,
           getLink: tab =>
-            validateArguments(scheduleJobFunctionUid, tab)
+            validateArguments(scheduledJobFunctionHash, tab)
               ? generateLinkToDetailsPanel(
                   job.project,
                   FUNCTIONS_PAGE,
                   null,
-                  scheduleJobFunctionUid,
+                  `${scheduledJobFunctionName}@${scheduledJobFunctionHash}`,
                   null,
                   tab
                 )

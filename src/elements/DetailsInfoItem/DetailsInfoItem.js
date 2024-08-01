@@ -26,12 +26,13 @@ import { useSelector } from 'react-redux'
 
 import ChipCell from '../../common/ChipCell/ChipCell'
 import CopyToClipboard from '../../common/CopyToClipboard/CopyToClipboard'
-import Input from '../../common/Input/Input'
-import { Tooltip, TextTooltipTemplate, RoundedIcon } from 'igz-controls/components'
-import { FormInput, FormOnChange, FormTextarea } from 'igz-controls/components'
 import DetailsInfoItemChip from '../DetailsInfoItemChip/DetailsInfoItemChip'
+import Input from '../../common/Input/Input'
+import { FormInput, FormOnChange, FormTextarea } from 'igz-controls/components'
+import { Tooltip, TextTooltipTemplate, RoundedIcon } from 'igz-controls/components'
 
 import { CHIP_OPTIONS } from '../../types'
+import { generateFunctionDetailsLink } from '../../utils/generateFunctionDetailsLink'
 import { getValidationRules } from 'igz-controls/utils/validation.util'
 
 import { ReactComponent as Checkmark } from 'igz-controls/images/checkmark2.svg'
@@ -206,7 +207,7 @@ const DetailsInfoItem = React.forwardRef(
         </div>
       )
     } else if (!isEmpty(func)) {
-      const [functionProject, functionNameWithHash] = func.split('/')
+      const funcLink = generateFunctionDetailsLink(func)
 
       return (
         <Tooltip
@@ -215,7 +216,7 @@ const DetailsInfoItem = React.forwardRef(
         >
           <Link
             className="link"
-            to={`/projects/${functionProject}/functions/${functionNameWithHash}/overview`}
+            to={funcLink}
           >
             {func}
           </Link>
