@@ -35,7 +35,8 @@ import {
   JOB_DEFAULT_OUTPUT_PATH,
   DATES_FILTER,
   NAME_FILTER,
-  SHOW_UNTAGGED_FILTER
+  SHOW_UNTAGGED_FILTER,
+  FUNCTION_FILTERS
 } from '../../constants'
 import {
   fetchInitialFunctions,
@@ -44,6 +45,11 @@ import {
   pollDeletingFunctions,
   setFullSelectedFunction
 } from './functions.util'
+import {
+  ANY_TIME_DATE_OPTION,
+  datePickerPastOptions,
+  getDatePickerFilterValue
+} from '../../utils/datePicker.util'
 import createFunctionsContent from '../../utils/createFunctionsContent'
 import functionsActions from '../../actions/functions'
 import jobsActions from '../../actions/jobs'
@@ -54,7 +60,7 @@ import { isBackgroundTaskRunning } from '../../utils/poll.util'
 import { isDetailsTabExists } from '../../utils/isDetailsTabExists'
 import { openPopUp } from 'igz-controls/utils/common.util'
 import { parseFunctions } from '../../utils/parseFunctions'
-import { setFilters } from '../../reducers/filtersReducer'
+import { setFilters, setFiltersValues, setModalFiltersValues } from '../../reducers/filtersReducer'
 import { setNotification } from '../../reducers/notificationReducer'
 import { showErrorNotification } from '../../utils/notifications.util'
 import { useGroupContent } from '../../hooks/groupContent.hook'
@@ -496,6 +502,33 @@ const Functions = ({
       params.projectName
     )
   }, [dispatch, fetchFunction, navigate, params.projectName, selectedFunctionMin])
+
+  useLayoutEffect(() => {
+    if (
+      !functionsAreInitializedRef.current &&
+      (params.funcName || (params.hash && params.hash.includes('@')))
+    ) {
+      const funcName = params.funcName || params.hash.split('@')[0]
+
+      dispatch(
+        setFiltersValues({
+          name: FUNCTION_FILTERS,
+          value: {
+            [NAME_FILTER]: funcName,
+            [DATES_FILTER]: getDatePickerFilterValue(datePickerPastOptions, ANY_TIME_DATE_OPTION)
+          }
+        })
+      )
+      dispatch(
+        setModalFiltersValues({
+          name: FUNCTION_FILTERS,
+          value: {
+            [SHOW_UNTAGGED_FILTER]: true
+          }
+        })
+      )
+    }
+  }, [dispatch, params])
 
   useEffect(() => {
     fetchInitialFunctions(filtersStore, fetchData, functionsAreInitializedRef)

@@ -36,9 +36,9 @@ const NameFilter = ({ applyChanges, filterMenuName= '' }) => {
     if (event.keyCode === KEY_CODES.ENTER) {
       applyChanges(event.target.value)
       if (filterMenuName) {
-        dispatch(setFiltersValues({ name: filterMenuName, value: { name: event.target.value } }))
+        dispatch(setFiltersValues({ name: filterMenuName, value: { [NAME_FILTER]: event.target.value } }))
       } else {
-        dispatch(setFilters({ name: event.target.value }))
+        dispatch(setFilters({ [NAME_FILTER]: event.target.value }))
       }
     }
   }
@@ -46,9 +46,9 @@ const NameFilter = ({ applyChanges, filterMenuName= '' }) => {
     if (input.value.length > 0) {
       applyChanges(input.value)
       if (filterMenuName) {
-        dispatch(setFiltersValues({ name: filterMenuName, value: { name: input.value } }))
+        dispatch(setFiltersValues({ name: filterMenuName, value: { [NAME_FILTER]: input.value } }))
       } else {
-        dispatch(setFilters({ name: input.value }))
+        dispatch(setFilters({ [NAME_FILTER]: input.value }))
       }
     }
   }
