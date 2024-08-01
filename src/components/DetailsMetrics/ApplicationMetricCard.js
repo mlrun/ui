@@ -7,6 +7,7 @@ import MetricChart from '../MetricChart/MetricChart'
 import { getBarChartMetricConfig, getLineChartMetricConfig } from '../../utils/getMetricChartConfig'
 import { calculateHistogram, METRIC_COMPUTED_AVG_POINTS } from './detailsMetrics.util'
 import { CHART_TYPE_LINE } from '../../constants'
+import { METRIC_DATA } from '../../types'
 
 import colors from 'igz-controls/scss/colors.scss'
 
@@ -88,6 +89,10 @@ const ApplicationMetricCard = ({ metric }) => {
       </div>
     </StatsCard>
   )
+}
+
+ApplicationMetricCard.propTypes = {
+  metric: METRIC_DATA.isRequired
 }
 
 export default memo(ApplicationMetricCard)
