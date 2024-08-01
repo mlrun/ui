@@ -35,9 +35,10 @@ import {
   JOB_DEFAULT_OUTPUT_PATH,
   DATES_FILTER,
   NAME_FILTER,
-  SHOW_UNTAGGED_FILTER, FILTER_MENU, FUNCTION_FILTERS, FILTER_MENU_MODAL
+  SHOW_UNTAGGED_FILTER
 } from '../../constants'
 import {
+  fetchInitialFunctions,
   generateActionsMenu,
   generateFunctionsPageData,
   pollDeletingFunctions,
@@ -497,13 +498,7 @@ const Functions = ({
   }, [dispatch, fetchFunction, navigate, params.projectName, selectedFunctionMin])
 
   useEffect(() => {
-    if (!functionsAreInitializedRef.current) {
-      fetchData({
-        ...filtersStore[FILTER_MENU][FUNCTION_FILTERS],
-        ...filtersStore[FILTER_MENU_MODAL][FUNCTION_FILTERS].values
-      })
-      functionsAreInitializedRef.current = true
-    }
+    fetchInitialFunctions(filtersStore, fetchData, functionsAreInitializedRef)
   }, [filtersStore, fetchData])
 
   useEffect(() => {

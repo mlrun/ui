@@ -30,9 +30,13 @@ const ScheduledMonitoring = () => {
   const [dataIsLoaded, setDataIsLoaded] = useState(false)
   const dispatch = useDispatch()
   const filtersStore = useSelector(store => store.filtersStore)
-  const { scheduledJobs, setScheduledJobs, largeRequestErrorMessage, refreshScheduled } = React.useContext(
-    ProjectJobsMonitoringContext
-  )
+  const {
+    largeRequestErrorMessage,
+    refreshScheduled,
+    scheduledFiltersConfig,
+    scheduledJobs,
+    setScheduledJobs
+  } = React.useContext(ProjectJobsMonitoringContext)
 
   const tableContent = useMemo(() => {
     return createScheduleJobsMonitoringContent(scheduledJobs)
@@ -59,6 +63,8 @@ const ScheduledMonitoring = () => {
   return (
     <ScheduledJobsTable
       context={ProjectJobsMonitoringContext}
+      filtersConfig={scheduledFiltersConfig}
+      filtersMenuName={JOBS_MONITORING_SCHEDULED_TAB}
       jobs={scheduledJobs}
       largeRequestErrorMessage={largeRequestErrorMessage}
       refreshJobs={() =>

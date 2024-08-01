@@ -149,6 +149,13 @@ const ActionBar = ({
         dispatch(setFilters({ groupBy: GROUP_BY_NONE }))
       }
 
+      dispatch(
+        setFiltersValues({
+          name: filterMenuName,
+          value: { ...formValues }
+        })
+      )
+
       removeSelectedItem && dispatch(removeSelectedItem({}))
       setSelectedRowData && setSelectedRowData({})
       handleExpandAll && handleExpandAll(true)
@@ -160,6 +167,12 @@ const ActionBar = ({
     if (changes.counter > 0 && cancelRequest) {
       cancelRequest(REQUEST_CANCELED)
     } else {
+      dispatch(
+        setFiltersValues({
+          name: filterMenuName,
+          value: { ...formState.values }
+        })
+      )
       handleRefresh({
         ...formState.values,
         ...filtersStore.filterMenuModal[filterMenuName].values
@@ -180,7 +193,7 @@ const ActionBar = ({
       initialSelectedOptionId: optionId
     }
 
-    const newFilterValues =  { ...formState.values, [DATES_FILTER]: selectedDate }
+    const newFilterValues = { ...formState.values, [DATES_FILTER]: selectedDate }
 
     dispatch(
       setFiltersValues({
@@ -189,10 +202,7 @@ const ActionBar = ({
       })
     )
 
-    applyChanges(
-      newFilterValues,
-      filterMenuModal.values
-    )
+    applyChanges(newFilterValues, filterMenuModal.values)
     input.onChange(selectedDate)
   }
 

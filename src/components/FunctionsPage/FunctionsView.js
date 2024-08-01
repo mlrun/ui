@@ -111,9 +111,10 @@ const FunctionsView = ({
               <NoData
                 message={getNoDataMessage(
                   filtersStore,
-                  [],
+                  functionsFiltersConfig,
                   largeRequestErrorMessage,
                   FUNCTIONS_PAGE,
+                  null,
                   FUNCTION_FILTERS
                 )}
               />
