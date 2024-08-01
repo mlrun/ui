@@ -237,6 +237,32 @@ export const METRICS_SELECTOR_OPTIONS = PropTypes.arrayOf(
   })
 )
 
+export const DRIFT_STATUS = PropTypes.shape({
+  className: PropTypes.string.isRequired,
+  text: PropTypes.string.isRequired,
+  chartColor: PropTypes.string.isRequired,
+  index: PropTypes.number
+})
+
+export const METRIC_DATA = PropTypes.shape({
+  type: PropTypes.string.isRequired,
+  data: PropTypes.oneOfType([PropTypes.bool, PropTypes.string]).isRequired,
+  full_name: PropTypes.string.isRequired,
+  resultKind: PropTypes.number,
+  app: PropTypes.string.isRequired,
+  id: PropTypes.number.isRequired,
+  labels: PropTypes.arrayOf(PropTypes.string).isRequired,
+  dates: PropTypes.arrayOf(PropTypes.string).isRequired,
+  points: PropTypes.arrayOf(PropTypes.number).isRequired,
+  title: PropTypes.string.isRequired,
+  driftStatusList: PropTypes.arrayOf(DRIFT_STATUS),
+  totalDriftStatus: DRIFT_STATUS,
+  minPointValue: PropTypes.number.isRequired,
+  maxPointValue: PropTypes.number.isRequired,
+  metric_computed_avg_points: PropTypes.string.isRequired,
+  metric_raw_avg_points: PropTypes.string.isRequired
+})
+
 export const DATE_PICKER_TIME_FRAME_LIMITS = PropTypes.oneOf([
   TIME_FRAME_LIMITS.HOUR,
   TIME_FRAME_LIMITS['24_HOURS'],

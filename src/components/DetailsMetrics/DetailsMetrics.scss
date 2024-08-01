@@ -147,12 +147,10 @@ $stickyHeaderHeight: 55px;
       &-collapsed {
         height: 80px;
         margin-top: 15px;
-        transition: all 0.3s ease-in-out;
       }
 
       &-expanded {
         height: 200px;
-        transition: all 0.3s ease-in-out;
       }
 
       .chart-item {
