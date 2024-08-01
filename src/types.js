@@ -237,6 +237,13 @@ export const METRICS_SELECTOR_OPTIONS = PropTypes.arrayOf(
   })
 )
 
+export const DRIFT_STATUS = PropTypes.shape({
+  className: PropTypes.string.isRequired,
+  text: PropTypes.string.isRequired,
+  chartColor: PropTypes.string.isRequired,
+  index: PropTypes.number
+})
+
 export const METRIC_DATA = PropTypes.shape({
   type: PropTypes.string.isRequired,
   data: PropTypes.oneOfType([PropTypes.bool, PropTypes.string]).isRequired,
@@ -248,8 +255,8 @@ export const METRIC_DATA = PropTypes.shape({
   dates: PropTypes.arrayOf(PropTypes.string).isRequired,
   points: PropTypes.arrayOf(PropTypes.number).isRequired,
   title: PropTypes.string.isRequired,
-  driftStatusList: PropTypes.arrayOf(PropTypes.object),
-  totalDriftStatus: PropTypes.object,
+  driftStatusList: PropTypes.arrayOf(DRIFT_STATUS),
+  totalDriftStatus: DRIFT_STATUS,
   minPointValue: PropTypes.number.isRequired,
   maxPointValue: PropTypes.number.isRequired,
   metric_computed_avg_points: PropTypes.string.isRequired,
