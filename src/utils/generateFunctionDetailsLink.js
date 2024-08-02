@@ -41,9 +41,15 @@ export const generateFunctionDetailsLink = (uri = '') => {
   // 'my_proj/func_name@func_hash' -> projects/my_proj/functions/func_hash/overview
   // 'my_proj/func_name' -> projects/my_proj/functions/func_name/latest/overview
   // 'my_proj/func_name:custom_tag' -> projects/my_proj/functions/func_name/custom_tag/overview
-  const { project, name, nameWithHash, tag } = parseFunctionUri(uri)
+  let generatedLink = ''
 
-  return uri
-    ? `/projects/${project}/functions/${nameWithHash ? nameWithHash : name}${nameWithHash ? '' : '/' + (tag ?? 'latest')}/overview`
-    : ''
+  if (uri) {
+    const { project, name, nameWithHash, tag } = parseFunctionUri(uri)
+
+    if (project && (name || nameWithHash)) {
+      generatedLink = `/projects/${project}/functions/${nameWithHash ? nameWithHash : name}${nameWithHash ? '' : '/' + (tag ?? 'latest')}/overview`
+    }
+  }
+
+  return generatedLink
 }
