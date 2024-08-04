@@ -18,11 +18,20 @@ under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
 import {
+  DATES_FILTER,
+  FILTER_ALL_ITEMS,
   JOBS_MONITORING_JOBS_TAB,
   JOBS_MONITORING_WORKFLOWS_TAB,
   JOB_KIND_JOB,
-  JOB_KIND_WORKFLOW
+  JOB_KIND_WORKFLOW,
+  STATUS_FILTER,
+  TYPE_FILTER
 } from '../constants'
+import {
+  ANY_TIME_DATE_OPTION,
+  datePickerPastOptions,
+  getDatePickerFilterValue
+} from './datePicker.util'
 import { setFiltersValues, setModalFiltersValues } from '../reducers/filtersReducer'
 
 export const generateMonitoringStats = (data, navigate, dispatch, tab) => {
@@ -36,27 +45,35 @@ export const generateMonitoringStats = (data, navigate, dispatch, tab) => {
     ? {
         all: {
           counter: data.all,
-          link: () => navigateToJobsMonitoringPage({ state: ['all'] })
+          link: () => navigateToJobsMonitoringPage({ [STATUS_FILTER]: [FILTER_ALL_ITEMS] })
         },
         counters: [
           {
             counter: data.running,
             link: () =>
-              navigateToJobsMonitoringPage({
-                state: ['running', 'pending', 'aborting']
-              }),
+              navigateToJobsMonitoringPage(
+                {
+                  [STATUS_FILTER]: ['running', 'pending', 'aborting']
+                },
+                {
+                  [DATES_FILTER]: getDatePickerFilterValue(
+                    datePickerPastOptions,
+                    ANY_TIME_DATE_OPTION
+                  )
+                }
+              ),
             statusClass: 'running',
             tooltip: 'Aborting, Pending, Running'
           },
           {
             counter: data.failed,
-            link: () => navigateToJobsMonitoringPage({ state: ['error', 'aborted'] }),
+            link: () => navigateToJobsMonitoringPage({ [STATUS_FILTER]: ['error', 'aborted'] }),
             statusClass: 'failed',
             tooltip: 'Aborted, Error'
           },
           {
             counter: data.completed,
-            link: () => navigateToJobsMonitoringPage({ state: ['completed'] }),
+            link: () => navigateToJobsMonitoringPage({ [STATUS_FILTER]: ['completed'] }),
             statusClass: 'completed',
             tooltip: 'Completed'
           }
@@ -66,24 +83,33 @@ export const generateMonitoringStats = (data, navigate, dispatch, tab) => {
       ? {
           all: {
             counter: data.all,
-            link: () => navigateToJobsMonitoringPage({ state: ['all'] })
+            link: () => navigateToJobsMonitoringPage({ [STATUS_FILTER]: [FILTER_ALL_ITEMS] })
           },
           counters: [
             {
               counter: data.running,
-              link: () => navigateToJobsMonitoringPage({ state: ['running'] }),
+              link: () =>
+                navigateToJobsMonitoringPage(
+                  { [STATUS_FILTER]: ['running'] },
+                  {
+                    [DATES_FILTER]: getDatePickerFilterValue(
+                      datePickerPastOptions,
+                      ANY_TIME_DATE_OPTION
+                    )
+                  }
+                ),
               statusClass: 'running',
               tooltip: 'Running'
             },
             {
               counter: data.failed,
-              link: () => navigateToJobsMonitoringPage({ state: ['error', 'failed'] }),
+              link: () => navigateToJobsMonitoringPage({ [STATUS_FILTER]: ['error', 'failed'] }),
               statusClass: 'failed',
               tooltip: 'Error, Failed'
             },
             {
               counter: data.completed,
-              link: () => navigateToJobsMonitoringPage({ state: ['completed'] }),
+              link: () => navigateToJobsMonitoringPage({ [STATUS_FILTER]: ['completed'] }),
               statusClass: 'completed',
               tooltip: 'Completed'
             }
@@ -92,11 +118,11 @@ export const generateMonitoringStats = (data, navigate, dispatch, tab) => {
       : {
           jobs: {
             counter: data.jobs,
-            link: () => navigateToJobsMonitoringPage({ type: JOB_KIND_JOB }, {})
+            link: () => navigateToJobsMonitoringPage({ [TYPE_FILTER]: JOB_KIND_JOB }, {})
           },
           workflows: {
             counter: data.workflows,
-            link: () => navigateToJobsMonitoringPage({ type: JOB_KIND_WORKFLOW }, {})
+            link: () => navigateToJobsMonitoringPage({ [TYPE_FILTER]: JOB_KIND_WORKFLOW }, {})
           }
         }
 }
