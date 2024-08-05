@@ -45,7 +45,10 @@ const WorkflowsMonitoring = ({ fetchFunctionLogs }) => {
   const [itemIsSelected, setItemIsSelected] = useState(false)
   const [selectedJob, setSelectedJob] = useState({})
   const workflowsStore = useSelector(state => state.workflowsStore)
-  const filtersStore = useSelector(state => state.filtersStore)
+  const [workflowsFilterMenu, workflowsFilterMenuModal] = useSelector(state => [
+    state.filtersStore.filterMenu[JOBS_MONITORING_WORKFLOWS_TAB],
+    state.filtersStore.filterMenuModal[JOBS_MONITORING_WORKFLOWS_TAB]
+  ])
   const jobIsLoading = useSelector(store => store.jobsStore.loading)
   const funcIsLoading = useSelector(store => store.functionsStore.funcLoading)
   const params = useParams()
@@ -91,14 +94,15 @@ const WorkflowsMonitoring = ({ fetchFunctionLogs }) => {
   useEffect(() => {
     if (!workflowsAreLoaded && !params.workflowId) {
       getWorkflows({
-        ...filtersStore.filterMenu[JOBS_MONITORING_WORKFLOWS_TAB],
-        ...filtersStore.filterMenuModal[JOBS_MONITORING_WORKFLOWS_TAB].values
+        ...workflowsFilterMenu,
+        ...workflowsFilterMenuModal.values
       })
 
       setWorkflowsAreLoaded(true)
     }
   }, [
-    filtersStore,
+    workflowsFilterMenu,
+    workflowsFilterMenuModal,
     getWorkflows,
     params.workflowId,
     workflowsAreLoaded,
