@@ -402,7 +402,7 @@ const getDriftStatusData = driftStatus => {
     case '-1':
     default:
       return {
-        value: <div data-testid="no-status-drift">N/A</div>,
+        value: 'N/A',
         tooltip: 'N/A',
         testId: 'no-status-drift'
       }
