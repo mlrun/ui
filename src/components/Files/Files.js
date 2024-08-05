@@ -171,6 +171,7 @@ const Files = () => {
         })
       )
       setSelectedRowData({})
+      setSelectedFileMin({})
       setFiles([])
 
       return fetchData(filters)

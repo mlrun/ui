@@ -51,7 +51,10 @@ export const generateArtifacts = (artifacts, tab, originalContent) => {
               item.extra_data ??= []
             }
 
-            item.producer.uid = item.tree
+            item.producer = {
+              ...item.producer,
+              uid: item.tree
+            }
 
             if (!generatedArtifact.ui) {
               item.ui = {

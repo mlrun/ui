@@ -175,6 +175,7 @@ const Datasets = () => {
         })
       )
       setSelectedRowData({})
+      setSelectedDatasetMin({})
       setDatasets([])
 
       return fetchData(filters)
