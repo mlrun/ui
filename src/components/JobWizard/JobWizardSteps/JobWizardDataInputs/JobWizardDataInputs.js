@@ -24,7 +24,7 @@ import FormDataInputsTable from '../../../../elements/FormDataInputsTable/FormDa
 
 import { DATA_INPUTS_STEP } from '../../../../constants'
 
-const JobWizardDataInputs = ({ formState, params, stepIsActive }) => {
+const JobWizardDataInputs = ({ formState, params, stepIsActive = false }) => {
   return (
     <div className="job-wizard__data-inputs">
       <div className="form-row">
@@ -41,10 +41,6 @@ const JobWizardDataInputs = ({ formState, params, stepIsActive }) => {
       </div>
     </div>
   )
-}
-
-JobWizardDataInputs.defaultProps = {
-  stepIsActive: false
 }
 
 JobWizardDataInputs.propTypes = {

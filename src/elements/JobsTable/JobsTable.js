@@ -257,7 +257,7 @@ const JobsTable = React.forwardRef(
             <div>
               Are you sure you want to abort the job "{job.name}"? <br />
               {isJobKindLocal(job) &&
-              'This is a local run. You can abort the run, though the actual process will continue.'}
+                'This is a local run. You can abort the run, though the actual process will continue.'}
             </div>
           ),
           btnConfirmLabel: 'Abort',

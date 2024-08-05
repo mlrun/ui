@@ -24,7 +24,7 @@ import { Tooltip, TextTooltipTemplate } from 'igz-controls/components'
 
 import './artifactInfoSources.scss'
 
-const ArtifactInfoSources = ({ sources }) => {
+const ArtifactInfoSources = ({ sources = {} }) => {
   return (
     <div className="info-sources" data-testid="sources">
       <h3 className="item-info__header">Sources</h3>
@@ -47,10 +47,6 @@ const ArtifactInfoSources = ({ sources }) => {
       ))}
     </div>
   )
-}
-
-ArtifactInfoSources.defaultProps = {
-  sources: {}
 }
 
 ArtifactInfoSources.propTypes = {

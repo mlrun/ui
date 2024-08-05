@@ -33,19 +33,19 @@ import { ReactComponent as ExclamationMarkIcon } from 'igz-controls/images/excla
 import './rangeInput.scss'
 
 const RangeInput = ({
-  density,
-  disabled,
-  invalid,
-  invalidText,
-  label,
-  labelType,
-  max,
-  min,
+  density = 'normal',
+  disabled = false,
+  invalid = false,
+  invalidText = 'This field is invalid',
+  label = '',
+  labelType = 'labelAtTop',
+  max = undefined,
+  min = 0,
   onChange,
-  step,
-  tip,
-  required,
-  requiredText,
+  step = 1,
+  tip = '',
+  required = false,
+  requiredText = 'This field is required',
   value
 }) => {
   const [inputValue, setInputValue] = useState(0)
@@ -158,9 +158,7 @@ const RangeInput = ({
           className="range__warning"
           template={
             <TextTooltipTemplate
-              text={
-                invalid && inputValue.length > 0 ? invalidText : requiredText
-              }
+              text={invalid && inputValue.length > 0 ? invalidText : requiredText}
               warning
             />
           }
@@ -168,26 +166,9 @@ const RangeInput = ({
           <ExclamationMarkIcon className="range__warning-icon" />
         </Tooltip>
       )}
-      {required && labelType === 'none' && (
-        <span className="range-required_asterisk">*</span>
-      )}
+      {required && labelType === 'none' && <span className="range-required_asterisk">*</span>}
     </div>
   )
-}
-
-RangeInput.defaultProps = {
-  density: 'normal',
-  disabled: false,
-  invalid: false,
-  invalidText: 'This field is invalid',
-  label: '',
-  labelType: 'labelAtTop',
-  max: undefined,
-  min: 0,
-  step: 1,
-  tip: '',
-  required: false,
-  requiredText: 'This field is required'
 }
 
 RangeInput.propTypes = {
@@ -196,12 +177,7 @@ RangeInput.propTypes = {
   invalid: PropTypes.bool,
   invalidText: PropTypes.string,
   label: PropTypes.string,
-  labelType: PropTypes.oneOf([
-    'none',
-    'floatingLabel',
-    'infoLabel',
-    'labelAtTop'
-  ]),
+  labelType: PropTypes.oneOf(['none', 'floatingLabel', 'infoLabel', 'labelAtTop']),
   max: PropTypes.number,
   min: PropTypes.number,
   onChange: PropTypes.func.isRequired,

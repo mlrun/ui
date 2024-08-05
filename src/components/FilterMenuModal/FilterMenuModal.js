@@ -43,17 +43,17 @@ import './filterMenuModal.scss'
 export const FilterMenuWizardContext = React.createContext({})
 
 const FilterMenuModal = ({
-  applyChanges,
-  applyButton,
-  cancelButton,
+  applyChanges = null,
+  applyButton = { label: 'Apply', variant: 'secondary' },
+  cancelButton = { label: 'Clear', variant: 'tertiary' },
   children,
   filterMenuName,
-  header,
+  header = 'Filter by',
   initialValues,
-  restartFormTrigger,
+  restartFormTrigger = null,
   values,
-  withoutApplyButton,
-  wizardClassName
+  withoutApplyButton = false,
+  wizardClassName = ''
 }) => {
   const [filtersWizardIsShown, setFiltersWizardIsShown] = useState(false)
   const filtersIconButtonRef = useRef()
@@ -106,7 +106,10 @@ const FilterMenuModal = ({
   }, [])
 
   useEffect(() => {
-    const throttledHideFiltersWizard = throttle(hideFiltersWizard, 500, { leading: true, trailing: true })
+    const throttledHideFiltersWizard = throttle(hideFiltersWizard, 500, {
+      leading: true,
+      trailing: true
+    })
     window.addEventListener('click', hideFiltersWizard)
     window.addEventListener('scroll', throttledHideFiltersWizard, true)
 
@@ -123,7 +126,14 @@ const FilterMenuModal = ({
       ref.restart(initialValues)
       dispatch(resetModalFilter(filterMenuName))
     }
-  }, [params.pageTab, params.projectName, restartFormTrigger, dispatch, initialValues, filterMenuName])
+  }, [
+    params.pageTab,
+    params.projectName,
+    restartFormTrigger,
+    dispatch,
+    initialValues,
+    filterMenuName
+  ])
 
   const getFilterCounter = formState => {
     const initialValues = applyChanges ? filtersData?.initialValues : formState.initialValues
@@ -229,16 +239,6 @@ const FilterMenuModal = ({
       }}
     </Form>
   )
-}
-
-FilterMenuModal.defaultProps = {
-  applyChanges: null,
-  applyButton: { label: 'Apply', variant: 'secondary' },
-  cancelButton: { label: 'Clear', variant: 'tertiary' },
-  header: 'Filter by',
-  restartFormTrigger: null,
-  withoutApplyButton: false,
-  wizardClassName: ''
 }
 
 FilterMenuModal.propTypes = {

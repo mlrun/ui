@@ -34,7 +34,13 @@ import { ReactComponent as BestIteration } from 'igz-controls/images/best-iterat
 
 import './detailsResults.scss'
 
-const DetailsResults = ({ allowSortBy, defaultSortBy, defaultDirection, excludeSortBy, job }) => {
+const DetailsResults = ({
+  allowSortBy = null,
+  defaultSortBy = null,
+  defaultDirection = 'desc',
+  excludeSortBy = null,
+  job
+}) => {
   const resultsContent = useMemo(() => {
     return generateResultsContent(job)
   }, [job])
@@ -65,7 +71,7 @@ const DetailsResults = ({ allowSortBy, defaultSortBy, defaultDirection, excludeS
                 onClick={isSortable ? () => sortTable(headerId) : null}
               >
                 <Tooltip template={<TextTooltipTemplate text={headerLabel} />}>
-                  <label className={isSortable? 'sortable-header-label': ''}>
+                  <label className={isSortable ? 'sortable-header-label' : ''}>
                     <span className="data-ellipsis">{headerLabel}</span>
                     {isSortable && getSortingIcon(headerId)}
                   </label>
@@ -152,13 +158,6 @@ const DetailsResults = ({ allowSortBy, defaultSortBy, defaultDirection, excludeS
       </table>
     </div>
   )
-}
-
-DetailsResults.defaultProps = {
-  allowSortBy: null,
-  defaultSortBy: null,
-  defaultDirection: 'desc',
-  excludeSortBy: null,
 }
 
 DetailsResults.propTypes = {

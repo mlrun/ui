@@ -23,7 +23,7 @@ import PropTypes from 'prop-types'
 
 import TimePicker from '../TimePicker/TimePicker'
 
-const FormTimePicker = ({ className, label, name }) => {
+const FormTimePicker = ({ className = '', label = '', name }) => {
   return (
     <Field name={name}>
       {({ input }) => (
@@ -38,11 +38,6 @@ const FormTimePicker = ({ className, label, name }) => {
       )}
     </Field>
   )
-}
-
-FormTimePicker.defaultProps = {
-  className: '',
-  label: ''
 }
 
 FormTimePicker.propTypes = {

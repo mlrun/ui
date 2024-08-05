@@ -31,13 +31,13 @@ import { useFormTable } from 'igz-controls/hooks'
 import { PARAMETERS_FROM_FILE_VALUE, PARAMETERS_FROM_UI_VALUE } from '../../constants'
 
 const FormParametersTable = ({
-  disabled,
-  exitEditModeTriggerItem,
+  disabled = false,
+  exitEditModeTriggerItem = null,
   fieldsPath,
   formState,
-  parametersFromPath,
-  rowCanBeAdded,
-  withHyperparameters
+  parametersFromPath = '',
+  rowCanBeAdded = false,
+  withHyperparameters = false
 }) => {
   const withRequiredParametersRef = useRef(true)
   const predefinedPath = `${fieldsPath}.predefined`
@@ -203,14 +203,6 @@ const FormParametersTable = ({
       </FieldArray>
     </div>
   )
-}
-
-FormParametersTable.defaultProps = {
-  disabled: false,
-  exitEditModeTriggerItem: null,
-  parametersFromPath: '',
-  rowCanBeAdded: false,
-  withHyperparameters: false
 }
 
 FormParametersTable.propTypes = {

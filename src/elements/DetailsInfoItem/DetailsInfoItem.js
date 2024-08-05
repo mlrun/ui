@@ -43,23 +43,26 @@ const DetailsInfoItem = React.forwardRef(
   (
     {
       changesData,
-      chipsClassName,
-      chipsData,
-      currentField,
-      detailsInfoDispatch,
-      detailsInfoState,
-      editableFieldType,
+      chipsClassName = '',
+      chipsData = {
+        chips: [],
+        chipOptions: {},
+        delimiter: null
+      },
+      currentField = '',
+      detailsInfoDispatch = () => {},
+      detailsInfoState = {},
+      editableFieldType = null,
       formState,
-      func,
+      func = '',
       handleDiscardChanges,
-      handleFinishEdit,
-      info,
-      isFieldInEditMode,
-      item,
-      onClick,
-      params,
-      setChangesData,
-      state
+      handleFinishEdit = () => {},
+      info = null,
+      isFieldInEditMode = false,
+      item = {},
+      onClick = null,
+      setChangesData = () => {},
+      state = ''
     },
     ref
   ) => {
@@ -152,14 +155,16 @@ const DetailsInfoItem = React.forwardRef(
       return (
         <div className="details-item__data details-item__data_multiline">
           {(Array.isArray(info) ? info : [info]).map((infoItem, index) => {
-            return <CopyToClipboard
-              key={index}
-              className="details-item__data details-item__copy-to-clipboard"
-              textToCopy={infoItem}
-              tooltipText="Click to copy"
-            >
-              {infoItem}
-            </CopyToClipboard>
+            return (
+              <CopyToClipboard
+                key={index}
+                className="details-item__data details-item__copy-to-clipboard"
+                textToCopy={infoItem}
+                tooltipText="Click to copy"
+              >
+                {infoItem}
+              </CopyToClipboard>
+            )
           })}
         </div>
       )
@@ -223,9 +228,9 @@ const DetailsInfoItem = React.forwardRef(
         </Tooltip>
       )
     } else if ((item.link || item.externalLink) && info) {
-      return <div className="details-item__data details-item__data_multiline">
-        {
-          (Array.isArray(info) ? info : [info]).map((infoItem, index) => {
+      return (
+        <div className="details-item__data details-item__data_multiline">
+          {(Array.isArray(info) ? info : [info]).map((infoItem, index) => {
             if (!infoItem) return null
 
             return item.link ? (
@@ -253,9 +258,9 @@ const DetailsInfoItem = React.forwardRef(
                 </Tooltip>
               </a>
             )
-          })
-        }
-      </div>
+          })}
+        </div>
+      )
     } else if ((typeof info !== 'object' || Array.isArray(info)) && item?.editModeEnabled) {
       return (
         <div className="details-item__data">
@@ -318,28 +323,6 @@ const DetailsInfoItem = React.forwardRef(
   }
 )
 
-DetailsInfoItem.defaultProps = {
-  chipsClassName: '',
-  chipsData: {
-    chips: [],
-    chipOptions: {},
-    delimiter: null
-  },
-  currentField: '',
-  detailsInfoDispatch: () => {},
-  detailsInfoState: {},
-  editableFieldType: null,
-  func: '',
-  handleFinishEdit: () => {},
-  info: null,
-  isFieldInEditMode: false,
-  item: {},
-  onClick: null,
-  params: {},
-  setChangesData: () => {},
-  state: ''
-}
-
 DetailsInfoItem.propTypes = {
   changesData: PropTypes.object,
   chipsClassName: PropTypes.string,
@@ -359,7 +342,6 @@ DetailsInfoItem.propTypes = {
   isFieldInEditMode: PropTypes.bool,
   item: PropTypes.shape({}),
   onClick: PropTypes.func,
-  params: PropTypes.shape({}),
   setChangesData: PropTypes.func,
   state: PropTypes.string
 }

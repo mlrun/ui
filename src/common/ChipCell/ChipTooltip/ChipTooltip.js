@@ -25,7 +25,7 @@ import { Tooltip, TextTooltipTemplate } from 'igz-controls/components'
 import { getChipLabelAndValue } from '../../../utils/getChipLabelAndValue'
 import { CHIP } from '../../../types'
 
-const ChipTooltip = ({ children, chip, editConfig }) => {
+const ChipTooltip = ({ children, chip, editConfig = {} }) => {
   const { chipLabel, chipValue } = useMemo(() => getChipLabelAndValue(chip), [chip])
 
   return (
@@ -50,10 +50,6 @@ const ChipTooltip = ({ children, chip, editConfig }) => {
       {children}
     </Tooltip>
   )
-}
-
-ChipTooltip.defaultProps = {
-  editConfig: {}
 }
 
 ChipTooltip.propTypes = {

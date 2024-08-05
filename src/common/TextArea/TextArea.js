@@ -36,28 +36,28 @@ import './textArea.scss'
 const TextArea = React.forwardRef(
   (
     {
-      className,
-      disabled,
-      floatingLabel,
-      focused,
-      iconClass,
-      invalid,
-      invalidText,
-      label,
-      maxLength,
-      onBlur,
-      onChange,
-      onKeyDown,
-      placeholder,
-      required,
-      requiredText,
-      rows,
-      setInvalid,
+      className = '',
+      disabled = false,
+      floatingLabel = false,
+      focused = false,
+      iconClass = '',
+      invalid = false,
+      invalidText = 'This field is invalid',
+      label = '',
+      maxLength = null,
+      onBlur = () => {},
+      onChange = () => {},
+      onKeyDown = () => {},
+      placeholder = '',
+      required = false,
+      requiredText = 'This field is required',
+      rows = 2,
+      setInvalid = () => {},
       textAreaIcon,
-      tip,
-      validationRules: rules,
-      value,
-      wrapperClassName
+      tip = '',
+      validationRules: rules = [],
+      value = '',
+      wrapperClassName = ''
     },
     ref
   ) => {
@@ -266,31 +266,6 @@ const TextArea = React.forwardRef(
     )
   }
 )
-
-TextArea.defaultProps = {
-  className: '',
-  disabled: false,
-  floatingLabel: false,
-  focused: false,
-  iconClass: '',
-  inputIcon: null,
-  invalid: false,
-  invalidText: 'This field is invalid',
-  label: '',
-  maxLength: null,
-  onBlur: () => {},
-  onChange: () => {},
-  onKeyDown: () => {},
-  placeholder: '',
-  required: false,
-  requiredText: 'This field is required',
-  rows: 2,
-  setInvalid: () => {},
-  tip: '',
-  validationRules: [],
-  value: '',
-  wrapperClassName: ''
-}
 
 TextArea.propTypes = {
   className: PropTypes.string,

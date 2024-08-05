@@ -28,11 +28,11 @@ import { ReactComponent as Edit } from 'igz-controls/images/edit.svg'
 import { ReactComponent as Delete } from 'igz-controls/images/delete.svg'
 
 export const VolumesTable = ({
-  className,
+  className = '',
   handleAddNewVolume,
   handleEdit,
   handleDelete,
-  isPanelEditMode,
+  isPanelEditMode = false,
   volumeMounts,
   volumes
 }) => {
@@ -263,11 +263,6 @@ export const VolumesTable = ({
       validation={validation}
     />
   )
-}
-
-VolumesTable.defaultProps = {
-  className: '',
-  isPanelEditMode: false
 }
 
 VolumesTable.propTypes = {

@@ -49,7 +49,13 @@ import { ReactComponent as QuestionMarkIcon } from 'igz-controls/images/question
 
 import './deployModelPopUp.scss'
 
-const DeployModelPopUp = ({ functionList, functionOptionList, isOpen, model, onResolve }) => {
+const DeployModelPopUp = ({
+  functionList,
+  functionOptionList,
+  isOpen,
+  model,
+  onResolve = () => {}
+}) => {
   const [tagOptionList, setTagOptionList] = useState([])
   const [initialValues, setInitialValues] = useState({
     modelName: '',
@@ -269,10 +275,6 @@ const DeployModelPopUp = ({ functionList, functionOptionList, isOpen, model, onR
       </Form>
     </>
   )
-}
-
-DeployModelPopUp.defaultProps = {
-  onResolve: () => {}
 }
 
 DeployModelPopUp.propTypes = {

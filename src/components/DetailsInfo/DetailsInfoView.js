@@ -47,7 +47,11 @@ import './detailsInfo.scss'
 const DetailsInfoView = React.forwardRef(
   (
     {
-      additionalInfo,
+      additionalInfo = {
+        drift: [],
+        producer: [],
+        sources: {}
+      },
       detailsInfoDispatch,
       detailsInfoState,
       detailsStore,
@@ -219,14 +223,6 @@ const DetailsInfoView = React.forwardRef(
     )
   }
 )
-
-DetailsInfoView.defaultProps = {
-  additionalInfo: {
-    drift: [],
-    producer: [],
-    sources: {}
-  }
-}
 
 DetailsInfoView.propTypes = {
   additionalInfo: PropTypes.shape({

@@ -28,7 +28,7 @@ import { secretsKindOptions } from './JobWizardAdvanced.util'
 
 import './jobWizardAdvanced.scss'
 
-const JobWizardAdvanced = ({ formState, stepIsActive }) => {
+const JobWizardAdvanced = ({ formState, stepIsActive = false }) => {
   const [showSecrets] = useState(false)
 
   return (
@@ -88,10 +88,6 @@ const JobWizardAdvanced = ({ formState, stepIsActive }) => {
       )}
     </div>
   )
-}
-
-JobWizardAdvanced.defaultProps = {
-  stepIsActive: false
 }
 
 JobWizardAdvanced.propTypes = {

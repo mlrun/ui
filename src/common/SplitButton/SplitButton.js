@@ -33,7 +33,22 @@ import { ReactComponent as CaretIcon } from 'igz-controls/images/dropdown.svg'
 import './splitButton.scss'
 import PropTypes from 'prop-types'
 
-const SplitButton = ({ disabled, mainButton, additionalButton }) => {
+const SplitButton = ({
+  disabled = false,
+  mainButton = {
+    label: 'Main',
+    onClick: () => {},
+    variant: TERTIARY_BUTTON
+  },
+  additionalButton = {
+    icon: <CaretIcon />,
+    label: '',
+    options: [],
+    onSelectOption: () => {},
+    selectedOption: {},
+    variant: TERTIARY_BUTTON
+  }
+}) => {
   const { onClick: mainAction, ...mainProps } = mainButton
   const { icon, options, onSelectOption, selectedOption, ...additionalProps } = additionalButton
 
@@ -95,23 +110,6 @@ const SplitButton = ({ disabled, mainButton, additionalButton }) => {
       )}
     </div>
   )
-}
-
-SplitButton.defaultProps = {
-  disabled: false,
-  mainButton: {
-    label: 'Main',
-    onClick: () => {},
-    variant: TERTIARY_BUTTON
-  },
-  additionalButton: {
-    icon: <CaretIcon />,
-    label: '',
-    options: [],
-    onSelectOption: () => {},
-    selectedOption: {},
-    variant: TERTIARY_BUTTON
-  }
 }
 
 SplitButton.propTypes = {

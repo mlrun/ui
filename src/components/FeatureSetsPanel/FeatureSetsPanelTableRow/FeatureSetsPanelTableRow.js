@@ -28,9 +28,9 @@ import { Tooltip, TextTooltipTemplate } from 'igz-controls/components'
 import { ACTIONS_MENU } from '../../../types'
 
 const FeatureSetsPanelTableRow = ({
-  actionButton,
-  actionsMenu,
-  className,
+  actionButton = null,
+  actionsMenu = [],
+  className = '',
   contentItem
 }) => {
   const rowClassNames = classnames('table__row', className)
@@ -40,9 +40,7 @@ const FeatureSetsPanelTableRow = ({
       {map(contentItem.data, (value, property) => {
         return (
           <div className="table__cell" key={property}>
-            <Tooltip template={<TextTooltipTemplate text={value} />}>
-              {value}
-            </Tooltip>
+            <Tooltip template={<TextTooltipTemplate text={value} />}>{value}</Tooltip>
           </div>
         )
       })}
@@ -51,9 +49,7 @@ const FeatureSetsPanelTableRow = ({
           <ActionsMenu menu={actionsMenu} dataItem={contentItem} />
         ) : (
           actionButton && (
-            <Tooltip
-              template={<TextTooltipTemplate text={actionButton.label} />}
-            >
+            <Tooltip template={<TextTooltipTemplate text={actionButton.label} />}>
               <button
                 className={actionButton.className}
                 onClick={() => actionButton.onClick(contentItem)}
@@ -66,12 +62,6 @@ const FeatureSetsPanelTableRow = ({
       </div>
     </div>
   )
-}
-
-FeatureSetsPanelTableRow.defaultProps = {
-  actionButton: null,
-  actionsMenu: [],
-  className: ''
 }
 
 FeatureSetsPanelTableRow.propTypes = {

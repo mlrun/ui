@@ -37,7 +37,7 @@ const nodeTypes = {
   [ML_NODE]: MlReactFlowNode
 }
 
-const MlReactFlow = ({ alignTriggerItem, edges, nodes, onNodeClick }) => {
+const MlReactFlow = ({ alignTriggerItem = '', edges, nodes, onNodeClick = () => {} }) => {
   const domChangeHandler = () => {
     const edgesWrapper = document.querySelector('.react-flow__edges > g')
     const selectedEdges = edgesWrapper.getElementsByClassName('selected')
@@ -125,11 +125,6 @@ const MlReactFlow = ({ alignTriggerItem, edges, nodes, onNodeClick }) => {
       />
     </ReactFlowProvider>
   )
-}
-
-MlReactFlow.defaultProps = {
-  alignTriggerItem: '',
-  onNodeClick: () => {}
 }
 
 MlReactFlow.propTypes = {

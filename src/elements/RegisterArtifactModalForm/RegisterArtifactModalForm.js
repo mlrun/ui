@@ -30,10 +30,10 @@ import { getValidationRules } from 'igz-controls/utils/validation.util'
 const RegisterArtifactModalForm = ({
   formState,
   initialValues,
-  messagesByKind,
+  messagesByKind = '',
   params,
   setFieldState,
-  showType
+  showType = true
 }) => {
   const kindOptions = useMemo(
     () => [
@@ -135,11 +135,6 @@ const RegisterArtifactModalForm = ({
       </div>
     </div>
   )
-}
-
-RegisterArtifactModalForm.defaultProps = {
-  showType: true,
-  messageByKind: ''
 }
 
 RegisterArtifactModalForm.propTypes = {

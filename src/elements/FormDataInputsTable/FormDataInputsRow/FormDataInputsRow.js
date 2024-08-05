@@ -46,9 +46,9 @@ const FormDataInputsRow = ({
   applyChanges,
   dataInputState,
   deleteRow,
-  disabled,
+  disabled = false,
   discardOrDelete,
-  editingItem,
+  editingItem = null,
   enterEditMode,
   fields,
   fieldsPath,
@@ -203,11 +203,6 @@ const FormDataInputsRow = ({
       )}
     </>
   )
-}
-
-FormDataInputsRow.defaultProps = {
-  disabled: false,
-  editingItem: null
 }
 
 FormDataInputsRow.propTypes = {

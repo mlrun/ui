@@ -32,7 +32,7 @@ import { isCommunityEdition } from '../../utils/helper'
 
 import './formResourcesUnits.scss'
 
-const FormResourcesUnits = ({ formState, onChangeEnabled }) => {
+const FormResourcesUnits = ({ formState, onChangeEnabled = true }) => {
   const gpuType = useMemo(
     () => getLimitsGpuType(formState.values.resources?.currentLimits),
     [formState.values.resources]
@@ -233,10 +233,6 @@ const FormResourcesUnits = ({ formState, onChangeEnabled }) => {
       )}
     </>
   )
-}
-
-FormResourcesUnits.defaultProps = {
-  onChangeEnabled: true
 }
 
 FormResourcesUnits.propTypes = {

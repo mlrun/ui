@@ -24,7 +24,7 @@ import Prism from 'prismjs'
 import './codeBlock.scss'
 import classNames from 'classnames'
 
-const CodeBlock = ({ className, codeData, label, language }) => {
+const CodeBlock = ({ className = '', codeData = {}, label = '', language = 'json' }) => {
   const codeBlockClassName = classNames('code-block', className)
 
   return (
@@ -45,13 +45,6 @@ const CodeBlock = ({ className, codeData, label, language }) => {
       </div>
     </div>
   )
-}
-
-CodeBlock.defaultProps = {
-  className: '',
-  codeData: {},
-  label: '',
-  language: 'json'
 }
 
 CodeBlock.propTypes = {

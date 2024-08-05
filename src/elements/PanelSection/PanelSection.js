@@ -24,7 +24,7 @@ import { Tip } from 'igz-controls/components'
 
 import './panelSection.scss'
 
-const PanelSection = ({ children, tip, title, className }) => {
+const PanelSection = ({ children, tip = '', title, className = '' }) => {
   return (
     <div className={`panel-section ${className}`}>
       <div className="panel-section__title">
@@ -34,11 +34,6 @@ const PanelSection = ({ children, tip, title, className }) => {
       {children && <div className="panel-section__body">{children}</div>}
     </div>
   )
-}
-
-PanelSection.defaultProps = {
-  className: '',
-  tip: ''
 }
 
 PanelSection.propTypes = {

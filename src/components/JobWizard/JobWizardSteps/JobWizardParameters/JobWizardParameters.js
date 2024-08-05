@@ -33,7 +33,7 @@ import {
 
 import './jobWizardParameters.scss'
 
-const JobWizardParameters = ({ formState, stepIsActive }) => {
+const JobWizardParameters = ({ formState, stepIsActive = false }) => {
   const parametersFromPath = `${PARAMETERS_STEP}.parametersFrom`
   const parametersFromFileUrlPath = `${PARAMETERS_STEP}.parametersFromFileUrl`
 
@@ -77,10 +77,6 @@ const JobWizardParameters = ({ formState, stepIsActive }) => {
       />
     </div>
   )
-}
-
-JobWizardParameters.defaultProps = {
-  stepIsActive: false
 }
 
 JobWizardParameters.propTypes = {

@@ -29,9 +29,9 @@ import FormEnvironmentVariablesRow from './FormEnvironmentVariablesRow/FormEnvir
 import { useFormTable } from 'igz-controls/hooks'
 
 const FormEnvironmentVariablesTable = ({
-  className,
-  disabled,
-  exitEditModeTriggerItem,
+  className = 'env-var-table',
+  disabled = false,
+  exitEditModeTriggerItem = null,
   fieldsPath,
   formState
 }) => {
@@ -114,12 +114,6 @@ const FormEnvironmentVariablesTable = ({
       </FieldArray>
     </div>
   )
-}
-
-FormEnvironmentVariablesTable.defaultProps = {
-  className: 'env-var-table',
-  disabled: false,
-  exitEditModeTriggerItem: null
 }
 
 FormEnvironmentVariablesTable.propTypes = {

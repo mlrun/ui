@@ -27,7 +27,7 @@ const TagFilterDropdown = ({
   handleSelectFilter,
   setIsDropDownMenuOpen,
   tagFilter,
-  tagFilterOptions
+  tagFilterOptions = []
 }) => {
   return (
     <div className="tag-filter__dropdown" onClick={() => setIsDropDownMenuOpen(false)}>
@@ -51,10 +51,6 @@ const TagFilterDropdown = ({
       })}
     </div>
   )
-}
-
-TagFilterDropdown.defaultProps = {
-  tagFilterOptions: []
 }
 
 TagFilterDropdown.propTypes = {

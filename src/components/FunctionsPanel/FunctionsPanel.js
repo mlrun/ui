@@ -46,7 +46,7 @@ const FunctionsPanel = ({
   closePanel,
   createFunctionSuccess,
   createNewFunction,
-  defaultData,
+  defaultData = null,
   deployFunction,
   fetchFunction,
   functionsStore,
@@ -81,7 +81,7 @@ const FunctionsPanel = ({
     (defaultData?.build?.image ||
       defaultData?.build?.base_image ||
       defaultData?.build?.commands?.length > 0) &&
-    defaultData.image?.length === 0
+      defaultData.image?.length === 0
       ? NEW_IMAGE
       : ''
   )
@@ -89,7 +89,9 @@ const FunctionsPanel = ({
   const navigate = useNavigate()
   const formRef = React.useRef(
     createForm({
-      initialValues: { labels: parseChipsData(defaultData?.labels || {}, frontendSpec.internal_labels) },
+      initialValues: {
+        labels: parseChipsData(defaultData?.labels || {}, frontendSpec.internal_labels)
+      },
       mutators: { ...arrayMutators, setFieldState },
       onSubmit: () => {}
     })
@@ -191,7 +193,7 @@ const FunctionsPanel = ({
             },
             metadata: {
               ...functionsStore.newFunction.metadata,
-              labels: convertChipsData(formRef.current.getFieldState('labels')?.value),
+              labels: convertChipsData(formRef.current.getFieldState('labels')?.value)
             }
           },
           skip_deployed,
@@ -322,16 +324,10 @@ const FunctionsPanel = ({
             />
           </>
         )
-      }
-      }
-    </Form>
-    ,
+      }}
+    </Form>,
     document.getElementById('overlay_container')
   )
-}
-
-FunctionsPanel.defaultProps = {
-  defaultData: null
 }
 
 FunctionsPanel.propTypes = {

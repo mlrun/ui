@@ -24,7 +24,7 @@ import { Tip } from 'igz-controls/components'
 
 import './ProjectAction.scss'
 
-const ProjectAction = ({ actions, onClick }) => {
+const ProjectAction = ({ actions = [], onClick = () => {} }) => {
   return (
     <ul className="project-overview-actions">
       {actions.map(({ icon, id, hidden, label, handleClick, tooltip }) => {
@@ -45,16 +45,9 @@ const ProjectAction = ({ actions, onClick }) => {
   )
 }
 
-ProjectAction.defaultProps = {
-  actions: [],
-  onClick: () => {},
-  showActions: true
-}
-
 ProjectAction.propTypes = {
   actions: PropTypes.array.isRequired,
-  onClick: PropTypes.func.isRequired,
-  showActions: PropTypes.bool
+  onClick: PropTypes.func.isRequired
 }
 
 export default ProjectAction

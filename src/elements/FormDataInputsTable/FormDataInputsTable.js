@@ -31,13 +31,13 @@ import { useFormTable } from 'igz-controls/hooks'
 import { targetPathInitialState } from '../../common/TargetPath/targetPath.util'
 
 const FormDataInputsTable = ({
-  className,
-  disabled,
-  exitEditModeTriggerItem,
+  className = '',
+  disabled = false,
+  exitEditModeTriggerItem = null,
   fieldsPath,
   formState,
   params,
-  rowCanBeAdded
+  rowCanBeAdded = false
 }) => {
   const [dataInputState, setDataInputState] = useState(targetPathInitialState)
   const tableClassNames = classnames('form-table', className)
@@ -148,13 +148,6 @@ const FormDataInputsTable = ({
       </FieldArray>
     </div>
   )
-}
-
-FormDataInputsTable.defaultProps = {
-  className: '',
-  disabled: false,
-  exitEditModeTriggerItem: null,
-  rowCanBeAdded: false
 }
 
 FormDataInputsTable.propTypes = {

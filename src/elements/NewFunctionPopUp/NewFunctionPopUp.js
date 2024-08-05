@@ -37,11 +37,11 @@ import { FUNCTION_TYPE_JOB } from '../../constants'
 import './newFunctionPopUp.scss'
 
 const NewFunctionPopUp = ({
-  action,
-  closePopUp,
+  action = null,
+  closePopUp = null,
   functionsStore,
-  isCustomPosition,
-  isOpened,
+  isCustomPosition = false,
+  isOpened = false,
   setNewFunctionKind,
   setNewFunctionName,
   setNewFunctionTag,
@@ -207,13 +207,6 @@ const NewFunctionPopUp = ({
       )}
     </div>
   )
-}
-
-NewFunctionPopUp.defaultProps = {
-  action: null,
-  closePopUp: null,
-  isCustomPosition: false,
-  isOpened: false
 }
 
 NewFunctionPopUp.propTypes = {

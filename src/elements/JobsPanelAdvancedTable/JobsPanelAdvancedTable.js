@@ -35,7 +35,7 @@ import { ReactComponent as Plus } from 'igz-controls/images/plus.svg'
 
 export const JobsPanelAdvancedTable = ({
   addNewItem,
-  className,
+  className = '',
   content,
   handleAddNewItem,
   handleDeleteItems,
@@ -43,9 +43,9 @@ export const JobsPanelAdvancedTable = ({
   handleResetForm,
   headers,
   isPanelEditMode,
-  newName,
+  newName = '',
   section,
-  selectedId,
+  selectedId = '',
   selectedItem,
   setAddNewItem,
   setNewItemName,
@@ -144,12 +144,6 @@ export const JobsPanelAdvancedTable = ({
       )}
     </JobsPanelTable>
   )
-}
-
-JobsPanelAdvancedTable.defaultProps = {
-  className: '',
-  newName: '',
-  selectedId: ''
 }
 
 JobsPanelAdvancedTable.propTypes = {

@@ -25,11 +25,11 @@ import { Button } from 'igz-controls/components'
 import { PRIMARY_BUTTON } from 'igz-controls/constants'
 
 const PageActionsMenu = ({
-  actionsMenuHeader,
-  disabled,
-  onClick,
-  showActionsMenu,
-  variant
+  actionsMenuHeader = '',
+  disabled = false,
+  onClick = () => {},
+  showActionsMenu = false,
+  variant = PRIMARY_BUTTON
 }) => {
   return (
     <>
@@ -46,14 +46,6 @@ const PageActionsMenu = ({
       )}
     </>
   )
-}
-
-PageActionsMenu.defaultProps = {
-  actionsMenuHeader: '',
-  disabled: false,
-  onClick: () => {},
-  showActionsMenu: false,
-  variant: PRIMARY_BUTTON
 }
 
 PageActionsMenu.propTypes = {
