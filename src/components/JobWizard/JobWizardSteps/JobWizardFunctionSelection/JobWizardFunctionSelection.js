@@ -89,6 +89,8 @@ const JobWizardFunctionSelection = ({
   const [filterByName, setFilterByName] = useState('')
   const [filterMatches, setFilterMatches] = useState([])
   const [projects, setProjects] = useState(generateProjectsList(projectNames, params.projectName))
+  const [functionsRequestErrorMessage, setFunctionsRequestErrorMessage] = useState('')
+  const [hubFunctionsRequestErrorMessage, setHubFunctionsRequestErrorMessage] = useState('')
   const selectedActiveTab = useRef(null)
   const functionSelectionRef = useRef(null)
 
@@ -239,7 +241,14 @@ const JobWizardFunctionSelection = ({
   }
 
   const onSelectedProjectNameChange = currentValue => {
-    dispatch(functionsActions.fetchFunctions(currentValue, {})).then(functions => {
+    setFunctionsRequestErrorMessage('')
+    dispatch(
+      functionsActions.fetchFunctions(
+        currentValue,
+        {},
+        { ui: { setRequestErrorMessage: setFunctionsRequestErrorMessage } }
+      )
+    ).then(functions => {
       if (functions) {
         const validFunctions = functions.filter(func => {
           return includes(FUNCTION_RUN_KINDS, func.kind)
@@ -280,7 +289,13 @@ const JobWizardFunctionSelection = ({
       activeTab === FUNCTIONS_SELECTION_HUB_TAB &&
       (isEmpty(hubFunctions) || isEmpty(hubFunctionsCatalog))
     ) {
-      dispatch(functionsActions.fetchHubFunctions()).then(templatesObject => {
+      dispatch(
+        functionsActions.fetchHubFunctions(
+          null,
+          { ui: { setRequestErrorMessage: setHubFunctionsRequestErrorMessage } }
+        )
+      ).then(templatesObject => {
+        // here another catch
         if (templatesObject) {
           setTemplatesCategories(templatesObject.hubFunctionsCategories)
           setTemplates(templatesObject.hubFunctions)
@@ -404,7 +419,7 @@ const JobWizardFunctionSelection = ({
           ((filterByName.length > 0 &&
             (filterMatches.length === 0 || isEmpty(filteredFunctions))) ||
             isEmpty(functions)) ? (
-            <NoData />
+            <NoData message={functionsRequestErrorMessage} />
           ) : (
             <div className="functions-list">
               {(filteredFunctions.length > 0 ? filteredFunctions : functions)
@@ -455,7 +470,7 @@ const JobWizardFunctionSelection = ({
           ((filterByName.length > 0 &&
             (filterMatches.length === 0 || isEmpty(filteredTemplates))) ||
             isEmpty(templates)) ? (
-            <NoData />
+            <NoData message={hubFunctionsRequestErrorMessage} />
           ) : (
             <div className="functions-list">
               {filteredTemplates

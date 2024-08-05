@@ -68,7 +68,7 @@ const ProjectsJobsMonitoring = ({ fetchAllJobRuns, fetchJobFunction, fetchJobs }
   const [jobRuns, setJobRuns] = useState([])
   const [jobs, setJobs] = useState([])
   const [selectedRunProject, setSelectedRunProject] = useState('')
-  const [largeRequestErrorMessage, setLargeRequestErrorMessage] = useState('')
+  const [requestErrorMessage, setRequestErrorMessage] = useState('')
   const { jobsMonitoringData } = useSelector(store => store.projectStore)
   const [selectedCard, setSelectedCard] = useState(
     jobsMonitoringData.filters?.status || STATS_TOTAL_CARD
@@ -160,7 +160,7 @@ const ProjectsJobsMonitoring = ({ fetchAllJobRuns, fetchJobFunction, fetchJobs }
         {
           ui: {
             controller: abortControllerRef.current,
-            setLargeRequestErrorMessage
+            setRequestErrorMessage
           },
           params: { ...newParams }
         },
@@ -228,7 +228,7 @@ const ProjectsJobsMonitoring = ({ fetchAllJobRuns, fetchJobFunction, fetchJobs }
         jobsActions.fetchScheduledJobs('*', filters, {
           ui: {
             controller: abortControllerRef.current,
-            setLargeRequestErrorMessage
+            setRequestErrorMessage
           }
         })
       ).then(jobs => {
@@ -287,7 +287,7 @@ const ProjectsJobsMonitoring = ({ fetchAllJobRuns, fetchJobFunction, fetchJobs }
           {
             ui: {
               controller: abortControllerRef.current,
-              setLargeRequestErrorMessage
+              setRequestErrorMessage
             }
           },
           true
@@ -368,7 +368,7 @@ const ProjectsJobsMonitoring = ({ fetchAllJobRuns, fetchJobFunction, fetchJobs }
                   jobs,
                   jobsFiltersConfig,
                   jobsMonitoringData,
-                  largeRequestErrorMessage,
+                  requestErrorMessage,
                   refreshJobs,
                   refreshScheduled,
                   scheduledFiltersConfig,

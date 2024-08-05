@@ -76,7 +76,7 @@ const Files = () => {
   const [selectedFile, setSelectedFile] = useState({})
   const [selectedFileMin, setSelectedFileMin] = useState({})
   const [selectedRowData, setSelectedRowData] = useState({})
-  const [largeRequestErrorMessage, setLargeRequestErrorMessage] = useState('')
+  const [requestErrorMessage, setRequestErrorMessage] = useState('')
   const [maxArtifactsErrorIsShown, setMaxArtifactsErrorIsShown] = useState(false)
   const [convertedYaml, toggleConvertedYaml] = useYaml('')
   const [urlTagOption, tagAbortControllerRef] = useGetTagOptions(
@@ -133,7 +133,7 @@ const Files = () => {
           config: {
             ui: {
               controller: abortControllerRef.current,
-              setLargeRequestErrorMessage
+              setRequestErrorMessage
             },
             params: {
               format: 'minimal'
@@ -165,7 +165,7 @@ const Files = () => {
           config: {
             ui: {
               controller: tagAbortControllerRef.current,
-              setLargeRequestErrorMessage
+              setRequestErrorMessage
             }
           }
         })
@@ -403,7 +403,7 @@ const Files = () => {
       handleExpandRow={handleExpandRow}
       handleRefresh={handleRefresh}
       handleRegisterArtifact={handleRegisterArtifact}
-      largeRequestErrorMessage={largeRequestErrorMessage}
+      requestErrorMessage={requestErrorMessage}
       maxArtifactsErrorIsShown={maxArtifactsErrorIsShown}
       pageData={pageData}
       ref={{ filesRef }}

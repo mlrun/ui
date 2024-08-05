@@ -155,6 +155,8 @@ const featureStoreActions = {
       })
       .catch(err => {
         dispatch(featureStoreActions.fetchEntitiesFailure(err))
+
+        return Promise.reject(err)
       })
   },
   fetchEntitiesBegin: () => ({
@@ -170,6 +172,7 @@ const featureStoreActions = {
   }),
   fetchFeatureSets: (project, filters, config) => dispatch => {
     dispatch(featureStoreActions.fetchFeatureSetsBegin())
+    config?.ui?.setRequestErrorMessage?.('')
 
     return featureStoreApi
       .getFeatureSets(project, filters, config)
@@ -181,8 +184,12 @@ const featureStoreActions = {
         return response.data?.feature_sets
       })
       .catch(error => {
+        const errorMessage = 'Failed to fetch feature sets'
+
         dispatch(featureStoreActions.fetchFeatureSetsFailure(error.message))
-        largeResponseCatchHandler(error, 'Failed to fetch feature sets', dispatch)
+        largeResponseCatchHandler(error, errorMessage, dispatch, () => {
+          config?.ui?.setRequestErrorMessage?.(errorMessage)
+        })
       })
   },
   fetchFeatureSetsBegin: () => ({
@@ -244,6 +251,7 @@ const featureStoreActions = {
     (project, filters, config = {}, skipErrorNotification) =>
     dispatch => {
       dispatch(featureStoreActions.fetchFeatureVectorsBegin())
+      config?.ui?.setRequestErrorMessage?.('')
 
       return featureStoreApi
         .getFeatureVectors(project, filters, config)
@@ -260,7 +268,11 @@ const featureStoreActions = {
           dispatch(featureStoreActions.fetchFeatureVectorsFailure(error))
 
           if (!skipErrorNotification) {
-            largeResponseCatchHandler(error, 'Failed to fetch feature vectors', dispatch)
+            const errorMessage = 'Failed to fetch feature vectors'
+
+            largeResponseCatchHandler(error, errorMessage, dispatch, () => {
+              config?.ui?.setRequestErrorMessage?.(errorMessage)
+            })
           }
         })
     },
@@ -311,6 +323,8 @@ const featureStoreActions = {
       })
       .catch(err => {
         dispatch(featureStoreActions.fetchFeaturesFailure(err))
+
+        return Promise.reject(err)
       })
   },
   fetchFeaturesBegin: () => ({

@@ -479,8 +479,9 @@ const projectsAction = {
     type: FETCH_PROJECT_SUMMARY_SUCCESS,
     payload: summary
   }),
-  fetchProjects: params => dispatch => {
+  fetchProjects: (params, config) => dispatch => {
     dispatch(projectsAction.fetchProjectsBegin())
+    config?.ui?.setRequestErrorMessage?.('')
 
     return projectsApi
       .getProjects(params)
@@ -495,8 +496,11 @@ const projectsAction = {
         return response.data.projects
       })
       .catch(error => {
+        const errorMessage = 'Failed to fetch projects'
+
         dispatch(projectsAction.fetchProjectsFailure(error), dispatch)
-        showErrorNotification(dispatch, error, 'Failed to fetch projects')
+        showErrorNotification(dispatch, error, errorMessage)
+        config?.ui?.setRequestErrorMessage?.(errorMessage)
       })
   },
   fetchProjectsBegin: () => ({ type: FETCH_PROJECTS_BEGIN }),

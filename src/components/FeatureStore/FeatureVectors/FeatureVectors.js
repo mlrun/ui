@@ -71,7 +71,7 @@ const FeatureVectors = ({
   const [featureVectors, setFeatureVectors] = useState([])
   const [selectedFeatureVector, setSelectedFeatureVector] = useState({})
   const [selectedRowData, setSelectedRowData] = useState({})
-  const [largeRequestErrorMessage, setLargeRequestErrorMessage] = useState('')
+  const [requestErrorMessage, setRequestErrorMessage] = useState('')
   const openPanelByDefault = useOpenPanel()
   const [urlTagOption] = useGetTagOptions(fetchFeatureVectorsTags, featureVectorsFilters)
   const params = useParams()
@@ -115,7 +115,7 @@ const FeatureVectors = ({
       const config = {
         ui: {
           controller: abortControllerRef.current,
-          setLargeRequestErrorMessage
+          setRequestErrorMessage
         }
       }
 
@@ -457,9 +457,9 @@ const FeatureVectors = ({
       filtersStore={filtersStore}
       handleExpandRow={handleExpandRow}
       handleRefresh={handleRefresh}
-      largeRequestErrorMessage={largeRequestErrorMessage}
       pageData={pageData}
       ref={{ featureStoreRef }}
+      requestErrorMessage={requestErrorMessage}
       selectedFeatureVector={selectedFeatureVector}
       selectedRowData={selectedRowData}
       setCreateVectorPopUpIsOpen={setCreateVectorPopUpIsOpen}

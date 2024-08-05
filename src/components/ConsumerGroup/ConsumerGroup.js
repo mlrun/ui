@@ -44,6 +44,7 @@ const ConsumerGroup = ({
   resetV3ioStreamShardLagsError
 }) => {
   const [currentV3ioStream, setCurrentV3ioStream] = useState([])
+  const [requestErrorMessage, setRequestErrorMessage] = useState('')
   const [filteredV3ioStreamShardLags, setFilteredV3ioStreamShardLags] = useState([])
   const [filterByName, setFilterByName] = useState('')
   const params = useParams()
@@ -67,6 +68,7 @@ const ConsumerGroup = ({
         containerName: currentV3ioStream.containerName,
         streamPath: currentV3ioStream.streamPath
       }
+      setRequestErrorMessage('')
       fetchNuclioV3ioStreamShardLags(params.projectName, fetchV3ioStreamBody)
     },
     [fetchNuclioV3ioStreamShardLags, params.projectName]
@@ -88,13 +90,16 @@ const ConsumerGroup = ({
 
   useEffect(() => {
     if (!isEmpty(currentV3ioStream) && nuclioStore.v3ioStreamShardLags.error) {
+
+      const errorMessage = 'Failed to fetch v3io stream shard lags'
       showErrorNotification(
         dispatch,
         nuclioStore.v3ioStreamShardLags.error,
-        'Failed to fetch v3io stream shard lags',
+        errorMessage,
         '',
         () => refreshConsumerGroup(currentV3ioStream)
       )
+      setRequestErrorMessage(errorMessage)
       resetV3ioStreamShardLagsError()
     }
   }, [
@@ -151,7 +156,7 @@ const ConsumerGroup = ({
       {!nuclioStore.v3ioStreams.loading &&
         !nuclioStore.v3ioStreamShardLags.loading &&
         nuclioStore.v3ioStreamShardLags.parsedData.length === 0 && (
-          <NoData message={getNoDataMessage()} />
+          <NoData message={requestErrorMessage || getNoDataMessage()} />
         )}
       {(nuclioStore.v3ioStreams.loading || nuclioStore.v3ioStreamShardLags.loading) && <Loader />}
     </>

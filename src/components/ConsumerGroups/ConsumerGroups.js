@@ -19,7 +19,7 @@ such restriction.
 */
 import React, { useEffect, useMemo, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { useParams } from 'react-router-dom'
+import { useParams, useOutletContext } from 'react-router-dom'
 
 import Loader from '../../common/Loader/Loader'
 import NoData from '../../common/NoData/NoData'
@@ -39,6 +39,7 @@ const ConsumerGroups = () => {
   const nuclioStore = useSelector(store => store.nuclioStore)
   const params = useParams()
   const dispatch = useDispatch()
+  const [requestErrorMessage] = useOutletContext()
 
   useEffect(() => {
     dispatch(setFilters({ groupBy: GROUP_BY_NONE }))
@@ -85,7 +86,11 @@ const ConsumerGroups = () => {
         })}
       </Table>
       {!nuclioStore.v3ioStreams.loading && nuclioStore.v3ioStreams.parsedData.length === 0 && (
-        <NoData message="You haven’t created any consumer group yet" />
+        <NoData
+          message={
+            requestErrorMessage || 'You haven’t created any consumer group yet'
+          }
+        />
       )}
       {nuclioStore.v3ioStreams.loading && <Loader />}
     </>

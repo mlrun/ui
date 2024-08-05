@@ -120,11 +120,19 @@ export const fetchArtifact = createAsyncThunk('fetchArtifact', ({ project, artif
     return filterArtifacts(result)
   })
 })
-export const fetchArtifacts = createAsyncThunk('fetchArtifacts', ({ project, filters, config }) => {
+export const fetchArtifacts = createAsyncThunk('fetchArtifacts', ({ project, filters, config }, thankAPI) => {
+  config?.ui?.setRequestErrorMessage?.('')
+
   return artifactsApi.getArtifacts(project, filters, config).then(({ data }) => {
     const result = parseArtifacts(data.artifacts)
 
     return generateArtifacts(filterArtifacts(result))
+  }).catch(error => {
+    const errorMessage = 'Failed to fetch artifacts'
+
+    largeResponseCatchHandler(error, errorMessage, thankAPI.dispatch, () => {
+      config?.ui?.setRequestErrorMessage?.(errorMessage)
+    })
   })
 })
 export const fetchArtifactTags = createAsyncThunk(
@@ -158,16 +166,20 @@ export const fetchDataSet = createAsyncThunk(
 export const fetchDataSets = createAsyncThunk(
   'fetchDataSets',
   ({ project, filters, config }, thunkAPI) => {
-    return artifactsApi
-      .getDataSets(project, filters, config)
-      .then(({ data }) => {
-        const result = parseArtifacts(data.artifacts)
+    config?.ui?.setRequestErrorMessage?.('')
 
-        return generateArtifacts(filterArtifacts(result), DATASETS_TAB, data.artifacts)
+    return artifactsApi.getDataSets(project, filters, config).then(({ data }) => {
+      const result = parseArtifacts(data.artifacts)
+
+      return generateArtifacts(filterArtifacts(result), DATASETS_TAB, data.artifacts)
+    })
+    .catch(error => {
+      const errorMessage = 'Failed to fetch datasets'
+
+      largeResponseCatchHandler(error, errorMessage, thunkAPI.dispatch, () => {
+        config?.ui?.setRequestErrorMessage?.(errorMessage)
       })
-      .catch(error =>
-        largeResponseCatchHandler(error, 'Failed to fetch datasets', thunkAPI.dispatch)
-      )
+    })
   }
 )
 export const fetchExpandedFile = createAsyncThunk(
@@ -193,6 +205,8 @@ export const fetchFile = createAsyncThunk(
 export const fetchFiles = createAsyncThunk(
   'fetchFiles',
   ({ project, filters, config }, thunkAPI) => {
+    config?.ui?.setRequestErrorMessage?.('')
+
     return artifactsApi
       .getFiles(project, filters, config)
       .then(({ data }) => {
@@ -200,14 +214,20 @@ export const fetchFiles = createAsyncThunk(
 
         return generateArtifacts(filterArtifacts(result), ARTIFACTS_TAB, data.artifacts)
       })
-      .catch(error =>
-        largeResponseCatchHandler(error, 'Failed to fetch artifacts', thunkAPI.dispatch)
-      )
+      .catch(error => {
+        const errorMessage = 'Failed to fetch artifacts'
+
+        largeResponseCatchHandler(error, errorMessage, thunkAPI.dispatch, () => {
+          config?.ui?.setRequestErrorMessage?.(errorMessage)
+        })
+      })
   }
 )
 export const fetchArtifactsFunctions = createAsyncThunk(
   'fetchArtifactsFunctions',
   ({ project, filters, config }, thunkAPI) => {
+    config?.ui?.setRequestErrorMessage?.('')
+
     return functionsApi
       .getFunctions(project, filters, config, null)
       .then(({ data }) => {
@@ -218,21 +238,31 @@ export const fetchArtifactsFunctions = createAsyncThunk(
         )
       })
       .catch(error => {
-        largeResponseCatchHandler(error, 'Failed to fetch functions', thunkAPI.dispatch)
+        const errorMessage = 'Failed to fetch real-time pipelines'
+
+        largeResponseCatchHandler(error, errorMessage, thunkAPI.dispatch, () => {
+          config?.ui?.setRequestErrorMessage?.(errorMessage)
+        })
       })
   }
 )
 export const fetchModelEndpoints = createAsyncThunk(
   'fetchModelEndpoints',
   ({ project, filters, config, params }, thunkAPI) => {
+    config?.ui?.setRequestErrorMessage?.('')
+
     return modelEndpointsApi
       .getModelEndpoints(project, filters, config, params)
       .then(({ data: { endpoints = [] } }) => {
         return generateModelEndpoints(endpoints)
       })
-      .catch(error =>
-        largeResponseCatchHandler(error, 'Failed to fetch model endpoints', thunkAPI.dispatch)
-      )
+      .catch(error => {
+        const errorMessage = 'Failed to fetch model endpoints'
+
+        largeResponseCatchHandler(error, errorMessage, thunkAPI.dispatch, () => {
+          config?.ui?.setRequestErrorMessage?.(errorMessage)
+        })
+      })
   }
 )
 export const fetchExpandedModel = createAsyncThunk(
@@ -258,6 +288,8 @@ export const fetchModel = createAsyncThunk(
 export const fetchModels = createAsyncThunk(
   'fetchModels',
   ({ project, filters, config }, thunkAPI) => {
+    config?.ui?.setRequestErrorMessage?.('')
+
     return artifactsApi
       .getModels(project, filters, config)
       .then(({ data }) => {
@@ -266,7 +298,11 @@ export const fetchModels = createAsyncThunk(
         return generateArtifacts(result, MODELS_TAB, data.artifacts)
       })
       .catch(error => {
-        largeResponseCatchHandler(error, 'Failed to fetch models', thunkAPI.dispatch)
+        const errorMessage = 'Failed to fetch models'
+
+        largeResponseCatchHandler(error, errorMessage, thunkAPI.dispatch, () => {
+          config?.ui?.setRequestErrorMessage?.(errorMessage)
+        })
       })
   }
 )

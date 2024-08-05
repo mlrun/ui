@@ -56,6 +56,7 @@ const Projects = () => {
   const [selectedProjectsState, setSelectedProjectsState] = useState('active')
   const [sortProjectId, setSortProjectId] = useState('byName')
   const [deletingProjects, setDeletingProjects] = useState({})
+  const [projectsRequestErrorMessage, setProjectsRequestErrorMessage] = useState()
 
   const abortControllerRef = useRef(new AbortController())
   const terminatePollRef = useRef(null)
@@ -67,7 +68,12 @@ const Projects = () => {
   const tasksStore = useSelector(store => store.tasksStore)
 
   const fetchMinimalProjects = useCallback(() => {
-    dispatch(projectsAction.fetchProjects({ format: 'minimal' }))
+    dispatch(
+      projectsAction.fetchProjects(
+        { format: 'minimal' },
+        { ui: { setRequestErrorMessage: setProjectsRequestErrorMessage } }
+      )
+    )
   }, [dispatch])
 
   const isValidProjectState = useCallback(
@@ -384,7 +390,7 @@ such as jobs, artifacts, and features.`,
     setCreateProject(false)
   }, [projectStore.newProject.error, removeNewProjectError])
 
-  const handleCreateProject = (values) => {
+  const handleCreateProject = values => {
     dispatch(
       projectsAction.createNewProject({
         metadata: {
@@ -413,16 +419,17 @@ such as jobs, artifacts, and features.`,
       actionsMenu={actionsMenu}
       closeNewProjectPopUp={closeNewProjectPopUp}
       confirmData={confirmData}
-      convertToYaml={convertToYaml}
       convertedYaml={convertedYaml}
+      convertToYaml={convertToYaml}
       createProject={createProject}
       filterByName={filterByName}
-      filterMatches={filterMatches}
       filteredProjects={filteredProjects}
+      filterMatches={filterMatches}
       handleCreateProject={handleCreateProject}
       handleSearchOnFocus={handleSearchOnFocus}
       handleSelectSortOption={handleSelectSortOption}
       isDescendingOrder={isDescendingOrder}
+      projectsRequestErrorMessage={projectsRequestErrorMessage}
       projectStore={projectStore}
       refreshProjects={refreshProjects}
       removeNewProjectError={removeNewProjectError}

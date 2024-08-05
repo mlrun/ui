@@ -81,7 +81,7 @@ import { useInitialArtifactsFetch } from '../../../hooks/artifacts.hook'
 
 const Models = ({ fetchModelFeatureVector }) => {
   const [models, setModels] = useState([])
-  const [largeRequestErrorMessage, setLargeRequestErrorMessage] = useState('')
+  const [requestErrorMessage, setRequestErrorMessage] = useState('')
   const [maxArtifactsErrorIsShown, setMaxArtifactsErrorIsShown] = useState(false)
   const [selectedModel, setSelectedModel] = useState({})
   const [selectedModelMin, setSelectedModelMin] = useState({})
@@ -151,7 +151,7 @@ const Models = ({ fetchModelFeatureVector }) => {
           config: {
             ui: {
               controller: abortControllerRef.current,
-              setLargeRequestErrorMessage
+              setRequestErrorMessage
             },
             params: { format: 'minimal' }
           }
@@ -219,7 +219,7 @@ const Models = ({ fetchModelFeatureVector }) => {
           config: {
             ui: {
               controller: tagAbortControllerRef.current,
-              setLargeRequestErrorMessage
+              setRequestErrorMessage
             }
           }
         })
@@ -525,11 +525,11 @@ const Models = ({ fetchModelFeatureVector }) => {
       handleRegisterModel={handleRegisterModel}
       handleTrainModel={handleTrainModel}
       isDemoMode={isDemoMode}
-      largeRequestErrorMessage={largeRequestErrorMessage}
       maxArtifactsErrorIsShown={maxArtifactsErrorIsShown}
       models={models}
       pageData={pageData}
       ref={{ modelsRef }}
+      requestErrorMessage={requestErrorMessage}
       selectedModel={selectedModel}
       selectedRowData={selectedRowData}
       setMaxArtifactsErrorIsShown={setMaxArtifactsErrorIsShown}

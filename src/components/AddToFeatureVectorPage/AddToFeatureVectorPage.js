@@ -65,7 +65,7 @@ const AddToFeatureVectorPage = ({
 }) => {
   const [content, setContent] = useState([])
   const [selectedRowData, setSelectedRowData] = useState({})
-  const [largeRequestErrorMessage, setLargeRequestErrorMessage] = useState('')
+  const [requestErrorMessage, setRequestErrorMessage] = useState('')
   const [convertedYaml, toggleConvertedYaml] = useYaml('')
   const addToFeatureVectorPageRef = useRef(null)
   const abortControllerRef = useRef(new AbortController())
@@ -156,18 +156,29 @@ const AddToFeatureVectorPage = ({
         signal: abortControllerRef.current.signal
       }
 
+      setRequestErrorMessage('')
       fetchFeatures(filters.project, filters, config)
         .then(features => {
           return handleFeaturesResponse(
             features,
             setContent,
             abortControllerRef,
-            setLargeRequestErrorMessage
+            setRequestErrorMessage
+          )
+        })
+        .catch(error => {
+          return handleFeaturesResponse(
+            null,
+            setContent,
+            abortControllerRef,
+            setRequestErrorMessage,
+            error,
+            dispatch
           )
         })
         .finally(() => clearTimeout(cancelRequestTimeout))
     },
-    [fetchFeatures]
+    [dispatch, fetchFeatures]
   )
 
   const handleRefresh = filters => {
@@ -320,9 +331,9 @@ const AddToFeatureVectorPage = ({
       filtersStore={filtersStore}
       handleExpandRow={handleExpandRow}
       handleRefresh={handleRefresh}
-      largeRequestErrorMessage={largeRequestErrorMessage}
       pageData={pageData}
       ref={addToFeatureVectorPageRef}
+      requestErrorMessage={requestErrorMessage}
       selectedRowData={selectedRowData}
       tableContent={tableContent}
       tableStore={tableStore}

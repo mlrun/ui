@@ -86,10 +86,10 @@ import {
 } from '../constants'
 import { FORBIDDEN_ERROR_STATUS_CODE } from 'igz-controls/constants'
 import { generateCategories, generateHubCategories } from '../utils/generateTemplatesCategories'
-import { largeResponseCatchHandler } from '../utils/largeResponseCatchHandler'
 import { showErrorNotification } from '../utils/notifications.util'
 import functionsApi from '../api/functions-api'
 import mlrunNuclioApi from '../api/mlrun-nuclio-api'
+import { largeResponseCatchHandler } from '../utils/largeResponseCatchHandler'
 
 const functionsActions = {
   createNewFunction: (project, data) => dispatch => {
@@ -235,6 +235,7 @@ const functionsActions = {
   }),
   fetchFunctions: (project, filters, config) => dispatch => {
     dispatch(functionsActions.fetchFunctionsBegin())
+    config?.ui?.setRequestErrorMessage?.('')
 
     return functionsApi
       .getFunctions(project, filters, config)
@@ -245,7 +246,12 @@ const functionsActions = {
       })
       .catch(error => {
         dispatch(functionsActions.fetchFunctionsFailure(error.message))
-        largeResponseCatchHandler(error, 'Failed to fetch functions', dispatch)
+
+        const errorMessage = 'Failed to fetch functions'
+
+        largeResponseCatchHandler(error, errorMessage, dispatch, () => {
+          config?.ui?.setRequestErrorMessage?.(errorMessage)
+        })
       })
   },
   fetchFunctionsBegin: () => ({
@@ -301,8 +307,9 @@ const functionsActions = {
     type: FETCH_HUB_FUNCTION_TEMPLATE_FAILURE,
     payload: err
   }),
-  fetchHubFunctions: allowedHubFunctions => dispatch => {
+  fetchHubFunctions: (allowedHubFunctions, config) => dispatch => {
     dispatch(functionsActions.fetchHubFunctionsBegin())
+    config?.ui?.setRequestErrorMessage?.('')
 
     return functionsApi
       .getHubFunctions()
@@ -314,7 +321,12 @@ const functionsActions = {
         return templatesData
       })
       .catch(error => {
-        showErrorNotification(dispatch, error, 'Functions failed to load')
+        const errorMessage = 'Failed to fetch functions'
+
+        dispatch(functionsActions.fetchHubFunctionsFailure(error))
+        largeResponseCatchHandler(error, errorMessage, dispatch, () => {
+          config?.ui?.setRequestErrorMessage?.(errorMessage)
+        })
       })
   },
 
