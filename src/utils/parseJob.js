@@ -78,6 +78,7 @@ export const parseJob = (job, tab) => {
         ...parseKeyValues(jobParameters),
         ...parseKeyValues(job.spec?.hyperparams || {})
       ],
+      nodeSelectorChips: parseKeyValues(job.spec?.node_selector || {}),
       project: job.metadata.project,
       reason: job.status?.reason ?? '',
       results: job.status?.results || {},
