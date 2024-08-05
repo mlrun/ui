@@ -173,7 +173,7 @@ const Models = ({ fetchModelFeatureVector }) => {
   const handleDeployModel = useCallback(
     model => {
       abortControllerRef.current = new AbortController()
-      
+
       dispatch(
         fetchArtifactsFunctions({
           project: model.project,
@@ -225,6 +225,7 @@ const Models = ({ fetchModelFeatureVector }) => {
         })
       )
       setSelectedRowData({})
+      setSelectedModelMin({})
       setModels([])
       //temporarily commented till ML-5606 will be done
       // setTableHeaders([])
