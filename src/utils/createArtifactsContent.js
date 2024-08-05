@@ -381,30 +381,39 @@ const getDriftStatusData = driftStatus => {
     case '0':
     case 'NO_DRIFT':
       return {
-        value: <SeverityOk />,
+        value: (
+          <span data-testid="no-drift">
+            <SeverityOk />
+          </span>
+        ),
         tooltip: 'No drift',
         testId: 'no-drift'
       }
     case '1':
     case 'POSSIBLE_DRIFT':
       return {
-        value: <SeverityWarning />,
-        tooltip: 'Possible drift',
-        testId: 'possible-drift'
+        value: (
+          <span data-testid="possible-drift">
+            <SeverityWarning />
+          </span>
+        ),
+        tooltip: 'Possible drift'
       }
     case '2':
     case 'DRIFT_DETECTED':
       return {
-        value: <SeverityError />,
-        tooltip: 'Drift detected',
-        testId: 'drift-detected'
+        value: (
+          <span data-testid="drift-detected">
+            <SeverityError />
+          </span>
+        ),
+        tooltip: 'Drift detected'
       }
     case '-1':
     default:
       return {
-        value: 'N/A',
-        tooltip: 'N/A',
-        testId: 'no-status-drift'
+        value: <span data-testid="no-status-drift">N/A</span>,
+        tooltip: 'N/A'
       }
   }
 }
@@ -517,8 +526,7 @@ export const createModelEndpointsRowData = (artifact, project) => {
         headerLabel: 'Drift Status',
         value: getDriftStatusData(artifact.status?.drift_status).value,
         className: 'table-cell-small',
-        tooltip: getDriftStatusData(artifact.status?.drift_status).tooltip,
-        driftTestId: getDriftStatusData(artifact.status?.drift_status).testId
+        tooltip: getDriftStatusData(artifact.status?.drift_status).tooltip
       }
     ]
   }

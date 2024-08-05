@@ -187,7 +187,6 @@ const TableCell = ({
   } else {
     return (
       <td data-testid={data?.headerId} className={cellClassNames}>
-        {data?.driftTestId && <span data-testid={data.driftTestId} />}
         <Tooltip
           className="text_small"
           template={<TextTooltipTemplate text={data.tooltip || data.value} />}
