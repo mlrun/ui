@@ -21,7 +21,6 @@ import { capitalize, chain, defaultsDeep, get, isEmpty } from 'lodash'
 
 import { pollAbortingJobs } from '../components/Jobs/jobs.util'
 import { showErrorNotification } from './notifications.util'
-import { parseKeyValues } from './object'
 import { generateFunctionPriorityLabel } from './generateFunctionPriorityLabel'
 import { setNotification } from '../reducers/notificationReducer'
 
@@ -137,7 +136,6 @@ export const enrichRunWithFunctionFields = (
           ui: {
             functionTag: tagsList.join(', '),
             runOnSpot: capitalize(funcs[0].spec.preemption_mode ?? ''),
-            nodeSelectorChips: parseKeyValues(funcs[0].spec.node_selector || {}),
             priority: generateFunctionPriorityLabel(funcs[0].spec.priority_class_name ?? '')
           }
         })
@@ -146,7 +144,6 @@ export const enrichRunWithFunctionFields = (
           ui: {
             functionTag: '',
             runOnSpot: '',
-            nodeSelectorChips: [],
             priority: ''
           }
         })
