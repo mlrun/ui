@@ -36,7 +36,7 @@ import { ReactComponent as EnlargeIcon } from 'igz-controls/images/ml-enlarge.sv
 
 import colors from 'igz-controls/scss/colors.scss'
 
-const InvocationMetricCard = forwardRef(
+const InvocationsMetricCard = forwardRef(
   (
     {
       isInvocationCardExpanded,
@@ -59,6 +59,29 @@ const InvocationMetricCard = forwardRef(
       previousTotalInvocation,
       metric[METRIC_RAW_TOTAL_POINTS]
     )
+    const chartConfig = useMemo(() => {
+      return {
+        gradient: true,
+        ...gradientConfig,
+        data: {
+          labels: metric.labels,
+          datasets: [
+            {
+              data: metric.points,
+              dates: metric.dates,
+              chartType: CHART_TYPE_LINE,
+              fill: true,
+              metricType: metric.type,
+              driftStatusList: [],
+              backgroundColor: colors.cornflowerBlueTwo,
+              borderColor: colors.cornflowerBlueTwo,
+              borderWidth: 1,
+              tension: 0.4
+            }
+          ]
+        }
+      }
+    }, [gradientConfig, metric.dates, metric.labels, metric.points, metric.type])
 
     return (
       <div className={invocationCardClassnames}>
@@ -117,27 +140,7 @@ const InvocationMetricCard = forwardRef(
             <div className="metrics__card-body-invocation">
               <MetricChart
                 isInvocationCardExpanded={isInvocationCardExpanded}
-                chartConfig={{
-                  gradient: true,
-                  ...gradientConfig,
-                  data: {
-                    labels: metric.labels,
-                    datasets: [
-                      {
-                        data: metric.points,
-                        dates: metric.dates,
-                        chartType: CHART_TYPE_LINE,
-                        fill: true,
-                        metricType: metric.type,
-                        driftStatusList: [],
-                        backgroundColor: colors.cornflowerBlueTwo,
-                        borderColor: colors.cornflowerBlueTwo,
-                        borderWidth: 1,
-                        tension: 0.4
-                      }
-                    ]
-                  }
-                }}
+                chartConfig={chartConfig}
               />
             </div>
           </div>
@@ -147,7 +150,7 @@ const InvocationMetricCard = forwardRef(
   }
 )
 
-InvocationMetricCard.propTypes = {
+InvocationsMetricCard.propTypes = {
   expandInvocationCard: PropTypes.func.isRequired,
   isInvocationCardExpanded: PropTypes.bool.isRequired,
   metric: PropTypes.object.isRequired,
@@ -155,4 +158,4 @@ InvocationMetricCard.propTypes = {
   selectedDate: PropTypes.string.isRequired
 }
 
-export default InvocationMetricCard
+export default InvocationsMetricCard

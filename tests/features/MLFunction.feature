@@ -70,7 +70,7 @@ Feature: ML Functions
         And click on cell with value "ML functions" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
         And hover "MLRun_Logo" component on "commonPagesHeader" wizard
         And wait load page
-        When click on cell with row index 1 in "name" column in "Functions_Table" table on "ML_Functions" wizard
+        When click on cell with row index 2 in "name" column in "Functions_Table" table on "ML_Functions" wizard
         Then verify "Header" element visibility on "ML_Function_Info_Pane" wizard
         Then verify "Updated" element visibility on "ML_Function_Info_Pane" wizard
         Then verify "Cross_Close_Button" element visibility on "ML_Function_Info_Pane" wizard
@@ -78,6 +78,15 @@ Feature: ML Functions
         Then verify "Info_Pane_Tab_Selector" on "ML_Function_Info_Pane" wizard should contains "ML_Function_Info_Pane"."Tab_List"
         Then verify "Overview" tab is active in "Info_Pane_Tab_Selector" on "ML_Function_Info_Pane" wizard
         Then verify "Overview_Headers" on "ML_Function_Info_Pane" wizard should contains "ML_Function_Info_Pane"."Overview_Headers"
+        Then click on "Cross_Close_Button" element on "ML_Function_Info_Pane" wizard
+        When click on cell with row index 1 in "name" column in "Functions_Table" table on "ML_Functions" wizard
+        Then verify "Header" element visibility on "ML_Function_Info_Pane" wizard
+        Then verify "Updated" element visibility on "ML_Function_Info_Pane" wizard
+        Then verify "Cross_Close_Button" element visibility on "ML_Function_Info_Pane" wizard
+        Then verify "Info_Pane_Tab_Selector" element visibility on "ML_Function_Info_Pane" wizard
+        Then verify "Info_Pane_Tab_Selector" on "ML_Function_Info_Pane" wizard should contains "ML_Function_Info_Pane"."Tab_List_Application_type"
+        Then verify "Overview" tab is active in "Info_Pane_Tab_Selector" on "ML_Function_Info_Pane" wizard
+        Then verify "Overview_Headers" on "ML_Function_Info_Pane" wizard should contains "ML_Function_Info_Pane"."Overview_Headers_Application_type"
 
     @MLF
     @passive
@@ -939,6 +948,7 @@ Feature: ML Functions
         And click on "Continue_Button" element on "Create_ML_Function_Popup" wizard
         When collapse "General_Accordion" on "New_Function" wizard
         When collapse "Code_Accordion" on "New_Function" wizard
+        When collapse "Environment_Variables_Accordion" on "New_Function" wizard
         When select "Manual" option in "New_Function_Volume_Mount_Dropdown" dropdown on "Resources_Accordion" on "New_Function" wizard
         When add new volume rows to "Volume_Paths_Table" table in "Resources_Accordion" on "New_Function" wizard using nontable inputs
             | Volume_Paths_Table_Type_Dropdown | Volume_Paths_Table_Volume_Name_Input | Volume_Paths_Table_Path_Input | Volume_Paths_Table_Container_Input | Volume_Paths_Table_Access_Key_Input | Volume_Paths_Table_Resource_Path_Input | Add_New_Row_Button | Delete_New_Row_Button |
@@ -1086,7 +1096,7 @@ Feature: ML Functions
         And click on cell with value "ML functions" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
         And hover "MLRun_Logo" component on "commonPagesHeader" wizard
         And wait load page
-        When click on cell with row index 2 in "name" column in "Functions_Table" table on "ML_Functions" wizard
+        When click on cell with row index 3 in "name" column in "Functions_Table" table on "ML_Functions" wizard
         Then verify "Action_Menu" element visibility on "ML_Function_Info_Pane" wizard
         Then verify "Action_Menu" dropdown element on "ML_Function_Info_Pane" wizard should contains "ML_Functions_Tab"."Common_Action_Menu_Options"
 

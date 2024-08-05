@@ -17,8 +17,8 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import { isEqual, isNil } from 'lodash'
-import { formatDate } from '../utils/datePicker.util'
+import { isEqual, isNil, keyBy } from 'lodash'
+import { formatDate } from './datePicker.util'
 import {
   ADD_TO_FEATURE_VECTOR_TAB,
   ANY_TIME,
@@ -43,11 +43,15 @@ import {
   REAL_TIME_PIPELINES_TAB,
   SHOW_ITERATIONS,
   SHOW_UNTAGGED_FILTER,
-  SHOW_UNTAGGED_ITEMS,
   FILTER_ALL_ITEMS,
   STATUS_FILTER,
   TAG_FILTER,
-  TAG_FILTER_ALL_ITEMS
+  TAG_FILTER_ALL_ITEMS,
+  DATES_FILTER,
+  FILTER_MENU_MODAL,
+  FILTER_MENU,
+  PROJECT_FILTER,
+  TYPE_FILTER
 } from '../constants'
 
 const messageNamesList = {
@@ -92,7 +96,7 @@ const messageNamesList = {
 
 export const getNoDataMessage = (
   filtersStore,
-  filters,
+  filtersConfig,
   defaultMessage,
   page,
   tab,
@@ -100,16 +104,21 @@ export const getNoDataMessage = (
 ) => {
   if (defaultMessage) return defaultMessage
 
+  if (Array.isArray(filtersConfig)) {
+    filtersConfig = keyBy(filtersConfig, 'type')
+  }
+
   const messageNames = messageNamesList[tab] || messageNamesList[page] || messageNamesList.default
 
   if (!messageNames) {
     return 'No data to show'
   } else {
-    const changedFiltersList = getChangedFiltersList(filters, filtersStore, filtersStoreKey)
+    const visibleFilterTypes = getVisibleFilterTypes(filtersConfig, filtersStore, filtersStoreKey)
 
-    return changedFiltersList.length > 0
+    return visibleFilterTypes.length > 0
       ? generateNoEntriesFoundMessage(
-          changedFiltersList,
+          visibleFilterTypes,
+          filtersConfig,
           filtersStore,
           messageNames,
           filtersStoreKey
@@ -118,71 +127,111 @@ export const getNoDataMessage = (
   }
 }
 
-const getSelectedDateValue = (filter, filtersStore) => {
+const getSelectedDateValue = (filterType, filtersStore, filtersStoreKey) => {
   const date = formatDate(
     true,
     true,
     '/',
-    filtersStore.dates.value[0],
-    filtersStore.dates.value[1] ?? new Date()
+    (filtersStoreKey
+      ? filtersStore[FILTER_MENU][filtersStoreKey][DATES_FILTER].value[0]
+      : filtersStore.dates.value[0]) ?? new Date(),
+    (filtersStoreKey
+      ? filtersStore[FILTER_MENU][filtersStoreKey][DATES_FILTER].value[1]
+      : filtersStore.dates.value[1]) ?? new Date()
   )
 
-  return filter.type === DATE_RANGE_TIME_FILTER &&
-    !isEqual(filtersStore.dates.value, DATE_FILTER_ANY_TIME)
+  return (filterType === DATE_RANGE_TIME_FILTER &&
+    !isEqual(filtersStore.dates.value, DATE_FILTER_ANY_TIME)) ||
+    (filterType === DATES_FILTER &&
+      !isEqual(
+        filtersStore[FILTER_MENU][filtersStoreKey][DATES_FILTER].value,
+        DATE_FILTER_ANY_TIME
+      ))
     ? date
     : ANY_TIME
 }
 
 const generateNoEntriesFoundMessage = (
-  changedFilters,
+  visibleFilterTypes,
+  filtersConfig,
   filtersStore,
   messageNames,
   filtersStoreKey
 ) => {
-  return changedFilters.reduce((message, filter, index) => {
-    const label = [ITERATIONS_FILTER, SHOW_UNTAGGED_ITEMS].includes(filter.type)
-      ? `${filter.label}:`
-      : filter.type === DATE_RANGE_TIME_FILTER
-        ? 'Date:'
-        : filter.label
-    const value = [ITERATIONS_FILTER, SHOW_UNTAGGED_ITEMS].includes(filter.type)
+  return visibleFilterTypes.reduce((message, filterType, index) => {
+    const label = filtersConfig[filterType].label
+    const value = [ITERATIONS_FILTER].includes(filterType)
       ? 'true'
-      : filter.type === DATE_RANGE_TIME_FILTER
-        ? getSelectedDateValue(filter, filtersStore)
-        : filter.type === STATUS_FILTER
-          ? filtersStore['state']
-          : filtersStore.filterMenuModal[filtersStoreKey]?.values?.[filter.type] ??
-            filtersStore[filter.type]
-    const isLastElement = index === changedFilters.length - 1
+      : filterType === DATE_RANGE_TIME_FILTER || filterType === DATES_FILTER
+        ? getSelectedDateValue(filterType, filtersStore, filtersStoreKey)
+        : filtersStore[FILTER_MENU][filtersStoreKey]?.[filterType] ??
+          filtersStore[FILTER_MENU_MODAL][filtersStoreKey]?.values?.[filterType] ??
+          filtersStore[filterType]
+    const isLastElement = index === visibleFilterTypes.length - 1
 
     return message + `${label} ${value}${isLastElement ? '"' : ', '}`
   }, 'No data matches the filter: "')
 }
 
-const getChangedFiltersList = (filters, filtersStore, filtersStoreKey) => {
-  if (!filters || !filtersStore) {
+const getVisibleFilterTypes = (filtersConfig, filtersStore, filtersStoreKey) => {
+  if (!filtersConfig || !filtersStore) {
     return []
   }
 
-  return filters.filter(({ type }) => {
-    const isTagChanged =
+  return Object.keys(filtersConfig).filter(type => {
+    const isTagVisible =
+      type === TAG_FILTER &&
       filtersStore.tag !== TAG_FILTER_ALL_ITEMS &&
-      filtersStore.filterMenuModal[filtersStoreKey]?.values?.tag !== TAG_FILTER_ALL_ITEMS
-    const isIterChanged = !isNil(filtersStore.filterMenuModal[filtersStoreKey]?.values?.iter)
-      ? filtersStore.filterMenuModal[filtersStoreKey].values.iter === SHOW_ITERATIONS
-      : filtersStore.iter === SHOW_ITERATIONS
+      filtersStore[FILTER_MENU_MODAL][filtersStoreKey]?.values?.[TAG_FILTER] !==
+        TAG_FILTER_ALL_ITEMS
+    const isIterVisible =
+      type === ITERATIONS_FILTER &&
+      (!isNil(filtersStore[FILTER_MENU_MODAL][filtersStoreKey]?.values?.iter)
+        ? filtersStore[FILTER_MENU_MODAL][filtersStoreKey].values.iter === SHOW_ITERATIONS
+        : filtersStore.iter === SHOW_ITERATIONS)
+    const isInputVisible =
+      (type === NAME_FILTER ||
+        type === LABELS_FILTER ||
+        type === ENTITIES_FILTER ||
+        type === PROJECT_FILTER) &&
+      (filtersStore[type].length > 0 ||
+        filtersStore[FILTER_MENU][filtersStoreKey]?.[type]?.length > 0 ||
+        filtersStore[FILTER_MENU_MODAL][filtersStoreKey]?.values?.[type]?.length > 0)
+    const isStatusVisible =
+      type === STATUS_FILTER &&
+      (filtersStore.state !== FILTER_ALL_ITEMS ||
+        (filtersStore[FILTER_MENU_MODAL][filtersStoreKey]?.values?.[STATUS_FILTER] &&
+          !isEqual(filtersStore[FILTER_MENU_MODAL][filtersStoreKey]?.values?.[STATUS_FILTER], [
+            FILTER_ALL_ITEMS
+          ])))
+    const isTypeVisible =
+      type === TYPE_FILTER &&
+      !isEqual(
+        filtersStore[FILTER_MENU_MODAL][filtersStoreKey]?.values?.[TYPE_FILTER],
+        FILTER_ALL_ITEMS
+      )
+    const isDateVisible =
+      (type === DATE_RANGE_TIME_FILTER &&
+        !isEqual(filtersStore.dates.value, DATE_FILTER_ANY_TIME)) ||
+      (type === DATES_FILTER &&
+        !isEqual(
+          filtersStore[FILTER_MENU][filtersStoreKey]?.[DATES_FILTER]?.value,
+          DATE_FILTER_ANY_TIME
+        ))
+    const isShowUntaggedVisible =
+      type === SHOW_UNTAGGED_FILTER &&
+      !filtersStore[FILTER_MENU_MODAL][filtersStoreKey]?.values?.[SHOW_UNTAGGED_FILTER]
+    const isGroupByVisible = type === GROUP_BY_FILTER && filtersStore.groupBy !== GROUP_BY_NONE
 
     return (
-      (type === LABELS_FILTER &&
-        filtersStore.filterMenuModal[filtersStoreKey]?.values?.labels.length > 0) ||
-      (type === TAG_FILTER && isTagChanged) ||
-      ((type === NAME_FILTER || type === LABELS_FILTER || type === ENTITIES_FILTER) &&
-        filtersStore[type].length > 0) ||
-      (type === STATUS_FILTER && filtersStore.state !== FILTER_ALL_ITEMS) ||
-      (type === DATE_RANGE_TIME_FILTER && !isEqual(filtersStore.dates.value, DATE_FILTER_ANY_TIME)) ||
-      (type === ITERATIONS_FILTER && isIterChanged) ||
-      (type === SHOW_UNTAGGED_FILTER && filtersStore.showUntagged === SHOW_UNTAGGED_ITEMS) ||
-      (type === GROUP_BY_FILTER && filtersStore.groupBy !== GROUP_BY_NONE)
+      isTagVisible ||
+      isIterVisible ||
+      isInputVisible ||
+      isStatusVisible ||
+      isTypeVisible ||
+      isDateVisible ||
+      isShowUntaggedVisible ||
+      isGroupByVisible
     )
   })
 }

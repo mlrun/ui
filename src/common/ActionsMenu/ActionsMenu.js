@@ -31,7 +31,13 @@ import { ReactComponent as ActionMenuIcon } from 'igz-controls/images/elipsis.sv
 
 import './actionsMenu.scss'
 
-const ActionsMenu = ({ dataItem, menu, menuPosition, time, withQuickActions }) => {
+const ActionsMenu = ({
+  dataItem = {},
+  menu,
+  menuPosition = '',
+  time = 100,
+  withQuickActions = false
+}) => {
   const [actionMenu, setActionMenu] = useState(menu)
   const [isIconDisplayed, setIsIconDisplayed] = useState(false)
   const [isShowMenu, setIsShowMenu] = useState(false)
@@ -48,14 +54,21 @@ const ActionsMenu = ({ dataItem, menu, menuPosition, time, withQuickActions }) =
     isShowMenu && 'actions-menu__container-active'
   )
 
-  const hideActionMenu = useCallback(event => {
+  const clickHandler = useCallback(event => {
     if (
-      !event.target.closest('.actions-menu-button') &&
+      !event.target.closest('.actions-menu-button')
+    ) {
+      setIsShowMenu(false)
+    }
+  }, [setIsShowMenu])
+
+  const scrollHandler = useCallback(event => {
+    if (
       !event.target.closest('.actions-menu__body')
     ) {
       setIsShowMenu(false)
     }
-  }, [])
+  }, [setIsShowMenu])
 
   const onMouseOut = () => {
     if (isShowMenu) {
@@ -84,14 +97,14 @@ const ActionsMenu = ({ dataItem, menu, menuPosition, time, withQuickActions }) =
   }, [actionMenu])
 
   useEffect(() => {
-    window.addEventListener('click', hideActionMenu)
-    window.addEventListener('scroll', hideActionMenu, true)
+    window.addEventListener('click', clickHandler)
+    window.addEventListener('scroll', scrollHandler, true)
 
     return () => {
-      window.removeEventListener('click', hideActionMenu)
-      window.removeEventListener('scroll', hideActionMenu, true)
+      window.removeEventListener('click', clickHandler)
+      window.removeEventListener('scroll', scrollHandler, true)
     }
-  }, [hideActionMenu])
+  }, [clickHandler, scrollHandler])
 
   return (
     <div
@@ -148,8 +161,8 @@ const ActionsMenu = ({ dataItem, menu, menuPosition, time, withQuickActions }) =
                   !menuItem.hidden && (
                     <ActionsMenuItem
                       dataItem={dataItem}
-                      isIconDisplayed={isIconDisplayed}
                       index={idx}
+                      isIconDisplayed={isIconDisplayed}
                       key={menuItem.label}
                       menuItem={menuItem}
                     />
@@ -161,13 +174,6 @@ const ActionsMenu = ({ dataItem, menu, menuPosition, time, withQuickActions }) =
       </div>
     </div>
   )
-}
-
-ActionsMenu.defaultProps = {
-  dataItem: {},
-  menuPosition: '',
-  time: 100,
-  withQuickActions: false
 }
 
 ActionsMenu.propTypes = {

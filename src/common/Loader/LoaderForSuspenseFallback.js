@@ -17,25 +17,24 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import {
-  JOBS_MONITORING_JOBS_TAB,
-  JOBS_MONITORING_WORKFLOWS_TAB,
-  JOBS_MONITORING_SCHEDULED_TAB
-} from '../../constants'
-import jobsActions from '../../actions/jobs'
-import functionsActions from '../../actions/functions'
+import React, { useLayoutEffect } from 'react'
+import Loader from './Loader'
 
-export const STATS_TOTAL_CARD = 'total'
+const LoaderForSuspenseFallback = () => {
+  useLayoutEffect(() => {
+    const overlayContainer = document.getElementById('overlay_container')
+    const savedDisplayStyle = overlayContainer ? overlayContainer.style.display : 'flex'
 
-export const tabs = [
-  { id: JOBS_MONITORING_JOBS_TAB, label: 'Jobs' },
-  { id: JOBS_MONITORING_WORKFLOWS_TAB, label: 'Workflows' },
-  { id: JOBS_MONITORING_SCHEDULED_TAB, label: 'Scheduled' }
-]
+    if (overlayContainer) overlayContainer.style.display = 'none'
 
-export const actionCreator = {
-  fetchAllJobRuns: jobsActions.fetchAllJobRuns,
-  fetchFunctionLogs: functionsActions.fetchFunctionLogs,
-  fetchJobFunction: jobsActions.fetchJobFunction,
-  fetchJobs: jobsActions.fetchJobs
+    return () => {
+      if (overlayContainer) overlayContainer.style.display = savedDisplayStyle
+    }
+  }, [])
+
+  return (
+    <Loader />
+  )
 }
+
+export default React.memo(LoaderForSuspenseFallback)

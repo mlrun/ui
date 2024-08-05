@@ -24,18 +24,14 @@ import { isEmpty } from 'lodash'
 
 import WorkflowsTable from '../../../elements/WorkflowsTable/WorkflowsTable'
 import { ProjectJobsMonitoringContext } from '../ProjectsJobsMonitoring'
+import Loader from '../../../common/Loader/Loader'
 
 import {
-  FILTER_ALL_ITEMS,
-  GROUP_BY_NONE,
-  GROUP_BY_WORKFLOW,
   JOBS_MONITORING_PAGE,
   JOBS_MONITORING_WORKFLOWS_TAB,
   REQUEST_CANCELED
 } from '../../../constants'
 import { createWorkflowsMonitoringContent } from '../../../utils/createJobsContent'
-import { datePickerPastOptions, PAST_24_HOUR_DATE_OPTION } from '../../../utils/datePicker.util'
-import { setFilters, setModalFiltersValues } from '../../../reducers/filtersReducer'
 import { useMode } from '../../../hooks/mode.hook'
 import { usePods } from '../../../hooks/usePods.hook'
 import detailsActions from '../../../actions/details'
@@ -50,14 +46,15 @@ const WorkflowsMonitoring = ({ fetchFunctionLogs }) => {
   const [selectedJob, setSelectedJob] = useState({})
   const workflowsStore = useSelector(state => state.workflowsStore)
   const filtersStore = useSelector(state => state.filtersStore)
+  const jobIsLoading = useSelector(store => store.jobsStore.loading)
+  const funcIsLoading = useSelector(store => store.functionsStore.funcLoading)
   const params = useParams()
   const dispatch = useDispatch()
   const { isStagingMode } = useMode()
   const abortControllerRef = useRef(new AbortController())
 
-  const { abortJobRef, getWorkflows, largeRequestErrorMessage } = React.useContext(
-    ProjectJobsMonitoringContext
-  )
+  const { abortJobRef, getWorkflows, largeRequestErrorMessage, workflowsFiltersConfig } =
+    React.useContext(ProjectJobsMonitoringContext)
 
   usePods(dispatch, detailsActions.fetchJobPods, detailsActions.removePods, selectedJob)
 
@@ -92,50 +89,15 @@ const WorkflowsMonitoring = ({ fetchFunctionLogs }) => {
   }, [dispatch])
 
   useEffect(() => {
-    if (!workflowsAreLoaded) {
-      if (params.workflowId) {
-        dispatch(setFilters({ groupBy: GROUP_BY_NONE }))
-      } else {
-        if (workflowsStore.workflows.data.length === 0 && !filtersStore.saveFilters) {
-          const past24HourOption = datePickerPastOptions.find(
-            option => option.id === PAST_24_HOUR_DATE_OPTION
-          )
-          const generatedDates = [...past24HourOption.handler()]
+    if (!workflowsAreLoaded && !params.workflowId) {
+      getWorkflows({
+        ...filtersStore.filterMenu[JOBS_MONITORING_WORKFLOWS_TAB],
+        ...filtersStore.filterMenuModal[JOBS_MONITORING_WORKFLOWS_TAB].values
+      })
 
-          const filters = {
-            groupBy: GROUP_BY_WORKFLOW,
-            dates: {
-              value: generatedDates,
-              isPredefined: past24HourOption.isPredefined,
-              initialSelectedOptionId: past24HourOption.id
-            }
-          }
-
-          dispatch(setFilters(filters))
-          dispatch(setModalFiltersValues({
-            name: JOBS_MONITORING_WORKFLOWS_TAB,
-            value: { state: [FILTER_ALL_ITEMS] }
-          }))
-          getWorkflows({
-            ...filters,
-            state: FILTER_ALL_ITEMS
-          })
-        } else {
-          getWorkflows({
-            ...filtersStore,
-            groupBy: filtersStore.groupBy,
-            state:
-              filtersStore.filterMenuModal[JOBS_MONITORING_WORKFLOWS_TAB].values.state ||
-              FILTER_ALL_ITEMS
-          })
-          dispatch(setFilters({ groupBy: GROUP_BY_WORKFLOW, saveFilters: false }))
-        }
-
-        setWorkflowsAreLoaded(true)
-      }
+      setWorkflowsAreLoaded(true)
     }
   }, [
-    dispatch,
     filtersStore,
     getWorkflows,
     params.workflowId,
@@ -145,10 +107,13 @@ const WorkflowsMonitoring = ({ fetchFunctionLogs }) => {
 
   return (
     <>
+      {(jobIsLoading || funcIsLoading || workflowsStore.activeWorkflow.loading) && <Loader />}
       <WorkflowsTable
         backLink={`/projects/${JOBS_MONITORING_PAGE}/${JOBS_MONITORING_WORKFLOWS_TAB}`}
         context={ProjectJobsMonitoringContext}
         fetchFunctionLogs={fetchFunctionLogs}
+        filterMenuName={JOBS_MONITORING_WORKFLOWS_TAB}
+        filtersConfig={workflowsFiltersConfig}
         getWorkflows={getWorkflows}
         itemIsSelected={itemIsSelected}
         largeRequestErrorMessage={largeRequestErrorMessage}

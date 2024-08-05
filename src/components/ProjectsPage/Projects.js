@@ -384,32 +384,28 @@ such as jobs, artifacts, and features.`,
     setCreateProject(false)
   }, [projectStore.newProject.error, removeNewProjectError])
 
-  const handleCreateProject = (e, formState) => {
-    e.preventDefault()
-
-    if (e.currentTarget.checkValidity() && formState.valid) {
-      dispatch(
-        projectsAction.createNewProject({
-          metadata: {
-            name: formState.values.name,
-            labels:
-              formState.values.labels?.reduce((acc, labelData) => {
-                acc[labelData.key] = labelData.value
-                return acc
-              }, {}) ?? {}
-          },
-          spec: {
-            description: formState.values.description
-          }
-        })
-      ).then(result => {
-        if (result) {
-          setCreateProject(false)
-          refreshProjects()
-          dispatch(projectsAction.fetchProjectsNames())
+  const handleCreateProject = (values) => {
+    dispatch(
+      projectsAction.createNewProject({
+        metadata: {
+          name: values.name,
+          labels:
+            values.labels?.reduce((acc, labelData) => {
+              acc[labelData.key] = labelData.value
+              return acc
+            }, {}) ?? {}
+        },
+        spec: {
+          description: values.description
         }
       })
-    }
+    ).then(result => {
+      if (result) {
+        setCreateProject(false)
+        refreshProjects()
+        dispatch(projectsAction.fetchProjectsNames())
+      }
+    })
   }
 
   return (

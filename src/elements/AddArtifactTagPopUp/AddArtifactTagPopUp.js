@@ -33,6 +33,7 @@ import { getValidationRules } from 'igz-controls/utils/validation.util'
 import { setNotification } from '../../reducers/notificationReducer'
 import { showErrorNotification } from '../../utils/notifications.util'
 import { useModalBlockHistory } from '../../hooks/useModalBlockHistory.hook'
+import { isSubmitDisabled } from 'igz-controls/utils/form.util'
 
 const AddArtifactTagPopUp = ({
   artifact,
@@ -116,7 +117,7 @@ const AddArtifactTagPopUp = ({
         variant: TERTIARY_BUTTON
       },
       {
-        disabled: formState.submitting || (formState.invalid && formState.submitFailed),
+        disabled: isSubmitDisabled(formState),
         label: 'Add',
         onClick: formState.handleSubmit,
         variant: SECONDARY_BUTTON
@@ -147,8 +148,8 @@ const AddArtifactTagPopUp = ({
                       artifact.kind === MODEL_TYPE
                         ? 'Model tag'
                         : artifact.kind === DATASET_TYPE
-                        ? 'Dataset tag'
-                        : 'Artifact tag'
+                          ? 'Dataset tag'
+                          : 'Artifact tag'
                     }`}
                     focused
                     required

@@ -29,13 +29,10 @@ import { ProjectJobsMonitoringContext } from '../ProjectsJobsMonitoring'
 import { createJobsMonitoringContent } from '../../../utils/createJobsContent'
 import { useMode } from '../../../hooks/mode.hook'
 import {
-  FILTER_ALL_ITEMS,
   JOBS_MONITORING_JOBS_TAB,
   JOBS_MONITORING_PAGE,
   REQUEST_CANCELED
 } from '../../../constants'
-import { setFilters, setModalFiltersValues } from '../../../reducers/filtersReducer'
-import { datePickerPastOptions, PAST_24_HOUR_DATE_OPTION } from '../../../utils/datePicker.util'
 
 const JobsMonitoring = () => {
   const [selectedJob, setSelectedJob] = useState({})
@@ -50,6 +47,7 @@ const JobsMonitoring = () => {
     abortingJobs,
     jobRuns,
     jobs,
+    jobsFiltersConfig,
     largeRequestErrorMessage,
     refreshJobs,
     setAbortingJobs,
@@ -72,35 +70,9 @@ const JobsMonitoring = () => {
 
   useEffect(() => {
     if (isEmpty(selectedJob) && !params.jobId && !dataIsLoaded) {
-      let filters = {}
-
-      if (filtersStore.saveFilters || !isJobDataEmpty()) {
-        filters = {
-          ...filtersStore,
-          state: filtersStore.filterMenuModal[JOBS_MONITORING_JOBS_TAB].values.state
-        }
-
-        dispatch(setModalFiltersValues({
-          name: JOBS_MONITORING_JOBS_TAB,
-          value: { state: filters.state }
-        }))
-        dispatch(setFilters({ ...filtersStore, saveFilters: false }))
-      } else {
-        const past24HourOption = datePickerPastOptions.find(
-          option => option.id === PAST_24_HOUR_DATE_OPTION
-        )
-        const generatedDates = [...past24HourOption.handler()]
-
-        filters = {
-          dates: {
-            value: generatedDates,
-            isPredefined: past24HourOption.isPredefined,
-            initialSelectedOptionId: past24HourOption.id
-          },
-          state: FILTER_ALL_ITEMS
-        }
-
-        dispatch(setFilters({ dates: filters.dates }))
+      let filters = {
+        ...filtersStore.filterMenu[JOBS_MONITORING_JOBS_TAB],
+        ...filtersStore.filterMenuModal[JOBS_MONITORING_JOBS_TAB].values
       }
 
       refreshJobs(filters)
@@ -121,19 +93,13 @@ const JobsMonitoring = () => {
     const abortController = abortControllerRef.current
 
     return () => {
+      setDataIsLoaded(false)
       setJobs([])
       setJobRuns([])
       abortController.abort(REQUEST_CANCELED)
       terminateAbortTasksPolling()
     }
-  }, [abortControllerRef, setJobRuns, setJobs, terminateAbortTasksPolling])
-
-  useEffect(() => {
-    return () => {
-      setDataIsLoaded(false)
-      terminateAbortTasksPolling()
-    }
-  }, [params.jobName, params.jobId, terminateAbortTasksPolling])
+  }, [params.jobName, params.jobId, terminateAbortTasksPolling, abortControllerRef, setJobs, setJobRuns])
 
   return (
     <>
@@ -147,13 +113,15 @@ const JobsMonitoring = () => {
         abortingJobs={abortingJobs}
         ref={{ abortJobRef }}
         context={ProjectJobsMonitoringContext}
+        filterMenuName={JOBS_MONITORING_JOBS_TAB}
+        filtersConfig={jobsFiltersConfig}
         jobRuns={jobRuns}
         jobs={jobs}
         largeRequestErrorMessage={largeRequestErrorMessage}
         navigateLink={`/projects/${JOBS_MONITORING_PAGE}/${JOBS_MONITORING_JOBS_TAB}`}
         refreshJobs={() =>
           refreshJobs({
-            ...filtersStore,
+            ...filtersStore.filterMenu[JOBS_MONITORING_JOBS_TAB],
             ...filtersStore.filterMenuModal[JOBS_MONITORING_JOBS_TAB].values
           })
         }

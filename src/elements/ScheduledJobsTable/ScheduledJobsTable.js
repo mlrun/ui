@@ -29,16 +29,17 @@ import Table from '../../components/Table/Table'
 import NoData from '../../common/NoData/NoData'
 import Loader from '../../common/Loader/Loader'
 
-import { JOB_KIND_WORKFLOW, JOBS_PAGE, PANEL_EDIT_MODE, SCHEDULE_TAB } from '../../constants'
-import { isRowRendered, useVirtualization } from '../../hooks/useVirtualization.hook'
-import { DANGER_BUTTON, FORBIDDEN_ERROR_STATUS_CODE } from 'igz-controls/constants'
-import { getErrorMsg, openPopUp } from 'igz-controls/utils/common.util'
-import { showErrorNotification } from '../../utils/notifications.util'
-import { getJobFunctionData } from '../../components/Jobs/jobs.util'
-import { getNoDataMessage } from '../../utils/getNoDataMessage'
-import { setNotification } from '../../reducers/notificationReducer'
 import functionsActions from '../../actions/functions'
 import jobsActions from '../../actions/jobs'
+import { DANGER_BUTTON, FORBIDDEN_ERROR_STATUS_CODE } from 'igz-controls/constants'
+import { FILTERS_CONFIG } from '../../types'
+import { JOB_KIND_WORKFLOW, JOBS_PAGE, PANEL_EDIT_MODE, SCHEDULE_TAB } from '../../constants'
+import { getErrorMsg, openPopUp } from 'igz-controls/utils/common.util'
+import { getJobFunctionData } from '../../components/Jobs/jobs.util'
+import { getNoDataMessage } from '../../utils/getNoDataMessage'
+import { isRowRendered, useVirtualization } from '../../hooks/useVirtualization.hook'
+import { setNotification } from '../../reducers/notificationReducer'
+import { showErrorNotification } from '../../utils/notifications.util'
 import { useYaml } from '../../hooks/yaml.hook'
 
 import { ReactComponent as Delete } from 'igz-controls/images/delete.svg'
@@ -50,7 +51,9 @@ import cssVariables from './scheduledJobsTable.scss'
 
 const ScheduledJobsTable = ({
   context,
-  filters,
+  filters = null,
+  filtersConfig = null,
+  filtersMenuName = '',
   jobs,
   largeRequestErrorMessage,
   refreshJobs,
@@ -256,10 +259,11 @@ const ScheduledJobsTable = ({
         <NoData
           message={getNoDataMessage(
             filtersStore,
-            filters,
+            filtersConfig || filters,
             largeRequestErrorMessage,
             JOBS_PAGE,
-            SCHEDULE_TAB
+            SCHEDULE_TAB,
+            filtersMenuName
           )}
         />
       ) : (
@@ -289,13 +293,11 @@ const ScheduledJobsTable = ({
   )
 }
 
-ScheduledJobsTable.defaultProps = {
-  filters: []
-}
-
 ScheduledJobsTable.propTypes = {
   context: PropTypes.object.isRequired,
   filters: PropTypes.array,
+  filtersConfig: FILTERS_CONFIG,
+  filtersMenuName: PropTypes.string,
   jobs: PropTypes.array.isRequired,
   largeRequestErrorMessage: PropTypes.string.isRequired,
   refreshJobs: PropTypes.func.isRequired,

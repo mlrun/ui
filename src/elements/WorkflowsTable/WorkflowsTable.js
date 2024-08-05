@@ -20,17 +20,17 @@ such restriction.
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useLocation, useNavigate, useParams } from 'react-router-dom'
+import PropTypes from 'prop-types'
 import { find, isEmpty } from 'lodash'
 
-import NoData from '../../common/NoData/NoData'
-import Workflow from '../../components/Workflow/Workflow'
-import Table from '../../components/Table/Table'
-import JobsTableRow from '../JobsTableRow/JobsTableRow'
-import YamlModal from '../../common/YamlModal/YamlModal'
-import Loader from '../../common/Loader/Loader'
 import JobWizard from '../../components/JobWizard/JobWizard'
+import JobsTableRow from '../JobsTableRow/JobsTableRow'
+import Loader from '../../common/Loader/Loader'
+import NoData from '../../common/NoData/NoData'
+import Table from '../../components/Table/Table'
+import Workflow from '../../components/Workflow/Workflow'
+import YamlModal from '../../common/YamlModal/YamlModal'
 
-import { getNoDataMessage } from '../../utils/getNoDataMessage'
 import {
   JOB_KIND_JOB,
   JOBS_PAGE,
@@ -39,31 +39,33 @@ import {
   PANEL_RERUN_MODE,
   WORKFLOW_GRAPH_VIEW
 } from '../../constants'
-import { isRowRendered, useVirtualization } from '../../hooks/useVirtualization.hook'
 import {
   generateActionsMenu,
   generatePageData
 } from '../../components/Jobs/MonitorWorkflows/monitorWorkflows.util'
-import { isJobKindLocal, pollAbortingJobs } from '../../components/Jobs/jobs.util'
-import { DANGER_BUTTON } from 'igz-controls/constants'
-import { setNotification } from '../../reducers/notificationReducer'
-import { enrichRunWithFunctionFields, handleAbortJob, handleDeleteJob } from '../../utils/jobs.util'
+import functionsActions from '../../actions/functions'
+import getState from '../../utils/getState'
 import jobsActions from '../../actions/jobs'
 import workflowsActions from '../../actions/workflow'
-import { parseJob } from '../../utils/parseJob'
-import getState from '../../utils/getState'
-import { useYaml } from '../../hooks/yaml.hook'
+import { DANGER_BUTTON } from 'igz-controls/constants'
+import { FILTERS_CONFIG } from '../../types'
+import { enrichRunWithFunctionFields, handleAbortJob, handleDeleteJob } from '../../utils/jobs.util'
 import { getFunctionLogs } from '../../utils/getFunctionLogs'
 import { getJobLogs } from '../../utils/getJobLogs.util'
-import cssVariables from '../../components/Jobs/MonitorWorkflows/monitorWorkflows.scss'
-import { isWorkflowStepExecutable } from '../../components/Workflow/workflow.util'
-import { parseFunction } from '../../utils/parseFunction'
-import functionsActions from '../../actions/functions'
-import { showErrorNotification } from '../../utils/notifications.util'
+import { getNoDataMessage } from '../../utils/getNoDataMessage'
 import { isDetailsTabExists } from '../../utils/isDetailsTabExists'
+import { isJobKindLocal, pollAbortingJobs } from '../../components/Jobs/jobs.util'
+import { isRowRendered, useVirtualization } from '../../hooks/useVirtualization.hook'
+import { isWorkflowStepExecutable } from '../../components/Workflow/workflow.util'
 import { openPopUp } from 'igz-controls/utils/common.util'
+import { parseFunction } from '../../utils/parseFunction'
+import { parseJob } from '../../utils/parseJob'
+import { setNotification } from '../../reducers/notificationReducer'
+import { showErrorNotification } from '../../utils/notifications.util'
 import { useSortTable } from '../../hooks/useSortTable.hook'
-import PropTypes from 'prop-types'
+import { useYaml } from '../../hooks/yaml.hook'
+
+import cssVariables from '../../components/Jobs/MonitorWorkflows/monitorWorkflows.scss'
 
 const WorkflowsTable = React.forwardRef(
   (
@@ -71,7 +73,9 @@ const WorkflowsTable = React.forwardRef(
       backLink,
       context,
       fetchFunctionLogs,
-      filters,
+      filterMenuName = '',
+      filters = null,
+      filtersConfig = null,
       getWorkflows,
       itemIsSelected,
       largeRequestErrorMessage,
@@ -81,12 +85,13 @@ const WorkflowsTable = React.forwardRef(
       setSelectedFunction,
       setSelectedJob,
       setWorkflowIsLoaded,
-      tableContent,
+      tableContent = [],
       workflowIsLoaded
     },
     abortJobRef
   ) => {
     const [convertedYaml, toggleConvertedYaml] = useYaml('')
+    const [dataIsLoading, setDataIsLoading] = useState(false)
     const [workflowsViewMode, setWorkflowsViewMode] = useState(WORKFLOW_GRAPH_VIEW)
     const workflowsStore = useSelector(state => state.workflowsStore)
     const filtersStore = useSelector(state => state.filtersStore)
@@ -426,11 +431,13 @@ const WorkflowsTable = React.forwardRef(
         !fetchJobFunctionsPromiseRef.current &&
         params.jobId &&
         (isEmpty(selectedJob) || params.jobId !== selectedJob.uid) &&
-        checkIfWorkflowItemIsJob()
+        checkIfWorkflowItemIsJob() && !dataIsLoading
       ) {
-        fetchRun()
+        setDataIsLoading(true)
+
+        fetchRun().finally(() => setDataIsLoading(false))
       }
-    }, [fetchRun, params.jobId, selectedJob, checkIfWorkflowItemIsJob])
+    }, [fetchRun, params.jobId, selectedJob, checkIfWorkflowItemIsJob, dataIsLoading])
 
     useEffect(() => {
       const functionToBeSelected = findSelectedWorkflowFunction(true)
@@ -631,10 +638,11 @@ const WorkflowsTable = React.forwardRef(
           <NoData
             message={getNoDataMessage(
               filtersStore,
-              filters,
+              filtersConfig || filters,
               largeRequestErrorMessage,
               JOBS_PAGE,
-              MONITOR_WORKFLOWS_TAB
+              MONITOR_WORKFLOWS_TAB,
+              filterMenuName
             )}
           />
         ) : (
@@ -696,7 +704,9 @@ WorkflowsTable.propTypes = {
   backLink: PropTypes.string.isRequired,
   context: PropTypes.object.isRequired,
   fetchFunctionLogs: PropTypes.func.isRequired,
+  filterMenuName: PropTypes.string,
   filters: PropTypes.arrayOf(PropTypes.shape({})),
+  filtersConfig: FILTERS_CONFIG,
   getWorkflows: PropTypes.func.isRequired,
   itemIsSelected: PropTypes.bool.isRequired,
   largeRequestErrorMessage: PropTypes.string.isRequired,

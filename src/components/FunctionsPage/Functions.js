@@ -27,34 +27,41 @@ import JobWizard from '../JobWizard/JobWizard'
 import NewFunctionPopUp from '../../elements/NewFunctionPopUp/NewFunctionPopUp'
 
 import {
-  FUNCTION_FILTERS,
   FUNCTIONS_PAGE,
   GROUP_BY_NAME,
-  SHOW_UNTAGGED_ITEMS,
   TAG_LATEST,
   REQUEST_CANCELED,
   DETAILS_BUILD_LOG_TAB,
-  JOB_DEFAULT_OUTPUT_PATH
+  JOB_DEFAULT_OUTPUT_PATH,
+  DATES_FILTER,
+  NAME_FILTER,
+  SHOW_UNTAGGED_FILTER,
+  FUNCTION_FILTERS
 } from '../../constants'
-import createFunctionsContent from '../../utils/createFunctionsContent'
-import functionsActions from '../../actions/functions'
-import jobsActions from '../../actions/jobs'
-import { DANGER_BUTTON, LABEL_BUTTON } from 'igz-controls/constants'
 import {
+  fetchInitialFunctions,
   generateActionsMenu,
-  filters,
   generateFunctionsPageData,
   pollDeletingFunctions,
   setFullSelectedFunction
 } from './functions.util'
+import {
+  ANY_TIME_DATE_OPTION,
+  datePickerPastOptions,
+  getDatePickerFilterValue
+} from '../../utils/datePicker.util'
+import createFunctionsContent from '../../utils/createFunctionsContent'
+import functionsActions from '../../actions/functions'
+import jobsActions from '../../actions/jobs'
+import { DANGER_BUTTON, LABEL_BUTTON } from 'igz-controls/constants'
 import { getFunctionIdentifier } from '../../utils/getUniqueIdentifier'
 import { getFunctionNuclioLogs, getFunctionLogs } from '../../utils/getFunctionLogs'
+import { isBackgroundTaskRunning } from '../../utils/poll.util'
 import { isDetailsTabExists } from '../../utils/isDetailsTabExists'
 import { openPopUp } from 'igz-controls/utils/common.util'
 import { parseFunctions } from '../../utils/parseFunctions'
-import { setFilters } from '../../reducers/filtersReducer'
+import { setFilters, setFiltersValues, setModalFiltersValues } from '../../reducers/filtersReducer'
 import { setNotification } from '../../reducers/notificationReducer'
-import { isBackgroundTaskRunning } from '../../utils/poll.util'
 import { showErrorNotification } from '../../utils/notifications.util'
 import { useGroupContent } from '../../hooks/groupContent.hook'
 import { useMode } from '../../hooks/mode.hook'
@@ -81,7 +88,6 @@ const Functions = ({
   const [selectedFunctionMin, setSelectedFunctionMin] = useState({})
   const [selectedFunction, setSelectedFunction] = useState({})
   const [editableItem, setEditableItem] = useState(null)
-  const [taggedFunctions, setTaggedFunctions] = useState([])
   const [functionsPanelIsOpen, setFunctionsPanelIsOpen] = useState(false)
   const [jobWizardIsOpened, setJobWizardIsOpened] = useState(false)
   const [jobWizardMode, setJobWizardMode] = useState(null)
@@ -94,6 +100,7 @@ const Functions = ({
   const fetchFunctionNuclioLogsTimeout = useRef(null)
   const nameFilterRef = useRef('')
   const terminatePollRef = useRef(null)
+  const functionsAreInitializedRef = useRef(false)
   const { isDemoMode, isStagingMode } = useMode()
   const params = useParams()
   const navigate = useNavigate()
@@ -207,7 +214,7 @@ const Functions = ({
   }
 
   const { latestItems, handleExpandRow, expand, handleExpandAll } = useGroupContent(
-    taggedFunctions,
+    functions,
     getFunctionIdentifier,
     handleCollapse,
     handleExpand,
@@ -477,7 +484,13 @@ const Functions = ({
     ]
   )
 
-  const functionsFilters = useMemo(() => [filters[0]], [])
+  const functionsFiltersConfig = useMemo(() => {
+    return {
+      [NAME_FILTER]: { label: 'Name:' },
+      [DATES_FILTER]: { label: 'Updated:' },
+      [SHOW_UNTAGGED_FILTER]: { label: 'Show untagged:' }
+    }
+  }, [])
 
   useEffect(() => {
     setFullSelectedFunction(
@@ -490,24 +503,48 @@ const Functions = ({
     )
   }, [dispatch, fetchFunction, navigate, params.projectName, selectedFunctionMin])
 
+  useLayoutEffect(() => {
+    if (
+      !functionsAreInitializedRef.current &&
+      (params.funcName || (params.hash && params.hash.includes('@')))
+    ) {
+      const funcName = params.funcName || params.hash.split('@')[0]
+
+      dispatch(
+        setFiltersValues({
+          name: FUNCTION_FILTERS,
+          value: {
+            [NAME_FILTER]: funcName,
+            [DATES_FILTER]: getDatePickerFilterValue(datePickerPastOptions, ANY_TIME_DATE_OPTION)
+          }
+        })
+      )
+      dispatch(
+        setModalFiltersValues({
+          name: FUNCTION_FILTERS,
+          value: {
+            [SHOW_UNTAGGED_FILTER]: true
+          }
+        })
+      )
+    }
+  }, [dispatch, params])
+
   useEffect(() => {
-    fetchData()
+    fetchInitialFunctions(filtersStore, fetchData, functionsAreInitializedRef)
+  }, [filtersStore, fetchData])
+
+  useEffect(() => {
+    const abortController = abortControllerRef.current
 
     return () => {
+      functionsAreInitializedRef.current = false
       setSelectedFunctionMin({})
       setFunctions([])
       setSelectedRowData({})
-      abortControllerRef.current.abort(REQUEST_CANCELED)
+      abortController.abort(REQUEST_CANCELED)
     }
-  }, [params.projectName, fetchData])
-
-  useEffect(() => {
-    setTaggedFunctions(
-      !filtersStore.filterMenuModal[FUNCTION_FILTERS].values.showUntagged
-        ? functions.filter(func => func.tag.length)
-        : functions
-    )
-  }, [filtersStore.filterMenuModal, functions])
+  }, [params.projectName])
 
   useEffect(() => {
     if (params.hash && pageData.details.menu.length > 0) {
@@ -563,21 +600,11 @@ const Functions = ({
   ])
 
   useEffect(() => {
-    dispatch(setFilters({ groupBy: GROUP_BY_NAME, showUntagged: SHOW_UNTAGGED_ITEMS }))
+    dispatch(setFilters({ groupBy: GROUP_BY_NAME }))
   }, [dispatch, params.projectName])
 
   const filtersChangeCallback = filters => {
-    if (
-      !filters.showUntagged &&
-      filters.showUntagged !== filtersStore.filterMenuModal[FUNCTION_FILTERS].values.showUntagged &&
-      selectedFunction.hash
-    ) {
-      navigate(`/projects/${params.projectName}/functions`)
-    } else if (
-      filters.showUntagged === filtersStore.filterMenuModal[FUNCTION_FILTERS].values.showUntagged
-    ) {
-      refreshFunctions(filters)
-    }
+    refreshFunctions(filters)
   }
 
   const handleSelectFunction = item => {
@@ -707,14 +734,15 @@ const Functions = ({
     <FunctionsView
       actionsMenu={actionsMenu}
       closePanel={closePanel}
-      createFunctionSuccess={createFunctionSuccess}
       confirmData={confirmData}
       convertedYaml={convertedYaml}
+      createFunctionSuccess={createFunctionSuccess}
       editableItem={editableItem}
       expand={expand}
       filtersChangeCallback={filtersChangeCallback}
       filtersStore={filtersStore}
-      functionsFilters={functionsFilters}
+      functions={functions}
+      functionsFiltersConfig={functionsFiltersConfig}
       functionsPanelIsOpen={functionsPanelIsOpen}
       functionsStore={functionsStore}
       getPopUpTemplate={getPopUpTemplate}
@@ -731,7 +759,6 @@ const Functions = ({
       selectedFunction={selectedFunction}
       selectedRowData={selectedRowData}
       tableContent={tableContent}
-      taggedFunctions={taggedFunctions}
       toggleConvertedYaml={toggleConvertedYaml}
       virtualizationConfig={virtualizationConfig}
     />

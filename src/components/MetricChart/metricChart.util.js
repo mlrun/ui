@@ -122,3 +122,12 @@ export const generateMetricChartTooltip = context => {
   tooltipEl.style.top = position.top + window.pageYOffset + tooltipModel.caretY + 'px'
   tooltipEl.style.pointerEvents = 'none'
 }
+
+export const setChartGradient = (chart, ctx, backgroundColor, canvasHeight = 200) => {
+  const gradient = ctx.createLinearGradient(0, 0, 0, canvasHeight)
+  gradient.addColorStop(0, hexToRGB(backgroundColor|| '#FFF', 0.7))
+  gradient.addColorStop(1, hexToRGB(backgroundColor))
+  chart.data.datasets.forEach(dataset => {
+    dataset.backgroundColor = gradient
+  })
+}
