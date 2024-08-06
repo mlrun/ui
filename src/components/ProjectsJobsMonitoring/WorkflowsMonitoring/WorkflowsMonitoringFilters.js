@@ -25,9 +25,11 @@ import StatusFilter from '../../../common/StatusFilter/StatusFilter'
 
 import { LABELS_FILTER, PROJECT_FILTER, STATUS_FILTER_NAME } from '../../../constants'
 import { workflowsStatuses } from '../../FilterMenu/filterMenu.settings'
+import { useMode } from '../../../hooks/mode.hook'
 
 const WorkflowsMonitoringFilters = () => {
   const form = useForm()
+  const { isDemoMode } = useMode()
 
   const handleInputChange = (value, inputName) => {
     form.change(inputName, value || '')
@@ -45,13 +47,15 @@ const WorkflowsMonitoringFilters = () => {
       <div className="form-row">
         <StatusFilter statusList={workflowsStatuses} name={STATUS_FILTER_NAME} />
       </div>
-      <div className="form-row">
-        <FormInput label="Labels" name={LABELS_FILTER} placeholder="key1,key2=value,..." />
-        <FormOnChange
-          handler={value => handleInputChange(value, LABELS_FILTER)}
-          name={LABELS_FILTER}
-        />
-      </div>
+      {isDemoMode && (
+        <div className="form-row">
+          <FormInput label="Labels" name={LABELS_FILTER} placeholder="key1,key2=value,..." />
+          <FormOnChange
+            handler={value => handleInputChange(value, LABELS_FILTER)}
+            name={LABELS_FILTER}
+          />
+        </div>
+      )}
     </div>
   )
 }
