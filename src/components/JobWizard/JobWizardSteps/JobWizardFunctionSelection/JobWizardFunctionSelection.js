@@ -291,11 +291,10 @@ const JobWizardFunctionSelection = ({
     ) {
       dispatch(
         functionsActions.fetchHubFunctions(
-          null,
+          {},
           { ui: { setRequestErrorMessage: setHubFunctionsRequestErrorMessage } }
         )
       ).then(templatesObject => {
-        // here another catch
         if (templatesObject) {
           setTemplatesCategories(templatesObject.hubFunctionsCategories)
           setTemplates(templatesObject.hubFunctions)

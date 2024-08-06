@@ -118,6 +118,10 @@ const Features = ({
 
       setRequestErrorMessage('')
 
+      const getFirstPromiseError = result => {
+        return result?.find(response => response.status === 'rejected')?.reason || null
+      }
+
       return Promise.allSettled([
         fetchFeatures(params.projectName, filters, config),
         fetchEntities(params.projectName, filters, config)
@@ -133,7 +137,7 @@ const Features = ({
               setFeatures,
               abortControllerRef,
               setRequestErrorMessage,
-              result?.filter((resp) => resp.reason)?.[0]?.reason || null,
+              getFirstPromiseError(result),
               dispatch
             )
           }

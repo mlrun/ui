@@ -29,5 +29,4 @@ export const largeResponseCatchHandler = (error, defaultError, dispatch, handler
     showErrorNotification(dispatch, error, defaultError)
     handlerCallback()
   }
-
 }

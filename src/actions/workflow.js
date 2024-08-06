@@ -76,10 +76,10 @@ const workflowActions = {
     const errorHandler = (error) => {
       const errorMessage = 'Failed to fetch workflows'
           
-          dispatch(workflowActions.fetchWorkflowsFailure(error))
-          largeResponseCatchHandler(error, errorMessage, dispatch, () => {
-            config?.ui?.setRequestErrorMessage?.(errorMessage)
-          })
+      dispatch(workflowActions.fetchWorkflowsFailure(error))
+      largeResponseCatchHandler(error, errorMessage, dispatch, () => {
+        config?.ui?.setRequestErrorMessage?.(errorMessage)
+      })
     }
 
     if (withPagination) {
@@ -101,7 +101,6 @@ const workflowActions = {
           nextPageToken = null
           errorHandler(error)
         }
-        
       }
 
       if (filter.project) {
