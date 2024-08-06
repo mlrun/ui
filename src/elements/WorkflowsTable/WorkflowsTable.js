@@ -709,7 +709,7 @@ WorkflowsTable.propTypes = {
   filtersConfig: FILTERS_CONFIG,
   getWorkflows: PropTypes.func.isRequired,
   itemIsSelected: PropTypes.bool.isRequired,
-  largeRequestErrorMessage: PropTypes.string.isRequired,
+  requestErrorMessage: PropTypes.string.isRequired,
   selectedFunction: PropTypes.object.isRequired,
   selectedJob: PropTypes.object.isRequired,
   setItemIsSelected: PropTypes.func.isRequired,
