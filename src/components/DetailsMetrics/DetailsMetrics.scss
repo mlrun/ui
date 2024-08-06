@@ -65,7 +65,7 @@ $stickyHeaderHeight: 55px;
         transition: all 0.2s ease-in-out;
       }
 
-      &_expanded.stats-card__row {
+      &_expanded .stats-card__row {
         height: 40px;
         transition: all 0.2s ease-in-out;
       }
@@ -215,9 +215,15 @@ $stickyHeaderHeight: 55px;
       }
     }
 
-    &-pin-icon {
+    &-enlarge-icon {
       position: absolute;
       top: -24px;
+      right: -15px;
+    }
+
+    &-minimize-icon {
+      position: absolute;
+      top: -59px;
       right: -15px;
     }
 
@@ -230,6 +236,10 @@ $stickyHeaderHeight: 55px;
       color: $primary;
       font-weight: 500;
       font-size: 14px;
+
+      &_expanded {
+        margin-right: 30px;
+      }
 
       &_drift-icon-container {
         align-self: stretch;
