@@ -19,7 +19,6 @@ such restriction.
 */
 import React from 'react'
 import PropTypes from 'prop-types'
-import { createPortal } from 'react-dom'
 
 import { ReactComponent as CloseIcon } from 'igz-controls/images/close.svg'
 import { ReactComponent as SuccessDone } from 'igz-controls/images/success_done.svg'
@@ -34,7 +33,7 @@ const NotificationView = ({
   retry,
   transitionStyles
 }) => {
-  return createPortal(
+  return (
     <div className="notification_container" style={{ ...transitionStyles }}>
       <div className="notification_body">
         <button
@@ -64,8 +63,7 @@ const NotificationView = ({
           </div>
         )}
       </div>
-    </div>,
-    document.getElementById('overlay_container')
+    </div>
   )
 }
 

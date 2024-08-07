@@ -1,79 +1,85 @@
 @import '~igz-controls/scss/colors';
 @import '~igz-controls/scss/shadows';
 
-.notification {
-  &_container {
-    position: relative;
-    align-self: flex-end;
-    opacity: 0;
-    padding: 15px;
-    color: $white;
-    background-color: $darkPurple;
-    border-radius: 5px;
-    box-shadow: $tooltipShadow;
-    margin-right: 24px;
-    margin-bottom: 10px;
-    z-index: 1000;
-  }
+.notifications-wrapper {
+  position: absolute;
+  right: 0;
+  bottom: 0;
 
-  &_body {
-    display: flex;
-    align-items: center;
+  .notification {
+    &_container {
+      position: relative;
+      z-index: 1000;
+      align-self: flex-end;
+      margin-right: 24px;
+      margin-bottom: 10px;
+      padding: 15px;
+      color: $white;
+      background-color: $darkPurple;
+      border-radius: 5px;
+      box-shadow: $tooltipShadow;
+      opacity: 0;
+    }
 
-    &_close_icon {
+    &_body {
       display: flex;
       align-items: center;
-      position: absolute;
-      top: -9px;
-      right: -9px;
-      width: 18px;
-      height: 18px;
-      border: 1px solid $white;
-      border-radius: 50%;
-      background-color: $darkPurple;
-      padding: 2px;
 
-      & svg {
-        & > * {
-          fill: $white;
+      &_close_icon {
+        position: absolute;
+        top: -9px;
+        right: -9px;
+        display: flex;
+        align-items: center;
+        width: 18px;
+        height: 18px;
+        padding: 2px;
+        background-color: $darkPurple;
+        border: 1px solid $white;
+        border-radius: 50%;
+
+        & svg {
+          & > * {
+            fill: $white;
+          }
         }
       }
-    }
 
-    &_icon {
-      .success_icon {
-        width: 14px;
-        height: 14px;
+      &_icon {
+        .success_icon {
+          width: 14px;
+          height: 14px;
+        }
+
+        .alert_icon {
+          width: 4px;
+          height: 14px;
+        }
       }
 
-      .alert_icon {
-        width: 4px;
-        height: 14px;
+      .notification_body_wrapper {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 24px;
+        height: 24px;
+        margin-right: 5px;
+        border-radius: 50%;
       }
-    }
 
-    .notification_body_wrapper {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      width: 24px;
-      height: 24px;
-      margin-right: 5px;
-      border-radius: 50%;
-    }
+      &_alert_icon {
+        background-color: $burntSienna;
+      }
 
-    &_alert_icon {
-      background-color: $burntSienna;
-    }
+      &_success_icon {
+        background-color: $brightTurquoise;
+      }
 
-    &_success_icon {
-      background-color: $brightTurquoise;
-    }
-
-    &_button {
-      margin-left: 15px;
-      color: $portage;
-      cursor: pointer;
+      &_button {
+        margin-left: 15px;
+        color: $portage;
+        cursor: pointer;
+      }
     }
   }
 }
