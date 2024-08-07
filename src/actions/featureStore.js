@@ -184,12 +184,13 @@ const featureStoreActions = {
         return response.data?.feature_sets
       })
       .catch(error => {
-        const errorMessage = 'Failed to fetch feature sets'
-
         dispatch(featureStoreActions.fetchFeatureSetsFailure(error.message))
-        largeResponseCatchHandler(error, errorMessage, dispatch, () => {
-          config?.ui?.setRequestErrorMessage?.(errorMessage)
-        })
+        largeResponseCatchHandler(
+          error,
+          'Failed to fetch feature sets',
+          dispatch,
+          config?.ui?.setRequestErrorMessage
+        )
       })
   },
   fetchFeatureSetsBegin: () => ({
@@ -268,11 +269,12 @@ const featureStoreActions = {
           dispatch(featureStoreActions.fetchFeatureVectorsFailure(error))
 
           if (!skipErrorNotification) {
-            const errorMessage = 'Failed to fetch feature vectors'
-
-            largeResponseCatchHandler(error, errorMessage, dispatch, () => {
-              config?.ui?.setRequestErrorMessage?.(errorMessage)
-            })
+            largeResponseCatchHandler(
+              error,
+              'Failed to fetch feature vectors',
+              dispatch,
+              config?.ui?.setRequestErrorMessage
+            )
           }
         })
     },

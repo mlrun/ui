@@ -20,13 +20,12 @@ such restriction.
 import { DEFAULT_ABORT_MSG, LARGE_REQUEST_CANCELED, REQUEST_CANCELED } from '../constants'
 import { showErrorNotification } from './notifications.util'
 
-export const largeResponseCatchHandler = (error, defaultError, dispatch, handlerCallback = () => {}) => {
+export const largeResponseCatchHandler = (error, defaultError, dispatch, setUIErrorMessage = () => {}) => {
   if (
     ![LARGE_REQUEST_CANCELED, REQUEST_CANCELED, DEFAULT_ABORT_MSG].includes(error.message) &&
     error &&
     dispatch
   ) {
-    showErrorNotification(dispatch, error, defaultError)
-    handlerCallback()
+    showErrorNotification(dispatch, error, defaultError, null, null, setUIErrorMessage)
   }
 }

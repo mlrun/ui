@@ -58,12 +58,14 @@ const ConsumerGroupsWrapper = ({
 
   useEffect(() => {
     if (v3ioStreams.error) {
-      const errorMessage = 'Failed to fetch v3io streams'
-
-      showErrorNotification(dispatch, v3ioStreams.error, errorMessage, '', () =>
-        refreshConsumerGroups()
+      showErrorNotification(
+        dispatch,
+        v3ioStreams.error,
+        'Failed to fetch v3io streams',
+        '',
+        refreshConsumerGroups,
+        setRequestErrorMessage
       )
-      setRequestErrorMessage(errorMessage)
 
       resetV3ioStreamsError()
     }

@@ -233,27 +233,32 @@ const functionsActions = {
     type: FETCH_FUNCTION_TEMPLATE_FAILURE,
     payload: err
   }),
-  fetchFunctions: (project, filters, config) => dispatch => {
-    dispatch(functionsActions.fetchFunctionsBegin())
-    config?.ui?.setRequestErrorMessage?.('')
+  fetchFunctions:
+    (project, filters, config, setRequestErrorMessage = () => {}) =>
+    dispatch => {
+      const setRequestErrorMessageLocal =
+        config?.ui?.setRequestErrorMessage || setRequestErrorMessage
 
-    return functionsApi
-      .getFunctions(project, filters, config)
-      .then(({ data }) => {
-        dispatch(functionsActions.fetchFunctionsSuccess(data.funcs))
+      dispatch(functionsActions.fetchFunctionsBegin())
+      setRequestErrorMessageLocal('')
 
-        return data.funcs
-      })
-      .catch(error => {
-        dispatch(functionsActions.fetchFunctionsFailure(error.message))
+      return functionsApi
+        .getFunctions(project, filters, config)
+        .then(({ data }) => {
+          dispatch(functionsActions.fetchFunctionsSuccess(data.funcs))
 
-        const errorMessage = 'Failed to fetch functions'
-
-        largeResponseCatchHandler(error, errorMessage, dispatch, () => {
-          config?.ui?.setRequestErrorMessage?.(errorMessage)
+          return data.funcs
         })
-      })
-  },
+        .catch(error => {
+          dispatch(functionsActions.fetchFunctionsFailure(error.message))
+          largeResponseCatchHandler(
+            error,
+            'Failed to fetch functions',
+            dispatch,
+            setRequestErrorMessageLocal
+          )
+        })
+    },
   fetchFunctionsBegin: () => ({
     type: FETCH_FUNCTIONS_BEGIN
   }),
@@ -307,28 +312,34 @@ const functionsActions = {
     type: FETCH_HUB_FUNCTION_TEMPLATE_FAILURE,
     payload: err
   }),
-  fetchHubFunctions: (allowedHubFunctions, config) => dispatch => {
-    dispatch(functionsActions.fetchHubFunctionsBegin())
-    config?.ui?.setRequestErrorMessage?.('')
+  fetchHubFunctions:
+    (allowedHubFunctions, setRequestErrorMessage = () => {}) =>
+    dispatch => {
+      dispatch(functionsActions.fetchHubFunctionsBegin())
+      setRequestErrorMessage('')
 
-    return functionsApi
-      .getHubFunctions()
-      .then(({ data: functionTemplates }) => {
-        const templatesData = generateHubCategories(functionTemplates.catalog, allowedHubFunctions)
+      return functionsApi
+        .getHubFunctions()
+        .then(({ data: functionTemplates }) => {
+          const templatesData = generateHubCategories(
+            functionTemplates.catalog,
+            allowedHubFunctions
+          )
 
-        dispatch(functionsActions.setHubFunctions(templatesData))
+          dispatch(functionsActions.setHubFunctions(templatesData))
 
-        return templatesData
-      })
-      .catch(error => {
-        const errorMessage = 'Failed to fetch functions'
-
-        dispatch(functionsActions.fetchHubFunctionsFailure(error))
-        largeResponseCatchHandler(error, errorMessage, dispatch, () => {
-          config?.ui?.setRequestErrorMessage?.(errorMessage)
+          return templatesData
         })
-      })
-  },
+        .catch(error => {
+          dispatch(functionsActions.fetchHubFunctionsFailure(error))
+          largeResponseCatchHandler(
+            error,
+            'Failed to fetch functions',
+            dispatch,
+            setRequestErrorMessage
+          )
+        })
+    },
 
   fetchHubFunctionsBegin: () => ({
     type: FETCH_HUB_FUNCTIONS_BEGIN

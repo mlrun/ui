@@ -93,12 +93,13 @@ const JobWizardFunctionSelection = ({
   const [hubFunctionsRequestErrorMessage, setHubFunctionsRequestErrorMessage] = useState('')
   const selectedActiveTab = useRef(null)
   const functionSelectionRef = useRef(null)
+  const hubFunctionLoadedRef = useRef(false)
 
   const filtersStoreHubCategories = useSelector(
     store =>
       store.filtersStore[FILTER_MENU_MODAL][JOB_WIZARD_FILTERS]?.values?.[HUB_CATEGORIES_FILTER]
   )
-  const { hubFunctions, hubFunctionsCatalog, loading } = useSelector(store => store.functionsStore)
+  const { loading } = useSelector(store => store.functionsStore)
 
   const dispatch = useDispatch()
 
@@ -241,13 +242,8 @@ const JobWizardFunctionSelection = ({
   }
 
   const onSelectedProjectNameChange = currentValue => {
-    setFunctionsRequestErrorMessage('')
     dispatch(
-      functionsActions.fetchFunctions(
-        currentValue,
-        {},
-        { ui: { setRequestErrorMessage: setFunctionsRequestErrorMessage } }
-      )
+      functionsActions.fetchFunctions(currentValue, {}, {}, setFunctionsRequestErrorMessage)
     ).then(functions => {
       if (functions) {
         const validFunctions = functions.filter(func => {
@@ -285,44 +281,32 @@ const JobWizardFunctionSelection = ({
   }
 
   useEffect(() => {
-    if (
-      activeTab === FUNCTIONS_SELECTION_HUB_TAB &&
-      (isEmpty(hubFunctions) || isEmpty(hubFunctionsCatalog))
-    ) {
-      dispatch(
-        functionsActions.fetchHubFunctions(
-          {},
-          { ui: { setRequestErrorMessage: setHubFunctionsRequestErrorMessage } }
-        )
-      ).then(templatesObject => {
-        if (templatesObject) {
-          setTemplatesCategories(templatesObject.hubFunctionsCategories)
-          setTemplates(templatesObject.hubFunctions)
+    if (activeTab === FUNCTIONS_SELECTION_HUB_TAB && !hubFunctionLoadedRef.current) {
+      dispatch(functionsActions.fetchHubFunctions({}, setHubFunctionsRequestErrorMessage)).then(
+        templatesObject => {
+          if (templatesObject) {
+            setTemplatesCategories(templatesObject.hubFunctionsCategories)
+            setTemplates(templatesObject.hubFunctions)
 
-          formState.initialValues[FUNCTION_SELECTION_STEP].templatesLabels =
-            templatesObject.hubFunctions.reduce((labels, template) => {
-              labels[template.metadata.name] = template.ui.categories.map(categoryId => {
-                return {
-                  id: categoryId,
-                  key: getCategoryName(categoryId),
-                  isKeyOnly: true
-                }
-              })
+            formState.initialValues[FUNCTION_SELECTION_STEP].templatesLabels =
+              templatesObject.hubFunctions.reduce((labels, template) => {
+                labels[template.metadata.name] = template.ui.categories.map(categoryId => {
+                  return {
+                    id: categoryId,
+                    key: getCategoryName(categoryId),
+                    isKeyOnly: true
+                  }
+                })
 
-              return labels
-            }, {})
+                return labels
+              }, {})
+
+            hubFunctionLoadedRef.current = true
+          }
         }
-      })
+      )
     }
-  }, [
-    activeTab,
-    dispatch,
-    formState.initialValues,
-    hubFunctions,
-    hubFunctionsCatalog,
-    setTemplates,
-    setTemplatesCategories
-  ])
+  }, [activeTab, dispatch, formState.initialValues, setTemplates, setTemplatesCategories])
 
   const selectProjectFunction = functionData => {
     const selectNewFunction = () => {

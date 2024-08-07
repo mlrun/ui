@@ -292,6 +292,8 @@ const functionReducer = (state = initialState, { type, payload }) => {
       return {
         ...state,
         loading: false,
+        hubFunctions: [],
+        hubFunctionsCatalog: [],
         error: payload
       }
     case GET_FUNCTION_BEGIN:

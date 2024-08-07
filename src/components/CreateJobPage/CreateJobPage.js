@@ -70,7 +70,7 @@ const CreateJobPage = ({
   }, [fetchProjectsNames, params.projectName, projects.length])
 
   useEffect(() => {
-    fetchFunctions(selectedProject, {}, { ui: { setRequestErrorMessage } }).then(functions => {
+    fetchFunctions(selectedProject, {}, {}, setRequestErrorMessage).then(functions => {
       if (functions) {
         const filteredFunctions = functions.filter(func => includes(FUNCTION_RUN_KINDS, func.kind))
 

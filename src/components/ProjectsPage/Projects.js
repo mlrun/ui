@@ -56,7 +56,7 @@ const Projects = () => {
   const [selectedProjectsState, setSelectedProjectsState] = useState('active')
   const [sortProjectId, setSortProjectId] = useState('byName')
   const [deletingProjects, setDeletingProjects] = useState({})
-  const [projectsRequestErrorMessage, setProjectsRequestErrorMessage] = useState()
+  const [projectsRequestErrorMessage, setProjectsRequestErrorMessage] = useState('')
 
   const abortControllerRef = useRef(new AbortController())
   const terminatePollRef = useRef(null)
@@ -68,12 +68,7 @@ const Projects = () => {
   const tasksStore = useSelector(store => store.tasksStore)
 
   const fetchMinimalProjects = useCallback(() => {
-    dispatch(
-      projectsAction.fetchProjects(
-        { format: 'minimal' },
-        { ui: { setRequestErrorMessage: setProjectsRequestErrorMessage } }
-      )
-    )
+    dispatch(projectsAction.fetchProjects({ format: 'minimal' }, setProjectsRequestErrorMessage))
   }, [dispatch])
 
   const isValidProjectState = useCallback(

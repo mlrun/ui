@@ -74,12 +74,13 @@ const workflowActions = {
     config?.ui?.setRequestErrorMessage?.('')
 
     const errorHandler = (error) => {
-      const errorMessage = 'Failed to fetch workflows'
-          
       dispatch(workflowActions.fetchWorkflowsFailure(error))
-      largeResponseCatchHandler(error, errorMessage, dispatch, () => {
-        config?.ui?.setRequestErrorMessage?.(errorMessage)
-      })
+      largeResponseCatchHandler(
+        error,
+        'Failed to fetch workflows',
+        dispatch,
+        config?.ui?.setRequestErrorMessage
+      )
     }
 
     if (withPagination) {

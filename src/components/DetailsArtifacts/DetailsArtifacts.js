@@ -137,22 +137,21 @@ const DetailsArtifacts = ({
       const workflowLabel = job.labels.find(label => label.includes('workflow:'))
       const { chipValue: workflowId } = getChipLabelAndValue({ value: workflowLabel ?? '' })
       const config = {
-        params: { tree: job.uid },
-        ui: { setRequestErrorMessage }
+        params: { tree: job.uid }
       }
 
       if (workflowId) {
-        return fetchJob(params.projectName, params.jobId, iteration, {
-          ui: { setRequestErrorMessage }
-        }).then(job => {
-          if (job) {
-            const selectedJob = getJobAccordingIteration(job)
+        return fetchJob(params.projectName, params.jobId, iteration, setRequestErrorMessage).then(
+          job => {
+            if (job) {
+              const selectedJob = getJobAccordingIteration(job)
 
-            setArtifactsPreviewContent(
-              generateArtifactsPreviewContent(selectedJob, selectedJob.artifacts)
-            )
+              setArtifactsPreviewContent(
+                generateArtifactsPreviewContent(selectedJob, selectedJob.artifacts)
+              )
+            }
           }
-        })
+        )
       }
 
       if (iteration) {
@@ -163,7 +162,8 @@ const DetailsArtifacts = ({
         fetchArtifacts({
           project: job.project || params.projectName,
           filters: {},
-          config
+          config,
+          setRequestErrorMessage
         })
       )
         .unwrap()

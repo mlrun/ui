@@ -18,25 +18,33 @@ under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
 import React, { useCallback, useEffect, useState, useMemo } from 'react'
-import { useDispatch, connect } from 'react-redux'
+import { useDispatch, connect, useSelector } from 'react-redux'
 import { isEmpty } from 'lodash'
 import { useParams } from 'react-router-dom'
 
 import Loader from '../../common/Loader/Loader'
 import NoData from '../../common/NoData/NoData'
 import PageHeader from '../../elements/PageHeader/PageHeader'
-import Search from '../../common/Search/Search'
 import Table from '../Table/Table'
 import { RoundedIcon } from 'igz-controls/components'
 import ConsumerGroupShardLagTableRow from '../../elements/ConsumerGroupShardLagTableRow/ConsumerGroupShardLagTableRow'
+import Search from '../../common/Search/Search.js'
 
 import nuclioActions from '../../actions/nuclio'
 import { generatePageData } from './consumerGroup.util.js'
 import { getNoDataMessage } from '../../utils/getNoDataMessage'
 import { showErrorNotification } from '../../utils/notifications.util'
 import createConsumerGroupContent from '../../utils/createConsumerGroupContent'
+import { setFiltersValues } from '../../reducers/filtersReducer.js'
+import {
+  CONSUMER_GROUP_FILTER,
+  CONSUMER_GROUP_PAGE,
+  FILTER_MENU,
+  NAME_FILTER
+} from '../../constants.js'
 
 import { ReactComponent as RefreshIcon } from 'igz-controls/images/refresh.svg'
+
 
 const ConsumerGroup = ({
   fetchNuclioV3ioStreamShardLags,
@@ -46,9 +54,18 @@ const ConsumerGroup = ({
   const [currentV3ioStream, setCurrentV3ioStream] = useState([])
   const [requestErrorMessage, setRequestErrorMessage] = useState('')
   const [filteredV3ioStreamShardLags, setFilteredV3ioStreamShardLags] = useState([])
-  const [filterByName, setFilterByName] = useState('')
+  const filtersStore = useSelector(store => store.filtersStore)
+  const nameFilter = useSelector(
+    store => store.filtersStore[FILTER_MENU][CONSUMER_GROUP_FILTER][NAME_FILTER]
+  )
   const params = useParams()
   const dispatch = useDispatch()
+
+  const filtersConfig = useMemo(() => {
+    return {
+      [NAME_FILTER]: { label: 'Name:' }
+    }
+  }, [])
 
   useEffect(() => {
     const v3ioStream = nuclioStore.v3ioStreams.parsedData.find(
@@ -83,23 +100,21 @@ const ConsumerGroup = ({
   useEffect(() => {
     setFilteredV3ioStreamShardLags(
       nuclioStore.v3ioStreamShardLags.parsedData.filter(shardLag =>
-        filterByName ? shardLag.shardLagId.toLowerCase().includes(filterByName) : true
+        nameFilter ? shardLag.shardLagId.toLowerCase().includes(nameFilter) : true
       )
     )
-  }, [nuclioStore.v3ioStreamShardLags.parsedData, filterByName])
+  }, [nameFilter, nuclioStore.v3ioStreamShardLags.parsedData])
 
   useEffect(() => {
     if (!isEmpty(currentV3ioStream) && nuclioStore.v3ioStreamShardLags.error) {
-
-      const errorMessage = 'Failed to fetch v3io stream shard lags'
       showErrorNotification(
         dispatch,
         nuclioStore.v3ioStreamShardLags.error,
-        errorMessage,
+        'Failed to fetch v3io stream shard lags',
         '',
-        () => refreshConsumerGroup(currentV3ioStream)
+        () => refreshConsumerGroup(currentV3ioStream),
+        setRequestErrorMessage
       )
-      setRequestErrorMessage(errorMessage)
       resetV3ioStreamShardLagsError()
     }
   }, [
@@ -117,6 +132,15 @@ const ConsumerGroup = ({
     [filteredV3ioStreamShardLags]
   )
 
+  const searchOnChangeHandler = (value) => {
+    dispatch(
+      setFiltersValues({
+        name: CONSUMER_GROUP_FILTER,
+        value: { [NAME_FILTER]: value.toLowerCase() }
+      })
+    )
+  }
+
   return (
     <>
       {!isEmpty(currentV3ioStream) && (
@@ -129,9 +153,9 @@ const ConsumerGroup = ({
       <div className="page-actions">
         <Search
           wrapperClassName="search-input-wrapper"
-          onChange={searchTerm => setFilterByName(searchTerm.toLowerCase())}
+          onChange={searchOnChangeHandler}
           placeholder="Search by shard name..."
-          value={filterByName}
+          value={nameFilter}
         />
         <RoundedIcon
           onClick={() => refreshConsumerGroup(currentV3ioStream)}
@@ -155,8 +179,17 @@ const ConsumerGroup = ({
       </Table>
       {!nuclioStore.v3ioStreams.loading &&
         !nuclioStore.v3ioStreamShardLags.loading &&
-        nuclioStore.v3ioStreamShardLags.parsedData.length === 0 && (
-          <NoData message={requestErrorMessage || getNoDataMessage()} />
+        filteredV3ioStreamShardLags.length === 0 && (
+          <NoData
+            message={getNoDataMessage(
+              filtersStore,
+              filtersConfig,
+              requestErrorMessage,
+              CONSUMER_GROUP_PAGE,
+              null,
+              CONSUMER_GROUP_FILTER
+            )}
+          />
         )}
       {(nuclioStore.v3ioStreams.loading || nuclioStore.v3ioStreamShardLags.loading) && <Loader />}
     </>

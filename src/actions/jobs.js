@@ -238,12 +238,13 @@ const jobsActions = {
         return data.runs
       })
       .catch(error => {
-        const errorMessage = 'Failed to fetch jobs'
-
         dispatch(jobsActions.fetchAllJobRunsFailure(error))
-        largeResponseCatchHandler(error, errorMessage, dispatch, () => {
-          config?.ui?.setRequestErrorMessage?.(errorMessage)
-        })
+        largeResponseCatchHandler(
+          error,
+          'Failed to fetch jobs',
+          dispatch,
+          config?.ui?.setRequestErrorMessage
+        )
       })
   },
   fetchAllJobRunsBegin: () => ({
@@ -257,9 +258,9 @@ const jobsActions = {
     type: FETCH_ALL_JOB_RUNS_SUCCESS,
     payload: jobsList
   }),
-  fetchJob: (project, jobId, iter, config) => dispatch => {
+  fetchJob: (project, jobId, iter, setRequestErrorMessage = () => {}) => dispatch => {
     dispatch(jobsActions.fetchJobBegin())
-    config?.ui?.setRequestErrorMessage?.('')
+    setRequestErrorMessage('')
 
     return jobsApi
       .getJob(project, jobId, iter)
@@ -269,13 +270,13 @@ const jobsActions = {
         return res.data.data
       })
       .catch(error => {
-        const errorMessage = 'Failed to fetch job'
-
         dispatch(jobsActions.fetchJobFailure(error.message))
-
-        largeResponseCatchHandler(error, errorMessage, dispatch, () => {
-          config?.ui?.setRequestErrorMessage?.(errorMessage)
-        })
+        largeResponseCatchHandler(
+          error,
+          'Failed to fetch job',
+          dispatch,
+          setRequestErrorMessage
+        )
       })
   },
   fetchJobBegin: () => ({
@@ -383,12 +384,13 @@ const jobsActions = {
         return newJobs
       })
       .catch(error => {
-        const errorMessage = 'Failed to fetch jobs'
-
         dispatch(jobsActions.fetchJobsFailure(error))
-        largeResponseCatchHandler(error, errorMessage, dispatch, () => {
-          config?.ui?.setRequestErrorMessage?.(errorMessage)
-        })
+        largeResponseCatchHandler(
+          error,
+          'Failed to fetch jobs',
+          dispatch,
+          config?.ui?.setRequestErrorMessage
+        )
       })
   },
   fetchScheduledJobs: (project, filters, config) => dispatch => {
@@ -425,12 +427,13 @@ const jobsActions = {
         return newJobs
       })
       .catch(error => {
-        const errorMessage = 'Failed to fetch scheduled jobs'
-
         dispatch(jobsActions.fetchScheduledJobsFailure(error))
-        largeResponseCatchHandler(error, errorMessage, dispatch, () => {
-          config?.ui?.setRequestErrorMessage?.(errorMessage)
-        })
+        largeResponseCatchHandler(
+          error,
+          'Failed to fetch scheduled jobs',
+          dispatch,
+          config?.ui?.setRequestErrorMessage
+        )
       })
   },
   fetchSpecificJobs: (project, filters, jobList) => () => {
