@@ -70,7 +70,6 @@ const Notification = () => {
             <Transition
               key={`css${item.id}`}
               timeout={duration}
-              classNames="notification_download"
               onEntered={() => {
                 setTimeout(() => {
                   handleRemoveNotification(item.id)

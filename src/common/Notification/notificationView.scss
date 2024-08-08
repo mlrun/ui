@@ -5,59 +5,46 @@
   position: absolute;
   right: 0;
   bottom: 0;
+  display: flex;
+  flex: 1 1;
+  flex-direction: column;
 
   .notification {
-    &_container {
-      position: relative;
-      z-index: 1000;
-      align-self: flex-end;
-      margin-right: 24px;
-      margin-bottom: 10px;
-      padding: 15px;
-      color: $white;
-      background-color: $darkPurple;
-      border-radius: 5px;
-      box-shadow: $tooltipShadow;
-      opacity: 0;
-    }
+    position: relative;
+    z-index: 1000;
+    align-self: flex-end;
+    margin-right: 24px;
+    margin-bottom: 10px;
+    padding: 15px;
+    color: $white;
+    background-color: $darkPurple;
+    border-radius: 5px;
+    box-shadow: $tooltipShadow;
+    opacity: 0;
 
-    &_body {
+    &__body {
       display: flex;
       align-items: center;
 
-      &_close_icon {
-        position: absolute;
-        top: -9px;
-        right: -9px;
-        display: flex;
-        align-items: center;
-        width: 18px;
-        height: 18px;
-        padding: 2px;
-        background-color: $darkPurple;
-        border: 1px solid $white;
-        border-radius: 50%;
-
-        & svg {
-          & > * {
-            fill: $white;
-          }
-        }
+      &__button-retry {
+        margin-left: 15px;
+        color: $portage;
+        cursor: pointer;
       }
 
-      &_icon {
-        .success_icon {
+      &__icon {
+        .icon-success {
           width: 14px;
           height: 14px;
         }
 
-        .alert_icon {
+        .icon-alert {
           width: 4px;
           height: 14px;
         }
       }
 
-      .notification_body_wrapper {
+      &__status {
         display: flex;
         align-items: center;
         justify-content: center;
@@ -67,18 +54,12 @@
         border-radius: 50%;
       }
 
-      &_alert_icon {
+      &__icon-alert {
         background-color: $burntSienna;
       }
 
-      &_success_icon {
+      &__icon-success {
         background-color: $brightTurquoise;
-      }
-
-      &_button {
-        margin-left: 15px;
-        color: $portage;
-        cursor: pointer;
       }
     }
   }
