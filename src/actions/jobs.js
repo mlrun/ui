@@ -258,9 +258,8 @@ const jobsActions = {
     type: FETCH_ALL_JOB_RUNS_SUCCESS,
     payload: jobsList
   }),
-  fetchJob: (project, jobId, iter, setRequestErrorMessage = () => {}) => dispatch => {
+  fetchJob: (project, jobId, iter) => dispatch => {
     dispatch(jobsActions.fetchJobBegin())
-    setRequestErrorMessage('')
 
     return jobsApi
       .getJob(project, jobId, iter)
@@ -271,12 +270,6 @@ const jobsActions = {
       })
       .catch(error => {
         dispatch(jobsActions.fetchJobFailure(error.message))
-        largeResponseCatchHandler(
-          error,
-          'Failed to fetch job',
-          dispatch,
-          setRequestErrorMessage
-        )
       })
   },
   fetchJobBegin: () => ({

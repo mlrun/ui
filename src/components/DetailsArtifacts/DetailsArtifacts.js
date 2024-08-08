@@ -141,17 +141,15 @@ const DetailsArtifacts = ({
       }
 
       if (workflowId) {
-        return fetchJob(params.projectName, params.jobId, iteration, setRequestErrorMessage).then(
-          job => {
-            if (job) {
-              const selectedJob = getJobAccordingIteration(job)
+        return fetchJob(params.projectName, params.jobId, iteration).then(job => {
+          if (job) {
+            const selectedJob = getJobAccordingIteration(job)
 
-              setArtifactsPreviewContent(
-                generateArtifactsPreviewContent(selectedJob, selectedJob.artifacts)
-              )
-            }
+            setArtifactsPreviewContent(
+              generateArtifactsPreviewContent(selectedJob, selectedJob.artifacts)
+            )
           }
-        )
+        })
       }
 
       if (iteration) {
