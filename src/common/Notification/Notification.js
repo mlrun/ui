@@ -23,6 +23,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { inRange } from 'lodash'
 
 import NotificationView from './NotificationView'
+import DownloadContainer from '../Download/DownloadContainer'
 
 import { removeNotification } from '../../reducers/notificationReducer'
 
@@ -47,51 +48,53 @@ const Notification = () => {
   }
 
   return (
-    <TransitionGroup>
-      {notificationStore.notification.map((item, index) => {
-        const isSuccessResponse = inRange(item.status, 200, 300)
+    <div className="notifications-wrapper">
+      <TransitionGroup component={null}>
+        {notificationStore.notification.map(item => {
+          const isSuccessResponse = inRange(item.status, 200, 300)
 
-        const transitionStyles = {
-          entered: {
-            transform: 'translateY(0)',
-            opacity: 1,
-            transition: `transform ${duration}ms ease-in-out, opacity ${duration}ms ease-in-out`
-          },
-          exiting: {
-            transform: 'translateY(130px)',
-            opacity: 0,
-            transition: `transform ${duration}ms ease-in-out, opacity ${duration}ms ease-in-out`
+          const transitionStyles = {
+            entered: {
+              transform: 'translateY(0)',
+              opacity: 1,
+              transition: `transform ${duration}ms ease-in-out, opacity ${duration}ms ease-in-out`
+            },
+            exiting: {
+              transform: 'translateY(130px)',
+              opacity: 0,
+              transition: `transform ${duration}ms ease-in-out, opacity ${duration}ms ease-in-out`
+            }
           }
-        }
 
-        return (
-          <Transition
-            key={`css${item.id}`}
-            timeout={duration}
-            classNames="notification_download"
-            onEntered={() => {
-              setTimeout(() => {
-                handleRemoveNotification(item.id)
-              }, 10000)
-            }}
-          >
-            {state => (
-              <NotificationView
-                item={item}
-                transitionStyles={{
-                  ...defaultStyle,
-                  ...transitionStyles[state]
-                }}
-                key={item.id}
-                isSuccessResponse={isSuccessResponse}
-                handleRemoveNotification={handleRemoveNotification}
-                retry={handleRetry}
-              />
-            )}
-          </Transition>
-        )
-      })}
-    </TransitionGroup>
+          return (
+            <Transition
+              key={`css${item.id}`}
+              timeout={duration}
+              onEntered={() => {
+                setTimeout(() => {
+                  handleRemoveNotification(item.id)
+                }, 10000)
+              }}
+            >
+              {state => (
+                <NotificationView
+                  item={item}
+                  transitionStyles={{
+                    ...defaultStyle,
+                    ...transitionStyles[state]
+                  }}
+                  key={item.id}
+                  isSuccessResponse={isSuccessResponse}
+                  handleRemoveNotification={handleRemoveNotification}
+                  retry={handleRetry}
+                />
+              )}
+            </Transition>
+          )
+        })}
+      </TransitionGroup>
+      <DownloadContainer />
+    </div>
   )
 }
 

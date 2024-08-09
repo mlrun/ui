@@ -1,79 +1,66 @@
 @import '~igz-controls/scss/colors';
 @import '~igz-controls/scss/shadows';
 
-.notification {
-  &_container {
+.notifications-wrapper {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  flex: 1 1;
+  flex-direction: column;
+
+  .notification {
     position: relative;
+    z-index: 1000;
     align-self: flex-end;
-    opacity: 0;
+    margin-right: 24px;
+    margin-bottom: 10px;
     padding: 15px;
     color: $white;
     background-color: $darkPurple;
     border-radius: 5px;
     box-shadow: $tooltipShadow;
-    margin-right: 24px;
-    margin-bottom: 10px;
-    z-index: 1000;
-  }
+    opacity: 0;
 
-  &_body {
-    display: flex;
-    align-items: center;
-
-    &_close_icon {
+    &__body {
       display: flex;
       align-items: center;
-      position: absolute;
-      top: -9px;
-      right: -9px;
-      width: 18px;
-      height: 18px;
-      border: 1px solid $white;
-      border-radius: 50%;
-      background-color: $darkPurple;
-      padding: 2px;
 
-      & svg {
-        & > * {
-          fill: $white;
+      &__button-retry {
+        margin-left: 15px;
+        color: $portage;
+        cursor: pointer;
+      }
+
+      &__icon {
+        .icon-success {
+          width: 14px;
+          height: 14px;
+        }
+
+        .icon-alert {
+          width: 4px;
+          height: 14px;
         }
       }
-    }
 
-    &_icon {
-      .success_icon {
-        width: 14px;
-        height: 14px;
+      &__status {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 24px;
+        height: 24px;
+        margin-right: 5px;
+        border-radius: 50%;
       }
 
-      .alert_icon {
-        width: 4px;
-        height: 14px;
+      &__icon-alert {
+        background-color: $burntSienna;
       }
-    }
 
-    .notification_body_wrapper {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      width: 24px;
-      height: 24px;
-      margin-right: 5px;
-      border-radius: 50%;
-    }
-
-    &_alert_icon {
-      background-color: $burntSienna;
-    }
-
-    &_success_icon {
-      background-color: $brightTurquoise;
-    }
-
-    &_button {
-      margin-left: 15px;
-      color: $portage;
-      cursor: pointer;
+      &__icon-success {
+        background-color: $brightTurquoise;
+      }
     }
   }
 }
