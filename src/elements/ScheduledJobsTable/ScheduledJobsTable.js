@@ -55,8 +55,8 @@ const ScheduledJobsTable = ({
   filtersConfig = null,
   filtersMenuName = '',
   jobs,
-  largeRequestErrorMessage,
   refreshJobs,
+  requestErrorMessage,
   tableContent
 }) => {
   const dispatch = useDispatch()
@@ -260,7 +260,7 @@ const ScheduledJobsTable = ({
           message={getNoDataMessage(
             filtersStore,
             filtersConfig || filters,
-            largeRequestErrorMessage,
+            requestErrorMessage,
             JOBS_PAGE,
             SCHEDULE_TAB,
             filtersMenuName
@@ -299,8 +299,8 @@ ScheduledJobsTable.propTypes = {
   filtersConfig: FILTERS_CONFIG,
   filtersMenuName: PropTypes.string,
   jobs: PropTypes.array.isRequired,
-  largeRequestErrorMessage: PropTypes.string.isRequired,
   refreshJobs: PropTypes.func.isRequired,
+  requestErrorMessage: PropTypes.string.isRequired,
   tableContent: PropTypes.array.isRequired
 }
 

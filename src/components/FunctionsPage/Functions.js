@@ -93,7 +93,7 @@ const Functions = ({
   const [jobWizardMode, setJobWizardMode] = useState(null)
   const filtersStore = useSelector(store => store.filtersStore)
   const [selectedRowData, setSelectedRowData] = useState({})
-  const [largeRequestErrorMessage, setLargeRequestErrorMessage] = useState('')
+  const [requestErrorMessage, setRequestErrorMessage] = useState('')
   const [deletingFunctions, setDeletingFunctions] = useState({})
   const abortControllerRef = useRef(new AbortController())
   const fetchFunctionLogsTimeout = useRef(null)
@@ -121,7 +121,7 @@ const Functions = ({
       return fetchFunctions(params.projectName, filters, {
         ui: {
           controller: abortControllerRef.current,
-          setLargeRequestErrorMessage
+          setRequestErrorMessage
         },
         params: {
           format: 'minimal'
@@ -753,9 +753,9 @@ const Functions = ({
       handleExpandRow={handleExpandRow}
       handleSelectFunction={handleSelectFunction}
       isDemoMode={isDemoMode}
-      largeRequestErrorMessage={largeRequestErrorMessage}
       pageData={pageData}
       refreshFunctions={refreshFunctions}
+      requestErrorMessage={requestErrorMessage}
       selectedFunction={selectedFunction}
       selectedRowData={selectedRowData}
       tableContent={tableContent}

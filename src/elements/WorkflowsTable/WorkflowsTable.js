@@ -78,7 +78,7 @@ const WorkflowsTable = React.forwardRef(
       filtersConfig = null,
       getWorkflows,
       itemIsSelected,
-      largeRequestErrorMessage,
+      requestErrorMessage,
       selectedFunction,
       selectedJob,
       setItemIsSelected,
@@ -634,12 +634,12 @@ const WorkflowsTable = React.forwardRef(
         {(!workflowsStore.workflows.loading &&
           !params.workflowId &&
           workflowsStore.workflows.data.length === 0) ||
-        largeRequestErrorMessage ? (
+          requestErrorMessage ? (
           <NoData
             message={getNoDataMessage(
               filtersStore,
               filtersConfig || filters,
-              largeRequestErrorMessage,
+              requestErrorMessage,
               JOBS_PAGE,
               MONITOR_WORKFLOWS_TAB,
               filterMenuName
@@ -709,7 +709,7 @@ WorkflowsTable.propTypes = {
   filtersConfig: FILTERS_CONFIG,
   getWorkflows: PropTypes.func.isRequired,
   itemIsSelected: PropTypes.bool.isRequired,
-  largeRequestErrorMessage: PropTypes.string.isRequired,
+  requestErrorMessage: PropTypes.string.isRequired,
   selectedFunction: PropTypes.object.isRequired,
   selectedJob: PropTypes.object.isRequired,
   setItemIsSelected: PropTypes.func.isRequired,

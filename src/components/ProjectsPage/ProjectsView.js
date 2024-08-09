@@ -55,6 +55,7 @@ const ProjectsView = ({
   handleSearchOnFocus,
   handleSelectSortOption,
   isDescendingOrder,
+  projectsRequestErrorMessage,
   projectStore,
   refreshProjects,
   removeNewProjectError,
@@ -189,7 +190,7 @@ const ProjectsView = ({
             message={
               projectStore.mlrunUnhealthy.retrying
                 ? 'Retrieving projects.'
-                : 'Your projects list is empty.'
+                : projectsRequestErrorMessage || 'Your projects list is empty.'
             }
           />
         )}
@@ -214,6 +215,7 @@ ProjectsView.propTypes = {
   handleCreateProject: PropTypes.func.isRequired,
   handleSearchOnFocus: PropTypes.func.isRequired,
   handleSelectSortOption: PropTypes.func.isRequired,
+  projectsRequestErrorMessage: PropTypes.func.isRequired,
   refreshProjects: PropTypes.func.isRequired,
   removeNewProjectError: PropTypes.func.isRequired,
   selectedProjectsState: PropTypes.string.isRequired,

@@ -51,7 +51,7 @@ import { ReactComponent as Yaml } from 'igz-controls/images/yaml.svg'
 import cssVariables from './modelEndpoints.scss'
 
 const ModelEndpoints = () => {
-  const [largeRequestErrorMessage, setLargeRequestErrorMessage] = useState('')
+  const [requestErrorMessage, setRequestErrorMessage] = useState('')
   const [modelEndpoints, setModelEndpoints] = useState([])
   const [selectedModelEndpoint, setSelectedModelEndpoint] = useState({})
   const frontendSpec = useSelector(store => store.appStore.frontendSpec)
@@ -115,7 +115,7 @@ const ModelEndpoints = () => {
           config: {
             ui: {
               controller: abortControllerRef.current,
-              setLargeRequestErrorMessage
+              setRequestErrorMessage
             }
           },
           params: {
@@ -250,7 +250,7 @@ const ModelEndpoints = () => {
               message={getNoDataMessage(
                 filtersStore,
                 filters,
-                largeRequestErrorMessage,
+                requestErrorMessage,
                 MODELS_PAGE,
                 MODEL_ENDPOINTS_TAB
               )}

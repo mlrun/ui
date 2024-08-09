@@ -31,7 +31,7 @@ const ScheduledMonitoring = () => {
   const dispatch = useDispatch()
   const filtersStore = useSelector(store => store.filtersStore)
   const {
-    largeRequestErrorMessage,
+    requestErrorMessage,
     refreshScheduled,
     scheduledFiltersConfig,
     scheduledJobs,
@@ -66,7 +66,7 @@ const ScheduledMonitoring = () => {
       filtersConfig={scheduledFiltersConfig}
       filtersMenuName={JOBS_MONITORING_SCHEDULED_TAB}
       jobs={scheduledJobs}
-      largeRequestErrorMessage={largeRequestErrorMessage}
+      requestErrorMessage={requestErrorMessage}
       refreshJobs={() =>
         refreshScheduled({
           ...filtersStore.filterMenu[JOBS_MONITORING_SCHEDULED_TAB],

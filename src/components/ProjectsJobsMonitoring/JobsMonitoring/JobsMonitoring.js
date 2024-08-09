@@ -48,7 +48,7 @@ const JobsMonitoring = () => {
     jobRuns,
     jobs,
     jobsFiltersConfig,
-    largeRequestErrorMessage,
+    requestErrorMessage,
     refreshJobs,
     setAbortingJobs,
     setJobRuns,
@@ -117,7 +117,7 @@ const JobsMonitoring = () => {
         filtersConfig={jobsFiltersConfig}
         jobRuns={jobRuns}
         jobs={jobs}
-        largeRequestErrorMessage={largeRequestErrorMessage}
+        requestErrorMessage={requestErrorMessage}
         navigateLink={`/projects/${JOBS_MONITORING_PAGE}/${JOBS_MONITORING_JOBS_TAB}`}
         refreshJobs={() =>
           refreshJobs({

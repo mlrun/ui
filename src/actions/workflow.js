@@ -71,20 +71,36 @@ const workflowActions = {
     const page = project === '*' ? JOBS_MONITORING_WORKFLOWS_TAB : MONITOR_WORKFLOWS_TAB
 
     dispatch(workflowActions.fetchWorkflowsBegin())
+    config?.ui?.setRequestErrorMessage?.('')
+
+    const errorHandler = (error) => {
+      dispatch(workflowActions.fetchWorkflowsFailure(error))
+      largeResponseCatchHandler(
+        error,
+        'Failed to fetch workflows',
+        dispatch,
+        config?.ui?.setRequestErrorMessage
+      )
+    }
 
     if (withPagination) {
       let result = []
       let nextPageToken = ''
 
       while (!isNil(nextPageToken)) {
-        const response = await workflowApi.getWorkflows(project, filter, config, nextPageToken)
+        try {
+          const response = await workflowApi.getWorkflows(project, filter, config, nextPageToken)
 
-        if (response.error) {
-          dispatch(workflowActions.fetchWorkflowsFailure(response.error))
-          largeResponseCatchHandler(response.error, 'Failed to fetch workflows', dispatch)
-        } else {
-          result = result.concat(response.data.runs)
-          nextPageToken = response.data.next_page_token
+          if (response.error) {
+            nextPageToken = null
+            errorHandler(response.error)
+          } else {
+            result = result.concat(response.data.runs)
+            nextPageToken = response.data.next_page_token
+          }
+        } catch (error) {
+          nextPageToken = null
+          errorHandler(error)
         }
       }
 
@@ -103,8 +119,7 @@ const workflowActions = {
           return response.data.runs
         })
         .catch(error => {
-          dispatch(workflowActions.fetchWorkflowsFailure(error))
-          largeResponseCatchHandler(error, 'Failed to fetch workflows', dispatch)
+          errorHandler(error)
         })
     }
   },

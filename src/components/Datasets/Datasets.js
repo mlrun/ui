@@ -75,7 +75,7 @@ const Datasets = () => {
   const [selectedDataset, setSelectedDataset] = useState({})
   const [selectedDatasetMin, setSelectedDatasetMin] = useState({})
   const [selectedRowData, setSelectedRowData] = useState({})
-  const [largeRequestErrorMessage, setLargeRequestErrorMessage] = useState('')
+  const [requestErrorMessage, setRequestErrorMessage] = useState('')
   const [maxArtifactsErrorIsShown, setMaxArtifactsErrorIsShown] = useState(false)
   const [convertedYaml, toggleConvertedYaml] = useYaml('')
   const [urlTagOption, tagAbortControllerRef] = useGetTagOptions(
@@ -137,7 +137,7 @@ const Datasets = () => {
           config: {
             ui: {
               controller: abortControllerRef.current,
-              setLargeRequestErrorMessage
+              setRequestErrorMessage
             },
             params: {
               format: 'minimal'
@@ -169,7 +169,7 @@ const Datasets = () => {
           config: {
             ui: {
               controller: tagAbortControllerRef.current,
-              setLargeRequestErrorMessage
+              setRequestErrorMessage
             }
           }
         })
@@ -412,10 +412,10 @@ const Datasets = () => {
       handleExpandRow={handleExpandRow}
       handleRefresh={handleRefresh}
       handleRegisterDataset={handleRegisterDataset}
-      largeRequestErrorMessage={largeRequestErrorMessage}
       maxArtifactsErrorIsShown={maxArtifactsErrorIsShown}
       pageData={pageData}
       ref={{ datasetsRef }}
+      requestErrorMessage={requestErrorMessage}
       selectedDataset={selectedDataset}
       selectedRowData={selectedRowData}
       setDatasets={setDatasets}

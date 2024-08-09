@@ -51,7 +51,9 @@ import {
   FILTER_MENU_MODAL,
   FILTER_MENU,
   PROJECT_FILTER,
-  TYPE_FILTER
+  TYPE_FILTER,
+  CONSUMER_GROUP_PAGE,
+  CONSUMER_GROUPS_PAGE
 } from '../constants'
 
 const messageNamesList = {
@@ -90,6 +92,12 @@ const messageNamesList = {
   },
   [REAL_TIME_PIPELINES_TAB]: {
     plural: 'Real-time pipelines'
+  },
+  [CONSUMER_GROUP_PAGE]: {
+    plural: 'v3io stream shard lags'
+  },
+  [CONSUMER_GROUPS_PAGE]: {
+    plural: 'Consumer groups'
   },
   default: ''
 }

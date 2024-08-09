@@ -22,6 +22,8 @@ import { set } from 'lodash'
 
 import {
   ARTIFACT_OTHER_TYPE,
+  CONSUMER_GROUPS_FILTER,
+  CONSUMER_GROUP_FILTER,
   DATASETS_FILTERS,
   DATASET_TYPE,
   DATES_FILTER,
@@ -95,6 +97,12 @@ const initialState = {
     [FUNCTION_FILTERS]: {
       [NAME_FILTER]: '',
       [DATES_FILTER]: getDatePickerFilterValue(datePickerPastOptions, PAST_WEEK_DATE_OPTION)
+    },
+    [CONSUMER_GROUPS_FILTER]: {
+      [NAME_FILTER]: '',
+    },
+    [CONSUMER_GROUP_FILTER]: {
+      [NAME_FILTER]: '',
     }
   },
   [FILTER_MENU_MODAL]: {
