@@ -155,7 +155,7 @@ const generateResultMessage = (driftStatus, resultKind) => {
   const { text } = driftStatusConfig[driftStatus]
 
   if (driftStatus === 0) {
-    return `No ${resultKindMessage}`
+    return 'No drift or anomalies detected'
   } else if (driftStatus === -1) {
     return `${text} ${resultKindMessage}`
   }
