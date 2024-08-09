@@ -17,38 +17,3 @@
     opacity: 0;
   }
 }
-
-#chartjs-tooltip {
-  position: fixed;
-  z-index: 5;
-  width: auto;
-  padding: 5px;
-  color: $white;
-  background-color: $primary;
-  border-radius: 4px;
-  transform: translate(-50%, calc(-100% - 10px));
-  opacity: 1;
-  transition: all 0.1s linear;
-  pointer-events: none;
-
-  &.hidden {
-    opacity: 0;
-  }
-
-  &::after {
-    position: absolute;
-    top: 100%;
-    left: 50%;
-    width: 0;
-    height: 0;
-    margin-left: -5px;
-    border: 5px solid transparent;
-    border-top-color: $primary;
-    content: "";
-    pointer-events: none;
-  }
-
-  td {
-    white-space: nowrap;
-  }
-}
