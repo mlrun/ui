@@ -35,8 +35,8 @@ const FormParametersTable = ({
   exitEditModeTriggerItem = null,
   fieldsPath,
   formState,
+  hasKwargs = false,
   parametersFromPath = '',
-  rowCanBeAdded = false,
   withHyperparameters = false
 }) => {
   const withRequiredParametersRef = useRef(true)
@@ -134,6 +134,7 @@ const FormParametersTable = ({
                 fieldsPath={predefinedPath}
                 formState={formState}
                 getTableArrayErrors={getTableArrayErrors}
+                hasKwargs={hasKwargs}
                 index={index}
                 isCurrentRowEditing={isCurrentRowEditing}
                 key={rowPath}
@@ -163,6 +164,7 @@ const FormParametersTable = ({
                     fieldsPath={customPath}
                     formState={formState}
                     getTableArrayErrors={getTableArrayErrors}
+                    hasKwargs={hasKwargs}
                     index={index}
                     isCurrentRowEditing={isCurrentRowEditing}
                     key={rowPath}
@@ -173,7 +175,7 @@ const FormParametersTable = ({
                   />
                 )
               })}
-              {rowCanBeAdded && (
+              {hasKwargs && (
                 <FormActionButton
                   disabled={disabled}
                   ref={bottomScrollRef}
@@ -210,8 +212,8 @@ FormParametersTable.propTypes = {
   exitEditModeTriggerItem: PropTypes.any,
   fieldsPath: PropTypes.string.isRequired,
   formState: PropTypes.shape({}).isRequired,
+  hasKwargs: PropTypes.bool,
   parametersFromPath: PropTypes.string,
-  rowCanBeAdded: PropTypes.bool,
   withHyperparameters: PropTypes.bool
 }
 
