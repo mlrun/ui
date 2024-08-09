@@ -93,6 +93,7 @@ import {
 import { parseSummaryData } from '../utils/parseSummaryData'
 import { showErrorNotification } from '../utils/notifications.util'
 import { mlrunUnhealthyErrors } from '../components/ProjectsPage/projects.util'
+import { parseProjects } from '../utils/parseProjects'
 
 let firstServerErrorTimestamp = null
 
@@ -485,14 +486,12 @@ const projectsAction = {
     return projectsApi
       .getProjects(params)
       .then(response => {
-        dispatch(projectsAction.fetchProjectsSuccess(response.data.projects))
-        dispatch(
-          projectsAction.fetchProjectsNamesSuccess(
-            response.data.projects.map(project => project.metadata.name)
-          )
-        )
+        const parsedProjects = parseProjects(response.data.projects)
 
-        return response.data.projects
+        dispatch(projectsAction.fetchProjectsSuccess(parsedProjects))
+        dispatch(projectsAction.fetchProjectsNamesSuccess(parsedProjects.map(project => project.metadata.name)))
+
+        return parsedProjects
       })
       .catch(error => {
         dispatch(projectsAction.fetchProjectsFailure(error), dispatch)

@@ -474,7 +474,7 @@ const JobWizardFunctionSelection = ({
                       formState={formState}
                       functionData={generateFunctionTemplateCardData(templateData)}
                       onSelectCard={event => {
-                        if (!event.target.closest('.chips')) {
+                        if (!event.target.closest('.chips-wrapper')) {
                           selectTemplateFunction(templateData)
                         }
                       }}
