@@ -649,7 +649,16 @@ const commonRunSaveButton = By.css('.modal__content [data-testid="run-btn"]')
 
 const commonLabelFilterInput = inputGroup(
   generateInputGroup(
-    '#overlay_container .form-field__wrapper',
+    '[data-testid="labels-form-field-input"]',
+    true,
+    false,
+    true
+  )
+)
+
+const commonProjectFilterInput = inputGroup(
+  generateInputGroup(
+    '[data-testid="project-form-field-input"]',
     true,
     false,
     true
@@ -1461,10 +1470,26 @@ module.exports = {
     No_Button: By.css('.pop-up-dialog .pop-up-dialog__btn_cancel'),
     Discard_Button: commonConfirmButton
   },
-  artifactsFilterByPopup: {
-    Title: By.css('#overlay_container .artifacts-filters__wrapper h3'),
+  filterByPopup: {
+    Title: By.css('[data-testid="pop-up-dialog"] h3'),
     Table_Label_Filter_Input: commonLabelFilterInput,
+    Table_Project_Filter_Input: commonProjectFilterInput,
     Table_Tree_Filter_Dropdown: commonTableTreeFilterDropdown,
+    Status_Filter_Element: By.css('[data-testid="state-form-field-select"]'),
+    Status_Filter_Dropdown: dropdownComponent(
+      generateDropdownGroup(
+        '[data-testid="state-form-field-select"]',
+        '[data-testid="select-header"]',
+        '[data-testid="select-body"] label'
+      )
+    ),
+    Type_Filter_Dropdown: dropdownComponent(
+      generateDropdownGroup(
+        '[data-testid="type-form-field-select"]',
+        '[data-testid="select-header"]',
+        '[data-testid="select-option"] [data-testid="tooltip-wrapper"]'
+      )
+    ),
     Show_Iterations_Checkbox: checkboxComponent({
       root: '#overlay_container .form-field-checkbox input',
       elements: {
@@ -1473,9 +1498,97 @@ module.exports = {
         icon: ''
       }
     }),
+    Status_All_Checkbox: checkboxComponent({
+      root: '[data-testid="select-checkbox"]:nth-of-type(1)',
+      elements: {
+        checkbox: 'input', 
+        name: 'label',
+        icon: ''
+      }
+    }),
+    Status_Aborting_Checkbox: checkboxComponent({
+      root: '[data-testid="select-checkbox"]:nth-of-type(3)',
+      elements: {
+        checkbox: 'input', 
+        name: 'label',
+        icon: ''
+      }
+    }),
+    Status_Jobs_Running_Checkbox: checkboxComponent({
+      root: '[data-testid="select-checkbox"]:nth-of-type(6)',
+      elements: {
+        checkbox: 'input', 
+        name: 'label',
+        icon: ''
+      }
+    }),
+    Status_Workflows_Running_Checkbox: checkboxComponent({
+      root: '[data-testid="select-checkbox"]:nth-of-type(4)',
+      elements: {
+        checkbox: 'input', 
+        name: 'label',
+        icon: ''
+      }
+    }),
+    Status_Pending_Checkbox: checkboxComponent({
+      root: '[data-testid="select-checkbox"]:nth-of-type(7)',
+      elements: {
+        checkbox: 'input', 
+        name: 'label',
+        icon: ''
+      }
+    }),
+    Status_Aborted_Checkbox: checkboxComponent({
+      root: '[data-testid="select-checkbox"]:nth-of-type(2)',
+      elements: {
+        checkbox: 'input', 
+        name: 'label',
+        icon: ''
+      }
+    }),
+    Status_Jobs_Error_Checkbox: checkboxComponent({
+      root: '[data-testid="select-checkbox"]:nth-of-type(5)',
+      elements: {
+        checkbox: 'input', 
+        name: 'label',
+        icon: ''
+      }
+    }),
+    Status_Workflows_Error_Checkbox: checkboxComponent({
+      root: '[data-testid="select-checkbox"]:nth-of-type(2)',
+      elements: {
+        checkbox: 'input', 
+        name: 'label',
+        icon: ''
+      }
+    }),
+    Status_Failed_Checkbox: checkboxComponent({
+      root: '[data-testid="select-checkbox"]:nth-of-type(3)',
+      elements: {
+        checkbox: 'input', 
+        name: 'label',
+        icon: ''
+      }
+    }),
+    Status_Jobs_Completed_Checkbox: checkboxComponent({
+      root: '[data-testid="select-checkbox"]:nth-of-type(4)',
+      elements: {
+        checkbox: 'input', 
+        name: 'label',
+        icon: ''
+      }
+    }),
+    Status_Workflows_Completed_Checkbox: checkboxComponent({
+      root: '[data-testid="select-checkbox"]:nth-of-type(5)',
+      elements: {
+        checkbox: 'input', 
+        name: 'label',
+        icon: ''
+      }
+    }),
     Checkbox_Label: By.css('#overlay_container .form-field-checkbox label'),
-    Clear_Button: By.css('#overlay_container .btn-tertiary'),
-    Apply_Button: By.css('#overlay_container .btn-secondary')
+    Clear_Button: By.css('[data-testid="filter-clear-btn"]'),
+    Apply_Button: By.css('[data-testid="filter-apply-btn"]')
   },
   downloadsPopUp: {
     Download_Pop_Up: By.css('[data-testid="download-container"]'),

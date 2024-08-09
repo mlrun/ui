@@ -352,8 +352,8 @@ module.exports = {
     'Key must be unique',
     Projects_Labels_Warning_Key: '[Name] Valid characters : a–z, A–Z, 0–9, –, _, .\n[Name] Must begin and end with: a–z, A–Z, 0–9\n[Name] Max length - 63 characters\n' +
     '[Prefix] Valid characters: a–z, 0–9, –, .\n[Prefix] Must begin and end with: a–z, 0–9\n[Prefix] Max length - 253 characters\n' +
-    '[Prefix] Must not start with \'kubernetes.io\', \'k8s.io\'\nKey must be unique',
-    Projects_Labels_Warning_Value: '[Value] Must begin and end with : a–z, A–Z, 0–9\n[Value] Max length - 63 characters\n[Value] Valid characters: a–z, A–Z, 0–9, –, _, .',
+    '[Prefix] Must not start with \'kubernetes.io\', \'k8s.io\'\nSystem-defined labels cannot be modified.\nKey must be unique',
+    Projects_Labels_Warning_Value: '[Value] Must begin and end with: a–z, A–Z, 0–9\n[Value] Length – max: 63\n[Value] Valid characters: a–z, A–Z, 0–9, –, _, .',
     Labels_Warning_Value: 'Valid characters: a–z, A–Z, 0–9, –, _, .\nMust begin and end with: a–z, A–Z, 0–9\nLength – max: 56',
     Feature_Set_Name_Hint:
       'Valid characters: a–z, A–Z, 0–9, –, _, .\nMust begin and end with: a–z, A–Z, 0–9\nLength – max: 56\n' +
@@ -460,6 +460,16 @@ module.exports = {
     How_To_Create:
     'See how to create a serving function in https://docs.mlrun.org/en/stable/serving/built-in-model-serving.html and https://docs.mlrun.org/en/stable/tutorials/03-model-serving.html'
   },
+  Jobs_Monitoring: {
+    Tab_List: ['Jobs', 'Workflows', 'Scheduled']
+    // Job_Action_Menu_Options: ['Batch re-run', 'Monitoring', 'View YAML', 'Delete'],
+    // Job_Overview_Action_Menu_Options: ['View YAML', 'Batch re-run', 'Delete'],
+    // Running_Job_Action_Menu_Options: ['Monitoring', 'Abort', 'View YAML'],
+    // Workflows_Action_Menu_Options: ['View YAML'],
+    // Workflows_Info_Pane_Action_Menu_Options: ['Batch re-run', 'Monitoring', 'View YAML', 'Delete'],
+    // Pending_Job_Action_Menu_Options: ['Batch re-run', 'Monitoring', 'Abort', 'View YAML'],
+    // Schedule_Action_Menu_Options: ['Run now', 'Edit', 'Delete', 'View YAML']
+  },
   Jobs_And_Workflows: {
     Tab_List: ['Monitor Jobs', 'Monitor Workflows', 'Schedule'],
     Job_Action_Menu_Options: ['Batch re-run', 'Monitoring', 'View YAML', 'Delete'],
@@ -513,6 +523,10 @@ module.exports = {
   Dropdown_Options: {
     Tag_Filer_Options: ['All', 'latest'],
     Status_Filter_Options: ['All', 'Completed', 'Running', 'Pending', 'Error', 'Aborted'],
+    Jobs_Status_Filter_Options: ['All', 'Aborted', 'Aborting', 'Completed', 'Error', 'Running', 'Pending'],
+    Workflows_Status_Filter_Options: ['All', 'Error', 'Failed', 'Running', 'Completed'],
+    Jobs_Type_Filter_Options: ['All', 'Local', 'Dask', 'Databricks', 'Handler', 'Job', 'Horovod', 'Spark'],
+    Scheduled_Type_Filter_Options: ['All', 'Jobs', 'Workflows'],
     Group_By_Filter_Options: ['None', 'Name'],
     Start_Time_Filter_Options: [
       'Any time',
@@ -521,6 +535,24 @@ module.exports = {
       'Past week',
       'Past month',
       'Past year',
+      'Custom range'
+    ],
+    Date_Picker_Filter_Options: [
+      'Any time',
+      'Past hour',
+      'Past 24 hours',
+      'Past week',
+      'Past month',
+      'Past year',
+      'Custom range'
+    ],
+    Scheduled_Date_Picker_Filter_Options: [
+      'Any time',
+      'Next hour',
+      'Next 24 hours',
+      'Next week',
+      'Next month',
+      'Next year',
       'Custom range'
     ],
     Parameters_Table_Type_Options: ['str', 'int', 'float', 'bool', 'list', 'map'],

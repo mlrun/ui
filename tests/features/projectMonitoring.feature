@@ -536,9 +536,9 @@ Feature: MLRun Project Page
         And wait load page
         Then verify "Table_Name_Filter_Input" element visibility on "Models" wizard
         Then click on "Table_FilterBy_Button" element on "Models" wizard
-        Then verify "Table_Label_Filter_Input" element visibility on "Artifacts_FilterBy_Popup" wizard
-        Then verify "Table_Tree_Filter_Dropdown" element visibility on "Artifacts_FilterBy_Popup" wizard
-        Then verify "Show_Iterations_Checkbox" element visibility on "Artifacts_FilterBy_Popup" wizard
+        Then verify "Table_Label_Filter_Input" element visibility on "FilterBy_Popup" wizard
+        Then verify "Table_Tree_Filter_Dropdown" element visibility on "FilterBy_Popup" wizard
+        Then verify "Show_Iterations_Checkbox" element visibility on "FilterBy_Popup" wizard
         Then verify "Table_Refresh_Button" element visibility on "Models" wizard
         Then verify "Models_Table" element visibility on "Models" wizard
         And turn on demo mode
@@ -580,9 +580,9 @@ Feature: MLRun Project Page
         And wait load page
         Then verify "Table_Name_Filter_Input" element visibility on "Files" wizard
         Then click on "Table_FilterBy_Button" element on "Files" wizard
-        Then verify "Table_Label_Filter_Input" element visibility on "Artifacts_FilterBy_Popup" wizard
-        Then verify "Table_Tree_Filter_Dropdown" element visibility on "Artifacts_FilterBy_Popup" wizard
-        Then verify "Show_Iterations_Checkbox" element visibility on "Artifacts_FilterBy_Popup" wizard
+        Then verify "Table_Label_Filter_Input" element visibility on "FilterBy_Popup" wizard
+        Then verify "Table_Tree_Filter_Dropdown" element visibility on "FilterBy_Popup" wizard
+        Then verify "Show_Iterations_Checkbox" element visibility on "FilterBy_Popup" wizard
         Then verify "Table_Refresh_Button" element visibility on "Files" wizard
         Then verify "Files_Table" element visibility on "Files" wizard
         Then verify "Register_File_Button" element visibility on "Files" wizard

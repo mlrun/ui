@@ -1,4 +1,4 @@
-Feature: MLRun Projects Page
+Feature: Projects Page
 
     Testcases that verifies functionality on MLRun Projects Page
 
@@ -295,13 +295,13 @@ Feature: MLRun Projects Page
         Then "Monitoring_Container_Title" element in "Projects_Monitoring_Container" on "Projects" should contains "Monitoring" value
         Then verify "Monitoring_Container_Running_Status" element visibility in "Projects_Monitoring_Container" on "Projects" wizard
         Then verify "Monitoring_Container_Running_Icon" element visibility in "Projects_Monitoring_Container" on "Projects" wizard
-        Then "Monitoring_Container_Running_Status" element in "Projects_Monitoring_Container" on "Projects" should contains "Running" value
+        Then "Monitoring_Container_Running_Status" element in "Projects_Monitoring_Container" on "Projects" should contains "In Process" value
         Then verify "Monitoring_Container_Failed_Status" element visibility in "Projects_Monitoring_Container" on "Projects" wizard
         Then verify "Monitoring_Container_Failed_Icon" element visibility in "Projects_Monitoring_Container" on "Projects" wizard
         Then "Monitoring_Container_Failed_Status" element in "Projects_Monitoring_Container" on "Projects" should contains "Failed" value
         Then verify "Monitoring_Container_Completed_Status" element visibility in "Projects_Monitoring_Container" on "Projects" wizard
         Then verify "Monitoring_Container_Completed_Icon" element visibility in "Projects_Monitoring_Container" on "Projects" wizard
-        Then "Monitoring_Container_Completed_Status" element in "Projects_Monitoring_Container" on "Projects" should contains "Completed" value
+        Then "Monitoring_Container_Completed_Status" element in "Projects_Monitoring_Container" on "Projects" should contains "Succeeded" value
         Then verify "Monitoring_Jobs_Box" element visibility in "Projects_Monitoring_Container" on "Projects" wizard
         Then verify "Monitoring_Workflows_Box" element visibility in "Projects_Monitoring_Container" on "Projects" wizard
         Then verify "Monitoring_Scheduled_Box" element visibility in "Projects_Monitoring_Container" on "Projects" wizard
@@ -343,16 +343,16 @@ Feature: MLRun Projects Page
         Then verify "Total_Counter_Title" element visibility in "Monitoring_Jobs_Box" on "Projects" wizard
         Then "Total_Counter_Title" element in "Monitoring_Jobs_Box" on "Projects" should contains "Jobs" value
         Then verify "Total_Counter_Number" element visibility in "Monitoring_Jobs_Box" on "Projects" wizard
-        Then "Total_Counter_Number" element in "Monitoring_Jobs_Box" on "Projects" should contains "18" value
+        Then "Total_Counter_Number" element in "Monitoring_Jobs_Box" on "Projects" should contains "6" value
         Then verify "Counter_Running_Status_Number" element visibility in "Monitoring_Jobs_Box" on "Projects" wizard
         Then verify "Counter_Running_Status_Icon" element visibility in "Monitoring_Jobs_Box" on "Projects" wizard
-        Then "Counter_Running_Status_Number" element in "Monitoring_Jobs_Box" on "Projects" should contains "17" value
+        Then "Counter_Running_Status_Number" element in "Monitoring_Jobs_Box" on "Projects" should contains "3" value
         Then verify "Counter_Failed_Status_Number" element visibility in "Monitoring_Jobs_Box" on "Projects" wizard
         Then verify "Counter_Failed_Status_Icon" element visibility in "Monitoring_Jobs_Box" on "Projects" wizard
-        Then "Counter_Failed_Status_Number" element in "Monitoring_Jobs_Box" on "Projects" should contains "1" value
+        Then "Counter_Failed_Status_Number" element in "Monitoring_Jobs_Box" on "Projects" should contains "2" value
         Then verify "Counter_Completed_Status_Number" element visibility in "Monitoring_Jobs_Box" on "Projects" wizard
         Then verify "Counter_Completed_Status_Icon" element visibility in "Monitoring_Jobs_Box" on "Projects" wizard
-        Then "Counter_Completed_Status_Number" element in "Monitoring_Jobs_Box" on "Projects" should contains "0" value
+        Then "Counter_Completed_Status_Number" element in "Monitoring_Jobs_Box" on "Projects" should contains "1" value
         Then verify "See_All_Link" element visibility in "Monitoring_Jobs_Box" on "Projects" wizard
         Then "See_All_Link" element in "Monitoring_Jobs_Box" on "Projects" should contains "See all" value
         When click on "Counter_Running_Status_Number" element in "Monitoring_Jobs_Box" on "Projects" wizard
@@ -395,16 +395,16 @@ Feature: MLRun Projects Page
         Then verify "Total_Counter_Title" element visibility in "Monitoring_Workflows_Box" on "Projects" wizard
         Then "Total_Counter_Title" element in "Monitoring_Workflows_Box" on "Projects" should contains "Workflows" value
         Then verify "Total_Counter_Number" element visibility in "Monitoring_Workflows_Box" on "Projects" wizard
-        Then "Total_Counter_Number" element in "Monitoring_Workflows_Box" on "Projects" should contains "0" value
+        Then "Total_Counter_Number" element in "Monitoring_Workflows_Box" on "Projects" should contains "2" value
         Then verify "Counter_Running_Status_Number" element visibility in "Monitoring_Workflows_Box" on "Projects" wizard
         Then verify "Counter_Running_Status_Icon" element visibility in "Monitoring_Workflows_Box" on "Projects" wizard
         Then "Counter_Running_Status_Number" element in "Monitoring_Workflows_Box" on "Projects" should contains "0" value
         Then verify "Counter_Failed_Status_Number" element visibility in "Monitoring_Workflows_Box" on "Projects" wizard
         Then verify "Counter_Failed_Status_Icon" element visibility in "Monitoring_Workflows_Box" on "Projects" wizard
-        Then "Counter_Failed_Status_Number" element in "Monitoring_Workflows_Box" on "Projects" should contains "0" value
+        Then "Counter_Failed_Status_Number" element in "Monitoring_Workflows_Box" on "Projects" should contains "1" value
         Then verify "Counter_Completed_Status_Number" element visibility in "Monitoring_Workflows_Box" on "Projects" wizard
         Then verify "Counter_Completed_Status_Icon" element visibility in "Monitoring_Workflows_Box" on "Projects" wizard
-        Then "Counter_Completed_Status_Number" element in "Monitoring_Workflows_Box" on "Projects" should contains "0" value
+        Then "Counter_Completed_Status_Number" element in "Monitoring_Workflows_Box" on "Projects" should contains "1" value
         Then verify "See_All_Link" element visibility in "Monitoring_Workflows_Box" on "Projects" wizard
         Then "See_All_Link" element in "Monitoring_Workflows_Box" on "Projects" should contains "See all" value
         When click on "Counter_Running_Status_Number" element in "Monitoring_Workflows_Box" on "Projects" wizard
@@ -450,7 +450,7 @@ Feature: MLRun Projects Page
         Then verify "Total_Job_Counter_Number" element visibility in "Monitoring_Scheduled_Box" on "Projects" wizard
         Then "Total_Job_Counter_Number" element in "Monitoring_Scheduled_Box" on "Projects" should contains "7" value
         Then verify "Total_Workflows_Counter_Number" element visibility in "Monitoring_Scheduled_Box" on "Projects" wizard
-        Then "Total_Workflows_Counter_Number" element in "Monitoring_Scheduled_Box" on "Projects" should contains "0" value
+        Then "Total_Workflows_Counter_Number" element in "Monitoring_Scheduled_Box" on "Projects" should contains "1" value
         Then verify "Jobs_See_All_Link" element visibility in "Monitoring_Scheduled_Box" on "Projects" wizard
         Then "Jobs_See_All_Link" element in "Monitoring_Scheduled_Box" on "Projects" should contains "See all" value
         Then verify "Workflows_See_All_Link" element visibility in "Monitoring_Scheduled_Box" on "Projects" wizard
