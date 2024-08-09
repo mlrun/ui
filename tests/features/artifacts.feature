@@ -25,14 +25,14 @@ Feature: Files Page
     And wait load page
     Then verify "Table_Name_Filter_Input" element visibility on "Files" wizard
     Then click on "Table_FilterBy_Button" element on "Files" wizard
-    Then verify "Table_Label_Filter_Input" element visibility on "Artifacts_FilterBy_Popup" wizard
-    Then verify "Table_Tree_Filter_Dropdown" element visibility on "Artifacts_FilterBy_Popup" wizard
-    Then verify "Show_Iterations_Checkbox" element visibility on "Artifacts_FilterBy_Popup" wizard
+    Then verify "Table_Label_Filter_Input" element visibility on "FilterBy_Popup" wizard
+    Then verify "Table_Tree_Filter_Dropdown" element visibility on "FilterBy_Popup" wizard
+    Then verify "Show_Iterations_Checkbox" element visibility on "FilterBy_Popup" wizard
     Then verify "Table_Refresh_Button" element visibility on "Files" wizard
     Then verify "Files_Table" element visibility on "Files" wizard
     Then verify "Register_File_Button" element visibility on "Files" wizard
     Then "Register_File_Button" element on "Files" should contains "Register artifact" value
-    Then verify "Table_Tree_Filter_Dropdown" dropdown element on "Artifacts_FilterBy_Popup" wizard should contains "Dropdown_Options"."Tag_Filer_Options"
+    Then verify "Table_Tree_Filter_Dropdown" dropdown element on "FilterBy_Popup" wizard should contains "Dropdown_Options"."Tag_Filer_Options"
 
   @MLA
   @passive
@@ -72,18 +72,18 @@ Feature: Files Page
     And select "tab" with "Artifacts" value in breadcrumbs menu
     And wait load page
     Then click on "Table_FilterBy_Button" element on "Files" wizard
-    Then type value "owner" to "Table_Label_Filter_Input" field on "Artifacts_FilterBy_Popup" wizard
-    Then click on "Apply_Button" element on "Artifacts_FilterBy_Popup" wizard
+    Then type value "owner" to "Table_Label_Filter_Input" field on "FilterBy_Popup" wizard
+    Then click on "Apply_Button" element on "FilterBy_Popup" wizard
     And wait load page
     Then value in "labels" column with "dropdowns" in "Files_Table" on "Files" wizard should contains "owner"
     Then click on "Table_FilterBy_Button" element on "Files" wizard
-    Then type value "v3io_user=admin" to "Table_Label_Filter_Input" field on "Artifacts_FilterBy_Popup" wizard
-    Then click on "Apply_Button" element on "Artifacts_FilterBy_Popup" wizard
+    Then type value "v3io_user=admin" to "Table_Label_Filter_Input" field on "FilterBy_Popup" wizard
+    Then click on "Apply_Button" element on "FilterBy_Popup" wizard
     And wait load page
     Then value in "labels" column with "dropdowns" in "Files_Table" on "Files" wizard should contains "v3io_user=admin"
     Then click on "Table_FilterBy_Button" element on "Files" wizard
-    Then type value "v3io_user=123" to "Table_Label_Filter_Input" field on "Artifacts_FilterBy_Popup" wizard
-    Then click on "Apply_Button" element on "Artifacts_FilterBy_Popup" wizard
+    Then type value "v3io_user=123" to "Table_Label_Filter_Input" field on "FilterBy_Popup" wizard
+    Then click on "Apply_Button" element on "FilterBy_Popup" wizard
     And wait load page
     And verify "No_Data_Message" element visibility on "commonPagesHeader" wizard
     Then "No_Data_Message" component on "commonPagesHeader" should contains "No_Data_Message"."No_Files_data"
@@ -99,25 +99,25 @@ Feature: Files Page
     And click on cell with value "Artifacts" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
     And wait load page
     Then click on "Table_FilterBy_Button" element on "Files" wizard
-    Then verify "Show_Iterations_Checkbox" element visibility on "Artifacts_FilterBy_Popup" wizard
+    Then verify "Show_Iterations_Checkbox" element visibility on "FilterBy_Popup" wizard
     Then check "expand_btn" not presented in "Files_Table" on "Files" wizard
-    Then uncheck "Show_Iterations_Checkbox" element on "Artifacts_FilterBy_Popup" wizard
-    Then click on "Apply_Button" element on "Artifacts_FilterBy_Popup" wizard
+    Then uncheck "Show_Iterations_Checkbox" element on "FilterBy_Popup" wizard
+    Then click on "Apply_Button" element on "FilterBy_Popup" wizard
     And wait load page
     Then click on "Table_FilterBy_Button" element on "Files" wizard
-    Then "Show_Iterations_Checkbox" element should be unchecked on "Artifacts_FilterBy_Popup" wizard
+    Then "Show_Iterations_Checkbox" element should be unchecked on "FilterBy_Popup" wizard
     Then check "expand_btn" visibility in "Files_Table" on "Files" wizard with 0 offset
     Then click on cell with row index 1 in "expand_btn" column in "Files_Table" table on "Files" wizard
     And wait load page
     Then click on cell with row index 1 in "name" column in "Files_Table" table on "Files" wizard
     Then verify "Header" element visibility on "Files_Info_Pane" wizard
     Then click on "Table_FilterBy_Button" element on "Files" wizard
-    Then check "Show_Iterations_Checkbox" element on "Artifacts_FilterBy_Popup" wizard
-    Then click on "Apply_Button" element on "Artifacts_FilterBy_Popup" wizard
+    Then check "Show_Iterations_Checkbox" element on "FilterBy_Popup" wizard
+    Then click on "Apply_Button" element on "FilterBy_Popup" wizard
     And wait load page
     Then verify "Header" element not exists on "Files_Info_Pane" wizard
     Then click on "Table_FilterBy_Button" element on "Files" wizard
-    Then "Show_Iterations_Checkbox" element should be checked on "Artifacts_FilterBy_Popup" wizard
+    Then "Show_Iterations_Checkbox" element should be checked on "FilterBy_Popup" wizard
     Then check "expand_btn" not presented in "Files_Table" on "Files" wizard
 
   @MLA
@@ -314,8 +314,8 @@ Feature: Files Page
     Then click on "Apply_Changes_Button" element on "Files_Info_Pane" wizard
     And wait load page
     Then click on "Table_FilterBy_Button" element on "Files" wizard
-    Then select "v1" option in "Table_Tree_Filter_Dropdown" dropdown on "Artifacts_FilterBy_Popup" wizard
-    Then click on "Apply_Button" element on "Artifacts_FilterBy_Popup" wizard
+    Then select "v1" option in "Table_Tree_Filter_Dropdown" dropdown on "FilterBy_Popup" wizard
+    Then click on "Apply_Button" element on "FilterBy_Popup" wizard
     And wait load page
     When click on cell with value "test-file" in "name" column in "Files_Table" table on "Files" wizard
     Then verify "Info_Pane_Tab_Selector" element visibility on "Files_Info_Pane" wizard
@@ -399,8 +399,8 @@ Feature: Files Page
     And wait load page
     Then verify "Table_FilterBy_Button" element visibility on "Files" wizard
     Then click on "Table_FilterBy_Button" element on "Files" wizard
-    Then select "All" option in "Table_Tree_Filter_Dropdown" dropdown on "Artifacts_FilterBy_Popup" wizard
-    Then click on "Apply_Button" element on "Artifacts_FilterBy_Popup" wizard
+    Then select "All" option in "Table_Tree_Filter_Dropdown" dropdown on "FilterBy_Popup" wizard
+    Then click on "Apply_Button" element on "FilterBy_Popup" wizard
     And wait load page
     Then verify action menu on "Files" wizard in "Files_Table" table with "survival-curves_km-survival" value in "name" column should contains "Common_Lists"."Action_Menu_List_Expanded"
     Then verify that in action menu on "Files" wizard in "Files_Table" table with "survival-curves_km-survival" value in "name" column "Delete" option is disabled
@@ -474,8 +474,8 @@ Feature: Files Page
     Then verify "YAML_Modal_Container" element visibility on "View_YAML" wizard
     Then click on "Cross_Cancel_Button" element on "View_YAML" wizard
     Then click on "Table_FilterBy_Button" element on "Files" wizard
-    Then uncheck "Show_Iterations_Checkbox" element on "Artifacts_FilterBy_Popup" wizard
-    Then click on "Apply_Button" element on "Artifacts_FilterBy_Popup" wizard
+    Then uncheck "Show_Iterations_Checkbox" element on "FilterBy_Popup" wizard
+    Then click on "Apply_Button" element on "FilterBy_Popup" wizard
     And wait load page
     Then click on cell with row index 1 in "expand_btn" column in "Files_Table" table on "Files" wizard
     Then select "View YAML" option in action menu on "Files" wizard in "Files_Table" table at row with "latest" value in "name_expand_btn" column
@@ -635,8 +635,8 @@ Feature: Files Page
     And wait load page
     Then verify "Table_FilterBy_Button" element visibility on "Files" wizard
     Then click on "Table_FilterBy_Button" element on "Files" wizard
-    Then select "newTag" option in "Table_Tree_Filter_Dropdown" dropdown on "Artifacts_FilterBy_Popup" wizard
-    Then click on "Apply_Button" element on "Artifacts_FilterBy_Popup" wizard
+    Then select "newTag" option in "Table_Tree_Filter_Dropdown" dropdown on "FilterBy_Popup" wizard
+    Then click on "Apply_Button" element on "FilterBy_Popup" wizard
     And wait load page
     Then check "newTag" value in "tag" column in "Files_Table" table on "Files" wizard
 
@@ -661,8 +661,8 @@ Feature: Files Page
     Then click on "Apply_Changes_Button" element on "Files_Info_Pane" wizard
     And wait load page
     Then click on "Table_FilterBy_Button" element on "Files" wizard
-    Then select "All" option in "Table_Tree_Filter_Dropdown" dropdown on "Artifacts_FilterBy_Popup" wizard
-    Then click on "Apply_Button" element on "Artifacts_FilterBy_Popup" wizard
+    Then select "All" option in "Table_Tree_Filter_Dropdown" dropdown on "FilterBy_Popup" wizard
+    Then click on "Apply_Button" element on "FilterBy_Popup" wizard
     And wait load page
     When click on cell with row index 1 in "name" column in "Files_Table" table on "Files" wizard
     And wait load page
@@ -679,8 +679,8 @@ Feature: Files Page
     And click on cell with value "Artifacts" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
     And wait load page
     Then click on "Table_FilterBy_Button" element on "Files" wizard
-    Then select "All" option in "Table_Tree_Filter_Dropdown" dropdown on "Artifacts_FilterBy_Popup" wizard
-    Then click on "Apply_Button" element on "Artifacts_FilterBy_Popup" wizard
+    Then select "All" option in "Table_Tree_Filter_Dropdown" dropdown on "FilterBy_Popup" wizard
+    Then click on "Apply_Button" element on "FilterBy_Popup" wizard
     And wait load page
     Then click on cell with row index 3 in "name" column in "Files_Table" table on "Files" wizard
     Then save to context "name" column on 3 row from "Files_Table" table on "Files" wizard

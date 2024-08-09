@@ -25,6 +25,7 @@ import infoPane from './page-objects/info-pane.po'
 import interactivePopup from './page-objects/interactive-popup.po'
 import sidePanel from './page-objects/side-panel.po'
 import jobsAndWorkflows from './page-objects/jobs-and-workflows.po'
+import jobsMonitoring from './page-objects/jobs-monitoring.po'
 import Functions from './page-objects/ml-functions.po'
 import projectsSettings from './page-objects/project-settings.po'
 import files from './page-objects/files.po'
@@ -36,7 +37,6 @@ module.exports = {
   Analysis_Info_Pane: infoPane['analysisInfoPane'],
   Artifact_Preview_Popup: interactivePopup['artifactPreviewPopup'],
   Artifacts_Info_Pane: infoPane['artifactsInfoPane'],
-  Artifacts_FilterBy_Popup: interactivePopup['artifactsFilterByPopup'],
   Change_Project_Owner_Popup: interactivePopup['changeProjectOwnerPopup'],
   Common_Popup: interactivePopup['commonPopup'],
   Consumer_Groups: project['consumerGroups'],
@@ -61,8 +61,12 @@ module.exports = {
   Features_Info_Pane: infoPane['featuresInfoPane'],
   Files: files['filesTab'],
   Files_Info_Pane: infoPane['filesInfoPane'],
+  FilterBy_Popup: interactivePopup['filterByPopup'],
   Inputs_Info_Pane: infoPane['inputsInfoPane'],
   Jobs_Monitor_Tab: jobsAndWorkflows['JobsMonitorTab'],
+  Jobs_Monitoring_Jobs_Tab: jobsMonitoring['crossJobsMonitorTab'],
+  Jobs_Monitoring_Workflows_Tab: jobsMonitoring['crossWorkflowsMonitorTab'],
+  Jobs_Monitoring_Scheduled_Tab: jobsMonitoring['crossScheduledMonitorTab'],
   Jobs_Monitor_Tab_Info_Pane: infoPane['jobsMonitorTabInfoPane'],
   ML_Function_Info_Pane: infoPane['mlFunctionInfoPane'],
   ML_Functions: Functions['mlFunctions'],
