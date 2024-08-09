@@ -90,7 +90,7 @@ const JobWizard = ({
   mode = PANEL_CREATE_MODE,
   onResolve,
   onSuccessRequest = () => {},
-  onWizardClose = () => {},
+  onWizardClose = null,
   params,
   prePopulatedData = {},
   removeJobFunction,
