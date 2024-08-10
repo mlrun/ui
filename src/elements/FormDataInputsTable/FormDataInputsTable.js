@@ -36,8 +36,8 @@ const FormDataInputsTable = ({
   exitEditModeTriggerItem = null,
   fieldsPath,
   formState,
-  params,
-  rowCanBeAdded = false
+  hasKwargs = false,
+  params
 }) => {
   const [dataInputState, setDataInputState] = useState(targetPathInitialState)
   const tableClassNames = classnames('form-table', className)
@@ -106,6 +106,7 @@ const FormDataInputsTable = ({
                     fieldsPath={fieldsPath}
                     formState={formState}
                     getTableArrayErrors={getTableArrayErrors}
+                    hasKwargs={hasKwargs}
                     index={index}
                     isCurrentRowEditing={isCurrentRowEditing}
                     key={rowPath}
@@ -117,7 +118,7 @@ const FormDataInputsTable = ({
                   />
                 )
               })}
-              {rowCanBeAdded && (
+              {hasKwargs && (
                 <FormActionButton
                   ref={bottomScrollRef}
                   hidden={editingItem?.ui?.isNew}
@@ -156,8 +157,8 @@ FormDataInputsTable.propTypes = {
   exitEditModeTriggerItem: PropTypes.any,
   fieldsPath: PropTypes.string.isRequired,
   formState: PropTypes.shape({}).isRequired,
-  params: PropTypes.shape({}).isRequired,
-  rowCanBeAdded: PropTypes.bool
+  hasKwargs: PropTypes.bool,
+  params: PropTypes.shape({}).isRequired
 }
 
 export default FormDataInputsTable

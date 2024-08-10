@@ -33,6 +33,7 @@ import {
   PANEL_EDIT_MODE,
   TAG_LATEST
 } from '../../constants'
+import { parameterTypeFloat, parameterTypeList } from '../../elements/FormParametersTable/formParametersTable.util'
 import { generateEnvVariable } from '../../utils/generateEnvironmentVariable'
 import { parseEnvVariables } from '../../utils/parseEnvironmentVariables'
 import { getPreemptionMode } from '../../utils/getPreemptionMode'
@@ -393,9 +394,9 @@ const parameterTypes = {
 
 const getParameterType = parameter => {
   return typeof parameter === 'string' && parameter.match(',')
-    ? 'list'
+    ? parameterTypeList
     : typeof parameter === 'number' && parameter % 1 !== 0
-    ? 'float'
+    ? parameterTypeFloat
     : parameterTypes[typeof parameter] ?? ''
 }
 

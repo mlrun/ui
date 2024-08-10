@@ -54,6 +54,7 @@ const FormDataInputsRow = ({
   fieldsPath,
   formState,
   getTableArrayErrors,
+  hasKwargs = false,
   index,
   isCurrentRowEditing,
   params,
@@ -190,7 +191,7 @@ const FormDataInputsRow = ({
           </div>
           <FormRowActions
             applyChanges={applyChanges}
-            deleteButtonIsHidden={fieldData.isRequired}
+            deleteButtonIsHidden={fieldData.isRequired || !hasKwargs}
             deleteRow={deleteRow}
             disabled={isRowDisabled()}
             discardOrDelete={discardOrDelete}
@@ -217,6 +218,7 @@ FormDataInputsRow.propTypes = {
   fieldsPath: PropTypes.string.isRequired,
   formState: PropTypes.shape({}).isRequired,
   getTableArrayErrors: PropTypes.func.isRequired,
+  hasKwargs: PropTypes.bool,
   index: PropTypes.number.isRequired,
   isCurrentRowEditing: PropTypes.func.isRequired,
   params: PropTypes.shape({}).isRequired,
