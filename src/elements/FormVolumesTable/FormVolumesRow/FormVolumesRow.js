@@ -39,9 +39,9 @@ import './formVolumeRow.scss'
 const FormVolumesRow = ({
   applyChanges,
   deleteRow,
-  disabled,
+  disabled = false,
   discardOrDelete,
-  editingItem,
+  editingItem = null,
   enterEditMode,
   fields,
   fieldsPath,
@@ -171,11 +171,6 @@ const FormVolumesRow = ({
       <FormOnChange handler={handleTypeChange} name={`${rowPath}.data.type`} />
     </>
   )
-}
-
-FormVolumesRow.defaultProps = {
-  disabled: false,
-  editingItem: null
 }
 
 FormVolumesRow.propTypes = {

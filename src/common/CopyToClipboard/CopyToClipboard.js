@@ -27,7 +27,13 @@ import { showErrorNotification } from '../../utils/notifications.util'
 
 import { ReactComponent as Copy } from 'igz-controls/images/copy-to-clipboard-icon.svg'
 
-const CopyToClipboard = ({ children, className, disabled, textToCopy, tooltipText }) => {
+const CopyToClipboard = ({
+  children = null,
+  className = '',
+  disabled = false,
+  textToCopy,
+  tooltipText
+}) => {
   const dispatch = useDispatch()
 
   const copyToClipboard = textToCopy => {
@@ -64,12 +70,6 @@ const CopyToClipboard = ({ children, className, disabled, textToCopy, tooltipTex
       )}
     </div>
   )
-}
-
-CopyToClipboard.defaultProps = {
-  children: null,
-  className: '',
-  disabled: false
 }
 
 CopyToClipboard.propTypes = {

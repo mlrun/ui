@@ -51,23 +51,23 @@ import { ReactComponent as Yaml } from 'igz-controls/images/yaml.svg'
 const Content = ({
   applyDetailsChanges,
   artifactsStore,
-  cancelRequest,
+  cancelRequest = () => {},
   children,
   content,
-  filtersChangeCallback,
+  filtersChangeCallback = null,
   filtersStore,
   getIdentifier,
-  handleActionsMenuClick,
-  handleCancel,
+  handleActionsMenuClick = () => {},
+  handleCancel = () => {},
   handleRemoveRequestData,
-  handleSelectItem,
+  handleSelectItem = () => {},
   header,
   loading,
   pageData,
   projectStore,
   refresh,
-  selectedItem,
-  tableTop
+  selectedItem = {},
+  tableTop = null
 }) => {
   const [convertedYaml, toggleConvertedYaml] = useYaml('')
   const [showActionsMenu, setShowActionsMenu] = useState(false)
@@ -188,17 +188,6 @@ const Content = ({
       )}
     </>
   )
-}
-
-Content.defaultProps = {
-  activeScreenTab: '',
-  cancelRequest: () => {},
-  filtersChangeCallback: null,
-  handleActionsMenuClick: () => {},
-  handleCancel: () => {},
-  handleSelectItem: () => {},
-  selectedItem: {},
-  tableTop: null
 }
 
 Content.propTypes = {

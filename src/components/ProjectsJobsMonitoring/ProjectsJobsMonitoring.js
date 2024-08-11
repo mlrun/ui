@@ -32,6 +32,7 @@ import WorkflowsMonitoringFilters from './WorkflowsMonitoring/WorkflowsMonitorin
 
 import { actionCreator, STATS_TOTAL_CARD, tabs } from './projectsJobsMotinoring.util'
 import {
+  DATES_FILTER,
   FILTER_ALL_ITEMS,
   GROUP_BY_WORKFLOW,
   JOB_KIND_LOCAL,
@@ -39,18 +40,16 @@ import {
   JOBS_MONITORING_PAGE,
   JOBS_MONITORING_SCHEDULED_TAB,
   JOBS_MONITORING_WORKFLOWS_TAB,
+  LABELS_FILTER,
   NAME_FILTER,
-  SCHEDULE_TAB
+  PROJECT_FILTER,
+  SCHEDULE_TAB,
+  STATUS_FILTER,
+  TYPE_FILTER
 } from '../../constants'
 import { monitorJob, pollAbortingJobs, rerunJob } from '../Jobs/jobs.util'
 import { TERTIARY_BUTTON } from 'igz-controls/constants'
 import { parseJob } from '../../utils/parseJob'
-import {
-  datePickerFutureOptions,
-  datePickerPastOptions,
-  NEXT_24_HOUR_DATE_OPTION,
-  PAST_24_HOUR_DATE_OPTION
-} from '../../utils/datePicker.util'
 import jobsActions from '../../actions/jobs'
 import workflowActions from '../../actions/workflow'
 
@@ -69,7 +68,7 @@ const ProjectsJobsMonitoring = ({ fetchAllJobRuns, fetchJobFunction, fetchJobs }
   const [jobRuns, setJobRuns] = useState([])
   const [jobs, setJobs] = useState([])
   const [selectedRunProject, setSelectedRunProject] = useState('')
-  const [largeRequestErrorMessage, setLargeRequestErrorMessage] = useState('')
+  const [requestErrorMessage, setRequestErrorMessage] = useState('')
   const { jobsMonitoringData } = useSelector(store => store.projectStore)
   const [selectedCard, setSelectedCard] = useState(
     jobsMonitoringData.filters?.status || STATS_TOTAL_CARD
@@ -83,57 +82,36 @@ const ProjectsJobsMonitoring = ({ fetchAllJobRuns, fetchJobFunction, fetchJobs }
   const appStore = useSelector(store => store.appStore)
   const artifactsStore = useSelector(store => store.artifactsStore)
 
-  const jobsFilters = useMemo(
-    () => [
-      { type: NAME_FILTER, label: 'Name:', initialValue: '', hidden: Boolean(params.jobName) },
-      {
-        type: 'dates',
-        initialValue: {
-          value: datePickerPastOptions
-            .find(option => option.id === PAST_24_HOUR_DATE_OPTION)
-            .handler(),
-          isPredefined: true,
-          initialSelectedOptionId: PAST_24_HOUR_DATE_OPTION
-        }
-      }
-    ],
-    [params.jobName]
-  )
+  const jobsFiltersConfig = useMemo(() => {
+    return {
+      [NAME_FILTER]: { label: 'Name:', hidden: Boolean(params.jobName) },
+      [DATES_FILTER]: { label: 'Start time:' },
+      [PROJECT_FILTER]: { label: 'Project:' },
+      [STATUS_FILTER]: { label: 'Status:' },
+      [TYPE_FILTER]: { label: 'Type:' },
+      [LABELS_FILTER]: { label: 'Labels:' }
+    }
+  }, [params.jobName])
 
-  const scheduledFilters = useMemo(
-    () => [
-      { type: NAME_FILTER, label: 'Name:', initialValue: '' },
-      {
-        type: 'dates',
-        initialValue: {
-          value: datePickerFutureOptions
-            .find(option => option.id === NEXT_24_HOUR_DATE_OPTION)
-            .handler(true),
-          isPredefined: true,
-          initialSelectedOptionId: NEXT_24_HOUR_DATE_OPTION
-        },
-        isFuture: true
-      }
-    ],
-    []
-  )
+  const workflowsFiltersConfig = useMemo(() => {
+    return {
+      [NAME_FILTER]: { label: 'Name:' },
+      [DATES_FILTER]: { label: 'Created at:' },
+      [PROJECT_FILTER]: { label: 'Project:' },
+      [STATUS_FILTER]: { label: 'Status:' },
+      [LABELS_FILTER]: { label: 'Labels:' }
+    }
+  }, [])
 
-  const workflowsFilters = useMemo(
-    () => [
-      { type: NAME_FILTER, label: 'Name:', initialValue: '' },
-      {
-        type: 'dates',
-        initialValue: {
-          value: datePickerPastOptions
-            .find(option => option.id === PAST_24_HOUR_DATE_OPTION)
-            .handler(),
-          isPredefined: true,
-          initialSelectedOptionId: PAST_24_HOUR_DATE_OPTION
-        }
-      }
-    ],
-    []
-  )
+  const scheduledFiltersConfig = useMemo(() => {
+    return {
+      [NAME_FILTER]: { label: 'Name:' },
+      [DATES_FILTER]: { label: 'Scheduled at:', isFuture: true },
+      [PROJECT_FILTER]: { label: 'Project:' },
+      [TYPE_FILTER]: { label: 'Type:' },
+      [LABELS_FILTER]: { label: 'Labels:' }
+    }
+  }, [])
 
   const handleTabChange = tabName => {
     setSelectedCard(STATS_TOTAL_CARD)
@@ -182,7 +160,7 @@ const ProjectsJobsMonitoring = ({ fetchAllJobRuns, fetchJobFunction, fetchJobs }
         {
           ui: {
             controller: abortControllerRef.current,
-            setLargeRequestErrorMessage
+            setRequestErrorMessage
           },
           params: { ...newParams }
         },
@@ -250,7 +228,7 @@ const ProjectsJobsMonitoring = ({ fetchAllJobRuns, fetchJobFunction, fetchJobs }
         jobsActions.fetchScheduledJobs('*', filters, {
           ui: {
             controller: abortControllerRef.current,
-            setLargeRequestErrorMessage
+            setRequestErrorMessage
           }
         })
       ).then(jobs => {
@@ -309,7 +287,7 @@ const ProjectsJobsMonitoring = ({ fetchAllJobRuns, fetchJobFunction, fetchJobs }
           {
             ui: {
               controller: abortControllerRef.current,
-              setLargeRequestErrorMessage
+              setRequestErrorMessage
             }
           },
           true
@@ -322,22 +300,29 @@ const ProjectsJobsMonitoring = ({ fetchAllJobRuns, fetchJobFunction, fetchJobs }
   const tabData = useMemo(() => {
     return {
       [JOBS_MONITORING_JOBS_TAB]: {
-        filters: jobsFilters,
+        filtersConfig: jobsFiltersConfig,
         handleRefresh: refreshJobs,
         modalFilters: <JobsMonitoringFilters />
       },
       [JOBS_MONITORING_WORKFLOWS_TAB]: {
-        filters: workflowsFilters,
+        filtersConfig: workflowsFiltersConfig,
         handleRefresh: getWorkflows,
         modalFilters: <WorkflowsMonitoringFilters />
       },
       [JOBS_MONITORING_SCHEDULED_TAB]: {
-        filters: scheduledFilters,
+        filtersConfig: scheduledFiltersConfig,
         handleRefresh: refreshScheduled,
         modalFilters: <ScheduledMonitoringFilters />
       }
     }
-  }, [getWorkflows, jobsFilters, refreshJobs, refreshScheduled, scheduledFilters, workflowsFilters])
+  }, [
+    getWorkflows,
+    jobsFiltersConfig,
+    refreshJobs,
+    refreshScheduled,
+    scheduledFiltersConfig,
+    workflowsFiltersConfig
+  ])
 
   return (
     <>
@@ -345,68 +330,69 @@ const ProjectsJobsMonitoring = ({ fetchAllJobRuns, fetchJobFunction, fetchJobs }
         <div className="content__header">
           <Breadcrumbs />
         </div>
-        {
-          selectedTab && (
-            <div className="content">
-              <div className="content__action-bar-wrapper">
-                <ContentMenu
-                  activeTab={selectedTab}
-                  screen={JOBS_MONITORING_PAGE}
-                  onClick={handleTabChange}
-                  tabs={tabs}
-                />
-                <ActionBar
-                  filterMenuName={selectedTab}
-                  filters={tabData[selectedTab].filters}
-                  handleRefresh={tabData[selectedTab].handleRefresh}
-                  hidden={Boolean(params.jobId || params.workflowId)}
-                  page={JOBS_MONITORING_PAGE}
-                  tab={selectedTab}
-                  withRefreshButton={false}
-                  key={selectedTab}
-                >
-                  {tabData[selectedTab].modalFilters}
-                </ActionBar>
-              </div>
-              <div className="table-container">
-                <ProjectJobsMonitoringContext.Provider
-                  value={{
-                    abortControllerRef,
-                    abortJobRef,
-                    abortingJobs,
-                    editableItem,
-                    getWorkflows,
-                    handleMonitoring,
-                    handleRerunJob,
-                    jobRuns,
-                    jobWizardIsOpened,
-                    jobWizardMode,
-                    jobs,
-                    jobsMonitoringData,
-                    largeRequestErrorMessage,
-                    refreshJobs,
-                    refreshScheduled,
-                    scheduledJobs,
-                    selectedCard,
-                    setAbortingJobs,
-                    setConfirmData,
-                    setEditableItem,
-                    setJobRuns,
-                    setJobWizardIsOpened,
-                    setJobWizardMode,
-                    setJobs,
-                    setScheduledJobs,
-                    setSelectedCard,
-                    setSelectedRunProject,
-                    terminateAbortTasksPolling
-                  }}
-                >
-                  <Outlet />
-                </ProjectJobsMonitoringContext.Provider>
-              </div>
+        {selectedTab && (
+          <div className="content">
+            <div className="content__action-bar-wrapper">
+              <ContentMenu
+                activeTab={selectedTab}
+                screen={JOBS_MONITORING_PAGE}
+                onClick={handleTabChange}
+                tabs={tabs}
+              />
+              <ActionBar
+                filterMenuName={selectedTab}
+                filtersConfig={tabData[selectedTab].filtersConfig}
+                handleRefresh={tabData[selectedTab].handleRefresh}
+                hidden={Boolean(params.jobId || params.workflowId)}
+                page={JOBS_MONITORING_PAGE}
+                tab={selectedTab}
+                withRefreshButton={false}
+                key={selectedTab}
+              >
+                {tabData[selectedTab].modalFilters}
+              </ActionBar>
             </div>
-          )
-        }
+            <div className="table-container">
+              <ProjectJobsMonitoringContext.Provider
+                value={{
+                  abortControllerRef,
+                  abortJobRef,
+                  abortingJobs,
+                  editableItem,
+                  getWorkflows,
+                  handleMonitoring,
+                  handleRerunJob,
+                  jobRuns,
+                  jobWizardIsOpened,
+                  jobWizardMode,
+                  jobs,
+                  jobsFiltersConfig,
+                  jobsMonitoringData,
+                  requestErrorMessage,
+                  refreshJobs,
+                  refreshScheduled,
+                  scheduledFiltersConfig,
+                  scheduledJobs,
+                  selectedCard,
+                  setAbortingJobs,
+                  setConfirmData,
+                  setEditableItem,
+                  setJobRuns,
+                  setJobWizardIsOpened,
+                  setJobWizardMode,
+                  setJobs,
+                  setScheduledJobs,
+                  setSelectedCard,
+                  setSelectedRunProject,
+                  terminateAbortTasksPolling,
+                  workflowsFiltersConfig
+                }}
+              >
+                <Outlet />
+              </ProjectJobsMonitoringContext.Provider>
+            </div>
+          </div>
+        )}
       </div>
       {confirmData && (
         <ConfirmDialog

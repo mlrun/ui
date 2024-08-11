@@ -22,7 +22,7 @@ import PropTypes from 'prop-types'
 
 const ArtifactFilterTreeDropDown = ({
   filterTree,
-  filterTreeOptions,
+  filterTreeOptions = [],
   handleSelectFilter,
   setIsDropDownMenu
 }) => {
@@ -49,10 +49,6 @@ const ArtifactFilterTreeDropDown = ({
       })}
     </div>
   )
-}
-
-ArtifactFilterTreeDropDown.defaultProps = {
-  filterTreeOptions: []
 }
 
 ArtifactFilterTreeDropDown.propTypes = {

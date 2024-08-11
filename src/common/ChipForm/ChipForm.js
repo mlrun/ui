@@ -274,18 +274,10 @@ const ChipForm = React.forwardRef(
   }
 )
 
-ChipForm.defaultProps = {
-  label: {
-    key: '',
-    value: ''
-  }
-}
-
 ChipForm.propTypes = {
   checkValidation: PropTypes.func,
   chipOptions: CHIP_OPTIONS.isRequired,
   editConfig: PropTypes.shape({}).isRequired,
-  label: PropTypes.shape({}),
   onChange: PropTypes.func.isRequired,
   setEditConfig: PropTypes.func.isRequired,
   validationRules: PropTypes.array

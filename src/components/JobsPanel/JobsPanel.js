@@ -46,17 +46,17 @@ import './jobsPanel.scss'
 
 const JobsPanel = ({
   closePanel,
-  defaultData,
+  defaultData = null,
   fetchFunctionTemplate,
   frontendSpec,
   functionsStore,
-  groupedFunctions,
+  groupedFunctions = {},
   jobsStore,
   mode,
-  onEditJob,
+  onEditJob = () => {},
   onSuccessRun,
   project,
-  redirectToDetailsPane,
+  redirectToDetailsPane = false,
   removeFunctionTemplate,
   removeFunctionsError,
   removeJobError,
@@ -65,7 +65,7 @@ const JobsPanel = ({
   setNewJob,
   setNewJobInputs,
   setNewJobSecretSources,
-  withSaveChanges
+  withSaveChanges = false
 }) => {
   const [panelState, panelDispatch] = useReducer(panelReducer, initialState)
   const [openScheduleJob, setOpenScheduleJob] = useState(false)
@@ -448,14 +448,6 @@ const JobsPanel = ({
     />,
     document.getElementById('overlay_container')
   )
-}
-
-JobsPanel.defaultProps = {
-  defaultData: null,
-  groupedFunctions: {},
-  onEditJob: () => {},
-  redirectToDetailsPane: false,
-  withSaveChanges: false
 }
 
 JobsPanel.propTypes = {

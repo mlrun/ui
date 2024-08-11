@@ -27,7 +27,7 @@ import TableCell from '../../../elements/TableCell/TableCell'
 import { DETAILS_OVERVIEW_TAB } from '../../../constants'
 import { isWorkflowJobSelected } from '../workflow.util'
 
-const JobsFunctionsTableRow = ({ handleSelectItem, rowItem, selectedItem }) => {
+const JobsFunctionsTableRow = ({ handleSelectItem = () => {}, rowItem, selectedItem = {} }) => {
   const params = useParams()
   const rowClassNames = classnames(
     'table-row',
@@ -58,11 +58,6 @@ const JobsFunctionsTableRow = ({ handleSelectItem, rowItem, selectedItem }) => {
       })}
     </tr>
   )
-}
-
-JobsFunctionsTableRow.defaultProps = {
-  handleSelectItem: () => {},
-  selectedItem: {}
 }
 
 JobsFunctionsTableRow.propTypes = {

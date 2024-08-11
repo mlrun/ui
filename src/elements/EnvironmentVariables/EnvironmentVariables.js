@@ -34,12 +34,12 @@ import { ReactComponent as Edit } from 'igz-controls/images/edit.svg'
 import { ReactComponent as Delete } from 'igz-controls/images/delete.svg'
 
 const EnvironmentVariables = ({
-  className,
+  className = '',
   envVariables,
   handleAddNewEnv,
   handleDeleteEnv,
   handleEditEnv,
-  isPanelEditMode
+  isPanelEditMode = false
 }) => {
   const [newEnvVariable, setNewEnvVariable] = useState(newVariableInitialState)
   const [validation, setValidation] = useState(validationInitialState)
@@ -172,11 +172,6 @@ const EnvironmentVariables = ({
       validation={validation}
     />
   )
-}
-
-EnvironmentVariables.defaultProps = {
-  className: '',
-  isPanelEditMode: false
 }
 
 EnvironmentVariables.propTypes = {

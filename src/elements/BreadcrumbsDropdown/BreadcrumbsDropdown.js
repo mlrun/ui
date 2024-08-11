@@ -31,7 +31,17 @@ import './breadcrumbsDropdown.scss'
 
 const BreadcrumbsDropdown = forwardRef(
   (
-    { link, list, onClick, screen, searchValue, setSearchValue, selectedItem, tab, withSearch },
+    {
+      link,
+      list,
+      onClick = () => {},
+      screen = '',
+      searchValue,
+      setSearchValue,
+      selectedItem,
+      tab = '',
+      withSearch = false
+    },
     ref
   ) => {
     return (
@@ -97,14 +107,6 @@ const BreadcrumbsDropdown = forwardRef(
     )
   }
 )
-
-BreadcrumbsDropdown.defaultProps = {
-  onClick: () => {},
-  screen: '',
-  searchOnChange: () => {},
-  tab: '',
-  withSearch: false
-}
 
 BreadcrumbsDropdown.propTypes = {
   link: PropTypes.string.isRequired,

@@ -22,9 +22,12 @@ import { debounce, get, isEmpty } from 'lodash'
 
 import {
   DETAILS_BUILD_LOG_TAB,
+  FILTER_MENU,
+  FILTER_MENU_MODAL,
   FUNCTION_CREATING_STATE,
   FUNCTION_ERROR_STATE,
   FUNCTION_FAILED_STATE,
+  FUNCTION_FILTERS,
   FUNCTION_INITIALIZED_STATE,
   FUNCTION_PENDINDG_STATE,
   FUNCTION_READY_STATE,
@@ -37,9 +40,7 @@ import {
   FUNCTION_TYPE_REMOTE,
   FUNCTION_TYPE_SERVING,
   FUNCTIONS_PAGE,
-  NAME_FILTER,
-  PANEL_FUNCTION_CREATE_MODE,
-  SHOW_UNTAGGED_FILTER
+  PANEL_FUNCTION_CREATE_MODE
 } from '../../constants'
 import jobsActions from '../../actions/jobs'
 import tasksApi from '../../api/tasks-api'
@@ -88,10 +89,6 @@ export const infoHeaders = [
   { label: 'Default handler', id: 'defaultHandler' },
   { label: 'Image', id: 'image' },
   { label: 'Description', id: 'description' }
-]
-export const filters = [
-  { type: NAME_FILTER, initialValue: '', label: 'Name:' },
-  { type: SHOW_UNTAGGED_FILTER, label: 'Show untagged' }
 ]
 export const TRANSIENT_FUNCTION_STATUSES = [FUNCTION_PENDINDG_STATE, FUNCTION_RUNNING_STATE]
 
@@ -291,6 +288,18 @@ export const generateActionsMenu = (
     ]
   ]
 }
+
+export const fetchInitialFunctions = debounce(
+  (filtersStore, fetchData, functionsAreInitializedRef) => {
+    if (!functionsAreInitializedRef.current) {
+      fetchData({
+        ...filtersStore[FILTER_MENU][FUNCTION_FILTERS],
+        ...filtersStore[FILTER_MENU_MODAL][FUNCTION_FILTERS].values
+      })
+      functionsAreInitializedRef.current = true
+    }
+  }
+)
 
 export const pollDeletingFunctions = (
   project,

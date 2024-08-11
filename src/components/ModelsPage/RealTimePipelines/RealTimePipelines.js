@@ -21,6 +21,7 @@ import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate, useParams } from 'react-router-dom'
 import classnames from 'classnames'
+import { isNil } from 'lodash'
 
 import FilterMenu from '../../FilterMenu/FilterMenu'
 import Loader from '../../../common/Loader/Loader'
@@ -41,7 +42,6 @@ import { fetchArtifactsFunctions, removePipelines } from '../../../reducers/arti
 import { filters, generatePageData } from './realTimePipelines.util'
 import { getNoDataMessage } from '../../../utils/getNoDataMessage'
 import { isRowRendered, useVirtualization } from '../../../hooks/useVirtualization.hook'
-import { largeResponseCatchHandler } from '../../../utils/largeResponseCatchHandler'
 import { setFilters } from '../../../reducers/filtersReducer'
 import { useModelsPage } from '../ModelsPage.context'
 
@@ -50,7 +50,7 @@ import { ReactComponent as Yaml } from 'igz-controls/images/yaml.svg'
 import cssVariables from './realTimePipelines.scss'
 
 const RealTimePipelines = () => {
-  const [largeRequestErrorMessage, setLargeRequestErrorMessage] = useState('')
+  const [requestErrorMessage, setRequestErrorMessage] = useState('')
   const [pipelines, setPipelines] = useState([])
   const artifactsStore = useSelector(store => store.artifactsStore)
   const filtersStore = useSelector(store => store.filtersStore)
@@ -91,23 +91,22 @@ const RealTimePipelines = () => {
           config: {
             ui: {
               controller: abortControllerRef.current,
-              setLargeRequestErrorMessage
+              setRequestErrorMessage
             }
           }
         })
       )
         .unwrap()
         .then(result => {
-          setPipelines(
-            result.filter(
-              func =>
-                !Object.keys(func.labels).some(labelKey => labelKey.includes('parent-function'))
+          if(!isNil(result)) {
+            setPipelines(
+              result.filter(
+                func =>
+                  !Object.keys(func.labels).some(labelKey => labelKey.includes('parent-function'))
+              )
             )
-          )
+          }
         })
-        .catch(error =>
-          largeResponseCatchHandler(error, 'Failed to fetch real-time pipelines', dispatch)
-        )
     },
     [dispatch, params.projectName]
   )
@@ -183,7 +182,7 @@ const RealTimePipelines = () => {
               message={getNoDataMessage(
                 filtersStore,
                 filters,
-                largeRequestErrorMessage,
+                requestErrorMessage,
                 MODELS_PAGE,
                 REAL_TIME_PIPELINES_TAB
               )}

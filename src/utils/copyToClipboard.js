@@ -21,6 +21,15 @@ import { setNotification } from '../reducers/notificationReducer'
 import { showErrorNotification } from './notifications.util'
 
 export const copyToClipboard = (textToCopy, dispatch) => {
+  if (!navigator.clipboard?.writeText) {
+    return showErrorNotification(
+      dispatch,
+      null,
+      '',
+      'Copy to clipboard failed due to unsecured connection'
+    )
+  }
+
   navigator.clipboard
     .writeText(textToCopy)
     .then(() => {

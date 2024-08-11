@@ -22,7 +22,7 @@ import PropTypes from 'prop-types'
 
 import './statsCard.scss'
 
-const StatsCard = ({ children, className, onClick }) => {
+const StatsCard = ({ children, className = '', onClick = () => {} }) => {
   return (
     <div className={`stats-card ${className}`} onClick={onClick}>
       {children}
@@ -30,7 +30,7 @@ const StatsCard = ({ children, className, onClick }) => {
   )
 }
 
-StatsCard.Header = ({ children, title }) => {
+StatsCard.Header = ({ children = null, title = '' }) => {
   return (
     <div className="stats-card__row">
       {title && <h5 className="stats-card__title">{title}</h5>}
@@ -45,16 +45,6 @@ StatsCard.Row = ({ children }) => {
 
 StatsCard.Col = ({ children }) => {
   return <div className="stats-card__col">{children}</div>
-}
-
-StatsCard.defaultProps = {
-  className: '',
-  onClick: () => {}
-}
-
-StatsCard.Header.defaultProps = {
-  children: null,
-  title: ''
 }
 
 StatsCard.propTypes = {

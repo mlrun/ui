@@ -31,14 +31,14 @@ import { ReactComponent as Arrow } from 'igz-controls/images/arrow.svg'
 import './tableLinkCell.scss'
 
 const TableLinkCell = ({
-  className,
-  data,
+  className = '',
+  data = {},
   handleExpandRow,
   item,
   link,
   selectItem,
-  selectedItem,
-  showExpandButton
+  selectedItem = {},
+  showExpandButton = false
 }) => {
   const tableCellClassNames = classnames(
     'table-body__cell',
@@ -129,14 +129,6 @@ const TableLinkCell = ({
       )}
     </td>
   )
-}
-
-TableLinkCell.defaultProps = {
-  className: '',
-  data: {},
-  expandLink: false,
-  selectedItem: {},
-  showExpandButton: false
 }
 
 TableLinkCell.propTypes = {

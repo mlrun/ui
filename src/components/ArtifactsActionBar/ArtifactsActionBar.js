@@ -44,17 +44,16 @@ import { setFieldState } from 'igz-controls/utils/form.util'
 import { ReactComponent as RefreshIcon } from 'igz-controls/images/refresh.svg'
 
 function ArtifactsActionBar({
-  actionButtons,
+  actionButtons = [],
   artifacts,
-  cancelRequest,
+  cancelRequest = null,
   filterMenuName,
   handleRefresh,
   page,
   removeSelectedItem,
   setContent,
   setSelectedRowData,
-  tab,
-  urlTagOption
+  tab = ''
 }) {
   const filtersStore = useSelector(store => store.filtersStore)
   const filterMenuModal = useSelector(store => store.filtersStore.filterMenuModal[filterMenuName])
@@ -204,12 +203,6 @@ function ArtifactsActionBar({
       )}
     </Form>
   )
-}
-
-ArtifactsActionBar.defaultProps = {
-  actionButtons: [],
-  cancelRequest: null,
-  tab: ''
 }
 
 ArtifactsActionBar.propTypes = {

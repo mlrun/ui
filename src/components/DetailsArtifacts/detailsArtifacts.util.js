@@ -31,9 +31,9 @@ import { ReactComponent as DetailsIcon } from 'igz-controls/images/view-details.
 
 export const getJobAccordingIteration = selectedJob => {
   return {
-    artifacts: parseArtifacts(selectedJob.status?.artifacts || []),
-    startTime: new Date(selectedJob.status?.start_time),
-    labels: parseKeyValues(selectedJob.metadata?.labels || {})
+    artifacts: parseArtifacts(selectedJob?.status?.artifacts || []),
+    startTime: new Date(selectedJob?.status?.start_time),
+    labels: parseKeyValues(selectedJob?.metadata?.labels || {})
   }
 }
 

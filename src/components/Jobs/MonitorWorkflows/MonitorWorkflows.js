@@ -47,7 +47,7 @@ import './monitorWorkflows.scss'
 
 const MonitorWorkflows = ({ deleteWorkflows, fetchFunctionLogs, fetchWorkflows }) => {
   const [selectedFunction, setSelectedFunction] = useState({})
-  const [largeRequestErrorMessage, setLargeRequestErrorMessage] = useState('')
+  const [requestErrorMessage, setRequestErrorMessage] = useState('')
   const [workflowsAreLoaded, setWorkflowsAreLoaded] = useState(false)
   const [workflowIsLoaded, setWorkflowIsLoaded] = useState(false)
   const [itemIsSelected, setItemIsSelected] = useState(false)
@@ -82,11 +82,11 @@ const MonitorWorkflows = ({ deleteWorkflows, fetchFunctionLogs, fetchWorkflows }
       fetchWorkflows(params.projectName, filter, {
         ui: {
           controller: abortControllerRef.current,
-          setLargeRequestErrorMessage
+          setRequestErrorMessage
         }
       })
     },
-    [fetchWorkflows, params.projectName, setLargeRequestErrorMessage]
+    [fetchWorkflows, params.projectName, setRequestErrorMessage]
   )
 
   useEffect(() => {
@@ -189,8 +189,8 @@ const MonitorWorkflows = ({ deleteWorkflows, fetchFunctionLogs, fetchWorkflows }
         filters={filters}
         getWorkflows={getWorkflows}
         itemIsSelected={itemIsSelected}
-        largeRequestErrorMessage={largeRequestErrorMessage}
         ref={{ abortJobRef }}
+        requestErrorMessage={requestErrorMessage}
         selectedFunction={selectedFunction}
         selectedJob={selectedJob}
         setItemIsSelected={setItemIsSelected}

@@ -38,7 +38,7 @@ import { useParams } from 'react-router-dom'
 
 const FunctionsPanelCode = ({
   appStore,
-  defaultData,
+  defaultData = {},
   functionsStore,
   imageType,
   mode,
@@ -285,10 +285,6 @@ const FunctionsPanelCode = ({
       validation={validation}
     />
   )
-}
-
-FunctionsPanelCode.defaultProps = {
-  defaultData: {}
 }
 
 FunctionsPanelCode.propTypes = {

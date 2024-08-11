@@ -33,22 +33,26 @@ const Table = React.forwardRef(
   (
     {
       actionsMenu,
-      applyDetailsChanges,
-      applyDetailsChangesCallback,
+      applyDetailsChanges = () => {},
+      applyDetailsChangesCallback = () => {},
       children,
-      detailsFormInitialValues,
-      getCloseDetailsLink,
-      handleCancel,
-      hideActionsMenu,
-      mainRowItemsCount,
+      detailsFormInitialValues = {},
+      getCloseDetailsLink = null,
+      handleCancel = () => {},
+      hideActionsMenu = false,
+      mainRowItemsCount = 1,
       pageData,
-      retryRequest,
-      selectedItem,
-      sortProps,
-      tab,
-      tableClassName,
-      tableHeaders,
-      virtualizationConfig
+      retryRequest = () => {},
+      selectedItem = {},
+      sortProps = null,
+      tab = '',
+      tableClassName = '',
+      tableHeaders = [],
+      virtualizationConfig = {
+        tableBodyPaddingTop: 0,
+        startIndex: -1,
+        endIndex: -1
+      }
     },
     ref
   ) => {
@@ -141,40 +145,13 @@ const Table = React.forwardRef(
   }
 )
 
-Table.defaultProps = {
-  applyDetailsChanges: () => {},
-  applyDetailsChangesCallback: () => {},
-  detailsFormInitialValues: {},
-  getCloseDetailsLink: null,
-  groupedContent: {},
-  handleCancel: () => {},
-  handleExpandRow: () => {},
-  handleSelectItem: () => {},
-  hideActionsMenu: false,
-  mainRowItemsCount: 1,
-  retryRequest: () => {},
-  selectedItem: {},
-  sortProps: null,
-  tab: '',
-  tableClassName: '',
-  tableHeaders: [],
-  virtualizationConfig: {
-    tableBodyPaddingTop: 0,
-    startIndex: -1,
-    endIndex: -1
-  }
-}
-
 Table.propTypes = {
   actionsMenu: ACTIONS_MENU.isRequired,
   applyDetailsChanges: PropTypes.func,
   applyDetailsChangesCallback: PropTypes.func,
   detailsFormInitialValues: PropTypes.object,
   getCloseDetailsLink: PropTypes.func,
-  groupedContent: PropTypes.shape({}),
   handleCancel: PropTypes.func,
-  handleExpandRow: PropTypes.func,
-  handleSelectItem: PropTypes.func,
   hideActionsMenu: PropTypes.bool,
   mainRowItemsCount: PropTypes.number,
   pageData: PropTypes.shape({}).isRequired,

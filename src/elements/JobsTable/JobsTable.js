@@ -35,7 +35,6 @@ import {
   MONITOR_JOBS_TAB,
   PANEL_RERUN_MODE
 } from '../../constants'
-import { generateActionsMenu } from '../../components/Jobs/MonitorJobs/monitorJobs.util'
 import Details from '../../components/Details/Details'
 import JobWizard from '../../components/JobWizard/JobWizard'
 import NoData from '../../common/NoData/NoData'
@@ -43,21 +42,23 @@ import detailsActions from '../../actions/details'
 import getState from '../../utils/getState'
 import jobsActions from '../../actions/jobs'
 import { DANGER_BUTTON } from 'igz-controls/constants'
+import { FILTERS_CONFIG } from '../../types'
+import { enrichRunWithFunctionFields, handleAbortJob, handleDeleteJob } from '../../utils/jobs.util'
+import { generateActionsMenu } from '../../components/Jobs/MonitorJobs/monitorJobs.util'
+import { generatePageData } from './jobsTable.util'
 import { getCloseDetailsLink } from '../../utils/getCloseDetailsLink'
 import { getJobLogs } from '../../utils/getJobLogs.util'
 import { getNoDataMessage } from '../../utils/getNoDataMessage'
 import { isDetailsTabExists } from '../../utils/isDetailsTabExists'
 import { isJobKindLocal, pollAbortingJobs } from '../../components/Jobs/jobs.util'
+import { isRowRendered, useVirtualization } from '../../hooks/useVirtualization.hook'
 import { openPopUp } from 'igz-controls/utils/common.util'
 import { parseJob } from '../../utils/parseJob'
+import { setFilters } from '../../reducers/filtersReducer'
 import { setNotification } from '../../reducers/notificationReducer'
 import { showErrorNotification } from '../../utils/notifications.util'
 import { usePods } from '../../hooks/usePods.hook'
 import { useYaml } from '../../hooks/yaml.hook'
-import { isRowRendered, useVirtualization } from '../../hooks/useVirtualization.hook'
-import { enrichRunWithFunctionFields, handleAbortJob, handleDeleteJob } from '../../utils/jobs.util'
-import { generatePageData } from './jobsTable.util'
-import { setFilters } from '../../reducers/filtersReducer'
 
 import cssVariables from './jobsTable.scss'
 
@@ -66,18 +67,20 @@ const JobsTable = React.forwardRef(
     {
       abortingJobs,
       context,
-      filters,
+      filterMenuName = '',
+      filters = null,
+      filtersConfig = null,
       jobRuns,
       jobs,
-      largeRequestErrorMessage,
       navigateLink,
       refreshJobs,
+      requestErrorMessage,
       selectedJob,
       setAbortingJobs,
       setJobRuns,
       setJobs,
       setSelectedJob,
-      setSelectedRunProject,
+      setSelectedRunProject = null,
       tableContent,
       terminateAbortTasksPolling
     },
@@ -254,7 +257,7 @@ const JobsTable = React.forwardRef(
             <div>
               Are you sure you want to abort the job "{job.name}"? <br />
               {isJobKindLocal(job) &&
-              'This is a local run. You can abort the run, though the actual process will continue.'}
+                'This is a local run. You can abort the run, though the actual process will continue.'}
             </div>
           ),
           btnConfirmLabel: 'Abort',
@@ -467,10 +470,11 @@ const JobsTable = React.forwardRef(
           <NoData
             message={getNoDataMessage(
               filtersStore,
-              filters,
-              largeRequestErrorMessage,
+              filtersConfig || filters,
+              requestErrorMessage,
               JOBS_PAGE,
-              MONITOR_JOBS_TAB
+              MONITOR_JOBS_TAB,
+              filterMenuName
             )}
           />
         ) : (
@@ -526,20 +530,17 @@ const JobsTable = React.forwardRef(
   }
 )
 
-JobsTable.defaultProps = {
-  filters: [],
-  setSelectedRunProject: null
-}
-
 JobsTable.propTypes = {
   abortingJobs: PropTypes.object.isRequired,
   context: PropTypes.object.isRequired,
+  filterMenuName: PropTypes.string,
   filters: PropTypes.array,
+  filtersConfig: FILTERS_CONFIG,
   jobRuns: PropTypes.array.isRequired,
   jobs: PropTypes.array.isRequired,
-  largeRequestErrorMessage: PropTypes.string.isRequired,
   navigateLink: PropTypes.string.isRequired,
   refreshJobs: PropTypes.func.isRequired,
+  requestErrorMessage: PropTypes.string.isRequired,
   selectedJob: PropTypes.object.isRequired,
   setAbortingJobs: PropTypes.func.isRequired,
   setJobRuns: PropTypes.func.isRequired,

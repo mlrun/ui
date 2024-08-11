@@ -25,7 +25,7 @@ import ArtifactsPreviewView from './ArtifactsPreviewView'
 import Loader from '../../common/Loader/Loader'
 import NoData from '../../common/NoData/NoData'
 
-const ArtifactsPreview = ({ className, noData, preview }) => {
+const ArtifactsPreview = ({ className = '', noData, preview }) => {
   const [showErrorBody, setShowErrorBody] = useState(false)
   const artifactsPreviewClasses = classnames('artifact-preview', className)
 
@@ -48,10 +48,6 @@ const ArtifactsPreview = ({ className, noData, preview }) => {
       ))}
     </>
   )
-}
-
-ArtifactsPreview.defaultProps = {
-  className: ''
 }
 
 ArtifactsPreview.propTypes = {

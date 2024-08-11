@@ -26,7 +26,7 @@ import FunctionsPanelRuntimeView from './FunctionsPanelRuntimeView'
 import { useMode } from '../../hooks/mode.hook'
 
 const FunctionsPanelRuntime = ({
-  defaultData,
+  defaultData = {},
   functionsStore,
   sections,
   setValidation,
@@ -46,10 +46,6 @@ const FunctionsPanelRuntime = ({
   )
 }
 
-FunctionsPanelRuntime.defaultProps = {
-  defaultData: {}
-}
-
 FunctionsPanelRuntime.propTypes = {
   defaultData: PropTypes.shape({}),
   sections: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
@@ -57,7 +53,4 @@ FunctionsPanelRuntime.propTypes = {
   validation: PropTypes.shape({}).isRequired
 }
 
-export default connect(
-  functionsStore => ({ ...functionsStore }),
-  {}
-)(FunctionsPanelRuntime)
+export default connect(functionsStore => ({ ...functionsStore }), {})(FunctionsPanelRuntime)

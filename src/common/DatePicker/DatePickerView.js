@@ -71,7 +71,7 @@ const DatePickerView = React.forwardRef(
       onTimeChange,
       required,
       requiredText,
-      selectedOption,
+      selectedOption = null,
       setSelectedDate,
       timeFrameLimit,
       tip,
@@ -291,10 +291,6 @@ const DatePickerView = React.forwardRef(
     )
   }
 )
-
-DatePickerView.defaultProps = {
-  selectedOption: null
-}
 
 DatePickerView.propTypes = {
   autoCorrectedDatePipe: PropTypes.func.isRequired,

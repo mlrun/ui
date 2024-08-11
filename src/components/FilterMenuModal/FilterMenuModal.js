@@ -30,7 +30,11 @@ import { PopUpDialog, RoundedIcon, Button } from 'igz-controls/components'
 
 import { FILTER_MENU_MODAL } from '../../constants'
 import { isTargetElementInContainerElement } from '../../utils/checkElementsPosition.utils'
-import { setModalFiltersInitialValues, setModalFiltersValues } from '../../reducers/filtersReducer'
+import {
+  resetModalFilter,
+  setModalFiltersInitialValues,
+  setModalFiltersValues
+} from '../../reducers/filtersReducer'
 
 import { ReactComponent as FilterIcon } from 'igz-controls/images/filter.svg'
 
@@ -39,17 +43,17 @@ import './filterMenuModal.scss'
 export const FilterMenuWizardContext = React.createContext({})
 
 const FilterMenuModal = ({
-  applyChanges,
-  applyButton,
-  cancelButton,
+  applyChanges = null,
+  applyButton = { label: 'Apply', variant: 'secondary' },
+  cancelButton = { label: 'Clear', variant: 'tertiary' },
   children,
   filterMenuName,
-  header,
+  header = 'Filter by',
   initialValues,
-  restartFormTrigger,
+  restartFormTrigger = null,
   values,
-  withoutApplyButton,
-  wizardClassName
+  withoutApplyButton = false,
+  wizardClassName = ''
 }) => {
   const [filtersWizardIsShown, setFiltersWizardIsShown] = useState(false)
   const filtersIconButtonRef = useRef()
@@ -68,12 +72,6 @@ const FilterMenuModal = ({
   )
 
   const filtersWizardClassnames = classnames('filters-wizard', wizardClassName)
-
-  useEffect(() => {
-    if (formRef.current && !isEqual(formRef.current.getState().values, values)) {
-      formRef.current.reset(values)
-    }
-  }, [initialValues, values])
 
   useEffect(() => {
     if (!has(filtersData, 'initialValues')) {
@@ -108,7 +106,10 @@ const FilterMenuModal = ({
   }, [])
 
   useEffect(() => {
-    const throttledHideFiltersWizard = throttle(hideFiltersWizard, 500, { leading: true, trailing: true })
+    const throttledHideFiltersWizard = throttle(hideFiltersWizard, 500, {
+      leading: true,
+      trailing: true
+    })
     window.addEventListener('click', hideFiltersWizard)
     window.addEventListener('scroll', throttledHideFiltersWizard, true)
 
@@ -123,8 +124,16 @@ const FilterMenuModal = ({
 
     return () => {
       ref.restart(initialValues)
+      dispatch(resetModalFilter(filterMenuName))
     }
-  }, [params.pageTab, params.projectName, restartFormTrigger, dispatch, initialValues])
+  }, [
+    params.pageTab,
+    params.projectName,
+    restartFormTrigger,
+    dispatch,
+    initialValues,
+    filterMenuName
+  ])
 
   const getFilterCounter = formState => {
     const initialValues = applyChanges ? filtersData?.initialValues : formState.initialValues
@@ -230,16 +239,6 @@ const FilterMenuModal = ({
       }}
     </Form>
   )
-}
-
-FilterMenuModal.defaultProps = {
-  applyChanges: null,
-  applyButton: { label: 'Apply', variant: 'secondary' },
-  cancelButton: { label: 'Clear', variant: 'tertiary' },
-  header: 'Filter by',
-  restartFormTrigger: null,
-  withoutApplyButton: false,
-  wizardClassName: ''
 }
 
 FilterMenuModal.propTypes = {

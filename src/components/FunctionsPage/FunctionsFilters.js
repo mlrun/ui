@@ -18,23 +18,17 @@ under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
 import React from 'react'
-import { useForm } from 'react-final-form'
 
-import { FormCheckBox, FormOnChange } from 'igz-controls/components'
+import { FormCheckBox } from 'igz-controls/components'
 
-import { SHOW_UNTAGGED_FILTER, SHOW_UNTAGGED_ITEMS } from '../../constants'
+import { SHOW_UNTAGGED_FILTER } from '../../constants'
 
 const FunctionsFilters = () => {
-  const { change } = useForm()
 
-  const handleIter = value => {
-    change(SHOW_UNTAGGED_ITEMS, value ? SHOW_UNTAGGED_ITEMS : '')
-  }
   return (
     <>
       <div className="form-row">
         <FormCheckBox label="Show untagged" name={SHOW_UNTAGGED_FILTER} />
-        <FormOnChange handler={handleIter} name={SHOW_UNTAGGED_FILTER} />
       </div>
     </>
   )

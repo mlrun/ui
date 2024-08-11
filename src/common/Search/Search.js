@@ -30,16 +30,16 @@ import { ReactComponent as SearchIcon } from 'igz-controls/images/search.svg'
 import './search.scss'
 
 const Search = ({
-  className,
-  disabled,
-  id,
-  matches,
+  className = '',
+  disabled = false,
+  id = 'search',
+  matches = [],
   onChange,
-  onFocus,
-  placeholder,
-  searchWhileTyping,
-  value,
-  wrapperClassName
+  onFocus = () => {},
+  placeholder = '',
+  searchWhileTyping = false,
+  value = '',
+  wrapperClassName = ''
 }) => {
   const [searchValue, setSearchValue] = useState(value ?? '')
   const [label, setLabel] = useState('')
@@ -178,18 +178,6 @@ const Search = ({
       )}
     </div>
   )
-}
-
-Search.defaultProps = {
-  className: '',
-  disabled: false,
-  id:'search',
-  matches: [],
-  onFocus: () => {},
-  placeholder: '',
-  searchWhileTyping: false,
-  value: '',
-  wrapperClassName: ''
 }
 
 Search.propTypes = {

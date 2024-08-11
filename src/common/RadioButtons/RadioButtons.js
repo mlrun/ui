@@ -27,7 +27,13 @@ import { RADIO_BUTTONS_ELEMENTS } from '../../types'
 
 import './radioButtons.scss'
 
-const RadioButtons = ({ className, disabled, elements, onChangeCallback, selectedValue }) => {
+const RadioButtons = ({
+  className = '',
+  disabled = false,
+  elements = [],
+  onChangeCallback = () => {},
+  selectedValue = null
+}) => {
   const [checked, setChecked] = useState('')
 
   const radioButtonsClassNames = classnames('radio-buttons', disabled && 'disabled', className)
@@ -68,14 +74,6 @@ const RadioButtons = ({ className, disabled, elements, onChangeCallback, selecte
       )}
     </div>
   )
-}
-
-RadioButtons.defaultProps = {
-  className: '',
-  disabled: false,
-  elements: [],
-  onChangeCallback: () => {},
-  selectedValue: null
 }
 
 RadioButtons.propTypes = {

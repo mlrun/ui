@@ -19,7 +19,6 @@ such restriction.
 */
 
 import {
-  FUNCTIONS_PAGE,
   JOB_KIND_WORKFLOW,
   JOBS_MONITORING_JOBS_TAB,
   JOBS_MONITORING_PAGE,
@@ -27,15 +26,16 @@ import {
   MONITOR_JOBS_TAB,
   MONITOR_WORKFLOWS_TAB
 } from '../constants'
-import { formatDatetime } from './datetime'
-import measureTime from './measureTime'
-import { parseKeyValues } from './object'
-import { generateLinkToDetailsPanel } from './generateLinkToDetailsPanel'
-import { getJobIdentifier, getWorkflowJobIdentifier } from './getUniqueIdentifier'
 import {
   getWorkflowDetailsLink,
   getWorkflowMonitoringDetailsLink
 } from '../components/Workflow/workflow.util'
+import measureTime from './measureTime'
+import { formatDatetime } from './datetime'
+import { generateFunctionDetailsLink } from './generateFunctionDetailsLink'
+import { generateLinkToDetailsPanel } from './generateLinkToDetailsPanel'
+import { getJobIdentifier, getWorkflowJobIdentifier } from './getUniqueIdentifier'
+import { parseKeyValues } from './object'
 import { validateArguments } from './validateArguments'
 
 export const createJobsMonitorTabContent = (jobs, jobName, isStagingMode) => {
@@ -156,7 +156,6 @@ export const createJobsMonitorTabContent = (jobs, jobName, isStagingMode) => {
 export const createJobsScheduleTabContent = jobs => {
   return jobs.map(job => {
     const identifierUnique = getJobIdentifier(job, true)
-    const [, , scheduleJobFunctionUid] = job.func?.match(/\w[\w'-]*/g, '') || []
     const [, projectName, jobUid] = job.lastRunUri?.match(/(.+)@(.+)#([^:]+)(?::(.+))?/) || []
     const jobName = job.name
     const lastRunLink = () =>
@@ -182,17 +181,7 @@ export const createJobsScheduleTabContent = jobs => {
           value: job.name,
           className: 'table-cell-name',
           showStatus: true,
-          getLink: tab =>
-            validateArguments(scheduleJobFunctionUid, tab)
-              ? generateLinkToDetailsPanel(
-                  job.project,
-                  FUNCTIONS_PAGE,
-                  null,
-                  scheduleJobFunctionUid,
-                  null,
-                  tab
-                )
-              : '',
+          getLink: () => generateFunctionDetailsLink(job.func),
           type: 'link'
         },
         {
@@ -363,18 +352,15 @@ export const createJobsWorkflowContent = (
           className: 'table-cell-name',
           type: 'link',
           getLink: tab => {
-            return workflowProjectName ?
-              getWorkflowMonitoringDetailsLink(
-                workflowProjectName,
-                workflowId,
-                job.customData
-              ) : getWorkflowDetailsLink(
-                projectName,
-                workflowId,
-                job.customData,
-                tab,
-                MONITOR_WORKFLOWS_TAB
-              )
+            return workflowProjectName
+              ? getWorkflowMonitoringDetailsLink(workflowProjectName, workflowId, job.customData)
+              : getWorkflowDetailsLink(
+                  projectName,
+                  workflowId,
+                  job.customData,
+                  tab,
+                  MONITOR_WORKFLOWS_TAB
+                )
           },
           showStatus: true,
           showUidRow: true
@@ -545,7 +531,6 @@ export const createJobsMonitoringContent = (jobs, jobName, isStagingMode) => {
 export const createScheduleJobsMonitoringContent = jobs => {
   return jobs.map(job => {
     const identifierUnique = getJobIdentifier(job, true)
-    const [, , scheduleJobFunctionUid] = job.func?.match(/\w[\w'-]*/g, '') || []
     const [, projectName, jobUid] = job.lastRunUri?.match(/(.+)@(.+)#([^:]+)(?::(.+))?/) || []
     const jobName = job.name
     const lastRunLink = () =>
@@ -571,17 +556,7 @@ export const createScheduleJobsMonitoringContent = jobs => {
           value: job.name,
           className: 'table-cell-name',
           showStatus: true,
-          getLink: tab =>
-            validateArguments(scheduleJobFunctionUid, tab)
-              ? generateLinkToDetailsPanel(
-                  job.project,
-                  FUNCTIONS_PAGE,
-                  null,
-                  scheduleJobFunctionUid,
-                  null,
-                  tab
-                )
-              : '',
+          getLink: () => generateFunctionDetailsLink(job.func),
           type: 'link'
         },
         {

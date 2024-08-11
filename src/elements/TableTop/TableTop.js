@@ -27,7 +27,7 @@ import { ReactComponent as Back } from 'igz-controls/images/back-arrow.svg'
 
 import './tableTop.scss'
 
-const TableTop = ({ children, link, text }) => {
+const TableTop = ({ children, link, text = '' }) => {
   return (
     <div className="table-top">
       <div className="link-back">
@@ -45,10 +45,6 @@ const TableTop = ({ children, link, text }) => {
       {children}
     </div>
   )
-}
-
-TableTop.defaultProps = {
-  text: ''
 }
 
 TableTop.propTypes = {

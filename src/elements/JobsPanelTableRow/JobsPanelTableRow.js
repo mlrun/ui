@@ -35,16 +35,16 @@ import './jobsPanelTableRow.scss'
 
 const JobsPanelTableRow = ({
   actionsMenu,
-  checkboxOnChange,
-  className,
+  checkboxOnChange = () => {},
+  className = '',
   contentItem,
   index,
-  isPanelEditMode,
+  isPanelEditMode = false,
   editItem,
   handleDelete,
   handleEdit,
   section,
-  withCheckbox
+  withCheckbox = false
 }) => {
   const rowClassNames = classnames('table__row', className)
 
@@ -122,13 +122,6 @@ const JobsPanelTableRow = ({
       </div>
     )
   )
-}
-
-JobsPanelTableRow.defaultProps = {
-  checkboxOnChange: () => {},
-  className: '',
-  isPanelEditMode: false,
-  withCheckbox: false
 }
 
 JobsPanelTableRow.propTypes = {

@@ -30,17 +30,17 @@ import { useHiddenChipsBlock } from 'igz-controls/hooks'
 const HiddenChipsBlock = React.forwardRef(
   (
     {
-      chipIndex,
-      chips,
+      chips = [],
+      chipIndex = 0,
       chipOptions,
       className,
-      editConfig,
+      editConfig = {},
       handleEditChip,
-      handleIsEdit,
+      handleIsEdit = () => {},
       handleRemoveChip,
       handleShowElements,
-      isEditMode,
-      setEditConfig
+      isEditMode = false,
+      setEditConfig = () => {}
     },
     { hiddenChipsCounterRef, hiddenChipsPopUpRef }
   ) => {
@@ -86,17 +86,6 @@ const HiddenChipsBlock = React.forwardRef(
     )
   }
 )
-
-HiddenChipsBlock.defaultProps = {
-  chips: [],
-  chipIndex: 0,
-  editChip: () => {},
-  editConfig: {},
-  handleIsEdit: () => {},
-  isEditMode: false,
-  removeChip: () => {},
-  setEditConfig: () => {}
-}
 
 HiddenChipsBlock.propTypes = {
   className: PropTypes.string,

@@ -19,7 +19,6 @@ such restriction.
 */
 import React from 'react'
 import PropTypes from 'prop-types'
-import { createPortal } from 'react-dom'
 
 import { ReactComponent as CloseIcon } from 'igz-controls/images/close.svg'
 import { ReactComponent as SuccessDone } from 'igz-controls/images/success_done.svg'
@@ -34,28 +33,28 @@ const NotificationView = ({
   retry,
   transitionStyles
 }) => {
-  return createPortal(
-    <div className="notification_container" style={{ ...transitionStyles }}>
-      <div className="notification_body">
+  return (
+    <div className="notification" style={{ ...transitionStyles }}>
+      <div className="notification__body">
         <button
-          className="notification_body_close_icon"
+          className="notification__button-close"
           onClick={() => handleRemoveNotification(item.id)}
         >
           <CloseIcon />
         </button>
         <div
-          className={`notification_body_wrapper notification_body_${
+          className={`notification__body__status notification__body__icon-${
             isSuccessResponse ? 'success' : 'alert'
-          }_icon`}
+          }`}
         >
-          <div className={isSuccessResponse ? 'success_icon' : 'alert_icon'}>
+          <div className={isSuccessResponse ? 'icon-success' : 'icon-alert'}>
             {isSuccessResponse ? <SuccessDone /> : <UnsuccessAlert />}
           </div>
         </div>
         {item.message}
         {!isSuccessResponse && item.retry && (
           <div
-            className="notification_body_button"
+            className="notification__body__button-retry"
             onClick={() => {
               retry(item)
             }}
@@ -64,8 +63,7 @@ const NotificationView = ({
           </div>
         )}
       </div>
-    </div>,
-    document.getElementById('overlay_container')
+    </div>
   )
 }
 

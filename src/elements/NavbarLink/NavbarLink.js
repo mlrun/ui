@@ -23,7 +23,7 @@ import PropTypes from 'prop-types'
 
 import './NavbarLink.scss'
 
-const NavbarLink = ({ externalLink, icon, label, link, ...props }) => {
+const NavbarLink = ({ externalLink = false, icon = {}, label = '', link = '', ...props }) => {
   return (
     <li className="nav-link" data-testid={`nav-link-${props.id}`}>
       {externalLink ? (
@@ -44,13 +44,6 @@ const NavbarLink = ({ externalLink, icon, label, link, ...props }) => {
       )}
     </li>
   )
-}
-
-NavbarLink.defaultProps = {
-  externalLink: false,
-  icon: {},
-  label: '',
-  link: ''
 }
 
 NavbarLink.propTypes = {

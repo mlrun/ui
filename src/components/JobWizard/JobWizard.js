@@ -69,7 +69,7 @@ import { JOB_WIZARD_MODE } from '../../types'
 import { MODAL_MAX } from 'igz-controls/constants'
 import { resetModalFilter } from '../../reducers/filtersReducer'
 import { scheduledJobsActionCreator } from '../Jobs/ScheduledJobs/scheduledJobs.util'
-import { setFieldState } from 'igz-controls/utils/form.util'
+import { setFieldState, isSubmitDisabled } from 'igz-controls/utils/form.util'
 import { setNotification } from '../../reducers/notificationReducer'
 import { showErrorNotification } from '../../utils/notifications.util'
 import { useModalBlockHistory } from '../../hooks/useModalBlockHistory.hook'
@@ -77,26 +77,26 @@ import { useModalBlockHistory } from '../../hooks/useModalBlockHistory.hook'
 import './jobWizard.scss'
 
 const JobWizard = ({
-  defaultData,
+  defaultData = {},
   editJob,
   fetchFunctionTemplate,
   fetchHubFunction,
   frontendSpec,
   functionsStore,
-  isBatchInference,
+  isBatchInference = false,
   isOpen,
-  isTrain,
+  isTrain = false,
   jobsStore,
-  mode,
+  mode = PANEL_CREATE_MODE,
   onResolve,
-  onSuccessRequest,
-  onWizardClose,
+  onSuccessRequest = () => {},
+  onWizardClose = null,
   params,
-  prePopulatedData,
+  prePopulatedData = {},
   removeJobFunction,
   removeHubFunctions,
   runNewJob,
-  wizardTitle
+  wizardTitle = 'Batch run'
 }) => {
   const formRef = React.useRef(
     createForm({
@@ -289,10 +289,7 @@ const JobWizard = ({
         }
       ]
 
-      const formIsSubmittedAndInvalid =
-        formState.submitting || (formState.invalid && formState.submitFailed)
-
-      if (formIsSubmittedAndInvalid) {
+      if (isSubmitDisabled(formState)) {
         stepsConfig.forEach(stepConfig => {
           if (stepConfig.id in formState.errors) {
             stepConfig.invalid = true
@@ -406,8 +403,7 @@ const JobWizard = ({
 
   const getActions = useCallback(
     ({ allStepsAreEnabled, goToFirstInvalidStep }, formState) => {
-      const formIsSubmittedAndInvalid =
-        formState.submitting || (formState.invalid && formState.submitFailed)
+      const submitIsDisabled = isSubmitDisabled(formState)
 
       return [
         {
@@ -426,7 +422,7 @@ const JobWizard = ({
               goToFirstInvalidStep()
             }
           },
-          disabled: !allStepsAreEnabled || formIsSubmittedAndInvalid,
+          disabled: !allStepsAreEnabled || submitIsDisabled,
           variant: 'tertiary',
           ref: scheduleButtonRef
         },
@@ -443,7 +439,7 @@ const JobWizard = ({
           onClick: () => {
             submitRequest(formState, false, goToFirstInvalidStep)
           },
-          disabled: !allStepsAreEnabled || formIsSubmittedAndInvalid,
+          disabled: !allStepsAreEnabled || submitIsDisabled,
           variant: 'secondary'
         }
       ]
@@ -531,23 +527,15 @@ const JobWizard = ({
               />
             )}
             <FormDirtySpy />
-            {(functionsStore.loading || functionsStore.funcLoading || jobsStore.loading || projectIsLoading) && <Loader />}
+            {(functionsStore.loading ||
+              functionsStore.funcLoading ||
+              jobsStore.loading ||
+              projectIsLoading) && <Loader />}
           </>
         )
       }}
     </Form>
   )
-}
-
-JobWizard.defaultProps = {
-  defaultData: {},
-  isBatchInference: false,
-  isTrain: false,
-  mode: PANEL_CREATE_MODE,
-  onSuccessRequest: () => {},
-  onWizardClose: () => {},
-  prePopulatedData: {},
-  wizardTitle: 'Batch run'
 }
 
 JobWizard.propTypes = {

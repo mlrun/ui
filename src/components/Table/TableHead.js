@@ -27,7 +27,10 @@ import { Tip, Tooltip, TextTooltipTemplate } from 'igz-controls/components'
 import { SORT_PROPS } from 'igz-controls/types'
 
 const TableHead = React.forwardRef(
-  ({ content, hideActionsMenu, mainRowItemsCount, selectedItem, sortProps }, ref) => {
+  (
+    { content, hideActionsMenu = false, mainRowItemsCount, selectedItem, sortProps = null },
+    ref
+  ) => {
     const getHeaderCellClasses = (
       headerId,
       isSortable,
@@ -78,11 +81,6 @@ const TableHead = React.forwardRef(
     )
   }
 )
-
-TableHead.defaultProps = {
-  hideActionsMenu: false,
-  sortProps: null
-}
 
 TableHead.propTypes = {
   content: PropTypes.array.isRequired,

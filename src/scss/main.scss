@@ -24,8 +24,8 @@ body {
   width: 100%;
 
   &-container {
-    display: flex;
     position: relative;
+    display: flex;
     width: 100%;
 
     &.has-header {
@@ -39,7 +39,7 @@ body {
   }
 }
 
-/*=========== CONTENT =============*/
+/* =========== CONTENT ============= */
 
 .content {
   position: relative;
@@ -117,7 +117,7 @@ body {
   }
 }
 
-/*=========== MAIN =============*/
+/* =========== MAIN ============= */
 
 main {
   position: relative;
@@ -148,7 +148,7 @@ main {
   }
 }
 
-/*=========== PAGE =============*/
+/* =========== PAGE ============= */
 
 .page {
   flex: 1 1;
@@ -191,12 +191,12 @@ main {
   }
 }
 
-/*=========== TABLE =============*/
+/* =========== TABLE ============= */
 
 .table {
   position: relative;
-  text-align: left;
   width: 100%;
+  text-align: left;
   border-spacing: 0;
 
   .table {
@@ -224,17 +224,17 @@ main {
           &-name {
             position: sticky;
             left: 0;
+            z-index: 1;
             min-width: 250px;
             padding-right: 10px;
-            z-index: 1;
           }
 
           &-icon {
             position: sticky;
             right: 0;
             justify-content: center;
-            padding: 0;
             max-width: 85px;
+            padding: 0;
 
             @include tableColumnFlex(0, 50px);
 
@@ -256,12 +256,13 @@ main {
             .table-cell-icon {
               .actions-menu {
                 &__container_extended {
-                  &:before {
-                    background: linear-gradient(
-                      90deg,
-                      rgba(255, 255, 255, 0) 0%,
-                      rgba(245, 247, 255, 1) 100%
-                    );
+                  &::before {
+                    background:
+                      linear-gradient(
+                        90deg,
+                        rgba(255, 255, 255, 0) 0%,
+                        rgba(245, 247, 255, 1) 100%
+                      );
                   }
                 }
               }
@@ -276,12 +277,13 @@ main {
                     &_extended {
                       background-color: $ghostWhite;
 
-                      &:before {
-                        background: linear-gradient(
-                          90deg,
-                          rgba(255, 255, 255, 0) 0%,
-                          rgba(245, 247, 255, 1) 100%
-                        );
+                      &::before {
+                        background:
+                          linear-gradient(
+                            90deg,
+                            rgba(255, 255, 255, 0) 0%,
+                            rgba(245, 247, 255, 1) 100%
+                          );
                       }
                     }
 
@@ -334,9 +336,9 @@ main {
           .row_grouped-by {
             position: sticky;
             top: #{$headerRowHeight}px;
-            background-color: $white;
-            padding: 0;
             z-index: 3;
+            padding: 0;
+            background-color: $white;
 
             .expand-arrow {
               transform: rotate(90deg);
@@ -355,8 +357,8 @@ main {
     &-header {
       position: sticky;
       top: 0;
-      min-width: 100%;
       z-index: 3;
+      min-width: 100%;
 
       &-row {
         min-height: #{$headerRowHeight}px;
@@ -387,8 +389,8 @@ main {
           flex: 0 1 12px;
           align-items: center;
           justify-content: center;
-          margin-left: 5px;
           min-width: 12px;
+          margin-left: 5px;
 
           & > * {
             margin: 0;
@@ -413,8 +415,8 @@ main {
 
   &-main {
     display: flex;
-    flex-flow: column nowrap;
     flex: 1;
+    flex-flow: column nowrap;
     overflow-y: auto;
     will-change: scroll-position;
   }
@@ -431,7 +433,7 @@ main {
   }
 }
 
-/*=========== SORT =============*/
+/* =========== SORT ============= */
 
 .sortable-header {
   &-cell {
@@ -441,11 +443,11 @@ main {
     cursor: pointer;
 
     .sort-icon {
-      display: none;
       position: absolute;
-      right: 2px;
       top: auto;
+      right: 2px;
       bottom: auto;
+      display: none;
     }
 
     &_active {
@@ -475,7 +477,7 @@ main {
   }
 }
 
-/*=========== STATE =============*/
+/* =========== STATE ============= */
 
 [class^='state-active'],
 [class^='state-completed'],
@@ -546,7 +548,7 @@ main {
   @include statusState($topaz, false);
 }
 
-/*=========== ERROR =============*/
+/* =========== ERROR ============= */
 
 .error-container {
   margin: auto;
@@ -563,7 +565,7 @@ main {
   }
 }
 
-/*=========== ACTIONS =============*/
+/* =========== ACTIONS ============= */
 
 .actions {
   display: flex;
@@ -589,7 +591,7 @@ main {
   }
 }
 
-/*=========== INPUT =============*/
+/* =========== INPUT ============= */
 
 .auto-resizable-input {
   position: relative;
@@ -621,7 +623,7 @@ main {
   }
 }
 
-/*=========== COMBOBOX =============*/
+/* =========== COMBOBOX ============= */
 
 .combobox {
   .path-type {
@@ -647,7 +649,7 @@ main {
   }
 }
 
-/*=========== GRAPH =============*/
+/* =========== GRAPH ============= */
 
 .graph-container {
   position: relative;
@@ -686,7 +688,7 @@ main {
   }
 }
 
-/*=========== FORM =============*/
+/* =========== FORM ============= */
 
 .form {
   color: $primary;
@@ -767,15 +769,52 @@ main {
 
     &-table-title {
       display: block;
-      font-weight: 500;
-      font-size: 20px;
       margin-bottom: 10px;
       padding-top: 10px;
+      font-weight: 500;
+      font-size: 20px;
 
       .tip-container {
         margin-left: 5px;
       }
     }
+  }
+}
+
+/*=========== CHART TOOLTIP =============*/
+
+div[id^='chartjs-tooltip'] {
+  position: fixed;
+  z-index: 5;
+  width: auto;
+  padding: 5px;
+  color: $white;
+  background-color: $primary;
+  border-radius: 4px;
+  transform: translate(-50%, calc(-100% - 10px));
+  opacity: 1;
+  transition: all 0.1s linear;
+  pointer-events: none;
+
+  &.hidden {
+    opacity: 0;
+  }
+
+  &::after {
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    margin-left: -5px;
+    border: 5px solid transparent;
+    border-top-color: $primary;
+    content: "";
+    pointer-events: none;
+  }
+
+  td {
+    white-space: nowrap;
   }
 }
 
@@ -827,7 +866,29 @@ main {
   }
 }
 
-/*=========== GENERAL =============*/
+/* =========== NOTIFICATION BUTTON ============= */
+
+.notification__button-close {
+  position: absolute;
+  top: -9px;
+  right: -9px;
+  display: flex;
+  align-items: center;
+  width: 18px;
+  height: 18px;
+  padding: 2px;
+  background-color: $darkPurple;
+  border: 1px solid $white;
+  border-radius: 50%;
+
+  & svg {
+    & > * {
+      fill: $white;
+    }
+  }
+}
+
+/* =========== GENERAL ============= */
 
 .visibility-hidden {
   visibility: hidden;

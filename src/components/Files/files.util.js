@@ -111,7 +111,7 @@ export const filters = [
   { type: TAG_FILTER, label: 'Version tag:' },
   { type: NAME_FILTER, label: 'Name:' },
   { type: LABELS_FILTER, label: 'Labels:' },
-  { type: ITERATIONS_FILTER, label: 'Show best iteration only' }
+  { type: ITERATIONS_FILTER, label: 'Show best iteration only:' }
 ]
 export const registerArtifactTitle = 'Register artifact'
 

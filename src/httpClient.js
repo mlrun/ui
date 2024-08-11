@@ -93,12 +93,12 @@ let requestTimeouts = {}
 let largeResponsePopUpIsOpen = false
 
 const requestLargeDataOnFulfill = config => {
-  if (config?.ui?.setLargeRequestErrorMessage) {
+  if (config?.ui?.setRequestErrorMessage) {
     const [signal, timeoutId] = getAbortSignal(
       config.ui?.controller,
       abortEvent => {
         if (abortEvent.target.reason === LARGE_REQUEST_CANCELED) {
-          showLargeResponsePopUp(config.ui.setLargeRequestErrorMessage)
+          showLargeResponsePopUp(config.ui.setRequestErrorMessage)
         }
       },
       CANCEL_REQUEST_TIMEOUT
@@ -129,11 +129,11 @@ const responseFulfillInterceptor = response => {
     delete requestTimeouts[response.config.ui.requestId]
 
     if (isLargeResponse) {
-      showLargeResponsePopUp(response.config.ui.setLargeRequestErrorMessage)
+      showLargeResponsePopUp(response.config.ui.setRequestErrorMessage)
 
       throw new Error(LARGE_REQUEST_CANCELED)
     } else {
-      response.config.ui.setLargeRequestErrorMessage('')
+      response.config.ui.setRequestErrorMessage('')
     }
   }
 
@@ -146,10 +146,16 @@ const responseRejectInterceptor = error => {
   }
 
   if (error.config?.method === 'get') {
-    if (mlrunUnhealthyErrors.includes(error.response?.status) && consecutiveErrorsCount < MAX_CONSECUTIVE_ERRORS_COUNT) {
+    if (
+      mlrunUnhealthyErrors.includes(error.response?.status) &&
+      consecutiveErrorsCount < MAX_CONSECUTIVE_ERRORS_COUNT
+    ) {
       consecutiveErrorsCount++
 
-      if (consecutiveErrorsCount === MAX_CONSECUTIVE_ERRORS_COUNT && window.location.pathname !== `/${PROJECTS_PAGE_PATH}`) {
+      if (
+        consecutiveErrorsCount === MAX_CONSECUTIVE_ERRORS_COUNT &&
+        window.location.pathname !== `/${PROJECTS_PAGE_PATH}`
+      ) {
         window.location.href = '/projects'
       }
     }
@@ -157,7 +163,6 @@ const responseRejectInterceptor = error => {
 
   return Promise.reject(error)
 }
-
 
 // Request interceptors
 mainHttpClient.interceptors.request.use(requestLargeDataOnFulfill, requestLargeDataOnReject)
@@ -167,12 +172,12 @@ mainHttpClientV2.interceptors.request.use(requestLargeDataOnFulfill, requestLarg
 mainHttpClient.interceptors.response.use(responseFulfillInterceptor, responseRejectInterceptor)
 mainHttpClientV2.interceptors.response.use(responseFulfillInterceptor, responseRejectInterceptor)
 
-export const showLargeResponsePopUp = setLargeRequestErrorMessage => {
+export const showLargeResponsePopUp = setRequestErrorMessage => {
   if (!largeResponsePopUpIsOpen) {
     const errorMessage =
       'The query result is too large to display. Add a filter (or narrow it) to retrieve fewer results.'
 
-    setLargeRequestErrorMessage(errorMessage)
+    setRequestErrorMessage(errorMessage)
     largeResponsePopUpIsOpen = true
 
     openPopUp(ConfirmDialog, {

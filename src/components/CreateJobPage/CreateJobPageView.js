@@ -41,17 +41,18 @@ import './createJobPage.scss'
 
 const CreateJobPageView = ({
   filterByName,
-  filterMatches,
   filteredFunctions,
   filteredTemplates,
+  filterMatches,
   functions,
   handleSearchOnChange,
   handleSelectGroupFunctions,
   loading,
   params,
   projects,
-  selectProject,
+  requestErrorMessage,
   selectedProject,
+  selectProject,
   setFilterMatches,
   templates
 }) => (
@@ -134,7 +135,7 @@ const CreateJobPageView = ({
             {(filterByName.length > 0 &&
               (filterMatches.length === 0 || isEveryObjectValueEmpty(filteredTemplates))) ||
             templates.length === 0 ? (
-              <NoData />
+              <NoData message={requestErrorMessage} />
             ) : (
               Object.entries(templates).map(category => {
                 const header = generateCategoryHeader(category[0])
@@ -174,16 +175,17 @@ const CreateJobPageView = ({
 
 CreateJobPageView.propTypes = {
   filterByName: PropTypes.string.isRequired,
-  filterMatches: PropTypes.arrayOf(PropTypes.string).isRequired,
   filteredFunctions: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
   filteredTemplates: PropTypes.shape({}).isRequired,
+  filterMatches: PropTypes.arrayOf(PropTypes.string).isRequired,
   functions: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
   handleSearchOnChange: PropTypes.func.isRequired,
   handleSelectGroupFunctions: PropTypes.func.isRequired,
   params: PropTypes.shape({}).isRequired,
   projects: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
-  selectProject: PropTypes.func.isRequired,
+  requestErrorMessage: PropTypes.string.isRequired,
   selectedProject: PropTypes.string.isRequired,
+  selectProject: PropTypes.func.isRequired,
   setFilterMatches: PropTypes.func.isRequired,
   templates: PropTypes.shape({}).isRequired
 }

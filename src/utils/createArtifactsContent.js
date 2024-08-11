@@ -169,7 +169,13 @@ export const createModelsRowData = (
       headerId: 'producer',
       headerLabel: 'Producer',
       value: artifact.producer?.name || '',
-      template: <TableProducerCell bodyCellClassName="table-cell-1" id="producer" producer={artifact.producer} />,
+      template: (
+        <TableProducerCell
+          bodyCellClassName="table-cell-1"
+          id="producer"
+          producer={artifact.producer}
+        />
+      ),
       className: 'table-cell-1',
       type: 'producer'
     },
@@ -335,7 +341,11 @@ export const createFilesRowData = (artifact, project, frontendSpec, showExpandBu
         headerLabel: 'Producer',
         value: artifact.producer?.name || '',
         template: (
-          <TableProducerCell bodyCellClassName="table-cell-1" id="producer" producer={artifact.producer} />
+          <TableProducerCell
+            bodyCellClassName="table-cell-1"
+            id="producer"
+            producer={artifact.producer}
+          />
         ),
         className: 'table-cell-1',
         type: 'producer'
@@ -371,25 +381,38 @@ const getDriftStatusData = driftStatus => {
     case '0':
     case 'NO_DRIFT':
       return {
-        value: <SeverityOk />,
-        tooltip: 'No drift'
+        value: (
+          <span data-testid="no-drift">
+            <SeverityOk />
+          </span>
+        ),
+        tooltip: 'No drift',
+        testId: 'no-drift'
       }
     case '1':
     case 'POSSIBLE_DRIFT':
       return {
-        value: <SeverityWarning />,
+        value: (
+          <span data-testid="possible-drift">
+            <SeverityWarning />
+          </span>
+        ),
         tooltip: 'Possible drift'
       }
     case '2':
     case 'DRIFT_DETECTED':
       return {
-        value: <SeverityError />,
+        value: (
+          <span data-testid="drift-detected">
+            <SeverityError />
+          </span>
+        ),
         tooltip: 'Drift detected'
       }
     case '-1':
     default:
       return {
-        value: 'N/A',
+        value: <span data-testid="no-status-drift">N/A</span>,
         tooltip: 'N/A'
       }
   }
@@ -564,7 +587,11 @@ export const createDatasetsRowData = (artifact, project, frontendSpec, showExpan
         headerLabel: 'Producer',
         value: artifact.producer?.name || '',
         template: (
-          <TableProducerCell bodyCellClassName="table-cell-1"  id="producer" producer={artifact.producer} />
+          <TableProducerCell
+            bodyCellClassName="table-cell-1"
+            id="producer"
+            producer={artifact.producer}
+          />
         ),
         className: 'table-cell-1',
         type: 'producer'
