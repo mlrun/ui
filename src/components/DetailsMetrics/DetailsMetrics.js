@@ -27,6 +27,7 @@ import DatePicker from '../../common/DatePicker/DatePicker'
 import MetricsSelector from '../../elements/MetricsSelector/MetricsSelector'
 import StatsCard from '../../common/StatsCard/StatsCard'
 import ApplicationMetricCard from './ApplicationMetricCard'
+import NoData from '../../common/NoData/NoData'
 
 import { REQUEST_CANCELED } from '../../constants'
 import detailsActions from '../../actions/details'
@@ -57,6 +58,7 @@ const DetailsMetrics = ({ selectedItem }) => {
   const [selectedDate, setSelectedDate] = useState('')
   const [previousTotalInvocation, setPreviousTotalInvocation] = useState(0)
   const [isInvocationCardExpanded, setIsInvocationCardExpanded] = useState(true)
+  const [requestErrorMessage, setRequestErrorMessage] = useState('')
   const enableScrollRef = useRef(true)
   const invocationBodyCardRef = useRef(null)
   const metricsContainerRef = useRef(null)
@@ -206,7 +208,8 @@ const DetailsMetrics = ({ selectedItem }) => {
             selectedItemProject,
             selectedItemUid,
             selectedMetricsParams,
-            metricsValuesAbortController.current.signal
+            metricsValuesAbortController.current,
+            setRequestErrorMessage
           )
         ),
         dispatch(
@@ -214,7 +217,8 @@ const DetailsMetrics = ({ selectedItem }) => {
             selectedItemProject,
             selectedItemUid,
             preInvocationMetricParams,
-            metricsValuesAbortController.current.signal
+            metricsValuesAbortController.current,
+            setRequestErrorMessage
           )
         )
       ]).then(([metrics, previousInvocation]) => {
@@ -325,10 +329,12 @@ const DetailsMetrics = ({ selectedItem }) => {
 
       {generatedMetrics.length === 0 ? (
         !detailsStore.loadingCounter ? (
-          <StatsCard className="metrics__empty-select">
-            <MetricsIcon />
-            <div>Choose metrics to view endpoint’s data</div>
-          </StatsCard>
+          requestErrorMessage ?
+            <NoData message={requestErrorMessage} /> :
+            <StatsCard className="metrics__empty-select">
+              <MetricsIcon />
+              <div>Choose metrics to view endpoint’s data</div>
+            </StatsCard>
         ) : null
       ) : (
         <div ref={metricsContainerRef} className="metrics">
