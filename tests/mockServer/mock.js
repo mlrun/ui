@@ -29,6 +29,7 @@ import {
   noop,
   get,
   random,
+  isArray,
   isFunction,
   clamp,
   find,
@@ -71,7 +72,12 @@ import iguazioProjectsRelations from './data/iguazioProjectsRelations.json'
 import nuclioFunctions from './data/nuclioFunctions.json'
 import nuclioAPIGateways from './data/nuclioAPIGateways.json'
 import nuclioStreams from './data/nuclioStreams.json'
-import { updateRuns, updatePipelines, updatePipelineIDs, updateSchedules } from './dateSynchronization.js'
+import {
+  updateRuns,
+  updatePipelines,
+  updatePipelineIDs,
+  updateSchedules
+} from './dateSynchronization.js'
 
 //updating values in files with synthetic data
 updateRuns(runs)
@@ -784,30 +790,39 @@ function getFunctionTemplate(req, res) {
 }
 
 function getProjectsSchedules(req, res) {
-  //get schedules for Projects Monitoring page
-  if (req.params['project'] === '*') {
-    let collectedSchedules = schedules.schedules
+  let collectedSchedules = schedules.schedules
 
-    res.send({ schedules: collectedSchedules })
+  if (req.params['project'] !== '*') {
+    collectedSchedules = schedules.schedules.filter(
+      schedule => schedule.scheduled_object.task.metadata.project === req.params['project']
+    )
   }
-  //get schedules for Jobs and workflows page Schedules tab
-  let collectedSchedules = schedules.schedules.filter(
-    schedule => schedule.scheduled_object.task.metadata.project === req.params['project']
-  )
 
   if (req.query['name']) {
     collectedSchedules = collectedSchedules.filter(schedule =>
       schedule.name.includes(req.query['name'].slice(1))
     )
   }
-  if (req.query['labels']) {
-    let [key, value] = req.query['labels'].split('=')
-    collectedSchedules = collectedSchedules.filter(schedule => {
-      return schedule.labels[key]
-    })
-    if (req.query['labels'].includes('=')) {
-      collectedSchedules = collectedSchedules.filter(schedule => schedule.labels[key] === value)
+
+  if (req.query['label']) {
+    let queryLabels = req.query['label']
+
+    if (!isArray(queryLabels)) {
+      queryLabels = [queryLabels]
     }
+
+    collectedSchedules = collectedSchedules.filter(schedule => {
+      return queryLabels.every(queryLabel => {
+        const [queryLabelKey, queryLabelValue] = queryLabel.split('=')
+        let jobHasLabel = queryLabelKey in schedule.labels
+
+        if (queryLabelValue) {
+          jobHasLabel = schedule.labels[queryLabelKey] === queryLabelValue
+        }
+
+        return jobHasLabel
+      })
+    })
   }
 
   res.send({ schedules: collectedSchedules })
@@ -1248,7 +1263,7 @@ function getPipelines(req, res) {
     const pipelinesRun = pipelineIDs.map(pipeline => pipeline.run)
     const filter = JSON.parse(req.query.filter)
     const predicates = filter.predicates
-  
+
     if (!predicates.length) {
       res.send({
         runs: pipelinesRun,
@@ -1269,14 +1284,19 @@ function getPipelines(req, res) {
 
     const collectedMonitoringPipelines = pipelinesRun.filter(pipeline => {
       const pipelineCreatedAt = new Date(pipeline.created_at)
-      const timestampMatch = !queryTimestampValue || pipelineCreatedAt >= new Date(queryTimestampValue)
-      const stateMatch = queryStateValue ? Array.isArray(queryStateValue) ? queryStateValue.includes(pipeline.status) : pipeline.status === queryStateValue : true
-    
+      const timestampMatch =
+        !queryTimestampValue || pipelineCreatedAt >= new Date(queryTimestampValue)
+      const stateMatch = queryStateValue
+        ? Array.isArray(queryStateValue)
+          ? queryStateValue.includes(pipeline.status)
+          : pipeline.status === queryStateValue
+        : true
+
       return timestampMatch && stateMatch
     })
-      
-    res.send({ 
-      runs: collectedMonitoringPipelines, 
+
+    res.send({
+      runs: collectedMonitoringPipelines,
       total_size: collectedMonitoringPipelines.length,
       next_page_token: null
     })
