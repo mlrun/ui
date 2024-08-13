@@ -48,31 +48,36 @@ import {
   ANY_TIME_DATE_OPTION,
   getTimeFrameWarningMsg,
   CUSTOM_RANGE_DATE_OPTION,
-  roundSeconds,
+  roundSeconds
 } from '../../utils/datePicker.util'
 import { initialState, datePickerActions, datePickerReducer } from './datePickerReducer'
 import { DATE_PICKER_TIME_FRAME_LIMITS } from '../../types'
 
+const defaultProps = {
+  date: new Date(),
+  dateTo: new Date()
+}
+
 const DatePicker = ({
-  className,
-  date,
-  dateTo,
-  disabled,
-  externalInvalid,
-  externalInvalidMessage,
-  hasFutureOptions,
-  label,
-  onBlur,
+  className = '',
+  date = defaultProps.date,
+  dateTo = defaultProps.dateTo,
+  disabled = false,
+  externalInvalid = null,
+  externalInvalidMessage = 'This field is invalid',
+  hasFutureOptions = false,
+  label = 'Date',
+  onBlur = () => {},
   onChange,
-  required,
-  requiredText,
-  selectedOptionId,
-  setExternalInvalid,
-  splitCharacter,
-  timeFrameLimit,
-  tip,
-  type,
-  withLabels
+  required = false,
+  requiredText = 'This field is required',
+  selectedOptionId = '',
+  setExternalInvalid = () => {},
+  splitCharacter = '/',
+  timeFrameLimit = Infinity,
+  tip = '',
+  type = 'date',
+  withLabels = false
 }) => {
   const [datePickerState, datePickerDispatch] = useReducer(datePickerReducer, initialState)
   const [invalidMessage, setInvalidMessage] = useState('')
@@ -366,9 +371,7 @@ const DatePicker = ({
       if (!isValueEmpty) {
         dates = event.target.value
           .split(datesDivider)
-          .map(
-            (date, index) => roundSeconds(date, index > 0)
-          )
+          .map((date, index) => roundSeconds(date, index > 0))
         const { isTimeRangeInvalid, timeRangeInvalidMessage } = validateTimeRange(dates)
 
         if (isTimeRangeInvalid) {
@@ -544,26 +547,6 @@ const DatePicker = ({
       withLabels={withLabels}
     />
   )
-}
-DatePicker.defaultProps = {
-  className: '',
-  date: new Date(),
-  dateTo: new Date(),
-  disabled: false,
-  externalInvalid: null,
-  externalInvalidMessage: 'This field is invalid',
-  hasFutureOptions: false,
-  label: 'Date',
-  onBlur: () => {},
-  required: false,
-  requiredText: 'This field is required',
-  selectedOptionId: '',
-  setExternalInvalid: () => {},
-  splitCharacter: '/',
-  timeFrameLimit: Infinity,
-  tip: '',
-  type: 'date',
-  withLabels: false
 }
 
 DatePicker.propTypes = {

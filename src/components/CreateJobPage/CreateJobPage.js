@@ -53,6 +53,7 @@ const CreateJobPage = ({
   const [templatesCategories, setTemplatesCategories] = useState(functionsStore.templatesCatalog)
   const [templates, setTemplates] = useState([])
   const [showPanel, setShowPanel] = useState(false)
+  const [requestErrorMessage, setRequestErrorMessage] = useState('')
 
   useEffect(() => {
     if (!selectedProject) {
@@ -69,7 +70,7 @@ const CreateJobPage = ({
   }, [fetchProjectsNames, params.projectName, projects.length])
 
   useEffect(() => {
-    fetchFunctions(selectedProject).then(functions => {
+    fetchFunctions(selectedProject, {}, {}, setRequestErrorMessage).then(functions => {
       if (functions) {
         const filteredFunctions = functions.filter(func => includes(FUNCTION_RUN_KINDS, func.kind))
 
@@ -91,7 +92,6 @@ const CreateJobPage = ({
         return setFunctions(groupedFunctions)
       }
     })
-
     if (isEmpty(functionsStore.templatesCatalog)) {
       fetchFunctionsTemplates().then(templatesObject => {
         setTemplatesCategories(templatesObject.templatesCategories)
@@ -166,19 +166,20 @@ const CreateJobPage = ({
     <>
       <CreateJobPageView
         filterByName={filterByName}
-        filterMatches={filterMatches}
         filteredFunctions={filteredFunctions}
         filteredTemplates={filteredTemplates}
+        filterMatches={filterMatches}
         functions={filteredFunctions.length > 0 ? filteredFunctions : functions}
         handleSearchOnChange={handleSearchOnChange}
         handleSelectGroupFunctions={handleSelectGroupFunctions}
         loading={functionsStore.loading || functionsStore.funcLoading}
         params={params}
         projects={projects}
-        selectProject={selectProject}
         selectedProject={selectedProject}
+        selectProject={selectProject}
         setFilterMatches={setFilterMatches}
         templates={!isEmpty(filteredTemplates) ? filteredTemplates : templatesCategories}
+        requestErrorMessage={requestErrorMessage}
       />
       {showPanel && (
         <JobsPanel

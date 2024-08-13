@@ -356,6 +356,13 @@ export const getTimeFrameWarningMsg = (timeFrameLimit) => {
   return `Maximum time range is ${mappedTime[timeFrameLimit]}`
 }
 
+export const getDatePickerFilterValue = (options, optionId, isRange) => {
+  return {
+    value: options.find(option => option.id === optionId).handler(isRange),
+    isPredefined: true,
+    initialSelectedOptionId: optionId
+  }
+}
 
 export const roundSeconds = (date = new Date(), top = false) => {
   const seconds = top ? 59 : 0

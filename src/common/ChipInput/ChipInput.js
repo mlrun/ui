@@ -30,13 +30,20 @@ import './chipInput.scss'
 
 const ChipInput = ({
   addChip,
-  chipOptions,
+  chipOptions = {
+    background: 'grey',
+    boldValue: false,
+    borderRadius: 'secondary',
+    borderColor: 'transparent',
+    density: 'dense',
+    font: 'primary'
+  },
   className,
-  elements,
-  isDeleteMode,
+  elements = [],
+  isDeleteMode = true,
   onInputChange,
-  placeholder,
-  removeChip,
+  placeholder = '',
+  removeChip = () => {},
   suggestionList
 }) => {
   const [typedValue, setTypedValue] = useState('')
@@ -166,21 +173,6 @@ const ChipInput = ({
       )}
     </div>
   )
-}
-
-ChipInput.defaultProps = {
-  chipOptions: {
-    background: 'grey',
-    boldValue: false,
-    borderRadius: 'secondary',
-    borderColor: 'transparent',
-    density: 'dense',
-    font: 'primary'
-  },
-  elements: [],
-  isDeleteMode: true,
-  placeholder: '',
-  removeChip: () => {}
 }
 
 ChipInput.propTypes = {

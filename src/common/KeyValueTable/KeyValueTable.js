@@ -26,23 +26,23 @@ import KeyValueTableView from './KeyValueTableView'
 const KeyValueTable = ({
   addNewItem,
   addNewItemLabel,
-  className,
+  className = '',
   content,
   deleteItem,
-  defaultKeyValue,
-  disabled,
-  editItem,
+  defaultKeyValue = '',
+  disabled = false,
+  editItem = () => {},
   isKeyEditable,
-  isKeyRequired,
-  isValueRequired,
+  isKeyRequired = false,
+  isValueRequired = false,
   keyHeader,
-  keyLabel,
-  keyOptions,
-  keyType,
+  keyLabel = 'Key',
+  keyOptions = [],
+  keyType = 'input',
   valueHeader,
-  valueLabel,
-  valueType,
-  withEditMode
+  valueLabel = 'Value',
+  valueType = 'text',
+  withEditMode = false
 }) => {
   const [isAddNewItem, setIsAddNewItem] = useState(false)
   const [isEditMode, setEditMode] = useState(false)
@@ -96,12 +96,7 @@ const KeyValueTable = ({
         }))
       }
     } else if (isKeyRequired && isValueRequired) {
-      if (
-        key.length > 0 &&
-        validation.isKeyValid &&
-        value.length > 0 &&
-        validation.isValueValid
-      ) {
+      if (key.length > 0 && validation.isKeyValid && value.length > 0 && validation.isValueValid) {
         save()
       } else {
         setValidation(state => ({
@@ -214,21 +209,6 @@ const KeyValueTable = ({
       withEditMode={withEditMode}
     />
   )
-}
-
-KeyValueTable.defaultProps = {
-  className: '',
-  defaultKeyValue: '',
-  disabled: false,
-  editItem: () => {},
-  isKeyRequired: false,
-  isValueRequired: false,
-  keyLabel: 'Key',
-  keyOptions: [],
-  keyType: 'input',
-  valueLabel: 'Value',
-  valueType: 'text',
-  withEditMode: false
 }
 
 KeyValueTable.propTypes = {

@@ -71,10 +71,13 @@ import iguazioProjectsRelations from './data/iguazioProjectsRelations.json'
 import nuclioFunctions from './data/nuclioFunctions.json'
 import nuclioAPIGateways from './data/nuclioAPIGateways.json'
 import nuclioStreams from './data/nuclioStreams.json'
-import { updateRuns } from './dateSynchronization.js'
+import { updateRuns, updatePipelines, updatePipelineIDs, updateSchedules } from './dateSynchronization.js'
 
 //updating values in files with synthetic data
 updateRuns(runs)
+updatePipelines(pipelines)
+updatePipelineIDs(pipelineIDs)
+updateSchedules(schedules)
 
 // Here we are configuring express to use body-parser as middle-ware.
 const app = express()
@@ -1242,28 +1245,38 @@ function deleteProjectsFeatureVectors (req, res) {
 function getPipelines (req, res) {
   //get pipelines for Projects Monitoring page
   if (req.params['project'] === '*') {
-    let collectedMonitoringPipelines = pipelineIDs.map(pipeline => {
-      return pipeline.run
-    })
-    if (JSON.parse(req.query.filter).predicates.length >= 1) {
-      if (JSON.parse(req.query.filter).predicates[0]) {
-        collectedMonitoringPipelines = collectedMonitoringPipelines.filter(
-          pipeline =>
-            Date.parse(pipeline.created_at) >=
-            Date.parse(JSON.parse(req.query.filter).predicates[0].timestamp_value) //start time from
-        )
-      }
-      if (JSON.parse(req.query.filter).predicates[1]) {
-        collectedMonitoringPipelines = collectedMonitoringPipelines.filter(
-          pipeline =>
-            Date.parse(pipeline.created_at) <=
-            Date.parse(JSON.parse(req.query.filter).predicates[1].timestamp_value) //start time to
-        )
-      }
+    const pipelinesRun = pipelineIDs.map(pipeline => pipeline.run)
+    const filter = JSON.parse(req.query.filter)
+    const predicates = filter.predicates
+  
+    if (!predicates.length) {
+      res.send({
+        runs: pipelinesRun,
+        total_size: pipelinesRun.length,
+        next_page_token: null
+      })
     }
 
-    res.send({
-      runs: collectedMonitoringPipelines,
+    let queryTimestampValue, queryStateValue
+
+    if (predicates.length === 1) {
+      queryTimestampValue = predicates[0].timestamp_value
+      queryStateValue = predicates[0].string_values ? predicates[0].string_values.values : null
+    } else {
+      queryTimestampValue = predicates[1].timestamp_value
+      queryStateValue = predicates[0].string_values.values
+    }
+
+    const collectedMonitoringPipelines = pipelinesRun.filter(pipeline => {
+      const pipelineCreatedAt = new Date(pipeline.created_at)
+      const timestampMatch = !queryTimestampValue || pipelineCreatedAt >= new Date(queryTimestampValue)
+      const stateMatch = queryStateValue ? Array.isArray(queryStateValue) ? queryStateValue.includes(pipeline.status) : pipeline.status === queryStateValue : true
+    
+      return timestampMatch && stateMatch
+    })
+      
+    res.send({ 
+      runs: collectedMonitoringPipelines, 
       total_size: collectedMonitoringPipelines.length,
       next_page_token: null
     })
@@ -1299,13 +1312,12 @@ function getPipeline (req, res) {
 
 function getFuncs (req, res) {
   const dt = parseInt(Date.now())
-
   const collectedFuncsByPrjTime = funcs.funcs
     .filter(func => func.metadata.project === req.query.project)
     .filter(func => Date.parse(func.metadata.updated) > dt)
-
   let collectedFuncs = []
   const newArray = cloneDeep(funcs.funcs)
+
   if (collectedFuncsByPrjTime.length) {
     collectedFuncs = newArray.filter(func => func.metadata.project === req.query.project)
 
@@ -1317,14 +1329,11 @@ function getFuncs (req, res) {
   } else if (req.query['hash_key']) {
     collectedFuncs = funcs.funcs.filter(func => func.metadata.hash === req.query.hash_key)
   } else {
-    collectedFuncs = funcs.funcs
+    funcs.funcs
       .filter(func => func.metadata.project === req.params['project'])
       .filter(func => func.metadata.tag === 'latest')
       .filter(func => func.status?.state === 'deploying')
-
-    collectedFuncs.forEach(func => {
-      func.status.state = 'ready'
-    })
+      .forEach(func => (func.status.state = 'ready'))
 
     collectedFuncs = funcs.funcs.filter(func => func.metadata.project === req.params['project'])
   }
@@ -1335,6 +1344,28 @@ function getFuncs (req, res) {
         return func.metadata.name.includes(req.query['name'].slice(1))
       } else {
         return func.metadata.name === func.query['name']
+      }
+    })
+  }
+
+  if (req.query['since']) {
+    collectedFuncs = collectedFuncs.filter(func => {
+      return new Date(func.metadata.updated) > new Date(req.query['since'])
+    })
+  }
+
+  if (req.query['until']) {
+    collectedFuncs = collectedFuncs.filter(func => {
+      return new Date(func.metadata.updated) < new Date(req.query['until'])
+    })
+  }
+
+  if (req.query['tag']) {
+    collectedFuncs = collectedFuncs.filter(func => {
+      if (req.query['tag'] === '*') {
+        return Boolean(func.metadata.tag)
+      } else {
+        return func.metadata.tag === req.query['tag']
       }
     })
   }
@@ -1353,10 +1384,7 @@ function getFuncs (req, res) {
         'priority_class_name'
       ].map(fieldName => `spec.${fieldName}`)
 
-      return pick(
-        func,
-        ['kind', 'metadata', 'status', ...specFields]
-      )
+      return pick(func, ['kind', 'metadata', 'status', ...specFields])
     })
   }
 
@@ -1442,7 +1470,7 @@ function deleteFunc (req, res) {
   }
 }
 
-function getNuclioLogs (req, res) {
+function getNuclioLogs(req, res) {
   sendLogsData(
     {
       project: req.params.project,
@@ -1454,7 +1482,7 @@ function getNuclioLogs (req, res) {
   )
 }
 
-function getBuildStatus (req, res) {
+function getBuildStatus(req, res) {
   sendLogsData(
     {
       project: req.query.name,
@@ -1466,7 +1494,7 @@ function getBuildStatus (req, res) {
   )
 }
 
-function sendLogsData (data, res) {
+function sendLogsData(data, res) {
   const dt = parseInt(Date.now())
 
   const collectedFunc = funcs.funcs
@@ -1785,15 +1813,22 @@ function deleteTags (req, res) {
   res.send()
 }
 
-function getArtifact (req, res) {
+function getArtifact(req, res) {
   let resData
   let requestedArtifact = artifacts.artifacts.find(
     artifact =>
-      (artifact.metadata?.project === req.params.project || artifact.project === req.params.project) &&
+      (artifact.metadata?.project === req.params.project ||
+        artifact.project === req.params.project) &&
       (artifact.spec?.db_key === req.params.key || artifact?.db_key === req.params.key) &&
-      (isNil(req.query.iter) || +req.query.iter === artifact?.iter || +req.query.iter === artifact.metadata?.iter) &&
-      (isNil(req.query.tag) || artifact.metadata?.tag === req.query.tag || artifact?.tag === req.query.tag) &&
-      (isNil(req.query.tree) || artifact.metadata?.tree === req.query.tree || artifact?.tree === req.query.tree)
+      (isNil(req.query.iter) ||
+        +req.query.iter === artifact?.iter ||
+        +req.query.iter === artifact.metadata?.iter) &&
+      (isNil(req.query.tag) ||
+        artifact.metadata?.tag === req.query.tag ||
+        artifact?.tag === req.query.tag) &&
+      (isNil(req.query.tree) ||
+        artifact.metadata?.tree === req.query.tree ||
+        artifact?.tree === req.query.tree)
   )
 
   if (requestedArtifact) {
@@ -1810,7 +1845,7 @@ function getArtifact (req, res) {
   res.send(resData)
 }
 
-function postArtifact (req, res) {
+function postArtifact(req, res) {
   const currentDate = new Date()
   const artifactTag = req.body.metadata.tag || 'latest'
   const tagObject = artifactTags.find(

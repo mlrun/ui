@@ -30,7 +30,13 @@ import { ReactComponent as Arrow } from 'igz-controls/images/arrow.svg'
 
 import './tabsSlider.scss'
 
-const TabsSlider = ({ initialTab, onClick, skipLink, sliderStyle, tabsList }) => {
+const TabsSlider = ({
+  initialTab = '',
+  onClick = () => {},
+  skipLink = false,
+  sliderStyle = SLIDER_STYLE_1,
+  tabsList
+}) => {
   const [selectedTab, setSelectedTab] = useState(initialTab)
   const [arrowsAreHidden, setArrowsAreHidden] = useState(true)
   const [scrolledWidth, setScrolledWidth] = useState(0)
@@ -211,13 +217,6 @@ const TabsSlider = ({ initialTab, onClick, skipLink, sliderStyle, tabsList }) =>
       </div>
     </div>
   )
-}
-
-TabsSlider.defaultProps = {
-  initialTab: '',
-  onClick: () => {},
-  skipLink: false,
-  sliderStyle: SLIDER_STYLE_1
 }
 
 TabsSlider.propTypes = {

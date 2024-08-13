@@ -45,8 +45,8 @@ const FunctionsPanelView = ({
   checkValidation,
   closePanel,
   confirmData,
-  defaultData,
-  error,
+  defaultData = {},
+  error = '',
   formState,
   frontendSpec,
   functionsStore,
@@ -92,7 +92,11 @@ const FunctionsPanelView = ({
               iconClassName="new-item-side-panel__expand-icon"
               openByDefault
             >
-              <FunctionsPanelGeneral defaultData={defaultData} formState={formState} frontendSpec={frontendSpec} />
+              <FunctionsPanelGeneral
+                defaultData={defaultData}
+                formState={formState}
+                frontendSpec={frontendSpec}
+              />
             </Accordion>
             <Accordion
               accordionClassName="new-item-side-panel__accordion"
@@ -197,11 +201,6 @@ const FunctionsPanelView = ({
       </div>
     </>
   )
-}
-
-FunctionsPanelView.defaultProps = {
-  defaultData: {},
-  error: ''
 }
 
 FunctionsPanelView.propTypes = {

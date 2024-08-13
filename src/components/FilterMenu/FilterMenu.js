@@ -48,8 +48,6 @@ import {
   PROJECT_FILTER,
   REQUEST_CANCELED,
   SHOW_ITERATIONS,
-  SHOW_UNTAGGED_FILTER,
-  SHOW_UNTAGGED_ITEMS,
   SORT_BY,
   STATUS_FILTER,
   TAG_FILTER
@@ -304,26 +302,6 @@ const FilterMenu = ({
     [applyChanges, changes, dispatch, filtersStore]
   )
 
-  const handleShowUntagged = useCallback(
-    async showUntagged => {
-      const showUntaggedValue = filtersStore.showUntagged === showUntagged ? '' : showUntagged
-      const filtersHelperResult = await filtersHelper(changes, dispatch)
-
-      if (filtersHelperResult) {
-        dispatch(
-          setFilters({
-            showUntagged: showUntaggedValue
-          })
-        )
-        applyChanges({
-          ...filtersStore,
-          showUntagged: showUntaggedValue
-        })
-      }
-    },
-    [applyChanges, changes, dispatch, filtersStore]
-  )
-
   const handleAutoRefresh = itemId => {
     setAutoRefresh(prevAutoRefresh => (prevAutoRefresh === itemId ? '' : AUTO_REFRESH_ID))
   }
@@ -415,15 +393,6 @@ const FilterMenu = ({
               selectedId={filtersStore.iter}
             />
           )
-        case SHOW_UNTAGGED_FILTER:
-          return (
-            <CheckBox
-              className="filters-checkbox"
-              item={{ label: filter.label, id: SHOW_UNTAGGED_ITEMS }}
-              onChange={handleShowUntagged}
-              selectedId={filtersStore.showUntagged}
-            />
-          )
         case PROJECT_FILTER:
           return (
             <Select
@@ -459,7 +428,6 @@ const FilterMenu = ({
       handleChangeDates,
       handleIter,
       handleSelectOption,
-      handleShowUntagged,
       labels,
       name,
       onBlur,

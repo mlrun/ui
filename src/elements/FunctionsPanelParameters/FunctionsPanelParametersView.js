@@ -41,7 +41,7 @@ const FunctionsPanelParametersView = ({
   handleAddNewParameter,
   newParameter,
   parameters,
-  selectedParameter,
+  selectedParameter = null,
   setNewParameter,
   setSelectedParameter,
   setShowAddNewParameterRow,
@@ -59,7 +59,7 @@ const FunctionsPanelParametersView = ({
     <PanelSection title="Parameters">
       <div className={tableClassNames}>
         <div className="table__header table__row no-hover">
-          {tableHeaders.map((header) => (
+          {tableHeaders.map(header => (
             <div className="table__cell" key={header.id}>
               {header.label}
             </div>
@@ -67,8 +67,7 @@ const FunctionsPanelParametersView = ({
           <div className="table__cell-actions" />
         </div>
         {parameters.map((parameter, index) =>
-          selectedParameter &&
-          selectedParameter.data.name === parameter.data.name ? (
+          selectedParameter && selectedParameter.data.name === parameter.data.name ? (
             <EditableFunctionParameterRow
               handleEdit={editParameter}
               key={index}
@@ -83,17 +82,12 @@ const FunctionsPanelParametersView = ({
               {map(parameter.data, (value, property) => {
                 return (
                   <div className="table__cell" key={property}>
-                    <Tooltip template={<TextTooltipTemplate text={value} />}>
-                      {value}
-                    </Tooltip>
+                    <Tooltip template={<TextTooltipTemplate text={value} />}>{value}</Tooltip>
                   </div>
                 )
               })}
               <div className="table__cell table__cell-actions">
-                <ActionsMenu
-                  dataItem={parameter}
-                  menu={generateActionsMenu(parameter)}
-                />
+                <ActionsMenu dataItem={parameter} menu={generateActionsMenu(parameter)} />
               </div>
             </div>
           )
@@ -110,10 +104,7 @@ const FunctionsPanelParametersView = ({
           />
         ) : (
           <div className="table__row no-hover">
-            <div
-              className="table__cell"
-              onClick={() => setShowAddNewParameterRow(true)}
-            >
+            <div className="table__cell" onClick={() => setShowAddNewParameterRow(true)}>
               <button className="add-input">
                 <Plus />
                 Add parameter
@@ -124,10 +115,6 @@ const FunctionsPanelParametersView = ({
       </div>
     </PanelSection>
   )
-}
-
-FunctionsPanelParametersView.defaultProps = {
-  selectedParameter: null
 }
 
 FunctionsPanelParametersView.propTypes = {

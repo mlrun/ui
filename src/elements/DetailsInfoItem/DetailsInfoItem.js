@@ -26,12 +26,13 @@ import { useSelector } from 'react-redux'
 
 import ChipCell from '../../common/ChipCell/ChipCell'
 import CopyToClipboard from '../../common/CopyToClipboard/CopyToClipboard'
-import Input from '../../common/Input/Input'
-import { Tooltip, TextTooltipTemplate, RoundedIcon } from 'igz-controls/components'
-import { FormInput, FormOnChange, FormTextarea } from 'igz-controls/components'
 import DetailsInfoItemChip from '../DetailsInfoItemChip/DetailsInfoItemChip'
+import Input from '../../common/Input/Input'
+import { FormInput, FormOnChange, FormTextarea } from 'igz-controls/components'
+import { Tooltip, TextTooltipTemplate, RoundedIcon } from 'igz-controls/components'
 
 import { CHIP_OPTIONS } from '../../types'
+import { generateFunctionDetailsLink } from '../../utils/generateFunctionDetailsLink'
 import { getValidationRules } from 'igz-controls/utils/validation.util'
 
 import { ReactComponent as Checkmark } from 'igz-controls/images/checkmark2.svg'
@@ -42,23 +43,26 @@ const DetailsInfoItem = React.forwardRef(
   (
     {
       changesData,
-      chipsClassName,
-      chipsData,
-      currentField,
-      detailsInfoDispatch,
-      detailsInfoState,
-      editableFieldType,
+      chipsClassName = '',
+      chipsData = {
+        chips: [],
+        chipOptions: {},
+        delimiter: null
+      },
+      currentField = '',
+      detailsInfoDispatch = () => {},
+      detailsInfoState = {},
+      editableFieldType = null,
       formState,
-      func,
+      func = '',
       handleDiscardChanges,
-      handleFinishEdit,
-      info,
-      isFieldInEditMode,
-      item,
-      onClick,
-      params,
-      setChangesData,
-      state
+      handleFinishEdit = () => {},
+      info = null,
+      isFieldInEditMode = false,
+      item = {},
+      onClick = null,
+      setChangesData = () => {},
+      state = ''
     },
     ref
   ) => {
@@ -151,14 +155,16 @@ const DetailsInfoItem = React.forwardRef(
       return (
         <div className="details-item__data details-item__data_multiline">
           {(Array.isArray(info) ? info : [info]).map((infoItem, index) => {
-            return <CopyToClipboard
-              key={index}
-              className="details-item__data details-item__copy-to-clipboard"
-              textToCopy={infoItem}
-              tooltipText="Click to copy"
-            >
-              {infoItem}
-            </CopyToClipboard>
+            return (
+              <CopyToClipboard
+                key={index}
+                className="details-item__data details-item__copy-to-clipboard"
+                textToCopy={infoItem}
+                tooltipText="Click to copy"
+              >
+                {infoItem}
+              </CopyToClipboard>
+            )
           })}
         </div>
       )
@@ -206,7 +212,7 @@ const DetailsInfoItem = React.forwardRef(
         </div>
       )
     } else if (!isEmpty(func)) {
-      const [functionProject, functionNameWithHash] = func.split('/')
+      const funcLink = generateFunctionDetailsLink(func)
 
       return (
         <Tooltip
@@ -215,25 +221,35 @@ const DetailsInfoItem = React.forwardRef(
         >
           <Link
             className="link"
-            to={`/projects/${functionProject}/functions/${functionNameWithHash}/overview`}
+            to={funcLink}
           >
             {func}
           </Link>
         </Tooltip>
       )
     } else if ((item.link || item.externalLink) && info) {
-      return <div className="details-item__data details-item__data_multiline">
-        {
-          (Array.isArray(info) ? info : [info]).map((infoItem, index) => {
+      return (
+        <div className="details-item__data details-item__data_multiline">
+          {(Array.isArray(info) ? info : [info]).map((infoItem, index) => {
+            if (!infoItem) return null
+
             return item.link ? (
-              <Link className="link details-item__data details-item__link" to={item.link} key={index}>
+              <Link
+                className="link details-item__data details-item__link"
+                to={item.link}
+                key={index}
+              >
                 <Tooltip template={<TextTooltipTemplate text={infoItem} />}>{infoItem}</Tooltip>
               </Link>
             ) : (
               <a
                 key={index}
                 className="details-item__data details-item__link"
-                href={infoItem}
+                href={
+                  !infoItem.startsWith?.('http')
+                    ? `${window.location.protocol}//${infoItem}`
+                    : infoItem
+                }
                 target="_blank"
                 rel="noreferrer"
               >
@@ -242,9 +258,9 @@ const DetailsInfoItem = React.forwardRef(
                 </Tooltip>
               </a>
             )
-          })
-        }
-      </div>
+          })}
+        </div>
+      )
     } else if ((typeof info !== 'object' || Array.isArray(info)) && item?.editModeEnabled) {
       return (
         <div className="details-item__data">
@@ -307,28 +323,6 @@ const DetailsInfoItem = React.forwardRef(
   }
 )
 
-DetailsInfoItem.defaultProps = {
-  chipsClassName: '',
-  chipsData: {
-    chips: [],
-    chipOptions: {},
-    delimiter: null
-  },
-  currentField: '',
-  detailsInfoDispatch: () => {},
-  detailsInfoState: {},
-  editableFieldType: null,
-  func: '',
-  handleFinishEdit: () => {},
-  info: null,
-  isFieldInEditMode: false,
-  item: {},
-  onClick: null,
-  params: {},
-  setChangesData: () => {},
-  state: ''
-}
-
 DetailsInfoItem.propTypes = {
   changesData: PropTypes.object,
   chipsClassName: PropTypes.string,
@@ -348,7 +342,6 @@ DetailsInfoItem.propTypes = {
   isFieldInEditMode: PropTypes.bool,
   item: PropTypes.shape({}),
   onClick: PropTypes.func,
-  params: PropTypes.shape({}),
   setChangesData: PropTypes.func,
   state: PropTypes.string
 }

@@ -23,7 +23,7 @@ import PropTypes from 'prop-types'
 
 import './loader.scss'
 
-const Loader = ({ secondary, section, small }) => {
+const Loader = ({ secondary = false, section = false, small = false }) => {
   const wrapperClassNames = classnames(
     'loader-wrapper',
     section && 'section-loader',
@@ -36,12 +36,6 @@ const Loader = ({ secondary, section, small }) => {
       <div className="loader" />
     </div>
   )
-}
-
-Loader.defaultProps = {
-  secondary: false,
-  section: false,
-  small: false
 }
 
 Loader.propTypes = {

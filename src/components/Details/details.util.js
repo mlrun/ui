@@ -200,7 +200,7 @@ export const generateJobsContent = selectedItem => {
       value: selectedItem.ui.runOnSpot
     },
     nodeSelectorChips: {
-      value: selectedItem.ui.nodeSelectorChips
+      value: selectedItem.nodeSelectorChips
     },
     priority: {
       value: selectedItem.ui.priority

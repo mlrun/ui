@@ -207,7 +207,7 @@ const DetailsTransformations = ({ selectedItem }) => {
         <ConfigFunctionTemplate selectedItem={selectedItem} />
         <ConfigSource selectedItem={selectedItem} />
         <ConfigSteps
-          states={states}
+          states={states ?? {}}
           setStates={setStates}
           steps={steps}
           afterSteps={afterSteps}

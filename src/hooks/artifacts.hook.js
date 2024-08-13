@@ -17,7 +17,7 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import { useEffect } from 'react'
+import { useEffect, useRef } from 'react'
 import { useParams, useSearchParams } from 'react-router-dom'
 import { useDispatch } from 'react-redux'
 
@@ -28,16 +28,16 @@ import { sortListByDate } from '../utils'
 export const useInitialArtifactsFetch = (
   fetchData,
   urlTagOption,
-  artifactsLength,
   setExpandedRowsData,
   createArtifactsRowData
 ) => {
   const [searchParams] = useSearchParams()
   const params = useParams()
   const dispatch = useDispatch()
+  const isInitialRequestSent = useRef(false)
 
   useEffect(() => {
-    if (urlTagOption && artifactsLength === 0) {
+    if (!isInitialRequestSent.current && urlTagOption) {
       let filtersLocal = { tag: urlTagOption, iter: SHOW_ITERATIONS }
 
       if (searchParams.get('useUrlParamsAsFilter') === 'true') {
@@ -64,16 +64,12 @@ export const useInitialArtifactsFetch = (
           }))
         }
       })
+
+      isInitialRequestSent.current = true
     }
-  }, [
-    dispatch,
-    fetchData,
-    artifactsLength,
-    params.name,
-    params.projectName,
-    searchParams,
-    urlTagOption,
-    setExpandedRowsData,
-    createArtifactsRowData
-  ])
+  }, [dispatch, fetchData, params.name, params.projectName, searchParams, urlTagOption, setExpandedRowsData, createArtifactsRowData])
+
+  useEffect(() => () => {
+    isInitialRequestSent.current = false
+  }, [params.projectName])
 }

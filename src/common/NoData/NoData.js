@@ -22,16 +22,14 @@ import PropTypes from 'prop-types'
 
 import './noData.scss'
 
+const defaultMessage = 'No data to show'
+
 const NoData = ({ message }) => {
   return (
     <div data-testid="no-data" className="no-data-block">
-      <h3>{message}</h3>
+      <h3>{message || defaultMessage}</h3>
     </div>
   )
-}
-
-NoData.defaultProps = {
-  message: 'No data to show'
 }
 
 NoData.propTypes = {

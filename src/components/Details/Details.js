@@ -61,19 +61,19 @@ import './details.scss'
 
 const Details = ({
   actionsMenu,
-  applyDetailsChanges,
-  applyDetailsChangesCallback,
+  applyDetailsChanges = () => {},
+  applyDetailsChangesCallback = () => {},
   detailsMenu,
-  formInitialValues,
-  getCloseDetailsLink,
-  handleCancel,
-  handleRefresh,
-  isDetailsScreen,
+  formInitialValues = {},
+  getCloseDetailsLink = null,
+  handleCancel = null,
+  handleRefresh = () => {},
+  isDetailsScreen = false,
   pageData,
   removeInfoContent,
-  removeModelFeatureVector,
+  removeModelFeatureVector = () => {},
   resetChanges,
-  retryRequest,
+  retryRequest = () => {},
   selectedItem,
   setChanges,
   setChangesCounter,
@@ -83,7 +83,7 @@ const Details = ({
   setIterationOption,
   setFiltersWasHandled,
   showWarning,
-  tab
+  tab = ''
 }) => {
   const applyChangesRef = useRef()
   const dispatch = useDispatch()
@@ -314,26 +314,10 @@ const Details = ({
   )
 }
 
-Details.defaultProps = {
-  applyDetailsChanges: () => {},
-  applyDetailsChangesCallback: () => {},
-  cancelRequest: () => {},
-  formInitialValues: {},
-  getCloseDetailsLink: null,
-  handleCancel: null,
-  handleRefresh: () => {},
-  isDetailsScreen: false,
-  item: {},
-  retryRequest: () => {},
-  removeModelFeatureVector: () => {},
-  tab: ''
-}
-
 Details.propTypes = {
   actionsMenu: ACTIONS_MENU.isRequired,
   applyDetailsChanges: PropTypes.func,
   applyDetailsChangesCallback: PropTypes.func,
-  cancelRequest: PropTypes.func,
   detailsMenu: PropTypes.arrayOf(
     PropTypes.shape({
       id: PropTypes.string.isRequired,

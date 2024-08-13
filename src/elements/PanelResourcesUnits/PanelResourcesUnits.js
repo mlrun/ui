@@ -41,7 +41,7 @@ const PanelResourcesUnits = ({
   gpuType,
   handleSelectCpuUnit,
   handleSelectMemoryUnit,
-  isPanelEditMode,
+  isPanelEditMode = false,
   setCpuValue,
   setGpuValue,
   setMemoryValue,
@@ -170,10 +170,6 @@ const PanelResourcesUnits = ({
       </PanelSection>
     </div>
   )
-}
-
-PanelResourcesUnits.defaultProps = {
-  isPanelEditMode: false
 }
 
 PanelResourcesUnits.propTypes = {

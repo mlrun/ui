@@ -23,7 +23,7 @@ import classnames from 'classnames'
 
 import { ReactComponent as Plus } from 'igz-controls/images/plus.svg'
 
-const JobsPanelTableAddItemRow = ({ isPanelEditMode, onClick, text}) => {
+const JobsPanelTableAddItemRow = ({ isPanelEditMode = false, onClick, text }) => {
   const classNames = classnames('add-input', isPanelEditMode && 'disabled')
 
   return (
@@ -36,10 +36,6 @@ const JobsPanelTableAddItemRow = ({ isPanelEditMode, onClick, text}) => {
       </div>
     </div>
   )
-}
-
-JobsPanelTableAddItemRow.defaultProps = {
-  isPanelEditMode: false
 }
 
 JobsPanelTableAddItemRow.propTypes = {

@@ -28,7 +28,7 @@ import './jobsPanelTitle.scss'
 
 const JobsPanelTitle = ({
   closePanel,
-  editModeEnabled,
+  editModeEnabled = true,
   functionData,
   openScheduleJob,
   panelDispatch,
@@ -158,10 +158,6 @@ const JobsPanelTitle = ({
       validation={validation}
     />
   )
-}
-
-JobsPanelTitle.defaultProps = {
-  editModeEnabled: true
 }
 
 JobsPanelTitle.propTypes = {

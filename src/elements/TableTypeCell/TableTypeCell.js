@@ -51,7 +51,7 @@ import {
   JOB_KIND_WORKFLOW
 } from '../../constants'
 
-const TableTypeCell = ({ className, data }) => {
+const TableTypeCell = ({ className = '', data }) => {
   const typesOfJob = {
     '': { label: 'Local', icon: <Code /> },
     [FUNCTION_TYPE_APPLICATION]: { label: 'Application', icon: <Application /> },
@@ -86,10 +86,6 @@ const TableTypeCell = ({ className, data }) => {
       </Tooltip>
     </td>
   )
-}
-
-TableTypeCell.defaultProps = {
-  className: ''
 }
 
 TableTypeCell.propTypes = {

@@ -44,7 +44,7 @@ import './projects.scss'
 const ProjectsView = ({
   actionsMenu,
   closeNewProjectPopUp,
-  confirmData,
+  confirmData = null,
   convertedYaml,
   convertToYaml,
   createProject,
@@ -55,6 +55,7 @@ const ProjectsView = ({
   handleSearchOnFocus,
   handleSelectSortOption,
   isDescendingOrder,
+  projectsRequestErrorMessage,
   projectStore,
   refreshProjects,
   removeNewProjectError,
@@ -74,9 +75,7 @@ const ProjectsView = ({
 
   return (
     <div className={projectsClassNames}>
-      {(projectStore.loading ||
-        projectStore.project.loading ||
-        tasksStore.loading) && <Loader />}
+      {(projectStore.loading || projectStore.project.loading || tasksStore.loading) && <Loader />}
       {projectStore.mlrunUnhealthy.isUnhealthy && (
         <PopUpDialog headerIsHidden>
           MLRun seems to be down. Try again in a few minutes.
@@ -191,7 +190,7 @@ const ProjectsView = ({
             message={
               projectStore.mlrunUnhealthy.retrying
                 ? 'Retrieving projects.'
-                : 'Your projects list is empty.'
+                : projectsRequestErrorMessage || 'Your projects list is empty.'
             }
           />
         )}
@@ -201,10 +200,6 @@ const ProjectsView = ({
       )}
     </div>
   )
-}
-
-ProjectsView.defaultProps = {
-  confirmData: null
 }
 
 ProjectsView.propTypes = {
@@ -220,6 +215,7 @@ ProjectsView.propTypes = {
   handleCreateProject: PropTypes.func.isRequired,
   handleSearchOnFocus: PropTypes.func.isRequired,
   handleSelectSortOption: PropTypes.func.isRequired,
+  projectsRequestErrorMessage: PropTypes.func.isRequired,
   refreshProjects: PropTypes.func.isRequired,
   removeNewProjectError: PropTypes.func.isRequired,
   selectedProjectsState: PropTypes.string.isRequired,

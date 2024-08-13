@@ -77,10 +77,10 @@ const Workflow = ({
   pageData,
   refresh,
   refreshJobs,
-  selectedFunction,
-  selectedJob,
+  selectedFunction = {},
+  selectedJob = {},
   setWorkflowsViewMode,
-  workflow,
+  workflow = {},
   workflowsViewMode
 }) => {
   const [jobsContent, setJobsContent] = useState([])
@@ -299,12 +299,6 @@ const Workflow = ({
       </div>
     </div>
   )
-}
-
-Workflow.defaultProps = {
-  selectedFunction: {},
-  selectedJob: {},
-  workflow: {}
 }
 
 Workflow.propTypes = {

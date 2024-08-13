@@ -38,15 +38,18 @@ import { ReactComponent as ArtifactView } from 'igz-controls/images/eye-icon.svg
 import { ReactComponent as Arrow } from 'igz-controls/images/arrow.svg'
 
 const TableCell = ({
-  className,
+  className = '',
   data,
   firstCell,
-  handleExpandRow,
-  item,
-  link,
-  selectItem,
-  selectedItem,
-  showExpandButton
+  handleExpandRow = null,
+  item = {
+    target_path: '',
+    schema: ''
+  },
+  link = '',
+  selectItem = () => {},
+  selectedItem = {},
+  showExpandButton = false
 }) => {
   const dispatch = useDispatch()
   const { value: stateValue, label: stateLabel, className: stateClassName } = item.state ?? {}
@@ -128,10 +131,10 @@ const TableCell = ({
             data.disabled
               ? ''
               : item.kind === MODEL_TYPE
-              ? 'Model Preview'
-              : item.kind === DATASET_TYPE
-              ? 'Dataset Preview'
-              : 'Artifact Preview'
+                ? 'Model Preview'
+                : item.kind === DATASET_TYPE
+                  ? 'Dataset Preview'
+                  : 'Artifact Preview'
           }
           disabled={data.disabled}
           onClick={() => {
@@ -186,7 +189,7 @@ const TableCell = ({
     )
   } else {
     return (
-      <td data-testid={data.headerId} className={cellClassNames}>
+      <td data-testid={data?.headerId} className={cellClassNames}>
         <Tooltip
           className="text_small"
           template={<TextTooltipTemplate text={data.tooltip || data.value} />}
@@ -196,22 +199,6 @@ const TableCell = ({
       </td>
     )
   }
-}
-
-TableCell.defaultProps = {
-  className: '',
-  expandLink: false,
-  firstRow: false,
-  handleExpandRow: null,
-  item: {
-    target_path: '',
-    schema: ''
-  },
-  link: '',
-  match: null,
-  selectItem: () => {},
-  selectedItem: {},
-  showExpandButton: false
 }
 
 TableCell.propTypes = {

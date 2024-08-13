@@ -29,10 +29,10 @@ import Input from '../../common/Input/Input'
 import './panelCredentialsAccessKey.scss'
 
 const PanelCredentialsAccessKey = ({
-  className,
+  className = '',
   credentialsAccessKey,
-  isPanelEditMode,
-  required,
+  isPanelEditMode = false,
+  required = false,
   setCredentialsAccessKey,
   setValidation,
   validation
@@ -92,12 +92,6 @@ const PanelCredentialsAccessKey = ({
       )}
     </div>
   )
-}
-
-PanelCredentialsAccessKey.defaultProps = {
-  className: '',
-  isPanelEditMode: false,
-  required: false
 }
 
 PanelCredentialsAccessKey.propTypes = {

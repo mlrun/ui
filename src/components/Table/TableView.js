@@ -31,11 +31,11 @@ import { SORT_PROPS } from 'igz-controls/types'
 
 const TableView = ({
   actionsMenu,
-  applyDetailsChanges,
-  applyDetailsChangesCallback,
+  applyDetailsChanges = () => {},
+  applyDetailsChangesCallback = () => {},
   children,
   detailsFormInitialValues,
-  getCloseDetailsLink,
+  getCloseDetailsLink = null,
   handleCancel,
   hideActionsMenu,
   isTablePanelOpen,
@@ -43,7 +43,7 @@ const TableView = ({
   pageData,
   retryRequest,
   selectedItem,
-  sortProps,
+  sortProps = null,
   tab,
   tableBodyRef,
   tableClassName,
@@ -115,14 +115,6 @@ const TableView = ({
       </div>
     </div>
   )
-}
-
-TableView.defaultProps = {
-  applyDetailsChanges: () => {},
-  applyDetailsChangesCallback: () => {},
-  getCloseDetailsLink: null,
-  groupLatestJob: {},
-  sortProps: null
 }
 
 TableView.propTypes = {

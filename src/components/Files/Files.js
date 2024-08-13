@@ -76,7 +76,8 @@ const Files = () => {
   const [selectedFile, setSelectedFile] = useState({})
   const [selectedFileMin, setSelectedFileMin] = useState({})
   const [selectedRowData, setSelectedRowData] = useState({})
-  const [largeRequestErrorMessage, setLargeRequestErrorMessage] = useState('')
+  const [requestErrorMessage, setRequestErrorMessage] = useState('')
+  const [maxArtifactsErrorIsShown, setMaxArtifactsErrorIsShown] = useState(false)
   const [convertedYaml, toggleConvertedYaml] = useYaml('')
   const [urlTagOption, tagAbortControllerRef] = useGetTagOptions(
     fetchArtifactTags,
@@ -132,7 +133,7 @@ const Files = () => {
           config: {
             ui: {
               controller: abortControllerRef.current,
-              setLargeRequestErrorMessage
+              setRequestErrorMessage
             },
             params: {
               format: 'minimal'
@@ -144,6 +145,7 @@ const Files = () => {
         .then(result => {
           if (result) {
             setFiles(result)
+            setMaxArtifactsErrorIsShown(result.length === 1000)
           }
 
           return result
@@ -163,12 +165,13 @@ const Files = () => {
           config: {
             ui: {
               controller: tagAbortControllerRef.current,
-              setLargeRequestErrorMessage
+              setRequestErrorMessage
             }
           }
         })
       )
       setSelectedRowData({})
+      setSelectedFileMin({})
       setFiles([])
 
       return fetchData(filters)
@@ -313,7 +316,6 @@ const Files = () => {
   useInitialArtifactsFetch(
     fetchData,
     urlTagOption,
-    files.length,
     setSelectedRowData,
     createFilesRowData
   )
@@ -402,11 +404,13 @@ const Files = () => {
       handleExpandRow={handleExpandRow}
       handleRefresh={handleRefresh}
       handleRegisterArtifact={handleRegisterArtifact}
-      largeRequestErrorMessage={largeRequestErrorMessage}
+      requestErrorMessage={requestErrorMessage}
+      maxArtifactsErrorIsShown={maxArtifactsErrorIsShown}
       pageData={pageData}
       ref={{ filesRef }}
       selectedFile={selectedFile}
       selectedRowData={selectedRowData}
+      setMaxArtifactsErrorIsShown={setMaxArtifactsErrorIsShown}
       setFiles={setFiles}
       setSelectedFileMin={setSelectedFileMin}
       setSelectedRowData={setSelectedRowData}

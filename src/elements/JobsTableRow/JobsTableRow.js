@@ -29,7 +29,7 @@ import { DETAILS_OVERVIEW_TAB } from '../../constants'
 import { ACTIONS_MENU } from '../../types'
 import { getJobIdentifier } from '../../utils/getUniqueIdentifier'
 
-const JobsTableRow = ({ actionsMenu, handleSelectJob, rowItem, selectedJob }) => {
+const JobsTableRow = ({ actionsMenu, handleSelectJob = () => {}, rowItem, selectedJob = {} }) => {
   const params = useParams()
   const rowClassNames = classnames(
     'table-row',
@@ -63,11 +63,6 @@ const JobsTableRow = ({ actionsMenu, handleSelectJob, rowItem, selectedJob }) =>
       </td>
     </tr>
   )
-}
-
-JobsTableRow.defaultProps = {
-  handleSelectJob: () => {},
-  selectedJob: {}
 }
 
 JobsTableRow.propTypes = {

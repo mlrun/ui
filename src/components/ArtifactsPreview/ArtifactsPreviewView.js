@@ -104,7 +104,9 @@ const ArtifactsPreviewView = ({ className, preview, setShowErrorBody, showErrorB
                 </tbody>
               </table>
             )}
-            {preview?.type === 'text' && <div className='artifact-preview__text'>{preview?.data.content}</div>}
+            {preview?.type === 'text' && (
+              <div className="artifact-preview__text">{preview?.data.content}</div>
+            )}
             {preview?.type === 'html' && (
               <iframe srcDoc={preview?.data.content} frameBorder="0" title="Preview" />
             )}
@@ -145,15 +147,10 @@ const ArtifactsPreviewView = ({ className, preview, setShowErrorBody, showErrorB
   )
 }
 
-ArtifactsPreviewView.defaultProps = {
-  showAccordion: false
-}
-
 ArtifactsPreviewView.propTypes = {
   className: PropTypes.string.isRequired,
   preview: PropTypes.shape({}).isRequired,
   setShowErrorBody: PropTypes.func.isRequired,
-  showAccordion: PropTypes.bool,
   showErrorBody: PropTypes.bool.isRequired
 }
 

@@ -65,7 +65,7 @@ const FeatureSets = ({
   const [featureSets, setFeatureSets] = useState([])
   const [selectedFeatureSet, setSelectedFeatureSet] = useState({})
   const [selectedRowData, setSelectedRowData] = useState({})
-  const [largeRequestErrorMessage, setLargeRequestErrorMessage] = useState('')
+  const [requestErrorMessage, setRequestErrorMessage] = useState('')
 
   const openPanelByDefault = useOpenPanel()
   const [urlTagOption] = useGetTagOptions(fetchFeatureSetsTags, featureSetsFilters)
@@ -112,7 +112,7 @@ const FeatureSets = ({
       const config = {
         ui: {
           controller: abortControllerRef.current,
-          setLargeRequestErrorMessage
+          setRequestErrorMessage
         }
       }
 
@@ -373,9 +373,9 @@ const FeatureSets = ({
       filtersStore={filtersStore}
       handleExpandRow={handleExpandRow}
       handleRefresh={handleRefresh}
-      largeRequestErrorMessage={largeRequestErrorMessage}
       pageData={pageData}
       ref={{ featureStoreRef }}
+      requestErrorMessage={requestErrorMessage}
       selectedFeatureSet={selectedFeatureSet}
       selectedRowData={selectedRowData}
       setSelectedFeatureSet={handleSelectFeatureSet}

@@ -34,7 +34,7 @@ const createFunctionsContent = (functions, projectName, showExpandButton) =>
           value: func.name,
           className: 'table-cell-name',
           getLink: (hash, tab) => {
-            return `/projects/${projectName}/functions/${hash}${`/${tab}`}`
+            return `/projects/${projectName}/functions/${func.name}@${hash}${`/${tab}`}`
           },
           expandedCellContent: {
             value: formatDatetime(func.updated, 'N/A'),

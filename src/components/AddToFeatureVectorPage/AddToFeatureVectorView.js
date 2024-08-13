@@ -45,8 +45,8 @@ const AddToFeatureVectorView = React.forwardRef(
       filtersStore,
       handleExpandRow,
       handleRefresh,
-      largeRequestErrorMessage,
       pageData,
+      requestErrorMessage,
       selectedRowData,
       tableContent,
       tableStore,
@@ -77,7 +77,7 @@ const AddToFeatureVectorView = React.forwardRef(
                 message={getNoDataMessage(
                   filtersStore,
                   filters,
-                  largeRequestErrorMessage,
+                  requestErrorMessage,
                   FEATURE_STORE_PAGE,
                   ADD_TO_FEATURE_VECTOR_TAB
                 )}
@@ -131,8 +131,8 @@ AddToFeatureVectorView.propTypes = {
   filtersStore: PropTypes.object.isRequired,
   handleExpandRow: PropTypes.func.isRequired,
   handleRefresh: PropTypes.func.isRequired,
-  largeRequestErrorMessage: PropTypes.string.isRequired,
   pageData: PropTypes.object.isRequired,
+  requestErrorMessage: PropTypes.string.isRequired,
   selectedRowData: PropTypes.object.isRequired,
   tableContent: PropTypes.arrayOf(PropTypes.object).isRequired,
   tableStore: PropTypes.object.isRequired,

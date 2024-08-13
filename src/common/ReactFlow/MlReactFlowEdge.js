@@ -31,14 +31,14 @@ import {
 } from '../../constants'
 
 const MlReactFlowEdge = ({
-  arrowHeadType,
+  arrowHeadType = 'arrowclosed',
   data,
   id,
-  markerEndId,
+  markerEndId = null,
   source,
   sourceX,
   sourceY,
-  style,
+  style = {},
   target,
   targetX,
   targetY
@@ -135,12 +135,6 @@ const MlReactFlowEdge = ({
       <BaseEdge id={id} path={path[0]} markerEnd={markerEnd} style={style} />
     </>
   )
-}
-
-MlReactFlowEdge.defaultProps = {
-  arrowHeadType: 'arrowclosed',
-  markerEndId: null,
-  style: {}
 }
 
 MlReactFlowEdge.propTypes = {

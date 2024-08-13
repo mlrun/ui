@@ -29,7 +29,7 @@ import { getJobsDetailsMenu } from '../../components/Jobs/jobs.util'
 
 import { DETAILS_OVERVIEW_TAB, MONITOR_JOBS_TAB } from '../../constants'
 
-const TableProducerCell = ({ bodyCellClassName, className, id, producer }) => {
+const TableProducerCell = ({ bodyCellClassName = '', className = '', id, producer }) => {
   const [project, uid] = producer.uri?.split('/') || []
   const overviewTab = getJobsDetailsMenu().find(tab => tab.id === DETAILS_OVERVIEW_TAB) || {}
   const cellClassNames = classnames('table-body__cell', className, bodyCellClassName)
@@ -65,11 +65,6 @@ const TableProducerCell = ({ bodyCellClassName, className, id, producer }) => {
       </td>
     )
   )
-}
-
-TableProducerCell.defaultProps = {
-  bodyCellClassName: '',
-  className: ''
 }
 
 TableProducerCell.propTypes = {

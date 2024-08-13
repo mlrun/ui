@@ -92,11 +92,11 @@ const kindToScreen = {
   models: `models/${MODELS_TAB}`
 }
 
-const generateLinkPath = (uri = '', ignoreKey = false) => {
+const generateLinkPath = (uri = '') => {
   const { kind, project, key, tag, uid } = parseUri(uri)
   const screen = kindToScreen[kind] ?? FILES_TAB
   const reference = tag ?? uid
-  return `/projects/${project}/${screen}${ignoreKey ? '' : `/${key}`}${reference ? `/${reference}` : ''}`
+  return `/projects/${project}/${screen}${key}${reference ? `/${reference}` : ''}`
 }
 
 const generateNuclioLink = pathname => {

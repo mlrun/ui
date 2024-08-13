@@ -31,7 +31,7 @@ import { getValidationRules } from 'igz-controls/utils/validation.util'
 
 import './jobWizardResources.scss'
 
-const JobWizardResources = ({ formState, frontendSpec, stepIsActive }) => {
+const JobWizardResources = ({ formState, frontendSpec, stepIsActive = false }) => {
   const validFunctionPriorityClassNames = useMemo(() => {
     return (frontendSpec.valid_function_priority_class_names ?? []).map(className => ({
       id: className,
@@ -92,10 +92,6 @@ const JobWizardResources = ({ formState, frontendSpec, stepIsActive }) => {
       </div>
     </div>
   )
-}
-
-JobWizardResources.defaultProps = {
-  stepIsActive: false
 }
 
 JobWizardResources.propTypes = {

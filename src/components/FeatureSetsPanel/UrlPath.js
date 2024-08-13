@@ -48,18 +48,23 @@ import {
 
 const UrlPath = ({
   comboboxSelectList,
-  defaultPath,
-  disabled,
-  handleUrlInputOnChange,
-  handleUrlOnApply,
-  handleUrlOnBlur,
-  handleUrlOnDiscard,
-  handleUrlOnEditModeChange,
-  handleUrlOnFocus,
-  handleUrlSelectOnChange,
-  invalid,
-  previewClassName,
-  withActionButtons
+  defaultPath = {
+    kind: '',
+    name: '',
+    partitioned: '',
+    path: ''
+  },
+  disabled = false,
+  handleUrlInputOnChange = () => {},
+  handleUrlOnApply = () => {},
+  handleUrlOnBlur = () => {},
+  handleUrlOnDiscard = () => {},
+  handleUrlOnEditModeChange = () => {},
+  handleUrlOnFocus = () => {},
+  handleUrlSelectOnChange = () => {},
+  invalid = false,
+  previewClassName = '',
+  withActionButtons = false
 }) => {
   const [urlData, setUrlData] = useState({
     artifact: '',
@@ -366,26 +371,6 @@ const UrlPath = ({
       )}
     </div>
   )
-}
-
-UrlPath.defaultProps = {
-  defaultPath: {
-    kind: '',
-    name: '',
-    partitioned: '',
-    path: ''
-  },
-  disabled: false,
-  handleUrlInputOnChange: () => {},
-  handleUrlOnApply: () => {},
-  handleUrlOnBlur: () => {},
-  handleUrlOnDiscard: () => {},
-  handleUrlOnEditModeChange: () => {},
-  handleUrlOnFocus: () => {},
-  handleUrlSelectOnChange: () => {},
-  invalid: false,
-  previewClassName: '',
-  withActionButtons: false
 }
 
 UrlPath.propTypes = {

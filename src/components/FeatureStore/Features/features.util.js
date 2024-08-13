@@ -20,6 +20,7 @@ such restriction.
 import featureStoreActions from '../../../actions/featureStore'
 import { LABELS_FILTER, LARGE_REQUEST_CANCELED, NAME_FILTER, TAG_FILTER } from '../../../constants'
 import { showLargeResponsePopUp } from '../../../httpClient'
+import { largeResponseCatchHandler } from '../../../utils/largeResponseCatchHandler'
 
 export const featuresFilters = [
   { type: TAG_FILTER, label: 'Version Tag:' },
@@ -31,20 +32,24 @@ export const handleFeaturesResponse = (
   features,
   setFeatures,
   abortControllerRef,
-  setLargeRequestErrorMessage
+  setRequestErrorMessage,
+  error,
+  dispatch
 ) => {
   if (
     features?.length > 10000 ||
     abortControllerRef.current?.signal?.reason === LARGE_REQUEST_CANCELED
   ) {
-    showLargeResponsePopUp(setLargeRequestErrorMessage)
+    showLargeResponsePopUp(setRequestErrorMessage)
     setFeatures([])
-  } else if (features) {
+  } else if (features?.length) {
     setFeatures(features)
-    setLargeRequestErrorMessage('')
+    setRequestErrorMessage('')
+  } else if (error && dispatch) {
+    largeResponseCatchHandler(error, 'Failed to fetch features', dispatch, setRequestErrorMessage)
   }
 
-  return features
+  return features || []
 }
 
 export const featuresActionCreator = {

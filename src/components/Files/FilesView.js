@@ -29,6 +29,7 @@ import Loader from '../../common/Loader/Loader'
 import PreviewModal from '../../elements/PreviewModal/PreviewModal'
 import ArtifactsTableRow from '../../elements/ArtifactsTableRow/ArtifactsTableRow'
 import Details from '../Details/Details'
+import WarningMessage from '../../common/WarningMessage/WarningMessage'
 
 import { ACTIONS_MENU, VIRTUALIZATION_CONFIG } from '../../types'
 import { FILES_FILTERS, FILES_PAGE, FULL_VIEW_MODE } from '../../constants'
@@ -53,10 +54,12 @@ const FilesView = React.forwardRef(
       handleExpandRow,
       handleRefresh,
       handleRegisterArtifact,
-      largeRequestErrorMessage,
+      maxArtifactsErrorIsShown,
       pageData,
+      requestErrorMessage,
       selectedFile,
       selectedRowData,
+      setMaxArtifactsErrorIsShown,
       setFiles,
       setSelectedFileMin,
       setSelectedRowData,
@@ -64,8 +67,8 @@ const FilesView = React.forwardRef(
       tableContent,
       tableHeaders,
       toggleConvertedYaml,
-      urlTagOption,
-      viewMode,
+      urlTagOption = null,
+      viewMode = null,
       virtualizationConfig
     },
     { filesRef }
@@ -104,7 +107,7 @@ const FilesView = React.forwardRef(
                   message={getNoDataMessage(
                     filtersStore,
                     filters,
-                    largeRequestErrorMessage,
+                    requestErrorMessage,
                     FILES_PAGE,
                     null,
                     FILES_FILTERS
@@ -113,6 +116,12 @@ const FilesView = React.forwardRef(
               ) : (
                 <>
                   {(selectedRowData.loading  || artifactsStore.files.fileLoading) && <Loader />}
+                  {maxArtifactsErrorIsShown && (
+                    <WarningMessage
+                      message="The query response displays up to 1000 items. Use filters to narrow down the results."
+                      handleClose={() => setMaxArtifactsErrorIsShown(false)}
+                    />
+                  )}
                   <Table
                     actionsMenu={actionsMenu}
                     applyDetailsChanges={applyDetailsChanges}
@@ -171,11 +180,6 @@ const FilesView = React.forwardRef(
   }
 )
 
-FilesView.defaultProps = {
-  viewMode: null,
-  urlTagOption: null
-}
-
 FilesView.propTypes = {
   actionsMenu: ACTIONS_MENU.isRequired,
   applyDetailsChanges: PropTypes.func.isRequired,
@@ -188,10 +192,12 @@ FilesView.propTypes = {
   handleExpandRow: PropTypes.func.isRequired,
   handleRefresh: PropTypes.func.isRequired,
   handleRegisterArtifact: PropTypes.func.isRequired,
-  largeRequestErrorMessage: PropTypes.string.isRequired,
+  maxArtifactsErrorIsShown: PropTypes.bool.isRequired,
   pageData: PropTypes.object.isRequired,
+  requestErrorMessage: PropTypes.string.isRequired,
   selectedFile: PropTypes.object.isRequired,
   selectedRowData: PropTypes.object.isRequired,
+  setMaxArtifactsErrorIsShown: PropTypes.func.isRequired,
   setSelectedFileMin: PropTypes.func.isRequired,
   sortProps: SORT_PROPS,
   tableContent: PropTypes.arrayOf(PropTypes.object).isRequired,

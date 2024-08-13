@@ -28,18 +28,25 @@ import { cutChips } from '../../utils/cutChips'
 import { useChipCell } from 'igz-controls/hooks'
 
 const ChipCell = ({
-  addChip,
-  chipOptions,
+  addChip = () => {},
+  chipOptions = {
+    background: 'purple',
+    boldValue: false,
+    borderRadius: 'primary',
+    borderColor: 'transparent',
+    density: 'dense',
+    font: 'purple'
+  },
   className,
-  delimiter,
-  editChip,
-  elements,
-  isEditMode,
-  onClick,
-  removeChip,
-  shortChips,
+  delimiter = null,
+  editChip = () => {},
+  elements = [],
+  isEditMode = false,
+  onClick = () => {},
+  removeChip = () => {},
+  shortChips = false,
   setValidation = null,
-  visibleChipsMaxLength
+  visibleChipsMaxLength = null
 }) => {
   const {
     chipsCellRef,
@@ -217,26 +224,6 @@ const ChipCell = ({
       showHiddenChips={showHiddenChips}
     />
   )
-}
-
-ChipCell.defaultProps = {
-  addChip: () => {},
-  chipOptions: {
-    background: 'purple',
-    boldValue: false,
-    borderRadius: 'primary',
-    borderColor: 'transparent',
-    density: 'dense',
-    font: 'purple'
-  },
-  delimiter: null,
-  editChip: () => {},
-  elements: [],
-  isEditMode: false,
-  onClick: () => {},
-  removeChip: () => {},
-  shortChips: false,
-  visibleChipsMaxLength: null
 }
 
 ChipCell.propTypes = {

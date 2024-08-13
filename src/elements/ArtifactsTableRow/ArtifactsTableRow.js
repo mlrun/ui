@@ -40,15 +40,15 @@ import { isRowExpanded, PARENT_ROW_EXPANDED_CLASS } from '../../utils/tableRows.
 
 const ArtifactsTableRow = ({
   actionsMenu,
-  handleExpandRow,
-  handleSelectItem,
-  hideActionsMenu,
+  handleExpandRow = null,
+  handleSelectItem = () => {},
+  hideActionsMenu = false,
   rowIndex,
-  mainRowItemsCount,
+  mainRowItemsCount = 1,
   rowItem,
   selectedItem,
   selectedRowData,
-  tab
+  tab = ''
 }) => {
   const parent = useRef()
   const params = useParams()
@@ -226,15 +226,6 @@ const ArtifactsTableRow = ({
   )
 }
 
-ArtifactsTableRow.defaultProps = {
-  handleExpandRow: null,
-  handleSelectItem: () => {},
-  hideActionsMenu: false,
-  tableContent: null,
-  mainRowItemsCount: 1,
-  tab: ''
-}
-
 ArtifactsTableRow.propTypes = {
   actionsMenu: ACTIONS_MENU.isRequired,
   handleExpandRow: PropTypes.func,
@@ -243,7 +234,6 @@ ArtifactsTableRow.propTypes = {
   rowIndex: PropTypes.number.isRequired,
   rowItem: PropTypes.shape({}).isRequired,
   selectedItem: PropTypes.shape({}).isRequired,
-  tableContent: PropTypes.arrayOf(PropTypes.shape({})),
   tab: PropTypes.string
 }
 

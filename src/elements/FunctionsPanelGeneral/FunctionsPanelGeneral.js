@@ -26,7 +26,7 @@ import FunctionsPanelGeneralView from './FunctionsPanelGeneralView'
 import functionsActions from '../../actions/functions'
 
 const FunctionsPanelGeneral = ({
-  defaultData,
+  defaultData = {},
   formState,
   frontendSpec,
   functionsStore,
@@ -55,10 +55,6 @@ const FunctionsPanelGeneral = ({
       setNewFunctionDescription={setNewFunctionDescription}
     />
   )
-}
-
-FunctionsPanelGeneral.defaultProps = {
-  defaultData: {}
 }
 
 FunctionsPanelGeneral.propTypes = {

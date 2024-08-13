@@ -35,14 +35,14 @@ import './enviromnetVariables.scss'
 
 const EnvironmentVariablesView = ({
   addEnvVariable,
-  className,
+  className = '',
   discardChanges,
   editEnvVariable,
   envVariables,
   generateActionsMenu,
-  isPanelEditMode,
+  isPanelEditMode = false,
   newEnvVariable,
-  selectedEnvVariable,
+  selectedEnvVariable = null,
   setNewEnvVariable,
   setSelectedEnvVariable,
   setShowAddNewEnvVariableRow,
@@ -63,10 +63,7 @@ const EnvironmentVariablesView = ({
         <div className={tableClassNames}>
           <div className="table__header table__row no-hover">
             {tableHeaders.map(header => {
-              const tableHeaderClassNames = classnames(
-                'table__cell',
-                header.className
-              )
+              const tableHeaderClassNames = classnames('table__cell', header.className)
 
               return (
                 <div className={tableHeaderClassNames} key={header.id}>
@@ -77,7 +74,8 @@ const EnvironmentVariablesView = ({
             <div className="table__cell-actions" />
           </div>
           {envVariables.map((envVariable, index) =>
-            selectedEnvVariable && !isPanelEditMode &&
+            selectedEnvVariable &&
+            !isPanelEditMode &&
             selectedEnvVariable.name === envVariable.name ? (
               <EditableEnvironmentVariablesRow
                 editEnvVariable={editEnvVariable}
@@ -89,36 +87,25 @@ const EnvironmentVariablesView = ({
             ) : (
               <div className="table__row" key={index}>
                 <div className="table__cell table-cell__key">
-                  <Tooltip
-                    template={<TextTooltipTemplate text={envVariable.name} />}
-                  >
+                  <Tooltip template={<TextTooltipTemplate text={envVariable.name} />}>
                     {envVariable.name}
                   </Tooltip>
                 </div>
                 <div className="table__cell table-cell__type">
-                  <Tooltip
-                    template={<TextTooltipTemplate text={envVariable.type} />}
-                  >
+                  <Tooltip template={<TextTooltipTemplate text={envVariable.type} />}>
                     {envVariable.type}
                   </Tooltip>
                 </div>
                 <div className="table__cell table-cell__value">
-                  <Tooltip
-                    template={<TextTooltipTemplate text={envVariable.value} />}
-                  >
+                  <Tooltip template={<TextTooltipTemplate text={envVariable.value} />}>
                     {envVariable.value}
                   </Tooltip>
                 </div>
-                {
-                  !isPanelEditMode && (
-                    <div className="table__cell table__cell-actions">
-                      <ActionsMenu
-                        dataItem={envVariable}
-                        menu={generateActionsMenu(envVariable)}
-                      />
-                    </div>
-                  )
-                }
+                {!isPanelEditMode && (
+                  <div className="table__cell table__cell-actions">
+                    <ActionsMenu dataItem={envVariable} menu={generateActionsMenu(envVariable)} />
+                  </div>
+                )}
               </div>
             )
           )}
@@ -149,12 +136,6 @@ const EnvironmentVariablesView = ({
       </PanelSection>
     </div>
   )
-}
-
-EnvironmentVariablesView.defaultProps = {
-  className: '',
-  isPanelEditMode: false,
-  selectedEnvVariable: null
 }
 
 EnvironmentVariablesView.propTypes = {

@@ -30,8 +30,8 @@ import { generateCronInitialValue } from '../../utils/generateCronInitialValue'
 import { getDefaultSchedule } from '../../utils/getDefaultSchedule'
 
 const ScheduleJob = ({
-  defaultCron,
-  handleEditJob,
+  defaultCron = '',
+  handleEditJob = () => {},
   handleRunJob,
   panelDispatch,
   panelState,
@@ -140,11 +140,6 @@ const ScheduleJob = ({
       validation={validation}
     />
   )
-}
-
-ScheduleJob.defaultProps = {
-  defaultCron: '',
-  handleEditJob: () => {}
 }
 
 ScheduleJob.propTypes = {

@@ -43,10 +43,10 @@ import { getChipLabelAndValue } from '../../utils/getChipLabelAndValue'
 import './detailsArtifacts.scss'
 
 const DetailsArtifacts = ({
-  allowSortBy,
-  defaultSortBy,
-  defaultDirection,
-  excludeSortBy,
+  allowSortBy = null,
+  defaultSortBy = null,
+  defaultDirection = 'desc',
+  excludeSortBy = null,
   fetchJob,
   iteration,
   selectedItem,
@@ -55,6 +55,7 @@ const DetailsArtifacts = ({
 }) => {
   const [artifactsPreviewContent, setArtifactsPreviewContent] = useState([])
   const [artifactsIds, setArtifactsIds] = useState([])
+  const [requestErrorMessage, setRequestErrorMessage] = useState('')
   const iterationOptions = useSelector(store => store.detailsStore.iterationOptions)
   const params = useParams()
   const getArtifactsHeaderCellClasses = (headerId, isSortable, className) =>
@@ -141,11 +142,13 @@ const DetailsArtifacts = ({
 
       if (workflowId) {
         return fetchJob(params.projectName, params.jobId, iteration).then(job => {
-          const selectedJob = getJobAccordingIteration(job)
+          if (job) {
+            const selectedJob = getJobAccordingIteration(job)
 
-          setArtifactsPreviewContent(
-            generateArtifactsPreviewContent(selectedJob, selectedJob.artifacts)
-          )
+            setArtifactsPreviewContent(
+              generateArtifactsPreviewContent(selectedJob, selectedJob.artifacts)
+            )
+          }
         })
       }
 
@@ -157,12 +160,15 @@ const DetailsArtifacts = ({
         fetchArtifacts({
           project: job.project || params.projectName,
           filters: {},
-          config
+          config,
+          setRequestErrorMessage
         })
       )
         .unwrap()
         .then(result => {
-          setArtifactsPreviewContent(generateArtifactsPreviewContent(job, result))
+          if (result) {
+            setArtifactsPreviewContent(generateArtifactsPreviewContent(job, result))
+          }
         })
     },
     [dispatch, fetchJob, params.jobId, params.projectName]
@@ -186,7 +192,7 @@ const DetailsArtifacts = ({
   return artifactsStore.loading ? (
     <Loader />
   ) : artifactsPreviewContent.length === 0 ? (
-    <NoData />
+    <NoData message={requestErrorMessage} />
   ) : (
     <div className="item-artifacts">
       <div className="table">
@@ -248,13 +254,6 @@ const DetailsArtifacts = ({
       </div>
     </div>
   )
-}
-
-DetailsArtifacts.defaultProps = {
-  allowSortBy: null,
-  defaultSortBy: null,
-  defaultDirection: 'desc',
-  excludeSortBy: null
 }
 
 DetailsArtifacts.propTypes = {
