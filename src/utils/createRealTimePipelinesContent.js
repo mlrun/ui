@@ -64,7 +64,14 @@ const createRealTimePipelinesContent = (pipelines, projectName) =>
           className: 'table-cell-2',
           getLink: tab =>
             validateArguments(pipeline.hash, tab)
-              ? generateLinkToDetailsPanel(pipeline.project, FUNCTIONS_PAGE, null, pipeline.hash, null, tab)
+              ? generateLinkToDetailsPanel(
+                  pipeline.project,
+                  FUNCTIONS_PAGE,
+                  null,
+                  `${pipeline.name}@${pipeline.hash}`,
+                  null,
+                  tab
+                )
               : ''
         },
         {

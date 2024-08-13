@@ -41,7 +41,7 @@ import artifactApi from '../../api/artifacts-api'
 import { ARTIFACT_TYPE } from '../../constants'
 import { convertChipsData } from '../../utils/convertChipsData'
 import { createArtifactMessages } from '../../utils/createArtifact.util'
-import { setFieldState } from 'igz-controls/utils/form.util'
+import { setFieldState, isSubmitDisabled } from 'igz-controls/utils/form.util'
 import { setNotification } from '../../reducers/notificationReducer'
 import { showErrorNotification } from '../../utils/notifications.util'
 import { openPopUp } from 'igz-controls/utils/common.util'
@@ -136,7 +136,9 @@ const RegisterArtifactModal = ({
                   label: 'Overwrite',
                   variant: PRIMARY_BUTTON,
                   handler: (...args) => {
-                    handleRegisterArtifact(...args).then(resolve).catch(reject)
+                    handleRegisterArtifact(...args)
+                      .then(resolve)
+                      .catch(reject)
                   }
                 },
                 cancelButton: {
@@ -146,7 +148,9 @@ const RegisterArtifactModal = ({
                 },
                 closePopUp: () => reject(),
                 header: messagesByKind.overwriteConfirmTitle,
-                message: messagesByKind.getOverwriteConfirmMessage(response.data.artifacts[0].kind || ARTIFACT_TYPE)
+                message: messagesByKind.getOverwriteConfirmMessage(
+                  response.data.artifacts[0].kind || ARTIFACT_TYPE
+                )
               })
             })
           } else {
@@ -177,7 +181,7 @@ const RegisterArtifactModal = ({
             variant: TERTIARY_BUTTON
           },
           {
-            disabled: formState.submitting || (formState.invalid && formState.submitFailed),
+            disabled: isSubmitDisabled(formState),
             label: 'Register',
             onClick: formState.handleSubmit,
             variant: SECONDARY_BUTTON

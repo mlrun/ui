@@ -801,6 +801,7 @@ module.exports = {
       ),
       Apply_Combobox_Button: By.css('.data-source .url-path-actions .round-icon-cp:nth-of-type(1) button'),
       Discard_Combobox_Button: By.css('.data-source .url-path-actions .round-icon-cp:nth-of-type(2) button'),
+      Edit_Button: By.css('.url-path-preview__actions .round-icon-cp'),
       Kind_Dropdown: dropdownComponent(
         generateDropdownGroup(
           '.feature-set-panel .accordion__container:nth-of-type(1) .panel-section__body .select',

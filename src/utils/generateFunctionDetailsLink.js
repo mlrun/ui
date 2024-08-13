@@ -17,7 +17,23 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import { generateLinkPath } from './parseUri'
+
+export const parseFunctionUri = functionUri => {
+  let [project, rest] = functionUri.split('/')
+  let name = rest
+  let hash = null
+  let tag = null
+  let nameWithHash = null
+
+  if (rest.includes('@')) {
+    ;[name, hash] = rest.split('@')
+    nameWithHash = `${name}@${hash}`
+  } else if (rest.includes(':')) {
+    ;[name, tag] = rest.split(':')
+  }
+
+  return { project, name, hash, tag, nameWithHash }
+}
 
 export const generateFunctionDetailsLink = (uri = '') => {
   // remove 'latest' when function_uri will contain hash or tag
@@ -25,9 +41,15 @@ export const generateFunctionDetailsLink = (uri = '') => {
   // 'my_proj/func_name@func_hash' -> projects/my_proj/functions/func_hash/overview
   // 'my_proj/func_name' -> projects/my_proj/functions/func_name/latest/overview
   // 'my_proj/func_name:custom_tag' -> projects/my_proj/functions/func_name/custom_tag/overview
-  return uri
-    ? `${generateLinkPath(`store://functions/${uri}`, uri.includes('@'))}${
-        uri.includes(':') || uri.includes('@') ? '' : '/latest'
-      }/overview`
-    : ''
+  let generatedLink = ''
+
+  if (uri) {
+    const { project, name, nameWithHash, tag } = parseFunctionUri(uri)
+
+    if (project && (name || nameWithHash)) {
+      generatedLink = `/projects/${project}/functions/${nameWithHash ? nameWithHash : name}${nameWithHash ? '' : '/' + (tag ?? 'latest')}/overview`
+    }
+  }
+
+  return generatedLink
 }

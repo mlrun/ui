@@ -76,7 +76,7 @@ const DetailsInputs = ({ inputs }) => {
         )
           .unwrap()
           .then(artifacts => {
-            if (artifacts.length) {
+            if (artifacts?.length) {
               setInputsContent(state => [
                 ...state,
                 {

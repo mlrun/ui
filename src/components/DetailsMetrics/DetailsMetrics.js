@@ -19,26 +19,24 @@ such restriction.
 */
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { isNil } from 'lodash'
+import { isEmpty } from 'lodash'
 
-import InvocationMetricCard from './IncvocationMetricCard'
-import MetricChart from '../MetricChart/MetricChart'
+import InvocationsMetricCard from './InvocationsMetricCard'
 import NoMetricData from './NoMetricData'
 import DatePicker from '../../common/DatePicker/DatePicker'
 import MetricsSelector from '../../elements/MetricsSelector/MetricsSelector'
 import StatsCard from '../../common/StatsCard/StatsCard'
-import { TextTooltipTemplate, Tooltip } from 'iguazio.dashboard-react-controls/dist/components'
+import ApplicationMetricCard from './ApplicationMetricCard'
 
-import { CHART_TYPE_LINE, CHART_TYPE_BAR, REQUEST_CANCELED } from '../../constants'
+import { REQUEST_CANCELED } from '../../constants'
 import detailsActions from '../../actions/details'
 import modelEndpointsActions from '../../actions/modelEndpoints'
 import { groupMetricByApplication } from '../../elements/MetricsSelector/metricsSelector.util'
-import { getBarChartMetricConfig, getLineChartMetricConfig } from '../../utils/getMetricChartConfig'
+
 import {
   getDateRangeBefore,
   INVOCATION_CARD_SCROLL_DELAY,
   INVOCATION_CARD_SCROLL_THRESHOLD,
-  METRIC_COMPUTED_AVG_POINTS,
   METRIC_RAW_TOTAL_POINTS,
   ML_RUN_INFRA,
   timeRangeMapping
@@ -51,7 +49,6 @@ import {
 } from '../../utils/datePicker.util'
 
 import { ReactComponent as MetricsIcon } from 'igz-controls/images/metrics-icon.svg'
-import colors from 'igz-controls/scss/colors.scss'
 
 import './DetailsMetrics.scss'
 
@@ -69,8 +66,6 @@ const DetailsMetrics = ({ selectedItem }) => {
   const [metricOptionsAreLoaded, setMetricOptionsAreLoaded] = useState(false)
   const detailsStore = useSelector(store => store.detailsStore)
   const dispatch = useDispatch()
-  const lineConfig = useMemo(() => getLineChartMetricConfig(), [])
-  const barConfig = useMemo(() => getBarChartMetricConfig(), [])
   const generatedMetrics = useMemo(() => {
     return groupMetricByApplication(metrics, true)
   }, [metrics])
@@ -86,59 +81,16 @@ const DetailsMetrics = ({ selectedItem }) => {
     )
   }, [generatedMetrics.length])
 
-  const calculateHistogram = useCallback((points, metric) => {
-    const numberOfBins = 5
-    const minPointValue = Math.min(...points)
-    const maxPointValue = Math.max(...points)
-    const range = maxPointValue - minPointValue === 0 ? 1 : maxPointValue - minPointValue
-    const binSize = range / numberOfBins
-    const bins = Array(numberOfBins)
-      .fill()
-      .map(() => ({ count: 0, minBinValue: null, maxBinValue: null }))
-    const roundValue = (value, fraction = 100) => Math.round(value * fraction) / fraction
-
-    points.forEach(value => {
-      const binIndex = Math.min(Math.floor((value - minPointValue) / binSize), numberOfBins - 1)
-      bins[binIndex].count++
-
-      if (isNil(bins[binIndex].minBinValue) || bins[binIndex].minBinValue > value)
-        bins[binIndex].minBinValue = value
-
-      if (isNil(bins[binIndex].maxBinValue) || bins[binIndex].maxBinValue < value)
-        bins[binIndex].maxBinValue = value
-    })
-
-    const totalCount = points.length
-
-    const binPercentages = bins.map(bin => roundValue((bin.count / totalCount) * 100, 1000))
-
-    const binLabels = Array.from({ length: numberOfBins }, (_, i) => {
-      if (parseFloat(binPercentages[i]) === 0) return ''
-
-      if (maxPointValue === minPointValue) return `${roundValue(maxPointValue)}`
-
-      const rangeStart = bins[i].minBinValue
-      const rangeEnd = bins[i].maxBinValue
-
-      if (rangeStart === rangeEnd) return String(roundValue(rangeStart))
-
-      return `${roundValue(rangeStart)} - ${roundValue(rangeEnd)}`
-    })
-
-    return {
-      labels: binLabels,
-      datasets: [
-        {
-          data: binPercentages,
-          chartType: CHART_TYPE_BAR,
-          tension: 0.2,
-          borderWidth: 2,
-          backgroundColor: colors.java,
-          borderColor: colors.java
-        }
-      ]
-    }
-  }, [])
+  const chooseMetricsDataCard = useMemo(() => {
+    return (
+      generatedMetrics.length === 1 && (
+        <StatsCard className="metrics__empty-select">
+          <MetricsIcon />
+          <div>Choose metrics to view endpoint’s data</div>
+        </StatsCard>
+      )
+    )
+  }, [generatedMetrics.length])
 
   const expandInvocationCard = useCallback(
     (isUnpinAction = false) => {
@@ -339,6 +291,7 @@ const DetailsMetrics = ({ selectedItem }) => {
 
     return () => {
       metricsValuesAbortController.current?.abort(REQUEST_CANCELED)
+      setMetrics([])
     }
   }, [
     metricOptionsAreLoaded,
@@ -351,15 +304,6 @@ const DetailsMetrics = ({ selectedItem }) => {
     setMetrics,
     metricsValuesAbortController
   ])
-
-  if (generatedMetrics.length === 0) {
-    return (
-      <StatsCard className="metrics__empty-select">
-        <MetricsIcon />
-        <div>Choose metrics to view endpoint’s data</div>
-      </StatsCard>
-    )
-  }
 
   return (
     <div className="metrics-wrapper">
@@ -390,119 +334,61 @@ const DetailsMetrics = ({ selectedItem }) => {
         />
       </div>
 
-      <div ref={metricsContainerRef} className="metrics">
-        {generatedMetrics.map(([applicationName, applicationMetrics]) => {
-          return (
-            <React.Fragment key={applicationName}>
-              <div className="metrics__app-name">
-                {applicationName === ML_RUN_INFRA ? '' : applicationName}
-              </div>
-              {applicationMetrics.map(metric => {
-                if (applicationName === ML_RUN_INFRA) {
-                  if (!metric.data) {
-                    return (
-                      <React.Fragment key={metric.id}>
-                        <NoMetricData
-                          className="empty-invocation-card"
-                          key={metric.id}
-                          title="Endpoint call count"
-                        />
-                        {chooseMetricsDataCard}
-                      </React.Fragment>
-                    )
+      {generatedMetrics.length === 0 ? (
+        !detailsStore.loadingCounter ? (
+          <StatsCard className="metrics__empty-select">
+            <MetricsIcon />
+            <div>Choose metrics to view endpoint’s data</div>
+          </StatsCard>
+        ) : null
+      ) : (
+        <div ref={metricsContainerRef} className="metrics">
+          {generatedMetrics.map(([applicationName, applicationMetrics]) => {
+            return (
+              <React.Fragment key={applicationName}>
+                <div className="metrics__app-name">
+                  {applicationName === ML_RUN_INFRA ? '' : applicationName}
+                </div>
+                {applicationMetrics.map(metric => {
+                  if (applicationName === ML_RUN_INFRA) {
+                    if (!metric.data || isEmpty(metric.points)) {
+                      return (
+                        <React.Fragment key={metric.id}>
+                          <NoMetricData
+                            className="empty-invocation-card"
+                            key={metric.id}
+                            title="Endpoint call count"
+                          />
+                          {chooseMetricsDataCard}
+                        </React.Fragment>
+                      )
+                    } else {
+                      return (
+                        <React.Fragment key={metric.id}>
+                          <InvocationsMetricCard
+                            ref={invocationBodyCardRef}
+                            expandInvocationCard={expandInvocationCard}
+                            isInvocationCardExpanded={isInvocationCardExpanded}
+                            key={metric.id}
+                            metric={metric}
+                            previousTotalInvocation={previousTotalInvocation}
+                            selectedDate={selectedDate}
+                          />
+                          {chooseMetricsDataCard}
+                        </React.Fragment>
+                      )
+                    }
+                  } else if (!metric.data || isEmpty(metric.points)) {
+                    return <NoMetricData key={metric.id} title={metric.title} />
                   } else {
-                    return (
-                      <React.Fragment key={metric.id}>
-                        <InvocationMetricCard
-                          ref={invocationBodyCardRef}
-                          expandInvocationCard={expandInvocationCard}
-                          isInvocationCardExpanded={isInvocationCardExpanded}
-                          key={metric.id}
-                          metric={metric}
-                          previousTotalInvocation={previousTotalInvocation}
-                          selectedDate={selectedDate}
-                        />
-                        {chooseMetricsDataCard}
-                      </React.Fragment>
-                    )
+                    return <ApplicationMetricCard metric={metric} key={metric.id} />
                   }
-                } else if (!metric.data) {
-                  return <NoMetricData key={metric.id} title={metric.title} />
-                } else {
-                  return (
-                    <StatsCard className="metrics__card" key={metric.id}>
-                      <StatsCard.Header title={metric.title}>
-                        {metric.totalDriftStatus && (
-                          <Tooltip
-                            template={
-                              <TextTooltipTemplate
-                                text={
-                                  <div className="total-drift-status-tooltip">
-                                    <div>Date: {metric.dates[metric.totalDriftStatus.index]}</div>
-                                    <div>Value:{metric.points[metric.totalDriftStatus.index]}</div>
-                                  </div>
-                                }
-                              />
-                            }
-                          >
-                            <div>
-                              <span>{metric.totalDriftStatus.text}</span>
-                              <span
-                                className={`metrics__card-drift-status metrics__card-drift-status-${metric.totalDriftStatus.className}`}
-                              ></span>
-                            </div>
-                          </Tooltip>
-                        )}
-                      </StatsCard.Header>
-                      <div className="metrics__card-body">
-                        <div className="metrics__card-body-bar">
-                          <div className="metrics__card-header">
-                            <div>Value distribution</div>
-                            <div className="metrics__card-header-data">
-                              <span className="metrics__card-header-label">Avg. </span>
-                              {metric[METRIC_COMPUTED_AVG_POINTS]}
-                            </div>
-                          </div>
-                          <MetricChart
-                            chartConfig={{
-                              ...barConfig,
-                              data: calculateHistogram(metric.points, metric)
-                            }}
-                          />
-                        </div>
-                        <div className="metrics__card-body-line">
-                          <div className="metrics__card-header">Value over time</div>
-                          <MetricChart
-                            chartConfig={{
-                              ...lineConfig,
-                              data: {
-                                labels: metric.labels,
-                                datasets: [
-                                  {
-                                    data: metric.points,
-                                    dates: metric.dates,
-                                    chartType: CHART_TYPE_LINE,
-                                    metricType: metric.type,
-                                    driftStatusList: metric.driftStatusList || [],
-                                    tension: 0.2,
-                                    totalDriftStatus: metric.totalDriftStatus,
-                                    borderWidth: 1,
-                                    borderColor: metric.totalDriftStatus?.chartColor || colors.java
-                                  }
-                                ]
-                              }
-                            }}
-                          />
-                        </div>
-                      </div>
-                    </StatsCard>
-                  )
-                }
-              })}
-            </React.Fragment>
-          )
-        })}
-      </div>
+                })}
+              </React.Fragment>
+            )
+          })}
+        </div>
+      )}
     </div>
   )
 }

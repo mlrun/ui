@@ -30,7 +30,15 @@ import { ReactComponent as DownloadIcon } from 'igz-controls/images/download.svg
 
 import './download.scss'
 
-const Download = ({ className, disabled, fileName, onlyIcon, path, user, withoutIcon }) => {
+const Download = ({
+  className = '',
+  disabled = false,
+  fileName,
+  onlyIcon = false,
+  path,
+  user,
+  withoutIcon = false
+}) => {
   const downloadRef = useRef(null)
   const dispatch = useDispatch()
   const downloadClassNames = classnames('download', className, disabled && 'download_disabled')
@@ -68,13 +76,6 @@ const Download = ({ className, disabled, fileName, onlyIcon, path, user, without
       )}
     </div>
   )
-}
-
-Download.defaultProps = {
-  className: '',
-  disabled: false,
-  onlyIcon: false,
-  withoutIcon: false
 }
 
 Download.propTypes = {

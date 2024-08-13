@@ -24,17 +24,22 @@ import ScheduledJobsTable from '../../../elements/ScheduledJobsTable/ScheduledJo
 import { ProjectJobsMonitoringContext } from '../ProjectsJobsMonitoring'
 
 import { createScheduleJobsMonitoringContent } from '../../../utils/createJobsContent'
-import { datePickerFutureOptions, NEXT_24_HOUR_DATE_OPTION } from '../../../utils/datePicker.util'
-import { setFilters } from '../../../reducers/filtersReducer'
 import { JOBS_MONITORING_SCHEDULED_TAB } from '../../../constants'
 
 const ScheduledMonitoring = () => {
   const [dataIsLoaded, setDataIsLoaded] = useState(false)
   const dispatch = useDispatch()
-  const filtersStore = useSelector(store => store.filtersStore)
-  const { scheduledJobs, setScheduledJobs, largeRequestErrorMessage, refreshScheduled } = React.useContext(
-    ProjectJobsMonitoringContext
-  )
+  const [schedulesFilterMenu, schedulesFilterMenuModal] = useSelector(state => [
+    state.filtersStore.filterMenu[JOBS_MONITORING_SCHEDULED_TAB],
+    state.filtersStore.filterMenuModal[JOBS_MONITORING_SCHEDULED_TAB]
+  ])
+  const {
+    requestErrorMessage,
+    refreshScheduled,
+    scheduledFiltersConfig,
+    scheduledJobs,
+    setScheduledJobs
+  } = React.useContext(ProjectJobsMonitoringContext)
 
   const tableContent = useMemo(() => {
     return createScheduleJobsMonitoringContent(scheduledJobs)
@@ -42,36 +47,20 @@ const ScheduledMonitoring = () => {
 
   useEffect(() => {
     if (!dataIsLoaded) {
-      let filters = {}
-
-      if (filtersStore.saveFilters) {
-        filters = {
-          dates: filtersStore.dates,
-          type: filtersStore.filterMenuModal[JOBS_MONITORING_SCHEDULED_TAB].values.type
-        }
-
-        dispatch(setFilters({ saveFilters: false }))
-      } else {
-        const next24HourOption = datePickerFutureOptions.find(
-          option => option.id === NEXT_24_HOUR_DATE_OPTION
-        )
-
-        filters = {
-          dates: {
-            value: next24HourOption.handler(true),
-            isPredefined: next24HourOption.isPredefined,
-            initialSelectedOptionId: next24HourOption.id
-          },
-          type: filtersStore.filterMenuModal[JOBS_MONITORING_SCHEDULED_TAB].values.type
-        }
-
-        dispatch(setFilters({ dates: filters.dates }))
+      let filters = {
+        ...schedulesFilterMenu,
+        ...schedulesFilterMenuModal.values
       }
-
       refreshScheduled(filters)
       setDataIsLoaded(true)
     }
-  }, [filtersStore, dataIsLoaded, dispatch, refreshScheduled])
+  }, [
+    dataIsLoaded,
+    dispatch,
+    refreshScheduled,
+    schedulesFilterMenu,
+    schedulesFilterMenuModal.values
+  ])
 
   useEffect(() => {
     return () => {
@@ -83,12 +72,14 @@ const ScheduledMonitoring = () => {
   return (
     <ScheduledJobsTable
       context={ProjectJobsMonitoringContext}
+      filtersConfig={scheduledFiltersConfig}
+      filtersMenuName={JOBS_MONITORING_SCHEDULED_TAB}
       jobs={scheduledJobs}
-      largeRequestErrorMessage={largeRequestErrorMessage}
+      requestErrorMessage={requestErrorMessage}
       refreshJobs={() =>
         refreshScheduled({
-          ...filtersStore,
-          ...filtersStore.filterMenuModal[JOBS_MONITORING_SCHEDULED_TAB].values
+          ...schedulesFilterMenu,
+          ...schedulesFilterMenuModal.values
         })
       }
       tableContent={tableContent}

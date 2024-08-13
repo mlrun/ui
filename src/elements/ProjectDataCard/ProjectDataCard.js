@@ -28,7 +28,16 @@ import ProjectStatistics from '../ProjectStatistics/ProjectStatistics'
 import ProjectTable from '../ProjectTable/ProjectTable'
 import { Tip } from 'igz-controls/components'
 
-const ProjectDataCard = ({ content, href, link, params, statistics, table, tip, title }) => {
+const ProjectDataCard = ({
+  content,
+  href = '',
+  link = '',
+  params,
+  statistics = {},
+  table = {},
+  tip = null,
+  title
+}) => {
   return (
     <div className="project-data-card">
       <div className="project-data-card__header table-header">
@@ -81,14 +90,6 @@ const ProjectDataCard = ({ content, href, link, params, statistics, table, tip, 
       )}
     </div>
   )
-}
-
-ProjectDataCard.defaultProps = {
-  href: '',
-  link: '',
-  statistics: {},
-  table: {},
-  tip: null,
 }
 
 ProjectDataCard.propTypes = {

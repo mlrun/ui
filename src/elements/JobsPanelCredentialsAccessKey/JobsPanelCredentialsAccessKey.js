@@ -31,17 +31,14 @@ import { PANEL_DEFAULT_ACCESS_KEY } from '../../constants'
 import './jobsPanelCredentialsAccessKey.scss'
 
 const JobsPanelCredentialsAccessKey = ({
-  isScheduled,
+  isScheduled = false,
   panelDispatch,
   panelState,
   setNewJobCredentialsAccessKey,
   setValidation,
   validation
 }) => {
-  const accessKeyClassNames = classnames(
-    isScheduled && 'without-padding',
-    'job-panel__item'
-  )
+  const accessKeyClassNames = classnames(isScheduled && 'without-padding', 'job-panel__item')
 
   const handleSetCredentialsAccessKey = value => {
     panelDispatch({
@@ -66,10 +63,6 @@ const JobsPanelCredentialsAccessKey = ({
       validation={validation}
     />
   )
-}
-
-JobsPanelCredentialsAccessKey.defaultProps = {
-  isScheduled: false
 }
 
 JobsPanelCredentialsAccessKey.propTypes = {

@@ -29,6 +29,7 @@ import Loader from '../../common/Loader/Loader'
 import ArtifactsActionBar from '../ArtifactsActionBar/ArtifactsActionBar'
 import NoData from '../../common/NoData/NoData'
 import Details from '../Details/Details'
+import WarningMessage from '../../common/WarningMessage/WarningMessage'
 
 import { DATASETS_FILTERS, DATASETS_PAGE, FULL_VIEW_MODE } from '../../constants'
 import { getNoDataMessage } from '../../utils/getNoDataMessage'
@@ -53,19 +54,21 @@ const DatasetsView = React.forwardRef(
       handleExpandRow,
       handleRefresh,
       handleRegisterDataset,
-      largeRequestErrorMessage,
+      maxArtifactsErrorIsShown,
       pageData,
+      requestErrorMessage,
       selectedDataset,
       selectedRowData,
       setDatasets,
+      setMaxArtifactsErrorIsShown,
       setSelectedDatasetMin,
       setSelectedRowData,
       sortProps,
       tableContent,
       tableHeaders,
       toggleConvertedYaml,
-      urlTagOption,
-      viewMode,
+      urlTagOption = null,
+      viewMode = null,
       virtualizationConfig
     },
     { datasetsRef }
@@ -104,7 +107,7 @@ const DatasetsView = React.forwardRef(
                   message={getNoDataMessage(
                     filtersStore,
                     filters,
-                    largeRequestErrorMessage,
+                    requestErrorMessage,
                     DATASETS_PAGE,
                     null,
                     DATASETS_FILTERS
@@ -113,6 +116,12 @@ const DatasetsView = React.forwardRef(
               ) : (
                 <>
                   {(selectedRowData.loading || artifactsStore.dataSets.datasetLoading) && <Loader />}
+                  {maxArtifactsErrorIsShown && (
+                    <WarningMessage
+                      message="The query response displays up to 1000 items. Use filters to narrow down the results."
+                      handleClose={() => setMaxArtifactsErrorIsShown(false)}
+                    />
+                  )}
                   <Table
                     actionsMenu={actionsMenu}
                     applyDetailsChanges={applyDetailsChanges}
@@ -171,11 +180,6 @@ const DatasetsView = React.forwardRef(
   }
 )
 
-DatasetsView.defaultProps = {
-  viewMode: null,
-  urlTagOption: null
-}
-
 DatasetsView.propTypes = {
   actionsMenu: ACTIONS_MENU.isRequired,
   applyDetailsChanges: PropTypes.func.isRequired,
@@ -188,11 +192,13 @@ DatasetsView.propTypes = {
   handleExpandRow: PropTypes.func.isRequired,
   handleRefresh: PropTypes.func.isRequired,
   handleRegisterDataset: PropTypes.func.isRequired,
-  largeRequestErrorMessage: PropTypes.string.isRequired,
+  maxArtifactsErrorIsShown: PropTypes.bool.isRequired,
   pageData: PropTypes.object.isRequired,
+  requestErrorMessage: PropTypes.string.isRequired,
   selectedDataset: PropTypes.object.isRequired,
   selectedRowData: PropTypes.object.isRequired,
   setDatasets: PropTypes.func.isRequired,
+  setMaxArtifactsErrorIsShown: PropTypes.func.isRequired,
   setSelectedDatasetMin: PropTypes.func.isRequired,
   setSelectedRowData: PropTypes.func.isRequired,
   sortProps: SORT_PROPS,

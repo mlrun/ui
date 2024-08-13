@@ -27,6 +27,7 @@ import ModelsPageTabs from '../ModelsPageTabs/ModelsPageTabs'
 import NoData from '../../../common/NoData/NoData'
 import Table from '../../Table/Table'
 import Details from '../../Details/Details'
+import WarningMessage from '../../../common/WarningMessage/WarningMessage'
 
 import { ACTIONS_MENU, VIRTUALIZATION_CONFIG } from '../../../types'
 import { FULL_VIEW_MODE, MODELS_FILTERS, MODELS_PAGE, MODELS_TAB } from '../../../constants'
@@ -51,19 +52,21 @@ const ModelsView = React.forwardRef(
       handleRegisterModel,
       handleTrainModel,
       isDemoMode,
-      largeRequestErrorMessage,
+      maxArtifactsErrorIsShown,
       models,
       pageData,
+      requestErrorMessage,
       selectedModel,
       selectedRowData,
+      setMaxArtifactsErrorIsShown,
       setModels,
       setSelectedModelMin,
       setSelectedRowData,
-      sortProps,
+      sortProps = null,
       tableContent,
       tableHeaders,
-      urlTagOption,
-      viewMode,
+      urlTagOption = null,
+      viewMode = null,
       virtualizationConfig
     },
     { modelsRef }
@@ -107,7 +110,7 @@ const ModelsView = React.forwardRef(
                 message={getNoDataMessage(
                   filtersStore,
                   filters,
-                  largeRequestErrorMessage,
+                  requestErrorMessage,
                   MODELS_PAGE,
                   MODELS_TAB,
                   MODELS_FILTERS
@@ -115,7 +118,15 @@ const ModelsView = React.forwardRef(
               />
             ) : (
               <>
-                {(selectedRowData.loading || artifactsStore.models.modelLoading) && <Loader />}
+                {(selectedRowData.loading ||
+                  artifactsStore.models.modelLoading ||
+                  artifactsStore.pipelines.loading) && <Loader />}
+                {maxArtifactsErrorIsShown && (
+                  <WarningMessage
+                    message="The query response displays up to 1000 items. Use filters to narrow down the results."
+                    handleClose={() => setMaxArtifactsErrorIsShown(false)}
+                  />
+                )}
                 <Table
                   actionsMenu={actionsMenu}
                   applyDetailsChanges={applyDetailsChanges}
@@ -169,12 +180,6 @@ const ModelsView = React.forwardRef(
   }
 )
 
-ModelsView.defaultProps = {
-  sortProps: null,
-  viewMode: null,
-  urlTagOption: null
-}
-
 ModelsView.propTypes = {
   actionsMenu: ACTIONS_MENU.isRequired,
   applyDetailsChanges: PropTypes.func.isRequired,
@@ -186,11 +191,13 @@ ModelsView.propTypes = {
   handleRegisterModel: PropTypes.func.isRequired,
   handleTrainModel: PropTypes.func.isRequired,
   isDemoMode: PropTypes.bool.isRequired,
-  largeRequestErrorMessage: PropTypes.string.isRequired,
+  maxArtifactsErrorIsShown: PropTypes.bool.isRequired,
   models: PropTypes.arrayOf(PropTypes.object).isRequired,
   pageData: PropTypes.object.isRequired,
+  requestErrorMessage: PropTypes.string.isRequired,
   selectedModel: PropTypes.object.isRequired,
   selectedRowData: PropTypes.object.isRequired,
+  setMaxArtifactsErrorIsShown: PropTypes.func.isRequired,
   setModels: PropTypes.func.isRequired,
   setSelectedModelMin: PropTypes.func.isRequired,
   setSelectedRowData: PropTypes.func.isRequired,

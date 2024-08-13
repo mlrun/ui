@@ -29,12 +29,12 @@ import { getChipOptions } from '../../utils/getChipOptions'
 import './functionCardTemplate.scss'
 
 const FunctionCardTemplate = ({
-  className,
-  formState,
-  dense,
+  className = '',
+  dense = false,
+  formState = {},
   functionData,
   onSelectCard,
-  selected
+  selected = false
 }) => {
   const templateClassName = classnames(
     'job-card-template',
@@ -94,13 +94,6 @@ const FunctionCardTemplate = ({
       )}
     </div>
   )
-}
-
-FunctionCardTemplate.defaultProps = {
-  className: '',
-  dense: false,
-  formState: {},
-  selected: false
 }
 
 FunctionCardTemplate.propTypes = {

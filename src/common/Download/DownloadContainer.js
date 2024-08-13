@@ -18,9 +18,9 @@ under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
 import React from 'react'
-import { createPortal } from 'react-dom'
 import { useDispatch, useSelector } from 'react-redux'
 import { Transition, TransitionGroup } from 'react-transition-group'
+import { isEmpty } from 'lodash'
 
 import DownloadItem from './DownloadItem'
 
@@ -58,29 +58,26 @@ const DownloadContainer = () => {
   }
 
   return (
-    <TransitionGroup>
-      {downloadStore.downloadList.length > 0 && downloadStore.showDownloadsList && (
+    <TransitionGroup component={null}>
+      {!isEmpty(downloadStore.downloadList) && downloadStore.showDownloadsList && (
         <Transition timeout={duration}>
-          {state =>
-            createPortal(
-              <div
-                className="download-container"
-                data-testid="download-container"
-                style={{ ...defaultStyle, ...transitionStyles[state] }}
-              >
-                <div className="download-container__header">Downloads</div>
-                <button className="notification_body_close_icon" onClick={handleCancel}>
-                  <CloseIcon />
-                </button>
-                <div className="download-container__body">
-                  {downloadStore.downloadList.map((downloadItem, index) => {
-                    return <DownloadItem downloadItem={downloadItem} key={index} />
-                  })}
-                </div>
-              </div>,
-              document.getElementById('overlay_container')
-            )
-          }
+          {state => (
+            <div
+              className="download-container"
+              data-testid="download-container"
+              style={{ ...defaultStyle, ...transitionStyles[state] }}
+            >
+              <div className="download-container__header">Downloads</div>
+              <button className="notification__button-close" onClick={handleCancel}>
+                <CloseIcon />
+              </button>
+              <div className="download-container__body">
+                {downloadStore.downloadList.map((downloadItem, index) => {
+                  return <DownloadItem downloadItem={downloadItem} key={index} />
+                })}
+              </div>
+            </div>
+          )}
         </Transition>
       )}
     </TransitionGroup>

@@ -40,7 +40,7 @@ import { MODAL_SM, SECONDARY_BUTTON, TERTIARY_BUTTON } from 'igz-controls/consta
 import { buildFunction } from '../../reducers/artifactsReducer'
 import { generateUri } from '../../utils/resources'
 import { getValidationRules } from 'igz-controls/utils/validation.util'
-import { setFieldState } from 'igz-controls/utils/form.util'
+import { setFieldState, isSubmitDisabled } from 'igz-controls/utils/form.util'
 import { setNotification } from '../../reducers/notificationReducer'
 import { showErrorNotification } from '../../utils/notifications.util'
 import { useModalBlockHistory } from '../../hooks/useModalBlockHistory.hook'
@@ -49,7 +49,13 @@ import { ReactComponent as QuestionMarkIcon } from 'igz-controls/images/question
 
 import './deployModelPopUp.scss'
 
-const DeployModelPopUp = ({ functionList, functionOptionList, isOpen, model, onResolve }) => {
+const DeployModelPopUp = ({
+  functionList,
+  functionOptionList,
+  isOpen,
+  model,
+  onResolve = () => {}
+}) => {
   const [tagOptionList, setTagOptionList] = useState([])
   const [initialValues, setInitialValues] = useState({
     modelName: '',
@@ -166,7 +172,7 @@ const DeployModelPopUp = ({ functionList, functionOptionList, isOpen, model, onR
         variant: TERTIARY_BUTTON
       },
       {
-        disabled: formState.submitting || (formState.invalid && formState.submitFailed),
+        disabled: isSubmitDisabled(formState),
         label: 'Deploy',
         onClick: formState.handleSubmit,
         variant: SECONDARY_BUTTON
@@ -269,10 +275,6 @@ const DeployModelPopUp = ({ functionList, functionOptionList, isOpen, model, onR
       </Form>
     </>
   )
-}
-
-DeployModelPopUp.defaultProps = {
-  onResolve: () => {}
 }
 
 DeployModelPopUp.propTypes = {

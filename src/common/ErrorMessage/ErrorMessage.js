@@ -27,7 +27,7 @@ import { ReactComponent as Close } from 'igz-controls/images/close.svg'
 
 import './errorMessage.scss'
 
-const ErrorMessage = ({ closeError, message }) => {
+const ErrorMessage = ({ closeError = null, message }) => {
   return (
     <div data-testid="error-message" className="error">
       <div className="error__data">
@@ -45,10 +45,6 @@ const ErrorMessage = ({ closeError, message }) => {
       )}
     </div>
   )
-}
-
-ErrorMessage.defaultProps = {
-  closeError: null
 }
 
 ErrorMessage.propTypes = {

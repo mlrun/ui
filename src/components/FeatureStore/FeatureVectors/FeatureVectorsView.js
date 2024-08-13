@@ -45,8 +45,8 @@ const FeatureVectorsView = React.forwardRef(
       filtersStore,
       handleExpandRow,
       handleRefresh,
-      largeRequestErrorMessage,
       pageData,
+      requestErrorMessage,
       selectedFeatureVector,
       selectedRowData,
       setCreateVectorPopUpIsOpen,
@@ -74,7 +74,7 @@ const FeatureVectorsView = React.forwardRef(
             message={getNoDataMessage(
               filtersStore,
               featureVectorsFilters,
-              largeRequestErrorMessage,
+              requestErrorMessage,
               FEATURE_STORE_PAGE,
               FEATURE_VECTORS_TAB
             )}
@@ -135,8 +135,8 @@ FeatureVectorsView.propTypes = {
   filtersStore: PropTypes.object.isRequired,
   handleExpandRow: PropTypes.func.isRequired,
   handleRefresh: PropTypes.func.isRequired,
-  largeRequestErrorMessage: PropTypes.string.isRequired,
   pageData: PropTypes.object.isRequired,
+  requestErrorMessage: PropTypes.string.isRequired,
   selectedFeatureVector: PropTypes.object.isRequired,
   selectedRowData: PropTypes.object.isRequired,
   setCreateVectorPopUpIsOpen: PropTypes.func.isRequired,

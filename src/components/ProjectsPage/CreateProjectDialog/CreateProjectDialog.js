@@ -22,16 +22,19 @@ import PropTypes from 'prop-types'
 import arrayMutators from 'final-form-arrays'
 import { Form } from 'react-final-form'
 import { useSelector } from 'react-redux'
+import { createForm } from 'final-form'
 
 import ErrorMessage from '../../../common/ErrorMessage/ErrorMessage'
 import Loader from '../../../common/Loader/Loader'
 import { Button, FormChipCell, FormInput, FormTextarea, PopUpDialog } from 'igz-controls/components'
 
 import { SECONDARY_BUTTON, TERTIARY_BUTTON } from 'igz-controls/constants'
-import { createForm } from 'final-form'
 import { getChipOptions } from '../../../utils/getChipOptions'
-import { getValidationRules, getInternalLabelsValidationRule } from 'igz-controls/utils/validation.util'
-import { setFieldState } from 'igz-controls/utils/form.util'
+import {
+  getValidationRules,
+  getInternalLabelsValidationRule
+} from 'igz-controls/utils/validation.util'
+import { setFieldState, isSubmitDisabled } from 'igz-controls/utils/form.util'
 
 import './createProjectDialog.scss'
 
@@ -51,7 +54,7 @@ const CreateProjectDialog = ({
     createForm({
       initialValues,
       mutators: { ...arrayMutators, setFieldState },
-      onSubmit: () => {}
+      onSubmit: handleCreateProject
     })
   )
 
@@ -62,12 +65,13 @@ const CreateProjectDialog = ({
       closePopUp={closeNewProjectPopUp}
     >
       {projectStore.loading && <Loader />}
-      <Form form={formRef.current} onSubmit={() => {}}>
+      <Form form={formRef.current} onSubmit={handleCreateProject}>
         {formState => {
           return (
             <>
               <div className="form-row">
                 <FormInput
+                  async
                   label="Name"
                   name="name"
                   required
@@ -88,7 +92,10 @@ const CreateProjectDialog = ({
                   shortChips
                   visibleChipsMaxLength="2"
                   validationRules={{
-                    key: getValidationRules('project.labels.key', getInternalLabelsValidationRule(frontendSpec.internal_labels)),
+                    key: getValidationRules(
+                      'project.labels.key',
+                      getInternalLabelsValidationRule(frontendSpec.internal_labels)
+                    ),
                     value: getValidationRules('project.labels.value')
                   }}
                 />
@@ -115,10 +122,10 @@ const CreateProjectDialog = ({
                   onClick={closeNewProjectPopUp}
                 />
                 <Button
-                  disabled={projectStore.loading || !formState.values.name || formState.invalid}
+                  disabled={projectStore.loading || isSubmitDisabled(formState)}
                   variant={SECONDARY_BUTTON}
                   label="Create"
-                  onClick={event => handleCreateProject(event, formState)}
+                  onClick={formState.handleSubmit}
                 />
               </div>
             </>

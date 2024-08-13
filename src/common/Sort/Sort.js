@@ -27,7 +27,14 @@ import { ReactComponent as ArrowIcon } from 'igz-controls/images/back-arrow.svg'
 
 import './sort.scss'
 
-const Sort = ({ disabled, isDescendingOrder, onSelectOption, options, selectedId, setIsDescendingOrder }) => {
+const Sort = ({
+  disabled = false,
+  isDescendingOrder,
+  onSelectOption,
+  options,
+  selectedId,
+  setIsDescendingOrder
+}) => {
   const [selectedOption, setSelectedOption] = useState(null)
   const arrowDirectionClassName = classNames(
     'sort-icon',
@@ -56,10 +63,6 @@ const Sort = ({ disabled, isDescendingOrder, onSelectOption, options, selectedId
       />
     </div>
   )
-}
-
-Sort.defaultProps = {
-  disabled: false
 }
 
 Sort.propTypes = {

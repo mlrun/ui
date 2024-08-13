@@ -32,21 +32,21 @@ import { ReactComponent as Caret } from 'igz-controls/images/dropdown.svg'
 import './select.scss'
 
 const Select = ({
-  className,
-  density,
-  disabled,
+  className = '',
+  density = 'normal',
+  disabled = false,
   floatingLabel,
-  hideSelectedOption,
-  label,
-  labelAtTop,
-  onClick,
+  hideSelectedOption = false,
+  label = '',
+  labelAtTop = false,
+  onClick = null,
   options,
-  search,
-  selectType,
-  selectedId,
+  search = false,
+  selectType = '',
+  selectedId = '',
   selectedItemAction,
-  withoutBorder,
-  withSelectedIcon
+  withoutBorder = false,
+  withSelectedIcon = false
 }) => {
   const selectRef = useRef()
   const [isConfirmDialogOpen, setConfirmDialogOpen] = useState(false)
@@ -237,21 +237,6 @@ const Select = ({
       )}
     </div>
   )
-}
-
-Select.defaultProps = {
-  className: '',
-  density: 'normal',
-  disabled: false,
-  hideSelectedOption: false,
-  label: '',
-  labelAtTop: false,
-  onClick: null,
-  search: false,
-  selectType: '',
-  selectedId: '',
-  withoutBorder: false,
-  withSelectedIcon: false
 }
 
 Select.propTypes = {

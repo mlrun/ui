@@ -30,19 +30,19 @@ import './jobsPanelTable.scss'
 const JobsPanelTable = ({
   addNewItem,
   children,
-  className,
+  className = '',
   content,
-  handleDeleteItems,
+  handleDeleteItems = null,
   handleEditItems,
-  headers,
+  headers = [],
   section,
-  sectionData,
-  sectionDispatch,
-  sectionState,
+  sectionData = {},
+  sectionDispatch = () => {},
+  sectionState = {},
   selectedItem,
   setSelectedItem,
-  setValidation,
-  validation
+  setValidation = () => {},
+  validation = {}
 }) => {
   const [editItem, setEditItem] = useState(false)
 
@@ -109,28 +109,13 @@ const JobsPanelTable = ({
   )
 }
 
-JobsPanelTable.defaultProps = {
-  className: '',
-  headers: [],
-  handleDeleteItems: null,
-  handleSetSelectedVolume: null,
-  sectionData: {},
-  sectionDispatch: () => {},
-  sectionState: {},
-  setValidation: () => {},
-  validation: {}
-}
-
 JobsPanelTable.propTypes = {
   addNewItem: PropTypes.bool.isRequired,
   className: PropTypes.string,
-  content: PropTypes.oneOfType([
-    PropTypes.arrayOf(PropTypes.shape({})),
-    PropTypes.shape({})
-  ]).isRequired,
+  content: PropTypes.oneOfType([PropTypes.arrayOf(PropTypes.shape({})), PropTypes.shape({})])
+    .isRequired,
   handleDeleteItems: PropTypes.func,
   handleEditItems: PropTypes.func.isRequired,
-  handleSetSelectedVolume: PropTypes.func,
   headers: PropTypes.arrayOf(PropTypes.shape({})),
   section: PropTypes.string.isRequired,
   sectionData: PropTypes.shape({}),

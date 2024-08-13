@@ -44,7 +44,7 @@ const FeatureSetsPanelDataSourceView = ({
   handleUrlOnApply,
   handleUrlOnDiscard,
   handleUrlOnEditModeChange,
-  handleUrlSelectOnChange,
+  handleUrlSelectOnChange = null,
   setData,
   setNewFeatureSetDataSourceParseDates,
   setNewFeatureSetSchedule,
@@ -131,10 +131,6 @@ const FeatureSetsPanelDataSourceView = ({
       </FeatureSetsPanelSection>
     </div>
   )
-}
-
-FeatureSetsPanelDataSourceView.defaultProps = {
-  handleUrlSelectOnChange: null
 }
 
 FeatureSetsPanelDataSourceView.propTypes = {

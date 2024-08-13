@@ -31,13 +31,13 @@ import { useFormTable } from 'igz-controls/hooks'
 import { PARAMETERS_FROM_FILE_VALUE, PARAMETERS_FROM_UI_VALUE } from '../../constants'
 
 const FormParametersTable = ({
-  disabled,
-  exitEditModeTriggerItem,
+  disabled = false,
+  exitEditModeTriggerItem = null,
   fieldsPath,
   formState,
-  parametersFromPath,
-  rowCanBeAdded,
-  withHyperparameters
+  hasKwargs = false,
+  parametersFromPath = '',
+  withHyperparameters = false
 }) => {
   const withRequiredParametersRef = useRef(true)
   const predefinedPath = `${fieldsPath}.predefined`
@@ -134,6 +134,7 @@ const FormParametersTable = ({
                 fieldsPath={predefinedPath}
                 formState={formState}
                 getTableArrayErrors={getTableArrayErrors}
+                hasKwargs={hasKwargs}
                 index={index}
                 isCurrentRowEditing={isCurrentRowEditing}
                 key={rowPath}
@@ -163,6 +164,7 @@ const FormParametersTable = ({
                     fieldsPath={customPath}
                     formState={formState}
                     getTableArrayErrors={getTableArrayErrors}
+                    hasKwargs={hasKwargs}
                     index={index}
                     isCurrentRowEditing={isCurrentRowEditing}
                     key={rowPath}
@@ -173,7 +175,7 @@ const FormParametersTable = ({
                   />
                 )
               })}
-              {rowCanBeAdded && (
+              {hasKwargs && (
                 <FormActionButton
                   disabled={disabled}
                   ref={bottomScrollRef}
@@ -205,21 +207,13 @@ const FormParametersTable = ({
   )
 }
 
-FormParametersTable.defaultProps = {
-  disabled: false,
-  exitEditModeTriggerItem: null,
-  parametersFromPath: '',
-  rowCanBeAdded: false,
-  withHyperparameters: false
-}
-
 FormParametersTable.propTypes = {
   disabled: PropTypes.bool,
   exitEditModeTriggerItem: PropTypes.any,
   fieldsPath: PropTypes.string.isRequired,
   formState: PropTypes.shape({}).isRequired,
+  hasKwargs: PropTypes.bool,
   parametersFromPath: PropTypes.string,
-  rowCanBeAdded: PropTypes.bool,
   withHyperparameters: PropTypes.bool
 }
 

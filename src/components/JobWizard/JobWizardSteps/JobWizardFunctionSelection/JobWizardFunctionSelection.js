@@ -57,7 +57,7 @@ import './jobWizardFunctionSelection.scss'
 
 const JobWizardFunctionSelection = ({
   activeTab,
-  currentProject,
+  currentProject = null,
   defaultData,
   filteredFunctions,
   filteredTemplates,
@@ -79,7 +79,7 @@ const JobWizardFunctionSelection = ({
   setShowSchedule,
   setTemplates,
   setTemplatesCategories,
-  stepIsActive,
+  stepIsActive = false,
   templates,
   templatesCategories
 }) => {
@@ -89,14 +89,17 @@ const JobWizardFunctionSelection = ({
   const [filterByName, setFilterByName] = useState('')
   const [filterMatches, setFilterMatches] = useState([])
   const [projects, setProjects] = useState(generateProjectsList(projectNames, params.projectName))
+  const [functionsRequestErrorMessage, setFunctionsRequestErrorMessage] = useState('')
+  const [hubFunctionsRequestErrorMessage, setHubFunctionsRequestErrorMessage] = useState('')
   const selectedActiveTab = useRef(null)
   const functionSelectionRef = useRef(null)
+  const hubFunctionLoadedRef = useRef(false)
 
   const filtersStoreHubCategories = useSelector(
     store =>
       store.filtersStore[FILTER_MENU_MODAL][JOB_WIZARD_FILTERS]?.values?.[HUB_CATEGORIES_FILTER]
   )
-  const { hubFunctions, hubFunctionsCatalog, loading } = useSelector(store => store.functionsStore)
+  const { loading } = useSelector(store => store.functionsStore)
 
   const dispatch = useDispatch()
 
@@ -239,7 +242,9 @@ const JobWizardFunctionSelection = ({
   }
 
   const onSelectedProjectNameChange = currentValue => {
-    dispatch(functionsActions.fetchFunctions(currentValue, {})).then(functions => {
+    dispatch(
+      functionsActions.fetchFunctions(currentValue, {}, {}, setFunctionsRequestErrorMessage)
+    ).then(functions => {
       if (functions) {
         const validFunctions = functions.filter(func => {
           return includes(FUNCTION_RUN_KINDS, func.kind)
@@ -276,39 +281,32 @@ const JobWizardFunctionSelection = ({
   }
 
   useEffect(() => {
-    if (
-      activeTab === FUNCTIONS_SELECTION_HUB_TAB &&
-      (isEmpty(hubFunctions) || isEmpty(hubFunctionsCatalog))
-    ) {
-      dispatch(functionsActions.fetchHubFunctions()).then(templatesObject => {
-        if (templatesObject) {
-          setTemplatesCategories(templatesObject.hubFunctionsCategories)
-          setTemplates(templatesObject.hubFunctions)
+    if (activeTab === FUNCTIONS_SELECTION_HUB_TAB && !hubFunctionLoadedRef.current) {
+      dispatch(functionsActions.fetchHubFunctions({}, setHubFunctionsRequestErrorMessage)).then(
+        templatesObject => {
+          if (templatesObject) {
+            setTemplatesCategories(templatesObject.hubFunctionsCategories)
+            setTemplates(templatesObject.hubFunctions)
 
-          formState.initialValues[FUNCTION_SELECTION_STEP].templatesLabels =
-            templatesObject.hubFunctions.reduce((labels, template) => {
-              labels[template.metadata.name] = template.ui.categories.map(categoryId => {
-                return {
-                  id: categoryId,
-                  key: getCategoryName(categoryId),
-                  isKeyOnly: true
-                }
-              })
+            formState.initialValues[FUNCTION_SELECTION_STEP].templatesLabels =
+              templatesObject.hubFunctions.reduce((labels, template) => {
+                labels[template.metadata.name] = template.ui.categories.map(categoryId => {
+                  return {
+                    id: categoryId,
+                    key: getCategoryName(categoryId),
+                    isKeyOnly: true
+                  }
+                })
 
-              return labels
-            }, {})
+                return labels
+              }, {})
+
+            hubFunctionLoadedRef.current = true
+          }
         }
-      })
+      )
     }
-  }, [
-    activeTab,
-    dispatch,
-    formState.initialValues,
-    hubFunctions,
-    hubFunctionsCatalog,
-    setTemplates,
-    setTemplatesCategories
-  ])
+  }, [activeTab, dispatch, formState.initialValues, setTemplates, setTemplatesCategories])
 
   const selectProjectFunction = functionData => {
     const selectNewFunction = () => {
@@ -404,7 +402,7 @@ const JobWizardFunctionSelection = ({
           ((filterByName.length > 0 &&
             (filterMatches.length === 0 || isEmpty(filteredFunctions))) ||
             isEmpty(functions)) ? (
-            <NoData />
+            <NoData message={functionsRequestErrorMessage} />
           ) : (
             <div className="functions-list">
               {(filteredFunctions.length > 0 ? filteredFunctions : functions)
@@ -455,7 +453,7 @@ const JobWizardFunctionSelection = ({
           ((filterByName.length > 0 &&
             (filterMatches.length === 0 || isEmpty(filteredTemplates))) ||
             isEmpty(templates)) ? (
-            <NoData />
+            <NoData message={hubFunctionsRequestErrorMessage} />
           ) : (
             <div className="functions-list">
               {filteredTemplates
@@ -492,11 +490,6 @@ const JobWizardFunctionSelection = ({
       />
     </div>
   )
-}
-
-JobWizardFunctionSelection.defaultProps = {
-  currentProject: null,
-  stepIsActive: false
 }
 
 JobWizardFunctionSelection.propTypes = {

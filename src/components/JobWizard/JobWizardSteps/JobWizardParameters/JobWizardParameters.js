@@ -33,7 +33,7 @@ import {
 
 import './jobWizardParameters.scss'
 
-const JobWizardParameters = ({ formState, stepIsActive }) => {
+const JobWizardParameters = ({ formState, stepIsActive = false }) => {
   const parametersFromPath = `${PARAMETERS_STEP}.parametersFrom`
   const parametersFromFileUrlPath = `${PARAMETERS_STEP}.parametersFromFileUrl`
 
@@ -70,17 +70,13 @@ const JobWizardParameters = ({ formState, stepIsActive }) => {
         fieldsPath={`${PARAMETERS_STEP}.parametersTable`}
         formState={formState}
         parametersFromPath={parametersFromPath}
-        rowCanBeAdded={formState.values.runDetails.handlerData?.has_kwargs}
+        hasKwargs={formState.values.runDetails.handlerData?.has_kwargs}
         withHyperparameters={
           hyperParametersAreEnabled && selectedFromValue === PARAMETERS_FROM_UI_VALUE
         }
       />
     </div>
   )
-}
-
-JobWizardParameters.defaultProps = {
-  stepIsActive: false
 }
 
 JobWizardParameters.propTypes = {

@@ -4,8 +4,9 @@
 
 .content-menu {
   display: inline-flex;
-  align-items: flex-end;
+  align-items: center;
   width: 100%;
+  min-height: 40px;
 
   &__list {
     display: flex;

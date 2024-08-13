@@ -43,7 +43,13 @@ import { ReactComponent as ResultIcon } from 'igz-controls/images/circled-r.svg'
 
 import './metricsSelector.scss'
 
-const MetricsSelector = ({ maxSelectionNumber, metrics, name, onSelect, preselectedMetrics }) => {
+const MetricsSelector = ({
+  maxSelectionNumber = 20,
+  metrics,
+  name,
+  onSelect = () => {},
+  preselectedMetrics = []
+}) => {
   const [nameFilter, setNameFilter] = useState('')
   const [isOpen, setIsOpen] = useState(false)
   const [appliedMetrics, setAppliedMetrics] = useState([])
@@ -137,9 +143,10 @@ const MetricsSelector = ({ maxSelectionNumber, metrics, name, onSelect, preselec
   }, [windowClickHandler, windowScrollHandler, isOpen])
 
   const handleApply = () => {
-    const newAppliedMetrics = formRef.current?.getFieldState('metrics')?.value?.map(metricFullName => {
-      return metrics.find(metric => metric.full_name === metricFullName)
-    }) || []
+    const newAppliedMetrics =
+      formRef.current?.getFieldState('metrics')?.value?.map(metricFullName => {
+        return metrics.find(metric => metric.full_name === metricFullName)
+      }) || []
 
     onSelect(newAppliedMetrics)
     setAppliedMetrics(newAppliedMetrics)
@@ -152,7 +159,7 @@ const MetricsSelector = ({ maxSelectionNumber, metrics, name, onSelect, preselec
 
   const getSelectValue = () => {
     if (isEmpty(appliedMetrics)) {
-      return 'Chose Metrics...'
+      return 'Choose Metrics...'
     }
 
     if (appliedMetrics.length === 1) {
@@ -277,10 +284,16 @@ const MetricsSelector = ({ maxSelectionNumber, metrics, name, onSelect, preselec
                   </FieldArray>
                 </ul>
                 <div className="metrics-selector__footer">
-                  <div data-testid="metrics-selector-counter" className="metrics-selector__footer-counter">
+                  <div
+                    data-testid="metrics-selector-counter"
+                    className="metrics-selector__footer-counter"
+                  >
                     {`${formState.values.metrics?.length ?? 0}/${maxSelectionNumber}`}
                   </div>
-                  <div data-testid="metrics-selector-buttons" className='metrics-selector__footer-buttons'>
+                  <div
+                    data-testid="metrics-selector-buttons"
+                    className="metrics-selector__footer-buttons"
+                  >
                     <Button variant={TERTIARY_BUTTON} label="Clear" onClick={handleClear} />
                     <Button variant={SECONDARY_BUTTON} label="Apply" onClick={handleApply} />
                   </div>
@@ -292,12 +305,6 @@ const MetricsSelector = ({ maxSelectionNumber, metrics, name, onSelect, preselec
       )}
     </Form>
   )
-}
-
-MetricsSelector.defaultProps = {
-  maxSelectionNumber: 20,
-  onSelect: () => {},
-  preselectedMetrics: []
 }
 
 MetricsSelector.propTypes = {

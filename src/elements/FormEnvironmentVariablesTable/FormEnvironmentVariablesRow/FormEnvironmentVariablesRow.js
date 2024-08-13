@@ -41,9 +41,9 @@ import './formEnvironmentVariablesRow.scss'
 const FormEnvironmentVariablesRow = ({
   applyChanges,
   deleteRow,
-  disabled,
+  disabled = false,
   discardOrDelete,
-  editingItem,
+  editingItem = null,
   enterEditMode,
   fields,
   fieldsPath,
@@ -184,11 +184,6 @@ const FormEnvironmentVariablesRow = ({
       <FormOnChange handler={handleTypeChange} name={`${rowPath}.data.type`} />
     </>
   )
-}
-
-FormEnvironmentVariablesRow.defaultProps = {
-  disabled: false,
-  editingItem: null
 }
 
 FormEnvironmentVariablesRow.propTypes = {

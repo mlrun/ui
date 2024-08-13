@@ -10276,7 +10276,7 @@
       "kind": "dataset",
       "iter": 0,
       "tree": "eaae138e-439a-47fa-93c6-ba0fe1dc3b79",
-      "target_path": "/User/demos/customer-churn-prediction/data/pipeline/eaae138e-439a-47fa-93c6-ba0fe1dc3b79/coxhazard-summary.csv",
+      "target_path": "v3io:///User/demos/customer-churn-prediction/data/pipeline/eaae138e-439a-47fa-93c6-ba0fe1dc3b79/coxhazard-summary.csv",
       "format": "csv",
       "size": 3357,
       "db_key": "survival-curves_coxhazard-summary",

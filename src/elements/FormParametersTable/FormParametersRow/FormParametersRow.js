@@ -18,7 +18,7 @@ under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
 import PropTypes from 'prop-types'
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import classnames from 'classnames'
 import { isPlainObject } from 'lodash'
 
@@ -53,20 +53,21 @@ import { ReactComponent as CustomIcon } from 'igz-controls/images/custom.svg'
 const FormParametersRow = ({
   applyChanges,
   deleteRow,
-  disabled,
+  disabled = false,
   discardOrDelete,
-  editingItem,
+  editingItem = null,
   enterEditMode,
   fields,
   fieldsPath,
   formState,
   getTableArrayErrors,
+  hasKwargs = false,
   index,
   isCurrentRowEditing,
   rowPath,
   uniquenessValidator,
-  withHyperparameters,
-  withRequiredParameters
+  withHyperparameters = false,
+  withRequiredParameters = true
 }) => {
   const [fieldData, setFieldData] = useState(fields.value[index])
   const [typeIsChanging, setTypeIsChanging] = useState(false)
@@ -79,6 +80,9 @@ const FormParametersRow = ({
     fieldData.isRequired && index in getTableArrayErrors(fieldsPath) && 'form-table__row_invalid'
   )
   const tableEditingRowClassNames = classnames(tableRowClassNames, 'form-table__row_active')
+  const typeOptions = useMemo(() => {
+    return fieldData?.parameterTypeOptions || parametersValueTypeOptions
+  }, [fieldData])
 
   const getValueValidationRules = parameterType => {
     if (parameterType === parameterTypeDict) {
@@ -314,8 +318,8 @@ const FormParametersRow = ({
                       setTypeIsChanging(true)
                     }}
                     name={`${rowPath}.data.type`}
-                    options={fieldData?.parameterTypeOptions || parametersValueTypeOptions}
-                    required={!fieldData.isPredefined}
+                    options={typeOptions}
+                    required
                   />
                 </div>
                 <div className="form-table__cell form-table__cell_3">
@@ -431,7 +435,7 @@ const FormParametersRow = ({
                 </div>
                 <FormRowActions
                   applyChanges={applyChanges}
-                  deleteButtonIsHidden={fieldData.isPredefined}
+                  deleteButtonIsHidden={fieldData.isRequired || !hasKwargs}
                   deleteRow={deleteRow}
                   disabled={isRowDisabled()}
                   discardOrDelete={discardOrDelete}
@@ -453,13 +457,6 @@ const FormParametersRow = ({
   )
 }
 
-FormParametersRow.defaultProps = {
-  disabled: false,
-  editingItem: null,
-  withHyperparameters: false,
-  withRequiredParameters: true
-}
-
 FormParametersRow.propTypes = {
   applyChanges: PropTypes.func.isRequired,
   deleteRow: PropTypes.func.isRequired,
@@ -470,6 +467,7 @@ FormParametersRow.propTypes = {
   fields: PropTypes.shape({}).isRequired,
   fieldsPath: PropTypes.string.isRequired,
   formState: PropTypes.shape({}).isRequired,
+  hasKwargs: PropTypes.bool,
   index: PropTypes.number.isRequired,
   isCurrentRowEditing: PropTypes.func.isRequired,
   rowPath: PropTypes.string.isRequired,

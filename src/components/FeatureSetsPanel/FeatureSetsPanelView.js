@@ -38,7 +38,7 @@ import './featureSetsPanel.scss'
 const FeatureSetsPanelView = ({
   accessKeyRequired,
   closePanel,
-  confirmDialog,
+  confirmDialog = null,
   disableButtons,
   featureStore,
   frontendSpec,
@@ -151,11 +151,6 @@ const FeatureSetsPanelView = ({
       </div>
     </div>
   )
-}
-
-FeatureSetsPanelView.defaultProps = {
-  confirmDialog: null,
-  defaultData: null
 }
 
 FeatureSetsPanelView.propTypes = {

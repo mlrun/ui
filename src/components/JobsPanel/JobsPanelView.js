@@ -40,7 +40,7 @@ import JobsPanelCredentialsAccessKey from '../../elements/JobsPanelCredentialsAc
 const JobsPanelView = ({
   checkValidation,
   closePanel,
-  defaultData,
+  defaultData = null,
   functionData,
   handleEditJob,
   handleRunJob,
@@ -182,10 +182,6 @@ const JobsPanelView = ({
       </div>
     </div>
   )
-}
-
-JobsPanelView.defaultProps = {
-  defaultData: null
 }
 
 JobsPanelView.propTypes = {

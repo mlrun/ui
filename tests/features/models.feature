@@ -28,10 +28,10 @@ Feature: Models Page
     Then verify "Models_Tab_Selector" on "Models" wizard should contains "Models"."Tab_List"
     Then verify "Table_Name_Filter_Input" element visibility on "Models" wizard
     Then click on "Table_FilterBy_Button" element on "Models" wizard
-    Then verify "Table_Label_Filter_Input" element visibility on "Artifacts_FilterBy_Popup" wizard
-    Then verify "Table_Tree_Filter_Dropdown" element visibility on "Artifacts_FilterBy_Popup" wizard
-    Then verify "Table_Tree_Filter_Dropdown" dropdown element on "Artifacts_FilterBy_Popup" wizard should contains "Dropdown_Options"."Tag_Filer_Options"
-    Then verify "Show_Iterations_Checkbox" element visibility on "Artifacts_FilterBy_Popup" wizard
+    Then verify "Table_Label_Filter_Input" element visibility on "FilterBy_Popup" wizard
+    Then verify "Table_Tree_Filter_Dropdown" element visibility on "FilterBy_Popup" wizard
+    Then verify "Table_Tree_Filter_Dropdown" dropdown element on "FilterBy_Popup" wizard should contains "Dropdown_Options"."Tag_Filer_Options"
+    Then verify "Show_Iterations_Checkbox" element visibility on "FilterBy_Popup" wizard
     Then verify "Table_Refresh_Button" element visibility on "Models" wizard
     Then verify "Models_Table" element visibility on "Models" wizard
     Then verify "Register_Model_Button" element visibility on "Models" wizard
@@ -124,25 +124,25 @@ Feature: Models Page
     And click on cell with value "Models" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
     And wait load page
     Then click on "Table_FilterBy_Button" element on "Models" wizard
-    Then verify "Show_Iterations_Checkbox" element visibility on "Artifacts_FilterBy_Popup" wizard
+    Then verify "Show_Iterations_Checkbox" element visibility on "FilterBy_Popup" wizard
     Then check "expand_btn" not presented in "Models_Table" on "Models" wizard
-    Then uncheck "Show_Iterations_Checkbox" element on "Artifacts_FilterBy_Popup" wizard
-    Then click on "Apply_Button" element on "Artifacts_FilterBy_Popup" wizard
+    Then uncheck "Show_Iterations_Checkbox" element on "FilterBy_Popup" wizard
+    Then click on "Apply_Button" element on "FilterBy_Popup" wizard
     And wait load page
     Then click on "Table_FilterBy_Button" element on "Models" wizard
-    Then "Show_Iterations_Checkbox" element should be unchecked on "Artifacts_FilterBy_Popup" wizard
+    Then "Show_Iterations_Checkbox" element should be unchecked on "FilterBy_Popup" wizard
     Then check "expand_btn" visibility in "Models_Table" on "Models" wizard with 0 offset
     Then click on cell with row index 1 in "expand_btn" column in "Models_Table" table on "Models" wizard
     And wait load page
     Then click on cell with row index 1 in "name" column in "Models_Table" table on "Models" wizard
     Then verify "Header" element visibility on "Models_Info_Pane" wizard
     Then click on "Table_FilterBy_Button" element on "Models" wizard
-    Then check "Show_Iterations_Checkbox" element on "Artifacts_FilterBy_Popup" wizard
-    Then click on "Apply_Button" element on "Artifacts_FilterBy_Popup" wizard
+    Then check "Show_Iterations_Checkbox" element on "FilterBy_Popup" wizard
+    Then click on "Apply_Button" element on "FilterBy_Popup" wizard
     And wait load page
     Then verify "Header" element not exists on "Models_Info_Pane" wizard
     Then click on "Table_FilterBy_Button" element on "Models" wizard
-    Then "Show_Iterations_Checkbox" element should be checked on "Artifacts_FilterBy_Popup" wizard
+    Then "Show_Iterations_Checkbox" element should be checked on "FilterBy_Popup" wizard
 
   @MLM
   @passive
@@ -180,18 +180,18 @@ Feature: Models Page
     And click on cell with value "Models" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
     And wait load page
     Then click on "Table_FilterBy_Button" element on "Models" wizard
-    Then type value "my-key" to "Table_Label_Filter_Input" field on "Artifacts_FilterBy_Popup" wizard
-    Then click on "Apply_Button" element on "Artifacts_FilterBy_Popup" wizard
+    Then type value "my-key" to "Table_Label_Filter_Input" field on "FilterBy_Popup" wizard
+    Then click on "Apply_Button" element on "FilterBy_Popup" wizard
     And wait load page
     Then value in "labels" column with "dropdowns" in "Models_Table" on "Models" wizard should contains "my-key" in "Overlay"
     Then click on "Table_FilterBy_Button" element on "Models" wizard
-    Then type value "my-key=my-value" to "Table_Label_Filter_Input" field on "Artifacts_FilterBy_Popup" wizard
-    Then click on "Apply_Button" element on "Artifacts_FilterBy_Popup" wizard
+    Then type value "my-key=my-value" to "Table_Label_Filter_Input" field on "FilterBy_Popup" wizard
+    Then click on "Apply_Button" element on "FilterBy_Popup" wizard
     And wait load page
     Then value in "labels" column with "dropdowns" in "Models_Table" on "Models" wizard should contains "my-key=my-value" in "Overlay"
     Then click on "Table_FilterBy_Button" element on "Models" wizard
-    Then type value "MY-KEY" to "Table_Label_Filter_Input" field on "Artifacts_FilterBy_Popup" wizard
-    Then click on "Apply_Button" element on "Artifacts_FilterBy_Popup" wizard
+    Then type value "MY-KEY" to "Table_Label_Filter_Input" field on "FilterBy_Popup" wizard
+    Then click on "Apply_Button" element on "FilterBy_Popup" wizard
     And wait load page
     And verify "No_Data_Message" element visibility on "commonPagesHeader" wizard
     Then "No_Data_Message" component on "commonPagesHeader" should contains "No_Data_Message"."No_Models_data"
@@ -392,8 +392,8 @@ Feature: Models Page
     Then verify "YAML_Modal_Container" element visibility on "View_YAML" wizard
     Then click on "Cross_Cancel_Button" element on "View_YAML" wizard
     Then click on "Table_FilterBy_Button" element on "Models" wizard
-    Then uncheck "Show_Iterations_Checkbox" element on "Artifacts_FilterBy_Popup" wizard
-    Then click on "Apply_Button" element on "Artifacts_FilterBy_Popup" wizard
+    Then uncheck "Show_Iterations_Checkbox" element on "FilterBy_Popup" wizard
+    Then click on "Apply_Button" element on "FilterBy_Popup" wizard
     And wait load page
     Then click on cell with row index 1 in "expand_btn" column in "Models_Table" table on "Models" wizard
     Then select "View YAML" option in action menu on "Models" wizard in "Models_Table" table at row with "latest" value in "name_expand_btn" column
@@ -498,8 +498,8 @@ Feature: Models Page
     And wait load page
     Then verify "Table_FilterBy_Button" element visibility on "Models" wizard
     Then click on "Table_FilterBy_Button" element on "Models" wizard
-    Then select "All" option in "Table_Tree_Filter_Dropdown" dropdown on "Artifacts_FilterBy_Popup" wizard
-    Then click on "Apply_Button" element on "Artifacts_FilterBy_Popup" wizard
+    Then select "All" option in "Table_Tree_Filter_Dropdown" dropdown on "FilterBy_Popup" wizard
+    Then click on "Apply_Button" element on "FilterBy_Popup" wizard
     And wait load page
     Then verify action menu on "Models" wizard in "Models_Table" table with "current-state_model" value in "name" column should contains "Common_Lists"."Action_Menu_List_Expanded"
     Then verify that in action menu on "Models" wizard in "Models_Table" table with "current-state_model" value in "name" column "Delete" option is disabled
@@ -678,8 +678,8 @@ Feature: Models Page
     And click on cell with value "Models" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
     And wait load page
     Then click on "Table_FilterBy_Button" element on "Models" wizard
-    Then select "v1" option in "Table_Tree_Filter_Dropdown" dropdown on "Artifacts_FilterBy_Popup" wizard
-    Then click on "Apply_Button" element on "Artifacts_FilterBy_Popup" wizard
+    Then select "v1" option in "Table_Tree_Filter_Dropdown" dropdown on "FilterBy_Popup" wizard
+    Then click on "Apply_Button" element on "FilterBy_Popup" wizard
     And wait load page
     When click on cell with value "test-model" in "name" column in "Models_Table" table on "Models" wizard
     Then verify "Info_Pane_Tab_Selector" element visibility on "Models_Info_Pane" wizard
@@ -1047,8 +1047,8 @@ Feature: Models Page
     And wait load page
     Then verify "Table_FilterBy_Button" element visibility on "Models" wizard
     Then click on "Table_FilterBy_Button" element on "Models" wizard
-    Then select "newTag" option in "Table_Tree_Filter_Dropdown" dropdown on "Artifacts_FilterBy_Popup" wizard
-    Then click on "Apply_Button" element on "Artifacts_FilterBy_Popup" wizard
+    Then select "newTag" option in "Table_Tree_Filter_Dropdown" dropdown on "FilterBy_Popup" wizard
+    Then click on "Apply_Button" element on "FilterBy_Popup" wizard
     And wait load page
     Then check "newTag" value in "tag" column in "Models_Table" table on "Models" wizard
 
@@ -1073,8 +1073,8 @@ Feature: Models Page
     Then click on "Apply_Changes_Button" element on "Models_Info_Pane" wizard
     And wait load page
     Then click on "Table_FilterBy_Button" element on "Models" wizard
-    Then select "All" option in "Table_Tree_Filter_Dropdown" dropdown on "Artifacts_FilterBy_Popup" wizard
-    Then click on "Apply_Button" element on "Artifacts_FilterBy_Popup" wizard
+    Then select "All" option in "Table_Tree_Filter_Dropdown" dropdown on "FilterBy_Popup" wizard
+    Then click on "Apply_Button" element on "FilterBy_Popup" wizard
     And wait load page
     When click on cell with row index 1 in "name" column in "Models_Table" table on "Models" wizard
     And wait load page
@@ -1091,8 +1091,8 @@ Feature: Models Page
     And click on cell with value "Models" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
     And wait load page
     Then click on "Table_FilterBy_Button" element on "Models" wizard
-    Then select "All" option in "Table_Tree_Filter_Dropdown" dropdown on "Artifacts_FilterBy_Popup" wizard
-    Then click on "Apply_Button" element on "Artifacts_FilterBy_Popup" wizard
+    Then select "All" option in "Table_Tree_Filter_Dropdown" dropdown on "FilterBy_Popup" wizard
+    Then click on "Apply_Button" element on "FilterBy_Popup" wizard
     And wait load page
     Then click on cell with row index 3 in "name" column in "Models_Table" table on "Models" wizard
     Then save to context "name" column on 3 row from "Models_Table" table on "Models" wizard

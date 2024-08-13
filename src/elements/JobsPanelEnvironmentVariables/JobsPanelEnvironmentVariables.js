@@ -38,7 +38,7 @@ const JobsPanelEnvironmentVariables = ({
   panelDispatch,
   panelEnvData,
   previousPanelEnvData,
-  isPanelEditMode,
+  isPanelEditMode = false,
   setNewJobEnvironmentVariables
 }) => {
   const { isStagingMode } = useMode()
@@ -54,10 +54,7 @@ const JobsPanelEnvironmentVariables = ({
           }
     )
 
-    setNewJobEnvironmentVariables([
-      ...jobsStore.newJob.function.spec.env,
-      { ...generatedVariable }
-    ])
+    setNewJobEnvironmentVariables([...jobsStore.newJob.function.spec.env, { ...generatedVariable }])
     panelDispatch({
       type: panelActions.SET_PREVIOUS_PANEL_DATA_ENVIRONMENT_VARIABLES,
       payload: [...previousPanelEnvData, { data: { ...generatedVariable } }]
@@ -138,15 +135,13 @@ const JobsPanelEnvironmentVariables = ({
           addNewItem={handleAddNewEnv}
           addNewItemLabel="Add variable"
           className="env"
-          content={parseEnvVariables(panelEnvData.map(env => env.data)).map(
-            env => {
-              return {
-                key: env.name,
-                value: env.value,
-                type: env.type
-              }
+          content={parseEnvVariables(panelEnvData.map(env => env.data)).map(env => {
+            return {
+              key: env.name,
+              value: env.value,
+              type: env.type
             }
-          )}
+          })}
           deleteItem={handleDeleteEnv}
           disabled={isPanelEditMode}
           editItem={handleEditEnv}
@@ -163,10 +158,6 @@ const JobsPanelEnvironmentVariables = ({
   )
 }
 
-JobsPanelEnvironmentVariables.defaultProps = {
-  isPanelEditMode: false
-}
-
 JobsPanelEnvironmentVariables.propTypes = {
   isPanelEditMode: PropTypes.bool.isRequired,
   panelDispatch: PropTypes.func.isRequired,
@@ -174,7 +165,4 @@ JobsPanelEnvironmentVariables.propTypes = {
   previousPanelEnvData: PropTypes.arrayOf(PropTypes.shape).isRequired
 }
 
-export default connect(
-  jobsStore => ({ ...jobsStore }),
-  jobsActions
-)(JobsPanelEnvironmentVariables)
+export default connect(jobsStore => ({ ...jobsStore }), jobsActions)(JobsPanelEnvironmentVariables)

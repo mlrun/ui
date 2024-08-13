@@ -17,23 +17,19 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import React, { useMemo } from 'react'
+import React from 'react'
 import { useForm } from 'react-final-form'
 
-import { FormInput, FormOnChange, FormSelect } from 'igz-controls/components'
+import { FormInput, FormOnChange } from 'igz-controls/components'
+import StatusFilter from '../../../common/StatusFilter/StatusFilter'
 
-import { JOBS_MONITORING_WORKFLOWS_TAB, LABELS_FILTER, PROJECT_FILTER } from '../../../constants'
-import { generateStatusFilter } from '../../FilterMenu/filterMenu.settings'
-import { handleFilterStateChange } from '../projectsJobsMotinoring.util'
+import { LABELS_FILTER, PROJECT_FILTER, STATUS_FILTER_NAME } from '../../../constants'
+import { workflowsStatuses } from '../../FilterMenu/filterMenu.settings'
+import { useMode } from '../../../hooks/mode.hook'
 
 const WorkflowsMonitoringFilters = () => {
   const form = useForm()
-
-  const statusList = useMemo(() => generateStatusFilter(false, JOBS_MONITORING_WORKFLOWS_TAB), [])
-
-  const handleStateChange = (selectedValue, currentValue) => {
-    handleFilterStateChange(selectedValue, currentValue, form, statusList)
-  }
+  const { isDemoMode } = useMode()
 
   const handleInputChange = (value, inputName) => {
     form.change(inputName, value || '')
@@ -49,16 +45,17 @@ const WorkflowsMonitoringFilters = () => {
         />
       </div>
       <div className="form-row">
-        <FormSelect label="Status" name="state" options={statusList} multiple />
-        <FormOnChange handler={(value, some) => handleStateChange(value, some)} name="state" />
+        <StatusFilter statusList={workflowsStatuses} name={STATUS_FILTER_NAME} />
       </div>
-      <div className="form-row">
-        <FormInput label="Labels" name={LABELS_FILTER} placeholder="key1,key2=value,..." />
-        <FormOnChange
-          handler={value => handleInputChange(value, LABELS_FILTER)}
-          name={LABELS_FILTER}
-        />
-      </div>
+      {isDemoMode && (
+        <div className="form-row">
+          <FormInput label="Labels" name={LABELS_FILTER} placeholder="key1,key2=value,..." />
+          <FormOnChange
+            handler={value => handleInputChange(value, LABELS_FILTER)}
+            name={LABELS_FILTER}
+          />
+        </div>
+      )}
     </div>
   )
 }

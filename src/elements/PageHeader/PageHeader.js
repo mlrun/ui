@@ -27,7 +27,7 @@ import { ReactComponent as Back } from 'igz-controls/images/back-arrow.svg'
 
 import './pageHeader.scss'
 
-const PageHeader = ({ title, description, backLink }) => {
+const PageHeader = ({ title, description = '', backLink = '' }) => {
   return (
     <div className="page-header">
       {backLink && (
@@ -45,11 +45,6 @@ const PageHeader = ({ title, description, backLink }) => {
       </div>
     </div>
   )
-}
-
-PageHeader.defaultProps = {
-  backLink: '',
-  description: ''
 }
 
 PageHeader.propTypes = {

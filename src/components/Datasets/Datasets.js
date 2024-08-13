@@ -75,7 +75,8 @@ const Datasets = () => {
   const [selectedDataset, setSelectedDataset] = useState({})
   const [selectedDatasetMin, setSelectedDatasetMin] = useState({})
   const [selectedRowData, setSelectedRowData] = useState({})
-  const [largeRequestErrorMessage, setLargeRequestErrorMessage] = useState('')
+  const [requestErrorMessage, setRequestErrorMessage] = useState('')
+  const [maxArtifactsErrorIsShown, setMaxArtifactsErrorIsShown] = useState(false)
   const [convertedYaml, toggleConvertedYaml] = useYaml('')
   const [urlTagOption, tagAbortControllerRef] = useGetTagOptions(
     fetchArtifactTags,
@@ -136,7 +137,7 @@ const Datasets = () => {
           config: {
             ui: {
               controller: abortControllerRef.current,
-              setLargeRequestErrorMessage
+              setRequestErrorMessage
             },
             params: {
               format: 'minimal'
@@ -148,6 +149,7 @@ const Datasets = () => {
         .then(result => {
           if (result) {
             setDatasets(result)
+            setMaxArtifactsErrorIsShown(result.length === 1000)
           }
 
           return result
@@ -167,12 +169,13 @@ const Datasets = () => {
           config: {
             ui: {
               controller: tagAbortControllerRef.current,
-              setLargeRequestErrorMessage
+              setRequestErrorMessage
             }
           }
         })
       )
       setSelectedRowData({})
+      setSelectedDatasetMin({})
       setDatasets([])
 
       return fetchData(filters)
@@ -321,7 +324,6 @@ const Datasets = () => {
   useInitialArtifactsFetch(
     fetchData,
     urlTagOption,
-    datasets.length,
     setSelectedRowData,
     createDatasetsRowData
   )
@@ -410,12 +412,14 @@ const Datasets = () => {
       handleExpandRow={handleExpandRow}
       handleRefresh={handleRefresh}
       handleRegisterDataset={handleRegisterDataset}
-      largeRequestErrorMessage={largeRequestErrorMessage}
+      maxArtifactsErrorIsShown={maxArtifactsErrorIsShown}
       pageData={pageData}
       ref={{ datasetsRef }}
+      requestErrorMessage={requestErrorMessage}
       selectedDataset={selectedDataset}
       selectedRowData={selectedRowData}
       setDatasets={setDatasets}
+      setMaxArtifactsErrorIsShown={setMaxArtifactsErrorIsShown}
       setSelectedDatasetMin={setSelectedDatasetMin}
       setSelectedRowData={setSelectedRowData}
       sortProps={{ sortTable, selectedColumnName, getSortingIcon }}

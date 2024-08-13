@@ -36,17 +36,17 @@ import { ReactComponent as Arrow } from 'igz-controls/images/arrow.svg'
 import './configSteps.scss'
 
 const ConfigSteps = ({
-  afterSteps,
-  errorSteps,
-  selectedAfterStep,
-  selectedErrorStep,
-  selectedStep,
-  setSelectedAfterStep,
-  setSelectedErrorStep,
-  setSelectedStep,
-  setStates,
-  states,
-  steps
+  afterSteps = [],
+  errorSteps = [],
+  selectedAfterStep = '',
+  selectedErrorStep = '',
+  selectedStep = '',
+  setSelectedAfterStep = () => {},
+  setSelectedErrorStep = () => {},
+  setSelectedStep = () => {},
+  setStates = () => {},
+  states = {},
+  steps = []
 }) => {
   const onChangeComments = newComments => {
     states[selectedStep].comments = newComments
@@ -215,20 +215,6 @@ const ConfigSteps = ({
       </div>
     </Accordion>
   )
-}
-
-ConfigSteps.defaultProps = {
-  afterSteps: [],
-  errorSteps: [],
-  selectedAfterStep: '',
-  selectedErrorStep: '',
-  selectedStep: '',
-  setSelectedAfterStep: () => {},
-  setSelectedErrorStep: () => {},
-  setSelectedStep: () => {},
-  setStates: () => {},
-  states: {},
-  steps: []
 }
 
 ConfigSteps.propTypes = {

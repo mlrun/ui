@@ -47,7 +47,11 @@ import './detailsInfo.scss'
 const DetailsInfoView = React.forwardRef(
   (
     {
-      additionalInfo,
+      additionalInfo = {
+        drift: [],
+        producer: [],
+        sources: {}
+      },
       detailsInfoDispatch,
       detailsInfoState,
       detailsStore,
@@ -108,9 +112,9 @@ const DetailsInfoView = React.forwardRef(
                     chipsData.chips = selectedItem.labels
                     chipsData.chipOptions = getChipOptions('labels')
                   } else if (
-                    detailsStore.infoContent[header.id]?.value === selectedItem.ui.nodeSelectorChips
+                    detailsStore.infoContent[header.id]?.value === selectedItem.nodeSelectorChips
                   ) {
-                    chipsData.chips = selectedItem.ui.nodeSelectorChips
+                    chipsData.chips = selectedItem.nodeSelectorChips
                     chipsData.chipOptions = getChipOptions('results')
                   }
 
@@ -219,14 +223,6 @@ const DetailsInfoView = React.forwardRef(
     )
   }
 )
-
-DetailsInfoView.defaultProps = {
-  additionalInfo: {
-    drift: [],
-    producer: [],
-    sources: {}
-  }
-}
 
 DetailsInfoView.propTypes = {
   additionalInfo: PropTypes.shape({
