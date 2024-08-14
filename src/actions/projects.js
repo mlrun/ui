@@ -119,13 +119,13 @@ const projectsAction = {
       .then(result => {
         dispatch(projectsAction.createProjectSuccess())
 
-        return result
+        return result.data
       })
       .catch(error => {
         const message =
-          error.response.status === CONFLICT_ERROR_STATUS_CODE
+          error.response?.status === CONFLICT_ERROR_STATUS_CODE
             ? `A project named "${postData.metadata.name}" already exists`
-            : error.response.status === INTERNAL_SERVER_ERROR_STATUS_CODE
+            : error.response?.status === INTERNAL_SERVER_ERROR_STATUS_CODE
               ? 'The system already has the maximum number of projects. An existing project must be deleted before you can create another.'
               : error.message
 
