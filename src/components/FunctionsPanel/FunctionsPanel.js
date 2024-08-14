@@ -81,7 +81,7 @@ const FunctionsPanel = ({
     (defaultData?.build?.image ||
       defaultData?.build?.base_image ||
       defaultData?.build?.commands?.length > 0) &&
-    defaultData.image?.length === 0
+      defaultData.image?.length === 0
       ? NEW_IMAGE
       : ''
   )

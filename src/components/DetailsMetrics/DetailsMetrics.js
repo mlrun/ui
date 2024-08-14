@@ -81,17 +81,6 @@ const DetailsMetrics = ({ selectedItem }) => {
     )
   }, [generatedMetrics.length])
 
-  const chooseMetricsDataCard = useMemo(() => {
-    return (
-      generatedMetrics.length === 1 && (
-        <StatsCard className="metrics__empty-select">
-          <MetricsIcon />
-          <div>Choose metrics to view endpoint’s data</div>
-        </StatsCard>
-      )
-    )
-  }, [generatedMetrics.length])
-
   const expandInvocationCard = useCallback(
     (isUnpinAction = false) => {
       const invocationBodyCard = invocationBodyCardRef.current
