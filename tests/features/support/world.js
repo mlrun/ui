@@ -41,14 +41,17 @@ class CustomWorld extends World {
     let browseConfigs
 
     if (browser === 'chrome') {
-      browseConfigs = new chrome.Options()
       if (headless) {
-        browseConfigs.addArguments('headless')
-        browseConfigs.addArguments('no-sandbox')
-        browseConfigs.addArguments('disable-gpu')
+        browseConfigs = new chrome.Options()
+          .addArguments('headless')
+          .addArguments('no-sandbox')
+          .addArguments('start-maximized')
+          .addArguments('disable-gpu')
+      } else {
+        browseConfigs = new chrome.Options()
+          .addArguments('start-maximized')
+          .excludeSwitches('disable-popup-blocking', 'enable-automation')
       }
-      browseConfigs.addArguments('start-maximized')
-      browseConfigs.excludeSwitches('disable-popup-blocking', 'enable-automation')
     }
 
     if (browser === 'firefox') {
