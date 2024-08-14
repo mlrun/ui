@@ -144,6 +144,7 @@ const App = () => {
               </Fragment>
             ))}
             <Route path={JOBS_MONITORING_SCHEDULED_TAB} element={<ScheduledMonitoring />} />
+            <Route path="*" element={<Navigate to={JOBS_MONITORING_JOBS_TAB} replace />} />
           </Route>
           <Route path="projects/:projectName" element={<Navigate replace to={PROJECT_MONITOR} />} />
           <Route path={`projects/:projectName/${PROJECT_MONITOR}`} element={<ProjectMonitor />} />

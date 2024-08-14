@@ -41,7 +41,7 @@ import { setFilters } from '../../../reducers/filtersReducer'
 const ScheduledJobs = ({ fetchScheduledJobs }) => {
   const [jobs, setJobs] = useState([])
   const [dataIsLoaded, setDataIsLoaded] = useState(false)
-  const [largeRequestErrorMessage, setLargeRequestErrorMessage] = useState('')
+  const [requestErrorMessage, setRequestErrorMessage] = useState('')
   const abortControllerRef = useRef(new AbortController())
 
   const dispatch = useDispatch()
@@ -65,7 +65,7 @@ const ScheduledJobs = ({ fetchScheduledJobs }) => {
       fetchScheduledJobs(params.projectName, filters, {
         ui: {
           controller: abortControllerRef.current,
-          setLargeRequestErrorMessage
+          setRequestErrorMessage
         }
       }).then(jobs => {
         if (jobs) {
@@ -111,7 +111,7 @@ const ScheduledJobs = ({ fetchScheduledJobs }) => {
         context={JobsContext}
         filters={filters}
         jobs={jobs}
-        largeRequestErrorMessage={largeRequestErrorMessage}
+        requestErrorMessage={requestErrorMessage}
         refreshJobs={refreshJobs}
         tableContent={tableContent}
       />

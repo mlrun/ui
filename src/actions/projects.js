@@ -480,24 +480,34 @@ const projectsAction = {
     type: FETCH_PROJECT_SUMMARY_SUCCESS,
     payload: summary
   }),
-  fetchProjects: params => dispatch => {
-    dispatch(projectsAction.fetchProjectsBegin())
+  fetchProjects:
+    (params, setRequestErrorMessage = () => {}) =>
+      dispatch => {
+        dispatch(projectsAction.fetchProjectsBegin())
+        setRequestErrorMessage('')
 
-    return projectsApi
-      .getProjects(params)
-      .then(response => {
-        const parsedProjects = parseProjects(response.data.projects)
+        return projectsApi
+          .getProjects(params)
+          .then(response => {
+            const parsedProjects = parseProjects(response.data.projects)
 
-        dispatch(projectsAction.fetchProjectsSuccess(parsedProjects))
-        dispatch(projectsAction.fetchProjectsNamesSuccess(parsedProjects.map(project => project.metadata.name)))
+            dispatch(projectsAction.fetchProjectsSuccess(parsedProjects))
+            dispatch(projectsAction.fetchProjectsNamesSuccess(parsedProjects.map(project => project.metadata.name)))
 
-        return parsedProjects
-      })
-      .catch(error => {
-        dispatch(projectsAction.fetchProjectsFailure(error), dispatch)
-        showErrorNotification(dispatch, error, 'Failed to fetch projects')
-      })
-  },
+            return parsedProjects
+          })
+          .catch(error => {
+            dispatch(projectsAction.fetchProjectsFailure(error), dispatch)
+            showErrorNotification(
+              dispatch,
+              error,
+              'Failed to fetch projects',
+              null,
+              null,
+              setRequestErrorMessage
+            )
+          })
+      },
   fetchProjectsBegin: () => ({ type: FETCH_PROJECTS_BEGIN }),
   fetchProjectsFailure: error => ({
     type: FETCH_PROJECTS_FAILURE,

@@ -189,7 +189,7 @@ const TableCell = ({
     )
   } else {
     return (
-      <td data-testid={data.headerId} className={cellClassNames}>
+      <td data-testid={data?.headerId} className={cellClassNames}>
         <Tooltip
           className="text_small"
           template={<TextTooltipTemplate text={data.tooltip || data.value} />}

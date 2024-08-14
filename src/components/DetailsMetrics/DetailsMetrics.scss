@@ -12,15 +12,15 @@ $stickyHeaderHeight: 55px;
   margin-bottom: 30px;
 
   &__custom-filters {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: flex-end;
     position: sticky;
     top: 0;
-    height: $stickyHeaderHeight;
-    align-items: center;
-    background-color: $white;
     z-index: 2;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: flex-end;
+    height: $stickyHeaderHeight;
+    background-color: $white;
 
     > * {
       margin: 0 0 15px 0;
@@ -38,19 +38,19 @@ $stickyHeaderHeight: 55px;
   }
 
   &__card {
-    border: $primaryBorder;
-    padding: 6px 16px 35px;
     width: 100%;
+    padding: 6px 16px 35px;
+    border: $primaryBorder;
     box-shadow: none;
 
     &-invocations {
       position: sticky;
       top: $stickyHeaderHeight;
-      width: 100%;
-      align-self: baseline;
-      background: $white;
-      padding-bottom: 25px;
       z-index: 1;
+      align-self: baseline;
+      width: 100%;
+      padding-bottom: 25px;
+      background: $white;
 
       .metrics__card {
         padding-top: 12px;
@@ -115,7 +115,7 @@ $stickyHeaderHeight: 55px;
         color: $topaz;
         font-weight: 500;
         font-size: 14px;
-        font-family: Roboto;
+        font-family: Roboto, sans-serif;
         font-style: normal;
         line-height: normal;
         text-overflow: ellipsis;
@@ -284,9 +284,9 @@ $stickyHeaderHeight: 55px;
         display: flex;
         flex: 0 1 auto;
         width: fit-content;
+        margin-right: 15px;
         visibility: visible;
         opacity: 1;
-        margin-right: 15px;
         transition:
           flex 0.2s,
           visibility 0s,
@@ -357,43 +357,24 @@ $stickyHeaderHeight: 55px;
   }
 
   &__empty-select {
-    box-shadow: none;
     display: flex;
     flex-direction: column;
     gap: 25px;
     align-items: center;
     justify-content: center;
     width: 100%;
+    box-shadow: none;
   }
 }
 
 .empty-invocation-card {
   position: sticky;
-  box-shadow: 0 -10px 0 0 $white;
   top: $stickyHeaderHeight;
   z-index: 1;
   box-shadow: 0 -10px 0 0 $white;
 }
 
 #chartjs-tooltip-metric {
-  position: fixed;
-  z-index: 5;
-  padding: 6px 8px;
-  color: $white;
-  letter-spacing: 0.5px;
-  background-color: $primary;
-  border-radius: 4px;
-  transform: translate(-50%, calc(-100% - 10px));
-  transition: all 0.1s linear;
-  background-color: $primary;
-  padding: 6px 8px;
-  font-family: Roboto;
-  letter-spacing: 0.5px;
-
-  &::after {
-    display: none;
-  }
-
   .tooltip-container {
     display: flex;
     flex-wrap: nowrap;
@@ -402,13 +383,6 @@ $stickyHeaderHeight: 55px;
     justify-content: flex-start;
     padding: 0;
     background: inherit;
-
-    &-value,
-    &-date {
-      min-width: fit-content;
-      font-weight: 700;
-      font-size: 12px;
-    }
 
     &-date {
       min-width: 150px;
@@ -421,11 +395,6 @@ $stickyHeaderHeight: 55px;
     align-items: center;
     justify-content: center;
     background: inherit;
-
-    &-text {
-      font-size: 10px;
-      font-weight: 400;
-    }
   }
 
   .tooltip-drift-status {

@@ -29,9 +29,12 @@ import { JOBS_MONITORING_SCHEDULED_TAB } from '../../../constants'
 const ScheduledMonitoring = () => {
   const [dataIsLoaded, setDataIsLoaded] = useState(false)
   const dispatch = useDispatch()
-  const filtersStore = useSelector(store => store.filtersStore)
+  const [schedulesFilterMenu, schedulesFilterMenuModal] = useSelector(state => [
+    state.filtersStore.filterMenu[JOBS_MONITORING_SCHEDULED_TAB],
+    state.filtersStore.filterMenuModal[JOBS_MONITORING_SCHEDULED_TAB]
+  ])
   const {
-    largeRequestErrorMessage,
+    requestErrorMessage,
     refreshScheduled,
     scheduledFiltersConfig,
     scheduledJobs,
@@ -45,13 +48,19 @@ const ScheduledMonitoring = () => {
   useEffect(() => {
     if (!dataIsLoaded) {
       let filters = {
-        ...filtersStore.filterMenu[JOBS_MONITORING_SCHEDULED_TAB],
-        ...filtersStore.filterMenuModal[JOBS_MONITORING_SCHEDULED_TAB].values
+        ...schedulesFilterMenu,
+        ...schedulesFilterMenuModal.values
       }
       refreshScheduled(filters)
       setDataIsLoaded(true)
     }
-  }, [filtersStore, dataIsLoaded, dispatch, refreshScheduled])
+  }, [
+    dataIsLoaded,
+    dispatch,
+    refreshScheduled,
+    schedulesFilterMenu,
+    schedulesFilterMenuModal.values
+  ])
 
   useEffect(() => {
     return () => {
@@ -66,11 +75,11 @@ const ScheduledMonitoring = () => {
       filtersConfig={scheduledFiltersConfig}
       filtersMenuName={JOBS_MONITORING_SCHEDULED_TAB}
       jobs={scheduledJobs}
-      largeRequestErrorMessage={largeRequestErrorMessage}
+      requestErrorMessage={requestErrorMessage}
       refreshJobs={() =>
         refreshScheduled({
-          ...filtersStore.filterMenu[JOBS_MONITORING_SCHEDULED_TAB],
-          ...filtersStore.filterMenuModal[JOBS_MONITORING_SCHEDULED_TAB].values
+          ...schedulesFilterMenu,
+          ...schedulesFilterMenuModal.values
         })
       }
       tableContent={tableContent}

@@ -40,7 +40,10 @@ const JobsMonitoring = () => {
   const params = useParams()
   const dispatch = useDispatch()
   const { isStagingMode } = useMode()
-  const filtersStore = useSelector(store => store.filtersStore)
+  const [jobsFilterMenu, jobsFilterMenuModal] = useSelector(state => [
+    state.filtersStore.filterMenu[JOBS_MONITORING_JOBS_TAB],
+    state.filtersStore.filterMenuModal[JOBS_MONITORING_JOBS_TAB]
+  ])
   const {
     abortControllerRef,
     abortJobRef,
@@ -48,7 +51,7 @@ const JobsMonitoring = () => {
     jobRuns,
     jobs,
     jobsFiltersConfig,
-    largeRequestErrorMessage,
+    requestErrorMessage,
     refreshJobs,
     setAbortingJobs,
     setJobRuns,
@@ -71,8 +74,8 @@ const JobsMonitoring = () => {
   useEffect(() => {
     if (isEmpty(selectedJob) && !params.jobId && !dataIsLoaded) {
       let filters = {
-        ...filtersStore.filterMenu[JOBS_MONITORING_JOBS_TAB],
-        ...filtersStore.filterMenuModal[JOBS_MONITORING_JOBS_TAB].values
+        ...jobsFilterMenu,
+        ...jobsFilterMenuModal.values
       }
 
       refreshJobs(filters)
@@ -82,11 +85,12 @@ const JobsMonitoring = () => {
     isJobDataEmpty,
     dataIsLoaded,
     dispatch,
-    filtersStore,
     params.jobId,
     params.jobName,
     refreshJobs,
-    selectedJob
+    selectedJob,
+    jobsFilterMenu,
+    jobsFilterMenuModal.values
   ])
 
   useEffect(() => {
@@ -99,7 +103,14 @@ const JobsMonitoring = () => {
       abortController.abort(REQUEST_CANCELED)
       terminateAbortTasksPolling()
     }
-  }, [params.jobName, params.jobId, terminateAbortTasksPolling, abortControllerRef, setJobs, setJobRuns])
+  }, [
+    params.jobName,
+    params.jobId,
+    terminateAbortTasksPolling,
+    abortControllerRef,
+    setJobs,
+    setJobRuns
+  ])
 
   return (
     <>
@@ -117,12 +128,12 @@ const JobsMonitoring = () => {
         filtersConfig={jobsFiltersConfig}
         jobRuns={jobRuns}
         jobs={jobs}
-        largeRequestErrorMessage={largeRequestErrorMessage}
+        requestErrorMessage={requestErrorMessage}
         navigateLink={`/projects/${JOBS_MONITORING_PAGE}/${JOBS_MONITORING_JOBS_TAB}`}
         refreshJobs={() =>
           refreshJobs({
-            ...filtersStore.filterMenu[JOBS_MONITORING_JOBS_TAB],
-            ...filtersStore.filterMenuModal[JOBS_MONITORING_JOBS_TAB].values
+            ...jobsFilterMenu,
+            ...jobsFilterMenuModal.values
           })
         }
         selectedJob={selectedJob}

@@ -64,7 +64,7 @@ const Features = ({
 }) => {
   const [features, setFeatures] = useState([])
   const [selectedRowData, setSelectedRowData] = useState({})
-  const [largeRequestErrorMessage, setLargeRequestErrorMessage] = useState('')
+  const [requestErrorMessage, setRequestErrorMessage] = useState('')
   const [urlTagOption] = useGetTagOptions(fetchFeatureSetsTags, featuresFilters)
   const params = useParams()
   const featureStore = useSelector(store => store.featureStore)
@@ -116,6 +116,12 @@ const Features = ({
         signal: abortControllerRef.current.signal
       }
 
+      setRequestErrorMessage('')
+
+      const getFirstPromiseError = result => {
+        return result?.find(response => response.status === 'rejected')?.reason || null
+      }
+
       return Promise.allSettled([
         fetchFeatures(params.projectName, filters, config),
         fetchEntities(params.projectName, filters, config)
@@ -130,7 +136,9 @@ const Features = ({
               features,
               setFeatures,
               abortControllerRef,
-              setLargeRequestErrorMessage
+              setRequestErrorMessage,
+              getFirstPromiseError(result),
+              dispatch
             )
           }
 
@@ -138,7 +146,7 @@ const Features = ({
         })
         .finally(() => clearTimeout(cancelRequestTimeout))
     },
-    [fetchEntities, fetchFeatures, params.projectName]
+    [dispatch, fetchEntities, fetchFeatures, params.projectName]
   )
 
   const handleRefresh = filters => {
@@ -300,15 +308,15 @@ const Features = ({
   return (
     <FeaturesView
       actionsMenu={actionsMenu}
-      featureStore={featureStore}
       features={features}
+      featureStore={featureStore}
       filtersStore={filtersStore}
       getPopUpTemplate={getPopUpTemplate}
       handleExpandRow={handleExpandRow}
       handleRefresh={handleRefresh}
-      largeRequestErrorMessage={largeRequestErrorMessage}
       pageData={pageData}
       ref={{ featureStoreRef }}
+      requestErrorMessage={requestErrorMessage}
       selectedRowData={selectedRowData}
       tableContent={tableContent}
       tableStore={tableStore}

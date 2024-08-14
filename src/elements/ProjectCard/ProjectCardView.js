@@ -22,7 +22,7 @@ import PropTypes from 'prop-types'
 import { useNavigate } from 'react-router-dom'
 
 import ActionsMenu from '../../common/ActionsMenu/ActionsMenu'
-import ReadonlyChips from '../ReadonlyChips/ReadonlyChips'
+import ReadOnlyChips from '../ReadOnlyChips/ReadOnlyChips'
 import ProjectStatistics from '../ProjectStatistics/ProjectStatistics'
 import { Tooltip, TextTooltipTemplate } from 'igz-controls/components'
 
@@ -95,7 +95,7 @@ const ProjectCardView = React.forwardRef(({ actionsMenu, project, statistics }, 
         {project.metadata.labels && (
           <div className="project-card__info" ref={chipRef}>
             <span>Labels:</span>
-            <ReadonlyChips labels={project.metadata.labels} shortChips/>
+            <ReadOnlyChips labels={project.metadata.labels} shortChips/>
           </div>
         )}
       </div>

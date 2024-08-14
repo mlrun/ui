@@ -155,7 +155,7 @@ const generateResultMessage = (driftStatus, resultKind) => {
   const { text } = driftStatusConfig[driftStatus]
 
   if (driftStatus === 0) {
-    return `No ${resultKindMessage}`
+    return 'No drift or anomalies detected'
   } else if (driftStatus === -1) {
     return `${text} ${resultKindMessage}`
   }
@@ -251,7 +251,7 @@ export const parseMetrics = (data, timeUnit) => {
       [withInvocationRate ? METRIC_RAW_TOTAL_POINTS : METRIC_RAW_AVG_POINTS]: 0
     }
     let metricsValueSum = 0
-    let highestDrift = null
+    let highestDrift = type === 'result' ? { status: -1 } : null
 
     values.forEach(([date, value, driftStatus], index) => {
       const parsedValue = parseFloat(value.toFixed(2))
@@ -264,9 +264,7 @@ export const parseMetrics = (data, timeUnit) => {
         parsedMetric.maxPointValue = parsedValue
 
       if (type === 'result') {
-        highestDrift = { status: -1 }
-
-        if (highestDrift.status < driftStatus) {
+        if (highestDrift?.status < driftStatus) {
           highestDrift = { status: driftStatus, index }
         }
 

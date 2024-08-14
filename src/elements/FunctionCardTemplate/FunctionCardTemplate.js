@@ -60,12 +60,7 @@ const FunctionCardTemplate = ({
       {functionData.sideTag && (
         <div className="job-card-template__side-tag">{functionData.sideTag}</div>
       )}
-      <Tooltip className="job-card-template__description"
-               textShow
-               hidden={functionData.description.length === 0}
-               template={<TextTooltipTemplate text={functionData.description} />}>
-        {functionData.description}
-      </Tooltip>
+      <div className="job-card-template__description">{functionData.description}</div>
       {functionData.labelsName && get(formState?.values, functionData.labelsName, null) && (
         <FormChipCell
           chipOptions={getChipOptions('metrics')}

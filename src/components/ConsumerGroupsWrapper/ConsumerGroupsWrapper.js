@@ -17,7 +17,7 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import React, { useCallback, useEffect, useMemo } from 'react'
+import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import { useNavigate, useParams, Outlet } from 'react-router-dom'
 import { useDispatch, connect } from 'react-redux'
 import { isEmpty } from 'lodash'
@@ -37,6 +37,7 @@ const ConsumerGroupsWrapper = ({
   resetV3ioStreamsError,
   v3ioStreams
 }) => {
+  const [requestErrorMessage, setRequestErrorMessage] = useState('')
   const navigate = useNavigate()
   const params = useParams()
   const dispatch = useDispatch()
@@ -51,13 +52,19 @@ const ConsumerGroupsWrapper = ({
   }, [dispatch])
 
   const refreshConsumerGroups = useCallback(() => {
+    setRequestErrorMessage('')
     fetchNuclioV3ioStreams(params.projectName)
   }, [fetchNuclioV3ioStreams, params.projectName])
 
   useEffect(() => {
     if (v3ioStreams.error) {
-      showErrorNotification(dispatch, v3ioStreams.error, 'Failed to fetch v3io streams', () =>
-        refreshConsumerGroups()
+      showErrorNotification(
+        dispatch,
+        v3ioStreams.error,
+        'Failed to fetch v3io streams',
+        '',
+        refreshConsumerGroups,
+        setRequestErrorMessage
       )
 
       resetV3ioStreamsError()
@@ -86,7 +93,7 @@ const ConsumerGroupsWrapper = ({
         <Breadcrumbs />
       </div>
       <div className="page-content">
-        <Outlet />
+        <Outlet context={[ requestErrorMessage ]} />
       </div>
     </div>
   )

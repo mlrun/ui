@@ -1,6 +1,6 @@
-Feature: MLRun Project Home Page
+Feature: Quick actions Page
 
-    Testcases that verifies functionality on MLRun Project Home Page
+    Testcases that verifies functionality on MLRun Quick actions Page
 
     @MLPH
     @smoke
@@ -129,6 +129,7 @@ Feature: MLRun Project Home Page
         And wait load page
         Then verify breadcrumbs "tab" label should be equal "Models" value
         Then click on cell with value "new-model" in "name" column in "Models_Table" table on "Models" wizard
+        And wait load page
         Then "Header" element on "Models_Info_Pane" should contains "new-model" value
         Then check "new-model" value in "key" column in "Overview_Table" table on "Models_Info_Pane" wizard
         Then check "latest" value in "tag" column in "Overview_Table" table on "Models_Info_Pane" wizard
@@ -156,10 +157,14 @@ Feature: MLRun Project Home Page
         Then verify "Labels_Table" element visibility on "New_Feature_Set" wizard
         Then verify "Accordion_Header" element visibility in "Data_Source_Accordion" on "New_Feature_Set" wizard
         Then verify "Collapse_Button" element visibility in "Data_Source_Accordion" on "New_Feature_Set" wizard
-        Then verify "URL_Combobox" element visibility in "Data_Source_Accordion" on "New_Feature_Set" wizard
         Then verify "Attributes_Input" element visibility in "Data_Source_Accordion" on "New_Feature_Set" wizard
         Then type value "   " to "Attributes_Input" field on "Data_Source_Accordion" on "New_Feature_Set" wizard
         Then verify "Attributes_Input" element in "Data_Source_Accordion" on "New_Feature_Set" wizard should display warning "Input_Hint"."Input_Field_Invalid"
+        When click on "Edit_Button" element in "Data_Source_Accordion" on "New_Feature_Set" wizard
+        Then verify "URL_Combobox" element visibility in "Data_Source_Accordion" on "New_Feature_Set" wizard
+        Then select "V3IO" option in "URL_Combobox" combobox on "Data_Source_Accordion" accordion on "New_Feature_Set" wizard
+        When type value "target/path" to "URL_Combobox" field on "Data_Source_Accordion" on "New_Feature_Set" wizard
+        Then click on "Apply_Combobox_Button" element in "Data_Source_Accordion" on "New_Feature_Set" wizard
         When collapse "Data_Source_Accordion" on "New_Feature_Set" wizard
         Then verify "Data_Source_Accordion" is collapsed on "New_Feature_Set" wizard
         Then verify "Accordion_Header" element visibility in "Schema_Accordion" on "New_Feature_Set" wizard
@@ -231,6 +236,7 @@ Feature: MLRun Project Home Page
         And wait load page
         Then verify breadcrumbs "tab" label should be equal "Datasets" value
         Then click on cell with value "dataset" in "name" column in "Datasets_Table" table on "Datasets" wizard
+        And wait load page
         Then "Header" element on "Datasets_Info_Pane" should contains "dataset" value
         Then check "dataset" value in "key" column in "Overview_Table" table on "Datasets_Info_Pane" wizard
         Then check "latest" value in "tag" column in "Overview_Table" table on "Datasets_Info_Pane" wizard
@@ -239,8 +245,6 @@ Feature: MLRun Project Home Page
     @MLPH 
     @passive
     @smoke
-    @FAILED_TODO
-    #TODO: bug - ML-6663 [ML Functions, Quick actions] 'Create New Function' pop-up doesn't appear
     Scenario: MLPH005 - Check all mandatory components on Create ML Function on Project Home Page
         * set tear-down property "project" created with "automation-test-1003" value
         * create "automation-test-1003" MLRun Project with code 201
@@ -427,6 +431,7 @@ Feature: MLRun Project Home Page
         And wait load page
         Then verify breadcrumbs "tab" label should be equal "Artifacts" value
         Then click on cell with value "artifact" in "name" column in "Files_Table" table on "Files" wizard
+        And wait load page
         Then "Header" element on "Files_Info_Pane" should contains "artifact" value
         Then check "artifact" value in "key" column in "Overview_Table" table on "Files_Info_Pane" wizard
         Then check "latest" value in "tag" column in "Overview_Table" table on "Files_Info_Pane" wizard
@@ -506,9 +511,9 @@ Feature: MLRun Project Home Page
         Then verify breadcrumbs "tab" label should be equal "Artifacts" value
         Then verify "Table_Name_Filter_Input" element visibility on "Files" wizard
         Then click on "Table_FilterBy_Button" element on "Files" wizard
-        Then verify "Table_Label_Filter_Input" element visibility on "Artifacts_FilterBy_Popup" wizard
-        Then verify "Table_Tree_Filter_Dropdown" element visibility on "Artifacts_FilterBy_Popup" wizard
-        Then verify "Show_Iterations_Checkbox" element visibility on "Artifacts_FilterBy_Popup" wizard
+        Then verify "Table_Label_Filter_Input" element visibility on "FilterBy_Popup" wizard
+        Then verify "Table_Tree_Filter_Dropdown" element visibility on "FilterBy_Popup" wizard
+        Then verify "Show_Iterations_Checkbox" element visibility on "FilterBy_Popup" wizard
         Then verify "Table_Refresh_Button" element visibility on "Files" wizard
         Then verify "Files_Table" element visibility on "Files" wizard
         Then verify "Register_File_Button" element visibility on "Files" wizard
@@ -534,9 +539,9 @@ Feature: MLRun Project Home Page
         Then "Register_Dataset_Button" element on "Datasets" should contains "Register dataset" value
         Then verify "Table_Name_Filter_Input" element visibility on "Datasets" wizard
         Then click on "Table_FilterBy_Button" element on "Datasets" wizard
-        Then verify "Table_Label_Filter_Input" element visibility on "Artifacts_FilterBy_Popup" wizard
-        Then verify "Table_Tree_Filter_Dropdown" element visibility on "Artifacts_FilterBy_Popup" wizard
-        Then verify "Table_Tree_Filter_Dropdown" dropdown element on "Artifacts_FilterBy_Popup" wizard should contains "Dropdown_Options"."Tag_Filer_Options"
+        Then verify "Table_Label_Filter_Input" element visibility on "FilterBy_Popup" wizard
+        Then verify "Table_Tree_Filter_Dropdown" element visibility on "FilterBy_Popup" wizard
+        Then verify "Table_Tree_Filter_Dropdown" dropdown element on "FilterBy_Popup" wizard should contains "Dropdown_Options"."Tag_Filer_Options"
         Then verify "Table_Refresh_Button" element visibility on "Datasets" wizard
 
     @MLPH
@@ -625,9 +630,9 @@ Feature: MLRun Project Home Page
         Then verify "Models_Tab_Selector" on "Models" wizard should contains "Models"."Tab_List"
         Then verify "Table_Name_Filter_Input" element visibility on "Models" wizard
         Then click on "Table_FilterBy_Button" element on "Models" wizard
-        Then verify "Table_Label_Filter_Input" element visibility on "Artifacts_FilterBy_Popup" wizard
-        Then verify "Table_Tree_Filter_Dropdown" element visibility on "Artifacts_FilterBy_Popup" wizard
-        Then verify "Show_Iterations_Checkbox" element visibility on "Artifacts_FilterBy_Popup" wizard
+        Then verify "Table_Label_Filter_Input" element visibility on "FilterBy_Popup" wizard
+        Then verify "Table_Tree_Filter_Dropdown" element visibility on "FilterBy_Popup" wizard
+        Then verify "Show_Iterations_Checkbox" element visibility on "FilterBy_Popup" wizard
         Then verify "Table_Refresh_Button" element visibility on "Models" wizard
         Then verify "Models_Table" element visibility on "Models" wizard
         Then verify "Train_Model_Button" element visibility on "Models" wizard

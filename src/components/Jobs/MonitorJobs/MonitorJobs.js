@@ -48,7 +48,7 @@ const MonitorJobs = ({ fetchAllJobRuns, fetchJobs }) => {
   const appStore = useSelector(store => store.appStore)
   const filtersStore = useSelector(store => store.filtersStore)
   const jobsStore = useSelector(store => store.jobsStore)
-  const [largeRequestErrorMessage, setLargeRequestErrorMessage] = useState('')
+  const [requestErrorMessage, setRequestErrorMessage] = useState('')
   const params = useParams()
   const dispatch = useDispatch()
   const { isStagingMode } = useMode()
@@ -103,7 +103,7 @@ const MonitorJobs = ({ fetchAllJobRuns, fetchJobs }) => {
         {
           ui: {
             controller: abortControllerRef.current,
-            setLargeRequestErrorMessage
+            setRequestErrorMessage
           },
           params: { ...newParams }
         },
@@ -267,7 +267,7 @@ const MonitorJobs = ({ fetchAllJobRuns, fetchJobs }) => {
         filters={filters}
         jobRuns={jobRuns}
         jobs={jobs}
-        largeRequestErrorMessage={largeRequestErrorMessage}
+        requestErrorMessage={requestErrorMessage}
         navigateLink={`/projects/${params.projectName}/jobs/${MONITOR_JOBS_TAB}`}
         refreshJobs={refreshJobs}
         selectedJob={selectedJob}

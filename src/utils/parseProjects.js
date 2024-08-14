@@ -17,19 +17,15 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
+import { parseChipsData } from './convertChipsData'
+
 export const parseProjects = projects =>
   projects.map(project => {
     return {
       ...project,
       metadata: {
         ...project.metadata,
-        labels: Object.entries(project.metadata.labels ?? {}).map(
-          ([key, value]) => ({
-            id: key,
-            key,
-            value
-          })
-        )
+        labels: parseChipsData(project.metadata.labels)
       }
     }
   })
