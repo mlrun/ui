@@ -129,7 +129,7 @@ const Projects = () => {
             backgroundTask =>
               backgroundTask.metadata.kind.startsWith(
                 wrapperIsUsed ? projectDeletionWrapperKind : projectDeletionKind
-              ) && backgroundTask.status.state === BG_TASK_RUNNING
+              ) && backgroundTask?.status?.state === BG_TASK_RUNNING
           )
           .reduce((acc, backgroundTask) => {
             acc[backgroundTask.metadata.name] = last(backgroundTask.metadata.kind.split('.'))
@@ -405,6 +405,13 @@ such as jobs, artifacts, and features.`,
         setCreateProject(false)
         refreshProjects()
         dispatch(projectsAction.fetchProjectsNames())
+        dispatch(
+          setNotification({
+            status: 200,
+            id: Math.random(),
+            message: `Project "${result.metadata?.name}" was created successfully`
+          })
+        )
       }
     })
   }
