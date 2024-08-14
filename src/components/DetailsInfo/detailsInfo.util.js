@@ -36,6 +36,7 @@ import { getChipOptions } from '../../utils/getChipOptions'
 import { getLimitsGpuType } from '../../elements/FormResourcesUnits/formResourcesUnits.util'
 import { isEveryObjectValueEmpty } from '../../utils/isEveryObjectValueEmpty'
 import { roundFloats } from '../../utils/roundFloats'
+import { generateFunctionPriorityLabel } from '../../utils/generateFunctionPriorityLabel'
 
 const DRIFT_DETECTED_THRESHOLD = 0.7
 const POSSIBLE_DRIFT_THRESHOLD = 0.5
@@ -69,12 +70,12 @@ const generateFunctionConfigurationContent = selectedFunction => {
     {
       id: 'runOnSpotNodes',
       label: 'Run on Spot nodes',
-      value: selectedFunction.preemption_mode
+      value: capitalize(selectedFunction.preemption_mode)
     },
     {
       id: 'podsPriority',
       label: 'Pods priority',
-      value: selectedFunction.priority_class_name
+      value: generateFunctionPriorityLabel(selectedFunction.priority_class_name)
     },
     {
       id: 'memoryRequests',
