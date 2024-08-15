@@ -20,20 +20,11 @@ such restriction.
 import React from 'react'
 import PropTypes from 'prop-types'
 
-import Loader from '../../common/Loader/Loader'
 import { Button } from 'igz-controls/components'
 
 import { ReactComponent as RefreshIcon } from 'igz-controls/images/refresh.svg'
 
-const Logs = React.forwardRef(({
-  detailsLogs,
-  isLoading,
-  item,
-  refreshLogs,
-  removeLogs,
-  setDetailsLogs,
-  withLogsRefreshBtn
-}, ref) => {
+const Logs = React.forwardRef(({ detailsLogs, refreshLogs, withLogsRefreshBtn }, ref) => {
   const handleScroll = event => {
     if (
       ref.current &&
@@ -61,11 +52,6 @@ const Logs = React.forwardRef(({
             />
           </div>
         )}
-        <div className="logs-loader">
-          {isLoading && (
-            <Loader section secondary small />
-          )}
-        </div>
       </div>
     </div>
   )
@@ -73,11 +59,7 @@ const Logs = React.forwardRef(({
 
 Logs.propTypes = {
   detailsLogs: PropTypes.string.isRequired,
-  isLoading: PropTypes.bool.isRequired,
-  item: PropTypes.object.isRequired,
   refreshLogs: PropTypes.func.isRequired,
-  removeLogs: PropTypes.func.isRequired,
-  setDetailsLogs: PropTypes.func.isRequired,
   withLogsRefreshBtn: PropTypes.bool.isRequired
 }
 
