@@ -171,14 +171,19 @@ const WorkflowsTable = React.forwardRef(
       ]
     )
 
-    const refreshJobs = useCallback(() => {
-      dispatch(
+    const refreshWorkflow = useCallback(() => {
+      return dispatch(
         workflowsActions.fetchWorkflow(
           params.workflowProjectName || params.projectName,
           params.workflowId
         )
-      )
-    }, [dispatch, params.projectName, params.workflowId, params.workflowProjectName])
+      ).catch(error => {
+        showErrorNotification(dispatch, error, 'Failed to fetch workflow')
+        navigate(backLink, {
+          replace: true
+        })
+      })
+    }, [backLink, dispatch, navigate, params.projectName, params.workflowId, params.workflowProjectName])
 
     const handlePollAbortingJob = useCallback(
       (jobRun, refresh) => {
@@ -222,28 +227,55 @@ const WorkflowsTable = React.forwardRef(
       [dispatch, handlePollAbortingJob, setItemIsSelected, setSelectedFunction, setSelectedJob]
     )
 
-    const fetchRun = useCallback(() => {
-      return dispatch(
-        jobsActions.fetchJob(params.workflowProjectName || params.projectName, params.jobId)
-      )
-        .then(job => modifyAndSelectRun(parseJob(job), fetchRun))
-        .catch(() =>
-          navigate(backLink, {
-            replace: true
-          })
+    const findSelectedWorkflowJob = useCallback(() => {
+      if (workflowsStore.activeWorkflow?.data) {
+        const workflow = { ...workflowsStore.activeWorkflow.data }
+
+        return find(workflow.graph, workflowItem =>
+          workflowItem.run_type === 'run' && workflowItem.run_uid === params.jobId)
+      }
+    }, [params.jobId, workflowsStore.activeWorkflow.data])
+
+    const getPipelineError = useCallback(state => {
+      return state === 'failed' && workflowsStore.activeWorkflow?.data?.run?.error !== 'None' ? {
+        title: 'Pipeline error - ',
+        message: workflowsStore.activeWorkflow.data.run.error
+      } : {}
+    }, [workflowsStore.activeWorkflow.data])
+
+    const fetchRun = useCallback(
+      () => {
+        return dispatch(
+          jobsActions.fetchJob(params.workflowProjectName || params.projectName, params.jobId)
         )
-        .finally(() => {
-          fetchJobFunctionsPromiseRef.current = null
-        })
-    }, [
-      backLink,
-      dispatch,
-      modifyAndSelectRun,
-      navigate,
-      params.jobId,
-      params.projectName,
-      params.workflowProjectName
-    ])
+          .then(job => {
+            const selectedJob = findSelectedWorkflowJob()
+            const customJobState = selectedJob?.phase?.toLowerCase()
+            const pipelineError = getPipelineError(customJobState)
+
+            return modifyAndSelectRun(parseJob(job, MONITOR_WORKFLOWS_TAB, customJobState, pipelineError), fetchRun)
+          })
+          .catch(() =>
+            navigate(backLink, {
+              replace: true
+            })
+          )
+          .finally(() => {
+            fetchJobFunctionsPromiseRef.current = null
+          })
+      },
+      [
+        backLink,
+        dispatch,
+        findSelectedWorkflowJob,
+        modifyAndSelectRun,
+        navigate,
+        params.jobId,
+        params.projectName,
+        params.workflowProjectName,
+        getPipelineError
+      ]
+    )
 
     const setJobStatusAborting = useCallback(
       task => {
@@ -259,7 +291,7 @@ const WorkflowsTable = React.forwardRef(
     const onAbortJob = useCallback(
       job => {
         const refresh = () => {
-          refreshJobs()
+          refreshWorkflow()
           fetchRun()
         }
 
@@ -274,7 +306,7 @@ const WorkflowsTable = React.forwardRef(
           setJobStatusAborting
         )
       },
-      [abortJobRef, dispatch, fetchRun, refreshJobs, setConfirmData, setJobStatusAborting]
+      [abortJobRef, dispatch, fetchRun, refreshWorkflow, setConfirmData, setJobStatusAborting]
     )
 
     const handleConfirmAbortJob = useCallback(
@@ -305,9 +337,8 @@ const WorkflowsTable = React.forwardRef(
 
     const onDeleteJob = useCallback(
       job => {
-        handleDeleteJob(jobsActions.deleteJob, job, refreshJobs, filtersStore, dispatch).then(
+        handleDeleteJob(jobsActions.deleteJob, job, refreshWorkflow, filtersStore, dispatch).then(
           () => {
-            //check
             navigate(
               location.pathname
                 .split('/')
@@ -317,7 +348,7 @@ const WorkflowsTable = React.forwardRef(
           }
         )
       },
-      [dispatch, filtersStore, location.pathname, navigate, params.workflowId, refreshJobs]
+      [dispatch, filtersStore, location.pathname, navigate, params.workflowId, refreshWorkflow]
     )
 
     const handleConfirmDeleteJob = useCallback(
@@ -367,19 +398,6 @@ const WorkflowsTable = React.forwardRef(
       setSelectedFunction({})
       setItemIsSelected(false)
     }, [setItemIsSelected, setSelectedFunction, setSelectedJob])
-
-    const handleSelectRun = useCallback(
-      item => {
-        if (params.jobName) {
-          if (document.getElementsByClassName('view')[0]) {
-            document.getElementsByClassName('view')[0].classList.remove('view')
-          }
-
-          modifyAndSelectRun(item)
-        }
-      },
-      [modifyAndSelectRun, params.jobName]
-    )
 
     const findSelectedWorkflowFunction = useCallback((withoutRunType) => {
       if (workflowsStore.activeWorkflow?.data) {
@@ -444,14 +462,14 @@ const WorkflowsTable = React.forwardRef(
 
       if (isWorkflowStepExecutable(functionToBeSelected)) {
         const workflow = { ...workflowsStore.activeWorkflow?.data }
+        const customFunctionState = functionToBeSelected?.phase?.toLowerCase()
+        const pipelineError = getPipelineError(customFunctionState)
 
         if (
           workflow.graph &&
           params.functionHash &&
           (isEmpty(selectedFunction) || params.functionHash !== selectedFunction.hash)
         ) {
-          const customFunctionState = functionToBeSelected?.phase?.toLowerCase()
-
           if (params.functionName !== selectedFunction.name) {
             dispatch(
               functionsActions.fetchFunction(
@@ -465,7 +483,8 @@ const WorkflowsTable = React.forwardRef(
                   parseFunction(
                     func,
                     params.workflowProjectName || params.projectName,
-                    customFunctionState
+                    customFunctionState,
+                    pipelineError
                   )
                 )
                 setItemIsSelected(true)
@@ -479,8 +498,6 @@ const WorkflowsTable = React.forwardRef(
           (isEmpty(selectedFunction) || params.jobId !== selectedFunction.name) &&
           !checkIfWorkflowItemIsJob()
         ) {
-          const customFunctionState = functionToBeSelected?.phase?.toLowerCase()
-
           dispatch(
             functionsActions.fetchFunction(
               params.workflowProjectName || params.projectName,
@@ -492,7 +509,8 @@ const WorkflowsTable = React.forwardRef(
                 parseFunction(
                   func,
                   params.workflowProjectName || params.projectName,
-                  customFunctionState
+                  customFunctionState,
+                  pipelineError
                 )
               )
               setItemIsSelected(true)
@@ -515,7 +533,8 @@ const WorkflowsTable = React.forwardRef(
       setSelectedFunction,
       setItemIsSelected,
       setSelectedJob,
-      params.workflowProjectName
+      params.workflowProjectName,
+      getPipelineError
     ])
 
     useEffect(() => {
@@ -526,26 +545,13 @@ const WorkflowsTable = React.forwardRef(
 
     useEffect(() => {
       const workflow = { ...workflowsStore.activeWorkflow?.data }
-      const getWorkflow = () => {
-        dispatch(
-          workflowsActions.fetchWorkflow(
-            params.workflowProjectName || params.projectName,
-            params.workflowId
-          )
-        ).catch(error => {
-          showErrorNotification(dispatch, error, 'Failed to fetch workflow')
-          navigate(backLink, {
-            replace: true
-          })
-        })
-      }
 
       if (!params.workflowId && workflow.graph) {
         dispatch(workflowsActions.resetWorkflow())
       }
 
       if (!workflow.graph && params.workflowId && !workflowIsLoaded) {
-        getWorkflow()
+        refreshWorkflow()
         setWorkflowIsLoaded(true)
       }
 
@@ -554,20 +560,17 @@ const WorkflowsTable = React.forwardRef(
         params.workflowId &&
         workflow.graph
       ) {
-        const timeout = setTimeout(getWorkflow, 10000)
+        const timeout = setTimeout(refreshWorkflow, 10000)
 
         return () => clearTimeout(timeout)
       }
     }, [
+      refreshWorkflow,
       dispatch,
       workflowIsLoaded,
-      navigate,
-      params.projectName,
       params.workflowId,
       workflowsStore.activeWorkflow,
-      setWorkflowIsLoaded,
-      params.workflowProjectName,
-      backLink
+      setWorkflowIsLoaded
     ])
 
     useEffect(() => {
@@ -634,7 +637,7 @@ const WorkflowsTable = React.forwardRef(
         {(!workflowsStore.workflows.loading &&
           !params.workflowId &&
           workflowsStore.workflows.data.length === 0) ||
-          requestErrorMessage ? (
+        requestErrorMessage ? (
           <NoData
             message={getNoDataMessage(
               filtersStore,
@@ -652,11 +655,10 @@ const WorkflowsTable = React.forwardRef(
                 actionsMenu={actionsMenu}
                 backLink={backLink}
                 handleCancel={handleCancel}
-                handleSelectItem={handleSelectRun}
                 itemIsSelected={itemIsSelected}
                 pageData={pageData}
                 refresh={getWorkflows}
-                refreshJobs={refreshJobs}
+                refreshJobs={refreshWorkflow}
                 selectedFunction={selectedFunction}
                 selectedJob={selectedJob}
                 setWorkflowsViewMode={setWorkflowsViewMode}
@@ -667,7 +669,6 @@ const WorkflowsTable = React.forwardRef(
               <Table
                 actionsMenu={actionsMenu}
                 handleCancel={handleCancel}
-                handleSelectItem={handleSelectRun}
                 pageData={pageData}
                 retryRequest={getWorkflows}
                 selectedItem={selectedJob}
@@ -681,7 +682,6 @@ const WorkflowsTable = React.forwardRef(
                     isRowRendered(virtualizationConfig, index) && (
                       <JobsTableRow
                         actionsMenu={actionsMenu}
-                        handleSelectJob={handleSelectRun}
                         key={index}
                         rowItem={tableItem}
                         selectedJob={selectedJob}

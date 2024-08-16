@@ -72,7 +72,6 @@ const Workflow = ({
   actionsMenu,
   backLink,
   handleCancel,
-  handleSelectItem,
   itemIsSelected,
   pageData,
   refresh,
@@ -278,7 +277,6 @@ const Workflow = ({
             actionsMenu={actionsMenu}
             getCloseDetailsLink={() => getCloseDetailsLink(location, params.workflowId)}
             handleCancel={handleCancel}
-            handleSelectItem={handleSelectItem}
             hideActionsMenu
             pageData={pageData}
             retryRequest={refresh}
@@ -288,7 +286,6 @@ const Workflow = ({
             {sortedTableContent.map((tableItem, index) => (
               <JobsFunctionsTableRow
                 actionsMenu={actionsMenu}
-                handleSelectJob={handleSelectItem}
                 key={index}
                 rowItem={tableItem}
                 selectedItem={!isEmpty(selectedFunction) ? selectedFunction : selectedJob}
@@ -305,7 +302,6 @@ Workflow.propTypes = {
   actionsMenu: ACTIONS_MENU.isRequired,
   backLink: PropTypes.string.isRequired,
   handleCancel: PropTypes.func.isRequired,
-  handleSelectItem: PropTypes.func.isRequired,
   itemIsSelected: PropTypes.bool.isRequired,
   pageData: PropTypes.shape({}).isRequired,
   refresh: PropTypes.func.isRequired,
