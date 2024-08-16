@@ -625,10 +625,13 @@ function getProjectSummary(req, res) {
 }
 
 function getRuns(req, res) {
+  let collectedRuns = runs.runs
   //get runs for Projects Monitoring page
   if (req.params['project'] === '*') {
     const { start_time_from, state } = req.query
-    let collectedMonitoringRuns = runs.runs.filter(run => {
+    collectedRuns = runs.runs
+    .filter(run => run.kind === 'run')
+    .filter(run => {
       const runStartTime = new Date(run.status.start_time)
 
       if (!start_time_from || runStartTime >= new Date(start_time_from)) {
@@ -645,21 +648,26 @@ function getRuns(req, res) {
 
       return false
     })
-
-    res.send({ runs: collectedMonitoringRuns })
   }
   //get runs for Jobs and workflows page
-  let collectedRuns = runs.runs.filter(run => run.metadata.project === req.params['project'])
+  if (req.params['project'] !== '*') {
+    collectedRuns = runs.runs.filter(run => run.metadata.project === req.params['project'])
 
-  if (req.query['start_time_from']) {
-    collectedRuns = collectedRuns.filter(
-      run => Date.parse(run.status.start_time) >= Date.parse(req.query['start_time_from'])
-    )
-  }
-  if (req.query['start_time_to']) {
-    collectedRuns = collectedRuns.filter(
-      run => Date.parse(run.status.start_time) <= Date.parse(req.query['start_time_to'])
-    )
+    if (req.query['start_time_from']) {
+      collectedRuns = collectedRuns.filter(
+        run => Date.parse(run.status.start_time) >= Date.parse(req.query['start_time_from'])
+      )
+    }
+
+    if (req.query['start_time_to']) {
+      collectedRuns = collectedRuns.filter(
+        run => Date.parse(run.status.start_time) <= Date.parse(req.query['start_time_to'])
+      )
+    }
+
+    if (req.query['state']) {
+      collectedRuns = collectedRuns.filter(run => run.status.state === req.query['state'])
+    }
   }
 
   if (req.query['label']) {
@@ -674,6 +682,21 @@ function getRuns(req, res) {
     }
   }
 
+  if (req.query['partition-by'] && req.query['partition-sort-by']){
+    const uniqueObjects = {}
+
+    collectedRuns.forEach(run => {
+      const name = run.metadata.name
+      const lastUpdate = new Date(run.status.last_update)
+
+        if (!uniqueObjects[name] || new Date(uniqueObjects[name].status.last_update) < lastUpdate) {
+          uniqueObjects[name] = run
+        }
+      }
+    )
+    collectedRuns = Object.values(uniqueObjects)
+  }
+
   if (req.query['name']) {
     collectedRuns = collectedRuns.filter(run => {
       if (req.query['name'].includes('~')) {
@@ -682,10 +705,6 @@ function getRuns(req, res) {
         return run.metadata.name === req.query['name']
       }
     })
-  }
-
-  if (req.query['state']) {
-    collectedRuns = collectedRuns.filter(run => run.status.state === req.query['state'])
   }
 
   res.send({ runs: collectedRuns })
