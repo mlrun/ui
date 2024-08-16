@@ -167,10 +167,7 @@ const Datasets = () => {
           project: params.projectName,
           category: DATASET_TYPE,
           config: {
-            ui: {
-              controller: tagAbortControllerRef.current,
-              setRequestErrorMessage
-            }
+            signal: tagAbortControllerRef.current.signal
           }
         })
       )

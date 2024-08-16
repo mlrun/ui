@@ -163,10 +163,7 @@ const Files = () => {
           project: params.projectName,
           category: ARTIFACT_OTHER_TYPE,
           config: {
-            ui: {
-              controller: tagAbortControllerRef.current,
-              setRequestErrorMessage
-            }
+            signal: tagAbortControllerRef.current.signal
           }
         })
       )
