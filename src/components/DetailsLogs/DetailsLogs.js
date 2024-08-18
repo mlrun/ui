@@ -22,7 +22,6 @@ import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
 
 import Logs from './Logs'
-import NoData from '../../common/NoData/NoData'
 
 const DetailsLogs = ({
   additionalLogsTitle = '',
@@ -31,7 +30,7 @@ const DetailsLogs = ({
   jobsStore,
   logsTitle = '',
   noDataMessage = '',
-  refreshAdditionalLogs = false,
+  refreshAdditionalLogs,
   refreshLogs,
   removeAdditionalLogs = false,
   removeLogs,
@@ -74,30 +73,24 @@ const DetailsLogs = ({
     }
   }, [item, withLogsRefreshBtn, refreshAdditionalLogs, removeAdditionalLogs])
 
-  return !detailsLogs.length && !detailsAdditionalLogs.length && !logsAreLoading ? (
-    <NoData message={noDataMessage} />
-  ) : (
+  return (
     <div className="table__item-logs-container">
-      {mainLogsAreLoading || detailsLogs.length ? (
-        <>
-          {logsTitle && <h3>{logsTitle}</h3>}
-          <Logs
-            isLoading={logsAreLoading}
-            refreshLogs={() => refreshLogs(item, item.project, setDetailsLogs, streamLogsRef)}
-            removeLogs={removeLogs}
-            item={item}
-            ref={streamLogsRef}
-            withLogsRefreshBtn={withLogsRefreshBtn}
-            detailsLogs={detailsLogs}
-            setDetailsLogs={setDetailsLogs}
-          />
-        </>
-      ) : null}
-      {refreshAdditionalLogs && (additionalLogsAreLoading || detailsAdditionalLogs.length) ? (
+      {logsTitle && <h3>{logsTitle}</h3>}
+      <Logs
+        isNoData={!detailsLogs.length}
+        isLoading={logsAreLoading || mainLogsAreLoading}
+        refreshLogs={() => refreshLogs(item, item.project, setDetailsLogs, streamLogsRef)}
+        ref={streamLogsRef}
+        withLogsRefreshBtn={withLogsRefreshBtn}
+        detailsLogs={detailsLogs}
+        noDataMessage={noDataMessage}
+      />
+      {refreshAdditionalLogs && (
         <>
           {additionalLogsTitle && <h3>{additionalLogsTitle}</h3>}
           <Logs
-            isLoading={logsAreLoading}
+            isNoData={!detailsAdditionalLogs.length}
+            isLoading={logsAreLoading || additionalLogsAreLoading}
             refreshLogs={() =>
               refreshAdditionalLogs(
                 item,
@@ -106,15 +99,13 @@ const DetailsLogs = ({
                 streamAdditionalLogsRef
               )
             }
-            removeLogs={removeAdditionalLogs}
-            item={item}
             ref={streamAdditionalLogsRef}
             withLogsRefreshBtn={withLogsRefreshBtn}
             detailsLogs={detailsAdditionalLogs}
-            setDetailsLogs={setDetailsAdditionalLogs}
+            noDataMessage={noDataMessage}
           />
         </>
-      ) : null}
+      )}
     </div>
   )
 }

@@ -22,11 +22,12 @@ import PropTypes from 'prop-types'
 
 import { Button } from 'igz-controls/components'
 import Loader from '../../common/Loader/Loader'
+import NoData from '../../common/NoData/NoData'
 
 import { ReactComponent as RefreshIcon } from 'igz-controls/images/refresh.svg'
 
 const Logs = React.forwardRef(
-  ({ detailsLogs, isLoading, refreshLogs, withLogsRefreshBtn }, ref) => {
+  ({ detailsLogs, isNoData, isLoading, noDataMessage, refreshLogs, withLogsRefreshBtn }, ref) => {
     const handleScroll = event => {
       if (
         ref.current &&
@@ -39,7 +40,7 @@ const Logs = React.forwardRef(
     return (
       <div className="table__item-logs">
         <div className="table__item-logs-content" onScroll={handleScroll}>
-          {detailsLogs}
+          {!isLoading && isNoData ? <NoData message={noDataMessage} /> : detailsLogs}
         </div>
         <div className="table__item-logs-panel">
           {withLogsRefreshBtn && (
@@ -54,7 +55,11 @@ const Logs = React.forwardRef(
               />
             </div>
           )}
-          <div className="logs-loader">{isLoading && <Loader section secondary small />}</div>
+          {isLoading && (
+            <div className="logs-loader">
+              <Loader section secondary small />
+            </div>
+          )}
         </div>
       </div>
     )
