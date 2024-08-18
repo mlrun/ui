@@ -21,44 +21,49 @@ import React from 'react'
 import PropTypes from 'prop-types'
 
 import { Button } from 'igz-controls/components'
+import Loader from '../../common/Loader/Loader'
 
 import { ReactComponent as RefreshIcon } from 'igz-controls/images/refresh.svg'
 
-const Logs = React.forwardRef(({ detailsLogs, refreshLogs, withLogsRefreshBtn }, ref) => {
-  const handleScroll = event => {
-    if (
-      ref.current &&
-      event.target.scrollHeight - event.target.scrollTop - 1 < event.target.clientHeight
-    ) {
-      ref.current()
+const Logs = React.forwardRef(
+  ({ detailsLogs, isLoading, refreshLogs, withLogsRefreshBtn }, ref) => {
+    const handleScroll = event => {
+      if (
+        ref.current &&
+        event.target.scrollHeight - event.target.scrollTop - 1 < event.target.clientHeight
+      ) {
+        ref.current()
+      }
     }
-  }
 
-  return (
-    <div className="table__item-logs">
-      <div className="table__item-logs-content" onScroll={handleScroll}>
-        {detailsLogs}
+    return (
+      <div className="table__item-logs">
+        <div className="table__item-logs-content" onScroll={handleScroll}>
+          {detailsLogs}
+        </div>
+        <div className="table__item-logs-panel">
+          {withLogsRefreshBtn && (
+            <div className="logs-refresh">
+              <Button
+                icon={<RefreshIcon />}
+                label=""
+                tooltip="Refresh"
+                onClick={() => {
+                  refreshLogs()
+                }}
+              />
+            </div>
+          )}
+          <div className="logs-loader">{isLoading && <Loader section secondary small />}</div>
+        </div>
       </div>
-      <div className="table__item-logs-panel">
-        {withLogsRefreshBtn && (
-          <div className="logs-refresh">
-            <Button
-              icon={<RefreshIcon />}
-              label=""
-              tooltip="Refresh"
-              onClick={() => {
-                refreshLogs()
-              }}
-            />
-          </div>
-        )}
-      </div>
-    </div>
-  )
-})
+    )
+  }
+)
 
 Logs.propTypes = {
   detailsLogs: PropTypes.string.isRequired,
+  isLoading: PropTypes.bool.isRequired,
   refreshLogs: PropTypes.func.isRequired,
   withLogsRefreshBtn: PropTypes.bool.isRequired
 }

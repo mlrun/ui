@@ -21,7 +21,6 @@ import React, { useEffect, useMemo, useRef, useState } from 'react'
 import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
 
-import Loader from '../../common/Loader/Loader'
 import Logs from './Logs'
 import NoData from '../../common/NoData/NoData'
 
@@ -47,6 +46,12 @@ const DetailsLogs = ({
       functionsStore.logs.loading || functionsStore.nuclioLogs.loading || jobsStore.logs.loading
     )
   }, [functionsStore.logs.loading, functionsStore.nuclioLogs.loading, jobsStore.logs.loading])
+  const mainLogsAreLoading = useMemo(() => {
+    return functionsStore.logs.loading || jobsStore.logs.loading
+  }, [functionsStore.logs.loading, jobsStore.logs.loading])
+  const additionalLogsAreLoading = useMemo(() => {
+    return functionsStore.nuclioLogs.loading
+  }, [functionsStore.nuclioLogs.loading])
 
   useEffect(() => {
     if (refreshLogs) {
@@ -69,27 +74,30 @@ const DetailsLogs = ({
     }
   }, [item, withLogsRefreshBtn, refreshAdditionalLogs, removeAdditionalLogs])
 
-  return logsAreLoading ? (
-    <Loader />
-  ) : !detailsLogs.length && !detailsAdditionalLogs.length ? (
+  return !detailsLogs.length && !detailsAdditionalLogs.length && !logsAreLoading ? (
     <NoData message={noDataMessage} />
   ) : (
     <div className="table__item-logs-container">
-      {detailsLogs.length ? (
+      {mainLogsAreLoading || detailsLogs.length ? (
         <>
           {logsTitle && <h3>{logsTitle}</h3>}
           <Logs
+            isLoading={logsAreLoading}
             refreshLogs={() => refreshLogs(item, item.project, setDetailsLogs, streamLogsRef)}
+            removeLogs={removeLogs}
+            item={item}
             ref={streamLogsRef}
             withLogsRefreshBtn={withLogsRefreshBtn}
             detailsLogs={detailsLogs}
+            setDetailsLogs={setDetailsLogs}
           />
         </>
       ) : null}
-      {detailsAdditionalLogs.length ? (
+      {refreshAdditionalLogs && (additionalLogsAreLoading || detailsAdditionalLogs.length) ? (
         <>
           {additionalLogsTitle && <h3>{additionalLogsTitle}</h3>}
           <Logs
+            isLoading={logsAreLoading}
             refreshLogs={() =>
               refreshAdditionalLogs(
                 item,
@@ -98,9 +106,12 @@ const DetailsLogs = ({
                 streamAdditionalLogsRef
               )
             }
+            removeLogs={removeAdditionalLogs}
+            item={item}
             ref={streamAdditionalLogsRef}
             withLogsRefreshBtn={withLogsRefreshBtn}
             detailsLogs={detailsAdditionalLogs}
+            setDetailsLogs={setDetailsAdditionalLogs}
           />
         </>
       ) : null}
