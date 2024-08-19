@@ -40,11 +40,7 @@ const DetailsLogs = ({
   const [detailsAdditionalLogs, setDetailsAdditionalLogs] = useState('')
   const streamLogsRef = useRef()
   const streamAdditionalLogsRef = useRef()
-  const logsAreLoading = useMemo(() => {
-    return (
-      functionsStore.logs.loading || functionsStore.nuclioLogs.loading || jobsStore.logs.loading
-    )
-  }, [functionsStore.logs.loading, functionsStore.nuclioLogs.loading, jobsStore.logs.loading])
+
   const mainLogsAreLoading = useMemo(() => {
     return functionsStore.logs.loading || jobsStore.logs.loading
   }, [functionsStore.logs.loading, jobsStore.logs.loading])
@@ -77,8 +73,7 @@ const DetailsLogs = ({
     <div className="table__item-logs-container">
       {logsTitle && <h3>{logsTitle}</h3>}
       <Logs
-        isNoData={!detailsLogs.length}
-        isLoading={logsAreLoading || mainLogsAreLoading}
+        isLoading={mainLogsAreLoading}
         refreshLogs={() => refreshLogs(item, item.project, setDetailsLogs, streamLogsRef)}
         ref={streamLogsRef}
         withLogsRefreshBtn={withLogsRefreshBtn}
@@ -89,8 +84,7 @@ const DetailsLogs = ({
         <>
           {additionalLogsTitle && <h3>{additionalLogsTitle}</h3>}
           <Logs
-            isNoData={!detailsAdditionalLogs.length}
-            isLoading={logsAreLoading || additionalLogsAreLoading}
+            isLoading={additionalLogsAreLoading}
             refreshLogs={() =>
               refreshAdditionalLogs(
                 item,

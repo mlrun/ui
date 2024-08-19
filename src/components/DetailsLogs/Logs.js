@@ -27,7 +27,7 @@ import NoData from '../../common/NoData/NoData'
 import { ReactComponent as RefreshIcon } from 'igz-controls/images/refresh.svg'
 
 const Logs = React.forwardRef(
-  ({ detailsLogs, isNoData, isLoading, noDataMessage, refreshLogs, withLogsRefreshBtn }, ref) => {
+  ({ detailsLogs, isLoading, noDataMessage, refreshLogs, withLogsRefreshBtn }, ref) => {
     const handleScroll = event => {
       if (
         ref.current &&
@@ -40,7 +40,7 @@ const Logs = React.forwardRef(
     return (
       <div className="table__item-logs">
         <div className="table__item-logs-content" onScroll={handleScroll}>
-          {!isLoading && isNoData ? <NoData message={noDataMessage} /> : detailsLogs}
+          {!isLoading && !detailsLogs.length ? <NoData message={noDataMessage} /> : detailsLogs}
         </div>
         <div className="table__item-logs-panel">
           {withLogsRefreshBtn && (
@@ -69,6 +69,7 @@ const Logs = React.forwardRef(
 Logs.propTypes = {
   detailsLogs: PropTypes.string.isRequired,
   isLoading: PropTypes.bool.isRequired,
+  noDataMessage: PropTypes.string,
   refreshLogs: PropTypes.func.isRequired,
   withLogsRefreshBtn: PropTypes.bool.isRequired
 }
