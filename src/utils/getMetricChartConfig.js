@@ -101,7 +101,7 @@ export const getBarChartMetricConfig = () => {
           },
           ticks: {
             align: 'left',
-            maxTicksLimit: 4,
+            autoSkip: false,
             offset: -20
           },
           grid: {
