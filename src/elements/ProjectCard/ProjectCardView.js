@@ -64,7 +64,7 @@ const ProjectCardView = React.forwardRef(({ actionsMenu, project, statistics }, 
 
             <div className="project-card__info">
               <ClockIcon className="project-card__info-icon" />
-              <span>{getTimeElapsedByDate(project.metadata.created)}</span>
+              <span>Created {getTimeElapsedByDate(project.metadata.created)}</span>
             </div>
           </div>
 
