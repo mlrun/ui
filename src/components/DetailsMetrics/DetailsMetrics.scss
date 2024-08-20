@@ -384,6 +384,10 @@ $stickyHeaderHeight: 55px;
   box-shadow: 0 -10px 0 0 $white;
 }
 
+.no-data-block {
+  height: calc(100% - $stickyHeaderHeight);
+}
+
 #chartjs-tooltip-metric {
   .tooltip-container {
     display: flex;

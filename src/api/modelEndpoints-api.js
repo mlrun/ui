@@ -36,15 +36,7 @@ const modelEndpointsApi = {
   },
   getModelEndpointMetrics: (project, uid, type = 'all') =>
     mainHttpClient.get(`/projects/${project}/model-endpoints/${uid}/metrics?type=${type}`), // type=results/metrics/all
-  getModelEndpointMetricsValues: (project, uid, params, signal) => {
-    const config = {
-      params
-    }
-
-    if (signal) {
-      config.signal = signal
-    }
-
+  getModelEndpointMetricsValues: (project, uid, config) => {
     return mainHttpClient.get(`/projects/${project}/model-endpoints/${uid}/metrics-values`, config)
   }
 }
