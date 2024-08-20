@@ -27,7 +27,7 @@ import NoData from '../../common/NoData/NoData'
 import { ReactComponent as RefreshIcon } from 'igz-controls/images/refresh.svg'
 
 const Logs = React.forwardRef(
-  ({ detailsLogs, isLoading, noDataMessage, refreshLogs, withLogsRefreshBtn }, ref) => {
+  ({ detailsLogs, isLoading, noDataMessage = '', refreshLogs, withLogsRefreshBtn }, ref) => {
     const handleScroll = event => {
       if (
         ref.current &&
