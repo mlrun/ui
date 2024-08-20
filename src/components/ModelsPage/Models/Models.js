@@ -217,10 +217,7 @@ const Models = ({ fetchModelFeatureVector }) => {
           project: params.projectName,
           category: MODEL_TYPE,
           config: {
-            ui: {
-              controller: tagAbortControllerRef.current,
-              setRequestErrorMessage
-            }
+            signal: tagAbortControllerRef.current.signal
           }
         })
       )
