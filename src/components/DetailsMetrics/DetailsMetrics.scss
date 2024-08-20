@@ -43,14 +43,15 @@ $stickyHeaderHeight: 55px;
     border: $primaryBorder;
     box-shadow: none;
 
+    .metrics__card-row {
+      display: flex;
+      flex: 1 0 100%;
+    }
+
     &-invocations {
-      position: sticky;
-      top: $stickyHeaderHeight;
+      position: relative;
       z-index: 1;
-      align-self: baseline;
       width: 100%;
-      padding-bottom: 25px;
-      background: $white;
 
       .metrics__card {
         padding-top: 12px;
@@ -59,14 +60,15 @@ $stickyHeaderHeight: 55px;
 
       &_collapsed .stats-card__row {
         height: 0;
+        opacity: 0;
         min-height: 0 !important;
         margin-bottom: 0 !important;
-        visibility: hidden !important;
         transition: all 0.2s ease-in-out;
       }
 
       &_expanded .stats-card__row {
         height: 40px;
+        opacity: 1;
         transition: all 0.2s ease-in-out;
       }
     }
@@ -96,9 +98,11 @@ $stickyHeaderHeight: 55px;
     }
 
     &-header {
+      position: relative;
       display: flex;
       flex-direction: row;
       gap: 8px;
+      top: -5px;
       align-items: center;
       justify-content: space-between;
       padding-left: 5px;
@@ -142,15 +146,10 @@ $stickyHeaderHeight: 55px;
       align-self: stretch;
       box-sizing: border-box;
       width: 100%;
-      aspect-ratio: 5;
+      aspect-ratio: 7;
 
       &-collapsed {
         height: 80px;
-        margin-top: 15px;
-      }
-
-      &-expanded {
-        height: 200px;
       }
 
       .chart-item {
@@ -215,16 +214,11 @@ $stickyHeaderHeight: 55px;
       }
     }
 
-    &-enlarge-icon {
-      position: absolute;
-      top: -24px;
-      right: -15px;
-    }
-
-    &-minimize-icon {
-      position: absolute;
-      top: -59px;
-      right: -15px;
+    &-invocation-toggle-icon {
+      align-self: flex-start;
+      position: relative;
+      top: -5px;
+      right: -10px;
     }
 
     &-invocation-header {
@@ -236,10 +230,6 @@ $stickyHeaderHeight: 55px;
       color: $primary;
       font-weight: 500;
       font-size: 14px;
-
-      &_expanded {
-        margin-right: 30px;
-      }
 
       &_drift-icon-container {
         align-self: stretch;
@@ -378,10 +368,9 @@ $stickyHeaderHeight: 55px;
 }
 
 .empty-invocation-card {
-  position: sticky;
-  top: $stickyHeaderHeight;
   z-index: 1;
   box-shadow: 0 -10px 0 0 $white;
+  padding-bottom: 1em;
 }
 
 .no-data-block {
