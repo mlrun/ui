@@ -374,10 +374,9 @@ $stickyHeaderHeight: 55px;
 }
 
 .empty-invocation-card {
-  position: sticky;
-  top: $stickyHeaderHeight;
   z-index: 1;
   box-shadow: 0 -10px 0 0 $white;
+  padding-bottom: 1em;
 }
 
 #chartjs-tooltip-metric {
