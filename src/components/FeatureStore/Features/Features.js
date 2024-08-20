@@ -65,7 +65,7 @@ const Features = ({
   const [features, setFeatures] = useState([])
   const [selectedRowData, setSelectedRowData] = useState({})
   const [requestErrorMessage, setRequestErrorMessage] = useState('')
-  const [urlTagOption] = useGetTagOptions(fetchFeatureSetsTags, featuresFilters)
+  const [urlTagOption, tagAbortControllerRef] = useGetTagOptions(fetchFeatureSetsTags, featuresFilters)
   const params = useParams()
   const featureStore = useSelector(store => store.featureStore)
   const filtersStore = useSelector(store => store.filtersStore)
@@ -150,7 +150,14 @@ const Features = ({
   )
 
   const handleRefresh = filters => {
-    dispatch(getFilterTagOptions({ fetchTags: fetchFeatureSetsTags, project: params.projectName }))
+    dispatch(
+      getFilterTagOptions({
+        fetchTags: fetchFeatureSetsTags,
+        project: params.projectName,
+        config: {
+          signal: tagAbortControllerRef.current.signal
+        }
+      }))
     setFeatures([])
     removeFeature()
     removeEntity()
@@ -282,6 +289,8 @@ const Features = ({
   }, [filtersStore.groupBy, filtersStore.tag, dispatch])
 
   useEffect(() => {
+    const tagAbortControllerCurrent = tagAbortControllerRef.current
+
     return () => {
       setFeatures([])
       removeFeature()
@@ -290,8 +299,9 @@ const Features = ({
       removeEntities()
       setSelectedRowData({})
       abortControllerRef.current.abort(REQUEST_CANCELED)
+      tagAbortControllerCurrent.abort(REQUEST_CANCELED)
     }
-  }, [removeEntities, removeEntity, removeFeature, removeFeatures, params.projectName])
+  }, [removeEntities, removeEntity, removeFeature, removeFeatures, params.projectName, tagAbortControllerRef])
 
   const virtualizationConfig = useVirtualization({
     rowsData: {

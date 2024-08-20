@@ -68,7 +68,7 @@ const FeatureSets = ({
   const [requestErrorMessage, setRequestErrorMessage] = useState('')
 
   const openPanelByDefault = useOpenPanel()
-  const [urlTagOption] = useGetTagOptions(fetchFeatureSetsTags, featureSetsFilters)
+  const [urlTagOption, tagAbortControllerRef] = useGetTagOptions(fetchFeatureSetsTags, featureSetsFilters)
   const params = useParams()
   const featureStore = useSelector(store => store.featureStore)
   const filtersStore = useSelector(store => store.filtersStore)
@@ -128,7 +128,14 @@ const FeatureSets = ({
   )
 
   const handleRefresh = filters => {
-    dispatch(getFilterTagOptions({ fetchTags: fetchFeatureSetsTags, project: params.projectName }))
+    dispatch(
+      getFilterTagOptions({
+        fetchTags: fetchFeatureSetsTags,
+        project: params.projectName,
+        config: {
+          signal: tagAbortControllerRef.current.signal
+        }
+      }))
     setFeatureSets([])
     setSelectedFeatureSet({})
     setSelectedRowData({})
@@ -336,6 +343,8 @@ const FeatureSets = ({
   }, [openPanelByDefault, setFeatureSetsPanelIsOpen])
 
   useEffect(() => {
+    const tagAbortControllerCurrent = tagAbortControllerRef.current
+
     return () => {
       setFeatureSets([])
       removeFeatureSets()
@@ -343,8 +352,9 @@ const FeatureSets = ({
       setSelectedFeatureSet({})
       setSelectedRowData({})
       abortControllerRef.current.abort(REQUEST_CANCELED)
+      tagAbortControllerCurrent.abort(REQUEST_CANCELED)
     }
-  }, [removeFeatureSet, removeFeatureSets, params.projectName])
+  }, [removeFeatureSet, removeFeatureSets, params.projectName, tagAbortControllerRef])
 
   const virtualizationConfig = useVirtualization({
     rowsData: {
