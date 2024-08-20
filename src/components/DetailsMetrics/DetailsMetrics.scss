@@ -44,13 +44,9 @@ $stickyHeaderHeight: 55px;
     box-shadow: none;
 
     &-invocations {
-      position: sticky;
-      top: $stickyHeaderHeight;
+      position: relative;
       z-index: 1;
-      align-self: baseline;
       width: 100%;
-      padding-bottom: 25px;
-      background: $white;
 
       .metrics__card {
         padding-top: 12px;
@@ -142,11 +138,11 @@ $stickyHeaderHeight: 55px;
       align-self: stretch;
       box-sizing: border-box;
       width: 100%;
-      aspect-ratio: 5;
+      aspect-ratio: 7;
 
       &-collapsed {
         height: 80px;
-        margin-top: 15px;
+        margin-top: 35px;
       }
 
       &-expanded {
@@ -217,7 +213,7 @@ $stickyHeaderHeight: 55px;
 
     &-enlarge-icon {
       position: absolute;
-      top: -24px;
+      top: -38px;
       right: -15px;
     }
 
