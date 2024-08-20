@@ -36,7 +36,7 @@ const JobWizardDataInputs = ({ formState, params, stepIsActive = false }) => {
           fieldsPath={`${DATA_INPUTS_STEP}.dataInputsTable`}
           formState={formState}
           params={params}
-          rowCanBeAdded={formState.values.runDetails.handlerData?.has_kwargs}
+          hasKwargs={formState.values.runDetails.handlerData?.has_kwargs}
         />
       </div>
     </div>

@@ -33,6 +33,7 @@ import {
 import { getGradientLineChartConfig } from '../../utils/getMetricChartConfig'
 import { CHART_TYPE_LINE } from '../../constants'
 import { ReactComponent as EnlargeIcon } from 'igz-controls/images/ml-enlarge.svg'
+import { ReactComponent as MinimizeIcon } from 'igz-controls/images/ml-minimize.svg'
 
 import colors from 'igz-controls/scss/colors.scss'
 
@@ -43,7 +44,7 @@ const InvocationsMetricCard = forwardRef(
       metric,
       previousTotalInvocation,
       selectedDate,
-      expandInvocationCard
+      setIsInvocationCardExpanded
     },
     invocationBodyCardRef
   ) => {
@@ -52,6 +53,10 @@ const InvocationsMetricCard = forwardRef(
       !isInvocationCardExpanded
         ? 'metrics__card-invocations_collapsed'
         : 'metrics__card-invocations_expanded'
+    )
+    const invocationCardHeaderClassnames = classNames(
+      'metrics__card-invocation-header',
+      isInvocationCardExpanded ? 'metrics__card-invocation-header_expanded' : ''
     )
 
     const gradientConfig = useMemo(() => getGradientLineChartConfig(), [])
@@ -87,7 +92,7 @@ const InvocationsMetricCard = forwardRef(
       <div className={invocationCardClassnames}>
         <StatsCard key={metric.id} className="metrics__card">
           <StatsCard.Header title="Endpoint call count">
-            <div className="metrics__card-invocation-header">
+            <div className={invocationCardHeaderClassnames}>
               <div className="metrics__card-invocation-header_drift-icon-container">
                 {resultPercentageDrift.icon}
               </div>
@@ -105,15 +110,13 @@ const InvocationsMetricCard = forwardRef(
             ref={invocationBodyCardRef}
             className={`metrics__card-body ${isInvocationCardExpanded ? 'metrics__card-body-expanded' : 'metrics__card-body-collapsed'}`}
           >
-            {!isInvocationCardExpanded && (
-              <RoundedIcon
-                className="metrics__card-pin-icon"
-                onClick={() => expandInvocationCard(true)}
-                tooltipText={'Expand Invocation Card'}
-              >
-                <EnlargeIcon />
-              </RoundedIcon>
-            )}
+            <RoundedIcon
+              className={`metrics__card-${isInvocationCardExpanded ? 'minimize' : 'enlarge'}-icon`}
+              onClick={() => setIsInvocationCardExpanded(!isInvocationCardExpanded)}
+              tooltipText={`${isInvocationCardExpanded ? 'Collapse' : 'Expand'} Invocation Card`}
+            >
+              {isInvocationCardExpanded ? <MinimizeIcon /> : <EnlargeIcon />}
+            </RoundedIcon>
             <div
               className={`metrics__card-invocation-content ${!isInvocationCardExpanded && 'metrics__card-invocation-content-visible'}`}
             >
@@ -151,7 +154,7 @@ const InvocationsMetricCard = forwardRef(
 )
 
 InvocationsMetricCard.propTypes = {
-  expandInvocationCard: PropTypes.func.isRequired,
+  setIsInvocationCardExpanded: PropTypes.func.isRequired,
   isInvocationCardExpanded: PropTypes.bool.isRequired,
   metric: PropTypes.object.isRequired,
   previousTotalInvocation: PropTypes.number,

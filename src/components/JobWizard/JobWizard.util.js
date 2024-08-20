@@ -699,7 +699,7 @@ export const parseDefaultParameters = (funcParams = {}, runParams = {}, runHyper
         isRequired: parametersIsRequired,
         isDefault: true,
         isPredefined: true,
-        parameterTypeOptions: getParameterTypeOptions(parameterType)
+        parameterTypeOptions: getParameterTypeOptions(parameter.type)
       }
     })
     .sort(sortParameters)
@@ -1152,15 +1152,15 @@ export const getSaveJobErrorMsg = error => {
 }
 
 export const getParameterTypeOptions = (parameterType = '') => {
-  const match = parameterType.match(/Union\[(.*?)\]$/)
+  const unionTypes = parameterType.match(/Union\[(.*?)\]$/)
 
-  if (match) {
+  if (unionTypes) {
     const uniqueUnionTypesList = [
       ...new Set(
-        match[1].split(',').map(unionType => {
+        unionTypes[1].split(',').map(unionType => {
           const trimmedUnionType = unionType.trim().toLowerCase()
 
-          return trimmedUnionType.startsWith('list') ? 'list' : trimmedUnionType
+          return trimmedUnionType.startsWith(parameterTypeList) ? parameterTypeList : trimmedUnionType
         })
       )
     ]
@@ -1174,6 +1174,15 @@ export const getParameterTypeOptions = (parameterType = '') => {
     }
 
     return parametersValueTypeOptions
+  } else if (parameterType) {
+    const filteredValueTypeOptions = parametersValueTypeOptions.filter(function (option) {
+      const parsedParameterType = parameterType?.toLocaleLowerCase()?.startsWith(parameterTypeList)
+        ? parameterTypeList
+        : parameterType
+      return parsedParameterType === option.id
+    })
+
+    return !isEmpty(filteredValueTypeOptions) ? filteredValueTypeOptions : parametersValueTypeOptions
   }
 
   return parametersValueTypeOptions

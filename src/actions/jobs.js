@@ -407,7 +407,7 @@ const jobsActions = {
     }
 
     if (filters?.labels) {
-      newConfig.params.labels = filters.labels?.split(',')
+      newConfig.params.label = filters.labels?.split(',')
     }
 
     return jobsApi
