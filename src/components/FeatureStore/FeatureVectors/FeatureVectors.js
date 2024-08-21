@@ -73,7 +73,7 @@ const FeatureVectors = ({
   const [selectedRowData, setSelectedRowData] = useState({})
   const [requestErrorMessage, setRequestErrorMessage] = useState('')
   const openPanelByDefault = useOpenPanel()
-  const [urlTagOption] = useGetTagOptions(fetchFeatureVectorsTags, featureVectorsFilters)
+  const [urlTagOption, tagAbortControllerRef] = useGetTagOptions(fetchFeatureVectorsTags, featureVectorsFilters)
   const params = useParams()
   const featureStore = useSelector(store => store.featureStore)
   const filtersStore = useSelector(store => store.filtersStore)
@@ -152,7 +152,10 @@ const FeatureVectors = ({
           dispatch(
             getFilterTagOptions({
               fetchTags: fetchFeatureVectorsTags,
-              project: params.projectName
+              project: params.projectName,
+              config: {
+                signal: tagAbortControllerRef.current.signal
+              }
             })
           )
             .unwrap()
@@ -182,7 +185,8 @@ const FeatureVectors = ({
       navigate,
       params.projectName,
       selectedFeatureVector,
-      setConfirmData
+      setConfirmData,
+      tagAbortControllerRef
     ]
   )
 
@@ -210,7 +214,13 @@ const FeatureVectors = ({
 
   const handleRefresh = filters => {
     dispatch(
-      getFilterTagOptions({ fetchTags: fetchFeatureVectorsTags, project: params.projectName })
+      getFilterTagOptions({
+        fetchTags: fetchFeatureVectorsTags,
+        project: params.projectName,
+        config: {
+          signal: tagAbortControllerRef.current.signal
+        }
+      })
     )
     setFeatureVectors([])
     setSelectedFeatureVector({})
@@ -422,15 +432,18 @@ const FeatureVectors = ({
   }, [openPanelByDefault, setCreateVectorPopUpIsOpen])
 
   useEffect(() => {
+    const tagAbortControllerCurrent = tagAbortControllerRef.current
+
     return () => {
       setFeatureVectors([])
       removeFeatureVectors()
       setSelectedFeatureVector({})
       setSelectedRowData({})
       abortControllerRef.current.abort(REQUEST_CANCELED)
+      tagAbortControllerCurrent.abort(REQUEST_CANCELED)
       setCreateVectorPopUpIsOpen(false)
     }
-  }, [removeFeatureVector, removeFeatureVectors, setCreateVectorPopUpIsOpen, params.projectName])
+  }, [removeFeatureVector, removeFeatureVectors, setCreateVectorPopUpIsOpen, params.projectName, tagAbortControllerRef])
 
   const virtualizationConfig = useVirtualization({
     rowsData: {

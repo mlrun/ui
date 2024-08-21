@@ -341,13 +341,17 @@ const featureStoreActions = {
     payload: features
   }),
   fetchFeatureSetsTags:
-    ({ project }) =>
-    () =>
-      featureStoreApi.fetchFeatureSetsTags(project),
+    ({ project, config }) =>
+      dispatch =>
+      featureStoreApi.fetchFeatureSetsTags(project, config).catch(error => {
+        largeResponseCatchHandler(error, 'Failed to fetch tags', dispatch)
+      }),
   fetchFeatureVectorsTags:
-    ({ project }) =>
-    () =>
-      featureStoreApi.fetchFeatureVectorsTags(project),
+    ({ project, config }) =>
+      dispatch =>
+      featureStoreApi.fetchFeatureVectorsTags(project, config).catch(error => {
+        largeResponseCatchHandler(error, 'Failed to fetch tags', dispatch)
+      }),
   removeEntity: entities => ({
     type: REMOVE_ENTITY,
     payload: entities

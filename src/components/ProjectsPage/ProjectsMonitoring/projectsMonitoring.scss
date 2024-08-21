@@ -5,17 +5,16 @@
     margin-bottom: 2rem;
     padding: 30px;
     background-color: $wildSand;
+
+    .page-header {
+      margin: 0 20px 0 0;
+    }
   }
 
   &-legend {
     display: flex;
     align-items: baseline;
     margin-bottom: 2em;
-
-    &__title {
-      margin: 0 30px 0 0;
-      font-size: 24px;
-    }
 
     &__status {
       display: flex;
@@ -45,7 +44,7 @@
 
   &-stats {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(380px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(345px, 1fr));
     gap: 18px 24px;
   }
 }

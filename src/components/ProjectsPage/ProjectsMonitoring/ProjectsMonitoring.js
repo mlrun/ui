@@ -18,6 +18,7 @@ under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
 import JobsCounters from '../../../elements/ProjectsMonitoringCounters/JobsCounters'
+import PageHeader from '../../../elements/PageHeader/PageHeader'
 import ScheduledJobsCounters from '../../../elements/ProjectsMonitoringCounters/ScheduledJobsCounters'
 import WorkflowsCounters from '../../../elements/ProjectsMonitoringCounters/WorkflowsCounters'
 
@@ -27,7 +28,7 @@ const ProjectsMonitoring = () => {
   return (
     <div className="projects-monitoring-container">
       <div className="projects-monitoring-legend">
-        <h5 className="projects-monitoring-legend__title">Monitoring</h5>
+        <PageHeader title="Monitoring" />
         <ul className="projects-monitoring-legend__status">
           <li>
             In Process <i className="state-running"></i>

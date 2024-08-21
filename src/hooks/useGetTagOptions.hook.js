@@ -33,11 +33,11 @@ import { getFilterTagOptions, setFilters, setModalFiltersValues } from '../reduc
 
 export const useGetTagOptions = (fetchTags, filters, category, modalFiltersName) => {
   const [urlTagOption, setUrlTagOption] = useState(null)
-  const [requestErrorMessage, setRequestErrorMessage] = useState('')
   const { projectName, tag: paramTag } = useParams()
   const tagOptions = useSelector(store => store.filtersStore.tagOptions)
   const dispatch = useDispatch()
   const abortControllerRef = useRef(new AbortController())
+  const isInitialRequestSent = useRef(false)
 
   useEffect(() => {
     if (
@@ -51,7 +51,7 @@ export const useGetTagOptions = (fetchTags, filters, category, modalFiltersName)
         setUrlTagOption(paramTag)
       }
 
-      if (fetchTags) {
+      if (fetchTags && !isInitialRequestSent.current) {
         abortControllerRef.current = new AbortController()
 
         dispatch(
@@ -61,10 +61,7 @@ export const useGetTagOptions = (fetchTags, filters, category, modalFiltersName)
             project: projectName,
             category,
             config: {
-              ui: {
-                controller: abortControllerRef.current,
-                setRequestErrorMessage
-              }
+              signal: abortControllerRef.current.signal
             }
           })
         )
@@ -95,6 +92,8 @@ export const useGetTagOptions = (fetchTags, filters, category, modalFiltersName)
               }
             }
           })
+
+        isInitialRequestSent.current = true
       } else if (paramTag) {
         dispatch(setFilters({ paramTag }))
         modalFiltersName &&
@@ -110,5 +109,12 @@ export const useGetTagOptions = (fetchTags, filters, category, modalFiltersName)
     }
   }, [category, dispatch, fetchTags, filters, modalFiltersName, paramTag, projectName, tagOptions])
 
-  return [urlTagOption, abortControllerRef, requestErrorMessage]
+
+  useEffect(() => {
+    return () => {
+      isInitialRequestSent.current = false
+    }
+  }, [])
+
+  return [urlTagOption, abortControllerRef]
 }

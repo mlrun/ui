@@ -37,8 +37,9 @@
     }
 
     &__title {
-      font-size: 1.1rem;
-      font-weight: bold;
+      color: $primary;
+      font-weight: normal;
+      font-size: 1.25rem;
       margin: 0;
     }
   }
