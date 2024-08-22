@@ -43,6 +43,10 @@ $stickyHeaderHeight: 55px;
     border: $primaryBorder;
     box-shadow: none;
 
+    &-metric {
+      min-height: 130px;
+    }
+
     .metrics__card-row {
       display: flex;
       flex: 1 0 100%;
