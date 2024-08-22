@@ -87,7 +87,8 @@ import {
 } from '../constants'
 import {
   CONFLICT_ERROR_STATUS_CODE,
-  INTERNAL_SERVER_ERROR_STATUS_CODE
+  INTERNAL_SERVER_ERROR_STATUS_CODE,
+  FORBIDDEN_ERROR_STATUS_CODE
 } from 'igz-controls/constants'
 
 import { parseSummaryData } from '../utils/parseSummaryData'
@@ -124,10 +125,12 @@ const projectsAction = {
       .catch(error => {
         const message =
           error.response?.status === CONFLICT_ERROR_STATUS_CODE
-            ? `A project named "${postData.metadata.name}" already exists`
-            : error.response?.status === INTERNAL_SERVER_ERROR_STATUS_CODE
-              ? 'The system already has the maximum number of projects. An existing project must be deleted before you can create another.'
-              : error.message
+            ? `A project named "${postData.metadata.name}" already exists.`
+            : error.response?.status === FORBIDDEN_ERROR_STATUS_CODE
+              ? 'You don’t have permission to create a project.'
+              : error.response?.status === INTERNAL_SERVER_ERROR_STATUS_CODE
+                ? 'The system already has the maximum number of projects. An existing project must be deleted before you can create another.'
+                : error.message
 
         dispatch(projectsAction.createProjectFailure(message))
       })
