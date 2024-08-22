@@ -35,16 +35,17 @@ import {
   GROUP_BY_NONE,
   LARGE_REQUEST_CANCELED,
   REQUEST_CANCELED,
-  TAG_FILTER_ALL_ITEMS
+  TAG_FILTER_ALL_ITEMS,
+  TAG_FILTER_LATEST
 } from '../../../constants'
 import { createFeaturesRowData } from '../../../utils/createFeatureStoreContent'
-import { featuresActionCreator, featuresFilters, handleFeaturesResponse } from './features.util'
+import { featuresActionCreator, handleFeaturesResponse } from './features.util'
 import { getFeatureIdentifier } from '../../../utils/getUniqueIdentifier'
 import { getFilterTagOptions, setFilters } from '../../../reducers/filtersReducer'
 import { setTablePanelOpen } from '../../../reducers/tableReducer'
-import { useGetTagOptions } from '../../../hooks/useGetTagOptions.hook'
 import { useGroupContent } from '../../../hooks/groupContent.hook'
 import { useVirtualization } from '../../../hooks/useVirtualization.hook'
+import { useInitialTableFetch } from '../../../hooks/useInitialTableFetch.hook'
 
 import { ReactComponent as Yaml } from 'igz-controls/images/yaml.svg'
 
@@ -65,13 +66,13 @@ const Features = ({
   const [features, setFeatures] = useState([])
   const [selectedRowData, setSelectedRowData] = useState({})
   const [requestErrorMessage, setRequestErrorMessage] = useState('')
-  const [urlTagOption, tagAbortControllerRef] = useGetTagOptions(fetchFeatureSetsTags, featuresFilters)
   const params = useParams()
   const featureStore = useSelector(store => store.featureStore)
   const filtersStore = useSelector(store => store.filtersStore)
   const tableStore = useSelector(store => store.tableStore)
   const featureStoreRef = useRef(null)
   const abortControllerRef = useRef(new AbortController())
+  const tagAbortControllerRef = useRef(new AbortController())
   const dispatch = useDispatch()
 
   const { toggleConvertedYaml } = React.useContext(FeatureStoreContext)
@@ -149,15 +150,16 @@ const Features = ({
     [dispatch, fetchEntities, fetchFeatures, params.projectName]
   )
 
+  const fetchTags = useCallback(() => {
+    tagAbortControllerRef.current = new AbortController()
+    
+    return dispatch(
+      getFilterTagOptions({ fetchTags: fetchFeatureSetsTags, project: params.projectName, config: { signal: tagAbortControllerRef.current.signal } })
+    )
+  }, [dispatch, fetchFeatureSetsTags, params.projectName])
+
   const handleRefresh = filters => {
-    dispatch(
-      getFilterTagOptions({
-        fetchTags: fetchFeatureSetsTags,
-        project: params.projectName,
-        config: {
-          signal: tagAbortControllerRef.current.signal
-        }
-      }))
+    fetchTags()
     setFeatures([])
     removeFeature()
     removeEntity()
@@ -271,14 +273,15 @@ const Features = ({
     }
   }, [params.projectName, dispatch])
 
-  useEffect(() => {
-    if (urlTagOption) {
-      fetchData({
-        tag: urlTagOption,
-        iter: ''
-      })
+  useInitialTableFetch({
+    fetchData,
+    fetchTags,
+    defaultFilters: {
+      tag: TAG_FILTER_LATEST,
+      iter: '',
+      project: params.projectName
     }
-  }, [fetchData, urlTagOption])
+  })
 
   useEffect(() => {
     if (filtersStore.tag === TAG_FILTER_ALL_ITEMS) {

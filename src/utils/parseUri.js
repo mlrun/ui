@@ -93,10 +93,10 @@ const kindToScreen = {
 }
 
 const generateLinkPath = (uri = '') => {
-  const { kind, project, key, tag, uid } = parseUri(uri)
+  const { kind, project, key, tag, uid, iteration } = parseUri(uri)
   const screen = kindToScreen[kind] ?? FILES_TAB
   const reference = tag ?? uid
-  return `/projects/${project}/${screen}${key}${reference ? `/${reference}` : ''}`
+  return `/projects/${project}/${screen}/${key}${reference ? `/${reference}` : ''}${iteration ? `/${iteration}` : ''}`
 }
 
 const generateNuclioLink = pathname => {

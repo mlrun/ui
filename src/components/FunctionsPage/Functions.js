@@ -36,10 +36,11 @@ import {
   DATES_FILTER,
   NAME_FILTER,
   SHOW_UNTAGGED_FILTER,
-  FUNCTION_FILTERS
+  FUNCTION_FILTERS,
+  FILTER_MENU,
+  FILTER_MENU_MODAL
 } from '../../constants'
 import {
-  fetchInitialFunctions,
   generateActionsMenu,
   generateFunctionsPageData,
   pollDeletingFunctions,
@@ -67,6 +68,7 @@ import { useGroupContent } from '../../hooks/groupContent.hook'
 import { useMode } from '../../hooks/mode.hook'
 import { useVirtualization } from '../../hooks/useVirtualization.hook'
 import { useYaml } from '../../hooks/yaml.hook'
+import { useInitialTableFetch } from '../../hooks/useInitialTableFetch.hook'
 
 import cssVariables from './functions.scss'
 
@@ -100,7 +102,6 @@ const Functions = ({
   const fetchFunctionNuclioLogsTimeout = useRef(null)
   const nameFilterRef = useRef('')
   const terminatePollRef = useRef(null)
-  const functionsAreInitializedRef = useRef(false)
   const { isDemoMode, isStagingMode } = useMode()
   const params = useParams()
   const navigate = useNavigate()
@@ -503,42 +504,55 @@ const Functions = ({
     )
   }, [dispatch, fetchFunction, navigate, params.projectName, selectedFunctionMin])
 
-  useLayoutEffect(() => {
-    if (
-      !functionsAreInitializedRef.current &&
-      (params.funcName || (params.hash && params.hash.includes('@')))
-    ) {
-      const funcName = params.funcName || params.hash.split('@')[0]
+  useInitialTableFetch({
+    fetchData,
+    setExpandedRowsData: setSelectedRowData,
+    createRowData: createFunctionsContent,
+    getFiltersCallback: () => {
+      if (params.funcName || (params.hash && params.hash.includes('@'))) {
+        const funcName = params.funcName || params.hash.split('@')[0]
+        const dateFilterValues = getDatePickerFilterValue(
+          datePickerPastOptions,
+          ANY_TIME_DATE_OPTION
+        )
+        const showUntagged = true
 
-      dispatch(
-        setFiltersValues({
-          name: FUNCTION_FILTERS,
-          value: {
-            [NAME_FILTER]: funcName,
-            [DATES_FILTER]: getDatePickerFilterValue(datePickerPastOptions, ANY_TIME_DATE_OPTION)
-          }
-        })
-      )
-      dispatch(
-        setModalFiltersValues({
-          name: FUNCTION_FILTERS,
-          value: {
-            [SHOW_UNTAGGED_FILTER]: true
-          }
-        })
-      )
+        dispatch(
+          setFiltersValues({
+            name: FUNCTION_FILTERS,
+            value: {
+              [NAME_FILTER]: funcName,
+              [DATES_FILTER]: dateFilterValues
+            }
+          })
+        )
+        dispatch(
+          setModalFiltersValues({
+            name: FUNCTION_FILTERS,
+            value: {
+              [SHOW_UNTAGGED_FILTER]: showUntagged
+            }
+          })
+        )
+
+        return {
+          [NAME_FILTER]: funcName,
+          [DATES_FILTER]: dateFilterValues,
+          [SHOW_UNTAGGED_FILTER]: showUntagged
+        }
+      }
+
+      return {
+        ...filtersStore[FILTER_MENU][FUNCTION_FILTERS],
+        ...filtersStore[FILTER_MENU_MODAL][FUNCTION_FILTERS].values
+      }
     }
-  }, [dispatch, params])
-
-  useEffect(() => {
-    fetchInitialFunctions(filtersStore, fetchData, functionsAreInitializedRef)
-  }, [filtersStore, fetchData])
+  })
 
   useEffect(() => {
     const abortController = abortControllerRef.current
 
     return () => {
-      functionsAreInitializedRef.current = false
       setSelectedFunctionMin({})
       setFunctions([])
       setSelectedRowData({})

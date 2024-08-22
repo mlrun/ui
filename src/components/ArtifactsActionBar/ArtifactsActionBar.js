@@ -23,7 +23,7 @@ import arrayMutators from 'final-form-arrays'
 import { Form } from 'react-final-form'
 import { useDispatch, useSelector } from 'react-redux'
 import { isEmpty } from 'lodash'
-import { useNavigate, useParams, useSearchParams } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 import PropTypes from 'prop-types'
 
 import { RoundedIcon, Button } from 'igz-controls/components'
@@ -35,10 +35,10 @@ import {
   GROUP_BY_NAME,
   GROUP_BY_NONE,
   REQUEST_CANCELED,
-  TAG_FILTER_ALL_ITEMS
+  TAG_FILTER_ALL_ITEMS,
 } from '../../constants'
 import detailsActions from '../../actions/details'
-import { removeFilters, setFilters, setModalFiltersValues } from '../../reducers/filtersReducer'
+import { removeFilters, setFilters } from '../../reducers/filtersReducer'
 import { setFieldState } from 'igz-controls/utils/form.util'
 
 import { ReactComponent as RefreshIcon } from 'igz-controls/images/refresh.svg'
@@ -60,7 +60,6 @@ function ArtifactsActionBar({
   const changes = useSelector(store => store.detailsStore.changes)
   const dispatch = useDispatch()
   const params = useParams()
-  let [searchParams] = useSearchParams()
   const navigate = useNavigate()
   const formRef = React.useRef(
     createForm({
@@ -81,25 +80,6 @@ function ArtifactsActionBar({
       dispatch(removeFilters())
     }
   }, [params.projectName, page, tab, dispatch])
-
-  useEffect(() => {
-    if (searchParams.get('useUrlParamsAsFilter') === 'true') {
-      if (params.name) {
-        dispatch(
-          setFilters({
-            name: params.name,
-            iter: ''
-          })
-        )
-        dispatch(
-          setModalFiltersValues({
-            name: filterMenuName,
-            value: { iter: '' }
-          })
-        )
-      }
-    }
-  }, [searchParams, params, dispatch, filterMenuName])
 
   useEffect(() => {
     formRef.current?.change('name', filtersStore.name)

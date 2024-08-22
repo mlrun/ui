@@ -20,8 +20,9 @@ such restriction.
 import { formatDatetime } from './datetime'
 import { getFunctionImage } from '../components/FunctionsPage/functions.util'
 
-const createFunctionsContent = (functions, projectName, showExpandButton) =>
-  functions.map(func => {
+const createFunctionsContent = (functions, projectName, showExpandButton) => {
+  const isListOfFunctions = Array.isArray(functions)
+  const content = (isListOfFunctions ? functions : [functions]).map(func => {
     return {
       data: {
         ...func
@@ -110,5 +111,8 @@ const createFunctionsContent = (functions, projectName, showExpandButton) =>
       ]
     }
   })
+
+  return isListOfFunctions ? content : content[0]
+}
 
 export default createFunctionsContent

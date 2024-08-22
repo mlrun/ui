@@ -18,6 +18,8 @@ under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
 
+import { sortListByDate } from './datetime'
+
 export const PARENT_ROW_EXPANDED_CLASS = 'parent-row_expanded'
 
 /**
@@ -32,4 +34,43 @@ export const isRowExpanded = (parentRef, expandedRowsData, rowItem) => {
     parentRef.current?.classList.value.includes(PARENT_ROW_EXPANDED_CLASS) ||
     (expandedRowsData && rowItem.data.ui.identifier in expandedRowsData)
   )
+}
+
+
+/**
+ * Auto expand table row.
+ * @param {string} name - Row name.
+ * @param {Array} itemsList - List of table items.
+ * @param {string} projectName - Project name.
+ * @param {function} setExpandedRowsData - Function that set expanded date in state.
+ * @param {function} createRowData - Function that create parsed row data.
+ * @param {string} sortBy - Field by witch we will sort items
+ * @returns {void}
+ */
+export const expandRowByName = (
+  name,
+  itemsList,
+  projectName,
+  setExpandedRowsData,
+  createRowData,
+  sortListBy
+) => {
+  if (name) {
+    const filteredItems = itemsList.filter(
+      artifact => artifact?.db_key === name || artifact.name === name
+    )
+
+    if (filteredItems.length) {
+      setExpandedRowsData(state => ({
+        ...state,
+        [filteredItems[0]?.ui?.identifier || name]: {
+          content: (sortListBy ? sortListByDate(filteredItems, sortListBy, false) : filteredItems).map(artifact =>
+            createRowData(artifact, projectName)
+          )
+        },
+        error: null,
+        loading: false
+      }))
+    }
+  }
 }
