@@ -76,9 +76,8 @@
         }
 
         &__data {
-          flex: 0 1 100%;
+          flex: 1 0 0;
           min-width: 250px;
-          max-width: calc(100% - 900px);
           margin-right: auto;
 
           h3 {
