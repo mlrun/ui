@@ -106,6 +106,10 @@ body {
       justify-content: flex-end;
       width: 100%;
 
+      &_hidden {
+        display: none;
+      }
+
       &__filters {
         &-item {
           &:not(:last-child) {
