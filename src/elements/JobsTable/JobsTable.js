@@ -482,7 +482,6 @@ const JobsTable = React.forwardRef(
             <Table
               actionsMenu={actionsMenu}
               handleCancel={() => setSelectedJob({})}
-              handleSelectItem={handleSelectRun}
               pageData={pageData}
               retryRequest={refreshJobs}
               selectedItem={selectedJob}
