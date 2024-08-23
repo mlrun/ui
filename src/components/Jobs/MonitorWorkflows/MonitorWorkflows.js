@@ -27,17 +27,17 @@ import FilterMenu from '../../FilterMenu/FilterMenu'
 import WorkflowsTable from '../../../elements/WorkflowsTable/WorkflowsTable'
 
 import {
-  FILTER_ALL_ITEMS,
-  GROUP_BY_NONE,
-  GROUP_BY_WORKFLOW,
   JOBS_PAGE,
   MONITOR_WORKFLOWS_TAB,
   REQUEST_CANCELED
 } from '../../../constants'
-import { generateFilters, monitorWorkflowsActionCreator } from './monitorWorkflows.util'
+import {
+  fetchInitialWorkflows,
+  generateFilters,
+  monitorWorkflowsActionCreator
+} from './monitorWorkflows.util'
 import { JobsContext } from '../Jobs'
 import { createJobsWorkflowsTabContent } from '../../../utils/createJobsContent'
-import { datePickerPastOptions, PAST_WEEK_DATE_OPTION } from '../../../utils/datePicker.util'
 import { setFilters } from '../../../reducers/filtersReducer'
 import { useMode } from '../../../hooks/mode.hook'
 import { usePods } from '../../../hooks/usePods.hook'
@@ -59,6 +59,7 @@ const MonitorWorkflows = ({ deleteWorkflows, fetchFunctionLogs, fetchWorkflows }
   const { isStagingMode } = useMode()
   const abortJobRef = useRef(null)
   const abortControllerRef = useRef(new AbortController())
+  const workflowsAreInitializedRef = useRef(false)
 
   usePods(dispatch, detailsActions.fetchJobPods, detailsActions.removePods, selectedJob)
 
@@ -97,6 +98,7 @@ const MonitorWorkflows = ({ deleteWorkflows, fetchFunctionLogs, fetchWorkflows }
       setSelectedJob({})
       setSelectedFunction({})
       abortControllerRef.current.abort(REQUEST_CANCELED)
+      workflowsAreInitializedRef.current = false
     }
   }, [params.projectName, params.workflowId])
 
@@ -108,57 +110,22 @@ const MonitorWorkflows = ({ deleteWorkflows, fetchFunctionLogs, fetchWorkflows }
   }, [deleteWorkflows])
 
   useEffect(() => {
-    if (!workflowsAreLoaded) {
-      if (params.workflowId) {
-        dispatch(setFilters({ groupBy: GROUP_BY_NONE }))
-      } else {
-        if (filtersStore.saveFilters) {
-          const filters = {
-            state: filtersStore.state,
-            dates: filtersStore.dates,
-            saveFilters: false,
-            groupBy: GROUP_BY_WORKFLOW
-          }
-
-          getWorkflows(filters)
-          dispatch(setFilters(filters))
-        } else if (workflowsStore.workflows.data.length === 0) {
-          const pastWeekOption = datePickerPastOptions.find(
-            option => option.id === PAST_WEEK_DATE_OPTION
-          )
-          const generatedDates = [...pastWeekOption.handler()]
-
-          if (generatedDates.length === 1) {
-            generatedDates.push(new Date())
-          }
-          const filters = {
-            dates: {
-              value: generatedDates,
-              isPredefined: pastWeekOption.isPredefined,
-              initialSelectedOptionId: pastWeekOption.id
-            },
-            state: FILTER_ALL_ITEMS,
-            groupBy: GROUP_BY_WORKFLOW
-          }
-
-          dispatch(setFilters(filters))
-          getWorkflows(filters)
-        } else {
-          getWorkflows({ ...filtersStore, groupBy: GROUP_BY_WORKFLOW })
-          dispatch(setFilters({ groupBy: GROUP_BY_WORKFLOW }))
-        }
-
-        setWorkflowsAreLoaded(true)
-      }
-    }
+    fetchInitialWorkflows(
+      filtersStore,
+      params,
+      getWorkflows,
+      setFilters,
+      dispatch,
+      workflowsStore.workflows.data.length,
+      workflowsAreInitializedRef
+    )
   }, [
     dispatch,
     getWorkflows,
-    params.workflowId,
-    params.projectName,
     filtersStore,
     workflowsAreLoaded,
-    workflowsStore.workflows.data.length
+    workflowsStore.workflows.data.length,
+    params
   ])
 
   return (

@@ -21,7 +21,6 @@ import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import classnames from 'classnames'
 import { useParams } from 'react-router-dom'
 import { connect, useDispatch, useSelector } from 'react-redux'
-import { isEmpty } from 'lodash'
 
 import FilterMenu from '../../FilterMenu/FilterMenu'
 import JobsTable from '../../../elements/JobsTable/JobsTable'
@@ -31,8 +30,7 @@ import { GROUP_BY_NONE, JOBS_PAGE, MONITOR_JOBS_TAB, REQUEST_CANCELED } from '..
 import { JobsContext } from '../Jobs'
 import { TERTIARY_BUTTON } from 'igz-controls/constants'
 import { createJobsMonitorTabContent } from '../../../utils/createJobsContent'
-import { datePickerPastOptions, PAST_WEEK_DATE_OPTION } from '../../../utils/datePicker.util'
-import { generateFilters, monitorJobsActionCreator } from './monitorJobs.util'
+import { fetchInitialJobs, generateFilters, monitorJobsActionCreator } from './monitorJobs.util'
 import { parseJob } from '../../../utils/parseJob'
 import { pollAbortingJobs } from '../jobs.util'
 import { setFilters } from '../../../reducers/filtersReducer'
@@ -44,7 +42,6 @@ const MonitorJobs = ({ fetchAllJobRuns, fetchJobs }) => {
   const [jobs, setJobs] = useState([])
   const [selectedJob, setSelectedJob] = useState({})
   const [dateFilter, setDateFilter] = useState(['', ''])
-  const [dataIsLoaded, setDataIsLoaded] = useState(false)
   const appStore = useSelector(store => store.appStore)
   const filtersStore = useSelector(store => store.filtersStore)
   const jobsStore = useSelector(store => store.jobsStore)
@@ -55,6 +52,7 @@ const MonitorJobs = ({ fetchAllJobRuns, fetchJobs }) => {
   const abortJobRef = useRef(null)
   const { handleMonitoring, jobWizardIsOpened } = React.useContext(JobsContext)
   const abortControllerRef = useRef(new AbortController())
+  const jobsAreInitializedRef = useRef(false)
 
   const filters = useMemo(() => {
     return generateFilters(params.jobName)
@@ -157,56 +155,18 @@ const MonitorJobs = ({ fetchAllJobRuns, fetchJobs }) => {
   )
 
   useEffect(() => {
-    if (isEmpty(selectedJob) && !params.jobId && !dataIsLoaded) {
-      let filters = {}
-
-      if (filtersStore.saveFilters) {
-        filters = {
-          saveFilters: false,
-          state: filtersStore.state,
-          dates: filtersStore.dates
-        }
-      } else if (isJobDataEmpty()) {
-        const pastWeekOption = datePickerPastOptions.find(
-          option => option.id === PAST_WEEK_DATE_OPTION
-        )
-
-        filters = {
-          dates: {
-            value: pastWeekOption.handler(),
-            isPredefined: pastWeekOption.isPredefined,
-            initialSelectedOptionId: pastWeekOption.id
-          }
-        }
-      } else {
-        filters = {
-          name: filtersStore.name,
-          state: filtersStore.state,
-          labels: filtersStore.labels,
-          dates: {
-            value: dateFilter,
-            isPredefined: false,
-            initialSelectedOptionId: filtersStore.dates.initialSelectedOptionId
-          }
-        }
-      }
-
-      refreshJobs(filters)
-      dispatch(setFilters(filters))
-      setDataIsLoaded(true)
-    }
-  }, [
-    filtersStore,
-    dataIsLoaded,
-    dateFilter,
-    dispatch,
-    isJobDataEmpty,
-    params.jobId,
-    params.jobName,
-    params.projectName,
-    refreshJobs,
-    selectedJob
-  ])
+    fetchInitialJobs(
+      filtersStore,
+      selectedJob,
+      dateFilter,
+      params,
+      refreshJobs,
+      setFilters,
+      dispatch,
+      isJobDataEmpty,
+      jobsAreInitializedRef
+    )
+  }, [dateFilter, dispatch, filtersStore, isJobDataEmpty, params, refreshJobs, selectedJob])
 
   useEffect(() => {
     dispatch(setFilters({ groupBy: GROUP_BY_NONE }))
@@ -223,7 +183,7 @@ const MonitorJobs = ({ fetchAllJobRuns, fetchJobs }) => {
 
   useEffect(() => {
     return () => {
-      setDataIsLoaded(false)
+      jobsAreInitializedRef.current = false
       terminateAbortTasksPolling()
     }
   }, [params.projectName, params.jobName, params.jobId, terminateAbortTasksPolling])
@@ -254,7 +214,6 @@ const MonitorJobs = ({ fetchAllJobRuns, fetchJobs }) => {
             hidden={Boolean(params.jobId)}
             onChange={refreshJobs}
             page={JOBS_PAGE}
-
             tab={MONITOR_JOBS_TAB}
             withoutExpandButton
           />
