@@ -114,7 +114,7 @@ const InvocationsMetricCard = forwardRef(
               </StatsCard.Header>
               <div
                 ref={invocationBodyCardRef}
-                className={`metrics__card-body ${isInvocationCardExpanded ? 'metrics__card-body-expanded' : 'metrics__card-body-collapsed'}`}
+                className={`metrics__card-body metrics__card_ratio-invocation ${isInvocationCardExpanded ? 'metrics__card-body-expanded' : 'metrics__card-body-collapsed'}`}
               >
                 <div
                   className={`metrics__card-invocation-content ${!isInvocationCardExpanded && 'metrics__card-invocation-content-visible'}`}

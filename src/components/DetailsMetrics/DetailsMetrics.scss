@@ -139,6 +139,14 @@ $stickyHeaderHeight: 55px;
       }
     }
 
+    &_ratio-invocation {
+      aspect-ratio: 5;
+    }
+
+    &_ratio-metric {
+      aspect-ratio: 7;
+    }
+
     &-body {
       position: relative;
       display: flex;
@@ -146,7 +154,6 @@ $stickyHeaderHeight: 55px;
       align-self: stretch;
       box-sizing: border-box;
       width: 100%;
-      aspect-ratio: 7;
 
       &-collapsed {
         height: 80px;
