@@ -68,7 +68,7 @@ const DetailsInputs = ({ inputs }) => {
             filters: { name: dbKey },
             config: {
               params: {
-                iter,
+                iter: iter.includes('@') ? iter.split('@')[0] : iter,
                 tag: hash ?? TAG_FILTER_LATEST
               }
             }
