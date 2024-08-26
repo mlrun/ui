@@ -66,7 +66,7 @@ const ApplicationMetricCard = ({ metric }) => {
   }, [barConfig, metric])
 
   return (
-    <StatsCard className="metrics__card">
+    <StatsCard className="metrics__card metrics__card-metric">
       <StatsCard.Header title={metric.title}>
         {metric.totalDriftStatus && (
           <Tooltip
@@ -90,7 +90,7 @@ const ApplicationMetricCard = ({ metric }) => {
           </Tooltip>
         )}
       </StatsCard.Header>
-      <div className="metrics__card-body metrics__card-metric">
+      <div className="metrics__card-body">
         <div className="metrics__card-body-bar">
           <div className="metrics__card-header">
             <div>Value distribution</div>
