@@ -154,7 +154,11 @@ const Features = ({
     tagAbortControllerRef.current = new AbortController()
     
     return dispatch(
-      getFilterTagOptions({ fetchTags: fetchFeatureSetsTags, project: params.projectName, config: { signal: tagAbortControllerRef.current.signal } })
+      getFilterTagOptions({
+        fetchTags: fetchFeatureSetsTags,
+        project: params.projectName,
+        config: { signal: tagAbortControllerRef.current.signal }
+      })
     )
   }, [dispatch, fetchFeatureSetsTags, params.projectName])
 

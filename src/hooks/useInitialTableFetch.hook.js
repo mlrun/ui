@@ -51,7 +51,7 @@ export const useInitialTableFetch = ({
       let localFilters = defaultFilters || { tag: TAG_FILTER_LATEST, iter: SHOW_ITERATIONS }
 
       if (!externalFilters && name) {
-        localFilters.tag = {
+        localFilters = {
           ...localFilters,
           tag: TAG_FILTER_ALL_ITEMS,
           iter: '',
@@ -61,7 +61,8 @@ export const useInitialTableFetch = ({
         dispatch(
           setFilters({
             name: params.name,
-            iter: ''
+            iter: '',
+            tag: TAG_FILTER_ALL_ITEMS
           })
         )
 
@@ -69,67 +70,36 @@ export const useInitialTableFetch = ({
           dispatch(
             setModalFiltersValues({
               name: filterMenuName,
-              value: { iter: '' }
+              value: { iter: '', tag: TAG_FILTER_ALL_ITEMS }
             })
           )
         }
       }
 
-      const fetchDataRequest = () =>
-        fetchData(externalFilters || localFilters).then((result = []) => {
-          if (name) {
-            dispatch(
-              setFilters({
-                groupBy: GROUP_BY_NAME
-              })
-            )
-
-            if (setExpandedRowsData && createRowData) {
-              expandRowByName(
-                name,
-                result,
-                params.projectName,
-                setExpandedRowsData,
-                createRowData,
-                sortExpandedRowsDataBy
-              )
-            }
-          }
-        })
-
       if (fetchTags) {
         fetchTags()
-          .unwrap()
-          .then(tags => {
-            if (params.tag) {
-              if (tags?.find(filterTag => filterTag === params.tag)) {
-                dispatch(setFilters({ tag: params.tag }))
-                filterMenuName &&
-                  dispatch(
-                    setModalFiltersValues({
-                      name: filterMenuName,
-                      value: { tag: params.tag }
-                    })
-                  )
-                localFilters.tag = params.tag
-              } else {
-                dispatch(setFilters({ tag: TAG_FILTER_ALL_ITEMS }))
-                filterMenuName &&
-                  dispatch(
-                    setModalFiltersValues({
-                      name: filterMenuName,
-                      value: { tag: TAG_FILTER_ALL_ITEMS }
-                    })
-                  )
-                localFilters.tag = TAG_FILTER_ALL_ITEMS
-              }
-            }
-
-            fetchDataRequest()
-          })
-      } else {
-        fetchDataRequest()
       }
+
+      fetchData(externalFilters || localFilters).then((result = []) => {
+        if (name) {
+          dispatch(
+            setFilters({
+              groupBy: GROUP_BY_NAME
+            })
+          )
+
+          if (setExpandedRowsData && createRowData) {
+            expandRowByName(
+              name,
+              result,
+              params.projectName,
+              setExpandedRowsData,
+              createRowData,
+              sortExpandedRowsDataBy
+            )
+          }
+        }
+      })
 
       isInitialRequestSent.current = true
     }

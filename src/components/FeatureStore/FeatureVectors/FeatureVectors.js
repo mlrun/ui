@@ -121,6 +121,7 @@ const FeatureVectors = ({
       return fetchFeatureVectors(params.projectName, filters, config).then(result => {
         if (result) {
           const parsedResult = parseFeatureVectors(result)
+
           setFeatureVectors(parsedResult)
 
           return parsedResult
@@ -134,9 +135,13 @@ const FeatureVectors = ({
     tagAbortControllerRef.current = new AbortController()
 
     return dispatch(
-      getFilterTagOptions({ fetchTags: fetchFeatureVectorsTags, project: params.projectName, config: {
-        signal: tagAbortControllerRef.current.signal
-      } })
+      getFilterTagOptions({
+        fetchTags: fetchFeatureVectorsTags,
+        project: params.projectName,
+        config: {
+          signal: tagAbortControllerRef.current.signal
+        }
+      })
     )
   }, [dispatch, fetchFeatureVectorsTags, params.projectName])
 
@@ -182,13 +187,12 @@ const FeatureVectors = ({
       deleteFeatureVector,
       dispatch,
       fetchData,
-      fetchFeatureVectorsTags,
+      fetchTags,
       filtersStore,
       navigate,
       params.projectName,
       selectedFeatureVector,
-      setConfirmData,
-      tagAbortControllerRef
+      setConfirmData
     ]
   )
 

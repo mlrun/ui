@@ -36,13 +36,12 @@ export const isRowExpanded = (parentRef, expandedRowsData, rowItem) => {
   )
 }
 
-
 /**
  * Auto expand table row.
  * @param {string} name - Row name.
  * @param {Array} itemsList - List of table items.
  * @param {string} projectName - Project name.
- * @param {function} setExpandedRowsData - Function that set expanded date in state.
+ * @param {function} setExpandedRowsData - Function that set expanded data in state.
  * @param {function} createRowData - Function that create parsed row data.
  * @param {string} sortBy - Field by witch we will sort items
  * @returns {void}

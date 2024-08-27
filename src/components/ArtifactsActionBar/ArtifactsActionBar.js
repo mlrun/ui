@@ -35,7 +35,7 @@ import {
   GROUP_BY_NAME,
   GROUP_BY_NONE,
   REQUEST_CANCELED,
-  TAG_FILTER_ALL_ITEMS,
+  TAG_FILTER_ALL_ITEMS
 } from '../../constants'
 import detailsActions from '../../actions/details'
 import { removeFilters, setFilters } from '../../reducers/filtersReducer'
