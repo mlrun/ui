@@ -126,7 +126,7 @@ const DeployModelPopUp = ({
   const deployModel = values => {
     const { name, hash, tag, project } = functionList.find(
       func => func.name === values.selectedFunctionName && func.tag === values.selectedTag
-    )
+    ) ?? {}
 
     dispatch(fetchArtifactsFunction({ project, name, hash, tag }))
       .unwrap()
