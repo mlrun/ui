@@ -18,13 +18,7 @@ under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
-import {
-  defaultFulfilledHandler,
-  defaultPendingHandler,
-  defaultRejectedHandler,
-  hideLoading,
-  showLoading
-} from './redux.util'
+import { defaultPendingHandler, hideLoading, showLoading } from './redux.util'
 import artifactsApi from '../api/artifacts-api'
 import functionsApi from '../api/functions-api'
 import modelEndpointsApi from '../api/modelEndpoints-api'
@@ -35,6 +29,7 @@ import { generateModelEndpoints } from '../utils/generateModelEndpoints'
 import { getArtifactIdentifier } from '../utils/getUniqueIdentifier'
 import { parseArtifacts } from '../utils/parseArtifacts'
 import { parseFunctions } from '../utils/parseFunctions'
+import { parseFunction } from '../utils/parseFunction'
 import { largeResponseCatchHandler } from '../utils/largeResponseCatchHandler'
 
 const initialState = {
@@ -258,6 +253,16 @@ export const fetchArtifactsFunctions = createAsyncThunk(
       })
   }
 )
+
+export const fetchArtifactsFunction = createAsyncThunk(
+  'fetchArtifactsFunction',
+  ({ project, name, hash, tag }) => {
+    return functionsApi.getFunction(project, name, hash, tag).then(({ data }) => {
+      return parseFunction(data.func, project)
+    })
+  }
+)
+
 export const fetchModelEndpoints = createAsyncThunk(
   'fetchModelEndpoints',
   ({ project, filters, config, params }, thunkAPI) => {
@@ -381,9 +386,17 @@ const artifactsSlice = createSlice({
     builder.addCase(addTag.pending, showLoading)
     builder.addCase(addTag.fulfilled, hideLoading)
     builder.addCase(addTag.rejected, hideLoading)
-    builder.addCase(buildFunction.pending, defaultPendingHandler)
-    builder.addCase(buildFunction.fulfilled, defaultFulfilledHandler)
-    builder.addCase(buildFunction.rejected, defaultRejectedHandler)
+    builder.addCase(buildFunction.pending, state => {
+      state.pipelines.loading = true
+    })
+    builder.addCase(buildFunction.fulfilled, state => {
+      state.pipelines.loading = false
+      state.error = null
+    })
+    builder.addCase(buildFunction.rejected, (state, action) => {
+      state.error = action.error
+      state.pipelines.loading = false
+    })
     builder.addCase(deleteArtifact.pending, showLoading)
     builder.addCase(deleteArtifact.fulfilled, hideLoading)
     builder.addCase(deleteArtifact.rejected, hideLoading)
@@ -411,6 +424,16 @@ const artifactsSlice = createSlice({
       state.pipelines = { allData: action.payload, loading: false }
     })
     builder.addCase(fetchArtifactsFunctions.rejected, state => {
+      state.pipelines.loading = false
+    })
+    builder.addCase(fetchArtifactsFunction.rejected, state => {
+      state.pipelines.loading = false
+    })
+    builder.addCase(fetchArtifactsFunction.pending, state => {
+      state.pipelines.loading = true
+    })
+    builder.addCase(fetchArtifactsFunction.fulfilled, (state, action) => {
+      state.error = null
       state.pipelines.loading = false
     })
     builder.addCase(fetchExpandedDataSet.fulfilled, (state, action) => {

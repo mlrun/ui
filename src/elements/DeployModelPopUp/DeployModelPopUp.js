@@ -37,7 +37,7 @@ import {
 
 import { MODELS_TAB } from '../../constants'
 import { MODAL_SM, SECONDARY_BUTTON, TERTIARY_BUTTON } from 'igz-controls/constants'
-import { buildFunction } from '../../reducers/artifactsReducer'
+import { buildFunction, fetchArtifactsFunction } from '../../reducers/artifactsReducer'
 import { generateUri } from '../../utils/resources'
 import { getValidationRules } from 'igz-controls/utils/validation.util'
 import { setFieldState, isSubmitDisabled } from 'igz-controls/utils/form.util'
@@ -124,44 +124,57 @@ const DeployModelPopUp = ({
   }, [])
 
   const deployModel = values => {
-    const servingFunction = functionList.find(
+    const { name, hash, tag, project } = functionList.find(
       func => func.name === values.selectedFunctionName && func.tag === values.selectedTag
     )
-    const classArguments = mapValues(keyBy(values.arguments, 'key'), 'value')
-    const servingFunctionCopy = cloneDeep(servingFunction.ui.originalContent)
 
-    servingFunctionCopy.spec.graph = {
-      ...servingFunctionCopy.spec.graph,
-      routes: {
-        [values.modelName]: {
-          class_args: {
-            model_path: generateUri(model, MODELS_TAB),
-            ...classArguments
-          },
-          class_name: values.className,
-          kind: 'task'
-        }
-      }
-    }
-
-    return dispatch(buildFunction({ funcData: { function: servingFunctionCopy } }))
+    dispatch(fetchArtifactsFunction({ project, name, hash, tag }))
       .unwrap()
-      .then(response => {
-        resolveModal()
-        dispatch(
-          setNotification({
-            status: response.status,
-            id: Math.random(),
-            message: 'Model deployment initiated successfully'
+      .then(servingFunction => {
+        const classArguments = mapValues(keyBy(values.arguments, 'key'), 'value')
+        const servingFunctionCopy = cloneDeep(servingFunction.ui.originalContent)
+
+        servingFunctionCopy.spec.graph = {
+          ...servingFunctionCopy.spec.graph,
+          routes: {
+            [values.modelName]: {
+              class_args: {
+                model_path: generateUri(model, MODELS_TAB),
+                ...classArguments
+              },
+              class_name: values.className,
+              kind: 'task'
+            }
+          }
+        }
+
+        return dispatch(buildFunction({ funcData: { function: servingFunctionCopy } }))
+          .unwrap()
+          .then(response => {
+            dispatch(
+              setNotification({
+                status: response.status,
+                id: Math.random(),
+                message: 'Model deployment initiated successfully'
+              })
+            )
           })
-        )
+          .catch(error => {
+            showErrorNotification(dispatch, error, '', 'Model deployment failed to initiate', () =>
+              deployModel(values)
+            )
+          })
       })
       .catch(error => {
-        showErrorNotification(dispatch, error, '', 'Model deployment failed to initiate', () =>
+        showErrorNotification(dispatch, error, '', 'Failed to retrieve function data', () =>
           deployModel(values)
         )
-        resolveModal()
       })
+  }
+
+  const submitHandler = values => {
+    deployModel(values)
+    resolveModal()
   }
 
   const getModalActions = formState => {
@@ -198,7 +211,7 @@ const DeployModelPopUp = ({
         form={formRef.current}
         initialValues={initialValues}
         mutators={{ ...arrayMutators, setFieldState }}
-        onSubmit={deployModel}
+        onSubmit={submitHandler}
       >
         {formState => {
           return (
