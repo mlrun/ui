@@ -55,21 +55,24 @@ const DetailsInputs = ({ inputs }) => {
   const dispatch = useDispatch()
   const params = useParams()
 
+  const extractIterOrTag = str => {
+    return str && str.includes('@') ? str.split('@')[0] : str
+  }
+
   useEffect(() => {
     Object.entries(inputs || {}).forEach(([key, value]) => {
       if (value.startsWith(MLRUN_STORAGE_INPUT_PATH_SCHEME)) {
         const [, , , project, dbKeyWithHash] = value.split('/')
         const [dbKeyWithIter, hash] = dbKeyWithHash.split(':')
         const [dbKey, iter] = dbKeyWithIter.split('#')
-
         dispatch(
           fetchArtifacts({
             project,
             filters: { name: dbKey },
             config: {
               params: {
-                iter: iter.includes('@') ? iter.split('@')[0] : iter,
-                tag: hash ?? TAG_FILTER_LATEST
+                iter: extractIterOrTag(iter),
+                tag: extractIterOrTag(hash) ?? TAG_FILTER_LATEST
               }
             }
           })
