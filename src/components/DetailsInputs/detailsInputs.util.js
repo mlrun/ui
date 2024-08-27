@@ -24,7 +24,13 @@ import classnames from 'classnames'
 import CopyToClipboard from '../../common/CopyToClipboard/CopyToClipboard'
 import { RoundedIcon, TextTooltipTemplate, Tooltip } from 'igz-controls/components'
 
-import { DATASETS_TAB, FILES_TAB, MODELS_TAB, TAG_FILTER_LATEST } from '../../constants'
+import {
+  DATASETS_TAB,
+  FILES_TAB,
+  MLRUN_STORAGE_INPUT_PATH_SCHEME,
+  MODELS_TAB,
+  TAG_FILTER_LATEST
+} from '../../constants'
 
 import { ReactComponent as DetailsIcon } from 'igz-controls/images/view-details.svg'
 
@@ -47,6 +53,7 @@ export const generateArtifactLink = (artifact, projectName) => {
 export const generateInputsTabContent = (artifacts, showArtifact) => {
   return artifacts.map(artifact => {
     const keyClassNames = classnames(artifact.ui.isPreviewable && 'link')
+    const isDetailsDisabled = !artifact.ui?.inputPath.startsWith(MLRUN_STORAGE_INPUT_PATH_SCHEME)
 
     return [
       {
@@ -79,12 +86,8 @@ export const generateInputsTabContent = (artifacts, showArtifact) => {
         template: (
           <>
             <CopyToClipboard textToCopy={artifact.ui.inputPath} tooltipText="Copy path" />
-            <RoundedIcon
-              tooltipText="Show Details"
-              id="show-details"
-              disabled={!artifact.ui?.inputPath.includes('store')}
-            >
-              {artifact.ui?.inputPath.includes('store') ? (
+            <RoundedIcon tooltipText="Show Details" id="show-details" disabled={isDetailsDisabled}>
+              {!isDetailsDisabled ? (
                 <Link target="_blank" to={artifact.ui.artifactLink}>
                   <DetailsIcon />
                 </Link>
