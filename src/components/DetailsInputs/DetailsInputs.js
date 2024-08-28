@@ -57,6 +57,7 @@ const DetailsInputs = ({ inputs }) => {
 
   useEffect(() => {
     Object.entries(inputs || {}).forEach(([key, value]) => {
+      console.log('value', value)
       if (value.startsWith(MLRUN_STORAGE_INPUT_PATH_SCHEME)) {
         const [, , , project, dbKeyWithHash] = value.split('/')
         const [dbKeyWithIter, hash] = dbKeyWithHash.split(':')
