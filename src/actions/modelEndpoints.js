@@ -39,6 +39,7 @@ import {
 } from '../components/DetailsMetrics/detailsMetrics.util'
 import { TIME_FRAME_LIMITS } from '../utils/datePicker.util'
 import { largeResponseCatchHandler } from '../utils/largeResponseCatchHandler'
+import { generateModelEndpoints } from '../utils/generateModelEndpoints'
 
 const modelEndpointsActions = {
   fetchModelEndpointWithAnalysis: (project, uid) => dispatch => {
@@ -49,7 +50,7 @@ const modelEndpointsActions = {
       .then(({ data }) => {
         dispatch(modelEndpointsActions.fetchModelEndpointWithAnalysisSuccess(data))
 
-        return data
+        return generateModelEndpoints([data])?.[0]
       })
       .catch(err => {
         dispatch(modelEndpointsActions.fetchModelEndpointWithAnalysisFailure(err))

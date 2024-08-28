@@ -17,9 +17,13 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
+import { isEmpty } from 'lodash'
+
 import { LABELS_FILTER, MODEL_ENDPOINTS_TAB, MODELS_PAGE, SORT_BY } from '../../../constants'
 import { TERTIARY_BUTTON } from 'igz-controls/constants'
 import { filterSelectOptions } from '../../FilterMenu/filterMenu.settings'
+import modelEndpointsActions from '../../../actions/modelEndpoints'
+import { showErrorNotification } from '../../../utils/notifications.util'
 
 export const filters = [
   { type: LABELS_FILTER, label: 'Labels:' },
@@ -86,4 +90,18 @@ export const monitorModelEndpoint = (model_monitoring_dashboard_url, item, proje
     .replace('{model_endpoint}', item.metadata?.uid)
 
   window.open(redirectUrl, '_blank')
+}
+
+export const chooseOrFetchModelEndpoint = (dispatch, selectedModelEndpoint, modelEndpointMin) => {
+  if (!isEmpty(selectedModelEndpoint)) return Promise.resolve(selectedModelEndpoint)
+
+  return dispatch(
+    modelEndpointsActions.fetchModelEndpointWithAnalysis(
+      modelEndpointMin.metadata.project,
+      modelEndpointMin.metadata.uid
+    )
+  )
+    .catch(error => {
+      showErrorNotification(dispatch, error, '', 'Failed to retrieve model endpoint data')
+    })
 }

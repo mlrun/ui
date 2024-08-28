@@ -358,7 +358,7 @@ export const setFullSelectedFunction = debounce(
         .then(parsedFunction => {
           setSelectedFunction(parsedFunction)
         })
-        .catch(error => {
+        .catch(() => {
           setSelectedFunction({})
           navigate(`/projects/${projectName}/functions`, { replace: true })
         })

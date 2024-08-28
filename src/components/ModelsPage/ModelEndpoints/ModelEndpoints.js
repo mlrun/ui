@@ -38,7 +38,7 @@ import {
 } from '../../../constants'
 import { createModelEndpointsRowData } from '../../../utils/createArtifactsContent'
 import { fetchModelEndpoints, removeModelEndpoints } from '../../../reducers/artifactsReducer'
-import { filters, generatePageData } from './modelEndpoints.util'
+import { chooseOrFetchModelEndpoint, filters, generatePageData } from './modelEndpoints.util'
 import { getNoDataMessage } from '../../../utils/getNoDataMessage'
 import { isDetailsTabExists } from '../../../utils/isDetailsTabExists'
 import { setFilters } from '../../../reducers/filtersReducer'
@@ -56,6 +56,7 @@ const ModelEndpoints = () => {
   const [selectedModelEndpoint, setSelectedModelEndpoint] = useState({})
   const frontendSpec = useSelector(store => store.appStore.frontendSpec)
   const artifactsStore = useSelector(store => store.artifactsStore)
+  const detailsStore = useSelector(store => store.detailsStore)
   const filtersStore = useSelector(store => store.filtersStore)
   const params = useParams()
   const navigate = useNavigate()
@@ -92,16 +93,15 @@ const ModelEndpoints = () => {
         {
           label: 'View YAML',
           icon: <Yaml />,
-          onClick: toggleConvertedYaml
+          onClick: modelEndpointMin => chooseOrFetchModelEndpoint(
+            dispatch,
+            selectedModelEndpoint,
+            modelEndpointMin
+          ).then(toggleConvertedYaml)
         }
       ]
     ],
-    [
-      frontendSpec.model_monitoring_dashboard_url,
-      handleMonitoring,
-      selectedModelEndpoint,
-      toggleConvertedYaml
-    ]
+    [dispatch, frontendSpec.model_monitoring_dashboard_url, handleMonitoring, selectedModelEndpoint, toggleConvertedYaml]
   )
 
   const fetchData = useCallback(
@@ -145,19 +145,10 @@ const ModelEndpoints = () => {
   )
 
   const handleSelectItem = useCallback(
-    modelEndpoint => {
-      if (!isEmpty(modelEndpoint)) {
-        dispatch(
-          modelEndpointsActions.fetchModelEndpointWithAnalysis(
-            params.projectName,
-            modelEndpoint.metadata.uid
-          )
-        )
-      }
-
-      setSelectedModelEndpoint(modelEndpoint)
+    modelEndpointMin => {
+      chooseOrFetchModelEndpoint(dispatch, {}, modelEndpointMin).then(setSelectedModelEndpoint)
     },
-    [dispatch, params.projectName]
+    [dispatch]
   )
 
   useEffect(() => {
@@ -230,7 +221,7 @@ const ModelEndpoints = () => {
 
   return (
     <>
-      {artifactsStore.modelEndpoints.loading && <Loader />}
+      {(detailsStore.loadingCounter > 0 || artifactsStore.modelEndpoints.loading) && <Loader />}
       <div className="models" ref={modelEndpointsRef}>
         <div className="table-container">
           <div className="content__action-bar-wrapper">
@@ -259,7 +250,6 @@ const ModelEndpoints = () => {
             <>
               <Table
                 actionsMenu={actionsMenu}
-                handleCancel={() => handleSelectItem({})}
                 pageData={pageData}
                 retryRequest={fetchData}
                 selectedItem={selectedModelEndpoint}
@@ -273,7 +263,6 @@ const ModelEndpoints = () => {
                     isRowRendered(virtualizationConfig, index) && (
                       <ArtifactsTableRow
                         actionsMenu={actionsMenu}
-                        handleSelectItem={handleSelectItem}
                         key={tableItem.data.ui.identifier}
                         rowIndex={index}
                         rowItem={tableItem}
