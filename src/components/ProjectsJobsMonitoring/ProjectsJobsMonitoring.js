@@ -175,7 +175,9 @@ const ProjectsJobsMonitoring = ({ fetchAllJobRuns, fetchJobFunction, fetchJobs }
                 JOB_KIND_LOCAL
 
               return (
-                (!filters.type || filters.type === FILTER_ALL_ITEMS || filters.type.includes(type)) &&
+                (!filters.type ||
+                  filters.type === FILTER_ALL_ITEMS ||
+                  filters.type.includes(type)) &&
                 (!filters.project || job.project.includes(filters.project.toLowerCase()))
               )
             })
@@ -340,13 +342,16 @@ const ProjectsJobsMonitoring = ({ fetchAllJobRuns, fetchJobFunction, fetchJobs }
                 tabs={tabs}
               />
               <ActionBar
+                autoRefreshIsEnabled
+                autoRefreshIsStopped={jobWizardIsOpened}
                 filterMenuName={selectedTab}
                 filtersConfig={tabData[selectedTab].filtersConfig}
                 handleRefresh={tabData[selectedTab].handleRefresh}
                 hidden={Boolean(params.jobId || params.workflowId)}
                 page={JOBS_MONITORING_PAGE}
                 tab={selectedTab}
-                withRefreshButton={false}
+                withRefreshButton
+                withoutExpandButton
                 key={selectedTab}
               >
                 {tabData[selectedTab].modalFilters}
