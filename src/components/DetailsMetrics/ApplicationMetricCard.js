@@ -90,7 +90,7 @@ const ApplicationMetricCard = ({ metric }) => {
           </Tooltip>
         )}
       </StatsCard.Header>
-      <div className="metrics__card-body metrics__card_ratio-metric">
+      <div className="metrics__card-body">
         <div className="metrics__card-body-bar">
           <div className="metrics__card-header">
             <div>Value distribution</div>
