@@ -59,18 +59,16 @@ const DetailsInputs = ({ inputs }) => {
   useEffect(() => {
     Object.entries(inputs || {}).forEach(([key, value]) => {
       if (value.startsWith(MLRUN_STORAGE_INPUT_PATH_SCHEME)) {
-        const [, , , project, dbKeyWithHash] = value.split('/')
-        const [dbKeyWithIter] = dbKeyWithHash.split(':')
-        const [dbKey] = dbKeyWithIter.split('#')
+        const { iteration, key, project, tag } = parseUri(value)
 
         dispatch(
           fetchArtifacts({
             project,
-            filters: { name: dbKey },
+            filters: { name: key },
             config: {
               params: {
-                iter: parseUri(value).iter,
-                tag: parseUri(value).tag ?? TAG_FILTER_LATEST
+                iter: iteration,
+                tag: tag ?? TAG_FILTER_LATEST
               }
             }
           })
