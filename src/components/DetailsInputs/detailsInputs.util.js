@@ -86,8 +86,12 @@ export const generateInputsTabContent = (artifacts, showArtifact) => {
         template: (
           <>
             <CopyToClipboard textToCopy={artifact.ui.inputPath} tooltipText="Copy path" />
-            <RoundedIcon tooltipText="Show Details" id="show-details" disabled={isDetailsDisabled}>
-              {!isDetailsDisabled ? (
+            <RoundedIcon
+              tooltipText="Show Details"
+              id="show-details"
+              disabled={isDetailsDisabled || !artifact.ui.isPreviewable}
+            >
+              {!isDetailsDisabled && artifact.ui.isPreviewable ? (
                 <Link target="_blank" to={artifact.ui.artifactLink}>
                   <DetailsIcon />
                 </Link>
