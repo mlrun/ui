@@ -43,6 +43,19 @@ $stickyHeaderHeight: 55px;
     border: $primaryBorder;
     box-shadow: none;
 
+    &.metrics__card-metric {
+      .metrics__card-body {
+        min-height: 130px;
+        aspect-ratio: 7;
+      }
+    }
+
+    &.metrics__card-invocation {
+      .metrics__card-body {
+        aspect-ratio: 5;
+      }
+    }
+
     .metrics__card-row {
       display: flex;
       flex: 1 0 100%;
@@ -137,14 +150,6 @@ $stickyHeaderHeight: 55px;
       &-label {
         font-size: 14px;
       }
-    }
-
-    &_ratio-invocation {
-      aspect-ratio: 5;
-    }
-
-    &_ratio-metric {
-      aspect-ratio: 7;
     }
 
     &-body {

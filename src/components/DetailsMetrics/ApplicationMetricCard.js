@@ -66,7 +66,7 @@ const ApplicationMetricCard = ({ metric }) => {
   }, [barConfig, metric])
 
   return (
-    <StatsCard className="metrics__card">
+    <StatsCard className="metrics__card metrics__card-metric">
       <StatsCard.Header title={metric.title}>
         {metric.totalDriftStatus && (
           <Tooltip

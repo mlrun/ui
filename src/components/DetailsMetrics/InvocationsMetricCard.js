@@ -90,7 +90,7 @@ const InvocationsMetricCard = forwardRef(
 
     return (
       <div className={invocationCardClassnames}>
-        <StatsCard key={metric.id} className="metrics__card">
+        <StatsCard key={metric.id} className="metrics__card metrics__card-invocation">
           <div className="metrics__card-row">
             <StatsCard.Col>
               <StatsCard.Header title="Endpoint call count">
@@ -114,7 +114,7 @@ const InvocationsMetricCard = forwardRef(
               </StatsCard.Header>
               <div
                 ref={invocationBodyCardRef}
-                className={`metrics__card-body metrics__card_ratio-invocation ${isInvocationCardExpanded ? 'metrics__card-body-expanded' : 'metrics__card-body-collapsed'}`}
+                className={`metrics__card-body ${isInvocationCardExpanded ? 'metrics__card-body-expanded' : 'metrics__card-body-collapsed'}`}
               >
                 <div
                   className={`metrics__card-invocation-content ${!isInvocationCardExpanded && 'metrics__card-invocation-content-visible'}`}
