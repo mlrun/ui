@@ -342,7 +342,7 @@ const ProjectsJobsMonitoring = ({ fetchAllJobRuns, fetchJobFunction, fetchJobs }
                 tabs={tabs}
               />
               <ActionBar
-                autoRefreshIsEnabled
+                autoRefreshIsEnabled={selectedTab === JOBS_MONITORING_JOBS_TAB}
                 autoRefreshIsStopped={jobWizardIsOpened}
                 filterMenuName={selectedTab}
                 filtersConfig={tabData[selectedTab].filtersConfig}
