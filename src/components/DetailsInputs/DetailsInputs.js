@@ -33,6 +33,7 @@ import { MLRUN_STORAGE_INPUT_PATH_SCHEME, TAG_FILTER_LATEST } from '../../consta
 import { fetchArtifacts } from '../../reducers/artifactsReducer'
 import { generateArtifactIdentifiers } from '../Details/details.util'
 import { generateArtifactLink, generateInputsTabContent } from './detailsInputs.util'
+import { parseUri } from '../../utils'
 
 import './detailsInputs.scss'
 
@@ -55,24 +56,21 @@ const DetailsInputs = ({ inputs }) => {
   const dispatch = useDispatch()
   const params = useParams()
 
-  const extractIterOrTag = str => {
-    return str && str.includes('@') ? str.split('@')[0] : str
-  }
-
   useEffect(() => {
     Object.entries(inputs || {}).forEach(([key, value]) => {
       if (value.startsWith(MLRUN_STORAGE_INPUT_PATH_SCHEME)) {
         const [, , , project, dbKeyWithHash] = value.split('/')
-        const [dbKeyWithIter, hash] = dbKeyWithHash.split(':')
-        const [dbKey, iter] = dbKeyWithIter.split('#')
+        const [dbKeyWithIter] = dbKeyWithHash.split(':')
+        const [dbKey] = dbKeyWithIter.split('#')
+
         dispatch(
           fetchArtifacts({
             project,
             filters: { name: dbKey },
             config: {
               params: {
-                iter: extractIterOrTag(iter),
-                tag: extractIterOrTag(hash) ?? TAG_FILTER_LATEST
+                iter: parseUri(value).iter,
+                tag: parseUri(value).tag ?? TAG_FILTER_LATEST
               }
             }
           })
