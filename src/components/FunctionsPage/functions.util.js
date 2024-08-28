@@ -289,18 +289,6 @@ export const generateActionsMenu = (
   ]
 }
 
-export const fetchInitialFunctions = debounce(
-  (filtersStore, fetchData, functionsAreInitializedRef) => {
-    if (!functionsAreInitializedRef.current) {
-      fetchData({
-        ...filtersStore[FILTER_MENU][FUNCTION_FILTERS],
-        ...filtersStore[FILTER_MENU_MODAL][FUNCTION_FILTERS].values
-      })
-      functionsAreInitializedRef.current = true
-    }
-  }
-)
-
 export const pollDeletingFunctions = (
   project,
   terminatePollRef,
