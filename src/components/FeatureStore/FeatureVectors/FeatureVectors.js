@@ -375,6 +375,7 @@ const FeatureVectors = ({
 
   useInitialTableFetch({
     fetchData,
+    filters: filtersStore,
     setExpandedRowsData: setSelectedRowData,
     createRowData: createFeatureVectorsRowData,
     fetchTags

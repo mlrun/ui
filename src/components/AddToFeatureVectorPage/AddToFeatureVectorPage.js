@@ -32,8 +32,7 @@ import {
   TAG_FILTER_ALL_ITEMS,
   REQUEST_CANCELED,
   LARGE_REQUEST_CANCELED,
-  CANCEL_REQUEST_TIMEOUT,
-  TAG_FILTER_LATEST
+  CANCEL_REQUEST_TIMEOUT
 } from '../../constants'
 import featureStoreActions from '../../actions/featureStore'
 import { FORBIDDEN_ERROR_STATUS_CODE } from 'igz-controls/constants'
@@ -273,11 +272,7 @@ const AddToFeatureVectorPage = ({
   useInitialTableFetch({
     fetchData,
     fetchTags,
-    defaultFilters: {
-      tag: TAG_FILTER_LATEST,
-      iter: '',
-      project: params.projectName
-    }
+    filters: filtersStore
   })
 
   useEffect(() => {

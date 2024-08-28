@@ -318,11 +318,12 @@ const Datasets = () => {
     })
 
   useInitialTableFetch({
-    fetchData,
-    setExpandedRowsData: setSelectedRowData,
     createRowData: createDatasetsRowData,
-    filterMenuName: DATASETS_FILTERS,
+    fetchData,
     fetchTags,
+    filterMenuName: DATASETS_FILTERS,
+    filters: datasetsFilters,
+    setExpandedRowsData: setSelectedRowData,
     sortExpandedRowsDataBy: 'updated'
   })
 

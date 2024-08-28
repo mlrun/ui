@@ -504,48 +504,40 @@ const Functions = ({
     )
   }, [dispatch, fetchFunction, navigate, params.projectName, selectedFunctionMin])
 
+  const setInitialFilters = useCallback(() => {
+    if (params.funcName || (params.hash && params.hash.includes('@'))) {
+      const funcName = params.funcName || params.hash.split('@')[0]
+      const dateFilterValues = getDatePickerFilterValue(datePickerPastOptions, ANY_TIME_DATE_OPTION)
+      const showUntagged = true
+
+      dispatch(
+        setFiltersValues({
+          name: FUNCTION_FILTERS,
+          value: {
+            [NAME_FILTER]: funcName,
+            [DATES_FILTER]: dateFilterValues
+          }
+        })
+      )
+      dispatch(
+        setModalFiltersValues({
+          name: FUNCTION_FILTERS,
+          value: {
+            [SHOW_UNTAGGED_FILTER]: showUntagged
+          }
+        })
+      )
+    }
+  }, [dispatch, params.funcName, params.hash])
+
   useInitialTableFetch({
     fetchData,
     setExpandedRowsData: setSelectedRowData,
     createRowData: createFunctionsContent,
-    getFiltersCallback: () => {
-      if (params.funcName || (params.hash && params.hash.includes('@'))) {
-        const funcName = params.funcName || params.hash.split('@')[0]
-        const dateFilterValues = getDatePickerFilterValue(
-          datePickerPastOptions,
-          ANY_TIME_DATE_OPTION
-        )
-        const showUntagged = true
-
-        dispatch(
-          setFiltersValues({
-            name: FUNCTION_FILTERS,
-            value: {
-              [NAME_FILTER]: funcName,
-              [DATES_FILTER]: dateFilterValues
-            }
-          })
-        )
-        dispatch(
-          setModalFiltersValues({
-            name: FUNCTION_FILTERS,
-            value: {
-              [SHOW_UNTAGGED_FILTER]: showUntagged
-            }
-          })
-        )
-
-        return {
-          [NAME_FILTER]: funcName,
-          [DATES_FILTER]: dateFilterValues,
-          [SHOW_UNTAGGED_FILTER]: showUntagged
-        }
-      }
-
-      return {
-        ...filtersStore[FILTER_MENU][FUNCTION_FILTERS],
-        ...filtersStore[FILTER_MENU_MODAL][FUNCTION_FILTERS].values
-      }
+    setInitialFilters,
+    filters: {
+      ...filtersStore[FILTER_MENU][FUNCTION_FILTERS],
+      ...filtersStore[FILTER_MENU_MODAL][FUNCTION_FILTERS].values
     }
   })
 

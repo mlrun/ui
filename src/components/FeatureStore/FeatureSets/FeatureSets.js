@@ -299,7 +299,8 @@ const FeatureSets = ({
     fetchData,
     setExpandedRowsData: setSelectedRowData,
     createRowData: createFeatureSetsRowData,
-    fetchTags
+    fetchTags,
+    filters: filtersStore
   })
 
   useEffect(() => {

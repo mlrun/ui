@@ -35,8 +35,7 @@ import {
   GROUP_BY_NONE,
   LARGE_REQUEST_CANCELED,
   REQUEST_CANCELED,
-  TAG_FILTER_ALL_ITEMS,
-  TAG_FILTER_LATEST
+  TAG_FILTER_ALL_ITEMS
 } from '../../../constants'
 import { createFeaturesRowData } from '../../../utils/createFeatureStoreContent'
 import { featuresActionCreator, handleFeaturesResponse } from './features.util'
@@ -280,11 +279,7 @@ const Features = ({
   useInitialTableFetch({
     fetchData,
     fetchTags,
-    defaultFilters: {
-      tag: TAG_FILTER_LATEST,
-      iter: '',
-      project: params.projectName
-    }
+    filters: filtersStore
   })
 
   useEffect(() => {

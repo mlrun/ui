@@ -310,11 +310,12 @@ const Files = () => {
   }
 
   useInitialTableFetch({
-    fetchData,
-    setExpandedRowsData: setSelectedRowData,
     createRowData: createFilesRowData,
-    filterMenuName: FILES_FILTERS,
+    fetchData,
     fetchTags,
+    filterMenuName: FILES_FILTERS,
+    filters: filesFilters,
+    setExpandedRowsData: setSelectedRowData,
     sortExpandedRowsDataBy: 'updated'
   })
 

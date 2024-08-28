@@ -17,103 +17,131 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import { useEffect, useRef } from 'react'
+import { useEffect, useLayoutEffect, useMemo, useRef } from 'react'
 import { useParams } from 'react-router-dom'
 import { useDispatch } from 'react-redux'
+import { debounce } from 'lodash'
 
 import {
+  GROUP_BY_FILTER,
   GROUP_BY_NAME,
-  SHOW_ITERATIONS,
-  TAG_FILTER_ALL_ITEMS,
-  TAG_FILTER_LATEST
+  ITERATIONS_FILTER,
+  NAME_FILTER,
+  TAG_FILTER,
+  TAG_FILTER_ALL_ITEMS
 } from '../constants'
 import { setFilters, setModalFiltersValues } from '../reducers/filtersReducer'
 import { expandRowByName } from '../utils/tableRows.util'
 
 export const useInitialTableFetch = ({
   createRowData,
-  defaultFilters,
+  filters,
   fetchData,
   fetchTags,
   filterMenuName,
-  getFiltersCallback,
   setExpandedRowsData,
+  setInitialFilters,
   sortExpandedRowsDataBy
 } = {}) => {
   const params = useParams()
   const dispatch = useDispatch()
   const isInitialRequestSent = useRef(false)
 
-  useEffect(() => {
-    if (!isInitialRequestSent.current) {
-      const externalFilters = getFiltersCallback?.()
-      const name = externalFilters?.name || params.name
-      let localFilters = defaultFilters || { tag: TAG_FILTER_LATEST, iter: SHOW_ITERATIONS }
+  const sendInitialRequest = useMemo(
+    () =>
+      debounce(
+        ({
+          createRowData,
+          dispatch,
+          filters,
+          fetchData,
+          fetchTags,
+          paramsProjectName,
+          setExpandedRowsData,
+          sortExpandedRowsDataBy
+        } = {}) => {
+          if (!isInitialRequestSent.current) {
 
-      if (!externalFilters && name) {
-        localFilters = {
-          ...localFilters,
-          tag: TAG_FILTER_ALL_ITEMS,
-          iter: '',
-          name: params.name
-        }
+            if (fetchTags) {
+              fetchTags()
+            }
 
-        dispatch(
-          setFilters({
-            name: params.name,
-            iter: '',
-            tag: TAG_FILTER_ALL_ITEMS
-          })
-        )
+            fetchData(filters).then((result = []) => {
+              if (filters[NAME_FILTER]) {
+                dispatch(
+                  setFilters({
+                    [GROUP_BY_FILTER]: GROUP_BY_NAME
+                  })
+                )
 
-        if (filterMenuName) {
-          dispatch(
-            setModalFiltersValues({
-              name: filterMenuName,
-              value: { iter: '', tag: TAG_FILTER_ALL_ITEMS }
+                if (setExpandedRowsData && createRowData) {
+                  expandRowByName(
+                    filters[NAME_FILTER],
+                    result,
+                    paramsProjectName,
+                    setExpandedRowsData,
+                    createRowData,
+                    sortExpandedRowsDataBy
+                  )
+                }
+              }
             })
-          )
+
+            isInitialRequestSent.current = true
+          }
         }
-      }
+      ),
+    []
+  )
 
-      if (fetchTags) {
-        fetchTags()
-      }
-
-      fetchData(externalFilters || localFilters).then((result = []) => {
-        if (name) {
+  useLayoutEffect(() => {
+    if (!isInitialRequestSent.current) {
+      if (setInitialFilters) {
+        setInitialFilters()
+      } else {
+        if (params.name) {
           dispatch(
             setFilters({
-              groupBy: GROUP_BY_NAME
+              [NAME_FILTER]: params.name,
+              [ITERATIONS_FILTER]: '',
+              [TAG_FILTER]: TAG_FILTER_ALL_ITEMS
             })
           )
 
-          if (setExpandedRowsData && createRowData) {
-            expandRowByName(
-              name,
-              result,
-              params.projectName,
-              setExpandedRowsData,
-              createRowData,
-              sortExpandedRowsDataBy
+          if (filterMenuName) {
+            dispatch(
+              setModalFiltersValues({
+                name: filterMenuName,
+                value: { [ITERATIONS_FILTER]: '', [TAG_FILTER]: TAG_FILTER_ALL_ITEMS }
+              })
             )
           }
         }
-      })
-
-      isInitialRequestSent.current = true
+      }
     }
+  }, [dispatch, filterMenuName, params.name, setInitialFilters])
+
+  useEffect(() => {
+    sendInitialRequest({
+      createRowData,
+      dispatch,
+      filters,
+      fetchData,
+      fetchTags,
+      paramsProjectName: params.projectName,
+      setExpandedRowsData,
+      sortExpandedRowsDataBy
+    })
   }, [
     createRowData,
-    defaultFilters,
     dispatch,
     fetchData,
     fetchTags,
     filterMenuName,
-    getFiltersCallback,
+    filters,
     params.name,
     params.projectName,
-    params.tag,
+    sendInitialRequest,
     setExpandedRowsData,
     sortExpandedRowsDataBy
   ])

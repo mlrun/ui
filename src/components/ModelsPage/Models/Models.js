@@ -372,11 +372,12 @@ const Models = ({ fetchModelFeatureVector }) => {
   }
 
   useInitialTableFetch({
-    fetchData,
-    setExpandedRowsData: setSelectedRowData,
     createRowData: createModelsRowData,
-    filterMenuName: MODELS_FILTERS,
+    fetchData,
     fetchTags,
+    filterMenuName: MODELS_FILTERS,
+    filters: modelsFilters,
+    setExpandedRowsData: setSelectedRowData,
     sortExpandedRowsDataBy: 'updated'
   })
 
