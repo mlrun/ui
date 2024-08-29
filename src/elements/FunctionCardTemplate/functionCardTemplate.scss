@@ -58,24 +58,17 @@
   }
 
   &__description {
-    color: $topaz;
-    font-size: 13px;
     height: 100%;
     margin-bottom: 10px;
-
-    .data-ellipsis {
-      height: 100%;
-    }
+    color: $topaz;
+    font-size: 13px;
+    white-space: normal;
   }
 
   &__links {
     display: flex;
     justify-content: space-between;
     padding: 10px 0;
-  }
-
-  &__chips {
-    width: fit-content;
   }
 
   &.dense {

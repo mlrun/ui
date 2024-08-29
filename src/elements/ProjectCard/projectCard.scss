@@ -89,20 +89,6 @@
     }
   }
 
-  &__labels {
-    .chips-cell {
-      .chip-block {
-        max-width: 250px;
-      }
-
-      .chip__value {
-        overflow: hidden;
-        white-space: nowrap;
-        text-overflow: ellipsis;
-      }
-    }
-  }
-
   &:hover {
     box-shadow: $previewBoxShadow;
   }
