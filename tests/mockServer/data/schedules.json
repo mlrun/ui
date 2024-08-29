@@ -284,15 +284,28 @@
             }
           }
         },
-        "schedule": "0 0 1 * *"
+        "schedule": {
+          "year": null,
+          "month": "*",
+          "day": "*",
+          "week": null,
+          "day_of_week": "*",
+          "hour": "*/10",
+          "minute": 0,
+          "second": null,
+          "start_date": null,
+          "end_date": null,
+          "timezone": null,
+          "jitter": null
+        }
       },
       "cron_trigger": {
         "year": null,
         "month": "*",
-        "day": 1,
+        "day": "*",
         "week": null,
         "day_of_week": "*",
-        "hour": 0,
+        "hour": "*/10",
         "minute": 0,
         "second": null,
         "start_date": null,
@@ -312,7 +325,7 @@
         "access_key": null
       },
       "creation_time": "2021-10-20T11:36:10.278278+00:00",
-      "project": "churn-project-admin",
+      "project": "default",
       "last_run_uri": null,
       "state": null,
       "next_run_time": "2021-12-01T00:00:00+00:00",
@@ -775,7 +788,7 @@
           "spec": {
             "function": "cat-vs-dog-classification/workflow-runner-main3@8d39c445668512b338eee3c9e38d832ada35006b",
             "parameters": {
-              "url":" git://github.com/mlrun/mlrun-import-project.git#refs/heads/main",
+              "url": " git://github.com/mlrun/mlrun-import-project.git#refs/heads/main",
               "project_name": "cat-vs-dog-classification",
               "workflow_name": "main3",
               "workflow_path": "workflow.py",
@@ -810,7 +823,7 @@
           "status": {
             "state": "created"
           }
-      },
+        },
         "schedule": "0 * * * *"
       },
       "cron_trigger": {
@@ -828,10 +841,10 @@
         "jitter": null
       },
       "desired_state": null,
-      "labels":{
+      "labels": {
         "job-type": "workflow-runner",
         "workflow": "main3",
-        "mlrun/client_version":" 1.7.0-rc22",
+        "mlrun/client_version": " 1.7.0-rc22",
         "mlrun/client_python_version": "3.9.18",
         "mlrun-auth-key": "mlrun-auth-secrets.7bd0ec2be4d0f3d54bfa0093250f64268fff0f8c7623744602f70c06"
       },
@@ -897,7 +910,7 @@
           "hyper_param_options": {},
           "data_stores": []
         },
-        "status":{
+        "status": {
           "results": {
             "workflow_id": "f8773e87-05f9-43bc-b5eb-2c336097ddf4",
             "engine": "kfp",

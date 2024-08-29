@@ -193,7 +193,7 @@ const ModelEndpoints = () => {
   }, [navigate, location, pageData.details.menu, params.name, params.tag, params.tab])
 
   const sortedContent = useMemo(() => {
-    const path = filtersStore.sortBy === 'function' ? 'spec.model_uri' : 'spec.model'
+    const path = filtersStore.sortBy === 'function' ? 'spec.function_uri' : 'spec.model'
 
     return orderBy(modelEndpoints, [path], ['asc'])
   }, [modelEndpoints, filtersStore.sortBy])
