@@ -48,7 +48,8 @@ import {
 import {
   ANY_TIME_DATE_OPTION,
   datePickerPastOptions,
-  getDatePickerFilterValue
+  getDatePickerFilterValue,
+  PAST_WEEK_DATE_OPTION
 } from '../../utils/datePicker.util'
 import createFunctionsContent from '../../utils/createFunctionsContent'
 import functionsActions from '../../actions/functions'
@@ -98,7 +99,7 @@ const Functions = ({
   const abortControllerRef = useRef(new AbortController())
   const fetchFunctionLogsTimeout = useRef(null)
   const fetchFunctionNuclioLogsTimeout = useRef(null)
-  const nameFilterRef = useRef('')
+  const filterRef = useRef({})
   const terminatePollRef = useRef(null)
   const functionsAreInitializedRef = useRef(false)
   const { isDemoMode, isStagingMode } = useMode()
@@ -116,7 +117,10 @@ const Functions = ({
     filters => {
       terminateDeleteTasksPolling()
       abortControllerRef.current = new AbortController()
-      nameFilterRef.current = filters?.name ?? ''
+      filterRef.current = {
+        name: filters?.name ?? '',
+        dates: filters.dates
+      }
 
       return fetchFunctions(params.projectName, filters, {
         ui: {
@@ -555,7 +559,7 @@ const Functions = ({
   useLayoutEffect(() => {
     const checkFunctionExistence = item => {
       if (!item || Object.keys(item).length === 0) {
-        if (isEmpty(nameFilterRef.current)) {
+        if (isEmpty(filterRef.current.name) && filterRef.current.dates.initialSelectedOptionId === PAST_WEEK_DATE_OPTION) {
           showErrorNotification(dispatch, {}, 'This function either does not exist or was deleted')
         }
 
