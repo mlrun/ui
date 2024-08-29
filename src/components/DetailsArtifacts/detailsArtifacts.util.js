@@ -73,10 +73,10 @@ export const generateArtifactsTabContent = (artifacts, params, iteration, showAr
         artifact.db_key || artifact.key
       }/${artifact.tag ? artifact.tag : artifact.tree ?? TAG_FILTER_LATEST}${
         iteration ? `/${iteration}` : ''
-      }/overview?useUrlParamsAsFilter=true`,
+      }/overview`,
       dataset: `/projects/${params.projectName}/${DATASETS_TAB}/${artifact.db_key || artifact.key}/${
         artifact.tag ? artifact.tag : artifact.tree ?? TAG_FILTER_LATEST
-      }${iteration ? `/${iteration}` : ''}/overview?useUrlParamsAsFilter=true`
+      }${iteration ? `/${iteration}` : ''}/overview`
     }
 
     return [

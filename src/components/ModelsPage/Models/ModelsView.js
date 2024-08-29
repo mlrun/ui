@@ -102,7 +102,6 @@ const ModelsView = React.forwardRef(
                 setContent={setModels}
                 setSelectedRowData={setSelectedRowData}
                 tab={MODELS_TAB}
-                urlTagOption={urlTagOption}
               />
             </div>
             {artifactsStore.loading ? null : models.length === 0 ? (
@@ -204,7 +203,6 @@ ModelsView.propTypes = {
   sortProps: SORT_PROPS,
   tableContent: PropTypes.arrayOf(PropTypes.object).isRequired,
   tableHeaders: PropTypes.arrayOf(PropTypes.object).isRequired,
-  urlTagOption: PropTypes.string,
   viewMode: PropTypes.string,
   virtualizationConfig: VIRTUALIZATION_CONFIG.isRequired
 }
