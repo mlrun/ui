@@ -75,14 +75,21 @@ export const generateInputsTabContent = (artifacts, showArtifact) => {
         headerId: 'actions',
         headerLabel: '',
         className: 'actions-cell',
-        hidden: !artifact.ui.isPreviewable,
         template: (
           <>
             <CopyToClipboard textToCopy={artifact.ui.inputPath} tooltipText="Copy path" />
-            <RoundedIcon tooltipText="Show Details" id="show-details">
-              <Link target="_blank" to={artifact.ui.artifactLink}>
+            <RoundedIcon
+              tooltipText="Show Details"
+              id="show-details"
+              disabled={!artifact.ui.isPreviewable}
+            >
+              {artifact.ui.isPreviewable ? (
+                <Link target="_blank" to={artifact.ui.artifactLink}>
+                  <DetailsIcon />
+                </Link>
+              ) : (
                 <DetailsIcon />
-              </Link>
+              )}
             </RoundedIcon>
           </>
         )
