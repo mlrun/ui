@@ -68,6 +68,7 @@ module.exports = {
   Jobs_Monitoring_Workflows_Tab: jobsMonitoring['crossWorkflowsMonitorTab'],
   Jobs_Monitoring_Scheduled_Tab: jobsMonitoring['crossScheduledMonitorTab'],
   Jobs_Monitor_Tab_Info_Pane: infoPane['jobsMonitorTabInfoPane'],
+  Metrics_Selector_Popup: interactivePopup['metricsSelectorPopup'],
   ML_Function_Info_Pane: infoPane['mlFunctionInfoPane'],
   ML_Functions: Functions['mlFunctions'],
   Model_Endpoints: models['modelEndpoints'],

@@ -67,6 +67,7 @@ import {
 import { isTabActive } from '../common/actions/tab-selector.action'
 import {
   checkHintText,
+  checkHintTextWithHover,
   checkInputAccordingHintText,
   checkWarningHintText,
   checkWarningText,
@@ -984,6 +985,18 @@ Then(
       this.driver,
       pageObjects[wizard][inputField],
       pageObjects['commonPagesHeader']['Common_Hint'],
+      pageObjectsConsts[constStorage][constValue]
+    )
+  }
+)
+
+Then(
+  'verify {string} in {string} on {string} wizard should display {string}.{string}',
+  async function(inputField, accordion, wizard, constStorage, constValue) {
+    await checkHintTextWithHover(
+      this.driver,
+      pageObjects[wizard][accordion][inputField],
+      pageObjects['commonPagesHeader']['Common_Tolltip'],
       pageObjectsConsts[constStorage][constValue]
     )
   }

@@ -721,7 +721,42 @@ module.exports = {
     Delete_Button: commonDeleteButton,
     Message: By.css('#overlay_container > div > div > div:nth-child(2)')
   },
-  modalWizardForm:{
+  metricsSelectorPopup: {
+    Search_Metrics_Input:inputGroup(
+      generateInputGroup(
+        '[data-testid="metricSearchName-form-field-input"]',
+        false,
+        false
+      )
+    ),
+    Evidently_App_Test_Accordion: {
+      Accordion_Header: By.css(
+        '[data-testid="accordion"]:nth-of-type(1) .metrics-selector-accordion-title'
+      ),
+      Collapse_Button: By.css(
+        '[data-testid="accordion"]:nth-of-type(1) [data-testid="accordion-btn"]'
+      ),
+      Hellinger_Mean_Metrics_Checkbox: checkboxComponent(
+        generateCheckboxGroup(
+          '[data-testid="accordion"]:nth-of-type(1) .accordion__body [data-testid="metrics-form-checkbox"]',
+          false,
+          false,
+          false
+        )
+      ),
+      Metrics_Type: labelComponent(
+        generateLabelGroup(
+          '[data-testid="accordion"]:nth-of-type(1) .metrics-selector-icon-type',
+          false,
+          'svg'
+        )
+      )
+    },
+    Metrics_Selector_Counter: By.css('[data-testid="metrics-selector-counter"]'),
+    Metrics_Apply_Button: By.css('[data-testid="metrics-selector-buttons"] .btn-secondary'),
+    Metrics_Clear_Button: By.css('[data-testid="metrics-selector-buttons"] .btn-tertiary')
+  },
+  modalWizardForm: {
     Title: By.css('.modal .modal__header-title'),
     Cross_Close_Button: By.css('.modal .modal__header-button'),
     Preview_text: By.css('.modal .modal__content .modal__header-preview-text'),
