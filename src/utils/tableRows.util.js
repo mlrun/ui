@@ -43,7 +43,7 @@ export const isRowExpanded = (parentRef, expandedRowsData, rowItem) => {
  * @param {string} projectName - Project name.
  * @param {function} setExpandedRowsData - Function that set expanded data in state.
  * @param {function} createRowData - Function that create parsed row data.
- * @param {string} sortTableBy - The field name by witch we will sort table rows
+ * @param {string} sortTableBy - The field name by which we will sort table rows
  * @returns {void}
  */
 export const expandRowByName = (
