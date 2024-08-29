@@ -81,6 +81,7 @@ const ProjectsJobsMonitoring = ({ fetchAllJobRuns, fetchJobFunction, fetchJobs }
   const navigate = useNavigate()
   const appStore = useSelector(store => store.appStore)
   const artifactsStore = useSelector(store => store.artifactsStore)
+  const jobsStore = useSelector(store => store.jobsStore)
 
   const jobsFiltersConfig = useMemo(() => {
     return {
@@ -343,7 +344,7 @@ const ProjectsJobsMonitoring = ({ fetchAllJobRuns, fetchJobFunction, fetchJobs }
               />
               <ActionBar
                 autoRefreshIsEnabled={selectedTab === JOBS_MONITORING_JOBS_TAB}
-                autoRefreshIsStopped={jobWizardIsOpened}
+                autoRefreshIsStopped={jobWizardIsOpened || jobsStore.loading}
                 filterMenuName={selectedTab}
                 filtersConfig={tabData[selectedTab].filtersConfig}
                 handleRefresh={tabData[selectedTab].handleRefresh}
