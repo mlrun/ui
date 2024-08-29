@@ -48,7 +48,7 @@ const ScheduledMonitoring = () => {
   useEffect(() => {
     if (!dataIsLoaded) {
       let filters = {
-        ...schedulesFilterMenu,
+        ...schedulesFilterMenu.values,
         ...schedulesFilterMenuModal.values
       }
       refreshScheduled(filters)
@@ -58,7 +58,7 @@ const ScheduledMonitoring = () => {
     dataIsLoaded,
     dispatch,
     refreshScheduled,
-    schedulesFilterMenu,
+    schedulesFilterMenu.values,
     schedulesFilterMenuModal.values
   ])
 
@@ -78,7 +78,7 @@ const ScheduledMonitoring = () => {
       requestErrorMessage={requestErrorMessage}
       refreshJobs={() =>
         refreshScheduled({
-          ...schedulesFilterMenu,
+          ...schedulesFilterMenu.values,
           ...schedulesFilterMenuModal.values
         })
       }

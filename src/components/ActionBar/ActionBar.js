@@ -71,7 +71,7 @@ const ActionBar = ({
   withoutExpandButton
 }) => {
   const filtersStore = useSelector(store => store.filtersStore)
-  const filterMenu = useSelector(store => store.filtersStore[FILTER_MENU][filterMenuName])
+  const filterMenu = useSelector(store => store.filtersStore[FILTER_MENU][filterMenuName].values)
   const filterMenuModal = useSelector(
     store => store.filtersStore[FILTER_MENU_MODAL][filterMenuName]
   )

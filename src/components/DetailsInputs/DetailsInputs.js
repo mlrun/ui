@@ -33,6 +33,7 @@ import { MLRUN_STORAGE_INPUT_PATH_SCHEME, TAG_FILTER_LATEST } from '../../consta
 import { fetchArtifacts } from '../../reducers/artifactsReducer'
 import { generateArtifactIdentifiers } from '../Details/details.util'
 import { generateArtifactLink, generateInputsTabContent } from './detailsInputs.util'
+import { parseUri } from '../../utils'
 
 import './detailsInputs.scss'
 
@@ -58,18 +59,16 @@ const DetailsInputs = ({ inputs }) => {
   useEffect(() => {
     Object.entries(inputs || {}).forEach(([key, value]) => {
       if (value.startsWith(MLRUN_STORAGE_INPUT_PATH_SCHEME)) {
-        const [, , , project, dbKeyWithHash] = value.split('/')
-        const [dbKeyWithIter, hash] = dbKeyWithHash.split(':')
-        const [dbKey, iter] = dbKeyWithIter.split('#')
+        const { iteration, key, project, tag } = parseUri(value)
 
         dispatch(
           fetchArtifacts({
             project,
-            filters: { name: dbKey },
+            filters: { name: key },
             config: {
               params: {
-                iter,
-                tag: hash ?? TAG_FILTER_LATEST
+                iter: iteration,
+                tag: tag ?? TAG_FILTER_LATEST
               }
             }
           })

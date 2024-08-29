@@ -18,9 +18,10 @@ under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
 import React from 'react'
-import { debounce, get, isEmpty } from 'lodash'
+import { debounce, get, isEmpty, isEqual, omit } from 'lodash'
 
 import {
+  DATES_FILTER,
   DETAILS_BUILD_LOG_TAB,
   FILTER_MENU,
   FILTER_MENU_MODAL,
@@ -293,7 +294,7 @@ export const fetchInitialFunctions = debounce(
   (filtersStore, fetchData, functionsAreInitializedRef) => {
     if (!functionsAreInitializedRef.current) {
       fetchData({
-        ...filtersStore[FILTER_MENU][FUNCTION_FILTERS],
+        ...filtersStore[FILTER_MENU][FUNCTION_FILTERS].values,
         ...filtersStore[FILTER_MENU_MODAL][FUNCTION_FILTERS].values
       })
       functionsAreInitializedRef.current = true
@@ -358,7 +359,7 @@ export const setFullSelectedFunction = debounce(
         .then(parsedFunction => {
           setSelectedFunction(parsedFunction)
         })
-        .catch(error => {
+        .catch(() => {
           setSelectedFunction({})
           navigate(`/projects/${projectName}/functions`, { replace: true })
         })
@@ -416,4 +417,20 @@ const chooseOrFetchFunction = (selectedFunction, dispatch, fetchFunction, funcMi
     funcMin?.hash,
     funcMin?.tag
   )
+}
+
+export const areFiltersInInitialState = (filtersStore, filtersStoreKey) => {
+  const {
+    values: filterMenuValues,
+    initialValues: filterMenuInitialValues
+  } = filtersStore[FILTER_MENU][filtersStoreKey]
+  const {
+    values: filterMenuModalValues,
+    initialValues: filterMenuModalInitialValues
+  } = filtersStore[FILTER_MENU_MODAL][filtersStoreKey]
+  const dateFilterIsEqual = filterMenuValues[DATES_FILTER].initialSelectedOptionId === filterMenuInitialValues[DATES_FILTER].initialSelectedOptionId
+  const filterMenuIsEqual = isEqual(omit(filterMenuValues, DATES_FILTER), omit(filterMenuInitialValues, DATES_FILTER))
+  const filterMenuModalIsEqual = isEqual(filterMenuModalValues, filterMenuModalInitialValues)
+
+  return dateFilterIsEqual && filterMenuIsEqual && filterMenuModalIsEqual
 }
