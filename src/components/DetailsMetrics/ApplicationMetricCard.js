@@ -38,35 +38,35 @@ const ApplicationMetricCard = ({ metric }) => {
 
   const lineChartConfig = useMemo(() => {
     return {
-        ...lineConfig,
-        data: {
-          labels: metric.labels,
-          datasets: [
-            {
-              data: metric.points,
-              dates: metric.dates,
-              chartType: CHART_TYPE_LINE,
-              metricType: metric.type,
-              driftStatusList: metric.driftStatusList || [],
-              tension: 0.2,
-              totalDriftStatus: metric.totalDriftStatus,
-              borderWidth: 1,
-              borderColor: metric.totalDriftStatus?.chartColor || colors.java
-            }
-          ]
-        }
+      ...lineConfig,
+      data: {
+        labels: metric.labels,
+        datasets: [
+          {
+            data: metric.points,
+            dates: metric.dates,
+            chartType: CHART_TYPE_LINE,
+            metricType: metric.type,
+            driftStatusList: metric.driftStatusList || [],
+            tension: 0.2,
+            totalDriftStatus: metric.totalDriftStatus,
+            borderWidth: 1,
+            borderColor: metric.totalDriftStatus?.chartColor || colors.java
+          }
+        ]
       }
+    }
   }, [lineConfig, metric])
-  
+
   const barChartConfig = useMemo(() => {
     return {
-        ...barConfig,
-        data: calculateHistogram(metric)
-      }
+      ...barConfig,
+      data: calculateHistogram(metric)
+    }
   }, [barConfig, metric])
 
   return (
-    <StatsCard className="metrics__card">
+    <StatsCard className="metrics__card metrics__card-metric">
       <StatsCard.Header title={metric.title}>
         {metric.totalDriftStatus && (
           <Tooltip
