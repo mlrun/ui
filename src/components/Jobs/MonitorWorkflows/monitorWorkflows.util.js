@@ -18,10 +18,14 @@ under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
 import React from 'react'
+import { debounce } from 'lodash'
 
 import {
   DATE_RANGE_TIME_FILTER,
+  FILTER_ALL_ITEMS,
   FUNCTIONS_PAGE,
+  GROUP_BY_NONE,
+  GROUP_BY_WORKFLOW,
   JOBS_PAGE,
   NAME_FILTER,
   STATUS_FILTER
@@ -44,6 +48,7 @@ import {
   detailsMenu as functionsDetailsMenu,
   infoHeaders as functionsInfoHeaders
 } from '../../FunctionsPage/functions.util'
+import { datePickerPastOptions, PAST_WEEK_DATE_OPTION } from '../../../utils/datePicker.util'
 import { isEveryObjectValueEmpty } from '../../../utils/isEveryObjectValueEmpty'
 import { generateStatusFilter } from '../../FilterMenu/filterMenu.settings'
 
@@ -118,8 +123,8 @@ export const generateActionsMenu = (
           tooltip: !jobs_dashboard_url
             ? 'Grafana service unavailable'
             : jobKindIsDask
-            ? 'Unavailable for Dask jobs'
-            : '',
+              ? 'Unavailable for Dask jobs'
+              : '',
           disabled: !jobs_dashboard_url || jobKindIsDask,
           onClick: handleMonitoring
         },
@@ -161,6 +166,62 @@ export const generateActionsMenu = (
     ]
   }
 }
+
+export const fetchInitialWorkflows = debounce(
+  (
+    filtersStore,
+    params,
+    getWorkflows,
+    setFilters,
+    dispatch,
+    workflowsLength,
+    workflowsAreInitializedRef
+  ) => {
+    if (!workflowsAreInitializedRef.current) {
+      if (params.workflowId) {
+        dispatch(setFilters({ groupBy: GROUP_BY_NONE }))
+      } else {
+        if (filtersStore.saveFilters) {
+          const filters = {
+            state: filtersStore.state,
+            dates: filtersStore.dates,
+            saveFilters: false,
+            groupBy: GROUP_BY_WORKFLOW
+          }
+
+          getWorkflows(filters)
+          dispatch(setFilters(filters))
+        } else if (workflowsLength === 0) {
+          const pastWeekOption = datePickerPastOptions.find(
+            option => option.id === PAST_WEEK_DATE_OPTION
+          )
+          const generatedDates = [...pastWeekOption.handler()]
+
+          if (generatedDates.length === 1) {
+            generatedDates.push(new Date())
+          }
+          const filters = {
+            dates: {
+              value: generatedDates,
+              isPredefined: pastWeekOption.isPredefined,
+              initialSelectedOptionId: pastWeekOption.id
+            },
+            state: FILTER_ALL_ITEMS,
+            groupBy: GROUP_BY_WORKFLOW
+          }
+
+          dispatch(setFilters(filters))
+          getWorkflows(filters)
+        } else {
+          getWorkflows({ ...filtersStore, groupBy: GROUP_BY_WORKFLOW })
+          dispatch(setFilters({ groupBy: GROUP_BY_WORKFLOW }))
+        }
+
+        workflowsAreInitializedRef.current = true
+      }
+    }
+  }
+)
 
 export const monitorWorkflowsActionCreator = {
   abortJob: jobsActions.abortJob,

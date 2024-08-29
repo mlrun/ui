@@ -175,7 +175,7 @@ const ProjectsJobsMonitoring = ({ fetchAllJobRuns, fetchJobFunction, fetchJobs }
                 JOB_KIND_LOCAL
 
               return (
-                (!filters.type || filters.type === FILTER_ALL_ITEMS || type === filters.type) &&
+                (!filters.type || filters.type === FILTER_ALL_ITEMS || filters.type.includes(type)) &&
                 (!filters.project || job.project.includes(filters.project.toLowerCase()))
               )
             })

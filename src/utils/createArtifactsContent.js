@@ -495,7 +495,7 @@ export const createModelEndpointsRowData = (artifact, project) => {
       {
         id: `firstRequest.${artifact.ui.identifierUnique}`,
         headerId: 'uptime',
-        headerLabel: 'Uptime',
+        headerLabel: 'First prediction',
         value: formatDatetime(artifact.status?.first_request, '-'),
         className: 'table-cell-1'
       },

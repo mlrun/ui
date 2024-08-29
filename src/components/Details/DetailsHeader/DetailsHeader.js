@@ -141,8 +141,8 @@ const DetailsHeader = ({
           >
             {
               selectedItem.name ||
-                selectedItem.db_key ||
-                selectedItem.spec?.model?.replace(/:.*$/, '') // 'model-key:model-tag', remove tag
+              selectedItem.db_key ||
+              selectedItem.spec?.model?.replace(/:.*$/, '') // 'model-key:model-tag', remove tag
             }
           </Tooltip>
         </h3>
@@ -168,6 +168,15 @@ const DetailsHeader = ({
           {stateValue && stateLabel && (
             <Tooltip className="state" template={<TextTooltipTemplate text={stateLabel} />}>
               <i className={stateClassName} />
+            </Tooltip>
+          )}
+          {selectedItem.ui.customError?.title && selectedItem.ui.customError?.message && (
+            <Tooltip
+              className="error-container"
+              template={<TextTooltipTemplate
+                text={`${selectedItem.ui.customError.title} ${selectedItem.ui.customError.message}`} />}
+            >
+              {selectedItem.ui.customError.title} {selectedItem.ui.customError.message}
             </Tooltip>
           )}
           {selectedItem.error && (

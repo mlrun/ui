@@ -18,7 +18,7 @@ under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
 import React from 'react'
-import { isNil, isEmpty } from 'lodash'
+import { isNil, isEmpty, debounce } from 'lodash'
 
 import {
   DATE_RANGE_TIME_FILTER,
@@ -37,6 +37,7 @@ import {
   isJobAborting,
   JOB_RUNNING_STATES
 } from '../jobs.util'
+import { datePickerPastOptions, PAST_WEEK_DATE_OPTION } from '../../../utils/datePicker.util'
 import { TERTIARY_BUTTON } from 'igz-controls/constants'
 import jobsActions from '../../../actions/jobs'
 import detailsActions from '../../../actions/details'
@@ -110,8 +111,8 @@ export const generateActionsMenu = (
           tooltip: !jobs_dashboard_url
             ? 'Grafana service unavailable'
             : jobKindIsDask
-            ? 'Unavailable for Dask jobs'
-            : '',
+              ? 'Unavailable for Dask jobs'
+              : '',
           disabled: !jobs_dashboard_url || jobKindIsDask,
           onClick: handleMonitoring,
           hidden: !isEmpty(selectedJob)
@@ -154,6 +155,59 @@ export const generateActionsMenu = (
     ]
   }
 }
+
+export const fetchInitialJobs = debounce(
+  (
+    filtersStore,
+    selectedJob,
+    dateFilter,
+    params,
+    refreshJobs,
+    setFilters,
+    dispatch,
+    isJobDataEmpty,
+    jobsAreInitializedRef
+  ) => {
+    if (isEmpty(selectedJob) && !params.jobId && !jobsAreInitializedRef.current) {
+      let filters = {}
+
+      if (filtersStore.saveFilters) {
+        filters = {
+          saveFilters: false,
+          state: filtersStore.state,
+          dates: filtersStore.dates
+        }
+      } else if (isJobDataEmpty()) {
+        const pastWeekOption = datePickerPastOptions.find(
+          option => option.id === PAST_WEEK_DATE_OPTION
+        )
+
+        filters = {
+          dates: {
+            value: pastWeekOption.handler(),
+            isPredefined: pastWeekOption.isPredefined,
+            initialSelectedOptionId: pastWeekOption.id
+          }
+        }
+      } else {
+        filters = {
+          name: filtersStore.name,
+          state: filtersStore.state,
+          labels: filtersStore.labels,
+          dates: {
+            value: dateFilter,
+            isPredefined: false,
+            initialSelectedOptionId: filtersStore.dates.initialSelectedOptionId
+          }
+        }
+      }
+
+      refreshJobs(filters)
+      dispatch(setFilters(filters))
+      jobsAreInitializedRef.current = true
+    }
+  }
+)
 
 export const monitorJobsActionCreator = {
   abortJob: jobsActions.abortJob,

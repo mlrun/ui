@@ -18,13 +18,14 @@ under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
 import React, { useEffect, useLayoutEffect, useMemo, useRef } from 'react'
-import { Form } from 'react-final-form'
-import { useDispatch, useSelector } from 'react-redux'
-import { isEmpty, isEqual } from 'lodash'
-import { createForm } from 'final-form'
-import { Field } from 'react-final-form'
-import arrayMutators from 'final-form-arrays'
 import PropTypes from 'prop-types'
+import arrayMutators from 'final-form-arrays'
+import classnames from 'classnames'
+import { Field } from 'react-final-form'
+import { Form } from 'react-final-form'
+import { createForm } from 'final-form'
+import { isEmpty, isEqual } from 'lodash'
+import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate, useParams } from 'react-router-dom'
 
 import DatePicker from '../../common/DatePicker/DatePicker'
@@ -79,6 +80,8 @@ const ActionBar = ({
   const dispatch = useDispatch()
   const params = useParams()
   const navigate = useNavigate()
+
+  const actionBarClassNames = classnames('action-bar', hidden && 'action-bar_hidden')
 
   const formInitialValues = useMemo(() => {
     const initialValues = {}
@@ -224,98 +227,92 @@ const ActionBar = ({
   }, [filterMenu])
 
   return (
-    !hidden && (
-      <Form form={formRef.current} onSubmit={() => {}}>
-        {formState => (
-          <div className="action-bar">
-            <div className="action-bar__filters">
-              {NAME_FILTER in filterMenu && !filtersConfig[NAME_FILTER].hidden && (
-                <div key={NAME_FILTER} className="action-bar__filters-item">
-                  <NameFilter
-                    filterMenuName={filterMenuName}
-                    applyChanges={value =>
-                      applyChanges({ ...formState.values, name: value }, filterMenuModal.values)
-                    }
-                  />
-                </div>
-              )}
-              {DATES_FILTER in filterMenu && !filtersConfig[DATES_FILTER].hidden && (
-                <div key={DATES_FILTER} className="action-bar__filters-item">
-                  <Field name={DATES_FILTER}>
-                    {({ input }) => {
-                      return (
-                        <DatePicker
-                          key={tab}
-                          className="details-date-picker"
-                          date={input.value.value[0]}
-                          dateTo={input.value.value[1]}
-                          hasFutureOptions={filtersConfig[DATES_FILTER].isFuture}
-                          selectedOptionId={input.value.initialSelectedOptionId}
-                          label=""
-                          onChange={(dates, isPredefined, optionId) =>
-                            handleDateChange(dates, isPredefined, optionId, input, formState)
-                          }
-                          type="date-range-time"
-                          withLabels
-                        />
-                      )
-                    }}
-                  </Field>
-                </div>
-              )}
-            </div>
-            {filterMenuModal && (
-              <FilterMenuModal
-                applyChanges={filterMenuModal => applyChanges(formState.values, filterMenuModal)}
-                filterMenuName={filterMenuName}
-                initialValues={filterMenuModalInitialState}
-                restartFormTrigger={tab}
-                values={filterMenuModal.values}
-              >
-                {children}
-              </FilterMenuModal>
+    <Form form={formRef.current} onSubmit={() => {}}>
+      {formState => (
+        <div className={actionBarClassNames}>
+          <div className="action-bar__filters">
+            {NAME_FILTER in filterMenu && !filtersConfig[NAME_FILTER].hidden && (
+              <div key={NAME_FILTER} className="action-bar__filters-item">
+                <NameFilter
+                  filterMenuName={filterMenuName}
+                  applyChanges={value =>
+                    applyChanges({ ...formState.values, name: value }, filterMenuModal.values)
+                  }
+                />
+              </div>
             )}
-            {(withRefreshButton || !isEmpty(actionButtons)) && (
-              <div className="action-bar__actions">
-                {actionButtons.map(
-                  (actionButton, index) =>
-                    actionButton &&
-                    !actionButton.hidden &&
-                    (actionButton.template || (
-                      <Button
-                        key={index}
-                        variant={actionButton.variant}
-                        label={actionButton.label}
-                        className={actionButton.className}
-                        onClick={actionButton.onClick}
+            {DATES_FILTER in filterMenu && !filtersConfig[DATES_FILTER].hidden && (
+              <div key={DATES_FILTER} className="action-bar__filters-item">
+                <Field name={DATES_FILTER}>
+                  {({ input }) => {
+                    return (
+                      <DatePicker
+                        key={tab}
+                        className="details-date-picker"
+                        date={input.value.value[0]}
+                        dateTo={input.value.value[1]}
+                        hasFutureOptions={filtersConfig[DATES_FILTER].isFuture}
+                        selectedOptionId={input.value.initialSelectedOptionId}
+                        label=""
+                        onChange={(dates, isPredefined, optionId) =>
+                          handleDateChange(dates, isPredefined, optionId, input, formState)
+                        }
+                        type="date-range-time"
+                        withLabels
                       />
-                    ))
-                )}
-
-                {withRefreshButton && (
-                  <RoundedIcon
-                    tooltipText="Refresh"
-                    onClick={() => refresh(formState)}
-                    id="refresh"
-                  >
-                    <RefreshIcon />
-                  </RoundedIcon>
-                )}
-                {!withoutExpandButton && filtersStore.groupBy !== GROUP_BY_NONE && (
-                  <RoundedIcon
-                    id="toggle-collapse"
-                    tooltipText={expand ? 'Collapse' : 'Expand all'}
-                    onClick={() => handleExpandAll()}
-                  >
-                    {expand ? <CollapseIcon /> : <ExpandIcon />}
-                  </RoundedIcon>
-                )}
+                    )
+                  }}
+                </Field>
               </div>
             )}
           </div>
-        )}
-      </Form>
-    )
+          {filterMenuModal && (
+            <FilterMenuModal
+              applyChanges={filterMenuModal => applyChanges(formState.values, filterMenuModal)}
+              filterMenuName={filterMenuName}
+              initialValues={filterMenuModalInitialState}
+              restartFormTrigger={`${tab}`}
+              values={filterMenuModal.values}
+            >
+              {children}
+            </FilterMenuModal>
+          )}
+          {(withRefreshButton || !isEmpty(actionButtons)) && (
+            <div className="action-bar__actions">
+              {actionButtons.map(
+                (actionButton, index) =>
+                  actionButton &&
+                  !actionButton.hidden &&
+                  (actionButton.template || (
+                    <Button
+                      key={index}
+                      variant={actionButton.variant}
+                      label={actionButton.label}
+                      className={actionButton.className}
+                      onClick={actionButton.onClick}
+                    />
+                  ))
+              )}
+
+              {withRefreshButton && (
+                <RoundedIcon tooltipText="Refresh" onClick={() => refresh(formState)} id="refresh">
+                  <RefreshIcon />
+                </RoundedIcon>
+              )}
+              {!withoutExpandButton && filtersStore.groupBy !== GROUP_BY_NONE && (
+                <RoundedIcon
+                  id="toggle-collapse"
+                  tooltipText={expand ? 'Collapse' : 'Expand all'}
+                  onClick={() => handleExpandAll()}
+                >
+                  {expand ? <CollapseIcon /> : <ExpandIcon />}
+                </RoundedIcon>
+              )}
+            </div>
+          )}
+        </div>
+      )}
+    </Form>
   )
 }
 

@@ -68,16 +68,21 @@ const DetailsMetrics = ({ selectedItem }) => {
     return groupMetricByApplication(metrics, true)
   }, [metrics])
 
+  const hasMetricsList = useMemo(() => {
+    return detailsStore.metricsOptions.all.filter(metric => metric.app !== ML_RUN_INFRA).length > 0
+  }, [detailsStore.metricsOptions.all])
+
   const chooseMetricsDataCard = useMemo(() => {
     return (
-      generatedMetrics.length === 1 && (
+      generatedMetrics.length === 1 &&
+      hasMetricsList && (
         <StatsCard className="metrics__empty-select">
           <MetricsIcon />
           <div>Choose metrics to view endpoint’s data</div>
         </StatsCard>
       )
     )
-  }, [generatedMetrics.length])
+  }, [hasMetricsList, generatedMetrics.length])
 
   const handleChangeDates = useCallback(
     (dates, isPredefined, selectedOptionId) => {
@@ -227,6 +232,7 @@ const DetailsMetrics = ({ selectedItem }) => {
       <div className="metrics__custom-filters">
         <MetricsSelector
           name="metrics"
+          disabled={!hasMetricsList}
           metrics={detailsStore.metricsOptions.all}
           onSelect={metrics =>
             dispatch(
@@ -253,12 +259,14 @@ const DetailsMetrics = ({ selectedItem }) => {
 
       {generatedMetrics.length === 0 ? (
         !detailsStore.loadingCounter ? (
-          requestErrorMessage ?
-            <NoData message={requestErrorMessage} /> :
+          requestErrorMessage ? (
+            <NoData message={requestErrorMessage} />
+          ) : (
             <StatsCard className="metrics__empty-select">
               <MetricsIcon />
               <div>Choose metrics to view endpoint’s data</div>
             </StatsCard>
+          )
         ) : null
       ) : (
         <div ref={metricsContainerRef} className="metrics">

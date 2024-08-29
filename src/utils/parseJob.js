@@ -17,6 +17,7 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
+import { isString } from 'lodash'
 import {
   JOB_KIND_JOB,
   JOB_KIND_PIPELINE,
@@ -25,14 +26,15 @@ import {
   SCHEDULE_TAB
 } from '../constants'
 import getState from './getState'
-import { parseKeyValues } from './object'
+import { convertTriggerToCrontab } from './jobs.util'
 import { getJobIdentifier } from './getUniqueIdentifier'
+import { parseKeyValues } from './object'
 
 export const jobHasWorkflowLabel = job => {
   return job.labels && 'job-type' in job.labels && job.labels['job-type'] === 'workflow-runner'
 }
 
-export const parseJob = (job, tab) => {
+export const parseJob = (job, tab, customState, customError) => {
   let jobItem = null
 
   if (tab === SCHEDULE_TAB) {
@@ -43,7 +45,12 @@ export const parseJob = (job, tab) => {
       nextRun: new Date(job.next_run_time),
       lastRunUri: job.last_run_uri,
       project: job.project,
-      scheduled_object: job.scheduled_object,
+      scheduled_object: {
+        ...job.scheduled_object,
+        schedule: isString(job.scheduled_object?.schedule)
+          ? job.scheduled_object?.schedule
+          : convertTriggerToCrontab(job.scheduled_object?.schedule)
+      },
       startTime: new Date(job.last_run?.status?.start_time),
       state: getState(job.last_run?.status?.state, JOBS_PAGE, JOB_KIND_JOB),
       type:
@@ -84,7 +91,7 @@ export const parseJob = (job, tab) => {
       results: job.status?.results || {},
       resultsChips: parseKeyValues(job.status?.results || {}),
       startTime: new Date(job.status?.start_time),
-      state: getState(job.status?.state, JOBS_PAGE, JOB_KIND_JOB),
+      state: getState(customState || job.status?.state, JOBS_PAGE, JOB_KIND_JOB),
       ui_run: job.status?.ui_url,
       uid: job.metadata.uid,
       updated: new Date(job.status?.last_update),
@@ -93,6 +100,7 @@ export const parseJob = (job, tab) => {
   }
 
   jobItem.ui = {
+    customError,
     originalContent: job,
     identifier: getJobIdentifier(jobItem),
     identifierUnique: getJobIdentifier(jobItem, true)

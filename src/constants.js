@@ -197,6 +197,7 @@ export const ADVANCED_STEP = 'advanced'
 
 /*=========== JOB KINDS =============*/
 
+export const JOB_KIND_APPLICATION = 'application'
 export const JOB_KIND_DASK = 'dask'
 export const JOB_KIND_DATABRICKS = 'databricks'
 export const JOB_KIND_HANDLER = 'handler'
