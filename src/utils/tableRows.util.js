@@ -39,11 +39,11 @@ export const isRowExpanded = (parentRef, expandedRowsData, rowItem) => {
 /**
  * Auto expand table row.
  * @param {string} name - Row name.
- * @param {Array} itemsList - List of table items.
+ * @param {Array.<Object>} itemsList - List of table items.
  * @param {string} projectName - Project name.
  * @param {function} setExpandedRowsData - Function that set expanded data in state.
  * @param {function} createRowData - Function that create parsed row data.
- * @param {string} sortBy - Field by witch we will sort items
+ * @param {string} sortTableBy - The field name by witch we will sort table rows
  * @returns {void}
  */
 export const expandRowByName = (
@@ -52,19 +52,19 @@ export const expandRowByName = (
   projectName,
   setExpandedRowsData,
   createRowData,
-  sortListBy
+  sortTableBy
 ) => {
   if (name) {
     const filteredItems = itemsList.filter(
-      artifact => artifact?.db_key === name || artifact.name === name
+      rowItem => rowItem?.db_key === name || rowItem.name === name
     )
 
     if (filteredItems.length) {
       setExpandedRowsData(state => ({
         ...state,
         [filteredItems[0]?.ui?.identifier || name]: {
-          content: (sortListBy ? sortListByDate(filteredItems, sortListBy, false) : filteredItems).map(artifact =>
-            createRowData(artifact, projectName)
+          content: (sortTableBy ? sortListByDate(filteredItems, sortTableBy, false) : filteredItems).map(rowItem =>
+            createRowData(rowItem, projectName)
           )
         },
         error: null,

@@ -51,7 +51,7 @@ import {
   datePickerPastOptions,
   getDatePickerFilterValue
 } from '../../utils/datePicker.util'
-import createFunctionsContent from '../../utils/createFunctionsContent'
+import createFunctionsRowData from '../../utils/createFunctionsRowData'
 import functionsActions from '../../actions/functions'
 import jobsActions from '../../actions/jobs'
 import { DANGER_BUTTON, LABEL_BUTTON } from 'igz-controls/constants'
@@ -179,7 +179,9 @@ const Functions = ({
         return {
           ...state,
           [funcIdentifier]: {
-            content: createFunctionsContent(content[func.name], params.projectName, false)
+            content: content[func.name].map(contentItem =>
+              createFunctionsRowData(contentItem, params.projectName, false)
+            )
           }
         }
       })
@@ -206,7 +208,9 @@ const Functions = ({
     } else {
       Object.entries(content).forEach(([key, value]) => {
         newSelectedRowData[key] = {
-          content: createFunctionsContent(value, params.projectName, false)
+          content: value.map(contentItem =>
+            createFunctionsRowData(contentItem, params.projectName, false)
+          )
         }
       })
     }
@@ -226,7 +230,7 @@ const Functions = ({
   )
 
   const tableContent = useMemo(
-    () => createFunctionsContent(latestItems, params.projectName, true),
+    () => latestItems.map(contentItem => createFunctionsRowData(contentItem, params.projectName, true)),
     [latestItems, params.projectName]
   )
 
@@ -508,7 +512,6 @@ const Functions = ({
     if (params.funcName || (params.hash && params.hash.includes('@'))) {
       const funcName = params.funcName || params.hash.split('@')[0]
       const dateFilterValues = getDatePickerFilterValue(datePickerPastOptions, ANY_TIME_DATE_OPTION)
-      const showUntagged = true
 
       dispatch(
         setFiltersValues({
@@ -523,7 +526,7 @@ const Functions = ({
         setModalFiltersValues({
           name: FUNCTION_FILTERS,
           value: {
-            [SHOW_UNTAGGED_FILTER]: showUntagged
+            [SHOW_UNTAGGED_FILTER]: true
           }
         })
       )
@@ -533,7 +536,7 @@ const Functions = ({
   useInitialTableFetch({
     fetchData,
     setExpandedRowsData: setSelectedRowData,
-    createRowData: createFunctionsContent,
+    createRowData: createFunctionsRowData,
     setInitialFilters,
     filters: {
       ...filtersStore[FILTER_MENU][FUNCTION_FILTERS],
