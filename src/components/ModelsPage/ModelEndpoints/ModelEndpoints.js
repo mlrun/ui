@@ -29,7 +29,6 @@ import ModelsPageTabs from '../ModelsPageTabs/ModelsPageTabs'
 import NoData from '../../../common/NoData/NoData'
 import Table from '../../Table/Table'
 
-import modelEndpointsActions from '../../../actions/modelEndpoints'
 import {
   GROUP_BY_NONE,
   MODEL_ENDPOINTS_TAB,
@@ -56,7 +55,6 @@ const ModelEndpoints = () => {
   const [selectedModelEndpoint, setSelectedModelEndpoint] = useState({})
   const frontendSpec = useSelector(store => store.appStore.frontendSpec)
   const artifactsStore = useSelector(store => store.artifactsStore)
-  const detailsStore = useSelector(store => store.detailsStore)
   const filtersStore = useSelector(store => store.filtersStore)
   const params = useParams()
   const navigate = useNavigate()
@@ -160,7 +158,6 @@ const ModelEndpoints = () => {
     return () => {
       setModelEndpoints([])
       dispatch(removeModelEndpoints())
-      dispatch(modelEndpointsActions.removeModelEndpoint())
       setSelectedModelEndpoint({})
       abortControllerRef.current.abort(REQUEST_CANCELED)
     }
@@ -221,7 +218,7 @@ const ModelEndpoints = () => {
 
   return (
     <>
-      {(detailsStore.loadingCounter > 0 || artifactsStore.modelEndpoints.loading) && <Loader />}
+      {(artifactsStore.modelEndpoints.modelEndpointLoading || artifactsStore.modelEndpoints.loading) && <Loader />}
       <div className="models" ref={modelEndpointsRef}>
         <div className="table-container">
           <div className="content__action-bar-wrapper">

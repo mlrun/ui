@@ -22,8 +22,8 @@ import { isEmpty } from 'lodash'
 import { LABELS_FILTER, MODEL_ENDPOINTS_TAB, MODELS_PAGE, SORT_BY } from '../../../constants'
 import { TERTIARY_BUTTON } from 'igz-controls/constants'
 import { filterSelectOptions } from '../../FilterMenu/filterMenu.settings'
-import modelEndpointsActions from '../../../actions/modelEndpoints'
 import { showErrorNotification } from '../../../utils/notifications.util'
+import { fetchModelEndpoint } from '../../../reducers/artifactsReducer'
 
 export const filters = [
   { type: LABELS_FILTER, label: 'Labels:' },
@@ -96,11 +96,14 @@ export const chooseOrFetchModelEndpoint = (dispatch, selectedModelEndpoint, mode
   if (!isEmpty(selectedModelEndpoint)) return Promise.resolve(selectedModelEndpoint)
 
   return dispatch(
-    modelEndpointsActions.fetchModelEndpointWithAnalysis(
-      modelEndpointMin.metadata.project,
-      modelEndpointMin.metadata.uid
+    fetchModelEndpoint(
+      {
+        project: modelEndpointMin.metadata.project,
+        uid: modelEndpointMin.metadata.uid
+      }
     )
   )
+    .unwrap()
     .catch(error => {
       showErrorNotification(dispatch, error, '', 'Failed to retrieve model endpoint data')
     })

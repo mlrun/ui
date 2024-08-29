@@ -22,9 +22,6 @@ import {
   FETCH_JOB_PODS_SUCCESS,
   FETCH_JOB_PODS_FAILURE,
   REMOVE_JOB_PODS,
-  FETCH_MODEL_ENDPOINT_WITH_ANALYSIS_BEGIN,
-  FETCH_MODEL_ENDPOINT_WITH_ANALYSIS_FAILURE,
-  FETCH_MODEL_ENDPOINT_WITH_ANALYSIS_SUCCESS,
   FETCH_MODEL_FEATURE_VECTOR_BEGIN,
   FETCH_MODEL_FEATURE_VECTOR_FAILURE,
   FETCH_MODEL_FEATURE_VECTOR_SUCCESS,
@@ -47,7 +44,6 @@ import {
   SET_FILTERS_WAS_HANDLED,
   SET_EDIT_MODE,
   FETCH_JOB_PODS_BEGIN,
-  REMOVE_MODEL_ENDPOINT,
   SET_SELECTED_METRICS_OPTIONS,
   DATE_FILTER_ANY_TIME,
   SET_DETAILS_DATES
@@ -69,9 +65,6 @@ const initialState = {
   iteration: '',
   iterationOptions: [],
   loadingCounter: 0,
-  modelEndpoint: {
-    data: {}
-  },
   modelFeatureVectorData: {},
   pods: {
     loading: true,
@@ -140,11 +133,6 @@ const detailsReducer = (state = initialState, { type, payload }) => {
           ...initialState.modelFeatureVectorData
         }
       }
-    case REMOVE_MODEL_ENDPOINT:
-      return {
-        ...state,
-        modelEndpoint: initialState.modelEndpoint
-      }
     case REMOVE_MODEL_FEATURE_VECTOR:
       return {
         ...state,
@@ -154,29 +142,6 @@ const detailsReducer = (state = initialState, { type, payload }) => {
       return {
         ...state,
         pods: initialState.pods
-      }
-    case FETCH_MODEL_ENDPOINT_WITH_ANALYSIS_BEGIN:
-      return {
-        ...state,
-        loadingCounter: state.loadingCounter + 1
-      }
-    case FETCH_MODEL_ENDPOINT_WITH_ANALYSIS_FAILURE:
-      return {
-        ...state,
-        error: payload,
-        loadingCounter: state.loadingCounter - 1,
-        modelEndpoint: {
-          data: {}
-        }
-      }
-    case FETCH_MODEL_ENDPOINT_WITH_ANALYSIS_SUCCESS:
-      return {
-        ...state,
-        error: null,
-        loadingCounter: state.loadingCounter - 1,
-        modelEndpoint: {
-          data: payload
-        }
       }
     case FETCH_ENDPOINT_METRICS_BEGIN:
       return {

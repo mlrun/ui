@@ -111,10 +111,7 @@ const DetailsInfo = React.forwardRef(
 
     const producer = useMemo(() => generateProducerDetailsInfo(selectedItem), [selectedItem])
 
-    const drift = useMemo(
-      () => generateDriftDetailsInfo(detailsStore.modelEndpoint.data),
-      [detailsStore.modelEndpoint.data]
-    )
+    const drift = useMemo(() => generateDriftDetailsInfo(selectedItem), [selectedItem])
 
     const configuration = useMemo(
       () => generateConfigurationDetailsInfo(selectedItem),
