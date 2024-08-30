@@ -37,7 +37,6 @@ import {
 import featureStoreActions from '../../actions/featureStore'
 import { FORBIDDEN_ERROR_STATUS_CODE } from 'igz-controls/constants'
 import { createFeaturesRowData } from '../../utils/createFeatureStoreContent'
-import { filters } from './addToFeatureVectorPage.util'
 import { getFeatureIdentifier } from '../../utils/getUniqueIdentifier'
 import { handleFeaturesResponse } from '../FeatureStore/Features/features.util'
 import { isEveryObjectValueEmpty } from '../../utils/isEveryObjectValueEmpty'
@@ -45,10 +44,10 @@ import { getFilterTagOptions, setFilters } from '../../reducers/filtersReducer'
 import { setNotification } from '../../reducers/notificationReducer'
 import { setTablePanelOpen } from '../../reducers/tableReducer'
 import { showErrorNotification } from '../../utils/notifications.util'
-import { useGetTagOptions } from '../../hooks/useGetTagOptions.hook'
 import { useGroupContent } from '../../hooks/groupContent.hook'
 import { useVirtualization } from '../../hooks/useVirtualization.hook'
 import { useYaml } from '../../hooks/yaml.hook'
+import { useInitialTableFetch } from '../../hooks/useInitialTableFetch.hook'
 
 import { ReactComponent as Yaml } from 'igz-controls/images/yaml.svg'
 
@@ -74,7 +73,6 @@ const AddToFeatureVectorPage = ({
   const tableStore = useSelector(store => store.tableStore)
   const filtersStore = useSelector(store => store.filtersStore)
   const dispatch = useDispatch()
-  const [urlTagOption] = useGetTagOptions(fetchFeatureSetsTags, filters)
 
   const navigateToFeatureVectorsScreen = useCallback(() => {
     navigate(`/projects/${params.projectName}/feature-store/feature-vectors`)
@@ -102,7 +100,7 @@ const AddToFeatureVectorPage = ({
         .catch(error => {
           const customErrorMsg =
             error.response?.status === FORBIDDEN_ERROR_STATUS_CODE
-              ? 'You are not permitted to create a feature vector'
+              ? 'You do not have permission to create a feature vector'
               : 'Feature vector creation failed'
 
           showErrorNotification(dispatch, error, '', customErrorMsg, () =>
@@ -181,11 +179,15 @@ const AddToFeatureVectorPage = ({
     [dispatch, fetchFeatures]
   )
 
-  const handleRefresh = filters => {
-    dispatch(
-      getFilterTagOptions({ fetchTags: fetchFeatureSetsTags, project: filters.project })
-    )
+  const fetchTags = useCallback(
+    (project = params.project) => {
+      return dispatch(getFilterTagOptions({ fetchTags: fetchFeatureSetsTags, project }))
+    },
+    [dispatch, fetchFeatureSetsTags, params.project]
+  )
 
+  const handleRefresh = filters => {
+    fetchTags(filters.project)
     setContent([])
     setSelectedRowData({})
 
@@ -267,15 +269,11 @@ const AddToFeatureVectorPage = ({
       : content.map(contentItem => createFeaturesRowData(contentItem, tableStore.isTablePanelOpen))
   }, [content, filtersStore.groupBy, latestItems, tableStore.isTablePanelOpen])
 
-  useEffect(() => {
-    if (urlTagOption) {
-      fetchData({
-        tag: urlTagOption,
-        iter: '',
-        project: params.projectName
-      })
-    }
-  }, [fetchData, params.projectName, urlTagOption])
+  useInitialTableFetch({
+    fetchData,
+    fetchTags,
+    filters: filtersStore
+  })
 
   useEffect(() => {
     return () => {

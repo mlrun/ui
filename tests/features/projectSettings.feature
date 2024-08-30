@@ -141,6 +141,7 @@ Feature: Project Settings page
         Then verify "Parameters_Table_Key_Input" on "Project_Settings_General_Tab" wizard should display warning "Input_Hint"."Input_Field_Require"
         Then verify "Parameters_Table_Value_Input" on "Project_Settings_General_Tab" wizard should display warning "Input_Hint"."Input_Field_Require"
         When click on "Parameters_Table_Discard_Row_Button" element on "Project_Settings_General_Tab" wizard
+        And wait load page
         When add new rows to "Parameters_Table" table on "Project_Settings_General_Tab" wizard using nontable inputs with notification pop-up
             | Parameters_Table_Key_Input | Parameters_Table_Value_Input | Parameters_Table_Add_Row_Button | Parameters_Table_Discard_Row_Button |
             |          key0              |           value0             |               yes               |                                     |
@@ -230,17 +231,17 @@ Feature: Project Settings page
             |    key2   |    value2   |
             |    key3   |    value3   |
             |    key4   |    value4   |
-        Then verify values in "Secrets_Table" table on "Projects_Settings_Secret_Tab" wizard
+        Then verify data in "Secrets_Table" table on "Projects_Settings_Secret_Tab" wizard
             | key  |
             | key1 |
             | key2 |
             | key3 |
             | key4 |
-        When click on "remove_btn" in "Secrets_Table" table on "Projects_Settings_Secret_Tab" wizard
+        When click on data "remove_btn" in "Secrets_Table" table on "Projects_Settings_Secret_Tab" wizard
             | key  |
             | key1 |
             | key4 |
-        Then verify values in "Secrets_Table" table on "Projects_Settings_Secret_Tab" wizard
+        Then verify data in "Secrets_Table" table on "Projects_Settings_Secret_Tab" wizard
             | key  |
             | key2 |
             | key3 |

@@ -112,7 +112,7 @@ const FeaturesTablePanel = ({
           const customErrorMsg =
             tableStore.features.isNewFeatureVector &&
             error.response.status === FORBIDDEN_ERROR_STATUS_CODE
-              ? 'You are not permitted to create a feature vector'
+              ? 'You do not have permission to create a feature vector'
               : tableStore.features.isNewFeatureVector
                 ? 'Feature vector creation failed'
                 : 'Failed to add features'

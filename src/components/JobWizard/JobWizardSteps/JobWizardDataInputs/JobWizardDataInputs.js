@@ -22,7 +22,7 @@ import PropTypes from 'prop-types'
 
 import FormDataInputsTable from '../../../../elements/FormDataInputsTable/FormDataInputsTable'
 
-import { DATA_INPUTS_STEP } from '../../../../constants'
+import { DATA_INPUTS_STEP, RUN_DETAILS_STEP } from '../../../../constants'
 
 const JobWizardDataInputs = ({ formState, params, stepIsActive = false }) => {
   return (
@@ -36,7 +36,7 @@ const JobWizardDataInputs = ({ formState, params, stepIsActive = false }) => {
           fieldsPath={`${DATA_INPUTS_STEP}.dataInputsTable`}
           formState={formState}
           params={params}
-          hasKwargs={formState.values.runDetails.handlerData?.has_kwargs}
+          hasKwargs={formState.values[RUN_DETAILS_STEP]?.handlerData?.has_kwargs}
         />
       </div>
     </div>

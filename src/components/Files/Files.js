@@ -40,7 +40,6 @@ import {
 import {
   checkForSelectedFile,
   fetchFilesRowData,
-  filters,
   generateActionsMenu,
   generatePageData,
   handleApplyDetailsChanges,
@@ -61,10 +60,9 @@ import { isDetailsTabExists } from '../../utils/isDetailsTabExists'
 import { openPopUp } from 'igz-controls/utils/common.util'
 import { setFullSelectedArtifact } from '../../utils/artifacts.util'
 import { setNotification } from '../../reducers/notificationReducer'
-import { useGetTagOptions } from '../../hooks/useGetTagOptions.hook'
 import { useGroupContent } from '../../hooks/groupContent.hook'
 import { useSortTable } from '../../hooks/useSortTable.hook'
-import { useInitialArtifactsFetch } from '../../hooks/artifacts.hook'
+import { useInitialTableFetch } from '../../hooks/useInitialTableFetch.hook'
 import { useVirtualization } from '../../hooks/useVirtualization.hook'
 import { useYaml } from '../../hooks/yaml.hook'
 
@@ -79,12 +77,6 @@ const Files = () => {
   const [requestErrorMessage, setRequestErrorMessage] = useState('')
   const [maxArtifactsErrorIsShown, setMaxArtifactsErrorIsShown] = useState(false)
   const [convertedYaml, toggleConvertedYaml] = useYaml('')
-  const [urlTagOption, tagAbortControllerRef] = useGetTagOptions(
-    fetchArtifactTags,
-    filters,
-    ARTIFACT_OTHER_TYPE,
-    FILES_FILTERS
-  )
   const artifactsStore = useSelector(store => store.artifactsStore)
   const filtersStore = useSelector(store => store.filtersStore)
   const frontendSpec = useSelector(store => store.appStore.frontendSpec)
@@ -95,6 +87,7 @@ const Files = () => {
   const viewMode = getViewMode(window.location.search)
 
   const abortControllerRef = useRef(new AbortController())
+  const tagAbortControllerRef = useRef(new AbortController())
   const filesRef = useRef(null)
 
   const pageData = useMemo(() => generatePageData(viewMode), [viewMode])
@@ -154,29 +147,32 @@ const Files = () => {
     [dispatch, params.projectName]
   )
 
+  const fetchTags = useCallback(() => {
+    tagAbortControllerRef.current = new AbortController()
+
+    return dispatch(
+      getFilterTagOptions({
+        dispatch,
+        fetchTags: fetchArtifactTags,
+        project: params.projectName,
+        category: ARTIFACT_OTHER_TYPE,
+        config: {
+          signal: tagAbortControllerRef.current.signal
+        }
+      })
+    )
+  }, [dispatch, params.projectName])
+
   const handleRefresh = useCallback(
     filters => {
-      dispatch(
-        getFilterTagOptions({
-          dispatch,
-          fetchTags: fetchArtifactTags,
-          project: params.projectName,
-          category: ARTIFACT_OTHER_TYPE,
-          config: {
-            ui: {
-              controller: tagAbortControllerRef.current,
-              setRequestErrorMessage
-            }
-          }
-        })
-      )
+      fetchTags()
       setSelectedRowData({})
       setSelectedFileMin({})
       setFiles([])
 
       return fetchData(filters)
     },
-    [dispatch, fetchData, params.projectName, tagAbortControllerRef]
+    [fetchData, fetchTags]
   )
 
   const handleAddTag = useCallback(
@@ -313,12 +309,15 @@ const Files = () => {
     handleRefresh(filesFilters)
   }
 
-  useInitialArtifactsFetch(
+  useInitialTableFetch({
+    createRowData: createFilesRowData,
     fetchData,
-    urlTagOption,
-    setSelectedRowData,
-    createFilesRowData
-  )
+    fetchTags,
+    filterMenuName: FILES_FILTERS,
+    filters: filesFilters,
+    setExpandedRowsData: setSelectedRowData,
+    sortExpandedRowsDataBy: 'updated'
+  })
 
   useEffect(() => {
     if (params.name && params.tag && pageData.details.menu.length > 0) {
@@ -418,7 +417,6 @@ const Files = () => {
       tableContent={sortedTableContent}
       tableHeaders={sortedTableHeaders}
       toggleConvertedYaml={toggleConvertedYaml}
-      urlTagOption={urlTagOption}
       viewMode={viewMode}
       virtualizationConfig={virtualizationConfig}
     />

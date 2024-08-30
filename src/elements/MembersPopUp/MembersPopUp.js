@@ -492,7 +492,7 @@ const MembersPopUp = ({ changeMembersCallback, membersDispatch, membersState }) 
                     }}
                     header="Are you sure?"
                     isOpen={deleteMemberId === member.id}
-                    message="Removing a member will provoke all access."
+                    message="Removing a member will revoke all access."
                   />
                 )}
               </div>

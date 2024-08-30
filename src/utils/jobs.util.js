@@ -172,3 +172,9 @@ export const handleDeleteJob = (deleteJob, job, refreshJobs, filters, dispatch) 
       showErrorNotification(dispatch, error, 'Deleting job failed', '', () => handleDeleteJob(job))
     })
 }
+
+export const convertTriggerToCrontab = trigger => {
+  return !isEmpty(trigger)
+    ? `${trigger.minute ?? '*/10'} ${trigger.hour ?? '*'} ${trigger.day ?? '*'} ${trigger.month ?? '*'} ${trigger.day_of_week ?? '*'}`
+    : ''
+}

@@ -215,7 +215,7 @@ ProjectsView.propTypes = {
   handleCreateProject: PropTypes.func.isRequired,
   handleSearchOnFocus: PropTypes.func.isRequired,
   handleSelectSortOption: PropTypes.func.isRequired,
-  projectsRequestErrorMessage: PropTypes.func.isRequired,
+  projectsRequestErrorMessage: PropTypes.string.isRequired,
   refreshProjects: PropTypes.func.isRequired,
   removeNewProjectError: PropTypes.func.isRequired,
   selectedProjectsState: PropTypes.string.isRequired,

@@ -34,7 +34,7 @@
         flex-wrap: wrap;
         align-items: flex-start;
         justify-content: flex-end;
-        margin: 0 0 26px 0;
+        margin: 0 0 1em 0;
 
         &-wrapper {
           position: sticky;
@@ -50,6 +50,7 @@
         }
 
         &__status {
+          color: $topaz;
           display: flex;
           flex-flow: row wrap;
           align-items: center;
@@ -75,13 +76,12 @@
         }
 
         &__data {
-          flex: 0 1 100%;
+          flex: 1 0 0;
           min-width: 250px;
-          max-width: calc(100% - 900px);
           margin-right: auto;
 
           h3 {
-            margin: 0 0 10px 0;
+            margin: 0 0 5px 0;
             font-size: 24px;
             line-height: 28px;
           }

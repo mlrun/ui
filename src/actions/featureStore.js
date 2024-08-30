@@ -94,9 +94,9 @@ const featureStoreActions = {
       .catch(error => {
         const message =
           error.response.status === CONFLICT_ERROR_STATUS_CODE
-            ? 'Cannot create the feature set: the name is already in use.'
+            ? 'Cannot create the feature set: the name is already in use'
             : error.response.status === FORBIDDEN_ERROR_STATUS_CODE
-              ? 'You are not permitted to create a feature set.'
+              ? 'You do not have permission to create a new feature set'
               : error.message
 
         showErrorNotification(dispatch, error, '', message)
@@ -341,13 +341,17 @@ const featureStoreActions = {
     payload: features
   }),
   fetchFeatureSetsTags:
-    ({ project }) =>
-    () =>
-      featureStoreApi.fetchFeatureSetsTags(project),
+    ({ project, config }) =>
+    dispatch =>
+      featureStoreApi.fetchFeatureSetsTags(project, config).catch(error => {
+        largeResponseCatchHandler(error, 'Failed to fetch tags', dispatch)
+      }),
   fetchFeatureVectorsTags:
-    ({ project }) =>
-    () =>
-      featureStoreApi.fetchFeatureVectorsTags(project),
+    ({ project, config }) =>
+    dispatch =>
+      featureStoreApi.fetchFeatureVectorsTags(project, config).catch(error => {
+        largeResponseCatchHandler(error, 'Failed to fetch tags', dispatch)
+      }),
   removeEntity: entities => ({
     type: REMOVE_ENTITY,
     payload: entities

@@ -338,7 +338,7 @@ const JobWizardRunDetails = ({
         {get(formState.values, `${RUN_DETAILS_STEP}.handlerData.doc`, '') && (
           <>
             <div className="form-row form-table-title">Description</div>
-            <div className="form-row">{formState.values[RUN_DETAILS_STEP].handlerData.doc}</div>
+            <div className="form-row">{formState.values[RUN_DETAILS_STEP]?.handlerData?.doc}</div>
           </>
         )}
         {get(formState.values, outputsPath, []).length > 0 && (

@@ -87,12 +87,14 @@ import {
 } from '../constants'
 import {
   CONFLICT_ERROR_STATUS_CODE,
-  INTERNAL_SERVER_ERROR_STATUS_CODE
+  INTERNAL_SERVER_ERROR_STATUS_CODE,
+  FORBIDDEN_ERROR_STATUS_CODE
 } from 'igz-controls/constants'
 
 import { parseSummaryData } from '../utils/parseSummaryData'
 import { showErrorNotification } from '../utils/notifications.util'
 import { mlrunUnhealthyErrors } from '../components/ProjectsPage/projects.util'
+import { parseProjects } from '../utils/parseProjects'
 
 let firstServerErrorTimestamp = null
 
@@ -119,15 +121,17 @@ const projectsAction = {
       .then(result => {
         dispatch(projectsAction.createProjectSuccess())
 
-        return result
+        return result.data
       })
       .catch(error => {
         const message =
-          error.response.status === CONFLICT_ERROR_STATUS_CODE
-            ? `A project named "${postData.metadata.name}" already exists`
-            : error.response.status === INTERNAL_SERVER_ERROR_STATUS_CODE
-              ? 'The system already has the maximum number of projects. An existing project must be deleted before you can create another.'
-              : error.message
+          error.response?.status === CONFLICT_ERROR_STATUS_CODE
+            ? `A project named "${postData.metadata.name}" already exists.`
+            : error.response?.status === FORBIDDEN_ERROR_STATUS_CODE
+              ? 'You don’t have permission to create a project.'
+              : error.response?.status === INTERNAL_SERVER_ERROR_STATUS_CODE
+                ? 'The system already has the maximum number of projects. An existing project must be deleted before you can create another.'
+                : error.message
 
         dispatch(projectsAction.createProjectFailure(message))
       })
@@ -481,34 +485,32 @@ const projectsAction = {
   }),
   fetchProjects:
     (params, setRequestErrorMessage = () => {}) =>
-    dispatch => {
-      dispatch(projectsAction.fetchProjectsBegin())
-      setRequestErrorMessage('')
+      dispatch => {
+        dispatch(projectsAction.fetchProjectsBegin())
+        setRequestErrorMessage('')
 
-      return projectsApi
-        .getProjects(params)
-        .then(response => {
-          dispatch(projectsAction.fetchProjectsSuccess(response.data.projects))
-          dispatch(
-            projectsAction.fetchProjectsNamesSuccess(
-              response.data.projects.map(project => project.metadata.name)
+        return projectsApi
+          .getProjects(params)
+          .then(response => {
+            const parsedProjects = parseProjects(response.data.projects)
+
+            dispatch(projectsAction.fetchProjectsSuccess(parsedProjects))
+            dispatch(projectsAction.fetchProjectsNamesSuccess(parsedProjects.map(project => project.metadata.name)))
+
+            return parsedProjects
+          })
+          .catch(error => {
+            dispatch(projectsAction.fetchProjectsFailure(error), dispatch)
+            showErrorNotification(
+              dispatch,
+              error,
+              'Failed to fetch projects',
+              null,
+              null,
+              setRequestErrorMessage
             )
-          )
-
-          return response.data.projects
-        })
-        .catch(error => {
-          dispatch(projectsAction.fetchProjectsFailure(error), dispatch)
-          showErrorNotification(
-            dispatch,
-            error,
-            'Failed to fetch projects',
-            null,
-            null,
-            setRequestErrorMessage
-          )
-        })
-    },
+          })
+      },
   fetchProjectsBegin: () => ({ type: FETCH_PROJECTS_BEGIN }),
   fetchProjectsFailure: error => ({
     type: FETCH_PROJECTS_FAILURE,

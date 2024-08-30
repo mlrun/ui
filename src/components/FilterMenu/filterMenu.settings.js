@@ -34,7 +34,11 @@ import {
   FILTER_ALL_ITEMS,
   STATUS_FILTER,
   TAG_FILTER_ALL_ITEMS,
-  TAG_FILTER_LATEST
+  TAG_FILTER_LATEST,
+  JOB_KIND_NUCLIO,
+  JOB_KIND_SERVING,
+  JOB_KIND_APPLICATION,
+  JOB_KIND_REMOTE
 } from '../../constants'
 
 export const jobsStatuses = [
@@ -71,13 +75,16 @@ export const generateStatusFilter = useFailedStatus => {
 export const generateTypeFilter = () => {
   return [
     { label: 'All', id: FILTER_ALL_ITEMS },
-    { label: 'Local', id: JOB_KIND_LOCAL },
+    { label: 'Job', id: JOB_KIND_JOB },
+    { label: 'Nuclio', id: `${JOB_KIND_REMOTE},${JOB_KIND_NUCLIO}` },
+    { label: 'Application', id: JOB_KIND_APPLICATION },
+    { label: 'Serving', id: JOB_KIND_SERVING },
+    { label: 'Spark', id: JOB_KIND_SPARK },
+    { label: 'Horovod', id: JOB_KIND_MPIJOB },
     { label: 'Dask', id: JOB_KIND_DASK },
     { label: 'Databricks', id: JOB_KIND_DATABRICKS },
+    { label: 'Local', id: JOB_KIND_LOCAL },
     { label: 'Handler', id: JOB_KIND_HANDLER },
-    { label: 'Job', id: JOB_KIND_JOB },
-    { label: 'Horovod', id: JOB_KIND_MPIJOB },
-    { label: 'Spark', id: JOB_KIND_SPARK }
   ]
 }
 
