@@ -24,29 +24,39 @@ import classnames from 'classnames'
 import CopyToClipboard from '../../common/CopyToClipboard/CopyToClipboard'
 import { RoundedIcon, TextTooltipTemplate, Tooltip } from 'igz-controls/components'
 
-import { DATASETS_TAB, FILES_TAB, MODELS_TAB, TAG_FILTER_LATEST } from '../../constants'
+import {
+  DATASETS_TAB,
+  FEATURE_STORE_PAGE,
+  FEATURE_VECTORS_TAB,
+  FILES_TAB,
+  MODELS_TAB,
+  TAG_FILTER_LATEST
+} from '../../constants'
 
 import { ReactComponent as DetailsIcon } from 'igz-controls/images/view-details.svg'
 
-export const generateArtifactLink = (artifact, projectName) => {
-  const artifactLinks = {
+export const featureVectorsKind = 'feature-vectors'
+
+export const generateInputResourceLink = (input, projectName) => {
+  const inputsLinks = {
     model: `/projects/${projectName}/models/${MODELS_TAB}/${
-      artifact.db_key || artifact.key
-    }/${TAG_FILTER_LATEST}${artifact.iter ? `/${artifact.iter}` : ''}/overview`,
+      input.db_key || input.key
+    }/${input.tag ?? TAG_FILTER_LATEST}${input.iter ? `/${input.iter}` : ''}/overview`,
     dataset: `/projects/${projectName}/${DATASETS_TAB}/${
-      artifact.db_key || artifact.key
-    }/${TAG_FILTER_LATEST}${artifact.iter ? `/${artifact.iter}` : ''}/overview`,
-    files: `/projects/${projectName}/${FILES_TAB}/${artifact.db_key || artifact.key}/${TAG_FILTER_LATEST}${
-      artifact.iter ? `/${artifact.iter}` : ''
-    }/overview`
+      input.db_key || input.key
+    }/${input.tag ?? TAG_FILTER_LATEST}${input.iter ? `/${input.iter}` : ''}/overview`,
+    files: `/projects/${projectName}/${FILES_TAB}/${input.db_key || input.key}/${input.tag ?? TAG_FILTER_LATEST}${
+      input.iter ? `/${input.iter}` : ''
+    }/overview`,
+    'feature-vectors': `/projects/${projectName}/${FEATURE_STORE_PAGE.toLowerCase()}/${FEATURE_VECTORS_TAB}/${input.name}/${input.tag ?? TAG_FILTER_LATEST}/overview`
   }
 
-  return artifact ? artifactLinks[artifact.kind] ?? artifactLinks.files : ''
+  return input ? inputsLinks[input.kind] ?? inputsLinks.files : ''
 }
 
-export const generateInputsTabContent = (artifacts, showArtifact) => {
-  return artifacts.map(artifact => {
-    const keyClassNames = classnames(artifact.ui.isPreviewable && 'link')
+export const generateInputsTabContent = (inputs, showArtifact) => {
+  return inputs.map(input => {
+    const keyClassNames = classnames(input.ui.isPreviewable && 'link')
 
     return [
       {
@@ -54,22 +64,22 @@ export const generateInputsTabContent = (artifacts, showArtifact) => {
         headerLabel: 'Name',
         className: 'table-cell-3',
         template: (
-          <Tooltip template={<TextTooltipTemplate text={artifact.ui.inputName} />}>
+          <Tooltip template={<TextTooltipTemplate text={input.ui.inputName} />}>
             <span
               className={keyClassNames}
-              onClick={() => artifact.ui.isPreviewable && showArtifact(artifact.uid)}
+              onClick={() => input.ui.isPreviewable && showArtifact(input.uid)}
             >
-              {artifact.ui.inputName}
+              {input.ui.inputName}
             </span>
           </Tooltip>
         ),
-        artifact
+        artifact: input.ui.isPreviewable && input 
       },
       {
         headerId: 'path',
         headerLabel: 'Path',
         className: 'table-cell-8',
-        value: artifact.ui.inputPath
+        value: input.ui.inputPath
       },
       {
         headerId: 'actions',
@@ -77,14 +87,14 @@ export const generateInputsTabContent = (artifacts, showArtifact) => {
         className: 'actions-cell',
         template: (
           <>
-            <CopyToClipboard textToCopy={artifact.ui.inputPath} tooltipText="Copy path" />
+            <CopyToClipboard textToCopy={input.ui.inputPath} tooltipText="Copy path" />
             <RoundedIcon
               tooltipText="Show Details"
               id="show-details"
-              disabled={!artifact.ui.isPreviewable}
+              disabled={!input.ui.isShowDetailsActive}
             >
-              {artifact.ui.isPreviewable ? (
-                <Link target="_blank" to={artifact.ui.artifactLink}>
+              {input.ui.isShowDetailsActive ? (
+                <Link target="_blank" to={input.ui.inputResourceLink}>
                   <DetailsIcon />
                 </Link>
               ) : (

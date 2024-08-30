@@ -37,7 +37,8 @@ import {
 import {
   generateActionsMenu,
   generatePageData,
-  featureVectorsActionCreator
+  featureVectorsActionCreator,
+  searchFeatureVectorItem
 } from './featureVectors.util'
 import { DANGER_BUTTON, LABEL_BUTTON } from 'igz-controls/constants'
 import { checkTabIsValid, handleApplyDetailsChanges } from '../featureStore.util'
@@ -394,12 +395,7 @@ const FeatureVectors = ({
     const content = cloneDeep(featureStore.featureVectors?.allData)
 
     if (params.name && content.length !== 0) {
-      const selectedItem = content.find(contentItem => {
-        return (
-          contentItem.name === params.name &&
-          (contentItem.tag === params.tag || contentItem.uid === params.tag)
-        )
-      })
+      const selectedItem = searchFeatureVectorItem(content, params.name, params.tag)
 
       if (!selectedItem) {
         navigate(`/projects/${params.projectName}/feature-store/${FEATURE_VECTORS_TAB}`, {

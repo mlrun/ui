@@ -30,7 +30,7 @@ import {
 
 const MAX_ARTIFACTS_LIMIT = 1000
 
-const fetchArtifacts = (project, filters, config = {}, withLatestTag) => {
+const fetchArtifacts = (project, filters, config = {}, withLatestTag, useExactName) => {
   const params = {
     limit: MAX_ARTIFACTS_LIMIT
   }
@@ -48,7 +48,7 @@ const fetchArtifacts = (project, filters, config = {}, withLatestTag) => {
   }
 
   if (filters?.name) {
-    params.name = `~${filters.name}`
+    params.name = `${useExactName ? '' : '~'}${filters.name}`
   }
 
   return mainHttpClientV2.get(`/projects/${project}/artifacts`, {
@@ -140,8 +140,8 @@ const artifactsApi = {
 
     return mainHttpClientV2.get(`/projects/${projectName}/artifacts/${artifactName}`, newConfig)
   },
-  getArtifacts: (project, filters, config) => {
-    return fetchArtifacts(project, filters, config)
+  getArtifacts: (project, filters, config, useExactName) => {
+    return fetchArtifacts(project, filters, config, false, useExactName)
   },
   getExpandedDataSet: (project, dataSet, iter, tag) => {
     return fetchArtifacts(
