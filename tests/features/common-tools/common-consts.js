@@ -436,6 +436,8 @@ module.exports = {
     New_Job_Volumes:
       'Volumes that define data paths and the required information for accessing the data from the function',
     Members_Hint: 'Some of the members might be user groups',
+    Metric_Type_Result: 'Result',
+    Metric_Type_Metric: 'Metric',
     Overview_Hash: 'Represents hash of the data. when the data changes the hash would change',
     Overview_UID:
       'Unique identifier representing the job or the workflow that generated the artifact',
@@ -458,7 +460,8 @@ module.exports = {
   },
   Messages: {
     How_To_Create:
-    'See how to create a serving function in https://docs.mlrun.org/en/stable/serving/built-in-model-serving.html and https://docs.mlrun.org/en/stable/tutorials/03-model-serving.html'
+    'See how to create a serving function in https://docs.mlrun.org/en/stable/serving/built-in-model-serving.html and https://docs.mlrun.org/en/stable/tutorials/03-model-serving.html',
+    Metrics_Empty_Select_Message: 'Choose metrics to view endpoint\’s data'
   },
   Jobs_Monitoring: {
     Tab_List: ['Jobs', 'Workflows', 'Scheduled']
@@ -553,6 +556,13 @@ module.exports = {
       'Next week',
       'Next month',
       'Next year',
+      'Custom range'
+    ],
+    Metrics_Date_Picker_Filter_Options: [
+      'Past hour',
+      'Past 24 hours',
+      'Past week',
+      'Past month',
       'Custom range'
     ],
     Parameters_Table_Type_Options: ['str', 'int', 'float', 'bool', 'list', 'map'],

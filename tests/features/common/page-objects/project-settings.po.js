@@ -109,7 +109,7 @@ const secretsTable = {
     add_row_btn: '[data-testid="secrets-add-btn"]',
     save_row_btn: '[data-testid="apply-btn"]',
     row: {
-      root: '.form-table__row:not(.table-row__header)',
+      root: '.form-table__row:not(.form-table__header-row)',
       fields: {
         key: '.form-table__cell_1:nth-of-type(1)',
         value: '.table-cell__value',

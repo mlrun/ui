@@ -92,6 +92,18 @@ const action = {
     const hintText = await hint.getText()
     expect(hintText).equal(text)
   },
+  checkHintTextWithHover:async function (driver, inputGroup, hintComponent, text) {
+    const hintButton = await driver.findElement(inputGroup.hintButton)
+    const coordinates = await hintButton.getRect()
+    const actions = driver.actions({ async: true })
+    await actions
+      .move({ x: parseInt(coordinates.x), y: parseInt(coordinates.y) })
+      .perform()
+    await driver.sleep(250)
+    const hint = await driver.findElement(hintComponent)
+    const hintText = await hint.getText()
+    expect(hintText).equal(text)
+  },
   checkInputAccordingHintText: async function (
     driver,
     attach,
