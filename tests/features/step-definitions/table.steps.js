@@ -88,6 +88,20 @@ Then(
   }
 )
 
+When(
+  'scroll to the element with {string} value in {string} column in {string} table on {string} wizard',
+  async function (value, columnName, table, wizard) {
+    const arr = await findRowIndexesByColumnValue(
+      this.driver,
+      pageObjects[wizard][table],
+      columnName,
+      value
+    )
+    const indx = arr[0]
+    await scrollToElement(this.driver, pageObjects[wizard][table]['rowRoot'](indx))
+  }
+)
+
 Then(
   'open action menu on {string} wizard in {string} table at row with {string} value in {string} column',
   async function (wizard, table, value, column) {
@@ -441,6 +455,7 @@ When('fill data to {string} table on {string} wizard', async function (table, wi
     await this.driver.sleep(100)
   }
 })
+
 When(
   'add rows to {string} key-value table on {string} wizard',
   async function (table, wizard, dataTable) {
@@ -448,17 +463,17 @@ When(
     const rows = dataTable.rows()
     for (const row_indx in rows) {
       await clickOnComponent(this.driver, pageObjects[wizard][table]['add_row_btn'])
-      await this.driver.sleep(100)
+      await this.driver.sleep(500)
       for (const i in inputFields) {
         await typeIntoInputField(
           this.driver,
-          pageObjects[wizard][table]['tableFields'][inputFields[i]](3),
+          pageObjects[wizard][table]['tableColumns'][inputFields[i]],
           rows[row_indx][i]
         )
       }
       await clickOnComponent(this.driver, pageObjects[wizard][table]['save_row_btn'])
       await clickNearComponent(this.driver, pageObjects[wizard][table]['root'])
-      await this.driver.sleep(100)
+      await this.driver.sleep(500)
     }
   }
 )
@@ -959,6 +974,32 @@ When(
       await clickOnComponent(
         this.driver,
         pageObjects[wizardName][tableName]['tableFields'][field](indx)
+      )
+    }
+  }
+)
+
+When(
+  'click on data {string} in {string} table on {string} wizard',
+  async function (field, tableName, wizardName, dataTable) {
+    const column = dataTable['rawTable'][0][0]
+    const rows = dataTable.rows()
+    for (const row_indx in rows) {
+      const arr = await findRowIndexesByColumnValue(
+        this.driver,
+        pageObjects[wizardName][tableName],
+        column,
+        rows[row_indx][0]
+      )
+      const indx = arr[0] - pageObjects[wizardName][tableName].offset
+      await hoverComponent(
+        this.driver,
+        pageObjects[wizardName][tableName]['tableFields'][field](indx + 1),
+        false
+      )
+      await clickOnComponent(
+        this.driver,
+        pageObjects[wizardName][tableName]['tableFields'][field](indx + 1)
       )
     }
   }
@@ -1600,13 +1641,13 @@ When(
 
         if (pageComponents[indx].includes('Input')) {
           await typeValue(this.driver, pageObjects[wizardName][pageComponents[indx]], row[indx])
-          await this.driver.sleep(250)
+          await this.driver.sleep(500)
         }
 
         if (pageComponents[indx].includes('Button')) {
           if (row[indx] === 'yes') {
             await clickOnComponent(this.driver, pageObjects[wizardName][pageComponents[indx]])
-            await this.driver.sleep(250)
+            await this.driver.sleep(500)
           }
         }
 
@@ -1615,7 +1656,7 @@ When(
             await this.driver.sleep(500)
             await waiteUntilComponent(this.driver, pageObjects['Notification_Popup']['Notification_Pop_Up_Cross_Close_Button'])
             await clickOnComponent(this.driver, pageObjects['Notification_Popup']['Notification_Pop_Up_Cross_Close_Button'])
-            await this.driver.sleep(250)
+            await this.driver.sleep(500)
           }
         }
       }

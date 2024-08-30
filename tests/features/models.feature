@@ -135,6 +135,7 @@ Feature: Models Page
     Then click on cell with row index 1 in "expand_btn" column in "Models_Table" table on "Models" wizard
     And wait load page
     Then click on cell with row index 1 in "name" column in "Models_Table" table on "Models" wizard
+    And wait load page
     Then verify "Header" element visibility on "Models_Info_Pane" wizard
     Then click on "Table_FilterBy_Button" element on "Models" wizard
     Then check "Show_Iterations_Checkbox" element on "FilterBy_Popup" wizard
@@ -225,10 +226,8 @@ Feature: Models Page
     And verify "No_Data_Message" element visibility on "commonPagesHeader" wizard
 
   @MLM
-  @FAILED_TODO
   @smoke
   #TODO: Register_Model_Button hidden from 1.4.0, running on demo mode
-  #TODO: bug - ML-6457 [Modal wizards] The "Are you sure?" pop-up does not appear on the browser's back navigation - failed
   Scenario: MLM009 - Check all mandatory components on Register Model Popup
     Given open url
     And turn on demo mode
@@ -340,6 +339,7 @@ Feature: Models Page
     Then click on "Register_Button" element on "Register_Model_Popup" wizard
     And wait load page
     Then click on cell with value "automation-model" in "name" column in "Models_Table" table on "Models" wizard
+    And wait load page
     Then "Header" element on "Models_Info_Pane" should contains "automation-model" value
     Then check "automation-model" value in "key" column in "Overview_Table" table on "Models_Info_Pane" wizard
     Then check "latest" value in "tag" column in "Overview_Table" table on "Models_Info_Pane" wizard
@@ -414,6 +414,7 @@ Feature: Models Page
     And hover "MLRun_Logo" component on "commonPagesHeader" wizard
     And wait load page
     When click on cell with row index 1 in "name" column in "Models_Table" table on "Models" wizard
+    And wait load page
     Then verify "Action_Menu" element visibility on "Models_Info_Pane" wizard
     Then select "View YAML" option in action menu on "Models_Info_Pane" wizard
     Then verify if "View_YAML" popup dialog appears
@@ -433,6 +434,7 @@ Feature: Models Page
     And hover "MLRun_Logo" component on "commonPagesHeader" wizard
     And wait load page
     When click on cell with row index 2 in "name" column in "Models_Table" table on "Models" wizard
+    And wait load page
     Then verify "Info_Pane_Tab_Selector" element visibility on "Models_Info_Pane" wizard
     Then verify "Info_Pane_Tab_Selector" on "Models_Info_Pane" wizard should contains "Models_Info_Pane"."Tab_List_Extended"
     Then verify "Overview" tab is active in "Info_Pane_Tab_Selector" on "Models_Info_Pane" wizard
@@ -486,6 +488,7 @@ Feature: Models Page
     Then verify action menu on "Models" wizard in "Models_Table" table with "current-state_model" value in "name" column should contains "Common_Lists"."Action_Menu_List"
     Then verify that in action menu on "Models" wizard in "Models_Table" table with "current-state_model" value in "name" column "Delete" option is enabled
     When click on cell with row index 1 in "name" column in "Models_Table" table on "Models" wizard
+    And wait load page
     Then check "latest" value in "tag" column in "Overview_Table" table on "Models_Info_Pane" wizard
     Then verify "Action_Menu" element visibility on "Models_Info_Pane" wizard
     Then verify "Action_Menu" dropdown element on "Models_Info_Pane" wizard should contains "Common_Lists"."Action_Menu_List"
@@ -504,13 +507,15 @@ Feature: Models Page
     Then verify action menu on "Models" wizard in "Models_Table" table with "current-state_model" value in "name" column should contains "Common_Lists"."Action_Menu_List_Expanded"
     Then verify that in action menu on "Models" wizard in "Models_Table" table with "current-state_model" value in "name" column "Delete" option is disabled
     When click on cell with row index 1 in "name" column in "Models_Table" table on "Models" wizard
+    And wait load page
     Then check "Click to add" value in "tag" column in "Overview_Table" table on "Models_Info_Pane" wizard
     Then verify "Action_Menu" dropdown element on "Models_Info_Pane" wizard should contains "Common_Lists"."Action_Menu_List"
-    Then check that "Delete" option in action menu on "Models_Info_Pane" wizard is disabled
+    Then check that "Delete" option in action menu on "Models_Info_Pane" wizard is enabled
 
   @MLM
   @passive
   @smoke
+  # @uniqueTag
   Scenario: MLM025 - Verify Preview, Deploy option, view Preview, Deploy action, Preview tab
       Given open url
       And wait load page
@@ -920,6 +925,7 @@ Feature: Models Page
     Then verify redirection from "projects/default/models/models/model_default/latest/0/INVALID" to "projects/default/models/models/model_default/latest/0/overview"
     Then verify redirection from "projects/default/models/models/model_default/latest/INVALID/overview" to "projects/default/models/models"
     When click on cell with row index 1 in "name" column in "Models_Table" table on "Models" wizard
+    And wait load page
     Then select "Preview" tab in "Info_Pane_Tab_Selector" on "Models_Info_Pane" wizard
     And wait load page
     When select "Model Endpoints" tab in "Models_Tab_Selector" on "Models" wizard
@@ -930,6 +936,8 @@ Feature: Models Page
     Then click on cell with row index 1 in "name" column in "Model_Endpoints_Table" table on "Model_Endpoints" wizard
     Then verify redirection from "projects/default/models/model-endpoints/RandomForestClassifier/a7c95783e6a726a1a233e581ea898ba33fa7e342/INVALID" to "projects/default/models/model-endpoints/RandomForestClassifier/a7c95783e6a726a1a233e581ea898ba33fa7e342/overview"
     Then select "Features Analysis" tab in "Info_Pane_Tab_Selector" on "Models_Info_Pane" wizard
+    Then verify redirection from "projects/default/models/model-endpoints/RandomForestClassifier/a7c95783e6a726a1a233e581ea898ba33fa7e342/INVALID" to "projects/default/models/model-endpoints/RandomForestClassifier/a7c95783e6a726a1a233e581ea898ba33fa7e342/overview"
+    Then select "Metrics" tab in "Info_Pane_Tab_Selector" on "Models_Info_Pane" wizard
     Then verify redirection from "projects/default/models/model-endpoints/RandomForestClassifier/a7c95783e6a726a1a233e581ea898ba33fa7e342/INVALID" to "projects/default/models/model-endpoints/RandomForestClassifier/a7c95783e6a726a1a233e581ea898ba33fa7e342/overview"
     Then verify redirection from "projects/default/models/model-endpoints/RandomForestClassifier/INVALID/overview" to "projects/default/models/model-endpoints"
     When select "Real-Time Pipelines" tab in "Models_Tab_Selector" on "Models" wizard
@@ -1109,3 +1117,90 @@ Feature: Models Page
     Then check "latest123456" value in "tag" column in "Overview_Table" table on "Models_Info_Pane" wizard
     Then save to context "name" column on 3 row from "Models_Table" table on "Models" wizard
     Then compare "Header" element value on "Models_Info_Pane" wizard with test "name" context value
+
+  @MLM
+  @smoke
+  Scenario: MLM035 - Check components in Item infopane on Metrics tab table on Model Endpoints tab
+    Given open url
+    And wait load page
+    And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
+    And wait load page
+    And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
+    And click on cell with value "Models" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+    And wait load page
+    And select "Model Endpoints" tab in "Models_Tab_Selector" on "Models" wizard
+    And wait load page
+    When click on cell with row index 1 in "name" column in "Model_Endpoints_Table" table on "Model_Endpoints" wizard
+    Then verify "Info_Pane_Tab_Selector" element visibility on "Models_Info_Pane" wizard
+    Then verify "Info_Pane_Tab_Selector" on "Models_Info_Pane" wizard should contains "Models_Endpoints_Info_Pane"."Tab_List"
+    Then select "Metrics" tab in "Info_Pane_Tab_Selector" on "Models_Info_Pane" wizard
+    Then verify "Choose_Metrics_Dropdown" element visibility on "Models_Info_Pane" wizard
+    Then "Choose_Metrics_Dropdown" element on "Models_Info_Pane" should contains "Choose Metrics..." value
+    Then verify "Date_Picker_Filter_Dropdown" element visibility on "Models_Info_Pane" wizard
+    Then verify "Date_Picker_Filter_Dropdown" dropdown on "Models_Info_Pane" wizard selected option value "Past 24 hours"
+    Then verify "Date_Picker_Filter_Dropdown" dropdown element on "Models_Info_Pane" wizard should contains "Dropdown_Options"."Metrics_Date_Picker_Filter_Options"
+    Then verify "Endpoint_Call_Count" element visibility on "Models_Info_Pane" wizard
+    Then verify "Invocation_Title" element visibility on "Models_Info_Pane" wizard
+    Then "Invocation_Title" element on "Models_Info_Pane" should contains "Endpoint call count" value
+    Then verify "Invocation_Drift_Icon" element visibility on "Models_Info_Pane" wizard
+    Then verify "Invocation_Drift_Up" element visibility on "Models_Info_Pane" wizard
+    Then verify "Invocation_Selected_Date" element visibility on "Models_Info_Pane" wizard
+    Then "Invocation_Selected_Date" element on "Models_Info_Pane" should contains "last 24 hours" value
+    Then verify "Invocation_Total_Title" element visibility on "Models_Info_Pane" wizard
+    Then "Invocation_Total_Title" element on "Models_Info_Pane" should contains "Total" value
+    Then verify "Invocation_Total_Score" element visibility on "Models_Info_Pane" wizard
+    Then verify "Invocation_Graph" element visibility on "Models_Info_Pane" wizard
+    Then verify "Metrics_Empty_Select_Message" element visibility on "Models_Info_Pane" wizard
+    Then "Metrics_Empty_Select_Message" component on "Models_Info_Pane" should contains "Messages"."Metrics_Empty_Select_Message"
+    Then click on "Choose_Metrics_Dropdown" element on "Models_Info_Pane" wizard
+    And wait load page
+    Then "Hellinger_Mean_Metrics_Checkbox" element should be unchecked in "Evidently_App_Test_Accordion" on "Metrics_Selector_Popup" wizard
+    Then check "Hellinger_Mean_Metrics_Checkbox" element in "Evidently_App_Test_Accordion" on "Metrics_Selector_Popup" wizard
+    And wait load page
+    Then click on "Metrics_Apply_Button" element on "Metrics_Selector_Popup" wizard
+    And wait load page
+    Then "Choose_Metrics_Dropdown" element on "Models_Info_Pane" should contains "1 metric selected" value
+    Then verify "Metric_App_Name" element visibility on "Models_Info_Pane" wizard
+    Then "Metric_App_Name" element on "Models_Info_Pane" should contains "evidently-app-test" value
+    Then verify "Metrics_Card" element visibility on "Models_Info_Pane" wizard
+    Then click on "Choose_Metrics_Dropdown" element on "Models_Info_Pane" wizard
+    And wait load page
+    Then uncheck "Hellinger_Mean_Metrics_Checkbox" element in "Evidently_App_Test_Accordion" on "Metrics_Selector_Popup" wizard
+    And wait load page
+    Then click on "Metrics_Apply_Button" element on "Metrics_Selector_Popup" wizard
+    And wait load page
+
+  @MLM
+  @smoke
+  Scenario: MLM036 - Check components in Metrics Selector Popup on Metrics tab table on Model Endpoints tab
+    Given open url
+    And wait load page
+    And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
+    And wait load page
+    And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
+    And click on cell with value "Models" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+    And wait load page
+    And select "Model Endpoints" tab in "Models_Tab_Selector" on "Models" wizard
+    And wait load page
+    When click on cell with row index 1 in "name" column in "Model_Endpoints_Table" table on "Model_Endpoints" wizard
+    Then select "Metrics" tab in "Info_Pane_Tab_Selector" on "Models_Info_Pane" wizard
+    Then click on "Choose_Metrics_Dropdown" element on "Models_Info_Pane" wizard
+    And wait load page
+    Then verify "Search_Metrics_Input" element visibility on "Metrics_Selector_Popup" wizard
+    Then verify "Accordion_Header" element visibility in "Evidently_App_Test_Accordion" on "Metrics_Selector_Popup" wizard
+    Then verify "Collapse_Button" element visibility in "Evidently_App_Test_Accordion" on "Metrics_Selector_Popup" wizard
+    Then verify "Hellinger_Mean_Metrics_Checkbox" element visibility in "Evidently_App_Test_Accordion" on "Metrics_Selector_Popup" wizard
+    Then "Hellinger_Mean_Metrics_Checkbox" element should be unchecked in "Evidently_App_Test_Accordion" on "Metrics_Selector_Popup" wizard
+    And wait load page
+    Then check "Hellinger_Mean_Metrics_Checkbox" element in "Evidently_App_Test_Accordion" on "Metrics_Selector_Popup" wizard
+    Then "Hellinger_Mean_Metrics_Checkbox" element should be checked in "Evidently_App_Test_Accordion" on "Metrics_Selector_Popup" wizard
+    And wait load page
+    Then verify "Metrics_Type" in "Evidently_App_Test_Accordion" on "Metrics_Selector_Popup" wizard should display "Label_Hint"."Metric_Type_Result"
+    When collapse "Evidently_App_Test_Accordion" on "Metrics_Selector_Popup" wizard
+    And wait load page
+    Then verify "Evidently_App_Test_Accordion" is collapsed on "Metrics_Selector_Popup" wizard
+    And wait load page
+    When expand "Evidently_App_Test_Accordion" on "Metrics_Selector_Popup" wizard
+    And wait load page
+    Then "Hellinger_Mean_Metrics_Checkbox" element should be checked in "Evidently_App_Test_Accordion" on "Metrics_Selector_Popup" wizard
+    And wait load page
