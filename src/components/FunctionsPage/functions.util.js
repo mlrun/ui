@@ -22,12 +22,9 @@ import { debounce, get, isEmpty } from 'lodash'
 
 import {
   DETAILS_BUILD_LOG_TAB,
-  FILTER_MENU,
-  FILTER_MENU_MODAL,
   FUNCTION_CREATING_STATE,
   FUNCTION_ERROR_STATE,
   FUNCTION_FAILED_STATE,
-  FUNCTION_FILTERS,
   FUNCTION_INITIALIZED_STATE,
   FUNCTION_PENDINDG_STATE,
   FUNCTION_READY_STATE,
@@ -288,18 +285,6 @@ export const generateActionsMenu = (
     ]
   ]
 }
-
-export const fetchInitialFunctions = debounce(
-  (filtersStore, fetchData, functionsAreInitializedRef) => {
-    if (!functionsAreInitializedRef.current) {
-      fetchData({
-        ...filtersStore[FILTER_MENU][FUNCTION_FILTERS],
-        ...filtersStore[FILTER_MENU_MODAL][FUNCTION_FILTERS].values
-      })
-      functionsAreInitializedRef.current = true
-    }
-  }
-)
 
 export const pollDeletingFunctions = (
   project,

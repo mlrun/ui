@@ -49,10 +49,10 @@ const InvocationsMetricCard = forwardRef(
     invocationBodyCardRef
   ) => {
     const invocationCardClassnames = classNames(
-      'metrics__card-invocations',
+      'metrics__card-invocation',
       !isInvocationCardExpanded
-        ? 'metrics__card-invocations_collapsed'
-        : 'metrics__card-invocations_expanded'
+        ? 'metrics__card-invocation_collapsed'
+        : 'metrics__card-invocation_expanded'
     )
     const invocationCardHeaderClassnames = classNames(
       'metrics__card-invocation-header',
@@ -91,70 +91,62 @@ const InvocationsMetricCard = forwardRef(
     return (
       <div className={invocationCardClassnames}>
         <StatsCard key={metric.id} className="metrics__card metrics__card-invocation">
-          <div className="metrics__card-row">
-            <StatsCard.Col>
-              <StatsCard.Header title="Endpoint call count">
-                <div className={invocationCardHeaderClassnames}>
-                  <div className="metrics__card-invocation-header_drift-icon-container">
-                    {resultPercentageDrift.icon}
-                  </div>
-                  <div
-                    className={`metrics__card-invocation-header_${resultPercentageDrift.className}`}
-                  >
-                    {resultPercentageDrift.percentageChange}
-                  </div>
-                  <div className="metrics__card-invocation-header-selected-date">
-                    {selectedDate}
-                  </div>
-                  <div className="metrics__card-invocation-header-total-title">Total</div>
-                  <div className="metrics__card-invocation-header-total-score">
-                    {metric[METRIC_COMPUTED_TOTAL_POINTS]}
-                  </div>
+          <RoundedIcon
+            className="metrics__card-invocation-toggle-icon"
+            id="invocation-card-toggle-icon"
+            onClick={() => setIsInvocationCardExpanded(!isInvocationCardExpanded)}
+            tooltipText={`${isInvocationCardExpanded ? 'Collapse' : 'Expand'} Invocation Card`}
+          >
+            {isInvocationCardExpanded ? <MinimizeIcon /> : <EnlargeIcon />}
+          </RoundedIcon>
+          <StatsCard.Header title="Endpoint call count">
+            <div className={invocationCardHeaderClassnames}>
+              <div className="metrics__card-invocation-header_drift-icon-container">
+                {resultPercentageDrift.icon}
+              </div>
+              <div className={`metrics__card-invocation-header_${resultPercentageDrift.className}`}>
+                {resultPercentageDrift.percentageChange}
+              </div>
+              <div className="metrics__card-invocation-header-selected-date">{selectedDate}</div>
+              <div className="metrics__card-invocation-header-total-title">Total</div>
+              <div className="metrics__card-invocation-header-total-score">
+                {metric[METRIC_COMPUTED_TOTAL_POINTS]}
+              </div>
+            </div>
+          </StatsCard.Header>
+          <div
+            ref={invocationBodyCardRef}
+            className={`metrics__card-body ${isInvocationCardExpanded ? 'metrics__card-body-expanded' : 'metrics__card-body-collapsed'}`}
+          >
+            <div
+              className={`metrics__card-invocation-content ${!isInvocationCardExpanded && 'metrics__card-invocation-content-visible'}`}
+            >
+              <div className="metrics__card-invocation-content-title">Endpoint call count</div>
+              <div className="metrics__card-invocation-content-container">
+                <div className="metrics__card-invocation-content-container_drift_icon">
+                  {resultPercentageDrift.icon}
                 </div>
-              </StatsCard.Header>
-              <div
-                ref={invocationBodyCardRef}
-                className={`metrics__card-body ${isInvocationCardExpanded ? 'metrics__card-body-expanded' : 'metrics__card-body-collapsed'}`}
-              >
                 <div
-                  className={`metrics__card-invocation-content ${!isInvocationCardExpanded && 'metrics__card-invocation-content-visible'}`}
+                  className={`metrics__card-invocation-content-container_${resultPercentageDrift.className}`}
                 >
-                  <div className="metrics__card-invocation-content-title">Endpoint call count</div>
-                  <div className="metrics__card-invocation-content-container">
-                    <div className="metrics__card-invocation-content-container_drift_icon">
-                      {resultPercentageDrift.icon}
-                    </div>
-                    <div
-                      className={`metrics__card-invocation-content-container_${resultPercentageDrift.className}`}
-                    >
-                      {resultPercentageDrift.percentageChange}
-                    </div>
-                    <div>{selectedDate}</div>
-                  </div>
-                  <div className="metrics__card-invocation-content-data">
-                    <div className="metrics__card-invocation-content-data_total_title">Total</div>
-                    <div className="metrics__card-invocation-content-data-total-score">
-                      {' '}
-                      {metric[METRIC_COMPUTED_TOTAL_POINTS]}
-                    </div>
-                  </div>
+                  {resultPercentageDrift.percentageChange}
                 </div>
-                <div className="metrics__card-body-invocation">
-                  <MetricChart
-                    isInvocationCardExpanded={isInvocationCardExpanded}
-                    chartConfig={chartConfig}
-                  />
+                <div>{selectedDate}</div>
+              </div>
+              <div className="metrics__card-invocation-content-data">
+                <div className="metrics__card-invocation-content-data_total_title">Total</div>
+                <div className="metrics__card-invocation-content-data-total-score">
+                  {' '}
+                  {metric[METRIC_COMPUTED_TOTAL_POINTS]}
                 </div>
               </div>
-            </StatsCard.Col>
-            <RoundedIcon
-              className="metrics__card-invocation-toggle-icon"
-              id="invocation-card-toggle-icon"
-              onClick={() => setIsInvocationCardExpanded(!isInvocationCardExpanded)}
-              tooltipText={`${isInvocationCardExpanded ? 'Collapse' : 'Expand'} Invocation Card`}
-            >
-              {isInvocationCardExpanded ? <MinimizeIcon /> : <EnlargeIcon />}
-            </RoundedIcon>
+            </div>
+            <div className="metrics__card-body-invocation">
+              <MetricChart
+                isInvocationCardExpanded={isInvocationCardExpanded}
+                chartConfig={chartConfig}
+              />
+            </div>
           </div>
         </StatsCard>
       </div>

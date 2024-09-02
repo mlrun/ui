@@ -54,7 +54,6 @@ import {
 import {
   checkForSelectedModel,
   fetchModelsRowData,
-  filters,
   generateActionsMenu,
   generatePageData,
   getFeatureVectorData,
@@ -71,13 +70,12 @@ import { openPopUp } from 'igz-controls/utils/common.util'
 import { parseChipsData } from '../../../utils/convertChipsData'
 import { setFullSelectedArtifact } from '../../../utils/artifacts.util'
 import { setNotification } from '../../../reducers/notificationReducer'
-import { useGetTagOptions } from '../../../hooks/useGetTagOptions.hook'
 import { useGroupContent } from '../../../hooks/groupContent.hook'
 import { useMode } from '../../../hooks/mode.hook'
 import { useModelsPage } from '../ModelsPage.context'
 import { useSortTable } from '../../../hooks/useSortTable.hook'
 import { useVirtualization } from '../../../hooks/useVirtualization.hook'
-import { useInitialArtifactsFetch } from '../../../hooks/artifacts.hook'
+import { useInitialTableFetch } from '../../../hooks/useInitialTableFetch.hook'
 
 const Models = ({ fetchModelFeatureVector }) => {
   const [models, setModels] = useState([])
@@ -90,12 +88,6 @@ const Models = ({ fetchModelFeatureVector }) => {
   // const [metricsCounter, setMetricsCounter] = useState(0)
   // const [dataIsLoaded, setDataIsLoaded] = useState(false)
   // const [tableHeaders, setTableHeaders] = useState([])
-  const [urlTagOption, tagAbortControllerRef] = useGetTagOptions(
-    fetchArtifactTags,
-    filters,
-    MODEL_TYPE,
-    MODELS_FILTERS
-  )
   const artifactsStore = useSelector(store => store.artifactsStore)
   const detailsStore = useSelector(store => store.detailsStore)
   const filtersStore = useSelector(store => store.filtersStore)
@@ -108,6 +100,7 @@ const Models = ({ fetchModelFeatureVector }) => {
   const { toggleConvertedYaml } = useModelsPage()
 
   const abortControllerRef = useRef(new AbortController())
+  const tagAbortControllerRef = useRef(new AbortController())
   const modelsRef = useRef(null)
 
   const modelsFilters = useMemo(
@@ -167,8 +160,24 @@ const Models = ({ fetchModelFeatureVector }) => {
           return result
         })
     },
-    [dispatch, setModels, params.projectName]
+    [dispatch, params]
   )
+
+  const fetchTags = useCallback(() => {
+    tagAbortControllerRef.current = new AbortController()
+
+    return dispatch(
+      getFilterTagOptions({
+        dispatch,
+        fetchTags: fetchArtifactTags,
+        project: params.projectName,
+        category: MODEL_TYPE,
+        config: {
+          signal: tagAbortControllerRef.current.signal
+        }
+      })
+    )
+  }, [dispatch, params.projectName])
 
   const handleDeployModel = useCallback(
     model => {
@@ -210,17 +219,7 @@ const Models = ({ fetchModelFeatureVector }) => {
 
   const handleRefresh = useCallback(
     filters => {
-      dispatch(
-        getFilterTagOptions({
-          dispatch,
-          fetchTags: fetchArtifactTags,
-          project: params.projectName,
-          category: MODEL_TYPE,
-          config: {
-            signal: tagAbortControllerRef.current.signal
-          }
-        })
-      )
+      fetchTags()
       setSelectedRowData({})
       setSelectedModelMin({})
       setModels([])
@@ -230,7 +229,7 @@ const Models = ({ fetchModelFeatureVector }) => {
 
       return fetchData(filters)
     },
-    [dispatch, fetchData, params.projectName, tagAbortControllerRef]
+    [fetchData, fetchTags]
   )
 
   const handleAddTag = useCallback(
@@ -372,12 +371,15 @@ const Models = ({ fetchModelFeatureVector }) => {
     handleRefresh(modelsFilters)
   }
 
-  useInitialArtifactsFetch(
+  useInitialTableFetch({
+    createRowData: createModelsRowData,
     fetchData,
-    urlTagOption,
-    setSelectedRowData,
-    createModelsRowData
-  )
+    fetchTags,
+    filterMenuName: MODELS_FILTERS,
+    filters: modelsFilters,
+    setExpandedRowsData: setSelectedRowData,
+    sortExpandedRowsDataBy: 'updated'
+  })
 
   useEffect(() => {
     if (params.name && params.tag && pageData.details.menu.length > 0) {
@@ -538,7 +540,6 @@ const Models = ({ fetchModelFeatureVector }) => {
       tableContent={sortedTableContent}
       tableHeaders={sortedTableHeaders}
       viewMode={viewMode}
-      urlTagOption={urlTagOption}
       virtualizationConfig={virtualizationConfig}
     />
   )

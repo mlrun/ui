@@ -81,6 +81,7 @@ const ProjectsJobsMonitoring = ({ fetchAllJobRuns, fetchJobFunction, fetchJobs }
   const navigate = useNavigate()
   const appStore = useSelector(store => store.appStore)
   const artifactsStore = useSelector(store => store.artifactsStore)
+  const jobsStore = useSelector(store => store.jobsStore)
 
   const jobsFiltersConfig = useMemo(() => {
     return {
@@ -175,7 +176,9 @@ const ProjectsJobsMonitoring = ({ fetchAllJobRuns, fetchJobFunction, fetchJobs }
                 JOB_KIND_LOCAL
 
               return (
-                (!filters.type || filters.type === FILTER_ALL_ITEMS || filters.type.includes(type)) &&
+                (!filters.type ||
+                  filters.type === FILTER_ALL_ITEMS ||
+                  filters.type.includes(type)) &&
                 (!filters.project || job.project.includes(filters.project.toLowerCase()))
               )
             })
@@ -340,13 +343,16 @@ const ProjectsJobsMonitoring = ({ fetchAllJobRuns, fetchJobFunction, fetchJobs }
                 tabs={tabs}
               />
               <ActionBar
+                autoRefreshIsEnabled={selectedTab === JOBS_MONITORING_JOBS_TAB}
+                autoRefreshIsStopped={jobWizardIsOpened || jobsStore.loading}
                 filterMenuName={selectedTab}
                 filtersConfig={tabData[selectedTab].filtersConfig}
                 handleRefresh={tabData[selectedTab].handleRefresh}
                 hidden={Boolean(params.jobId || params.workflowId)}
                 page={JOBS_MONITORING_PAGE}
                 tab={selectedTab}
-                withRefreshButton={false}
+                withRefreshButton
+                withoutExpandButton
                 key={selectedTab}
               >
                 {tabData[selectedTab].modalFilters}

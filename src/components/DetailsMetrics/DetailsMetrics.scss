@@ -61,10 +61,163 @@ $stickyHeaderHeight: 55px;
       flex: 1 0 100%;
     }
 
-    &-invocations {
+    &-invocation {
       position: relative;
       z-index: 1;
       width: 100%;
+
+      &-toggle-icon {
+        align-self: flex-start;
+        position: absolute;
+        bottom: 5px;
+        right: 5px;
+        visibility: hidden;
+        opacity: 0;
+        transition: all 0.2s ease-in-out;
+      }
+
+      &:hover {
+        .metrics__card-invocation-toggle-icon {
+          visibility: visible;
+          opacity: 1;
+
+          .round-icon-cp__circle {
+            &::before {
+              opacity: 0.4;
+            }
+
+            &:hover::before {
+              opacity: 1;
+            }
+          }
+        }
+      }
+
+      &-header {
+        display: flex;
+        flex: 1;
+        align-items: baseline;
+        justify-content: end;
+        height: 40px;
+        color: $primary;
+        font-weight: 500;
+        font-size: 14px;
+
+        &_drift-icon-container {
+          align-self: stretch;
+          margin-right: 2px;
+
+          svg {
+            box-sizing: content-box;
+            width: 17px;
+            height: 17px;
+            padding-top: 9px;
+          }
+        }
+
+        &_drift_up {
+          color: $brightTurquoise;
+        }
+
+        &_drift_down {
+          color: $ceriseRed;
+        }
+
+        &-selected-date {
+          margin-left: 4px;
+          color: $topaz;
+        }
+
+        &-total-title {
+          margin: 0 6px 0 12px;
+          font-weight: 700;
+        }
+
+        &-total-score {
+          font-weight: 700;
+          font-size: 24px;
+        }
+      }
+
+      &-content {
+        flex: 0 0 0;
+        flex-wrap: wrap;
+        align-content: center;
+        align-items: baseline;
+        justify-content: center;
+        width: 0;
+        font-weight: 700;
+        font-size: 18px;
+        visibility: hidden;
+        opacity: 0;
+        transition: flex 0.2s;
+
+        &-visible {
+          display: flex;
+          flex: 0 1 auto;
+          width: fit-content;
+          margin-right: 15px;
+          visibility: visible;
+          opacity: 1;
+          transition:
+            flex 0.2s,
+            visibility 0s,
+            opacity 1s;
+        }
+
+        &-title {
+          margin-right: 24px;
+          color: $primary;
+          font-size: 18px;
+          text-align: center;
+        }
+
+        &-container {
+          display: flex;
+          gap: 2px;
+          align-items: baseline;
+          font-weight: 700;
+          font-size: 14px;
+
+          &_drift_icon {
+            align-self: stretch;
+
+            svg {
+              box-sizing: content-box;
+              width: 17px;
+              height: 17px;
+              margin-top: -1px;
+            }
+          }
+
+          &_drift_up {
+            margin-right: 4px;
+            color: $brightTurquoise;
+          }
+
+          &_drift_down {
+            margin-right: 4px;
+            color: $ceriseRed;
+          }
+        }
+
+        &-data {
+          display: flex;
+          align-items: baseline;
+          margin-left: 15px;
+
+          &_total_title {
+            margin-right: 7px;
+            font-weight: 700;
+            font-size: 14px;
+          }
+
+          &_total_score {
+            font-weight: 700;
+            font-size: 24px;
+          }
+        }
+      }
 
       .metrics__card {
         padding-top: 12px;
@@ -222,139 +375,6 @@ $stickyHeaderHeight: 55px;
           top: 0;
           left: 0;
           opacity: 0;
-        }
-      }
-    }
-
-    &-invocation-toggle-icon {
-      align-self: flex-start;
-      position: relative;
-      top: -5px;
-      right: -10px;
-    }
-
-    &-invocation-header {
-      display: flex;
-      flex: 1;
-      align-items: baseline;
-      justify-content: end;
-      height: 40px;
-      color: $primary;
-      font-weight: 500;
-      font-size: 14px;
-
-      &_drift-icon-container {
-        align-self: stretch;
-        margin-right: 2px;
-
-        svg {
-          box-sizing: content-box;
-          width: 17px;
-          height: 17px;
-          padding-top: 9px;
-        }
-      }
-
-      &_drift_up {
-        color: $brightTurquoise;
-      }
-
-      &_drift_down {
-        color: $ceriseRed;
-      }
-
-      &-selected-date {
-        margin-left: 4px;
-        color: $topaz;
-      }
-
-      &-total-title {
-        margin: 0 6px 0 12px;
-        font-weight: 700;
-      }
-
-      &-total-score {
-        font-weight: 700;
-        font-size: 24px;
-      }
-    }
-
-    &-invocation-content {
-      flex: 0 0 0;
-      flex-wrap: wrap;
-      align-content: center;
-      align-items: baseline;
-      justify-content: center;
-      width: 0;
-      font-weight: 700;
-      font-size: 18px;
-      visibility: hidden;
-      opacity: 0;
-      transition: flex 0.2s;
-
-      &-visible {
-        display: flex;
-        flex: 0 1 auto;
-        width: fit-content;
-        margin-right: 15px;
-        visibility: visible;
-        opacity: 1;
-        transition:
-          flex 0.2s,
-          visibility 0s,
-          opacity 1s;
-      }
-
-      &-title {
-        margin-right: 24px;
-        color: $primary;
-        font-size: 18px;
-        text-align: center;
-      }
-
-      &-container {
-        display: flex;
-        gap: 2px;
-        align-items: baseline;
-        font-weight: 700;
-        font-size: 14px;
-
-        &_drift_icon {
-          align-self: stretch;
-
-          svg {
-            box-sizing: content-box;
-            width: 17px;
-            height: 17px;
-            margin-top: -1px;
-          }
-        }
-
-        &_drift_up {
-          margin-right: 4px;
-          color: $brightTurquoise;
-        }
-
-        &_drift_down {
-          margin-right: 4px;
-          color: $ceriseRed;
-        }
-      }
-
-      &-data {
-        display: flex;
-        align-items: baseline;
-        margin-left: 15px;
-
-        &_total_title {
-          margin-right: 7px;
-          font-weight: 700;
-          font-size: 14px;
-        }
-
-        &_total_score {
-          font-weight: 700;
-          font-size: 24px;
         }
       }
     }
