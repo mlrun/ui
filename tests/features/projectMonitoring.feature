@@ -1,4 +1,4 @@
-Feature: MLRun Project Page
+Feature: Project Monitoring Page
 
     Testcases that verifies functionality on MLRun Project Page
 
@@ -501,10 +501,14 @@ Feature: MLRun Project Page
         Then verify "Labels_Table" element visibility on "New_Feature_Set" wizard
         Then verify "Accordion_Header" element visibility in "Data_Source_Accordion" on "New_Feature_Set" wizard
         Then verify "Collapse_Button" element visibility in "Data_Source_Accordion" on "New_Feature_Set" wizard
-        Then verify "URL_Combobox" element visibility in "Data_Source_Accordion" on "New_Feature_Set" wizard
         Then verify "Attributes_Input" element visibility in "Data_Source_Accordion" on "New_Feature_Set" wizard
         Then type value "   " to "Attributes_Input" field on "Data_Source_Accordion" on "New_Feature_Set" wizard
         Then verify "Attributes_Input" element in "Data_Source_Accordion" on "New_Feature_Set" wizard should display warning "Input_Hint"."Input_Field_Invalid"
+        When click on "Edit_Button" element in "Data_Source_Accordion" on "New_Feature_Set" wizard
+        Then verify "URL_Combobox" element visibility in "Data_Source_Accordion" on "New_Feature_Set" wizard
+        Then select "V3IO" option in "URL_Combobox" combobox on "Data_Source_Accordion" accordion on "New_Feature_Set" wizard
+        When type value "target/path" to "URL_Combobox" field on "Data_Source_Accordion" on "New_Feature_Set" wizard
+        Then click on "Apply_Combobox_Button" element in "Data_Source_Accordion" on "New_Feature_Set" wizard
         When collapse "Data_Source_Accordion" on "New_Feature_Set" wizard
         Then verify "Data_Source_Accordion" is collapsed on "New_Feature_Set" wizard
         Then verify "Accordion_Header" element visibility in "Schema_Accordion" on "New_Feature_Set" wizard

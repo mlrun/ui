@@ -783,7 +783,29 @@ module.exports = {
     Version_tag_Input_table_view: commonVersionTagInputTableView,
     Version_tag_Input_full_view: commonVersionTagInputFullView,
     Version_Tag_Input_Placeholder: commonVersionTagInputPlaceholder,
-    Version_tag_Input: commonVersionTagInput
+    Version_tag_Input: commonVersionTagInput,
+    Choose_Metrics_Dropdown: By.css('[data-testid="metric-selector-field"]'),
+    Date_Picker_Filter_Dropdown: dropdownComponent(
+      generateDropdownGroup(
+        '[data-testid="date-picker-container"]',
+        '[data-testid="date-picker-input"]',
+        '.date-picker__pop-up .select__item',
+        '.data-ellipsis .data-ellipsis',
+        false
+      )
+    ),
+    Endpoint_Call_Count: By.css('.metrics .metrics__card-invocations'),
+    Invocation_Title: By.css('.stats-card .stats-card__title'),
+    Invocation_Drift_Icon: By.css('.stats-card .metrics__card-invocation-header_drift-icon-container'),
+    Invocation_Drift_Down: By.css('.stats-card .metrics__card-invocation-header_drift_down'),
+    Invocation_Drift_Up: By.css('.stats-card .metrics__card-invocation-header_drift_up'),
+    Invocation_Selected_Date: By.css('.stats-card .metrics__card-invocation-header-selected-date'),
+    Invocation_Total_Title: By.css('.stats-card .metrics__card-invocation-header-total-title'),
+    Invocation_Total_Score: By.css('.stats-card .metrics__card-invocation-header-total-score'),
+    Invocation_Graph: By.css('.stats-card .metrics__card-body-invocation'),
+    Metrics_Empty_Select_Message: By.css('.metrics .metrics__empty-select'),
+    Metric_App_Name: By.css('.metrics .metrics__app-name:nth-of-type(3)'),
+    Metrics_Card: By.css('.metrics .metrics__card:nth-of-type(4)')
   },
   modelsRealTimePipelineInfoPane: {
     Arrow_Back: commonArrowBack,

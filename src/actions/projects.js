@@ -94,6 +94,7 @@ import {
 import { parseSummaryData } from '../utils/parseSummaryData'
 import { showErrorNotification } from '../utils/notifications.util'
 import { mlrunUnhealthyErrors } from '../components/ProjectsPage/projects.util'
+import { parseProjects } from '../utils/parseProjects'
 
 let firstServerErrorTimestamp = null
 
@@ -484,34 +485,32 @@ const projectsAction = {
   }),
   fetchProjects:
     (params, setRequestErrorMessage = () => {}) =>
-    dispatch => {
-      dispatch(projectsAction.fetchProjectsBegin())
-      setRequestErrorMessage('')
+      dispatch => {
+        dispatch(projectsAction.fetchProjectsBegin())
+        setRequestErrorMessage('')
 
-      return projectsApi
-        .getProjects(params)
-        .then(response => {
-          dispatch(projectsAction.fetchProjectsSuccess(response.data.projects))
-          dispatch(
-            projectsAction.fetchProjectsNamesSuccess(
-              response.data.projects.map(project => project.metadata.name)
+        return projectsApi
+          .getProjects(params)
+          .then(response => {
+            const parsedProjects = parseProjects(response.data.projects)
+
+            dispatch(projectsAction.fetchProjectsSuccess(parsedProjects))
+            dispatch(projectsAction.fetchProjectsNamesSuccess(parsedProjects.map(project => project.metadata.name)))
+
+            return parsedProjects
+          })
+          .catch(error => {
+            dispatch(projectsAction.fetchProjectsFailure(error), dispatch)
+            showErrorNotification(
+              dispatch,
+              error,
+              'Failed to fetch projects',
+              null,
+              null,
+              setRequestErrorMessage
             )
-          )
-
-          return response.data.projects
-        })
-        .catch(error => {
-          dispatch(projectsAction.fetchProjectsFailure(error), dispatch)
-          showErrorNotification(
-            dispatch,
-            error,
-            'Failed to fetch projects',
-            null,
-            null,
-            setRequestErrorMessage
-          )
-        })
-    },
+          })
+      },
   fetchProjectsBegin: () => ({ type: FETCH_PROJECTS_BEGIN }),
   fetchProjectsFailure: error => ({
     type: FETCH_PROJECTS_FAILURE,

@@ -17,9 +17,9 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import React, { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react'
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { connect, useDispatch, useSelector } from 'react-redux'
-import { isEqual, isEmpty } from 'lodash'
+import { isEmpty } from 'lodash'
 import { useLocation, useNavigate, useParams } from 'react-router-dom'
 
 import FunctionsView from './FunctionsView'
@@ -36,14 +36,16 @@ import {
   DATES_FILTER,
   NAME_FILTER,
   SHOW_UNTAGGED_FILTER,
-  FUNCTION_FILTERS
+  FUNCTION_FILTERS,
+  FILTER_MENU,
+  FILTER_MENU_MODAL
 } from '../../constants'
 import {
-  areFiltersInInitialState,
-  fetchInitialFunctions,
+  checkForSelectedFunction,
   generateActionsMenu,
   generateFunctionsPageData,
   pollDeletingFunctions,
+  searchFunctionItem,
   setFullSelectedFunction
 } from './functions.util'
 import {
@@ -51,7 +53,7 @@ import {
   datePickerPastOptions,
   getDatePickerFilterValue
 } from '../../utils/datePicker.util'
-import createFunctionsContent from '../../utils/createFunctionsContent'
+import createFunctionsRowData from '../../utils/createFunctionsRowData'
 import functionsActions from '../../actions/functions'
 import jobsActions from '../../actions/jobs'
 import { DANGER_BUTTON, LABEL_BUTTON } from 'igz-controls/constants'
@@ -68,6 +70,7 @@ import { useGroupContent } from '../../hooks/groupContent.hook'
 import { useMode } from '../../hooks/mode.hook'
 import { useVirtualization } from '../../hooks/useVirtualization.hook'
 import { useYaml } from '../../hooks/yaml.hook'
+import { useInitialTableFetch } from '../../hooks/useInitialTableFetch.hook'
 
 import cssVariables from './functions.scss'
 
@@ -100,7 +103,6 @@ const Functions = ({
   const fetchFunctionLogsTimeout = useRef(null)
   const fetchFunctionNuclioLogsTimeout = useRef(null)
   const terminatePollRef = useRef(null)
-  const functionsAreInitializedRef = useRef(false)
   const { isDemoMode, isStagingMode } = useMode()
   const params = useParams()
   const navigate = useNavigate()
@@ -126,7 +128,7 @@ const Functions = ({
           format: 'minimal'
         }
       }).then(functions => {
-        if (functions) {
+        if (functions?.length  > 0) {
           const newFunctions = parseFunctions(functions, params.projectName)
           const deletingFunctions = newFunctions.reduce((acc, func) => {
             if (func.deletion_task_id && !func.deletion_error && !acc[func.deletion_task_id]) {
@@ -152,10 +154,24 @@ const Functions = ({
           setFunctions(newFunctions)
 
           return newFunctions
+        } else {
+          const paramsFunction = searchFunctionItem(
+            params.hash,
+            params.funcName,
+            params.tag,
+            params.projectName,
+            [],
+            dispatch,
+            true
+          )
+
+          if (!paramsFunction) {
+            navigate(`/projects/${params.projectName}/functions`, { replace: true })
+          }
         }
       })
     },
-    [dispatch, fetchFunctions, params.projectName, terminateDeleteTasksPolling]
+    [dispatch, fetchFunctions, navigate, params.funcName, params.hash, params.projectName, params.tag, terminateDeleteTasksPolling]
   )
 
   const refreshFunctions = useCallback(
@@ -177,7 +193,9 @@ const Functions = ({
         return {
           ...state,
           [funcIdentifier]: {
-            content: createFunctionsContent(content[func.name], params.projectName, false)
+            content: content[func.name].map(contentItem =>
+              createFunctionsRowData(contentItem, params.projectName, false)
+            )
           }
         }
       })
@@ -204,7 +222,9 @@ const Functions = ({
     } else {
       Object.entries(content).forEach(([key, value]) => {
         newSelectedRowData[key] = {
-          content: createFunctionsContent(value, params.projectName, false)
+          content: value.map(contentItem =>
+            createFunctionsRowData(contentItem, params.projectName, false)
+          )
         }
       })
     }
@@ -224,7 +244,7 @@ const Functions = ({
   )
 
   const tableContent = useMemo(
-    () => createFunctionsContent(latestItems, params.projectName, true),
+    () => latestItems.map(contentItem => createFunctionsRowData(contentItem, params.projectName, true)),
     [latestItems, params.projectName]
   )
 
@@ -502,19 +522,17 @@ const Functions = ({
     )
   }, [dispatch, fetchFunction, navigate, params.projectName, selectedFunctionMin])
 
-  useLayoutEffect(() => {
-    if (
-      !functionsAreInitializedRef.current &&
-      (params.funcName || (params.hash && params.hash.includes('@')))
-    ) {
+  const setInitialFilters = useCallback(() => {
+    if (params.funcName || (params.hash && params.hash.includes('@'))) {
       const funcName = params.funcName || params.hash.split('@')[0]
+      const dateFilterValues = getDatePickerFilterValue(datePickerPastOptions, ANY_TIME_DATE_OPTION)
 
       dispatch(
         setFiltersValues({
           name: FUNCTION_FILTERS,
           value: {
             [NAME_FILTER]: funcName,
-            [DATES_FILTER]: getDatePickerFilterValue(datePickerPastOptions, ANY_TIME_DATE_OPTION)
+            [DATES_FILTER]: dateFilterValues
           }
         })
       )
@@ -527,17 +545,23 @@ const Functions = ({
         })
       )
     }
-  }, [dispatch, params])
+  }, [dispatch, params.funcName, params.hash])
 
-  useEffect(() => {
-    fetchInitialFunctions(filtersStore, fetchData, functionsAreInitializedRef)
-  }, [filtersStore, fetchData])
+  useInitialTableFetch({
+    fetchData,
+    setExpandedRowsData: setSelectedRowData,
+    createRowData: createFunctionsRowData,
+    setInitialFilters,
+    filters: {
+      ...filtersStore[FILTER_MENU][FUNCTION_FILTERS].values,
+      ...filtersStore[FILTER_MENU_MODAL][FUNCTION_FILTERS].values
+    }
+  })
 
   useEffect(() => {
     const abortController = abortControllerRef.current
 
     return () => {
-      functionsAreInitializedRef.current = false
       setSelectedFunctionMin({})
       setFunctions([])
       setSelectedRowData({})
@@ -551,53 +575,19 @@ const Functions = ({
     }
   }, [navigate, pageData.details.menu, location, params.hash, params.tab])
 
-  useLayoutEffect(() => {
-    const checkFunctionExistence = item => {
-      if (!item || Object.keys(item).length === 0) {
-        if (areFiltersInInitialState(filtersStore, FUNCTION_FILTERS)) {
-          showErrorNotification(dispatch, {}, 'This function either does not exist or was deleted')
-        }
-
-        navigate(`/projects/${params.projectName}/functions`, { replace: true })
-      }
-    }
-
-    let item = {}
-
-    handleRemoveLogs()
-
-    if (params.hash && functions.length > 0) {
-      const funcTagIndex = params.hash.indexOf(':')
-
-      item = functions.find(func => {
-        if (funcTagIndex > 0) {
-          return isEqual(func.tag, params.hash.slice(funcTagIndex + 1))
-        } else {
-          return isEqual(func.hash, params.hash.slice(params.hash.indexOf('@') + 1))
-        }
-      })
-
-      checkFunctionExistence(item)
-    } else if (params.funcName && params.tag && functions.length > 0) {
-      item = functions.find(func => {
-        return isEqual(func.tag, params.tag) && isEqual(func.name, params.funcName)
-      })
-
-      checkFunctionExistence(item)
-    }
-
-    setSelectedFunctionMin(item ?? {})
-  }, [
-    dispatch,
-    functions,
-    handleRemoveLogs,
-    navigate,
-    params.funcName,
-    params.hash,
-    params.projectName,
-    params.tag,
-    filtersStore
-  ])
+  useEffect(() => {
+    checkForSelectedFunction(
+      params.funcName,
+      selectedRowData,
+      functions,
+      params.hash,
+      params.tag,
+      navigate,
+      params.projectName,
+      setSelectedFunctionMin,
+      dispatch
+    )
+  }, [dispatch, functions, navigate, params.funcName, params.hash, params.projectName, params.tag, selectedRowData])
 
   useEffect(() => {
     dispatch(setFilters({ groupBy: GROUP_BY_NAME }))
@@ -611,10 +601,6 @@ const Functions = ({
     if (document.getElementsByClassName('view')[0]) {
       document.getElementsByClassName('view')[0].classList.remove('view')
     }
-
-    queueMicrotask(() => {
-      setSelectedFunctionMin(item)
-    })
   }
 
   const closePanel = () => {

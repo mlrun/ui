@@ -46,7 +46,6 @@ import {
 import {
   checkForSelectedDataset,
   fetchDataSetRowData,
-  filters,
   generateActionsMenu,
   generatePageData,
   handleApplyDetailsChanges,
@@ -60,12 +59,11 @@ import { isDetailsTabExists } from '../../utils/isDetailsTabExists'
 import { openPopUp } from 'igz-controls/utils/common.util'
 import { setFullSelectedArtifact } from '../../utils/artifacts.util'
 import { setNotification } from '../../reducers/notificationReducer'
-import { useGetTagOptions } from '../../hooks/useGetTagOptions.hook'
 import { useGroupContent } from '../../hooks/groupContent.hook'
 import { useSortTable } from '../../hooks/useSortTable.hook'
 import { useVirtualization } from '../../hooks/useVirtualization.hook'
 import { useYaml } from '../../hooks/yaml.hook'
-import { useInitialArtifactsFetch } from '../../hooks/artifacts.hook'
+import { useInitialTableFetch } from '../../hooks/useInitialTableFetch.hook'
 
 import './datasets.scss'
 import cssVariables from './datasets.scss'
@@ -78,12 +76,6 @@ const Datasets = () => {
   const [requestErrorMessage, setRequestErrorMessage] = useState('')
   const [maxArtifactsErrorIsShown, setMaxArtifactsErrorIsShown] = useState(false)
   const [convertedYaml, toggleConvertedYaml] = useYaml('')
-  const [urlTagOption, tagAbortControllerRef] = useGetTagOptions(
-    fetchArtifactTags,
-    filters,
-    DATASET_TYPE,
-    DATASETS_FILTERS
-  )
   const artifactsStore = useSelector(store => store.artifactsStore)
   const filtersStore = useSelector(store => store.filtersStore)
   const frontendSpec = useSelector(store => store.appStore.frontendSpec)
@@ -94,6 +86,7 @@ const Datasets = () => {
   const params = useParams()
 
   const abortControllerRef = useRef(new AbortController())
+  const tagAbortControllerRef = useRef(new AbortController())
   const datasetsRef = useRef(null)
 
   const datasetsFilters = useMemo(
@@ -158,26 +151,32 @@ const Datasets = () => {
     [dispatch, params.projectName]
   )
 
+  const fetchTags = useCallback(() => {
+    tagAbortControllerRef.current = new AbortController()
+
+    return dispatch(
+      getFilterTagOptions({
+        dispatch,
+        fetchTags: fetchArtifactTags,
+        project: params.projectName,
+        category: DATASET_TYPE,
+        config: {
+          signal: tagAbortControllerRef.current.signal
+        }
+      })
+    )
+  }, [dispatch, params.projectName])
+
   const handleRefresh = useCallback(
     filters => {
-      dispatch(
-        getFilterTagOptions({
-          dispatch,
-          fetchTags: fetchArtifactTags,
-          project: params.projectName,
-          category: DATASET_TYPE,
-          config: {
-            signal: tagAbortControllerRef.current.signal
-          }
-        })
-      )
+      fetchTags()
       setSelectedRowData({})
       setSelectedDatasetMin({})
       setDatasets([])
 
       return fetchData(filters)
     },
-    [dispatch, fetchData, params.projectName, tagAbortControllerRef]
+    [fetchData, fetchTags]
   )
 
   const handleAddTag = useCallback(
@@ -318,12 +317,15 @@ const Datasets = () => {
       }
     })
 
-  useInitialArtifactsFetch(
+  useInitialTableFetch({
+    createRowData: createDatasetsRowData,
     fetchData,
-    urlTagOption,
-    setSelectedRowData,
-    createDatasetsRowData
-  )
+    fetchTags,
+    filterMenuName: DATASETS_FILTERS,
+    filters: datasetsFilters,
+    setExpandedRowsData: setSelectedRowData,
+    sortExpandedRowsDataBy: 'updated'
+  })
 
   useEffect(() => {
     if (params.name && params.tag && pageData.details.menu.length > 0) {
@@ -423,7 +425,6 @@ const Datasets = () => {
       tableContent={sortedTableContent}
       tableHeaders={sortedTableHeaders}
       toggleConvertedYaml={toggleConvertedYaml}
-      urlTagOption={urlTagOption}
       viewMode={viewMode}
       virtualizationConfig={virtualizationConfig}
     />

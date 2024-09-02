@@ -119,7 +119,7 @@ const FilterMenu = ({
     }
   }, [dispatch, filters, filtersStore.tagOptions])
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     if (
       filtersStore.projectOptions.length === 0 &&
       filters.some(filter => filter.type === PROJECT_FILTER)

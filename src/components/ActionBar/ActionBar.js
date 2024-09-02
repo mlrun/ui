@@ -17,7 +17,7 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import React, { useEffect, useLayoutEffect, useMemo, useRef } from 'react'
+import React, { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react'
 import PropTypes from 'prop-types'
 import arrayMutators from 'final-form-arrays'
 import classnames from 'classnames'
@@ -31,9 +31,11 @@ import { useNavigate, useParams } from 'react-router-dom'
 import DatePicker from '../../common/DatePicker/DatePicker'
 import FilterMenuModal from '../FilterMenuModal/FilterMenuModal'
 import NameFilter from '../../common/NameFilter/NameFilter'
-import { RoundedIcon, Button } from 'igz-controls/components'
+import { RoundedIcon, Button, FormCheckBox, FormOnChange } from 'igz-controls/components'
 
 import {
+  AUTO_REFRESH,
+  AUTO_REFRESH_ID,
   DATES_FILTER,
   FILTER_MENU,
   FILTER_MENU_MODAL,
@@ -53,6 +55,8 @@ import { ReactComponent as ExpandIcon } from 'igz-controls/images/expand.svg'
 import { ReactComponent as RefreshIcon } from 'igz-controls/images/refresh.svg'
 
 const ActionBar = ({
+  autoRefreshIsEnabled = false,
+  autoRefreshIsStopped = false,
   actionButtons = [],
   cancelRequest = null,
   children,
@@ -70,6 +74,7 @@ const ActionBar = ({
   withRefreshButton = true,
   withoutExpandButton
 }) => {
+  const [autoRefresh, setAutoRefresh] = useState(autoRefreshIsEnabled)
   const filtersStore = useSelector(store => store.filtersStore)
   const filterMenu = useSelector(store => store.filtersStore[FILTER_MENU][filterMenuName].values)
   const filterMenuModal = useSelector(
@@ -84,7 +89,9 @@ const ActionBar = ({
   const actionBarClassNames = classnames('action-bar', hidden && 'action-bar_hidden')
 
   const formInitialValues = useMemo(() => {
-    const initialValues = {}
+    const initialValues = {
+      [AUTO_REFRESH_ID]: autoRefreshIsEnabled
+    }
 
     if (!filterMenuRef.current) {
       for (let filterType in filterMenu) {
@@ -94,7 +101,7 @@ const ActionBar = ({
     }
 
     return initialValues
-  }, [filterMenu])
+  }, [autoRefreshIsEnabled, filterMenu])
 
   const formRef = React.useRef(
     createForm({
@@ -112,7 +119,7 @@ const ActionBar = ({
     )
   }, [filterMenuModal?.initialValues])
 
-  const filtersHelper = async () => {
+  const filtersHelper = useCallback(async () => {
     let handleChangeFilters = Promise.resolve(true)
 
     if (changes.counter > 0) {
@@ -129,59 +136,85 @@ const ActionBar = ({
     }
 
     return handleChangeFilters
-  }
+  }, [changes.counter, dispatch])
 
-  const applyChanges = async (formValues, filterMenuModal) => {
-    const filtersHelperResult = await filtersHelper(changes, dispatch)
+  const applyChanges = useCallback(
+    async (formValues, filterMenuModal) => {
+      const filtersHelperResult = await filtersHelper(changes, dispatch)
 
-    if (filtersHelperResult) {
-      if (params.name) {
-        navigate(navigateLink)
+      if (filtersHelperResult) {
+        if (params.name || params.funcName || params.hash) {
+          navigate(navigateLink)
+        }
+
+        if (
+          (filterMenuModal.tag === TAG_FILTER_ALL_ITEMS || isEmpty(filterMenuModal.iter)) &&
+          filtersStore.groupBy === GROUP_BY_NONE
+        ) {
+          dispatch(setFilters({ groupBy: GROUP_BY_NAME }))
+        } else if (
+          filtersStore.groupBy === GROUP_BY_NAME &&
+          filterMenuModal.tag !== TAG_FILTER_ALL_ITEMS &&
+          !isEmpty(filterMenuModal.iter)
+        ) {
+          dispatch(setFilters({ groupBy: GROUP_BY_NONE }))
+        }
+
+        dispatch(
+          setFiltersValues({
+            name: filterMenuName,
+            value: { ...formValues }
+          })
+        )
+
+        removeSelectedItem && dispatch(removeSelectedItem({}))
+        setSelectedRowData && setSelectedRowData({})
+        handleExpandAll && handleExpandAll(true)
+        handleRefresh({ ...formValues, ...filterMenuModal })
       }
+    },
+    [
+      changes,
+      dispatch,
+      filterMenuName,
+      filtersHelper,
+      filtersStore.groupBy,
+      handleExpandAll,
+      handleRefresh,
+      navigate,
+      navigateLink,
+      params.name,
+      removeSelectedItem,
+      setSelectedRowData
+    ]
+  )
 
-      if (
-        (filterMenuModal.tag === TAG_FILTER_ALL_ITEMS || isEmpty(filterMenuModal.iter)) &&
-        filtersStore.groupBy === GROUP_BY_NONE
-      ) {
-        dispatch(setFilters({ groupBy: GROUP_BY_NAME }))
-      } else if (
-        filtersStore.groupBy === GROUP_BY_NAME &&
-        filterMenuModal.tag !== TAG_FILTER_ALL_ITEMS &&
-        !isEmpty(filterMenuModal.iter)
-      ) {
-        dispatch(setFilters({ groupBy: GROUP_BY_NONE }))
+  const refresh = useCallback(
+    formState => {
+      if (changes.counter > 0 && cancelRequest) {
+        cancelRequest(REQUEST_CANCELED)
+      } else {
+        dispatch(
+          setFiltersValues({
+            name: filterMenuName,
+            value: { ...formState.values }
+          })
+        )
+        handleRefresh({
+          ...formState.values,
+          ...filtersStore.filterMenuModal[filterMenuName].values
+        })
       }
-
-      dispatch(
-        setFiltersValues({
-          name: filterMenuName,
-          value: { ...formValues }
-        })
-      )
-
-      removeSelectedItem && dispatch(removeSelectedItem({}))
-      setSelectedRowData && setSelectedRowData({})
-      handleExpandAll && handleExpandAll(true)
-      handleRefresh({ ...formValues, ...filterMenuModal })
-    }
-  }
-
-  const refresh = formState => {
-    if (changes.counter > 0 && cancelRequest) {
-      cancelRequest(REQUEST_CANCELED)
-    } else {
-      dispatch(
-        setFiltersValues({
-          name: filterMenuName,
-          value: { ...formState.values }
-        })
-      )
-      handleRefresh({
-        ...formState.values,
-        ...filtersStore.filterMenuModal[filterMenuName].values
-      })
-    }
-  }
+    },
+    [
+      cancelRequest,
+      changes.counter,
+      dispatch,
+      filterMenuName,
+      filtersStore.filterMenuModal,
+      handleRefresh
+    ]
+  )
 
   const handleDateChange = (dates, isPredefined, optionId, input, formState) => {
     const generatedDates = [...dates]
@@ -225,6 +258,18 @@ const ActionBar = ({
       })
     }
   }, [filterMenu])
+
+  useEffect(() => {
+    if (autoRefreshIsEnabled && autoRefresh && !hidden) {
+      const intervalId = setInterval(() => {
+        if (!autoRefreshIsStopped) {
+          refresh(formRef.current.getState())
+        }
+      }, 30000)
+
+      return () => clearInterval(intervalId)
+    }
+  }, [autoRefresh, autoRefreshIsStopped, hidden, autoRefreshIsEnabled, filtersStore, refresh])
 
   return (
     <Form form={formRef.current} onSubmit={() => {}}>
@@ -293,7 +338,8 @@ const ActionBar = ({
                     />
                   ))
               )}
-
+              {autoRefreshIsEnabled && <FormCheckBox label={AUTO_REFRESH} name={AUTO_REFRESH_ID} />}
+              <FormOnChange handler={setAutoRefresh} name={AUTO_REFRESH_ID} />
               {withRefreshButton && (
                 <RoundedIcon tooltipText="Refresh" onClick={() => refresh(formState)} id="refresh">
                   <RefreshIcon />
@@ -332,6 +378,8 @@ ActionBar.propTypes = {
       })
     ])
   ),
+  autoRefreshIsEnabled: PropTypes.bool,
+  autoRefreshIsStopped: PropTypes.bool,
   cancelRequest: PropTypes.func,
   expand: PropTypes.bool,
   filterMenuName: PropTypes.string.isRequired,

@@ -18,17 +18,13 @@ under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
 import React from 'react'
-import { debounce, get, isEmpty, isEqual, omit } from 'lodash'
+import { debounce, get, isEmpty, isEqual } from 'lodash'
 
 import {
-  DATES_FILTER,
   DETAILS_BUILD_LOG_TAB,
-  FILTER_MENU,
-  FILTER_MENU_MODAL,
   FUNCTION_CREATING_STATE,
   FUNCTION_ERROR_STATE,
   FUNCTION_FAILED_STATE,
-  FUNCTION_FILTERS,
   FUNCTION_INITIALIZED_STATE,
   FUNCTION_PENDINDG_STATE,
   FUNCTION_READY_STATE,
@@ -44,6 +40,7 @@ import {
   PANEL_FUNCTION_CREATE_MODE
 } from '../../constants'
 import jobsActions from '../../actions/jobs'
+import functionsApi from '../../api/functions-api'
 import tasksApi from '../../api/tasks-api'
 import { BG_TASK_FAILED, BG_TASK_SUCCEEDED, pollTask } from '../../utils/poll.util'
 import { parseFunction } from '../../utils/parseFunction'
@@ -180,8 +177,8 @@ export const getFunctionsEditableTypes = isStagingMode => {
 }
 export const getFunctionImage = func => {
   return func.type === FUNCTION_TYPE_NUCLIO ||
-    func.type === FUNCTION_TYPE_SERVING ||
-    func.type === FUNCTION_TYPE_REMOTE
+  func.type === FUNCTION_TYPE_SERVING ||
+  func.type === FUNCTION_TYPE_REMOTE
     ? func.container_image
     : func.image
 }
@@ -289,18 +286,6 @@ export const generateActionsMenu = (
     ]
   ]
 }
-
-export const fetchInitialFunctions = debounce(
-  (filtersStore, fetchData, functionsAreInitializedRef) => {
-    if (!functionsAreInitializedRef.current) {
-      fetchData({
-        ...filtersStore[FILTER_MENU][FUNCTION_FILTERS].values,
-        ...filtersStore[FILTER_MENU_MODAL][FUNCTION_FILTERS].values
-      })
-      functionsAreInitializedRef.current = true
-    }
-  }
-)
 
 export const pollDeletingFunctions = (
   project,
@@ -419,18 +404,83 @@ const chooseOrFetchFunction = (selectedFunction, dispatch, fetchFunction, funcMi
   )
 }
 
-export const areFiltersInInitialState = (filtersStore, filtersStoreKey) => {
-  const {
-    values: filterMenuValues,
-    initialValues: filterMenuInitialValues
-  } = filtersStore[FILTER_MENU][filtersStoreKey]
-  const {
-    values: filterMenuModalValues,
-    initialValues: filterMenuModalInitialValues
-  } = filtersStore[FILTER_MENU_MODAL][filtersStoreKey]
-  const dateFilterIsEqual = filterMenuValues[DATES_FILTER].initialSelectedOptionId === filterMenuInitialValues[DATES_FILTER].initialSelectedOptionId
-  const filterMenuIsEqual = isEqual(omit(filterMenuValues, DATES_FILTER), omit(filterMenuInitialValues, DATES_FILTER))
-  const filterMenuModalIsEqual = isEqual(filterMenuModalValues, filterMenuModalInitialValues)
+export const checkForSelectedFunction = (
+  name,
+  selectedRowData,
+  functions,
+  hash,
+  tag,
+  navigate,
+  projectName,
+  setSelectedFunction,
+  dispatch
+) => {
+  queueMicrotask(() => {
+      if (name || hash) {
+        const functionsList = selectedRowData?.[name]?.content || functions
 
-  return dateFilterIsEqual && filterMenuIsEqual && filterMenuModalIsEqual
+        if (functionsList.length > 0) {
+          const searchItem = searchFunctionItem(
+            hash,
+            name,
+            tag,
+            projectName,
+            functionsList.map(func => func.data ?? func),
+            dispatch,
+            true
+          )
+
+          if (!searchItem) {
+            navigate(`/projects/${projectName}/functions`, { replace: true })
+          } else {
+            setSelectedFunction(prevState => {
+              return isEqual(prevState, searchItem) ? prevState : searchItem
+            })
+          }
+        }
+      } else {
+        setSelectedFunction({})
+      }
+    }
+  )
+}
+
+export const searchFunctionItem = (paramsHash, paramsName, paramsTag, projectName, functions, dispatch, checkExistence = false) => {
+  let item = {}
+
+  if (paramsHash) {
+    const withFunctionTag = paramsHash.indexOf(':') > 0
+    let name, tag, hash = ''
+
+    item = functions.find(func => {
+      if (withFunctionTag) {
+        [name, tag] = paramsHash.split(':')
+
+        return isEqual(func.tag, tag) && isEqual(func.name, name)
+      } else {
+        [name, hash] = paramsHash.split('@')
+
+        return isEqual(func.hash, hash) && isEqual(func.name, name)
+      }
+    })
+
+    checkExistence && checkFunctionExistence(item, { tag, name, hash }, projectName, dispatch)
+  } else if (paramsName && paramsTag) {
+    item = functions.find(func => {
+      return isEqual(func.tag, paramsTag) && isEqual(func.name, paramsName)
+    })
+
+    checkExistence && checkFunctionExistence(item, { name: paramsName, tag: paramsTag }, projectName, dispatch)
+  }
+
+  return item
+}
+
+const checkFunctionExistence = (item, filters, projectName, dispatch) => {
+  if (!item || Object.keys(item).length === 0) {
+    functionsApi.getFunction(projectName, filters.name, filters.hash, filters.tag)
+      .catch(() => {
+        showErrorNotification(dispatch, {}, 'This function either does not exist or was deleted')
+      })
+  }
 }

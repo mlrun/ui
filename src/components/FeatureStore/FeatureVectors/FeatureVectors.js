@@ -35,7 +35,6 @@ import {
   TAG_FILTER_LATEST
 } from '../../../constants'
 import {
-  featureVectorsFilters,
   generateActionsMenu,
   generatePageData,
   featureVectorsActionCreator
@@ -52,10 +51,10 @@ import { parseFeatureVectors } from '../../../utils/parseFeatureVectors'
 import { setFeaturesPanelData } from '../../../reducers/tableReducer'
 import { setNotification } from '../../../reducers/notificationReducer'
 import { showErrorNotification } from '../../../utils/notifications.util'
-import { useGetTagOptions } from '../../../hooks/useGetTagOptions.hook'
 import { useGroupContent } from '../../../hooks/groupContent.hook'
 import { useOpenPanel } from '../../../hooks/openPanel.hook'
 import { useVirtualization } from '../../../hooks/useVirtualization.hook'
+import { useInitialTableFetch } from '../../../hooks/useInitialTableFetch.hook'
 
 import cssVariables from './featureVectors.scss'
 
@@ -73,12 +72,12 @@ const FeatureVectors = ({
   const [selectedRowData, setSelectedRowData] = useState({})
   const [requestErrorMessage, setRequestErrorMessage] = useState('')
   const openPanelByDefault = useOpenPanel()
-  const [urlTagOption, tagAbortControllerRef] = useGetTagOptions(fetchFeatureVectorsTags, featureVectorsFilters)
   const params = useParams()
   const featureStore = useSelector(store => store.featureStore)
   const filtersStore = useSelector(store => store.filtersStore)
   const featureStoreRef = useRef(null)
   const abortControllerRef = useRef(new AbortController())
+  const tagAbortControllerRef = useRef(new AbortController())
   const navigate = useNavigate()
   const location = useLocation()
   const dispatch = useDispatch()
@@ -121,14 +120,30 @@ const FeatureVectors = ({
 
       return fetchFeatureVectors(params.projectName, filters, config).then(result => {
         if (result) {
-          setFeatureVectors(parseFeatureVectors(result))
+          const parsedResult = parseFeatureVectors(result)
 
-          return result
+          setFeatureVectors(parsedResult)
+
+          return parsedResult
         }
       })
     },
     [fetchFeatureVectors, params.projectName]
   )
+
+  const fetchTags = useCallback(() => {
+    tagAbortControllerRef.current = new AbortController()
+
+    return dispatch(
+      getFilterTagOptions({
+        fetchTags: fetchFeatureVectorsTags,
+        project: params.projectName,
+        config: {
+          signal: tagAbortControllerRef.current.signal
+        }
+      })
+    )
+  }, [dispatch, fetchFeatureVectorsTags, params.projectName])
 
   const handleDeleteFeatureVector = useCallback(
     featureVector => {
@@ -149,15 +164,7 @@ const FeatureVectors = ({
             })
           )
 
-          dispatch(
-            getFilterTagOptions({
-              fetchTags: fetchFeatureVectorsTags,
-              project: params.projectName,
-              config: {
-                signal: tagAbortControllerRef.current.signal
-              }
-            })
-          )
+          fetchTags()
             .unwrap()
             .then(response => {
               const tag = [...response, TAG_FILTER_ALL_ITEMS].includes(filtersStore.tag)
@@ -180,13 +187,12 @@ const FeatureVectors = ({
       deleteFeatureVector,
       dispatch,
       fetchData,
-      fetchFeatureVectorsTags,
+      fetchTags,
       filtersStore,
       navigate,
       params.projectName,
       selectedFeatureVector,
-      setConfirmData,
-      tagAbortControllerRef
+      setConfirmData
     ]
   )
 
@@ -213,15 +219,7 @@ const FeatureVectors = ({
   )
 
   const handleRefresh = filters => {
-    dispatch(
-      getFilterTagOptions({
-        fetchTags: fetchFeatureVectorsTags,
-        project: params.projectName,
-        config: {
-          signal: tagAbortControllerRef.current.signal
-        }
-      })
-    )
+    fetchTags()
     setFeatureVectors([])
     setSelectedFeatureVector({})
     setSelectedRowData({})
@@ -375,14 +373,13 @@ const FeatureVectors = ({
     setSelectedRowData({})
   }, [filtersStore.tag])
 
-  useEffect(() => {
-    if (urlTagOption) {
-      fetchData({
-        tag: urlTagOption,
-        iter: ''
-      })
-    }
-  }, [fetchData, urlTagOption])
+  useInitialTableFetch({
+    fetchData,
+    filters: filtersStore,
+    setExpandedRowsData: setSelectedRowData,
+    createRowData: createFeatureVectorsRowData,
+    fetchTags
+  })
 
   useEffect(() => {
     if (filtersStore.tag === TAG_FILTER_ALL_ITEMS) {
