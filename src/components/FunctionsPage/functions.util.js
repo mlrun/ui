@@ -266,9 +266,9 @@ export const generateActionsMenu = (
         disabled: functionIsDeleting,
         onClick: funcMin =>
           getFullFunction(funcMin).then(func => !isEmpty(func) && buildAndRunFunc(func)),
-        hidden:
-          func?.type !== FUNCTION_TYPE_JOB ||
-          (func?.type === FUNCTION_TYPE_JOB && func?.state?.value !== FUNCTION_INITIALIZED_STATE)
+        // todo: move out of "demo" mode and make additional changes as needed after the BE part is implemented.
+        hidden: !isDemoMode || (func?.type !== FUNCTION_TYPE_JOB ||
+          (func?.type === FUNCTION_TYPE_JOB && func?.state?.value !== FUNCTION_INITIALIZED_STATE))
       },
       {
         id: 'deploy',
