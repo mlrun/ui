@@ -237,7 +237,9 @@ const WorkflowsTable = React.forwardRef(
     }, [params.jobId, workflowsStore.activeWorkflow.data])
 
     const getPipelineError = useCallback(state => {
-      return state === 'failed' && workflowsStore.activeWorkflow?.data?.run?.error !== 'None' ? {
+      return ['failed', 'error'].includes(state) &&
+      workflowsStore.activeWorkflow?.data?.run?.error &&
+      workflowsStore.activeWorkflow.data.run.error !== 'None' ? {
         title: 'Pipeline error - ',
         message: workflowsStore.activeWorkflow.data.run.error
       } : {}
@@ -318,7 +320,7 @@ const WorkflowsTable = React.forwardRef(
             <div>
               Are you sure you want to abort the job "{job.name}"? <br />
               {isJobKindLocal(job) &&
-                'This is a local run. You can abort the run, though the actual process will continue.'}
+              'This is a local run. You can abort the run, though the actual process will continue.'}
             </div>
           ),
           btnConfirmLabel: 'Abort',
