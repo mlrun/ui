@@ -25,7 +25,7 @@ import modelEndpointsApi from '../api/modelEndpoints-api'
 import { ARTIFACTS_TAB, DATASETS_TAB, FUNCTION_TYPE_SERVING, MODELS_TAB } from '../constants'
 import { filterArtifacts } from '../utils/filterArtifacts'
 import { generateArtifacts } from '../utils/generateArtifacts'
-import { generateModelEndpoints } from '../utils/generateModelEndpoints'
+import { parseModelEndpoints } from '../utils/parseModelEndpoints'
 import { getArtifactIdentifier } from '../utils/getUniqueIdentifier'
 import { parseArtifacts } from '../utils/parseArtifacts'
 import { parseFunctions } from '../utils/parseFunctions'
@@ -60,7 +60,8 @@ const initialState = {
   loading: false,
   modelEndpoints: {
     allData: [],
-    loading: false
+    loading: false,
+    modelEndpointLoading: false,
   },
   models: {
     allData: [],
@@ -253,7 +254,6 @@ export const fetchArtifactsFunctions = createAsyncThunk(
       })
   }
 )
-
 export const fetchArtifactsFunction = createAsyncThunk(
   'fetchArtifactsFunction',
   ({ project, name, hash, tag }) => {
@@ -262,7 +262,15 @@ export const fetchArtifactsFunction = createAsyncThunk(
     })
   }
 )
-
+export const fetchModelEndpoint = createAsyncThunk(
+  'fetchModelEndpoint',
+  ({ project, uid }) => {
+    return modelEndpointsApi.getModelEndpoint(project, uid)
+      .then(({ data: endpoint }) => {
+        return parseModelEndpoints([endpoint])?.[0]
+      })
+  }
+)
 export const fetchModelEndpoints = createAsyncThunk(
   'fetchModelEndpoints',
   ({ project, filters, config, params }, thunkAPI) => {
@@ -271,7 +279,7 @@ export const fetchModelEndpoints = createAsyncThunk(
     return modelEndpointsApi
       .getModelEndpoints(project, filters, config, params)
       .then(({ data: { endpoints = [] } }) => {
-        return generateModelEndpoints(endpoints)
+        return parseModelEndpoints(endpoints)
       })
       .catch(error => {
         largeResponseCatchHandler(
@@ -362,7 +370,7 @@ const artifactsSlice = createSlice({
     removeFiles(state) {
       state.files = initialState.files
     },
-    removeModel(state, action) {
+    removeModel(state) {
       state.models.selectedRowData = {
         content: initialState.models.selectedRowData.content,
         error: null,
@@ -489,7 +497,7 @@ const artifactsSlice = createSlice({
       state.files.loading = false
       state.loading = state.models.loading || state.dataSets.loading
     })
-    builder.addCase(fetchExpandedModel.pending, (state, action) => {
+    builder.addCase(fetchExpandedModel.pending, (state) => {
       state.models.selectedRowData = {
         content: initialState.models.selectedRowData.content,
         error: null,
@@ -517,6 +525,15 @@ const artifactsSlice = createSlice({
     })
     builder.addCase(fetchModel.rejected, state => {
       state.models.modelLoading = false
+    })
+    builder.addCase(fetchModelEndpoint.pending, state => {
+      state.modelEndpoints.modelEndpointLoading = true
+    })
+    builder.addCase(fetchModelEndpoint.fulfilled, state => {
+      state.modelEndpoints.modelEndpointLoading = false
+    })
+    builder.addCase(fetchModelEndpoint.rejected, state => {
+      state.modelEndpoints.modelEndpointLoading = false
     })
     builder.addCase(fetchModelEndpoints.pending, state => {
       state.modelEndpoints.loading = true
