@@ -137,7 +137,6 @@ Feature: Jobs Monitoring Page
         Then click on "Status_Filter_Element" element on "FilterBy_Popup" wizard
         Then "Status_All_Checkbox" element should be checked on "FilterBy_Popup" wizard
         Then click on "Status_Filter_Element" element on "FilterBy_Popup" wizard
-        Then verify "Table_Label_Filter_Input" element visibility on "FilterBy_Popup" wizard
         Then verify "Clear_Button" element visibility on "FilterBy_Popup" wizard
         Then verify "Apply_Button" element visibility on "FilterBy_Popup" wizard
         Then verify "Clear_Button" element on "FilterBy_Popup" wizard is disabled
@@ -195,6 +194,11 @@ Feature: Jobs Monitoring Page
         Then "Status_Workflows_Completed_Checkbox" element should be checked on "FilterBy_Popup" wizard
         Then verify "Workflows_Table" element visibility on "Jobs_Monitoring_Workflows_Tab" wizard
         Then verify that 1 row elements are displayed in "Workflows_Table" on "Jobs_Monitoring_Workflows_Tab" wizard
+        And turn on demo mode
+        And wait load page
+        Then click on "Table_FilterBy_Button" element on "Jobs_Monitoring_Workflows_Tab" wizard
+        #moved to demo mode ML-7352
+        Then verify "Table_Label_Filter_Input" element visibility on "FilterBy_Popup" wizard
 
     @MLJM
     @smoke

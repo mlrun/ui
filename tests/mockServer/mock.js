@@ -1796,7 +1796,7 @@ function putTags(req, res) {
 
     return (
       artifactMetaData?.project === req.params.project &&
-      artifact.kind === req.body.identifiers[0].kind &&
+      (artifact.kind === req.body.identifiers[0].kind || (!artifact.kind && req.body.identifiers[0].kind === 'artifact')) &&
       (artifactMetaData?.uid === req.body.identifiers[0].uid ||
         artifactMetaData?.tree === req.body.identifiers[0].uid) &&
       artifactSpecData?.db_key === req.body.identifiers[0].key

@@ -1,6 +1,6 @@
-Feature: Files Page
+Feature: Artifacts Page
 
-  Testcases that verifies functionality on Files Page
+  Testcases that verifies functionality on Artifacts Page
 
   @MLA
   @passive
@@ -110,6 +110,7 @@ Feature: Files Page
     Then click on cell with row index 1 in "expand_btn" column in "Files_Table" table on "Files" wizard
     And wait load page
     Then click on cell with row index 1 in "name" column in "Files_Table" table on "Files" wizard
+    And wait load page
     Then verify "Header" element visibility on "Files_Info_Pane" wizard
     Then click on "Table_FilterBy_Button" element on "Files" wizard
     Then check "Show_Iterations_Checkbox" element on "FilterBy_Popup" wizard
@@ -123,9 +124,7 @@ Feature: Files Page
   @MLA
   @passive
   @inProgress
-  @FAILED_TODO
   @smoke
-  #TODO: bug - ML-6457 [Modal wizards] The "Are you sure?" pop-up does not appear on the browser's back navigation
   Scenario: MLA005 - Check all mandatory components on Register Artifacts Popup
     Given open url
     And wait load page
@@ -224,6 +223,7 @@ Feature: Files Page
     Then value in "name" column with "text" in "Files_Table" on "Files" wizard should contains "test-artifact"
     Then value in "type" column with "text" in "Files_Table" on "Files" wizard should contains "table"
     Then click on cell with value "test-artifact" in "name" column in "Files_Table" table on "Files" wizard
+    And wait load page
     Then "Header" element on "Files_Info_Pane" should contains "test-artifact" value
     Then check "test-artifact" value in "key" column in "Overview_Table" table on "Files_Info_Pane" wizard
     Then check "latest" value in "tag" column in "Overview_Table" table on "Files_Info_Pane" wizard
@@ -259,6 +259,7 @@ Feature: Files Page
     And hover "MLRun_Logo" component on "commonPagesHeader" wizard
     And wait load page
     When click on cell with row index 1 in "name" column in "Files_Table" table on "Files" wizard
+    And wait load page
     Then verify "Info_Pane_Tab_Selector" element visibility on "Files_Info_Pane" wizard
     Then verify "Info_Pane_Tab_Selector" on "Files_Info_Pane" wizard should contains "Files_Info_Pane"."Tab_List"
     Then verify "Overview" tab is active in "Info_Pane_Tab_Selector" on "Files_Info_Pane" wizard
@@ -306,6 +307,7 @@ Feature: Files Page
     And click on cell with value "Artifacts" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
     And wait load page
     When click on cell with value "test-file" in "name" column in "Files_Table" table on "Files" wizard
+    And wait load page
     Then check "latest" value in "tag" column in "Overview_Table" table on "Files_Info_Pane" wizard
     Then click on "Edit_btn_table_view" element on "Files_Info_Pane" wizard
     And wait load page
@@ -318,6 +320,7 @@ Feature: Files Page
     Then click on "Apply_Button" element on "FilterBy_Popup" wizard
     And wait load page
     When click on cell with value "test-file" in "name" column in "Files_Table" table on "Files" wizard
+    And wait load page
     Then verify "Info_Pane_Tab_Selector" element visibility on "Files_Info_Pane" wizard
     Then verify "Info_Pane_Tab_Selector" on "Files_Info_Pane" wizard should contains "Files_Info_Pane"."Tab_List"
     Then verify "Overview" tab is active in "Info_Pane_Tab_Selector" on "Files_Info_Pane" wizard
