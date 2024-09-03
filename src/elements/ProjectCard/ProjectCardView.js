@@ -62,7 +62,7 @@ const ProjectCardView = React.forwardRef(({ actionsMenu, project, statistics }, 
               {project.metadata.name}
             </Tooltip>
 
-            <div className="project-card__info">
+            <div className="project-card__info" data-testid="project-card__created">
               <ClockIcon className="project-card__info-icon" />
               <span>Created {getTimeElapsedByDate(project.metadata.created)}</span>
             </div>
@@ -72,6 +72,7 @@ const ProjectCardView = React.forwardRef(({ actionsMenu, project, statistics }, 
             className={`project-card__header-sub-title project-card__info ${
               !project.spec.owner ? 'visibility-hidden' : ''
             } `}
+            data-testid="project-card__owner"
           >
             <span>Owner:</span>
             <span>{project.spec.owner}</span>
@@ -79,7 +80,7 @@ const ProjectCardView = React.forwardRef(({ actionsMenu, project, statistics }, 
         </div>
 
         <div className="project-card__content">
-          <div className="project-card__description">
+          <div className="project-card__description" data-testid="project-card__description">
             {project?.spec.description && (
               <Tooltip template={<TextTooltipTemplate text={project.spec.description} />}>
                 {project.spec.description}
@@ -93,9 +94,9 @@ const ProjectCardView = React.forwardRef(({ actionsMenu, project, statistics }, 
         </div>
 
         {project.metadata.labels && (
-          <div className="project-card__info" ref={chipRef}>
+          <div className="project-card__info" ref={chipRef} data-testid="project-card__labels">
             <span>Labels:</span>
-            <ReadOnlyChips labels={project.metadata.labels} shortChips/>
+            <ReadOnlyChips labels={project.metadata.labels} shortChips />
           </div>
         )}
       </div>
