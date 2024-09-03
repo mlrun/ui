@@ -75,39 +75,45 @@ const DetailsInputs = ({ inputs }) => {
 
         const fetchData =
           kind === featureVectorsKind
-            ? () =>
-                dispatch(
-                  featureStoreActions.fetchFeatureVectors(
-                    project,
-                    {
-                      name: key,
-                      tag: tag ?? TAG_FILTER_LATEST
-                    },
-                    {},
-                    false,
-                    true
-                  )
+            ? () => {
+                const params = {
+                  name: key
+                }
+
+                if (tag) {
+                  params.tag = tag
+                }
+
+                return dispatch(
+                  featureStoreActions.fetchFeatureVectors(project, params, {}, false, true)
                 )
-            : () =>
-                dispatch(
+              }
+            : () => {
+                const params = {
+                  iter: iteration,
+                  category:
+                    kind === 'artifacts'
+                      ? ARTIFACT_OTHER_TYPE
+                      : kind === 'datasets'
+                        ? DATASET_TYPE
+                        : MODEL_TYPE
+                }
+
+                if (tag) {
+                  params.tag = tag
+                }
+
+                return dispatch(
                   fetchArtifacts({
                     project,
                     filters: { name: key },
                     config: {
-                      params: {
-                        iter: iteration,
-                        tag: tag ?? TAG_FILTER_LATEST,
-                        category:
-                          kind === 'artifacts'
-                            ? ARTIFACT_OTHER_TYPE
-                            : kind === 'datasets'
-                              ? DATASET_TYPE
-                              : MODEL_TYPE
-                      }
+                      params
                     },
                     useExactName: true
                   })
                 ).unwrap()
+              }
 
         setRequestsCounter(counter => ++counter)
 
@@ -120,7 +126,7 @@ const DetailsInputs = ({ inputs }) => {
                 searchedInput = searchFeatureVectorItem(
                   parseFeatureVectors(inputs),
                   key,
-                  tag ?? TAG_FILTER_LATEST
+                  tag ?? uid ?? TAG_FILTER_LATEST
                 )
 
                 if (searchedInput) searchedInput.kind = featureVectorsKind
@@ -128,9 +134,8 @@ const DetailsInputs = ({ inputs }) => {
                 searchedInput = searchArtifactItem(
                   inputs,
                   key,
-                  tag ?? TAG_FILTER_LATEST,
-                  iteration,
-                  uid
+                  tag ?? uid ?? TAG_FILTER_LATEST, // uid from parseUri util it is a tree for artifacts
+                  iteration
                 )
               }
             }

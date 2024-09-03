@@ -41,14 +41,14 @@ export const generateInputResourceLink = (input, projectName) => {
   const inputsLinks = {
     model: `/projects/${projectName}/models/${MODELS_TAB}/${
       input.db_key || input.key
-    }/${input.tag ?? TAG_FILTER_LATEST}${input.iter ? `/${input.iter}` : ''}/overview`,
+    }/${input.tag ?? input.tree ?? TAG_FILTER_LATEST}${input.iter ? `/${input.iter}` : ''}/overview`,
     dataset: `/projects/${projectName}/${DATASETS_TAB}/${
       input.db_key || input.key
-    }/${input.tag ?? TAG_FILTER_LATEST}${input.iter ? `/${input.iter}` : ''}/overview`,
-    files: `/projects/${projectName}/${FILES_TAB}/${input.db_key || input.key}/${input.tag ?? TAG_FILTER_LATEST}${
+    }/${input.tag ?? input.tree ?? TAG_FILTER_LATEST}${input.iter ? `/${input.iter}` : ''}/overview`,
+    files: `/projects/${projectName}/${FILES_TAB}/${input.db_key || input.key}/${input.tag ?? input.tree ?? TAG_FILTER_LATEST}${
       input.iter ? `/${input.iter}` : ''
     }/overview`,
-    'feature-vectors': `/projects/${projectName}/${FEATURE_STORE_PAGE.toLowerCase()}/${FEATURE_VECTORS_TAB}/${input.name}/${input.tag ?? TAG_FILTER_LATEST}/overview`
+    'feature-vectors': `/projects/${projectName}/${FEATURE_STORE_PAGE.toLowerCase()}/${FEATURE_VECTORS_TAB}/${input.name}/${input.tag ?? input.uid ?? TAG_FILTER_LATEST}/overview`
   }
 
   return input ? inputsLinks[input.kind] ?? inputsLinks.files : ''
