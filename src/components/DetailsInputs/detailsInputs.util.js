@@ -35,7 +35,7 @@ import {
 
 import { ReactComponent as DetailsIcon } from 'igz-controls/images/view-details.svg'
 
-export const featureVectorsKind = 'feature-vectors'
+export const FEATURE_VECTORS_KIND = 'feature-vectors'
 
 export const generateInputResourceLink = (input, projectName) => {
   const inputsLinks = {

@@ -40,7 +40,7 @@ import { fetchArtifacts } from '../../reducers/artifactsReducer'
 import featureStoreActions from '../../actions/featureStore'
 
 import { generateArtifactIdentifiers } from '../Details/details.util'
-import { generateInputResourceLink, generateInputsTabContent } from './detailsInputs.util'
+import { FEATURE_VECTORS_KIND, generateInputResourceLink, generateInputsTabContent } from './detailsInputs.util'
 import { parseUri } from '../../utils'
 import { searchArtifactItem } from '../../utils/searchArtifactItem'
 import { searchFeatureVectorItem } from '../FeatureStore/FeatureVectors/featureVectors.util'
@@ -71,10 +71,8 @@ const DetailsInputs = ({ inputs }) => {
     Object.entries(inputs || {}).forEach(([key, value]) => {
       if (value.startsWith(MLRUN_STORAGE_INPUT_PATH_SCHEME)) {
         const { iteration, key, project, tag, kind, uid } = parseUri(value)
-        const featureVectorsKind = 'feature-vectors'
-
         const fetchData =
-          kind === featureVectorsKind
+          kind === FEATURE_VECTORS_KIND
             ? () => {
                 const params = {
                   name: key
@@ -122,14 +120,14 @@ const DetailsInputs = ({ inputs }) => {
             let searchedInput = null
 
             if (inputs?.length) {
-              if (kind === featureVectorsKind) {
+              if (kind === FEATURE_VECTORS_KIND) {
                 searchedInput = searchFeatureVectorItem(
                   parseFeatureVectors(inputs),
                   key,
                   tag ?? uid ?? TAG_FILTER_LATEST
                 )
 
-                if (searchedInput) searchedInput.kind = featureVectorsKind
+                if (searchedInput) searchedInput.kind = FEATURE_VECTORS_KIND
               } else {
                 searchedInput = searchArtifactItem(
                   inputs,
@@ -150,7 +148,7 @@ const DetailsInputs = ({ inputs }) => {
                     inputPath: value,
                     inputResourceLink: generateInputResourceLink(searchedInput, params.projectName),
                     isShowDetailsActive: true,
-                    isPreviewable: kind !== featureVectorsKind
+                    isPreviewable: kind !== FEATURE_VECTORS_KIND
                   }
                 }
               ])
