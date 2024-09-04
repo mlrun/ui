@@ -122,7 +122,7 @@ const ScheduledJobsCounters = () => {
           <span
             className="link"
             onClick={scheduledStats.all.link}
-            data-testid="scheduled_wf_see_all"
+            data-testid="scheduled_total_see_all"
           >
             See all
           </span>
