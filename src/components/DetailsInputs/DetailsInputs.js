@@ -20,7 +20,7 @@ such restriction.
 import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import { useDispatch } from 'react-redux'
 import { useParams } from 'react-router-dom'
-import { isEmpty } from 'lodash'
+import { isEmpty, orderBy } from 'lodash'
 import PropTypes from 'prop-types'
 import classnames from 'classnames'
 
@@ -37,13 +37,15 @@ import {
   TAG_FILTER_LATEST
 } from '../../constants'
 import { fetchArtifacts } from '../../reducers/artifactsReducer'
-import featureStoreActions from '../../actions/featureStore'
-
+import featureStoreApi from '../../api/featureStore-api'
 import { generateArtifactIdentifiers } from '../Details/details.util'
-import { FEATURE_VECTORS_KIND, generateInputResourceLink, generateInputsTabContent } from './detailsInputs.util'
+import {
+  FEATURE_VECTORS_KIND,
+  generateInputResourceLink,
+  generateInputsTabContent
+} from './detailsInputs.util'
 import { parseUri } from '../../utils'
 import { searchArtifactItem } from '../../utils/searchArtifactItem'
-import { searchFeatureVectorItem } from '../FeatureStore/FeatureVectors/featureVectors.util'
 import { parseFeatureVectors } from '../../utils/parseFeatureVectors'
 
 import './detailsInputs.scss'
@@ -67,86 +69,94 @@ const DetailsInputs = ({ inputs }) => {
   const dispatch = useDispatch()
   const params = useParams()
 
+  const fetchFeatureVector = useCallback((project, name, tag, uid) => {
+    return featureStoreApi
+      .getFeatureVectorByReference(project, name, tag ?? uid ?? TAG_FILTER_LATEST)
+      .then(response => {
+        if (response?.data) {
+          const parsedFeatureVector = parseFeatureVectors([response.data])[0]
+          parsedFeatureVector.kind = FEATURE_VECTORS_KIND
+
+          return parsedFeatureVector
+        }
+
+        return null
+      })
+  }, [])
+
+  const fetchArtifactByKind = useCallback(
+    (projectName, artifactName, kind, tag, tree, iter) => {
+      const params = {
+        iter,
+        category:
+          kind === 'artifacts'
+            ? ARTIFACT_OTHER_TYPE
+            : kind === 'datasets'
+              ? DATASET_TYPE
+              : MODEL_TYPE
+      }
+
+      if (tag) {
+        params.tag = tag
+      }
+
+      if (tree) {
+        params.tree = tree
+      }
+
+      if (!tag && !tree) {
+        params.tag = TAG_FILTER_LATEST
+      }
+
+      return dispatch(
+        fetchArtifacts({
+          project: projectName,
+          filters: { name: artifactName },
+          config: {
+            params
+          },
+          withExactName: true
+        })
+      )
+        .unwrap()
+        .then(artifacts => {
+          if (artifacts?.length) {
+            return searchArtifactItem(
+              orderBy(artifacts, ['metadata.updated'], 'desc'),
+              artifactName,
+              tag ?? tree ?? TAG_FILTER_LATEST,
+              iter
+            )
+          }
+
+          return null
+        })
+    },
+    [dispatch]
+  )
+
   useEffect(() => {
-    Object.entries(inputs || {}).forEach(([key, value]) => {
-      if (value.startsWith(MLRUN_STORAGE_INPUT_PATH_SCHEME)) {
-        const { iteration, key, project, tag, kind, uid } = parseUri(value)
-        const fetchData =
-          kind === FEATURE_VECTORS_KIND
-            ? () => {
-                const params = {
-                  name: key
-                }
-
-                if (tag) {
-                  params.tag = tag
-                }
-
-                return dispatch(
-                  featureStoreActions.fetchFeatureVectors(project, params, {}, false, true)
-                )
-              }
-            : () => {
-                const params = {
-                  iter: iteration,
-                  category:
-                    kind === 'artifacts'
-                      ? ARTIFACT_OTHER_TYPE
-                      : kind === 'datasets'
-                        ? DATASET_TYPE
-                        : MODEL_TYPE
-                }
-
-                if (tag) {
-                  params.tag = tag
-                }
-
-                return dispatch(
-                  fetchArtifacts({
-                    project,
-                    filters: { name: key },
-                    config: {
-                      params
-                    },
-                    useExactName: true
-                  })
-                ).unwrap()
-              }
+    Object.entries(inputs || {}).forEach(([inputName, inputPath]) => {
+      if (inputPath.startsWith(MLRUN_STORAGE_INPUT_PATH_SCHEME)) {
+        const { iteration, key, project, tag, kind, uid } = parseUri(inputPath)
+        const isFeatureVector = kind === FEATURE_VECTORS_KIND
+        const fetchData = isFeatureVector
+          ? () => fetchFeatureVector(project, key, tag, uid)
+          : () => fetchArtifactByKind(project, key, kind, tag, uid, iteration)
 
         setRequestsCounter(counter => ++counter)
 
         fetchData()
-          .then(inputs => {
-            let searchedInput = null
-
-            if (inputs?.length) {
-              if (kind === FEATURE_VECTORS_KIND) {
-                searchedInput = searchFeatureVectorItem(
-                  parseFeatureVectors(inputs),
-                  key,
-                  tag ?? uid ?? TAG_FILTER_LATEST
-                )
-
-                if (searchedInput) searchedInput.kind = FEATURE_VECTORS_KIND
-              } else {
-                searchedInput = searchArtifactItem(
-                  inputs,
-                  key,
-                  tag ?? uid ?? TAG_FILTER_LATEST, // uid from parseUri util it is a tree for artifacts
-                  iteration
-                )
-              }
-            }
-
-            if (searchedInput) {
+          .then(input => {
+            if (input) {
               setInputsContent(state => [
                 ...state,
                 {
-                  ...searchedInput,
+                  ...input,
                   ui: {
                     inputName: key,
-                    inputPath: value,
-                    inputResourceLink: generateInputResourceLink(searchedInput, params.projectName),
+                    inputPath,
+                    inputResourceLink: generateInputResourceLink(input, params.projectName),
                     isShowDetailsActive: true,
                     isPreviewable: kind !== FEATURE_VECTORS_KIND
                   }
@@ -158,7 +168,7 @@ const DetailsInputs = ({ inputs }) => {
                 {
                   ui: {
                     inputName: key,
-                    inputPath: value,
+                    inputPath,
                     isShowDetailsActive: false,
                     isPreviewable: false,
                     inputResourceLink: ''
@@ -166,6 +176,20 @@ const DetailsInputs = ({ inputs }) => {
                 }
               ])
             }
+          })
+          .catch(() => {
+            setInputsContent(state => [
+              ...state,
+              {
+                ui: {
+                  inputName: key,
+                  inputPath,
+                  isShowDetailsActive: false,
+                  isPreviewable: false,
+                  inputResourceLink: ''
+                }
+              }
+            ])
           })
           .finally(() => {
             setRequestsCounter(counter => --counter)
@@ -175,8 +199,8 @@ const DetailsInputs = ({ inputs }) => {
           ...state,
           {
             ui: {
-              inputName: key,
-              inputPath: value,
+              inputName,
+              inputPath,
               isShowDetailsActive: false,
               isPreviewable: false,
               inputResourceLink: ''
@@ -190,7 +214,7 @@ const DetailsInputs = ({ inputs }) => {
       setInputsContent([])
       setArtifactsIds([])
     }
-  }, [inputs, dispatch, params.projectName])
+  }, [inputs, dispatch, params.projectName, fetchFeatureVector, fetchArtifactByKind])
 
   return requestsCounter ? (
     <Loader />

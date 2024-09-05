@@ -26,7 +26,7 @@ import {
   TAG_FILTER_LATEST
 } from '../constants'
 
-const fetchFeatureStoreContent = (path, filters, config = {}, withLatestTag, apiV2, useExactName) => {
+const fetchFeatureStoreContent = (path, filters, config = {}, withLatestTag, apiV2) => {
   const params = {}
   const httpClient = apiV2 ? mainHttpClientV2 : mainHttpClient
 
@@ -47,7 +47,7 @@ const fetchFeatureStoreContent = (path, filters, config = {}, withLatestTag, api
   }
 
   if (filters?.name) {
-    params.name = `${useExactName ? '' : '~'}${filters.name}`
+    params.name = `$~${filters.name}`
   }
 
   return httpClient.get(path, {
@@ -109,14 +109,15 @@ const featureStoreApi = {
       params
     })
   },
-  getFeatureVectors: (project, filters, config, useExactName) => {
+  // reference = tag or uid
+  getFeatureVectorByReference: (project, name, reference) =>
+    mainHttpClient.get(`/projects/${project}/feature-vectors/${name}/references/${reference}`),
+  getFeatureVectors: (project, filters, config) => {
     return fetchFeatureStoreContent(
       `/projects/${project}/${FEATURE_VECTORS_TAB}`,
       filters,
       config,
-      true,
-      false,
-      useExactName
+      true
     )
   },
   getFeature: (project, feature) =>

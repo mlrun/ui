@@ -249,13 +249,13 @@ const featureStoreActions = {
     payload: featureSets
   }),
   fetchFeatureVectors:
-    (project, filters, config = {}, skipErrorNotification, useExactName) =>
+    (project, filters, config = {}, skipErrorNotification) =>
     dispatch => {
       dispatch(featureStoreActions.fetchFeatureVectorsBegin())
       config?.ui?.setRequestErrorMessage?.('')
 
       return featureStoreApi
-        .getFeatureVectors(project, filters, config, useExactName)
+        .getFeatureVectors(project, filters, config)
         .then(response => {
           dispatch(
             featureStoreActions.fetchFeatureVectorsSuccess(
