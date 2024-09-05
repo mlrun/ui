@@ -348,6 +348,7 @@ const FilterMenu = ({
               placeholder="key1,key2=value,..."
               type="text"
               value={labels}
+              tip="Add ~ before the filter value to return substring and case insensitive value."
             />
           )
         case NAME_FILTER:
