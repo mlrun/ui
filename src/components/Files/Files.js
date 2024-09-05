@@ -20,6 +20,7 @@ such restriction.
 import React, { useCallback, useEffect, useState, useMemo, useRef } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useLocation, useNavigate, useParams } from 'react-router-dom'
+import { isEmpty } from 'lodash'
 
 import AddArtifactTagPopUp from '../../elements/AddArtifactTagPopUp/AddArtifactTagPopUp'
 import FilesView from './FilesView'
@@ -38,7 +39,7 @@ import {
   TAG_FILTER_ALL_ITEMS
 } from '../../constants'
 import {
-  // checkForSelectedFile,
+  checkForSelectedFile,
   fetchFilesRowData,
   generateActionsMenu,
   generatePageData,
@@ -68,8 +69,6 @@ import { useYaml } from '../../hooks/yaml.hook'
 
 import './files.scss'
 import cssVariables from './files.scss'
-import { searchArtifactItem } from '../../utils/searchArtifactItem'
-import { isEmpty, isEqual } from 'lodash'
 
 const Files = () => {
   const [files, setFiles] = useState([])
@@ -348,33 +347,19 @@ const Files = () => {
 
   const handleSelectFile = useCallback(
     file => {
-      queueMicrotask(() => {
-        const { db_key: name, tag, iter, uid } = file
+      const { db_key: name, tag, iter, uid } = file
 
-        if (name) {
-          const artifacts = selectedRowData?.[name]?.content || files
-
-          if (artifacts.length > 0) {
-            const searchItem = searchArtifactItem(
-              artifacts.map(artifact => artifact.data ?? artifact),
-              name,
-              tag,
-              iter,
-              uid
-            )
-
-            if (!searchItem) {
-              navigate(`/projects/${params.projectName}/files`, { replace: true })
-            } else {
-              setSelectedFileMin(prevState => {
-                return isEqual(prevState, searchItem) ? prevState : searchItem
-              })
-            }
-          }
-        } else {
-          setSelectedFileMin({})
-        }
-      })
+      checkForSelectedFile(
+        name,
+        selectedRowData,
+        files,
+        tag,
+        iter,
+        uid,
+        navigate,
+        params.projectName,
+        setSelectedFileMin
+      )
     },
     [files, navigate, params.projectName, selectedRowData]
   )
