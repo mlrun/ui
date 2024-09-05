@@ -115,7 +115,9 @@ const MetricsSelector = ({
     event => {
       if (
         !event.target.closest('.metrics-selector-popup') &&
-        !event.target.closest('.metrics-selector')
+        !event.target.closest('.metrics-selector') &&
+        !event.target.closest('.tooltip-template') &&
+        !event.target.closest('#overlay_container')
       ) {
         setIsOpen(false)
       }
