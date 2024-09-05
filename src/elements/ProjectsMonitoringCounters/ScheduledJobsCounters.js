@@ -88,6 +88,16 @@ const ScheduledJobsCounters = () => {
             )}
           </span>
         </StatsCard.Col>
+        <StatsCard.Col>
+          <h6 className="stats__subtitle">Total</h6>
+          <span className="stats__counter">
+            {projectStore.projectsSummary.loading ? (
+              <Loader section small secondary />
+            ) : (
+              scheduledStats.all.counter
+            )}
+          </span>
+        </StatsCard.Col>
       </StatsCard.Row>
       <StatsCard.Row>
         <StatsCard.Col>
@@ -104,6 +114,15 @@ const ScheduledJobsCounters = () => {
             className="link"
             onClick={scheduledStats.workflows.link}
             data-testid="scheduled_wf_see_all"
+          >
+            See all
+          </span>
+        </StatsCard.Col>
+        <StatsCard.Col>
+          <span
+            className="link"
+            onClick={scheduledStats.all.link}
+            data-testid="scheduled_total_see_all"
           >
             See all
           </span>
