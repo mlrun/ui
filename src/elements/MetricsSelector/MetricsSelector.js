@@ -113,14 +113,11 @@ const MetricsSelector = ({
 
   const windowClickHandler = useCallback(
     event => {
-      const isTooltip = event.target.closest('.tooltip-template')
-      const isOverlayContainer = event.target.closest('#overlay_container')
-
-      if (isTooltip || isOverlayContainer) return
-
       if (
         !event.target.closest('.metrics-selector-popup') &&
-        !event.target.closest('.metrics-selector')
+        !event.target.closest('.metrics-selector') &&
+        !event.target.closest('.tooltip-template') &&
+        !event.target.closest('#overlay_container')
       ) {
         setIsOpen(false)
       }
