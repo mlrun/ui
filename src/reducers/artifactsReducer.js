@@ -61,7 +61,7 @@ const initialState = {
   modelEndpoints: {
     allData: [],
     loading: false,
-    modelEndpointLoading: false,
+    modelEndpointLoading: false
   },
   models: {
     allData: [],
@@ -266,15 +266,11 @@ export const fetchArtifactsFunction = createAsyncThunk(
     })
   }
 )
-export const fetchModelEndpoint = createAsyncThunk(
-  'fetchModelEndpoint',
-  ({ project, uid }) => {
-    return modelEndpointsApi.getModelEndpoint(project, uid)
-      .then(({ data: endpoint }) => {
-        return parseModelEndpoints([endpoint])?.[0]
-      })
-  }
-)
+export const fetchModelEndpoint = createAsyncThunk('fetchModelEndpoint', ({ project, uid }) => {
+  return modelEndpointsApi.getModelEndpoint(project, uid).then(({ data: endpoint }) => {
+    return parseModelEndpoints([endpoint])?.[0]
+  })
+})
 export const fetchModelEndpoints = createAsyncThunk(
   'fetchModelEndpoints',
   ({ project, filters, config, params }, thunkAPI) => {
@@ -503,7 +499,7 @@ const artifactsSlice = createSlice({
       state.files.loading = false
       state.loading = state.models.loading || state.dataSets.loading
     })
-    builder.addCase(fetchExpandedModel.pending, (state) => {
+    builder.addCase(fetchExpandedModel.pending, state => {
       state.models.selectedRowData = {
         content: initialState.models.selectedRowData.content,
         error: null,

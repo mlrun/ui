@@ -38,7 +38,7 @@ import {
   TAG_FILTER_ALL_ITEMS
 } from '../../constants'
 import {
-  checkForSelectedFile,
+  // checkForSelectedFile,
   fetchFilesRowData,
   generateActionsMenu,
   generatePageData,
@@ -68,6 +68,8 @@ import { useYaml } from '../../hooks/yaml.hook'
 
 import './files.scss'
 import cssVariables from './files.scss'
+import { searchArtifactItem } from '../../utils/searchArtifactItem'
+import { isEmpty, isEqual } from 'lodash'
 
 const Files = () => {
   const [files, setFiles] = useState([])
@@ -344,28 +346,44 @@ const Files = () => {
     dispatch(setFilters({ groupBy: GROUP_BY_NONE }))
   }, [dispatch, params.projectName])
 
+  const handleSelectFile = useCallback(
+    file => {
+      queueMicrotask(() => {
+        const { db_key: name, tag, iter, uid } = file
+
+        if (name) {
+          const artifacts = selectedRowData?.[name]?.content || files
+
+          if (artifacts.length > 0) {
+            const searchItem = searchArtifactItem(
+              artifacts.map(artifact => artifact.data ?? artifact),
+              name,
+              tag,
+              iter,
+              uid
+            )
+
+            if (!searchItem) {
+              navigate(`/projects/${params.projectName}/files`, { replace: true })
+            } else {
+              setSelectedFileMin(prevState => {
+                return isEqual(prevState, searchItem) ? prevState : searchItem
+              })
+            }
+          }
+        } else {
+          setSelectedFileMin({})
+        }
+      })
+    },
+    [files, navigate, params.projectName, selectedRowData]
+  )
+
   useEffect(() => {
-    checkForSelectedFile(
-      params.name,
-      selectedRowData,
-      files,
-      params.tag,
-      params.iter,
-      params.uid,
-      navigate,
-      params.projectName,
-      setSelectedFileMin
-    )
-  }, [
-    files,
-    navigate,
-    params.iter,
-    params.name,
-    params.projectName,
-    params.tag,
-    params.uid,
-    selectedRowData
-  ])
+    if (params.name && isEmpty(selectedFileMin)) {
+      handleSelectFile({ db_key: params.name, tag: params.tag, iter: params.iter })
+    }
+  }, [handleSelectFile, params.iter, params.name, params.tag, selectedFileMin])
 
   const handleRegisterArtifact = useCallback(() => {
     openPopUp(RegisterArtifactModal, {
@@ -403,6 +421,7 @@ const Files = () => {
       handleExpandRow={handleExpandRow}
       handleRefresh={handleRefresh}
       handleRegisterArtifact={handleRegisterArtifact}
+      handleSelectFile={handleSelectFile}
       requestErrorMessage={requestErrorMessage}
       maxArtifactsErrorIsShown={maxArtifactsErrorIsShown}
       pageData={pageData}
