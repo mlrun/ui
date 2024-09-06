@@ -203,9 +203,11 @@ const FunctionsPanel = ({
         return handleDeploy(data)
       }
 
-      createFunctionSuccess().then(() => {
-        navigate(`/projects/${params.projectName}/functions/${result.data.hash_key}/overview`)
-      })
+      if (result) {
+        createFunctionSuccess().then(() => {
+          navigate(`/projects/${params.projectName}/functions/${result.data.hash_key}/overview`)
+        })
+      }
     })
   }
 
