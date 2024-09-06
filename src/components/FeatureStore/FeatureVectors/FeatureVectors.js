@@ -377,7 +377,8 @@ const FeatureVectors = ({
     fetchData,
     filters: filtersStore,
     setExpandedRowsData: setSelectedRowData,
-    createRowData: createFeatureVectorsRowData,
+    createRowData: rowItem =>
+      createFeatureVectorsRowData(rowItem, FEATURE_VECTORS_TAB, params.projectName),
     fetchTags
   })
 
@@ -440,7 +441,13 @@ const FeatureVectors = ({
       tagAbortControllerCurrent.abort(REQUEST_CANCELED)
       setCreateVectorPopUpIsOpen(false)
     }
-  }, [removeFeatureVector, removeFeatureVectors, setCreateVectorPopUpIsOpen, params.projectName, tagAbortControllerRef])
+  }, [
+    removeFeatureVector,
+    removeFeatureVectors,
+    setCreateVectorPopUpIsOpen,
+    params.projectName,
+    tagAbortControllerRef
+  ])
 
   const virtualizationConfig = useVirtualization({
     rowsData: {

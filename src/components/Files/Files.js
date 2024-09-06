@@ -310,7 +310,7 @@ const Files = () => {
   }
 
   useInitialTableFetch({
-    createRowData: createFilesRowData,
+    createRowData: rowItem => createFilesRowData(rowItem, params.projectName, frontendSpec),
     fetchData,
     fetchTags,
     filterMenuName: FILES_FILTERS,

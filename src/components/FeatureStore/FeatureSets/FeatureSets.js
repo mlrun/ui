@@ -298,7 +298,8 @@ const FeatureSets = ({
   useInitialTableFetch({
     fetchData,
     setExpandedRowsData: setSelectedRowData,
-    createRowData: createFeatureSetsRowData,
+    createRowData: rowItem =>
+      createFeatureSetsRowData(rowItem, FEATURE_SETS_TAB, params.projectName),
     fetchTags,
     filters: filtersStore
   })
