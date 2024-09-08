@@ -26,11 +26,7 @@ import classnames from 'classnames'
 import FilterMenu from '../../FilterMenu/FilterMenu'
 import WorkflowsTable from '../../../elements/WorkflowsTable/WorkflowsTable'
 
-import {
-  JOBS_PAGE,
-  MONITOR_WORKFLOWS_TAB,
-  REQUEST_CANCELED
-} from '../../../constants'
+import { JOBS_PAGE, MONITOR_WORKFLOWS_TAB, REQUEST_CANCELED } from '../../../constants'
 import {
   fetchInitialWorkflows,
   generateFilters,
@@ -136,18 +132,19 @@ const MonitorWorkflows = ({ deleteWorkflows, fetchFunctionLogs, fetchWorkflows }
             View running workflows and previously executed workflows
           </p>
         )}
-        <div className="content__action-bar-wrapper">
-          <div className={classnames(!params.workflowId && 'action-bar')}>
-            <FilterMenu
-              filters={filters}
-              onChange={getWorkflows}
-              page={JOBS_PAGE}
-              tab={MONITOR_WORKFLOWS_TAB}
-              withoutExpandButton
-              hidden={Boolean(params.workflowId)}
-            />
+        {Boolean(!params.workflowId) && (
+          <div className="content__action-bar-wrapper">
+            <div className={classnames(!params.workflowId && 'action-bar')}>
+              <FilterMenu
+                filters={filters}
+                onChange={getWorkflows}
+                page={JOBS_PAGE}
+                tab={MONITOR_WORKFLOWS_TAB}
+                withoutExpandButton
+              />
+            </div>
           </div>
-        </div>
+        )}
       </div>
       <WorkflowsTable
         backLink={`/projects/${params.projectName}/jobs/${MONITOR_WORKFLOWS_TAB}`}
