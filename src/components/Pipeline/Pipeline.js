@@ -321,7 +321,7 @@ const Pipeline = ({ content }) => {
           )}
         </div>
       ) : (
-        <NoData message="No ingestion graph available." />
+        <NoData message="The ingestion function has no steps and therefore no graph." />
       )}
     </div>
   )
