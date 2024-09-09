@@ -23,9 +23,11 @@ import commonTable from '../components/table.component'
 import actionMenu from '../components/action-menu.component'
 import {
   generateInputGroup,
-  generateLabelGroup
+  generateLabelGroup,
+  generateDropdownGroup
 } from '../../common-tools/common-tools'
 import labelComponent from '../components/label.component'
+import dropdownComponent from '../components/dropdown.component'
 
 const actionMenuStructure = {
   root: '.actions-menu__container',
@@ -99,6 +101,15 @@ module.exports = {
     Table_Expand_Rows_Button: By.css(
       '.content [data-testid="toggle-collapse"]'
     ),
-    Functions_Table: commonTable(functionsTable)
+    Functions_Table: commonTable(functionsTable),
+    Date_Picker_Filter_Dropdown: dropdownComponent(
+      generateDropdownGroup(
+        '[data-testid="date-picker-container"]',
+        '[data-testid="date-picker-input"]',
+        '.date-picker__pop-up .select__item',
+        '.data-ellipsis .data-ellipsis',
+        false
+      )
+    )
   }
 }

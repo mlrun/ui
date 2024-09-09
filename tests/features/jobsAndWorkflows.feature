@@ -1049,6 +1049,7 @@ Feature: Jobs and workflows
     @passive
     @links
     @smoke
+    # @uniqueTag
     Scenario: MLJW030 - Check redirect to project`s Function Infopane from Job Overview
         Given open url
         And click on row root with value "churn-project-admin" in "name" column in "Projects_Table" table on "Projects" wizard
@@ -1246,9 +1247,7 @@ Feature: Jobs and workflows
         Then verify redirection from "projects/INVALID/jobs/monitor-workflows/workflow/eaae138e-439a-47fa-93c6-ba0fe1dc3b79/07f98fb46a424b2dbee5247b35f37727/overview" to "projects"
 
     @MLJW
-    @FAILED_TODO
     @smoke
-    #TODO: [Batch Run] Unexpected Application Error screen ML-6250
     Scenario: MLJW012 - Check all mandatory components on Batch Run wizard - Function selection
         Given open url
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
@@ -1306,11 +1305,11 @@ Feature: Jobs and workflows
         Then verify "Title" element visibility in "Filter_Dropdown" on "Modal_Wizard_Form" wizard
         Then "Title" element in "Filter_Dropdown" on "Modal_Wizard_Form" should contains "Filter by category" value
         And click on "Title" element on "Modal_Wizard_Form" wizard
-        Then select "Utilities" option in "Category_Selector_Dropdown" filter dropdown on "Modal_Wizard_Form" wizard
+        Then select "ETL" option in "Category_Selector_Dropdown" filter dropdown on "Modal_Wizard_Form" wizard
         When click on "Apply_Button" element in "Filter_Dropdown" on "Modal_Wizard_Form" wizard
         And wait load page
         And click on "Title" element on "Modal_Wizard_Form" wizard
-        Then value in "labels" column with "attribute" in "Functions_Table" on "Modal_Wizard_Form" wizard should contains "Utilities"
+        Then value in "labels" column with "attribute" in "Functions_Table" on "Modal_Wizard_Form" wizard should contains "ETL"
         And click on "Filter_Button_Hub_Tab" element on "Modal_Wizard_Form" wizard
         When click on "Clear_Button" element in "Filter_Dropdown" on "Modal_Wizard_Form" wizard
         When type searchable fragment "test" into "Search_Input" on "Modal_Wizard_Form" wizard
@@ -1368,11 +1367,11 @@ Feature: Jobs and workflows
         Then verify "Clear_Button" not input element in "Filter_Dropdown" on "Modal_Wizard_Form" wizard is disabled
         Then verify "Apply_Button" not input element in "Filter_Dropdown" on "Modal_Wizard_Form" wizard is disabled
         And click on "Title" element on "Modal_Wizard_Form" wizard
-        Then select "Utilities" option in "Category_Selector_Dropdown" filter dropdown on "Modal_Wizard_Form" wizard
+        Then select "ETL" option in "Category_Selector_Dropdown" filter dropdown on "Modal_Wizard_Form" wizard
         When click on "Apply_Button" element in "Filter_Dropdown" on "Modal_Wizard_Form" wizard
         And wait load page
         And click on "Title" element on "Modal_Wizard_Form" wizard
-        Then value in "labels" column with "attribute" in "Functions_Table" on "Modal_Wizard_Form" wizard should contains "Utilities"
+        Then value in "labels" column with "attribute" in "Functions_Table" on "Modal_Wizard_Form" wizard should contains "ETL"
 
     @MLJW
     @smoke
@@ -1503,7 +1502,7 @@ Feature: Jobs and workflows
         Then verify "Run_Details_Labels_Table" element visibility on "Modal_Wizard_Form" wizard
         And click on "Add_Label_Button" element on "Modal_Wizard_Form" wizard
         Then type value "/" to "Run_Details_Labels_Key" field on "Modal_Wizard_Form" wizard
-        Then verify labels warning should display options "Input_Hint"."Labels_Warning_Key"
+        Then verify labels warning should display options "Input_Hint"."Labels_Warning_Key_Modal_Wizard_Form"
         Then type value "/" to "Run_Details_Labels_Value" field on "Modal_Wizard_Form" wizard without inputgroup
         When click on "Title" element on "Modal_Wizard_Form" wizard
         And click on "Close_Label_Button" element on "Modal_Wizard_Form" wizard   

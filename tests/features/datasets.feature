@@ -73,6 +73,7 @@ Feature: Datasets Page
     Then click on cell with row index 1 in "expand_btn" column in "Datasets_Table" table on "Datasets" wizard
     And wait load page
     Then click on cell with row index 2 in "name" column in "Datasets_Table" table on "Datasets" wizard
+    And wait load page
     Then verify "Header" element visibility on "Datasets_Info_Pane" wizard
     Then click on "Table_FilterBy_Button" element on "Datasets" wizard
     Then check "Show_Iterations_Checkbox" element on "FilterBy_Popup" wizard
@@ -95,6 +96,7 @@ Feature: Datasets Page
     And click on cell with value "Datasets" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
     And wait load page
     When click on cell with row index 1 in "name" column in "Datasets_Table" table on "Datasets" wizard
+    And wait load page
     Then verify "Info_Pane_Tab_Selector" on "Datasets_Info_Pane" wizard should contains "Datasets_Info_Pane"."Tab_List"
     Then verify "Overview" tab is active in "Info_Pane_Tab_Selector" on "Datasets_Info_Pane" wizard
     Then verify "Header" element visibility on "Datasets_Info_Pane" wizard
@@ -150,6 +152,7 @@ Feature: Datasets Page
     And click on cell with value "Datasets" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
     And wait load page
     When click on cell with value "test-dataset" in "name" column in "Datasets_Table" table on "Datasets" wizard
+    And wait load page
     Then check "latest" value in "tag" column in "Overview_Table" table on "Datasets_Info_Pane" wizard
     Then click on "Edit_btn_table_view" element on "Datasets_Info_Pane" wizard
     And wait load page
@@ -162,6 +165,7 @@ Feature: Datasets Page
     Then click on "Apply_Button" element on "FilterBy_Popup" wizard
     And wait load page
     When click on cell with value "test-dataset" in "name" column in "Datasets_Table" table on "Datasets" wizard
+    And wait load page
     Then verify "Info_Pane_Tab_Selector" element visibility on "Datasets_Info_Pane" wizard
     Then verify "Info_Pane_Tab_Selector" on "Datasets_Info_Pane" wizard should contains "Datasets_Info_Pane"."Tab_List"
     Then verify "Overview" tab is active in "Info_Pane_Tab_Selector" on "Datasets_Info_Pane" wizard
@@ -263,6 +267,7 @@ Feature: Datasets Page
     And wait load page
     Then check "dataset-test" value in "name" column in "Datasets_Table" table on "Datasets" wizard
     Then click on cell with value "dataset-test" in "name" column in "Datasets_Table" table on "Datasets" wizard
+    And wait load page
     Then "Header" element on "Datasets_Info_Pane" should contains "dataset-test" value
     Then check "dataset-test" value in "key" column in "Overview_Table" table on "Datasets_Info_Pane" wizard
     Then check "latest" value in "tag" column in "Overview_Table" table on "Datasets_Info_Pane" wizard
@@ -364,6 +369,7 @@ Feature: Datasets Page
     Then click on "Apply_Button" element on "FilterBy_Popup" wizard
     And wait load page
     Then click on cell with row index 1 in "expand_btn" column in "Datasets_Table" table on "Datasets" wizard
+    And wait load page
     Then select "View YAML" option in action menu on "Datasets" wizard in "Datasets_Table" table at row with "latest" value in "name_expand_btn" column
     Then verify if "View_YAML" popup dialog appears
     Then verify "Cross_Cancel_Button" element visibility on "View_YAML" wizard
@@ -381,6 +387,7 @@ Feature: Datasets Page
     Then verify action menu on "Datasets" wizard in "Datasets_Table" table with "test-regressor_cox-test-summary" value in "name" column should contains "Common_Lists"."Action_Menu_List"
     Then verify that in action menu on "Datasets" wizard in "Datasets_Table" table with "test-regressor_cox-test-summary" value in "name" column "Delete" option is enabled
     When click on cell with row index 1 in "name" column in "Datasets_Table" table on "Datasets" wizard
+    And wait load page
     Then check "latest" value in "tag" column in "Overview_Table" table on "Datasets_Info_Pane" wizard
     Then verify "Action_Menu" element visibility on "Datasets_Info_Pane" wizard
     Then verify "Action_Menu" dropdown element on "Datasets_Info_Pane" wizard should contains "Common_Lists"."Action_Menu_List"
@@ -397,11 +404,12 @@ Feature: Datasets Page
     Then click on "Apply_Button" element on "FilterBy_Popup" wizard
     And wait load page
     Then verify action menu on "Datasets" wizard in "Datasets_Table" table with "test-regressor_cox-test-summary" value in "name" column should contains "Common_Lists"."Action_Menu_List_Expanded"
-    Then verify that in action menu on "Datasets" wizard in "Datasets_Table" table with "test-regressor_cox-test-summary" value in "name" column "Delete" option is disabled
+    Then verify that in action menu on "Datasets" wizard in "Datasets_Table" table with "test-regressor_cox-test-summary" value in "name" column "Delete" option is enabled
     When click on cell with row index 1 in "name" column in "Datasets_Table" table on "Datasets" wizard
+    And wait load page
     Then check "Click to add" value in "tag" column in "Overview_Table" table on "Datasets_Info_Pane" wizard
     Then verify "Action_Menu" dropdown element on "Datasets_Info_Pane" wizard should contains "Common_Lists"."Action_Menu_List"
-    Then check that "Delete" option in action menu on "Datasets_Info_Pane" wizard is disabled
+    Then check that "Delete" option in action menu on "Datasets_Info_Pane" wizard is enabled
   
   @MLD
   @passive
@@ -485,6 +493,7 @@ Feature: Datasets Page
     And click on cell with value "Datasets" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
     And wait load page
     Then click on cell with row index 1 in "name" column in "Datasets_Table" table on "Datasets" wizard
+    And wait load page
     Then verify "Info_Pane_Tab_Selector" element visibility on "Datasets_Info_Pane" wizard
     Then verify "Overview" tab is active in "Info_Pane_Tab_Selector" on "Datasets_Info_Pane" wizard
     Then verify "Header" element visibility on "Datasets_Info_Pane" wizard
@@ -492,7 +501,8 @@ Feature: Datasets Page
     Then compare "Header" element value on "Datasets_Info_Pane" wizard with test "name" context value
     Then verify that row index 1 is active in "Datasets_Table" table on "Datasets" wizard
     Then verify that row index 2 is NOT active in "Datasets_Table" table on "Datasets" wizard
-    Then click on cell with row index 2 in "name" column in "Datasets_Table" table on "Datasets" wizard  
+    Then click on cell with row index 2 in "name" column in "Datasets_Table" table on "Datasets" wizard
+    And wait load page
     Then verify that row index 2 is active in "Datasets_Table" table on "Datasets" wizard   
     Then verify that row index 1 is NOT active in "Datasets_Table" table on "Datasets" wizard
     Then verify "Info_Pane_Tab_Selector" element visibility on "Datasets_Info_Pane" wizard
@@ -512,6 +522,7 @@ Feature: Datasets Page
     And click on cell with value "Datasets" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
     And wait load page
     When click on cell with row index 1 in "name" column in "Datasets_Table" table on "Datasets" wizard
+    And wait load page
     Then verify "Info_Pane_Tab_Selector" on "Datasets_Info_Pane" wizard should contains "Datasets_Info_Pane"."Tab_List"
     Then verify "Overview" tab is active in "Info_Pane_Tab_Selector" on "Datasets_Info_Pane" wizard
     Then verify "Overview_General_Headers" on "Datasets_Info_Pane" wizard should contains "Datasets_Info_Pane"."Overview_General_Headers"
@@ -537,6 +548,7 @@ Feature: Datasets Page
     And click on cell with value "Datasets" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
     And wait load page
     When click on cell with row index 1 in "name" column in "Datasets_Table" table on "Datasets" wizard
+    And wait load page
     Then verify "Info_Pane_Tab_Selector" on "Datasets_Info_Pane" wizard should contains "Datasets_Info_Pane"."Tab_List"
     Then verify "Overview" tab is active in "Info_Pane_Tab_Selector" on "Datasets_Info_Pane" wizard
     Then verify "Overview_General_Headers" on "Datasets_Info_Pane" wizard should contains "Datasets_Info_Pane"."Overview_General_Headers"
@@ -565,6 +577,7 @@ Feature: Datasets Page
     And click on cell with value "Datasets" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
     And wait load page
     When click on cell with row index 1 in "name" column in "Datasets_Table" table on "Datasets" wizard
+    And wait load page
     Then verify "Info_Pane_Tab_Selector" on "Datasets_Info_Pane" wizard should contains "Datasets_Info_Pane"."Tab_List"
     Then verify "Overview" tab is active in "Info_Pane_Tab_Selector" on "Datasets_Info_Pane" wizard
     Then verify "Overview_General_Headers" on "Datasets_Info_Pane" wizard should contains "Datasets_Info_Pane"."Overview_General_Headers"
@@ -597,6 +610,7 @@ Feature: Datasets Page
     Then click on "Apply_Button" element on "FilterBy_Popup" wizard
     And wait load page
     Then click on cell with row index 2 in "name" column in "Datasets_Table" table on "Datasets" wizard
+    And wait load page
     Then save to context "name" column on 2 row from "Datasets_Table" table on "Datasets" wizard
     Then compare "Header" element value on "Datasets_Info_Pane" wizard with test "name" context value
     Then check "latest" value in "tag" column in "Overview_Table" table on "Datasets_Info_Pane" wizard
@@ -623,6 +637,7 @@ Feature: Datasets Page
     And click on cell with value "Datasets" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
     And wait load page
     When click on cell with row index 1 in "name" column in "Datasets_Table" table on "Datasets" wizard
+    And wait load page
     Then verify "Train_Button" element visibility on "Datasets_Info_Pane" wizard
     Then "Train_Button" element on "Datasets_Info_Pane" should contains "Train" value
     Then click on "Train_Button" element on "Datasets_Info_Pane" wizard
@@ -754,6 +769,7 @@ Feature: Datasets Page
     And click on cell with value "Datasets" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
     And wait load page
     When click on cell with row index 1 in "name" column in "Datasets_Table" table on "Datasets" wizard
+    And wait load page
     Then click on "Train_Button" element on "Datasets_Info_Pane" wizard
     And wait load page
     Then "Form_Header_Run_Details" element on "commonPagesHeader" should contains "Run Details" value
@@ -767,7 +783,7 @@ Feature: Datasets Page
     Then verify "Labels_Table" element visibility on "Modal_Wizard_Form" wizard
     And click on "Add_Label_Button" element on "Modal_Wizard_Form" wizard
     Then type value "/" to "Run_Details_Labels_Key" field on "Modal_Wizard_Form" wizard
-    Then verify labels warning should display options "Input_Hint"."Labels_Warning_Key"
+    Then verify labels warning should display options "Input_Hint"."Labels_Warning_Key_Modal_Wizard_Form"
     Then type value "/" to "Run_Details_Labels_Value" field on "Modal_Wizard_Form" wizard without inputgroup
     When click on "Title" element on "Modal_Wizard_Form" wizard
     And click on "Close_Label_Button" element on "Modal_Wizard_Form" wizard   
@@ -797,6 +813,7 @@ Feature: Datasets Page
     And click on cell with value "Datasets" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
     And wait load page
     When click on cell with row index 3 in "name" column in "Datasets_Table" table on "Datasets" wizard
+    And wait load page
     Then click on "Train_Button" element on "Datasets_Info_Pane" wizard
     And wait load page
     Then "Form_Header_Run_Details" element on "commonPagesHeader" should contains "Run Details" value
@@ -1160,6 +1177,7 @@ Feature: Datasets Page
     And wait load page
     Then verify that 9 row elements are displayed in "Datasets_Table" on "Datasets" wizard
     When click on cell with row index 1 in "name" column in "Datasets_Table" table on "Datasets" wizard
+    And wait load page
     Then verify "Info_Pane_Tab_Selector" on "Datasets_Info_Pane" wizard should contains "Datasets_Info_Pane"."Tab_List"
     Then verify that 9 row elements are displayed in "Datasets_Table" on "Datasets" wizard
     Then click on "Cross_Close_Button" element on "Datasets_Info_Pane" wizard
@@ -1171,6 +1189,7 @@ Feature: Datasets Page
     Then check "expand_btn" visibility in "Datasets_Table" on "Datasets" wizard with 0 offset
     Then verify that 9 row elements are displayed in "Datasets_Table" on "Datasets" wizard
     Then click on cell with row index 1 in "expand_btn" column in "Datasets_Table" table on "Datasets" wizard
+    And wait load page
     Then verify that 10 row elements are displayed in "Datasets_Table" on "Datasets" wizard
     Then select "View YAML" option in action menu on "Datasets" wizard in "Datasets_Table" table at row with "latest" value in "name_expand_btn" column
     Then verify if "View_YAML" popup dialog appears
@@ -1178,16 +1197,18 @@ Feature: Datasets Page
     Then click on "Cross_Cancel_Button" element on "View_YAML" wizard
     Then verify that 10 row elements are displayed in "Datasets_Table" on "Datasets" wizard
     Then click on cell with row index 2 in "name" column in "Datasets_Table" table on "Datasets" wizard
+    And wait load page
     Then verify "Info_Pane_Tab_Selector" on "Datasets_Info_Pane" wizard should contains "Datasets_Info_Pane"."Tab_List"
     Then verify that 10 row elements are displayed in "Datasets_Table" on "Datasets" wizard
     Then click on "Cross_Close_Button" element on "Datasets_Info_Pane" wizard
     Then verify that 10 row elements are displayed in "Datasets_Table" on "Datasets" wizard
     Then click on cell with row index 1 in "expand_btn" column in "Datasets_Table" table on "Datasets" wizard
+    And wait load page
     Then verify that 9 row elements are displayed in "Datasets_Table" on "Datasets" wizard
 
   @MLD
   @inProgress
-  @smoke     
+  @smoke
 # Run this test case only on full screen
   Scenario: MLD027 - Verify dataset elements visibility on Datasets Table with high number of rows
     * create "new_dataset_10" Dataset with "set_10" tag in "churn-project-admin" project with code 200
@@ -1221,28 +1242,20 @@ Feature: Datasets Page
     Then check "survival-curves_coxhazard-summary" value not in "name" column in "Datasets_Table" table on "Datasets" wizard
     Then check "iris_gen_iris_dataset" value not in "name" column in "Datasets_Table" table on "Datasets" wizard
     Then check "data_clean_cleaned-data" value not in "name" column in "Datasets_Table" table on "Datasets" wizard
-    Then click on cell with value "new_dataset_24" in "name" column in "Datasets_Table" table on "Datasets" wizard
-    Then "Header" element on "Datasets_Info_Pane" should contains "new_dataset_24" value
-    Then click on "Cross_Close_Button" element on "Datasets_Info_Pane" wizard
+    When scroll to the element with "test-regressor_cox-test-summary" value in "name" column in "Datasets_Table" table on "Datasets" wizard
     And wait load page
-    And wait load page
-    Then verify that 20 row elements are displayed in "Datasets_Table" on "Datasets" wizard
+    Then verify that 17 row elements are displayed in "Datasets_Table" on "Datasets" wizard
     Then check "test-regressor_cox-test-summary" value in "name" column in "Datasets_Table" table on "Datasets" wizard
-    Then check "survival-curves_coxhazard-summary" value in "name" column in "Datasets_Table" table on "Datasets" wizard
     Then check "iris_gen_iris_dataset" value in "name" column in "Datasets_Table" table on "Datasets" wizard
-    Then check "new_dataset_10" value in "name" column in "Datasets_Table" table on "Datasets" wizard
-    Then check "data_clean_cleaned-data" value not in "name" column in "Datasets_Table" table on "Datasets" wizard
-    Then click on cell with value "iris_gen_iris_dataset" in "name" column in "Datasets_Table" table on "Datasets" wizard
-    Then "Header" element on "Datasets_Info_Pane" should contains "iris_gen_iris_dataset" value
-    Then click on "Cross_Close_Button" element on "Datasets_Info_Pane" wizard
-    Then verify that 21 row elements are displayed in "Datasets_Table" on "Datasets" wizard
-    Then check "new_dataset_11" value not in "name" column in "Datasets_Table" table on "Datasets" wizard
-    Then check "new_dataset_12" value not in "name" column in "Datasets_Table" table on "Datasets" wizard
+    Then check "new_dataset_10" value not in "name" column in "Datasets_Table" table on "Datasets" wizard
     Then check "data_clean_cleaned-data" value in "name" column in "Datasets_Table" table on "Datasets" wizard
-    Then type value "new_dataset_11" to "Table_Name_Filter_Input" field on "Datasets" wizard
+    Then click on cell with value "data_clean_cleaned-data" in "name" column in "Datasets_Table" table on "Datasets" wizard
+    And wait load page
+    Then "Header" element on "Datasets_Info_Pane" should contains "data_clean_cleaned-data" value
+    Then type value "new_dataset_10" to "Table_Name_Filter_Input" field on "Datasets" wizard
     Then click on "Table_Refresh_Button" element on "Datasets" wizard
     And wait load page
-    Then value in "name" column with "text" in "Datasets_Table" on "Datasets" wizard should contains "new_dataset_11"
+    Then value in "name" column with "text" in "Datasets_Table" on "Datasets" wizard should contains "new_dataset_10"
     Then type value "new_data" to "Table_Name_Filter_Input" field on "Datasets" wizard
     Then click on "Table_Refresh_Button" element on "Datasets" wizard
     And wait load page
@@ -1260,11 +1273,13 @@ Feature: Datasets Page
     Then select "All" option in "Table_Tree_Filter_Dropdown" dropdown on "FilterBy_Popup" wizard
     Then click on "Apply_Button" element on "FilterBy_Popup" wizard
     And wait load page
-    Then verify that 15 row elements are displayed in "Datasets_Table" on "Datasets" wizard
+    Then verify that 16 row elements are displayed in "Datasets_Table" on "Datasets" wizard
     Then check "new_dataset_24" value in "name" column in "Datasets_Table" table on "Datasets" wizard
-    Then check "test-regressor_cox-test-summary" value not in "name" column in "Datasets_Table" table on "Datasets" wizard
-    Then click on cell with value "new_dataset_24" in "name" column in "Datasets_Table" table on "Datasets" wizard
-    Then check "test-regressor_cox-test-summary" value not in "name" column in "Datasets_Table" table on "Datasets" wizard
-    Then verify that 20 row elements are displayed in "Datasets_Table" on "Datasets" wizard
+    Then check "test-regressor_cox-test-summary" value in "name" column in "Datasets_Table" table on "Datasets" wizard
+    Then check "survival-curves_coxhazard-summary" value not in "name" column in "Datasets_Table" table on "Datasets" wizard
+    Then click on cell with value "test-regressor_cox-test-summary" in "name" column in "Datasets_Table" table on "Datasets" wizard
+    And wait load page
+    Then check "new_dataset_10" value not in "name" column in "Datasets_Table" table on "Datasets" wizard
+    Then verify that 18 row elements are displayed in "Datasets_Table" on "Datasets" wizard
     Then click on "Cross_Close_Button" element on "Datasets_Info_Pane" wizard
     And wait load page
