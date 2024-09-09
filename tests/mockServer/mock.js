@@ -1287,6 +1287,25 @@ function patchProjectsFeatureVectors(req, res) {
   res.send('')
 }
 
+function getProjectsFeatureVector(req, res) {
+  const featureVector = featureVectors.feature_vectors
+    .find(
+      item =>
+        item.metadata.project === req.params.project &&
+        item.metadata.name === req.params.name &&
+        (item.metadata.uid === req.params.reference || item.metadata.tag === req.params.reference)
+    )
+
+  if (featureVector) {
+    res.send(featureVector)
+  } else {
+    res.statusCode = 404
+    res.send({
+      detail: `MLRunNotFoundError('Feature-vector not found preview/${req.params.name}:${req.params.reference}')`
+    })
+  }
+}
+
 function deleteProjectsFeatureVectors(req, res) {
   const collectedFV = featureVectors.feature_vectors
     .filter(item => item.metadata.project === req.params.project)
@@ -2441,6 +2460,10 @@ app.put(
 app.patch(
   `${mlrunAPIIngress}/projects/:project/feature-vectors/:name/references/:tag`,
   patchProjectsFeatureVectors
+)
+app.get(
+  `${mlrunAPIIngress}/projects/:project/feature-vectors/:name/references/:reference`,
+  getProjectsFeatureVector
 )
 app.delete(
   `${mlrunAPIIngress}/projects/:project/feature-vectors/:name`,
