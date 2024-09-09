@@ -515,7 +515,6 @@ Feature: Models Page
   @MLM
   @passive
   @smoke
-  # @uniqueTag
   Scenario: MLM025 - Verify Preview, Deploy option, view Preview, Deploy action, Preview tab
       Given open url
       And wait load page
@@ -687,6 +686,7 @@ Feature: Models Page
     Then click on "Apply_Button" element on "FilterBy_Popup" wizard
     And wait load page
     When click on cell with value "test-model" in "name" column in "Models_Table" table on "Models" wizard
+    And wait load page
     Then verify "Info_Pane_Tab_Selector" element visibility on "Models_Info_Pane" wizard
     Then verify "Info_Pane_Tab_Selector" on "Models_Info_Pane" wizard should contains "Models_Info_Pane"."Tab_List_Extended"
     Then verify "Overview" tab is active in "Info_Pane_Tab_Selector" on "Models_Info_Pane" wizard
@@ -710,6 +710,7 @@ Feature: Models Page
     And hover "MLRun_Logo" component on "commonPagesHeader" wizard
     And wait load page
     When click on cell with row index 1 in "name" column in "Models_Table" table on "Models" wizard
+    And wait load page
     Then verify "Info_Pane_Tab_Selector" element visibility on "Models_Info_Pane" wizard
     Then verify "Info_Pane_Tab_Selector" on "Models_Info_Pane" wizard should contains "Models_Info_Pane"."Tab_List_Extended"
     Then verify "Overview" tab is active in "Info_Pane_Tab_Selector" on "Models_Info_Pane" wizard
@@ -718,8 +719,6 @@ Feature: Models Page
   @MLM
   @passive
   @smoke
-  @FAILED_TODO
-  #TODO: bug - ML-6457 [Modal wizards] The "Are you sure?" pop-up does not appear on the browser's back navigation - failed
   Scenario: MLM029 - Check components on Deploy Model Popup
     * set tear-down property "function" created in "default" project with "automation-test-function-1" value
     * set tear-down property "function" created in "default" project with "automation-test-function-2" value
@@ -918,9 +917,11 @@ Feature: Models Page
     And wait load page
     Then verify redirection from "projects/default/models/INVALID" to "projects/default/models/models"
     When click on cell with row index 3 in "name" column in "Models_Table" table on "Models" wizard
+    And wait load page
     Then verify redirection from "projects/default/models/INVALID/model_default/latest/0/overview" to "projects/default/models/models"
     Then verify redirection from "projects/default/models/models/INVALID/latest/0/overview" to "projects/default/models/models"
     When click on cell with row index 3 in "name" column in "Models_Table" table on "Models" wizard
+    And wait load page
     Then verify redirection from "projects/default/models/models/model_default/latest/0/INVALID" to "projects/default/models/models/model_default/latest/0/overview"
     Then verify redirection from "projects/default/models/models/model_default/latest/0/INVALID" to "projects/default/models/models/model_default/latest/0/overview"
     Then verify redirection from "projects/default/models/models/model_default/latest/INVALID/overview" to "projects/default/models/models"
@@ -934,6 +935,7 @@ Feature: Models Page
     When select "Model Endpoints" tab in "Models_Tab_Selector" on "Models" wizard
     And wait load page
     Then click on cell with row index 1 in "name" column in "Model_Endpoints_Table" table on "Model_Endpoints" wizard
+    And wait load page
     Then verify redirection from "projects/default/models/model-endpoints/RandomForestClassifier/a7c95783e6a726a1a233e581ea898ba33fa7e342/INVALID" to "projects/default/models/model-endpoints/RandomForestClassifier/a7c95783e6a726a1a233e581ea898ba33fa7e342/overview"
     Then select "Features Analysis" tab in "Info_Pane_Tab_Selector" on "Models_Info_Pane" wizard
     Then verify redirection from "projects/default/models/model-endpoints/RandomForestClassifier/a7c95783e6a726a1a233e581ea898ba33fa7e342/INVALID" to "projects/default/models/model-endpoints/RandomForestClassifier/a7c95783e6a726a1a233e581ea898ba33fa7e342/overview"
@@ -946,6 +948,7 @@ Feature: Models Page
     Then select "Real-Time Pipelines" tab in "Models_Tab_Selector" on "Models" wizard
     And wait load page
     Then click on cell with row index 1 in "name" column in "Real_Time_Pipelines_Table" table on "Real_Time_Pipelines" wizard
+    And wait load page
     Then verify redirection from "projects/default/models/real-time-pipelines/pipeline/INVALID" to "projects/default/models/real-time-pipelines"
     Then verify redirection from "projects/INVALID/models/real-time-pipelines" to "projects"
   
@@ -991,6 +994,7 @@ Feature: Models Page
     And click on cell with value "Models" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
     And wait load page
     Then click on cell with row index 1 in "name" column in "Models_Table" table on "Models" wizard
+    And wait load page
     Then verify "Info_Pane_Tab_Selector" element visibility on "Models_Info_Pane" wizard
     Then verify "Overview" tab is active in "Info_Pane_Tab_Selector" on "Models_Info_Pane" wizard
     Then verify "Header" element visibility on "Models_Info_Pane" wizard
@@ -998,7 +1002,8 @@ Feature: Models Page
     Then compare "Header" element value on "Models_Info_Pane" wizard with test "name" context value
 	  Then verify that row index 1 is active in "Models_Table" table on "Models" wizard
     Then verify that row index 2 is NOT active in "Models_Table" table on "Models" wizard
-    Then click on cell with row index 2 in "name" column in "Models_Table" table on "Models" wizard  
+    Then click on cell with row index 2 in "name" column in "Models_Table" table on "Models" wizard
+    And wait load page
     Then verify that row index 2 is active in "Models_Table" table on "Models" wizard   
     Then verify that row index 1 is NOT active in "Models_Table" table on "Models" wizard
     Then verify "Info_Pane_Tab_Selector" element visibility on "Models_Info_Pane" wizard
@@ -1019,6 +1024,7 @@ Feature: Models Page
     And hover "MLRun_Logo" component on "commonPagesHeader" wizard
     And wait load page
     When click on cell with row index 1 in "name" column in "Models_Table" table on "Models" wizard
+    And wait load page
     Then verify "Info_Pane_Tab_Selector" on "Models_Info_Pane" wizard should contains "Models_Info_Pane"."Tab_List_Extended"
     Then verify "Overview" tab is active in "Info_Pane_Tab_Selector" on "Models_Info_Pane" wizard
     Then verify "Overview_General_Headers" on "Models_Info_Pane" wizard should contains "Models_Info_Pane"."Overview_General_Headers"
@@ -1043,6 +1049,7 @@ Feature: Models Page
     And click on cell with value "Models" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
     And wait load page
     When click on cell with row index 2 in "name" column in "Models_Table" table on "Models" wizard
+    And wait load page
     Then verify "Info_Pane_Tab_Selector" on "Models_Info_Pane" wizard should contains "Models_Info_Pane"."Tab_List_Extended"
     Then verify "Overview" tab is active in "Info_Pane_Tab_Selector" on "Models_Info_Pane" wizard
     Then verify "Overview_General_Headers" on "Models_Info_Pane" wizard should contains "Models_Info_Pane"."Overview_General_Headers"
@@ -1071,6 +1078,7 @@ Feature: Models Page
     And click on cell with value "Models" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
     And wait load page
     When click on cell with row index 1 in "name" column in "Models_Table" table on "Models" wizard
+    And wait load page
     Then verify "Info_Pane_Tab_Selector" on "Models_Info_Pane" wizard should contains "Models_Info_Pane"."Tab_List_Extended"
     Then verify "Overview" tab is active in "Info_Pane_Tab_Selector" on "Models_Info_Pane" wizard
     Then verify "Overview_General_Headers" on "Models_Info_Pane" wizard should contains "Models_Info_Pane"."Overview_General_Headers"   
@@ -1103,6 +1111,7 @@ Feature: Models Page
     Then click on "Apply_Button" element on "FilterBy_Popup" wizard
     And wait load page
     Then click on cell with row index 3 in "name" column in "Models_Table" table on "Models" wizard
+    And wait load page
     Then save to context "name" column on 3 row from "Models_Table" table on "Models" wizard
     Then compare "Header" element value on "Models_Info_Pane" wizard with test "name" context value
     Then check "latest" value in "tag" column in "Overview_Table" table on "Models_Info_Pane" wizard
@@ -1131,6 +1140,7 @@ Feature: Models Page
     And select "Model Endpoints" tab in "Models_Tab_Selector" on "Models" wizard
     And wait load page
     When click on cell with row index 1 in "name" column in "Model_Endpoints_Table" table on "Model_Endpoints" wizard
+    And wait load page
     Then verify "Info_Pane_Tab_Selector" element visibility on "Models_Info_Pane" wizard
     Then verify "Info_Pane_Tab_Selector" on "Models_Info_Pane" wizard should contains "Models_Endpoints_Info_Pane"."Tab_List"
     Then select "Metrics" tab in "Info_Pane_Tab_Selector" on "Models_Info_Pane" wizard
@@ -1140,6 +1150,10 @@ Feature: Models Page
     Then verify "Date_Picker_Filter_Dropdown" dropdown on "Models_Info_Pane" wizard selected option value "Past 24 hours"
     Then verify "Date_Picker_Filter_Dropdown" dropdown element on "Models_Info_Pane" wizard should contains "Dropdown_Options"."Metrics_Date_Picker_Filter_Options"
     Then verify "Endpoint_Call_Count" element visibility on "Models_Info_Pane" wizard
+    Then verify "Invocation_Collapse_Title" element visibility on "Models_Info_Pane" wizard
+    And hover "Invocation_Collapse_Title" component on "Models_Info_Pane" wizard
+    And wait load page
+    Then click on "Expand_Collapse_Invocation_Card_Button" element on "Models_Info_Pane" wizard
     Then verify "Invocation_Title" element visibility on "Models_Info_Pane" wizard
     Then "Invocation_Title" element on "Models_Info_Pane" should contains "Endpoint call count" value
     Then verify "Invocation_Drift_Icon" element visibility on "Models_Info_Pane" wizard

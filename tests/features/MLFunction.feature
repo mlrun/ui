@@ -70,7 +70,13 @@ Feature: ML Functions
         And click on cell with value "ML functions" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
         And hover "MLRun_Logo" component on "commonPagesHeader" wizard
         And wait load page
+        Then verify "Date_Picker_Filter_Dropdown" element visibility on "ML_Functions" wizard
+        Then verify "Date_Picker_Filter_Dropdown" dropdown on "ML_Functions" wizard selected option value "Past week"
+        Then verify "Date_Picker_Filter_Dropdown" dropdown element on "ML_Functions" wizard should contains "Dropdown_Options"."Date_Picker_Filter_Options"
+        When select "Any time" option in "Date_Picker_Filter_Dropdown" filter dropdown on "ML_Functions" wizard
+        And wait load page
         When click on cell with row index 2 in "name" column in "Functions_Table" table on "ML_Functions" wizard
+        And wait load page
         Then verify "Header" element visibility on "ML_Function_Info_Pane" wizard
         Then verify "Updated" element visibility on "ML_Function_Info_Pane" wizard
         Then verify "Cross_Close_Button" element visibility on "ML_Function_Info_Pane" wizard
@@ -100,6 +106,11 @@ Feature: ML Functions
         And click on cell with value "ML functions" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
         And hover "MLRun_Logo" component on "commonPagesHeader" wizard
         And wait load page
+        Then verify "Date_Picker_Filter_Dropdown" element visibility on "ML_Functions" wizard
+        Then verify "Date_Picker_Filter_Dropdown" dropdown on "ML_Functions" wizard selected option value "Past week"
+        Then verify "Date_Picker_Filter_Dropdown" dropdown element on "ML_Functions" wizard should contains "Dropdown_Options"."Date_Picker_Filter_Options"
+        When select "Any time" option in "Date_Picker_Filter_Dropdown" filter dropdown on "ML_Functions" wizard
+        And wait load page
         Then select "Delete" option in action menu on "ML_Functions" wizard in "Functions_Table" table at row with "test-m" value in "name" column
         And wait load page
         Then "Title" element on "Common_Popup" should contains "Delete function?" value
@@ -121,7 +132,13 @@ Feature: ML Functions
         And click on cell with value "ML functions" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
         And hover "MLRun_Logo" component on "commonPagesHeader" wizard
         And wait load page
+        Then verify "Date_Picker_Filter_Dropdown" element visibility on "ML_Functions" wizard
+        Then verify "Date_Picker_Filter_Dropdown" dropdown on "ML_Functions" wizard selected option value "Past week"
+        Then verify "Date_Picker_Filter_Dropdown" dropdown element on "ML_Functions" wizard should contains "Dropdown_Options"."Date_Picker_Filter_Options"
+        When select "Any time" option in "Date_Picker_Filter_Dropdown" filter dropdown on "ML_Functions" wizard
+        And wait load page
         When click on cell with row index 1 in "name" column in "Functions_Table" table on "ML_Functions" wizard
+        And wait load page
         Then verify "Action_Menu" element visibility on "ML_Function_Info_Pane" wizard
         Then select "Delete" option in action menu on "ML_Function_Info_Pane" wizard
         And wait load page
@@ -196,18 +213,18 @@ Feature: ML Functions
             |    key1   |    value1   |
             |    key2   |    value2   |
             |    key3   |    value3   |
-        Then verify values in "Labels_Table" table in "General_Accordion" on "New_Function" wizard
-            |       label     |
-            | key1\n:\nvalue1 |
-            | key2\n:\nvalue2 |
-            | key3\n:\nvalue3 |
-        When click on "remove_btn" in "Labels_Table" table in "General_Accordion" on "New_Function" wizard
-            |       label     |
-            | key1\n:\nvalue1 |
-            | key3\n:\nvalue3 |
-        Then verify values in "Labels_Table" table in "General_Accordion" on "New_Function" wizard
-            |       label     |
-            | key2\n:\nvalue2 |
+        Then verify values in "Labels_Table" table in "General_Accordion" on "New_Function" wizard with attribute
+            | key_verify | value_verify | 
+            |    key1    |    value1    |
+            |    key2    |    value2    |
+            |    key3    |    value3    |
+        When click on "remove_btn" in "Labels_Table" table in "General_Accordion" on "New_Function" wizard with attribute
+            | key_verify | 
+            |    key1    |    
+            |    key3    |
+        Then verify values in "Labels_Table" table in "General_Accordion" on "New_Function" wizard with attribute
+            | key_verify | value_verify | 
+            |    key2    |    value2    |
 
     @MLF
     @passive
@@ -680,23 +697,37 @@ Feature: ML Functions
     @MLF
     @smoke
     Scenario: MLF017 - Delete ml-function
-        * set tear-down property "function" created with "new-aqa-function-01" value
-        * set tear-down property "project" created with "automation-test-name07" value
-        * create "automation-test-name07" MLRun Project with code 201
-        * create "new-aqa-function-01" Function with "job" kind and "latest" tag in "automation-test-name07" project with code 200
-        And set tear-down property "function" created in "automation-test-name07" project with "new-aqa-function-01" value
         Given open url
         And wait load page
-        And click on row root with value "automation-test-name07" in "name" column in "Projects_Table" table on "Projects" wizard
+        And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
         And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
         And click on cell with value "ML functions" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
         And hover "MLRun_Logo" component on "commonPagesHeader" wizard
         And wait load page
-        Then check "new-aqa-function-01" value in "name" column in "Functions_Table" table on "ML_Functions" wizard
-        And select "Delete" option in action menu on "ML_Functions" wizard in "Functions_Table" table at row with "new-aqa-function-01" value in "name" column
+        Then verify "Date_Picker_Filter_Dropdown" element visibility on "ML_Functions" wizard
+        When select "Any time" option in "Date_Picker_Filter_Dropdown" filter dropdown on "ML_Functions" wizard
+        And wait load page
+        Then check "erann-with-mlrun" value in "name" column in "Functions_Table" table on "ML_Functions" wizard
+        And wait load page
+        And select "Delete" option in action menu on "ML_Functions" wizard in "Functions_Table" table at row with "erann-with-mlrun" value in "name" column
         And click on "Delete_Button" element on "Common_Popup" wizard
-        Then check "new-aqa-function-01" value not in "name" column in "Functions_Table" table on "ML_Functions" wizard
+        And wait load page
+        And wait load page
+        Then verify "Notification_Pop_Up" element visibility on "Notification_Popup" wizard
+        And wait load page
+        Then "Notification_Pop_Up" element on "Notification_Popup" should contains "Function deletion in progress" value
+        And wait load page
+        Then verify "Notification_Pop_Up_Cross_Close_Button" element visibility on "Notification_Popup" wizard
+        Then click on "Notification_Pop_Up_Cross_Close_Button" element on "Notification_Popup" wizard
+        Then wait for 10 seconds
+        Then verify "Notification_Pop_Up" element visibility on "Notification_Popup" wizard
+        Then "Notification_Pop_Up" element on "Notification_Popup" should contains "Function erann-with-mlrun is successfully deleted" value
+        And wait load page
+        Then verify "Notification_Pop_Up_Cross_Close_Button" element visibility on "Notification_Popup" wizard
+        Then click on "Notification_Pop_Up_Cross_Close_Button" element on "Notification_Popup" wizard
+        And wait load page
+        Then check "erann-with-mlrun" value not in "name" column in "Functions_Table" table on "ML_Functions" wizard
 
     @MLF
     @passive
@@ -1032,12 +1063,15 @@ Feature: ML Functions
         And click on cell with value "ML functions" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
         And hover "MLRun_Logo" component on "commonPagesHeader" wizard
         And wait load page
+        Then verify "Date_Picker_Filter_Dropdown" element visibility on "ML_Functions" wizard
+        When select "Any time" option in "Date_Picker_Filter_Dropdown" filter dropdown on "ML_Functions" wizard
+        And wait load page
         Then select "View YAML" option in action menu on "ML_Functions" wizard in "Functions_Table" table at row with "test-m" value in "name" column
         Then verify if "View_YAML" popup dialog appears
         Then verify "Cross_Cancel_Button" element visibility on "View_YAML" wizard
         Then verify "YAML_Modal_Container" element visibility on "View_YAML" wizard
         Then click on "Cross_Cancel_Button" element on "View_YAML" wizard
-        Then click on cell with row index 7 in "expand_btn" column in "Functions_Table" table on "ML_Functions" wizard
+        Then click on cell with row index 8 in "expand_btn" column in "Functions_Table" table on "ML_Functions" wizard
         Then select "View YAML" option in action menu on "ML_Functions" wizard in "Functions_Table" table at row with "Nov 23, 2021, 11:31:51 AM" value in "name" column
         Then verify if "View_YAML" popup dialog appears
         Then verify "Cross_Cancel_Button" element visibility on "View_YAML" wizard
@@ -1077,6 +1111,9 @@ Feature: ML Functions
         And click on cell with value "ML functions" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
         And hover "MLRun_Logo" component on "commonPagesHeader" wizard
         And wait load page
+        Then verify "Date_Picker_Filter_Dropdown" element visibility on "ML_Functions" wizard
+        When select "Any time" option in "Date_Picker_Filter_Dropdown" filter dropdown on "ML_Functions" wizard
+        And wait load page
         Then verify options in action menu on "ML_Functions" wizard in "Functions_Table" table with "Job" value in "kind" column should contains "ML_Functions_Tab"."Common_Action_Menu_Options"
         Then verify options in action menu on "ML_Functions" wizard in "Functions_Table" table with "Serving" value in "kind" column should contains "ML_Functions_Tab"."Serving_Action_Menu_Options"
         #TODO: check if serving function can be edited
@@ -1115,7 +1152,11 @@ Feature: ML Functions
         And click on cell with value "ML functions" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
         And hover "MLRun_Logo" component on "commonPagesHeader" wizard
         And wait load page
+        Then verify "Date_Picker_Filter_Dropdown" element visibility on "ML_Functions" wizard
+        When select "Any time" option in "Date_Picker_Filter_Dropdown" filter dropdown on "ML_Functions" wizard
+        And wait load page
         When click on cell with row index 9 in "name" column in "Functions_Table" table on "ML_Functions" wizard
+        And wait load page
         Then verify "Action_Menu" element visibility on "ML_Function_Info_Pane" wizard
         Then verify "Action_Menu" dropdown element on "ML_Function_Info_Pane" wizard should contains "ML_Functions_Tab"."Serving_Action_Menu_Options"
         #TODO: check if serving function can be edited
@@ -1257,9 +1298,14 @@ Feature: ML Functions
         And wait load page
         And select "tab" with "ML functions" value in breadcrumbs menu
         And wait load page
+        Then verify "Date_Picker_Filter_Dropdown" element visibility on "ML_Functions" wizard
+        When select "Any time" option in "Date_Picker_Filter_Dropdown" filter dropdown on "ML_Functions" wizard
+        And wait load page
         When click on cell with row index 1 in "name" column in "Functions_Table" table on "ML_Functions" wizard
+        And wait load page
         Then verify redirection from "projects/default/functions/INVALID/overview" to "projects/default/functions"
         When click on cell with row index 1 in "name" column in "Functions_Table" table on "ML_Functions" wizard
+        And wait load page
         Then verify redirection from "projects/default/functions/85957751e571a92e07213781f5e0c35bfbe42c64/INVALID" to "projects/default/functions/85957751e571a92e07213781f5e0c35bfbe42c64/overview"
         Then select "Code" tab in "Info_Pane_Tab_Selector" on "ML_Function_Info_Pane" wizard
         And wait load page
@@ -1352,6 +1398,9 @@ Feature: ML Functions
         And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
         And click on cell with value "ML functions" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
         And hover "MLRun_Logo" component on "commonPagesHeader" wizard
+        And wait load page
+        Then verify "Date_Picker_Filter_Dropdown" element visibility on "ML_Functions" wizard
+        When select "Any time" option in "Date_Picker_Filter_Dropdown" filter dropdown on "ML_Functions" wizard
         And wait load page
         Then value in "kind" column with "tooltip" in "Functions_Table" on "ML_Functions" wizard should contains "Serving"
         Then verify that "Serving" type is displayed in "kind" kind on "ML_Functions" wizard in "Functions_Table" table with "churn-server" value in "name" column
