@@ -26,10 +26,6 @@ import {
   FETCH_ENDPOINT_METRICS_VALUES_BEGIN,
   FETCH_ENDPOINT_METRICS_VALUES_SUCCESS,
   FETCH_ENDPOINT_METRICS_VALUES_FAILURE,
-  FETCH_MODEL_ENDPOINT_WITH_ANALYSIS_BEGIN,
-  FETCH_MODEL_ENDPOINT_WITH_ANALYSIS_FAILURE,
-  FETCH_MODEL_ENDPOINT_WITH_ANALYSIS_SUCCESS,
-  REMOVE_MODEL_ENDPOINT,
   SET_SELECTED_METRICS_OPTIONS
 } from '../constants'
 
@@ -41,30 +37,6 @@ import { TIME_FRAME_LIMITS } from '../utils/datePicker.util'
 import { largeResponseCatchHandler } from '../utils/largeResponseCatchHandler'
 
 const modelEndpointsActions = {
-  fetchModelEndpointWithAnalysis: (project, uid) => dispatch => {
-    dispatch(modelEndpointsActions.fetchModelEndpointWithAnalysisBegin())
-
-    return modelEndpointsApi
-      .getModelEndpoint(project, uid)
-      .then(({ data }) => {
-        dispatch(modelEndpointsActions.fetchModelEndpointWithAnalysisSuccess(data))
-
-        return data
-      })
-      .catch(err => {
-        dispatch(modelEndpointsActions.fetchModelEndpointWithAnalysisFailure(err))
-      })
-  },
-  fetchModelEndpointWithAnalysisBegin: () => ({
-    type: FETCH_MODEL_ENDPOINT_WITH_ANALYSIS_BEGIN
-  }),
-  fetchModelEndpointWithAnalysisFailure: () => ({
-    type: FETCH_MODEL_ENDPOINT_WITH_ANALYSIS_FAILURE
-  }),
-  fetchModelEndpointWithAnalysisSuccess: model => ({
-    type: FETCH_MODEL_ENDPOINT_WITH_ANALYSIS_SUCCESS,
-    payload: model
-  }),
   fetchModelEndpointMetrics: (project, uid) => dispatch => {
     dispatch(modelEndpointsActions.fetchEndpointMetricsBegin())
 
@@ -140,9 +112,6 @@ const modelEndpointsActions = {
   }),
   fetchEndpointMetricsValuesSuccess: () => ({
     type: FETCH_ENDPOINT_METRICS_VALUES_SUCCESS
-  }),
-  removeModelEndpoint: () => ({
-    type: REMOVE_MODEL_ENDPOINT
   }),
   setSelectedMetricsOptions: payload => ({
     type: SET_SELECTED_METRICS_OPTIONS,

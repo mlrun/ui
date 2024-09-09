@@ -29,7 +29,8 @@ import {
   merge,
   omit,
   set,
-  some
+  some,
+  uniq
 } from 'lodash'
 
 import {
@@ -530,26 +531,32 @@ const parseVolumes = (volumes, volumeMounts, isEditMode) => {
 
 export const getCategoryName = categoryId => {
   const categoriesNames = {
-    dask: 'Dask',
     'data-analysis': 'Data Analysis',
+    'data-generation': 'Data Generation',
     'data-preparation': 'Data Preparation',
-    etl: 'ETL',
     'data-validation': 'Data Validation',
-    dl: 'Deep Learning',
+    'deep-learning': 'Deep Learning',
     'feature-store': 'Feature Store',
     'machine-learning': 'Machine Learning',
     'model-prep': 'Model Prep',
+    'model-serving': 'Model Serving',
     'model-test': 'Model Test',
     'model-testing': 'Model Testing',
     'model-training': 'Model Training',
-    monitoring: 'Monitoring',
     NLP: 'NLP',
+    audio: 'Audio',
+    dask: 'Dask',
+    dl: 'Deep Learning',
+    etl: 'ETL',
+    genai: 'GenAI',
+    huggingface: 'Hugging Face',
+    monitoring: 'Monitoring',
     notifications: 'Alerts and Notifications',
     other: 'Other',
-    utils: 'Utilities',
-    'model-serving': 'Model Serving',
+    pytorch: 'PyTorch',
     simulators: 'Simulators',
-    training: 'Model Training'
+    training: 'Model Training',
+    utils: 'Utilities'
   }
 
   return categoriesNames[categoryId] ?? categoryId
@@ -1151,39 +1158,96 @@ export const getSaveJobErrorMsg = error => {
     : getErrorDetail(error) || 'Unable to save the job.'
 }
 
-export const getParameterTypeOptions = (parameterType = '') => {
-  const unionTypes = parameterType.match(/Union\[(.*?)\]$/)
-
-  if (unionTypes) {
-    const uniqueUnionTypesList = [
-      ...new Set(
-        unionTypes[1].split(',').map(unionType => {
-          const trimmedUnionType = unionType.trim().toLowerCase()
-
-          return trimmedUnionType.startsWith(parameterTypeList) ? parameterTypeList : trimmedUnionType
-        })
-      )
-    ]
-
-    const selectOptionsList = parametersValueTypeOptions.filter(option =>
-      uniqueUnionTypesList.includes(option.id)
-    )
-
-    if (selectOptionsList.length === uniqueUnionTypesList.length) {
-      return selectOptionsList
-    }
-
-    return parametersValueTypeOptions
-  } else if (parameterType) {
-    const filteredValueTypeOptions = parametersValueTypeOptions.filter(function (option) {
-      const parsedParameterType = parameterType?.toLocaleLowerCase()?.startsWith(parameterTypeList)
-        ? parameterTypeList
-        : parameterType
-      return parsedParameterType === option.id
-    })
-
-    return !isEmpty(filteredValueTypeOptions) ? filteredValueTypeOptions : parametersValueTypeOptions
+/**
+ * Parses a complex type string (e.g., "Union[int, str]")
+ * and returns an array of types.
+ *
+ * @param {string} typeString - The complex type string to parse.
+ * @returns {string[]} An array of parsed types.
+ */
+const parseComplexType = typeString => {
+  const openBracketIndex = typeString.indexOf('[')
+  if (openBracketIndex === -1) {
+    return [typeString]
   }
 
-  return parametersValueTypeOptions
+  const cleanedString = typeString.slice(openBracketIndex + 1, -1)
+
+  const types = []
+  let bracketDepth = 0
+  let start = 0
+
+  for (let i = 0; i < cleanedString.length; i++) {
+    if (cleanedString[i] === '[') {
+      bracketDepth++
+    } else if (cleanedString[i] === ']') {
+      bracketDepth--
+    } else if (cleanedString[i] === ',' && bracketDepth === 0) {
+      types.push(cleanedString.slice(start, i).trim())
+      start = i + 1
+    }
+  }
+
+  types.push(cleanedString.slice(start).trim())
+
+  return types
+}
+
+/**
+ * Converts a complex type string into a simpler form based on certain prefixes.
+ *
+ * @param {string} complexType - The complex type string to convert.
+ * @returns {string} The simplified type string or the original if no conversion is applicable.
+ */
+const convertComplexType = complexType => {
+  if (!complexType) return complexType
+
+  complexType = complexType?.toLowerCase() ?? ''
+
+  if (complexType.startsWith(parameterTypeList)) {
+    return parameterTypeList
+  } else if (complexType.startsWith(parameterTypeDict)) {
+    return parameterTypeDict
+  } else if (complexType.startsWith('optional')) {
+    return complexType.slice(9, -1)
+  }
+
+  return complexType
+}
+
+const getFilteredComplexTypes = complexTypes => {
+  const convertedComplexTypes = uniq(complexTypes.map(convertComplexType))
+  const filteredComplexTypes = parametersValueTypeOptions.filter(option =>
+    convertedComplexTypes.includes(option.id)
+  )
+
+  return convertedComplexTypes.length === filteredComplexTypes.length
+    ? filteredComplexTypes
+    : parametersValueTypeOptions
+}
+
+/**
+ * Retrieves the parameter type options based on the given parameter type.
+ *
+ * @param {string} [parameterType=''] - The parameter type string to process.
+ * @returns {Array} The filtered parameter type options.
+ */
+export const getParameterTypeOptions = (parameterType = '') => {
+  let typeOptions = parametersValueTypeOptions
+  const convertedType = convertComplexType(parameterType)
+
+  if (convertedType.startsWith('union')) {
+    const complexTypes = parseComplexType(convertedType)
+    typeOptions = getFilteredComplexTypes(complexTypes)
+  } else if (convertedType) {
+    const filteredValueTypeOptions = parametersValueTypeOptions.filter(
+      option => convertComplexType(convertedType) === option.id
+    )
+
+    if (!isEmpty(filteredValueTypeOptions)) {
+      typeOptions = filteredValueTypeOptions
+    }
+  }
+
+  return typeOptions
 }

@@ -19,10 +19,8 @@ such restriction.
 */
 import React, { useMemo } from 'react'
 import PropTypes from 'prop-types'
-import { connect } from 'react-redux'
 
 import MlChart from '../../common/Chart/MlChart'
-import Loader from '../../common/Loader/Loader'
 import NoData from '../../common/NoData/NoData'
 import { Tooltip, TextTooltipTemplate } from 'igz-controls/components'
 
@@ -32,18 +30,13 @@ import { getHistogramChartConfig } from '../../utils/getHistogramChartConfig'
 import './detailsFeaturesAnalysis.scss'
 import colors from 'igz-controls/scss/colors.scss'
 
-const DetailsFeaturesAnalysis = ({ detailsStore }) => {
-  const table = generateFeaturesAnalysis(detailsStore.modelEndpoint.data)
+const DetailsFeaturesAnalysis = ({ selectedItem }) => {
+  const table = generateFeaturesAnalysis(selectedItem)
   const chartConfig = useMemo(getHistogramChartConfig, [])
 
   return (
     <div className="features-analysis">
-      {detailsStore.modelEndpoint.loading && <Loader />}
-      {detailsStore.modelEndpoint.error ? (
-        <div className="features-analysis__error">
-          Failed to fetch data from model endpoint analysis. Please try again later.
-        </div>
-      ) : table.body.length === 0 ? (
+      {table.body.length === 0 ? (
         <NoData />
       ) : (
         <div className="features-analysis__table">
@@ -136,9 +129,7 @@ const DetailsFeaturesAnalysis = ({ detailsStore }) => {
 }
 
 DetailsFeaturesAnalysis.propTypes = {
-  detailsStore: PropTypes.shape({}).isRequired
+  selectedItem: PropTypes.object.isRequired
 }
 
-export default connect(({ detailsStore }) => ({
-  detailsStore
-}))(DetailsFeaturesAnalysis)
+export default DetailsFeaturesAnalysis

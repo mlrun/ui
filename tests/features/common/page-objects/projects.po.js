@@ -119,7 +119,7 @@ module.exports = {
   ),
   Projects_Monitoring_Container:{
     Monitoring_Container: By.css('.projects .projects-monitoring-container'),
-    Monitoring_Container_Title: By.css('.projects-monitoring-container .projects-monitoring-legend h5'),
+    Monitoring_Container_Title: By.css('.projects-monitoring-container .projects-monitoring-legend .page-header__title'),
     Monitoring_Container_Running_Status: By.css('.projects-monitoring-container .projects-monitoring-legend .projects-monitoring-legend__status li:nth-of-type(1)'),
     Monitoring_Container_Running_Icon: By.css('.projects-monitoring-container .projects-monitoring-legend .projects-monitoring-legend__status li:nth-of-type(1) i'),
     Monitoring_Container_Failed_Status: By.css('.projects-monitoring-container .projects-monitoring-legend .projects-monitoring-legend__status li:nth-of-type(2)'),
