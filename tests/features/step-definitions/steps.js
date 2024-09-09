@@ -202,14 +202,13 @@ Then('wait load page', async function () {
   await this.driver.sleep(DRIVER_SLEEP || 500)
 })
 
-Then('navigate forward', async function () {
-Then('wait for {int} seconds', async function(seconds) {
+Then('wait for {int} seconds', async function (seconds) {
   const milliseconds = seconds * 1000
 
   await new Promise(resolve => setTimeout(resolve, milliseconds))
 })
 
-Then('navigate forward', async function() {
+Then('navigate forward', async function () {
   await navigateForward(this.driver)
   await waitPageLoad(this.driver, pageObjects['commonPagesHeader']['loader'])
   await this.driver.sleep(DRIVER_SLEEP || 500)
@@ -341,7 +340,10 @@ Then(
 Then(
   'verify checkbox {string} element in {string} on {string} wizard is enabled',
   async function (elementName, accordionName, wizardName) {
-    await verifyCheckboxEnabled(this.driver, pageObjects[wizardName][accordionName][elementName].root)
+    await verifyCheckboxEnabled(
+      this.driver,
+      pageObjects[wizardName][accordionName][elementName].root
+    )
   }
 )
 
@@ -447,11 +449,6 @@ Then(
     const result = Number.parseInt(txt) + value
     await incrementValue(this.driver, pageObjects[wizard][accordion][inputField], value)
 
-    await incrementValue(
-      this.driver,
-      pageObjects[wizard][accordion][inputField],
-      value
-    )
     await verifyTypedValue(
       this.driver,
       pageObjects[wizard][accordion][inputField],
@@ -526,8 +523,7 @@ Then(
 
     if (unit === 'cpu') {
       return result.toFixed(3)
-    }
-    else if (unit !== 'cpu' && result < 1) {
+    } else if (unit !== 'cpu' && result < 1) {
       result = 1
     }
 
@@ -881,7 +877,7 @@ Then(
 
 Then(
   'verify {string} in {string} on {string} wizard should display {string}.{string}',
-  async function(inputField, accordion, wizard, constStorage, constValue) {
+  async function (inputField, accordion, wizard, constStorage, constValue) {
     await checkHintTextWithHover(
       this.driver,
       pageObjects[wizard][accordion][inputField],
@@ -1135,7 +1131,6 @@ Then(
 Then('check that {string} file is existed on {string} directory', async function (file, filePath) {
   const path = await generatePath(file, filePath)
 
-  await this.driver.sleep(150)
   await this.driver.sleep(DRIVER_SLEEP || 150)
   await determineFileAccess(path, file)
   await this.driver.sleep(DRIVER_SLEEP || 150)
@@ -1214,10 +1209,10 @@ Then(
   }
 )
 Then(
-    'verify {string} input should contains {string} placeholder value on {string} wizard',
-    async function (component, value, wizard) {
-        await verifyPlaceholder(this.driver, pageObjects[wizard][component], value)
-    }
+  'verify {string} input should contains {string} placeholder value on {string} wizard',
+  async function (component, value, wizard) {
+    await verifyPlaceholder(this.driver, pageObjects[wizard][component], value)
+  }
 )
 
 Then(
