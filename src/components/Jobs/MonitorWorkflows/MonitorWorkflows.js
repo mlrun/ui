@@ -132,19 +132,18 @@ const MonitorWorkflows = ({ deleteWorkflows, fetchFunctionLogs, fetchWorkflows }
             View running workflows and previously executed workflows
           </p>
         )}
-        {Boolean(!params.workflowId) && (
-          <div className="content__action-bar-wrapper">
-            <div className={classnames(!params.workflowId && 'action-bar')}>
-              <FilterMenu
-                filters={filters}
-                onChange={getWorkflows}
-                page={JOBS_PAGE}
-                tab={MONITOR_WORKFLOWS_TAB}
-                withoutExpandButton
-              />
-            </div>
+        <div className="content__action-bar-wrapper">
+          <div className={classnames(!params.workflowId && 'action-bar')}>
+            <FilterMenu
+              filters={filters}
+              onChange={getWorkflows}
+              page={JOBS_PAGE}
+              tab={MONITOR_WORKFLOWS_TAB}
+              withoutExpandButton
+              hidden={Boolean(params.workflowId)}
+            />
           </div>
-        )}
+        </div>
       </div>
       <WorkflowsTable
         backLink={`/projects/${params.projectName}/jobs/${MONITOR_WORKFLOWS_TAB}`}
