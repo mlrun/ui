@@ -131,8 +131,8 @@ module.exports = {
     ]
   },
   ML_Functions_Tab: {
-    Common_Action_Menu_Options: ['Edit', 'Delete', 'View YAML'],
-    Serving_Action_Menu_Options: ['Edit', 'Delete', 'View YAML']
+    Common_Action_Menu_Options: ['Edit', 'View YAML', 'Delete'],
+    Serving_Action_Menu_Options: ['Edit', 'View YAML', 'Delete']
   },
   ML_Function_Info_Pane: {
     Tab_List: ['Overview', 'Code', 'Build Log'],
@@ -350,6 +350,8 @@ module.exports = {
       'This field is required',
     Labels_Warning_Key: 'Valid characters: a–z, A–Z, 0–9, –, _, .\nMust begin and end with: a–z, A–Z, 0–9\nLength – max: 75\n' +
     'Key must be unique',
+    Labels_Warning_Key_Modal_Wizard_Form: 'Valid characters: a–z, A–Z, 0–9, –, _, .\nMust begin and end with: a–z, A–Z, 0–9\nLength – max: 75\n' +
+    'System-defined labels cannot be modified.\nKey must be unique',
     Projects_Labels_Warning_Key: '[Name] Valid characters : a–z, A–Z, 0–9, –, _, .\n[Name] Must begin and end with: a–z, A–Z, 0–9\n[Name] Max length - 63 characters\n' +
     '[Prefix] Valid characters: a–z, 0–9, –, .\n[Prefix] Must begin and end with: a–z, 0–9\n[Prefix] Max length - 253 characters\n' +
     '[Prefix] Must not start with \'kubernetes.io\', \'k8s.io\'\nSystem-defined labels cannot be modified.\nKey must be unique',
@@ -595,7 +597,7 @@ module.exports = {
   No_Data_Message: {
     Common_Message: 'No data matches the filter: "Version Tag: latest, Name: ccccc"',
     Common_Message_Feature: 'No data matches the filter: "Version Tag: latest"',
-    Common_Message_Feature_Vector_Tab: 'No data matches the filter: "Tag: latest"',
+    Common_Message_Feature_Vector_Tab: 'No data matches the filter: "Tag: latest, Project: test-test"',
     Common_Message_Feature_Vector: 'No data matches the filter: "Version Tag: latest"',
     Common_Message_Feature_Sets: 'No data matches the filter: "Version Tag: latest"',
     No_Data: 'No data to show',

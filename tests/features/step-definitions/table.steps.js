@@ -546,6 +546,23 @@ Then(
   }
 )
 
+Then(
+  'verify values in {string} table in {string} on {string} wizard with attribute',
+  async function (table, accordion, wizard, dataTable) {
+    const columns = dataTable['rawTable'][0]
+    const rows = dataTable.rows()
+    for (const row_indx in rows) {
+      for (const i in columns) {
+        await verifyTypedText (
+          this.driver,
+          pageObjects[wizard][accordion][table]['tableFields'][columns[i]](parseInt(row_indx) + 1),
+          rows[row_indx][i]
+        )
+      }
+    }
+  }
+)
+
 When(
   'click on {string} in {string} table on {string} wizard with offset {string}',
   async function (fieldName, tableName, wizardName, offsetFlag, dataTable) {
@@ -1027,6 +1044,33 @@ When(
       await clickOnComponent(
         this.driver,
         pageObjects[wizardName][tableName]['tableFields'][field](indx)
+      )
+    }
+  }
+)
+
+When(
+  'click on {string} in {string} table in {string} on {string} wizard with attribute',
+  async function (field, tableName, accordion, wizardName, dataTable) {
+    const column = dataTable['rawTable'][0][0]
+    const rows = dataTable.rows()
+    for (const row_indx in rows) {
+      const arr = await findRowIndexesByColumnValueAttribute(
+        this.driver,
+        pageObjects[wizardName][accordion][tableName],
+        column,
+        rows[row_indx][0]
+      )
+      const indx = arr[0] - pageObjects[wizardName][accordion][tableName].offset
+      await hoverComponent(
+        this.driver,
+        pageObjects[wizardName][accordion][tableName]['tableFields'][field](indx),
+        true
+      )
+      await this.driver.sleep(500)
+      await clickOnComponent(
+        this.driver,
+        pageObjects[wizardName][accordion][tableName]['tableFields'][field](indx)
       )
     }
   }

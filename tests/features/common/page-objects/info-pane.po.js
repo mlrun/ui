@@ -794,8 +794,10 @@ module.exports = {
         false
       )
     ),
-    Endpoint_Call_Count: By.css('.metrics .metrics__card-invocations'),
+    Endpoint_Call_Count: By.css('.metrics .metrics__card-invocation'),
+    Expand_Collapse_Invocation_Card_Button: By.css('[data-testid="invocation-card-toggle-icon"]'),
     Invocation_Title: By.css('.stats-card .stats-card__title'),
+    Invocation_Collapse_Title: By.css('.stats-card .metrics__card-invocation-content-title'),
     Invocation_Drift_Icon: By.css('.stats-card .metrics__card-invocation-header_drift-icon-container'),
     Invocation_Drift_Down: By.css('.stats-card .metrics__card-invocation-header_drift_down'),
     Invocation_Drift_Up: By.css('.stats-card .metrics__card-invocation-header_drift_up'),

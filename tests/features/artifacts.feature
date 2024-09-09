@@ -335,15 +335,17 @@ Feature: Artifacts Page
   @passive
   @inProgress
   @smoke
+  # [Artifacts] Download notification popup is hidden https://iguazio.atlassian.net/browse/ML-7754
   Scenario: MLA016 - Check all mandatory components in Item infopane on Preview tab table
     Given open url
-    And click on row root with value "churn-project-admin" in "name" column in "Projects_Table" table on "Projects" wizard
+    And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
     And wait load page
     And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
     And click on cell with value "Artifacts" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
     And hover "MLRun_Logo" component on "commonPagesHeader" wizard
     And wait load page
-    When click on cell with row index 1 in "name" column in "Files_Table" table on "Files" wizard
+    When click on cell with row index 3 in "name" column in "Files_Table" table on "Files" wizard
+    And wait load page
     Then select "Preview" tab in "Info_Pane_Tab_Selector" on "Files_Info_Pane" wizard
     And wait load page
     Then verify "Info_Pane_Tab_Selector" element visibility on "Files_Info_Pane" wizard
@@ -354,7 +356,7 @@ Feature: Artifacts Page
     Then verify "Action_Menu" element visibility on "Files_Info_Pane" wizard
     Then verify "Action_Menu" dropdown element on "Files_Info_Pane" wizard should contains "Common_Lists"."Action_Menu_List"
     Then verify "Cross_Close_Button" element visibility on "Files_Info_Pane" wizard
-    When click on cell with value "survival-curves_km-survival" in "name" column in "Files_Table" table on "Files" wizard
+    When click on cell with value "download_content" in "name" column in "Files_Table" table on "Files" wizard
     Then select "Preview" tab in "Info_Pane_Tab_Selector" on "Files_Info_Pane" wizard
     And wait load page
     Then verify "Pop_Out_Button" element visibility on "Files_Info_Pane" wizard 
@@ -390,6 +392,7 @@ Feature: Artifacts Page
     Then verify action menu on "Files" wizard in "Files_Table" table with "survival-curves_km-survival" value in "name" column should contains "Common_Lists"."Action_Menu_List"
     Then verify that in action menu on "Files" wizard in "Files_Table" table with "survival-curves_km-survival" value in "name" column "Delete" option is enabled
     When click on cell with row index 1 in "name" column in "Files_Table" table on "Files" wizard
+    And wait load page
     Then check "latest" value in "tag" column in "Overview_Table" table on "Files_Info_Pane" wizard
     Then verify "Action_Menu" element visibility on "Files_Info_Pane" wizard
     Then verify "Action_Menu" dropdown element on "Files_Info_Pane" wizard should contains "Common_Lists"."Action_Menu_List"
@@ -408,9 +411,10 @@ Feature: Artifacts Page
     Then verify action menu on "Files" wizard in "Files_Table" table with "survival-curves_km-survival" value in "name" column should contains "Common_Lists"."Action_Menu_List_Expanded"
     Then verify that in action menu on "Files" wizard in "Files_Table" table with "survival-curves_km-survival" value in "name" column "Delete" option is disabled
     When click on cell with row index 2 in "name" column in "Files_Table" table on "Files" wizard
+    And wait load page
     Then check "Click to add" value in "tag" column in "Overview_Table" table on "Files_Info_Pane" wizard
     Then verify "Action_Menu" dropdown element on "Files_Info_Pane" wizard should contains "Common_Lists"."Action_Menu_List"
-    Then check that "Delete" option in action menu on "Files_Info_Pane" wizard is disabled
+    Then check that "Delete" option in action menu on "Files_Info_Pane" wizard is enabled
 
   @MLA
   @passive
@@ -489,6 +493,7 @@ Feature: Artifacts Page
   @MLA
   @passive
   @smoke
+  # [Artifacts] Download notification popup is hidden https://iguazio.atlassian.net/browse/ML-7754
   Scenario: MLA015 - Verify Preview option, view Preview action
       Given open url
       And wait load page
@@ -531,6 +536,7 @@ Feature: Artifacts Page
     And hover "MLRun_Logo" component on "commonPagesHeader" wizard
     And wait load page
     When click on cell with row index 1 in "name" column in "Files_Table" table on "Files" wizard
+    And wait load page
     Then verify "Action_Menu" element visibility on "Files_Info_Pane" wizard
     Then select "View YAML" option in action menu on "Files_Info_Pane" wizard
     Then verify if "View_YAML" popup dialog appears
@@ -550,8 +556,10 @@ Feature: Artifacts Page
     And select "tab" with "Artifacts" value in breadcrumbs menu
     And wait load page
     When click on cell with row index 1 in "name" column in "Files_Table" table on "Files" wizard
+    And wait load page
     Then verify redirection from "projects/default/files/INVALID/latest/0/overview" to "projects/default/files"
     When click on cell with row index 1 in "name" column in "Files_Table" table on "Files" wizard
+    And wait load page
     And wait load page
     Then verify redirection from "projects/default/files/training_iteration_results/latest/0/INVALID" to "projects/default/files/training_iteration_results/latest/0/overview"
     And wait load page
@@ -574,6 +582,7 @@ Feature: Artifacts Page
     And click on cell with value "Artifacts" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
     And wait load page
     Then click on cell with row index 1 in "name" column in "Files_Table" table on "Files" wizard
+    And wait load page
     Then verify "Info_Pane_Tab_Selector" element visibility on "Files_Info_Pane" wizard
     Then verify "Overview" tab is active in "Info_Pane_Tab_Selector" on "Files_Info_Pane" wizard
     Then verify "Header" element visibility on "Files_Info_Pane" wizard
@@ -602,6 +611,7 @@ Feature: Artifacts Page
     And hover "MLRun_Logo" component on "commonPagesHeader" wizard
     And wait load page
     When click on cell with row index 1 in "name" column in "Files_Table" table on "Files" wizard
+    And wait load page
     Then verify "Info_Pane_Tab_Selector" on "Files_Info_Pane" wizard should contains "Files_Info_Pane"."Tab_List"
     Then verify "Overview" tab is active in "Info_Pane_Tab_Selector" on "Files_Info_Pane" wizard
     Then verify "Overview_General_Headers" on "Files_Info_Pane" wizard should contains "Files_Info_Pane"."Overview_General_Headers"
@@ -626,6 +636,7 @@ Feature: Artifacts Page
     And click on cell with value "Artifacts" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
     And wait load page
     When click on cell with row index 2 in "name" column in "Files_Table" table on "Files" wizard
+    And wait load page
     Then verify "Info_Pane_Tab_Selector" on "Files_Info_Pane" wizard should contains "Files_Info_Pane"."Tab_List"
     Then verify "Overview" tab is active in "Info_Pane_Tab_Selector" on "Files_Info_Pane" wizard
     Then verify "Overview_General_Headers" on "Files_Info_Pane" wizard should contains "Files_Info_Pane"."Overview_General_Headers"
@@ -654,6 +665,7 @@ Feature: Artifacts Page
     And click on cell with value "Artifacts" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
     And wait load page
     When click on cell with row index 1 in "name" column in "Files_Table" table on "Files" wizard
+    And wait load page
     Then verify "Info_Pane_Tab_Selector" on "Files_Info_Pane" wizard should contains "Files_Info_Pane"."Tab_List"
     Then verify "Overview" tab is active in "Info_Pane_Tab_Selector" on "Files_Info_Pane" wizard
     Then verify "Overview_General_Headers" on "Files_Info_Pane" wizard should contains "Files_Info_Pane"."Overview_General_Headers"   
@@ -686,6 +698,7 @@ Feature: Artifacts Page
     Then click on "Apply_Button" element on "FilterBy_Popup" wizard
     And wait load page
     Then click on cell with row index 3 in "name" column in "Files_Table" table on "Files" wizard
+    And wait load page
     Then save to context "name" column on 3 row from "Files_Table" table on "Files" wizard
     Then compare "Header" element value on "Files_Info_Pane" wizard with test "name" context value
     Then check "latest" value in "tag" column in "Overview_Table" table on "Files_Info_Pane" wizard

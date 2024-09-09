@@ -59,6 +59,11 @@ async function getInputValue(driver, inputGroup) {
   return inputField.getAttribute('value')
 }
 
+async function getInputPlaceholder(driver, inputGroup) {
+  const inputField = await driver.findElement(inputGroup.inputField)
+  return inputField.getAttribute('placeholder')
+}
+
 async function getInputValueWithoutInputgroup(driver, input) {
   const inputField = await driver.findElement(input)
   return inputField.getAttribute('value')
@@ -168,6 +173,10 @@ const action = {
   },
   verifyTypedValue: async function (driver, inputGroup, value) {
     const txt = await getInputValue(driver, inputGroup)
+    expect(txt).equal(value)
+  },
+  verifyPlaceholder: async function (driver, inputGroup, value) {
+    const txt = await getInputPlaceholder(driver, inputGroup)
     expect(txt).equal(value)
   },
   verifyTypedValueWithoutInputgroup: async function (driver, input, value) {

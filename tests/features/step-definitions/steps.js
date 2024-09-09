@@ -79,6 +79,7 @@ import {
   verifyInputEnabled,
   verifyInputClassEnabled,
   verifyTypedValue,
+  verifyPlaceholder,
   verifyTypedValueWithoutInputgroup,
   verifyTextAreaCounter
 } from '../common/actions/input-group.action'
@@ -197,6 +198,11 @@ Then(
 Then('wait load page', async function() {
   await waitPageLoad(this.driver, pageObjects['commonPagesHeader']['loader'])
   await this.driver.sleep(500)
+})
+
+Then('wait for {int} seconds', async function(seconds) {
+  const milliseconds = seconds * 1000
+  await new Promise(resolve => setTimeout(resolve, milliseconds))
 })
 
 Then('navigate forward', async function() {
@@ -333,6 +339,13 @@ Then(
   'verify checkbox {string} element on {string} wizard is enabled',
   async function (elementName, wizardName) {
     await verifyCheckboxEnabled(this.driver, pageObjects[wizardName][elementName])
+  }
+)
+
+Then(
+  'verify checkbox {string} element in {string} on {string} wizard is enabled',
+  async function (elementName, accordionName, wizardName) {
+    await verifyCheckboxEnabled(this.driver, pageObjects[wizardName][accordionName][elementName].root)
   }
 )
 
@@ -1385,6 +1398,12 @@ Then(
     'verify {string} input should contains {string} value on {string} wizard',
     async function (component, value, wizard) {
         await verifyTypedValue(this.driver, pageObjects[wizard][component], value)
+    }
+)
+Then(
+    'verify {string} input should contains {string} placeholder value on {string} wizard',
+    async function (component, value, wizard) {
+        await verifyPlaceholder(this.driver, pageObjects[wizard][component], value)
     }
 )
 
