@@ -52,7 +52,7 @@ export const getInfoHeaders = (isSpark, selectedJob) => {
     {
       label: 'Node selector',
       id: 'nodeSelectorChips',
-      hidden: isJobKindDask(selectedJob?.labels) || !selectedJob?.nodeSelectorChips?.length
+      hidden: isJobKindDask(selectedJob?.labels)
     },
     { label: 'Priority', id: 'priority' },
     { label: 'Parameters', id: 'parameters' },
