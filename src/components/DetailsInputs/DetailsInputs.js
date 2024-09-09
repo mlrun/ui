@@ -74,10 +74,7 @@ const DetailsInputs = ({ inputs }) => {
       .getFeatureVectorByReference(project, name, tag ?? uid ?? TAG_FILTER_LATEST)
       .then(response => {
         if (response?.data) {
-          const parsedFeatureVector = parseFeatureVectors([response.data])[0]
-          parsedFeatureVector.kind = FEATURE_VECTORS_KIND
-
-          return parsedFeatureVector
+          return parseFeatureVectors([response.data])[0]
         }
 
         return null

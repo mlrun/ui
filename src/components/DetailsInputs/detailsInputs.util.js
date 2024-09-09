@@ -26,7 +26,6 @@ import { RoundedIcon, TextTooltipTemplate, Tooltip } from 'igz-controls/componen
 
 import {
   DATASETS_TAB,
-  FEATURE_STORE_PAGE,
   FEATURE_VECTORS_TAB,
   FILES_TAB,
   MODELS_TAB,
@@ -48,7 +47,7 @@ export const generateInputResourceLink = (input, projectName) => {
     files: `/projects/${projectName}/${FILES_TAB}/${input.db_key || input.key}/${input.tag ?? input.tree ?? TAG_FILTER_LATEST}${
       input.iter ? `/${input.iter}` : ''
     }/overview`,
-    'feature-vectors': `/projects/${projectName}/${FEATURE_STORE_PAGE.toLowerCase()}/${FEATURE_VECTORS_TAB}/${input.name}/${input.tag ?? input.uid ?? TAG_FILTER_LATEST}/overview`
+    FeatureVector: `/projects/${projectName}/feature-store/${FEATURE_VECTORS_TAB}/${input.name}/${input.tag ?? input.uid ?? TAG_FILTER_LATEST}/overview`
   }
 
   return input ? inputsLinks[input.kind] ?? inputsLinks.files : ''

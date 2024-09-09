@@ -47,7 +47,7 @@ const fetchFeatureStoreContent = (path, filters, config = {}, withLatestTag, api
   }
 
   if (filters?.name) {
-    params.name = `$~${filters.name}`
+    params.name = `~${filters.name}`
   }
 
   return httpClient.get(path, {
