@@ -90,7 +90,7 @@ const InvocationsMetricCard = forwardRef(
 
     return (
       <div className={invocationCardClassnames}>
-        <StatsCard key={metric.id} className="metrics__card">
+        <StatsCard key={metric.id} className="metrics__card metrics__card-invocation">
           <RoundedIcon
             className="metrics__card-invocation-toggle-icon"
             id="invocation-card-toggle-icon"

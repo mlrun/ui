@@ -46,6 +46,13 @@ $stickyHeaderHeight: 55px;
     &.metrics__card-metric {
       .metrics__card-body {
         min-height: 130px;
+        aspect-ratio: 7;
+      }
+    }
+
+    &.metrics__card-invocation {
+      .metrics__card-body {
+        aspect-ratio: 5;
       }
     }
 
@@ -305,7 +312,6 @@ $stickyHeaderHeight: 55px;
       align-self: stretch;
       box-sizing: border-box;
       width: 100%;
-      aspect-ratio: 7;
 
       &-collapsed {
         height: 80px;
