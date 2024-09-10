@@ -177,6 +177,7 @@ const mlrunAPIIngressV2 = `${mlrunIngress}/api/v2`
 const nuclioApiUrl = '/nuclio-ingress.default-tenant.app.vmdev36.lab.iguazeng.com'
 const iguazioApiUrl = '/platform-api.default-tenant.app.vmdev36.lab.iguazeng.com'
 const port = 30000
+const NOT_ALLOWED_SECRET_KEY = 'mlrun.'
 
 // Support function
 function createTask(projectName, config) {
@@ -513,10 +514,32 @@ function getSecretKeys(req, res) {
 }
 
 function postSecretKeys(req, res) {
-  secretKeys[req.params['project']].secret_keys.push(Object.keys(req.body.secrets)[0])
+  let respBody = ''
+  const newSecretKey = Object.keys(req.body.secrets)[0]
 
-  res.statusCode = 201
-  res.send('')
+  if (newSecretKey.startsWith(NOT_ALLOWED_SECRET_KEY)) {
+    res.statusCode = 403
+    respBody = {
+      detail: `MLRunAccessDeniedError('Not allowed to create/update internal secrets (key starts with ${NOT_ALLOWED_SECRET_KEY})')`
+    }
+  } else {
+    const projectSecrets = get(secretKeys, [req.params['project'], 'secret_keys'])
+
+    if (projectSecrets) {
+      if (!projectSecrets.includes(newSecretKey)) {
+        projectSecrets.push(newSecretKey)
+      }
+    } else {
+      secretKeys[req.params['project']] = {
+        provider: 'kubernetes',
+        secret_keys: [newSecretKey]
+      }
+    }
+
+    res.statusCode = 201
+  }
+
+  res.send(respBody)
 }
 
 function deleteSecretKeys(req, res) {
