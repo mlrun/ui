@@ -20,6 +20,7 @@ such restriction.
 import React, { useCallback, useEffect, useState, useMemo, useRef } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useLocation, useNavigate, useParams } from 'react-router-dom'
+import { isEmpty } from 'lodash'
 
 import AddArtifactTagPopUp from '../../elements/AddArtifactTagPopUp/AddArtifactTagPopUp'
 import FilesView from './FilesView'
@@ -344,28 +345,30 @@ const Files = () => {
     dispatch(setFilters({ groupBy: GROUP_BY_NONE }))
   }, [dispatch, params.projectName])
 
+  const handleSelectFile = useCallback(
+    file => {
+      const { db_key: name, tag, iter, uid } = file
+
+      checkForSelectedFile(
+        name,
+        selectedRowData,
+        files,
+        tag,
+        iter,
+        uid,
+        navigate,
+        params.projectName,
+        setSelectedFileMin
+      )
+    },
+    [files, navigate, params.projectName, selectedRowData]
+  )
+
   useEffect(() => {
-    checkForSelectedFile(
-      params.name,
-      selectedRowData,
-      files,
-      params.tag,
-      params.iter,
-      params.uid,
-      navigate,
-      params.projectName,
-      setSelectedFileMin
-    )
-  }, [
-    files,
-    navigate,
-    params.iter,
-    params.name,
-    params.projectName,
-    params.tag,
-    params.uid,
-    selectedRowData
-  ])
+    if (params.name && isEmpty(selectedFileMin)) {
+      handleSelectFile({ db_key: params.name, tag: params.tag, iter: params.iter })
+    }
+  }, [handleSelectFile, params.iter, params.name, params.tag, selectedFileMin])
 
   const handleRegisterArtifact = useCallback(() => {
     openPopUp(RegisterArtifactModal, {
@@ -403,6 +406,7 @@ const Files = () => {
       handleExpandRow={handleExpandRow}
       handleRefresh={handleRefresh}
       handleRegisterArtifact={handleRegisterArtifact}
+      handleSelectFile={handleSelectFile}
       requestErrorMessage={requestErrorMessage}
       maxArtifactsErrorIsShown={maxArtifactsErrorIsShown}
       pageData={pageData}

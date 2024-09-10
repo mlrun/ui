@@ -125,9 +125,9 @@ const artifactsApi = {
 
     return mainHttpClientV2.get(`/projects/${project}/artifacts`, { params })
   },
-  getArtifact: (projectName, artifactName, tree, tag, iter) => {
+  getArtifact: (projectName, artifactName, uid, tree, tag, iter) => {
     const newConfig = {
-      params: { tree: tree }
+      params: { tree, uid }
     }
 
     if (tag) {

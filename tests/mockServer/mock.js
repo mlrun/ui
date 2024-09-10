@@ -636,24 +636,24 @@ function getRuns(req, res) {
   if (req.params['project'] === '*') {
     const { start_time_from, state } = req.query
     collectedRuns = runs.runs
-    .filter(run => run.kind === 'run')
-    .filter(run => {
-      const runStartTime = new Date(run.status.start_time)
+      .filter(run => run.kind === 'run')
+      .filter(run => {
+        const runStartTime = new Date(run.status.start_time)
 
-      if (!start_time_from || runStartTime >= new Date(start_time_from)) {
-        if (state) {
-          if (Array.isArray(state)) {
-            return state.includes(run.status.state)
+        if (!start_time_from || runStartTime >= new Date(start_time_from)) {
+          if (state) {
+            if (Array.isArray(state)) {
+              return state.includes(run.status.state)
+            } else {
+              return run.status.state === state
+            }
           } else {
-            return run.status.state === state
+            return true
           }
-        } else {
-          return true
         }
-      }
 
-      return false
-    })
+        return false
+      })
   }
   //get runs for Jobs and workflows page
   if (req.params['project'] !== '*') {
@@ -688,18 +688,17 @@ function getRuns(req, res) {
     }
   }
 
-  if (req.query['partition-by'] && req.query['partition-sort-by']){
+  if (req.query['partition-by'] && req.query['partition-sort-by']) {
     const uniqueObjects = {}
 
     collectedRuns.forEach(run => {
       const name = run.metadata.name
       const lastUpdate = new Date(run.status.last_update)
 
-        if (!uniqueObjects[name] || new Date(uniqueObjects[name].status.last_update) < lastUpdate) {
-          uniqueObjects[name] = run
-        }
+      if (!uniqueObjects[name] || new Date(uniqueObjects[name].status.last_update) < lastUpdate) {
+        uniqueObjects[name] = run
       }
-    )
+    })
     collectedRuns = Object.values(uniqueObjects)
   }
 
@@ -1867,7 +1866,10 @@ function getArtifact(req, res) {
         artifact?.tag === req.query.tag) &&
       (isNil(req.query.tree) ||
         artifact.metadata?.tree === req.query.tree ||
-        artifact?.tree === req.query.tree)
+        artifact?.tree === req.query.tree) &&
+      (isNil(req.query.uid) ||
+        artifact.metadata?.uid === req.query.uid ||
+        artifact?.uid === req.query.uid)
   )
 
   if (requestedArtifact) {

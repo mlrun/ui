@@ -61,7 +61,7 @@ const initialState = {
   modelEndpoints: {
     allData: [],
     loading: false,
-    modelEndpointLoading: false,
+    modelEndpointLoading: false
   },
   models: {
     allData: [],
@@ -158,12 +158,14 @@ export const fetchExpandedDataSet = createAsyncThunk(
 )
 export const fetchDataSet = createAsyncThunk(
   'fetchDataSet',
-  ({ projectName, artifactName, tree, tag, iter }) => {
-    return artifactsApi.getArtifact(projectName, artifactName, tree, tag, iter).then(response => {
-      const result = parseArtifacts([response.data])
+  ({ projectName, artifactName, uid, tree, tag, iter }) => {
+    return artifactsApi
+      .getArtifact(projectName, artifactName, uid, tree, tag, iter)
+      .then(response => {
+        const result = parseArtifacts([response.data])
 
-      return generateArtifacts(filterArtifacts(result), DATASETS_TAB, [response.data])?.[0]
-    })
+        return generateArtifacts(filterArtifacts(result), DATASETS_TAB, [response.data])?.[0]
+      })
   }
 )
 export const fetchDataSets = createAsyncThunk(
@@ -200,12 +202,14 @@ export const fetchExpandedFile = createAsyncThunk(
 )
 export const fetchFile = createAsyncThunk(
   'fetchFile',
-  ({ projectName, artifactName, tree, tag, iter }) => {
-    return artifactsApi.getArtifact(projectName, artifactName, tree, tag, iter).then(response => {
-      const result = parseArtifacts([response.data])
+  ({ projectName, artifactName, uid, tree, tag, iter }) => {
+    return artifactsApi
+      .getArtifact(projectName, artifactName, uid, tree, tag, iter)
+      .then(response => {
+        const result = parseArtifacts([response.data])
 
-      return generateArtifacts(filterArtifacts(result), ARTIFACTS_TAB, [response.data])?.[0]
-    })
+        return generateArtifacts(filterArtifacts(result), ARTIFACTS_TAB, [response.data])?.[0]
+      })
   }
 )
 export const fetchFiles = createAsyncThunk(
@@ -262,15 +266,11 @@ export const fetchArtifactsFunction = createAsyncThunk(
     })
   }
 )
-export const fetchModelEndpoint = createAsyncThunk(
-  'fetchModelEndpoint',
-  ({ project, uid }) => {
-    return modelEndpointsApi.getModelEndpoint(project, uid)
-      .then(({ data: endpoint }) => {
-        return parseModelEndpoints([endpoint])?.[0]
-      })
-  }
-)
+export const fetchModelEndpoint = createAsyncThunk('fetchModelEndpoint', ({ project, uid }) => {
+  return modelEndpointsApi.getModelEndpoint(project, uid).then(({ data: endpoint }) => {
+    return parseModelEndpoints([endpoint])?.[0]
+  })
+})
 export const fetchModelEndpoints = createAsyncThunk(
   'fetchModelEndpoints',
   ({ project, filters, config, params }, thunkAPI) => {
@@ -303,12 +303,14 @@ export const fetchExpandedModel = createAsyncThunk(
 )
 export const fetchModel = createAsyncThunk(
   'fetchModel',
-  ({ projectName, artifactName, tree, tag, iter }) => {
-    return artifactsApi.getArtifact(projectName, artifactName, tree, tag, iter).then(response => {
-      const result = parseArtifacts([response.data])
+  ({ projectName, artifactName, uid, tree, tag, iter }) => {
+    return artifactsApi
+      .getArtifact(projectName, artifactName, uid, tree, tag, iter)
+      .then(response => {
+        const result = parseArtifacts([response.data])
 
-      return generateArtifacts(filterArtifacts(result), MODELS_TAB, [response.data])?.[0]
-    })
+        return generateArtifacts(filterArtifacts(result), MODELS_TAB, [response.data])?.[0]
+      })
   }
 )
 export const fetchModels = createAsyncThunk(
@@ -497,7 +499,7 @@ const artifactsSlice = createSlice({
       state.files.loading = false
       state.loading = state.models.loading || state.dataSets.loading
     })
-    builder.addCase(fetchExpandedModel.pending, (state) => {
+    builder.addCase(fetchExpandedModel.pending, state => {
       state.models.selectedRowData = {
         content: initialState.models.selectedRowData.content,
         error: null,

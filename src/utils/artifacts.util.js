@@ -201,10 +201,10 @@ export const setFullSelectedArtifact = debounce(
     if (isEmpty(selectedArtifactMin)) {
       setSelectedArtifact({})
     } else {
-      const { db_key, tree, tag, iter } = selectedArtifactMin
+      const { db_key, tree, tag, iter, uid } = selectedArtifactMin
       const fetchArtifactData = getArtifactFetchMethod(tab)
 
-      dispatch(fetchArtifactData({ projectName, artifactName: db_key, tree, tag, iter }))
+      dispatch(fetchArtifactData({ projectName, artifactName: db_key, uid, tree, tag, iter }))
         .unwrap()
         .then(artifact => {
           setSelectedArtifact(artifact)
@@ -226,6 +226,7 @@ export const chooseOrFetchArtifact = (dispatch, tab, selectedArtifact, artifactM
     fetchArtifactData({
       projectName: artifactMin.project,
       artifactName: artifactMin.db_key,
+      uid: artifactMin.uid,
       tree: artifactMin.tree,
       tag: artifactMin.tag,
       iter: artifactMin.iter

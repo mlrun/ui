@@ -54,6 +54,7 @@ const FilesView = React.forwardRef(
       handleExpandRow,
       handleRefresh,
       handleRegisterArtifact,
+      handleSelectFile,
       maxArtifactsErrorIsShown,
       pageData,
       requestErrorMessage,
@@ -113,7 +114,7 @@ const FilesView = React.forwardRef(
                 />
               ) : (
                 <>
-                  {(selectedRowData.loading  || artifactsStore.files.fileLoading) && <Loader />}
+                  {(selectedRowData.loading || artifactsStore.files.fileLoading) && <Loader />}
                   {maxArtifactsErrorIsShown && (
                     <WarningMessage
                       message="The query response displays up to 1000 items. Use filters to narrow down the results."
@@ -140,6 +141,7 @@ const FilesView = React.forwardRef(
                           <ArtifactsTableRow
                             actionsMenu={actionsMenu}
                             handleExpandRow={handleExpandRow}
+                            handleSelectItem={handleSelectFile}
                             key={tableItem.data.ui.identifier}
                             rowIndex={index}
                             rowItem={tableItem}
@@ -190,6 +192,7 @@ FilesView.propTypes = {
   handleExpandRow: PropTypes.func.isRequired,
   handleRefresh: PropTypes.func.isRequired,
   handleRegisterArtifact: PropTypes.func.isRequired,
+  handleSelectFile: PropTypes.func.isRequired,
   maxArtifactsErrorIsShown: PropTypes.bool.isRequired,
   pageData: PropTypes.object.isRequired,
   requestErrorMessage: PropTypes.string.isRequired,
