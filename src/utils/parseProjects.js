@@ -17,12 +17,15 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import React from 'react'
-import ReactDOM from 'react-dom'
-import App from './App'
+import { parseChipsData } from './convertChipsData'
 
-it('renders without crashing', () => {
-  const div = document.createElement('div')
-  ReactDOM.render(<App />, div)
-  ReactDOM.unmountComponentAtNode(div)
-})
+export const parseProjects = projects =>
+  projects.map(project => {
+    return {
+      ...project,
+      metadata: {
+        ...project.metadata,
+        labels: parseChipsData(project.metadata.labels)
+      }
+    }
+  })

@@ -66,9 +66,9 @@ const featureStoreApi = {
     mainHttpClient.post(`/projects/${data.metadata.project}/feature-vectors`, data),
   deleteFeatureVector: (project, featureVector) =>
     mainHttpClient.delete(`/projects/${project}/feature-vectors/${featureVector}`),
-  fetchFeatureSetsTags: project => mainHttpClient.get(`/projects/${project}/feature-sets/*/tags`),
-  fetchFeatureVectorsTags: project =>
-    mainHttpClient.get(`/projects/${project}/feature-vectors/*/tags`),
+  fetchFeatureSetsTags: (project, config) => mainHttpClient.get(`/projects/${project}/feature-sets/*/tags`, config),
+  fetchFeatureVectorsTags: (project, config) =>
+    mainHttpClient.get(`/projects/${project}/feature-vectors/*/tags`, config),
   getEntity: (project, entity) =>
     mainHttpClientV2.get(`/projects/${project}/entities`, {
       params: { name: entity }

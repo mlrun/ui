@@ -37,17 +37,17 @@ import {
 } from '../../../constants'
 import { checkTabIsValid, handleApplyDetailsChanges } from '../featureStore.util'
 import { createFeatureSetsRowData } from '../../../utils/createFeatureStoreContent'
-import { featureSetsActionCreator, featureSetsFilters, generatePageData } from './featureSets.util'
+import { featureSetsActionCreator, generatePageData } from './featureSets.util'
 import { getFeatureSetIdentifier } from '../../../utils/getUniqueIdentifier'
 import { getFilterTagOptions, setFilters } from '../../../reducers/filtersReducer'
 import { isDetailsTabExists } from '../../../utils/isDetailsTabExists'
 import { parseChipsData } from '../../../utils/convertChipsData'
 import { parseFeatureSets } from '../../../utils/parseFeatureSets'
 import { setNotification } from '../../../reducers/notificationReducer'
-import { useGetTagOptions } from '../../../hooks/useGetTagOptions.hook'
 import { useGroupContent } from '../../../hooks/groupContent.hook'
 import { useOpenPanel } from '../../../hooks/openPanel.hook'
 import { useVirtualization } from '../../../hooks/useVirtualization.hook'
+import { useInitialTableFetch } from '../../../hooks/useInitialTableFetch.hook'
 
 import { ReactComponent as Yaml } from 'igz-controls/images/yaml.svg'
 
@@ -68,11 +68,11 @@ const FeatureSets = ({
   const [requestErrorMessage, setRequestErrorMessage] = useState('')
 
   const openPanelByDefault = useOpenPanel()
-  const [urlTagOption] = useGetTagOptions(fetchFeatureSetsTags, featureSetsFilters)
   const params = useParams()
   const featureStore = useSelector(store => store.featureStore)
   const filtersStore = useSelector(store => store.filtersStore)
   const abortControllerRef = useRef(new AbortController())
+  const tagAbortControllerRef = useRef(new AbortController())
   const featureStoreRef = useRef(null)
   const navigate = useNavigate()
   const location = useLocation()
@@ -118,17 +118,33 @@ const FeatureSets = ({
 
       return fetchFeatureSets(params.projectName, filters, config).then(result => {
         if (result) {
-          setFeatureSets(parseFeatureSets(result))
+          const parsedResult = parseFeatureSets(result)
 
-          return result
+          setFeatureSets(parsedResult)
+
+          return parsedResult
         }
       })
     },
     [fetchFeatureSets, params.projectName]
   )
 
+  const fetchTags = useCallback(() => {
+    tagAbortControllerRef.current = new AbortController()
+
+    return dispatch(
+      getFilterTagOptions({
+        fetchTags: fetchFeatureSetsTags,
+        project: params.projectName,
+        config: {
+          signal: tagAbortControllerRef.current.signal
+        }
+      })
+    )
+  }, [dispatch, fetchFeatureSetsTags, params.projectName])
+
   const handleRefresh = filters => {
-    dispatch(getFilterTagOptions({ fetchTags: fetchFeatureSetsTags, project: params.projectName }))
+    fetchTags()
     setFeatureSets([])
     setSelectedFeatureSet({})
     setSelectedRowData({})
@@ -279,14 +295,13 @@ const FeatureSets = ({
     setSelectedRowData({})
   }, [filtersStore.tag])
 
-  useEffect(() => {
-    if (urlTagOption) {
-      fetchData({
-        tag: urlTagOption,
-        iter: ''
-      })
-    }
-  }, [fetchData, urlTagOption])
+  useInitialTableFetch({
+    fetchData,
+    setExpandedRowsData: setSelectedRowData,
+    createRowData: createFeatureSetsRowData,
+    fetchTags,
+    filters: filtersStore
+  })
 
   useEffect(() => {
     if (filtersStore.tag === TAG_FILTER_ALL_ITEMS) {
@@ -336,6 +351,8 @@ const FeatureSets = ({
   }, [openPanelByDefault, setFeatureSetsPanelIsOpen])
 
   useEffect(() => {
+    const tagAbortControllerCurrent = tagAbortControllerRef.current
+
     return () => {
       setFeatureSets([])
       removeFeatureSets()
@@ -343,8 +360,9 @@ const FeatureSets = ({
       setSelectedFeatureSet({})
       setSelectedRowData({})
       abortControllerRef.current.abort(REQUEST_CANCELED)
+      tagAbortControllerCurrent.abort(REQUEST_CANCELED)
     }
-  }, [removeFeatureSet, removeFeatureSets, params.projectName])
+  }, [removeFeatureSet, removeFeatureSets, params.projectName, tagAbortControllerRef])
 
   const virtualizationConfig = useVirtualization({
     rowsData: {

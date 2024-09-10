@@ -32,7 +32,8 @@ import {
   FormChipCell,
   FormInput,
   FormOnChange,
-  FormTextarea
+  FormTextarea,
+  Tip
 } from 'igz-controls/components'
 import ChangeOwnerPopUp from '../ChangeOwnerPopUp/ChangeOwnerPopUp'
 import Loader from '../../common/Loader/Loader'
@@ -60,7 +61,10 @@ import { FORBIDDEN_ERROR_STATUS_CODE } from 'igz-controls/constants'
 import { KEY_CODES } from '../../constants'
 import { getChipOptions } from '../../utils/getChipOptions'
 import { getErrorMsg } from 'igz-controls/utils/common.util'
-import { getValidationRules, getInternalLabelsValidationRule } from 'igz-controls/utils/validation.util'
+import {
+  getValidationRules,
+  getInternalLabelsValidationRule
+} from 'igz-controls/utils/validation.util'
 import { parseChipsData, convertChipsData } from '../../utils/convertChipsData'
 import { setNotification } from '../../reducers/notificationReducer'
 import { showErrorNotification } from '../../utils/notifications.util'
@@ -91,45 +95,54 @@ const ProjectSettingsGeneral = ({
   const params = useParams()
   const dispatch = useDispatch()
 
-  useEffect(
-    () => {
-      if (!projectIsInitialized) {
-        setProjectIsInitialized(true)
+  useEffect(() => {
+    if (!projectIsInitialized) {
+      setProjectIsInitialized(true)
 
-        fetchProject(params.projectName)
-          .then(projectResponse => {
-            setTimeout(() => {
-              const newInitial = {
-                [SOURCE_URL]: projectResponse.spec[SOURCE_URL],
-                [ARTIFACT_PATH]: projectResponse.spec[ARTIFACT_PATH],
-                [LOAD_SOURCE_ON_RUN]: projectResponse.spec[LOAD_SOURCE_ON_RUN],
-                [DEFAULT_IMAGE]: projectResponse.spec[DEFAULT_IMAGE],
-                [DESCRIPTION]: projectResponse.spec[DESCRIPTION],
-                [GOALS]: projectResponse.spec[GOALS],
-                [PARAMS]: parseObjectToKeyValue(projectResponse.spec[PARAMS]),
-                [LABELS]: parseChipsData(projectResponse.metadata[LABELS], frontendSpec.internal_labels || [])
-              }
+      fetchProject(params.projectName)
+        .then(projectResponse => {
+          setTimeout(() => {
+            const newInitial = {
+              [SOURCE_URL]: projectResponse.spec[SOURCE_URL],
+              [ARTIFACT_PATH]: projectResponse.spec[ARTIFACT_PATH],
+              [LOAD_SOURCE_ON_RUN]: projectResponse.spec[LOAD_SOURCE_ON_RUN],
+              [DEFAULT_IMAGE]: projectResponse.spec[DEFAULT_IMAGE],
+              [DESCRIPTION]: projectResponse.spec[DESCRIPTION],
+              [GOALS]: projectResponse.spec[GOALS],
+              [PARAMS]: parseObjectToKeyValue(projectResponse.spec[PARAMS]),
+              [LABELS]: parseChipsData(
+                projectResponse.metadata[LABELS],
+                frontendSpec.internal_labels || []
+              )
+            }
 
-              if (areNodeSelectorsSupported) {
-                newInitial[NODE_SELECTORS] = parseObjectToKeyValue(projectResponse.spec[NODE_SELECTORS])
-              }
+            if (areNodeSelectorsSupported) {
+              newInitial[NODE_SELECTORS] = parseObjectToKeyValue(
+                projectResponse.spec[NODE_SELECTORS]
+              )
+            }
 
-              setLastEditedProjectValues(newInitial)
-              formStateRef.current.form.restart(newInitial)
-            }, 10)
-          })
-          .catch(error => {
-            const customErrorMsg =
-              error.response?.status === FORBIDDEN_ERROR_STATUS_CODE
-                ? 'Permission denied'
-                : getErrorMsg(error, 'Failed to fetch project data')
+            setLastEditedProjectValues(newInitial)
+            formStateRef.current.form.restart(newInitial)
+          }, 10)
+        })
+        .catch(error => {
+          const customErrorMsg =
+            error.response?.status === FORBIDDEN_ERROR_STATUS_CODE
+              ? 'Permission denied'
+              : getErrorMsg(error, 'Failed to fetch project data')
 
-            showErrorNotification(dispatch, error, '', customErrorMsg)
-          })
-      }
-    },
-    [params.pageTab, params.projectName, fetchProject, dispatch, frontendSpec.internal_labels, projectIsInitialized]
-  )
+          showErrorNotification(dispatch, error, '', customErrorMsg)
+        })
+    }
+  }, [
+    params.pageTab,
+    params.projectName,
+    fetchProject,
+    dispatch,
+    frontendSpec.internal_labels,
+    projectIsInitialized
+  ])
 
   useEffect(() => {
     return () => {
@@ -320,7 +333,11 @@ const ProjectSettingsGeneral = ({
                   </div>
                   {areNodeSelectorsSupported && (
                     <div>
-                      <p className="settings__card-title">Node Selectors</p>
+                      <div className="settings__card-title">
+                        <span>Node Selectors</span>
+                        <Tip text="Ensure that the node selectors you are configuring are compatible with the available nodes in your cluster. Incompatible node selectors will not be validated at the project level and might result in scheduling issues when running functions.
+                        Node-selector values set in the global settings are not shown. Keep the “Key” and delete the “Value” to remove the global setting." />
+                      </div>
                       <FormKeyValueTable
                         addNewItemLabel="Add node selector"
                         keyValidationRules={getValidationRules('nodeSelectors.key')}
@@ -328,6 +345,7 @@ const ProjectSettingsGeneral = ({
                         onExitEditModeCallback={updateProjectData}
                         fieldsPath={NODE_SELECTORS}
                         formState={formState}
+                        isValueRequired={false}
                       />
                     </div>
                   )}
@@ -339,7 +357,7 @@ const ProjectSettingsGeneral = ({
                         <span className="row-label">Owner:</span>
                         <span className="row-name">
                           {membersState.projectInfo?.owner?.username ||
-                          projectStore.project.data?.spec?.owner}
+                            projectStore.project.data?.spec?.owner}
                         </span>
                       </div>
                     </div>

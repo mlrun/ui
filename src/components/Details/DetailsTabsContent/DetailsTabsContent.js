@@ -93,7 +93,7 @@ const DetailsTabsContent = ({
         />
       )
     case DETAILS_DRIFT_ANALYSIS_TAB:
-      return <DetailsDriftAnalysis />
+      return <DetailsDriftAnalysis selectedItem={selectedItem}/>
     case DETAILS_PODS_TAB:
       return (
         !isJobKindDask(selectedItem?.labels) && (
@@ -111,7 +111,7 @@ const DetailsTabsContent = ({
         )
       )
     case DETAILS_FEATURES_ANALYSIS_TAB:
-      return <DetailsFeatureAnalysis />
+      return <DetailsFeatureAnalysis selectedItem={selectedItem}/>
     case DETAILS_METRICS_TAB:
       return <DetailsMetrics selectedItem={selectedItem} />
     case DETAILS_PREVIEW_TAB:

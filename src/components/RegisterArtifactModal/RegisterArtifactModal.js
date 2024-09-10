@@ -162,7 +162,7 @@ const RegisterArtifactModal = ({
         if (error) {
           const customErrorMsg =
             error.response.status === FORBIDDEN_ERROR_STATUS_CODE
-              ? 'You are not permitted to create a new resource'
+              ? 'You do not have permission to create a new resource'
               : `${title} failed to initiate`
 
           showErrorNotification(dispatch, error, '', customErrorMsg, () => registerArtifact(values))

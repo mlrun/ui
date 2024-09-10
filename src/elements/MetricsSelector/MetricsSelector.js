@@ -44,6 +44,7 @@ import { ReactComponent as ResultIcon } from 'igz-controls/images/circled-r.svg'
 import './metricsSelector.scss'
 
 const MetricsSelector = ({
+  disabled = false,
   maxSelectionNumber = 20,
   metrics,
   name,
@@ -83,7 +84,8 @@ const MetricsSelector = ({
 
   const metricsHeaderClassNames = classNames(
     'metrics-selector-header',
-    isOpen && 'metrics-selector-header_open'
+    isOpen && 'metrics-selector-header_open',
+    disabled && 'metrics-selector-header_disabled'
   )
 
   useEffect(() => {
@@ -113,7 +115,9 @@ const MetricsSelector = ({
     event => {
       if (
         !event.target.closest('.metrics-selector-popup') &&
-        !event.target.closest('.metrics-selector')
+        !event.target.closest('.metrics-selector') &&
+        !event.target.closest('.tooltip-template') &&
+        !event.target.closest('#overlay_container')
       ) {
         setIsOpen(false)
       }
@@ -202,7 +206,7 @@ const MetricsSelector = ({
             <div
               data-testid="metrics-selector-header"
               className={metricsHeaderClassNames}
-              onClick={() => setIsOpen(isOpen => !isOpen)}
+              onClick={() => setIsOpen(isOpen => !disabled && !isOpen)}
             >
               <div
                 data-testid="selected-metrics"
@@ -308,6 +312,7 @@ const MetricsSelector = ({
 }
 
 MetricsSelector.propTypes = {
+  disabled: PropTypes.bool,
   maxSelectionNumber: PropTypes.number,
   metrics: METRICS_SELECTOR_OPTIONS.isRequired,
   name: PropTypes.string.isRequired,

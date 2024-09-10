@@ -28,7 +28,7 @@ export const convertChipsData = (chips = []) => {
 }
 
 // {myKey: "myValue"} --> [{id: "myKey0", key: "myKey", value: "myValue"}]
-export const parseChipsData = (labels = {}, internalLabels, delimiter = null) => {
+export const parseChipsData = (labels = {}, internalLabels = [], delimiter = null) => {
   return labels == null
     ? []
     : Object.entries(labels).reduce((result, [key, value], idx) => {

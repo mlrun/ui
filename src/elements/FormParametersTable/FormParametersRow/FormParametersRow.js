@@ -319,7 +319,7 @@ const FormParametersRow = ({
                     }}
                     name={`${rowPath}.data.type`}
                     options={typeOptions}
-                    required
+                    required={!fieldData.isPredefined}
                   />
                 </div>
                 <div className="form-table__cell form-table__cell_3">

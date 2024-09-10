@@ -36,10 +36,11 @@ import {
   DATES_FILTER,
   NAME_FILTER,
   SHOW_UNTAGGED_FILTER,
-  FUNCTION_FILTERS
+  FUNCTION_FILTERS,
+  FILTER_MENU,
+  FILTER_MENU_MODAL
 } from '../../constants'
 import {
-  fetchInitialFunctions,
   generateActionsMenu,
   generateFunctionsPageData,
   pollDeletingFunctions,
@@ -50,7 +51,7 @@ import {
   datePickerPastOptions,
   getDatePickerFilterValue
 } from '../../utils/datePicker.util'
-import createFunctionsContent from '../../utils/createFunctionsContent'
+import createFunctionsRowData from '../../utils/createFunctionsRowData'
 import functionsActions from '../../actions/functions'
 import jobsActions from '../../actions/jobs'
 import { DANGER_BUTTON, LABEL_BUTTON } from 'igz-controls/constants'
@@ -67,6 +68,7 @@ import { useGroupContent } from '../../hooks/groupContent.hook'
 import { useMode } from '../../hooks/mode.hook'
 import { useVirtualization } from '../../hooks/useVirtualization.hook'
 import { useYaml } from '../../hooks/yaml.hook'
+import { useInitialTableFetch } from '../../hooks/useInitialTableFetch.hook'
 
 import cssVariables from './functions.scss'
 
@@ -100,7 +102,6 @@ const Functions = ({
   const fetchFunctionNuclioLogsTimeout = useRef(null)
   const nameFilterRef = useRef('')
   const terminatePollRef = useRef(null)
-  const functionsAreInitializedRef = useRef(false)
   const { isDemoMode, isStagingMode } = useMode()
   const params = useParams()
   const navigate = useNavigate()
@@ -178,7 +179,9 @@ const Functions = ({
         return {
           ...state,
           [funcIdentifier]: {
-            content: createFunctionsContent(content[func.name], params.projectName, false)
+            content: content[func.name].map(contentItem =>
+              createFunctionsRowData(contentItem, params.projectName, false)
+            )
           }
         }
       })
@@ -205,7 +208,9 @@ const Functions = ({
     } else {
       Object.entries(content).forEach(([key, value]) => {
         newSelectedRowData[key] = {
-          content: createFunctionsContent(value, params.projectName, false)
+          content: value.map(contentItem =>
+            createFunctionsRowData(contentItem, params.projectName, false)
+          )
         }
       })
     }
@@ -225,7 +230,7 @@ const Functions = ({
   )
 
   const tableContent = useMemo(
-    () => createFunctionsContent(latestItems, params.projectName, true),
+    () => latestItems.map(contentItem => createFunctionsRowData(contentItem, params.projectName, true)),
     [latestItems, params.projectName]
   )
 
@@ -503,19 +508,17 @@ const Functions = ({
     )
   }, [dispatch, fetchFunction, navigate, params.projectName, selectedFunctionMin])
 
-  useLayoutEffect(() => {
-    if (
-      !functionsAreInitializedRef.current &&
-      (params.funcName || (params.hash && params.hash.includes('@')))
-    ) {
+  const setInitialFilters = useCallback(() => {
+    if (params.funcName || (params.hash && params.hash.includes('@'))) {
       const funcName = params.funcName || params.hash.split('@')[0]
+      const dateFilterValues = getDatePickerFilterValue(datePickerPastOptions, ANY_TIME_DATE_OPTION)
 
       dispatch(
         setFiltersValues({
           name: FUNCTION_FILTERS,
           value: {
             [NAME_FILTER]: funcName,
-            [DATES_FILTER]: getDatePickerFilterValue(datePickerPastOptions, ANY_TIME_DATE_OPTION)
+            [DATES_FILTER]: dateFilterValues
           }
         })
       )
@@ -528,17 +531,23 @@ const Functions = ({
         })
       )
     }
-  }, [dispatch, params])
+  }, [dispatch, params.funcName, params.hash])
 
-  useEffect(() => {
-    fetchInitialFunctions(filtersStore, fetchData, functionsAreInitializedRef)
-  }, [filtersStore, fetchData])
+  useInitialTableFetch({
+    fetchData,
+    setExpandedRowsData: setSelectedRowData,
+    createRowData: createFunctionsRowData,
+    setInitialFilters,
+    filters: {
+      ...filtersStore[FILTER_MENU][FUNCTION_FILTERS],
+      ...filtersStore[FILTER_MENU_MODAL][FUNCTION_FILTERS].values
+    }
+  })
 
   useEffect(() => {
     const abortController = abortControllerRef.current
 
     return () => {
-      functionsAreInitializedRef.current = false
       setSelectedFunctionMin({})
       setFunctions([])
       setSelectedRowData({})

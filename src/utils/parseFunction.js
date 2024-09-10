@@ -31,7 +31,7 @@ import {
 
 const nuclioRuntimeKinds = [FUNCTION_TYPE_REMOTE, FUNCTION_TYPE_NUCLIO, FUNCTION_TYPE_SERVING, FUNCTION_TYPE_APPLICATION]
 
-export const parseFunction = (func, projectName, customState) => {
+export const parseFunction = (func, projectName, customState, customError) => {
   const externalInvocationUrls = func.status?.external_invocation_urls ?? []
   let command = nuclioRuntimeKinds.includes(func.kind) ? externalInvocationUrls.length === 1 ?
     externalInvocationUrls[0] : externalInvocationUrls : func.spec?.command
@@ -79,6 +79,7 @@ export const parseFunction = (func, projectName, customState) => {
   }
 
   item.ui = {
+    customError,
     originalContent: func,
     identifier: getFunctionIdentifier(item),
     identifierUnique: getFunctionIdentifier(item, true)

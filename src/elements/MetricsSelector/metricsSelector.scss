@@ -21,6 +21,18 @@
       background-color: $alabaster;
     }
 
+    &_disabled {
+      border: $disabledBorder;
+      color: $spunPearl;
+      cursor: not-allowed;
+
+      .metrics-selector-header__icon {
+        path {
+          fill: $spunPearl;
+        }
+      }
+    }
+
     &__icon {
       display: flex;
       align-items: center;

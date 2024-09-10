@@ -27,6 +27,7 @@ import DatePicker from '../../common/DatePicker/DatePicker'
 import MetricsSelector from '../../elements/MetricsSelector/MetricsSelector'
 import StatsCard from '../../common/StatsCard/StatsCard'
 import ApplicationMetricCard from './ApplicationMetricCard'
+import NoData from '../../common/NoData/NoData'
 
 import { REQUEST_CANCELED } from '../../constants'
 import detailsActions from '../../actions/details'
@@ -35,8 +36,6 @@ import { groupMetricByApplication } from '../../elements/MetricsSelector/metrics
 
 import {
   getDateRangeBefore,
-  INVOCATION_CARD_SCROLL_DELAY,
-  INVOCATION_CARD_SCROLL_THRESHOLD,
   METRIC_RAW_TOTAL_POINTS,
   ML_RUN_INFRA,
   timeRangeMapping
@@ -56,12 +55,11 @@ const DetailsMetrics = ({ selectedItem }) => {
   const [metrics, setMetrics] = useState([])
   const [selectedDate, setSelectedDate] = useState('')
   const [previousTotalInvocation, setPreviousTotalInvocation] = useState(0)
-  const [isInvocationCardExpanded, setIsInvocationCardExpanded] = useState(true)
-  const enableScrollRef = useRef(true)
+  const [isInvocationCardExpanded, setIsInvocationCardExpanded] = useState(false)
+  const [requestErrorMessage, setRequestErrorMessage] = useState('')
   const invocationBodyCardRef = useRef(null)
   const metricsContainerRef = useRef(null)
   const metricsValuesAbortController = useRef(new AbortController())
-  const prevScrollPositionRef = useRef(0)
   const prevSelectedEndPointNameRef = useRef('')
   const [metricOptionsAreLoaded, setMetricOptionsAreLoaded] = useState(false)
   const detailsStore = useSelector(store => store.detailsStore)
@@ -70,79 +68,21 @@ const DetailsMetrics = ({ selectedItem }) => {
     return groupMetricByApplication(metrics, true)
   }, [metrics])
 
+  const hasMetricsList = useMemo(() => {
+    return detailsStore.metricsOptions.all.filter(metric => metric.app !== ML_RUN_INFRA).length > 0
+  }, [detailsStore.metricsOptions.all])
+
   const chooseMetricsDataCard = useMemo(() => {
     return (
-      generatedMetrics.length === 1 && (
+      generatedMetrics.length === 1 &&
+      hasMetricsList && (
         <StatsCard className="metrics__empty-select">
           <MetricsIcon />
           <div>Choose metrics to view endpoint’s data</div>
         </StatsCard>
       )
     )
-  }, [generatedMetrics.length])
-
-  const expandInvocationCard = useCallback(
-    (isUnpinAction = false) => {
-      const invocationBodyCard = invocationBodyCardRef.current
-      const metricsContainer = metricsContainerRef.current
-      const isOnlyOneMetric = generatedMetrics.length === 1
-
-      if (!invocationBodyCard || !metricsContainer) return
-
-      if (!isUnpinAction && isOnlyOneMetric) {
-        setIsInvocationCardExpanded(true)
-      } else if (isUnpinAction) {
-        enableScrollRef.current = false
-        metricsContainer.parentNode.scrollTo({ top: 0, left: 0, behavior: 'smooth' })
-        setIsInvocationCardExpanded(true)
-        setTimeout(() => {
-          enableScrollRef.current = true
-        }, INVOCATION_CARD_SCROLL_DELAY)
-      }
-    },
-    [generatedMetrics]
-  )
-
-  const handleWindowScroll = useCallback(
-    e => {
-      if (e.target && !e.target.classList?.contains('item-info')) return
-
-      const invocationBodyCard = invocationBodyCardRef.current
-      const metricsContainer = metricsContainerRef.current
-      const scrollTopPosition = e.target.scrollTop
-
-      if (!invocationBodyCard) return
-
-      const selectedMetrics =
-        detailsStore.metricsOptions.selectedByEndpoint[selectedItem?.metadata?.uid]
-
-      e.preventDefault()
-
-      metricsContainer.scrollBy({
-        top: e.deltaY * 0.1,
-        left: 0,
-        behavior: 'smooth'
-      })
-
-      const shouldCollapse =
-        isInvocationCardExpanded &&
-        enableScrollRef.current &&
-        selectedMetrics.length > 0 &&
-        scrollTopPosition > prevScrollPositionRef.current &&
-        scrollTopPosition > INVOCATION_CARD_SCROLL_THRESHOLD
-
-      if (shouldCollapse) {
-        setIsInvocationCardExpanded(false)
-        enableScrollRef.current = false
-        setTimeout(() => {
-          enableScrollRef.current = true
-        }, INVOCATION_CARD_SCROLL_DELAY)
-      }
-
-      prevScrollPositionRef.current = scrollTopPosition
-    },
-    [isInvocationCardExpanded, detailsStore.metricsOptions.selectedByEndpoint, selectedItem]
-  )
+  }, [hasMetricsList, generatedMetrics.length])
 
   const handleChangeDates = useCallback(
     (dates, isPredefined, selectedOptionId) => {
@@ -172,15 +112,6 @@ const DetailsMetrics = ({ selectedItem }) => {
   }, [handleChangeDates])
 
   useEffect(() => {
-    expandInvocationCard()
-  }, [metrics, expandInvocationCard])
-
-  useEffect(() => {
-    window.addEventListener('scroll', handleWindowScroll, true)
-    return () => window.removeEventListener('scroll', handleWindowScroll, true)
-  }, [handleWindowScroll])
-
-  useEffect(() => {
     dispatch(
       modelEndpointsActions.fetchModelEndpointMetrics(
         selectedItem.metadata.project,
@@ -206,7 +137,8 @@ const DetailsMetrics = ({ selectedItem }) => {
             selectedItemProject,
             selectedItemUid,
             selectedMetricsParams,
-            metricsValuesAbortController.current.signal
+            metricsValuesAbortController.current,
+            setRequestErrorMessage
           )
         ),
         dispatch(
@@ -214,7 +146,8 @@ const DetailsMetrics = ({ selectedItem }) => {
             selectedItemProject,
             selectedItemUid,
             preInvocationMetricParams,
-            metricsValuesAbortController.current.signal
+            metricsValuesAbortController.current,
+            setRequestErrorMessage
           )
         )
       ]).then(([metrics, previousInvocation]) => {
@@ -299,6 +232,7 @@ const DetailsMetrics = ({ selectedItem }) => {
       <div className="metrics__custom-filters">
         <MetricsSelector
           name="metrics"
+          disabled={!hasMetricsList}
           metrics={detailsStore.metricsOptions.all}
           onSelect={metrics =>
             dispatch(
@@ -325,10 +259,14 @@ const DetailsMetrics = ({ selectedItem }) => {
 
       {generatedMetrics.length === 0 ? (
         !detailsStore.loadingCounter ? (
-          <StatsCard className="metrics__empty-select">
-            <MetricsIcon />
-            <div>Choose metrics to view endpoint’s data</div>
-          </StatsCard>
+          requestErrorMessage ? (
+            <NoData message={requestErrorMessage} />
+          ) : (
+            <StatsCard className="metrics__empty-select">
+              <MetricsIcon />
+              <div>Choose metrics to view endpoint’s data</div>
+            </StatsCard>
+          )
         ) : null
       ) : (
         <div ref={metricsContainerRef} className="metrics">
@@ -356,12 +294,12 @@ const DetailsMetrics = ({ selectedItem }) => {
                         <React.Fragment key={metric.id}>
                           <InvocationsMetricCard
                             ref={invocationBodyCardRef}
-                            expandInvocationCard={expandInvocationCard}
                             isInvocationCardExpanded={isInvocationCardExpanded}
                             key={metric.id}
                             metric={metric}
                             previousTotalInvocation={previousTotalInvocation}
                             selectedDate={selectedDate}
+                            setIsInvocationCardExpanded={setIsInvocationCardExpanded}
                           />
                           {chooseMetricsDataCard}
                         </React.Fragment>

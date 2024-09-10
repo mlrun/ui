@@ -131,8 +131,8 @@ module.exports = {
     ]
   },
   ML_Functions_Tab: {
-    Common_Action_Menu_Options: ['Edit', 'Delete', 'View YAML'],
-    Serving_Action_Menu_Options: ['Edit', 'Delete', 'View YAML']
+    Common_Action_Menu_Options: ['Edit', 'View YAML', 'Delete'],
+    Serving_Action_Menu_Options: ['Edit', 'View YAML', 'Delete']
   },
   ML_Function_Info_Pane: {
     Tab_List: ['Overview', 'Code', 'Build Log'],
@@ -350,6 +350,8 @@ module.exports = {
       'This field is required',
     Labels_Warning_Key: 'Valid characters: a–z, A–Z, 0–9, –, _, .\nMust begin and end with: a–z, A–Z, 0–9\nLength – max: 75\n' +
     'Key must be unique',
+    Labels_Warning_Key_Modal_Wizard_Form: 'Valid characters: a–z, A–Z, 0–9, –, _, .\nMust begin and end with: a–z, A–Z, 0–9\nLength – max: 75\n' +
+    'System-defined labels cannot be modified.\nKey must be unique',
     Projects_Labels_Warning_Key: '[Name] Valid characters : a–z, A–Z, 0–9, –, _, .\n[Name] Must begin and end with: a–z, A–Z, 0–9\n[Name] Max length - 63 characters\n' +
     '[Prefix] Valid characters: a–z, 0–9, –, .\n[Prefix] Must begin and end with: a–z, 0–9\n[Prefix] Max length - 253 characters\n' +
     '[Prefix] Must not start with \'kubernetes.io\', \'k8s.io\'\nSystem-defined labels cannot be modified.\nKey must be unique',
@@ -436,6 +438,8 @@ module.exports = {
     New_Job_Volumes:
       'Volumes that define data paths and the required information for accessing the data from the function',
     Members_Hint: 'Some of the members might be user groups',
+    Metric_Type_Result: 'Result',
+    Metric_Type_Metric: 'Metric',
     Overview_Hash: 'Represents hash of the data. when the data changes the hash would change',
     Overview_UID:
       'Unique identifier representing the job or the workflow that generated the artifact',
@@ -458,7 +462,8 @@ module.exports = {
   },
   Messages: {
     How_To_Create:
-    'See how to create a serving function in https://docs.mlrun.org/en/stable/serving/built-in-model-serving.html and https://docs.mlrun.org/en/stable/tutorials/03-model-serving.html'
+    'See how to create a serving function in https://docs.mlrun.org/en/stable/serving/built-in-model-serving.html and https://docs.mlrun.org/en/stable/tutorials/03-model-serving.html',
+    Metrics_Empty_Select_Message: 'Choose metrics to view endpoint\’s data'
   },
   Jobs_Monitoring: {
     Tab_List: ['Jobs', 'Workflows', 'Scheduled']
@@ -555,6 +560,13 @@ module.exports = {
       'Next year',
       'Custom range'
     ],
+    Metrics_Date_Picker_Filter_Options: [
+      'Past hour',
+      'Past 24 hours',
+      'Past week',
+      'Past month',
+      'Custom range'
+    ],
     Parameters_Table_Type_Options: ['str', 'int', 'float', 'bool', 'list', 'map'],
     Parameter_Table_Simple_Hyper_Options: ['Simple', 'Hyper'],
     Turning_Strategy_Options: ['List', 'Grid', 'Random'],
@@ -585,7 +597,7 @@ module.exports = {
   No_Data_Message: {
     Common_Message: 'No data matches the filter: "Version Tag: latest, Name: ccccc"',
     Common_Message_Feature: 'No data matches the filter: "Version Tag: latest"',
-    Common_Message_Feature_Vector_Tab: 'No data matches the filter: "Tag: latest"',
+    Common_Message_Feature_Vector_Tab: 'No data matches the filter: "Tag: latest, Project: test-test"',
     Common_Message_Feature_Vector: 'No data matches the filter: "Version Tag: latest"',
     Common_Message_Feature_Sets: 'No data matches the filter: "Version Tag: latest"',
     No_Data: 'No data to show',

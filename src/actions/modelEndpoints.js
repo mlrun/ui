@@ -26,10 +26,6 @@ import {
   FETCH_ENDPOINT_METRICS_VALUES_BEGIN,
   FETCH_ENDPOINT_METRICS_VALUES_SUCCESS,
   FETCH_ENDPOINT_METRICS_VALUES_FAILURE,
-  FETCH_MODEL_ENDPOINT_WITH_ANALYSIS_BEGIN,
-  FETCH_MODEL_ENDPOINT_WITH_ANALYSIS_FAILURE,
-  FETCH_MODEL_ENDPOINT_WITH_ANALYSIS_SUCCESS,
-  REMOVE_MODEL_ENDPOINT,
   SET_SELECTED_METRICS_OPTIONS
 } from '../constants'
 
@@ -38,32 +34,9 @@ import {
   parseMetrics
 } from '../components/DetailsMetrics/detailsMetrics.util'
 import { TIME_FRAME_LIMITS } from '../utils/datePicker.util'
+import { largeResponseCatchHandler } from '../utils/largeResponseCatchHandler'
 
 const modelEndpointsActions = {
-  fetchModelEndpointWithAnalysis: (project, uid) => dispatch => {
-    dispatch(modelEndpointsActions.fetchModelEndpointWithAnalysisBegin())
-
-    return modelEndpointsApi
-      .getModelEndpoint(project, uid)
-      .then(({ data }) => {
-        dispatch(modelEndpointsActions.fetchModelEndpointWithAnalysisSuccess(data))
-
-        return data
-      })
-      .catch(err => {
-        dispatch(modelEndpointsActions.fetchModelEndpointWithAnalysisFailure(err))
-      })
-  },
-  fetchModelEndpointWithAnalysisBegin: () => ({
-    type: FETCH_MODEL_ENDPOINT_WITH_ANALYSIS_BEGIN
-  }),
-  fetchModelEndpointWithAnalysisFailure: () => ({
-    type: FETCH_MODEL_ENDPOINT_WITH_ANALYSIS_FAILURE
-  }),
-  fetchModelEndpointWithAnalysisSuccess: model => ({
-    type: FETCH_MODEL_ENDPOINT_WITH_ANALYSIS_SUCCESS,
-    payload: model
-  }),
   fetchModelEndpointMetrics: (project, uid) => dispatch => {
     dispatch(modelEndpointsActions.fetchEndpointMetricsBegin())
 
@@ -91,11 +64,27 @@ const modelEndpointsActions = {
     type: FETCH_ENDPOINT_METRICS_SUCCESS,
     payload
   }),
-  fetchModelEndpointMetricsValues: (project, uid, params, signal) => dispatch => {
+  fetchModelEndpointMetricsValues: (
+    project,
+    uid,
+    params,
+    abortController,
+    setRequestErrorMessage = () => {}
+  ) => dispatch => {
+    const config = {
+      params,
+      ui: {
+        controller: abortController,
+        setRequestErrorMessage,
+        customErrorMessage: 'The query result is too large to display. Reduce either the number of metrics or the time period.'
+      }
+    }
+
+    setRequestErrorMessage('')
     dispatch(modelEndpointsActions.fetchEndpointMetricsValuesBegin())
 
     return modelEndpointsApi
-      .getModelEndpointMetricsValues(project, uid, params, signal)
+      .getModelEndpointMetricsValues(project, uid, config)
       .then(({ data = [] }) => {
         const differenceInDays = params.end - params.start
         const timeUnit = differenceInDays > TIME_FRAME_LIMITS['24_HOURS'] ? 'days' : 'hours'
@@ -111,6 +100,7 @@ const modelEndpointsActions = {
             error?.message === DEFAULT_ABORT_MSG ? null : error
           )
         )
+        largeResponseCatchHandler(error, 'Failed to fetch metrics', dispatch, setRequestErrorMessage)
       })
   },
   fetchEndpointMetricsValuesBegin: () => ({
@@ -122,9 +112,6 @@ const modelEndpointsActions = {
   }),
   fetchEndpointMetricsValuesSuccess: () => ({
     type: FETCH_ENDPOINT_METRICS_VALUES_SUCCESS
-  }),
-  removeModelEndpoint: () => ({
-    type: REMOVE_MODEL_ENDPOINT
   }),
   setSelectedMetricsOptions: payload => ({
     type: SET_SELECTED_METRICS_OPTIONS,

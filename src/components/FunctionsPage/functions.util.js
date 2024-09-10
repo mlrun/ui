@@ -22,12 +22,9 @@ import { debounce, get, isEmpty } from 'lodash'
 
 import {
   DETAILS_BUILD_LOG_TAB,
-  FILTER_MENU,
-  FILTER_MENU_MODAL,
   FUNCTION_CREATING_STATE,
   FUNCTION_ERROR_STATE,
   FUNCTION_FAILED_STATE,
-  FUNCTION_FILTERS,
   FUNCTION_INITIALIZED_STATE,
   FUNCTION_PENDINDG_STATE,
   FUNCTION_READY_STATE,
@@ -266,9 +263,9 @@ export const generateActionsMenu = (
         disabled: functionIsDeleting,
         onClick: funcMin =>
           getFullFunction(funcMin).then(func => !isEmpty(func) && buildAndRunFunc(func)),
-        hidden:
-          func?.type !== FUNCTION_TYPE_JOB ||
-          (func?.type === FUNCTION_TYPE_JOB && func?.state?.value !== FUNCTION_INITIALIZED_STATE)
+        // todo: move out of "demo" mode and make additional changes as needed after the BE part is implemented.
+        hidden: !isDemoMode || (func?.type !== FUNCTION_TYPE_JOB ||
+          (func?.type === FUNCTION_TYPE_JOB && func?.state?.value !== FUNCTION_INITIALIZED_STATE))
       },
       {
         id: 'deploy',
@@ -288,18 +285,6 @@ export const generateActionsMenu = (
     ]
   ]
 }
-
-export const fetchInitialFunctions = debounce(
-  (filtersStore, fetchData, functionsAreInitializedRef) => {
-    if (!functionsAreInitializedRef.current) {
-      fetchData({
-        ...filtersStore[FILTER_MENU][FUNCTION_FILTERS],
-        ...filtersStore[FILTER_MENU_MODAL][FUNCTION_FILTERS].values
-      })
-      functionsAreInitializedRef.current = true
-    }
-  }
-)
 
 export const pollDeletingFunctions = (
   project,
@@ -358,7 +343,7 @@ export const setFullSelectedFunction = debounce(
         .then(parsedFunction => {
           setSelectedFunction(parsedFunction)
         })
-        .catch(error => {
+        .catch(() => {
           setSelectedFunction({})
           navigate(`/projects/${projectName}/functions`, { replace: true })
         })

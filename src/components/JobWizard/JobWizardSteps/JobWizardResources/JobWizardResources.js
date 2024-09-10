@@ -64,7 +64,11 @@ const JobWizardResources = ({ formState, frontendSpec, stepIsActive = false }) =
           </div>
         )}
       </div>
-      <div className="form-row form-table-title">Node selection</div>
+      <div className="form-row form-table-title">
+        <span>Node selection</span>
+        <Tip text="If the project has a defined node selector, it takes precedence over a node selector you specify here for the batch run.
+        Node-selector values set in the global settings or project settings are not shown. Keep the “Key” and delete the “Value” to remove the global or project setting." />
+      </div>
       <div className="form-row">
         <FormKeyValueTable
           actionButtonId="add-node-selector"
@@ -76,11 +80,12 @@ const JobWizardResources = ({ formState, frontendSpec, stepIsActive = false }) =
           formState={formState}
           keyHeader="Key"
           keyLabel="Key"
+          isValueRequired={false}
         />
       </div>
       <FormResourcesUnits formState={formState} onChangeEnabled={stepIsActive} />
       <div className="form-row form-table-title">
-        Volumes
+        <span>Volumes</span>
         <Tip text="Volumes that define data paths and the required information for accessing the data from the function" />
       </div>
       <div className="form-row">

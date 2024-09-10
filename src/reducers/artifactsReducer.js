@@ -18,23 +18,18 @@ under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
-import {
-  defaultFulfilledHandler,
-  defaultPendingHandler,
-  defaultRejectedHandler,
-  hideLoading,
-  showLoading
-} from './redux.util'
+import { defaultPendingHandler, hideLoading, showLoading } from './redux.util'
 import artifactsApi from '../api/artifacts-api'
 import functionsApi from '../api/functions-api'
 import modelEndpointsApi from '../api/modelEndpoints-api'
 import { ARTIFACTS_TAB, DATASETS_TAB, FUNCTION_TYPE_SERVING, MODELS_TAB } from '../constants'
 import { filterArtifacts } from '../utils/filterArtifacts'
 import { generateArtifacts } from '../utils/generateArtifacts'
-import { generateModelEndpoints } from '../utils/generateModelEndpoints'
+import { parseModelEndpoints } from '../utils/parseModelEndpoints'
 import { getArtifactIdentifier } from '../utils/getUniqueIdentifier'
 import { parseArtifacts } from '../utils/parseArtifacts'
 import { parseFunctions } from '../utils/parseFunctions'
+import { parseFunction } from '../utils/parseFunction'
 import { largeResponseCatchHandler } from '../utils/largeResponseCatchHandler'
 
 const initialState = {
@@ -65,7 +60,8 @@ const initialState = {
   loading: false,
   modelEndpoints: {
     allData: [],
-    loading: false
+    loading: false,
+    modelEndpointLoading: false,
   },
   models: {
     allData: [],
@@ -258,6 +254,23 @@ export const fetchArtifactsFunctions = createAsyncThunk(
       })
   }
 )
+export const fetchArtifactsFunction = createAsyncThunk(
+  'fetchArtifactsFunction',
+  ({ project, name, hash, tag }) => {
+    return functionsApi.getFunction(project, name, hash, tag).then(({ data }) => {
+      return parseFunction(data.func, project)
+    })
+  }
+)
+export const fetchModelEndpoint = createAsyncThunk(
+  'fetchModelEndpoint',
+  ({ project, uid }) => {
+    return modelEndpointsApi.getModelEndpoint(project, uid)
+      .then(({ data: endpoint }) => {
+        return parseModelEndpoints([endpoint])?.[0]
+      })
+  }
+)
 export const fetchModelEndpoints = createAsyncThunk(
   'fetchModelEndpoints',
   ({ project, filters, config, params }, thunkAPI) => {
@@ -266,7 +279,7 @@ export const fetchModelEndpoints = createAsyncThunk(
     return modelEndpointsApi
       .getModelEndpoints(project, filters, config, params)
       .then(({ data: { endpoints = [] } }) => {
-        return generateModelEndpoints(endpoints)
+        return parseModelEndpoints(endpoints)
       })
       .catch(error => {
         largeResponseCatchHandler(
@@ -357,7 +370,7 @@ const artifactsSlice = createSlice({
     removeFiles(state) {
       state.files = initialState.files
     },
-    removeModel(state, action) {
+    removeModel(state) {
       state.models.selectedRowData = {
         content: initialState.models.selectedRowData.content,
         error: null,
@@ -381,9 +394,17 @@ const artifactsSlice = createSlice({
     builder.addCase(addTag.pending, showLoading)
     builder.addCase(addTag.fulfilled, hideLoading)
     builder.addCase(addTag.rejected, hideLoading)
-    builder.addCase(buildFunction.pending, defaultPendingHandler)
-    builder.addCase(buildFunction.fulfilled, defaultFulfilledHandler)
-    builder.addCase(buildFunction.rejected, defaultRejectedHandler)
+    builder.addCase(buildFunction.pending, state => {
+      state.pipelines.loading = true
+    })
+    builder.addCase(buildFunction.fulfilled, state => {
+      state.pipelines.loading = false
+      state.error = null
+    })
+    builder.addCase(buildFunction.rejected, (state, action) => {
+      state.error = action.error
+      state.pipelines.loading = false
+    })
     builder.addCase(deleteArtifact.pending, showLoading)
     builder.addCase(deleteArtifact.fulfilled, hideLoading)
     builder.addCase(deleteArtifact.rejected, hideLoading)
@@ -411,6 +432,16 @@ const artifactsSlice = createSlice({
       state.pipelines = { allData: action.payload, loading: false }
     })
     builder.addCase(fetchArtifactsFunctions.rejected, state => {
+      state.pipelines.loading = false
+    })
+    builder.addCase(fetchArtifactsFunction.rejected, state => {
+      state.pipelines.loading = false
+    })
+    builder.addCase(fetchArtifactsFunction.pending, state => {
+      state.pipelines.loading = true
+    })
+    builder.addCase(fetchArtifactsFunction.fulfilled, (state, action) => {
+      state.error = null
       state.pipelines.loading = false
     })
     builder.addCase(fetchExpandedDataSet.fulfilled, (state, action) => {
@@ -466,7 +497,7 @@ const artifactsSlice = createSlice({
       state.files.loading = false
       state.loading = state.models.loading || state.dataSets.loading
     })
-    builder.addCase(fetchExpandedModel.pending, (state, action) => {
+    builder.addCase(fetchExpandedModel.pending, (state) => {
       state.models.selectedRowData = {
         content: initialState.models.selectedRowData.content,
         error: null,
@@ -494,6 +525,15 @@ const artifactsSlice = createSlice({
     })
     builder.addCase(fetchModel.rejected, state => {
       state.models.modelLoading = false
+    })
+    builder.addCase(fetchModelEndpoint.pending, state => {
+      state.modelEndpoints.modelEndpointLoading = true
+    })
+    builder.addCase(fetchModelEndpoint.fulfilled, state => {
+      state.modelEndpoints.modelEndpointLoading = false
+    })
+    builder.addCase(fetchModelEndpoint.rejected, state => {
+      state.modelEndpoints.modelEndpointLoading = false
     })
     builder.addCase(fetchModelEndpoints.pending, state => {
       state.modelEndpoints.loading = true

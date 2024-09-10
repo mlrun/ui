@@ -88,6 +88,21 @@ Then(
   }
 )
 
+When(
+  'scroll to the element with {string} value in {string} column in {string} table on {string} wizard',
+  async function (value, columnName, table, wizard) {
+    const arr = await findRowIndexesByColumnValue(
+      this.driver,
+      pageObjects[wizard][table],
+      columnName,
+      value
+    )
+    const indx = arr[0]
+
+    await scrollToElement(this.driver, pageObjects[wizard][table]['rowRoot'](indx))
+  }
+)
+
 Then(
   'open action menu on {string} wizard in {string} table at row with {string} value in {string} column',
   async function (wizard, table, value, column) {
@@ -104,6 +119,7 @@ Then(
       indx,
       'action_menu'
     )
+
     await openActionMenu(this.driver, actionMenuSel)
   }
 )
@@ -124,6 +140,7 @@ Then(
       indx,
       'action_menu'
     )
+
     await hoverComponent(
       this.driver,
       pageObjects[wizard][table]['tableFields'][expand_name](indx),
@@ -151,7 +168,8 @@ Then(
         pageObjects[wizard][table],
         indx,
         menuType
-      )
+    )
+    
     await hoverComponent(
       this.driver,
       pageObjects[wizard][table]['tableFields'][column](indx),
@@ -166,6 +184,7 @@ Then(
 When('add rows to {string} table on {string} wizard', async function (table, wizard, dataTable) {
   const inputFields = dataTable['rawTable'][0]
   const rows = dataTable.rows()
+
   for (const row_indx in rows) {
     await clickOnComponent(this.driver, pageObjects[wizard][table]['add_row_btn'])
     await this.driver.sleep(100)
@@ -188,6 +207,7 @@ When('add rows to {string} table on {string} wizard', async function (table, wiz
 When('add data to {string} table on {string} wizard', async function (table, wizard, dataTable) {
   const inputFields = dataTable['rawTable'][0]
   const rows = dataTable.rows()
+
   for (const row_indx in rows) {
     await clickOnComponent(this.driver, pageObjects[wizard][table]['add_row_btn'])
     await this.driver.sleep(100)
@@ -222,8 +242,10 @@ When('add data to {string} table on {string} wizard', async function (table, wiz
 When('add data to {string} table on {string} wizard with a pre-filled table', async function (table, wizard, dataTable) {
   const inputFields = dataTable['rawTable'][0]
   const rows = dataTable.rows()
+
   for (const row_indx in rows) {
     let rowsNumber = await getTableRows(this.driver, pageObjects[wizard][table])
+
     await clickOnComponent(this.driver, pageObjects[wizard][table]['add_row_btn'])
     await this.driver.sleep(100)
     await clickOnComponent(this.driver, pageObjects[wizard][table]['tableFields'][inputFields[0]](rowsNumber + 2))
@@ -257,8 +279,10 @@ When('add data to {string} table on {string} wizard with a pre-filled table', as
 When('add custom parameters to {string} table on {string} wizard with a pre-filled table', async function (table, wizard, dataTable) {
   const inputFields = dataTable['rawTable'][0]
   const rows = dataTable.rows()
+
   for (const row_indx in rows) {
     let rowsNumber = await getTableRows(this.driver, pageObjects[wizard][table])
+
     await clickOnComponent(this.driver, pageObjects[wizard][table]['add_row_btn'])
     await this.driver.sleep(100)
     await clickOnComponent(this.driver, pageObjects[wizard][table]['tableFields'][inputFields[0]](rowsNumber + 1))
@@ -292,8 +316,10 @@ When('add custom parameters to {string} table on {string} wizard with a pre-fill
 When('add data to {string} table on {string} wizard with combobox', async function (table, wizard, dataTable) {
   const inputFields = dataTable['rawTable'][0]
   const rows = dataTable.rows()
+
   for (const row_indx in rows) {
     let rowsNumber = await getTableRows(this.driver, pageObjects[wizard][table])
+
     await clickOnComponent(this.driver, pageObjects[wizard][table]['add_row_btn'])
     await this.driver.sleep(100)
     await clickOnComponent(
@@ -357,6 +383,7 @@ When('add data to {string} table on {string} wizard with combobox', async functi
 When('add data to {string} table on {string} wizard with several inputs', async function (table, wizard, dataTable) {
   const inputFields = dataTable['rawTable'][0]
   const rows = dataTable.rows()
+
   for (const row_indx in rows) {
     await clickOnComponent(this.driver, pageObjects[wizard][table]['add_row_btn'])
     await this.driver.sleep(100)
@@ -387,6 +414,7 @@ When('add data to {string} table on {string} wizard with several inputs', async 
       rows[row_indx][2]
     )
     await this.driver.sleep(100)
+
     if (rows[row_indx][3].length !== 0){
       await typeIntoInputField(
         this.driver,
@@ -411,6 +439,7 @@ When('add data to {string} table on {string} wizard with several inputs', async 
 When('fill data to {string} table on {string} wizard', async function (table, wizard, dataTable) {
   const inputFields = dataTable['rawTable'][0]
   const rows = dataTable.rows()
+
   for (const row_indx in rows) {
     await clickOnComponent(this.driver, pageObjects[wizard][table]['add_row_btn'])
     await this.driver.sleep(100)
@@ -441,24 +470,26 @@ When('fill data to {string} table on {string} wizard', async function (table, wi
     await this.driver.sleep(100)
   }
 })
+
 When(
   'add rows to {string} key-value table on {string} wizard',
   async function (table, wizard, dataTable) {
     const inputFields = dataTable['rawTable'][0]
     const rows = dataTable.rows()
+
     for (const row_indx in rows) {
       await clickOnComponent(this.driver, pageObjects[wizard][table]['add_row_btn'])
-      await this.driver.sleep(100)
+      await this.driver.sleep(500)
       for (const i in inputFields) {
         await typeIntoInputField(
           this.driver,
-          pageObjects[wizard][table]['tableFields'][inputFields[i]](3),
+          pageObjects[wizard][table]['tableColumns'][inputFields[i]],
           rows[row_indx][i]
         )
       }
       await clickOnComponent(this.driver, pageObjects[wizard][table]['save_row_btn'])
       await clickNearComponent(this.driver, pageObjects[wizard][table]['root'])
-      await this.driver.sleep(100)
+      await this.driver.sleep(500)
     }
   }
 )
@@ -468,6 +499,7 @@ Then(
   async function (table, wizard, dataTable) {
     const columns = dataTable['rawTable'][0]
     const rows = dataTable.rows()
+
     for (const row_indx in rows) {
       for (const i in columns) {
         await verifyText(
@@ -485,6 +517,7 @@ Then(
   async function (table, wizard, dataTable) {
     const columns = dataTable['rawTable'][0]
     const rows = dataTable.rows()
+
     for (const row_indx in rows) {
       for (const i in columns) {
         await verifyText(
@@ -502,6 +535,7 @@ Then(
   async function (table, wizard, dataTable) {
     const columns = dataTable['rawTable'][0]
     const rows = dataTable.rows()
+    
     for (const row_indx in rows) {
       for (const i in columns) {
         await verifyText(
@@ -519,6 +553,7 @@ Then(
   async function (table, wizard, dataTable) {
     const columns = dataTable['rawTable'][0]
     const rows = dataTable.rows()
+
     for (const row_indx in rows) {
       for (const i in columns) {
         await verifyTypedText (
@@ -531,11 +566,30 @@ Then(
   }
 )
 
+Then(
+  'verify values in {string} table in {string} on {string} wizard with attribute',
+  async function (table, accordion, wizard, dataTable) {
+    const columns = dataTable['rawTable'][0]
+    const rows = dataTable.rows()
+
+    for (const row_indx in rows) {
+      for (const i in columns) {
+        await verifyTypedText (
+          this.driver,
+          pageObjects[wizard][accordion][table]['tableFields'][columns[i]](parseInt(row_indx) + 1),
+          rows[row_indx][i]
+        )
+      }
+    }
+  }
+)
+
 When(
   'click on {string} in {string} table on {string} wizard with offset {string}',
   async function (fieldName, tableName, wizardName, offsetFlag, dataTable) {
     const column = dataTable['rawTable'][0][0]
     const rows = dataTable.rows()
+
     for (const row_indx in rows) {
       const arr = await findRowIndexesByColumnValue(
         this.driver,
@@ -543,11 +597,12 @@ When(
         column,
         rows[row_indx][0]
       )
-
       let indx = arr[0]
+
       if (offsetFlag === 'true') {
         indx -= pageObjects[wizardName][tableName].offset
       }
+
       await hoverComponent(
         this.driver,
         pageObjects[wizardName][tableName]['tableFields'][fieldName](indx)
@@ -579,6 +634,7 @@ When(
   async function (fieldName, tableName, wizardName, offsetFlag, dataTable) {
     const column = dataTable['rawTable'][0][0]
     const rows = dataTable.rows()
+
     for (const row_indx in rows) {
       const arr = await findRowIndexesByColumnValue(
         this.driver,
@@ -586,8 +642,8 @@ When(
         column,
         rows[row_indx][0]
       )
-
       let indx = arr[0]
+
       if (offsetFlag === 'true') {
         indx -= pageObjects[wizardName][tableName].offset
       }
@@ -609,6 +665,7 @@ When(
   async function (fieldName, tableName, wizardName, offsetFlag, dataTable) {
     const column = dataTable['rawTable'][0][0]
     const rows = dataTable.rows()
+
     for (const row_indx in rows) {
       const arr = await findRowIndexesByColumnValue(
         this.driver,
@@ -616,8 +673,8 @@ When(
         column,
         rows[row_indx][0]
       )
-
       let indx = arr[0]
+
       if (offsetFlag === 'true') {
         indx -= pageObjects[wizardName][tableName].offset
       }
@@ -639,6 +696,7 @@ When(
   async function (table, accordion, wizard, dataTable) {
     const inputFields = dataTable['rawTable'][0]
     const rows = dataTable.rows()
+
     for (const row_indx in rows) {
       await clickOnComponent(this.driver, pageObjects[wizard][accordion][table]['add_row_btn'])
       await this.driver.sleep(100)
@@ -647,6 +705,7 @@ When(
           parseInt(row_indx) + 1
         )
         const inputField = component.inputField ?? component
+
         await typeIntoInputField(this.driver, inputField, rows[row_indx][i])
       }
 
@@ -671,6 +730,7 @@ When(
   async function (table, accordion, wizard, dataTable) {
     const inputFields = dataTable['rawTable'][0]
     const rows = dataTable.rows()
+
     for (const row_indx in rows) {
       await clickOnComponent(this.driver, pageObjects[wizard][accordion][table]['add_row_btn'])
       await this.driver.sleep(100)
@@ -697,6 +757,7 @@ When(
   async function (table, accordion, wizard, dataTable) {
     const inputFields = dataTable['rawTable'][0]
     const rows = dataTable.rows()
+
     for (const row_indx in rows) {
       await clickOnComponent(this.driver, pageObjects[wizard][accordion][table]['add_row_btn'])
       await this.driver.sleep(100)
@@ -725,6 +786,7 @@ When(
   async function (table, wizard, dataTable) {
     const inputFields = dataTable['rawTable'][0]
     const rows = dataTable.rows()
+
     for (const row_indx in rows) {
       await clickOnComponent(this.driver, pageObjects[wizard][table]['add_row_btn'])
       await this.driver.sleep(100)
@@ -753,6 +815,7 @@ When(
   async function (index, table, wizard, dataTable) {
     const inputFields = dataTable['rawTable'][0]
     const row = dataTable.rows()[0]
+
     await hoverComponent(
       this.driver,
       pageObjects[wizard][table]['tableFields']['edit_btn'](index + 1)
@@ -809,8 +872,10 @@ When(
       this.driver,
       pageObjects[wizard][accordion][table]['tableFields']['edit_btn'](index)
     )
+
     for (const i in inputFields) {
       const component = pageObjects[wizard][accordion][table]['tableFields'][inputFields[i]](index)
+
       await typeIntoInputField(this.driver, component.inputField, row[i])
     }
 
@@ -827,6 +892,7 @@ When(
   async function (index, table, wizard, dataTable) {
     const inputFields = dataTable['rawTable'][0]
     const row = dataTable.rows()[0]
+
     await hoverComponent(
       this.driver,
       pageObjects[wizard][table]['tableFields']['edit_btn'](index + 1)
@@ -835,6 +901,7 @@ When(
       this.driver,
       pageObjects[wizard][table]['tableFields']['edit_btn'](index + 1)
     )
+
     for (const i in inputFields) {
       await typeIntoInputField(
         this.driver,
@@ -856,6 +923,7 @@ When(
   async function (index, table, wizard, dataTable) {
     const inputFields = dataTable['rawTable'][0]
     const row = dataTable.rows()[0]
+
     await hoverComponent(
       this.driver,
       pageObjects[wizard][table]['tableFields']['edit_btn'](index + 2)
@@ -864,6 +932,7 @@ When(
       this.driver,
       pageObjects[wizard][table]['tableFields']['edit_btn'](index + 2)
     )
+
     for (const i in inputFields) {
       await typeIntoInputField(
         this.driver,
@@ -885,6 +954,7 @@ Then(
   async function (table, accordion, wizard, dataTable) {
     const columns = dataTable['rawTable'][0]
     const rows = dataTable.rows()
+
     for (const row_indx in rows) {
       for (const i in columns) {
         await verifyText(
@@ -901,6 +971,7 @@ Then(
   async function (table, accordion, wizard, dataTable) {
     const columns = dataTable['rawTable'][0]
     const rows = dataTable.rows()
+
     for (const row_indx in rows) {
       for (const i in columns) {
         await verifyText(
@@ -918,6 +989,7 @@ When(
   async function (field, tableName, accordionName, wizardName, dataTable) {
     const column = dataTable['rawTable'][0][0]
     const rows = dataTable.rows()
+
     for (const row_indx in rows) {
       const arr = await findRowIndexesByColumnValue(
         this.driver,
@@ -926,6 +998,7 @@ When(
         rows[row_indx][0]
       )
       const indx = arr[0] - pageObjects[wizardName][accordionName][tableName].offset
+
       await hoverComponent(
         this.driver,
         pageObjects[wizardName][accordionName][tableName]['tableFields'][field](indx)
@@ -943,6 +1016,7 @@ When(
   async function (field, tableName, wizardName, dataTable) {
     const column = dataTable['rawTable'][0][0]
     const rows = dataTable.rows()
+
     for (const row_indx in rows) {
       const arr = await findRowIndexesByColumnValue(
         this.driver,
@@ -951,6 +1025,7 @@ When(
         rows[row_indx][0]
       )
       const indx = arr[0] - pageObjects[wizardName][tableName].offset
+
       await hoverComponent(
         this.driver,
         pageObjects[wizardName][tableName]['tableFields'][field](indx),
@@ -965,10 +1040,39 @@ When(
 )
 
 When(
+  'click on data {string} in {string} table on {string} wizard',
+  async function (field, tableName, wizardName, dataTable) {
+    const column = dataTable['rawTable'][0][0]
+    const rows = dataTable.rows()
+
+    for (const row_indx in rows) {
+      const arr = await findRowIndexesByColumnValue(
+        this.driver,
+        pageObjects[wizardName][tableName],
+        column,
+        rows[row_indx][0]
+      )
+      const indx = arr[0] - pageObjects[wizardName][tableName].offset
+
+      await hoverComponent(
+        this.driver,
+        pageObjects[wizardName][tableName]['tableFields'][field](indx + 1),
+        false
+      )
+      await clickOnComponent(
+        this.driver,
+        pageObjects[wizardName][tableName]['tableFields'][field](indx + 1)
+      )
+    }
+  }
+)
+
+When(
   'click on {string} in {string} table on {string} wizard with attribute',
   async function (field, tableName, wizardName, dataTable) {
     const column = dataTable['rawTable'][0][0]
     const rows = dataTable.rows()
+
     for (const row_indx in rows) {
       const arr = await findRowIndexesByColumnValueAttribute(
         this.driver,
@@ -977,6 +1081,7 @@ When(
         rows[row_indx][0]
       )
       const indx = arr[0] - pageObjects[wizardName][tableName].offset
+
       await hoverComponent(
         this.driver,
         pageObjects[wizardName][tableName]['tableFields'][field](indx),
@@ -992,10 +1097,40 @@ When(
 )
 
 When(
+  'click on {string} in {string} table in {string} on {string} wizard with attribute',
+  async function (field, tableName, accordion, wizardName, dataTable) {
+    const column = dataTable['rawTable'][0][0]
+    const rows = dataTable.rows()
+
+    for (const row_indx in rows) {
+      const arr = await findRowIndexesByColumnValueAttribute(
+        this.driver,
+        pageObjects[wizardName][accordion][tableName],
+        column,
+        rows[row_indx][0]
+      )
+      const indx = arr[0] - pageObjects[wizardName][accordion][tableName].offset
+
+      await hoverComponent(
+        this.driver,
+        pageObjects[wizardName][accordion][tableName]['tableFields'][field](indx),
+        true
+      )
+      await this.driver.sleep(500)
+      await clickOnComponent(
+        this.driver,
+        pageObjects[wizardName][accordion][tableName]['tableFields'][field](indx)
+      )
+    }
+  }
+)
+
+When(
   'click on {string} in {string} table in {string} on {string} wizard with offset {string}',
   async function (field, tableName, accordionName, wizardName, offsetFlag, dataTable) {
     const column = dataTable['rawTable'][0][0]
     const rows = dataTable.rows()
+
     for (const row_indx in rows) {
       const arr = await findRowIndexesByColumnValue(
         this.driver,
@@ -1003,11 +1138,12 @@ When(
         column,
         rows[row_indx][0]
       )
-
       let indx = arr[0]
+
       if (offsetFlag === 'true') {
         indx -= pageObjects[wizardName][accordionName][tableName].offset
       }
+
       await hoverComponent(
         this.driver,
         pageObjects[wizardName][accordionName][tableName]['tableFields'][column](indx)
@@ -1025,6 +1161,7 @@ When(
   async function (field, tableName, accordionName, wizardName, offsetFlag, dataTable) {
     const column = dataTable['rawTable'][0][0]
     const rows = dataTable.rows()
+
     for (const row_indx in rows) {
       const arr = await findRowIndexesByColumnValue(
         this.driver,
@@ -1032,11 +1169,12 @@ When(
         column,
         rows[row_indx][0]
       )
-
       let indx = arr[0]
+
       if (offsetFlag === 'true') {
         indx -= pageObjects[wizardName][accordionName][tableName].offset
       }
+
       await hoverComponent(
         this.driver,
         pageObjects[wizardName][accordionName][tableName]['tableFields'][column](indx + 1)
@@ -1067,13 +1205,14 @@ Then(
 Then(
   'verify {string} on {string} wizard should contains {string} value', 
   async function(componentName, wizardName, value) {
-  await verifyComponentContainsAttributeValue(
-    this.driver,
-    pageObjects[wizardName][componentName],
-    'value',
-    value
-  )
-})
+    await verifyComponentContainsAttributeValue(
+      this.driver,
+      pageObjects[wizardName][componentName],
+      'value',
+      value
+    )
+  }
+)
 
 Then(
   'value in {string} column with {string} in {string} on {string} wizard should contains {string}',
@@ -1086,6 +1225,7 @@ Then(
         substring
       )
     }
+
     if (type === 'text') {
       await isContainsSubstringInColumnCells(
         this.driver,
@@ -1094,6 +1234,7 @@ Then(
         substring
       )
     }
+
     if (type === 'dropdowns') {
       await isContainsSubstringInColumnDropdownCells(
         this.driver,
@@ -1125,6 +1266,7 @@ Then(
         substring
       )
     }
+
     if (type === 'dropdowns') {
       await isContainsSubstringInColumnDropdownCells(
         this.driver,
@@ -1152,6 +1294,7 @@ Then(
       indx,
       'action_menu'
     )
+
     await hoverComponent(
       this.driver,
       pageObjects[wizard][table]['tableFields'][columnName](indx)['label']
@@ -1183,6 +1326,7 @@ Then(
       indx,
       'action_menu'
     )
+
     await hoverComponent(
       this.driver,
       pageObjects[wizard][table]['tableFields'][column](indx)
@@ -1214,6 +1358,7 @@ Then(
       indx,
       'action_menu'
     )
+
     await hoverComponent(
       this.driver,
       pageObjects[wizard][table]['tableFields'][column](indx)
@@ -1241,6 +1386,7 @@ Then(
       indx,
       'action_menu'
     )
+
     await hoverComponent(
       this.driver,
       pageObjects[wizard][table]['tableFields'][column](indx)
@@ -1268,6 +1414,7 @@ Then(
       indx,
       option
     )
+
     await hoverComponent(
       this.driver,
       pageObjects[wizard][table]['tableFields'][column](indx)
@@ -1293,6 +1440,7 @@ Then(
       indx,
       kind
     )
+
     await hoverComponent(this.driver, tabelCell['label'])
     await verifyText(this.driver, tabelCell['hint'], type)
   }
@@ -1314,6 +1462,7 @@ Then(
       indx,
       option
     )
+
     await hoverComponent(
       this.driver,
       pageObjects[wizard][table]['tableFields'][column](indx)
@@ -1328,6 +1477,7 @@ Then(
   'subtable column {string} in {string} in {string} on {string} wizard should contains {string} in {string} column',
   async function (subTable, table, accordion, wizard, subString, subColumn) {
     const numOfRows = await getTableRows(this.driver, pageObjects[wizard][accordion][table])
+
     for (let i = 1; i <= numOfRows; i++) {
       const cellTable = await getCellByIndexColumn(
         this.driver,
@@ -1335,6 +1485,7 @@ Then(
         i,
         subTable
       )
+
       await isContainsSubstringInColumnCells(this.driver, cellTable, subColumn, subString)
     }
   }
@@ -1344,6 +1495,7 @@ When(
   'expand each row in {string} in {string} on {string} wizard',
   async function (table, accordion, wizard) {
     const numOfRows = await getTableRows(this.driver, pageObjects[wizard][accordion][table])
+
     for (let i = 1; i <= numOfRows; i++) {
       const expandBtn = await getCellByIndexColumn(
         this.driver,
@@ -1351,6 +1503,7 @@ When(
         i,
         'expand_btn'
       )
+
       await clickOnComponent(this.driver, expandBtn)
     }
   }
@@ -1365,6 +1518,7 @@ When(
     const arr = await findRowIndexesByColumnValue(this.driver, tableElement, column, value)
     const indx = arr[0]
     const expandBtn = await getCellByIndexColumn(this.driver, tableElement, indx, 'expand_btn')
+
     await clickOnComponent(this.driver, expandBtn)
   }
 )
@@ -1385,10 +1539,10 @@ When(
       indx,
       subTable
     )
-
     const subArr = await findRowIndexesByColumnValue(this.driver, cellTable, searchColumn, value)
     const subIndx = subArr[0]
     const option = await getCellByIndexColumn(this.driver, cellTable, subIndx, subColumn)
+
     await clickOnComponent(this.driver, option)
   }
 )
@@ -1416,6 +1570,7 @@ When(
       value
     )
     const indx = arr[0]
+
     await clickOnComponent(this.driver, pageObjects[wizard][table]['tableFields'][columnName](indx))
   }
 )
@@ -1430,6 +1585,7 @@ When(
       value
     )
     const indx = arr[0]
+
     await clickOnComponent(this.driver, pageObjects[wizard][table]['rowRoot'](indx))
   }
 )
@@ -1444,6 +1600,7 @@ When(
       value
     )
     const indx = arr[0]
+
     await clickOnComponent(this.driver, pageObjects[wizard][accordion][table]['rowRoot'](indx))
   }
 )
@@ -1600,13 +1757,13 @@ When(
 
         if (pageComponents[indx].includes('Input')) {
           await typeValue(this.driver, pageObjects[wizardName][pageComponents[indx]], row[indx])
-          await this.driver.sleep(250)
+          await this.driver.sleep(500)
         }
 
         if (pageComponents[indx].includes('Button')) {
           if (row[indx] === 'yes') {
             await clickOnComponent(this.driver, pageObjects[wizardName][pageComponents[indx]])
-            await this.driver.sleep(250)
+            await this.driver.sleep(500)
           }
         }
 
@@ -1615,7 +1772,7 @@ When(
             await this.driver.sleep(500)
             await waiteUntilComponent(this.driver, pageObjects['Notification_Popup']['Notification_Pop_Up_Cross_Close_Button'])
             await clickOnComponent(this.driver, pageObjects['Notification_Popup']['Notification_Pop_Up_Cross_Close_Button'])
-            await this.driver.sleep(250)
+            await this.driver.sleep(500)
           }
         }
       }
@@ -1636,9 +1793,7 @@ When(
         column,
         rows[row_indx][0]
       )
-
       const indx = arr[0] - pageObjects[wizardName][accordionName][tableName].offset
-
       const cell = await getCellByIndexColumn(
         this.driver,
         pageObjects[wizardName][accordionName][tableName],
@@ -1651,6 +1806,7 @@ When(
         indx,
         'action_menu'
       )
+
       await hoverComponent(this.driver, cell)
       await this.driver.sleep(500)
       await openActionMenu(this.driver, actionMenuSel)
@@ -1674,8 +1830,8 @@ When(
         column,
         rows[row_indx][0]
       )
-
       let indx = arr[0]
+
       if (offsetFlag === 'true') {
         indx -= pageObjects[wizardName][accordionName][tableName].offset
       }
@@ -1692,6 +1848,7 @@ When(
         indx,
         'action_menu'
       )
+
       await hoverComponent(this.driver, cell)
       await this.driver.sleep(500)
       await openActionMenu(this.driver, actionMenuSel)
@@ -1706,6 +1863,7 @@ Then(
   'verify that {int} row elements are displayed in {string} on {string} wizard',
   async function (rowElement, tableName, wizardName) {
     const rowsNumber = await getTableRows(this.driver, pageObjects[wizardName][tableName])
+
     expect(rowsNumber).equal(rowElement, `${rowsNumber} row elements are not equal expected ${rowElement} row elements`)
   }
 )
@@ -1714,6 +1872,7 @@ Then(
   'check {string} visibility in {string} on {string} wizard with {int} offset',
   async function (cellName, tableName, wizardName, indexOffset) {
     const rowsNumber = await getTableRows(this.driver, pageObjects[wizardName][tableName])
+
     for (let i = 0; i < rowsNumber; i++) {
       await componentIsVisible(
         this.driver,
@@ -1727,6 +1886,7 @@ Then(
   'check {string} not presented in {string} on {string} wizard',
   async function (cellName, tableName, wizardName) {
     const rowsNumber = await getTableRows(this.driver, pageObjects[wizardName][tableName])
+
     for (let i = 0; i < rowsNumber; i++) {
       await componentIsNotPresent(
         this.driver,
@@ -1740,6 +1900,7 @@ Then(
   'check {string} not visible in {string} on {string} wizard',
   async function (cellName, tableName, wizardName) {
     const rowsNumber = await getTableRows(this.driver, pageObjects[wizardName][tableName])
+
     for (let i = 0; i < rowsNumber; i++) {
       await componentIsNotVisible(
         this.driver,
@@ -1848,6 +2009,7 @@ Then(
         pageObjects[wizardName][overviewTable].tableFields['value'](arr[0])
       )
       const cellValue = await cellComponent.getText()
+
       expect(this.testContext[contextContainer].includes(cellValue)).equal(
         true,
         `"${key}" value "${cellValue}" is not in link "${this.testContext[
@@ -1875,6 +2037,7 @@ Then(
       )
       const cellValue = await cellComponent.getText()
       const contextSplit = this.testContext[contextContainer].split(/[/@]/)
+      
       expect(contextSplit.includes(cellValue)).equal(
         true,
         `"${key}" value "${cellValue}" is not in link "${contextSplit}"`

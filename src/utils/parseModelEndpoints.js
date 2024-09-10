@@ -20,7 +20,7 @@ such restriction.
 import getState from './getState'
 import { getArtifactIdentifier } from './getUniqueIdentifier'
 
-export const generateModelEndpoints = endpoints =>
+export const parseModelEndpoints = endpoints =>
   endpoints.map(endpoint => ({
     ...endpoint,
     name: endpoint.spec.model.split(':')[0],
