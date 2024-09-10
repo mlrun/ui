@@ -532,12 +532,17 @@ function getProjectsSummaries(req, res) {
   const currentDate = new Date()
   const last24Hours = new Date(currentDate.getTime() - 24 * 60 * 60 * 1000)
   const next24Hours = new Date(currentDate.getTime() + 24 * 60 * 60 * 1000)
+  const inProcessStates = ['pending', 'running']
 
   // Pipelines
   const possibleStatuses = ['Succeeded', 'Failed', 'Running']
   const filteredPipelines24Hours = {}
   for (const project in pipelines) {
-    const runs = pipelines[project].runs.filter(run => new Date(run.finished_at) > last24Hours)
+    const runs = pipelines[project].runs.filter(
+      run =>
+        new Date(run.finished_at) > last24Hours ||
+        inProcessStates.includes(run.status.toLowerCase())
+    )
     if (runs.length > 0) {
       const statusCounts = runs.reduce((counts, run) => {
         counts[run.status] = (counts[run.status] || 0) + 1
@@ -553,15 +558,38 @@ function getProjectsSummaries(req, res) {
   }
 
   // Runs
+  const uniqueJobs = {}
   const projectData = runs.runs
-    .filter(run => run.kind === 'run' && new Date(run.status.last_update) > last24Hours)
+    .filter(
+      run =>
+        (run.kind === 'run' &&
+          !inProcessStates.includes(run.status.state) &&
+          new Date(run.status.last_update) > last24Hours) ||
+        (run.kind === 'run' && inProcessStates.includes(run.status.state))
+    )
     .reduce((acc, run) => {
       const project = run.metadata.project
       const state = run.status.state
+      const name = run.metadata.name
+      const lastUpdate = new Date(run.status.last_update)
+
       if (!acc[project]) {
         acc[project] = { pending: 0, running: 0, error: 0, aborted: 0, completed: 0 }
       }
-      acc[project][state] = (acc[project][state] || 0) + 1
+
+      if (
+        !uniqueJobs[name] ||
+        !uniqueJobs[name][state] ||
+        new Date(uniqueJobs[name][state].status.last_update) < lastUpdate
+      ) {
+        if (!uniqueJobs[name]) {
+          uniqueJobs[name] = { [state]: run }
+        } else {
+          uniqueJobs[name] = { ...uniqueJobs[name], [state]: run }
+        }
+
+        acc[project][state] = (acc[project][state] || 0) + 1
+      }
 
       return acc
     }, {})
@@ -655,6 +683,7 @@ function getRuns(req, res) {
         return false
       })
   }
+
   //get runs for Jobs and workflows page
   if (req.params['project'] !== '*') {
     collectedRuns = runs.runs.filter(run => run.metadata.project === req.params['project'])
