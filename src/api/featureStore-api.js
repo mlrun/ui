@@ -109,6 +109,9 @@ const featureStoreApi = {
       params
     })
   },
+  // reference = tag or uid
+  getFeatureVectorByReference: (project, name, reference) =>
+    mainHttpClient.get(`/projects/${project}/feature-vectors/${name}/references/${reference}`),
   getFeatureVectors: (project, filters, config) => {
     return fetchFeatureStoreContent(
       `/projects/${project}/${FEATURE_VECTORS_TAB}`,

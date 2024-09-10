@@ -107,6 +107,15 @@ export const generateActionsMenu = (onDeleteFeatureVector, toggleConvertedYaml) 
   ]
 ]
 
+export const searchFeatureVectorItem = (content, name, tag) => {
+  return content.find(contentItem => {
+    return (
+      contentItem.name === name &&
+      (contentItem.tag === tag || contentItem.uid === tag)
+    )
+  })
+}
+
 export const featureVectorsActionCreator = {
   deleteFeatureVector: featureStoreActions.deleteFeatureVector,
   fetchFeatureVector: featureStoreActions.fetchFeatureVector,

@@ -118,11 +118,11 @@ export const fetchArtifact = createAsyncThunk('fetchArtifact', ({ project, artif
 })
 export const fetchArtifacts = createAsyncThunk(
   'fetchArtifacts',
-  ({ project, filters, config, setRequestErrorMessage = () => {} }, thunkAPI) => {
+  ({ project, filters, config, setRequestErrorMessage = () => {}, withExactName }, thunkAPI) => {
     setRequestErrorMessage('')
 
     return artifactsApi
-      .getArtifacts(project, filters, config)
+      .getArtifacts(project, filters, config, withExactName)
       .then(({ data }) => {
         const result = parseArtifacts(data.artifacts)
 

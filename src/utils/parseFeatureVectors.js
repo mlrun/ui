@@ -25,6 +25,7 @@ import { getFeatureVectorIdentifier } from './getUniqueIdentifier'
 export const parseFeatureVectors = featureVectors =>
   featureVectors.map(featureVector => {
     const item = {
+      kind: featureVector.kind,
       ...featureVector.metadata,
       ...featureVector.status,
       ...featureVector.spec

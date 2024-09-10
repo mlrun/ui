@@ -20,7 +20,9 @@ such restriction.
 export const searchArtifactItem = (artifacts, name, tag, iter, uid) =>
   artifacts.find(item => {
     const isNameFound = item.db_key === name
-    const isIterFound = iter ? item.iter === Number(iter) : true
+    const isIterFound = iter
+      ? item.iter === Number(iter) || (Number(iter) === 0 && !item.iter)
+      : true
     const isTagFound = tag ? item.tag === tag || item.tree === tag : true
     const isUidFound = uid ? uid === item.uid : true
 
