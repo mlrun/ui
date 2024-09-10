@@ -372,7 +372,7 @@ const Models = ({ fetchModelFeatureVector }) => {
   }
 
   useInitialTableFetch({
-    createRowData: createModelsRowData,
+    createRowData: rowItem => createModelsRowData(rowItem, params.projectName, frontendSpec),
     fetchData,
     fetchTags,
     filterMenuName: MODELS_FILTERS,

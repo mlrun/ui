@@ -318,7 +318,7 @@ const Datasets = () => {
     })
 
   useInitialTableFetch({
-    createRowData: createDatasetsRowData,
+    createRowData: rowItem => createDatasetsRowData(rowItem, params.projectName, frontendSpec),
     fetchData,
     fetchTags,
     filterMenuName: DATASETS_FILTERS,

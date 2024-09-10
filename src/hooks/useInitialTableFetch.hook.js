@@ -56,7 +56,6 @@ export const useInitialTableFetch = ({
           filters,
           fetchData,
           fetchTags,
-          paramsProjectName,
           setExpandedRowsData,
           sortExpandedRowsDataBy
         } = {}) => {
@@ -78,7 +77,6 @@ export const useInitialTableFetch = ({
                   expandRowByName(
                     filters[NAME_FILTER],
                     result,
-                    paramsProjectName,
                     setExpandedRowsData,
                     createRowData,
                     sortExpandedRowsDataBy
@@ -128,7 +126,6 @@ export const useInitialTableFetch = ({
       filters,
       fetchData,
       fetchTags,
-      paramsProjectName: params.projectName,
       setExpandedRowsData,
       sortExpandedRowsDataBy
     })
@@ -140,7 +137,6 @@ export const useInitialTableFetch = ({
     filterMenuName,
     filters,
     params.name,
-    params.projectName,
     sendInitialRequest,
     setExpandedRowsData,
     sortExpandedRowsDataBy

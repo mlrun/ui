@@ -230,7 +230,8 @@ const Functions = ({
   )
 
   const tableContent = useMemo(
-    () => latestItems.map(contentItem => createFunctionsRowData(contentItem, params.projectName, true)),
+    () =>
+      latestItems.map(contentItem => createFunctionsRowData(contentItem, params.projectName, true)),
     [latestItems, params.projectName]
   )
 
@@ -536,7 +537,7 @@ const Functions = ({
   useInitialTableFetch({
     fetchData,
     setExpandedRowsData: setSelectedRowData,
-    createRowData: createFunctionsRowData,
+    createRowData: rowItem => createFunctionsRowData(rowItem, params.projectName),
     setInitialFilters,
     filters: {
       ...filtersStore[FILTER_MENU][FUNCTION_FILTERS],
