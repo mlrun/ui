@@ -57,7 +57,8 @@ const commonStateLabels = withFailedState => {
     ready: 'Ready',
     running: 'Running',
     skipped: 'Skipped',
-    succeeded: 'Completed'
+    succeeded: 'Completed',
+    terminating: 'Terminating'
   }
 }
 
