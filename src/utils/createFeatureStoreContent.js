@@ -43,7 +43,7 @@ import { ReactComponent as DbIcon } from 'igz-controls/images/db-icon.svg'
 export const createFeatureStoreContent = (content, pageTab, project, isTablePanelOpen) => {
   return content.map(contentItem => {
     if (pageTab === FEATURE_SETS_TAB) {
-      return createFeatureSetsRowData(contentItem, pageTab, project)
+      return createFeatureSetsRowData(contentItem, project, pageTab)
     } else if (pageTab === FEATURE_VECTORS_TAB) {
       return createFeatureVectorsRowData(contentItem, pageTab, project)
     }
@@ -52,7 +52,7 @@ export const createFeatureStoreContent = (content, pageTab, project, isTablePane
   })
 }
 
-export const createFeatureSetsRowData = (featureSet, pageTab, project, showExpandButton) => {
+export const createFeatureSetsRowData = (featureSet, project, pageTab, showExpandButton) => {
   return {
     data: {
       ...featureSet

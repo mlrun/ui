@@ -61,7 +61,6 @@ export const useInitialTableFetch = ({
           sortExpandedRowsDataBy
         } = {}) => {
           if (!isInitialRequestSent.current) {
-
             if (fetchTags) {
               fetchTags()
             }

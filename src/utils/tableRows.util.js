@@ -63,9 +63,10 @@ export const expandRowByName = (
       setExpandedRowsData(state => ({
         ...state,
         [filteredItems[0]?.ui?.identifier || name]: {
-          content: (sortTableBy ? sortListByDate(filteredItems, sortTableBy, false) : filteredItems).map(rowItem =>
-            createRowData(rowItem, projectName)
-          )
+          content: (sortTableBy
+            ? sortListByDate(filteredItems, sortTableBy, false)
+            : filteredItems
+          ).map(rowItem => createRowData(rowItem, projectName))
         },
         error: null,
         loading: false
