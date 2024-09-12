@@ -105,7 +105,7 @@ const Files = () => {
     [selectedFile.tag]
   )
 
-  useEffect(() => {
+  const getAndSetSelectedArtifact = useCallback(() => {
     setFullSelectedArtifact(
       FILES_TAB,
       dispatch,
@@ -115,6 +115,10 @@ const Files = () => {
       params.projectName
     )
   }, [dispatch, navigate, params.projectName, selectedFileMin])
+
+  useEffect(() => {
+    getAndSetSelectedArtifact()
+  }, [getAndSetSelectedArtifact])
 
   const fetchData = useCallback(
     filters => {
@@ -403,18 +407,19 @@ const Files = () => {
       detailsFormInitialValues={detailsFormInitialValues}
       files={files}
       filtersStore={filtersStore}
+      getAndSetSelectedArtifact={getAndSetSelectedArtifact}
       handleExpandRow={handleExpandRow}
       handleRefresh={handleRefresh}
       handleRegisterArtifact={handleRegisterArtifact}
       handleSelectFile={handleSelectFile}
-      requestErrorMessage={requestErrorMessage}
       maxArtifactsErrorIsShown={maxArtifactsErrorIsShown}
       pageData={pageData}
       ref={{ filesRef }}
+      requestErrorMessage={requestErrorMessage}
       selectedFile={selectedFile}
       selectedRowData={selectedRowData}
-      setMaxArtifactsErrorIsShown={setMaxArtifactsErrorIsShown}
       setFiles={setFiles}
+      setMaxArtifactsErrorIsShown={setMaxArtifactsErrorIsShown}
       setSelectedFileMin={setSelectedFileMin}
       setSelectedRowData={setSelectedRowData}
       sortProps={{ sortTable, selectedColumnName, getSortingIcon }}

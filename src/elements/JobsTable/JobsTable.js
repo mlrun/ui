@@ -209,6 +209,10 @@ const JobsTable = React.forwardRef(
       [dispatch, modifyAndSelectRun, navigate, navigateLink, params.jobId]
     )
 
+    const refreshRun = useCallback((selectedItem) => {
+      fetchRun(selectedItem.project)
+    }, [fetchRun])
+
     const onAbortJob = useCallback(
       job => {
         const refresh = !isEmpty(selectedJob)
@@ -514,7 +518,7 @@ const JobsTable = React.forwardRef(
               setSelectedJob({})
               dispatch(setFilters({ saveFilters: true }))
             }}
-            handleRefresh={fetchRun}
+            handleRefresh={refreshRun}
             isDetailsScreen
             pageData={pageData}
             selectedItem={selectedJob}

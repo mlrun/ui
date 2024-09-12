@@ -19,6 +19,7 @@ such restriction.
 */
 import React from 'react'
 import PropTypes from 'prop-types'
+import { isEmpty } from 'lodash'
 
 import ArtifactsActionBar from '../ArtifactsActionBar/ArtifactsActionBar'
 import NoData from '../../common/NoData/NoData'
@@ -51,6 +52,7 @@ const FilesView = React.forwardRef(
       detailsFormInitialValues,
       files,
       filtersStore,
+      getAndSetSelectedArtifact,
       handleExpandRow,
       handleRefresh,
       handleRegisterArtifact,
@@ -153,14 +155,14 @@ const FilesView = React.forwardRef(
                   </Table>
                 </>
               )}
-              {viewMode === FULL_VIEW_MODE && (
+              {viewMode === FULL_VIEW_MODE && !isEmpty(selectedFile) && (
                 <Details
                   actionsMenu={actionsMenu}
                   applyDetailsChanges={applyDetailsChanges}
                   applyDetailsChangesCallback={applyDetailsChangesCallback}
                   formInitialValues={detailsFormInitialValues}
                   detailsMenu={pageData.details.menu}
-                  handleRefresh={handleRefresh}
+                  handleRefresh={getAndSetSelectedArtifact}
                   isDetailsScreen
                   pageData={pageData}
                   selectedItem={selectedFile}
@@ -189,6 +191,7 @@ FilesView.propTypes = {
   detailsFormInitialValues: PropTypes.object.isRequired,
   files: PropTypes.arrayOf(PropTypes.object).isRequired,
   filtersStore: PropTypes.object.isRequired,
+  getAndSetSelectedArtifact: PropTypes.func.isRequired,
   handleExpandRow: PropTypes.func.isRequired,
   handleRefresh: PropTypes.func.isRequired,
   handleRegisterArtifact: PropTypes.func.isRequired,
