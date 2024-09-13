@@ -49,8 +49,6 @@ const generateQueryParams = (project, filter, config) => {
       op: 9,
       string_value: filter.name
     })
-
-    set(config, ['params', 'name-contains'], filter.name)
   }
 
   if (!filter.state.includes(FILTER_ALL_ITEMS)) {
@@ -58,7 +56,7 @@ const generateQueryParams = (project, filter, config) => {
       key: 'status',
       op: 8,
       string_values: {
-        values: stateFilter.map(state => state === 'completed' ? 'Succeeded' : capitalize(state))
+        values: stateFilter.map(state => (state === 'completed' ? 'Succeeded' : capitalize(state)))
       }
     })
   }
@@ -100,6 +98,10 @@ const workflowsApi = {
 
       if (filter?.groupBy === GROUP_BY_WORKFLOW) {
         set(newConfig, ['params', 'filter'], generateQueryParams(project, filter, config))
+      }
+
+      if (filter?.name) {
+        set(newConfig, ['params', 'name-contains'], filter.name)
       }
 
       set(newConfig, ['params', 'sort_by'], 'created_at desc')
