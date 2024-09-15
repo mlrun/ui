@@ -19,6 +19,7 @@ such restriction.
 */
 import React from 'react'
 import PropTypes from 'prop-types'
+import { isEmpty } from 'lodash'
 
 import PreviewModal from '../../elements/PreviewModal/PreviewModal'
 import Breadcrumbs from '../../common/Breadcrumbs/Breadcrumbs'
@@ -51,6 +52,7 @@ const DatasetsView = React.forwardRef(
       datasets,
       detailsFormInitialValues,
       filtersStore,
+      getAndSetSelectedArtifact,
       handleExpandRow,
       handleRefresh,
       handleRegisterDataset,
@@ -151,14 +153,14 @@ const DatasetsView = React.forwardRef(
                   </Table>
                 </>
               )}
-              {viewMode === FULL_VIEW_MODE && (
+              {viewMode === FULL_VIEW_MODE && !isEmpty(selectedDataset) && (
                 <Details
                   actionsMenu={actionsMenu}
                   applyDetailsChanges={applyDetailsChanges}
                   applyDetailsChangesCallback={applyDetailsChangesCallback}
                   formInitialValues={detailsFormInitialValues}
                   detailsMenu={pageData.details.menu}
-                  handleRefresh={handleRefresh}
+                  handleRefresh={getAndSetSelectedArtifact}
                   isDetailsScreen
                   pageData={pageData}
                   selectedItem={selectedDataset}
@@ -186,6 +188,7 @@ DatasetsView.propTypes = {
   convertedYaml: PropTypes.string.isRequired,
   datasets: PropTypes.arrayOf(PropTypes.object).isRequired,
   detailsFormInitialValues: PropTypes.object.isRequired,
+  getAndSetSelectedArtifact: PropTypes.func.isRequired,
   filtersStore: PropTypes.object.isRequired,
   handleExpandRow: PropTypes.func.isRequired,
   handleRefresh: PropTypes.func.isRequired,
