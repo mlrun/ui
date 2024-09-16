@@ -110,8 +110,12 @@ pipeline {
                         echo "Cleaning up temporary files..."
                         def tmpDir = "/home/iguazio/tmp"
                         sh """
-                             rm -rf ${tmpDir}/.[!.]* ${tmpDir}/..?* ${tmpDir}/*
+                             rm -rf ${tmpDir}/*        # Non-hidden files and directories
+                             rm -rf ${tmpDir}/.[!.]*    # Hidden files and directories
+                             rm -rf ${tmpDir}/..?*      # Handles hidden directories like ../
                         """
+
+
 
                         echo "Temporary files cleaned up."
                     }
