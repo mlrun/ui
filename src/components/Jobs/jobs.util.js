@@ -43,13 +43,17 @@ import { showErrorNotification } from '../../utils/notifications.util'
 
 export const page = JOBS_PAGE
 const LOG_LEVEL_ID = 'logLevel'
-export const getInfoHeaders = isSpark => {
+export const getInfoHeaders = (isSpark, selectedJob) => {
   const infoHeaders = [
     { label: 'UID', id: 'uid' },
     { label: 'Start time', id: 'startTime' },
     { label: 'Last Updated', id: 'updated' },
     { label: 'Run on spot', id: 'runOnSpot' },
-    { label: 'Node selector', id: 'nodeSelectorChips' },
+    {
+      label: 'Node selector',
+      id: 'nodeSelectorChips',
+      hidden: isJobKindDask(selectedJob?.labels)
+    },
     { label: 'Priority', id: 'priority' },
     { label: 'Parameters', id: 'parameters' },
     { label: 'Function', id: 'function' },

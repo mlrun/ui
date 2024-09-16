@@ -24,6 +24,7 @@ import { parseString } from '../../common-tools/common-tools'
 async function verifyInputInvalid(driver, inputGroup) {
   const inputField = await driver.findElement(inputGroup.inputField)
   const flag = await inputField.getAttribute('class')
+
   await driver.sleep(500)
   expect(flag.includes('invalid')).equal(true)
 }
@@ -32,23 +33,27 @@ async function verifyFormInputInvalid(driver, inputGroup) {
   const inputField = await driver.findElement(inputGroup.root)
   await driver.sleep(500)
   const flag = await inputField.getAttribute('class')
+
   expect(flag.includes('form-field__wrapper-invalid')).equal(true)
 }
 
 async function verifyInputValid(driver, inputGroup) {
   const inputField = await driver.findElement(inputGroup.inputField)
   const flag = await inputField.getAttribute('class')
+
   expect(flag.includes('invalid')).equal(false)
 }
 
 async function verifyFormInputValid(driver, inputGroup) {
   const inputField = await driver.findElement(inputGroup.root)
   const flag = await inputField.getAttribute('class')
+
   expect(flag.includes('form-field__wrapper-invalid')).equal(false)
 }
 
 async function clearManually(inputField) {
   const existValue = await inputField.getAttribute('value')
+
   for (let i = 0; i <= existValue.length; i++) {
     await inputField.sendKeys(Key.BACK_SPACE, Key.DELETE)
   }
@@ -56,23 +61,33 @@ async function clearManually(inputField) {
 
 async function getInputValue(driver, inputGroup) {
   const inputField = await driver.findElement(inputGroup.inputField)
+
   return inputField.getAttribute('value')
+}
+
+async function getInputPlaceholder(driver, inputGroup) {
+  const inputField = await driver.findElement(inputGroup.inputField)
+
+  return inputField.getAttribute('placeholder')
 }
 
 async function getInputValueWithoutInputgroup(driver, input) {
   const inputField = await driver.findElement(input)
+
   return inputField.getAttribute('value')
 }
 
 async function typeValue(driver, inputGroup, value) {
   const inputField = await driver.findElement(inputGroup.inputField)
   await clearManually(inputField)
+
   return inputField.sendKeys(value)
 }
 
 async function typeValueWithoutInputgroup(driver, input, value) {
   const inputField = await driver.findElement(input)
   await clearManually(inputField)
+  
   return inputField.sendKeys(value)
 }
 
@@ -90,6 +105,7 @@ const action = {
     await driver.sleep(250)
     const hint = await driver.findElement(hintComponent)
     const hintText = await hint.getText()
+
     expect(hintText).equal(text)
   },
   checkHintTextWithHover:async function (driver, inputGroup, hintComponent, text) {
@@ -102,6 +118,7 @@ const action = {
     await driver.sleep(250)
     const hint = await driver.findElement(hintComponent)
     const hintText = await hint.getText()
+
     expect(hintText).equal(text)
   },
   checkInputAccordingHintText: async function (
@@ -158,42 +175,55 @@ const action = {
     const hint = await driver.findElement(hintComponent)
     await driver.sleep(250)
     const hintText = await hint.getText()
+
     expect(hintText).equal(text)
   },
   checkWarningText: async function (driver, hintComponent, text) {
     const hint = await driver.findElement(hintComponent)
     await driver.sleep(250)
     const hintText = await hint.getText()
+
     expect(hintText).equal(text)
   },
   verifyTypedValue: async function (driver, inputGroup, value) {
     const txt = await getInputValue(driver, inputGroup)
+
+    expect(txt).equal(value)
+  },
+  verifyPlaceholder: async function (driver, inputGroup, value) {
+    const txt = await getInputPlaceholder(driver, inputGroup)
+
     expect(txt).equal(value)
   },
   verifyTypedValueWithoutInputgroup: async function (driver, input, value) {
     const txt = await getInputValueWithoutInputgroup(driver, input)
+
     expect(txt).equal(value)
   },
   verifyInputDisabled: async function (driver, inputGroup) {
     const inputField = await driver.findElement(inputGroup.inputField)
     const flag = await inputField.getAttribute('disabled')
+
     expect(flag).equal('true')
   },
   verifyInputClassDisabled: async function (driver, inputGroup) {
     const inputField = await driver.findElement(inputGroup.root)
     const attributes = await inputField.getAttribute('class')
     const flag = attributes.includes('form-field__wrapper-disabled')
+
     expect(flag).equal(true)
   },
   verifyInputClassEnabled: async function (driver, inputGroup) {
     const inputField = await driver.findElement(inputGroup.inputField)
     const attributes = await inputField.getAttribute('class')
     const flag = attributes.includes('form-field__wrapper-disabled')
+
     expect(flag).equal(false)
   },
   verifyInputEnabled: async function (driver, inputGroup) {
     const inputField = await driver.findElement(inputGroup.inputField)
     const flag = await inputField.getAttribute('disabled')
+    
     expect(flag).equal(null)
   },
   verifyTextAreaCounter: async function (driver, textAreaGroup) {

@@ -125,7 +125,7 @@ export const generateArtifactsTabContent = (artifacts, params, iteration, showAr
                   artifactScreenLinks[artifact.kind] ??
                   `/projects/${params.projectName}/files/${artifact.db_key || artifact.key}/${
                     artifact.tag ? artifact.tag : artifact.tree ?? TAG_FILTER_LATEST
-                  }${iteration ? `/${iteration}` : ''}/overview?useUrlParamsAsFilter=true`
+                  }${iteration ? `/${iteration}` : ''}/overview`
                 }
               >
                 <DetailsIcon />

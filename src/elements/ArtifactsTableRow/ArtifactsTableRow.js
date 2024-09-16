@@ -60,7 +60,7 @@ const ArtifactsTableRow = ({
     'table-row',
     'table-body-row',
     'parent-row',
-    (selectedItem.db_key || selectedItem?.spec?.model) &&
+    (selectedItem?.db_key || selectedItem?.spec?.model) &&
       getArtifactIdentifier(selectedItem, true) === rowItem.data.ui.identifierUnique &&
       !rowIsExpanded &&
       'table-row_active',

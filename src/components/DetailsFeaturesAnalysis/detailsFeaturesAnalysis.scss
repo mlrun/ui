@@ -2,6 +2,8 @@
 @import '~igz-controls/scss/borders';
 
 .features-analysis {
+  display: flex;
+
   &__table {
     display: flex;
     flex: 1;

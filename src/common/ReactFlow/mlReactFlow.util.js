@@ -81,7 +81,7 @@ export const getLayoutedElements = (nodes, edges, direction = 'TB') => {
   return [layoutedNodes, layoutedEdges]
 }
 
-export const getNodeClassName = (node) => {
+export const getNodeClassName = node => {
   return classnames(
     node.className,
     node.data.subType,
@@ -99,8 +99,8 @@ const getNodeIntersection = (intersectionNode, targetNode) => {
     width: intersectionNodeWidth,
     height: intersectionNodeHeight,
     position: intersectionNodePosition
-  } = intersectionNode.__rf
-  const targetPosition = targetNode.__rf.position
+  } = intersectionNode?.__rf || intersectionNode
+  const targetPosition = targetNode?.__rf?.position || targetNode.position
 
   const w = intersectionNodeWidth / 2
   const h = intersectionNodeHeight / 2
@@ -123,7 +123,7 @@ const getNodeIntersection = (intersectionNode, targetNode) => {
 
 // returns the position (top,right,bottom or right) passed node compared to the intersection point
 const getEdgePosition = (node, intersectionPoint) => {
-  const n = { ...node.__rf.position, ...node.__rf }
+  const n = { ...(node?.__rf?.position || node.position), ...(node?.__rf || node) }
   const nx = Math.round(n.x)
   const ny = Math.round(n.y)
   const px = Math.round(intersectionPoint.x)

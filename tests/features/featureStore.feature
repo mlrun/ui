@@ -552,6 +552,7 @@ Feature: Feature Store Page
         And wait load page
         Then verify "Create_Set_Button" element visibility on "Feature_Store_Feature_Sets_Tab" wizard
         Then click on "Create_Set_Button" element on "Feature_Store_Feature_Sets_Tab" wizard
+        When click on "Edit_Button" element in "Data_Source_Accordion" on "New_Feature_Set" wizard
         Then verify options in "URL_Combobox" combobox in "Data_Source_Accordion" on "New_Feature_Set" wizard should contains "New_Feature_Store"."Combobox_Options"
         When select "MLRun store" option in "URL_Combobox" combobox on "Data_Source_Accordion" accordion on "New_Feature_Set" wizard
         Then searchable fragment "Artifacts" should be in every suggested option into "URL_Combobox" combobox input in "Data_Source_Accordion" on "New_Feature_Set" wizard
@@ -647,10 +648,14 @@ Feature: Feature Store Page
         Then verify "Labels_Table" element visibility on "New_Feature_Set" wizard
         Then verify "Accordion_Header" element visibility in "Data_Source_Accordion" on "New_Feature_Set" wizard
         Then verify "Collapse_Button" element visibility in "Data_Source_Accordion" on "New_Feature_Set" wizard
-        Then verify "URL_Combobox" element visibility in "Data_Source_Accordion" on "New_Feature_Set" wizard
         Then verify "Attributes_Input" element visibility in "Data_Source_Accordion" on "New_Feature_Set" wizard
         Then type value "   " to "Attributes_Input" field on "Data_Source_Accordion" on "New_Feature_Set" wizard
         Then verify "Attributes_Input" element in "Data_Source_Accordion" on "New_Feature_Set" wizard should display warning "Input_Hint"."Input_Field_Invalid"
+        When click on "Edit_Button" element in "Data_Source_Accordion" on "New_Feature_Set" wizard
+        Then verify "URL_Combobox" element visibility in "Data_Source_Accordion" on "New_Feature_Set" wizard
+        Then select "V3IO" option in "URL_Combobox" combobox on "Data_Source_Accordion" accordion on "New_Feature_Set" wizard
+        When type value "target/path" to "URL_Combobox" field on "Data_Source_Accordion" on "New_Feature_Set" wizard
+        Then click on "Apply_Combobox_Button" element in "Data_Source_Accordion" on "New_Feature_Set" wizard
         When collapse "Data_Source_Accordion" on "New_Feature_Set" wizard
         Then verify "Data_Source_Accordion" is collapsed on "New_Feature_Set" wizard
         Then verify "Accordion_Header" element visibility in "Schema_Accordion" on "New_Feature_Set" wizard
@@ -794,13 +799,19 @@ Feature: Feature Store Page
         When uncheck "Offline_Checkbox" element in "Target_Store_Accordion" on "New_Feature_Set" wizard
         When check "External_Offline_Checkbox" element in "Target_Store_Accordion" on "New_Feature_Set" wizard
         Then verify "File_Type_Dropdown" element visibility in "Target_Store_Accordion" on "New_Feature_Set" wizard
-        Then verify "URL_Combobox" element visibility in "Target_Store_Accordion" on "New_Feature_Set" wizard
         When select "Parquet" option in "File_Type_Dropdown" dropdown on "Target_Store_Accordion" on "New_Feature_Set" wizard
+        Then verify checkbox "External_Offline_Partition_Checkbox" element in "Target_Store_Accordion" on "New_Feature_Set" wizard is enabled
+        When click on "Edit_Combobox_Button" element in "Target_Store_Accordion" on "New_Feature_Set" wizard
         Then verify checkbox "External_Offline_Partition_Checkbox" element in "Target_Store_Accordion" on "New_Feature_Set" wizard is disabled
+        Then verify "URL_Combobox" element visibility in "Target_Store_Accordion" on "New_Feature_Set" wizard
         Then select "S3" option in "URL_Combobox" combobox on "Target_Store_Accordion" accordion on "New_Feature_Set" wizard
-        Then type value "bucket/path " to "URL_Combobox" field on "Target_Store_Accordion" on "New_Feature_Set" wizard
+        Then type value "bucket/path" to "URL_Combobox" field on "Target_Store_Accordion" on "New_Feature_Set" wizard
+        And wait load page
         Then click on "Apply_Combobox_Button" element in "Target_Store_Accordion" on "New_Feature_Set" wizard
+        And wait load page
+        Then verify checkbox "External_Offline_Partition_Checkbox" element in "Target_Store_Accordion" on "New_Feature_Set" wizard is enabled
         When check "External_Offline_Partition_Checkbox" element in "Target_Store_Accordion" on "New_Feature_Set" wizard
+        And wait load page
         Then verify "External_Offline_Partition_ShowHide_Link" element visibility in "Target_Store_Accordion" on "New_Feature_Set" wizard
         When click on "External_Offline_Partition_ShowHide_Link" element in "Target_Store_Accordion" on "New_Feature_Set" wizard
         When check "External_Offline_Partition_By_Key_Checkbox" element in "Target_Store_Accordion" on "New_Feature_Set" wizard
@@ -915,12 +926,15 @@ Feature: Feature Store Page
         Then is "Offline_Partition_Number_Of_Buckets_Radiobutton" in "Target_Store_Accordion" on "New_Feature_Set" selected
         When check "External_Offline_Checkbox" element in "Target_Store_Accordion" on "New_Feature_Set" wizard
         When uncheck "Offline_Partition_Checkbox" element in "Target_Store_Accordion" on "New_Feature_Set" wizard
-        Then verify "URL_Combobox" element visibility in "Target_Store_Accordion" on "New_Feature_Set" wizard
         When select "Parquet" option in "File_Type_Dropdown" dropdown on "Target_Store_Accordion" on "New_Feature_Set" wizard
+        Then verify checkbox "External_Offline_Partition_Checkbox" element in "Target_Store_Accordion" on "New_Feature_Set" wizard is enabled
+        When click on "Edit_Combobox_Button" element in "Target_Store_Accordion" on "New_Feature_Set" wizard
         Then verify checkbox "External_Offline_Partition_Checkbox" element in "Target_Store_Accordion" on "New_Feature_Set" wizard is disabled
+        Then verify "URL_Combobox" element visibility in "Target_Store_Accordion" on "New_Feature_Set" wizard
         Then select "S3" option in "URL_Combobox" combobox on "Target_Store_Accordion" accordion on "New_Feature_Set" wizard
-        Then type value "bucket/path " to "URL_Combobox" field on "Target_Store_Accordion" on "New_Feature_Set" wizard
+        Then type value "bucket/path" to "URL_Combobox" field on "Target_Store_Accordion" on "New_Feature_Set" wizard
         Then click on "Apply_Combobox_Button" element in "Target_Store_Accordion" on "New_Feature_Set" wizard
+        Then verify checkbox "External_Offline_Partition_Checkbox" element in "Target_Store_Accordion" on "New_Feature_Set" wizard is enabled
         When check "External_Offline_Partition_Checkbox" element in "Target_Store_Accordion" on "New_Feature_Set" wizard
         When click on "External_Offline_Partition_ShowHide_Link" element in "Target_Store_Accordion" on "New_Feature_Set" wizard
         When check "External_Offline_Partition_By_Key_Checkbox" element in "Target_Store_Accordion" on "New_Feature_Set" wizard
@@ -952,18 +966,18 @@ Feature: Feature Store Page
             |    key1   |    value1   |
             |    key2   |    value2   |
             |    key3   |    value3   |
-        Then verify values in "Labels_Table" table on "New_Feature_Set" wizard
-            |      label      |
-            | key1\n:\nvalue1 |
-            | key2\n:\nvalue2 |
-            | key3\n:\nvalue3 |
-        When click on "remove_btn" in "Labels_Table" table on "New_Feature_Set" wizard with offset "false"
-            |      label      |
-            | key1\n:\nvalue1 |
-            | key3\n:\nvalue3 |
-        Then verify values in "Labels_Table" table on "New_Feature_Set" wizard
-            |      label      |
-            | key2\n:\nvalue2 |
+        Then verify values in "Labels_Table" table on "New_Feature_Set" wizard with attribute
+            | key_verify | value_verify | 
+            |    key1    |    value1    |
+            |    key2    |    value2    |
+            |    key3    |    value3    |
+        When click on "remove_btn" in "Labels_Table" table on "New_Feature_Set" wizard with attribute
+            | key_verify |
+            |    key1    |
+            |    key3    |
+        Then verify values in "Labels_Table" table on "New_Feature_Set" wizard with attribute
+            | key_verify | value_verify | 
+            |    key2    |    value2    |
 
     @MLFS
     @inProgress
@@ -992,15 +1006,16 @@ Feature: Feature Store Page
             |    key1   |    value1   |
             |    key2   |    value2   |
             |    key3   |    value3   |
-        Then verify values in "Labels_Table" table on "New_Feature_Set" wizard
-            |       label     |
-            | key1\n:\nvalue1 |
-            | key2\n:\nvalue2 |
-            | key3\n:\nvalue3 |
+        Then verify values in "Labels_Table" table on "New_Feature_Set" wizard with attribute
+            | key_verify | value_verify | 
+            |    key1    |    value1    |
+            |    key2    |    value2    |
+            |    key3    |    value3    |
         Then type value "entity1,entity2,entity3" to "Entities_Input" field on "Schema_Accordion" on "New_Feature_Set" wizard
         When collapse "Schema_Accordion" on "New_Feature_Set" wizard
         When uncheck "Offline_Checkbox" element in "Target_Store_Accordion" on "New_Feature_Set" wizard
         When collapse "Target_Store_Accordion" on "New_Feature_Set" wizard
+        When click on "Edit_Button" element in "Data_Source_Accordion" on "New_Feature_Set" wizard
         When select "MLRun store" option in "URL_Combobox" combobox on "Data_Source_Accordion" accordion on "New_Feature_Set" wizard
         When type value "artifacts/automation-test-name3/artifact" to "URL_Combobox" field on "Data_Source_Accordion" on "New_Feature_Set" wizard
         Then click on "Apply_Combobox_Button" element in "Data_Source_Accordion" on "New_Feature_Set" wizard
@@ -1174,9 +1189,7 @@ Feature: Feature Store Page
 
     @MLFS
     @passive
-    @FAILED_TODO
     @smoke
-    #TODO: Bug ML-6142 - [Feature Vectors] Unify the conditions for the 'Tag' field
     Scenario: MLFS039 - Check all mandatory components on Create feature vector popup
         Given open url
         And click on row root with value "fsdemo-admin" in "name" column in "Projects_Table" table on "Projects" wizard
@@ -1194,7 +1207,7 @@ Feature: Feature Store Page
         Then type value "   " to "Name_Input" field on "Create_Feature_Vector_Popup" wizard
         Then verify "Name_Input" options rules on form "Create_Feature_Vector_Popup" wizard
         Then verify "Tag_Input" element visibility on "Create_Feature_Vector_Popup" wizard
-        Then verify "Tag_Input" input should contains "latest" value on "Create_Feature_Vector_Popup" wizard
+        Then verify "Tag_Input" input should contains "latest" placeholder value on "Create_Feature_Vector_Popup" wizard
         Then type value "   " to "Tag_Input" field on "Create_Feature_Vector_Popup" wizard
         Then verify "Tag_Input" options rules on form "Create_Feature_Vector_Popup" wizard
         Then verify "Description_Input" element visibility on "Create_Feature_Vector_Popup" wizard
@@ -1207,22 +1220,22 @@ Feature: Feature Store Page
             |    key3   |    value3   |
             |    key4   |    value4   |
             |    key5   |    value5   |
-        Then verify values in "Labels_Table" table on "Create_Feature_Vector_Popup" wizard
-            |       label     |
-            | key1\n:\nvalue1 |
-            | key2\n:\nvalue2 |
-            | key3\n:\nvalue3 |
-            | key4\n:\nvalue4 |
-            | key5\n:\nvalue5 |
-        When click on "remove_btn" in "Labels_Table" table on "Create_Feature_Vector_Popup" wizard
-            |       label     |
-            | key1\n:\nvalue1 |
-            | key3\n:\nvalue3 |
-        Then verify values in "Labels_Table" table on "Create_Feature_Vector_Popup" wizard
-            |       label     |
-            | key2\n:\nvalue2 |
-            | key4\n:\nvalue4 |
-            | key5\n:\nvalue5 |
+        Then verify values in "Labels_Table" table on "Create_Feature_Vector_Popup" wizard with attribute
+            | key_verify | value_verify | 
+            |    key1    |    value1    |
+            |    key2    |    value2    |
+            |    key3    |    value3    |
+            |    key4    |    value4    |
+            |    key5    |    value5    |
+        When click on "remove_btn" in "Labels_Table" table on "Create_Feature_Vector_Popup" wizard with attribute
+            | key_verify |
+            |    key2    |
+            |    key3    |
+        Then verify values in "Labels_Table" table on "Create_Feature_Vector_Popup" wizard with attribute
+            | key_verify | value_verify | 
+            |    key1    |    value1    |
+            |    key4    |    value4    |
+            |    key5    |    value5    |
         Then verify "Cancel_Button" element visibility on "Create_Feature_Vector_Popup" wizard
         Then "Cancel_Button" element on "Create_Feature_Vector_Popup" should contains "Cancel" value
         Then verify "Create_Button" element visibility on "Create_Feature_Vector_Popup" wizard
@@ -1231,7 +1244,7 @@ Feature: Feature Store Page
     @MLFS
     @passive
     @smoke
-    #TODO: add check tag validation rules after fixing bug ML-6142
+    #TODO: add check tag validation rules
     Scenario: MLFS040 - Check all mandatory components on Edit feature vector Popup
         Given open url
         And click on row root with value "fsdemo-admin" in "name" column in "Projects_Table" table on "Projects" wizard
@@ -1443,8 +1456,12 @@ Feature: Feature Store Page
             | last_updated |
         Then click on "Add_Button" element on "Add_To_Feature_Vector_Tab" wizard
         And wait load page
+        And wait load page
         Then verify "Notification_Pop_Up" element visibility on "Notification_Popup" wizard
+        And wait load page
+        And wait load page
         Then "Notification_Pop_Up" element on "Notification_Popup" should contains "Feature vector created successfully" value
+        And wait load page
         Then verify "Notification_Pop_Up_Cross_Close_Button" element visibility on "Notification_Popup" wizard
         Then click on "Notification_Pop_Up_Cross_Close_Button" element on "Notification_Popup" wizard
         And set tear-down property "featureVector" created in "fsdemo-admin" project with "temp_vector02" value
@@ -1509,7 +1526,7 @@ Feature: Feature Store Page
         Then "Apply_Changes_Button" element on "Feature_Vectors_Info_Pane" should contains "Apply Changes" value
 
     @MLFS
-    @smoke  
+    @smoke
     Scenario: MLFS045 - Verify Feature Label icon on Requested Features tab on Feature Vectors tab
         And set tear-down property "featureVector" created in "default" project with "test_vector" value
         Given open url
@@ -1579,7 +1596,7 @@ Feature: Feature Store Page
         Then "No_Data_Message" component on "commonPagesHeader" should contains "No_Data_Message"."No_Data"
 
     @MLFS
-    @smoke 
+    @smoke
     Scenario: MLFS047 - Check broken link redirection
         * set tear-down property "project" created with "automation-test-010" value
         * create "automation-test-010" MLRun Project with code 201
@@ -1710,6 +1727,7 @@ Feature: Feature Store Page
         Then verify checkbox "External_Offline_Checkbox_State" element on "New_Feature_Set" wizard is enabled
         Then "External_Offline_Checkbox" element should be unchecked in "Target_Store_Accordion" on "New_Feature_Set" wizard
         Then type value "new-feature-set-1" to "Feature_Set_Name_Input" field on "New_Feature_Set" wizard
+        When click on "Edit_Button" element in "Data_Source_Accordion" on "New_Feature_Set" wizard
         Then select "V3IO" option in "URL_Combobox" combobox on "Data_Source_Accordion" accordion on "New_Feature_Set" wizard
         When type value "target/path" to "URL_Combobox" field on "Data_Source_Accordion" on "New_Feature_Set" wizard
         Then click on "Apply_Combobox_Button" element in "Data_Source_Accordion" on "New_Feature_Set" wizard
@@ -1749,6 +1767,7 @@ Feature: Feature Store Page
         Then verify checkbox "External_Offline_Checkbox_State" element on "New_Feature_Set" wizard is disabled
         Then "External_Offline_Checkbox" element should be unchecked in "Target_Store_Accordion" on "New_Feature_Set" wizard
         Then type value "new-feature-set-2" to "Feature_Set_Name_Input" field on "New_Feature_Set" wizard
+        When click on "Edit_Button" element in "Data_Source_Accordion" on "New_Feature_Set" wizard
         Then select "V3IO" option in "URL_Combobox" combobox on "Data_Source_Accordion" accordion on "New_Feature_Set" wizard
         When type value "target/path" to "URL_Combobox" field on "Data_Source_Accordion" on "New_Feature_Set" wizard
         Then click on "Apply_Combobox_Button" element in "Data_Source_Accordion" on "New_Feature_Set" wizard
@@ -1790,6 +1809,7 @@ Feature: Feature Store Page
         Then verify checkbox "External_Offline_Checkbox_State" element on "New_Feature_Set" wizard is disabled
         Then "External_Offline_Checkbox" element should be unchecked in "Target_Store_Accordion" on "New_Feature_Set" wizard
         Then type value "new-feature-set-3" to "Feature_Set_Name_Input" field on "New_Feature_Set" wizard
+        When click on "Edit_Button" element in "Data_Source_Accordion" on "New_Feature_Set" wizard
         Then select "V3IO" option in "URL_Combobox" combobox on "Data_Source_Accordion" accordion on "New_Feature_Set" wizard
         When type value "target/path" to "URL_Combobox" field on "Data_Source_Accordion" on "New_Feature_Set" wizard
         Then click on "Apply_Combobox_Button" element in "Data_Source_Accordion" on "New_Feature_Set" wizard
@@ -1813,6 +1833,7 @@ Feature: Feature Store Page
         And verify "Feature Sets" tab is active in "Feature_Store_Tab_Selector" on "Feature_Store_Feature_Sets_Tab" wizard
         And click on "Create_Set_Button" element on "Feature_Store_Feature_Sets_Tab" wizard
         Then type value "new-feature-set-4" to "Feature_Set_Name_Input" field on "New_Feature_Set" wizard
+        When click on "Edit_Button" element in "Data_Source_Accordion" on "New_Feature_Set" wizard
         Then select "V3IO" option in "URL_Combobox" combobox on "Data_Source_Accordion" accordion on "New_Feature_Set" wizard
         When type value "target/path" to "URL_Combobox" field on "Data_Source_Accordion" on "New_Feature_Set" wizard
         Then click on "Apply_Combobox_Button" element in "Data_Source_Accordion" on "New_Feature_Set" wizard
@@ -1837,6 +1858,7 @@ Feature: Feature Store Page
         Then click on "Cancel_Button" element on "New_Feature_Set" wizard
         And click on "Create_Set_Button" element on "Feature_Store_Feature_Sets_Tab" wizard 
         Then type value "new-feature-set-4" to "Feature_Set_Name_Input" field on "New_Feature_Set" wizard
+        When click on "Edit_Button" element in "Data_Source_Accordion" on "New_Feature_Set" wizard
         Then select "V3IO" option in "URL_Combobox" combobox on "Data_Source_Accordion" accordion on "New_Feature_Set" wizard
         When type value "target/path" to "URL_Combobox" field on "Data_Source_Accordion" on "New_Feature_Set" wizard
         Then click on "Apply_Combobox_Button" element in "Data_Source_Accordion" on "New_Feature_Set" wizard
@@ -1857,6 +1879,7 @@ Feature: Feature Store Page
         Then click on "Cancel_Button" element on "New_Feature_Set" wizard
         And click on "Create_Set_Button" element on "Feature_Store_Feature_Sets_Tab" wizard 
         Then type value "new-feature-set-4" to "Feature_Set_Name_Input" field on "New_Feature_Set" wizard
+        When click on "Edit_Button" element in "Data_Source_Accordion" on "New_Feature_Set" wizard
         Then select "V3IO" option in "URL_Combobox" combobox on "Data_Source_Accordion" accordion on "New_Feature_Set" wizard
         When type value "target/path" to "URL_Combobox" field on "Data_Source_Accordion" on "New_Feature_Set" wizard
         Then click on "Apply_Combobox_Button" element in "Data_Source_Accordion" on "New_Feature_Set" wizard
@@ -1866,6 +1889,7 @@ Feature: Feature Store Page
         Then "Passthrough_Checkbox" element should be unchecked on "New_Feature_Set" wizard
         Then check "External_Offline_Checkbox" element in "Target_Store_Accordion" on "New_Feature_Set" wizard
         When select "Parquet" option in "File_Type_Dropdown" dropdown on "Target_Store_Accordion" on "New_Feature_Set" wizard
+        When click on "Edit_Combobox_Button" element in "Target_Store_Accordion" on "New_Feature_Set" wizard
         Then verify checkbox "External_Offline_Partition_Checkbox" element in "Target_Store_Accordion" on "New_Feature_Set" wizard is disabled
         Then select "S3" option in "URL_Combobox" combobox on "Target_Store_Accordion" accordion on "New_Feature_Set" wizard
         Then type value "text/text" to "URL_Combobox" field on "Target_Store_Accordion" on "New_Feature_Set" wizard
@@ -1899,9 +1923,11 @@ Feature: Feature Store Page
         And verify "Feature Sets" tab is active in "Feature_Store_Tab_Selector" on "Feature_Store_Feature_Sets_Tab" wizard
         And click on "Create_Set_Button" element on "Feature_Store_Feature_Sets_Tab" wizard
         Then type value "new-feature-set-5" to "Feature_Set_Name_Input" field on "New_Feature_Set" wizard
+        When click on "Edit_Button" element in "Data_Source_Accordion" on "New_Feature_Set" wizard
         Then select "V3IO" option in "URL_Combobox" combobox on "Data_Source_Accordion" accordion on "New_Feature_Set" wizard
         When type value "target/path" to "URL_Combobox" field on "Data_Source_Accordion" on "New_Feature_Set" wizard
         Then click on "Apply_Combobox_Button" element in "Data_Source_Accordion" on "New_Feature_Set" wizard
+        When collapse "Data_Source_Accordion" on "New_Feature_Set" wizard
         Then type value "text" to "Entities_Input" field on "Schema_Accordion" on "New_Feature_Set" wizard
         Then check "Offline_Partition_Checkbox" element in "Target_Store_Accordion" on "New_Feature_Set" wizard
         Then click on "Save_Button" element on "New_Feature_Set" wizard
@@ -1917,18 +1943,22 @@ Feature: Feature Store Page
         Then "Header" element on "Feature_Sets_Info_Pane" should contains "new-feature-set-5" value
         And click on "Create_Set_Button" element on "Feature_Store_Feature_Sets_Tab" wizard
         Then type value "new-feature-set-6" to "Feature_Set_Name_Input" field on "New_Feature_Set" wizard
+        When click on "Edit_Button" element in "Data_Source_Accordion" on "New_Feature_Set" wizard
         Then select "V3IO" option in "URL_Combobox" combobox on "Data_Source_Accordion" accordion on "New_Feature_Set" wizard
         When type value "target/path" to "URL_Combobox" field on "Data_Source_Accordion" on "New_Feature_Set" wizard
         Then click on "Apply_Combobox_Button" element in "Data_Source_Accordion" on "New_Feature_Set" wizard
+        When collapse "Data_Source_Accordion" on "New_Feature_Set" wizard
         Then type value "text" to "Entities_Input" field on "Schema_Accordion" on "New_Feature_Set" wizard
         Then check "External_Offline_Checkbox" element in "Target_Store_Accordion" on "New_Feature_Set" wizard
         When select "Parquet" option in "File_Type_Dropdown" dropdown on "Target_Store_Accordion" on "New_Feature_Set" wizard
+        When click on "Edit_Combobox_Button" element in "Target_Store_Accordion" on "New_Feature_Set" wizard
         Then verify checkbox "External_Offline_Partition_Checkbox" element in "Target_Store_Accordion" on "New_Feature_Set" wizard is disabled
         Then select "S3" option in "URL_Combobox" combobox on "Target_Store_Accordion" accordion on "New_Feature_Set" wizard
         Then type value "text/text" to "URL_Combobox" field on "Target_Store_Accordion" on "New_Feature_Set" wizard
         Then click on "Apply_Combobox_Button" element in "Target_Store_Accordion" on "New_Feature_Set" wizard
         Then "External_Offline_Partition_Checkbox" element should be unchecked in "Target_Store_Accordion" on "New_Feature_Set" wizard
         When check "External_Offline_Partition_Checkbox" element in "Target_Store_Accordion" on "New_Feature_Set" wizard
+        When collapse "Target_Store_Accordion" on "New_Feature_Set" wizard
         Then click on "Save_Button" element on "New_Feature_Set" wizard
         Then verify "Save_Button" element on "New_Feature_Set" wizard is disabled
         Then verify "Save_And_Ingest_Button" element on "New_Feature_Set" wizard is disabled

@@ -19,6 +19,7 @@ such restriction.
 */
 import React from 'react'
 import PropTypes from 'prop-types'
+import { isEmpty } from 'lodash'
 
 import ArtifactsActionBar from '../ArtifactsActionBar/ArtifactsActionBar'
 import NoData from '../../common/NoData/NoData'
@@ -51,9 +52,11 @@ const FilesView = React.forwardRef(
       detailsFormInitialValues,
       files,
       filtersStore,
+      getAndSetSelectedArtifact,
       handleExpandRow,
       handleRefresh,
       handleRegisterArtifact,
+      handleSelectFile,
       maxArtifactsErrorIsShown,
       pageData,
       requestErrorMessage,
@@ -113,7 +116,7 @@ const FilesView = React.forwardRef(
                 />
               ) : (
                 <>
-                  {(selectedRowData.loading  || artifactsStore.files.fileLoading) && <Loader />}
+                  {(selectedRowData.loading || artifactsStore.files.fileLoading) && <Loader />}
                   {maxArtifactsErrorIsShown && (
                     <WarningMessage
                       message="The query response displays up to 1000 items. Use filters to narrow down the results."
@@ -140,6 +143,7 @@ const FilesView = React.forwardRef(
                           <ArtifactsTableRow
                             actionsMenu={actionsMenu}
                             handleExpandRow={handleExpandRow}
+                            handleSelectItem={handleSelectFile}
                             key={tableItem.data.ui.identifier}
                             rowIndex={index}
                             rowItem={tableItem}
@@ -151,14 +155,14 @@ const FilesView = React.forwardRef(
                   </Table>
                 </>
               )}
-              {viewMode === FULL_VIEW_MODE && (
+              {viewMode === FULL_VIEW_MODE && !isEmpty(selectedFile) && (
                 <Details
                   actionsMenu={actionsMenu}
                   applyDetailsChanges={applyDetailsChanges}
                   applyDetailsChangesCallback={applyDetailsChangesCallback}
                   formInitialValues={detailsFormInitialValues}
                   detailsMenu={pageData.details.menu}
-                  handleRefresh={handleRefresh}
+                  handleRefresh={getAndSetSelectedArtifact}
                   isDetailsScreen
                   pageData={pageData}
                   selectedItem={selectedFile}
@@ -187,9 +191,11 @@ FilesView.propTypes = {
   detailsFormInitialValues: PropTypes.object.isRequired,
   files: PropTypes.arrayOf(PropTypes.object).isRequired,
   filtersStore: PropTypes.object.isRequired,
+  getAndSetSelectedArtifact: PropTypes.func.isRequired,
   handleExpandRow: PropTypes.func.isRequired,
   handleRefresh: PropTypes.func.isRequired,
   handleRegisterArtifact: PropTypes.func.isRequired,
+  handleSelectFile: PropTypes.func.isRequired,
   maxArtifactsErrorIsShown: PropTypes.bool.isRequired,
   pageData: PropTypes.object.isRequired,
   requestErrorMessage: PropTypes.string.isRequired,

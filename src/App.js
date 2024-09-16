@@ -57,6 +57,9 @@ import {
 import 'reactflow/dist/style.css'
 import 'igz-controls/scss/common.scss'
 import './scss/main.scss'
+import { createPortal } from 'react-dom'
+
+import Notification from './common/Notification/Notification'
 
 const Page = lazyRetry(() => import('./layout/Page/Page'))
 const CreateJobPage = lazyRetry(() => import('./components/CreateJobPage/CreateJobPage'))
@@ -300,6 +303,7 @@ const App = () => {
         <Suspense fallback={<LoaderForSuspenseFallback />}>
           <RouterProvider router={router} />
         </Suspense>
+        {createPortal(<Notification />, document.getElementById('overlay_container'))}
       </div>
     </div>
   )

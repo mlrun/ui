@@ -527,6 +527,10 @@ main {
   @include statusState($sorbus, false);
 }
 
+[class^='state-terminating'] {
+  @include statusState($primary, false);
+}
+
 [class^='state-skipped'] {
   @include statusState($topaz, true);
 }

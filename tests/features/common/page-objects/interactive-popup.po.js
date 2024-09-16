@@ -161,7 +161,8 @@ const createFeatureVectorLabelsTable = {
       fields: {
         key_input: 'input.input-label-key',
         value_input: 'input.input-label-value',
-        label: '.chip',
+        key_verify: 'input.input-label-key',
+        value_verify: 'input.input-label-value',
         remove_btn: '.item-icon-close'
       }
     }
@@ -511,7 +512,7 @@ const functionsTableSelector = {
         labels: {
           componentType: dropdownComponent,
           structure: generateDropdownGroup(
-            '.job-card-template__chips input',
+            '.chips-cell input',
             '.chip-block span.chips_button',
             '.chip-block .data-ellipsis.tooltip-wrapper .edit-chip-container',
             false,
@@ -1627,13 +1628,13 @@ module.exports = {
   },
   downloadsPopUp: {
     Download_Pop_Up: By.css('[data-testid="download-container"]'),
-    Download_Pop_Up_Cross_Cancel_Button: By.css('[data-testid="download-container"] .notification_body_close_icon'),
+    Download_Pop_Up_Cross_Cancel_Button: By.css('[data-testid="download-container"] .notification__button-close'),
     Header_Download_Pop_Up: By.css('[data-testid="download-container"] .download-container__header')
   },
   notificationPopUp: {
-    Title: By.css('.notification_container .notification_body'),
-    Notification_Pop_Up: By.css('.notification_container .notification_body'),
-    Notification_Pop_Up_Cross_Close_Button: By.css('.notification_container .notification_body_close_icon')
+    Title: By.css('#overlay_container .notification__body'),
+    Notification_Pop_Up: By.css('#overlay_container .notification__body'),
+    Notification_Pop_Up_Cross_Close_Button: By.css('#overlay_container .notification__button-close')
   },
   schedulePopUp: {
     Schedule_For_Later: {

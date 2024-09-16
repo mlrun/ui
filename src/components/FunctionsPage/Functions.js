@@ -230,7 +230,8 @@ const Functions = ({
   )
 
   const tableContent = useMemo(
-    () => latestItems.map(contentItem => createFunctionsRowData(contentItem, params.projectName, true)),
+    () =>
+      latestItems.map(contentItem => createFunctionsRowData(contentItem, params.projectName, true)),
     [latestItems, params.projectName]
   )
 
@@ -536,7 +537,7 @@ const Functions = ({
   useInitialTableFetch({
     fetchData,
     setExpandedRowsData: setSelectedRowData,
-    createRowData: createFunctionsRowData,
+    createRowData: rowItem => createFunctionsRowData(rowItem, params.projectName),
     setInitialFilters,
     filters: {
       ...filtersStore[FILTER_MENU][FUNCTION_FILTERS],
@@ -663,16 +664,18 @@ const Functions = ({
     removeNewFunction()
 
     return fetchData().then(functions => {
-      const currentItem = functions.find(func => func.name === name && func.tag === tag)
+      if (functions) {
+        const currentItem = functions.find(func => func.name === name && func.tag === tag)
 
-      navigate(`/projects/${params.projectName}/functions/${currentItem.hash}/${tab}`)
-      dispatch(
-        setNotification({
-          status: 200,
-          id: Math.random(),
-          message: 'Function was deployed'
-        })
-      )
+        navigate(`/projects/${params.projectName}/functions/${currentItem.hash}/${tab}`)
+        dispatch(
+          setNotification({
+            status: 200,
+            id: Math.random(),
+            message: 'Function was deployed'
+          })
+        )
+      }
     })
   }
 
@@ -683,11 +686,13 @@ const Functions = ({
     removeNewFunction()
 
     return fetchData().then(functions => {
-      const currentItem = functions.find(func => func.name === name && func.tag === tag)
+      if (functions) {
+        const currentItem = functions.find(func => func.name === name && func.tag === tag)
 
-      showErrorNotification(dispatch, error, '', 'Failed to deploy the function')
+        showErrorNotification(dispatch, error, '', 'Failed to deploy the function')
 
-      navigate(`/projects/${params.projectName}/functions/${currentItem.hash}/overview`)
+        navigate(`/projects/${params.projectName}/functions/${currentItem.hash}/overview`)
+      }
     })
   }
 

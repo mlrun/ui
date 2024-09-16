@@ -122,7 +122,7 @@ const Models = ({ fetchModelFeatureVector }) => {
     [frontendSpec.internal_labels, selectedModel.labels, selectedModel.tag]
   )
 
-  useEffect(() => {
+  const getAndSetSelectedArtifact = useCallback(() => {
     setFullSelectedArtifact(
       MODELS_TAB,
       dispatch,
@@ -132,6 +132,10 @@ const Models = ({ fetchModelFeatureVector }) => {
       params.projectName
     )
   }, [dispatch, navigate, params.projectName, selectedModelMin])
+
+  useEffect(() => {
+    getAndSetSelectedArtifact()
+  }, [getAndSetSelectedArtifact])
 
   const fetchData = useCallback(
     async filters => {
@@ -372,7 +376,7 @@ const Models = ({ fetchModelFeatureVector }) => {
   }
 
   useInitialTableFetch({
-    createRowData: createModelsRowData,
+    createRowData: rowItem => createModelsRowData(rowItem, params.projectName, frontendSpec),
     fetchData,
     fetchTags,
     filterMenuName: MODELS_FILTERS,
@@ -520,6 +524,7 @@ const Models = ({ fetchModelFeatureVector }) => {
       artifactsStore={artifactsStore}
       detailsFormInitialValues={detailsFormInitialValues}
       filtersStore={filtersStore}
+      getAndSetSelectedArtifact={getAndSetSelectedArtifact}
       handleExpandRow={handleExpandRow}
       handleRefresh={handleRefresh}
       handleRegisterModel={handleRegisterModel}

@@ -169,7 +169,7 @@ const ModelEndpoints = () => {
 
       if (!searchItem) {
         navigate(`/projects/${params.projectName}/models/${MODEL_ENDPOINTS_TAB}`, { replace: true })
-      } else if (searchItem.metadata.uid !== selectedModelEndpoint.metadata?.uid) {
+      } else if (searchItem.metadata.uid !== selectedModelEndpoint?.metadata?.uid) {
         handleSelectItem(searchItem)
       }
     } else {
@@ -183,7 +183,7 @@ const ModelEndpoints = () => {
     params.name,
     params.projectName,
     params.tag,
-    selectedModelEndpoint.metadata?.uid
+    selectedModelEndpoint?.metadata
   ])
 
   useEffect(() => {

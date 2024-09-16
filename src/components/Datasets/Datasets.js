@@ -108,7 +108,7 @@ const Datasets = () => {
     [selectedDataset.tag]
   )
 
-  useEffect(() => {
+  const getAndSetSelectedArtifact = useCallback(() => {
     setFullSelectedArtifact(
       DATASETS_TAB,
       dispatch,
@@ -118,6 +118,10 @@ const Datasets = () => {
       params.projectName
     )
   }, [dispatch, navigate, params.projectName, selectedDatasetMin])
+
+  useEffect(() => {
+    getAndSetSelectedArtifact()
+  }, [getAndSetSelectedArtifact])
 
   const fetchData = useCallback(
     filters => {
@@ -318,7 +322,7 @@ const Datasets = () => {
     })
 
   useInitialTableFetch({
-    createRowData: createDatasetsRowData,
+    createRowData: rowItem => createDatasetsRowData(rowItem, params.projectName, frontendSpec),
     fetchData,
     fetchTags,
     filterMenuName: DATASETS_FILTERS,
@@ -408,6 +412,7 @@ const Datasets = () => {
       datasets={datasets}
       detailsFormInitialValues={detailsFormInitialValues}
       filtersStore={filtersStore}
+      getAndSetSelectedArtifact={getAndSetSelectedArtifact}
       handleExpandRow={handleExpandRow}
       handleRefresh={handleRefresh}
       handleRegisterDataset={handleRegisterDataset}
