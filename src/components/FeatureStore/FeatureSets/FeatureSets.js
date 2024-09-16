@@ -299,7 +299,7 @@ const FeatureSets = ({
     fetchData,
     setExpandedRowsData: setSelectedRowData,
     createRowData: rowItem =>
-      createFeatureSetsRowData(rowItem, FEATURE_SETS_TAB, params.projectName),
+      createFeatureSetsRowData(rowItem, params.projectName, FEATURE_SETS_TAB),
     fetchTags,
     filters: filtersStore
   })
