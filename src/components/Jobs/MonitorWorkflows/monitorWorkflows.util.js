@@ -34,7 +34,6 @@ import {
   getJobsDetailsMenu,
   getInfoHeaders,
   isJobKindAbortable,
-  JOB_STEADY_STATES,
   isJobKindDask,
   isJobAborting,
   JOB_RUNNING_STATES,
@@ -138,7 +137,7 @@ export const generateActionsMenu = (
               : ''
             : 'Cannot abort jobs of this kind',
           disabled: !jobKindIsAbortable || jobIsAborting,
-          hidden: JOB_STEADY_STATES.includes(job?.state?.value)
+          hidden: !JOB_RUNNING_STATES.includes(job?.state?.value)
         },
         {
           label: 'View YAML',
