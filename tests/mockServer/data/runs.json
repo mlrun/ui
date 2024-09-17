@@ -31840,7 +31840,16 @@
         "handler": "handler",
         "outputs": [],
         "output_path": "v3io:///projects/default/artifacts/1d3a8b0833b74f55b008537b1e19ea57",
-        "inputs": {},
+        "inputs": {
+          "dataset_input": "store://datasets/default/test_new_structure#0:latest",
+          "model_input": "store://models/default/test-i#0@0936ae1b-fa8d-4307-9d05-4eae2649c2be",
+          "artifact_input": "store://artifacts/default/test-i#0:latest",
+          "fv_input": "store://feature-vectors/default/default-fv:latest",
+          "dataset_input_invalid": "store://datasets/default/test_new_structure#0:ivalid_tag",
+          "model_input_invalid": "store://models/default/test-i#0@0936ae1b-fa8d-4307-9d05-4eye2649c2b45",
+          "artifact_input_invalid": "store://artifacts/default/test-i#2:latest",
+          "fv_input_invalid": "store://feature-vectors/default/default-fv:latest23"
+        },
         "hyperparams": {},
         "hyper_param_options": {},
         "data_stores": []

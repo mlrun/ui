@@ -116,6 +116,10 @@ export const generateMonitoringStats = (data, navigate, dispatch, tab) => {
           ]
         }
       : {
+          all: {
+            counter: data.all,
+            link: () => navigateToJobsMonitoringPage({ [TYPE_FILTER]: FILTER_ALL_ITEMS }, {})
+          },
           jobs: {
             counter: data.jobs,
             link: () => navigateToJobsMonitoringPage({ [TYPE_FILTER]: JOB_KIND_JOB }, {})

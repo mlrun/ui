@@ -127,10 +127,10 @@ const ProjectMonitor = ({
   const fetchProjectDataAndSummary = useCallback(() => {
     Promise.all([fetchProject(params.projectName), fetchProjectSummary(params.projectName)]).catch(
       error => {
-        handleFetchProjectError(error, navigate, setConfirmData)
+        handleFetchProjectError(error, navigate, setConfirmData, dispatch)
       }
     )
-  }, [fetchProject, fetchProjectSummary, navigate, params.projectName])
+  }, [dispatch, fetchProject, fetchProjectSummary, navigate, params.projectName])
 
   const resetProjectData = useCallback(() => {
     removeProjectData()

@@ -18,7 +18,7 @@ under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
 import React, { useEffect, useMemo, useState } from 'react'
-import { connect } from 'react-redux'
+import { connect, useDispatch } from 'react-redux'
 import { isEmpty } from 'lodash'
 import { useNavigate, useParams } from 'react-router-dom'
 
@@ -43,6 +43,7 @@ const ProjectOverview = ({ fetchProject, project }) => {
   const [confirmData, setConfirmData] = useState(null)
   const params = useParams()
   const navigate = useNavigate()
+  const dispatch = useDispatch()
   const { isDemoMode } = useMode()
 
   const cards = useMemo(() => {
@@ -53,9 +54,9 @@ const ProjectOverview = ({ fetchProject, project }) => {
 
   useEffect(() => {
     fetchProject(params.projectName).catch(error =>
-      handleFetchProjectError(error, navigate, setConfirmData)
+      handleFetchProjectError(error, navigate, setConfirmData, dispatch)
     )
-  }, [fetchProject, navigate, params.projectName])
+  }, [dispatch, fetchProject, navigate, params.projectName])
 
   if (project.error) {
     return (

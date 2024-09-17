@@ -57,7 +57,8 @@ const labelsTable = {
       fields: {
         key_input: 'input.input-label-key',
         value_input: 'input.input-label-value',
-        label: '.chip',
+        key_verify: 'input.input-label-key',
+        value_verify: 'input.input-label-value',
         remove_btn: '.item-icon-close'
       }
     }
@@ -474,6 +475,8 @@ const newFunctionLabelsTable = {
       fields: {
         key_input: 'input.input-label-key',
         value_input: 'input.input-label-value',
+        key_verify: '.edit-chip-container input.input-label-key',
+        value_verify: '.edit-chip-container input.input-label-value',
         label: '.chip',
         remove_btn: '.item-icon-close'
       }
@@ -1039,6 +1042,7 @@ module.exports = {
         '.target-store__item .target-store__inputs-container .combobox'
       ),
       Apply_Combobox_Button: By.css('.target-store__inputs-container .url-path-actions .round-icon-cp:nth-of-type(1) button'),
+      Edit_Combobox_Button: By.css('.target-store__inputs-container .url-path-preview__actions .round-icon-cp'),
       URL_Input: inputGroup(
         generateInputGroup(
           '.target-store__item .target-store__inputs-container .url',

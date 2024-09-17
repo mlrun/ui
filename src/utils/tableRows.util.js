@@ -40,7 +40,6 @@ export const isRowExpanded = (parentRef, expandedRowsData, rowItem) => {
  * Auto expand table row.
  * @param {string} name - Row name.
  * @param {Array.<Object>} itemsList - List of table items.
- * @param {string} projectName - Project name.
  * @param {function} setExpandedRowsData - Function that set expanded data in state.
  * @param {function} createRowData - Function that create parsed row data.
  * @param {string} sortTableBy - The field name by which we will sort table rows
@@ -49,7 +48,6 @@ export const isRowExpanded = (parentRef, expandedRowsData, rowItem) => {
 export const expandRowByName = (
   name,
   itemsList,
-  projectName,
   setExpandedRowsData,
   createRowData,
   sortTableBy
@@ -64,7 +62,7 @@ export const expandRowByName = (
         ...state,
         [filteredItems[0]?.ui?.identifier || name]: {
           content: (sortTableBy ? sortListByDate(filteredItems, sortTableBy, false) : filteredItems).map(rowItem =>
-            createRowData(rowItem, projectName)
+            createRowData(rowItem)
           )
         },
         error: null,

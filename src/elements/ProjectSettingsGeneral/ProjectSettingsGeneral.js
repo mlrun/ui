@@ -335,7 +335,8 @@ const ProjectSettingsGeneral = ({
                     <div>
                       <div className="settings__card-title">
                         <span>Node Selectors</span>
-                        <Tip text="Ensure that the node selectors you are configuring are compatible with the available nodes in your cluster. Incompatible node selectors will not be validated at the project level and might result in scheduling issues when running functions." />
+                        <Tip text="Ensure that the node selectors you are configuring are compatible with the available nodes in your cluster. Incompatible node selectors will not be validated at the project level and might result in scheduling issues when running functions.
+                        Node-selector values set in the global settings are not shown. Keep the “Key” and delete the “Value” to remove the global setting." />
                       </div>
                       <FormKeyValueTable
                         addNewItemLabel="Add node selector"
@@ -344,6 +345,7 @@ const ProjectSettingsGeneral = ({
                         onExitEditModeCallback={updateProjectData}
                         fieldsPath={NODE_SELECTORS}
                         formState={formState}
+                        isValueRequired={false}
                       />
                     </div>
                   )}

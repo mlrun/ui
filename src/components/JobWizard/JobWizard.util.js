@@ -531,26 +531,32 @@ const parseVolumes = (volumes, volumeMounts, isEditMode) => {
 
 export const getCategoryName = categoryId => {
   const categoriesNames = {
-    dask: 'Dask',
     'data-analysis': 'Data Analysis',
+    'data-generation': 'Data Generation',
     'data-preparation': 'Data Preparation',
-    etl: 'ETL',
     'data-validation': 'Data Validation',
-    dl: 'Deep Learning',
+    'deep-learning': 'Deep Learning',
     'feature-store': 'Feature Store',
     'machine-learning': 'Machine Learning',
     'model-prep': 'Model Prep',
+    'model-serving': 'Model Serving',
     'model-test': 'Model Test',
     'model-testing': 'Model Testing',
     'model-training': 'Model Training',
-    monitoring: 'Monitoring',
     NLP: 'NLP',
+    audio: 'Audio',
+    dask: 'Dask',
+    dl: 'Deep Learning',
+    etl: 'ETL',
+    genai: 'GenAI',
+    huggingface: 'Hugging Face',
+    monitoring: 'Monitoring',
     notifications: 'Alerts and Notifications',
     other: 'Other',
-    utils: 'Utilities',
-    'model-serving': 'Model Serving',
+    pytorch: 'PyTorch',
     simulators: 'Simulators',
-    training: 'Model Training'
+    training: 'Model Training',
+    utils: 'Utilities'
   }
 
   return categoriesNames[categoryId] ?? categoryId

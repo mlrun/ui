@@ -252,7 +252,7 @@ const DetailsHeader = ({
         {isDetailsScreen && (
           <RoundedIcon
             id="refresh"
-            onClick={() => handleRefresh(selectedItem.project)}
+            onClick={() => handleRefresh(selectedItem)}
             tooltipText="Refresh"
           >
             <Refresh />
