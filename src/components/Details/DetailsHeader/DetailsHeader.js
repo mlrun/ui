@@ -118,8 +118,10 @@ const DetailsHeader = ({
             <Link
               className="item-header__back-btn"
               to={
-                getCloseDetailsLink(location, selectedItem.name) ??
-                location.pathname.split('/').slice(0, -2).join('/')
+                new URL(
+                  getCloseDetailsLink(location, selectedItem.name) ??
+                    location.pathname.split('/').slice(0, -2).join('/')
+                )
               }
               onClick={handleBackClick}
             >
@@ -141,8 +143,8 @@ const DetailsHeader = ({
           >
             {
               selectedItem.name ||
-              selectedItem.db_key ||
-              selectedItem.spec?.model?.replace(/:.*$/, '') // 'model-key:model-tag', remove tag
+                selectedItem.db_key ||
+                selectedItem.spec?.model?.replace(/:.*$/, '') // 'model-key:model-tag', remove tag
             }
           </Tooltip>
         </h3>
@@ -173,8 +175,11 @@ const DetailsHeader = ({
           {selectedItem.ui.customError?.title && selectedItem.ui.customError?.message && (
             <Tooltip
               className="error-container"
-              template={<TextTooltipTemplate
-                text={`${selectedItem.ui.customError.title} ${selectedItem.ui.customError.message}`} />}
+              template={
+                <TextTooltipTemplate
+                  text={`${selectedItem.ui.customError.title} ${selectedItem.ui.customError.message}`}
+                />
+              }
             >
               {selectedItem.ui.customError.title} {selectedItem.ui.customError.message}
             </Tooltip>
