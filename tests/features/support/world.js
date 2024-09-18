@@ -40,7 +40,6 @@ class CustomWorld extends World {
 
     let browseConfigs
 
-    //browseConfigs = new chrome.Options().windowSize(screen_size) - can be used to define a specific screen size
     if (browser === 'chrome') {
       if (headless) {
         browseConfigs = new chrome.Options()
@@ -48,14 +47,19 @@ class CustomWorld extends World {
           .addArguments('no-sandbox')
           .addArguments('start-maximized')
           .addArguments('disable-gpu')
-      } else browseConfigs = new chrome.Options()
+      } else {
+        browseConfigs = new chrome.Options()
           .addArguments('start-maximized')
           .excludeSwitches('disable-popup-blocking', 'enable-automation')
+      }
     }
+
     if (browser === 'firefox') {
+      browseConfigs = new firefox.Options()
       if (headless) {
-        browseConfigs = new firefox.Options().headless().windowSize(screen_size)
-      } else browseConfigs = new firefox.Options().windowSize(screen_size)
+        browseConfigs.addArguments('-headless')
+      }
+      browseConfigs.windowSize(screen_size)
     }
 
     this.driver = new seleniumWebdriver.Builder()

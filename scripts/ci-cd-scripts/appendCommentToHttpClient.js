@@ -17,18 +17,18 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
+const fs = require('fs')
+const path = require('path')
 
-const HEADLESS = process.env.HEADLESS === 'true' || false
+const sourceFilePath = path.join(__dirname, 'commentedHttpClient.js')
+const targetFilePath = path.join(__dirname, '../../src/httpClient.js')
 
-/* eslint-disable-next-line no-console */
-console.log(`DRIVER_SLEEP: ${HEADLESS}`)
+try {
+  const fileContent = fs.readFileSync(sourceFilePath, 'utf-8')
+  fs.writeFileSync(targetFilePath, fileContent)
 
-module.exports = {
-  timeout: 60000,
-  browser: 'chrome',
-  headless: HEADLESS,
-  screen_size: { width: 1600, height: 900 },
-  report: 'tests/reports/cucumber_report',
-  test_url: 'localhost',
-  test_port: '3000'
+  console.log(`Successfully overwritten ${targetFilePath} with content from ${sourceFilePath}`)
+} catch (err) {
+  console.error(`Error occurred: ${err.message}`)
+  process.exit(1)
 }
