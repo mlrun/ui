@@ -17,19 +17,21 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import React, { useMemo } from 'react'
+import React, { useMemo, useState } from 'react'
 import PropTypes from 'prop-types'
 import Prism from 'prismjs'
 
 import DetailsResults from '../DetailsResults/DetailsResults'
 import PreviewError from './PreviewError/PreviewError'
 import { Tooltip, TextTooltipTemplate } from 'igz-controls/components'
+import WarningMessage from '../../common/WarningMessage/WarningMessage'
 
 import { ARTIFACT_PREVIEW_TABLE_ROW_LIMIT } from '../../constants'
 
 import './artifactsPreview.scss'
 
 const ArtifactsPreviewView = ({ className, preview, setShowErrorBody, showErrorBody }) => {
+  const [showWarningMsg, setShowWarningMsg] = useState(true)
   const content = useMemo(
     () =>
       preview.data && preview.data.content
@@ -37,113 +39,122 @@ const ArtifactsPreviewView = ({ className, preview, setShowErrorBody, showErrorB
         : [],
     [preview.data]
   )
-
+  
   return preview?.hidden ? (
     <div className="artifact-preview__no-data">No preview</div>
   ) : (
-    <div className="artifact-preview__wrapper">
-      {preview.header && (
-        <div className="artifact-preview__header">
-          <h5 className="artifact-preview__header-title">{preview.header}</h5>
-        </div>
+    <>
+      {showWarningMsg && preview.warningMsg && (
+        <WarningMessage message={preview.warningMsg} handleClose={() => setShowWarningMsg(false)} />
       )}
-      <div className={className}>
-        {preview?.type === 'error' ? (
-          <PreviewError
-            error={preview.error}
-            setShowErrorBody={setShowErrorBody}
-            showErrorBody={showErrorBody}
-          />
-        ) : (
-          <>
-            {preview?.type === 'table-results' && (
-              <div className="artifact-preview__table">
-                <DetailsResults job={preview} excludeSortBy="state" defaultDirection="desc" />
-              </div>
-            )}
-            {preview?.type === 'table' && (
-              <table className="table artifact-preview__table">
-                <thead className="table-header">
-                  <tr className="table-row">
-                    {preview.data.headers.map((header, index) => {
-                      return (
-                        <th key={`${header}${index}`} className="table-header__cell">
-                          <Tooltip template={<TextTooltipTemplate text={header} />}>
-                            {header}
-                          </Tooltip>
-                        </th>
-                      )
-                    })}
-                  </tr>
-                </thead>
-                <tbody className="table-body">
-                  {content.map((contentItem, contentItemIndex) => (
-                    <tr key={contentItemIndex} className="table-row">
-                      {Array.isArray(contentItem) ? (
-                        contentItem.map((contentItemValue, contentItemValueIndex) => (
-                          <td key={contentItemValueIndex} className="table-body__cell">
-                            <Tooltip
-                              key={`${contentItemValue}${Math.random()}`}
-                              template={<TextTooltipTemplate text={`${contentItemValue}`} />}
-                            >
-                              {typeof contentItemValue === 'object' && contentItemValue !== null
-                                ? JSON.stringify(contentItemValue)
-                                : String(contentItemValue)}
+      <div className="artifact-preview__wrapper">
+        {preview.header && (
+          <div className="artifact-preview__header">
+            <h5 className="artifact-preview__header-title">{preview.header}</h5>
+          </div>
+        )}
+        <div className={className}>
+          {preview?.type === 'error' ? (
+            <PreviewError
+              error={preview.error}
+              setShowErrorBody={setShowErrorBody}
+              showErrorBody={showErrorBody}
+            />
+          ) : (
+            <>
+              {preview?.type === 'table-results' && (
+                <div className="artifact-preview__table">
+                  <DetailsResults job={preview} excludeSortBy="state" defaultDirection="desc" />
+                </div>
+              )}
+              {preview?.type === 'table' && (
+                <table className="table artifact-preview__table">
+                  <thead className="table-header">
+                    <tr className="table-row">
+                      {preview.data.headers.map((header, index) => {
+                        return (
+                          <th key={`${header}${index}`} className="table-header__cell">
+                            <Tooltip template={<TextTooltipTemplate text={header} />}>
+                              {header}
+                            </Tooltip>
+                          </th>
+                        )
+                      })}
+                    </tr>
+                  </thead>
+                  <tbody className="table-body">
+                    {content.map((contentItem, contentItemIndex) => (
+                      <tr key={contentItemIndex} className="table-row">
+                        {Array.isArray(contentItem) ? (
+                          contentItem.map((contentItemValue, contentItemValueIndex) => (
+                            <td key={contentItemValueIndex} className="table-body__cell">
+                              <Tooltip
+                                key={`${contentItemValue}${Math.random()}`}
+                                template={<TextTooltipTemplate text={`${contentItemValue}`} />}
+                              >
+                                {typeof contentItemValue === 'object' && contentItemValue !== null
+                                  ? JSON.stringify(contentItemValue)
+                                  : String(contentItemValue)}
+                              </Tooltip>
+                            </td>
+                          ))
+                        ) : (
+                          <td className="table-body__cell">
+                            <Tooltip template={<TextTooltipTemplate text={contentItem} />}>
+                              {contentItem}
                             </Tooltip>
                           </td>
-                        ))
-                      ) : (
-                        <td className="table-body__cell">
-                          <Tooltip template={<TextTooltipTemplate text={contentItem} />}>
-                            {contentItem}
-                          </Tooltip>
-                        </td>
-                      )}
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            )}
-            {preview?.type === 'text' && (
-              <div className="artifact-preview__text">{preview?.data.content}</div>
-            )}
-            {preview?.type === 'html' && (
-              <iframe srcDoc={preview?.data.content} frameBorder="0" title="Preview" />
-            )}
-            {preview?.type === 'json' && (
-              <div className="json">
-                <pre className="json-content">
-                  <code
-                    dangerouslySetInnerHTML={{
-                      __html: Prism.highlight(preview?.data.content, Prism.languages.json, 'json')
-                    }}
-                  />
-                </pre>
-              </div>
-            )}
-            {preview?.type === 'yaml' && (
-              <div className="json">
-                <pre className="json-content">
-                  <code
-                    dangerouslySetInnerHTML={{
-                      __html: Prism.highlight(preview?.data.content, Prism.languages.yaml, 'yaml')
-                    }}
-                  />
-                </pre>
-              </div>
-            )}
-            {preview?.type === 'image' && (
-              <img className="artifact-preview__image" src={preview?.data?.content} alt="preview" />
-            )}
-            {preview?.type === 'unknown' && (
-              <div className="artifact-preview__no-data">
-                {preview?.data?.content ? preview?.data.content : 'No preview'}
-              </div>
-            )}
-          </>
-        )}
+                        )}
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              )}
+              {preview?.type === 'text' && (
+                <div className="artifact-preview__text">{preview?.data.content}</div>
+              )}
+              {preview?.type === 'html' && (
+                <iframe src={preview?.data.content} frameBorder="0" title="Preview" />
+              )}
+              {preview?.type === 'json' && (
+                <div className="json">
+                  <pre className="json-content">
+                    <code
+                      dangerouslySetInnerHTML={{
+                        __html: Prism.highlight(preview?.data.content, Prism.languages.json, 'json')
+                      }}
+                    />
+                  </pre>
+                </div>
+              )}
+              {preview?.type === 'yaml' && (
+                <div className="json">
+                  <pre className="json-content">
+                    <code
+                      dangerouslySetInnerHTML={{
+                        __html: Prism.highlight(preview?.data.content, Prism.languages.yaml, 'yaml')
+                      }}
+                    />
+                  </pre>
+                </div>
+              )}
+              {preview?.type === 'image' && (
+                <img
+                  className="artifact-preview__image"
+                  src={preview?.data?.content}
+                  alt="preview"
+                />
+              )}
+              {preview?.type === 'unknown' && (
+                <h3 className="artifact-preview__no-data">
+                  {preview?.data?.content ? preview?.data.content : 'No preview'}
+                </h3>
+              )}
+            </>
+          )}
+        </div>
       </div>
-    </div>
+    </>
   )
 }
 

@@ -11,6 +11,11 @@
         "handler",
         ""
     ],
+    "artifact_limits": {
+        "max_chunk_size": 1048576,
+        "max_download_size": 104857600,
+        "max_preview_size": 10485760
+    },
     "feature_flags": {
         "project_membership": "enabled",
         "authentication": "iguazio",
