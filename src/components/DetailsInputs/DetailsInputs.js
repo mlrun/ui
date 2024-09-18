@@ -153,7 +153,7 @@ const DetailsInputs = ({ inputs }) => {
                   ui: {
                     inputName: key,
                     inputPath,
-                    inputResourceLink: generateInputResourceLink(input, params.projectName),
+                    inputResourceLink: generateInputResourceLink(input, project ?? params.projectName),
                     isShowDetailsActive: true,
                     isPreviewable: kind !== FEATURE_VECTORS_KIND
                   }
