@@ -37,11 +37,12 @@ const projectsApi = {
   deleteSecret: (project, key) =>
     mainHttpClient.delete(`/projects/${project}/secrets?provider=kubernetes&secret=${key}`),
   editProject: (project, data) => mainHttpClient.put(`/projects/${project}`, data),
-  getJobsAndWorkflows: (project, params) =>
-    mainHttpClient.get(`/projects/${project}/runs`, { params }),
-  getProject: (project, params) =>
+  getJobsAndWorkflows: (project, params, signal) =>
+    mainHttpClient.get(`/projects/${project}/runs`, { params, signal }),
+  getProject: (project, params, signal) =>
     mainHttpClient.get(`/projects/${project}`, {
-      params
+      params,
+      signal
     }),
   getProjectDataSets: project =>
     mainHttpClient.get(`/projects/${project}/artifacts?category=dataset`),
@@ -82,8 +83,8 @@ const projectsApi = {
     mainHttpClient.get('/project-summaries', {
       signal
     }),
-  getProjectSummary: project => {
-    return mainHttpClient.get(`/project-summaries/${project}`)
+  getProjectSummary: (project, signal) => {
+    return mainHttpClient.get(`/project-summaries/${project}`, {signal})
   },
   getProjectWorkflows: project => {
     return mainHttpClient.get(`/projects/${project}/pipelines`)
