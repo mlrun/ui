@@ -24,10 +24,10 @@ Feature: Project Settings page
         Then verify "General" tab is active in "Project_Settings_Tab_Selector" on "Project_Settings_General_Tab" wizard
         Then verify "Source_URL_Input" on "Project_Settings_General_Tab" wizard should display "Input_Hint"."Source_URL_Input"
         Then type value "   " to "Source_URL_Input" field on "Project_Settings_General_Tab" wizard
-        Then verify "Source_URL_Input" on "Project_Settings_General_Tab" wizard should display warning "Input_Hint"."Input_Field_Invalid"
+        Then verify "Source_URL_Input" on "Project_Settings_General_Tab" wizard should display hover warning "Input_Hint"."Input_Field_Invalid"
         Then verify "Artifact_Path_Input" element visibility on "Project_Settings_General_Tab" wizard
         Then type value "   " to "Artifact_Path_Input" field on "Project_Settings_General_Tab" wizard
-        Then verify "Artifact_Path_Input" on "Project_Settings_General_Tab" wizard should display warning "Input_Hint"."Input_Field_Invalid"
+        Then verify "Artifact_Path_Input" on "Project_Settings_General_Tab" wizard should display hover warning "Input_Hint"."Input_Field_Invalid"
         Then verify "Parameters_Table" element visibility on "Project_Settings_General_Tab" wizard
         When add rows to "Labels_Table" table on "Project_Settings_General_Tab" wizard
             | key_input     | value_input     |
@@ -66,7 +66,7 @@ Feature: Project Settings page
         Then click on "Project_Settings_Button" element on "commonPagesHeader" wizard
         And hover "MLRun_Logo" component on "commonPagesHeader" wizard
         Then type value "   " to "Source_URL_Input" field on "Project_Settings_General_Tab" wizard
-        Then verify "Source_URL_Input" on "Project_Settings_General_Tab" wizard should display warning "Input_Hint"."Input_Field_Invalid"
+        Then verify "Source_URL_Input" on "Project_Settings_General_Tab" wizard should display hover warning "Input_Hint"."Input_Field_Invalid"
         When add rows to "Labels_Table" table on "Project_Settings_General_Tab" wizard
             | key_input | value_input |
             | a         | b           |
@@ -92,7 +92,7 @@ Feature: Project Settings page
             |     c      |
             |     e      |
         Then type value "   " to "Source_URL_Input" field on "Project_Settings_General_Tab" wizard
-        Then verify "Source_URL_Input" on "Project_Settings_General_Tab" wizard should display warning "Input_Hint"."Input_Field_Invalid"
+        Then verify "Source_URL_Input" on "Project_Settings_General_Tab" wizard should display hover warning "Input_Hint"."Input_Field_Invalid"
         When add rows to "Labels_Table" table on "Project_Settings_General_Tab" wizard
             | key_input         | value_input         |
             | a                 | b                   |
@@ -138,8 +138,8 @@ Feature: Project Settings page
         When add new rows to "Parameters_Table" table on "Project_Settings_General_Tab" wizard using nontable inputs
             | Parameters_Table_Key_Input | Parameters_Table_Value_Input | Parameters_Table_Add_Row_Button |
             |                            |                              |               yes               |
-        Then verify "Parameters_Table_Key_Input" on "Project_Settings_General_Tab" wizard should display warning "Input_Hint"."Input_Field_Require"
-        Then verify "Parameters_Table_Value_Input" on "Project_Settings_General_Tab" wizard should display warning "Input_Hint"."Input_Field_Require"
+        Then verify "Parameters_Table_Key_Input" on "Project_Settings_General_Tab" wizard should display hover warning "Input_Hint"."Input_Field_Require"
+        Then verify "Parameters_Table_Value_Input" on "Project_Settings_General_Tab" wizard should display hover warning "Input_Hint"."Input_Field_Require"
         When click on "Parameters_Table_Discard_Row_Button" element on "Project_Settings_General_Tab" wizard
         And wait load page
         When add new rows to "Parameters_Table" table on "Project_Settings_General_Tab" wizard using nontable inputs with notification pop-up
@@ -206,10 +206,10 @@ Feature: Project Settings page
         Then click on "Add_Secret_Button" element on "Projects_Settings_Secret_Tab" wizard
         Then verify "New_Secret_Key_Input" element visibility on "Create_New_Secret_Popup" wizard
         Then type value "   " to "New_Secret_Key_Input" field on "Create_New_Secret_Popup" wizard
-        Then verify "New_Secret_Key_Input" on "Create_New_Secret_Popup" wizard should display warning "Input_Hint"."Input_Field_Require"
+        Then verify "New_Secret_Key_Input" on "Create_New_Secret_Popup" wizard should display hover warning "Input_Hint"."Input_Field_Require"
         Then verify "New_Secret_Value_Input" element visibility on "Create_New_Secret_Popup" wizard
         Then type value "   " to "New_Secret_Value_Input" field on "Create_New_Secret_Popup" wizard
-        Then verify "New_Secret_Value_Input" on "Create_New_Secret_Popup" wizard should display warning "Input_Hint"."Input_Field_Require"
+        Then verify "New_Secret_Value_Input" on "Create_New_Secret_Popup" wizard should display hover warning "Input_Hint"."Input_Field_Require"
 
     @MLPS
     @inProgress

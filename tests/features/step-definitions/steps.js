@@ -70,6 +70,7 @@ import {
   checkHintTextWithHover,
   checkInputAccordingHintText,
   checkWarningHintText,
+  checkWarningHintTextWithHover,
   checkWarningText,
   getInputValue,
   typeValue,
@@ -1113,6 +1114,26 @@ Then(
     )
   }
 )
+Then(
+  'verify {string} on {string} wizard should display hover warning {string}.{string}',
+  async function(input, wizard, constStorage, constValue) {
+    await clickOnComponent(
+      this.driver,
+      pageObjects[wizard][input]['inputField']
+    )
+    await this.driver.sleep(100)
+    await clickNearComponent(
+      this.driver,
+      pageObjects[wizard][input]['inputField']
+    )
+    await checkWarningHintTextWithHover(
+      this.driver,
+      pageObjects[wizard][input],
+      pageObjects[wizard][input]['warningText'],
+      pageObjectsConsts[constStorage][constValue]
+    )
+  }
+)
 
 Then(
   'verify {string} element in {string} on {string} wizard should display warning {string}.{string}',
@@ -1127,6 +1148,27 @@ Then(
       pageObjects[wizard][accordion][input]['inputField']
     )
     await checkWarningHintText(
+      this.driver,
+      pageObjects[wizard][accordion][input],
+      pageObjects[wizard][accordion][input]['warningText'],
+      pageObjectsConsts[constStorage][constValue]
+    )
+  }
+)
+
+Then(
+  'verify {string} element in {string} on {string} wizard should display hover warning {string}.{string}',
+  async function(input, accordion, wizard, constStorage, constValue) {
+    await clickOnComponent(
+      this.driver,
+      pageObjects[wizard][accordion][input]['inputField']
+    )
+    await this.driver.sleep(100)
+    await clickNearComponent(
+      this.driver,
+      pageObjects[wizard][accordion][input]['inputField']
+    )
+    await checkWarningHintTextWithHover(
       this.driver,
       pageObjects[wizard][accordion][input],
       pageObjects[wizard][accordion][input]['warningText'],
@@ -1307,6 +1349,17 @@ Then('select {string} option in action menu on {string} wizard', async function(
   wizard
 ) {
   const actionMenu = pageObjects[wizard]['Action_Menu']
+
+  await openActionMenu(this.driver, actionMenu)
+  await this.driver.sleep(500)
+  await selectOptionInActionMenu(this.driver, actionMenu, option)
+})
+
+Then('select {string} option in full view action menu on {string} wizard', async function(
+  option,
+  wizard
+) {
+  const actionMenu = pageObjects[wizard]['Action_Menu_Full_View']
 
   await openActionMenu(this.driver, actionMenu)
   await this.driver.sleep(500)

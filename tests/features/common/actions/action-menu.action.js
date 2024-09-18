@@ -18,7 +18,7 @@ under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
 import { expect } from 'chai'
-import { differenceWith, isEqual } from 'lodash'
+import { isEqual } from 'lodash'
 
 async function getOptionValues(driver, options) {
   return await driver.findElements(options).then(function(elements) {

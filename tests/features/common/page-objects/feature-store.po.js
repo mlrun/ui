@@ -412,6 +412,7 @@ module.exports = {
     Overlay: By.css('#overlay_container .chip-block-hidden_visible')
   },
   datasets: {
+    Delete_Artifact_Popup: By.css('[data-testid="pop-up-dialog"]'),
     Feature_Store_Tab_Selector: featureStoreTabSelector,
     Register_Dataset_Button: By.css('.content__action-bar-wrapper .action-bar__actions .action-button'),
     Table_Name_Filter_Input: commonNameFilterInputDataset,
