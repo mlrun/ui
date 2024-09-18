@@ -457,6 +457,7 @@ Feature: Projects Page
         Then "Workflows_See_All_Link" element in "Monitoring_Scheduled_Box" on "Projects" should contains "See all" value
         When click on "Jobs_See_All_Link" element in "Monitoring_Scheduled_Box" on "Projects" wizard
         Then verify redirection to "projects/jobs-monitoring/scheduled"
+        And wait load page
         Then navigate back
         And wait load page
         When click on "Workflows_See_All_Link" element in "Monitoring_Scheduled_Box" on "Projects" wizard

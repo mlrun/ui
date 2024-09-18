@@ -201,13 +201,14 @@ Feature: Datasets Page
     Then type value " " to "Name_Input" field on "Register_Dataset" wizard
     And wait load page
     Then verify "Name_Input" on "Register_Dataset" wizard should display options "Input_Hint"."Artifact_Name_Hint"
+    Then click on "Form_Subtext" element on "Register_Dataset" wizard
     Then verify "Name_Input" options rules on form "Register_Dataset" wizard
     When select "V3IO" option in "Path_Scheme_Combobox" combobox on "Target_Path" accordion on "Register_Dataset" wizard
     When type value "  " to "Path_Scheme_Combobox" field on "Target_Path" on "Register_Dataset" wizard
-    Then verify "Path_Scheme_Combobox" element in "Target_Path" on "Register_Dataset" wizard should display warning "Input_Hint"."V3IO_Path_Hint"
+    Then verify "Path_Scheme_Combobox" element in "Target_Path" on "Register_Dataset" wizard should display hover warning "Input_Hint"."V3IO_Path_Hint"
     Then verify "Description_Input" element visibility on "Register_Dataset" wizard
-    Then type value "   " to "Description_Input" field on "Register_Dataset" wizard
-    Then verify "Description_Input" on "Register_Dataset" wizard should display warning "Input_Hint"."Input_Field_Invalid"
+    Then type value " " to "Description_Input" field on "Register_Dataset" wizard
+    Then verify "Description_Input" on "Register_Dataset" wizard should display hover warning "Input_Hint"."Input_Field_Invalid"
     Then verify "Cancel_Button" element visibility on "Register_Dataset" wizard
     Then "Cancel_Button" element on "Register_Dataset" should contains "Cancel" value
     Then verify "Register_Button" element visibility on "Register_Dataset" wizard
@@ -799,7 +800,7 @@ Feature: Datasets Page
             |    key3    |    value3    |
     Then verify "Image_Name_Input_Run_Details" element visibility on "Modal_Wizard_Form" wizard
     Then type value "" to "Image_Name_Input_Run_Details" field on "Modal_Wizard_Form" wizard
-    Then verify "Image_Name_Input_Run_Details" on "Modal_Wizard_Form" wizard should display warning "Input_Hint"."Input_Field_Require"
+    Then verify "Image_Name_Input_Run_Details" on "Modal_Wizard_Form" wizard should display hover warning "Input_Hint"."Input_Field_Require"
     Then "Image_Name_Text_Run_Details" component on "Modal_Wizard_Form" should contains "Modal_Wizard_Form"."Image_Name_Text"
 
   @MLD
@@ -988,34 +989,34 @@ Feature: Datasets Page
     Then verify "Memory_Request_Dropdown" element in "Resources_Accordion" on "Modal_Wizard_Form" wizard should contains "Dropdown_Options"."Memory_Unit_Options"
     Then verify "Memory_Limit_Dropdown" element in "Resources_Accordion" on "Modal_Wizard_Form" wizard should contains "Dropdown_Options"."Memory_Unit_Options"
     Then type value "0" to "Memory_Limit_Number_Input" field on "Resources_Accordion" on "Modal_Wizard_Form" wizard
-    Then verify "Memory_Limit_Number_Input" element in "Resources_Accordion" on "Modal_Wizard_Form" wizard should display warning "Input_Hint"."Minimum_Value_Warning"
+    Then verify "Memory_Limit_Number_Input" element in "Resources_Accordion" on "Modal_Wizard_Form" wizard should display hover warning "Input_Hint"."Minimum_Value_Warning"
     Then type value "1" to "Memory_Limit_Number_Input" field on "Resources_Accordion" on "Modal_Wizard_Form" wizard
     Then type value "1025" to "Memory_Request_Number_Input" field on "Resources_Accordion" on "Modal_Wizard_Form" wizard
-    Then verify "Memory_Limit_Number_Input" element in "Resources_Accordion" on "Modal_Wizard_Form" wizard should display warning "Input_Hint"."Limit_Number_Warning"
-    Then verify "Memory_Request_Number_Input" element in "Resources_Accordion" on "Modal_Wizard_Form" wizard should display warning "Input_Hint"."Request_Number_Warning"
+    Then verify "Memory_Limit_Number_Input" element in "Resources_Accordion" on "Modal_Wizard_Form" wizard should display hover warning "Input_Hint"."Limit_Number_Warning"
+    Then verify "Memory_Request_Number_Input" element in "Resources_Accordion" on "Modal_Wizard_Form" wizard should display hover warning "Input_Hint"."Request_Number_Warning"
     Then type value "2" to "Memory_Limit_Number_Input" field on "Resources_Accordion" on "Modal_Wizard_Form" wizard
     Then select "KB" option in "Memory_Limit_Dropdown" dropdown on "Resources_Accordion" on "Modal_Wizard_Form" wizard
-    Then verify "Memory_Limit_Number_Input" element in "Resources_Accordion" on "Modal_Wizard_Form" wizard should display warning "Input_Hint"."Limit_Number_Warning"
-    Then verify "Memory_Request_Number_Input" element in "Resources_Accordion" on "Modal_Wizard_Form" wizard should display warning "Input_Hint"."Request_Number_Warning"
+    Then verify "Memory_Limit_Number_Input" element in "Resources_Accordion" on "Modal_Wizard_Form" wizard should display hover warning "Input_Hint"."Limit_Number_Warning"
+    Then verify "Memory_Request_Number_Input" element in "Resources_Accordion" on "Modal_Wizard_Form" wizard should display hover warning "Input_Hint"."Request_Number_Warning"
     Then select "KB" option in "Memory_Request_Dropdown" dropdown on "Resources_Accordion" on "Modal_Wizard_Form" wizard
     Then type value "" to "Memory_Limit_Number_Input" field on "Resources_Accordion" on "Modal_Wizard_Form" wizard
-    Then verify "Memory_Limit_Number_Input" element in "Resources_Accordion" on "Modal_Wizard_Form" wizard should display warning "Input_Hint"."Input_Field_Require"
+    Then verify "Memory_Limit_Number_Input" element in "Resources_Accordion" on "Modal_Wizard_Form" wizard should display hover warning "Input_Hint"."Input_Field_Require"
     Then type value "2" to "Memory_Limit_Number_Input" field on "Resources_Accordion" on "Modal_Wizard_Form" wizard
     Then select "GB" option in "Memory_Request_Dropdown" dropdown on "Resources_Accordion" on "Modal_Wizard_Form" wizard
-    Then verify "Memory_Limit_Number_Input" element in "Resources_Accordion" on "Modal_Wizard_Form" wizard should display warning "Input_Hint"."Limit_Number_Warning"
-    Then verify "Memory_Request_Number_Input" element in "Resources_Accordion" on "Modal_Wizard_Form" wizard should display warning "Input_Hint"."Request_Number_Warning"
+    Then verify "Memory_Limit_Number_Input" element in "Resources_Accordion" on "Modal_Wizard_Form" wizard should display hover warning "Input_Hint"."Limit_Number_Warning"
+    Then verify "Memory_Request_Number_Input" element in "Resources_Accordion" on "Modal_Wizard_Form" wizard should display hover warning "Input_Hint"."Request_Number_Warning"
     Then verify "CPU_Request_Dropdown" element in "Resources_Accordion" on "Modal_Wizard_Form" wizard should contains "Dropdown_Options"."CPU_Unit_Options"
     Then verify "CPU_Limit_Dropdown" element in "Resources_Accordion" on "Modal_Wizard_Form" wizard should contains "Dropdown_Options"."CPU_Unit_Options"
     Then select "millicpu" option in "CPU_Limit_Dropdown" dropdown on "Resources_Accordion" on "Modal_Wizard_Form" wizard
     Then select "millicpu" option in "CPU_Request_Dropdown" dropdown on "Resources_Accordion" on "Modal_Wizard_Form" wizard
     Then type value "0" to "CPU_Limit_Number_Input" field on "Resources_Accordion" on "Modal_Wizard_Form" wizard
-    Then verify "CPU_Limit_Number_Input" element in "Resources_Accordion" on "Modal_Wizard_Form" wizard should display warning "Input_Hint"."Minimum_Value_Warning"
+    Then verify "CPU_Limit_Number_Input" element in "Resources_Accordion" on "Modal_Wizard_Form" wizard should display hover warning "Input_Hint"."Minimum_Value_Warning"
     Then type value "1" to "CPU_Limit_Number_Input" field on "Resources_Accordion" on "Modal_Wizard_Form" wizard
     Then type value "1025" to "CPU_Request_Number_Input" field on "Resources_Accordion" on "Modal_Wizard_Form" wizard
-    Then verify "CPU_Limit_Number_Input" element in "Resources_Accordion" on "Modal_Wizard_Form" wizard should display warning "Input_Hint"."Limit_Number_Warning" 
-    Then verify "CPU_Request_Number_Input" element in "Resources_Accordion" on "Modal_Wizard_Form" wizard should display warning "Input_Hint"."Request_Number_Warning" 
+    Then verify "CPU_Limit_Number_Input" element in "Resources_Accordion" on "Modal_Wizard_Form" wizard should display hover warning "Input_Hint"."Limit_Number_Warning" 
+    Then verify "CPU_Request_Number_Input" element in "Resources_Accordion" on "Modal_Wizard_Form" wizard should display hover warning "Input_Hint"."Request_Number_Warning" 
     Then type value "0" to "GPU_Limit_Number_Input" field on "Resources_Accordion" on "Modal_Wizard_Form" wizard
-    Then verify "GPU_Limit_Number_Input" element in "Resources_Accordion" on "Modal_Wizard_Form" wizard should display warning "Input_Hint"."Minimum_Value_Warning"
+    Then verify "GPU_Limit_Number_Input" element in "Resources_Accordion" on "Modal_Wizard_Form" wizard should display hover warning "Input_Hint"."Minimum_Value_Warning"
     Then verify "Memory_Request_Dropdown" element in "Resources_Accordion" on "Modal_Wizard_Form" wizard should contains "Dropdown_Options"."Memory_Unit_Options"
     Then type value "1" to "Memory_Request_Number_Input" field on "Resources_Accordion" on "Modal_Wizard_Form" wizard
     Then increase value on 15 points in "Memory_Request_Number_Input" field on "Resources_Accordion" on "Modal_Wizard_Form" wizard
@@ -1043,9 +1044,9 @@ Feature: Datasets Page
     When add new volume rows to "Volume_Paths_Table" table in "Resources_Accordion" on "Modal_Wizard_Form" wizard using nontable inputs
             | Volume_Paths_Table_Type_Dropdown | Volume_Paths_Table_Volume_Name_Input | Volume_Paths_Table_Path_Input | Volume_Paths_Table_Container_Input | Volume_Paths_Table_Access_Key_Input | Volume_Paths_Table_Resource_Path_Input | Add_New_Row_Button |
             |             V3IO                 |                                      |                               |                                    |                                     |                                        |         yes        |
-    Then verify "Volume_Paths_Table_Volume_Name_Input" element in "Resources_Accordion" on "Modal_Wizard_Form" wizard should display warning "Input_Hint"."Input_Field_Require"
-    Then verify "Volume_Paths_Table_Path_Input" element in "Resources_Accordion" on "Modal_Wizard_Form" wizard should display warning "Input_Hint"."Input_Field_Require"
-    Then verify "Volume_Paths_Table_Access_Key_Input" element in "Resources_Accordion" on "Modal_Wizard_Form" wizard should display warning "Input_Hint"."Input_Field_Require"
+    Then verify "Volume_Paths_Table_Volume_Name_Input" element in "Resources_Accordion" on "Modal_Wizard_Form" wizard should display hover warning "Input_Hint"."Input_Field_Require"
+    Then verify "Volume_Paths_Table_Path_Input" element in "Resources_Accordion" on "Modal_Wizard_Form" wizard should display hover warning "Input_Hint"."Input_Field_Require"
+    Then verify "Volume_Paths_Table_Access_Key_Input" element in "Resources_Accordion" on "Modal_Wizard_Form" wizard should display hover warning "Input_Hint"."Input_Field_Require"
     Then verify "Volume_Paths_Table_Path_Input" element in "Resources_Accordion" on "Modal_Wizard_Form" wizard should display hint "Input_Hint"."Mount_Path_Hint"
     Then verify "Volume_Paths_Table_Container_Input" element in "Resources_Accordion" on "Modal_Wizard_Form" wizard should display hint "Input_Hint"."Data_Container_Hint"
     Then verify "Volume_Paths_Table_Access_Key_Input" element in "Resources_Accordion" on "Modal_Wizard_Form" wizard should display hint "Input_Hint"."DataAccess_Key_Hint"
@@ -1054,25 +1055,25 @@ Feature: Datasets Page
     When add new volume rows to "Volume_Paths_Table" table in "Resources_Accordion" on "Modal_Wizard_Form" wizard using nontable inputs
             | Volume_Paths_Table_Type_Dropdown | Volume_Paths_Table_Volume_Name_Input | Volume_Paths_Table_Path_Input | Volume_Paths_Table_Config_Map_Input | Add_New_Row_Button |
             |           Config Map             |                                      |                               |                                     |         yes        |
-    Then verify "Volume_Paths_Table_Volume_Name_Input" element in "Resources_Accordion" on "Modal_Wizard_Form" wizard should display warning "Input_Hint"."Input_Field_Require"
-    Then verify "Volume_Paths_Table_Path_Input" element in "Resources_Accordion" on "Modal_Wizard_Form" wizard should display warning "Input_Hint"."Input_Field_Require"
-    Then verify "Volume_Paths_Table_Config_Map_Input" element in "Resources_Accordion" on "Modal_Wizard_Form" wizard should display warning "Input_Hint"."Input_Field_Require"
+    Then verify "Volume_Paths_Table_Volume_Name_Input" element in "Resources_Accordion" on "Modal_Wizard_Form" wizard should display hover warning "Input_Hint"."Input_Field_Require"
+    Then verify "Volume_Paths_Table_Path_Input" element in "Resources_Accordion" on "Modal_Wizard_Form" wizard should display hover warning "Input_Hint"."Input_Field_Require"
+    Then verify "Volume_Paths_Table_Config_Map_Input" element in "Resources_Accordion" on "Modal_Wizard_Form" wizard should display hover warning "Input_Hint"."Input_Field_Require"
     Then verify "Volume_Paths_Table_Path_Input" element in "Resources_Accordion" on "Modal_Wizard_Form" wizard should display hint "Input_Hint"."Mount_Path_Hint"
     When click on "Delete_New_Row_Button" element in "Resources_Accordion" on "Modal_Wizard_Form" wizard
     When add new volume rows to "Volume_Paths_Table" table in "Resources_Accordion" on "Modal_Wizard_Form" wizard using nontable inputs
             | Volume_Paths_Table_Type_Dropdown | Volume_Paths_Table_Volume_Name_Input | Volume_Paths_Table_Path_Input | Volume_Paths_Table_Secret_Name_Input | Add_New_Row_Button |
             |             Secret               |                                      |                               |                                      |         yes        |
-    Then verify "Volume_Paths_Table_Volume_Name_Input" element in "Resources_Accordion" on "Modal_Wizard_Form" wizard should display warning "Input_Hint"."Input_Field_Require"
-    Then verify "Volume_Paths_Table_Path_Input" element in "Resources_Accordion" on "Modal_Wizard_Form" wizard should display warning "Input_Hint"."Input_Field_Require"
-    Then verify "Volume_Paths_Table_Secret_Name_Input" element in "Resources_Accordion" on "Modal_Wizard_Form" wizard should display warning "Input_Hint"."Input_Field_Require"
+    Then verify "Volume_Paths_Table_Volume_Name_Input" element in "Resources_Accordion" on "Modal_Wizard_Form" wizard should display hover warning "Input_Hint"."Input_Field_Require"
+    Then verify "Volume_Paths_Table_Path_Input" element in "Resources_Accordion" on "Modal_Wizard_Form" wizard should display hover warning "Input_Hint"."Input_Field_Require"
+    Then verify "Volume_Paths_Table_Secret_Name_Input" element in "Resources_Accordion" on "Modal_Wizard_Form" wizard should display hover warning "Input_Hint"."Input_Field_Require"
     Then verify "Volume_Paths_Table_Path_Input" element in "Resources_Accordion" on "Modal_Wizard_Form" wizard should display hint "Input_Hint"."Mount_Path_Hint"
     When click on "Delete_New_Row_Button" element in "Resources_Accordion" on "Modal_Wizard_Form" wizard
     When add new volume rows to "Volume_Paths_Table" table in "Resources_Accordion" on "Modal_Wizard_Form" wizard using nontable inputs
             | Volume_Paths_Table_Type_Dropdown | Volume_Paths_Table_Volume_Name_Input | Volume_Paths_Table_Path_Input | Volume_Paths_Table_Claime_Name_Input | Add_New_Row_Button |
             |               PVC                |                                      |                               |                                      |         yes        |
-    Then verify "Volume_Paths_Table_Volume_Name_Input" element in "Resources_Accordion" on "Modal_Wizard_Form" wizard should display warning "Input_Hint"."Input_Field_Require"
-    Then verify "Volume_Paths_Table_Path_Input" element in "Resources_Accordion" on "Modal_Wizard_Form" wizard should display warning "Input_Hint"."Input_Field_Require"
-    Then verify "Volume_Paths_Table_Claime_Name_Input" element in "Resources_Accordion" on "Modal_Wizard_Form" wizard should display warning "Input_Hint"."Input_Field_Require"
+    Then verify "Volume_Paths_Table_Volume_Name_Input" element in "Resources_Accordion" on "Modal_Wizard_Form" wizard should display hover warning "Input_Hint"."Input_Field_Require"
+    Then verify "Volume_Paths_Table_Path_Input" element in "Resources_Accordion" on "Modal_Wizard_Form" wizard should display hover warning "Input_Hint"."Input_Field_Require"
+    Then verify "Volume_Paths_Table_Claime_Name_Input" element in "Resources_Accordion" on "Modal_Wizard_Form" wizard should display hover warning "Input_Hint"."Input_Field_Require"
     Then verify "Volume_Paths_Table_Path_Input" element in "Resources_Accordion" on "Modal_Wizard_Form" wizard should display hint "Input_Hint"."Mount_Path_Hint"
     When click on "Delete_New_Row_Button" element in "Resources_Accordion" on "Modal_Wizard_Form" wizard
 
@@ -1283,3 +1284,111 @@ Feature: Datasets Page
     Then verify that 18 row elements are displayed in "Datasets_Table" on "Datasets" wizard
     Then click on "Cross_Close_Button" element on "Datasets_Info_Pane" wizard
     And wait load page
+
+  @MLD
+  @smoke
+  Scenario: MLD028 - Verify the Delete option in Datasets table, details panel, full view action menu 
+    Given open url
+    And wait load page
+    And click on row root with value "churn-project-admin" in "name" column in "Projects_Table" table on "Projects" wizard
+    And wait load page
+    And select "tab" with "Datasets" value in breadcrumbs menu
+    And wait load page
+    Then verify action menu on "Datasets" wizard in "Datasets_Table" table with "test-regressor_cox-test-summary" value in "name" column should contains "Common_Lists"."Action_Menu_List"
+    Then select "Delete" option in action menu on "Datasets" wizard in "Datasets_Table" table at row with "test-regressor_cox-test-summary" value in "name" column
+    And wait load page
+    Then verify if "Delete_Artifact_Popup" popup dialog appears
+    Then verify "Delete_Artifact_Popup" element visibility on "Datasets" wizard
+    Then verify "Close_Button" element visibility on "Delete_Artifact_Popup" wizard
+    Then verify "Title" element visibility on "Delete_Artifact_Popup" wizard
+    Then "Title" element on "Delete_Artifact_Popup" should contains "Delete dataset?" value
+    Then verify "Dialog_Message" element visibility on "Delete_Artifact_Popup" wizard
+    Then "Dialog_Message" element on "Delete_Artifact_Popup" should contains "Do you want to delete the dataset \"test-regressor_cox-test-summary\"? Deleted datasets can not be restored." value
+    Then verify "Cancel_Button" element visibility on "Delete_Artifact_Popup" wizard
+    Then "Cancel_Button" element on "Delete_Artifact_Popup" should contains "Cancel" value
+    Then verify "Delete_Button" element visibility on "Delete_Artifact_Popup" wizard
+    Then "Delete_Button" element on "Delete_Artifact_Popup" should contains "Delete" value
+    Then click on "Cancel_Button" element on "Delete_Artifact_Popup" wizard
+    Then verify "Delete_Artifact_Popup" element not exists on "Datasets" wizard
+    Then select "Delete" option in action menu on "Datasets" wizard in "Datasets_Table" table at row with "test-regressor_cox-test-summary" value in "name" column
+    And wait load page
+    Then click on "Delete_Button" element on "Delete_Artifact_Popup" wizard
+    And wait load page
+    Then verify "Notification_Pop_Up" element visibility on "Notification_Popup" wizard
+    And wait load page
+    And wait load page
+    Then "Notification_Pop_Up" element on "Notification_Popup" should contains "Dataset is successfully deleted" value
+    And wait load page
+    Then verify "Notification_Pop_Up_Cross_Close_Button" element visibility on "Notification_Popup" wizard
+    Then click on "Notification_Pop_Up_Cross_Close_Button" element on "Notification_Popup" wizard
+    Then check "test-regressor_cox-test-summary" value not in "name" column in "Datasets_Table" table on "Datasets" wizard
+    When click on cell with row index 1 in "name" column in "Datasets_Table" table on "Datasets" wizard
+    And wait load page
+    Then verify "Header" element visibility on "Datasets_Info_Pane" wizard
+    Then "Header" element on "Datasets_Info_Pane" should contains "survival-curves_coxhazard-summary" value
+    Then verify "Action_Menu" element visibility on "Datasets_Info_Pane" wizard
+    Then select "Delete" option in action menu on "Datasets_Info_Pane" wizard
+    And wait load page
+    Then verify if "Delete_Artifact_Popup" popup dialog appears
+    Then verify "Delete_Artifact_Popup" element visibility on "Datasets_Info_Pane" wizard
+    Then verify "Close_Button" element visibility on "Delete_Artifact_Popup" wizard
+    Then verify "Title" element visibility on "Delete_Artifact_Popup" wizard
+    Then "Title" element on "Delete_Artifact_Popup" should contains "Delete dataset?" value
+    Then verify "Dialog_Message" element visibility on "Delete_Artifact_Popup" wizard
+    Then "Dialog_Message" element on "Delete_Artifact_Popup" should contains "Do you want to delete the dataset \"survival-curves_coxhazard-summary\"? Deleted datasets can not be restored." value
+    Then verify "Cancel_Button" element visibility on "Delete_Artifact_Popup" wizard
+    Then "Cancel_Button" element on "Delete_Artifact_Popup" should contains "Cancel" value
+    Then verify "Delete_Button" element visibility on "Delete_Artifact_Popup" wizard
+    Then "Delete_Button" element on "Delete_Artifact_Popup" should contains "Delete" value
+    Then click on "Cancel_Button" element on "Delete_Artifact_Popup" wizard
+    Then verify "Delete_Artifact_Popup" element not exists on "Datasets_Info_Pane" wizard
+    Then select "Delete" option in action menu on "Datasets_Info_Pane" wizard
+    And wait load page
+    Then click on "Delete_Button" element on "Delete_Artifact_Popup" wizard
+    And wait load page
+    Then verify "Notification_Pop_Up" element visibility on "Notification_Popup" wizard
+    And wait load page
+    And wait load page
+    Then "Notification_Pop_Up" element on "Notification_Popup" should contains "Dataset is successfully deleted" value
+    And wait load page
+    Then verify "Notification_Pop_Up_Cross_Close_Button" element visibility on "Notification_Popup" wizard
+    Then click on "Notification_Pop_Up_Cross_Close_Button" element on "Notification_Popup" wizard
+    Then check "survival-curves_coxhazard-summary" value not in "name" column in "Datasets_Table" table on "Datasets" wizard
+    When click on cell with row index 1 in "name" column in "Datasets_Table" table on "Datasets" wizard
+    And wait load page
+    Then verify "Header" element visibility on "Datasets_Info_Pane" wizard
+    Then "Header" element on "Datasets_Info_Pane" should contains "iris_gen_iris_dataset" value
+    Then click on "Full_View_Button" element on "Datasets_Info_Pane" wizard
+    Then verify "Cross_Close_Button" element not exists on "Datasets_Info_Pane" wizard
+    Then verify "Header_Full_View" element visibility on "Datasets_Info_Pane" wizard
+    Then "Header_Full_View" element on "Datasets_Info_Pane" should contains "iris_gen_iris_dataset" value
+    Then verify "Action_Menu_Full_View" element visibility on "Datasets_Info_Pane" wizard
+    Then verify "Action_Menu_Full_View" dropdown element on "Datasets_Info_Pane" wizard should contains "Common_Lists"."Action_Menu_List"
+    Then click on "Header_Full_View" element on "Datasets_Info_Pane" wizard
+    Then select "Delete" option in full view action menu on "Datasets_Info_Pane" wizard
+    And wait load page
+    Then verify if "Delete_Artifact_Popup" popup dialog appears
+    Then verify "Delete_Artifact_Popup" element visibility on "Datasets_Info_Pane" wizard
+    Then verify "Close_Button" element visibility on "Delete_Artifact_Popup" wizard
+    Then verify "Title" element visibility on "Delete_Artifact_Popup" wizard
+    Then "Title" element on "Delete_Artifact_Popup" should contains "Delete dataset?" value
+    Then verify "Dialog_Message" element visibility on "Delete_Artifact_Popup" wizard
+    Then "Dialog_Message" element on "Delete_Artifact_Popup" should contains "Do you want to delete the dataset \"iris_gen_iris_dataset\"? Deleted datasets can not be restored." value
+    Then verify "Cancel_Button" element visibility on "Delete_Artifact_Popup" wizard
+    Then "Cancel_Button" element on "Delete_Artifact_Popup" should contains "Cancel" value
+    Then verify "Delete_Button" element visibility on "Delete_Artifact_Popup" wizard
+    Then "Delete_Button" element on "Delete_Artifact_Popup" should contains "Delete" value
+    Then click on "Cancel_Button" element on "Delete_Artifact_Popup" wizard
+    Then verify "Delete_Artifact_Popup" element not exists on "Datasets_Info_Pane" wizard
+    Then select "Delete" option in full view action menu on "Datasets_Info_Pane" wizard
+    And wait load page
+    Then click on "Delete_Button" element on "Delete_Artifact_Popup" wizard
+    And wait load page
+    Then verify "Notification_Pop_Up" element visibility on "Notification_Popup" wizard
+    And wait load page
+    And wait load page
+    Then "Notification_Pop_Up" element on "Notification_Popup" should contains "Dataset is successfully deleted" value
+    And wait load page
+    Then verify "Notification_Pop_Up_Cross_Close_Button" element visibility on "Notification_Popup" wizard
+    Then click on "Notification_Pop_Up_Cross_Close_Button" element on "Notification_Popup" wizard
+    Then check "iris_gen_iris_dataset" value not in "name" column in "Datasets_Table" table on "Datasets" wizard

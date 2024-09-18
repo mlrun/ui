@@ -133,10 +133,12 @@ const action = {
     if (!isLabel){
       const hintButton = await driver.findElement(inputGroup.hintButton)
       await hintButton.click()
-      await driver.sleep(250)
+      await driver.sleep(500)
     }
     const hint = await driver.findElement(hintComponent)
+    await driver.sleep(500)
     const hintText = await hint.getText()
+    await driver.sleep(500)
     const { validStrings, invalidStrings } = parseString(hintText)
     const input = await driver.findElement(inputGroup.inputField)
 
@@ -172,6 +174,21 @@ const action = {
     await driver.sleep(250)
     await hintButton.click()
     await driver.sleep(250)
+    const hint = await driver.findElement(hintComponent)
+    await driver.sleep(250)
+    const hintText = await hint.getText()
+
+    expect(hintText).equal(text)
+  },
+  checkWarningHintTextWithHover: async function (driver, inputGroup, hintComponent, text) {
+    const hintButton = await driver.findElement(inputGroup.warningHint)
+    await driver.sleep(250)
+    const coordinates = await hintButton.getRect()
+    const actions = driver.actions({ async: true })
+    await actions
+      .move({ x: parseInt(coordinates.x), y: parseInt(coordinates.y) })
+      .perform()
+    await driver.sleep(500)
     const hint = await driver.findElement(hintComponent)
     await driver.sleep(250)
     const hintText = await hint.getText()

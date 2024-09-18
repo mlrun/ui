@@ -41,6 +41,14 @@ const actionMenuStructure = {
   }
 }
 
+const actionMenuStructureFullView = {
+  root: '.table__item_big .item-header__buttons > .actions-menu__container',
+  menuElements: {
+    open_button: 'button',
+    options: '.actions-menu__body .actions-menu__option'
+  }
+}
+
 const infoPaneTabSelector = {
   root: '.table__item .tabs-slider__tabs',
   header: {},
@@ -509,6 +517,7 @@ const applyChangesButton = By.css(
 )
 const applyButton = By.css('.item-info__details .round-icon-cp:nth-of-type(2) button')
 const commonActionMenu = actionMenu(actionMenuStructure)
+const commonActionMenuFullView = actionMenu(actionMenuStructureFullView)
 const fullViewButton = By.css('.table__item .item-header__buttons .item-header__navigation-buttons > div > div')
 const tabelViewButton = By.css('#main-wrapper .table__item_big .item-header__navigation-buttons')
 const crossCloseButton = By.css('.table__item .item-header__buttons a .data-ellipsis')
@@ -573,6 +582,7 @@ module.exports = {
     Overview_General_Headers: commonTable(infoPaneOverviewHeaders)
   },
   datasetsInfoPane: {
+    Delete_Artifact_Popup: By.css('[data-testid="pop-up-dialog"]'),
     Header: header,
     Updated: updated,
     Cancel_Button: cancelButton,
@@ -581,6 +591,10 @@ module.exports = {
     Download_Button: commonDownloadButton,
     Action_Menu: commonActionMenu,
     Full_View_Button: fullViewButton,
+    Header_Full_View: By.css('.table__item_big .item-header__data h3'),
+    Updated_Full_View: By.css('.table__item_big .item-header__data span'),
+    Refresh_Button_Full_View: By.css('.table__item_big .item-header__buttons [data-testid="refresh-tooltip-wrapper"]'),
+    Action_Menu_Full_View: commonActionMenuFullView,
     Tabel_View_Button: tabelViewButton,
     Cross_Close_Button: crossCloseButton,
     Info_Pane_Tab_Selector: commonInfoPaneTabSelector,
@@ -704,6 +718,7 @@ module.exports = {
     Results_Table: commonTable(resultsTable)
   },
   filesInfoPane: {
+    Delete_Artifact_Popup: By.css('[data-testid="pop-up-dialog"]'),
     Header: header,
     Updated: updated,
     Download_Button: commonDownloadButton,
@@ -712,6 +727,10 @@ module.exports = {
     Apply_Button: applyButton,
     Cross_Close_Button: crossCloseButton,
     Full_View_Button: fullViewButton,
+    Header_Full_View: By.css('.table__item_big .item-header__data h3'),
+    Updated_Full_View: By.css('.table__item_big .item-header__data span'),
+    Refresh_Button_Full_View: By.css('.table__item_big .item-header__buttons [data-testid="refresh-tooltip-wrapper"]'),
+    Action_Menu_Full_View: commonActionMenuFullView, 
     Tabel_View_Button: tabelViewButton,
     Info_Pane_Tab_Selector: commonInfoPaneTabSelector,
     Pop_Out_Button: By.css('[data-testid="details-preview-tooltip-wrapper"]'),
@@ -741,6 +760,7 @@ module.exports = {
     Version_tag_Input: commonVersionTagInput
   },
   modelsInfoPane: {
+    Delete_Artifact_Popup: By.css('[data-testid="pop-up-dialog"]'),
     Header: header,
     Updated: updated,
     Download_Button: commonDownloadButton,
@@ -750,6 +770,8 @@ module.exports = {
     Cross_Close_Button: crossCloseButton,
     Full_View_Button: fullViewButton,
     Tabel_View_Button: tabelViewButton,
+    Header_Full_View: By.css('.table__item_big .item-header__data h3'),
+    Action_Menu_Full_View: commonActionMenuFullView,
     Info_Pane_Tab_Selector: commonInfoPaneTabSelector,
     Pop_Out_Button: By.css('[data-testid="details-preview-tooltip-wrapper"]'),
     Overview_General_Headers: commonTable(infoPaneOverviewHeaders),

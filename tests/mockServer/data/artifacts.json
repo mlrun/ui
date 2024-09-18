@@ -10217,7 +10217,7 @@
       "iter": 0,
       "tree": "eaae138e-439a-47fa-93c6-ba0fe1dc3b79",
       "src_path": "plots/km-survival.html",
-      "target_path": "/User/demos/customer-churn-prediction/data/pipeline/eaae138e-439a-47fa-93c6-ba0fe1dc3b79/plots/km-survival.html",
+      "target_path": "v3io://User/demos/customer-churn-prediction/data/pipeline/eaae138e-439a-47fa-93c6-ba0fe1dc3b79/plots/km-survival.html",
       "hash": "7170dee01545dacea65ffc31d27f71edc623f7b7",
       "viewer": "chart",
       "format": "html",

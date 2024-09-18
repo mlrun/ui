@@ -112,14 +112,14 @@ Feature: Quick actions Page
         Then verify "Cancel_Button" element visibility on "Register_Model_Popup" wizard
         Then verify "Register_Button" element visibility on "Register_Model_Popup" wizard
         Then click on "Register_Button" element on "Register_Model_Popup" wizard
-        Then verify "Path_Scheme_Combobox" element in "Target_Path" on "Register_Model_Popup" wizard should display warning "Input_Hint"."Input_Field_Require"
+        Then verify "Path_Scheme_Combobox" element in "Target_Path" on "Register_Model_Popup" wizard should display hover warning "Input_Hint"."Input_Field_Require"
         Then type value "   " to "New_File_Name_Input" field on "Register_Model_Popup" wizard
         Then verify "New_File_Name_Input" on "Register_Model_Popup" wizard should display options "Input_Hint"."Artifact_Name_Hint"
         When select "V3IO" option in "Path_Scheme_Combobox" combobox on "Target_Path" accordion on "Register_Model_Popup" wizard
         When type value "  " to "Path_Scheme_Combobox" field on "Target_Path" on "Register_Model_Popup" wizard
-        Then verify "Path_Scheme_Combobox" element in "Target_Path" on "Register_Model_Popup" wizard should display warning "Input_Hint"."V3IO_Path_Hint"
+        Then verify "Path_Scheme_Combobox" element in "Target_Path" on "Register_Model_Popup" wizard should display hover warning "Input_Hint"."V3IO_Path_Hint"
         Then type value "   " to "New_File_Description_Input" field on "Register_Model_Popup" wizard
-        Then verify "New_File_Description_Input" on "Register_Model_Popup" wizard should display warning "Input_Hint"."Input_Field_Invalid"
+        Then verify "New_File_Description_Input" on "Register_Model_Popup" wizard should display hover warning "Input_Hint"."Input_Field_Invalid"
         Then type value "new-model" to "New_File_Name_Input" field on "Register_Model_Popup" wizard
         When select "V3IO" option in "Path_Scheme_Combobox" combobox on "Target_Path" accordion on "Register_Model_Popup" wizard
         When type value "target/path" to "Path_Scheme_Combobox" field on "Target_Path" on "Register_Model_Popup" wizard
@@ -159,7 +159,7 @@ Feature: Quick actions Page
         Then verify "Collapse_Button" element visibility in "Data_Source_Accordion" on "New_Feature_Set" wizard
         Then verify "Attributes_Input" element visibility in "Data_Source_Accordion" on "New_Feature_Set" wizard
         Then type value "   " to "Attributes_Input" field on "Data_Source_Accordion" on "New_Feature_Set" wizard
-        Then verify "Attributes_Input" element in "Data_Source_Accordion" on "New_Feature_Set" wizard should display warning "Input_Hint"."Input_Field_Invalid"
+        Then verify "Attributes_Input" element in "Data_Source_Accordion" on "New_Feature_Set" wizard should display hover warning "Input_Hint"."Input_Field_Invalid"
         When click on "Edit_Button" element in "Data_Source_Accordion" on "New_Feature_Set" wizard
         Then verify "URL_Combobox" element visibility in "Data_Source_Accordion" on "New_Feature_Set" wizard
         Then select "V3IO" option in "URL_Combobox" combobox on "Data_Source_Accordion" accordion on "New_Feature_Set" wizard
@@ -206,14 +206,15 @@ Feature: Quick actions Page
         Then verify "Name_Input" element visibility on "Register_Dataset" wizard
         Then type value "   " to "Name_Input" field on "Register_Dataset" wizard
         Then verify "Name_Input" on "Register_Dataset" wizard should display options "Input_Hint"."Artifact_Name_Hint"
+        Then click on "Form_Subtext" element on "Register_Dataset" wizard
         Then verify "Name_Input" options rules on form "Register_Dataset" wizard
         Then verify options in "Path_Scheme_Combobox" combobox in "Target_Path" on "Register_Dataset" wizard should contains "Register_Dataset"."Combobox_Options"
         When select "V3IO" option in "Path_Scheme_Combobox" combobox on "Target_Path" accordion on "Register_Dataset" wizard
         When type value "  " to "Path_Scheme_Combobox" field on "Target_Path" on "Register_Dataset" wizard
-        Then verify "Path_Scheme_Combobox" element in "Target_Path" on "Register_Dataset" wizard should display warning "Input_Hint"."V3IO_Path_Hint"
+        Then verify "Path_Scheme_Combobox" element in "Target_Path" on "Register_Dataset" wizard should display hover warning "Input_Hint"."V3IO_Path_Hint"
         Then verify "Description_Input" element visibility on "Register_Dataset" wizard
         Then type value "   " to "Description_Input" field on "Register_Dataset" wizard
-        Then verify "Description_Input" on "Register_Dataset" wizard should display warning "Input_Hint"."Input_Field_Invalid"
+        Then verify "Description_Input" on "Register_Dataset" wizard should display hover warning "Input_Hint"."Input_Field_Invalid"
         Then verify "Cancel_Button" element visibility on "Register_Dataset" wizard
         Then "Cancel_Button" element on "Register_Dataset" should contains "Cancel" value
         Then verify "Register_Button" element visibility on "Register_Dataset" wizard
@@ -397,14 +398,15 @@ Feature: Quick actions Page
         Then verify "New_File_Name_Input" element visibility on "Register_File_Popup" wizard
         Then type value "   " to "New_File_Name_Input" field on "Register_File_Popup" wizard
         Then verify "New_File_Name_Input" on "Register_File_Popup" wizard should display options "Input_Hint"."Artifact_Name_Hint"
+        Then click on "Form_Subtext" element on "Register_File_Popup" wizard
         Then verify "New_File_Name_Input" options rules on form "Register_File_Popup" wizard
         Then verify options in "Path_Scheme_Combobox" combobox in "Target_Path" on "Register_File_Popup" wizard should contains "Register_Artifact"."Combobox_Options"
         When select "V3IO" option in "Path_Scheme_Combobox" combobox on "Target_Path" accordion on "Register_File_Popup" wizard
         When type value "  " to "Path_Scheme_Combobox" field on "Target_Path" on "Register_File_Popup" wizard
-        Then verify "Path_Scheme_Combobox" element in "Target_Path" on "Register_File_Popup" wizard should display warning "Input_Hint"."V3IO_Path_Hint"
+        Then verify "Path_Scheme_Combobox" element in "Target_Path" on "Register_File_Popup" wizard should display hover warning "Input_Hint"."V3IO_Path_Hint"
         Then verify "New_File_Description_Input" element visibility on "Register_File_Popup" wizard
         Then type value "   " to "New_File_Description_Input" field on "Register_File_Popup" wizard
-        Then verify "New_File_Description_Input" on "Register_File_Popup" wizard should display warning "Input_Hint"."Input_Field_Invalid"
+        Then verify "New_File_Description_Input" on "Register_File_Popup" wizard should display hover warning "Input_Hint"."Input_Field_Invalid"
         Then verify "New_File_Type_Dropdown" element visibility on "Register_File_Popup" wizard
         Then verify "New_File_Type_Dropdown" dropdown element on "Register_File_Popup" wizard should contains "Register_Artifact"."Type_Options"
         Then select "Table" option in "New_File_Type_Dropdown" dropdown on "Register_File_Popup" wizard
@@ -484,10 +486,10 @@ Feature: Quick actions Page
         Then verify "Table_Tag_Filter_Dropdown" element visibility on "Feature_Store_Feature_Sets_Tab" wizard
         Then verify "Table_Tag_Filter_Dropdown" dropdown element on "Feature_Store_Feature_Sets_Tab" wizard should contains "Dropdown_Options"."Tag_Filer_Options"
         Then type value "   " to "Table_Name_Filter_Input" field on "Feature_Store_Feature_Sets_Tab" wizard
-        Then verify "Table_Name_Filter_Input" on "Feature_Store_Feature_Sets_Tab" wizard should display warning "Input_Hint"."Input_Field_Invalid"
+        Then verify "Table_Name_Filter_Input" on "Feature_Store_Feature_Sets_Tab" wizard should display hover warning "Input_Hint"."Input_Field_Invalid"
         Then verify "Table_Label_Filter_Input" element visibility on "Feature_Store_Feature_Sets_Tab" wizard
         Then type value "   " to "Table_Label_Filter_Input" field on "Feature_Store_Feature_Sets_Tab" wizard
-        Then verify "Table_Label_Filter_Input" on "Feature_Store_Feature_Sets_Tab" wizard should display warning "Input_Hint"."Input_Field_Invalid"
+        Then verify "Table_Label_Filter_Input" on "Feature_Store_Feature_Sets_Tab" wizard should display hover warning "Input_Hint"."Input_Field_Invalid"
         Then verify "Feature_Sets_Table" element visibility on "Feature_Store_Feature_Sets_Tab" wizard
         Then verify "Feature_Store_Tab_Selector" element visibility on "Feature_Store_Feature_Sets_Tab" wizard
         Then verify "Create_Set_Button" element visibility on "Feature_Store_Feature_Sets_Tab" wizard
@@ -832,9 +834,9 @@ Feature: Quick actions Page
         Then uncheck "Access_Key_Checkbox" element on "Modal_Wizard_Form" wizard
         Then verify "Access_Key_Input" element visibility on "Modal_Wizard_Form" wizard
         Then type value "  @" to "Access_Key_Input" field on "Modal_Wizard_Form" wizard
-        Then verify "Access_Key_Input" on "Modal_Wizard_Form" wizard should display warning "Input_Hint"."Input_Field_Invalid"
+        Then verify "Access_Key_Input" on "Modal_Wizard_Form" wizard should display hover warning "Input_Hint"."Input_Field_Invalid"
         Then type value "" to "Access_Key_Input" field on "Modal_Wizard_Form" wizard
-        Then verify "Access_Key_Input" on "Modal_Wizard_Form" wizard should display warning "Input_Hint"."Input_Field_Require"
+        Then verify "Access_Key_Input" on "Modal_Wizard_Form" wizard should display hover warning "Input_Hint"."Input_Field_Require"
         Then check "Access_Key_Checkbox" element on "Modal_Wizard_Form" wizard
         Then verify "Infer_Now_Button" element on "Modal_Wizard_Form" wizard is enabled
         And click on "Infer_Now_Button" element on "Modal_Wizard_Form" wizard
