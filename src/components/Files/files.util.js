@@ -26,6 +26,7 @@ import {
   ACTION_MENU_PARENT_ROW,
   ACTION_MENU_PARENT_ROW_EXPANDED,
   ARTIFACTS_TAB,
+  ARTIFACT_MAX_DOWNLOAD_SIZE,
   ARTIFACT_OTHER_TYPE,
   ARTIFACT_TYPE,
   FILES_PAGE,
@@ -247,7 +248,7 @@ export const generateActionsMenu = (
       {
         label: 'Download',
         hidden: menuPosition === ACTION_MENU_PARENT_ROW_EXPANDED,
-        disabled: !isTargetPathValid,
+        disabled: !isTargetPathValid || fileMin.size > (frontendSpec?.artifact_limits?.max_download_size ?? ARTIFACT_MAX_DOWNLOAD_SIZE),
         icon: <DownloadIcon />,
         onClick: fileMin => {
           getFullFile(fileMin).then(file => {
@@ -256,7 +257,10 @@ export const generateActionsMenu = (
               setDownloadItem({
                 path: downloadPath,
                 user: file.producer?.owner,
-                id: downloadPath
+                id: downloadPath,
+                artifactLimits: frontendSpec?.artifact_limits,
+                fileSize: file.size,
+                projectName
               })
             )
             dispatch(setShowDownloadsList(true))

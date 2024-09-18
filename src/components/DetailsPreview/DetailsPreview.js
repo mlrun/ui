@@ -17,7 +17,7 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import React, { useEffect, useMemo, useState } from 'react'
+import React, { useEffect, useMemo, useRef, useState } from 'react'
 import { isEqual } from 'lodash'
 import PropTypes from 'prop-types'
 import classnames from 'classnames'
@@ -30,11 +30,16 @@ import { RoundedIcon } from 'igz-controls/components'
 import { getArtifactPreview } from '../../utils/getArtifactPreview'
 
 import { ReactComponent as Popout } from 'igz-controls/images/popout.svg'
+import { REQUEST_CANCELED } from '../../constants'
+import { useSelector } from 'react-redux'
 
 const DetailsPreview = ({ artifact, handlePreview }) => {
   const [preview, setPreview] = useState([])
   const [noData, setNoData] = useState(false)
   const params = useParams()
+  const frontendSpec = useSelector(store => store.appStore.frontendSpec)
+  const previewIsFetchedRef = useRef(false)
+  const previewAbortControllerRef = useRef(new AbortController())
 
   const popupButtonIsDisplayed = useMemo(() => {
     return (
@@ -55,8 +60,33 @@ const DetailsPreview = ({ artifact, handlePreview }) => {
   }, [artifact])
 
   useEffect(() => {
-    getArtifactPreview(params.projectName, artifact, noData, setNoData, setPreview)
-  }, [artifact, noData, params.projectName])
+    if (!previewIsFetchedRef.current && frontendSpec) {
+      previewAbortControllerRef.current = new AbortController()
+
+      getArtifactPreview(
+        params.projectName,
+        artifact,
+        noData,
+        setNoData,
+        setPreview,
+        false,
+        null,
+        frontendSpec.artifact_limits,
+        previewAbortControllerRef.current.signal
+      )
+
+      previewIsFetchedRef.current = true
+    }
+  }, [artifact, noData, params.projectName, frontendSpec])
+
+  useEffect(() => {
+    const abortController = previewAbortControllerRef.current
+
+    return () => {
+      abortController.abort(REQUEST_CANCELED)
+      previewIsFetchedRef.current = false
+    }
+  }, [artifact, params.projectName])
 
   return (
     <div className="preview_container">
