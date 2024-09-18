@@ -55,6 +55,7 @@ import { useGroupContent } from '../../../hooks/groupContent.hook'
 import { useOpenPanel } from '../../../hooks/openPanel.hook'
 import { useVirtualization } from '../../../hooks/useVirtualization.hook'
 import { useInitialTableFetch } from '../../../hooks/useInitialTableFetch.hook'
+import { sortListByDate } from '../../../utils'
 
 import cssVariables from './featureVectors.scss'
 
@@ -218,14 +219,14 @@ const FeatureVectors = ({
     [onDeleteFeatureVector, toggleConvertedYaml]
   )
 
-  const handleRefresh = filters => {
+  const handleRefresh = useCallback(filters => {
     fetchTags()
     setFeatureVectors([])
     setSelectedFeatureVector({})
     setSelectedRowData({})
 
     return fetchData(filters)
-  }
+  }, [fetchData, fetchTags])
 
   const handleRemoveFeatureVector = useCallback(
     featureVector => {
@@ -257,7 +258,7 @@ const FeatureVectors = ({
 
       fetchFeatureVector(featureVector.project, featureVector.name, filtersStore.tag)
         .then(result => {
-          const content = [...parseFeatureVectors(result)].map(contentItem =>
+          const content = sortListByDate(parseFeatureVectors(result), 'updated', false).map(contentItem =>
             createFeatureVectorsRowData(contentItem, FEATURE_VECTORS_TAB, params.projectName)
           )
           setSelectedRowData(state => ({
@@ -295,7 +296,7 @@ const FeatureVectors = ({
 
   const tableContent = useMemo(() => {
     return filtersStore.groupBy === GROUP_BY_NAME
-      ? latestItems.map(contentItem => {
+      ? sortListByDate(latestItems, 'updated', false).map(contentItem => {
           return createFeatureVectorsRowData(
             contentItem,
             FEATURE_VECTORS_TAB,
@@ -303,7 +304,7 @@ const FeatureVectors = ({
             true
           )
         })
-      : featureVectors.map(contentItem =>
+      : sortListByDate(featureVectors, 'updated', false).map(contentItem =>
           createFeatureVectorsRowData(contentItem, FEATURE_VECTORS_TAB, params.projectName)
         )
   }, [featureVectors, filtersStore.groupBy, latestItems, params.projectName])
@@ -318,7 +319,7 @@ const FeatureVectors = ({
     changes => {
       return handleApplyDetailsChanges(
         changes,
-        fetchData,
+        handleRefresh,
         params.projectName,
         params.name,
         FEATURE_VECTORS_TAB,
@@ -331,7 +332,7 @@ const FeatureVectors = ({
     },
     [
       dispatch,
-      fetchData,
+      handleRefresh,
       filtersStore,
       params.name,
       params.projectName,
@@ -379,7 +380,8 @@ const FeatureVectors = ({
     setExpandedRowsData: setSelectedRowData,
     createRowData: rowItem =>
       createFeatureVectorsRowData(rowItem, FEATURE_VECTORS_TAB, params.projectName),
-    fetchTags
+    fetchTags,
+    sortExpandedRowsDataBy: 'updated'
   })
 
   useEffect(() => {
