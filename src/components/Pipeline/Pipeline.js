@@ -20,7 +20,7 @@ such restriction.
 import React, { useEffect, useState } from 'react'
 import PropTypes from 'prop-types'
 import classnames from 'classnames'
-import { groupBy, forEach, map, concat } from 'lodash'
+import { groupBy, forEach, isEmpty, map, concat } from 'lodash'
 import { Link, useParams } from 'react-router-dom'
 
 import MlReactFlow from '../../common/ReactFlow/MlReactFlow'
@@ -279,7 +279,7 @@ const Pipeline = ({ content }) => {
           </div>
         </div>
       </div>
-      {pipeline?.graph && Object.keys(pipeline?.graph).length ? (
+      {!isEmpty(pipeline?.graph) ? (
         <div className="graph-container pipeline-content">
           <div className="graph-view">
             <MlReactFlow
