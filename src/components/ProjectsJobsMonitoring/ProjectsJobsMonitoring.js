@@ -156,7 +156,11 @@ const ProjectsJobsMonitoring = ({ fetchAllJobRuns, fetchJobFunction, fetchJobs }
       }
 
       fetchData(
-        params.jobName ? selectedRunProject || '*' : '*',
+        params.jobName
+          ? selectedRunProject || '*'
+          : filters.project
+            ? filters.project.toLowerCase()
+            : '*',
         filters,
         {
           ui: {
@@ -176,10 +180,7 @@ const ProjectsJobsMonitoring = ({ fetchAllJobRuns, fetchJobFunction, fetchJobs }
                 JOB_KIND_LOCAL
 
               return (
-                (!filters.type ||
-                  filters.type === FILTER_ALL_ITEMS ||
-                  filters.type.includes(type)) &&
-                (!filters.project || job.project.includes(filters.project.toLowerCase()))
+                !filters.type || filters.type === FILTER_ALL_ITEMS || filters.type.includes(type)
               )
             })
           const responseAbortingJobs = parsedJobs.reduce((acc, job) => {
@@ -196,7 +197,11 @@ const ProjectsJobsMonitoring = ({ fetchAllJobRuns, fetchJobFunction, fetchJobs }
           if (Object.keys(responseAbortingJobs).length > 0) {
             setAbortingJobs(responseAbortingJobs)
             pollAbortingJobs(
-              '*',
+              params.jobName
+                ? selectedRunProject || '*'
+                : filters.project
+                  ? filters.project.toLowerCase()
+                  : '*',
               abortJobRef,
               responseAbortingJobs,
               () => refreshJobs(filters),
@@ -228,12 +233,16 @@ const ProjectsJobsMonitoring = ({ fetchAllJobRuns, fetchJobFunction, fetchJobs }
       abortControllerRef.current = new AbortController()
 
       dispatch(
-        jobsActions.fetchScheduledJobs('*', filters, {
-          ui: {
-            controller: abortControllerRef.current,
-            setRequestErrorMessage
+        jobsActions.fetchScheduledJobs(
+          filters.project ? filters.project.toLowerCase() : '*',
+          filters,
+          {
+            ui: {
+              controller: abortControllerRef.current,
+              setRequestErrorMessage
+            }
           }
-        })
+        )
       ).then(jobs => {
         if (jobs) {
           const parsedJobs = jobs
@@ -257,8 +266,7 @@ const ProjectsJobsMonitoring = ({ fetchAllJobRuns, fetchJobFunction, fetchJobs }
 
               return (
                 inDateRange &&
-                (!filters.type || filters.type === FILTER_ALL_ITEMS || job.type === filters.type) &&
-                (!filters.project || job.project.includes(filters.project.toLowerCase()))
+                (!filters.type || filters.type === FILTER_ALL_ITEMS || job.type === filters.type)
               )
             })
 
@@ -285,7 +293,7 @@ const ProjectsJobsMonitoring = ({ fetchAllJobRuns, fetchJobFunction, fetchJobs }
 
       dispatch(
         workflowActions.fetchWorkflows(
-          '*',
+          filter.project ? filter.project.toLowerCase() : '*',
           { ...filter, groupBy: GROUP_BY_WORKFLOW },
           {
             ui: {
