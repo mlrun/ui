@@ -150,13 +150,14 @@ Feature: Artifacts Page
     Then verify "New_File_Name_Input" element visibility on "Register_File_Popup" wizard
     Then type value " " to "New_File_Name_Input" field on "Register_File_Popup" wizard
     Then verify "New_File_Name_Input" on "Register_File_Popup" wizard should display options "Input_Hint"."Artifact_Name_Hint"
+    Then click on "Form_Subtext" element on "Register_File_Popup" wizard
     Then verify "New_File_Name_Input" options rules on form "Register_File_Popup" wizard
     When select "V3IO" option in "Path_Scheme_Combobox" combobox on "Target_Path" accordion on "Register_File_Popup" wizard
     When type value "  " to "Path_Scheme_Combobox" field on "Target_Path" on "Register_File_Popup" wizard
-    Then verify "Path_Scheme_Combobox" element in "Target_Path" on "Register_File_Popup" wizard should display warning "Input_Hint"."V3IO_Path_Hint"
+    Then verify "Path_Scheme_Combobox" element in "Target_Path" on "Register_File_Popup" wizard should display hover warning "Input_Hint"."V3IO_Path_Hint"
     Then verify "New_File_Description_Input" element visibility on "Register_File_Popup" wizard
-    Then type value "   " to "New_File_Description_Input" field on "Register_File_Popup" wizard
-    Then verify "New_File_Description_Input" on "Register_File_Popup" wizard should display warning "Input_Hint"."Input_Field_Invalid"
+    Then type value " " to "New_File_Description_Input" field on "Register_File_Popup" wizard
+    Then verify "New_File_Description_Input" on "Register_File_Popup" wizard should display hover warning "Input_Hint"."Input_Field_Invalid"
     Then verify "New_File_Type_Dropdown" element visibility on "Register_File_Popup" wizard
     Then verify "New_File_Type_Dropdown" dropdown on "Register_File_Popup" wizard selected option value "General"
     Then verify "New_File_Type_Dropdown" dropdown element on "Register_File_Popup" wizard should contains "Register_Artifact"."Type_Options"
@@ -429,6 +430,7 @@ Feature: Artifacts Page
     And hover "MLRun_Logo" component on "commonPagesHeader" wizard
     And wait load page
     When click on cell with row index 2 in "name" column in "Files_Table" table on "Files" wizard
+    And wait load page
     Then verify "Info_Pane_Tab_Selector" element visibility on "Files_Info_Pane" wizard
     Then verify "Info_Pane_Tab_Selector" on "Files_Info_Pane" wizard should contains "Files_Info_Pane"."Tab_List"
     Then verify "Overview" tab is active in "Info_Pane_Tab_Selector" on "Files_Info_Pane" wizard
@@ -557,7 +559,11 @@ Feature: Artifacts Page
     And wait load page
     When click on cell with row index 1 in "name" column in "Files_Table" table on "Files" wizard
     And wait load page
-    Then verify redirection from "projects/default/files/INVALID/latest/0/overview" to "projects/default/files"
+    Then verify redirection from "projects/default/files/INVALID/latest/0/overview" to "projects/default/files/INVALID/latest/0/overview"
+    And select "tab" with "Datasets" value in breadcrumbs menu
+    And wait load page
+    And select "tab" with "Artifacts" value in breadcrumbs menu
+    And wait load page
     When click on cell with row index 1 in "name" column in "Files_Table" table on "Files" wizard
     And wait load page
     And wait load page
@@ -713,3 +719,92 @@ Feature: Artifacts Page
     Then check "latest123456" value in "tag" column in "Overview_Table" table on "Files_Info_Pane" wizard
     Then save to context "name" column on 3 row from "Files_Table" table on "Files" wizard
     Then compare "Header" element value on "Files_Info_Pane" wizard with test "name" context value
+
+  @MLA
+  @smoke
+  Scenario: MLA023 - Check components on artifact Full view content
+    Given open url
+    And wait load page
+    And click on row root with value "churn-project-admin" in "name" column in "Projects_Table" table on "Projects" wizard
+    And wait load page
+    And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
+    And click on cell with value "Artifacts" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+    And hover "MLRun_Logo" component on "commonPagesHeader" wizard
+    And wait load page
+    When click on cell with row index 1 in "name" column in "Files_Table" table on "Files" wizard
+    And wait load page
+    Then verify "Full_View_Button" element visibility on "Files_Info_Pane" wizard
+    Then click on "Full_View_Button" element on "Files_Info_Pane" wizard
+    And wait load page
+    Then verify "Cross_Close_Button" element not exists on "Files_Info_Pane" wizard
+    Then verify "Header_Full_View" element visibility on "Files_Info_Pane" wizard
+    Then "Header_Full_View" element on "Files_Info_Pane" should contains "survival-curves_km-survival" value
+    Then verify "Updated_Full_View" element visibility on "Files_Info_Pane" wizard
+    Then verify "Refresh_Button_Full_View" element visibility on "Files_Info_Pane" wizard
+    Then click on "Refresh_Button_Full_View" element on "Files_Info_Pane" wizard
+    And wait load page
+    Then verify "Header_Full_View" element visibility on "Files_Info_Pane" wizard
+    Then "Header_Full_View" element on "Files_Info_Pane" should contains "survival-curves_km-survival" value
+    Then verify "Action_Menu_Full_View" element visibility on "Files_Info_Pane" wizard
+    Then verify "Action_Menu_Full_View" dropdown element on "Files_Info_Pane" wizard should contains "Common_Lists"."Action_Menu_List"
+    Then click on "Header_Full_View" element on "Files_Info_Pane" wizard
+    Then select "Download" option in full view action menu on "Files_Info_Pane" wizard
+    And wait load page
+    And wait load page
+    Then verify "Download_Pop_Up" element visibility on "Downloads_Popup" wizard
+    Then select "Add a tag" option in full view action menu on "Files_Info_Pane" wizard
+    And wait load page
+    And wait load page
+    Then verify "Add_Tag_Popup" element visibility on "Add_Tag_Popup" wizard
+    Then verify "Close_Button" element visibility on "Add_Tag_Popup" wizard
+    Then verify "Title" element visibility on "Add_Tag_Popup" wizard
+    # Then "Title" element on "Add_Tag_Popup" should contains "Add a tag" value  - bug 'Add A Tag'
+    Then verify "Input_Label" element visibility on "Add_Tag_Popup" wizard
+    Then "Input_Label" element on "Add_Tag_Popup" should contains "Artifact tag *" value
+    Then verify "Tag_Input" element visibility on "Add_Tag_Popup" wizard
+    Then verify "Add_Button" element visibility on "Add_Tag_Popup" wizard
+    Then "Add_Button" element on "Add_Tag_Popup" should contains "Add" value
+    Then verify "Cancel_Button" element visibility on "Add_Tag_Popup" wizard
+    Then "Cancel_Button" element on "Add_Tag_Popup" should contains "Cancel" value
+    Then type value "newTag" to "Tag_Input" field on "Add_Tag_Popup" wizard
+    # Then click on "Add_Button" element on "Add_Tag_Popup" wizard - bug ML-7849
+    Then click on "Cancel_Button" element on "Add_Tag_Popup" wizard
+    And wait load page
+    Then verify if "Common_Popup" popup dialog appears
+    Then "Title" element on "Common_Popup" should contains "Are you sure?" value
+    Then "Description" element on "Common_Popup" should contains "All changes will be lost" value
+    Then click on "Confirm_Button" element on "Common_Popup" wizard
+    Then select "Copy URI" option in full view action menu on "Files_Info_Pane" wizard
+    And wait load page
+    Then verify if "Notification_Popup" popup dialog appears
+    Then verify "Notification_Pop_Up" element visibility on "Notification_Popup" wizard
+    Then "Notification_Pop_Up" element on "Notification_Popup" should contains "Copied to clipboard successfully" value
+    Then verify "Notification_Pop_Up_Cross_Close_Button" element visibility on "Notification_Popup" wizard
+    Then click on "Notification_Pop_Up_Cross_Close_Button" element on "Notification_Popup" wizard
+    Then select "View YAML" option in full view action menu on "Files_Info_Pane" wizard
+    Then verify if "View_YAML" popup dialog appears
+    Then verify "Cross_Cancel_Button" element visibility on "View_YAML" wizard
+    Then verify "YAML_Modal_Container" element visibility on "View_YAML" wizard
+    Then click on "Cross_Cancel_Button" element on "View_YAML" wizard
+    Then select "Delete" option in full view action menu on "Files_Info_Pane" wizard
+    And wait load page
+    Then verify if "Delete_Artifact_Popup" popup dialog appears
+    Then verify "Delete_Artifact_Popup" element visibility on "Files_Info_Pane" wizard
+    Then verify "Close_Button" element visibility on "Delete_Artifact_Popup" wizard
+    Then verify "Title" element visibility on "Delete_Artifact_Popup" wizard
+    Then "Title" element on "Delete_Artifact_Popup" should contains "Delete artifact?" value
+    Then verify "Dialog_Message" element visibility on "Delete_Artifact_Popup" wizard
+    Then "Dialog_Message" element on "Delete_Artifact_Popup" should contains "Are you sure you want to delete the artifact \"survival-curves_km-survival\" metadata? Deleted metadata can not be restored." value
+    Then verify "Delete_Data_Checkbox" element visibility on "Delete_Artifact_Popup" wizard
+    Then "Delete_Data_Checkbox" element should be unchecked on "Delete_Artifact_Popup" wizard
+    Then verify "Cancel_Button" element visibility on "Delete_Artifact_Popup" wizard
+    Then "Cancel_Button" element on "Delete_Artifact_Popup" should contains "Cancel" value
+    Then verify "Delete_Button" element visibility on "Delete_Artifact_Popup" wizard
+    Then "Delete_Button" element on "Delete_Artifact_Popup" should contains "Delete" value
+    Then click on "Delete_Button" element on "Delete_Artifact_Popup" wizard
+    And wait load page
+    And wait load page
+    And wait load page
+    Then click on "Edit_btn_full_view" element on "Files_Info_Pane" wizard
+    Then verify "Version_tag_Input_full_view" on "Files_Info_Pane" wizard should contains "latest" value   
+    Then click on "Tabel_View_Button" element on "Files_Info_Pane" wizard
