@@ -197,115 +197,118 @@ const MetricsSelector = ({
   return (
     <Form form={formRef.current} onSubmit={() => {}}>
       {formState => (
-        <div className="metrics-selector" data-testid="metrics-selector">
-          <div
-            data-testid="metric-selector-field"
-            ref={selectorFieldRef}
-            className="metric-selector-field"
-          >
+        <Tooltip hidden={!disabled} template={<TextTooltipTemplate
+                                                text="No metrics to display due to one of: there are no applications configured; metrics were not logged yet due to lack of model invocations; model-monitoring hasn’t processed the results yet." />}>
+          <div className="metrics-selector" data-testid="metrics-selector">
             <div
-              data-testid="metrics-selector-header"
-              className={metricsHeaderClassNames}
-              onClick={() => setIsOpen(isOpen => !disabled && !isOpen)}
+              data-testid="metric-selector-field"
+              ref={selectorFieldRef}
+              className="metric-selector-field"
             >
               <div
-                data-testid="selected-metrics"
-                className="metrics-selector-header__selected-metrics data-ellipsis"
+                data-testid="metrics-selector-header"
+                className={metricsHeaderClassNames}
+                onClick={() => setIsOpen(isOpen => !disabled && !isOpen)}
               >
-                <span>{getSelectValue(formState.values.metrics)}</span>
-              </div>
-              <div className="metrics-selector-header__icon">
-                <Caret />
-              </div>
-            </div>
-            {isOpen && (
-              <PopUpDialog
-                className="form-field form-field-select__options-list metrics-selector-popup"
-                headerIsHidden
-                customPosition={{
-                  element: selectorFieldRef,
-                  position: 'bottom-right',
-                  autoHorizontalPosition: true
-                }}
-                style={{
-                  width: '280px'
-                }}
-              >
-                <div className="metrics-selector-search">
-                  <div className="metrics-selector-search__name-filter">
-                    <FormInput
-                      inputIcon={<SearchIcon />}
-                      name="metricSearchName"
-                      placeholder="Search metrics..."
-                    />
-                    <FormOnChange name="metricSearchName" handler={setNameFilterDebounced} />
-                  </div>
+                <div
+                  data-testid="selected-metrics"
+                  className="metrics-selector-header__selected-metrics data-ellipsis"
+                >
+                  <span>{getSelectValue(formState.values.metrics)}</span>
                 </div>
+                <div className="metrics-selector-header__icon">
+                  <Caret />
+                </div>
+              </div>
+              {isOpen && (
+                <PopUpDialog
+                  className="form-field form-field-select__options-list metrics-selector-popup"
+                  headerIsHidden
+                  customPosition={{
+                    element: selectorFieldRef,
+                    position: 'bottom-right',
+                    autoHorizontalPosition: true
+                  }}
+                  style={{
+                    width: '280px'
+                  }}
+                >
+                  <div className="metrics-selector-search">
+                    <div className="metrics-selector-search__name-filter">
+                      <FormInput
+                        inputIcon={<SearchIcon />}
+                        name="metricSearchName"
+                        placeholder="Search metrics..."
+                      />
+                      <FormOnChange name="metricSearchName" handler={setNameFilterDebounced} />
+                    </div>
+                  </div>
 
-                <ul className="metrics-selector-options options-list">
-                  <FieldArray name={name}>
-                    {({ fields }) => {
-                      return (
-                        <>
-                          {filteredMetrics.map(metricsGroup => {
-                            return !isEmpty(metricsGroup.metrics) ? (
-                              <Accordion
-                                key={metricsGroup.app}
-                                accordionClassName="metrics-selector-accordion"
-                                icon={<Arrow />}
-                                iconClassName="metrics-selector-accordion-icon"
-                                openByDefault
-                              >
-                                <div className="metrics-selector-accordion-content">
-                                  <div className="metrics-selector-accordion-title">
-                                    {metricsGroup.app}
+                  <ul className="metrics-selector-options options-list">
+                    <FieldArray name={name}>
+                      {({ fields }) => {
+                        return (
+                          <>
+                            {filteredMetrics.map(metricsGroup => {
+                              return !isEmpty(metricsGroup.metrics) ? (
+                                <Accordion
+                                  key={metricsGroup.app}
+                                  accordionClassName="metrics-selector-accordion"
+                                  icon={<Arrow />}
+                                  iconClassName="metrics-selector-accordion-icon"
+                                  openByDefault
+                                >
+                                  <div className="metrics-selector-accordion-content">
+                                    <div className="metrics-selector-accordion-title">
+                                      {metricsGroup.app}
+                                    </div>
+                                    <ul className="metrics-selector-options">
+                                      {metricsGroup.metrics.map(metricItem => {
+                                        return (
+                                          <SelectOption
+                                            key={metricItem.id}
+                                            item={{
+                                              ...metricItem,
+                                              label: getMetricsLabel(metricItem),
+                                              disabled:
+                                                fields.value?.length >= maxSelectionNumber &&
+                                                !fields.value.includes(metricItem.id)
+                                            }}
+                                            name={name}
+                                            multiple
+                                          />
+                                        )
+                                      })}
+                                    </ul>
                                   </div>
-                                  <ul className="metrics-selector-options">
-                                    {metricsGroup.metrics.map(metricItem => {
-                                      return (
-                                        <SelectOption
-                                          key={metricItem.id}
-                                          item={{
-                                            ...metricItem,
-                                            label: getMetricsLabel(metricItem),
-                                            disabled:
-                                              fields.value?.length >= maxSelectionNumber &&
-                                              !fields.value.includes(metricItem.id)
-                                          }}
-                                          name={name}
-                                          multiple
-                                        />
-                                      )
-                                    })}
-                                  </ul>
-                                </div>
-                              </Accordion>
-                            ) : null
-                          })}
-                        </>
-                      )
-                    }}
-                  </FieldArray>
-                </ul>
-                <div className="metrics-selector__footer">
-                  <div
-                    data-testid="metrics-selector-counter"
-                    className="metrics-selector__footer-counter"
-                  >
-                    {`${formState.values.metrics?.length ?? 0}/${maxSelectionNumber}`}
+                                </Accordion>
+                              ) : null
+                            })}
+                          </>
+                        )
+                      }}
+                    </FieldArray>
+                  </ul>
+                  <div className="metrics-selector__footer">
+                    <div
+                      data-testid="metrics-selector-counter"
+                      className="metrics-selector__footer-counter"
+                    >
+                      {`${formState.values.metrics?.length ?? 0}/${maxSelectionNumber}`}
+                    </div>
+                    <div
+                      data-testid="metrics-selector-buttons"
+                      className="metrics-selector__footer-buttons"
+                    >
+                      <Button variant={TERTIARY_BUTTON} label="Clear" onClick={handleClear} />
+                      <Button variant={SECONDARY_BUTTON} label="Apply" onClick={handleApply} />
+                    </div>
                   </div>
-                  <div
-                    data-testid="metrics-selector-buttons"
-                    className="metrics-selector__footer-buttons"
-                  >
-                    <Button variant={TERTIARY_BUTTON} label="Clear" onClick={handleClear} />
-                    <Button variant={SECONDARY_BUTTON} label="Apply" onClick={handleApply} />
-                  </div>
-                </div>
-              </PopUpDialog>
-            )}
+                </PopUpDialog>
+              )}
+            </div>
           </div>
-        </div>
+        </Tooltip>
       )}
     </Form>
   )
