@@ -1227,6 +1227,22 @@ function getArtifacts(req, res) {
     }
   }
 
+  if (req.query['format'] === 'minimal') {
+    collectedArtifacts = collectedArtifacts.map(func => {
+      const fieldsToPick = [
+        'db_key',
+        'producer',
+        'size',
+        'target_path',
+        'framework',
+        'metrics'
+      ]
+      const specFieldsToPick = fieldsToPick.map(fieldName => `spec.${fieldName}`)
+
+      return pick(func, ['kind', 'metadata', 'status', 'project', ...specFieldsToPick, ...fieldsToPick])
+    })
+  }
+
   res.send({ artifacts: collectedArtifacts })
 }
 
