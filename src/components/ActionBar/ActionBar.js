@@ -76,7 +76,7 @@ const ActionBar = ({
 }) => {
   const [autoRefresh, setAutoRefresh] = useState(autoRefreshIsEnabled)
   const filtersStore = useSelector(store => store.filtersStore)
-  const filterMenu = useSelector(store => store.filtersStore[FILTER_MENU][filterMenuName])
+  const filterMenu = useSelector(store => store.filtersStore[FILTER_MENU][filterMenuName].values)
   const filterMenuModal = useSelector(
     store => store.filtersStore[FILTER_MENU_MODAL][filterMenuName]
   )
@@ -143,7 +143,7 @@ const ActionBar = ({
       const filtersHelperResult = await filtersHelper(changes, dispatch)
 
       if (filtersHelperResult) {
-        if (params.name) {
+        if (params.name || params.funcName || params.hash) {
           navigate(navigateLink)
         }
 

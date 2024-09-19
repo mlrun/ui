@@ -91,6 +91,7 @@ const FunctionsView = ({
                 filterMenuName={FUNCTION_FILTERS}
                 handleExpandAll={handleExpandAll}
                 handleRefresh={filtersChangeCallback}
+                navigateLink={`/projects/${params.projectName}/functions`}
                 actionButtons={[
                   {
                     hidden: !isDemoMode,
