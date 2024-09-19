@@ -108,6 +108,17 @@ const Functions = ({
   const location = useLocation()
   const dispatch = useDispatch()
 
+  const functionsFilter = useMemo(
+    () => ({
+      showUntagged: filtersStore.filterMenuModal.FUNCTION_FILTERS.values.showUntagged,
+      dates: filtersStore.filterMenu.FUNCTION_FILTERS.dates
+    }),
+    [
+      filtersStore.filterMenuModal.FUNCTION_FILTERS.values.showUntagged,
+      filtersStore.filterMenu.FUNCTION_FILTERS.dates
+    ]
+  )
+
   const terminateDeleteTasksPolling = useCallback(() => {
     terminatePollRef?.current?.()
     setDeletingFunctions({})
@@ -431,7 +442,7 @@ const Functions = ({
               message: 'Function is built and ran successfully.'
             })
           )
-          refreshFunctions(filtersStore)
+          refreshFunctions(functionsFilter)
         })
         .catch(error => {
           showErrorNotification(dispatch, error, 'Failed to build and run function.', '', () => {
@@ -439,7 +450,7 @@ const Functions = ({
           })
         })
     },
-    [deployFunction, dispatch, filtersStore, refreshFunctions, runNewJob]
+    [deployFunction, dispatch, functionsFilter, refreshFunctions, runNewJob]
   )
 
   const pageData = useMemo(
