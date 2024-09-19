@@ -542,7 +542,8 @@ const projectReducer = (state = initialState, { type, payload }) => {
         project: {
           ...state.project,
           data: payload,
-          loading: false
+          loading: false,
+          error: null
         }
       }
     case FETCH_PROJECT_SCHEDULED_JOBS_BEGIN:
