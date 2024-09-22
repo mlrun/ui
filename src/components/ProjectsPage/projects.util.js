@@ -27,6 +27,7 @@ import {
   GATEWAY_TIMEOUT_STATUS_CODE
 } from 'igz-controls/constants'
 import { BG_TASK_FAILED, BG_TASK_SUCCEEDED, pollTask } from '../../utils/poll.util'
+import { PROJECT_ONLINE_STATUS } from '../../constants'
 import { DANGER_BUTTON, FORBIDDEN_ERROR_STATUS_CODE } from 'igz-controls/constants'
 import { setNotification } from '../../reducers/notificationReducer'
 import { showErrorNotification } from '../../utils/notifications.util'
@@ -75,7 +76,7 @@ export const generateProjectActionsMenu = (
         {
           label: 'Unarchive',
           icon: <UnarchiveIcon />,
-          hidden: project.status.state === 'online',
+          hidden: project.status.state === PROJECT_ONLINE_STATUS,
           disabled: projectIsDeleting,
           onClick: unarchiveProject
         },
