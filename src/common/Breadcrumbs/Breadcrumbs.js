@@ -74,11 +74,11 @@ const Breadcrumbs = ({ onClick = () => {}, projectStore, fetchProjectsNames }) =
         tab
       }
     } else {
-      const [projects, page] = location.pathname.split('/').slice(1, 3)
+      const [page] = location.pathname.split('/').slice(3, 4)
       const screen = mlrunScreens.find(screen => screen.id === page)
 
       return {
-        pathItems: [projects, screen?.label || page],
+        pathItems: ['projects', screen?.label || page],
         screen
       }
     }

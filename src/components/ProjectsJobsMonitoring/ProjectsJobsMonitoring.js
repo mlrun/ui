@@ -117,7 +117,7 @@ const ProjectsJobsMonitoring = ({ fetchAllJobRuns, fetchJobFunction, fetchJobs }
   const handleTabChange = tabName => {
     setSelectedCard(STATS_TOTAL_CARD)
     setSelectedTab(tabName)
-    navigate(`/projects/${JOBS_MONITORING_PAGE}/${tabName}`)
+    navigate(`/projects/*/${JOBS_MONITORING_PAGE}/${tabName}`)
   }
 
   const handleRerunJob = useCallback(
