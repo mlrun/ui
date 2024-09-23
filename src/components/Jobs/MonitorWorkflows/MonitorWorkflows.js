@@ -26,11 +26,7 @@ import classnames from 'classnames'
 import FilterMenu from '../../FilterMenu/FilterMenu'
 import WorkflowsTable from '../../../elements/WorkflowsTable/WorkflowsTable'
 
-import {
-  JOBS_PAGE,
-  MONITOR_WORKFLOWS_TAB,
-  REQUEST_CANCELED
-} from '../../../constants'
+import { JOBS_PAGE, MONITOR_WORKFLOWS_TAB, REQUEST_CANCELED } from '../../../constants'
 import {
   fetchInitialWorkflows,
   generateFilters,

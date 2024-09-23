@@ -94,7 +94,7 @@ const WorkflowsMonitoring = ({ fetchFunctionLogs }) => {
   useEffect(() => {
     if (!workflowsAreLoaded && !params.workflowId) {
       getWorkflows({
-        ...workflowsFilterMenu,
+        ...workflowsFilterMenu.values,
         ...workflowsFilterMenuModal.values
       })
 

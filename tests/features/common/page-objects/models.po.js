@@ -249,6 +249,7 @@ const tableRefreshButton = By.css('.content__action-bar-wrapper .action-bar [dat
 
 module.exports = {
   modelsTab: {
+    Delete_Artifact_Popup: By.css('[data-testid="pop-up-dialog"]'),
     Models_Tab_Selector: commonTable(tabSelector),
     Table_Name_Filter_Input: inputGroup(
       generateInputGroup(

@@ -141,7 +141,9 @@ const JobWizard = ({
     if (!isEditMode) {
       dispatch(projectsAction.fetchProject(params.projectName, { format: 'minimal' })).then(
         project => setCurrentProject(project)
-      )
+      ).catch(error => {
+        showErrorNotification(dispatch, error, 'The project failed to load')
+      })
     }
   }, [dispatch, isEditMode, params.projectName])
 

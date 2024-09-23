@@ -228,6 +228,7 @@ export const generateMonitoringCounters = (data, dispatch) => {
       running: 0
     },
     scheduled: {
+      all: 0,
       jobs: 0,
       workflows: 0
     }
@@ -248,6 +249,9 @@ export const generateMonitoringCounters = (data, dispatch) => {
     monitoringCounters.workflows.completed += project.pipelines_completed_recent_count
     monitoringCounters.workflows.failed += project.pipelines_failed_recent_count
     monitoringCounters.workflows.running += project.pipelines_running_count
+    monitoringCounters.scheduled.all +=
+      project.distinct_scheduled_jobs_pending_count +
+      project.distinct_scheduled_pipelines_pending_count
     monitoringCounters.scheduled.jobs += project.distinct_scheduled_jobs_pending_count
     monitoringCounters.scheduled.workflows += project.distinct_scheduled_pipelines_pending_count
   })

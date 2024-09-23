@@ -34,7 +34,7 @@ const ErrorMessage = ({ closeError = null, message }) => {
         <div>
           <UnsuccessAlert className="error__icon" />
         </div>
-        <div className="error__message"> {message}</div>
+        <div className="error__message">{message}</div>
       </div>
       {closeError && (
         <button data-testid="close" onClick={closeError}>

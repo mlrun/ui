@@ -130,7 +130,8 @@ const projectsAction = {
             : error.response?.status === FORBIDDEN_ERROR_STATUS_CODE
               ? 'You don’t have permission to create a project.'
               : error.response?.status === INTERNAL_SERVER_ERROR_STATUS_CODE
-                ? 'The system already has the maximum number of projects. An existing project must be deleted before you can create another.'
+                ? error.response.data?.detail ||
+                  'The system already has the maximum number of projects. An existing project must be deleted before you can create another.'
                 : error.message
 
         dispatch(projectsAction.createProjectFailure(message))
@@ -168,11 +169,11 @@ const projectsAction = {
   deleteProjectSuccess: () => ({
     type: DELETE_PROJECT_SUCCESS
   }),
-  fetchProject: (project, params) => dispatch => {
+  fetchProject: (project, params, signal) => dispatch => {
     dispatch(projectsAction.fetchProjectBegin())
 
     return projectsApi
-      .getProject(project, params)
+      .getProject(project, params, signal)
       .then(response => {
         dispatch(projectsAction.fetchProjectSuccess(response?.data))
 
@@ -318,7 +319,7 @@ const projectsAction = {
     type: FETCH_PROJECT_FUNCTIONS_SUCCESS,
     payload: functions
   }),
-  fetchProjectJobs: (project, startTimeFrom) => dispatch => {
+  fetchProjectJobs: (project, startTimeFrom, signal) => dispatch => {
     dispatch(projectsAction.fetchProjectJobsBegin())
 
     const params = {
@@ -331,7 +332,7 @@ const projectsAction = {
     }
 
     return projectsApi
-      .getJobsAndWorkflows(project, params)
+      .getJobsAndWorkflows(project, params, signal)
       .then(response => {
         dispatch(
           projectsAction.fetchProjectJobsSuccess(
@@ -458,11 +459,11 @@ const projectsAction = {
     type: FETCH_PROJECT_SECRETS_SUCCESS,
     payload: secrets
   }),
-  fetchProjectSummary: project => dispatch => {
+  fetchProjectSummary: (project, signal) => dispatch => {
     dispatch(projectsAction.fetchProjectSummaryBegin())
 
     return projectsApi
-      .getProjectSummary(project)
+      .getProjectSummary(project, signal)
       .then(({ data }) => {
         return dispatch(projectsAction.fetchProjectSummarySuccess(parseSummaryData(data)))
       })
@@ -485,32 +486,36 @@ const projectsAction = {
   }),
   fetchProjects:
     (params, setRequestErrorMessage = () => {}) =>
-      dispatch => {
-        dispatch(projectsAction.fetchProjectsBegin())
-        setRequestErrorMessage('')
+    dispatch => {
+      dispatch(projectsAction.fetchProjectsBegin())
+      setRequestErrorMessage('')
 
-        return projectsApi
-          .getProjects(params)
-          .then(response => {
-            const parsedProjects = parseProjects(response.data.projects)
+      return projectsApi
+        .getProjects(params)
+        .then(response => {
+          const parsedProjects = parseProjects(response.data.projects)
 
-            dispatch(projectsAction.fetchProjectsSuccess(parsedProjects))
-            dispatch(projectsAction.fetchProjectsNamesSuccess(parsedProjects.map(project => project.metadata.name)))
-
-            return parsedProjects
-          })
-          .catch(error => {
-            dispatch(projectsAction.fetchProjectsFailure(error), dispatch)
-            showErrorNotification(
-              dispatch,
-              error,
-              'Failed to fetch projects',
-              null,
-              null,
-              setRequestErrorMessage
+          dispatch(projectsAction.fetchProjectsSuccess(parsedProjects))
+          dispatch(
+            projectsAction.fetchProjectsNamesSuccess(
+              parsedProjects.map(project => project.metadata.name)
             )
-          })
-      },
+          )
+
+          return parsedProjects
+        })
+        .catch(error => {
+          dispatch(projectsAction.fetchProjectsFailure(error), dispatch)
+          showErrorNotification(
+            dispatch,
+            error,
+            'Failed to fetch projects',
+            null,
+            null,
+            setRequestErrorMessage
+          )
+        })
+    },
   fetchProjectsBegin: () => ({ type: FETCH_PROJECTS_BEGIN }),
   fetchProjectsFailure: error => ({
     type: FETCH_PROJECTS_FAILURE,

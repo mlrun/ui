@@ -24,7 +24,7 @@ import moment from 'moment'
 
 import ProjectDataCard from '../ProjectDataCard/ProjectDataCard'
 
-import { MONITOR_JOBS_TAB } from '../../constants'
+import { MONITOR_JOBS_TAB, REQUEST_CANCELED } from '../../constants'
 import { getJobsStatistics, getJobsTableData, groupByName, sortByDate } from './projectJobs.utils'
 import projectsAction from '../../actions/projects'
 
@@ -39,9 +39,14 @@ const ProjectJobs = ({ fetchProjectJobs, projectStore }) => {
   }, [projectStore.project.jobs.data])
 
   useEffect(() => {
+    const abortController = new AbortController()
     const startTimeFrom = moment().add(-2, 'days').toISOString()
 
-    fetchProjectJobs(params.projectName, startTimeFrom)
+    fetchProjectJobs(params.projectName, startTimeFrom, abortController.signal)
+
+    return () => {
+      abortController.abort(REQUEST_CANCELED)
+    }
   }, [fetchProjectJobs, params.projectName])
 
   const jobsData = useMemo(() => {

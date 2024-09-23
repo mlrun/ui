@@ -56,7 +56,7 @@ const ConsumerGroup = ({
   const [filteredV3ioStreamShardLags, setFilteredV3ioStreamShardLags] = useState([])
   const filtersStore = useSelector(store => store.filtersStore)
   const nameFilter = useSelector(
-    store => store.filtersStore[FILTER_MENU][CONSUMER_GROUP_FILTER][NAME_FILTER]
+    store => store.filtersStore[FILTER_MENU][CONSUMER_GROUP_FILTER].values[NAME_FILTER]
   )
   const params = useParams()
   const dispatch = useDispatch()

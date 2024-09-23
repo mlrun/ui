@@ -20,6 +20,7 @@ such restriction.
 import React, { useCallback, useEffect, useState, useMemo, useRef } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useLocation, useNavigate, useParams } from 'react-router-dom'
+import { isEmpty } from 'lodash'
 
 import AddArtifactTagPopUp from '../../elements/AddArtifactTagPopUp/AddArtifactTagPopUp'
 import FilesView from './FilesView'
@@ -104,7 +105,7 @@ const Files = () => {
     [selectedFile.tag]
   )
 
-  useEffect(() => {
+  const getAndSetSelectedArtifact = useCallback(() => {
     setFullSelectedArtifact(
       FILES_TAB,
       dispatch,
@@ -114,6 +115,10 @@ const Files = () => {
       params.projectName
     )
   }, [dispatch, navigate, params.projectName, selectedFileMin])
+
+  useEffect(() => {
+    getAndSetSelectedArtifact()
+  }, [getAndSetSelectedArtifact])
 
   const fetchData = useCallback(
     filters => {
@@ -310,7 +315,7 @@ const Files = () => {
   }
 
   useInitialTableFetch({
-    createRowData: createFilesRowData,
+    createRowData: rowItem => createFilesRowData(rowItem, params.projectName, frontendSpec),
     fetchData,
     fetchTags,
     filterMenuName: FILES_FILTERS,
@@ -344,28 +349,30 @@ const Files = () => {
     dispatch(setFilters({ groupBy: GROUP_BY_NONE }))
   }, [dispatch, params.projectName])
 
+  const handleSelectFile = useCallback(
+    file => {
+      const { db_key: name, tag, iter, uid } = file
+
+      checkForSelectedFile(
+        name,
+        selectedRowData,
+        files,
+        tag,
+        iter,
+        uid,
+        navigate,
+        params.projectName,
+        setSelectedFileMin
+      )
+    },
+    [files, navigate, params.projectName, selectedRowData]
+  )
+
   useEffect(() => {
-    checkForSelectedFile(
-      params.name,
-      selectedRowData,
-      files,
-      params.tag,
-      params.iter,
-      params.uid,
-      navigate,
-      params.projectName,
-      setSelectedFileMin
-    )
-  }, [
-    files,
-    navigate,
-    params.iter,
-    params.name,
-    params.projectName,
-    params.tag,
-    params.uid,
-    selectedRowData
-  ])
+    if (params.name && isEmpty(selectedFileMin)) {
+      handleSelectFile({ db_key: params.name, tag: params.tag, iter: params.iter })
+    }
+  }, [handleSelectFile, params.iter, params.name, params.tag, selectedFileMin])
 
   const handleRegisterArtifact = useCallback(() => {
     openPopUp(RegisterArtifactModal, {
@@ -400,17 +407,19 @@ const Files = () => {
       detailsFormInitialValues={detailsFormInitialValues}
       files={files}
       filtersStore={filtersStore}
+      getAndSetSelectedArtifact={getAndSetSelectedArtifact}
       handleExpandRow={handleExpandRow}
       handleRefresh={handleRefresh}
       handleRegisterArtifact={handleRegisterArtifact}
-      requestErrorMessage={requestErrorMessage}
+      handleSelectFile={handleSelectFile}
       maxArtifactsErrorIsShown={maxArtifactsErrorIsShown}
       pageData={pageData}
       ref={{ filesRef }}
+      requestErrorMessage={requestErrorMessage}
       selectedFile={selectedFile}
       selectedRowData={selectedRowData}
-      setMaxArtifactsErrorIsShown={setMaxArtifactsErrorIsShown}
       setFiles={setFiles}
+      setMaxArtifactsErrorIsShown={setMaxArtifactsErrorIsShown}
       setSelectedFileMin={setSelectedFileMin}
       setSelectedRowData={setSelectedRowData}
       sortProps={{ sortTable, selectedColumnName, getSortingIcon }}

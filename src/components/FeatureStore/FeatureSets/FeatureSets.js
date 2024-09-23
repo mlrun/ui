@@ -182,7 +182,7 @@ const FeatureSets = ({
       fetchFeatureSet(item.project, item.name, filtersStore.tag)
         .then(result => {
           const content = [...parseFeatureSets(result)].map(contentItem =>
-            createFeatureSetsRowData(contentItem, FEATURE_SETS_TAB, params.projectName, true)
+            createFeatureSetsRowData(contentItem, params.projectName, FEATURE_SETS_TAB, true)
           )
           setSelectedRowData(state => ({
             ...state,
@@ -220,10 +220,10 @@ const FeatureSets = ({
   const tableContent = useMemo(() => {
     return filtersStore.groupBy === GROUP_BY_NAME
       ? latestItems.map(contentItem => {
-          return createFeatureSetsRowData(contentItem, FEATURE_SETS_TAB, params.projectName, true)
+          return createFeatureSetsRowData(contentItem, params.projectName, FEATURE_SETS_TAB, true)
         })
       : featureSets.map(contentItem =>
-          createFeatureSetsRowData(contentItem, FEATURE_SETS_TAB, params.projectName)
+          createFeatureSetsRowData(contentItem, params.projectName, FEATURE_SETS_TAB)
         )
   }, [featureSets, filtersStore.groupBy, latestItems, params.projectName])
 
@@ -298,7 +298,8 @@ const FeatureSets = ({
   useInitialTableFetch({
     fetchData,
     setExpandedRowsData: setSelectedRowData,
-    createRowData: createFeatureSetsRowData,
+    createRowData: rowItem =>
+      createFeatureSetsRowData(rowItem, params.projectName, FEATURE_SETS_TAB),
     fetchTags,
     filters: filtersStore
   })
@@ -321,6 +322,7 @@ const FeatureSets = ({
           (contentItem.tag === params.tag || contentItem.uid === params.tag)
         )
       })
+      // console.log(params.projectName)
 
       if (!selectedItem) {
         navigate(`/projects/${params.projectName}/feature-store/${FEATURE_SETS_TAB}`, {

@@ -42,11 +42,11 @@ import { parseV3ioStreams } from '../utils/parseV3ioStreams'
 import { parseV3ioStreamShardLags } from '../utils/parseV3ioStreamShardLags'
 
 const nuclioActions = {
-  fetchApiGateways: project => dispatch => {
+  fetchApiGateways: (project, signal) => dispatch => {
     dispatch(nuclioActions.fetchApiGatewaysBegin())
 
     return nuclioApi
-      .getApiGateways(project)
+      .getApiGateways(project, signal)
       .then(({ data }) => {
         dispatch(nuclioActions.fetchApiGatewaysSuccess(Object.keys(data).length))
       })
@@ -65,11 +65,11 @@ const nuclioActions = {
     type: FETCH_API_GATEWAYS_SUCCESS,
     payload: apiGateways
   }),
-  fetchNuclioFunctions: project => dispatch => {
+  fetchNuclioFunctions: (project, signal) => dispatch => {
     dispatch(nuclioActions.fetchNuclioFunctionsBegin())
 
     return nuclioApi
-      .getFunctions(project)
+      .getFunctions(project, signal)
       .then(({ data }) => {
         if (project) {
           dispatch(nuclioActions.fetchNuclioFunctionsSuccess(Object.values(data)))
@@ -131,11 +131,11 @@ const nuclioActions = {
     type: FETCH_NUCLIO_V3IO_STREAM_SHARD_LAGS_SUCCESS,
     payload: summary
   }),
-  fetchNuclioV3ioStreams: project => dispatch => {
+  fetchNuclioV3ioStreams: (project, signal) => dispatch => {
     dispatch(nuclioActions.fetchNuclioV3ioStreamsBegin())
 
     return nuclioApi
-      .getV3ioStreams(project)
+      .getV3ioStreams(project, signal)
       .then(({ data }) => {
         const parsedV3ioStreams = parseV3ioStreams(data)
 

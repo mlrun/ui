@@ -70,6 +70,7 @@ import {
   checkHintTextWithHover,
   checkInputAccordingHintText,
   checkWarningHintText,
+  checkWarningHintTextWithHover,
   checkWarningText,
   getInputValue,
   typeValue,
@@ -79,6 +80,7 @@ import {
   verifyInputEnabled,
   verifyInputClassEnabled,
   verifyTypedValue,
+  verifyPlaceholder,
   verifyTypedValueWithoutInputgroup,
   verifyTextAreaCounter
 } from '../common/actions/input-group.action'
@@ -135,11 +137,13 @@ Given('open url', async function() {
 
 When('turn on demo mode', async function() {
   const url = await this.driver.getCurrentUrl()
+
   await navigateToPage(this.driver, `${url}?mode=demo`)
 })
 
 When('turn on staging mode', async function() {
   const url = await this.driver.getCurrentUrl()
+
   await navigateToPage(this.driver, `${url}?mode=staging`)
 })
 
@@ -156,8 +160,10 @@ Then('additionally redirect by INVALID-TAB', async function() {
     urlNodesArr[urlNodesArr.length - 1],
     'INVALID-TAB'
   )
+
   await navigateToPage(this.driver, `${invalidTab}`)
   const afterURL = await this.driver.getCurrentUrl()
+  
   expect(beforeURL).equal(
     afterURL,
     `Redirection from "${beforeURL}/INVALID-TAB"\nshould be "${beforeURL}"\nbut is "${afterURL}"`
@@ -197,6 +203,12 @@ Then(
 Then('wait load page', async function() {
   await waitPageLoad(this.driver, pageObjects['commonPagesHeader']['loader'])
   await this.driver.sleep(500)
+})
+
+Then('wait for {int} seconds', async function(seconds) {
+  const milliseconds = seconds * 1000
+
+  await new Promise(resolve => setTimeout(resolve, milliseconds))
 })
 
 Then('navigate forward', async function() {
@@ -337,6 +349,13 @@ Then(
 )
 
 Then(
+  'verify checkbox {string} element in {string} on {string} wizard is enabled',
+  async function (elementName, accordionName, wizardName) {
+    await verifyCheckboxEnabled(this.driver, pageObjects[wizardName][accordionName][elementName].root)
+  }
+)
+
+Then(
   'verify checkbox {string} element on {string} wizard is disabled',
   async function (elementName, wizardName) {
     await verifyCheckboxDisabled(this.driver, pageObjects[wizardName][elementName])
@@ -455,6 +474,7 @@ Then(
       pageObjects[wizard][accordion][inputField]
     )
     const result = Number.parseInt(txt) + value
+
     await incrementValue(
       this.driver,
       pageObjects[wizard][accordion][inputField],
@@ -476,6 +496,7 @@ Then(
       pageObjects[wizard][inputField]
     )
     const result = Number.parseInt(txt) + value
+
     await incrementValue(
       this.driver,
       pageObjects[wizard][inputField],
@@ -498,9 +519,11 @@ Then(
         )
         const unitValue = unit === 'cpu' ? value / 1000 : unit === 'millicpu' ? value * 100 : value
         let result = Number.parseFloat(txt || '0') + unitValue
+
         if (unit === 'cpu') {
           return result.toFixed(3)
         }
+
         await incrementValue(
             this.driver,
             pageObjects[wizard][accordion][inputField],
@@ -522,6 +545,7 @@ Then(
       pageObjects[wizard][accordion][inputField]
     )
     const result = Number.parseInt(txt) - value
+
     await decrementValue(
       this.driver,
       pageObjects[wizard][accordion][inputField],
@@ -543,6 +567,7 @@ Then(
       pageObjects[wizard][inputField]
     )
     const result = Number.parseInt(txt) - value
+
     await decrementValue(
       this.driver,
       pageObjects[wizard][inputField],
@@ -562,12 +587,14 @@ Then(
     const txt = await getInputValue(this.driver, pageObjects[wizard][accordion][inputField])
     const unitValue = unit === 'cpu' ? value / 1000 : unit === 'millicpu' ? value * 100 : value
     let result = Number.parseFloat(txt) - unitValue
+
     if (unit === 'cpu') {
       return result.toFixed(3)
     }
     else if (unit !== 'cpu' && result < 1) {
       result = 1
     }
+
     await decrementValue(this.driver, pageObjects[wizard][accordion][inputField], value)
     await verifyTypedValue(
       this.driver,
@@ -897,12 +924,14 @@ Then('sort projects in ascending order', async function() {
     'class',
     'sort_up'
   )
+
   if (!upSorted) {
         await clickOnComponent(
             this.driver,
             pageObjects['Projects']['Projects_Sorter']
         )
   }
+
   if (upSorted) {
     await isTableColumnSorted(
       this.driver,
@@ -919,12 +948,14 @@ Then('sort projects in descending order', async function() {
     'class',
     'sort_down'
   )
+
   if (!downSorted) {
     await clickOnComponent(
       this.driver,
       pageObjects['Projects']['Projects_Sorter']
     )
   }
+
   await isTableColumnSorted(
     this.driver,
     pageObjects['Projects']['Projects_Table'],
@@ -972,6 +1003,7 @@ When('select {string} tab in {string} on {string} wizard', async function(
     tabName
   )
   const indx = arr[0]
+
   await clickOnComponent(
     this.driver,
     pageObjects[wizard][tabSelector]['tableFields']['key'](indx)
@@ -1082,6 +1114,26 @@ Then(
     )
   }
 )
+Then(
+  'verify {string} on {string} wizard should display hover warning {string}.{string}',
+  async function(input, wizard, constStorage, constValue) {
+    await clickOnComponent(
+      this.driver,
+      pageObjects[wizard][input]['inputField']
+    )
+    await this.driver.sleep(100)
+    await clickNearComponent(
+      this.driver,
+      pageObjects[wizard][input]['inputField']
+    )
+    await checkWarningHintTextWithHover(
+      this.driver,
+      pageObjects[wizard][input],
+      pageObjects[wizard][input]['warningText'],
+      pageObjectsConsts[constStorage][constValue]
+    )
+  }
+)
 
 Then(
   'verify {string} element in {string} on {string} wizard should display warning {string}.{string}',
@@ -1096,6 +1148,27 @@ Then(
       pageObjects[wizard][accordion][input]['inputField']
     )
     await checkWarningHintText(
+      this.driver,
+      pageObjects[wizard][accordion][input],
+      pageObjects[wizard][accordion][input]['warningText'],
+      pageObjectsConsts[constStorage][constValue]
+    )
+  }
+)
+
+Then(
+  'verify {string} element in {string} on {string} wizard should display hover warning {string}.{string}',
+  async function(input, accordion, wizard, constStorage, constValue) {
+    await clickOnComponent(
+      this.driver,
+      pageObjects[wizard][accordion][input]['inputField']
+    )
+    await this.driver.sleep(100)
+    await clickNearComponent(
+      this.driver,
+      pageObjects[wizard][accordion][input]['inputField']
+    )
+    await checkWarningHintTextWithHover(
       this.driver,
       pageObjects[wizard][accordion][input],
       pageObjects[wizard][accordion][input]['warningText'],
@@ -1276,6 +1349,18 @@ Then('select {string} option in action menu on {string} wizard', async function(
   wizard
 ) {
   const actionMenu = pageObjects[wizard]['Action_Menu']
+
+  await openActionMenu(this.driver, actionMenu)
+  await this.driver.sleep(500)
+  await selectOptionInActionMenu(this.driver, actionMenu, option)
+})
+
+Then('select {string} option in full view action menu on {string} wizard', async function(
+  option,
+  wizard
+) {
+  const actionMenu = pageObjects[wizard]['Action_Menu_Full_View']
+
   await openActionMenu(this.driver, actionMenu)
   await this.driver.sleep(500)
   await selectOptionInActionMenu(this.driver, actionMenu, option)
@@ -1286,6 +1371,7 @@ Then('check that {string} option in action menu on {string} wizard is enabled', 
   wizard
 ) {
   const actionMenu = pageObjects[wizard]['Action_Menu']
+
   await openActionMenu(this.driver, actionMenu)
   await this.driver.sleep(500)
   await verifyOptionInActionMenuEnabled (this.driver, actionMenu, option)
@@ -1296,6 +1382,7 @@ Then('check that {string} option in action menu on {string} wizard is disabled',
   wizard
 ) {
   const actionMenu = pageObjects[wizard]['Action_Menu']
+
   await openActionMenu(this.driver, actionMenu)
   await this.driver.sleep(500)
   await verifyOptionInActionMenuDisabled (this.driver, actionMenu, option)
@@ -1303,6 +1390,7 @@ Then('check that {string} option in action menu on {string} wizard is disabled',
 
 Then('check that {string} file is existed on {string} directory', async function (file, filePath) {
   const path = await generatePath(file, filePath)
+
   await this.driver.sleep(150)
   await determineFileAccess(path, file)
   await this.driver.sleep(150)
@@ -1385,6 +1473,12 @@ Then(
     'verify {string} input should contains {string} value on {string} wizard',
     async function (component, value, wizard) {
         await verifyTypedValue(this.driver, pageObjects[wizard][component], value)
+    }
+)
+Then(
+    'verify {string} input should contains {string} placeholder value on {string} wizard',
+    async function (component, value, wizard) {
+        await verifyPlaceholder(this.driver, pageObjects[wizard][component], value)
     }
 )
 
@@ -1475,6 +1569,7 @@ When(
       nodeName
     )
     const indx = arr[0]
+
     await clickOnComponent(
       this.driver,
       pageObjects[wizardName][graphName].nodesTable.tableFields['name'](indx)

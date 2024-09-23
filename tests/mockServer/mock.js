@@ -178,6 +178,7 @@ const mlrunAPIIngressV2 = `${mlrunIngress}/api/v2`
 const nuclioApiUrl = '/nuclio-ingress.default-tenant.app.vmdev36.lab.iguazeng.com'
 const iguazioApiUrl = '/platform-api.default-tenant.app.vmdev36.lab.iguazeng.com'
 const port = 30000
+const NOT_ALLOWED_SECRET_KEY = 'mlrun.'
 
 // Support function
 function createTask(projectName, config) {
@@ -525,10 +526,32 @@ function getSecretKeys(req, res) {
 }
 
 function postSecretKeys(req, res) {
-  secretKeys[req.params['project']].secret_keys.push(Object.keys(req.body.secrets)[0])
+  let respBody = ''
+  const newSecretKey = Object.keys(req.body.secrets)[0]
 
-  res.statusCode = 201
-  res.send('')
+  if (newSecretKey.startsWith(NOT_ALLOWED_SECRET_KEY)) {
+    res.statusCode = 403
+    respBody = {
+      detail: `MLRunAccessDeniedError('Not allowed to create/update internal secrets (key starts with ${NOT_ALLOWED_SECRET_KEY})')`
+    }
+  } else {
+    const projectSecrets = get(secretKeys, [req.params['project'], 'secret_keys'])
+
+    if (projectSecrets) {
+      if (!projectSecrets.includes(newSecretKey)) {
+        projectSecrets.push(newSecretKey)
+      }
+    } else {
+      secretKeys[req.params['project']] = {
+        provider: 'kubernetes',
+        secret_keys: [newSecretKey]
+      }
+    }
+
+    res.statusCode = 201
+  }
+
+  res.send(respBody)
 }
 
 function deleteSecretKeys(req, res) {
@@ -544,12 +567,17 @@ function getProjectsSummaries(req, res) {
   const currentDate = new Date()
   const last24Hours = new Date(currentDate.getTime() - 24 * 60 * 60 * 1000)
   const next24Hours = new Date(currentDate.getTime() + 24 * 60 * 60 * 1000)
+  const inProcessStates = ['pending', 'running']
 
   // Pipelines
   const possibleStatuses = ['Succeeded', 'Failed', 'Running']
   const filteredPipelines24Hours = {}
   for (const project in pipelines) {
-    const runs = pipelines[project].runs.filter(run => new Date(run.finished_at) > last24Hours)
+    const runs = pipelines[project].runs.filter(
+      run =>
+        new Date(run.finished_at) > last24Hours ||
+        inProcessStates.includes(run.status.toLowerCase())
+    )
     if (runs.length > 0) {
       const statusCounts = runs.reduce((counts, run) => {
         counts[run.status] = (counts[run.status] || 0) + 1
@@ -565,15 +593,38 @@ function getProjectsSummaries(req, res) {
   }
 
   // Runs
+  const uniqueJobs = {}
   const projectData = runs.runs
-    .filter(run => run.kind === 'run' && new Date(run.status.last_update) > last24Hours)
+    .filter(
+      run =>
+        (run.kind === 'run' &&
+          !inProcessStates.includes(run.status.state) &&
+          new Date(run.status.last_update) > last24Hours) ||
+        (run.kind === 'run' && inProcessStates.includes(run.status.state))
+    )
     .reduce((acc, run) => {
       const project = run.metadata.project
       const state = run.status.state
+      const name = run.metadata.name
+      const lastUpdate = new Date(run.status.last_update)
+
       if (!acc[project]) {
         acc[project] = { pending: 0, running: 0, error: 0, aborted: 0, completed: 0 }
       }
-      acc[project][state] = (acc[project][state] || 0) + 1
+
+      if (
+        !uniqueJobs[name] ||
+        !uniqueJobs[name][state] ||
+        new Date(uniqueJobs[name][state].status.last_update) < lastUpdate
+      ) {
+        if (!uniqueJobs[name]) {
+          uniqueJobs[name] = { [state]: run }
+        } else {
+          uniqueJobs[name] = { ...uniqueJobs[name], [state]: run }
+        }
+
+        acc[project][state] = (acc[project][state] || 0) + 1
+      }
 
       return acc
     }, {})
@@ -648,9 +699,9 @@ function getRuns(req, res) {
   if (req.params['project'] === '*') {
     const { start_time_from, state } = req.query
     collectedRuns = runs.runs
-    .filter(run => run.kind === 'run')
-    .filter(run => {
-      const runStartTime = new Date(run.status.start_time)
+      .filter(run => run.kind === 'run')
+      .filter(run => {
+        const runStartTime = new Date(run.status.start_time)
 
       if (!start_time_from || runStartTime >= new Date(start_time_from)) {
         if (state) {
@@ -664,9 +715,10 @@ function getRuns(req, res) {
         }
       }
 
-      return false
-    })
+        return false
+      })
   }
+
   //get runs for Jobs and workflows page
   if (req.params['project'] !== '*') {
     collectedRuns = runs.runs.filter(run => run.metadata.project === req.params['project'])
@@ -692,18 +744,17 @@ function getRuns(req, res) {
     collectedRuns = collectedRuns.filter(run => filterByLabels(run.metadata.labels, req.query['label']))
   }
 
-  if (req.query['partition-by'] && req.query['partition-sort-by']){
+  if (req.query['partition-by'] && req.query['partition-sort-by']) {
     const uniqueObjects = {}
 
     collectedRuns.forEach(run => {
       const name = run.metadata.name
       const lastUpdate = new Date(run.status.last_update)
 
-        if (!uniqueObjects[name] || new Date(uniqueObjects[name].status.last_update) < lastUpdate) {
-          uniqueObjects[name] = run
-        }
+      if (!uniqueObjects[name] || new Date(uniqueObjects[name].status.last_update) < lastUpdate) {
+        uniqueObjects[name] = run
       }
-    )
+    })
     collectedRuns = Object.values(uniqueObjects)
   }
 
@@ -1142,6 +1193,22 @@ function getArtifacts(req, res) {
     }
   }
 
+  if (req.query['format'] === 'minimal') {
+    collectedArtifacts = collectedArtifacts.map(func => {
+      const fieldsToPick = [
+        'db_key',
+        'producer',
+        'size',
+        'target_path',
+        'framework',
+        'metrics'
+      ]
+      const specFieldsToPick = fieldsToPick.map(fieldName => `spec.${fieldName}`)
+
+      return pick(func, ['kind', 'metadata', 'status', 'project', ...specFieldsToPick, ...fieldsToPick])
+    })
+  }
+
   res.send({ artifacts: collectedArtifacts })
 }
 
@@ -1223,6 +1290,25 @@ function patchProjectsFeatureVectors(req, res) {
   }
 
   res.send('')
+}
+
+function getProjectsFeatureVector(req, res) {
+  const featureVector = featureVectors.feature_vectors
+    .find(
+      item =>
+        item.metadata.project === req.params.project &&
+        item.metadata.name === req.params.name &&
+        (item.metadata.uid === req.params.reference || item.metadata.tag === req.params.reference)
+    )
+
+  if (featureVector) {
+    res.send(featureVector)
+  } else {
+    res.statusCode = 404
+    res.send({
+      detail: `MLRunNotFoundError('Feature-vector not found preview/${req.params.name}:${req.params.reference}')`
+    })
+  }
 }
 
 function deleteProjectsFeatureVectors(req, res) {
@@ -1762,7 +1848,7 @@ function putTags(req, res) {
 
     return (
       artifactMetaData?.project === req.params.project &&
-      artifact.kind === req.body.identifiers[0].kind &&
+      (artifact.kind === req.body.identifiers[0].kind || (!artifact.kind && req.body.identifiers[0].kind === 'artifact')) &&
       (artifactMetaData?.uid === req.body.identifiers[0].uid ||
         artifactMetaData?.tree === req.body.identifiers[0].uid) &&
       artifactSpecData?.db_key === req.body.identifiers[0].key
@@ -1833,7 +1919,10 @@ function getArtifact(req, res) {
         artifact?.tag === req.query.tag) &&
       (isNil(req.query.tree) ||
         artifact.metadata?.tree === req.query.tree ||
-        artifact?.tree === req.query.tree)
+        artifact?.tree === req.query.tree) &&
+      (isNil(req.query.uid) ||
+        artifact.metadata?.uid === req.query.uid ||
+        artifact?.uid === req.query.uid)
   )
 
   if (requestedArtifact) {
@@ -2370,6 +2459,10 @@ app.put(
 app.patch(
   `${mlrunAPIIngress}/projects/:project/feature-vectors/:name/references/:tag`,
   patchProjectsFeatureVectors
+)
+app.get(
+  `${mlrunAPIIngress}/projects/:project/feature-vectors/:name/references/:reference`,
+  getProjectsFeatureVector
 )
 app.delete(
   `${mlrunAPIIngress}/projects/:project/feature-vectors/:name`,

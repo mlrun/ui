@@ -25,7 +25,6 @@ import { isEmpty } from 'lodash'
 import { createPortal } from 'react-dom'
 import ModalContainer from 'react-modal-promise'
 
-import Notification from '../../common/Notification/Notification'
 import Navbar from '../Navbar/Navbar'
 
 import { getTransitionEndEventName } from 'igz-controls/utils/common.util'
@@ -47,8 +46,8 @@ const Page = () => {
     marginLeft: !projectName
       ? 0
       : isNavbarPinned
-      ? `${NAVBAR_WIDTH_OPENED}px`
-      : `${NAVBAR_WIDTH_CLOSED}px`
+        ? `${NAVBAR_WIDTH_OPENED}px`
+        : `${NAVBAR_WIDTH_CLOSED}px`
   }
   const { frontendSpec, frontendSpecPopupIsOpened } = useSelector(store => store.appStore)
   const { projectsNames } = useSelector(store => store.projectStore)
@@ -91,7 +90,6 @@ const Page = () => {
           <Outlet />
         </div>
       </main>
-      {createPortal(<Notification />, document.getElementById('overlay_container'))}
       {createPortal(<ModalContainer />, document.getElementById('overlay_container'))}
     </>
   )
