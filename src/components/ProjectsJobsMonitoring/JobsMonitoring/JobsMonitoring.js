@@ -116,7 +116,7 @@ const JobsMonitoring = () => {
     <>
       {params.jobName && (
         <TableTop
-          link={`/projects/${JOBS_MONITORING_PAGE}/${JOBS_MONITORING_JOBS_TAB}`}
+          link={`/projects/*/${JOBS_MONITORING_PAGE}/${JOBS_MONITORING_JOBS_TAB}`}
           text={params.jobName}
         />
       )}
@@ -129,7 +129,7 @@ const JobsMonitoring = () => {
         jobRuns={jobRuns}
         jobs={jobs}
         requestErrorMessage={requestErrorMessage}
-        navigateLink={`/projects/${JOBS_MONITORING_PAGE}/${JOBS_MONITORING_JOBS_TAB}`}
+        navigateLink={`/projects/*/${JOBS_MONITORING_PAGE}/${JOBS_MONITORING_JOBS_TAB}`}
         refreshJobs={() =>
           refreshJobs({
             ...jobsFilterMenu,

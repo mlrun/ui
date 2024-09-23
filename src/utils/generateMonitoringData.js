@@ -21,6 +21,7 @@ import {
   DATES_FILTER,
   FILTER_ALL_ITEMS,
   JOBS_MONITORING_JOBS_TAB,
+  JOBS_MONITORING_PAGE,
   JOBS_MONITORING_WORKFLOWS_TAB,
   JOB_KIND_JOB,
   JOB_KIND_WORKFLOW,
@@ -38,7 +39,7 @@ export const generateMonitoringStats = (data, navigate, dispatch, tab) => {
   const navigateToJobsMonitoringPage = (modalFilters, filters = {}) => {
     dispatch(setFiltersValues({ name: tab, value: filters }))
     dispatch(setModalFiltersValues({ name: tab, value: modalFilters }))
-    navigate(`/projects/jobs-monitoring/${tab}`)
+    navigate(`/projects/*/${JOBS_MONITORING_PAGE}/${tab}`)
   }
 
   return tab === JOBS_MONITORING_JOBS_TAB
