@@ -21,7 +21,7 @@ import React, { useEffect, useCallback, useState, useMemo, useRef } from 'react'
 import PropTypes from 'prop-types'
 import { useLocation, useParams, Link } from 'react-router-dom'
 import classnames from 'classnames'
-import { connect } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 
 import BreadcrumbsDropdown from '../../elements/BreadcrumbsDropdown/BreadcrumbsDropdown'
 import { RoundedIcon } from 'igz-controls/components'
@@ -37,7 +37,7 @@ import { ReactComponent as ArrowIcon } from 'igz-controls/images/arrow.svg'
 
 import './breadcrums.scss'
 
-const Breadcrumbs = ({ onClick = () => {}, projectStore, fetchProjectsNames }) => {
+const Breadcrumbs = ({ onClick = () => {} }) => {
   const [showScreensList, setShowScreensList] = useState(false)
   const [showProjectsList, setShowProjectsList] = useState(false)
   const [searchValue, setSearchValue] = useState('')
@@ -46,6 +46,8 @@ const Breadcrumbs = ({ onClick = () => {}, projectStore, fetchProjectsNames }) =
   const projectListRef = useRef()
   const params = useParams()
   const location = useLocation()
+  const projectStore = useSelector(state => state.projectStore)
+  const dispatch = useDispatch()
 
   const mlrunScreens = useMemo(() => {
     return generateMlrunScreens(params, isDemoMode)
@@ -124,9 +126,9 @@ const Breadcrumbs = ({ onClick = () => {}, projectStore, fetchProjectsNames }) =
 
   useEffect(() => {
     if (projectsList.length === 0 && location.pathname !== '/projects') {
-      fetchProjectsNames()
+      dispatch(projectsAction.fetchProjectsNames())
     }
-  }, [fetchProjectsNames, location.pathname, projectsList.length])
+  }, [dispatch, location.pathname, projectsList.length])
 
   const handleSeparatorClick = (nextItem, separatorRef) => {
     const nextItemIsScreen = Boolean(mlrunScreens.find(screen => screen.label === nextItem))
@@ -250,9 +252,4 @@ Breadcrumbs.propTypes = {
   onClick: PropTypes.func
 }
 
-export default connect(
-  projectStore => ({
-    ...projectStore
-  }),
-  { ...projectsAction }
-)(Breadcrumbs)
+export default Breadcrumbs

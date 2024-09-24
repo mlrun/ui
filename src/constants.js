@@ -60,6 +60,8 @@ export const NAVBAR_WIDTH_CLOSED = 57
 export const NAVBAR_WIDTH_OPENED = 245
 export const CANCEL_REQUEST_TIMEOUT = 120000
 
+export const PROJECT_ONLINE_STATUS = 'online'
+
 /*=========== PAGES & TABS =============*/
 
 export const PROJECTS_PAGE = 'PROJECTS'

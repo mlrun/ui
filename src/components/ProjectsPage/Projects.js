@@ -37,6 +37,7 @@ import {
 import nuclioActions from '../../actions/nuclio'
 import projectsAction from '../../actions/projects'
 import { BG_TASK_RUNNING, isBackgroundTaskRunning } from '../../utils/poll.util'
+import { PROJECT_ONLINE_STATUS } from '../../constants'
 import { DANGER_BUTTON, FORBIDDEN_ERROR_STATUS_CODE, PRIMARY_BUTTON } from 'igz-controls/constants'
 import { fetchBackgroundTasks } from '../../reducers/tasksReducer'
 import { setNotification } from '../../reducers/notificationReducer'
@@ -233,7 +234,9 @@ const Projects = () => {
 
   const handleUnarchiveProject = useCallback(
     project => {
-      dispatch(projectsAction.changeProjectState(project.metadata.name, 'online')).then(() => {
+      dispatch(
+        projectsAction.changeProjectState(project.metadata.name, PROJECT_ONLINE_STATUS)
+      ).then(() => {
         fetchMinimalProjects()
       })
     },
