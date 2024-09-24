@@ -81,6 +81,7 @@ import {
   FETCH_PROJECT_SECRETS_BEGIN,
   FETCH_PROJECT_SECRETS_FAILURE,
   FETCH_PROJECT_SECRETS_SUCCESS,
+  PROJECT_ONLINE_STATUS,
   SET_JOBS_MONITORING_DATA,
   SET_MLRUN_IS_UNHEALTHY,
   SET_MLRUN_UNHEALTHY_RETRYING
@@ -498,7 +499,9 @@ const projectsAction = {
           dispatch(projectsAction.fetchProjectsSuccess(parsedProjects))
           dispatch(
             projectsAction.fetchProjectsNamesSuccess(
-              parsedProjects.map(project => project.metadata.name)
+              parsedProjects
+                .filter(project => project.status.state === PROJECT_ONLINE_STATUS)
+                .map(project => project.metadata.name)
             )
           )
 
@@ -525,7 +528,7 @@ const projectsAction = {
     dispatch(projectsAction.fetchProjectsNamesBegin())
 
     return projectsApi
-      .getProjects({ format: 'name_only' })
+      .getProjects({ format: 'name_only', state: PROJECT_ONLINE_STATUS })
       .then(({ data: { projects } }) => {
         dispatch(projectsAction.fetchProjectsNamesSuccess(projects))
 
