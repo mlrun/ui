@@ -37,7 +37,8 @@ import {
   omit,
   forEach,
   pick,
-  isNil
+  isNil,
+  isEmpty
 } from 'lodash'
 
 import frontendSpec from './data/frontendSpec.json'
@@ -308,6 +309,29 @@ function deleteProjectHandler(req, res, omitResponse) {
   }
 }
 
+function filterByLabels(elementLabels, requestLabels) {
+  if (requestLabels?.length > 0 && !isEmpty(elementLabels)) {
+    const requestLabelsList = (isArray(requestLabels) ? requestLabels : [requestLabels]).map(label => label.split('='))
+
+    return requestLabelsList.every(([key = '', value = '']) => {
+      const trimmedKey = key.trim()
+      const trimmedValue = value.trim()
+
+      if (!trimmedKey && !trimmedValue) {
+        return true
+      }
+
+      if (trimmedValue && trimmedValue.startsWith('~')) {
+        return elementLabels[trimmedKey] && elementLabels[trimmedKey].toLowerCase().includes(trimmedValue.substring(1).toLowerCase())
+      }
+
+      return elementLabels[trimmedKey] && (!trimmedValue || elementLabels[trimmedKey] === trimmedValue)
+    })
+  }
+
+  return false
+}
+
 // Request Handlers
 function getFrontendSpec(req, res) {
   res.send(frontendSpec)
@@ -351,19 +375,7 @@ function getFeatureSet(req, res) {
   }
 
   if (req.query['label']) {
-    let [key, value] = req.query['label'].split('=')
-    collectedFeatureSets = collectedFeatureSets.filter(featureSet => {
-      if (featureSet.metadata.labels) {
-        return featureSet.metadata.labels[key]
-      }
-    })
-    if (req.query['label'].includes('=')) {
-      collectedFeatureSets = collectedFeatureSets.filter(featureSet => {
-        if (featureSet.metadata.labels) {
-          return featureSet.metadata.labels[key] === value
-        }
-      })
-    }
+    collectedFeatureSets = collectedFeatureSets.filter(featureSet => filterByLabels(featureSet.metadata.labels, req.query['label']))
   }
 
   res.send({ feature_sets: collectedFeatureSets })
@@ -691,17 +703,17 @@ function getRuns(req, res) {
       .filter(run => {
         const runStartTime = new Date(run.status.start_time)
 
-        if (!start_time_from || runStartTime >= new Date(start_time_from)) {
-          if (state) {
-            if (Array.isArray(state)) {
-              return state.includes(run.status.state)
-            } else {
-              return run.status.state === state
-            }
+      if (!start_time_from || runStartTime >= new Date(start_time_from)) {
+        if (state) {
+          if (isArray(state)) {
+            return state.includes(run.status.state)
           } else {
-            return true
+            return run.status.state === state
           }
+        } else {
+          return true
         }
+      }
 
         return false
       })
@@ -729,15 +741,7 @@ function getRuns(req, res) {
   }
 
   if (req.query['label']) {
-    let [key, value] = req.query['label'].split('=')
-    collectedRuns = collectedRuns.filter(run =>
-      run.metadata.labels ? run.metadata.labels[key] : false
-    )
-    if (req.query['label'].includes('=')) {
-      collectedRuns = collectedRuns.filter(run => run.metadata.labels[key] === value)
-    } else {
-      collectedRuns = collectedRuns.filter(run => run.metadata.labels[key] || false)
-    }
+    collectedRuns = collectedRuns.filter(run => filterByLabels(run.metadata.labels, req.query['label']))
   }
 
   if (req.query['partition-by'] && req.query['partition-sort-by']) {
@@ -875,24 +879,7 @@ function getProjectsSchedules(req, res) {
   }
 
   if (req.query['label']) {
-    let queryLabels = req.query['label']
-
-    if (!isArray(queryLabels)) {
-      queryLabels = [queryLabels]
-    }
-
-    collectedSchedules = collectedSchedules.filter(schedule => {
-      return queryLabels.every(queryLabel => {
-        const [queryLabelKey, queryLabelValue] = queryLabel.split('=')
-        let jobHasLabel = queryLabelKey in schedule.labels
-
-        if (queryLabelValue) {
-          jobHasLabel = schedule.labels[queryLabelKey] === queryLabelValue
-        }
-
-        return jobHasLabel
-      })
-    })
+    collectedSchedules = collectedSchedules.filter(schedule => filterByLabels(schedule.labels, req.query['label']))
   }
 
   res.send({ schedules: collectedSchedules })
@@ -1084,25 +1071,15 @@ function getProjectsFeaturesEntities(req, res) {
     }
 
     if (req.query['label']) {
-      let [key, value] = req.query['label'].split('=')
-
       collectedArtifacts = collectedArtifacts.filter(item => {
         if (artifact === 'feature-vectors' && item.metadata.labels) {
-          return item.metadata.labels[key]
+          return filterByLabels(item.metadata.labels, req.query['label'])
         } else if ((artifact === 'features' || artifact === 'entities') && item.labels) {
-          return item.labels[key]
+          return filterByLabels(item.labels, req.query['label'])
         }
-      })
 
-      if (req.query['label'].includes('=')) {
-        collectedArtifacts = collectedArtifacts.filter(item => {
-          if (artifact === 'feature-vectors' && item.metadata.labels) {
-            return item.metadata.labels[key] === value
-          } else if (artifact === 'features' || artifact === 'entities') {
-            return item.labels[key] === value
-          }
-        })
-      }
+        return false
+      })
     }
 
     if (req.query['entity']) {
@@ -1177,20 +1154,9 @@ function getArtifacts(req, res) {
       categories[req.query['category']].includes(artifact.kind)
     )
   }
+
   if (req.query['label']) {
-    let [key, value] = req.query['label'].split('=')
-    collectedArtifacts = collectedArtifacts.filter(artifact => {
-      if (artifact.labels) {
-        return artifact.labels[key]
-      }
-    })
-    if (req.query['label'].includes('=')) {
-      collectedArtifacts = collectedArtifacts.filter(artifact => {
-        if (artifact.labels) {
-          return artifact.labels[key] === value
-        }
-      })
-    }
+    collectedArtifacts = collectedArtifacts.filter(artifact => filterByLabels(artifact.labels, req.query['label']))
   }
 
   if (req.query['name']) {
@@ -2092,13 +2058,7 @@ function getModelEndpoints(req, res) {
       }
     }))
   if (req.query['label']) {
-    let [key, value] = req.query['label'].split('=')
-
-    collectedEndpoints = collectedEndpoints.filter(endpoint =>
-      req.query['label'].includes('=')
-        ? endpoint.metadata.labels[key] === value
-        : endpoint.metadata.labels[key]
-    )
+    collectedEndpoints = collectedEndpoints.filter(endpoint => filterByLabels(endpoint.metadata.labels, req.query['label']))
   }
 
   res.send({ endpoints: collectedEndpoints })
