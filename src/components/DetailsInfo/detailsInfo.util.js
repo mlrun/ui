@@ -29,14 +29,16 @@ import {
   FUNCTION_TYPE_APPLICATION,
   MODELS_PAGE,
   MODEL_ENDPOINTS_TAB,
-  MONITOR_JOBS_TAB
+  MONITOR_JOBS_TAB,
+  MLRUN_STORAGE_INPUT_PATH_SCHEME
 } from '../../constants'
-import { formatDatetime } from '../../utils'
+import { formatDatetime, parseUri } from '../../utils'
 import { getChipOptions } from '../../utils/getChipOptions'
 import { getLimitsGpuType } from '../../elements/FormResourcesUnits/formResourcesUnits.util'
 import { isEveryObjectValueEmpty } from '../../utils/isEveryObjectValueEmpty'
 import { roundFloats } from '../../utils/roundFloats'
 import { generateFunctionPriorityLabel } from '../../utils/generateFunctionPriorityLabel'
+import { generateStoreResourceLink } from '../../utils/generateStoreResourceLink'
 
 const DRIFT_DETECTED_THRESHOLD = 0.7
 const POSSIBLE_DRIFT_THRESHOLD = 0.5
@@ -44,7 +46,7 @@ const POSSIBLE_DRIFT_THRESHOLD = 0.5
 export const generateArtifactsInfoContent = (page, pageTab, selectedItem) => {
   if (pageTab === MODEL_ENDPOINTS_TAB) {
     const { name, tag } =
-      (selectedItem?.metadata?.uid ?? '').match(/^(?<name>.*?):(?<tag>.*)$/)?.groups ?? {}
+    (selectedItem?.metadata?.uid ?? '').match(/^(?<name>.*?):(?<tag>.*)$/)?.groups ?? {}
     return [tag, name]
   } else
     return [
@@ -145,11 +147,11 @@ const generateModelEndpointDriftContent = modelEndpoint => {
         isNumber(modelEndpoint.status?.drift_measures?.hellinger_mean) &&
         isNumber(modelEndpoint.status?.drift_measures?.tvd_mean)
           ? roundFloats(
-              (modelEndpoint.status?.drift_measures?.hellinger_mean +
-                modelEndpoint.status?.drift_measures?.tvd_mean) /
-                2,
-              2
-            )
+            (modelEndpoint.status?.drift_measures?.hellinger_mean +
+              modelEndpoint.status?.drift_measures?.tvd_mean) /
+            2,
+            2
+          )
           : '-'
     },
     {
@@ -182,9 +184,9 @@ export const generateConfigurationDetailsInfo = selectedFunction => {
             chipsData={
               item.chipVariant
                 ? {
-                    chips: item.value,
-                    chipOptions: getChipOptions(item.chipVariant)
-                  }
+                  chips: item.value,
+                  chipOptions: getChipOptions(item.chipVariant)
+                }
                 : null
             }
           />
@@ -201,13 +203,13 @@ export const generateDriftDetailsInfo = modelEndpoint => {
 
   return modelEndpoint?.status?.drift_measures
     ? modelEndpointContent.map(item => {
-        return (
-          <li className="details-item" key={item.id}>
-            <div className="details-item__header">{item.label}:</div>
-            <DetailsInfoItem info={item.value} />
-          </li>
-        )
-      })
+      return (
+        <li className="details-item" key={item.id}>
+          <div className="details-item__header">{item.label}:</div>
+          <DetailsInfoItem info={item.value} />
+        </li>
+      )
+    })
     : []
 }
 
@@ -220,6 +222,7 @@ export const generateProducerDetailsInfo = selectedItem => {
         // value is in the form of: project/uid-iteration
         const [project, rest] = value.split('/')
         const [uid] = rest?.split('-') ?? []
+
         if (uid) {
           url = `/projects/${project}/jobs/${MONITOR_JOBS_TAB}/${uid}/overview`
         }
@@ -236,9 +239,27 @@ export const generateProducerDetailsInfo = selectedItem => {
               />
             )}
           </div>
-          <DetailsInfoItem link={url} info={value} />
+          <DetailsInfoItem item={{ link: url }} info={value} />
         </li>
       )
     })
   }
+}
+
+export const generateSourcesDetailsInfo = (selectedItem, projectName) => {
+  const reduceHandler = (acc, [key, value]) => {
+    let source = {}
+    const parsedUri = parseUri(value)
+
+    source[key] = {
+      value: value,
+      link: value.startsWith(MLRUN_STORAGE_INPUT_PATH_SCHEME) ? generateStoreResourceLink(parsedUri, projectName) : '',
+    }
+
+    return { ...acc, ...source }
+  }
+
+  return Array.isArray(selectedItem.sources)
+    ? selectedItem.sources.reduce((acc, cur) => reduceHandler(acc, [cur.name, cur.path]), {})
+    : Object.entries(selectedItem.sources || {}).reduce((acc, entries) => reduceHandler(acc, entries), {})
 }

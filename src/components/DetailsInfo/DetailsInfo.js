@@ -31,7 +31,8 @@ import { isEveryObjectValueEmpty } from '../../utils/isEveryObjectValueEmpty'
 import {
   generateConfigurationDetailsInfo,
   generateDriftDetailsInfo,
-  generateProducerDetailsInfo
+  generateProducerDetailsInfo,
+  generateSourcesDetailsInfo
 } from './detailsInfo.util'
 
 const DetailsInfo = React.forwardRef(
@@ -97,16 +98,8 @@ const DetailsInfo = React.forwardRef(
     )
 
     const sources = useMemo(
-      () =>
-        Array.isArray(selectedItem.sources)
-          ? selectedItem.sources.reduce((prev, cur) => {
-              let source = {}
-              source[cur.name] = cur.path
-
-              return { ...prev, ...source }
-            }, {})
-          : selectedItem.sources,
-      [selectedItem.sources]
+      () => generateSourcesDetailsInfo(selectedItem, params.projectName),
+      [params.projectName, selectedItem]
     )
 
     const producer = useMemo(() => generateProducerDetailsInfo(selectedItem), [selectedItem])
