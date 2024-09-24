@@ -188,9 +188,11 @@ const TabsSlider = ({
                 <Link
                   className={tabClassName}
                   data-tab={tab.id}
-                  to={`${location.pathname?.replace(/^$|([^/]+$)/, tab.id)}${
-                    location.search ?? ''
-                  }`}
+                  to={
+                    new URL(
+                      `${location.pathname?.replace(/^$|([^/]+$)/, tab.id)}${location.search ?? ''}`
+                    )
+                  }
                   onClick={() => onSelectTab(tab)}
                   key={tab.id}
                 >
