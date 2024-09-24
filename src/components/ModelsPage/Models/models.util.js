@@ -388,8 +388,8 @@ export const generateActionsMenu = (
         className: 'danger',
         onClick: () =>
           openDeleteConfirmPopUp(
-            'Delete dataset?',
-            `Do you want to delete all versions of the dataset "${modelMin.db_key}"? Deleted datasets can not be restored.`,
+            'Delete model?',
+            `Do you want to delete all versions of the model "${modelMin.db_key}"? Deleted models can not be restored.`,
             () => {
               handleDeleteArtifact(
                 dispatch,

@@ -20,29 +20,32 @@ such restriction.
 import { nuclioHttpClient } from '../httpClient'
 
 const nuclioApi = {
-  getApiGateways: project => {
+  getApiGateways: (project, signal) => {
     return nuclioHttpClient.get('/api_gateways', {
       headers: {
         'x-nuclio-project-name': project
-      }
+      },
+      signal
     })
   },
   getV3ioStreamShardLags: (project, body) =>
     nuclioHttpClient.post('/v3io_streams/get_shard_lags', body, {
       headers: { 'x-nuclio-project-name': project }
     }),
-  getV3ioStreams: project =>
+  getV3ioStreams: (project, signal) =>
     nuclioHttpClient.get('/v3io_streams', {
-      headers: { 'x-nuclio-project-name': project }
+      headers: { 'x-nuclio-project-name': project },
+      signal
     }),
-  getFunctions: project => {
+  getFunctions: (project, signal) => {
     let config = project
       ? {
           headers: {
             'x-nuclio-project-name': project
-          }
+          },
+          signal
         }
-      : {}
+      : { signal }
 
     return nuclioHttpClient.get('/functions', config)
   }

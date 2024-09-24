@@ -163,7 +163,7 @@ Feature: Models Page
     And wait load page
     Then verify "Real-Time Pipelines" tab is active in "Models_Tab_Selector" on "Models" wizard
     Then type value "  " to "Table_Name_Filter_Input" field on "Real_Time_Pipelines" wizard
-    Then verify "Table_Name_Filter_Input" on "Real_Time_Pipelines" wizard should display warning "Input_Hint"."Input_Field_Invalid"
+    Then verify "Table_Name_Filter_Input" on "Real_Time_Pipelines" wizard should display hover warning "Input_Hint"."Input_Field_Invalid"
     Then type value "churn-server" to "Table_Name_Filter_Input" field on "Real_Time_Pipelines" wizard
     Then click on "Table_Refresh_Button" element on "Real_Time_Pipelines" wizard
     And wait load page
@@ -253,11 +253,11 @@ Feature: Models Page
     Then verify options in "Path_Scheme_Combobox" combobox in "Target_Path" on "Register_Model_Popup" wizard should contains "Models"."Combobox_Options"
     When select "V3IO" option in "Path_Scheme_Combobox" combobox on "Target_Path" accordion on "Register_Model_Popup" wizard
     When type value "  " to "Path_Scheme_Combobox" field on "Target_Path" on "Register_Model_Popup" wizard
-    Then verify "Path_Scheme_Combobox" element in "Target_Path" on "Register_Model_Popup" wizard should display warning "Input_Hint"."V3IO_Path_Hint"
+    Then verify "Path_Scheme_Combobox" element in "Target_Path" on "Register_Model_Popup" wizard should display hover warning "Input_Hint"."V3IO_Path_Hint"
     Then verify "New_File_Description_Input" element visibility on "Register_Model_Popup" wizard
     Then check "New_File_Description_Input" textarea counter on "Register_Model_Popup" wizard
     Then type value "   " to "New_File_Description_Input" field on "Register_Model_Popup" wizard
-    Then verify "New_File_Description_Input" on "Register_Model_Popup" wizard should display warning "Input_Hint"."Input_Field_Invalid"
+    Then verify "New_File_Description_Input" on "Register_Model_Popup" wizard should display hover warning "Input_Hint"."Input_Field_Invalid"
     Then verify "Cancel_Button" element visibility on "Register_Model_Popup" wizard
     Then "Cancel_Button" element on "Register_Model_Popup" should contains "Cancel" value
     Then verify "Register_Button" element visibility on "Register_Model_Popup" wizard
@@ -515,7 +515,7 @@ Feature: Models Page
   @MLM
   @passive
   @smoke
-  Scenario: MLM025 - Verify Preview, Deploy option, view Preview, Deploy action, Preview tab
+  Scenario: MLM025 - Verify Preview, view Preview, Preview tab
       Given open url
       And wait load page
       And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
@@ -543,14 +543,8 @@ Feature: Models Page
       Then "Header_Download_Pop_Up" element on "Downloads_Popup" should contains "Downloads" value
       Then click on "Download_Pop_Up_Cross_Cancel_Button" element on "Downloads_Popup" wizard
       Then click on "Cross_Cancel_Button" element on "Preview_Popup" wizard
-      Then verify "deploy" option is present on "Models" wizard in "Models_Table" table with "transaction_fraud_xgboost" value in "name" column
-      Then click on "deploy" option on "Models" wizard in "Models_Table" table with "transaction_fraud_xgboost" value in "name" column
-      Then verify if "Common_Popup" popup dialog appears
-      Then "Title" element on "Common_Popup" should contains "Model cannot be deployed" value
-      Then "Message" component on "Common_Popup" should contains "Messages"."How_To_Create"
-      Then verify "Cross_Cancel_Button" element visibility on "Common_Popup" wizard
-      Then click on "Cross_Cancel_Button" element on "Common_Popup" wizard
       When click on cell with value "transaction_fraud_xgboost" in "name" column in "Models_Table" table on "Models" wizard
+      And wait load page
       Then select "Preview" tab in "Info_Pane_Tab_Selector" on "Models_Info_Pane" wizard
       And wait load page
       Then verify "Pop_Out_Button" element visibility on "Models_Info_Pane" wizard 
@@ -570,6 +564,27 @@ Feature: Models Page
       Then "Header_Download_Pop_Up" element on "Downloads_Popup" should contains "Downloads" value
       Then click on "Download_Pop_Up_Cross_Cancel_Button" element on "Downloads_Popup" wizard
       Then click on "Cross_Cancel_Button" element on "Artifact_Preview_Popup" wizard
+
+  @MLM
+  @passive
+  @smoke
+  Scenario: MLM036 - Verify Deploy option, Deploy action
+      Given open url
+      And wait load page
+      And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
+      And wait load page
+      Then verify breadcrumbs "tab" label should be equal "Project monitoring" value
+      And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
+      And click on cell with value "Models" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+      And hover "MLRun_Logo" component on "commonPagesHeader" wizard
+      And wait load page
+      Then verify "deploy" option is present on "Models" wizard in "Models_Table" table with "transaction_fraud_xgboost" value in "name" column
+      Then click on "deploy" option on "Models" wizard in "Models_Table" table with "transaction_fraud_xgboost" value in "name" column
+      Then verify if "Common_Popup" popup dialog appears
+      Then "Title" element on "Common_Popup" should contains "Model cannot be deployed" value
+      Then "Message" component on "Common_Popup" should contains "Messages"."How_To_Create"
+      Then verify "Cross_Cancel_Button" element visibility on "Common_Popup" wizard
+      Then click on "Cross_Cancel_Button" element on "Common_Popup" wizard
       And select "project" with "churn-project-admin" value in breadcrumbs menu
       And wait load page
       Then verify breadcrumbs "project" label should be equal "churn-project-admin" value
@@ -758,7 +773,7 @@ Feature: Models Page
     Then type value "/" to "Model_Name_Input" field on "Deploy_Model_Popup" wizard
     Then verify "Class_Name_Input" element visibility on "Deploy_Model_Popup" wizard
     Then type value "  " to "Class_Name_Input" field on "Deploy_Model_Popup" wizard
-    Then verify "Class_Name_Input" on "Deploy_Model_Popup" wizard should display warning "Input_Hint"."Input_Field_Require"
+    Then verify "Class_Name_Input" on "Deploy_Model_Popup" wizard should display hover warning "Input_Hint"."Input_Field_Require"
     Then verify "Cancel_Button" element visibility on "Deploy_Model_Popup" wizard
     Then "Cancel_Button" element on "Deploy_Model_Popup" should contains "Cancel" value
     Then verify "Deploy_Button" element visibility on "Deploy_Model_Popup" wizard
@@ -767,7 +782,7 @@ Feature: Models Page
     Then verify "Deploy_Button" element on "Deploy_Model_Popup" wizard is disabled
     Then verify "Model_Name_Input" on "Deploy_Model_Popup" wizard should display options "Input_Hint"."Artifact_Name_Hint_Deploy_Model"
     Then type value "automation-test-model" to "Model_Name_Input" field on "Deploy_Model_Popup" wizard
-    Then verify "Class_Name_Input" on "Deploy_Model_Popup" wizard should display warning "Input_Hint"."Input_Field_Require"
+    Then verify "Class_Name_Input" on "Deploy_Model_Popup" wizard should display hover warning "Input_Hint"."Input_Field_Require"
     Then type value "Class" to "Class_Name_Input" field on "Deploy_Model_Popup" wizard
     Then verify "Deploy_Button" element on "Deploy_Model_Popup" wizard is enabled
     Then click on "Cancel_Button" element on "Deploy_Model_Popup" wizard
@@ -814,8 +829,8 @@ Feature: Models Page
      When add new volume rows to "Key_Value_Table" table in "Deploy_Model_Table" on "Deploy_Model_Popup" wizard using nontable inputs
        | Class_Argument_Name_Input | Class_Argument_Value_Input | Add_New_Row_Button | Delete_New_Row_Button |
        |           \n name0        |            \n value0       | yes                |                       |
-     Then verify "Class_Argument_Name_Input" element in "Deploy_Model_Table" on "Deploy_Model_Popup" wizard should display warning "Input_Hint"."Input_Field_Invalid"
-     Then verify "Class_Argument_Value_Input" element in "Deploy_Model_Table" on "Deploy_Model_Popup" wizard should display warning "Input_Hint"."Input_Field_Invalid"
+     Then verify "Class_Argument_Name_Input" element in "Deploy_Model_Table" on "Deploy_Model_Popup" wizard should display hover warning "Input_Hint"."Input_Field_Invalid"
+     Then verify "Class_Argument_Value_Input" element in "Deploy_Model_Table" on "Deploy_Model_Popup" wizard should display hover warning "Input_Hint"."Input_Field_Invalid"
      Then click on "Delete_New_Row_Button" element in "Deploy_Model_Table" on "Deploy_Model_Popup" wizard
      When add new volume rows to "Key_Value_Table" table in "Deploy_Model_Table" on "Deploy_Model_Popup" wizard using nontable inputs
        | Class_Argument_Name_Input | Class_Argument_Value_Input | Add_New_Row_Button | Delete_New_Row_Button |
@@ -919,7 +934,11 @@ Feature: Models Page
     When click on cell with row index 3 in "name" column in "Models_Table" table on "Models" wizard
     And wait load page
     Then verify redirection from "projects/default/models/INVALID/model_default/latest/0/overview" to "projects/default/models/models"
-    Then verify redirection from "projects/default/models/models/INVALID/latest/0/overview" to "projects/default/models/models"
+    Then verify redirection from "projects/default/models/models/INVALID/latest/0/overview" to "projects/default/models/models/INVALID/latest/0/overview"
+    And select "tab" with "Datasets" value in breadcrumbs menu
+    And wait load page
+    And select "tab" with "Models" value in breadcrumbs menu
+    And wait load page
     When click on cell with row index 3 in "name" column in "Models_Table" table on "Models" wizard
     And wait load page
     Then verify redirection from "projects/default/models/models/model_default/latest/0/INVALID" to "projects/default/models/models/model_default/latest/0/overview"
@@ -1218,3 +1237,111 @@ Feature: Models Page
     And wait load page
     Then "Hellinger_Mean_Metrics_Checkbox" element should be checked in "Evidently_App_Test_Accordion" on "Metrics_Selector_Popup" wizard
     And wait load page
+
+  @MLM
+  @smoke
+  Scenario: MLM037 - Verify the Delete option in Models table, details panel, full view action menu 
+    Given open url
+    And wait load page
+    And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
+    And wait load page
+    And select "tab" with "Models" value in breadcrumbs menu
+    And wait load page
+    Then verify action menu on "Models" wizard in "Models_Table" table with "transaction_fraud_xgboost" value in "name" column should contains "Common_Lists"."Action_Menu_List"
+    Then select "Delete" option in action menu on "Models" wizard in "Models_Table" table at row with "transaction_fraud_xgboost" value in "name" column
+    And wait load page
+    Then verify if "Delete_Artifact_Popup" popup dialog appears
+    Then verify "Delete_Artifact_Popup" element visibility on "Models" wizard
+    Then verify "Close_Button" element visibility on "Delete_Artifact_Popup" wizard
+    Then verify "Title" element visibility on "Delete_Artifact_Popup" wizard
+    Then "Title" element on "Delete_Artifact_Popup" should contains "Delete model?" value
+    Then verify "Dialog_Message" element visibility on "Delete_Artifact_Popup" wizard
+    Then "Dialog_Message" element on "Delete_Artifact_Popup" should contains "Do you want to delete the model \"transaction_fraud_xgboost\"? Deleted models can not be restored." value
+    Then verify "Cancel_Button" element visibility on "Delete_Artifact_Popup" wizard
+    Then "Cancel_Button" element on "Delete_Artifact_Popup" should contains "Cancel" value
+    Then verify "Delete_Button" element visibility on "Delete_Artifact_Popup" wizard
+    Then "Delete_Button" element on "Delete_Artifact_Popup" should contains "Delete" value
+    Then click on "Cancel_Button" element on "Delete_Artifact_Popup" wizard
+    Then verify "Delete_Artifact_Popup" element not exists on "Models" wizard
+    Then select "Delete" option in action menu on "Models" wizard in "Models_Table" table at row with "transaction_fraud_xgboost" value in "name" column
+    And wait load page
+    Then click on "Delete_Button" element on "Delete_Artifact_Popup" wizard
+    And wait load page
+    Then verify "Notification_Pop_Up" element visibility on "Notification_Popup" wizard
+    And wait load page
+    And wait load page
+    Then "Notification_Pop_Up" element on "Notification_Popup" should contains "Model is successfully deleted" value
+    And wait load page
+    Then verify "Notification_Pop_Up_Cross_Close_Button" element visibility on "Notification_Popup" wizard
+    Then click on "Notification_Pop_Up_Cross_Close_Button" element on "Notification_Popup" wizard
+    Then check "transaction_fraud_xgboost" value not in "name" column in "Models_Table" table on "Models" wizard
+    When click on cell with row index 1 in "name" column in "Models_Table" table on "Models" wizard
+    And wait load page
+    Then verify "Header" element visibility on "Models_Info_Pane" wizard
+    Then "Header" element on "Models_Info_Pane" should contains "train_model" value
+    Then verify "Action_Menu" element visibility on "Models_Info_Pane" wizard
+    Then select "Delete" option in action menu on "Models_Info_Pane" wizard
+    And wait load page
+    Then verify if "Delete_Artifact_Popup" popup dialog appears
+    Then verify "Delete_Artifact_Popup" element visibility on "Models_Info_Pane" wizard
+    Then verify "Close_Button" element visibility on "Delete_Artifact_Popup" wizard
+    Then verify "Title" element visibility on "Delete_Artifact_Popup" wizard
+    Then "Title" element on "Delete_Artifact_Popup" should contains "Delete model?" value
+    Then verify "Dialog_Message" element visibility on "Delete_Artifact_Popup" wizard
+    Then "Dialog_Message" element on "Delete_Artifact_Popup" should contains "Do you want to delete the model \"train_model\"? Deleted models can not be restored." value
+    Then verify "Cancel_Button" element visibility on "Delete_Artifact_Popup" wizard
+    Then "Cancel_Button" element on "Delete_Artifact_Popup" should contains "Cancel" value
+    Then verify "Delete_Button" element visibility on "Delete_Artifact_Popup" wizard
+    Then "Delete_Button" element on "Delete_Artifact_Popup" should contains "Delete" value
+    Then click on "Cancel_Button" element on "Delete_Artifact_Popup" wizard
+    Then verify "Delete_Artifact_Popup" element not exists on "Models_Info_Pane" wizard
+    Then select "Delete" option in action menu on "Models_Info_Pane" wizard
+    And wait load page
+    Then click on "Delete_Button" element on "Delete_Artifact_Popup" wizard
+    And wait load page
+    Then verify "Notification_Pop_Up" element visibility on "Notification_Popup" wizard
+    And wait load page
+    And wait load page
+    Then "Notification_Pop_Up" element on "Notification_Popup" should contains "Model is successfully deleted" value
+    And wait load page
+    Then verify "Notification_Pop_Up_Cross_Close_Button" element visibility on "Notification_Popup" wizard
+    Then click on "Notification_Pop_Up_Cross_Close_Button" element on "Notification_Popup" wizard
+    Then check "train_model" value not in "name" column in "Models_Table" table on "Models" wizard
+    When click on cell with row index 1 in "name" column in "Models_Table" table on "Models" wizard
+    And wait load page
+    Then verify "Header" element visibility on "Models_Info_Pane" wizard
+    Then "Header" element on "Models_Info_Pane" should contains "model_default" value
+    Then click on "Full_View_Button" element on "Models_Info_Pane" wizard
+    Then verify "Cross_Close_Button" element not exists on "Models_Info_Pane" wizard
+    Then verify "Header_Full_View" element visibility on "Models_Info_Pane" wizard
+    Then "Header_Full_View" element on "Models_Info_Pane" should contains "model_default" value
+    Then verify "Action_Menu_Full_View" element visibility on "Models_Info_Pane" wizard
+    Then verify "Action_Menu_Full_View" dropdown element on "Models_Info_Pane" wizard should contains "Common_Lists"."Action_Menu_List"
+    Then click on "Header_Full_View" element on "Models_Info_Pane" wizard
+    Then select "Delete" option in full view action menu on "Models_Info_Pane" wizard
+    And wait load page
+    Then verify if "Delete_Artifact_Popup" popup dialog appears
+    Then verify "Delete_Artifact_Popup" element visibility on "Models_Info_Pane" wizard
+    Then verify "Close_Button" element visibility on "Delete_Artifact_Popup" wizard
+    Then verify "Title" element visibility on "Delete_Artifact_Popup" wizard
+    Then "Title" element on "Delete_Artifact_Popup" should contains "Delete model?" value
+    Then verify "Dialog_Message" element visibility on "Delete_Artifact_Popup" wizard
+    Then "Dialog_Message" element on "Delete_Artifact_Popup" should contains "Do you want to delete the model \"model_default\"? Deleted models can not be restored." value
+    Then verify "Cancel_Button" element visibility on "Delete_Artifact_Popup" wizard
+    Then "Cancel_Button" element on "Delete_Artifact_Popup" should contains "Cancel" value
+    Then verify "Delete_Button" element visibility on "Delete_Artifact_Popup" wizard
+    Then "Delete_Button" element on "Delete_Artifact_Popup" should contains "Delete" value
+    Then click on "Cancel_Button" element on "Delete_Artifact_Popup" wizard
+    Then verify "Delete_Artifact_Popup" element not exists on "Models_Info_Pane" wizard
+    Then select "Delete" option in full view action menu on "Models_Info_Pane" wizard
+    And wait load page
+    Then click on "Delete_Button" element on "Delete_Artifact_Popup" wizard
+    And wait load page
+    Then verify "Notification_Pop_Up" element visibility on "Notification_Popup" wizard
+    And wait load page
+    And wait load page
+    Then "Notification_Pop_Up" element on "Notification_Popup" should contains "Model is successfully deleted" value
+    And wait load page
+    Then verify "Notification_Pop_Up_Cross_Close_Button" element visibility on "Notification_Popup" wizard
+    Then click on "Notification_Pop_Up_Cross_Close_Button" element on "Notification_Popup" wizard
+    Then check "model_default" value not in "name" column in "Models_Table" table on "Models" wizard
