@@ -123,7 +123,7 @@ const App = () => {
       <>
         <Route path="" element={<Page isHeaderShown={isHeaderShown} />}>
           <Route path="projects" element={<Projects />} />
-          <Route path={`projects/${JOBS_MONITORING_PAGE}/*`} element={<ProjectsJobsMonitoring />}>
+          <Route path={`projects/*/${JOBS_MONITORING_PAGE}/*`} element={<ProjectsJobsMonitoring />}>
             {[
               `${JOBS_MONITORING_JOBS_TAB}/:jobName/:jobProjectName/:jobId/:tab`,
               `${JOBS_MONITORING_JOBS_TAB}/:jobProjectName/:jobId/:tab`,

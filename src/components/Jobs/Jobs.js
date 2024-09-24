@@ -31,6 +31,7 @@ import { ConfirmDialog } from 'igz-controls/components'
 import {
   INACTIVE_JOBS_TAB,
   JOBS_PAGE,
+  JOBS_PAGE_PATH,
   MONITOR_JOBS_TAB,
   MONITOR_WORKFLOWS_TAB,
   PANEL_CREATE_MODE,
@@ -83,9 +84,9 @@ const Jobs = ({ fetchJobFunction }) => {
       urlPathArray[monitorJobsIndex] = MONITOR_JOBS_TAB
       navigate(urlPathArray.join('/'), { replace: true })
     } else {
-      const pageTab = location.pathname.includes(MONITOR_WORKFLOWS_TAB)
+      const pageTab = location.pathname.includes(`${JOBS_PAGE_PATH}/${MONITOR_WORKFLOWS_TAB}`)
         ? MONITOR_WORKFLOWS_TAB
-        : location.pathname.includes(SCHEDULE_TAB)
+        : location.pathname.includes(`${JOBS_PAGE_PATH}/${SCHEDULE_TAB}`)
           ? SCHEDULE_TAB
           : MONITOR_JOBS_TAB
 
@@ -113,9 +114,9 @@ const Jobs = ({ fetchJobFunction }) => {
           <div className="content__action-bar-wrapper">
             <ContentMenu
               activeTab={
-                location.pathname.includes(MONITOR_JOBS_TAB)
+                location.pathname.includes(`${JOBS_PAGE_PATH}/${MONITOR_JOBS_TAB}`)
                   ? MONITOR_JOBS_TAB
-                  : location.pathname.includes(SCHEDULE_TAB)
+                  : location.pathname.includes(`${JOBS_PAGE_PATH}/${SCHEDULE_TAB}`)
                     ? SCHEDULE_TAB
                     : MONITOR_WORKFLOWS_TAB
               }
