@@ -71,6 +71,7 @@ export const PROJECTS_SETTINGS_SECRETS_TAB = 'secrets'
 
 export const INACTIVE_JOBS_TAB = 'monitor'
 export const JOBS_PAGE = 'JOBS'
+export const JOBS_PAGE_PATH = 'jobs'
 export const MONITOR_JOBS_TAB = 'monitor-jobs'
 export const MONITOR_WORKFLOWS_TAB = 'monitor-workflows'
 export const SCHEDULE_TAB = 'schedule'

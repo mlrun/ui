@@ -31,6 +31,7 @@ import { generateMlrunScreens, generateTabsList } from './breadcrumbs.util'
 import { generateProjectsList } from '../../utils/projects'
 import { scrollToElement } from '../../utils/scroll.util'
 import projectsAction from '../../actions/projects'
+import { PROJECTS_PAGE_PATH } from '../../constants'
 
 import { ReactComponent as ArrowIcon } from 'igz-controls/images/arrow.svg'
 
@@ -74,11 +75,11 @@ const Breadcrumbs = ({ onClick = () => {}, projectStore, fetchProjectsNames }) =
         tab
       }
     } else {
-      const [projects, page] = location.pathname.split('/').slice(1, 3)
+      const [page] = location.pathname.split('/').slice(3, 4)
       const screen = mlrunScreens.find(screen => screen.id === page)
 
       return {
-        pathItems: [projects, screen?.label || page],
+        pathItems: [PROJECTS_PAGE_PATH, screen?.label || page],
         screen
       }
     }

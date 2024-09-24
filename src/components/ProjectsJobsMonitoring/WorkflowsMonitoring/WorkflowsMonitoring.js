@@ -113,7 +113,7 @@ const WorkflowsMonitoring = ({ fetchFunctionLogs }) => {
     <>
       {(jobIsLoading || funcIsLoading || workflowsStore.activeWorkflow.loading) && <Loader />}
       <WorkflowsTable
-        backLink={`/projects/${JOBS_MONITORING_PAGE}/${JOBS_MONITORING_WORKFLOWS_TAB}`}
+        backLink={`/projects/*/${JOBS_MONITORING_PAGE}/${JOBS_MONITORING_WORKFLOWS_TAB}`}
         context={ProjectJobsMonitoringContext}
         fetchFunctionLogs={fetchFunctionLogs}
         filterMenuName={JOBS_MONITORING_WORKFLOWS_TAB}
