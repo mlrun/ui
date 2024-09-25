@@ -184,6 +184,8 @@ const ActionBar = ({
       navigate,
       navigateLink,
       params.name,
+      params.funcName,
+      params.hash,
       removeSelectedItem,
       setSelectedRowData
     ]
