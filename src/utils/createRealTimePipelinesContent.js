@@ -19,7 +19,7 @@ such restriction.
 */
 import { formatDatetime } from './datetime'
 import { FUNCTIONS_PAGE, MODELS_PAGE, REAL_TIME_PIPELINES_TAB } from '../constants'
-import { generateLinkToDetailsPanel } from './generateLinkToDetailsPanel'
+import { generateLinkToDetailsPanel } from './link-helper.util'
 import { validateArguments } from './validateArguments'
 
 const createRealTimePipelinesContent = (pipelines, projectName) =>

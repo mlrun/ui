@@ -39,7 +39,7 @@ import { createModelEndpointsRowData } from '../../../utils/createArtifactsConte
 import { fetchModelEndpoints, removeModelEndpoints } from '../../../reducers/artifactsReducer'
 import { chooseOrFetchModelEndpoint, filters, generatePageData } from './modelEndpoints.util'
 import { getNoDataMessage } from '../../../utils/getNoDataMessage'
-import { isDetailsTabExists } from '../../../utils/isDetailsTabExists'
+import { isDetailsTabExists } from '../../../utils/link-helper.util'
 import { setFilters } from '../../../reducers/filtersReducer'
 import { useModelsPage } from '../ModelsPage.context'
 import { isRowRendered, useVirtualization } from '../../../hooks/useVirtualization.hook'

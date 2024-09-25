@@ -30,7 +30,7 @@ import Navbar from '../Navbar/Navbar'
 import { getTransitionEndEventName } from 'igz-controls/utils/common.util'
 import { fetchFrontendSpec } from '../../reducers/appReducer'
 import { NAVBAR_WIDTH_CLOSED, NAVBAR_WIDTH_OPENED } from '../../constants'
-import { isProjectValid } from '../../utils/handleRedirect'
+import { isProjectValid } from '../../utils/link-helper.util'
 
 import './Page.scss'
 
