@@ -32,7 +32,7 @@ import { parseKeyValues } from './object'
 import { formatDatetime } from './datetime'
 import { generateUri } from './resources'
 import { truncateUid } from '../utils'
-import { generateLinkToDetailsPanel } from './generateLinkToDetailsPanel'
+import { generateLinkToDetailsPanel } from './link-helper.util'
 import { validateArguments } from './validateArguments'
 
 import { ReactComponent as Nosql } from 'igz-controls/images/nosql.svg'

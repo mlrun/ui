@@ -32,7 +32,7 @@ import { FormInput, FormOnChange, FormTextarea } from 'igz-controls/components'
 import { Tooltip, TextTooltipTemplate, RoundedIcon } from 'igz-controls/components'
 
 import { CHIP_OPTIONS } from '../../types'
-import { generateFunctionDetailsLink } from '../../utils/generateFunctionDetailsLink'
+import { generateFunctionDetailsLink } from '../../utils/link-helper.util'
 import { getValidationRules } from 'igz-controls/utils/validation.util'
 
 import { ReactComponent as Checkmark } from 'igz-controls/images/checkmark2.svg'

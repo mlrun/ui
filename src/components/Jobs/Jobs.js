@@ -40,7 +40,7 @@ import {
 } from '../../constants'
 import { TERTIARY_BUTTON } from 'igz-controls/constants'
 import { actionCreator, actionsMenuHeader, monitorJob, rerunJob, tabs } from './jobs.util'
-import { isPageTabValid } from '../../utils/handleRedirect'
+import { isPageTabValid } from '../../utils/link-helper.util'
 
 export const JobsContext = React.createContext({})
 

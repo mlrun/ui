@@ -19,7 +19,7 @@ such restriction.
 */
 import { getJobIdentifier } from '../../../utils/getUniqueIdentifier'
 import { validateArguments } from '../../../utils/validateArguments'
-import { generateLinkToDetailsPanel } from '../../../utils/generateLinkToDetailsPanel'
+import { generateLinkToDetailsPanel } from '../../../utils/link-helper.util'
 import { JOB_KIND_WORKFLOW, JOBS_PAGE, MONITOR_JOBS_TAB } from '../../../constants'
 import measureTime from '../../../utils/measureTime'
 import { formatDatetime } from '../../../utils'

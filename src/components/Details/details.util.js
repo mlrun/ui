@@ -33,7 +33,7 @@ import {
 import { formatDatetime, generateLinkPath } from '../../utils'
 import { isArtifactTagUnique } from '../../utils/artifacts.util'
 import { getFunctionImage } from '../FunctionsPage/functions.util'
-import { generateFunctionDetailsLink } from '../../utils/generateFunctionDetailsLink'
+import { generateFunctionDetailsLink } from '../../utils/link-helper.util'
 
 export const generateArtifactsContent = (detailsType, selectedItem, projectName) => {
   if (detailsType === MODEL_ENDPOINTS_TAB) {

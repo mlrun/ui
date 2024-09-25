@@ -34,6 +34,7 @@ import { formatDatetime } from '../../../utils'
 import { LABEL_BUTTON } from 'igz-controls/constants'
 import { ACTIONS_MENU } from '../../../types'
 import { getViewMode } from '../../../utils/helper'
+import { generateUrlFromRouterPath } from '../../../utils/link-helper.util'
 
 import { ReactComponent as Close } from 'igz-controls/images/close.svg'
 import { ReactComponent as Back } from 'igz-controls/images/back-arrow.svg'
@@ -117,12 +118,8 @@ const DetailsHeader = ({
           {isDetailsScreen && !pageData.details.hideBackBtn && (
             <Link
               className="item-header__back-btn"
-              to={
-                new URL(
-                  getCloseDetailsLink(location, selectedItem.name) ??
-                    location.pathname.split('/').slice(0, -2).join('/')
-                )
-              }
+              to={generateUrlFromRouterPath(getCloseDetailsLink ? getCloseDetailsLink(location, selectedItem.name) :
+                location.pathname.split('/').slice(0, -2).join('/'))}
               onClick={handleBackClick}
             >
               <RoundedIcon id="go-back" tooltipText="Go to list">
@@ -143,8 +140,8 @@ const DetailsHeader = ({
           >
             {
               selectedItem.name ||
-                selectedItem.db_key ||
-                selectedItem.spec?.model?.replace(/:.*$/, '') // 'model-key:model-tag', remove tag
+              selectedItem.db_key ||
+              selectedItem.spec?.model?.replace(/:.*$/, '') // 'model-key:model-tag', remove tag
             }
           </Tooltip>
         </h3>
@@ -156,9 +153,9 @@ const DetailsHeader = ({
             pageData.page === JOBS_PAGE &&
             !selectedItem?.updated
               ? formatDatetime(
-                  selectedItem?.startTime,
-                  stateValue === 'aborted' ? 'N/A' : 'Not yet started'
-                )
+                selectedItem?.startTime,
+                stateValue === 'aborted' ? 'N/A' : 'Not yet started'
+              )
               : selectedItem?.updated
                 ? formatDatetime(selectedItem?.updated, 'N/A')
                 : selectedItem?.spec?.model.includes(':') // 'model-key:model-tag'
@@ -296,11 +293,11 @@ const DetailsHeader = ({
               className="details-close-btn"
               data-testid="details-close-btn"
               to={
-                getCloseDetailsLink
-                  ? getCloseDetailsLink(selectedItem.name)
+                generateUrlFromRouterPath(getCloseDetailsLink
+                  ? getCloseDetailsLink(location, selectedItem.name)
                   : `/projects/${params.projectName}/${pageData.page.toLowerCase()}${
-                      params.pageTab ? `/${params.pageTab}` : tab ? `/${tab}` : ''
-                    }`
+                    params.pageTab ? `/${params.pageTab}` : tab ? `/${tab}` : ''
+                  }`)
               }
               onClick={handleCancelClick}
             >
