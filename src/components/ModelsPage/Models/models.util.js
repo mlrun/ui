@@ -34,7 +34,8 @@ import {
   FULL_VIEW_MODE,
   MODEL_TYPE,
   ACTION_MENU_PARENT_ROW,
-  ACTION_MENU_PARENT_ROW_EXPANDED
+  ACTION_MENU_PARENT_ROW_EXPANDED,
+  ARTIFACT_MAX_DOWNLOAD_SIZE
 } from '../../../constants'
 import {
   fetchExpandedModel,
@@ -331,7 +332,9 @@ export const generateActionsMenu = (
       {
         label: 'Download',
         hidden: menuPosition === ACTION_MENU_PARENT_ROW_EXPANDED,
-        disabled: !isTargetPathValid,
+        disabled:
+          !isTargetPathValid ||
+          modelMin.size > (frontendSpec?.artifact_limits?.max_download_size ?? ARTIFACT_MAX_DOWNLOAD_SIZE),
         icon: <DownloadIcon />,
         onClick: modelMin => {
           getFullModel(modelMin).then(model => {
@@ -340,7 +343,10 @@ export const generateActionsMenu = (
               setDownloadItem({
                 path: downloadPath,
                 user: model.producer?.owner,
-                id: downloadPath
+                id: downloadPath,
+                artifactLimits: frontendSpec?.artifact_limits,
+                fileSize: model.size,
+                projectName
               })
             )
             dispatch(setShowDownloadsList(true))

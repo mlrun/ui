@@ -86,7 +86,10 @@ const artifactsApi = {
   },
   deleteTag: (project, tag, data) =>
     mainHttpClient.delete(`/projects/${project}/tags/${tag}`, { data }),
-  getArtifactPreview: (project, path, user, fileFormat, signal) => {
+  getArtifactPreview: (project, config) => {
+    return mainHttpClient.get(`projects/${project}/files`, config)
+  },
+  getArtifactPreviewStats: (project, path, user, signal) => {
     const config = {
       params: { path }
     }
@@ -95,15 +98,11 @@ const artifactsApi = {
       config.params.user = user
     }
 
-    if (['png', 'jpg', 'jpeg'].includes(fileFormat)) {
-      config.responseType = 'blob'
-    }
-
     if (signal) {
       config.signal = signal
     }
 
-    return mainHttpClient.get(`projects/${project}/files`, config)
+    return mainHttpClient.get(`projects/${project}/filestat`, config)
   },
   getArtifactTags: (project, category, config) =>
     mainHttpClient.get(`/projects/${project}/artifact-tags`, {

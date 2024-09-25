@@ -17,8 +17,8 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import React, { useEffect, useState } from 'react'
-import { useDispatch } from 'react-redux'
+import React, { useEffect, useRef, useState } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
 import prettyBytes from 'pretty-bytes'
 import PropTypes from 'prop-types'
 import { useParams } from 'react-router-dom'
@@ -31,6 +31,7 @@ import ArtifactsExtraData from '../ArtifactsExtraData/ArtifactsExtraData'
 import { formatDatetime } from '../../utils'
 import { getArtifactPreview } from '../../utils/getArtifactPreview'
 import { closeArtifactsPreview } from '../../reducers/artifactsReducer'
+import { REQUEST_CANCELED } from '../../constants'
 
 import './previewModal.scss'
 
@@ -39,12 +40,38 @@ const PreviewModal = ({ artifact }) => {
   const [noData, setNoData] = useState(false)
   const dispatch = useDispatch()
   const params = useParams()
+  const frontendSpec = useSelector(store => store.appStore.frontendSpec)
+  const previewIsFetchedRef = useRef(false)
+  const previewAbortControllerRef = useRef(new AbortController())
 
   useEffect(() => {
-    if (preview.length === 0) {
-      getArtifactPreview(params.projectName, artifact, noData, setNoData, setPreview)
+    if (preview.length === 0 && !previewIsFetchedRef.current && frontendSpec) {
+      previewAbortControllerRef.current = new AbortController()
+
+      getArtifactPreview(
+        params.projectName,
+        artifact,
+        noData,
+        setNoData,
+        setPreview,
+        false,
+        null,
+        frontendSpec.artifact_limits,
+        previewAbortControllerRef.current.signal
+      )
+
+      previewIsFetchedRef.current = true
     }
-  }, [artifact, noData, params.projectName, preview.length])
+  }, [artifact, frontendSpec, noData, params.projectName, preview.length])
+
+  useEffect(() => {
+    const abortController = previewAbortControllerRef.current
+
+    return () => {
+      abortController.abort(REQUEST_CANCELED)
+      previewIsFetchedRef.current = false
+    }
+  }, [artifact, params.projectName])
 
   useEffect(() => {
     return () => {
@@ -98,6 +125,8 @@ const PreviewModal = ({ artifact }) => {
                 onlyIcon
                 path={`${artifact.target_path}${artifact.model_file ? artifact.model_file : ''}`}
                 user={artifact.ui.user ?? artifact.producer?.owner}
+                fileSize={artifact.size}
+                projectName={params.projectName}
               />
             </div>
           </div>

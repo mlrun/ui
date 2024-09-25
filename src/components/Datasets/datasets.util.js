@@ -26,6 +26,7 @@ import DeleteArtifactPopUp from '../../elements/DeleteArtifactPopUp/DeleteArtifa
 import {
   ACTION_MENU_PARENT_ROW,
   ACTION_MENU_PARENT_ROW_EXPANDED,
+  ARTIFACT_MAX_DOWNLOAD_SIZE,
   DATASET_TYPE,
   DATASETS_PAGE,
   DATASETS_TAB,
@@ -275,7 +276,7 @@ export const generateActionsMenu = (
       {
         label: 'Download',
         hidden: menuPosition === ACTION_MENU_PARENT_ROW_EXPANDED,
-        disabled: !isTargetPathValid,
+        disabled: !isTargetPathValid || datasetMin.size > (frontendSpec.artifact_limits.max_download_size ?? ARTIFACT_MAX_DOWNLOAD_SIZE),
         icon: <DownloadIcon />,
         onClick: datasetMin => {
           getFullDataset(datasetMin).then(dataset => {
@@ -284,7 +285,10 @@ export const generateActionsMenu = (
               setDownloadItem({
                 path: downloadPath,
                 user: dataset.producer?.owner,
-                id: downloadPath
+                id: downloadPath,
+                artifactLimits: frontendSpec?.artifact_limits,
+                fileSize: dataset.size,
+                projectName
               })
             )
             dispatch(setShowDownloadsList(true))
