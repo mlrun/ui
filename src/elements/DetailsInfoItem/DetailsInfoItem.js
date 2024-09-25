@@ -235,7 +235,7 @@ const DetailsInfoItem = React.forwardRef(
 
             return item.link ? (
               <Link
-                className="link details-item__data details-item__link"
+                className="details-item__data details-item__link"
                 to={item.link}
                 key={index}
               >
