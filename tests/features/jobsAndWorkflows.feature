@@ -1049,7 +1049,6 @@ Feature: Jobs and workflows
     @passive
     @links
     @smoke
-    # @uniqueTag
     Scenario: MLJW030 - Check redirect to project`s Function Infopane from Job Overview
         Given open url
         And click on row root with value "churn-project-admin" in "name" column in "Projects_Table" table on "Projects" wizard
