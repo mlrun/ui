@@ -440,6 +440,7 @@ Feature: Datasets Page
     Then click on "Download_Pop_Up_Cross_Cancel_Button" element on "Downloads_Popup" wizard
     Then click on "Cross_Cancel_Button" element on "Artifact_Preview_Popup" wizard
     When click on cell with value "auto-trainer-train_test_set" in "name" column in "Datasets_Table" table on "Datasets" wizard
+    And wait load page
     Then select "Preview" tab in "Info_Pane_Tab_Selector" on "Datasets_Info_Pane" wizard
     And wait load page
     Then verify "Pop_Out_Button" element visibility on "Datasets_Info_Pane" wizard 
@@ -1383,7 +1384,7 @@ Feature: Datasets Page
     Then select "Delete" option in full view action menu on "Datasets_Info_Pane" wizard
     And wait load page
     Then click on "Delete_Button" element on "Delete_Artifact_Popup" wizard
-    And wait load page
+    Then wait for 4 seconds
     Then verify "Notification_Pop_Up" element visibility on "Notification_Popup" wizard
     And wait load page
     And wait load page

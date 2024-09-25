@@ -699,9 +699,11 @@ Feature: Feature Store Page
         And click on "Create_Set_Button" element on "Feature_Store_Feature_Sets_Tab" wizard
         Then type value "   " to "Feature_Set_Name_Input" field on "New_Feature_Set" wizard
         Then verify "Feature_Set_Name_Input" on "New_Feature_Set" wizard should display options "Input_Hint"."Feature_Set_Name_Hint"
+        When click on "Accordion_Header" element in "Data_Source_Accordion" on "New_Feature_Set" wizard
         Then verify "Feature_Set_Name_Input" options rules on "New_Feature_Set" wizard
         Then type value "   " to "Version_Input" field on "New_Feature_Set" wizard
         Then verify "Version_Input" on "New_Feature_Set" wizard should display options "Input_Hint"."Feature_Set_Version_Hint"
+        When click on "Accordion_Header" element in "Data_Source_Accordion" on "New_Feature_Set" wizard
         Then verify "Version_Input" options rules on "New_Feature_Set" wizard
         Then verify "Kind_Dropdown" element in "Data_Source_Accordion" on "New_Feature_Set" wizard should contains "New_Feature_Store"."Kind_Options"
         When collapse "Data_Source_Accordion" on "New_Feature_Set" wizard
