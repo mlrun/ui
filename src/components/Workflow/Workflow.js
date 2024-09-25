@@ -42,6 +42,7 @@ import {
   isWorkflowStepExecutable,
   isWorkflowStepVisible
 } from './workflow.util'
+import { getCloseDetailsLink } from '../../utils/link-helper.util'
 import functionsActions from '../../actions/functions'
 import { ACTIONS_MENU } from '../../types'
 import {
@@ -57,7 +58,6 @@ import {
   WORKFLOW_GRAPH_VIEW,
   WORKFLOW_LIST_VIEW
 } from '../../constants'
-import { getCloseDetailsLink } from '../../utils/getCloseDetailsLink'
 import { createJobsWorkflowContent } from '../../utils/createJobsContent'
 import { useMode } from '../../hooks/mode.hook'
 import getState from '../../utils/getState'

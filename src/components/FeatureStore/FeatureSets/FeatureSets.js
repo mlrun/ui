@@ -40,7 +40,7 @@ import { createFeatureSetsRowData } from '../../../utils/createFeatureStoreConte
 import { featureSetsActionCreator, generatePageData } from './featureSets.util'
 import { getFeatureSetIdentifier } from '../../../utils/getUniqueIdentifier'
 import { getFilterTagOptions, setFilters } from '../../../reducers/filtersReducer'
-import { isDetailsTabExists } from '../../../utils/isDetailsTabExists'
+import { isDetailsTabExists } from '../../../utils/link-helper.util'
 import { parseChipsData } from '../../../utils/convertChipsData'
 import { parseFeatureSets } from '../../../utils/parseFeatureSets'
 import { setNotification } from '../../../reducers/notificationReducer'

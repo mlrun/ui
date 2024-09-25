@@ -45,7 +45,6 @@ import { checkTabIsValid, handleApplyDetailsChanges } from '../featureStore.util
 import { createFeatureVectorsRowData } from '../../../utils/createFeatureStoreContent'
 import { getFeatureVectorIdentifier } from '../../../utils/getUniqueIdentifier'
 import { getFilterTagOptions, setFilters } from '../../../reducers/filtersReducer'
-import { isDetailsTabExists } from '../../../utils/isDetailsTabExists'
 import { parseChipsData } from '../../../utils/convertChipsData'
 import { parseFeatureTemplate } from '../../../utils/parseFeatureTemplate'
 import { parseFeatureVectors } from '../../../utils/parseFeatureVectors'
@@ -56,6 +55,7 @@ import { useGroupContent } from '../../../hooks/groupContent.hook'
 import { useOpenPanel } from '../../../hooks/openPanel.hook'
 import { useVirtualization } from '../../../hooks/useVirtualization.hook'
 import { useInitialTableFetch } from '../../../hooks/useInitialTableFetch.hook'
+import { isDetailsTabExists } from '../../../utils/link-helper.util'
 
 import cssVariables from './featureVectors.scss'
 
