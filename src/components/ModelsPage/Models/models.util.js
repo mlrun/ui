@@ -211,15 +211,6 @@ export const handleApplyDetailsChanges = (
   const artifactItem = cloneDeep(
     isNewFormat ? selectedItem.ui.originalContent : omit(selectedItem, ['ui'])
   )
-  let updateArtifactPromise = Promise.resolve()
-
-  let updateTagPromise = applyTagChanges(
-    changes,
-    selectedItem,
-    projectName,
-    dispatch,
-    setNotification
-  )
 
   if (!isEmpty(omit(changes.data, ['tag']))) {
     Object.keys(changes.data).forEach(key => {
@@ -238,7 +229,7 @@ export const handleApplyDetailsChanges = (
       artifactItem.labels = labels
     }
 
-    updateArtifactPromise = dispatch(updateArtifact({ project: projectName, data: artifactItem }))
+    return dispatch(updateArtifact({ project: projectName, data: artifactItem }))
       .unwrap()
       .then(response => {
         dispatch(
@@ -259,9 +250,24 @@ export const handleApplyDetailsChanges = (
           handleApplyDetailsChanges(changes, projectName, selectedItem, setNotification, dispatch)
         )
       })
+      .finally(() => {
+        return applyTagChanges(
+          changes,
+          selectedItem,
+          projectName,
+          dispatch,
+          setNotification
+        )
+      })
+  } else {
+    return applyTagChanges(
+      changes,
+      selectedItem,
+      projectName,
+      dispatch,
+      setNotification
+    )
   }
-
-  return Promise.all([updateTagPromise, updateArtifactPromise])
 }
 
 export const checkForSelectedModel = (
