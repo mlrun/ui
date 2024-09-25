@@ -23,10 +23,16 @@ const splitStringToArray = str => {
   return str.split(/,(?! )/g)
 }
 
-export const createArtifactPreviewContent = (res, fileFormat, path, artifactName) => {
+export const createArtifactPreviewContent = (
+  res,
+  fileFormat,
+  path,
+  artifactName,
+  isPreviewTruncated = false
+) => {
   const artifact = {}
 
-  if (res.headers['content-type'].includes('text/csv') && isString(res.data)) {
+  if (res?.headers['content-type'].includes('text/csv') && isString(res?.data)) {
     const data = res.data.split('\n')
 
     if (data[0].includes('state')) {
@@ -49,32 +55,34 @@ export const createArtifactPreviewContent = (res, fileFormat, path, artifactName
         content: content
       }
     }
-  } else if (res.headers['content-type'].includes('text/plain') ||
-    (res.headers['content-type'].includes('application/octet-stream') && isString(res.data))) {
+  } else if (fileFormat === 'yaml' || fileFormat === 'yml') {
+    artifact.type = 'yaml'
+    artifact.data = {
+      content: res.data
+    }
+  } else if (
+    res?.headers['content-type'].includes('text/plain') ||
+    (res?.headers['content-type'].includes('application/octet-stream') && isString(res?.data))
+  ) {
     artifact.type = 'text'
     artifact.data = {
       content: String(res.data)
     }
-  } else if (res.headers['content-type'].includes('text/html')) {
+  } else if (res?.headers['content-type'].includes('text/html')) {
     artifact.type = 'html'
     artifact.data = {
-      content: res.data
+      content: URL.createObjectURL(res.data)
     }
-  } else if (res.headers['content-type'].includes('application/json')) {
+  } else if (res?.headers['content-type'].includes('application/json')) {
     artifact.type = 'json'
     artifact.data = {
       content: JSON.stringify(res.data, null, 2)
     }
     artifact.hidden = has(res.data, 'listdir')
-  } else if (res.headers['content-type'].includes('image')) {
+  } else if (res?.headers['content-type'].includes('image')) {
     artifact.type = 'image'
     artifact.data = {
-      content: URL.createObjectURL(new Blob([res.data]))
-    }
-  } else if (fileFormat === 'yaml' || fileFormat === 'yml') {
-    artifact.type = 'yaml'
-    artifact.data = {
-      content: res.data
+      content: URL.createObjectURL(res.data)
     }
   } else {
     artifact.type = 'unknown'
@@ -85,6 +93,8 @@ export const createArtifactPreviewContent = (res, fileFormat, path, artifactName
       }
     }
   }
+
+  if (isPreviewTruncated) artifact.warningMsg = 'The preview is truncated due to the file size'
 
   return artifact
 }

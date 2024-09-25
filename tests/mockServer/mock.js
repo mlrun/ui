@@ -40,6 +40,7 @@ import {
   isNil,
   isEmpty
 } from 'lodash'
+import mime from 'mime-types'
 
 import frontendSpec from './data/frontendSpec.json'
 import projects from './data/projects.json'
@@ -1671,6 +1672,15 @@ function getFile(req, res) {
   res.sendFile(filePath)
 }
 
+function getFileStats(req, res) {
+  const dataRoot = mockHome + '/data/'
+  const filePath = dataRoot + req.query['path'].split('://')[1]
+  const { size } = fs.statSync(filePath)
+  const mimeType = mime.lookup(filePath)
+
+  res.send({mimetype: mimeType, size, modified: Date.now()})
+}
+
 function deleteSchedule(req, res) {
   const collectedSchedule = schedules.schedules
     .filter(schedule => schedule.project === req.params.project)
@@ -2486,6 +2496,8 @@ app.get(`${mlrunAPIIngress}/build/status`, getBuildStatus)
 app.post(`${mlrunAPIIngress}/build/function`, deployMLFunction)
 
 app.get(`${mlrunAPIIngress}/projects/:project/files`, getFile)
+app.get(`${mlrunAPIIngress}/projects/:project/filestat`, getFileStats)
+
 
 app.get(`${mlrunAPIIngress}/log/:project/:uid`, getLog)
 

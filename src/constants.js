@@ -637,3 +637,8 @@ export const ACTION_MENU_PARENT_ROW_EXPANDED = 'action-menu_parent-row-expanded'
 /*=========== Chart =============*/
 export const CHART_TYPE_LINE = 'line'
 export const CHART_TYPE_BAR = 'bar'
+
+/*=========== ARTIFACTS LIMITS =============*/
+export const ARTIFACT_MAX_CHUNK_SIZE = 1048576       // 1MB
+export const ARTIFACT_MAX_PREVIEW_SIZE = 10485760    // 10MB
+export const ARTIFACT_MAX_DOWNLOAD_SIZE = 104857600  // 100MB

@@ -17,67 +17,63 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import React, { useCallback, useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useState, useRef } from 'react'
 import PropTypes from 'prop-types'
 import { useParams } from 'react-router-dom'
+import { useSelector } from 'react-redux'
 
 import ArtifactsPreview from '../ArtifactsPreview/ArtifactsPreview'
 
-import api from '../../api/artifacts-api'
-import { createArtifactPreviewContent } from '../../utils/createArtifactPreviewContent'
+import { REQUEST_CANCELED } from '../../constants'
+import { fetchArtifactPreviewFromPath } from '../../utils/getArtifactPreview'
 
 const DetailsAnalysis = ({ artifact }) => {
   const [preview, setPreview] = useState([])
   const [noData, setNoData] = useState(false)
   const params = useParams()
-
-  const getArtifactPreview = useCallback(
-    (path, user, fileFormat) => {
-      return api.getArtifactPreview(params.projectName, path, user, fileFormat).then(res => {
-        return createArtifactPreviewContent(res, fileFormat)
-      })
-    },
-    [params.projectName]
-  )
+  const frontendSpec = useSelector(store => store.appStore.frontendSpec)
+  const previewIsFetchedRef = useRef(false)
+  const abortControllersListRef = useRef([])
 
   const fetchPreviewFromAnalysis = useCallback(() => {
-    Object.entries(artifact.analysis).forEach(([key, value]) => {
-      getArtifactPreview(
-        value,
-        String(value).startsWith('/User') && (artifact.user || artifact.producer?.owner),
-        String(value).replace(/.*\./g, '')
-      )
-        .then(content => {
-          setPreview(prevState => [...prevState, { ...content, header: key }])
+    Object.entries(artifact.analysis).forEach(([name, path]) => {
+      const previewAbortController = new AbortController()
 
-          if (noData) {
-            setNoData(false)
-          }
-        })
-        .catch(err => {
-          setPreview(state => [
-            ...state,
-            {
-              header: key,
-              error: {
-                text: `${err.response?.status} ${err.response?.statusText}`,
-                body: JSON.stringify(err.response, null, 2)
-              },
-              content: [],
-              type: 'error'
-            }
-          ])
-        })
+      abortControllersListRef.current.push(previewAbortController)
+
+      fetchArtifactPreviewFromPath(
+        params.projectName,
+        {...artifact, size: null},
+        path,
+        noData,
+        setNoData,
+        content => setPreview(prevState => [...prevState, { ...content[0], header: name }]),
+        frontendSpec.artifact_limits,
+        previewAbortController.signal
+      )
+
     })
-  }, [artifact.analysis, artifact.producer, artifact.user, getArtifactPreview, noData])
+  }, [artifact, noData, params.projectName, frontendSpec])
 
   useEffect(() => {
-    if (artifact.analysis && preview.length === 0) {
+    if (artifact.analysis && preview.length === 0 && !previewIsFetchedRef.current && frontendSpec) {
       fetchPreviewFromAnalysis()
+
+      previewIsFetchedRef.current = true
     } else if (!artifact.analysis) {
       setNoData(true)
     }
-  }, [artifact.analysis, fetchPreviewFromAnalysis, preview.length])
+  }, [artifact.analysis, fetchPreviewFromAnalysis, preview.length, frontendSpec])
+
+  useEffect(() => {
+    const abortControllersList = abortControllersListRef.current
+
+    return () => {
+      abortControllersList.forEach(controller => controller.abort(REQUEST_CANCELED))
+      abortControllersListRef.current = []
+      previewIsFetchedRef.current = false
+    }
+  }, [artifact.analysis, params.projectName])
 
   return (
     <div className="preview_container">
