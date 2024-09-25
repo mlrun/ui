@@ -512,7 +512,7 @@ const JobsTable = React.forwardRef(
           <Details
             actionsMenu={actionsMenu}
             detailsMenu={pageData.details.menu}
-            getCloseDetailsLink={() => getCloseDetailsLink(location, params.jobName)}
+            getCloseDetailsLink={() => getCloseDetailsLink(window.location, params.jobName)}
             handleCancel={() => {
               setSelectedJob({})
               dispatch(setFilters({ saveFilters: true }))
