@@ -57,7 +57,7 @@ import {
 import { getArtifactIdentifier } from '../../utils/getUniqueIdentifier'
 import { getFilterTagOptions, setFilters } from '../../reducers/filtersReducer'
 import { getViewMode } from '../../utils/helper'
-import { isDetailsTabExists } from '../../utils/isDetailsTabExists'
+import { isDetailsTabExists } from '../../utils/link-helper.util'
 import { openPopUp } from 'igz-controls/utils/common.util'
 import { setFullSelectedArtifact } from '../../utils/artifacts.util'
 import { setNotification } from '../../reducers/notificationReducer'

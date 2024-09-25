@@ -53,7 +53,7 @@ import { enrichRunWithFunctionFields, handleAbortJob, handleDeleteJob } from '..
 import { getFunctionLogs } from '../../utils/getFunctionLogs'
 import { getJobLogs } from '../../utils/getJobLogs.util'
 import { getNoDataMessage } from '../../utils/getNoDataMessage'
-import { isDetailsTabExists } from '../../utils/isDetailsTabExists'
+import { isDetailsTabExists } from '../../utils/link-helper.util'
 import { isJobKindLocal, pollAbortingJobs } from '../../components/Jobs/jobs.util'
 import { isRowRendered, useVirtualization } from '../../hooks/useVirtualization.hook'
 import { isWorkflowStepExecutable } from '../../components/Workflow/workflow.util'
