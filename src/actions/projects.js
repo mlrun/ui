@@ -84,7 +84,9 @@ import {
   PROJECT_ONLINE_STATUS,
   SET_JOBS_MONITORING_DATA,
   SET_MLRUN_IS_UNHEALTHY,
-  SET_MLRUN_UNHEALTHY_RETRYING
+  SET_MLRUN_UNHEALTHY_RETRYING,
+  REQUEST_CANCELED,
+  DEFAULT_ABORT_MSG
 } from '../constants'
 import {
   CONFLICT_ERROR_STATUS_CODE,
@@ -181,9 +183,11 @@ const projectsAction = {
         return response?.data
       })
       .catch(error => {
-        dispatch(projectsAction.fetchProjectFailure(error))
+        if (![REQUEST_CANCELED, DEFAULT_ABORT_MSG].includes(error.message)) {
+          dispatch(projectsAction.fetchProjectFailure(error))
 
-        throw error
+          throw error
+        }
       })
   },
   fetchProjectBegin: () => ({ type: FETCH_PROJECT_BEGIN }),
@@ -469,9 +473,11 @@ const projectsAction = {
         return dispatch(projectsAction.fetchProjectSummarySuccess(parseSummaryData(data)))
       })
       .catch(error => {
-        dispatch(projectsAction.fetchProjectSummaryFailure(error.message))
+        if (![REQUEST_CANCELED, DEFAULT_ABORT_MSG].includes(error.message)) {
+          dispatch(projectsAction.fetchProjectSummaryFailure(error.message))
 
-        throw error
+          throw error
+        }
       })
   },
   fetchProjectSummaryBegin: () => ({
