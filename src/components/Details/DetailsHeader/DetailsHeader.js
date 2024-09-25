@@ -118,10 +118,9 @@ const DetailsHeader = ({
             <Link
               className="item-header__back-btn"
               to={
-                new URL(
-                  getCloseDetailsLink(location, selectedItem.name) ??
-                    location.pathname.split('/').slice(0, -2).join('/')
-                )
+                new URL(`${window.location.origin}${getCloseDetailsLink(location, selectedItem.name) ??
+                  location.pathname.split('/').slice(0, -2).join('/')}`
+                ).href
               }
               onClick={handleBackClick}
             >
