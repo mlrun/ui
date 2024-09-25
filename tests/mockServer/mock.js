@@ -158,11 +158,7 @@ const projectExistsConflict = {
   detail: "MLRunConflictError('Conflict - Project already exists')"
 }
 const projectsLimitReachedConflict = {
-  detail: {
-    reason:
-      'MLRunHTTPError("405 Client Error: Method Not Allowed for url: https://dashboard.default-tenant.app.vmdev2.lab.iguazeng.com/api/projects: ' +
-      "Failed creating project in Iguazio: [{'status': 405, 'detail': 'Resource limit reached. Cannot create more records'}]\")"
-  }
+    detail: "MLRunHTTPError(\"Failed creating project in Iguazio: [{'status': 405, 'detail': 'Resource limit reached. Cannot create more records'}]\")"
 }
 const secretKeyTemplate = {
   provider: 'kubernetes',

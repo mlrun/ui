@@ -177,9 +177,11 @@ Feature: ML Functions
         Then verify "New_Function_Name_Input" element visibility on "Create_ML_Function_Popup" wizard
         Then type value "   " to "New_Function_Name_Input" field on "Create_ML_Function_Popup" wizard
         Then verify "New_Function_Name_Input" on "Create_ML_Function_Popup" wizard should display options "Input_Hint"."Function_Name_Hint"
+        Then click on "Title" element on "Create_ML_Function_Popup" wizard
         Then verify "New_Function_Name_Input" options rules on "Create_ML_Function_Popup" wizard
         Then type value "   " to "New_Function_Tag_Input" field on "Create_ML_Function_Popup" wizard
         Then verify "New_Function_Tag_Input" on "Create_ML_Function_Popup" wizard should display options "Input_Hint"."Function_Tag_Hint"
+        Then click on "Title" element on "Create_ML_Function_Popup" wizard
         Then verify "New_Function_Tag_Input" options rules on "Create_ML_Function_Popup" wizard
         Then verify "New_Function_Runtime_Dropdown" element visibility on "Create_ML_Function_Popup" wizard
         Then verify "Cancel_Button" element visibility on "Create_ML_Function_Popup" wizard

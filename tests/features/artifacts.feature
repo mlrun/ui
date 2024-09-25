@@ -336,7 +336,6 @@ Feature: Artifacts Page
   @passive
   @inProgress
   @smoke
-  # [Artifacts] Download notification popup is hidden https://iguazio.atlassian.net/browse/ML-7754
   Scenario: MLA016 - Check all mandatory components in Item infopane on Preview tab table
     Given open url
     And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
@@ -495,7 +494,6 @@ Feature: Artifacts Page
   @MLA
   @passive
   @smoke
-  # [Artifacts] Download notification popup is hidden https://iguazio.atlassian.net/browse/ML-7754
   Scenario: MLA015 - Verify Preview option, view Preview action
       Given open url
       And wait load page
@@ -767,7 +765,6 @@ Feature: Artifacts Page
     Then verify "Cancel_Button" element visibility on "Add_Tag_Popup" wizard
     Then "Cancel_Button" element on "Add_Tag_Popup" should contains "Cancel" value
     Then type value "newTag" to "Tag_Input" field on "Add_Tag_Popup" wizard
-    # Then click on "Add_Button" element on "Add_Tag_Popup" wizard - bug ML-7849
     Then click on "Cancel_Button" element on "Add_Tag_Popup" wizard
     And wait load page
     Then verify if "Common_Popup" popup dialog appears
@@ -803,8 +800,39 @@ Feature: Artifacts Page
     Then "Delete_Button" element on "Delete_Artifact_Popup" should contains "Delete" value
     Then click on "Delete_Button" element on "Delete_Artifact_Popup" wizard
     And wait load page
+    Then verify if "Notification_Popup" popup dialog appears
+    Then verify "Notification_Pop_Up" element visibility on "Notification_Popup" wizard
+    Then "Notification_Pop_Up" element on "Notification_Popup" should contains "Artifact is successfully deleted" value
+    Then verify "Notification_Pop_Up_Cross_Close_Button" element visibility on "Notification_Popup" wizard
+    Then click on "Notification_Pop_Up_Cross_Close_Button" element on "Notification_Popup" wizard
+    Then check "survival-curves_km-survival" value not in "name" column in "Files_Table" table on "Files" wizard
+    And wait load page
+    When click on cell with row index 1 in "name" column in "Files_Table" table on "Files" wizard
+    And wait load page
+    Then verify "Full_View_Button" element visibility on "Files_Info_Pane" wizard
+    Then click on "Full_View_Button" element on "Files_Info_Pane" wizard
+    And wait load page
+    Then verify "Cross_Close_Button" element not exists on "Files_Info_Pane" wizard
+    Then verify "Header_Full_View" element visibility on "Files_Info_Pane" wizard
+    Then "Header_Full_View" element on "Files_Info_Pane" should contains "clean-data_preproc-column_map.json" value
+    Then select "Add a tag" option in full view action menu on "Files_Info_Pane" wizard
     And wait load page
     And wait load page
-    Then click on "Edit_btn_full_view" element on "Files_Info_Pane" wizard
-    Then verify "Version_tag_Input_full_view" on "Files_Info_Pane" wizard should contains "latest" value   
+    Then verify "Add_Tag_Popup" element visibility on "Add_Tag_Popup" wizard
+    Then verify "Title" element visibility on "Add_Tag_Popup" wizard
+    Then type value "newTag" to "Tag_Input" field on "Add_Tag_Popup" wizard
+    Then click on "Add_Button" element on "Add_Tag_Popup" wizard
+    And wait load page
+    Then verify "Header_Full_View" element visibility on "Files_Info_Pane" wizard
+    Then "Header_Full_View" element on "Files_Info_Pane" should contains "clean-data_preproc-column_map.json" value
     Then click on "Tabel_View_Button" element on "Files_Info_Pane" wizard
+    And wait load page
+    Then verify "Cross_Close_Button" element visibility on "Files_Info_Pane" wizard
+    And wait load page
+    Then click on "Table_FilterBy_Button" element on "Files" wizard
+    Then select "newTag" option in "Table_Tree_Filter_Dropdown" dropdown on "FilterBy_Popup" wizard
+    Then click on "Apply_Button" element on "FilterBy_Popup" wizard
+    And wait load page
+    When click on cell with row index 1 in "name" column in "Files_Table" table on "Files" wizard
+    And wait load page
+    Then check "newTag" value in "tag" column in "Overview_Table" table on "Files_Info_Pane" wizard

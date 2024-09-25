@@ -73,6 +73,7 @@ Feature: Projects Page
         Then verify "Name_Input" element visibility on "Create_New_Project" wizard
         Then type value "/" to "Name_Input" field on "Create_New_Project" wizard
         Then verify "Name_Input" on "Create_New_Project" wizard should display options "Input_Hint"."Project_Name_Hint"
+        Then click on "Title" element on "Create_New_Project" wizard
         Then verify "Name_Input" options rules on form "Create_New_Project" wizard
         Then verify "Description_Input" element visibility on "Create_New_Project" wizard
         Then verify "Cancel_Button" element visibility on "Create_New_Project" wizard
@@ -343,10 +344,10 @@ Feature: Projects Page
         Then verify "Total_Counter_Title" element visibility in "Monitoring_Jobs_Box" on "Projects" wizard
         Then "Total_Counter_Title" element in "Monitoring_Jobs_Box" on "Projects" should contains "Jobs" value
         Then verify "Total_Counter_Number" element visibility in "Monitoring_Jobs_Box" on "Projects" wizard
-        Then "Total_Counter_Number" element in "Monitoring_Jobs_Box" on "Projects" should contains "6" value
+        Then "Total_Counter_Number" element in "Monitoring_Jobs_Box" on "Projects" should contains "19" value
         Then verify "Counter_Running_Status_Number" element visibility in "Monitoring_Jobs_Box" on "Projects" wizard
         Then verify "Counter_Running_Status_Icon" element visibility in "Monitoring_Jobs_Box" on "Projects" wizard
-        Then "Counter_Running_Status_Number" element in "Monitoring_Jobs_Box" on "Projects" should contains "3" value
+        Then "Counter_Running_Status_Number" element in "Monitoring_Jobs_Box" on "Projects" should contains "16" value
         Then verify "Counter_Failed_Status_Number" element visibility in "Monitoring_Jobs_Box" on "Projects" wizard
         Then verify "Counter_Failed_Status_Icon" element visibility in "Monitoring_Jobs_Box" on "Projects" wizard
         Then "Counter_Failed_Status_Number" element in "Monitoring_Jobs_Box" on "Projects" should contains "2" value
@@ -455,6 +456,12 @@ Feature: Projects Page
         Then "Jobs_See_All_Link" element in "Monitoring_Scheduled_Box" on "Projects" should contains "See all" value
         Then verify "Workflows_See_All_Link" element visibility in "Monitoring_Scheduled_Box" on "Projects" wizard
         Then "Workflows_See_All_Link" element in "Monitoring_Scheduled_Box" on "Projects" should contains "See all" value
+        Then verify "Total_Scheduled_Title" element visibility in "Monitoring_Scheduled_Box" on "Projects" wizard
+        Then "Total_Scheduled_Title" element in "Monitoring_Scheduled_Box" on "Projects" should contains "Total" value
+        Then verify "Total_Scheduled_Number" element visibility in "Monitoring_Scheduled_Box" on "Projects" wizard
+        Then "Total_Scheduled_Number" element in "Monitoring_Scheduled_Box" on "Projects" should contains "8" value
+        Then verify "Total_See_All_Link" element visibility in "Monitoring_Scheduled_Box" on "Projects" wizard
+        Then "Total_See_All_Link" element in "Monitoring_Scheduled_Box" on "Projects" should contains "See all" value
         When click on "Jobs_See_All_Link" element in "Monitoring_Scheduled_Box" on "Projects" wizard
         Then verify redirection to "projects/jobs-monitoring/scheduled"
         And wait load page
@@ -462,5 +469,9 @@ Feature: Projects Page
         And wait load page
         When click on "Workflows_See_All_Link" element in "Monitoring_Scheduled_Box" on "Projects" wizard
         Then verify redirection to "projects/jobs-monitoring/scheduled"
+        And wait load page
         Then navigate back
+        And wait load page
+        When click on "Total_See_All_Link" element in "Monitoring_Scheduled_Box" on "Projects" wizard
+        Then verify redirection to "projects/jobs-monitoring/scheduled"
         And wait load page
