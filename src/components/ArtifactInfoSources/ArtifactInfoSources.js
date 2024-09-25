@@ -19,6 +19,7 @@ such restriction.
 */
 import React from 'react'
 import PropTypes from 'prop-types'
+import { Link } from 'react-router-dom'
 
 import { Tooltip, TextTooltipTemplate } from 'igz-controls/components'
 
@@ -28,8 +29,8 @@ const ArtifactInfoSources = ({ sources = {} }) => {
   return (
     <div className="info-sources" data-testid="sources">
       <h3 className="item-info__header">Sources</h3>
-      {Object.entries(sources).map(([key, value], index) => (
-        <div className="info-sources__table" key={key + value}>
+      {Object.entries(sources).map(([key, sourceData], index) => (
+        <div className="info-sources__table" key={key + sourceData.value}>
           <h5 className="info-sources__table-header">Source {index + 1}</h5>
           <div className="info-sources__table-row">
             <div className="info-sources__table-key">Name:</div>
@@ -40,7 +41,15 @@ const ArtifactInfoSources = ({ sources = {} }) => {
           <div className="info-sources__table-row">
             <div className="info-sources__table-key">Path:</div>
             <div className="info-sources__table-value">
-              <Tooltip template={<TextTooltipTemplate text={value} />}>{value}</Tooltip>
+              <Tooltip template={<TextTooltipTemplate text={sourceData.value} />}>
+                {
+                  sourceData.link ? (
+                    <Link to={sourceData.link} className="link" reloadDocument>
+                      {sourceData.value}
+                    </Link>
+                  ) : sourceData.value
+                }
+              </Tooltip>
             </div>
           </div>
         </div>

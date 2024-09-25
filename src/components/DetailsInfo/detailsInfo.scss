@@ -137,6 +137,10 @@
         }
       }
 
+      &__link {
+        color: $cornflowerBlue;
+      }
+
       &_disabled {
         pointer-events: none;
       }
