@@ -141,9 +141,9 @@ const DetailsArtifacts = ({
       }
 
       if (workflowId) {
-        return fetchJob(params.projectName, params.jobId, iteration).then(job => {
-          if (job) {
-            const selectedJob = getJobAccordingIteration(job)
+        return fetchJob(job.project || params.projectName, params.jobId, iteration).then(responseJob => {
+          if (responseJob) {
+            const selectedJob = getJobAccordingIteration(responseJob)
 
             setArtifactsPreviewContent(
               generateArtifactsPreviewContent(selectedJob, selectedJob.artifacts)
