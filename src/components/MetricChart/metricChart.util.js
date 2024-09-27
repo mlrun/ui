@@ -28,30 +28,6 @@ export const hexToRGB = (hex, alpha = 0) => {
   return `rgba(${r}, ${g}, ${b}, ${alpha})`
 }
 
-export const calculateMaxTicksLimit = (container, type) => {
-  const parent = container.parentNode
-
-  if (type === CHART_TYPE_LINE) {
-    const containerWidth = parent.clientWidth
-
-    if (containerWidth < 290) return 3
-    if (containerWidth < 500) return 5
-    if (containerWidth < 800) return 8
-
-    return 10
-  } else if (type === CHART_TYPE_BAR) {
-    const containerWidth = parent.clientWidth
-
-    if (containerWidth < 170) return 3
-    if (containerWidth < 220) return 5
-    if (containerWidth < 900) return 8
-
-    return 10
-  } else {
-    return 10
-  }
-}
-
 // TODO: refactor generateMetricChartTooltip function with generateCustomTooltip
 export const generateMetricChartTooltip = context => {
   const chartType = context.tooltip.dataPoints[0].dataset.chartType
@@ -125,7 +101,7 @@ export const generateMetricChartTooltip = context => {
 
 export const setChartGradient = (chart, ctx, backgroundColor, canvasHeight = 200) => {
   const gradient = ctx.createLinearGradient(0, 0, 0, canvasHeight)
-  gradient.addColorStop(0, hexToRGB(backgroundColor|| '#FFF', 0.7))
+  gradient.addColorStop(0, hexToRGB(backgroundColor || '#FFF', 0.7))
   gradient.addColorStop(1, hexToRGB(backgroundColor))
   chart.data.datasets.forEach(dataset => {
     dataset.backgroundColor = gradient
