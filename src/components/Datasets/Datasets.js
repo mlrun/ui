@@ -33,19 +33,16 @@ import {
   FILTER_MENU_MODAL,
   GROUP_BY_NAME,
   GROUP_BY_NONE,
-  REQUEST_CANCELED,
-  TAG_FILTER_ALL_ITEMS
+  REQUEST_CANCELED
 } from '../../constants'
 import {
   fetchArtifactTags,
   fetchDataSets,
-  fetchExpandedDataSet,
   removeDataSet,
   removeDataSets
 } from '../../reducers/artifactsReducer'
 import {
   checkForSelectedDataset,
-  fetchDataSetRowData,
   generateActionsMenu,
   generatePageData,
   handleApplyDetailsChanges,
@@ -57,6 +54,7 @@ import { getFilterTagOptions, setFilters } from '../../reducers/filtersReducer'
 import { getViewMode } from '../../utils/helper'
 import { isDetailsTabExists } from '../../utils/link-helper.util'
 import { openPopUp } from 'igz-controls/utils/common.util'
+import { sortListByDate } from '../../utils'
 import { setFullSelectedArtifact } from '../../utils/artifacts.util'
 import { setNotification } from '../../reducers/notificationReducer'
 import { useGroupContent } from '../../hooks/groupContent.hook'
@@ -188,13 +186,6 @@ const Datasets = () => {
       openPopUp(AddArtifactTagPopUp, {
         artifact,
         onAddTag: () => handleRefresh(datasetsFilters),
-        getArtifact: () =>
-          fetchExpandedDataSet({
-            project: params.projectName,
-            dataSet: artifact.db_key,
-            iter: true,
-            tag: TAG_FILTER_ALL_ITEMS
-          }),
         projectName: params.projectName
       })
     },
@@ -258,19 +249,24 @@ const Datasets = () => {
     handleRefresh(datasetsFilters)
   }
 
-  const handleRequestOnExpand = useCallback(
-    async dataset => {
-      await fetchDataSetRowData(
-        dispatch,
-        dataset,
-        setSelectedRowData,
-        datasetsFilters.iter,
-        datasetsFilters.tag,
-        params.projectName,
-        frontendSpec
-      )
+  const handleExpand = useCallback(
+    (dataset, content) => {
+      const dataSetIdentifier = getArtifactIdentifier(dataset)
+
+      setSelectedRowData(state => {
+        return {
+          ...state,
+          [dataSetIdentifier]: {
+            content: sortListByDate(content[dataset.db_key ?? dataset.key], 'updated', false).map(contentItem =>
+              createDatasetsRowData(contentItem, params.projectName, false)
+            ),
+            error: null,
+            loading: false
+          }
+        }
+      })
     },
-    [datasetsFilters.iter, datasetsFilters.tag, dispatch, frontendSpec, params.projectName]
+    [params.projectName]
   )
 
   const handleRemoveRowData = useCallback(
@@ -293,7 +289,7 @@ const Datasets = () => {
     datasets,
     getArtifactIdentifier,
     handleRemoveRowData,
-    handleRequestOnExpand,
+    handleExpand,
     null,
     DATASETS_PAGE
   )
@@ -301,11 +297,11 @@ const Datasets = () => {
   const tableContent = useMemo(() => {
     return filtersStore.groupBy === GROUP_BY_NAME
       ? latestItems.map(contentItem => {
-          return createDatasetsRowData(contentItem, params.projectName, frontendSpec, true)
-        })
+        return createDatasetsRowData(contentItem, params.projectName, frontendSpec, true)
+      })
       : datasets.map(contentItem =>
-          createDatasetsRowData(contentItem, params.projectName, frontendSpec)
-        )
+        createDatasetsRowData(contentItem, params.projectName, frontendSpec)
+      )
   }, [datasets, filtersStore.groupBy, frontendSpec, latestItems, params.projectName])
 
   const tableHeaders = useMemo(() => tableContent[0]?.content ?? [], [tableContent])

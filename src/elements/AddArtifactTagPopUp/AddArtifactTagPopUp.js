@@ -17,9 +17,9 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import PropTypes from 'prop-types'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { useLocation } from 'react-router-dom'
 import { Form } from 'react-final-form'
 import { createForm } from 'final-form'
@@ -37,17 +37,16 @@ import { isSubmitDisabled } from 'igz-controls/utils/form.util'
 
 const AddArtifactTagPopUp = ({
   artifact,
-  getArtifact,
   isOpen,
   onAddTag = () => {},
   onResolve,
   projectName
 }) => {
   const dispatch = useDispatch()
+  const filtersStore = useSelector(store => store.filtersStore)
   const [initialValues] = useState({
     artifactTag: ''
   })
-  const [existingTags, setExistingTags] = useState([])
 
   const formRef = React.useRef(
     createForm({
@@ -57,16 +56,6 @@ const AddArtifactTagPopUp = ({
   )
   const location = useLocation()
   const { handleCloseModal, resolveModal } = useModalBlockHistory(onResolve, formRef.current)
-
-  useEffect(() => {
-    getArtifact &&
-      dispatch(getArtifact())
-        .unwrap()
-        .then(results => {
-          const tags = results.filter(result => result.tag).map(result => result.tag)
-          setExistingTags(tags)
-        })
-  }, [dispatch, getArtifact])
 
   const addArtifactTag = values => {
     const identifier = {
@@ -157,7 +146,7 @@ const AddArtifactTagPopUp = ({
                       {
                         name: 'uniqueness',
                         label: 'Tag name must be unique',
-                        pattern: value => !existingTags.includes(value)
+                        pattern: value => !filtersStore.tagOptions.includes(value)
                       }
                     ])}
                   />
@@ -172,7 +161,6 @@ const AddArtifactTagPopUp = ({
 }
 
 AddArtifactTagPopUp.propTypes = {
-  getArtifact: PropTypes.func.isRequired,
   isOpen: PropTypes.bool.isRequired,
   artifact: PropTypes.shape({}).isRequired,
   onAddTag: PropTypes.func,
