@@ -278,8 +278,7 @@ const Projects = () => {
       setConfirmData({
         item: project,
         header: 'Delete project?',
-        message: `You are trying to delete the non-empty project "${project.metadata.name}". Deleting it will also delete all of its resources,
-such as jobs, artifacts, and features.`,
+        message: `You are trying to delete the project "${project.metadata.name}". Deleted projects cannot be restored`,
         btnConfirmLabel: 'Delete',
         btnConfirmType: DANGER_BUTTON,
         rejectHandler: () => {
