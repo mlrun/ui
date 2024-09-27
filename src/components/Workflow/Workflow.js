@@ -22,7 +22,7 @@ import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
 import classnames from 'classnames'
 import { forEach, isEmpty } from 'lodash'
-import { useLocation, useNavigate, useParams } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 
 import Details from '../Details/Details'
 import MlReactFlow from '../../common/ReactFlow/MlReactFlow'
@@ -86,7 +86,6 @@ const Workflow = ({
   const [nodes, setNodes] = useState([])
   const [edges, setEdges] = useState([])
   const params = useParams()
-  const location = useLocation()
   const navigate = useNavigate()
   const { isStagingMode } = useMode()
 
@@ -263,7 +262,7 @@ const Workflow = ({
               <Details
                 actionsMenu={actionsMenu}
                 detailsMenu={pageData.details.menu}
-                getCloseDetailsLink={() => getCloseDetailsLink(location, params.workflowId)}
+                getCloseDetailsLink={() => getCloseDetailsLink(window.location, params.workflowId)}
                 handleCancel={handleCancel}
                 pageData={pageData}
                 retryRequest={refreshJobs}
@@ -275,7 +274,7 @@ const Workflow = ({
         ) : (
           <Table
             actionsMenu={actionsMenu}
-            getCloseDetailsLink={() => getCloseDetailsLink(location, params.workflowId)}
+            getCloseDetailsLink={() => getCloseDetailsLink(window.location, params.workflowId)}
             handleCancel={handleCancel}
             hideActionsMenu
             pageData={pageData}

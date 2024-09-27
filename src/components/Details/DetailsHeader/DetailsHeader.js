@@ -118,8 +118,11 @@ const DetailsHeader = ({
           {isDetailsScreen && !pageData.details.hideBackBtn && (
             <Link
               className="item-header__back-btn"
-              to={generateUrlFromRouterPath(getCloseDetailsLink ? getCloseDetailsLink(location, selectedItem.name) :
-                location.pathname.split('/').slice(0, -2).join('/'))}
+              to={generateUrlFromRouterPath(
+                getCloseDetailsLink
+                  ? getCloseDetailsLink(window.location, selectedItem.name)
+                  : window.location.pathname.split('/').slice(0, -2).join('/')
+              )}
               onClick={handleBackClick}
             >
               <RoundedIcon id="go-back" tooltipText="Go to list">
@@ -140,8 +143,8 @@ const DetailsHeader = ({
           >
             {
               selectedItem.name ||
-              selectedItem.db_key ||
-              selectedItem.spec?.model?.replace(/:.*$/, '') // 'model-key:model-tag', remove tag
+                selectedItem.db_key ||
+                selectedItem.spec?.model?.replace(/:.*$/, '') // 'model-key:model-tag', remove tag
             }
           </Tooltip>
         </h3>
@@ -153,9 +156,9 @@ const DetailsHeader = ({
             pageData.page === JOBS_PAGE &&
             !selectedItem?.updated
               ? formatDatetime(
-                selectedItem?.startTime,
-                stateValue === 'aborted' ? 'N/A' : 'Not yet started'
-              )
+                  selectedItem?.startTime,
+                  stateValue === 'aborted' ? 'N/A' : 'Not yet started'
+                )
               : selectedItem?.updated
                 ? formatDatetime(selectedItem?.updated, 'N/A')
                 : selectedItem?.spec?.model.includes(':') // 'model-key:model-tag'
@@ -293,11 +296,11 @@ const DetailsHeader = ({
               className="details-close-btn"
               data-testid="details-close-btn"
               to={
-                generateUrlFromRouterPath(getCloseDetailsLink
-                  ? getCloseDetailsLink(location, selectedItem.name)
+                getCloseDetailsLink
+                  ? generateUrlFromRouterPath(getCloseDetailsLink(window.location, selectedItem.name))
                   : `/projects/${params.projectName}/${pageData.page.toLowerCase()}${
-                    params.pageTab ? `/${params.pageTab}` : tab ? `/${tab}` : ''
-                  }`)
+                      params.pageTab ? `/${params.pageTab}` : tab ? `/${tab}` : ''
+                    }`
               }
               onClick={handleCancelClick}
             >
