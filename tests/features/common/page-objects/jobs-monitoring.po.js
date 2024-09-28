@@ -25,7 +25,7 @@ import {
   generateInputGroup
 } from '../../common-tools/common-tools'
 import inputGroup from '../components/input-group.component'
-
+import checkboxComponent from '../components/checkbox.component'
 
 const tabSelector = {
   root: '.content .content-menu',
@@ -82,10 +82,23 @@ const commonDatePickerFilter = dropdownComponent(
   )
 )
 
+const commonRefreshButton = By.css('[data-testid="refresh"]')
+const commonErrorMessage = By.css('[data-testid="no-data"] h3')
+
 module.exports = {
   crossJobsMonitorTab: {
     Cross_Jobs_Tab_Selector: commonTable(tabSelector),
     Table_FilterBy_Button: By.css('[data-testid="filter-menu-btn-tooltip-wrapper"]'),
+    Refresh_Button: commonRefreshButton,
+    Error_Message: commonErrorMessage,
+    Auto_Refresh_Checkbox: checkboxComponent({
+      root: '[data-testid="form-field-checkbox"]',
+      elements: {
+        checkbox: 'input', 
+        name: '',
+        icon: ''
+      }
+    }),
     Search_By_Name_Filter_Input: inputGroup(
       generateInputGroup(
         '[data-testid="name-form-field-input"]',
@@ -107,6 +120,8 @@ module.exports = {
       )
     ),
     Date_Picker_Filter_Dropdown: commonDatePickerFilter,
+    Refresh_Button: commonRefreshButton,
+    Error_Message: commonErrorMessage,
     Workflows_Table: commonTable(overallTable)
   },
   crossScheduledMonitorTab: {
@@ -120,6 +135,8 @@ module.exports = {
       )
     ),
     Date_Picker_Filter_Dropdown: commonDatePickerFilter,
+    Refresh_Button: commonRefreshButton,
+    Error_Message: commonErrorMessage,
     Scheduled_Table: commonTable(overallTable)
   }
 }
