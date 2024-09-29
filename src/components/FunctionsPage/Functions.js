@@ -108,15 +108,12 @@ const Functions = ({
   const location = useLocation()
   const dispatch = useDispatch()
 
-  const functionsFilter = useMemo(
+  const functionsFilters = useMemo(
     () => ({
-      showUntagged: filtersStore.filterMenuModal.FUNCTION_FILTERS.values.showUntagged,
-      dates: filtersStore.filterMenu.FUNCTION_FILTERS.dates
+      ...filtersStore.filterMenu.FUNCTION_FILTERS,
+      ...filtersStore.filterMenuModal.FUNCTION_FILTERS.values
     }),
-    [
-      filtersStore.filterMenuModal.FUNCTION_FILTERS.values.showUntagged,
-      filtersStore.filterMenu.FUNCTION_FILTERS.dates
-    ]
+    [filtersStore.filterMenu.FUNCTION_FILTERS, filtersStore.filterMenuModal.FUNCTION_FILTERS.values]
   )
 
   const terminateDeleteTasksPolling = useCallback(() => {
@@ -310,7 +307,7 @@ const Functions = ({
               params.projectName,
               terminatePollRef,
               newDeletingFunctions,
-              () => fetchData(filtersStore),
+              () => fetchData(functionsFilters),
               dispatch
             )
 
@@ -328,12 +325,12 @@ const Functions = ({
     },
     [
       deleteFunction,
-      params.projectName,
       dispatch,
       fetchData,
-      selectedFunction,
+      functionsFilters,
       navigate,
-      filtersStore
+      params.projectName,
+      selectedFunction
     ]
   )
 
@@ -442,7 +439,7 @@ const Functions = ({
               message: 'Function is built and ran successfully.'
             })
           )
-          refreshFunctions(functionsFilter)
+          refreshFunctions(functionsFilters)
         })
         .catch(error => {
           showErrorNotification(dispatch, error, 'Failed to build and run function.', '', () => {
@@ -450,7 +447,7 @@ const Functions = ({
           })
         })
     },
-    [deployFunction, dispatch, functionsFilter, refreshFunctions, runNewJob]
+    [deployFunction, dispatch, functionsFilters, refreshFunctions, runNewJob]
   )
 
   const pageData = useMemo(
@@ -628,6 +625,10 @@ const Functions = ({
     refreshFunctions(filters)
   }
 
+  const retryRequestCallback = () => {
+    refreshFunctions(functionsFilters)
+  }
+
   const handleSelectFunction = item => {
     if (document.getElementsByClassName('view')[0]) {
       document.getElementsByClassName('view')[0].classList.remove('view')
@@ -674,8 +675,8 @@ const Functions = ({
     setEditableItem(null)
     removeNewFunction()
 
-    return fetchData().then(functions => {
-      if (functions) {
+    return fetchData(functionsFilters).then(functions => {
+      if (functions.length) {
         const currentItem = functions.find(func => func.name === name && func.tag === tag)
 
         navigate(`/projects/${params.projectName}/functions/${currentItem.hash}/${tab}`)
@@ -779,7 +780,7 @@ const Functions = ({
       handleSelectFunction={handleSelectFunction}
       isDemoMode={isDemoMode}
       pageData={pageData}
-      refreshFunctions={refreshFunctions}
+      retryRequest={retryRequestCallback}
       requestErrorMessage={requestErrorMessage}
       selectedFunction={selectedFunction}
       selectedRowData={selectedRowData}

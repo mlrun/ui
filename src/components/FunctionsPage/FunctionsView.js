@@ -66,7 +66,7 @@ const FunctionsView = ({
   handleSelectFunction,
   isDemoMode,
   pageData,
-  refreshFunctions,
+  retryRequest,
   requestErrorMessage,
   selectedFunction,
   selectedRowData,
@@ -98,7 +98,7 @@ const FunctionsView = ({
                       className: 'action-button',
                       label: 'New',
                       variant: SECONDARY_BUTTON
-                    }),
+                    })
                   }
                 ]}
               >
@@ -125,7 +125,7 @@ const FunctionsView = ({
                   actionsMenu={actionsMenu}
                   handleCancel={handleCancel}
                   pageData={pageData}
-                  retryRequest={refreshFunctions}
+                  retryRequest={retryRequest}
                   selectedItem={selectedFunction}
                   tableClassName="functions-table"
                   tableHeaders={tableContent[0]?.content ?? []}
@@ -216,7 +216,7 @@ FunctionsView.propTypes = {
   handleExpandRow: PropTypes.func.isRequired,
   handleSelectFunction: PropTypes.func.isRequired,
   pageData: PropTypes.object.isRequired,
-  refreshFunctions: PropTypes.func.isRequired,
+  retryRequest: PropTypes.func.isRequired,
   requestErrorMessage: PropTypes.string.isRequired,
   selectedFunction: PropTypes.object.isRequired,
   selectedRowData: PropTypes.object.isRequired,
