@@ -111,7 +111,7 @@ const Functions = ({
 
   const functionsFilters = useMemo(
     () => ({
-      ...filtersStore.filterMenu.FUNCTION_FILTERS,
+      ...filtersStore.filterMenu.FUNCTION_FILTERS.values,
       ...filtersStore.filterMenuModal.FUNCTION_FILTERS.values
     }),
     [filtersStore.filterMenu.FUNCTION_FILTERS, filtersStore.filterMenuModal.FUNCTION_FILTERS.values]
@@ -136,7 +136,7 @@ const Functions = ({
           format: 'minimal'
         }
       }).then(functions => {
-        if (functions?.length  > 0) {
+        if (functions?.length > 0) {
           const newFunctions = parseFunctions(functions, params.projectName)
           const deletingFunctions = newFunctions.reduce((acc, func) => {
             if (func.deletion_task_id && !func.deletion_error && !acc[func.deletion_task_id]) {
@@ -179,7 +179,16 @@ const Functions = ({
         }
       })
     },
-    [dispatch, fetchFunctions, navigate, params.funcName, params.hash, params.projectName, params.tag, terminateDeleteTasksPolling]
+    [
+      dispatch,
+      fetchFunctions,
+      navigate,
+      params.funcName,
+      params.hash,
+      params.projectName,
+      params.tag,
+      terminateDeleteTasksPolling
+    ]
   )
 
   const refreshFunctions = useCallback(
@@ -596,7 +605,16 @@ const Functions = ({
       setSelectedFunctionMin,
       dispatch
     )
-  }, [dispatch, functions, navigate, params.funcName, params.hash, params.projectName, params.tag, selectedRowData])
+  }, [
+    dispatch,
+    functions,
+    navigate,
+    params.funcName,
+    params.hash,
+    params.projectName,
+    params.tag,
+    selectedRowData
+  ])
 
   useEffect(() => {
     dispatch(setFilters({ groupBy: GROUP_BY_NAME }))
