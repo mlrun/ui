@@ -109,8 +109,8 @@ const Content = ({
   }, [pageData.hidePageActionMenu, showActionsMenu])
 
   useEffect(() => {
-    isProjectValid(navigate, projectStore.projectsNames.data, params.projectName)
-  }, [navigate, params.projectName, projectStore.projectsNames.data])
+    isProjectValid(navigate, projectStore.projects, params.projectName)
+  }, [navigate, params.projectName, projectStore.projects])
 
   return (
     <>
