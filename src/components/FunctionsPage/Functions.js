@@ -109,6 +109,14 @@ const Functions = ({
   const location = useLocation()
   const dispatch = useDispatch()
 
+  const functionsFilters = useMemo(
+    () => ({
+      ...filtersStore.filterMenu.FUNCTION_FILTERS.values,
+      ...filtersStore.filterMenuModal.FUNCTION_FILTERS.values
+    }),
+    [filtersStore.filterMenu.FUNCTION_FILTERS, filtersStore.filterMenuModal.FUNCTION_FILTERS.values]
+  )
+
   const terminateDeleteTasksPolling = useCallback(() => {
     terminatePollRef?.current?.()
     setDeletingFunctions({})
@@ -128,7 +136,7 @@ const Functions = ({
           format: 'minimal'
         }
       }).then(functions => {
-        if (functions?.length  > 0) {
+        if (functions?.length > 0) {
           const newFunctions = parseFunctions(functions, params.projectName)
           const deletingFunctions = newFunctions.reduce((acc, func) => {
             if (func.deletion_task_id && !func.deletion_error && !acc[func.deletion_task_id]) {
@@ -171,7 +179,16 @@ const Functions = ({
         }
       })
     },
-    [dispatch, fetchFunctions, navigate, params.funcName, params.hash, params.projectName, params.tag, terminateDeleteTasksPolling]
+    [
+      dispatch,
+      fetchFunctions,
+      navigate,
+      params.funcName,
+      params.hash,
+      params.projectName,
+      params.tag,
+      terminateDeleteTasksPolling
+    ]
   )
 
   const refreshFunctions = useCallback(
@@ -313,7 +330,7 @@ const Functions = ({
               params.projectName,
               terminatePollRef,
               newDeletingFunctions,
-              () => fetchData(filtersStore),
+              () => fetchData(functionsFilters),
               dispatch
             )
 
@@ -331,12 +348,12 @@ const Functions = ({
     },
     [
       deleteFunction,
-      params.projectName,
       dispatch,
       fetchData,
-      selectedFunction,
+      functionsFilters,
       navigate,
-      filtersStore
+      params.projectName,
+      selectedFunction
     ]
   )
 
@@ -445,7 +462,7 @@ const Functions = ({
               message: 'Function is built and ran successfully.'
             })
           )
-          refreshFunctions(filtersStore)
+          refreshFunctions(functionsFilters)
         })
         .catch(error => {
           showErrorNotification(dispatch, error, 'Failed to build and run function.', '', () => {
@@ -453,7 +470,7 @@ const Functions = ({
           })
         })
     },
-    [deployFunction, dispatch, filtersStore, refreshFunctions, runNewJob]
+    [deployFunction, dispatch, functionsFilters, refreshFunctions, runNewJob]
   )
 
   const pageData = useMemo(
@@ -588,7 +605,16 @@ const Functions = ({
       setSelectedFunctionMin,
       dispatch
     )
-  }, [dispatch, functions, navigate, params.funcName, params.hash, params.projectName, params.tag, selectedRowData])
+  }, [
+    dispatch,
+    functions,
+    navigate,
+    params.funcName,
+    params.hash,
+    params.projectName,
+    params.tag,
+    selectedRowData
+  ])
 
   useEffect(() => {
     dispatch(setFilters({ groupBy: GROUP_BY_NAME }))
@@ -596,6 +622,10 @@ const Functions = ({
 
   const filtersChangeCallback = filters => {
     refreshFunctions(filters)
+  }
+
+  const retryRequestCallback = () => {
+    refreshFunctions(functionsFilters)
   }
 
   const handleSelectFunction = item => {
@@ -640,8 +670,8 @@ const Functions = ({
     setEditableItem(null)
     removeNewFunction()
 
-    return fetchData().then(functions => {
-      if (functions) {
+    return fetchData(functionsFilters).then(functions => {
+      if (functions.length) {
         const currentItem = functions.find(func => func.name === name && func.tag === tag)
 
         navigate(`/projects/${params.projectName}/functions/${currentItem.hash}/${tab}`)
@@ -745,7 +775,7 @@ const Functions = ({
       handleSelectFunction={handleSelectFunction}
       isDemoMode={isDemoMode}
       pageData={pageData}
-      refreshFunctions={refreshFunctions}
+      retryRequest={retryRequestCallback}
       requestErrorMessage={requestErrorMessage}
       selectedFunction={selectedFunction}
       selectedRowData={selectedRowData}
