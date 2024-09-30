@@ -34,6 +34,7 @@ import models from './page-objects/models.po'
 module.exports = {
   Add_To_Feature_Vector_Popup: interactivePopup['addToFeatureVectorPopup'],
   Add_To_Feature_Vector_Tab: featureStore['addToFeatureVector'],
+  Add_Tag_Popup: interactivePopup['addTagPopup'],
   Analysis_Info_Pane: infoPane['analysisInfoPane'],
   Artifact_Preview_Popup: interactivePopup['artifactPreviewPopup'],
   Artifacts_Info_Pane: infoPane['artifactsInfoPane'],
@@ -51,6 +52,7 @@ module.exports = {
   Demo_Project: project['demoProject'],
   Deploy_Model_Popup: interactivePopup['deployModelPopup'],
   Discard_Changes_Popup: interactivePopup['discardChangesPopup'],
+  Delete_Artifact_Popup: interactivePopup['deleteArtifactPopup'],
   Downloads_Popup: interactivePopup['downloadsPopUp'],
   Feature_Set_Schedule_Popup: interactivePopup['featureSetSchedulePopup'],
   Feature_Sets_Info_Pane: infoPane['featureSetsInfoPane'],

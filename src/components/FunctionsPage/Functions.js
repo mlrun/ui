@@ -17,9 +17,9 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import React, { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react'
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { connect, useDispatch, useSelector } from 'react-redux'
-import { isEqual, isEmpty } from 'lodash'
+import { isEmpty } from 'lodash'
 import { useLocation, useNavigate, useParams } from 'react-router-dom'
 
 import FunctionsView from './FunctionsView'
@@ -41,9 +41,11 @@ import {
   FILTER_MENU_MODAL
 } from '../../constants'
 import {
+  checkForSelectedFunction,
   generateActionsMenu,
   generateFunctionsPageData,
   pollDeletingFunctions,
+  searchFunctionItem,
   setFullSelectedFunction
 } from './functions.util'
 import {
@@ -58,7 +60,7 @@ import { DANGER_BUTTON, LABEL_BUTTON } from 'igz-controls/constants'
 import { getFunctionIdentifier } from '../../utils/getUniqueIdentifier'
 import { getFunctionNuclioLogs, getFunctionLogs } from '../../utils/getFunctionLogs'
 import { isBackgroundTaskRunning } from '../../utils/poll.util'
-import { isDetailsTabExists } from '../../utils/isDetailsTabExists'
+import { isDetailsTabExists } from '../../utils/link-helper.util'
 import { openPopUp } from 'igz-controls/utils/common.util'
 import { parseFunctions } from '../../utils/parseFunctions'
 import { setFilters, setFiltersValues, setModalFiltersValues } from '../../reducers/filtersReducer'
@@ -100,7 +102,6 @@ const Functions = ({
   const abortControllerRef = useRef(new AbortController())
   const fetchFunctionLogsTimeout = useRef(null)
   const fetchFunctionNuclioLogsTimeout = useRef(null)
-  const nameFilterRef = useRef('')
   const terminatePollRef = useRef(null)
   const { isDemoMode, isStagingMode } = useMode()
   const params = useParams()
@@ -125,7 +126,6 @@ const Functions = ({
     filters => {
       terminateDeleteTasksPolling()
       abortControllerRef.current = new AbortController()
-      nameFilterRef.current = filters?.name ?? ''
 
       return fetchFunctions(params.projectName, filters, {
         ui: {
@@ -136,7 +136,7 @@ const Functions = ({
           format: 'minimal'
         }
       }).then(functions => {
-        if (functions) {
+        if (functions?.length  > 0) {
           const newFunctions = parseFunctions(functions, params.projectName)
           const deletingFunctions = newFunctions.reduce((acc, func) => {
             if (func.deletion_task_id && !func.deletion_error && !acc[func.deletion_task_id]) {
@@ -162,10 +162,24 @@ const Functions = ({
           setFunctions(newFunctions)
 
           return newFunctions
+        } else {
+          const paramsFunction = searchFunctionItem(
+            params.hash,
+            params.funcName,
+            params.tag,
+            params.projectName,
+            [],
+            dispatch,
+            true
+          )
+
+          if (!paramsFunction) {
+            navigate(`/projects/${params.projectName}/functions`, { replace: true })
+          }
         }
       })
     },
-    [dispatch, fetchFunctions, params.projectName, terminateDeleteTasksPolling]
+    [dispatch, fetchFunctions, navigate, params.funcName, params.hash, params.projectName, params.tag, terminateDeleteTasksPolling]
   )
 
   const refreshFunctions = useCallback(
@@ -548,7 +562,7 @@ const Functions = ({
     createRowData: rowItem => createFunctionsRowData(rowItem, params.projectName),
     setInitialFilters,
     filters: {
-      ...filtersStore[FILTER_MENU][FUNCTION_FILTERS],
+      ...filtersStore[FILTER_MENU][FUNCTION_FILTERS].values,
       ...filtersStore[FILTER_MENU_MODAL][FUNCTION_FILTERS].values
     }
   })
@@ -570,52 +584,19 @@ const Functions = ({
     }
   }, [navigate, pageData.details.menu, location, params.hash, params.tab])
 
-  useLayoutEffect(() => {
-    const checkFunctionExistence = item => {
-      if (!item || Object.keys(item).length === 0) {
-        if (isEmpty(nameFilterRef.current)) {
-          showErrorNotification(dispatch, {}, 'This function either does not exist or was deleted')
-        }
-
-        navigate(`/projects/${params.projectName}/functions`, { replace: true })
-      }
-    }
-
-    let item = {}
-
-    handleRemoveLogs()
-
-    if (params.hash && functions.length > 0) {
-      const funcTagIndex = params.hash.indexOf(':')
-
-      item = functions.find(func => {
-        if (funcTagIndex > 0) {
-          return isEqual(func.tag, params.hash.slice(funcTagIndex + 1))
-        } else {
-          return isEqual(func.hash, params.hash.slice(params.hash.indexOf('@') + 1))
-        }
-      })
-
-      checkFunctionExistence(item)
-    } else if (params.funcName && params.tag && functions.length > 0) {
-      item = functions.find(func => {
-        return isEqual(func.tag, params.tag) && isEqual(func.name, params.funcName)
-      })
-
-      checkFunctionExistence(item)
-    }
-
-    setSelectedFunctionMin(item ?? {})
-  }, [
-    dispatch,
-    functions,
-    handleRemoveLogs,
-    navigate,
-    params.funcName,
-    params.hash,
-    params.projectName,
-    params.tag
-  ])
+  useEffect(() => {
+    checkForSelectedFunction(
+      params.funcName,
+      selectedRowData,
+      functions,
+      params.hash,
+      params.tag,
+      navigate,
+      params.projectName,
+      setSelectedFunctionMin,
+      dispatch
+    )
+  }, [dispatch, functions, navigate, params.funcName, params.hash, params.projectName, params.tag, selectedRowData])
 
   useEffect(() => {
     dispatch(setFilters({ groupBy: GROUP_BY_NAME }))
@@ -633,10 +614,6 @@ const Functions = ({
     if (document.getElementsByClassName('view')[0]) {
       document.getElementsByClassName('view')[0].classList.remove('view')
     }
-
-    queueMicrotask(() => {
-      setSelectedFunctionMin(item)
-    })
   }
 
   const closePanel = () => {

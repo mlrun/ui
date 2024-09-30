@@ -17,9 +17,9 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import React, { useRef } from 'react'
+import React, { useMemo, useRef } from 'react'
 import PropTypes from 'prop-types'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import classnames from 'classnames'
 
 import { RoundedIcon, Tooltip, TextTooltipTemplate } from 'igz-controls/components'
@@ -34,14 +34,27 @@ const Download = ({
   className = '',
   disabled = false,
   fileName,
+  fileSize,
   onlyIcon = false,
   path,
+  projectName,
   user,
   withoutIcon = false
 }) => {
   const downloadRef = useRef(null)
   const dispatch = useDispatch()
-  const downloadClassNames = classnames('download', className, disabled && 'download_disabled')
+  const artifactLimits = useSelector(store => store.appStore.frontendSpec?.artifact_limits)
+  const downloadIsDisabled = useMemo(
+    () =>
+      disabled ||
+      (artifactLimits?.max_download_size && fileSize > artifactLimits.max_download_size),
+    [disabled, artifactLimits.max_download_size, fileSize]
+  )
+  const downloadClassNames = classnames(
+    'download',
+    className,
+    downloadIsDisabled && 'download_disabled'
+  )
 
   const handleClick = () => {
     dispatch(
@@ -49,7 +62,10 @@ const Download = ({
         filename: fileName,
         id: path + Date.now(),
         path,
-        user: user
+        user: user,
+        artifactLimits,
+        fileSize,
+        projectName
       })
     )
     dispatch(setShowDownloadsList(true))
@@ -63,8 +79,8 @@ const Download = ({
       onClick={handleClick}
     >
       {onlyIcon ? (
-        <Tooltip template={<TextTooltipTemplate text="Download" />}>
-          <RoundedIcon>
+        <Tooltip template={!downloadIsDisabled ? <TextTooltipTemplate text="Download" /> : null}>
+          <RoundedIcon disabled={downloadIsDisabled}>
             <DownloadIcon />
           </RoundedIcon>
         </Tooltip>
@@ -82,8 +98,10 @@ Download.propTypes = {
   className: PropTypes.string,
   disabled: PropTypes.bool,
   fileName: PropTypes.string,
+  fileSize: PropTypes.number,
   onlyIcon: PropTypes.bool,
   path: PropTypes.string.isRequired,
+  projectName: PropTypes.string.isRequired,
   user: PropTypes.string,
   withoutIcon: PropTypes.bool
 }

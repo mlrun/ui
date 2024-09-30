@@ -34,7 +34,8 @@ import {
   FULL_VIEW_MODE,
   MODEL_TYPE,
   ACTION_MENU_PARENT_ROW,
-  ACTION_MENU_PARENT_ROW_EXPANDED
+  ACTION_MENU_PARENT_ROW_EXPANDED,
+  ARTIFACT_MAX_DOWNLOAD_SIZE
 } from '../../../constants'
 import {
   fetchExpandedModel,
@@ -210,15 +211,6 @@ export const handleApplyDetailsChanges = (
   const artifactItem = cloneDeep(
     isNewFormat ? selectedItem.ui.originalContent : omit(selectedItem, ['ui'])
   )
-  let updateArtifactPromise = Promise.resolve()
-
-  let updateTagPromise = applyTagChanges(
-    changes,
-    selectedItem,
-    projectName,
-    dispatch,
-    setNotification
-  )
 
   if (!isEmpty(omit(changes.data, ['tag']))) {
     Object.keys(changes.data).forEach(key => {
@@ -237,7 +229,7 @@ export const handleApplyDetailsChanges = (
       artifactItem.labels = labels
     }
 
-    updateArtifactPromise = dispatch(updateArtifact({ project: projectName, data: artifactItem }))
+    return dispatch(updateArtifact({ project: projectName, data: artifactItem }))
       .unwrap()
       .then(response => {
         dispatch(
@@ -258,9 +250,24 @@ export const handleApplyDetailsChanges = (
           handleApplyDetailsChanges(changes, projectName, selectedItem, setNotification, dispatch)
         )
       })
+      .finally(() => {
+        return applyTagChanges(
+          changes,
+          selectedItem,
+          projectName,
+          dispatch,
+          setNotification
+        )
+      })
+  } else {
+    return applyTagChanges(
+      changes,
+      selectedItem,
+      projectName,
+      dispatch,
+      setNotification
+    )
   }
-
-  return Promise.all([updateTagPromise, updateArtifactPromise])
 }
 
 export const checkForSelectedModel = (
@@ -331,7 +338,9 @@ export const generateActionsMenu = (
       {
         label: 'Download',
         hidden: menuPosition === ACTION_MENU_PARENT_ROW_EXPANDED,
-        disabled: !isTargetPathValid,
+        disabled:
+          !isTargetPathValid ||
+          modelMin.size > (frontendSpec?.artifact_limits?.max_download_size ?? ARTIFACT_MAX_DOWNLOAD_SIZE),
         icon: <DownloadIcon />,
         onClick: modelMin => {
           getFullModel(modelMin).then(model => {
@@ -340,7 +349,10 @@ export const generateActionsMenu = (
               setDownloadItem({
                 path: downloadPath,
                 user: model.producer?.owner,
-                id: downloadPath
+                id: downloadPath,
+                artifactLimits: frontendSpec?.artifact_limits,
+                fileSize: model.size,
+                projectName
               })
             )
             dispatch(setShowDownloadsList(true))
@@ -388,8 +400,8 @@ export const generateActionsMenu = (
         className: 'danger',
         onClick: () =>
           openDeleteConfirmPopUp(
-            'Delete dataset?',
-            `Do you want to delete all versions of the dataset "${modelMin.db_key}"? Deleted datasets can not be restored.`,
+            'Delete model?',
+            `Do you want to delete all versions of the model "${modelMin.db_key}"? Deleted models can not be restored.`,
             () => {
               handleDeleteArtifact(
                 dispatch,

@@ -24,6 +24,7 @@ import JobWizard from '../JobWizard/JobWizard'
 import { ARTIFACT_TYPE, DATASET_TYPE } from '../../constants'
 import { PRIMARY_BUTTON, FORBIDDEN_ERROR_STATUS_CODE } from 'igz-controls/constants'
 import { openPopUp } from 'igz-controls/utils/common.util'
+import { showErrorNotification } from '../../utils/notifications.util'
 
 import { ReactComponent as Jupyter } from 'igz-controls/images/jupyter.svg'
 import { ReactComponent as VSCode } from 'igz-controls/images/vs-code.svg'
@@ -102,7 +103,7 @@ export const generateTipMessageForCounter = (counter = '', page = '') => {
           You can browse them in the ${page} page.`
 }
 
-export const handleFetchProjectError = (error, navigate, setConfirmData) => {
+export const handleFetchProjectError = (error, navigate, setConfirmData, dispatch) => {
   if (error.response?.status === FORBIDDEN_ERROR_STATUS_CODE) {
     setConfirmData({
       message: 'You are not permitted to view this project.',
@@ -114,6 +115,7 @@ export const handleFetchProjectError = (error, navigate, setConfirmData) => {
       }
     })
   } else {
+    showErrorNotification(dispatch, error, 'Failed to fetch project data')
     navigate('/projects/')
   }
 }

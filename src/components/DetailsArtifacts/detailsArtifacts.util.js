@@ -133,8 +133,10 @@ export const generateArtifactsTabContent = (artifacts, params, iteration, showAr
             </RoundedIcon>
             <Download
               className="icon-download"
+              fileSize={artifact.size}
               onlyIcon
               path={artifact.target_path}
+              projectName={params.projectName}
               user={artifact.ui.user}
             />
           </>

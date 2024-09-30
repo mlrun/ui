@@ -6,9 +6,13 @@
   justify-content: space-between;
   cursor: pointer;
 
-  &_disabled {
+  &.download_disabled {
     color: $topaz;
     cursor: not-allowed;
+
+    button[disabled] {
+      cursor: not-allowed;
+    }
   }
 
   &__label {

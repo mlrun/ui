@@ -18,7 +18,7 @@ under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
 import React from 'react'
-import { debounce, get, isEmpty } from 'lodash'
+import { debounce, get, isEmpty, isEqual } from 'lodash'
 
 import {
   DETAILS_BUILD_LOG_TAB,
@@ -40,6 +40,7 @@ import {
   PANEL_FUNCTION_CREATE_MODE
 } from '../../constants'
 import jobsActions from '../../actions/jobs'
+import functionsApi from '../../api/functions-api'
 import tasksApi from '../../api/tasks-api'
 import { BG_TASK_FAILED, BG_TASK_SUCCEEDED, pollTask } from '../../utils/poll.util'
 import { parseFunction } from '../../utils/parseFunction'
@@ -176,8 +177,8 @@ export const getFunctionsEditableTypes = isStagingMode => {
 }
 export const getFunctionImage = func => {
   return func.type === FUNCTION_TYPE_NUCLIO ||
-    func.type === FUNCTION_TYPE_SERVING ||
-    func.type === FUNCTION_TYPE_REMOTE
+  func.type === FUNCTION_TYPE_SERVING ||
+  func.type === FUNCTION_TYPE_REMOTE
     ? func.container_image
     : func.image
 }
@@ -401,4 +402,85 @@ const chooseOrFetchFunction = (selectedFunction, dispatch, fetchFunction, funcMi
     funcMin?.hash,
     funcMin?.tag
   )
+}
+
+export const checkForSelectedFunction = (
+  name,
+  selectedRowData,
+  functions,
+  hash,
+  tag,
+  navigate,
+  projectName,
+  setSelectedFunction,
+  dispatch
+) => {
+  queueMicrotask(() => {
+      if (name || hash) {
+        const functionsList = selectedRowData?.[name]?.content || functions
+
+        if (functionsList.length > 0) {
+          const searchItem = searchFunctionItem(
+            hash,
+            name,
+            tag,
+            projectName,
+            functionsList.map(func => func.data ?? func),
+            dispatch,
+            true
+          )
+
+          if (!searchItem) {
+            navigate(`/projects/${projectName}/functions`, { replace: true })
+          } else {
+            setSelectedFunction(prevState => {
+              return isEqual(prevState, searchItem) ? prevState : searchItem
+            })
+          }
+        }
+      } else {
+        setSelectedFunction({})
+      }
+    }
+  )
+}
+
+export const searchFunctionItem = (paramsHash, paramsName, paramsTag, projectName, functions, dispatch, checkExistence = false) => {
+  let item = {}
+
+  if (paramsHash) {
+    const withFunctionTag = paramsHash.indexOf(':') > 0
+    let name, tag, hash = ''
+
+    item = functions.find(func => {
+      if (withFunctionTag) {
+        [name, tag] = paramsHash.split(':')
+
+        return isEqual(func.tag, tag) && isEqual(func.name, name)
+      } else {
+        [name, hash] = paramsHash.split('@')
+
+        return isEqual(func.hash, hash) && isEqual(func.name, name)
+      }
+    })
+
+    checkExistence && checkFunctionExistence(item, { tag, name, hash }, projectName, dispatch)
+  } else if (paramsName && paramsTag) {
+    item = functions.find(func => {
+      return isEqual(func.tag, paramsTag) && isEqual(func.name, paramsName)
+    })
+
+    checkExistence && checkFunctionExistence(item, { name: paramsName, tag: paramsTag }, projectName, dispatch)
+  }
+
+  return item
+}
+
+const checkFunctionExistence = (item, filters, projectName, dispatch) => {
+  if (!item || Object.keys(item).length === 0) {
+    functionsApi.getFunction(projectName, filters.name, filters.hash, filters.tag)
+      .catch(() => {
+        showErrorNotification(dispatch, {}, 'This function either does not exist or was deleted')
+      })
+  }
 }

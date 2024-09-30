@@ -41,9 +41,9 @@ import featureStoreApi from '../../api/featureStore-api'
 import { generateArtifactIdentifiers } from '../Details/details.util'
 import {
   FEATURE_VECTORS_KIND,
-  generateInputResourceLink,
   generateInputsTabContent
 } from './detailsInputs.util'
+import { generateStoreResourceLink } from '../../utils/generateStoreResourceLink'
 import { parseUri } from '../../utils'
 import { searchArtifactItem } from '../../utils/searchArtifactItem'
 import { parseFeatureVectors } from '../../utils/parseFeatureVectors'
@@ -153,7 +153,7 @@ const DetailsInputs = ({ inputs }) => {
                   ui: {
                     inputName: key,
                     inputPath,
-                    inputResourceLink: generateInputResourceLink(input, params.projectName),
+                    inputResourceLink: generateStoreResourceLink(input, project ?? params.projectName),
                     isShowDetailsActive: true,
                     isPreviewable: kind !== FEATURE_VECTORS_KIND
                   }

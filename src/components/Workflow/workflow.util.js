@@ -128,7 +128,7 @@ export const getWorkflowMonitoringDetailsLink = (
     }
   }
 
-  return `/projects/${JOBS_MONITORING_PAGE}/${JOBS_MONITORING_WORKFLOWS_TAB}/workflow/${projectName}/${workflowId}${
+  return `/projects/*/${JOBS_MONITORING_PAGE}/${JOBS_MONITORING_WORKFLOWS_TAB}/workflow/${projectName}/${workflowId}${
     jobPath ? `/${jobPath}/${tab ?? DETAILS_OVERVIEW_TAB}` : ''
   }`
 }

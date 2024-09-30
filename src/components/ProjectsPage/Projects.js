@@ -37,6 +37,7 @@ import {
 import nuclioActions from '../../actions/nuclio'
 import projectsAction from '../../actions/projects'
 import { BG_TASK_RUNNING, isBackgroundTaskRunning } from '../../utils/poll.util'
+import { PROJECT_ONLINE_STATUS } from '../../constants'
 import { DANGER_BUTTON, FORBIDDEN_ERROR_STATUS_CODE, PRIMARY_BUTTON } from 'igz-controls/constants'
 import { fetchBackgroundTasks } from '../../reducers/tasksReducer'
 import { setNotification } from '../../reducers/notificationReducer'
@@ -233,7 +234,9 @@ const Projects = () => {
 
   const handleUnarchiveProject = useCallback(
     project => {
-      dispatch(projectsAction.changeProjectState(project.metadata.name, 'online')).then(() => {
+      dispatch(
+        projectsAction.changeProjectState(project.metadata.name, PROJECT_ONLINE_STATUS)
+      ).then(() => {
         fetchMinimalProjects()
       })
     },
@@ -275,8 +278,7 @@ const Projects = () => {
       setConfirmData({
         item: project,
         header: 'Delete project?',
-        message: `You are trying to delete the non-empty project "${project.metadata.name}". Deleting it will also delete all of its resources,
-such as jobs, artifacts, and features.`,
+        message: `You are trying to delete the project "${project.metadata.name}". Deleted projects cannot be restored`,
         btnConfirmLabel: 'Delete',
         btnConfirmType: DANGER_BUTTON,
         rejectHandler: () => {

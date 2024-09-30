@@ -32,8 +32,7 @@ import {
 } from '../components/Workflow/workflow.util'
 import measureTime from './measureTime'
 import { formatDatetime } from './datetime'
-import { generateFunctionDetailsLink } from './generateFunctionDetailsLink'
-import { generateLinkToDetailsPanel } from './generateLinkToDetailsPanel'
+import { generateFunctionDetailsLink, generateLinkToDetailsPanel } from './link-helper.util'
 import { getJobIdentifier, getWorkflowJobIdentifier } from './getUniqueIdentifier'
 import { parseKeyValues } from './object'
 import { validateArguments } from './validateArguments'
@@ -422,12 +421,12 @@ export const createJobsMonitoringContent = (jobs, jobName, isStagingMode) => {
     const getLink = tab => {
       if (jobName) {
         return validateArguments(job.uid, tab, job.name)
-          ? `/projects/${JOBS_MONITORING_PAGE}/${JOBS_MONITORING_JOBS_TAB}${
+          ? `/projects/*/${JOBS_MONITORING_PAGE}/${JOBS_MONITORING_JOBS_TAB}${
               job.name ? `/${job.name}` : ''
             }/${job.project}/${job.uid}/${tab.toLowerCase()}`
           : ''
       } else {
-        return `/projects/${JOBS_MONITORING_PAGE}/${JOBS_MONITORING_JOBS_TAB}/${job.name}`
+        return `/projects/*/${JOBS_MONITORING_PAGE}/${JOBS_MONITORING_JOBS_TAB}/${job.name}`
       }
     }
 

@@ -24,34 +24,9 @@ import classnames from 'classnames'
 import CopyToClipboard from '../../common/CopyToClipboard/CopyToClipboard'
 import { RoundedIcon, TextTooltipTemplate, Tooltip } from 'igz-controls/components'
 
-import {
-  DATASETS_TAB,
-  FEATURE_VECTORS_TAB,
-  FILES_TAB,
-  MODELS_TAB,
-  TAG_FILTER_LATEST
-} from '../../constants'
-
 import { ReactComponent as DetailsIcon } from 'igz-controls/images/view-details.svg'
 
 export const FEATURE_VECTORS_KIND = 'feature-vectors'
-
-export const generateInputResourceLink = (input, projectName) => {
-  const inputsLinks = {
-    model: `/projects/${projectName}/models/${MODELS_TAB}/${
-      input.db_key || input.key
-    }/${input.tag ?? input.tree ?? TAG_FILTER_LATEST}${input.iter ? `/${input.iter}` : ''}/overview`,
-    dataset: `/projects/${projectName}/${DATASETS_TAB}/${
-      input.db_key || input.key
-    }/${input.tag ?? input.tree ?? TAG_FILTER_LATEST}${input.iter ? `/${input.iter}` : ''}/overview`,
-    files: `/projects/${projectName}/${FILES_TAB}/${input.db_key || input.key}/${input.tag ?? input.tree ?? TAG_FILTER_LATEST}${
-      input.iter ? `/${input.iter}` : ''
-    }/overview`,
-    FeatureVector: `/projects/${projectName}/feature-store/${FEATURE_VECTORS_TAB}/${input.name}/${input.tag ?? input.uid ?? TAG_FILTER_LATEST}/overview`
-  }
-
-  return input ? inputsLinks[input.kind] ?? inputsLinks.files : ''
-}
 
 export const generateInputsTabContent = (inputs, showArtifact) => {
   return inputs.map(input => {
@@ -72,7 +47,7 @@ export const generateInputsTabContent = (inputs, showArtifact) => {
             </span>
           </Tooltip>
         ),
-        artifact: input.ui.isPreviewable && input 
+        artifact: input.ui.isPreviewable && input
       },
       {
         headerId: 'path',

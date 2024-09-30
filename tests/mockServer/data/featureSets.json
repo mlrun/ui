@@ -337,7 +337,7 @@
       "metadata": {
         "name": "erann-fs",
         "project": "default",
-        "tag": null,
+        "tag": "with_analysis",
         "labels": {
           "my-key": "my-value"
         },
@@ -393,12 +393,12 @@
         },
         "analysis": {
           "not-found": "not-found",
-          "image": "v3io:///users/admin/artifacts/default/test-image.png",
-          "json": "v3io:///users/admin/artifacts/default/test-json.json",
-          "csv": "v3io:///users/admin/artifacts/default/test-csv.csv",
-          "yaml": "v3io:///users/admin/artifacts/default/test-yaml.yaml",
-          "text": "v3io:///users/admin/artifacts/default/test-text.txt",
-          "html": "v3io:///users/admin/artifacts/default/test-html.html"
+          "image": "v3io://artifacts/image_mock_data.png",
+          "json": "v3io://artifacts/json_mock_data.json",
+          "csv": "v3io://artifacts/csv_mock_data.csv",
+          "yaml": "v3io://artifacts/yaml_mock_data.yaml",
+          "text": "v3io://artifacts/text_mock_data.txt",
+          "html": "v3io://artifacts/html_mock_data.html"
         },
         "output_path": "v3io:///projects/{{run.project}}/artifacts"
       },

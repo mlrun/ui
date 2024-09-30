@@ -205,7 +205,7 @@ const FunctionsPanel = ({
 
       if (result) {
         createFunctionSuccess().then(() => {
-          navigate(`/projects/${params.projectName}/functions/${result.data.hash_key}/overview`)
+          navigate(`/projects/${params.projectName}/functions/${functionPayload.metadata.name}@${result.data.hash_key}/overview`)
         })
       }
     })

@@ -43,9 +43,10 @@ export const getLineChartMetricConfig = () => {
             font: 10
           },
           ticks: {
-            autoSkip: true,
             align: 'start',
-            maxTicksLimit: 10
+            autoSkip: true,
+            autoSkipPadding: 20,
+            maxRotation: 0
           },
           grid: {
             drawOnChartArea: true,
@@ -152,7 +153,9 @@ export const getGradientLineChartConfig = () => {
           },
           ticks: {
             align: 'start',
-            maxTicksLimit: 5
+            autoSkip: true,
+            autoSkipPadding: 20,
+            maxRotation: 0
           }
         },
         y: {

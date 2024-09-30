@@ -30,6 +30,7 @@ import nuclioActions from '../../actions/nuclio'
 import { groupByUniqName } from '../../utils/groupByUniqName'
 import { useNuclioMode } from '../../hooks/nuclioMode.hook'
 import { generateNuclioLink } from '../../utils'
+import { REQUEST_CANCELED } from '../../constants'
 
 const ProjectFunctions = ({ fetchApiGateways, fetchNuclioFunctions, nuclioStore }) => {
   const params = useParams()
@@ -37,13 +38,25 @@ const ProjectFunctions = ({ fetchApiGateways, fetchNuclioFunctions, nuclioStore 
 
   useEffect(() => {
     if (!isNuclioModeDisabled) {
-      fetchNuclioFunctions(params.projectName)
+      const abortController = new AbortController()
+
+      fetchNuclioFunctions(params.projectName, abortController.signal)
+
+      return () => {
+        abortController.abort(REQUEST_CANCELED)
+      }
     }
   }, [fetchNuclioFunctions, isNuclioModeDisabled, params.projectName])
 
   useEffect(() => {
     if (!isNuclioModeDisabled) {
-      fetchApiGateways(params.projectName)
+      const abortController = new AbortController()
+
+      fetchApiGateways(params.projectName, abortController.signal)
+
+      return () => {
+        abortController.abort(REQUEST_CANCELED)
+      }
     }
   }, [fetchApiGateways, isNuclioModeDisabled, params.projectName])
 

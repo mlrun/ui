@@ -36,7 +36,7 @@ import TableTop from '../../elements/TableTop/TableTop'
 
 import { generateContentActionsMenu } from './content.util'
 import { getNoDataMessage } from '../../utils/getNoDataMessage'
-import { isProjectValid } from '../../utils/handleRedirect'
+import { isProjectValid } from '../../utils/link-helper.util'
 import { useYaml } from '../../hooks/yaml.hook'
 import {
   ADD_TO_FEATURE_VECTOR_TAB,

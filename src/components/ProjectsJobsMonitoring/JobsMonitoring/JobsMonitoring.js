@@ -74,7 +74,7 @@ const JobsMonitoring = () => {
   useEffect(() => {
     if (isEmpty(selectedJob) && !params.jobId && !dataIsLoaded) {
       let filters = {
-        ...jobsFilterMenu,
+        ...jobsFilterMenu.values,
         ...jobsFilterMenuModal.values
       }
 
@@ -89,7 +89,7 @@ const JobsMonitoring = () => {
     params.jobName,
     refreshJobs,
     selectedJob,
-    jobsFilterMenu,
+    jobsFilterMenu.values,
     jobsFilterMenuModal.values
   ])
 
@@ -116,7 +116,7 @@ const JobsMonitoring = () => {
     <>
       {params.jobName && (
         <TableTop
-          link={`/projects/${JOBS_MONITORING_PAGE}/${JOBS_MONITORING_JOBS_TAB}`}
+          link={`/projects/*/${JOBS_MONITORING_PAGE}/${JOBS_MONITORING_JOBS_TAB}`}
           text={params.jobName}
         />
       )}
@@ -129,10 +129,10 @@ const JobsMonitoring = () => {
         jobRuns={jobRuns}
         jobs={jobs}
         requestErrorMessage={requestErrorMessage}
-        navigateLink={`/projects/${JOBS_MONITORING_PAGE}/${JOBS_MONITORING_JOBS_TAB}`}
+        navigateLink={`/projects/*/${JOBS_MONITORING_PAGE}/${JOBS_MONITORING_JOBS_TAB}`}
         refreshJobs={() =>
           refreshJobs({
-            ...jobsFilterMenu,
+            ...jobsFilterMenu.values,
             ...jobsFilterMenuModal.values
           })
         }
