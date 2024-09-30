@@ -26,8 +26,13 @@ export const isPageTabValid = (pageTab, tabs, navigate, location) => {
   }
 }
 
-export const isProjectValid = (navigate, projectsNames, currentProjectName) => {
-  if (projectsNames.length > 0 && currentProjectName && !projectsNames.some(project => project === currentProjectName)) {
+export const isProjectValid = (navigate, projects, currentProjectName) => {
+  if (
+    projects.length > 0 &&
+    currentProjectName &&
+    !projects
+      .some(project => project?.metadata?.name === currentProjectName)
+  ) {
     navigate('/projects')
   }
 }

@@ -50,11 +50,11 @@ const Page = () => {
         : `${NAVBAR_WIDTH_CLOSED}px`
   }
   const { frontendSpec, frontendSpecPopupIsOpened } = useSelector(store => store.appStore)
-  const { projectsNames } = useSelector(store => store.projectStore)
+  const { projects } = useSelector(store => store.projectStore)
 
   useEffect(() => {
-    isProjectValid(navigate, projectsNames.data, projectName)
-  }, [navigate, projectName, projectsNames.data])
+    isProjectValid(navigate, projects, projectName)
+  }, [navigate, projectName, projects])
 
   useEffect(() => {
     if (mainRef) {
