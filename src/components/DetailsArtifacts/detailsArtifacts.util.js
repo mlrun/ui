@@ -69,12 +69,12 @@ export const generateArtifactsPreviewContent = (selectedJob, artifacts) => {
 export const generateArtifactsTabContent = (artifacts, params, iteration, showArtifact) => {
   return artifacts.map((artifact, index) => {
     const artifactScreenLinks = {
-      model: `/projects/${params.projectName}/models/${MODELS_TAB}/${
+      model: `/projects/${params.projectName || artifact.project}/models/${MODELS_TAB}/${
         artifact.db_key || artifact.key
       }/${artifact.tag ? artifact.tag : artifact.tree ?? TAG_FILTER_LATEST}${
         iteration ? `/${iteration}` : ''
       }/overview`,
-      dataset: `/projects/${params.projectName}/${DATASETS_TAB}/${artifact.db_key || artifact.key}/${
+      dataset: `/projects/${params.projectName || artifact.project}/${DATASETS_TAB}/${artifact.db_key || artifact.key}/${
         artifact.tag ? artifact.tag : artifact.tree ?? TAG_FILTER_LATEST
       }${iteration ? `/${iteration}` : ''}/overview`
     }
@@ -123,7 +123,7 @@ export const generateArtifactsTabContent = (artifacts, params, iteration, showAr
                 target="_blank"
                 to={
                   artifactScreenLinks[artifact.kind] ??
-                  `/projects/${params.projectName}/files/${artifact.db_key || artifact.key}/${
+                  `/projects/${params.projectName || artifact.project}/files/${artifact.db_key || artifact.key}/${
                     artifact.tag ? artifact.tag : artifact.tree ?? TAG_FILTER_LATEST
                   }${iteration ? `/${iteration}` : ''}/overview`
                 }
@@ -136,7 +136,7 @@ export const generateArtifactsTabContent = (artifacts, params, iteration, showAr
               fileSize={artifact.size}
               onlyIcon
               path={artifact.target_path}
-              projectName={params.projectName}
+              projectName={params.projectName || artifact.project}
               user={artifact.ui.user}
             />
           </>
