@@ -126,7 +126,7 @@ const Breadcrumbs = ({ onClick = () => {} }) => {
 
   useEffect(() => {
     if (projectsList.length === 0 && location.pathname !== '/projects') {
-      dispatch(projectsAction.fetchProjectsNames())
+      dispatch(projectsAction.fetchProjects({ format: 'minimal' }))
     }
   }, [dispatch, location.pathname, projectsList.length])
 
