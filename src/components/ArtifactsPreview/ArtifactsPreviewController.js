@@ -65,7 +65,7 @@ const ArtifactsPreviewController = ({
       previewAbortControllerRef.current = new AbortController()
 
       getArtifactPreview(
-        params.projectName,
+        params.projectName || artifact?.project,
         artifact,
         noData,
         setNoData,
