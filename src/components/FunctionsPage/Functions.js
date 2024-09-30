@@ -176,6 +176,7 @@ const Functions = ({
           if (!paramsFunction) {
             navigate(`/projects/${params.projectName}/functions`, { replace: true })
           }
+          setFunctions([])
         }
       })
     },
