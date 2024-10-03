@@ -208,6 +208,9 @@ export const generateJobsContent = selectedItem => {
     parameters: {
       value: selectedItem.parametersChips
     },
+    handler: {
+      value: selectedItem.handler
+    },
     function: {
       value: selectedItem.function
     },
