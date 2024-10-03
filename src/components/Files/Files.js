@@ -35,12 +35,10 @@ import {
   FILTER_MENU_MODAL,
   GROUP_BY_NAME,
   GROUP_BY_NONE,
-  REQUEST_CANCELED,
-  TAG_FILTER_ALL_ITEMS
+  REQUEST_CANCELED
 } from '../../constants'
 import {
   checkForSelectedFile,
-  fetchFilesRowData,
   generateActionsMenu,
   generatePageData,
   handleApplyDetailsChanges,
@@ -49,7 +47,6 @@ import {
 import { createFilesRowData } from '../../utils/createArtifactsContent'
 import {
   fetchArtifactTags,
-  fetchExpandedFile,
   fetchFiles,
   removeFile,
   removeFiles
@@ -59,6 +56,7 @@ import { getFilterTagOptions, setFilters } from '../../reducers/filtersReducer'
 import { getViewMode } from '../../utils/helper'
 import { isDetailsTabExists } from '../../utils/link-helper.util'
 import { openPopUp } from 'igz-controls/utils/common.util'
+import { sortListByDate } from '../../utils'
 import { setFullSelectedArtifact } from '../../utils/artifacts.util'
 import { setNotification } from '../../reducers/notificationReducer'
 import { useGroupContent } from '../../hooks/groupContent.hook'
@@ -185,13 +183,6 @@ const Files = () => {
       openPopUp(AddArtifactTagPopUp, {
         artifact,
         onAddTag: () => handleRefresh(filesFilters),
-        getArtifact: () =>
-          fetchExpandedFile({
-            project: params.projectName,
-            file: artifact.db_key,
-            iter: true,
-            tag: TAG_FILTER_ALL_ITEMS
-          }),
         projectName: params.projectName
       })
     },
@@ -240,26 +231,29 @@ const Files = () => {
     [artifactsStore.files.selectedRowData.content, dispatch, selectedRowData]
   )
 
-  const handleRequestOnExpand = useCallback(
-    async file => {
-      await fetchFilesRowData(
-        file,
-        setSelectedRowData,
-        dispatch,
-        params.projectName,
-        filesFilters.iter,
-        filesFilters.tag,
-        frontendSpec
-      )
+  const handleExpand = useCallback(
+    (file, content) => {
+      const fileIdentifier = getArtifactIdentifier(file)
+
+      setSelectedRowData(state => ({
+        ...state,
+        [fileIdentifier]: {
+          content: sortListByDate(content[file.db_key ?? file.key], 'updated', false).map(artifact =>
+            createFilesRowData(artifact, params.projectName)
+          )
+        },
+        error: null,
+        loading: false
+      }))
     },
-    [dispatch, filesFilters.iter, filesFilters.tag, frontendSpec, params.projectName]
+    [params.projectName]
   )
 
   const { latestItems, handleExpandRow } = useGroupContent(
     files,
     getArtifactIdentifier,
     handleRemoveRowData,
-    handleRequestOnExpand,
+    handleExpand,
     null,
     FILES_PAGE
   )

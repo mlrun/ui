@@ -26,7 +26,6 @@ import { ARTIFACTS_TAB, DATASETS_TAB, FUNCTION_TYPE_SERVING, MODELS_TAB } from '
 import { filterArtifacts } from '../utils/filterArtifacts'
 import { generateArtifacts } from '../utils/generateArtifacts'
 import { parseModelEndpoints } from '../utils/parseModelEndpoints'
-import { getArtifactIdentifier } from '../utils/getUniqueIdentifier'
 import { parseArtifacts } from '../utils/parseArtifacts'
 import { parseFunctions } from '../utils/parseFunctions'
 import { parseFunction } from '../utils/parseFunction'
@@ -146,16 +145,6 @@ export const fetchArtifactTags = createAsyncThunk(
       .catch(error => largeResponseCatchHandler(error, 'Failed to fetch tags', thunkAPI.dispatch))
   }
 )
-export const fetchExpandedDataSet = createAsyncThunk(
-  'fetchExpandedDataSet',
-  ({ project, dataSet, iter, tag }) => {
-    return artifactsApi.getExpandedDataSet(project, dataSet, iter, tag).then(response => {
-      const result = parseArtifacts(response.data.artifacts)
-
-      return generateArtifacts(filterArtifacts(result), DATASETS_TAB, response.data.artifacts)
-    })
-  }
-)
 export const fetchDataSet = createAsyncThunk(
   'fetchDataSet',
   ({ projectName, artifactName, uid, tree, tag, iter }) => {
@@ -188,16 +177,6 @@ export const fetchDataSets = createAsyncThunk(
           config?.ui?.setRequestErrorMessage
         )
       })
-  }
-)
-export const fetchExpandedFile = createAsyncThunk(
-  'fetchExpandedFile',
-  ({ project, file, iter, tag }) => {
-    return artifactsApi.getExpandedFile(project, file, iter, tag).then(response => {
-      const result = parseArtifacts(response.data.artifacts)
-
-      return generateArtifacts(filterArtifacts(result), ARTIFACTS_TAB, response.data.artifacts)
-    })
   }
 )
 export const fetchFile = createAsyncThunk(
@@ -289,16 +268,6 @@ export const fetchModelEndpoints = createAsyncThunk(
           config?.ui?.setRequestErrorMessage
         )
       })
-  }
-)
-export const fetchExpandedModel = createAsyncThunk(
-  'fetchExpandedModel',
-  ({ project, model, iter, tag }) => {
-    return artifactsApi.getExpandedModel(project, model, iter, tag).then(response => {
-      const result = parseArtifacts(response.data.artifacts)
-
-      return generateArtifacts(filterArtifacts(result), MODELS_TAB, response.data.artifacts)
-    })
   }
 )
 export const fetchModel = createAsyncThunk(
@@ -446,10 +415,6 @@ const artifactsSlice = createSlice({
       state.error = null
       state.pipelines.loading = false
     })
-    builder.addCase(fetchExpandedDataSet.fulfilled, (state, action) => {
-      state.dataSets.selectedRowData.content[getArtifactIdentifier(action.payload[0])] =
-        action.payload
-    })
     builder.addCase(fetchDataSet.pending, state => {
       state.dataSets.datasetLoading = true
     })
@@ -473,9 +438,6 @@ const artifactsSlice = createSlice({
       state.dataSets.loading = false
       state.loading = state.models.loading || state.files.loading
     })
-    builder.addCase(fetchExpandedFile.fulfilled, (state, action) => {
-      state.files.selectedRowData.content[getArtifactIdentifier(action.payload[0])] = action.payload
-    })
     builder.addCase(fetchFile.pending, state => {
       state.files.fileLoading = true
     })
@@ -498,26 +460,6 @@ const artifactsSlice = createSlice({
     builder.addCase(fetchFiles.rejected, state => {
       state.files.loading = false
       state.loading = state.models.loading || state.dataSets.loading
-    })
-    builder.addCase(fetchExpandedModel.pending, state => {
-      state.models.selectedRowData = {
-        content: initialState.models.selectedRowData.content,
-        error: null,
-        loading: true
-      }
-    })
-    builder.addCase(fetchExpandedModel.fulfilled, (state, action) => {
-      state.models.selectedRowData.error = null
-      state.models.selectedRowData.content[getArtifactIdentifier(action.payload[0])] =
-        action.payload
-      state.models.selectedRowData.loading = false
-    })
-    builder.addCase(fetchExpandedModel.rejected, (state, action) => {
-      state.models.selectedRowData.error = {
-        content: initialState.models.selectedRowData.content,
-        error: action.payload,
-        loading: true
-      }
     })
     builder.addCase(fetchModel.pending, state => {
       state.models.modelLoading = true

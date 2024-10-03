@@ -34,7 +34,6 @@ import cssVariables from './models.scss'
 import {
   fetchArtifactsFunctions,
   fetchArtifactTags,
-  fetchExpandedModel,
   fetchModels,
   removeModel,
   removeModels
@@ -43,7 +42,6 @@ import {
   GROUP_BY_NAME,
   MODELS_PAGE,
   MODELS_TAB,
-  TAG_FILTER_ALL_ITEMS,
   FILTER_MENU_MODAL,
   GROUP_BY_NONE,
   MODELS_FILTERS,
@@ -53,7 +51,6 @@ import {
 } from '../../../constants'
 import {
   checkForSelectedModel,
-  fetchModelsRowData,
   generateActionsMenu,
   generatePageData,
   getFeatureVectorData,
@@ -67,6 +64,7 @@ import { getFilterTagOptions, setFilters } from '../../../reducers/filtersReduce
 import { getViewMode } from '../../../utils/helper'
 import { isDetailsTabExists } from '../../../utils/link-helper.util'
 import { openPopUp } from 'igz-controls/utils/common.util'
+import { sortListByDate } from '../../../utils'
 import { parseChipsData } from '../../../utils/convertChipsData'
 import { setFullSelectedArtifact } from '../../../utils/artifacts.util'
 import { setNotification } from '../../../reducers/notificationReducer'
@@ -241,13 +239,6 @@ const Models = ({ fetchModelFeatureVector }) => {
       openPopUp(AddArtifactTagPopUp, {
         artifact,
         onAddTag: () => handleRefresh(modelsFilters),
-        getArtifact: () =>
-          fetchExpandedModel({
-            project: params.projectName,
-            model: artifact.db_key,
-            iter: true,
-            tag: TAG_FILTER_ALL_ITEMS
-          }),
         projectName: params.projectName
       })
     },
@@ -298,28 +289,31 @@ const Models = ({ fetchModelFeatureVector }) => {
     [artifactsStore.models.selectedRowData, dispatch, selectedRowData]
   )
 
-  const handleRequestOnExpand = useCallback(
-    async model => {
-      await fetchModelsRowData(
-        dispatch,
-        model,
-        setSelectedRowData,
-        modelsFilters.iter,
-        modelsFilters.tag,
-        params.projectName,
-        frontendSpec
-        //temporarily commented till ML-5606 will be done
-        // metricsCounter
-      )
+  const handleExpand = useCallback(
+    (model, content) => {
+      const modelIdentifier = getArtifactIdentifier(model)
+
+      setSelectedRowData(state => {
+        return {
+          ...state,
+          [modelIdentifier]: {
+            content: sortListByDate(content[model.db_key ?? model.key], 'updated', false).map(artifact =>
+              createModelsRowData(artifact, params.projectName)
+            )
+          },
+          error: null,
+          loading: false
+        }
+      })
     },
-    [dispatch, modelsFilters.iter, modelsFilters.tag, params.projectName, frontendSpec]
+    [params.projectName]
   )
 
   const { latestItems, handleExpandRow } = useGroupContent(
     models,
     getArtifactIdentifier,
     handleRemoveRowData,
-    handleRequestOnExpand,
+    handleExpand,
     null,
     MODELS_PAGE,
     MODELS_TAB

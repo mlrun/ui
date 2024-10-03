@@ -38,7 +38,6 @@ import {
   ARTIFACT_MAX_DOWNLOAD_SIZE
 } from '../../../constants'
 import {
-  fetchExpandedModel,
   showArtifactsPreview,
   updateArtifact
 } from '../../../reducers/artifactsReducer'
@@ -46,16 +45,14 @@ import { FORBIDDEN_ERROR_STATUS_CODE } from 'igz-controls/constants'
 import { applyTagChanges, chooseOrFetchArtifact } from '../../../utils/artifacts.util'
 import { convertChipsData } from '../../../utils/convertChipsData'
 import { copyToClipboard } from '../../../utils/copyToClipboard'
-import { createModelsRowData, getIsTargetPathValid } from '../../../utils/createArtifactsContent'
+import { getIsTargetPathValid } from '../../../utils/createArtifactsContent'
 import { generateUri } from '../../../utils/resources'
-import { getArtifactIdentifier } from '../../../utils/getUniqueIdentifier'
 import { getErrorMsg } from 'igz-controls/utils/common.util'
 import { handleDeleteArtifact } from '../../../utils/handleDeleteArtifact'
 import { openDeleteConfirmPopUp } from 'igz-controls/utils/common.util'
 import { searchArtifactItem } from '../../../utils/searchArtifactItem'
 import { setDownloadItem, setShowDownloadsList } from '../../../reducers/downloadReducer'
 import { showErrorNotification } from '../../../utils/notifications.util'
-import { sortListByDate } from '../../../utils'
 import { openPopUp } from 'igz-controls/utils/common.util'
 
 import { ReactComponent as TagIcon } from 'igz-controls/images/tag-icon.svg'
@@ -94,62 +91,6 @@ export const infoHeaders = [
   { label: 'Labels', id: 'labels' },
   { label: 'Metrics', id: 'metrics' }
 ]
-
-export const fetchModelsRowData = async (
-  dispatch,
-  model,
-  setSelectedRowData,
-  iter,
-  tag,
-  projectName,
-  frontendSpec,
-  metricsCounter
-) => {
-  const modelIdentifier = getArtifactIdentifier(model)
-
-  setSelectedRowData(state => ({
-    ...state,
-    loading: true
-  }))
-
-  dispatch(fetchExpandedModel({ project: model.project, model: model.db_key, iter, tag }))
-    .unwrap()
-    .then(result => {
-      if (result?.length > 0) {
-        setSelectedRowData(state => {
-          return {
-            ...state,
-            [modelIdentifier]: {
-              content: sortListByDate(result, 'updated', false).map(artifact =>
-                createModelsRowData(artifact, projectName, frontendSpec, metricsCounter)
-              )
-            },
-            error: null,
-            loading: false
-          }
-        })
-      } else {
-        setSelectedRowData(state => ({
-          ...state,
-          [modelIdentifier]: {
-            content: []
-          },
-          error: null,
-          loading: false
-        }))
-      }
-    })
-    .catch(error => {
-      setSelectedRowData(state => ({
-        ...state,
-        [modelIdentifier]: {
-          ...state[modelIdentifier]
-        },
-        error,
-        loading: false
-      }))
-    })
-}
 
 export const generateModelsDetailsMenu = selectedModel => [
   {

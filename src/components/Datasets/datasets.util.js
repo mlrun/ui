@@ -39,19 +39,14 @@ import {
 import { PRIMARY_BUTTON } from 'igz-controls/constants'
 import { applyTagChanges, chooseOrFetchArtifact } from '../../utils/artifacts.util'
 import { copyToClipboard } from '../../utils/copyToClipboard'
-import { createDatasetsRowData, getIsTargetPathValid } from '../../utils/createArtifactsContent'
-import {
-  fetchExpandedDataSet,
-  showArtifactsPreview
-} from '../../reducers/artifactsReducer'
+import { getIsTargetPathValid } from '../../utils/createArtifactsContent'
+import { showArtifactsPreview } from '../../reducers/artifactsReducer'
 import { generateUri } from '../../utils/resources'
-import { getArtifactIdentifier } from '../../utils/getUniqueIdentifier'
 import { handleDeleteArtifact } from '../../utils/handleDeleteArtifact'
 import { openDeleteConfirmPopUp } from 'igz-controls/utils/common.util'
 import { openPopUp } from 'igz-controls/utils/common.util'
 import { searchArtifactItem } from '../../utils/searchArtifactItem'
 import { setDownloadItem, setShowDownloadsList } from '../../reducers/downloadReducer'
-import { sortListByDate } from '../../utils'
 
 import { ReactComponent as TagIcon } from 'igz-controls/images/tag-icon.svg'
 import { ReactComponent as YamlIcon } from 'igz-controls/images/yaml.svg'
@@ -132,70 +127,6 @@ const handleTrainDataset = (selectedItem, params) => {
       trainDatasetUri: selectedItem.URI
     }
   })
-}
-
-export const fetchDataSetRowData = async (
-  dispatch,
-  dataSet,
-  setSelectedRowData,
-  iter,
-  tag,
-  projectName,
-  frontendSpec
-) => {
-  const dataSetIdentifier = getArtifactIdentifier(dataSet)
-
-  setSelectedRowData(state => ({
-    ...state,
-    loading: true
-  }))
-
-  dispatch(
-    fetchExpandedDataSet({
-      project: dataSet.project,
-      dataSet: dataSet.db_key,
-      iter,
-      tag
-    })
-  )
-    .unwrap()
-    .then(result => {
-      if (result?.length > 0) {
-        setSelectedRowData(state => {
-          return {
-            ...state,
-            [dataSetIdentifier]: {
-              content: sortListByDate(result, 'updated', false).map(artifact =>
-                createDatasetsRowData(artifact, projectName, frontendSpec)
-              )
-            },
-            error: null,
-            loading: false
-          }
-        })
-      } else {
-        setSelectedRowData(state => {
-          return {
-            ...state,
-            [dataSetIdentifier]: {
-              content: []
-            },
-            error: null,
-            loading: false
-          }
-        })
-      }
-    })
-    .catch(error => {
-      setSelectedRowData(state => ({
-        ...state,
-        [dataSetIdentifier]: {
-          ...state[dataSetIdentifier]
-        },
-        error,
-        loading: false
-      }))
-    })
 }
 
 export const handleApplyDetailsChanges = (
