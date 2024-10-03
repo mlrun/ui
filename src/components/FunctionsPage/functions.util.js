@@ -146,7 +146,7 @@ const generateFunctionsInfoHeaders = selectedFunction => {
       id: 'internalUrl',
       hidden: selectedFunction.type !== FUNCTION_TYPE_APPLICATION
     },
-    { label: 'Image', id: 'image' },
+    { label: 'Image', id: 'image', hidden: selectedFunction.type === FUNCTION_TYPE_APPLICATION },
     {
       label: 'Application image',
       id: 'applicationImage',
@@ -159,9 +159,17 @@ const generateFunctionsInfoHeaders = selectedFunction => {
       id: 'internalPort',
       hidden: selectedFunction.type !== FUNCTION_TYPE_APPLICATION
     },
-    { label: 'Code origin', id: 'codeOrigin' },
+    {
+      label: 'Code origin',
+      id: 'codeOrigin',
+      hidden: selectedFunction.type === FUNCTION_TYPE_APPLICATION
+    },
     { label: 'Updated', id: 'updated' },
-    { label: 'Default handler', id: 'defaultHandler' },
+    {
+      label: 'Default handler',
+      id: 'defaultHandler',
+      hidden: selectedFunction.type === FUNCTION_TYPE_APPLICATION
+    },
     { label: 'Description', id: 'description' }
   ]
 }
