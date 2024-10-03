@@ -589,10 +589,10 @@ const Functions = ({
   }, [params.projectName])
 
   useEffect(() => {
-    if (params.hash && pageData.details.menu.length > 0) {
+    if ((params.funcName || params.hash) && pageData.details.menu.length > 0) {
       isDetailsTabExists(params.tab, pageData.details.menu, navigate, location)
     }
-  }, [navigate, pageData.details.menu, location, params.hash, params.tab])
+  }, [navigate, pageData.details.menu, location, params.hash, params.funcName, params.tab])
 
   useEffect(() => {
     checkForSelectedFunction(
