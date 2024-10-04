@@ -697,10 +697,9 @@ Feature: ML Functions
         When select "Build_A_New_Image_Radiobutton" in "Code_Accordion" on "New_Function"
         When collapse "General_Accordion" on "New_Function" wizard
         When collapse "Resources_Accordion" on "New_Function" wizard
-        And set tear-down property "function" created in "default" project with "new-aqa-function-00" value
-        Then click on "Deploy_Button" element on "New_Function" wizard
         Then "Deploy_Button" element on "New_Function" should contains "Create" value
-        Then click on "Cross_Close_Button" element on "ML_Function_Info_Pane" wizard
+        Then click on "Deploy_Button" element on "New_Function" wizard
+        Then click on "Cross_Close_Button" element on "ML_Function_Info_Pane" wizard 
         Then check "new-aqa-function-01" value in "name" column in "Functions_Table" table on "ML_Functions" wizard
 
     @MLF
@@ -1080,7 +1079,8 @@ Feature: ML Functions
         Then verify "Cross_Cancel_Button" element visibility on "View_YAML" wizard
         Then verify "YAML_Modal_Container" element visibility on "View_YAML" wizard
         Then click on "Cross_Cancel_Button" element on "View_YAML" wizard
-        Then click on cell with row index 8 in "expand_btn" column in "Functions_Table" table on "ML_Functions" wizard
+        Then click on cell with row index 9 in "expand_btn" column in "Functions_Table" table on "ML_Functions" wizard
+        And wait load page
         Then select "View YAML" option in action menu on "ML_Functions" wizard in "Functions_Table" table at row with "Nov 23, 2021, 11:31:51 AM" value in "name" column
         Then verify if "View_YAML" popup dialog appears
         Then verify "Cross_Cancel_Button" element visibility on "View_YAML" wizard
@@ -1280,6 +1280,8 @@ Feature: ML Functions
         Then type value "99" to "GPU_Limit_Number_Input" field on "Resources_Accordion" on "New_Function" wizard
         Then click on "Deploy_Button" element on "New_Function" wizard
         And wait load page
+        When click on cell with row index 1 in "name" column in "Functions_Table" table on "ML_Functions" wizard
+        And wait load page
         Then "Header" element on "ML_Function_Info_Pane" should contains "new-aqa-function-00" value
         Then select "tab" with "Jobs and workflows" value in breadcrumbs menu
         And wait load page
@@ -1318,7 +1320,20 @@ Feature: ML Functions
         And wait load page
         When click on cell with row index 1 in "name" column in "Functions_Table" table on "ML_Functions" wizard
         And wait load page
-        Then verify redirection from "projects/default/functions/INVALID/overview" to "projects/default/functions"
+        Then verify redirection from "projects/default/functions/INVALID/latest/overview" to "projects/default/functions"
+        Then verify "Notification_Pop_Up" element visibility on "Notification_Popup" wizard
+        And wait load page
+        Then "Notification_Pop_Up" element on "Notification_Popup" should contains "This function either does not exist or was deleted" value
+        And wait load page
+        Then verify "Notification_Pop_Up_Cross_Close_Button" element visibility on "Notification_Popup" wizard
+        Then click on "Notification_Pop_Up_Cross_Close_Button" element on "Notification_Popup" wizard
+        And select "tab" with "Datasets" value in breadcrumbs menu
+        And wait load page
+        And select "tab" with "ML functions" value in breadcrumbs menu
+        And wait load page
+        Then verify "Date_Picker_Filter_Dropdown" element visibility on "ML_Functions" wizard
+        When select "Any time" option in "Date_Picker_Filter_Dropdown" filter dropdown on "ML_Functions" wizard
+        And wait load page
         When click on cell with row index 1 in "name" column in "Functions_Table" table on "ML_Functions" wizard
         And wait load page
         Then verify redirection from "projects/default/functions/85957751e571a92e07213781f5e0c35bfbe42c64/INVALID" to "projects/default/functions/85957751e571a92e07213781f5e0c35bfbe42c64/overview"

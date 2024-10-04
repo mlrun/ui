@@ -225,6 +225,15 @@ Feature: Project Settings page
         And wait load page
         And select "Secrets" tab in "Project_Settings_Tab_Selector" on "Project_Settings_General_Tab" wizard
         And wait load page
+        When add rows to "Secrets_Table" invalid key-value table on "Projects_Settings_Secret_Tab" wizard
+            |    key_input    | value_input |
+            | mlrun.something |    value    |
+        And wait load page
+        Then verify if "Notification_Popup" popup dialog appears
+        Then "Error_Message" component on "Projects_Settings_Secret_Tab" should contains "Error_Messages"."MLRunAccessDeniedError"
+        Then verify "Notification_Pop_Up_Cross_Close_Button" element visibility on "Notification_Popup" wizard
+        Then click on "Notification_Pop_Up_Cross_Close_Button" element on "Notification_Popup" wizard
+        And wait load page
         When add rows to "Secrets_Table" key-value table on "Projects_Settings_Secret_Tab" wizard
             | key_input | value_input |
             |    key1   |    value1   |
