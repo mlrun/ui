@@ -494,6 +494,28 @@ When(
   }
 )
 
+When(
+  'add rows to {string} invalid key-value table on {string} wizard',
+  async function (table, wizard, dataTable) {
+    const inputFields = dataTable['rawTable'][0]
+    const rows = dataTable.rows()
+
+    for (const row_indx in rows) {
+      await clickOnComponent(this.driver, pageObjects[wizard][table]['add_row_btn'])
+      await this.driver.sleep(500)
+      for (const i in inputFields) {
+        await typeIntoInputField(
+          this.driver,
+          pageObjects[wizard][table]['tableColumns'][inputFields[i]],
+          rows[row_indx][i]
+        )
+      }
+      await clickOnComponent(this.driver, pageObjects[wizard][table]['save_row_btn'])
+      await this.driver.sleep(500)
+    }
+  }
+)
+
 Then(
   'verify values in {string} table on {string} wizard',
   async function (table, wizard, dataTable) {

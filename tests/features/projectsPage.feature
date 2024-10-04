@@ -106,11 +106,51 @@ Feature: Projects Page
         And wait load page
         Then select "Delete" option in action menu on "Projects" wizard in "Projects_Table" table at row with "churn-project-admin" value in "name" column
         Then verify if "Common_Popup" popup dialog appears
-        Then "Description" component on "Common_Popup" should be equal "Descriptions"."Delete_Project"
+        Then "Description" component on "Common_Popup" should be equal "Descriptions"."Delete_Project_Confirm_Message"
         Then verify "Cancel_Button" element visibility on "Common_Popup" wizard
         Then "Cancel_Button" element on "Common_Popup" should contains "Cancel" value
         Then verify "Delete_Button" element visibility on "Common_Popup" wizard
         Then "Delete_Button" element on "Common_Popup" should contains "Delete" value
+        Then click on "Delete_Button" element on "Common_Popup" wizard
+        And wait load page
+        Then verify if "Common_Popup" popup dialog appears
+        Then "Description" component on "Common_Popup" should be equal "Descriptions"."Delete_Project"
+        Then click on "Cancel_Button" element on "Common_Popup" wizard
+        And wait load page
+        Then click on "New_Project_Button" element on "Projects" wizard
+        Then verify if "Create_New_Project" popup dialog appears
+        Then type into "Name_Input" on "Create_New_Project" popup dialog "empty-project" value
+        Then type into "Description_Input" on "Create_New_Project" popup dialog "empty project description" value
+        Then type value "empty" to "Labels_Key" field on "Create_New_Project" wizard
+        Then type value "project" to "Labels_Value" field on "Create_New_Project" wizard
+        When click on "Title" element on "Create_New_Project" wizard
+        And wait load page
+        Then click on "Create_Button" element on "Create_New_Project" wizard
+        And wait load page
+        Then verify "Notification_Pop_Up" element visibility on "Notification_Popup" wizard
+        Then "Notification_Pop_Up" element on "Notification_Popup" should contains "Project \"empty-project\" was created successfully" value
+        And wait load page
+        Then verify "Notification_Pop_Up_Cross_Close_Button" element visibility on "Notification_Popup" wizard
+        Then click on "Notification_Pop_Up_Cross_Close_Button" element on "Notification_Popup" wizard
+        And wait load page
+        Then check "empty-project" value in "name" column in "Projects_Table" table on "Projects" wizard
+        Then select "Delete" option in action menu on "Projects" wizard in "Projects_Table" table at row with "empty-project" value in "name" column
+        Then verify if "Common_Popup" popup dialog appears
+        Then "Description" component on "Common_Popup" should be equal "Descriptions"."Delete_Project_Confirm_Message"
+        Then click on "Delete_Button" element on "Common_Popup" wizard
+        And wait load page
+        Then verify "Notification_Pop_Up" element visibility on "Notification_Popup" wizard
+        Then "Notification_Pop_Up" element on "Notification_Popup" should contains "Project deletion in progress" value
+        And wait load page
+        Then verify "Notification_Pop_Up_Cross_Close_Button" element visibility on "Notification_Popup" wizard
+        Then click on "Notification_Pop_Up_Cross_Close_Button" element on "Notification_Popup" wizard
+        And wait load page
+        Then verify if "Notification_Popup" popup dialog appears
+        Then verify "Notification_Pop_Up" element visibility on "Notification_Popup" wizard
+        Then "Notification_Pop_Up" element on "Notification_Popup" should contains "Project \"empty-project\" was deleted successfully" value
+        Then verify "Notification_Pop_Up_Cross_Close_Button" element visibility on "Notification_Popup" wizard
+        Then click on "Notification_Pop_Up_Cross_Close_Button" element on "Notification_Popup" wizard
+        Then check "empty-project" value not in "name" column in "Projects_Table" table on "Projects" wizard
 
     @MLPr
     @sanity
@@ -358,22 +398,22 @@ Feature: Projects Page
         Then "See_All_Link" element in "Monitoring_Jobs_Box" on "Projects" should contains "See all" value
         When click on "Counter_Running_Status_Number" element in "Monitoring_Jobs_Box" on "Projects" wizard
         And wait load page
-        Then verify redirection to "projects/jobs-monitoring/jobs"
+        Then verify redirection to "projects/*/jobs-monitoring/jobs"
         Then navigate back
         And wait load page
         When click on "Counter_Failed_Status_Number" element in "Monitoring_Jobs_Box" on "Projects" wizard
         And wait load page
-        Then verify redirection to "projects/jobs-monitoring/jobs"
+        Then verify redirection to "projects/*/jobs-monitoring/jobs"
         Then navigate back
         And wait load page
         When click on "Counter_Completed_Status_Number" element in "Monitoring_Jobs_Box" on "Projects" wizard
         And wait load page
-        Then verify redirection to "projects/jobs-monitoring/jobs"
+        Then verify redirection to "projects/*/jobs-monitoring/jobs"
         Then navigate back
         And wait load page
         When click on "See_All_Link" element in "Monitoring_Jobs_Box" on "Projects" wizard
         And wait load page
-        Then verify redirection to "projects/jobs-monitoring/jobs"
+        Then verify redirection to "projects/*/jobs-monitoring/jobs"
         Then navigate back
         And wait load page
         Then verify "Monitoring_Container" element visibility in "Projects_Monitoring_Container" on "Projects" wizard
@@ -410,21 +450,21 @@ Feature: Projects Page
         Then "See_All_Link" element in "Monitoring_Workflows_Box" on "Projects" should contains "See all" value
         When click on "Counter_Running_Status_Number" element in "Monitoring_Workflows_Box" on "Projects" wizard
         And wait load page
-        Then verify redirection to "projects/jobs-monitoring/workflows"
+        Then verify redirection to "projects/*/jobs-monitoring/workflows"
         Then navigate back
         And wait load page
         When click on "Counter_Failed_Status_Number" element in "Monitoring_Workflows_Box" on "Projects" wizard
         And wait load page
-        Then verify redirection to "projects/jobs-monitoring/workflows"
+        Then verify redirection to "projects/*/jobs-monitoring/workflows"
         Then navigate back
         And wait load page
         When click on "Counter_Completed_Status_Number" element in "Monitoring_Workflows_Box" on "Projects" wizard
         And wait load page
-        Then verify redirection to "projects/jobs-monitoring/workflows"
+        Then verify redirection to "projects/*/jobs-monitoring/workflows"
         Then navigate back
         And wait load page
         When click on "See_All_Link" element in "Monitoring_Workflows_Box" on "Projects" wizard
-        Then verify redirection to "projects/jobs-monitoring/workflows"
+        Then verify redirection to "projects/*/jobs-monitoring/workflows"
         Then navigate back
         And wait load page
         Then verify "Monitoring_Container" element visibility in "Projects_Monitoring_Container" on "Projects" wizard
@@ -463,15 +503,15 @@ Feature: Projects Page
         Then verify "Total_See_All_Link" element visibility in "Monitoring_Scheduled_Box" on "Projects" wizard
         Then "Total_See_All_Link" element in "Monitoring_Scheduled_Box" on "Projects" should contains "See all" value
         When click on "Jobs_See_All_Link" element in "Monitoring_Scheduled_Box" on "Projects" wizard
-        Then verify redirection to "projects/jobs-monitoring/scheduled"
+        Then verify redirection to "projects/*/jobs-monitoring/scheduled"
         And wait load page
         Then navigate back
         And wait load page
         When click on "Workflows_See_All_Link" element in "Monitoring_Scheduled_Box" on "Projects" wizard
-        Then verify redirection to "projects/jobs-monitoring/scheduled"
+        Then verify redirection to "projects/*/jobs-monitoring/scheduled"
         And wait load page
         Then navigate back
         And wait load page
         When click on "Total_See_All_Link" element in "Monitoring_Scheduled_Box" on "Projects" wizard
-        Then verify redirection to "projects/jobs-monitoring/scheduled"
+        Then verify redirection to "projects/*/jobs-monitoring/scheduled"
         And wait load page

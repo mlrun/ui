@@ -625,7 +625,7 @@ Feature: Datasets Page
     Then verify "Overview" tab is active in "Info_Pane_Tab_Selector" on "Datasets_Info_Pane" wizard
     Then verify "Overview_General_Headers" on "Datasets_Info_Pane" wizard should contains "Datasets_Info_Pane"."Overview_General_Headers"
     Then check "latest123456" value in "tag" column in "Overview_Table" table on "Datasets_Info_Pane" wizard
-    Then save to context "name" column on 3 row from "Datasets_Table" table on "Datasets" wizard
+    Then save to context "name" column on 2 row from "Datasets_Table" table on "Datasets" wizard
     Then compare "Header" element value on "Datasets_Info_Pane" wizard with test "name" context value
 
   @MLD
