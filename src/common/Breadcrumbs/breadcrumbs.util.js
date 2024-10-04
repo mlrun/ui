@@ -70,7 +70,7 @@ export const generateMlrunScreens = params =>
         {
           label: 'Jobs monitoring',
           id: JOBS_MONITORING_PAGE,
-          link: `/${PROJECTS_PAGE_PATH}/*/${JOBS_MONITORING_PAGE}`
+          linkTo: `/${PROJECTS_PAGE_PATH}/*/${JOBS_MONITORING_PAGE}`
         }
       ]
 
