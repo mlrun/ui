@@ -33,7 +33,7 @@ export const isProjectValid = (navigate, projects, currentProjectName) => {
     !projects
       .some(project => project?.metadata?.name === currentProjectName)
   ) {
-    navigate('/projects')
+    navigate('/projects', { replace: true })
   }
 }
 
