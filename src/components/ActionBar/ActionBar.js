@@ -340,7 +340,7 @@ const ActionBar = ({
                     />
                   ))
               )}
-              {autoRefreshIsEnabled && <FormCheckBox label={AUTO_REFRESH} name={AUTO_REFRESH_ID} />}
+              {autoRefreshIsEnabled && <FormCheckBox className="auto-refresh" label={AUTO_REFRESH} name={AUTO_REFRESH_ID} />}
               <FormOnChange handler={setAutoRefresh} name={AUTO_REFRESH_ID} />
               {withRefreshButton && (
                 <RoundedIcon tooltipText="Refresh" onClick={() => refresh(formState)} id="refresh">
