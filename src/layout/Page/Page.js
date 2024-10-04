@@ -17,7 +17,7 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import React, { useEffect, useMemo, useRef, useState } from 'react'
+import React, { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useParams, Outlet, useNavigate } from 'react-router-dom'
 import classNames from 'classnames'
@@ -52,7 +52,7 @@ const Page = () => {
   const { frontendSpec, frontendSpecPopupIsOpened } = useSelector(store => store.appStore)
   const { projects } = useSelector(store => store.projectStore)
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     isProjectValid(navigate, projects, projectName)
   }, [navigate, projectName, projects])
 
