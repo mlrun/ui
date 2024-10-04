@@ -29,7 +29,7 @@ import { Button, PopUpDialog } from 'igz-controls/components'
 
 import { parseFeatureTemplate } from '../../utils/parseFeatureTemplate'
 import { generateProjectsList } from '../../utils/projects'
-import { LABEL_BUTTON, PRIMARY_BUTTON } from 'igz-controls/constants'
+import { TERTIARY_BUTTON, PRIMARY_BUTTON } from 'igz-controls/constants'
 import { setFeaturesPanelData, setTablePanelOpen } from '../../reducers/tableReducer'
 
 import { ReactComponent as AddCircle } from 'igz-controls/images/add-circle.svg'
@@ -244,7 +244,7 @@ const AddToFeatureVectorPopUp = ({
           </div>
           <div className="pop-up-dialog__footer-container">
             <Button
-              variant={LABEL_BUTTON}
+              variant={TERTIARY_BUTTON}
               label="Cancel"
               className="pop-up-dialog__btn_cancel"
               onClick={closePopUp}
