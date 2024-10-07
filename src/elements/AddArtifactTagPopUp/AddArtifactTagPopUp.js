@@ -17,18 +17,19 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import PropTypes from 'prop-types'
-import { useDispatch, useSelector } from 'react-redux'
+import { useDispatch } from 'react-redux'
 import { useLocation } from 'react-router-dom'
 import { Form } from 'react-final-form'
 import { createForm } from 'final-form'
 
 import { Button, FormInput, Modal } from 'igz-controls/components'
+import Loader from '../../common/Loader/Loader'
 
 import { DATASET_TYPE, MODEL_TYPE } from '../../constants'
 import { SECONDARY_BUTTON, TERTIARY_BUTTON } from 'igz-controls/constants'
-import { addTag } from '../../reducers/artifactsReducer'
+import { addTag, fetchArtifacts } from '../../reducers/artifactsReducer'
 import { getValidationRules } from 'igz-controls/utils/validation.util'
 import { setNotification } from '../../reducers/notificationReducer'
 import { showErrorNotification } from '../../utils/notifications.util'
@@ -43,10 +44,11 @@ const AddArtifactTagPopUp = ({
   projectName
 }) => {
   const dispatch = useDispatch()
-  const filtersStore = useSelector(store => store.filtersStore)
   const [initialValues] = useState({
     artifactTag: ''
   })
+  const [artifactTags, setArtifactTags] = useState([])
+  const [isLoading, setIsLoading] = useState(true)
 
   const formRef = React.useRef(
     createForm({
@@ -116,44 +118,72 @@ const AddArtifactTagPopUp = ({
     return actions.map(action => <Button {...action} />)
   }
 
+  useEffect(() => {
+    setIsLoading(true)
+    dispatch(
+      fetchArtifacts({
+        project: projectName,
+        filters: { name: artifact.db_key },
+        config: {
+          params: {
+            format: 'minimal'
+          }
+        },
+        withExactName: true
+      })
+    )
+      .unwrap()
+      .then(artifacts => {
+        if (artifacts.length) {
+          setArtifactTags(artifacts.map(artifact => artifact.tag))
+        }
+      })
+      .finally(() => {
+        setIsLoading(false)
+      })
+  }, [artifact.db_key, dispatch, projectName])
+
   return (
     <Form form={formRef.current} initialValues={initialValues} onSubmit={addArtifactTag}>
       {formState => {
         return (
-          <Modal
-            actions={getModalActions(formState)}
-            location={location}
-            onClose={handleCloseModal}
-            show={isOpen}
-            size="min"
-            title="Add a tag"
-          >
-            <div className="form">
-              <div className="form-row">
-                <div className="form-col-1">
-                  <FormInput
-                    name="artifactTag"
-                    label={`${
-                      artifact.kind === MODEL_TYPE
-                        ? 'Model tag'
-                        : artifact.kind === DATASET_TYPE
-                          ? 'Dataset tag'
-                          : 'Artifact tag'
-                    }`}
-                    focused
-                    required
-                    validationRules={getValidationRules('common.name', [
-                      {
-                        name: 'uniqueness',
-                        label: 'Tag name must be unique',
-                        pattern: value => !filtersStore.tagOptions.includes(value)
-                      }
-                    ])}
-                  />
+          <>
+            {isLoading && <Loader />}
+            <Modal
+              actions={getModalActions(formState)}
+              location={location}
+              onClose={handleCloseModal}
+              show={isOpen}
+              size="min"
+              title="Add a tag"
+            >
+              <div className="form">
+                <div className="form-row">
+                  <div className="form-col-1">
+                    <FormInput
+                      name="artifactTag"
+                      label={`${
+                        artifact.kind === MODEL_TYPE
+                          ? 'Model tag'
+                          : artifact.kind === DATASET_TYPE
+                            ? 'Dataset tag'
+                            : 'Artifact tag'
+                      }`}
+                      focused
+                      required
+                      validationRules={getValidationRules('common.name', [
+                        {
+                          name: 'uniqueness',
+                          label: 'Tag name must be unique',
+                          pattern: value => !artifactTags.includes(value)
+                        }
+                      ])}
+                    />
+                  </div>
                 </div>
               </div>
-            </div>
-          </Modal>
+            </Modal>
+          </>
         )
       }}
     </Form>
