@@ -56,17 +56,21 @@ const Projects = () => {
   const [isDescendingOrder, setIsDescendingOrder] = useState(false)
   const [selectedProjectsState, setSelectedProjectsState] = useState('active')
   const [sortProjectId, setSortProjectId] = useState('byName')
-  const [deletingProjects, setDeletingProjects] = useState({})
   const [projectsRequestErrorMessage, setProjectsRequestErrorMessage] = useState('')
 
   const abortControllerRef = useRef(new AbortController())
   const terminatePollRef = useRef(null)
+  const deletingProjectsRef = useRef({})
 
   const dispatch = useDispatch()
   const { isDemoMode } = useMode()
   const { isNuclioModeDisabled } = useNuclioMode()
   const projectStore = useSelector(store => store.projectStore)
   const tasksStore = useSelector(store => store.tasksStore)
+
+  useEffect(() => {
+    deletingProjectsRef.current = projectStore.deletingProjects
+  }, [projectStore.deletingProjects])
 
   const fetchMinimalProjects = useCallback(() => {
     dispatch(projectsAction.fetchProjects({ format: 'minimal' }, setProjectsRequestErrorMessage))
@@ -118,36 +122,38 @@ const Projects = () => {
       }
     })
 
-    dispatch(fetchBackgroundTasks({}))
-      .unwrap()
-      .then(backgroundTasks => {
-        const wrapperIsUsed = backgroundTasks.some(backgroundTask =>
-          backgroundTask.metadata.kind.startsWith(projectDeletionWrapperKind)
-        )
-
-        const newDeletingProjects = backgroundTasks
-          .filter(
-            backgroundTask =>
-              backgroundTask.metadata.kind.startsWith(
-                wrapperIsUsed ? projectDeletionWrapperKind : projectDeletionKind
-              ) && backgroundTask?.status?.state === BG_TASK_RUNNING
+    if (!isEmpty(deletingProjectsRef.current)) {
+      dispatch(fetchBackgroundTasks({}))
+        .unwrap()
+        .then(backgroundTasks => {
+          const wrapperIsUsed = backgroundTasks.some(backgroundTask =>
+            backgroundTask.metadata.kind.startsWith(projectDeletionWrapperKind)
           )
-          .reduce((acc, backgroundTask) => {
-            acc[backgroundTask.metadata.name] = last(backgroundTask.metadata.kind.split('.'))
 
-            return acc
-          }, {})
+          const newDeletingProjects = backgroundTasks
+            .filter(
+              backgroundTask =>
+                backgroundTask.metadata.kind.startsWith(
+                  wrapperIsUsed ? projectDeletionWrapperKind : projectDeletionKind
+                ) && backgroundTask?.status?.state === BG_TASK_RUNNING && deletingProjectsRef.current[backgroundTask.metadata.name]
+            )
+            .reduce((acc, backgroundTask) => {
+              acc[backgroundTask.metadata.name] = last(backgroundTask.metadata.kind.split('.'))
 
-        setDeletingProjects(newDeletingProjects)
+              return acc
+            }, {})
 
-        if (!isEmpty(newDeletingProjects)) {
-          pollDeletingProjects(terminatePollRef, newDeletingProjects, refreshProjects, dispatch)
-        }
-      })
-      .catch(error => {
-        showErrorNotification(dispatch, error, '')
-      })
-  }, [fetchMinimalProjects, isNuclioModeDisabled, dispatch])
+          if (!isEmpty(newDeletingProjects)) {
+            pollDeletingProjects(terminatePollRef, newDeletingProjects, refreshProjects, dispatch)
+          } else {
+            dispatch(projectsAction.setDeletingProjects({}))
+          }
+        })
+        .catch(error => {
+          showErrorNotification(dispatch, error, '')
+        })
+    }
+  }, [isNuclioModeDisabled, dispatch, fetchMinimalProjects])
 
   const handleSearchOnFocus = useCallback(() => {
     refreshProjects()
@@ -197,16 +203,13 @@ const Projects = () => {
               })
             )
 
-            setDeletingProjects(prevDeletingProjects => {
-              const newDeletingProjects = {
-                ...prevDeletingProjects,
-                [response.data.metadata.name]: last(response.data.metadata.kind.split('.'))
-              }
+            const newDeletingProjects = {
+              ...deletingProjectsRef.current,
+              [response.data.metadata.name]: last(response.data.metadata.kind.split('.'))
+            }
 
-              pollDeletingProjects(terminatePollRef, newDeletingProjects, refreshProjects, dispatch)
-
-              return newDeletingProjects
-            })
+            dispatch(projectsAction.setDeletingProjects(newDeletingProjects))
+            pollDeletingProjects(terminatePollRef, newDeletingProjects, refreshProjects, dispatch)
           } else {
             fetchMinimalProjects()
             dispatch(
@@ -300,7 +303,7 @@ const Projects = () => {
             FileSaver.saveAs(blob, `${projectMinimal.metadata.name}.yaml`)
           })
           .catch(error => {
-            showErrorNotification(dispatch, error, '', "Failed to fetch project's YAML", () =>
+            showErrorNotification(dispatch, error, '', 'Failed to fetch project\'s YAML', () =>
               exportYaml(projectMinimal)
             )
           })
@@ -319,7 +322,7 @@ const Projects = () => {
           .catch(error => {
             setConvertedYaml('')
 
-            showErrorNotification(dispatch, error, '', "Failed to fetch project's YAML", () =>
+            showErrorNotification(dispatch, error, '', 'Failed to fetch project\'s YAML', () =>
               viewYaml(projectMinimal)
             )
           })
@@ -339,7 +342,7 @@ const Projects = () => {
     setActionsMenu(
       generateProjectActionsMenu(
         projectStore.projects,
-        deletingProjects,
+        projectStore.deletingProjects,
         exportYaml,
         viewYaml,
         onArchiveProject,
@@ -349,7 +352,7 @@ const Projects = () => {
     )
   }, [
     convertToYaml,
-    deletingProjects,
+    projectStore.deletingProjects,
     exportYaml,
     handleUnarchiveProject,
     isDemoMode,
@@ -366,6 +369,7 @@ const Projects = () => {
   useEffect(() => {
     return () => {
       abortControllerRef.current.abort()
+      terminatePollRef?.current?.()
     }
   }, [])
 
