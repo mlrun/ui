@@ -452,6 +452,7 @@ module.exports = {
   Descriptions: {
     Archive_Project:
       'Archived projects continue to consume resources.To stop the project from consuming resources, delete its scheduled jobs and suspend its Nuclio functions.',
+    Delete_Project_Confirm_Message: /You are trying to delete the project "[^"]+[$"]\. Deleted projects cannot be restored/,
     Delete_Project: /You are trying to delete the non-empty project "[^"]+[$"]\. Deleting it will also delete all of its resources, such as jobs, artifacts, and features\./,
     Delete_Function:
       /You try to delete function "[^"]+[$"]\. Deleted functions cannot be restored\./,
@@ -520,6 +521,7 @@ module.exports = {
     Project_Already_Exists: /A project named "[^"]+[$"] already exists/,
     Projects_Limit_Reached:
       'The system already has the maximum number of projects. An existing project must be deleted before you can create another.',
+    MLRunAccessDeniedError: 'MLRunAccessDeniedError(\'Not allowed to create\/update internal secrets (key starts with mlrun\.)\')',
     Must_Select_One: 'Must select at least one',
     Must_Select_One_Partition: 'Must select at least one partitioning option',
     Already_Scheduled: 'This job is already scheduled',

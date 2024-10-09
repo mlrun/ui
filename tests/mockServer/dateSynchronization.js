@@ -61,7 +61,7 @@ function updatePipelines(pipelines) {
             if (['5a5db6e3-7cdd-4d33-971c-d2310b02387c', '1f8b29a5-cdab-4b84-aad7-7f9bc20daf0b'].includes(run.id)) {
                 
                 return { ...run, finished_at: formatDate(oneDayAgo) }
-            } else if (['1d3a8b0833b74f55b008537b1e19ea57'].includes(run.id)) {
+            } else if (['e8c24cbd-187f-44eb-85df-52e003ff9eaa'].includes(run.id)) {
                 
                 return { ...run, finished_at: formatDate(oneHourAgo) }
             } else {
@@ -77,7 +77,7 @@ function updatePipelineIDs(pipelineIDs) {
         if (['5a5db6e3-7cdd-4d33-971c-d2310b02387c', '1f8b29a5-cdab-4b84-aad7-7f9bc20daf0b'].includes(pipeline.run.id)) { 
 
             pipeline.run = { ...pipeline.run, created_at: formatDate(oneDayAgo), finished_at: formatDate(oneDayAgo) }
-        } else if (['1d3a8b0833b74f55b008537b1e19ea57'].includes(pipeline.run.id)) { 
+        } else if (['e8c24cbd-187f-44eb-85df-52e003ff9eaa'].includes(pipeline.run.id)) { 
         
             pipeline.run = { ...pipeline.run, created_at: formatDate(oneHourAgo), finished_at: formatDate(oneHourAgo) }
         } 
