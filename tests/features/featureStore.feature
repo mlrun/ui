@@ -1139,7 +1139,7 @@ Feature: Feature Store Page
         Then verify "YAML_Modal_Container" element visibility on "View_YAML" wizard
         Then click on "Cross_Cancel_Button" element on "View_YAML" wizard
         Then select "All" option in "Table_Tag_Filter_Dropdown" dropdown on "Feature_Store_Features_Vectors_Tab" wizard
-        Then click on cell with row index 1 in "expand_btn" column in "Feature_Vectors_Table" table on "Feature_Store_Features_Vectors_Tab" wizard
+        Then click on cell with row index 4 in "expand_btn" column in "Feature_Vectors_Table" table on "Feature_Store_Features_Vectors_Tab" wizard
         Then select "View YAML" option in action menu on "Feature_Store_Features_Vectors_Tab" wizard in "Feature_Vectors_Table" table at row with "my-tag" value in "name_expand_btn" column
         Then verify if "View_YAML" popup dialog appears
         Then verify "Cross_Cancel_Button" element visibility on "View_YAML" wizard

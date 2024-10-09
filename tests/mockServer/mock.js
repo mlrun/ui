@@ -1072,7 +1072,7 @@ function getProjectsFeaturesEntities(req, res) {
         if (artifact === 'feature-vectors' && item.metadata.labels) {
           return filterByLabels(item.metadata.labels, req.query['label'])
         } else if ((artifact === 'features' || artifact === 'entities') && item.labels) {
-          return filterByLabels(item.labels, req.query['label'])
+          return filterByLabels(item.metadata.labels, req.query['label'])
         }
 
         return false
@@ -1153,7 +1153,7 @@ function getArtifacts(req, res) {
   }
 
   if (req.query['label']) {
-    collectedArtifacts = collectedArtifacts.filter(artifact => filterByLabels(artifact.labels, req.query['label']))
+    collectedArtifacts = collectedArtifacts.filter(artifact => filterByLabels(artifact.metadata.labels, req.query['label']))
   }
 
   if (req.query['name']) {

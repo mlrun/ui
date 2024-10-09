@@ -1337,6 +1337,7 @@ Feature: Models Page
     And wait load page
     Then click on "Delete_Button" element on "Delete_Artifact_Popup" wizard
     And wait load page
+    And wait load page
     Then verify "Notification_Pop_Up" element visibility on "Notification_Popup" wizard
     And wait load page
     And wait load page
