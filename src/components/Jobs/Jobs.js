@@ -17,19 +17,19 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import React, { useEffect, useState, useCallback } from 'react'
-import { connect, useDispatch, useSelector } from 'react-redux'
+import React, { useEffect, useState, useMemo, useLayoutEffect, useCallback } from 'react'
+import { connect, useSelector } from 'react-redux'
 import { useNavigate, useParams, Outlet, useLocation } from 'react-router-dom'
 
 import Breadcrumbs from '../../common/Breadcrumbs/Breadcrumbs'
 import ContentMenu from '../../elements/ContentMenu/ContentMenu'
 import Loader from '../../common/Loader/Loader'
-import PageActionsMenu from '../../common/PageActionsMenu/PageActionsMenu'
 import PreviewModal from '../../elements/PreviewModal/PreviewModal'
 import { ConfirmDialog } from 'igz-controls/components'
 
 import {
   INACTIVE_JOBS_TAB,
+  JOBS_MONITORING_PAGE,
   JOBS_PAGE,
   MONITOR_JOBS_TAB,
   MONITOR_WORKFLOWS_TAB,
@@ -38,41 +38,101 @@ import {
   SCHEDULE_TAB
 } from '../../constants'
 import { TERTIARY_BUTTON } from 'igz-controls/constants'
-import { actionCreator, actionsMenuHeader, monitorJob, rerunJob, tabs } from './jobs.util'
+import { actionButtonHeader, actionCreator, tabs } from './jobs.util'
 import { isPageTabValid } from '../../utils/handleRedirect'
+import {
+  getJobsFiltersConfig,
+  getScheduledFiltersConfig,
+  getWorkflowsFiltersConfig
+} from '../../utils/jobs.util'
+import ActionBar from '../ActionBar/ActionBar'
+import JobsFilters from './MonitorJobs/JobsFilters'
+import WorkflowsFilters from './MonitorWorkflows/WorkflowsFilters'
+import ScheduledJobsFilters from './ScheduledJobs/ScheduledJobsFilters'
+import { useJobsPageData } from '../../hooks/useJobsPageData'
+import { PRIMARY_BUTTON } from '../../../../dashboard-react-controls/dist/constants'
 
 export const JobsContext = React.createContext({})
 
-const Jobs = ({ fetchJobFunction }) => {
+const Jobs = ({ fetchAllJobRuns, fetchJobFunction, fetchJobs }) => {
   const [confirmData, setConfirmData] = useState(null)
-  const [editableItem, setEditableItem] = useState(null)
-  const [jobWizardMode, setJobWizardMode] = useState(null)
-  const [jobWizardIsOpened, setJobWizardIsOpened] = useState(false)
+  const [selectedTab, setSelectedTab] = useState(null)
   const params = useParams()
   const navigate = useNavigate()
   const location = useLocation()
-  const dispatch = useDispatch()
   const functionsStore = useSelector(store => store.functionsStore)
   const jobsStore = useSelector(store => store.jobsStore)
   const workflowsStore = useSelector(store => store.workflowsStore)
-  const appStore = useSelector(store => store.appStore)
   const artifactsStore = useSelector(store => store.artifactsStore)
+
+  const {
+    abortControllerRef,
+    abortJobRef,
+    abortingJobs,
+    dateFilter,
+    editableItem,
+    getWorkflows,
+    jobRuns,
+    jobs,
+    jobWizardIsOpened,
+    jobWizardMode,
+    handleRerunJob,
+    refreshJobs,
+    refreshScheduled,
+    requestErrorMessage,
+    scheduledJobs,
+    setAbortingJobs,
+    setEditableItem,
+    setJobRuns,
+    setJobWizardIsOpened,
+    setJobWizardMode,
+    setJobs,
+    setScheduledJobs,
+    setSelectedRunProject,
+    terminateAbortTasksPolling
+  } = useJobsPageData(fetchAllJobRuns, fetchJobFunction, fetchJobs)
 
   const handleActionsMenuClick = () => {
     setJobWizardMode(PANEL_CREATE_MODE)
   }
 
-  const handleRerunJob = useCallback(
-    async job => await rerunJob(job, fetchJobFunction, setEditableItem, setJobWizardMode, dispatch),
-    [fetchJobFunction, dispatch]
+  const handleTabChange = useCallback(
+    tabName => {
+      setSelectedTab(tabName)
+      navigate(`/projects/${params.projectName}/${JOBS_PAGE.toLowerCase()}/${tabName}`)
+    },
+    [navigate, params.projectName]
   )
 
-  const handleMonitoring = useCallback(
-    item => {
-      monitorJob(appStore.frontendSpec.jobs_dashboard_url, item, params.projectName)
-    },
-    [appStore.frontendSpec.jobs_dashboard_url, params.projectName]
-  )
+  const tabData = useMemo(() => {
+    return {
+      [MONITOR_JOBS_TAB]: {
+        filtersConfig: getJobsFiltersConfig(params.jobName),
+        handleRefresh: refreshJobs,
+        modalFilters: <JobsFilters />
+      },
+      [MONITOR_WORKFLOWS_TAB]: {
+        filtersConfig: getWorkflowsFiltersConfig(),
+        handleRefresh: getWorkflows,
+        modalFilters: <WorkflowsFilters />
+      },
+      [SCHEDULE_TAB]: {
+        filtersConfig: getScheduledFiltersConfig(),
+        handleRefresh: refreshScheduled,
+        modalFilters: <ScheduledJobsFilters />
+      }
+    }
+  }, [getWorkflows, params.jobName, refreshJobs, refreshScheduled])
+
+  useLayoutEffect(() => {
+    setSelectedTab(
+      location.pathname.includes(MONITOR_WORKFLOWS_TAB)
+        ? MONITOR_WORKFLOWS_TAB
+        : location.pathname.includes(SCHEDULE_TAB)
+          ? SCHEDULE_TAB
+          : MONITOR_JOBS_TAB
+    )
+  }, [location.pathname])
 
   useEffect(() => {
     const urlPathArray = location.pathname.split('/')
@@ -103,50 +163,80 @@ const Jobs = ({ fetchJobFunction }) => {
       <div className="content-wrapper">
         <div className="content__header">
           <Breadcrumbs />
-          <PageActionsMenu
-            actionsMenuHeader={actionsMenuHeader}
-            onClick={handleActionsMenuClick}
-            showActionsMenu={true}
-          />
         </div>
-        <div className="content">
-          <div className="content__action-bar-wrapper">
-            <ContentMenu
-              activeTab={
-                location.pathname.includes(MONITOR_JOBS_TAB)
-                  ? MONITOR_JOBS_TAB
-                  : location.pathname.includes(SCHEDULE_TAB)
-                    ? SCHEDULE_TAB
-                    : MONITOR_WORKFLOWS_TAB
-              }
-              screen={JOBS_PAGE}
-              tabs={tabs}
-            />
+        {selectedTab && (
+          <div className="content">
+            <div className="content__action-bar-wrapper">
+              <ContentMenu
+                activeTab={selectedTab}
+                onClick={handleTabChange}
+                screen={JOBS_PAGE}
+                tabs={tabs}
+              />
+              <ActionBar
+                actionButtons={[
+                  {
+                    className: 'action-button',
+                    hidden: selectedTab !== MONITOR_JOBS_TAB,
+                    label: actionButtonHeader,
+                    onClick: handleActionsMenuClick,
+                    variant: PRIMARY_BUTTON
+                  }
+                ]}
+                autoRefreshIsEnabled={selectedTab === MONITOR_JOBS_TAB}
+                autoRefreshIsStopped={jobWizardIsOpened || jobsStore.loading}
+                filterMenuName={selectedTab}
+                filtersConfig={tabData[selectedTab].filtersConfig}
+                handleRefresh={tabData[selectedTab].handleRefresh}
+                hidden={Boolean(params.jobId || params.workflowId)}
+                page={JOBS_MONITORING_PAGE}
+                tab={selectedTab}
+                withRefreshButton
+                withoutExpandButton
+                key={selectedTab}
+              >
+                {tabData[selectedTab].modalFilters}
+              </ActionBar>
+            </div>
+            <div className="table-container">
+              <JobsContext.Provider
+                value={{
+                  abortControllerRef,
+                  abortJobRef,
+                  abortingJobs,
+                  dateFilter,
+                  editableItem,
+                  getWorkflows,
+                  handleRerunJob,
+                  jobRuns,
+                  jobs,
+                  jobWizardMode,
+                  refreshJobs,
+                  refreshScheduled,
+                  requestErrorMessage,
+                  scheduledJobs,
+                  setAbortingJobs,
+                  setConfirmData,
+                  setEditableItem,
+                  setJobRuns,
+                  setJobWizardIsOpened,
+                  setJobWizardMode,
+                  setJobs,
+                  setScheduledJobs,
+                  setSelectedRunProject,
+                  terminateAbortTasksPolling
+                }}
+              >
+                <Outlet />
+              </JobsContext.Provider>
+              {(jobsStore.loading ||
+                workflowsStore.workflows.loading ||
+                workflowsStore.activeWorkflow.loading ||
+                functionsStore.loading ||
+                functionsStore.funcLoading) && <Loader />}
+            </div>
           </div>
-
-          <div className="table-container">
-            <JobsContext.Provider
-              value={{
-                editableItem,
-                handleMonitoring,
-                handleRerunJob,
-                jobWizardIsOpened,
-                jobWizardMode,
-                setConfirmData,
-                setEditableItem,
-                setJobWizardIsOpened,
-                setJobWizardMode
-              }}
-            >
-              <Outlet />
-            </JobsContext.Provider>
-            {(jobsStore.loading ||
-              workflowsStore.workflows.loading ||
-              workflowsStore.activeWorkflow.loading ||
-              functionsStore.loading ||
-              functionsStore.funcLoading) && <Loader />}
-          </div>
-        </div>
+        )}
       </div>
       {confirmData && (
         <ConfirmDialog

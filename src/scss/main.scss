@@ -861,13 +861,10 @@ div[id^='chartjs-tooltip'] {
 
     .action-button {
       white-space: nowrap;
+      margin-right: 10px;
 
       @media screen and (min-width: 1300px) {
         min-width: 160px;
-      }
-
-      &:not(:last-of-type) {
-        margin-right: 10px;
       }
     }
   }

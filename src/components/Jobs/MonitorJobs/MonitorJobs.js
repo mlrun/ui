@@ -18,135 +18,52 @@ under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
-import classnames from 'classnames'
 import { useParams } from 'react-router-dom'
-import { connect, useDispatch, useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 
-import FilterMenu from '../../FilterMenu/FilterMenu'
 import JobsTable from '../../../elements/JobsTable/JobsTable'
 import TableTop from '../../../elements/TableTop/TableTop'
 
-import { GROUP_BY_NONE, JOBS_PAGE, MONITOR_JOBS_TAB, REQUEST_CANCELED } from '../../../constants'
+import { GROUP_BY_NONE, MONITOR_JOBS_TAB, REQUEST_CANCELED } from '../../../constants'
 import { JobsContext } from '../Jobs'
-import { TERTIARY_BUTTON } from 'igz-controls/constants'
 import { createJobsMonitorTabContent } from '../../../utils/createJobsContent'
-import { fetchInitialJobs, generateFilters, monitorJobsActionCreator } from './monitorJobs.util'
-import { parseJob } from '../../../utils/parseJob'
-import { pollAbortingJobs } from '../jobs.util'
+import { fetchInitialJobs, generateFilters } from './monitorJobs.util'
 import { setFilters } from '../../../reducers/filtersReducer'
 import { useMode } from '../../../hooks/mode.hook'
 
-const MonitorJobs = ({ fetchAllJobRuns, fetchJobs }) => {
-  const [abortingJobs, setAbortingJobs] = useState({})
-  const [jobRuns, setJobRuns] = useState([])
-  const [jobs, setJobs] = useState([])
+const MonitorJobs = () => {
   const [selectedJob, setSelectedJob] = useState({})
-  const [dateFilter, setDateFilter] = useState(['', ''])
-  const appStore = useSelector(store => store.appStore)
-  const filtersStore = useSelector(store => store.filtersStore)
-  const jobsStore = useSelector(store => store.jobsStore)
-  const [requestErrorMessage, setRequestErrorMessage] = useState('')
+  const [jobsFilterMenu, jobsFilterMenuModal] = useSelector(state => [
+    state.filtersStore.filterMenu[MONITOR_JOBS_TAB],
+    state.filtersStore.filterMenuModal[MONITOR_JOBS_TAB]
+  ])
   const params = useParams()
   const dispatch = useDispatch()
   const { isStagingMode } = useMode()
-  const abortJobRef = useRef(null)
-  const { handleMonitoring, jobWizardIsOpened } = React.useContext(JobsContext)
-  const abortControllerRef = useRef(new AbortController())
+  const {
+    abortControllerRef,
+    abortJobRef,
+    abortingJobs,
+    dateFilter,
+    jobRuns,
+    jobs,
+    refreshJobs,
+    requestErrorMessage,
+    setAbortingJobs,
+    setJobRuns,
+    setJobs,
+    terminateAbortTasksPolling
+  } = React.useContext(JobsContext)
   const jobsAreInitializedRef = useRef(false)
 
   const filters = useMemo(() => {
     return generateFilters(params.jobName)
   }, [params.jobName])
 
-  const filterMenuClassNames = classnames(
-    'content__action-bar-wrapper',
-    params.jobId && 'content__action-bar-wrapper_hidden'
-  )
-
   const tableContent = useMemo(
     () =>
       createJobsMonitorTabContent(params.jobName ? jobRuns : jobs, params.jobName, isStagingMode),
     [isStagingMode, jobRuns, jobs, params.jobName]
-  )
-
-  const terminateAbortTasksPolling = useCallback(() => {
-    abortJobRef?.current?.()
-    setAbortingJobs({})
-  }, [])
-
-  const refreshJobs = useCallback(
-    filters => {
-      if (params.jobName) {
-        setJobRuns([])
-      } else {
-        setJobs([])
-      }
-      abortControllerRef.current = new AbortController()
-
-      terminateAbortTasksPolling()
-
-      if (filters.dates) {
-        setDateFilter(filters.dates.value)
-      }
-
-      const fetchData = params.jobName ? fetchAllJobRuns : fetchJobs
-      const newParams = !params.jobName && {
-        'partition-by': 'name',
-        'partition-sort-by': 'updated'
-      }
-
-      fetchData(
-        params.projectName,
-        filters,
-        {
-          ui: {
-            controller: abortControllerRef.current,
-            setRequestErrorMessage
-          },
-          params: { ...newParams }
-        },
-        params.jobName ?? false
-      ).then(jobs => {
-        if (jobs) {
-          const parsedJobs = jobs.map(job => parseJob(job, MONITOR_JOBS_TAB))
-          const responseAbortingJobs = parsedJobs.reduce((acc, job) => {
-            if (job.state.value === 'aborting' && job.abortTaskId) {
-              acc[job.abortTaskId] = {
-                uid: job.uid,
-                name: job.name
-              }
-            }
-
-            return acc
-          }, {})
-
-          if (Object.keys(responseAbortingJobs).length > 0) {
-            setAbortingJobs(responseAbortingJobs)
-            pollAbortingJobs(
-              params.projectName,
-              abortJobRef,
-              responseAbortingJobs,
-              () => refreshJobs(filters),
-              dispatch
-            )
-          }
-
-          if (params.jobName) {
-            setJobRuns(parsedJobs)
-          } else {
-            setJobs(parsedJobs)
-          }
-        }
-      })
-    },
-    [
-      dispatch,
-      fetchAllJobRuns,
-      fetchJobs,
-      params.jobName,
-      params.projectName,
-      terminateAbortTasksPolling
-    ]
   )
 
   const isJobDataEmpty = useCallback(
@@ -156,7 +73,10 @@ const MonitorJobs = ({ fetchAllJobRuns, fetchJobs }) => {
 
   useEffect(() => {
     fetchInitialJobs(
-      filtersStore,
+      {
+        ...jobsFilterMenu,
+        ...jobsFilterMenuModal.values
+      },
       selectedJob,
       dateFilter,
       params,
@@ -166,20 +86,31 @@ const MonitorJobs = ({ fetchAllJobRuns, fetchJobs }) => {
       isJobDataEmpty,
       jobsAreInitializedRef
     )
-  }, [dateFilter, dispatch, filtersStore, isJobDataEmpty, params, refreshJobs, selectedJob])
+  }, [
+    dateFilter,
+    dispatch,
+    isJobDataEmpty,
+    jobsFilterMenu,
+    jobsFilterMenuModal.values,
+    params,
+    refreshJobs,
+    selectedJob
+  ])
 
   useEffect(() => {
     dispatch(setFilters({ groupBy: GROUP_BY_NONE }))
   }, [dispatch])
 
   useEffect(() => {
+    const abortControllerRefCurrent = abortControllerRef.current
+
     return () => {
       setJobs([])
       setJobRuns([])
-      abortControllerRef.current.abort(REQUEST_CANCELED)
+      abortControllerRefCurrent?.abort(REQUEST_CANCELED)
       terminateAbortTasksPolling()
     }
-  }, [params.projectName, terminateAbortTasksPolling])
+  }, [abortControllerRef, params.projectName, setJobRuns, setJobs, terminateAbortTasksPolling])
 
   useEffect(() => {
     return () => {
@@ -196,29 +127,6 @@ const MonitorJobs = ({ fetchAllJobRuns, fetchJobs }) => {
           text={params.jobName}
         />
       )}
-      <div className={filterMenuClassNames}>
-        <div className="action-bar">
-          <FilterMenu
-            actionButton={{
-              label: 'Resource monitoring',
-              tooltip: !appStore.frontendSpec.jobs_dashboard_url
-                ? 'Grafana service unavailable'
-                : '',
-              variant: TERTIARY_BUTTON,
-              disabled: !appStore.frontendSpec.jobs_dashboard_url,
-              onClick: () => handleMonitoring()
-            }}
-            autoRefreshIsEnabled
-            autoRefreshIsStopped={jobWizardIsOpened || jobsStore.loading}
-            filters={filters}
-            hidden={Boolean(params.jobId)}
-            onChange={refreshJobs}
-            page={JOBS_PAGE}
-            tab={MONITOR_JOBS_TAB}
-            withoutExpandButton
-          />
-        </div>
-      </div>
       <JobsTable
         abortingJobs={abortingJobs}
         ref={{ abortJobRef }}
@@ -241,6 +149,4 @@ const MonitorJobs = ({ fetchAllJobRuns, fetchJobs }) => {
   )
 }
 
-export default connect(null, {
-  ...monitorJobsActionCreator
-})(React.memo(MonitorJobs))
+export default React.memo(MonitorJobs)
