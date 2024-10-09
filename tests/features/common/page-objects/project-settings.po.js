@@ -189,6 +189,7 @@ module.exports = {
   secretsTab: {
     Secrets_Table: commonTable(secretsTable),
     Add_Secret_Button: By.css('[data-testid="secrets-add-btn"]'),
-    Secrets_Hint: By.css('.settings__card-subtitle')
+    Secrets_Hint: By.css('.settings__card-subtitle'),
+    Error_Message: By.css('#overlay_container .notification__body')
   }
 }
