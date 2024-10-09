@@ -18,7 +18,9 @@ under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
 import { isEmpty } from 'lodash'
+
 import { groupByUniqName } from '../../utils/groupByUniqName'
+import { ERROR_STATE } from '../../constants'
 
 export const generateProjectStatistic = (
   projectSummary = {},
@@ -34,7 +36,7 @@ export const generateProjectStatistic = (
     0
   )
   const failedNuclioFunctions = Object.values(grouppedNuclioFunctions).reduce(
-    (prev, curr) => (curr.status.state === 'error' ? (prev += 1) : prev),
+    (prev, curr) => (curr.status.state === ERROR_STATE ? (prev += 1) : prev),
     0
   )
 

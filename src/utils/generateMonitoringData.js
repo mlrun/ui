@@ -26,7 +26,9 @@ import {
   JOB_KIND_JOB,
   JOB_KIND_WORKFLOW,
   STATUS_FILTER,
-  TYPE_FILTER
+  TYPE_FILTER,
+  ERROR_STATE,
+  FAILED_STATE
 } from '../constants'
 import {
   ANY_TIME_DATE_OPTION,
@@ -68,7 +70,7 @@ export const generateMonitoringStats = (data, navigate, dispatch, tab) => {
           },
           {
             counter: data.failed,
-            link: () => navigateToJobsMonitoringPage({ [STATUS_FILTER]: ['error', 'aborted'] }),
+            link: () => navigateToJobsMonitoringPage({ [STATUS_FILTER]: [ERROR_STATE, 'aborted'] }),
             statusClass: 'failed',
             tooltip: 'Aborted, Error'
           },
@@ -104,7 +106,7 @@ export const generateMonitoringStats = (data, navigate, dispatch, tab) => {
             },
             {
               counter: data.failed,
-              link: () => navigateToJobsMonitoringPage({ [STATUS_FILTER]: ['error', 'failed'] }),
+              link: () => navigateToJobsMonitoringPage({ [STATUS_FILTER]: [ERROR_STATE, FAILED_STATE] }),
               statusClass: 'failed',
               tooltip: 'Error, Failed'
             },
