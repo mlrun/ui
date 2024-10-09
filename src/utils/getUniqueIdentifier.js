@@ -27,8 +27,8 @@ import {
 export const getArtifactIdentifier = (artifact, unique) => {
   let identifier = ''
 
-  if (artifact?.db_key) {
-    identifier = artifact?.db_key
+  if (artifact?.db_key || artifact?.spec?.db_key) {
+    identifier = artifact?.db_key || artifact?.spec?.db_key
   } else if (artifact?.spec?.model) {
     identifier = `${artifact?.spec?.model}.${artifact?.spec?.function_uri}`
   }
@@ -36,6 +36,8 @@ export const getArtifactIdentifier = (artifact, unique) => {
   if (unique) {
     if (artifact?.uid) identifier += `.${artifact.uid}`
     if (artifact?.metadata?.uid) identifier += `.${artifact.metadata.uid}`
+    if (artifact?.tag) identifier += `.${artifact?.tag}`
+    if (artifact?.metadata?.tag) identifier += `.${artifact?.metadata?.tag}`
   }
 
   return identifier

@@ -195,7 +195,7 @@ export const fetchInitialJobs = debounce(
           dates: {
             value: dateFilter,
             isPredefined: false,
-            initialSelectedOptionId: filtersStore.dates.initialSelectedOptionId
+            initialSelectedOptionId: filtersStore.values.dates.initialSelectedOptionId
           }
         }
       }

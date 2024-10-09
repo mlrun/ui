@@ -55,6 +55,7 @@ export const getInfoHeaders = (isSpark, selectedJob) => {
       hidden: isJobKindDask(selectedJob?.labels)
     },
     { label: 'Priority', id: 'priority' },
+    { label: 'Handler', id: 'handler' },
     { label: 'Parameters', id: 'parameters' },
     { label: 'Function', id: 'function' },
     { label: 'Function tag', id: 'functionTag' },
@@ -77,7 +78,7 @@ export const getInfoHeaders = (isSpark, selectedJob) => {
 }
 export const actionButtonHeader = 'Batch run'
 
-export const JOB_STEADY_STATES = ['completed', 'error', 'aborted']
+export const JOB_STEADY_STATES = ['completed', 'error', 'aborted', 'failed']
 export const JOB_RUNNING_STATES = ['running', 'pending']
 
 export const getJobsDetailsMenu = (jobLabels = []) => {

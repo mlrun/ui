@@ -60,6 +60,8 @@ export const NAVBAR_WIDTH_CLOSED = 57
 export const NAVBAR_WIDTH_OPENED = 245
 export const CANCEL_REQUEST_TIMEOUT = 120000
 
+export const PROJECT_ONLINE_STATUS = 'online'
+
 /*=========== PAGES & TABS =============*/
 
 export const PROJECTS_PAGE = 'PROJECTS'
@@ -71,6 +73,7 @@ export const PROJECTS_SETTINGS_SECRETS_TAB = 'secrets'
 
 export const INACTIVE_JOBS_TAB = 'monitor'
 export const JOBS_PAGE = 'JOBS'
+export const JOBS_PAGE_PATH = 'jobs'
 export const MONITOR_JOBS_TAB = 'monitor-jobs'
 export const MONITOR_WORKFLOWS_TAB = 'monitor-workflows'
 export const SCHEDULE_TAB = 'schedule'
@@ -634,3 +637,8 @@ export const ACTION_MENU_PARENT_ROW_EXPANDED = 'action-menu_parent-row-expanded'
 /*=========== Chart =============*/
 export const CHART_TYPE_LINE = 'line'
 export const CHART_TYPE_BAR = 'bar'
+
+/*=========== ARTIFACTS LIMITS =============*/
+export const ARTIFACT_MAX_CHUNK_SIZE = 1048576       // 1MB
+export const ARTIFACT_MAX_PREVIEW_SIZE = 10485760    // 10MB
+export const ARTIFACT_MAX_DOWNLOAD_SIZE = 104857600  // 100MB

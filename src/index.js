@@ -33,8 +33,17 @@ if (!window.location.pathname.includes(process.env.PUBLIC_URL)) {
 
 fetch(`${process.env.PUBLIC_URL}/config.json`, { cache: 'no-store' })
   .then(response => response.json())
-  .then(json => {
-    window.mlrunConfig = json
+  .then(config => {
+    if (config.nuclioUiUrl) {
+      const mlrunProtocol = config.nuclioUiUrl.startsWith(`${window.location.protocol}//`) ? '' : `${window.location.protocol}//`
+
+      window.mlrunConfig = {
+        ...config,
+        nuclioUiUrl: `${mlrunProtocol}${config.nuclioUiUrl}`
+      }
+    } else {
+      window.mlrunConfig = config
+    }
   })
   .then(() => {
     const root = createRoot(document.getElementById('root'))

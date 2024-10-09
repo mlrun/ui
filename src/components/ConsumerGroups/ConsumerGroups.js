@@ -47,7 +47,7 @@ const ConsumerGroups = () => {
   const dispatch = useDispatch()
   const filtersStore = useSelector(store => store.filtersStore)
   const nameFilter = useSelector(
-    store => store.filtersStore[FILTER_MENU][CONSUMER_GROUPS_FILTER][NAME_FILTER]
+    store => store.filtersStore[FILTER_MENU][CONSUMER_GROUPS_FILTER].values[NAME_FILTER]
   )
   const [requestErrorMessage] = useOutletContext()
 

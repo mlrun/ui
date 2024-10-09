@@ -82,46 +82,106 @@ const initialState = {
   projectOptions: [],
   [FILTER_MENU]: {
     [JOBS_MONITORING_JOBS_TAB]: {
-      [NAME_FILTER]: '',
-      [DATES_FILTER]: getDatePickerFilterValue(datePickerPastOptions, PAST_24_HOUR_DATE_OPTION)
+      initialValues: {
+        [NAME_FILTER]: '',
+        [DATES_FILTER]: getDatePickerFilterValue(datePickerPastOptions, PAST_24_HOUR_DATE_OPTION)
+      },
+      values: {
+        [NAME_FILTER]: '',
+        [DATES_FILTER]: getDatePickerFilterValue(datePickerPastOptions, PAST_24_HOUR_DATE_OPTION)
+      }
     },
     [JOBS_MONITORING_WORKFLOWS_TAB]: {
-      [NAME_FILTER]: '',
-      [DATES_FILTER]: getDatePickerFilterValue(datePickerPastOptions, PAST_24_HOUR_DATE_OPTION)
+      initialValues: {
+        [NAME_FILTER]: '',
+        [DATES_FILTER]: getDatePickerFilterValue(datePickerPastOptions, PAST_24_HOUR_DATE_OPTION)
+      },
+      values: {
+        [NAME_FILTER]: '',
+        [DATES_FILTER]: getDatePickerFilterValue(datePickerPastOptions, PAST_24_HOUR_DATE_OPTION)
+      }
     },
     [JOBS_MONITORING_SCHEDULED_TAB]: {
-      [NAME_FILTER]: '',
-      [DATES_FILTER]: getDatePickerFilterValue(
-        datePickerFutureOptions,
-        NEXT_24_HOUR_DATE_OPTION,
-        true
-      )
+      initialValues: {
+        [NAME_FILTER]: '',
+        [DATES_FILTER]: getDatePickerFilterValue(
+          datePickerFutureOptions,
+          NEXT_24_HOUR_DATE_OPTION,
+          true
+        )
+      },
+      values: {
+        [NAME_FILTER]: '',
+        [DATES_FILTER]: getDatePickerFilterValue(
+          datePickerFutureOptions,
+          NEXT_24_HOUR_DATE_OPTION,
+          true
+        )
+      }
     },
     [MONITOR_JOBS_TAB]: {
-      [NAME_FILTER]: '',
-      [DATES_FILTER]: getDatePickerFilterValue(datePickerPastOptions, PAST_24_HOUR_DATE_OPTION)
+      initialValues: {
+        [NAME_FILTER]: '',
+        [DATES_FILTER]: getDatePickerFilterValue(datePickerPastOptions, PAST_24_HOUR_DATE_OPTION)
+      },
+      values: {
+        [NAME_FILTER]: '',
+        [DATES_FILTER]: getDatePickerFilterValue(datePickerPastOptions, PAST_24_HOUR_DATE_OPTION)
+      }
     },
     [MONITOR_WORKFLOWS_TAB]: {
-      [NAME_FILTER]: '',
-      [DATES_FILTER]: getDatePickerFilterValue(datePickerPastOptions, PAST_24_HOUR_DATE_OPTION)
+      initialValues: {
+        [NAME_FILTER]: '',
+        [DATES_FILTER]: getDatePickerFilterValue(datePickerPastOptions, PAST_24_HOUR_DATE_OPTION)
+      },
+      values: {
+        [NAME_FILTER]: '',
+        [DATES_FILTER]: getDatePickerFilterValue(datePickerPastOptions, PAST_24_HOUR_DATE_OPTION)
+      }
     },
     [SCHEDULE_TAB]: {
-      [NAME_FILTER]: '',
-      [DATES_FILTER]: getDatePickerFilterValue(
-        datePickerFutureOptions,
-        NEXT_24_HOUR_DATE_OPTION,
-        true
-      )
+      initialValues: {
+        [NAME_FILTER]: '',
+        [DATES_FILTER]: getDatePickerFilterValue(
+          datePickerFutureOptions,
+          NEXT_24_HOUR_DATE_OPTION,
+          true
+        )
+      },
+      values: {
+        [NAME_FILTER]: '',
+        [DATES_FILTER]: getDatePickerFilterValue(
+          datePickerFutureOptions,
+          NEXT_24_HOUR_DATE_OPTION,
+          true
+        )
+      }
     },
     [FUNCTION_FILTERS]: {
-      [NAME_FILTER]: '',
-      [DATES_FILTER]: getDatePickerFilterValue(datePickerPastOptions, PAST_WEEK_DATE_OPTION)
+      values: {
+        [NAME_FILTER]: '',
+        [DATES_FILTER]: getDatePickerFilterValue(datePickerPastOptions, PAST_WEEK_DATE_OPTION)
+      },
+      initialValues: {
+        [NAME_FILTER]: '',
+        [DATES_FILTER]: getDatePickerFilterValue(datePickerPastOptions, PAST_WEEK_DATE_OPTION)
+      }
     },
     [CONSUMER_GROUPS_FILTER]: {
-      [NAME_FILTER]: ''
+      values: {
+        [NAME_FILTER]: ''
+      },
+      initialValues: {
+        [NAME_FILTER]: ''
+      }
     },
     [CONSUMER_GROUP_FILTER]: {
-      [NAME_FILTER]: ''
+      values: {
+        [NAME_FILTER]: ''
+      },
+      initialValues: {
+        [NAME_FILTER]: ''
+      }
     }
   },
   [FILTER_MENU_MODAL]: {
@@ -280,11 +340,11 @@ const filtersSlice = createSlice({
     setFiltersValues(state, action) {
       const payloadValue = action.payload.value ?? {}
       const newFilterValues = {
-        ...state[FILTER_MENU][action.payload.name],
+        ...state[FILTER_MENU][action.payload.name]?.values,
         ...payloadValue
       }
 
-      set(state, [FILTER_MENU, action.payload.name], newFilterValues)
+      set(state, [FILTER_MENU, action.payload.name, 'values'], newFilterValues)
     },
     setModalFiltersValues(state, action) {
       const payloadValue = action.payload.value ?? {}

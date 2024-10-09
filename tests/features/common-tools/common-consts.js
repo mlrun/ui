@@ -452,6 +452,7 @@ module.exports = {
   Descriptions: {
     Archive_Project:
       'Archived projects continue to consume resources.To stop the project from consuming resources, delete its scheduled jobs and suspend its Nuclio functions.',
+    Delete_Project_Confirm_Message: /You are trying to delete the project "[^"]+[$"]\. Deleted projects cannot be restored/,
     Delete_Project: /You are trying to delete the non-empty project "[^"]+[$"]\. Deleting it will also delete all of its resources, such as jobs, artifacts, and features\./,
     Delete_Function:
       /You try to delete function "[^"]+[$"]\. Deleted functions cannot be restored\./,
@@ -520,6 +521,7 @@ module.exports = {
     Project_Already_Exists: /A project named "[^"]+[$"] already exists/,
     Projects_Limit_Reached:
       'The system already has the maximum number of projects. An existing project must be deleted before you can create another.',
+    MLRunAccessDeniedError: 'MLRunAccessDeniedError(\'Not allowed to create\/update internal secrets (key starts with mlrun\.)\')',
     Must_Select_One: 'Must select at least one',
     Must_Select_One_Partition: 'Must select at least one partitioning option',
     Already_Scheduled: 'This job is already scheduled',
@@ -595,6 +597,8 @@ module.exports = {
     Schedule_Hours_Variants: ['1', '2', '3', '4', '6', '12']
   },
   No_Data_Message: {
+    Common_Message_Jobs_Monitoring: /No data matches the filter: "Start time: \d{2}\/\d{2}\/\d{4} \d{2}:\d{2} - \d{2}\/\d{2}\/\d{4} \d{2}:\d{2}, Project: test"/,
+    Common_Message_Jobs_Monitoring_Scheduled: /No data matches the filter: "Scheduled at: \d{2}\/\d{2}\/\d{4} \d{2}:\d{2} - \d{2}\/\d{2}\/\d{4} \d{2}:\d{2}, Project: test"/,
     Common_Message: 'No data matches the filter: "Version Tag: latest, Name: ccccc"',
     Common_Message_Feature: 'No data matches the filter: "Version Tag: latest"',
     Common_Message_Feature_Vector_Tab: 'No data matches the filter: "Tag: latest, Project: test-test"',

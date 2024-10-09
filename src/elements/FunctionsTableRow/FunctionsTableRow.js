@@ -130,8 +130,9 @@ const FunctionsTableRow = ({
                               data={value.expandedCellContent ? value.expandedCellContent : value}
                               item={func.data}
                               link={value.getLink?.(
-                                func.data.hash,
-                                params.tab ?? DETAILS_OVERVIEW_TAB
+                                func.data.tag,
+                                params.tab ?? DETAILS_OVERVIEW_TAB,
+                                func.data.hash
                               )}
                               key={value.id}
                               selectItem={handleSelectItem}
@@ -165,7 +166,7 @@ const FunctionsTableRow = ({
                   handleExpandRow={handleExpandRow}
                   item={rowItem.data}
                   key={value.id}
-                  link={value.getLink?.(rowItem.data.hash, params.tab ?? DETAILS_OVERVIEW_TAB)}
+                  link={value.getLink?.(rowItem.data.tag, params.tab ?? DETAILS_OVERVIEW_TAB, rowItem.data.hash)}
                   selectedItem={selectedItem}
                   selectItem={handleSelectItem}
                   showExpandButton={value.showExpandButton}

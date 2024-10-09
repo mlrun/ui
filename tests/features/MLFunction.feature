@@ -31,6 +31,11 @@ Feature: ML Functions
         Then "New_Function_Button" element on "ML_Functions" should contains "New" value
         Then verify "Table_Refresh_Button" element visibility on "ML_Functions" wizard
         Then verify "Table_Expand_Rows_Button" element visibility on "ML_Functions" wizard
+        Then verify "Date_Picker_Filter_Dropdown" element visibility on "ML_Functions" wizard
+        Then verify "Date_Picker_Filter_Dropdown" dropdown on "ML_Functions" wizard selected option value "Past week"
+        Then verify "Date_Picker_Filter_Dropdown" dropdown element on "ML_Functions" wizard should contains "Dropdown_Options"."Date_Picker_Filter_Options"
+        When select "Any time" option in "Date_Picker_Filter_Dropdown" filter dropdown on "ML_Functions" wizard
+        And wait load page
         Then verify "Functions_Table" element visibility on "ML_Functions" wizard
 
     @MLF
@@ -51,6 +56,8 @@ Feature: ML Functions
         And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
         And click on cell with value "ML functions" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
         And hover "MLRun_Logo" component on "commonPagesHeader" wizard
+        And wait load page
+        When select "Any time" option in "Date_Picker_Filter_Dropdown" filter dropdown on "ML_Functions" wizard
         And wait load page
         And verify "Table_Name_Filter_Input" element visibility on "ML_Functions" wizard
         Then type value "test" to "Table_Name_Filter_Input" field on "ML_Functions" wizard
@@ -170,9 +177,11 @@ Feature: ML Functions
         Then verify "New_Function_Name_Input" element visibility on "Create_ML_Function_Popup" wizard
         Then type value "   " to "New_Function_Name_Input" field on "Create_ML_Function_Popup" wizard
         Then verify "New_Function_Name_Input" on "Create_ML_Function_Popup" wizard should display options "Input_Hint"."Function_Name_Hint"
+        Then click on "Title" element on "Create_ML_Function_Popup" wizard
         Then verify "New_Function_Name_Input" options rules on "Create_ML_Function_Popup" wizard
         Then type value "   " to "New_Function_Tag_Input" field on "Create_ML_Function_Popup" wizard
         Then verify "New_Function_Tag_Input" on "Create_ML_Function_Popup" wizard should display options "Input_Hint"."Function_Tag_Hint"
+        Then click on "Title" element on "Create_ML_Function_Popup" wizard
         Then verify "New_Function_Tag_Input" options rules on "Create_ML_Function_Popup" wizard
         Then verify "New_Function_Runtime_Dropdown" element visibility on "Create_ML_Function_Popup" wizard
         Then verify "Cancel_Button" element visibility on "Create_ML_Function_Popup" wizard
@@ -248,7 +257,7 @@ Feature: ML Functions
         When collapse "General_Accordion" on "New_Function" wizard
         Then verify "New_Function_Code_Entry_Dropdown" element visibility in "Code_Accordion" on "New_Function" wizard
         Then type value "   " to "New_Function_Handler_Input" field on "Code_Accordion" on "New_Function" wizard
-        Then verify "New_Function_Handler_Input" element in "Code_Accordion" on "New_Function" wizard should display warning "Input_Hint"."Input_Field_Invalid"
+        Then verify "New_Function_Handler_Input" element in "Code_Accordion" on "New_Function" wizard should display hover warning "Input_Hint"."Input_Field_Invalid"
         Then verify "New_Function_Handler_Input" element in "Code_Accordion" on "New_Function" wizard should display hint "Input_Hint"."Function_Handler_Hint"
         Then is "Use_An_Existing_Image_Radiobutton" in "Code_Accordion" on "New_Function" selected
         Then is not "Build_A_New_Image_Radiobutton" in "Code_Accordion" on "New_Function" selected
@@ -257,7 +266,7 @@ Feature: ML Functions
         Then verify "New_Function_Base_Image_Input" element in "Code_Accordion" on "New_Function" wizard is disabled
         Then verify "New_Function_Build_Commands_Text_Area" element visibility in "Code_Accordion" on "New_Function" wizard
         Then type value "   " to "New_Function_Image_Name_Input" field on "Code_Accordion" on "New_Function" wizard
-        Then verify "New_Function_Image_Name_Input" element in "Code_Accordion" on "New_Function" wizard should display warning "Input_Hint"."Input_Field_Invalid"
+        Then verify "New_Function_Image_Name_Input" element in "Code_Accordion" on "New_Function" wizard should display hover warning "Input_Hint"."Input_Field_Invalid"
         Then verify "New_Function_Image_Name_Input" element in "Code_Accordion" on "New_Function" wizard should display hint "Input_Hint"."Image_Name_Hint"
         When select "Build_A_New_Image_Radiobutton" in "Code_Accordion" on "New_Function"
         Then is "Build_A_New_Image_Radiobutton" in "Code_Accordion" on "New_Function" selected
@@ -266,10 +275,10 @@ Feature: ML Functions
         Then verify "New_Function_Resulting_Image_Input" element in "Code_Accordion" on "New_Function" wizard is enabled
         Then verify "New_Function_Base_Image_Input" element in "Code_Accordion" on "New_Function" wizard is enabled
         Then type value "   " to "New_Function_Resulting_Image_Input" field on "Code_Accordion" on "New_Function" wizard
-        Then verify "New_Function_Resulting_Image_Input" element in "Code_Accordion" on "New_Function" wizard should display warning "Input_Hint"."Input_Field_Invalid"
+        Then verify "New_Function_Resulting_Image_Input" element in "Code_Accordion" on "New_Function" wizard should display hover warning "Input_Hint"."Input_Field_Invalid"
         Then verify "New_Function_Resulting_Image_Input" element in "Code_Accordion" on "New_Function" wizard should display hint "Input_Hint"."Resulting_Image_Hint"
         Then type value "   " to "New_Function_Base_Image_Input" field on "Code_Accordion" on "New_Function" wizard
-        Then verify "New_Function_Base_Image_Input" element in "Code_Accordion" on "New_Function" wizard should display warning "Input_Hint"."Input_Field_Invalid"
+        Then verify "New_Function_Base_Image_Input" element in "Code_Accordion" on "New_Function" wizard should display hover warning "Input_Hint"."Input_Field_Invalid"
         Then verify "New_Function_Base_Image_Input" element in "Code_Accordion" on "New_Function" wizard should display hint "Input_Hint"."Base_Image_Hint"
 
     @MLF
@@ -297,35 +306,35 @@ Feature: ML Functions
         Then verify "New_Function_Volume_Mount_Dropdown" element visibility in "Resources_Accordion" on "New_Function" wizard
         Then verify "New_Function_Volume_Mount_Dropdown" element in "Resources_Accordion" on "New_Function" wizard should contains "Dropdown_Options"."Volume_Mount_Options"
         Then type value "0" to "Memory_Limit_Number_Input" field on "Resources_Accordion" on "New_Function" wizard
-        Then verify "Memory_Limit_Number_Input" element in "Resources_Accordion" on "New_Function" wizard should display warning "Input_Hint"."Limit_Number_Warning"
+        Then verify "Memory_Limit_Number_Input" element in "Resources_Accordion" on "New_Function" wizard should display hover warning "Input_Hint"."Limit_Number_Warning"
         Then type value "1" to "Memory_Limit_Number_Input" field on "Resources_Accordion" on "New_Function" wizard
         Then type value "1025" to "Memory_Request_Number_Input" field on "Resources_Accordion" on "New_Function" wizard
-        Then verify "Memory_Limit_Number_Input" element in "Resources_Accordion" on "New_Function" wizard should display warning "Input_Hint"."Limit_Number_Warning"
-        Then verify "Memory_Request_Number_Input" element in "Resources_Accordion" on "New_Function" wizard should display warning "Input_Hint"."Request_Number_Warning"
+        Then verify "Memory_Limit_Number_Input" element in "Resources_Accordion" on "New_Function" wizard should display hover warning "Input_Hint"."Limit_Number_Warning"
+        Then verify "Memory_Request_Number_Input" element in "Resources_Accordion" on "New_Function" wizard should display hover warning "Input_Hint"."Request_Number_Warning"
         Then type value "2" to "Memory_Limit_Number_Input" field on "Resources_Accordion" on "New_Function" wizard
         Then select "KB" option in "Memory_Limit_Dropdown" dropdown on "Resources_Accordion" on "New_Function" wizard
-        Then verify "Memory_Limit_Number_Input" element in "Resources_Accordion" on "New_Function" wizard should display warning "Input_Hint"."Limit_Number_Warning"
-        Then verify "Memory_Request_Number_Input" element in "Resources_Accordion" on "New_Function" wizard should display warning "Input_Hint"."Request_Number_Warning"
+        Then verify "Memory_Limit_Number_Input" element in "Resources_Accordion" on "New_Function" wizard should display hover warning "Input_Hint"."Limit_Number_Warning"
+        Then verify "Memory_Request_Number_Input" element in "Resources_Accordion" on "New_Function" wizard should display hover warning "Input_Hint"."Request_Number_Warning"
         Then select "KB" option in "Memory_Request_Dropdown" dropdown on "Resources_Accordion" on "New_Function" wizard
         Then type value "" to "Memory_Limit_Number_Input" field on "Resources_Accordion" on "New_Function" wizard
-        Then verify "Memory_Limit_Number_Input" element in "Resources_Accordion" on "New_Function" wizard should display warning "Input_Hint"."Input_Field_Require"
+        Then verify "Memory_Limit_Number_Input" element in "Resources_Accordion" on "New_Function" wizard should display hover warning "Input_Hint"."Input_Field_Require"
         Then type value "2" to "Memory_Limit_Number_Input" field on "Resources_Accordion" on "New_Function" wizard
         Then select "GB" option in "Memory_Request_Dropdown" dropdown on "Resources_Accordion" on "New_Function" wizard
-        Then verify "Memory_Limit_Number_Input" element in "Resources_Accordion" on "New_Function" wizard should display warning "Input_Hint"."Limit_Number_Warning"
-        Then verify "Memory_Request_Number_Input" element in "Resources_Accordion" on "New_Function" wizard should display warning "Input_Hint"."Request_Number_Warning"
+        Then verify "Memory_Limit_Number_Input" element in "Resources_Accordion" on "New_Function" wizard should display hover warning "Input_Hint"."Limit_Number_Warning"
+        Then verify "Memory_Request_Number_Input" element in "Resources_Accordion" on "New_Function" wizard should display hover warning "Input_Hint"."Request_Number_Warning"
         Then select "cpu" option in "CPU_Request_Dropdown" dropdown on "Resources_Accordion" on "New_Function" wizard
         Then increase value on 2 points in "CPU_Request_Number_Input" field with "cpu" on "Resources_Accordion" on "New_Function" wizard
         Then increase value on 1 points in "CPU_Limit_Number_Input" field with "cpu" on "Resources_Accordion" on "New_Function" wizard
         Then select "millicpu" option in "CPU_Limit_Dropdown" dropdown on "Resources_Accordion" on "New_Function" wizard
         Then select "millicpu" option in "CPU_Request_Dropdown" dropdown on "Resources_Accordion" on "New_Function" wizard
         Then type value "0" to "CPU_Limit_Number_Input" field on "Resources_Accordion" on "New_Function" wizard
-        Then verify "CPU_Limit_Number_Input" element in "Resources_Accordion" on "New_Function" wizard should display warning "Input_Hint"."Limit_Number_Warning"
+        Then verify "CPU_Limit_Number_Input" element in "Resources_Accordion" on "New_Function" wizard should display hover warning "Input_Hint"."Limit_Number_Warning"
         Then type value "1" to "CPU_Limit_Number_Input" field on "Resources_Accordion" on "New_Function" wizard
         Then type value "2" to "CPU_Request_Number_Input" field on "Resources_Accordion" on "New_Function" wizard
-        Then verify "CPU_Limit_Number_Input" element in "Resources_Accordion" on "New_Function" wizard should display warning "Input_Hint"."Limit_Number_Warning"
-        Then verify "CPU_Request_Number_Input" element in "Resources_Accordion" on "New_Function" wizard should display warning "Input_Hint"."Request_Number_Warning"
+        Then verify "CPU_Limit_Number_Input" element in "Resources_Accordion" on "New_Function" wizard should display hover warning "Input_Hint"."Limit_Number_Warning"
+        Then verify "CPU_Request_Number_Input" element in "Resources_Accordion" on "New_Function" wizard should display hover warning "Input_Hint"."Request_Number_Warning"
         Then type value "0" to "GPU_Limit_Number_Input" field on "Resources_Accordion" on "New_Function" wizard
-        Then verify "GPU_Limit_Number_Input" element in "Resources_Accordion" on "New_Function" wizard should display warning "Input_Hint"."GPU_Minimum_Value_Warning"
+        Then verify "GPU_Limit_Number_Input" element in "Resources_Accordion" on "New_Function" wizard should display hover warning "Input_Hint"."GPU_Minimum_Value_Warning"
         Then verify "Memory_Request_Dropdown" element visibility in "Resources_Accordion" on "New_Function" wizard
         Then verify "Memory_Request_Dropdown" element in "Resources_Accordion" on "New_Function" wizard should contains "Dropdown_Options"."Memory_Unit_Options"
         Then verify "Memory_Request_Number_Input" element visibility in "Resources_Accordion" on "New_Function" wizard
@@ -391,9 +400,9 @@ Feature: ML Functions
         When add new volume rows to "Volume_Paths_Table" table in "Resources_Accordion" on "New_Function" wizard using nontable inputs
             | Volume_Paths_Table_Type_Dropdown | Volume_Paths_Table_Volume_Name_Input | Volume_Paths_Table_Path_Input | Volume_Paths_Table_Container_Input | Volume_Paths_Table_Access_Key_Input | Volume_Paths_Table_Resource_Path_Input | Add_New_Row_Button |
             |             V3IO                 |                                      |                               |                                    |                                     |                                        |         yes        |
-        Then verify "Volume_Paths_Table_Volume_Name_Input" element in "Resources_Accordion" on "New_Function" wizard should display warning "Input_Hint"."Input_Field_Require"
-        Then verify "Volume_Paths_Table_Path_Input" element in "Resources_Accordion" on "New_Function" wizard should display warning "Input_Hint"."Input_Field_Require"
-        Then verify "Volume_Paths_Table_Access_Key_Input" element in "Resources_Accordion" on "New_Function" wizard should display warning "Input_Hint"."Input_Field_Require"
+        Then verify "Volume_Paths_Table_Volume_Name_Input" element in "Resources_Accordion" on "New_Function" wizard should display hover warning "Input_Hint"."Input_Field_Require"
+        Then verify "Volume_Paths_Table_Path_Input" element in "Resources_Accordion" on "New_Function" wizard should display hover warning "Input_Hint"."Input_Field_Require"
+        Then verify "Volume_Paths_Table_Access_Key_Input" element in "Resources_Accordion" on "New_Function" wizard should display hover warning "Input_Hint"."Input_Field_Require"
         Then verify "Volume_Paths_Table_Path_Input" element in "Resources_Accordion" on "New_Function" wizard should display hint "Input_Hint"."Mount_Path_Hint"
         Then verify "Volume_Paths_Table_Container_Input" element in "Resources_Accordion" on "New_Function" wizard should display hint "Input_Hint"."Data_Container_Hint"
         Then verify "Volume_Paths_Table_Access_Key_Input" element in "Resources_Accordion" on "New_Function" wizard should display hint "Input_Hint"."DataAccess_Key_Hint"
@@ -402,25 +411,25 @@ Feature: ML Functions
         When add new volume rows to "Volume_Paths_Table" table in "Resources_Accordion" on "New_Function" wizard using nontable inputs
             | Volume_Paths_Table_Type_Dropdown | Volume_Paths_Table_Volume_Name_Input | Volume_Paths_Table_Path_Input | Volume_Paths_Table_Config_Map_Input | Add_New_Row_Button |
             |           Config Map             |                                      |                               |                                     |         yes        |
-        Then verify "Volume_Paths_Table_Volume_Name_Input" element in "Resources_Accordion" on "New_Function" wizard should display warning "Input_Hint"."Input_Field_Require"
-        Then verify "Volume_Paths_Table_Path_Input" element in "Resources_Accordion" on "New_Function" wizard should display warning "Input_Hint"."Input_Field_Require"
-        Then verify "Volume_Paths_Table_Config_Map_Input" element in "Resources_Accordion" on "New_Function" wizard should display warning "Input_Hint"."Input_Field_Require"
+        Then verify "Volume_Paths_Table_Volume_Name_Input" element in "Resources_Accordion" on "New_Function" wizard should display hover warning "Input_Hint"."Input_Field_Require"
+        Then verify "Volume_Paths_Table_Path_Input" element in "Resources_Accordion" on "New_Function" wizard should display hover warning "Input_Hint"."Input_Field_Require"
+        Then verify "Volume_Paths_Table_Config_Map_Input" element in "Resources_Accordion" on "New_Function" wizard should display hover warning "Input_Hint"."Input_Field_Require"
         Then verify "Volume_Paths_Table_Path_Input" element in "Resources_Accordion" on "New_Function" wizard should display hint "Input_Hint"."Mount_Path_Hint"
         When click on "Delete_New_Row_Button" element in "Resources_Accordion" on "New_Function" wizard
         When add new volume rows to "Volume_Paths_Table" table in "Resources_Accordion" on "New_Function" wizard using nontable inputs
             | Volume_Paths_Table_Type_Dropdown | Volume_Paths_Table_Volume_Name_Input | Volume_Paths_Table_Path_Input | Volume_Paths_Table_Secret_Name_Input | Add_New_Row_Button |
             |             Secret               |                                      |                               |                                      |         yes        |
-        Then verify "Volume_Paths_Table_Volume_Name_Input" element in "Resources_Accordion" on "New_Function" wizard should display warning "Input_Hint"."Input_Field_Require"
-        Then verify "Volume_Paths_Table_Path_Input" element in "Resources_Accordion" on "New_Function" wizard should display warning "Input_Hint"."Input_Field_Require"
-        Then verify "Volume_Paths_Table_Config_Map_Input" element in "Resources_Accordion" on "New_Function" wizard should display warning "Input_Hint"."Input_Field_Require"
+        Then verify "Volume_Paths_Table_Volume_Name_Input" element in "Resources_Accordion" on "New_Function" wizard should display hover warning "Input_Hint"."Input_Field_Require"
+        Then verify "Volume_Paths_Table_Path_Input" element in "Resources_Accordion" on "New_Function" wizard should display hover warning "Input_Hint"."Input_Field_Require"
+        Then verify "Volume_Paths_Table_Config_Map_Input" element in "Resources_Accordion" on "New_Function" wizard should display hover warning "Input_Hint"."Input_Field_Require"
         Then verify "Volume_Paths_Table_Path_Input" element in "Resources_Accordion" on "New_Function" wizard should display hint "Input_Hint"."Mount_Path_Hint"
         When click on "Delete_New_Row_Button" element in "Resources_Accordion" on "New_Function" wizard
         When add new volume rows to "Volume_Paths_Table" table in "Resources_Accordion" on "New_Function" wizard using nontable inputs
             | Volume_Paths_Table_Type_Dropdown | Volume_Paths_Table_Volume_Name_Input | Volume_Paths_Table_Path_Input | Volume_Paths_Table_Claime_Name_Input | Add_New_Row_Button |
             |               PVC                |                                      |                               |                                      |         yes        |
-        Then verify "Volume_Paths_Table_Volume_Name_Input" element in "Resources_Accordion" on "New_Function" wizard should display warning "Input_Hint"."Input_Field_Require"
-        Then verify "Volume_Paths_Table_Path_Input" element in "Resources_Accordion" on "New_Function" wizard should display warning "Input_Hint"."Input_Field_Require"
-        Then verify "Volume_Paths_Table_Claime_Name_Input" element in "Resources_Accordion" on "New_Function" wizard should display warning "Input_Hint"."Input_Field_Require"
+        Then verify "Volume_Paths_Table_Volume_Name_Input" element in "Resources_Accordion" on "New_Function" wizard should display hover warning "Input_Hint"."Input_Field_Require"
+        Then verify "Volume_Paths_Table_Path_Input" element in "Resources_Accordion" on "New_Function" wizard should display hover warning "Input_Hint"."Input_Field_Require"
+        Then verify "Volume_Paths_Table_Claime_Name_Input" element in "Resources_Accordion" on "New_Function" wizard should display hover warning "Input_Hint"."Input_Field_Require"
         Then verify "Volume_Paths_Table_Path_Input" element in "Resources_Accordion" on "New_Function" wizard should display hint "Input_Hint"."Mount_Path_Hint"
         When click on "Delete_New_Row_Button" element in "Resources_Accordion" on "New_Function" wizard
         When add new volume rows to "Volume_Paths_Table" table in "Resources_Accordion" on "New_Function" wizard using nontable inputs
@@ -493,16 +502,16 @@ Feature: ML Functions
         When add new volume rows to "Function_Environment_Variables_Demo_Table" table in "Environment_Variables_Accordion" on "New_Function" wizard using nontable inputs
             | Function_Environment_Variables_Name_Input | Function_Environment_Variables_Type_Dropdown | Function_Environment_Variables_Value_Input | Add_Row_Button |
             |                                           |                    Value                     |                                            |       yes      |
-        Then verify "Function_Environment_Variables_Name_Input" element in "Environment_Variables_Accordion" on "New_Function" wizard should display warning "Input_Hint"."Input_Field_Require"
-        Then verify "Function_Environment_Variables_Value_Input" element in "Environment_Variables_Accordion" on "New_Function" wizard should display warning "Input_Hint"."Input_Field_Require"
+        Then verify "Function_Environment_Variables_Name_Input" element in "Environment_Variables_Accordion" on "New_Function" wizard should display hover warning "Input_Hint"."Input_Field_Require"
+        Then verify "Function_Environment_Variables_Value_Input" element in "Environment_Variables_Accordion" on "New_Function" wizard should display hover warning "Input_Hint"."Input_Field_Require"
         When click on "Discard_Row_Button" element in "Environment_Variables_Accordion" on "New_Function" wizard
         When add new volume rows to "Function_Environment_Variables_Demo_Table" table in "Environment_Variables_Accordion" on "New_Function" wizard using nontable inputs
             | Function_Environment_Variables_Name_Input | Function_Environment_Variables_Type_Dropdown | Function_Environment_Variables_Secret_Name_Input | Function_Environment_Variables_Secret_Key_Input | Add_Row_Button |
             |                                           |                    Secret                    |                                                 |                        @#$                     |       yes      |
-        Then verify "Function_Environment_Variables_Name_Input" element in "Environment_Variables_Accordion" on "New_Function" wizard should display warning "Input_Hint"."Input_Field_Require"
-        Then verify "Function_Environment_Variables_Secret_Name_Input" element in "Environment_Variables_Accordion" on "New_Function" wizard should display warning "Input_Hint"."Input_Field_Require"
+        Then verify "Function_Environment_Variables_Name_Input" element in "Environment_Variables_Accordion" on "New_Function" wizard should display hover warning "Input_Hint"."Input_Field_Require"
+        Then verify "Function_Environment_Variables_Secret_Name_Input" element in "Environment_Variables_Accordion" on "New_Function" wizard should display hover warning "Input_Hint"."Input_Field_Require"
         Then verify "Function_Environment_Variables_Secret_Name_Input" element in "Environment_Variables_Accordion" on "New_Function" wizard should display hint "Input_Hint"."SECRET_INPUT_HINT"
-        Then verify "Function_Environment_Variables_Secret_Key_Input" element in "Environment_Variables_Accordion" on "New_Function" wizard should display warning "Input_Hint"."Input_Field_Invalid"
+        Then verify "Function_Environment_Variables_Secret_Key_Input" element in "Environment_Variables_Accordion" on "New_Function" wizard should display hover warning "Input_Hint"."Input_Field_Invalid"
         Then verify "Function_Environment_Variables_Secret_Key_Input" element in "Environment_Variables_Accordion" on "New_Function" wizard should display hint "Input_Hint"."VALUE_INPUT_HINT"
         When click on "Discard_Row_Button" element in "Environment_Variables_Accordion" on "New_Function" wizard
         When add new volume rows to "Function_Environment_Variables_Demo_Table" table in "Environment_Variables_Accordion" on "New_Function" wizard using nontable inputs
@@ -580,9 +589,9 @@ Feature: ML Functions
         Then uncheck "Access_Key_Checkbox" element on "New_Function" wizard
         Then verify "Access_Key_Input" element visibility on "New_Function" wizard
         Then type value "  " to "Access_Key_Input" field on "New_Function" wizard
-        Then verify "Access_Key_Input" on "New_Function" wizard should display warning "Input_Hint"."Input_Field_Invalid"
+        Then verify "Access_Key_Input" on "New_Function" wizard should display hover warning "Input_Hint"."Input_Field_Invalid"
         Then type value "" to "Access_Key_Input" field on "New_Function" wizard
-        Then verify "Access_Key_Input" on "New_Function" wizard should display warning "Input_Hint"."Input_Field_Require"
+        Then verify "Access_Key_Input" on "New_Function" wizard should display hover warning "Input_Hint"."Input_Field_Require"
         Then verify "Cancel_Button" element visibility on "New_Function" wizard
         Then "Cancel_Button" element on "New_Function" should contains "Cancel" value
         Then verify "Save_Button" element visibility on "New_Function" wizard
@@ -649,19 +658,19 @@ Feature: ML Functions
         Then verify "Pods_Priority_Dropdown" dropdown in "Resources_Accordion" on "New_Function" wizard selected option value "Low"
         Then verify "Memory_Request_Number_Input" input should contains "1" value in "Resources_Accordion" on "New_Function" wizard
         Then type value "" to "Memory_Request_Number_Input" field on "Resources_Accordion" on "New_Function" wizard
-        Then verify "Memory_Request_Number_Input" element in "Resources_Accordion" on "New_Function" wizard should display warning "Input_Hint"."Input_Field_Require"
+        Then verify "Memory_Request_Number_Input" element in "Resources_Accordion" on "New_Function" wizard should display hover warning "Input_Hint"."Input_Field_Require"
         Then verify "Memory_Request_Dropdown" dropdown in "Resources_Accordion" on "New_Function" wizard selected option value "MB"
         Then verify "Memory_Limit_Number_Input" input should contains "1000" value in "Resources_Accordion" on "New_Function" wizard
         Then type value "" to "Memory_Limit_Number_Input" field on "Resources_Accordion" on "New_Function" wizard
-        Then verify "Memory_Limit_Number_Input" element in "Resources_Accordion" on "New_Function" wizard should display warning "Input_Hint"."Input_Field_Require"
+        Then verify "Memory_Limit_Number_Input" element in "Resources_Accordion" on "New_Function" wizard should display hover warning "Input_Hint"."Input_Field_Require"
         Then verify "Memory_Limit_Dropdown" dropdown in "Resources_Accordion" on "New_Function" wizard selected option value "KB"
         Then verify "CPU_Request_Number_Input" input should contains "10" value in "Resources_Accordion" on "New_Function" wizard
         Then type value "" to "CPU_Request_Number_Input" field on "Resources_Accordion" on "New_Function" wizard
-        Then verify "CPU_Request_Number_Input" element in "Resources_Accordion" on "New_Function" wizard should display warning "Input_Hint"."Input_Field_Require"
+        Then verify "CPU_Request_Number_Input" element in "Resources_Accordion" on "New_Function" wizard should display hover warning "Input_Hint"."Input_Field_Require"
         Then verify "CPU_Request_Dropdown" dropdown in "Resources_Accordion" on "New_Function" wizard selected option value "millicpu"
         Then verify "CPU_Limit_Number_Input" input should contains "50" value in "Resources_Accordion" on "New_Function" wizard
         Then type value "" to "CPU_Limit_Number_Input" field on "Resources_Accordion" on "New_Function" wizard
-        Then verify "CPU_Limit_Number_Input" element in "Resources_Accordion" on "New_Function" wizard should display warning "Input_Hint"."Input_Field_Require"
+        Then verify "CPU_Limit_Number_Input" element in "Resources_Accordion" on "New_Function" wizard should display hover warning "Input_Hint"."Input_Field_Require"
         Then verify "CPU_Limit_Dropdown" dropdown in "Resources_Accordion" on "New_Function" wizard selected option value "millicpu"
         Then verify "GPU_Limit_Number_Input" input should contains "15" value in "Resources_Accordion" on "New_Function" wizard
 
@@ -688,10 +697,9 @@ Feature: ML Functions
         When select "Build_A_New_Image_Radiobutton" in "Code_Accordion" on "New_Function"
         When collapse "General_Accordion" on "New_Function" wizard
         When collapse "Resources_Accordion" on "New_Function" wizard
-        And set tear-down property "function" created in "default" project with "new-aqa-function-00" value
-        Then click on "Deploy_Button" element on "New_Function" wizard
         Then "Deploy_Button" element on "New_Function" should contains "Create" value
-        Then click on "Cross_Close_Button" element on "ML_Function_Info_Pane" wizard
+        Then click on "Deploy_Button" element on "New_Function" wizard
+        Then click on "Cross_Close_Button" element on "ML_Function_Info_Pane" wizard 
         Then check "new-aqa-function-01" value in "name" column in "Functions_Table" table on "ML_Functions" wizard
 
     @MLF
@@ -985,8 +993,8 @@ Feature: ML Functions
             | Volume_Paths_Table_Type_Dropdown | Volume_Paths_Table_Volume_Name_Input | Volume_Paths_Table_Path_Input | Volume_Paths_Table_Container_Input | Volume_Paths_Table_Access_Key_Input | Volume_Paths_Table_Resource_Path_Input | Add_New_Row_Button | Delete_New_Row_Button |
             |               V3IO               |            Volume_Name_1             |       /path/to/happines1      |         Container_Input_1          |           Access_Key_1              |            /resource/path_1            |         yes        |                       |
             |               V3IO               |            Volume_Name_1             |       /path/to/happines1      |         Container_Input_1          |           Access_Key_1              |            /resource/path_1            |         yes        |                       |
-        Then verify "Volume_Paths_Table_Volume_Name_Input" element in "Resources_Accordion" on "New_Function" wizard should display warning "Input_Hint"."Name_Already_Exists"
-        Then verify "Volume_Paths_Table_Path_Input" element in "Resources_Accordion" on "New_JobTemplate_Edit" wizard should display warning "Input_Hint"."Volumes_Path_Already_Exists"
+        Then verify "Volume_Paths_Table_Volume_Name_Input" element in "Resources_Accordion" on "New_Function" wizard should display hover warning "Input_Hint"."Name_Already_Exists"
+        Then verify "Volume_Paths_Table_Path_Input" element in "Resources_Accordion" on "New_JobTemplate_Edit" wizard should display hover warning "Input_Hint"."Volumes_Path_Already_Exists"
 
     @MLF
     @passive
@@ -1013,27 +1021,27 @@ Feature: ML Functions
             | Volume_Paths_Table_Type_Dropdown | Volume_Paths_Table_Volume_Name_Input | Volume_Paths_Table_Path_Input | Volume_Paths_Table_Container_Input | Volume_Paths_Table_Access_Key_Input | Volume_Paths_Table_Resource_Path_Input | Add_New_Row_Button | Delete_New_Row_Button |
             |               V3IO               |            Volume_Name_1             |       /path/to/happines1      |         Container_Input_1          |           Access_Key_1              |            /resource/path_1            |         yes        |                       |
             |               V3IO               |            Volume_Name_1             |       /path/to/happines1      |         Container_Input_1          |           Access_Key_1              |            /resource/path_1            |         yes        |                       |
-        Then verify "Volume_Paths_Table_Volume_Name_Input" element in "Resources_Accordion" on "New_Function" wizard should display warning "Input_Hint"."Name_Already_Exists"
-        Then verify "Volume_Paths_Table_Path_Input" element in "Resources_Accordion" on "New_JobTemplate_Edit" wizard should display warning "Input_Hint"."Volumes_Path_Already_Exists"
+        Then verify "Volume_Paths_Table_Volume_Name_Input" element in "Resources_Accordion" on "New_Function" wizard should display hover warning "Input_Hint"."Name_Already_Exists"
+        Then verify "Volume_Paths_Table_Path_Input" element in "Resources_Accordion" on "New_JobTemplate_Edit" wizard should display hover warning "Input_Hint"."Volumes_Path_Already_Exists"
         When collapse "Resources_Accordion" on "New_Function" wizard
         When collapse "Serving_Runtime_Configuration_Accordion" on "New_Function" wizard
         When add new volume rows to "Function_Environment_Variables_Demo_Table" table in "Environment_Variables_Accordion" on "New_Function" wizard using nontable inputs
             | Function_Environment_Variables_Name_Input | Function_Environment_Variables_Type_Dropdown | Function_Environment_Variables_Value_Input | Add_Row_Button | Discard_Row_Button |
             |                 name0                     |                    Value                     |                  value0                    |       yes      |                    |
             |                 name0                     |                    Value                     |                  value0                    |       yes      |                    |
-        Then verify "Function_Environment_Variables_Name_Input" element in "Environment_Variables_Accordion" on "New_Function" wizard should display warning "Input_Hint"."Name_Already_Exists"
+        Then verify "Function_Environment_Variables_Name_Input" element in "Environment_Variables_Accordion" on "New_Function" wizard should display hover warning "Input_Hint"."Name_Already_Exists"
         When collapse "Environment_Variables_Accordion" on "New_Function" wizard
         When expand "Serving_Runtime_Configuration_Accordion" on "New_Function" wizard
         When add new volume rows to "Serving_Runtime_Configuration_Model_Table" table in "Serving_Runtime_Configuration_Accordion" on "New_Function" wizard using nontable inputs
             | Model_Table_Name_Input | Model_Table_Class_Input | Model_Table_Path_Input | Add_Model_Table_Row_Button | Discard_Model_Table_Row_Button |
             |          name0         |          class0         |         /path/0        |            yes             |                                |
             |          name0         |          class0         |         /path/0        |            yes             |                                |
-        Then verify "Model_Table_Name_Input" element in "Serving_Runtime_Configuration_Accordion" on "New_Function" wizard should display warning "Input_Hint"."Name_Already_Exists"
+        Then verify "Model_Table_Name_Input" element in "Serving_Runtime_Configuration_Accordion" on "New_Function" wizard should display hover warning "Input_Hint"."Name_Already_Exists"
         When add new volume rows to "Parameters_Runtime_Configuration_Table" table in "Serving_Runtime_Configuration_Accordion" on "New_Function" wizard using nontable inputs
             | Parameters_Table_Name_Input | Parameters_Table_Type_Dropdown | Parameters_Table_Value_Input | Add_Parameter_Table_Row_Button | Remove_Parameter_Table_Row_Button |
             |            name0            |             String             |            valueA            |                yes             |                                   |
             |            name0            |             String             |            valueA            |                yes             |                                   |
-        Then verify "Parameters_Table_Name_Input" element in "Serving_Runtime_Configuration_Accordion" on "New_Function" wizard should display warning "Input_Hint"."Name_Already_Exists"
+        Then verify "Parameters_Table_Name_Input" element in "Serving_Runtime_Configuration_Accordion" on "New_Function" wizard should display hover warning "Input_Hint"."Name_Already_Exists"
 
     @MLF
     @passive
@@ -1071,7 +1079,8 @@ Feature: ML Functions
         Then verify "Cross_Cancel_Button" element visibility on "View_YAML" wizard
         Then verify "YAML_Modal_Container" element visibility on "View_YAML" wizard
         Then click on "Cross_Cancel_Button" element on "View_YAML" wizard
-        Then click on cell with row index 8 in "expand_btn" column in "Functions_Table" table on "ML_Functions" wizard
+        Then click on cell with row index 9 in "expand_btn" column in "Functions_Table" table on "ML_Functions" wizard
+        And wait load page
         Then select "View YAML" option in action menu on "ML_Functions" wizard in "Functions_Table" table at row with "Nov 23, 2021, 11:31:51 AM" value in "name" column
         Then verify if "View_YAML" popup dialog appears
         Then verify "Cross_Cancel_Button" element visibility on "View_YAML" wizard
@@ -1089,7 +1098,10 @@ Feature: ML Functions
         And click on cell with value "ML functions" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
         And hover "MLRun_Logo" component on "commonPagesHeader" wizard
         And wait load page
+        When select "Any time" option in "Date_Picker_Filter_Dropdown" filter dropdown on "ML_Functions" wizard
+        And wait load page
         When click on cell with row index 1 in "name" column in "Functions_Table" table on "ML_Functions" wizard
+        And wait load page
         Then verify "Action_Menu" element visibility on "ML_Function_Info_Pane" wizard
         Then select "View YAML" option in action menu on "ML_Function_Info_Pane" wizard
         Then verify if "View_YAML" popup dialog appears
@@ -1133,7 +1145,10 @@ Feature: ML Functions
         And click on cell with value "ML functions" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
         And hover "MLRun_Logo" component on "commonPagesHeader" wizard
         And wait load page
+        When select "Any time" option in "Date_Picker_Filter_Dropdown" filter dropdown on "ML_Functions" wizard
+        And wait load page
         When click on cell with row index 3 in "name" column in "Functions_Table" table on "ML_Functions" wizard
+        And wait load page
         Then verify "Action_Menu" element visibility on "ML_Function_Info_Pane" wizard
         Then verify "Action_Menu" dropdown element on "ML_Function_Info_Pane" wizard should contains "ML_Functions_Tab"."Common_Action_Menu_Options"
 
@@ -1222,9 +1237,9 @@ Feature: ML Functions
         Then uncheck "Access_Key_Checkbox" element on "New_Function" wizard
         Then verify "Access_Key_Input" element visibility on "New_Function" wizard
         Then type value "  " to "Access_Key_Input" field on "New_Function" wizard
-        Then verify "Access_Key_Input" on "New_Function" wizard should display warning "Input_Hint"."Input_Field_Invalid"
+        Then verify "Access_Key_Input" on "New_Function" wizard should display hover warning "Input_Hint"."Input_Field_Invalid"
         Then type value "" to "Access_Key_Input" field on "New_Function" wizard
-        Then verify "Access_Key_Input" on "New_Function" wizard should display warning "Input_Hint"."Input_Field_Require"
+        Then verify "Access_Key_Input" on "New_Function" wizard should display hover warning "Input_Hint"."Input_Field_Require"
         Then verify "Cancel_Button" element visibility on "New_Function" wizard
         Then "Cancel_Button" element on "New_Function" should contains "Cancel" value
         Then verify "Save_Button" element visibility on "New_Function" wizard
@@ -1265,6 +1280,8 @@ Feature: ML Functions
         Then type value "99" to "GPU_Limit_Number_Input" field on "Resources_Accordion" on "New_Function" wizard
         Then click on "Deploy_Button" element on "New_Function" wizard
         And wait load page
+        When click on cell with row index 1 in "name" column in "Functions_Table" table on "ML_Functions" wizard
+        And wait load page
         Then "Header" element on "ML_Function_Info_Pane" should contains "new-aqa-function-00" value
         Then select "tab" with "Jobs and workflows" value in breadcrumbs menu
         And wait load page
@@ -1303,7 +1320,20 @@ Feature: ML Functions
         And wait load page
         When click on cell with row index 1 in "name" column in "Functions_Table" table on "ML_Functions" wizard
         And wait load page
-        Then verify redirection from "projects/default/functions/INVALID/overview" to "projects/default/functions"
+        Then verify redirection from "projects/default/functions/INVALID/latest/overview" to "projects/default/functions"
+        Then verify "Notification_Pop_Up" element visibility on "Notification_Popup" wizard
+        And wait load page
+        Then "Notification_Pop_Up" element on "Notification_Popup" should contains "This function either does not exist or was deleted" value
+        And wait load page
+        Then verify "Notification_Pop_Up_Cross_Close_Button" element visibility on "Notification_Popup" wizard
+        Then click on "Notification_Pop_Up_Cross_Close_Button" element on "Notification_Popup" wizard
+        And select "tab" with "Datasets" value in breadcrumbs menu
+        And wait load page
+        And select "tab" with "ML functions" value in breadcrumbs menu
+        And wait load page
+        Then verify "Date_Picker_Filter_Dropdown" element visibility on "ML_Functions" wizard
+        When select "Any time" option in "Date_Picker_Filter_Dropdown" filter dropdown on "ML_Functions" wizard
+        And wait load page
         When click on cell with row index 1 in "name" column in "Functions_Table" table on "ML_Functions" wizard
         And wait load page
         Then verify redirection from "projects/default/functions/85957751e571a92e07213781f5e0c35bfbe42c64/INVALID" to "projects/default/functions/85957751e571a92e07213781f5e0c35bfbe42c64/overview"
@@ -1326,6 +1356,8 @@ Feature: ML Functions
         And click on cell with value "ML functions" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
         And wait load page
         And hover "MLRun_Logo" component on "commonPagesHeader" wizard
+        And wait load page
+        When select "Any time" option in "Date_Picker_Filter_Dropdown" filter dropdown on "ML_Functions" wizard
         And wait load page
         Then click on cell with row index 1 in "name" column in "Functions_Table" table on "ML_Functions" wizard
         And wait load page
@@ -1411,3 +1443,4 @@ Feature: ML Functions
         Then "Function_Name" element in "General_Accordion" on "New_Function" should contains "churn-server" value
         Then verify "Deploy_Button" element visibility on "New_Function" wizard
         Then "Deploy_Button" element on "New_Function" should contains "Deploy" value
+        

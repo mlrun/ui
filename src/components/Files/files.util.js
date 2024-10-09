@@ -26,6 +26,7 @@ import {
   ACTION_MENU_PARENT_ROW,
   ACTION_MENU_PARENT_ROW_EXPANDED,
   ARTIFACTS_TAB,
+  ARTIFACT_MAX_DOWNLOAD_SIZE,
   ARTIFACT_OTHER_TYPE,
   ARTIFACT_TYPE,
   FILES_PAGE,
@@ -38,15 +39,13 @@ import {
 } from '../../constants'
 import { applyTagChanges, chooseOrFetchArtifact } from '../../utils/artifacts.util'
 import { copyToClipboard } from '../../utils/copyToClipboard'
-import { createFilesRowData, getIsTargetPathValid } from '../../utils/createArtifactsContent'
-import { fetchExpandedFile, showArtifactsPreview } from '../../reducers/artifactsReducer'
+import { getIsTargetPathValid } from '../../utils/createArtifactsContent'
+import { showArtifactsPreview } from '../../reducers/artifactsReducer'
 import { generateUri } from '../../utils/resources'
-import { getArtifactIdentifier } from '../../utils/getUniqueIdentifier'
 import { handleDeleteArtifact } from '../../utils/handleDeleteArtifact'
 import { openDeleteConfirmPopUp } from 'igz-controls/utils/common.util'
 import { searchArtifactItem } from '../../utils/searchArtifactItem'
 import { setDownloadItem, setShowDownloadsList } from '../../reducers/downloadReducer'
-import { sortListByDate } from '../../utils'
 import { openPopUp } from 'igz-controls/utils/common.util'
 
 import { ReactComponent as TagIcon } from 'igz-controls/images/tag-icon.svg'
@@ -114,61 +113,6 @@ export const filters = [
   { type: ITERATIONS_FILTER, label: 'Show best iteration only:' }
 ]
 export const registerArtifactTitle = 'Register artifact'
-
-export const fetchFilesRowData = (
-  file,
-  setSelectedRowData,
-  dispatch,
-  projectName,
-  iter,
-  tag,
-  frontendSpec
-) => {
-  const fileIdentifier = getArtifactIdentifier(file)
-
-  setSelectedRowData(state => ({
-    ...state,
-    loading: true
-  }))
-
-  dispatch(
-    fetchExpandedFile({ project: file.project ?? projectName, file: file.db_key, iter, tag })
-  )
-    .unwrap()
-    .then(result => {
-      if (result?.length > 0) {
-        setSelectedRowData(state => ({
-          ...state,
-          [fileIdentifier]: {
-            content: sortListByDate(result, 'updated', false).map(artifact =>
-              createFilesRowData(artifact, projectName, frontendSpec)
-            )
-          },
-          error: null,
-          loading: false
-        }))
-      } else {
-        setSelectedRowData(state => ({
-          ...state,
-          [fileIdentifier]: {
-            content: []
-          },
-          error: null,
-          loading: false
-        }))
-      }
-    })
-    .catch(error => {
-      setSelectedRowData(state => ({
-        ...state,
-        [fileIdentifier]: {
-          ...state[fileIdentifier]
-        },
-        error,
-        loading: false
-      }))
-    })
-}
 
 export const handleApplyDetailsChanges = (
   changes,
@@ -247,7 +191,7 @@ export const generateActionsMenu = (
       {
         label: 'Download',
         hidden: menuPosition === ACTION_MENU_PARENT_ROW_EXPANDED,
-        disabled: !isTargetPathValid,
+        disabled: !isTargetPathValid || fileMin.size > (frontendSpec?.artifact_limits?.max_download_size ?? ARTIFACT_MAX_DOWNLOAD_SIZE),
         icon: <DownloadIcon />,
         onClick: fileMin => {
           getFullFile(fileMin).then(file => {
@@ -256,7 +200,10 @@ export const generateActionsMenu = (
               setDownloadItem({
                 path: downloadPath,
                 user: file.producer?.owner,
-                id: downloadPath
+                id: downloadPath,
+                artifactLimits: frontendSpec?.artifact_limits,
+                fileSize: file.size,
+                projectName
               })
             )
             dispatch(setShowDownloadsList(true))

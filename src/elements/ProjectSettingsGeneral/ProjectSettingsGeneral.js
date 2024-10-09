@@ -23,7 +23,7 @@ import arrayMutators from 'final-form-arrays'
 import { Form } from 'react-final-form'
 import { connect, useDispatch } from 'react-redux'
 import { createForm } from 'final-form'
-import { cloneDeep, isBoolean } from 'lodash'
+import { cloneDeep, isEmpty } from 'lodash'
 import { useParams } from 'react-router-dom'
 
 import {
@@ -184,6 +184,7 @@ const ProjectSettingsGeneral = ({
       const formStateLocal = formStateRef.current
 
       if (
+        !isEmpty(lastEditedProjectValues) &&
         areFormValuesChanged(lastEditedProjectValues, formStateLocal.values) &&
         formStateLocal.valid
       ) {
@@ -258,11 +259,7 @@ const ProjectSettingsGeneral = ({
                       name={LOAD_SOURCE_ON_RUN}
                     />
                     <FormOnChange
-                      handler={(curr, prev) => {
-                        if (isBoolean(prev)) {
-                          updateProjectData()
-                        }
-                      }}
+                      handler={updateProjectData}
                       name={LOAD_SOURCE_ON_RUN}
                     />
                   </div>

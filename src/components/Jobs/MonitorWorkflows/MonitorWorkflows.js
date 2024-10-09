@@ -54,9 +54,10 @@ const MonitorWorkflows = ({ deleteWorkflows, fetchFunctionLogs }) => {
     workflowsFiltersConfig
   } = React.useContext(JobsContext)
   const workflowsAreInitializedRef = useRef(false)
-  const [workflowsFilterMenu, workflowsFilterMenuModal] = useSelector(state => [
+  const [workflowsFilterMenu, workflowsFilterMenuModal, saveFilters] = useSelector(state => [
     state.filtersStore.filterMenu[MONITOR_WORKFLOWS_TAB],
-    state.filtersStore.filterMenuModal[MONITOR_WORKFLOWS_TAB]
+    state.filtersStore.filterMenuModal[MONITOR_WORKFLOWS_TAB],
+    state.filtersStore.saveFilters
   ])
 
   usePods(dispatch, detailsActions.fetchJobPods, detailsActions.removePods, selectedJob)
@@ -95,7 +96,7 @@ const MonitorWorkflows = ({ deleteWorkflows, fetchFunctionLogs }) => {
 
   useEffect(() => {
     fetchInitialWorkflows(
-      { ...workflowsFilterMenu, ...workflowsFilterMenuModal.values },
+      { saveFilters, ...workflowsFilterMenu, ...workflowsFilterMenuModal.values },
       params,
       getWorkflows,
       setFilters,
@@ -111,7 +112,8 @@ const MonitorWorkflows = ({ deleteWorkflows, fetchFunctionLogs }) => {
     params,
     dateFilter,
     workflowsFilterMenu,
-    workflowsFilterMenuModal.values
+    workflowsFilterMenuModal.values,
+    saveFilters
   ])
 
   return (

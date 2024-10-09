@@ -81,9 +81,12 @@ import {
   FETCH_PROJECT_SECRETS_BEGIN,
   FETCH_PROJECT_SECRETS_FAILURE,
   FETCH_PROJECT_SECRETS_SUCCESS,
+  PROJECT_ONLINE_STATUS,
   SET_JOBS_MONITORING_DATA,
   SET_MLRUN_IS_UNHEALTHY,
-  SET_MLRUN_UNHEALTHY_RETRYING
+  SET_MLRUN_UNHEALTHY_RETRYING,
+  REQUEST_CANCELED,
+  DEFAULT_ABORT_MSG
 } from '../constants'
 import {
   CONFLICT_ERROR_STATUS_CODE,
@@ -169,20 +172,22 @@ const projectsAction = {
   deleteProjectSuccess: () => ({
     type: DELETE_PROJECT_SUCCESS
   }),
-  fetchProject: (project, params) => dispatch => {
+  fetchProject: (project, params, signal) => dispatch => {
     dispatch(projectsAction.fetchProjectBegin())
 
     return projectsApi
-      .getProject(project, params)
+      .getProject(project, params, signal)
       .then(response => {
         dispatch(projectsAction.fetchProjectSuccess(response?.data))
 
         return response?.data
       })
       .catch(error => {
-        dispatch(projectsAction.fetchProjectFailure(error))
+        if (![REQUEST_CANCELED, DEFAULT_ABORT_MSG].includes(error.message)) {
+          dispatch(projectsAction.fetchProjectFailure(error))
 
-        throw error
+          throw error
+        }
       })
   },
   fetchProjectBegin: () => ({ type: FETCH_PROJECT_BEGIN }),
@@ -319,7 +324,7 @@ const projectsAction = {
     type: FETCH_PROJECT_FUNCTIONS_SUCCESS,
     payload: functions
   }),
-  fetchProjectJobs: (project, startTimeFrom) => dispatch => {
+  fetchProjectJobs: (project, startTimeFrom, signal) => dispatch => {
     dispatch(projectsAction.fetchProjectJobsBegin())
 
     const params = {
@@ -332,7 +337,7 @@ const projectsAction = {
     }
 
     return projectsApi
-      .getJobsAndWorkflows(project, params)
+      .getJobsAndWorkflows(project, params, signal)
       .then(response => {
         dispatch(
           projectsAction.fetchProjectJobsSuccess(
@@ -459,18 +464,20 @@ const projectsAction = {
     type: FETCH_PROJECT_SECRETS_SUCCESS,
     payload: secrets
   }),
-  fetchProjectSummary: project => dispatch => {
+  fetchProjectSummary: (project, signal) => dispatch => {
     dispatch(projectsAction.fetchProjectSummaryBegin())
 
     return projectsApi
-      .getProjectSummary(project)
+      .getProjectSummary(project, signal)
       .then(({ data }) => {
         return dispatch(projectsAction.fetchProjectSummarySuccess(parseSummaryData(data)))
       })
       .catch(error => {
-        dispatch(projectsAction.fetchProjectSummaryFailure(error.message))
+        if (![REQUEST_CANCELED, DEFAULT_ABORT_MSG].includes(error.message)) {
+          dispatch(projectsAction.fetchProjectSummaryFailure(error.message))
 
-        throw error
+          throw error
+        }
       })
   },
   fetchProjectSummaryBegin: () => ({
@@ -498,7 +505,9 @@ const projectsAction = {
           dispatch(projectsAction.fetchProjectsSuccess(parsedProjects))
           dispatch(
             projectsAction.fetchProjectsNamesSuccess(
-              parsedProjects.map(project => project.metadata.name)
+              parsedProjects
+                .filter(project => project.status.state === PROJECT_ONLINE_STATUS)
+                .map(project => project.metadata.name)
             )
           )
 
@@ -525,7 +534,7 @@ const projectsAction = {
     dispatch(projectsAction.fetchProjectsNamesBegin())
 
     return projectsApi
-      .getProjects({ format: 'name_only' })
+      .getProjects({ format: 'name_only', state: PROJECT_ONLINE_STATUS })
       .then(({ data: { projects } }) => {
         dispatch(projectsAction.fetchProjectsNamesSuccess(projects))
 

@@ -17,7 +17,7 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import React, { useEffect, useMemo } from 'react'
+import React, { useEffect, useLayoutEffect, useMemo } from 'react'
 import { createForm } from 'final-form'
 import arrayMutators from 'final-form-arrays'
 import { Form } from 'react-final-form'
@@ -75,7 +75,7 @@ function ArtifactsActionBar({
     }
   }, [filterMenuModal.initialValues])
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     return () => {
       dispatch(removeFilters())
     }

@@ -17,6 +17,53 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
+import { DETAILS_OVERVIEW_TAB } from '../constants'
+
+export const isPageTabValid = (pageTab, tabs, navigate, location) => {
+  if (!tabs.includes(pageTab)) {
+    // Change invalid "tab" part of the link to a valid one
+    navigate([...location.pathname.split('/').slice(0, 4)].join('/'))
+  }
+}
+
+export const isProjectValid = (navigate, projects, currentProjectName) => {
+  if (
+    projects.length > 0 &&
+    currentProjectName &&
+    !projects
+      .some(project => project?.metadata?.name === currentProjectName)
+  ) {
+    navigate('/projects', { replace: true })
+  }
+}
+
+export const generateUrlFromRouterPath = link => {
+  return new URL(link, window.location.origin).toString()
+}
+
+export const getCloseDetailsLink = (location, paramName) => {
+  return location.pathname
+    .split('/')
+    .splice(0, location.pathname.split('/').lastIndexOf(paramName) + 1)
+    .join('/')
+}
+
+export const generateLinkToDetailsPanel = (
+  project,
+  screen,
+  tab,
+  key,
+  version,
+  detailsTab,
+  uid,
+  iter,
+  itemName
+) =>
+  `/projects/${project}/${screen.toLowerCase()}${tab ? `/${tab}` : ''}${
+    itemName ? `/${itemName}` : ''
+  }/${key}${version ? `/${version}` : uid ? `/${uid}` : ''}${
+    isNaN(parseInt(iter)) ? '' : `/${iter}`
+  }/${detailsTab.toLowerCase()}`
 
 export const parseFunctionUri = functionUri => {
   let [project, rest] = functionUri.split('/')
@@ -52,4 +99,14 @@ export const generateFunctionDetailsLink = (uri = '') => {
   }
 
   return generatedLink
+}
+
+export const isDetailsTabExists = (tab, tabsList, navigate, location) => {
+  if (!tabsList.find(el => el.id === tab && !el.hidden)) {
+    const newUrlArray = location.pathname.split('/')
+    newUrlArray[newUrlArray.length - 1] = DETAILS_OVERVIEW_TAB
+    const newUrl = newUrlArray.join('/')
+
+    navigate(newUrl, { replace: true })
+  }
 }

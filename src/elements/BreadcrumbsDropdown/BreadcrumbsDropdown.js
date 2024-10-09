@@ -85,7 +85,7 @@ const BreadcrumbsDropdown = forwardRef(
                   </a>
                 ) : (
                   <Link
-                    to={`${link}/${listItem.id}${screen ? `/${screen}` : ''}${
+                    to={listItem.linkTo || `${link}/${listItem.id}${screen ? `/${screen}` : ''}${
                       tab ? `/${tab}` : ''
                     }`}
                     onClick={onClick}

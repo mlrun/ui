@@ -141,10 +141,10 @@ const getSelectedDateValue = (filterType, filtersStore, filtersStoreKey) => {
     true,
     '/',
     (filtersStoreKey
-      ? filtersStore[FILTER_MENU][filtersStoreKey][DATES_FILTER].value[0]
+      ? filtersStore[FILTER_MENU][filtersStoreKey].values[DATES_FILTER].value[0]
       : filtersStore.dates.value[0]) ?? new Date(),
     (filtersStoreKey
-      ? filtersStore[FILTER_MENU][filtersStoreKey][DATES_FILTER].value[1]
+      ? filtersStore[FILTER_MENU][filtersStoreKey].values[DATES_FILTER].value[1]
       : filtersStore.dates.value[1]) ?? new Date()
   )
 
@@ -152,7 +152,7 @@ const getSelectedDateValue = (filterType, filtersStore, filtersStoreKey) => {
     !isEqual(filtersStore.dates.value, DATE_FILTER_ANY_TIME)) ||
     (filterType === DATES_FILTER &&
       !isEqual(
-        filtersStore[FILTER_MENU][filtersStoreKey][DATES_FILTER].value,
+        filtersStore[FILTER_MENU][filtersStoreKey].values[DATES_FILTER].value,
         DATE_FILTER_ANY_TIME
       ))
     ? date
@@ -172,7 +172,7 @@ const generateNoEntriesFoundMessage = (
       ? 'true'
       : filterType === DATE_RANGE_TIME_FILTER || filterType === DATES_FILTER
         ? getSelectedDateValue(filterType, filtersStore, filtersStoreKey)
-        : filtersStore[FILTER_MENU][filtersStoreKey]?.[filterType] ??
+        : filtersStore[FILTER_MENU][filtersStoreKey]?.values?.[filterType] ??
           filtersStore[FILTER_MENU_MODAL][filtersStoreKey]?.values?.[filterType] ??
           filtersStore[filterType]
     const isLastElement = index === visibleFilterTypes.length - 1
@@ -203,7 +203,7 @@ const getVisibleFilterTypes = (filtersConfig, filtersStore, filtersStoreKey) => 
         type === ENTITIES_FILTER ||
         type === PROJECT_FILTER) &&
       (filtersStore[type].length > 0 ||
-        filtersStore[FILTER_MENU][filtersStoreKey]?.[type]?.length > 0 ||
+        filtersStore[FILTER_MENU][filtersStoreKey]?.values?.[type]?.length > 0 ||
         filtersStore[FILTER_MENU_MODAL][filtersStoreKey]?.values?.[type]?.length > 0)
     const isStatusVisible =
       type === STATUS_FILTER &&
@@ -223,7 +223,7 @@ const getVisibleFilterTypes = (filtersConfig, filtersStore, filtersStoreKey) => 
         !isEqual(filtersStore.dates.value, DATE_FILTER_ANY_TIME)) ||
       (type === DATES_FILTER &&
         !isEqual(
-          filtersStore[FILTER_MENU][filtersStoreKey]?.[DATES_FILTER]?.value,
+          filtersStore[FILTER_MENU][filtersStoreKey]?.values?.[DATES_FILTER]?.value,
           DATE_FILTER_ANY_TIME
         ))
     const isShowUntaggedVisible =

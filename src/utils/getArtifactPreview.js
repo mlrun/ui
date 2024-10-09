@@ -23,23 +23,31 @@ import Download from '../common/Download/Download'
 
 import api from '../api/artifacts-api'
 import { createArtifactPreviewContent } from './createArtifactPreviewContent'
+import { ARTIFACT_MAX_CHUNK_SIZE, DEFAULT_ABORT_MSG, REQUEST_CANCELED } from '../constants'
 
 const fileSizes = {
-  '1MB': 1048576,
+  '100KB': 102400,
   '10MB': 10485760,
-  '20BM': 20971520,
-  '50MB': 52428800
+  '1MB': 1048576,
 }
-const limitsByFormat = {
-  json: fileSizes['1MB'],
-  yaml: fileSizes['1MB'],
-  yml: fileSizes['1MB'],
-  txt: fileSizes['10MB'],
-  html: fileSizes['20MB'],
-  png: fileSizes['50MB'],
-  jpg: fileSizes['50MB'],
-  jpeg: fileSizes['50MB']
+const limitsByFormat = (fileFormat, maxSizeLimit) => {
+  const limits = {
+    csv: Infinity,
+    html: maxSizeLimit ?? fileSizes['10MB'],
+    jpeg: maxSizeLimit ?? fileSizes['10MB'],
+    jpg: maxSizeLimit ?? fileSizes['10MB'],
+    json: fileSizes['100KB'],
+    png: maxSizeLimit ?? fileSizes['10MB'],
+    sql: Infinity,
+    txt: Infinity,
+    yaml: Infinity,
+    yml: Infinity
+  }
+
+  return limits[fileFormat]
 }
+
+const supportedFormats = ['csv', 'html', 'jpeg', 'jpg', 'json', 'png', 'txt', 'yaml', 'yml']
 
 export const setArtifactPreviewFromSchema = (artifact, noData, setNoData, setPreview) => {
   if (noData) {
@@ -73,47 +81,7 @@ export const setArtifactPreviewFromPreviewData = (artifact, noData, setNoData, s
   ])
 }
 
-export const fetchArtifactPreviewFromExtraData = (
-  projectName,
-  artifact,
-  noData,
-  setNoData,
-  setPreview,
-  signal
-) => {
-  artifact.extra_data.forEach(previewItem => {
-    fetchArtifactPreview(
-      projectName,
-      previewItem.path,
-      previewItem.path.startsWith('/User') && (artifact.ui.user || artifact.producer.owner),
-      previewItem.path.replace(/.*\./g, ''),
-      artifact.db_key,
-      signal
-    )
-      .then(content => {
-        setPreview({ ...content, header: previewItem.header })
-
-        if (noData) {
-          setNoData(false)
-        }
-      })
-      .catch(err => {
-        if (err.response) {
-          setPreview({
-            header: previewItem.header,
-            error: {
-              text: `${err.response.status} ${err.response.statusText}`,
-              body: JSON.stringify(err.response, null, 2)
-            },
-            content: [],
-            type: 'error'
-          })
-        }
-      })
-  })
-}
-
-export const generateExtraDataContent = (extraData, showArtifactPreview) => {
+export const generateExtraDataContent = (extraData, showArtifactPreview, projectName) => {
   return extraData.map((extraDataItem, index) => {
     return [
       {
@@ -147,6 +115,7 @@ export const generateExtraDataContent = (extraData, showArtifactPreview) => {
               className="icon-download"
               onlyIcon
               path={extraDataItem.path}
+              projectName={projectName}
               //TODO: add user after BE part will be done
               // user={artifact.ui.user}
             />
@@ -157,71 +126,139 @@ export const generateExtraDataContent = (extraData, showArtifactPreview) => {
   })
 }
 
-export const fetchArtifactPreviewFromTargetPath = (
+export const fetchArtifactPreviewFromPath = async (
   projectName,
   artifact,
+  path,
   noData,
   setNoData,
-  setPreview
+  setPreview,
+  artifactLimits = {},
+  signal
 ) => {
-  const fileFormat = artifact.target_path.replace(/.*\./g, '')
+  const user = path.startsWith('/User') && (artifact.user || artifact.producer?.owner)
+  const fileFormat = path.replace(/.*\./g, '')
+  let fileSize = artifact.size
 
-  if (
-    fileFormat &&
-    fileFormat !== artifact.target_path &&
-    ((limitsByFormat[fileFormat] && artifact.size > limitsByFormat[fileFormat]) ||
-      (!limitsByFormat[fileFormat] && artifact.size > fileSizes['10MB']))
-  ) {
-    setPreview([
-      {
-        error: {
-          text: 'The artifact is too large to preview, use the download option instead',
-          body: ''
-        },
-        content: [],
-        type: 'error'
-      }
-    ])
-  } else {
-    fetchArtifactPreview(
-      projectName,
-      artifact.target_path,
-      artifact.target_path.startsWith('/User') && (artifact.user || artifact.producer?.owner),
-      fileFormat,
-      artifact.db_key
-    )
-      .then(content => {
+  try {
+    if (!fileSize) {
+      const { data: fileStats } = await api.getArtifactPreviewStats(projectName, path, user, signal)
+
+      fileSize = fileStats.size
+    }
+
+    if (supportedFormats.includes(fileFormat)) {
+      if (
+        fileFormat &&
+        fileFormat !== path &&
+        ((limitsByFormat(fileFormat, artifactLimits?.max_preview_size) &&
+          fileSize > limitsByFormat(fileFormat, artifactLimits?.max_preview_size)) ||
+          (!limitsByFormat(fileFormat, artifactLimits?.max_preview_size) &&
+            fileSize > fileSizes['1MB']))
+      ) {
+        setPreview([
+          {
+            data: {
+              content: `The artifact is too large to ${fileSize > artifactLimits.max_download_size ?
+                 `download. Go to ${path} to retrieve the data, or use mlrun api/sdk project.get_artifact('${artifact.db_key || artifact.name}').to_dataitem().get()` : 'preview, use the download option instead'}`
+            },
+            type: 'unknown'
+          }
+        ])
+      } else {
+        const content = await fetchArtifactPreview(
+          projectName,
+          path,
+          user,
+          fileFormat,
+          artifact.db_key,
+          { fileSize, ...artifactLimits },
+          signal
+        )
         setPreview([content])
 
         if (noData) {
           setNoData(false)
         }
-      })
-      .catch(err => {
-        setPreview([
-          {
-            error: {
-              text: `${err.response.status} ${err.response.statusText}`,
-              body: JSON.stringify(err.response, null, 2)
-            },
-            content: [],
-            type: 'error'
-          }
-        ])
-      })
+      }
+    } else {
+      return setPreview([createArtifactPreviewContent(null, null, path, artifact.db_key)])
+    }
+  } catch (err) {
+    if (![REQUEST_CANCELED, DEFAULT_ABORT_MSG].includes(err.message)) {
+      setPreview([
+        {
+          error: {
+            text: err.response ? `${err.response.status} ${err.response.statusText}` : err.message,
+            body: err.response ? JSON.stringify(err.response, null, 2) : ''
+          },
+          content: [],
+          type: 'error'
+        }
+      ])
+    }
   }
 }
 
-export const fetchArtifactPreview = (
+export const fetchArtifactPreview = async (
   projectName,
   path,
   user,
   fileFormat,
   artifactName,
+  sizeConfigs = {},
   signal
 ) => {
-  return api.getArtifactPreview(projectName, path, user, fileFormat, signal).then(res => {
-    return createArtifactPreviewContent(res, fileFormat, path, artifactName)
+  const defaultSizeLimit = fileSizes['100KB']
+  const config = {
+    params: { path, size: defaultSizeLimit }
+  }
+
+  if (user) {
+    config.params.user = user
+  }
+
+  if (signal) {
+    config.signal = signal
+  }
+  
+  if (['png', 'jpg', 'jpeg', 'html'].includes(fileFormat)) {
+    const chunkSize = sizeConfigs.max_chunk_size ?? ARTIFACT_MAX_CHUNK_SIZE
+    let fullFile = new Blob()
+    let response = {}
+    config.responseType = 'blob'
+    config.params.size = chunkSize
+    config.params.offset = 0
+
+    while (config.params.offset < sizeConfigs.fileSize) {
+      if (signal) {
+        config.signal = signal
+      }
+
+      response = await api.getArtifactPreview(projectName, config)
+
+      if (response?.data) {
+        fullFile = new Blob([fullFile, response.data], { type: response.data.type })
+      } else {
+        throw new Error('Error during loading the preview file')
+      }
+
+      config.params.offset += chunkSize
+    }
+
+    response.data = fullFile
+
+    return createArtifactPreviewContent(response, fileFormat, path, artifactName)
+  }
+
+  return api.getArtifactPreview(projectName, config).then(response => {
+    return createArtifactPreviewContent(
+      response,
+      fileFormat,
+      path,
+      artifactName,
+      sizeConfigs.fileSize > defaultSizeLimit
+    )
   })
 }
 
@@ -248,7 +285,9 @@ export const getArtifactPreview = (
   setNoData,
   setPreview,
   previewIsObject = false,
-  artifactId = null
+  artifactId = null,
+  artifactLimits = {},
+  signal
 ) => {
   if (artifact.schema) {
     setArtifactPreviewFromSchema(artifact, noData, setNoData, previewContent =>
@@ -257,10 +296,18 @@ export const getArtifactPreview = (
         : setPreview(previewContent)
     )
   } else if (artifact.target_path) {
-    fetchArtifactPreviewFromTargetPath(projectName, artifact, noData, setNoData, previewContent =>
-      previewIsObject
-        ? handleSetArtifactPreviewObject(previewContent, artifactId, setPreview)
-        : setPreview(previewContent)
+    fetchArtifactPreviewFromPath(
+      projectName,
+      artifact,
+      artifact.target_path,
+      noData,
+      setNoData,
+      previewContent =>
+        previewIsObject
+          ? handleSetArtifactPreviewObject(previewContent, artifactId, setPreview)
+          : setPreview(previewContent),
+      artifactLimits,
+      signal
     )
   } else if (artifact.preview?.length > 0) {
     setArtifactPreviewFromPreviewData(artifact, noData, setNoData, previewContent =>

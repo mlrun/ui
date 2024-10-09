@@ -8,10 +8,10 @@ Feature: Jobs Monitoring Page
         Given open url
         And wait load page
         Then verify "Monitoring_Container" element visibility in "Projects_Monitoring_Container" on "Projects" wizard
-        Then "Total_Counter_Number" element in "Monitoring_Jobs_Box" on "Projects" should contains "6" value
+        Then "Total_Counter_Number" element in "Monitoring_Jobs_Box" on "Projects" should contains "19" value
         When click on "See_All_Link" element in "Monitoring_Jobs_Box" on "Projects" wizard
         And wait load page
-        Then verify redirection to "projects/jobs-monitoring/jobs"
+        Then verify redirection to "projects/*/jobs-monitoring/jobs"
         Then verify breadcrumbs "cross" label should be equal "Jobs monitoring" value
         Then verify breadcrumbs "projectsPage" label should be equal "Projects" value
         Then verify "Cross_Jobs_Tab_Selector" on "Jobs_Monitoring_Jobs_Tab" wizard should contains "Jobs_Monitoring"."Tab_List"
@@ -23,6 +23,14 @@ Feature: Jobs Monitoring Page
         Then verify "Date_Picker_Filter_Dropdown" dropdown on "Jobs_Monitoring_Workflows_Tab" wizard selected option value "Past 24 hours"
         Then verify "Date_Picker_Filter_Dropdown" dropdown element on "Jobs_Monitoring_Jobs_Tab" wizard should contains "Dropdown_Options"."Date_Picker_Filter_Options"
         Then verify "Table_FilterBy_Button" element visibility on "Jobs_Monitoring_Jobs_Tab" wizard
+        Then verify "Refresh_Button" element visibility on "Jobs_Monitoring_Jobs_Tab" wizard
+        Then click on "Refresh_Button" element on "Jobs_Monitoring_Jobs_Tab" wizard
+        And wait load page
+        Then verify "Jobs_Table" element visibility on "Jobs_Monitoring_Jobs_Tab" wizard
+        Then verify "Auto_Refresh_Checkbox" element visibility on "Jobs_Monitoring_Jobs_Tab" wizard
+        Then "Auto_Refresh_Checkbox" element should be checked on "Jobs_Monitoring_Jobs_Tab" wizard
+        Then uncheck "Auto_Refresh_Checkbox" element on "Jobs_Monitoring_Jobs_Tab" wizard
+        Then "Auto_Refresh_Checkbox" element should be unchecked on "Jobs_Monitoring_Jobs_Tab" wizard
         Then click on "Table_FilterBy_Button" element on "Jobs_Monitoring_Jobs_Tab" wizard
         Then "Title" element on "FilterBy_Popup" should contains "Filter by" value
         Then verify "Table_Project_Filter_Input" element visibility on "FilterBy_Popup" wizard
@@ -44,7 +52,7 @@ Feature: Jobs Monitoring Page
         Then navigate back
         And wait load page
         Then verify "Counter_Running_Status_Number" element visibility in "Monitoring_Jobs_Box" on "Projects" wizard
-        Then "Counter_Running_Status_Number" element in "Monitoring_Jobs_Box" on "Projects" should contains "3" value
+        Then "Counter_Running_Status_Number" element in "Monitoring_Jobs_Box" on "Projects" should contains "16" value
         When click on "Counter_Running_Status_Number" element in "Monitoring_Jobs_Box" on "Projects" wizard
         And wait load page
         Then verify "Jobs" tab is active in "Cross_Jobs_Tab_Selector" on "Jobs_Monitoring_Jobs_Tab" wizard
@@ -103,7 +111,79 @@ Feature: Jobs Monitoring Page
         Then "Status_Jobs_Completed_Checkbox" element should be checked on "FilterBy_Popup" wizard
         Then verify "Jobs_Table" element visibility on "Jobs_Monitoring_Jobs_Tab" wizard
         Then verify that 1 row elements are displayed in "Jobs_Table" on "Jobs_Monitoring_Jobs_Tab" wizard
-
+        And select "crossTab" with "Jobs monitoring" value in breadcrumbs menu
+        Then verify redirection to "projects/*/jobs-monitoring/jobs"
+        Then click on breadcrumbs "projectsPage" label on "commonPagesHeader" wizard
+        And wait load page
+        When click on "See_All_Link" element in "Monitoring_Jobs_Box" on "Projects" wizard
+        And wait load page
+        Then click on "Table_FilterBy_Button" element on "Jobs_Monitoring_Jobs_Tab" wizard
+        Then verify "Table_Project_Filter_Input" element visibility on "FilterBy_Popup" wizard
+        Then type value "test" to "Table_Project_Filter_Input" field on "FilterBy_Popup" wizard
+        And wait load page
+        Then click on "Apply_Button" element on "FilterBy_Popup" wizard
+        And wait load page
+        Then "Error_Message" component on "Jobs_Monitoring_Jobs_Tab" should be equal "No_Data_Message"."Common_Message_Jobs_Monitoring"
+    
+    @MLJM
+    @smoke
+    Scenario: MLJM004 - Check search by name, project name, filter by Date picker on Jobs tab of Jobs monitoring page
+        Given open url
+        And wait load page
+        When click on "See_All_Link" element in "Monitoring_Jobs_Box" on "Projects" wizard
+        And wait load page
+        Then verify redirection to "projects/*/jobs-monitoring/jobs"
+        Then verify "Date_Picker_Filter_Dropdown" element visibility on "Jobs_Monitoring_Jobs_Tab" wizard
+        When select "Any time" option in "Date_Picker_Filter_Dropdown" filter dropdown on "Jobs_Monitoring_Jobs_Tab" wizard
+        And wait load page
+        Then verify "Date_Picker_Filter_Dropdown" dropdown on "Jobs_Monitoring_Jobs_Tab" wizard selected option value "Any time"
+        Then verify "Search_By_Name_Filter_Input" element visibility on "Jobs_Monitoring_Jobs_Tab" wizard
+        Then type value "test" to "Search_By_Name_Filter_Input" field on "Jobs_Monitoring_Jobs_Tab" wizard
+        Then click on "Refresh_Button" element on "Jobs_Monitoring_Jobs_Tab" wizard
+        And wait load page
+        Then value in "name" column with "text" in "Jobs_Table" on "Jobs_Monitoring_Jobs_Tab" wizard should contains "test"
+        And select "Scheduled" tab in "Cross_Jobs_Tab_Selector" on "Jobs_Monitoring_Scheduled_Tab" wizard
+        And select "Jobs" tab in "Cross_Jobs_Tab_Selector" on "Jobs_Monitoring_Jobs_Tab" wizard
+        Then click on "Table_FilterBy_Button" element on "Jobs_Monitoring_Jobs_Tab" wizard
+        Then verify "Table_Project_Filter_Input" element visibility on "FilterBy_Popup" wizard
+        Then type value "cat-vs-dog-classification" to "Table_Project_Filter_Input" field on "FilterBy_Popup" wizard
+        Then click on "Apply_Button" element on "FilterBy_Popup" wizard
+        And wait load page
+        Then value in "project_name" column with "text" in "Jobs_Table" on "Jobs_Monitoring_Jobs_Tab" wizard should contains "cat-vs-dog-classification"
+        Then click on "Table_FilterBy_Button" element on "Jobs_Monitoring_Jobs_Tab" wizard
+        Then click on "Clear_Button" element on "FilterBy_Popup" wizard
+        And wait load page
+        Then verify "Date_Picker_Filter_Dropdown" dropdown on "Jobs_Monitoring_Jobs_Tab" wizard selected option value "Past 24 hours"
+        Then verify "Jobs_Table" element visibility on "Jobs_Monitoring_Jobs_Tab" wizard
+        Then verify that 6 row elements are displayed in "Jobs_Table" on "Jobs_Monitoring_Jobs_Tab" wizard
+        When select "Any time" option in "Date_Picker_Filter_Dropdown" filter dropdown on "Jobs_Monitoring_Jobs_Tab" wizard
+        And wait load page
+        Then verify "Date_Picker_Filter_Dropdown" dropdown on "Jobs_Monitoring_Jobs_Tab" wizard selected option value "Any time"
+        Then verify "Jobs_Table" element visibility on "Jobs_Monitoring_Jobs_Tab" wizard
+        When select "Past hour" option in "Date_Picker_Filter_Dropdown" filter dropdown on "Jobs_Monitoring_Jobs_Tab" wizard
+        And wait load page
+        Then verify "Date_Picker_Filter_Dropdown" dropdown on "Jobs_Monitoring_Jobs_Tab" wizard selected option value "Past hour"
+        Then verify "Jobs_Table" element visibility on "Jobs_Monitoring_Jobs_Tab" wizard
+        Then verify that 1 row elements are displayed in "Jobs_Table" on "Jobs_Monitoring_Jobs_Tab" wizard
+        When select "Past week" option in "Date_Picker_Filter_Dropdown" filter dropdown on "Jobs_Monitoring_Jobs_Tab" wizard
+        And wait load page
+        Then verify "Date_Picker_Filter_Dropdown" dropdown on "Jobs_Monitoring_Jobs_Tab" wizard selected option value "Past week"
+        Then verify "Jobs_Table" element visibility on "Jobs_Monitoring_Jobs_Tab" wizard
+        Then verify that 6 row elements are displayed in "Jobs_Table" on "Jobs_Monitoring_Jobs_Tab" wizard
+        When select "Past month" option in "Date_Picker_Filter_Dropdown" filter dropdown on "Jobs_Monitoring_Jobs_Tab" wizard
+        And wait load page
+        Then verify "Date_Picker_Filter_Dropdown" dropdown on "Jobs_Monitoring_Jobs_Tab" wizard selected option value "Past month"
+        Then verify "Jobs_Table" element visibility on "Jobs_Monitoring_Jobs_Tab" wizard
+        Then verify that 6 row elements are displayed in "Jobs_Table" on "Jobs_Monitoring_Jobs_Tab" wizard
+        When select "Past year" option in "Date_Picker_Filter_Dropdown" filter dropdown on "Jobs_Monitoring_Jobs_Tab" wizard
+        And wait load page
+        Then verify "Date_Picker_Filter_Dropdown" dropdown on "Jobs_Monitoring_Jobs_Tab" wizard selected option value "Past year"
+        Then verify "Jobs_Table" element visibility on "Jobs_Monitoring_Jobs_Tab" wizard
+        Then verify that 6 row elements are displayed in "Jobs_Table" on "Jobs_Monitoring_Jobs_Tab" wizard
+        When pick up "Custom range" from "09/03/2024 00:00" to "09/04/2024 00:00" in "Date_Time_Picker" via "Date_Picker_Filter_Dropdown" on "Jobs_Monitoring_Jobs_Tab" wizard
+        Then verify from "09/03/2024 00:00" to "09/04/2024 00:00" filter band in "Custom_Range_Filter_Dropdown" filter dropdown on "Jobs_Monitoring_Jobs_Tab" wizard
+        And wait load page
+            
     @MLJM
     @smoke
     Scenario: MLJM002 - Check components on Workflows tab of Jobs monitoring page
@@ -115,7 +195,7 @@ Feature: Jobs Monitoring Page
         Then "Total_Counter_Number" element in "Monitoring_Workflows_Box" on "Projects" should contains "2" value
         When click on "See_All_Link" element in "Monitoring_Workflows_Box" on "Projects" wizard
         And wait load page
-        Then verify redirection to "projects/jobs-monitoring/workflows"
+        Then verify redirection to "projects/*/jobs-monitoring/workflows"
         Then verify breadcrumbs "cross" label should be equal "Jobs monitoring" value
         Then verify breadcrumbs "projectsPage" label should be equal "Projects" value
         Then verify "Cross_Jobs_Tab_Selector" on "Jobs_Monitoring_Workflows_Tab" wizard should contains "Jobs_Monitoring"."Tab_List"
@@ -127,6 +207,10 @@ Feature: Jobs Monitoring Page
         Then verify "Date_Picker_Filter_Dropdown" dropdown on "Jobs_Monitoring_Workflows_Tab" wizard selected option value "Past 24 hours"
         Then verify "Date_Picker_Filter_Dropdown" dropdown element on "Jobs_Monitoring_Workflows_Tab" wizard should contains "Dropdown_Options"."Date_Picker_Filter_Options"
         Then verify "Table_FilterBy_Button" element visibility on "Jobs_Monitoring_Workflows_Tab" wizard
+        Then verify "Refresh_Button" element visibility on "Jobs_Monitoring_Workflows_Tab" wizard
+        Then click on "Refresh_Button" element on "Jobs_Monitoring_Workflows_Tab" wizard
+        And wait load page
+        Then verify "Workflows_Table" element visibility on "Jobs_Monitoring_Workflows_Tab" wizard
         Then click on "Table_FilterBy_Button" element on "Jobs_Monitoring_Workflows_Tab" wizard
         Then "Title" element on "FilterBy_Popup" should contains "Filter by" value
         Then verify "Table_Project_Filter_Input" element visibility on "FilterBy_Popup" wizard
@@ -194,11 +278,89 @@ Feature: Jobs Monitoring Page
         Then "Status_Workflows_Completed_Checkbox" element should be checked on "FilterBy_Popup" wizard
         Then verify "Workflows_Table" element visibility on "Jobs_Monitoring_Workflows_Tab" wizard
         Then verify that 1 row elements are displayed in "Workflows_Table" on "Jobs_Monitoring_Workflows_Tab" wizard
+        And select "crossTab" with "Jobs monitoring" value in breadcrumbs menu
+        Then verify redirection to "projects/*/jobs-monitoring/jobs"
+        Then click on breadcrumbs "projectsPage" label on "commonPagesHeader" wizard
+        And wait load page
+        When click on "See_All_Link" element in "Monitoring_Jobs_Box" on "Projects" wizard
+        And wait load page
+        Then click on "Table_FilterBy_Button" element on "Jobs_Monitoring_Workflows_Tab" wizard
+        Then verify "Table_Project_Filter_Input" element visibility on "FilterBy_Popup" wizard
+        Then type value "test" to "Table_Project_Filter_Input" field on "FilterBy_Popup" wizard
+        And wait load page
+        Then click on "Apply_Button" element on "FilterBy_Popup" wizard
+        And wait load page
+        Then "Error_Message" component on "Jobs_Monitoring_Workflows_Tab" should be equal "No_Data_Message"."Common_Message_Jobs_Monitoring"
         And turn on demo mode
         And wait load page
         Then click on "Table_FilterBy_Button" element on "Jobs_Monitoring_Workflows_Tab" wizard
         #moved to demo mode ML-7352
         Then verify "Table_Label_Filter_Input" element visibility on "FilterBy_Popup" wizard
+    
+    @MLJM
+    @smoke
+    Scenario: MLJM005 - Check search by name, project name, filter by Date picker on Workflows tab of Jobs monitoring page
+        Given open url
+        And wait load page
+        When click on "See_All_Link" element in "Monitoring_Workflows_Box" on "Projects" wizard
+        And wait load page
+        Then verify redirection to "projects/*/jobs-monitoring/workflows"
+        Then verify "Date_Picker_Filter_Dropdown" element visibility on "Jobs_Monitoring_Workflows_Tab" wizard
+        When select "Any time" option in "Date_Picker_Filter_Dropdown" filter dropdown on "Jobs_Monitoring_Workflows_Tab" wizard
+        And wait load page
+        Then verify "Date_Picker_Filter_Dropdown" dropdown on "Jobs_Monitoring_Workflows_Tab" wizard selected option value "Any time"
+        Then verify "Search_By_Name_Filter_Input" element visibility on "Jobs_Monitoring_Workflows_Tab" wizard
+        Then type value "main" to "Search_By_Name_Filter_Input" field on "Jobs_Monitoring_Workflows_Tab" wizard
+        Then click on "Refresh_Button" element on "Jobs_Monitoring_Workflows_Tab" wizard
+        And wait load page
+        Then verify that 1 row elements are displayed in "Workflows_Table" on "Jobs_Monitoring_Workflows_Tab" wizard
+        Then value in "name" column with "text" in "Workflows_Table" on "Jobs_Monitoring_Workflows_Tab" wizard should contains "main"
+        Then type value "kfpipeline" to "Search_By_Name_Filter_Input" field on "Jobs_Monitoring_Workflows_Tab" wizard
+        Then click on "Refresh_Button" element on "Jobs_Monitoring_Workflows_Tab" wizard
+        And wait load page
+        Then verify that 1 row elements are displayed in "Workflows_Table" on "Jobs_Monitoring_Workflows_Tab" wizard
+        Then value in "name" column with "text" in "Workflows_Table" on "Jobs_Monitoring_Workflows_Tab" wizard should contains "kfpipeline"
+        And select "Scheduled" tab in "Cross_Jobs_Tab_Selector" on "Jobs_Monitoring_Scheduled_Tab" wizard
+        And select "Workflows" tab in "Cross_Jobs_Tab_Selector" on "Jobs_Monitoring_Workflows_Tab" wizard
+        Then click on "Table_FilterBy_Button" element on "Jobs_Monitoring_Workflows_Tab" wizard
+        Then verify "Table_Project_Filter_Input" element visibility on "FilterBy_Popup" wizard
+        Then type value "cat-vs-dog-classification" to "Table_Project_Filter_Input" field on "FilterBy_Popup" wizard
+        Then click on "Apply_Button" element on "FilterBy_Popup" wizard
+        And wait load page
+        Then value in "project_name" column with "text" in "Workflows_Table" on "Jobs_Monitoring_Workflows_Tab" wizard should contains "cat-vs-dog-classification"
+        Then click on "Table_FilterBy_Button" element on "Jobs_Monitoring_Workflows_Tab" wizard
+        Then click on "Clear_Button" element on "FilterBy_Popup" wizard
+        And wait load page
+        Then verify "Date_Picker_Filter_Dropdown" dropdown on "Jobs_Monitoring_Workflows_Tab" wizard selected option value "Past 24 hours"
+        Then verify "Workflows_Table" element visibility on "Jobs_Monitoring_Workflows_Tab" wizard
+        Then verify that 3 row elements are displayed in "Workflows_Table" on "Jobs_Monitoring_Workflows_Tab" wizard
+        When select "Any time" option in "Date_Picker_Filter_Dropdown" filter dropdown on "Jobs_Monitoring_Workflows_Tab" wizard
+        And wait load page
+        Then verify "Date_Picker_Filter_Dropdown" dropdown on "Jobs_Monitoring_Workflows_Tab" wizard selected option value "Any time"
+        Then verify "Workflows_Table" element visibility on "Jobs_Monitoring_Workflows_Tab" wizard
+        When select "Past hour" option in "Date_Picker_Filter_Dropdown" filter dropdown on "Jobs_Monitoring_Workflows_Tab" wizard
+        And wait load page
+        Then verify "Date_Picker_Filter_Dropdown" dropdown on "Jobs_Monitoring_Workflows_Tab" wizard selected option value "Past hour"
+        Then verify "Workflows_Table" element visibility on "Jobs_Monitoring_Workflows_Tab" wizard
+        Then verify that 1 row elements are displayed in "Workflows_Table" on "Jobs_Monitoring_Workflows_Tab" wizard
+        When select "Past week" option in "Date_Picker_Filter_Dropdown" filter dropdown on "Jobs_Monitoring_Workflows_Tab" wizard
+        And wait load page
+        Then verify "Date_Picker_Filter_Dropdown" dropdown on "Jobs_Monitoring_Workflows_Tab" wizard selected option value "Past week"
+        Then verify "Workflows_Table" element visibility on "Jobs_Monitoring_Workflows_Tab" wizard
+        Then verify that 3 row elements are displayed in "Workflows_Table" on "Jobs_Monitoring_Workflows_Tab" wizard
+        When select "Past month" option in "Date_Picker_Filter_Dropdown" filter dropdown on "Jobs_Monitoring_Workflows_Tab" wizard
+        And wait load page
+        Then verify "Date_Picker_Filter_Dropdown" dropdown on "Jobs_Monitoring_Workflows_Tab" wizard selected option value "Past month"
+        Then verify "Workflows_Table" element visibility on "Jobs_Monitoring_Workflows_Tab" wizard
+        Then verify that 3 row elements are displayed in "Workflows_Table" on "Jobs_Monitoring_Workflows_Tab" wizard
+        When select "Past year" option in "Date_Picker_Filter_Dropdown" filter dropdown on "Jobs_Monitoring_Workflows_Tab" wizard
+        And wait load page
+        Then verify "Date_Picker_Filter_Dropdown" dropdown on "Jobs_Monitoring_Workflows_Tab" wizard selected option value "Past year"
+        Then verify "Workflows_Table" element visibility on "Jobs_Monitoring_Workflows_Tab" wizard
+        Then verify that 3 row elements are displayed in "Workflows_Table" on "Jobs_Monitoring_Workflows_Tab" wizard
+        When pick up "Custom range" from "09/03/2024 00:00" to "09/04/2024 00:00" in "Date_Time_Picker" via "Date_Picker_Filter_Dropdown" on "Jobs_Monitoring_Workflows_Tab" wizard
+        Then verify from "09/03/2024 00:00" to "09/04/2024 00:00" filter band in "Custom_Range_Filter_Dropdown" filter dropdown on "Jobs_Monitoring_Workflows_Tab" wizard
+        And wait load page
 
     @MLJM
     @smoke
@@ -207,12 +369,14 @@ Feature: Jobs Monitoring Page
         And wait load page
         Then verify "Monitoring_Container" element visibility in "Projects_Monitoring_Container" on "Projects" wizard
         Then verify "Monitoring_Scheduled_Box" element visibility in "Projects_Monitoring_Container" on "Projects" wizard
+        Then verify "Total_Job_Counter_Title" element visibility in "Monitoring_Scheduled_Box" on "Projects" wizard
+        Then "Total_Job_Counter_Title" element in "Monitoring_Scheduled_Box" on "Projects" should contains "Jobs" value
         Then verify "Total_Job_Counter_Number" element visibility in "Monitoring_Scheduled_Box" on "Projects" wizard
         Then "Total_Job_Counter_Number" element in "Monitoring_Scheduled_Box" on "Projects" should contains "7" value
         Then verify "Jobs_See_All_Link" element visibility in "Monitoring_Scheduled_Box" on "Projects" wizard
         When click on "Jobs_See_All_Link" element in "Monitoring_Scheduled_Box" on "Projects" wizard
         And wait load page
-        Then verify redirection to "projects/jobs-monitoring/scheduled"
+        Then verify redirection to "projects/*/jobs-monitoring/scheduled"
         Then verify breadcrumbs "cross" label should be equal "Jobs monitoring" value
         Then verify breadcrumbs "projectsPage" label should be equal "Projects" value
         Then verify "Cross_Jobs_Tab_Selector" on "Jobs_Monitoring_Scheduled_Tab" wizard should contains "Jobs_Monitoring"."Tab_List"
@@ -224,6 +388,10 @@ Feature: Jobs Monitoring Page
         Then verify "Date_Picker_Filter_Dropdown" dropdown on "Jobs_Monitoring_Scheduled_Tab" wizard selected option value "Next 24 hours"
         Then verify "Date_Picker_Filter_Dropdown" dropdown element on "Jobs_Monitoring_Scheduled_Tab" wizard should contains "Dropdown_Options"."Scheduled_Date_Picker_Filter_Options"
         Then verify "Table_FilterBy_Button" element visibility on "Jobs_Monitoring_Scheduled_Tab" wizard
+        Then verify "Refresh_Button" element visibility on "Jobs_Monitoring_Scheduled_Tab" wizard
+        Then click on "Refresh_Button" element on "Jobs_Monitoring_Scheduled_Tab" wizard
+        And wait load page
+        Then verify "Scheduled_Table" element visibility on "Jobs_Monitoring_Scheduled_Tab" wizard
         Then click on "Table_FilterBy_Button" element on "Jobs_Monitoring_Scheduled_Tab" wizard
         Then "Title" element on "FilterBy_Popup" should contains "Filter by" value
         Then verify "Table_Project_Filter_Input" element visibility on "FilterBy_Popup" wizard
@@ -237,11 +405,13 @@ Feature: Jobs Monitoring Page
         Then verify "Apply_Button" element on "FilterBy_Popup" wizard is disabled
         Then navigate back
         And wait load page
+        Then verify "Total_Workflows_Counter_Title" element visibility in "Monitoring_Scheduled_Box" on "Projects" wizard
+        Then "Total_Workflows_Counter_Title" element in "Monitoring_Scheduled_Box" on "Projects" should contains "Workflows" value
         Then verify "Total_Workflows_Counter_Number" element visibility in "Monitoring_Scheduled_Box" on "Projects" wizard
         Then "Total_Workflows_Counter_Number" element in "Monitoring_Scheduled_Box" on "Projects" should contains "1" value
         Then verify "Workflows_See_All_Link" element visibility in "Monitoring_Scheduled_Box" on "Projects" wizard
         When click on "Workflows_See_All_Link" element in "Monitoring_Scheduled_Box" on "Projects" wizard
-        Then verify redirection to "projects/jobs-monitoring/scheduled"
+        Then verify redirection to "projects/*/jobs-monitoring/scheduled"
         Then verify breadcrumbs "cross" label should be equal "Jobs monitoring" value
         Then verify breadcrumbs "projectsPage" label should be equal "Projects" value
         Then verify "Cross_Jobs_Tab_Selector" on "Jobs_Monitoring_Scheduled_Tab" wizard should contains "Jobs_Monitoring"."Tab_List"
@@ -264,5 +434,90 @@ Feature: Jobs Monitoring Page
         Then verify "Apply_Button" element visibility on "FilterBy_Popup" wizard
         Then verify "Clear_Button" element on "FilterBy_Popup" wizard is enabled
         Then verify "Apply_Button" element on "FilterBy_Popup" wizard is disabled
+        And select "crossTab" with "Jobs monitoring" value in breadcrumbs menu
+        Then verify redirection to "projects/*/jobs-monitoring/jobs"
+        And select "Scheduled" tab in "Cross_Jobs_Tab_Selector" on "Jobs_Monitoring_Scheduled_Tab" wizard
+        And wait load page
         Then click on breadcrumbs "projectsPage" label on "commonPagesHeader" wizard
+        And wait load page
+        Then verify redirection to "projects"
+        Then verify "Total_Scheduled_Title" element visibility in "Monitoring_Scheduled_Box" on "Projects" wizard
+        Then "Total_Scheduled_Title" element in "Monitoring_Scheduled_Box" on "Projects" should contains "Total" value
+        Then verify "Total_Job_Counter_Number" element visibility in "Monitoring_Scheduled_Box" on "Projects" wizard
+        Then "Total_Scheduled_Number" element in "Monitoring_Scheduled_Box" on "Projects" should contains "8" value
+        Then verify "Total_See_All_Link" element visibility in "Monitoring_Scheduled_Box" on "Projects" wizard
+        When click on "Total_See_All_Link" element in "Monitoring_Scheduled_Box" on "Projects" wizard
+        And wait load page
+        Then verify redirection to "projects/*/jobs-monitoring/scheduled"
+        Then click on "Table_FilterBy_Button" element on "Jobs_Monitoring_Scheduled_Tab" wizard
+        Then verify "Table_Project_Filter_Input" element visibility on "FilterBy_Popup" wizard
+        Then type value "test" to "Table_Project_Filter_Input" field on "FilterBy_Popup" wizard
+        And wait load page
+        Then click on "Apply_Button" element on "FilterBy_Popup" wizard
+        And wait load page
+        And wait load page
+        And wait load page
+        Then "Error_Message" component on "Jobs_Monitoring_Scheduled_Tab" should be equal "No_Data_Message"."Common_Message_Jobs_Monitoring_Scheduled"
+
+    @MLJM
+    @smoke
+    Scenario: MLJM006 - Check search by name, project name, filter by Date picker on Scheduled tab of Jobs monitoring page
+        Given open url
+        And wait load page
+        When click on "Total_See_All_Link" element in "Monitoring_Scheduled_Box" on "Projects" wizard
+        And wait load page
+        Then verify redirection to "projects/*/jobs-monitoring/scheduled"
+        Then verify "Scheduled_Table" element visibility on "Jobs_Monitoring_Scheduled_Tab" wizard
+        Then verify that 8 row elements are displayed in "Scheduled_Table" on "Jobs_Monitoring_Scheduled_Tab" wizard
+        Then verify "Date_Picker_Filter_Dropdown" element visibility on "Jobs_Monitoring_Scheduled_Tab" wizard
+        When select "Any time" option in "Date_Picker_Filter_Dropdown" filter dropdown on "Jobs_Monitoring_Scheduled_Tab" wizard
+        And wait load page
+        Then verify "Date_Picker_Filter_Dropdown" dropdown on "Jobs_Monitoring_Scheduled_Tab" wizard selected option value "Any time"
+        Then verify "Search_By_Name_Filter_Input" element visibility on "Jobs_Monitoring_Scheduled_Tab" wizard
+        Then type value "clean" to "Search_By_Name_Filter_Input" field on "Jobs_Monitoring_Scheduled_Tab" wizard
+        Then click on "Refresh_Button" element on "Jobs_Monitoring_Scheduled_Tab" wizard
+        And wait load page
+        Then verify that 2 row elements are displayed in "Scheduled_Table" on "Jobs_Monitoring_Scheduled_Tab" wizard
+        Then value in "name" column with "text" in "Scheduled_Table" on "Jobs_Monitoring_Scheduled_Tab" wizard should contains "clean"
+        And select "Workflows" tab in "Cross_Jobs_Tab_Selector" on "Jobs_Monitoring_Workflows_Tab" wizard
+        And select "Scheduled" tab in "Cross_Jobs_Tab_Selector" on "Jobs_Monitoring_Scheduled_Tab" wizard
+        Then click on "Table_FilterBy_Button" element on "Jobs_Monitoring_Scheduled_Tab" wizard
+        Then verify "Table_Project_Filter_Input" element visibility on "FilterBy_Popup" wizard
+        Then type value "default" to "Table_Project_Filter_Input" field on "FilterBy_Popup" wizard
+        Then click on "Apply_Button" element on "FilterBy_Popup" wizard
+        And wait load page
+        Then value in "project_name" column with "text" in "Scheduled_Table" on "Jobs_Monitoring_Scheduled_Tab" wizard should contains "default"
+        Then verify that 2 row elements are displayed in "Scheduled_Table" on "Jobs_Monitoring_Scheduled_Tab" wizard
+        Then click on "Table_FilterBy_Button" element on "Jobs_Monitoring_Scheduled_Tab" wizard
+        Then click on "Clear_Button" element on "FilterBy_Popup" wizard
+        And wait load page
+        Then verify "Date_Picker_Filter_Dropdown" dropdown on "Jobs_Monitoring_Scheduled_Tab" wizard selected option value "Next 24 hours"
+        Then verify "Scheduled_Table" element visibility on "Jobs_Monitoring_Scheduled_Tab" wizard
+        Then verify that 8 row elements are displayed in "Scheduled_Table" on "Jobs_Monitoring_Scheduled_Tab" wizard
+        When select "Any time" option in "Date_Picker_Filter_Dropdown" filter dropdown on "Jobs_Monitoring_Scheduled_Tab" wizard
+        And wait load page
+        Then verify "Date_Picker_Filter_Dropdown" dropdown on "Jobs_Monitoring_Scheduled_Tab" wizard selected option value "Any time"
+        Then verify "Scheduled_Table" element visibility on "Jobs_Monitoring_Scheduled_Tab" wizard
+        When select "Next hour" option in "Date_Picker_Filter_Dropdown" filter dropdown on "Jobs_Monitoring_Scheduled_Tab" wizard
+        And wait load page
+        Then verify "Date_Picker_Filter_Dropdown" dropdown on "Jobs_Monitoring_Scheduled_Tab" wizard selected option value "Next hour"
+        Then verify "Scheduled_Table" element visibility on "Jobs_Monitoring_Scheduled_Tab" wizard
+        Then verify that 1 row elements are displayed in "Scheduled_Table" on "Jobs_Monitoring_Scheduled_Tab" wizard
+        When select "Next week" option in "Date_Picker_Filter_Dropdown" filter dropdown on "Jobs_Monitoring_Scheduled_Tab" wizard
+        And wait load page
+        Then verify "Date_Picker_Filter_Dropdown" dropdown on "Jobs_Monitoring_Scheduled_Tab" wizard selected option value "Next week"
+        Then verify "Scheduled_Table" element visibility on "Jobs_Monitoring_Scheduled_Tab" wizard
+        Then verify that 8 row elements are displayed in "Scheduled_Table" on "Jobs_Monitoring_Scheduled_Tab" wizard
+        When select "Next month" option in "Date_Picker_Filter_Dropdown" filter dropdown on "Jobs_Monitoring_Scheduled_Tab" wizard
+        And wait load page
+        Then verify "Date_Picker_Filter_Dropdown" dropdown on "Jobs_Monitoring_Scheduled_Tab" wizard selected option value "Next month"
+        Then verify "Scheduled_Table" element visibility on "Jobs_Monitoring_Scheduled_Tab" wizard
+        Then verify that 8 row elements are displayed in "Scheduled_Table" on "Jobs_Monitoring_Scheduled_Tab" wizard
+        When select "Next year" option in "Date_Picker_Filter_Dropdown" filter dropdown on "Jobs_Monitoring_Scheduled_Tab" wizard
+        And wait load page
+        Then verify "Date_Picker_Filter_Dropdown" dropdown on "Jobs_Monitoring_Scheduled_Tab" wizard selected option value "Next year"
+        Then verify "Scheduled_Table" element visibility on "Jobs_Monitoring_Scheduled_Tab" wizard
+        Then verify that 8 row elements are displayed in "Scheduled_Table" on "Jobs_Monitoring_Scheduled_Tab" wizard
+        When pick up "Custom range" from "09/03/2024 00:00" to "09/04/2024 00:00" in "Date_Time_Picker" via "Date_Picker_Filter_Dropdown" on "Jobs_Monitoring_Scheduled_Tab" wizard
+        Then verify from "09/03/2024 00:00" to "09/04/2024 00:00" filter band in "Custom_Range_Filter_Dropdown" filter dropdown on "Jobs_Monitoring_Scheduled_Tab" wizard
         And wait load page

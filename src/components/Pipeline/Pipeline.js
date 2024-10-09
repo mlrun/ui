@@ -20,11 +20,12 @@ such restriction.
 import React, { useEffect, useState } from 'react'
 import PropTypes from 'prop-types'
 import classnames from 'classnames'
-import { groupBy, forEach, map, concat } from 'lodash'
+import { groupBy, forEach, isEmpty, map, concat } from 'lodash'
 import { Link, useParams } from 'react-router-dom'
 
 import MlReactFlow from '../../common/ReactFlow/MlReactFlow'
 import CodeBlock from '../../common/CodeBlock/CodeBlock'
+import NoData from '../../common/NoData/NoData'
 import { Tooltip, TextTooltipTemplate, RoundedIcon } from 'igz-controls/components'
 
 import {
@@ -278,47 +279,50 @@ const Pipeline = ({ content }) => {
           </div>
         </div>
       </div>
-
-      <div className="graph-container pipeline-content">
-        <div className="graph-view">
-          <MlReactFlow
-            nodes={nodes}
-            edges={edges}
-            alignTriggerItem={stepIsSelected}
-            onNodeClick={(event, node) => {
-              if (node.data?.customData) {
-                setSelectedStep(node)
-              }
-            }}
-          />
-        </div>
-        {stepIsSelected && (
-          <div className="graph-pane">
-            <div className="graph-pane__title">
-              <span>{selectedStep.id}</span>
-              <RoundedIcon onClick={() => setSelectedStep({})} tooltipText="Close">
-                <CloseIcon />
-              </RoundedIcon>
-            </div>
-            {selectedStepData.map(rowData => (
-              <div className="graph-pane__row" key={rowData.label}>
-                {rowData.type === 'codeblock' ? (
-                  <CodeBlock label="Arguments" codeData={rowData.value} />
-                ) : (
-                  <>
-                    <div className="graph-pane__row-label">{rowData.label}</div>
-                    <div className="graph-pane__row-value">
-                      <Tooltip template={<TextTooltipTemplate text={rowData.value} />}>
-                        {rowData.value}
-                      </Tooltip>
-                    </div>
-                  </>
-                )}
-              </div>
-            ))}
+      {!isEmpty(pipeline?.graph) ? (
+        <div className="graph-container pipeline-content">
+          <div className="graph-view">
+            <MlReactFlow
+              nodes={nodes}
+              edges={edges}
+              alignTriggerItem={stepIsSelected}
+              onNodeClick={(event, node) => {
+                if (node.data?.customData) {
+                  setSelectedStep(node)
+                }
+              }}
+            />
           </div>
-        )}
-      </div>
+          {stepIsSelected && (
+            <div className="graph-pane">
+              <div className="graph-pane__title">
+                <span>{selectedStep.id}</span>
+                <RoundedIcon onClick={() => setSelectedStep({})} tooltipText="Close">
+                  <CloseIcon />
+                </RoundedIcon>
+              </div>
+              {selectedStepData.map(rowData => (
+                <div className="graph-pane__row" key={rowData.label}>
+                  {rowData.type === 'codeblock' ? (
+                    <CodeBlock label="Arguments" codeData={rowData.value} />
+                  ) : (
+                    <>
+                      <div className="graph-pane__row-label">{rowData.label}</div>
+                      <div className="graph-pane__row-value">
+                        <Tooltip template={<TextTooltipTemplate text={rowData.value} />}>
+                          {rowData.value}
+                        </Tooltip>
+                      </div>
+                    </>
+                  )}
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+      ) : (
+        <NoData message="The ingestion function has no steps and therefore no graph." />
+      )}
     </div>
   )
 }

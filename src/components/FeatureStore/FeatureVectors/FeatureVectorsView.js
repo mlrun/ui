@@ -100,7 +100,7 @@ const FeatureVectorsView = React.forwardRef(
                     <FeatureStoreTableRow
                       actionsMenu={actionsMenu}
                       handleExpandRow={handleExpandRow}
-                      key={index}
+                      key={tableItem.data?.ui?.identifier ?? index}
                       pageTab={FEATURE_VECTORS_TAB}
                       rowIndex={index}
                       rowItem={tableItem}

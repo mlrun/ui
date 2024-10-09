@@ -33,9 +33,10 @@ import { useMode } from '../../../hooks/mode.hook'
 
 const MonitorJobs = () => {
   const [selectedJob, setSelectedJob] = useState({})
-  const [jobsFilterMenu, jobsFilterMenuModal] = useSelector(state => [
+  const [jobsFilterMenu, jobsFilterMenuModal, saveFilters] = useSelector(state => [
     state.filtersStore.filterMenu[MONITOR_JOBS_TAB],
-    state.filtersStore.filterMenuModal[MONITOR_JOBS_TAB]
+    state.filtersStore.filterMenuModal[MONITOR_JOBS_TAB],
+    state.filtersStore.saveFilters
   ])
   const params = useParams()
   const dispatch = useDispatch()
@@ -74,6 +75,7 @@ const MonitorJobs = () => {
   useEffect(() => {
     fetchInitialJobs(
       {
+        saveFilters,
         ...jobsFilterMenu,
         ...jobsFilterMenuModal.values
       },
@@ -94,6 +96,7 @@ const MonitorJobs = () => {
     jobsFilterMenuModal.values,
     params,
     refreshJobs,
+    saveFilters,
     selectedJob
   ])
 

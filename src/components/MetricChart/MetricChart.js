@@ -20,16 +20,11 @@ such restriction.
 import { useEffect, useMemo, useRef, useState, memo } from 'react'
 import { Chart } from 'chart.js/auto'
 import classnames from 'classnames'
-import { throttle } from 'lodash'
 
 import Loader from '../../common/Loader/Loader'
 import { CHART_TYPE_BAR } from '../../constants'
 
-import {
-  calculateMaxTicksLimit,
-  generateMetricChartTooltip,
-  setChartGradient
-} from './metricChart.util'
+import { generateMetricChartTooltip, setChartGradient } from './metricChart.util'
 
 const GenericMetricChart = ({ chartConfig, isInvocationCardExpanded }) => {
   const chartRef = useRef(null)
@@ -63,8 +58,6 @@ const GenericMetricChart = ({ chartConfig, isInvocationCardExpanded }) => {
       if (chartInstance.current) {
         chartInstance.current.destroy()
       }
-      const container = chartRef.current
-      const maxTicksLimit = calculateMaxTicksLimit(container, chartConfig.type)
       chartInstance.current = new Chart(contextRef.current, {
         type: chartConfig.type,
         data: chartConfig.data,
@@ -75,8 +68,7 @@ const GenericMetricChart = ({ chartConfig, isInvocationCardExpanded }) => {
             x: {
               ...chartConfig.options.scales?.x,
               ticks: {
-                ...chartConfig.options.scales?.x?.ticks,
-                maxTicksLimit
+                ...chartConfig.options.scales?.x?.ticks
               },
               title:
                 chartConfig.type === CHART_TYPE_BAR
@@ -165,31 +157,12 @@ const GenericMetricChart = ({ chartConfig, isInvocationCardExpanded }) => {
 
       if (chartConfig.gradient && contextRef.current) {
         const canvasHeight = isInvocationCardExpanded ? 200 : 80
-        setChartGradient(chartInstance.current, contextRef.current, backgroundColor, canvasHeight) 
+        setChartGradient(chartInstance.current, contextRef.current, backgroundColor, canvasHeight)
       }
 
       chartInstance.current.update()
     }
   }, [backgroundColor, chartConfig.gradient, isInvocationCardExpanded])
-
-  useEffect(() => {
-    const handleResize = () => {
-      if (chartInstance.current) {
-        const container = chartRef.current
-        const maxTicksLimit = calculateMaxTicksLimit(container, chartConfig.type)
-        chartInstance.current.options.scales.x.ticks.maxTicksLimit = maxTicksLimit
-        chartInstance.current.options.scales.y.ticks.maxTicksLimit = maxTicksLimit
-        chartInstance.current.update()
-      }
-    }
-    const throttledResizeHandler = throttle(handleResize, 500, { leading: true, trailing: true })
-
-    window.addEventListener('resize', throttledResizeHandler)
-
-    return () => {
-      window.removeEventListener('resize', throttledResizeHandler)
-    }
-  }, [chartConfig.type])
 
   return (
     <>

@@ -31,15 +31,16 @@ import {
   INACTIVE_JOBS_TAB,
   JOBS_MONITORING_PAGE,
   JOBS_PAGE,
+  JOBS_PAGE_PATH,
   MONITOR_JOBS_TAB,
   MONITOR_WORKFLOWS_TAB,
   PANEL_CREATE_MODE,
   PROJECTS_PAGE_PATH,
   SCHEDULE_TAB
 } from '../../constants'
-import { TERTIARY_BUTTON } from 'igz-controls/constants'
+import { TERTIARY_BUTTON, PRIMARY_BUTTON } from 'igz-controls/constants'
 import { actionButtonHeader, actionCreator, tabs } from './jobs.util'
-import { isPageTabValid } from '../../utils/handleRedirect'
+import { isPageTabValid } from '../../utils/link-helper.util'
 import {
   getJobsFiltersConfig,
   getScheduledFiltersConfig,
@@ -50,7 +51,6 @@ import JobsFilters from './MonitorJobs/JobsFilters'
 import WorkflowsFilters from './MonitorWorkflows/WorkflowsFilters'
 import ScheduledJobsFilters from './ScheduledJobs/ScheduledJobsFilters'
 import { useJobsPageData } from '../../hooks/useJobsPageData'
-import { PRIMARY_BUTTON } from '../../../../dashboard-react-controls/dist/constants'
 
 export const JobsContext = React.createContext({})
 
@@ -126,11 +126,11 @@ const Jobs = ({ fetchAllJobRuns, fetchJobFunction, fetchJobs }) => {
 
   useLayoutEffect(() => {
     setSelectedTab(
-      location.pathname.includes(MONITOR_WORKFLOWS_TAB)
-        ? MONITOR_WORKFLOWS_TAB
-        : location.pathname.includes(SCHEDULE_TAB)
+      location.pathname.includes(`${JOBS_PAGE_PATH}/${MONITOR_JOBS_TAB}`)
+        ? MONITOR_JOBS_TAB
+        : location.pathname.includes(`${JOBS_PAGE_PATH}/${SCHEDULE_TAB}`)
           ? SCHEDULE_TAB
-          : MONITOR_JOBS_TAB
+          : MONITOR_WORKFLOWS_TAB
     )
   }, [location.pathname])
 
@@ -143,9 +143,9 @@ const Jobs = ({ fetchAllJobRuns, fetchJobFunction, fetchJobs }) => {
       urlPathArray[monitorJobsIndex] = MONITOR_JOBS_TAB
       navigate(urlPathArray.join('/'), { replace: true })
     } else {
-      const pageTab = location.pathname.includes(MONITOR_WORKFLOWS_TAB)
+      const pageTab = location.pathname.includes(`${JOBS_PAGE_PATH}/${MONITOR_WORKFLOWS_TAB}`)
         ? MONITOR_WORKFLOWS_TAB
-        : location.pathname.includes(SCHEDULE_TAB)
+        : location.pathname.includes(`${JOBS_PAGE_PATH}/${SCHEDULE_TAB}`)
           ? SCHEDULE_TAB
           : MONITOR_JOBS_TAB
 
@@ -177,7 +177,7 @@ const Jobs = ({ fetchAllJobRuns, fetchJobFunction, fetchJobs }) => {
                 actionButtons={[
                   {
                     className: 'action-button',
-                    hidden: selectedTab !== MONITOR_JOBS_TAB,
+                    hidden: selectedTab === MONITOR_WORKFLOWS_TAB,
                     label: actionButtonHeader,
                     onClick: handleActionsMenuClick,
                     variant: PRIMARY_BUTTON

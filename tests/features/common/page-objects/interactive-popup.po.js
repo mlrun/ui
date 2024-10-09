@@ -1187,7 +1187,11 @@ module.exports = {
         true
       )
     },
-    Description_Input: textAreaGroup(commonDescriptionTextArea),
+    Description_Input: textAreaGroup(
+      generateTextAreaGroup(
+      '.form .form-row:nth-of-type(3) .form-field-textarea',
+      '.form-field__counter'
+    )),
     Cancel_Button: commonFormCancelButton,
     Register_Button: commonFormConfirmButton,
     Register_Error_Message: commonRegisterErrorMessage
@@ -1635,6 +1639,38 @@ module.exports = {
     Title: By.css('#overlay_container .notification__body'),
     Notification_Pop_Up: By.css('#overlay_container .notification__body'),
     Notification_Pop_Up_Cross_Close_Button: By.css('#overlay_container .notification__button-close')
+  },
+  addTagPopup: {
+    Add_Tag_Popup: By.css('[data-testid="modal"]'),
+    Close_Button: By.css('[data-testid="modal"] .modal__header-button'),
+    Title: By.css('[data-testid="modal"] .modal__content .modal__header h5'),
+    Input_Label: By.css('[data-testid="modal"] .modal__body [data-testid="artifactTag-form-label"]'),
+    Tag_Input: inputGroup(
+      generateInputGroup(
+        '[data-testid="modal"] .modal__body .form-field__wrapper', 
+        true, 
+        '.form-field__warning svg', 
+        true
+      )
+    ),
+    Add_Button: By.css('[data-testid="modal"] .modal__footer .btn-secondary'),
+    Cancel_Button: By.css('[data-testid="modal"] .modal__footer .btn-tertiary')
+  },
+  deleteArtifactPopup: {
+    Delete_Artifact_Popup: By.css('[data-testid="pop-up-dialog"]'),
+    Close_Button: By.css('[data-testid="pop-up-dialog"] .pop-up-dialog__header .pop-up-dialog__btn_close'),
+    Title: By.css('[data-testid="pop-up-dialog"] .pop-up-dialog__header .tooltip-wrapper span'),
+    Dialog_Message: By.css('[data-testid="pop-up-dialog"] .confirm-dialog__message'),
+    Delete_Data_Checkbox: checkboxComponent(
+      generateCheckboxGroup(
+        '[data-testid="pop-up-dialog"] .confirm-dialog [data-testid="form-field-checkbox"] input',
+        false,
+        false,
+        false
+      )
+    ),
+    Delete_Button: By.css('[data-testid="pop-up-dialog"] .confirm-dialog__btn-container .btn-danger'),
+    Cancel_Button: By.css('[data-testid="pop-up-dialog"] .confirm-dialog__btn-container .pop-up-dialog__btn_cancel')
   },
   schedulePopUp: {
     Schedule_For_Later: {

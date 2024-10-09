@@ -17,7 +17,7 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import React, { useCallback, useState, useEffect, useMemo } from 'react'
+import React, { useCallback, useState, useEffect, useMemo, useRef } from 'react'
 import { connect, useDispatch } from 'react-redux'
 import { useNavigate, useParams } from 'react-router-dom'
 import { isEmpty } from 'lodash'
@@ -36,7 +36,8 @@ import {
   DETAILS_BUILD_LOG_TAB,
   FILES_TAB,
   MODELS_TAB,
-  MODEL_TYPE
+  MODEL_TYPE,
+  REQUEST_CANCELED
 } from '../../constants'
 import { areNuclioStreamsEnabled } from '../../utils/helper'
 import { generateCreateNewOptions, handleFetchProjectError } from './project.utils'
@@ -71,6 +72,9 @@ const ProjectMonitor = ({
   const { isDemoMode } = useMode()
   const dispatch = useDispatch()
   const { isNuclioModeDisabled } = useNuclioMode()
+  const projectAbortControllerRef = useRef(new AbortController())
+  const projectSummariesAbortControllerRef = useRef(new AbortController())
+  const v3ioStreamsAbortControllerRef = useRef(new AbortController())
 
   const registerArtifactLink = useCallback(
     artifactKind =>
@@ -125,16 +129,28 @@ const ProjectMonitor = ({
   }, [isDemoMode, navigate, params, openRegisterArtifactModal, openRegisterModelModal])
 
   const fetchProjectDataAndSummary = useCallback(() => {
-    Promise.all([fetchProject(params.projectName), fetchProjectSummary(params.projectName)]).catch(
-      error => {
-        handleFetchProjectError(error, navigate, setConfirmData, dispatch)
-      }
-    )
+    projectAbortControllerRef.current = new AbortController()
+    projectSummariesAbortControllerRef.current = new AbortController()
+
+    Promise.all([
+      fetchProject(params.projectName, {}, projectAbortControllerRef.current.signal),
+      fetchProjectSummary(params.projectName, projectSummariesAbortControllerRef.current.signal)
+    ]).catch(error => {
+      handleFetchProjectError(error, navigate, setConfirmData, dispatch)
+    })
   }, [dispatch, fetchProject, fetchProjectSummary, navigate, params.projectName])
 
   const resetProjectData = useCallback(() => {
     removeProjectData()
   }, [removeProjectData])
+
+  useEffect(() => {
+    return () => {
+      projectAbortControllerRef.current.abort(REQUEST_CANCELED)
+      projectSummariesAbortControllerRef.current.abort(REQUEST_CANCELED)
+      v3ioStreamsAbortControllerRef.current.abort(REQUEST_CANCELED)
+    }
+  }, [params.projectName])
 
   useEffect(() => {
     fetchProjectDataAndSummary()
@@ -147,9 +163,9 @@ const ProjectMonitor = ({
 
   useEffect(() => {
     if (nuclioStreamsAreEnabled && !isNuclioModeDisabled) {
-      fetchNuclioV3ioStreams(params.projectName)
+      v3ioStreamsAbortControllerRef.current = new AbortController()
 
-      return () => removeV3ioStreams()
+      fetchNuclioV3ioStreams(params.projectName, v3ioStreamsAbortControllerRef.current.signal)
     }
   }, [
     fetchNuclioV3ioStreams,
@@ -263,7 +279,9 @@ const ProjectMonitor = ({
     fetchProjectDataAndSummary()
 
     if (nuclioStreamsAreEnabled && !isNuclioModeDisabled) {
-      fetchNuclioV3ioStreams(params.projectName)
+      v3ioStreamsAbortControllerRef.current = new AbortController()
+
+      fetchNuclioV3ioStreams(params.projectName, v3ioStreamsAbortControllerRef.current.signal)
     }
   }
 

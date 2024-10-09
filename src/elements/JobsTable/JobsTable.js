@@ -46,10 +46,9 @@ import { FILTERS_CONFIG } from '../../types'
 import { enrichRunWithFunctionFields, handleAbortJob, handleDeleteJob } from '../../utils/jobs.util'
 import { generateActionsMenu } from '../../components/Jobs/MonitorJobs/monitorJobs.util'
 import { generatePageData } from './jobsTable.util'
-import { getCloseDetailsLink } from '../../utils/getCloseDetailsLink'
+import { getCloseDetailsLink, isDetailsTabExists } from '../../utils/link-helper.util'
 import { getJobLogs } from '../../utils/getJobLogs.util'
 import { getNoDataMessage } from '../../utils/getNoDataMessage'
-import { isDetailsTabExists } from '../../utils/isDetailsTabExists'
 import { isJobKindLocal, pollAbortingJobs } from '../../components/Jobs/jobs.util'
 import { isRowRendered, useVirtualization } from '../../hooks/useVirtualization.hook'
 import { openPopUp } from 'igz-controls/utils/common.util'
@@ -513,7 +512,7 @@ const JobsTable = React.forwardRef(
           <Details
             actionsMenu={actionsMenu}
             detailsMenu={pageData.details.menu}
-            getCloseDetailsLink={() => getCloseDetailsLink(location, params.jobName)}
+            getCloseDetailsLink={() => getCloseDetailsLink(window.location, params.jobName)}
             handleCancel={() => {
               setSelectedJob({})
               dispatch(setFilters({ saveFilters: true }))

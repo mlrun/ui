@@ -53,7 +53,7 @@ import { enrichRunWithFunctionFields, handleAbortJob, handleDeleteJob } from '..
 import { getFunctionLogs } from '../../utils/getFunctionLogs'
 import { getJobLogs } from '../../utils/getJobLogs.util'
 import { getNoDataMessage } from '../../utils/getNoDataMessage'
-import { isDetailsTabExists } from '../../utils/isDetailsTabExists'
+import { isDetailsTabExists } from '../../utils/link-helper.util'
 import { isJobKindLocal, pollAbortingJobs } from '../../components/Jobs/jobs.util'
 import { isRowRendered, useVirtualization } from '../../hooks/useVirtualization.hook'
 import { isWorkflowStepExecutable } from '../../components/Workflow/workflow.util'
@@ -236,8 +236,8 @@ const WorkflowsTable = React.forwardRef(
       }
     }, [params.jobId, workflowsStore.activeWorkflow.data])
 
-    const getPipelineError = useCallback(state => {
-      return ['failed', 'error'].includes(state) &&
+    const getPipelineError = useCallback(isErrorState => {
+      return isErrorState &&
       workflowsStore.activeWorkflow?.data?.run?.error &&
       workflowsStore.activeWorkflow.data.run.error !== 'None' ? {
         title: 'Pipeline error - ',
@@ -252,10 +252,16 @@ const WorkflowsTable = React.forwardRef(
         )
           .then(job => {
             const selectedJob = findSelectedWorkflowJob()
-            const customJobState = selectedJob?.phase?.toLowerCase()
-            const pipelineError = getPipelineError(customJobState)
+            const graphJobState = selectedJob?.phase?.toLowerCase()
+            const isErrorState = ['failed', 'error'].includes(graphJobState)
+            const customJobState = isErrorState ? graphJobState : ''
 
-            return modifyAndSelectRun(parseJob(job, MONITOR_WORKFLOWS_TAB, customJobState, pipelineError), fetchRun)
+            return modifyAndSelectRun(parseJob(
+              job,
+              MONITOR_WORKFLOWS_TAB,
+              customJobState,
+              getPipelineError(isErrorState)
+            ), fetchRun)
           })
           .catch(() =>
             navigate(backLink, {
@@ -464,8 +470,10 @@ const WorkflowsTable = React.forwardRef(
 
       if (isWorkflowStepExecutable(functionToBeSelected)) {
         const workflow = { ...workflowsStore.activeWorkflow?.data }
-        const customFunctionState = functionToBeSelected?.phase?.toLowerCase()
-        const pipelineError = getPipelineError(customFunctionState)
+        const graphFunctionState = functionToBeSelected?.phase?.toLowerCase()
+        const isErrorState = ['failed', 'error'].includes(graphFunctionState)
+        const customFunctionState = isErrorState ? graphFunctionState : ''
+        const pipelineError = getPipelineError(isErrorState)
 
         if (
           workflow.graph &&

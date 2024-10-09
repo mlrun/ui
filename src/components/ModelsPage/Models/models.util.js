@@ -34,10 +34,10 @@ import {
   FULL_VIEW_MODE,
   MODEL_TYPE,
   ACTION_MENU_PARENT_ROW,
-  ACTION_MENU_PARENT_ROW_EXPANDED
+  ACTION_MENU_PARENT_ROW_EXPANDED,
+  ARTIFACT_MAX_DOWNLOAD_SIZE
 } from '../../../constants'
 import {
-  fetchExpandedModel,
   showArtifactsPreview,
   updateArtifact
 } from '../../../reducers/artifactsReducer'
@@ -45,16 +45,14 @@ import { FORBIDDEN_ERROR_STATUS_CODE } from 'igz-controls/constants'
 import { applyTagChanges, chooseOrFetchArtifact } from '../../../utils/artifacts.util'
 import { convertChipsData } from '../../../utils/convertChipsData'
 import { copyToClipboard } from '../../../utils/copyToClipboard'
-import { createModelsRowData, getIsTargetPathValid } from '../../../utils/createArtifactsContent'
+import { getIsTargetPathValid } from '../../../utils/createArtifactsContent'
 import { generateUri } from '../../../utils/resources'
-import { getArtifactIdentifier } from '../../../utils/getUniqueIdentifier'
 import { getErrorMsg } from 'igz-controls/utils/common.util'
 import { handleDeleteArtifact } from '../../../utils/handleDeleteArtifact'
 import { openDeleteConfirmPopUp } from 'igz-controls/utils/common.util'
 import { searchArtifactItem } from '../../../utils/searchArtifactItem'
 import { setDownloadItem, setShowDownloadsList } from '../../../reducers/downloadReducer'
 import { showErrorNotification } from '../../../utils/notifications.util'
-import { sortListByDate } from '../../../utils'
 import { openPopUp } from 'igz-controls/utils/common.util'
 
 import { ReactComponent as TagIcon } from 'igz-controls/images/tag-icon.svg'
@@ -93,62 +91,6 @@ export const infoHeaders = [
   { label: 'Labels', id: 'labels' },
   { label: 'Metrics', id: 'metrics' }
 ]
-
-export const fetchModelsRowData = async (
-  dispatch,
-  model,
-  setSelectedRowData,
-  iter,
-  tag,
-  projectName,
-  frontendSpec,
-  metricsCounter
-) => {
-  const modelIdentifier = getArtifactIdentifier(model)
-
-  setSelectedRowData(state => ({
-    ...state,
-    loading: true
-  }))
-
-  dispatch(fetchExpandedModel({ project: model.project, model: model.db_key, iter, tag }))
-    .unwrap()
-    .then(result => {
-      if (result?.length > 0) {
-        setSelectedRowData(state => {
-          return {
-            ...state,
-            [modelIdentifier]: {
-              content: sortListByDate(result, 'updated', false).map(artifact =>
-                createModelsRowData(artifact, projectName, frontendSpec, metricsCounter)
-              )
-            },
-            error: null,
-            loading: false
-          }
-        })
-      } else {
-        setSelectedRowData(state => ({
-          ...state,
-          [modelIdentifier]: {
-            content: []
-          },
-          error: null,
-          loading: false
-        }))
-      }
-    })
-    .catch(error => {
-      setSelectedRowData(state => ({
-        ...state,
-        [modelIdentifier]: {
-          ...state[modelIdentifier]
-        },
-        error,
-        loading: false
-      }))
-    })
-}
 
 export const generateModelsDetailsMenu = selectedModel => [
   {
@@ -210,15 +152,6 @@ export const handleApplyDetailsChanges = (
   const artifactItem = cloneDeep(
     isNewFormat ? selectedItem.ui.originalContent : omit(selectedItem, ['ui'])
   )
-  let updateArtifactPromise = Promise.resolve()
-
-  let updateTagPromise = applyTagChanges(
-    changes,
-    selectedItem,
-    projectName,
-    dispatch,
-    setNotification
-  )
 
   if (!isEmpty(omit(changes.data, ['tag']))) {
     Object.keys(changes.data).forEach(key => {
@@ -237,7 +170,7 @@ export const handleApplyDetailsChanges = (
       artifactItem.labels = labels
     }
 
-    updateArtifactPromise = dispatch(updateArtifact({ project: projectName, data: artifactItem }))
+    return dispatch(updateArtifact({ project: projectName, data: artifactItem }))
       .unwrap()
       .then(response => {
         dispatch(
@@ -258,9 +191,24 @@ export const handleApplyDetailsChanges = (
           handleApplyDetailsChanges(changes, projectName, selectedItem, setNotification, dispatch)
         )
       })
+      .finally(() => {
+        return applyTagChanges(
+          changes,
+          selectedItem,
+          projectName,
+          dispatch,
+          setNotification
+        )
+      })
+  } else {
+    return applyTagChanges(
+      changes,
+      selectedItem,
+      projectName,
+      dispatch,
+      setNotification
+    )
   }
-
-  return Promise.all([updateTagPromise, updateArtifactPromise])
 }
 
 export const checkForSelectedModel = (
@@ -331,7 +279,9 @@ export const generateActionsMenu = (
       {
         label: 'Download',
         hidden: menuPosition === ACTION_MENU_PARENT_ROW_EXPANDED,
-        disabled: !isTargetPathValid,
+        disabled:
+          !isTargetPathValid ||
+          modelMin.size > (frontendSpec?.artifact_limits?.max_download_size ?? ARTIFACT_MAX_DOWNLOAD_SIZE),
         icon: <DownloadIcon />,
         onClick: modelMin => {
           getFullModel(modelMin).then(model => {
@@ -340,7 +290,10 @@ export const generateActionsMenu = (
               setDownloadItem({
                 path: downloadPath,
                 user: model.producer?.owner,
-                id: downloadPath
+                id: downloadPath,
+                artifactLimits: frontendSpec?.artifact_limits,
+                fileSize: model.size,
+                projectName
               })
             )
             dispatch(setShowDownloadsList(true))
@@ -388,8 +341,8 @@ export const generateActionsMenu = (
         className: 'danger',
         onClick: () =>
           openDeleteConfirmPopUp(
-            'Delete dataset?',
-            `Do you want to delete all versions of the dataset "${modelMin.db_key}"? Deleted datasets can not be restored.`,
+            'Delete model?',
+            `Do you want to delete all versions of the model "${modelMin.db_key}"? Deleted models can not be restored.`,
             () => {
               handleDeleteArtifact(
                 dispatch,

@@ -71,7 +71,11 @@ export const useJobsPageData = (fetchAllJobRuns, fetchJobFunction, fetchJobs) =>
       }
 
       fetchData(
-        params.jobName ? selectedRunProject || '*' : params.projectName || '*',
+        params.jobName
+          ? selectedRunProject || '*'
+          : filters.project
+            ? filters.project.toLowerCase()
+            : params.projectName || '*',
         filters,
         {
           ui: {
@@ -111,7 +115,11 @@ export const useJobsPageData = (fetchAllJobRuns, fetchJobFunction, fetchJobs) =>
           if (Object.keys(responseAbortingJobs).length > 0) {
             setAbortingJobs(responseAbortingJobs)
             pollAbortingJobs(
-              '*',
+              params.jobName
+                ? selectedRunProject || '*'
+                : filters.project
+                  ? filters.project.toLowerCase()
+                  : params.projectName || '*',
               abortJobRef,
               responseAbortingJobs,
               () => refreshJobs(filters),
@@ -144,12 +152,16 @@ export const useJobsPageData = (fetchAllJobRuns, fetchJobFunction, fetchJobs) =>
       abortControllerRef.current = new AbortController()
 
       dispatch(
-        jobsActions.fetchScheduledJobs(params.projectName || selectedRunProject || '*', filters, {
-          ui: {
-            controller: abortControllerRef.current,
-            setRequestErrorMessage
+        jobsActions.fetchScheduledJobs(
+          filters.project ? filters.project.toLowerCase() : params.projectName || '*',
+          filters,
+          {
+            ui: {
+              controller: abortControllerRef.current,
+              setRequestErrorMessage
+            }
           }
-        })
+        )
       ).then(jobs => {
         if (jobs) {
           const parsedJobs = jobs
@@ -195,7 +207,7 @@ export const useJobsPageData = (fetchAllJobRuns, fetchJobFunction, fetchJobs) =>
 
       dispatch(
         workflowActions.fetchWorkflows(
-          params.projectName || '*',
+          filter.project ? filter.project.toLowerCase() : params.projectName || '*',
           { ...filter, groupBy: GROUP_BY_WORKFLOW },
           {
             ui: {

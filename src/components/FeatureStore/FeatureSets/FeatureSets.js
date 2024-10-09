@@ -40,7 +40,7 @@ import { createFeatureSetsRowData } from '../../../utils/createFeatureStoreConte
 import { featureSetsActionCreator, generatePageData } from './featureSets.util'
 import { getFeatureSetIdentifier } from '../../../utils/getUniqueIdentifier'
 import { getFilterTagOptions, setFilters } from '../../../reducers/filtersReducer'
-import { isDetailsTabExists } from '../../../utils/isDetailsTabExists'
+import { isDetailsTabExists } from '../../../utils/link-helper.util'
 import { parseChipsData } from '../../../utils/convertChipsData'
 import { parseFeatureSets } from '../../../utils/parseFeatureSets'
 import { setNotification } from '../../../reducers/notificationReducer'
@@ -143,13 +143,13 @@ const FeatureSets = ({
     )
   }, [dispatch, fetchFeatureSetsTags, params.projectName])
 
-  const handleRefresh = filters => {
+  const handleRefresh = useCallback(filters => {
     fetchTags()
     setFeatureSets([])
     setSelectedFeatureSet({})
     setSelectedRowData({})
     return fetchData(filters)
-  }
+  }, [fetchData, fetchTags])
 
   const handleRemoveFeatureSet = useCallback(
     featureSet => {
@@ -237,7 +237,7 @@ const FeatureSets = ({
     changes => {
       return handleApplyDetailsChanges(
         changes,
-        fetchData,
+        handleRefresh,
         params.projectName,
         params.name,
         FEATURE_SETS_TAB,
@@ -250,7 +250,7 @@ const FeatureSets = ({
     },
     [
       dispatch,
-      fetchData,
+      handleRefresh,
       filtersStore,
       params.name,
       params.projectName,

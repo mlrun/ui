@@ -17,9 +17,9 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { useParams } from 'react-router-dom'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import PropTypes from 'prop-types'
 
 import ArtifactsPreview from './ArtifactsPreview'
@@ -27,6 +27,7 @@ import { Tooltip, TextTooltipTemplate } from 'igz-controls/components'
 
 import { getArtifactPreview } from '../../utils/getArtifactPreview'
 import { showArtifactsPreview } from '../../reducers/artifactsReducer'
+import { REQUEST_CANCELED } from '../../constants'
 
 import { ReactComponent as Popout } from 'igz-controls/images/popout.svg'
 
@@ -41,6 +42,9 @@ const ArtifactsPreviewController = ({
   const [noData, setNoData] = useState(false)
   const [preview, setPreview] = useState({})
   const params = useParams()
+  const frontendSpec = useSelector(store => store.appStore.frontendSpec)
+  const previewIsFetchedRef = useRef(false)
+  const previewAbortControllerRef = useRef(new AbortController())
 
   const dispatch = useDispatch()
 
@@ -51,18 +55,47 @@ const ArtifactsPreviewController = ({
   }, [])
 
   useEffect(() => {
-    if (artifactsIds.length > 0 && !preview[artifactId] && artifactsIds.includes(artifactId)) {
+    if (
+      artifactsIds.length > 0 &&
+      !preview[artifactId] &&
+      artifactsIds.includes(artifactId) &&
+      frontendSpec &&
+      !previewIsFetchedRef.current
+    ) {
+      previewAbortControllerRef.current = new AbortController()
+
       getArtifactPreview(
-        params.projectName,
+        params.projectName || artifact?.project,
         artifact,
         noData,
         setNoData,
         setPreview,
         true,
-        artifactId
+        artifactId,
+        frontendSpec.artifact_limits,
+        previewAbortControllerRef.current.signal
       )
+      previewIsFetchedRef.current = true
     }
-  }, [artifactsIds, setPreview, artifact, noData, params.projectName, preview, artifactId])
+  }, [
+    artifactsIds,
+    setPreview,
+    artifact,
+    noData,
+    params.projectName,
+    preview,
+    artifactId,
+    frontendSpec
+  ])
+
+  useEffect(() => {
+    const abortController = previewAbortControllerRef.current
+
+    return () => {
+      previewIsFetchedRef.current = false
+      abortController.abort(REQUEST_CANCELED)
+    }
+  }, [artifact, params.projectName])
 
   const showPreview = () => {
     dispatch(
