@@ -56,7 +56,7 @@ import {
 import createFunctionsRowData from '../../utils/createFunctionsRowData'
 import functionsActions from '../../actions/functions'
 import jobsActions from '../../actions/jobs'
-import { DANGER_BUTTON, LABEL_BUTTON } from 'igz-controls/constants'
+import { DANGER_BUTTON, TERTIARY_BUTTON } from 'igz-controls/constants'
 import { getFunctionIdentifier } from '../../utils/getUniqueIdentifier'
 import { getFunctionNuclioLogs, getFunctionLogs } from '../../utils/getFunctionLogs'
 import { isBackgroundTaskRunning } from '../../utils/poll.util'
@@ -365,7 +365,7 @@ const Functions = ({
         header: 'Delete function?',
         message: `You try to delete function "${func.name}". Deleted functions cannot be restored.`,
         btnCancelLabel: 'Cancel',
-        btnCancelVariant: LABEL_BUTTON,
+        btnCancelVariant: TERTIARY_BUTTON,
         btnConfirmLabel: 'Delete',
         btnConfirmVariant: DANGER_BUTTON,
         rejectHandler: () => setConfirmData(null),
