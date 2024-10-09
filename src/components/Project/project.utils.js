@@ -86,8 +86,7 @@ export const generateCreateNewOptions = (
     handler: () => {
       openRegisterModelModal()
     },
-    // TODO: remove hidden in 1.4
-    hidden: true
+    hidden: !isDemoMode
   },
   {
     label: 'Register Dataset',

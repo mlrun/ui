@@ -240,7 +240,7 @@ const Input = React.forwardRef(
             type,
             value: typedValue
           }}
-          style={floatingLabel ? {} : { paddingLeft: `${labelWidth + 16}px` }}
+          style={floatingLabel ? {} : { paddingLeft: `${labelWidth + 16}px`, paddingRight: tip ? '25px' : '0px' }}
         />
         {label && (
           <div className={labelClassNames}>
