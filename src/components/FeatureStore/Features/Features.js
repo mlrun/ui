@@ -29,8 +29,11 @@ import { FeatureStoreContext } from '../FeatureStore'
 
 import {
   CANCEL_REQUEST_TIMEOUT,
+  FEATURES_FILTERS,
   FEATURES_TAB,
   FEATURE_STORE_PAGE,
+  FILTER_MENU,
+  FILTER_MENU_MODAL,
   GROUP_BY_NAME,
   GROUP_BY_NONE,
   LARGE_REQUEST_CANCELED,
@@ -68,6 +71,12 @@ const Features = ({
   const params = useParams()
   const featureStore = useSelector(store => store.featureStore)
   const filtersStore = useSelector(store => store.filtersStore)
+  const featuresFilters = useSelector(store => {
+    return {
+      ...store.filtersStore[FILTER_MENU][FEATURES_FILTERS].values,
+      ...store.filtersStore[FILTER_MENU_MODAL][FEATURES_FILTERS].values
+    }
+  })
   const tableStore = useSelector(store => store.tableStore)
   const featureStoreRef = useRef(null)
   const abortControllerRef = useRef(new AbortController())
@@ -151,7 +160,7 @@ const Features = ({
 
   const fetchTags = useCallback(() => {
     tagAbortControllerRef.current = new AbortController()
-    
+
     return dispatch(
       getFilterTagOptions({
         fetchTags: fetchFeatureSetsTags,
@@ -171,6 +180,10 @@ const Features = ({
     setSelectedRowData({})
 
     return fetchData(filters)
+  }
+
+  const handleRefreshWithStoreFilters = () => {
+    handleRefresh(featuresFilters)
   }
 
   const handleRemoveFeature = useCallback(
@@ -261,6 +274,7 @@ const Features = ({
     action => {
       return (
         <AddToFeatureVectorPopUp
+          key={action}
           action={action}
           currentProject={params.projectName}
           fetchFeatureVectors={fetchFeatureVectors}
@@ -279,16 +293,16 @@ const Features = ({
   useInitialTableFetch({
     fetchData,
     fetchTags,
-    filters: filtersStore
+    filters: featuresFilters
   })
 
   useEffect(() => {
-    if (filtersStore.tag === TAG_FILTER_ALL_ITEMS) {
+    if (featuresFilters.tag === TAG_FILTER_ALL_ITEMS) {
       dispatch(setFilters({ groupBy: GROUP_BY_NAME }))
     } else if (filtersStore.groupBy === GROUP_BY_NAME) {
       dispatch(setFilters({ groupBy: GROUP_BY_NONE }))
     }
-  }, [filtersStore.groupBy, filtersStore.tag, dispatch])
+  }, [filtersStore.groupBy, featuresFilters.tag, dispatch])
 
   useEffect(() => {
     const tagAbortControllerCurrent = tagAbortControllerRef.current
@@ -303,7 +317,14 @@ const Features = ({
       abortControllerRef.current.abort(REQUEST_CANCELED)
       tagAbortControllerCurrent.abort(REQUEST_CANCELED)
     }
-  }, [removeEntities, removeEntity, removeFeature, removeFeatures, params.projectName, tagAbortControllerRef])
+  }, [
+    removeEntities,
+    removeEntity,
+    removeFeature,
+    removeFeatures,
+    params.projectName,
+    tagAbortControllerRef
+  ])
 
   const virtualizationConfig = useVirtualization({
     rowsData: {
@@ -326,6 +347,7 @@ const Features = ({
       getPopUpTemplate={getPopUpTemplate}
       handleExpandRow={handleExpandRow}
       handleRefresh={handleRefresh}
+      handleRefreshWithStoreFilters={handleRefreshWithStoreFilters}
       pageData={pageData}
       ref={{ featureStoreRef }}
       requestErrorMessage={requestErrorMessage}

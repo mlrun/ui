@@ -23,17 +23,22 @@ import PropTypes from 'prop-types'
 
 import AddToFeatureVectorPageHeader from '../../elements/AddToFeatureVectorPageHeader/AddToFeatureVectorPageHeader'
 import Loader from '../../common/Loader/Loader'
-import FilterMenu from '../FilterMenu/FilterMenu'
 import NoData from '../../common/NoData/NoData'
 import Table from '../Table/Table'
 import FeatureStoreTableRow from '../../elements/FeatureStoreTableRow/FeatureStoreTableRow'
 import YamlModal from '../../common/YamlModal/YamlModal'
 
-import { ADD_TO_FEATURE_VECTOR_TAB, FEATURE_STORE_PAGE } from '../../constants'
+import {
+  ADD_TO_FEATURE_VECTOR_FILTERS,
+  ADD_TO_FEATURE_VECTOR_TAB,
+  FEATURE_STORE_PAGE
+} from '../../constants'
 import { VIRTUALIZATION_CONFIG } from '../../types'
 import { filters } from './addToFeatureVectorPage.util'
 import { getNoDataMessage } from '../../utils/getNoDataMessage'
 import { isRowRendered } from '../../hooks/useVirtualization.hook'
+import ActionBar from '../ActionBar/ActionBar'
+import AddToFeatureVectorFilters from './AddToFeatureVectorFilters'
 
 const AddToFeatureVectorView = React.forwardRef(
   (
@@ -45,6 +50,7 @@ const AddToFeatureVectorView = React.forwardRef(
       filtersStore,
       handleExpandRow,
       handleRefresh,
+      handleRefreshWithStoreFilters,
       pageData,
       requestErrorMessage,
       selectedRowData,
@@ -65,12 +71,16 @@ const AddToFeatureVectorView = React.forwardRef(
         <div className="content">
           <div className="table-container">
             <div className="content__action-bar-wrapper">
-              <FilterMenu
-                filters={filters}
-                onChange={handleRefresh}
+              <ActionBar
+                filterMenuName={ADD_TO_FEATURE_VECTOR_FILTERS}
+                filtersConfig={filters}
+                handleRefresh={handleRefresh}
                 page={FEATURE_STORE_PAGE}
+                tab={ADD_TO_FEATURE_VECTOR_TAB}
                 withoutExpandButton
-              />
+              >
+                <AddToFeatureVectorFilters content={content} />
+              </ActionBar>
             </div>
             {featureStore.loading || featureStore.features.loading ? null : content.length === 0 ? (
               <NoData
@@ -79,7 +89,8 @@ const AddToFeatureVectorView = React.forwardRef(
                   filters,
                   requestErrorMessage,
                   FEATURE_STORE_PAGE,
-                  ADD_TO_FEATURE_VECTOR_TAB
+                  ADD_TO_FEATURE_VECTOR_TAB,
+                  ADD_TO_FEATURE_VECTOR_FILTERS
                 )}
               />
             ) : (
@@ -88,7 +99,7 @@ const AddToFeatureVectorView = React.forwardRef(
                   actionsMenu={actionsMenu}
                   hideActionsMenu={tableStore.isTablePanelOpen}
                   pageData={pageData}
-                  retryRequest={handleRefresh}
+                  retryRequest={handleRefreshWithStoreFilters}
                   tab={ADD_TO_FEATURE_VECTOR_TAB}
                   tableClassName="features-table"
                   tableHeaders={tableContent[0]?.content ?? []}
@@ -131,6 +142,7 @@ AddToFeatureVectorView.propTypes = {
   filtersStore: PropTypes.object.isRequired,
   handleExpandRow: PropTypes.func.isRequired,
   handleRefresh: PropTypes.func.isRequired,
+  handleRefreshWithStoreFilters: PropTypes.func.isRequired,
   pageData: PropTypes.object.isRequired,
   requestErrorMessage: PropTypes.string.isRequired,
   selectedRowData: PropTypes.object.isRequired,

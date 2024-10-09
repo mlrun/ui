@@ -27,11 +27,17 @@ import { FeatureStoreContext } from '../FeatureStore'
 
 import {
   DETAILS_OVERVIEW_TAB,
+  FEATURE_SETS_FILTERS,
   FEATURE_SETS_TAB,
   FEATURE_STORE_PAGE,
+  FILTER_MENU,
+  FILTER_MENU_MODAL,
   GROUP_BY_NAME,
   GROUP_BY_NONE,
+  LABELS_FILTER,
+  NAME_FILTER,
   REQUEST_CANCELED,
+  TAG_FILTER,
   TAG_FILTER_ALL_ITEMS,
   TAG_LATEST
 } from '../../../constants'
@@ -44,7 +50,7 @@ import {
   setFullSelectedFeatureSet
 } from './featureSets.util'
 import { getFeatureSetIdentifier } from '../../../utils/getUniqueIdentifier'
-import { getFilterTagOptions, setFilters } from '../../../reducers/filtersReducer'
+import { getFilterTagOptions, setFilters, setFiltersValues, setModalFiltersValues } from '../../../reducers/filtersReducer'
 import { isDetailsTabExists } from '../../../utils/link-helper.util'
 import { parseChipsData } from '../../../utils/convertChipsData'
 import { parseFeatureSets } from '../../../utils/parseFeatureSets'
@@ -53,6 +59,7 @@ import { useGroupContent } from '../../../hooks/groupContent.hook'
 import { useOpenPanel } from '../../../hooks/openPanel.hook'
 import { useVirtualization } from '../../../hooks/useVirtualization.hook'
 import { useInitialTableFetch } from '../../../hooks/useInitialTableFetch.hook'
+import { featureSetsFilters as filtersConfig } from './featureSets.util'
 
 import { ReactComponent as Yaml } from 'igz-controls/images/yaml.svg'
 
@@ -76,6 +83,14 @@ const FeatureSets = ({
   const params = useParams()
   const featureStore = useSelector(store => store.featureStore)
   const filtersStore = useSelector(store => store.filtersStore)
+  const featureSetsFilters = useSelector(
+    store => {
+      return {
+        ...store.filtersStore[FILTER_MENU][FEATURE_SETS_FILTERS].values,
+        ...store.filtersStore[FILTER_MENU_MODAL][FEATURE_SETS_FILTERS].values
+      }
+    }
+  )
   const abortControllerRef = useRef(new AbortController())
   const tagAbortControllerRef = useRef(new AbortController())
   const featureStoreRef = useRef(null)
@@ -83,7 +98,6 @@ const FeatureSets = ({
   const location = useLocation()
   const dispatch = useDispatch()
   const frontendSpec = useSelector(store => store.appStore.frontendSpec)
-
   const detailsFormInitialValues = useMemo(
     () => ({
       description: selectedFeatureSet.description,
@@ -160,11 +174,14 @@ const FeatureSets = ({
       setFeatureSets([])
       setSelectedFeatureSet({})
       setSelectedRowData({})
-
       return fetchData(filters)
     },
     [fetchData, fetchTags]
   )
+
+  const handleRefreshWithStoreFilters = () => {
+    handleRefresh(featureSetsFilters)
+  }
 
   const handleRemoveFeatureSet = useCallback(
     featureSet => {
@@ -194,7 +211,7 @@ const FeatureSets = ({
         }
       }))
 
-      fetchExpandedFeatureSet(item.project, item.name, filtersStore.tag)
+      fetchExpandedFeatureSet(item.project, item.name, featureSetsFilters.tag)
         .then(result => {
           const content = [...parseFeatureSets(result)].map(contentItem =>
             createFeatureSetsRowData(contentItem, params.projectName, FEATURE_SETS_TAB, true)
@@ -219,7 +236,7 @@ const FeatureSets = ({
           }))
         })
     },
-    [fetchExpandedFeatureSet, filtersStore.tag, params.projectName]
+    [fetchExpandedFeatureSet, featureSetsFilters.tag, params.projectName]
   )
 
   const { latestItems, handleExpandRow } = useGroupContent(
@@ -262,14 +279,14 @@ const FeatureSets = ({
         selectedFeatureSet,
         setNotification,
         updateFeatureStoreData,
-        filtersStore,
+        featureSetsFilters,
         dispatch
       )
     },
     [
       dispatch,
       handleRefresh,
-      filtersStore,
+      featureSetsFilters,
       params.name,
       params.projectName,
       selectedFeatureSet,
@@ -286,15 +303,26 @@ const FeatureSets = ({
   }
 
   const createFeatureSetSuccess = tag => {
-    const currentTag = filtersStore.tag === TAG_FILTER_ALL_ITEMS ? TAG_FILTER_ALL_ITEMS : tag
+    const currentTag = featureSetsFilters.tag === TAG_FILTER_ALL_ITEMS ? TAG_FILTER_ALL_ITEMS : tag
 
     setFeatureSetsPanelIsOpen(false)
     removeNewFeatureSet()
+
     dispatch(
-      setFilters({
-        name: '',
-        labels: '',
-        tag: currentTag
+      setFiltersValues({
+        name: FEATURE_SETS_FILTERS,
+        value: {
+          [NAME_FILTER]: '',
+        }
+      })
+    )
+    dispatch(
+      setModalFiltersValues({
+        name: FEATURE_SETS_FILTERS,
+        value: {
+          [TAG_FILTER]: currentTag,
+          [LABELS_FILTER]: '',
+        }
       })
     )
 
@@ -322,7 +350,7 @@ const FeatureSets = ({
 
   useEffect(() => {
     setSelectedRowData({})
-  }, [filtersStore.tag])
+  }, [featureSetsFilters.tag])
 
   useInitialTableFetch({
     fetchData,
@@ -330,16 +358,19 @@ const FeatureSets = ({
     createRowData: rowItem =>
       createFeatureSetsRowData(rowItem, params.projectName, FEATURE_SETS_TAB),
     fetchTags,
-    filters: filtersStore
+    filters: featureSetsFilters,
+    filterModalName: FEATURE_SETS_FILTERS,
+    filterName: FEATURE_SETS_FILTERS,
+    filtersConfig
   })
 
   useEffect(() => {
-    if (filtersStore.tag === TAG_FILTER_ALL_ITEMS) {
+    if (featureSetsFilters.tag === TAG_FILTER_ALL_ITEMS) {
       dispatch(setFilters({ groupBy: GROUP_BY_NAME }))
     } else if (filtersStore.groupBy === GROUP_BY_NAME) {
       dispatch(setFilters({ groupBy: GROUP_BY_NONE }))
     }
-  }, [filtersStore.groupBy, filtersStore.tag, dispatch])
+  }, [filtersStore.groupBy, featureSetsFilters.tag, dispatch])
 
   useEffect(() => {
     const content = cloneDeep(featureStore.featureSets?.allData)
@@ -420,12 +451,14 @@ const FeatureSets = ({
       featureStore={featureStore}
       filtersStore={filtersStore}
       handleExpandRow={handleExpandRow}
+      handleRefreshWithStoreFilters={handleRefreshWithStoreFilters}
       handleRefresh={handleRefresh}
       pageData={pageData}
       ref={{ featureStoreRef }}
       requestErrorMessage={requestErrorMessage}
       selectedFeatureSet={selectedFeatureSet}
       selectedRowData={selectedRowData}
+      setFeatureSetsPanelIsOpen={setFeatureSetsPanelIsOpen}
       setSelectedFeatureSetMin={handleSelectFeatureSet}
       tableContent={tableContent}
       virtualizationConfig={virtualizationConfig}

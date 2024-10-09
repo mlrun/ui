@@ -129,7 +129,7 @@ const JobWizard = ({
     if (showSchedule) {
       setShowSchedule(false)
     }
-    dispatch(resetModalFilter(JOB_WIZARD_FILTERS))
+    dispatch(resetModalFilter({ name: JOB_WIZARD_FILTERS }))
     removeJobFunction()
     onResolve()
     onWizardClose && onWizardClose()

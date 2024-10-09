@@ -74,11 +74,11 @@ export const featureSetsInfoHeaders = [
   { label: 'Usage example', id: 'usage_example' }
 ]
 
-export const featureVectorsFilters = [
-  { type: TAG_FILTER, label: 'Version Tag:' },
-  { type: NAME_FILTER, label: 'Name:' },
-  { type: LABELS_FILTER, label: 'Labels:' }
-]
+export const featureVectorsFilters = {
+  [TAG_FILTER]: { label: 'Version Tag:' },
+  [NAME_FILTER]: { label: 'Name:' },
+  [LABELS_FILTER]: { label: 'Labels:' }
+}
 
 export const generatePageData = selectedFeatureSet => {
   return {

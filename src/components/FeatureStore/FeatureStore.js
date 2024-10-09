@@ -24,7 +24,6 @@ import { useLocation } from 'react-router-dom'
 
 import Loader from '../../common/Loader/Loader'
 import Breadcrumbs from '../../common/Breadcrumbs/Breadcrumbs'
-import PageActionsMenu from '../../common/PageActionsMenu/PageActionsMenu'
 import ContentMenu from '../../elements/ContentMenu/ContentMenu'
 import YamlModal from '../../common/YamlModal/YamlModal'
 import { ConfirmDialog } from 'igz-controls/components'
@@ -36,7 +35,7 @@ import {
   FEATURE_VECTORS_TAB,
   FEATURES_TAB
 } from '../../constants'
-import { createFeatureSetTitle, createFeatureVectorTitle, tabs } from './featureStore.util'
+import { tabs } from './featureStore.util'
 import { useYaml } from '../../hooks/yaml.hook'
 
 import './featureStore.scss'
@@ -51,29 +50,11 @@ const FeatureStore = () => {
   const location = useLocation()
   const featureStore = useSelector(store => store.featureStore)
 
-  const handleActionsMenuClick = () => {
-    return location.pathname.includes(FEATURE_SETS_TAB)
-      ? setFeatureSetsPanelIsOpen(true)
-      : setCreateVectorPopUpIsOpen(true)
-  }
-
   return (
     <>
       <div className="content-wrapper">
         <div className="content__header">
           <Breadcrumbs />
-          <PageActionsMenu
-            actionsMenuHeader={
-              location.pathname.includes(FEATURE_SETS_TAB)
-                ? createFeatureSetTitle
-                : createFeatureVectorTitle
-            }
-            onClick={handleActionsMenuClick}
-            showActionsMenu={
-              location.pathname.includes(FEATURE_SETS_TAB) ||
-              location.pathname.includes(FEATURE_VECTORS_TAB)
-            }
-          />
         </div>
 
         <div className="content">

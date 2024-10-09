@@ -32,7 +32,11 @@ import {
   TAG_FILTER_ALL_ITEMS,
   REQUEST_CANCELED,
   LARGE_REQUEST_CANCELED,
-  CANCEL_REQUEST_TIMEOUT
+  CANCEL_REQUEST_TIMEOUT,
+  PROJECT_FILTER,
+  ADD_TO_FEATURE_VECTOR_FILTERS,
+  FILTER_MENU,
+  FILTER_MENU_MODAL
 } from '../../constants'
 import featureStoreActions from '../../actions/featureStore'
 import { FORBIDDEN_ERROR_STATUS_CODE } from 'igz-controls/constants'
@@ -40,7 +44,12 @@ import { createFeaturesRowData } from '../../utils/createFeatureStoreContent'
 import { getFeatureIdentifier } from '../../utils/getUniqueIdentifier'
 import { handleFeaturesResponse } from '../FeatureStore/Features/features.util'
 import { isEveryObjectValueEmpty } from '../../utils/isEveryObjectValueEmpty'
-import { getFilterTagOptions, setFilters } from '../../reducers/filtersReducer'
+import {
+  getFilterTagOptions,
+  setFilters,
+  setModalFiltersInitialValues,
+  setModalFiltersValues
+} from '../../reducers/filtersReducer'
 import { setNotification } from '../../reducers/notificationReducer'
 import { setTablePanelOpen } from '../../reducers/tableReducer'
 import { showErrorNotification } from '../../utils/notifications.util'
@@ -72,6 +81,10 @@ const AddToFeatureVectorPage = ({
   const navigate = useNavigate()
   const tableStore = useSelector(store => store.tableStore)
   const filtersStore = useSelector(store => store.filtersStore)
+  const addToFeatureVectorFilters = useSelector(store => ({
+    ...store.filtersStore[FILTER_MENU][ADD_TO_FEATURE_VECTOR_FILTERS].values,
+    ...store.filtersStore[FILTER_MENU_MODAL][ADD_TO_FEATURE_VECTOR_FILTERS].values
+  }))
   const dispatch = useDispatch()
 
   const navigateToFeatureVectorsScreen = useCallback(() => {
@@ -194,6 +207,10 @@ const AddToFeatureVectorPage = ({
     return fetchData(filters)
   }
 
+  const handleRefreshWithStoreFilters = () => {
+    handleRefresh(addToFeatureVectorFilters)
+  }
+
   const handleRemoveFeature = useCallback(
     feature => {
       const newStoreSelectedRowData = {
@@ -269,10 +286,30 @@ const AddToFeatureVectorPage = ({
       : content.map(contentItem => createFeaturesRowData(contentItem, tableStore.isTablePanelOpen))
   }, [content, filtersStore.groupBy, latestItems, tableStore.isTablePanelOpen])
 
+  const setInitialFilters = useCallback(() => {
+    dispatch(
+      setModalFiltersInitialValues({
+        name: ADD_TO_FEATURE_VECTOR_FILTERS,
+        value: {
+          [PROJECT_FILTER]: params.projectName
+        }
+      })
+    )
+    dispatch(
+      setModalFiltersValues({
+        name: ADD_TO_FEATURE_VECTOR_FILTERS,
+        value: {
+          [PROJECT_FILTER]: params.projectName
+        }
+      })
+    )
+  }, [dispatch, params.projectName])
+
   useInitialTableFetch({
     fetchData,
     fetchTags,
-    filters: filtersStore
+    filters: addToFeatureVectorFilters,
+    setInitialFilters
   })
 
   useEffect(() => {
@@ -286,12 +323,12 @@ const AddToFeatureVectorPage = ({
   }, [removeFeature, removeFeatures])
 
   useEffect(() => {
-    if (filtersStore.tag === TAG_FILTER_ALL_ITEMS) {
+    if (addToFeatureVectorFilters.tag === TAG_FILTER_ALL_ITEMS) {
       dispatch(setFilters({ groupBy: GROUP_BY_NAME }))
     } else if (filtersStore.groupBy === GROUP_BY_NAME) {
       dispatch(setFilters({ groupBy: GROUP_BY_NONE }))
     }
-  }, [dispatch, filtersStore.groupBy, filtersStore.tag])
+  }, [dispatch, filtersStore.groupBy, addToFeatureVectorFilters.tag])
 
   useEffect(() => {
     if (isEveryObjectValueEmpty(tableStore.features.featureVector)) {
@@ -329,6 +366,7 @@ const AddToFeatureVectorPage = ({
       filtersStore={filtersStore}
       handleExpandRow={handleExpandRow}
       handleRefresh={handleRefresh}
+      handleRefreshWithStoreFilters={handleRefreshWithStoreFilters}
       pageData={pageData}
       ref={addToFeatureVectorPageRef}
       requestErrorMessage={requestErrorMessage}

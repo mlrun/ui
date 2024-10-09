@@ -22,11 +22,11 @@ import { LABELS_FILTER, LARGE_REQUEST_CANCELED, NAME_FILTER, TAG_FILTER } from '
 import { showLargeResponsePopUp } from '../../../httpClient'
 import { largeResponseCatchHandler } from '../../../utils/largeResponseCatchHandler'
 
-export const featuresFilters = [
-  { type: TAG_FILTER, label: 'Version Tag:' },
-  { type: NAME_FILTER, label: 'Name:' },
-  { type: LABELS_FILTER, label: 'Labels:' }
-]
+export const featuresFilters = {
+  [TAG_FILTER]: { label: 'Version Tag:' },
+  [NAME_FILTER]: { label: 'Name:' },
+  [LABELS_FILTER]: { label: 'Labels:' }
+}
 
 export const handleFeaturesResponse = (
   features,

@@ -21,6 +21,7 @@ import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
 import { set } from 'lodash'
 
 import {
+  ADD_TO_FEATURE_VECTOR_FILTERS,
   ARTIFACT_OTHER_TYPE,
   CONSUMER_GROUPS_FILTER,
   CONSUMER_GROUP_FILTER,
@@ -28,6 +29,10 @@ import {
   DATASET_TYPE,
   DATES_FILTER,
   DATE_FILTER_ANY_TIME,
+  ENTITIES_FILTER,
+  FEATURES_FILTERS,
+  FEATURE_SETS_FILTERS,
+  FEATURE_VECTORS_FILTERS,
   FILES_FILTERS,
   FILTER_ALL_ITEMS,
   FILTER_MENU,
@@ -144,6 +149,38 @@ const initialState = {
         [NAME_FILTER]: ''
       }
     },
+    [FEATURE_SETS_FILTERS]: {
+      values: {
+        [NAME_FILTER]: ''
+      },
+      initialValues: {
+        [NAME_FILTER]: ''
+      }
+    },
+    [FEATURES_FILTERS]: {
+      values: {
+        [NAME_FILTER]: ''
+      },
+      initialValues: {
+        [NAME_FILTER]: ''
+      }
+    },
+    [FEATURE_VECTORS_FILTERS]: {
+      values: {
+        [NAME_FILTER]: ''
+      },
+      initialValues: {
+        [NAME_FILTER]: ''
+      }
+    },
+    [ADD_TO_FEATURE_VECTOR_FILTERS]: {
+      values: {
+        [NAME_FILTER]: ''
+      },
+      initialValues: {
+        [NAME_FILTER]: ''
+      }
+    },
     [REAL_TIME_PIPELINES_TAB]: {
       values: {
         [NAME_FILTER]: ''
@@ -232,6 +269,50 @@ const initialState = {
         [TYPE_FILTER]: FILTER_ALL_ITEMS
       }
     },
+    [FEATURE_SETS_FILTERS]: {
+      initialValues: {
+        [TAG_FILTER]: TAG_FILTER_LATEST,
+        [LABELS_FILTER]: ''
+      },
+      values: {
+        [TAG_FILTER]: TAG_FILTER_LATEST,
+        [LABELS_FILTER]: ''
+      }
+    },
+    [FEATURES_FILTERS]: {
+      initialValues: {
+        [TAG_FILTER]: TAG_FILTER_LATEST,
+        [LABELS_FILTER]: ''
+      },
+      values: {
+        [TAG_FILTER]: TAG_FILTER_LATEST,
+        [LABELS_FILTER]: ''
+      }
+    },
+    [FEATURE_VECTORS_FILTERS]: {
+      initialValues: {
+        [TAG_FILTER]: TAG_FILTER_LATEST,
+        [LABELS_FILTER]: ''
+      },
+      values: {
+        [TAG_FILTER]: TAG_FILTER_LATEST,
+        [LABELS_FILTER]: ''
+      }
+    },
+    [ADD_TO_FEATURE_VECTOR_FILTERS]: {
+      initialValues: {
+        [TAG_FILTER]: TAG_FILTER_LATEST,
+        [ENTITIES_FILTER]: '',
+        [LABELS_FILTER]: '',
+        [PROJECT_FILTER]: ''
+      },
+      values: {
+        [TAG_FILTER]: TAG_FILTER_LATEST,
+        [ENTITIES_FILTER]: '',
+        [LABELS_FILTER]: '',
+        [PROJECT_FILTER]: ''
+      }
+    },
     [MODEL_ENDPOINTS_TAB]: {
       initialValues: {
         [LABELS_FILTER]: ''
@@ -275,7 +356,11 @@ const filtersSlice = createSlice({
       state[FILTER_MENU][action.payload] = initialState[FILTER_MENU][action.payload]
     },
     resetModalFilter(state, action) {
-      state[FILTER_MENU_MODAL][action.payload] = initialState[FILTER_MENU_MODAL][action.payload]
+      state[FILTER_MENU_MODAL][action.payload.name] =
+        initialState[FILTER_MENU_MODAL][action.payload.name]
+      action.payload.resetModalFilterCallback?.(
+        initialState[FILTER_MENU_MODAL][action.payload.name]?.initialValues
+      )
     },
     setFilters(state, action) {
       for (let filterProp in action.payload) {
