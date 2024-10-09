@@ -18,7 +18,7 @@ under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
 import React from 'react'
-import { get } from 'lodash'
+import { get, omit } from 'lodash'
 
 import tasksApi from '../../api/tasks-api'
 import {
@@ -176,7 +176,11 @@ export const pollDeletingProjects = (terminatePollRef, deletingProjects, refresh
     )
 
     if (finishedTasks.length > 0) {
+      const tasksToExclude  = []
+
       finishedTasks.forEach(task => {
+        tasksToExclude.push(task.metadata.name)
+
         if (task.status.state === BG_TASK_SUCCEEDED) {
           dispatch(
             setNotification({
@@ -200,6 +204,7 @@ export const pollDeletingProjects = (terminatePollRef, deletingProjects, refresh
         }
       })
 
+      dispatch(projectsAction.setDeletingProjects(omit(deletingProjects, tasksToExclude)))
       refresh()
     }
 

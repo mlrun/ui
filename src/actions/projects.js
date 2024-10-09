@@ -86,7 +86,8 @@ import {
   SET_MLRUN_IS_UNHEALTHY,
   SET_MLRUN_UNHEALTHY_RETRYING,
   REQUEST_CANCELED,
-  DEFAULT_ABORT_MSG
+  DEFAULT_ABORT_MSG,
+  SET_DELETING_PROJECTS
 } from '../constants'
 import {
   CONFLICT_ERROR_STATUS_CODE,
@@ -639,6 +640,10 @@ const projectsAction = {
   removeProjectData: () => ({ type: REMOVE_PROJECT_DATA }),
   removeProjectSummary: () => ({ type: REMOVE_PROJECT_SUMMARY }),
   removeProjects: () => ({ type: REMOVE_PROJECTS }),
+  setDeletingProjects: data => ({
+    type: SET_DELETING_PROJECTS,
+    payload: data
+  }),
   setMlrunIsUnhealthy: isUnhealthy => ({
     type: SET_MLRUN_IS_UNHEALTHY,
     payload: isUnhealthy
