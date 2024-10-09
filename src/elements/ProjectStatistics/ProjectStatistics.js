@@ -30,6 +30,7 @@ import {
   datePickerPastOptions,
   PAST_24_HOUR_DATE_OPTION
 } from '../../utils/datePicker.util'
+import { ERROR_STATE, FAILED_STATE } from '../../constants'
 
 import './projectStatistics.scss'
 
@@ -52,14 +53,14 @@ const ProjectStatistics = ({ statistics }) => {
           initialSelectedOptionId: anyTimeOption.id
         }
       }
-    } else if (key === 'failed') {
+    } else if (key === FAILED_STATE) {
       const past24HourOption = datePickerPastOptions.find(
         option => option.id === PAST_24_HOUR_DATE_OPTION
       )
 
       filters = {
         saveFilters: true,
-        state: 'error',
+        state: ERROR_STATE,
         dates: {
           value: past24HourOption.handler(),
           isPredefined: past24HourOption.isPredefined,
