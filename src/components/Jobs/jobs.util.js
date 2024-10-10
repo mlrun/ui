@@ -76,7 +76,7 @@ export const getInfoHeaders = (isSpark, selectedJob) => {
 
   return infoHeaders
 }
-export const actionsMenuHeader = 'Batch run'
+export const actionButtonHeader = 'Batch run'
 
 export const JOB_STEADY_STATES = ['completed', 'error', 'aborted', 'failed']
 export const JOB_RUNNING_STATES = ['running', 'pending']
@@ -147,7 +147,9 @@ export const arePodsHidden = (jobLabels = []) => {
 }
 
 export const actionCreator = {
-  fetchJobFunction: jobsActions.fetchJobFunction
+  fetchAllJobRuns: jobsActions.fetchAllJobRuns,
+  fetchJobFunction: jobsActions.fetchJobFunction,
+  fetchJobs: jobsActions.fetchJobs
 }
 
 const generateEditableItem = (functionData, job) => {
