@@ -51,8 +51,8 @@ const Notification = () => {
     <div className="notifications-wrapper">
       <TransitionGroup component={null}>
         {notificationStore.notification.map(item => {
+          const nodeRef = React.createRef()
           const isSuccessResponse = inRange(item.status, 200, 300)
-
           const transitionStyles = {
             entered: {
               transform: 'translateY(0)',
@@ -68,6 +68,7 @@ const Notification = () => {
 
           return (
             <Transition
+              nodeRef={nodeRef}
               key={`css${item.id}`}
               timeout={duration}
               onEntered={() => {
