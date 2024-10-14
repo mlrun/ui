@@ -44,7 +44,7 @@ export const useSortTable = ({ headers, content, sortConfig = {} }) => {
 
   const isDateValid = date => {
     const dateString = String(date)
-    
+
     if (Date.parse(dateString)) {
       return !(dateString.match(/-/g) && !dateString.split('-').every(char => isNumber(char)))
     }
@@ -179,7 +179,10 @@ export const useSortTable = ({ headers, content, sortConfig = {} }) => {
 
       if (columnName) {
         const sorted = orderBy(content, getValueByType(columnIndex), sortDirection)
-        setSortedTableContent(sorted)
+
+        setSortedTableContent(prevState => {
+          return isEqual(prevState, sorted) ? prevState : sorted
+        })
       }
 
       setSelectedColumnName(columnName)

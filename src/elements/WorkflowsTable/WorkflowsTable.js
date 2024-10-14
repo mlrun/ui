@@ -460,7 +460,6 @@ const WorkflowsTable = React.forwardRef(
         checkIfWorkflowItemIsJob() && !dataIsLoading
       ) {
         setDataIsLoading(true)
-
         fetchRun().finally(() => setDataIsLoading(false))
       }
     }, [fetchRun, params.jobId, selectedJob, checkIfWorkflowItemIsJob, dataIsLoading])

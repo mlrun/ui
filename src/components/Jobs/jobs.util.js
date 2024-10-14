@@ -17,7 +17,7 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import { get } from 'lodash'
+import { get, isObject } from 'lodash'
 
 import tasksApi from '../../api/tasks-api'
 
@@ -36,7 +36,7 @@ import {
   JOB_KIND_LOCAL
 } from '../../constants'
 import jobsActions from '../../actions/jobs'
-import { generateKeyValues, truncateUid } from '../../utils'
+import { generateKeyValues, parseKeyValues, truncateUid } from '../../utils'
 import { BG_TASK_FAILED, BG_TASK_SUCCEEDED, pollTask } from '../../utils/poll.util'
 import { setNotification } from '../../reducers/notificationReducer'
 import { showErrorNotification } from '../../utils/notifications.util'
@@ -127,7 +127,7 @@ export const isJobAborting = (currentJob = {}) => {
 }
 
 export const isJobKindDask = (jobLabels = []) => {
-  return jobLabels?.includes(`kind: ${JOB_KIND_DASK}`)
+  return (isObject(jobLabels) ? parseKeyValues(jobLabels) : jobLabels)?.includes(`kind: ${JOB_KIND_DASK}`)
 }
 
 export const isJobKindLocal = job =>
