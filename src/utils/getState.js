@@ -21,7 +21,7 @@ such restriction.
 import { isEmpty } from 'lodash'
 import { FUNCTION_INITIALIZED_STATE, FUNCTIONS_PAGE, JOBS_MONITORING_WORKFLOWS_TAB } from '../constants'
 
-const getState = (state, page, kind) => {
+const getState = (state, page, kind, reason = '') => {
   const stateExists = !isEmpty(state)
 
   if (page === FUNCTIONS_PAGE) {
@@ -33,9 +33,12 @@ const getState = (state, page, kind) => {
       }`
     }
   } else {
+    const commonLabel = state ? commonStateLabels(page === JOBS_MONITORING_WORKFLOWS_TAB)[state] : ''
+    const label = reason && commonLabel === 'Error' ? `${commonLabel}. Reason: ${reason}` : commonLabel
+
     return {
       value: state ?? null,
-      label: state ? commonStateLabels(page === JOBS_MONITORING_WORKFLOWS_TAB)[state] : '',
+      label: label,
       className: `state${state ? '-' + state : ''}${kind ? '-' + kind : ''}`
     }
   }
