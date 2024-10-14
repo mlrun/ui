@@ -41,7 +41,7 @@ import {
   getInternalLabelsValidationRule
 } from 'igz-controls/utils/validation.util'
 import { setFieldState, isSubmitDisabled } from 'igz-controls/utils/form.util'
-import { LABEL_BUTTON, PRIMARY_BUTTON } from 'igz-controls/constants'
+import { TERTIARY_BUTTON, PRIMARY_BUTTON } from 'igz-controls/constants'
 import { getChipOptions } from '../../utils/getChipOptions'
 import { convertChipsData, parseChipsData } from '../../utils/convertChipsData'
 
@@ -149,7 +149,7 @@ const CreateFeatureVectorPopUp = ({
               <div className="pop-up-dialog__footer-container">
                 <Button
                   type="button"
-                  variant={LABEL_BUTTON}
+                  variant={TERTIARY_BUTTON}
                   label="Cancel"
                   className="pop-up-dialog__btn_cancel"
                   onClick={closePopUp}
