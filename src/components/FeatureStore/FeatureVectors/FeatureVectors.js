@@ -40,7 +40,7 @@ import {
   featureVectorsActionCreator,
   searchFeatureVectorItem
 } from './featureVectors.util'
-import { DANGER_BUTTON, LABEL_BUTTON } from 'igz-controls/constants'
+import { DANGER_BUTTON, TERTIARY_BUTTON } from 'igz-controls/constants'
 import { checkTabIsValid, handleApplyDetailsChanges } from '../featureStore.util'
 import { createFeatureVectorsRowData } from '../../../utils/createFeatureStoreContent'
 import { getFeatureVectorIdentifier } from '../../../utils/getUniqueIdentifier'
@@ -205,7 +205,7 @@ const FeatureVectors = ({
         header: 'Delete feature vector?',
         message: `Are you sure you want to delete the feature vector "${featureVector.name}"?. You cannot restore a feature vector after deleting it.`,
         btnCancelLabel: 'Cancel',
-        btnCancelVariant: LABEL_BUTTON,
+        btnCancelVariant: TERTIARY_BUTTON,
         btnConfirmLabel: 'Delete',
         btnConfirmVariant: DANGER_BUTTON,
         rejectHandler: () => setConfirmData(null),
