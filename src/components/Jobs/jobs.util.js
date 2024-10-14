@@ -17,7 +17,7 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import { get, isEmpty } from 'lodash'
+import { get } from 'lodash'
 
 import tasksApi from '../../api/tasks-api'
 
@@ -127,7 +127,7 @@ export const isJobAborting = (currentJob = {}) => {
 }
 
 export const isJobKindDask = (jobLabels = []) => {
-  return !isEmpty(jobLabels) ? jobLabels?.includes(`kind: ${JOB_KIND_DASK}`) : false
+  return jobLabels?.includes(`kind: ${JOB_KIND_DASK}`)
 }
 
 export const isJobKindLocal = job =>
