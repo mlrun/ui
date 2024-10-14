@@ -180,7 +180,7 @@ const ProjectsJobsMonitoring = ({ fetchAllJobRuns, fetchJobFunction, fetchJobs }
                 JOB_KIND_LOCAL
 
               return (
-                !filters.type || filters.type === FILTER_ALL_ITEMS || filters.type.includes(type)
+                !filters.type || filters.type === FILTER_ALL_ITEMS || filters.type.split(',').includes(type)
               )
             })
           const responseAbortingJobs = parsedJobs.reduce((acc, job) => {
