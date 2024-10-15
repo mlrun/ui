@@ -96,6 +96,17 @@ body {
     align-items: center;
     padding: 4px 0 15px 0;
 
+    &.content__action-bar-wrapper_wrapped {
+      @media screen and (max-width: 1500px) {
+        flex-wrap: wrap;
+
+        .action-bar {
+          justify-content: space-between;
+          margin-top: 10px;
+        }
+      }
+    }
+
     &_hidden {
       display: none;
     }

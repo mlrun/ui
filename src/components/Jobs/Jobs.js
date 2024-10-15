@@ -166,7 +166,7 @@ const Jobs = ({ fetchAllJobRuns, fetchJobFunction, fetchJobs }) => {
         </div>
         {selectedTab && (
           <div className="content">
-            <div className="content__action-bar-wrapper">
+            <div className="content__action-bar-wrapper content__action-bar-wrapper_wrapped">
               <ContentMenu
                 activeTab={selectedTab}
                 onClick={handleTabChange}

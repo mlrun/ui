@@ -77,7 +77,7 @@ const ModelsView = React.forwardRef(
       <>
         <div className="models" ref={modelsRef}>
           <div className="table-container">
-            <div className="content__action-bar-wrapper">
+            <div className="content__action-bar-wrapper  content__action-bar-wrapper_wrapped">
               <ModelsPageTabs />
               {/* TODO: remove from demo in 1.7 */}
               <ArtifactsActionBar
