@@ -1512,7 +1512,14 @@ module.exports = {
   },
   filterByPopup: {
     Title: By.css('[data-testid="pop-up-dialog"] h3'),
-    Table_Label_Filter_Input: commonLabelFilterInput,
+    Table_Label_Filter_Input: inputGroup(
+      generateInputGroup(
+        '[data-testid="labels-form-field-input"]',
+        true,
+        false,
+        'svg'
+      )
+    ),
     Table_Project_Filter_Input: commonProjectFilterInput,
     Table_Tree_Filter_Dropdown: commonTableTreeFilterDropdown,
     Status_Filter_Element: By.css('[data-testid="state-form-field-select"]'),
