@@ -154,9 +154,9 @@ const responseRejectInterceptor = error => {
 
       if (
         consecutiveErrorsCount === MAX_CONSECUTIVE_ERRORS_COUNT &&
-        window.location.pathname !== `/${PROJECTS_PAGE_PATH}`
+        window.location.pathname !== `${process.env.PUBLIC_URL}/${PROJECTS_PAGE_PATH}`
       ) {
-        window.location.href = '/projects'
+        window.location.href = `${process.env.PUBLIC_URL}/${PROJECTS_PAGE_PATH}`
       }
     }
   }
