@@ -367,9 +367,11 @@ const Projects = () => {
   }, [refreshProjects])
 
   useEffect(() => {
+    const terminateRef = terminatePollRef
+
     return () => {
       abortControllerRef.current.abort()
-      terminatePollRef?.current?.()
+      terminateRef?.current?.()
     }
   }, [])
 
