@@ -176,7 +176,7 @@
     "stylelint-scss": "^3.17.2",
     "terser-webpack-plugin": "^5.2.5",
     "url-loader": "4.1.1",
-    "webpack": "^5.90.3",
+    "webpack": "^5.94.0",
     "webpack-dev-server": "^4.6.0",
     "webpack-manifest-plugin": "^4.0.2",
     "workbox-webpack-plugin": "^7.0.0"
