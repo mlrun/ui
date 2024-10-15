@@ -20,13 +20,16 @@ such restriction.
 import { By } from 'selenium-webdriver'
 import commonTable from '../components/table.component'
 import dropdownComponent from '../components/dropdown.component'
+import labelComponent from '../components/label.component'
 import {
   generateDropdownGroup,
-  generateInputGroup
+  generateInputGroup,
+  generateLabelGroup
 } from '../../common-tools/common-tools'
 import inputGroup from '../components/input-group.component'
 import checkboxComponent from '../components/checkbox.component'
 import datepicker from '../components/date-picker.component'
+import actionMenu from '../components/action-menu.component'
 
 const tabSelector = {
   root: '.content .content-menu',
@@ -39,6 +42,14 @@ const tabSelector = {
         key: 'a'
       }
     }
+  }
+}
+
+const actionMenuStructure = {
+  root: '.actions-menu__container',
+  menuElements: {
+    open_button: 'button',
+    options: '.actions-menu__body .actions-menu__option'
   }
 }
 
@@ -68,7 +79,30 @@ const overallTable = {
         uid:
           '.table-body__cell:nth-of-type(1) a .date-uid-row .link-subtext:nth-of-type(2)',
         duration: '.table-body__cell:nth-of-type(3) .data-ellipsis',
-        owner: '.table-body__cell:nth-of-type(4) .data-ellipsis'
+        owner: '.table-body__cell:nth-of-type(4) .data-ellipsis',
+        action_menu: {
+          componentType: actionMenu,
+          structure: actionMenuStructure
+        },
+        labels: {
+          componentType: dropdownComponent,
+          structure: generateDropdownGroup(
+            '.table-body__cell:nth-of-type(7)',
+            '.chip-block span.chips_button',
+            '.chip-block-hidden_visible .data-ellipsis.tooltip-wrapper',
+            false,
+            false
+          )
+        },
+        type: {
+          componentType: labelComponent,
+          structure: generateLabelGroup(
+            '.table-body__cell:nth-of-type(3)',
+            '.data-ellipsis',
+            true,
+            '.tooltip .tooltip__text span'
+          )
+        },
       }
     }
   }

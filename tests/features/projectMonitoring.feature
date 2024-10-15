@@ -23,7 +23,7 @@ Feature: Project Monitoring Page
     @MLPM
     @passive
     @smoke
-    Scenario: MLNB001 - Check all mandatory components on Navigation Bar
+    Scenario: MLPM001 - Check all mandatory components on Navigation Bar
         Given open url
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
@@ -633,7 +633,7 @@ Feature: Project Monitoring Page
     @MLPM
     @passive
     @smoke
-    Scenario: MLB003 - Verify behaviour of Breadcrumbs menu
+    Scenario: MLPM022 - Verify behaviour of Breadcrumbs menu
         Given open url
         And click on row root with value "churn-project-admin" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
