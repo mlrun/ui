@@ -81,10 +81,12 @@ import {
   FETCH_PROJECT_SECRETS_SUCCESS,
   SET_JOBS_MONITORING_DATA,
   SET_MLRUN_IS_UNHEALTHY,
-  SET_MLRUN_UNHEALTHY_RETRYING
+  SET_MLRUN_UNHEALTHY_RETRYING,
+  SET_DELETING_PROJECTS
 } from '../constants'
 
 const initialState = {
+  deletingProjects: {},
   error: null,
   jobsMonitoringData: {
     jobs: {},
@@ -780,6 +782,13 @@ const projectReducer = (state = initialState, { type, payload }) => {
         ...state,
         newProject: {
           error: null
+        }
+      }
+    case SET_DELETING_PROJECTS:
+      return {
+        ...state,
+        deletingProjects: {
+          ...payload
         }
       }
     case SET_JOBS_MONITORING_DATA:
