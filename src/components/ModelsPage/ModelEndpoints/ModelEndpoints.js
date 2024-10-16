@@ -117,7 +117,6 @@ const ModelEndpoints = () => {
             }
           },
           params: {
-            metric: 'latency_avg_1h',
             start: 'now-10m'
           }
         })
