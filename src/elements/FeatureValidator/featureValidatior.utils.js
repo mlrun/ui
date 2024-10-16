@@ -18,10 +18,12 @@ under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
 
+import { ERROR_STATE, FAIL_STATE } from '../../constants'
+
 export const validatorStates = {
-  error: 'error',
+  [ERROR_STATE]: 'error',
   info: 'info',
   warn: 'warning',
   warning: 'warning',
-  fail: 'fail'
+  [FAIL_STATE]: 'fail'
 }

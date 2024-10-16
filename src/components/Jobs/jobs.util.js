@@ -33,7 +33,9 @@ import {
   JOB_KIND_REMOTE_SPARK,
   SCHEDULE_TAB,
   JOB_KIND_SPARK,
-  JOB_KIND_LOCAL
+  JOB_KIND_LOCAL,
+  ERROR_STATE,
+  FAILED_STATE
 } from '../../constants'
 import jobsActions from '../../actions/jobs'
 import { generateKeyValues, truncateUid } from '../../utils'
@@ -78,7 +80,7 @@ export const getInfoHeaders = (isSpark, selectedJob) => {
 }
 export const actionsMenuHeader = 'Batch run'
 
-export const JOB_STEADY_STATES = ['completed', 'error', 'aborted', 'failed']
+export const JOB_STEADY_STATES = ['completed', ERROR_STATE, 'aborted', FAILED_STATE]
 export const JOB_RUNNING_STATES = ['running', 'pending']
 
 export const getJobsDetailsMenu = (jobLabels = []) => {

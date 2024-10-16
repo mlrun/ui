@@ -19,7 +19,16 @@ such restriction.
 */
 
 import { isEmpty } from 'lodash'
-import { FUNCTION_INITIALIZED_STATE, FUNCTIONS_PAGE, JOBS_MONITORING_WORKFLOWS_TAB } from '../constants'
+import {
+  ERROR_STATE,
+  FAIL_STATE,
+  FAILED_STATE,
+  FUNCTION_INITIALIZED_STATE,
+  FUNCTIONS_PAGE,
+  JOBS_MONITORING_WORKFLOWS_TAB
+} from '../constants'
+
+const errorStates = [ERROR_STATE, FAIL_STATE, FAILED_STATE]
 
 const getState = (state, page, kind, reason = '') => {
   const stateExists = !isEmpty(state)
@@ -34,7 +43,7 @@ const getState = (state, page, kind, reason = '') => {
     }
   } else {
     const commonLabel = state ? commonStateLabels(page === JOBS_MONITORING_WORKFLOWS_TAB)[state] : ''
-    const label = reason && commonLabel === 'Error' ? `${commonLabel}. Reason: ${reason}` : commonLabel
+    const label = reason && errorStates.includes(state) ? `${commonLabel}. Reason: ${reason}` : commonLabel
 
     return {
       value: state ?? null,
@@ -52,9 +61,9 @@ const commonStateLabels = withFailedState => {
     completed: 'Completed',
     created: 'Created',
     creating: 'Creating',
-    error: 'Error',
-    fail: 'Error',
-    failed: withFailedState ? 'Failed' : 'Error',
+    [ERROR_STATE]: 'Error',
+    [FAIL_STATE]: 'Error',
+    [FAILED_STATE]: withFailedState ? 'Failed' : 'Error',
     omitted: 'Omitted',
     pending: 'Pending',
     ready: 'Ready',
@@ -69,8 +78,8 @@ const functionStateLabels = {
   build: 'Deploying',
   building: 'Deploying',
   deploying: 'Deploying',
-  error: 'Error',
-  failed: 'Error',
+  [ERROR_STATE]: 'Error',
+  [FAILED_STATE]: 'Error',
   omitted: 'Omitted',
   pending: 'Deploying',
   ready: 'Ready',

@@ -21,6 +21,8 @@ import classnames from 'classnames'
 import dagre from 'dagre'
 import { Position } from 'reactflow'
 
+import { ERROR_STATE, FAILED_STATE } from '../../constants'
+
 export const getLayoutedElements = (nodes, edges, direction = 'TB') => {
   const elWidth = 300
   const elHeight = 80
@@ -181,9 +183,9 @@ export const getWorkflowSourceHandle = phase => {
 
 const nodeStates = {
   succeeded: 'Completed',
-  failed: 'Error',
+  [FAILED_STATE]: 'Error',
   skipped: 'Skipped',
-  error: 'Error',
+  [ERROR_STATE]: 'Error',
   running: 'Running',
   omitted: 'Omitted'
 }

@@ -20,7 +20,7 @@ such restriction.
 import { getJobIdentifier } from '../../../utils/getUniqueIdentifier'
 import { validateArguments } from '../../../utils/validateArguments'
 import { generateLinkToDetailsPanel } from '../../../utils/link-helper.util'
-import { JOB_KIND_WORKFLOW, JOBS_PAGE, MONITOR_JOBS_TAB } from '../../../constants'
+import { ERROR_STATE, JOB_KIND_WORKFLOW, JOBS_PAGE, MONITOR_JOBS_TAB } from '../../../constants'
 import measureTime from '../../../utils/measureTime'
 import { formatDatetime } from '../../../utils'
 
@@ -104,7 +104,7 @@ export const createJobsMonitoringContent = (jobs, jobName, isStagingMode) => {
           value: measureTime(
             job.startTime || new Date(job.created_at),
             (job.state?.value !== 'running' && job.updated) ||
-              (job.state?.value !== 'error' && new Date(job.finished_at))
+              (job.state?.value !== ERROR_STATE && new Date(job.finished_at))
           ),
           className: 'table-cell-1',
           type: 'duration'

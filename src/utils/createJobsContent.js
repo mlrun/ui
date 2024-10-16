@@ -19,6 +19,7 @@ such restriction.
 */
 
 import {
+  ERROR_STATE,
   JOB_KIND_WORKFLOW,
   JOBS_MONITORING_JOBS_TAB,
   JOBS_MONITORING_PAGE,
@@ -104,7 +105,7 @@ export const createJobsMonitorTabContent = (jobs, jobName, isStagingMode) => {
           value: measureTime(
             job.startTime || new Date(job.created_at),
             (job.state?.value !== 'running' && job.updated) ||
-              (job.state?.value !== 'error' && new Date(job.finished_at))
+              (job.state?.value !== ERROR_STATE && new Date(job.finished_at))
           ),
           className: 'table-cell-1',
           type: 'duration'
@@ -302,7 +303,7 @@ export const createJobsWorkflowsTabContent = (jobs, projectName, isStagingMode, 
           value: measureTime(
             job.startTime || new Date(job.created_at),
             (job.state?.value !== 'running' && job.updated) ||
-              (job.state?.value !== 'error' && new Date(job.finished_at))
+              (job.state?.value !== ERROR_STATE && new Date(job.finished_at))
           ),
           className: 'table-cell-1',
           type: 'duration',
@@ -403,7 +404,7 @@ export const createJobsWorkflowContent = (
           id: `duration.${identifierUnique}`,
           value: measureTime(
             new Date(job.startedAt),
-            job.state?.value !== 'error' && new Date(job.finishedAt)
+            job.state?.value !== ERROR_STATE && new Date(job.finishedAt)
           ),
           className: 'table-cell-1',
           type: 'duration',
@@ -487,7 +488,7 @@ export const createJobsMonitoringContent = (jobs, jobName, isStagingMode) => {
           value: measureTime(
             job.startTime || new Date(job.created_at),
             (job.state?.value !== 'running' && job.updated) ||
-              (job.state?.value !== 'error' && new Date(job.finished_at))
+              (job.state?.value !== ERROR_STATE && new Date(job.finished_at))
           ),
           className: 'table-cell-1',
           type: 'duration'
@@ -691,7 +692,7 @@ export const createWorkflowsMonitoringContent = (jobs, isStagingMode, isSelected
           value: measureTime(
             job.startTime || new Date(job.created_at),
             (job.state?.value !== 'running' && job.updated) ||
-              (job.state?.value !== 'error' && new Date(job.finished_at))
+              (job.state?.value !== ERROR_STATE && new Date(job.finished_at))
           ),
           className: 'table-cell-1',
           type: 'duration',
