@@ -424,8 +424,6 @@ export const createModelEndpointsRowData = (artifact, project) => {
     ? `store://functions/${artifact.spec.function_uri}`
     : ''
   const { key: functionName } = parseUri(functionUri)
-  const averageLatency = artifact.status?.metrics?.real_time?.latency_avg_1h?.[0]?.[1]
-
   const isEndpointTypeRouter = artifact?.status?.endpoint_type === 2
 
   return {
@@ -503,13 +501,6 @@ export const createModelEndpointsRowData = (artifact, project) => {
         headerId: 'lastprediction',
         headerLabel: 'Last prediction',
         value: formatDatetime(artifact.status?.last_request, '-'),
-        className: 'table-cell-1'
-      },
-      {
-        id: `averageLatency.${artifact.ui.identifierUnique}`,
-        headerId: 'averagelatency',
-        headerLabel: 'Average latency',
-        value: averageLatency ? `${(averageLatency / 1000).toFixed(2)}ms` : '-',
         className: 'table-cell-1'
       },
       {
