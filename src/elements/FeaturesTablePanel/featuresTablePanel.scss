@@ -63,12 +63,16 @@
   .features-panel__buttons {
     position: sticky;
     bottom: 0;
+    z-index: 3;
     display: flex;
     justify-content: flex-end;
     width: 100%;
     padding: 10px 15px;
     background-color: $white;
-    z-index: 3;
+
+    .btn {
+      margin-right: 10px;
+    }
   }
 
   .features-panel__divider {
