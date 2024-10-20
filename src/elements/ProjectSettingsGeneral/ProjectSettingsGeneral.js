@@ -355,18 +355,21 @@ const ProjectSettingsGeneral = ({
                 <>
                   <div className="settings__card-title">
                     <span>Project: {params.projectName || ''}</span>
-                    <RoundedIcon
-                      className="delete-project-danger"
-                      id="delete-project-btn"
-                      onClick={event => {
-                        event.stopPropagation()
-                        onDeleteProject(projectStore.project?.data)
-                      }}
-                      tooltipText="Delete project"
-                    >
-                      <DeleteIcon />
-                    </RoundedIcon>
+                    {projectMembershipIsEnabled && (
+                      <RoundedIcon
+                        className="delete-project-danger"
+                        id="delete-project-btn"
+                        onClick={event => {
+                          event.stopPropagation()
+                          onDeleteProject(projectStore.project?.data)
+                        }}
+                        tooltipText="Delete project"
+                      >
+                        <DeleteIcon />
+                      </RoundedIcon>
+                    )}
                   </div>
+
                   <div className="settings__card-content">
                     <div className="settings__card-content-col">
                       <div className="settings__source">
