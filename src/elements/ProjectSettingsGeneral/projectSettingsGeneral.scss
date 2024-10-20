@@ -69,4 +69,14 @@
   .text-area {
     width: 100%;
   }
+
+  .delete-project {
+    &-danger {
+      svg {
+        path:first-child {
+          fill: $amaranth;
+        }
+      }
+    }
+  }
 }
