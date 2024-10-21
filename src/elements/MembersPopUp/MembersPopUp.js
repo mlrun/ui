@@ -31,7 +31,7 @@ import { Button, ConfirmDialog, RoundedIcon, Tip } from 'igz-controls/components
 
 import {
   DANGER_BUTTON,
-  LABEL_BUTTON,
+  TERTIARY_BUTTON,
   PRIMARY_BUTTON,
   SECONDARY_BUTTON
 } from 'igz-controls/constants'
@@ -526,7 +526,7 @@ const MembersPopUp = ({ changeMembersCallback, membersDispatch, membersState }) 
         <div className="apply-discard-buttons">
           <Button
             disabled={!areChangesMade()}
-            variant={LABEL_BUTTON}
+            variant={TERTIARY_BUTTON}
             label="Discard"
             className="pop-up-dialog__btn_cancel"
             onClick={closeMemberPopUp}
@@ -547,7 +547,7 @@ const MembersPopUp = ({ changeMembersCallback, membersDispatch, membersState }) 
               setConfirmDiscard(false)
             },
             label: 'No',
-            variant: LABEL_BUTTON
+            variant: TERTIARY_BUTTON
           }}
           closePopUp={() => setConfirmDiscard(false)}
           confirmButton={{

@@ -26,7 +26,7 @@ import CreateFeatureVectorPopUp from '../CreateFeatureVectorPopUp/CreateFeatureV
 import FeaturesTablePanelRow from './FeatureTablePanleRow/FeaturesTablePanelRow'
 import { Button, Tip, Tooltip, TextTooltipTemplate } from 'igz-controls/components'
 
-import { LABEL_BUTTON, PRIMARY_BUTTON } from 'igz-controls/constants'
+import { TERTIARY_BUTTON, PRIMARY_BUTTON } from 'igz-controls/constants'
 
 import { ReactComponent as Edit } from 'igz-controls/images/edit.svg'
 import { ReactComponent as Arrow } from 'igz-controls/images/arrow.svg'
@@ -164,7 +164,7 @@ function FeaturesTablePanelView({
         })}
       </div>
       <div className="features-panel__buttons">
-        <Button label="Cancel" variant={LABEL_BUTTON} onClick={handleCancel} />
+        <Button label="Cancel" variant={TERTIARY_BUTTON} onClick={handleCancel} />
         <Button variant={PRIMARY_BUTTON} label="Add" onClick={addFeatures} />
       </div>
     </div>
