@@ -73,7 +73,7 @@ const workflowActions = {
     dispatch(workflowActions.fetchWorkflowsBegin())
     config?.ui?.setRequestErrorMessage?.('')
 
-    const errorHandler = (error) => {
+    const errorHandler = error => {
       dispatch(workflowActions.fetchWorkflowsFailure(error))
       largeResponseCatchHandler(
         error,
@@ -134,6 +134,9 @@ const workflowActions = {
     type: FETCH_WORKFLOWS_FAILURE,
     payload: error
   }),
+  rerunWorkflow: (project, workflowId) => () => {
+    return workflowApi.rerunWorkflow(project, workflowId)
+  },
   resetWorkflow: () => ({
     type: RESET_WORKFLOW
   })
