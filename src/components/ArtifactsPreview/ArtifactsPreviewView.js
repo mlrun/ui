@@ -26,7 +26,7 @@ import PreviewError from './PreviewError/PreviewError'
 import { Tooltip, TextTooltipTemplate } from 'igz-controls/components'
 import WarningMessage from '../../common/WarningMessage/WarningMessage'
 
-import { ARTIFACT_PREVIEW_TABLE_ROW_LIMIT } from '../../constants'
+import { ARTIFACT_PREVIEW_TABLE_ROW_LIMIT, ERROR_STATE } from '../../constants'
 
 import './artifactsPreview.scss'
 
@@ -39,7 +39,7 @@ const ArtifactsPreviewView = ({ className, preview, setShowErrorBody, showErrorB
         : [],
     [preview.data]
   )
-  
+
   return preview?.hidden ? (
     <div className="artifact-preview__no-data">No preview</div>
   ) : (
@@ -54,7 +54,7 @@ const ArtifactsPreviewView = ({ className, preview, setShowErrorBody, showErrorB
           </div>
         )}
         <div className={className}>
-          {preview?.type === 'error' ? (
+          {preview?.type === ERROR_STATE ? (
             <PreviewError
               error={preview.error}
               setShowErrorBody={setShowErrorBody}
