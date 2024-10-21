@@ -74,7 +74,7 @@ export const featureSetsInfoHeaders = [
   { label: 'Usage example', id: 'usage_example' }
 ]
 
-export const featureVectorsFilters = {
+export const filtersConfig = {
   [TAG_FILTER]: { label: 'Version Tag:' },
   [NAME_FILTER]: { label: 'Name:' },
   [LABELS_FILTER]: { label: 'Labels:' }

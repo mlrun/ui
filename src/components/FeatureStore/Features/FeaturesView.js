@@ -24,10 +24,10 @@ import FeatureStoreTableRow from '../../../elements/FeatureStoreTableRow/Feature
 import NoData from '../../../common/NoData/NoData'
 import Table from '../../Table/Table'
 
-import { FEATURE_STORE_PAGE, FEATURES_FILTERS, FEATURES_TAB } from '../../../constants'
+import { FEATURE_STORE_PAGE, FEATURES_TAB } from '../../../constants'
 import { SECONDARY_BUTTON } from 'igz-controls/constants'
 import { VIRTUALIZATION_CONFIG } from '../../../types'
-import { featuresFilters } from './features.util'
+import { filtersConfig } from './features.util'
 import { getNoDataMessage } from '../../../utils/getNoDataMessage'
 import { isRowRendered } from '../../../hooks/useVirtualization.hook'
 import ActionBar from '../../ActionBar/ActionBar'
@@ -68,8 +68,8 @@ const FeaturesView = React.forwardRef(
                 })
               }
             ]}
-            filterMenuName={FEATURES_FILTERS}
-            filtersConfig={featuresFilters}
+            filterMenuName={FEATURES_TAB}
+            filtersConfig={filtersConfig}
             handleRefresh={handleRefresh}
             page={FEATURE_STORE_PAGE}
             tab={FEATURES_TAB}
@@ -83,11 +83,11 @@ const FeaturesView = React.forwardRef(
           <NoData
             message={getNoDataMessage(
               filtersStore,
-              featuresFilters,
+              filtersConfig,
               requestErrorMessage,
               FEATURE_STORE_PAGE,
               FEATURES_TAB,
-              FEATURES_FILTERS
+              FEATURES_TAB
             )}
           />
         ) : (

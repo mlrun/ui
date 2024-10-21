@@ -29,7 +29,6 @@ import { FeatureStoreContext } from '../FeatureStore'
 
 import {
   CANCEL_REQUEST_TIMEOUT,
-  FEATURES_FILTERS,
   FEATURES_TAB,
   FEATURE_STORE_PAGE,
   FILTER_MENU,
@@ -73,8 +72,8 @@ const Features = ({
   const filtersStore = useSelector(store => store.filtersStore)
   const featuresFilters = useSelector(store => {
     return {
-      ...store.filtersStore[FILTER_MENU][FEATURES_FILTERS].values,
-      ...store.filtersStore[FILTER_MENU_MODAL][FEATURES_FILTERS].values
+      ...store.filtersStore[FILTER_MENU][FEATURES_TAB].values,
+      ...store.filtersStore[FILTER_MENU_MODAL][FEATURES_TAB].values
     }
   })
   const tableStore = useSelector(store => store.tableStore)

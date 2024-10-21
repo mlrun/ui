@@ -29,12 +29,11 @@ import FeatureStoreTableRow from '../../elements/FeatureStoreTableRow/FeatureSto
 import YamlModal from '../../common/YamlModal/YamlModal'
 
 import {
-  ADD_TO_FEATURE_VECTOR_FILTERS,
   ADD_TO_FEATURE_VECTOR_TAB,
   FEATURE_STORE_PAGE
 } from '../../constants'
 import { VIRTUALIZATION_CONFIG } from '../../types'
-import { filters } from './addToFeatureVectorPage.util'
+import { filtersConfig } from './addToFeatureVectorPage.util'
 import { getNoDataMessage } from '../../utils/getNoDataMessage'
 import { isRowRendered } from '../../hooks/useVirtualization.hook'
 import ActionBar from '../ActionBar/ActionBar'
@@ -72,8 +71,8 @@ const AddToFeatureVectorView = React.forwardRef(
           <div className="table-container">
             <div className="content__action-bar-wrapper">
               <ActionBar
-                filterMenuName={ADD_TO_FEATURE_VECTOR_FILTERS}
-                filtersConfig={filters}
+                filterMenuName={ADD_TO_FEATURE_VECTOR_TAB}
+                filtersConfig={filtersConfig}
                 handleRefresh={handleRefresh}
                 page={FEATURE_STORE_PAGE}
                 tab={ADD_TO_FEATURE_VECTOR_TAB}
@@ -86,11 +85,11 @@ const AddToFeatureVectorView = React.forwardRef(
               <NoData
                 message={getNoDataMessage(
                   filtersStore,
-                  filters,
+                  filtersConfig,
                   requestErrorMessage,
                   FEATURE_STORE_PAGE,
                   ADD_TO_FEATURE_VECTOR_TAB,
-                  ADD_TO_FEATURE_VECTOR_FILTERS
+                  ADD_TO_FEATURE_VECTOR_TAB
                 )}
               />
             ) : (

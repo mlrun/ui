@@ -19,11 +19,12 @@ such restriction.
 */
 import React from 'react'
 import { useForm } from 'react-final-form'
+import PropTypes from 'prop-types'
 
 import { FormInput, FormOnChange } from 'igz-controls/components'
+import FormTagFilter from '../../common/FormTagFilter/FormTagFilter'
 
 import { LABELS_FILTER, TAG_FILTER } from '../../constants'
-import FormTagFilter from '../../common/FormTagFilter/FormTagFilter'
 
 const FeatureStoreFilters = ({ content }) => {
   const form = useForm()
@@ -48,6 +49,10 @@ const FeatureStoreFilters = ({ content }) => {
       </div>
     </div>
   )
+}
+
+FeatureStoreFilters.propTypes = {
+  content: PropTypes.arrayOf(PropTypes.object).isRequired
 }
 
 export default FeatureStoreFilters

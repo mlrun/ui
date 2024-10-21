@@ -29,10 +29,10 @@ import ActionBar from '../../ActionBar/ActionBar'
 import FeatureStoreFilters from '../FeatureStoreFilters'
 import Loader from '../../../common/Loader/Loader'
 
-import { FEATURE_SETS_FILTERS, FEATURE_SETS_TAB, FEATURE_STORE_PAGE } from '../../../constants'
+import { FEATURE_SETS_TAB, FEATURE_STORE_PAGE } from '../../../constants'
 import { SECONDARY_BUTTON } from 'iguazio.dashboard-react-controls/dist/constants'
 import { VIRTUALIZATION_CONFIG } from '../../../types'
-import { featureSetsFilters } from './featureSets.util'
+import { filtersConfig } from './featureSets.util'
 import { getNoDataMessage } from '../../../utils/getNoDataMessage'
 import { isRowRendered } from '../../../hooks/useVirtualization.hook'
 import { createFeatureSetTitle } from '../featureStore.util'
@@ -78,8 +78,8 @@ const FeatureSetsView = React.forwardRef(
                 onClick: () => setFeatureSetsPanelIsOpen(true)
               }
             ]}
-            filterMenuName={FEATURE_SETS_FILTERS}
-            filtersConfig={featureSetsFilters}
+            filterMenuName={FEATURE_SETS_TAB}
+            filtersConfig={filtersConfig}
             handleRefresh={handleRefresh}
             page={FEATURE_STORE_PAGE}
             tab={FEATURE_SETS_TAB}
@@ -92,11 +92,11 @@ const FeatureSetsView = React.forwardRef(
           <NoData
             message={getNoDataMessage(
               filtersStore,
-              featureSetsFilters,
+              filtersConfig,
               requestErrorMessage,
               FEATURE_STORE_PAGE,
               FEATURE_SETS_TAB,
-              FEATURE_SETS_FILTERS
+              FEATURE_SETS_TAB
             )}
           />
         ) : (

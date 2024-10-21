@@ -21,6 +21,7 @@ import React from 'react'
 import { useForm } from 'react-final-form'
 import { useSelector } from 'react-redux'
 import { useParams } from 'react-router-dom'
+import PropTypes from 'prop-types'
 
 import { FormInput, FormOnChange } from 'igz-controls/components'
 import FormTagFilter from '../../common/FormTagFilter/FormTagFilter'
@@ -65,6 +66,10 @@ const AddToFeatureVectorFilters = ({ content }) => {
       </div>
     </div>
   )
+}
+
+AddToFeatureVectorFilters.propTypes = {
+  content: PropTypes.arrayOf(PropTypes.object).isRequired
 }
 
 export default AddToFeatureVectorFilters

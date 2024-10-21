@@ -27,11 +27,10 @@ import Table from '../../Table/Table'
 
 import {
   FEATURE_STORE_PAGE,
-  FEATURE_VECTORS_FILTERS,
   FEATURE_VECTORS_TAB
 } from '../../../constants'
 import { VIRTUALIZATION_CONFIG } from '../../../types'
-import { featureVectorsFilters } from './featureVectors.util'
+import { filtersConfig } from './featureVectors.util'
 import { getNoDataMessage } from '../../../utils/getNoDataMessage'
 import { isRowRendered } from '../../../hooks/useVirtualization.hook'
 import ActionBar from '../../ActionBar/ActionBar'
@@ -76,8 +75,8 @@ const FeatureVectorsView = React.forwardRef(
                 onClick: () => setCreateVectorPopUpIsOpen(true)
               }
             ]}
-            filterMenuName={FEATURE_VECTORS_FILTERS}
-            filtersConfig={featureVectorsFilters}
+            filterMenuName={FEATURE_VECTORS_TAB}
+            filtersConfig={filtersConfig}
             handleRefresh={handleRefresh}
             page={FEATURE_STORE_PAGE}
             tab={FEATURE_VECTORS_TAB}
@@ -90,11 +89,11 @@ const FeatureVectorsView = React.forwardRef(
           <NoData
             message={getNoDataMessage(
               filtersStore,
-              featureVectorsFilters,
+              filtersConfig,
               requestErrorMessage,
               FEATURE_STORE_PAGE,
               FEATURE_VECTORS_TAB,
-              FEATURE_VECTORS_FILTERS
+              FEATURE_VECTORS_TAB
             )}
           />
         ) : (

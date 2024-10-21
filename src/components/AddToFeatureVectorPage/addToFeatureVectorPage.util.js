@@ -40,7 +40,7 @@ export const pageDataInitialState = {
   tabs: []
 }
 
-export const filters = {
+export const filtersConfig = {
   [TAG_FILTER]: { label: 'Tag:' },
   [NAME_FILTER]: { label: 'Name:' },
   [ENTITIES_FILTER]: { label: 'Entity:' },

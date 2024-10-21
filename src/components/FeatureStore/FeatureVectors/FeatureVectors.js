@@ -27,7 +27,6 @@ import { FeatureStoreContext } from '../FeatureStore'
 
 import {
   FEATURE_STORE_PAGE,
-  FEATURE_VECTORS_FILTERS,
   FEATURE_VECTORS_TAB,
   FILTER_MENU,
   FILTER_MENU_MODAL,
@@ -61,7 +60,7 @@ import { useVirtualization } from '../../../hooks/useVirtualization.hook'
 import { useInitialTableFetch } from '../../../hooks/useInitialTableFetch.hook'
 import { sortListByDate } from '../../../utils'
 import { isDetailsTabExists } from '../../../utils/link-helper.util'
-import { featureVectorsFilters as filtersConfig } from './featureVectors.util'
+import { filtersConfig } from './featureVectors.util'
 
 import cssVariables from './featureVectors.scss'
 
@@ -84,8 +83,8 @@ const FeatureVectors = ({
   const filtersStore = useSelector(store => store.filtersStore)
   const featureVectorsFilters = useSelector(store => {
     return {
-      ...store.filtersStore[FILTER_MENU][FEATURE_VECTORS_FILTERS].values,
-      ...store.filtersStore[FILTER_MENU_MODAL][FEATURE_VECTORS_FILTERS].values
+      ...store.filtersStore[FILTER_MENU][FEATURE_VECTORS_TAB].values,
+      ...store.filtersStore[FILTER_MENU_MODAL][FEATURE_VECTORS_TAB].values
     }
   })
   const featureStoreRef = useRef(null)
@@ -186,7 +185,7 @@ const FeatureVectors = ({
 
               dispatch(
                 setModalFiltersValues({
-                  name: FEATURE_VECTORS_FILTERS,
+                  name: FEATURE_VECTORS_TAB,
                   value: {
                     [TAG_FILTER]: tag
                   }
@@ -409,8 +408,8 @@ const FeatureVectors = ({
       createFeatureVectorsRowData(rowItem, FEATURE_VECTORS_TAB, params.projectName),
     fetchTags,
     sortExpandedRowsDataBy: 'updated',
-    filterModalName: FEATURE_VECTORS_FILTERS,
-    filterName: FEATURE_VECTORS_FILTERS,
+    filterModalName: FEATURE_VECTORS_TAB,
+    filterName: FEATURE_VECTORS_TAB,
     filtersConfig
   })
 

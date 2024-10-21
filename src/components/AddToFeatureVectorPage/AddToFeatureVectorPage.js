@@ -34,7 +34,7 @@ import {
   LARGE_REQUEST_CANCELED,
   CANCEL_REQUEST_TIMEOUT,
   PROJECT_FILTER,
-  ADD_TO_FEATURE_VECTOR_FILTERS,
+  ADD_TO_FEATURE_VECTOR_TAB,
   FILTER_MENU,
   FILTER_MENU_MODAL
 } from '../../constants'
@@ -82,8 +82,8 @@ const AddToFeatureVectorPage = ({
   const tableStore = useSelector(store => store.tableStore)
   const filtersStore = useSelector(store => store.filtersStore)
   const addToFeatureVectorFilters = useSelector(store => ({
-    ...store.filtersStore[FILTER_MENU][ADD_TO_FEATURE_VECTOR_FILTERS].values,
-    ...store.filtersStore[FILTER_MENU_MODAL][ADD_TO_FEATURE_VECTOR_FILTERS].values
+    ...store.filtersStore[FILTER_MENU][ADD_TO_FEATURE_VECTOR_TAB].values,
+    ...store.filtersStore[FILTER_MENU_MODAL][ADD_TO_FEATURE_VECTOR_TAB].values
   }))
   const dispatch = useDispatch()
 
@@ -289,7 +289,7 @@ const AddToFeatureVectorPage = ({
   const setInitialFilters = useCallback(() => {
     dispatch(
       setModalFiltersInitialValues({
-        name: ADD_TO_FEATURE_VECTOR_FILTERS,
+        name: ADD_TO_FEATURE_VECTOR_TAB,
         value: {
           [PROJECT_FILTER]: params.projectName
         }
@@ -297,7 +297,7 @@ const AddToFeatureVectorPage = ({
     )
     dispatch(
       setModalFiltersValues({
-        name: ADD_TO_FEATURE_VECTOR_FILTERS,
+        name: ADD_TO_FEATURE_VECTOR_TAB,
         value: {
           [PROJECT_FILTER]: params.projectName
         }

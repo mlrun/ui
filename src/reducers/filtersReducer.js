@@ -21,7 +21,7 @@ import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
 import { set } from 'lodash'
 
 import {
-  ADD_TO_FEATURE_VECTOR_FILTERS,
+  ADD_TO_FEATURE_VECTOR_TAB,
   ARTIFACT_OTHER_TYPE,
   CONSUMER_GROUPS_FILTER,
   CONSUMER_GROUP_FILTER,
@@ -30,9 +30,9 @@ import {
   DATES_FILTER,
   DATE_FILTER_ANY_TIME,
   ENTITIES_FILTER,
-  FEATURES_FILTERS,
-  FEATURE_SETS_FILTERS,
-  FEATURE_VECTORS_FILTERS,
+  FEATURES_TAB,
+  FEATURE_SETS_TAB,
+  FEATURE_VECTORS_TAB,
   FILES_FILTERS,
   FILTER_ALL_ITEMS,
   FILTER_MENU,
@@ -149,7 +149,7 @@ const initialState = {
         [NAME_FILTER]: ''
       }
     },
-    [FEATURE_SETS_FILTERS]: {
+    [FEATURE_SETS_TAB]: {
       values: {
         [NAME_FILTER]: ''
       },
@@ -157,7 +157,7 @@ const initialState = {
         [NAME_FILTER]: ''
       }
     },
-    [FEATURES_FILTERS]: {
+    [FEATURES_TAB]: {
       values: {
         [NAME_FILTER]: ''
       },
@@ -165,7 +165,7 @@ const initialState = {
         [NAME_FILTER]: ''
       }
     },
-    [FEATURE_VECTORS_FILTERS]: {
+    [FEATURE_VECTORS_TAB]: {
       values: {
         [NAME_FILTER]: ''
       },
@@ -173,7 +173,7 @@ const initialState = {
         [NAME_FILTER]: ''
       }
     },
-    [ADD_TO_FEATURE_VECTOR_FILTERS]: {
+    [ADD_TO_FEATURE_VECTOR_TAB]: {
       values: {
         [NAME_FILTER]: ''
       },
@@ -269,7 +269,7 @@ const initialState = {
         [TYPE_FILTER]: FILTER_ALL_ITEMS
       }
     },
-    [FEATURE_SETS_FILTERS]: {
+    [FEATURE_SETS_TAB]: {
       initialValues: {
         [TAG_FILTER]: TAG_FILTER_LATEST,
         [LABELS_FILTER]: ''
@@ -279,7 +279,7 @@ const initialState = {
         [LABELS_FILTER]: ''
       }
     },
-    [FEATURES_FILTERS]: {
+    [FEATURES_TAB]: {
       initialValues: {
         [TAG_FILTER]: TAG_FILTER_LATEST,
         [LABELS_FILTER]: ''
@@ -289,7 +289,7 @@ const initialState = {
         [LABELS_FILTER]: ''
       }
     },
-    [FEATURE_VECTORS_FILTERS]: {
+    [FEATURE_VECTORS_TAB]: {
       initialValues: {
         [TAG_FILTER]: TAG_FILTER_LATEST,
         [LABELS_FILTER]: ''
@@ -299,7 +299,7 @@ const initialState = {
         [LABELS_FILTER]: ''
       }
     },
-    [ADD_TO_FEATURE_VECTOR_FILTERS]: {
+    [ADD_TO_FEATURE_VECTOR_TAB]: {
       initialValues: {
         [TAG_FILTER]: TAG_FILTER_LATEST,
         [ENTITIES_FILTER]: '',
