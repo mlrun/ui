@@ -267,8 +267,8 @@ export const createJobsWorkflowsTabContent = (jobs, projectName, isStagingMode, 
           value: jobName,
           className: 'table-cell-name',
           type: 'link',
-          getLink: () => {
-            return getWorkflowDetailsLink(projectName, job.id, null, null, MONITOR_WORKFLOWS_TAB)
+          getLink: tab => {
+            return getWorkflowDetailsLink(projectName, job.id, null, tab, MONITOR_WORKFLOWS_TAB)
           },
           showStatus: true
         },
@@ -353,7 +353,7 @@ export const createJobsWorkflowContent = (
           type: 'link',
           getLink: tab => {
             return workflowProjectName
-              ? getWorkflowMonitoringDetailsLink(workflowProjectName, workflowId, job.customData)
+              ? getWorkflowMonitoringDetailsLink(workflowProjectName, workflowId, job.customData, tab)
               : getWorkflowDetailsLink(
                   projectName,
                   workflowId,
@@ -649,8 +649,8 @@ export const createWorkflowsMonitoringContent = (jobs, isStagingMode, isSelected
           value: jobName,
           className: 'table-cell-name',
           type: 'link',
-          getLink: () => {
-            return getWorkflowMonitoringDetailsLink(job.project, job.id)
+          getLink: tab => {
+            return getWorkflowMonitoringDetailsLink(job.project, job.id, null, tab)
           },
           showStatus: true
         },

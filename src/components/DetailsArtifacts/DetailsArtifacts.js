@@ -123,7 +123,7 @@ const DetailsArtifacts = ({
   useEffect(() => {
     if (!isNaN(parseInt(bestIteration))) {
       setIteration(`${bestIteration}`)
-    } else if (selectedItem.iterationStats.length > 0 && iterationOptions.length > 0) {
+    } else if (selectedItem.iterationStats?.length > 0 && iterationOptions?.length > 0) {
       setIteration(iterationOptions[0].id)
     }
 
@@ -175,10 +175,12 @@ const DetailsArtifacts = ({
   )
 
   useEffect(() => {
-    if (selectedItem.iterationStats.length > 0 && iteration) {
-      getJobArtifacts(selectedItem, iteration)
-    } else if (selectedItem.iterationStats.length === 0) {
-      getJobArtifacts(selectedItem, null)
+    if (params.jobId === selectedItem.uid) {
+      if (selectedItem.iterationStats?.length > 0 && iteration) {
+        getJobArtifacts(selectedItem, iteration)
+      } else if (selectedItem.iterationStats?.length === 0) {
+        getJobArtifacts(selectedItem, null)
+      }
     }
   }, [getJobArtifacts, iteration, params.jobId, params.projectName, selectedItem])
 
