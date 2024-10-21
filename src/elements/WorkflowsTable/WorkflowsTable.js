@@ -32,6 +32,8 @@ import Workflow from '../../components/Workflow/Workflow'
 import YamlModal from '../../common/YamlModal/YamlModal'
 
 import {
+  ERROR_STATE,
+  FAILED_STATE,
   JOB_KIND_JOB,
   JOBS_PAGE,
   MONITOR_JOBS_TAB,
@@ -266,7 +268,7 @@ const WorkflowsTable = React.forwardRef(
         .then(job => {
           const selectedJob = findSelectedWorkflowJob()
           const graphJobState = selectedJob?.phase?.toLowerCase()
-          const isErrorState = ['failed', 'error'].includes(graphJobState)
+          const isErrorState = [FAILED_STATE, ERROR_STATE].includes(graphJobState)
           const customJobState = isErrorState ? graphJobState : ''
 
           return modifyAndSelectRun(
@@ -495,7 +497,6 @@ const WorkflowsTable = React.forwardRef(
         !dataIsLoading
       ) {
         setDataIsLoading(true)
-
         fetchRun().finally(() => setDataIsLoading(false))
       }
     }, [fetchRun, params.jobId, selectedJob, checkIfWorkflowItemIsJob, dataIsLoading])
@@ -506,7 +507,7 @@ const WorkflowsTable = React.forwardRef(
       if (isWorkflowStepExecutable(functionToBeSelected)) {
         const workflow = { ...workflowsStore.activeWorkflow?.data }
         const graphFunctionState = functionToBeSelected?.phase?.toLowerCase()
-        const isErrorState = ['failed', 'error'].includes(graphFunctionState)
+        const isErrorState = [FAILED_STATE, ERROR_STATE].includes(graphFunctionState)
         const customFunctionState = isErrorState ? graphFunctionState : ''
         const pipelineError = getPipelineError(isErrorState)
 

@@ -242,24 +242,24 @@ export const generateMonitoringCounters = (data, dispatch) => {
 
   data.forEach(project => {
     monitoringCounters.jobs.all +=
-      project.runs_completed_recent_count +
-      project.runs_failed_recent_count +
-      project.runs_running_count
-    monitoringCounters.jobs.completed += project.runs_completed_recent_count
-    monitoringCounters.jobs.failed += project.runs_failed_recent_count
-    monitoringCounters.jobs.running += project.runs_running_count
+      project.runs_completed_recent_count || 0 +
+      project.runs_failed_recent_count || 0 +
+      project.runs_running_count || 0
+    monitoringCounters.jobs.completed += project.runs_completed_recent_count || 0
+    monitoringCounters.jobs.failed += project.runs_failed_recent_count || 0
+    monitoringCounters.jobs.running += project.runs_running_count || 0
     monitoringCounters.workflows.all +=
-      project.pipelines_completed_recent_count +
-      project.pipelines_failed_recent_count +
-      project.pipelines_running_count
-    monitoringCounters.workflows.completed += project.pipelines_completed_recent_count
-    monitoringCounters.workflows.failed += project.pipelines_failed_recent_count
-    monitoringCounters.workflows.running += project.pipelines_running_count
+      project.pipelines_completed_recent_count || 0 +
+      project.pipelines_failed_recent_count || 0 +
+      project.pipelines_running_count || 0
+    monitoringCounters.workflows.completed += project.pipelines_completed_recent_count || 0
+    monitoringCounters.workflows.failed += project.pipelines_failed_recent_count || 0
+    monitoringCounters.workflows.running += project.pipelines_running_count || 0
     monitoringCounters.scheduled.all +=
-      project.distinct_scheduled_jobs_pending_count +
-      project.distinct_scheduled_pipelines_pending_count
-    monitoringCounters.scheduled.jobs += project.distinct_scheduled_jobs_pending_count
-    monitoringCounters.scheduled.workflows += project.distinct_scheduled_pipelines_pending_count
+      project.distinct_scheduled_jobs_pending_count || 0 +
+      project.distinct_scheduled_pipelines_pending_count || 0
+    monitoringCounters.scheduled.jobs += project.distinct_scheduled_jobs_pending_count || 0
+    monitoringCounters.scheduled.workflows += project.distinct_scheduled_pipelines_pending_count || 0
   })
 
   dispatch(projectsAction.setJobsMonitoringData(monitoringCounters))

@@ -158,8 +158,8 @@ const DetailsTabsContent = ({
       return (
         <DetailsCode
           code={
-            selectedItem.build.functionSourceCode ??
-            selectedItem.base_spec.spec?.build?.functionSourceCode
+            selectedItem.build?.functionSourceCode ??
+            selectedItem.base_spec?.spec?.build?.functionSourceCode ?? ''
           }
         />
       )

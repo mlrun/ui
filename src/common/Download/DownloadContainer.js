@@ -17,7 +17,7 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import React from 'react'
+import React, { useRef } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { Transition, TransitionGroup } from 'react-transition-group'
 import { isEmpty } from 'lodash'
@@ -31,6 +31,7 @@ import { ReactComponent as CloseIcon } from 'igz-controls/images/close.svg'
 import './downloadContainer.scss'
 
 const DownloadContainer = () => {
+  const nodeRef = useRef(null)
   const downloadStore = useSelector(store => store.downloadStore)
   const dispatch = useDispatch()
   const duration = 500
@@ -60,7 +61,7 @@ const DownloadContainer = () => {
   return (
     <TransitionGroup component={null}>
       {!isEmpty(downloadStore.downloadList) && downloadStore.showDownloadsList && (
-        <Transition timeout={duration}>
+        <Transition timeout={duration} nodeRef={nodeRef}>
           {state => (
             <div
               className="download-container"

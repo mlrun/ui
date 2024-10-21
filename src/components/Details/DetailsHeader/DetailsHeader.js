@@ -31,7 +31,7 @@ import ActionsMenu from '../../../common/ActionsMenu/ActionsMenu'
 
 import { DETAILS_ARTIFACTS_TAB, FULL_VIEW_MODE, JOBS_PAGE } from '../../../constants'
 import { formatDatetime } from '../../../utils'
-import { LABEL_BUTTON } from 'igz-controls/constants'
+import { TERTIARY_BUTTON } from 'igz-controls/constants'
 import { ACTIONS_MENU } from '../../../types'
 import { getViewMode } from '../../../utils/helper'
 import { generateUrlFromRouterPath } from '../../../utils/link-helper.util'
@@ -220,7 +220,7 @@ const DetailsHeader = ({
         {detailsStore.changes.counter > 0 && (
           <>
             <Button
-              variant={LABEL_BUTTON}
+              variant={TERTIARY_BUTTON}
               label="Cancel"
               onClick={cancelChanges}
               disabled={detailsStore.changes.counter === 0 || detailsStore.editMode}

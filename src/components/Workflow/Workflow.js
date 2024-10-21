@@ -203,13 +203,14 @@ const Workflow = ({
       ? getWorkflowMonitoringDetailsLink(
           params.workflowProjectName,
           params.workflowId,
-          node.data.customData
+          node.data.customData,
+          params.tab
         )
       : getWorkflowDetailsLink(
           params.projectName,
           params.workflowId,
           node.data.customData,
-          null,
+          params.tab,
           MONITOR_WORKFLOWS_TAB
         )
 
