@@ -17,7 +17,7 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import React, { useState, useEffect, useRef } from 'react'
+import React, { useState, useEffect, useRef, useMemo } from 'react'
 import PropTypes from 'prop-types'
 import classnames from 'classnames'
 import { isEmpty } from 'lodash'
@@ -86,6 +86,13 @@ const Input = React.forwardRef(
     const inputRef = useRef()
     const inputLabelRef = useRef(null)
     useDetectOutsideClick(ref, () => setShowValidationRules(false))
+
+    const inputStyles = useMemo(() => {
+      return {
+        paddingLeft: `${labelWidth + 16}px`,
+        paddingRight: (tip ? 25 : 0) + (isInvalid ? 20 : 0) + 'px'
+      }
+    }, [isInvalid, labelWidth, tip])
 
     const inputClassNames = classnames(
       'input',
@@ -240,7 +247,7 @@ const Input = React.forwardRef(
             type,
             value: typedValue
           }}
-          style={floatingLabel ? {} : { paddingLeft: `${labelWidth + 16}px`, paddingRight: tip ? '25px' : '0px' }}
+          style={floatingLabel ? {} : inputStyles }
         />
         {label && (
           <div className={labelClassNames}>
