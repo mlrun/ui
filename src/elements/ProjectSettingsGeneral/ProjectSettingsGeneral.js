@@ -258,10 +258,7 @@ const ProjectSettingsGeneral = ({
                       label="Pull at runtime"
                       name={LOAD_SOURCE_ON_RUN}
                     />
-                    <FormOnChange
-                      handler={updateProjectData}
-                      name={LOAD_SOURCE_ON_RUN}
-                    />
+                    <FormOnChange handler={updateProjectData} name={LOAD_SOURCE_ON_RUN} />
                   </div>
                   <div className="settings__artifact-path">
                     <FormInput
@@ -332,8 +329,10 @@ const ProjectSettingsGeneral = ({
                     <div>
                       <div className="settings__card-title">
                         <span>Node Selectors</span>
-                        <Tip text="Ensure that the node selectors you are configuring are compatible with the available nodes in your cluster. Incompatible node selectors will not be validated at the project level and might result in scheduling issues when running functions.
-                        Node-selector values set in the global settings are not shown. Keep the “Key” and delete the “Value” to remove the global setting." />
+                        <Tip
+                          text="Ensure that the node selectors you are configuring are compatible with the available nodes in your cluster. Incompatible node selectors will not be validated at the project level and might result in scheduling issues when running functions.
+                       If there is a conflict with the function node selector you defined or if the pod cannot be scheduled for some reason, check the project/platform configuration Key:Value combinations to see if there is a node selection causing the issue. If, after consulting with the project/general admin, you want to delete a global setting, enter the Key here, but leave the Value empty."
+                        />
                       </div>
                       <FormKeyValueTable
                         addNewItemLabel="Add node selector"
