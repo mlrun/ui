@@ -52,36 +52,39 @@ const DetailsResults = ({
       sortConfig: { allowSortBy, excludeSortBy, defaultSortBy, defaultDirection }
     })
 
-  const getHeaderCellClasses = (headerId, isSortable) =>
+  const getHeaderCellClasses = (headerId, isSortable, customClassName = '') =>
     classNames(
       'table-header__cell',
       isSortable && 'sortable-header-cell',
-      isSortable && selectedColumnName === headerId && 'sortable-header-cell_active'
+      isSortable && selectedColumnName === headerId && 'sortable-header-cell_active',
+      customClassName
     )
 
   const getHeaderTemplate = () => {
     return (
-      <thead className="table-header">
-        <tr className="table-row table-header-row">
-          {sortedTableHeaders.map(({ headerLabel, headerId, isSortable, ...tableItem }) => {
-            return (
-              <th
-                className={getHeaderCellClasses(headerId, isSortable)}
-                key={`${headerId}`}
-                onClick={isSortable ? () => sortTable(headerId) : null}
-              >
-                <Tooltip template={<TextTooltipTemplate text={headerLabel} />}>
-                  <label className={isSortable ? 'sortable-header-label' : ''}>
-                    <span className="data-ellipsis">{headerLabel}</span>
-                    {isSortable && getSortingIcon(headerId)}
-                  </label>
-                </Tooltip>
-                {tableItem.tip && <Tip text={tableItem.tip} />}
-              </th>
-            )
-          })}
-        </tr>
-      </thead>
+      <div className="table-header">
+        <div className="table-row table-header-row">
+          {sortedTableHeaders.map(
+            ({ headerLabel, headerId, isSortable, className, ...tableItem }) => {
+              return (
+                <div
+                  className={getHeaderCellClasses(headerId, isSortable, className)}
+                  key={`${headerId}`}
+                  onClick={isSortable ? () => sortTable(headerId) : null}
+                >
+                  <Tooltip template={<TextTooltipTemplate text={headerLabel} />}>
+                    <label className={isSortable ? 'sortable-header-label' : ''}>
+                      <span className="data-ellipsis">{headerLabel}</span>
+                      {isSortable && getSortingIcon(headerId)}
+                    </label>
+                  </Tooltip>
+                  {tableItem.tip && <Tip text={tableItem.tip} />}
+                </div>
+              )
+            }
+          )}
+        </div>
+      </div>
     )
   }
 
@@ -90,13 +93,13 @@ const DetailsResults = ({
     <NoData />
   ) : (
     <div className="table__item-results">
-      <table className="table">
+      <div className="table">
         {job.iterationStats && job.iterationStats.length !== 0 ? (
           <>
             {getHeaderTemplate()}
-            <tbody className="table-body">
+            <div className="table-body">
               {sortedTableContent.map((rowData, rowIndex) => (
-                <tr className="table-row parent-row" key={rowIndex}>
+                <div className="table-row parent-row" key={rowIndex}>
                   {rowData.map((cellData, cellIndex) => {
                     if (
                       job.results &&
@@ -104,9 +107,13 @@ const DetailsResults = ({
                       cellIndex === 0
                     ) {
                       return (
-                        <td
+                        <div
                           key={`${cellData.value}-${cellIndex}`}
-                          className="results-table__medal table-body__cell"
+                          className={classNames(
+                            'results-table__medal',
+                            'table-body__cell',
+                            cellData.className
+                          )}
                         >
                           <span>{cellData.value}</span>
                           <Tooltip
@@ -115,47 +122,53 @@ const DetailsResults = ({
                           >
                             <BestIteration />
                           </Tooltip>
-                        </td>
+                        </div>
                       )
                     } else {
                       return (
-                        <td className="table-body__cell" key={`${cellData.value}-${cellIndex}`}>
+                        <div
+                          className={classNames('table-body__cell', cellData.className)}
+                          key={`${cellData.value}-${cellIndex}`}
+                        >
                           <Tooltip
                             className="data-ellipsis"
                             template={<TextTooltipTemplate text={cellData.value.toString()} />}
                           >
                             {roundFloats(cellData.value, 4)}
                           </Tooltip>
-                        </td>
+                        </div>
                       )
                     }
                   })}
-                </tr>
+                </div>
               ))}
-            </tbody>
+            </div>
           </>
         ) : job.iterations?.length === 0 && Object.keys(job.results ?? {}).length !== 0 ? (
           <>
             {getHeaderTemplate()}
-            <tbody className="table-body">
+            <div className="table-body">
               {sortedTableContent.map((rowData, rowIndex) => (
-                <tr key={rowIndex} className="table-row">
+                <div key={rowIndex} className="table-row">
                   {rowData.map((cellData, cellIndex) => (
-                    <td key={cellIndex} className="table-body__cell">
+                    <div
+                      key={cellIndex}
+                      className={classNames('table-body__cell', cellData.className)}
+                    >
                       <Tooltip
                         className="data-ellipsis"
-                        template={<TextTooltipTemplate text={cellIndex.value} />}
+                        template={<TextTooltipTemplate text={cellData.value} />}
                       >
                         {cellData.value}
                       </Tooltip>
-                    </td>
+                    </div>
                   ))}
-                </tr>
+                </div>
               ))}
-            </tbody>
+            </div>
           </>
         ) : null}
-      </table>
+      </div>
     </div>
   )
 }
