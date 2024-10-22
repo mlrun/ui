@@ -1545,6 +1545,14 @@ module.exports = {
         icon: ''
       }
     }),
+    Show_Untagged: checkboxComponent({
+      root: '#overlay_container .form-field-checkbox input',
+      elements: {
+        checkbox: '', 
+        name: '',
+        icon: ''
+      }
+    }),
     Status_All_Checkbox: checkboxComponent({
       root: '[data-testid="select-checkbox"]:nth-of-type(1)',
       elements: {

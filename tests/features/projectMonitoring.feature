@@ -180,12 +180,12 @@ Feature: Project Monitoring Page
         Then verify "New_File_Type_Dropdown" dropdown on "Register_File_Popup" wizard selected option value "Table"
 
     @MLPM
-    @FAILED_TODO
-    #TODO: 'Register Model' option is missing in list of 'Create New' dropdown in demo mode
     @passive
     @smoke
     Scenario: MLPM005 - Check all mandatory components on Register Model Popup
         Given open url
+        And turn on demo mode
+        And wait load page
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
         Then verify "Create_New" element visibility on "Project" wizard

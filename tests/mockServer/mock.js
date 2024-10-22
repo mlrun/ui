@@ -459,28 +459,51 @@ function deleteProject(req, res) {
 }
 
 function deleteProjectV2(req, res) {
-  const taskFunc = () => {
-    return new Promise(resolve => {
-      setTimeout(
-        () => {
+  const isCascade = req.headers['x-mlrun-deletion-strategy'] === 'cascade'
+
+  const handleDeletion = () => {
+    const taskFunc = () => {
+      return new Promise((resolve) => {
+        setTimeout(() => {
           deleteProjectHandler(req, res, true)
-
           resolve()
-        },
-        random(5000, 10000)
-      )
+        }, random(5000, 10000))
+      })
+    }
+
+    const task = createTask(null, {
+      taskFunc,
+      kind: `project.deletion.wrapper.${req.params.project}`,
     })
+
+    res.status = 202
+    res.send(task)
   }
-  const task = createTask(null, {
-    taskFunc,
-    kind: `project.deletion.wrapper.${req.params.project}`
-  })
 
-  res.status = 202
+  if (isCascade) {
+    handleDeletion()
+  } else {
+    const collectedProject = projects.projects.filter(
+      (project) => project.metadata.name === req.params['project']
+    )
 
-  res.send(task)
+    const isEmpty = collectedProject.every(
+      (project) =>
+        (project.spec.functions && project.spec.functions.length > 0) ||
+        (project.spec.workflows && project.spec.workflows.length > 0) ||
+        (project.spec.artifacts && project.spec.artifacts.length > 0)
+    )
+
+    if (!isEmpty) {
+      handleDeletion()
+    } else {
+      res.status(412).send({
+        detail: `MLRunPreconditionFailedError('Project ${req.params.project} cannot be deleted since related resources found: artifacts')`,
+      })
+    }
+  }
 }
-
+    
 function patchProject(req, res) {
   const project = projects.projects.find(project => project.metadata.name === req.params['project'])
 
@@ -1072,7 +1095,7 @@ function getProjectsFeaturesEntities(req, res) {
         if (artifact === 'feature-vectors' && item.metadata.labels) {
           return filterByLabels(item.metadata.labels, req.query['label'])
         } else if ((artifact === 'features' || artifact === 'entities') && item.labels) {
-          return filterByLabels(item.metadata.labels, req.query['label'])
+          return filterByLabels(item.labels, req.query['label'])
         }
 
         return false
