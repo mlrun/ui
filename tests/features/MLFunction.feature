@@ -699,7 +699,7 @@ Feature: ML Functions
         When collapse "Resources_Accordion" on "New_Function" wizard
         Then "Deploy_Button" element on "New_Function" should contains "Create" value
         Then click on "Deploy_Button" element on "New_Function" wizard
-        Then click on "Cross_Close_Button" element on "ML_Function_Info_Pane" wizard 
+        And wait load page
         Then check "new-aqa-function-01" value in "name" column in "Functions_Table" table on "ML_Functions" wizard
 
     @MLF
@@ -1321,6 +1321,8 @@ Feature: ML Functions
         When click on cell with row index 1 in "name" column in "Functions_Table" table on "ML_Functions" wizard
         And wait load page
         Then verify redirection from "projects/default/functions/INVALID/latest/overview" to "projects/default/functions"
+        And wait load page
+        And wait load page
         Then verify "Notification_Pop_Up" element visibility on "Notification_Popup" wizard
         And wait load page
         Then "Notification_Pop_Up" element on "Notification_Popup" should contains "This function either does not exist or was deleted" value
@@ -1334,16 +1336,16 @@ Feature: ML Functions
         Then verify "Date_Picker_Filter_Dropdown" element visibility on "ML_Functions" wizard
         When select "Any time" option in "Date_Picker_Filter_Dropdown" filter dropdown on "ML_Functions" wizard
         And wait load page
-        When click on cell with row index 1 in "name" column in "Functions_Table" table on "ML_Functions" wizard
+        When click on cell with row index 2 in "name" column in "Functions_Table" table on "ML_Functions" wizard
         And wait load page
-        Then verify redirection from "projects/default/functions/85957751e571a92e07213781f5e0c35bfbe42c64/INVALID" to "projects/default/functions/85957751e571a92e07213781f5e0c35bfbe42c64/overview"
+        Then verify redirection from "projects/default/functions/model-monitoring-stream/latest/INVALID" to "projects/default/functions/model-monitoring-stream/latest/overview"
         Then select "Code" tab in "Info_Pane_Tab_Selector" on "ML_Function_Info_Pane" wizard
         And wait load page
-        Then verify redirection from "projects/default/functions/85957751e571a92e07213781f5e0c35bfbe42c64/INVALID" to "projects/default/functions/85957751e571a92e07213781f5e0c35bfbe42c64/overview"
+        Then verify redirection from "projects/default/functions/model-monitoring-stream/latest/INVALID" to "projects/default/functions/model-monitoring-stream/latest/overview"
         Then select "Build Log" tab in "Info_Pane_Tab_Selector" on "ML_Function_Info_Pane" wizard
         And wait load page
-        Then verify redirection from "projects/default/functions/85957751e571a92e07213781f5e0c35bfbe42c64/INVALID" to "projects/default/functions/85957751e571a92e07213781f5e0c35bfbe42c64/overview"
-        Then verify redirection from "projects/default/INVALID/85957751e571a92e07213781f5e0c35bfbe42c64/overview" to "projects"
+        Then verify redirection from "projects/default/functions/model-monitoring-stream/latest/INVALID" to "projects/default/functions/model-monitoring-stream/latest/overview"
+        Then verify redirection from "projects/default/INVALID/model-monitoring-stream/latest/overview" to "projects"
 
     @MLF
     @smoke
@@ -1412,8 +1414,19 @@ Feature: ML Functions
         Then verify "New_Function_Build_Commands_Text_Area" not input element in "Code_Accordion" on "New_Function" wizard is enabled
         Then click on "Save_Button" element on "New_Function" wizard
         And wait load page
-        Then "Header" element on "ML_Function_Info_Pane" should contains "demo-function-02" value
+        Then check "demo-function-02" value in "name" column in "Functions_Table" table on "ML_Functions" wizard
+        Then verify "Table_FilterBy_Button" element visibility on "ML_Functions" wizard
+        Then click on "Table_FilterBy_Button" element on "ML_Functions" wizard
+        Then "Title" element on "FilterBy_Popup" should contains "Filter by" value
+        Then verify "Show_Untagged" element visibility on "FilterBy_Popup" wizard
+        Then check "Show_Untagged" element on "FilterBy_Popup" wizard
+        Then click on "Apply_Button" element on "FilterBy_Popup" wizard
+        And wait load page
+        And wait load page
+        Then check "demo-function-02" value in "name" column in "Functions_Table" table on "ML_Functions" wizard
+        When click on cell with value "demo-function-02" in "name" column in "Functions_Table" table on "ML_Functions" wizard
         Then check "demo-function-02" value in "name" column in "Overview_Table" table on "ML_Function_Info_Pane" wizard
+        Then "Header" element on "ML_Function_Info_Pane" should contains "demo-function-02" value
 
     @MLF
     @passive
