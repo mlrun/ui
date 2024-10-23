@@ -1241,9 +1241,13 @@ Feature: Jobs and workflows
         Then select "Pods" tab in "Info_Pane_Tab_Selector" on "Workflows_Monitor_Tab_Info_Pane" wizard
         And wait load page
         Then verify redirection from "projects/churn-project-admin/jobs/monitor-workflows/workflow/eaae138e-439a-47fa-93c6-ba0fe1dc3b79/07f98fb46a424b2dbee5247b35f37727/INVALID" to "projects/churn-project-admin/jobs/monitor-workflows/workflow/eaae138e-439a-47fa-93c6-ba0fe1dc3b79/07f98fb46a424b2dbee5247b35f37727/overview"
+        And wait load page
         Then verify redirection from "projects/churn-project-admin/jobs/monitor-workflows/workflow/INVALID/07f98fb46a424b2dbee5247b35f37727/overview" to "projects/churn-project-admin/jobs/monitor-workflows"
+        And wait load page
         Then verify redirection from "projects/churn-project-admin/jobs/monitor-workflows/workflow/eaae138e-439a-47fa-93c6-ba0fe1dc3b79/INVALID/overview" to "projects/churn-project-admin/jobs/monitor-workflows"
+        And wait load page
         Then verify redirection from "projects/INVALID/jobs/monitor-workflows/workflow/eaae138e-439a-47fa-93c6-ba0fe1dc3b79/07f98fb46a424b2dbee5247b35f37727/overview" to "projects"
+        And wait load page
 
     @MLJW
     @smoke

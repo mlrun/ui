@@ -64564,6 +64564,51 @@
             }
           ]
       }
-    }
+    },
+    {
+      "kind": "run",
+      "metadata": {
+        "name": "horovod-train",
+        "uid": "85c3a6bcc292462d89e4d65444d179b1",
+        "iteration": 0,
+        "project": "sk-project-admin",
+        "labels": {
+          "v3io_user": "admin",
+          "kind": "mpijob",
+          "owner": "admin",
+          "mlrun/client_version": "1.7.0-rc51",
+          "mlrun/client_python_version": "3.9.18"
+        },
+        "annotations": {}
+      },
+      "spec": {
+        "function": "sk-project-admin/horovod-train@c93f6c0bf4b3b633ef84c7c59093bd28b028e3a6",
+        "log_level": "info",
+        "parameters": {},
+        "handler": null,
+        "outputs": [],
+        "output_path": "v3io:///projects/sk-project-admin/artifacts",
+        "inputs": {},
+        "notifications": [],
+        "state_thresholds": {
+          "pending_scheduled": "1h",
+          "pending_not_scheduled": "-1",
+          "image_pull_backoff": "1h",
+          "executing": "24h"
+        },
+        "node_selector": {},
+        "hyperparams": {},
+        "hyper_param_options": {},
+        "data_stores": []
+      },
+      "status": {
+        "results": {},
+        "start_time": "2024-10-08T14:06:44.618450+00:00",
+        "last_update": "2024-10-08T14:34:12.621378+00:00",
+        "state": "aborted",
+        "abort_task_id": "74be3e06-56fb-4bc9-9ece-b77f7f818373",
+        "status_text": "aborted"
+      }
+    }    
   ]
 }

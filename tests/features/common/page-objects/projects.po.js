@@ -58,6 +58,24 @@ const ProjectsTableSelector = {
             '.tooltip .tooltip__text span'
           )
         },
+        labels_key: {
+          componentType: labelComponent,
+          structure: generateLabelGroup(
+            '[data-testid="project-card__labels"] .chip-block .input-label-key',
+            false,
+            false,
+            '.tooltip .tooltip__text span'
+          )
+        },
+        labels_value: {
+          componentType: labelComponent,
+          structure: generateLabelGroup(
+            '[data-testid="project-card__labels"] .chip-block .input-label-value',
+            false,
+            false,
+            '.tooltip .tooltip__text span'
+          )
+        },
         labels: {
           componentType: dropdownComponent,
           structure: generateDropdownGroup(
