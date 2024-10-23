@@ -38,7 +38,9 @@ import {
   JOB_KIND_NUCLIO,
   JOB_KIND_SERVING,
   JOB_KIND_APPLICATION,
-  JOB_KIND_REMOTE
+  JOB_KIND_REMOTE,
+  ERROR_STATE,
+  FAILED_STATE
 } from '../../constants'
 
 export const jobsStatuses = [
@@ -46,21 +48,21 @@ export const jobsStatuses = [
   { label: 'Aborted', id: 'aborted', status: 'aborted' },
   { label: 'Aborting', id: 'aborting', status: 'aborting' },
   { label: 'Completed', id: 'completed', status: 'completed' },
-  { label: 'Error', id: 'error', status: 'error' },
+  { label: 'Error', id: ERROR_STATE, status: ERROR_STATE },
   { label: 'Running', id: 'running', status: 'running' },
   { label: 'Pending', id: 'pending', status: 'pending' }
 ]
 
 export const workflowsStatuses = [
   { label: 'All', id: FILTER_ALL_ITEMS, status: FILTER_ALL_ITEMS },
-  { label: 'Error', id: 'error', status: 'error' },
-  { label: 'Failed', id: 'failed', status: 'failed' },
+  { label: 'Error', id: ERROR_STATE, status: ERROR_STATE },
+  { label: 'Failed', id: FAILED_STATE, status: FAILED_STATE },
   { label: 'Running', id: 'running', status: 'running' },
   { label: 'Completed', id: 'completed', status: 'completed' }
 ]
 
 export const generateStatusFilter = useFailedStatus => {
-  const status = useFailedStatus ? 'failed' : 'error'
+  const status = useFailedStatus ? FAILED_STATE : ERROR_STATE
 
   return [
     { label: 'All', id: FILTER_ALL_ITEMS, status: FILTER_ALL_ITEMS },

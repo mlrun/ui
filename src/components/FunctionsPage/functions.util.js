@@ -23,8 +23,7 @@ import { debounce, get, isEmpty, isEqual } from 'lodash'
 import {
   DETAILS_BUILD_LOG_TAB,
   FUNCTION_CREATING_STATE,
-  FUNCTION_ERROR_STATE,
-  FUNCTION_FAILED_STATE,
+  ERROR_STATE,
   FUNCTION_INITIALIZED_STATE,
   FUNCTION_PENDINDG_STATE,
   FUNCTION_READY_STATE,
@@ -37,7 +36,8 @@ import {
   FUNCTION_TYPE_REMOTE,
   FUNCTION_TYPE_SERVING,
   FUNCTIONS_PAGE,
-  PANEL_FUNCTION_CREATE_MODE
+  PANEL_FUNCTION_CREATE_MODE,
+  FAILED_STATE
 } from '../../constants'
 import jobsActions from '../../actions/jobs'
 import functionsApi from '../../api/functions-api'
@@ -68,7 +68,7 @@ export const detailsMenu = [
     label: 'build log'
   }
 ]
-export const FUNCTIONS_FAILED_STATES = [FUNCTION_FAILED_STATE, FUNCTION_ERROR_STATE]
+export const FUNCTIONS_FAILED_STATES = [FAILED_STATE, ERROR_STATE]
 export const FUNCTIONS_READY_STATES = [FUNCTION_READY_STATE]
 export const FUNCTIONS_EDITABLE_STATES = [
   FUNCTION_CREATING_STATE,
