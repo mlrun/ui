@@ -57,6 +57,7 @@ import { ReactComponent as Run } from 'igz-controls/images/run.svg'
 import { ReactComponent as Cancel } from 'igz-controls/images/close.svg'
 import { ReactComponent as Yaml } from 'igz-controls/images/yaml.svg'
 import { ReactComponent as Delete } from 'igz-controls/images/delete.svg'
+import { ReactComponent as Rerun } from 'igz-controls/images/rerun.svg'
 
 export const generateFilters = () => [
   {
@@ -102,7 +103,8 @@ export const generateActionsMenu = (
   abortable_function_kinds,
   handleConfirmAbortJob,
   handleConfirmDeleteJob,
-  toggleConvertedYaml
+  toggleConvertedYaml,
+  handleRerun
 ) => {
   if (job?.uid) {
     const jobKindIsAbortable = isJobKindAbortable(job, abortable_function_kinds)
@@ -155,12 +157,20 @@ export const generateActionsMenu = (
       ]
     ]
   } else {
+    const runningStates = ['running', 'pending']
+
     return [
       [
         {
           label: 'View YAML',
           icon: <Yaml />,
           onClick: toggleConvertedYaml
+        },
+        {
+          hidden: runningStates.includes(job?.state?.value),
+          icon: <Rerun />,
+          label: 'Retry',
+          onClick: () => handleRerun(job)
         }
       ]
     ]

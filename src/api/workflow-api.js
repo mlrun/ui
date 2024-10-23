@@ -108,6 +108,9 @@ const workflowsApi = {
     }
 
     return mainHttpClient.get(`/projects/${project}/pipelines`, newConfig)
+  },
+  rerunWorkflow: (project, workflowId) => {
+    return mainHttpClient.post(`projects/${project}/pipelines/${workflowId}/retry`)
   }
 }
 
