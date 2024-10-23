@@ -81,7 +81,7 @@ const action = {
       `Value "${subString}" does not includes in all values: [${arr}]`
     )
   },
-  isContainsSubstringInColumnAttributrCells: async function(
+  isContainsSubstringInColumnAttributeCells: async function(
     driver,
     table,
     columnName,
@@ -90,6 +90,19 @@ const action = {
     const arr = await getColumnValuesAttribute(driver, table, columnName)
     expect(arr.length > 0).equal(true)
     expect(arr.every(item => item.includes(value))).equal(
+      true,
+      `Value "${value}" does not includes in all values: [${arr}]`
+    )
+  },
+  isContainsSubstringInColumnAttributeListCells: async function(
+    driver,
+    table,
+    columnName,
+    value
+  ) {
+    const arr = await getColumnValuesAttribute(driver, table, columnName)
+    expect(arr.length > 0).to.equal(true)
+    expect(arr.every(item => value.includes(item))).to.equal(
       true,
       `Value "${value}" does not includes in all values: [${arr}]`
     )

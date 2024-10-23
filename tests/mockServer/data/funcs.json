@@ -30219,6 +30219,96 @@
       },
       "verbose": false,
       "status": {}
-    }
+    },
+    {
+      "spec": {
+        "priority_class_name": "igz-workload-medium",
+        "command": "python your_training_script.py",
+        "state_thresholds": {
+          "pending_scheduled": "1h",
+          "pending_not_scheduled": "-1",
+          "image_pull_backoff": "1h",
+          "executing": "24h"
+        },
+        "image": "your_image_with_horovod",
+        "description": "",
+        "replicas": 4,
+        "preemption_mode": "prevent",
+        "disable_auto_mount": true,
+        "build": {
+          "functionSourceCode": "IyBHZW5lcmF0ZWQgYnkgbnVjbGlvLmV4cG9ydC5OdWNsaW9FeHBvcnRlcgoKaW1wb3J0IG1scnVuCgojIENyZWF0ZSBvciBsb2FkIGFuIE1MUnVuIHByb2plY3QKcHJvamVjdCA9IG1scnVuLm5ld19wcm9qZWN0KCJob3Jvdm9kcHJvamVjdCIsIGNvbnRleHQ9Ii4vIiwgdXNlcl9wcm9qZWN0PVRydWUpCgojIERlZmluZSB0aGUgTVBJIGpvYiBmdW5jdGlvbgpmbiA9IG1scnVuLmNvZGVfdG9fZnVuY3Rpb24oCiAgICBuYW1lPSJob3Jvdm9kLXRyYWluIiwKICAgIGtpbmQ9Im1waWpvYiIsCiAgICBpbWFnZT0ieW91cl9pbWFnZV93aXRoX2hvcm92b2QiLAopCgojIFNldCBjb21tYW5kIGFuZCBvdGhlciBzcGVjcyBkaXJlY3RseQpmbi5zcGVjLmNvbW1hbmQgPSAicHl0aG9uIHlvdXJfdHJhaW5pbmdfc2NyaXB0LnB5Igpmbi5zcGVjLnJlcGxpY2FzID0gNAoKIyBSdW4gdGhlIGpvYgpydW4gPSBmbi5ydW4oKQoK",
+          "code_origin": "horovod-train.ipynb",
+          "origin_filename": "horovod-train.ipynb"
+        },
+        "default_handler": "",
+        "clean_pod_policy": "All",
+        "mpi_args": [
+          "-x",
+          "NCCL_SOCKET_NTHREADS=2",
+          "-x",
+          "NCCL_NSOCKS_PERTHREAD=8",
+          "-x",
+          "NCCL_MIN_NCHANNELS=4"
+        ],
+        "resources": {
+          "requests": {
+            "memory": "1Mi",
+            "cpu": "25m"
+          },
+          "limits": {
+            "memory": "20Gi",
+            "cpu": "2"
+          }
+        },
+        "env": [
+          {
+            "name": "V3IO_API",
+            "value": "v3io-webapi.default-tenant.svc:8081"
+          },
+          {
+            "name": "V3IO_USERNAME",
+            "value": "admin"
+          },
+          {
+            "name": "V3IO_ACCESS_KEY",
+            "valueFrom": {
+              "secretKeyRef": {
+                "key": "accessKey",
+                "name": "mlrun-auth-secrets.352e93afc5b83672fc9aaf3f20478d0b82f572eaddf9a8f4bf71c51d"
+              }
+            }
+          },
+          {
+            "name": "V3IO_FRAMESD",
+            "value": "framesd:8081"
+          },
+          {
+            "name": "MLRUN_AUTH_SESSION",
+            "valueFrom": {
+              "secretKeyRef": {
+                "key": "accessKey",
+                "name": "mlrun-auth-secrets.f9557c6c45ee4666c5c1550dafeb323ef82127208de229b8ea3ae472"
+              }
+            }
+          }
+        ],
+        "affinity": null,
+        "node_selector": {},
+        "tolerations": null
+      },
+      "kind": "mpijob",
+      "verbose": false,
+      "metadata": {
+        "tag": "latest",
+        "credentials": {
+          "access_key": "$ref:mlrun-auth-secrets.f9557c6c45ee4666c5c1550dafeb323ef82127208de229b8ea3ae472"
+        },
+        "name": "horovod-train",
+        "project": "sk-project-admin",
+        "hash": "c93f6c0bf4b3b633ef84c7c59093bd28b028e3a6",
+        "updated": "2024-10-08T14:06:44.563424+00:00"
+      },
+      "status": {}
+    }    
   ]
 }

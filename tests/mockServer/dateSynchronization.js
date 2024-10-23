@@ -39,7 +39,7 @@ const nextHour = new Date(now.getTime() + (60 * 60 * 1000))
 function updateRuns(runs) {  
     // update start_time та last_update
     runs.runs = runs.runs.map(run => {
-        if (['cf842616c89347c7bb7bca2c9e840a21', '76f48c8165da473bb4356ef7b196343f','f5751299ee21476e897dfd90d94c49c4', 'dad0fdf93bd949589f6b20f79fa47798', '9723e5a30b0e43b0b7cfda098445c446']
+        if (['cf842616c89347c7bb7bca2c9e840a21', '76f48c8165da473bb4356ef7b196343f','f5751299ee21476e897dfd90d94c49c4', 'dad0fdf93bd949589f6b20f79fa47798', '9723e5a30b0e43b0b7cfda098445c446', '85c3a6bcc292462d89e4d65444d179b1']
             .includes(run.metadata.uid)) { 
             
             return { ...run, status: { ...run.status, start_time: formatDate(oneDayAgo), last_update: formatDate(oneDayAgo) } 

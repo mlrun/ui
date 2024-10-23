@@ -94,6 +94,7 @@ module.exports = {
         false
       )
     ),
+    Table_FilterBy_Button: By.css('[data-testid="filter-menu-btn-tooltip-wrapper"]'),
     New_Function_Button: By.css('.content [data-testid="btn"]'),
     Table_Refresh_Button: By.css(
       '.content [data-testid="refresh-tooltip-wrapper"]'
