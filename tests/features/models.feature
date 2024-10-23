@@ -708,6 +708,7 @@ Feature: Models Page
     Then verify "Header" element visibility on "Models_Info_Pane" wizard
     Then "Header" element on "Models_Info_Pane" should contains "test-model" value
     Then refresh a page
+    And wait load page
     Then verify "Header" element visibility on "Models_Info_Pane" wizard
     Then "Header" element on "Models_Info_Pane" should contains "test-model" value
 

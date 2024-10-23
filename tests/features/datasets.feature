@@ -172,6 +172,7 @@ Feature: Datasets Page
     Then verify "Header" element visibility on "Datasets_Info_Pane" wizard
     Then "Header" element on "Datasets_Info_Pane" should contains "test-dataset" value
     Then refresh a page
+    And wait load page
     Then verify "Header" element visibility on "Datasets_Info_Pane" wizard
     Then "Header" element on "Datasets_Info_Pane" should contains "test-dataset" value
   
