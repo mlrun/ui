@@ -312,7 +312,7 @@ const Files = () => {
     createRowData: rowItem => createFilesRowData(rowItem, params.projectName, frontendSpec),
     fetchData,
     fetchTags,
-    filterMenuName: FILES_FILTERS,
+    filterModalName: FILES_FILTERS,
     filters: filesFilters,
     setExpandedRowsData: setSelectedRowData,
     sortExpandedRowsDataBy: 'updated'

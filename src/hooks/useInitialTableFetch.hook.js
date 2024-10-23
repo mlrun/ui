@@ -20,7 +20,7 @@ such restriction.
 import { useEffect, useLayoutEffect, useMemo, useRef } from 'react'
 import { useParams } from 'react-router-dom'
 import { useDispatch } from 'react-redux'
-import { debounce } from 'lodash'
+import { debounce, has, isEmpty } from 'lodash'
 
 import {
   GROUP_BY_FILTER,
@@ -30,15 +30,17 @@ import {
   TAG_FILTER,
   TAG_FILTER_ALL_ITEMS
 } from '../constants'
-import { setFilters, setModalFiltersValues } from '../reducers/filtersReducer'
+import { setFilters, setFiltersValues, setModalFiltersValues } from '../reducers/filtersReducer'
 import { expandRowByName } from '../utils/tableRows.util'
 
 export const useInitialTableFetch = ({
   createRowData,
-  filters,
   fetchData,
   fetchTags,
-  filterMenuName,
+  filterModalName,
+  filterName,
+  filters,
+  filtersConfig,
   setExpandedRowsData,
   setInitialFilters,
   sortExpandedRowsDataBy
@@ -99,24 +101,41 @@ export const useInitialTableFetch = ({
         if (params.name) {
           dispatch(
             setFilters({
-              [NAME_FILTER]: params.name,
-              [ITERATIONS_FILTER]: '',
-              [TAG_FILTER]: TAG_FILTER_ALL_ITEMS
+              [NAME_FILTER]: params.name
             })
           )
 
-          if (filterMenuName) {
+          if (filterName) {
             dispatch(
-              setModalFiltersValues({
-                name: filterMenuName,
-                value: { [ITERATIONS_FILTER]: '', [TAG_FILTER]: TAG_FILTER_ALL_ITEMS }
+              setFiltersValues({
+                name: filterName,
+                value: { [NAME_FILTER]: params.name }
               })
             )
+          }
+
+          if (filterModalName) {
+            const value = { [ITERATIONS_FILTER]: '', [TAG_FILTER]: TAG_FILTER_ALL_ITEMS }
+
+            if (filtersConfig) {
+              for (const filterName of Object.keys(value)) {
+                if (!has(filtersConfig, filterName)) delete value[filterName]
+              }
+            }
+
+            if (!isEmpty(value)) {
+              dispatch(
+                setModalFiltersValues({
+                  name: filterModalName,
+                  value: value
+                })
+              )
+            }
           }
         }
       }
     }
-  }, [dispatch, filterMenuName, params.name, setInitialFilters])
+  }, [dispatch, filterModalName, filterName, filtersConfig, params.name, setInitialFilters])
 
   useEffect(() => {
     sendInitialRequest({
@@ -133,7 +152,7 @@ export const useInitialTableFetch = ({
     dispatch,
     fetchData,
     fetchTags,
-    filterMenuName,
+    filterModalName,
     filters,
     params.name,
     sendInitialRequest,
