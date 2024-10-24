@@ -231,6 +231,7 @@ const Input = React.forwardRef(
         <input
           data-testid={id ? `${id}-input` : 'input'}
           className={inputClassNames}
+          name={id}
           onBlur={handleInputBlur}
           onChange={handleInputChange}
           onFocus={handleInputFocus}
@@ -247,7 +248,7 @@ const Input = React.forwardRef(
             type,
             value: typedValue
           }}
-          style={floatingLabel ? {} : inputStyles }
+          style={floatingLabel ? {} : inputStyles}
         />
         {label && (
           <div className={labelClassNames}>
