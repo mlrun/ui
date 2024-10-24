@@ -17,37 +17,26 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import React, { useEffect, useCallback, useState, useMemo, useRef } from 'react'
+import React, { useMemo, useRef, useState } from 'react'
 import PropTypes from 'prop-types'
-import { useLocation, useParams, Link } from 'react-router-dom'
-import classnames from 'classnames'
-import { useDispatch, useSelector } from 'react-redux'
+import { useLocation, useParams } from 'react-router-dom'
 
-import BreadcrumbsDropdown from '../../elements/BreadcrumbsDropdown/BreadcrumbsDropdown'
-import { RoundedIcon } from 'igz-controls/components'
+import BreadcrumbsStep from './BreadcrumbsStep/BreadcrumbsStep'
 
 import { useMode } from '../../hooks/mode.hook'
 import { generateMlrunScreens, generateTabsList } from './breadcrumbs.util'
-import { generateProjectsList } from '../../utils/projects'
-import { scrollToElement } from '../../utils/scroll.util'
-import projectsAction from '../../actions/projects'
 import { PROJECTS_PAGE_PATH } from '../../constants'
 
-import { ReactComponent as ArrowIcon } from 'igz-controls/images/arrow.svg'
-
-import './breadcrums.scss'
+import './breadcrumbs.scss'
 
 const Breadcrumbs = ({ onClick = () => {} }) => {
+  const [searchValue, setSearchValue] = useState('')
   const [showScreensList, setShowScreensList] = useState(false)
   const [showProjectsList, setShowProjectsList] = useState(false)
-  const [searchValue, setSearchValue] = useState('')
   const { isDemoMode } = useMode()
   const breadcrumbsRef = useRef()
-  const projectListRef = useRef()
   const params = useParams()
   const location = useLocation()
-  const projectStore = useSelector(state => state.projectStore)
-  const dispatch = useDispatch()
 
   const mlrunScreens = useMemo(() => {
     return generateMlrunScreens(params, isDemoMode)
@@ -56,11 +45,7 @@ const Breadcrumbs = ({ onClick = () => {} }) => {
     return generateTabsList()
   }, [])
 
-  const projectsList = useMemo(() => {
-    return generateProjectsList(projectStore.projectsNames.data)
-  }, [projectStore.projectsNames.data])
-
-  const urlItems = useMemo(() => {
+  const urlParts = useMemo(() => {
     if (params.projectName) {
       const [projects, projectName, screenName] = location.pathname.split('/').slice(1, 4)
       const screen = mlrunScreens.find(screen => screen.id === screenName)
@@ -87,161 +72,28 @@ const Breadcrumbs = ({ onClick = () => {} }) => {
     }
   }, [location.pathname, params.projectName, mlrunScreens, projectTabs])
 
-  const handleCloseDropdown = useCallback(
-    event => {
-      if (breadcrumbsRef.current && !breadcrumbsRef.current.contains(event.target)) {
-        const [activeSeparator] = document.getElementsByClassName('breadcrumbs__separator_active')
-
-        if (activeSeparator) {
-          activeSeparator.classList.remove('breadcrumbs__separator_active')
-        }
-
-        if (showScreensList) setShowScreensList(false)
-
-        if (showProjectsList) setShowProjectsList(false)
-      }
-
-      setSearchValue('')
-    },
-    [breadcrumbsRef, showProjectsList, showScreensList]
-  )
-
-  const scrollProjectOptionToView = useCallback(() => {
-    scrollToElement(projectListRef, `#${params.projectName}`, searchValue)
-  }, [params.projectName, searchValue])
-
-  useEffect(() => {
-    if (showProjectsList && projectListRef.current) {
-      scrollProjectOptionToView()
-    }
-  }, [showProjectsList, scrollProjectOptionToView])
-
-  useEffect(() => {
-    window.addEventListener('click', handleCloseDropdown)
-
-    return () => {
-      window.removeEventListener('click', handleCloseDropdown)
-    }
-  }, [handleCloseDropdown])
-
-  useEffect(() => {
-    if (projectsList.length === 0 && location.pathname !== '/projects') {
-      dispatch(projectsAction.fetchProjects({ format: 'minimal' }))
-    }
-  }, [dispatch, location.pathname, projectsList.length])
-
-  const handleSeparatorClick = (nextItem, separatorRef) => {
-    const nextItemIsScreen = Boolean(mlrunScreens.find(screen => screen.label === nextItem))
-
-    if (nextItemIsScreen || nextItem === params.projectName) {
-      const [activeSeparator] = document.getElementsByClassName('breadcrumbs__separator_active')
-
-      if (
-        activeSeparator &&
-        !separatorRef.current.classList.contains('breadcrumbs__separator_active')
-      ) {
-        activeSeparator.classList.remove('breadcrumbs__separator_active')
-      }
-
-      if (nextItemIsScreen) {
-        setShowScreensList(state => !state)
-
-        if (showProjectsList) {
-          setShowProjectsList(false)
-        }
-      }
-
-      if (nextItem === params.projectName) {
-        setShowProjectsList(state => !state)
-
-        if (showScreensList) {
-          setShowScreensList(false)
-        }
-      }
-
-      separatorRef.current.classList.toggle('breadcrumbs__separator_active')
-    }
-  }
-
-  const handleSelectDropdownItem = separatorRef => {
-    if (showProjectsList) setShowProjectsList(false)
-
-    if (showScreensList) setShowScreensList(false)
-
-    separatorRef.current.classList.remove('breadcrumbs__separator_active')
-  }
-
   return (
     <nav data-testid="breadcrumbs" className="breadcrumbs" ref={breadcrumbsRef}>
       <ul className="breadcrumbs__list">
-        {urlItems.pathItems.map((item, i) => {
-          const param = Object.values(params ?? {}).includes(item)
-          const label = param ? item : item.charAt(0).toUpperCase() + item.slice(1)
-          const to = `/${urlItems.pathItems.slice(0, i + 1).join('/')}`
-          const last = i === urlItems.pathItems.length - 1
-          const separatorClassNames = classnames(
-            'breadcrumbs__separator',
-            ((urlItems.pathItems[i + 1] === urlItems.screen?.id && !param) ||
-              urlItems.pathItems[i + 1] === params.projectName) &&
-              'breadcrumbs__separator_tumbler'
+        {urlParts.pathItems.map((urlPart, index) => {
+          return (
+            <BreadcrumbsStep
+              key={index}
+              index={index}
+              mlrunScreens={mlrunScreens}
+              onClick={onClick}
+              params={params}
+              ref={breadcrumbsRef}
+              searchValue={searchValue}
+              setSearchValue={setSearchValue}
+              setShowProjectsList={setShowProjectsList}
+              setShowScreensList={setShowScreensList}
+              showProjectsList={showProjectsList}
+              showScreensList={showScreensList}
+              urlPart={urlPart}
+              urlParts={urlParts}
+            />
           )
-          const separatorRef = React.createRef()
-
-          if (last) {
-            return (
-              <li
-                data-testid="breadcrumbs-last-item"
-                className="breadcrumbs__item"
-                key={`${i}${item}`}
-              >
-                {label}
-              </li>
-            )
-          } else {
-            return [
-              <li key={`${i}${item}`} className="breadcrumbs__item">
-                <Link to={to} onClick={onClick}>
-                  {label}
-                </Link>
-              </li>,
-              <li key={i} className="breadcrumbs__item">
-                <RoundedIcon
-                  className={separatorClassNames}
-                  id="separator"
-                  ref={separatorRef}
-                  onClick={() => handleSeparatorClick(urlItems.pathItems[i + 1], separatorRef)}
-                >
-                  <ArrowIcon />
-                </RoundedIcon>
-                {showScreensList && urlItems.pathItems[i + 1] === urlItems.screen?.label && (
-                  <BreadcrumbsDropdown
-                    link={to}
-                    list={mlrunScreens}
-                    onClick={() => handleSelectDropdownItem(separatorRef)}
-                    selectedItem={urlItems.screen?.id}
-                    searchValue={searchValue}
-                    setSearchValue={setSearchValue}
-                  />
-                )}
-                {showProjectsList && urlItems.pathItems[i + 1] === params.projectName && (
-                  <>
-                    <BreadcrumbsDropdown
-                      link={to}
-                      list={projectsList}
-                      onClick={() => handleSelectDropdownItem(separatorRef)}
-                      ref={projectListRef}
-                      screen={urlItems.screen?.id}
-                      selectedItem={params.projectName}
-                      searchValue={searchValue}
-                      setSearchValue={setSearchValue}
-                      tab={urlItems.tab?.id}
-                      withSearch
-                    />
-                  </>
-                )}
-              </li>
-            ]
-          }
         })}
       </ul>
     </nav>

@@ -1,0 +1,20 @@
+@import '~igz-controls/scss/mixins';
+@import '~igz-controls/scss/colors';
+
+.breadcrumbs {
+  @include resetSpaces;
+
+  font-size: 20px;
+  line-height: 23px;
+}
+
+.breadcrumbs__list {
+  @include resetSpaces;
+
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  font-weight: 400;
+  letter-spacing: 0.00938em;
+  list-style-type: none;
+}
