@@ -19,6 +19,7 @@ such restriction.
 */
 import React, { useEffect, useState, useCallback, useRef } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
+import { useNavigate } from 'react-router-dom'
 import { isEmpty, last, orderBy } from 'lodash'
 import FileSaver from 'file-saver'
 import yaml from 'js-yaml'
@@ -28,7 +29,6 @@ import ProjectsView from './ProjectsView'
 import {
   generateMonitoringCounters,
   generateProjectActionsMenu,
-  handleDeleteProjectError,
   pollDeletingProjects,
   projectDeletionKind,
   projectDeletionWrapperKind,
@@ -36,9 +36,10 @@ import {
 } from './projects.util'
 import nuclioActions from '../../actions/nuclio'
 import projectsAction from '../../actions/projects'
-import { BG_TASK_RUNNING, isBackgroundTaskRunning } from '../../utils/poll.util'
+import { BG_TASK_RUNNING } from '../../utils/poll.util'
+import { onDeleteProject } from './projects.util'
 import { PROJECT_ONLINE_STATUS } from '../../constants'
-import { DANGER_BUTTON, FORBIDDEN_ERROR_STATUS_CODE, PRIMARY_BUTTON } from 'igz-controls/constants'
+import { FORBIDDEN_ERROR_STATUS_CODE, PRIMARY_BUTTON } from 'igz-controls/constants'
 import { fetchBackgroundTasks } from '../../reducers/tasksReducer'
 import { setNotification } from '../../reducers/notificationReducer'
 import { showErrorNotification } from '../../utils/notifications.util'
@@ -63,6 +64,7 @@ const Projects = () => {
   const deletingProjectsRef = useRef({})
 
   const dispatch = useDispatch()
+  const navigate = useNavigate()
   const { isDemoMode } = useMode()
   const { isNuclioModeDisabled } = useNuclioMode()
   const projectStore = useSelector(store => store.projectStore)
@@ -135,7 +137,9 @@ const Projects = () => {
               backgroundTask =>
                 backgroundTask.metadata.kind.startsWith(
                   wrapperIsUsed ? projectDeletionWrapperKind : projectDeletionKind
-                ) && backgroundTask?.status?.state === BG_TASK_RUNNING && deletingProjectsRef.current[backgroundTask.metadata.name]
+                ) &&
+                backgroundTask?.status?.state === BG_TASK_RUNNING &&
+                deletingProjectsRef.current[backgroundTask.metadata.name]
             )
             .reduce((acc, backgroundTask) => {
               acc[backgroundTask.metadata.name] = last(backgroundTask.metadata.kind.split('.'))
@@ -188,53 +192,6 @@ const Projects = () => {
     [dispatch, fetchMinimalProjects]
   )
 
-  const handleDeleteProject = useCallback(
-    (project, deleteNonEmpty) => {
-      setConfirmData(null)
-
-      dispatch(projectsAction.deleteProject(project.metadata.name, deleteNonEmpty))
-        .then(response => {
-          if (isBackgroundTaskRunning(response)) {
-            dispatch(
-              setNotification({
-                status: 200,
-                id: Math.random(),
-                message: 'Project deletion in progress'
-              })
-            )
-
-            const newDeletingProjects = {
-              ...deletingProjectsRef.current,
-              [response.data.metadata.name]: last(response.data.metadata.kind.split('.'))
-            }
-
-            dispatch(projectsAction.setDeletingProjects(newDeletingProjects))
-            pollDeletingProjects(terminatePollRef, newDeletingProjects, refreshProjects, dispatch)
-          } else {
-            fetchMinimalProjects()
-            dispatch(
-              setNotification({
-                status: 200,
-                id: Math.random(),
-                message: `Project "${project}" was deleted successfully`
-              })
-            )
-          }
-        })
-        .catch(error => {
-          handleDeleteProjectError(
-            error,
-            handleDeleteProject,
-            project,
-            setConfirmData,
-            dispatch,
-            deleteNonEmpty
-          )
-        })
-    },
-    [dispatch, fetchMinimalProjects, refreshProjects]
-  )
-
   const handleUnarchiveProject = useCallback(
     project => {
       dispatch(
@@ -276,23 +233,6 @@ const Projects = () => {
     [handleArchiveProject]
   )
 
-  const onDeleteProject = useCallback(
-    project => {
-      setConfirmData({
-        item: project,
-        header: 'Delete project?',
-        message: `You are trying to delete the project "${project.metadata.name}". Deleted projects cannot be restored`,
-        btnConfirmLabel: 'Delete',
-        btnConfirmType: DANGER_BUTTON,
-        rejectHandler: () => {
-          setConfirmData(null)
-        },
-        confirmHandler: handleDeleteProject
-      })
-    },
-    [handleDeleteProject]
-  )
-
   const exportYaml = useCallback(
     projectMinimal => {
       if (projectMinimal?.metadata?.name) {
@@ -303,7 +243,7 @@ const Projects = () => {
             FileSaver.saveAs(blob, `${projectMinimal.metadata.name}.yaml`)
           })
           .catch(error => {
-            showErrorNotification(dispatch, error, '', 'Failed to fetch project\'s YAML', () =>
+            showErrorNotification(dispatch, error, '', "Failed to fetch project's YAML", () =>
               exportYaml(projectMinimal)
             )
           })
@@ -322,7 +262,7 @@ const Projects = () => {
           .catch(error => {
             setConvertedYaml('')
 
-            showErrorNotification(dispatch, error, '', 'Failed to fetch project\'s YAML', () =>
+            showErrorNotification(dispatch, error, '', "Failed to fetch project's YAML", () =>
               viewYaml(projectMinimal)
             )
           })
@@ -338,6 +278,20 @@ const Projects = () => {
     [dispatch]
   )
 
+  const handleOnDeleteProject = useCallback(
+    project =>
+      onDeleteProject(
+        project,
+        setConfirmData,
+        dispatch,
+        deletingProjectsRef,
+        terminatePollRef,
+        fetchMinimalProjects,
+        navigate
+      ),
+    [dispatch, fetchMinimalProjects, navigate]
+  )
+
   useEffect(() => {
     setActionsMenu(
       generateProjectActionsMenu(
@@ -347,17 +301,17 @@ const Projects = () => {
         viewYaml,
         onArchiveProject,
         handleUnarchiveProject,
-        onDeleteProject
+        handleOnDeleteProject
       )
     )
   }, [
     convertToYaml,
+    handleOnDeleteProject,
     projectStore.deletingProjects,
     exportYaml,
     handleUnarchiveProject,
     isDemoMode,
     onArchiveProject,
-    onDeleteProject,
     projectStore.projects,
     viewYaml
   ])

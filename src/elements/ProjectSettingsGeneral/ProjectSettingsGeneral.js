@@ -23,18 +23,16 @@ import arrayMutators from 'final-form-arrays'
 import { Form } from 'react-final-form'
 import { connect, useDispatch } from 'react-redux'
 import { createForm } from 'final-form'
-import { cloneDeep, isEmpty, last } from 'lodash'
-import { useNavigate, useParams } from 'react-router-dom'
+import { cloneDeep, isEmpty } from 'lodash'
+import { useParams } from 'react-router-dom'
 
 import {
-  ConfirmDialog,
   FormKeyValueTable,
   FormCheckBox,
   FormChipCell,
   FormInput,
   FormOnChange,
   FormTextarea,
-  RoundedIcon,
   Tip
 } from 'igz-controls/components'
 import ChangeOwnerPopUp from '../ChangeOwnerPopUp/ChangeOwnerPopUp'
@@ -60,7 +58,7 @@ import {
   parseObjectToKeyValue,
   setFieldState
 } from 'igz-controls/utils/form.util'
-import { DANGER_BUTTON, FORBIDDEN_ERROR_STATUS_CODE, TERTIARY_BUTTON } from 'igz-controls/constants'
+import { FORBIDDEN_ERROR_STATUS_CODE } from 'igz-controls/constants'
 import { getChipOptions } from '../../utils/getChipOptions'
 import { getErrorMsg } from 'igz-controls/utils/common.util'
 import {
@@ -71,13 +69,6 @@ import { parseChipsData, convertChipsData } from '../../utils/convertChipsData'
 import { setNotification } from '../../reducers/notificationReducer'
 import { showErrorNotification } from '../../utils/notifications.util'
 import { areNodeSelectorsSupported } from './projectSettingsGeneral.utils'
-import { isBackgroundTaskRunning } from '../../utils/poll.util'
-import {
-  handleDeleteProjectError,
-  pollDeletingProjects
-} from '../../components/ProjectsPage/projects.util'
-
-import { ReactComponent as DeleteIcon } from 'igz-controls/images/delete.svg'
 
 import './projectSettingsGeneral.scss'
 
@@ -93,9 +84,7 @@ const ProjectSettingsGeneral = ({
 }) => {
   const [projectIsInitialized, setProjectIsInitialized] = useState(false)
   const [lastEditedProjectValues, setLastEditedProjectValues] = useState({})
-  const [confirmData, setConfirmData] = useState(null)
 
-  const deletingProjectsRef = useRef({})
   const formRef = useRef(
     createForm({
       initialValues: {},
@@ -104,10 +93,8 @@ const ProjectSettingsGeneral = ({
     })
   )
   const formStateRef = useRef(null)
-  const terminatePollRef = useRef(null)
   const params = useParams()
   const dispatch = useDispatch()
-  const navigate = useNavigate()
 
   useEffect(() => {
     if (!projectIsInitialized) {
@@ -241,102 +228,8 @@ const ProjectSettingsGeneral = ({
     }
   }, [])
 
-  const fetchMinimalProjects = useCallback(() => {
-    dispatch(projectsAction.fetchProjects({ format: 'minimal' }))
-  }, [dispatch])
-
-  const handleDeleteProject = useCallback(
-    (project, deleteNonEmpty) => {
-      setConfirmData(null)
-
-      dispatch(projectsAction.deleteProject(project.metadata.name, deleteNonEmpty))
-        .then(response => {
-          if (isBackgroundTaskRunning(response)) {
-            dispatch(
-              setNotification({
-                status: 200,
-                id: Math.random(),
-                message: 'Project deletion in progress'
-              })
-            )
-
-            const newDeletingProjects = {
-              ...deletingProjectsRef.current,
-              [response.data.metadata.name]: last(response.data.metadata.kind.split('.'))
-            }
-
-            dispatch(projectsAction.setDeletingProjects(newDeletingProjects))
-
-            pollDeletingProjects(
-              terminatePollRef,
-              newDeletingProjects,
-              () => navigate('/projects'),
-              dispatch
-            )
-          } else {
-            fetchMinimalProjects()
-            dispatch(
-              setNotification({
-                status: 200,
-                id: Math.random(),
-                message: `Project "${project.metadata.name}" was deleted successfully`
-              })
-            )
-            navigate('/projects')
-          }
-        })
-        .catch(error => {
-          handleDeleteProjectError(
-            error,
-            handleDeleteProject,
-            project,
-            setConfirmData,
-            dispatch,
-            deleteNonEmpty
-          )
-        })
-    },
-    [dispatch, fetchMinimalProjects, navigate]
-  )
-
-  const onDeleteProject = useCallback(
-    project => {
-      setConfirmData({
-        item: project,
-        header: 'Delete project?',
-        message: `You are trying to delete the project "${project.metadata.name}". Deleted projects cannot be restored`,
-        btnConfirmLabel: 'Delete',
-        btnConfirmType: DANGER_BUTTON,
-        rejectHandler: () => {
-          setConfirmData(null)
-        },
-        confirmHandler: handleDeleteProject
-      })
-    },
-    [handleDeleteProject]
-  )
-
   return (
     <>
-      {confirmData && (
-        <ConfirmDialog
-          cancelButton={{
-            handler: confirmData.rejectHandler,
-            label: 'Cancel',
-            variant: TERTIARY_BUTTON
-          }}
-          closePopUp={confirmData.rejectHandler}
-          confirmButton={{
-            handler: () => confirmData.confirmHandler(confirmData.item),
-            label: confirmData.btnConfirmLabel,
-            variant: confirmData.btnConfirmType
-          }}
-          isOpen={confirmData}
-          header={confirmData.header}
-          message={confirmData.message}
-        />
-      )}
-
       {(projectStore.loading || projectStore.project.loading) && <Loader />}
 
       <Form form={formRef.current} onSubmit={() => {}}>
@@ -355,19 +248,6 @@ const ProjectSettingsGeneral = ({
                 <>
                   <div className="settings__card-title">
                     <span>Project: {params.projectName || ''}</span>
-                    {projectMembershipIsEnabled && (
-                      <RoundedIcon
-                        className="delete-project-danger"
-                        id="delete-project-btn"
-                        onClick={event => {
-                          event.stopPropagation()
-                          onDeleteProject(projectStore.project?.data)
-                        }}
-                        tooltipText="Delete project"
-                      >
-                        <DeleteIcon />
-                      </RoundedIcon>
-                    )}
                   </div>
 
                   <div className="settings__card-content">
