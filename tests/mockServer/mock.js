@@ -1353,6 +1353,7 @@ function getPipelines(req, res) {
   if (req.params['project'] === '*') {
     const pipelinesRun = pipelineIDs.map(pipeline => pipeline.run)
     const filter = JSON.parse(req.query.filter)
+    const nameFilter = req.query['name-contains']
     const predicates = filter.predicates
 
     if (!predicates.length) {
@@ -1362,28 +1363,29 @@ function getPipelines(req, res) {
         next_page_token: null
       })
     }
-
-    let queryTimestampValue, queryStateValue
-
-    if (predicates.length === 1) {
-      queryTimestampValue = predicates[0].timestamp_value
-      queryStateValue = predicates[0].string_values ? predicates[0].string_values.values : null
-    } else {
-      queryTimestampValue = predicates[1].timestamp_value
-      queryStateValue = predicates[0].string_values.values
-    }
+    const queryFromTimestampValue = predicates.find(
+      predicate => predicate.key === 'created_at' && predicate.op === 5
+    )?.timestamp_value
+    const queryToTimestampValue =
+      predicates.find(predicate => predicate.key === 'created_at' && predicate.op === 7)
+        ?.timestamp_value ?? new Date()
+    const queryStateValue = predicates.find(predicate => predicate.key === 'status')?.string_values
+      ?.values
 
     const collectedMonitoringPipelines = pipelinesRun.filter(pipeline => {
       const pipelineCreatedAt = new Date(pipeline.created_at)
       const timestampMatch =
-        !queryTimestampValue || pipelineCreatedAt >= new Date(queryTimestampValue)
+        !queryFromTimestampValue ||
+        (pipelineCreatedAt >= new Date(queryFromTimestampValue) &&
+          pipelineCreatedAt <= new Date(queryToTimestampValue))
       const stateMatch = queryStateValue
         ? Array.isArray(queryStateValue)
           ? queryStateValue.includes(pipeline.status)
           : pipeline.status === queryStateValue
         : true
+      const nameMatch = nameFilter ? pipeline.name.includes(nameFilter) : true
 
-      return timestampMatch && stateMatch
+      return timestampMatch && stateMatch && nameMatch
     })
 
     res.send({
@@ -1410,6 +1412,13 @@ function getPipelines(req, res) {
         return pipeline.status.includes(statusFilter.string_value)
       })
     }
+  }
+
+  if (req.query['name-contains']) {
+    const nameFilter = req.query['name-contains']
+    collectedPipelines.runs = collectedPipelines.runs.filter(pipeline => {
+      return pipeline.name.includes(nameFilter)
+    })
   }
 
   res.send(collectedPipelines)
