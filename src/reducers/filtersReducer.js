@@ -40,9 +40,11 @@ import {
   JOBS_MONITORING_WORKFLOWS_TAB,
   LABELS_FILTER,
   MODELS_FILTERS,
+  MODEL_ENDPOINTS_TAB,
   MODEL_TYPE,
   NAME_FILTER,
   PROJECT_FILTER,
+  REAL_TIME_PIPELINES_TAB,
   SHOW_ITERATIONS,
   SHOW_UNTAGGED_FILTER,
   STATUS_FILTER,
@@ -119,11 +121,11 @@ const initialState = {
     [FUNCTION_FILTERS]: {
       values: {
         [NAME_FILTER]: '',
-        [DATES_FILTER]: getDatePickerFilterValue(datePickerPastOptions, PAST_WEEK_DATE_OPTION),
+        [DATES_FILTER]: getDatePickerFilterValue(datePickerPastOptions, PAST_WEEK_DATE_OPTION)
       },
       initialValues: {
         [NAME_FILTER]: '',
-        [DATES_FILTER]: getDatePickerFilterValue(datePickerPastOptions, PAST_WEEK_DATE_OPTION),
+        [DATES_FILTER]: getDatePickerFilterValue(datePickerPastOptions, PAST_WEEK_DATE_OPTION)
       }
     },
     [CONSUMER_GROUPS_FILTER]: {
@@ -135,6 +137,14 @@ const initialState = {
       }
     },
     [CONSUMER_GROUP_FILTER]: {
+      values: {
+        [NAME_FILTER]: ''
+      },
+      initialValues: {
+        [NAME_FILTER]: ''
+      }
+    },
+    [REAL_TIME_PIPELINES_TAB]: {
       values: {
         [NAME_FILTER]: ''
       },
@@ -220,6 +230,14 @@ const initialState = {
         [LABELS_FILTER]: '',
         [PROJECT_FILTER]: '',
         [TYPE_FILTER]: FILTER_ALL_ITEMS
+      }
+    },
+    [MODEL_ENDPOINTS_TAB]: {
+      initialValues: {
+        [LABELS_FILTER]: ''
+      },
+      values: {
+        [LABELS_FILTER]: ''
       }
     }
   }

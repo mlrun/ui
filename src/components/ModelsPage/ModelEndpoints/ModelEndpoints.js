@@ -20,14 +20,15 @@ such restriction.
 import React, { useState, useRef, useCallback, useEffect, useMemo } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useLocation, useNavigate, useParams } from 'react-router-dom'
-import { isEmpty, orderBy } from 'lodash'
+import { isEmpty } from 'lodash'
 
 import ArtifactsTableRow from '../../../elements/ArtifactsTableRow/ArtifactsTableRow'
-import FilterMenu from '../../FilterMenu/FilterMenu'
 import Loader from '../../../common/Loader/Loader'
 import ModelsPageTabs from '../ModelsPageTabs/ModelsPageTabs'
 import NoData from '../../../common/NoData/NoData'
 import Table from '../../Table/Table'
+import ActionBar from '../../ActionBar/ActionBar'
+import ModelEndpointsFilters from './ModelEndpointsFilters'
 
 import {
   GROUP_BY_NONE,
@@ -37,12 +38,17 @@ import {
 } from '../../../constants'
 import { createModelEndpointsRowData } from '../../../utils/createArtifactsContent'
 import { fetchModelEndpoints, removeModelEndpoints } from '../../../reducers/artifactsReducer'
-import { chooseOrFetchModelEndpoint, filters, generatePageData } from './modelEndpoints.util'
+import {
+  chooseOrFetchModelEndpoint,
+  filtersConfig,
+  generatePageData
+} from './modelEndpoints.util'
 import { getNoDataMessage } from '../../../utils/getNoDataMessage'
 import { isDetailsTabExists } from '../../../utils/link-helper.util'
 import { setFilters } from '../../../reducers/filtersReducer'
 import { useModelsPage } from '../ModelsPage.context'
 import { isRowRendered, useVirtualization } from '../../../hooks/useVirtualization.hook'
+import { useSortTable } from '../../../hooks/useSortTable.hook'
 
 import { ReactComponent as MonitorIcon } from 'igz-controls/images/monitor-icon.svg'
 import { ReactComponent as Yaml } from 'igz-controls/images/yaml.svg'
@@ -91,15 +97,20 @@ const ModelEndpoints = () => {
         {
           label: 'View YAML',
           icon: <Yaml />,
-          onClick: modelEndpointMin => chooseOrFetchModelEndpoint(
-            dispatch,
-            selectedModelEndpoint,
-            modelEndpointMin
-          ).then(toggleConvertedYaml)
+          onClick: modelEndpointMin =>
+            chooseOrFetchModelEndpoint(dispatch, selectedModelEndpoint, modelEndpointMin).then(
+              toggleConvertedYaml
+            )
         }
       ]
     ],
-    [dispatch, frontendSpec.model_monitoring_dashboard_url, handleMonitoring, selectedModelEndpoint, toggleConvertedYaml]
+    [
+      dispatch,
+      frontendSpec.model_monitoring_dashboard_url,
+      handleMonitoring,
+      selectedModelEndpoint,
+      toggleConvertedYaml
+    ]
   )
 
   const fetchData = useCallback(
@@ -150,7 +161,7 @@ const ModelEndpoints = () => {
 
   useEffect(() => {
     fetchData({})
-    dispatch(setFilters({ groupBy: GROUP_BY_NONE, sortBy: 'function' }))
+    dispatch(setFilters({ groupBy: GROUP_BY_NONE }))
   }, [dispatch, fetchData])
 
   useEffect(() => {
@@ -191,21 +202,28 @@ const ModelEndpoints = () => {
     }
   }, [navigate, location, pageData.details.menu, params.name, params.tag, params.tab])
 
-  const sortedContent = useMemo(() => {
-    const path = filtersStore.sortBy === 'function' ? 'spec.function_uri' : 'spec.model'
-
-    return orderBy(modelEndpoints, [path], ['asc'])
-  }, [modelEndpoints, filtersStore.sortBy])
-
   const tableContent = useMemo(() => {
-    return sortedContent.map(contentItem =>
+    return modelEndpoints.map(contentItem =>
       createModelEndpointsRowData(contentItem, params.projectName)
     )
-  }, [params.projectName, sortedContent])
+  }, [modelEndpoints, params.projectName])
+
+  const tableHeaders = useMemo(() => tableContent[0]?.content ?? [], [tableContent])
+
+  const { sortTable, selectedColumnName, getSortingIcon, sortedTableContent, sortedTableHeaders } =
+    useSortTable({
+      headers: tableHeaders,
+      content: tableContent,
+      sortConfig: {
+        allowSortBy: ['name', 'function'],
+        defaultSortBy: 'function',
+        defaultDirection: 'asc'
+      }
+    })
 
   const virtualizationConfig = useVirtualization({
     rowsData: {
-      content: tableContent,
+      content: sortedTableContent,
       selectedItem: selectedModelEndpoint
     },
     heightData: {
@@ -217,26 +235,31 @@ const ModelEndpoints = () => {
 
   return (
     <>
-      {(artifactsStore.modelEndpoints.modelEndpointLoading || artifactsStore.modelEndpoints.loading) && <Loader />}
+      {(artifactsStore.modelEndpoints.modelEndpointLoading ||
+        artifactsStore.modelEndpoints.loading) && <Loader />}
       <div className="models" ref={modelEndpointsRef}>
         <div className="table-container">
           <div className="content__action-bar-wrapper">
             <ModelsPageTabs />
             <div className="action-bar">
-              <FilterMenu
-                filters={filters}
-                onChange={handleRefresh}
+              <ActionBar
+                filterMenuName={MODEL_ENDPOINTS_TAB}
+                filtersConfig={filtersConfig}
+                handleRefresh={handleRefresh}
+                navigateLink={`/projects/${params.projectName}/models/${MODEL_ENDPOINTS_TAB}`}
                 page={MODELS_PAGE}
                 tab={MODEL_ENDPOINTS_TAB}
                 withoutExpandButton
-              />
+              >
+                <ModelEndpointsFilters />
+              </ActionBar>
             </div>
           </div>
           {artifactsStore.modelEndpoints.loading ? null : modelEndpoints.length === 0 ? (
             <NoData
               message={getNoDataMessage(
                 filtersStore,
-                filters,
+                filtersConfig,
                 requestErrorMessage,
                 MODELS_PAGE,
                 MODEL_ENDPOINTS_TAB
@@ -251,10 +274,11 @@ const ModelEndpoints = () => {
                 selectedItem={selectedModelEndpoint}
                 tab={MODEL_ENDPOINTS_TAB}
                 tableClassName="model-endpoints-table"
-                tableHeaders={tableContent[0]?.content ?? []}
+                tableHeaders={sortedTableHeaders}
                 virtualizationConfig={virtualizationConfig}
+                sortProps={{ sortTable, selectedColumnName, getSortingIcon }}
               >
-                {tableContent.map(
+                {sortedTableContent.map(
                   (tableItem, index) =>
                     isRowRendered(virtualizationConfig, index) && (
                       <ArtifactsTableRow
