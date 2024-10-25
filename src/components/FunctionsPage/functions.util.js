@@ -39,7 +39,6 @@ import {
   PANEL_FUNCTION_CREATE_MODE,
   FAILED_STATE
 } from '../../constants'
-import jobsActions from '../../actions/jobs'
 import functionsApi from '../../api/functions-api'
 import tasksApi from '../../api/tasks-api'
 import { BG_TASK_FAILED, BG_TASK_SUCCEEDED, pollTask } from '../../utils/poll.util'
@@ -185,8 +184,8 @@ export const getFunctionsEditableTypes = isStagingMode => {
 }
 export const getFunctionImage = func => {
   return func.type === FUNCTION_TYPE_NUCLIO ||
-  func.type === FUNCTION_TYPE_SERVING ||
-  func.type === FUNCTION_TYPE_REMOTE
+    func.type === FUNCTION_TYPE_SERVING ||
+    func.type === FUNCTION_TYPE_REMOTE
     ? func.container_image
     : func.image
 }
@@ -221,7 +220,7 @@ export const generateActionsMenu = (
         onClick: funcMin => {
           getFullFunction(funcMin).then(func => {
             if (func?.project && func?.name && func?.hash && func?.ui?.originalContent) {
-              dispatch(jobsActions.fetchJobFunctionSuccess(func.ui.originalContent))
+              // dispatch(jobsActions.fetchJobFunctionSuccess(func.ui.originalContent))
               setJobWizardMode(PANEL_FUNCTION_CREATE_MODE)
             } else {
               showErrorNotification(dispatch, {}, '', 'Failed to retrieve function data')
@@ -273,8 +272,10 @@ export const generateActionsMenu = (
         onClick: funcMin =>
           getFullFunction(funcMin).then(func => !isEmpty(func) && buildAndRunFunc(func)),
         // todo: move out of "demo" mode and make additional changes as needed after the BE part is implemented.
-        hidden: !isDemoMode || (func?.type !== FUNCTION_TYPE_JOB ||
-          (func?.type === FUNCTION_TYPE_JOB && func?.state?.value !== FUNCTION_INITIALIZED_STATE))
+        hidden:
+          !isDemoMode ||
+          func?.type !== FUNCTION_TYPE_JOB ||
+          (func?.type === FUNCTION_TYPE_JOB && func?.state?.value !== FUNCTION_INITIALIZED_STATE)
       },
       {
         id: 'deploy',
@@ -424,49 +425,58 @@ export const checkForSelectedFunction = (
   dispatch
 ) => {
   queueMicrotask(() => {
-      if (name || hash) {
-        const functionsList = selectedRowData?.[name]?.content || functions
+    if (name || hash) {
+      const functionsList = selectedRowData?.[name]?.content || functions
 
-        if (functionsList.length > 0) {
-          const searchItem = searchFunctionItem(
-            hash,
-            name,
-            tag,
-            projectName,
-            functionsList.map(func => func.data ?? func),
-            dispatch,
-            true
-          )
+      if (functionsList.length > 0) {
+        const searchItem = searchFunctionItem(
+          hash,
+          name,
+          tag,
+          projectName,
+          functionsList.map(func => func.data ?? func),
+          dispatch,
+          true
+        )
 
-          if (!searchItem) {
-            navigate(`/projects/${projectName}/functions`, { replace: true })
-          } else {
-            setSelectedFunction(prevState => {
-              return isEqual(prevState, searchItem) ? prevState : searchItem
-            })
-          }
+        if (!searchItem) {
+          navigate(`/projects/${projectName}/functions`, { replace: true })
+        } else {
+          setSelectedFunction(prevState => {
+            return isEqual(prevState, searchItem) ? prevState : searchItem
+          })
         }
-      } else {
-        setSelectedFunction({})
       }
+    } else {
+      setSelectedFunction({})
     }
-  )
+  })
 }
 
-export const searchFunctionItem = (paramsHash, paramsName, paramsTag, projectName, functions, dispatch, checkExistence = false) => {
+export const searchFunctionItem = (
+  paramsHash,
+  paramsName,
+  paramsTag,
+  projectName,
+  functions,
+  dispatch,
+  checkExistence = false
+) => {
   let item = {}
 
   if (paramsHash) {
     const withFunctionTag = paramsHash.indexOf(':') > 0
-    let name, tag, hash = ''
+    let name,
+      tag,
+      hash = ''
 
     item = functions.find(func => {
       if (withFunctionTag) {
-        [name, tag] = paramsHash.split(':')
+        ;[name, tag] = paramsHash.split(':')
 
         return isEqual(func.tag, tag) && isEqual(func.name, name)
       } else {
-        [name, hash] = paramsHash.split('@')
+        ;[name, hash] = paramsHash.split('@')
 
         return isEqual(func.hash, hash) && isEqual(func.name, name)
       }
@@ -478,7 +488,8 @@ export const searchFunctionItem = (paramsHash, paramsName, paramsTag, projectNam
       return isEqual(func.tag, paramsTag) && isEqual(func.name, paramsName)
     })
 
-    checkExistence && checkFunctionExistence(item, { name: paramsName, tag: paramsTag }, projectName, dispatch)
+    checkExistence &&
+      checkFunctionExistence(item, { name: paramsName, tag: paramsTag }, projectName, dispatch)
   }
 
   return item
@@ -486,9 +497,8 @@ export const searchFunctionItem = (paramsHash, paramsName, paramsTag, projectNam
 
 const checkFunctionExistence = (item, filters, projectName, dispatch) => {
   if (!item || Object.keys(item).length === 0) {
-    functionsApi.getFunction(projectName, filters.name, filters.hash, filters.tag)
-      .catch(() => {
-        showErrorNotification(dispatch, {}, 'This function either does not exist or was deleted')
-      })
+    functionsApi.getFunction(projectName, filters.name, filters.hash, filters.tag).catch(() => {
+      showErrorNotification(dispatch, {}, 'This function either does not exist or was deleted')
+    })
   }
 }

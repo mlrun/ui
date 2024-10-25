@@ -40,10 +40,7 @@ import {
   JOB_RUNNING_STATES,
   isJobKindLocal
 } from '../jobs.util'
-import jobsActions from '../../../actions/jobs'
 import functionsActions from '../../../actions/functions'
-import workflowsActions from '../../../actions/workflow'
-import detailsActions from '../../../actions/details'
 import {
   detailsMenu as functionsDetailsMenu,
   infoHeaders as functionsInfoHeaders
@@ -224,17 +221,5 @@ export const fetchInitialWorkflows = debounce(
 )
 
 export const monitorWorkflowsActionCreator = {
-  abortJob: jobsActions.abortJob,
-  deleteJob: jobsActions.deleteJob,
-  deleteWorkflows: workflowsActions.deleteWorkflows,
-  fetchFunction: functionsActions.fetchFunction,
-  fetchFunctionLogs: functionsActions.fetchFunctionLogs,
-  fetchJob: jobsActions.fetchJob,
-  fetchJobFunctions: jobsActions.fetchJobFunctions,
-  fetchJobLogs: jobsActions.fetchJobLogs,
-  fetchJobPods: detailsActions.fetchJobPods,
-  fetchWorkflow: workflowsActions.fetchWorkflow,
-  fetchWorkflows: workflowsActions.fetchWorkflows,
-  removePods: detailsActions.removePods,
-  resetWorkflow: workflowsActions.resetWorkflow
+  fetchFunctionLogs: functionsActions.fetchFunctionLogs
 }

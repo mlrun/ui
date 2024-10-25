@@ -18,7 +18,7 @@ under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
 import React, { useEffect, useState, useCallback } from 'react'
-import { connect, useDispatch, useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate, useParams, Outlet, useLocation } from 'react-router-dom'
 
 import Breadcrumbs from '../../common/Breadcrumbs/Breadcrumbs'
@@ -39,12 +39,12 @@ import {
   SCHEDULE_TAB
 } from '../../constants'
 import { TERTIARY_BUTTON } from 'igz-controls/constants'
-import { actionCreator, actionsMenuHeader, monitorJob, rerunJob, tabs } from './jobs.util'
+import { actionsMenuHeader, monitorJob, rerunJob, tabs } from './jobs.util'
 import { isPageTabValid } from '../../utils/link-helper.util'
 
 export const JobsContext = React.createContext({})
 
-const Jobs = ({ fetchJobFunction }) => {
+const Jobs = () => {
   const [confirmData, setConfirmData] = useState(null)
   const [editableItem, setEditableItem] = useState(null)
   const [jobWizardMode, setJobWizardMode] = useState(null)
@@ -64,8 +64,8 @@ const Jobs = ({ fetchJobFunction }) => {
   }
 
   const handleRerunJob = useCallback(
-    async job => await rerunJob(job, fetchJobFunction, setEditableItem, setJobWizardMode, dispatch),
-    [fetchJobFunction, dispatch]
+    async job => await rerunJob(job, setEditableItem, setJobWizardMode, dispatch),
+    [dispatch]
   )
 
   const handleMonitoring = useCallback(
@@ -174,6 +174,4 @@ const Jobs = ({ fetchJobFunction }) => {
   )
 }
 
-export default connect(null, {
-  ...actionCreator
-})(React.memo(Jobs))
+export default React.memo(Jobs)

@@ -62,7 +62,6 @@ import { createPortal } from 'react-dom'
 import Notification from './common/Notification/Notification'
 
 const Page = lazyRetry(() => import('./layout/Page/Page'))
-const CreateJobPage = lazyRetry(() => import('./components/CreateJobPage/CreateJobPage'))
 const Datasets = lazyRetry(() => import('./components/Datasets/Datasets'))
 const FeatureStore = lazyRetry(() => import('./components/FeatureStore/FeatureStore'))
 const Files = lazyRetry(() => import('./components/Files/Files'))
@@ -174,10 +173,6 @@ const App = () => {
           <Route
             path="projects/:projectName/jobs"
             element={<Navigate to={`${MONITOR_JOBS_TAB}`} replace />}
-          />
-          <Route
-            path="projects/:projectName/jobs/:pageTab/create-new-job"
-            element={<CreateJobPage />}
           />
           <Route path="projects/:projectName/jobs/*" element={<Jobs />}>
             {[

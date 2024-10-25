@@ -40,8 +40,9 @@ import { usePods } from '../../../hooks/usePods.hook'
 import detailsActions from '../../../actions/details'
 
 import './monitorWorkflows.scss'
+import { deleteWorkflows, fetchWorkflows } from '../../../reducers/workflowReducer'
 
-const MonitorWorkflows = ({ deleteWorkflows, fetchFunctionLogs, fetchWorkflows }) => {
+const MonitorWorkflows = ({ fetchFunctionLogs }) => {
   const [selectedFunction, setSelectedFunction] = useState({})
   const [requestErrorMessage, setRequestErrorMessage] = useState('')
   const [workflowsAreLoaded, setWorkflowsAreLoaded] = useState(false)
@@ -76,14 +77,20 @@ const MonitorWorkflows = ({ deleteWorkflows, fetchFunctionLogs, fetchWorkflows }
     filter => {
       abortControllerRef.current = new AbortController()
 
-      fetchWorkflows(params.projectName, filter, {
-        ui: {
-          controller: abortControllerRef.current,
-          setRequestErrorMessage
-        }
-      })
+      dispatch(
+        fetchWorkflows({
+          project: params.projectName,
+          filter,
+          config: {
+            ui: {
+              controller: abortControllerRef.current,
+              setRequestErrorMessage
+            }
+          }
+        })
+      )
     },
-    [fetchWorkflows, params.projectName, setRequestErrorMessage]
+    [dispatch, params.projectName]
   )
 
   useEffect(() => {
@@ -100,10 +107,10 @@ const MonitorWorkflows = ({ deleteWorkflows, fetchFunctionLogs, fetchWorkflows }
 
   useEffect(() => {
     return () => {
-      deleteWorkflows()
+      dispatch(deleteWorkflows())
       setWorkflowsAreLoaded(false)
     }
-  }, [deleteWorkflows])
+  }, [dispatch])
 
   useEffect(() => {
     fetchInitialWorkflows(

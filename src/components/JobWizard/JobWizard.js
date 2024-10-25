@@ -62,23 +62,21 @@ import {
   getSaveJobErrorMsg
 } from './JobWizard.util'
 import functionsActions from '../../actions/functions'
-import jobsActions from '../../actions/jobs'
 import projectsAction from '../../actions/projects'
 import { FUNCTIONS_SELECTION_FUNCTIONS_TAB } from './JobWizardSteps/JobWizardFunctionSelection/jobWizardFunctionSelection.util'
 import { JOB_WIZARD_MODE } from '../../types'
 import { MODAL_MAX } from 'igz-controls/constants'
 import { resetModalFilter } from '../../reducers/filtersReducer'
-import { scheduledJobsActionCreator } from '../Jobs/ScheduledJobs/scheduledJobs.util'
 import { setFieldState, isSubmitDisabled } from 'igz-controls/utils/form.util'
 import { setNotification } from '../../reducers/notificationReducer'
 import { showErrorNotification } from '../../utils/notifications.util'
 import { useModalBlockHistory } from '../../hooks/useModalBlockHistory.hook'
+import { editJob, removeJobFunction, runNewJob } from '../../reducers/jobReducer'
 
 import './jobWizard.scss'
 
 const JobWizard = ({
   defaultData = {},
-  editJob,
   fetchFunctionTemplate,
   fetchHubFunction,
   frontendSpec,
@@ -93,9 +91,7 @@ const JobWizard = ({
   onWizardClose = null,
   params,
   prePopulatedData = {},
-  removeJobFunction,
   removeHubFunctions,
-  runNewJob,
   wizardTitle = 'Batch run'
 }) => {
   const formRef = React.useRef(
@@ -130,20 +126,20 @@ const JobWizard = ({
       setShowSchedule(false)
     }
     dispatch(resetModalFilter(JOB_WIZARD_FILTERS))
-    removeJobFunction()
+    dispatch(removeJobFunction())
     onResolve()
     onWizardClose && onWizardClose()
-  }, [dispatch, onResolve, onWizardClose, removeJobFunction, showSchedule])
+  }, [dispatch, onResolve, onWizardClose, showSchedule])
 
   const { handleCloseModal, resolveModal } = useModalBlockHistory(closeModal, formRef.current)
 
   useEffect(() => {
     if (!isEditMode) {
-      dispatch(projectsAction.fetchProject(params.projectName, { format: 'minimal' })).then(
-        project => setCurrentProject(project)
-      ).catch(error => {
-        showErrorNotification(dispatch, error, 'The project failed to load')
-      })
+      dispatch(projectsAction.fetchProject(params.projectName, { format: 'minimal' }))
+        .then(project => setCurrentProject(project))
+        .catch(error => {
+          showErrorNotification(dispatch, error, 'The project failed to load')
+        })
     }
   }, [dispatch, isEditMode, params.projectName])
 
@@ -314,7 +310,8 @@ const JobWizard = ({
         isSchedule
       )
 
-      runNewJob(jobRequestData)
+      dispatch(runNewJob({ postData: jobRequestData }))
+        .unwrap()
         .then(() => {
           if (isSchedule) {
             setShowSchedule(state => !state)
@@ -338,7 +335,7 @@ const JobWizard = ({
           showErrorNotification(dispatch, error, '', getNewJobErrorMsg(error))
         })
     },
-    [dispatch, mode, navigate, onSuccessRequest, resolveModal, runNewJob]
+    [dispatch, mode, navigate, onSuccessRequest, resolveModal]
   )
 
   const editJobHandler = useCallback(
@@ -354,14 +351,17 @@ const JobWizard = ({
 
       delete jobRequestData.function.metadata
 
-      editJob(
-        {
-          credentials,
-          scheduled_object: jobRequestData,
-          cron_trigger: jobRequestData.schedule
-        },
-        params.projectName
+      dispatch(
+        editJob({
+          postData: {
+            credentials,
+            scheduled_object: jobRequestData,
+            cron_trigger: jobRequestData.schedule
+          },
+          project: params.projectName
+        })
       )
+        .unwrap()
         .then(() => {
           if (isSchedule) {
             setShowSchedule(state => !state)
@@ -383,7 +383,7 @@ const JobWizard = ({
           showErrorNotification(dispatch, error, '', getSaveJobErrorMsg(error))
         })
     },
-    [dispatch, editJob, mode, navigate, onSuccessRequest, resolveModal]
+    [dispatch, mode, navigate, onSuccessRequest, resolveModal]
   )
 
   const submitRequest = useCallback(
@@ -562,8 +562,6 @@ export default connect(
   }),
   {
     ...functionsActions,
-    ...jobsActions,
-    ...projectsAction,
-    editJob: scheduledJobsActionCreator.editJob
+    ...projectsAction
   }
 )(JobWizard)

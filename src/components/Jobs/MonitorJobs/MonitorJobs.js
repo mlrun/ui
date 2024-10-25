@@ -20,7 +20,7 @@ such restriction.
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import classnames from 'classnames'
 import { useParams } from 'react-router-dom'
-import { connect, useDispatch, useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 
 import FilterMenu from '../../FilterMenu/FilterMenu'
 import JobsTable from '../../../elements/JobsTable/JobsTable'
@@ -30,13 +30,14 @@ import { GROUP_BY_NONE, JOBS_PAGE, MONITOR_JOBS_TAB, REQUEST_CANCELED } from '..
 import { JobsContext } from '../Jobs'
 import { TERTIARY_BUTTON } from 'igz-controls/constants'
 import { createJobsMonitorTabContent } from '../../../utils/createJobsContent'
-import { fetchInitialJobs, generateFilters, monitorJobsActionCreator } from './monitorJobs.util'
+import { fetchInitialJobs, generateFilters } from './monitorJobs.util'
 import { parseJob } from '../../../utils/parseJob'
 import { pollAbortingJobs } from '../jobs.util'
 import { setFilters } from '../../../reducers/filtersReducer'
 import { useMode } from '../../../hooks/mode.hook'
+import { fetchAllJobRuns, fetchJobs } from '../../../reducers/jobReducer'
 
-const MonitorJobs = ({ fetchAllJobRuns, fetchJobs }) => {
+const MonitorJobs = () => {
   const [abortingJobs, setAbortingJobs] = useState({})
   const [jobRuns, setJobRuns] = useState([])
   const [jobs, setJobs] = useState([])
@@ -95,58 +96,55 @@ const MonitorJobs = ({ fetchAllJobRuns, fetchJobs }) => {
         'partition-sort-by': 'updated'
       }
 
-      fetchData(
-        params.projectName,
-        filters,
-        {
-          ui: {
-            controller: abortControllerRef.current,
-            setRequestErrorMessage
+      dispatch(
+        fetchData({
+          project: params.projectName,
+          filters,
+          config: {
+            ui: {
+              controller: abortControllerRef.current,
+              setRequestErrorMessage
+            },
+            params: { ...newParams }
           },
-          params: { ...newParams }
-        },
-        params.jobName ?? false
-      ).then(jobs => {
-        if (jobs) {
-          const parsedJobs = jobs.map(job => parseJob(job, MONITOR_JOBS_TAB))
-          const responseAbortingJobs = parsedJobs.reduce((acc, job) => {
-            if (job.state.value === 'aborting' && job.abortTaskId) {
-              acc[job.abortTaskId] = {
-                uid: job.uid,
-                name: job.name
+          jobName: params.jobName ?? false
+        })
+      )
+        .unwrap()
+        .then(jobs => {
+          if (jobs) {
+            const parsedJobs = jobs.map(job => parseJob(job, MONITOR_JOBS_TAB))
+            const responseAbortingJobs = parsedJobs.reduce((acc, job) => {
+              if (job.state.value === 'aborting' && job.abortTaskId) {
+                acc[job.abortTaskId] = {
+                  uid: job.uid,
+                  name: job.name
+                }
               }
+
+              return acc
+            }, {})
+
+            if (Object.keys(responseAbortingJobs).length > 0) {
+              setAbortingJobs(responseAbortingJobs)
+              pollAbortingJobs(
+                params.projectName,
+                abortJobRef,
+                responseAbortingJobs,
+                () => refreshJobs(filters),
+                dispatch
+              )
             }
 
-            return acc
-          }, {})
-
-          if (Object.keys(responseAbortingJobs).length > 0) {
-            setAbortingJobs(responseAbortingJobs)
-            pollAbortingJobs(
-              params.projectName,
-              abortJobRef,
-              responseAbortingJobs,
-              () => refreshJobs(filters),
-              dispatch
-            )
+            if (params.jobName) {
+              setJobRuns(parsedJobs)
+            } else {
+              setJobs(parsedJobs)
+            }
           }
-
-          if (params.jobName) {
-            setJobRuns(parsedJobs)
-          } else {
-            setJobs(parsedJobs)
-          }
-        }
-      })
+        })
     },
-    [
-      dispatch,
-      fetchAllJobRuns,
-      fetchJobs,
-      params.jobName,
-      params.projectName,
-      terminateAbortTasksPolling
-    ]
+    [dispatch, params.jobName, params.projectName, terminateAbortTasksPolling]
   )
 
   const isJobDataEmpty = useCallback(
@@ -241,6 +239,4 @@ const MonitorJobs = ({ fetchAllJobRuns, fetchJobs }) => {
   )
 }
 
-export default connect(null, {
-  ...monitorJobsActionCreator
-})(React.memo(MonitorJobs))
+export default React.memo(MonitorJobs)

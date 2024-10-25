@@ -39,8 +39,6 @@ import {
 } from '../jobs.util'
 import { datePickerPastOptions, PAST_WEEK_DATE_OPTION } from '../../../utils/datePicker.util'
 import { TERTIARY_BUTTON } from 'igz-controls/constants'
-import jobsActions from '../../../actions/jobs'
-import detailsActions from '../../../actions/details'
 
 import { ReactComponent as MonitorIcon } from 'igz-controls/images/monitor-icon.svg'
 import { ReactComponent as Run } from 'igz-controls/images/run.svg'
@@ -208,17 +206,3 @@ export const fetchInitialJobs = debounce(
     }
   }
 )
-
-export const monitorJobsActionCreator = {
-  abortJob: jobsActions.abortJob,
-  deleteAllJobRuns: jobsActions.deleteAllJobRuns,
-  deleteJob: jobsActions.deleteJob,
-  fetchAllJobRuns: jobsActions.fetchAllJobRuns,
-  fetchJob: jobsActions.fetchJob,
-  fetchJobFunctions: jobsActions.fetchJobFunctions,
-  fetchJobLogs: jobsActions.fetchJobLogs,
-  fetchJobPods: detailsActions.fetchJobPods,
-  fetchJobs: jobsActions.fetchJobs,
-  removeJobLogs: jobsActions.removeJobLogs,
-  removePods: detailsActions.removePods
-}

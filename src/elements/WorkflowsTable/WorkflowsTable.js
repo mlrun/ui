@@ -47,16 +47,19 @@ import {
 } from '../../components/Jobs/MonitorWorkflows/monitorWorkflows.util'
 import functionsActions from '../../actions/functions'
 import getState from '../../utils/getState'
-import jobsActions from '../../actions/jobs'
-import workflowsActions from '../../actions/workflow'
 import { DANGER_BUTTON } from 'igz-controls/constants'
 import { FILTERS_CONFIG } from '../../types'
-import { enrichRunWithFunctionFields, handleAbortJob, handleDeleteJob } from '../../utils/jobs.util'
 import { getFunctionLogs } from '../../utils/getFunctionLogs'
 import { getJobLogs } from '../../utils/getJobLogs.util'
 import { getNoDataMessage } from '../../utils/getNoDataMessage'
 import { isDetailsTabExists } from '../../utils/link-helper.util'
-import { isJobKindLocal, pollAbortingJobs } from '../../components/Jobs/jobs.util'
+import {
+  enrichRunWithFunctionFields,
+  handleAbortJob,
+  handleDeleteJob,
+  isJobKindLocal,
+  pollAbortingJobs
+} from '../../components/Jobs/jobs.util'
 import { isRowRendered, useVirtualization } from '../../hooks/useVirtualization.hook'
 import { isWorkflowStepExecutable } from '../../components/Workflow/workflow.util'
 import { openPopUp } from 'igz-controls/utils/common.util'
@@ -68,6 +71,8 @@ import { useSortTable } from '../../hooks/useSortTable.hook'
 import { useYaml } from '../../hooks/yaml.hook'
 
 import cssVariables from '../../components/Jobs/MonitorWorkflows/monitorWorkflows.scss'
+import { fetchJob } from '../../reducers/jobReducer'
+import { fetchWorkflow, resetWorkflow } from '../../reducers/workflowReducer'
 
 const WorkflowsTable = React.forwardRef(
   (
@@ -139,14 +144,7 @@ const WorkflowsTable = React.forwardRef(
 
     const handleFetchJobLogs = useCallback(
       (item, projectName, setDetailsLogs, streamLogsRef) => {
-        return getJobLogs(
-          item.uid,
-          projectName,
-          streamLogsRef,
-          setDetailsLogs,
-          jobsActions.fetchJobLogs,
-          dispatch
-        )
+        return getJobLogs(item.uid, projectName, streamLogsRef, setDetailsLogs, dispatch)
       },
       [dispatch]
     )
@@ -175,17 +173,26 @@ const WorkflowsTable = React.forwardRef(
 
     const refreshWorkflow = useCallback(() => {
       return dispatch(
-        workflowsActions.fetchWorkflow(
-          params.workflowProjectName || params.projectName,
-          params.workflowId
-        )
-      ).catch(error => {
-        showErrorNotification(dispatch, error, 'Failed to fetch workflow')
-        navigate(backLink, {
-          replace: true
+        fetchWorkflow({
+          project: params.workflowProjectName || params.projectName,
+          workflowId: params.workflowId
         })
-      })
-    }, [backLink, dispatch, navigate, params.projectName, params.workflowId, params.workflowProjectName])
+      )
+        .unwrap()
+        .catch(error => {
+          showErrorNotification(dispatch, error, 'Failed to fetch workflow')
+          navigate(backLink, {
+            replace: true
+          })
+        })
+    }, [
+      backLink,
+      dispatch,
+      navigate,
+      params.projectName,
+      params.workflowId,
+      params.workflowProjectName
+    ])
 
     const handlePollAbortingJob = useCallback(
       (jobRun, refresh) => {
@@ -211,20 +218,17 @@ const WorkflowsTable = React.forwardRef(
 
     const modifyAndSelectRun = useCallback(
       (jobRun, refresh) => {
-        return enrichRunWithFunctionFields(
-          dispatch,
-          jobRun,
-          jobsActions.fetchJobFunctions,
-          fetchJobFunctionsPromiseRef
-        ).then(jobRun => {
-          setSelectedJob(jobRun)
-          setSelectedFunction({})
-          setItemIsSelected(true)
+        return enrichRunWithFunctionFields(dispatch, jobRun, fetchJobFunctionsPromiseRef).then(
+          jobRun => {
+            setSelectedJob(jobRun)
+            setSelectedFunction({})
+            setItemIsSelected(true)
 
-          if (refresh) {
-            handlePollAbortingJob(jobRun, refresh)
+            if (refresh) {
+              handlePollAbortingJob(jobRun, refresh)
+            }
           }
-        })
+        )
       },
       [dispatch, handlePollAbortingJob, setItemIsSelected, setSelectedFunction, setSelectedJob]
     )
@@ -233,59 +237,62 @@ const WorkflowsTable = React.forwardRef(
       if (workflowsStore.activeWorkflow?.data) {
         const workflow = { ...workflowsStore.activeWorkflow.data }
 
-        return find(workflow.graph, workflowItem =>
-          workflowItem.run_type === 'run' && workflowItem.run_uid === params.jobId)
+        return find(
+          workflow.graph,
+          workflowItem => workflowItem.run_type === 'run' && workflowItem.run_uid === params.jobId
+        )
       }
     }, [params.jobId, workflowsStore.activeWorkflow.data])
 
-    const getPipelineError = useCallback(isErrorState => {
-      return isErrorState &&
-      workflowsStore.activeWorkflow?.data?.run?.error &&
-      workflowsStore.activeWorkflow.data.run.error !== 'None' ? {
-        title: 'Pipeline error - ',
-        message: workflowsStore.activeWorkflow.data.run.error
-      } : {}
-    }, [workflowsStore.activeWorkflow.data])
-
-    const fetchRun = useCallback(
-      () => {
-        return dispatch(
-          jobsActions.fetchJob(params.workflowProjectName || params.projectName, params.jobId)
-        )
-          .then(job => {
-            const selectedJob = findSelectedWorkflowJob()
-            const graphJobState = selectedJob?.phase?.toLowerCase()
-            const isErrorState = [FAILED_STATE, ERROR_STATE].includes(graphJobState)
-            const customJobState = isErrorState ? graphJobState : ''
-
-            return modifyAndSelectRun(parseJob(
-              job,
-              MONITOR_WORKFLOWS_TAB,
-              customJobState,
-              getPipelineError(isErrorState)
-            ), fetchRun)
-          })
-          .catch(() =>
-            navigate(backLink, {
-              replace: true
-            })
-          )
-          .finally(() => {
-            fetchJobFunctionsPromiseRef.current = null
-          })
+    const getPipelineError = useCallback(
+      isErrorState => {
+        return isErrorState &&
+          workflowsStore.activeWorkflow?.data?.run?.error &&
+          workflowsStore.activeWorkflow.data.run.error !== 'None'
+          ? {
+              title: 'Pipeline error - ',
+              message: workflowsStore.activeWorkflow.data.run.error
+            }
+          : {}
       },
-      [
-        backLink,
-        dispatch,
-        findSelectedWorkflowJob,
-        modifyAndSelectRun,
-        navigate,
-        params.jobId,
-        params.projectName,
-        params.workflowProjectName,
-        getPipelineError
-      ]
+      [workflowsStore.activeWorkflow.data]
     )
+
+    const fetchRun = useCallback(() => {
+      return dispatch(
+        fetchJob({ project: params.workflowProjectName || params.projectName, jobId: params.jobId })
+      )
+        .unwrap()
+        .then(job => {
+          const selectedJob = findSelectedWorkflowJob()
+          const graphJobState = selectedJob?.phase?.toLowerCase()
+          const isErrorState = [FAILED_STATE, ERROR_STATE].includes(graphJobState)
+          const customJobState = isErrorState ? graphJobState : ''
+
+          return modifyAndSelectRun(
+            parseJob(job, MONITOR_WORKFLOWS_TAB, customJobState, getPipelineError(isErrorState)),
+            fetchRun
+          )
+        })
+        .catch(() =>
+          navigate(backLink, {
+            replace: true
+          })
+        )
+        .finally(() => {
+          fetchJobFunctionsPromiseRef.current = null
+        })
+    }, [
+      backLink,
+      dispatch,
+      findSelectedWorkflowJob,
+      modifyAndSelectRun,
+      navigate,
+      params.jobId,
+      params.projectName,
+      params.workflowProjectName,
+      getPipelineError
+    ])
 
     const setJobStatusAborting = useCallback(
       task => {
@@ -306,7 +313,6 @@ const WorkflowsTable = React.forwardRef(
         }
 
         handleAbortJob(
-          jobsActions.abortJob,
           job,
           setNotification,
           refresh,
@@ -328,7 +334,7 @@ const WorkflowsTable = React.forwardRef(
             <div>
               Are you sure you want to abort the job "{job.name}"? <br />
               {isJobKindLocal(job) &&
-              'This is a local run. You can abort the run, though the actual process will continue.'}
+                'This is a local run. You can abort the run, though the actual process will continue.'}
             </div>
           ),
           btnConfirmLabel: 'Abort',
@@ -347,16 +353,14 @@ const WorkflowsTable = React.forwardRef(
 
     const onDeleteJob = useCallback(
       job => {
-        handleDeleteJob(jobsActions.deleteJob, job, refreshWorkflow, filtersStore, dispatch).then(
-          () => {
-            navigate(
-              location.pathname
-                .split('/')
-                .splice(0, location.pathname.split('/').indexOf(params.workflowId) + 1)
-                .join('/')
-            )
-          }
-        )
+        handleDeleteJob(true, job, refreshWorkflow, filtersStore, dispatch).then(() => {
+          navigate(
+            location.pathname
+              .split('/')
+              .splice(0, location.pathname.split('/').indexOf(params.workflowId) + 1)
+              .join('/')
+          )
+        })
       },
       [dispatch, filtersStore, location.pathname, navigate, params.workflowId, refreshWorkflow]
     )
@@ -409,25 +413,27 @@ const WorkflowsTable = React.forwardRef(
       setItemIsSelected(false)
     }, [setItemIsSelected, setSelectedFunction, setSelectedJob])
 
-    const findSelectedWorkflowFunction = useCallback((withoutRunType) => {
-      if (workflowsStore.activeWorkflow?.data) {
-        const workflow = { ...workflowsStore.activeWorkflow.data }
+    const findSelectedWorkflowFunction = useCallback(
+      withoutRunType => {
+        if (workflowsStore.activeWorkflow?.data) {
+          const workflow = { ...workflowsStore.activeWorkflow.data }
 
-        return find(workflow.graph, workflowItem => {
-          let workflowItemIsFound = (
-            workflowItem.function?.includes(`${params.functionName}@${params.functionHash}`) ||
-            workflowItem.function?.includes(params.functionName) ||
-            workflowItem.function?.includes(params.jobId)
-          )
+          return find(workflow.graph, workflowItem => {
+            let workflowItemIsFound =
+              workflowItem.function?.includes(`${params.functionName}@${params.functionHash}`) ||
+              workflowItem.function?.includes(params.functionName) ||
+              workflowItem.function?.includes(params.jobId)
 
-          if (withoutRunType) {
-            workflowItemIsFound = workflowItemIsFound && workflowItem.run_type !== 'run'
-          }
+            if (withoutRunType) {
+              workflowItemIsFound = workflowItemIsFound && workflowItem.run_type !== 'run'
+            }
 
-          return workflowItemIsFound
-        })
-      }
-    }, [params.functionName, params.functionHash, params.jobId, workflowsStore.activeWorkflow.data])
+            return workflowItemIsFound
+          })
+        }
+      },
+      [params.functionName, params.functionHash, params.jobId, workflowsStore.activeWorkflow.data]
+    )
 
     const checkIfWorkflowItemIsJob = useCallback(() => {
       if (workflowsStore.activeWorkflow?.data?.graph) {
@@ -459,7 +465,8 @@ const WorkflowsTable = React.forwardRef(
         !fetchJobFunctionsPromiseRef.current &&
         params.jobId &&
         (isEmpty(selectedJob) || params.jobId !== selectedJob.uid) &&
-        checkIfWorkflowItemIsJob() && !dataIsLoading
+        checkIfWorkflowItemIsJob() &&
+        !dataIsLoading
       ) {
         setDataIsLoading(true)
         fetchRun().finally(() => setDataIsLoading(false))
@@ -558,7 +565,7 @@ const WorkflowsTable = React.forwardRef(
       const workflow = { ...workflowsStore.activeWorkflow?.data }
 
       if (!params.workflowId && workflow.graph) {
-        dispatch(workflowsActions.resetWorkflow())
+        dispatch(resetWorkflow())
       }
 
       if (!workflow.graph && params.workflowId && !workflowIsLoaded) {

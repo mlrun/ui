@@ -40,16 +40,20 @@ import JobWizard from '../../components/JobWizard/JobWizard'
 import NoData from '../../common/NoData/NoData'
 import detailsActions from '../../actions/details'
 import getState from '../../utils/getState'
-import jobsActions from '../../actions/jobs'
 import { DANGER_BUTTON } from 'igz-controls/constants'
 import { FILTERS_CONFIG } from '../../types'
-import { enrichRunWithFunctionFields, handleAbortJob, handleDeleteJob } from '../../utils/jobs.util'
 import { generateActionsMenu } from '../../components/Jobs/MonitorJobs/monitorJobs.util'
 import { generatePageData } from './jobsTable.util'
 import { getCloseDetailsLink, isDetailsTabExists } from '../../utils/link-helper.util'
 import { getJobLogs } from '../../utils/getJobLogs.util'
 import { getNoDataMessage } from '../../utils/getNoDataMessage'
-import { isJobKindLocal, pollAbortingJobs } from '../../components/Jobs/jobs.util'
+import {
+  enrichRunWithFunctionFields,
+  handleAbortJob,
+  handleDeleteJob,
+  isJobKindLocal,
+  pollAbortingJobs
+} from '../../components/Jobs/jobs.util'
 import { isRowRendered, useVirtualization } from '../../hooks/useVirtualization.hook'
 import { openPopUp } from 'igz-controls/utils/common.util'
 import { parseJob } from '../../utils/parseJob'
@@ -60,6 +64,7 @@ import { usePods } from '../../hooks/usePods.hook'
 import { useYaml } from '../../hooks/yaml.hook'
 
 import cssVariables from './jobsTable.scss'
+import { fetchJob } from '../../reducers/jobReducer'
 
 const JobsTable = React.forwardRef(
   (
@@ -110,14 +115,7 @@ const JobsTable = React.forwardRef(
 
     const handleFetchJobLogs = useCallback(
       (item, projectName, setDetailsLogs, streamLogsRef) => {
-        return getJobLogs(
-          item.uid,
-          projectName,
-          streamLogsRef,
-          setDetailsLogs,
-          jobsActions.fetchJobLogs,
-          dispatch
-        )
+        return getJobLogs(item.uid, projectName, streamLogsRef, setDetailsLogs, dispatch)
       },
       [dispatch]
     )
@@ -161,14 +159,11 @@ const JobsTable = React.forwardRef(
 
     const modifyAndSelectRun = useCallback(
       jobRun => {
-        return enrichRunWithFunctionFields(
-          dispatch,
-          jobRun,
-          jobsActions.fetchJobFunctions,
-          fetchJobFunctionsPromiseRef
-        ).then(jobRun => {
-          setSelectedJob(jobRun)
-        })
+        return enrichRunWithFunctionFields(dispatch, jobRun, fetchJobFunctionsPromiseRef).then(
+          jobRun => {
+            setSelectedJob(jobRun)
+          }
+        )
       },
       [dispatch, setSelectedJob]
     )
@@ -192,7 +187,7 @@ const JobsTable = React.forwardRef(
 
     const fetchRun = useCallback(
       project => {
-        dispatch(jobsActions.fetchJob(project, params.jobId))
+        dispatch(fetchJob({ project, jobId: params.jobId }))
           .then(job => {
             return modifyAndSelectRun(parseJob(job))
           })
@@ -208,9 +203,12 @@ const JobsTable = React.forwardRef(
       [dispatch, modifyAndSelectRun, navigate, navigateLink, params.jobId]
     )
 
-    const refreshRun = useCallback((selectedItem) => {
-      fetchRun(selectedItem.project)
-    }, [fetchRun])
+    const refreshRun = useCallback(
+      selectedItem => {
+        fetchRun(selectedItem.project)
+      },
+      [fetchRun]
+    )
 
     const onAbortJob = useCallback(
       job => {
@@ -219,7 +217,6 @@ const JobsTable = React.forwardRef(
           : () => refreshJobs(filtersStore)
 
         handleAbortJob(
-          jobsActions.abortJob,
           job,
           setNotification,
           refresh,
@@ -279,9 +276,7 @@ const JobsTable = React.forwardRef(
     const onDeleteJob = useCallback(
       job => {
         handleDeleteJob(
-          params.jobName || !isEmpty(selectedJob)
-            ? jobsActions.deleteJob
-            : jobsActions.deleteAllJobRuns,
+          params.jobName || !isEmpty(selectedJob),
           job,
           refreshJobs,
           filtersStore,

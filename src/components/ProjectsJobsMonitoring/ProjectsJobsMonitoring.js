@@ -18,7 +18,7 @@ under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
 import React, { useCallback, useLayoutEffect, useMemo, useRef, useState } from 'react'
-import { connect, useDispatch, useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { Outlet, useLocation, useNavigate, useParams } from 'react-router-dom'
 
 import ContentMenu from '../../elements/ContentMenu/ContentMenu'
@@ -30,7 +30,7 @@ import JobsMonitoringFilters from './JobsMonitoring/JobsMonitoringFilters'
 import ScheduledMonitoringFilters from './ScheduledMonitoring/ScheduledMonitoringFilters'
 import WorkflowsMonitoringFilters from './WorkflowsMonitoring/WorkflowsMonitoringFilters'
 
-import { actionCreator, STATS_TOTAL_CARD, tabs } from './projectsJobsMotinoring.util'
+import { STATS_TOTAL_CARD, tabs } from './projectsJobsMotinoring.util'
 import {
   DATES_FILTER,
   FILTER_ALL_ITEMS,
@@ -50,14 +50,14 @@ import {
 import { monitorJob, pollAbortingJobs, rerunJob } from '../Jobs/jobs.util'
 import { TERTIARY_BUTTON } from 'igz-controls/constants'
 import { parseJob } from '../../utils/parseJob'
-import jobsActions from '../../actions/jobs'
-import workflowActions from '../../actions/workflow'
+import { fetchWorkflows } from '../../reducers/workflowReducer'
+import { fetchAllJobRuns, fetchJobs, fetchScheduledJobs } from '../../reducers/jobReducer'
 
 import './projectsJobsMonitoring.scss'
 
 export const ProjectJobsMonitoringContext = React.createContext({})
 
-const ProjectsJobsMonitoring = ({ fetchAllJobRuns, fetchJobFunction, fetchJobs }) => {
+const ProjectsJobsMonitoring = () => {
   const [abortingJobs, setAbortingJobs] = useState({})
   const [editableItem, setEditableItem] = useState(null)
   const [jobWizardMode, setJobWizardMode] = useState(null)
@@ -121,8 +121,8 @@ const ProjectsJobsMonitoring = ({ fetchAllJobRuns, fetchJobFunction, fetchJobs }
   }
 
   const handleRerunJob = useCallback(
-    async job => await rerunJob(job, fetchJobFunction, setEditableItem, setJobWizardMode, dispatch),
-    [fetchJobFunction, dispatch]
+    async job => await rerunJob(job, setEditableItem, setJobWizardMode, dispatch),
+    [dispatch]
   )
 
   const handleMonitoring = useCallback(
@@ -155,76 +155,75 @@ const ProjectsJobsMonitoring = ({ fetchAllJobRuns, fetchJobFunction, fetchJobs }
         'partition-sort-by': 'updated'
       }
 
-      fetchData(
-        params.jobName
-          ? selectedRunProject || '*'
-          : filters.project
-            ? filters.project.toLowerCase()
-            : '*',
-        filters,
-        {
-          ui: {
-            controller: abortControllerRef.current,
-            setRequestErrorMessage
+      dispatch(
+        fetchData({
+          project: params.jobName
+            ? selectedRunProject || '*'
+            : filters.project
+              ? filters.project.toLowerCase()
+              : '*',
+          filters,
+          config: {
+            ui: {
+              controller: abortControllerRef.current,
+              setRequestErrorMessage
+            },
+            params: { ...newParams }
           },
-          params: { ...newParams }
-        },
-        params.jobName ?? false
-      ).then(jobs => {
-        if (jobs) {
-          const parsedJobs = jobs
-            .map(job => parseJob(job))
-            .filter(job => {
-              const type =
-                job.labels?.find(label => label.includes('kind:'))?.replace('kind: ', '') ??
-                JOB_KIND_LOCAL
+          jobName: params.jobName ?? false
+        })
+      )
+        .unwrap()
+        .then(jobs => {
+          if (jobs) {
+            const parsedJobs = jobs
+              .map(job => parseJob(job))
+              .filter(job => {
+                const type =
+                  job.labels?.find(label => label.includes('kind:'))?.replace('kind: ', '') ??
+                  JOB_KIND_LOCAL
 
-              return (
-                !filters.type || filters.type === FILTER_ALL_ITEMS || filters.type.split(',').includes(type)
-              )
-            })
-          const responseAbortingJobs = parsedJobs.reduce((acc, job) => {
-            if (job.state.value === 'aborting' && job.abortTaskId) {
-              acc[job.abortTaskId] = {
-                uid: job.uid,
-                name: job.name
+                return (
+                  !filters.type ||
+                  filters.type === FILTER_ALL_ITEMS ||
+                  filters.type.split(',').includes(type)
+                )
+              })
+            const responseAbortingJobs = parsedJobs.reduce((acc, job) => {
+              if (job.state.value === 'aborting' && job.abortTaskId) {
+                acc[job.abortTaskId] = {
+                  uid: job.uid,
+                  name: job.name
+                }
               }
+
+              return acc
+            }, {})
+
+            if (Object.keys(responseAbortingJobs).length > 0) {
+              setAbortingJobs(responseAbortingJobs)
+              pollAbortingJobs(
+                params.jobName
+                  ? selectedRunProject || '*'
+                  : filters.project
+                    ? filters.project.toLowerCase()
+                    : '*',
+                abortJobRef,
+                responseAbortingJobs,
+                () => refreshJobs(filters),
+                dispatch
+              )
             }
 
-            return acc
-          }, {})
-
-          if (Object.keys(responseAbortingJobs).length > 0) {
-            setAbortingJobs(responseAbortingJobs)
-            pollAbortingJobs(
-              params.jobName
-                ? selectedRunProject || '*'
-                : filters.project
-                  ? filters.project.toLowerCase()
-                  : '*',
-              abortJobRef,
-              responseAbortingJobs,
-              () => refreshJobs(filters),
-              dispatch
-            )
+            if (params.jobName) {
+              setJobRuns(parsedJobs)
+            } else {
+              setJobs(parsedJobs)
+            }
           }
-
-          if (params.jobName) {
-            setJobRuns(parsedJobs)
-          } else {
-            setJobs(parsedJobs)
-          }
-        }
-      })
+        })
     },
-    [
-      dispatch,
-      fetchAllJobRuns,
-      fetchJobs,
-      params.jobName,
-      selectedRunProject,
-      terminateAbortTasksPolling
-    ]
+    [dispatch, params.jobName, selectedRunProject, terminateAbortTasksPolling]
   )
 
   const refreshScheduled = useCallback(
@@ -233,46 +232,48 @@ const ProjectsJobsMonitoring = ({ fetchAllJobRuns, fetchJobFunction, fetchJobs }
       abortControllerRef.current = new AbortController()
 
       dispatch(
-        jobsActions.fetchScheduledJobs(
-          filters.project ? filters.project.toLowerCase() : '*',
+        fetchScheduledJobs({
+          project: filters.project ? filters.project.toLowerCase() : '*',
           filters,
-          {
+          config: {
             ui: {
               controller: abortControllerRef.current,
               setRequestErrorMessage
             }
           }
-        )
-      ).then(jobs => {
-        if (jobs) {
-          const parsedJobs = jobs
-            .map(job => parseJob(job, SCHEDULE_TAB))
-            .filter(job => {
-              let inDateRange = true
+        })
+      )
+        .unwrap()
+        .then(jobs => {
+          if (jobs) {
+            const parsedJobs = jobs
+              .map(job => parseJob(job, SCHEDULE_TAB))
+              .filter(job => {
+                let inDateRange = true
 
-              if (filters.dates) {
-                const timeTo = filters.dates.value[1]?.getTime?.() || ''
-                const timeFrom = filters.dates.value[0]?.getTime?.() || ''
-                const nextRun = job.nextRun.getTime()
+                if (filters.dates) {
+                  const timeTo = filters.dates.value[1]?.getTime?.() || ''
+                  const timeFrom = filters.dates.value[0]?.getTime?.() || ''
+                  const nextRun = job.nextRun.getTime()
 
-                if (timeFrom) {
-                  inDateRange = nextRun >= timeFrom
+                  if (timeFrom) {
+                    inDateRange = nextRun >= timeFrom
+                  }
+
+                  if (timeTo && inDateRange) {
+                    inDateRange = nextRun <= timeTo
+                  }
                 }
 
-                if (timeTo && inDateRange) {
-                  inDateRange = nextRun <= timeTo
-                }
-              }
+                return (
+                  inDateRange &&
+                  (!filters.type || filters.type === FILTER_ALL_ITEMS || job.type === filters.type)
+                )
+              })
 
-              return (
-                inDateRange &&
-                (!filters.type || filters.type === FILTER_ALL_ITEMS || job.type === filters.type)
-              )
-            })
-
-          setScheduledJobs(parsedJobs)
-        }
-      })
+            setScheduledJobs(parsedJobs)
+          }
+        })
     },
     [dispatch]
   )
@@ -292,17 +293,17 @@ const ProjectsJobsMonitoring = ({ fetchAllJobRuns, fetchJobFunction, fetchJobs }
       abortControllerRef.current = new AbortController()
 
       dispatch(
-        workflowActions.fetchWorkflows(
-          filter.project ? filter.project.toLowerCase() : '*',
-          { ...filter, groupBy: GROUP_BY_WORKFLOW },
-          {
+        fetchWorkflows({
+          project: filter.project ? filter.project.toLowerCase() : '*',
+          filter: { ...filter, groupBy: GROUP_BY_WORKFLOW },
+          config: {
             ui: {
               controller: abortControllerRef.current,
               setRequestErrorMessage
             }
           },
-          true
-        )
+          withPagination: true
+        })
       )
     },
     [dispatch]
@@ -433,6 +434,4 @@ const ProjectsJobsMonitoring = ({ fetchAllJobRuns, fetchJobFunction, fetchJobs }
   )
 }
 
-export default connect(null, {
-  ...actionCreator
-})(ProjectsJobsMonitoring)
+export default ProjectsJobsMonitoring

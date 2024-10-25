@@ -26,9 +26,9 @@ import {
   SCHEDULE_TAB
 } from '../constants'
 import getState from './getState'
-import { convertTriggerToCrontab } from './jobs.util'
 import { getJobIdentifier } from './getUniqueIdentifier'
 import { parseKeyValues } from './object'
+import { convertTriggerToCrontab } from '../components/Jobs/jobs.util'
 
 export const jobHasWorkflowLabel = job => {
   return job.labels && 'job-type' in job.labels && job.labels['job-type'] === 'workflow-runner'
@@ -91,7 +91,12 @@ export const parseJob = (job, tab, customState, customError) => {
       results: job.status?.results || {},
       resultsChips: parseKeyValues(job.status?.results || {}),
       startTime: new Date(job.status?.start_time),
-      state: getState(customState || job.status?.state, JOBS_PAGE, JOB_KIND_JOB, job.status?.reason),
+      state: getState(
+        customState || job.status?.state,
+        JOBS_PAGE,
+        JOB_KIND_JOB,
+        job.status?.reason
+      ),
       ui_run: job.status?.ui_url,
       uid: job.metadata.uid,
       updated: new Date(job.status?.last_update),

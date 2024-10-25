@@ -19,7 +19,7 @@ such restriction.
 */
 import React, { useCallback, useState, useMemo, useEffect, useRef } from 'react'
 import { useParams } from 'react-router-dom'
-import { connect, useDispatch } from 'react-redux'
+import { useDispatch } from 'react-redux'
 
 import FilterMenu from '../../FilterMenu/FilterMenu'
 import ScheduledJobsTable from '../../../elements/ScheduledJobsTable/ScheduledJobsTable'
@@ -35,10 +35,10 @@ import {
 import { JobsContext } from '../Jobs'
 import { createJobsScheduleTabContent } from '../../../utils/createJobsContent'
 import { parseJob } from '../../../utils/parseJob'
-import { scheduledJobsActionCreator } from './scheduledJobs.util'
 import { setFilters } from '../../../reducers/filtersReducer'
+import { fetchScheduledJobs } from '../../../reducers/jobReducer'
 
-const ScheduledJobs = ({ fetchScheduledJobs }) => {
+const ScheduledJobs = () => {
   const [jobs, setJobs] = useState([])
   const [dataIsLoaded, setDataIsLoaded] = useState(false)
   const [requestErrorMessage, setRequestErrorMessage] = useState('')
@@ -62,18 +62,26 @@ const ScheduledJobs = ({ fetchScheduledJobs }) => {
       setJobs([])
       abortControllerRef.current = new AbortController()
 
-      fetchScheduledJobs(params.projectName, filters, {
-        ui: {
-          controller: abortControllerRef.current,
-          setRequestErrorMessage
-        }
-      }).then(jobs => {
-        if (jobs) {
-          setJobs(jobs.map(job => parseJob(job, SCHEDULE_TAB)))
-        }
-      })
+      dispatch(
+        fetchScheduledJobs({
+          project: params.projectName,
+          filters,
+          config: {
+            ui: {
+              controller: abortControllerRef.current,
+              setRequestErrorMessage
+            }
+          }
+        })
+      )
+        .unwrap()
+        .then(jobs => {
+          if (jobs) {
+            setJobs(jobs.map(job => parseJob(job, SCHEDULE_TAB)))
+          }
+        })
     },
-    [fetchScheduledJobs, params.projectName]
+    [dispatch, params.projectName]
   )
 
   useEffect(() => {
@@ -121,6 +129,4 @@ const ScheduledJobs = ({ fetchScheduledJobs }) => {
 
 ScheduledJobs.propTypes = {}
 
-export default connect(null, {
-  ...scheduledJobsActionCreator
-})(React.memo(ScheduledJobs))
+export default React.memo(ScheduledJobs)
