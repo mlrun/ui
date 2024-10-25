@@ -160,7 +160,8 @@ const projectExistsConflict = {
   detail: "MLRunConflictError('Conflict - Project already exists')"
 }
 const projectsLimitReachedConflict = {
-    detail: "MLRunHTTPError(\"Failed creating project in Iguazio: [{'status': 405, 'detail': 'Resource limit reached. Cannot create more records'}]\")"
+  detail:
+    "MLRunHTTPError(\"Failed creating project in Iguazio: [{'status': 405, 'detail': 'Resource limit reached. Cannot create more records'}]\")"
 }
 const secretKeyTemplate = {
   provider: 'kubernetes',
@@ -308,7 +309,9 @@ function deleteProjectHandler(req, res, omitResponse) {
 
 function filterByLabels(elementLabels, requestLabels) {
   if (requestLabels?.length > 0 && !isEmpty(elementLabels)) {
-    const requestLabelsList = (isArray(requestLabels) ? requestLabels : [requestLabels]).map(label => label.split('='))
+    const requestLabelsList = (isArray(requestLabels) ? requestLabels : [requestLabels]).map(
+      label => label.split('=')
+    )
 
     return requestLabelsList.every(([key = '', value = '']) => {
       const trimmedKey = key.trim()
@@ -319,10 +322,15 @@ function filterByLabels(elementLabels, requestLabels) {
       }
 
       if (trimmedValue && trimmedValue.startsWith('~')) {
-        return elementLabels[trimmedKey] && elementLabels[trimmedKey].toLowerCase().includes(trimmedValue.substring(1).toLowerCase())
+        return (
+          elementLabels[trimmedKey] &&
+          elementLabels[trimmedKey].toLowerCase().includes(trimmedValue.substring(1).toLowerCase())
+        )
       }
 
-      return elementLabels[trimmedKey] && (!trimmedValue || elementLabels[trimmedKey] === trimmedValue)
+      return (
+        elementLabels[trimmedKey] && (!trimmedValue || elementLabels[trimmedKey] === trimmedValue)
+      )
     })
   }
 
@@ -372,7 +380,9 @@ function getFeatureSet(req, res) {
   }
 
   if (req.query['label']) {
-    collectedFeatureSets = collectedFeatureSets.filter(featureSet => filterByLabels(featureSet.metadata.labels, req.query['label']))
+    collectedFeatureSets = collectedFeatureSets.filter(featureSet =>
+      filterByLabels(featureSet.metadata.labels, req.query['label'])
+    )
   }
 
   res.send({ feature_sets: collectedFeatureSets })
@@ -463,17 +473,20 @@ function deleteProjectV2(req, res) {
 
   const handleDeletion = () => {
     const taskFunc = () => {
-      return new Promise((resolve) => {
-        setTimeout(() => {
-          deleteProjectHandler(req, res, true)
-          resolve()
-        }, random(5000, 10000))
+      return new Promise(resolve => {
+        setTimeout(
+          () => {
+            deleteProjectHandler(req, res, true)
+            resolve()
+          },
+          random(5000, 10000)
+        )
       })
     }
 
     const task = createTask(null, {
       taskFunc,
-      kind: `project.deletion.wrapper.${req.params.project}`,
+      kind: `project.deletion.wrapper.${req.params.project}`
     })
 
     res.status = 202
@@ -484,11 +497,11 @@ function deleteProjectV2(req, res) {
     handleDeletion()
   } else {
     const collectedProject = projects.projects.filter(
-      (project) => project.metadata.name === req.params['project']
+      project => project.metadata.name === req.params['project']
     )
 
     const isEmpty = collectedProject.every(
-      (project) =>
+      project =>
         (project.spec.functions && project.spec.functions.length > 0) ||
         (project.spec.workflows && project.spec.workflows.length > 0) ||
         (project.spec.artifacts && project.spec.artifacts.length > 0)
@@ -498,12 +511,12 @@ function deleteProjectV2(req, res) {
       handleDeletion()
     } else {
       res.status(412).send({
-        detail: `MLRunPreconditionFailedError('Project ${req.params.project} cannot be deleted since related resources found: artifacts')`,
+        detail: `MLRunPreconditionFailedError('Project ${req.params.project} cannot be deleted since related resources found: artifacts')`
       })
     }
   }
 }
-    
+
 function patchProject(req, res) {
   const project = projects.projects.find(project => project.metadata.name === req.params['project'])
 
@@ -723,17 +736,17 @@ function getRuns(req, res) {
       .filter(run => {
         const runStartTime = new Date(run.status.start_time)
 
-      if (!start_time_from || runStartTime >= new Date(start_time_from)) {
-        if (state) {
-          if (isArray(state)) {
-            return state.includes(run.status.state)
+        if (!start_time_from || runStartTime >= new Date(start_time_from)) {
+          if (state) {
+            if (isArray(state)) {
+              return state.includes(run.status.state)
+            } else {
+              return run.status.state === state
+            }
           } else {
-            return run.status.state === state
+            return true
           }
-        } else {
-          return true
         }
-      }
 
         return false
       })
@@ -761,7 +774,9 @@ function getRuns(req, res) {
   }
 
   if (req.query['label']) {
-    collectedRuns = collectedRuns.filter(run => filterByLabels(run.metadata.labels, req.query['label']))
+    collectedRuns = collectedRuns.filter(run =>
+      filterByLabels(run.metadata.labels, req.query['label'])
+    )
   }
 
   if (req.query['partition-by'] && req.query['partition-sort-by']) {
@@ -899,7 +914,9 @@ function getProjectsSchedules(req, res) {
   }
 
   if (req.query['label']) {
-    collectedSchedules = collectedSchedules.filter(schedule => filterByLabels(schedule.labels, req.query['label']))
+    collectedSchedules = collectedSchedules.filter(schedule =>
+      filterByLabels(schedule.labels, req.query['label'])
+    )
   }
 
   res.send({ schedules: collectedSchedules })
@@ -1176,7 +1193,9 @@ function getArtifacts(req, res) {
   }
 
   if (req.query['label']) {
-    collectedArtifacts = collectedArtifacts.filter(artifact => filterByLabels(artifact.metadata.labels, req.query['label']))
+    collectedArtifacts = collectedArtifacts.filter(artifact =>
+      filterByLabels(artifact.metadata.labels, req.query['label'])
+    )
   }
 
   if (req.query['name']) {
@@ -1215,17 +1234,17 @@ function getArtifacts(req, res) {
 
   if (req.query['format'] === 'minimal') {
     collectedArtifacts = collectedArtifacts.map(func => {
-      const fieldsToPick = [
-        'db_key',
-        'producer',
-        'size',
-        'target_path',
-        'framework',
-        'metrics'
-      ]
+      const fieldsToPick = ['db_key', 'producer', 'size', 'target_path', 'framework', 'metrics']
       const specFieldsToPick = fieldsToPick.map(fieldName => `spec.${fieldName}`)
 
-      return pick(func, ['kind', 'metadata', 'status', 'project', ...specFieldsToPick, ...fieldsToPick])
+      return pick(func, [
+        'kind',
+        'metadata',
+        'status',
+        'project',
+        ...specFieldsToPick,
+        ...fieldsToPick
+      ])
     })
   }
 
@@ -1313,13 +1332,12 @@ function patchProjectsFeatureVectors(req, res) {
 }
 
 function getProjectsFeatureVector(req, res) {
-  const featureVector = featureVectors.feature_vectors
-    .find(
-      item =>
-        item.metadata.project === req.params.project &&
-        item.metadata.name === req.params.name &&
-        (item.metadata.uid === req.params.reference || item.metadata.tag === req.params.reference)
-    )
+  const featureVector = featureVectors.feature_vectors.find(
+    item =>
+      item.metadata.project === req.params.project &&
+      item.metadata.name === req.params.name &&
+      (item.metadata.uid === req.params.reference || item.metadata.tag === req.params.reference)
+  )
 
   if (featureVector) {
     res.send(featureVector)
@@ -1697,7 +1715,7 @@ function getFileStats(req, res) {
   const { size } = fs.statSync(filePath)
   const mimeType = mime.lookup(filePath)
 
-  res.send({mimetype: mimeType, size, modified: Date.now()})
+  res.send({ mimetype: mimeType, size, modified: Date.now() })
 }
 
 function deleteSchedule(req, res) {
@@ -1877,7 +1895,8 @@ function putTags(req, res) {
 
     return (
       artifactMetaData?.project === req.params.project &&
-      (artifact.kind === req.body.identifiers[0].kind || (!artifact.kind && req.body.identifiers[0].kind === 'artifact')) &&
+      (artifact.kind === req.body.identifiers[0].kind ||
+        (!artifact.kind && req.body.identifiers[0].kind === 'artifact')) &&
       (artifactMetaData?.uid === req.body.identifiers[0].uid ||
         artifactMetaData?.tree === req.body.identifiers[0].uid) &&
       artifactSpecData?.db_key === req.body.identifiers[0].key
@@ -2007,6 +2026,27 @@ function postArtifact(req, res) {
     artifactTemplate.spec.model_file = req.body.spec.model_file
   }
 
+
+  const collectedArtifactsWithSameName = artifacts.artifacts.filter(artifact => {
+    return (
+      artifact.metadata?.project === req.body.metadata.project &&
+      ((artifact.spec && artifact.spec.db_key === req.body.spec.db_key) ||
+        artifact.metadata.key === req.body.metadata.key)
+    )
+  })
+
+  collectedArtifactsWithSameName.forEach(artifact => {
+    if (artifact.metadata?.tag === req.body.metadata.tag) {
+      artifact.metadata.tag = null
+    } else if (artifact.metadata?.tag === 'latest') {
+      if(collectedArtifactsWithSameName.find(searchedArtifact => searchedArtifact.metadata.uid === artifact.metadata.uid && searchedArtifact.metadata?.tag !== 'latest')) {
+        remove(artifacts.artifacts, artifact)
+      } else {
+        artifact.metadata.tag = null
+      }
+    }
+  })
+
   if (artifactTag === 'latest') {
     artifactTemplate.metadata['tag'] = artifactTag
     artifacts.artifacts.push(artifactTemplate)
@@ -2075,6 +2115,24 @@ function deleteArtifact(req, res) {
   res.send({})
 }
 
+function deleteArtifacts(req, res) {
+  const collectedArtifacts = artifacts.artifacts.filter(artifact => {
+    const artifactMetaData = artifact.metadata ?? artifact
+    const artifactSpecData = artifact.spec ?? artifact
+
+    return (
+      artifactMetaData?.project === req.params.project &&
+      (artifactSpecData?.db_key === req.query.name || artifactMetaData.key === req.query.name)
+    )
+  })
+
+  if (collectedArtifacts?.length > 0) {
+    collectedArtifacts.forEach(collectedArtifact => remove(artifacts.artifacts, collectedArtifact))
+  }
+
+  res.send({})
+}
+
 function getModelEndpoints(req, res) {
   let collectedEndpoints = modelEndpoints.endpoints
     .filter(endpoint => endpoint.metadata.project === req.params.project)
@@ -2087,7 +2145,9 @@ function getModelEndpoints(req, res) {
       }
     }))
   if (req.query['label']) {
-    collectedEndpoints = collectedEndpoints.filter(endpoint => filterByLabels(endpoint.metadata.labels, req.query['label']))
+    collectedEndpoints = collectedEndpoints.filter(endpoint =>
+      filterByLabels(endpoint.metadata.labels, req.query['label'])
+    )
   }
 
   res.send({ endpoints: collectedEndpoints })
@@ -2468,6 +2528,7 @@ app.get(`${mlrunAPIIngressV2}/projects/:project/artifacts/:key`, getArtifact)
 app.post(`${mlrunAPIIngressV2}/projects/:project/artifacts`, postArtifact)
 app.put(`${mlrunAPIIngressV2}/projects/:project/artifacts/:key`, putArtifact)
 app.delete(`${mlrunAPIIngressV2}/projects/:project/artifacts/:key`, deleteArtifact)
+app.delete(`${mlrunAPIIngressV2}/projects/:project/artifacts`, deleteArtifacts)
 
 app.put(`${mlrunAPIIngress}/projects/:project/tags/:tag`, putTags)
 app.delete(`${mlrunAPIIngress}/projects/:project/tags/:tag`, deleteTags)
