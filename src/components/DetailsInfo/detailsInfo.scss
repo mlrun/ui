@@ -6,8 +6,12 @@
   display: flex;
   flex: 1;
   flex-wrap: wrap;
-  overflow: auto;
   padding-right: 24px;
+  overflow: auto;
+
+  &:has(.lazy-table) {
+    padding-right: 0;
+  }
 
   & > * {
     flex: 0 0 100%;
@@ -71,8 +75,8 @@
         flex: 1;
         align-items: center;
         min-width: 110px;
-        word-break: break-word;
         color: $topaz;
+        word-break: break-word;
 
         &_multiline {
           display: inline-block;
