@@ -688,6 +688,8 @@ module.exports = {
     Cross_Close_Button: crossCloseButton,
     Info_Pane_Tab_Selector: commonInfoPaneTabSelector,
     Overview_Headers: commonTable(infoPaneOverviewHeaders),
+    Resource_Monitoring_Button: By.css('.item-header__buttons .btn-tertiary'),
+    Info_Pane_Refresh_Button: By.css('.item-header__buttons [data-testid="refresh"]'),
 
     // Logs tab.
     Logs_Text_container: By.css('.table__item .table__item-logs-content'),
