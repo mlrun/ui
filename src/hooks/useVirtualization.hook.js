@@ -208,22 +208,39 @@ const useTableScroll = ({
  * @param {string|number} options.heightData.rowHeightExtended - Height of an extended row.
  * @param {string|number} options.heightData.headerRowHeight - Height of the table header row.
  * @param {boolean} options.activateTableScroll - Boolean indicator for useTableScroll hook.
+ * @param {string|number} options.tableId - Custom table ID.
+ * @param {string|number} options.tableBodyId - Custom table body ID.
+ * @param {boolean} options.ignoreVerticalScroll - Boolean indicator for ignoring vertical scroll event
  * @returns {Object} - Object containing virtualization configuration.
  */
+const rowsDataDefault = {
+  content: []
+}
+const rowsSizesDefault = []
+const heightDataDefault = {}
+
 export const useVirtualization = ({
   renderTriggerItem,
-  rowsSizes = [],
-  rowsData = {
-    content: []
-  },
-  heightData: { rowHeight, rowHeightExtended, headerRowHeight },
-  activateTableScroll = false
+  rowsSizes = rowsSizesDefault,
+  rowsData = rowsDataDefault,
+  heightData = heightDataDefault,
+  activateTableScroll = false,
+  tableId = null,
+  tableBodyId = null,
+  ignoreVerticalScroll = true
 }) => {
   const [virtualizationConfig, setVirtualizationConfig] = useState(virtualizationConfigInitialState)
   const [rowsSizesLocal, setRowsSizesLocal] = useState(rowsSizes)
-  const rowHeightLocal = useMemo(() => parseInt(rowHeight), [rowHeight])
-  const extendedRowHeightLocal = useMemo(() => parseInt(rowHeightExtended), [rowHeightExtended])
-  const headerRowHeightLocal = useMemo(() => parseInt(headerRowHeight), [headerRowHeight])
+  const rowHeightLocal = useMemo(() => parseInt(heightData.rowHeight) || 0, [heightData.rowHeight])
+  const extendedRowHeightLocal = useMemo(
+    () => parseInt(heightData.rowHeightExtended) || 0,
+    [heightData.rowHeightExtended]
+  )
+  const headerRowHeightLocal = useMemo(
+    () => parseInt(heightData.headerRowHeight) || 0,
+    [heightData.headerRowHeight]
+  )
+  const prevScrollTop = useRef(null)
 
   useLayoutEffect(() => {
     if (isEmpty(rowsData.content) && !isEqual(rowsSizes, rowsSizesLocal)) {
@@ -255,13 +272,17 @@ export const useVirtualization = ({
   ])
 
   useLayoutEffect(() => {
-    const tableElement = document.getElementById(MAIN_TABLE_ID)
-    const tableBodyElement = document.getElementById(MAIN_TABLE_BODY_ID)
+    const tableElement = document.getElementById(tableId || MAIN_TABLE_ID)
+    const tableBodyElement = document.getElementById(tableBodyId || MAIN_TABLE_BODY_ID)
     const elementsHeight = sum(rowsSizesLocal)
 
-    const calculateVirtualizationConfig = throttle(() => {
+    const calculateVirtualizationConfig = throttle(event => {
+      if (event?.target && ignoreVerticalScroll) {
+        if (tableElement.scrollTop === prevScrollTop.current) return
+        prevScrollTop.current = tableElement.scrollTop
+      }
       const scrollClientHeight = parseInt(
-        tableElement.scrollTop + tableElement.clientHeight - headerRowHeightLocal
+        tableElement.scrollTop + tableElement.clientHeight - headerRowHeightLocal 
       )
       let firstVisibleItemIndex = 0
       let heightToFirstVisibleItem = 0
@@ -342,7 +363,7 @@ export const useVirtualization = ({
         window.removeEventListener('resize', calculateVirtualizationConfig)
       }
     }
-  }, [renderTriggerItem, headerRowHeightLocal, rowsSizesLocal, rowsData.content])
+  }, [renderTriggerItem, headerRowHeightLocal, rowsSizesLocal, rowsData.content, tableId, tableBodyId, ignoreVerticalScroll])
 
   useTableScroll({
     rowHeight: rowHeightLocal,

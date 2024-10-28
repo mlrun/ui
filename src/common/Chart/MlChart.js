@@ -27,10 +27,10 @@ import './mlChart.scss'
 
 Chart.register(...registerables)
 
-const MlChart = ({ config }) => {
+const MlChart = ({ config, showLoader = true }) => {
   const canvasRef = useRef()
   const [isLoading, setIsLoading] = useState(true)
-  const canvasClassNames = classnames(isLoading && 'hidden')
+  const canvasClassNames = classnames(showLoader && isLoading && 'hidden')
 
   useLayoutEffect(() => {
     const ctx = canvasRef.current.getContext('2d')
@@ -53,7 +53,6 @@ const MlChart = ({ config }) => {
         })
       }
     }
-
     const mlChartInstance = new Chart(ctx, {
       ...chartConfig,
       options: {
@@ -61,7 +60,7 @@ const MlChart = ({ config }) => {
         animation: {
           ...chartConfig.options.animation,
           onComplete: () => {
-            setIsLoading(false)
+            showLoader && setIsLoading(false)
 
             if (chartConfig?.options?.animation?.onComplete) {
               chartConfig.options.animation.onComplete()
@@ -72,13 +71,13 @@ const MlChart = ({ config }) => {
     })
 
     return () => {
-      mlChartInstance.destroy()
+      mlChartInstance?.destroy()
     }
-  }, [isLoading, config])
+  }, [config, showLoader])
 
   return (
     <div className="chart-container">
-      {isLoading && <Loader section small secondary />}
+      {showLoader && isLoading && <Loader section small secondary />}
       <canvas className={canvasClassNames} ref={canvasRef} />
     </div>
   )
