@@ -107,10 +107,10 @@ const ProjectMonitor = ({
 
   const openRegisterModelModal = useCallback(() => {
     openPopUp(RegisterModelModal, {
-      projectName: params.projectName,
+      params: params,
       refresh: () => navigate(registerArtifactLink(MODEL_TYPE))
     })
-  }, [params.projectName, navigate, registerArtifactLink])
+  }, [params, navigate, registerArtifactLink])
 
   const { createNewOptions } = useMemo(() => {
     const createNewOptions = generateCreateNewOptions(
