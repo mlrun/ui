@@ -1393,7 +1393,9 @@ function getPipelines(req, res) {
     })
   }
   //get pipelines for Jobs and workflows page Monitor Workflows tab
-  const collectedPipelines = { ...pipelines[req.params.project] }
+  const collectedPipelines = {
+    ...(pipelines[req.params.project] ?? { runs: [], total_size: 0, next_page_token: null })
+  }
 
   if (req.query.filter) {
     const nameFilter = JSON.parse(req.query.filter).predicates.find(item => item.key === 'name')
@@ -1416,7 +1418,17 @@ function getPipelines(req, res) {
 }
 
 function getPipeline(req, res) {
-  const collectedPipeline = pipelineIDs.find(item => item.run.id === req.params.pipelineID)
+  const collectedPipeline = pipelineIDs.find(
+    item => item.run.id === req.params.pipelineID && item.run.project === req.params.project
+  )
+
+  if (!collectedPipeline) {
+    res.statusCode = 404
+
+    return res.send({
+      detail: `"MLRunNotFoundError('Pipeline run with id ${req.params.pipelineID} is not of project ${req.params.project}')"`
+    })
+  }
 
   res.send(collectedPipeline)
 }
