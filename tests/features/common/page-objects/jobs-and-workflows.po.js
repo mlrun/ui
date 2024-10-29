@@ -408,7 +408,7 @@ const functionsTemplates = {
 
 // Common components
 const pageHeaderButton = By.css(
-  '.content__header .page-actions-container button'
+  '.action-bar .action-bar__actions button'
 )
 const jobsTabSelector = commonTable(tabSelector)
 const tableRefreshButton = By.css(
@@ -431,32 +431,60 @@ const commonStartTimeFilter = dropdownComponent(
     false // options_in_root ?
   )
 )
+const commonDatePickerFilter = dropdownComponent(
+  generateDropdownGroup(
+    '[data-testid="date-picker-container"]',
+    '[data-testid="date-picker-input"]',
+    '.date-picker__pop-up .select__item',
+    '.data-ellipsis .data-ellipsis',
+    false
+  )
+)
+
+const commonTableNameFilter = inputGroup(
+  generateInputGroup(
+    '[data-testid="name-form-field-input"]',
+    true,
+    false
+  )
+)
+
+const commonTableFilterByButton = By.css('[data-testid="filter-menu-btn-tooltip-wrapper"]')
+const commonErrorMessage = By.css('[data-testid="no-data"] h3')
+
+const commonCustomRangeFilter = dropdownComponent(
+  generateDropdownGroup(
+    '[data-testid="date-picker-container"]',
+    '[data-testid="date-picker-input"] input',
+    '.date-picker__pop-up .select__item',
+    '.data-ellipsis .data-ellipsis',
+    false
+  )
+)
 
 module.exports = {
   JobsMonitorTab: {
     Jobs_Tab_Selector: jobsTabSelector,
+    Date_Picker_Filter_Dropdown: commonDatePickerFilter,
+    Table_FilterBy_Button: commonTableFilterByButton,
     Batch_Run_Button: pageHeaderButton,
+    Error_Message: commonErrorMessage,
+    Custom_Range_Filter_Dropdown: commonCustomRangeFilter,
     Arrow_Back: By.css('.link-back__icon'),
     Resource_Monitoring_Button: By.css(
       '.content__action-bar-wrapper .action-bar button'
     ),
     Auto_Refresh_Checkbox: checkboxComponent({
-      root: '.content__action-bar-wrapper .checkbox',
+      root: '[data-testid="form-field-checkbox"]',
       elements: {
-        checkbox: 'svg', 
+        checkbox: 'input', 
         name: '',
         icon: ''
       }
     }),
     Table_Refresh_Button: tableRefreshButton,
     Status_Filter_Dropdown: commonStatusFilter,
-    Table_Name_Filter_Input: inputGroup(
-      generateInputGroup(
-        '.content__action-bar-wrapper .filter-column:nth-of-type(2) .input-wrapper',
-        true,
-        false
-      )
-    ),
+    Table_Name_Filter_Input: commonTableNameFilter,
     Table_Labels_Filter_Input: inputGroup(
       generateInputGroup(
         '.content__action-bar-wrapper .filter-column:nth-of-type(3) .input-wrapper',
@@ -470,29 +498,27 @@ module.exports = {
   },
   WorkflowsMonitorTab: {
     Status_Filter_Dropdown: commonStatusFilter,
-    Table_Name_Filter_Input: inputGroup(
-      generateInputGroup(
-        '.content__action-bar-wrapper .filter-column:nth-of-type(2) .input-wrapper',
-        true,
-        false
-      )
-    ),
+    Table_Name_Filter_Input: commonTableNameFilter,
+    Date_Picker_Filter_Dropdown: commonDatePickerFilter,
+    Table_FilterBy_Button: commonTableFilterByButton,
+    Error_Message: commonErrorMessage,
+    Custom_Range_Filter_Dropdown: commonCustomRangeFilter,
     Start_Time_Filter_Dropdown: commonStartTimeFilter,
     Date_Time_Picker: datepicker(dateTimePickerCalendars),
     Workflows_Monitor_Table: commonTable(workflowsMonitorTable),
     Toggle_View_Button: By.css('.workflow-container .actions .toggle-view-btn'),
     Workflow_List_View_Table: commonTable(jobsMonitorTable),
     Workflow_Graph: graph(monitorWorkflowGraph),
-    Table_Refresh_Button: tableRefreshButton
+    Table_Refresh_Button: tableRefreshButton,
+    Monitor_Workflows_Subtitle: By.css('.table-container .monitor-workflows__subtitle')
   },
   ScheduleMonitorTab: {
-    Table_Name_Filter_Input: inputGroup(
-      generateInputGroup(
-        '.content__action-bar-wrapper .filter-column:nth-of-type(1) .input-wrapper',
-        true,
-        false
-      )
-    ),
+    Table_Name_Filter_Input: commonTableNameFilter,
+    Date_Picker_Filter_Dropdown: commonDatePickerFilter,
+    Table_FilterBy_Button: commonTableFilterByButton,
+    Batch_Run_Button: pageHeaderButton,
+    Error_Message: commonErrorMessage,
+    Custom_Range_Filter_Dropdown: commonCustomRangeFilter,
     Table_Labels_Filter_Input: inputGroup(
       generateInputGroup(
         '.content__action-bar-wrapper .filter-column:nth-of-type(2) .input-wrapper',
