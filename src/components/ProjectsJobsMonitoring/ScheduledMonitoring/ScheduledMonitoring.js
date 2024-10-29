@@ -73,7 +73,7 @@ const ScheduledMonitoring = () => {
     <ScheduledJobsTable
       context={ProjectJobsMonitoringContext}
       filtersConfig={scheduledFiltersConfig}
-      filtersMenuName={JOBS_MONITORING_SCHEDULED_TAB}
+      filterMenuName={JOBS_MONITORING_SCHEDULED_TAB}
       jobs={scheduledJobs}
       requestErrorMessage={requestErrorMessage}
       refreshJobs={() =>

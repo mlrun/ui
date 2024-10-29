@@ -160,7 +160,8 @@ const projectExistsConflict = {
   detail: "MLRunConflictError('Conflict - Project already exists')"
 }
 const projectsLimitReachedConflict = {
-    detail: "MLRunHTTPError(\"Failed creating project in Iguazio: [{'status': 405, 'detail': 'Resource limit reached. Cannot create more records'}]\")"
+  detail:
+    "MLRunHTTPError(\"Failed creating project in Iguazio: [{'status': 405, 'detail': 'Resource limit reached. Cannot create more records'}]\")"
 }
 const secretKeyTemplate = {
   provider: 'kubernetes',
@@ -308,7 +309,9 @@ function deleteProjectHandler(req, res, omitResponse) {
 
 function filterByLabels(elementLabels, requestLabels) {
   if (requestLabels?.length > 0 && !isEmpty(elementLabels)) {
-    const requestLabelsList = (isArray(requestLabels) ? requestLabels : [requestLabels]).map(label => label.split('='))
+    const requestLabelsList = (isArray(requestLabels) ? requestLabels : [requestLabels]).map(
+      label => label.split('=')
+    )
 
     return requestLabelsList.every(([key = '', value = '']) => {
       const trimmedKey = key.trim()
@@ -319,10 +322,15 @@ function filterByLabels(elementLabels, requestLabels) {
       }
 
       if (trimmedValue && trimmedValue.startsWith('~')) {
-        return elementLabels[trimmedKey] && elementLabels[trimmedKey].toLowerCase().includes(trimmedValue.substring(1).toLowerCase())
+        return (
+          elementLabels[trimmedKey] &&
+          elementLabels[trimmedKey].toLowerCase().includes(trimmedValue.substring(1).toLowerCase())
+        )
       }
 
-      return elementLabels[trimmedKey] && (!trimmedValue || elementLabels[trimmedKey] === trimmedValue)
+      return (
+        elementLabels[trimmedKey] && (!trimmedValue || elementLabels[trimmedKey] === trimmedValue)
+      )
     })
   }
 
@@ -372,7 +380,9 @@ function getFeatureSet(req, res) {
   }
 
   if (req.query['label']) {
-    collectedFeatureSets = collectedFeatureSets.filter(featureSet => filterByLabels(featureSet.metadata.labels, req.query['label']))
+    collectedFeatureSets = collectedFeatureSets.filter(featureSet =>
+      filterByLabels(featureSet.metadata.labels, req.query['label'])
+    )
   }
 
   res.send({ feature_sets: collectedFeatureSets })
@@ -700,17 +710,17 @@ function getRuns(req, res) {
       .filter(run => {
         const runStartTime = new Date(run.status.start_time)
 
-      if (!start_time_from || runStartTime >= new Date(start_time_from)) {
-        if (state) {
-          if (isArray(state)) {
-            return state.includes(run.status.state)
+        if (!start_time_from || runStartTime >= new Date(start_time_from)) {
+          if (state) {
+            if (isArray(state)) {
+              return state.includes(run.status.state)
+            } else {
+              return run.status.state === state
+            }
           } else {
-            return run.status.state === state
+            return true
           }
-        } else {
-          return true
         }
-      }
 
         return false
       })
@@ -733,12 +743,22 @@ function getRuns(req, res) {
     }
 
     if (req.query['state']) {
-      collectedRuns = collectedRuns.filter(run => run.status.state === req.query['state'])
+      const state = req.query['state']
+
+      collectedRuns = collectedRuns.filter(run => {
+        if (isArray(state)) {
+          return state.includes(run.status.state)
+        } else {
+          return run.status.state === state
+        }
+      })
     }
   }
 
   if (req.query['label']) {
-    collectedRuns = collectedRuns.filter(run => filterByLabels(run.metadata.labels, req.query['label']))
+    collectedRuns = collectedRuns.filter(run =>
+      filterByLabels(run.metadata.labels, req.query['label'])
+    )
   }
 
   if (req.query['partition-by'] && req.query['partition-sort-by']) {
@@ -876,7 +896,9 @@ function getProjectsSchedules(req, res) {
   }
 
   if (req.query['label']) {
-    collectedSchedules = collectedSchedules.filter(schedule => filterByLabels(schedule.labels, req.query['label']))
+    collectedSchedules = collectedSchedules.filter(schedule =>
+      filterByLabels(schedule.labels, req.query['label'])
+    )
   }
 
   res.send({ schedules: collectedSchedules })
@@ -1153,7 +1175,9 @@ function getArtifacts(req, res) {
   }
 
   if (req.query['label']) {
-    collectedArtifacts = collectedArtifacts.filter(artifact => filterByLabels(artifact.metadata.labels, req.query['label']))
+    collectedArtifacts = collectedArtifacts.filter(artifact =>
+      filterByLabels(artifact.metadata.labels, req.query['label'])
+    )
   }
 
   if (req.query['name']) {
@@ -1192,17 +1216,17 @@ function getArtifacts(req, res) {
 
   if (req.query['format'] === 'minimal') {
     collectedArtifacts = collectedArtifacts.map(func => {
-      const fieldsToPick = [
-        'db_key',
-        'producer',
-        'size',
-        'target_path',
-        'framework',
-        'metrics'
-      ]
+      const fieldsToPick = ['db_key', 'producer', 'size', 'target_path', 'framework', 'metrics']
       const specFieldsToPick = fieldsToPick.map(fieldName => `spec.${fieldName}`)
 
-      return pick(func, ['kind', 'metadata', 'status', 'project', ...specFieldsToPick, ...fieldsToPick])
+      return pick(func, [
+        'kind',
+        'metadata',
+        'status',
+        'project',
+        ...specFieldsToPick,
+        ...fieldsToPick
+      ])
     })
   }
 
@@ -1290,13 +1314,12 @@ function patchProjectsFeatureVectors(req, res) {
 }
 
 function getProjectsFeatureVector(req, res) {
-  const featureVector = featureVectors.feature_vectors
-    .find(
-      item =>
-        item.metadata.project === req.params.project &&
-        item.metadata.name === req.params.name &&
-        (item.metadata.uid === req.params.reference || item.metadata.tag === req.params.reference)
-    )
+  const featureVector = featureVectors.feature_vectors.find(
+    item =>
+      item.metadata.project === req.params.project &&
+      item.metadata.name === req.params.name &&
+      (item.metadata.uid === req.params.reference || item.metadata.tag === req.params.reference)
+  )
 
   if (featureVector) {
     res.send(featureVector)
@@ -1674,7 +1697,7 @@ function getFileStats(req, res) {
   const { size } = fs.statSync(filePath)
   const mimeType = mime.lookup(filePath)
 
-  res.send({mimetype: mimeType, size, modified: Date.now()})
+  res.send({ mimetype: mimeType, size, modified: Date.now() })
 }
 
 function deleteSchedule(req, res) {
@@ -1854,7 +1877,8 @@ function putTags(req, res) {
 
     return (
       artifactMetaData?.project === req.params.project &&
-      (artifact.kind === req.body.identifiers[0].kind || (!artifact.kind && req.body.identifiers[0].kind === 'artifact')) &&
+      (artifact.kind === req.body.identifiers[0].kind ||
+        (!artifact.kind && req.body.identifiers[0].kind === 'artifact')) &&
       (artifactMetaData?.uid === req.body.identifiers[0].uid ||
         artifactMetaData?.tree === req.body.identifiers[0].uid) &&
       artifactSpecData?.db_key === req.body.identifiers[0].key
@@ -2064,7 +2088,9 @@ function getModelEndpoints(req, res) {
       }
     }))
   if (req.query['label']) {
-    collectedEndpoints = collectedEndpoints.filter(endpoint => filterByLabels(endpoint.metadata.labels, req.query['label']))
+    collectedEndpoints = collectedEndpoints.filter(endpoint =>
+      filterByLabels(endpoint.metadata.labels, req.query['label'])
+    )
   }
 
   res.send({ endpoints: collectedEndpoints })
@@ -2493,7 +2519,6 @@ app.post(`${mlrunAPIIngress}/build/function`, deployMLFunction)
 
 app.get(`${mlrunAPIIngress}/projects/:project/files`, getFile)
 app.get(`${mlrunAPIIngress}/projects/:project/filestat`, getFileStats)
-
 
 app.get(`${mlrunAPIIngress}/log/:project/:uid`, getLog)
 

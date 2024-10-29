@@ -194,7 +194,7 @@ export const useJobsPageData = (fetchAllJobRuns, fetchJobFunction, fetchJobs) =>
         }
       })
     },
-    [dispatch, params.projectName, selectedRunProject]
+    [dispatch, params.projectName]
   )
 
   const getWorkflows = useCallback(

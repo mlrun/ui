@@ -53,7 +53,9 @@ import {
   PROJECT_FILTER,
   TYPE_FILTER,
   CONSUMER_GROUP_PAGE,
-  CONSUMER_GROUPS_PAGE
+  CONSUMER_GROUPS_PAGE,
+  MONITOR_JOBS_TAB,
+  SCHEDULE_TAB
 } from '../constants'
 
 const messageNamesList = {
@@ -86,6 +88,12 @@ const messageNamesList = {
   },
   [MONITOR_WORKFLOWS_TAB]: {
     plural: 'Workflows'
+  },
+  [MONITOR_JOBS_TAB]: {
+    plural: 'Jobs'
+  },
+  [SCHEDULE_TAB]: {
+    plural: 'Scheduled jobs'
   },
   [MODEL_ENDPOINTS_TAB]: {
     plural: 'Model endpoints'
@@ -149,7 +157,12 @@ const getSelectedDateValue = (filterType, filtersStore, filtersStoreKey) => {
   )
 
   return (filterType === DATE_RANGE_TIME_FILTER &&
-    !isEqual(filtersStore.dates.value, DATE_FILTER_ANY_TIME)) ||
+    (filtersStoreKey
+      ? !isEqual(
+          filtersStore[FILTER_MENU][filtersStoreKey].values[DATES_FILTER].value[0],
+          DATE_FILTER_ANY_TIME
+        )
+      : !isEqual(filtersStore.dates.value, DATE_FILTER_ANY_TIME))) ||
     (filterType === DATES_FILTER &&
       !isEqual(
         filtersStore[FILTER_MENU][filtersStoreKey].values[DATES_FILTER].value,
@@ -172,9 +185,9 @@ const generateNoEntriesFoundMessage = (
       ? 'true'
       : filterType === DATE_RANGE_TIME_FILTER || filterType === DATES_FILTER
         ? getSelectedDateValue(filterType, filtersStore, filtersStoreKey)
-        : filtersStore[FILTER_MENU][filtersStoreKey]?.values?.[filterType] ??
+        : (filtersStore[FILTER_MENU][filtersStoreKey]?.values?.[filterType] ??
           filtersStore[FILTER_MENU_MODAL][filtersStoreKey]?.values?.[filterType] ??
-          filtersStore[filterType]
+          filtersStore[filterType])
     const isLastElement = index === visibleFilterTypes.length - 1
 
     return message + `${label} ${value}${isLastElement ? '"' : ', '}`

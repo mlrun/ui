@@ -19,7 +19,12 @@ such restriction.
 */
 
 import { isEmpty } from 'lodash'
-import { FUNCTION_INITIALIZED_STATE, FUNCTIONS_PAGE, JOBS_MONITORING_WORKFLOWS_TAB } from '../constants'
+import {
+  FUNCTION_INITIALIZED_STATE,
+  FUNCTIONS_PAGE,
+  JOBS_MONITORING_WORKFLOWS_TAB,
+  MONITOR_WORKFLOWS_TAB
+} from '../constants'
 
 const getState = (state, page, kind) => {
   const stateExists = !isEmpty(state)
@@ -35,7 +40,11 @@ const getState = (state, page, kind) => {
   } else {
     return {
       value: state ?? null,
-      label: state ? commonStateLabels(page === JOBS_MONITORING_WORKFLOWS_TAB)[state] : '',
+      label: state
+        ? commonStateLabels(
+            page === JOBS_MONITORING_WORKFLOWS_TAB || page === MONITOR_WORKFLOWS_TAB
+          )[state]
+        : '',
       className: `state${state ? '-' + state : ''}${kind ? '-' + kind : ''}`
     }
   }

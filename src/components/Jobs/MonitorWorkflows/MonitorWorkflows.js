@@ -129,6 +129,7 @@ const MonitorWorkflows = ({ deleteWorkflows, fetchFunctionLogs }) => {
         backLink={`/projects/${params.projectName}/jobs/${MONITOR_WORKFLOWS_TAB}`}
         context={JobsContext}
         fetchFunctionLogs={fetchFunctionLogs}
+        filterMenuName={MONITOR_WORKFLOWS_TAB}
         filtersConfig={workflowsFiltersConfig}
         getWorkflows={getWorkflows}
         itemIsSelected={itemIsSelected}

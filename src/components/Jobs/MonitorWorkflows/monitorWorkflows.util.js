@@ -43,7 +43,7 @@ import {
   detailsMenu as functionsDetailsMenu,
   infoHeaders as functionsInfoHeaders
 } from '../../FunctionsPage/functions.util'
-import { datePickerPastOptions, PAST_WEEK_DATE_OPTION } from '../../../utils/datePicker.util'
+import { datePickerPastOptions, PAST_24_HOUR_DATE_OPTION } from '../../../utils/datePicker.util'
 import { isEveryObjectValueEmpty } from '../../../utils/isEveryObjectValueEmpty'
 
 import { ReactComponent as MonitorIcon } from 'igz-controls/images/monitor-icon.svg'
@@ -176,10 +176,10 @@ export const fetchInitialWorkflows = debounce(
           getWorkflows(filters)
           dispatch(setFilters(filters))
         } else if (workflowsLength === 0) {
-          const pastWeekOption = datePickerPastOptions.find(
-            option => option.id === PAST_WEEK_DATE_OPTION
+          const past24HourOption = datePickerPastOptions.find(
+            option => option.id === PAST_24_HOUR_DATE_OPTION
           )
-          const generatedDates = [...pastWeekOption.handler()]
+          const generatedDates = [...past24HourOption.handler()]
 
           if (generatedDates.length === 1) {
             generatedDates.push(new Date())
@@ -187,8 +187,8 @@ export const fetchInitialWorkflows = debounce(
           const filters = {
             dates: {
               value: generatedDates,
-              isPredefined: pastWeekOption.isPredefined,
-              initialSelectedOptionId: pastWeekOption.id
+              isPredefined: past24HourOption.isPredefined,
+              initialSelectedOptionId: past24HourOption.id
             },
             state: FILTER_ALL_ITEMS,
             groupBy: GROUP_BY_WORKFLOW

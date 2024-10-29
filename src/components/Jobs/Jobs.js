@@ -64,6 +64,7 @@ const Jobs = ({ fetchAllJobRuns, fetchJobFunction, fetchJobs }) => {
   const jobsStore = useSelector(store => store.jobsStore)
   const workflowsStore = useSelector(store => store.workflowsStore)
   const artifactsStore = useSelector(store => store.artifactsStore)
+  const appStore = useSelector(store => store.appStore)
 
   const {
     abortControllerRef,
@@ -76,6 +77,7 @@ const Jobs = ({ fetchAllJobRuns, fetchJobFunction, fetchJobs }) => {
     jobs,
     jobWizardIsOpened,
     jobWizardMode,
+    handleMonitoring,
     handleRerunJob,
     refreshJobs,
     refreshScheduled,
@@ -181,6 +183,17 @@ const Jobs = ({ fetchAllJobRuns, fetchJobFunction, fetchJobs }) => {
                     label: actionButtonHeader,
                     onClick: handleActionsMenuClick,
                     variant: PRIMARY_BUTTON
+                  },
+                  {
+                    className: 'action-button',
+                    label: 'Resource monitoring',
+                    hidden: selectedTab !== MONITOR_JOBS_TAB,
+                    tooltip: !appStore.frontendSpec.jobs_dashboard_url
+                      ? 'Grafana service unavailable'
+                      : '',
+                    variant: TERTIARY_BUTTON,
+                    disabled: !appStore.frontendSpec.jobs_dashboard_url,
+                    onClick: () => handleMonitoring()
                   }
                 ]}
                 autoRefreshIsEnabled={selectedTab === MONITOR_JOBS_TAB}
@@ -211,10 +224,12 @@ const Jobs = ({ fetchAllJobRuns, fetchJobFunction, fetchJobs }) => {
                   jobRuns,
                   jobs,
                   jobWizardMode,
+                  jobWizardIsOpened,
                   refreshJobs,
                   refreshScheduled,
                   requestErrorMessage,
                   scheduledJobs,
+                  scheduledFiltersConfig: tabData[SCHEDULE_TAB].filtersConfig,
                   setAbortingJobs,
                   setConfirmData,
                   setEditableItem,
@@ -224,7 +239,8 @@ const Jobs = ({ fetchAllJobRuns, fetchJobFunction, fetchJobs }) => {
                   setJobs,
                   setScheduledJobs,
                   setSelectedRunProject,
-                  terminateAbortTasksPolling
+                  terminateAbortTasksPolling,
+                  workflowsFiltersConfig: tabData[MONITOR_WORKFLOWS_TAB].filtersConfig
                 }}
               >
                 <Outlet />

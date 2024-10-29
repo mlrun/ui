@@ -208,9 +208,12 @@ const JobsTable = React.forwardRef(
       [dispatch, modifyAndSelectRun, navigate, navigateLink, params.jobId]
     )
 
-    const refreshRun = useCallback((selectedItem) => {
-      fetchRun(selectedItem.project)
-    }, [fetchRun])
+    const refreshRun = useCallback(
+      selectedItem => {
+        fetchRun(selectedItem.project)
+      },
+      [fetchRun]
+    )
 
     const onAbortJob = useCallback(
       job => {

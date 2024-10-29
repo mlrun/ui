@@ -134,6 +134,7 @@ const MonitorJobs = () => {
         abortingJobs={abortingJobs}
         ref={{ abortJobRef }}
         context={JobsContext}
+        filterMenuName={MONITOR_JOBS_TAB}
         filters={filters}
         jobRuns={jobRuns}
         jobs={jobs}

@@ -50,7 +50,7 @@ const ScheduledJobs = () => {
   useEffect(() => {
     if (!dataIsLoaded) {
       refreshJobs({
-        ...schedulesFilterMenu,
+        ...schedulesFilterMenu.values,
         ...schedulesFilterMenuModal.values
       })
       setDataIsLoaded(true)
@@ -74,6 +74,7 @@ const ScheduledJobs = () => {
   return (
     <ScheduledJobsTable
       context={JobsContext}
+      filterMenuName={SCHEDULE_TAB}
       filtersConfig={scheduledFiltersConfig}
       jobs={scheduledJobs}
       requestErrorMessage={requestErrorMessage}

@@ -49,7 +49,12 @@ const JobsMonitoringFilters = () => {
         <FormSelect label="Type" name="type" options={generateTypeFilter()} />
       </div>
       <div className="form-row">
-        <FormInput label="Labels" name={LABELS_FILTER} placeholder="key1,key2=value,..." />
+        <FormInput
+          label="Labels"
+          name={LABELS_FILTER}
+          placeholder="key1,key2=value,..."
+          tip="Add ~ before the filter value to return substring and case insensitive value."
+        />
         <FormOnChange
           handler={value => handleInputChange(value, LABELS_FILTER)}
           name={LABELS_FILTER}
