@@ -54,6 +54,7 @@ import jobsActions from '../../actions/jobs'
 import workflowActions from '../../actions/workflow'
 
 import './projectsJobsMonitoring.scss'
+import { getJobKindFromLabels } from '../../utils/jobs.util'
 
 export const ProjectJobsMonitoringContext = React.createContext({})
 
@@ -175,12 +176,12 @@ const ProjectsJobsMonitoring = ({ fetchAllJobRuns, fetchJobFunction, fetchJobs }
           const parsedJobs = jobs
             .map(job => parseJob(job))
             .filter(job => {
-              const type =
-                job.labels?.find(label => label.includes('kind:'))?.replace('kind: ', '') ??
-                JOB_KIND_LOCAL
+              const type = getJobKindFromLabels(job.labels) ?? JOB_KIND_LOCAL
 
               return (
-                !filters.type || filters.type === FILTER_ALL_ITEMS || filters.type.split(',').includes(type)
+                !filters.type ||
+                filters.type === FILTER_ALL_ITEMS ||
+                filters.type.split(',').includes(type)
               )
             })
           const responseAbortingJobs = parsedJobs.reduce((acc, job) => {

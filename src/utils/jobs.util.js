@@ -178,3 +178,7 @@ export const convertTriggerToCrontab = trigger => {
     ? `${trigger.minute ?? '*/10'} ${trigger.hour ?? '*'} ${trigger.day ?? '*'} ${trigger.month ?? '*'} ${trigger.day_of_week ?? '*'}`
     : ''
 }
+
+export const getJobKindFromLabels = (labels = []) => {
+  return labels.find(label => label.includes('kind:'))?.replace('kind: ', '')
+}
