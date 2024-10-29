@@ -26,13 +26,22 @@ Feature: Feature Store Page
         Then verify "Feature_Store_Tab_Selector" on "Feature_Store_Feature_Sets_Tab" wizard should contains "Feature_Store"."Tab_List"
         Then verify "Feature Sets" tab is active in "Feature_Store_Tab_Selector" on "Feature_Store_Feature_Sets_Tab" wizard
         Then verify "Table_Refresh_Button" element visibility on "Feature_Store_Feature_Sets_Tab" wizard
-        Then verify "Table_Tag_Filter_Dropdown" element visibility on "Feature_Store_Feature_Sets_Tab" wizard
-        Then verify "Table_Tag_Filter_Dropdown" dropdown element on "Feature_Store_Feature_Sets_Tab" wizard should contains "Dropdown_Options"."Tag_Filer_Options"
+        Then verify "Table_FilterBy_Button" element visibility on "Feature_Store_Feature_Sets_Tab" wizard
+        Then click on "Table_FilterBy_Button" element on "Feature_Store_Feature_Sets_Tab" wizard
+        Then verify "Table_Label_Filter_Input" element visibility on "FilterBy_Popup" wizard
+        Then verify "Table_Tree_Filter_Dropdown" element visibility on "FilterBy_Popup" wizard
+        Then verify "Table_Tree_Filter_Dropdown" dropdown element on "FilterBy_Popup" wizard should contains "Dropdown_Options"."Tag_Filer_Options"
+        Then verify "Apply_Button" element visibility on "FilterBy_Popup" wizard
+        Then verify "Apply_Button" element on "FilterBy_Popup" wizard is disabled
+        Then verify "Clear_Button" element visibility on "FilterBy_Popup" wizard
+        Then verify "Clear_Button" element on "FilterBy_Popup" wizard is disabled
+        Then click on "Table_FilterBy_Button" element on "Feature_Store_Feature_Sets_Tab" wizard
         Then type value "   " to "Table_Name_Filter_Input" field on "Feature_Store_Feature_Sets_Tab" wizard
         Then verify "Table_Name_Filter_Input" on "Feature_Store_Feature_Sets_Tab" wizard should display hover warning "Input_Hint"."Input_Field_Invalid"
-        Then verify "Table_Label_Filter_Input" element visibility on "Feature_Store_Feature_Sets_Tab" wizard
-        Then type value "   " to "Table_Label_Filter_Input" field on "Feature_Store_Feature_Sets_Tab" wizard
-        Then verify "Table_Label_Filter_Input" on "Feature_Store_Feature_Sets_Tab" wizard should display hover warning "Input_Hint"."Input_Field_Invalid"
+        Then click on "Table_FilterBy_Button" element on "Feature_Store_Feature_Sets_Tab" wizard
+        Then verify "Table_Label_Filter_Input" element visibility on "FilterBy_Popup" wizard
+        Then type value "   " to "Table_Label_Filter_Input" field on "FilterBy_Popup" wizard
+        Then verify "Table_Label_Filter_Input" on "FilterBy_Popup" wizard should display hover warning "Input_Hint"."Input_Field_Invalid"
         Then verify "Feature_Sets_Table" element visibility on "Feature_Store_Feature_Sets_Tab" wizard
         Then verify "Feature_Store_Tab_Selector" element visibility on "Feature_Store_Feature_Sets_Tab" wizard
         Then verify "Create_Set_Button" element visibility on "Feature_Store_Feature_Sets_Tab" wizard
@@ -66,13 +75,23 @@ Feature: Feature Store Page
         Then "Add_To_Feature_Vector_Button" element on "Feature_Store_Features_Tab" should contains "Add to feature vector" value
         Then verify "Table_Refresh_Button" element visibility on "Feature_Store_Features_Tab" wizard
         Then verify "Table_Name_Filter_Input" element visibility on "Feature_Store_Features_Tab" wizard
-        Then verify "Table_Label_Filter_Input" element visibility on "Feature_Store_Features_Tab" wizard
-        Then verify "Table_Tag_Filter_Dropdown" element visibility on "Feature_Store_Features_Tab" wizard
-        Then verify "Table_Tag_Filter_Dropdown" dropdown element on "Feature_Store_Features_Tab" wizard should contains "Dropdown_Options"."Tag_Filer_Options"
+        Then verify "Table_FilterBy_Button" element visibility on "Feature_Store_Features_Tab" wizard
+        Then click on "Table_FilterBy_Button" element on "Feature_Store_Features_Tab" wizard
+        Then verify "Table_Label_Filter_Input" element visibility on "FilterBy_Popup" wizard
+        Then verify "Table_Tree_Filter_Dropdown" element visibility on "FilterBy_Popup" wizard
+        Then verify "Table_Tree_Filter_Dropdown" dropdown element on "FilterBy_Popup" wizard should contains "Dropdown_Options"."Tag_Filer_Options"
+        Then verify "Apply_Button" element visibility on "FilterBy_Popup" wizard
+        Then verify "Apply_Button" element on "FilterBy_Popup" wizard is disabled
+        Then verify "Clear_Button" element visibility on "FilterBy_Popup" wizard
+        Then verify "Clear_Button" element on "FilterBy_Popup" wizard is disabled
+        Then click on "Table_FilterBy_Button" element on "Feature_Store_Feature_Sets_Tab" wizard
         Then verify "Features_Table" element visibility on "Feature_Store_Features_Tab" wizard
         Then select "project" with "test-test" value in breadcrumbs menu
         Then "No_Data_Message" component on "commonPagesHeader" should contains "No_Data_Message"."Common_Message_Feature"
-        Then select "All" option in "Table_Tag_Filter_Dropdown" dropdown on "Feature_Store_Features_Tab" wizard
+        Then click on "Table_FilterBy_Button" element on "Feature_Store_Features_Tab" wizard
+        Then select "All" option in "Table_Tree_Filter_Dropdown" dropdown on "FilterBy_Popup" wizard
+        Then click on "Apply_Button" element on "FilterBy_Popup" wizard
+        And wait load page
         Then "No_Data_Message" component on "commonPagesHeader" should contains "No_Data_Message"."No_Features_Yet"
 
     @MLFS
@@ -95,9 +114,16 @@ Feature: Feature Store Page
         Then verify "Create_Vector_Button" element visibility on "Feature_Store_Features_Vectors_Tab" wizard
         Then "Create_Vector_Button" element on "Feature_Store_Features_Vectors_Tab" should contains "Create Vector" value
         Then verify "Table_Name_Filter_Input" element visibility on "Feature_Store_Features_Vectors_Tab" wizard
-        Then verify "Table_Label_Filter_Input" element visibility on "Feature_Store_Features_Vectors_Tab" wizard
-        Then verify "Table_Tag_Filter_Dropdown" element visibility on "Feature_Store_Features_Vectors_Tab" wizard
-        Then verify "Table_Tag_Filter_Dropdown" dropdown element on "Feature_Store_Features_Vectors_Tab" wizard should contains "Dropdown_Options"."Tag_Filer_Options"
+        Then verify "Table_FilterBy_Button" element visibility on "Feature_Store_Features_Vectors_Tab" wizard
+        Then click on "Table_FilterBy_Button" element on "Feature_Store_Features_Vectors_Tab" wizard
+        Then verify "Table_Label_Filter_Input" element visibility on "FilterBy_Popup" wizard
+        Then verify "Table_Tree_Filter_Dropdown" element visibility on "FilterBy_Popup" wizard
+        Then verify "Table_Tree_Filter_Dropdown" dropdown element on "FilterBy_Popup" wizard should contains "Dropdown_Options"."Tag_Filer_Options"
+        Then verify "Apply_Button" element visibility on "FilterBy_Popup" wizard
+        Then verify "Apply_Button" element on "FilterBy_Popup" wizard is disabled
+        Then verify "Clear_Button" element visibility on "FilterBy_Popup" wizard
+        Then verify "Clear_Button" element on "FilterBy_Popup" wizard is disabled
+        Then click on "Table_FilterBy_Button" element on "Feature_Store_Feature_Sets_Tab" wizard
         Then verify "Table_Refresh_Button" element visibility on "Feature_Store_Features_Vectors_Tab" wizard
         Then verify "Feature_Vectors_Table" element visibility on "Feature_Store_Features_Vectors_Tab" wizard
 
@@ -115,7 +141,9 @@ Feature: Feature Store Page
         And hover "MLRun_Logo" component on "commonPagesHeader" wizard
         And wait load page
         Then verify "Feature Sets" tab is active in "Feature_Store_Tab_Selector" on "Feature_Store_Feature_Sets_Tab" wizard
-        Then select "All" option in "Table_Tag_Filter_Dropdown" dropdown on "Feature_Store_Feature_Sets_Tab" wizard
+        Then click on "Table_FilterBy_Button" element on "Feature_Store_Feature_Sets_Tab" wizard
+        Then select "All" option in "Table_Tree_Filter_Dropdown" dropdown on "FilterBy_Popup" wizard
+        Then click on "Apply_Button" element on "FilterBy_Popup" wizard
         And wait load page
         When click on cell with row index 2 in "name" column in "Feature_Sets_Table" table on "Feature_Store_Feature_Sets_Tab" wizard
         Then verify "Header" element visibility on "Feature_Sets_Info_Pane" wizard
@@ -218,7 +246,9 @@ Feature: Feature Store Page
         And wait load page
         And select "Feature Vectors" tab in "Feature_Store_Tab_Selector" on "Feature_Store_Feature_Sets_Tab" wizard
         Then verify "Feature Vectors" tab is active in "Feature_Store_Tab_Selector" on "Feature_Store_Features_Vectors_Tab" wizard
-        When select "test-tag" option in "Table_Tag_Filter_Dropdown" filter dropdown on "Feature_Store_Features_Vectors_Tab" wizard
+        Then click on "Table_FilterBy_Button" element on "Feature_Store_Features_Vectors_Tab" wizard
+        When select "test-tag" option in "Table_Tree_Filter_Dropdown" filter dropdown on "FilterBy_Popup" wizard
+        Then click on "Apply_Button" element on "FilterBy_Popup" wizard
         And wait load page
         When click on cell with row index 1 in "name" column in "Feature_Vectors_Table" table on "Feature_Store_Features_Vectors_Tab" wizard
         Then verify "Header" element visibility on "Feature_Vectors_Info_Pane" wizard
@@ -381,16 +411,19 @@ Feature: Feature Store Page
         And wait load page
         And select "tab" with "Feature store" value in breadcrumbs menu
         And wait load page
-        Then type value "my-key" to "Table_Label_Filter_Input" field on "Feature_Store_Feature_Sets_Tab" wizard
-        Then click on "Table_Refresh_Button" element on "Feature_Store_Feature_Sets_Tab" wizard
+        Then click on "Table_FilterBy_Button" element on "Feature_Store_Feature_Sets_Tab" wizard
+        Then type value "my-key" to "Table_Label_Filter_Input" field on "FilterBy_Popup" wizard
+        Then click on "Apply_Button" element on "FilterBy_Popup" wizard
         And wait load page
         Then value in "labels" column with "text" in "Feature_Sets_Table" on "Feature_Store_Feature_Sets_Tab" wizard should contains "my-key"
-        Then type value "type=featureSet" to "Table_Label_Filter_Input" field on "Feature_Store_Feature_Sets_Tab" wizard
-        Then click on "Table_Refresh_Button" element on "Feature_Store_Feature_Sets_Tab" wizard
+        Then click on "Table_FilterBy_Button" element on "Feature_Store_Feature_Sets_Tab" wizard
+        Then type value "type=featureSet" to "Table_Label_Filter_Input" field on "FilterBy_Popup" wizard
+        Then click on "Apply_Button" element on "FilterBy_Popup" wizard
         And wait load page
         Then value in "labels" column with "text" in "Feature_Sets_Table" on "Feature_Store_Feature_Sets_Tab" wizard should contains "type=featureSet"
-        Then type value "v3io_user=123" to "Table_Label_Filter_Input" field on "Feature_Store_Feature_Sets_Tab" wizard
-        Then click on "Table_Refresh_Button" element on "Feature_Store_Feature_Sets_Tab" wizard
+        Then click on "Table_FilterBy_Button" element on "Feature_Store_Feature_Sets_Tab" wizard
+        Then type value "v3io_user=123" to "Table_Label_Filter_Input" field on "FilterBy_Popup" wizard
+        Then click on "Apply_Button" element on "FilterBy_Popup" wizard
         And wait load page
         And verify "No_Data_Message" element visibility on "commonPagesHeader" wizard
 
@@ -425,16 +458,19 @@ Feature: Feature Store Page
         And wait load page
         And select "Features" tab in "Feature_Store_Tab_Selector" on "Feature_Store_Feature_Sets_Tab" wizard
         And wait load page
-        Then type value "owner" to "Table_Label_Filter_Input" field on "Feature_Store_Features_Tab" wizard
-        Then click on "Table_Refresh_Button" element on "Feature_Store_Features_Tab" wizard
+        Then click on "Table_FilterBy_Button" element on "Feature_Store_Features_Tab" wizard
+        Then type value "owner" to "Table_Label_Filter_Input" field on "FilterBy_Popup" wizard
+        Then click on "Apply_Button" element on "FilterBy_Popup" wizard
         And wait load page
         Then value in "labels" column with "dropdowns" in "Features_Table" on "Feature_Store_Features_Tab" wizard should contains "owner"
-        Then type value "type=feature" to "Table_Label_Filter_Input" field on "Feature_Store_Features_Tab" wizard
-        Then click on "Table_Refresh_Button" element on "Feature_Store_Features_Tab" wizard
+        Then click on "Table_FilterBy_Button" element on "Feature_Store_Features_Tab" wizard
+        Then type value "type=feature" to "Table_Label_Filter_Input" field on "FilterBy_Popup" wizard
+        Then click on "Apply_Button" element on "FilterBy_Popup" wizard
         And wait load page
         Then value in "labels" column with "dropdowns" in "Features_Table" on "Feature_Store_Features_Tab" wizard should contains "type=feature"
-        Then type value "v3io_user=123" to "Table_Label_Filter_Input" field on "Feature_Store_Features_Tab" wizard
-        Then click on "Table_Refresh_Button" element on "Feature_Store_Features_Tab" wizard
+        Then click on "Table_FilterBy_Button" element on "Feature_Store_Features_Tab" wizard
+        Then type value "v3io_user=123" to "Table_Label_Filter_Input" field on "FilterBy_Popup" wizard
+        Then click on "Apply_Button" element on "FilterBy_Popup" wizard
         And wait load page
         And verify "No_Data_Message" element visibility on "commonPagesHeader" wizard
 
@@ -466,16 +502,19 @@ Feature: Feature Store Page
         And wait load page
         And select "Feature Vectors" tab in "Feature_Store_Tab_Selector" on "Feature_Store_Features_Vectors_Tab" wizard
         And wait load page
-        Then type value "owner" to "Table_Label_Filter_Input" field on "Feature_Store_Features_Vectors_Tab" wizard
-        Then click on "Table_Refresh_Button" element on "Feature_Store_Features_Vectors_Tab" wizard
+        Then click on "Table_FilterBy_Button" element on "Feature_Store_Features_Vectors_Tab" wizard
+        Then type value "owner" to "Table_Label_Filter_Input" field on "FilterBy_Popup" wizard
+        Then click on "Apply_Button" element on "FilterBy_Popup" wizard
         And wait load page
         Then value in "labels" column with "text" in "Feature_Vectors_Table" on "Feature_Store_Features_Vectors_Tab" wizard should contains "owner"
-        Then type value "type=featureVector" to "Table_Label_Filter_Input" field on "Feature_Store_Features_Vectors_Tab" wizard
-        Then click on "Table_Refresh_Button" element on "Feature_Store_Features_Tab" wizard
+        Then click on "Table_FilterBy_Button" element on "Feature_Store_Features_Vectors_Tab" wizard
+        Then type value "type=featureVector" to "Table_Label_Filter_Input" field on "FilterBy_Popup" wizard
+        Then click on "Apply_Button" element on "FilterBy_Popup" wizard
         And wait load page
         Then value in "labels" column with "text" in "Feature_Vectors_Table" on "Feature_Store_Features_Vectors_Tab" wizard should contains "type=featureVector"
-        Then type value "v3io_user=123" to "Table_Label_Filter_Input" field on "Feature_Store_Features_Vectors_Tab" wizard
-        Then click on "Table_Refresh_Button" element on "Feature_Store_Features_Vectors_Tab" wizard
+        Then click on "Table_FilterBy_Button" element on "Feature_Store_Features_Vectors_Tab" wizard
+        Then type value "v3io_user=123" to "Table_Label_Filter_Input" field on "FilterBy_Popup" wizard
+        Then click on "Apply_Button" element on "FilterBy_Popup" wizard
         And wait load page
         And verify "No_Data_Message" element visibility on "commonPagesHeader" wizard
 
@@ -489,8 +528,9 @@ Feature: Feature Store Page
         And select "tab" with "Feature store" value in breadcrumbs menu
         And wait load page
         Then verify "Feature Sets" tab is active in "Feature_Store_Tab_Selector" on "Feature_Store_Feature_Sets_Tab" wizard
-        When select "my-tag" option in "Table_Tag_Filter_Dropdown" dropdown on "Feature_Store_Feature_Sets_Tab" wizard
-        Then click on "Table_Refresh_Button" element on "Feature_Store_Feature_Sets_Tab" wizard
+        Then click on "Table_FilterBy_Button" element on "Feature_Store_Feature_Sets_Tab" wizard
+        When select "my-tag" option in "Table_Tree_Filter_Dropdown" dropdown on "FilterBy_Popup" wizard
+        Then click on "Apply_Button" element on "FilterBy_Popup" wizard
         And wait load page
         Then value in "tag" column with "text" in "Feature_Sets_Table" on "Feature_Store_Feature_Sets_Tab" wizard should contains "my-tag"
 
@@ -504,8 +544,9 @@ Feature: Feature Store Page
         And select "tab" with "Feature store" value in breadcrumbs menu
         And wait load page
         And select "Feature Vectors" tab in "Feature_Store_Tab_Selector" on "Feature_Store_Feature_Sets_Tab" wizard
-        When select "test-tag" option in "Table_Tag_Filter_Dropdown" dropdown on "Feature_Store_Features_Vectors_Tab" wizard
-        Then click on "Table_Refresh_Button" element on "Feature_Store_Features_Vectors_Tab" wizard
+        Then click on "Table_FilterBy_Button" element on "Feature_Store_Features_Vectors_Tab" wizard
+        When select "test-tag" option in "Table_Tree_Filter_Dropdown" dropdown on "FilterBy_Popup" wizard
+        Then click on "Apply_Button" element on "FilterBy_Popup" wizard
         And wait load page
         Then value in "tag" column with "text" in "Feature_Vectors_Table" on "Feature_Store_Features_Vectors_Tab" wizard should contains "test-tag"
 
@@ -1044,23 +1085,38 @@ Feature: Feature Store Page
         Then verify "Feature_Store_Tab_Selector" on "Feature_Store_Feature_Sets_Tab" wizard should contains "Feature_Store"."Tab_List"
         Then verify "Feature Sets" tab is active in "Feature_Store_Tab_Selector" on "Feature_Store_Feature_Sets_Tab" wizard
         Then check "expand_btn" not presented in "Feature_Sets_Table" on "Feature_Store_Feature_Sets_Tab" wizard
-        When select "my-tag" option in "Table_Tag_Filter_Dropdown" dropdown on "Feature_Store_Feature_Sets_Tab" wizard
+        Then click on "Table_FilterBy_Button" element on "Feature_Store_Feature_Sets_Tab" wizard
+        When select "my-tag" option in "Table_Tree_Filter_Dropdown" dropdown on "FilterBy_Popup" wizard
+        Then click on "Apply_Button" element on "FilterBy_Popup" wizard
+        And wait load page
         Then check "expand_btn" not presented in "Feature_Sets_Table" on "Feature_Store_Feature_Sets_Tab" wizard
         When select "Features" tab in "Feature_Store_Tab_Selector" on "Feature_Store_Feature_Sets_Tab" wizard
         And wait load page
         Then verify "Features" tab is active in "Feature_Store_Tab_Selector" on "Feature_Store_Feature_Sets_Tab" wizard
         Then check "expand_btn" not presented in "Features_Table" on "Feature_Store_Features_Tab" wizard
-        When select "All" option in "Table_Tag_Filter_Dropdown" dropdown on "Feature_Store_Features_Tab" wizard
+        Then click on "Table_FilterBy_Button" element on "Feature_Store_Features_Tab" wizard
+        When select "All" option in "Table_Tree_Filter_Dropdown" dropdown on "FilterBy_Popup" wizard
+        Then click on "Apply_Button" element on "FilterBy_Popup" wizard
+        And wait load page
         Then check "expand_btn" visibility in "Features_Table" on "Feature_Store_Features_Tab" wizard with 0 offset
-        When select "my-tag" option in "Table_Tag_Filter_Dropdown" dropdown on "Feature_Store_Features_Tab" wizard
+        Then click on "Table_FilterBy_Button" element on "Feature_Store_Features_Tab" wizard
+        When select "my-tag" option in "Table_Tree_Filter_Dropdown" dropdown on "FilterBy_Popup" wizard
+        Then click on "Apply_Button" element on "FilterBy_Popup" wizard
+        And wait load page
         Then check "expand_btn" not presented in "Features_Table" on "Feature_Store_Features_Tab" wizard
         When select "Feature Vectors" tab in "Feature_Store_Tab_Selector" on "Feature_Store_Feature_Sets_Tab" wizard
         And wait load page
         Then verify "Feature Vectors" tab is active in "Feature_Store_Tab_Selector" on "Feature_Store_Feature_Sets_Tab" wizard
         Then check "expand_btn" not presented in "Feature_Vectors_Table" on "Feature_Store_Features_Vectors_Tab" wizard
-        When select "All" option in "Table_Tag_Filter_Dropdown" dropdown on "Feature_Store_Features_Vectors_Tab" wizard
+        Then click on "Table_FilterBy_Button" element on "Feature_Store_Features_Vectors_Tab" wizard
+        When select "All" option in "Table_Tree_Filter_Dropdown" dropdown on "FilterBy_Popup" wizard
+        Then click on "Apply_Button" element on "FilterBy_Popup" wizard
+        And wait load page
         Then check "expand_btn" visibility in "Feature_Vectors_Table" on "Feature_Store_Features_Vectors_Tab" wizard with 0 offset
-        When select "test-tag" option in "Table_Tag_Filter_Dropdown" dropdown on "Feature_Store_Features_Vectors_Tab" wizard
+        Then click on "Table_FilterBy_Button" element on "Feature_Store_Features_Vectors_Tab" wizard
+        When select "test-tag" option in "Table_Tree_Filter_Dropdown" dropdown on "FilterBy_Popup" wizard
+        Then click on "Apply_Button" element on "FilterBy_Popup" wizard
+        And wait load page
         Then check "expand_btn" not presented in "Feature_Vectors_Table" on "Feature_Store_Features_Vectors_Tab" wizard
 
     @MLFS
@@ -1093,7 +1149,10 @@ Feature: Feature Store Page
         Then verify "Cross_Cancel_Button" element visibility on "View_YAML" wizard
         Then verify "YAML_Modal_Container" element visibility on "View_YAML" wizard
         Then click on "Cross_Cancel_Button" element on "View_YAML" wizard
-        Then select "All" option in "Table_Tag_Filter_Dropdown" dropdown on "Feature_Store_Feature_Sets_Tab" wizard
+        Then click on "Table_FilterBy_Button" element on "Feature_Store_Feature_Sets_Tab" wizard
+        When select "All" option in "Table_Tree_Filter_Dropdown" dropdown on "FilterBy_Popup" wizard
+        Then click on "Apply_Button" element on "FilterBy_Popup" wizard
+        And wait load page
         Then click on cell with row index 1 in "expand_btn" column in "Feature_Sets_Table" table on "Feature_Store_Feature_Sets_Tab" wizard
         Then select "View YAML" option in action menu on "Feature_Store_Feature_Sets_Tab" wizard in "Feature_Sets_Table" table at row with "latest" value in "name_expand_btn" column
         Then verify if "View_YAML" popup dialog appears
@@ -1138,7 +1197,10 @@ Feature: Feature Store Page
         Then verify "Cross_Cancel_Button" element visibility on "View_YAML" wizard
         Then verify "YAML_Modal_Container" element visibility on "View_YAML" wizard
         Then click on "Cross_Cancel_Button" element on "View_YAML" wizard
-        Then select "All" option in "Table_Tag_Filter_Dropdown" dropdown on "Feature_Store_Features_Vectors_Tab" wizard
+        Then click on "Table_FilterBy_Button" element on "Feature_Store_Features_Vectors_Tab" wizard
+        When select "All" option in "Table_Tree_Filter_Dropdown" dropdown on "FilterBy_Popup" wizard
+        Then click on "Apply_Button" element on "FilterBy_Popup" wizard
+        And wait load page
         Then click on cell with row index 4 in "expand_btn" column in "Feature_Vectors_Table" table on "Feature_Store_Features_Vectors_Tab" wizard
         Then select "View YAML" option in action menu on "Feature_Store_Features_Vectors_Tab" wizard in "Feature_Vectors_Table" table at row with "my-tag" value in "name_expand_btn" column
         Then verify if "View_YAML" popup dialog appears
@@ -1304,18 +1366,29 @@ Feature: Feature Store Page
         Then click on "Create_Button" element on "Create_Feature_Vector_Popup" wizard
         And wait load page
         Then verify "Add_To_Feature_Vector_Table" element visibility on "Add_To_Feature_Vector_Tab" wizard
-        Then verify "Table_Tree_Filter_Dropdown" element visibility on "Add_To_Feature_Vector_Tab" wizard
         Then verify "Table_Name_Filter_Input" element visibility on "Add_To_Feature_Vector_Tab" wizard
-        Then verify "Table_Entity_Filter_Input" element visibility on "Add_To_Feature_Vector_Tab" wizard
-        Then verify "Table_Label_Filter_Input" element visibility on "Add_To_Feature_Vector_Tab" wizard
-        Then verify "Table_Projects_Filter_Dropdown" element visibility on "Add_To_Feature_Vector_Tab" wizard
+        Then verify "Table_FilterBy_Button" element visibility on "Add_To_Feature_Vector_Tab" wizard
+        Then click on "Table_FilterBy_Button" element on "Add_To_Feature_Vector_Tab" wizard
+        Then verify "Table_Projects_Filter_Dropdown" element visibility on "FilterBy_Popup" wizard
+        Then verify "Table_Entity_Filter_Input" element visibility on "FilterBy_Popup" wizard
+        Then verify "Table_Label_Filter_Input" element visibility on "FilterBy_Popup" wizard
+        Then verify "Table_Tree_Filter_Dropdown" element visibility on "FilterBy_Popup" wizard
+        Then verify "Apply_Button" element visibility on "FilterBy_Popup" wizard
+        Then verify "Apply_Button" element on "FilterBy_Popup" wizard is disabled
+        Then verify "Clear_Button" element visibility on "FilterBy_Popup" wizard
+        Then verify "Clear_Button" element on "FilterBy_Popup" wizard is disabled
+        Then click on "Table_FilterBy_Button" element on "Add_To_Feature_Vector_Tab" wizard
         Then verify "Table_Refresh_Button" element visibility on "Add_To_Feature_Vector_Tab" wizard
         Then verify "Features_Panel_Title" element visibility on "Add_To_Feature_Vector_Tab" wizard
         Then verify "Features_Panel_Title" on "Add_To_Feature_Vector_Tab" wizard should display "Input_Hint"."Add_Feature_Vector_Hint"
-        When select "test-test" option in "Table_Projects_Filter_Dropdown" filter dropdown on "Add_To_Feature_Vector_Tab" wizard
+        Then click on "Table_FilterBy_Button" element on "Add_To_Feature_Vector_Tab" wizard
+        When select "test-test" option in "Table_Projects_Filter_Dropdown" filter dropdown on "FilterBy_Popup" wizard
+        Then click on "Apply_Button" element on "FilterBy_Popup" wizard
         And wait load page
         Then "No_Data_Message" component on "commonPagesHeader" should contains "No_Data_Message"."Common_Message_Feature_Vector_Tab"
-        When select "stocks" option in "Table_Projects_Filter_Dropdown" filter dropdown on "Add_To_Feature_Vector_Tab" wizard
+        Then click on "Table_FilterBy_Button" element on "Add_To_Feature_Vector_Tab" wizard
+        When select "stocks" option in "Table_Projects_Filter_Dropdown" filter dropdown on "FilterBy_Popup" wizard
+        Then click on "Apply_Button" element on "FilterBy_Popup" wizard
         And wait load page
         Then verify "Features_Panel_Title" element visibility on "Add_To_Feature_Vector_Tab" wizard
         Then verify "Features_Panel_Title" on "Add_To_Feature_Vector_Tab" wizard should display "Input_Hint"."Add_Feature_Vector_Hint"
@@ -1344,13 +1417,19 @@ Feature: Feature Store Page
         Then click on "Create_Button" element on "Create_Feature_Vector_Popup" wizard
         And wait load page
         Then type value "dep" to "Table_Name_Filter_Input" field on "Add_To_Feature_Vector_Tab" wizard
-        Then type value "patient_id" to "Table_Entity_Filter_Input" field on "Add_To_Feature_Vector_Tab" wizard
         Then click on "Table_Refresh_Button" element on "Add_To_Feature_Vector_Tab" wizard
+        Then click on "Table_FilterBy_Button" element on "Add_To_Feature_Vector_Tab" wizard
+        Then type value "patient_id" to "Table_Entity_Filter_Input" field on "FilterBy_Popup" wizard
+        Then click on "Apply_Button" element on "FilterBy_Popup" wizard
+        And wait load page
         Then value in "featureName" column with "text" in "Add_To_Feature_Vector_Table" on "Add_To_Feature_Vector_Tab" wizard should contains "department"
         Then value in "entities" column with "text" in "Add_To_Feature_Vector_Table" on "Add_To_Feature_Vector_Tab" wizard should contains "patient_id"
         Then type value "" to "Table_Name_Filter_Input" field on "Add_To_Feature_Vector_Tab" wizard
-        Then type value "patient_id" to "Table_Entity_Filter_Input" field on "Add_To_Feature_Vector_Tab" wizard
         Then click on "Table_Refresh_Button" element on "Add_To_Feature_Vector_Tab" wizard
+        Then click on "Table_FilterBy_Button" element on "Add_To_Feature_Vector_Tab" wizard
+        Then type value "patient_id" to "Table_Entity_Filter_Input" field on "FilterBy_Popup" wizard
+        Then click on "Apply_Button" element on "FilterBy_Popup" wizard
+        And wait load page
         Then value in "entities" column with "text" in "Add_To_Feature_Vector_Table" on "Add_To_Feature_Vector_Tab" wizard should contains "patient_id"
 
     @MLFS
@@ -1394,7 +1473,10 @@ Feature: Feature Store Page
             | patient_details : latest #age_mapped_elder        |
             | patient_details : latest #department              |
             | patient_details : latest #gender                  |
-        Then select "stocks" option in "Table_Projects_Filter_Dropdown" dropdown on "Add_To_Feature_Vector_Tab" wizard
+        Then click on "Table_FilterBy_Button" element on "Add_To_Feature_Vector_Tab" wizard
+        Then select "stocks" option in "Table_Projects_Filter_Dropdown" dropdown on "FilterBy_Popup" wizard
+        Then click on "Apply_Button" element on "FilterBy_Popup" wizard
+        And wait load page
         Then expand "Features_By_Projects_Accordion" on "Add_To_Feature_Vector_Tab" wizard
         Then verify values in "Features_By_Projects_Table" table in "Features_By_Projects_Accordion" on "Add_To_Feature_Vector_Tab" wizard
             | feature                                           |
@@ -1423,7 +1505,10 @@ Feature: Feature Store Page
             | stocks : latest #exchange    |
         Then click on "Add_Button" element on "Add_To_Feature_Vector_Tab" wizard
         And set tear-down property "featureVector" created in "fsdemo-admin" project with "temp_vector01" value
-        When select "temp_tag" option in "Table_Tree_Filter_Dropdown" filter dropdown on "Add_To_Feature_Vector_Tab" wizard
+        Then click on "Table_FilterBy_Button" element on "Add_To_Feature_Vector_Tab" wizard
+        When select "temp_tag" option in "Table_Tree_Filter_Dropdown" filter dropdown on "FilterBy_Popup" wizard
+        Then click on "Apply_Button" element on "FilterBy_Popup" wizard
+        And wait load page
         Then value in "name" column with "text" in "Feature_Vectors_Table" on "Feature_Store_Features_Vectors_Tab" wizard should contains "temp_vector"
         Then value in "description" column with "text" in "Feature_Vectors_Table" on "Feature_Store_Features_Vectors_Tab" wizard should contains "Automation test description"
 
@@ -1449,8 +1534,11 @@ Feature: Feature Store Page
             | featureName |
             | department  |
             | bad         |
-            | room         |
-        Then select "stocks-admin" option in "Table_Projects_Filter_Dropdown" dropdown on "Add_To_Feature_Vector_Tab" wizard
+            | room        |
+        Then click on "Table_FilterBy_Button" element on "Add_To_Feature_Vector_Tab" wizard
+        Then select "stocks-admin" option in "Table_Projects_Filter_Dropdown" dropdown on "FilterBy_Popup" wizard
+        Then click on "Apply_Button" element on "FilterBy_Popup" wizard
+        And wait load page
         Then click on "add_feature_btn" in "Add_To_Feature_Vector_Table" table on "Add_To_Feature_Vector_Tab" wizard
             | featureName  |
             | price        |

@@ -640,7 +640,12 @@ const commonScheduleButton = By.css('.modal__content [data-testid="schedule-btn"
 const commonRunSaveButton = By.css('.modal__content [data-testid="run-btn"]')
 
 const commonLabelFilterInput = inputGroup(
-  generateInputGroup('[data-testid="labels-form-field-input"]', true, false, true)
+  generateInputGroup(
+    '[data-testid="labels-form-field-input"]',
+    true,
+    false,
+    '.form-field__warning svg'
+  )
 )
 
 const commonProjectFilterInput = inputGroup(
@@ -1689,6 +1694,22 @@ module.exports = {
       }
     }),
     Checkbox_Label: By.css('#overlay_container .form-field-checkbox label'),
+    Table_Projects_Filter_Dropdown: dropdownComponent(
+      generateDropdownGroup(
+        '[data-testid="project-form-field-select"] [data-testid="select-header"]',
+        'svg',
+        '[data-testid="select-body"] [data-testid="select-option"]',
+        ''
+      )
+    ),
+    Table_Entity_Filter_Input: inputGroup(
+      generateInputGroup(
+        '[data-testid="entities-form-field-input"]',
+        true,
+        false,
+        true
+      )
+    ),
     Clear_Button: By.css('[data-testid="filter-clear-btn"]'),
     Apply_Button: By.css('[data-testid="filter-apply-btn"]')
   },
