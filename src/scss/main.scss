@@ -868,7 +868,6 @@ div[id^='chartjs-tooltip'] {
 
   &__actions {
     display: flex;
-    margin-left: 20px;
 
     .action-button {
       white-space: nowrap;
@@ -877,6 +876,10 @@ div[id^='chartjs-tooltip'] {
       @media screen and (min-width: 1300px) {
         min-width: 160px;
       }
+    }
+
+    .auto-refresh {
+      margin-left: 20px;
     }
   }
 }

@@ -32,6 +32,8 @@ import Workflow from '../../components/Workflow/Workflow'
 import YamlModal from '../../common/YamlModal/YamlModal'
 
 import {
+  ERROR_STATE,
+  FAILED_STATE,
   JOB_KIND_JOB,
   JOBS_PAGE,
   MONITOR_JOBS_TAB,
@@ -266,7 +268,7 @@ const WorkflowsTable = React.forwardRef(
         .then(job => {
           const selectedJob = findSelectedWorkflowJob()
           const graphJobState = selectedJob?.phase?.toLowerCase()
-          const isErrorState = ['failed', 'error'].includes(graphJobState)
+          const isErrorState = [FAILED_STATE, ERROR_STATE].includes(graphJobState)
           const customJobState = isErrorState ? graphJobState : ''
 
           return modifyAndSelectRun(
@@ -388,6 +390,27 @@ const WorkflowsTable = React.forwardRef(
       [onDeleteJob, setConfirmData]
     )
 
+    const handleRerun = useCallback(
+      workflow => {
+        dispatch(workflowsActions.rerunWorkflow(workflow.project, workflow.id))
+          .then(
+            dispatch(
+              setNotification({
+                status: 200,
+                id: Math.random(),
+                message: 'Workflow ran successfully.'
+              })
+            )
+          )
+          .catch(error => {
+            showErrorNotification(dispatch, error, 'Workflow did not run successfully', '', () =>
+              handleRerun(workflow)
+            )
+          })
+      },
+      [dispatch]
+    )
+
     const actionsMenu = useMemo(() => {
       return job =>
         generateActionsMenu(
@@ -398,7 +421,8 @@ const WorkflowsTable = React.forwardRef(
           appStore.frontendSpec.abortable_function_kinds,
           handleConfirmAbortJob,
           handleConfirmDeleteJob,
-          toggleConvertedYaml
+          toggleConvertedYaml,
+          handleRerun
         )
     }, [
       handleRerunJob,
@@ -407,7 +431,8 @@ const WorkflowsTable = React.forwardRef(
       handleMonitoring,
       handleConfirmAbortJob,
       handleConfirmDeleteJob,
-      toggleConvertedYaml
+      toggleConvertedYaml,
+      handleRerun
     ])
 
     const handleCancel = useCallback(() => {
@@ -472,7 +497,6 @@ const WorkflowsTable = React.forwardRef(
         !dataIsLoading
       ) {
         setDataIsLoading(true)
-
         fetchRun().finally(() => setDataIsLoading(false))
       }
     }, [fetchRun, params.jobId, selectedJob, checkIfWorkflowItemIsJob, dataIsLoading])
@@ -483,7 +507,7 @@ const WorkflowsTable = React.forwardRef(
       if (isWorkflowStepExecutable(functionToBeSelected)) {
         const workflow = { ...workflowsStore.activeWorkflow?.data }
         const graphFunctionState = functionToBeSelected?.phase?.toLowerCase()
-        const isErrorState = ['failed', 'error'].includes(graphFunctionState)
+        const isErrorState = [FAILED_STATE, ERROR_STATE].includes(graphFunctionState)
         const customFunctionState = isErrorState ? graphFunctionState : ''
         const pipelineError = getPipelineError(isErrorState)
 

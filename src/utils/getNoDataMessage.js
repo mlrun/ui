@@ -215,7 +215,7 @@ const getVisibleFilterTypes = (filtersConfig, filtersStore, filtersStoreKey) => 
         type === LABELS_FILTER ||
         type === ENTITIES_FILTER ||
         type === PROJECT_FILTER) &&
-      (filtersStore[type].length > 0 ||
+      (filtersStore[type]?.length > 0 ||
         filtersStore[FILTER_MENU][filtersStoreKey]?.values?.[type]?.length > 0 ||
         filtersStore[FILTER_MENU_MODAL][filtersStoreKey]?.values?.[type]?.length > 0)
     const isStatusVisible =

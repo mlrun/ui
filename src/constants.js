@@ -62,6 +62,10 @@ export const CANCEL_REQUEST_TIMEOUT = 120000
 
 export const PROJECT_ONLINE_STATUS = 'online'
 
+export const ERROR_STATE = 'error'
+export const FAIL_STATE = 'fail'
+export const FAILED_STATE = 'failed'
+
 /*=========== PAGES & TABS =============*/
 
 export const PROJECTS_PAGE = 'PROJECTS'
@@ -169,6 +173,7 @@ export const REMOVE_SCHEDULED_JOB_FAILURE = 'REMOVE_SCHEDULED_JOB_FAILURE'
 export const RUN_NEW_JOB_BEGIN = 'RUN_NEW_JOB_BEGIN'
 export const RUN_NEW_JOB_FAILURE = 'RUN_NEW_JOB_FAILURE'
 export const RUN_NEW_JOB_SUCCESS = 'RUN_NEW_JOB_SUCCESS'
+export const SET_DELETING_PROJECTS = 'SET_DELETING_PROJECTS'
 export const SET_JOBS_DATA = 'SET_JOBS_DATA'
 export const SET_JOBS_MONITORING_DATA = 'SET_JOBS_MONITORING_DATA'
 export const SET_MLRUN_IS_UNHEALTHY = 'SET_MLRUN_IS_UNHEALTHY'
@@ -310,9 +315,7 @@ export const SET_NEW_FUNCTION_TRACK_MODELS = 'SET_NEW_FUNCTION_TRACK_MODELS'
 export const SET_NEW_FUNCTION_VOLUMES = 'SET_NEW_FUNCTION_VOLUMES'
 export const SET_NEW_FUNCTION_VOLUME_MOUNTS = 'SET_NEW_FUNCTION_VOLUME_MOUNTS'
 export const FUNCTION_CREATING_STATE = 'creating'
-export const FUNCTION_FAILED_STATE = 'failed'
 export const FUNCTION_FAILED_TO_DELETE_STATE = 'failedToDelete'
-export const FUNCTION_ERROR_STATE = 'error'
 export const FUNCTION_INITIALIZED_STATE = 'initialized'
 export const FUNCTION_READY_STATE = 'ready'
 export const FUNCTION_PENDINDG_STATE = 'pending'

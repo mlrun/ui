@@ -22,6 +22,7 @@ import commonTable from '../components/table.component'
 import inputGroup from '../components/input-group.component'
 import textAreaGroup from '../components/text-area.component'
 import { generateInputGroup, generateTextAreaGroup } from '../../common-tools/common-tools'
+import checkboxComponent from '../components/checkbox.component'
 
 
 const tabSelector = {
@@ -185,6 +186,14 @@ module.exports = {
         '.input-label-value'
       )
     ),
+    Pull_At_Runtime_Checkbox: checkboxComponent({
+      root: '.settings__source [data-testid="form-field-checkbox"]',
+      elements: {
+        checkbox: 'input', 
+        name: '',
+        icon: ''
+      }
+    })
   },
   secretsTab: {
     Secrets_Table: commonTable(secretsTable),

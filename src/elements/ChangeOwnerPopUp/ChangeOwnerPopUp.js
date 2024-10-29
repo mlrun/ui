@@ -27,7 +27,7 @@ import Input from '../../common/Input/Input'
 import { Button, PopUpDialog } from 'igz-controls/components'
 
 import projectsIguazioApi from '../../api/projects-iguazio-api'
-import { FORBIDDEN_ERROR_STATUS_CODE, SECONDARY_BUTTON, LABEL_BUTTON } from 'igz-controls/constants'
+import { FORBIDDEN_ERROR_STATUS_CODE, SECONDARY_BUTTON, TERTIARY_BUTTON } from 'igz-controls/constants'
 import { deleteUnsafeHtml } from '../../utils'
 import { getErrorMsg } from 'igz-controls/utils/common.util'
 import { isIgzVersionCompatible } from '../../utils/isIgzVersionCompatible'
@@ -238,7 +238,7 @@ const ChangeOwnerPopUp = ({ changeOwnerCallback, projectId }) => {
               className="pop-up-dialog__btn_cancel"
               label="Discard"
               onClick={handleOnClose}
-              variant={LABEL_BUTTON}
+              variant={TERTIARY_BUTTON}
             />
             <Button
               disabled={!newOwnerId}
