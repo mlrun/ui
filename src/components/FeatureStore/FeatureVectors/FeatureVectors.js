@@ -220,14 +220,17 @@ const FeatureVectors = ({
     [onDeleteFeatureVector, toggleConvertedYaml]
   )
 
-  const handleRefresh = useCallback(filters => {
-    fetchTags()
-    setFeatureVectors([])
-    setSelectedFeatureVector({})
-    setSelectedRowData({})
+  const handleRefresh = useCallback(
+    filters => {
+      fetchTags()
+      setFeatureVectors([])
+      setSelectedFeatureVector({})
+      setSelectedRowData({})
 
-    return fetchData(filters)
-  }, [fetchData, fetchTags])
+      return fetchData(filters)
+    },
+    [fetchData, fetchTags]
+  )
 
   const handleRemoveFeatureVector = useCallback(
     featureVector => {
@@ -259,8 +262,9 @@ const FeatureVectors = ({
 
       fetchFeatureVector(featureVector.project, featureVector.name, filtersStore.tag)
         .then(result => {
-          const content = sortListByDate(parseFeatureVectors(result), 'updated', false).map(contentItem =>
-            createFeatureVectorsRowData(contentItem, FEATURE_VECTORS_TAB, params.projectName)
+          const content = sortListByDate(parseFeatureVectors(result), 'updated', false).map(
+            contentItem =>
+              createFeatureVectorsRowData(contentItem, FEATURE_VECTORS_TAB, params.projectName)
           )
           setSelectedRowData(state => ({
             ...state,

@@ -143,13 +143,16 @@ const FeatureSets = ({
     )
   }, [dispatch, fetchFeatureSetsTags, params.projectName])
 
-  const handleRefresh = useCallback(filters => {
-    fetchTags()
-    setFeatureSets([])
-    setSelectedFeatureSet({})
-    setSelectedRowData({})
-    return fetchData(filters)
-  }, [fetchData, fetchTags])
+  const handleRefresh = useCallback(
+    filters => {
+      fetchTags()
+      setFeatureSets([])
+      setSelectedFeatureSet({})
+      setSelectedRowData({})
+      return fetchData(filters)
+    },
+    [fetchData, fetchTags]
+  )
 
   const handleRemoveFeatureSet = useCallback(
     featureSet => {
