@@ -580,23 +580,26 @@ const projectsAction = {
         return summaryData
       })
       .catch(err => {
-        if (!firstServerErrorTimestamp) {
-          firstServerErrorTimestamp = new Date()
+        if (mlrunUnhealthyErrors.includes(err.response?.status)) {
+          if (!firstServerErrorTimestamp) {
+            firstServerErrorTimestamp = new Date()
 
-          dispatch(projectsAction.setMlrunUnhealthyRetrying(true))
-        }
+            dispatch(projectsAction.setMlrunUnhealthyRetrying(true))
+          }
 
-        const threeMinutesPassed = (new Date() - firstServerErrorTimestamp) / 1000 > 180
+          const threeMinutesPassed = (new Date() - firstServerErrorTimestamp) / 1000 > 180
 
-        if (mlrunUnhealthyErrors.includes(err.response?.status) && !threeMinutesPassed) {
-          setTimeout(() => {
-            dispatch(projectsAction.fetchProjectsSummary(signal, refresh))
-          }, 3000)
-        }
+          // 502 503 504
+          if (!threeMinutesPassed) {
+            setTimeout(() => {
+              dispatch(projectsAction.fetchProjectsSummary(signal, refresh))
+            }, 3000)
+          }
 
-        if (threeMinutesPassed) {
-          dispatch(projectsAction.setMlrunIsUnhealthy(true))
-          dispatch(projectsAction.setMlrunUnhealthyRetrying(true))
+          if (threeMinutesPassed) {
+            dispatch(projectsAction.setMlrunIsUnhealthy(true))
+            dispatch(projectsAction.setMlrunUnhealthyRetrying(true))
+          }
         }
 
         dispatch(projectsAction.fetchProjectsSummaryFailure(err))
