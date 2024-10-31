@@ -136,10 +136,11 @@ const AddToFeatureVectorPage = ({
         <FeaturesTablePanel
           onSubmit={handleCreateFeatureVector}
           handleCancel={handleCancelCreateFeatureVector}
+          projectName={addToFeatureVectorFilters[PROJECT_FILTER]}
         />
       )
     }),
-    [handleCancelCreateFeatureVector, handleCreateFeatureVector]
+    [addToFeatureVectorFilters, handleCancelCreateFeatureVector, handleCreateFeatureVector]
   )
 
   const actionsMenu = useMemo(

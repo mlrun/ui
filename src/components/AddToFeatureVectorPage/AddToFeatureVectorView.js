@@ -39,6 +39,8 @@ import { isRowRendered } from '../../hooks/useVirtualization.hook'
 import ActionBar from '../ActionBar/ActionBar'
 import AddToFeatureVectorFilters from './AddToFeatureVectorFilters'
 
+import './addToFeatureVector.scss'
+
 const AddToFeatureVectorView = React.forwardRef(
   (
     {
@@ -65,11 +67,7 @@ const AddToFeatureVectorView = React.forwardRef(
       <div ref={ref} className="add-to-feature-vector content-wrapper">
         <div className="content__header">
           <AddToFeatureVectorPageHeader params={params} />
-        </div>
-        {(featureStore.loading || featureStore.features.loading) && <Loader />}
-        <div className="content">
-          <div className="table-container">
-            <div className="content__action-bar-wrapper">
+          <div className="content__action-bar-wrapper">
               <ActionBar
                 filterMenuName={ADD_TO_FEATURE_VECTOR_TAB}
                 filtersConfig={filtersConfig}
@@ -81,6 +79,10 @@ const AddToFeatureVectorView = React.forwardRef(
                 <AddToFeatureVectorFilters content={content} />
               </ActionBar>
             </div>
+        </div>
+        {(featureStore.loading || featureStore.features.loading) && <Loader />}
+        <div className="content">
+          <div className="table-container">
             {featureStore.loading || featureStore.features.loading ? null : content.length === 0 ? (
               <NoData
                 message={getNoDataMessage(

@@ -97,6 +97,7 @@ export const REAL_TIME_PIPELINES_TAB = 'real-time-pipelines'
 export const PIPELINE_SUB_PAGE = 'pipeline'
 
 export const FEATURE_STORE_PAGE = 'FEATURE-STORE'
+export const FEATURE_STORE_PAGE_PATH = 'feature-store'
 export const FEATURES_TAB = 'features'
 export const FEATURE_SETS_TAB = 'feature-sets'
 export const FEATURE_VECTORS_TAB = 'feature-vectors'

@@ -23,6 +23,7 @@ import PropTypes from 'prop-types'
 import FeatureStoreTableRow from '../../../elements/FeatureStoreTableRow/FeatureStoreTableRow'
 import NoData from '../../../common/NoData/NoData'
 import Table from '../../Table/Table'
+import FeatureStorePageTabs from '../FeatureStorePageTabs/FeatureStorePageTabs'
 
 import { FEATURE_STORE_PAGE, FEATURES_TAB } from '../../../constants'
 import { SECONDARY_BUTTON } from 'igz-controls/constants'
@@ -57,6 +58,7 @@ const FeaturesView = React.forwardRef(
     return (
       <div className="feature-store" ref={featureStoreRef}>
         <div className="content__action-bar-wrapper">
+          <FeatureStorePageTabs />
           <ActionBar
             actionButtons={[
               {

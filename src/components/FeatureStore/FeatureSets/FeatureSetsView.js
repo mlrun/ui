@@ -28,6 +28,7 @@ import Table from '../../Table/Table'
 import ActionBar from '../../ActionBar/ActionBar'
 import FeatureStoreFilters from '../FeatureStoreFilters'
 import Loader from '../../../common/Loader/Loader'
+import FeatureStorePageTabs from '../FeatureStorePageTabs/FeatureStorePageTabs'
 
 import { FEATURE_SETS_TAB, FEATURE_STORE_PAGE } from '../../../constants'
 import { SECONDARY_BUTTON } from 'iguazio.dashboard-react-controls/dist/constants'
@@ -69,6 +70,7 @@ const FeatureSetsView = React.forwardRef(
     return (
       <div className="feature-store" ref={featureStoreRef}>
         <div className="content__action-bar-wrapper">
+          <FeatureStorePageTabs />
           <ActionBar
             actionButtons={[
               {

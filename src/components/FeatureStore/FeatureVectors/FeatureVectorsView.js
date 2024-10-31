@@ -24,6 +24,7 @@ import CreateFeatureVectorPopUp from '../../../elements/CreateFeatureVectorPopUp
 import FeatureStoreTableRow from '../../../elements/FeatureStoreTableRow/FeatureStoreTableRow'
 import NoData from '../../../common/NoData/NoData'
 import Table from '../../Table/Table'
+import FeatureStorePageTabs from '../FeatureStorePageTabs/FeatureStorePageTabs'
 
 import {
   FEATURE_STORE_PAGE,
@@ -66,6 +67,7 @@ const FeatureVectorsView = React.forwardRef(
     return (
       <div className="feature-store" ref={featureStoreRef}>
         <div className="content__action-bar-wrapper">
+          <FeatureStorePageTabs />
           <ActionBar
             actionButtons={[
               {
