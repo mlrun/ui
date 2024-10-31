@@ -589,7 +589,6 @@ const projectsAction = {
 
           const threeMinutesPassed = (new Date() - firstServerErrorTimestamp) / 1000 > 180
 
-          // 502 503 504
           if (!threeMinutesPassed) {
             setTimeout(() => {
               dispatch(projectsAction.fetchProjectsSummary(signal, refresh))
