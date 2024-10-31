@@ -59,7 +59,8 @@ import {
   PAST_WEEK_DATE_OPTION,
   datePickerFutureOptions,
   datePickerPastOptions,
-  getDatePickerFilterValue
+  getDatePickerFilterValue,
+  ANY_TIME_DATE_OPTION
 } from '../utils/datePicker.util'
 
 const initialState = {
@@ -122,39 +123,31 @@ const initialState = {
     [MONITOR_JOBS_TAB]: {
       initialValues: {
         [NAME_FILTER]: '',
-        [DATES_FILTER]: getDatePickerFilterValue(datePickerPastOptions, PAST_24_HOUR_DATE_OPTION)
+        [DATES_FILTER]: getDatePickerFilterValue(datePickerPastOptions, PAST_WEEK_DATE_OPTION)
       },
       values: {
         [NAME_FILTER]: '',
-        [DATES_FILTER]: getDatePickerFilterValue(datePickerPastOptions, PAST_24_HOUR_DATE_OPTION)
+        [DATES_FILTER]: getDatePickerFilterValue(datePickerPastOptions, PAST_WEEK_DATE_OPTION)
       }
     },
     [MONITOR_WORKFLOWS_TAB]: {
       initialValues: {
         [NAME_FILTER]: '',
-        [DATES_FILTER]: getDatePickerFilterValue(datePickerPastOptions, PAST_24_HOUR_DATE_OPTION)
+        [DATES_FILTER]: getDatePickerFilterValue(datePickerPastOptions, PAST_WEEK_DATE_OPTION)
       },
       values: {
         [NAME_FILTER]: '',
-        [DATES_FILTER]: getDatePickerFilterValue(datePickerPastOptions, PAST_24_HOUR_DATE_OPTION)
+        [DATES_FILTER]: getDatePickerFilterValue(datePickerPastOptions, PAST_WEEK_DATE_OPTION)
       }
     },
     [SCHEDULE_TAB]: {
       initialValues: {
         [NAME_FILTER]: '',
-        [DATES_FILTER]: getDatePickerFilterValue(
-          datePickerFutureOptions,
-          NEXT_24_HOUR_DATE_OPTION,
-          true
-        )
+        [DATES_FILTER]: getDatePickerFilterValue(datePickerFutureOptions, ANY_TIME_DATE_OPTION)
       },
       values: {
         [NAME_FILTER]: '',
-        [DATES_FILTER]: getDatePickerFilterValue(
-          datePickerFutureOptions,
-          NEXT_24_HOUR_DATE_OPTION,
-          true
-        )
+        [DATES_FILTER]: getDatePickerFilterValue(datePickerFutureOptions, ANY_TIME_DATE_OPTION)
       }
     },
     [FUNCTION_FILTERS]: {

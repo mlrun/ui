@@ -83,6 +83,7 @@ const Jobs = ({ fetchAllJobRuns, fetchJobFunction, fetchJobs }) => {
     refreshScheduled,
     requestErrorMessage,
     scheduledJobs,
+    selectedRunProject,
     setAbortingJobs,
     setEditableItem,
     setJobRuns,
@@ -168,7 +169,7 @@ const Jobs = ({ fetchAllJobRuns, fetchJobFunction, fetchJobs }) => {
         </div>
         {selectedTab && (
           <div className="content">
-            <div className="content__action-bar-wrapper content__action-bar-wrapper_wrapped">
+            <div className="content__action-bar-wrapper content__action-bar-wrapper_multi-row">
               <ContentMenu
                 activeTab={selectedTab}
                 onClick={handleTabChange}
@@ -223,6 +224,7 @@ const Jobs = ({ fetchAllJobRuns, fetchJobFunction, fetchJobs }) => {
                   handleRerunJob,
                   jobRuns,
                   jobs,
+                  jobsFiltersConfig: tabData[MONITOR_JOBS_TAB].filtersConfig,
                   jobWizardMode,
                   jobWizardIsOpened,
                   refreshJobs,
@@ -230,6 +232,7 @@ const Jobs = ({ fetchAllJobRuns, fetchJobFunction, fetchJobs }) => {
                   requestErrorMessage,
                   scheduledJobs,
                   scheduledFiltersConfig: tabData[SCHEDULE_TAB].filtersConfig,
+                  selectedRunProject,
                   setAbortingJobs,
                   setConfirmData,
                   setEditableItem,

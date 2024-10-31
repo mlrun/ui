@@ -222,7 +222,9 @@ const FilterMenuModal = ({
                       )}
                       {applyButton && !withoutApplyButton && (
                         <Button
-                          disabled={isEqual(filtersData?.values, formState.values) || formState?.invalid}
+                          disabled={
+                            isEqual(filtersData?.values, formState.values) || formState?.invalid
+                          }
                           id="filter-apply-btn"
                           variant={applyButton.variant}
                           label={applyButton.label}

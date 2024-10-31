@@ -97,7 +97,7 @@ export const useJobsPageData = (fetchAllJobRuns, fetchJobFunction, fetchJobs) =>
               return (
                 (!filters.type ||
                   filters.type === FILTER_ALL_ITEMS ||
-                  filters.type.includes(type)) &&
+                  filters.type.split(',').includes(type)) &&
                 (!filters.project || job.project.includes(filters.project.toLowerCase()))
               )
             })
@@ -251,6 +251,7 @@ export const useJobsPageData = (fetchAllJobRuns, fetchJobFunction, fetchJobs) =>
     refreshScheduled,
     requestErrorMessage,
     scheduledJobs,
+    selectedRunProject,
     setAbortingJobs,
     setEditableItem,
     setJobRuns,

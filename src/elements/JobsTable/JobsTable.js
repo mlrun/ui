@@ -75,6 +75,7 @@ const JobsTable = React.forwardRef(
       refreshJobs,
       requestErrorMessage,
       selectedJob,
+      selectedRunProject,
       setAbortingJobs,
       setJobRuns,
       setJobs,
@@ -183,11 +184,20 @@ const JobsTable = React.forwardRef(
           modifyAndSelectRun(item)
         }
 
-        if (!params.jobName && setSelectedRunProject) {
+        if (
+          (!params.jobName && setSelectedRunProject) ||
+          params.projectName !== selectedRunProject
+        ) {
           setSelectedRunProject(item.project)
         }
       },
-      [modifyAndSelectRun, params.jobName, setSelectedRunProject]
+      [
+        modifyAndSelectRun,
+        params.jobName,
+        params.projectName,
+        selectedRunProject,
+        setSelectedRunProject
+      ]
     )
 
     const fetchRun = useCallback(
@@ -547,6 +557,7 @@ JobsTable.propTypes = {
   refreshJobs: PropTypes.func.isRequired,
   requestErrorMessage: PropTypes.string.isRequired,
   selectedJob: PropTypes.object.isRequired,
+  selectedRunProject: PropTypes.string.isRequired,
   setAbortingJobs: PropTypes.func.isRequired,
   setJobRuns: PropTypes.func.isRequired,
   setJobs: PropTypes.func.isRequired,

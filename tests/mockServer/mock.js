@@ -473,17 +473,20 @@ function deleteProjectV2(req, res) {
 
   const handleDeletion = () => {
     const taskFunc = () => {
-      return new Promise((resolve) => {
-        setTimeout(() => {
-          deleteProjectHandler(req, res, true)
-          resolve()
-        }, random(5000, 10000))
+      return new Promise(resolve => {
+        setTimeout(
+          () => {
+            deleteProjectHandler(req, res, true)
+            resolve()
+          },
+          random(5000, 10000)
+        )
       })
     }
 
     const task = createTask(null, {
       taskFunc,
-      kind: `project.deletion.wrapper.${req.params.project}`,
+      kind: `project.deletion.wrapper.${req.params.project}`
     })
 
     res.status = 202
@@ -494,11 +497,11 @@ function deleteProjectV2(req, res) {
     handleDeletion()
   } else {
     const collectedProject = projects.projects.filter(
-      (project) => project.metadata.name === req.params['project']
+      project => project.metadata.name === req.params['project']
     )
 
     const isEmpty = collectedProject.every(
-      (project) =>
+      project =>
         (project.spec.functions && project.spec.functions.length > 0) ||
         (project.spec.workflows && project.spec.workflows.length > 0) ||
         (project.spec.artifacts && project.spec.artifacts.length > 0)
@@ -508,12 +511,12 @@ function deleteProjectV2(req, res) {
       handleDeletion()
     } else {
       res.status(412).send({
-        detail: `MLRunPreconditionFailedError('Project ${req.params.project} cannot be deleted since related resources found: artifacts')`,
+        detail: `MLRunPreconditionFailedError('Project ${req.params.project} cannot be deleted since related resources found: artifacts')`
       })
     }
   }
 }
-    
+
 function patchProject(req, res) {
   const project = projects.projects.find(project => project.metadata.name === req.params['project'])
 
@@ -1422,7 +1425,9 @@ function getPipelines(req, res) {
 
   if (req.query.filter) {
     const nameFilter = JSON.parse(req.query.filter).predicates.find(item => item.key === 'name')
-    const statusFilter = JSON.parse(req.query.filter).predicates.find(item => item.key === 'status')
+    const queryStateValue = JSON.parse(req.query.filter).predicates.find(
+      predicate => predicate.key === 'status'
+    )?.string_values?.values
 
     if (nameFilter) {
       collectedPipelines.runs = collectedPipelines.runs.filter(pipeline => {
@@ -1430,9 +1435,11 @@ function getPipelines(req, res) {
       })
     }
 
-    if (statusFilter) {
+    if (queryStateValue) {
       collectedPipelines.runs = collectedPipelines.runs.filter(pipeline => {
-        return pipeline.status.includes(statusFilter.string_value)
+        return Array.isArray(queryStateValue)
+          ? queryStateValue.includes(pipeline.status)
+          : pipeline.status === queryStateValue
       })
     }
   }

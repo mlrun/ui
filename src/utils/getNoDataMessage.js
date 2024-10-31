@@ -233,7 +233,12 @@ const getVisibleFilterTypes = (filtersConfig, filtersStore, filtersStoreKey) => 
       )
     const isDateVisible =
       (type === DATE_RANGE_TIME_FILTER &&
-        !isEqual(filtersStore.dates.value, DATE_FILTER_ANY_TIME)) ||
+        !isEqual(
+          filtersStoreKey
+            ? filtersStore[FILTER_MENU][filtersStoreKey]?.values?.dates?.value
+            : filtersStore?.dates?.value,
+          DATE_FILTER_ANY_TIME
+        )) ||
       (type === DATES_FILTER &&
         !isEqual(
           filtersStore[FILTER_MENU][filtersStoreKey]?.values?.[DATES_FILTER]?.value,

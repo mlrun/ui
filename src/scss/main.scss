@@ -96,12 +96,12 @@ body {
     align-items: center;
     padding: 4px 0 15px 0;
 
-    &.content__action-bar-wrapper_wrapped {
-      @media screen and (max-width: 1500px) {
+    &.content__action-bar-wrapper_multi-row {
+      @media screen and (max-width: 1610px) {
         flex-wrap: wrap;
 
         .action-bar {
-          justify-content: space-between;
+          justify-content: flex-end;
           margin-top: 10px;
         }
       }
@@ -854,6 +854,7 @@ div[id^='chartjs-tooltip'] {
 .action-bar {
   .filters-button {
     margin-left: 5px;
+    margin-right: 5px;
   }
 
   &__filters {
@@ -868,6 +869,7 @@ div[id^='chartjs-tooltip'] {
 
   &__actions {
     display: flex;
+    margin-left: 15px;
 
     .action-button {
       white-space: nowrap;

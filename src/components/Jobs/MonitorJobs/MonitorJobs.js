@@ -27,7 +27,7 @@ import TableTop from '../../../elements/TableTop/TableTop'
 import { GROUP_BY_NONE, MONITOR_JOBS_TAB, REQUEST_CANCELED } from '../../../constants'
 import { JobsContext } from '../Jobs'
 import { createJobsMonitorTabContent } from '../../../utils/createJobsContent'
-import { fetchInitialJobs, generateFilters } from './monitorJobs.util'
+import { fetchInitialJobs } from './monitorJobs.util'
 import { setFilters } from '../../../reducers/filtersReducer'
 import { useMode } from '../../../hooks/mode.hook'
 
@@ -48,18 +48,17 @@ const MonitorJobs = () => {
     dateFilter,
     jobRuns,
     jobs,
+    jobsFiltersConfig,
     refreshJobs,
     requestErrorMessage,
+    selectedRunProject,
     setAbortingJobs,
     setJobRuns,
     setJobs,
+    setSelectedRunProject,
     terminateAbortTasksPolling
   } = React.useContext(JobsContext)
   const jobsAreInitializedRef = useRef(false)
-
-  const filters = useMemo(() => {
-    return generateFilters(params.jobName)
-  }, [params.jobName])
 
   const tableContent = useMemo(
     () =>
@@ -76,12 +75,12 @@ const MonitorJobs = () => {
     fetchInitialJobs(
       {
         saveFilters,
-        ...jobsFilterMenu,
+        ...jobsFilterMenu.values,
         ...jobsFilterMenuModal.values
       },
       selectedJob,
       dateFilter,
-      params,
+      params.jobId,
       refreshJobs,
       setFilters,
       dispatch,
@@ -94,7 +93,8 @@ const MonitorJobs = () => {
     isJobDataEmpty,
     jobsFilterMenu,
     jobsFilterMenuModal.values,
-    params,
+    params.jobId,
+    params.projectName,
     refreshJobs,
     saveFilters,
     selectedJob
@@ -135,13 +135,15 @@ const MonitorJobs = () => {
         ref={{ abortJobRef }}
         context={JobsContext}
         filterMenuName={MONITOR_JOBS_TAB}
-        filters={filters}
+        filtersConfig={jobsFiltersConfig}
         jobRuns={jobRuns}
         jobs={jobs}
         requestErrorMessage={requestErrorMessage}
         navigateLink={`/projects/${params.projectName}/jobs/${MONITOR_JOBS_TAB}`}
         refreshJobs={refreshJobs}
         selectedJob={selectedJob}
+        selectedRunProject={selectedRunProject}
+        setSelectedRunProject={setSelectedRunProject}
         setAbortingJobs={setAbortingJobs}
         setJobRuns={setJobRuns}
         setJobs={setJobs}
