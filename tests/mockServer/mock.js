@@ -2037,9 +2037,19 @@ function postArtifact(req, res) {
 
   collectedArtifactsWithSameName.forEach(artifact => {
     if (artifact.metadata?.tag === req.body.metadata.tag) {
+      //  override existing artifact's tag in case when we create artifact with same tag
       artifact.metadata.tag = null
     } else if (artifact.metadata?.tag === 'latest') {
-      if(collectedArtifactsWithSameName.find(searchedArtifact => searchedArtifact.metadata.uid === artifact.metadata.uid && searchedArtifact.metadata?.tag !== 'latest')) {
+      //  when we post an artifact with custom tag we store 2 artifacts (custom and latest)
+      //  so when we post another artifact with same name we have to delete artifact with 'latest' tag 
+      //  or we remove latest tag in case when we have only one object
+      if (
+        collectedArtifactsWithSameName.find(
+          searchedArtifact =>
+            searchedArtifact.metadata.uid === artifact.metadata.uid &&
+            searchedArtifact.metadata?.tag !== 'latest'
+        )
+      ) {
         remove(artifacts.artifacts, artifact)
       } else {
         artifact.metadata.tag = null
