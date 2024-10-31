@@ -73,7 +73,6 @@ const ProjectsView = ({
     (createProject || convertedYaml.length > 0) && 'projects-modal_opened'
   )
 
-  console.log('projectStore.projects', projectStore.projects)
   return (
     <div className={projectsClassNames}>
       {(projectStore.loading || projectStore.project.loading || tasksStore.loading) && <Loader />}
