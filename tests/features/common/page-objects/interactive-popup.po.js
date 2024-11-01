@@ -1653,7 +1653,8 @@ module.exports = {
   notificationPopUp: {
     Title: By.css('#overlay_container .notification__body'),
     Notification_Pop_Up: By.css('#overlay_container .notification__body'),
-    Notification_Pop_Up_Cross_Close_Button: By.css('#overlay_container .notification__button-close')
+    Notification_Pop_Up_Cross_Close_Button: By.css('#overlay_container .notification__button-close'),
+    Retry_Button: By.css('#overlay_container .notification__body .notification__body__button-retry')
   },
   addTagPopup: {
     Add_Tag_Popup: By.css('[data-testid="modal"]'),

@@ -450,7 +450,7 @@ module.exports = {
     Table_Refresh_Button: tableRefreshButton,
     Add_To_Feature_Vector_Table: commonTable(addToFeatureVectorTable),
     Add_Button: By.css('.features-panel__buttons .btn-primary'),
-    Cancel_Button: By.css('.features-panel__buttons .btn-label'),
+    Cancel_Button: By.css('.features-panel__buttons .btn-tertiary'),
     Features_Panel_Title: labelComponent(
       generateLabelGroup('.add-to-feature-vector .features-panel__header', false, true)
     ),
