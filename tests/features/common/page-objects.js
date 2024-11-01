@@ -73,6 +73,7 @@ module.exports = {
   Metrics_Selector_Popup: interactivePopup['metricsSelectorPopup'],
   ML_Function_Info_Pane: infoPane['mlFunctionInfoPane'],
   ML_Functions: Functions['mlFunctions'],
+  MLRun_Unhealthy_PopUp: interactivePopup['mLRunUnhealthyPopUp'],
   Model_Endpoints: models['modelEndpoints'],
   Models: models['modelsTab'],
   Models_Info_Pane: infoPane['modelsInfoPane'],

@@ -36,8 +36,7 @@ const ProjectsTableSelector = {
     row: {
       root: '.project-card',
       fields: {
-        name:
-          '.project-card__general-info .project-card__header .project-card__header-title .data-ellipsis.tooltip-wrapper.project-card__title',
+        name: '.project-card__general-info .project-card__header .project-card__header-title .data-ellipsis.tooltip-wrapper.project-card__title',
         description:
           '.project-card__general-info .project-card__content .project-card__description .data-ellipsis',
         running: {
@@ -103,12 +102,11 @@ const ProjectsTableSelector = {
 }
 
 module.exports = {
+  Retrieving_projects_message: By.css('[data-testid=no-data]'),
   New_Project_Button: By.css(
     '.projects__wrapper .projects-content-header-item .page-actions-container .btn_register'
   ),
-  Refresh_Projects_Button: By.css(
-    '.projects-content-header .data-ellipsis button'
-  ),
+  Refresh_Projects_Button: By.css('.projects-content-header .data-ellipsis button'),
   Projects_Table: commonTable(ProjectsTableSelector),
   Overlay: By.css('#overlay_container .chip-block-hidden_visible'),
   Active_Projects_Button: By.css(
@@ -117,9 +115,7 @@ module.exports = {
   Archive_Projects_Button: By.css(
     '.projects__wrapper .projects-content-header .projects-content-header-item .content-menu .content-menu__list li[data-testid=archived] a'
   ),
-  Projects_Sorter: By.css(
-    '.projects-content-header-item .sort .split-btn__button:nth-of-type(1)'
-  ),
+  Projects_Sorter: By.css('.projects-content-header-item .sort .split-btn__button:nth-of-type(1)'),
   Projects_Sort_Dropdown: dropdownComponent(
     generateDropdownGroup(
       '.projects-content-header-item .sort .split-btn__button:nth-of-type(2)',
@@ -128,63 +124,136 @@ module.exports = {
       '.data-ellipsis > .tooltip-wrapper' // Option value
     )
   ),
-  No_Archived_Projects_Label:
-    '.projects .projects__wrapper .projects-content .no-filtered-data',
+  No_Archived_Projects_Label: '.projects .projects__wrapper .projects-content .no-filtered-data',
   Search_Projects_Input: inputGroup(
-    generateInputGroup(
-      '.projects__wrapper .projects-content-header .search-container'
-    )
+    generateInputGroup('.projects__wrapper .projects-content-header .search-container')
   ),
-  Projects_Monitoring_Container:{
+  Projects_Monitoring_Container: {
     Monitoring_Container: By.css('.projects .projects-monitoring-container'),
-    Monitoring_Container_Title: By.css('.projects-monitoring-container .projects-monitoring-legend .page-header__title'),
-    Monitoring_Container_Running_Status: By.css('.projects-monitoring-container .projects-monitoring-legend .projects-monitoring-legend__status li:nth-of-type(1)'),
-    Monitoring_Container_Running_Icon: By.css('.projects-monitoring-container .projects-monitoring-legend .projects-monitoring-legend__status li:nth-of-type(1) i'),
-    Monitoring_Container_Failed_Status: By.css('.projects-monitoring-container .projects-monitoring-legend .projects-monitoring-legend__status li:nth-of-type(2)'),
-    Monitoring_Container_Failed_Icon: By.css('.projects-monitoring-container .projects-monitoring-legend .projects-monitoring-legend__status li:nth-of-type(2) i'),
-    Monitoring_Container_Completed_Status: By.css('.projects-monitoring-container .projects-monitoring-legend .projects-monitoring-legend__status li:nth-of-type(3)'),
-    Monitoring_Container_Completed_Icon: By.css('.projects-monitoring-container .projects-monitoring-legend .projects-monitoring-legend__status li:nth-of-type(3) i'),
-    Monitoring_Jobs_Box: By.css('.projects-monitoring-container .projects-monitoring-stats .stats-card:nth-of-type(1)'),
-    Monitoring_Workflows_Box: By.css('.projects-monitoring-container .projects-monitoring-stats .stats-card:nth-of-type(2)'),
-    Monitoring_Scheduled_Box: By.css('.projects-monitoring-container .projects-monitoring-stats .stats-card:nth-of-type(3)')
+    Monitoring_Container_Title: By.css(
+      '.projects-monitoring-container .projects-monitoring-legend .page-header__title'
+    ),
+    Monitoring_Container_Running_Status: By.css(
+      '.projects-monitoring-container .projects-monitoring-legend .projects-monitoring-legend__status li:nth-of-type(1)'
+    ),
+    Monitoring_Container_Running_Icon: By.css(
+      '.projects-monitoring-container .projects-monitoring-legend .projects-monitoring-legend__status li:nth-of-type(1) i'
+    ),
+    Monitoring_Container_Failed_Status: By.css(
+      '.projects-monitoring-container .projects-monitoring-legend .projects-monitoring-legend__status li:nth-of-type(2)'
+    ),
+    Monitoring_Container_Failed_Icon: By.css(
+      '.projects-monitoring-container .projects-monitoring-legend .projects-monitoring-legend__status li:nth-of-type(2) i'
+    ),
+    Monitoring_Container_Completed_Status: By.css(
+      '.projects-monitoring-container .projects-monitoring-legend .projects-monitoring-legend__status li:nth-of-type(3)'
+    ),
+    Monitoring_Container_Completed_Icon: By.css(
+      '.projects-monitoring-container .projects-monitoring-legend .projects-monitoring-legend__status li:nth-of-type(3) i'
+    ),
+    Monitoring_Jobs_Box: By.css(
+      '.projects-monitoring-container .projects-monitoring-stats .stats-card:nth-of-type(1)'
+    ),
+    Monitoring_Workflows_Box: By.css(
+      '.projects-monitoring-container .projects-monitoring-stats .stats-card:nth-of-type(2)'
+    ),
+    Monitoring_Scheduled_Box: By.css(
+      '.projects-monitoring-container .projects-monitoring-stats .stats-card:nth-of-type(3)'
+    )
   },
-  Monitoring_Jobs_Box:{
-    Monitoring_Jobs_Box_Title: By.css('.projects-monitoring-stats .stats-card:nth-of-type(1) .stats-card__title'),
+  Monitoring_Jobs_Box: {
+    Monitoring_Jobs_Box_Title: By.css(
+      '.projects-monitoring-stats .stats-card:nth-of-type(1) .stats-card__title'
+    ),
     Filtering_Time_Period: By.css('.stats-card:nth-of-type(1) .project-card__info'),
-    Total_Counter_Title: By.css('.stats-card:nth-of-type(1) .stats-card__row:nth-of-type(2) .stats__subtitle'),
-    Total_Counter_Number: By.css('.stats-card:nth-of-type(1) .stats-card__row:nth-of-type(2) .stats__counter'),
-    Counter_Running_Status_Number: By.css('.stats-card:nth-of-type(1) .stats-card__row:nth-of-type(2) .projects-monitoring-legend__status .link:nth-of-type(1)'),
-    Counter_Running_Status_Icon: By.css('.stats-card:nth-of-type(1) .stats-card__row:nth-of-type(2) .projects-monitoring-legend__status .link:nth-of-type(1) i'),
-    Counter_Failed_Status_Number: By.css('.stats-card:nth-of-type(1) .stats-card__row:nth-of-type(2) .projects-monitoring-legend__status .link:nth-of-type(2)'),
-    Counter_Failed_Status_Icon: By.css('.stats-card:nth-of-type(1) .stats-card__row:nth-of-type(2) .projects-monitoring-legend__status .link:nth-of-type(2) i'),
-    Counter_Completed_Status_Number: By.css('.stats-card:nth-of-type(1) .stats-card__row:nth-of-type(2) .projects-monitoring-legend__status .link:nth-of-type(3)'),
-    Counter_Completed_Status_Icon: By.css('.stats-card:nth-of-type(1) .stats-card__row:nth-of-type(2) .projects-monitoring-legend__status .link:nth-of-type(3) i'),
+    Total_Counter_Title: By.css(
+      '.stats-card:nth-of-type(1) .stats-card__row:nth-of-type(2) .stats__subtitle'
+    ),
+    Total_Counter_Number: By.css(
+      '.stats-card:nth-of-type(1) .stats-card__row:nth-of-type(2) .stats__counter'
+    ),
+    Counter_Running_Status_Number: By.css(
+      '.stats-card:nth-of-type(1) .stats-card__row:nth-of-type(2) .projects-monitoring-legend__status .link:nth-of-type(1)'
+    ),
+    Counter_Running_Status_Icon: By.css(
+      '.stats-card:nth-of-type(1) .stats-card__row:nth-of-type(2) .projects-monitoring-legend__status .link:nth-of-type(1) i'
+    ),
+    Counter_Failed_Status_Number: By.css(
+      '.stats-card:nth-of-type(1) .stats-card__row:nth-of-type(2) .projects-monitoring-legend__status .link:nth-of-type(2)'
+    ),
+    Counter_Failed_Status_Icon: By.css(
+      '.stats-card:nth-of-type(1) .stats-card__row:nth-of-type(2) .projects-monitoring-legend__status .link:nth-of-type(2) i'
+    ),
+    Counter_Completed_Status_Number: By.css(
+      '.stats-card:nth-of-type(1) .stats-card__row:nth-of-type(2) .projects-monitoring-legend__status .link:nth-of-type(3)'
+    ),
+    Counter_Completed_Status_Icon: By.css(
+      '.stats-card:nth-of-type(1) .stats-card__row:nth-of-type(2) .projects-monitoring-legend__status .link:nth-of-type(3) i'
+    ),
     See_All_Link: By.css('.stats-card:nth-of-type(1) .stats-card__row:nth-of-type(3) .link')
   },
-  Monitoring_Workflows_Box:{
-    Monitoring_Workflows_Box_Title: By.css('.projects-monitoring-stats .stats-card:nth-of-type(2) .stats-card__title'),
+  Monitoring_Workflows_Box: {
+    Monitoring_Workflows_Box_Title: By.css(
+      '.projects-monitoring-stats .stats-card:nth-of-type(2) .stats-card__title'
+    ),
     Filtering_Time_Period: By.css('.stats-card:nth-of-type(2) .project-card__info'),
-    Total_Counter_Title: By.css('.stats-card:nth-of-type(2) .stats-card__row:nth-of-type(2) .stats__subtitle'),
-    Total_Counter_Number: By.css('.stats-card:nth-of-type(2) .stats-card__row:nth-of-type(2) .stats__counter'),
-    Counter_Running_Status_Number: By.css('.stats-card:nth-of-type(2) .stats-card__row:nth-of-type(2) .projects-monitoring-legend__status .link:nth-of-type(1)'),
-    Counter_Running_Status_Icon: By.css('.stats-card:nth-of-type(2) .stats-card__row:nth-of-type(2) .projects-monitoring-legend__status .link:nth-of-type(1) i'),
-    Counter_Failed_Status_Number: By.css('.stats-card:nth-of-type(2) .stats-card__row:nth-of-type(2) .projects-monitoring-legend__status .link:nth-of-type(2)'),
-    Counter_Failed_Status_Icon: By.css('.stats-card:nth-of-type(2) .stats-card__row:nth-of-type(2) .projects-monitoring-legend__status .link:nth-of-type(2) i'),
-    Counter_Completed_Status_Number: By.css('.stats-card:nth-of-type(2) .stats-card__row:nth-of-type(2) .projects-monitoring-legend__status .link:nth-of-type(3)'),
-    Counter_Completed_Status_Icon: By.css('.stats-card:nth-of-type(2) .stats-card__row:nth-of-type(2) .projects-monitoring-legend__status .link:nth-of-type(3) i'),
+    Total_Counter_Title: By.css(
+      '.stats-card:nth-of-type(2) .stats-card__row:nth-of-type(2) .stats__subtitle'
+    ),
+    Total_Counter_Number: By.css(
+      '.stats-card:nth-of-type(2) .stats-card__row:nth-of-type(2) .stats__counter'
+    ),
+    Counter_Running_Status_Number: By.css(
+      '.stats-card:nth-of-type(2) .stats-card__row:nth-of-type(2) .projects-monitoring-legend__status .link:nth-of-type(1)'
+    ),
+    Counter_Running_Status_Icon: By.css(
+      '.stats-card:nth-of-type(2) .stats-card__row:nth-of-type(2) .projects-monitoring-legend__status .link:nth-of-type(1) i'
+    ),
+    Counter_Failed_Status_Number: By.css(
+      '.stats-card:nth-of-type(2) .stats-card__row:nth-of-type(2) .projects-monitoring-legend__status .link:nth-of-type(2)'
+    ),
+    Counter_Failed_Status_Icon: By.css(
+      '.stats-card:nth-of-type(2) .stats-card__row:nth-of-type(2) .projects-monitoring-legend__status .link:nth-of-type(2) i'
+    ),
+    Counter_Completed_Status_Number: By.css(
+      '.stats-card:nth-of-type(2) .stats-card__row:nth-of-type(2) .projects-monitoring-legend__status .link:nth-of-type(3)'
+    ),
+    Counter_Completed_Status_Icon: By.css(
+      '.stats-card:nth-of-type(2) .stats-card__row:nth-of-type(2) .projects-monitoring-legend__status .link:nth-of-type(3) i'
+    ),
     See_All_Link: By.css('.stats-card:nth-of-type(2) .stats-card__row:nth-of-type(3) .link')
   },
-  Monitoring_Scheduled_Box:{
-    Monitoring_Scheduled_Box_Title: By.css('.projects-monitoring-stats .stats-card:nth-of-type(3) .stats-card__title'),
+  Monitoring_Scheduled_Box: {
+    Monitoring_Scheduled_Box_Title: By.css(
+      '.projects-monitoring-stats .stats-card:nth-of-type(3) .stats-card__title'
+    ),
     Filtering_Time_Period: By.css('.stats-card:nth-of-type(3) .project-card__info'),
-    Total_Job_Counter_Title: By.css('.stats-card:nth-of-type(3) .stats-card__row:nth-of-type(2) .stats-card__col:nth-of-type(1) .stats__subtitle'),
-    Total_Workflows_Counter_Title: By.css('.stats-card:nth-of-type(3) .stats-card__row:nth-of-type(2) .stats-card__col:nth-of-type(2) .stats__subtitle'),
-    Total_Scheduled_Title: By.css('.stats-card:nth-of-type(3) .stats-card__row:nth-of-type(2) .stats-card__col:nth-of-type(3) .stats__subtitle'),
-    Total_Job_Counter_Number: By.css('.stats-card:nth-of-type(3) .stats-card__row:nth-of-type(2) .stats-card__col:nth-of-type(1) .stats__counter'),
-    Total_Workflows_Counter_Number: By.css('.stats-card:nth-of-type(3) .stats-card__row:nth-of-type(2) .stats-card__col:nth-of-type(2) .stats__counter'),
-    Total_Scheduled_Number: By.css('.stats-card:nth-of-type(3) .stats-card__row:nth-of-type(2) .stats-card__col:nth-of-type(3) .stats__counter'),
-    Jobs_See_All_Link: By.css('.stats-card:nth-of-type(3) .stats-card__row:nth-of-type(3) .stats-card__col:nth-of-type(1) .link'),
-    Workflows_See_All_Link: By.css('.stats-card:nth-of-type(3) .stats-card__row:nth-of-type(3) .stats-card__col:nth-of-type(2) .link'),
-    Total_See_All_Link: By.css('.stats-card:nth-of-type(3) .stats-card__row:nth-of-type(3) .stats-card__col:nth-of-type(3) .link')
+    Total_Job_Counter_Title: By.css(
+      '.stats-card:nth-of-type(3) .stats-card__row:nth-of-type(2) .stats-card__col:nth-of-type(1) .stats__subtitle'
+    ),
+    Total_Workflows_Counter_Title: By.css(
+      '.stats-card:nth-of-type(3) .stats-card__row:nth-of-type(2) .stats-card__col:nth-of-type(2) .stats__subtitle'
+    ),
+    Total_Scheduled_Title: By.css(
+      '.stats-card:nth-of-type(3) .stats-card__row:nth-of-type(2) .stats-card__col:nth-of-type(3) .stats__subtitle'
+    ),
+    Total_Job_Counter_Number: By.css(
+      '.stats-card:nth-of-type(3) .stats-card__row:nth-of-type(2) .stats-card__col:nth-of-type(1) .stats__counter'
+    ),
+    Total_Workflows_Counter_Number: By.css(
+      '.stats-card:nth-of-type(3) .stats-card__row:nth-of-type(2) .stats-card__col:nth-of-type(2) .stats__counter'
+    ),
+    Total_Scheduled_Number: By.css(
+      '.stats-card:nth-of-type(3) .stats-card__row:nth-of-type(2) .stats-card__col:nth-of-type(3) .stats__counter'
+    ),
+    Jobs_See_All_Link: By.css(
+      '.stats-card:nth-of-type(3) .stats-card__row:nth-of-type(3) .stats-card__col:nth-of-type(1) .link'
+    ),
+    Workflows_See_All_Link: By.css(
+      '.stats-card:nth-of-type(3) .stats-card__row:nth-of-type(3) .stats-card__col:nth-of-type(2) .link'
+    ),
+    Total_See_All_Link: By.css(
+      '.stats-card:nth-of-type(3) .stats-card__row:nth-of-type(3) .stats-card__col:nth-of-type(3) .link'
+    )
   }
 }

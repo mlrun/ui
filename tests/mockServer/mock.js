@@ -92,6 +92,19 @@ const app = express()
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json())
 
+// intercepts all the requests and reject them if `failAllRequests` is true
+// should be used ONLY for test framework
+let failAllRequests = false
+app.use((req, res, next) => {
+  if (failAllRequests && req.url !== '/set-failure-condition') {
+    res.statusCode = 502
+
+    res.send({})
+  } else {
+    next()
+  }
+})
+
 // MLRun object Templates
 const projectBackgroundTasks = {}
 const backgroundTasks = {}
@@ -2501,6 +2514,13 @@ function getIguazioJob(req, res) {
     }
   })
 }
+
+// Helper request for AQA framework to fail all the requests
+app.post('/set-failure-condition', (req, res) => {
+  failAllRequests = req.body.shouldFail
+
+  res.send(`Failure condition set to ${failAllRequests}`)
+})
 
 // REQUESTS
 app.get(`${mlrunAPIIngress}/frontend-spec`, getFrontendSpec)
