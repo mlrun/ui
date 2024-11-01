@@ -1572,6 +1572,10 @@ function postFunc(req, res) {
   baseFunc.metadata.hash = hashPwd
   baseFunc.status = {}
 
+  if (!baseFunc.metadata.tag) {
+    baseFunc.metadata.tag = 'latest'
+  }
+
   funcs.funcs.push(baseFunc)
 
   res.send({ hash_key: hashPwd })
@@ -2608,7 +2612,6 @@ app.post(`${mlrunAPIIngress}/build/function`, deployMLFunction)
 
 app.get(`${mlrunAPIIngress}/projects/:project/files`, getFile)
 app.get(`${mlrunAPIIngress}/projects/:project/filestat`, getFileStats)
-
 
 app.get(`${mlrunAPIIngress}/log/:project/:uid`, getLog)
 
