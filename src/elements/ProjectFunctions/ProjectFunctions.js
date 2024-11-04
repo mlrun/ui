@@ -30,7 +30,7 @@ import nuclioActions from '../../actions/nuclio'
 import { groupByUniqName } from '../../utils/groupByUniqName'
 import { useNuclioMode } from '../../hooks/nuclioMode.hook'
 import { generateNuclioLink } from '../../utils'
-import { REQUEST_CANCELED } from '../../constants'
+import { ERROR_STATE, REQUEST_CANCELED } from '../../constants'
 
 const ProjectFunctions = ({ fetchApiGateways, fetchNuclioFunctions, nuclioStore }) => {
   const params = useParams()
@@ -71,7 +71,7 @@ const ProjectFunctions = ({ fetchApiGateways, fetchNuclioFunctions, nuclioStore 
       0
     )
     const functionsFailed = groupeFunctionsRunning.reduce(
-      (prev, curr) => (['error', 'unhealthy'].includes(curr.status.state) ? (prev += 1) : prev),
+      (prev, curr) => ([ERROR_STATE, 'unhealthy'].includes(curr.status.state) ? (prev += 1) : prev),
       0
     )
 
@@ -129,7 +129,7 @@ const ProjectFunctions = ({ fetchApiGateways, fetchNuclioFunctions, nuclioStore 
                 ? 'Running'
                 : func?.status?.state === 'ready' && func?.spec?.disable
                   ? 'Standby'
-                  : ['error', 'unhealthy', 'imported', 'scaledToZero'].includes(func?.status?.state)
+                  : [ERROR_STATE, 'unhealthy', 'imported', 'scaledToZero'].includes(func?.status?.state)
                     ? upperFirst(lowerCase(func.status.state))
                     : 'Building',
             className: funcClassName
