@@ -49,7 +49,7 @@ const AddToFeatureVectorFilters = ({ content }) => {
         />
       </div>
       <div className="form-row">
-        <FormInput label="Entities" name={ENTITIES_FILTER} placeholder="Search by entity" />
+        <FormInput label="Entity" name={ENTITIES_FILTER} placeholder="Search by entity" />
         <FormOnChange name={ENTITIES_FILTER} handler={value => handleInputChange(value, ENTITIES_FILTER)} />
       </div>
       <div className="form-row">

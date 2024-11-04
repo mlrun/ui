@@ -98,18 +98,19 @@ export const useInitialTableFetch = ({
       if (setInitialFilters) {
         setInitialFilters()
       } else {
-        if (params.name) {
-          dispatch(
-            setFilters({
-              [NAME_FILTER]: params.name
-            })
-          )
-
+        if (params.name) {    
           if (filterName) {
             dispatch(
               setFiltersValues({
                 name: filterName,
                 value: { [NAME_FILTER]: params.name }
+              })
+            )
+          } else {
+            // todo remove when all filters will be changed to new components
+            dispatch(
+              setFilters({
+                [NAME_FILTER]: params.name
               })
             )
           }
