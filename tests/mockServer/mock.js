@@ -375,6 +375,17 @@ function getFeatureSet(req, res) {
     collectedFeatureSets = collectedFeatureSets.filter(featureSet => filterByLabels(featureSet.metadata.labels, req.query['label']))
   }
 
+  if (req.query['format'] === 'minimal') {
+    collectedFeatureSets = collectedFeatureSets.map(featureSet => {
+      const metadataFields = ['description', 'name', 'project', 'tag', 'uid', 'labels'].map(
+        fieldName => `metadata.${fieldName}`
+      )
+      const specFields = ['entities', 'targets', 'engine'].map(fieldName => `spec.${fieldName}`)
+
+      return pick(featureSet, ['kind', ...metadataFields, 'status.state', ...specFields])
+    })
+  }
+
   res.send({ feature_sets: collectedFeatureSets })
 }
 
@@ -503,7 +514,7 @@ function deleteProjectV2(req, res) {
     }
   }
 }
-    
+
 function patchProject(req, res) {
   const project = projects.projects.find(project => project.metadata.name === req.params['project'])
 
