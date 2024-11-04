@@ -32,6 +32,7 @@ import { VIRTUALIZATION_CONFIG } from '../../../types'
 import { featureSetsFilters } from './featureSets.util'
 import { getNoDataMessage } from '../../../utils/getNoDataMessage'
 import { isRowRendered } from '../../../hooks/useVirtualization.hook'
+import Loader from '../../../common/Loader/Loader'
 
 const FeatureSetsView = React.forwardRef(
   (
@@ -52,7 +53,7 @@ const FeatureSetsView = React.forwardRef(
       requestErrorMessage,
       selectedFeatureSet,
       selectedRowData,
-      setSelectedFeatureSet,
+      setSelectedFeatureSetMin,
       tableContent,
       virtualizationConfig
     },
@@ -85,12 +86,13 @@ const FeatureSetsView = React.forwardRef(
           />
         ) : (
           <>
+            {(selectedRowData.loading || featureStore.featureSets.featureSetLoading) && <Loader />}
             <Table
               actionsMenu={actionsMenu}
               applyDetailsChanges={applyDetailsChanges}
               applyDetailsChangesCallback={applyDetailsChangesCallback}
               detailsFormInitialValues={detailsFormInitialValues}
-              handleCancel={() => setSelectedFeatureSet({})}
+              handleCancel={() => setSelectedFeatureSetMin({})}
               pageData={pageData}
               retryRequest={handleRefresh}
               selectedItem={selectedFeatureSet}
@@ -146,7 +148,7 @@ FeatureSetsView.propTypes = {
   requestErrorMessage: PropTypes.string.isRequired,
   selectedFeatureSet: PropTypes.object.isRequired,
   selectedRowData: PropTypes.object.isRequired,
-  setSelectedFeatureSet: PropTypes.func.isRequired,
+  setSelectedFeatureSetMin: PropTypes.func.isRequired,
   tableContent: PropTypes.arrayOf(PropTypes.object).isRequired,
   virtualizationConfig: VIRTUALIZATION_CONFIG.isRequired
 }

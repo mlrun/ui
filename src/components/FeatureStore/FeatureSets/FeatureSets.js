@@ -37,7 +37,12 @@ import {
 } from '../../../constants'
 import { checkTabIsValid, handleApplyDetailsChanges } from '../featureStore.util'
 import { createFeatureSetsRowData } from '../../../utils/createFeatureStoreContent'
-import { featureSetsActionCreator, generatePageData } from './featureSets.util'
+import {
+  chooseOrFetchFeatureSet,
+  featureSetsActionCreator,
+  generatePageData,
+  setFullSelectedFeatureSet
+} from './featureSets.util'
 import { getFeatureSetIdentifier } from '../../../utils/getUniqueIdentifier'
 import { getFilterTagOptions, setFilters } from '../../../reducers/filtersReducer'
 import { isDetailsTabExists } from '../../../utils/link-helper.util'
@@ -54,7 +59,7 @@ import { ReactComponent as Yaml } from 'igz-controls/images/yaml.svg'
 import cssVariables from './featureSets.scss'
 
 const FeatureSets = ({
-  fetchFeatureSet,
+  fetchExpandedFeatureSet,
   fetchFeatureSets,
   fetchFeatureSetsTags,
   removeFeatureSet,
@@ -64,9 +69,9 @@ const FeatureSets = ({
 }) => {
   const [featureSets, setFeatureSets] = useState([])
   const [selectedFeatureSet, setSelectedFeatureSet] = useState({})
+  const [selectedFeatureSetMin, setSelectedFeatureSetMin] = useState({})
   const [selectedRowData, setSelectedRowData] = useState({})
   const [requestErrorMessage, setRequestErrorMessage] = useState('')
-
   const openPanelByDefault = useOpenPanel()
   const params = useParams()
   const featureStore = useSelector(store => store.featureStore)
@@ -98,11 +103,14 @@ const FeatureSets = ({
         {
           label: 'View YAML',
           icon: <Yaml />,
-          onClick: toggleConvertedYaml
+          onClick: featureSetMin =>
+            chooseOrFetchFeatureSet(dispatch, selectedFeatureSet, featureSetMin).then(
+              toggleConvertedYaml
+            )
         }
       ]
     ],
-    [toggleConvertedYaml]
+    [dispatch, selectedFeatureSet, toggleConvertedYaml]
   )
 
   const fetchData = useCallback(
@@ -113,6 +121,9 @@ const FeatureSets = ({
         ui: {
           controller: abortControllerRef.current,
           setRequestErrorMessage
+        },
+        params: {
+          format: 'minimal'
         }
       }
 
@@ -143,13 +154,17 @@ const FeatureSets = ({
     )
   }, [dispatch, fetchFeatureSetsTags, params.projectName])
 
-  const handleRefresh = filters => {
-    fetchTags()
-    setFeatureSets([])
-    setSelectedFeatureSet({})
-    setSelectedRowData({})
-    return fetchData(filters)
-  }
+  const handleRefresh = useCallback(
+    filters => {
+      fetchTags()
+      setFeatureSets([])
+      setSelectedFeatureSet({})
+      setSelectedRowData({})
+
+      return fetchData(filters)
+    },
+    [fetchData, fetchTags]
+  )
 
   const handleRemoveFeatureSet = useCallback(
     featureSet => {
@@ -179,7 +194,7 @@ const FeatureSets = ({
         }
       }))
 
-      fetchFeatureSet(item.project, item.name, filtersStore.tag)
+      fetchExpandedFeatureSet(item.project, item.name, filtersStore.tag)
         .then(result => {
           const content = [...parseFeatureSets(result)].map(contentItem =>
             createFeatureSetsRowData(contentItem, params.projectName, FEATURE_SETS_TAB, true)
@@ -204,7 +219,7 @@ const FeatureSets = ({
           }))
         })
     },
-    [fetchFeatureSet, filtersStore.tag, params.projectName]
+    [fetchExpandedFeatureSet, filtersStore.tag, params.projectName]
   )
 
   const { latestItems, handleExpandRow } = useGroupContent(
@@ -227,11 +242,14 @@ const FeatureSets = ({
         )
   }, [featureSets, filtersStore.groupBy, latestItems, params.projectName])
 
-  const handleSelectFeatureSet = item => {
-    if (params.name === item.name && params.tag === item.tag) {
-      setSelectedFeatureSet(item)
-    }
-  }
+  const handleSelectFeatureSet = useCallback(
+    item => {
+      if (params.name === item.name && params.tag === item.tag) {
+        setSelectedFeatureSetMin(item)
+      }
+    },
+    [params.name, params.tag]
+  )
 
   const applyDetailsChanges = useCallback(
     changes => {
@@ -292,6 +310,17 @@ const FeatureSets = ({
   }
 
   useEffect(() => {
+    setFullSelectedFeatureSet(
+      FEATURE_SETS_TAB,
+      dispatch,
+      navigate,
+      selectedFeatureSetMin,
+      setSelectedFeatureSet,
+      params.projectName
+    )
+  }, [dispatch, navigate, params.projectName, selectedFeatureSetMin])
+
+  useEffect(() => {
     setSelectedRowData({})
   }, [filtersStore.tag])
 
@@ -322,17 +351,16 @@ const FeatureSets = ({
           (contentItem.tag === params.tag || contentItem.uid === params.tag)
         )
       })
-      // console.log(params.projectName)
 
       if (!selectedItem) {
         navigate(`/projects/${params.projectName}/feature-store/${FEATURE_SETS_TAB}`, {
           replace: true
         })
       } else {
-        setSelectedFeatureSet(selectedItem)
+        setSelectedFeatureSetMin(selectedItem)
       }
     } else {
-      setSelectedFeatureSet({})
+      setSelectedFeatureSetMin({})
     }
   }, [featureStore.featureSets.allData, navigate, params.name, params.projectName, params.tag])
 
@@ -359,7 +387,7 @@ const FeatureSets = ({
       setFeatureSets([])
       removeFeatureSets()
       removeFeatureSet()
-      setSelectedFeatureSet({})
+      setSelectedFeatureSetMin({})
       setSelectedRowData({})
       abortControllerRef.current.abort(REQUEST_CANCELED)
       tagAbortControllerCurrent.abort(REQUEST_CANCELED)
@@ -398,7 +426,7 @@ const FeatureSets = ({
       requestErrorMessage={requestErrorMessage}
       selectedFeatureSet={selectedFeatureSet}
       selectedRowData={selectedRowData}
-      setSelectedFeatureSet={handleSelectFeatureSet}
+      setSelectedFeatureSetMin={handleSelectFeatureSet}
       tableContent={tableContent}
       virtualizationConfig={virtualizationConfig}
     />

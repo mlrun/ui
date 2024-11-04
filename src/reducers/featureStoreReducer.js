@@ -66,7 +66,10 @@ import {
   START_FEATURE_SET_INGEST_SUCCESS,
   FETCH_FEATURE_SET_SUCCESS,
   SET_NEW_FEATURE_SET_CREDENTIALS_ACCESS_KEY,
-  PANEL_DEFAULT_ACCESS_KEY
+  PANEL_DEFAULT_ACCESS_KEY,
+  FETCH_EXPANDED_FEATURE_SET_SUCCESS,
+  FETCH_FEATURE_SET_BEGIN,
+  FETCH_FEATURE_SET_FAILURE
 } from '../constants'
 
 const initialState = {
@@ -75,7 +78,8 @@ const initialState = {
     allData: [],
     selectedRowData: {
       content: {}
-    }
+    },
+    featureSetLoading: false
   },
   featureVectors: {
     allData: [],
@@ -174,18 +178,7 @@ const featureStoreReducer = (state = initialState, { type, payload }) => {
           }
         }
       }
-    case FETCH_FEATURE_SETS_BEGIN:
-      return {
-        ...state,
-        loading: true
-      }
-    case FETCH_FEATURE_SETS_FAILURE:
-      return {
-        ...state,
-        error: payload,
-        loading: false
-      }
-    case FETCH_FEATURE_SET_SUCCESS:
+    case FETCH_EXPANDED_FEATURE_SET_SUCCESS:
       return {
         ...state,
         featureSets: {
@@ -198,6 +191,41 @@ const featureStoreReducer = (state = initialState, { type, payload }) => {
             }
           }
         }
+      }
+    case FETCH_FEATURE_SET_BEGIN:
+      return {
+        ...state,
+        featureSets: {
+          ...state.featureSets,
+          featureSetLoading: true
+        }
+      }
+    case FETCH_FEATURE_SET_FAILURE:
+      return {
+        ...state,
+        featureSets: {
+          ...state.featureSets,
+          featureSetLoading: false
+        }
+      }
+    case FETCH_FEATURE_SET_SUCCESS:
+      return {
+        ...state,
+        featureSets: {
+          ...state.featureSets,
+          featureSetLoading: false
+        }
+      }
+    case FETCH_FEATURE_SETS_BEGIN:
+      return {
+        ...state,
+        loading: true
+      }
+    case FETCH_FEATURE_SETS_FAILURE:
+      return {
+        ...state,
+        error: payload,
+        loading: false
       }
     case FETCH_FEATURE_SETS_SUCCESS:
       return {

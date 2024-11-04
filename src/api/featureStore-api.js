@@ -27,7 +27,7 @@ import {
 } from '../constants'
 
 const fetchFeatureStoreContent = (path, filters, config = {}, withLatestTag, apiV2) => {
-  const params = {}
+  const params = { ...config.params }
   const httpClient = apiV2 ? mainHttpClientV2 : mainHttpClient
 
   if (filters?.labels) {
@@ -66,7 +66,8 @@ const featureStoreApi = {
     mainHttpClient.post(`/projects/${data.metadata.project}/feature-vectors`, data),
   deleteFeatureVector: (project, featureVector) =>
     mainHttpClient.delete(`/projects/${project}/feature-vectors/${featureVector}`),
-  fetchFeatureSetsTags: (project, config) => mainHttpClient.get(`/projects/${project}/feature-sets/*/tags`, config),
+  fetchFeatureSetsTags: (project, config) =>
+    mainHttpClient.get(`/projects/${project}/feature-sets/*/tags`, config),
   fetchFeatureVectorsTags: (project, config) =>
     mainHttpClient.get(`/projects/${project}/feature-vectors/*/tags`, config),
   getEntity: (project, entity) =>
@@ -75,14 +76,22 @@ const featureStoreApi = {
     }),
   getEntities: (project, filters, config) =>
     fetchFeatureStoreContent(`/projects/${project}/entities`, filters, config ?? {}, true, true),
-  getFeatureSet: (project, featureSet, tag) => {
+  getExpandedFeatureSet: (project, featureSet, tag) => {
     const params = {
-      name: featureSet
+      name: featureSet,
+      format: 'minimal'
     }
 
     if (tag !== TAG_FILTER_ALL_ITEMS) {
       params.tag = tag
     }
+
+    return mainHttpClient.get(`/projects/${project}/feature-sets`, {
+      params
+    })
+  },
+  getFeatureSet: (project, featureSet, tag) => {
+    const params = { name: featureSet, tag }
 
     return mainHttpClient.get(`/projects/${project}/feature-sets`, {
       params
@@ -125,7 +134,13 @@ const featureStoreApi = {
       params: { name: feature }
     }),
   getFeatures: (project, filters, config) =>
-    fetchFeatureStoreContent(`/projects/${project}/${FEATURES_TAB}`, filters, config ?? {}, true, true),
+    fetchFeatureStoreContent(
+      `/projects/${project}/${FEATURES_TAB}`,
+      filters,
+      config ?? {},
+      true,
+      true
+    ),
   startIngest: (project, featureSet, reference, data) =>
     mainHttpClient.post(
       `/projects/${project}/feature-sets/${featureSet}/references/${reference}/ingest`,
