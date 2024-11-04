@@ -398,6 +398,17 @@ function getFeatureSet(req, res) {
     )
   }
 
+  if (req.query['format'] === 'minimal') {
+    collectedFeatureSets = collectedFeatureSets.map(featureSet => {
+      const metadataFields = ['description', 'name', 'project', 'tag', 'uid', 'labels'].map(
+        fieldName => `metadata.${fieldName}`
+      )
+      const specFields = ['entities', 'targets', 'engine'].map(fieldName => `spec.${fieldName}`)
+
+      return pick(featureSet, ['kind', ...metadataFields, 'status.state', ...specFields])
+    })
+  }
+
   res.send({ feature_sets: collectedFeatureSets })
 }
 
@@ -2064,7 +2075,6 @@ function postArtifact(req, res) {
     artifactTemplate.spec.model_file = req.body.spec.model_file
   }
 
-
   const collectedArtifactsWithSameName = artifacts.artifacts.filter(artifact => {
     return (
       artifact.metadata?.project === req.body.metadata.project &&
@@ -2079,7 +2089,7 @@ function postArtifact(req, res) {
       artifact.metadata.tag = null
     } else if (artifact.metadata?.tag === 'latest') {
       //  when we post an artifact with custom tag we store 2 artifacts (custom and latest)
-      //  so when we post another artifact with same name we have to delete artifact with 'latest' tag 
+      //  so when we post another artifact with same name we have to delete artifact with 'latest' tag
       //  or we remove latest tag in case when we have only one object
       if (
         collectedArtifactsWithSameName.find(

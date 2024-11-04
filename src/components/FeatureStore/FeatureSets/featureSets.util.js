@@ -25,6 +25,8 @@ import {
   TAG_FILTER
 } from '../../../constants'
 import featureStoreActions from '../../../actions/featureStore'
+import { debounce, isEmpty } from 'lodash'
+import { showErrorNotification } from '../../../utils/notifications.util'
 
 export const generateFeatureSetsDetailsMenu = selectedItem => [
   {
@@ -87,8 +89,42 @@ export const generatePageData = selectedFeatureSet => {
   }
 }
 
+export const setFullSelectedFeatureSet = debounce(
+  (tab, dispatch, navigate, selectedFeatureSetMin, setSelectedFeatureSet, projectName) => {
+    if (isEmpty(selectedFeatureSetMin)) {
+      setSelectedFeatureSet({})
+    } else {
+      const { name, tag } = selectedFeatureSetMin
+
+      dispatch(featureStoreActions.fetchFeatureSet(projectName, name, tag))
+        .then(featureSet => {
+          setSelectedFeatureSet(featureSet)
+        })
+        .catch(error => {
+          navigate(`/projects/${projectName}/${tab}`, { replace: true })
+          showErrorNotification(dispatch, error, '', 'Failed to retrieve feature set data.')
+        })
+    }
+  },
+  50
+)
+
+export const chooseOrFetchFeatureSet = (dispatch, selectedFeatureSet, featureSetMin) => {
+  if (!isEmpty(selectedFeatureSet)) return Promise.resolve(selectedFeatureSet)
+
+  return dispatch(
+    featureStoreActions.fetchFeatureSet(
+      featureSetMin.project,
+      featureSetMin.name,
+      featureSetMin.tag
+    )
+  ).catch(error => {
+    showErrorNotification(dispatch, error, 'Failed to retrieve feature set data.')
+  })
+}
+
 export const featureSetsActionCreator = {
-  fetchFeatureSet: featureStoreActions.fetchFeatureSet,
+  fetchExpandedFeatureSet: featureStoreActions.fetchExpandedFeatureSet,
   fetchFeatureSets: featureStoreActions.fetchFeatureSets,
   fetchFeatureSetsTags: featureStoreActions.fetchFeatureSetsTags,
   removeFeatureSet: featureStoreActions.removeFeatureSet,
