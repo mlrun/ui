@@ -43,7 +43,7 @@ const FunctionsTableRow = ({
   selectedRowData,
   withQuickActions = false
 }) => {
-  const parent = useRef
+  const parent = useRef()
   const params = useParams()
   const rowIsExpanded = useMemo(
     () => isRowExpanded(parent, selectedRowData, rowItem),
