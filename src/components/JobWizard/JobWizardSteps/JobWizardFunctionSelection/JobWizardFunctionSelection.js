@@ -92,7 +92,7 @@ const JobWizardFunctionSelection = ({
   const [functionsRequestErrorMessage, setFunctionsRequestErrorMessage] = useState('')
   const [hubFunctionsRequestErrorMessage, setHubFunctionsRequestErrorMessage] = useState('')
   const selectedActiveTab = useRef(null)
-  const functionSelectionRef = useRef(null)
+  const functionsContainerRef = useRef(null)
   const hubFunctionLoadedRef = useRef(false)
 
   const filtersStoreHubCategories = useSelector(
@@ -362,14 +362,14 @@ const JobWizardFunctionSelection = ({
     const isTabActive = selectedActiveTab.current && selectedActiveTab.current === activeTab
 
     if (stepIsActive && isTabActive) {
-      scrollToElement(functionSelectionRef, '.selected')
+      scrollToElement(functionsContainerRef, '.selected')
     } else if (!stepIsActive && !isTabActive) {
       setActiveTab(selectedActiveTab.current)
     }
   }, [stepIsActive, activeTab, setActiveTab, selectedActiveTab])
 
   return (
-    <div ref={functionSelectionRef} className="job-wizard__function-selection">
+    <div className="job-wizard__function-selection">
       <div className="form-row">
         <h5 className="form-step-title">Function selection</h5>
       </div>
@@ -404,7 +404,7 @@ const JobWizardFunctionSelection = ({
             isEmpty(functions)) ? (
             <NoData message={functionsRequestErrorMessage} />
           ) : (
-            <div className="functions-list">
+            <div className="functions-list" ref={functionsContainerRef}>
               {(filteredFunctions.length > 0 ? filteredFunctions : functions)
                 .sort((prevFunc, nextFunc) => prevFunc.name.localeCompare(nextFunc.name))
                 .map(functionData => {
@@ -455,7 +455,7 @@ const JobWizardFunctionSelection = ({
             isEmpty(templates)) ? (
             <NoData message={hubFunctionsRequestErrorMessage} />
           ) : (
-            <div className="functions-list">
+            <div className="functions-list" ref={functionsContainerRef}>
               {filteredTemplates
                 .sort((prevTemplate, nextTemplate) =>
                   prevTemplate.metadata.name.localeCompare(nextTemplate.metadata.name)
