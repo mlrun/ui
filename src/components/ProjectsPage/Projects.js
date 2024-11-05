@@ -114,7 +114,6 @@ const Projects = () => {
 
     dispatch(projectsAction.removeProjects())
     fetchMinimalProjects()
-
     dispatch(
       projectsAction.fetchProjectsSummary(abortControllerRef.current.signal, refreshProjects)
     ).then(result => {
@@ -136,9 +135,7 @@ const Projects = () => {
               backgroundTask =>
                 backgroundTask.metadata.kind.startsWith(
                   wrapperIsUsed ? projectDeletionWrapperKind : projectDeletionKind
-                ) &&
-                backgroundTask?.status?.state === BG_TASK_RUNNING &&
-                deletingProjectsRef.current[backgroundTask.metadata.name]
+                ) && backgroundTask?.status?.state === BG_TASK_RUNNING && deletingProjectsRef.current[backgroundTask.metadata.name]
             )
             .reduce((acc, backgroundTask) => {
               acc[backgroundTask.metadata.name] = last(backgroundTask.metadata.kind.split('.'))
@@ -306,7 +303,7 @@ const Projects = () => {
             FileSaver.saveAs(blob, `${projectMinimal.metadata.name}.yaml`)
           })
           .catch(error => {
-            showErrorNotification(dispatch, error, '', "Failed to fetch project's YAML", () =>
+            showErrorNotification(dispatch, error, '', 'Failed to fetch project\'s YAML', () =>
               exportYaml(projectMinimal)
             )
           })
@@ -325,7 +322,7 @@ const Projects = () => {
           .catch(error => {
             setConvertedYaml('')
 
-            showErrorNotification(dispatch, error, '', "Failed to fetch project's YAML", () =>
+            showErrorNotification(dispatch, error, '', 'Failed to fetch project\'s YAML', () =>
               viewYaml(projectMinimal)
             )
           })
