@@ -112,6 +112,7 @@ const Projects = () => {
       dispatch(nuclioActions.fetchNuclioFunctions())
     }
 
+    dispatch(projectsAction.removeProjects())
     fetchMinimalProjects()
 
     dispatch(
