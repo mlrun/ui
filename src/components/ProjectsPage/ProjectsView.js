@@ -107,7 +107,7 @@ const ProjectsView = ({
         />
       )}
       <div className="projects__wrapper">
-        {projectStore.projects.length > 0 && <ProjectsMonitoring />}
+        <ProjectsMonitoring />
         <PageHeader title="Projects" />
         <div className="projects-content-header">
           <div className="projects-content-header__row">

@@ -47,7 +47,7 @@ export const generateMonitoringStats = (data, navigate, dispatch, tab) => {
   return tab === JOBS_MONITORING_JOBS_TAB
     ? {
         all: {
-          counter: data.all,
+          counter: data.all || 0,
           link: () => navigateToJobsMonitoringPage({ [STATUS_FILTER]: [FILTER_ALL_ITEMS] })
         },
         counters: [
@@ -85,7 +85,7 @@ export const generateMonitoringStats = (data, navigate, dispatch, tab) => {
     : tab === JOBS_MONITORING_WORKFLOWS_TAB
       ? {
           all: {
-            counter: data.all,
+            counter: data.all || 0,
             link: () => navigateToJobsMonitoringPage({ [STATUS_FILTER]: [FILTER_ALL_ITEMS] })
           },
           counters: [
@@ -106,7 +106,8 @@ export const generateMonitoringStats = (data, navigate, dispatch, tab) => {
             },
             {
               counter: data.failed,
-              link: () => navigateToJobsMonitoringPage({ [STATUS_FILTER]: [ERROR_STATE, FAILED_STATE] }),
+              link: () =>
+                navigateToJobsMonitoringPage({ [STATUS_FILTER]: [ERROR_STATE, FAILED_STATE] }),
               statusClass: 'failed',
               tooltip: 'Error, Failed'
             },
@@ -120,7 +121,7 @@ export const generateMonitoringStats = (data, navigate, dispatch, tab) => {
         }
       : {
           all: {
-            counter: data.all,
+            counter: data.all || 0,
             link: () => navigateToJobsMonitoringPage({ [TYPE_FILTER]: FILTER_ALL_ITEMS }, {})
           },
           jobs: {
