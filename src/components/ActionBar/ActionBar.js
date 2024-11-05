@@ -204,7 +204,7 @@ const ActionBar = ({
         )
         handleRefresh({
           ...formState.values,
-          ...filtersStore.filterMenuModal[filterMenuName].values
+          ...filtersStore.filterMenuModal[filterMenuName]?.values ?? {}
         })
       }
     },
