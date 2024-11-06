@@ -26,6 +26,9 @@ import { roundFloats } from '../../utils/roundFloats'
 import { ReactComponent as Primary } from 'igz-controls/images/ic-key.svg'
 import { ReactComponent as LabelColumn } from 'igz-controls/images/ic_target-with-dart.svg'
 
+export const DETAILS_STATISTICS_TABLE_ID = 'DETAILS_STATISTICS_TABLE_ID'
+export const DETAILS_STATISTICS_TABLE_BODY_ID = 'DETAILS_STATISTICS_TABLE_BODY_ID'
+
 export const generateStatistics = selectedItem => {
   return Object.entries((selectedItem?.stats || selectedItem.feature_stats) ?? {}).map(
     ([name, metrics]) => {
