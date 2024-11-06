@@ -2,6 +2,8 @@
 @import '~igz-controls/scss/borders';
 @import '~igz-controls/scss/mixins';
 
+$itemInfoWithoutPadding: item-info-without-padding;
+
 .item-info {
   display: flex;
   flex: 1;
@@ -9,8 +11,8 @@
   padding-right: 24px;
   overflow: auto;
 
-  &:has(.lazy-table) {
-    padding-right: 0;
+  &:has(.#{$itemInfoWithoutPadding}) {
+    padding: 0;
   }
 
   & > * {
@@ -158,4 +160,8 @@
   &__full-width {
     width: 100%;
   }
+}
+
+:export {
+  itemInfoWithoutPadding: $itemInfoWithoutPadding;
 }
