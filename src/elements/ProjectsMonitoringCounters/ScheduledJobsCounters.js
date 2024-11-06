@@ -100,7 +100,6 @@ const ScheduledJobsCounters = () => {
           </span>
           <h6 className="stats__subtitle">Workflows</h6>
         </StatsCard.Col>
-        <StatsCard.Col></StatsCard.Col>
       </StatsCard.Row>
       <StatsCard.Row>
         <StatsCard.Col></StatsCard.Col>
