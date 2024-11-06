@@ -2,16 +2,42 @@
 @import '~igz-controls/scss/borders';
 @import '~igz-controls/scss/mixins';
 
+$detailsStatisticsRowHeight: 45px;
+$detailsStatisticsHeaderRowHeight: 49px;
+
 .details-statistics {
   @include detailsMetadataStatisticsTable;
 
+  height: 100%;
+
   &__table {
+    height: 100%;
+    overflow: auto;
+
     &-wrapper {
+      width: 100%;
       padding: 0 0 20px 0;
     }
 
     &-header {
-      padding: 15px 0;
+      height: $detailsStatisticsHeaderRowHeight;
+      padding: 0;
+      border-bottom: none;
+
+      .header-item {
+        padding: 15px 0;
+        background-color: $white;
+        border-bottom: $secondaryBorder;
+      }
+    }
+
+    &-row {
+      height: $detailsStatisticsRowHeight;
+      border-bottom: none;
+    }
+
+    &-item {
+      border-bottom: $secondaryBorder;
     }
 
     .statistics-cell {
@@ -27,6 +53,7 @@
 
         &_chart {
           flex: 1.5;
+          min-width: 160px;
         }
       }
 
@@ -39,4 +66,9 @@
       }
     }
   }
+}
+
+:export {
+  detailsStatisticsRowHeight: $detailsStatisticsRowHeight;
+  detailsStatisticsHeaderRowHeight: $detailsStatisticsHeaderRowHeight
 }
