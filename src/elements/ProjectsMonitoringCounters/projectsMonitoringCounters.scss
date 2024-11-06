@@ -33,6 +33,19 @@
       justify-content: center;
     }
 
+    &__link {
+      color: $darkPurple;
+      cursor: pointer;
+
+      &:hover {
+        text-decoration: underline;
+        color: $bombay;
+        text-underline-offset: 1px;
+        text-decoration-thickness: 2px
+      }
+    }
+
+
     .link {
       font-size: 1rem;
     }
