@@ -333,6 +333,10 @@ module.exports = {
     Secrets_Hint:
       'These secrets are automatically available to all jobs belonging to this project that are not executed locally. See Secrets'
   },
+  Common_Tooltips:{
+    FilterBy_Button: 'Filter',
+    Refresh_Button: 'Refresh'
+  },
   Input_Hint: {
     Artifact_Names_Unique: 'Artifact names in the same project must be unique',
     Dataset_Names_Unique: 'Dataset names in the same project must be unique',
