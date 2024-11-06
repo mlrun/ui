@@ -29,14 +29,20 @@ import { getHistogramChartConfig } from '../../utils/getHistogramChartConfig'
 import { isRowRendered, useVirtualization } from '../../hooks/useVirtualization.hook'
 
 import cssVariables from './detailsStatistics.scss'
+import cssVariablesItemInfo from '../DetailsInfo/detailsInfo.scss'
 import './detailsStatistics.scss'
-
-
 
 const DetailsStatistics = ({ selectedItem }) => {
   const statistics = useMemo(() => generateStatistics(selectedItem), [selectedItem])
   const rowsSizes = useMemo(() => new Array(statistics.length).fill(parseInt(cssVariables.detailsStatisticsRowHeight)), [statistics])
-  const heightData = useMemo(() => ({headerRowHeight: cssVariables.detailsStatisticsHeaderRowHeight}), [])
+  const heightData = useMemo(
+    () => ({
+      headerRowHeight: cssVariables.detailsStatisticsHeaderRowHeight,
+      rowHeight: cssVariables.detailsStatisticsRowHeight,
+      rowHeightExtended: cssVariables.detailsStatisticsRowHeight
+    }),
+    []
+  )
   const chartConfig = useMemo(getHistogramChartConfig, [])
   const headers = useMemo(
     () =>
@@ -48,15 +54,16 @@ const DetailsStatistics = ({ selectedItem }) => {
     [statistics]
   )
   const virtualizationConfig = useVirtualization({
+    heightData,
+    ignoreHorizontalScroll: true,
     rowsSizes,
-    tableId: DETAILS_STATISTICS_TABLE_ID,
     tableBodyId: DETAILS_STATISTICS_TABLE_BODY_ID,
-    heightData
+    tableId: DETAILS_STATISTICS_TABLE_ID
   })
 
   return (
-    <div className="details-statistics">
-      <div className="details-statistics__table lazy-table" id={DETAILS_STATISTICS_TABLE_ID}>
+    <div className={classnames('details-statistics', cssVariablesItemInfo.itemInfoWithoutPadding)}>
+      <div className="details-statistics__table" id={DETAILS_STATISTICS_TABLE_ID}>
         <div className="details-statistics__table-wrapper">
           <div className="details-statistics__table-header">
             {headers.map(({ label, type, hidden }) => {
@@ -77,7 +84,11 @@ const DetailsStatistics = ({ selectedItem }) => {
               )
             })}
           </div>
-          <div className="details-statistics__table-body" id={DETAILS_STATISTICS_TABLE_BODY_ID} style={{ paddingTop: virtualizationConfig.tableBodyPaddingTop || 0 }}>
+          <div
+            className="details-statistics__table-body"
+            id={DETAILS_STATISTICS_TABLE_BODY_ID}
+            style={{ paddingTop: virtualizationConfig.tableBodyPaddingTop || 0 }}
+          >
             {statistics.map(
               (statisticsItem, statisticsItemIndex) =>
                 isRowRendered(virtualizationConfig, statisticsItemIndex) && (
