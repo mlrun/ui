@@ -49,7 +49,8 @@ import {
   verifyElementNotActive,
   generatePath,
   determineFileAccess,
-  verifyClassDisabled
+  verifyClassDisabled,
+  checkComponentHintTextWithHover
 } from '../common/actions/common.action'
 import {
   checkTableColumnValues,
@@ -1028,6 +1029,18 @@ Then(
     await checkHintTextWithHover(
       this.driver,
       pageObjects[wizard][accordion][inputField],
+      pageObjects['commonPagesHeader']['Common_Tolltip'],
+      pageObjectsConsts[constStorage][constValue]
+    )
+  }
+)
+
+Then(
+  'verify {string} element on {string} wizard should display hover tooltip {string}.{string}',
+  async function(inputField, wizard, constStorage, constValue) {
+    await checkComponentHintTextWithHover(
+      this.driver,
+      pageObjects[wizard][inputField],
       pageObjects['commonPagesHeader']['Common_Tolltip'],
       pageObjectsConsts[constStorage][constValue]
     )
