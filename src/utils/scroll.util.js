@@ -31,10 +31,23 @@ export const scrollToElement = (
   shouldScrollToTop
     ? parentRef.current.scrollTo({ top: 0, left: 0, behavior: 'smooth' })
     : setTimeout(() => {
-        selectedElement.scrollIntoView({
-          behavior: 'smooth',
-          block: 'center',
-          inline: 'start'
-        })
+        scrollToCenter(parentRef?.current, selectedElement)
       }, timeoutDuration)
+}
+
+const scrollToCenter = (container, element) => {
+  const containerRect = container.getBoundingClientRect()
+  const elementRect = element.getBoundingClientRect()
+
+  const scrollTop =
+    container.scrollTop +
+    elementRect.top -
+    containerRect.top -
+    container.clientHeight / 2 +
+    elementRect.height / 2
+
+  container.scrollTo({
+    top: scrollTop,
+    behavior: 'smooth'
+  })
 }
