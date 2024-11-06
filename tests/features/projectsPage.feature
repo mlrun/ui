@@ -523,7 +523,6 @@ Feature: Projects Page
     @MLPr
     @mlrunUnhealthyTest
     @passive
-    @uniqueTag
     @smoke
     Scenario: MLPr019 - Check Mlrun unhealthy popup
         Given open url

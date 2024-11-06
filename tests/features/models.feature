@@ -186,6 +186,8 @@ Feature: Models Page
     Then value in "name" column with "text" in "Real_Time_Pipelines_Table" on "Real_Time_Pipelines" wizard should contains "churn-server"
     Then click on cell with row index 1 in "name" column in "Real_Time_Pipelines_Table" table on "Real_Time_Pipelines" wizard
     And wait load page
+    Then verify "Real_Time_Pipelines_Graph" element visibility on "Real_Time_Pipelines" wizard
+    When click on node with index 2 in "Real_Time_Pipelines_Graph" graph on "Real_Time_Pipelines" wizard
     Then verify "Header" element visibility on "Real_Time_Pipeline_Pane" wizard
 
   @MLM
