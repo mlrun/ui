@@ -69,13 +69,12 @@ const ScheduledJobsCounters = () => {
       </StatsCard.Header>
       <StatsCard.Row>
         <StatsCard.Col>
-          <h6 className="stats__subtitle">Jobs</h6>
           <span className="stats__counter">
             {projectStore.projectsSummary.loading ? (
               <Loader section small secondary />
             ) : (
               <span
-                className="link"
+                className="stats__link"
                 onClick={scheduledStats.all.link}
                 data-testid="scheduled_total_see_all"
               >
@@ -83,15 +82,15 @@ const ScheduledJobsCounters = () => {
               </span>
             )}
           </span>
+          <h6 className="stats__subtitle">Jobs</h6>
         </StatsCard.Col>
         <StatsCard.Col>
-          <h6 className="stats__subtitle">Workflows</h6>
           <span className="stats__counter">
             {projectStore.projectsSummary.loading ? (
               <Loader section small secondary />
             ) : (
               <span
-                className="link"
+                className="stats__link"
                 onClick={scheduledStats.workflows.link}
                 data-testid="scheduled_wf_see_all"
               >
@@ -99,23 +98,9 @@ const ScheduledJobsCounters = () => {
               </span>
             )}
           </span>
+          <h6 className="stats__subtitle">Workflows</h6>
         </StatsCard.Col>
-        <StatsCard.Col>
-          <h6 className="stats__subtitle">Total</h6>
-          <span className="stats__counter">
-            {projectStore.projectsSummary.loading ? (
-              <Loader section small secondary />
-            ) : (
-              <span
-                className="link"
-                onClick={scheduledStats.jobs.link}
-                data-testid="scheduled_jobs_see_all"
-              >
-                {scheduledStats.all.counter}{' '}
-              </span>
-            )}
-          </span>
-        </StatsCard.Col>
+        <StatsCard.Col></StatsCard.Col>
       </StatsCard.Row>
       <StatsCard.Row>
         <StatsCard.Col></StatsCard.Col>
