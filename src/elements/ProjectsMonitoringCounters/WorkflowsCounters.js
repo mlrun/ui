@@ -20,7 +20,6 @@ such restriction.
 import React, { useMemo } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
-import { upperFirst } from 'lodash'
 
 import Loader from '../../common/Loader/Loader'
 import StatsCard from '../../common/StatsCard/StatsCard'
@@ -69,12 +68,17 @@ const WorkflowsCounters = () => {
       </StatsCard.Header>
       <StatsCard.Row>
         <StatsCard.Col>
-          <h6 className="stats__subtitle">{upperFirst(JOBS_MONITORING_WORKFLOWS_TAB)}</h6>
           <span className="stats__counter">
             {projectStore.projectsSummary.loading ? (
               <Loader section small secondary />
             ) : (
-              workflowsStats.all.counter
+              <span
+                className="stats__link"
+                onClick={workflowsStats.all.link}
+                data-testid="workflows_see_all"
+              >
+                {workflowsStats.all.counter}
+              </span>
             )}
           </span>
           <ul className="projects-monitoring-legend__status">
@@ -96,11 +100,7 @@ const WorkflowsCounters = () => {
         </StatsCard.Col>
       </StatsCard.Row>
       <StatsCard.Row>
-        <StatsCard.Col>
-          <span className="link" onClick={workflowsStats.all.link} data-testid="workflows_see_all">
-            See all
-          </span>
-        </StatsCard.Col>
+        <StatsCard.Col></StatsCard.Col>
       </StatsCard.Row>
     </StatsCard>
   )

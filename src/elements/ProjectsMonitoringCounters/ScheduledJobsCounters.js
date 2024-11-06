@@ -74,7 +74,13 @@ const ScheduledJobsCounters = () => {
             {projectStore.projectsSummary.loading ? (
               <Loader section small secondary />
             ) : (
-              scheduledStats.jobs.counter
+              <span
+                className="link"
+                onClick={scheduledStats.all.link}
+                data-testid="scheduled_total_see_all"
+              >
+                {scheduledStats.jobs.counter}{' '}
+              </span>
             )}
           </span>
         </StatsCard.Col>
@@ -84,7 +90,13 @@ const ScheduledJobsCounters = () => {
             {projectStore.projectsSummary.loading ? (
               <Loader section small secondary />
             ) : (
-              scheduledStats.workflows.counter
+              <span
+                className="link"
+                onClick={scheduledStats.workflows.link}
+                data-testid="scheduled_wf_see_all"
+              >
+                {scheduledStats.workflows.counter}{' '}
+              </span>
             )}
           </span>
         </StatsCard.Col>
@@ -94,39 +106,21 @@ const ScheduledJobsCounters = () => {
             {projectStore.projectsSummary.loading ? (
               <Loader section small secondary />
             ) : (
-              scheduledStats.all.counter
+              <span
+                className="link"
+                onClick={scheduledStats.jobs.link}
+                data-testid="scheduled_jobs_see_all"
+              >
+                {scheduledStats.all.counter}{' '}
+              </span>
             )}
           </span>
         </StatsCard.Col>
       </StatsCard.Row>
       <StatsCard.Row>
-        <StatsCard.Col>
-          <span
-            className="link"
-            onClick={scheduledStats.jobs.link}
-            data-testid="scheduled_jobs_see_all"
-          >
-            See all
-          </span>
-        </StatsCard.Col>
-        <StatsCard.Col>
-          <span
-            className="link"
-            onClick={scheduledStats.workflows.link}
-            data-testid="scheduled_wf_see_all"
-          >
-            See all
-          </span>
-        </StatsCard.Col>
-        <StatsCard.Col>
-          <span
-            className="link"
-            onClick={scheduledStats.all.link}
-            data-testid="scheduled_total_see_all"
-          >
-            See all
-          </span>
-        </StatsCard.Col>
+        <StatsCard.Col></StatsCard.Col>
+        <StatsCard.Col></StatsCard.Col>
+        <StatsCard.Col></StatsCard.Col>
       </StatsCard.Row>
     </StatsCard>
   )
