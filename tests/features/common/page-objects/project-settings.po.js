@@ -151,7 +151,7 @@ module.exports = {
         '.form-key-value-table .form-table__row_active .form-table__cell_1:nth-of-type(1)',
         true,
         false,
-        '.form-field__warning'
+        '.form-field__warning svg'
       )
     ),
     Parameters_Table_Value_Input: inputGroup(
@@ -159,7 +159,7 @@ module.exports = {
         '.form-key-value-table .form-table__row_active .form-table__cell_1:nth-of-type(2)',
         true,
         false,
-        '.form-field__warning'
+        '.form-field__warning svg'
       )
     ),
     Parameters_Table_Add_Row_Button: By.css(

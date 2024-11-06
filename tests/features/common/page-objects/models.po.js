@@ -246,17 +246,20 @@ const realTimePipelinesGraph = {
 
 // Common components
 const tableRefreshButton = By.css('.content__action-bar-wrapper .action-bar [data-testid="refresh"]')
+const tableNameFilterInput = inputGroup(
+  generateInputGroup(
+    '.content .content__action-bar-wrapper .action-bar .name-filter .form-field-input',
+    true,
+    false,
+    '.form-field__warning svg'
+  )
+)
 
 module.exports = {
   modelsTab: {
     Delete_Artifact_Popup: By.css('[data-testid="pop-up-dialog"]'),
     Models_Tab_Selector: commonTable(tabSelector),
-    Table_Name_Filter_Input: inputGroup(
-      generateInputGroup(
-        '.content .content__action-bar-wrapper .action-bar .name-filter .form-field-input',
-        true
-      )
-    ),
+    Table_Name_Filter_Input: tableNameFilterInput,
     Table_Refresh_Button: By.css('.content__action-bar-wrapper .action-bar__actions [data-testid="refresh"]'),
     Models_Table: commonTable(modelsTable),
     Overlay: By.css('#overlay_container .chip-block-hidden_visible'),
@@ -268,34 +271,18 @@ module.exports = {
   },
   modelEndpoints: {
     Table_Refresh_Button: tableRefreshButton,
-    Table_Label_Filter_Input: inputGroup(
-      generateInputGroup(
-        '.content .content__action-bar-wrapper .input-wrapper:nth-of-type(1)',
-        true,
-        false,
-        true
-      )
-    ),
-    Table_Sort_By_Filter: dropdownComponent(
-      generateDropdownGroup(
-        '.content__action-bar-wrapper .filters .filter-column:nth-of-type(2) .select',
-        '.select__header',
-        '.select__body .select__item',
-        '.data-ellipsis .data-ellipsis'
-      )
-    ),
     Model_Endpoints_Table: commonTable(modelsEndpointTable),
-    Overlay: By.css('#overlay_container .chip-block-hidden_visible')
+    Overlay: By.css('#overlay_container .chip-block-hidden_visible'),
+    Table_FilterBy_Button: By.css(
+      '[data-testid="filter-menu-btn-tooltip-wrapper"]'
+    ),
+    Column_Name_Header: By.css('[data-testid="name"]'),
+    Sort_By_Name: By.css('[data-testid="name"].sortable-header-cell_active svg'),
+    Sort_By_Function: By.css('[data-testid="function"].sortable-header-cell_active svg'),
+    Column_Function_Header: By.css('[data-testid="function"]')
   },
   realTimePipelinesTab: {
-    Table_Name_Filter_Input: inputGroup(
-      generateInputGroup(
-        '.content .content__action-bar-wrapper .filters .input-wrapper',
-        true,
-        false,
-        true
-      )
-    ),
+    Table_Name_Filter_Input: tableNameFilterInput,
     Table_Refresh_Button: tableRefreshButton,
     Real_Time_Pipelines_Table: commonTable(realTimePipelinesTable),
     Real_Time_Pipelines_Graph: graph(realTimePipelinesGraph)
