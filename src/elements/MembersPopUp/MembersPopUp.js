@@ -37,7 +37,6 @@ import { getRoleOptions, initialNewMembersRole, DELETE_MODIFICATION } from './me
 import { isIgzVersionCompatible } from '../../utils/isIgzVersionCompatible'
 import { membersActions } from './membersReducer'
 import { showErrorNotification } from '../../utils/notifications.util'
-import { useNavigate } from 'react-router-dom'
 
 import { USER_GROUP_ROLE, USER_ROLE } from '../../constants'
 
@@ -62,7 +61,6 @@ const MembersPopUp = ({ changeMembersCallback, membersDispatch, membersState }) 
     role: 'All'
   })
   const dispatch = useDispatch()
-  const navigate = useNavigate()
 
   const handleOnClose = () => {
     setConfirmDiscard(false)
@@ -195,11 +193,7 @@ const MembersPopUp = ({ changeMembersCallback, membersDispatch, membersState }) 
             'Project Security Admin'
           ) ?? false
 
-        if (validMember || userIsProjectSecurityAdmin) {
-          changeMembersCallback(response.data.data.id)
-        } else {
-          navigate('/projects/')
-        }
+        changeMembersCallback(response.data.data.id, validMember || userIsProjectSecurityAdmin)
       })
       .catch(error => {
         const customErrorMsg =

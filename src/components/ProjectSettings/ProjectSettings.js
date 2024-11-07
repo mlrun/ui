@@ -171,26 +171,37 @@ const ProjectSettings = () => {
     }
   }, [fetchProjectIdAndOwner, fetchProjectMembers, params.projectName, projectMembershipIsEnabled])
 
-  const changeMembersCallback = jobId => {
+  const changeMembersCallback = (jobId, isValidUser) => {
     const fetchJob = () => {
       projectsIguazioApi.getProjectJob(jobId).then(response => {
         if (response.data.data.attributes.state !== COMPLETED_STATE) {
           setTimeout(fetchJob, 1000)
         } else {
-          fetchProjectMembers(membersState.projectInfo.id, membersState.projectInfo.owner).then(
-            () => {
-              membersDispatch({
-                type: membersActions.GET_PROJECT_USERS_DATA_END
-              })
-              dispatch(
-                setNotification({
-                  status: 200,
-                  id: Math.random(),
-                  message: 'Members updated successfully'
+          if (isValidUser) {
+            fetchProjectMembers(membersState.projectInfo.id, membersState.projectInfo.owner).then(
+              () => {
+                membersDispatch({
+                  type: membersActions.GET_PROJECT_USERS_DATA_END
                 })
-              )
-            }
-          )
+                dispatch(
+                  setNotification({
+                    status: 200,
+                    id: Math.random(),
+                    message: 'Members updated successfully'
+                  })
+                )
+              }
+            )
+          } else {
+            dispatch(
+              setNotification({
+                status: 200,
+                id: Math.random(),
+                message: 'Members updated successfully'
+              })
+            )
+            navigate('/projects/')
+          }
         }
       })
     }
