@@ -19,7 +19,6 @@ such restriction.
 */
 import React, { useEffect, useState, useCallback, useRef } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { useNavigate } from 'react-router-dom'
 import { isEmpty, last, orderBy } from 'lodash'
 import FileSaver from 'file-saver'
 import yaml from 'js-yaml'
@@ -64,7 +63,6 @@ const Projects = () => {
   const deletingProjectsRef = useRef({})
 
   const dispatch = useDispatch()
-  const navigate = useNavigate()
   const { isDemoMode } = useMode()
   const { isNuclioModeDisabled } = useNuclioMode()
   const projectStore = useSelector(store => store.projectStore)
@@ -287,9 +285,10 @@ const Projects = () => {
         deletingProjectsRef,
         terminatePollRef,
         fetchMinimalProjects,
-        navigate
+        null,
+        refreshProjects
       ),
-    [dispatch, fetchMinimalProjects, navigate]
+    [dispatch, fetchMinimalProjects, refreshProjects]
   )
 
   useEffect(() => {

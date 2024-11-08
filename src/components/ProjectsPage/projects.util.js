@@ -329,7 +329,8 @@ export const handleDeleteProject = (
   deletingProjectsRef,
   terminatePollRef,
   fetchMinimalProjects,
-  navigate
+  navigate,
+  refreshProjects
 ) => {
   setConfirmData && setConfirmData(null)
 
@@ -350,7 +351,13 @@ export const handleDeleteProject = (
         }
 
         dispatch(projectsAction.setDeletingProjects(newDeletingProjects))
-        navigate('/projects')
+        if (refreshProjects) {
+          pollDeletingProjects(terminatePollRef, newDeletingProjects, refreshProjects, dispatch)
+        }
+
+        if (navigate) {
+          navigate('/projects')
+        }
       } else {
         fetchMinimalProjects()
         dispatch(
@@ -360,7 +367,9 @@ export const handleDeleteProject = (
             message: `Project "${project.metadata.name}" was deleted successfully`
           })
         )
-        navigate('/projects')
+        if (navigate) {
+          navigate('/projects')
+        }
       }
     })
     .catch(error => {

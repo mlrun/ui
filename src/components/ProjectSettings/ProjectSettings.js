@@ -56,7 +56,6 @@ const ProjectSettings = ({ frontendSpec, projectStore }) => {
   const [projectMembersIsShown, setProjectMembersIsShown] = useState(false)
   const [projectOwnerIsShown, setProjectOwnerIsShown] = useState(false)
   const [confirmData, setConfirmData] = useState(null)
-
   const [membersState, membersDispatch] = useReducer(membersReducer, initialMembersState)
   const location = useLocation()
   const navigate = useNavigate()
