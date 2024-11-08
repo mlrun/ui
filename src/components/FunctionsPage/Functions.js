@@ -645,7 +645,7 @@ const Functions = ({
     }
   }
 
-  const createFunctionSuccess = () => {
+  const createFunctionSuccess = (isEditMode) => {
     setEditableItem(null)
     setFunctionsPanelIsOpen(false)
     removeNewFunction()
@@ -655,7 +655,7 @@ const Functions = ({
         setNotification({
           status: 200,
           id: Math.random(),
-          message: 'Function created successfully'
+          message: isEditMode ? 'Function edited successfully' : 'Function created successfully'
         })
       )
     })
