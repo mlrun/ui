@@ -68,7 +68,7 @@ export const generateInputsTabContent = (inputs, showArtifact) => {
               disabled={!input.ui.isShowDetailsActive}
             >
               {input.ui.isShowDetailsActive ? (
-                <Link target="_blank" to={input.ui.inputResourceLink}>
+                <Link to={input.ui.inputResourceLink}>
                   <DetailsIcon />
                 </Link>
               ) : (

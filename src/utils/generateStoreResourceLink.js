@@ -17,7 +17,13 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import { DATASETS_TAB, FEATURE_VECTORS_TAB, FILES_TAB, MODELS_TAB, TAG_FILTER_LATEST } from '../constants'
+import {
+  DATASETS_TAB,
+  FEATURE_VECTORS_TAB,
+  FILES_TAB,
+  MODELS_TAB,
+  TAG_FILTER_LATEST
+} from '../constants'
 
 export const generateStoreResourceLink = (input, projectName) => {
   if ([MODELS_TAB, DATASETS_TAB].includes(input.kind)) {
@@ -27,17 +33,17 @@ export const generateStoreResourceLink = (input, projectName) => {
   }
 
   const inputsLinks = {
-    model: `/projects/${projectName}/models/${MODELS_TAB}/${
+    model: `${process.env.PUBLIC_URL}/projects/${projectName}/models/${MODELS_TAB}/${
       input.db_key || input.key
     }/${input.tag ?? input.tree ?? TAG_FILTER_LATEST}${input.iter ? `/${input.iter}` : ''}/overview`,
-    dataset: `/projects/${projectName}/${DATASETS_TAB}/${
+    dataset: `${process.env.PUBLIC_URL}/projects/${projectName}/${DATASETS_TAB}/${
       input.db_key || input.key
     }/${input.tag ?? input.tree ?? TAG_FILTER_LATEST}${input.iter ? `/${input.iter}` : ''}/overview`,
-    files: `/projects/${projectName}/${FILES_TAB}/${input.db_key || input.key}/${input.tag ?? input.tree ?? TAG_FILTER_LATEST}${
+    files: `${process.env.PUBLIC_URL}/projects/${projectName}/${FILES_TAB}/${input.db_key || input.key}/${input.tag ?? input.tree ?? TAG_FILTER_LATEST}${
       input.iter ? `/${input.iter}` : ''
     }/overview`,
-    FeatureVector: `/projects/${projectName}/feature-store/${FEATURE_VECTORS_TAB}/${input.name ?? input.key}/${input.tag ?? input.uid ?? TAG_FILTER_LATEST}/overview`
+    FeatureVector: `${process.env.PUBLIC_URL}/projects/${projectName}/feature-store/${FEATURE_VECTORS_TAB}/${input.name ?? input.key}/${input.tag ?? input.uid ?? TAG_FILTER_LATEST}/overview`
   }
 
-  return input ? inputsLinks[input.kind] ?? inputsLinks.files : ''
+  return input ? (inputsLinks[input.kind] ?? inputsLinks.files) : ''
 }
