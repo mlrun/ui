@@ -23,16 +23,20 @@ import PropTypes from 'prop-types'
 
 import FeatureSetsPanel from '../../FeatureSetsPanel/FeatureSetsPanel'
 import FeatureStoreTableRow from '../../../elements/FeatureStoreTableRow/FeatureStoreTableRow'
-import FilterMenu from '../../FilterMenu/FilterMenu'
 import NoData from '../../../common/NoData/NoData'
 import Table from '../../Table/Table'
+import ActionBar from '../../ActionBar/ActionBar'
+import FeatureStoreFilters from '../FeatureStoreFilters'
+import Loader from '../../../common/Loader/Loader'
+import FeatureStorePageTabs from '../FeatureStorePageTabs/FeatureStorePageTabs'
 
 import { FEATURE_SETS_TAB, FEATURE_STORE_PAGE } from '../../../constants'
+import { SECONDARY_BUTTON } from 'iguazio.dashboard-react-controls/dist/constants'
 import { VIRTUALIZATION_CONFIG } from '../../../types'
-import { featureSetsFilters } from './featureSets.util'
+import { filtersConfig } from './featureSets.util'
 import { getNoDataMessage } from '../../../utils/getNoDataMessage'
 import { isRowRendered } from '../../../hooks/useVirtualization.hook'
-import Loader from '../../../common/Loader/Loader'
+import { createFeatureSetTitle } from '../featureStore.util'
 
 const FeatureSetsView = React.forwardRef(
   (
@@ -49,10 +53,12 @@ const FeatureSetsView = React.forwardRef(
       filtersStore,
       handleExpandRow,
       handleRefresh,
+      handleRefreshWithStoreFilters,
       pageData,
       requestErrorMessage,
       selectedFeatureSet,
       selectedRowData,
+      setFeatureSetsPanelIsOpen,
       setSelectedFeatureSetMin,
       tableContent,
       virtualizationConfig
@@ -64,23 +70,34 @@ const FeatureSetsView = React.forwardRef(
     return (
       <div className="feature-store" ref={featureStoreRef}>
         <div className="content__action-bar-wrapper">
-          <div className="action-bar">
-            <FilterMenu
-              filters={featureSetsFilters}
-              onChange={handleRefresh}
-              page={FEATURE_STORE_PAGE}
-              tab={FEATURE_SETS_TAB}
-              withoutExpandButton
-            />
-          </div>
+          <FeatureStorePageTabs />
+          <ActionBar
+            actionButtons={[
+              {
+                className: 'action-button',
+                label: createFeatureSetTitle,
+                variant: SECONDARY_BUTTON,
+                onClick: () => setFeatureSetsPanelIsOpen(true)
+              }
+            ]}
+            filterMenuName={FEATURE_SETS_TAB}
+            filtersConfig={filtersConfig}
+            handleRefresh={handleRefresh}
+            page={FEATURE_STORE_PAGE}
+            tab={FEATURE_SETS_TAB}
+            withoutExpandButton
+          >
+            <FeatureStoreFilters content={featureSets} />
+          </ActionBar>
         </div>
         {featureStore.loading ? null : featureSets.length === 0 ? (
           <NoData
             message={getNoDataMessage(
               filtersStore,
-              featureSetsFilters,
+              filtersConfig,
               requestErrorMessage,
               FEATURE_STORE_PAGE,
+              FEATURE_SETS_TAB,
               FEATURE_SETS_TAB
             )}
           />
@@ -94,7 +111,7 @@ const FeatureSetsView = React.forwardRef(
               detailsFormInitialValues={detailsFormInitialValues}
               handleCancel={() => setSelectedFeatureSetMin({})}
               pageData={pageData}
-              retryRequest={handleRefresh}
+              retryRequest={handleRefreshWithStoreFilters}
               selectedItem={selectedFeatureSet}
               tab={FEATURE_SETS_TAB}
               tableClassName="feature-sets-table"
@@ -144,10 +161,12 @@ FeatureSetsView.propTypes = {
   filtersStore: PropTypes.object.isRequired,
   handleExpandRow: PropTypes.func.isRequired,
   handleRefresh: PropTypes.func.isRequired,
+  handleRefreshWithStoreFilters: PropTypes.func.isRequired,
   pageData: PropTypes.object.isRequired,
   requestErrorMessage: PropTypes.string.isRequired,
   selectedFeatureSet: PropTypes.object.isRequired,
   selectedRowData: PropTypes.object.isRequired,
+  setFeatureSetsPanelIsOpen: PropTypes.func.isRequired,
   setSelectedFeatureSetMin: PropTypes.func.isRequired,
   tableContent: PropTypes.arrayOf(PropTypes.object).isRequired,
   virtualizationConfig: VIRTUALIZATION_CONFIG.isRequired

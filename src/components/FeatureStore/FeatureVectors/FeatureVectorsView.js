@@ -22,15 +22,22 @@ import PropTypes from 'prop-types'
 
 import CreateFeatureVectorPopUp from '../../../elements/CreateFeatureVectorPopUp/CreateFeatureVectorPopUp'
 import FeatureStoreTableRow from '../../../elements/FeatureStoreTableRow/FeatureStoreTableRow'
-import FilterMenu from '../../FilterMenu/FilterMenu'
 import NoData from '../../../common/NoData/NoData'
 import Table from '../../Table/Table'
+import FeatureStorePageTabs from '../FeatureStorePageTabs/FeatureStorePageTabs'
 
-import { FEATURE_STORE_PAGE, FEATURE_VECTORS_TAB } from '../../../constants'
+import {
+  FEATURE_STORE_PAGE,
+  FEATURE_VECTORS_TAB
+} from '../../../constants'
 import { VIRTUALIZATION_CONFIG } from '../../../types'
-import { featureVectorsFilters } from './featureVectors.util'
+import { filtersConfig } from './featureVectors.util'
 import { getNoDataMessage } from '../../../utils/getNoDataMessage'
 import { isRowRendered } from '../../../hooks/useVirtualization.hook'
+import ActionBar from '../../ActionBar/ActionBar'
+import { SECONDARY_BUTTON } from 'iguazio.dashboard-react-controls/dist/constants'
+import { createFeatureVectorTitle } from '../featureStore.util'
+import FeatureStoreFilters from '../FeatureStoreFilters'
 
 const FeatureVectorsView = React.forwardRef(
   (
@@ -45,6 +52,7 @@ const FeatureVectorsView = React.forwardRef(
       filtersStore,
       handleExpandRow,
       handleRefresh,
+      handleRefreshWithStoreFilters,
       pageData,
       requestErrorMessage,
       selectedFeatureVector,
@@ -59,23 +67,34 @@ const FeatureVectorsView = React.forwardRef(
     return (
       <div className="feature-store" ref={featureStoreRef}>
         <div className="content__action-bar-wrapper">
-          <div className="action-bar">
-            <FilterMenu
-              filters={featureVectorsFilters}
-              onChange={handleRefresh}
-              page={FEATURE_STORE_PAGE}
-              tab={FEATURE_VECTORS_TAB}
-              withoutExpandButton
-            />
-          </div>
+          <FeatureStorePageTabs />
+          <ActionBar
+            actionButtons={[
+              {
+                className: 'action-button',
+                label: createFeatureVectorTitle,
+                variant: SECONDARY_BUTTON,
+                onClick: () => setCreateVectorPopUpIsOpen(true)
+              }
+            ]}
+            filterMenuName={FEATURE_VECTORS_TAB}
+            filtersConfig={filtersConfig}
+            handleRefresh={handleRefresh}
+            page={FEATURE_STORE_PAGE}
+            tab={FEATURE_VECTORS_TAB}
+            withoutExpandButton
+          >
+            <FeatureStoreFilters content={featureVectors} />
+          </ActionBar>
         </div>
         {featureStore.loading ? null : featureVectors.length === 0 ? (
           <NoData
             message={getNoDataMessage(
               filtersStore,
-              featureVectorsFilters,
+              filtersConfig,
               requestErrorMessage,
               FEATURE_STORE_PAGE,
+              FEATURE_VECTORS_TAB,
               FEATURE_VECTORS_TAB
             )}
           />
@@ -87,7 +106,7 @@ const FeatureVectorsView = React.forwardRef(
               detailsFormInitialValues={detailsFormInitialValues}
               handleCancel={() => setSelectedFeatureVector({})}
               pageData={pageData}
-              retryRequest={handleRefresh}
+              retryRequest={handleRefreshWithStoreFilters}
               selectedItem={selectedFeatureVector}
               tab={FEATURE_VECTORS_TAB}
               tableClassName="feature-vectors-table"
@@ -135,6 +154,7 @@ FeatureVectorsView.propTypes = {
   filtersStore: PropTypes.object.isRequired,
   handleExpandRow: PropTypes.func.isRequired,
   handleRefresh: PropTypes.func.isRequired,
+  handleRefreshWithStoreFilters: PropTypes.func.isRequired,
   pageData: PropTypes.object.isRequired,
   requestErrorMessage: PropTypes.string.isRequired,
   selectedFeatureVector: PropTypes.object.isRequired,

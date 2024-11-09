@@ -340,14 +340,14 @@ const datasetsTable = {
 // Common components
 const featureStoreTabSelector = commonTable(tabSelector)
 const tableRefreshButton = By.css('.content__action-bar-wrapper [data-testid="refresh"]')
-const tableFilterByButton = By.css('.content .content__action-bar-wrapper .action-bar__filters .filters-button button')
-const pageHeaderButton = By.css('.content__header .page-actions-container button')
+const tableFilterByButton = By.css('[data-testid="filter-menu-btn"]')
+const pageHeaderButton = By.css('[data-testid="btn"]')
 const commonNameFilterInput = inputGroup(
   generateInputGroup(
-    '.content .content__action-bar-wrapper .filters .filter-column:nth-of-type(2) .input-wrapper',
+    '[data-testid="name-form-field-input"]',
     true,
     false,
-    true
+    '.form-field__warning svg'
   )
 )
 const commonNameFilterInputDataset = inputGroup(
@@ -363,7 +363,7 @@ const commonLabelFilterInput = inputGroup(
     '.content .content__action-bar-wrapper .filters .filter-column:nth-of-type(3) .input-wrapper',
     true,
     false,
-    true
+    '.form-field__warning svg'
   )
 )
 const commonTableTreeFilterDropdown = dropdownComponent(
@@ -378,6 +378,7 @@ const commonTableTreeFilterDropdown = dropdownComponent(
 
 module.exports = {
   featureSetsTab: {
+    Table_FilterBy_Button: tableFilterByButton,
     Table_Refresh_Button: tableRefreshButton,
     Create_Set_Button: pageHeaderButton,
     Table_Expand_Rows_Button: By.css(
@@ -392,6 +393,7 @@ module.exports = {
   },
   featuresTab: {
     Feature_Store_Tab_Selector: featureStoreTabSelector,
+    Table_FilterBy_Button: tableFilterByButton,
     Add_To_Feature_Vector_Button: By.css(
       '.content .content__action-bar-wrapper .action-bar  button.btn-secondary'
     ),
@@ -404,6 +406,7 @@ module.exports = {
   featureVectorsTab: {
     Feature_Store_Tab_Selector: featureStoreTabSelector,
     Create_Vector_Button: pageHeaderButton,
+    Table_FilterBy_Button: tableFilterByButton,
     Table_Name_Filter_Input: commonNameFilterInput,
     Table_Label_Filter_Input: commonLabelFilterInput,
     Table_Tag_Filter_Dropdown: commonTableTreeFilterDropdown,
@@ -422,6 +425,7 @@ module.exports = {
   },
   addToFeatureVector: {
     Table_Tree_Filter_Dropdown: commonTableTreeFilterDropdown,
+    Table_FilterBy_Button: tableFilterByButton,
     Table_Name_Filter_Input: commonNameFilterInput,
     Table_Entity_Filter_Input: inputGroup(
       generateInputGroup(

@@ -17,33 +17,36 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
+import { useLocation } from 'react-router-dom'
+
+import ContentMenu from '../../../elements/ContentMenu/ContentMenu'
+
+import { tabs } from '../featureStore.util'
+
 import {
-  ENTITIES_FILTER,
-  LABELS_FILTER,
-  NAME_FILTER,
-  PROJECT_FILTER,
-  TAG_FILTER
-} from '../../constants'
+  FEATURE_SETS_TAB,
+  FEATURE_STORE_PAGE,
+  FEATURE_STORE_PAGE_PATH,
+  FEATURE_VECTORS_TAB,
+  FEATURES_TAB,
+} from '../../../constants'
 
-export const page = 'FEATURE-STORE'
+const FeatureStorePageTabs = () => {
+  const location = useLocation()
 
-export const pageDataInitialState = {
-  actionsMenu: [],
-  actionsMenuHeader: '',
-  details: {
-    menu: [],
-    infoHeaders: []
-  },
-  filters: [],
-  page: '',
-  selectedRowData: {},
-  tabs: []
+  return (
+    <ContentMenu
+      activeTab={
+        location.pathname.includes(`${FEATURE_STORE_PAGE_PATH}/${FEATURE_SETS_TAB}`)
+          ? FEATURE_SETS_TAB
+          : location.pathname.includes(`${FEATURE_STORE_PAGE_PATH}/${FEATURE_VECTORS_TAB}`)
+            ? FEATURE_VECTORS_TAB
+            : FEATURES_TAB
+      }
+      screen={FEATURE_STORE_PAGE}
+      tabs={tabs}
+    />
+  )
 }
 
-export const filtersConfig = {
-  [TAG_FILTER]: { label: 'Tag:' },
-  [NAME_FILTER]: { label: 'Name:' },
-  [ENTITIES_FILTER]: { label: 'Entity:' },
-  [LABELS_FILTER]: { label: 'Labels:' },
-  [PROJECT_FILTER]: { label: 'Project:' }
-}
+export default FeatureStorePageTabs
