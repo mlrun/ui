@@ -203,9 +203,9 @@ Feature: Project Monitoring Page
         Then verify "New_File_Name_Input" on "Register_Model_Popup" wizard should display options "Input_Hint"."Artifact_Name_Hint"
         When select "V3IO" option in "Path_Scheme_Combobox" combobox on "Target_Path" accordion on "Register_Model_Popup" wizard
         When type value "  " to "Path_Scheme_Combobox" field on "Target_Path" on "Register_Model_Popup" wizard
-        Then verify "Path_Scheme_Combobox" element in "Target_Path" on "Register_Model_Popup" wizard should display warning "Input_Hint"."V3IO_Path_Hint"
+        Then verify "Path_Scheme_Combobox" element in "Target_Path" on "Register_Model_Popup" wizard should display hover warning "Input_Hint"."V3IO_Path_Hint"
         Then type value "   " to "New_File_Description_Input" field on "Register_Model_Popup" wizard
-        Then verify "New_File_Description_Input" on "Register_Model_Popup" wizard should display warning "Input_Hint"."Input_Field_Invalid"
+        Then verify "New_File_Description_Input" on "Register_Model_Popup" wizard should display hover warning "Input_Hint"."Input_Field_Invalid"
         When add rows to "Labels_Table" table on "Register_Model_Popup" wizard
             | key_input | value_input |
             |    key1   |    value1   |
