@@ -36,15 +36,14 @@
     &-tip {
       margin-left: 5px;
     }
-    .tabs-slider__tab-icon {
+
+    &_icon {
       svg {
         width: 20px;
         height: 20px;
         margin-right: 5px;
         path {
-
           fill: $topaz;
-
         }
       }
     }

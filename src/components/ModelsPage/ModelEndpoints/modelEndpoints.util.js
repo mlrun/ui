@@ -24,6 +24,7 @@ import { TERTIARY_BUTTON } from 'igz-controls/constants'
 import { filterSelectOptions } from '../../FilterMenu/filterMenu.settings'
 import { showErrorNotification } from '../../../utils/notifications.util'
 import { fetchModelEndpoint } from '../../../reducers/artifactsReducer'
+
 import { ReactComponent as Alert } from 'igz-controls/images/alerts.svg'
 
 export const filters = [
