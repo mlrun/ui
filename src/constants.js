@@ -472,6 +472,7 @@ export const DETAILS_OVERVIEW_TAB = 'overview'
 export const DETAILS_PODS_TAB = 'pods'
 export const DETAILS_PREVIEW_TAB = 'preview'
 export const DETAILS_REQUESTED_FEATURES_TAB = 'requested-features'
+export const DETAILS_ALERTS_TAB = 'alerts'
 export const DETAILS_RESULTS_TAB = 'results'
 export const DETAILS_RETURNED_FEATURES_TAB = 'returned-features'
 export const DETAILS_STATISTICS_TAB = 'statistics'
@@ -642,6 +643,6 @@ export const CHART_TYPE_LINE = 'line'
 export const CHART_TYPE_BAR = 'bar'
 
 /*=========== ARTIFACTS LIMITS =============*/
-export const ARTIFACT_MAX_CHUNK_SIZE = 1048576       // 1MB
-export const ARTIFACT_MAX_PREVIEW_SIZE = 10485760    // 10MB
-export const ARTIFACT_MAX_DOWNLOAD_SIZE = 104857600  // 100MB
+export const ARTIFACT_MAX_CHUNK_SIZE = 1048576 // 1MB
+export const ARTIFACT_MAX_PREVIEW_SIZE = 10485760 // 10MB
+export const ARTIFACT_MAX_DOWNLOAD_SIZE = 104857600 // 100MB
