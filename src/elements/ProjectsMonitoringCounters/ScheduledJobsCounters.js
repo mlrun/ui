@@ -70,7 +70,6 @@ const ScheduledJobsCounters = () => {
       <StatsCard.Row>
         <StatsCard.Col>
           <h6 className="stats__subtitle">Jobs</h6>
-
           <span className="stats__counter">
             {projectStore.projectsSummary.loading ? (
               <Loader section small secondary />
@@ -102,11 +101,7 @@ const ScheduledJobsCounters = () => {
           </span>
         </StatsCard.Col>
       </StatsCard.Row>
-      <StatsCard.Row>
-        <StatsCard.Col></StatsCard.Col>
-        <StatsCard.Col></StatsCard.Col>
-        <StatsCard.Col></StatsCard.Col>
-      </StatsCard.Row>
+      <div className="space"></div>
     </StatsCard>
   )
 }
