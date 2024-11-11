@@ -47,6 +47,7 @@ import {
   STATUS_FILTER,
   TYPE_FILTER
 } from '../../constants'
+import { getJobKindFromLabels } from '../../utils/jobs.util'
 import { monitorJob, pollAbortingJobs, rerunJob } from '../Jobs/jobs.util'
 import { TERTIARY_BUTTON } from 'igz-controls/constants'
 import { parseJob } from '../../utils/parseJob'
@@ -54,7 +55,6 @@ import jobsActions from '../../actions/jobs'
 import workflowActions from '../../actions/workflow'
 
 import './projectsJobsMonitoring.scss'
-import { getJobKindFromLabels } from '../../utils/jobs.util'
 
 export const ProjectJobsMonitoringContext = React.createContext({})
 

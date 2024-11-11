@@ -28,7 +28,7 @@ import { getJobKindFromLabels } from '../../../utils/jobs.util'
 export const createJobsMonitoringContent = (jobs, jobName, isStagingMode) => {
   return jobs.map(job => {
     const identifierUnique = getJobIdentifier(job, true)
-    const type = getJobKindFromLabels(job.labels) ?? ''
+    const type = getJobKindFromLabels(job.labels)
     const getLink = tab => {
       if (jobName) {
         return validateArguments(job.uid, tab, job.name)
