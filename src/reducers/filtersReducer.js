@@ -21,6 +21,7 @@ import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
 import { set } from 'lodash'
 
 import {
+  ADD_TO_FEATURE_VECTOR_TAB,
   ARTIFACT_OTHER_TYPE,
   CONSUMER_GROUPS_FILTER,
   CONSUMER_GROUP_FILTER,
@@ -28,6 +29,10 @@ import {
   DATASET_TYPE,
   DATES_FILTER,
   DATE_FILTER_ANY_TIME,
+  ENTITIES_FILTER,
+  FEATURES_TAB,
+  FEATURE_SETS_TAB,
+  FEATURE_VECTORS_TAB,
   FILES_FILTERS,
   FILTER_ALL_ITEMS,
   FILTER_MENU,
@@ -40,9 +45,11 @@ import {
   JOBS_MONITORING_WORKFLOWS_TAB,
   LABELS_FILTER,
   MODELS_FILTERS,
+  MODEL_ENDPOINTS_TAB,
   MODEL_TYPE,
   NAME_FILTER,
   PROJECT_FILTER,
+  REAL_TIME_PIPELINES_TAB,
   SHOW_ITERATIONS,
   SHOW_UNTAGGED_FILTER,
   STATUS_FILTER,
@@ -175,6 +182,46 @@ const initialState = {
       initialValues: {
         [NAME_FILTER]: ''
       }
+    },
+    [FEATURE_SETS_TAB]: {
+      values: {
+        [NAME_FILTER]: ''
+      },
+      initialValues: {
+        [NAME_FILTER]: ''
+      }
+    },
+    [FEATURES_TAB]: {
+      values: {
+        [NAME_FILTER]: ''
+      },
+      initialValues: {
+        [NAME_FILTER]: ''
+      }
+    },
+    [FEATURE_VECTORS_TAB]: {
+      values: {
+        [NAME_FILTER]: ''
+      },
+      initialValues: {
+        [NAME_FILTER]: ''
+      }
+    },
+    [ADD_TO_FEATURE_VECTOR_TAB]: {
+      values: {
+        [NAME_FILTER]: ''
+      },
+      initialValues: {
+        [NAME_FILTER]: ''
+      }
+    },
+    [REAL_TIME_PIPELINES_TAB]: {
+      values: {
+        [NAME_FILTER]: ''
+      },
+      initialValues: {
+        [NAME_FILTER]: ''
+      }
     }
   },
   [FILTER_MENU_MODAL]: {
@@ -287,6 +334,58 @@ const initialState = {
         [LABELS_FILTER]: '',
         [TYPE_FILTER]: FILTER_ALL_ITEMS
       }
+    },
+    [FEATURE_SETS_TAB]: {
+      initialValues: {
+        [TAG_FILTER]: TAG_FILTER_LATEST,
+        [LABELS_FILTER]: ''
+      },
+      values: {
+        [TAG_FILTER]: TAG_FILTER_LATEST,
+        [LABELS_FILTER]: ''
+      }
+    },
+    [FEATURES_TAB]: {
+      initialValues: {
+        [TAG_FILTER]: TAG_FILTER_LATEST,
+        [LABELS_FILTER]: ''
+      },
+      values: {
+        [TAG_FILTER]: TAG_FILTER_LATEST,
+        [LABELS_FILTER]: ''
+      }
+    },
+    [FEATURE_VECTORS_TAB]: {
+      initialValues: {
+        [TAG_FILTER]: TAG_FILTER_LATEST,
+        [LABELS_FILTER]: ''
+      },
+      values: {
+        [TAG_FILTER]: TAG_FILTER_LATEST,
+        [LABELS_FILTER]: ''
+      }
+    },
+    [ADD_TO_FEATURE_VECTOR_TAB]: {
+      initialValues: {
+        [TAG_FILTER]: TAG_FILTER_LATEST,
+        [ENTITIES_FILTER]: '',
+        [LABELS_FILTER]: '',
+        [PROJECT_FILTER]: ''
+      },
+      values: {
+        [TAG_FILTER]: TAG_FILTER_LATEST,
+        [ENTITIES_FILTER]: '',
+        [LABELS_FILTER]: '',
+        [PROJECT_FILTER]: ''
+      }
+    },
+    [MODEL_ENDPOINTS_TAB]: {
+      initialValues: {
+        [LABELS_FILTER]: ''
+      },
+      values: {
+        [LABELS_FILTER]: ''
+      }
     }
   }
 }
@@ -323,7 +422,11 @@ const filtersSlice = createSlice({
       state[FILTER_MENU][action.payload] = initialState[FILTER_MENU][action.payload]
     },
     resetModalFilter(state, action) {
-      state[FILTER_MENU_MODAL][action.payload] = initialState[FILTER_MENU_MODAL][action.payload]
+      state[FILTER_MENU_MODAL][action.payload.name] =
+        initialState[FILTER_MENU_MODAL][action.payload.name]
+      action.payload.resetModalFilterCallback?.(
+        initialState[FILTER_MENU_MODAL][action.payload.name]?.initialValues
+      )
     },
     setFilters(state, action) {
       for (let filterProp in action.payload) {

@@ -92,6 +92,19 @@ const app = express()
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json())
 
+// intercepts all the requests and reject them if `failAllRequests` is true
+// should be used ONLY for test framework
+let failAllRequests = false
+app.use((req, res, next) => {
+  if (failAllRequests && req.url !== '/set-failure-condition') {
+    res.statusCode = 502
+
+    res.send({})
+  } else {
+    next()
+  }
+})
+
 // MLRun object Templates
 const projectBackgroundTasks = {}
 const backgroundTasks = {}
@@ -383,6 +396,17 @@ function getFeatureSet(req, res) {
     collectedFeatureSets = collectedFeatureSets.filter(featureSet =>
       filterByLabels(featureSet.metadata.labels, req.query['label'])
     )
+  }
+
+  if (req.query['format'] === 'minimal') {
+    collectedFeatureSets = collectedFeatureSets.map(featureSet => {
+      const metadataFields = ['description', 'name', 'project', 'tag', 'uid', 'labels'].map(
+        fieldName => `metadata.${fieldName}`
+      )
+      const specFields = ['entities', 'targets', 'engine'].map(fieldName => `spec.${fieldName}`)
+
+      return pick(featureSet, ['kind', ...metadataFields, 'status.state', ...specFields])
+    })
   }
 
   res.send({ feature_sets: collectedFeatureSets })
@@ -1421,7 +1445,9 @@ function getPipelines(req, res) {
     })
   }
   //get pipelines for Jobs and workflows page Monitor Workflows tab
-  const collectedPipelines = { ...pipelines[req.params.project] }
+  const collectedPipelines = {
+    ...(pipelines[req.params.project] ?? { runs: [], total_size: 0, next_page_token: null })
+  }
 
   if (req.query.filter) {
     const nameFilter = JSON.parse(req.query.filter).predicates.find(item => item.key === 'name')
@@ -1455,7 +1481,17 @@ function getPipelines(req, res) {
 }
 
 function getPipeline(req, res) {
-  const collectedPipeline = pipelineIDs.find(item => item.run.id === req.params.pipelineID)
+  const collectedPipeline = pipelineIDs.find(
+    item => item.run.id === req.params.pipelineID && item.run.project === req.params.project
+  )
+
+  if (!collectedPipeline) {
+    res.statusCode = 404
+
+    return res.send({
+      detail: `"MLRunNotFoundError('Pipeline run with id ${req.params.pipelineID} is not of project ${req.params.project}')"`
+    })
+  }
 
   res.send(collectedPipeline)
 }
@@ -1571,6 +1607,10 @@ function postFunc(req, res) {
   baseFunc.metadata.updated = new Date(dt0).toISOString()
   baseFunc.metadata.hash = hashPwd
   baseFunc.status = {}
+
+  if (!baseFunc.metadata.tag) {
+    baseFunc.metadata.tag = 'latest'
+  }
 
   funcs.funcs.push(baseFunc)
 
@@ -2047,6 +2087,36 @@ function postArtifact(req, res) {
     artifactTemplate.spec.model_file = req.body.spec.model_file
   }
 
+  const collectedArtifactsWithSameName = artifacts.artifacts.filter(artifact => {
+    return (
+      artifact.metadata?.project === req.body.metadata.project &&
+      ((artifact.spec && artifact.spec.db_key === req.body.spec.db_key) ||
+        artifact.metadata.key === req.body.metadata.key)
+    )
+  })
+
+  collectedArtifactsWithSameName.forEach(artifact => {
+    if (artifact.metadata?.tag === req.body.metadata.tag) {
+      //  override existing artifact's tag in case when we create artifact with same tag
+      artifact.metadata.tag = null
+    } else if (artifact.metadata?.tag === 'latest') {
+      //  when we post an artifact with custom tag we store 2 artifacts (custom and latest)
+      //  so when we post another artifact with same name we have to delete artifact with 'latest' tag
+      //  or we remove latest tag in case when we have only one object
+      if (
+        collectedArtifactsWithSameName.find(
+          searchedArtifact =>
+            searchedArtifact.metadata.uid === artifact.metadata.uid &&
+            searchedArtifact.metadata?.tag !== 'latest'
+        )
+      ) {
+        remove(artifacts.artifacts, artifact)
+      } else {
+        artifact.metadata.tag = null
+      }
+    }
+  })
+
   if (artifactTag === 'latest') {
     artifactTemplate.metadata['tag'] = artifactTag
     artifacts.artifacts.push(artifactTemplate)
@@ -2105,6 +2175,24 @@ function deleteArtifact(req, res) {
       (req.query.tree ? artifactMetaData?.tree === req.query.tree : true) &&
       (req.query.tag ? artifactMetaData?.tag === req.query.tag : true) &&
       (req.query['object-uid'] ? artifactMetaData?.uid === req.query['object-uid'] : true)
+    )
+  })
+
+  if (collectedArtifacts?.length > 0) {
+    collectedArtifacts.forEach(collectedArtifact => remove(artifacts.artifacts, collectedArtifact))
+  }
+
+  res.send({})
+}
+
+function deleteArtifacts(req, res) {
+  const collectedArtifacts = artifacts.artifacts.filter(artifact => {
+    const artifactMetaData = artifact.metadata ?? artifact
+    const artifactSpecData = artifact.spec ?? artifact
+
+    return (
+      artifactMetaData?.project === req.params.project &&
+      (artifactSpecData?.db_key === req.query.name || artifactMetaData.key === req.query.name)
     )
   })
 
@@ -2449,6 +2537,13 @@ function getIguazioJob(req, res) {
   })
 }
 
+// Helper request for AQA framework to fail all the requests
+app.post('/set-failure-condition', (req, res) => {
+  failAllRequests = req.body.shouldFail
+
+  res.send(`Failure condition set to ${failAllRequests}`)
+})
+
 // REQUESTS
 app.get(`${mlrunAPIIngress}/frontend-spec`, getFrontendSpec)
 app.get(`${mlrunAPIIngress}/projects/:project/background-tasks/:taskId`, getProjectTask)
@@ -2510,6 +2605,7 @@ app.get(`${mlrunAPIIngressV2}/projects/:project/artifacts/:key`, getArtifact)
 app.post(`${mlrunAPIIngressV2}/projects/:project/artifacts`, postArtifact)
 app.put(`${mlrunAPIIngressV2}/projects/:project/artifacts/:key`, putArtifact)
 app.delete(`${mlrunAPIIngressV2}/projects/:project/artifacts/:key`, deleteArtifact)
+app.delete(`${mlrunAPIIngressV2}/projects/:project/artifacts`, deleteArtifacts)
 
 app.put(`${mlrunAPIIngress}/projects/:project/tags/:tag`, putTags)
 app.delete(`${mlrunAPIIngress}/projects/:project/tags/:tag`, deleteTags)

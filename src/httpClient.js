@@ -129,7 +129,10 @@ const responseFulfillInterceptor = response => {
     delete requestTimeouts[response.config.ui.requestId]
 
     if (isLargeResponse) {
-      showLargeResponsePopUp(response.config.ui.setRequestErrorMessage, response.config.ui.customErrorMessage)
+      showLargeResponsePopUp(
+        response.config.ui.setRequestErrorMessage,
+        response.config.ui.customErrorMessage
+      )
 
       throw new Error(LARGE_REQUEST_CANCELED)
     } else {
@@ -174,7 +177,8 @@ mainHttpClientV2.interceptors.response.use(responseFulfillInterceptor, responseR
 
 export const showLargeResponsePopUp = (setRequestErrorMessage, customErrorMessage) => {
   if (!largeResponsePopUpIsOpen) {
-    const errorMessage = customErrorMessage ||
+    const errorMessage =
+      customErrorMessage ||
       'The query result is too large to display. Add a filter (or narrow it) to retrieve fewer results.'
 
     setRequestErrorMessage(errorMessage)

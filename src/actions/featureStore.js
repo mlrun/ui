@@ -66,7 +66,9 @@ import {
   SET_NEW_FEATURE_SET_TARGET,
   SET_NEW_FEATURE_SET_VERSION,
   START_FEATURE_SET_INGEST_BEGIN,
-  START_FEATURE_SET_INGEST_SUCCESS
+  START_FEATURE_SET_INGEST_SUCCESS,
+  FETCH_FEATURE_SET_BEGIN,
+  FETCH_FEATURE_SET_FAILURE
 } from '../constants'
 import { CONFLICT_ERROR_STATUS_CODE, FORBIDDEN_ERROR_STATUS_CODE } from 'igz-controls/constants'
 import { parseFeatureVectors } from '../utils/parseFeatureVectors'
@@ -204,14 +206,14 @@ const featureStoreActions = {
     type: FETCH_FEATURE_SETS_SUCCESS,
     payload: featureSets
   }),
-  fetchFeatureSet: (project, featureSet, tag) => dispatch => {
+  fetchExpandedFeatureSet: (project, featureSet, tag) => dispatch => {
     return featureStoreApi
-      .getFeatureSet(project, featureSet, tag)
+      .getExpandedFeatureSet(project, featureSet, tag)
       .then(response => {
         const generatedFeatureSets = parseFeatureSets(response.data?.feature_sets)
 
         dispatch(
-          featureStoreActions.fetchFeatureSetSuccess({
+          featureStoreActions.fetchExpandedFeatureSetSuccess({
             [getFeatureSetIdentifier(generatedFeatureSets[0])]: generatedFeatureSets
           })
         )
@@ -222,9 +224,34 @@ const featureStoreActions = {
         throw error
       })
   },
-  fetchFeatureSetSuccess: featureSets => ({
+  fetchExpandedFeatureSetSuccess: featureSets => ({
     type: FETCH_FEATURE_SET_SUCCESS,
     payload: featureSets
+  }),
+  fetchFeatureSet: (project, featureSet, tag) => dispatch => {
+    dispatch(featureStoreActions.fetchFeatureSetBegin())
+
+    return featureStoreApi
+      .getFeatureSet(project, featureSet, tag)
+      .then(response => {
+        dispatch(featureStoreActions.fetchFeatureSetSuccess())
+
+        return parseFeatureSets(response.data?.feature_sets)[0]
+      })
+      .catch(error => {
+        dispatch(featureStoreActions.fetchFeatureSetFailure(error.message))
+        throw error
+      })
+  },
+  fetchFeatureSetBegin: () => ({
+    type: FETCH_FEATURE_SET_BEGIN
+  }),
+  fetchFeatureSetFailure: error => ({
+    type: FETCH_FEATURE_SET_FAILURE,
+    payload: error
+  }),
+  fetchFeatureSetSuccess: () => ({
+    type: FETCH_FEATURE_SET_SUCCESS
   }),
   fetchFeatureVector: (project, featureVector, tag) => dispatch => {
     return featureStoreApi

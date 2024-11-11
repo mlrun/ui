@@ -2403,4 +2403,34 @@ Feature: Jobs and workflows
         Then verify "Parameters_From_File_Input" element in "Parameters_Accordion" on "Modal_Wizard_Form" wizard is enabled by class name
         Then verify "Parameters_Headers" on "Modal_Wizard_Form" wizard should contains "Modal_Wizard_Form"."Parameters_Table_Header"
         Then verify "Hyper_Toggle_Switch" element not exists in "Parameters_Accordion" on "Modal_Wizard_Form" wizard
-        
+    
+    @MLJW
+    @passive
+    @smoke
+    Scenario: MLJW087 - Check Retry option in action menu on Workflows Monitor tab
+        Given open url
+        And click on row root with value "churn-project-admin" in "name" column in "Projects_Table" table on "Projects" wizard
+        And wait load page
+        And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
+        And click on cell with value "Jobs and workflows" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+        And hover "MLRun_Logo" component on "commonPagesHeader" wizard
+        And wait load page
+        And select "Monitor Workflows" tab in "Jobs_Tab_Selector" on "Jobs_Monitor_Tab" wizard
+        And wait load page
+        Then verify "Monitor Workflows" tab is active in "Jobs_Tab_Selector" on "Jobs_Monitor_Tab" wizard
+        Then verify options in action menu on "Workflows_Monitor_Tab" wizard in "Workflows_Monitor_Table" table with "Completed" value in "status" column should contains "Jobs_And_Workflows"."Workflows_Action_Menu_Options"
+        Then select "Retry" option in action menu on "Workflows_Monitor_Tab" wizard in "Workflows_Monitor_Table" table at row with "kfpipeline 2021-07-06 11-16-28" value in "name" column
+        And wait load page
+        Then verify if "Notification_Popup" popup dialog appears
+        Then verify "Notification_Pop_Up" element visibility on "Notification_Popup" wizard
+        Then "Notification_Pop_Up" element on "Notification_Popup" should contains "Workflow ran successfully." value
+        Then verify "Notification_Pop_Up_Cross_Close_Button" element visibility on "Notification_Popup" wizard
+        Then click on "Notification_Pop_Up_Cross_Close_Button" element on "Notification_Popup" wizard
+        Then verify if "Notification_Popup" popup dialog appears
+        Then verify "Notification_Pop_Up" element visibility on "Notification_Popup" wizard
+        Then "Notification_Pop_Up" component on "Notification_Popup" should contains "Jobs_And_Workflows"."Workflows_Unsuccessful_Run_Message"
+        Then verify "Retry_Button" element visibility on "Notification_Popup" wizard
+        Then "Retry_Button" element on "Notification_Popup" should contains "RETRY" value
+        Then verify "Notification_Pop_Up_Cross_Close_Button" element visibility on "Notification_Popup" wizard
+        Then click on "Notification_Pop_Up_Cross_Close_Button" element on "Notification_Popup" wizard
+         

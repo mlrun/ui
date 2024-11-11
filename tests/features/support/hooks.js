@@ -20,15 +20,15 @@ such restriction.
 import { Before, After, Status } from '@cucumber/cucumber'
 import wd from 'selenium-webdriver'
 import { browser } from '../../config'
-import { clearBackendAfterTest } from '../common-tools/common-tools'
+import { clearBackendAfterTest, setRequestsFailureCondition } from '../common-tools/common-tools'
 
-Before(async function() {
+Before(async function () {
   await this.driver.manage().window()
   this.createdItems = []
   this.testContext = {}
 })
 
-After(async function(testCase) {
+After(async function (testCase) {
   if (testCase.result.status === Status.FAILED) {
     var stream = await this.driver.takeScreenshot()
     await this.attach(stream, 'base64:image/png')
@@ -36,12 +36,7 @@ After(async function(testCase) {
   let logs = []
   if (browser === 'chrome') {
     await this.driver
-      .then(() =>
-        this.driver
-          .manage()
-          .logs()
-          .get(wd.logging.Type.BROWSER)
-      )
+      .then(() => this.driver.manage().logs().get(wd.logging.Type.BROWSER))
       .then(result => {
         logs = result
       })
@@ -51,9 +46,15 @@ After(async function(testCase) {
   await this.driver.quit()
 
   if (logs.some(log => log.level.name_ === 'SEVERE')) {
-    await logs.forEach(log =>
-      this.attach(`${log.level.name} ${log.message}`, 'text/plain')
-    )
+    await logs.forEach(log => this.attach(`${log.level.name} ${log.message}`, 'text/plain'))
     // throw new Error('There are some errors in console')
   }
+})
+
+Before('@mlrunUnhealthyTest', async function () {
+  await setRequestsFailureCondition(true)
+})
+
+After('@mlrunUnhealthyTest', async function () {
+  await setRequestsFailureCondition(false)
 })

@@ -756,7 +756,7 @@ Feature: Artifacts Page
     Then verify "Add_Tag_Popup" element visibility on "Add_Tag_Popup" wizard
     Then verify "Close_Button" element visibility on "Add_Tag_Popup" wizard
     Then verify "Title" element visibility on "Add_Tag_Popup" wizard
-    # Then "Title" element on "Add_Tag_Popup" should contains "Add a tag" value  - bug 'Add A Tag'
+    Then "Title" element on "Add_Tag_Popup" should contains "Add A Tag" value
     Then verify "Input_Label" element visibility on "Add_Tag_Popup" wizard
     Then "Input_Label" element on "Add_Tag_Popup" should contains "Artifact tag *" value
     Then verify "Tag_Input" element visibility on "Add_Tag_Popup" wizard

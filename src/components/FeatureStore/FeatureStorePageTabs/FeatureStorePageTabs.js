@@ -17,37 +17,36 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
+import { useLocation } from 'react-router-dom'
 
-export const scrollToElement = (
-  parentRef,
-  querySelector,
-  shouldScrollToTop = false,
-  timeoutDuration = 0
-) => {
-  const selectedElement = parentRef?.current?.querySelector(`${querySelector}`)
+import ContentMenu from '../../../elements/ContentMenu/ContentMenu'
 
-  if (!selectedElement) return
+import { tabs } from '../featureStore.util'
 
-  shouldScrollToTop
-    ? parentRef.current.scrollTo({ top: 0, left: 0, behavior: 'smooth' })
-    : setTimeout(() => {
-        scrollToCenter(parentRef?.current, selectedElement)
-      }, timeoutDuration)
+import {
+  FEATURE_SETS_TAB,
+  FEATURE_STORE_PAGE,
+  FEATURE_STORE_PAGE_PATH,
+  FEATURE_VECTORS_TAB,
+  FEATURES_TAB,
+} from '../../../constants'
+
+const FeatureStorePageTabs = () => {
+  const location = useLocation()
+
+  return (
+    <ContentMenu
+      activeTab={
+        location.pathname.includes(`${FEATURE_STORE_PAGE_PATH}/${FEATURE_SETS_TAB}`)
+          ? FEATURE_SETS_TAB
+          : location.pathname.includes(`${FEATURE_STORE_PAGE_PATH}/${FEATURE_VECTORS_TAB}`)
+            ? FEATURE_VECTORS_TAB
+            : FEATURES_TAB
+      }
+      screen={FEATURE_STORE_PAGE}
+      tabs={tabs}
+    />
+  )
 }
 
-const scrollToCenter = (container, element) => {
-  const containerRect = container.getBoundingClientRect()
-  const elementRect = element.getBoundingClientRect()
-
-  const scrollTop =
-    container.scrollTop +
-    elementRect.top -
-    containerRect.top -
-    container.clientHeight / 2 +
-    elementRect.height / 2
-
-  container.scrollTo({
-    top: scrollTop,
-    behavior: 'smooth'
-  })
-}
+export default FeatureStorePageTabs
