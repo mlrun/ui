@@ -5,7 +5,7 @@ import React from 'react'
 import { ReactComponent as ClockIcon } from 'igz-controls/images/clock.svg'
 import Loader from '../../common/Loader/Loader'
 
-const AlertCounter = () => {
+const AlertsCounter = () => {
   const demoData = 10
   const demoFalse = false
   return (
@@ -70,4 +70,4 @@ const AlertCounter = () => {
   )
 }
 
-export default AlertCounter
+export default AlertsCounter
