@@ -2,7 +2,6 @@
 @import '~igz-controls/scss/colors';
 
 .stats {
-
   &-card {
     display: flex;
     flex-wrap: wrap;
@@ -11,10 +10,9 @@
     background-color: $white;
     border-radius: 8px;
     box-shadow: $previewBoxShadowInit;
-    padding: 10px 25px 10px;
+    padding: 20px 25px 15px;
     transition: box-shadow 0.3s ease-in-out;
     border: 1px solid $frenchLilac;
-    //TODO : change the color
 
     &__row {
       display: flex;
@@ -46,9 +44,8 @@
       margin: 0;
     }
   }
-
 }
 .alerts-card {
-  background-color: #E5415814;
-  border: 1px solid #F4BEC6;
+  background-color: $babyPink;
+  border: 1px solid $ceriseRed;
 }
