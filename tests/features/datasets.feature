@@ -1238,16 +1238,16 @@ Feature: Datasets Page
     And wait load page
     And hover "MLRun_Logo" component on "commonPagesHeader" wizard
     And wait load page
-    Then verify that 16 row elements are displayed in "Datasets_Table" on "Datasets" wizard
+    Then verify that 17 row elements are displayed in "Datasets_Table" on "Datasets" wizard
     Then check "new_dataset_10" value in "name" column in "Datasets_Table" table on "Datasets" wizard
     Then check "new_dataset_24" value in "name" column in "Datasets_Table" table on "Datasets" wizard
     Then check "test-regressor_cox-test-summary" value in "name" column in "Datasets_Table" table on "Datasets" wizard
-    Then check "survival-curves_coxhazard-summary" value not in "name" column in "Datasets_Table" table on "Datasets" wizard
+    Then check "survival-curves_coxhazard-summary" value in "name" column in "Datasets_Table" table on "Datasets" wizard
     Then check "iris_gen_iris_dataset" value not in "name" column in "Datasets_Table" table on "Datasets" wizard
     Then check "data_clean_cleaned-data" value not in "name" column in "Datasets_Table" table on "Datasets" wizard
     When scroll to the element with "test-regressor_cox-test-summary" value in "name" column in "Datasets_Table" table on "Datasets" wizard
     And wait load page
-    Then verify that 17 row elements are displayed in "Datasets_Table" on "Datasets" wizard
+    Then verify that 18 row elements are displayed in "Datasets_Table" on "Datasets" wizard
     Then check "test-regressor_cox-test-summary" value in "name" column in "Datasets_Table" table on "Datasets" wizard
     Then check "iris_gen_iris_dataset" value in "name" column in "Datasets_Table" table on "Datasets" wizard
     Then check "new_dataset_10" value not in "name" column in "Datasets_Table" table on "Datasets" wizard
@@ -1276,10 +1276,11 @@ Feature: Datasets Page
     Then select "All" option in "Table_Tree_Filter_Dropdown" dropdown on "FilterBy_Popup" wizard
     Then click on "Apply_Button" element on "FilterBy_Popup" wizard
     And wait load page
-    Then verify that 16 row elements are displayed in "Datasets_Table" on "Datasets" wizard
+    Then verify that 17 row elements are displayed in "Datasets_Table" on "Datasets" wizard
     Then check "new_dataset_24" value in "name" column in "Datasets_Table" table on "Datasets" wizard
     Then check "test-regressor_cox-test-summary" value in "name" column in "Datasets_Table" table on "Datasets" wizard
-    Then check "survival-curves_coxhazard-summary" value not in "name" column in "Datasets_Table" table on "Datasets" wizard
+    Then check "survival-curves_coxhazard-summary" value in "name" column in "Datasets_Table" table on "Datasets" wizard
+    Then check "iris_gen_iris_dataset" value not in "name" column in "Datasets_Table" table on "Datasets" wizard
     Then click on cell with value "test-regressor_cox-test-summary" in "name" column in "Datasets_Table" table on "Datasets" wizard
     And wait load page
     Then check "new_dataset_10" value not in "name" column in "Datasets_Table" table on "Datasets" wizard

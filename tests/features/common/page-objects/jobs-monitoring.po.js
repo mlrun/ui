@@ -72,6 +72,15 @@ const overallTable = {
     row: {
       root: '.table-row',
       fields: {
+        status: {
+          componentType: labelComponent,
+          structure: generateLabelGroup(
+            '.table-body__cell:nth-of-type(1) .status',
+            'i',
+            true,
+            '.tooltip .tooltip__text span'
+          )
+        },
         name: '[data-testid="name"] a .link',
         project_name: '[data-testid="projectName"] .data-ellipsis',
         datetime:

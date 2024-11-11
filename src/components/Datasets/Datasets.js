@@ -321,7 +321,7 @@ const Datasets = () => {
     createRowData: rowItem => createDatasetsRowData(rowItem, params.projectName, frontendSpec),
     fetchData,
     fetchTags,
-    filterMenuName: DATASETS_FILTERS,
+    filterModalName: DATASETS_FILTERS,
     filters: datasetsFilters,
     setExpandedRowsData: setSelectedRowData,
     sortExpandedRowsDataBy: 'updated'

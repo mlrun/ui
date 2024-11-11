@@ -78,7 +78,7 @@ const JobsCounters = () => {
                   {projectStore.projectsSummary.loading ? (
                     <Loader section small secondary />
                   ) : (
-                    <Tooltip template={<TextTooltipTemplate text={tooltip} />}>
+                    <Tooltip textShow template={<TextTooltipTemplate text={tooltip} />}>
                       <span>
                         {counter}
                         <i className={`state-${statusClass}`} />

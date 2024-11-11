@@ -36,6 +36,7 @@ import { truncateUid } from '../../utils'
 
 export const createFeatureSetTitle = 'Create set'
 export const createFeatureVectorTitle = 'Create vector'
+export const addToFeatureVectorTitle = 'Add to feature vector'
 
 export const tabs = [
   { id: FEATURE_SETS_TAB, label: 'Feature sets' },
