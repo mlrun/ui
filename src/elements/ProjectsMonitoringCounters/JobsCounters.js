@@ -58,37 +58,32 @@ const JobsCounters = () => {
       </StatsCard.Header>
       <StatsCard.Row>
         <StatsCard.Col>
-          <>
-            <span className="stats__counter">
-              {projectStore.projectsSummary.loading ? (
-                <Loader section small secondary />
-              ) : (
-                <span
-                  className="stats__link"
-                  onClick={jobStats.all.link}
-                  data-testid="jobs_see_all"
-                >
-                  {jobStats.all.counter}
-                </span>
-              )}
-            </span>
-            <ul className="projects-monitoring-legend__status">
-              {jobStats.counters.map(({ counter, link, statusClass, tooltip }) => (
-                <li className="link" onClick={link} key={`${statusClass}-jobs`}>
-                  {projectStore.projectsSummary.loading ? (
-                    <Loader section small secondary />
-                  ) : (
-                    <Tooltip textShow template={<TextTooltipTemplate text={tooltip} />}>
-                      <span>
-                        {counter}
-                        <i className={`state-${statusClass}`} />
-                      </span>
-                    </Tooltip>
-                  )}
-                </li>
-              ))}
-            </ul>
-          </>
+          <h6> </h6>
+          <span className="stats__counter">
+            {projectStore.projectsSummary.loading ? (
+              <Loader section small secondary />
+            ) : (
+              <span className="stats__link" onClick={jobStats.all.link} data-testid="jobs_see_all">
+                {jobStats.all.counter}
+              </span>
+            )}
+          </span>
+          <ul className="projects-monitoring-legend__status">
+            {jobStats.counters.map(({ counter, link, statusClass, tooltip }) => (
+              <li className="link" onClick={link} key={`${statusClass}-jobs`}>
+                {projectStore.projectsSummary.loading ? (
+                  <Loader section small secondary />
+                ) : (
+                  <Tooltip textShow template={<TextTooltipTemplate text={tooltip} />}>
+                    <span>
+                      {counter}
+                      <i className={`state-${statusClass}`} />
+                    </span>
+                  </Tooltip>
+                )}
+              </li>
+            ))}
+          </ul>
         </StatsCard.Col>
       </StatsCard.Row>
       <StatsCard.Row>

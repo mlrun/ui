@@ -66,8 +66,10 @@ const WorkflowsCounters = () => {
           withLabels
         /> */}
       </StatsCard.Header>
+
       <StatsCard.Row>
         <StatsCard.Col>
+          <h6> </h6>
           <span className="stats__counter">
             {projectStore.projectsSummary.loading ? (
               <Loader section small secondary />
