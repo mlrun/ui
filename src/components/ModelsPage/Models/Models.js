@@ -373,7 +373,7 @@ const Models = ({ fetchModelFeatureVector }) => {
     createRowData: rowItem => createModelsRowData(rowItem, params.projectName, frontendSpec),
     fetchData,
     fetchTags,
-    filterMenuName: MODELS_FILTERS,
+    filterModalName: MODELS_FILTERS,
     filters: modelsFilters,
     setExpandedRowsData: setSelectedRowData,
     sortExpandedRowsDataBy: 'updated'

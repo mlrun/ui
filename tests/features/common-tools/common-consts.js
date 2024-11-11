@@ -333,6 +333,10 @@ module.exports = {
     Secrets_Hint:
       'These secrets are automatically available to all jobs belonging to this project that are not executed locally. See Secrets'
   },
+  Common_Tooltips:{
+    FilterBy_Button: 'Filter',
+    Refresh_Button: 'Refresh'
+  },
   Input_Hint: {
     Artifact_Names_Unique: 'Artifact names in the same project must be unique',
     Dataset_Names_Unique: 'Dataset names in the same project must be unique',
@@ -481,10 +485,11 @@ module.exports = {
     Job_Action_Menu_Options: ['Batch re-run', 'Monitoring', 'View YAML', 'Delete'],
     Job_Overview_Action_Menu_Options: ['View YAML', 'Batch re-run', 'Delete'],
     Running_Job_Action_Menu_Options: ['Monitoring', 'Abort', 'View YAML'],
-    Workflows_Action_Menu_Options: ['View YAML'],
+    Workflows_Action_Menu_Options: ['View YAML', 'Retry'],
     Workflows_Info_Pane_Action_Menu_Options: ['Batch re-run', 'Monitoring', 'View YAML', 'Delete'],
     Pending_Job_Action_Menu_Options: ['Batch re-run', 'Monitoring', 'Abort', 'View YAML'],
-    Schedule_Action_Menu_Options: ['Run now', 'Edit', 'Delete', 'View YAML']
+    Schedule_Action_Menu_Options: ['Run now', 'Edit', 'Delete', 'View YAML'],
+    Workflows_Unsuccessful_Run_Message: 'Workflow did not run successfully\nRETRY'
   },
   Jobs_Monitor_Tab_Info_Pane: {
     Tab_List: ['Overview', 'Inputs', 'Artifacts', 'Results', 'Logs', 'Pods'],

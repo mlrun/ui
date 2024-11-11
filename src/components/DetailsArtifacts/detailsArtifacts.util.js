@@ -67,15 +67,15 @@ export const generateArtifactsPreviewContent = (selectedJob, artifacts) => {
 }
 
 export const generateArtifactsTabContent = (artifacts, params, iteration, showArtifact) => {
-  return artifacts.map((artifact, index) => {
+  return artifacts.map(artifact => {
     const artifactScreenLinks = {
-      model: `/projects/${params.projectName || artifact.project}/models/${MODELS_TAB}/${
+      model: `${process.env.PUBLIC_URL}/projects/${params.projectName || artifact.project}/models/${MODELS_TAB}/${
         artifact.db_key || artifact.key
-      }/${artifact.tag ? artifact.tag : artifact.tree ?? TAG_FILTER_LATEST}${
+      }/${artifact.tag ? artifact.tag : (artifact.tree ?? TAG_FILTER_LATEST)}${
         iteration ? `/${iteration}` : ''
       }/overview`,
-      dataset: `/projects/${params.projectName || artifact.project}/${DATASETS_TAB}/${artifact.db_key || artifact.key}/${
-        artifact.tag ? artifact.tag : artifact.tree ?? TAG_FILTER_LATEST
+      dataset: `${process.env.PUBLIC_URL}/projects/${params.projectName || artifact.project}/${DATASETS_TAB}/${artifact.db_key || artifact.key}/${
+        artifact.tag ? artifact.tag : (artifact.tree ?? TAG_FILTER_LATEST)
       }${iteration ? `/${iteration}` : ''}/overview`
     }
 
@@ -120,11 +120,10 @@ export const generateArtifactsTabContent = (artifacts, params, iteration, showAr
             <CopyToClipboard textToCopy={artifact.target_path} tooltipText="Copy path" />
             <RoundedIcon tooltipText="Show Details" id="show-details">
               <Link
-                target="_blank"
                 to={
                   artifactScreenLinks[artifact.kind] ??
-                  `/projects/${params.projectName || artifact.project}/files/${artifact.db_key || artifact.key}/${
-                    artifact.tag ? artifact.tag : artifact.tree ?? TAG_FILTER_LATEST
+                  `${process.env.PUBLIC_URL}/projects/${params.projectName || artifact.project}/files/${artifact.db_key || artifact.key}/${
+                    artifact.tag ? artifact.tag : (artifact.tree ?? TAG_FILTER_LATEST)
                   }${iteration ? `/${iteration}` : ''}/overview`
                 }
               >
