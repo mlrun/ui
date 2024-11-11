@@ -3,8 +3,11 @@ import StatsCard from '../../common/StatsCard/StatsCard'
 import React from 'react'
 
 import { ReactComponent as ClockIcon } from 'igz-controls/images/clock.svg'
+import Loader from '../../common/Loader/Loader'
 
 const AlertCounter = () => {
+  const demoData = 10
+  const demoFalse = false
   return (
     <StatsCard className="monitoring-stats">
       <StatsCard.Header title="Alerts">
@@ -14,7 +17,54 @@ const AlertCounter = () => {
         </div>
       </StatsCard.Header>
       <StatsCard.Row>
-        <StatsCard.Col></StatsCard.Col>
+        <StatsCard.Col>
+          <h6 className="stats__subtitle">Endpoint</h6>
+          <span className="stats__counter">
+            {demoFalse ? (
+              <Loader section small secondary />
+            ) : (
+              <span
+                className="stats__link"
+                onClick={() => {}}
+                data-testid="scheduled_total_see_all"
+              >
+                {demoData}{' '}
+              </span>
+            )}
+          </span>
+        </StatsCard.Col>
+        <StatsCard.Col>
+          <h6 className="stats__subtitle">Jobs</h6>
+          <span className="stats__counter">
+            {demoFalse ? (
+              <Loader section small secondary />
+            ) : (
+              <span
+                className="stats__link"
+                onClick={() => {}}
+                data-testid="scheduled_total_see_all"
+              >
+                {demoData}{' '}
+              </span>
+            )}
+          </span>
+        </StatsCard.Col>
+        <StatsCard.Col>
+          <h6 className="stats__subtitle">Other</h6>
+          <span className="stats__counter">
+            {demoFalse ? (
+              <Loader section small secondary />
+            ) : (
+              <span
+                className="stats__link"
+                onClick={() => {}}
+                data-testid="scheduled_total_see_all"
+              >
+                {demoData}{' '}
+              </span>
+            )}
+          </span>
+        </StatsCard.Col>
       </StatsCard.Row>
     </StatsCard>
   )
