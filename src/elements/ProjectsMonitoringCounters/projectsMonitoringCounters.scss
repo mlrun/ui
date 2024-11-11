@@ -1,5 +1,8 @@
 @import '~igz-controls/scss/colors';
 
+.space{
+  height: 10px;
+}
 .monitoring-stats {
   flex-direction: column;
   flex-wrap: unset;
@@ -22,8 +25,8 @@
     }
 
     &__counter {
-      //display: flex;
-      //flex: 1;
+      display: flex;
+      flex: 1;
       min-height: 58px;
       //margin: 0 0 5px 0;
       color: $primary;
