@@ -2,15 +2,16 @@ import './projectsMonitoringCounters.scss'
 import StatsCard from '../../common/StatsCard/StatsCard'
 import React from 'react'
 
-import { ReactComponent as ClockIcon } from 'igz-controls/images/clock.svg'
 import Loader from '../../common/Loader/Loader'
 
 import { ReactComponent as Alerts } from 'igz-controls/images/alerts.svg'
+import { ReactComponent as ClockIcon } from 'igz-controls/images/clock.svg'
 
 const AlertsCounter = () => {
   const demoData = 10
   const demoLoading = false
   //todo:change to data
+
   const AlertTitle = (
     <div>
       <Alerts className="stats__header-icon" />

@@ -17,13 +17,13 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
+import AlertsCounter from '../../../elements/ProjectsMonitoringCounters/AlertsCounter'
 import JobsCounters from '../../../elements/ProjectsMonitoringCounters/JobsCounters'
 import PageHeader from '../../../elements/PageHeader/PageHeader'
 import ScheduledJobsCounters from '../../../elements/ProjectsMonitoringCounters/ScheduledJobsCounters'
 import WorkflowsCounters from '../../../elements/ProjectsMonitoringCounters/WorkflowsCounters'
 
 import './projectsMonitoring.scss'
-import AlertsCounter from '../../../elements/ProjectsMonitoringCounters/AlertsCounter'
 
 const ProjectsMonitoring = () => {
   return (
