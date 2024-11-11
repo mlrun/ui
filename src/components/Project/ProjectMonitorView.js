@@ -40,6 +40,7 @@ import { launchIDEOptions, generateTipMessageForCounter } from './project.utils'
 import { ReactComponent as RefreshIcon } from 'igz-controls/images/refresh.svg'
 
 import './project.scss'
+import AlertsCounter from '../../elements/ProjectsMonitoringCounters/AlertsCounter'
 
 const ProjectMonitorView = ({
   closeFeatureSetPanel,
@@ -150,7 +151,7 @@ const ProjectMonitorView = ({
               {nuclioStreamsAreEnabled && (
                 <ProjectSummaryCard
                   counterValue={
-                    isNuclioModeDisabled ? 'N/A' : Object.keys(v3ioStreams.data).length ?? 0
+                    isNuclioModeDisabled ? 'N/A' : (Object.keys(v3ioStreams.data).length ?? 0)
                   }
                   link={`/projects/${params.projectName}/monitor${
                     !isNuclioModeDisabled ? '/consumer-groups' : ''
@@ -164,6 +165,9 @@ const ProjectMonitorView = ({
                   }
                 />
               )}
+              <div className="main-info__alerts-section">
+                <AlertsCounter />
+              </div>
             </div>
             <div className="main-info__statistics-section">
               <ProjectJobs />

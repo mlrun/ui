@@ -24,6 +24,15 @@
       font-size: 1rem;
     }
 
+    &__header-icon {
+      height: 20px;
+      width: 20px;
+      margin-right: 5px;
+      path {
+        fill: #E54158;
+      }
+    }
+
     &__counter {
       display: flex;
       flex: 1;
