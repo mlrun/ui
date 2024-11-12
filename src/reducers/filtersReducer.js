@@ -21,6 +21,7 @@ import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
 import { set } from 'lodash'
 
 import {
+  ADD_TO_FEATURE_VECTOR_TAB,
   ARTIFACT_OTHER_TYPE,
   CONSUMER_GROUPS_FILTER,
   CONSUMER_GROUP_FILTER,
@@ -28,6 +29,10 @@ import {
   DATASET_TYPE,
   DATES_FILTER,
   DATE_FILTER_ANY_TIME,
+  ENTITIES_FILTER,
+  FEATURES_TAB,
+  FEATURE_SETS_TAB,
+  FEATURE_VECTORS_TAB,
   FILES_FILTERS,
   FILTER_ALL_ITEMS,
   FILTER_MENU,
@@ -40,15 +45,20 @@ import {
   JOBS_MONITORING_WORKFLOWS_TAB,
   LABELS_FILTER,
   MODELS_FILTERS,
+  MODEL_ENDPOINTS_TAB,
   MODEL_TYPE,
   NAME_FILTER,
   PROJECT_FILTER,
+  REAL_TIME_PIPELINES_TAB,
   SHOW_ITERATIONS,
   SHOW_UNTAGGED_FILTER,
   STATUS_FILTER,
   TAG_FILTER,
   TAG_FILTER_LATEST,
-  TYPE_FILTER
+  TYPE_FILTER,
+  MONITOR_JOBS_TAB,
+  MONITOR_WORKFLOWS_TAB,
+  SCHEDULE_TAB
 } from '../constants'
 import {
   NEXT_24_HOUR_DATE_OPTION,
@@ -56,7 +66,8 @@ import {
   PAST_WEEK_DATE_OPTION,
   datePickerFutureOptions,
   datePickerPastOptions,
-  getDatePickerFilterValue
+  getDatePickerFilterValue,
+  ANY_TIME_DATE_OPTION
 } from '../utils/datePicker.util'
 
 const initialState = {
@@ -116,14 +127,44 @@ const initialState = {
         )
       }
     },
+    [MONITOR_JOBS_TAB]: {
+      initialValues: {
+        [NAME_FILTER]: '',
+        [DATES_FILTER]: getDatePickerFilterValue(datePickerPastOptions, PAST_WEEK_DATE_OPTION)
+      },
+      values: {
+        [NAME_FILTER]: '',
+        [DATES_FILTER]: getDatePickerFilterValue(datePickerPastOptions, PAST_WEEK_DATE_OPTION)
+      }
+    },
+    [MONITOR_WORKFLOWS_TAB]: {
+      initialValues: {
+        [NAME_FILTER]: '',
+        [DATES_FILTER]: getDatePickerFilterValue(datePickerPastOptions, PAST_WEEK_DATE_OPTION)
+      },
+      values: {
+        [NAME_FILTER]: '',
+        [DATES_FILTER]: getDatePickerFilterValue(datePickerPastOptions, PAST_WEEK_DATE_OPTION)
+      }
+    },
+    [SCHEDULE_TAB]: {
+      initialValues: {
+        [NAME_FILTER]: '',
+        [DATES_FILTER]: getDatePickerFilterValue(datePickerFutureOptions, ANY_TIME_DATE_OPTION)
+      },
+      values: {
+        [NAME_FILTER]: '',
+        [DATES_FILTER]: getDatePickerFilterValue(datePickerFutureOptions, ANY_TIME_DATE_OPTION)
+      }
+    },
     [FUNCTION_FILTERS]: {
       values: {
         [NAME_FILTER]: '',
-        [DATES_FILTER]: getDatePickerFilterValue(datePickerPastOptions, PAST_WEEK_DATE_OPTION),
+        [DATES_FILTER]: getDatePickerFilterValue(datePickerPastOptions, PAST_WEEK_DATE_OPTION)
       },
       initialValues: {
         [NAME_FILTER]: '',
-        [DATES_FILTER]: getDatePickerFilterValue(datePickerPastOptions, PAST_WEEK_DATE_OPTION),
+        [DATES_FILTER]: getDatePickerFilterValue(datePickerPastOptions, PAST_WEEK_DATE_OPTION)
       }
     },
     [CONSUMER_GROUPS_FILTER]: {
@@ -135,6 +176,46 @@ const initialState = {
       }
     },
     [CONSUMER_GROUP_FILTER]: {
+      values: {
+        [NAME_FILTER]: ''
+      },
+      initialValues: {
+        [NAME_FILTER]: ''
+      }
+    },
+    [FEATURE_SETS_TAB]: {
+      values: {
+        [NAME_FILTER]: ''
+      },
+      initialValues: {
+        [NAME_FILTER]: ''
+      }
+    },
+    [FEATURES_TAB]: {
+      values: {
+        [NAME_FILTER]: ''
+      },
+      initialValues: {
+        [NAME_FILTER]: ''
+      }
+    },
+    [FEATURE_VECTORS_TAB]: {
+      values: {
+        [NAME_FILTER]: ''
+      },
+      initialValues: {
+        [NAME_FILTER]: ''
+      }
+    },
+    [ADD_TO_FEATURE_VECTOR_TAB]: {
+      values: {
+        [NAME_FILTER]: ''
+      },
+      initialValues: {
+        [NAME_FILTER]: ''
+      }
+    },
+    [REAL_TIME_PIPELINES_TAB]: {
       values: {
         [NAME_FILTER]: ''
       },
@@ -221,6 +302,90 @@ const initialState = {
         [PROJECT_FILTER]: '',
         [TYPE_FILTER]: FILTER_ALL_ITEMS
       }
+    },
+    [MONITOR_JOBS_TAB]: {
+      initialValues: {
+        [LABELS_FILTER]: '',
+        [STATUS_FILTER]: [FILTER_ALL_ITEMS],
+        [TYPE_FILTER]: FILTER_ALL_ITEMS
+      },
+      values: {
+        [LABELS_FILTER]: '',
+        [STATUS_FILTER]: [FILTER_ALL_ITEMS],
+        [TYPE_FILTER]: FILTER_ALL_ITEMS
+      }
+    },
+    [MONITOR_WORKFLOWS_TAB]: {
+      initialValues: {
+        [LABELS_FILTER]: '',
+        [STATUS_FILTER]: [FILTER_ALL_ITEMS]
+      },
+      values: {
+        [LABELS_FILTER]: '',
+        [STATUS_FILTER]: [FILTER_ALL_ITEMS]
+      }
+    },
+    [SCHEDULE_TAB]: {
+      initialValues: {
+        [LABELS_FILTER]: '',
+        [TYPE_FILTER]: FILTER_ALL_ITEMS
+      },
+      values: {
+        [LABELS_FILTER]: '',
+        [TYPE_FILTER]: FILTER_ALL_ITEMS
+      }
+    },
+    [FEATURE_SETS_TAB]: {
+      initialValues: {
+        [TAG_FILTER]: TAG_FILTER_LATEST,
+        [LABELS_FILTER]: ''
+      },
+      values: {
+        [TAG_FILTER]: TAG_FILTER_LATEST,
+        [LABELS_FILTER]: ''
+      }
+    },
+    [FEATURES_TAB]: {
+      initialValues: {
+        [TAG_FILTER]: TAG_FILTER_LATEST,
+        [LABELS_FILTER]: ''
+      },
+      values: {
+        [TAG_FILTER]: TAG_FILTER_LATEST,
+        [LABELS_FILTER]: ''
+      }
+    },
+    [FEATURE_VECTORS_TAB]: {
+      initialValues: {
+        [TAG_FILTER]: TAG_FILTER_LATEST,
+        [LABELS_FILTER]: ''
+      },
+      values: {
+        [TAG_FILTER]: TAG_FILTER_LATEST,
+        [LABELS_FILTER]: ''
+      }
+    },
+    [ADD_TO_FEATURE_VECTOR_TAB]: {
+      initialValues: {
+        [TAG_FILTER]: TAG_FILTER_LATEST,
+        [ENTITIES_FILTER]: '',
+        [LABELS_FILTER]: '',
+        [PROJECT_FILTER]: ''
+      },
+      values: {
+        [TAG_FILTER]: TAG_FILTER_LATEST,
+        [ENTITIES_FILTER]: '',
+        [LABELS_FILTER]: '',
+        [PROJECT_FILTER]: ''
+      }
+    },
+    [MODEL_ENDPOINTS_TAB]: {
+      initialValues: {
+        [LABELS_FILTER]: ''
+      },
+      values: {
+        [LABELS_FILTER]: ''
+      }
     }
   }
 }
@@ -257,7 +422,11 @@ const filtersSlice = createSlice({
       state[FILTER_MENU][action.payload] = initialState[FILTER_MENU][action.payload]
     },
     resetModalFilter(state, action) {
-      state[FILTER_MENU_MODAL][action.payload] = initialState[FILTER_MENU_MODAL][action.payload]
+      state[FILTER_MENU_MODAL][action.payload.name] =
+        initialState[FILTER_MENU_MODAL][action.payload.name]
+      action.payload.resetModalFilterCallback?.(
+        initialState[FILTER_MENU_MODAL][action.payload.name]?.initialValues
+      )
     },
     setFilters(state, action) {
       for (let filterProp in action.payload) {

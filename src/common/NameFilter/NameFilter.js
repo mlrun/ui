@@ -28,7 +28,7 @@ import { ReactComponent as SearchIcon } from 'igz-controls/images/search.svg'
 
 import './nameFilter.scss'
 
-const NameFilter = ({ applyChanges, filterMenuName= '' }) => {
+const NameFilter = ({ applyChanges, filterMenuName = '' }) => {
   const { input } = useField(NAME_FILTER)
   const dispatch = useDispatch()
 
@@ -36,7 +36,9 @@ const NameFilter = ({ applyChanges, filterMenuName= '' }) => {
     if (event.keyCode === KEY_CODES.ENTER) {
       applyChanges(event.target.value)
       if (filterMenuName) {
-        dispatch(setFiltersValues({ name: filterMenuName, value: { [NAME_FILTER]: event.target.value } }))
+        dispatch(
+          setFiltersValues({ name: filterMenuName, value: { [NAME_FILTER]: event.target.value } })
+        )
       } else {
         dispatch(setFilters({ [NAME_FILTER]: event.target.value }))
       }
@@ -54,7 +56,7 @@ const NameFilter = ({ applyChanges, filterMenuName= '' }) => {
   }
 
   return (
-    <div className="name-filter">
+    <div className="name-filter filter-column">
       <FormInput
         iconClass="name-filter__icon"
         iconClick={handleIconClick}

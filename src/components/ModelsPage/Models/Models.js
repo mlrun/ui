@@ -297,8 +297,8 @@ const Models = ({ fetchModelFeatureVector }) => {
         return {
           ...state,
           [modelIdentifier]: {
-            content: sortListByDate(content[model.db_key ?? model.key], 'updated', false).map(artifact =>
-              createModelsRowData(artifact, params.projectName)
+            content: sortListByDate(content[model.db_key ?? model.key], 'updated', false).map(
+              artifact => createModelsRowData(artifact, params.projectName)
             )
           },
           error: null,
@@ -373,7 +373,7 @@ const Models = ({ fetchModelFeatureVector }) => {
     createRowData: rowItem => createModelsRowData(rowItem, params.projectName, frontendSpec),
     fetchData,
     fetchTags,
-    filterMenuName: MODELS_FILTERS,
+    filterModalName: MODELS_FILTERS,
     filters: modelsFilters,
     setExpandedRowsData: setSelectedRowData,
     sortExpandedRowsDataBy: 'updated'

@@ -25,24 +25,40 @@ Feature: Jobs and workflows
         And wait load page
         Then verify "Jobs_Tab_Selector" on "Jobs_Monitor_Tab" wizard should contains "Jobs_And_Workflows"."Tab_List"
         Then verify "Monitor Jobs" tab is active in "Jobs_Tab_Selector" on "Jobs_Monitor_Tab" wizard
+        Then verify "Table_Name_Filter_Input" element visibility on "Jobs_Monitor_Tab" wizard
+        Then verify "Date_Picker_Filter_Dropdown" element visibility on "Jobs_Monitor_Tab" wizard
+        Then verify "Date_Picker_Filter_Dropdown" dropdown element on "Jobs_Monitor_Tab" wizard should contains "Dropdown_Options"."Date_Picker_Filter_Options"
+        Then verify "Table_FilterBy_Button" element visibility on "Jobs_Monitor_Tab" wizard
+        Then click on "Table_FilterBy_Button" element on "Jobs_Monitor_Tab" wizard
+        Then "Title" element on "FilterBy_Popup" should contains "Filter by" value
+        Then verify "Status_Filter_Dropdown" element visibility on "FilterBy_Popup" wizard
+        Then verify "Status_Filter_Dropdown" dropdown on "FilterBy_Popup" wizard selected option value "All"
+        Then verify "Status_Filter_Dropdown" dropdown element on "FilterBy_Popup" wizard should contains "Dropdown_Options"."Jobs_Status_Filter_Options"
+        And wait load page
+        Then click on "Status_Filter_Element" element on "FilterBy_Popup" wizard
+        Then "Status_All_Checkbox" element should be checked on "FilterBy_Popup" wizard
+        Then click on "Status_Filter_Element" element on "FilterBy_Popup" wizard
+        Then verify "Type_Filter_Dropdown" element visibility on "FilterBy_Popup" wizard
+        Then verify "Type_Filter_Dropdown" dropdown on "FilterBy_Popup" wizard selected option value "All"
+        Then verify "Type_Filter_Dropdown" dropdown element on "FilterBy_Popup" wizard should contains "Dropdown_Options"."Jobs_Type_Filter_Options"
+        Then verify "Table_Label_Filter_Input" element visibility on "FilterBy_Popup" wizard
+        Then verify "Clear_Button" element visibility on "FilterBy_Popup" wizard
+        Then verify "Apply_Button" element visibility on "FilterBy_Popup" wizard
+        Then verify "Clear_Button" element on "FilterBy_Popup" wizard is disabled
+        Then verify "Apply_Button" element on "FilterBy_Popup" wizard is disabled
+        Then click on "Table_FilterBy_Button" element on "Jobs_Monitor_Tab" wizard
         Then verify "Batch_Run_Button" element visibility on "Jobs_Monitor_Tab" wizard
         Then "Batch_Run_Button" element on "Jobs_Monitor_Tab" should contains "Batch Run" value
         Then verify "Resource_Monitoring_Button" element visibility on "Jobs_Monitor_Tab" wizard
+        Then verify "Auto_Refresh_Checkbox" element visibility on "Jobs_Monitor_Tab" wizard
+        Then "Auto_Refresh_Checkbox" element should be checked on "Jobs_Monitor_Tab" wizard
         Then verify "Table_Refresh_Button" element visibility on "Jobs_Monitor_Tab" wizard
-        Then verify "Status_Filter_Dropdown" element visibility on "Jobs_Monitor_Tab" wizard
-        Then verify "Status_Filter_Dropdown" dropdown element on "Jobs_Monitor_Tab" wizard should contains "Dropdown_Options"."Status_Filter_Options"
-        Then verify "Table_Name_Filter_Input" element visibility on "Jobs_Monitor_Tab" wizard
-        Then verify "Table_Labels_Filter_Input" element visibility on "Jobs_Monitor_Tab" wizard
-        Then verify "Start_Time_Filter_Dropdown" element visibility on "Jobs_Monitor_Tab" wizard
-        Then verify "Start_Time_Filter_Dropdown" dropdown element on "Jobs_Monitor_Tab" wizard should contains "Dropdown_Options"."Start_Time_Filter_Options"
-        When select "Any time" option in "Start_Time_Filter_Dropdown" filter dropdown on "Jobs_Monitor_Tab" wizard
+        When select "Any time" option in "Date_Picker_Filter_Dropdown" filter dropdown on "Jobs_Monitor_Tab" wizard
         And wait load page
-        And wait load page
+        Then verify "Date_Picker_Filter_Dropdown" dropdown on "Jobs_Monitor_Tab" wizard selected option value "Any time"
         Then verify "Jobs_Monitor_Table" element visibility on "Jobs_Monitor_Tab" wizard
         Then click on "Table_Refresh_Button" element on "Jobs_Monitor_Tab" wizard
-        And wait load page
-        And wait load page
-        And wait load page
+        Then wait for 3 seconds
         Then verify "Jobs_Monitor_Table" element visibility on "Jobs_Monitor_Tab" wizard
 
     @MLJW
@@ -69,7 +85,40 @@ Feature: Jobs and workflows
         And select "Monitor Workflows" tab in "Jobs_Tab_Selector" on "Jobs_Monitor_Tab" wizard
         And wait load page
         Then verify "Monitor Workflows" tab is active in "Jobs_Tab_Selector" on "Jobs_Monitor_Tab" wizard
+        Then verify "Table_Name_Filter_Input" element visibility on "Workflows_Monitor_Tab" wizard
+        Then verify "Date_Picker_Filter_Dropdown" element visibility on "Workflows_Monitor_Tab" wizard
+        Then verify "Date_Picker_Filter_Dropdown" dropdown element on "Workflows_Monitor_Tab" wizard should contains "Dropdown_Options"."Date_Picker_Filter_Options"
+        Then verify "Table_FilterBy_Button" element visibility on "Workflows_Monitor_Tab" wizard
+        Then click on "Table_FilterBy_Button" element on "Workflows_Monitor_Tab" wizard
+        Then "Title" element on "FilterBy_Popup" should contains "Filter by" value
+        Then verify "Status_Filter_Dropdown" element visibility on "FilterBy_Popup" wizard
+        Then verify "Status_Filter_Dropdown" dropdown on "FilterBy_Popup" wizard selected option value "All"
+        Then verify "Status_Filter_Dropdown" dropdown element on "FilterBy_Popup" wizard should contains "Dropdown_Options"."Workflows_Status_Filter_Options"
+        And wait load page
+        Then click on "Status_Filter_Element" element on "FilterBy_Popup" wizard
+        Then "Status_All_Checkbox" element should be checked on "FilterBy_Popup" wizard
+        Then click on "Status_Filter_Element" element on "FilterBy_Popup" wizard
+        Then verify "Clear_Button" element visibility on "FilterBy_Popup" wizard
+        Then verify "Apply_Button" element visibility on "FilterBy_Popup" wizard
+        Then verify "Clear_Button" element on "FilterBy_Popup" wizard is disabled
+        Then verify "Apply_Button" element on "FilterBy_Popup" wizard is disabled
+        Then click on "Table_FilterBy_Button" element on "Workflows_Monitor_Tab" wizard
+        Then verify "Table_Refresh_Button" element visibility on "Workflows_Monitor_Tab" wizard
         Then verify "Workflows_Monitor_Table" element visibility on "Workflows_Monitor_Tab" wizard
+        When select "Any time" option in "Date_Picker_Filter_Dropdown" filter dropdown on "Workflows_Monitor_Tab" wizard
+        And wait load page
+        Then verify "Date_Picker_Filter_Dropdown" dropdown on "Workflows_Monitor_Tab" wizard selected option value "Any time"
+        Then verify "Workflows_Monitor_Table" element visibility on "Workflows_Monitor_Tab" wizard
+        Then click on "Table_Refresh_Button" element on "Workflows_Monitor_Tab" wizard
+        Then wait for 3 seconds
+        Then verify "Workflows_Monitor_Table" element visibility on "Workflows_Monitor_Tab" wizard
+        Then verify "Monitor_Workflows_Subtitle" element visibility on "Workflows_Monitor_Tab" wizard
+        Then "Monitor_Workflows_Subtitle" element on "Workflows_Monitor_Tab" should contains "View running workflows and previously executed workflows" value
+        And turn on demo mode
+        And wait load page
+        Then click on "Table_FilterBy_Button" element on "Workflows_Monitor_Tab" wizard
+        #moved to demo mode ML-7352
+        Then verify "Table_Label_Filter_Input" element visibility on "FilterBy_Popup" wizard
 
     @MLJW
     @passive
@@ -92,8 +141,30 @@ Feature: Jobs and workflows
         And wait load page
         Then verify "Schedule" tab is active in "Jobs_Tab_Selector" on "Jobs_Monitor_Tab" wizard
         Then verify "Table_Name_Filter_Input" element visibility on "Schedule_Monitor_Tab" wizard
-        Then verify "Table_Labels_Filter_Input" element visibility on "Schedule_Monitor_Tab" wizard
+        Then verify "Date_Picker_Filter_Dropdown" element visibility on "Schedule_Monitor_Tab" wizard
+        Then verify "Date_Picker_Filter_Dropdown" dropdown element on "Schedule_Monitor_Tab" wizard should contains "Dropdown_Options"."Scheduled_Date_Picker_Filter_Options"
+        Then verify "Table_FilterBy_Button" element visibility on "Schedule_Monitor_Tab" wizard
+        Then click on "Table_FilterBy_Button" element on "Schedule_Monitor_Tab" wizard
+        Then "Title" element on "FilterBy_Popup" should contains "Filter by" value
+        Then verify "Type_Filter_Dropdown" element visibility on "FilterBy_Popup" wizard
+        Then verify "Type_Filter_Dropdown" dropdown on "FilterBy_Popup" wizard selected option value "All"
+        Then verify "Type_Filter_Dropdown" dropdown element on "FilterBy_Popup" wizard should contains "Dropdown_Options"."Scheduled_Type_Filter_Options"
+        Then verify "Table_Label_Filter_Input" element visibility on "FilterBy_Popup" wizard
+        Then verify "Clear_Button" element visibility on "FilterBy_Popup" wizard
+        Then verify "Apply_Button" element visibility on "FilterBy_Popup" wizard
+        Then verify "Clear_Button" element on "FilterBy_Popup" wizard is disabled
+        Then verify "Apply_Button" element on "FilterBy_Popup" wizard is disabled
+        Then click on "Table_FilterBy_Button" element on "Schedule_Monitor_Tab" wizard
+        Then verify "Batch_Run_Button" element visibility on "Schedule_Monitor_Tab" wizard
+        Then "Batch_Run_Button" element on "Schedule_Monitor_Tab" should contains "Batch Run" value
         Then verify "Table_Refresh_Button" element visibility on "Schedule_Monitor_Tab" wizard
+        Then verify "Schedule_Monitor_Table" element visibility on "Schedule_Monitor_Tab" wizard
+        When select "Any time" option in "Date_Picker_Filter_Dropdown" filter dropdown on "Schedule_Monitor_Tab" wizard
+        And wait load page
+        Then verify "Date_Picker_Filter_Dropdown" dropdown on "Schedule_Monitor_Tab" wizard selected option value "Any time"
+        Then verify "Schedule_Monitor_Table" element visibility on "Schedule_Monitor_Tab" wizard
+        Then click on "Table_Refresh_Button" element on "Schedule_Monitor_Tab" wizard
+        Then wait for 3 seconds
         Then verify "Schedule_Monitor_Table" element visibility on "Schedule_Monitor_Tab" wizard
 
     @MLJW
@@ -108,18 +179,35 @@ Feature: Jobs and workflows
         And click on cell with value "Jobs and workflows" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
         And hover "MLRun_Logo" component on "commonPagesHeader" wizard
         And wait load page
-        When select "Past hour" option in "Start_Time_Filter_Dropdown" filter dropdown on "Jobs_Monitor_Tab" wizard
-        Then verify "Past hour" filter band in "Start_Time_Filter_Dropdown" filter dropdown on "Jobs_Monitor_Tab" wizard
-        When select "Past 24 hours" option in "Start_Time_Filter_Dropdown" filter dropdown on "Jobs_Monitor_Tab" wizard
-        Then verify "Past 24 hours" filter band in "Start_Time_Filter_Dropdown" filter dropdown on "Jobs_Monitor_Tab" wizard
-        When select "Past week" option in "Start_Time_Filter_Dropdown" filter dropdown on "Jobs_Monitor_Tab" wizard
-        Then verify "Past week" filter band in "Start_Time_Filter_Dropdown" filter dropdown on "Jobs_Monitor_Tab" wizard
-        When select "Past month" option in "Start_Time_Filter_Dropdown" filter dropdown on "Jobs_Monitor_Tab" wizard
-        Then verify "Past month" filter band in "Start_Time_Filter_Dropdown" filter dropdown on "Jobs_Monitor_Tab" wizard
-        When select "Past year" option in "Start_Time_Filter_Dropdown" filter dropdown on "Jobs_Monitor_Tab" wizard
-        Then verify "Past leap year" filter band in "Start_Time_Filter_Dropdown" filter dropdown on "Jobs_Monitor_Tab" wizard
-        When select "Custom range" option in "Start_Time_Filter_Dropdown" filter dropdown on "Jobs_Monitor_Tab" wizard
-        Then verify "Date_Time_Picker" element visibility on "Jobs_Monitor_Tab" wizard
+        Then verify "Date_Picker_Filter_Dropdown" element visibility on "Jobs_Monitor_Tab" wizard
+        Then verify "Date_Picker_Filter_Dropdown" dropdown element on "Jobs_Monitor_Tab" wizard should contains "Dropdown_Options"."Date_Picker_Filter_Options"
+        Then verify "Date_Picker_Filter_Dropdown" dropdown on "Jobs_Monitor_Tab" wizard selected option value "Past 24 hours"
+        Then verify "Jobs_Monitor_Table" element visibility on "Jobs_Monitor_Tab" wizard
+        When select "Any time" option in "Date_Picker_Filter_Dropdown" filter dropdown on "Jobs_Monitor_Tab" wizard
+        And wait load page
+        Then verify "Date_Picker_Filter_Dropdown" dropdown on "Jobs_Monitor_Tab" wizard selected option value "Any time"
+        Then verify "Jobs_Monitor_Table" element visibility on "Jobs_Monitor_Tab" wizard
+        When select "Past hour" option in "Date_Picker_Filter_Dropdown" filter dropdown on "Jobs_Monitor_Tab" wizard
+        And wait load page
+        Then verify "Date_Picker_Filter_Dropdown" dropdown on "Jobs_Monitor_Tab" wizard selected option value "Past hour"
+        Then verify "Jobs_Monitor_Table" element visibility on "Jobs_Monitor_Tab" wizard
+        When select "Past week" option in "Date_Picker_Filter_Dropdown" filter dropdown on "Jobs_Monitor_Tab" wizard
+        And wait load page
+        Then verify "Date_Picker_Filter_Dropdown" dropdown on "Jobs_Monitor_Tab" wizard selected option value "Past week"
+        Then verify "Jobs_Monitor_Table" element visibility on "Jobs_Monitor_Tab" wizard
+        When select "Past month" option in "Date_Picker_Filter_Dropdown" filter dropdown on "Jobs_Monitor_Tab" wizard
+        And wait load page
+        Then verify "Date_Picker_Filter_Dropdown" dropdown on "Jobs_Monitor_Tab" wizard selected option value "Past month"
+        Then verify "Jobs_Monitor_Table" element visibility on "Jobs_Monitor_Tab" wizard
+        When select "Past year" option in "Date_Picker_Filter_Dropdown" filter dropdown on "Jobs_Monitor_Tab" wizard
+        And wait load page
+        Then verify "Date_Picker_Filter_Dropdown" dropdown on "Jobs_Monitor_Tab" wizard selected option value "Past year"
+        Then verify "Jobs_Monitor_Table" element visibility on "Jobs_Monitor_Tab" wizard
+        When pick up "Custom range" from "10/01/2021 00:00" to "11/30/2021 00:00" in "Date_Time_Picker" via "Date_Picker_Filter_Dropdown" on "Jobs_Monitor_Tab" wizard
+        And wait load page
+        Then verify from "10/01/2021 00:00" to "11/30/2021 00:00" filter band in "Custom_Range_Filter_Dropdown" filter dropdown on "Jobs_Monitor_Tab" wizard
+        And wait load page
+        Then verify "Jobs_Monitor_Table" element visibility on "Jobs_Monitor_Tab" wizard
 
     @MLJW
     @passive
@@ -133,14 +221,14 @@ Feature: Jobs and workflows
         And click on cell with value "Jobs and workflows" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
         And hover "MLRun_Logo" component on "commonPagesHeader" wizard
         And wait load page
-        When pick up "Custom range" from "03/31/2014 10:30" to "03/21/2015 19:15" in "Date_Time_Picker" via "Start_Time_Filter_Dropdown" on "Jobs_Monitor_Tab" wizard
-        Then verify from "03/31/2014 10:30" to "03/21/2015 19:15" filter band in "Start_Time_Filter_Dropdown" filter dropdown on "Jobs_Monitor_Tab" wizard
-        When pick up "Custom range" from "03/31/2044 10:30" to "03/21/2015 19:15" in "Date_Time_Picker" via "Start_Time_Filter_Dropdown" on "Jobs_Monitor_Tab" wizard
+        When pick up "Custom range" from "03/31/2014 10:30" to "03/21/2015 19:15" in "Date_Time_Picker" via "Date_Picker_Filter_Dropdown" on "Jobs_Monitor_Tab" wizard
+        Then verify from "03/31/2014 10:30" to "03/21/2015 19:15" filter band in "Custom_Range_Filter_Dropdown" filter dropdown on "Jobs_Monitor_Tab" wizard
+        When pick up "Custom range" from "03/31/2044 10:30" to "03/21/2015 19:15" in "Date_Time_Picker" via "Date_Picker_Filter_Dropdown" on "Jobs_Monitor_Tab" wizard
         Then verify error message in "Date_Time_Picker" on "Jobs_Monitor_Tab" wizard with value "Date_Time_Picker"."Error_Message"
         Then click on "Table_Refresh_Button" element on "Jobs_Monitor_Tab" wizard
-        When pick up "Custom range" from "03/31/2030 10:30" to "03/31/2030 10:31" in "Date_Time_Picker" via "Start_Time_Filter_Dropdown" on "Jobs_Monitor_Tab" wizard
-        Then verify from "03/31/2030 10:30" to "03/31/2030 10:31" filter band in "Start_Time_Filter_Dropdown" filter dropdown on "Jobs_Monitor_Tab" wizard
-        When pick up "Custom range" from "03/31/2025 10:31" to "03/21/2025 10:30" in "Date_Time_Picker" via "Start_Time_Filter_Dropdown" on "Jobs_Monitor_Tab" wizard
+        When pick up "Custom range" from "03/31/2030 10:30" to "03/31/2030 10:31" in "Date_Time_Picker" via "Date_Picker_Filter_Dropdown" on "Jobs_Monitor_Tab" wizard
+        Then verify from "03/31/2030 10:30" to "03/31/2030 10:31" filter band in "Custom_Range_Filter_Dropdown" filter dropdown on "Jobs_Monitor_Tab" wizard
+        When pick up "Custom range" from "03/31/2025 10:31" to "03/21/2025 10:30" in "Date_Time_Picker" via "Date_Picker_Filter_Dropdown" on "Jobs_Monitor_Tab" wizard
         Then verify error message in "Date_Time_Picker" on "Jobs_Monitor_Tab" wizard with value "Date_Time_Picker"."Error_Message"
 
     @MLJW
@@ -155,7 +243,7 @@ Feature: Jobs and workflows
         And click on cell with value "Jobs and workflows" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
         And hover "MLRun_Logo" component on "commonPagesHeader" wizard
         And wait load page
-        When select "Any time" option in "Start_Time_Filter_Dropdown" filter dropdown on "Jobs_Monitor_Tab" wizard
+        When select "Any time" option in "Date_Picker_Filter_Dropdown" filter dropdown on "Jobs_Monitor_Tab" wizard
         Then type value "test" to "Table_Name_Filter_Input" field on "Jobs_Monitor_Tab" wizard
         Then click on "Table_Refresh_Button" element on "Jobs_Monitor_Tab" wizard
         And wait load page
@@ -217,18 +305,22 @@ Feature: Jobs and workflows
         And click on cell with value "Jobs and workflows" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
         And hover "MLRun_Logo" component on "commonPagesHeader" wizard
         And wait load page
-        When select "Any time" option in "Start_Time_Filter_Dropdown" filter dropdown on "Jobs_Monitor_Tab" wizard
-        Then type value "author" to "Table_Labels_Filter_Input" field on "Jobs_Monitor_Tab" wizard
-        And wait load page
-        Then click on "Table_Refresh_Button" element on "Jobs_Monitor_Tab" wizard
+        When select "Any time" option in "Date_Picker_Filter_Dropdown" filter dropdown on "Jobs_Monitor_Tab" wizard
+        Then click on "Table_FilterBy_Button" element on "Jobs_Monitor_Tab" wizard
+        Then "Title" element on "FilterBy_Popup" should contains "Filter by" value
+        Then verify "Table_Label_Filter_Input" element visibility on "FilterBy_Popup" wizard
+        Then type value "author" to "Table_Label_Filter_Input" field on "FilterBy_Popup" wizard
+        Then click on "Apply_Button" element on "FilterBy_Popup" wizard
         And wait load page
         Then value in "labels" column with "dropdowns" in "Jobs_Monitor_Table" on "Jobs_Monitor_Tab" wizard should contains "author"
-        Then type value "mlrun/schedule-name=tf2-serving" to "Table_Labels_Filter_Input" field on "Jobs_Monitor_Tab" wizard
-        Then click on "Table_Refresh_Button" element on "Jobs_Monitor_Tab" wizard
+        Then click on "Table_FilterBy_Button" element on "Jobs_Monitor_Tab" wizard
+        Then type value "mlrun/schedule-name=tf2-serving" to "Table_Label_Filter_Input" field on "FilterBy_Popup" wizard
+        Then click on "Apply_Button" element on "FilterBy_Popup" wizard
         And wait load page
         Then value in "labels" column with "dropdowns" in "Jobs_Monitor_Table" on "Jobs_Monitor_Tab" wizard should contains "mlrun/schedule-name=tf2-serving"
-        Then type value "123456" to "Table_Labels_Filter_Input" field on "Jobs_Monitor_Tab" wizard
-        Then click on "Table_Refresh_Button" element on "Jobs_Monitor_Tab" wizard
+        Then click on "Table_FilterBy_Button" element on "Jobs_Monitor_Tab" wizard
+        Then type value "123456" to "Table_Label_Filter_Input" field on "FilterBy_Popup" wizard
+        Then click on "Apply_Button" element on "FilterBy_Popup" wizard
         And wait load page
         And verify "No_Data_Message" element visibility on "commonPagesHeader" wizard
 
@@ -248,12 +340,14 @@ Feature: Jobs and workflows
         And select "Schedule" tab in "Jobs_Tab_Selector" on "Jobs_Monitor_Tab" wizard
         And wait load page
         Then verify "Schedule" tab is active in "Jobs_Tab_Selector" on "Jobs_Monitor_Tab" wizard
-        Then type value "v3io_user" to "Table_Labels_Filter_Input" field on "Schedule_Monitor_Tab" wizard
-        Then click on "Table_Refresh_Button" element on "Schedule_Monitor_Tab" wizard
+        Then click on "Table_FilterBy_Button" element on "Schedule_Monitor_Tab" wizard
+        Then type value "v3io_user" to "Table_Label_Filter_Input" field on "FilterBy_Popup" wizard
+        Then click on "Apply_Button" element on "FilterBy_Popup" wizard
         And wait load page
         Then value in "labels" column with "dropdowns" in "Schedule_Monitor_Table" on "Schedule_Monitor_Tab" wizard should contains "v3io_user"
-        Then type value "v3io_user=admin" to "Table_Labels_Filter_Input" field on "Schedule_Monitor_Tab" wizard
-        Then click on "Table_Refresh_Button" element on "Schedule_Monitor_Tab" wizard
+        Then click on "Table_FilterBy_Button" element on "Schedule_Monitor_Tab" wizard
+        Then type value "v3io_user=admin" to "Table_Label_Filter_Input" field on "FilterBy_Popup" wizard
+        Then click on "Apply_Button" element on "FilterBy_Popup" wizard
         And wait load page
         Then value in "labels" column with "dropdowns" in "Schedule_Monitor_Table" on "Schedule_Monitor_Tab" wizard should contains "v3io_user=admin"
 
@@ -269,19 +363,32 @@ Feature: Jobs and workflows
         And click on cell with value "Jobs and workflows" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
         And hover "MLRun_Logo" component on "commonPagesHeader" wizard
         And wait load page
-        When pick up "Custom range" from "09/03/2021 00:00" to "09/04/2021 00:00" in "Date_Time_Picker" via "Start_Time_Filter_Dropdown" on "Jobs_Monitor_Tab" wizard
-        Then verify from "09/03/2021 00:00" to "09/04/2021 00:00" filter band in "Start_Time_Filter_Dropdown" filter dropdown on "Jobs_Monitor_Tab" wizard
+        When pick up "Custom range" from "09/03/2021 00:00" to "09/04/2021 00:00" in "Date_Time_Picker" via "Date_Picker_Filter_Dropdown" on "Jobs_Monitor_Tab" wizard
+        Then verify from "09/03/2021 00:00" to "09/04/2021 00:00" filter band in "Custom_Range_Filter_Dropdown" filter dropdown on "Jobs_Monitor_Tab" wizard
         And wait load page
-        Then select "Completed" option in "Status_Filter_Dropdown" filter dropdown on "Jobs_Monitor_Tab" wizard
+        Then click on "Table_FilterBy_Button" element on "Jobs_Monitor_Tab" wizard
+        Then select "Completed" option in "Status_Filter_Dropdown" filter dropdown on "FilterBy_Popup" wizard
+        Then click on "Title" element on "FilterBy_Popup" wizard
+        Then click on "Apply_Button" element on "FilterBy_Popup" wizard
         And wait load page
         Then value in "status" column with "tooltip" in "Jobs_Monitor_Table" on "Jobs_Monitor_Tab" wizard should contains "Completed"
-        Then select "Error" option in "Status_Filter_Dropdown" filter dropdown on "Jobs_Monitor_Tab" wizard
+        Then click on "Table_FilterBy_Button" element on "Jobs_Monitor_Tab" wizard
+        Then select "Completed" option in "Status_Filter_Dropdown" filter dropdown on "FilterBy_Popup" wizard
+        Then click on "Title" element on "FilterBy_Popup" wizard
+        Then select "Error" option in "Status_Filter_Dropdown" filter dropdown on "FilterBy_Popup" wizard
+        Then click on "Title" element on "FilterBy_Popup" wizard
+        Then click on "Apply_Button" element on "FilterBy_Popup" wizard
         And wait load page
         Then value in "status" column with "tooltip" in "Jobs_Monitor_Table" on "Jobs_Monitor_Tab" wizard should contains "Error"
-        When pick up "Custom range" from "09/08/2021 00:00" to "09/09/2021 00:00" in "Date_Time_Picker" via "Start_Time_Filter_Dropdown" on "Jobs_Monitor_Tab" wizard
-        Then verify from "09/08/2021 00:00" to "09/09/2021 00:00" filter band in "Start_Time_Filter_Dropdown" filter dropdown on "Jobs_Monitor_Tab" wizard
+        When pick up "Custom range" from "10/01/2021 00:00" to "11/30/2021 00:00" in "Date_Time_Picker" via "Date_Picker_Filter_Dropdown" on "Jobs_Monitor_Tab" wizard
+        Then verify from "10/01/2021 00:00" to "11/30/2021 00:00" filter band in "Custom_Range_Filter_Dropdown" filter dropdown on "Jobs_Monitor_Tab" wizard
         And wait load page
-        Then select "Pending" option in "Status_Filter_Dropdown" filter dropdown on "Jobs_Monitor_Tab" wizard
+        Then click on "Table_FilterBy_Button" element on "Jobs_Monitor_Tab" wizard
+        Then select "Error" option in "Status_Filter_Dropdown" filter dropdown on "FilterBy_Popup" wizard
+        Then click on "Title" element on "FilterBy_Popup" wizard
+        Then select "Pending" option in "Status_Filter_Dropdown" filter dropdown on "FilterBy_Popup" wizard
+        Then click on "Title" element on "FilterBy_Popup" wizard
+        Then click on "Apply_Button" element on "FilterBy_Popup" wizard
         And wait load page
         Then value in "status" column with "tooltip" in "Jobs_Monitor_Table" on "Jobs_Monitor_Tab" wizard should contains "Pending"
 
@@ -297,10 +404,11 @@ Feature: Jobs and workflows
         And click on cell with value "Jobs and workflows" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
         And hover "MLRun_Logo" component on "commonPagesHeader" wizard
         And wait load page
-        Then select "Any time" option in "Start_Time_Filter_Dropdown" filter dropdown on "Jobs_Monitor_Tab" wizard
+        Then select "Any time" option in "Date_Picker_Filter_Dropdown" filter dropdown on "Jobs_Monitor_Tab" wizard
         Then type value "seff" to "Table_Name_Filter_Input" field on "Jobs_Monitor_Tab" wizard
-        Then type value "kind" to "Table_Labels_Filter_Input" field on "Jobs_Monitor_Tab" wizard
-        Then click on "Table_Refresh_Button" element on "Jobs_Monitor_Tab" wizard
+        Then click on "Table_FilterBy_Button" element on "Jobs_Monitor_Tab" wizard
+        Then type value "kind" to "Table_Label_Filter_Input" field on "FilterBy_Popup" wizard
+        Then click on "Apply_Button" element on "FilterBy_Popup" wizard
         And wait load page
         Then select "Batch re-run" option in action menu on "Jobs_Monitor_Tab" wizard in "Jobs_Monitor_Table" table at row with "seff" value in "name" column
         And wait load page
@@ -326,8 +434,8 @@ Feature: Jobs and workflows
         Then "Auto_Refresh_Checkbox" element should be checked on "Jobs_Monitor_Tab" wizard
         Then uncheck "Auto_Refresh_Checkbox" element on "Jobs_Monitor_Tab" wizard
         Then "Auto_Refresh_Checkbox" element should be unchecked on "Jobs_Monitor_Tab" wizard
-        When pick up "Custom range" from "11/07/2021 18:00" to "11/08/2021 18:00" in "Date_Time_Picker" via "Start_Time_Filter_Dropdown" on "Jobs_Monitor_Tab" wizard
-        Then verify from "11/07/2021 18:00" to "11/08/2021 18:00" filter band in "Start_Time_Filter_Dropdown" filter dropdown on "Jobs_Monitor_Tab" wizard
+        When pick up "Custom range" from "11/07/2021 18:00" to "11/08/2021 18:00" in "Date_Time_Picker" via "Date_Picker_Filter_Dropdown" on "Jobs_Monitor_Tab" wizard
+        Then verify from "11/07/2021 18:00" to "11/08/2021 18:00" filter band in "Custom_Range_Filter_Dropdown" filter dropdown on "Jobs_Monitor_Tab" wizard
         Then value in "datetime" column in "Jobs_Monitor_Table" on "Jobs_Monitor_Tab" wizard should be from "11/07/2021 18:00" to "11/08/2021 18:00"
 
     @MLJW
@@ -343,11 +451,11 @@ Feature: Jobs and workflows
         And hover "MLRun_Logo" component on "commonPagesHeader" wizard
         And wait load page
         Then verify "Monitor Jobs" tab is active in "Jobs_Tab_Selector" on "Jobs_Monitor_Tab" wizard
-        When select "Any time" option in "Start_Time_Filter_Dropdown" filter dropdown on "Jobs_Monitor_Tab" wizard
+        When select "Any time" option in "Date_Picker_Filter_Dropdown" filter dropdown on "Jobs_Monitor_Tab" wizard
         When click on cell with row index 1 in "name" column in "Jobs_Monitor_Table" table on "Jobs_Monitor_Tab" wizard
         And wait load page
-        When pick up "Custom range" from "01/01/2021 00:00" to "01/01/2023 00:00" in "Date_Time_Picker" via "Start_Time_Filter_Dropdown" on "Jobs_Monitor_Tab" wizard
-        Then verify from "01/01/2021 00:00" to "01/01/2023 00:00" filter band in "Start_Time_Filter_Dropdown" filter dropdown on "Jobs_Monitor_Tab" wizard
+        When pick up "Custom range" from "01/01/2021 00:00" to "01/01/2023 00:00" in "Date_Time_Picker" via "Date_Picker_Filter_Dropdown" on "Jobs_Monitor_Tab" wizard
+        Then verify from "01/01/2021 00:00" to "01/01/2023 00:00" filter band in "Custom_Range_Filter_Dropdown" filter dropdown on "Jobs_Monitor_Tab" wizard
         And wait load page
         When click on cell with row index 1 in "name" column in "Jobs_Monitor_Table" table on "Jobs_Monitor_Tab" wizard
         And wait load page
@@ -361,10 +469,10 @@ Feature: Jobs and workflows
         Then verify "Overview_Headers" on "Jobs_Monitor_Tab_Info_Pane" wizard should contains "Jobs_Monitor_Tab_Info_Pane"."Overview_Headers"
         Then click on "Arrow_Back" element on "Jobs_Monitor_Tab_Info_Pane" wizard
         And wait load page
-        Then verify from "01/01/2021 00:00" to "01/01/2023 00:00" filter band in "Start_Time_Filter_Dropdown" filter dropdown on "Jobs_Monitor_Tab" wizard
+        Then verify from "01/01/2021 00:00" to "01/01/2023 00:00" filter band in "Custom_Range_Filter_Dropdown" filter dropdown on "Jobs_Monitor_Tab" wizard
         Then click on "Arrow_Back" element on "Jobs_Monitor_Tab" wizard
         And wait load page
-        Then verify from "01/01/2021 00:00" to "01/01/2023 00:00" filter band in "Start_Time_Filter_Dropdown" filter dropdown on "Jobs_Monitor_Tab" wizard
+        Then verify from "01/01/2021 00:00" to "01/01/2023 00:00" filter band in "Custom_Range_Filter_Dropdown" filter dropdown on "Jobs_Monitor_Tab" wizard
 
     @MLJW
     @smoke
@@ -378,10 +486,15 @@ Feature: Jobs and workflows
         And hover "MLRun_Logo" component on "commonPagesHeader" wizard
         And wait load page
         Then verify "Monitor Jobs" tab is active in "Jobs_Tab_Selector" on "Jobs_Monitor_Tab" wizard
-        When select "Any time" option in "Start_Time_Filter_Dropdown" filter dropdown on "Jobs_Monitor_Tab" wizard
+        When select "Any time" option in "Date_Picker_Filter_Dropdown" filter dropdown on "Jobs_Monitor_Tab" wizard
         When click on cell with row index 1 in "name" column in "Jobs_Monitor_Table" table on "Jobs_Monitor_Tab" wizard
         And wait load page
         Then verify options in action menu on "Jobs_Monitor_Tab" wizard in "Jobs_Monitor_Table" table with "Job" value in "type" column should contains "Jobs_And_Workflows"."Job_Action_Menu_Options"
+        Then verify "Date_Picker_Filter_Dropdown" element visibility on "Jobs_Monitor_Tab" wizard
+        Then verify "Table_FilterBy_Button" element visibility on "Jobs_Monitor_Tab" wizard
+        Then verify "Batch_Run_Button" element visibility on "Jobs_Monitor_Tab" wizard
+        Then verify "Auto_Refresh_Checkbox" element visibility on "Jobs_Monitor_Tab" wizard
+        Then verify "Table_Refresh_Button" element visibility on "Jobs_Monitor_Tab" wizard
         When click on cell with row index 1 in "name" column in "Jobs_Monitor_Table" table on "Jobs_Monitor_Tab" wizard
         And wait load page
         Then verify "Action_Menu" dropdown element on "Jobs_Monitor_Tab_Info_Pane" wizard should contains "Jobs_And_Workflows"."Job_Overview_Action_Menu_Options"
@@ -389,6 +502,8 @@ Feature: Jobs and workflows
         Then verify "Header" element visibility on "Jobs_Monitor_Tab_Info_Pane" wizard
         Then verify "Updated" element visibility on "Jobs_Monitor_Tab_Info_Pane" wizard
         Then verify "Cross_Close_Button" element visibility on "Jobs_Monitor_Tab_Info_Pane" wizard
+        Then verify "Resource_Monitoring_Button" element visibility on "Jobs_Monitor_Tab_Info_Pane" wizard
+        Then verify "Info_Pane_Refresh_Button" element visibility on "Jobs_Monitor_Tab_Info_Pane" wizard
         Then verify "Info_Pane_Tab_Selector" on "Jobs_Monitor_Tab_Info_Pane" wizard should contains "Jobs_Monitor_Tab_Info_Pane"."Tab_List"
         Then verify "Overview" tab is active in "Info_Pane_Tab_Selector" on "Jobs_Monitor_Tab_Info_Pane" wizard
         Then verify "Overview_Headers" on "Jobs_Monitor_Tab_Info_Pane" wizard should contains "Jobs_Monitor_Tab_Info_Pane"."Overview_Headers"
@@ -405,7 +520,7 @@ Feature: Jobs and workflows
         And hover "MLRun_Logo" component on "commonPagesHeader" wizard
         And wait load page
         Then verify "Monitor Jobs" tab is active in "Jobs_Tab_Selector" on "Jobs_Monitor_Tab" wizard
-        When select "Any time" option in "Start_Time_Filter_Dropdown" filter dropdown on "Jobs_Monitor_Tab" wizard
+        When select "Any time" option in "Date_Picker_Filter_Dropdown" filter dropdown on "Jobs_Monitor_Tab" wizard
         Then select "Delete" option in action menu on "Jobs_Monitor_Tab" wizard in "Jobs_Monitor_Table" table at row with "test-m_ingest" value in "name" column
         And wait load page
         Then verify if "Confirm_Popup" popup dialog appears
@@ -459,8 +574,11 @@ Feature: Jobs and workflows
         And hover "MLRun_Logo" component on "commonPagesHeader" wizard
         And wait load page
         Then verify "Monitor Jobs" tab is active in "Jobs_Tab_Selector" on "Jobs_Monitor_Tab" wizard
-        When select "Any time" option in "Start_Time_Filter_Dropdown" filter dropdown on "Jobs_Monitor_Tab" wizard
-        Then select "Completed" option in "Status_Filter_Dropdown" filter dropdown on "Jobs_Monitor_Tab" wizard
+        When select "Any time" option in "Date_Picker_Filter_Dropdown" filter dropdown on "Jobs_Monitor_Tab" wizard
+        Then click on "Table_FilterBy_Button" element on "Jobs_Monitor_Tab" wizard
+        Then select "Completed" option in "Status_Filter_Dropdown" filter dropdown on "FilterBy_Popup" wizard
+        Then click on "Title" element on "FilterBy_Popup" wizard
+        Then click on "Apply_Button" element on "FilterBy_Popup" wizard
         And wait load page
         When click on cell with row index 1 in "name" column in "Schedule_Monitor_Table" table on "Schedule_Monitor_Tab" wizard
         And wait load page
@@ -474,8 +592,6 @@ Feature: Jobs and workflows
     @MLJW
     @passive
     @smoke
-    @FAILED_TODO
-    #TODO: Bug ML-6603 [Monitor Jobs, per project] The artifact preview is not collapsed
     Scenario: MLJW065 - Check all mandatory components in Item infopane on Artifacts tab on Jobs Monitor Page
         Given open url
         And wait load page
@@ -485,8 +601,11 @@ Feature: Jobs and workflows
         And click on cell with value "Jobs and workflows" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
         And wait load page
         Then verify "Monitor Jobs" tab is active in "Jobs_Tab_Selector" on "Jobs_Monitor_Tab" wizard
-        When select "Any time" option in "Start_Time_Filter_Dropdown" filter dropdown on "Jobs_Monitor_Tab" wizard
-        Then select "Completed" option in "Status_Filter_Dropdown" filter dropdown on "Jobs_Monitor_Tab" wizard
+        When select "Any time" option in "Date_Picker_Filter_Dropdown" filter dropdown on "Jobs_Monitor_Tab" wizard
+        Then click on "Table_FilterBy_Button" element on "Jobs_Monitor_Tab" wizard
+        Then select "Completed" option in "Status_Filter_Dropdown" filter dropdown on "FilterBy_Popup" wizard
+        Then click on "Title" element on "FilterBy_Popup" wizard
+        Then click on "Apply_Button" element on "FilterBy_Popup" wizard
         And wait load page
         When click on cell with value "trainer-train" in "name" column in "Jobs_Monitor_Table" table on "Jobs_Monitor_Tab" wizard
         And wait load page
@@ -598,7 +717,7 @@ Feature: Jobs and workflows
         And hover "MLRun_Logo" component on "commonPagesHeader" wizard
         And wait load page
         Then verify "Monitor Jobs" tab is active in "Jobs_Tab_Selector" on "Jobs_Monitor_Tab" wizard
-        Then select "Any time" option in "Start_Time_Filter_Dropdown" filter dropdown on "Jobs_Monitor_Tab" wizard
+        Then select "Any time" option in "Date_Picker_Filter_Dropdown" filter dropdown on "Jobs_Monitor_Tab" wizard
         Then select "View YAML" option in action menu on "Jobs_Monitor_Tab" wizard in "Jobs_Monitor_Table" table at row with "test-m_ingest" value in "name" column
         Then verify if "View_YAML" popup dialog appears
         Then verify "Cross_Cancel_Button" element visibility on "View_YAML" wizard
@@ -606,7 +725,7 @@ Feature: Jobs and workflows
         When click on "Cross_Cancel_Button" element on "View_YAML" wizard
         When click on cell with row index 1 in "name" column in "Jobs_Monitor_Table" table on "Jobs_Monitor_Tab" wizard
         And wait load page
-        Then select "Any time" option in "Start_Time_Filter_Dropdown" filter dropdown on "Jobs_Monitor_Tab" wizard
+        Then select "Any time" option in "Date_Picker_Filter_Dropdown" filter dropdown on "Jobs_Monitor_Tab" wizard
         And wait load page
         When click on cell with row index 1 in "name" column in "Jobs_Monitor_Table" table on "Jobs_Monitor_Tab" wizard
         And wait load page
@@ -906,16 +1025,38 @@ Feature: Jobs and workflows
         And hover "MLRun_Logo" component on "commonPagesHeader" wizard
         And wait load page
         Then verify "Monitor Jobs" tab is active in "Jobs_Tab_Selector" on "Jobs_Monitor_Tab" wizard
-        When pick up "Custom range" from "09/01/2021 18:00" to "09/03/2021 18:00" in "Date_Time_Picker" via "Start_Time_Filter_Dropdown" on "Jobs_Monitor_Tab" wizard
-        Then select "Error" option in "Status_Filter_Dropdown" filter dropdown on "Jobs_Monitor_Tab" wizard
+        When pick up "Custom range" from "09/01/2021 18:00" to "09/03/2021 18:00" in "Date_Time_Picker" via "Date_Picker_Filter_Dropdown" on "Jobs_Monitor_Tab" wizard
+        Then click on "Table_FilterBy_Button" element on "Jobs_Monitor_Tab" wizard
+        Then select "Error" option in "Status_Filter_Dropdown" filter dropdown on "FilterBy_Popup" wizard
+        Then click on "Title" element on "FilterBy_Popup" wizard
+        Then click on "Apply_Button" element on "FilterBy_Popup" wizard
+        And wait load page
         Then verify options in action menu on "Jobs_Monitor_Tab" wizard in "Jobs_Monitor_Table" table with "Error" value in "status" column should contains "Jobs_And_Workflows"."Job_Action_Menu_Options"
-        Then select "Running" option in "Status_Filter_Dropdown" filter dropdown on "Jobs_Monitor_Tab" wizard
+        Then click on "Table_FilterBy_Button" element on "Jobs_Monitor_Tab" wizard
+        Then select "Error" option in "Status_Filter_Dropdown" filter dropdown on "FilterBy_Popup" wizard
+        Then click on "Title" element on "FilterBy_Popup" wizard
+        Then select "Running" option in "Status_Filter_Dropdown" filter dropdown on "FilterBy_Popup" wizard
+        Then click on "Title" element on "FilterBy_Popup" wizard
+        Then click on "Apply_Button" element on "FilterBy_Popup" wizard
+        And wait load page
         Then verify options in action menu on "Jobs_Monitor_Tab" wizard in "Jobs_Monitor_Table" table with "Running" value in "status" column should contains "Jobs_And_Workflows"."Running_Job_Action_Menu_Options"
-        When pick up "Custom range" from "08/28/2021 18:00" to "09/01/2021 18:00" in "Date_Time_Picker" via "Start_Time_Filter_Dropdown" on "Jobs_Monitor_Tab" wizard
-        Then select "Completed" option in "Status_Filter_Dropdown" filter dropdown on "Jobs_Monitor_Tab" wizard
+        When pick up "Custom range" from "08/28/2021 18:00" to "09/01/2021 18:00" in "Date_Time_Picker" via "Date_Picker_Filter_Dropdown" on "Jobs_Monitor_Tab" wizard
+        Then click on "Table_FilterBy_Button" element on "Jobs_Monitor_Tab" wizard
+        Then select "Running" option in "Status_Filter_Dropdown" filter dropdown on "FilterBy_Popup" wizard
+        Then click on "Title" element on "FilterBy_Popup" wizard
+        Then select "Completed" option in "Status_Filter_Dropdown" filter dropdown on "FilterBy_Popup" wizard
+        Then click on "Title" element on "FilterBy_Popup" wizard
+        Then click on "Apply_Button" element on "FilterBy_Popup" wizard
+        And wait load page
         Then verify options in action menu on "Jobs_Monitor_Tab" wizard in "Jobs_Monitor_Table" table with "Completed" value in "status" column should contains "Jobs_And_Workflows"."Job_Action_Menu_Options"
-        Then select "Any time" option in "Start_Time_Filter_Dropdown" filter dropdown on "Jobs_Monitor_Tab" wizard
-        Then select "Pending" option in "Status_Filter_Dropdown" filter dropdown on "Jobs_Monitor_Tab" wizard
+        Then select "Any time" option in "Date_Picker_Filter_Dropdown" filter dropdown on "Jobs_Monitor_Tab" wizard
+        Then click on "Table_FilterBy_Button" element on "Jobs_Monitor_Tab" wizard
+        Then select "Completed" option in "Status_Filter_Dropdown" filter dropdown on "FilterBy_Popup" wizard
+        Then click on "Title" element on "FilterBy_Popup" wizard
+        Then select "Pending" option in "Status_Filter_Dropdown" filter dropdown on "FilterBy_Popup" wizard
+        Then click on "Title" element on "FilterBy_Popup" wizard
+        Then click on "Apply_Button" element on "FilterBy_Popup" wizard
+        And wait load page
         Then verify options in action menu on "Jobs_Monitor_Tab" wizard in "Jobs_Monitor_Table" table with "Pending" value in "status" column should contains "Jobs_And_Workflows"."Pending_Job_Action_Menu_Options"
 
     @MLJW
@@ -1167,12 +1308,12 @@ Feature: Jobs and workflows
         And select "tab" with "Jobs and workflows" value in breadcrumbs menu
         And wait load page
         Then verify redirection from "projects/default/jobs/INVALID" to "projects/default/jobs/monitor-jobs"
-        Then select "Any time" option in "Start_Time_Filter_Dropdown" filter dropdown on "Jobs_Monitor_Tab" wizard
+        Then select "Any time" option in "Date_Picker_Filter_Dropdown" filter dropdown on "Jobs_Monitor_Tab" wizard
         And wait load page
         When click on cell with row index 1 in "name" column in "Jobs_Monitor_Table" table on "Jobs_Monitor_Tab" wizard
         And wait load page
         Then verify redirection from "projects/default/jobs/INVALID" to "projects/default/jobs/monitor-jobs"
-        Then select "Any time" option in "Start_Time_Filter_Dropdown" filter dropdown on "Jobs_Monitor_Tab" wizard
+        Then select "Any time" option in "Date_Picker_Filter_Dropdown" filter dropdown on "Jobs_Monitor_Tab" wizard
         And wait load page
         When click on cell with row index 1 in "name" column in "Jobs_Monitor_Table" table on "Jobs_Monitor_Tab" wizard
         And wait load page
@@ -1195,6 +1336,12 @@ Feature: Jobs and workflows
         And wait load page
         Then verify redirection from "projects/default/jobs/monitor-jobs/aggregate-test/864f4da42773494eb94dce1c8834feb6/INVALID" to "projects/default/jobs/monitor-jobs/aggregate-test/864f4da42773494eb94dce1c8834feb6/overview"
         Then verify redirection from "projects/default/jobs/monitor-jobs/aggregate-test/INVALID/overview" to "projects/default/jobs/monitor-jobs"
+        And wait load page
+        Then verify if "Notification_Popup" popup dialog appears
+        Then verify "Notification_Pop_Up" element visibility on "Notification_Popup" wizard
+        Then "Notification_Pop_Up" element on "Notification_Popup" should contains "This job either does not exist or was deleted" value
+        Then verify "Notification_Pop_Up_Cross_Close_Button" element visibility on "Notification_Popup" wizard
+        Then click on "Notification_Pop_Up_Cross_Close_Button" element on "Notification_Popup" wizard
         And select "Schedule" tab in "Jobs_Tab_Selector" on "Jobs_Monitor_Tab" wizard
         And wait load page
         Then verify redirection from "projects/default/jobs/INVALID" to "projects/default/jobs/monitor-jobs"
@@ -2199,7 +2346,7 @@ Feature: Jobs and workflows
         And click on cell with value "Jobs and workflows" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
         And hover "MLRun_Logo" component on "commonPagesHeader" wizard
         And wait load page
-        When select "Any time" option in "Start_Time_Filter_Dropdown" filter dropdown on "Jobs_Monitor_Tab" wizard
+        When select "Any time" option in "Date_Picker_Filter_Dropdown" filter dropdown on "Jobs_Monitor_Tab" wizard
         And wait load page
         When click on cell with row index 1 in "name" column in "Jobs_Monitor_Table" table on "Jobs_Monitor_Tab" wizard
         When click on cell with row index 1 in "name" column in "Jobs_Monitor_Table" table on "Jobs_Monitor_Tab" wizard
@@ -2256,4 +2403,34 @@ Feature: Jobs and workflows
         Then verify "Parameters_From_File_Input" element in "Parameters_Accordion" on "Modal_Wizard_Form" wizard is enabled by class name
         Then verify "Parameters_Headers" on "Modal_Wizard_Form" wizard should contains "Modal_Wizard_Form"."Parameters_Table_Header"
         Then verify "Hyper_Toggle_Switch" element not exists in "Parameters_Accordion" on "Modal_Wizard_Form" wizard
-        
+    
+    @MLJW
+    @passive
+    @smoke
+    Scenario: MLJW087 - Check Retry option in action menu on Workflows Monitor tab
+        Given open url
+        And click on row root with value "churn-project-admin" in "name" column in "Projects_Table" table on "Projects" wizard
+        And wait load page
+        And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
+        And click on cell with value "Jobs and workflows" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+        And hover "MLRun_Logo" component on "commonPagesHeader" wizard
+        And wait load page
+        And select "Monitor Workflows" tab in "Jobs_Tab_Selector" on "Jobs_Monitor_Tab" wizard
+        And wait load page
+        Then verify "Monitor Workflows" tab is active in "Jobs_Tab_Selector" on "Jobs_Monitor_Tab" wizard
+        Then verify options in action menu on "Workflows_Monitor_Tab" wizard in "Workflows_Monitor_Table" table with "Completed" value in "status" column should contains "Jobs_And_Workflows"."Workflows_Action_Menu_Options"
+        Then select "Retry" option in action menu on "Workflows_Monitor_Tab" wizard in "Workflows_Monitor_Table" table at row with "kfpipeline 2021-07-06 11-16-28" value in "name" column
+        And wait load page
+        Then verify if "Notification_Popup" popup dialog appears
+        Then verify "Notification_Pop_Up" element visibility on "Notification_Popup" wizard
+        Then "Notification_Pop_Up" element on "Notification_Popup" should contains "Workflow ran successfully." value
+        Then verify "Notification_Pop_Up_Cross_Close_Button" element visibility on "Notification_Popup" wizard
+        Then click on "Notification_Pop_Up_Cross_Close_Button" element on "Notification_Popup" wizard
+        Then verify if "Notification_Popup" popup dialog appears
+        Then verify "Notification_Pop_Up" element visibility on "Notification_Popup" wizard
+        Then "Notification_Pop_Up" component on "Notification_Popup" should contains "Jobs_And_Workflows"."Workflows_Unsuccessful_Run_Message"
+        Then verify "Retry_Button" element visibility on "Notification_Popup" wizard
+        Then "Retry_Button" element on "Notification_Popup" should contains "RETRY" value
+        Then verify "Notification_Pop_Up_Cross_Close_Button" element visibility on "Notification_Popup" wizard
+        Then click on "Notification_Pop_Up_Cross_Close_Button" element on "Notification_Popup" wizard
+         
