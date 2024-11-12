@@ -17,6 +17,7 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
+import axios from 'axios'
 import { generateRegEx, getLength, getNotToBe, getRule } from './utils'
 import {
   deleteAPIArtifact,
@@ -39,10 +40,16 @@ module.exports = {
       return result.join('')
     }
   },
-  generateInputGroup: function (root, label = false, hint = false, warning = false, input = 'input') {
+  generateInputGroup: function (
+    root,
+    label = false,
+    hint = false,
+    warning = false,
+    input = 'input'
+  ) {
     const structure = { root, elements: {} }
     structure.elements.input = input
-    
+
     if (label) {
       structure.elements.label = 'label'
     }
@@ -81,7 +88,7 @@ module.exports = {
     if (warning) {
       structure.elements.warningHint = typeof warning === 'string' ? warning : '.range__warning svg'
       structure.elements.warningText = '.tooltip .tooltip__text'
-    } 
+    }
 
     return structure
   },
@@ -187,5 +194,15 @@ module.exports = {
           return null
       }
     })
+  },
+  setRequestsFailureCondition: async shouldFail => {
+    try {
+      const response = await axios.post('http://localhost:30000/set-failure-condition', {
+        shouldFail
+      })
+      console.log(response.data)
+    } catch (error) {
+      console.error(`Error setting failure condition: ${error}`)
+    }
   }
 }

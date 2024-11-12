@@ -21,16 +21,19 @@ import React from 'react'
 import PropTypes from 'prop-types'
 
 import FeatureStoreTableRow from '../../../elements/FeatureStoreTableRow/FeatureStoreTableRow'
-import FilterMenu from '../../FilterMenu/FilterMenu'
 import NoData from '../../../common/NoData/NoData'
 import Table from '../../Table/Table'
+import FeatureStorePageTabs from '../FeatureStorePageTabs/FeatureStorePageTabs'
 
 import { FEATURE_STORE_PAGE, FEATURES_TAB } from '../../../constants'
 import { SECONDARY_BUTTON } from 'igz-controls/constants'
 import { VIRTUALIZATION_CONFIG } from '../../../types'
-import { featuresFilters } from './features.util'
+import { filtersConfig } from './features.util'
 import { getNoDataMessage } from '../../../utils/getNoDataMessage'
 import { isRowRendered } from '../../../hooks/useVirtualization.hook'
+import ActionBar from '../../ActionBar/ActionBar'
+import FeatureStoreFilters from '../FeatureStoreFilters'
+import { addToFeatureVectorTitle } from '../featureStore.util'
 
 const FeaturesView = React.forwardRef(
   (
@@ -42,6 +45,7 @@ const FeaturesView = React.forwardRef(
       getPopUpTemplate,
       handleExpandRow,
       handleRefresh,
+      handleRefreshWithStoreFilters,
       pageData,
       requestErrorMessage,
       selectedRowData,
@@ -54,29 +58,37 @@ const FeaturesView = React.forwardRef(
     return (
       <div className="feature-store" ref={featureStoreRef}>
         <div className="content__action-bar-wrapper">
-          <div className="action-bar">
-            <FilterMenu
-              actionButton={{
-                label: 'Add to feature vector',
-                variant: SECONDARY_BUTTON,
-                getCustomTemplate: getPopUpTemplate
-              }}
-              filters={featuresFilters}
-              onChange={handleRefresh}
-              page={FEATURE_STORE_PAGE}
-              tab={FEATURES_TAB}
-              withoutExpandButton
-            />
-          </div>
+          <FeatureStorePageTabs />
+          <ActionBar
+            actionButtons={[
+              {
+                hidden: false,
+                template: getPopUpTemplate({
+                  className: 'action-button',
+                  label: addToFeatureVectorTitle,
+                  variant: SECONDARY_BUTTON
+                })
+              }
+            ]}
+            filterMenuName={FEATURES_TAB}
+            filtersConfig={filtersConfig}
+            handleRefresh={handleRefresh}
+            page={FEATURE_STORE_PAGE}
+            tab={FEATURES_TAB}
+            withoutExpandButton
+          >
+            <FeatureStoreFilters content={features} />
+          </ActionBar>
         </div>
         {featureStore.features.loading || featureStore.entities.loading ? null : features.length ===
           0 ? (
           <NoData
             message={getNoDataMessage(
               filtersStore,
-              featuresFilters,
+              filtersConfig,
               requestErrorMessage,
               FEATURE_STORE_PAGE,
+              FEATURES_TAB,
               FEATURES_TAB
             )}
           />
@@ -86,7 +98,7 @@ const FeaturesView = React.forwardRef(
               actionsMenu={actionsMenu}
               hideActionsMenu={tableStore.isTablePanelOpen}
               pageData={pageData}
-              retryRequest={handleRefresh}
+              retryRequest={handleRefreshWithStoreFilters}
               tab={FEATURES_TAB}
               tableClassName="features-table"
               tableHeaders={tableContent[0]?.content ?? []}
@@ -126,6 +138,7 @@ FeaturesView.propTypes = {
   getPopUpTemplate: PropTypes.func.isRequired,
   handleExpandRow: PropTypes.func.isRequired,
   handleRefresh: PropTypes.func.isRequired,
+  handleRefreshWithStoreFilters: PropTypes.func.isRequired,
   pageData: PropTypes.object.isRequired,
   requestErrorMessage: PropTypes.string.isRequired,
   selectedRowData: PropTypes.object.isRequired,

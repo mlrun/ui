@@ -17,8 +17,8 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import React, { useCallback, useLayoutEffect, useMemo, useRef, useState } from 'react'
-import { connect, useDispatch, useSelector } from 'react-redux'
+import React, { useLayoutEffect, useMemo, useState } from 'react'
+import { connect, useSelector } from 'react-redux'
 import { Outlet, useLocation, useNavigate, useParams } from 'react-router-dom'
 
 import ContentMenu from '../../elements/ContentMenu/ContentMenu'
@@ -32,251 +32,67 @@ import WorkflowsMonitoringFilters from './WorkflowsMonitoring/WorkflowsMonitorin
 
 import { actionCreator, STATS_TOTAL_CARD, tabs } from './projectsJobsMotinoring.util'
 import {
-  DATES_FILTER,
-  FILTER_ALL_ITEMS,
-  GROUP_BY_WORKFLOW,
-  JOB_KIND_LOCAL,
   JOBS_MONITORING_JOBS_TAB,
   JOBS_MONITORING_PAGE,
   JOBS_MONITORING_SCHEDULED_TAB,
-  JOBS_MONITORING_WORKFLOWS_TAB,
-  LABELS_FILTER,
-  NAME_FILTER,
-  PROJECT_FILTER,
-  SCHEDULE_TAB,
-  STATUS_FILTER,
-  TYPE_FILTER
+  JOBS_MONITORING_WORKFLOWS_TAB
 } from '../../constants'
-import { getJobKindFromLabels } from '../../utils/jobs.util'
-import { monitorJob, pollAbortingJobs, rerunJob } from '../Jobs/jobs.util'
 import { TERTIARY_BUTTON } from 'igz-controls/constants'
-import { parseJob } from '../../utils/parseJob'
-import jobsActions from '../../actions/jobs'
-import workflowActions from '../../actions/workflow'
 
 import './projectsJobsMonitoring.scss'
+import {
+  getJobsFiltersConfig,
+  getScheduledFiltersConfig,
+  getWorkflowsFiltersConfig
+} from '../../utils/jobs.util'
+import { useJobsPageData } from '../../hooks/useJobsPageData'
 
 export const ProjectJobsMonitoringContext = React.createContext({})
 
 const ProjectsJobsMonitoring = ({ fetchAllJobRuns, fetchJobFunction, fetchJobs }) => {
-  const [abortingJobs, setAbortingJobs] = useState({})
-  const [editableItem, setEditableItem] = useState(null)
-  const [jobWizardMode, setJobWizardMode] = useState(null)
-  const [jobWizardIsOpened, setJobWizardIsOpened] = useState(false)
   const [confirmData, setConfirmData] = useState(null)
   const [selectedTab, setSelectedTab] = useState(null)
-  const [scheduledJobs, setScheduledJobs] = useState([])
-  const [jobRuns, setJobRuns] = useState([])
-  const [jobs, setJobs] = useState([])
-  const [selectedRunProject, setSelectedRunProject] = useState('')
-  const [requestErrorMessage, setRequestErrorMessage] = useState('')
   const { jobsMonitoringData } = useSelector(store => store.projectStore)
   const [selectedCard, setSelectedCard] = useState(
     jobsMonitoringData.filters?.status || STATS_TOTAL_CARD
   )
-  const abortJobRef = useRef(null)
-  const abortControllerRef = useRef(new AbortController())
-  const dispatch = useDispatch()
   const location = useLocation()
   const params = useParams()
   const navigate = useNavigate()
-  const appStore = useSelector(store => store.appStore)
   const artifactsStore = useSelector(store => store.artifactsStore)
   const jobsStore = useSelector(store => store.jobsStore)
-
-  const jobsFiltersConfig = useMemo(() => {
-    return {
-      [NAME_FILTER]: { label: 'Name:', hidden: Boolean(params.jobName) },
-      [DATES_FILTER]: { label: 'Start time:' },
-      [PROJECT_FILTER]: { label: 'Project:' },
-      [STATUS_FILTER]: { label: 'Status:' },
-      [TYPE_FILTER]: { label: 'Type:' },
-      [LABELS_FILTER]: { label: 'Labels:' }
-    }
-  }, [params.jobName])
-
-  const workflowsFiltersConfig = useMemo(() => {
-    return {
-      [NAME_FILTER]: { label: 'Name:' },
-      [DATES_FILTER]: { label: 'Created at:' },
-      [PROJECT_FILTER]: { label: 'Project:' },
-      [STATUS_FILTER]: { label: 'Status:' },
-      [LABELS_FILTER]: { label: 'Labels:' }
-    }
-  }, [])
-
-  const scheduledFiltersConfig = useMemo(() => {
-    return {
-      [NAME_FILTER]: { label: 'Name:' },
-      [DATES_FILTER]: { label: 'Scheduled at:', isFuture: true },
-      [PROJECT_FILTER]: { label: 'Project:' },
-      [TYPE_FILTER]: { label: 'Type:' },
-      [LABELS_FILTER]: { label: 'Labels:' }
-    }
-  }, [])
+  const {
+    abortControllerRef,
+    abortJobRef,
+    abortingJobs,
+    editableItem,
+    getWorkflows,
+    jobRuns,
+    jobs,
+    jobWizardIsOpened,
+    jobWizardMode,
+    handleMonitoring,
+    handleRerunJob,
+    refreshJobs,
+    refreshScheduled,
+    requestErrorMessage,
+    scheduledJobs,
+    setAbortingJobs,
+    setEditableItem,
+    setJobRuns,
+    setJobWizardIsOpened,
+    setJobWizardMode,
+    setJobs,
+    setScheduledJobs,
+    setSelectedRunProject,
+    terminateAbortTasksPolling
+  } = useJobsPageData(fetchAllJobRuns, fetchJobFunction, fetchJobs)
 
   const handleTabChange = tabName => {
     setSelectedCard(STATS_TOTAL_CARD)
     setSelectedTab(tabName)
     navigate(`/projects/*/${JOBS_MONITORING_PAGE}/${tabName}`)
   }
-
-  const handleRerunJob = useCallback(
-    async job => await rerunJob(job, fetchJobFunction, setEditableItem, setJobWizardMode, dispatch),
-    [fetchJobFunction, dispatch]
-  )
-
-  const handleMonitoring = useCallback(
-    item => {
-      monitorJob(appStore.frontendSpec.jobs_dashboard_url, item, params.projectName)
-    },
-    [appStore.frontendSpec.jobs_dashboard_url, params.projectName]
-  )
-
-  const terminateAbortTasksPolling = useCallback(() => {
-    abortJobRef?.current?.()
-    setAbortingJobs({})
-  }, [])
-
-  const refreshJobs = useCallback(
-    filters => {
-      if (params.jobName) {
-        setJobRuns([])
-      } else {
-        setJobs([])
-      }
-
-      abortControllerRef.current = new AbortController()
-
-      terminateAbortTasksPolling()
-
-      const fetchData = params.jobName ? fetchAllJobRuns : fetchJobs
-      const newParams = !params.jobName && {
-        'partition-by': 'project_and_name',
-        'partition-sort-by': 'updated'
-      }
-
-      fetchData(
-        params.jobName
-          ? selectedRunProject || '*'
-          : filters.project
-            ? filters.project.toLowerCase()
-            : '*',
-        filters,
-        {
-          ui: {
-            controller: abortControllerRef.current,
-            setRequestErrorMessage
-          },
-          params: { ...newParams }
-        },
-        params.jobName ?? false
-      ).then(jobs => {
-        if (jobs) {
-          const parsedJobs = jobs
-            .map(job => parseJob(job))
-            .filter(job => {
-              const type = getJobKindFromLabels(job.labels) ?? JOB_KIND_LOCAL
-
-              return (
-                !filters.type ||
-                filters.type === FILTER_ALL_ITEMS ||
-                filters.type.split(',').includes(type)
-              )
-            })
-          const responseAbortingJobs = parsedJobs.reduce((acc, job) => {
-            if (job.state.value === 'aborting' && job.abortTaskId) {
-              acc[job.abortTaskId] = {
-                uid: job.uid,
-                name: job.name
-              }
-            }
-
-            return acc
-          }, {})
-
-          if (Object.keys(responseAbortingJobs).length > 0) {
-            setAbortingJobs(responseAbortingJobs)
-            pollAbortingJobs(
-              params.jobName
-                ? selectedRunProject || '*'
-                : filters.project
-                  ? filters.project.toLowerCase()
-                  : '*',
-              abortJobRef,
-              responseAbortingJobs,
-              () => refreshJobs(filters),
-              dispatch
-            )
-          }
-
-          if (params.jobName) {
-            setJobRuns(parsedJobs)
-          } else {
-            setJobs(parsedJobs)
-          }
-        }
-      })
-    },
-    [
-      dispatch,
-      fetchAllJobRuns,
-      fetchJobs,
-      params.jobName,
-      selectedRunProject,
-      terminateAbortTasksPolling
-    ]
-  )
-
-  const refreshScheduled = useCallback(
-    filters => {
-      setScheduledJobs([])
-      abortControllerRef.current = new AbortController()
-
-      dispatch(
-        jobsActions.fetchScheduledJobs(
-          filters.project ? filters.project.toLowerCase() : '*',
-          filters,
-          {
-            ui: {
-              controller: abortControllerRef.current,
-              setRequestErrorMessage
-            }
-          }
-        )
-      ).then(jobs => {
-        if (jobs) {
-          const parsedJobs = jobs
-            .map(job => parseJob(job, SCHEDULE_TAB))
-            .filter(job => {
-              let inDateRange = true
-
-              if (filters.dates) {
-                const timeTo = filters.dates.value[1]?.getTime?.() || ''
-                const timeFrom = filters.dates.value[0]?.getTime?.() || ''
-                const nextRun = job.nextRun.getTime()
-
-                if (timeFrom) {
-                  inDateRange = nextRun >= timeFrom
-                }
-
-                if (timeTo && inDateRange) {
-                  inDateRange = nextRun <= timeTo
-                }
-              }
-
-              return (
-                inDateRange &&
-                (!filters.type || filters.type === FILTER_ALL_ITEMS || job.type === filters.type)
-              )
-            })
-
-          setScheduledJobs(parsedJobs)
-        }
-      })
-    },
-    [dispatch]
-  )
 
   useLayoutEffect(() => {
     setSelectedTab(
@@ -288,26 +104,9 @@ const ProjectsJobsMonitoring = ({ fetchAllJobRuns, fetchJobFunction, fetchJobs }
     )
   }, [location.pathname])
 
-  const getWorkflows = useCallback(
-    filter => {
-      abortControllerRef.current = new AbortController()
-
-      dispatch(
-        workflowActions.fetchWorkflows(
-          filter.project ? filter.project.toLowerCase() : '*',
-          { ...filter, groupBy: GROUP_BY_WORKFLOW },
-          {
-            ui: {
-              controller: abortControllerRef.current,
-              setRequestErrorMessage
-            }
-          },
-          true
-        )
-      )
-    },
-    [dispatch]
-  )
+  const jobsFiltersConfig = useMemo(() => getJobsFiltersConfig(params.jobName), [params.jobName])
+  const scheduledFiltersConfig = useMemo(() => getScheduledFiltersConfig(), [])
+  const workflowsFiltersConfig = useMemo(() => getWorkflowsFiltersConfig(), [])
 
   const tabData = useMemo(() => {
     return {

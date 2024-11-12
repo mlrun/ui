@@ -20,12 +20,12 @@ such restriction.
 
 import { isEmpty } from 'lodash'
 import {
-  ERROR_STATE,
+ ERROR_STATE,
   FAIL_STATE,
-  FAILED_STATE,
-  FUNCTION_INITIALIZED_STATE,
+  FAILED_STATE, FUNCTION_INITIALIZED_STATE,
   FUNCTIONS_PAGE,
-  JOBS_MONITORING_WORKFLOWS_TAB
+  JOBS_MONITORING_WORKFLOWS_TAB,
+  MONITOR_WORKFLOWS_TAB
 } from '../constants'
 
 const errorStates = [ERROR_STATE, FAIL_STATE, FAILED_STATE]
@@ -42,7 +42,7 @@ const getState = (state, page, kind, reason = '') => {
       }`
     }
   } else {
-    const commonLabel = state ? commonStateLabels(page === JOBS_MONITORING_WORKFLOWS_TAB)[state] : ''
+    const commonLabel = state ? commonStateLabels(page === JOBS_MONITORING_WORKFLOWS_TAB || page === MONITOR_WORKFLOWS_TAB)[state] : ''
     const label = reason && errorStates.includes(state) ? `${commonLabel}. Reason: ${reason}` : commonLabel
 
     return {

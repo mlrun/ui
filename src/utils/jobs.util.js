@@ -23,6 +23,14 @@ import { pollAbortingJobs } from '../components/Jobs/jobs.util'
 import { showErrorNotification } from './notifications.util'
 import { generateFunctionPriorityLabel } from './generateFunctionPriorityLabel'
 import { setNotification } from '../reducers/notificationReducer'
+import {
+  DATES_FILTER,
+  LABELS_FILTER,
+  NAME_FILTER,
+  PROJECT_FILTER,
+  STATUS_FILTER,
+  TYPE_FILTER
+} from '../constants'
 
 export const handleAbortJob = (
   abortJob,
@@ -181,4 +189,35 @@ export const convertTriggerToCrontab = trigger => {
 
 export const getJobKindFromLabels = (labels = []) => {
   return labels.find(label => label.includes('kind:'))?.replace('kind: ', '') ?? ''
+}
+
+export const getJobsFiltersConfig = jobName => {
+  return {
+    [NAME_FILTER]: { label: 'Name:', hidden: Boolean(jobName) },
+    [DATES_FILTER]: { label: 'Start time:' },
+    [PROJECT_FILTER]: { label: 'Project:' },
+    [STATUS_FILTER]: { label: 'Status:' },
+    [TYPE_FILTER]: { label: 'Type:' },
+    [LABELS_FILTER]: { label: 'Labels:' }
+  }
+}
+
+export const getWorkflowsFiltersConfig = () => {
+  return {
+    [NAME_FILTER]: { label: 'Name:' },
+    [DATES_FILTER]: { label: 'Created at:' },
+    [PROJECT_FILTER]: { label: 'Project:' },
+    [STATUS_FILTER]: { label: 'Status:' },
+    [LABELS_FILTER]: { label: 'Labels:' }
+  }
+}
+
+export const getScheduledFiltersConfig = () => {
+  return {
+    [NAME_FILTER]: { label: 'Name:' },
+    [DATES_FILTER]: { label: 'Scheduled at:', isFuture: true },
+    [PROJECT_FILTER]: { label: 'Project:' },
+    [TYPE_FILTER]: { label: 'Type:' },
+    [LABELS_FILTER]: { label: 'Labels:' }
+  }
 }

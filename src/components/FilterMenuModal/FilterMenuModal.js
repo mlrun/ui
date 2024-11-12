@@ -86,14 +86,18 @@ const FilterMenuModal = ({
   }, [dispatch, filtersData, filterMenuName, values])
 
   useEffect(() => {
-    if (!isEqual(initialValues, values)) {
+    if (!isEqual(formRef.current?.getState().values, values)) {
       formRef.current?.batch(() => {
         for (const filterName in values) {
           formRef.current?.change(filterName, values[filterName])
         }
       })
     }
-  }, [initialValues, values])
+  }, [values])
+
+  useEffect(() => {
+    formRef.current.reset(initialValues)
+  }, [initialValues])
 
   const hideFiltersWizard = useCallback(event => {
     if (
@@ -123,17 +127,16 @@ const FilterMenuModal = ({
     const ref = formRef.current
 
     return () => {
-      ref.restart(initialValues)
-      dispatch(resetModalFilter(filterMenuName))
+      dispatch(
+        resetModalFilter({
+          name: filterMenuName,
+          resetModalFilterCallback: newInitialValues => {
+            if (newInitialValues) ref.restart(newInitialValues)
+          }
+        })
+      )
     }
-  }, [
-    params.pageTab,
-    params.projectName,
-    restartFormTrigger,
-    dispatch,
-    initialValues,
-    filterMenuName
-  ])
+  }, [params.pageTab, params.projectName, restartFormTrigger, dispatch, filterMenuName])
 
   const getFilterCounter = formState => {
     const initialValues = applyChanges ? filtersData?.initialValues : formState.initialValues
@@ -222,7 +225,9 @@ const FilterMenuModal = ({
                       )}
                       {applyButton && !withoutApplyButton && (
                         <Button
-                          disabled={isEqual(filtersData?.values, formState.values) || formState?.invalid}
+                          disabled={
+                            isEqual(filtersData?.values, formState.values) || formState?.invalid
+                          }
                           id="filter-apply-btn"
                           variant={applyButton.variant}
                           label={applyButton.label}
