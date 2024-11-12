@@ -38,7 +38,7 @@ import {
 } from '../../elements/FunctionsPanelCode/functionsPanelCode.util'
 import { setFieldState } from 'igz-controls/utils/form.util'
 import { convertChipsData, parseChipsData } from '../../utils/convertChipsData'
-import { FUNCTION_TYPE_SERVING, PANEL_CREATE_MODE, PANEL_DEFAULT_ACCESS_KEY } from '../../constants'
+import { FUNCTION_TYPE_SERVING, PANEL_CREATE_MODE, PANEL_DEFAULT_ACCESS_KEY, PANEL_EDIT_MODE } from '../../constants'
 import { LABEL_BUTTON, NOTFOUND_ERROR_STATUS_CODE, SECONDARY_BUTTON } from 'igz-controls/constants'
 
 const FunctionsPanel = ({
@@ -204,7 +204,7 @@ const FunctionsPanel = ({
       }
 
       if (result) {
-        createFunctionSuccess().then(() => {
+        createFunctionSuccess(mode === PANEL_EDIT_MODE).then(() => {
           navigate(`/projects/${params.projectName}/functions/${functionPayload.metadata.name}@${result.data.hash_key}/overview`)
         })
       }

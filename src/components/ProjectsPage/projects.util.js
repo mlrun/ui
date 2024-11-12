@@ -160,7 +160,7 @@ export const handleDeleteProjectError = (
     const customErrorMsg =
       error.response?.status === FORBIDDEN_ERROR_STATUS_CODE
         ? `You do not have permission to delete the project ${project.metadata.name} `
-        : `Failed to delete the project ${project.metadata.name} project`
+        : `Failed to delete the project ${project.metadata.name}`
 
     showErrorNotification(dispatch, error, '', customErrorMsg, () => handleDeleteProject(project))
   }
