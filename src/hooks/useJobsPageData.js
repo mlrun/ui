@@ -18,13 +18,16 @@ under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
 import { useCallback, useRef, useState } from 'react'
-import { parseJob } from '../utils/parseJob'
-import { FILTER_ALL_ITEMS, GROUP_BY_WORKFLOW, JOB_KIND_LOCAL, SCHEDULE_TAB } from '../constants'
-import { monitorJob, pollAbortingJobs, rerunJob } from '../components/Jobs/jobs.util'
 import { useParams } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
+
+import { monitorJob, pollAbortingJobs, rerunJob } from '../components/Jobs/jobs.util'
+
+import { getJobKindFromLabels } from '../utils/jobs.util'
+import { parseJob } from '../utils/parseJob'
 import jobsActions from '../actions/jobs'
 import workflowActions from '../actions/workflow'
+import { FILTER_ALL_ITEMS, GROUP_BY_WORKFLOW, JOB_KIND_LOCAL, SCHEDULE_TAB } from '../constants'
 
 export const useJobsPageData = (fetchAllJobRuns, fetchJobFunction, fetchJobs) => {
   const [jobRuns, setJobRuns] = useState([])
@@ -90,9 +93,7 @@ export const useJobsPageData = (fetchAllJobRuns, fetchJobFunction, fetchJobs) =>
           const parsedJobs = jobs
             .map(job => parseJob(job))
             .filter(job => {
-              const type =
-                job.labels?.find(label => label.includes('kind:'))?.replace('kind: ', '') ??
-                JOB_KIND_LOCAL
+              const type = getJobKindFromLabels(job.labels) ?? JOB_KIND_LOCAL
 
               return (
                 (!filters.type ||

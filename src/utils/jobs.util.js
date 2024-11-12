@@ -187,6 +187,10 @@ export const convertTriggerToCrontab = trigger => {
     : ''
 }
 
+export const getJobKindFromLabels = (labels = []) => {
+  return labels.find(label => label.includes('kind:'))?.replace('kind: ', '') ?? ''
+}
+
 export const getJobsFiltersConfig = jobName => {
   return {
     [NAME_FILTER]: { label: 'Name:', hidden: Boolean(jobName) },

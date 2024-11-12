@@ -26,7 +26,7 @@ import {
   SCHEDULE_TAB
 } from '../constants'
 import getState from './getState'
-import { convertTriggerToCrontab } from './jobs.util'
+import { convertTriggerToCrontab, getJobKindFromLabels } from './jobs.util'
 import { getJobIdentifier } from './getUniqueIdentifier'
 import { parseKeyValues } from './object'
 
@@ -59,7 +59,9 @@ export const parseJob = (job, tab, customState, customError) => {
         job.last_run?.status?.reason ?? job.last_run?.status?.error
       ),
       type:
-        job.kind === JOB_KIND_PIPELINE || jobHasWorkflowLabel(job) ? JOB_KIND_WORKFLOW : job.kind,
+        job.kind === JOB_KIND_PIPELINE || jobHasWorkflowLabel(job)
+          ? JOB_KIND_WORKFLOW
+          : getJobKindFromLabels(parseKeyValues(job.labels || {})),
       ui: {
         originalContent: job
       }
