@@ -17,7 +17,7 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import React, { useEffect, useState, useMemo } from 'react'
+import React, { useEffect, useState, useMemo, useRef } from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 
@@ -26,19 +26,10 @@ import ProjectCardView from './ProjectCardView'
 import { generateProjectStatistic } from './projectCard.util'
 import projectsAction from '../../actions/projects'
 
-const ProjectCard = ({
-  actionsMenu,
-  nuclioStore,
-  project,
-  projectStore,
-  projectSummary
-}) => {
-  const [
-    fetchNuclioFunctionsFailure,
-    setFetchNuclioFunctionsFailure
-  ] = useState(false)
+const ProjectCard = ({ actionsMenu, nuclioStore, project, projectStore, projectSummary }) => {
+  const [fetchNuclioFunctionsFailure, setFetchNuclioFunctionsFailure] = useState(false)
 
-  const actionsMenuRef = React.createRef()
+  const actionsMenuRef = useRef()
 
   useEffect(() => {
     setFetchNuclioFunctionsFailure(

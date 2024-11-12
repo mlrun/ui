@@ -1,0 +1,30 @@
+@import '~igz-controls/scss/colors';
+
+.breadcrumbs__item {
+  position: relative;
+  max-width: 700px;
+  color: $topaz;
+
+  &:last-child {
+    color: $mulledWine;
+    font-weight: 500;
+    font-size: 20px;
+    line-height: 23px;
+  }
+}
+
+.breadcrumbs__separator {
+  display: flex;
+  margin: 0 8px;
+  color: $topaz;
+  transition: transform 0.2s linear;
+  user-select: none;
+
+  &_tumbler {
+    cursor: pointer;
+  }
+
+  &_active {
+    transform: rotate(90deg);
+  }
+}

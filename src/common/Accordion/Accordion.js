@@ -17,7 +17,7 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import React, { useState, useEffect, useCallback } from 'react'
+import React, { useState, useEffect, useCallback, useRef } from 'react'
 import PropTypes from 'prop-types'
 import classnames from 'classnames'
 
@@ -35,7 +35,7 @@ const Accordion = ({
   openByDefault = false
 }) => {
   const [open, setOpen] = useState(openByDefault)
-  const accordionRef = React.createRef()
+  const accordionRef = useRef()
 
   const handleOnBlur = useCallback(
     event => {

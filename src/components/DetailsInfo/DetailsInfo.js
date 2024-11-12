@@ -17,7 +17,7 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import React, { useReducer, useCallback, useEffect, useMemo } from 'react'
+import React, { useReducer, useCallback, useEffect, useMemo, useRef } from 'react'
 import PropTypes from 'prop-types'
 import { useParams } from 'react-router-dom'
 import { useDispatch } from 'react-redux'
@@ -42,7 +42,7 @@ const DetailsInfo = React.forwardRef(
   ) => {
     const [detailsInfoState, detailsInfoDispatch] = useReducer(detailsInfoReducer, initialState)
     const params = useParams()
-    const editItemRef = React.createRef()
+    const editItemRef = useRef()
     const dispatch = useDispatch()
 
     const onApplyChanges = useCallback(
