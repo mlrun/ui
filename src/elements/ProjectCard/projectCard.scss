@@ -68,6 +68,26 @@
     margin-right: 1rem;
   }
 
+  &__alert{
+    display: flex;
+    border-radius: 100px;
+    padding:  0 8px ;
+    align-items: center;
+    text-align: center;
+    font-size: 14px;
+    color: $primary;
+    background-color: $selago;
+    &-icon {
+      width: 20px;
+      height: 20px;
+    path{
+      fill: $ceriseRed;
+    }
+  }
+
+
+  }
+
   &__info {
     display: flex;
     align-items: center;
@@ -77,8 +97,9 @@
     & > *:first-child {
       flex: 0 0 auto;
       margin-right: 5px;
-      color: $spunPearl;
-    }
+        color: $spunPearl; // Apply a different color when a modifier is used
+      }
+
 
     &-icon {
       flex: 0 1 25px;

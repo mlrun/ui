@@ -28,6 +28,8 @@ import { Tooltip, TextTooltipTemplate } from 'igz-controls/components'
 
 import { getTimeElapsedByDate } from '../../utils'
 
+import { ReactComponent as Alerts } from 'igz-controls/images/alerts.svg'
+
 import { ReactComponent as ClockIcon } from 'igz-controls/images/clock.svg'
 
 import './projectCard.scss'
@@ -36,6 +38,8 @@ const ProjectCardView = React.forwardRef(({ actionsMenu, project, statistics }, 
   const cardRef = useRef()
   const chipRef = useRef()
   const navigate = useNavigate()
+  //TODO: change the to real data
+  // const demoData = 4
 
   return (
     <div
@@ -63,6 +67,10 @@ const ProjectCardView = React.forwardRef(({ actionsMenu, project, statistics }, 
             </Tooltip>
 
             <div className="project-card__info" data-testid="project-card__created">
+              <div className="project-card__alert">
+                <Alerts className="project-card__alert-icon" />
+                <p>1234</p>
+              </div>
               <ClockIcon className="project-card__info-icon" />
               <span>Created {getTimeElapsedByDate(project.metadata.created)}</span>
             </div>
