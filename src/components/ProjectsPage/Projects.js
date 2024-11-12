@@ -61,6 +61,7 @@ const Projects = () => {
   const abortControllerRef = useRef(new AbortController())
   const terminatePollRef = useRef(null)
   const deletingProjectsRef = useRef({})
+  const projectsAreRefreshedOnSearchRef = useRef(false)
 
   const dispatch = useDispatch()
   const { isDemoMode } = useMode()
@@ -157,9 +158,14 @@ const Projects = () => {
     }
   }, [isNuclioModeDisabled, dispatch, fetchMinimalProjects])
 
-  const handleSearchOnFocus = useCallback(() => {
-    refreshProjects()
-  }, [refreshProjects])
+  const handleSearchOnChange = useCallback((name) => {
+    setFilterByName(name)
+
+    if (!projectsAreRefreshedOnSearchRef.current && name.length >= 1) {
+      refreshProjects()
+      projectsAreRefreshedOnSearchRef.current = true
+    }
+  }, [refreshProjects, setFilterByName])
 
   const handleSelectSortOption = option => {
     setSortProjectId(option)
@@ -389,7 +395,7 @@ const Projects = () => {
       filteredProjects={filteredProjects}
       filterMatches={filterMatches}
       handleCreateProject={handleCreateProject}
-      handleSearchOnFocus={handleSearchOnFocus}
+      handleSearchOnChange={handleSearchOnChange}
       handleSelectSortOption={handleSelectSortOption}
       isDescendingOrder={isDescendingOrder}
       projectsRequestErrorMessage={projectsRequestErrorMessage}
@@ -398,7 +404,6 @@ const Projects = () => {
       removeNewProjectError={removeNewProjectError}
       selectedProjectsState={selectedProjectsState}
       setCreateProject={setCreateProject}
-      setFilterByName={setFilterByName}
       setFilterMatches={setFilterMatches}
       setIsDescendingOrder={setIsDescendingOrder}
       setSelectedProjectsState={setSelectedProjectsState}
