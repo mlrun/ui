@@ -289,7 +289,7 @@ const ActionBar = ({
               </div>
             )}
             {DATES_FILTER in filterMenu && !filtersConfig[DATES_FILTER].hidden && (
-              <div key={DATES_FILTER} className="action-bar__filters-item">
+              <div key={DATES_FILTER} className="action-bar__filters-item filter-column">
                 <Field name={DATES_FILTER}>
                   {({ input }) => {
                     return (
@@ -312,18 +312,18 @@ const ActionBar = ({
                 </Field>
               </div>
             )}
+            {filterMenuModal && (
+              <FilterMenuModal
+                applyChanges={filterMenuModal => applyChanges(formState.values, filterMenuModal)}
+                filterMenuName={filterMenuName}
+                initialValues={filterMenuModalInitialState}
+                restartFormTrigger={`${tab}`}
+                values={filterMenuModal.values}
+              >
+                {children}
+              </FilterMenuModal>
+            )}
           </div>
-          {filterMenuModal && (
-            <FilterMenuModal
-              applyChanges={filterMenuModal => applyChanges(formState.values, filterMenuModal)}
-              filterMenuName={filterMenuName}
-              initialValues={filterMenuModalInitialState}
-              restartFormTrigger={`${tab}`}
-              values={filterMenuModal.values}
-            >
-              {children}
-            </FilterMenuModal>
-          )}
           {(withRefreshButton || !isEmpty(actionButtons)) && (
             <div className="action-bar__actions">
               {actionButtons.map(
@@ -332,6 +332,7 @@ const ActionBar = ({
                   !actionButton.hidden &&
                   (actionButton.template || (
                     <Button
+                      disabled={actionButton.disabled}
                       key={index}
                       variant={actionButton.variant}
                       label={actionButton.label}
@@ -340,7 +341,13 @@ const ActionBar = ({
                     />
                   ))
               )}
-              {autoRefreshIsEnabled && <FormCheckBox className="auto-refresh" label={AUTO_REFRESH} name={AUTO_REFRESH_ID} />}
+              {autoRefreshIsEnabled && (
+                <FormCheckBox
+                  className="auto-refresh"
+                  label={AUTO_REFRESH}
+                  name={AUTO_REFRESH_ID}
+                />
+              )}
               <FormOnChange handler={setAutoRefresh} name={AUTO_REFRESH_ID} />
               {withRefreshButton && (
                 <RoundedIcon tooltipText="Refresh" onClick={() => refresh(formState)} id="refresh">

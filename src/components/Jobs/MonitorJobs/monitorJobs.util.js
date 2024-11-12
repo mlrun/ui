@@ -21,11 +21,10 @@ import React from 'react'
 import { isNil, isEmpty, debounce } from 'lodash'
 
 import {
-  DATE_RANGE_TIME_FILTER,
+  DATES_FILTER,
   FUNCTION_RUN_KINDS,
   JOBS_PAGE,
-  LABELS_FILTER,
-  NAME_FILTER,
+  MONITOR_JOBS_TAB,
   STATUS_FILTER
 } from '../../../constants'
 import {
@@ -39,21 +38,13 @@ import {
 } from '../jobs.util'
 import { datePickerPastOptions, PAST_WEEK_DATE_OPTION } from '../../../utils/datePicker.util'
 import { TERTIARY_BUTTON } from 'igz-controls/constants'
-import jobsActions from '../../../actions/jobs'
-import detailsActions from '../../../actions/details'
+import { setFiltersValues, setModalFiltersValues } from '../../../reducers/filtersReducer'
 
 import { ReactComponent as MonitorIcon } from 'igz-controls/images/monitor-icon.svg'
 import { ReactComponent as Run } from 'igz-controls/images/run.svg'
 import { ReactComponent as Cancel } from 'igz-controls/images/close.svg'
 import { ReactComponent as Yaml } from 'igz-controls/images/yaml.svg'
 import { ReactComponent as Delete } from 'igz-controls/images/delete.svg'
-
-export const generateFilters = jobName => [
-  { type: STATUS_FILTER, label: 'Status:' },
-  { type: NAME_FILTER, label: 'Name:', hidden: Boolean(jobName) },
-  { type: LABELS_FILTER, label: 'Labels:' },
-  { type: DATE_RANGE_TIME_FILTER, label: 'Start time:' }
-]
 
 export const generatePageData = (
   handleFetchJobLogs,
@@ -161,28 +152,57 @@ export const fetchInitialJobs = debounce(
     filtersStore,
     selectedJob,
     dateFilter,
-    params,
+    jobId,
     refreshJobs,
     setFilters,
     dispatch,
     isJobDataEmpty,
     jobsAreInitializedRef
   ) => {
-    if (isEmpty(selectedJob) && !params.jobId && !jobsAreInitializedRef.current) {
+    if (isEmpty(selectedJob) && !jobId && !jobsAreInitializedRef.current) {
       let filters = {}
+      let requestFilters = {}
+      let pageFilters = {}
+      let modalFilters = {}
 
       if (filtersStore.saveFilters) {
-        filters = {
-          saveFilters: false,
+        requestFilters = {
           state: filtersStore.state,
           dates: filtersStore.dates
         }
+        filters = {
+          saveFilters: false
+        }
+        pageFilters = {
+          name: [MONITOR_JOBS_TAB],
+          value: {
+            [DATES_FILTER]: filtersStore.dates
+          }
+        }
+        modalFilters = {
+          name: MONITOR_JOBS_TAB,
+          value: {
+            [STATUS_FILTER]: Array.isArray(filtersStore.state)
+              ? [...filtersStore.state]
+              : [filtersStore.state]
+          }
+        }
+
+        dispatch(setModalFiltersValues(modalFilters))
+        dispatch(setFiltersValues(pageFilters))
       } else if (isJobDataEmpty()) {
         const pastWeekOption = datePickerPastOptions.find(
           option => option.id === PAST_WEEK_DATE_OPTION
         )
 
         filters = {
+          dates: {
+            value: pastWeekOption.handler(),
+            isPredefined: pastWeekOption.isPredefined,
+            initialSelectedOptionId: pastWeekOption.id
+          }
+        }
+        requestFilters = {
           dates: {
             value: pastWeekOption.handler(),
             isPredefined: pastWeekOption.isPredefined,
@@ -197,28 +217,24 @@ export const fetchInitialJobs = debounce(
           dates: {
             value: dateFilter,
             isPredefined: false,
-            initialSelectedOptionId: filtersStore.dates.initialSelectedOptionId
+            initialSelectedOptionId: filtersStore.dates.value.initialSelectedOptionId
+          }
+        }
+        requestFilters = {
+          name: filtersStore.name,
+          state: filtersStore.state,
+          labels: filtersStore.labels,
+          dates: {
+            value: dateFilter,
+            isPredefined: false,
+            initialSelectedOptionId: filtersStore.dates.value.initialSelectedOptionId
           }
         }
       }
 
-      refreshJobs(filters)
+      refreshJobs(requestFilters)
       dispatch(setFilters(filters))
       jobsAreInitializedRef.current = true
     }
   }
 )
-
-export const monitorJobsActionCreator = {
-  abortJob: jobsActions.abortJob,
-  deleteAllJobRuns: jobsActions.deleteAllJobRuns,
-  deleteJob: jobsActions.deleteJob,
-  fetchAllJobRuns: jobsActions.fetchAllJobRuns,
-  fetchJob: jobsActions.fetchJob,
-  fetchJobFunctions: jobsActions.fetchJobFunctions,
-  fetchJobLogs: jobsActions.fetchJobLogs,
-  fetchJobPods: detailsActions.fetchJobPods,
-  fetchJobs: jobsActions.fetchJobs,
-  removeJobLogs: jobsActions.removeJobLogs,
-  removePods: detailsActions.removePods
-}

@@ -53,7 +53,7 @@ module.exports = {
       'Azure storage',
       'Google storage',
       'Databricks filesystem'
-    ] 
+    ]
   },
   Real_Time_Pipeline_Pane: {
     Overview_Headers: [
@@ -241,10 +241,10 @@ module.exports = {
       'Stream path:'
     ],
     Overview_Drift_Headers: [
-      'Mean TVD:', 
-      'Mean Hellinger:', 
-      'Mean KLD:', 
-      'Drift Actual Value:', 
+      'Mean TVD:',
+      'Mean Hellinger:',
+      'Mean KLD:',
+      'Drift Actual Value:',
       'Drift Detected Threshold:',
       'Possible Drift Threshold:'
     ]
@@ -310,7 +310,7 @@ module.exports = {
       'Google storage',
       'Databricks filesystem'
     ],
-    Register_Error_Message: /That combination of name and tag is already in use in an existing (artifact|dataset|plotly|table)\. If you proceed, the existing (artifact|dataset|plotly|table) will be overwritten/  
+    Register_Error_Message: /That combination of name and tag is already in use in an existing (artifact|dataset|plotly|table)\. If you proceed, the existing (artifact|dataset|plotly|table) will be overwritten/
   },
   Register_Dataset: {
     Type_Options: ['General', 'Chart', 'Plot', 'Table'],
@@ -326,7 +326,7 @@ module.exports = {
       'Azure storage',
       'Google storage',
       'Databricks filesystem'
-    ]  
+    ]
   },
   Project_Settings: {
     Tab_List: ['General', 'Members', 'Secrets'],
@@ -606,6 +606,7 @@ module.exports = {
     Common_Message_Jobs_Monitoring: /No data matches the filter: "Start time: \d{2}\/\d{2}\/\d{4} \d{2}:\d{2} - \d{2}\/\d{2}\/\d{4} \d{2}:\d{2}, Project: test"/,
     Common_Message_Jobs_Monitoring_Status: /No data matches the filter: "Created at: \d{2}\/\d{2}\/\d{4} \d{2}:\d{2} - \d{2}\/\d{2}\/\d{4} \d{2}:\d{2}, Status: (.+?)"/,
     Common_Message_Jobs_Monitoring_Type: /No data matches the filter: "Start time: \d{2}\/\d{2}\/\d{4} \d{2}:\d{2} - \d{2}\/\d{2}\/\d{4} \d{2}:\d{2}, Type: (.+?)"/,
+    Common_Message_Monitor_Jobs: /No data matches the filter: "Start time: \d{2}\/\d{2}\/\d{4} \d{2}:\d{2} - \d{2}\/\d{2}\/\d{4} \d{2}:\d{2}"/,
     Common_Message_Jobs_Monitoring_Scheduled: /No data matches the filter: "Scheduled at: \d{2}\/\d{2}\/\d{4} \d{2}:\d{2} - \d{2}\/\d{2}\/\d{4} \d{2}:\d{2}, Project: test"/,
     Common_Message: 'No data matches the filter: "Version Tag: latest, Name: ccccc"',
     Common_Message_Feature: 'No data matches the filter: "Version Tag: latest"',

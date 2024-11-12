@@ -23,11 +23,11 @@ import { useForm } from 'react-final-form'
 import { FormInput, FormOnChange } from 'igz-controls/components'
 import StatusFilter from '../../../common/StatusFilter/StatusFilter'
 
-import { LABELS_FILTER, PROJECT_FILTER, STATUS_FILTER_NAME } from '../../../constants'
+import { LABELS_FILTER, STATUS_FILTER_NAME } from '../../../constants'
 import { workflowsStatuses } from '../../FilterMenu/filterMenu.settings'
 import { useMode } from '../../../hooks/mode.hook'
 
-const WorkflowsMonitoringFilters = () => {
+const WorkflowsFilters = () => {
   const form = useForm()
   const { isDemoMode } = useMode()
 
@@ -37,13 +37,6 @@ const WorkflowsMonitoringFilters = () => {
 
   return (
     <div>
-      <div className="form-row">
-        <FormInput name={PROJECT_FILTER} placeholder="Search by project name..." />
-        <FormOnChange
-          handler={value => handleInputChange(value, PROJECT_FILTER)}
-          name={PROJECT_FILTER}
-        />
-      </div>
       <div className="form-row">
         <StatusFilter statusList={workflowsStatuses} name={STATUS_FILTER_NAME} />
       </div>
@@ -65,4 +58,4 @@ const WorkflowsMonitoringFilters = () => {
   )
 }
 
-export default WorkflowsMonitoringFilters
+export default WorkflowsFilters
