@@ -66,7 +66,6 @@ const detailsMenu = [
   {
     label: 'alerts',
     id: 'alerts',
-
     icon: <Alert />
   }
 ]
