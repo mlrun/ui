@@ -297,8 +297,8 @@ const Models = ({ fetchModelFeatureVector }) => {
         return {
           ...state,
           [modelIdentifier]: {
-            content: sortListByDate(content[model.db_key ?? model.key], 'updated', false).map(artifact =>
-              createModelsRowData(artifact, params.projectName)
+            content: sortListByDate(content[model.db_key ?? model.key], 'updated', false).map(
+              artifact => createModelsRowData(artifact, params.projectName)
             )
           },
           error: null,
