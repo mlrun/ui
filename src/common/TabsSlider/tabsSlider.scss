@@ -37,12 +37,11 @@
       margin-left: 5px;
     }
 
-    &_icon {
+    &-icon {
       svg {
         width: 20px;
         height: 20px;
         margin-right: 5px;
-
         path {
           fill: $topaz;
         }
