@@ -18,7 +18,7 @@ under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
 import React, { useCallback, useEffect, useMemo, useReducer, useRef, useState } from 'react'
-import { connect, useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { useLocation, useNavigate, useParams } from 'react-router-dom'
 
 import ProjectSettingsGeneral from '../../elements/ProjectSettingsGeneral/ProjectSettingsGeneral'
@@ -52,7 +52,7 @@ import { showErrorNotification } from '../../utils/notifications.util'
 
 import './projectSettings.scss'
 
-const ProjectSettings = ({ frontendSpec, projectStore }) => {
+const ProjectSettings = () => {
   const [projectMembersIsShown, setProjectMembersIsShown] = useState(false)
   const [projectOwnerIsShown, setProjectOwnerIsShown] = useState(false)
   const [confirmData, setConfirmData] = useState(null)
@@ -63,6 +63,8 @@ const ProjectSettings = ({ frontendSpec, projectStore }) => {
   const dispatch = useDispatch()
   const deletingProjectsRef = useRef({})
   const terminatePollRef = useRef(null)
+  const projectStore = useSelector(state => state.projectStore)
+  const frontendSpec = useSelector(store => store.appStore.frontendSpec)
 
   const projectMembershipIsEnabled = useMemo(
     () => frontendSpec?.feature_flags?.project_membership === 'enabled',
@@ -317,10 +319,4 @@ const ProjectSettings = ({ frontendSpec, projectStore }) => {
   )
 }
 
-export default connect(
-  ({ appStore, projectStore }) => ({
-    projectStore,
-    frontendSpec: appStore.frontendSpec
-  }),
-  null
-)(ProjectSettings)
+export default ProjectSettings
