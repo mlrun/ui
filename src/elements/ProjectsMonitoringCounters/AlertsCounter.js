@@ -7,10 +7,6 @@ import Loader from '../../common/Loader/Loader'
 import { ReactComponent as Alerts } from 'igz-controls/images/alerts.svg'
 import { ReactComponent as ClockIcon } from 'igz-controls/images/clock.svg'
 import { useSelector } from 'react-redux'
-// import { useNavigate } from 'react-router-dom'
-//
-// import { generateMonitoringStats } from '../../utils/generateMonitoringData'
-// import { JOB_MONITORING_ALERT_TAB } from '../../constants'
 
 const AlertTitle = (
   <div>
@@ -20,20 +16,7 @@ const AlertTitle = (
 )
 
 const AlertsCounter = () => {
-  // const dispatch = useDispatch()
-  // const navigate = useNavigate()
   const projectStore = useSelector(store => store.projectStore)
-
-  // const alertStats = useMemo(
-  //   () =>
-  //     generateMonitoringStats(
-  //       projectStore.jobsMonitoringData.alerts,
-  //       navigate,
-  //       dispatch,
-  //       JOB_MONITORING_ALERT_TAB
-  //     ),
-  //   [dispatch, navigate, projectStore.jobsMonitoringData.alerts]
-  // )
 
   console.log(projectStore.jobsMonitoringData)
 
