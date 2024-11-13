@@ -17,9 +17,6 @@ const AlertTitle = (
 
 const AlertsCounter = () => {
   const projectStore = useSelector(store => store.projectStore)
-
-  console.log(projectStore.jobsMonitoringData)
-
   return (
     <StatsCard className="monitoring-stats alerts-card">
       <StatsCard.Header title={AlertTitle}>
