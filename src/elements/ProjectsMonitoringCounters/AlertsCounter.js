@@ -1,23 +1,42 @@
 import './projectsMonitoringCounters.scss'
 import StatsCard from '../../common/StatsCard/StatsCard'
-import React from 'react'
+// import React, { useMemo } from 'react'
 
 import Loader from '../../common/Loader/Loader'
 
 import { ReactComponent as Alerts } from 'igz-controls/images/alerts.svg'
 import { ReactComponent as ClockIcon } from 'igz-controls/images/clock.svg'
+import { useSelector } from 'react-redux'
+// import { useNavigate } from 'react-router-dom'
+//
+// import { generateMonitoringStats } from '../../utils/generateMonitoringData'
+// import { JOB_MONITORING_ALERT_TAB } from '../../constants'
+
+const AlertTitle = (
+  <div>
+    <Alerts className="stats__header-icon" />
+    Alerts
+  </div>
+)
 
 const AlertsCounter = () => {
-  const demoData = 10
-  const demoLoading = false
-  //todo:change to data
+  // const dispatch = useDispatch()
+  // const navigate = useNavigate()
+  const projectStore = useSelector(store => store.projectStore)
 
-  const AlertTitle = (
-    <div>
-      <Alerts className="stats__header-icon" />
-      Alerts
-    </div>
-  )
+  // const alertStats = useMemo(
+  //   () =>
+  //     generateMonitoringStats(
+  //       projectStore.jobsMonitoringData.alerts,
+  //       navigate,
+  //       dispatch,
+  //       JOB_MONITORING_ALERT_TAB
+  //     ),
+  //   [dispatch, navigate, projectStore.jobsMonitoringData.alerts]
+  // )
+
+  console.log(projectStore.jobsMonitoringData)
+
   return (
     <StatsCard className="monitoring-stats alerts-card">
       <StatsCard.Header title={AlertTitle}>
@@ -30,15 +49,15 @@ const AlertsCounter = () => {
         <StatsCard.Col>
           <h6 className="stats__subtitle">Endpoint</h6>
           <span className="stats__counter">
-            {demoLoading ? (
+            {projectStore.projectsSummary.loading ? (
               <Loader section small secondary />
             ) : (
               <span
                 className="stats__link"
-                onClick={() => {}}
+                onClick={() => {}} //todo
                 data-testid="scheduled_total_see_all"
               >
-                {demoData}{' '}
+                {projectStore.jobsMonitoringData.alerts.endpoint}
               </span>
             )}
           </span>
@@ -46,7 +65,7 @@ const AlertsCounter = () => {
         <StatsCard.Col>
           <h6 className="stats__subtitle">Jobs</h6>
           <span className="stats__counter">
-            {demoLoading ? (
+            {projectStore.projectsSummary.loading ? (
               <Loader section small secondary />
             ) : (
               <span
@@ -54,7 +73,7 @@ const AlertsCounter = () => {
                 onClick={() => {}}
                 data-testid="scheduled_total_see_all"
               >
-                {demoData}{' '}
+                {projectStore.jobsMonitoringData.alerts.jobs}{' '}
               </span>
             )}
           </span>
@@ -62,7 +81,7 @@ const AlertsCounter = () => {
         <StatsCard.Col>
           <h6 className="stats__subtitle">Other</h6>
           <span className="stats__counter">
-            {demoLoading ? (
+            {projectStore.projectsSummary.loading ? (
               <Loader section small secondary />
             ) : (
               <span
@@ -70,7 +89,7 @@ const AlertsCounter = () => {
                 onClick={() => {}}
                 data-testid="scheduled_total_see_all"
               >
-                {demoData}{' '}
+                {projectStore.jobsMonitoringData.alerts.application}
               </span>
             )}
           </span>
