@@ -91,7 +91,8 @@ const initialState = {
   jobsMonitoringData: {
     jobs: {},
     workflows: {},
-    scheduled: {}
+    scheduled: {},
+    alerts: {}
   },
   loading: false,
   newProject: {
