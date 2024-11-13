@@ -21,6 +21,7 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { isEmpty } from 'lodash'
 
+import AlertsCounter from '../../elements/ProjectsMonitoringCounters/AlertsCounter'
 import Breadcrumbs from '../../common/Breadcrumbs/Breadcrumbs'
 import FeatureSetsPanel from '../FeatureSetsPanel/FeatureSetsPanel'
 import FunctionsPanel from '../FunctionsPanel/FunctionsPanel'
@@ -40,7 +41,6 @@ import { launchIDEOptions, generateTipMessageForCounter } from './project.utils'
 import { ReactComponent as RefreshIcon } from 'igz-controls/images/refresh.svg'
 
 import './project.scss'
-import AlertsCounter from '../../elements/ProjectsMonitoringCounters/AlertsCounter'
 
 const ProjectMonitorView = ({
   closeFeatureSetPanel,
