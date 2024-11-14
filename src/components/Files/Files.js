@@ -29,10 +29,8 @@ import RegisterArtifactModal from '../RegisterArtifactModal/RegisterArtifactModa
 import {
   ARTIFACT_OTHER_TYPE,
   ARTIFACT_TYPE,
-  FILES_FILTERS,
   FILES_PAGE,
   FILES_TAB,
-  FILTER_MENU_MODAL,
   GROUP_BY_NAME,
   GROUP_BY_NONE,
   REQUEST_CANCELED
@@ -84,17 +82,15 @@ const Files = () => {
   const navigate = useNavigate()
   const params = useParams()
   const viewMode = getViewMode(window.location.search)
-
+  const [filesFilters, filesModalFilters] = useSelector(state => [
+    state.filtersStore.filterMenu[FILES_PAGE],
+    state.filtersStore.filterMenuModal[FILES_PAGE]
+  ])
   const abortControllerRef = useRef(new AbortController())
   const tagAbortControllerRef = useRef(new AbortController())
   const filesRef = useRef(null)
 
   const pageData = useMemo(() => generatePageData(viewMode), [viewMode])
-
-  const filesFilters = useMemo(
-    () => ({ name: filtersStore.name, ...filtersStore[FILTER_MENU_MODAL][FILES_FILTERS].values }),
-    [filtersStore]
-  )
 
   const detailsFormInitialValues = useMemo(
     () => ({
@@ -182,11 +178,11 @@ const Files = () => {
     artifact => {
       openPopUp(AddArtifactTagPopUp, {
         artifact,
-        onAddTag: () => handleRefresh(filesFilters),
+        onAddTag: () => handleRefresh({ ...filesFilters.values, ...filesModalFilters.values }),
         projectName: params.projectName
       })
     },
-    [handleRefresh, params.projectName, filesFilters]
+    [params.projectName, handleRefresh, filesFilters.values, filesModalFilters.values]
   )
 
   const actionsMenu = useMemo(
@@ -199,18 +195,19 @@ const Files = () => {
         handleAddTag,
         params.projectName,
         handleRefresh,
-        filesFilters,
+        { ...filesFilters.values, ...filesModalFilters.values },
         menuPosition,
         selectedFile
       ),
     [
-      dispatch,
-      filesFilters,
       frontendSpec,
-      handleAddTag,
-      handleRefresh,
-      params.projectName,
+      dispatch,
       toggleConvertedYaml,
+      handleAddTag,
+      params.projectName,
+      handleRefresh,
+      filesFilters.values,
+      filesModalFilters.values,
       selectedFile
     ]
   )
@@ -238,8 +235,8 @@ const Files = () => {
       setSelectedRowData(state => ({
         ...state,
         [fileIdentifier]: {
-          content: sortListByDate(content[file.db_key ?? file.key], 'updated', false).map(artifact =>
-            createFilesRowData(artifact, params.projectName)
+          content: sortListByDate(content[file.db_key ?? file.key], 'updated', false).map(
+            artifact => createFilesRowData(artifact, params.projectName)
           )
         },
         error: null,
@@ -305,15 +302,15 @@ const Files = () => {
       }
     }
 
-    handleRefresh(filesFilters)
+    handleRefresh({ ...filesFilters.values, ...filesModalFilters.values })
   }
 
   useInitialTableFetch({
     createRowData: rowItem => createFilesRowData(rowItem, params.projectName, frontendSpec),
     fetchData,
     fetchTags,
-    filterModalName: FILES_FILTERS,
-    filters: filesFilters,
+    filterModalName: FILES_PAGE,
+    filters: { ...filesFilters.values, ...filesModalFilters.values },
     setExpandedRowsData: setSelectedRowData,
     sortExpandedRowsDataBy: 'updated'
   })
@@ -372,10 +369,10 @@ const Files = () => {
     openPopUp(RegisterArtifactModal, {
       artifactKind: ARTIFACT_TYPE,
       params,
-      refresh: () => handleRefresh(filesFilters),
+      refresh: () => handleRefresh({ ...filesFilters.values, ...filesModalFilters.values }),
       title: registerArtifactTitle
     })
-  }, [handleRefresh, params, filesFilters])
+  }, [params, handleRefresh, filesFilters, filesModalFilters])
 
   const virtualizationConfig = useVirtualization({
     rowsData: {

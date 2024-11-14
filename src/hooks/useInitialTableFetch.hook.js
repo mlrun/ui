@@ -98,7 +98,7 @@ export const useInitialTableFetch = ({
       if (setInitialFilters) {
         setInitialFilters()
       } else {
-        if (params.name) {    
+        if (params.name) {
           if (filterName) {
             dispatch(
               setFiltersValues({

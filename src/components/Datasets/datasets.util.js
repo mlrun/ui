@@ -31,10 +31,7 @@ import {
   DATASETS_PAGE,
   DATASETS_TAB,
   FULL_VIEW_MODE,
-  ITERATIONS_FILTER,
-  LABELS_FILTER,
-  NAME_FILTER,
-  TAG_FILTER
+  NAME_FILTER
 } from '../../constants'
 import { PRIMARY_BUTTON } from 'igz-controls/constants'
 import { applyTagChanges, chooseOrFetchArtifact } from '../../utils/artifacts.util'
@@ -72,12 +69,9 @@ export const infoHeaders = [
   { label: 'Labels', id: 'labels' }
 ]
 
-export const filters = [
-  { type: TAG_FILTER, label: 'Version tag:' },
-  { type: NAME_FILTER, label: 'Name:' },
-  { type: LABELS_FILTER, label: 'Labels:' },
-  { type: ITERATIONS_FILTER, label: 'Show best iteration only:' }
-]
+export const filtersConfig = {
+  [NAME_FILTER]: { label: 'Name:' }
+}
 
 export const registerDatasetTitle = 'Register dataset'
 
@@ -190,7 +184,8 @@ export const generateActionsMenu = (
   selectedDataset
 ) => {
   const isTargetPathValid = getIsTargetPathValid(datasetMin ?? {}, frontendSpec)
-  const datasetDataCouldBeDeleted = datasetMin?.target_path?.endsWith('.pq') || datasetMin?.target_path?.endsWith('.parquet')
+  const datasetDataCouldBeDeleted =
+    datasetMin?.target_path?.endsWith('.pq') || datasetMin?.target_path?.endsWith('.parquet')
 
   const getFullDataset = datasetMin => {
     return chooseOrFetchArtifact(dispatch, DATASETS_TAB, selectedDataset, datasetMin)
@@ -207,7 +202,10 @@ export const generateActionsMenu = (
       {
         label: 'Download',
         hidden: menuPosition === ACTION_MENU_PARENT_ROW_EXPANDED,
-        disabled: !isTargetPathValid || datasetMin.size > (frontendSpec.artifact_limits.max_download_size ?? ARTIFACT_MAX_DOWNLOAD_SIZE),
+        disabled:
+          !isTargetPathValid ||
+          datasetMin.size >
+            (frontendSpec.artifact_limits.max_download_size ?? ARTIFACT_MAX_DOWNLOAD_SIZE),
         icon: <DownloadIcon />,
         onClick: datasetMin => {
           getFullDataset(datasetMin).then(dataset => {
@@ -244,29 +242,29 @@ export const generateActionsMenu = (
         hidden: [ACTION_MENU_PARENT_ROW, ACTION_MENU_PARENT_ROW_EXPANDED].includes(menuPosition),
         className: 'danger',
         onClick: () =>
-          datasetDataCouldBeDeleted ?
-            openPopUp(DeleteArtifactPopUp, {
-              artifact: datasetMin,
-              artifactType: DATASET_TYPE,
-              category: DATASET_TYPE,
-              filters: datasetsFilters,
-              handleRefresh
-            })
+          datasetDataCouldBeDeleted
+            ? openPopUp(DeleteArtifactPopUp, {
+                artifact: datasetMin,
+                artifactType: DATASET_TYPE,
+                category: DATASET_TYPE,
+                filters: datasetsFilters,
+                handleRefresh
+              })
             : openDeleteConfirmPopUp(
-              'Delete dataset?',
-              `Do you want to delete the dataset "${datasetMin.db_key}"? Deleted datasets can not be restored.`,
-              () => {
-                handleDeleteArtifact(
-                  dispatch,
-                  projectName,
-                  datasetMin.db_key,
-                  datasetMin.uid,
-                  handleRefresh,
-                  datasetsFilters,
-                  DATASET_TYPE
-                )
-              }
-            )
+                'Delete dataset?',
+                `Do you want to delete the dataset "${datasetMin.db_key}"? Deleted datasets can not be restored.`,
+                () => {
+                  handleDeleteArtifact(
+                    dispatch,
+                    projectName,
+                    datasetMin.db_key,
+                    datasetMin.uid,
+                    handleRefresh,
+                    datasetsFilters,
+                    DATASET_TYPE
+                  )
+                }
+              )
       },
       {
         label: 'Delete all',
