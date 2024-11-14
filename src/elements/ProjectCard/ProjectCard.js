@@ -28,6 +28,7 @@ import projectsAction from '../../actions/projects'
 
 const ProjectCard = ({
   actionsMenu,
+  alerts,
   nuclioStore,
   project,
   projectStore,
@@ -68,6 +69,7 @@ const ProjectCard = ({
   return (
     <ProjectCardView
       actionsMenu={actionsMenu}
+      alerts={alerts}
       project={project}
       statistics={statistics}
       ref={actionsMenuRef}
