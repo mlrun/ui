@@ -46,11 +46,13 @@ export const generateResultsContent = job => {
         {
           headerId: 'name',
           headerLabel: 'Name',
+          className: 'table-cell-3',
           value: resultName
         },
         {
           headerId: 'value',
           headerLabel: 'Value',
+          className: 'table-cell-8',
           value: String(resultValue ?? '')
         }
       ]

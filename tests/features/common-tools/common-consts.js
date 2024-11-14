@@ -53,7 +53,7 @@ module.exports = {
       'Azure storage',
       'Google storage',
       'Databricks filesystem'
-    ] 
+    ]
   },
   Real_Time_Pipeline_Pane: {
     Overview_Headers: [
@@ -241,10 +241,10 @@ module.exports = {
       'Stream path:'
     ],
     Overview_Drift_Headers: [
-      'Mean TVD:', 
-      'Mean Hellinger:', 
-      'Mean KLD:', 
-      'Drift Actual Value:', 
+      'Mean TVD:',
+      'Mean Hellinger:',
+      'Mean KLD:',
+      'Drift Actual Value:',
       'Drift Detected Threshold:',
       'Possible Drift Threshold:'
     ]
@@ -310,7 +310,7 @@ module.exports = {
       'Google storage',
       'Databricks filesystem'
     ],
-    Register_Error_Message: /That combination of name and tag is already in use in an existing (artifact|dataset|plotly|table)\. If you proceed, the existing (artifact|dataset|plotly|table) will be overwritten/  
+    Register_Error_Message: /That combination of name and tag is already in use in an existing (artifact|dataset|plotly|table)\. If you proceed, the existing (artifact|dataset|plotly|table) will be overwritten/
   },
   Register_Dataset: {
     Type_Options: ['General', 'Chart', 'Plot', 'Table'],
@@ -326,12 +326,16 @@ module.exports = {
       'Azure storage',
       'Google storage',
       'Databricks filesystem'
-    ]  
+    ]
   },
   Project_Settings: {
     Tab_List: ['General', 'Members', 'Secrets'],
     Secrets_Hint:
       'These secrets are automatically available to all jobs belonging to this project that are not executed locally. See Secrets'
+  },
+  Common_Tooltips:{
+    FilterBy_Button: 'Filter',
+    Refresh_Button: 'Refresh'
   },
   Input_Hint: {
     Artifact_Names_Unique: 'Artifact names in the same project must be unique',
@@ -481,10 +485,11 @@ module.exports = {
     Job_Action_Menu_Options: ['Batch re-run', 'Monitoring', 'View YAML', 'Delete'],
     Job_Overview_Action_Menu_Options: ['View YAML', 'Batch re-run', 'Delete'],
     Running_Job_Action_Menu_Options: ['Monitoring', 'Abort', 'View YAML'],
-    Workflows_Action_Menu_Options: ['View YAML'],
+    Workflows_Action_Menu_Options: ['View YAML', 'Retry'],
     Workflows_Info_Pane_Action_Menu_Options: ['Batch re-run', 'Monitoring', 'View YAML', 'Delete'],
     Pending_Job_Action_Menu_Options: ['Batch re-run', 'Monitoring', 'Abort', 'View YAML'],
-    Schedule_Action_Menu_Options: ['Run now', 'Edit', 'Delete', 'View YAML']
+    Schedule_Action_Menu_Options: ['Run now', 'Edit', 'Delete', 'View YAML'],
+    Workflows_Unsuccessful_Run_Message: 'Workflow did not run successfully\nRETRY'
   },
   Jobs_Monitor_Tab_Info_Pane: {
     Tab_List: ['Overview', 'Inputs', 'Artifacts', 'Results', 'Logs', 'Pods'],
@@ -495,6 +500,7 @@ module.exports = {
       'Run on spot:',
       'Node selector:',
       'Priority:',
+      'Handler:',
       'Parameters:',
       'Function:',
       'Function tag:',
@@ -598,6 +604,9 @@ module.exports = {
   },
   No_Data_Message: {
     Common_Message_Jobs_Monitoring: /No data matches the filter: "Start time: \d{2}\/\d{2}\/\d{4} \d{2}:\d{2} - \d{2}\/\d{2}\/\d{4} \d{2}:\d{2}, Project: test"/,
+    Common_Message_Jobs_Monitoring_Status: /No data matches the filter: "Created at: \d{2}\/\d{2}\/\d{4} \d{2}:\d{2} - \d{2}\/\d{2}\/\d{4} \d{2}:\d{2}, Status: (.+?)"/,
+    Common_Message_Jobs_Monitoring_Type: /No data matches the filter: "Start time: \d{2}\/\d{2}\/\d{4} \d{2}:\d{2} - \d{2}\/\d{2}\/\d{4} \d{2}:\d{2}, Type: (.+?)"/,
+    Common_Message_Monitor_Jobs: /No data matches the filter: "Start time: \d{2}\/\d{2}\/\d{4} \d{2}:\d{2} - \d{2}\/\d{2}\/\d{4} \d{2}:\d{2}"/,
     Common_Message_Jobs_Monitoring_Scheduled: /No data matches the filter: "Scheduled at: \d{2}\/\d{2}\/\d{4} \d{2}:\d{2} - \d{2}\/\d{2}\/\d{4} \d{2}:\d{2}, Project: test"/,
     Common_Message: 'No data matches the filter: "Version Tag: latest, Name: ccccc"',
     Common_Message_Feature: 'No data matches the filter: "Version Tag: latest"',

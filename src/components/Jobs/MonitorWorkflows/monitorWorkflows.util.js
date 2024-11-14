@@ -21,14 +21,11 @@ import React from 'react'
 import { debounce } from 'lodash'
 
 import {
-  DATE_RANGE_TIME_FILTER,
   FILTER_ALL_ITEMS,
   FUNCTIONS_PAGE,
   GROUP_BY_NONE,
   GROUP_BY_WORKFLOW,
-  JOBS_PAGE,
-  NAME_FILTER,
-  STATUS_FILTER
+  JOBS_PAGE
 } from '../../../constants'
 import {
   getJobsDetailsMenu,
@@ -47,23 +44,13 @@ import {
 } from '../../FunctionsPage/functions.util'
 import { datePickerPastOptions, PAST_WEEK_DATE_OPTION } from '../../../utils/datePicker.util'
 import { isEveryObjectValueEmpty } from '../../../utils/isEveryObjectValueEmpty'
-import { generateStatusFilter } from '../../FilterMenu/filterMenu.settings'
 
 import { ReactComponent as MonitorIcon } from 'igz-controls/images/monitor-icon.svg'
 import { ReactComponent as Run } from 'igz-controls/images/run.svg'
 import { ReactComponent as Cancel } from 'igz-controls/images/close.svg'
 import { ReactComponent as Yaml } from 'igz-controls/images/yaml.svg'
 import { ReactComponent as Delete } from 'igz-controls/images/delete.svg'
-
-export const generateFilters = () => [
-  {
-    type: STATUS_FILTER,
-    label: 'Status:',
-    options: generateStatusFilter(true)
-  },
-  { type: NAME_FILTER, label: 'Name:' },
-  { type: DATE_RANGE_TIME_FILTER, label: 'Created at:' }
-]
+import { ReactComponent as Rerun } from 'igz-controls/images/rerun.svg'
 
 export const generatePageData = (
   selectedFunction,
@@ -99,7 +86,8 @@ export const generateActionsMenu = (
   abortable_function_kinds,
   handleConfirmAbortJob,
   handleConfirmDeleteJob,
-  toggleConvertedYaml
+  toggleConvertedYaml,
+  handleRerun
 ) => {
   if (job?.uid) {
     const jobKindIsAbortable = isJobKindAbortable(job, abortable_function_kinds)
@@ -152,12 +140,20 @@ export const generateActionsMenu = (
       ]
     ]
   } else {
+    const runningStates = ['running', 'pending']
+
     return [
       [
         {
           label: 'View YAML',
           icon: <Yaml />,
           onClick: toggleConvertedYaml
+        },
+        {
+          hidden: runningStates.includes(job?.state?.value),
+          icon: <Rerun />,
+          label: 'Retry',
+          onClick: () => handleRerun(job)
         }
       ]
     ]
@@ -189,10 +185,10 @@ export const fetchInitialWorkflows = debounce(
           getWorkflows(filters)
           dispatch(setFilters(filters))
         } else if (workflowsLength === 0) {
-          const pastWeekOption = datePickerPastOptions.find(
+          const past24HourOption = datePickerPastOptions.find(
             option => option.id === PAST_WEEK_DATE_OPTION
           )
-          const generatedDates = [...pastWeekOption.handler()]
+          const generatedDates = [...past24HourOption.handler()]
 
           if (generatedDates.length === 1) {
             generatedDates.push(new Date())
@@ -200,8 +196,8 @@ export const fetchInitialWorkflows = debounce(
           const filters = {
             dates: {
               value: generatedDates,
-              isPredefined: pastWeekOption.isPredefined,
-              initialSelectedOptionId: pastWeekOption.id
+              isPredefined: past24HourOption.isPredefined,
+              initialSelectedOptionId: past24HourOption.id
             },
             state: FILTER_ALL_ITEMS,
             groupBy: GROUP_BY_WORKFLOW

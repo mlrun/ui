@@ -17,21 +17,15 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import React, { useEffect, useMemo, useRef, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { connect, useDispatch, useSelector } from 'react-redux'
 import { isEmpty } from 'lodash'
-import classnames from 'classnames'
 
-import FilterMenu from '../../FilterMenu/FilterMenu'
 import WorkflowsTable from '../../../elements/WorkflowsTable/WorkflowsTable'
 
-import { JOBS_PAGE, MONITOR_WORKFLOWS_TAB, REQUEST_CANCELED } from '../../../constants'
-import {
-  fetchInitialWorkflows,
-  generateFilters,
-  monitorWorkflowsActionCreator
-} from './monitorWorkflows.util'
+import { MONITOR_WORKFLOWS_TAB, REQUEST_CANCELED } from '../../../constants'
+import { fetchInitialWorkflows, monitorWorkflowsActionCreator } from './monitorWorkflows.util'
 import { JobsContext } from '../Jobs'
 import { createJobsWorkflowsTabContent } from '../../../utils/createJobsContent'
 import { setFilters } from '../../../reducers/filtersReducer'
@@ -40,27 +34,34 @@ import { usePods } from '../../../hooks/usePods.hook'
 import detailsActions from '../../../actions/details'
 
 import './monitorWorkflows.scss'
-import { deleteWorkflows, fetchWorkflows } from '../../../reducers/workflowReducer'
+import { deleteWorkflows } from '../../../reducers/workflowReducer'
 
 const MonitorWorkflows = ({ fetchFunctionLogs }) => {
   const [selectedFunction, setSelectedFunction] = useState({})
-  const [requestErrorMessage, setRequestErrorMessage] = useState('')
   const [workflowsAreLoaded, setWorkflowsAreLoaded] = useState(false)
   const [workflowIsLoaded, setWorkflowIsLoaded] = useState(false)
   const [itemIsSelected, setItemIsSelected] = useState(false)
   const [selectedJob, setSelectedJob] = useState({})
   const workflowsStore = useSelector(state => state.workflowsStore)
-  const filtersStore = useSelector(state => state.filtersStore)
   const params = useParams()
   const dispatch = useDispatch()
   const { isStagingMode } = useMode()
-  const abortJobRef = useRef(null)
-  const abortControllerRef = useRef(new AbortController())
+  const {
+    abortControllerRef,
+    abortJobRef,
+    dateFilter,
+    getWorkflows,
+    requestErrorMessage,
+    workflowsFiltersConfig
+  } = React.useContext(JobsContext)
   const workflowsAreInitializedRef = useRef(false)
+  const [workflowsFilterMenu, workflowsFilterMenuModal, saveFilters] = useSelector(state => [
+    state.filtersStore.filterMenu[MONITOR_WORKFLOWS_TAB],
+    state.filtersStore.filterMenuModal[MONITOR_WORKFLOWS_TAB],
+    state.filtersStore.saveFilters
+  ])
 
   usePods(dispatch, detailsActions.fetchJobPods, detailsActions.removePods, selectedJob)
-
-  const filters = useMemo(() => generateFilters(), [])
 
   const tableContent = useMemo(
     () =>
@@ -73,37 +74,19 @@ const MonitorWorkflows = ({ fetchFunctionLogs }) => {
     [isStagingMode, params.projectName, selectedJob, workflowsStore.workflows.data]
   )
 
-  const getWorkflows = useCallback(
-    filter => {
-      abortControllerRef.current = new AbortController()
-
-      dispatch(
-        fetchWorkflows({
-          project: params.projectName,
-          filter,
-          config: {
-            ui: {
-              controller: abortControllerRef.current,
-              setRequestErrorMessage
-            }
-          }
-        })
-      )
-    },
-    [dispatch, params.projectName]
-  )
-
   useEffect(() => {
+    const abortControllerRefCurrent = abortControllerRef.current
+
     return () => {
       setWorkflowIsLoaded(false)
       setWorkflowsAreLoaded(false)
       setItemIsSelected(false)
       setSelectedJob({})
       setSelectedFunction({})
-      abortControllerRef.current.abort(REQUEST_CANCELED)
+      abortControllerRefCurrent.abort(REQUEST_CANCELED)
       workflowsAreInitializedRef.current = false
     }
-  }, [params.projectName, params.workflowId])
+  }, [abortControllerRef, params.projectName, params.workflowId])
 
   useEffect(() => {
     return () => {
@@ -114,7 +97,7 @@ const MonitorWorkflows = ({ fetchFunctionLogs }) => {
 
   useEffect(() => {
     fetchInitialWorkflows(
-      filtersStore,
+      { saveFilters, ...workflowsFilterMenu, ...workflowsFilterMenuModal.values },
       params,
       getWorkflows,
       setFilters,
@@ -125,10 +108,13 @@ const MonitorWorkflows = ({ fetchFunctionLogs }) => {
   }, [
     dispatch,
     getWorkflows,
-    filtersStore,
     workflowsAreLoaded,
     workflowsStore.workflows.data.length,
-    params
+    params,
+    dateFilter,
+    workflowsFilterMenu,
+    workflowsFilterMenuModal.values,
+    saveFilters
   ])
 
   return (
@@ -139,24 +125,13 @@ const MonitorWorkflows = ({ fetchFunctionLogs }) => {
             View running workflows and previously executed workflows
           </p>
         )}
-        <div className="content__action-bar-wrapper">
-          <div className={classnames(!params.workflowId && 'action-bar')}>
-            <FilterMenu
-              filters={filters}
-              onChange={getWorkflows}
-              page={JOBS_PAGE}
-              tab={MONITOR_WORKFLOWS_TAB}
-              withoutExpandButton
-              hidden={Boolean(params.workflowId)}
-            />
-          </div>
-        </div>
       </div>
       <WorkflowsTable
         backLink={`/projects/${params.projectName}/jobs/${MONITOR_WORKFLOWS_TAB}`}
         context={JobsContext}
         fetchFunctionLogs={fetchFunctionLogs}
-        filters={filters}
+        filterMenuName={MONITOR_WORKFLOWS_TAB}
+        filtersConfig={workflowsFiltersConfig}
         getWorkflows={getWorkflows}
         itemIsSelected={itemIsSelected}
         ref={{ abortJobRef }}

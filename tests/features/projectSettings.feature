@@ -25,6 +25,34 @@ Feature: Project Settings page
         Then verify "Source_URL_Input" on "Project_Settings_General_Tab" wizard should display "Input_Hint"."Source_URL_Input"
         Then type value "   " to "Source_URL_Input" field on "Project_Settings_General_Tab" wizard
         Then verify "Source_URL_Input" on "Project_Settings_General_Tab" wizard should display hover warning "Input_Hint"."Input_Field_Invalid"
+        Then type value "test" to "Source_URL_Input" field on "Project_Settings_General_Tab" wizard
+        Then verify "Pull_At_Runtime_Checkbox" element visibility on "Project_Settings_General_Tab" wizard
+        Then "Pull_At_Runtime_Checkbox" element should be unchecked on "Project_Settings_General_Tab" wizard
+        Then check "Pull_At_Runtime_Checkbox" element on "Project_Settings_General_Tab" wizard
+        And wait load page
+        Then verify if "Notification_Popup" popup dialog appears
+        Then "Notification_Pop_Up" element on "Notification_Popup" should contains "Data was edited successfully" value
+        Then verify "Notification_Pop_Up_Cross_Close_Button" element visibility on "Notification_Popup" wizard
+        Then click on "Notification_Pop_Up_Cross_Close_Button" element on "Notification_Popup" wizard
+        And wait load page
+        Then click on "Notification_Pop_Up_Cross_Close_Button" element on "Notification_Popup" wizard
+        And wait load page
+        Then "Pull_At_Runtime_Checkbox" element should be checked on "Project_Settings_General_Tab" wizard
+        Then click on breadcrumbs "project" label on "commonPagesHeader" wizard
+        And wait load page
+        Then verify breadcrumbs "tab" label should be equal "Project monitoring" value
+        And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
+        Then click on "Project_Settings_Button" element on "commonPagesHeader" wizard
+        And hover "MLRun_Logo" component on "commonPagesHeader" wizard
+        Then "Pull_At_Runtime_Checkbox" element should be checked on "Project_Settings_General_Tab" wizard
+        Then uncheck "Pull_At_Runtime_Checkbox" element on "Project_Settings_General_Tab" wizard
+        And wait load page
+        Then verify if "Notification_Popup" popup dialog appears
+        Then "Notification_Pop_Up" element on "Notification_Popup" should contains "Data was edited successfully" value
+        Then verify "Notification_Pop_Up_Cross_Close_Button" element visibility on "Notification_Popup" wizard
+        Then click on "Notification_Pop_Up_Cross_Close_Button" element on "Notification_Popup" wizard
+        And wait load page
+        Then "Pull_At_Runtime_Checkbox" element should be unchecked on "Project_Settings_General_Tab" wizard
         Then verify "Artifact_Path_Input" element visibility on "Project_Settings_General_Tab" wizard
         Then type value "   " to "Artifact_Path_Input" field on "Project_Settings_General_Tab" wizard
         Then verify "Artifact_Path_Input" on "Project_Settings_General_Tab" wizard should display hover warning "Input_Hint"."Input_Field_Invalid"
@@ -77,9 +105,8 @@ Feature: Project Settings page
         And click on "MLRun_Logo" element on "commonPagesHeader" wizard
         And wait load page
         Then type value "cat-vs-dog-classification" to "Search_Projects_Input" field on "Projects" wizard
-        Then value in "labels" column with "dropdowns" in "Projects_Table" on "Projects" wizard should contains "c=d" in "Overlay"
-        Then click on "Active_Projects_Button" element on "Projects" wizard
-        Then value in "labels" column with "dropdowns" in "Projects_Table" on "Projects" wizard should contains "e=f" in "Overlay"
+        Then value in "labels_key" column with "attribute_list" in "Projects_Table" on "Projects" wizard should contains "a,c,e"
+        Then value in "labels_value" column with "attribute_list" in "Projects_Table" on "Projects" wizard should contains "b,d,f"
         And click on row root with value "cat-vs-dog-classification" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
         And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
@@ -95,17 +122,15 @@ Feature: Project Settings page
         Then verify "Source_URL_Input" on "Project_Settings_General_Tab" wizard should display hover warning "Input_Hint"."Input_Field_Invalid"
         When add rows to "Labels_Table" table on "Project_Settings_General_Tab" wizard
             | key_input         | value_input         |
-            | a                 | b                   |
-            | project_label_key | project_label_value |
             | a12345            | b54321              |
+            | project_label_key | project_label_value |
+            | a                 | b                   |
         Then type value "test" to "Source_URL_Input" field on "Project_Settings_General_Tab" wizard
         And click on "MLRun_Logo" element on "commonPagesHeader" wizard
         And wait load page
         Then type value "cat-vs-dog-classification" to "Search_Projects_Input" field on "Projects" wizard
-        Then value in "labels" column with "dropdowns" in "Projects_Table" on "Projects" wizard should contains "project_label_key=project_label_value" in "Overlay"
-        Then click on "Active_Projects_Button" element on "Projects" wizard
-        Then value in "labels" column with "dropdowns" in "Projects_Table" on "Projects" wizard should contains "a12345=b54321" in "Overlay"
-        Then click on "Active_Projects_Button" element on "Projects" wizard
+        Then value in "labels_key" column with "attribute_list" in "Projects_Table" on "Projects" wizard should contains "a12345,project_label_key,a"
+        Then value in "labels_value" column with "attribute_list" in "Projects_Table" on "Projects" wizard should contains "b54321,project_label_value,b"
         And click on row root with value "cat-vs-dog-classification" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
         And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard

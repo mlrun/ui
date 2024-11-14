@@ -1,0 +1,57 @@
+@import '~igz-controls/scss/colors';
+@import '~igz-controls/scss/shadows';
+
+.notification {
+  position: relative;
+  z-index: 1000;
+  align-self: flex-end;
+  margin-right: 24px;
+  margin-bottom: 10px;
+  padding: 15px;
+  color: $white;
+  background-color: $darkPurple;
+  border-radius: 5px;
+  box-shadow: $tooltipShadow;
+  opacity: 0;
+
+  &__body {
+    display: flex;
+    align-items: center;
+
+    &__button-retry {
+      margin-left: 15px;
+      color: $portage;
+      cursor: pointer;
+    }
+
+    &__icon {
+      .icon-success {
+        width: 14px;
+        height: 14px;
+      }
+
+      .icon-alert {
+        width: 4px;
+        height: 14px;
+      }
+    }
+
+    &__status {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 24px;
+      height: 24px;
+      margin-right: 5px;
+      border-radius: 50%;
+    }
+
+    &__icon-alert {
+      background-color: $burntSienna;
+    }
+
+    &__icon-success {
+      background-color: $brightTurquoise;
+    }
+  }
+}

@@ -219,10 +219,7 @@ const DetailsInfoItem = React.forwardRef(
           className="details-item__data details-item__link"
           template={<TextTooltipTemplate text={func} />}
         >
-          <Link
-            className="link"
-            to={funcLink}
-          >
+          <Link className="link" to={funcLink}>
             {func}
           </Link>
         </Tooltip>
@@ -234,11 +231,7 @@ const DetailsInfoItem = React.forwardRef(
             if (!infoItem) return null
 
             return item.link ? (
-              <Link
-                className="details-item__data details-item__link"
-                to={item.link}
-                key={index}
-              >
+              <Link className="details-item__data details-item__link" to={item.link} key={index}>
                 <Tooltip template={<TextTooltipTemplate text={infoItem} />}>{infoItem}</Tooltip>
               </Link>
             ) : (

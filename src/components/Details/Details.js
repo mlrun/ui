@@ -198,7 +198,8 @@ const Details = ({
     if (
       formRef.current &&
       detailsStore.changes.counter === 0 &&
-      !isEqual(pickBy(formInitialValues), pickBy(formRef.current.getState()?.values))
+      !isEqual(pickBy(formInitialValues), pickBy(formRef.current.getState()?.values)) &&
+      !formRef.current.getState()?.active
     ) {
       formRef.current.restart(formInitialValues)
     }

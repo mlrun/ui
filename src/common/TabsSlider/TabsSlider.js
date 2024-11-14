@@ -25,7 +25,7 @@ import classnames from 'classnames'
 import { Tip } from 'igz-controls/components'
 
 import { SLIDER_STYLE_1, SLIDER_STYLE_2, SLIDER_TABS } from '../../types'
-import { generateUrlFromRouterPath  } from '../../utils/link-helper.util'
+import { generateUrlFromRouterPath } from '../../utils/link-helper.util'
 
 import { ReactComponent as Arrow } from 'igz-controls/images/arrow.svg'
 
@@ -117,8 +117,8 @@ const TabsSlider = ({
     } else if (
       tabsRef.current?.scrollWidth <
       tabsWrapperRef.current?.offsetWidth / menuOffsetHalfWidth +
-      selectedTabNode?.offsetLeft +
-      selectedTabNode?.offsetWidth
+        selectedTabNode?.offsetLeft +
+        selectedTabNode?.offsetWidth
     ) {
       setScrolledWidth(tabsRef.current?.scrollWidth - tabsWrapperRef.current?.offsetWidth)
       setRightArrowDisabled(true)
@@ -189,7 +189,9 @@ const TabsSlider = ({
                 <Link
                   className={tabClassName}
                   data-tab={tab.id}
-                  to={generateUrlFromRouterPath(`${window.location.pathname?.replace(/^$|([^/]+$)/, tab.id)}${location.search ?? ''}`)}
+                  to={generateUrlFromRouterPath(
+                    `${window.location.pathname?.replace(/^$|([^/]+$)/, tab.id)}${location.search ?? ''}`
+                  )}
                   onClick={() => onSelectTab(tab)}
                   key={tab.id}
                 >

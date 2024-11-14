@@ -26,6 +26,7 @@ import {
   SCHEDULE_TAB
 } from '../constants'
 import getState from './getState'
+import { getJobKindFromLabels } from './jobs.util'
 import { getJobIdentifier } from './getUniqueIdentifier'
 import { parseKeyValues } from './object'
 import { convertTriggerToCrontab } from '../components/Jobs/jobs.util'
@@ -52,9 +53,16 @@ export const parseJob = (job, tab, customState, customError) => {
           : convertTriggerToCrontab(job.scheduled_object?.schedule)
       },
       startTime: new Date(job.last_run?.status?.start_time),
-      state: getState(job.last_run?.status?.state, JOBS_PAGE, JOB_KIND_JOB),
+      state: getState(
+        job.last_run?.status?.state,
+        JOBS_PAGE,
+        JOB_KIND_JOB,
+        job.last_run?.status?.reason ?? job.last_run?.status?.error
+      ),
       type:
-        job.kind === JOB_KIND_PIPELINE || jobHasWorkflowLabel(job) ? JOB_KIND_WORKFLOW : job.kind,
+        job.kind === JOB_KIND_PIPELINE || jobHasWorkflowLabel(job)
+          ? JOB_KIND_WORKFLOW
+          : getJobKindFromLabels(parseKeyValues(job.labels || {})),
       ui: {
         originalContent: job
       }
@@ -95,7 +103,7 @@ export const parseJob = (job, tab, customState, customError) => {
         customState || job.status?.state,
         JOBS_PAGE,
         JOB_KIND_JOB,
-        job.status?.reason
+        job.status?.reason ?? job.status?.error
       ),
       ui_run: job.status?.ui_url,
       uid: job.metadata.uid,

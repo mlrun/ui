@@ -69,9 +69,24 @@ Feature: Models Page
     And select "Model Endpoints" tab in "Models_Tab_Selector" on "Models" wizard
     And wait load page
     Then verify "Model Endpoints" tab is active in "Models_Tab_Selector" on "Models" wizard
-    Then verify "Table_Label_Filter_Input" element visibility on "Model_Endpoints" wizard
-    Then verify "Table_Sort_By_Filter" element visibility on "Model_Endpoints" wizard
+    Then verify "Table_FilterBy_Button" element visibility on "Model_Endpoints" wizard
+    Then verify "Table_FilterBy_Button" element on "Model_Endpoints" wizard should display hover tooltip "Common_Tooltips"."FilterBy_Button"
+    Then click on "Table_FilterBy_Button" element on "Model_Endpoints" wizard
+    Then verify "Table_Label_Filter_Input" element visibility on "FilterBy_Popup" wizard
+    Then verify "Apply_Button" element visibility on "FilterBy_Popup" wizard
+    Then verify "Apply_Button" element on "FilterBy_Popup" wizard is disabled
+    Then verify "Clear_Button" element visibility on "FilterBy_Popup" wizard
+    Then verify "Clear_Button" element on "FilterBy_Popup" wizard is disabled
     Then verify "Table_Refresh_Button" element visibility on "Model_Endpoints" wizard
+    Then verify "Table_Refresh_Button" element on "Model_Endpoints" wizard should display hover tooltip "Common_Tooltips"."Refresh_Button"
+    Then verify "Sort_By_Function" element visibility on "Model_Endpoints" wizard
+    Then verify "Sort_By_Name" element not exists on "Model_Endpoints" wizard
+    Then click on "Column_Name_Header" element on "Model_Endpoints" wizard
+    Then verify "Sort_By_Name" element visibility on "Model_Endpoints" wizard
+    Then verify "Sort_By_Function" element not exists on "Model_Endpoints" wizard
+    Then click on "Column_Function_Header" element on "Model_Endpoints" wizard
+    Then verify "Sort_By_Function" element visibility on "Model_Endpoints" wizard
+    Then verify "Sort_By_Name" element not exists on "Model_Endpoints" wizard
     Then verify "Model_Endpoints_Table" element visibility on "Model_Endpoints" wizard
 
   @MLM
@@ -93,6 +108,7 @@ Feature: Models Page
     Then verify "Real-Time Pipelines" tab is active in "Models_Tab_Selector" on "Models" wizard
     Then verify "Table_Name_Filter_Input" element visibility on "Real_Time_Pipelines" wizard
     Then verify "Table_Refresh_Button" element visibility on "Real_Time_Pipelines" wizard
+    Then verify "Table_Refresh_Button" element on "Real_Time_Pipelines" wizard should display hover tooltip "Common_Tooltips"."Refresh_Button"
     Then verify "Real_Time_Pipelines_Table" element visibility on "Real_Time_Pipelines" wizard
 
   @MLM
@@ -168,6 +184,11 @@ Feature: Models Page
     Then click on "Table_Refresh_Button" element on "Real_Time_Pipelines" wizard
     And wait load page
     Then value in "name" column with "text" in "Real_Time_Pipelines_Table" on "Real_Time_Pipelines" wizard should contains "churn-server"
+    Then click on cell with row index 1 in "name" column in "Real_Time_Pipelines_Table" table on "Real_Time_Pipelines" wizard
+    And wait load page
+    Then verify "Real_Time_Pipelines_Graph" element visibility on "Real_Time_Pipelines" wizard
+    When click on node with index 2 in "Real_Time_Pipelines_Graph" graph on "Real_Time_Pipelines" wizard
+    Then verify "Header" element visibility on "Real_Time_Pipeline_Pane" wizard
 
   @MLM
   @passive
@@ -211,17 +232,22 @@ Feature: Models Page
     And select "Model Endpoints" tab in "Models_Tab_Selector" on "Models" wizard
     And wait load page
     Then verify "Model Endpoints" tab is active in "Models_Tab_Selector" on "Models" wizard
-    Then verify "Table_Label_Filter_Input" element visibility on "Model_Endpoints" wizard
-    Then type value "my-key" to "Table_Label_Filter_Input" field on "Model_Endpoints" wizard
-    Then click on "Table_Refresh_Button" element on "Model_Endpoints" wizard
+    Then click on "Table_FilterBy_Button" element on "Model_Endpoints" wizard
+    Then verify "Table_Label_Filter_Input" element visibility on "FilterBy_Popup" wizard
+    Then type value "my-key" to "Table_Label_Filter_Input" field on "FilterBy_Popup" wizard
+    Then click on "Apply_Button" element on "FilterBy_Popup" wizard
     And wait load page
     Then value in "labels" column with "dropdowns" in "Model_Endpoints_Table" on "Model_Endpoints" wizard should contains "my-key=my-value" in "Overlay"
-    Then type value "my-key=my-value" to "Table_Label_Filter_Input" field on "Model_Endpoints" wizard
-    Then click on "Table_Refresh_Button" element on "Model_Endpoints" wizard
+    Then click on "Table_FilterBy_Button" element on "Model_Endpoints" wizard
+    Then verify "Table_Label_Filter_Input" element visibility on "FilterBy_Popup" wizard
+    Then type value "my-key=my-value" to "Table_Label_Filter_Input" field on "FilterBy_Popup" wizard
+    Then click on "Apply_Button" element on "FilterBy_Popup" wizard
     And wait load page
     Then value in "labels" column with "dropdowns" in "Model_Endpoints_Table" on "Model_Endpoints" wizard should contains "my-key=my-value" in "Overlay"
-    Then type value "MY-KEY" to "Table_Label_Filter_Input" field on "Model_Endpoints" wizard
-    Then click on "Table_Refresh_Button" element on "Model_Endpoints" wizard
+    Then click on "Table_FilterBy_Button" element on "Model_Endpoints" wizard
+    Then verify "Table_Label_Filter_Input" element visibility on "FilterBy_Popup" wizard
+    Then type value "MY-KEY" to "Table_Label_Filter_Input" field on "FilterBy_Popup" wizard
+    Then click on "Apply_Button" element on "FilterBy_Popup" wizard
     And wait load page
     And verify "No_Data_Message" element visibility on "commonPagesHeader" wizard
 
@@ -708,6 +734,7 @@ Feature: Models Page
     Then verify "Header" element visibility on "Models_Info_Pane" wizard
     Then "Header" element on "Models_Info_Pane" should contains "test-model" value
     Then refresh a page
+    And wait load page
     Then verify "Header" element visibility on "Models_Info_Pane" wizard
     Then "Header" element on "Models_Info_Pane" should contains "test-model" value
 

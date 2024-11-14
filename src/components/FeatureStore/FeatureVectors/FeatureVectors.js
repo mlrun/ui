@@ -28,9 +28,12 @@ import { FeatureStoreContext } from '../FeatureStore'
 import {
   FEATURE_STORE_PAGE,
   FEATURE_VECTORS_TAB,
+  FILTER_MENU,
+  FILTER_MENU_MODAL,
   GROUP_BY_NAME,
   GROUP_BY_NONE,
   REQUEST_CANCELED,
+  TAG_FILTER,
   TAG_FILTER_ALL_ITEMS,
   TAG_FILTER_LATEST
 } from '../../../constants'
@@ -44,7 +47,7 @@ import { DANGER_BUTTON, TERTIARY_BUTTON } from 'igz-controls/constants'
 import { checkTabIsValid, handleApplyDetailsChanges } from '../featureStore.util'
 import { createFeatureVectorsRowData } from '../../../utils/createFeatureStoreContent'
 import { getFeatureVectorIdentifier } from '../../../utils/getUniqueIdentifier'
-import { getFilterTagOptions, setFilters } from '../../../reducers/filtersReducer'
+import { getFilterTagOptions, setFilters, setModalFiltersValues } from '../../../reducers/filtersReducer'
 import { parseChipsData } from '../../../utils/convertChipsData'
 import { parseFeatureTemplate } from '../../../utils/parseFeatureTemplate'
 import { parseFeatureVectors } from '../../../utils/parseFeatureVectors'
@@ -57,6 +60,7 @@ import { useVirtualization } from '../../../hooks/useVirtualization.hook'
 import { useInitialTableFetch } from '../../../hooks/useInitialTableFetch.hook'
 import { sortListByDate } from '../../../utils'
 import { isDetailsTabExists } from '../../../utils/link-helper.util'
+import { filtersConfig } from './featureVectors.util'
 
 import cssVariables from './featureVectors.scss'
 
@@ -77,6 +81,12 @@ const FeatureVectors = ({
   const params = useParams()
   const featureStore = useSelector(store => store.featureStore)
   const filtersStore = useSelector(store => store.filtersStore)
+  const featureVectorsFilters = useSelector(store => {
+    return {
+      ...store.filtersStore[FILTER_MENU][FEATURE_VECTORS_TAB].values,
+      ...store.filtersStore[FILTER_MENU_MODAL][FEATURE_VECTORS_TAB].values
+    }
+  })
   const featureStoreRef = useRef(null)
   const abortControllerRef = useRef(new AbortController())
   const tagAbortControllerRef = useRef(new AbortController())
@@ -169,12 +179,19 @@ const FeatureVectors = ({
           fetchTags()
             .unwrap()
             .then(response => {
-              const tag = [...response, TAG_FILTER_ALL_ITEMS].includes(filtersStore.tag)
-                ? filtersStore.tag
+              const tag = [...response, TAG_FILTER_ALL_ITEMS].includes(featureVectorsFilters.tag)
+                ? featureVectorsFilters.tag
                 : TAG_FILTER_LATEST
 
-              dispatch(setFilters({ tag }))
-              fetchData({ ...filtersStore, tag })
+              dispatch(
+                setModalFiltersValues({
+                  name: FEATURE_VECTORS_TAB,
+                  value: {
+                    [TAG_FILTER]: tag
+                  }
+                })
+              )
+              fetchData({ ...featureVectorsFilters, tag })
             })
         })
         .catch(error => {
@@ -187,14 +204,14 @@ const FeatureVectors = ({
     },
     [
       deleteFeatureVector,
-      dispatch,
-      fetchData,
-      fetchTags,
-      filtersStore,
-      navigate,
       params.projectName,
+      setConfirmData,
       selectedFeatureVector,
-      setConfirmData
+      dispatch,
+      fetchTags,
+      navigate,
+      featureVectorsFilters,
+      fetchData
     ]
   )
 
@@ -220,14 +237,21 @@ const FeatureVectors = ({
     [onDeleteFeatureVector, toggleConvertedYaml]
   )
 
-  const handleRefresh = useCallback(filters => {
-    fetchTags()
-    setFeatureVectors([])
-    setSelectedFeatureVector({})
-    setSelectedRowData({})
+  const handleRefresh = useCallback(
+    filters => {
+      fetchTags()
+      setFeatureVectors([])
+      setSelectedFeatureVector({})
+      setSelectedRowData({})
 
-    return fetchData(filters)
-  }, [fetchData, fetchTags])
+      return fetchData(filters)
+    },
+    [fetchData, fetchTags]
+  )
+
+  const handleRefreshWithStoreFilters = () => {
+    handleRefresh(featureVectorsFilters)
+  }
 
   const handleRemoveFeatureVector = useCallback(
     featureVector => {
@@ -257,10 +281,11 @@ const FeatureVectors = ({
         }
       }))
 
-      fetchFeatureVector(featureVector.project, featureVector.name, filtersStore.tag)
+      fetchFeatureVector(featureVector.project, featureVector.name, featureVectorsFilters.tag)
         .then(result => {
-          const content = sortListByDate(parseFeatureVectors(result), 'updated', false).map(contentItem =>
-            createFeatureVectorsRowData(contentItem, FEATURE_VECTORS_TAB, params.projectName)
+          const content = sortListByDate(parseFeatureVectors(result), 'updated', false).map(
+            contentItem =>
+              createFeatureVectorsRowData(contentItem, FEATURE_VECTORS_TAB, params.projectName)
           )
           setSelectedRowData(state => ({
             ...state,
@@ -282,7 +307,7 @@ const FeatureVectors = ({
           }))
         })
     },
-    [fetchFeatureVector, filtersStore.tag, params.projectName]
+    [fetchFeatureVector, featureVectorsFilters.tag, params.projectName]
   )
 
   const { latestItems, handleExpandRow } = useGroupContent(
@@ -327,14 +352,14 @@ const FeatureVectors = ({
         selectedFeatureVector,
         setNotification,
         updateFeatureStoreData,
-        filtersStore,
+        featureVectorsFilters,
         dispatch
       )
     },
     [
       dispatch,
       handleRefresh,
-      filtersStore,
+      featureVectorsFilters,
       params.name,
       params.projectName,
       selectedFeatureVector,
@@ -373,25 +398,28 @@ const FeatureVectors = ({
 
   useEffect(() => {
     setSelectedRowData({})
-  }, [filtersStore.tag])
+  }, [featureVectorsFilters.tag])
 
   useInitialTableFetch({
     fetchData,
-    filters: filtersStore,
+    filters: featureVectorsFilters,
     setExpandedRowsData: setSelectedRowData,
     createRowData: rowItem =>
       createFeatureVectorsRowData(rowItem, FEATURE_VECTORS_TAB, params.projectName),
     fetchTags,
-    sortExpandedRowsDataBy: 'updated'
+    sortExpandedRowsDataBy: 'updated',
+    filterModalName: FEATURE_VECTORS_TAB,
+    filterName: FEATURE_VECTORS_TAB,
+    filtersConfig
   })
 
   useEffect(() => {
-    if (filtersStore.tag === TAG_FILTER_ALL_ITEMS) {
+    if (featureVectorsFilters.tag === TAG_FILTER_ALL_ITEMS) {
       dispatch(setFilters({ groupBy: GROUP_BY_NAME }))
     } else if (filtersStore.groupBy === GROUP_BY_NAME) {
       dispatch(setFilters({ groupBy: GROUP_BY_NONE }))
     }
-  }, [filtersStore.groupBy, filtersStore.tag, dispatch])
+  }, [filtersStore.groupBy, featureVectorsFilters.tag, dispatch])
 
   useEffect(() => {
     const content = cloneDeep(featureStore.featureVectors?.allData)
@@ -472,6 +500,7 @@ const FeatureVectors = ({
       filtersStore={filtersStore}
       handleExpandRow={handleExpandRow}
       handleRefresh={handleRefresh}
+      handleRefreshWithStoreFilters={handleRefreshWithStoreFilters}
       pageData={pageData}
       ref={{ featureStoreRef }}
       requestErrorMessage={requestErrorMessage}

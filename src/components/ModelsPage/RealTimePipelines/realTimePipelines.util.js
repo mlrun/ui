@@ -19,7 +19,9 @@ such restriction.
 */
 import { MODELS_PAGE, NAME_FILTER } from '../../../constants'
 
-export const filters = [{ type: NAME_FILTER, label: 'Name:' }]
+export const filtersConfig = {
+  [NAME_FILTER]: { label: 'Name:' }
+}
 
 export const generatePageData = hideFilterMenu => ({
   page: MODELS_PAGE,

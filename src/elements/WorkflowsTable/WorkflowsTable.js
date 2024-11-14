@@ -72,7 +72,7 @@ import { useYaml } from '../../hooks/yaml.hook'
 
 import cssVariables from '../../components/Jobs/MonitorWorkflows/monitorWorkflows.scss'
 import { fetchJob } from '../../reducers/jobReducer'
-import { fetchWorkflow, resetWorkflow } from '../../reducers/workflowReducer'
+import { fetchWorkflow, rerunWorkflow, resetWorkflow } from '../../reducers/workflowReducer'
 
 const WorkflowsTable = React.forwardRef(
   (
@@ -385,6 +385,28 @@ const WorkflowsTable = React.forwardRef(
       [onDeleteJob, setConfirmData]
     )
 
+    const handleRerun = useCallback(
+      workflow => {
+        dispatch(rerunWorkflow({ project: workflow.project, workflowId: workflow.id }))
+          .unwrap()
+          .then(
+            dispatch(
+              setNotification({
+                status: 200,
+                id: Math.random(),
+                message: 'Workflow ran successfully.'
+              })
+            )
+          )
+          .catch(error => {
+            showErrorNotification(dispatch, error, 'Workflow did not run successfully', '', () =>
+              handleRerun(workflow)
+            )
+          })
+      },
+      [dispatch]
+    )
+
     const actionsMenu = useMemo(() => {
       return job =>
         generateActionsMenu(
@@ -395,7 +417,8 @@ const WorkflowsTable = React.forwardRef(
           appStore.frontendSpec.abortable_function_kinds,
           handleConfirmAbortJob,
           handleConfirmDeleteJob,
-          toggleConvertedYaml
+          toggleConvertedYaml,
+          handleRerun
         )
     }, [
       handleRerunJob,
@@ -404,7 +427,8 @@ const WorkflowsTable = React.forwardRef(
       handleMonitoring,
       handleConfirmAbortJob,
       handleConfirmDeleteJob,
-      toggleConvertedYaml
+      toggleConvertedYaml,
+      handleRerun
     ])
 
     const handleCancel = useCallback(() => {

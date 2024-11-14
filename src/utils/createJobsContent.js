@@ -37,11 +37,12 @@ import { generateFunctionDetailsLink, generateLinkToDetailsPanel } from './link-
 import { getJobIdentifier, getWorkflowJobIdentifier } from './getUniqueIdentifier'
 import { parseKeyValues } from './object'
 import { validateArguments } from './validateArguments'
+import { getJobKindFromLabels } from './jobs.util'
 
 export const createJobsMonitorTabContent = (jobs, jobName, isStagingMode) => {
   return jobs.map(job => {
     const identifierUnique = getJobIdentifier(job, true)
-    const type = job.labels?.find(label => label.includes('kind:'))?.replace('kind: ', '') ?? ''
+    const type = getJobKindFromLabels(job.labels)
     const getLink = tab => {
       if (jobName) {
         return validateArguments(job.uid, tab, job.name)
@@ -353,7 +354,12 @@ export const createJobsWorkflowContent = (
           type: 'link',
           getLink: tab => {
             return workflowProjectName
-              ? getWorkflowMonitoringDetailsLink(workflowProjectName, workflowId, job.customData, tab)
+              ? getWorkflowMonitoringDetailsLink(
+                  workflowProjectName,
+                  workflowId,
+                  job.customData,
+                  tab
+                )
               : getWorkflowDetailsLink(
                   projectName,
                   workflowId,
@@ -418,7 +424,7 @@ export const createJobsWorkflowContent = (
 export const createJobsMonitoringContent = (jobs, jobName, isStagingMode) => {
   return jobs.map(job => {
     const identifierUnique = getJobIdentifier(job, true)
-    const type = job.labels?.find(label => label.includes('kind:'))?.replace('kind: ', '') ?? ''
+    const type = getJobKindFromLabels(job.labels)
     const getLink = tab => {
       if (jobName) {
         return validateArguments(job.uid, tab, job.name)

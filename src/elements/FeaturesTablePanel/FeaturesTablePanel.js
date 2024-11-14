@@ -38,7 +38,7 @@ import { showErrorNotification } from '../../utils/notifications.util'
 
 const FeaturesTablePanel = ({
   createNewFeatureVector,
-  filtersStore,
+  projectName = '',
   handleCancel = null,
   onSubmit = null,
   updateFeatureVectorData
@@ -51,13 +51,13 @@ const FeaturesTablePanel = ({
     if (tableStore.features.isNewFeatureVector) {
       dispatch(
         updateCurrentProjectName(
-          filtersStore.project || tableStore.features.featureVector.metadata.project
+          projectName || tableStore.features.featureVector.metadata.project
         )
       )
     }
   }, [
     dispatch,
-    filtersStore.project,
+    projectName,
     tableStore.features.featureVector.metadata.project,
     tableStore.features.isNewFeatureVector
   ])
@@ -174,12 +174,11 @@ const FeaturesTablePanel = ({
 
 FeaturesTablePanel.propTypes = {
   handleCancel: PropTypes.func,
-  onSubmit: PropTypes.func
+  onSubmit: PropTypes.func,
+  projectName: PropTypes.string
 }
 
 export default connect(
-  filtersStore => ({
-    ...filtersStore
-  }),
+  null,
   { ...featureStoreActions }
 )(FeaturesTablePanel)

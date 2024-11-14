@@ -80,6 +80,7 @@ const JobsTable = React.forwardRef(
       refreshJobs,
       requestErrorMessage,
       selectedJob,
+      selectedRunProject,
       setAbortingJobs,
       setJobRuns,
       setJobs,
@@ -98,6 +99,10 @@ const JobsTable = React.forwardRef(
     const dispatch = useDispatch()
     const navigate = useNavigate()
     const location = useLocation()
+    const [jobsFilterMenu, jobsFilterMenuModal] = useSelector(state => [
+      state.filtersStore.filterMenu[MONITOR_JOBS_TAB],
+      state.filtersStore.filterMenuModal[MONITOR_JOBS_TAB]
+    ])
     const fetchJobFunctionsPromiseRef = useRef()
     const {
       editableItem,
@@ -178,11 +183,20 @@ const JobsTable = React.forwardRef(
           modifyAndSelectRun(item)
         }
 
-        if (!params.jobName && setSelectedRunProject) {
+        if (
+          (!params.jobName && setSelectedRunProject) ||
+          params.projectName !== selectedRunProject
+        ) {
           setSelectedRunProject(item.project)
         }
       },
-      [modifyAndSelectRun, params.jobName, setSelectedRunProject]
+      [
+        modifyAndSelectRun,
+        params.jobName,
+        params.projectName,
+        selectedRunProject,
+        setSelectedRunProject
+      ]
     )
 
     const fetchRun = useCallback(
@@ -214,7 +228,7 @@ const JobsTable = React.forwardRef(
       job => {
         const refresh = !isEmpty(selectedJob)
           ? () => fetchRun(job.project)
-          : () => refreshJobs(filtersStore)
+          : () => refreshJobs({ ...jobsFilterMenu.values, ...jobsFilterMenuModal.values })
 
         handleAbortJob(
           job,
@@ -233,7 +247,8 @@ const JobsTable = React.forwardRef(
         abortingJobs,
         dispatch,
         fetchRun,
-        filtersStore,
+        jobsFilterMenu.values,
+        jobsFilterMenuModal.values,
         refreshJobs,
         selectedJob,
         setAbortingJobs,
@@ -387,7 +402,8 @@ const JobsTable = React.forwardRef(
           defaultData: jobWizardMode === PANEL_RERUN_MODE ? editableItem?.rerun_object : {},
           mode: jobWizardMode,
           wizardTitle: jobWizardMode === PANEL_RERUN_MODE ? 'Batch re-run' : undefined,
-          onSuccessRequest: () => refreshJobs(filtersStore)
+          onSuccessRequest: () =>
+            refreshJobs({ ...jobsFilterMenu.values, ...jobsFilterMenuModal.values })
         })
 
         setJobWizardIsOpened(true)
@@ -397,6 +413,8 @@ const JobsTable = React.forwardRef(
       filtersStore,
       jobWizardIsOpened,
       jobWizardMode,
+      jobsFilterMenu.values,
+      jobsFilterMenuModal.values,
       params,
       refreshJobs,
       setEditableItem,
@@ -539,6 +557,7 @@ JobsTable.propTypes = {
   refreshJobs: PropTypes.func.isRequired,
   requestErrorMessage: PropTypes.string.isRequired,
   selectedJob: PropTypes.object.isRequired,
+  selectedRunProject: PropTypes.string.isRequired,
   setAbortingJobs: PropTypes.func.isRequired,
   setJobRuns: PropTypes.func.isRequired,
   setJobs: PropTypes.func.isRequired,

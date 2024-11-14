@@ -22,6 +22,7 @@ import commonTable from '../components/table.component'
 import inputGroup from '../components/input-group.component'
 import textAreaGroup from '../components/text-area.component'
 import { generateInputGroup, generateTextAreaGroup } from '../../common-tools/common-tools'
+import checkboxComponent from '../components/checkbox.component'
 
 
 const tabSelector = {
@@ -150,7 +151,7 @@ module.exports = {
         '.form-key-value-table .form-table__row_active .form-table__cell_1:nth-of-type(1)',
         true,
         false,
-        '.form-field__warning'
+        '.form-field__warning svg'
       )
     ),
     Parameters_Table_Value_Input: inputGroup(
@@ -158,7 +159,7 @@ module.exports = {
         '.form-key-value-table .form-table__row_active .form-table__cell_1:nth-of-type(2)',
         true,
         false,
-        '.form-field__warning'
+        '.form-field__warning svg'
       )
     ),
     Parameters_Table_Add_Row_Button: By.css(
@@ -185,6 +186,14 @@ module.exports = {
         '.input-label-value'
       )
     ),
+    Pull_At_Runtime_Checkbox: checkboxComponent({
+      root: '.settings__source [data-testid="form-field-checkbox"]',
+      elements: {
+        checkbox: 'input', 
+        name: '',
+        icon: ''
+      }
+    })
   },
   secretsTab: {
     Secrets_Table: commonTable(secretsTable),

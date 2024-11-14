@@ -47,7 +47,7 @@ Feature: Projects Page
         Then type value "" to "Search_Projects_Input" field on "Projects" wizard
         Then click on "Refresh_Projects_Button" element on "Projects" wizard
         Then type value "defa" to "Search_Projects_Input" field on "Projects" wizard
-        Then value in "name" column with "text" in "Projects_Table" on "Projects" wizard should contains "default"        
+        Then value in "name" column with "text" in "Projects_Table" on "Projects" wizard should contains "default"
 
     @MLPr
     @passive
@@ -105,6 +105,7 @@ Feature: Projects Page
         Given open url
         And wait load page
         Then select "Delete" option in action menu on "Projects" wizard in "Projects_Table" table at row with "churn-project-admin" value in "name" column
+        And wait load page
         Then verify if "Common_Popup" popup dialog appears
         Then "Description" component on "Common_Popup" should be equal "Descriptions"."Delete_Project_Confirm_Message"
         Then verify "Cancel_Button" element visibility on "Common_Popup" wizard
@@ -121,12 +122,13 @@ Feature: Projects Page
         Then verify if "Create_New_Project" popup dialog appears
         Then type into "Name_Input" on "Create_New_Project" popup dialog "empty-project" value
         Then type into "Description_Input" on "Create_New_Project" popup dialog "empty project description" value
+        And click on "Add_Label_Button" element on "Create_New_Project" wizard
         Then type value "empty" to "Labels_Key" field on "Create_New_Project" wizard
         Then type value "project" to "Labels_Value" field on "Create_New_Project" wizard
         When click on "Title" element on "Create_New_Project" wizard
         And wait load page
         Then click on "Create_Button" element on "Create_New_Project" wizard
-        And wait load page
+        Then wait for 4 seconds
         Then verify "Notification_Pop_Up" element visibility on "Notification_Popup" wizard
         Then "Notification_Pop_Up" element on "Notification_Popup" should contains "Project \"empty-project\" was created successfully" value
         And wait load page
@@ -134,6 +136,8 @@ Feature: Projects Page
         Then click on "Notification_Pop_Up_Cross_Close_Button" element on "Notification_Popup" wizard
         And wait load page
         Then check "empty-project" value in "name" column in "Projects_Table" table on "Projects" wizard
+        Then type value "empty" to "Search_Projects_Input" field on "Projects" wizard
+        Then value in "name" column with "text" in "Projects_Table" on "Projects" wizard should contains "empty"
         Then select "Delete" option in action menu on "Projects" wizard in "Projects_Table" table at row with "empty-project" value in "name" column
         Then verify if "Common_Popup" popup dialog appears
         Then "Description" component on "Common_Popup" should be equal "Descriptions"."Delete_Project_Confirm_Message"
@@ -178,7 +182,7 @@ Feature: Projects Page
         Then click on "Create_Button" element on "Create_New_Project" wizard
         And set tear-down property "project" created with "automation-test-name" value
         Then check "automation-test-name" value in "name" column in "Projects_Table" table on "Projects" wizard
-    
+
     @MLPr
     @passive
     @smoke
@@ -194,7 +198,7 @@ Feature: Projects Page
         Then check "automation-test-name1" value not in "name" column in "Projects_Table" table on "Projects" wizard
         Then click on "Archive_Projects_Button" element on "Projects" wizard
         Then check "automation-test-name1" value in "name" column in "Projects_Table" table on "Projects" wizard
-    
+
     @MLPr
     @passive
     @smoke
@@ -222,7 +226,7 @@ Feature: Projects Page
         Then check "automation-test-name2" value not in "name" column in "Projects_Table" table on "Projects" wizard
         Then verify "New_Project_Button" element visibility on "Projects" wizard
         Then "New_Project_Button" element on "Projects" should contains "New Project" value
-    
+
     @MLPr
     @passive
     @smoke
@@ -248,7 +252,7 @@ Feature: Projects Page
         Then select "Unarchive" option in action menu on "Projects" wizard in "Projects_Table" table at row with "automation-test-name7" value in "name" column
         Then click on "Active_Projects_Button" element on "Projects" wizard
         Then check "automation-test-name7" value in "name" column in "Projects_Table" table on "Projects" wizard
-    
+
     @MLPr
     @passive
     @smoke
@@ -263,8 +267,8 @@ Feature: Projects Page
         Then select "Export YAML" option in action menu on "Projects" wizard in "Projects_Table" table at row with "default" value in "name" column
         And wait load page
         Then check that "default.yaml" file is existed on "Downloads" directory
-    
-    @MLPr    
+
+    @MLPr
     @danger
     @smoke
 #   Run this test case only with mocked backend!!!
@@ -384,13 +388,13 @@ Feature: Projects Page
         Then verify "Total_Counter_Title" element visibility in "Monitoring_Jobs_Box" on "Projects" wizard
         Then "Total_Counter_Title" element in "Monitoring_Jobs_Box" on "Projects" should contains "Jobs" value
         Then verify "Total_Counter_Number" element visibility in "Monitoring_Jobs_Box" on "Projects" wizard
-        Then "Total_Counter_Number" element in "Monitoring_Jobs_Box" on "Projects" should contains "19" value
+        Then "Total_Counter_Number" element in "Monitoring_Jobs_Box" on "Projects" should contains "20" value
         Then verify "Counter_Running_Status_Number" element visibility in "Monitoring_Jobs_Box" on "Projects" wizard
         Then verify "Counter_Running_Status_Icon" element visibility in "Monitoring_Jobs_Box" on "Projects" wizard
         Then "Counter_Running_Status_Number" element in "Monitoring_Jobs_Box" on "Projects" should contains "16" value
         Then verify "Counter_Failed_Status_Number" element visibility in "Monitoring_Jobs_Box" on "Projects" wizard
         Then verify "Counter_Failed_Status_Icon" element visibility in "Monitoring_Jobs_Box" on "Projects" wizard
-        Then "Counter_Failed_Status_Number" element in "Monitoring_Jobs_Box" on "Projects" should contains "2" value
+        Then "Counter_Failed_Status_Number" element in "Monitoring_Jobs_Box" on "Projects" should contains "3" value
         Then verify "Counter_Completed_Status_Number" element visibility in "Monitoring_Jobs_Box" on "Projects" wizard
         Then verify "Counter_Completed_Status_Icon" element visibility in "Monitoring_Jobs_Box" on "Projects" wizard
         Then "Counter_Completed_Status_Number" element in "Monitoring_Jobs_Box" on "Projects" should contains "1" value
@@ -436,7 +440,7 @@ Feature: Projects Page
         Then verify "Total_Counter_Title" element visibility in "Monitoring_Workflows_Box" on "Projects" wizard
         Then "Total_Counter_Title" element in "Monitoring_Workflows_Box" on "Projects" should contains "Workflows" value
         Then verify "Total_Counter_Number" element visibility in "Monitoring_Workflows_Box" on "Projects" wizard
-        Then "Total_Counter_Number" element in "Monitoring_Workflows_Box" on "Projects" should contains "2" value
+        Then "Total_Counter_Number" element in "Monitoring_Workflows_Box" on "Projects" should contains "3" value
         Then verify "Counter_Running_Status_Number" element visibility in "Monitoring_Workflows_Box" on "Projects" wizard
         Then verify "Counter_Running_Status_Icon" element visibility in "Monitoring_Workflows_Box" on "Projects" wizard
         Then "Counter_Running_Status_Number" element in "Monitoring_Workflows_Box" on "Projects" should contains "0" value
@@ -445,7 +449,7 @@ Feature: Projects Page
         Then "Counter_Failed_Status_Number" element in "Monitoring_Workflows_Box" on "Projects" should contains "1" value
         Then verify "Counter_Completed_Status_Number" element visibility in "Monitoring_Workflows_Box" on "Projects" wizard
         Then verify "Counter_Completed_Status_Icon" element visibility in "Monitoring_Workflows_Box" on "Projects" wizard
-        Then "Counter_Completed_Status_Number" element in "Monitoring_Workflows_Box" on "Projects" should contains "1" value
+        Then "Counter_Completed_Status_Number" element in "Monitoring_Workflows_Box" on "Projects" should contains "2" value
         Then verify "See_All_Link" element visibility in "Monitoring_Workflows_Box" on "Projects" wizard
         Then "See_All_Link" element in "Monitoring_Workflows_Box" on "Projects" should contains "See all" value
         When click on "Counter_Running_Status_Number" element in "Monitoring_Workflows_Box" on "Projects" wizard
@@ -514,4 +518,27 @@ Feature: Projects Page
         And wait load page
         When click on "Total_See_All_Link" element in "Monitoring_Scheduled_Box" on "Projects" wizard
         Then verify redirection to "projects/*/jobs-monitoring/scheduled"
+        And wait load page
+
+    @MLPr
+    @mlrunUnhealthyTest
+    @passive
+    @smoke
+    Scenario: MLPr019 - Check Mlrun unhealthy popup
+        Given open url
+        And wait load page
+        Then verify "New_Project_Button" element visibility on "Projects" wizard
+        Then "New_Project_Button" element on "Projects" should contains "New Project" value
+        Then verify "Active_Projects_Button" element visibility on "Projects" wizard
+        Then verify "Archive_Projects_Button" element visibility on "Projects" wizard
+        Then verify "Projects_Sort_Dropdown" element visibility on "Projects" wizard
+        Then verify "Projects_Sorter" element visibility on "Projects" wizard
+        Then verify "Retrieving_projects_message" element visibility on "Projects" wizard
+        Then "Retrieving_projects_message" element on "Projects" should contains "Retrieving projects." value
+        And wait load page
+        Then verify "Notification_Pop_Up" element visibility on "Notification_Popup" wizard
+        Then "Notification_Pop_Up" element on "Notification_Popup" should contains "Failed to fetch projects" value
+        Then wait for 181 seconds
+        Then verify "Message" element visibility on "MLRun_Unhealthy_PopUp" wizard
+        Then "Message" element on "MLRun_Unhealthy_PopUp" should contains "MLRun seems to be down. Try again in a few minutes." value
         And wait load page

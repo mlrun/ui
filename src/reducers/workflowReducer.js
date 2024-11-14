@@ -98,6 +98,10 @@ export const fetchWorkflows = createAsyncThunk(
   }
 )
 
+export const rerunWorkflow = createAsyncThunk('rerunWorkflow', ({ project, workflowId }) => {
+  return workflowApi.rerunWorkflow(project, workflowId)
+})
+
 const workflowsSlice = createSlice({
   name: 'workflowsStore',
   initialState,

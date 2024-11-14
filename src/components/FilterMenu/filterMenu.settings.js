@@ -40,7 +40,8 @@ import {
   JOB_KIND_APPLICATION,
   JOB_KIND_REMOTE,
   ERROR_STATE,
-  FAILED_STATE
+  FAILED_STATE,
+  JOBS_MONITORING_SCHEDULED_TAB
 } from '../../constants'
 
 export const jobsStatuses = [
@@ -74,10 +75,11 @@ export const generateStatusFilter = useFailedStatus => {
   ]
 }
 
-export const generateTypeFilter = () => {
+export const generateTypeFilter = tab => {
   return [
     { label: 'All', id: FILTER_ALL_ITEMS },
     { label: 'Job', id: JOB_KIND_JOB },
+    { label: 'Workflow', id: JOB_KIND_WORKFLOW, hidden: tab !== JOBS_MONITORING_SCHEDULED_TAB },
     { label: 'Nuclio', id: `${JOB_KIND_REMOTE},${JOB_KIND_NUCLIO}` },
     { label: 'Application', id: JOB_KIND_APPLICATION },
     { label: 'Serving', id: JOB_KIND_SERVING },
@@ -86,7 +88,7 @@ export const generateTypeFilter = () => {
     { label: 'Dask', id: JOB_KIND_DASK },
     { label: 'Databricks', id: JOB_KIND_DATABRICKS },
     { label: 'Local', id: JOB_KIND_LOCAL },
-    { label: 'Handler', id: JOB_KIND_HANDLER },
+    { label: 'Handler', id: JOB_KIND_HANDLER }
   ]
 }
 
@@ -103,10 +105,4 @@ export const filterSelectOptions = {
 export const tagFilterOptions = [
   { label: 'All', id: TAG_FILTER_ALL_ITEMS },
   { label: 'latest', id: TAG_FILTER_LATEST }
-]
-
-export const filterScheduledTypeOptions = [
-  { label: 'All', id: FILTER_ALL_ITEMS },
-  { label: 'Jobs', id: JOB_KIND_JOB },
-  { label: 'Workflows', id: JOB_KIND_WORKFLOW }
 ]

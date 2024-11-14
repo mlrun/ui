@@ -22,8 +22,8 @@ import { useForm } from 'react-final-form'
 
 import { FormInput, FormOnChange, FormSelect } from 'igz-controls/components'
 
-import { LABELS_FILTER, PROJECT_FILTER } from '../../../constants'
-import { filterScheduledTypeOptions } from '../../FilterMenu/filterMenu.settings'
+import { JOBS_MONITORING_SCHEDULED_TAB, LABELS_FILTER, PROJECT_FILTER } from '../../../constants'
+import { generateTypeFilter } from '../../FilterMenu/filterMenu.settings'
 
 const ScheduledMonitoringFilters = () => {
   const form = useForm()
@@ -42,10 +42,19 @@ const ScheduledMonitoringFilters = () => {
         />
       </div>
       <div className="form-row">
-        <FormSelect label="Type" name="type" options={filterScheduledTypeOptions} />
+        <FormSelect
+          label="Type"
+          name="type"
+          options={generateTypeFilter(JOBS_MONITORING_SCHEDULED_TAB)}
+        />
       </div>
       <div className="form-row">
-        <FormInput label="Labels" name={LABELS_FILTER} placeholder="key1,key2=value,..." />
+        <FormInput
+          label="Labels"
+          name={LABELS_FILTER}
+          placeholder="key1,key2=value,..."
+          tip="Add ~ before the filter value to return substring and case insensitive value."
+        />
         <FormOnChange
           handler={value => handleInputChange(value, LABELS_FILTER)}
           name={LABELS_FILTER}
