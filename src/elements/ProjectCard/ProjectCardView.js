@@ -40,7 +40,7 @@ const ProjectCardView = React.forwardRef(({ actionsMenu, project, statistics }, 
   const navigate = useNavigate()
   //TODO: change the to real data
   // const demoData = 4
-
+  console.log(project)
   return (
     <div
       className="project-card"
@@ -69,7 +69,7 @@ const ProjectCardView = React.forwardRef(({ actionsMenu, project, statistics }, 
             <div className="project-card__info" data-testid="project-card__created">
               <div className="project-card__alert">
                 <Alerts className="project-card__alert-icon" />
-                <p>1234</p>
+                <h6>123</h6>
               </div>
               <ClockIcon className="project-card__info-icon" />
               <span>Created {getTimeElapsedByDate(project.metadata.created)}</span>
