@@ -32,6 +32,7 @@
       display: flex;
       align-items: stretch;
       margin-bottom: 5px;
+      gap: 8px;
       color: $primary;
       font-weight: normal;
       font-size: 1.25rem;
@@ -68,13 +69,12 @@
     margin-right: 1rem;
   }
 
-  &__alert{
+  &__alert {
     display: flex;
     border-radius: 100px;
-    padding:  0 8px ;
+    padding:  3px 8px  ;
     align-items: center;
-    text-align: center;
-    font-size: 14px;
+    font-size: 20px;
     color: $primary;
     background-color: $selago;
     &-icon {
@@ -85,7 +85,9 @@
     }
   }
 
-
+    &-text{
+      margin: 0;
+    }
   }
 
   &__info {

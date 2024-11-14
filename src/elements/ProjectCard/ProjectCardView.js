@@ -38,8 +38,6 @@ const ProjectCardView = React.forwardRef(({ actionsMenu, project, statistics }, 
   const cardRef = useRef()
   const chipRef = useRef()
   const navigate = useNavigate()
-  //TODO: change the to real data
-  // const demoData = 4
 
   return (
     <div
@@ -65,17 +63,19 @@ const ProjectCardView = React.forwardRef(({ actionsMenu, project, statistics }, 
             >
               {project.metadata.name}
             </Tooltip>
+                <div
+                  className="project-card__alert"
+                >
+                  <Alerts className="project-card__alert-icon" />
+                  <h6 className='project-card__alert-text'>123</h6>
+                </div>
+              {/*</div>*/}
 
             <div className="project-card__info" data-testid="project-card__created">
-              <div className="project-card__alert">
-                <Alerts className="project-card__alert-icon" />
-                <h6>123</h6>
-              </div>
               <ClockIcon className="project-card__info-icon" />
               <span>Created {getTimeElapsedByDate(project.metadata.created)}</span>
             </div>
           </div>
-
           <div
             className={`project-card__header-sub-title project-card__info ${
               !project.spec.owner ? 'visibility-hidden' : ''
