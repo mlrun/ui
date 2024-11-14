@@ -40,7 +40,7 @@ const ProjectCardView = React.forwardRef(({ actionsMenu, project, statistics }, 
   const navigate = useNavigate()
   //TODO: change the to real data
   // const demoData = 4
-  console.log(project)
+
   return (
     <div
       className="project-card"

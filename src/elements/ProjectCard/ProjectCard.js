@@ -19,7 +19,7 @@ such restriction.
 */
 import React, { useEffect, useState, useMemo } from 'react'
 import PropTypes from 'prop-types'
-import { connect } from 'react-redux'
+import { connect, useSelector } from 'react-redux'
 
 import ProjectCardView from './ProjectCardView'
 
@@ -31,7 +31,6 @@ const ProjectCard = ({
   alerts,
   nuclioStore,
   project,
-  projectStore,
   projectSummary
 }) => {
   const [
@@ -41,6 +40,9 @@ const ProjectCard = ({
 
   const actionsMenuRef = React.createRef()
 
+  const projectStore = useSelector(store => store.projectStore)
+
+  // console.log(projectStore)
   useEffect(() => {
     setFetchNuclioFunctionsFailure(
       nuclioStore.error && !nuclioStore.functions[project.metadata.name]

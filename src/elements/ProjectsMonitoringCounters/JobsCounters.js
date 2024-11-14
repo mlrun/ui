@@ -38,6 +38,7 @@ const JobsCounters = () => {
   const navigate = useNavigate()
   const projectStore = useSelector(store => store.projectStore)
 
+  console.log(projectStore)
   const jobStats = useMemo(
     () =>
       generateMonitoringStats(
