@@ -67,6 +67,7 @@ const DownloadContainer = () => {
               className="download-container"
               data-testid="download-container"
               style={{ ...defaultStyle, ...transitionStyles[state] }}
+              ref={nodeRef}
             >
               <div className="download-container__header">Downloads</div>
               <button className="notification__button-close" onClick={handleCancel}>
