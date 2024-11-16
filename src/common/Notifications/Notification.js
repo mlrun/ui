@@ -131,15 +131,22 @@ const Notification = ({ notification, timeoutMs = 10000, ...rest }) => {
           <button className="notification__button-close">
             <CloseIcon />
           </button>
-          <div
-            role="progressbar"
-            aria-hidden="false"
-            aria-label="notification timer"
-            className={`notification__progress-bar notification__progress-bar--${
-              isSuccessResponse ? 'success' : 'alert'
-            }`}
-            style={{ animationDuration: `${timeoutMs}ms` }}
-          ></div>
+          <div className="notification__progress-bar--wrapper">
+            <div
+              className={`notification__progress-bar--bg notification__progress-bar--${
+                isSuccessResponse ? 'success' : 'alert'
+              }`}
+            ></div>
+            <div
+              role="progressbar"
+              aria-hidden="false"
+              aria-label="notification timer"
+              className={`notification__progress-bar notification__progress-bar--${
+                isSuccessResponse ? 'success' : 'alert'
+              }`}
+              style={{ animationDuration: `${timeoutMs}ms` }}
+            ></div>
+          </div>
         </div>
       )}
     </Transition>
