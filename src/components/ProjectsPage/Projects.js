@@ -26,6 +26,7 @@ import yaml from 'js-yaml'
 import ProjectsView from './ProjectsView'
 
 import {
+  generateAlerts,
   generateMonitoringCounters,
   generateProjectActionsMenu,
   handleDeleteProjectError,
@@ -65,6 +66,7 @@ const Projects = () => {
   const dispatch = useDispatch()
   const { isDemoMode } = useMode()
   const { isNuclioModeDisabled } = useNuclioMode()
+  const alertStore = useSelector(store => store.projectStore.projectAlarms)
   const projectStore = useSelector(store => store.projectStore)
   const tasksStore = useSelector(store => store.tasksStore)
 
@@ -119,6 +121,7 @@ const Projects = () => {
     ).then(result => {
       if (result) {
         generateMonitoringCounters(result, dispatch)
+        generateAlerts(result, dispatch)
       }
     })
 
@@ -440,6 +443,7 @@ const Projects = () => {
       handleSelectSortOption={handleSelectSortOption}
       isDescendingOrder={isDescendingOrder}
       projectsRequestErrorMessage={projectsRequestErrorMessage}
+      alertStore={alertStore}
       projectStore={projectStore}
       refreshProjects={refreshProjects}
       removeNewProjectError={removeNewProjectError}

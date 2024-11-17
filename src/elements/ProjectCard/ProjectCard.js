@@ -28,7 +28,7 @@ import projectsAction from '../../actions/projects'
 
 const ProjectCard = ({
   actionsMenu,
-  alerts,
+  alert,
   nuclioStore,
   project,
   projectSummary
@@ -42,7 +42,7 @@ const ProjectCard = ({
 
   const projectStore = useSelector(store => store.projectStore)
 
-  // console.log(projectStore)
+
   useEffect(() => {
     setFetchNuclioFunctionsFailure(
       nuclioStore.error && !nuclioStore.functions[project.metadata.name]
@@ -71,7 +71,7 @@ const ProjectCard = ({
   return (
     <ProjectCardView
       actionsMenu={actionsMenu}
-      alerts={alerts}
+      alert={alert}
       project={project}
       statistics={statistics}
       ref={actionsMenuRef}

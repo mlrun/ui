@@ -23,12 +23,13 @@ import { get, omit } from 'lodash'
 import tasksApi from '../../api/tasks-api'
 import {
   BAD_GATEWAY_ERROR_STATUS_CODE,
-  SERVICE_UNAVAILABLE_ERROR_STATUS_CODE,
-  GATEWAY_TIMEOUT_STATUS_CODE
+  DANGER_BUTTON,
+  FORBIDDEN_ERROR_STATUS_CODE,
+  GATEWAY_TIMEOUT_STATUS_CODE,
+  SERVICE_UNAVAILABLE_ERROR_STATUS_CODE
 } from 'igz-controls/constants'
 import { BG_TASK_FAILED, BG_TASK_SUCCEEDED, pollTask } from '../../utils/poll.util'
 import { PROJECT_ONLINE_STATUS } from '../../constants'
-import { DANGER_BUTTON, FORBIDDEN_ERROR_STATUS_CODE } from 'igz-controls/constants'
 import { setNotification } from '../../reducers/notificationReducer'
 import { showErrorNotification } from '../../utils/notifications.util'
 import projectsAction from '../../actions/projects'
@@ -219,6 +220,18 @@ export const pollDeletingProjects = (terminatePollRef, deletingProjects, refresh
   })
 }
 
+export const generateAlerts = (data, dispatch) => {
+  const projectAlerts = {}
+  data.forEach(project => {
+    const projectName = project.name || 'unknown_project'
+    projectAlerts[projectName] = (project.endpoint_alerts_count || 0) + (project.job_alerts_count || 0) + (project.other_alerts_count || 0)
+  })
+  dispatch({
+    type: 'SET_PROJECT_ALERTS',
+    payload: projectAlerts
+  })
+}
+
 export const generateMonitoringCounters = (data, dispatch) => {
   const monitoringCounters = {
     jobs: {
@@ -269,7 +282,6 @@ export const generateMonitoringCounters = (data, dispatch) => {
     monitoringCounters.alerts.application = project.other_alerts_count || 20 // TODO: Replace with 0 once the API is ready
 
     monitoringCounters.alerts.sum =  monitoringCounters.alerts.application + monitoringCounters.alerts.job + monitoringCounters.alerts.endpoint
-    console.log(monitoringCounters.alerts.sum)
   })
 
   dispatch(projectsAction.setJobsMonitoringData(monitoringCounters))

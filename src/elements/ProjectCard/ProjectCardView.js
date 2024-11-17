@@ -34,7 +34,7 @@ import { ReactComponent as ClockIcon } from 'igz-controls/images/clock.svg'
 
 import './projectCard.scss'
 
-const ProjectCardView = React.forwardRef(({ actionsMenu, project, statistics }, ref) => {
+const ProjectCardView = React.forwardRef(({ actionsMenu, alert, project, statistics }, ref) => {
   const cardRef = useRef()
   const chipRef = useRef()
   const navigate = useNavigate()
@@ -63,12 +63,14 @@ const ProjectCardView = React.forwardRef(({ actionsMenu, project, statistics }, 
             >
               {project.metadata.name}
             </Tooltip>
+            {alert !==  undefined ? //todo: change to 0
                 <div
                   className="project-card__alert"
                 >
                   <Alerts className="project-card__alert-icon" />
-                  <h6 className='project-card__alert-text'>123</h6>
-                </div>
+                  <h6 className='project-card__alert-text'>{alert}</h6>
+                </div> : <></>
+        }
               {/*</div>*/}
 
             <div className="project-card__info" data-testid="project-card__created">

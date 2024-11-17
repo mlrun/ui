@@ -17,7 +17,6 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import React from 'react'
 import PropTypes from 'prop-types'
 import classnames from 'classnames'
 
@@ -56,6 +55,7 @@ const ProjectsView = ({
   handleSelectSortOption,
   isDescendingOrder,
   projectsRequestErrorMessage,
+  alertStore,
   projectStore,
   refreshProjects,
   removeNewProjectError,
@@ -176,6 +176,7 @@ const ProjectsView = ({
                   <ProjectCard
                     actionsMenu={actionsMenu}
                     key={project.id || project.metadata.name}
+                    alert={alertStore[project.metadata.name]}
                     project={project}
                     projectSummary={projectStore.projectsSummary.data.find(
                       item => item.name === project.metadata.name
