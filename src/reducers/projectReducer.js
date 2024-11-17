@@ -789,7 +789,7 @@ const projectReducer = (state = initialState, { type, payload }) => {
     case SET_PROJECT_TOTAL_ALERTS:
       return {
         ...state,
-        projectAlarms: {
+        projectTotalAlerts: {
           ...state.projectTotalAlerts,
           ...payload
         }

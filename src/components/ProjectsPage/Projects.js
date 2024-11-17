@@ -66,7 +66,7 @@ const Projects = () => {
   const dispatch = useDispatch()
   const { isDemoMode } = useMode()
   const { isNuclioModeDisabled } = useNuclioMode()
-  const alertStore = useSelector(store => store.projectStore.projectAlarms)
+  const alertStore = useSelector(store => store.projectStore.projectTotalAlerts)
   const projectStore = useSelector(store => store.projectStore)
   const tasksStore = useSelector(store => store.tasksStore)
 
