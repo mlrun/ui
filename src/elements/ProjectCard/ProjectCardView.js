@@ -63,12 +63,12 @@ const ProjectCardView = React.forwardRef(({ actionsMenu, alert, project, statist
             >
               {project.metadata.name}
             </Tooltip>
-            {alert ? (
-                <div className="project-card__alert">
-                  <Alerts className="project-card__alert-icon" />
-                  <div className='project-card__alert-text'>{alert}</div>
-                </div>
-            ) : <></>}
+            {alert && (
+              <div className="project-card__alert">
+                <Alerts className="project-card__alert-icon" />
+                <div className="project-card__alert-text">{alert}</div>
+              </div>
+            )}
             <div className="project-card__info" data-testid="project-card__created">
               <ClockIcon className="project-card__info-icon" />
               <span>Created {getTimeElapsedByDate(project.metadata.created)}</span>
