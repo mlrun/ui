@@ -74,19 +74,19 @@
     border-radius: 100px;
     padding:  3px 8px  ;
     align-items: center;
-    font-size: 14px;
     color: $primary;
     background-color: $selago;
-    font-family: Roboto,sans-serif;
     &-icon {
-      width: 20px;
-      height: 20px;
+      width: 16px;
+      height: 16px;
     path{
       fill: $ceriseRed;
     }
   }
 
     &-text{
+      font-family: Roboto,sans-serif;
+      font-size: 14px;
       margin: 0;
     }
   }
