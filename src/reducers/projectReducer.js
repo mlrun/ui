@@ -79,7 +79,7 @@ import {
   FETCH_PROJECT_SECRETS_BEGIN,
   FETCH_PROJECT_SECRETS_FAILURE,
   FETCH_PROJECT_SECRETS_SUCCESS,
-  SET_PROJECT_ALERTS,
+  SET_PROJECT_TOTAL_ALERTS,
   SET_JOBS_MONITORING_DATA,
   SET_MLRUN_IS_UNHEALTHY,
   SET_MLRUN_UNHEALTHY_RETRYING,
@@ -162,7 +162,7 @@ const initialState = {
       loading: false
     }
   },
-  projectAlarms: {},
+  projectTotalAlerts: {},
   projects: [],
   projectsNames: {
     error: null,
@@ -786,11 +786,11 @@ const projectReducer = (state = initialState, { type, payload }) => {
           error: null
         }
       }
-    case SET_PROJECT_ALERTS:
+    case SET_PROJECT_TOTAL_ALERTS:
       return {
         ...state,
         projectAlarms: {
-          ...state.projectAlarms,
+          ...state.projectTotalAlerts,
           ...payload
         }
       }
