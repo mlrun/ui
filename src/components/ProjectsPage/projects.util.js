@@ -241,7 +241,8 @@ export const generateMonitoringCounters = (data, dispatch) => {
     alerts: {
       endpoint: 0,
       jobs: 0,
-      application: 0
+      application: 0,
+      total: 0,
     }
   }
 
@@ -274,6 +275,7 @@ export const generateMonitoringCounters = (data, dispatch) => {
     monitoringCounters.alerts.job += project.job_alerts_count || 0
     monitoringCounters.alerts.application += project.other_alerts_count || 20
   })
+  monitoringCounters.alerts.total = (monitoringCounters.alerts.endpoint || 0) + (monitoringCounters.alerts.jobs || 0) + (monitoringCounters.alerts.application || 0)
 
   dispatch(projectsAction.setJobsMonitoringData(monitoringCounters))
 }

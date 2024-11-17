@@ -53,7 +53,7 @@ const AlertsCounter = () => {
                 onClick={() => {}}
                 data-testid="scheduled_total_see_all"
               >
-                {projectStore.jobsMonitoringData.alerts.jobs}{' '}
+                {(projectStore.jobsMonitoringData.alerts.jobs || 0).toLocaleString()}
               </span>
             )}
           </span>
@@ -69,7 +69,23 @@ const AlertsCounter = () => {
                 onClick={() => {}}
                 data-testid="scheduled_total_see_all"
               >
-                {projectStore.jobsMonitoringData.alerts.application}
+                {(projectStore.jobsMonitoringData.alerts.application || 0).toLocaleString()}
+              </span>
+            )}
+          </span>
+        </StatsCard.Col>
+        <StatsCard.Col>
+          <h6 className="stats__subtitle">Total</h6>
+          <span className="stats__counter">
+            {projectStore.projectsSummary.loading ? (
+              <Loader section small secondary />
+            ) : (
+              <span
+                className="stats__link"
+                onClick={() => {}}
+                data-testid="scheduled_total_see_all"
+              >
+                {(projectStore.jobsMonitoringData.alerts.total || 0).toLocaleString()}
               </span>
             )}
           </span>
