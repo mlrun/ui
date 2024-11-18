@@ -6,6 +6,11 @@
   flex-wrap: unset;
   justify-content: flex-start;
 
+  &.alerts-card {
+    background-color: $carouselPink;
+    border: 1px solid $babyPink;
+  }
+
   .gap{
     height: 24px;
   }

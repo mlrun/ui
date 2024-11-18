@@ -69,7 +69,6 @@ const WorkflowsCounters = () => {
       <StatsCard.Row>
         <StatsCard.Col>
           <div className="monitoring-stats gap"></div>
-
           <span className="stats__counter">
             {projectStore.projectsSummary.loading ? (
               <Loader section small secondary />
