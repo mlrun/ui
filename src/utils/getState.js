@@ -25,12 +25,13 @@ import {
   FAILED_STATE,
   FUNCTION_INITIALIZED_STATE,
   FUNCTIONS_PAGE,
-  JOBS_MONITORING_WORKFLOWS_TAB
+  JOBS_MONITORING_WORKFLOWS_TAB,
+  MONITOR_WORKFLOWS_TAB
 } from '../constants'
 
 const errorStates = [ERROR_STATE, FAIL_STATE, FAILED_STATE]
 
-const getState = (state, page, kind, reason = '') => {
+const getState = (state, page, kind, reason = '', error = '') => {
   const stateExists = !isEmpty(state)
 
   if (page === FUNCTIONS_PAGE) {
@@ -42,8 +43,16 @@ const getState = (state, page, kind, reason = '') => {
       }`
     }
   } else {
-    const commonLabel = state ? commonStateLabels(page === JOBS_MONITORING_WORKFLOWS_TAB)[state] : ''
-    const label = reason && errorStates.includes(state) ? `${commonLabel}. Reason: ${reason}` : commonLabel
+    const commonLabel = state
+      ? commonStateLabels(page === JOBS_MONITORING_WORKFLOWS_TAB || page === MONITOR_WORKFLOWS_TAB)[
+          state
+        ]
+      : ''
+    const additionalLabel = reason ? `Reason: ${reason}` : error ? `${error}` : ''
+    const label =
+      additionalLabel && errorStates.includes(state)
+        ? `${commonLabel}. ${additionalLabel}`
+        : commonLabel
 
     return {
       value: state ?? null,

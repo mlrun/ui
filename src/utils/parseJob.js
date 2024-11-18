@@ -56,7 +56,8 @@ export const parseJob = (job, tab, customState, customError) => {
         job.last_run?.status?.state,
         JOBS_PAGE,
         JOB_KIND_JOB,
-        job.last_run?.status?.reason ?? job.last_run?.status?.error
+        job.last_run?.status?.reason,
+        job.last_run?.status?.error
       ),
       type:
         job.kind === JOB_KIND_PIPELINE || jobHasWorkflowLabel(job) ? JOB_KIND_WORKFLOW : job.kind,
@@ -100,7 +101,8 @@ export const parseJob = (job, tab, customState, customError) => {
         customState || job.status?.state,
         JOBS_PAGE,
         JOB_KIND_JOB,
-        job.status?.reason ?? job.status?.error
+        job.status?.reason,
+        job.status?.error
       ),
       ui_run: job.status?.ui_url,
       uid: job.metadata.uid,

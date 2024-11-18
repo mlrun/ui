@@ -17,7 +17,7 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import React, { useCallback, useRef, useEffect, useState } from 'react'
+import React, { useCallback, useRef, useEffect, useState, useMemo } from 'react'
 import PropTypes from 'prop-types'
 import { Link, useLocation, useNavigate, useParams } from 'react-router-dom'
 import { isEmpty } from 'lodash'
@@ -65,6 +65,16 @@ const DetailsHeader = ({
   const viewMode = getViewMode(window.location.search)
   const { actionButton, withToggleViewBtn } = pageData.details
   const headerRef = useRef()
+
+  const errorMessage = useMemo(
+    () =>
+      selectedItem.reason
+        ? `Reason: ${selectedItem.reason}`
+        : selectedItem.error
+          ? `Error: ${selectedItem.error}`
+          : '',
+    [selectedItem.error, selectedItem.reason]
+  )
 
   const {
     value: stateValue,
@@ -184,12 +194,12 @@ const DetailsHeader = ({
               {selectedItem.ui.customError.title} {selectedItem.ui.customError.message}
             </Tooltip>
           )}
-          {selectedItem.error && (
+          {errorMessage && (
             <Tooltip
               className="error-container"
-              template={<TextTooltipTemplate text={`Error - ${selectedItem.error}`} />}
+              template={<TextTooltipTemplate text={errorMessage} />}
             >
-              Error - {selectedItem.error}
+              {errorMessage}
             </Tooltip>
           )}
           {!isEmpty(detailsStore.pods.podsPending) && (
@@ -297,7 +307,9 @@ const DetailsHeader = ({
               data-testid="details-close-btn"
               to={
                 getCloseDetailsLink
-                  ? generateUrlFromRouterPath(getCloseDetailsLink(window.location, selectedItem.name))
+                  ? generateUrlFromRouterPath(
+                      getCloseDetailsLink(window.location, selectedItem.name)
+                    )
                   : `/projects/${params.projectName}/${pageData.page.toLowerCase()}${
                       params.pageTab ? `/${params.pageTab}` : tab ? `/${tab}` : ''
                     }`
