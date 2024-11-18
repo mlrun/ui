@@ -1,12 +1,14 @@
 @import '~igz-controls/scss/colors';
 
-.space{
-  height: 2vh;
-}
+
 .monitoring-stats {
   flex-direction: column;
   flex-wrap: unset;
   justify-content: flex-start;
+
+  .gap{
+    height: 24px;
+  }
 
   .stats-card__row {
     flex: unset;

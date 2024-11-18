@@ -101,7 +101,9 @@ const ScheduledJobsCounters = () => {
           </span>
         </StatsCard.Col>
       </StatsCard.Row>
-      <div className="space"></div>
+      <StatsCard.Row>
+        <StatsCard.Col/>
+      </StatsCard.Row>
     </StatsCard>
   )
 }

@@ -29,21 +29,18 @@ import { ReactComponent as ClockIcon } from 'igz-controls/images/clock.svg'
 
 import './projectsMonitoringCounters.scss'
 
-const AlertTitle = (
-  <div>
-    <Alerts className="stats__header-icon" />
-    Alerts
-  </div>
-)
-
 const AlertsCounter = () => {
   const projectStore = useSelector(store => store.projectStore)
   return (
     <StatsCard className="monitoring-stats alerts-card">
-      <StatsCard.Header title={AlertTitle}>
+      <StatsCard.Header>
+        <div className='project-card__title-icon'>
+          <Alerts className="stats__header-icon" />
+          Alerts
+        </div>
         <div className="project-card__info">
           <ClockIcon className="project-card__info-icon" />
-          <span>Past 24 hours</span>
+          <span>Last 24 hours</span>
         </div>
       </StatsCard.Header>
       <StatsCard.Row>
@@ -55,8 +52,8 @@ const AlertsCounter = () => {
             ) : (
               <span
                 className="stats__link"
-                onClick={() => {}} // @TODO
-                data-testid="scheduled_total_see_all"
+                onClick={() => {}} // @TODO: will be implemented in ML-8100
+                data-testid="alerts_endpoint_see_all"
               >
                 {projectStore.jobsMonitoringData.alerts.endpoint}
               </span>
@@ -71,8 +68,8 @@ const AlertsCounter = () => {
             ) : (
               <span
                 className="stats__link"
-                onClick={() => {}}
-                data-testid="scheduled_total_see_all"
+                onClick={() => {}} // @TODO: will be implemented in ML-8100
+                data-testid="alerts_jobs_see_all"
               >
                 {(projectStore.jobsMonitoringData.alerts.jobs || 0).toLocaleString()}
               </span>
@@ -80,15 +77,15 @@ const AlertsCounter = () => {
           </span>
         </StatsCard.Col>
         <StatsCard.Col>
-          <h6 className="stats__subtitle">Other</h6>
+          <h6 className="stats__subtitle">Application</h6>
           <span className="stats__counter">
             {projectStore.projectsSummary.loading ? (
               <Loader section small secondary />
             ) : (
               <span
                 className="stats__link"
-                onClick={() => {}}
-                data-testid="scheduled_total_see_all"
+                onClick={() => {}} // @TODO: will be implemented in ML-8100
+                data-testid="alerts_application_see_all"
               >
                 {(projectStore.jobsMonitoringData.alerts.application || 0).toLocaleString()}
               </span>
@@ -103,8 +100,8 @@ const AlertsCounter = () => {
             ) : (
               <span
                 className="stats__link"
-                onClick={() => {}}
-                data-testid="scheduled_total_see_all"
+                onClick={() => {}} // @TODO: will be implemented in ML-8100
+                data-testid="alerts_total_see_all"
               >
                 {(projectStore.jobsMonitoringData.alerts.total || 0).toLocaleString()}
               </span>
@@ -112,7 +109,9 @@ const AlertsCounter = () => {
           </span>
         </StatsCard.Col>
       </StatsCard.Row>
-      <div className="space"></div>
+      <StatsCard.Row>
+        <StatsCard.Col/>
+      </StatsCard.Row>
     </StatsCard>
   )
 }

@@ -271,11 +271,11 @@ export const generateMonitoringCounters = (data, dispatch) => {
     monitoringCounters.scheduled.workflows +=
       project.distinct_scheduled_pipelines_pending_count || 0
 
-    monitoringCounters.alerts.endpoint += project.endpoint_alerts_count || 10 // TODO: Replace with 0 once the API is ready
+    monitoringCounters.alerts.endpoint += project.endpoint_alerts_count || 0
     monitoringCounters.alerts.job += project.job_alerts_count || 0
-    monitoringCounters.alerts.application += project.other_alerts_count || 20
+    monitoringCounters.alerts.application += project.other_alerts_count || 0
   })
-  monitoringCounters.alerts.total = (monitoringCounters.alerts.endpoint || 0) + (monitoringCounters.alerts.jobs || 0) + (monitoringCounters.alerts.application || 0)
+  monitoringCounters.alerts.total = monitoringCounters.alerts.endpoint + monitoringCounters.alerts.jobs  + monitoringCounters.alerts.application
 
   dispatch(projectsAction.setJobsMonitoringData(monitoringCounters))
 }
