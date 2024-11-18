@@ -123,9 +123,6 @@ export const CONSUMER_GROUPS_PAGE = 'CONSUMER_GROUPS'
 export const CONSUMER_GROUPS_FILTER = 'CONSUMER_GROUPS_FILTER'
 export const CONSUMER_GROUP_FILTER = 'CONSUMER_GROUP_FILTER'
 
-/*=========== DATASETS =============*/
-export const DATASETS_FILTERS = 'DATASETS_FILTERS'
-
 /*=========== JOBS =============*/
 
 export const ABORT_JOB_BEGIN = 'ABORT_JOB_BEGIN'
@@ -330,12 +327,7 @@ export const FUNCTION_FILTERS = 'FUNCTION_FILTERS'
 /*=========== ARTIFACTS =============*/
 
 export const ARTIFACTS_TAB = 'artifacts'
-export const FILES_FILTERS = 'FILES_FILTERS'
 export const ARTIFACT_PREVIEW_TABLE_ROW_LIMIT = 100
-
-/*=========== MODELS =============*/
-
-export const MODELS_FILTERS = 'MODELS_FILTERS'
 
 /*=========== FEATURE STORE =============*/
 

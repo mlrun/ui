@@ -26,11 +26,9 @@ import AddArtifactTagPopUp from '../../elements/AddArtifactTagPopUp/AddArtifactT
 import RegisterArtifactModal from '../RegisterArtifactModal/RegisterArtifactModal'
 
 import {
-  DATASETS_FILTERS,
   DATASETS_PAGE,
   DATASETS_TAB,
   DATASET_TYPE,
-  FILTER_MENU_MODAL,
   GROUP_BY_NAME,
   GROUP_BY_NONE,
   REQUEST_CANCELED
@@ -82,18 +80,14 @@ const Datasets = () => {
   const location = useLocation()
   const navigate = useNavigate()
   const params = useParams()
-
+  const [datasetsFilters, datasetsModalFilters] = useSelector(state => [
+    state.filtersStore.filterMenu[DATASETS_PAGE],
+    state.filtersStore.filterMenuModal[DATASETS_PAGE]
+  ])
   const abortControllerRef = useRef(new AbortController())
   const tagAbortControllerRef = useRef(new AbortController())
   const datasetsRef = useRef(null)
 
-  const datasetsFilters = useMemo(
-    () => ({
-      name: filtersStore.name,
-      ...filtersStore[FILTER_MENU_MODAL][DATASETS_FILTERS].values
-    }),
-    [filtersStore]
-  )
   const pageData = useMemo(
     () => generatePageData(selectedDataset, viewMode, params),
     [selectedDataset, viewMode, params]
@@ -185,11 +179,12 @@ const Datasets = () => {
     artifact => {
       openPopUp(AddArtifactTagPopUp, {
         artifact,
-        onAddTag: () => handleRefresh(datasetsFilters),
+        onAddTag: () =>
+          handleRefresh({ ...datasetsFilters.values, ...datasetsModalFilters.values }),
         projectName: params.projectName
       })
     },
-    [handleRefresh, params.projectName, datasetsFilters]
+    [params.projectName, handleRefresh, datasetsFilters.values, datasetsModalFilters.values]
   )
 
   const actionsMenu = useMemo(
@@ -202,12 +197,13 @@ const Datasets = () => {
         handleAddTag,
         params.projectName,
         handleRefresh,
-        datasetsFilters,
+        { ...datasetsFilters.values, ...datasetsModalFilters.values },
         menuPosition,
         selectedDataset
       ),
     [
-      datasetsFilters,
+      datasetsFilters.values,
+      datasetsModalFilters.values,
       dispatch,
       frontendSpec,
       handleAddTag,
@@ -246,7 +242,7 @@ const Datasets = () => {
       }
     }
 
-    handleRefresh(datasetsFilters)
+    handleRefresh({ ...datasetsFilters.values, ...datasetsModalFilters.values })
   }
 
   const handleExpand = useCallback(
@@ -257,8 +253,8 @@ const Datasets = () => {
         return {
           ...state,
           [dataSetIdentifier]: {
-            content: sortListByDate(content[dataset.db_key ?? dataset.key], 'updated', false).map(contentItem =>
-              createDatasetsRowData(contentItem, params.projectName, false)
+            content: sortListByDate(content[dataset.db_key ?? dataset.key], 'updated', false).map(
+              contentItem => createDatasetsRowData(contentItem, params.projectName, false)
             ),
             error: null,
             loading: false
@@ -297,11 +293,11 @@ const Datasets = () => {
   const tableContent = useMemo(() => {
     return filtersStore.groupBy === GROUP_BY_NAME
       ? latestItems.map(contentItem => {
-        return createDatasetsRowData(contentItem, params.projectName, frontendSpec, true)
-      })
+          return createDatasetsRowData(contentItem, params.projectName, frontendSpec, true)
+        })
       : datasets.map(contentItem =>
-        createDatasetsRowData(contentItem, params.projectName, frontendSpec)
-      )
+          createDatasetsRowData(contentItem, params.projectName, frontendSpec)
+        )
   }, [datasets, filtersStore.groupBy, frontendSpec, latestItems, params.projectName])
 
   const tableHeaders = useMemo(() => tableContent[0]?.content ?? [], [tableContent])
@@ -321,8 +317,8 @@ const Datasets = () => {
     createRowData: rowItem => createDatasetsRowData(rowItem, params.projectName, frontendSpec),
     fetchData,
     fetchTags,
-    filterModalName: DATASETS_FILTERS,
-    filters: datasetsFilters,
+    filterModalName: DATASETS_PAGE,
+    filters: { ...datasetsFilters.values, ...datasetsModalFilters.values },
     setExpandedRowsData: setSelectedRowData,
     sortExpandedRowsDataBy: 'updated'
   })
@@ -377,10 +373,10 @@ const Datasets = () => {
     openPopUp(RegisterArtifactModal, {
       artifactKind: DATASET_TYPE,
       params,
-      refresh: () => handleRefresh(datasetsFilters),
+      refresh: () => handleRefresh({ ...datasetsFilters.values, ...datasetsModalFilters.values }),
       title: registerDatasetTitle
     })
-  }, [handleRefresh, params, datasetsFilters])
+  }, [params, handleRefresh, datasetsFilters.values, datasetsModalFilters.values])
 
   useEffect(() => setDatasets([]), [filtersStore.tag])
 

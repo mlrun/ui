@@ -27,15 +27,15 @@ import Table from '../Table/Table'
 import ArtifactsTableRow from '../../elements/ArtifactsTableRow/ArtifactsTableRow'
 import YamlModal from '../../common/YamlModal/YamlModal'
 import Loader from '../../common/Loader/Loader'
-import ArtifactsActionBar from '../ArtifactsActionBar/ArtifactsActionBar'
 import NoData from '../../common/NoData/NoData'
 import Details from '../Details/Details'
 import WarningMessage from '../../common/WarningMessage/WarningMessage'
+import ActionBar from '../ActionBar/ActionBar'
+import ArtifactsFilters from '../ArtifactsActionBar/ArtifactsFilters'
 
-import { DATASETS_FILTERS, DATASETS_PAGE, FULL_VIEW_MODE } from '../../constants'
+import { DATASETS_PAGE, FULL_VIEW_MODE } from '../../constants'
 import { getNoDataMessage } from '../../utils/getNoDataMessage'
-import { registerDatasetTitle, filters } from './datasets.util'
-import { removeDataSet } from '../../reducers/artifactsReducer'
+import { registerDatasetTitle, filtersConfig } from './datasets.util'
 import { ACTIONS_MENU, VIRTUALIZATION_CONFIG } from '../../types'
 import { SECONDARY_BUTTON } from 'igz-controls/constants'
 import { SORT_PROPS } from 'igz-controls/types'
@@ -84,7 +84,7 @@ const DatasetsView = React.forwardRef(
             {artifactsStore.loading && <Loader />}
             <div className="table-container">
               <div className="content__action-bar-wrapper">
-                <ArtifactsActionBar
+                <ActionBar
                   actionButtons={[
                     {
                       variant: SECONDARY_BUTTON,
@@ -93,29 +93,32 @@ const DatasetsView = React.forwardRef(
                       onClick: handleRegisterDataset
                     }
                   ]}
-                  artifacts={datasets}
-                  filterMenuName={DATASETS_FILTERS}
+                  filterMenuName={DATASETS_PAGE}
+                  filtersConfig={filtersConfig}
                   handleRefresh={handleRefresh}
                   page={DATASETS_PAGE}
-                  removeSelectedItem={removeDataSet}
-                  setContent={setDatasets}
-                  setSelectedRowData={setSelectedRowData}
-                />
+                  withRefreshButton
+                  withoutExpandButton
+                >
+                  <ArtifactsFilters artifacts={datasets} />
+                </ActionBar>
               </div>
               {artifactsStore.loading ? null : datasets.length === 0 ? (
                 <NoData
                   message={getNoDataMessage(
                     filtersStore,
-                    filters,
+                    filtersConfig,
                     requestErrorMessage,
                     DATASETS_PAGE,
                     null,
-                    DATASETS_FILTERS
+                    DATASETS_PAGE
                   )}
                 />
               ) : (
                 <>
-                  {(selectedRowData.loading || artifactsStore.dataSets.datasetLoading) && <Loader />}
+                  {(selectedRowData.loading || artifactsStore.dataSets.datasetLoading) && (
+                    <Loader />
+                  )}
                   {maxArtifactsErrorIsShown && (
                     <WarningMessage
                       message="The query response displays up to 1000 items. Use filters to narrow down the results."
