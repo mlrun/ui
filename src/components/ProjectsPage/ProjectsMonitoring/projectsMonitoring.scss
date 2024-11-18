@@ -47,7 +47,7 @@
     grid-template-columns: 3fr 3fr 3fr 5fr;
     gap: 9px 8px;
 
-    @media (max-width: 1200px) {
+    @media (max-width: 1260px) {
       grid-template-columns: repeat(2, 1fr);
     }
   }
