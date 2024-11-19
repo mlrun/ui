@@ -68,7 +68,6 @@ import { FUNCTIONS_SELECTION_FUNCTIONS_TAB } from './JobWizardSteps/JobWizardFun
 import { JOB_WIZARD_MODE } from '../../types'
 import { MODAL_MAX } from 'igz-controls/constants'
 import { resetModalFilter } from '../../reducers/filtersReducer'
-import { scheduledJobsActionCreator } from '../Jobs/ScheduledJobs/scheduledJobs.util'
 import { setFieldState, isSubmitDisabled } from 'igz-controls/utils/form.util'
 import { setNotification } from '../../reducers/notificationReducer'
 import { showErrorNotification } from '../../utils/notifications.util'
@@ -139,11 +138,11 @@ const JobWizard = ({
 
   useEffect(() => {
     if (!isEditMode) {
-      dispatch(projectsAction.fetchProject(params.projectName, { format: 'minimal' })).then(
-        project => setCurrentProject(project)
-      ).catch(error => {
-        showErrorNotification(dispatch, error, 'The project failed to load')
-      })
+      dispatch(projectsAction.fetchProject(params.projectName, { format: 'minimal' }))
+        .then(project => setCurrentProject(project))
+        .catch(error => {
+          showErrorNotification(dispatch, error, 'The project failed to load')
+        })
     }
   }, [dispatch, isEditMode, params.projectName])
 
@@ -563,7 +562,6 @@ export default connect(
   {
     ...functionsActions,
     ...jobsActions,
-    ...projectsAction,
-    editJob: scheduledJobsActionCreator.editJob
+    ...projectsAction
   }
 )(JobWizard)

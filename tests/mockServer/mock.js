@@ -793,7 +793,15 @@ function getRuns(req, res) {
     }
 
     if (req.query['state']) {
-      collectedRuns = collectedRuns.filter(run => run.status.state === req.query['state'])
+      const state = req.query['state']
+
+      collectedRuns = collectedRuns.filter(run => {
+        if (isArray(state)) {
+          return state.includes(run.status.state)
+        } else {
+          return run.status.state === state
+        }
+      })
     }
   }
 
@@ -1443,7 +1451,9 @@ function getPipelines(req, res) {
 
   if (req.query.filter) {
     const nameFilter = JSON.parse(req.query.filter).predicates.find(item => item.key === 'name')
-    const statusFilter = JSON.parse(req.query.filter).predicates.find(item => item.key === 'status')
+    const queryStateValue = JSON.parse(req.query.filter).predicates.find(
+      predicate => predicate.key === 'status'
+    )?.string_values?.values
 
     if (nameFilter) {
       collectedPipelines.runs = collectedPipelines.runs.filter(pipeline => {
@@ -1451,9 +1461,11 @@ function getPipelines(req, res) {
       })
     }
 
-    if (statusFilter) {
+    if (queryStateValue) {
       collectedPipelines.runs = collectedPipelines.runs.filter(pipeline => {
-        return pipeline.status.includes(statusFilter.string_value)
+        return Array.isArray(queryStateValue)
+          ? queryStateValue.includes(pipeline.status)
+          : pipeline.status === queryStateValue
       })
     }
   }

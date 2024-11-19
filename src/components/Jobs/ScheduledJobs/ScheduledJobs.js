@@ -17,110 +17,73 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import React, { useCallback, useState, useMemo, useEffect, useRef } from 'react'
+import React, { useState, useMemo, useEffect } from 'react'
 import { useParams } from 'react-router-dom'
-import { connect, useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 
-import FilterMenu from '../../FilterMenu/FilterMenu'
 import ScheduledJobsTable from '../../../elements/ScheduledJobsTable/ScheduledJobsTable'
 
-import {
-  GROUP_BY_NONE,
-  JOBS_PAGE,
-  LABELS_FILTER,
-  NAME_FILTER,
-  SCHEDULE_TAB,
-  REQUEST_CANCELED
-} from '../../../constants'
+import { GROUP_BY_NONE, REQUEST_CANCELED, SCHEDULE_TAB } from '../../../constants'
 import { JobsContext } from '../Jobs'
 import { createJobsScheduleTabContent } from '../../../utils/createJobsContent'
-import { parseJob } from '../../../utils/parseJob'
-import { scheduledJobsActionCreator } from './scheduledJobs.util'
 import { setFilters } from '../../../reducers/filtersReducer'
 
-const ScheduledJobs = ({ fetchScheduledJobs }) => {
-  const [jobs, setJobs] = useState([])
+const ScheduledJobs = () => {
   const [dataIsLoaded, setDataIsLoaded] = useState(false)
-  const [requestErrorMessage, setRequestErrorMessage] = useState('')
-  const abortControllerRef = useRef(new AbortController())
-
+  const [schedulesFilterMenu, schedulesFilterMenuModal] = useSelector(state => [
+    state.filtersStore.filterMenu[SCHEDULE_TAB],
+    state.filtersStore.filterMenuModal[SCHEDULE_TAB]
+  ])
+  const {
+    abortControllerRef,
+    scheduledJobs,
+    refreshScheduled: refreshJobs,
+    requestErrorMessage,
+    setJobs,
+    scheduledFiltersConfig
+  } = React.useContext(JobsContext)
   const dispatch = useDispatch()
   const params = useParams()
 
-  const tableContent = useMemo(() => createJobsScheduleTabContent(jobs), [jobs])
-
-  const filters = useMemo(
-    () => [
-      { type: NAME_FILTER, label: 'Name:' },
-      { type: LABELS_FILTER, label: 'Labels:' }
-    ],
-    []
-  )
-
-  const refreshJobs = useCallback(
-    filters => {
-      setJobs([])
-      abortControllerRef.current = new AbortController()
-
-      fetchScheduledJobs(params.projectName, filters, {
-        ui: {
-          controller: abortControllerRef.current,
-          setRequestErrorMessage
-        }
-      }).then(jobs => {
-        if (jobs) {
-          setJobs(jobs.map(job => parseJob(job, SCHEDULE_TAB)))
-        }
-      })
-    },
-    [fetchScheduledJobs, params.projectName]
-  )
+  const tableContent = useMemo(() => createJobsScheduleTabContent(scheduledJobs), [scheduledJobs])
 
   useEffect(() => {
     if (!dataIsLoaded) {
-      refreshJobs()
+      refreshJobs({
+        ...schedulesFilterMenu.values,
+        ...schedulesFilterMenuModal.values
+      })
       setDataIsLoaded(true)
     }
-  }, [dataIsLoaded, refreshJobs])
+  }, [dataIsLoaded, refreshJobs, schedulesFilterMenu, schedulesFilterMenuModal.values])
 
   useEffect(() => {
+    const abortControllerRefCurrent = abortControllerRef.current
+
     return () => {
       setJobs([])
       setDataIsLoaded(false)
-      abortControllerRef.current.abort(REQUEST_CANCELED)
+      abortControllerRefCurrent.abort(REQUEST_CANCELED)
     }
-  }, [params.projectName])
+  }, [abortControllerRef, params.projectName, setJobs])
 
   useEffect(() => {
     dispatch(setFilters({ groupBy: GROUP_BY_NONE }))
   }, [dispatch])
 
   return (
-    <>
-      <div className="content__action-bar-wrapper">
-        <div className="action-bar">
-          <FilterMenu
-            filters={filters}
-            onChange={refreshJobs}
-            page={JOBS_PAGE}
-            withoutExpandButton
-          />
-        </div>
-      </div>
-      <ScheduledJobsTable
-        context={JobsContext}
-        filters={filters}
-        jobs={jobs}
-        requestErrorMessage={requestErrorMessage}
-        refreshJobs={refreshJobs}
-        tableContent={tableContent}
-      />
-    </>
+    <ScheduledJobsTable
+      context={JobsContext}
+      filterMenuName={SCHEDULE_TAB}
+      filtersConfig={scheduledFiltersConfig}
+      jobs={scheduledJobs}
+      requestErrorMessage={requestErrorMessage}
+      refreshJobs={refreshJobs}
+      tableContent={tableContent}
+    />
   )
 }
 
 ScheduledJobs.propTypes = {}
 
-export default connect(null, {
-  ...scheduledJobsActionCreator
-})(React.memo(ScheduledJobs))
+export default React.memo(ScheduledJobs)
