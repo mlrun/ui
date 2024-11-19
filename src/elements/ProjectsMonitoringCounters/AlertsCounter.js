@@ -19,7 +19,7 @@ such restriction.
 */
 
 import React from 'react'
-import {useSelector } from 'react-redux'
+import { useSelector } from 'react-redux'
 
 import Loader from '../../common/Loader/Loader'
 import StatsCard from '../../common/StatsCard/StatsCard'
@@ -31,10 +31,11 @@ import './projectsMonitoringCounters.scss'
 
 const AlertsCounter = () => {
   const projectStore = useSelector(store => store.projectStore)
+  // TODO:Implement the generateAlertsStats function in task ML-8100
   return (
     <StatsCard className="monitoring-stats alerts-card">
       <StatsCard.Header>
-        <div className='project-card__title-icon'>
+        <div className="project-card__title-icon">
           <Alerts className="stats__header-icon" />
           Alerts
         </div>
@@ -110,7 +111,7 @@ const AlertsCounter = () => {
         </StatsCard.Col>
       </StatsCard.Row>
       <StatsCard.Row>
-        <StatsCard.Col/>
+        <StatsCard.Col />
       </StatsCard.Row>
     </StatsCard>
   )
