@@ -21,7 +21,6 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { isEmpty } from 'lodash'
 
-import AlertsCounter from '../../elements/ProjectsMonitoringCounters/AlertsCounter'
 import Breadcrumbs from '../../common/Breadcrumbs/Breadcrumbs'
 import FeatureSetsPanel from '../FeatureSetsPanel/FeatureSetsPanel'
 import FunctionsPanel from '../FunctionsPanel/FunctionsPanel'
@@ -165,9 +164,6 @@ const ProjectMonitorView = ({
                   }
                 />
               )}
-              <div className="main-info__alerts-section">
-                <AlertsCounter />
-              </div>
             </div>
             <div className="main-info__statistics-section">
               <ProjectJobs />
