@@ -32,7 +32,6 @@
       display: flex;
       align-items: stretch;
       margin-bottom: 5px;
-      gap: 8px;
       color: $primary;
       font-weight: normal;
       font-size: 1.25rem;
@@ -70,6 +69,7 @@
   }
 
   &__alert {
+    margin-right: 8px;
     display: flex;
     border-radius: 100px;
     padding:  3px 8px  ;
@@ -100,7 +100,7 @@
     & > *:first-child {
       flex: 0 0 auto;
       margin-right: 5px;
-        color: $spunPearl; // Apply a different color when a modifier is used
+        color: $spunPearl;
       }
 
 

@@ -26,22 +26,12 @@ import ProjectCardView from './ProjectCardView'
 import { generateProjectStatistic } from './projectCard.util'
 import projectsAction from '../../actions/projects'
 
-const ProjectCard = ({
-  actionsMenu,
-  alert,
-  nuclioStore,
-  project,
-  projectSummary
-}) => {
-  const [
-    fetchNuclioFunctionsFailure,
-    setFetchNuclioFunctionsFailure
-  ] = useState(false)
+const ProjectCard = ({ actionsMenu, alert, nuclioStore, project, projectSummary }) => {
+  const [fetchNuclioFunctionsFailure, setFetchNuclioFunctionsFailure] = useState(false)
 
   const actionsMenuRef = React.createRef()
 
   const projectStore = useSelector(store => store.projectStore)
-
 
   useEffect(() => {
     setFetchNuclioFunctionsFailure(
