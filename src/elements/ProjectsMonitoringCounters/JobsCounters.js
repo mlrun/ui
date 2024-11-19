@@ -58,7 +58,7 @@ const JobsCounters = () => {
       </StatsCard.Header>
       <StatsCard.Row>
         <StatsCard.Col>
-          <div className="monitoring-stats gap"></div>
+          <div className="monitoring-stats gap" />
           <span className="stats__counter">
             {projectStore.projectsSummary.loading ? (
               <Loader section small secondary />
