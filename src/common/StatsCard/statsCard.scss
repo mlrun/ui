@@ -12,7 +12,6 @@
     box-shadow: $previewBoxShadowInit;
     padding: 20px 25px 15px;
     transition: box-shadow 0.3s ease-in-out;
-    border: 1px solid $frenchLilac;
 
     &__row {
       display: flex;
@@ -45,4 +44,3 @@
     }
   }
 }
-

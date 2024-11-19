@@ -5,14 +5,11 @@
   flex-direction: column;
   flex-wrap: unset;
   justify-content: flex-start;
+  border: 1px solid $frenchLilac;
 
   &.alerts-card {
     background-color: $carouselPink;
     border: 1px solid $babyPink;
-  }
-
-  .gap{
-    height: 24px;
   }
 
   .stats-card__row {
@@ -30,6 +27,11 @@
       font-weight: normal;
       font-size: 1rem;
     }
+
+    &__placeholder-subtitle{
+      height: 24px;
+    }
+
 
     &__header-icon {
       height: 20px;
