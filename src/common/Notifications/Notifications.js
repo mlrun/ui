@@ -17,18 +17,28 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import jobsActions from '../../../actions/jobs'
-import workflowsActions from '../../../actions/workflow'
-import functionsActions from '../../../actions/functions'
+import React from 'react'
+import { TransitionGroup } from 'react-transition-group'
+import { useSelector } from 'react-redux'
 
-export const scheduledJobsActionCreator = {
-  editJob: jobsActions.editJob,
-  fetchFunctionTemplate: functionsActions.fetchFunctionTemplate,
-  fetchJob: jobsActions.fetchJob,
-  fetchJobFunction: jobsActions.fetchJobFunction,
-  fetchJobFunctionSuccess: jobsActions.fetchJobFunctionSuccess,
-  fetchScheduledJobs: jobsActions.fetchScheduledJobs,
-  handleRunScheduledJob: jobsActions.handleRunScheduledJob,
-  removeScheduledJob: jobsActions.removeScheduledJob,
-  resetWorkflow: workflowsActions.resetWorkflow
+import Notification from './Notification'
+import DownloadContainer from '../Download/DownloadContainer'
+
+import './notifications.scss'
+
+const Notifications = () => {
+  const notificationStore = useSelector(store => store.notificationStore)
+
+  return (
+    <div className="notifications-wrapper">
+      <TransitionGroup component={null}>
+        {notificationStore.notification.map(notification => (
+          <Notification notification={notification} key={`css${notification.id}`} />
+        ))}
+      </TransitionGroup>
+      <DownloadContainer />
+    </div>
+  )
 }
+
+export default Notifications

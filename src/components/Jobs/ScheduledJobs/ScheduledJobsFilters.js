@@ -22,10 +22,10 @@ import { useForm } from 'react-final-form'
 
 import { FormInput, FormOnChange, FormSelect } from 'igz-controls/components'
 
-import { JOBS_MONITORING_SCHEDULED_TAB, LABELS_FILTER, PROJECT_FILTER } from '../../../constants'
+import { JOBS_MONITORING_SCHEDULED_TAB, LABELS_FILTER } from '../../../constants'
 import { generateTypeFilter } from '../../FilterMenu/filterMenu.settings'
 
-const ScheduledMonitoringFilters = () => {
+const ScheduledJobsFilters = () => {
   const form = useForm()
 
   const handleInputChange = (value, inputName) => {
@@ -34,13 +34,6 @@ const ScheduledMonitoringFilters = () => {
 
   return (
     <div>
-      <div className="form-row">
-        <FormInput name={PROJECT_FILTER} placeholder="Search by project name..." />
-        <FormOnChange
-          handler={value => handleInputChange(value, PROJECT_FILTER)}
-          name={PROJECT_FILTER}
-        />
-      </div>
       <div className="form-row">
         <FormSelect
           label="Type"
@@ -64,4 +57,4 @@ const ScheduledMonitoringFilters = () => {
   )
 }
 
-export default ScheduledMonitoringFilters
+export default ScheduledJobsFilters

@@ -17,7 +17,7 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import React, { useState, useCallback, useEffect, useLayoutEffect, useMemo } from 'react'
+import React, { useState, useCallback, useEffect, useLayoutEffect, useMemo, useRef } from 'react'
 import PropTypes from 'prop-types'
 import classnames from 'classnames'
 import { isEmpty } from 'lodash'
@@ -55,9 +55,9 @@ const ChipForm = React.forwardRef(
     const minWidthInput = 25
     const minWidthValueInput = 35
 
-    const refInputKey = React.createRef()
-    const refInputValue = React.createRef()
-    const refInputContainer = React.createRef()
+    const refInputKey = useRef()
+    const refInputValue = useRef()
+    const refInputContainer = useRef()
 
     const labelKeyClassName = classnames(
       className,

@@ -25,7 +25,6 @@ import {
   ARTIFACT_OTHER_TYPE,
   CONSUMER_GROUPS_FILTER,
   CONSUMER_GROUP_FILTER,
-  DATASETS_FILTERS,
   DATASET_TYPE,
   DATES_FILTER,
   DATE_FILTER_ANY_TIME,
@@ -33,7 +32,6 @@ import {
   FEATURES_TAB,
   FEATURE_SETS_TAB,
   FEATURE_VECTORS_TAB,
-  FILES_FILTERS,
   FILTER_ALL_ITEMS,
   FILTER_MENU,
   FILTER_MENU_MODAL,
@@ -44,7 +42,6 @@ import {
   JOBS_MONITORING_SCHEDULED_TAB,
   JOBS_MONITORING_WORKFLOWS_TAB,
   LABELS_FILTER,
-  MODELS_FILTERS,
   MODEL_ENDPOINTS_TAB,
   MODEL_TYPE,
   NAME_FILTER,
@@ -55,7 +52,13 @@ import {
   STATUS_FILTER,
   TAG_FILTER,
   TAG_FILTER_LATEST,
-  TYPE_FILTER
+  TYPE_FILTER,
+  MONITOR_JOBS_TAB,
+  MONITOR_WORKFLOWS_TAB,
+  SCHEDULE_TAB,
+  FILES_PAGE,
+  DATASETS_PAGE,
+  MODELS_TAB
 } from '../constants'
 import {
   NEXT_24_HOUR_DATE_OPTION,
@@ -63,7 +66,8 @@ import {
   PAST_WEEK_DATE_OPTION,
   datePickerFutureOptions,
   datePickerPastOptions,
-  getDatePickerFilterValue
+  getDatePickerFilterValue,
+  ANY_TIME_DATE_OPTION
 } from '../utils/datePicker.util'
 
 const initialState = {
@@ -121,6 +125,36 @@ const initialState = {
           NEXT_24_HOUR_DATE_OPTION,
           true
         )
+      }
+    },
+    [MONITOR_JOBS_TAB]: {
+      initialValues: {
+        [NAME_FILTER]: '',
+        [DATES_FILTER]: getDatePickerFilterValue(datePickerPastOptions, PAST_WEEK_DATE_OPTION)
+      },
+      values: {
+        [NAME_FILTER]: '',
+        [DATES_FILTER]: getDatePickerFilterValue(datePickerPastOptions, PAST_WEEK_DATE_OPTION)
+      }
+    },
+    [MONITOR_WORKFLOWS_TAB]: {
+      initialValues: {
+        [NAME_FILTER]: '',
+        [DATES_FILTER]: getDatePickerFilterValue(datePickerPastOptions, PAST_WEEK_DATE_OPTION)
+      },
+      values: {
+        [NAME_FILTER]: '',
+        [DATES_FILTER]: getDatePickerFilterValue(datePickerPastOptions, PAST_WEEK_DATE_OPTION)
+      }
+    },
+    [SCHEDULE_TAB]: {
+      initialValues: {
+        [NAME_FILTER]: '',
+        [DATES_FILTER]: getDatePickerFilterValue(datePickerFutureOptions, ANY_TIME_DATE_OPTION)
+      },
+      values: {
+        [NAME_FILTER]: '',
+        [DATES_FILTER]: getDatePickerFilterValue(datePickerFutureOptions, ANY_TIME_DATE_OPTION)
       }
     },
     [FUNCTION_FILTERS]: {
@@ -188,10 +222,34 @@ const initialState = {
       initialValues: {
         [NAME_FILTER]: ''
       }
+    },
+    [FILES_PAGE]: {
+      values: {
+        [NAME_FILTER]: ''
+      },
+      initialValues: {
+        [NAME_FILTER]: ''
+      }
+    },
+    [DATASETS_PAGE]: {
+      values: {
+        [NAME_FILTER]: ''
+      },
+      initialValues: {
+        [NAME_FILTER]: ''
+      }
+    },
+    [MODELS_TAB]: {
+      values: {
+        [NAME_FILTER]: ''
+      },
+      initialValues: {
+        [NAME_FILTER]: ''
+      }
     }
   },
   [FILTER_MENU_MODAL]: {
-    [DATASETS_FILTERS]: {
+    [DATASETS_PAGE]: {
       initialValues: {
         [TAG_FILTER]: TAG_FILTER_LATEST,
         [LABELS_FILTER]: '',
@@ -203,7 +261,7 @@ const initialState = {
         [ITERATIONS_FILTER]: SHOW_ITERATIONS
       }
     },
-    [FILES_FILTERS]: {
+    [FILES_PAGE]: {
       initialValues: {
         [TAG_FILTER]: TAG_FILTER_LATEST,
         [LABELS_FILTER]: '',
@@ -215,7 +273,7 @@ const initialState = {
         [ITERATIONS_FILTER]: SHOW_ITERATIONS
       }
     },
-    [MODELS_FILTERS]: {
+    [MODELS_TAB]: {
       initialValues: {
         [TAG_FILTER]: TAG_FILTER_LATEST,
         [LABELS_FILTER]: '',
@@ -266,6 +324,38 @@ const initialState = {
       values: {
         [LABELS_FILTER]: '',
         [PROJECT_FILTER]: '',
+        [TYPE_FILTER]: FILTER_ALL_ITEMS
+      }
+    },
+    [MONITOR_JOBS_TAB]: {
+      initialValues: {
+        [LABELS_FILTER]: '',
+        [STATUS_FILTER]: [FILTER_ALL_ITEMS],
+        [TYPE_FILTER]: FILTER_ALL_ITEMS
+      },
+      values: {
+        [LABELS_FILTER]: '',
+        [STATUS_FILTER]: [FILTER_ALL_ITEMS],
+        [TYPE_FILTER]: FILTER_ALL_ITEMS
+      }
+    },
+    [MONITOR_WORKFLOWS_TAB]: {
+      initialValues: {
+        [LABELS_FILTER]: '',
+        [STATUS_FILTER]: [FILTER_ALL_ITEMS]
+      },
+      values: {
+        [LABELS_FILTER]: '',
+        [STATUS_FILTER]: [FILTER_ALL_ITEMS]
+      }
+    },
+    [SCHEDULE_TAB]: {
+      initialValues: {
+        [LABELS_FILTER]: '',
+        [TYPE_FILTER]: FILTER_ALL_ITEMS
+      },
+      values: {
+        [LABELS_FILTER]: '',
         [TYPE_FILTER]: FILTER_ALL_ITEMS
       }
     },

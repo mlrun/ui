@@ -53,7 +53,7 @@ const ScheduledJobsTable = ({
   context,
   filters = null,
   filtersConfig = null,
-  filtersMenuName = '',
+  filterMenuName = '',
   jobs,
   refreshJobs,
   requestErrorMessage,
@@ -96,7 +96,7 @@ const ScheduledJobsTable = ({
             setNotification({
               status: response.status,
               id: Math.random(),
-              message: 'The batch run was started'
+              message: 'Job started'
             })
           )
         })
@@ -263,7 +263,7 @@ const ScheduledJobsTable = ({
             requestErrorMessage,
             JOBS_PAGE,
             SCHEDULE_TAB,
-            filtersMenuName
+            filterMenuName
           )}
         />
       ) : (
@@ -297,7 +297,7 @@ ScheduledJobsTable.propTypes = {
   context: PropTypes.object.isRequired,
   filters: PropTypes.array,
   filtersConfig: FILTERS_CONFIG,
-  filtersMenuName: PropTypes.string,
+  filterMenuName: PropTypes.string,
   jobs: PropTypes.array.isRequired,
   refreshJobs: PropTypes.func.isRequired,
   requestErrorMessage: PropTypes.string.isRequired,

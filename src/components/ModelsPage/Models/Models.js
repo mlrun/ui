@@ -42,9 +42,7 @@ import {
   GROUP_BY_NAME,
   MODELS_PAGE,
   MODELS_TAB,
-  FILTER_MENU_MODAL,
   GROUP_BY_NONE,
-  MODELS_FILTERS,
   REQUEST_CANCELED,
   MODEL_TYPE,
   FUNCTION_TYPE_SERVING
@@ -96,15 +94,14 @@ const Models = ({ fetchModelFeatureVector }) => {
   const params = useParams()
   const viewMode = getViewMode(window.location.search)
   const { toggleConvertedYaml } = useModelsPage()
-
+  const [modelsFilters, modelsModalFilters] = useSelector(state => [
+    state.filtersStore.filterMenu[MODELS_TAB],
+    state.filtersStore.filterMenuModal[MODELS_TAB]
+  ])
   const abortControllerRef = useRef(new AbortController())
   const tagAbortControllerRef = useRef(new AbortController())
   const modelsRef = useRef(null)
 
-  const modelsFilters = useMemo(
-    () => ({ name: filtersStore.name, ...filtersStore[FILTER_MENU_MODAL][MODELS_FILTERS].values }),
-    [filtersStore]
-  )
   const { isDemoMode } = useMode()
 
   const pageData = useMemo(
@@ -238,11 +235,11 @@ const Models = ({ fetchModelFeatureVector }) => {
     artifact => {
       openPopUp(AddArtifactTagPopUp, {
         artifact,
-        onAddTag: () => handleRefresh(modelsFilters),
+        onAddTag: () => handleRefresh({ ...modelsFilters.values, ...modelsModalFilters.values }),
         projectName: params.projectName
       })
     },
-    [handleRefresh, params.projectName, modelsFilters]
+    [params.projectName, handleRefresh, modelsFilters.values, modelsModalFilters.values]
   )
 
   const actionsMenu = useMemo(
@@ -255,20 +252,21 @@ const Models = ({ fetchModelFeatureVector }) => {
         handleAddTag,
         params.projectName,
         handleRefresh,
-        modelsFilters,
+        { ...modelsFilters.values, ...modelsModalFilters.values },
         handleDeployModel,
         menuPosition,
         selectedModel
       ),
     [
-      dispatch,
       frontendSpec,
-      handleAddTag,
-      handleDeployModel,
-      handleRefresh,
-      modelsFilters,
-      params.projectName,
+      dispatch,
       toggleConvertedYaml,
+      handleAddTag,
+      params.projectName,
+      handleRefresh,
+      modelsFilters.values,
+      modelsModalFilters.values,
+      handleDeployModel,
       selectedModel
     ]
   )
@@ -297,8 +295,8 @@ const Models = ({ fetchModelFeatureVector }) => {
         return {
           ...state,
           [modelIdentifier]: {
-            content: sortListByDate(content[model.db_key ?? model.key], 'updated', false).map(artifact =>
-              createModelsRowData(artifact, params.projectName)
+            content: sortListByDate(content[model.db_key ?? model.key], 'updated', false).map(
+              artifact => createModelsRowData(artifact, params.projectName)
             )
           },
           error: null,
@@ -366,15 +364,15 @@ const Models = ({ fetchModelFeatureVector }) => {
       }
     }
 
-    handleRefresh(modelsFilters)
+    handleRefresh({ ...modelsFilters.values, ...modelsModalFilters.values })
   }
 
   useInitialTableFetch({
     createRowData: rowItem => createModelsRowData(rowItem, params.projectName, frontendSpec),
     fetchData,
     fetchTags,
-    filterModalName: MODELS_FILTERS,
-    filters: modelsFilters,
+    filterModalName: MODELS_TAB,
+    filters: { ...modelsFilters.values, ...modelsModalFilters.values },
     setExpandedRowsData: setSelectedRowData,
     sortExpandedRowsDataBy: 'updated'
   })
@@ -484,9 +482,9 @@ const Models = ({ fetchModelFeatureVector }) => {
   const handleRegisterModel = useCallback(() => {
     openPopUp(RegisterModelModal, {
       params,
-      refresh: () => handleRefresh(modelsFilters)
+      refresh: () => handleRefresh({ ...modelsFilters.values, ...modelsModalFilters.values })
     })
-  }, [handleRefresh, params, modelsFilters])
+  }, [params, handleRefresh, modelsFilters.values, modelsModalFilters.values])
 
   const handleTrainModel = () => {
     openPopUp(JobWizard, {

@@ -176,6 +176,7 @@ const ChangeOwnerPopUp = ({ changeOwnerCallback, projectId }) => {
             <Input
               density="dense"
               onChange={onSearchChange}
+              id="owner"
               placeholder="Type to select new owner..."
               ref={searchInputRef}
               type="text"
