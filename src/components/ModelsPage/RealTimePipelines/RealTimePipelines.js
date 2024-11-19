@@ -23,13 +23,13 @@ import { useNavigate, useParams } from 'react-router-dom'
 import classnames from 'classnames'
 import { isNil } from 'lodash'
 
-import FilterMenu from '../../FilterMenu/FilterMenu'
 import Loader from '../../../common/Loader/Loader'
 import ModelsPageTabs from '../ModelsPageTabs/ModelsPageTabs'
 import NoData from '../../../common/NoData/NoData'
 import Pipeline from '../../Pipeline/Pipeline'
 import RealTimePipelinesTableRow from '../../../elements/RealTimePipelinesTableRow/RealTimePipelinesTableRow'
 import Table from '../../Table/Table'
+import ActionBar from '../../ActionBar/ActionBar'
 
 import {
   GROUP_BY_NAME,
@@ -39,7 +39,7 @@ import {
 } from '../../../constants'
 import createRealTimePipelinesContent from '../../../utils/createRealTimePipelinesContent'
 import { fetchArtifactsFunctions, removePipelines } from '../../../reducers/artifactsReducer'
-import { filters, generatePageData } from './realTimePipelines.util'
+import { filtersConfig, generatePageData } from './realTimePipelines.util'
 import { getNoDataMessage } from '../../../utils/getNoDataMessage'
 import { isRowRendered, useVirtualization } from '../../../hooks/useVirtualization.hook'
 import { setFilters } from '../../../reducers/filtersReducer'
@@ -167,10 +167,11 @@ const RealTimePipelines = () => {
           <div className={filterMenuClassNames}>
             <ModelsPageTabs />
             <div className="action-bar">
-              <FilterMenu
-                filters={filters}
-                hidden={Boolean(params.pipelineId)}
-                onChange={handleRefresh}
+              <ActionBar
+                filterMenuName={REAL_TIME_PIPELINES_TAB}
+                filtersConfig={filtersConfig}
+                handleRefresh={handleRefresh}
+                navigateLink={`/projects/${params.projectName}/models/${REAL_TIME_PIPELINES_TAB}`}
                 page={MODELS_PAGE}
                 tab={REAL_TIME_PIPELINES_TAB}
                 withoutExpandButton
@@ -181,7 +182,7 @@ const RealTimePipelines = () => {
             <NoData
               message={getNoDataMessage(
                 filtersStore,
-                filters,
+                filtersConfig,
                 requestErrorMessage,
                 MODELS_PAGE,
                 REAL_TIME_PIPELINES_TAB

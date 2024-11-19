@@ -19,22 +19,14 @@ such restriction.
 */
 import { isEmpty } from 'lodash'
 
-import { LABELS_FILTER, MODEL_ENDPOINTS_TAB, MODELS_PAGE, SORT_BY } from '../../../constants'
+import { LABELS_FILTER, MODEL_ENDPOINTS_TAB, MODELS_PAGE } from '../../../constants'
 import { TERTIARY_BUTTON } from 'igz-controls/constants'
-import { filterSelectOptions } from '../../FilterMenu/filterMenu.settings'
 import { showErrorNotification } from '../../../utils/notifications.util'
 import { fetchModelEndpoint } from '../../../reducers/artifactsReducer'
 
-import { ReactComponent as Alert } from 'igz-controls/images/alerts.svg'
-
-export const filters = [
-  { type: LABELS_FILTER, label: 'Labels:' },
-  {
-    type: SORT_BY,
-    label: 'Sort By:',
-    options: [{ label: 'Function', id: 'function' }, ...filterSelectOptions.sortBy]
-  }
-]
+export const filtersConfig = {
+  [LABELS_FILTER]: { label: 'Labels:' }
+}
 
 const infoHeaders = [
   { label: 'UID', id: 'uid' },
@@ -62,11 +54,6 @@ const detailsMenu = [
   {
     label: 'metrics',
     id: 'metrics'
-  },
-  {
-    label: 'alerts',
-    id: 'alerts',
-    icon: <Alert />
   }
 ]
 
@@ -103,10 +90,12 @@ export const chooseOrFetchModelEndpoint = (dispatch, selectedModelEndpoint, mode
   if (!isEmpty(selectedModelEndpoint)) return Promise.resolve(selectedModelEndpoint)
 
   return dispatch(
-    fetchModelEndpoint({
-      project: modelEndpointMin.metadata.project,
-      uid: modelEndpointMin.metadata.uid
-    })
+    fetchModelEndpoint(
+      {
+        project: modelEndpointMin.metadata.project,
+        uid: modelEndpointMin.metadata.uid
+      }
+    )
   )
     .unwrap()
     .catch(error => {
