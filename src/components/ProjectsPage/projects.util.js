@@ -272,7 +272,7 @@ export const generateMonitoringCounters = (data, dispatch) => {
       project.distinct_scheduled_pipelines_pending_count || 0
 
     monitoringCounters.alerts.endpoint += project.endpoint_alerts_count || 0
-    monitoringCounters.alerts.jobs += project.jobs_alerts_count || 0
+    monitoringCounters.alerts.jobs += project.job_alerts_count || 0
     monitoringCounters.alerts.application += project.other_alerts_count || 0
   })
   monitoringCounters.alerts.total =
