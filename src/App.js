@@ -60,7 +60,6 @@ import './scss/main.scss'
 import { createPortal } from 'react-dom'
 
 import Notifications from './common/Notifications/Notifications'
-import ProjectsAlerts from './components/ProjectsAlerts/ProjectsAlerts'
 
 const Page = lazyRetry(() => import('./layout/Page/Page'))
 const CreateJobPage = lazyRetry(() => import('./components/CreateJobPage/CreateJobPage'))
@@ -104,6 +103,7 @@ const FeatureVectors = lazyRetry(
 const ProjectsJobsMonitoring = lazyRetry(
   () => import('./components/ProjectsJobsMonitoring/ProjectsJobsMonitoring')
 )
+const ProjectsAlerts = lazyRetry(() => import('./components/ProjectsAlerts/ProjectsAlerts'))
 const JobsMonitoring = lazyRetry(
   () => import('./components/ProjectsJobsMonitoring/JobsMonitoring/JobsMonitoring')
 )
