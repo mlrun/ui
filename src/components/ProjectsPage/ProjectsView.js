@@ -204,7 +204,7 @@ const ProjectsView = ({
 
 ProjectsView.propTypes = {
   actionsMenu: PropTypes.shape({}).isRequired,
-  alert: PropTypes.number.isRequired,
+  alertStore: PropTypes.shape({}).isRequired,
   closeNewProjectPopUp: PropTypes.func.isRequired,
   confirmData: PropTypes.shape({}),
   convertedYaml: PropTypes.string.isRequired,
