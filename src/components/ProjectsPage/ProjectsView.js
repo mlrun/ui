@@ -171,7 +171,6 @@ const ProjectsView = ({
           ) : (
             <div className="projects-content">
               {filteredProjects.map(project => {
-                console.log({ alertStore })
                 return (
                   <ProjectCard
                     actionsMenu={actionsMenu}
