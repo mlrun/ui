@@ -90,7 +90,6 @@ const Details = ({
   const detailsRef = useRef()
   const params = useParams()
   const detailsStore = useSelector(store => store.detailsStore)
-  const filtersStore = useSelector(store => store.filtersStore)
   const location = useLocation()
 
   const detailsPanelClassNames = classnames(
@@ -230,7 +229,7 @@ const Details = ({
     handleShowWarning(false)
 
     if (detailsStore.filtersWasHandled) {
-      retryRequest(filtersStore)
+      retryRequest({})
       setFiltersWasHandled(false)
     } else {
       blocker.proceed?.()
@@ -241,7 +240,6 @@ const Details = ({
     blocker,
     cancelChanges,
     detailsStore.filtersWasHandled,
-    filtersStore,
     handleShowWarning,
     retryRequest,
     setFiltersWasHandled

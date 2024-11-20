@@ -44,13 +44,17 @@ import { isPageTabValid } from '../../utils/link-helper.util'
 import {
   getJobsFiltersConfig,
   getScheduledFiltersConfig,
-  getWorkflowsFiltersConfig
+  getWorkflowsFiltersConfig,
+  parseJobsQueryParamsCallback,
+  parseScheduledQueryParamsCallback,
+  parseWorkflowsQueryParamsCallback
 } from '../../utils/jobs.util'
 import ActionBar from '../ActionBar/ActionBar'
 import JobsFilters from './MonitorJobs/JobsFilters'
 import WorkflowsFilters from './MonitorWorkflows/WorkflowsFilters'
 import ScheduledJobsFilters from './ScheduledJobs/ScheduledJobsFilters'
 import { useJobsPageData } from '../../hooks/useJobsPageData'
+import { useFiltersFromSearchParams } from '../../hooks/useFiltersFromSearchParams.hook'
 
 export const JobsContext = React.createContext({})
 
@@ -70,7 +74,6 @@ const Jobs = ({ fetchAllJobRuns, fetchJobFunction, fetchJobs }) => {
     abortControllerRef,
     abortJobRef,
     abortingJobs,
-    dateFilter,
     editableItem,
     getWorkflows,
     jobRuns,
@@ -112,17 +115,20 @@ const Jobs = ({ fetchAllJobRuns, fetchJobFunction, fetchJobs }) => {
       [MONITOR_JOBS_TAB]: {
         filtersConfig: getJobsFiltersConfig(params.jobName),
         handleRefresh: refreshJobs,
-        modalFilters: <JobsFilters />
+        modalFilters: <JobsFilters />,
+        parseQueryParamsCallback: parseJobsQueryParamsCallback
       },
       [MONITOR_WORKFLOWS_TAB]: {
         filtersConfig: getWorkflowsFiltersConfig(),
         handleRefresh: getWorkflows,
-        modalFilters: <WorkflowsFilters />
+        modalFilters: <WorkflowsFilters />,
+        parseQueryParamsCallback: parseWorkflowsQueryParamsCallback
       },
       [SCHEDULE_TAB]: {
         filtersConfig: getScheduledFiltersConfig(),
         handleRefresh: refreshScheduled,
-        modalFilters: <ScheduledJobsFilters />
+        modalFilters: <ScheduledJobsFilters />,
+        parseQueryParamsCallback: parseScheduledQueryParamsCallback
       }
     }
   }, [getWorkflows, params.jobName, refreshJobs, refreshScheduled])
@@ -161,13 +167,18 @@ const Jobs = ({ fetchAllJobRuns, fetchJobFunction, fetchJobs }) => {
     }
   }, [navigate, params.pageTab, location])
 
+  const filters = useFiltersFromSearchParams(
+    tabData[selectedTab]?.filtersConfig,
+    tabData[selectedTab]?.parseQueryParamsCallback
+  )
+
   return (
     <>
       <div className="content-wrapper">
         <div className="content__header">
           <Breadcrumbs />
         </div>
-        {selectedTab && (
+        {selectedTab && filters && (
           <div className="content">
             <div className="content__action-bar-wrapper content__action-bar-wrapper_multi-row">
               <ContentMenu
@@ -199,7 +210,7 @@ const Jobs = ({ fetchAllJobRuns, fetchJobFunction, fetchJobs }) => {
                 ]}
                 autoRefreshIsEnabled={selectedTab === MONITOR_JOBS_TAB}
                 autoRefreshIsStopped={jobWizardIsOpened || jobsStore.loading}
-                filterMenuName={selectedTab}
+                filters={filters}
                 filtersConfig={tabData[selectedTab].filtersConfig}
                 handleRefresh={tabData[selectedTab].handleRefresh}
                 hidden={Boolean(params.jobId || params.workflowId)}
@@ -218,7 +229,6 @@ const Jobs = ({ fetchAllJobRuns, fetchJobFunction, fetchJobs }) => {
                   abortControllerRef,
                   abortJobRef,
                   abortingJobs,
-                  dateFilter,
                   editableItem,
                   getWorkflows,
                   handleRerunJob,
@@ -243,6 +253,7 @@ const Jobs = ({ fetchAllJobRuns, fetchJobFunction, fetchJobs }) => {
                   setScheduledJobs,
                   setSelectedRunProject,
                   terminateAbortTasksPolling,
+                  tabData,
                   workflowsFiltersConfig: tabData[MONITOR_WORKFLOWS_TAB].filtersConfig
                 }}
               >

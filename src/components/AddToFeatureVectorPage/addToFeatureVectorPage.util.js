@@ -22,7 +22,8 @@ import {
   LABELS_FILTER,
   NAME_FILTER,
   PROJECT_FILTER,
-  TAG_FILTER
+  TAG_FILTER,
+  TAG_FILTER_LATEST
 } from '../../constants'
 
 export const page = 'FEATURE-STORE'
@@ -40,10 +41,12 @@ export const pageDataInitialState = {
   tabs: []
 }
 
-export const filtersConfig = {
-  [TAG_FILTER]: { label: 'Tag:' },
-  [NAME_FILTER]: { label: 'Name:' },
-  [ENTITIES_FILTER]: { label: 'Entity:' },
-  [LABELS_FILTER]: { label: 'Labels:' },
-  [PROJECT_FILTER]: { label: 'Project:' }
+export const getFiltersConfig = (currentProject = '') => {
+  return {
+    [NAME_FILTER]: { label: 'Name:', initialValue: '' },
+    [TAG_FILTER]: { label: 'Tag:', initialValue: TAG_FILTER_LATEST, isModal: true },
+    [ENTITIES_FILTER]: { label: 'Entity:', initialValue: '', isModal: true },
+    [LABELS_FILTER]: { label: 'Labels:', initialValue: '', isModal: true },
+    [PROJECT_FILTER]: { label: 'Project:', initialValue: currentProject, isModal: true }
+  }
 }

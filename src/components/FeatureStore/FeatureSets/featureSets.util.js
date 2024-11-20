@@ -22,7 +22,8 @@ import {
   FEATURE_STORE_PAGE,
   LABELS_FILTER,
   NAME_FILTER,
-  TAG_FILTER
+  TAG_FILTER,
+  TAG_FILTER_LATEST
 } from '../../../constants'
 import featureStoreActions from '../../../actions/featureStore'
 import { debounce, isEmpty } from 'lodash'
@@ -73,9 +74,9 @@ export const featureSetsInfoHeaders = [
 ]
 
 export const filtersConfig = {
-  [TAG_FILTER]: { label: 'Version Tag:' },
-  [NAME_FILTER]: { label: 'Name:' },
-  [LABELS_FILTER]: { label: 'Labels:' }
+  [NAME_FILTER]: { label: 'Name:', initialValue: '' },
+  [TAG_FILTER]: { label: 'Version Tag:', initialValue: TAG_FILTER_LATEST, isModal: true },
+  [LABELS_FILTER]: { label: 'Labels:', initialValue: '', isModal: true }
 }
 
 export const generatePageData = selectedFeatureSet => {

@@ -354,7 +354,7 @@ export const setFullSelectedFunction = debounce(
         })
         .catch(() => {
           setSelectedFunction({})
-          navigate(`/projects/${projectName}/functions`, { replace: true })
+          navigate(`/projects/${projectName}/functions${window.location.search}`, { replace: true })
         })
     }
   },
@@ -439,7 +439,7 @@ export const checkForSelectedFunction = (
           )
 
           if (!searchItem) {
-            navigate(`/projects/${projectName}/functions`, { replace: true })
+            navigate(`/projects/${projectName}/functions${window.location.search}`, { replace: true })
           } else {
             setSelectedFunction(prevState => {
               return isEqual(prevState, searchItem) ? prevState : searchItem

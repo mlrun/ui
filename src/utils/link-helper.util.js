@@ -45,7 +45,7 @@ export const getCloseDetailsLink = (location, paramName) => {
   return location.pathname
     .split('/')
     .splice(0, location.pathname.split('/').lastIndexOf(paramName) + 1)
-    .join('/')
+    .join('/') + window.location.search
 }
 
 export const generateLinkToDetailsPanel = (
@@ -63,7 +63,7 @@ export const generateLinkToDetailsPanel = (
     itemName ? `/${itemName}` : ''
   }/${key}${version ? `/${version}` : uid ? `/${uid}` : ''}${
     isNaN(parseInt(iter)) ? '' : `/${iter}`
-  }/${detailsTab.toLowerCase()}`
+  }/${detailsTab.toLowerCase()}${window.location.search}`
 
 export const parseFunctionUri = functionUri => {
   let [project, rest] = functionUri.split('/')
@@ -105,7 +105,7 @@ export const isDetailsTabExists = (tab, tabsList, navigate, location) => {
   if (!tabsList.find(el => el.id === tab && !el.hidden)) {
     const newUrlArray = location.pathname.split('/')
     newUrlArray[newUrlArray.length - 1] = DETAILS_OVERVIEW_TAB
-    const newUrl = newUrlArray.join('/')
+    const newUrl = newUrlArray.join('/') + window.location.search
 
     navigate(newUrl, { replace: true })
   }

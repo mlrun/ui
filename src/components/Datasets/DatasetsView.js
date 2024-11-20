@@ -51,20 +51,20 @@ const DatasetsView = React.forwardRef(
       convertedYaml,
       datasets,
       detailsFormInitialValues,
+      filters,
       filtersStore,
       getAndSetSelectedArtifact,
       handleExpandRow,
       handleRefresh,
+      handleRefreshWithFilters,
       handleRegisterDataset,
       maxArtifactsErrorIsShown,
       pageData,
       requestErrorMessage,
       selectedDataset,
       selectedRowData,
-      setDatasets,
       setMaxArtifactsErrorIsShown,
       setSelectedDatasetMin,
-      setSelectedRowData,
       sortProps,
       tableContent,
       tableHeaders,
@@ -93,7 +93,7 @@ const DatasetsView = React.forwardRef(
                       onClick: handleRegisterDataset
                     }
                   ]}
-                  filterMenuName={DATASETS_PAGE}
+                  filters={filters}
                   filtersConfig={filtersConfig}
                   handleRefresh={handleRefresh}
                   page={DATASETS_PAGE}
@@ -106,12 +106,12 @@ const DatasetsView = React.forwardRef(
               {artifactsStore.loading ? null : datasets.length === 0 ? (
                 <NoData
                   message={getNoDataMessage(
-                    filtersStore,
+                    filters,
                     filtersConfig,
                     requestErrorMessage,
                     DATASETS_PAGE,
                     null,
-                    DATASETS_PAGE
+                    filtersStore
                   )}
                 />
               ) : (
@@ -132,7 +132,7 @@ const DatasetsView = React.forwardRef(
                     detailsFormInitialValues={detailsFormInitialValues}
                     handleCancel={() => setSelectedDatasetMin({})}
                     pageData={pageData}
-                    retryRequest={handleRefresh}
+                    retryRequest={handleRefreshWithFilters}
                     selectedItem={selectedDataset}
                     sortProps={sortProps}
                     tableClassName="datasets-table"
@@ -192,19 +192,19 @@ DatasetsView.propTypes = {
   datasets: PropTypes.arrayOf(PropTypes.object).isRequired,
   detailsFormInitialValues: PropTypes.object.isRequired,
   getAndSetSelectedArtifact: PropTypes.func.isRequired,
+  filters: PropTypes.object.isRequired,
   filtersStore: PropTypes.object.isRequired,
   handleExpandRow: PropTypes.func.isRequired,
   handleRefresh: PropTypes.func.isRequired,
+  handleRefreshWithFilters: PropTypes.func.isRequired,
   handleRegisterDataset: PropTypes.func.isRequired,
   maxArtifactsErrorIsShown: PropTypes.bool.isRequired,
   pageData: PropTypes.object.isRequired,
   requestErrorMessage: PropTypes.string.isRequired,
   selectedDataset: PropTypes.object.isRequired,
   selectedRowData: PropTypes.object.isRequired,
-  setDatasets: PropTypes.func.isRequired,
   setMaxArtifactsErrorIsShown: PropTypes.func.isRequired,
   setSelectedDatasetMin: PropTypes.func.isRequired,
-  setSelectedRowData: PropTypes.func.isRequired,
   sortProps: SORT_PROPS,
   tableContent: PropTypes.arrayOf(PropTypes.object).isRequired,
   tableHeaders: PropTypes.arrayOf(PropTypes.object).isRequired,

@@ -36,7 +36,6 @@ export const useJobsPageData = (fetchAllJobRuns, fetchJobFunction, fetchJobs) =>
   const [jobWizardIsOpened, setJobWizardIsOpened] = useState(false)
   const [jobs, setJobs] = useState([])
   const [abortingJobs, setAbortingJobs] = useState({})
-  const [dateFilter, setDateFilter] = useState(['', ''])
   const abortControllerRef = useRef(new AbortController())
   const abortJobRef = useRef(null)
   const params = useParams()
@@ -62,10 +61,6 @@ export const useJobsPageData = (fetchAllJobRuns, fetchJobFunction, fetchJobs) =>
       abortControllerRef.current = new AbortController()
 
       terminateAbortTasksPolling()
-
-      if (filters.dates) {
-        setDateFilter(filters.dates.value)
-      }
 
       const fetchData = params.jobName ? fetchAllJobRuns : fetchJobs
       const newParams = !params.jobName && {
@@ -199,17 +194,13 @@ export const useJobsPageData = (fetchAllJobRuns, fetchJobFunction, fetchJobs) =>
   )
 
   const getWorkflows = useCallback(
-    filter => {
+    filters => {
       abortControllerRef.current = new AbortController()
-
-      if (filter.dates) {
-        setDateFilter(filter.dates.value)
-      }
 
       dispatch(
         workflowActions.fetchWorkflows(
-          filter.project ? filter.project.toLowerCase() : params.projectName || '*',
-          { ...filter, groupBy: GROUP_BY_WORKFLOW },
+          filters.project ? filters.project.toLowerCase() : params.projectName || '*',
+          { ...filters, groupBy: GROUP_BY_WORKFLOW },
           {
             ui: {
               controller: abortControllerRef.current,
@@ -239,7 +230,6 @@ export const useJobsPageData = (fetchAllJobRuns, fetchJobFunction, fetchJobs) =>
     abortControllerRef,
     abortJobRef,
     abortingJobs,
-    dateFilter,
     editableItem,
     getWorkflows,
     handleMonitoring,

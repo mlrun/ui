@@ -312,7 +312,7 @@ const DetailsHeader = ({
                     )
                   : `/projects/${params.projectName}/${pageData.page.toLowerCase()}${
                       params.pageTab ? `/${params.pageTab}` : tab ? `/${tab}` : ''
-                    }`
+                    }${window.location.search}`
               }
               onClick={handleCancelClick}
             >

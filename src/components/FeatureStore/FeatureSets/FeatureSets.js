@@ -18,7 +18,7 @@ under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
-import { useLocation, useNavigate, useParams } from 'react-router-dom'
+import { useLocation, useNavigate, useParams, useSearchParams } from 'react-router-dom'
 import { connect, useSelector, useDispatch } from 'react-redux'
 import { cloneDeep } from 'lodash'
 
@@ -29,8 +29,6 @@ import {
   DETAILS_OVERVIEW_TAB,
   FEATURE_SETS_TAB,
   FEATURE_STORE_PAGE,
-  FILTER_MENU,
-  FILTER_MENU_MODAL,
   GROUP_BY_NAME,
   GROUP_BY_NONE,
   LABELS_FILTER,
@@ -49,7 +47,7 @@ import {
   setFullSelectedFeatureSet
 } from './featureSets.util'
 import { getFeatureSetIdentifier } from '../../../utils/getUniqueIdentifier'
-import { getFilterTagOptions, setFilters, setFiltersValues, setModalFiltersValues } from '../../../reducers/filtersReducer'
+import { getFilterTagOptions, setFilters } from '../../../reducers/filtersReducer'
 import { isDetailsTabExists } from '../../../utils/link-helper.util'
 import { parseChipsData } from '../../../utils/convertChipsData'
 import { parseFeatureSets } from '../../../utils/parseFeatureSets'
@@ -63,6 +61,7 @@ import { filtersConfig } from './featureSets.util'
 import { ReactComponent as Yaml } from 'igz-controls/images/yaml.svg'
 
 import cssVariables from './featureSets.scss'
+import { useFiltersFromSearchParams } from '../../../hooks/useFiltersFromSearchParams.hook'
 
 const FeatureSets = ({
   fetchExpandedFeatureSet,
@@ -80,16 +79,9 @@ const FeatureSets = ({
   const [requestErrorMessage, setRequestErrorMessage] = useState('')
   const openPanelByDefault = useOpenPanel()
   const params = useParams()
+  const [, setSearchParams] = useSearchParams()
   const featureStore = useSelector(store => store.featureStore)
   const filtersStore = useSelector(store => store.filtersStore)
-  const featureSetsFilters = useSelector(
-    store => {
-      return {
-        ...store.filtersStore[FILTER_MENU][FEATURE_SETS_TAB].values,
-        ...store.filtersStore[FILTER_MENU_MODAL][FEATURE_SETS_TAB].values
-      }
-    }
-  )
   const abortControllerRef = useRef(new AbortController())
   const tagAbortControllerRef = useRef(new AbortController())
   const featureStoreRef = useRef(null)
@@ -104,6 +96,7 @@ const FeatureSets = ({
     }),
     [frontendSpec.internal_labels, selectedFeatureSet.description, selectedFeatureSet.labels]
   )
+  const featureSetsFilters = useFiltersFromSearchParams(filtersConfig)
 
   const { featureSetsPanelIsOpen, setFeatureSetsPanelIsOpen, toggleConvertedYaml } =
     React.useContext(FeatureStoreContext)
@@ -178,9 +171,9 @@ const FeatureSets = ({
     [fetchData, fetchTags]
   )
 
-  const handleRefreshWithStoreFilters = () => {
+  const handleRefreshWithFilters = useCallback(() => {
     handleRefresh(featureSetsFilters)
-  }
+  }, [featureSetsFilters, handleRefresh])
 
   const handleRemoveFeatureSet = useCallback(
     featureSet => {
@@ -307,22 +300,20 @@ const FeatureSets = ({
     setFeatureSetsPanelIsOpen(false)
     removeNewFeatureSet()
 
-    dispatch(
-      setFiltersValues({
-        name: FEATURE_SETS_TAB,
-        value: {
-          [NAME_FILTER]: '',
+    setSearchParams(
+      prevSearchParams => {
+        if (currentTag === filtersConfig[TAG_FILTER].initialValue) {
+          prevSearchParams.delete(TAG_FILTER)
+        } else {
+          prevSearchParams.set(TAG_FILTER, currentTag)
         }
-      })
-    )
-    dispatch(
-      setModalFiltersValues({
-        name: FEATURE_SETS_TAB,
-        value: {
-          [TAG_FILTER]: currentTag,
-          [LABELS_FILTER]: '',
-        }
-      })
+
+        prevSearchParams.delete(NAME_FILTER)
+        prevSearchParams.delete(LABELS_FILTER)
+
+        return prevSearchParams
+      },
+      { replace: true }
     )
 
     return handleRefresh({
@@ -383,9 +374,12 @@ const FeatureSets = ({
       })
 
       if (!selectedItem) {
-        navigate(`/projects/${params.projectName}/feature-store/${FEATURE_SETS_TAB}`, {
-          replace: true
-        })
+        navigate(
+          `/projects/${params.projectName}/feature-store/${FEATURE_SETS_TAB}${window.location.search}`,
+          {
+            replace: true
+          }
+        )
       } else {
         setSelectedFeatureSetMin(selectedItem)
       }
@@ -449,8 +443,9 @@ const FeatureSets = ({
       featureSetsPanelIsOpen={featureSetsPanelIsOpen}
       featureStore={featureStore}
       filtersStore={filtersStore}
+      filters={featureSetsFilters}
       handleExpandRow={handleExpandRow}
-      handleRefreshWithStoreFilters={handleRefreshWithStoreFilters}
+      handleRefreshWithFilters={handleRefreshWithFilters}
       handleRefresh={handleRefresh}
       pageData={pageData}
       ref={{ featureStoreRef }}

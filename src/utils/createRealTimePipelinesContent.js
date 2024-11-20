@@ -36,7 +36,7 @@ const createRealTimePipelinesContent = (pipelines, projectName) =>
           value: pipeline.name,
           className: 'table-cell-name',
           getLink: () => {
-            return `/projects/${projectName}/${MODELS_PAGE.toLowerCase()}/${REAL_TIME_PIPELINES_TAB}/pipeline/${pipeline.hash}`
+            return `/projects/${projectName}/${MODELS_PAGE.toLowerCase()}/${REAL_TIME_PIPELINES_TAB}/pipeline/${pipeline.hash}${window.location.search}`
           },
           showTag: true,
           showStatus: true,

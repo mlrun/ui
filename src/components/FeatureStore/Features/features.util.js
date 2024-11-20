@@ -18,14 +18,14 @@ under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
 import featureStoreActions from '../../../actions/featureStore'
-import { LABELS_FILTER, LARGE_REQUEST_CANCELED, NAME_FILTER, TAG_FILTER } from '../../../constants'
+import { LABELS_FILTER, LARGE_REQUEST_CANCELED, NAME_FILTER, TAG_FILTER, TAG_FILTER_LATEST } from '../../../constants'
 import { showLargeResponsePopUp } from '../../../httpClient'
 import { largeResponseCatchHandler } from '../../../utils/largeResponseCatchHandler'
 
 export const filtersConfig = {
-  [TAG_FILTER]: { label: 'Version Tag:' },
-  [NAME_FILTER]: { label: 'Name:' },
-  [LABELS_FILTER]: { label: 'Labels:' }
+  [TAG_FILTER]: { label: 'Version Tag:', initialValue: TAG_FILTER_LATEST, isModal: true },
+  [NAME_FILTER]: { label: 'Name:', initialValue: '' },
+  [LABELS_FILTER]: { label: 'Labels:', initialValue: '', isModal: true }
 }
 
 export const handleFeaturesResponse = (

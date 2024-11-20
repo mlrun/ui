@@ -21,7 +21,6 @@ import React from 'react'
 import { debounce } from 'lodash'
 
 import {
-  FILTER_ALL_ITEMS,
   FUNCTIONS_PAGE,
   GROUP_BY_NONE,
   GROUP_BY_WORKFLOW,
@@ -43,7 +42,6 @@ import {
   detailsMenu as functionsDetailsMenu,
   infoHeaders as functionsInfoHeaders
 } from '../../FunctionsPage/functions.util'
-import { datePickerPastOptions, PAST_WEEK_DATE_OPTION } from '../../../utils/datePicker.util'
 import { isEveryObjectValueEmpty } from '../../../utils/isEveryObjectValueEmpty'
 
 import { ReactComponent as MonitorIcon } from 'igz-controls/images/monitor-icon.svg'
@@ -163,54 +161,19 @@ export const generateActionsMenu = (
 
 export const fetchInitialWorkflows = debounce(
   (
-    filtersStore,
+    filters,
     params,
     getWorkflows,
     setFilters,
     dispatch,
-    workflowsLength,
     workflowsAreInitializedRef
   ) => {
     if (!workflowsAreInitializedRef.current) {
       if (params.workflowId) {
         dispatch(setFilters({ groupBy: GROUP_BY_NONE }))
       } else {
-        if (filtersStore.saveFilters) {
-          const filters = {
-            state: filtersStore.state,
-            dates: filtersStore.dates,
-            saveFilters: false,
-            groupBy: GROUP_BY_WORKFLOW
-          }
-
-          getWorkflows(filters)
-          dispatch(setFilters(filters))
-        } else if (workflowsLength === 0) {
-          const past24HourOption = datePickerPastOptions.find(
-            option => option.id === PAST_WEEK_DATE_OPTION
-          )
-          const generatedDates = [...past24HourOption.handler()]
-
-          if (generatedDates.length === 1) {
-            generatedDates.push(new Date())
-          }
-          const filters = {
-            dates: {
-              value: generatedDates,
-              isPredefined: past24HourOption.isPredefined,
-              initialSelectedOptionId: past24HourOption.id
-            },
-            state: FILTER_ALL_ITEMS,
-            groupBy: GROUP_BY_WORKFLOW
-          }
-
-          dispatch(setFilters(filters))
-          getWorkflows(filters)
-        } else {
-          getWorkflows({ ...filtersStore, groupBy: GROUP_BY_WORKFLOW })
-          dispatch(setFilters({ groupBy: GROUP_BY_WORKFLOW }))
-        }
-
+        getWorkflows({ ...filters, groupBy: GROUP_BY_WORKFLOW })
+        dispatch(setFilters({ groupBy: GROUP_BY_WORKFLOW }))
         workflowsAreInitializedRef.current = true
       }
     }

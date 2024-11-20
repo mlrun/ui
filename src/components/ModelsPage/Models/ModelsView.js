@@ -47,10 +47,12 @@ const ModelsView = React.forwardRef(
       applyDetailsChangesCallback,
       artifactsStore,
       detailsFormInitialValues,
+      filters,
       filtersStore,
       getAndSetSelectedArtifact,
       handleExpandRow,
       handleRefresh,
+      handleRefreshWithFilters,
       handleRegisterModel,
       handleTrainModel,
       isDemoMode,
@@ -61,13 +63,10 @@ const ModelsView = React.forwardRef(
       selectedModel,
       selectedRowData,
       setMaxArtifactsErrorIsShown,
-      setModels,
       setSelectedModelMin,
-      setSelectedRowData,
       sortProps = null,
       tableContent,
       tableHeaders,
-      urlTagOption = null,
       viewMode = null,
       virtualizationConfig
     },
@@ -96,7 +95,7 @@ const ModelsView = React.forwardRef(
                     hidden: !isDemoMode
                   }
                 ]}
-                filterMenuName={MODELS_TAB}
+                filters={filters}
                 filtersConfig={filtersConfig}
                 handleRefresh={handleRefresh}
                 page={MODELS_PAGE}
@@ -110,12 +109,12 @@ const ModelsView = React.forwardRef(
             {artifactsStore.loading ? null : models.length === 0 ? (
               <NoData
                 message={getNoDataMessage(
-                  filtersStore,
+                  filters,
                   filtersConfig,
                   requestErrorMessage,
                   MODELS_PAGE,
                   MODELS_TAB,
-                  MODELS_TAB
+                  filtersStore
                 )}
               />
             ) : (
@@ -136,7 +135,7 @@ const ModelsView = React.forwardRef(
                   detailsFormInitialValues={detailsFormInitialValues}
                   handleCancel={() => setSelectedModelMin({})}
                   pageData={pageData}
-                  retryRequest={handleRefresh}
+                  retryRequest={handleRefreshWithFilters}
                   selectedItem={selectedModel}
                   sortProps={sortProps}
                   tab={MODELS_TAB}
@@ -187,10 +186,12 @@ ModelsView.propTypes = {
   applyDetailsChanges: PropTypes.func.isRequired,
   applyDetailsChangesCallback: PropTypes.func.isRequired,
   artifactsStore: PropTypes.object.isRequired,
+  filters: PropTypes.object.isRequired,
   filtersStore: PropTypes.object.isRequired,
   getAndSetSelectedArtifact: PropTypes.func.isRequired,
   handleExpandRow: PropTypes.func.isRequired,
   handleRefresh: PropTypes.func.isRequired,
+  handleRefreshWithFilters: PropTypes.func.isRequired,
   handleRegisterModel: PropTypes.func.isRequired,
   handleTrainModel: PropTypes.func.isRequired,
   isDemoMode: PropTypes.bool.isRequired,
@@ -201,9 +202,7 @@ ModelsView.propTypes = {
   selectedModel: PropTypes.object.isRequired,
   selectedRowData: PropTypes.object.isRequired,
   setMaxArtifactsErrorIsShown: PropTypes.func.isRequired,
-  setModels: PropTypes.func.isRequired,
   setSelectedModelMin: PropTypes.func.isRequired,
-  setSelectedRowData: PropTypes.func.isRequired,
   sortProps: SORT_PROPS,
   tableContent: PropTypes.arrayOf(PropTypes.object).isRequired,
   tableHeaders: PropTypes.arrayOf(PropTypes.object).isRequired,
