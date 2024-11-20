@@ -76,9 +76,11 @@
     align-items: center;
     color: $primary;
     background-color: $selago;
+
     &-icon {
       width: 16px;
       height: 16px;
+
     path{
       fill: $ceriseRed;
     }
@@ -87,7 +89,6 @@
     &-text{
       font-family: Roboto,sans-serif;
       font-size: 14px;
-      margin: 0;
     }
   }
 
@@ -100,9 +101,8 @@
     & > *:first-child {
       flex: 0 0 auto;
       margin-right: 5px;
-        color: $spunPearl;
-      }
-
+      color: $spunPearl;
+    }
 
     &-icon {
       flex: 0 1 25px;

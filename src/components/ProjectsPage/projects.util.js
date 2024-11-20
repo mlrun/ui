@@ -264,7 +264,6 @@ export const generateAlerts = (data, dispatch) => {
 }
 
 export const generateMonitoringCounters = (data, dispatch) => {
-  console.log({ data })
   const monitoringCounters = {
     jobs: {
       all: 0,

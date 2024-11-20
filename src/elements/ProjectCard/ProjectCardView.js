@@ -67,6 +67,7 @@ const ProjectCardView = React.forwardRef(({ actionsMenu, alert, project, statist
               >
                 {project.metadata.name}
               </Tooltip>
+
               {alert ? (
                 <div className="project-card__alert">
                   <Alerts className="project-card__alert-icon" />

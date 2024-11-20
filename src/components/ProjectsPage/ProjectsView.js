@@ -171,10 +171,11 @@ const ProjectsView = ({
           ) : (
             <div className="projects-content">
               {filteredProjects.map(project => {
+                console.log({ alertStore })
                 return (
                   <ProjectCard
                     actionsMenu={actionsMenu}
-                    alert={alertStore[project.metadata.name]}
+                    alert={alertStore[project.metadata.name] || 0}
                     key={project.id || project.metadata.name}
                     project={project}
                     projectSummary={projectStore.projectsSummary.data.find(

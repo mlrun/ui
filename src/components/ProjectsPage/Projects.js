@@ -75,9 +75,6 @@ const Projects = () => {
     deletingProjectsRef.current = projectStore.deletingProjects
   }, [projectStore.deletingProjects])
 
-  useEffect(() => {
-    console.log({ projectStore })
-  }, [projectStore])
   const fetchMinimalProjects = useCallback(() => {
     dispatch(projectsAction.fetchProjects({ format: 'minimal' }, setProjectsRequestErrorMessage))
   }, [dispatch])
