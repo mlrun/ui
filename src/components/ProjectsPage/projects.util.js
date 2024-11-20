@@ -224,10 +224,13 @@ export const generateAlerts = (data, dispatch) => {
   const projectAlerts = {}
   data.forEach(project => {
     const projectName = project.name || 'unknown_project'
-    projectAlerts[projectName] = (project.endpoint_alerts_count || 1) + (project.job_alerts_count || 0) + (project.other_alerts_count || 0)
+    projectAlerts[projectName] =
+      (project.endpoint_alerts_count || 1) +
+      (project.job_alerts_count || 0) +
+      (project.other_alerts_count || 0)
   })
   dispatch({
-    type: 'SET_PROJECT_TOTAL_ALERTS',
+    type: SET_PROJECT_TOTAL_ALERTS,
     payload: projectAlerts
   })
 }
@@ -281,7 +284,10 @@ export const generateMonitoringCounters = (data, dispatch) => {
     monitoringCounters.alerts.job = project.job_alerts_count || 0
     monitoringCounters.alerts.application = project.other_alerts_count || 20 // TODO: Replace with 0 once the API is ready
 
-    monitoringCounters.alerts.sum =  monitoringCounters.alerts.application + monitoringCounters.alerts.job + monitoringCounters.alerts.endpoint
+    monitoringCounters.alerts.sum =
+      monitoringCounters.alerts.application +
+      monitoringCounters.alerts.job +
+      monitoringCounters.alerts.endpoint
   })
 
   dispatch(projectsAction.setJobsMonitoringData(monitoringCounters))
