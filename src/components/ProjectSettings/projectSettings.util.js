@@ -17,7 +17,7 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import React, { createRef } from 'react'
+import React from 'react'
 import { forEach, groupBy } from 'lodash'
 
 import { membersActions } from '../../elements/MembersPopUp/membersReducer'
@@ -75,8 +75,7 @@ const addMember = (members, name, id, type, initialRole, role) => {
     initialRole,
     role,
     icon: type === USER_ROLE ? <User /> : <Users />,
-    modification: '',
-    actionElement: createRef()
+    modification: ''
   })
 }
 

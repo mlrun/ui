@@ -77,7 +77,7 @@ const ProjectCard = ({
 ProjectCard.propTypes = {
   actionsMenu: PropTypes.shape({}).isRequired,
   project: PropTypes.shape({}).isRequired,
-  alert: PropTypes.shape({}).isRequired
+  alert: PropTypes.number.isRequired
 }
 
 export default connect(

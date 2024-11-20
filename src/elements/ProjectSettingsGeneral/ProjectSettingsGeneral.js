@@ -45,6 +45,7 @@ import {
   DEFAULT_IMAGE,
   DESCRIPTION,
   GOALS,
+  KEY_CODES,
   LABELS,
   LOAD_SOURCE_ON_RUN,
   NODE_SELECTORS,
@@ -58,7 +59,6 @@ import {
   setFieldState
 } from 'igz-controls/utils/form.util'
 import { FORBIDDEN_ERROR_STATUS_CODE } from 'igz-controls/constants'
-import { KEY_CODES } from '../../constants'
 import { getChipOptions } from '../../utils/getChipOptions'
 import { getErrorMsg } from 'igz-controls/utils/common.util'
 import {
@@ -84,7 +84,8 @@ const ProjectSettingsGeneral = ({
 }) => {
   const [projectIsInitialized, setProjectIsInitialized] = useState(false)
   const [lastEditedProjectValues, setLastEditedProjectValues] = useState({})
-  const formRef = React.useRef(
+
+  const formRef = useRef(
     createForm({
       initialValues: {},
       mutators: { ...arrayMutators, setFieldState },
@@ -228,164 +229,174 @@ const ProjectSettingsGeneral = ({
   }, [])
 
   return (
-    <Form form={formRef.current} onSubmit={() => {}}>
-      {formState => {
-        formStateRef.current = formState
+    <>
+      {(projectStore.loading || projectStore.project.loading) && <Loader />}
 
-        return (
-          <div className="settings__card">
-            {projectStore.project.loading ? (
-              <Loader />
-            ) : projectStore.project.error ? (
-              <div>
-                <h1>{projectStore.project.error.message}</h1>
-              </div>
-            ) : (
-              <div className="settings__card-content">
-                <div className="settings__card-content-col">
-                  <div className="settings__source">
-                    <FormInput
-                      className="source-url"
-                      name={SOURCE_URL}
-                      label="Source URL"
-                      tip="Source URL is the Git Repo that is associated with the project. When the user pulls the project it will use the source URL to pull from"
-                      link={{ show: true }}
-                      onBlur={updateProjectData}
-                      onKeyDown={handleOnKeyDown}
-                    />
-                    <FormCheckBox
-                      className="pull-at-runtime"
-                      label="Pull at runtime"
-                      name={LOAD_SOURCE_ON_RUN}
-                    />
-                    <FormOnChange handler={updateProjectData} name={LOAD_SOURCE_ON_RUN} />
-                  </div>
-                  <div className="settings__artifact-path">
-                    <FormInput
-                      name={ARTIFACT_PATH}
-                      label="Artifact path"
-                      onBlur={updateProjectData}
-                      onKeyDown={handleOnKeyDown}
-                      placeholder={frontendSpec.default_artifact_path ?? ''}
-                    />
-                    <span className="settings__artifact-path-link">
-                      Enter the default path for saving the artifacts within your
-                      projectStore.project.
-                      <a
-                        className="link"
-                        href="https://docs.mlrun.org/en/latest/store/artifacts.html"
-                        target="_blank"
-                        rel="noreferrer"
-                      >
-                        Read more
-                      </a>
-                    </span>
-                  </div>
-                  <div className="settings__default-image">
-                    <FormInput
-                      name={DEFAULT_IMAGE}
-                      label="Default image"
-                      onBlur={updateProjectData}
-                      onKeyDown={handleOnKeyDown}
-                    />
-                  </div>
-                  <div className="settings__description" data-testid="project-description">
-                    <FormTextarea
-                      maxLength={255}
-                      name={DESCRIPTION}
-                      label="Project description"
-                      onBlur={updateProjectData}
-                    />
-                  </div>
-                  <div className="settings__goals" data-testid="project-goals">
-                    <FormTextarea
-                      name={GOALS}
-                      label="Project goals"
-                      rows="5"
-                      onBlur={updateProjectData}
-                    />
-                  </div>
-                  <div className="settings__labels">
-                    <FormChipCell
-                      chipOptions={getChipOptions('metrics')}
-                      formState={formState}
-                      initialValues={formState.initialValues}
-                      isEditable
-                      label="Labels"
-                      name={LABELS}
-                      shortChips
-                      onExitEditModeCallback={updateProjectData}
-                      visibleChipsMaxLength="all"
-                      validationRules={{
-                        key: getValidationRules(
-                          'project.labels.key',
-                          getInternalLabelsValidationRule(frontendSpec.internal_labels || [])
-                        ),
-                        value: getValidationRules('project.labels.value')
-                      }}
-                    />
-                  </div>
-                  {areNodeSelectorsSupported && (
-                    <div>
-                      <div className="settings__card-title">
-                        <span>Node Selectors</span>
-                        <Tip
-                          text="Ensure that the node selectors you are configuring are compatible with the available nodes in your cluster. Incompatible node selectors will not be validated at the project level and might result in scheduling issues when running functions.
-                       If there is a conflict with the function node selector you defined or if the pod cannot be scheduled for some reason, check the project/platform configuration Key:Value combinations to see if there is a node selection causing the issue. If, after consulting with the project/general admin, you want to delete a global setting, enter the Key here, but leave the Value empty."
-                        />
-                      </div>
-                      <FormKeyValueTable
-                        addNewItemLabel="Add node selector"
-                        keyValidationRules={getValidationRules('nodeSelectors.key')}
-                        valueValidationRules={getValidationRules('nodeSelectors.value')}
-                        onExitEditModeCallback={updateProjectData}
-                        fieldsPath={NODE_SELECTORS}
-                        formState={formState}
-                        isValueRequired={false}
-                      />
-                    </div>
-                  )}
+      <Form form={formRef.current} onSubmit={() => {}}>
+        {formState => {
+          formStateRef.current = formState
+
+          return (
+            <div className="settings__card">
+              {projectStore.project.loading ? (
+                <Loader />
+              ) : projectStore.project.error ? (
+                <div>
+                  <h1>{projectStore.project.error.message}</h1>
                 </div>
-                <div className="settings__card-content-col">
-                  <div className="settings__owner">
-                    <div className="settings__owner-row">
-                      <div className="row-value">
-                        <span className="row-label">Owner:</span>
-                        <span className="row-name">
-                          {membersState.projectInfo?.owner?.username ||
-                            projectStore.project.data?.spec?.owner}
+              ) : (
+                <>
+                  <div className="settings__card-title">
+                    <span>Project: {params.projectName || ''}</span>
+                  </div>
+
+                  <div className="settings__card-content">
+                    <div className="settings__card-content-col">
+                      <div className="settings__source">
+                        <FormInput
+                          className="source-url"
+                          name={SOURCE_URL}
+                          label="Source URL"
+                          tip="Source URL is the Git Repo that is associated with the project. When the user pulls the project it will use the source URL to pull from"
+                          link={{ show: true }}
+                          onBlur={updateProjectData}
+                          onKeyDown={handleOnKeyDown}
+                        />
+                        <FormCheckBox
+                          className="pull-at-runtime"
+                          label="Pull at runtime"
+                          name={LOAD_SOURCE_ON_RUN}
+                        />
+                        <FormOnChange handler={updateProjectData} name={LOAD_SOURCE_ON_RUN} />
+                      </div>
+                      <div className="settings__artifact-path">
+                        <FormInput
+                          name={ARTIFACT_PATH}
+                          label="Artifact path"
+                          onBlur={updateProjectData}
+                          onKeyDown={handleOnKeyDown}
+                          placeholder={frontendSpec.default_artifact_path ?? ''}
+                        />
+                        <span className="settings__artifact-path-link">
+                          Enter the default path for saving the artifacts within your
+                          projectStore.project.
+                          <a
+                            className="link"
+                            href="https://docs.mlrun.org/en/latest/store/artifacts.html"
+                            target="_blank"
+                            rel="noreferrer"
+                          >
+                            Read more
+                          </a>
                         </span>
                       </div>
+                      <div className="settings__default-image">
+                        <FormInput
+                          name={DEFAULT_IMAGE}
+                          label="Default image"
+                          onBlur={updateProjectData}
+                          onKeyDown={handleOnKeyDown}
+                        />
+                      </div>
+                      <div className="settings__description" data-testid="project-description">
+                        <FormTextarea
+                          maxLength={255}
+                          name={DESCRIPTION}
+                          label="Project description"
+                          onBlur={updateProjectData}
+                        />
+                      </div>
+                      <div className="settings__goals" data-testid="project-goals">
+                        <FormTextarea
+                          name={GOALS}
+                          label="Project goals"
+                          rows="5"
+                          onBlur={updateProjectData}
+                        />
+                      </div>
+                      <div className="settings__labels">
+                        <FormChipCell
+                          chipOptions={getChipOptions('metrics')}
+                          formState={formState}
+                          initialValues={formState.initialValues}
+                          isEditable
+                          label="Labels"
+                          name={LABELS}
+                          shortChips
+                          onExitEditModeCallback={updateProjectData}
+                          visibleChipsMaxLength="all"
+                          validationRules={{
+                            key: getValidationRules(
+                              'project.labels.key',
+                              getInternalLabelsValidationRule(frontendSpec.internal_labels || [])
+                            ),
+                            value: getValidationRules('project.labels.value')
+                          }}
+                        />
+                      </div>
+                      {areNodeSelectorsSupported && (
+                        <div>
+                          <div className="settings__card-title">
+                            <span>Node Selectors</span>
+                            <Tip
+                              text="Ensure that the node selectors you are configuring are compatible with the available nodes in your cluster. Incompatible node selectors will not be validated at the project level and might result in scheduling issues when running functions.
+                          If there is a conflict with the function node selector you defined or if the pod cannot be scheduled for some reason, check the project/platform configuration Key:Value combinations to see if there is a node selection causing the issue. If, after consulting with the project/general admin, you want to delete a global setting, enter the Key here, but leave the Value empty."
+                            />
+                          </div>
+                          <FormKeyValueTable
+                            addNewItemLabel="Add node selector"
+                            keyValidationRules={getValidationRules('nodeSelectors.key')}
+                            valueValidationRules={getValidationRules('nodeSelectors.value')}
+                            onExitEditModeCallback={updateProjectData}
+                            fieldsPath={NODE_SELECTORS}
+                            formState={formState}
+                            isValueRequired={false}
+                          />
+                        </div>
+                      )}
                     </div>
-                    {projectMembershipIsEnabled && projectOwnerIsShown && (
-                      <ChangeOwnerPopUp
-                        changeOwnerCallback={changeOwnerCallback}
-                        projectId={membersState.projectInfo.id}
-                      />
-                    )}
+                    <div className="settings__card-content-col">
+                      <div className="settings__owner">
+                        <div className="settings__owner-row">
+                          <div className="row-value">
+                            <span className="row-label">Owner:</span>
+                            <span className="row-name">
+                              {membersState.projectInfo?.owner?.username ||
+                                projectStore.project.data?.spec?.owner}
+                            </span>
+                          </div>
+                        </div>
+                        {projectMembershipIsEnabled && projectOwnerIsShown && (
+                          <ChangeOwnerPopUp
+                            changeOwnerCallback={changeOwnerCallback}
+                            projectId={membersState.projectInfo.id}
+                          />
+                        )}
+                      </div>
+                      <div>
+                        <p className="settings__card-title">Parameters</p>
+                        <p className="settings__card-subtitle">
+                          The parameters enable users to pass key/value to the project context that
+                          can later be used for running jobs & pipelines
+                        </p>
+                        <FormKeyValueTable
+                          addNewItemLabel="Add parameter"
+                          keyValidationRules={getValidationRules('project.params.key')}
+                          valueValidationRules={getValidationRules('project.params.value')}
+                          onExitEditModeCallback={updateProjectData}
+                          fieldsPath={PARAMS}
+                          formState={formState}
+                        />
+                      </div>
+                    </div>
                   </div>
-                  <div>
-                    <p className="settings__card-title">Parameters</p>
-                    <p className="settings__card-subtitle">
-                      The parameters enable users to pass key/value to the project context that can
-                      later be used for running jobs & pipelines
-                    </p>
-                    <FormKeyValueTable
-                      addNewItemLabel="Add parameter"
-                      keyValidationRules={getValidationRules('project.params.key')}
-                      valueValidationRules={getValidationRules('project.params.value')}
-                      onExitEditModeCallback={updateProjectData}
-                      fieldsPath={PARAMS}
-                      formState={formState}
-                    />
-                  </div>
-                </div>
-              </div>
-            )}
-          </div>
-        )
-      }}
-    </Form>
+                </>
+              )}
+            </div>
+          )
+        }}
+      </Form>
+    </>
   )
 }
 

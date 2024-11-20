@@ -17,8 +17,8 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import React, { useCallback, useEffect, useMemo, useReducer, useState } from 'react'
-import { connect, useDispatch } from 'react-redux'
+import React, { useCallback, useEffect, useMemo, useReducer, useRef, useState } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
 import { useLocation, useNavigate, useParams } from 'react-router-dom'
 
 import ProjectSettingsGeneral from '../../elements/ProjectSettingsGeneral/ProjectSettingsGeneral'
@@ -26,6 +26,9 @@ import ProjectSettingsMembers from '../../elements/ProjectSettingsMembers/Projec
 import ProjectSettingsSecrets from '../../elements/ProjectSettingsSecrets/ProjectSettingsSecrets'
 import Breadcrumbs from '../../common/Breadcrumbs/Breadcrumbs'
 import ContentMenu from '../../elements/ContentMenu/ContentMenu'
+
+import { Button, ConfirmDialog } from 'igz-controls/components'
+import { DANGER_BUTTON, TERTIARY_BUTTON } from 'igz-controls/constants'
 
 import {
   COMPLETED_STATE,
@@ -35,6 +38,8 @@ import {
   tabs,
   validTabs
 } from './projectSettings.util'
+import { onDeleteProject } from '../ProjectsPage/projects.util'
+import projectsAction from '../../actions/projects'
 import {
   initialMembersState,
   membersActions,
@@ -47,14 +52,19 @@ import { showErrorNotification } from '../../utils/notifications.util'
 
 import './projectSettings.scss'
 
-const ProjectSettings = ({ frontendSpec }) => {
+const ProjectSettings = () => {
   const [projectMembersIsShown, setProjectMembersIsShown] = useState(false)
   const [projectOwnerIsShown, setProjectOwnerIsShown] = useState(false)
+  const [confirmData, setConfirmData] = useState(null)
   const [membersState, membersDispatch] = useReducer(membersReducer, initialMembersState)
   const location = useLocation()
   const navigate = useNavigate()
   const params = useParams()
   const dispatch = useDispatch()
+  const deletingProjectsRef = useRef({})
+  const terminatePollRef = useRef(null)
+  const projectStore = useSelector(state => state.projectStore)
+  const frontendSpec = useSelector(store => store.appStore.frontendSpec)
 
   const projectMembershipIsEnabled = useMemo(
     () => frontendSpec?.feature_flags?.project_membership === 'enabled',
@@ -122,7 +132,7 @@ const ProjectSettings = ({ frontendSpec }) => {
           []
         ) || [])
       ])
-      
+
       membersDispatch({
         type: membersActions.SET_ACTIVE_USER,
         payload: activeUser
@@ -208,6 +218,10 @@ const ProjectSettings = ({ frontendSpec }) => {
     })
   }, [])
 
+  const fetchMinimalProjects = useCallback(() => {
+    dispatch(projectsAction.fetchProjects({ format: 'minimal' }))
+  }, [dispatch])
+
   useEffect(() => {
     membersDispatch({
       type: membersActions.GET_PROJECT_USERS_DATA_BEGIN
@@ -226,43 +240,83 @@ const ProjectSettings = ({ frontendSpec }) => {
   }, [navigate, params.pageTab, params.projectName])
 
   return (
-    <div className="settings">
-      <div className="settings__header">
-        <Breadcrumbs />
-      </div>
-      <div className="settings__content">
-        <ContentMenu
-          activeTab={params.pageTab}
-          location={location}
-          screen={page}
-          tabs={tabs(projectMembersTabIsShown)}
+    <>
+      {confirmData && (
+        <ConfirmDialog
+          cancelButton={{
+            handler: confirmData.rejectHandler,
+            label: 'Cancel',
+            variant: TERTIARY_BUTTON
+          }}
+          closePopUp={confirmData.rejectHandler}
+          confirmButton={{
+            handler: confirmData.confirmHandler,
+            label: confirmData.btnConfirmLabel,
+            variant: confirmData.btnConfirmType
+          }}
+          isOpen={confirmData}
+          header={confirmData.header}
+          message={confirmData.message}
         />
-        {params.pageTab === PROJECTS_SETTINGS_MEMBERS_TAB && projectMembersTabIsShown ? (
-          <ProjectSettingsMembers
-            changeMembersCallback={changeMembersCallback}
-            loading={membersState.loading}
-            membersState={membersState}
-            membersDispatch={membersDispatch}
-            projectMembersIsShown={projectMembersIsShown}
-          />
-        ) : params.pageTab === PROJECTS_SETTINGS_SECRETS_TAB ? (
-          <ProjectSettingsSecrets setNotification={setNotification} />
-        ) : (
-          <ProjectSettingsGeneral
-            changeOwnerCallback={changeOwnerCallback}
-            membersState={membersState}
-            projectMembershipIsEnabled={projectMembershipIsEnabled}
-            projectOwnerIsShown={projectOwnerIsShown}
-          />
-        )}
+      )}
+
+      <div className="settings">
+        <div className="settings__header">
+          <Breadcrumbs />
+        </div>
+        <div className="settings__content">
+          <div className="content__action-bar-wrapper">
+            <ContentMenu
+              activeTab={params.pageTab}
+              location={location}
+              screen={page}
+              tabs={tabs(projectMembersTabIsShown)}
+            />
+            <div className="action-bar">
+              {projectMembershipIsEnabled && (
+                <Button
+                  variant={DANGER_BUTTON}
+                  label="Delete project"
+                  onClick={event => {
+                    event.stopPropagation()
+                    onDeleteProject(
+                      projectStore.project?.data,
+                      setConfirmData,
+                      dispatch,
+                      deletingProjectsRef,
+                      terminatePollRef,
+                      fetchMinimalProjects,
+                      navigate
+                    )
+                  }}
+                  className="delete-project-btn"
+                  disabled={projectStore.loading || projectStore.project.loading}
+                />
+              )}
+            </div>
+          </div>
+          {params.pageTab === PROJECTS_SETTINGS_MEMBERS_TAB && projectMembersTabIsShown ? (
+            <ProjectSettingsMembers
+              changeMembersCallback={changeMembersCallback}
+              loading={membersState.loading}
+              membersState={membersState}
+              membersDispatch={membersDispatch}
+              projectMembersIsShown={projectMembersIsShown}
+            />
+          ) : params.pageTab === PROJECTS_SETTINGS_SECRETS_TAB ? (
+            <ProjectSettingsSecrets setNotification={setNotification} />
+          ) : (
+            <ProjectSettingsGeneral
+              changeOwnerCallback={changeOwnerCallback}
+              membersState={membersState}
+              projectMembershipIsEnabled={projectMembershipIsEnabled}
+              projectOwnerIsShown={projectOwnerIsShown}
+            />
+          )}
+        </div>
       </div>
-    </div>
+    </>
   )
 }
 
-export default connect(
-  ({ appStore }) => ({
-    frontendSpec: appStore.frontendSpec
-  }),
-  null
-)(ProjectSettings)
+export default ProjectSettings

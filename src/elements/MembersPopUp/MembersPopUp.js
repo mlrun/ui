@@ -17,9 +17,8 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import React, { createRef, useState } from 'react'
+import React, { useState } from 'react'
 import PropTypes from 'prop-types'
-import classnames from 'classnames'
 import { useDispatch } from 'react-redux'
 import { cloneDeep, debounce, groupBy } from 'lodash'
 
@@ -27,14 +26,10 @@ import CheckBox from '../../common/CheckBox/CheckBox'
 import ChipInput from '../../common/ChipInput/ChipInput'
 import Input from '../../common/Input/Input'
 import Select from '../../common/Select/Select'
+import MembersPopUpRow from './MembersPopUpRow'
 import { Button, ConfirmDialog, RoundedIcon, Tip } from 'igz-controls/components'
 
-import {
-  DANGER_BUTTON,
-  TERTIARY_BUTTON,
-  PRIMARY_BUTTON,
-  SECONDARY_BUTTON
-} from 'igz-controls/constants'
+import { TERTIARY_BUTTON, PRIMARY_BUTTON, SECONDARY_BUTTON } from 'igz-controls/constants'
 import projectsIguazioApi from '../../api/projects-iguazio-api'
 import { FORBIDDEN_ERROR_STATUS_CODE } from 'igz-controls/constants'
 import { getErrorMsg } from 'igz-controls/utils/common.util'
@@ -44,11 +39,10 @@ import { membersActions } from './membersReducer'
 import { showErrorNotification } from '../../utils/notifications.util'
 import { useNavigate } from 'react-router-dom'
 
-import { OWNER_ROLE, USER_GROUP_ROLE, USER_ROLE } from '../../constants'
+import { USER_GROUP_ROLE, USER_ROLE } from '../../constants'
 
 import { ReactComponent as Add } from 'igz-controls/images/add.svg'
 import { ReactComponent as Close } from 'igz-controls/images/close.svg'
-import { ReactComponent as Delete } from 'igz-controls/images/delete.svg'
 import { ReactComponent as Filter } from 'igz-controls/images/filter.svg'
 import { ReactComponent as User } from 'igz-controls/images/user.svg'
 import { ReactComponent as Users } from 'igz-controls/images/users.svg'
@@ -57,7 +51,6 @@ import './membersPopUp.scss'
 
 const MembersPopUp = ({ changeMembersCallback, membersDispatch, membersState }) => {
   const [membersData, setMembersData] = useState(membersState)
-  const [deleteMemberId, setDeleteMemberId] = useState('')
   const [confirmDiscard, setConfirmDiscard] = useState(false)
   const [inviteNewMembers, setInviteNewMembers] = useState(false)
   const [notifyByEmail, setNotifyByEmail] = useState(false)
@@ -70,7 +63,6 @@ const MembersPopUp = ({ changeMembersCallback, membersDispatch, membersState }) 
   })
   const dispatch = useDispatch()
   const navigate = useNavigate()
-  const membersTableRowClassNames = classnames('table-row', inviteNewMembers && 'inactive')
 
   const handleOnClose = () => {
     setConfirmDiscard(false)
@@ -94,8 +86,7 @@ const MembersPopUp = ({ changeMembersCallback, membersDispatch, membersState }) 
           type: newMember.ui.type,
           role: newMembersRole,
           icon: newMember.ui.type === USER_ROLE ? <User /> : <Users />,
-          modification: 'post',
-          actionElement: createRef()
+          modification: 'post'
         })
       }
     })
@@ -226,37 +217,12 @@ const MembersPopUp = ({ changeMembersCallback, membersDispatch, membersState }) 
     return membersData.members.some(member => member.modification !== '')
   }
 
-  const changeMemberRole = (roleOption, memberToEdit) => {
-    const membersCopy = cloneDeep(membersData.members)
-    const member = membersCopy.find(member => member.id === memberToEdit.id)
-
-    if (member.initialRole) {
-      member.modification = member.initialRole !== roleOption ? 'put' : ''
-    }
-    member.role = roleOption
-
-    setMembersData(state => ({ ...state, members: membersCopy }))
-  }
-
   const closeMemberPopUp = event => {
     if (areChangesMade()) {
       setConfirmDiscard(true)
     } else {
       discardChanges(event)
     }
-  }
-
-  const deleteMember = memberToDelete => {
-    let membersCopy = cloneDeep(membersData.members)
-
-    if (memberToDelete.initialRole) {
-      membersCopy.find(member => member.id === memberToDelete.id).modification = DELETE_MODIFICATION
-    } else {
-      membersCopy = membersCopy.filter(member => member.id !== memberToDelete.id)
-    }
-
-    setMembersData(state => ({ ...state, members: membersCopy }))
-    setDeleteMemberId('')
   }
 
   const discardChanges = event => {
@@ -447,55 +413,13 @@ const MembersPopUp = ({ changeMembersCallback, membersDispatch, membersState }) 
               )
             })
             .map(member => (
-              <div
-                className={membersTableRowClassNames}
+              <MembersPopUpRow
                 key={`${member.name}${member.role}${member.type}`}
-              >
-                <div className="member-info">
-                  <div className={`member-status ${member.modification ? 'visible' : ''}`} />
-                  <div className="member-symbol">{member.name[0]?.toUpperCase()}</div>
-                  <div className={`member-icon ${member.type}`}>{member.icon}</div>
-                  <div className="member-name">{member.name}</div>
-                </div>
-                <div className="member-roles">
-                  <Select
-                    density="dense"
-                    label="Role"
-                    disabled={member.role === OWNER_ROLE || inviteNewMembers}
-                    floatingLabel
-                    onClick={roleOption => changeMemberRole(roleOption, member)}
-                    options={getRoleOptions(member.role)}
-                    selectedId={member.role}
-                  />
-                </div>
-                <div className="member-actions actions">
-                  <button
-                    disabled={member.role === OWNER_ROLE || inviteNewMembers}
-                    ref={member.actionElement}
-                    onClick={() => setDeleteMemberId(member.id)}
-                  >
-                    <Delete />
-                  </button>
-                </div>
-                {deleteMemberId === member.id && (
-                  <ConfirmDialog
-                    className="delete-member__pop-up"
-                    closePopUp={() => setDeleteMemberId('')}
-                    confirmButton={{
-                      handler: () => deleteMember(member),
-                      label: 'Remove member',
-                      variant: DANGER_BUTTON
-                    }}
-                    customPosition={{
-                      element: member.actionElement,
-                      position: 'top-right'
-                    }}
-                    header="Are you sure?"
-                    isOpen={deleteMemberId === member.id}
-                    message="Removing a member will revoke all access."
-                  />
-                )}
-              </div>
+                inviteNewMembers={inviteNewMembers}
+                member={member}
+                membersData={membersData}
+                setMembersData={setMembersData}
+              />
             ))}
         </div>
       </div>

@@ -18,18 +18,22 @@ under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
 import React from 'react'
-import { get, omit } from 'lodash'
+import { get, omit, last } from 'lodash'
 
 import tasksApi from '../../api/tasks-api'
 import {
   BAD_GATEWAY_ERROR_STATUS_CODE,
-  DANGER_BUTTON,
-  FORBIDDEN_ERROR_STATUS_CODE,
-  GATEWAY_TIMEOUT_STATUS_CODE,
-  SERVICE_UNAVAILABLE_ERROR_STATUS_CODE
+  SERVICE_UNAVAILABLE_ERROR_STATUS_CODE,
+  GATEWAY_TIMEOUT_STATUS_CODE
 } from 'igz-controls/constants'
-import { BG_TASK_FAILED, BG_TASK_SUCCEEDED, pollTask } from '../../utils/poll.util'
-import { PROJECT_ONLINE_STATUS } from '../../constants'
+import {
+  BG_TASK_FAILED,
+  BG_TASK_SUCCEEDED,
+  isBackgroundTaskRunning,
+  pollTask
+} from '../../utils/poll.util'
+import { PROJECT_ONLINE_STATUS, SET_PROJECT_TOTAL_ALERTS } from '../../constants'
+import { DANGER_BUTTON, FORBIDDEN_ERROR_STATUS_CODE } from 'igz-controls/constants'
 import { setNotification } from '../../reducers/notificationReducer'
 import { showErrorNotification } from '../../utils/notifications.util'
 import projectsAction from '../../actions/projects'
@@ -139,7 +143,11 @@ export const handleDeleteProjectError = (
   project,
   setConfirmData,
   dispatch,
-  deleteNonEmpty
+  deleteNonEmpty,
+  deletingProjectsRef,
+  terminatePollRef,
+  fetchMinimalProjects,
+  navigate
 ) => {
   if (error.response?.status === 412 && !deleteNonEmpty) {
     setConfirmData({
@@ -154,16 +162,36 @@ export const handleDeleteProjectError = (
         setConfirmData(null)
       },
       confirmHandler: project => {
-        handleDeleteProject(project, true)
+        handleDeleteProject(
+          project,
+          true,
+          setConfirmData,
+          dispatch,
+          deletingProjectsRef,
+          terminatePollRef,
+          fetchMinimalProjects,
+          navigate
+        )
       }
     })
   } else {
     const customErrorMsg =
       error.response?.status === FORBIDDEN_ERROR_STATUS_CODE
         ? `You do not have permission to delete the project ${project.metadata.name} `
-        : `Failed to delete the project ${project.metadata.name} project`
+        : `Failed to delete the project ${project.metadata.name}`
 
-    showErrorNotification(dispatch, error, '', customErrorMsg, () => handleDeleteProject(project))
+    showErrorNotification(dispatch, error, '', customErrorMsg, () =>
+      handleDeleteProject(
+        project,
+        false,
+        setConfirmData,
+        dispatch,
+        deletingProjectsRef,
+        terminatePollRef,
+        fetchMinimalProjects,
+        navigate
+      )
+    )
   }
 }
 
@@ -223,9 +251,9 @@ export const pollDeletingProjects = (terminatePollRef, deletingProjects, refresh
 export const generateAlerts = (data, dispatch) => {
   const projectAlerts = {}
   data.forEach(project => {
-    const projectName = project.name || 'unknown_project'
+    const projectName = project.name
     projectAlerts[projectName] =
-      (project.endpoint_alerts_count || 1) +
+      (project.endpoint_alerts_count || 0) +
       (project.job_alerts_count || 0) +
       (project.other_alerts_count || 0)
   })
@@ -236,6 +264,7 @@ export const generateAlerts = (data, dispatch) => {
 }
 
 export const generateMonitoringCounters = (data, dispatch) => {
+  console.log({ data })
   const monitoringCounters = {
     jobs: {
       all: 0,
@@ -253,12 +282,6 @@ export const generateMonitoringCounters = (data, dispatch) => {
       all: 0,
       jobs: 0,
       workflows: 0
-    },
-    alerts: {
-      endpoint: 0,
-      jobs: 0,
-      application: 0,
-      sum: 0
     }
   }
 
@@ -266,29 +289,117 @@ export const generateMonitoringCounters = (data, dispatch) => {
     monitoringCounters.jobs.all += project.runs_completed_recent_count || 0
     monitoringCounters.jobs.all += project.runs_failed_recent_count || 0
     monitoringCounters.jobs.all += project.runs_running_count || 0
+    monitoringCounters.jobs.all +=
+      project.runs_completed_recent_count ||
+      0 + project.runs_failed_recent_count ||
+      0 + project.runs_running_count ||
+      0
     monitoringCounters.jobs.completed += project.runs_completed_recent_count || 0
     monitoringCounters.jobs.failed += project.runs_failed_recent_count || 0
     monitoringCounters.jobs.running += project.runs_running_count || 0
     monitoringCounters.workflows.all += project.pipelines_completed_recent_count || 0
     monitoringCounters.workflows.all += project.pipelines_failed_recent_count || 0
     monitoringCounters.workflows.all += project.pipelines_running_count || 0
+    monitoringCounters.workflows.all +=
+      project.pipelines_completed_recent_count ||
+      0 + project.pipelines_failed_recent_count ||
+      0 + project.pipelines_running_count ||
+      0
     monitoringCounters.workflows.completed += project.pipelines_completed_recent_count || 0
     monitoringCounters.workflows.failed += project.pipelines_failed_recent_count || 0
     monitoringCounters.workflows.running += project.pipelines_running_count || 0
-    monitoringCounters.scheduled.all += project.distinct_scheduled_jobs_pending_count || 0
-    monitoringCounters.scheduled.all += project.distinct_scheduled_pipelines_pending_count || 0
+    monitoringCounters.scheduled.all +=
+      project.distinct_scheduled_jobs_pending_count ||
+      0 + project.distinct_scheduled_pipelines_pending_count ||
+      0
     monitoringCounters.scheduled.jobs += project.distinct_scheduled_jobs_pending_count || 0
     monitoringCounters.scheduled.workflows +=
       project.distinct_scheduled_pipelines_pending_count || 0
-    monitoringCounters.alerts.endpoint = project.endpoint_alerts_count || 10 // TODO: Replace with 0 once the API is ready
-    monitoringCounters.alerts.job = project.job_alerts_count || 0
-    monitoringCounters.alerts.application = project.other_alerts_count || 20 // TODO: Replace with 0 once the API is ready
-
-    monitoringCounters.alerts.sum =
-      monitoringCounters.alerts.application +
-      monitoringCounters.alerts.job +
-      monitoringCounters.alerts.endpoint
+    monitoringCounters.scheduled.workflows +=
+      project.distinct_scheduled_pipelines_pending_count || 0
   })
 
   dispatch(projectsAction.setJobsMonitoringData(monitoringCounters))
+}
+
+export const onDeleteProject = (project, setConfirmData, ...args) => {
+  setConfirmData({
+    item: project,
+    header: 'Delete project?',
+    message: `You are trying to delete the project "${project.metadata.name}". Deleted projects cannot be restored`,
+    btnConfirmLabel: 'Delete',
+    btnConfirmType: DANGER_BUTTON,
+    rejectHandler: () => {
+      setConfirmData(null)
+    },
+    confirmHandler: deleteNonEmpty =>
+      handleDeleteProject(project, deleteNonEmpty, setConfirmData, ...args)
+  })
+}
+
+export const handleDeleteProject = (
+  project,
+  deleteNonEmpty,
+  setConfirmData,
+  dispatch,
+  deletingProjectsRef,
+  terminatePollRef,
+  fetchMinimalProjects,
+  navigate,
+  refreshProjects
+) => {
+  setConfirmData && setConfirmData(null)
+
+  dispatch(projectsAction.deleteProject(project.metadata.name, deleteNonEmpty))
+    .then(response => {
+      if (isBackgroundTaskRunning(response)) {
+        dispatch(
+          setNotification({
+            status: 200,
+            id: Math.random(),
+            message: 'Project deletion in progress'
+          })
+        )
+
+        const newDeletingProjects = {
+          ...deletingProjectsRef.current,
+          [response.data.metadata.name]: last(response.data.metadata.kind.split('.'))
+        }
+
+        dispatch(projectsAction.setDeletingProjects(newDeletingProjects))
+        if (refreshProjects) {
+          pollDeletingProjects(terminatePollRef, newDeletingProjects, refreshProjects, dispatch)
+        }
+
+        if (navigate) {
+          navigate('/projects')
+        }
+      } else {
+        fetchMinimalProjects()
+        dispatch(
+          setNotification({
+            status: 200,
+            id: Math.random(),
+            message: `Project "${project.metadata.name}" was deleted successfully`
+          })
+        )
+        if (navigate) {
+          navigate('/projects')
+        }
+      }
+    })
+    .catch(error => {
+      handleDeleteProjectError(
+        error,
+        handleDeleteProject,
+        project,
+        setConfirmData,
+        dispatch,
+        deleteNonEmpty,
+        deletingProjectsRef,
+        terminatePollRef,
+        fetchMinimalProjects,
+        navigate
+      )
+    })
 }

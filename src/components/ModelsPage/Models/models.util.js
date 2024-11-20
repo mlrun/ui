@@ -24,10 +24,7 @@ import Prism from 'prismjs'
 import { PopUpDialog } from 'igz-controls/components'
 
 import {
-  ITERATIONS_FILTER,
-  LABELS_FILTER,
   NAME_FILTER,
-  TAG_FILTER,
   MODELS_PAGE,
   MODELS_TAB,
   TAG_LATEST,
@@ -37,10 +34,7 @@ import {
   ACTION_MENU_PARENT_ROW_EXPANDED,
   ARTIFACT_MAX_DOWNLOAD_SIZE
 } from '../../../constants'
-import {
-  showArtifactsPreview,
-  updateArtifact
-} from '../../../reducers/artifactsReducer'
+import { showArtifactsPreview, updateArtifact } from '../../../reducers/artifactsReducer'
 import { FORBIDDEN_ERROR_STATUS_CODE } from 'igz-controls/constants'
 import { applyTagChanges, chooseOrFetchArtifact } from '../../../utils/artifacts.util'
 import { convertChipsData } from '../../../utils/convertChipsData'
@@ -63,12 +57,9 @@ import { ReactComponent as Delete } from 'igz-controls/images/delete.svg'
 import { ReactComponent as DeployIcon } from 'igz-controls/images/deploy-icon.svg'
 import { ReactComponent as DownloadIcon } from 'igz-controls/images/download.svg'
 
-export const filters = [
-  { type: TAG_FILTER, label: 'Version tag:' },
-  { type: NAME_FILTER, label: 'Name:' },
-  { type: LABELS_FILTER, label: 'Labels:' },
-  { type: ITERATIONS_FILTER, label: 'Show best iteration only:' }
-]
+export const filtersConfig = {
+  [NAME_FILTER]: { label: 'Name:' }
+}
 
 export const infoHeaders = [
   {
@@ -192,22 +183,10 @@ export const handleApplyDetailsChanges = (
         )
       })
       .finally(() => {
-        return applyTagChanges(
-          changes,
-          selectedItem,
-          projectName,
-          dispatch,
-          setNotification
-        )
+        return applyTagChanges(changes, selectedItem, projectName, dispatch, setNotification)
       })
   } else {
-    return applyTagChanges(
-      changes,
-      selectedItem,
-      projectName,
-      dispatch,
-      setNotification
-    )
+    return applyTagChanges(changes, selectedItem, projectName, dispatch, setNotification)
   }
 }
 
@@ -281,7 +260,8 @@ export const generateActionsMenu = (
         hidden: menuPosition === ACTION_MENU_PARENT_ROW_EXPANDED,
         disabled:
           !isTargetPathValid ||
-          modelMin.size > (frontendSpec?.artifact_limits?.max_download_size ?? ARTIFACT_MAX_DOWNLOAD_SIZE),
+          modelMin.size >
+            (frontendSpec?.artifact_limits?.max_download_size ?? ARTIFACT_MAX_DOWNLOAD_SIZE),
         icon: <DownloadIcon />,
         onClick: modelMin => {
           getFullModel(modelMin).then(model => {

@@ -17,6 +17,7 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
+import React from 'react'
 import PropTypes from 'prop-types'
 import classnames from 'classnames'
 
@@ -42,6 +43,7 @@ import './projects.scss'
 
 const ProjectsView = ({
   actionsMenu,
+  alertStore,
   closeNewProjectPopUp,
   confirmData = null,
   convertedYaml,
@@ -51,17 +53,15 @@ const ProjectsView = ({
   filteredProjects,
   filterMatches,
   handleCreateProject,
-  handleSearchOnFocus,
+  handleSearchOnChange,
   handleSelectSortOption,
   isDescendingOrder,
   projectsRequestErrorMessage,
-  alertStore,
   projectStore,
   refreshProjects,
   removeNewProjectError,
   selectedProjectsState,
   setCreateProject,
-  setFilterByName,
   setFilterMatches,
   setIsDescendingOrder,
   setSelectedProjectsState,
@@ -137,8 +137,7 @@ const ProjectsView = ({
                   className="projects-search"
                   disabled={projectStore.mlrunUnhealthy.retrying}
                   matches={filterMatches}
-                  onChange={setFilterByName}
-                  onFocus={handleSearchOnFocus}
+                  onChange={handleSearchOnChange}
                   placeholder="Search projects..."
                   setMatches={setFilterMatches}
                   value={filterByName}
@@ -175,8 +174,8 @@ const ProjectsView = ({
                 return (
                   <ProjectCard
                     actionsMenu={actionsMenu}
-                    key={project.id || project.metadata.name}
                     alert={alertStore[project.metadata.name]}
+                    key={project.id || project.metadata.name}
                     project={project}
                     projectSummary={projectStore.projectsSummary.data.find(
                       item => item.name === project.metadata.name
@@ -205,6 +204,7 @@ const ProjectsView = ({
 
 ProjectsView.propTypes = {
   actionsMenu: PropTypes.shape({}).isRequired,
+  alert: PropTypes.number.isRequired,
   closeNewProjectPopUp: PropTypes.func.isRequired,
   confirmData: PropTypes.shape({}),
   convertedYaml: PropTypes.string.isRequired,
@@ -214,14 +214,13 @@ ProjectsView.propTypes = {
   filteredProjects: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
   filterMatches: PropTypes.arrayOf(PropTypes.string).isRequired,
   handleCreateProject: PropTypes.func.isRequired,
-  handleSearchOnFocus: PropTypes.func.isRequired,
+  handleSearchOnChange: PropTypes.func.isRequired,
   handleSelectSortOption: PropTypes.func.isRequired,
   projectsRequestErrorMessage: PropTypes.string.isRequired,
   refreshProjects: PropTypes.func.isRequired,
   removeNewProjectError: PropTypes.func.isRequired,
   selectedProjectsState: PropTypes.string.isRequired,
   setCreateProject: PropTypes.func.isRequired,
-  setFilterByName: PropTypes.func.isRequired,
   setFilterMatches: PropTypes.func.isRequired,
   setIsDescendingOrder: PropTypes.func.isRequired,
   setSelectedProjectsState: PropTypes.func.isRequired,

@@ -23,11 +23,12 @@ import { generateLinkToDetailsPanel } from '../../../utils/link-helper.util'
 import { ERROR_STATE, JOB_KIND_WORKFLOW, JOBS_PAGE, MONITOR_JOBS_TAB } from '../../../constants'
 import measureTime from '../../../utils/measureTime'
 import { formatDatetime } from '../../../utils'
+import { getJobKindFromLabels } from '../../../utils/jobs.util'
 
 export const createJobsMonitoringContent = (jobs, jobName, isStagingMode) => {
   return jobs.map(job => {
     const identifierUnique = getJobIdentifier(job, true)
-    const type = job.labels?.find(label => label.includes('kind:'))?.replace('kind: ', '') ?? ''
+    const type = getJobKindFromLabels(job.labels)
     const getLink = tab => {
       if (jobName) {
         return validateArguments(job.uid, tab, job.name)

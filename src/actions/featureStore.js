@@ -70,7 +70,7 @@ import {
   FETCH_FEATURE_SET_BEGIN,
   FETCH_FEATURE_SET_FAILURE
 } from '../constants'
-import { CONFLICT_ERROR_STATUS_CODE, FORBIDDEN_ERROR_STATUS_CODE } from 'igz-controls/constants'
+import { FORBIDDEN_ERROR_STATUS_CODE } from 'igz-controls/constants'
 import { parseFeatureVectors } from '../utils/parseFeatureVectors'
 import { parseFeatures } from '../utils/parseFeatures'
 import {
@@ -95,11 +95,9 @@ const featureStoreActions = {
       })
       .catch(error => {
         const message =
-          error.response.status === CONFLICT_ERROR_STATUS_CODE
-            ? 'Cannot create the feature set: the name is already in use.'
-            : error.response.status === FORBIDDEN_ERROR_STATUS_CODE
-              ? 'You do not have permission to create a new feature set.'
-              : error.message
+          error.response.status === FORBIDDEN_ERROR_STATUS_CODE
+            ? 'You are not permitted to create a feature set.'
+            : error.message
 
         showErrorNotification(dispatch, error, '', message)
         dispatch(featureStoreActions.createNewFeatureSetFailure())
@@ -494,11 +492,9 @@ const featureStoreActions = {
       })
       .catch(error => {
         const message =
-          error.response.status === CONFLICT_ERROR_STATUS_CODE
-            ? 'Cannot create the feature set: the name is already in use.'
-            : error.response.status === FORBIDDEN_ERROR_STATUS_CODE
-              ? 'You do not have permission to create a new feature set.'
-              : error.message
+          error.response.status === FORBIDDEN_ERROR_STATUS_CODE
+            ? 'You are not permitted to create a feature set.'
+            : error.message
 
         showErrorNotification(dispatch, error, '', message)
         dispatch(featureStoreActions.createNewFeatureSetFailure(message))

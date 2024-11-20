@@ -21,7 +21,6 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { isEmpty } from 'lodash'
 
-import ArtifactsActionBar from '../../ArtifactsActionBar/ArtifactsActionBar'
 import ArtifactsTableRow from '../../../elements/ArtifactsTableRow/ArtifactsTableRow'
 import Loader from '../../../common/Loader/Loader'
 import ModelsPageTabs from '../ModelsPageTabs/ModelsPageTabs'
@@ -29,15 +28,16 @@ import NoData from '../../../common/NoData/NoData'
 import Table from '../../Table/Table'
 import Details from '../../Details/Details'
 import WarningMessage from '../../../common/WarningMessage/WarningMessage'
+import ActionBar from '../../ActionBar/ActionBar'
+import ArtifactsFilters from '../../ArtifactsActionBar/ArtifactsFilters'
 
 import { ACTIONS_MENU, VIRTUALIZATION_CONFIG } from '../../../types'
-import { FULL_VIEW_MODE, MODELS_FILTERS, MODELS_PAGE, MODELS_TAB } from '../../../constants'
+import { FULL_VIEW_MODE, MODELS_PAGE, MODELS_TAB } from '../../../constants'
 import { SECONDARY_BUTTON, PRIMARY_BUTTON } from 'igz-controls/constants'
 import { SORT_PROPS } from 'igz-controls/types'
-import { filters } from './models.util'
+import { filtersConfig } from './models.util'
 import { getNoDataMessage } from '../../../utils/getNoDataMessage'
 import { isRowRendered } from '../../../hooks/useVirtualization.hook'
-import { removeModel } from '../../../reducers/artifactsReducer'
 
 const ModelsView = React.forwardRef(
   (
@@ -80,7 +80,7 @@ const ModelsView = React.forwardRef(
             <div className="content__action-bar-wrapper  content__action-bar-wrapper_multi-row">
               <ModelsPageTabs />
               {/* TODO: remove from demo in 1.7 */}
-              <ArtifactsActionBar
+              <ActionBar
                 actionButtons={[
                   {
                     variant: PRIMARY_BUTTON,
@@ -96,25 +96,26 @@ const ModelsView = React.forwardRef(
                     hidden: !isDemoMode
                   }
                 ]}
-                artifacts={models}
-                filterMenuName={MODELS_FILTERS}
+                filterMenuName={MODELS_TAB}
+                filtersConfig={filtersConfig}
                 handleRefresh={handleRefresh}
                 page={MODELS_PAGE}
-                removeSelectedItem={removeModel}
-                setContent={setModels}
-                setSelectedRowData={setSelectedRowData}
                 tab={MODELS_TAB}
-              />
+                withRefreshButton
+                withoutExpandButton
+              >
+                <ArtifactsFilters artifacts={models} />
+              </ActionBar>
             </div>
             {artifactsStore.loading ? null : models.length === 0 ? (
               <NoData
                 message={getNoDataMessage(
                   filtersStore,
-                  filters,
+                  filtersConfig,
                   requestErrorMessage,
                   MODELS_PAGE,
                   MODELS_TAB,
-                  MODELS_FILTERS
+                  MODELS_TAB
                 )}
               />
             ) : (

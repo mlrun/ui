@@ -96,7 +96,7 @@ const ScheduledJobsTable = ({
             setNotification({
               status: response.status,
               id: Math.random(),
-              message: 'The batch run was started'
+              message: 'Job started'
             })
           )
         })
