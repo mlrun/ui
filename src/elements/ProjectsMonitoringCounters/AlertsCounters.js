@@ -29,7 +29,7 @@ import { ReactComponent as ClockIcon } from 'igz-controls/images/clock.svg'
 
 import './projectsMonitoringCounters.scss'
 
-const AlertsCounter = () => {
+const AlertsCounters = () => {
   const projectStore = useSelector(store => store.projectStore)
   // TODO:Implement the generateAlertsStats function in task ML-8100
   return (
@@ -117,4 +117,4 @@ const AlertsCounter = () => {
   )
 }
 
-export default React.memo(AlertsCounter)
+export default React.memo(AlertsCounters)

@@ -17,7 +17,7 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import AlertsCounter from '../../../elements/ProjectsMonitoringCounters/AlertsCounter'
+import AlertsCounters from '../../../elements/ProjectsMonitoringCounters/AlertsCounters'
 import JobsCounters from '../../../elements/ProjectsMonitoringCounters/JobsCounters'
 import PageHeader from '../../../elements/PageHeader/PageHeader'
 import ScheduledJobsCounters from '../../../elements/ProjectsMonitoringCounters/ScheduledJobsCounters'
@@ -47,7 +47,7 @@ const ProjectsMonitoring = () => {
         {/* Todo: Delete WorkflowsCounters after ML-5460 is impplemented */}
         <WorkflowsCounters />
         <ScheduledJobsCounters />
-        <AlertsCounter />
+        <AlertsCounters />
         {/* Todo: implement as part of ML-5460
         <ModelEndpointsCounters /> */}
       </div>
