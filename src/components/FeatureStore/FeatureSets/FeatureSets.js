@@ -57,11 +57,11 @@ import { useOpenPanel } from '../../../hooks/openPanel.hook'
 import { useVirtualization } from '../../../hooks/useVirtualization.hook'
 import { useInitialTableFetch } from '../../../hooks/useInitialTableFetch.hook'
 import { filtersConfig } from './featureSets.util'
+import { useFiltersFromSearchParams } from '../../../hooks/useFiltersFromSearchParams.hook'
 
 import { ReactComponent as Yaml } from 'igz-controls/images/yaml.svg'
 
 import cssVariables from './featureSets.scss'
-import { useFiltersFromSearchParams } from '../../../hooks/useFiltersFromSearchParams.hook'
 
 const FeatureSets = ({
   fetchExpandedFeatureSet,

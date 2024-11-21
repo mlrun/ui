@@ -64,13 +64,13 @@ import { useVirtualization } from '../../hooks/useVirtualization.hook'
 import { useYaml } from '../../hooks/yaml.hook'
 import { useInitialTableFetch } from '../../hooks/useInitialTableFetch.hook'
 import { useFiltersFromSearchParams } from '../../hooks/useFiltersFromSearchParams.hook'
-
-import cssVariables from './functions.scss'
 import {
   datePickerPastOptions,
   getDatePickerFilterValue,
   PAST_WEEK_DATE_OPTION
 } from '../../utils/datePicker.util'
+
+import cssVariables from './functions.scss'
 
 const Functions = ({
   deleteFunction,

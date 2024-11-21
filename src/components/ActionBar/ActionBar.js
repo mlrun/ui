@@ -75,7 +75,7 @@ const ActionBar = ({
 }) => {
   const [autoRefresh, setAutoRefresh] = useState(autoRefreshIsEnabled)
   const filtersStore = useSelector(store => store.filtersStore)
-  const areFormInitialValuesSetRef = useRef(null)
+  const formInitialValuesAreSetRef = useRef(false)
   const changes = useSelector(store => store.detailsStore.changes)
   const dispatch = useDispatch()
   const params = useParams()
@@ -84,32 +84,39 @@ const ActionBar = ({
 
   const actionBarClassNames = classnames('action-bar', hidden && 'action-bar_hidden')
 
-  const filterMenu = useMemo(() => {
-    return filters && filtersConfig ? pickBy(
-      filters,
-      (_, filerName) => filerName in filtersConfig && !filtersConfig[filerName].isModal
-    ) : {}
-  }, [filters, filtersConfig])
+  const getFilterMenu = useCallback(
+    isModal => {
+      return filters && filtersConfig
+        ? pickBy(filters, (_, filerName) => {
+            if (
+              filerName in filtersConfig &&
+              Boolean(filtersConfig[filerName].isModal) === isModal
+            ) {
+              return true
+            }
 
-  const filterMenuModal = useMemo(() => {
-    return filters && filtersConfig ? pickBy(
-      filters,
-      (_, filerName) => filerName in filtersConfig && filtersConfig[filerName].isModal
-    ) : {}
-  }, [filters, filtersConfig])
+            return false
+          })
+        : {}
+    },
+    [filters, filtersConfig]
+  )
+
+  const filterMenu = useMemo(() => getFilterMenu(false), [getFilterMenu])
+  const filterMenuModal = useMemo(() => getFilterMenu(true), [getFilterMenu])
 
   const formInitialValues = useMemo(() => {
     const initialValues = {
       [AUTO_REFRESH_ID]: autoRefreshIsEnabled
     }
 
-    if (!areFormInitialValuesSetRef.current) {
-      for (const [filterName, config] of Object.entries(filtersConfig)) {
-        if (!config.isModal) {
-          initialValues[filterName] = config.initialValue
+    if (!formInitialValuesAreSetRef.current) {
+      for (const [filterName, filterConfig] of Object.entries(filtersConfig)) {
+        if (!filterConfig.isModal) {
+          initialValues[filterName] = filterConfig.initialValue
         }
       }
-      areFormInitialValuesSetRef.current = true
+      formInitialValuesAreSetRef.current = true
     }
 
     return initialValues
@@ -124,8 +131,9 @@ const ActionBar = ({
   )
 
   const filterMenuModalInitialState = useMemo(() => {
-    return (
-      mapValues(pickBy(filtersConfig, (config) => config.isModal), config => config.initialValue)
+    return mapValues(
+      pickBy(filtersConfig, filterConfig => filterConfig.isModal),
+      filterConfig => filterConfig.initialValue
     )
   }, [filtersConfig])
 
@@ -151,7 +159,7 @@ const ActionBar = ({
   const applyChanges = useCallback(
     async (formValues, filters) => {
       const filtersHelperResult = await filtersHelper(changes, dispatch)
-      const newFilters = {...filters, ...formValues }
+      const newFilters = { ...filters, ...formValues }
 
       if (filtersHelperResult) {
         if (params.name || params.funcName || params.hash) {
@@ -171,37 +179,31 @@ const ActionBar = ({
           dispatch(setFilters({ groupBy: GROUP_BY_NONE }))
         }
 
-        for (const [parameterName, parameterValue] of Object.entries(newFilters)) {
+        for (const [filterName, filterValue] of Object.entries(newFilters)) {
           if (
-            !isNil(filtersConfig[parameterName]?.initialValue) &&
-            !isEqual(filtersConfig[parameterName].initialValue, parameterValue)
+            !isNil(filtersConfig[filterName]?.initialValue) &&
+            !isEqual(filtersConfig[filterName].initialValue, filterValue)
           ) {
-            if (parameterName === DATES_FILTER) {
-              setSearchParams(
-                prevSearchParams => {
-                  prevSearchParams.set(
-                    parameterName,
-                    parameterValue.initialSelectedOptionId === CUSTOM_RANGE_DATE_OPTION
-                      ? parameterValue.value.map(date => new Date(date).getTime()).join('-')
-                      : parameterValue.initialSelectedOptionId
-                  )
-                  return prevSearchParams
-                },
-                { replace: true }
-              )
-            } else {
-              setSearchParams(
-                prevSearchParams => {
-                  prevSearchParams.set(parameterName, parameterValue)
-                  return prevSearchParams
-                },
-                { replace: true }
-              )
+            let newFilterValue = filterValue
+
+            if (filterName === DATES_FILTER) {
+              newFilterValue =
+                filterValue.initialSelectedOptionId === CUSTOM_RANGE_DATE_OPTION
+                  ? filterValue.value.map(date => new Date(date).getTime()).join('-')
+                  : filterValue.initialSelectedOptionId
             }
+
+            setSearchParams(
+              prevSearchParams => {
+                prevSearchParams.set(filterName, newFilterValue)
+                return prevSearchParams
+              },
+              { replace: true }
+            )
           } else {
             setSearchParams(
               prevSearchParams => {
-                prevSearchParams.delete(parameterName)
+                prevSearchParams.delete(filterName)
                 return prevSearchParams
               },
               { replace: true }
@@ -269,7 +271,7 @@ const ActionBar = ({
 
   useLayoutEffect(() => {
     return () => {
-      areFormInitialValuesSetRef.current = null
+      formInitialValuesAreSetRef.current = false
     }
   }, [params.projectName, params.name, page, tab])
 

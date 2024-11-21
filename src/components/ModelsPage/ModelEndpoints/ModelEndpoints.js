@@ -50,12 +50,12 @@ import { useModelsPage } from '../ModelsPage.context'
 import { isRowRendered, useVirtualization } from '../../../hooks/useVirtualization.hook'
 import { useSortTable } from '../../../hooks/useSortTable.hook'
 import { useFiltersFromSearchParams } from '../../../hooks/useFiltersFromSearchParams.hook'
+import { useInitialTableFetch } from '../../../hooks/useInitialTableFetch.hook'
 
 import { ReactComponent as MonitorIcon } from 'igz-controls/images/monitor-icon.svg'
 import { ReactComponent as Yaml } from 'igz-controls/images/yaml.svg'
 
 import cssVariables from './modelEndpoints.scss'
-import { useInitialTableFetch } from '../../../hooks/useInitialTableFetch.hook'
 
 const ModelEndpoints = () => {
   const [requestErrorMessage, setRequestErrorMessage] = useState('')

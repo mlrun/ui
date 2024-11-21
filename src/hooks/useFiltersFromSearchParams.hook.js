@@ -37,34 +37,34 @@ const defaultParamsParsingCallback = (_, value) => value
 const getFiltersFromSearchParams = (filtersConfig, searchParams, paramsParsingCallback) => {
   if (!filtersConfig) return {}
 
-  return mapValues(filtersConfig, (config, configName) => {
-    const searchParamVale = searchParams.get(configName)
+  return mapValues(filtersConfig, (filterConfig, filterName) => {
+    const searchParamValue = searchParams.get(filterName)?.trim?.()
 
-    if (isNil(searchParamVale)) return config.initialValue
+    if (isNil(searchParamValue)) return filterConfig.initialValue
 
-    let parsedValue = paramsParsingCallback(configName, searchParamVale)
+    let parsedValue = paramsParsingCallback(filterName, searchParamValue)
 
-    if (searchParamVale === parsedValue) {
-      if (configName === DATES_FILTER) {
+    if (searchParamValue === parsedValue) {
+      if (filterName === DATES_FILTER) {
         const dateFilter = getDatePickerFilterValue(
-          config.isFuture ? datePickerFutureOptions : datePickerPastOptions,
-          searchParamVale,
-          config.isFuture
+          filterConfig.isFuture ? datePickerFutureOptions : datePickerPastOptions,
+          searchParamValue,
+          filterConfig.isFuture
         )
 
         parsedValue = dateFilter.value ? dateFilter : null
       }
 
-      if (!parsedValue && configName === ITERATIONS_FILTER) {
-        parsedValue = searchParamVale === SHOW_ITERATIONS ? SHOW_ITERATIONS : ''
+      if (!parsedValue && filterName === ITERATIONS_FILTER) {
+        parsedValue = searchParamValue === SHOW_ITERATIONS ? SHOW_ITERATIONS : ''
       }
 
-      if (configName === SHOW_UNTAGGED_FILTER) {
-        parsedValue = searchParamVale === 'true'
+      if (filterName === SHOW_UNTAGGED_FILTER) {
+        parsedValue = searchParamValue === 'true'
       }
     }
 
-    return isNil(parsedValue) ? config.initialValue : parsedValue
+    return isNil(parsedValue) ? filterConfig.initialValue : parsedValue
   })
 }
 

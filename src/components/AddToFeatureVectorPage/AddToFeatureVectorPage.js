@@ -52,12 +52,12 @@ import { useGroupContent } from '../../hooks/groupContent.hook'
 import { useVirtualization } from '../../hooks/useVirtualization.hook'
 import { useYaml } from '../../hooks/yaml.hook'
 import { useInitialTableFetch } from '../../hooks/useInitialTableFetch.hook'
+import { useFiltersFromSearchParams } from '../../hooks/useFiltersFromSearchParams.hook'
+import { getFiltersConfig } from './addToFeatureVectorPage.util'
 
 import { ReactComponent as Yaml } from 'igz-controls/images/yaml.svg'
 
 import cssVariables from '../FeatureStore/Features/features.scss'
-import { useFiltersFromSearchParams } from '../../hooks/useFiltersFromSearchParams.hook'
-import { getFiltersConfig } from './addToFeatureVectorPage.util'
 
 const AddToFeatureVectorPage = ({
   createNewFeatureVector,

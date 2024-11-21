@@ -31,7 +31,7 @@ import { fetchInitialJobs } from './monitorJobs.util'
 import { setFilters } from '../../../reducers/filtersReducer'
 import { useMode } from '../../../hooks/mode.hook'
 import { useFiltersFromSearchParams } from '../../../hooks/useFiltersFromSearchParams.hook'
-import { getSavedSearchParams } from '../../../utils/filterHelpers'
+import { getSavedSearchParams } from '../../../utils/filter.util'
 
 const MonitorJobs = () => {
   const [selectedJob, setSelectedJob] = useState({})

@@ -39,7 +39,7 @@ import { getJobIdentifier, getWorkflowJobIdentifier } from './getUniqueIdentifie
 import { parseKeyValues } from './object'
 import { validateArguments } from './validateArguments'
 import { getJobKindFromLabels } from './jobs.util'
-import { saveAndTransformSearchParams } from './filterHelpers'
+import { saveAndTransformSearchParams } from './filter.util'
 
 export const createJobsMonitorTabContent = (jobs, jobName, isStagingMode) => {
   return jobs.map(job => {

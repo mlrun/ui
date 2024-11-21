@@ -19,6 +19,7 @@ such restriction.
 */
 import React, { useState, useMemo, useEffect, useRef } from 'react'
 import { useParams } from 'react-router-dom'
+import { isEmpty } from 'lodash'
 
 import JobsTable from '../../../elements/JobsTable/JobsTable'
 import TableTop from '../../../elements/TableTop/TableTop'
@@ -32,8 +33,7 @@ import {
   REQUEST_CANCELED
 } from '../../../constants'
 import { useFiltersFromSearchParams } from '../../../hooks/useFiltersFromSearchParams.hook'
-import { getSavedSearchParams } from '../../../utils/filterHelpers'
-import { isEmpty } from 'lodash'
+import { getSavedSearchParams } from '../../../utils/filter.util'
 
 const JobsMonitoring = () => {
   const [selectedJob, setSelectedJob] = useState({})

@@ -81,7 +81,6 @@ export const filtersConfig = {
   [ITERATIONS_FILTER]: { label: 'Show best iteration only:', initialValue: SHOW_ITERATIONS, isModal: true }
 }
 
-
 export const registerDatasetTitle = 'Register dataset'
 
 export const generateDataSetsDetailsMenu = selectedItem => [

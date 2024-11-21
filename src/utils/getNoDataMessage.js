@@ -169,10 +169,7 @@ const getVisibleFilterTypes = (filtersConfig, filters, filtersStore) => {
   }
 
   return Object.keys(filtersConfig).filter(type => {
-    const isTagVisible =
-      type === TAG_FILTER &&
-      filters.tag !== TAG_FILTER_ALL_ITEMS &&
-      filters[TAG_FILTER] !== TAG_FILTER_ALL_ITEMS
+    const isTagVisible = type === TAG_FILTER && filters[TAG_FILTER] !== TAG_FILTER_ALL_ITEMS
     const isIterVisible =
       type === ITERATIONS_FILTER && filters[ITERATIONS_FILTER] === SHOW_ITERATIONS
     const isInputVisible =
@@ -181,7 +178,8 @@ const getVisibleFilterTypes = (filtersConfig, filters, filtersStore) => {
         type === ENTITIES_FILTER ||
         type === PROJECT_FILTER) &&
       filters[type]?.length > 0
-    const isStatusVisible = type === STATUS_FILTER && filters[STATUS_FILTER] !== FILTER_ALL_ITEMS
+    const isStatusVisible =
+      type === STATUS_FILTER && !isEqual(filters[STATUS_FILTER], [FILTER_ALL_ITEMS])
     const isTypeVisible = type === TYPE_FILTER && !isEqual(filters[TYPE_FILTER], FILTER_ALL_ITEMS)
     const isDateVisible =
       (type === DATE_RANGE_TIME_FILTER &&
