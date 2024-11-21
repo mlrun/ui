@@ -25,7 +25,8 @@ import {
   JOBS_MONITORING_PAGE,
   JOBS_PAGE,
   MONITOR_JOBS_TAB,
-  MONITOR_WORKFLOWS_TAB
+  MONITOR_WORKFLOWS_TAB,
+  PROJECT_FILTER
 } from '../constants'
 import {
   getWorkflowDetailsLink,
@@ -434,7 +435,8 @@ export const createJobsMonitoringContent = (jobs, jobName, isStagingMode) => {
             }/${job.project}/${job.uid}/${tab.toLowerCase()}${window.location.search}`
           : ''
       } else {
-        return `/projects/*/${JOBS_MONITORING_PAGE}/${JOBS_MONITORING_JOBS_TAB}/${job.name}${saveAndTransformSearchParams(window.location.search)}`
+        return `/projects/*/${JOBS_MONITORING_PAGE}/${JOBS_MONITORING_JOBS_TAB}/${job.name}${saveAndTransformSearchParams(window.location.search)}
+                ${window.location.search ? '&' : '?'}${`${PROJECT_FILTER}=${job.project}`}`
       }
     }
 

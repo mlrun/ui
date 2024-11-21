@@ -47,11 +47,9 @@ const MonitorJobs = () => {
     jobsFiltersConfig,
     refreshJobs,
     requestErrorMessage,
-    selectedRunProject,
     setAbortingJobs,
     setJobRuns,
     setJobs,
-    setSelectedRunProject,
     terminateAbortTasksPolling,
     tabData
   } = React.useContext(JobsContext)
@@ -127,8 +125,6 @@ const MonitorJobs = () => {
         navigateLink={`/projects/${params.projectName}/jobs/${MONITOR_JOBS_TAB}${window.location.search}`}
         refreshJobs={refreshJobs}
         selectedJob={selectedJob}
-        selectedRunProject={selectedRunProject}
-        setSelectedRunProject={setSelectedRunProject}
         setAbortingJobs={setAbortingJobs}
         setJobRuns={setJobRuns}
         setJobs={setJobs}

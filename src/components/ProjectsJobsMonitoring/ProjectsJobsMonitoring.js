@@ -88,7 +88,6 @@ const ProjectsJobsMonitoring = ({ fetchAllJobRuns, fetchJobFunction, fetchJobs }
     setJobWizardMode,
     setJobs,
     setScheduledJobs,
-    setSelectedRunProject,
     terminateAbortTasksPolling
   } = useJobsPageData(fetchAllJobRuns, fetchJobFunction, fetchJobs)
 
@@ -213,7 +212,6 @@ const ProjectsJobsMonitoring = ({ fetchAllJobRuns, fetchJobFunction, fetchJobs }
                   setJobs,
                   setScheduledJobs,
                   setSelectedCard,
-                  setSelectedRunProject,
                   tabData,
                   terminateAbortTasksPolling,
                   workflowsFiltersConfig

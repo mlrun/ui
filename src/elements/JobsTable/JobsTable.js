@@ -74,12 +74,10 @@ const JobsTable = React.forwardRef(
       refreshJobs,
       requestErrorMessage,
       selectedJob,
-      selectedRunProject,
       setAbortingJobs,
       setJobRuns,
       setJobs,
       setSelectedJob,
-      setSelectedRunProject = null,
       tableContent,
       terminateAbortTasksPolling
     },
@@ -186,21 +184,8 @@ const JobsTable = React.forwardRef(
 
           modifyAndSelectRun(item)
         }
-
-        if (
-          (!params.jobName && setSelectedRunProject) ||
-          params.projectName !== selectedRunProject
-        ) {
-          setSelectedRunProject(item.project)
-        }
       },
-      [
-        modifyAndSelectRun,
-        params.jobName,
-        params.projectName,
-        selectedRunProject,
-        setSelectedRunProject
-      ]
+      [modifyAndSelectRun, params.jobName]
     )
 
     const fetchRun = useCallback(
@@ -312,15 +297,7 @@ const JobsTable = React.forwardRef(
             )
         })
       },
-      [
-        params.jobName,
-        selectedJob,
-        refreshJobs,
-        filters,
-        dispatch,
-        navigate,
-        location.pathname
-      ]
+      [params.jobName, selectedJob, refreshJobs, filters, dispatch, navigate, location.pathname]
     )
 
     const handleConfirmDeleteJob = useCallback(
@@ -408,8 +385,7 @@ const JobsTable = React.forwardRef(
           defaultData: jobWizardMode === PANEL_RERUN_MODE ? editableItem?.rerun_object : {},
           mode: jobWizardMode,
           wizardTitle: jobWizardMode === PANEL_RERUN_MODE ? 'Batch re-run' : undefined,
-          onSuccessRequest: () =>
-            refreshJobs(filters)
+          onSuccessRequest: () => refreshJobs(filters)
         })
 
         setJobWizardIsOpened(true)
@@ -486,7 +462,8 @@ const JobsTable = React.forwardRef(
       <>
         {jobsStore.loading && <Loader />}
         {((params.jobName && jobRuns.length === 0) || (jobs.length === 0 && !params.jobName)) &&
-        !jobsStore.loading && filters ? (
+        !jobsStore.loading &&
+        filters ? (
           <NoData
             message={getNoDataMessage(
               filters,
@@ -560,12 +537,10 @@ JobsTable.propTypes = {
   refreshJobs: PropTypes.func.isRequired,
   requestErrorMessage: PropTypes.string.isRequired,
   selectedJob: PropTypes.object.isRequired,
-  selectedRunProject: PropTypes.string.isRequired,
   setAbortingJobs: PropTypes.func.isRequired,
   setJobRuns: PropTypes.func.isRequired,
   setJobs: PropTypes.func.isRequired,
   setSelectedJob: PropTypes.func.isRequired,
-  setSelectedRunProject: PropTypes.func,
   tableContent: PropTypes.array.isRequired,
   terminateAbortTasksPolling: PropTypes.func.isRequired
 }

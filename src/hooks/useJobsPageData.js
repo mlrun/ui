@@ -39,7 +39,6 @@ export const useJobsPageData = (fetchAllJobRuns, fetchJobFunction, fetchJobs) =>
   const abortControllerRef = useRef(new AbortController())
   const abortJobRef = useRef(null)
   const params = useParams()
-  const [selectedRunProject, setSelectedRunProject] = useState(params.projectName || '')
   const [requestErrorMessage, setRequestErrorMessage] = useState('')
   const [scheduledJobs, setScheduledJobs] = useState([])
   const dispatch = useDispatch()
@@ -69,11 +68,7 @@ export const useJobsPageData = (fetchAllJobRuns, fetchJobFunction, fetchJobs) =>
       }
 
       fetchData(
-        params.jobName
-          ? selectedRunProject || '*'
-          : filters.project
-            ? filters.project.toLowerCase()
-            : params.projectName || '*',
+        filters.project?.toLowerCase?.() || params.projectName || '*',
         filters,
         {
           ui: {
@@ -111,11 +106,7 @@ export const useJobsPageData = (fetchAllJobRuns, fetchJobFunction, fetchJobs) =>
           if (Object.keys(responseAbortingJobs).length > 0) {
             setAbortingJobs(responseAbortingJobs)
             pollAbortingJobs(
-              params.jobName
-                ? selectedRunProject || '*'
-                : filters.project
-                  ? filters.project.toLowerCase()
-                  : params.projectName || '*',
+              filters.project?.toLowerCase?.() || params.projectName || '*',
               abortJobRef,
               responseAbortingJobs,
               () => refreshJobs(filters),
@@ -137,7 +128,6 @@ export const useJobsPageData = (fetchAllJobRuns, fetchJobFunction, fetchJobs) =>
       fetchJobs,
       params.jobName,
       params.projectName,
-      selectedRunProject,
       terminateAbortTasksPolling
     ]
   )
@@ -242,7 +232,6 @@ export const useJobsPageData = (fetchAllJobRuns, fetchJobFunction, fetchJobs) =>
     refreshScheduled,
     requestErrorMessage,
     scheduledJobs,
-    selectedRunProject,
     setAbortingJobs,
     setEditableItem,
     setJobRuns,
@@ -250,7 +239,6 @@ export const useJobsPageData = (fetchAllJobRuns, fetchJobFunction, fetchJobs) =>
     setJobWizardMode,
     setJobs,
     setScheduledJobs,
-    setSelectedRunProject,
     terminateAbortTasksPolling
   }
 }

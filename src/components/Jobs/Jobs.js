@@ -86,7 +86,6 @@ const Jobs = ({ fetchAllJobRuns, fetchJobFunction, fetchJobs }) => {
     refreshScheduled,
     requestErrorMessage,
     scheduledJobs,
-    selectedRunProject,
     setAbortingJobs,
     setEditableItem,
     setJobRuns,
@@ -94,7 +93,6 @@ const Jobs = ({ fetchAllJobRuns, fetchJobFunction, fetchJobs }) => {
     setJobWizardMode,
     setJobs,
     setScheduledJobs,
-    setSelectedRunProject,
     terminateAbortTasksPolling
   } = useJobsPageData(fetchAllJobRuns, fetchJobFunction, fetchJobs)
 
@@ -242,7 +240,6 @@ const Jobs = ({ fetchAllJobRuns, fetchJobFunction, fetchJobs }) => {
                   requestErrorMessage,
                   scheduledJobs,
                   scheduledFiltersConfig: tabData[SCHEDULE_TAB].filtersConfig,
-                  selectedRunProject,
                   setAbortingJobs,
                   setConfirmData,
                   setEditableItem,
@@ -251,7 +248,6 @@ const Jobs = ({ fetchAllJobRuns, fetchJobFunction, fetchJobs }) => {
                   setJobWizardMode,
                   setJobs,
                   setScheduledJobs,
-                  setSelectedRunProject,
                   terminateAbortTasksPolling,
                   tabData,
                   workflowsFiltersConfig: tabData[MONITOR_WORKFLOWS_TAB].filtersConfig

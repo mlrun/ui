@@ -52,7 +52,6 @@ const JobsMonitoring = () => {
     setAbortingJobs,
     setJobRuns,
     setJobs,
-    setSelectedRunProject,
     terminateAbortTasksPolling,
     tabData
   } = React.useContext(ProjectJobsMonitoringContext)
@@ -124,7 +123,6 @@ const JobsMonitoring = () => {
         setJobRuns={setJobRuns}
         setJobs={setJobs}
         setSelectedJob={setSelectedJob}
-        setSelectedRunProject={setSelectedRunProject}
         tableContent={tableContent}
         terminateAbortTasksPolling={terminateAbortTasksPolling}
       />
