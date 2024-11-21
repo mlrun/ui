@@ -71,7 +71,7 @@ const ProjectCardView = React.forwardRef(({ actionsMenu, alert, project, statist
               {alert ? (
                 <div className="project-card__alert">
                   <Alerts className="project-card__alert-icon" />
-                  <div className="project-card__alert-text">{alert}</div>
+                  <div className="project-card__alert-text">{alert.toLocaleString()}</div>
                 </div>
               ) : null}
               <div className="project-card__info" data-testid="project-card__created">
