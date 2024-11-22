@@ -87,16 +87,11 @@ const ActionBar = ({
   const getFilterMenu = useCallback(
     isModal => {
       return filters && filtersConfig
-        ? pickBy(filters, (_, filerName) => {
-            if (
-              filerName in filtersConfig &&
-              Boolean(filtersConfig[filerName].isModal) === isModal
-            ) {
-              return true
-            }
-
-            return false
-          })
+        ? pickBy(
+            filters,
+            (_, filerName) =>
+              filerName in filtersConfig && Boolean(filtersConfig[filerName].isModal) === isModal
+          )
         : {}
     },
     [filters, filtersConfig]
