@@ -146,15 +146,17 @@ const DetailsArtifacts = ({
             jobId: params.jobId,
             iter: iteration
           })
-        ).then(responseJob => {
-          if (responseJob) {
-            const selectedJob = getJobAccordingIteration(responseJob)
+        )
+          .unwrap()
+          .then(responseJob => {
+            if (responseJob) {
+              const selectedJob = getJobAccordingIteration(responseJob)
 
-            setArtifactsPreviewContent(
-              generateArtifactsPreviewContent(selectedJob, selectedJob.artifacts)
-            )
-          }
-        })
+              setArtifactsPreviewContent(
+                generateArtifactsPreviewContent(selectedJob, selectedJob.artifacts)
+              )
+            }
+          })
       }
 
       if (iteration) {

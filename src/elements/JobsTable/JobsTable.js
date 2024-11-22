@@ -202,6 +202,7 @@ const JobsTable = React.forwardRef(
     const fetchRun = useCallback(
       project => {
         dispatch(fetchJob({ project, jobId: params.jobId }))
+          .unwrap()
           .then(job => {
             return modifyAndSelectRun(parseJob(job))
           })

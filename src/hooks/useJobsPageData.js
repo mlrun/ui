@@ -148,16 +148,16 @@ export const useJobsPageData = () => {
       abortControllerRef.current = new AbortController()
 
       dispatch(
-        fetchScheduledJobs(
-          filters.project ? filters.project.toLowerCase() : params.projectName || '*',
+        fetchScheduledJobs({
+          project: filters.project ? filters.project.toLowerCase() : params.projectName || '*',
           filters,
-          {
+          config: {
             ui: {
               controller: abortControllerRef.current,
               setRequestErrorMessage
             }
           }
-        )
+        })
       )
         .unwrap()
         .then(jobs => {
