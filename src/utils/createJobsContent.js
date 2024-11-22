@@ -435,8 +435,7 @@ export const createJobsMonitoringContent = (jobs, jobName, isStagingMode) => {
             }/${job.project}/${job.uid}/${tab.toLowerCase()}${window.location.search}`
           : ''
       } else {
-        return `/projects/*/${JOBS_MONITORING_PAGE}/${JOBS_MONITORING_JOBS_TAB}/${job.name}${saveAndTransformSearchParams(window.location.search)}
-                ${window.location.search ? '&' : '?'}${`${PROJECT_FILTER}=${job.project}`}`
+        return `/projects/*/${JOBS_MONITORING_PAGE}/${JOBS_MONITORING_JOBS_TAB}/${job.name}${saveAndTransformSearchParams(window.location.search)}${window.location.search ? '&' : '?'}${`${PROJECT_FILTER}=${job.project}`}`
       }
     }
 
