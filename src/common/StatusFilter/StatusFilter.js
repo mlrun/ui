@@ -16,7 +16,7 @@ such restriction.
 */
 import React, { useMemo, memo } from 'react'
 import { useField, useForm } from 'react-final-form'
-import { isEmpty } from 'lodash'
+import { isEmpty, capitalize } from 'lodash'
 
 import { FormOnChange, FormSelect } from 'iguazio.dashboard-react-controls/dist/components'
 import { FILTER_ALL_ITEMS, STATUS_FILTER_NAME } from '../../constants'
@@ -59,7 +59,8 @@ const StatusFilter = ({ statusList, name = STATUS_FILTER_NAME }) => {
 
   return (
     <>
-      <FormSelect label="Status" name={name} options={mappedStatusList} multiple />
+      {/*<FormSelect label="Status" name={name} options={mappedStatusList} multiple />*/}
+      <FormSelect label={capitalize(name)} name={name} options={mappedStatusList} multiple />
       <FormOnChange handler={(value, some) => handleFilterStateChange(value, some)} name={name} />
     </>
   )

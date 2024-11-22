@@ -21,6 +21,7 @@ import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
 import { set } from 'lodash'
 
 import {
+  ALERTS_FILTERS,
   ADD_TO_FEATURE_VECTOR_TAB,
   ARTIFACT_OTHER_TYPE,
   CONSUMER_GROUPS_FILTER,
@@ -28,7 +29,12 @@ import {
   DATASET_TYPE,
   DATES_FILTER,
   DATE_FILTER_ANY_TIME,
+  ENDPOINT_APPLICATION,
+  ENDPOINT_RESULT,
   ENTITIES_FILTER,
+  ENTITY_ID,
+  ENTITY_TYPE,
+  EVENT_TYPE,
   FEATURES_TAB,
   FEATURE_SETS_TAB,
   FEATURE_VECTORS_TAB,
@@ -38,6 +44,7 @@ import {
   FUNCTION_FILTERS,
   GROUP_BY_NAME,
   ITERATIONS_FILTER,
+  JOB_NAME,
   JOBS_MONITORING_JOBS_TAB,
   JOBS_MONITORING_SCHEDULED_TAB,
   JOBS_MONITORING_WORKFLOWS_TAB,
@@ -47,6 +54,7 @@ import {
   NAME_FILTER,
   PROJECT_FILTER,
   REAL_TIME_PIPELINES_TAB,
+  SEVERITY,
   SHOW_ITERATIONS,
   SHOW_UNTAGGED_FILTER,
   STATUS_FILTER,
@@ -246,6 +254,16 @@ const initialState = {
       initialValues: {
         [NAME_FILTER]: ''
       }
+    },
+    [ALERTS_FILTERS]: {
+      values: {
+        [NAME_FILTER]: '',
+        [DATES_FILTER]: getDatePickerFilterValue(datePickerPastOptions, PAST_24_HOUR_DATE_OPTION)
+      },
+      initialValues: {
+        [NAME_FILTER]: '',
+        [DATES_FILTER]: getDatePickerFilterValue(datePickerPastOptions, PAST_24_HOUR_DATE_OPTION)
+      }
     }
   },
   [FILTER_MENU_MODAL]: {
@@ -410,6 +428,28 @@ const initialState = {
       values: {
         [LABELS_FILTER]: ''
       }
+    },
+    [ALERTS_FILTERS]: {
+      initialValues: {
+        [PROJECT_FILTER]: FILTER_ALL_ITEMS,
+        [ENTITY_TYPE]: FILTER_ALL_ITEMS,
+        [ENTITY_ID]: '',
+        [JOB_NAME]: '',
+        [ENDPOINT_APPLICATION]: '',
+        [ENDPOINT_RESULT]: '',
+        [SEVERITY]: [FILTER_ALL_ITEMS],
+        [EVENT_TYPE]: FILTER_ALL_ITEMS
+      },
+      values: {
+        [PROJECT_FILTER]: FILTER_ALL_ITEMS,
+        [ENTITY_TYPE]: FILTER_ALL_ITEMS,
+        [ENTITY_ID]: '',
+        [JOB_NAME]: '',
+        [ENDPOINT_APPLICATION]: '',
+        [ENDPOINT_RESULT]: '',
+        [SEVERITY]: [FILTER_ALL_ITEMS],
+        [EVENT_TYPE]: FILTER_ALL_ITEMS
+      }
     }
   }
 }
@@ -468,6 +508,7 @@ const filtersSlice = createSlice({
     },
     setModalFiltersValues(state, action) {
       const payloadValue = action.payload.value ?? {}
+      console.log(payloadValue)
       const newFilterValues = {
         ...state[FILTER_MENU_MODAL][action.payload.name]?.values,
         ...payloadValue

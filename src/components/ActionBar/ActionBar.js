@@ -76,10 +76,13 @@ const ActionBar = ({
 }) => {
   const [autoRefresh, setAutoRefresh] = useState(autoRefreshIsEnabled)
   const filtersStore = useSelector(store => store.filtersStore)
-  const filterMenu = useSelector(store => store.filtersStore[FILTER_MENU][filterMenuName]?.values ?? {})
+  const filterMenu = useSelector(
+    store => store.filtersStore[FILTER_MENU][filterMenuName]?.values ?? {}
+  )
   const filterMenuModal = useSelector(
     store => store.filtersStore[FILTER_MENU_MODAL][filterMenuName]
   )
+  console.log(filterMenuModal.values)
   const filterMenuRef = useRef(null)
   const changes = useSelector(store => store.detailsStore.changes)
   const dispatch = useDispatch()
@@ -204,7 +207,7 @@ const ActionBar = ({
         )
         handleRefresh({
           ...formState.values,
-          ...filtersStore.filterMenuModal[filterMenuName]?.values ?? {}
+          ...(filtersStore.filterMenuModal[filterMenuName]?.values ?? {})
         })
       }
     },
@@ -283,7 +286,10 @@ const ActionBar = ({
                 <NameFilter
                   filterMenuName={filterMenuName}
                   applyChanges={value =>
-                    applyChanges({ ...formState.values, name: value }, filterMenuModal?.values ?? {})
+                    applyChanges(
+                      { ...formState.values, name: value },
+                      filterMenuModal?.values ?? {}
+                    )
                   }
                 />
               </div>

@@ -66,6 +66,16 @@
   &__title {
     flex: 0 1 100%;
     margin-right: 1rem;
+
+    &-icon {
+      display: flex;
+      justify-content: center;
+      gap: 2px;
+      color: $primary;
+      font-weight: normal;
+      font-size: 1.25rem;
+      margin: 0;
+    }
   }
 
   &__info {
