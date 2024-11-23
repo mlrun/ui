@@ -37,6 +37,12 @@ import { truncateUid } from '../../utils'
 
 import { ReactComponent as ArtifactView } from 'igz-controls/images/eye-icon.svg'
 import { ReactComponent as Arrow } from 'igz-controls/images/arrow.svg'
+import { ReactComponent as Package } from 'igz-controls/images/package.svg'
+import { ReactComponent as Slack } from 'igz-controls/images/slack-icon.svg'
+import { ReactComponent as Git } from 'igz-controls/images/navbar/mlrun-jobs-and-workflows.svg'
+import { ReactComponent as Webhook } from 'igz-controls/images/model-serving-mini.svg'
+
+import { capitalize } from 'lodash'
 
 const TableCell = ({
   className = '',
@@ -116,6 +122,24 @@ const TableCell = ({
           >
             {valueItem.icon}
           </Tooltip>
+        ))}
+      </td>
+    )
+  } else if (data.headerId === 'notifications') {
+    return (
+      <td data-testid={data.headerId} className={cellClassNames}>
+        {data.value.map(icon => (
+          <div style={{ marginRight: '12px' }}>
+            <Tooltip
+              className="table-body__cell_type"
+              template={<TextTooltipTemplate text={capitalize(icon.kind)} />}
+            >
+              {icon.kind === 'email' && <Package />}
+              {icon.kind === 'slack' && <Slack />}
+              {icon.kind === 'git' && <Git />}
+              {icon.kind === 'webhook' && <Webhook />}
+            </Tooltip>
+          </div>
         ))}
       </td>
     )
