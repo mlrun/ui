@@ -35,7 +35,7 @@ const AlertsCounters = () => {
   return (
     <StatsCard className="monitoring-stats alerts-card">
       <StatsCard.Header>
-        <div className="project-card__title-icon">
+        <div className="project-card__header-title">
           <Alerts className="stats__header-icon" />
           Alerts
         </div>
