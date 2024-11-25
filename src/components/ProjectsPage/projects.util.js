@@ -257,6 +257,7 @@ export const generateAlerts = (data, dispatch) => {
       (project.job_alerts_count || 0) +
       (project.other_alerts_count || 0)
   })
+
   dispatch({
     type: SET_PROJECT_TOTAL_ALERTS,
     payload: projectAlerts

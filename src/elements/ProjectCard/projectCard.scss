@@ -74,7 +74,6 @@
     border-radius: 100px;
     padding:  3px 8px  ;
     align-items: center;
-    color: $primary;
     background-color: $selago;
 
     &-icon {
@@ -87,6 +86,7 @@
   }
 
     &-text{
+      color: $primary;
       font-family: Roboto,sans-serif;
       font-size: 14px;
     }
