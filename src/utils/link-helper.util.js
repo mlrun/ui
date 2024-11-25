@@ -17,7 +17,7 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import { DETAILS_OVERVIEW_TAB } from '../constants'
+import { DETAILS_OVERVIEW_TAB, VIEW_SEARCH_PARAMETER } from '../constants'
 import { getFilteredSearchParams } from './filter.util'
 
 export const isPageTabValid = (pageTab, tabs, navigate, location) => {
@@ -106,7 +106,9 @@ export const isDetailsTabExists = (tab, tabsList, navigate, location) => {
   if (!tabsList.find(el => el.id === tab && !el.hidden)) {
     const newUrlArray = location.pathname.split('/')
     newUrlArray[newUrlArray.length - 1] = DETAILS_OVERVIEW_TAB
-    const newUrl = newUrlArray.join('/') + getFilteredSearchParams(window.location.search, ['view'])
+    const newUrl =
+      newUrlArray.join('/') +
+      getFilteredSearchParams(window.location.search, [VIEW_SEARCH_PARAMETER])
 
     navigate(newUrl, { replace: true })
   }

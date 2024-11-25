@@ -193,8 +193,6 @@ const ActionBar = ({
       const filtersHelperResult = await filtersHelper(changes, dispatch)
       const newFilters = { ...filters, ...formValues }
 
-      saveFilters(newFilters)
-
       if (filtersHelperResult) {
         if (params.name || params.funcName || params.hash) {
           navigate(navigateLink)
@@ -213,6 +211,7 @@ const ActionBar = ({
           dispatch(setFilters({ groupBy: GROUP_BY_NONE }))
         }
 
+        saveFilters(newFilters)
         removeSelectedItem && dispatch(removeSelectedItem({}))
         setSelectedRowData && setSelectedRowData({})
         handleExpandAll && handleExpandAll(true)

@@ -36,7 +36,8 @@ import {
   NAME_FILTER,
   SHOW_ITERATIONS,
   TAG_FILTER,
-  TAG_FILTER_LATEST
+  TAG_FILTER_LATEST,
+  VIEW_SEARCH_PARAMETER
 } from '../../constants'
 import { PRIMARY_BUTTON } from 'igz-controls/constants'
 import { applyTagChanges, chooseOrFetchArtifact } from '../../utils/artifacts.util'
@@ -167,7 +168,10 @@ export const checkForSelectedDataset = (
         )
 
         if (!searchItem) {
-          navigate(`/projects/${projectName}/datasets${getFilteredSearchParams(window.location.search, ['view'])}`, { replace: true })
+          navigate(
+            `/projects/${projectName}/datasets${getFilteredSearchParams(window.location.search, [VIEW_SEARCH_PARAMETER])}`,
+            { replace: true }
+          )
         } else {
           setSelectedDataset(prevState => {
             return isEqual(prevState, searchItem) ? prevState : searchItem
