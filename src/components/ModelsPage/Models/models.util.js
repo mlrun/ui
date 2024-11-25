@@ -53,6 +53,7 @@ import { searchArtifactItem } from '../../../utils/searchArtifactItem'
 import { setDownloadItem, setShowDownloadsList } from '../../../reducers/downloadReducer'
 import { showErrorNotification } from '../../../utils/notifications.util'
 import { openPopUp } from 'igz-controls/utils/common.util'
+import { getFilteredSearchParams } from '../../../utils/filter.util'
 
 import { ReactComponent as TagIcon } from 'igz-controls/images/tag-icon.svg'
 import { ReactComponent as YamlIcon } from 'igz-controls/images/yaml.svg'
@@ -223,7 +224,7 @@ export const checkForSelectedModel = (
         )
 
         if (!searchItem) {
-          navigate(`/projects/${projectName}/models/models${window.location.search}`)
+          navigate(`/projects/${projectName}/models/models${getFilteredSearchParams(window.location.search, ['view'])}`)
         } else {
           setSelectedModel(prevState => {
             return isEqual(prevState, searchItem) ? prevState : searchItem

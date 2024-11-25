@@ -27,3 +27,15 @@ export const getSavedSearchParams = (params) => {
 export const saveAndTransformSearchParams = (params) => {
   return params ? `${params}&${SAVED_PARAMS}=${btoa(params)}` : ''
 }
+
+export const getFilteredSearchParams = (searchParams, excludeParamsNames = []) => {
+  const params = new URLSearchParams(searchParams)
+
+  excludeParamsNames.forEach(paramName => params.delete(paramName))
+
+  const newSearchParams = params.toString()
+
+  if (!newSearchParams) return ''
+
+  return `?${newSearchParams}`
+}

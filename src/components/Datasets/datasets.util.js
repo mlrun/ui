@@ -49,6 +49,7 @@ import { openDeleteConfirmPopUp } from 'igz-controls/utils/common.util'
 import { openPopUp } from 'igz-controls/utils/common.util'
 import { searchArtifactItem } from '../../utils/searchArtifactItem'
 import { setDownloadItem, setShowDownloadsList } from '../../reducers/downloadReducer'
+import { getFilteredSearchParams } from '../../utils/filter.util'
 
 import { ReactComponent as TagIcon } from 'igz-controls/images/tag-icon.svg'
 import { ReactComponent as YamlIcon } from 'igz-controls/images/yaml.svg'
@@ -166,7 +167,7 @@ export const checkForSelectedDataset = (
         )
 
         if (!searchItem) {
-          navigate(`/projects/${projectName}/datasets${window.location.search}`, { replace: true })
+          navigate(`/projects/${projectName}/datasets${getFilteredSearchParams(window.location.search, ['view'])}`, { replace: true })
         } else {
           setSelectedDataset(prevState => {
             return isEqual(prevState, searchItem) ? prevState : searchItem
