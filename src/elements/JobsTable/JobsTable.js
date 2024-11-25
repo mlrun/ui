@@ -485,6 +485,7 @@ const JobsTable = React.forwardRef(
               tab={MONITOR_JOBS_TAB}
               tableClassName="monitor-jobs-table"
               tableHeaders={tableContent[0]?.content ?? []}
+              toggleConvertedYaml={toggleConvertedYaml}
               virtualizationConfig={virtualizationConfig}
             >
               {tableContent.map(
@@ -516,6 +517,7 @@ const JobsTable = React.forwardRef(
             pageData={pageData}
             selectedItem={selectedJob}
             tab={MONITOR_JOBS_TAB}
+            toggleConvertedYaml={toggleConvertedYaml}
           />
         )}
         {convertedYaml.length > 0 && (

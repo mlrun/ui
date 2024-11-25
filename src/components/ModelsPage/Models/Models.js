@@ -256,9 +256,10 @@ const Models = ({ fetchModelFeatureVector }) => {
         params.projectName,
         handleRefresh,
         filters,
-        handleDeployModel,
         menuPosition,
-        selectedModel
+        selectedModel,
+        false,
+        handleDeployModel
       ),
     [
       frontendSpec,
@@ -298,7 +299,15 @@ const Models = ({ fetchModelFeatureVector }) => {
           ...state,
           [modelIdentifier]: {
             content: sortListByDate(content[model.db_key ?? model.key], 'updated', false).map(
-              artifact => createModelsRowData(artifact, params.projectName)
+              artifact =>
+                createModelsRowData(
+                  artifact,
+                  params.projectName,
+                  false,
+                  null,
+                  false,
+                  toggleConvertedYaml
+                )
             )
           },
           error: null,
@@ -306,7 +315,7 @@ const Models = ({ fetchModelFeatureVector }) => {
         }
       })
     },
-    [params.projectName]
+    [params.projectName, toggleConvertedYaml]
   )
 
   const { latestItems, handleExpandRow } = useGroupContent(
@@ -325,9 +334,23 @@ const Models = ({ fetchModelFeatureVector }) => {
           return createModelsRowData(contentItem, params.projectName, frontendSpec, null, true)
         })
       : models.map(contentItem =>
-          createModelsRowData(contentItem, params.projectName, frontendSpec)
+          createModelsRowData(
+            contentItem,
+            params.projectName,
+            frontendSpec,
+            null,
+            false,
+            toggleConvertedYaml
+          )
         )
-  }, [filtersStore.groupBy, frontendSpec, latestItems, models, params.projectName])
+  }, [
+    filtersStore.groupBy,
+    frontendSpec,
+    latestItems,
+    models,
+    params.projectName,
+    toggleConvertedYaml
+  ])
 
   const tableHeaders = useMemo(() => tableContent[0]?.content ?? [], [tableContent])
 
@@ -370,7 +393,15 @@ const Models = ({ fetchModelFeatureVector }) => {
   }
 
   useInitialTableFetch({
-    createRowData: rowItem => createModelsRowData(rowItem, params.projectName, frontendSpec),
+    createRowData: rowItem =>
+      createModelsRowData(
+        rowItem,
+        params.projectName,
+        frontendSpec,
+        null,
+        false,
+        toggleConvertedYaml
+      ),
     fetchData,
     fetchTags,
     filterModalName: MODELS_TAB,
@@ -536,6 +567,7 @@ const Models = ({ fetchModelFeatureVector }) => {
       sortProps={{ sortTable, selectedColumnName, getSortingIcon }}
       tableContent={sortedTableContent}
       tableHeaders={sortedTableHeaders}
+      toggleConvertedYaml={toggleConvertedYaml}
       viewMode={viewMode}
       virtualizationConfig={virtualizationConfig}
     />

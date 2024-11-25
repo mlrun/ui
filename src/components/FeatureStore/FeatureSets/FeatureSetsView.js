@@ -62,6 +62,7 @@ const FeatureSetsView = React.forwardRef(
       setFeatureSetsPanelIsOpen,
       setSelectedFeatureSetMin,
       tableContent,
+      toggleConvertedYaml,
       virtualizationConfig
     },
     { featureStoreRef }
@@ -118,6 +119,7 @@ const FeatureSetsView = React.forwardRef(
               tab={FEATURE_SETS_TAB}
               tableClassName="feature-sets-table"
               tableHeaders={tableContent[0]?.content ?? []}
+              toggleConvertedYaml={toggleConvertedYaml}
               virtualizationConfig={virtualizationConfig}
             >
               {tableContent.map(

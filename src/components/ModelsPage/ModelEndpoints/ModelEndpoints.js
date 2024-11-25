@@ -219,9 +219,9 @@ const ModelEndpoints = () => {
 
   const tableContent = useMemo(() => {
     return modelEndpoints.map(contentItem =>
-      createModelEndpointsRowData(contentItem, params.projectName)
+      createModelEndpointsRowData(contentItem, params.projectName, toggleConvertedYaml)
     )
-  }, [modelEndpoints, params.projectName])
+  }, [modelEndpoints, params.projectName, toggleConvertedYaml])
 
   const tableHeaders = useMemo(() => tableContent[0]?.content ?? [], [tableContent])
 
@@ -293,6 +293,7 @@ const ModelEndpoints = () => {
                 tableHeaders={sortedTableHeaders}
                 virtualizationConfig={virtualizationConfig}
                 sortProps={{ sortTable, selectedColumnName, getSortingIcon }}
+                toggleConvertedYaml={toggleConvertedYaml}
               >
                 {sortedTableContent.map(
                   (tableItem, index) =>

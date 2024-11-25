@@ -137,6 +137,7 @@ const DatasetsView = React.forwardRef(
                     sortProps={sortProps}
                     tableClassName="datasets-table"
                     tableHeaders={tableHeaders ?? []}
+                    toggleConvertedYaml={toggleConvertedYaml}
                     virtualizationConfig={virtualizationConfig}
                   >
                     {tableContent.map(
@@ -167,6 +168,7 @@ const DatasetsView = React.forwardRef(
                   isDetailsScreen
                   pageData={pageData}
                   selectedItem={selectedDataset}
+                  toggleConvertedYaml={toggleConvertedYaml}
                 />
               )}
             </div>

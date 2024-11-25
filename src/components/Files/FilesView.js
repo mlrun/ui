@@ -136,6 +136,7 @@ const FilesView = React.forwardRef(
                     sortProps={sortProps}
                     tableClassName="files-table"
                     tableHeaders={tableHeaders ?? []}
+                    toggleConvertedYaml={toggleConvertedYaml}
                     virtualizationConfig={virtualizationConfig}
                   >
                     {tableContent.map(
@@ -167,6 +168,7 @@ const FilesView = React.forwardRef(
                   isDetailsScreen
                   pageData={pageData}
                   selectedItem={selectedFile}
+                  toggleConvertedYaml={toggleConvertedYaml}
                 />
               )}
             </div>

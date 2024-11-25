@@ -192,6 +192,7 @@ const FeatureStoreTableRow = ({
                   item={rowItem.data}
                   key={value.id}
                   link={value.getLink?.(params.tab ?? DETAILS_OVERVIEW_TAB)}
+                  onClick={value.handleClick}
                   selectedItem={selectedItem}
                   selectItem={handleSelectItem}
                   showExpandButton={value.showExpandButton}

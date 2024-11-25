@@ -238,14 +238,15 @@ const Files = () => {
         ...state,
         [fileIdentifier]: {
           content: sortListByDate(content[file.db_key ?? file.key], 'updated', false).map(
-            artifact => createFilesRowData(artifact, params.projectName)
+            artifact =>
+              createFilesRowData(artifact, params.projectName, null, false, toggleConvertedYaml)
           )
         },
         error: null,
         loading: false
       }))
     },
-    [params.projectName]
+    [params.projectName, toggleConvertedYaml]
   )
 
   const { latestItems, handleExpandRow } = useGroupContent(
@@ -260,10 +261,31 @@ const Files = () => {
   const tableContent = useMemo(() => {
     return filtersStore.groupBy === GROUP_BY_NAME
       ? latestItems.map(contentItem => {
-          return createFilesRowData(contentItem, params.projectName, frontendSpec, true)
+          return createFilesRowData(
+            contentItem,
+            params.projectName,
+            frontendSpec,
+            true,
+            toggleConvertedYaml
+          )
         })
-      : files.map(contentItem => createFilesRowData(contentItem, params.projectName, frontendSpec))
-  }, [files, filtersStore.groupBy, frontendSpec, latestItems, params.projectName])
+      : files.map(contentItem =>
+          createFilesRowData(
+            contentItem,
+            params.projectName,
+            frontendSpec,
+            false,
+            toggleConvertedYaml
+          )
+        )
+  }, [
+    files,
+    filtersStore.groupBy,
+    frontendSpec,
+    latestItems,
+    params.projectName,
+    toggleConvertedYaml
+  ])
 
   const tableHeaders = useMemo(() => tableContent[0]?.content ?? [], [tableContent])
 
@@ -308,7 +330,8 @@ const Files = () => {
   }
 
   useInitialTableFetch({
-    createRowData: rowItem => createFilesRowData(rowItem, params.projectName, frontendSpec),
+    createRowData: rowItem =>
+      createFilesRowData(rowItem, params.projectName, frontendSpec, false, toggleConvertedYaml),
     fetchData,
     fetchTags,
     filterModalName: FILES_PAGE,

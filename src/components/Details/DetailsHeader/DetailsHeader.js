@@ -53,6 +53,7 @@ const DetailsHeader = ({
   handleRefresh,
   handleShowWarning,
   isDetailsScreen,
+  isDetailsPopUp,
   pageData,
   selectedItem,
   setIteration,
@@ -125,7 +126,7 @@ const DetailsHeader = ({
     >
       <div className="item-header__data">
         <h3 className="item-header__title">
-          {isDetailsScreen && !pageData.details.hideBackBtn && (
+          {isDetailsScreen && !pageData.details.hideBackBtn && !isDetailsPopUp && (
             <Link
               className="item-header__back-btn"
               to={generateUrlFromRouterPath(
@@ -182,7 +183,7 @@ const DetailsHeader = ({
               <i className={stateClassName} />
             </Tooltip>
           )}
-          {selectedItem.ui.customError?.title && selectedItem.ui.customError?.message && (
+          {selectedItem.ui?.customError?.title && selectedItem.ui?.customError?.message && (
             <Tooltip
               className="error-container"
               template={
@@ -275,7 +276,7 @@ const DetailsHeader = ({
         )}
         <ActionsMenu dataItem={selectedItem} menu={actionsMenu} time={500} />
         <div className="item-header__navigation-buttons">
-          {withToggleViewBtn && (
+          {withToggleViewBtn && !isDetailsPopUp && (
             <>
               {viewMode !== FULL_VIEW_MODE && (
                 <RoundedIcon
@@ -305,26 +306,37 @@ const DetailsHeader = ({
               )}
             </>
           )}
-          {!pageData.details.hideBackBtn && (
-            <Link
-              className="details-close-btn"
-              data-testid="details-close-btn"
-              to={
-                getCloseDetailsLink
-                  ? generateUrlFromRouterPath(
-                      getCloseDetailsLink(window.location, selectedItem.name)
-                    )
-                  : `/projects/${params.projectName}/${pageData.page.toLowerCase()}${
-                      params.pageTab ? `/${params.pageTab}` : tab ? `/${tab}` : ''
-                    }${window.location.search}`
-              }
-              onClick={handleCancelClick}
-            >
-              <RoundedIcon tooltipText="Close" id="details-close">
-                <Close />
-              </RoundedIcon>
-            </Link>
-          )}
+          {!pageData.details.hideBackBtn &&
+            (isDetailsPopUp ? (
+              <div
+                className="details-close-btn"
+                data-testid="details-close-btn"
+                onClick={handleCancelClick}
+              >
+                <RoundedIcon tooltipText="Close" id="details-close">
+                  <Close />
+                </RoundedIcon>
+              </div>
+            ) : (
+              <Link
+                className="details-close-btn"
+                data-testid="details-close-btn"
+                to={
+                  getCloseDetailsLink
+                    ? generateUrlFromRouterPath(
+                        getCloseDetailsLink(window.location, selectedItem.name)
+                      )
+                    : `/projects/${params.projectName}/${pageData.page.toLowerCase()}${
+                        params.pageTab ? `/${params.pageTab}` : tab ? `/${tab}` : ''
+                      }`
+                }
+                onClick={handleCancelClick}
+              >
+                <RoundedIcon tooltipText="Close" id="details-close">
+                  <Close />
+                </RoundedIcon>
+              </Link>
+            ))}
         </div>
       </div>
     </div>

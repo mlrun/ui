@@ -101,7 +101,7 @@ const RealTimePipelines = () => {
       )
         .unwrap()
         .then(result => {
-          if(!isNil(result)) {
+          if (!isNil(result)) {
             setPipelines(
               result.filter(
                 func =>
@@ -128,8 +128,8 @@ const RealTimePipelines = () => {
   }, [filters, handleRefresh])
 
   const tableContent = useMemo(() => {
-    return createRealTimePipelinesContent(pipelines, params.projectName)
-  }, [pipelines, params.projectName])
+    return createRealTimePipelinesContent(pipelines, params.projectName, toggleConvertedYaml)
+  }, [pipelines, params.projectName, toggleConvertedYaml])
 
   const fetchInitialData = useCallback(
     filters => {
@@ -214,6 +214,7 @@ const RealTimePipelines = () => {
                 tab={REAL_TIME_PIPELINES_TAB}
                 tableClassName="pipelines-table"
                 tableHeaders={tableContent[0]?.content ?? []}
+                toggleConvertedYaml={toggleConvertedYaml}
                 virtualizationConfig={virtualizationConfig}
               >
                 {tableContent.map(

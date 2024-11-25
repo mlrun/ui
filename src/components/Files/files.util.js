@@ -176,7 +176,8 @@ export const generateActionsMenu = (
   handleRefresh,
   filters,
   menuPosition,
-  selectedFile
+  selectedFile,
+  isDetailsPopUp = false
 ) => {
   const isTargetPathValid = getIsTargetPathValid(fileMin ?? {}, frontendSpec)
 
@@ -188,7 +189,7 @@ export const generateActionsMenu = (
     [
       {
         label: 'Add a tag',
-        hidden: menuPosition === ACTION_MENU_PARENT_ROW_EXPANDED,
+        hidden: menuPosition === ACTION_MENU_PARENT_ROW_EXPANDED || isDetailsPopUp,
         icon: <TagIcon />,
         onClick: handleAddTag
       },
@@ -232,7 +233,7 @@ export const generateActionsMenu = (
       {
         label: 'Delete',
         icon: <Delete />,
-        hidden: [ACTION_MENU_PARENT_ROW, ACTION_MENU_PARENT_ROW_EXPANDED].includes(menuPosition),
+        hidden: [ACTION_MENU_PARENT_ROW, ACTION_MENU_PARENT_ROW_EXPANDED].includes(menuPosition) || isDetailsPopUp,
         className: 'danger',
         onClick: () =>
           openPopUp(DeleteArtifactPopUp, {
@@ -246,7 +247,7 @@ export const generateActionsMenu = (
       {
         label: 'Delete all',
         icon: <Delete />,
-        hidden: ![ACTION_MENU_PARENT_ROW, ACTION_MENU_PARENT_ROW_EXPANDED].includes(menuPosition),
+        hidden: ![ACTION_MENU_PARENT_ROW, ACTION_MENU_PARENT_ROW_EXPANDED].includes(menuPosition) || isDetailsPopUp,
         className: 'danger',
         onClick: () =>
           openDeleteConfirmPopUp(

@@ -39,15 +39,14 @@ import {
   generateActionsMenu,
   generatePageData,
   featureVectorsActionCreator,
-  searchFeatureVectorItem
+  searchFeatureVectorItem,
+  generateDetailsFormInitialValue
 } from './featureVectors.util'
 import { DANGER_BUTTON, TERTIARY_BUTTON } from 'igz-controls/constants'
 import { checkTabIsValid, handleApplyDetailsChanges } from '../featureStore.util'
 import { createFeatureVectorsRowData } from '../../../utils/createFeatureStoreContent'
 import { getFeatureVectorIdentifier } from '../../../utils/getUniqueIdentifier'
 import { getFilterTagOptions, setFilters } from '../../../reducers/filtersReducer'
-import { parseChipsData } from '../../../utils/convertChipsData'
-import { parseFeatureTemplate } from '../../../utils/parseFeatureTemplate'
 import { parseFeatureVectors } from '../../../utils/parseFeatureVectors'
 import { setFeaturesPanelData } from '../../../reducers/tableReducer'
 import { setNotification } from '../../../reducers/notificationReducer'
@@ -99,19 +98,8 @@ const FeatureVectors = ({
   const pageData = useMemo(() => generatePageData(selectedFeatureVector), [selectedFeatureVector])
 
   const detailsFormInitialValues = useMemo(
-    () => ({
-      features: (selectedFeatureVector.specFeatures ?? []).map(featureData => {
-        return { ...parseFeatureTemplate(featureData) }
-      }),
-      description: selectedFeatureVector.description,
-      labels: parseChipsData(selectedFeatureVector.labels, frontendSpec.internal_labels)
-    }),
-    [
-      frontendSpec.internal_labels,
-      selectedFeatureVector.description,
-      selectedFeatureVector.labels,
-      selectedFeatureVector.specFeatures
-    ]
+    () => generateDetailsFormInitialValue(selectedFeatureVector, frontendSpec.internal_labels),
+    [frontendSpec.internal_labels, selectedFeatureVector]
   )
 
   const fetchData = useCallback(
@@ -517,6 +505,7 @@ const FeatureVectors = ({
       setCreateVectorPopUpIsOpen={setCreateVectorPopUpIsOpen}
       setSelectedFeatureVector={handleSelectFeatureVector}
       tableContent={tableContent}
+      toggleConvertedYaml={toggleConvertedYaml}
       virtualizationConfig={virtualizationConfig}
     />
   )

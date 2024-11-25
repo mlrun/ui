@@ -44,14 +44,16 @@ import './detailsArtifacts.scss'
 
 const DetailsArtifacts = ({
   allowSortBy = null,
-  defaultSortBy = null,
   defaultDirection = 'desc',
+  defaultSortBy = null,
   excludeSortBy = null,
   fetchJob,
+  isDetailsPopUp = false,
   iteration,
   selectedItem,
   setIteration,
-  setIterationOption
+  setIterationOption,
+  toggleConvertedYaml
 }) => {
   const [artifactsPreviewContent, setArtifactsPreviewContent] = useState([])
   const [artifactsIds, setArtifactsIds] = useState([])
@@ -77,8 +79,22 @@ const DetailsArtifacts = ({
   )
 
   const artifactsTabContent = useMemo(() => {
-    return generateArtifactsTabContent(artifactsPreviewContent, params, iteration, showArtifact)
-  }, [artifactsPreviewContent, iteration, params, showArtifact])
+    return generateArtifactsTabContent(
+      artifactsPreviewContent,
+      params,
+      iteration,
+      showArtifact,
+      isDetailsPopUp,
+      toggleConvertedYaml,
+    )
+  }, [
+    artifactsPreviewContent,
+    iteration,
+    params,
+    showArtifact,
+    isDetailsPopUp,
+    toggleConvertedYaml
+  ])
 
   const { sortTable, selectedColumnName, getSortingIcon, sortedTableContent, sortedTableHeaders } =
     useSortTable({
@@ -141,15 +157,17 @@ const DetailsArtifacts = ({
       }
 
       if (workflowId) {
-        return fetchJob(job.project || params.projectName, params.jobId, iteration).then(responseJob => {
-          if (responseJob) {
-            const selectedJob = getJobAccordingIteration(responseJob)
+        return fetchJob(job.project || params.projectName, params.jobId, iteration).then(
+          responseJob => {
+            if (responseJob) {
+              const selectedJob = getJobAccordingIteration(responseJob)
 
-            setArtifactsPreviewContent(
-              generateArtifactsPreviewContent(selectedJob, selectedJob.artifacts)
-            )
+              setArtifactsPreviewContent(
+                generateArtifactsPreviewContent(selectedJob, selectedJob.artifacts)
+              )
+            }
           }
-        })
+        )
       }
 
       if (iteration) {
@@ -175,14 +193,14 @@ const DetailsArtifacts = ({
   )
 
   useEffect(() => {
-    if (params.jobId === selectedItem.uid) {
+    if (params.jobId === selectedItem.uid || isDetailsPopUp) {
       if (selectedItem.iterationStats?.length > 0 && iteration) {
         getJobArtifacts(selectedItem, iteration)
       } else if (selectedItem.iterationStats?.length === 0) {
         getJobArtifacts(selectedItem, null)
       }
     }
-  }, [getJobArtifacts, iteration, params.jobId, params.projectName, selectedItem])
+  }, [getJobArtifacts, iteration, params.jobId, params.projectName, selectedItem, isDetailsPopUp])
 
   useEffect(() => {
     return () => {

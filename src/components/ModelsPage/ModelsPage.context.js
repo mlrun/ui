@@ -22,7 +22,7 @@ import { useSelector } from 'react-redux'
 import { useParams } from 'react-router-dom'
 
 import { useYaml } from '../../hooks/yaml.hook'
-import { monitorModelEndpoint } from '../ModelsPage/ModelEndpoints/modelEndpoints.util'
+import { monitorModelEndpoint } from './ModelEndpoints/modelEndpoints.util'
 
 export const ModelsPageContext = React.createContext({})
 

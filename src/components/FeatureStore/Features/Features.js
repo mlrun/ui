@@ -101,11 +101,16 @@ const Features = ({
       return mapValues(prevSelectedRowData, feature => ({
         ...feature,
         content: map(feature.content, contentItem =>
-          createFeaturesRowData(contentItem.data, tableStore.isTablePanelOpen)
+          createFeaturesRowData(
+            contentItem.data,
+            tableStore.isTablePanelOpen,
+            false,
+            toggleConvertedYaml
+          )
         )
       }))
     })
-  }, [tableStore.isTablePanelOpen, setSelectedRowData])
+  }, [tableStore.isTablePanelOpen, setSelectedRowData, toggleConvertedYaml])
 
   const fetchData = useCallback(
     filters => {
@@ -222,7 +227,12 @@ const Features = ({
         .then(result => {
           if (result?.length > 0) {
             const content = [...result].map(contentItem =>
-              createFeaturesRowData(contentItem, tableStore.isTablePanelOpen)
+              createFeaturesRowData(
+                contentItem,
+                tableStore.isTablePanelOpen,
+                false,
+                toggleConvertedYaml
+              )
             )
             setSelectedRowData(state => ({
               ...state,
@@ -245,7 +255,7 @@ const Features = ({
           }))
         })
     },
-    [fetchEntity, fetchFeature, tableStore.isTablePanelOpen]
+    [fetchEntity, fetchFeature, tableStore.isTablePanelOpen, toggleConvertedYaml]
   )
 
   const { latestItems, handleExpandRow } = useGroupContent(
@@ -263,8 +273,21 @@ const Features = ({
       ? latestItems.map(contentItem => {
           return createFeaturesRowData(contentItem, tableStore.isTablePanelOpen, true)
         })
-      : features.map(contentItem => createFeaturesRowData(contentItem, tableStore.isTablePanelOpen))
-  }, [features, filtersStore.groupBy, latestItems, tableStore.isTablePanelOpen])
+      : features.map(contentItem =>
+          createFeaturesRowData(
+            contentItem,
+            tableStore.isTablePanelOpen,
+            false,
+            toggleConvertedYaml
+          )
+        )
+  }, [
+    features,
+    filtersStore.groupBy,
+    latestItems,
+    tableStore.isTablePanelOpen,
+    toggleConvertedYaml
+  ])
 
   const getPopUpTemplate = useCallback(
     action => {
@@ -351,6 +374,7 @@ const Features = ({
       selectedRowData={selectedRowData}
       tableContent={tableContent}
       tableStore={tableStore}
+      toggleConvertedYaml={toggleConvertedYaml}
       virtualizationConfig={virtualizationConfig}
     />
   )

@@ -130,6 +130,7 @@ const FunctionsView = ({
                   selectedItem={selectedFunction}
                   tableClassName="functions-table"
                   tableHeaders={tableContent[0]?.content ?? []}
+                  toggleConvertedYaml={toggleConvertedYaml}
                   virtualizationConfig={virtualizationConfig}
                 >
                   {tableContent.map(

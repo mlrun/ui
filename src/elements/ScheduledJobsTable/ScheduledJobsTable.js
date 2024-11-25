@@ -51,12 +51,12 @@ import cssVariables from './scheduledJobsTable.scss'
 
 const ScheduledJobsTable = ({
   context,
-  filters,
-  filtersConfig,
+  createTableContent,
+  filters = null,
+  filtersConfig = null,
   jobs,
   refreshJobs,
-  requestErrorMessage,
-  tableContent
+  requestErrorMessage
 }) => {
   const dispatch = useDispatch()
   const params = useParams()
@@ -78,6 +78,9 @@ const ScheduledJobsTable = ({
       page: JOBS_PAGE
     }
   }, [])
+  const tableContent = useMemo(() => {
+    return createTableContent(toggleConvertedYaml)
+  }, [createTableContent, toggleConvertedYaml])
 
   const handleRunJob = useCallback(
     job => {
@@ -278,6 +281,7 @@ const ScheduledJobsTable = ({
             tab={SCHEDULE_TAB}
             tableClassName="scheduled-jobs-table"
             tableHeaders={tableContent[0]?.content ?? []}
+            toggleConvertedYaml={toggleConvertedYaml}
             virtualizationConfig={virtualizationConfig}
           >
             {tableContent.map(
@@ -302,8 +306,7 @@ ScheduledJobsTable.propTypes = {
   filtersConfig: FILTERS_CONFIG.isRequired,
   jobs: PropTypes.array.isRequired,
   refreshJobs: PropTypes.func.isRequired,
-  requestErrorMessage: PropTypes.string.isRequired,
-  tableContent: PropTypes.array.isRequired
+  requestErrorMessage: PropTypes.string.isRequired
 }
 
 export default ScheduledJobsTable

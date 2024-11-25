@@ -26,10 +26,7 @@ import NoData from '../../../common/NoData/NoData'
 import Table from '../../Table/Table'
 import FeatureStorePageTabs from '../FeatureStorePageTabs/FeatureStorePageTabs'
 
-import {
-  FEATURE_STORE_PAGE,
-  FEATURE_VECTORS_TAB
-} from '../../../constants'
+import { FEATURE_STORE_PAGE, FEATURE_VECTORS_TAB } from '../../../constants'
 import { VIRTUALIZATION_CONFIG } from '../../../types'
 import { filtersConfig } from './featureVectors.util'
 import { getNoDataMessage } from '../../../utils/getNoDataMessage'
@@ -61,6 +58,7 @@ const FeatureVectorsView = React.forwardRef(
       setCreateVectorPopUpIsOpen,
       setSelectedFeatureVector,
       tableContent,
+      toggleConvertedYaml,
       virtualizationConfig
     },
     { featureStoreRef }
@@ -113,6 +111,7 @@ const FeatureVectorsView = React.forwardRef(
               tab={FEATURE_VECTORS_TAB}
               tableClassName="feature-vectors-table"
               tableHeaders={tableContent[0]?.content ?? []}
+              toggleConvertedYaml={toggleConvertedYaml}
               virtualizationConfig={virtualizationConfig}
             >
               {tableContent.map(

@@ -77,7 +77,8 @@ export const generateActionsMenu = (
   handleConfirmAbortJob,
   toggleConvertedYaml,
   selectedJob,
-  handleConfirmDeleteJob
+  handleConfirmDeleteJob,
+  isDetailsPopUp = false
 ) => {
   if (job?.uid) {
     const jobKindIsAbortable = isJobKindAbortable(job, abortable_function_kinds)
@@ -89,7 +90,7 @@ export const generateActionsMenu = (
         {
           label: 'Batch re-run',
           icon: <Run />,
-          hidden: !FUNCTION_RUN_KINDS.includes(job?.ui?.originalContent.metadata.labels?.kind),
+          hidden: !FUNCTION_RUN_KINDS.includes(job?.ui?.originalContent.metadata.labels?.kind) || isDetailsPopUp,
           onClick: handleRerunJob
         },
         {
@@ -114,7 +115,7 @@ export const generateActionsMenu = (
               : ''
             : 'Cannot abort jobs of this kind',
           disabled: !jobKindIsAbortable || jobIsAborting,
-          hidden: JOB_STEADY_STATES.includes(job?.state?.value)
+          hidden: JOB_STEADY_STATES.includes(job?.state?.value) || isDetailsPopUp
         },
         {
           label: 'View YAML',
@@ -126,7 +127,7 @@ export const generateActionsMenu = (
           icon: <Delete />,
           className: 'danger',
           onClick: handleConfirmDeleteJob,
-          hidden: JOB_RUNNING_STATES.includes(job?.state?.value)
+          hidden: JOB_RUNNING_STATES.includes(job?.state?.value) || isDetailsPopUp
         }
       ]
     ]

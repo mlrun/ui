@@ -79,6 +79,7 @@ const Workflow = ({
   selectedFunction = {},
   selectedJob = {},
   setWorkflowsViewMode,
+  toggleConvertedYaml,
   workflow = {},
   workflowsViewMode
 }) => {
@@ -269,6 +270,7 @@ const Workflow = ({
                 retryRequest={refreshJobs}
                 selectedItem={!isEmpty(selectedFunction) ? selectedFunction : selectedJob}
                 tab={MONITOR_WORKFLOWS_TAB}
+                toggleConvertedYaml={toggleConvertedYaml}
               />
             )}
           </div>
@@ -282,6 +284,7 @@ const Workflow = ({
             retryRequest={refresh}
             selectedItem={!isEmpty(selectedFunction) ? selectedFunction : selectedJob}
             tableHeaders={sortedTableContent[0]?.content ?? []}
+            toggleConvertedYaml={toggleConvertedYaml}
           >
             {sortedTableContent.map((tableItem, index) => (
               <JobsFunctionsTableRow

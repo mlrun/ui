@@ -74,7 +74,6 @@ const WorkflowsTable = React.forwardRef(
     {
       backLink,
       context,
-      fetchFunctionLogs,
       filters,
       filtersConfig,
       getWorkflows,
@@ -124,12 +123,13 @@ const WorkflowsTable = React.forwardRef(
 
     const handleRetry = useCallback(() => {
       getWorkflows(filters)
-    }, [filters, getWorkflows]) 
+    }, [filters, getWorkflows])
 
     const handleFetchFunctionLogs = useCallback(
       (item, projectName, setDetailsLogs) => {
         return getFunctionLogs(
-          fetchFunctionLogs,
+          dispatch,
+          functionsActions.fetchFunctionLogs,
           fetchFunctionLogsTimeout,
           projectName,
           item.name,
@@ -137,7 +137,7 @@ const WorkflowsTable = React.forwardRef(
           setDetailsLogs
         )
       },
-      [fetchFunctionLogs, fetchFunctionLogsTimeout]
+      [fetchFunctionLogsTimeout, dispatch]
     )
 
     const handleFetchJobLogs = useCallback(
@@ -359,16 +359,14 @@ const WorkflowsTable = React.forwardRef(
 
     const onDeleteJob = useCallback(
       job => {
-        handleDeleteJob(jobsActions.deleteJob, job, refreshWorkflow, filters, dispatch).then(
-          () => {
-            navigate(
-              location.pathname
-                .split('/')
-                .splice(0, location.pathname.split('/').indexOf(params.workflowId) + 1)
-                .join('/') + window.location.search
-            )
-          }
-        )
+        handleDeleteJob(jobsActions.deleteJob, job, refreshWorkflow, filters, dispatch).then(() => {
+          navigate(
+            location.pathname
+              .split('/')
+              .splice(0, location.pathname.split('/').indexOf(params.workflowId) + 1)
+              .join('/') + window.location.search
+          )
+        })
       },
       [dispatch, filters, location.pathname, navigate, params.workflowId, refreshWorkflow]
     )
@@ -711,6 +709,7 @@ const WorkflowsTable = React.forwardRef(
                 selectedFunction={selectedFunction}
                 selectedJob={selectedJob}
                 setWorkflowsViewMode={setWorkflowsViewMode}
+                toggleConvertedYaml={toggleConvertedYaml}
                 workflow={workflowsStore.activeWorkflow?.data}
                 workflowsViewMode={workflowsViewMode}
               />
@@ -724,6 +723,7 @@ const WorkflowsTable = React.forwardRef(
                 tab={MONITOR_JOBS_TAB}
                 tableClassName="monitor-workflows-table"
                 tableHeaders={sortedTableContent[0]?.content ?? []}
+                toggleConvertedYaml={toggleConvertedYaml}
                 virtualizationConfig={virtualizationConfig}
               >
                 {sortedTableContent.map(

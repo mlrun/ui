@@ -20,6 +20,9 @@ such restriction.
 import React from 'react'
 import { isNumber } from 'lodash'
 
+import TableProducerCell from '../elements/TableProducerCell/TableProducerCell'
+import FunctionPopUp from '../elements/DetailsPopUp/FunctionPopUp/FunctionPopUp'
+
 import {
   ARTIFACTS_PAGE,
   DATASETS_PAGE,
@@ -32,30 +35,45 @@ import { parseKeyValues } from './object'
 import { formatDatetime } from './datetime'
 import prettyBytes from 'pretty-bytes'
 import { parseUri } from './parseUri'
-import { generateFunctionDetailsLink, generateLinkToDetailsPanel } from './link-helper.util'
+import { generateLinkToDetailsPanel } from './link-helper.util'
+import { openPopUp } from 'igz-controls/utils/common.util'
 import { validateArguments } from './validateArguments'
 // import { roundFloats } from './roundFloats'
-import TableProducerCell from '../elements/TableProducerCell/TableProducerCell'
+
 
 import { ReactComponent as SeverityOk } from 'igz-controls/images/severity-ok.svg'
 import { ReactComponent as SeverityWarning } from 'igz-controls/images/severity-warning.svg'
 import { ReactComponent as SeverityError } from 'igz-controls/images/severity-error.svg'
 
-export const createArtifactsContent = (artifacts, page, pageTab, project, frontendSpec) => {
+export const createArtifactsContent = (
+  artifacts,
+  page,
+  pageTab,
+  project,
+  frontendSpec,
+  toggleConvertedYaml
+) => {
   return (artifacts.filter(artifact => !artifact.link_iteration) ?? []).map(artifact => {
     if (page === ARTIFACTS_PAGE) {
       return createArtifactsRowData(artifact)
     } else if (page === MODELS_PAGE) {
       if (pageTab === MODELS_TAB) {
-        return createModelsRowData(artifact, project, frontendSpec)
+        return createModelsRowData(
+          artifact,
+          project,
+          frontendSpec,
+          null,
+          false,
+          toggleConvertedYaml
+        )
       } else if (pageTab === MODEL_ENDPOINTS_TAB) {
-        return createModelEndpointsRowData(artifact, project)
+        return createModelEndpointsRowData(artifact, project, toggleConvertedYaml)
       }
     } else if (page === FILES_PAGE) {
-      return createFilesRowData(artifact, project, frontendSpec)
+      return createFilesRowData(artifact, project, frontendSpec, false, toggleConvertedYaml)
     }
 
-    return createDatasetsRowData(artifact, project, frontendSpec)
+    return createDatasetsRowData(artifact, project, frontendSpec, false, toggleConvertedYaml)
   })
 }
 
@@ -116,7 +134,8 @@ export const createModelsRowData = (
   project,
   frontendSpec,
   metricsCounter,
-  showExpandButton
+  showExpandButton,
+  toggleConvertedYaml
 ) => {
   const iter = getIter(artifact)
   //temporarily commented till ML-5606 will be done
@@ -173,6 +192,7 @@ export const createModelsRowData = (
           bodyCellClassName="table-cell-1"
           id="producer"
           producer={artifact.producer}
+          toggleConvertedYaml={toggleConvertedYaml}
         />
       ),
       className: 'table-cell-1',
@@ -271,7 +291,13 @@ export const createModelsRowData = (
   }
 }
 
-export const createFilesRowData = (artifact, project, frontendSpec, showExpandButton) => {
+export const createFilesRowData = (
+  artifact,
+  project,
+  frontendSpec,
+  showExpandButton,
+  toggleConvertedYaml
+) => {
   const iter = getIter(artifact)
 
   return {
@@ -344,6 +370,7 @@ export const createFilesRowData = (artifact, project, frontendSpec, showExpandBu
             bodyCellClassName="table-cell-1"
             id="producer"
             producer={artifact.producer}
+            toggleConvertedYaml={toggleConvertedYaml}
           />
         ),
         className: 'table-cell-1',
@@ -417,7 +444,7 @@ const getDriftStatusData = driftStatus => {
   }
 }
 
-export const createModelEndpointsRowData = (artifact, project) => {
+export const createModelEndpointsRowData = (artifact, project, toggleConvertedYaml) => {
   const { name, tag = '-' } =
     (artifact.spec?.model ?? '').match(/^(?<name>.*?)(:(?<tag>.*))?$/)?.groups ?? {}
   const functionUri = artifact.spec?.function_uri
@@ -457,7 +484,12 @@ export const createModelEndpointsRowData = (artifact, project) => {
         headerLabel: 'Function',
         value: functionName,
         className: 'table-cell-1',
-        getLink: () => generateFunctionDetailsLink(artifact.spec?.function_uri),
+        handleClick: () =>
+          openPopUp(FunctionPopUp, {
+            funcUri: artifact.spec?.function_uri,
+            toggleConvertedYaml
+          }),
+        type: 'link',
         tooltip: functionUri
       },
       {
@@ -522,7 +554,13 @@ export const createModelEndpointsRowData = (artifact, project) => {
   }
 }
 
-export const createDatasetsRowData = (artifact, project, frontendSpec, showExpandButton) => {
+export const createDatasetsRowData = (
+  artifact,
+  project,
+  frontendSpec,
+  showExpandButton,
+  toggleConvertedYaml
+) => {
   const iter = getIter(artifact)
 
   return {
@@ -581,6 +619,7 @@ export const createDatasetsRowData = (artifact, project, frontendSpec, showExpan
             bodyCellClassName="table-cell-1"
             id="producer"
             producer={artifact.producer}
+            toggleConvertedYaml={toggleConvertedYaml}
           />
         ),
         className: 'table-cell-1',

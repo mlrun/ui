@@ -67,6 +67,7 @@ const ModelsView = React.forwardRef(
       sortProps = null,
       tableContent,
       tableHeaders,
+      toggleConvertedYaml,
       viewMode = null,
       virtualizationConfig
     },
@@ -141,6 +142,7 @@ const ModelsView = React.forwardRef(
                   tab={MODELS_TAB}
                   tableClassName="models-table"
                   tableHeaders={tableHeaders ?? []}
+                  toggleConvertedYaml={toggleConvertedYaml}
                   virtualizationConfig={virtualizationConfig}
                 >
                   {tableContent.map(
@@ -172,6 +174,7 @@ const ModelsView = React.forwardRef(
                 pageData={pageData}
                 selectedItem={selectedModel}
                 tab={MODELS_TAB}
+                toggleConvertedYaml={toggleConvertedYaml}
               />
             )}
           </div>

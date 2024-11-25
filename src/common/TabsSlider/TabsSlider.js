@@ -33,6 +33,7 @@ import './tabsSlider.scss'
 
 const TabsSlider = ({
   initialTab = '',
+  isDetailsPopUp = false,
   onClick = () => {},
   skipLink = false,
   sliderStyle = SLIDER_STYLE_1,
@@ -129,7 +130,7 @@ const TabsSlider = ({
   }, [selectedTab])
 
   const onSelectTab = newTab => {
-    setSelectedTab(newTab.id)
+    setSelectedTab(newTab)
     onClick && onClick(newTab)
   }
 
@@ -154,10 +155,10 @@ const TabsSlider = ({
   }, [moveToSelectedTab])
 
   useEffect(() => {
-    if (params.tab && params.tab !== selectedTab) {
-      setSelectedTab(tabsList.find(tab => tab.id === params.tab).id)
+    if (params.tab && params.tab !== selectedTab && !isDetailsPopUp) {
+      setSelectedTab(tabsList.find(tab => tab.id === params.tab)?.id)
     }
-  }, [params.tab, selectedTab, tabsList])
+  }, [isDetailsPopUp, params.tab, selectedTab, tabsList])
 
   return (
     <div className={tabsSliderClassNames}>
@@ -203,7 +204,7 @@ const TabsSlider = ({
                   className={tabClassName}
                   data-tab={tab.id}
                   key={tab.id}
-                  onClick={() => onSelectTab(tab)}
+                  onClick={() => onSelectTab(tab.id)}
                 >
                   {tab.label}
                   {tab.tip && <Tip className="tabs-slider__tab-tip" text={tab.tip} />}

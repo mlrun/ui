@@ -255,7 +255,14 @@ const Datasets = () => {
           ...state,
           [dataSetIdentifier]: {
             content: sortListByDate(content[dataset.db_key ?? dataset.key], 'updated', false).map(
-              contentItem => createDatasetsRowData(contentItem, params.projectName, false)
+              contentItem =>
+                createDatasetsRowData(
+                  contentItem,
+                  params.projectName,
+                  null,
+                  false,
+                  toggleConvertedYaml
+                )
             ),
             error: null,
             loading: false
@@ -263,7 +270,7 @@ const Datasets = () => {
         }
       })
     },
-    [params.projectName]
+    [params.projectName, toggleConvertedYaml]
   )
 
   const handleRemoveRowData = useCallback(
@@ -294,12 +301,31 @@ const Datasets = () => {
   const tableContent = useMemo(() => {
     return filtersStore.groupBy === GROUP_BY_NAME
       ? latestItems.map(contentItem => {
-          return createDatasetsRowData(contentItem, params.projectName, frontendSpec, true)
+          return createDatasetsRowData(
+            contentItem,
+            params.projectName,
+            frontendSpec,
+            true,
+            toggleConvertedYaml
+          )
         })
       : datasets.map(contentItem =>
-          createDatasetsRowData(contentItem, params.projectName, frontendSpec)
+          createDatasetsRowData(
+            contentItem,
+            params.projectName,
+            frontendSpec,
+            false,
+            toggleConvertedYaml
+          )
         )
-  }, [datasets, filtersStore.groupBy, frontendSpec, latestItems, params.projectName])
+  }, [
+    datasets,
+    filtersStore.groupBy,
+    frontendSpec,
+    latestItems,
+    params.projectName,
+    toggleConvertedYaml
+  ])
 
   const tableHeaders = useMemo(() => tableContent[0]?.content ?? [], [tableContent])
 
@@ -315,7 +341,8 @@ const Datasets = () => {
     })
 
   useInitialTableFetch({
-    createRowData: rowItem => createDatasetsRowData(rowItem, params.projectName, frontendSpec),
+    createRowData: rowItem =>
+      createDatasetsRowData(rowItem, params.projectName, frontendSpec, false, toggleConvertedYaml),
     fetchData,
     fetchTags,
     filterModalName: DATASETS_PAGE,

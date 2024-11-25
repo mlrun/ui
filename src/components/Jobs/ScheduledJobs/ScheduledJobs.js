@@ -17,7 +17,7 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import React, { useState, useMemo, useEffect } from 'react'
+import React, { useState, useEffect } from 'react'
 import { useParams } from 'react-router-dom'
 import { useDispatch } from 'react-redux'
 
@@ -47,8 +47,6 @@ const ScheduledJobs = () => {
     tabData[SCHEDULE_TAB]?.parseQueryParamsCallback
   )
 
-  const tableContent = useMemo(() => createJobsScheduleTabContent(scheduledJobs), [scheduledJobs])
-
   useEffect(() => {
     if (!dataIsLoaded) {
       refreshJobs(filters)
@@ -73,12 +71,12 @@ const ScheduledJobs = () => {
   return (
     <ScheduledJobsTable
       context={JobsContext}
+      createTableContent={toggleConvertedYaml => createJobsScheduleTabContent(scheduledJobs, toggleConvertedYaml)}
       filters={filters}
       filtersConfig={scheduledFiltersConfig}
       jobs={scheduledJobs}
       requestErrorMessage={requestErrorMessage}
       refreshJobs={refreshJobs}
-      tableContent={tableContent}
     />
   )
 }

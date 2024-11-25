@@ -17,12 +17,13 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import { formatDatetime } from './datetime'
-import { FUNCTIONS_PAGE, MODELS_PAGE, REAL_TIME_PIPELINES_TAB } from '../constants'
-import { generateLinkToDetailsPanel } from './link-helper.util'
-import { validateArguments } from './validateArguments'
+import FunctionPopUp from '../elements/DetailsPopUp/FunctionPopUp/FunctionPopUp'
 
-const createRealTimePipelinesContent = (pipelines, projectName) =>
+import { formatDatetime } from './datetime'
+import { openPopUp } from 'igz-controls/utils/common.util'
+import { MODELS_PAGE, REAL_TIME_PIPELINES_TAB } from '../constants'
+
+const createRealTimePipelinesContent = (pipelines, projectName, toggleConvertedYaml) =>
   pipelines.map(pipeline => {
     return {
       data: {
@@ -62,17 +63,11 @@ const createRealTimePipelinesContent = (pipelines, projectName) =>
           headerLabel: 'Function',
           value: pipeline.name,
           className: 'table-cell-2',
-          getLink: tab =>
-            validateArguments(pipeline.hash, tab)
-              ? generateLinkToDetailsPanel(
-                  pipeline.project,
-                  FUNCTIONS_PAGE,
-                  null,
-                  `${pipeline.name}@${pipeline.hash}`,
-                  null,
-                  tab
-                )
-              : ''
+          handleClick: () =>
+            openPopUp(FunctionPopUp, {
+              funcUri: `${pipeline.project}/${pipeline.name}@${pipeline.hash}`,
+              toggleConvertedYaml
+            })
         },
         {
           id: `updated.${pipeline.ui.identifierUnique}`,

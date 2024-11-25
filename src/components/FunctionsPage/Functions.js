@@ -50,7 +50,6 @@ import functionsActions from '../../actions/functions'
 import jobsActions from '../../actions/jobs'
 import { DANGER_BUTTON, TERTIARY_BUTTON } from 'igz-controls/constants'
 import { getFunctionIdentifier } from '../../utils/getUniqueIdentifier'
-import { getFunctionNuclioLogs, getFunctionLogs } from '../../utils/getFunctionLogs'
 import { isBackgroundTaskRunning } from '../../utils/poll.util'
 import { isDetailsTabExists } from '../../utils/link-helper.util'
 import { openPopUp } from 'igz-controls/utils/common.util'
@@ -76,8 +75,6 @@ const Functions = ({
   deleteFunction,
   deployFunction,
   fetchFunction,
-  fetchFunctionLogs,
-  fetchFunctionNuclioLogs,
   fetchFunctions,
   functionsStore,
   removeFunctionsError,
@@ -272,46 +269,6 @@ const Functions = ({
     [latestItems, params.projectName]
   )
 
-  const handleRemoveLogs = useCallback(() => {
-    clearTimeout(fetchFunctionLogsTimeout.current)
-    fetchFunctionLogsTimeout.current = null
-  }, [])
-
-  const handleRemoveApplicationLogs = useCallback(() => {
-    clearTimeout(fetchFunctionNuclioLogsTimeout.current)
-    fetchFunctionNuclioLogsTimeout.current = null
-  }, [])
-
-  const handleFetchFunctionLogs = useCallback(
-    (item, projectName, setDetailsLogs) => {
-      return getFunctionLogs(
-        fetchFunctionLogs,
-        fetchFunctionLogsTimeout,
-        projectName,
-        item.name,
-        item.tag,
-        setDetailsLogs,
-        navigate,
-        () => fetchData(filtersStore)
-      )
-    },
-    [filtersStore, fetchFunctionLogs, navigate, fetchData]
-  )
-
-  const handleFetchFunctionApplicationLogs = useCallback(
-    (item, projectName, setDetailsLogs) => {
-      return getFunctionNuclioLogs(
-        fetchFunctionNuclioLogs,
-        fetchFunctionNuclioLogsTimeout,
-        projectName,
-        item.name,
-        item.tag,
-        setDetailsLogs
-      )
-    },
-    [fetchFunctionNuclioLogs]
-  )
-
   const removeFunction = useCallback(
     func => {
       deleteFunction(func.name, params.projectName).then(response => {
@@ -482,19 +439,15 @@ const Functions = ({
   const pageData = useMemo(
     () =>
       generateFunctionsPageData(
+        dispatch,
         selectedFunction,
-        handleFetchFunctionLogs,
-        handleFetchFunctionApplicationLogs,
-        handleRemoveLogs,
-        handleRemoveApplicationLogs
+        fetchFunctionLogsTimeout,
+        fetchFunctionNuclioLogsTimeout,
+        navigate,
+        fetchData,
+        filtersStore
       ),
-    [
-      handleFetchFunctionApplicationLogs,
-      handleFetchFunctionLogs,
-      handleRemoveApplicationLogs,
-      handleRemoveLogs,
-      selectedFunction
-    ]
+    [dispatch, fetchData, filtersStore, navigate, selectedFunction]
   )
 
   const actionsMenu = useMemo(
