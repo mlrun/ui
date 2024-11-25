@@ -388,7 +388,7 @@ const DatePicker = ({
         setExternalInvalid(false)
       }
 
-      if (dates) onChange(dates)
+      if (dates) onChange(dates, false, CUSTOM_RANGE_DATE_OPTION)
     }
   }
 

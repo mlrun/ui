@@ -51,10 +51,12 @@ const FilesView = React.forwardRef(
       convertedYaml,
       detailsFormInitialValues,
       files,
+      filters,
       filtersStore,
       getAndSetSelectedArtifact,
       handleExpandRow,
       handleRefresh,
+      handleRefreshWithFilters,
       handleRegisterArtifact,
       handleSelectFile,
       maxArtifactsErrorIsShown,
@@ -63,9 +65,7 @@ const FilesView = React.forwardRef(
       selectedFile,
       selectedRowData,
       setMaxArtifactsErrorIsShown,
-      setFiles,
       setSelectedFileMin,
-      setSelectedRowData,
       sortProps,
       tableContent,
       tableHeaders,
@@ -94,7 +94,7 @@ const FilesView = React.forwardRef(
                       onClick: handleRegisterArtifact
                     }
                   ]}
-                  filterMenuName={FILES_PAGE}
+                  filters={filters}
                   filtersConfig={filtersConfig}
                   handleRefresh={handleRefresh}
                   page={FILES_PAGE}
@@ -107,12 +107,12 @@ const FilesView = React.forwardRef(
               {artifactsStore.loading ? null : files.length === 0 ? (
                 <NoData
                   message={getNoDataMessage(
-                    filtersStore,
+                    filters,
                     filtersConfig,
                     requestErrorMessage,
                     FILES_PAGE,
                     null,
-                    FILES_PAGE
+                    filtersStore
                   )}
                 />
               ) : (
@@ -131,7 +131,7 @@ const FilesView = React.forwardRef(
                     detailsFormInitialValues={detailsFormInitialValues}
                     handleCancel={() => setSelectedFileMin({})}
                     pageData={pageData}
-                    retryRequest={handleRefresh}
+                    retryRequest={handleRefreshWithFilters}
                     selectedItem={selectedFile}
                     sortProps={sortProps}
                     tableClassName="files-table"
@@ -191,10 +191,12 @@ FilesView.propTypes = {
   convertedYaml: PropTypes.string.isRequired,
   detailsFormInitialValues: PropTypes.object.isRequired,
   files: PropTypes.arrayOf(PropTypes.object).isRequired,
+  filters: PropTypes.object.isRequired,
   filtersStore: PropTypes.object.isRequired,
   getAndSetSelectedArtifact: PropTypes.func.isRequired,
   handleExpandRow: PropTypes.func.isRequired,
   handleRefresh: PropTypes.func.isRequired,
+  handleRefreshWithFilters: PropTypes.func.isRequired,
   handleRegisterArtifact: PropTypes.func.isRequired,
   handleSelectFile: PropTypes.func.isRequired,
   maxArtifactsErrorIsShown: PropTypes.bool.isRequired,

@@ -49,6 +49,8 @@ import { setFilters } from '../../../reducers/filtersReducer'
 import { useModelsPage } from '../ModelsPage.context'
 import { isRowRendered, useVirtualization } from '../../../hooks/useVirtualization.hook'
 import { useSortTable } from '../../../hooks/useSortTable.hook'
+import { useFiltersFromSearchParams } from '../../../hooks/useFiltersFromSearchParams.hook'
+import { useInitialTableFetch } from '../../../hooks/useInitialTableFetch.hook'
 
 import { ReactComponent as MonitorIcon } from 'igz-controls/images/monitor-icon.svg'
 import { ReactComponent as Yaml } from 'igz-controls/images/yaml.svg'
@@ -68,6 +70,7 @@ const ModelEndpoints = () => {
   const dispatch = useDispatch()
   const abortControllerRef = useRef(new AbortController())
   const modelEndpointsRef = useRef(null)
+  const filters = useFiltersFromSearchParams(filtersConfig)
 
   const { handleMonitoring, toggleConvertedYaml } = useModelsPage()
 
@@ -152,6 +155,10 @@ const ModelEndpoints = () => {
     [fetchData]
   )
 
+  const handleRefreshWithFilters = useCallback(() => {
+    handleRefresh(filters)
+  }, [filters, handleRefresh])
+
   const handleSelectItem = useCallback(
     modelEndpointMin => {
       chooseOrFetchModelEndpoint(dispatch, {}, modelEndpointMin).then(setSelectedModelEndpoint)
@@ -159,10 +166,15 @@ const ModelEndpoints = () => {
     [dispatch]
   )
 
-  useEffect(() => {
-    fetchData({})
-    dispatch(setFilters({ groupBy: GROUP_BY_NONE }))
-  }, [dispatch, fetchData])
+  const fetchInitialData = useCallback(
+    filters => {
+      fetchData(filters)
+      dispatch(setFilters({ groupBy: GROUP_BY_NONE }))
+    },
+    [dispatch, fetchData]
+  )
+
+  useInitialTableFetch({fetchData: fetchInitialData, filters })
 
   useEffect(() => {
     return () => {
@@ -178,7 +190,10 @@ const ModelEndpoints = () => {
       const searchItem = modelEndpoints.find(item => item.metadata?.uid === params.tag)
 
       if (!searchItem) {
-        navigate(`/projects/${params.projectName}/models/${MODEL_ENDPOINTS_TAB}`, { replace: true })
+        navigate(
+          `/projects/${params.projectName}/models/${MODEL_ENDPOINTS_TAB}${window.location.search}`,
+          { replace: true }
+        )
       } else if (searchItem.metadata.uid !== selectedModelEndpoint?.metadata?.uid) {
         handleSelectItem(searchItem)
       }
@@ -243,10 +258,10 @@ const ModelEndpoints = () => {
             <ModelsPageTabs />
             <div className="action-bar">
               <ActionBar
-                filterMenuName={MODEL_ENDPOINTS_TAB}
+                filters={filters}
                 filtersConfig={filtersConfig}
                 handleRefresh={handleRefresh}
-                navigateLink={`/projects/${params.projectName}/models/${MODEL_ENDPOINTS_TAB}`}
+                navigateLink={`/projects/${params.projectName}/models/${MODEL_ENDPOINTS_TAB}${window.location.search}`}
                 page={MODELS_PAGE}
                 tab={MODEL_ENDPOINTS_TAB}
                 withoutExpandButton
@@ -258,11 +273,12 @@ const ModelEndpoints = () => {
           {artifactsStore.modelEndpoints.loading ? null : modelEndpoints.length === 0 ? (
             <NoData
               message={getNoDataMessage(
-                filtersStore,
+                filters,
                 filtersConfig,
                 requestErrorMessage,
                 MODELS_PAGE,
-                MODEL_ENDPOINTS_TAB
+                MODEL_ENDPOINTS_TAB,
+                filtersStore
               )}
             />
           ) : (
@@ -270,7 +286,7 @@ const ModelEndpoints = () => {
               <Table
                 actionsMenu={actionsMenu}
                 pageData={pageData}
-                retryRequest={fetchData}
+                retryRequest={handleRefreshWithFilters}
                 selectedItem={selectedModelEndpoint}
                 tab={MODEL_ENDPOINTS_TAB}
                 tableClassName="model-endpoints-table"

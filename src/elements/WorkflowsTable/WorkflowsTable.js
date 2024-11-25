@@ -75,9 +75,8 @@ const WorkflowsTable = React.forwardRef(
       backLink,
       context,
       fetchFunctionLogs,
-      filterMenuName = '',
-      filters = null,
-      filtersConfig = null,
+      filters,
+      filtersConfig,
       getWorkflows,
       itemIsSelected,
       requestErrorMessage,
@@ -122,6 +121,10 @@ const WorkflowsTable = React.forwardRef(
       content: tableContent,
       sortConfig: { defaultSortBy: 'startedAt' }
     })
+
+    const handleRetry = useCallback(() => {
+      getWorkflows(filters)
+    }, [filters, getWorkflows]) 
 
     const handleFetchFunctionLogs = useCallback(
       (item, projectName, setDetailsLogs) => {
@@ -356,18 +359,18 @@ const WorkflowsTable = React.forwardRef(
 
     const onDeleteJob = useCallback(
       job => {
-        handleDeleteJob(jobsActions.deleteJob, job, refreshWorkflow, filtersStore, dispatch).then(
+        handleDeleteJob(jobsActions.deleteJob, job, refreshWorkflow, filters, dispatch).then(
           () => {
             navigate(
               location.pathname
                 .split('/')
                 .splice(0, location.pathname.split('/').indexOf(params.workflowId) + 1)
-                .join('/')
+                .join('/') + window.location.search
             )
           }
         )
       },
-      [dispatch, filtersStore, location.pathname, navigate, params.workflowId, refreshWorkflow]
+      [dispatch, filters, location.pathname, navigate, params.workflowId, refreshWorkflow]
     )
 
     const handleConfirmDeleteJob = useCallback(
@@ -482,7 +485,7 @@ const WorkflowsTable = React.forwardRef(
           location.pathname
             .split('/')
             .splice(0, location.pathname.split('/').indexOf(params.workflowId) + 1)
-            .join('/')
+            .join('/') + window.location.search
         )
       },
       [dispatch, location.pathname, navigate, params.workflowId]
@@ -645,7 +648,7 @@ const WorkflowsTable = React.forwardRef(
       }
     }, [
       editableItem?.rerun_object,
-      filtersStore,
+      filters,
       jobWizardIsOpened,
       jobWizardMode,
       params,
@@ -686,12 +689,12 @@ const WorkflowsTable = React.forwardRef(
         requestErrorMessage ? (
           <NoData
             message={getNoDataMessage(
-              filtersStore,
-              filtersConfig || filters,
+              filters,
+              filtersConfig,
               requestErrorMessage,
               JOBS_PAGE,
               MONITOR_WORKFLOWS_TAB,
-              filterMenuName
+              filtersStore
             )}
           />
         ) : (
@@ -703,7 +706,7 @@ const WorkflowsTable = React.forwardRef(
                 handleCancel={handleCancel}
                 itemIsSelected={itemIsSelected}
                 pageData={pageData}
-                refresh={getWorkflows}
+                refresh={handleRetry}
                 refreshJobs={refreshWorkflow}
                 selectedFunction={selectedFunction}
                 selectedJob={selectedJob}
@@ -716,7 +719,7 @@ const WorkflowsTable = React.forwardRef(
                 actionsMenu={actionsMenu}
                 handleCancel={handleCancel}
                 pageData={pageData}
-                retryRequest={getWorkflows}
+                retryRequest={handleRetry}
                 selectedItem={selectedJob}
                 tab={MONITOR_JOBS_TAB}
                 tableClassName="monitor-workflows-table"
@@ -750,9 +753,8 @@ WorkflowsTable.propTypes = {
   backLink: PropTypes.string.isRequired,
   context: PropTypes.object.isRequired,
   fetchFunctionLogs: PropTypes.func.isRequired,
-  filterMenuName: PropTypes.string,
-  filters: PropTypes.arrayOf(PropTypes.shape({})),
-  filtersConfig: FILTERS_CONFIG,
+  filters: PropTypes.shape({}).isRequired,
+  filtersConfig: FILTERS_CONFIG.isRequired,
   getWorkflows: PropTypes.func.isRequired,
   itemIsSelected: PropTypes.bool.isRequired,
   requestErrorMessage: PropTypes.string.isRequired,

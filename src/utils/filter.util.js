@@ -17,14 +17,25 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import { MODELS_PAGE, NAME_FILTER } from '../../../constants'
 
-export const filtersConfig = {
-  [NAME_FILTER]: { label: 'Name:', initialValue: '' }
+const SAVED_PARAMS = 'savedParams'
+
+export const getSavedSearchParams = (params) => {
+  return atob(new URLSearchParams(params)?.get(SAVED_PARAMS) ?? '') ?? params
 }
 
-export const generatePageData = hideFilterMenu => ({
-  page: MODELS_PAGE,
-  hidePageActionMenu: true,
-  hideFilterMenu
-})
+export const saveAndTransformSearchParams = (params) => {
+  return params ? `${params}&${SAVED_PARAMS}=${btoa(params)}` : ''
+}
+
+export const getFilteredSearchParams = (searchParams, excludeParamsNames = []) => {
+  const params = new URLSearchParams(searchParams)
+
+  excludeParamsNames.forEach(paramName => params.delete(paramName))
+
+  const newSearchParams = params.toString()
+
+  if (!newSearchParams) return ''
+
+  return `?${newSearchParams}`
+}

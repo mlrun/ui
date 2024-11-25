@@ -34,7 +34,6 @@ import { ConfirmDialog } from 'igz-controls/components'
 
 import {
   FUNCTIONS_PAGE,
-  FUNCTION_FILTERS,
   PANEL_CREATE_MODE,
   PANEL_EDIT_MODE
 } from '../../constants'
@@ -53,6 +52,7 @@ const FunctionsView = ({
   expand,
   filtersChangeCallback,
   filtersStore,
+  filters,
   functions,
   functionsFiltersConfig,
   functionsPanelIsOpen,
@@ -88,10 +88,10 @@ const FunctionsView = ({
                 page={FUNCTIONS_PAGE}
                 expand={expand}
                 filtersConfig={functionsFiltersConfig}
-                filterMenuName={FUNCTION_FILTERS}
+                filters={filters}
                 handleExpandAll={handleExpandAll}
                 handleRefresh={filtersChangeCallback}
-                navigateLink={`/projects/${params.projectName}/functions`}
+                navigateLink={`/projects/${params.projectName}/functions${window.location.search}`}
                 actionButtons={[
                   {
                     hidden: !isDemoMode,
@@ -111,12 +111,12 @@ const FunctionsView = ({
             ) : functions.length === 0 ? (
               <NoData
                 message={getNoDataMessage(
-                  filtersStore,
+                  filters,
                   functionsFiltersConfig,
                   requestErrorMessage,
                   FUNCTIONS_PAGE,
                   null,
-                  FUNCTION_FILTERS
+                  filtersStore
                 )}
               />
             ) : (

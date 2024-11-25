@@ -37,6 +37,7 @@ import { usePods } from '../../../hooks/usePods.hook'
 import detailsActions from '../../../actions/details'
 import workflowsActions from '../../../actions/workflow'
 import { actionCreator } from './workflowsMonitoring.util'
+import { useFiltersFromSearchParams } from '../../../hooks/useFiltersFromSearchParams.hook'
 
 const WorkflowsMonitoring = ({ fetchFunctionLogs }) => {
   const [selectedFunction, setSelectedFunction] = useState({})
@@ -45,10 +46,6 @@ const WorkflowsMonitoring = ({ fetchFunctionLogs }) => {
   const [itemIsSelected, setItemIsSelected] = useState(false)
   const [selectedJob, setSelectedJob] = useState({})
   const workflowsStore = useSelector(state => state.workflowsStore)
-  const [workflowsFilterMenu, workflowsFilterMenuModal] = useSelector(state => [
-    state.filtersStore.filterMenu[JOBS_MONITORING_WORKFLOWS_TAB],
-    state.filtersStore.filterMenuModal[JOBS_MONITORING_WORKFLOWS_TAB]
-  ])
   const jobIsLoading = useSelector(store => store.jobsStore.loading)
   const funcIsLoading = useSelector(store => store.functionsStore.funcLoading)
   const params = useParams()
@@ -56,8 +53,13 @@ const WorkflowsMonitoring = ({ fetchFunctionLogs }) => {
   const { isStagingMode } = useMode()
   const abortControllerRef = useRef(new AbortController())
 
-  const { abortJobRef, getWorkflows, requestErrorMessage, workflowsFiltersConfig } =
+  const { abortJobRef, getWorkflows, requestErrorMessage, workflowsFiltersConfig, tabData } =
     React.useContext(ProjectJobsMonitoringContext)
+
+    const filters = useFiltersFromSearchParams(
+      tabData[JOBS_MONITORING_WORKFLOWS_TAB]?.filtersConfig,
+      tabData[JOBS_MONITORING_WORKFLOWS_TAB]?.parseQueryParamsCallback
+    )
 
   usePods(dispatch, detailsActions.fetchJobPods, detailsActions.removePods, selectedJob)
 
@@ -93,16 +95,12 @@ const WorkflowsMonitoring = ({ fetchFunctionLogs }) => {
 
   useEffect(() => {
     if (!workflowsAreLoaded && !params.workflowId) {
-      getWorkflows({
-        ...workflowsFilterMenu.values,
-        ...workflowsFilterMenuModal.values
-      })
+      getWorkflows(filters)
 
       setWorkflowsAreLoaded(true)
     }
   }, [
-    workflowsFilterMenu,
-    workflowsFilterMenuModal,
+    filters,
     getWorkflows,
     params.workflowId,
     workflowsAreLoaded,
@@ -113,10 +111,10 @@ const WorkflowsMonitoring = ({ fetchFunctionLogs }) => {
     <>
       {(jobIsLoading || funcIsLoading || workflowsStore.activeWorkflow.loading) && <Loader />}
       <WorkflowsTable
-        backLink={`/projects/*/${JOBS_MONITORING_PAGE}/${JOBS_MONITORING_WORKFLOWS_TAB}`}
+        backLink={`/projects/*/${JOBS_MONITORING_PAGE}/${JOBS_MONITORING_WORKFLOWS_TAB}${window.location.search}`}
         context={ProjectJobsMonitoringContext}
         fetchFunctionLogs={fetchFunctionLogs}
-        filterMenuName={JOBS_MONITORING_WORKFLOWS_TAB}
+        filters={filters}
         filtersConfig={workflowsFiltersConfig}
         getWorkflows={getWorkflows}
         itemIsSelected={itemIsSelected}

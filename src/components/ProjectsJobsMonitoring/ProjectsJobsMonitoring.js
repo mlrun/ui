@@ -38,12 +38,16 @@ import {
   JOBS_MONITORING_WORKFLOWS_TAB
 } from '../../constants'
 import { TERTIARY_BUTTON } from 'igz-controls/constants'
+import { useFiltersFromSearchParams } from '../../hooks/useFiltersFromSearchParams.hook'
 
 import './projectsJobsMonitoring.scss'
 import {
   getJobsFiltersConfig,
   getScheduledFiltersConfig,
-  getWorkflowsFiltersConfig
+  getWorkflowsFiltersConfig,
+  parseJobsQueryParamsCallback,
+  parseScheduledQueryParamsCallback,
+  parseWorkflowsQueryParamsCallback
 } from '../../utils/jobs.util'
 import { useJobsPageData } from '../../hooks/useJobsPageData'
 
@@ -84,7 +88,6 @@ const ProjectsJobsMonitoring = ({ fetchAllJobRuns, fetchJobFunction, fetchJobs }
     setJobWizardMode,
     setJobs,
     setScheduledJobs,
-    setSelectedRunProject,
     terminateAbortTasksPolling
   } = useJobsPageData(fetchAllJobRuns, fetchJobFunction, fetchJobs)
 
@@ -104,26 +107,32 @@ const ProjectsJobsMonitoring = ({ fetchAllJobRuns, fetchJobFunction, fetchJobs }
     )
   }, [location.pathname])
 
-  const jobsFiltersConfig = useMemo(() => getJobsFiltersConfig(params.jobName), [params.jobName])
-  const scheduledFiltersConfig = useMemo(() => getScheduledFiltersConfig(), [])
-  const workflowsFiltersConfig = useMemo(() => getWorkflowsFiltersConfig(), [])
+  const jobsFiltersConfig = useMemo(
+    () => getJobsFiltersConfig(params.jobName, true),
+    [params.jobName]
+  )
+  const scheduledFiltersConfig = useMemo(() => getScheduledFiltersConfig(true), [])
+  const workflowsFiltersConfig = useMemo(() => getWorkflowsFiltersConfig(true), [])
 
   const tabData = useMemo(() => {
     return {
       [JOBS_MONITORING_JOBS_TAB]: {
         filtersConfig: jobsFiltersConfig,
         handleRefresh: refreshJobs,
-        modalFilters: <JobsMonitoringFilters />
+        modalFilters: <JobsMonitoringFilters />,
+        parseQueryParamsCallback: parseJobsQueryParamsCallback
       },
       [JOBS_MONITORING_WORKFLOWS_TAB]: {
         filtersConfig: workflowsFiltersConfig,
         handleRefresh: getWorkflows,
-        modalFilters: <WorkflowsMonitoringFilters />
+        modalFilters: <WorkflowsMonitoringFilters />,
+        parseQueryParamsCallback: parseWorkflowsQueryParamsCallback
       },
       [JOBS_MONITORING_SCHEDULED_TAB]: {
         filtersConfig: scheduledFiltersConfig,
         handleRefresh: refreshScheduled,
-        modalFilters: <ScheduledMonitoringFilters />
+        modalFilters: <ScheduledMonitoringFilters />,
+        parseQueryParamsCallback: parseScheduledQueryParamsCallback
       }
     }
   }, [
@@ -135,13 +144,18 @@ const ProjectsJobsMonitoring = ({ fetchAllJobRuns, fetchJobFunction, fetchJobs }
     workflowsFiltersConfig
   ])
 
+  const filters = useFiltersFromSearchParams(
+    tabData[selectedTab]?.filtersConfig,
+    tabData[selectedTab]?.parseQueryParamsCallback
+  )
+
   return (
     <>
       <div className="job-monitoring content-wrapper">
         <div className="content__header">
           <Breadcrumbs />
         </div>
-        {selectedTab && (
+        {selectedTab && filters && (
           <div className="content">
             <div className="content__action-bar-wrapper">
               <ContentMenu
@@ -150,10 +164,11 @@ const ProjectsJobsMonitoring = ({ fetchAllJobRuns, fetchJobFunction, fetchJobs }
                 onClick={handleTabChange}
                 tabs={tabs}
               />
+
               <ActionBar
                 autoRefreshIsEnabled={selectedTab === JOBS_MONITORING_JOBS_TAB}
                 autoRefreshIsStopped={jobWizardIsOpened || jobsStore.loading}
-                filterMenuName={selectedTab}
+                filters={filters}
                 filtersConfig={tabData[selectedTab].filtersConfig}
                 handleRefresh={tabData[selectedTab].handleRefresh}
                 hidden={Boolean(params.jobId || params.workflowId)}
@@ -197,7 +212,7 @@ const ProjectsJobsMonitoring = ({ fetchAllJobRuns, fetchJobFunction, fetchJobs }
                   setJobs,
                   setScheduledJobs,
                   setSelectedCard,
-                  setSelectedRunProject,
+                  tabData,
                   terminateAbortTasksPolling,
                   workflowsFiltersConfig
                 }}

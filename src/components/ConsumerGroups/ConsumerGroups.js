@@ -30,14 +30,12 @@ import ConsumerGroupTableRow from '../../elements/ConsumerGroupTableRow/Consumer
 
 import createConsumerGroupsContent from '../../utils/createConsumerGroupsContent'
 import {
-  CONSUMER_GROUPS_FILTER,
   CONSUMER_GROUPS_PAGE,
-  FILTER_MENU,
   GROUP_BY_NONE,
   NAME_FILTER
 } from '../../constants'
 import { generatePageData } from './consumerGroups.util.js'
-import { setFilters, setFiltersValues } from '../../reducers/filtersReducer'
+import { setFilters } from '../../reducers/filtersReducer'
 import { getNoDataMessage } from '../../utils/getNoDataMessage.js'
 
 const ConsumerGroups = () => {
@@ -46,9 +44,7 @@ const ConsumerGroups = () => {
   const params = useParams()
   const dispatch = useDispatch()
   const filtersStore = useSelector(store => store.filtersStore)
-  const nameFilter = useSelector(
-    store => store.filtersStore[FILTER_MENU][CONSUMER_GROUPS_FILTER].values[NAME_FILTER]
-  )
+  const [localFilters, setLocalFilters] = useState({ [NAME_FILTER]: '' })
   const [requestErrorMessage] = useOutletContext()
 
   const filtersConfig = useMemo(() => {
@@ -64,10 +60,12 @@ const ConsumerGroups = () => {
   useEffect(() => {
     setFilteredV3ioStreams(
       nuclioStore.v3ioStreams.parsedData.filter(v3ioStreamData =>
-        nameFilter ? v3ioStreamData.consumerGroup.toLowerCase().includes(nameFilter) : true
+        localFilters[NAME_FILTER]
+          ? v3ioStreamData.consumerGroup.toLowerCase().includes(localFilters[NAME_FILTER])
+          : true
       )
     )
-  }, [nuclioStore.v3ioStreams.parsedData, nameFilter])
+  }, [nuclioStore.v3ioStreams.parsedData, localFilters])
 
   const pageData = useMemo(() => generatePageData(), [])
 
@@ -77,12 +75,7 @@ const ConsumerGroups = () => {
   )
 
   const searchOnChangeHandler = value => {
-    dispatch(
-      setFiltersValues({
-        name: CONSUMER_GROUPS_FILTER,
-        value: { [NAME_FILTER]: value.toLowerCase() }
-      })
-    )
+    setLocalFilters({ [NAME_FILTER]: value.toLowerCase() })
   }
 
   return (
@@ -97,7 +90,7 @@ const ConsumerGroups = () => {
           wrapperClassName="search-input-wrapper"
           onChange={searchOnChangeHandler}
           placeholder="Search consumer groups..."
-          value={nameFilter}
+          value={localFilters[NAME_FILTER]}
         />
       </div>
       <Table
@@ -113,14 +106,14 @@ const ConsumerGroups = () => {
       {!nuclioStore.v3ioStreams.loading && filteredV3ioStreams.length === 0 && (
         <NoData
           message={getNoDataMessage(
-            filtersStore,
+            localFilters,
             filtersConfig,
             requestErrorMessage ||
               (!nuclioStore.v3ioStreams.parsedData?.length &&
                 'You haven’t created any consumer group yet'),
             CONSUMER_GROUPS_PAGE,
             null,
-            CONSUMER_GROUPS_FILTER
+            filtersStore
           )}
         />
       )}

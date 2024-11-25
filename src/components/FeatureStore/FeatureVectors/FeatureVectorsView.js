@@ -49,10 +49,11 @@ const FeatureVectorsView = React.forwardRef(
       detailsFormInitialValues,
       featureStore,
       featureVectors,
+      filters,
       filtersStore,
       handleExpandRow,
       handleRefresh,
-      handleRefreshWithStoreFilters,
+      handleRefreshWithFilters,
       pageData,
       requestErrorMessage,
       selectedFeatureVector,
@@ -77,7 +78,7 @@ const FeatureVectorsView = React.forwardRef(
                 onClick: () => setCreateVectorPopUpIsOpen(true)
               }
             ]}
-            filterMenuName={FEATURE_VECTORS_TAB}
+            filters={filters}
             filtersConfig={filtersConfig}
             handleRefresh={handleRefresh}
             page={FEATURE_STORE_PAGE}
@@ -90,12 +91,13 @@ const FeatureVectorsView = React.forwardRef(
         {featureStore.loading ? null : featureVectors.length === 0 ? (
           <NoData
             message={getNoDataMessage(
-              filtersStore,
+              filters,
               filtersConfig,
               requestErrorMessage,
               FEATURE_STORE_PAGE,
               FEATURE_VECTORS_TAB,
-              FEATURE_VECTORS_TAB
+              FEATURE_VECTORS_TAB,
+              filtersStore
             )}
           />
         ) : (
@@ -106,7 +108,7 @@ const FeatureVectorsView = React.forwardRef(
               detailsFormInitialValues={detailsFormInitialValues}
               handleCancel={() => setSelectedFeatureVector({})}
               pageData={pageData}
-              retryRequest={handleRefreshWithStoreFilters}
+              retryRequest={handleRefreshWithFilters}
               selectedItem={selectedFeatureVector}
               tab={FEATURE_VECTORS_TAB}
               tableClassName="feature-vectors-table"
@@ -151,10 +153,11 @@ FeatureVectorsView.propTypes = {
   createVectorPopUpIsOpen: PropTypes.bool.isRequired,
   featureStore: PropTypes.object.isRequired,
   featureVectors: PropTypes.arrayOf(PropTypes.object).isRequired,
+  filters: PropTypes.object.isRequired,
   filtersStore: PropTypes.object.isRequired,
   handleExpandRow: PropTypes.func.isRequired,
   handleRefresh: PropTypes.func.isRequired,
-  handleRefreshWithStoreFilters: PropTypes.func.isRequired,
+  handleRefreshWithFilters: PropTypes.func.isRequired,
   pageData: PropTypes.object.isRequired,
   requestErrorMessage: PropTypes.string.isRequired,
   selectedFeatureVector: PropTypes.object.isRequired,

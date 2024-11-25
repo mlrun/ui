@@ -25,7 +25,7 @@ import { showErrorNotification } from '../../../utils/notifications.util'
 import { fetchModelEndpoint } from '../../../reducers/artifactsReducer'
 
 export const filtersConfig = {
-  [LABELS_FILTER]: { label: 'Labels:' }
+  [LABELS_FILTER]: { label: 'Labels:', initialValue: '', isModal: true }
 }
 
 const infoHeaders = [

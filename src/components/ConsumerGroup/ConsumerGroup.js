@@ -35,11 +35,8 @@ import { generatePageData } from './consumerGroup.util.js'
 import { getNoDataMessage } from '../../utils/getNoDataMessage'
 import { showErrorNotification } from '../../utils/notifications.util'
 import createConsumerGroupContent from '../../utils/createConsumerGroupContent'
-import { setFiltersValues } from '../../reducers/filtersReducer.js'
 import {
-  CONSUMER_GROUP_FILTER,
   CONSUMER_GROUP_PAGE,
-  FILTER_MENU,
   NAME_FILTER
 } from '../../constants.js'
 
@@ -55,9 +52,7 @@ const ConsumerGroup = ({
   const [requestErrorMessage, setRequestErrorMessage] = useState('')
   const [filteredV3ioStreamShardLags, setFilteredV3ioStreamShardLags] = useState([])
   const filtersStore = useSelector(store => store.filtersStore)
-  const nameFilter = useSelector(
-    store => store.filtersStore[FILTER_MENU][CONSUMER_GROUP_FILTER].values[NAME_FILTER]
-  )
+  const [localFilters, setLocalFilters] = useState({ [NAME_FILTER]: '' })
   const params = useParams()
   const dispatch = useDispatch()
 
@@ -100,10 +95,10 @@ const ConsumerGroup = ({
   useEffect(() => {
     setFilteredV3ioStreamShardLags(
       nuclioStore.v3ioStreamShardLags.parsedData.filter(shardLag =>
-        nameFilter ? shardLag.shardLagId.toLowerCase().includes(nameFilter) : true
+        localFilters[NAME_FILTER] ? shardLag.shardLagId.toLowerCase().includes(localFilters[NAME_FILTER]) : true
       )
     )
-  }, [nameFilter, nuclioStore.v3ioStreamShardLags.parsedData])
+  }, [localFilters, nuclioStore.v3ioStreamShardLags.parsedData])
 
   useEffect(() => {
     if (!isEmpty(currentV3ioStream) && nuclioStore.v3ioStreamShardLags.error) {
@@ -132,13 +127,8 @@ const ConsumerGroup = ({
     [filteredV3ioStreamShardLags]
   )
 
-  const searchOnChangeHandler = (value) => {
-    dispatch(
-      setFiltersValues({
-        name: CONSUMER_GROUP_FILTER,
-        value: { [NAME_FILTER]: value.toLowerCase() }
-      })
-    )
+  const searchOnChangeHandler = value => {
+    setLocalFilters({ [NAME_FILTER]: value.toLowerCase() })
   }
 
   return (
@@ -155,7 +145,7 @@ const ConsumerGroup = ({
           wrapperClassName="search-input-wrapper"
           onChange={searchOnChangeHandler}
           placeholder="Search by shard name..."
-          value={nameFilter}
+          value={localFilters[NAME_FILTER]}
         />
         <RoundedIcon
           onClick={() => refreshConsumerGroup(currentV3ioStream)}
@@ -182,12 +172,12 @@ const ConsumerGroup = ({
         filteredV3ioStreamShardLags.length === 0 && (
           <NoData
             message={getNoDataMessage(
-              filtersStore,
+              localFilters,
               filtersConfig,
               requestErrorMessage,
               CONSUMER_GROUP_PAGE,
               null,
-              CONSUMER_GROUP_FILTER
+              filtersStore
             )}
           />
         )}

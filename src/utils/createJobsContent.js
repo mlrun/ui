@@ -25,7 +25,8 @@ import {
   JOBS_MONITORING_PAGE,
   JOBS_PAGE,
   MONITOR_JOBS_TAB,
-  MONITOR_WORKFLOWS_TAB
+  MONITOR_WORKFLOWS_TAB,
+  PROJECT_FILTER
 } from '../constants'
 import {
   getWorkflowDetailsLink,
@@ -38,6 +39,7 @@ import { getJobIdentifier, getWorkflowJobIdentifier } from './getUniqueIdentifie
 import { parseKeyValues } from './object'
 import { validateArguments } from './validateArguments'
 import { getJobKindFromLabels } from './jobs.util'
+import { saveAndTransformSearchParams } from './filter.util'
 
 export const createJobsMonitorTabContent = (jobs, jobName, isStagingMode) => {
   return jobs.map(job => {
@@ -59,7 +61,7 @@ export const createJobsMonitorTabContent = (jobs, jobName, isStagingMode) => {
             )
           : ''
       } else {
-        return `/projects/${job.project}/${JOBS_PAGE.toLowerCase()}/${MONITOR_JOBS_TAB}/${job.name}`
+        return `/projects/${job.project}/${JOBS_PAGE.toLowerCase()}/${MONITOR_JOBS_TAB}/${job.name}${saveAndTransformSearchParams(window.location.search)}`
       }
     }
 
@@ -163,7 +165,7 @@ export const createJobsScheduleTabContent = jobs => {
       projectName &&
       jobName &&
       jobUid &&
-      `/projects/${projectName}/jobs/${MONITOR_JOBS_TAB}/${jobName}/${jobUid}/overview`
+      `/projects/${projectName}/jobs/${MONITOR_JOBS_TAB}/${jobName}/${jobUid}/overview${window.location.search}`
 
     return {
       data: {
@@ -430,10 +432,10 @@ export const createJobsMonitoringContent = (jobs, jobName, isStagingMode) => {
         return validateArguments(job.uid, tab, job.name)
           ? `/projects/*/${JOBS_MONITORING_PAGE}/${JOBS_MONITORING_JOBS_TAB}${
               job.name ? `/${job.name}` : ''
-            }/${job.project}/${job.uid}/${tab.toLowerCase()}`
+            }/${job.project}/${job.uid}/${tab.toLowerCase()}${window.location.search}`
           : ''
       } else {
-        return `/projects/*/${JOBS_MONITORING_PAGE}/${JOBS_MONITORING_JOBS_TAB}/${job.name}`
+        return `/projects/*/${JOBS_MONITORING_PAGE}/${JOBS_MONITORING_JOBS_TAB}/${job.name}${saveAndTransformSearchParams(window.location.search)}${window.location.search ? '&' : '?'}${`${PROJECT_FILTER}=${job.project}`}`
       }
     }
 

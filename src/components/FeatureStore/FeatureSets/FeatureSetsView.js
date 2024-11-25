@@ -51,9 +51,10 @@ const FeatureSetsView = React.forwardRef(
       featureSetsPanelIsOpen,
       featureStore,
       filtersStore,
+      filters,
       handleExpandRow,
       handleRefresh,
-      handleRefreshWithStoreFilters,
+      handleRefreshWithFilters,
       pageData,
       requestErrorMessage,
       selectedFeatureSet,
@@ -80,7 +81,7 @@ const FeatureSetsView = React.forwardRef(
                 onClick: () => setFeatureSetsPanelIsOpen(true)
               }
             ]}
-            filterMenuName={FEATURE_SETS_TAB}
+            filters={filters}
             filtersConfig={filtersConfig}
             handleRefresh={handleRefresh}
             page={FEATURE_STORE_PAGE}
@@ -93,12 +94,13 @@ const FeatureSetsView = React.forwardRef(
         {featureStore.loading ? null : featureSets.length === 0 ? (
           <NoData
             message={getNoDataMessage(
-              filtersStore,
+              filters,
               filtersConfig,
               requestErrorMessage,
               FEATURE_STORE_PAGE,
               FEATURE_SETS_TAB,
-              FEATURE_SETS_TAB
+              FEATURE_SETS_TAB,
+              filtersStore
             )}
           />
         ) : (
@@ -111,7 +113,7 @@ const FeatureSetsView = React.forwardRef(
               detailsFormInitialValues={detailsFormInitialValues}
               handleCancel={() => setSelectedFeatureSetMin({})}
               pageData={pageData}
-              retryRequest={handleRefreshWithStoreFilters}
+              retryRequest={handleRefreshWithFilters}
               selectedItem={selectedFeatureSet}
               tab={FEATURE_SETS_TAB}
               tableClassName="feature-sets-table"
@@ -161,7 +163,7 @@ FeatureSetsView.propTypes = {
   filtersStore: PropTypes.object.isRequired,
   handleExpandRow: PropTypes.func.isRequired,
   handleRefresh: PropTypes.func.isRequired,
-  handleRefreshWithStoreFilters: PropTypes.func.isRequired,
+  handleRefreshWithFilters: PropTypes.func.isRequired,
   pageData: PropTypes.object.isRequired,
   requestErrorMessage: PropTypes.string.isRequired,
   selectedFeatureSet: PropTypes.object.isRequired,

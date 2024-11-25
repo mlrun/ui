@@ -37,6 +37,7 @@ import {
 } from '../../constants'
 import {
   checkForSelectedFile,
+  filtersConfig,
   generateActionsMenu,
   generatePageData,
   handleApplyDetailsChanges,
@@ -62,6 +63,7 @@ import { useSortTable } from '../../hooks/useSortTable.hook'
 import { useInitialTableFetch } from '../../hooks/useInitialTableFetch.hook'
 import { useVirtualization } from '../../hooks/useVirtualization.hook'
 import { useYaml } from '../../hooks/yaml.hook'
+import { useFiltersFromSearchParams } from '../../hooks/useFiltersFromSearchParams.hook'
 
 import './files.scss'
 import cssVariables from './files.scss'
@@ -82,10 +84,7 @@ const Files = () => {
   const navigate = useNavigate()
   const params = useParams()
   const viewMode = getViewMode(window.location.search)
-  const [filesFilters, filesModalFilters] = useSelector(state => [
-    state.filtersStore.filterMenu[FILES_PAGE],
-    state.filtersStore.filterMenuModal[FILES_PAGE]
-  ])
+  const filters = useFiltersFromSearchParams(filtersConfig)
   const abortControllerRef = useRef(new AbortController())
   const tagAbortControllerRef = useRef(new AbortController())
   const filesRef = useRef(null)
@@ -174,15 +173,19 @@ const Files = () => {
     [fetchData, fetchTags]
   )
 
+  const handleRefreshWithFilters = useCallback(() => {
+    handleRefresh(filters)
+  }, [filters, handleRefresh])
+
   const handleAddTag = useCallback(
     artifact => {
       openPopUp(AddArtifactTagPopUp, {
         artifact,
-        onAddTag: () => handleRefresh({ ...filesFilters.values, ...filesModalFilters.values }),
+        onAddTag: () => handleRefresh(filters),
         projectName: params.projectName
       })
     },
-    [params.projectName, handleRefresh, filesFilters.values, filesModalFilters.values]
+    [params.projectName, handleRefresh, filters]
   )
 
   const actionsMenu = useMemo(
@@ -195,7 +198,7 @@ const Files = () => {
         handleAddTag,
         params.projectName,
         handleRefresh,
-        { ...filesFilters.values, ...filesModalFilters.values },
+        filters,
         menuPosition,
         selectedFile
       ),
@@ -206,8 +209,7 @@ const Files = () => {
       handleAddTag,
       params.projectName,
       handleRefresh,
-      filesFilters.values,
-      filesModalFilters.values,
+      filters,
       selectedFile
     ]
   )
@@ -302,7 +304,7 @@ const Files = () => {
       }
     }
 
-    handleRefresh({ ...filesFilters.values, ...filesModalFilters.values })
+    handleRefresh(filters)
   }
 
   useInitialTableFetch({
@@ -310,7 +312,7 @@ const Files = () => {
     fetchData,
     fetchTags,
     filterModalName: FILES_PAGE,
-    filters: { ...filesFilters.values, ...filesModalFilters.values },
+    filters,
     setExpandedRowsData: setSelectedRowData,
     sortExpandedRowsDataBy: 'updated'
   })
@@ -369,10 +371,10 @@ const Files = () => {
     openPopUp(RegisterArtifactModal, {
       artifactKind: ARTIFACT_TYPE,
       params,
-      refresh: () => handleRefresh({ ...filesFilters.values, ...filesModalFilters.values }),
+      refresh: () => handleRefresh(filters),
       title: registerArtifactTitle
     })
-  }, [params, handleRefresh, filesFilters, filesModalFilters])
+  }, [params, handleRefresh, filters])
 
   const virtualizationConfig = useVirtualization({
     rowsData: {
@@ -397,10 +399,12 @@ const Files = () => {
       convertedYaml={convertedYaml}
       detailsFormInitialValues={detailsFormInitialValues}
       files={files}
+      filters={filters}
       filtersStore={filtersStore}
       getAndSetSelectedArtifact={getAndSetSelectedArtifact}
       handleExpandRow={handleExpandRow}
       handleRefresh={handleRefresh}
+      handleRefreshWithFilters={handleRefreshWithFilters}
       handleRegisterArtifact={handleRegisterArtifact}
       handleSelectFile={handleSelectFile}
       maxArtifactsErrorIsShown={maxArtifactsErrorIsShown}
@@ -409,10 +413,8 @@ const Files = () => {
       requestErrorMessage={requestErrorMessage}
       selectedFile={selectedFile}
       selectedRowData={selectedRowData}
-      setFiles={setFiles}
       setMaxArtifactsErrorIsShown={setMaxArtifactsErrorIsShown}
       setSelectedFileMin={setSelectedFileMin}
-      setSelectedRowData={setSelectedRowData}
       sortProps={{ sortTable, selectedColumnName, getSortingIcon }}
       tableContent={sortedTableContent}
       tableHeaders={sortedTableHeaders}

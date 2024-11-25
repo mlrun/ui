@@ -19,7 +19,7 @@ such restriction.
 */
 import React, { useCallback, useRef, useEffect, useState, useMemo } from 'react'
 import PropTypes from 'prop-types'
-import { Link, useLocation, useNavigate, useParams } from 'react-router-dom'
+import { Link, useNavigate, useParams } from 'react-router-dom'
 import { isEmpty } from 'lodash'
 import { useSelector } from 'react-redux'
 import classNames from 'classnames'
@@ -35,6 +35,7 @@ import { TERTIARY_BUTTON } from 'igz-controls/constants'
 import { ACTIONS_MENU } from '../../../types'
 import { getViewMode } from '../../../utils/helper'
 import { generateUrlFromRouterPath } from '../../../utils/link-helper.util'
+import { getFilteredSearchParams } from '../../../utils/filter.util'
 
 import { ReactComponent as Close } from 'igz-controls/images/close.svg'
 import { ReactComponent as Back } from 'igz-controls/images/back-arrow.svg'
@@ -59,7 +60,6 @@ const DetailsHeader = ({
 }) => {
   const [headerIsMultiline, setHeaderIsMultiline] = useState(false)
   const detailsStore = useSelector(store => store.detailsStore)
-  const location = useLocation()
   const params = useParams()
   const navigate = useNavigate()
   const viewMode = getViewMode(window.location.search)
@@ -280,7 +280,9 @@ const DetailsHeader = ({
               {viewMode !== FULL_VIEW_MODE && (
                 <RoundedIcon
                   onClick={() => {
-                    navigate(`${location.pathname}${location.search ? '&' : '?'}view=full`)
+                    navigate(
+                      `${window.location.pathname}${window.location.search}${window.location.search ? '&' : '?'}view=full`
+                    )
                   }}
                   id="full-view"
                   tooltipText="Full view"
@@ -291,7 +293,9 @@ const DetailsHeader = ({
               {viewMode === FULL_VIEW_MODE && (
                 <RoundedIcon
                   onClick={() => {
-                    navigate(`${location.pathname.replace(/(\?|&)view=full(&|$)/, '$1')}`)
+                    navigate(
+                      `${window.location.pathname}${getFilteredSearchParams(window.location.search, ['view'])}`
+                    )
                   }}
                   id="table-view"
                   tooltipText="Table view"
@@ -312,7 +316,7 @@ const DetailsHeader = ({
                     )
                   : `/projects/${params.projectName}/${pageData.page.toLowerCase()}${
                       params.pageTab ? `/${params.pageTab}` : tab ? `/${tab}` : ''
-                    }`
+                    }${window.location.search}`
               }
               onClick={handleCancelClick}
             >

@@ -77,7 +77,7 @@ export const getFunctionLogs = (
           ).hash
 
           if (hash) {
-            navigate(`/projects/${projectName}/functions/${hash}/build-log`)
+            navigate(`/projects/${projectName}/functions/${hash}/build-log${window.location.search}`)
           }
         })
       }
