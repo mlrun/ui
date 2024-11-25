@@ -37,7 +37,7 @@ const ProjectsAlerts = () => {
   const filtersStore = useSelector(store => store.filtersStore)
 
   const alertsFiltersConfig = useMemo(() => getAlertsFiltersConfig(), [])
-
+  console.log(alerts)
   const refreshAlertsCallback = useCallback(filters => {
     console.log(filters)
   }, [])

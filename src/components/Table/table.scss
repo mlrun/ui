@@ -99,6 +99,20 @@
         flex: 1;
         max-width: 150px;
       }
+
+      &-notification {
+
+        .notifications {
+          margin-right:12px
+        }
+
+        .notification-fail {
+
+          path {
+            fill: #C4C2C8;
+          }
+        }
+      }
     }
 
     &:has(.actions-menu__container-active) {
@@ -200,7 +214,7 @@
           *  {
             visibility: hidden;
           }
-          
+
 
           .chip {
             visibility: hidden;
@@ -265,6 +279,11 @@
 
         .chip_short {
           max-width: 100px;
+        }
+
+        .severity-cell {
+          display: flex;
+          gap: 4px;
         }
       }
     }

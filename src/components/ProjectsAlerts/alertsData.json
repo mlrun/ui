@@ -12,16 +12,24 @@
         {
           "kind": "webhook",
           "err": "Timeout error"
+        },
+        {
+          "kind": "git",
+          "err": "Error"
+        },
+        {
+          "kind": "slack",
+          "err": "Failed to send notification due to network issue"
         }
       ],
-      "entity_id": "model-endpoint-1.app-1.result-1",
+      "entity_id": "5662c7a4470ef28ed1df450e80d37624de7e1749.histogram-data-drift.general_drift",
       "entity_kind": "model-endpoint-result",
       "criteria": {
         "count": 3,
         "period": "30m"
       },
       "event_kind": "data-drift-detected",
-      "severity": "critical",
+      "severity": "medium",
       "number_of_events": 15
     },
     {
@@ -38,7 +46,7 @@
           "err": ""
         }
       ],
-      "entity_id": "job-entity-2.app-2.result-2",
+      "entity_id": "trainer-train.5a8037bd46cf192ce7e94b25f06a8d13",
       "entity_kind": "job",
       "criteria": {
         "count": 10,
@@ -58,7 +66,7 @@
           "err": ""
         }
       ],
-      "entity_id": "model-endpoint-3.app-3.result-3",
+      "entity_id": "application-1",
       "entity_kind": "model-monitoring-application",
       "criteria": {
         "count": 2,
@@ -82,8 +90,8 @@
           "err": "Authentication failed"
         }
       ],
-      "entity_id": "model-monitoring-4.app-4.result-4",
-      "entity_kind": "model-monitoring-application",
+      "entity_id": "d5e6f4b3970ef28ed1df450e80d37624de7e1749.feature-importance.general_drift",
+      "entity_kind": "model-endpoint-result",
       "criteria": {
         "count": 8,
         "period": "1h"
@@ -102,14 +110,14 @@
           "err": ""
         }
       ],
-      "entity_id": "job-entity-5.app-5.result-5",
+      "entity_id": "batch-inference-v2-infer.7ad15b839fc206e4ba9f02c84f31e57a",
       "entity_kind": "job",
       "criteria": {
         "count": 4,
         "period": "3h"
       },
       "event_kind": "system-performance-suspected",
-      "severity": "critical",
+      "severity": "high",
       "number_of_events": 20
     },
     {
@@ -122,7 +130,7 @@
           "err": "SMTP server not reachable"
         }
       ],
-      "entity_id": "model-endpoint-6.app-6.result-6",
+      "entity_id": "a2b4c6d8970ef28ed1df450e80d37624de7e1749.statistical-shift.general_drift",
       "entity_kind": "model-endpoint-result",
       "criteria": {
         "count": 6,
@@ -142,8 +150,8 @@
           "err": ""
         }
       ],
-      "entity_id": "model-monitoring-7.app-7.result-7",
-      "entity_kind": "model-monitoring-application",
+      "entity_id": "c6d3e7f0970ef28ed1df450e80d37624de7e1749.data-quality-issue.drift",
+      "entity_kind": "model-endpoint-result",
       "criteria": {
         "count": 1,
         "period": "30m"
@@ -162,14 +170,14 @@
           "err": "Failed to send notification due to network issue"
         }
       ],
-      "entity_id": "job-entity-8.app-8.result-8",
+      "entity_id": "batch-inference-v1-infer.c3b47590a6821d7ef9f2ab04c8e163a5",
       "entity_kind": "job",
       "criteria": {
         "count": 9,
         "period": "4h"
       },
       "event_kind": "concept-drift-detected",
-      "severity": "critical",
+      "severity": "medium",
       "number_of_events": 16
     },
     {
@@ -186,7 +194,7 @@
           "err": ""
         }
       ],
-      "entity_id": "model-endpoint-9.app-9.result-9",
+      "entity_id": "d9e8f5b4970ef28ed1df450e80d37624de7e1749.input-missing-values.general_drift",
       "entity_kind": "model-endpoint-result",
       "criteria": {
         "count": 7,
@@ -206,14 +214,14 @@
           "err": ""
         }
       ],
-      "entity_id": "model-endpoint-10.app-10.result-10",
+      "entity_id": "c2a3e1f8970ef28ed1df450e80d37624de7e1749.class-distribution.general_drift",
       "entity_kind": "model-endpoint-result",
       "criteria": {
         "count": 5,
         "period": "2h"
       },
       "event_kind": "system-performance-detected",
-      "severity": "low",
+      "severity": "medium",
       "number_of_events": 9
     },
     {
@@ -230,14 +238,14 @@
           "err": "API endpoint not responding"
         }
       ],
-      "entity_id": "model-monitoring-11.app-11.result-11",
-      "entity_kind": "model-monitoring-application",
+      "entity_id": "f3d4b5a1970ef28ed1df450e80d37624de7e1749.outlier-detection.general_drift",
+      "entity_kind": "model-endpoint-result",
       "criteria": {
         "count": 10,
         "period": "3h"
       },
       "event_kind": "mm-app-anomaly-suspected",
-      "severity": "critical",
+      "severity": "high",
       "number_of_events": 13
     },
     {
@@ -250,7 +258,7 @@
           "err": ""
         }
       ],
-      "entity_id": "job-entity-12.app-12.result-12",
+      "entity_id": "tutorial-function.af2de87229ab49139748db785e0c3d6b",
       "entity_kind": "job",
       "criteria": {
         "count": 3,
@@ -270,14 +278,14 @@
           "err": "SMTP server not reachable"
         }
       ],
-      "entity_id": "model-endpoint-13.app-13.result-13",
+      "entity_id": "d5e6f4b3970ef28ed1df450e80d37624de7e1749.feature-importance.general_drift",
       "entity_kind": "model-endpoint-result",
       "criteria": {
         "count": 8,
         "period": "4h"
       },
       "event_kind": "concept-drift-suspected",
-      "severity": "critical",
+      "severity": "high",
       "number_of_events": 6
     },
     {
@@ -290,7 +298,7 @@
           "err": ""
         }
       ],
-      "entity_id": "model-monitoring-14.app-14.result-14",
+      "entity_id": "application-2",
       "entity_kind": "model-monitoring-application",
       "criteria": {
         "count": 2,
@@ -310,7 +318,7 @@
           "err": ""
         }
       ],
-      "entity_id": "job-entity-15.app-15.result-15",
+      "entity_id": "get-data.a23bcd3ef5d9f0174abc8e09324a76bc",
       "entity_kind": "job",
       "criteria": {
         "count": 5,
@@ -330,14 +338,14 @@
           "err": "Failed to send notification due to network issue"
         }
       ],
-      "entity_id": "model-endpoint-16.app-16.result-16",
+      "entity_id": "c9e7f6a3970ef28ed1df450e80d37624de7e1749.null-value-frequency.general_drift",
       "entity_kind": "model-endpoint-result",
       "criteria": {
         "count": 7,
         "period": "1h"
       },
       "event_kind": "system-performance-suspected",
-      "severity": "critical",
+      "severity": "high",
       "number_of_events": 17
     },
     {
@@ -354,8 +362,8 @@
           "err": ""
         }
       ],
-      "entity_id": "model-monitoring-17.app-17.result-17",
-      "entity_kind": "model-monitoring-application",
+      "entity_id": "b4d5f8e7970ef28ed1df450e80d37624de7e1749.imbalance-ratio.general_drift",
+      "entity_kind": "model-endpoint-result",
       "criteria": {
         "count": 9,
         "period": "3h"
@@ -374,7 +382,7 @@
           "err": ""
         }
       ],
-      "entity_id": "job-entity-18.app-18.result-18",
+      "entity_id": "get-dev.af12d780b9ce4a6c0357ef3941b5ad68",
       "entity_kind": "job",
       "criteria": {
         "count": 6,
@@ -401,7 +409,7 @@
         "period": "2h"
       },
       "event_kind": "mm-app-anomaly-detected",
-      "severity": "critical",
+      "severity": "high",
       "number_of_events": 10
     },
     {
@@ -418,8 +426,8 @@
           "err": "Failed to send notification due to network issue"
         }
       ],
-      "entity_id": "model-monitoring-20.app-20.result-20",
-      "entity_kind": "model-monitoring-application",
+      "entity_id": "d5e6f4b3970ef28ed1df450e80d37624de7e1749.feature-importance.general_drift",
+      "entity_kind": "model-endpoint-result",
       "criteria": {
         "count": 1,
         "period": "30m"

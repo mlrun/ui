@@ -92,6 +92,11 @@ export const JOBS_MONITORING_SCHEDULED_TAB = 'scheduled'
 
 export const ALERTS_PAGE = 'ALERTS'
 export const ALERTS_FILTERS = 'alerts'
+export const MODEL_ENDPOINT_RESULT = 'model-endpoint-result'
+export const MODEL_MONITORING_APPLICATION = 'model-monitoring-application'
+export const SEVERITY_LOW = 'low'
+export const SEVERITY_MEDIUM = 'medium'
+export const SEVERITY_HIGH = 'high'
 
 export const MODELS_PAGE = 'MODELS'
 export const MODELS_TAB = 'models'

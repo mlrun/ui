@@ -135,6 +135,7 @@ const Files = () => {
       )
         .unwrap()
         .then(result => {
+          console.log(result)
           if (result) {
             setFiles(result)
             setMaxArtifactsErrorIsShown(result.length === 1000)

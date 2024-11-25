@@ -17,79 +17,168 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
+import { upperFirst } from 'lodash'
 
 import { formatDatetime } from './datetime'
-import { JOB_KIND_SPARK } from '../constants'
+
+import { ReactComponent as Application } from 'igz-controls/images/application-icon.svg'
+import { ReactComponent as Endpoint } from '../components/ProjectsAlerts/endpoint.svg'
+import { ReactComponent as Job } from '../components/ProjectsAlerts/job.svg'
+import { ReactComponent as Low } from '../components/ProjectsAlerts/low.svg'
+import { ReactComponent as Normal } from '../components/ProjectsAlerts/normal.svg'
+import { ReactComponent as High } from '../components/ProjectsAlerts/critical.svg'
+import { ReactComponent as Git } from '../components/ProjectsAlerts/git.svg'
+import { ReactComponent as Mail } from '../components/ProjectsAlerts/mail.svg'
+import { ReactComponent as Webhook } from '../components/ProjectsAlerts/webhook.svg'
+import { ReactComponent as Slack } from '../components/ProjectsAlerts/slack.svg'
+
+import {
+  APPLICATION,
+  ENDPOINT,
+  JOB,
+  MODEL_ENDPOINT_RESULT,
+  MODEL_MONITORING_APPLICATION,
+  SEVERITY_HIGH,
+  SEVERITY_LOW,
+  SEVERITY_MEDIUM
+} from '../constants'
+
+const getEntityTypeData = entityType => {
+  switch (entityType) {
+    case MODEL_ENDPOINT_RESULT:
+      return {
+        value: <Endpoint />,
+        tooltip: upperFirst(ENDPOINT)
+      }
+    case MODEL_MONITORING_APPLICATION:
+      return {
+        value: <Application />,
+        tooltip: upperFirst(APPLICATION)
+      }
+    case JOB:
+      return {
+        value: <Job />,
+        tooltip: upperFirst(JOB)
+      }
+  }
+}
+
+const getSeverityData = severity => {
+  switch (severity) {
+    case SEVERITY_LOW:
+      return {
+        value: (
+          <div className="severity-cell">
+            <Low />
+            <span>{upperFirst(SEVERITY_LOW)}</span>
+          </div>
+        ),
+        tooltip: upperFirst(SEVERITY_LOW)
+      }
+    case SEVERITY_MEDIUM:
+      return {
+        value: (
+          <div className="severity-cell">
+            <Normal />
+            <span>{upperFirst(SEVERITY_MEDIUM)}</span>
+          </div>
+        ),
+        tooltip: upperFirst(SEVERITY_MEDIUM)
+      }
+    case SEVERITY_HIGH:
+      return {
+        value: (
+          <div className="severity-cell">
+            <High />
+            <span>{upperFirst(SEVERITY_MEDIUM)}</span>
+          </div>
+        ),
+
+        tooltip: upperFirst(SEVERITY_HIGH)
+      }
+  }
+}
+
+const alertsNotifications = {
+  webhook: <Webhook />,
+  git: <Git />,
+  slack: <Slack />,
+  email: <Mail />
+}
+
+const getNotificationData = notifications =>
+  notifications.map(notification => {
+    const failClass = notification.err === '' ? 'notification-fail' : ''
+
+    return {
+      icon: (
+        <div className={`notifications ${failClass}`}>{alertsNotifications[notification.kind]}</div>
+      ),
+      tooltip: upperFirst(notification.kind)
+    }
+  })
 
 export const createAlertRowData = ({ name, ...alert }) => {
+  // TODO: create ID for alert
   return {
     data: {
       ...alert
     },
     content: [
       {
-        id: 'key.alert', // @TODO create id
-        headerId: 'alertname',
+        id: `alertName.${alert.id}`,
+        headerId: 'alertName',
         headerLabel: 'Alert Name',
         value: name,
         className: 'table-cell-1',
-        getLink: () => {},
+        getLink: () => {}, // TODO create link
         showStatus: true,
         tooltip: name,
         type: 'link'
       },
       {
-        headerId: 'projectname',
+        id: `projectName.${alert.id}`,
+        headerId: 'projectName',
         headerLabel: 'Project name',
-        id: 'projectname',
-        // id: `projectName.${identifierUnique}`, @TODO create projectName.id
         value: alert.project,
         className: 'table-cell-1'
       },
       {
-        headerId: 'eventtype',
+        id: `eventType.${alert.id}`,
+        headerId: 'eventType',
         headerLabel: 'Event Type',
-        id: 'eventtype',
-        // id: `type.${identifierUnique}`,  @TODO create id
-        value: alert.event_kind,
+        value: alert.event_kind.split('-').join(' '),
         className: 'table-cell-1'
       },
       {
-        headerId: 'entityid',
+        id: `entityId.${alert.id}`,
+        headerId: 'entityId',
         headerLabel: 'Entity ID',
-        id: 'entityid',
-        // id: `uid.${identifierUnique}`,//@TODO create id
-        value: alert.entity_id, // @TODO add id based on type
+        value: alert.entity_id,
         className: 'table-cell-1'
       },
       {
-        headerId: 'entitytype',
+        id: `entityType.${alert.id}`,
+        headerId: 'entityType',
         headerLabel: 'Entity Type',
-        id: 'entitytype',
-        // id: `entitytype.${identifierUnique}`,//@TODO create id
-        // value: type, //@TODO add jobs label type to alert object in response
-        value: 'job',
+        value: getEntityTypeData(alert.entity_kind).value,
         className: 'table-cell-small',
-        type: 'type'
+        tooltip: getEntityTypeData(alert.entity_kind).tooltip
       },
       {
-        // id: `timestamp.${alert.ui.identifierUnique}`, //@TODO create id
+        id: `timestamp.${alert.id}`,
         headerId: 'timestamp',
-        id: 'timestamp',
         headerLabel: 'Timestamp',
         value: formatDatetime(alert.activation_time, '-'),
         className: 'table-cell-1'
       },
       {
+        id: `entityType.${alert.id}`,
         headerId: 'severity',
         headerLabel: 'severity',
-        id: 'severity',
-        // id: `severity.${identifierUnique}`, //@TODO create id
-        // value: alert.severity,
-        value: JOB_KIND_SPARK,
-        text: alert.severity,
-        className: 'table-cell-1',
-        type: 'type'
+        value: getSeverityData(alert.severity).value,
+        tooltip: getSeverityData(alert.severity).tooltip,
+        className: 'table-cell-1'
       },
       {
         headerId: 'criteriacount',
@@ -113,8 +202,9 @@ export const createAlertRowData = ({ name, ...alert }) => {
         id: 'notifications',
         headerId: 'notifications',
         headerLabel: 'Notifications',
-        value: alert.notifications || [],
-        className: 'table-cell-1'
+        value: getNotificationData(alert.notifications),
+        className: 'table-cell-1 table-cell-notification',
+        type: 'icons'
       }
     ]
   }
