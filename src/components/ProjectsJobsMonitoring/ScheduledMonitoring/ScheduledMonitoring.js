@@ -17,7 +17,7 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import React, { useEffect, useMemo, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useDispatch } from 'react-redux'
 
 import ScheduledJobsTable from '../../../elements/ScheduledJobsTable/ScheduledJobsTable'
@@ -44,10 +44,6 @@ const ScheduledMonitoring = () => {
     tabData[JOBS_MONITORING_SCHEDULED_TAB]?.parseQueryParamsCallback
   )
 
-  const tableContent = useMemo(() => {
-    return createScheduleJobsMonitoringContent(scheduledJobs)
-  }, [scheduledJobs])
-
   useEffect(() => {
     if (!dataIsLoaded) {
       refreshScheduled(filters)
@@ -70,6 +66,7 @@ const ScheduledMonitoring = () => {
   return (
     <ScheduledJobsTable
       context={ProjectJobsMonitoringContext}
+      createTableContent={() => createScheduleJobsMonitoringContent(scheduledJobs)}
       filtersConfig={scheduledFiltersConfig}
       filters={filters}
       jobs={scheduledJobs}
@@ -77,7 +74,6 @@ const ScheduledMonitoring = () => {
       refreshJobs={() =>
         refreshScheduled(filters)
       }
-      tableContent={tableContent}
     />
   )
 }

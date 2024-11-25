@@ -247,9 +247,10 @@ export const generateActionsMenu = (
   projectName,
   handleRefresh,
   modelsFilters,
-  handleDeployModel,
   menuPosition,
-  selectedModel
+  selectedModel,
+  isDetailsPopUp = false,
+  handleDeployModel
 ) => {
   const isTargetPathValid = getIsTargetPathValid(modelMin ?? {}, frontendSpec)
 
@@ -261,7 +262,7 @@ export const generateActionsMenu = (
     [
       {
         label: 'Add a tag',
-        hidden: menuPosition === ACTION_MENU_PARENT_ROW_EXPANDED,
+        hidden: menuPosition === ACTION_MENU_PARENT_ROW_EXPANDED || isDetailsPopUp,
         icon: <TagIcon />,
         onClick: handleAddTag
       },
@@ -306,7 +307,7 @@ export const generateActionsMenu = (
         label: 'Delete',
         icon: <Delete />,
         className: 'danger',
-        hidden: [ACTION_MENU_PARENT_ROW, ACTION_MENU_PARENT_ROW_EXPANDED].includes(menuPosition),
+        hidden: [ACTION_MENU_PARENT_ROW, ACTION_MENU_PARENT_ROW_EXPANDED].includes(menuPosition) || isDetailsPopUp,
         onClick: () =>
           openDeleteConfirmPopUp(
             'Delete model?',
@@ -327,7 +328,7 @@ export const generateActionsMenu = (
       {
         label: 'Delete all',
         icon: <Delete />,
-        hidden: ![ACTION_MENU_PARENT_ROW, ACTION_MENU_PARENT_ROW_EXPANDED].includes(menuPosition),
+        hidden: ![ACTION_MENU_PARENT_ROW, ACTION_MENU_PARENT_ROW_EXPANDED].includes(menuPosition) || isDetailsPopUp,
         className: 'danger',
         onClick: () =>
           openDeleteConfirmPopUp(
@@ -370,7 +371,8 @@ export const generateActionsMenu = (
         label: 'Deploy',
         id: 'model-deploy',
         icon: <DeployIcon />,
-        onClick: handleDeployModel
+        onClick: handleDeployModel,
+        hidden: isDetailsPopUp
       }
     ]
   ]

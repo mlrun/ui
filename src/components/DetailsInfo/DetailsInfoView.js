@@ -17,7 +17,7 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import React from 'react'
+import React, { useMemo } from 'react'
 import PropTypes from 'prop-types'
 import { isNil } from 'lodash'
 import classnames from 'classnames'
@@ -59,6 +59,7 @@ const DetailsInfoView = React.forwardRef(
       handleDiscardChanges,
       handleFinishEdit,
       handleInfoItemClick,
+      isDetailsPopUp,
       pageData,
       params,
       selectedItem,
@@ -66,6 +67,10 @@ const DetailsInfoView = React.forwardRef(
     },
     ref
   ) => {
+    const infoContent = useMemo(
+      () => (isDetailsPopUp ? detailsStore.detailsPopUpInfoContent : detailsStore.infoContent),
+      [detailsStore.infoContent, detailsStore.detailsPopUpInfoContent, isDetailsPopUp]
+    )
     const wrapperClassNames = classnames(
       !isEveryObjectValueEmpty(additionalInfo)
         ? 'item-info__details-wrapper'
@@ -73,7 +78,7 @@ const DetailsInfoView = React.forwardRef(
     )
 
     return (
-      !isEveryObjectValueEmpty(detailsStore.infoContent) && (
+      !isEveryObjectValueEmpty(infoContent) && (
         <>
           <div className="item-info__details-wrapper">
             {(pageData.page === ARTIFACTS_PAGE ||
@@ -100,33 +105,29 @@ const DetailsInfoView = React.forwardRef(
                 let info = null
 
                 if (pageData.page === JOBS_PAGE) {
-                  if (detailsStore.infoContent[header.id]?.value === selectedItem.parametersChips) {
+                  if (infoContent[header.id]?.value === selectedItem.parametersChips) {
                     chipsData.chips = selectedItem.parametersChips
                     chipsData.chipOptions = getChipOptions('parameters')
-                  } else if (
-                    detailsStore.infoContent[header.id]?.value === selectedItem.resultsChips
-                  ) {
+                  } else if (infoContent[header.id]?.value === selectedItem.resultsChips) {
                     chipsData.chips = selectedItem.resultsChips
                     chipsData.chipOptions = getChipOptions('results')
-                  } else if (detailsStore.infoContent[header.id]?.value === selectedItem.labels) {
+                  } else if (infoContent[header.id]?.value === selectedItem.labels) {
                     chipsData.chips = selectedItem.labels
                     chipsData.chipOptions = getChipOptions('labels')
-                  } else if (
-                    detailsStore.infoContent[header.id]?.value === selectedItem.nodeSelectorChips
-                  ) {
+                  } else if (infoContent[header.id]?.value === selectedItem.nodeSelectorChips) {
                     chipsData.chips = selectedItem.nodeSelectorChips
                     chipsData.chipOptions = getChipOptions('results')
                   }
 
                   func =
-                    detailsStore.infoContent[header.id]?.value === selectedItem.function
+                    infoContent[header.id]?.value === selectedItem.function
                       ? selectedItem.function
                       : ''
                   state =
-                    detailsStore.infoContent[header.id]?.value === selectedItem.state?.value
+                    infoContent[header.id]?.value === selectedItem.state?.value
                       ? selectedItem.state?.value
                       : ''
-                  info = detailsStore.infoContent[header.id]?.value
+                  info = infoContent[header.id]?.value
                 } else if (
                   pageData.page === ARTIFACTS_PAGE ||
                   pageData.page === DATASETS_PAGE ||
@@ -137,26 +138,26 @@ const DetailsInfoView = React.forwardRef(
                   if (header.id === 'labels') {
                     chipsData.chips = formState.values.labels
                       ? parseKeyValues(formState.values.labels)
-                      : parseKeyValues(detailsStore.infoContent[header.id]?.value)
+                      : parseKeyValues(infoContent[header.id]?.value)
                     chipsData.chipOptions = getChipOptions(header.id)
                   }
                   if (header.id === 'metrics') {
-                    chipsData.chips = parseKeyValues(detailsStore.infoContent[header.id]?.value)
+                    chipsData.chips = parseKeyValues(infoContent[header.id]?.value)
                     chipsData.chipOptions = getChipOptions(header.id)
                   } else if (header.id === 'relations') {
-                    chipsData.chips = parseKeyValues(detailsStore.infoContent[header.id]?.value)
+                    chipsData.chips = parseKeyValues(infoContent[header.id]?.value)
                     chipsData.chipOptions = getChipOptions(header.id)
                     chipsData.delimiter = <RightArrow />
                   }
 
                   info = !isNil(detailsStore.changes.data[header.id])
                     ? detailsStore.changes.data[header.id].currentFieldValue
-                    : selectedItem && detailsStore.infoContent[header.id]?.value
+                    : selectedItem && infoContent[header.id]?.value
                 } else if (pageData.page === FUNCTIONS_PAGE) {
                   info =
                     header.id === 'kind'
-                      ? detailsStore.infoContent[header.id]?.value || 'Local'
-                      : detailsStore.infoContent[header.id]?.value || ''
+                      ? infoContent[header.id]?.value || 'Local'
+                      : infoContent[header.id]?.value || ''
                 }
 
                 return (
@@ -179,8 +180,9 @@ const DetailsInfoView = React.forwardRef(
                         handleDiscardChanges={handleDiscardChanges}
                         handleFinishEdit={handleFinishEdit}
                         info={info}
+                        isDetailsPopUp={isDetailsPopUp}
                         isFieldInEditMode={detailsInfoState.editMode.field === header.id}
-                        item={detailsStore.infoContent[header.id]}
+                        item={infoContent[header.id]}
                         onClick={handleInfoItemClick}
                         params={params}
                         ref={ref}
@@ -214,7 +216,10 @@ const DetailsInfoView = React.forwardRef(
                 </>
               )}
               {!isEveryObjectValueEmpty(additionalInfo.sources) && (
-                <ArtifactInfoSources sources={additionalInfo.sources} />
+                <ArtifactInfoSources
+                  isDetailsPopUp={isDetailsPopUp}
+                  sources={additionalInfo.sources}
+                />
               )}
             </div>
           )}

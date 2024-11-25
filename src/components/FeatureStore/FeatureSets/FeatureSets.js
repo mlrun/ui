@@ -41,8 +41,8 @@ import {
 import { checkTabIsValid, handleApplyDetailsChanges } from '../featureStore.util'
 import { createFeatureSetsRowData } from '../../../utils/createFeatureStoreContent'
 import {
-  chooseOrFetchFeatureSet,
   featureSetsActionCreator,
+  generateActionsMenu,
   generatePageData,
   setFullSelectedFeatureSet
 } from './featureSets.util'
@@ -58,8 +58,6 @@ import { useVirtualization } from '../../../hooks/useVirtualization.hook'
 import { useInitialTableFetch } from '../../../hooks/useInitialTableFetch.hook'
 import { filtersConfig } from './featureSets.util'
 import { useFiltersFromSearchParams } from '../../../hooks/useFiltersFromSearchParams.hook'
-
-import { ReactComponent as Yaml } from 'igz-controls/images/yaml.svg'
 
 import cssVariables from './featureSets.scss'
 
@@ -104,18 +102,7 @@ const FeatureSets = ({
   const pageData = useMemo(() => generatePageData(selectedFeatureSet), [selectedFeatureSet])
 
   const actionsMenu = useMemo(
-    () => [
-      [
-        {
-          label: 'View YAML',
-          icon: <Yaml />,
-          onClick: featureSetMin =>
-            chooseOrFetchFeatureSet(dispatch, selectedFeatureSet, featureSetMin).then(
-              toggleConvertedYaml
-            )
-        }
-      ]
-    ],
+    () => generateActionsMenu(dispatch, selectedFeatureSet, toggleConvertedYaml),
     [dispatch, selectedFeatureSet, toggleConvertedYaml]
   )
 

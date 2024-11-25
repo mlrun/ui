@@ -21,6 +21,7 @@ import React from 'react'
 
 import AddFeatureButton from '../elements/AddFeatureButton/AddFeatureButton'
 import FeatureValidator from '../elements/FeatureValidator/FeatureValidator'
+import FeatureSetPopUp from '../elements/DetailsPopUp/FeatureSetPopUp/FeatureSetPopUp'
 
 import {
   FEATURE_STORE_PAGE,
@@ -34,6 +35,7 @@ import { generateUri } from './resources'
 import { truncateUid } from '../utils'
 import { generateLinkToDetailsPanel } from './link-helper.util'
 import { validateArguments } from './validateArguments'
+import { openPopUp } from 'igz-controls/utils/common.util'
 
 import { ReactComponent as Nosql } from 'igz-controls/images/nosql.svg'
 import { ReactComponent as Stream } from 'igz-controls/images/stream.svg'
@@ -130,7 +132,11 @@ export const createFeatureSetsRowData = (featureSet, project, pageTab, showExpan
   }
 }
 
-export const createFeaturesRowData = (feature, isTablePanelOpen, showExpandButton) => {
+export const createFeaturesRowData = (
+  feature,
+  isTablePanelOpen,
+  showExpandButton
+) => {
   return {
     data: {
       ...feature
@@ -156,43 +162,27 @@ export const createFeaturesRowData = (feature, isTablePanelOpen, showExpandButto
         headerLabel: 'Feature set',
         value: feature.metadata?.name,
         className: 'table-cell-2',
-        getLink: tab =>
-          validateArguments(
-            feature.metadata?.name,
-            feature.metadata?.tag || feature.metadata?.uid,
-            tab
-          )
-            ? generateLinkToDetailsPanel(
-                feature.metadata?.project,
-                FEATURE_STORE_PAGE,
-                FEATURE_SETS_TAB,
-                feature.metadata?.name,
-                feature.metadata?.tag,
-                tab,
-                feature.metadata?.uid
-              )
-            : '',
+        handleClick: () =>
+          openPopUp(FeatureSetPopUp, {
+            featureSetData: {
+              project: feature.metadata?.project,
+              name: feature.metadata?.name,
+              tag: feature.metadata?.tag
+            }
+          }),
         expandedCellContent: {
           className: 'table-cell-2',
           value: ''
         },
         rowExpanded: {
-          getLink: tab =>
-            validateArguments(
-              feature.metadata?.name,
-              feature.metadata?.tag || feature.metadata?.uid,
-              tab
-            )
-              ? generateLinkToDetailsPanel(
-                  feature.metadata?.project,
-                  FEATURE_STORE_PAGE,
-                  FEATURE_SETS_TAB,
-                  feature.metadata?.name,
-                  feature.metadata?.tag,
-                  tab,
-                  feature.metadata?.uid
-                )
-              : ''
+          handleClick: () =>
+            openPopUp(FeatureSetPopUp, {
+              featureSetData: {
+                project: feature.metadata?.project,
+                name: feature.metadata?.name,
+                tag: feature.metadata?.tag
+              }
+            })
         }
       },
       {

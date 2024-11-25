@@ -29,7 +29,6 @@ import Loader from '../../common/Loader/Loader'
 import NoData from '../../common/NoData/NoData'
 import Table from '../../components/Table/Table'
 import Workflow from '../../components/Workflow/Workflow'
-import YamlModal from '../../common/YamlModal/YamlModal'
 
 import {
   ERROR_STATE,
@@ -65,7 +64,7 @@ import { parseJob } from '../../utils/parseJob'
 import { setNotification } from '../../reducers/notificationReducer'
 import { showErrorNotification } from '../../utils/notifications.util'
 import { useSortTable } from '../../hooks/useSortTable.hook'
-import { useYaml } from '../../hooks/yaml.hook'
+import { toggleYaml } from '../../reducers/appReducer'
 
 import cssVariables from '../../components/Jobs/MonitorWorkflows/monitorWorkflows.scss'
 
@@ -74,7 +73,6 @@ const WorkflowsTable = React.forwardRef(
     {
       backLink,
       context,
-      fetchFunctionLogs,
       filters,
       filtersConfig,
       getWorkflows,
@@ -91,7 +89,6 @@ const WorkflowsTable = React.forwardRef(
     },
     abortJobRef
   ) => {
-    const [convertedYaml, toggleConvertedYaml] = useYaml('')
     const [dataIsLoading, setDataIsLoading] = useState(false)
     const [workflowsViewMode, setWorkflowsViewMode] = useState(WORKFLOW_GRAPH_VIEW)
     const workflowsStore = useSelector(state => state.workflowsStore)
@@ -124,12 +121,13 @@ const WorkflowsTable = React.forwardRef(
 
     const handleRetry = useCallback(() => {
       getWorkflows(filters)
-    }, [filters, getWorkflows]) 
+    }, [filters, getWorkflows])
 
     const handleFetchFunctionLogs = useCallback(
       (item, projectName, setDetailsLogs) => {
         return getFunctionLogs(
-          fetchFunctionLogs,
+          dispatch,
+          functionsActions.fetchFunctionLogs,
           fetchFunctionLogsTimeout,
           projectName,
           item.name,
@@ -137,7 +135,7 @@ const WorkflowsTable = React.forwardRef(
           setDetailsLogs
         )
       },
-      [fetchFunctionLogs, fetchFunctionLogsTimeout]
+      [fetchFunctionLogsTimeout, dispatch]
     )
 
     const handleFetchJobLogs = useCallback(
@@ -150,6 +148,13 @@ const WorkflowsTable = React.forwardRef(
           jobsActions.fetchJobLogs,
           dispatch
         )
+      },
+      [dispatch]
+    )
+
+    const toggleConvertedYaml = useCallback(
+      data => {
+        return dispatch(toggleYaml(data))
       },
       [dispatch]
     )
@@ -359,16 +364,14 @@ const WorkflowsTable = React.forwardRef(
 
     const onDeleteJob = useCallback(
       job => {
-        handleDeleteJob(jobsActions.deleteJob, job, refreshWorkflow, filters, dispatch).then(
-          () => {
-            navigate(
-              location.pathname
-                .split('/')
-                .splice(0, location.pathname.split('/').indexOf(params.workflowId) + 1)
-                .join('/') + window.location.search
-            )
-          }
-        )
+        handleDeleteJob(jobsActions.deleteJob, job, refreshWorkflow, filters, dispatch).then(() => {
+          navigate(
+            location.pathname
+              .split('/')
+              .splice(0, location.pathname.split('/').indexOf(params.workflowId) + 1)
+              .join('/') + window.location.search
+          )
+        })
       },
       [dispatch, filters, location.pathname, navigate, params.workflowId, refreshWorkflow]
     )
@@ -740,9 +743,6 @@ const WorkflowsTable = React.forwardRef(
               </Table>
             )}
           </>
-        )}
-        {convertedYaml.length > 0 && (
-          <YamlModal convertedYaml={convertedYaml} toggleConvertToYaml={toggleConvertedYaml} />
         )}
       </>
     )

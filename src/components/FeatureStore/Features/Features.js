@@ -101,7 +101,11 @@ const Features = ({
       return mapValues(prevSelectedRowData, feature => ({
         ...feature,
         content: map(feature.content, contentItem =>
-          createFeaturesRowData(contentItem.data, tableStore.isTablePanelOpen)
+          createFeaturesRowData(
+            contentItem.data,
+            tableStore.isTablePanelOpen,
+            false
+          )
         )
       }))
     })
@@ -222,7 +226,11 @@ const Features = ({
         .then(result => {
           if (result?.length > 0) {
             const content = [...result].map(contentItem =>
-              createFeaturesRowData(contentItem, tableStore.isTablePanelOpen)
+              createFeaturesRowData(
+                contentItem,
+                tableStore.isTablePanelOpen,
+                false
+              )
             )
             setSelectedRowData(state => ({
               ...state,
@@ -263,8 +271,19 @@ const Features = ({
       ? latestItems.map(contentItem => {
           return createFeaturesRowData(contentItem, tableStore.isTablePanelOpen, true)
         })
-      : features.map(contentItem => createFeaturesRowData(contentItem, tableStore.isTablePanelOpen))
-  }, [features, filtersStore.groupBy, latestItems, tableStore.isTablePanelOpen])
+      : features.map(contentItem =>
+          createFeaturesRowData(
+            contentItem,
+            tableStore.isTablePanelOpen,
+            false
+          )
+        )
+  }, [
+    features,
+    filtersStore.groupBy,
+    latestItems,
+    tableStore.isTablePanelOpen
+  ])
 
   const getPopUpTemplate = useCallback(
     action => {

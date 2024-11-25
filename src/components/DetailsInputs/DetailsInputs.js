@@ -39,10 +39,7 @@ import {
 import { fetchArtifacts } from '../../reducers/artifactsReducer'
 import featureStoreApi from '../../api/featureStore-api'
 import { generateArtifactIdentifiers } from '../Details/details.util'
-import {
-  FEATURE_VECTORS_KIND,
-  generateInputsTabContent
-} from './detailsInputs.util'
+import { FEATURE_VECTORS_KIND, generateInputsTabContent } from './detailsInputs.util'
 import { generateStoreResourceLink } from '../../utils/generateStoreResourceLink'
 import { parseUri } from '../../utils'
 import { searchArtifactItem } from '../../utils/searchArtifactItem'
@@ -50,7 +47,7 @@ import { parseFeatureVectors } from '../../utils/parseFeatureVectors'
 
 import './detailsInputs.scss'
 
-const DetailsInputs = ({ inputs }) => {
+const DetailsInputs = ({ inputs, isDetailsPopUp = false }) => {
   const [artifactsIds, setArtifactsIds] = useState([])
   const [inputsContent, setInputsContent] = useState([])
   const [requestsCounter, setRequestsCounter] = useState(0)
@@ -63,8 +60,12 @@ const DetailsInputs = ({ inputs }) => {
   )
 
   const inputsTabContent = useMemo(() => {
-    return generateInputsTabContent(inputsContent, showArtifact)
-  }, [inputsContent, showArtifact])
+    return generateInputsTabContent(
+      inputsContent,
+      showArtifact,
+      isDetailsPopUp
+    )
+  }, [inputsContent, isDetailsPopUp, showArtifact])
 
   const dispatch = useDispatch()
   const params = useParams()
@@ -153,7 +154,10 @@ const DetailsInputs = ({ inputs }) => {
                   ui: {
                     inputName: key,
                     inputPath,
-                    inputResourceLink: generateStoreResourceLink(input, project ?? params.projectName),
+                    inputResourceLink: generateStoreResourceLink(
+                      input,
+                      project ?? params.projectName
+                    ),
                     isShowDetailsActive: true,
                     isPreviewable: kind !== FEATURE_VECTORS_KIND
                   }

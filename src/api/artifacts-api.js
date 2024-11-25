@@ -51,6 +51,10 @@ const fetchArtifacts = (project, filters, config = {}, withLatestTag, withExactN
     params.name = `${withExactName ? '' : '~'}${filters.name}`
   }
 
+  if (filters?.tree) {
+    params.tree = filters.tree
+  }
+
   return mainHttpClientV2.get(`/projects/${project}/artifacts`, {
     ...config,
     params: { ...config.params, ...params }

@@ -37,7 +37,15 @@ import {
 
 const DetailsInfo = React.forwardRef(
   (
-    { detailsStore, formState, pageData, selectedItem, setChangesData, setChangesCounter },
+    {
+      detailsStore,
+      formState,
+      isDetailsPopUp,
+      pageData,
+      selectedItem,
+      setChangesCounter,
+      setChangesData
+    },
     applyChangesRef
   ) => {
     const [detailsInfoState, detailsInfoDispatch] = useReducer(detailsInfoReducer, initialState)
@@ -102,7 +110,10 @@ const DetailsInfo = React.forwardRef(
       [params.projectName, selectedItem]
     )
 
-    const producer = useMemo(() => generateProducerDetailsInfo(selectedItem), [selectedItem])
+    const producer = useMemo(
+      () => generateProducerDetailsInfo(selectedItem, isDetailsPopUp),
+      [selectedItem, isDetailsPopUp]
+    )
 
     const drift = useMemo(() => generateDriftDetailsInfo(selectedItem), [selectedItem])
 
@@ -138,6 +149,7 @@ const DetailsInfo = React.forwardRef(
         handleDiscardChanges={handleDiscardChanges}
         handleFinishEdit={finishEdit}
         handleInfoItemClick={handleInfoItemClick}
+        isDetailsPopUp={isDetailsPopUp}
         pageData={pageData}
         params={params}
         ref={editItemRef}

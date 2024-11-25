@@ -101,7 +101,7 @@ const RealTimePipelines = () => {
       )
         .unwrap()
         .then(result => {
-          if(!isNil(result)) {
+          if (!isNil(result)) {
             setPipelines(
               result.filter(
                 func =>
@@ -139,8 +139,7 @@ const RealTimePipelines = () => {
     [dispatch, fetchData]
   )
 
-  useInitialTableFetch({fetchData: fetchInitialData, filters })
-
+  useInitialTableFetch({ fetchData: fetchInitialData, filters })
 
   useEffect(() => {
     return () => {
@@ -153,9 +152,12 @@ const RealTimePipelines = () => {
   useEffect(() => {
     if (params.pipelineId && pipelines.length > 0) {
       if (!pipelines.find(item => item.hash === params.pipelineId)) {
-        navigate(`/projects/${params.projectName}/models/${REAL_TIME_PIPELINES_TAB}${window.location.search}`, {
-          replace: true
-        })
+        navigate(
+          `/projects/${params.projectName}/models/${REAL_TIME_PIPELINES_TAB}${window.location.search}`,
+          {
+            replace: true
+          }
+        )
       }
     }
   }, [navigate, params.pipelineId, params.projectName, pipelines])

@@ -20,6 +20,9 @@ such restriction.
 import React from 'react'
 import { isNumber } from 'lodash'
 
+import TableProducerCell from '../elements/TableProducerCell/TableProducerCell'
+import FunctionPopUp from '../elements/DetailsPopUp/FunctionPopUp/FunctionPopUp'
+
 import {
   ARTIFACTS_PAGE,
   DATASETS_PAGE,
@@ -32,10 +35,10 @@ import { parseKeyValues } from './object'
 import { formatDatetime } from './datetime'
 import prettyBytes from 'pretty-bytes'
 import { parseUri } from './parseUri'
-import { generateFunctionDetailsLink, generateLinkToDetailsPanel } from './link-helper.util'
+import { generateLinkToDetailsPanel } from './link-helper.util'
+import { openPopUp } from 'igz-controls/utils/common.util'
 import { validateArguments } from './validateArguments'
 // import { roundFloats } from './roundFloats'
-import TableProducerCell from '../elements/TableProducerCell/TableProducerCell'
 
 import { ReactComponent as SeverityOk } from 'igz-controls/images/severity-ok.svg'
 import { ReactComponent as SeverityWarning } from 'igz-controls/images/severity-warning.svg'
@@ -47,7 +50,7 @@ export const createArtifactsContent = (artifacts, page, pageTab, project, fronte
       return createArtifactsRowData(artifact)
     } else if (page === MODELS_PAGE) {
       if (pageTab === MODELS_TAB) {
-        return createModelsRowData(artifact, project, frontendSpec)
+        return createModelsRowData(artifact, project, frontendSpec, null, false)
       } else if (pageTab === MODEL_ENDPOINTS_TAB) {
         return createModelEndpointsRowData(artifact, project)
       }
@@ -457,7 +460,11 @@ export const createModelEndpointsRowData = (artifact, project) => {
         headerLabel: 'Function',
         value: functionName,
         className: 'table-cell-1',
-        getLink: () => generateFunctionDetailsLink(artifact.spec?.function_uri),
+        handleClick: () =>
+          openPopUp(FunctionPopUp, {
+            funcUri: artifact.spec?.function_uri
+          }),
+        type: 'link',
         tooltip: functionUri
       },
       {

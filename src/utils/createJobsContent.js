@@ -17,6 +17,8 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
+import JobPopUp from '../elements/DetailsPopUp/JobPopUp/JobPopUp'
+import FunctionPopUp from '../elements/DetailsPopUp/FunctionPopUp/FunctionPopUp'
 
 import {
   ERROR_STATE,
@@ -28,13 +30,14 @@ import {
   MONITOR_WORKFLOWS_TAB,
   PROJECT_FILTER
 } from '../constants'
+import { openPopUp } from 'igz-controls/utils/common.util'
 import {
   getWorkflowDetailsLink,
   getWorkflowMonitoringDetailsLink
 } from '../components/Workflow/workflow.util'
 import measureTime from './measureTime'
 import { formatDatetime } from './datetime'
-import { generateFunctionDetailsLink, generateLinkToDetailsPanel } from './link-helper.util'
+import { generateLinkToDetailsPanel } from './link-helper.util'
 import { getJobIdentifier, getWorkflowJobIdentifier } from './getUniqueIdentifier'
 import { parseKeyValues } from './object'
 import { validateArguments } from './validateArguments'
@@ -159,13 +162,8 @@ export const createJobsMonitorTabContent = (jobs, jobName, isStagingMode) => {
 export const createJobsScheduleTabContent = jobs => {
   return jobs.map(job => {
     const identifierUnique = getJobIdentifier(job, true)
-    const [, projectName, jobUid] = job.lastRunUri?.match(/(.+)@(.+)#([^:]+)(?::(.+))?/) || []
-    const jobName = job.name
-    const lastRunLink = () =>
-      projectName &&
-      jobName &&
-      jobUid &&
-      `/projects/${projectName}/jobs/${MONITOR_JOBS_TAB}/${jobName}/${jobUid}/overview${window.location.search}`
+    const [, projectName, lastRunUid, lastRunIter] =
+      job.lastRunUri?.match(/(.+)@(.+)#([^:]+)(?::(.+))?/) || []
 
     return {
       data: {
@@ -184,7 +182,10 @@ export const createJobsScheduleTabContent = jobs => {
           value: job.name,
           className: 'table-cell-name',
           showStatus: true,
-          getLink: () => generateFunctionDetailsLink(job.func),
+          handleClick: () =>
+            openPopUp(FunctionPopUp, {
+              funcUri: job.func
+            }),
           type: 'link'
         },
         {
@@ -225,7 +226,14 @@ export const createJobsScheduleTabContent = jobs => {
           id: `lastRun.${identifierUnique}`,
           value: formatDatetime(job.startTime),
           className: 'table-cell-1',
-          getLink: lastRunLink,
+          handleClick: () =>
+            openPopUp(JobPopUp, {
+              jobData: {
+                project: projectName,
+                uid: lastRunUid,
+                iter: lastRunIter
+              }
+            }),
           type: 'link'
         },
         {
@@ -536,16 +544,11 @@ export const createJobsMonitoringContent = (jobs, jobName, isStagingMode) => {
   })
 }
 
-export const createScheduleJobsMonitoringContent = jobs => {
+export const createScheduleJobsMonitoringContent = (jobs) => {
   return jobs.map(job => {
     const identifierUnique = getJobIdentifier(job, true)
-    const [, projectName, jobUid] = job.lastRunUri?.match(/(.+)@(.+)#([^:]+)(?::(.+))?/) || []
-    const jobName = job.name
-    const lastRunLink = () =>
-      projectName &&
-      jobName &&
-      jobUid &&
-      `/projects/${projectName}/jobs/${MONITOR_JOBS_TAB}/${jobName}/${jobUid}/overview`
+    const [, projectName, lastRunUid, lastRunIter] =
+      job.lastRunUri?.match(/(.+)@(.+)#([^:]+)(?::(.+))?/) || []
 
     return {
       data: {
@@ -564,7 +567,10 @@ export const createScheduleJobsMonitoringContent = jobs => {
           value: job.name,
           className: 'table-cell-name',
           showStatus: true,
-          getLink: () => generateFunctionDetailsLink(job.func),
+          handleClick: () =>
+            openPopUp(FunctionPopUp, {
+              funcUri: job.func
+            }),
           type: 'link'
         },
         {
@@ -612,7 +618,14 @@ export const createScheduleJobsMonitoringContent = jobs => {
           id: `lastRun.${identifierUnique}`,
           value: formatDatetime(job.startTime),
           className: 'table-cell-1',
-          getLink: lastRunLink,
+          handleClick: () =>
+            openPopUp(JobPopUp, {
+              jobData: {
+                project: projectName,
+                uid: lastRunUid,
+                iter: lastRunIter
+              }
+            }),
           type: 'link'
         },
         {

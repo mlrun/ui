@@ -248,7 +248,7 @@ const getArtifactFetchMethod = tab => {
         : null
 }
 
-const showArtifactErrorNotification = (dispatch, error, tab) => {
+export const showArtifactErrorNotification = (dispatch, error, tab) => {
   const customArtifactErrorMsg =
     tab === DATASETS_TAB
       ? 'Failed to retrieve dataset data'

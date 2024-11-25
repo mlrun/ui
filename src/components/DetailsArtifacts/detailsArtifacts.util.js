@@ -17,13 +17,14 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import { Link } from 'react-router-dom'
 import prettyBytes from 'pretty-bytes'
 
 import CopyToClipboard from '../../common/CopyToClipboard/CopyToClipboard'
 import Download from '../../common/Download/Download'
-import { DATASETS_TAB, MODELS_TAB, TAG_FILTER_LATEST } from '../../constants'
 import { RoundedIcon, TextTooltipTemplate, Tooltip } from 'igz-controls/components'
+import ArtifactPopUp from '../../elements/DetailsPopUp/ArtifactPopUp/ArtifactPopUp'
+
+import { openPopUp } from 'igz-controls/utils/common.util'
 import { formatDatetime, parseKeyValues } from '../../utils'
 import { parseArtifacts } from '../../utils/parseArtifacts'
 
@@ -66,19 +67,28 @@ export const generateArtifactsPreviewContent = (selectedJob, artifacts) => {
   })
 }
 
-export const generateArtifactsTabContent = (artifacts, params, iteration, showArtifact) => {
-  return artifacts.map(artifact => {
-    const artifactScreenLinks = {
-      model: `${process.env.PUBLIC_URL}/projects/${params.projectName || artifact.project}/models/${MODELS_TAB}/${
-        artifact.db_key || artifact.key
-      }/${artifact.tag ? artifact.tag : (artifact.tree ?? TAG_FILTER_LATEST)}${
-        iteration ? `/${iteration}` : ''
-      }/overview`,
-      dataset: `${process.env.PUBLIC_URL}/projects/${params.projectName || artifact.project}/${DATASETS_TAB}/${artifact.db_key || artifact.key}/${
-        artifact.tag ? artifact.tag : (artifact.tree ?? TAG_FILTER_LATEST)
-      }${iteration ? `/${iteration}` : ''}/overview`
+export const generateArtifactsTabContent = (
+  artifacts,
+  params,
+  iteration,
+  showArtifact,
+  isDetailsPopUp = false
+) => {
+  const handleOpenArtifactPopUp = artifact => {
+    const artifactData = {
+      project: artifact.project || params.projectName,
+      name: artifact.db_key || artifact.key,
+      iter: artifact.iter,
+      tree: artifact.tree,
+      tag: artifact.tag
     }
 
+    openPopUp(ArtifactPopUp, {
+      artifactData
+    })
+  }
+
+  return artifacts.map(artifact => {
     return [
       {
         headerId: 'name',
@@ -118,18 +128,15 @@ export const generateArtifactsTabContent = (artifacts, params, iteration, showAr
         template: (
           <>
             <CopyToClipboard textToCopy={artifact.target_path} tooltipText="Copy path" />
-            <RoundedIcon tooltipText="Show Details" id="show-details">
-              <Link
-                to={
-                  artifactScreenLinks[artifact.kind] ??
-                  `${process.env.PUBLIC_URL}/projects/${params.projectName || artifact.project}/files/${artifact.db_key || artifact.key}/${
-                    artifact.tag ? artifact.tag : (artifact.tree ?? TAG_FILTER_LATEST)
-                  }${iteration ? `/${iteration}` : ''}/overview`
-                }
+            {!isDetailsPopUp && (
+              <RoundedIcon
+                tooltipText="Show Details"
+                id="show-details"
+                onClick={() => handleOpenArtifactPopUp(artifact)}
               >
                 <DetailsIcon />
-              </Link>
-            </RoundedIcon>
+              </RoundedIcon>
+            )}
             <Download
               className="icon-download"
               fileSize={artifact.size}

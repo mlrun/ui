@@ -256,9 +256,10 @@ const Models = ({ fetchModelFeatureVector }) => {
         params.projectName,
         handleRefresh,
         filters,
-        handleDeployModel,
         menuPosition,
-        selectedModel
+        selectedModel,
+        false,
+        handleDeployModel
       ),
     [
       frontendSpec,
@@ -370,7 +371,12 @@ const Models = ({ fetchModelFeatureVector }) => {
   }
 
   useInitialTableFetch({
-    createRowData: rowItem => createModelsRowData(rowItem, params.projectName, frontendSpec),
+    createRowData: rowItem =>
+      createModelsRowData(
+        rowItem,
+        params.projectName,
+        frontendSpec
+      ),
     fetchData,
     fetchTags,
     filterModalName: MODELS_TAB,

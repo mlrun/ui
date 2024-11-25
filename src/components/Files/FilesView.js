@@ -24,7 +24,6 @@ import { isEmpty } from 'lodash'
 import NoData from '../../common/NoData/NoData'
 import Table from '../Table/Table'
 import Breadcrumbs from '../../common/Breadcrumbs/Breadcrumbs'
-import YamlModal from '../../common/YamlModal/YamlModal'
 import Loader from '../../common/Loader/Loader'
 import PreviewModal from '../../elements/PreviewModal/PreviewModal'
 import ArtifactsTableRow from '../../elements/ArtifactsTableRow/ArtifactsTableRow'
@@ -48,7 +47,6 @@ const FilesView = React.forwardRef(
       applyDetailsChanges,
       applyDetailsChangesCallback,
       artifactsStore,
-      convertedYaml,
       detailsFormInitialValues,
       files,
       filters,
@@ -69,7 +67,6 @@ const FilesView = React.forwardRef(
       sortProps,
       tableContent,
       tableHeaders,
-      toggleConvertedYaml,
       viewMode = null,
       virtualizationConfig
     },
@@ -172,9 +169,6 @@ const FilesView = React.forwardRef(
             </div>
           </div>
         </div>
-        {convertedYaml.length > 0 && (
-          <YamlModal convertedYaml={convertedYaml} toggleConvertToYaml={toggleConvertedYaml} />
-        )}
         {artifactsStore?.preview?.isPreview && (
           <PreviewModal artifact={artifactsStore?.preview?.selectedItem} />
         )}
@@ -188,7 +182,6 @@ FilesView.propTypes = {
   applyDetailsChanges: PropTypes.func.isRequired,
   applyDetailsChangesCallback: PropTypes.func.isRequired,
   artifactsStore: PropTypes.object.isRequired,
-  convertedYaml: PropTypes.string.isRequired,
   detailsFormInitialValues: PropTypes.object.isRequired,
   files: PropTypes.arrayOf(PropTypes.object).isRequired,
   filters: PropTypes.object.isRequired,
@@ -209,7 +202,6 @@ FilesView.propTypes = {
   sortProps: SORT_PROPS,
   tableContent: PropTypes.arrayOf(PropTypes.object).isRequired,
   tableHeaders: PropTypes.arrayOf(PropTypes.object).isRequired,
-  toggleConvertedYaml: PropTypes.func.isRequired,
   viewMode: PropTypes.string,
   virtualizationConfig: VIRTUALIZATION_CONFIG.isRequired
 }

@@ -26,10 +26,7 @@ import NoData from '../../../common/NoData/NoData'
 import Table from '../../Table/Table'
 import FeatureStorePageTabs from '../FeatureStorePageTabs/FeatureStorePageTabs'
 
-import {
-  FEATURE_STORE_PAGE,
-  FEATURE_VECTORS_TAB
-} from '../../../constants'
+import { FEATURE_STORE_PAGE, FEATURE_VECTORS_TAB } from '../../../constants'
 import { VIRTUALIZATION_CONFIG } from '../../../types'
 import { filtersConfig } from './featureVectors.util'
 import { getNoDataMessage } from '../../../utils/getNoDataMessage'

@@ -50,7 +50,6 @@ import functionsActions from '../../actions/functions'
 import jobsActions from '../../actions/jobs'
 import { DANGER_BUTTON, TERTIARY_BUTTON } from 'igz-controls/constants'
 import { getFunctionIdentifier } from '../../utils/getUniqueIdentifier'
-import { getFunctionNuclioLogs, getFunctionLogs } from '../../utils/getFunctionLogs'
 import { isBackgroundTaskRunning } from '../../utils/poll.util'
 import { isDetailsTabExists } from '../../utils/link-helper.util'
 import { openPopUp } from 'igz-controls/utils/common.util'
@@ -61,7 +60,6 @@ import { showErrorNotification } from '../../utils/notifications.util'
 import { useGroupContent } from '../../hooks/groupContent.hook'
 import { useMode } from '../../hooks/mode.hook'
 import { useVirtualization } from '../../hooks/useVirtualization.hook'
-import { useYaml } from '../../hooks/yaml.hook'
 import { useInitialTableFetch } from '../../hooks/useInitialTableFetch.hook'
 import { useFiltersFromSearchParams } from '../../hooks/useFiltersFromSearchParams.hook'
 import {
@@ -69,6 +67,7 @@ import {
   getDatePickerFilterValue,
   PAST_WEEK_DATE_OPTION
 } from '../../utils/datePicker.util'
+import { toggleYaml } from '../../reducers/appReducer'
 
 import cssVariables from './functions.scss'
 
@@ -76,8 +75,6 @@ const Functions = ({
   deleteFunction,
   deployFunction,
   fetchFunction,
-  fetchFunctionLogs,
-  fetchFunctionNuclioLogs,
   fetchFunctions,
   functionsStore,
   removeFunctionsError,
@@ -85,7 +82,6 @@ const Functions = ({
   runNewJob
 }) => {
   const [confirmData, setConfirmData] = useState(null)
-  const [convertedYaml, toggleConvertedYaml] = useYaml('')
   const [functions, setFunctions] = useState([])
   const [selectedFunctionMin, setSelectedFunctionMin] = useState({})
   const [selectedFunction, setSelectedFunction] = useState({})
@@ -118,9 +114,7 @@ const Functions = ({
     }
   }, [])
 
-  const functionsFilters = useFiltersFromSearchParams(
-    functionsFiltersConfig
-  )
+  const functionsFilters = useFiltersFromSearchParams(functionsFiltersConfig)
 
   const terminateDeleteTasksPolling = useCallback(() => {
     terminatePollRef?.current?.()
@@ -179,7 +173,9 @@ const Functions = ({
           )
 
           if (!paramsFunction) {
-            navigate(`/projects/${params.projectName}/functions${window.location.search}`, { replace: true })
+            navigate(`/projects/${params.projectName}/functions${window.location.search}`, {
+              replace: true
+            })
           }
           setFunctions([])
         }
@@ -272,46 +268,6 @@ const Functions = ({
     [latestItems, params.projectName]
   )
 
-  const handleRemoveLogs = useCallback(() => {
-    clearTimeout(fetchFunctionLogsTimeout.current)
-    fetchFunctionLogsTimeout.current = null
-  }, [])
-
-  const handleRemoveApplicationLogs = useCallback(() => {
-    clearTimeout(fetchFunctionNuclioLogsTimeout.current)
-    fetchFunctionNuclioLogsTimeout.current = null
-  }, [])
-
-  const handleFetchFunctionLogs = useCallback(
-    (item, projectName, setDetailsLogs) => {
-      return getFunctionLogs(
-        fetchFunctionLogs,
-        fetchFunctionLogsTimeout,
-        projectName,
-        item.name,
-        item.tag,
-        setDetailsLogs,
-        navigate,
-        () => fetchData(filtersStore)
-      )
-    },
-    [filtersStore, fetchFunctionLogs, navigate, fetchData]
-  )
-
-  const handleFetchFunctionApplicationLogs = useCallback(
-    (item, projectName, setDetailsLogs) => {
-      return getFunctionNuclioLogs(
-        fetchFunctionNuclioLogs,
-        fetchFunctionNuclioLogsTimeout,
-        projectName,
-        item.name,
-        item.tag,
-        setDetailsLogs
-      )
-    },
-    [fetchFunctionNuclioLogs]
-  )
-
   const removeFunction = useCallback(
     func => {
       deleteFunction(func.name, params.projectName).then(response => {
@@ -345,7 +301,9 @@ const Functions = ({
 
           if (!isEmpty(selectedFunction)) {
             setSelectedFunctionMin({})
-            navigate(`/projects/${params.projectName}/functions${window.location.search}`, { replace: true })
+            navigate(`/projects/${params.projectName}/functions${window.location.search}`, {
+              replace: true
+            })
           }
         }
       })
@@ -361,6 +319,13 @@ const Functions = ({
       params.projectName,
       selectedFunction
     ]
+  )
+
+  const toggleConvertedYaml = useCallback(
+    data => {
+      return dispatch(toggleYaml(data))
+    },
+    [dispatch]
   )
 
   const onRemoveFunction = useCallback(
@@ -482,19 +447,15 @@ const Functions = ({
   const pageData = useMemo(
     () =>
       generateFunctionsPageData(
+        dispatch,
         selectedFunction,
-        handleFetchFunctionLogs,
-        handleFetchFunctionApplicationLogs,
-        handleRemoveLogs,
-        handleRemoveApplicationLogs
+        fetchFunctionLogsTimeout,
+        fetchFunctionNuclioLogsTimeout,
+        navigate,
+        fetchData,
+        filtersStore
       ),
-    [
-      handleFetchFunctionApplicationLogs,
-      handleFetchFunctionLogs,
-      handleRemoveApplicationLogs,
-      handleRemoveLogs,
-      selectedFunction
-    ]
+    [dispatch, fetchData, filtersStore, navigate, selectedFunction]
   )
 
   const actionsMenu = useMemo(
@@ -613,7 +574,7 @@ const Functions = ({
     }
   }
 
-  const createFunctionSuccess = (isEditMode) => {
+  const createFunctionSuccess = isEditMode => {
     setEditableItem(null)
     setFunctionsPanelIsOpen(false)
     removeNewFunction()
@@ -643,7 +604,9 @@ const Functions = ({
       if (functions.length) {
         const currentItem = functions.find(func => func.name === name && func.tag === tag)
 
-        navigate(`/projects/${params.projectName}/functions/${currentItem.hash}/${tab}${window.location.search}`)
+        navigate(
+          `/projects/${params.projectName}/functions/${currentItem.hash}/${tab}${window.location.search}`
+        )
         dispatch(
           setNotification({
             status: 200,
@@ -667,7 +630,9 @@ const Functions = ({
 
         showErrorNotification(dispatch, error, '', 'Failed to deploy the function')
 
-        navigate(`/projects/${params.projectName}/functions/${currentItem.hash}/overview${window.location.search}`)
+        navigate(
+          `/projects/${params.projectName}/functions/${currentItem.hash}/overview${window.location.search}`
+        )
       }
     })
   }
@@ -725,7 +690,6 @@ const Functions = ({
       actionsMenu={actionsMenu}
       closePanel={closePanel}
       confirmData={confirmData}
-      convertedYaml={convertedYaml}
       createFunctionSuccess={createFunctionSuccess}
       editableItem={editableItem}
       expand={expand}
@@ -750,7 +714,6 @@ const Functions = ({
       selectedFunction={selectedFunction}
       selectedRowData={selectedRowData}
       tableContent={tableContent}
-      toggleConvertedYaml={toggleConvertedYaml}
       virtualizationConfig={virtualizationConfig}
     />
   )

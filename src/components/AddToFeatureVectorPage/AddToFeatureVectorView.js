@@ -26,7 +26,6 @@ import Loader from '../../common/Loader/Loader'
 import NoData from '../../common/NoData/NoData'
 import Table from '../Table/Table'
 import FeatureStoreTableRow from '../../elements/FeatureStoreTableRow/FeatureStoreTableRow'
-import YamlModal from '../../common/YamlModal/YamlModal'
 
 import {
   ADD_TO_FEATURE_VECTOR_TAB,
@@ -45,7 +44,6 @@ const AddToFeatureVectorView = React.forwardRef(
     {
       actionsMenu,
       content,
-      convertedYaml,
       featureStore,
       filters,
       filtersConfig,
@@ -58,7 +56,6 @@ const AddToFeatureVectorView = React.forwardRef(
       selectedRowData,
       tableContent,
       tableStore,
-      toggleConvertedYaml,
       virtualizationConfig
     },
     ref
@@ -127,9 +124,6 @@ const AddToFeatureVectorView = React.forwardRef(
                 </Table>
               </>
             )}
-            {convertedYaml.length > 0 && (
-              <YamlModal convertedYaml={convertedYaml} toggleConvertToYaml={toggleConvertedYaml} />
-            )}
           </div>
         </div>
       </div>
@@ -140,7 +134,6 @@ const AddToFeatureVectorView = React.forwardRef(
 AddToFeatureVectorView.propTypes = {
   actionsMenu: PropTypes.array.isRequired,
   content: PropTypes.arrayOf(PropTypes.object).isRequired,
-  convertedYaml: PropTypes.string.isRequired,
   featureStore: PropTypes.object.isRequired,
   filters: PropTypes.object.isRequired,
   filtersConfig: PropTypes.object.isRequired,
@@ -153,7 +146,6 @@ AddToFeatureVectorView.propTypes = {
   selectedRowData: PropTypes.object.isRequired,
   tableContent: PropTypes.arrayOf(PropTypes.object).isRequired,
   tableStore: PropTypes.object.isRequired,
-  toggleConvertedYaml: PropTypes.func.isRequired,
   virtualizationConfig: VIRTUALIZATION_CONFIG.isRequired
 }
 
