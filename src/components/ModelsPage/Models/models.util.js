@@ -37,7 +37,8 @@ import {
   TAG_FILTER,
   ITERATIONS_FILTER,
   TAG_FILTER_LATEST,
-  SHOW_ITERATIONS
+  SHOW_ITERATIONS,
+  VIEW_SEARCH_PARAMETER
 } from '../../../constants'
 import { showArtifactsPreview, updateArtifact } from '../../../reducers/artifactsReducer'
 import { FORBIDDEN_ERROR_STATUS_CODE } from 'igz-controls/constants'
@@ -224,7 +225,7 @@ export const checkForSelectedModel = (
         )
 
         if (!searchItem) {
-          navigate(`/projects/${projectName}/models/models${getFilteredSearchParams(window.location.search, ['view'])}`)
+          navigate(`/projects/${projectName}/models/models${getFilteredSearchParams(window.location.search, [VIEW_SEARCH_PARAMETER])}`)
         } else {
           setSelectedModel(prevState => {
             return isEqual(prevState, searchItem) ? prevState : searchItem

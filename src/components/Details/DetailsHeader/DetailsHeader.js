@@ -29,7 +29,12 @@ import LoadButton from '../../../common/LoadButton/LoadButton'
 import Select from '../../../common/Select/Select'
 import ActionsMenu from '../../../common/ActionsMenu/ActionsMenu'
 
-import { DETAILS_ARTIFACTS_TAB, FULL_VIEW_MODE, JOBS_PAGE } from '../../../constants'
+import {
+  DETAILS_ARTIFACTS_TAB,
+  FULL_VIEW_MODE,
+  JOBS_PAGE,
+  VIEW_SEARCH_PARAMETER
+} from '../../../constants'
 import { formatDatetime } from '../../../utils'
 import { TERTIARY_BUTTON } from 'igz-controls/constants'
 import { ACTIONS_MENU } from '../../../types'
@@ -281,7 +286,7 @@ const DetailsHeader = ({
                 <RoundedIcon
                   onClick={() => {
                     navigate(
-                      `${window.location.pathname}${window.location.search}${window.location.search ? '&' : '?'}view=full`
+                      `${window.location.pathname}${window.location.search}${window.location.search ? '&' : '?'}${VIEW_SEARCH_PARAMETER}=full`
                     )
                   }}
                   id="full-view"
@@ -294,7 +299,7 @@ const DetailsHeader = ({
                 <RoundedIcon
                   onClick={() => {
                     navigate(
-                      `${window.location.pathname}${getFilteredSearchParams(window.location.search, ['view'])}`
+                      `${window.location.pathname}${getFilteredSearchParams(window.location.search, [VIEW_SEARCH_PARAMETER])}`
                     )
                   }}
                   id="table-view"

@@ -37,7 +37,8 @@ import {
   NAME_FILTER,
   SHOW_ITERATIONS,
   TAG_FILTER,
-  TAG_FILTER_LATEST
+  TAG_FILTER_LATEST,
+  VIEW_SEARCH_PARAMETER
 } from '../../constants'
 import { applyTagChanges, chooseOrFetchArtifact } from '../../utils/artifacts.util'
 import { copyToClipboard } from '../../utils/copyToClipboard'
@@ -153,7 +154,7 @@ export const checkForSelectedFile = (
         )
 
         if (!searchItem) {
-          navigate(`/projects/${projectName}/files${getFilteredSearchParams(window.location.search, ['view'])}`, { replace: true })
+          navigate(`/projects/${projectName}/files${getFilteredSearchParams(window.location.search, [VIEW_SEARCH_PARAMETER])}`, { replace: true })
         } else {
           setSelectedFile(prevState => {
             return isEqual(prevState, searchItem) ? prevState : searchItem
