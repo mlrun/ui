@@ -17,28 +17,34 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import React, { useState } from 'react'
+import React, { useCallback, useState } from 'react'
 import { Outlet } from 'react-router-dom'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 
 import Loader from '../../common/Loader/Loader'
 import Breadcrumbs from '../../common/Breadcrumbs/Breadcrumbs'
-import YamlModal from '../../common/YamlModal/YamlModal'
 import { ConfirmDialog } from 'igz-controls/components'
-import { TABLE_CONTAINER } from '../../constants'
 
-import { useYaml } from '../../hooks/yaml.hook'
+import { TABLE_CONTAINER } from '../../constants'
+import { toggleYaml } from '../../reducers/appReducer'
 
 import './featureStore.scss'
 
 export const FeatureStoreContext = React.createContext({})
 
 const FeatureStore = () => {
+  const dispatch = useDispatch()
   const [featureSetsPanelIsOpen, setFeatureSetsPanelIsOpen] = useState(false)
   const [createVectorPopUpIsOpen, setCreateVectorPopUpIsOpen] = useState(false)
   const [confirmData, setConfirmData] = useState(null)
-  const [convertedYaml, toggleConvertedYaml] = useYaml('')
   const featureStore = useSelector(store => store.featureStore)
+
+  const toggleConvertedYaml = useCallback(
+    data => {
+      return dispatch(toggleYaml(data))
+    },
+    [dispatch]
+  )
 
   return (
     <>
@@ -83,9 +89,6 @@ const FeatureStore = () => {
           isOpen={confirmData}
           message={confirmData.message}
         />
-      )}
-      {convertedYaml.length > 0 && (
-        <YamlModal convertedYaml={convertedYaml} toggleConvertToYaml={toggleConvertedYaml} />
       )}
     </>
   )

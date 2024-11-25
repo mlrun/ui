@@ -44,8 +44,7 @@ const DetailsInfo = React.forwardRef(
       pageData,
       selectedItem,
       setChangesCounter,
-      setChangesData,
-      toggleConvertedYaml
+      setChangesData
     },
     applyChangesRef
   ) => {
@@ -112,8 +111,8 @@ const DetailsInfo = React.forwardRef(
     )
 
     const producer = useMemo(
-      () => generateProducerDetailsInfo(selectedItem, toggleConvertedYaml, isDetailsPopUp),
-      [selectedItem, toggleConvertedYaml, isDetailsPopUp]
+      () => generateProducerDetailsInfo(selectedItem, isDetailsPopUp),
+      [selectedItem, isDetailsPopUp]
     )
 
     const drift = useMemo(() => generateDriftDetailsInfo(selectedItem), [selectedItem])
@@ -156,7 +155,6 @@ const DetailsInfo = React.forwardRef(
         ref={editItemRef}
         selectedItem={selectedItem}
         setChangesData={setChangesData}
-        toggleConvertedYaml={toggleConvertedYaml}
       />
     )
   }

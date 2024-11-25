@@ -63,8 +63,7 @@ const DetailsInfoView = React.forwardRef(
       pageData,
       params,
       selectedItem,
-      setChangesData,
-      toggleConvertedYaml
+      setChangesData
     },
     ref
   ) => {
@@ -220,7 +219,6 @@ const DetailsInfoView = React.forwardRef(
                 <ArtifactInfoSources
                   isDetailsPopUp={isDetailsPopUp}
                   sources={additionalInfo.sources}
-                  toggleConvertedYaml={toggleConvertedYaml}
                 />
               )}
             </div>

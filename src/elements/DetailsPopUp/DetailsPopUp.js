@@ -36,8 +36,7 @@ const DetailsPopUp = ({
   isOpen,
   onResolve,
   pageData,
-  selectedItem,
-  toggleConvertedYaml
+  selectedItem
 }) => {
   const location = useLocation()
   const [detailsPopUpSelectedTab, setDetailsPopUpSelectedTab] = useState(DETAILS_OVERVIEW_TAB)
@@ -60,7 +59,6 @@ const DetailsPopUp = ({
             pageData={pageData}
             selectedItem={selectedItem}
             setDetailsPopUpSelectedTab={setDetailsPopUpSelectedTab}
-            toggleConvertedYaml={toggleConvertedYaml}
           />
         </div>
       )}
@@ -74,8 +72,7 @@ DetailsPopUp.propTypes = {
   isLoading: PropTypes.bool.isRequired,
   onResolve: PropTypes.func.isRequired,
   pageData: PropTypes.object.isRequired,
-  selectedItem: PropTypes.object.isRequired,
-  toggleConvertedYaml: PropTypes.func.isRequired
+  selectedItem: PropTypes.object.isRequired
 }
 
 export default DetailsPopUp

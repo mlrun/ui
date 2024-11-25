@@ -52,8 +52,7 @@ const DetailsArtifacts = ({
   iteration,
   selectedItem,
   setIteration,
-  setIterationOption,
-  toggleConvertedYaml
+  setIterationOption
 }) => {
   const [artifactsPreviewContent, setArtifactsPreviewContent] = useState([])
   const [artifactsIds, setArtifactsIds] = useState([])
@@ -84,17 +83,9 @@ const DetailsArtifacts = ({
       params,
       iteration,
       showArtifact,
-      isDetailsPopUp,
-      toggleConvertedYaml,
+      isDetailsPopUp
     )
-  }, [
-    artifactsPreviewContent,
-    iteration,
-    params,
-    showArtifact,
-    isDetailsPopUp,
-    toggleConvertedYaml
-  ])
+  }, [artifactsPreviewContent, iteration, params, showArtifact, isDetailsPopUp])
 
   const { sortTable, selectedColumnName, getSortingIcon, sortedTableContent, sortedTableHeaders } =
     useSortTable({

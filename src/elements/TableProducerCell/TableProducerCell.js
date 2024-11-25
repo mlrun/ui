@@ -31,8 +31,7 @@ const TableProducerCell = ({
   bodyCellClassName = '',
   className = '',
   id,
-  producer,
-  toggleConvertedYaml
+  producer
 }) => {
   const [project, uidWithIter] = producer.uri?.split('/') || []
   const cellClassNames = classnames('table-body__cell', className, bodyCellClassName)
@@ -45,7 +44,7 @@ const TableProducerCell = ({
       iter
     }
 
-    openPopUp(JobPopUp, { jobData, toggleConvertedYaml })
+    openPopUp(JobPopUp, { jobData })
   }
 
   return (

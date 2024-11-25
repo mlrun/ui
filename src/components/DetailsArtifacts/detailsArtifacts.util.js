@@ -72,8 +72,7 @@ export const generateArtifactsTabContent = (
   params,
   iteration,
   showArtifact,
-  isDetailsPopUp = false,
-  toggleConvertedYaml
+  isDetailsPopUp = false
 ) => {
   const handleOpenArtifactPopUp = artifact => {
     const artifactData = {
@@ -85,8 +84,7 @@ export const generateArtifactsTabContent = (
     }
 
     openPopUp(ArtifactPopUp, {
-      artifactData,
-      toggleConvertedYaml
+      artifactData
     })
   }
 

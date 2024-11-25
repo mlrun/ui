@@ -213,13 +213,13 @@ export const generateDriftDetailsInfo = modelEndpoint => {
     : []
 }
 
-export const generateProducerDetailsInfo = (selectedItem, toggleConvertedYaml, isDetailsPopUp) => {
+export const generateProducerDetailsInfo = (selectedItem, isDetailsPopUp) => {
   if (!isEveryObjectValueEmpty(selectedItem) && selectedItem.producer) {
     return Object.entries(selectedItem.producer).map(([key, value]) => {
       let producerData = {}
       let isUri = key === 'uri'
       const handleOpenJobDetails = jobData => {
-        openPopUp(JobPopUp, { jobData, toggleConvertedYaml })
+        openPopUp(JobPopUp, { jobData })
       }
 
       if (isUri) {

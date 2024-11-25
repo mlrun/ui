@@ -23,7 +23,7 @@ import { formatDatetime } from './datetime'
 import { openPopUp } from 'igz-controls/utils/common.util'
 import { MODELS_PAGE, REAL_TIME_PIPELINES_TAB } from '../constants'
 
-const createRealTimePipelinesContent = (pipelines, projectName, toggleConvertedYaml) =>
+const createRealTimePipelinesContent = (pipelines, projectName) =>
   pipelines.map(pipeline => {
     return {
       data: {
@@ -65,8 +65,7 @@ const createRealTimePipelinesContent = (pipelines, projectName, toggleConvertedY
           className: 'table-cell-2',
           handleClick: () =>
             openPopUp(FunctionPopUp, {
-              funcUri: `${pipeline.project}/${pipeline.name}@${pipeline.hash}`,
-              toggleConvertedYaml
+              funcUri: `${pipeline.project}/${pipeline.name}@${pipeline.hash}`
             })
         },
         {

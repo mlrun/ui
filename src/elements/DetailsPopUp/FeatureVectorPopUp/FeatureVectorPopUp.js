@@ -33,12 +33,21 @@ import {
 } from '../../../components/FeatureStore/FeatureVectors/featureVectors.util'
 
 import featureStoreApi from '../../../api/featureStore-api'
+import { toggleYaml } from '../../../reducers/appReducer'
 
-const FeatureVectorPopUp = ({ featureVectorData, isOpen, onResolve, toggleConvertedYaml }) => {
+const FeatureVectorPopUp = ({ featureVectorData, isOpen, onResolve }) => {
   const dispatch = useDispatch()
   const frontendSpec = useSelector(store => store.appStore.frontendSpec)
   const [isLoading, setIsLoading] = useState(true)
   const [selectedFeatureVector, setSelectedFeatureVector] = useState({})
+
+  const toggleConvertedYaml = useCallback(
+    data => {
+      return dispatch(toggleYaml(data))
+    },
+    [dispatch]
+  )
+
   const actionsMenu = useMemo(
     () => generateActionsMenu(() => {}, toggleConvertedYaml, true),
     [toggleConvertedYaml]
@@ -53,11 +62,7 @@ const FeatureVectorPopUp = ({ featureVectorData, isOpen, onResolve, toggleConver
     setIsLoading(true)
 
     featureStoreApi
-      .getFeatureVector(
-        featureVectorData.project,
-        featureVectorData.key,
-        featureVectorData.tag
-      )
+      .getFeatureVector(featureVectorData.project, featureVectorData.key, featureVectorData.tag)
       .then(response => {
         if (response.data?.feature_vectors.length > 0) {
           const parsedFeatureVectors = parseFeatureVectors(response.data?.feature_vectors)
@@ -83,13 +88,7 @@ const FeatureVectorPopUp = ({ featureVectorData, isOpen, onResolve, toggleConver
 
         onResolve()
       })
-  }, [
-    dispatch,
-    onResolve,
-    featureVectorData.key,
-    featureVectorData.project,
-    featureVectorData.tag
-  ])
+  }, [dispatch, onResolve, featureVectorData.key, featureVectorData.project, featureVectorData.tag])
 
   useEffect(() => {
     if (isEmpty(selectedFeatureVector)) {
@@ -107,7 +106,6 @@ const FeatureVectorPopUp = ({ featureVectorData, isOpen, onResolve, toggleConver
       onResolve={onResolve}
       pageData={pageData}
       selectedItem={selectedFeatureVector}
-      toggleConvertedYaml={toggleConvertedYaml}
     />
   )
 }
@@ -115,8 +113,7 @@ const FeatureVectorPopUp = ({ featureVectorData, isOpen, onResolve, toggleConver
 FeatureVectorPopUp.propTypes = {
   featureVectorData: PropTypes.object.isRequired,
   isOpen: PropTypes.bool.isRequired,
-  onResolve: PropTypes.func.isRequired,
-  toggleConvertedYaml: PropTypes.func.isRequired
+  onResolve: PropTypes.func.isRequired
 }
 
 export default FeatureVectorPopUp

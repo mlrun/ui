@@ -26,7 +26,6 @@ import { useLocation, useNavigate, useParams } from 'react-router-dom'
 import JobsTableRow from '../JobsTableRow/JobsTableRow'
 import Loader from '../../common/Loader/Loader'
 import Table from '../../components/Table/Table'
-import YamlModal from '../../common/YamlModal/YamlModal'
 
 import {
   JOB_KIND_JOB,
@@ -57,7 +56,7 @@ import { setFilters } from '../../reducers/filtersReducer'
 import { setNotification } from '../../reducers/notificationReducer'
 import { showErrorNotification } from '../../utils/notifications.util'
 import { usePods } from '../../hooks/usePods.hook'
-import { useYaml } from '../../hooks/yaml.hook'
+import { toggleYaml } from '../../reducers/appReducer'
 
 import cssVariables from './jobsTable.scss'
 
@@ -83,7 +82,6 @@ const JobsTable = React.forwardRef(
     },
     { abortJobRef }
   ) => {
-    const [convertedYaml, toggleConvertedYaml] = useYaml('')
     const appStore = useSelector(store => store.appStore)
     const filtersStore = useSelector(store => store.filtersStore)
     const jobsStore = useSelector(store => store.jobsStore)
@@ -105,6 +103,13 @@ const JobsTable = React.forwardRef(
     } = React.useContext(context)
 
     usePods(dispatch, detailsActions.fetchJobPods, detailsActions.removePods, selectedJob)
+
+    const toggleConvertedYaml = useCallback(
+      data => {
+        return dispatch(toggleYaml(data))
+      },
+      [dispatch]
+    )
 
     const handleFetchJobLogs = useCallback(
       (item, projectName, setDetailsLogs, streamLogsRef) => {
@@ -485,7 +490,6 @@ const JobsTable = React.forwardRef(
               tab={MONITOR_JOBS_TAB}
               tableClassName="monitor-jobs-table"
               tableHeaders={tableContent[0]?.content ?? []}
-              toggleConvertedYaml={toggleConvertedYaml}
               virtualizationConfig={virtualizationConfig}
             >
               {tableContent.map(
@@ -517,11 +521,7 @@ const JobsTable = React.forwardRef(
             pageData={pageData}
             selectedItem={selectedJob}
             tab={MONITOR_JOBS_TAB}
-            toggleConvertedYaml={toggleConvertedYaml}
           />
-        )}
-        {convertedYaml.length > 0 && (
-          <YamlModal convertedYaml={convertedYaml} toggleConvertToYaml={toggleConvertedYaml} />
         )}
       </>
     )

@@ -29,7 +29,6 @@ import Loader from '../../common/Loader/Loader'
 import NoData from '../../common/NoData/NoData'
 import Table from '../../components/Table/Table'
 import Workflow from '../../components/Workflow/Workflow'
-import YamlModal from '../../common/YamlModal/YamlModal'
 
 import {
   ERROR_STATE,
@@ -65,7 +64,7 @@ import { parseJob } from '../../utils/parseJob'
 import { setNotification } from '../../reducers/notificationReducer'
 import { showErrorNotification } from '../../utils/notifications.util'
 import { useSortTable } from '../../hooks/useSortTable.hook'
-import { useYaml } from '../../hooks/yaml.hook'
+import { toggleYaml } from '../../reducers/appReducer'
 
 import cssVariables from '../../components/Jobs/MonitorWorkflows/monitorWorkflows.scss'
 
@@ -90,7 +89,6 @@ const WorkflowsTable = React.forwardRef(
     },
     abortJobRef
   ) => {
-    const [convertedYaml, toggleConvertedYaml] = useYaml('')
     const [dataIsLoading, setDataIsLoading] = useState(false)
     const [workflowsViewMode, setWorkflowsViewMode] = useState(WORKFLOW_GRAPH_VIEW)
     const workflowsStore = useSelector(state => state.workflowsStore)
@@ -150,6 +148,13 @@ const WorkflowsTable = React.forwardRef(
           jobsActions.fetchJobLogs,
           dispatch
         )
+      },
+      [dispatch]
+    )
+
+    const toggleConvertedYaml = useCallback(
+      data => {
+        return dispatch(toggleYaml(data))
       },
       [dispatch]
     )
@@ -709,7 +714,6 @@ const WorkflowsTable = React.forwardRef(
                 selectedFunction={selectedFunction}
                 selectedJob={selectedJob}
                 setWorkflowsViewMode={setWorkflowsViewMode}
-                toggleConvertedYaml={toggleConvertedYaml}
                 workflow={workflowsStore.activeWorkflow?.data}
                 workflowsViewMode={workflowsViewMode}
               />
@@ -723,7 +727,6 @@ const WorkflowsTable = React.forwardRef(
                 tab={MONITOR_JOBS_TAB}
                 tableClassName="monitor-workflows-table"
                 tableHeaders={sortedTableContent[0]?.content ?? []}
-                toggleConvertedYaml={toggleConvertedYaml}
                 virtualizationConfig={virtualizationConfig}
               >
                 {sortedTableContent.map(
@@ -740,9 +743,6 @@ const WorkflowsTable = React.forwardRef(
               </Table>
             )}
           </>
-        )}
-        {convertedYaml.length > 0 && (
-          <YamlModal convertedYaml={convertedYaml} toggleConvertToYaml={toggleConvertedYaml} />
         )}
       </>
     )

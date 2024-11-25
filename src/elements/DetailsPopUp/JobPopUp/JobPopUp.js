@@ -35,14 +35,22 @@ import { usePods } from '../../../hooks/usePods.hook'
 
 import jobsActions from '../../../actions/jobs'
 import detailsActions from '../../../actions/details'
+import { toggleYaml } from '../../../reducers/appReducer'
 
-const JobPopUp = ({ isOpen, jobData, onResolve, toggleConvertedYaml }) => {
+const JobPopUp = ({ isOpen, jobData, onResolve }) => {
   const dispatch = useDispatch()
   const frontendSpec = useSelector(store => store.appStore.frontendSpec)
   const [selectedJob, setSelectedJob] = useState({})
   const [isLoading, setIsLoading] = useState(true)
 
   usePods(dispatch, detailsActions.fetchJobPods, detailsActions.removePods, selectedJob)
+
+  const toggleConvertedYaml = useCallback(
+    data => {
+      return dispatch(toggleYaml(data))
+    },
+    [dispatch]
+  )
 
   const handleFetchJobLogs = useCallback(
     (item, projectName, setDetailsLogs, streamLogsRef) => {
@@ -132,7 +140,6 @@ const JobPopUp = ({ isOpen, jobData, onResolve, toggleConvertedYaml }) => {
       onResolve={onResolve}
       pageData={pageData}
       selectedItem={selectedJob}
-      toggleConvertedYaml={toggleConvertedYaml}
     />
   )
 }
@@ -140,8 +147,7 @@ const JobPopUp = ({ isOpen, jobData, onResolve, toggleConvertedYaml }) => {
 JobPopUp.propTypes = {
   isOpen: PropTypes.bool.isRequired,
   jobData: PropTypes.object.isRequired,
-  onResolve: PropTypes.func.isRequired,
-  toggleConvertedYaml: PropTypes.func.isRequired
+  onResolve: PropTypes.func.isRequired
 }
 
 export default JobPopUp

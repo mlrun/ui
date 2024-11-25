@@ -59,9 +59,9 @@ import { setNotification } from '../../reducers/notificationReducer'
 import { useGroupContent } from '../../hooks/groupContent.hook'
 import { useSortTable } from '../../hooks/useSortTable.hook'
 import { useVirtualization } from '../../hooks/useVirtualization.hook'
-import { useYaml } from '../../hooks/yaml.hook'
 import { useInitialTableFetch } from '../../hooks/useInitialTableFetch.hook'
 import { useFiltersFromSearchParams } from '../../hooks/useFiltersFromSearchParams.hook'
+import { toggleYaml } from '../../reducers/appReducer'
 
 import './datasets.scss'
 import cssVariables from './datasets.scss'
@@ -73,7 +73,6 @@ const Datasets = () => {
   const [selectedRowData, setSelectedRowData] = useState({})
   const [requestErrorMessage, setRequestErrorMessage] = useState('')
   const [maxArtifactsErrorIsShown, setMaxArtifactsErrorIsShown] = useState(false)
-  const [convertedYaml, toggleConvertedYaml] = useYaml('')
   const artifactsStore = useSelector(store => store.artifactsStore)
   const filtersStore = useSelector(store => store.filtersStore)
   const frontendSpec = useSelector(store => store.appStore.frontendSpec)
@@ -109,6 +108,13 @@ const Datasets = () => {
       params.projectName
     )
   }, [dispatch, navigate, params.projectName, selectedDatasetMin])
+
+  const toggleConvertedYaml = useCallback(
+    data => {
+      return dispatch(toggleYaml(data))
+    },
+    [dispatch]
+  )
 
   useEffect(() => {
     getAndSetSelectedArtifact()
@@ -255,14 +261,7 @@ const Datasets = () => {
           ...state,
           [dataSetIdentifier]: {
             content: sortListByDate(content[dataset.db_key ?? dataset.key], 'updated', false).map(
-              contentItem =>
-                createDatasetsRowData(
-                  contentItem,
-                  params.projectName,
-                  null,
-                  false,
-                  toggleConvertedYaml
-                )
+              contentItem => createDatasetsRowData(contentItem, params.projectName)
             ),
             error: null,
             loading: false
@@ -270,7 +269,7 @@ const Datasets = () => {
         }
       })
     },
-    [params.projectName, toggleConvertedYaml]
+    [params.projectName]
   )
 
   const handleRemoveRowData = useCallback(
@@ -301,31 +300,12 @@ const Datasets = () => {
   const tableContent = useMemo(() => {
     return filtersStore.groupBy === GROUP_BY_NAME
       ? latestItems.map(contentItem => {
-          return createDatasetsRowData(
-            contentItem,
-            params.projectName,
-            frontendSpec,
-            true,
-            toggleConvertedYaml
-          )
+          return createDatasetsRowData(contentItem, params.projectName, frontendSpec, true)
         })
       : datasets.map(contentItem =>
-          createDatasetsRowData(
-            contentItem,
-            params.projectName,
-            frontendSpec,
-            false,
-            toggleConvertedYaml
-          )
+          createDatasetsRowData(contentItem, params.projectName, frontendSpec, false)
         )
-  }, [
-    datasets,
-    filtersStore.groupBy,
-    frontendSpec,
-    latestItems,
-    params.projectName,
-    toggleConvertedYaml
-  ])
+  }, [datasets, filtersStore.groupBy, frontendSpec, latestItems, params.projectName])
 
   const tableHeaders = useMemo(() => tableContent[0]?.content ?? [], [tableContent])
 
@@ -341,8 +321,7 @@ const Datasets = () => {
     })
 
   useInitialTableFetch({
-    createRowData: rowItem =>
-      createDatasetsRowData(rowItem, params.projectName, frontendSpec, false, toggleConvertedYaml),
+    createRowData: rowItem => createDatasetsRowData(rowItem, params.projectName, frontendSpec),
     fetchData,
     fetchTags,
     filterModalName: DATASETS_PAGE,
@@ -426,7 +405,6 @@ const Datasets = () => {
       applyDetailsChanges={applyDetailsChanges}
       applyDetailsChangesCallback={applyDetailsChangesCallback}
       artifactsStore={artifactsStore}
-      convertedYaml={convertedYaml}
       datasets={datasets}
       detailsFormInitialValues={detailsFormInitialValues}
       filters={filters}
@@ -447,7 +425,6 @@ const Datasets = () => {
       sortProps={{ sortTable, selectedColumnName, getSortingIcon }}
       tableContent={sortedTableContent}
       tableHeaders={sortedTableHeaders}
-      toggleConvertedYaml={toggleConvertedYaml}
       viewMode={viewMode}
       virtualizationConfig={virtualizationConfig}
     />

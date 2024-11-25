@@ -35,21 +35,18 @@ export const FEATURE_VECTORS_KIND = 'feature-vectors'
 export const generateInputsTabContent = (
   inputs,
   showArtifact,
-  isDetailsPopUp = false,
-  toggleConvertedYaml
+  isDetailsPopUp = false
 ) => {
   const handleOpenInputPopUp = inputPath => {
     const inputUri = parseUri(inputPath)
 
     if (inputUri.kind === FEATURE_VECTORS_TAB) {
       openPopUp(FeatureVectorPopUp, {
-        featureVectorData: inputUri,
-        toggleConvertedYaml
+        featureVectorData: inputUri
       })
     } else {
       openPopUp(ArtifactPopUp, {
-        artifactData: inputUri,
-        toggleConvertedYaml
+        artifactData: inputUri
       })
     }
   }

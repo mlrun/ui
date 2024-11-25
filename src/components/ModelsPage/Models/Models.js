@@ -299,15 +299,7 @@ const Models = ({ fetchModelFeatureVector }) => {
           ...state,
           [modelIdentifier]: {
             content: sortListByDate(content[model.db_key ?? model.key], 'updated', false).map(
-              artifact =>
-                createModelsRowData(
-                  artifact,
-                  params.projectName,
-                  false,
-                  null,
-                  false,
-                  toggleConvertedYaml
-                )
+              artifact => createModelsRowData(artifact, params.projectName)
             )
           },
           error: null,
@@ -315,7 +307,7 @@ const Models = ({ fetchModelFeatureVector }) => {
         }
       })
     },
-    [params.projectName, toggleConvertedYaml]
+    [params.projectName]
   )
 
   const { latestItems, handleExpandRow } = useGroupContent(
@@ -334,23 +326,9 @@ const Models = ({ fetchModelFeatureVector }) => {
           return createModelsRowData(contentItem, params.projectName, frontendSpec, null, true)
         })
       : models.map(contentItem =>
-          createModelsRowData(
-            contentItem,
-            params.projectName,
-            frontendSpec,
-            null,
-            false,
-            toggleConvertedYaml
-          )
+          createModelsRowData(contentItem, params.projectName, frontendSpec)
         )
-  }, [
-    filtersStore.groupBy,
-    frontendSpec,
-    latestItems,
-    models,
-    params.projectName,
-    toggleConvertedYaml
-  ])
+  }, [filtersStore.groupBy, frontendSpec, latestItems, models, params.projectName])
 
   const tableHeaders = useMemo(() => tableContent[0]?.content ?? [], [tableContent])
 
@@ -397,10 +375,7 @@ const Models = ({ fetchModelFeatureVector }) => {
       createModelsRowData(
         rowItem,
         params.projectName,
-        frontendSpec,
-        null,
-        false,
-        toggleConvertedYaml
+        frontendSpec
       ),
     fetchData,
     fetchTags,
@@ -567,7 +542,6 @@ const Models = ({ fetchModelFeatureVector }) => {
       sortProps={{ sortTable, selectedColumnName, getSortingIcon }}
       tableContent={sortedTableContent}
       tableHeaders={sortedTableHeaders}
-      toggleConvertedYaml={toggleConvertedYaml}
       viewMode={viewMode}
       virtualizationConfig={virtualizationConfig}
     />

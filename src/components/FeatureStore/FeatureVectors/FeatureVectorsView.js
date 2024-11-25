@@ -58,7 +58,6 @@ const FeatureVectorsView = React.forwardRef(
       setCreateVectorPopUpIsOpen,
       setSelectedFeatureVector,
       tableContent,
-      toggleConvertedYaml,
       virtualizationConfig
     },
     { featureStoreRef }
@@ -111,7 +110,6 @@ const FeatureVectorsView = React.forwardRef(
               tab={FEATURE_VECTORS_TAB}
               tableClassName="feature-vectors-table"
               tableHeaders={tableContent[0]?.content ?? []}
-              toggleConvertedYaml={toggleConvertedYaml}
               virtualizationConfig={virtualizationConfig}
             >
               {tableContent.map(

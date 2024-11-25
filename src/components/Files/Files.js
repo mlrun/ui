@@ -62,8 +62,8 @@ import { useGroupContent } from '../../hooks/groupContent.hook'
 import { useSortTable } from '../../hooks/useSortTable.hook'
 import { useInitialTableFetch } from '../../hooks/useInitialTableFetch.hook'
 import { useVirtualization } from '../../hooks/useVirtualization.hook'
-import { useYaml } from '../../hooks/yaml.hook'
 import { useFiltersFromSearchParams } from '../../hooks/useFiltersFromSearchParams.hook'
+import { toggleYaml } from '../../reducers/appReducer'
 
 import './files.scss'
 import cssVariables from './files.scss'
@@ -75,7 +75,6 @@ const Files = () => {
   const [selectedRowData, setSelectedRowData] = useState({})
   const [requestErrorMessage, setRequestErrorMessage] = useState('')
   const [maxArtifactsErrorIsShown, setMaxArtifactsErrorIsShown] = useState(false)
-  const [convertedYaml, toggleConvertedYaml] = useYaml('')
   const artifactsStore = useSelector(store => store.artifactsStore)
   const filtersStore = useSelector(store => store.filtersStore)
   const frontendSpec = useSelector(store => store.appStore.frontendSpec)
@@ -96,6 +95,13 @@ const Files = () => {
       tag: selectedFile.tag ?? ''
     }),
     [selectedFile.tag]
+  )
+
+  const toggleConvertedYaml = useCallback(
+    data => {
+      return dispatch(toggleYaml(data))
+    },
+    [dispatch]
   )
 
   const getAndSetSelectedArtifact = useCallback(() => {
@@ -238,15 +244,14 @@ const Files = () => {
         ...state,
         [fileIdentifier]: {
           content: sortListByDate(content[file.db_key ?? file.key], 'updated', false).map(
-            artifact =>
-              createFilesRowData(artifact, params.projectName, null, false, toggleConvertedYaml)
+            artifact => createFilesRowData(artifact, params.projectName)
           )
         },
         error: null,
         loading: false
       }))
     },
-    [params.projectName, toggleConvertedYaml]
+    [params.projectName]
   )
 
   const { latestItems, handleExpandRow } = useGroupContent(
@@ -261,31 +266,12 @@ const Files = () => {
   const tableContent = useMemo(() => {
     return filtersStore.groupBy === GROUP_BY_NAME
       ? latestItems.map(contentItem => {
-          return createFilesRowData(
-            contentItem,
-            params.projectName,
-            frontendSpec,
-            true,
-            toggleConvertedYaml
-          )
+          return createFilesRowData(contentItem, params.projectName, frontendSpec, true)
         })
       : files.map(contentItem =>
-          createFilesRowData(
-            contentItem,
-            params.projectName,
-            frontendSpec,
-            false,
-            toggleConvertedYaml
-          )
+          createFilesRowData(contentItem, params.projectName, frontendSpec, false)
         )
-  }, [
-    files,
-    filtersStore.groupBy,
-    frontendSpec,
-    latestItems,
-    params.projectName,
-    toggleConvertedYaml
-  ])
+  }, [files, filtersStore.groupBy, frontendSpec, latestItems, params.projectName])
 
   const tableHeaders = useMemo(() => tableContent[0]?.content ?? [], [tableContent])
 
@@ -330,8 +316,7 @@ const Files = () => {
   }
 
   useInitialTableFetch({
-    createRowData: rowItem =>
-      createFilesRowData(rowItem, params.projectName, frontendSpec, false, toggleConvertedYaml),
+    createRowData: rowItem => createFilesRowData(rowItem, params.projectName, frontendSpec),
     fetchData,
     fetchTags,
     filterModalName: FILES_PAGE,
@@ -419,7 +404,6 @@ const Files = () => {
       applyDetailsChanges={applyDetailsChanges}
       applyDetailsChangesCallback={applyDetailsChangesCallback}
       artifactsStore={artifactsStore}
-      convertedYaml={convertedYaml}
       detailsFormInitialValues={detailsFormInitialValues}
       files={files}
       filters={filters}
@@ -441,7 +425,6 @@ const Files = () => {
       sortProps={{ sortTable, selectedColumnName, getSortingIcon }}
       tableContent={sortedTableContent}
       tableHeaders={sortedTableHeaders}
-      toggleConvertedYaml={toggleConvertedYaml}
       viewMode={viewMode}
       virtualizationConfig={virtualizationConfig}
     />

@@ -89,8 +89,7 @@ const Details = ({
   setIteration,
   setIterationOption,
   showWarning,
-  tab = '',
-  toggleConvertedYaml = () => {}
+  tab = ''
 }) => {
   const applyChangesRef = useRef()
   const dispatch = useDispatch()
@@ -143,7 +142,7 @@ const Details = ({
   useEffect(() => {
     if (!isEveryObjectValueEmpty(selectedItem)) {
       if (pageData.details.type === JOBS_PAGE) {
-        setDetailsInfo(generateJobsContent(selectedItem, toggleConvertedYaml))
+        setDetailsInfo(generateJobsContent(selectedItem))
       } else if (
         pageData.details.type === ARTIFACTS_PAGE ||
         pageData.details.type === FILES_TAB ||
@@ -152,12 +151,7 @@ const Details = ({
         pageData.details.type === DATASETS_TAB
       ) {
         setDetailsInfo(
-          generateArtifactsContent(
-            pageData.details.type,
-            selectedItem,
-            params.projectName,
-            toggleConvertedYaml
-          )
+          generateArtifactsContent(pageData.details.type, selectedItem, params.projectName)
         )
       } else if (pageData.details.type === FUNCTIONS_PAGE) {
         setDetailsInfo(generateFunctionsContent(selectedItem))
@@ -165,14 +159,7 @@ const Details = ({
         setDetailsInfo(generateFeatureStoreContent(pageData.details.type, selectedItem))
       }
     }
-  }, [
-    pageData.details.type,
-    params.projectName,
-    selectedItem,
-    setDetailsInfo,
-    location.search,
-    toggleConvertedYaml
-  ])
+  }, [pageData.details.type, params.projectName, selectedItem, setDetailsInfo, location.search])
 
   useEffect(() => {
     return () => {
@@ -321,7 +308,6 @@ const Details = ({
               setChangesData={setChangesData}
               setIteration={setIteration}
               setIterationOption={setIterationOption}
-              toggleConvertedYaml={toggleConvertedYaml}
             />
           </div>
           {blocker.state === 'blocked' && (

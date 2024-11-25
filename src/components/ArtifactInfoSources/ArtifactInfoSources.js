@@ -29,17 +29,15 @@ import { FEATURE_VECTORS_TAB } from '../../constants'
 
 import './artifactInfoSources.scss'
 
-const ArtifactInfoSources = ({ isDetailsPopUp = false, sources = {}, toggleConvertedYaml }) => {
+const ArtifactInfoSources = ({ isDetailsPopUp = false, sources = {} }) => {
   const handleOpenSourceDetails = sourceData => {
     if (sourceData.parsedUri.kind === FEATURE_VECTORS_TAB) {
       openPopUp(FeatureVectorPopUp, {
-        featureVectorData: sourceData.parsedUri,
-        toggleConvertedYaml
+        featureVectorData: sourceData.parsedUri
       })
     } else {
       openPopUp(ArtifactPopUp, {
-        artifactData: sourceData.parsedUri,
-        toggleConvertedYaml
+        artifactData: sourceData.parsedUri
       })
     }
   }

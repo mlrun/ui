@@ -47,7 +47,7 @@ import { parseFeatureVectors } from '../../utils/parseFeatureVectors'
 
 import './detailsInputs.scss'
 
-const DetailsInputs = ({ inputs, isDetailsPopUp = false, toggleConvertedYaml }) => {
+const DetailsInputs = ({ inputs, isDetailsPopUp = false }) => {
   const [artifactsIds, setArtifactsIds] = useState([])
   const [inputsContent, setInputsContent] = useState([])
   const [requestsCounter, setRequestsCounter] = useState(0)
@@ -63,10 +63,9 @@ const DetailsInputs = ({ inputs, isDetailsPopUp = false, toggleConvertedYaml }) 
     return generateInputsTabContent(
       inputsContent,
       showArtifact,
-      isDetailsPopUp,
-      toggleConvertedYaml
+      isDetailsPopUp
     )
-  }, [inputsContent, isDetailsPopUp, showArtifact, toggleConvertedYaml])
+  }, [inputsContent, isDetailsPopUp, showArtifact])
 
   const dispatch = useDispatch()
   const params = useParams()

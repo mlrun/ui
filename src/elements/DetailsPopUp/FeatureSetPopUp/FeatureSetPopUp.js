@@ -31,11 +31,19 @@ import {
 import { showErrorNotification } from '../../../utils/notifications.util'
 
 import featureStoreActions from '../../../actions/featureStore'
+import { toggleYaml } from '../../../reducers/appReducer'
 
-const FeatureSetPopUp = ({ featureSetData, isOpen, onResolve, toggleConvertedYaml }) => {
+const FeatureSetPopUp = ({ featureSetData, isOpen, onResolve }) => {
   const dispatch = useDispatch()
   const [isLoading, setIsLoading] = useState(true)
   const [selectedFeatureSet, setSelectedFeatureSet] = useState({})
+
+  const toggleConvertedYaml = useCallback(
+    data => {
+      return dispatch(toggleYaml(data))
+    },
+    [dispatch]
+  )
 
   const actionsMenu = useMemo(
     () => generateActionsMenu(dispatch, selectedFeatureSet, toggleConvertedYaml),
@@ -86,7 +94,6 @@ const FeatureSetPopUp = ({ featureSetData, isOpen, onResolve, toggleConvertedYam
       onResolve={onResolve}
       pageData={pageData}
       selectedItem={selectedFeatureSet}
-      toggleConvertedYaml={toggleConvertedYaml}
     />
   )
 }
@@ -94,8 +101,7 @@ const FeatureSetPopUp = ({ featureSetData, isOpen, onResolve, toggleConvertedYam
 FeatureSetPopUp.propTypes = {
   featureSetData: PropTypes.object.isRequired,
   isOpen: PropTypes.bool.isRequired,
-  onResolve: PropTypes.func.isRequired,
-  toggleConvertedYaml: PropTypes.func.isRequired
+  onResolve: PropTypes.func.isRequired
 }
 
 export default FeatureSetPopUp

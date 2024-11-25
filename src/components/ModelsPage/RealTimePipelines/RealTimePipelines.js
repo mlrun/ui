@@ -128,8 +128,8 @@ const RealTimePipelines = () => {
   }, [filters, handleRefresh])
 
   const tableContent = useMemo(() => {
-    return createRealTimePipelinesContent(pipelines, params.projectName, toggleConvertedYaml)
-  }, [pipelines, params.projectName, toggleConvertedYaml])
+    return createRealTimePipelinesContent(pipelines, params.projectName)
+  }, [pipelines, params.projectName])
 
   const fetchInitialData = useCallback(
     filters => {
@@ -139,8 +139,7 @@ const RealTimePipelines = () => {
     [dispatch, fetchData]
   )
 
-  useInitialTableFetch({fetchData: fetchInitialData, filters })
-
+  useInitialTableFetch({ fetchData: fetchInitialData, filters })
 
   useEffect(() => {
     return () => {
@@ -153,9 +152,12 @@ const RealTimePipelines = () => {
   useEffect(() => {
     if (params.pipelineId && pipelines.length > 0) {
       if (!pipelines.find(item => item.hash === params.pipelineId)) {
-        navigate(`/projects/${params.projectName}/models/${REAL_TIME_PIPELINES_TAB}${window.location.search}`, {
-          replace: true
-        })
+        navigate(
+          `/projects/${params.projectName}/models/${REAL_TIME_PIPELINES_TAB}${window.location.search}`,
+          {
+            replace: true
+          }
+        )
       }
     }
   }, [navigate, params.pipelineId, params.projectName, pipelines])
@@ -214,7 +216,6 @@ const RealTimePipelines = () => {
                 tab={REAL_TIME_PIPELINES_TAB}
                 tableClassName="pipelines-table"
                 tableHeaders={tableContent[0]?.content ?? []}
-                toggleConvertedYaml={toggleConvertedYaml}
                 virtualizationConfig={virtualizationConfig}
               >
                 {tableContent.map(

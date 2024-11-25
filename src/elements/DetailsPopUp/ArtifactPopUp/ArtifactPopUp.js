@@ -41,8 +41,9 @@ import {
 
 import { fetchDataSets, fetchFiles, fetchModels } from '../../../reducers/artifactsReducer'
 import { ARTIFACTS_TAB, DATASETS_TAB, FILES_TAB, MODELS_TAB } from '../../../constants'
+import { toggleYaml } from '../../../reducers/appReducer'
 
-const ArtifactPopUp = ({ artifactData, isOpen, onResolve, toggleConvertedYaml }) => {
+const ArtifactPopUp = ({ artifactData, isOpen, onResolve }) => {
   const dispatch = useDispatch()
   const [isLoading, setIsLoading] = useState(true)
   const [selectedArtifact, setSelectedArtifact] = useState({})
@@ -71,6 +72,13 @@ const ArtifactPopUp = ({ artifactData, isOpen, onResolve, toggleConvertedYaml })
             fetchArtifact: fetchModels
           }
   }, [selectedArtifact, artifactData.kind, viewMode])
+
+  const toggleConvertedYaml = useCallback(
+    data => {
+      return dispatch(toggleYaml(data))
+    },
+    [dispatch]
+  )
 
   const fetchArtifact = useCallback(() => {
     const artifactMin = {
@@ -162,7 +170,6 @@ const ArtifactPopUp = ({ artifactData, isOpen, onResolve, toggleConvertedYaml })
       onResolve={onResolve}
       pageData={artifactContext.pageData}
       selectedItem={selectedArtifact}
-      toggleConvertedYaml={toggleConvertedYaml}
     />
   )
 }
@@ -170,8 +177,7 @@ const ArtifactPopUp = ({ artifactData, isOpen, onResolve, toggleConvertedYaml })
 ArtifactPopUp.propTypes = {
   artifactData: PropTypes.object.isRequired,
   isOpen: PropTypes.bool.isRequired,
-  onResolve: PropTypes.func.isRequired,
-  toggleConvertedYaml: PropTypes.func.isRequired
+  onResolve: PropTypes.func.isRequired
 }
 
 export default ArtifactPopUp

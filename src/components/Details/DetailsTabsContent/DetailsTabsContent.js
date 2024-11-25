@@ -76,8 +76,7 @@ const DetailsTabsContent = ({
   setChangesCounter,
   setChangesData,
   setIteration,
-  setIterationOption,
-  toggleConvertedYaml = () => {}
+  setIterationOption
 }) => {
   const detailsStore = useSelector(store => store.detailsStore)
   const params = useParams()
@@ -94,7 +93,6 @@ const DetailsTabsContent = ({
           selectedItem={selectedItem}
           setChangesCounter={setChangesCounter}
           setChangesData={setChangesData}
-          toggleConvertedYaml={toggleConvertedYaml}
         />
       )
     case DETAILS_DRIFT_ANALYSIS_TAB:
@@ -126,7 +124,6 @@ const DetailsTabsContent = ({
         <DetailsInputs
           inputs={selectedItem.inputs}
           isDetailsPopUp={isDetailsPopUp}
-          toggleConvertedYaml={toggleConvertedYaml}
         />
       )
     case DETAILS_ARTIFACTS_TAB:
@@ -140,7 +137,6 @@ const DetailsTabsContent = ({
           selectedItem={selectedItem}
           setIteration={setIteration}
           setIterationOption={setIterationOption}
-          toggleConvertedYaml={toggleConvertedYaml}
         />
       )
     case DETAILS_RESULTS_TAB:

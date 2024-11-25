@@ -110,7 +110,6 @@ const TableView = ({
             retryRequest={retryRequest}
             selectedItem={selectedItem}
             tab={tab}
-            toggleConvertedYaml={toggleConvertedYaml}
           />
         )}
       </div>

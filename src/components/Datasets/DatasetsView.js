@@ -25,7 +25,6 @@ import PreviewModal from '../../elements/PreviewModal/PreviewModal'
 import Breadcrumbs from '../../common/Breadcrumbs/Breadcrumbs'
 import Table from '../Table/Table'
 import ArtifactsTableRow from '../../elements/ArtifactsTableRow/ArtifactsTableRow'
-import YamlModal from '../../common/YamlModal/YamlModal'
 import Loader from '../../common/Loader/Loader'
 import NoData from '../../common/NoData/NoData'
 import Details from '../Details/Details'
@@ -48,7 +47,6 @@ const DatasetsView = React.forwardRef(
       applyDetailsChanges,
       applyDetailsChangesCallback,
       artifactsStore,
-      convertedYaml,
       datasets,
       detailsFormInitialValues,
       filters,
@@ -68,7 +66,6 @@ const DatasetsView = React.forwardRef(
       sortProps,
       tableContent,
       tableHeaders,
-      toggleConvertedYaml,
       viewMode = null,
       virtualizationConfig
     },
@@ -137,7 +134,6 @@ const DatasetsView = React.forwardRef(
                     sortProps={sortProps}
                     tableClassName="datasets-table"
                     tableHeaders={tableHeaders ?? []}
-                    toggleConvertedYaml={toggleConvertedYaml}
                     virtualizationConfig={virtualizationConfig}
                   >
                     {tableContent.map(
@@ -168,15 +164,11 @@ const DatasetsView = React.forwardRef(
                   isDetailsScreen
                   pageData={pageData}
                   selectedItem={selectedDataset}
-                  toggleConvertedYaml={toggleConvertedYaml}
                 />
               )}
             </div>
           </div>
         </div>
-        {convertedYaml.length > 0 && (
-          <YamlModal convertedYaml={convertedYaml} toggleConvertToYaml={toggleConvertedYaml} />
-        )}
         {artifactsStore?.preview?.isPreview && (
           <PreviewModal artifact={artifactsStore?.preview?.selectedItem} />
         )}
@@ -190,7 +182,6 @@ DatasetsView.propTypes = {
   applyDetailsChanges: PropTypes.func.isRequired,
   applyDetailsChangesCallback: PropTypes.func.isRequired,
   artifactsStore: PropTypes.object.isRequired,
-  convertedYaml: PropTypes.string.isRequired,
   datasets: PropTypes.arrayOf(PropTypes.object).isRequired,
   detailsFormInitialValues: PropTypes.object.isRequired,
   getAndSetSelectedArtifact: PropTypes.func.isRequired,
@@ -210,7 +201,6 @@ DatasetsView.propTypes = {
   sortProps: SORT_PROPS,
   tableContent: PropTypes.arrayOf(PropTypes.object).isRequired,
   tableHeaders: PropTypes.arrayOf(PropTypes.object).isRequired,
-  toggleConvertedYaml: PropTypes.func.isRequired,
   viewMode: PropTypes.string,
   virtualizationConfig: VIRTUALIZATION_CONFIG.isRequired
 }

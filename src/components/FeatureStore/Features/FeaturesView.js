@@ -52,7 +52,6 @@ const FeaturesView = React.forwardRef(
       selectedRowData,
       tableContent,
       tableStore,
-      toggleConvertedYaml,
       virtualizationConfig
     },
     { featureStoreRef }
@@ -105,7 +104,6 @@ const FeaturesView = React.forwardRef(
               tab={FEATURES_TAB}
               tableClassName="features-table"
               tableHeaders={tableContent[0]?.content ?? []}
-              toggleConvertedYaml={toggleConvertedYaml}
               virtualizationConfig={virtualizationConfig}
             >
               <>

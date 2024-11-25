@@ -48,7 +48,6 @@ const Table = React.forwardRef(
       tab = '',
       tableClassName = '',
       tableHeaders = [],
-      toggleConvertedYaml,
       virtualizationConfig = {
         tableBodyPaddingTop: 0,
         startIndex: -1,
@@ -138,7 +137,6 @@ const Table = React.forwardRef(
         tableHeaders={tableHeaders}
         tableHeadRef={tableHeadRef}
         tablePanelRef={tablePanelRef}
-        toggleConvertedYaml={toggleConvertedYaml}
         virtualizationConfig={virtualizationConfig}
       >
         {children}

@@ -41,19 +41,16 @@ import { createFeaturesRowData } from '../../utils/createFeatureStoreContent'
 import { getFeatureIdentifier } from '../../utils/getUniqueIdentifier'
 import { handleFeaturesResponse } from '../FeatureStore/Features/features.util'
 import { isEveryObjectValueEmpty } from '../../utils/isEveryObjectValueEmpty'
-import {
-  getFilterTagOptions,
-  setFilters
-} from '../../reducers/filtersReducer'
+import { getFilterTagOptions, setFilters } from '../../reducers/filtersReducer'
 import { setNotification } from '../../reducers/notificationReducer'
 import { setTablePanelOpen } from '../../reducers/tableReducer'
 import { showErrorNotification } from '../../utils/notifications.util'
 import { useGroupContent } from '../../hooks/groupContent.hook'
 import { useVirtualization } from '../../hooks/useVirtualization.hook'
-import { useYaml } from '../../hooks/yaml.hook'
 import { useInitialTableFetch } from '../../hooks/useInitialTableFetch.hook'
 import { useFiltersFromSearchParams } from '../../hooks/useFiltersFromSearchParams.hook'
 import { getFiltersConfig } from './addToFeatureVectorPage.util'
+import { toggleYaml } from '../../reducers/appReducer'
 
 import { ReactComponent as Yaml } from 'igz-controls/images/yaml.svg'
 
@@ -71,7 +68,6 @@ const AddToFeatureVectorPage = ({
   const [content, setContent] = useState([])
   const [selectedRowData, setSelectedRowData] = useState({})
   const [requestErrorMessage, setRequestErrorMessage] = useState('')
-  const [convertedYaml, toggleConvertedYaml] = useYaml('')
   const addToFeatureVectorPageRef = useRef(null)
   const abortControllerRef = useRef(new AbortController())
   const params = useParams()
@@ -83,6 +79,13 @@ const AddToFeatureVectorPage = ({
     return getFiltersConfig(params.projectName)
   }, [params.projectName])
   const addToFeatureVectorFilters = useFiltersFromSearchParams(filtersConfig)
+
+  const toggleConvertedYaml = useCallback(
+    data => {
+      return dispatch(toggleYaml(data))
+    },
+    [dispatch]
+  )
 
   const navigateToFeatureVectorsScreen = useCallback(() => {
     navigate(`/projects/${params.projectName}/feature-store/feature-vectors`)
@@ -197,13 +200,16 @@ const AddToFeatureVectorPage = ({
     [dispatch, fetchFeatureSetsTags, params.projectName]
   )
 
-  const handleRefresh = useCallback(filters => {
-    fetchTags(filters.project)
-    setContent([])
-    setSelectedRowData({})
+  const handleRefresh = useCallback(
+    filters => {
+      fetchTags(filters.project)
+      setContent([])
+      setSelectedRowData({})
 
-    return fetchData(filters)
-  }, [fetchData, fetchTags])
+      return fetchData(filters)
+    },
+    [fetchData, fetchTags]
+  )
 
   const handleRefreshWithFilters = useCallback(() => {
     handleRefresh(addToFeatureVectorFilters)
@@ -339,7 +345,6 @@ const AddToFeatureVectorPage = ({
     <AddToFeatureVectorView
       actionsMenu={actionsMenu}
       content={content}
-      convertedYaml={convertedYaml}
       featureStore={featureStore}
       filters={addToFeatureVectorFilters}
       filtersConfig={filtersConfig}
@@ -353,7 +358,6 @@ const AddToFeatureVectorPage = ({
       selectedRowData={selectedRowData}
       tableContent={tableContent}
       tableStore={tableStore}
-      toggleConvertedYaml={toggleConvertedYaml}
       virtualizationConfig={virtualizationConfig}
     />
   )

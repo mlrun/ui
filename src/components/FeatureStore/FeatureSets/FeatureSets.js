@@ -442,7 +442,6 @@ const FeatureSets = ({
       setFeatureSetsPanelIsOpen={setFeatureSetsPanelIsOpen}
       setSelectedFeatureSetMin={handleSelectFeatureSet}
       tableContent={tableContent}
-      toggleConvertedYaml={toggleConvertedYaml}
       virtualizationConfig={virtualizationConfig}
     />
   )

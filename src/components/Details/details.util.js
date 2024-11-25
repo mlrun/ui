@@ -39,12 +39,7 @@ import { isArtifactTagUnique } from '../../utils/artifacts.util'
 import { getFunctionImage } from '../FunctionsPage/functions.util'
 import { openPopUp } from 'igz-controls/utils/common.util'
 
-export const generateArtifactsContent = (
-  detailsType,
-  selectedItem,
-  projectName,
-  toggleConvertedYaml
-) => {
+export const generateArtifactsContent = (detailsType, selectedItem, projectName) => {
   if (detailsType === MODEL_ENDPOINTS_TAB) {
     const monitoringFeatureSetUri = selectedItem?.status?.monitoring_feature_set_uri ?? ''
     const featureSetParsedUri = parseUri(monitoringFeatureSetUri)
@@ -64,8 +59,7 @@ export const generateArtifactsContent = (
         shouldPopUp: !isEmpty(selectedItem?.spec?.model_uri),
         handleClick: () =>
           openPopUp(ArtifactPopUp, {
-            artifactData: parseUri(selectedItem?.spec?.model_uri),
-            toggleConvertedYaml
+            artifactData: parseUri(selectedItem?.spec?.model_uri)
           })
       },
       function_uri: {
@@ -73,8 +67,7 @@ export const generateArtifactsContent = (
         shouldPopUp: !isEmpty(selectedItem?.spec?.function_uri),
         handleClick: () =>
           openPopUp(FunctionPopUp, {
-            funcUri: selectedItem?.spec?.function_uri,
-            toggleConvertedYaml
+            funcUri: selectedItem?.spec?.function_uri
           })
       },
       function_tag: {
@@ -89,8 +82,7 @@ export const generateArtifactsContent = (
               project: featureSetParsedUri.project,
               name: featureSetParsedUri.key,
               tag: featureSetParsedUri.tag
-            },
-            toggleConvertedYaml
+            }
           })
       },
       last_prediction: {
@@ -204,7 +196,7 @@ export const generateFeatureStoreContent = (detailsType, selectedItem) => {
   }
 }
 
-export const generateJobsContent = (selectedItem, toggleConvertedYaml) => {
+export const generateJobsContent = selectedItem => {
   const sparkUiUrl = selectedItem.ui_run ? { sparkUiUrl: { value: selectedItem.ui_run } } : {}
 
   return {
@@ -241,8 +233,7 @@ export const generateJobsContent = (selectedItem, toggleConvertedYaml) => {
       shouldPopUp: !isEmpty(selectedItem.function),
       handleClick: () =>
         openPopUp(FunctionPopUp, {
-          funcUri: selectedItem.function,
-          toggleConvertedYaml
+          funcUri: selectedItem.function
         })
     },
     functionTag: {

@@ -29,7 +29,6 @@ import FunctionsTableRow from '../../elements/FunctionsTableRow/FunctionsTableRo
 import Loader from '../../common/Loader/Loader'
 import NoData from '../../common/NoData/NoData'
 import Table from '../Table/Table'
-import YamlModal from '../../common/YamlModal/YamlModal'
 import { ConfirmDialog } from 'igz-controls/components'
 
 import {
@@ -46,7 +45,6 @@ const FunctionsView = ({
   actionsMenu,
   closePanel,
   confirmData,
-  convertedYaml,
   createFunctionSuccess,
   editableItem,
   expand,
@@ -71,7 +69,6 @@ const FunctionsView = ({
   selectedFunction,
   selectedRowData,
   tableContent,
-  toggleConvertedYaml,
   virtualizationConfig
 }) => {
   const params = useParams()
@@ -130,7 +127,6 @@ const FunctionsView = ({
                   selectedItem={selectedFunction}
                   tableClassName="functions-table"
                   tableHeaders={tableContent[0]?.content ?? []}
-                  toggleConvertedYaml={toggleConvertedYaml}
                   virtualizationConfig={virtualizationConfig}
                 >
                   {tableContent.map(
@@ -184,9 +180,7 @@ const FunctionsView = ({
           message={confirmData.message}
         />
       )}
-      {convertedYaml.length > 0 && (
-        <YamlModal convertedYaml={convertedYaml} toggleConvertToYaml={toggleConvertedYaml} />
-      )}
+
     </>
   )
 }
@@ -200,7 +194,6 @@ FunctionsView.propTypes = {
   actionsMenu: PropTypes.func.isRequired,
   closePanel: PropTypes.func.isRequired,
   confirmData: PropTypes.object,
-  convertedYaml: PropTypes.string.isRequired,
   createFunctionSuccess: PropTypes.func.isRequired,
   editableItem: PropTypes.object,
   expand: PropTypes.bool.isRequired,
@@ -223,7 +216,6 @@ FunctionsView.propTypes = {
   selectedFunction: PropTypes.object.isRequired,
   selectedRowData: PropTypes.object.isRequired,
   tableContent: PropTypes.arrayOf(PropTypes.object).isRequired,
-  toggleConvertedYaml: PropTypes.func.isRequired,
   virtualizationConfig: VIRTUALIZATION_CONFIG.isRequired
 }
 

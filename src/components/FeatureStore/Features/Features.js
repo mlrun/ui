@@ -104,13 +104,12 @@ const Features = ({
           createFeaturesRowData(
             contentItem.data,
             tableStore.isTablePanelOpen,
-            false,
-            toggleConvertedYaml
+            false
           )
         )
       }))
     })
-  }, [tableStore.isTablePanelOpen, setSelectedRowData, toggleConvertedYaml])
+  }, [tableStore.isTablePanelOpen, setSelectedRowData])
 
   const fetchData = useCallback(
     filters => {
@@ -230,8 +229,7 @@ const Features = ({
               createFeaturesRowData(
                 contentItem,
                 tableStore.isTablePanelOpen,
-                false,
-                toggleConvertedYaml
+                false
               )
             )
             setSelectedRowData(state => ({
@@ -255,7 +253,7 @@ const Features = ({
           }))
         })
     },
-    [fetchEntity, fetchFeature, tableStore.isTablePanelOpen, toggleConvertedYaml]
+    [fetchEntity, fetchFeature, tableStore.isTablePanelOpen]
   )
 
   const { latestItems, handleExpandRow } = useGroupContent(
@@ -277,16 +275,14 @@ const Features = ({
           createFeaturesRowData(
             contentItem,
             tableStore.isTablePanelOpen,
-            false,
-            toggleConvertedYaml
+            false
           )
         )
   }, [
     features,
     filtersStore.groupBy,
     latestItems,
-    tableStore.isTablePanelOpen,
-    toggleConvertedYaml
+    tableStore.isTablePanelOpen
   ])
 
   const getPopUpTemplate = useCallback(
@@ -374,7 +370,6 @@ const Features = ({
       selectedRowData={selectedRowData}
       tableContent={tableContent}
       tableStore={tableStore}
-      toggleConvertedYaml={toggleConvertedYaml}
       virtualizationConfig={virtualizationConfig}
     />
   )

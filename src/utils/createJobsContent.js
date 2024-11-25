@@ -159,7 +159,7 @@ export const createJobsMonitorTabContent = (jobs, jobName, isStagingMode) => {
   })
 }
 
-export const createJobsScheduleTabContent = (jobs, toggleConvertedYaml) => {
+export const createJobsScheduleTabContent = jobs => {
   return jobs.map(job => {
     const identifierUnique = getJobIdentifier(job, true)
     const [, projectName, lastRunUid, lastRunIter] =
@@ -184,8 +184,7 @@ export const createJobsScheduleTabContent = (jobs, toggleConvertedYaml) => {
           showStatus: true,
           handleClick: () =>
             openPopUp(FunctionPopUp, {
-              funcUri: job.func,
-              toggleConvertedYaml
+              funcUri: job.func
             }),
           type: 'link'
         },
@@ -233,8 +232,7 @@ export const createJobsScheduleTabContent = (jobs, toggleConvertedYaml) => {
                 project: projectName,
                 uid: lastRunUid,
                 iter: lastRunIter
-              },
-              toggleConvertedYaml
+              }
             }),
           type: 'link'
         },
@@ -546,7 +544,7 @@ export const createJobsMonitoringContent = (jobs, jobName, isStagingMode) => {
   })
 }
 
-export const createScheduleJobsMonitoringContent = (jobs, toggleConvertedYaml) => {
+export const createScheduleJobsMonitoringContent = (jobs) => {
   return jobs.map(job => {
     const identifierUnique = getJobIdentifier(job, true)
     const [, projectName, lastRunUid, lastRunIter] =
@@ -571,8 +569,7 @@ export const createScheduleJobsMonitoringContent = (jobs, toggleConvertedYaml) =
           showStatus: true,
           handleClick: () =>
             openPopUp(FunctionPopUp, {
-              funcUri: job.func,
-              toggleConvertedYaml
+              funcUri: job.func
             }),
           type: 'link'
         },
@@ -627,8 +624,7 @@ export const createScheduleJobsMonitoringContent = (jobs, toggleConvertedYaml) =
                 project: projectName,
                 uid: lastRunUid,
                 iter: lastRunIter
-              },
-              toggleConvertedYaml
+              }
             }),
           type: 'link'
         },

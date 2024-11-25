@@ -135,8 +135,7 @@ export const createFeatureSetsRowData = (featureSet, project, pageTab, showExpan
 export const createFeaturesRowData = (
   feature,
   isTablePanelOpen,
-  showExpandButton,
-  toggleConvertedYaml
+  showExpandButton
 ) => {
   return {
     data: {
@@ -169,8 +168,7 @@ export const createFeaturesRowData = (
               project: feature.metadata?.project,
               name: feature.metadata?.name,
               tag: feature.metadata?.tag
-            },
-            toggleConvertedYaml
+            }
           }),
         expandedCellContent: {
           className: 'table-cell-2',
@@ -183,8 +181,7 @@ export const createFeaturesRowData = (
                 project: feature.metadata?.project,
                 name: feature.metadata?.name,
                 tag: feature.metadata?.tag
-              },
-              toggleConvertedYaml
+              }
             })
         }
       },

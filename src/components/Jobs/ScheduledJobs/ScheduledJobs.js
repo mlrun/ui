@@ -71,7 +71,7 @@ const ScheduledJobs = () => {
   return (
     <ScheduledJobsTable
       context={JobsContext}
-      createTableContent={toggleConvertedYaml => createJobsScheduleTabContent(scheduledJobs, toggleConvertedYaml)}
+      createTableContent={() => createJobsScheduleTabContent(scheduledJobs)}
       filters={filters}
       filtersConfig={scheduledFiltersConfig}
       jobs={scheduledJobs}

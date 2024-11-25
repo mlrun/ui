@@ -23,7 +23,6 @@ import { useParams } from 'react-router-dom'
 import PropTypes from 'prop-types'
 
 import JobWizard from '../../components/JobWizard/JobWizard'
-import YamlModal from '../../common/YamlModal/YamlModal'
 import JobsTableRow from '../JobsTableRow/JobsTableRow'
 import Table from '../../components/Table/Table'
 import NoData from '../../common/NoData/NoData'
@@ -40,7 +39,7 @@ import { getNoDataMessage } from '../../utils/getNoDataMessage'
 import { isRowRendered, useVirtualization } from '../../hooks/useVirtualization.hook'
 import { setNotification } from '../../reducers/notificationReducer'
 import { showErrorNotification } from '../../utils/notifications.util'
-import { useYaml } from '../../hooks/yaml.hook'
+import { toggleYaml } from '../../reducers/appReducer'
 
 import { ReactComponent as Delete } from 'igz-controls/images/delete.svg'
 import { ReactComponent as Yaml } from 'igz-controls/images/yaml.svg'
@@ -62,7 +61,6 @@ const ScheduledJobsTable = ({
   const params = useParams()
   const jobsStore = useSelector(store => store.jobsStore)
   const filtersStore = useSelector(store => store.filtersStore)
-  const [convertedYaml, toggleConvertedYaml] = useYaml('')
   const {
     editableItem,
     jobWizardIsOpened,
@@ -79,8 +77,15 @@ const ScheduledJobsTable = ({
     }
   }, [])
   const tableContent = useMemo(() => {
-    return createTableContent(toggleConvertedYaml)
-  }, [createTableContent, toggleConvertedYaml])
+    return createTableContent()
+  }, [createTableContent])
+
+  const toggleConvertedYaml = useCallback(
+    data => {
+      return dispatch(toggleYaml(data))
+    },
+    [dispatch]
+  )
 
   const handleRunJob = useCallback(
     job => {
@@ -281,7 +286,6 @@ const ScheduledJobsTable = ({
             tab={SCHEDULE_TAB}
             tableClassName="scheduled-jobs-table"
             tableHeaders={tableContent[0]?.content ?? []}
-            toggleConvertedYaml={toggleConvertedYaml}
             virtualizationConfig={virtualizationConfig}
           >
             {tableContent.map(
@@ -292,9 +296,6 @@ const ScheduledJobsTable = ({
             )}
           </Table>
         </>
-      )}
-      {convertedYaml.length > 0 && (
-        <YamlModal convertedYaml={convertedYaml} toggleConvertToYaml={toggleConvertedYaml} />
       )}
     </>
   )

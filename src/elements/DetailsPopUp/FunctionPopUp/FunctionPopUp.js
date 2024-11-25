@@ -36,8 +36,9 @@ import { showErrorNotification } from '../../../utils/notifications.util'
 import { TAG_LATEST } from '../../../constants'
 
 import functionsApi from '../../../api/functions-api'
+import { toggleYaml } from '../../../reducers/appReducer'
 
-const FunctionPopUp = ({ funcUri, toggleConvertedYaml, isOpen, onResolve }) => {
+const FunctionPopUp = ({ funcUri, isOpen, onResolve }) => {
   const dispatch = useDispatch()
   const navigate = useNavigate()
   const { isDemoMode, isStagingMode } = useMode()
@@ -45,6 +46,13 @@ const FunctionPopUp = ({ funcUri, toggleConvertedYaml, isOpen, onResolve }) => {
   const [selectedFunction, setSelectedFunction] = useState({})
   const fetchFunctionLogsTimeout = useRef(null)
   const fetchFunctionNuclioLogsTimeout = useRef(null)
+
+  const toggleConvertedYaml = useCallback(
+    data => {
+      return dispatch(toggleYaml(data))
+    },
+    [dispatch]
+  )
 
   const fetchFunction = useCallback(() => {
     const parsedFuncUri = parseFunctionUri(funcUri)
@@ -117,7 +125,6 @@ const FunctionPopUp = ({ funcUri, toggleConvertedYaml, isOpen, onResolve }) => {
       onResolve={onResolve}
       pageData={pageData}
       selectedItem={selectedFunction}
-      toggleConvertedYaml={toggleConvertedYaml}
     />
   )
 }
@@ -125,8 +132,7 @@ const FunctionPopUp = ({ funcUri, toggleConvertedYaml, isOpen, onResolve }) => {
 FunctionPopUp.propTypes = {
   funcUri: PropTypes.string.isRequired,
   isOpen: PropTypes.bool.isRequired,
-  onResolve: PropTypes.func.isRequired,
-  toggleConvertedYaml: PropTypes.func.isRequired
+  onResolve: PropTypes.func.isRequired
 }
 
 export default FunctionPopUp

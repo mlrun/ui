@@ -505,7 +505,6 @@ const FeatureVectors = ({
       setCreateVectorPopUpIsOpen={setCreateVectorPopUpIsOpen}
       setSelectedFeatureVector={handleSelectFeatureVector}
       tableContent={tableContent}
-      toggleConvertedYaml={toggleConvertedYaml}
       virtualizationConfig={virtualizationConfig}
     />
   )
