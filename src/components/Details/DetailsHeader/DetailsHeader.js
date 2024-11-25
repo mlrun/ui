@@ -286,7 +286,7 @@ const DetailsHeader = ({
                 <RoundedIcon
                   onClick={() => {
                     navigate(
-                      `${window.location.pathname}${window.location.search}${window.location.search ? '&' : '?'}view=full`
+                      `${window.location.pathname}${window.location.search}${window.location.search ? '&' : '?'}${VIEW_SEARCH_PARAMETER}=full`
                     )
                   }}
                   id="full-view"
