@@ -38,6 +38,7 @@ import {
   JOB,
   MODEL_ENDPOINT_RESULT,
   MODEL_MONITORING_APPLICATION,
+  SEVERITY,
   SEVERITY_HIGH,
   SEVERITY_LOW,
   SEVERITY_MEDIUM
@@ -59,6 +60,10 @@ const getEntityTypeData = entityType => {
       return {
         value: <Job />,
         tooltip: upperFirst(JOB)
+      }
+    default:
+      return {
+        value: <span />
       }
   }
 }
@@ -96,6 +101,10 @@ const getSeverityData = severity => {
 
         tooltip: upperFirst(SEVERITY_HIGH)
       }
+    default:
+      return {
+        value: <span />
+      }
   }
 }
 
@@ -108,18 +117,26 @@ const alertsNotifications = {
 
 const getNotificationData = notifications =>
   notifications.map(notification => {
-    const failClass = notification.err === '' ? 'notification-fail' : ''
-
     return {
       icon: (
-        <div className={`notifications ${failClass}`}>{alertsNotifications[notification.kind]}</div>
+        <div
+          className={`table-cell-notification__content ${notification.err !== '' ? 'notification-fail' : ''}`}
+        >
+          {alertsNotifications[notification.kind]}
+        </div>
       ),
       tooltip: upperFirst(notification.kind)
     }
   })
 
 export const createAlertRowData = ({ name, ...alert }) => {
-  // TODO: create ID for alert
+  const createAlertsId = (activationTime = new Date().toISOString()) => {
+    const date = new Date(activationTime)
+
+    return date.getTime().toString(36).slice(-7)
+  }
+  alert.id = createAlertsId(alert.activation_time)
+
   return {
     data: {
       ...alert
@@ -131,7 +148,7 @@ export const createAlertRowData = ({ name, ...alert }) => {
         headerLabel: 'Alert Name',
         value: name,
         className: 'table-cell-1',
-        getLink: () => {}, // TODO create link
+        getLink: () => {}, //TODO: Implement in ML-8368
         showStatus: true,
         tooltip: name,
         type: 'link'
@@ -173,37 +190,33 @@ export const createAlertRowData = ({ name, ...alert }) => {
         className: 'table-cell-1'
       },
       {
-        id: `entityType.${alert.id}`,
-        headerId: 'severity',
-        headerLabel: 'severity',
+        id: `severity.${alert.id}`,
+        headerId: SEVERITY,
+        headerLabel: upperFirst(SEVERITY),
         value: getSeverityData(alert.severity).value,
         tooltip: getSeverityData(alert.severity).tooltip,
         className: 'table-cell-1'
       },
       {
-        headerId: 'criteriacount',
-        id: 'criteriacount',
-        headerLabel: 'Trigger count',
-        // id: `severity.${identifierUnique}`, //@TODO create id
+        id: `criteriaCount.${alert.id}`,
+        headerId: 'criteriaCount',
+        headerLabel: 'Trigger criteria count',
         value: alert.criteria.count,
         className: 'table-cell-1'
       },
       {
-        // id: `criteriatime.${alert.ui.identifierUnique}`,//@TODO create id
-        id: 'criteriatime',
-        headerId: 'criteriatime',
-        headerLabel: 'Trigger time',
+        id: `criteriaTime.${alert.id}`,
+        headerId: 'criteriaTime',
+        headerLabel: 'Trigger criteria time period',
         value: alert.criteria.period,
-        // value: formatDatetime(alert.status?.first_request, '-'),
         className: 'table-cell-1'
       },
       {
-        // id: `notifications.${alert.ui.identifierUnique}`,//@TODO create id
-        id: 'notifications',
+        id: `notifications.${alert.id}`,
         headerId: 'notifications',
         headerLabel: 'Notifications',
         value: getNotificationData(alert.notifications),
-        className: 'table-cell-1 table-cell-notification',
+        className: 'table-cell-small table-cell-notification',
         type: 'icons'
       }
     ]

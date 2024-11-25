@@ -11,15 +11,15 @@
         },
         {
           "kind": "webhook",
-          "err": "Timeout error"
+          "err": ""
         },
         {
           "kind": "git",
-          "err": "Error"
+          "err": ""
         },
         {
           "kind": "slack",
-          "err": "Failed to send notification due to network issue"
+          "err": ""
         }
       ],
       "entity_id": "5662c7a4470ef28ed1df450e80d37624de7e1749.histogram-data-drift.general_drift",
@@ -38,12 +38,20 @@
       "activation_time": "2024-10-24T12:20:30Z",
       "notifications": [
         {
-          "kind": "slack",
-          "err": "Failed to send notification due to network issue"
+          "kind": "email",
+          "err": "fail"
+        },
+        {
+          "kind": "webhook",
+          "err": "fail"
         },
         {
           "kind": "git",
-          "err": ""
+          "err": "fail"
+        },
+        {
+          "kind": "slack",
+          "err": "fail"
         }
       ],
       "entity_id": "trainer-train.5a8037bd46cf192ce7e94b25f06a8d13",

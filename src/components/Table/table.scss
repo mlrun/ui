@@ -101,15 +101,10 @@
       }
 
       &-notification {
-
-        .notifications {
-          margin-right:12px
-        }
-
         .notification-fail {
-
           path {
-            fill: #C4C2C8;
+            fill: $white;
+            stroke: $silver;
           }
         }
       }
@@ -214,7 +209,6 @@
           *  {
             visibility: hidden;
           }
-
 
           .chip {
             visibility: hidden;
