@@ -4,6 +4,12 @@
   flex-direction: column;
   flex-wrap: unset;
   justify-content: flex-start;
+  border: 1px solid $frenchLilac;
+
+  &.alerts-card {
+    background-color: $carouselPink;
+    border: 1px solid $babyPink;
+  }
 
   .stats-card__row {
     flex: unset;
@@ -21,6 +27,20 @@
       font-size: 1rem;
     }
 
+    &__placeholder-subtitle{
+      height: 24px;
+    }
+
+    &__header-icon {
+      height: 20px;
+      width: 20px;
+      margin-right: 5px;
+
+      path {
+        fill: $ceriseRed;
+      }
+    }
+
     &__counter {
       display: flex;
       flex: 1;
@@ -28,9 +48,21 @@
       margin: 0 0 5px 0;
       color: $primary;
       font-weight: 700;
-      font-size: 42px;
+      font-size: 38px;
       align-items: center;
       justify-content: center;
+    }
+
+    &__link {
+      color: $darkPurple;
+      cursor: pointer;
+
+      &:hover {
+        text-decoration: underline;
+        color: $topaz;
+        text-underline-offset: 1px;
+        text-decoration-thickness: 2px;
+      }
     }
 
     .link {
