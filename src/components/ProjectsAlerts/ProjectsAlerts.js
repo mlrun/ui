@@ -29,9 +29,7 @@ const ProjectsAlerts = () => {
 
   const alertsFilters = useFiltersFromSearchParams(alertsFiltersConfig)
 
-  const refreshAlertsCallback = useCallback(filters => {
-    console.log(filters) // TODO: will be remove in ML-8368
-  }, [])
+  const refreshAlertsCallback = useCallback(() => {}, [])
 
   return (
     <ProjectAlertsView
