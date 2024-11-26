@@ -29,9 +29,9 @@ import { FormOnChange } from 'iguazio.dashboard-react-controls/dist/components'
 import { generateProjectsList } from '../../utils/projects'
 import {
   allProjectsOption,
+  filterAlertsEntityTypeOptions,
   filterAlertsEventTypeOptions,
-  filterAlertsSeverityOptions,
-  filterAlertsTypeOptions
+  filterAlertsSeverityOptions
 } from './alerts.util'
 
 import {
@@ -50,18 +50,11 @@ import {
 import StatusFilter from '../../common/StatusFilter/StatusFilter'
 
 const ProjectsAlertsFilters = () => {
-  const filtersStore = useSelector(store => store.filtersStore)
-  console.log(filtersStore.filterMenuModal.alerts)
-
   const form = useForm()
   const {
     values: { [ENTITY_TYPE]: entityType }
   } = useFormState()
 
-  const { values } = useFormState()
-  console.log(entityType)
-  console.log(values)
-  console.log(form.getState())
   const projectStore = useSelector(state => state.projectStore)
 
   const projectsList = useMemo(() => {
@@ -83,20 +76,23 @@ const ProjectsAlertsFilters = () => {
         <FormSelect label="Project name" name={PROJECT_FILTER} options={projectsList} />
       </div>
       <div className="form-row">
-        <FormSelect label="Entity type" name={ENTITY_TYPE} options={filterAlertsTypeOptions} />
-        {/*<FormOnChange handler={value => handleInputChange(value, ENTITY_TYPE)} name={ENTITY_TYPE} />*/}
+        <FormSelect
+          label="Entity type"
+          name={ENTITY_TYPE}
+          options={filterAlertsEntityTypeOptions}
+        />
       </div>
 
       {(entityType === FILTER_ALL_ITEMS || entityType === APPLICATION) && (
         <div className="form-row">
           <FormInput label="Endpoint ID" name={ENTITY_ID} placeholder="Search by ID" />
-          {/*<FormOnChange handler={value => handleInputChange(value, ENTITY_ID)} name={ENTITY_ID} />*/}
+          <FormOnChange handler={value => handleInputChange(value, ENTITY_ID)} name={ENTITY_ID} />
         </div>
       )}
       {entityType === JOB_NAME && (
         <div className="form-row">
           <FormInput label="Job" name={JOB_NAME} placeholder="Search by job name" />
-          {/*<FormOnChange handler={value => handleInputChange(value, JOB_NAME)} name={JOB_NAME} />*/}
+          <FormOnChange handler={value => handleInputChange(value, JOB_NAME)} name={JOB_NAME} />
         </div>
       )}
       {entityType === ENDPOINT && (

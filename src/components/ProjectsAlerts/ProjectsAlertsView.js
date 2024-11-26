@@ -66,7 +66,6 @@ const ProjectAlertsView = ({ alertsFiltersConfig, refreshAlertsCallback }) => {
 }
 
 ProjectAlertsView.propTypes = {
-  alertsStore: PropTypes.object.isRequired,
   refreshAlertsCallback: PropTypes.func.isRequired
 }
 export default ProjectAlertsView

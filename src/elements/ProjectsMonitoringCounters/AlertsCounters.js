@@ -20,20 +20,18 @@ such restriction.
 import React, { useMemo } from 'react'
 import { useLocation, useNavigate, useParams } from 'react-router-dom'
 
-import { useDispatch, useSelector } from 'react-redux'
+import { useSelector } from 'react-redux'
 
 import Loader from '../../common/Loader/Loader'
 import StatsCard from '../../common/StatsCard/StatsCard'
-
 import { ReactComponent as Alerts } from 'igz-controls/images/alerts.svg'
 import { ReactComponent as ClockIcon } from 'igz-controls/images/clock.svg'
 
-import './projectsMonitoringCounters.scss'
 import { generateAlertsStats } from '../../utils/generateAlertsStats'
-// import { PROJECTS_PAGE_PATH } from '../../constants'
+
+import './projectsMonitoringCounters.scss'
 
 const AlertsCounters = () => {
-  const dispatch = useDispatch()
   const { pathname } = useLocation()
   const { projectName: paramProjectName } = useParams()
   const navigate = useNavigate()
@@ -45,17 +43,14 @@ const AlertsCounters = () => {
   )
 
   const alertsStats = useMemo(
-    () =>
-      generateAlertsStats(projectStore.jobsMonitoringData.alerts, navigate, dispatch, projectName),
-    [dispatch, navigate, projectName, projectStore.jobsMonitoringData.alerts]
+    () => generateAlertsStats(projectStore.jobsMonitoringData.alerts, navigate, projectName),
+    [navigate, projectName, projectStore.jobsMonitoringData.alerts]
   )
-
-  console.log(alertsStats)
 
   return (
     <StatsCard className="monitoring-stats alerts-card">
       <StatsCard.Header>
-        <div className="project-card__title-icon">
+        <div className="project-card__header-title">
           <Alerts className="stats__header-icon" />
           Alerts
         </div>

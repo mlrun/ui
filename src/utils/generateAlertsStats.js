@@ -17,17 +17,13 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import { setFiltersValues, setModalFiltersValues } from '../reducers/filtersReducer'
-import { ALERTS_FILTERS, APPLICATION, ENDPOINT, ENTITY_TYPE, JOB } from '../constants'
+import { APPLICATION, ENDPOINT, ENTITY_TYPE, JOB } from '../constants'
 
-export const generateAlertsStats = (data, navigate, dispatch, projectName) => {
-  console.log(projectName)
-  const navigateToAlertsPage = (modalFilters, filters = {}, tab) => {
-    dispatch(setFiltersValues({ name: ALERTS_FILTERS, value: filters }))
-    dispatch(setModalFiltersValues({ name: ALERTS_FILTERS, value: modalFilters }))
-    navigate(`/projects/${projectName}/alerts`)
+export const generateAlertsStats = (data, navigate, projectName) => {
+  const navigateToAlertsPage = (filters = {}, tab) => {
+    navigate(`/projects/${projectName}/alerts?${new URLSearchParams(filters)}`)
   }
-  console.log(data)
+
   return {
     all: {
       counter: data.all,
