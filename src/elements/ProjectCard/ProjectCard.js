@@ -26,7 +26,14 @@ import ProjectCardView from './ProjectCardView'
 import { generateProjectStatistic } from './projectCard.util'
 import projectsAction from '../../actions/projects'
 
-const ProjectCard = ({ actionsMenu, nuclioStore, project, projectStore, projectSummary }) => {
+const ProjectCard = ({
+  actionsMenu,
+  alert,
+  nuclioStore,
+  project,
+  projectStore,
+  projectSummary
+}) => {
   const [fetchNuclioFunctionsFailure, setFetchNuclioFunctionsFailure] = useState(false)
 
   const actionsMenuRef = useRef()
@@ -59,6 +66,7 @@ const ProjectCard = ({ actionsMenu, nuclioStore, project, projectStore, projectS
   return (
     <ProjectCardView
       actionsMenu={actionsMenu}
+      alert={alert}
       project={project}
       statistics={statistics}
       ref={actionsMenuRef}
@@ -68,7 +76,8 @@ const ProjectCard = ({ actionsMenu, nuclioStore, project, projectStore, projectS
 
 ProjectCard.propTypes = {
   actionsMenu: PropTypes.shape({}).isRequired,
-  project: PropTypes.shape({}).isRequired
+  project: PropTypes.shape({}).isRequired,
+  alert: PropTypes.number.isRequired
 }
 
 export default connect(

@@ -32,7 +32,7 @@ import {
   isBackgroundTaskRunning,
   pollTask
 } from '../../utils/poll.util'
-import { PROJECT_ONLINE_STATUS } from '../../constants'
+import { PROJECT_ONLINE_STATUS, SET_PROJECT_TOTAL_ALERTS } from '../../constants'
 import { DANGER_BUTTON, FORBIDDEN_ERROR_STATUS_CODE } from 'igz-controls/constants'
 import { setNotification } from '../../reducers/notificationReducer'
 import { showErrorNotification } from '../../utils/notifications.util'
@@ -245,6 +245,22 @@ export const pollDeletingProjects = (terminatePollRef, deletingProjects, refresh
 
   return pollTask(() => tasksApi.getBackgroundTasks(), isDone, {
     terminatePollRef
+  })
+}
+
+export const generateAlerts = (data, dispatch) => {
+  const projectAlerts = {}
+  data.forEach(project => {
+    const projectName = project.name
+    projectAlerts[projectName] =
+      (project.endpoint_alerts_count || 0) +
+      (project.job_alerts_count || 0) +
+      (project.other_alerts_count || 0)
+  })
+
+  dispatch({
+    type: SET_PROJECT_TOTAL_ALERTS,
+    payload: projectAlerts
   })
 }
 

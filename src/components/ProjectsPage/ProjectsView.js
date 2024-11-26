@@ -43,6 +43,7 @@ import './projects.scss'
 
 const ProjectsView = ({
   actionsMenu,
+  alertStore,
   closeNewProjectPopUp,
   confirmData = null,
   convertedYaml,
@@ -173,6 +174,7 @@ const ProjectsView = ({
                 return (
                   <ProjectCard
                     actionsMenu={actionsMenu}
+                    alert={alertStore[project.metadata.name] || 0}
                     key={project.id || project.metadata.name}
                     project={project}
                     projectSummary={projectStore.projectsSummary.data.find(
@@ -202,6 +204,7 @@ const ProjectsView = ({
 
 ProjectsView.propTypes = {
   actionsMenu: PropTypes.shape({}).isRequired,
+  alertStore: PropTypes.shape({}).isRequired,
   closeNewProjectPopUp: PropTypes.func.isRequired,
   confirmData: PropTypes.shape({}),
   convertedYaml: PropTypes.string.isRequired,

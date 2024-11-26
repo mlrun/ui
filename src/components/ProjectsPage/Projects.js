@@ -26,6 +26,7 @@ import yaml from 'js-yaml'
 import ProjectsView from './ProjectsView'
 
 import {
+  generateAlerts,
   generateMonitoringCounters,
   generateProjectActionsMenu,
   pollDeletingProjects,
@@ -66,6 +67,7 @@ const Projects = () => {
   const dispatch = useDispatch()
   const { isDemoMode } = useMode()
   const { isNuclioModeDisabled } = useNuclioMode()
+  const alertStore = useSelector(store => store.projectStore.projectTotalAlerts)
   const projectStore = useSelector(store => store.projectStore)
   const tasksStore = useSelector(store => store.tasksStore)
 
@@ -120,6 +122,7 @@ const Projects = () => {
     ).then(result => {
       if (result) {
         generateMonitoringCounters(result, dispatch)
+        generateAlerts(result, dispatch)
       }
     })
 
@@ -158,14 +161,17 @@ const Projects = () => {
     }
   }, [isNuclioModeDisabled, dispatch, fetchMinimalProjects])
 
-  const handleSearchOnChange = useCallback((name) => {
-    setFilterByName(name)
+  const handleSearchOnChange = useCallback(
+    name => {
+      setFilterByName(name)
 
-    if (!projectsAreRefreshedOnSearchRef.current && name.length >= 1) {
-      refreshProjects()
-      projectsAreRefreshedOnSearchRef.current = true
-    }
-  }, [refreshProjects, setFilterByName])
+      if (!projectsAreRefreshedOnSearchRef.current && name.length >= 1) {
+        refreshProjects()
+        projectsAreRefreshedOnSearchRef.current = true
+      }
+    },
+    [refreshProjects, setFilterByName]
+  )
 
   const handleSelectSortOption = option => {
     setSortProjectId(option)
@@ -386,6 +392,7 @@ const Projects = () => {
   return (
     <ProjectsView
       actionsMenu={actionsMenu}
+      alertStore={alertStore}
       closeNewProjectPopUp={closeNewProjectPopUp}
       confirmData={confirmData}
       convertedYaml={convertedYaml}
