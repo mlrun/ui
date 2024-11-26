@@ -57,6 +57,17 @@ export const getAlertsFiltersConfig = () => {
   }
 }
 
+export const parseAlertsQueryParamsCallback = (paramName, paramValue) => {
+  if (paramName === SEVERITY) {
+    const filteredStatuses = paramValue
+      ?.split(',')
+      .filter(paramStatus => filterAlertsSeverityOptions.find(status => status.id === paramStatus))
+
+    return filteredStatuses?.length ? filteredStatuses : null
+  }
+  return paramValue
+}
+
 export const allProjectsOption = [
   {
     id: FILTER_ALL_ITEMS,

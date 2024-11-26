@@ -21,13 +21,16 @@ import { useCallback, useMemo } from 'react'
 
 import ProjectAlertsView from './ProjectsAlertsView'
 
-import { getAlertsFiltersConfig } from './alerts.util'
+import { getAlertsFiltersConfig, parseAlertsQueryParamsCallback } from './alerts.util'
 import { useFiltersFromSearchParams } from '../../hooks/useFiltersFromSearchParams.hook'
 
 const ProjectsAlerts = () => {
   const alertsFiltersConfig = useMemo(() => getAlertsFiltersConfig(), [])
 
-  const alertsFilters = useFiltersFromSearchParams(alertsFiltersConfig)
+  const alertsFilters = useFiltersFromSearchParams(
+    alertsFiltersConfig,
+    parseAlertsQueryParamsCallback
+  )
 
   const refreshAlertsCallback = useCallback(() => {}, [])
 
