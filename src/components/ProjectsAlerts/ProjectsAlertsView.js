@@ -25,7 +25,7 @@ import { ALERTS_FILTERS, ALERTS_PAGE } from '../../constants'
 
 import PropTypes from 'prop-types'
 
-const ProjectAlertsView = ({ alertsFiltersConfig, refreshAlertsCallback }) => {
+const ProjectAlertsView = ({ alertsFiltersConfig, filters, refreshAlertsCallback }) => {
   return (
     <>
       <div className="content-wrapper">
@@ -35,25 +35,15 @@ const ProjectAlertsView = ({ alertsFiltersConfig, refreshAlertsCallback }) => {
         <div className="content">
           <div className="table-container">
             <div className="content__action-bar-wrapper">
-              {/*<ActionBar*/}
-              {/*  filterMenuName={ALERTS_FILTERS}*/}
-              {/*  filtersConfig={alertsFiltersConfig}*/}
-              {/*  handleRefresh={refreshAlertsCallback}*/}
-              {/*  page={ALERTS_PAGE}*/}
-              {/*  withRefreshButton*/}
-              {/*  withoutExpandButton*/}
-              {/*>*/}
               <ActionBar
-                autoRefreshIsEnabled={false}
                 autoRefreshIsStopped={true}
                 filterMenuName={ALERTS_FILTERS}
                 filtersConfig={alertsFiltersConfig}
+                filters={filters}
                 handleRefresh={refreshAlertsCallback}
                 page={ALERTS_PAGE}
-                tab="alerts tab"
                 withRefreshButton
                 withoutExpandButton
-                key="alerts key"
               >
                 <ProjectsAlertsFilters />
               </ActionBar>
@@ -66,6 +56,8 @@ const ProjectAlertsView = ({ alertsFiltersConfig, refreshAlertsCallback }) => {
 }
 
 ProjectAlertsView.propTypes = {
+  alertsFiltersConfig: PropTypes.object.isRequired,
+  filters: PropTypes.object.isRequired,
   refreshAlertsCallback: PropTypes.func.isRequired
 }
 export default ProjectAlertsView

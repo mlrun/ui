@@ -21,15 +21,38 @@ import {
   APPLICATION,
   DATES_FILTER,
   ENDPOINT,
+  ENDPOINT_APPLICATION,
+  ENDPOINT_RESULT,
+  ENTITY_ID,
+  ENTITY_TYPE,
+  EVENT_TYPE,
   FILTER_ALL_ITEMS,
   JOB_KIND_JOB,
-  NAME_FILTER
+  JOB_NAME,
+  NAME_FILTER,
+  PROJECT_FILTER,
+  SEVERITY
 } from '../../constants'
+import {
+  datePickerPastOptions,
+  getDatePickerFilterValue,
+  PAST_24_HOUR_DATE_OPTION
+} from '../../utils/datePicker.util'
 
 export const getAlertsFiltersConfig = () => {
   return {
-    [NAME_FILTER]: { label: 'Name:' },
-    [DATES_FILTER]: { label: 'Start time:' }
+    [NAME_FILTER]: { initialValue: '' },
+    [DATES_FILTER]: {
+      initialValue: getDatePickerFilterValue(datePickerPastOptions, PAST_24_HOUR_DATE_OPTION)
+    },
+    [PROJECT_FILTER]: { initialValue: FILTER_ALL_ITEMS, isModal: true },
+    [ENTITY_TYPE]: { initialValue: FILTER_ALL_ITEMS, isModal: true },
+    [ENTITY_ID]: { initialValue: '', isModal: true },
+    [JOB_NAME]: { initialValue: '', isModal: true },
+    [ENDPOINT_APPLICATION]: { initialValue: '', isModal: true },
+    [ENDPOINT_RESULT]: { initialValue: '', isModal: true },
+    [SEVERITY]: { initialValue: [FILTER_ALL_ITEMS], isModal: true },
+    [EVENT_TYPE]: { initialValue: FILTER_ALL_ITEMS, isModal: true }
   }
 }
 

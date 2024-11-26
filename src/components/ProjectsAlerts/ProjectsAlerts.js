@@ -17,38 +17,29 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import { useCallback, useMemo, useState } from 'react'
-
-import { useSelector } from 'react-redux'
+import { useCallback, useMemo } from 'react'
 
 import ProjectAlertsView from './ProjectsAlertsView'
 
 import { getAlertsFiltersConfig } from './alerts.util'
-
-import alertsData from './alertsData.json'
+import { useFiltersFromSearchParams } from '../../hooks/useFiltersFromSearchParams.hook'
 
 const ProjectsAlerts = () => {
-  const [alerts] = useState(alertsData)
-  const [requestErrorMessage] = useState('')
-  const filtersStore = useSelector(store => store.filtersStore)
-
   const alertsFiltersConfig = useMemo(() => getAlertsFiltersConfig(), [])
 
+  const alertsFilters = useFiltersFromSearchParams(alertsFiltersConfig)
+
   const refreshAlertsCallback = useCallback(filters => {
-    console.log(filters)
+    console.log(filters) // TODO: will be remove in ML-8368
   }, [])
 
   return (
     <ProjectAlertsView
-      alerts={alerts}
+      filters={alertsFilters}
       alertsFiltersConfig={alertsFiltersConfig}
       refreshAlertsCallback={refreshAlertsCallback}
-      filtersStore={filtersStore}
-      requestErrorMessage={requestErrorMessage}
     />
   )
 }
-
-ProjectsAlerts.propTypes = {}
 
 export default ProjectsAlerts
