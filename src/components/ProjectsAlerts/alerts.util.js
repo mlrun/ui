@@ -41,18 +41,19 @@ import {
 
 export const getAlertsFiltersConfig = () => {
   return {
-    [NAME_FILTER]: { initialValue: '' },
+    [NAME_FILTER]: { label: 'Alert name', initialValue: '' },
     [DATES_FILTER]: {
+      label: 'Start time:',
       initialValue: getDatePickerFilterValue(datePickerPastOptions, PAST_24_HOUR_DATE_OPTION)
     },
-    [PROJECT_FILTER]: { initialValue: FILTER_ALL_ITEMS, isModal: true },
-    [ENTITY_TYPE]: { initialValue: FILTER_ALL_ITEMS, isModal: true },
-    [ENTITY_ID]: { initialValue: '', isModal: true },
-    [JOB_NAME]: { initialValue: '', isModal: true },
-    [ENDPOINT_APPLICATION]: { initialValue: '', isModal: true },
-    [ENDPOINT_RESULT]: { initialValue: '', isModal: true },
-    [SEVERITY]: { initialValue: [FILTER_ALL_ITEMS], isModal: true },
-    [EVENT_TYPE]: { initialValue: FILTER_ALL_ITEMS, isModal: true }
+    [PROJECT_FILTER]: { label: 'Project:', initialValue: FILTER_ALL_ITEMS, isModal: true },
+    [ENTITY_TYPE]: { label: 'Entity Type', initialValue: FILTER_ALL_ITEMS, isModal: true },
+    [ENTITY_ID]: { label: 'Entity ID:', initialValue: '', isModal: true },
+    [JOB_NAME]: { label: 'Job name:', initialValue: '', isModal: true },
+    [ENDPOINT_APPLICATION]: { label: 'Endpoint:', initialValue: '', isModal: true },
+    [ENDPOINT_RESULT]: { label: 'Result:', initialValue: '', isModal: true },
+    [SEVERITY]: { label: 'Severity:', initialValue: [FILTER_ALL_ITEMS], isModal: true },
+    [EVENT_TYPE]: { label: 'Event Type:', initialValue: FILTER_ALL_ITEMS, isModal: true }
   }
 }
 
