@@ -23,16 +23,14 @@ import { useSelector } from 'react-redux'
 
 import Breadcrumbs from '../../common/Breadcrumbs/Breadcrumbs'
 import Loader from '../../common/Loader/Loader'
-import YamlModal from '../../common/YamlModal/YamlModal'
 import PreviewModal from '../../elements/PreviewModal/PreviewModal'
 
-import { ModelsPageProvider, useModelsPage } from './ModelsPage.context'
+import { ModelsPageProvider } from './ModelsPage.context'
 
 import './modelsPage.scss'
 
 const ModelsPage = () => {
   const artifactsStore = useSelector(store => store.artifactsStore)
-  const { convertedYaml, toggleConvertedYaml } = useModelsPage()
 
   return (
     <>
@@ -47,9 +45,6 @@ const ModelsPage = () => {
           </div>
         </div>
       </div>
-      {convertedYaml.length > 0 && (
-        <YamlModal convertedYaml={convertedYaml} toggleConvertToYaml={toggleConvertedYaml} />
-      )}
       {artifactsStore?.preview?.isPreview && (
         <PreviewModal artifact={artifactsStore?.preview?.selectedItem} />
       )}

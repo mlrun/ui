@@ -41,6 +41,7 @@ import {
 } from '../../reducers/artifactsReducer'
 import {
   checkForSelectedDataset,
+  filtersConfig,
   generateActionsMenu,
   generatePageData,
   handleApplyDetailsChanges,
@@ -58,8 +59,9 @@ import { setNotification } from '../../reducers/notificationReducer'
 import { useGroupContent } from '../../hooks/groupContent.hook'
 import { useSortTable } from '../../hooks/useSortTable.hook'
 import { useVirtualization } from '../../hooks/useVirtualization.hook'
-import { useYaml } from '../../hooks/yaml.hook'
 import { useInitialTableFetch } from '../../hooks/useInitialTableFetch.hook'
+import { useFiltersFromSearchParams } from '../../hooks/useFiltersFromSearchParams.hook'
+import { toggleYaml } from '../../reducers/appReducer'
 
 import './datasets.scss'
 import cssVariables from './datasets.scss'
@@ -71,7 +73,6 @@ const Datasets = () => {
   const [selectedRowData, setSelectedRowData] = useState({})
   const [requestErrorMessage, setRequestErrorMessage] = useState('')
   const [maxArtifactsErrorIsShown, setMaxArtifactsErrorIsShown] = useState(false)
-  const [convertedYaml, toggleConvertedYaml] = useYaml('')
   const artifactsStore = useSelector(store => store.artifactsStore)
   const filtersStore = useSelector(store => store.filtersStore)
   const frontendSpec = useSelector(store => store.appStore.frontendSpec)
@@ -80,10 +81,7 @@ const Datasets = () => {
   const location = useLocation()
   const navigate = useNavigate()
   const params = useParams()
-  const [datasetsFilters, datasetsModalFilters] = useSelector(state => [
-    state.filtersStore.filterMenu[DATASETS_PAGE],
-    state.filtersStore.filterMenuModal[DATASETS_PAGE]
-  ])
+  const filters = useFiltersFromSearchParams(filtersConfig)
   const abortControllerRef = useRef(new AbortController())
   const tagAbortControllerRef = useRef(new AbortController())
   const datasetsRef = useRef(null)
@@ -110,6 +108,13 @@ const Datasets = () => {
       params.projectName
     )
   }, [dispatch, navigate, params.projectName, selectedDatasetMin])
+
+  const toggleConvertedYaml = useCallback(
+    data => {
+      return dispatch(toggleYaml(data))
+    },
+    [dispatch]
+  )
 
   useEffect(() => {
     getAndSetSelectedArtifact()
@@ -175,16 +180,19 @@ const Datasets = () => {
     [fetchData, fetchTags]
   )
 
+  const handleRefreshWithFilters = useCallback(() => {
+    handleRefresh(filters)
+  }, [filters, handleRefresh])
+
   const handleAddTag = useCallback(
     artifact => {
       openPopUp(AddArtifactTagPopUp, {
         artifact,
-        onAddTag: () =>
-          handleRefresh({ ...datasetsFilters.values, ...datasetsModalFilters.values }),
+        onAddTag: () => handleRefresh(filters),
         projectName: params.projectName
       })
     },
-    [params.projectName, handleRefresh, datasetsFilters.values, datasetsModalFilters.values]
+    [params.projectName, handleRefresh, filters]
   )
 
   const actionsMenu = useMemo(
@@ -197,14 +205,13 @@ const Datasets = () => {
         handleAddTag,
         params.projectName,
         handleRefresh,
-        { ...datasetsFilters.values, ...datasetsModalFilters.values },
+        filters,
         menuPosition,
         selectedDataset
       ),
     [
-      datasetsFilters.values,
-      datasetsModalFilters.values,
       dispatch,
+      filters,
       frontendSpec,
       handleAddTag,
       handleRefresh,
@@ -236,13 +243,13 @@ const Datasets = () => {
         navigate(
           `/projects/${params.projectName}/${DATASETS_PAGE.toLowerCase()}/${params.name}/${
             changes.data.tag.currentFieldValue
-          }/overview`,
+          }/overview${window.location.search}`,
           { replace: true }
         )
       }
     }
 
-    handleRefresh({ ...datasetsFilters.values, ...datasetsModalFilters.values })
+    handleRefresh(filters)
   }
 
   const handleExpand = useCallback(
@@ -254,7 +261,7 @@ const Datasets = () => {
           ...state,
           [dataSetIdentifier]: {
             content: sortListByDate(content[dataset.db_key ?? dataset.key], 'updated', false).map(
-              contentItem => createDatasetsRowData(contentItem, params.projectName, false)
+              contentItem => createDatasetsRowData(contentItem, params.projectName)
             ),
             error: null,
             loading: false
@@ -296,7 +303,7 @@ const Datasets = () => {
           return createDatasetsRowData(contentItem, params.projectName, frontendSpec, true)
         })
       : datasets.map(contentItem =>
-          createDatasetsRowData(contentItem, params.projectName, frontendSpec)
+          createDatasetsRowData(contentItem, params.projectName, frontendSpec, false)
         )
   }, [datasets, filtersStore.groupBy, frontendSpec, latestItems, params.projectName])
 
@@ -318,7 +325,7 @@ const Datasets = () => {
     fetchData,
     fetchTags,
     filterModalName: DATASETS_PAGE,
-    filters: { ...datasetsFilters.values, ...datasetsModalFilters.values },
+    filters,
     setExpandedRowsData: setSelectedRowData,
     sortExpandedRowsDataBy: 'updated'
   })
@@ -373,12 +380,10 @@ const Datasets = () => {
     openPopUp(RegisterArtifactModal, {
       artifactKind: DATASET_TYPE,
       params,
-      refresh: () => handleRefresh({ ...datasetsFilters.values, ...datasetsModalFilters.values }),
+      refresh: () => handleRefresh(filters),
       title: registerDatasetTitle
     })
-  }, [params, handleRefresh, datasetsFilters.values, datasetsModalFilters.values])
-
-  useEffect(() => setDatasets([]), [filtersStore.tag])
+  }, [params, handleRefresh, filters])
 
   const virtualizationConfig = useVirtualization({
     rowsData: {
@@ -400,13 +405,14 @@ const Datasets = () => {
       applyDetailsChanges={applyDetailsChanges}
       applyDetailsChangesCallback={applyDetailsChangesCallback}
       artifactsStore={artifactsStore}
-      convertedYaml={convertedYaml}
       datasets={datasets}
       detailsFormInitialValues={detailsFormInitialValues}
+      filters={filters}
       filtersStore={filtersStore}
       getAndSetSelectedArtifact={getAndSetSelectedArtifact}
       handleExpandRow={handleExpandRow}
       handleRefresh={handleRefresh}
+      handleRefreshWithFilters={handleRefreshWithFilters}
       handleRegisterDataset={handleRegisterDataset}
       maxArtifactsErrorIsShown={maxArtifactsErrorIsShown}
       pageData={pageData}
@@ -414,14 +420,11 @@ const Datasets = () => {
       requestErrorMessage={requestErrorMessage}
       selectedDataset={selectedDataset}
       selectedRowData={selectedRowData}
-      setDatasets={setDatasets}
       setMaxArtifactsErrorIsShown={setMaxArtifactsErrorIsShown}
       setSelectedDatasetMin={setSelectedDatasetMin}
-      setSelectedRowData={setSelectedRowData}
       sortProps={{ sortTable, selectedColumnName, getSortingIcon }}
       tableContent={sortedTableContent}
       tableHeaders={sortedTableHeaders}
-      toggleConvertedYaml={toggleConvertedYaml}
       viewMode={viewMode}
       virtualizationConfig={virtualizationConfig}
     />

@@ -15,43 +15,28 @@ under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
 import React from 'react'
-import { useDispatch } from 'react-redux'
 import PropTypes from 'prop-types'
 import { useField } from 'react-final-form'
 
 import { FormInput } from 'igz-controls/components'
 
 import { KEY_CODES, NAME_FILTER } from '../../constants'
-import { setFilters, setFiltersValues } from '../../reducers/filtersReducer'
 
 import { ReactComponent as SearchIcon } from 'igz-controls/images/search.svg'
 
 import './nameFilter.scss'
 
-const NameFilter = ({ applyChanges, filterMenuName = '' }) => {
+const NameFilter = ({ applyChanges }) => {
   const { input } = useField(NAME_FILTER)
-  const dispatch = useDispatch()
 
   const handleNameChange = event => {
     if (event.keyCode === KEY_CODES.ENTER) {
       applyChanges(event.target.value)
-      if (filterMenuName) {
-        dispatch(
-          setFiltersValues({ name: filterMenuName, value: { [NAME_FILTER]: event.target.value } })
-        )
-      } else {
-        dispatch(setFilters({ [NAME_FILTER]: event.target.value }))
-      }
     }
   }
   const handleIconClick = () => {
     if (input.value.length > 0) {
       applyChanges(input.value)
-      if (filterMenuName) {
-        dispatch(setFiltersValues({ name: filterMenuName, value: { [NAME_FILTER]: input.value } }))
-      } else {
-        dispatch(setFilters({ [NAME_FILTER]: input.value }))
-      }
     }
   }
 
@@ -70,8 +55,7 @@ const NameFilter = ({ applyChanges, filterMenuName = '' }) => {
 }
 
 NameFilter.propTypes = {
-  applyChanges: PropTypes.func.isRequired,
-  filterMenuName: PropTypes.string
+  applyChanges: PropTypes.func.isRequired
 }
 
 export default NameFilter

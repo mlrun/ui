@@ -18,17 +18,39 @@ under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
 import React from 'react'
-import { Link } from 'react-router-dom'
 import classnames from 'classnames'
 
 import CopyToClipboard from '../../common/CopyToClipboard/CopyToClipboard'
 import { RoundedIcon, TextTooltipTemplate, Tooltip } from 'igz-controls/components'
+import ArtifactPopUp from '../../elements/DetailsPopUp/ArtifactPopUp/ArtifactPopUp'
+import FeatureVectorPopUp from '../../elements/DetailsPopUp/FeatureVectorPopUp/FeatureVectorPopUp'
 
+import { openPopUp } from 'igz-controls/utils/common.util'
+import { parseUri } from '../../utils'
 import { ReactComponent as DetailsIcon } from 'igz-controls/images/view-details.svg'
+import { FEATURE_VECTORS_TAB } from '../../constants'
 
 export const FEATURE_VECTORS_KIND = 'feature-vectors'
 
-export const generateInputsTabContent = (inputs, showArtifact) => {
+export const generateInputsTabContent = (
+  inputs,
+  showArtifact,
+  isDetailsPopUp = false
+) => {
+  const handleOpenInputPopUp = inputPath => {
+    const inputUri = parseUri(inputPath)
+
+    if (inputUri.kind === FEATURE_VECTORS_TAB) {
+      openPopUp(FeatureVectorPopUp, {
+        featureVectorData: inputUri
+      })
+    } else {
+      openPopUp(ArtifactPopUp, {
+        artifactData: inputUri
+      })
+    }
+  }
+
   return inputs.map(input => {
     const keyClassNames = classnames(input.ui.isPreviewable && 'link')
 
@@ -62,19 +84,16 @@ export const generateInputsTabContent = (inputs, showArtifact) => {
         template: (
           <>
             <CopyToClipboard textToCopy={input.ui.inputPath} tooltipText="Copy path" />
-            <RoundedIcon
-              tooltipText="Show Details"
-              id="show-details"
-              disabled={!input.ui.isShowDetailsActive}
-            >
-              {input.ui.isShowDetailsActive ? (
-                <Link to={input.ui.inputResourceLink}>
-                  <DetailsIcon />
-                </Link>
-              ) : (
+            {!isDetailsPopUp && (
+              <RoundedIcon
+                tooltipText="Show Details"
+                id="show-details"
+                disabled={!input.ui.isShowDetailsActive}
+                onClick={() => handleOpenInputPopUp(input.ui.inputPath)}
+              >
                 <DetailsIcon />
-              )}
-            </RoundedIcon>
+              </RoundedIcon>
+            )}
           </>
         )
       }

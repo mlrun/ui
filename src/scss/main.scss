@@ -93,29 +93,30 @@ body {
 
   &__action-bar-wrapper {
     display: flex;
+    flex-flow: row wrap;
     align-items: center;
-    padding: 4px 0 15px 0;
-
-    &.content__action-bar-wrapper_multi-row {
-      @media screen and (max-width: 1610px) {
-        flex-wrap: wrap;
-
-        .action-bar {
-          justify-content: flex-end;
-          margin-top: 10px;
-        }
-      }
-    }
 
     &_hidden {
       display: none;
     }
 
+    .content-menu {
+      flex: 0;
+      margin-right: 20px;
+      margin-bottom: 15px;
+
+      &__item {
+        white-space: nowrap;
+      }
+    }
+
     .action-bar {
       display: flex;
+      flex: 1;
       align-items: flex-start;
       justify-content: flex-end;
       width: 100%;
+      margin-bottom: 15px;
 
       &_hidden {
         display: none;

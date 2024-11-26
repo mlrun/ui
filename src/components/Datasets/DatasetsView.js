@@ -25,7 +25,6 @@ import PreviewModal from '../../elements/PreviewModal/PreviewModal'
 import Breadcrumbs from '../../common/Breadcrumbs/Breadcrumbs'
 import Table from '../Table/Table'
 import ArtifactsTableRow from '../../elements/ArtifactsTableRow/ArtifactsTableRow'
-import YamlModal from '../../common/YamlModal/YamlModal'
 import Loader from '../../common/Loader/Loader'
 import NoData from '../../common/NoData/NoData'
 import Details from '../Details/Details'
@@ -48,27 +47,25 @@ const DatasetsView = React.forwardRef(
       applyDetailsChanges,
       applyDetailsChangesCallback,
       artifactsStore,
-      convertedYaml,
       datasets,
       detailsFormInitialValues,
+      filters,
       filtersStore,
       getAndSetSelectedArtifact,
       handleExpandRow,
       handleRefresh,
+      handleRefreshWithFilters,
       handleRegisterDataset,
       maxArtifactsErrorIsShown,
       pageData,
       requestErrorMessage,
       selectedDataset,
       selectedRowData,
-      setDatasets,
       setMaxArtifactsErrorIsShown,
       setSelectedDatasetMin,
-      setSelectedRowData,
       sortProps,
       tableContent,
       tableHeaders,
-      toggleConvertedYaml,
       viewMode = null,
       virtualizationConfig
     },
@@ -93,7 +90,7 @@ const DatasetsView = React.forwardRef(
                       onClick: handleRegisterDataset
                     }
                   ]}
-                  filterMenuName={DATASETS_PAGE}
+                  filters={filters}
                   filtersConfig={filtersConfig}
                   handleRefresh={handleRefresh}
                   page={DATASETS_PAGE}
@@ -106,12 +103,12 @@ const DatasetsView = React.forwardRef(
               {artifactsStore.loading ? null : datasets.length === 0 ? (
                 <NoData
                   message={getNoDataMessage(
-                    filtersStore,
+                    filters,
                     filtersConfig,
                     requestErrorMessage,
                     DATASETS_PAGE,
                     null,
-                    DATASETS_PAGE
+                    filtersStore
                   )}
                 />
               ) : (
@@ -132,7 +129,7 @@ const DatasetsView = React.forwardRef(
                     detailsFormInitialValues={detailsFormInitialValues}
                     handleCancel={() => setSelectedDatasetMin({})}
                     pageData={pageData}
-                    retryRequest={handleRefresh}
+                    retryRequest={handleRefreshWithFilters}
                     selectedItem={selectedDataset}
                     sortProps={sortProps}
                     tableClassName="datasets-table"
@@ -172,9 +169,6 @@ const DatasetsView = React.forwardRef(
             </div>
           </div>
         </div>
-        {convertedYaml.length > 0 && (
-          <YamlModal convertedYaml={convertedYaml} toggleConvertToYaml={toggleConvertedYaml} />
-        )}
         {artifactsStore?.preview?.isPreview && (
           <PreviewModal artifact={artifactsStore?.preview?.selectedItem} />
         )}
@@ -188,27 +182,25 @@ DatasetsView.propTypes = {
   applyDetailsChanges: PropTypes.func.isRequired,
   applyDetailsChangesCallback: PropTypes.func.isRequired,
   artifactsStore: PropTypes.object.isRequired,
-  convertedYaml: PropTypes.string.isRequired,
   datasets: PropTypes.arrayOf(PropTypes.object).isRequired,
   detailsFormInitialValues: PropTypes.object.isRequired,
   getAndSetSelectedArtifact: PropTypes.func.isRequired,
+  filters: PropTypes.object.isRequired,
   filtersStore: PropTypes.object.isRequired,
   handleExpandRow: PropTypes.func.isRequired,
   handleRefresh: PropTypes.func.isRequired,
+  handleRefreshWithFilters: PropTypes.func.isRequired,
   handleRegisterDataset: PropTypes.func.isRequired,
   maxArtifactsErrorIsShown: PropTypes.bool.isRequired,
   pageData: PropTypes.object.isRequired,
   requestErrorMessage: PropTypes.string.isRequired,
   selectedDataset: PropTypes.object.isRequired,
   selectedRowData: PropTypes.object.isRequired,
-  setDatasets: PropTypes.func.isRequired,
   setMaxArtifactsErrorIsShown: PropTypes.func.isRequired,
   setSelectedDatasetMin: PropTypes.func.isRequired,
-  setSelectedRowData: PropTypes.func.isRequired,
   sortProps: SORT_PROPS,
   tableContent: PropTypes.arrayOf(PropTypes.object).isRequired,
   tableHeaders: PropTypes.arrayOf(PropTypes.object).isRequired,
-  toggleConvertedYaml: PropTypes.func.isRequired,
   viewMode: PropTypes.string,
   virtualizationConfig: VIRTUALIZATION_CONFIG.isRequired
 }

@@ -48,6 +48,7 @@ const TableCell = ({
     schema: ''
   },
   link = '',
+  onClick = null,
   selectItem = () => {},
   selectedItem = {},
   showExpandButton = false
@@ -59,7 +60,8 @@ const TableCell = ({
     'table-body__cell',
     data.className,
     className,
-    data.bodyCellClassName
+    data.bodyCellClassName,
+    onClick && 'link'
   )
 
   if (data.template) {
@@ -192,7 +194,11 @@ const TableCell = ({
     )
   } else {
     return (
-      <td data-testid={data?.headerId} className={cellClassNames}>
+      <td
+        data-testid={data?.headerId}
+        className={cellClassNames}
+        onClick={() => data.value && onClick && onClick(data.value)}
+      >
         <Tooltip
           className="text_small"
           template={<TextTooltipTemplate text={data.tooltip || data.value} />}

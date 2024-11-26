@@ -29,7 +29,6 @@ import Loader from '../../common/Loader/Loader'
 import NoData from '../../common/NoData/NoData'
 import Table from '../../components/Table/Table'
 import Workflow from '../../components/Workflow/Workflow'
-import YamlModal from '../../common/YamlModal/YamlModal'
 
 import {
   ERROR_STATE,
@@ -65,7 +64,7 @@ import { parseJob } from '../../utils/parseJob'
 import { setNotification } from '../../reducers/notificationReducer'
 import { showErrorNotification } from '../../utils/notifications.util'
 import { useSortTable } from '../../hooks/useSortTable.hook'
-import { useYaml } from '../../hooks/yaml.hook'
+import { toggleYaml } from '../../reducers/appReducer'
 
 import cssVariables from '../../components/Jobs/MonitorWorkflows/monitorWorkflows.scss'
 
@@ -74,10 +73,8 @@ const WorkflowsTable = React.forwardRef(
     {
       backLink,
       context,
-      fetchFunctionLogs,
-      filterMenuName = '',
-      filters = null,
-      filtersConfig = null,
+      filters,
+      filtersConfig,
       getWorkflows,
       itemIsSelected,
       requestErrorMessage,
@@ -92,7 +89,6 @@ const WorkflowsTable = React.forwardRef(
     },
     abortJobRef
   ) => {
-    const [convertedYaml, toggleConvertedYaml] = useYaml('')
     const [dataIsLoading, setDataIsLoading] = useState(false)
     const [workflowsViewMode, setWorkflowsViewMode] = useState(WORKFLOW_GRAPH_VIEW)
     const workflowsStore = useSelector(state => state.workflowsStore)
@@ -123,10 +119,15 @@ const WorkflowsTable = React.forwardRef(
       sortConfig: { defaultSortBy: 'startedAt' }
     })
 
+    const handleRetry = useCallback(() => {
+      getWorkflows(filters)
+    }, [filters, getWorkflows])
+
     const handleFetchFunctionLogs = useCallback(
       (item, projectName, setDetailsLogs) => {
         return getFunctionLogs(
-          fetchFunctionLogs,
+          dispatch,
+          functionsActions.fetchFunctionLogs,
           fetchFunctionLogsTimeout,
           projectName,
           item.name,
@@ -134,7 +135,7 @@ const WorkflowsTable = React.forwardRef(
           setDetailsLogs
         )
       },
-      [fetchFunctionLogs, fetchFunctionLogsTimeout]
+      [fetchFunctionLogsTimeout, dispatch]
     )
 
     const handleFetchJobLogs = useCallback(
@@ -147,6 +148,13 @@ const WorkflowsTable = React.forwardRef(
           jobsActions.fetchJobLogs,
           dispatch
         )
+      },
+      [dispatch]
+    )
+
+    const toggleConvertedYaml = useCallback(
+      data => {
+        return dispatch(toggleYaml(data))
       },
       [dispatch]
     )
@@ -356,18 +364,16 @@ const WorkflowsTable = React.forwardRef(
 
     const onDeleteJob = useCallback(
       job => {
-        handleDeleteJob(jobsActions.deleteJob, job, refreshWorkflow, filtersStore, dispatch).then(
-          () => {
-            navigate(
-              location.pathname
-                .split('/')
-                .splice(0, location.pathname.split('/').indexOf(params.workflowId) + 1)
-                .join('/')
-            )
-          }
-        )
+        handleDeleteJob(jobsActions.deleteJob, job, refreshWorkflow, filters, dispatch).then(() => {
+          navigate(
+            location.pathname
+              .split('/')
+              .splice(0, location.pathname.split('/').indexOf(params.workflowId) + 1)
+              .join('/') + window.location.search
+          )
+        })
       },
-      [dispatch, filtersStore, location.pathname, navigate, params.workflowId, refreshWorkflow]
+      [dispatch, filters, location.pathname, navigate, params.workflowId, refreshWorkflow]
     )
 
     const handleConfirmDeleteJob = useCallback(
@@ -482,7 +488,7 @@ const WorkflowsTable = React.forwardRef(
           location.pathname
             .split('/')
             .splice(0, location.pathname.split('/').indexOf(params.workflowId) + 1)
-            .join('/')
+            .join('/') + window.location.search
         )
       },
       [dispatch, location.pathname, navigate, params.workflowId]
@@ -645,7 +651,7 @@ const WorkflowsTable = React.forwardRef(
       }
     }, [
       editableItem?.rerun_object,
-      filtersStore,
+      filters,
       jobWizardIsOpened,
       jobWizardMode,
       params,
@@ -686,12 +692,12 @@ const WorkflowsTable = React.forwardRef(
         requestErrorMessage ? (
           <NoData
             message={getNoDataMessage(
-              filtersStore,
-              filtersConfig || filters,
+              filters,
+              filtersConfig,
               requestErrorMessage,
               JOBS_PAGE,
               MONITOR_WORKFLOWS_TAB,
-              filterMenuName
+              filtersStore
             )}
           />
         ) : (
@@ -703,7 +709,7 @@ const WorkflowsTable = React.forwardRef(
                 handleCancel={handleCancel}
                 itemIsSelected={itemIsSelected}
                 pageData={pageData}
-                refresh={getWorkflows}
+                refresh={handleRetry}
                 refreshJobs={refreshWorkflow}
                 selectedFunction={selectedFunction}
                 selectedJob={selectedJob}
@@ -716,7 +722,7 @@ const WorkflowsTable = React.forwardRef(
                 actionsMenu={actionsMenu}
                 handleCancel={handleCancel}
                 pageData={pageData}
-                retryRequest={getWorkflows}
+                retryRequest={handleRetry}
                 selectedItem={selectedJob}
                 tab={MONITOR_JOBS_TAB}
                 tableClassName="monitor-workflows-table"
@@ -738,9 +744,6 @@ const WorkflowsTable = React.forwardRef(
             )}
           </>
         )}
-        {convertedYaml.length > 0 && (
-          <YamlModal convertedYaml={convertedYaml} toggleConvertToYaml={toggleConvertedYaml} />
-        )}
       </>
     )
   }
@@ -750,9 +753,8 @@ WorkflowsTable.propTypes = {
   backLink: PropTypes.string.isRequired,
   context: PropTypes.object.isRequired,
   fetchFunctionLogs: PropTypes.func.isRequired,
-  filterMenuName: PropTypes.string,
-  filters: PropTypes.arrayOf(PropTypes.shape({})),
-  filtersConfig: FILTERS_CONFIG,
+  filters: PropTypes.shape({}).isRequired,
+  filtersConfig: FILTERS_CONFIG.isRequired,
   getWorkflows: PropTypes.func.isRequired,
   itemIsSelected: PropTypes.bool.isRequired,
   requestErrorMessage: PropTypes.string.isRequired,

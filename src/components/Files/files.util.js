@@ -32,7 +32,13 @@ import {
   FILES_PAGE,
   FILES_TAB,
   FULL_VIEW_MODE,
-  NAME_FILTER
+  ITERATIONS_FILTER,
+  LABELS_FILTER,
+  NAME_FILTER,
+  SHOW_ITERATIONS,
+  TAG_FILTER,
+  TAG_FILTER_LATEST,
+  VIEW_SEARCH_PARAMETER
 } from '../../constants'
 import { applyTagChanges, chooseOrFetchArtifact } from '../../utils/artifacts.util'
 import { copyToClipboard } from '../../utils/copyToClipboard'
@@ -44,6 +50,7 @@ import { openDeleteConfirmPopUp } from 'igz-controls/utils/common.util'
 import { searchArtifactItem } from '../../utils/searchArtifactItem'
 import { setDownloadItem, setShowDownloadsList } from '../../reducers/downloadReducer'
 import { openPopUp } from 'igz-controls/utils/common.util'
+import { getFilteredSearchParams } from '../../utils/filter.util'
 
 import { ReactComponent as TagIcon } from 'igz-controls/images/tag-icon.svg'
 import { ReactComponent as YamlIcon } from 'igz-controls/images/yaml.svg'
@@ -51,6 +58,13 @@ import { ReactComponent as ArtifactView } from 'igz-controls/images/eye-icon.svg
 import { ReactComponent as Copy } from 'igz-controls/images/copy-to-clipboard-icon.svg'
 import { ReactComponent as Delete } from 'igz-controls/images/delete.svg'
 import { ReactComponent as DownloadIcon } from 'igz-controls/images/download.svg'
+
+export const filtersConfig = {
+  [NAME_FILTER]: { label: 'Name:', initialValue: '' },
+  [TAG_FILTER]: { label: 'Version tag:', initialValue: TAG_FILTER_LATEST, isModal: true },
+  [LABELS_FILTER]: { label: 'Labels:', initialValue: '', isModal: true },
+  [ITERATIONS_FILTER]: { label: 'Show best iteration only:', initialValue: SHOW_ITERATIONS, isModal: true }
+}
 
 export const pageDataInitialState = {
   details: {
@@ -140,7 +154,7 @@ export const checkForSelectedFile = (
         )
 
         if (!searchItem) {
-          navigate(`/projects/${projectName}/files`, { replace: true })
+          navigate(`/projects/${projectName}/files${getFilteredSearchParams(window.location.search, [VIEW_SEARCH_PARAMETER])}`, { replace: true })
         } else {
           setSelectedFile(prevState => {
             return isEqual(prevState, searchItem) ? prevState : searchItem
@@ -163,7 +177,8 @@ export const generateActionsMenu = (
   handleRefresh,
   filters,
   menuPosition,
-  selectedFile
+  selectedFile,
+  isDetailsPopUp = false
 ) => {
   const isTargetPathValid = getIsTargetPathValid(fileMin ?? {}, frontendSpec)
 
@@ -175,7 +190,7 @@ export const generateActionsMenu = (
     [
       {
         label: 'Add a tag',
-        hidden: menuPosition === ACTION_MENU_PARENT_ROW_EXPANDED,
+        hidden: menuPosition === ACTION_MENU_PARENT_ROW_EXPANDED || isDetailsPopUp,
         icon: <TagIcon />,
         onClick: handleAddTag
       },
@@ -219,7 +234,7 @@ export const generateActionsMenu = (
       {
         label: 'Delete',
         icon: <Delete />,
-        hidden: [ACTION_MENU_PARENT_ROW, ACTION_MENU_PARENT_ROW_EXPANDED].includes(menuPosition),
+        hidden: [ACTION_MENU_PARENT_ROW, ACTION_MENU_PARENT_ROW_EXPANDED].includes(menuPosition) || isDetailsPopUp,
         className: 'danger',
         onClick: () =>
           openPopUp(DeleteArtifactPopUp, {
@@ -233,7 +248,7 @@ export const generateActionsMenu = (
       {
         label: 'Delete all',
         icon: <Delete />,
-        hidden: ![ACTION_MENU_PARENT_ROW, ACTION_MENU_PARENT_ROW_EXPANDED].includes(menuPosition),
+        hidden: ![ACTION_MENU_PARENT_ROW, ACTION_MENU_PARENT_ROW_EXPANDED].includes(menuPosition) || isDetailsPopUp,
         className: 'danger',
         onClick: () =>
           openDeleteConfirmPopUp(
@@ -274,8 +289,4 @@ export const generateActionsMenu = (
       }
     ]
   ]
-}
-
-export const filtersConfig = {
-  [NAME_FILTER]: { label: 'Name:' }
 }

@@ -18,33 +18,41 @@ under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
 import React from 'react'
-import { Link } from 'react-router-dom'
 import PropTypes from 'prop-types'
 import classnames from 'classnames'
 
+import JobPopUp from '../DetailsPopUp/JobPopUp/JobPopUp'
 import ProducerTooltipTemplate from '../TooltipTemplate/ProducerTooltipTemplate'
 import { Tooltip, TextTooltipTemplate } from 'igz-controls/components'
 
-import { getJobsDetailsMenu } from '../../components/Jobs/jobs.util'
+import { openPopUp } from 'igz-controls/utils/common.util'
 
-import { DETAILS_OVERVIEW_TAB, MONITOR_JOBS_TAB } from '../../constants'
-
-const TableProducerCell = ({ bodyCellClassName = '', className = '', id, producer }) => {
-  const [project, uid] = producer.uri?.split('/') || []
-  const overviewTab = getJobsDetailsMenu().find(tab => tab.id === DETAILS_OVERVIEW_TAB) || {}
+const TableProducerCell = ({
+  bodyCellClassName = '',
+  className = '',
+  id,
+  producer
+}) => {
+  const [project, uidWithIter] = producer.uri?.split('/') || []
   const cellClassNames = classnames('table-body__cell', className, bodyCellClassName)
+
+  const handleOpenProducerDetails = () => {
+    const [uid, iter] = uidWithIter.split('-')
+    const jobData = {
+      project,
+      uid,
+      iter
+    }
+
+    openPopUp(JobPopUp, { jobData })
+  }
 
   return (
     producer && (
       <td data-testid={id} className={cellClassNames}>
-        {producer?.name && uid && (
-          <Link
-            className="data-ellipsis"
-            to={`/projects/${project}/jobs/${MONITOR_JOBS_TAB}/${producer.name}/${
-              uid.split('-')[0]
-            }/${overviewTab.id}`}
-          >
-            <div className="link">
+        {producer?.name && uidWithIter && (
+          <div className="data-ellipsis">
+            <div className="link" onClick={() => handleOpenProducerDetails()}>
               <Tooltip
                 template={
                   <ProducerTooltipTemplate
@@ -57,9 +65,9 @@ const TableProducerCell = ({ bodyCellClassName = '', className = '', id, produce
                 {producer.name}
               </Tooltip>
             </div>
-          </Link>
+          </div>
         )}
-        {producer?.name && !uid && (
+        {producer?.name && !uidWithIter && (
           <Tooltip template={<TextTooltipTemplate text={producer.name} />}>{producer.name}</Tooltip>
         )}
       </td>

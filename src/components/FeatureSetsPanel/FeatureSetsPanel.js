@@ -159,7 +159,7 @@ const FeatureSetsPanel = ({
 
   const handleCreateFeatureSetSuccess = (name, tag) => {
     createFeatureSetSuccess(tag).then(() => {
-      navigate(`/projects/${project}/feature-store/${FEATURE_SETS_TAB}/${name}/${tag}/overview`)
+      navigate(`/projects/${project}/feature-store/${FEATURE_SETS_TAB}/${name}/${tag}/overview${window.location.search}`)
       dispatch(
         setNotification({
           status: 200,

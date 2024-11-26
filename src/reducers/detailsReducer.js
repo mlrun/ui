@@ -46,7 +46,9 @@ import {
   FETCH_JOB_PODS_BEGIN,
   SET_SELECTED_METRICS_OPTIONS,
   DATE_FILTER_ANY_TIME,
-  SET_DETAILS_DATES
+  SET_DETAILS_DATES,
+  SET_DETAILS_POPUP_INFO_CONTENT,
+  REMOVE_DETAILS_POPUP_INFO_CONTENT
 } from '../constants'
 
 const initialState = {
@@ -56,9 +58,10 @@ const initialState = {
   },
   dates: {
     value: DATE_FILTER_ANY_TIME,
-    selectedOptionId : '',
+    selectedOptionId: '',
     isPredefined: false
   },
+  detailsPopUpInfoContent: {},
   editMode: false,
   error: null,
   infoContent: {},
@@ -146,7 +149,7 @@ const detailsReducer = (state = initialState, { type, payload }) => {
     case FETCH_ENDPOINT_METRICS_BEGIN:
       return {
         ...state,
-        loadingCounter: state.loadingCounter + 1,
+        loadingCounter: state.loadingCounter + 1
       }
     case FETCH_ENDPOINT_METRICS_SUCCESS: {
       const areMetricsSelectedForEndpoint = !isEmpty(
@@ -187,30 +190,35 @@ const detailsReducer = (state = initialState, { type, payload }) => {
         loadingCounter: state.loadingCounter - 1,
         metricsOptions: {
           ...state.metricsOptions,
-          all: [],
+          all: []
         }
       }
     case FETCH_ENDPOINT_METRICS_VALUES_BEGIN:
       return {
         ...state,
-        loadingCounter: state.loadingCounter + 1,
+        loadingCounter: state.loadingCounter + 1
       }
     case FETCH_ENDPOINT_METRICS_VALUES_SUCCESS:
       return {
         ...state,
         error: null,
-        loadingCounter: state.loadingCounter - 1,
+        loadingCounter: state.loadingCounter - 1
       }
     case FETCH_ENDPOINT_METRICS_VALUES_FAILURE:
       return {
         ...state,
         error: payload,
-        loadingCounter: state.loadingCounter - 1,
+        loadingCounter: state.loadingCounter - 1
       }
     case REMOVE_INFO_CONTENT:
       return {
         ...state,
         infoContent: {}
+      }
+    case REMOVE_DETAILS_POPUP_INFO_CONTENT:
+      return {
+        ...state,
+        detailsPopUpInfoContent: {}
       }
     case RESET_CHANGES:
       return {
@@ -242,6 +250,11 @@ const detailsReducer = (state = initialState, { type, payload }) => {
       return {
         ...state,
         dates: payload
+      }
+    case SET_DETAILS_POPUP_INFO_CONTENT:
+      return {
+        ...state,
+        detailsPopUpInfoContent: payload
       }
     case SET_EDIT_MODE:
       return {

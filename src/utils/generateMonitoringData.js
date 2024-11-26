@@ -35,13 +35,10 @@ import {
   datePickerPastOptions,
   getDatePickerFilterValue
 } from './datePicker.util'
-import { setFiltersValues, setModalFiltersValues } from '../reducers/filtersReducer'
 
-export const generateMonitoringStats = (data, navigate, dispatch, tab) => {
-  const navigateToJobsMonitoringPage = (modalFilters, filters = {}) => {
-    dispatch(setFiltersValues({ name: tab, value: filters }))
-    dispatch(setModalFiltersValues({ name: tab, value: modalFilters }))
-    navigate(`/projects/*/${JOBS_MONITORING_PAGE}/${tab}`)
+export const generateMonitoringStats = (data, navigate, tab) => {
+  const navigateToJobsMonitoringPage = (filters = {}) => {
+    navigate(`/projects/*/${JOBS_MONITORING_PAGE}/${tab}?${new URLSearchParams(filters)}`)
   }
 
   return tab === JOBS_MONITORING_JOBS_TAB

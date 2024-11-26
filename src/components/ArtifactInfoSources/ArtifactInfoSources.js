@@ -19,13 +19,29 @@ such restriction.
 */
 import React from 'react'
 import PropTypes from 'prop-types'
-import { Link } from 'react-router-dom'
 
+import FeatureVectorPopUp from '../../elements/DetailsPopUp/FeatureVectorPopUp/FeatureVectorPopUp'
+import ArtifactPopUp from '../../elements/DetailsPopUp/ArtifactPopUp/ArtifactPopUp'
 import { Tooltip, TextTooltipTemplate } from 'igz-controls/components'
+
+import { openPopUp } from 'igz-controls/utils/common.util'
+import { FEATURE_VECTORS_TAB } from '../../constants'
 
 import './artifactInfoSources.scss'
 
-const ArtifactInfoSources = ({ sources = {} }) => {
+const ArtifactInfoSources = ({ isDetailsPopUp = false, sources = {} }) => {
+  const handleOpenSourceDetails = sourceData => {
+    if (sourceData.parsedUri.kind === FEATURE_VECTORS_TAB) {
+      openPopUp(FeatureVectorPopUp, {
+        featureVectorData: sourceData.parsedUri
+      })
+    } else {
+      openPopUp(ArtifactPopUp, {
+        artifactData: sourceData.parsedUri
+      })
+    }
+  }
+
   return (
     <div className="info-sources" data-testid="sources">
       <h3 className="item-info__header">Sources</h3>
@@ -42,13 +58,13 @@ const ArtifactInfoSources = ({ sources = {} }) => {
             <div className="info-sources__table-key">Path:</div>
             <div className="info-sources__table-value">
               <Tooltip template={<TextTooltipTemplate text={sourceData.value} />}>
-                {
-                  sourceData.link ? (
-                    <Link to={sourceData.link} className="link" reloadDocument>
-                      {sourceData.value}
-                    </Link>
-                  ) : sourceData.value
-                }
+                {sourceData && !isDetailsPopUp ? (
+                  <div onClick={() => handleOpenSourceDetails(sourceData)} className="link">
+                    {sourceData.value}
+                  </div>
+                ) : (
+                  sourceData.value
+                )}
               </Tooltip>
             </div>
           </div>

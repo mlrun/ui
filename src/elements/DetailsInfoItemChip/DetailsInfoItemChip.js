@@ -39,10 +39,11 @@ const DetailsInfoItemChip = ({
   detailsInfoDispatch,
   detailsInfoState,
   editableFieldType,
+  formState,
   handleFinishEdit,
+  isEditable = true,
   isFieldInEditMode,
-  item,
-  formState
+  item
 }) => {
   const frontendSpec = useSelector(store => store.appStore.frontendSpec)
   const dispatch = useDispatch()
@@ -73,7 +74,7 @@ const DetailsInfoItemChip = ({
         chipOptions={chipsData.chipOptions}
         formState={formState}
         initialValues={formState.initialValues}
-        isEditable
+        isEditable={isEditable}
         name={item.fieldData.name}
         shortChips
         visibleChipsMaxLength="all"

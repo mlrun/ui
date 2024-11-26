@@ -22,19 +22,14 @@ import PropTypes from 'prop-types'
 import classnames from 'classnames'
 import { Form } from 'react-final-form'
 import { createForm } from 'final-form'
-import { has, isEmpty, isEqual, reduce, throttle } from 'lodash'
-import { useDispatch, useSelector } from 'react-redux'
+import { isEmpty, isEqual, reduce, throttle } from 'lodash'
+import { useDispatch } from 'react-redux'
 import { useParams } from 'react-router-dom'
 
 import { PopUpDialog, RoundedIcon, Button } from 'igz-controls/components'
 
-import { FILTER_MENU_MODAL } from '../../constants'
 import { isTargetElementInContainerElement } from '../../utils/checkElementsPosition.utils'
-import {
-  resetModalFilter,
-  setModalFiltersInitialValues,
-  setModalFiltersValues
-} from '../../reducers/filtersReducer'
+import { setModalFiltersValues } from '../../reducers/filtersReducer'
 
 import { ReactComponent as FilterIcon } from 'igz-controls/images/filter.svg'
 
@@ -47,7 +42,7 @@ const FilterMenuModal = ({
   applyButton = { label: 'Apply', variant: 'secondary' },
   cancelButton = { label: 'Clear', variant: 'tertiary' },
   children,
-  filterMenuName,
+  filterMenuName = '',
   header = 'Filter by',
   initialValues,
   restartFormTrigger = null,
@@ -58,7 +53,6 @@ const FilterMenuModal = ({
   const [filtersWizardIsShown, setFiltersWizardIsShown] = useState(false)
   const filtersIconButtonRef = useRef()
   const dispatch = useDispatch()
-  const filtersData = useSelector(store => store.filtersStore[FILTER_MENU_MODAL][filterMenuName])
   const params = useParams()
   const formRef = React.useRef(
     createForm({
@@ -68,22 +62,10 @@ const FilterMenuModal = ({
   )
   const filtersIconClassnames = classnames(
     'filters-button',
-    !isEqual(filtersData?.values, filtersData?.initialValues) && 'filters-button_applied'
+    !isEqual(values, initialValues) && 'filters-button_applied'
   )
 
   const filtersWizardClassnames = classnames('filters-wizard', wizardClassName)
-
-  useEffect(() => {
-    if (!has(filtersData, 'initialValues')) {
-      dispatch(setModalFiltersInitialValues({ name: filterMenuName, value: initialValues }))
-    }
-  }, [dispatch, filtersData, filterMenuName, initialValues])
-
-  useEffect(() => {
-    if (!has(filtersData, 'values')) {
-      dispatch(setModalFiltersValues({ name: filterMenuName, value: values }))
-    }
-  }, [dispatch, filtersData, filterMenuName, values])
 
   useEffect(() => {
     if (!isEqual(formRef.current?.getState().values, values)) {
@@ -94,10 +76,6 @@ const FilterMenuModal = ({
       })
     }
   }, [values])
-
-  useEffect(() => {
-    formRef.current.reset(initialValues)
-  }, [initialValues])
 
   const hideFiltersWizard = useCallback(event => {
     if (
@@ -127,25 +105,25 @@ const FilterMenuModal = ({
     const ref = formRef.current
 
     return () => {
-      dispatch(
-        resetModalFilter({
-          name: filterMenuName,
-          resetModalFilterCallback: newInitialValues => {
-            if (newInitialValues) ref.restart(newInitialValues)
-          }
-        })
-      )
+      ref.restart(initialValues)
     }
-  }, [params.pageTab, params.projectName, restartFormTrigger, dispatch, filterMenuName])
+  }, [
+    params.pageTab,
+    params.projectName,
+    restartFormTrigger,
+    dispatch,
+    initialValues,
+    filterMenuName
+  ])
 
   const getFilterCounter = formState => {
-    const initialValues = applyChanges ? filtersData?.initialValues : formState.initialValues
-    const currentValues = applyChanges ? filtersData?.values : formState.values
+    const initialValuesLocal = applyChanges ? initialValues : formState.initialValues
+    const currentValues = applyChanges ? values : formState.values
 
     return reduce(
       currentValues,
       (acc, filterValue, filterName) => {
-        return !isEqual(filterValue, initialValues[filterName]) &&
+        return !isEqual(filterValue, initialValuesLocal[filterName]) &&
           isEmpty(formState.errors[filterName])
           ? ++acc
           : acc
@@ -155,12 +133,15 @@ const FilterMenuModal = ({
   }
 
   const handleApplyFilters = formState => {
-    dispatch(
-      setModalFiltersValues({
-        name: filterMenuName,
-        value: { ...formState.values }
-      })
-    )
+    if (filterMenuName) {
+      dispatch(
+        setModalFiltersValues({
+          name: filterMenuName,
+          value: { ...formState.values }
+        })
+      )
+    }
+    
     applyChanges && applyChanges(formState.values)
     setFiltersWizardIsShown(false)
   }
@@ -172,12 +153,6 @@ const FilterMenuModal = ({
 
       if (counter > 0) {
         applyChanges && applyChanges(initialValues)
-        dispatch(
-          setModalFiltersValues({
-            name: filterMenuName,
-            value: initialValues
-          })
-        )
       }
     }
   }
@@ -225,9 +200,7 @@ const FilterMenuModal = ({
                       )}
                       {applyButton && !withoutApplyButton && (
                         <Button
-                          disabled={
-                            isEqual(filtersData?.values, formState.values) || formState?.invalid
-                          }
+                          disabled={isEqual(values, formState.values) || formState?.invalid}
                           id="filter-apply-btn"
                           variant={applyButton.variant}
                           label={applyButton.label}
@@ -256,7 +229,7 @@ FilterMenuModal.propTypes = {
     label: PropTypes.string.isRequired,
     variant: PropTypes.string.isRequired
   }),
-  filterMenuName: PropTypes.string.isRequired,
+  filterMenuName: PropTypes.string,
   header: PropTypes.string,
   initialValues: PropTypes.shape({}).isRequired,
   restartFormTrigger: PropTypes.oneOfType([PropTypes.string, PropTypes.bool]),

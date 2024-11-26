@@ -265,7 +265,7 @@ const Pipeline = ({ content }) => {
           <Link
             to={`/projects/${params.projectName}/models/${
               params.pageTab ?? REAL_TIME_PIPELINES_TAB
-            }`}
+            }${window.location.search}`}
             className="link-back__icon"
           >
             <RoundedIcon id="pipeline-back-btn" tooltipText="Back">

@@ -19,7 +19,7 @@ such restriction.
 */
 import React, { useMemo } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { useDispatch, useSelector } from 'react-redux'
+import { useSelector } from 'react-redux'
 import { upperFirst } from 'lodash'
 
 import Loader from '../../common/Loader/Loader'
@@ -34,7 +34,6 @@ import { ReactComponent as ClockIcon } from 'igz-controls/images/clock.svg'
 import './projectsMonitoringCounters.scss'
 
 const WorkflowsCounters = () => {
-  const dispatch = useDispatch()
   const navigate = useNavigate()
   const projectStore = useSelector(store => store.projectStore)
 
@@ -43,10 +42,9 @@ const WorkflowsCounters = () => {
       generateMonitoringStats(
         projectStore.jobsMonitoringData.workflows,
         navigate,
-        dispatch,
         JOBS_MONITORING_WORKFLOWS_TAB
       ),
-    [dispatch, navigate, projectStore.jobsMonitoringData.workflows]
+    [navigate, projectStore.jobsMonitoringData.workflows]
   )
 
   return (

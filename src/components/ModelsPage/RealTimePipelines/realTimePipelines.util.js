@@ -20,7 +20,7 @@ such restriction.
 import { MODELS_PAGE, NAME_FILTER } from '../../../constants'
 
 export const filtersConfig = {
-  [NAME_FILTER]: { label: 'Name:' }
+  [NAME_FILTER]: { label: 'Name:', initialValue: '' }
 }
 
 export const generatePageData = hideFilterMenu => ({

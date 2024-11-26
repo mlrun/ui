@@ -33,10 +33,7 @@ import {
   REQUEST_CANCELED,
   LARGE_REQUEST_CANCELED,
   CANCEL_REQUEST_TIMEOUT,
-  PROJECT_FILTER,
-  ADD_TO_FEATURE_VECTOR_TAB,
-  FILTER_MENU,
-  FILTER_MENU_MODAL
+  PROJECT_FILTER
 } from '../../constants'
 import featureStoreActions from '../../actions/featureStore'
 import { FORBIDDEN_ERROR_STATUS_CODE } from 'igz-controls/constants'
@@ -44,19 +41,16 @@ import { createFeaturesRowData } from '../../utils/createFeatureStoreContent'
 import { getFeatureIdentifier } from '../../utils/getUniqueIdentifier'
 import { handleFeaturesResponse } from '../FeatureStore/Features/features.util'
 import { isEveryObjectValueEmpty } from '../../utils/isEveryObjectValueEmpty'
-import {
-  getFilterTagOptions,
-  setFilters,
-  setModalFiltersInitialValues,
-  setModalFiltersValues
-} from '../../reducers/filtersReducer'
+import { getFilterTagOptions, setFilters } from '../../reducers/filtersReducer'
 import { setNotification } from '../../reducers/notificationReducer'
 import { setTablePanelOpen } from '../../reducers/tableReducer'
 import { showErrorNotification } from '../../utils/notifications.util'
 import { useGroupContent } from '../../hooks/groupContent.hook'
 import { useVirtualization } from '../../hooks/useVirtualization.hook'
-import { useYaml } from '../../hooks/yaml.hook'
 import { useInitialTableFetch } from '../../hooks/useInitialTableFetch.hook'
+import { useFiltersFromSearchParams } from '../../hooks/useFiltersFromSearchParams.hook'
+import { getFiltersConfig } from './addToFeatureVectorPage.util'
+import { toggleYaml } from '../../reducers/appReducer'
 
 import { ReactComponent as Yaml } from 'igz-controls/images/yaml.svg'
 
@@ -74,18 +68,24 @@ const AddToFeatureVectorPage = ({
   const [content, setContent] = useState([])
   const [selectedRowData, setSelectedRowData] = useState({})
   const [requestErrorMessage, setRequestErrorMessage] = useState('')
-  const [convertedYaml, toggleConvertedYaml] = useYaml('')
   const addToFeatureVectorPageRef = useRef(null)
   const abortControllerRef = useRef(new AbortController())
   const params = useParams()
   const navigate = useNavigate()
   const tableStore = useSelector(store => store.tableStore)
   const filtersStore = useSelector(store => store.filtersStore)
-  const addToFeatureVectorFilters = useSelector(store => ({
-    ...store.filtersStore[FILTER_MENU][ADD_TO_FEATURE_VECTOR_TAB].values,
-    ...store.filtersStore[FILTER_MENU_MODAL][ADD_TO_FEATURE_VECTOR_TAB].values
-  }))
   const dispatch = useDispatch()
+  const filtersConfig = useMemo(() => {
+    return getFiltersConfig(params.projectName)
+  }, [params.projectName])
+  const addToFeatureVectorFilters = useFiltersFromSearchParams(filtersConfig)
+
+  const toggleConvertedYaml = useCallback(
+    data => {
+      return dispatch(toggleYaml(data))
+    },
+    [dispatch]
+  )
 
   const navigateToFeatureVectorsScreen = useCallback(() => {
     navigate(`/projects/${params.projectName}/feature-store/feature-vectors`)
@@ -200,17 +200,20 @@ const AddToFeatureVectorPage = ({
     [dispatch, fetchFeatureSetsTags, params.projectName]
   )
 
-  const handleRefresh = filters => {
-    fetchTags(filters.project)
-    setContent([])
-    setSelectedRowData({})
+  const handleRefresh = useCallback(
+    filters => {
+      fetchTags(filters.project)
+      setContent([])
+      setSelectedRowData({})
 
-    return fetchData(filters)
-  }
+      return fetchData(filters)
+    },
+    [fetchData, fetchTags]
+  )
 
-  const handleRefreshWithStoreFilters = () => {
+  const handleRefreshWithFilters = useCallback(() => {
     handleRefresh(addToFeatureVectorFilters)
-  }
+  }, [addToFeatureVectorFilters, handleRefresh])
 
   const handleRemoveFeature = useCallback(
     feature => {
@@ -287,30 +290,10 @@ const AddToFeatureVectorPage = ({
       : content.map(contentItem => createFeaturesRowData(contentItem, tableStore.isTablePanelOpen))
   }, [content, filtersStore.groupBy, latestItems, tableStore.isTablePanelOpen])
 
-  const setInitialFilters = useCallback(() => {
-    dispatch(
-      setModalFiltersInitialValues({
-        name: ADD_TO_FEATURE_VECTOR_TAB,
-        value: {
-          [PROJECT_FILTER]: params.projectName
-        }
-      })
-    )
-    dispatch(
-      setModalFiltersValues({
-        name: ADD_TO_FEATURE_VECTOR_TAB,
-        value: {
-          [PROJECT_FILTER]: params.projectName
-        }
-      })
-    )
-  }, [dispatch, params.projectName])
-
   useInitialTableFetch({
     fetchData,
     fetchTags,
-    filters: addToFeatureVectorFilters,
-    setInitialFilters
+    filters: addToFeatureVectorFilters
   })
 
   useEffect(() => {
@@ -362,19 +345,19 @@ const AddToFeatureVectorPage = ({
     <AddToFeatureVectorView
       actionsMenu={actionsMenu}
       content={content}
-      convertedYaml={convertedYaml}
       featureStore={featureStore}
+      filters={addToFeatureVectorFilters}
+      filtersConfig={filtersConfig}
       filtersStore={filtersStore}
       handleExpandRow={handleExpandRow}
       handleRefresh={handleRefresh}
-      handleRefreshWithStoreFilters={handleRefreshWithStoreFilters}
+      handleRefreshWithFilters={handleRefreshWithFilters}
       pageData={pageData}
       ref={addToFeatureVectorPageRef}
       requestErrorMessage={requestErrorMessage}
       selectedRowData={selectedRowData}
       tableContent={tableContent}
       tableStore={tableStore}
-      toggleConvertedYaml={toggleConvertedYaml}
       virtualizationConfig={virtualizationConfig}
     />
   )
