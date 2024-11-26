@@ -23,13 +23,11 @@ import {
 } from '../components/FunctionsPage/functions.util'
 import { TAG_LATEST } from '../constants'
 
-const isFunctionTransient = (response) => {
-  return TRANSIENT_FUNCTION_STATUSES.includes(
-    response.headers?.['x-mlrun-function-status']
-  )
+const isFunctionTransient = response => {
+  return TRANSIENT_FUNCTION_STATUSES.includes(response.headers?.['x-mlrun-function-status'])
 }
 
-const clearLogsTimeout = (timeoutRef) => {
+const clearLogsTimeout = timeoutRef => {
   if (timeoutRef.current) {
     clearTimeout(timeoutRef.current)
     timeoutRef.current = null
@@ -37,6 +35,7 @@ const clearLogsTimeout = (timeoutRef) => {
 }
 
 export const getFunctionLogs = (
+  dispatch,
   fetchFunctionLogs,
   fetchFunctionLogsTimeout,
   projectName,
@@ -47,12 +46,13 @@ export const getFunctionLogs = (
   refreshFunctions,
   startedDeploying
 ) => {
-  fetchFunctionLogs(projectName, name, tag).then(response => {
+  dispatch(fetchFunctionLogs(projectName, name, tag)).then(response => {
     if (isFunctionTransient(response)) {
       clearLogsTimeout(fetchFunctionLogsTimeout)
 
       fetchFunctionLogsTimeout.current = setTimeout(() => {
         getFunctionLogs(
+          dispatch,
           fetchFunctionLogs,
           fetchFunctionLogsTimeout,
           projectName,
@@ -66,18 +66,14 @@ export const getFunctionLogs = (
       }, 2000)
     } else {
       if (
-        FUNCTIONS_READY_STATES.includes(
-          response.headers?.['x-mlrun-function-status']
-        ) &&
+        FUNCTIONS_READY_STATES.includes(response.headers?.['x-mlrun-function-status']) &&
         startedDeploying
       ) {
         refreshFunctions().then(response => {
-          const hash = response.find(
-            item => item.name === name && item.tag === TAG_LATEST
-          ).hash
+          const hash = response.find(item => item.name === name && item.tag === TAG_LATEST).hash
 
           if (hash) {
-            navigate(`/projects/${projectName}/functions/${hash}/build-log`)
+            navigate(`/projects/${projectName}/functions/${hash}/build-log${window.location.search}`)
           }
         })
       }

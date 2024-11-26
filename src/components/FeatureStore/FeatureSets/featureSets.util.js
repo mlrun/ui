@@ -17,16 +17,21 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
+import React from 'react'
+import { debounce, isEmpty } from 'lodash'
+
 import {
   FEATURE_SETS_TAB,
   FEATURE_STORE_PAGE,
   LABELS_FILTER,
   NAME_FILTER,
-  TAG_FILTER
+  TAG_FILTER,
+  TAG_FILTER_LATEST
 } from '../../../constants'
 import featureStoreActions from '../../../actions/featureStore'
-import { debounce, isEmpty } from 'lodash'
 import { showErrorNotification } from '../../../utils/notifications.util'
+
+import { ReactComponent as Yaml } from 'igz-controls/images/yaml.svg'
 
 export const generateFeatureSetsDetailsMenu = selectedItem => [
   {
@@ -73,9 +78,9 @@ export const featureSetsInfoHeaders = [
 ]
 
 export const filtersConfig = {
-  [TAG_FILTER]: { label: 'Version Tag:' },
-  [NAME_FILTER]: { label: 'Name:' },
-  [LABELS_FILTER]: { label: 'Labels:' }
+  [NAME_FILTER]: { label: 'Name:', initialValue: '' },
+  [TAG_FILTER]: { label: 'Version Tag:', initialValue: TAG_FILTER_LATEST, isModal: true },
+  [LABELS_FILTER]: { label: 'Labels:', initialValue: '', isModal: true }
 }
 
 export const generatePageData = selectedFeatureSet => {
@@ -88,6 +93,19 @@ export const generatePageData = selectedFeatureSet => {
     }
   }
 }
+
+export const generateActionsMenu = (dispatch, selectedFeatureSet, toggleConvertedYaml) => [
+  [
+    {
+      label: 'View YAML',
+      icon: <Yaml />,
+      onClick: featureSetMin =>
+        chooseOrFetchFeatureSet(dispatch, selectedFeatureSet, featureSetMin).then(
+          toggleConvertedYaml
+        )
+    }
+  ]
+]
 
 export const setFullSelectedFeatureSet = debounce(
   (tab, dispatch, navigate, selectedFeatureSetMin, setSelectedFeatureSet, projectName) => {

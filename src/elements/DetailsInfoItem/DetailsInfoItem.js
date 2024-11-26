@@ -32,7 +32,6 @@ import { FormInput, FormOnChange, FormTextarea } from 'igz-controls/components'
 import { Tooltip, TextTooltipTemplate, RoundedIcon } from 'igz-controls/components'
 
 import { CHIP_OPTIONS } from '../../types'
-import { generateFunctionDetailsLink } from '../../utils/link-helper.util'
 import { getValidationRules } from 'igz-controls/utils/validation.util'
 
 import { ReactComponent as Checkmark } from 'igz-controls/images/checkmark2.svg'
@@ -58,6 +57,7 @@ const DetailsInfoItem = React.forwardRef(
       handleDiscardChanges,
       handleFinishEdit = () => {},
       info = null,
+      isDetailsPopUp = false,
       isFieldInEditMode = false,
       item = {},
       onClick = null,
@@ -84,14 +84,15 @@ const DetailsInfoItem = React.forwardRef(
           detailsInfoDispatch={detailsInfoDispatch}
           detailsInfoState={detailsInfoState}
           editableFieldType={editableFieldType}
+          formState={formState}
           handleFinishEdit={handleFinishEdit}
           isFieldInEditMode={isFieldInEditMode}
           item={item}
+          isEditable={!isDetailsPopUp}
           setChangesData={setChangesData}
-          formState={formState}
         />
       )
-    } else if (item?.editModeEnabled && isFieldInEditMode) {
+    } else if (item?.editModeEnabled && isFieldInEditMode && !isDetailsPopUp) {
       return (
         <div className="details-item__input-wrapper" ref={ref}>
           {editableFieldType === 'input' && (
@@ -147,6 +148,7 @@ const DetailsInfoItem = React.forwardRef(
             className={`details-item__${chipsClassName}`}
             delimiter={chipsData.delimiter}
             elements={chipsData.chips}
+            isEditMode={!isDetailsPopUp}
             visibleChipsMaxLength="all"
           />
         </div>
@@ -193,7 +195,7 @@ const DetailsInfoItem = React.forwardRef(
           ))}
         </div>
       )
-    } else if (currentField === 'sparkUiUrl') {
+    } else if (currentField === 'sparkUiUrl' && !isDetailsPopUp) {
       return (
         <Tooltip
           className="details-item__data details-item__link"
@@ -211,20 +213,18 @@ const DetailsInfoItem = React.forwardRef(
           <i className={`state-${state}-job status-icon`} />
         </div>
       )
-    } else if (!isEmpty(func)) {
-      const funcLink = generateFunctionDetailsLink(func)
-
+    } else if (!isEmpty(info) && item.shouldPopUp && item.handleClick && !isDetailsPopUp) {
       return (
         <Tooltip
           className="details-item__data details-item__link"
-          template={<TextTooltipTemplate text={func} />}
+          template={<TextTooltipTemplate text={info} />}
         >
-          <Link className="link" to={funcLink}>
-            {func}
-          </Link>
+          <div className="link custom" onClick={item.handleClick}>
+            {info}
+          </div>
         </Tooltip>
       )
-    } else if ((item.link || item.externalLink) && info) {
+    } else if ((item.link || item.externalLink) && info && !isDetailsPopUp) {
       return (
         <div className="details-item__data details-item__data_multiline">
           {(Array.isArray(info) ? info : [info]).map((infoItem, index) => {
@@ -254,7 +254,11 @@ const DetailsInfoItem = React.forwardRef(
           })}
         </div>
       )
-    } else if ((typeof info !== 'object' || Array.isArray(info)) && item?.editModeEnabled) {
+    } else if (
+      (typeof info !== 'object' || Array.isArray(info)) &&
+      item?.editModeEnabled &&
+      !isDetailsPopUp
+    ) {
       return (
         <div className="details-item__data">
           {info.length === 0 ? (

@@ -19,7 +19,7 @@ such restriction.
 */
 import React, { useCallback, useRef, useEffect, useState, useMemo } from 'react'
 import PropTypes from 'prop-types'
-import { Link, useLocation, useNavigate, useParams } from 'react-router-dom'
+import { Link, useNavigate, useParams } from 'react-router-dom'
 import { isEmpty } from 'lodash'
 import { useSelector } from 'react-redux'
 import classNames from 'classnames'
@@ -29,12 +29,18 @@ import LoadButton from '../../../common/LoadButton/LoadButton'
 import Select from '../../../common/Select/Select'
 import ActionsMenu from '../../../common/ActionsMenu/ActionsMenu'
 
-import { DETAILS_ARTIFACTS_TAB, FULL_VIEW_MODE, JOBS_PAGE } from '../../../constants'
+import {
+  DETAILS_ARTIFACTS_TAB,
+  FULL_VIEW_MODE,
+  JOBS_PAGE,
+  VIEW_SEARCH_PARAMETER
+} from '../../../constants'
 import { formatDatetime } from '../../../utils'
 import { TERTIARY_BUTTON } from 'igz-controls/constants'
 import { ACTIONS_MENU } from '../../../types'
 import { getViewMode } from '../../../utils/helper'
 import { generateUrlFromRouterPath } from '../../../utils/link-helper.util'
+import { getFilteredSearchParams } from '../../../utils/filter.util'
 
 import { ReactComponent as Close } from 'igz-controls/images/close.svg'
 import { ReactComponent as Back } from 'igz-controls/images/back-arrow.svg'
@@ -52,6 +58,7 @@ const DetailsHeader = ({
   handleRefresh,
   handleShowWarning,
   isDetailsScreen,
+  isDetailsPopUp,
   pageData,
   selectedItem,
   setIteration,
@@ -59,7 +66,6 @@ const DetailsHeader = ({
 }) => {
   const [headerIsMultiline, setHeaderIsMultiline] = useState(false)
   const detailsStore = useSelector(store => store.detailsStore)
-  const location = useLocation()
   const params = useParams()
   const navigate = useNavigate()
   const viewMode = getViewMode(window.location.search)
@@ -125,7 +131,7 @@ const DetailsHeader = ({
     >
       <div className="item-header__data">
         <h3 className="item-header__title">
-          {isDetailsScreen && !pageData.details.hideBackBtn && (
+          {isDetailsScreen && !pageData.details.hideBackBtn && !isDetailsPopUp && (
             <Link
               className="item-header__back-btn"
               to={generateUrlFromRouterPath(
@@ -182,7 +188,7 @@ const DetailsHeader = ({
               <i className={stateClassName} />
             </Tooltip>
           )}
-          {selectedItem.ui.customError?.title && selectedItem.ui.customError?.message && (
+          {selectedItem.ui?.customError?.title && selectedItem.ui?.customError?.message && (
             <Tooltip
               className="error-container"
               template={
@@ -275,12 +281,14 @@ const DetailsHeader = ({
         )}
         <ActionsMenu dataItem={selectedItem} menu={actionsMenu} time={500} />
         <div className="item-header__navigation-buttons">
-          {withToggleViewBtn && (
+          {withToggleViewBtn && !isDetailsPopUp && (
             <>
               {viewMode !== FULL_VIEW_MODE && (
                 <RoundedIcon
                   onClick={() => {
-                    navigate(`${location.pathname}${location.search ? '&' : '?'}view=full`)
+                    navigate(
+                      `${window.location.pathname}${window.location.search}${window.location.search ? '&' : '?'}${VIEW_SEARCH_PARAMETER}=full`
+                    )
                   }}
                   id="full-view"
                   tooltipText="Full view"
@@ -291,7 +299,9 @@ const DetailsHeader = ({
               {viewMode === FULL_VIEW_MODE && (
                 <RoundedIcon
                   onClick={() => {
-                    navigate(`${location.pathname.replace(/(\?|&)view=full(&|$)/, '$1')}`)
+                    navigate(
+                      `${window.location.pathname}${getFilteredSearchParams(window.location.search, [VIEW_SEARCH_PARAMETER])}`
+                    )
                   }}
                   id="table-view"
                   tooltipText="Table view"
@@ -301,26 +311,37 @@ const DetailsHeader = ({
               )}
             </>
           )}
-          {!pageData.details.hideBackBtn && (
-            <Link
-              className="details-close-btn"
-              data-testid="details-close-btn"
-              to={
-                getCloseDetailsLink
-                  ? generateUrlFromRouterPath(
-                      getCloseDetailsLink(window.location, selectedItem.name)
-                    )
-                  : `/projects/${params.projectName}/${pageData.page.toLowerCase()}${
-                      params.pageTab ? `/${params.pageTab}` : tab ? `/${tab}` : ''
-                    }`
-              }
-              onClick={handleCancelClick}
-            >
-              <RoundedIcon tooltipText="Close" id="details-close">
-                <Close />
-              </RoundedIcon>
-            </Link>
-          )}
+          {!pageData.details.hideBackBtn &&
+            (isDetailsPopUp ? (
+              <div
+                className="details-close-btn"
+                data-testid="details-close-btn"
+                onClick={handleCancelClick}
+              >
+                <RoundedIcon tooltipText="Close" id="details-close">
+                  <Close />
+                </RoundedIcon>
+              </div>
+            ) : (
+              <Link
+                className="details-close-btn"
+                data-testid="details-close-btn"
+                to={
+                  getCloseDetailsLink
+                    ? generateUrlFromRouterPath(
+                        getCloseDetailsLink(window.location, selectedItem.name)
+                      )
+                    : `/projects/${params.projectName}/${pageData.page.toLowerCase()}${
+                        params.pageTab ? `/${params.pageTab}` : tab ? `/${tab}` : ''
+                      }`
+                }
+                onClick={handleCancelClick}
+              >
+                <RoundedIcon tooltipText="Close" id="details-close">
+                  <Close />
+                </RoundedIcon>
+              </Link>
+            ))}
         </div>
       </div>
     </div>

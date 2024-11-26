@@ -31,8 +31,6 @@ import {
   CANCEL_REQUEST_TIMEOUT,
   FEATURES_TAB,
   FEATURE_STORE_PAGE,
-  FILTER_MENU,
-  FILTER_MENU_MODAL,
   GROUP_BY_NAME,
   GROUP_BY_NONE,
   LARGE_REQUEST_CANCELED,
@@ -40,13 +38,14 @@ import {
   TAG_FILTER_ALL_ITEMS
 } from '../../../constants'
 import { createFeaturesRowData } from '../../../utils/createFeatureStoreContent'
-import { featuresActionCreator, handleFeaturesResponse } from './features.util'
+import { featuresActionCreator, filtersConfig, handleFeaturesResponse } from './features.util'
 import { getFeatureIdentifier } from '../../../utils/getUniqueIdentifier'
 import { getFilterTagOptions, setFilters } from '../../../reducers/filtersReducer'
 import { setTablePanelOpen } from '../../../reducers/tableReducer'
 import { useGroupContent } from '../../../hooks/groupContent.hook'
 import { useVirtualization } from '../../../hooks/useVirtualization.hook'
 import { useInitialTableFetch } from '../../../hooks/useInitialTableFetch.hook'
+import { useFiltersFromSearchParams } from '../../../hooks/useFiltersFromSearchParams.hook'
 
 import { ReactComponent as Yaml } from 'igz-controls/images/yaml.svg'
 
@@ -70,12 +69,7 @@ const Features = ({
   const params = useParams()
   const featureStore = useSelector(store => store.featureStore)
   const filtersStore = useSelector(store => store.filtersStore)
-  const featuresFilters = useSelector(store => {
-    return {
-      ...store.filtersStore[FILTER_MENU][FEATURES_TAB].values,
-      ...store.filtersStore[FILTER_MENU_MODAL][FEATURES_TAB].values
-    }
-  })
+  const featuresFilters = useFiltersFromSearchParams(filtersConfig)
   const tableStore = useSelector(store => store.tableStore)
   const featureStoreRef = useRef(null)
   const abortControllerRef = useRef(new AbortController())
@@ -107,7 +101,11 @@ const Features = ({
       return mapValues(prevSelectedRowData, feature => ({
         ...feature,
         content: map(feature.content, contentItem =>
-          createFeaturesRowData(contentItem.data, tableStore.isTablePanelOpen)
+          createFeaturesRowData(
+            contentItem.data,
+            tableStore.isTablePanelOpen,
+            false
+          )
         )
       }))
     })
@@ -169,21 +167,24 @@ const Features = ({
     )
   }, [dispatch, fetchFeatureSetsTags, params.projectName])
 
-  const handleRefresh = filters => {
-    fetchTags()
-    setFeatures([])
-    removeFeature()
-    removeEntity()
-    removeFeatures()
-    removeEntities()
-    setSelectedRowData({})
+  const handleRefresh = useCallback(
+    filters => {
+      fetchTags()
+      setFeatures([])
+      removeFeature()
+      removeEntity()
+      removeFeatures()
+      removeEntities()
+      setSelectedRowData({})
 
-    return fetchData(filters)
-  }
+      return fetchData(filters)
+    },
+    [fetchData, fetchTags, removeEntities, removeEntity, removeFeature, removeFeatures]
+  )
 
-  const handleRefreshWithStoreFilters = () => {
+  const handleRefreshWithFilters = useCallback(() => {
     handleRefresh(featuresFilters)
-  }
+  }, [featuresFilters, handleRefresh])
 
   const handleRemoveFeature = useCallback(
     feature => {
@@ -225,7 +226,11 @@ const Features = ({
         .then(result => {
           if (result?.length > 0) {
             const content = [...result].map(contentItem =>
-              createFeaturesRowData(contentItem, tableStore.isTablePanelOpen)
+              createFeaturesRowData(
+                contentItem,
+                tableStore.isTablePanelOpen,
+                false
+              )
             )
             setSelectedRowData(state => ({
               ...state,
@@ -266,8 +271,19 @@ const Features = ({
       ? latestItems.map(contentItem => {
           return createFeaturesRowData(contentItem, tableStore.isTablePanelOpen, true)
         })
-      : features.map(contentItem => createFeaturesRowData(contentItem, tableStore.isTablePanelOpen))
-  }, [features, filtersStore.groupBy, latestItems, tableStore.isTablePanelOpen])
+      : features.map(contentItem =>
+          createFeaturesRowData(
+            contentItem,
+            tableStore.isTablePanelOpen,
+            false
+          )
+        )
+  }, [
+    features,
+    filtersStore.groupBy,
+    latestItems,
+    tableStore.isTablePanelOpen
+  ])
 
   const getPopUpTemplate = useCallback(
     action => {
@@ -343,10 +359,11 @@ const Features = ({
       features={features}
       featureStore={featureStore}
       filtersStore={filtersStore}
+      filters={featuresFilters}
       getPopUpTemplate={getPopUpTemplate}
       handleExpandRow={handleExpandRow}
       handleRefresh={handleRefresh}
-      handleRefreshWithStoreFilters={handleRefreshWithStoreFilters}
+      handleRefreshWithFilters={handleRefreshWithFilters}
       pageData={pageData}
       ref={{ featureStoreRef }}
       requestErrorMessage={requestErrorMessage}

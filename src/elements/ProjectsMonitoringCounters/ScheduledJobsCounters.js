@@ -18,7 +18,7 @@ under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
 import React, { useMemo } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
+import { useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 
 import StatsCard from '../../common/StatsCard/StatsCard'
@@ -32,7 +32,6 @@ import { ReactComponent as ClockIcon } from 'igz-controls/images/clock.svg'
 import './projectsMonitoringCounters.scss'
 
 const ScheduledJobsCounters = () => {
-  const dispatch = useDispatch()
   const navigate = useNavigate()
   const projectStore = useSelector(store => store.projectStore)
 
@@ -41,10 +40,9 @@ const ScheduledJobsCounters = () => {
       generateMonitoringStats(
         projectStore.jobsMonitoringData.scheduled,
         navigate,
-        dispatch,
         JOBS_MONITORING_SCHEDULED_TAB
       ),
-    [dispatch, navigate, projectStore.jobsMonitoringData.scheduled]
+    [navigate, projectStore.jobsMonitoringData.scheduled]
   )
 
   return (

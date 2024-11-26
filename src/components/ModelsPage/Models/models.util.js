@@ -32,7 +32,13 @@ import {
   MODEL_TYPE,
   ACTION_MENU_PARENT_ROW,
   ACTION_MENU_PARENT_ROW_EXPANDED,
-  ARTIFACT_MAX_DOWNLOAD_SIZE
+  ARTIFACT_MAX_DOWNLOAD_SIZE,
+  LABELS_FILTER,
+  TAG_FILTER,
+  ITERATIONS_FILTER,
+  TAG_FILTER_LATEST,
+  SHOW_ITERATIONS,
+  VIEW_SEARCH_PARAMETER
 } from '../../../constants'
 import { showArtifactsPreview, updateArtifact } from '../../../reducers/artifactsReducer'
 import { FORBIDDEN_ERROR_STATUS_CODE } from 'igz-controls/constants'
@@ -48,6 +54,7 @@ import { searchArtifactItem } from '../../../utils/searchArtifactItem'
 import { setDownloadItem, setShowDownloadsList } from '../../../reducers/downloadReducer'
 import { showErrorNotification } from '../../../utils/notifications.util'
 import { openPopUp } from 'igz-controls/utils/common.util'
+import { getFilteredSearchParams } from '../../../utils/filter.util'
 
 import { ReactComponent as TagIcon } from 'igz-controls/images/tag-icon.svg'
 import { ReactComponent as YamlIcon } from 'igz-controls/images/yaml.svg'
@@ -58,7 +65,10 @@ import { ReactComponent as DeployIcon } from 'igz-controls/images/deploy-icon.sv
 import { ReactComponent as DownloadIcon } from 'igz-controls/images/download.svg'
 
 export const filtersConfig = {
-  [NAME_FILTER]: { label: 'Name:' }
+  [NAME_FILTER]: { label: 'Name:', initialValue: '' },
+  [TAG_FILTER]: { label: 'Version tag:', initialValue: TAG_FILTER_LATEST, isModal: true },
+  [LABELS_FILTER]: { label: 'Labels:', initialValue: '', isModal: true },
+  [ITERATIONS_FILTER]: { label: 'Show best iteration only:', initialValue: SHOW_ITERATIONS, isModal: true }
 }
 
 export const infoHeaders = [
@@ -215,7 +225,7 @@ export const checkForSelectedModel = (
         )
 
         if (!searchItem) {
-          navigate(`/projects/${projectName}/models/models`)
+          navigate(`/projects/${projectName}/models/models${getFilteredSearchParams(window.location.search, [VIEW_SEARCH_PARAMETER])}`)
         } else {
           setSelectedModel(prevState => {
             return isEqual(prevState, searchItem) ? prevState : searchItem
@@ -237,9 +247,10 @@ export const generateActionsMenu = (
   projectName,
   handleRefresh,
   modelsFilters,
-  handleDeployModel,
   menuPosition,
-  selectedModel
+  selectedModel,
+  isDetailsPopUp = false,
+  handleDeployModel
 ) => {
   const isTargetPathValid = getIsTargetPathValid(modelMin ?? {}, frontendSpec)
 
@@ -251,7 +262,7 @@ export const generateActionsMenu = (
     [
       {
         label: 'Add a tag',
-        hidden: menuPosition === ACTION_MENU_PARENT_ROW_EXPANDED,
+        hidden: menuPosition === ACTION_MENU_PARENT_ROW_EXPANDED || isDetailsPopUp,
         icon: <TagIcon />,
         onClick: handleAddTag
       },
@@ -296,7 +307,7 @@ export const generateActionsMenu = (
         label: 'Delete',
         icon: <Delete />,
         className: 'danger',
-        hidden: [ACTION_MENU_PARENT_ROW, ACTION_MENU_PARENT_ROW_EXPANDED].includes(menuPosition),
+        hidden: [ACTION_MENU_PARENT_ROW, ACTION_MENU_PARENT_ROW_EXPANDED].includes(menuPosition) || isDetailsPopUp,
         onClick: () =>
           openDeleteConfirmPopUp(
             'Delete model?',
@@ -317,7 +328,7 @@ export const generateActionsMenu = (
       {
         label: 'Delete all',
         icon: <Delete />,
-        hidden: ![ACTION_MENU_PARENT_ROW, ACTION_MENU_PARENT_ROW_EXPANDED].includes(menuPosition),
+        hidden: ![ACTION_MENU_PARENT_ROW, ACTION_MENU_PARENT_ROW_EXPANDED].includes(menuPosition) || isDetailsPopUp,
         className: 'danger',
         onClick: () =>
           openDeleteConfirmPopUp(
@@ -360,7 +371,8 @@ export const generateActionsMenu = (
         label: 'Deploy',
         id: 'model-deploy',
         icon: <DeployIcon />,
-        onClick: handleDeployModel
+        onClick: handleDeployModel,
+        hidden: isDetailsPopUp
       }
     ]
   ]

@@ -17,7 +17,8 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import { DETAILS_OVERVIEW_TAB } from '../constants'
+import { DETAILS_OVERVIEW_TAB, VIEW_SEARCH_PARAMETER } from '../constants'
+import { getFilteredSearchParams } from './filter.util'
 
 export const isPageTabValid = (pageTab, tabs, navigate, location) => {
   if (!tabs.includes(pageTab)) {
@@ -45,7 +46,7 @@ export const getCloseDetailsLink = (location, paramName) => {
   return location.pathname
     .split('/')
     .splice(0, location.pathname.split('/').lastIndexOf(paramName) + 1)
-    .join('/')
+    .join('/') + window.location.search
 }
 
 export const generateLinkToDetailsPanel = (
@@ -63,7 +64,7 @@ export const generateLinkToDetailsPanel = (
     itemName ? `/${itemName}` : ''
   }/${key}${version ? `/${version}` : uid ? `/${uid}` : ''}${
     isNaN(parseInt(iter)) ? '' : `/${iter}`
-  }/${detailsTab.toLowerCase()}`
+  }/${detailsTab.toLowerCase()}${window.location.search}`
 
 export const parseFunctionUri = functionUri => {
   let [project, rest] = functionUri.split('/')
@@ -105,7 +106,9 @@ export const isDetailsTabExists = (tab, tabsList, navigate, location) => {
   if (!tabsList.find(el => el.id === tab && !el.hidden)) {
     const newUrlArray = location.pathname.split('/')
     newUrlArray[newUrlArray.length - 1] = DETAILS_OVERVIEW_TAB
-    const newUrl = newUrlArray.join('/')
+    const newUrl =
+      newUrlArray.join('/') +
+      getFilteredSearchParams(window.location.search, [VIEW_SEARCH_PARAMETER])
 
     navigate(newUrl, { replace: true })
   }

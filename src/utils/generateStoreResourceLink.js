@@ -25,7 +25,9 @@ import {
   TAG_FILTER_LATEST
 } from '../constants'
 
-export const generateStoreResourceLink = (input, projectName) => {
+export const generateStoreResourceLink = (resource, projectName) => {
+  const input = { ...resource }
+
   if ([MODELS_TAB, DATASETS_TAB].includes(input.kind)) {
     input.kind = input.kind.slice(0, -1)
   } else if (FEATURE_VECTORS_TAB === input.kind) {

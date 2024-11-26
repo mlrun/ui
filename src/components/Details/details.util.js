@@ -19,6 +19,10 @@ such restriction.
 */
 import { get, isEmpty, isEqual, cloneDeep } from 'lodash'
 
+import ArtifactPopUp from '../../elements/DetailsPopUp/ArtifactPopUp/ArtifactPopUp'
+import FunctionPopUp from '../../elements/DetailsPopUp/FunctionPopUp/FunctionPopUp'
+import FeatureSetPopUp from '../../elements/DetailsPopUp/FeatureSetPopUp/FeatureSetPopUp'
+
 import {
   DATASETS_PAGE,
   FEATURE_SETS_TAB,
@@ -30,14 +34,15 @@ import {
   MODEL_ENDPOINTS_TAB,
   MODELS_TAB
 } from '../../constants'
-import { formatDatetime, generateLinkPath } from '../../utils'
+import { formatDatetime, generateLinkPath, parseUri } from '../../utils'
 import { isArtifactTagUnique } from '../../utils/artifacts.util'
 import { getFunctionImage } from '../FunctionsPage/functions.util'
-import { generateFunctionDetailsLink } from '../../utils/link-helper.util'
+import { openPopUp } from 'igz-controls/utils/common.util'
 
 export const generateArtifactsContent = (detailsType, selectedItem, projectName) => {
   if (detailsType === MODEL_ENDPOINTS_TAB) {
     const monitoringFeatureSetUri = selectedItem?.status?.monitoring_feature_set_uri ?? ''
+    const featureSetParsedUri = parseUri(monitoringFeatureSetUri)
 
     return {
       uid: {
@@ -51,22 +56,34 @@ export const generateArtifactsContent = (detailsType, selectedItem, projectName)
       },
       model_artifact: {
         value: selectedItem?.spec?.model_uri?.replace(/^store:\/\/artifacts\//, ''),
-        link: `${generateLinkPath(selectedItem?.spec?.model_uri)}/overview`
+        shouldPopUp: !isEmpty(selectedItem?.spec?.model_uri),
+        handleClick: () =>
+          openPopUp(ArtifactPopUp, {
+            artifactData: parseUri(selectedItem?.spec?.model_uri)
+          })
       },
       function_uri: {
         value: selectedItem?.spec?.function_uri,
-        link: generateFunctionDetailsLink(selectedItem.spec.function_uri)
+        shouldPopUp: !isEmpty(selectedItem?.spec?.function_uri),
+        handleClick: () =>
+          openPopUp(FunctionPopUp, {
+            funcUri: selectedItem?.spec?.function_uri
+          })
       },
       function_tag: {
         value: selectedItem?.spec?.function_uri?.match(/(?<=:)[^:]*$/) || 'latest'
       },
       monitoring_feature_set_uri: {
         value: monitoringFeatureSetUri,
-        link: monitoringFeatureSetUri
-          ? `${generateLinkPath(monitoringFeatureSetUri)}${
-              monitoringFeatureSetUri.split(':').length > 2 ? '' : '/latest'
-            }/overview`
-          : ''
+        shouldPopUp: !isEmpty(monitoringFeatureSetUri),
+        handleClick: () =>
+          openPopUp(FeatureSetPopUp, {
+            featureSetData: {
+              project: featureSetParsedUri.project,
+              name: featureSetParsedUri.key,
+              tag: featureSetParsedUri.tag
+            }
+          })
       },
       last_prediction: {
         value: formatDatetime(selectedItem?.status?.last_request, '-')
@@ -154,7 +171,7 @@ export const generateArtifactsContent = (detailsType, selectedItem, projectName)
         value: formatDatetime(selectedItem.updated, 'N/A')
       },
       framework: {
-        value: detailsType === MODELS_TAB ? selectedItem.framework ?? '' : null
+        value: detailsType === MODELS_TAB ? (selectedItem.framework ?? '') : null
       },
       algorithm: {
         value: selectedItem.algorithm
@@ -212,7 +229,12 @@ export const generateJobsContent = selectedItem => {
       value: selectedItem.handler
     },
     function: {
-      value: selectedItem.function
+      value: selectedItem.function,
+      shouldPopUp: !isEmpty(selectedItem.function),
+      handleClick: () =>
+        openPopUp(FunctionPopUp, {
+          funcUri: selectedItem.function
+        })
     },
     functionTag: {
       value: selectedItem.ui?.functionTag ?? ''

@@ -17,15 +17,14 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import React, { useEffect, useMemo, useState } from 'react'
+import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import { useLocation, useNavigate, useParams } from 'react-router-dom'
 import PropTypes from 'prop-types'
 import classnames from 'classnames'
-import { connect } from 'react-redux'
+import { connect, useDispatch } from 'react-redux'
 import { isEmpty } from 'lodash'
 
 import Breadcrumbs from '../../common/Breadcrumbs/Breadcrumbs'
-import YamlModal from '../../common/YamlModal/YamlModal'
 import FilterMenu from '../../components/FilterMenu/FilterMenu'
 import Table from '../../components/Table/Table'
 import ContentMenu from '../../elements/ContentMenu/ContentMenu'
@@ -37,7 +36,6 @@ import TableTop from '../../elements/TableTop/TableTop'
 import { generateContentActionsMenu } from './content.util'
 import { getNoDataMessage } from '../../utils/getNoDataMessage'
 import { isProjectValid } from '../../utils/link-helper.util'
-import { useYaml } from '../../hooks/yaml.hook'
 import {
   ADD_TO_FEATURE_VECTOR_TAB,
   FEATURE_STORE_PAGE,
@@ -45,6 +43,7 @@ import {
   MODELS_PAGE
 } from '../../constants'
 import { useGroupContent } from '../../hooks/groupContent.hook'
+import { toggleYaml } from '../../reducers/appReducer'
 
 import { ReactComponent as Yaml } from 'igz-controls/images/yaml.svg'
 
@@ -69,7 +68,7 @@ const Content = ({
   selectedItem = {},
   tableTop = null
 }) => {
-  const [convertedYaml, toggleConvertedYaml] = useYaml('')
+  const dispatch = useDispatch()
   const [showActionsMenu, setShowActionsMenu] = useState(false)
   const navigate = useNavigate()
   const params = useParams()
@@ -88,6 +87,13 @@ const Content = ({
   const filterMenuClassNames = classnames(
     'content__action-bar-wrapper',
     pageData.hideFilterMenu && 'content__action-bar-wrapper_hidden'
+  )
+
+  const toggleConvertedYaml = useCallback(
+    data => {
+      return dispatch(toggleYaml(data))
+    },
+    [dispatch]
   )
 
   const actionsMenu = useMemo(() => {
@@ -179,9 +185,6 @@ const Content = ({
             </>
           )}
         </div>
-        {convertedYaml.length > 0 && (
-          <YamlModal convertedYaml={convertedYaml} toggleConvertToYaml={toggleConvertedYaml} />
-        )}
       </div>
       {artifactsStore?.preview?.isPreview && (
         <PreviewModal artifact={artifactsStore?.preview?.selectedItem} />

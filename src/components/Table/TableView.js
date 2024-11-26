@@ -52,6 +52,7 @@ const TableView = ({
   tableHeaders,
   tablePanelRef,
   tableRef,
+  toggleConvertedYaml,
   virtualizationConfig
 }) => {
   const tableClass = classnames(
@@ -60,7 +61,6 @@ const TableView = ({
     !isEmpty(selectedItem) && 'table-with-details',
     tableClassName && tableClassName
   )
-
   return (
     <div className="table__flex">
       <div className="table__content" id="table-content" ref={tableContentRef}>
