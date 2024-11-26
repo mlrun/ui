@@ -17,21 +17,36 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
+import React, { useMemo } from 'react'
+import { useLocation, useNavigate, useParams } from 'react-router-dom'
 
-import React from 'react'
 import { useSelector } from 'react-redux'
 
 import Loader from '../../common/Loader/Loader'
 import StatsCard from '../../common/StatsCard/StatsCard'
-
 import { ReactComponent as Alerts } from 'igz-controls/images/alerts.svg'
 import { ReactComponent as ClockIcon } from 'igz-controls/images/clock.svg'
+
+import { generateAlertsStats } from '../../utils/generateAlertsStats'
 
 import './projectsMonitoringCounters.scss'
 
 const AlertsCounters = () => {
+  const { pathname } = useLocation()
+  const { projectName: paramProjectName } = useParams()
+  const navigate = useNavigate()
   const projectStore = useSelector(store => store.projectStore)
-  // TODO:Implement the generateAlertsStats function in task ML-8100
+
+  const projectName = useMemo(
+    () => (pathname === '/projects' ? '*' : paramProjectName),
+    [pathname, paramProjectName]
+  )
+
+  const alertsStats = useMemo(
+    () => generateAlertsStats(projectStore.jobsMonitoringData.alerts, navigate, projectName),
+    [navigate, projectName, projectStore.jobsMonitoringData.alerts]
+  )
+
   return (
     <StatsCard className="monitoring-stats alerts-card">
       <StatsCard.Header>
@@ -53,7 +68,7 @@ const AlertsCounters = () => {
             ) : (
               <span
                 className="stats__link"
-                onClick={() => {}} // @TODO: will be implemented in ML-8100
+                onClick={() => alertsStats.endpoints.link()}
                 data-testid="alerts_endpoint_see_all"
               >
                 {projectStore.jobsMonitoringData.alerts.endpoint}
@@ -69,7 +84,7 @@ const AlertsCounters = () => {
             ) : (
               <span
                 className="stats__link"
-                onClick={() => {}} // @TODO: will be implemented in ML-8100
+                onClick={() => alertsStats.job.link()}
                 data-testid="alerts_jobs_see_all"
               >
                 {(projectStore.jobsMonitoringData.alerts.jobs || 0).toLocaleString()}
@@ -85,7 +100,7 @@ const AlertsCounters = () => {
             ) : (
               <span
                 className="stats__link"
-                onClick={() => {}} // @TODO: will be implemented in ML-8100
+                onClick={() => alertsStats.application.link()}
                 data-testid="alerts_application_see_all"
               >
                 {(projectStore.jobsMonitoringData.alerts.application || 0).toLocaleString()}
@@ -101,7 +116,7 @@ const AlertsCounters = () => {
             ) : (
               <span
                 className="stats__link"
-                onClick={() => {}} // @TODO: will be implemented in ML-8100
+                onClick={() => alertsStats.all.link()}
                 data-testid="alerts_total_see_all"
               >
                 {(projectStore.jobsMonitoringData.alerts.total || 0).toLocaleString()}

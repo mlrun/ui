@@ -17,30 +17,29 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import { useCallback, useMemo } from 'react'
+import { APPLICATION, ENDPOINT, ENTITY_TYPE, JOB } from '../constants'
 
-import ProjectAlertsView from './ProjectsAlertsView'
+export const generateAlertsStats = (data, navigate, projectName) => {
+  const navigateToAlertsPage = (filters = {}) => {
+    navigate(`/projects/${projectName}/alerts?${new URLSearchParams(filters)}`)
+  }
 
-import { getAlertsFiltersConfig, parseAlertsQueryParamsCallback } from './alerts.util'
-import { useFiltersFromSearchParams } from '../../hooks/useFiltersFromSearchParams.hook'
-
-const ProjectsAlerts = () => {
-  const alertsFiltersConfig = useMemo(() => getAlertsFiltersConfig(), [])
-
-  const alertsFilters = useFiltersFromSearchParams(
-    alertsFiltersConfig,
-    parseAlertsQueryParamsCallback
-  )
-
-  const refreshAlertsCallback = useCallback(() => {}, [])
-
-  return (
-    <ProjectAlertsView
-      filters={alertsFilters}
-      alertsFiltersConfig={alertsFiltersConfig}
-      refreshAlertsCallback={refreshAlertsCallback}
-    />
-  )
+  return {
+    all: {
+      counter: data.all,
+      link: () => navigateToAlertsPage({})
+    },
+    job: {
+      counter: data.job,
+      link: () => navigateToAlertsPage({ [ENTITY_TYPE]: JOB })
+    },
+    endpoints: {
+      counter: data.endpoint,
+      link: () => navigateToAlertsPage({ [ENTITY_TYPE]: ENDPOINT })
+    },
+    application: {
+      counter: data.application,
+      link: () => navigateToAlertsPage({ [ENTITY_TYPE]: APPLICATION })
+    }
+  }
 }
-
-export default ProjectsAlerts
