@@ -20,26 +20,26 @@ such restriction.
 import { APPLICATION, ENDPOINT, ENTITY_TYPE, JOB } from '../constants'
 
 export const generateAlertsStats = (data, navigate, projectName) => {
-  const navigateToAlertsPage = (filters = {}, tab) => {
+  const navigateToAlertsPage = (filters = {}) => {
     navigate(`/projects/${projectName}/alerts?${new URLSearchParams(filters)}`)
   }
 
   return {
     all: {
       counter: data.all,
-      link: () => navigateToAlertsPage({}, {})
+      link: () => navigateToAlertsPage({})
     },
     job: {
       counter: data.job,
-      link: () => navigateToAlertsPage({ [ENTITY_TYPE]: JOB }, {})
+      link: () => navigateToAlertsPage({ [ENTITY_TYPE]: JOB })
     },
     endpoints: {
       counter: data.endpoint,
-      link: () => navigateToAlertsPage({ [ENTITY_TYPE]: ENDPOINT }, {})
+      link: () => navigateToAlertsPage({ [ENTITY_TYPE]: ENDPOINT })
     },
     application: {
       counter: data.application,
-      link: () => navigateToAlertsPage({ [ENTITY_TYPE]: APPLICATION }, {})
+      link: () => navigateToAlertsPage({ [ENTITY_TYPE]: APPLICATION })
     }
   }
 }
