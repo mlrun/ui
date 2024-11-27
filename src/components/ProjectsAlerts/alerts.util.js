@@ -65,6 +65,15 @@ export const parseAlertsQueryParamsCallback = (paramName, paramValue) => {
 
     return filteredStatuses?.length ? filteredStatuses : null
   }
+
+  if (paramName === ENTITY_TYPE) {
+    return filterAlertsEntityTypeOptions.find(type => type.id === paramValue)?.id
+  }
+
+  if (paramName === EVENT_TYPE) {
+    return filterAlertsEventTypeOptions.find(type => type.id === paramValue)?.id
+  }
+
   return paramValue
 }
 
