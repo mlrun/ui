@@ -24,9 +24,12 @@ import {
   FEATURE_VECTORS_TAB,
   LABELS_FILTER,
   NAME_FILTER,
-  TAG_FILTER
+  TAG_FILTER,
+  TAG_FILTER_LATEST
 } from '../../../constants'
 import featureStoreActions from '../../../actions/featureStore'
+import { parseFeatureTemplate } from '../../../utils/parseFeatureTemplate'
+import { parseChipsData } from '../../../utils/convertChipsData'
 
 import { ReactComponent as Delete } from 'igz-controls/images/delete.svg'
 import { ReactComponent as Yaml } from 'igz-controls/images/yaml.svg'
@@ -75,9 +78,9 @@ export const featureSetsInfoHeaders = [
 ]
 
 export const filtersConfig = {
-  [TAG_FILTER]: { label: 'Version Tag:' },
-  [NAME_FILTER]: { label: 'Name:' },
-  [LABELS_FILTER]: { label: 'Labels:' }
+  [NAME_FILTER]: { label: 'Name:', initialValue: '' },
+  [TAG_FILTER]: { label: 'Version Tag:', initialValue: TAG_FILTER_LATEST, isModal: true },
+  [LABELS_FILTER]: { label: 'Labels:', initialValue: '', isModal: true }
 }
 
 export const generatePageData = selectedFeatureSet => {
@@ -91,7 +94,11 @@ export const generatePageData = selectedFeatureSet => {
   }
 }
 
-export const generateActionsMenu = (onDeleteFeatureVector, toggleConvertedYaml) => [
+export const generateActionsMenu = (
+  onDeleteFeatureVector,
+  toggleConvertedYaml,
+  isDetailsPopUp = false
+) => [
   [
     {
       label: 'View YAML',
@@ -100,6 +107,7 @@ export const generateActionsMenu = (onDeleteFeatureVector, toggleConvertedYaml) 
     },
     {
       label: 'Delete',
+      hidden: isDetailsPopUp,
       icon: <Delete />,
       className: 'danger',
       onClick: onDeleteFeatureVector
@@ -109,10 +117,7 @@ export const generateActionsMenu = (onDeleteFeatureVector, toggleConvertedYaml) 
 
 export const searchFeatureVectorItem = (content, name, tag) => {
   return content.find(contentItem => {
-    return (
-      contentItem.name === name &&
-      (contentItem.tag === tag || contentItem.uid === tag)
-    )
+    return contentItem.name === name && (contentItem.tag === tag || contentItem.uid === tag)
   })
 }
 
@@ -124,4 +129,14 @@ export const featureVectorsActionCreator = {
   removeFeatureVector: featureStoreActions.removeFeatureVector,
   removeFeatureVectors: featureStoreActions.removeFeatureVectors,
   updateFeatureStoreData: featureStoreActions.updateFeatureStoreData
+}
+
+export const generateDetailsFormInitialValue = (selectedFeatureVector, internalLabels) => {
+  return {
+    features: (selectedFeatureVector.specFeatures ?? []).map(featureData => {
+      return { ...parseFeatureTemplate(featureData) }
+    }),
+    description: selectedFeatureVector.description,
+    labels: parseChipsData(selectedFeatureVector.labels, internalLabels)
+  }
 }

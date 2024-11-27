@@ -25,6 +25,7 @@ import {
   FETCH_MODEL_FEATURE_VECTOR_BEGIN,
   FETCH_MODEL_FEATURE_VECTOR_FAILURE,
   FETCH_MODEL_FEATURE_VECTOR_SUCCESS,
+  REMOVE_DETAILS_POPUP_INFO_CONTENT,
   REMOVE_INFO_CONTENT,
   REMOVE_JOB_PODS,
   REMOVE_MODEL_FEATURE_VECTOR,
@@ -33,6 +34,7 @@ import {
   SET_CHANGES_COUNTER,
   SET_CHANGES_DATA,
   SET_DETAILS_DATES,
+  SET_DETAILS_POPUP_INFO_CONTENT,
   SET_EDIT_MODE,
   SET_FILTERS_WAS_HANDLED,
   SET_INFO_CONTENT,
@@ -95,6 +97,9 @@ const detailsActions = {
     type: FETCH_JOB_PODS_SUCCESS,
     payload: pods
   }),
+  removeDetailsPopUpInfoContent: () => ({
+    type: REMOVE_DETAILS_POPUP_INFO_CONTENT
+  }),
   removeInfoContent: () => ({
     type: REMOVE_INFO_CONTENT
   }),
@@ -122,6 +127,10 @@ const detailsActions = {
   setDetailsDates: data => ({
     type: SET_DETAILS_DATES,
     payload: data
+  }),
+  setDetailsPopUpInfoContent: content => ({
+    type: SET_DETAILS_POPUP_INFO_CONTENT,
+    payload: content
   }),
   setEditMode: value => ({
     type: SET_EDIT_MODE,

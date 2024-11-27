@@ -17,9 +17,8 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import React, { useState, useMemo, useEffect, useCallback } from 'react'
+import React, { useState, useMemo, useEffect, useRef } from 'react'
 import { useParams } from 'react-router-dom'
-import { useDispatch, useSelector } from 'react-redux'
 import { isEmpty } from 'lodash'
 
 import JobsTable from '../../../elements/JobsTable/JobsTable'
@@ -33,17 +32,14 @@ import {
   JOBS_MONITORING_PAGE,
   REQUEST_CANCELED
 } from '../../../constants'
+import { useFiltersFromSearchParams } from '../../../hooks/useFiltersFromSearchParams.hook'
+import { getSavedSearchParams } from '../../../utils/filter.util'
 
 const JobsMonitoring = () => {
   const [selectedJob, setSelectedJob] = useState({})
   const [dataIsLoaded, setDataIsLoaded] = useState(false)
   const params = useParams()
-  const dispatch = useDispatch()
   const { isStagingMode } = useMode()
-  const [jobsFilterMenu, jobsFilterMenuModal] = useSelector(state => [
-    state.filtersStore.filterMenu[JOBS_MONITORING_JOBS_TAB],
-    state.filtersStore.filterMenuModal[JOBS_MONITORING_JOBS_TAB]
-  ])
   const {
     abortControllerRef,
     abortJobRef,
@@ -56,9 +52,15 @@ const JobsMonitoring = () => {
     setAbortingJobs,
     setJobRuns,
     setJobs,
-    setSelectedRunProject,
-    terminateAbortTasksPolling
+    terminateAbortTasksPolling,
+    tabData
   } = React.useContext(ProjectJobsMonitoringContext)
+  const jobsAreInitializedRef = useRef(false)
+
+  const filters = useFiltersFromSearchParams(
+    tabData[JOBS_MONITORING_JOBS_TAB]?.filtersConfig,
+    tabData[JOBS_MONITORING_JOBS_TAB]?.parseQueryParamsCallback
+  )
 
   const tableContent = useMemo(
     () =>
@@ -66,32 +68,14 @@ const JobsMonitoring = () => {
     [isStagingMode, jobRuns, jobs, params.jobName]
   )
 
-  const isJobDataEmpty = useCallback(
-    () => jobs.length === 0 && ((!params.jobName && jobRuns.length === 0) || params.jobName),
-    [jobRuns.length, jobs.length, params.jobName]
-  )
-
   useEffect(() => {
     if (isEmpty(selectedJob) && !params.jobId && !dataIsLoaded) {
-      let filters = {
-        ...jobsFilterMenu.values,
-        ...jobsFilterMenuModal.values
-      }
+      // TODO QP: check for double request after deleting job from details, after pagination will be merged
 
       refreshJobs(filters)
       setDataIsLoaded(true)
     }
-  }, [
-    isJobDataEmpty,
-    dataIsLoaded,
-    dispatch,
-    params.jobId,
-    params.jobName,
-    refreshJobs,
-    selectedJob,
-    jobsFilterMenu.values,
-    jobsFilterMenuModal.values
-  ])
+  }, [params.jobId, params.jobName, refreshJobs, selectedJob, filters, dataIsLoaded])
 
   useEffect(() => {
     const abortController = abortControllerRef.current
@@ -101,6 +85,7 @@ const JobsMonitoring = () => {
       setJobs([])
       setJobRuns([])
       abortController.abort(REQUEST_CANCELED)
+      jobsAreInitializedRef.current = false
       terminateAbortTasksPolling()
     }
   }, [
@@ -116,7 +101,7 @@ const JobsMonitoring = () => {
     <>
       {params.jobName && (
         <TableTop
-          link={`/projects/*/${JOBS_MONITORING_PAGE}/${JOBS_MONITORING_JOBS_TAB}`}
+          link={`/projects/*/${JOBS_MONITORING_PAGE}/${JOBS_MONITORING_JOBS_TAB}${getSavedSearchParams(window.location.search)}`}
           text={params.jobName}
         />
       )}
@@ -124,24 +109,20 @@ const JobsMonitoring = () => {
         abortingJobs={abortingJobs}
         ref={{ abortJobRef }}
         context={ProjectJobsMonitoringContext}
-        filterMenuName={JOBS_MONITORING_JOBS_TAB}
+        filters={filters}
         filtersConfig={jobsFiltersConfig}
         jobRuns={jobRuns}
         jobs={jobs}
         requestErrorMessage={requestErrorMessage}
-        navigateLink={`/projects/*/${JOBS_MONITORING_PAGE}/${JOBS_MONITORING_JOBS_TAB}`}
+        navigateLink={`/projects/*/${JOBS_MONITORING_PAGE}/${JOBS_MONITORING_JOBS_TAB}${window.location.search}`}
         refreshJobs={() =>
-          refreshJobs({
-            ...jobsFilterMenu.values,
-            ...jobsFilterMenuModal.values
-          })
+          refreshJobs(filters)
         }
         selectedJob={selectedJob}
         setAbortingJobs={setAbortingJobs}
         setJobRuns={setJobRuns}
         setJobs={setJobs}
         setSelectedJob={setSelectedJob}
-        setSelectedRunProject={setSelectedRunProject}
         tableContent={tableContent}
         terminateAbortTasksPolling={terminateAbortTasksPolling}
       />

@@ -21,11 +21,8 @@ import React from 'react'
 import { isNil, isEmpty, debounce } from 'lodash'
 
 import {
-  DATES_FILTER,
   FUNCTION_RUN_KINDS,
-  JOBS_PAGE,
-  MONITOR_JOBS_TAB,
-  STATUS_FILTER
+  JOBS_PAGE
 } from '../../../constants'
 import {
   JOB_STEADY_STATES,
@@ -36,9 +33,8 @@ import {
   isJobAborting,
   JOB_RUNNING_STATES
 } from '../jobs.util'
-import { datePickerPastOptions, PAST_WEEK_DATE_OPTION } from '../../../utils/datePicker.util'
+
 import { TERTIARY_BUTTON } from 'igz-controls/constants'
-import { setFiltersValues, setModalFiltersValues } from '../../../reducers/filtersReducer'
 
 import { ReactComponent as MonitorIcon } from 'igz-controls/images/monitor-icon.svg'
 import { ReactComponent as Run } from 'igz-controls/images/run.svg'
@@ -81,7 +77,8 @@ export const generateActionsMenu = (
   handleConfirmAbortJob,
   toggleConvertedYaml,
   selectedJob,
-  handleConfirmDeleteJob
+  handleConfirmDeleteJob,
+  isDetailsPopUp = false
 ) => {
   if (job?.uid) {
     const jobKindIsAbortable = isJobKindAbortable(job, abortable_function_kinds)
@@ -93,7 +90,7 @@ export const generateActionsMenu = (
         {
           label: 'Batch re-run',
           icon: <Run />,
-          hidden: !FUNCTION_RUN_KINDS.includes(job?.ui?.originalContent.metadata.labels?.kind),
+          hidden: !FUNCTION_RUN_KINDS.includes(job?.ui?.originalContent.metadata.labels?.kind) || isDetailsPopUp,
           onClick: handleRerunJob
         },
         {
@@ -118,7 +115,7 @@ export const generateActionsMenu = (
               : ''
             : 'Cannot abort jobs of this kind',
           disabled: !jobKindIsAbortable || jobIsAborting,
-          hidden: JOB_STEADY_STATES.includes(job?.state?.value)
+          hidden: JOB_STEADY_STATES.includes(job?.state?.value) || isDetailsPopUp
         },
         {
           label: 'View YAML',
@@ -130,7 +127,7 @@ export const generateActionsMenu = (
           icon: <Delete />,
           className: 'danger',
           onClick: handleConfirmDeleteJob,
-          hidden: JOB_RUNNING_STATES.includes(job?.state?.value)
+          hidden: JOB_RUNNING_STATES.includes(job?.state?.value) || isDetailsPopUp
         }
       ]
     ]
@@ -149,91 +146,14 @@ export const generateActionsMenu = (
 
 export const fetchInitialJobs = debounce(
   (
-    filtersStore,
+    filters,
     selectedJob,
-    dateFilter,
     jobId,
     refreshJobs,
-    setFilters,
-    dispatch,
-    isJobDataEmpty,
     jobsAreInitializedRef
   ) => {
     if (isEmpty(selectedJob) && !jobId && !jobsAreInitializedRef.current) {
-      let filters = {}
-      let requestFilters = {}
-      let pageFilters = {}
-      let modalFilters = {}
-
-      if (filtersStore.saveFilters) {
-        requestFilters = {
-          state: filtersStore.state,
-          dates: filtersStore.dates
-        }
-        filters = {
-          saveFilters: false
-        }
-        pageFilters = {
-          name: [MONITOR_JOBS_TAB],
-          value: {
-            [DATES_FILTER]: filtersStore.dates
-          }
-        }
-        modalFilters = {
-          name: MONITOR_JOBS_TAB,
-          value: {
-            [STATUS_FILTER]: Array.isArray(filtersStore.state)
-              ? [...filtersStore.state]
-              : [filtersStore.state]
-          }
-        }
-
-        dispatch(setModalFiltersValues(modalFilters))
-        dispatch(setFiltersValues(pageFilters))
-      } else if (isJobDataEmpty()) {
-        const pastWeekOption = datePickerPastOptions.find(
-          option => option.id === PAST_WEEK_DATE_OPTION
-        )
-
-        filters = {
-          dates: {
-            value: pastWeekOption.handler(),
-            isPredefined: pastWeekOption.isPredefined,
-            initialSelectedOptionId: pastWeekOption.id
-          }
-        }
-        requestFilters = {
-          dates: {
-            value: pastWeekOption.handler(),
-            isPredefined: pastWeekOption.isPredefined,
-            initialSelectedOptionId: pastWeekOption.id
-          }
-        }
-      } else {
-        filters = {
-          name: filtersStore.name,
-          state: filtersStore.state,
-          labels: filtersStore.labels,
-          dates: {
-            value: dateFilter,
-            isPredefined: false,
-            initialSelectedOptionId: filtersStore.dates.value.initialSelectedOptionId
-          }
-        }
-        requestFilters = {
-          name: filtersStore.name,
-          state: filtersStore.state,
-          labels: filtersStore.labels,
-          dates: {
-            value: dateFilter,
-            isPredefined: false,
-            initialSelectedOptionId: filtersStore.dates.value.initialSelectedOptionId
-          }
-        }
-      }
-
-      refreshJobs(requestFilters)
-      dispatch(setFilters(filters))
+      refreshJobs(filters)
       jobsAreInitializedRef.current = true
     }
   }

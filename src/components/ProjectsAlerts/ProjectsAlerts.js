@@ -19,44 +19,37 @@ such restriction.
 */
 import { useCallback, useMemo, useState } from 'react'
 
-import { useSelector } from 'react-redux'
-
 import ProjectAlertsView from './ProjectsAlertsView'
 
-import { getAlertsFiltersConfig } from './alerts.util'
+import { getAlertsFiltersConfig, parseAlertsQueryParamsCallback } from './alerts.util'
+import { useFiltersFromSearchParams } from '../../hooks/useFiltersFromSearchParams.hook'
 
 import alertsData from './alertsData.json'
 
 const ProjectsAlerts = () => {
   const [alerts] = useState(alertsData)
-  // const [selectedAlert, setSelectedAlert] = useState({})
   const [selectedAlert] = useState({})
-  // const [requestErrorMessage, setRequestErrorMessage] = useState('')
-  const [requestErrorMessage] = useState('')
-  const alertsStore = useSelector(state => state.alertsStore)
-  const filtersStore = useSelector(store => store.filtersStore)
 
   const alertsFiltersConfig = useMemo(() => getAlertsFiltersConfig(), [])
 
-  const refreshAlertsCallback = useCallback(filters => {
-    console.log(filters)
-  }, [])
+  const alertsFilters = useFiltersFromSearchParams(
+    alertsFiltersConfig,
+    parseAlertsQueryParamsCallback
+  )
+
+  const refreshAlertsCallback = useCallback(() => {}, [])
 
   return (
     <ProjectAlertsView
-      actionsMenu={() => []} // TODO
       alerts={alerts}
       alertsFiltersConfig={alertsFiltersConfig}
-      alertsStore={alertsStore}
-      refreshAlertsCallback={refreshAlertsCallback}
-      filtersStore={filtersStore}
+      actionsMenu={() => []} // TODO
+      filters={alertsFilters}
       pageData={{}} //TODO
-      requestErrorMessage={requestErrorMessage}
+      refreshAlertsCallback={refreshAlertsCallback}
       selectedAlert={selectedAlert}
     />
   )
 }
-
-ProjectsAlerts.propTypes = {}
 
 export default ProjectsAlerts

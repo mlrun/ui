@@ -17,7 +17,7 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import React, { useEffect, useCallback, useRef } from 'react'
+import React, { useEffect, useCallback, useRef, useMemo } from 'react'
 import PropTypes from 'prop-types'
 import { useBlocker, useLocation, useParams } from 'react-router-dom'
 import { connect, useDispatch, useSelector } from 'react-redux'
@@ -40,6 +40,7 @@ import detailsActions from '../../actions/details'
 import {
   ARTIFACTS_PAGE,
   DATASETS_TAB,
+  DETAILS_OVERVIEW_TAB,
   FILES_TAB,
   FUNCTIONS_PAGE,
   JOBS_PAGE,
@@ -64,12 +65,15 @@ const Details = ({
   applyDetailsChanges = () => {},
   applyDetailsChangesCallback = () => {},
   detailsMenu,
+  detailsPopUpSelectedTab = DETAILS_OVERVIEW_TAB,
   formInitialValues = {},
   getCloseDetailsLink = null,
   handleCancel = null,
   handleRefresh = () => {},
+  isDetailsPopUp = false,
   isDetailsScreen = false,
   pageData,
+  removeDetailsPopUpInfoContent,
   removeInfoContent,
   removeModelFeatureVector = () => {},
   resetChanges,
@@ -78,10 +82,12 @@ const Details = ({
   setChanges,
   setChangesCounter,
   setChangesData,
+  setDetailsPopUpInfoContent,
+  setDetailsPopUpSelectedTab,
+  setFiltersWasHandled,
   setInfoContent,
   setIteration,
   setIterationOption,
-  setFiltersWasHandled,
   showWarning,
   tab = ''
 }) => {
@@ -90,13 +96,24 @@ const Details = ({
   const detailsRef = useRef()
   const params = useParams()
   const detailsStore = useSelector(store => store.detailsStore)
-  const filtersStore = useSelector(store => store.filtersStore)
   const location = useLocation()
+  const [setDetailsInfo, removeDetailsInfo] = useMemo(() => {
+    return isDetailsPopUp
+      ? [setDetailsPopUpInfoContent, removeDetailsPopUpInfoContent]
+      : [setInfoContent, removeInfoContent]
+  }, [
+    isDetailsPopUp,
+    removeDetailsPopUpInfoContent,
+    removeInfoContent,
+    setDetailsPopUpInfoContent,
+    setInfoContent
+  ])
 
   const detailsPanelClassNames = classnames(
     'table__item',
     detailsStore.showWarning && 'pop-up-dialog-opened',
-    isDetailsScreen && 'table__item_big'
+    isDetailsScreen && 'table__item_big',
+    isDetailsPopUp && 'table__item-popup'
   )
 
   const formRef = React.useRef(
@@ -125,7 +142,7 @@ const Details = ({
   useEffect(() => {
     if (!isEveryObjectValueEmpty(selectedItem)) {
       if (pageData.details.type === JOBS_PAGE) {
-        setInfoContent(generateJobsContent(selectedItem))
+        setDetailsInfo(generateJobsContent(selectedItem))
       } else if (
         pageData.details.type === ARTIFACTS_PAGE ||
         pageData.details.type === FILES_TAB ||
@@ -133,16 +150,16 @@ const Details = ({
         pageData.details.type === MODEL_ENDPOINTS_TAB ||
         pageData.details.type === DATASETS_TAB
       ) {
-        setInfoContent(
+        setDetailsInfo(
           generateArtifactsContent(pageData.details.type, selectedItem, params.projectName)
         )
       } else if (pageData.details.type === FUNCTIONS_PAGE) {
-        setInfoContent(generateFunctionsContent(selectedItem))
+        setDetailsInfo(generateFunctionsContent(selectedItem))
       } else {
-        setInfoContent(generateFeatureStoreContent(pageData.details.type, selectedItem))
+        setDetailsInfo(generateFeatureStoreContent(pageData.details.type, selectedItem))
       }
     }
-  }, [pageData.details.type, params.projectName, selectedItem, setInfoContent, location.search])
+  }, [pageData.details.type, params.projectName, selectedItem, setDetailsInfo, location.search])
 
   useEffect(() => {
     return () => {
@@ -150,9 +167,9 @@ const Details = ({
         removeModelFeatureVector()
       }
 
-      removeInfoContent()
+      removeDetailsInfo()
     }
-  }, [pageData.details.type, removeInfoContent, removeModelFeatureVector, selectedItem])
+  }, [pageData.details.type, removeDetailsInfo, removeModelFeatureVector, selectedItem])
 
   const handleShowWarning = useCallback(
     show => {
@@ -230,7 +247,7 @@ const Details = ({
     handleShowWarning(false)
 
     if (detailsStore.filtersWasHandled) {
-      retryRequest(filtersStore)
+      retryRequest({})
       setFiltersWasHandled(false)
     } else {
       blocker.proceed?.()
@@ -241,7 +258,6 @@ const Details = ({
     blocker,
     cancelChanges,
     detailsStore.filtersWasHandled,
-    filtersStore,
     handleShowWarning,
     retryRequest,
     setFiltersWasHandled
@@ -260,6 +276,7 @@ const Details = ({
               applyChangesRef={applyChangesRef}
               cancelChanges={cancelChanges}
               getCloseDetailsLink={getCloseDetailsLink}
+              isDetailsPopUp={isDetailsPopUp}
               isDetailsScreen={isDetailsScreen}
               handleCancel={handleCancel}
               handleRefresh={handleRefresh}
@@ -269,13 +286,21 @@ const Details = ({
               setIteration={setIteration}
               tab={tab}
             />
-            <TabsSlider tabsList={detailsMenu} initialTab={params.tab} />
+            <TabsSlider
+              initialTab={isDetailsPopUp ? detailsPopUpSelectedTab : params.tab}
+              isDetailsPopUp={isDetailsPopUp}
+              onClick={newTab => setDetailsPopUpSelectedTab && setDetailsPopUpSelectedTab(newTab)}
+              skipLink={isDetailsPopUp}
+              tabsList={detailsMenu}
+            />
           </div>
           <div className="item-info">
             <DetailsTabsContent
               applyChangesRef={applyChangesRef}
+              detailsPopUpSelectedTab={detailsPopUpSelectedTab}
               formState={formState}
               handlePreview={handlePreview}
+              isDetailsPopUp={isDetailsPopUp}
               pageData={pageData}
               selectedItem={selectedItem}
               setChanges={setChanges}

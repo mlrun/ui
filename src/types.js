@@ -276,7 +276,9 @@ export const FILTERS_CONFIG = PropTypes.objectOf(
   PropTypes.shape({
     label: PropTypes.string,
     hidden: PropTypes.bool,
-    isFuture: PropTypes.bool
+    isFuture: PropTypes.bool,
+    initialValue: PropTypes.any.isRequired,
+    isModal: PropTypes.bool
   })
 )
 

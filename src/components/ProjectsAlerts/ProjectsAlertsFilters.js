@@ -43,6 +43,7 @@ import {
   ENTITY_TYPE,
   EVENT_TYPE,
   FILTER_ALL_ITEMS,
+  JOB,
   JOB_NAME,
   PROJECT_FILTER,
   SEVERITY
@@ -89,7 +90,7 @@ const ProjectsAlertsFilters = () => {
           <FormOnChange handler={value => handleInputChange(value, ENTITY_ID)} name={ENTITY_ID} />
         </div>
       )}
-      {entityType === JOB_NAME && (
+      {entityType === JOB && (
         <div className="form-row">
           <FormInput label="Job" name={JOB_NAME} placeholder="Search by job name" />
           <FormOnChange handler={value => handleInputChange(value, JOB_NAME)} name={JOB_NAME} />

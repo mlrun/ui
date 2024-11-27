@@ -356,11 +356,22 @@ export const getTimeFrameWarningMsg = (timeFrameLimit) => {
   return `Maximum time range is ${mappedTime[timeFrameLimit]}`
 }
 
-export const getDatePickerFilterValue = (options, optionId, isRange) => {
+export const getDatePickerFilterValue = (options, optionIdOrTimeStamps, isRange) => {
+  const splittedTimestamps = optionIdOrTimeStamps.split?.('-')
+  const validCustomDates = splittedTimestamps
+    .map(timeStamp => new Date(+timeStamp))
+    .filter(customDate => customDate.toString() !== 'Invalid Date')
+  const isAllTCustomDatesValid =
+    validCustomDates.length && validCustomDates.length === splittedTimestamps.length
+
   return {
-    value: options.find(option => option.id === optionId).handler(isRange),
-    isPredefined: true,
-    initialSelectedOptionId: optionId
+    value: isAllTCustomDatesValid
+      ? validCustomDates
+      : options.find(option => option.id === optionIdOrTimeStamps)?.handler?.(isRange),
+    isPredefined: !isAllTCustomDatesValid,
+    initialSelectedOptionId: isAllTCustomDatesValid
+      ? CUSTOM_RANGE_DATE_OPTION
+      : optionIdOrTimeStamps
   }
 }
 

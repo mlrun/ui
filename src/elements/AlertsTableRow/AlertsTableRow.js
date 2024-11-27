@@ -25,18 +25,12 @@ import { useParams } from 'react-router-dom'
 import TableCell from '../TableCell/TableCell'
 
 import { DETAILS_OVERVIEW_TAB } from '../../constants'
-import { getFunctionIdentifier } from '../../utils/getUniqueIdentifier'
 
 const AlertsTableRow = ({ handleExpandRow, handleSelectItem, rowItem, selectedItem }) => {
   const parent = useRef()
   const params = useParams()
 
-  const rowClassNames = classnames(
-    'table-row',
-    'table-body-row',
-    'parent-row',
-    getFunctionIdentifier(selectedItem, true) === rowItem.data?.ui?.identifierUnique
-  )
+  const rowClassNames = classnames('table-row', 'table-body-row', 'parent-row')
 
   return (
     <tr className={rowClassNames} ref={parent}>

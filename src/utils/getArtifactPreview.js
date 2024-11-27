@@ -28,7 +28,7 @@ import { ARTIFACT_MAX_CHUNK_SIZE, DEFAULT_ABORT_MSG, REQUEST_CANCELED } from '..
 const fileSizes = {
   '100KB': 102400,
   '10MB': 10485760,
-  '1MB': 1048576,
+  '1MB': 1048576
 }
 const limitsByFormat = (fileFormat, maxSizeLimit) => {
   const limits = {
@@ -82,7 +82,7 @@ export const setArtifactPreviewFromPreviewData = (artifact, noData, setNoData, s
 }
 
 export const generateExtraDataContent = (extraData, showArtifactPreview, projectName) => {
-  return extraData.map((extraDataItem, index) => {
+  return extraData.map(extraDataItem => {
     return [
       {
         headerId: 'name',
@@ -159,8 +159,11 @@ export const fetchArtifactPreviewFromPath = async (
         setPreview([
           {
             data: {
-              content: `The artifact is too large to ${fileSize > artifactLimits.max_download_size ?
-                 `download. Go to ${path} to retrieve the data, or use mlrun api/sdk project.get_artifact('${artifact.db_key || artifact.name}').to_dataitem().get()` : 'preview, use the download option instead'}`
+              content: `The artifact is too large to ${
+                fileSize > artifactLimits.max_download_size
+                  ? `download. Go to ${path} to retrieve the data, or use mlrun api/sdk project.get_artifact('${artifact.db_key || artifact.name}').to_dataitem().get()`
+                  : 'preview, use the download option instead'
+              }`
             },
             type: 'unknown'
           }
@@ -221,7 +224,7 @@ export const fetchArtifactPreview = async (
   if (signal) {
     config.signal = signal
   }
-  
+
   if (['png', 'jpg', 'jpeg', 'html'].includes(fileFormat)) {
     const chunkSize = sizeConfigs.max_chunk_size ?? ARTIFACT_MAX_CHUNK_SIZE
     let fullFile = new Blob()

@@ -43,14 +43,20 @@ const ArtifactsExtraData = ({ artifact }) => {
   )
 
   const artifactExtraDataWithId = useMemo(() => {
-    return artifact.extra_data?.map((item = {}) => {
-       return { ...item, id: uuidv4() }
-    }) || []
+    return (
+      artifact.extra_data?.map((item = {}) => {
+        return { ...item, id: uuidv4() }
+      }) || []
+    )
   }, [artifact])
 
   const extraData = useMemo(() => {
-    return generateExtraDataContent(artifactExtraDataWithId, showArtifactPreview, params.projectName)
-  }, [artifactExtraDataWithId, showArtifactPreview, params.projectName])
+    return generateExtraDataContent(
+      artifactExtraDataWithId,
+      showArtifactPreview,
+      artifact.project || params.projectName
+    )
+  }, [artifactExtraDataWithId, showArtifactPreview, params.projectName, artifact.project])
 
   useEffect(() => {
     return () => {

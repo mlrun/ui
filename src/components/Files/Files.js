@@ -37,6 +37,7 @@ import {
 } from '../../constants'
 import {
   checkForSelectedFile,
+  filtersConfig,
   generateActionsMenu,
   generatePageData,
   handleApplyDetailsChanges,
@@ -61,7 +62,8 @@ import { useGroupContent } from '../../hooks/groupContent.hook'
 import { useSortTable } from '../../hooks/useSortTable.hook'
 import { useInitialTableFetch } from '../../hooks/useInitialTableFetch.hook'
 import { useVirtualization } from '../../hooks/useVirtualization.hook'
-import { useYaml } from '../../hooks/yaml.hook'
+import { useFiltersFromSearchParams } from '../../hooks/useFiltersFromSearchParams.hook'
+import { toggleYaml } from '../../reducers/appReducer'
 
 import './files.scss'
 import cssVariables from './files.scss'
@@ -73,7 +75,6 @@ const Files = () => {
   const [selectedRowData, setSelectedRowData] = useState({})
   const [requestErrorMessage, setRequestErrorMessage] = useState('')
   const [maxArtifactsErrorIsShown, setMaxArtifactsErrorIsShown] = useState(false)
-  const [convertedYaml, toggleConvertedYaml] = useYaml('')
   const artifactsStore = useSelector(store => store.artifactsStore)
   const filtersStore = useSelector(store => store.filtersStore)
   const frontendSpec = useSelector(store => store.appStore.frontendSpec)
@@ -82,10 +83,7 @@ const Files = () => {
   const navigate = useNavigate()
   const params = useParams()
   const viewMode = getViewMode(window.location.search)
-  const [filesFilters, filesModalFilters] = useSelector(state => [
-    state.filtersStore.filterMenu[FILES_PAGE],
-    state.filtersStore.filterMenuModal[FILES_PAGE]
-  ])
+  const filters = useFiltersFromSearchParams(filtersConfig)
   const abortControllerRef = useRef(new AbortController())
   const tagAbortControllerRef = useRef(new AbortController())
   const filesRef = useRef(null)
@@ -97,6 +95,13 @@ const Files = () => {
       tag: selectedFile.tag ?? ''
     }),
     [selectedFile.tag]
+  )
+
+  const toggleConvertedYaml = useCallback(
+    data => {
+      return dispatch(toggleYaml(data))
+    },
+    [dispatch]
   )
 
   const getAndSetSelectedArtifact = useCallback(() => {
@@ -175,15 +180,19 @@ const Files = () => {
     [fetchData, fetchTags]
   )
 
+  const handleRefreshWithFilters = useCallback(() => {
+    handleRefresh(filters)
+  }, [filters, handleRefresh])
+
   const handleAddTag = useCallback(
     artifact => {
       openPopUp(AddArtifactTagPopUp, {
         artifact,
-        onAddTag: () => handleRefresh({ ...filesFilters.values, ...filesModalFilters.values }),
+        onAddTag: () => handleRefresh(filters),
         projectName: params.projectName
       })
     },
-    [params.projectName, handleRefresh, filesFilters.values, filesModalFilters.values]
+    [params.projectName, handleRefresh, filters]
   )
 
   const actionsMenu = useMemo(
@@ -196,7 +205,7 @@ const Files = () => {
         handleAddTag,
         params.projectName,
         handleRefresh,
-        { ...filesFilters.values, ...filesModalFilters.values },
+        filters,
         menuPosition,
         selectedFile
       ),
@@ -207,8 +216,7 @@ const Files = () => {
       handleAddTag,
       params.projectName,
       handleRefresh,
-      filesFilters.values,
-      filesModalFilters.values,
+      filters,
       selectedFile
     ]
   )
@@ -261,7 +269,9 @@ const Files = () => {
       ? latestItems.map(contentItem => {
           return createFilesRowData(contentItem, params.projectName, frontendSpec, true)
         })
-      : files.map(contentItem => createFilesRowData(contentItem, params.projectName, frontendSpec))
+      : files.map(contentItem =>
+          createFilesRowData(contentItem, params.projectName, frontendSpec, false)
+        )
   }, [files, filtersStore.groupBy, frontendSpec, latestItems, params.projectName])
 
   const tableHeaders = useMemo(() => tableContent[0]?.content ?? [], [tableContent])
@@ -303,7 +313,7 @@ const Files = () => {
       }
     }
 
-    handleRefresh({ ...filesFilters.values, ...filesModalFilters.values })
+    handleRefresh(filters)
   }
 
   useInitialTableFetch({
@@ -311,7 +321,7 @@ const Files = () => {
     fetchData,
     fetchTags,
     filterModalName: FILES_PAGE,
-    filters: { ...filesFilters.values, ...filesModalFilters.values },
+    filters,
     setExpandedRowsData: setSelectedRowData,
     sortExpandedRowsDataBy: 'updated'
   })
@@ -370,10 +380,10 @@ const Files = () => {
     openPopUp(RegisterArtifactModal, {
       artifactKind: ARTIFACT_TYPE,
       params,
-      refresh: () => handleRefresh({ ...filesFilters.values, ...filesModalFilters.values }),
+      refresh: () => handleRefresh(filters),
       title: registerArtifactTitle
     })
-  }, [params, handleRefresh, filesFilters, filesModalFilters])
+  }, [params, handleRefresh, filters])
 
   const virtualizationConfig = useVirtualization({
     rowsData: {
@@ -395,13 +405,14 @@ const Files = () => {
       applyDetailsChanges={applyDetailsChanges}
       applyDetailsChangesCallback={applyDetailsChangesCallback}
       artifactsStore={artifactsStore}
-      convertedYaml={convertedYaml}
       detailsFormInitialValues={detailsFormInitialValues}
       files={files}
+      filters={filters}
       filtersStore={filtersStore}
       getAndSetSelectedArtifact={getAndSetSelectedArtifact}
       handleExpandRow={handleExpandRow}
       handleRefresh={handleRefresh}
+      handleRefreshWithFilters={handleRefreshWithFilters}
       handleRegisterArtifact={handleRegisterArtifact}
       handleSelectFile={handleSelectFile}
       maxArtifactsErrorIsShown={maxArtifactsErrorIsShown}
@@ -410,14 +421,11 @@ const Files = () => {
       requestErrorMessage={requestErrorMessage}
       selectedFile={selectedFile}
       selectedRowData={selectedRowData}
-      setFiles={setFiles}
       setMaxArtifactsErrorIsShown={setMaxArtifactsErrorIsShown}
       setSelectedFileMin={setSelectedFileMin}
-      setSelectedRowData={setSelectedRowData}
       sortProps={{ sortTable, selectedColumnName, getSortingIcon }}
       tableContent={sortedTableContent}
       tableHeaders={sortedTableHeaders}
-      toggleConvertedYaml={toggleConvertedYaml}
       viewMode={viewMode}
       virtualizationConfig={virtualizationConfig}
     />

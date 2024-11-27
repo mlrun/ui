@@ -32,7 +32,7 @@ import {
   isBackgroundTaskRunning,
   pollTask
 } from '../../utils/poll.util'
-import { PROJECT_ONLINE_STATUS } from '../../constants'
+import { PROJECT_ONLINE_STATUS, SET_PROJECT_TOTAL_ALERTS } from '../../constants'
 import { DANGER_BUTTON, FORBIDDEN_ERROR_STATUS_CODE } from 'igz-controls/constants'
 import { setNotification } from '../../reducers/notificationReducer'
 import { showErrorNotification } from '../../utils/notifications.util'
@@ -248,6 +248,22 @@ export const pollDeletingProjects = (terminatePollRef, deletingProjects, refresh
   })
 }
 
+export const generateAlerts = (data, dispatch) => {
+  const projectAlerts = {}
+  data.forEach(project => {
+    const projectName = project.name
+    projectAlerts[projectName] =
+      (project.endpoint_alerts_count || 0) +
+      (project.job_alerts_count || 0) +
+      (project.other_alerts_count || 0)
+  })
+
+  dispatch({
+    type: SET_PROJECT_TOTAL_ALERTS,
+    payload: projectAlerts
+  })
+}
+
 export const generateMonitoringCounters = (data, dispatch) => {
   const monitoringCounters = {
     jobs: {
@@ -266,6 +282,12 @@ export const generateMonitoringCounters = (data, dispatch) => {
       all: 0,
       jobs: 0,
       workflows: 0
+    },
+    alerts: {
+      endpoint: 0,
+      jobs: 0,
+      application: 0,
+      total: 0
     }
   }
 
@@ -299,9 +321,15 @@ export const generateMonitoringCounters = (data, dispatch) => {
     monitoringCounters.scheduled.jobs += project.distinct_scheduled_jobs_pending_count || 0
     monitoringCounters.scheduled.workflows +=
       project.distinct_scheduled_pipelines_pending_count || 0
-    monitoringCounters.scheduled.workflows +=
-      project.distinct_scheduled_pipelines_pending_count || 0
+
+    monitoringCounters.alerts.endpoint += project.endpoint_alerts_count || 0
+    monitoringCounters.alerts.jobs += project.job_alerts_count || 0
+    monitoringCounters.alerts.application += project.other_alerts_count || 0
   })
+  monitoringCounters.alerts.total =
+    monitoringCounters.alerts.endpoint +
+    monitoringCounters.alerts.jobs +
+    monitoringCounters.alerts.application
 
   dispatch(projectsAction.setJobsMonitoringData(monitoringCounters))
 }

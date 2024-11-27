@@ -17,10 +17,11 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
+import FunctionPopUp from '../elements/DetailsPopUp/FunctionPopUp/FunctionPopUp'
+
 import { formatDatetime } from './datetime'
-import { FUNCTIONS_PAGE, MODELS_PAGE, REAL_TIME_PIPELINES_TAB } from '../constants'
-import { generateLinkToDetailsPanel } from './link-helper.util'
-import { validateArguments } from './validateArguments'
+import { openPopUp } from 'igz-controls/utils/common.util'
+import { MODELS_PAGE, REAL_TIME_PIPELINES_TAB } from '../constants'
 
 const createRealTimePipelinesContent = (pipelines, projectName) =>
   pipelines.map(pipeline => {
@@ -36,7 +37,7 @@ const createRealTimePipelinesContent = (pipelines, projectName) =>
           value: pipeline.name,
           className: 'table-cell-name',
           getLink: () => {
-            return `/projects/${projectName}/${MODELS_PAGE.toLowerCase()}/${REAL_TIME_PIPELINES_TAB}/pipeline/${pipeline.hash}`
+            return `/projects/${projectName}/${MODELS_PAGE.toLowerCase()}/${REAL_TIME_PIPELINES_TAB}/pipeline/${pipeline.hash}${window.location.search}`
           },
           showTag: true,
           showStatus: true,
@@ -62,17 +63,10 @@ const createRealTimePipelinesContent = (pipelines, projectName) =>
           headerLabel: 'Function',
           value: pipeline.name,
           className: 'table-cell-2',
-          getLink: tab =>
-            validateArguments(pipeline.hash, tab)
-              ? generateLinkToDetailsPanel(
-                  pipeline.project,
-                  FUNCTIONS_PAGE,
-                  null,
-                  `${pipeline.name}@${pipeline.hash}`,
-                  null,
-                  tab
-                )
-              : ''
+          handleClick: () =>
+            openPopUp(FunctionPopUp, {
+              funcUri: `${pipeline.project}/${pipeline.name}@${pipeline.hash}`
+            })
         },
         {
           id: `updated.${pipeline.ui.identifierUnique}`,

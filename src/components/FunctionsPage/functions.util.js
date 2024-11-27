@@ -42,10 +42,12 @@ import {
 import jobsActions from '../../actions/jobs'
 import functionsApi from '../../api/functions-api'
 import tasksApi from '../../api/tasks-api'
+import functionsActions from '../../actions/functions'
 import { BG_TASK_FAILED, BG_TASK_SUCCEEDED, pollTask } from '../../utils/poll.util'
 import { parseFunction } from '../../utils/parseFunction'
 import { setNotification } from '../../reducers/notificationReducer'
 import { showErrorNotification } from '../../utils/notifications.util'
+import { getFunctionLogs, getFunctionNuclioLogs } from '../../utils/getFunctionLogs'
 
 import { ReactComponent as Delete } from 'igz-controls/images/delete.svg'
 import { ReactComponent as Run } from 'igz-controls/images/run.svg'
@@ -90,12 +92,64 @@ export const infoHeaders = [
 ]
 export const TRANSIENT_FUNCTION_STATUSES = [FUNCTION_PENDINDG_STATE, FUNCTION_RUNNING_STATE]
 
+const handleFetchFunctionLogs = (
+  dispatch,
+  item,
+  projectName,
+  setDetailsLogs,
+  fetchFunctionLogsTimeout,
+  navigate,
+  fetchData,
+  filtersStore
+) => {
+  return getFunctionLogs(
+    dispatch,
+    functionsActions.fetchFunctionLogs,
+    fetchFunctionLogsTimeout,
+    projectName,
+    item.name,
+    item.tag,
+    setDetailsLogs,
+    navigate,
+    () => fetchData(filtersStore)
+  )
+}
+
+const handleFetchFunctionApplicationLogs = (
+  item,
+  projectName,
+  setDetailsLogs,
+  fetchFunctionNuclioLogs,
+  fetchFunctionNuclioLogsTimeout
+) => {
+  return getFunctionNuclioLogs(
+    fetchFunctionNuclioLogs,
+    fetchFunctionNuclioLogsTimeout,
+    projectName,
+    item.name,
+    item.tag,
+    setDetailsLogs
+  )
+}
+
+const handleRemoveLogs = fetchFunctionLogsTimeout => {
+  clearTimeout(fetchFunctionLogsTimeout.current)
+  fetchFunctionLogsTimeout.current = null
+}
+
+const handleRemoveApplicationLogs = fetchFunctionNuclioLogsTimeout => {
+  clearTimeout(fetchFunctionNuclioLogsTimeout.current)
+  fetchFunctionNuclioLogsTimeout.current = null
+}
+
 export const generateFunctionsPageData = (
+  dispatch,
   selectedFunction,
-  handleFetchFunctionLogs,
-  handleFetchFunctionApplicationLogs,
-  handleRemoveLogs,
-  handleRemoveApplicationLogs
+  fetchFunctionLogsTimeout,
+  fetchFunctionNuclioLogsTimeout,
+  navigate,
+  fetchData,
+  filtersStore
 ) => {
   const showAdditionalLogs = selectedFunction.type === FUNCTION_TYPE_APPLICATION
 
@@ -109,11 +163,38 @@ export const generateFunctionsPageData = (
       logsNoDataMessage: selectedFunction.tag
         ? 'No data to show'
         : 'Cannot show build logs for an untagged function.',
-      refreshLogs: Boolean(selectedFunction.tag) && handleFetchFunctionLogs,
-      refreshAdditionalLogs:
-        showAdditionalLogs && Boolean(selectedFunction.tag) && handleFetchFunctionApplicationLogs,
-      removeLogs: handleRemoveLogs,
-      removeAdditionalLogs: showAdditionalLogs && handleRemoveApplicationLogs,
+      refreshLogs: (item, projectName, setDetailsLogs) => {
+        if (selectedFunction.tag) {
+          return handleFetchFunctionLogs(
+            dispatch,
+            item,
+            projectName,
+            setDetailsLogs,
+            fetchFunctionLogsTimeout,
+            navigate,
+            fetchData,
+            filtersStore
+          )
+        }
+      },
+      refreshAdditionalLogs: (item, projectName, setDetailsLogs) => {
+        if (showAdditionalLogs && selectedFunction.tag) {
+          return () =>
+            handleFetchFunctionApplicationLogs(
+              item,
+              projectName,
+              setDetailsLogs,
+              functionsActions.fetchFunctionNuclioLogs,
+              fetchFunctionNuclioLogsTimeout
+            )
+        }
+      },
+      removeLogs: () => handleRemoveLogs(fetchFunctionLogsTimeout),
+      removeAdditionalLogs: () => {
+        if (showAdditionalLogs) {
+          return () => handleRemoveApplicationLogs(fetchFunctionNuclioLogsTimeout)
+        }
+      },
       withLogsRefreshBtn: false,
       type: FUNCTIONS_PAGE
     }
@@ -185,8 +266,8 @@ export const getFunctionsEditableTypes = isStagingMode => {
 }
 export const getFunctionImage = func => {
   return func.type === FUNCTION_TYPE_NUCLIO ||
-  func.type === FUNCTION_TYPE_SERVING ||
-  func.type === FUNCTION_TYPE_REMOTE
+    func.type === FUNCTION_TYPE_SERVING ||
+    func.type === FUNCTION_TYPE_REMOTE
     ? func.container_image
     : func.image
 }
@@ -204,7 +285,8 @@ export const generateActionsMenu = (
   buildAndRunFunc,
   deletingFunctions,
   selectedFunction,
-  fetchFunction
+  fetchFunction,
+  isDetailsPopUp = false
 ) => {
   const functionIsDeleting = isFunctionDeleting(func, deletingFunctions)
   const getFullFunction = funcMin => {
@@ -230,7 +312,8 @@ export const generateActionsMenu = (
         },
         hidden:
           !FUNCTION_RUN_KINDS.includes(func?.type) ||
-          !FUNCTIONS_READY_STATES.includes(func?.state?.value)
+          !FUNCTIONS_READY_STATES.includes(func?.state?.value) ||
+          isDetailsPopUp
       },
       {
         label: 'Edit',
@@ -247,7 +330,8 @@ export const generateActionsMenu = (
         hidden:
           !isDemoMode ||
           !getFunctionsEditableTypes(isStagingMode).includes(func?.type) ||
-          !FUNCTIONS_EDITABLE_STATES.includes(func?.state?.value)
+          !FUNCTIONS_EDITABLE_STATES.includes(func?.state?.value) ||
+          isDetailsPopUp
       },
       {
         label: 'View YAML',
@@ -261,7 +345,8 @@ export const generateActionsMenu = (
         icon: <Delete />,
         className: 'danger',
         disabled: functionIsDeleting,
-        onClick: onRemoveFunction
+        onClick: onRemoveFunction,
+        hidden: isDetailsPopUp
       }
     ],
     [
@@ -273,8 +358,11 @@ export const generateActionsMenu = (
         onClick: funcMin =>
           getFullFunction(funcMin).then(func => !isEmpty(func) && buildAndRunFunc(func)),
         // todo: move out of "demo" mode and make additional changes as needed after the BE part is implemented.
-        hidden: !isDemoMode || (func?.type !== FUNCTION_TYPE_JOB ||
-          (func?.type === FUNCTION_TYPE_JOB && func?.state?.value !== FUNCTION_INITIALIZED_STATE))
+        hidden:
+          !isDemoMode ||
+          func?.type !== FUNCTION_TYPE_JOB ||
+          (func?.type === FUNCTION_TYPE_JOB && func?.state?.value !== FUNCTION_INITIALIZED_STATE) ||
+          isDetailsPopUp
       },
       {
         id: 'deploy',
@@ -289,7 +377,7 @@ export const generateActionsMenu = (
             }
           })
         },
-        hidden: !isDemoMode || func?.type !== FUNCTION_TYPE_SERVING
+        hidden: !isDemoMode || func?.type !== FUNCTION_TYPE_SERVING || isDetailsPopUp
       }
     ]
   ]
@@ -354,7 +442,7 @@ export const setFullSelectedFunction = debounce(
         })
         .catch(() => {
           setSelectedFunction({})
-          navigate(`/projects/${projectName}/functions`, { replace: true })
+          navigate(`/projects/${projectName}/functions${window.location.search}`, { replace: true })
         })
     }
   },
@@ -424,41 +512,50 @@ export const checkForSelectedFunction = (
   dispatch
 ) => {
   queueMicrotask(() => {
-      if (name || hash) {
-        const functionsList = selectedRowData?.[name]?.content || functions
+    if (name || hash) {
+      const functionsList = selectedRowData?.[name]?.content || functions
 
-        if (functionsList.length > 0) {
-          const searchItem = searchFunctionItem(
-            hash,
-            name,
-            tag,
-            projectName,
-            functionsList.map(func => func.data ?? func),
-            dispatch,
-            true
-          )
+      if (functionsList.length > 0) {
+        const searchItem = searchFunctionItem(
+          hash,
+          name,
+          tag,
+          projectName,
+          functionsList.map(func => func.data ?? func),
+          dispatch,
+          true
+        )
 
-          if (!searchItem) {
-            navigate(`/projects/${projectName}/functions`, { replace: true })
-          } else {
-            setSelectedFunction(prevState => {
-              return isEqual(prevState, searchItem) ? prevState : searchItem
-            })
-          }
+        if (!searchItem) {
+          navigate(`/projects/${projectName}/functions${window.location.search}`, { replace: true })
+        } else {
+          setSelectedFunction(prevState => {
+            return isEqual(prevState, searchItem) ? prevState : searchItem
+          })
         }
-      } else {
-        setSelectedFunction({})
       }
+    } else {
+      setSelectedFunction({})
     }
-  )
+  })
 }
 
-export const searchFunctionItem = (paramsHash, paramsName, paramsTag, projectName, functions, dispatch, checkExistence = false) => {
+export const searchFunctionItem = (
+  paramsHash,
+  paramsName,
+  paramsTag,
+  projectName,
+  functions,
+  dispatch,
+  checkExistence = false
+) => {
   let item = {}
 
   if (paramsHash) {
     const withFunctionTag = paramsHash.indexOf(':') > 0
-    let name, tag, hash = ''
+    let name,
+      tag,
+      hash = ''
 
     item = functions.find(func => {
       if (withFunctionTag) {
@@ -478,7 +575,8 @@ export const searchFunctionItem = (paramsHash, paramsName, paramsTag, projectNam
       return isEqual(func.tag, paramsTag) && isEqual(func.name, paramsName)
     })
 
-    checkExistence && checkFunctionExistence(item, { name: paramsName, tag: paramsTag }, projectName, dispatch)
+    checkExistence &&
+      checkFunctionExistence(item, { name: paramsName, tag: paramsTag }, projectName, dispatch)
   }
 
   return item
@@ -486,9 +584,8 @@ export const searchFunctionItem = (paramsHash, paramsName, paramsTag, projectNam
 
 const checkFunctionExistence = (item, filters, projectName, dispatch) => {
   if (!item || Object.keys(item).length === 0) {
-    functionsApi.getFunction(projectName, filters.name, filters.hash, filters.tag)
-      .catch(() => {
-        showErrorNotification(dispatch, {}, 'This function either does not exist or was deleted')
-      })
+    functionsApi.getFunction(projectName, filters.name, filters.hash, filters.tag).catch(() => {
+      showErrorNotification(dispatch, {}, 'This function either does not exist or was deleted')
+    })
   }
 }

@@ -22,6 +22,7 @@ import PropTypes from 'prop-types'
 import { useSelector } from 'react-redux'
 import { useParams } from 'react-router-dom'
 
+import DetailsAlerts from '../../DetailsAlerts/DetailsAlerts'
 import DetailsAnalysis from '../../DetailsAnalysis/DetailsAnalysis'
 import DetailsArtifacts from '../../DetailsArtifacts/DetailsArtifacts'
 import DetailsCode from '../../DetailsCode/DetailsCode'
@@ -43,6 +44,7 @@ import NoData from '../../../common/NoData/NoData'
 import { isJobKindDask, JOB_STEADY_STATES } from '../../Jobs/jobs.util'
 
 import {
+  DETAILS_ALERTS_TAB,
   DETAILS_ANALYSIS_TAB,
   DETAILS_ARTIFACTS_TAB,
   DETAILS_BUILD_LOG_TAB,
@@ -66,8 +68,10 @@ import {
 
 const DetailsTabsContent = ({
   applyChangesRef,
+  detailsPopUpSelectedTab = '',
   formState,
   handlePreview,
+  isDetailsPopUp = false,
   pageData,
   selectedItem,
   setChanges,
@@ -79,12 +83,13 @@ const DetailsTabsContent = ({
   const detailsStore = useSelector(store => store.detailsStore)
   const params = useParams()
 
-  switch (params.tab) {
+  switch (isDetailsPopUp ? detailsPopUpSelectedTab : params.tab) {
     case DETAILS_OVERVIEW_TAB:
       return (
         <DetailsInfo
           detailsStore={detailsStore}
           formState={formState}
+          isDetailsPopUp={isDetailsPopUp}
           pageData={pageData}
           ref={applyChangesRef}
           selectedItem={selectedItem}
@@ -93,7 +98,7 @@ const DetailsTabsContent = ({
         />
       )
     case DETAILS_DRIFT_ANALYSIS_TAB:
-      return <DetailsDriftAnalysis selectedItem={selectedItem}/>
+      return <DetailsDriftAnalysis selectedItem={selectedItem} />
     case DETAILS_PODS_TAB:
       return (
         !isJobKindDask(selectedItem?.labels) && (
@@ -111,19 +116,27 @@ const DetailsTabsContent = ({
         )
       )
     case DETAILS_FEATURES_ANALYSIS_TAB:
-      return <DetailsFeatureAnalysis selectedItem={selectedItem}/>
+      return <DetailsFeatureAnalysis selectedItem={selectedItem} />
     case DETAILS_METRICS_TAB:
       return <DetailsMetrics selectedItem={selectedItem} />
+    case DETAILS_ALERTS_TAB:
+      return <DetailsAlerts selectedItem={selectedItem} />
     case DETAILS_PREVIEW_TAB:
       return <DetailsPreview artifact={selectedItem} handlePreview={handlePreview} />
     case DETAILS_INPUTS_TAB:
-      return <DetailsInputs inputs={selectedItem.inputs} />
+      return (
+        <DetailsInputs
+          inputs={selectedItem.inputs}
+          isDetailsPopUp={isDetailsPopUp}
+        />
+      )
     case DETAILS_ARTIFACTS_TAB:
       return (
         <DetailsArtifacts
           allowSortBy={['name', 'updated']}
           defaultSortBy="name"
           defaultDirection="asc"
+          isDetailsPopUp={isDetailsPopUp}
           iteration={detailsStore.iteration}
           selectedItem={selectedItem}
           setIteration={setIteration}
@@ -159,19 +172,20 @@ const DetailsTabsContent = ({
         <DetailsCode
           code={
             selectedItem.build?.functionSourceCode ??
-            selectedItem.base_spec?.spec?.build?.functionSourceCode ?? ''
+            selectedItem.base_spec?.spec?.build?.functionSourceCode ??
+            ''
           }
         />
       )
     case DETAILS_METADATA_TAB:
     case DETAILS_FEATURES_TAB:
     case DETAILS_RETURNED_FEATURES_TAB:
-      return detailsStore.modelFeatureVectorData.features ??
+      return (detailsStore.modelFeatureVectorData.features ??
         (selectedItem.schema ||
           selectedItem.entities ||
           selectedItem.features ||
           selectedItem.inputs ||
-          selectedItem.outputs) ? (
+          selectedItem.outputs)) ? (
         <DetailsMetadata
           selectedItem={
             selectedItem.schema ||
@@ -214,6 +228,7 @@ const DetailsTabsContent = ({
         <DetailsRequestedFeatures
           changes={detailsStore.changes}
           formState={formState}
+          isDetailsPopUp={isDetailsPopUp}
           selectedItem={selectedItem}
           setChanges={setChanges}
           setChangesData={setChangesData}

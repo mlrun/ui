@@ -17,9 +17,9 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import React, { useState, useMemo, useEffect } from 'react'
+import React, { useState, useEffect } from 'react'
 import { useParams } from 'react-router-dom'
-import { useDispatch, useSelector } from 'react-redux'
+import { useDispatch } from 'react-redux'
 
 import ScheduledJobsTable from '../../../elements/ScheduledJobsTable/ScheduledJobsTable'
 
@@ -27,35 +27,32 @@ import { GROUP_BY_NONE, REQUEST_CANCELED, SCHEDULE_TAB } from '../../../constant
 import { JobsContext } from '../Jobs'
 import { createJobsScheduleTabContent } from '../../../utils/createJobsContent'
 import { setFilters } from '../../../reducers/filtersReducer'
+import { useFiltersFromSearchParams } from '../../../hooks/useFiltersFromSearchParams.hook'
 
 const ScheduledJobs = () => {
   const [dataIsLoaded, setDataIsLoaded] = useState(false)
-  const [schedulesFilterMenu, schedulesFilterMenuModal] = useSelector(state => [
-    state.filtersStore.filterMenu[SCHEDULE_TAB],
-    state.filtersStore.filterMenuModal[SCHEDULE_TAB]
-  ])
   const {
     abortControllerRef,
     scheduledJobs,
     refreshScheduled: refreshJobs,
     requestErrorMessage,
     setJobs,
-    scheduledFiltersConfig
+    scheduledFiltersConfig,
+    tabData
   } = React.useContext(JobsContext)
   const dispatch = useDispatch()
   const params = useParams()
-
-  const tableContent = useMemo(() => createJobsScheduleTabContent(scheduledJobs), [scheduledJobs])
+  const filters = useFiltersFromSearchParams(
+    tabData[SCHEDULE_TAB]?.filtersConfig,
+    tabData[SCHEDULE_TAB]?.parseQueryParamsCallback
+  )
 
   useEffect(() => {
     if (!dataIsLoaded) {
-      refreshJobs({
-        ...schedulesFilterMenu.values,
-        ...schedulesFilterMenuModal.values
-      })
+      refreshJobs(filters)
       setDataIsLoaded(true)
     }
-  }, [dataIsLoaded, refreshJobs, schedulesFilterMenu, schedulesFilterMenuModal.values])
+  }, [dataIsLoaded, filters, refreshJobs])
 
   useEffect(() => {
     const abortControllerRefCurrent = abortControllerRef.current
@@ -74,12 +71,12 @@ const ScheduledJobs = () => {
   return (
     <ScheduledJobsTable
       context={JobsContext}
-      filterMenuName={SCHEDULE_TAB}
+      createTableContent={() => createJobsScheduleTabContent(scheduledJobs)}
+      filters={filters}
       filtersConfig={scheduledFiltersConfig}
       jobs={scheduledJobs}
       requestErrorMessage={requestErrorMessage}
       refreshJobs={refreshJobs}
-      tableContent={tableContent}
     />
   )
 }

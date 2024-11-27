@@ -17,33 +17,27 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import { useMemo, useState } from 'react'
-
-import Table from '../../components/Table/Table'
-import { createAlertRowData } from '../../utils/createAlertsContent'
 import Breadcrumbs from '../../common/Breadcrumbs/Breadcrumbs'
-import PropTypes from 'prop-types'
-import Loader from '../../common/Loader/Loader'
-import NoData from '../../common/NoData/NoData'
-import { getNoDataMessage } from '../../utils/getNoDataMessage'
+import ActionBar from '../ActionBar/ActionBar'
+import ProjectsAlertsFilters from './ProjectsAlertsFilters'
+
 import { ALERTS_FILTERS, ALERTS_PAGE } from '../../constants'
 
+import PropTypes from 'prop-types'
 import AlertsTableRow from '../../elements/AlertsTableRow/AlertsTableRow'
+import { useMemo } from 'react'
+import { createAlertRowData } from '../../utils/createAlertsContent'
+import Table from '../Table/Table'
 
 const ProjectAlertsView = ({
   actionsMenu,
   alerts,
   alertsFiltersConfig,
-  alertsStore,
-  handleRefresh,
-  filtersStore,
+  filters,
   pageData,
   refreshAlertsCallback,
-  requestErrorMessage,
   selectedAlert
 }) => {
-  const [selectedModelEndpoint] = useState({})
-
   const tableContent = useMemo(() => {
     return alerts.activations.map(alert => createAlertRowData(alert))
   }, [alerts.activations])
@@ -56,54 +50,41 @@ const ProjectAlertsView = ({
         </div>
         <div className="content">
           <div className="table-container">
-            {/*<div className="content__action-bar-wrapper">*/}
-            {/*  <ActionBar*/}
-            {/*    filterMenuName={ALERTS_FILTERS}*/}
-            {/*    filtersConfig={alertsFiltersConfig}*/}
-            {/*    handleRefresh={refreshAlertsCallback}*/}
-            {/*    page={ALERTS_PAGE}*/}
-            {/*    withRefreshButton*/}
-            {/*    withoutExpandButton*/}
-            {/*  >*/}
-            {/*    <ProjectsAlertsFilters />*/}
-            {/*  </ActionBar>*/}
-            {/*</div>*/}
-            {alertsStore.loading ? (
-              <Loader />
-            ) : tableContent.length === 0 ? (
-              <NoData
-                message={getNoDataMessage(
-                  filtersStore,
-                  alertsFiltersConfig,
-                  requestErrorMessage,
-                  ALERTS_PAGE,
-                  null,
-                  ALERTS_FILTERS
-                )}
-              />
-            ) : (
-              <Table
-                actionsMenu={actionsMenu}
-                pageData={pageData}
-                retryRequest={handleRefresh}
-                selectedItem={selectedAlert}
-                tableClassName="model-endpoints-table"
-                hideActionsMenu
-                tableHeaders={tableContent[0]?.content ?? []}
+            <div className="content__action-bar-wrapper">
+              <ActionBar
+                autoRefreshIsStopped={true}
+                filterMenuName={ALERTS_FILTERS}
+                filtersConfig={alertsFiltersConfig}
+                filters={filters}
+                handleRefresh={refreshAlertsCallback}
+                page={ALERTS_PAGE}
+                withRefreshButton
+                withoutExpandButton
               >
-                {tableContent.map((tableItem, index) => (
-                  <AlertsTableRow
-                    key={index}
-                    hideActionsMenu
-                    handleSelectItem={() => {}}
-                    rowIndex={index}
-                    rowItem={tableItem}
-                    actionsMenu={[]}
-                    selectedItem={selectedModelEndpoint}
-                  />
-                ))}
-              </Table>
-            )}
+                <ProjectsAlertsFilters />
+              </ActionBar>
+            </div>
+            <Table
+              actionsMenu={actionsMenu}
+              pageData={pageData}
+              retryRequest={refreshAlertsCallback}
+              selectedItem={selectedAlert}
+              tableClassName="model-endpoints-table"
+              hideActionsMenu
+              tableHeaders={tableContent[0]?.content ?? []}
+            >
+              {tableContent.map((tableItem, index) => (
+                <AlertsTableRow
+                  key={index}
+                  hideActionsMenu
+                  handleSelectItem={() => {}}
+                  rowIndex={index}
+                  rowItem={tableItem}
+                  actionsMenu={[]}
+                  selectedItem={selectedAlert}
+                />
+              ))}
+            </Table>
           </div>
         </div>
       </div>
@@ -112,10 +93,8 @@ const ProjectAlertsView = ({
 }
 
 ProjectAlertsView.propTypes = {
-  actionsMenu: PropTypes.func.isRequired,
-  alertsStore: PropTypes.object.isRequired,
-  pageData: PropTypes.object.isRequired,
-  refreshAlertsCallback: PropTypes.func.isRequired,
-  selectedAlert: PropTypes.object.isRequired
+  alertsFiltersConfig: PropTypes.object.isRequired,
+  filters: PropTypes.object.isRequired,
+  refreshAlertsCallback: PropTypes.func.isRequired
 }
 export default ProjectAlertsView

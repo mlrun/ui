@@ -17,9 +17,9 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import React, { useEffect, useMemo, useRef, useState } from 'react'
 import { useParams } from 'react-router-dom'
-import { useDispatch, useSelector } from 'react-redux'
+import { useDispatch } from 'react-redux'
 
 import JobsTable from '../../../elements/JobsTable/JobsTable'
 import TableTop from '../../../elements/TableTop/TableTop'
@@ -30,14 +30,11 @@ import { createJobsMonitorTabContent } from '../../../utils/createJobsContent'
 import { fetchInitialJobs } from './monitorJobs.util'
 import { setFilters } from '../../../reducers/filtersReducer'
 import { useMode } from '../../../hooks/mode.hook'
+import { useFiltersFromSearchParams } from '../../../hooks/useFiltersFromSearchParams.hook'
+import { getSavedSearchParams } from '../../../utils/filter.util'
 
 const MonitorJobs = () => {
   const [selectedJob, setSelectedJob] = useState({})
-  const [jobsFilterMenu, jobsFilterMenuModal, saveFilters] = useSelector(state => [
-    state.filtersStore.filterMenu[MONITOR_JOBS_TAB],
-    state.filtersStore.filterMenuModal[MONITOR_JOBS_TAB],
-    state.filtersStore.saveFilters
-  ])
   const params = useParams()
   const dispatch = useDispatch()
   const { isStagingMode } = useMode()
@@ -45,20 +42,23 @@ const MonitorJobs = () => {
     abortControllerRef,
     abortJobRef,
     abortingJobs,
-    dateFilter,
     jobRuns,
     jobs,
     jobsFiltersConfig,
     refreshJobs,
     requestErrorMessage,
-    selectedRunProject,
     setAbortingJobs,
     setJobRuns,
     setJobs,
-    setSelectedRunProject,
-    terminateAbortTasksPolling
+    terminateAbortTasksPolling,
+    tabData
   } = React.useContext(JobsContext)
   const jobsAreInitializedRef = useRef(false)
+
+  const filters = useFiltersFromSearchParams(
+    tabData[MONITOR_JOBS_TAB]?.filtersConfig,
+    tabData[MONITOR_JOBS_TAB]?.parseQueryParamsCallback
+  )
 
   const tableContent = useMemo(
     () =>
@@ -66,37 +66,20 @@ const MonitorJobs = () => {
     [isStagingMode, jobRuns, jobs, params.jobName]
   )
 
-  const isJobDataEmpty = useCallback(
-    () => jobs.length === 0 && ((!params.jobName && jobRuns.length === 0) || params.jobName),
-    [jobRuns.length, jobs.length, params.jobName]
-  )
-
   useEffect(() => {
     fetchInitialJobs(
-      {
-        saveFilters,
-        ...jobsFilterMenu.values,
-        ...jobsFilterMenuModal.values
-      },
+      filters,
       selectedJob,
-      dateFilter,
       params.jobId,
       refreshJobs,
-      setFilters,
-      dispatch,
-      isJobDataEmpty,
       jobsAreInitializedRef
     )
   }, [
-    dateFilter,
     dispatch,
-    isJobDataEmpty,
-    jobsFilterMenu,
-    jobsFilterMenuModal.values,
+    filters,
     params.jobId,
     params.projectName,
     refreshJobs,
-    saveFilters,
     selectedJob
   ])
 
@@ -126,7 +109,7 @@ const MonitorJobs = () => {
     <>
       {params.jobName && (
         <TableTop
-          link={`/projects/${params.projectName}/jobs/${MONITOR_JOBS_TAB}`}
+          link={`/projects/${params.projectName}/jobs/${MONITOR_JOBS_TAB}${getSavedSearchParams(window.location.search)}`}
           text={params.jobName}
         />
       )}
@@ -134,16 +117,14 @@ const MonitorJobs = () => {
         abortingJobs={abortingJobs}
         ref={{ abortJobRef }}
         context={JobsContext}
-        filterMenuName={MONITOR_JOBS_TAB}
+        filters={filters}
         filtersConfig={jobsFiltersConfig}
         jobRuns={jobRuns}
         jobs={jobs}
         requestErrorMessage={requestErrorMessage}
-        navigateLink={`/projects/${params.projectName}/jobs/${MONITOR_JOBS_TAB}`}
+        navigateLink={`/projects/${params.projectName}/jobs/${MONITOR_JOBS_TAB}${window.location.search}`}
         refreshJobs={refreshJobs}
         selectedJob={selectedJob}
-        selectedRunProject={selectedRunProject}
-        setSelectedRunProject={setSelectedRunProject}
         setAbortingJobs={setAbortingJobs}
         setJobRuns={setJobRuns}
         setJobs={setJobs}

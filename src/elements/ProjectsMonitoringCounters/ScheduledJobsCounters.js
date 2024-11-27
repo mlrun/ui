@@ -18,7 +18,7 @@ under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
 import React, { useMemo } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
+import { useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 
 import StatsCard from '../../common/StatsCard/StatsCard'
@@ -32,7 +32,6 @@ import { ReactComponent as ClockIcon } from 'igz-controls/images/clock.svg'
 import './projectsMonitoringCounters.scss'
 
 const ScheduledJobsCounters = () => {
-  const dispatch = useDispatch()
   const navigate = useNavigate()
   const projectStore = useSelector(store => store.projectStore)
 
@@ -41,10 +40,9 @@ const ScheduledJobsCounters = () => {
       generateMonitoringStats(
         projectStore.jobsMonitoringData.scheduled,
         navigate,
-        dispatch,
         JOBS_MONITORING_SCHEDULED_TAB
       ),
-    [dispatch, navigate, projectStore.jobsMonitoringData.scheduled]
+    [navigate, projectStore.jobsMonitoringData.scheduled]
   )
 
   return (
@@ -74,7 +72,13 @@ const ScheduledJobsCounters = () => {
             {projectStore.projectsSummary.loading ? (
               <Loader section small secondary />
             ) : (
-              scheduledStats.jobs.counter
+              <span
+                className="stats__link"
+                onClick={scheduledStats.all.link}
+                data-testid="scheduled_total_see_all"
+              >
+                {scheduledStats.jobs.counter}{' '}
+              </span>
             )}
           </span>
         </StatsCard.Col>
@@ -84,49 +88,19 @@ const ScheduledJobsCounters = () => {
             {projectStore.projectsSummary.loading ? (
               <Loader section small secondary />
             ) : (
-              scheduledStats.workflows.counter
-            )}
-          </span>
-        </StatsCard.Col>
-        <StatsCard.Col>
-          <h6 className="stats__subtitle">Total</h6>
-          <span className="stats__counter">
-            {projectStore.projectsSummary.loading ? (
-              <Loader section small secondary />
-            ) : (
-              scheduledStats.all.counter
+              <span
+                className="stats__link"
+                onClick={scheduledStats.workflows.link}
+                data-testid="scheduled_wf_see_all"
+              >
+                {scheduledStats.workflows.counter}{' '}
+              </span>
             )}
           </span>
         </StatsCard.Col>
       </StatsCard.Row>
       <StatsCard.Row>
-        <StatsCard.Col>
-          <span
-            className="link"
-            onClick={scheduledStats.jobs.link}
-            data-testid="scheduled_jobs_see_all"
-          >
-            See all
-          </span>
-        </StatsCard.Col>
-        <StatsCard.Col>
-          <span
-            className="link"
-            onClick={scheduledStats.workflows.link}
-            data-testid="scheduled_wf_see_all"
-          >
-            See all
-          </span>
-        </StatsCard.Col>
-        <StatsCard.Col>
-          <span
-            className="link"
-            onClick={scheduledStats.all.link}
-            data-testid="scheduled_total_see_all"
-          >
-            See all
-          </span>
-        </StatsCard.Col>
+        <StatsCard.Col/>
       </StatsCard.Row>
     </StatsCard>
   )

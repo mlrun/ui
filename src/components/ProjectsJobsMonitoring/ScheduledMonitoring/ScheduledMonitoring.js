@@ -17,40 +17,35 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import React, { useEffect, useMemo, useState } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
+import React, { useEffect, useState } from 'react'
+import { useDispatch } from 'react-redux'
 
 import ScheduledJobsTable from '../../../elements/ScheduledJobsTable/ScheduledJobsTable'
 import { ProjectJobsMonitoringContext } from '../ProjectsJobsMonitoring'
 
 import { createScheduleJobsMonitoringContent } from '../../../utils/createJobsContent'
 import { JOBS_MONITORING_SCHEDULED_TAB } from '../../../constants'
+import { useFiltersFromSearchParams } from '../../../hooks/useFiltersFromSearchParams.hook'
 
 const ScheduledMonitoring = () => {
   const [dataIsLoaded, setDataIsLoaded] = useState(false)
   const dispatch = useDispatch()
-  const [schedulesFilterMenu, schedulesFilterMenuModal] = useSelector(state => [
-    state.filtersStore.filterMenu[JOBS_MONITORING_SCHEDULED_TAB],
-    state.filtersStore.filterMenuModal[JOBS_MONITORING_SCHEDULED_TAB]
-  ])
   const {
     requestErrorMessage,
     refreshScheduled,
     scheduledFiltersConfig,
     scheduledJobs,
-    setScheduledJobs
+    setScheduledJobs,
+    tabData
   } = React.useContext(ProjectJobsMonitoringContext)
 
-  const tableContent = useMemo(() => {
-    return createScheduleJobsMonitoringContent(scheduledJobs)
-  }, [scheduledJobs])
+  const filters = useFiltersFromSearchParams(
+    tabData[JOBS_MONITORING_SCHEDULED_TAB]?.filtersConfig,
+    tabData[JOBS_MONITORING_SCHEDULED_TAB]?.parseQueryParamsCallback
+  )
 
   useEffect(() => {
     if (!dataIsLoaded) {
-      let filters = {
-        ...schedulesFilterMenu.values,
-        ...schedulesFilterMenuModal.values
-      }
       refreshScheduled(filters)
       setDataIsLoaded(true)
     }
@@ -58,8 +53,7 @@ const ScheduledMonitoring = () => {
     dataIsLoaded,
     dispatch,
     refreshScheduled,
-    schedulesFilterMenu.values,
-    schedulesFilterMenuModal.values
+    filters
   ])
 
   useEffect(() => {
@@ -72,17 +66,14 @@ const ScheduledMonitoring = () => {
   return (
     <ScheduledJobsTable
       context={ProjectJobsMonitoringContext}
+      createTableContent={() => createScheduleJobsMonitoringContent(scheduledJobs)}
       filtersConfig={scheduledFiltersConfig}
-      filterMenuName={JOBS_MONITORING_SCHEDULED_TAB}
+      filters={filters}
       jobs={scheduledJobs}
       requestErrorMessage={requestErrorMessage}
       refreshJobs={() =>
-        refreshScheduled({
-          ...schedulesFilterMenu.values,
-          ...schedulesFilterMenuModal.values
-        })
+        refreshScheduled(filters)
       }
-      tableContent={tableContent}
     />
   )
 }

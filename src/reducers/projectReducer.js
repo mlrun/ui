@@ -79,6 +79,7 @@ import {
   FETCH_PROJECT_SECRETS_BEGIN,
   FETCH_PROJECT_SECRETS_FAILURE,
   FETCH_PROJECT_SECRETS_SUCCESS,
+  SET_PROJECT_TOTAL_ALERTS,
   SET_JOBS_MONITORING_DATA,
   SET_MLRUN_IS_UNHEALTHY,
   SET_MLRUN_UNHEALTHY_RETRYING,
@@ -91,7 +92,8 @@ const initialState = {
   jobsMonitoringData: {
     jobs: {},
     workflows: {},
-    scheduled: {}
+    scheduled: {},
+    alerts: {}
   },
   loading: false,
   newProject: {
@@ -161,6 +163,7 @@ const initialState = {
       loading: false
     }
   },
+  projectTotalAlerts: {},
   projects: [],
   projectsNames: {
     error: null,
@@ -782,6 +785,14 @@ const projectReducer = (state = initialState, { type, payload }) => {
         ...state,
         newProject: {
           error: null
+        }
+      }
+    case SET_PROJECT_TOTAL_ALERTS:
+      return {
+        ...state,
+        projectTotalAlerts: {
+          ...state.projectTotalAlerts,
+          ...payload
         }
       }
     case SET_DELETING_PROJECTS:

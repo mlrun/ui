@@ -22,6 +22,7 @@ import { capitalize, isNil, isNumber } from 'lodash'
 import DetailsInfoItem from '../../elements/DetailsInfoItem/DetailsInfoItem'
 
 import { Tip } from 'igz-controls/components'
+import JobPopUp from '../../elements/DetailsPopUp/JobPopUp/JobPopUp'
 
 import {
   FEATURE_STORE_PAGE,
@@ -29,7 +30,6 @@ import {
   FUNCTION_TYPE_APPLICATION,
   MODELS_PAGE,
   MODEL_ENDPOINTS_TAB,
-  MONITOR_JOBS_TAB,
   MLRUN_STORAGE_INPUT_PATH_SCHEME
 } from '../../constants'
 import { formatDatetime, parseUri } from '../../utils'
@@ -38,7 +38,7 @@ import { getLimitsGpuType } from '../../elements/FormResourcesUnits/formResource
 import { isEveryObjectValueEmpty } from '../../utils/isEveryObjectValueEmpty'
 import { roundFloats } from '../../utils/roundFloats'
 import { generateFunctionPriorityLabel } from '../../utils/generateFunctionPriorityLabel'
-import { generateStoreResourceLink } from '../../utils/generateStoreResourceLink'
+import { openPopUp } from 'igz-controls/utils/common.util'
 
 const DRIFT_DETECTED_THRESHOLD = 0.7
 const POSSIBLE_DRIFT_THRESHOLD = 0.5
@@ -46,7 +46,7 @@ const POSSIBLE_DRIFT_THRESHOLD = 0.5
 export const generateArtifactsInfoContent = (page, pageTab, selectedItem) => {
   if (pageTab === MODEL_ENDPOINTS_TAB) {
     const { name, tag } =
-    (selectedItem?.metadata?.uid ?? '').match(/^(?<name>.*?):(?<tag>.*)$/)?.groups ?? {}
+      (selectedItem?.metadata?.uid ?? '').match(/^(?<name>.*?):(?<tag>.*)$/)?.groups ?? {}
     return [tag, name]
   } else
     return [
@@ -58,7 +58,7 @@ export const generateArtifactsInfoContent = (page, pageTab, selectedItem) => {
       selectedItem.target_path,
       selectedItem.tree,
       formatDatetime(selectedItem.updated, 'N/A'),
-      page === MODELS_PAGE ? selectedItem.framework ?? '' : null,
+      page === MODELS_PAGE ? (selectedItem.framework ?? '') : null,
       selectedItem.labels ?? [],
       selectedItem.sources
     ].filter(content => !isNil(content))
@@ -147,11 +147,11 @@ const generateModelEndpointDriftContent = modelEndpoint => {
         isNumber(modelEndpoint.status?.drift_measures?.hellinger_mean) &&
         isNumber(modelEndpoint.status?.drift_measures?.tvd_mean)
           ? roundFloats(
-            (modelEndpoint.status?.drift_measures?.hellinger_mean +
-              modelEndpoint.status?.drift_measures?.tvd_mean) /
-            2,
-            2
-          )
+              (modelEndpoint.status?.drift_measures?.hellinger_mean +
+                modelEndpoint.status?.drift_measures?.tvd_mean) /
+                2,
+              2
+            )
           : '-'
     },
     {
@@ -184,9 +184,9 @@ export const generateConfigurationDetailsInfo = selectedFunction => {
             chipsData={
               item.chipVariant
                 ? {
-                  chips: item.value,
-                  chipOptions: getChipOptions(item.chipVariant)
-                }
+                    chips: item.value,
+                    chipOptions: getChipOptions(item.chipVariant)
+                  }
                 : null
             }
           />
@@ -203,28 +203,34 @@ export const generateDriftDetailsInfo = modelEndpoint => {
 
   return modelEndpoint?.status?.drift_measures
     ? modelEndpointContent.map(item => {
-      return (
-        <li className="details-item" key={item.id}>
-          <div className="details-item__header">{item.label}:</div>
-          <DetailsInfoItem info={item.value} />
-        </li>
-      )
-    })
+        return (
+          <li className="details-item" key={item.id}>
+            <div className="details-item__header">{item.label}:</div>
+            <DetailsInfoItem info={item.value} />
+          </li>
+        )
+      })
     : []
 }
 
-export const generateProducerDetailsInfo = selectedItem => {
+export const generateProducerDetailsInfo = (selectedItem, isDetailsPopUp) => {
   if (!isEveryObjectValueEmpty(selectedItem) && selectedItem.producer) {
     return Object.entries(selectedItem.producer).map(([key, value]) => {
-      let url = ''
+      let producerData = {}
+      let isUri = key === 'uri'
+      const handleOpenJobDetails = jobData => {
+        openPopUp(JobPopUp, { jobData })
+      }
 
-      if (key === 'uri') {
+      if (isUri) {
         // value is in the form of: project/uid-iteration
         const [project, rest] = value.split('/')
-        const [uid] = rest?.split('-') ?? []
+        const [uid, iter] = rest?.split('-') ?? []
 
-        if (uid) {
-          url = `/projects/${project}/jobs/${MONITOR_JOBS_TAB}/${uid}/overview`
+        producerData = {
+          project,
+          uid,
+          iter
         }
       }
 
@@ -239,7 +245,14 @@ export const generateProducerDetailsInfo = selectedItem => {
               />
             )}
           </div>
-          <DetailsInfoItem item={{ link: url }} info={value} />
+          <DetailsInfoItem
+            item={{
+              shouldPopUp: isUri,
+              handleClick: () => isUri && handleOpenJobDetails(producerData)
+            }}
+            info={value}
+            isDetailsPopUp={isDetailsPopUp}
+          />
         </li>
       )
     })
@@ -253,7 +266,7 @@ export const generateSourcesDetailsInfo = (selectedItem, projectName) => {
 
     source[key] = {
       value: value,
-      link: value.startsWith(MLRUN_STORAGE_INPUT_PATH_SCHEME) ? generateStoreResourceLink(parsedUri, projectName) : '',
+      parsedUri: value.startsWith(MLRUN_STORAGE_INPUT_PATH_SCHEME) ? parsedUri : null
     }
 
     return { ...acc, ...source }
@@ -261,5 +274,8 @@ export const generateSourcesDetailsInfo = (selectedItem, projectName) => {
 
   return Array.isArray(selectedItem.sources)
     ? selectedItem.sources.reduce((acc, cur) => reduceHandler(acc, [cur.name, cur.path]), {})
-    : Object.entries(selectedItem.sources || {}).reduce((acc, entries) => reduceHandler(acc, entries), {})
+    : Object.entries(selectedItem.sources || {}).reduce(
+        (acc, entries) => reduceHandler(acc, entries),
+        {}
+      )
 }

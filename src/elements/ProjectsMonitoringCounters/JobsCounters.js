@@ -18,9 +18,8 @@ under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
 import React, { useMemo } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
+import { useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
-import { upperFirst } from 'lodash'
 
 import Loader from '../../common/Loader/Loader'
 import StatsCard from '../../common/StatsCard/StatsCard'
@@ -34,7 +33,6 @@ import { ReactComponent as ClockIcon } from 'igz-controls/images/clock.svg'
 import './projectsMonitoringCounters.scss'
 
 const JobsCounters = () => {
-  const dispatch = useDispatch()
   const navigate = useNavigate()
   const projectStore = useSelector(store => store.projectStore)
 
@@ -43,10 +41,9 @@ const JobsCounters = () => {
       generateMonitoringStats(
         projectStore.jobsMonitoringData.jobs,
         navigate,
-        dispatch,
         JOBS_MONITORING_JOBS_TAB
       ),
-    [dispatch, navigate, projectStore.jobsMonitoringData.jobs]
+    [navigate, projectStore.jobsMonitoringData.jobs]
   )
 
   return (
@@ -59,40 +56,36 @@ const JobsCounters = () => {
       </StatsCard.Header>
       <StatsCard.Row>
         <StatsCard.Col>
-          <>
-            <h6 className="stats__subtitle">{upperFirst(JOBS_MONITORING_JOBS_TAB)}</h6>
-            <span className="stats__counter">
-              {projectStore.projectsSummary.loading ? (
-                <Loader section small secondary />
-              ) : (
-                jobStats.all.counter
-              )}
-            </span>
-            <ul className="projects-monitoring-legend__status">
-              {jobStats.counters.map(({ counter, link, statusClass, tooltip }) => (
-                <li className="link" onClick={link} key={`${statusClass}-jobs`}>
-                  {projectStore.projectsSummary.loading ? (
-                    <Loader section small secondary />
-                  ) : (
-                    <Tooltip textShow template={<TextTooltipTemplate text={tooltip} />}>
-                      <span>
-                        {counter}
-                        <i className={`state-${statusClass}`} />
-                      </span>
-                    </Tooltip>
-                  )}
-                </li>
-              ))}
-            </ul>
-          </>
+          <div className="stats__placeholder-subtitle" />
+          <span className="stats__counter">
+            {projectStore.projectsSummary.loading ? (
+              <Loader section small secondary />
+            ) : (
+              <span className="stats__link" onClick={jobStats.all.link} data-testid="jobs_see_all">
+                {jobStats.all.counter}
+              </span>
+            )}
+          </span>
+          <ul className="projects-monitoring-legend__status">
+            {jobStats.counters.map(({ counter, link, statusClass, tooltip }) => (
+              <li className="link" onClick={link} key={`${statusClass}-jobs`}>
+                {projectStore.projectsSummary.loading ? (
+                  <Loader section small secondary />
+                ) : (
+                  <Tooltip textShow template={<TextTooltipTemplate text={tooltip} />}>
+                    <span>
+                      {counter}
+                      <i className={`state-${statusClass}`} />
+                    </span>
+                  </Tooltip>
+                )}
+              </li>
+            ))}
+          </ul>
         </StatsCard.Col>
       </StatsCard.Row>
       <StatsCard.Row>
-        <StatsCard.Col>
-          <span className="link" onClick={jobStats.all.link} data-testid="jobs_see_all">
-            See all
-          </span>
-        </StatsCard.Col>
+        <StatsCard.Col />
       </StatsCard.Row>
     </StatsCard>
   )

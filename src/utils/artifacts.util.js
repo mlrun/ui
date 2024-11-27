@@ -210,7 +210,7 @@ export const setFullSelectedArtifact = debounce(
           setSelectedArtifact(artifact)
         })
         .catch(error => {
-          navigate(`/projects/${projectName}/${tab}`, { replace: true })
+          navigate(`/projects/${projectName}/${tab}${window.location.search}`, { replace: true })
           showArtifactErrorNotification(dispatch, error, tab)
         })
     }
@@ -248,7 +248,7 @@ const getArtifactFetchMethod = tab => {
         : null
 }
 
-const showArtifactErrorNotification = (dispatch, error, tab) => {
+export const showArtifactErrorNotification = (dispatch, error, tab) => {
   const customArtifactErrorMsg =
     tab === DATASETS_TAB
       ? 'Failed to retrieve dataset data'

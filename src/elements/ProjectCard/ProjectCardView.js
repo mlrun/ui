@@ -30,11 +30,12 @@ import { Tooltip, TextTooltipTemplate } from 'igz-controls/components'
 
 import { getTimeElapsedByDate } from '../../utils'
 
+import { ReactComponent as Alerts } from 'igz-controls/images/alerts.svg'
 import { ReactComponent as ClockIcon } from 'igz-controls/images/clock.svg'
 
 import './projectCard.scss'
 
-const ProjectCardView = React.forwardRef(({ actionsMenu, project, statistics }, ref) => {
+const ProjectCardView = React.forwardRef(({ actionsMenu, alert, project, statistics }, ref) => {
   const cardRef = useRef()
   const chipRef = useRef()
   const navigate = useNavigate()
@@ -67,6 +68,12 @@ const ProjectCardView = React.forwardRef(({ actionsMenu, project, statistics }, 
                 {project.metadata.name}
               </Tooltip>
 
+              {alert ? (
+                <div className="project-card__alert">
+                  <Alerts className="project-card__alert-icon" />
+                  <div className="project-card__alert-text">{alert.toLocaleString()}</div>
+                </div>
+              ) : null}
               <div className="project-card__info" data-testid="project-card__created">
                 <ClockIcon className="project-card__info-icon" />
                 <span>Created {getTimeElapsedByDate(project.metadata.created)}</span>
@@ -116,6 +123,7 @@ const ProjectCardView = React.forwardRef(({ actionsMenu, project, statistics }, 
 
 ProjectCardView.propTypes = {
   actionsMenu: PropTypes.shape({}).isRequired,
+  alert: PropTypes.number.isRequired,
   project: PropTypes.shape({}).isRequired,
   statistics: PropTypes.shape({}).isRequired
 }

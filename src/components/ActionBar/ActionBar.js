@@ -24,9 +24,9 @@ import classnames from 'classnames'
 import { Field } from 'react-final-form'
 import { Form } from 'react-final-form'
 import { createForm } from 'final-form'
-import { isEmpty, isEqual } from 'lodash'
+import { isEmpty, isEqual, isNil, mapValues, pickBy } from 'lodash'
 import { useDispatch, useSelector } from 'react-redux'
-import { useNavigate, useParams } from 'react-router-dom'
+import { useNavigate, useParams, useSearchParams } from 'react-router-dom'
 
 import DatePicker from '../../common/DatePicker/DatePicker'
 import FilterMenuModal from '../FilterMenuModal/FilterMenuModal'
@@ -37,8 +37,6 @@ import {
   AUTO_REFRESH,
   AUTO_REFRESH_ID,
   DATES_FILTER,
-  FILTER_MENU,
-  FILTER_MENU_MODAL,
   GROUP_BY_NAME,
   GROUP_BY_NONE,
   NAME_FILTER,
@@ -47,8 +45,9 @@ import {
 } from '../../constants'
 import detailsActions from '../../actions/details'
 import { FILTERS_CONFIG } from '../../types'
-import { resetFilter, setFilters, setFiltersValues } from '../../reducers/filtersReducer'
+import { setFilters } from '../../reducers/filtersReducer'
 import { setFieldState } from 'igz-controls/utils/form.util'
+import { CUSTOM_RANGE_DATE_OPTION } from '../../utils/datePicker.util'
 
 import { ReactComponent as CollapseIcon } from 'igz-controls/images/collapse.svg'
 import { ReactComponent as ExpandIcon } from 'igz-controls/images/expand.svg'
@@ -61,7 +60,7 @@ const ActionBar = ({
   cancelRequest = null,
   children,
   expand,
-  filterMenuName,
+  filters,
   filtersConfig,
   handleExpandAll,
   handleRefresh,
@@ -76,32 +75,47 @@ const ActionBar = ({
 }) => {
   const [autoRefresh, setAutoRefresh] = useState(autoRefreshIsEnabled)
   const filtersStore = useSelector(store => store.filtersStore)
-  const filterMenu = useSelector(store => store.filtersStore[FILTER_MENU][filterMenuName]?.values ?? {})
-  const filterMenuModal = useSelector(
-    store => store.filtersStore[FILTER_MENU_MODAL][filterMenuName]
-  )
-  const filterMenuRef = useRef(null)
+  const formInitialValuesAreSetRef = useRef(false)
   const changes = useSelector(store => store.detailsStore.changes)
   const dispatch = useDispatch()
   const params = useParams()
   const navigate = useNavigate()
+  const [, setSearchParams] = useSearchParams()
 
   const actionBarClassNames = classnames('action-bar', hidden && 'action-bar_hidden')
+
+  const getFilterMenu = useCallback(
+    isModal => {
+      return filters && filtersConfig
+        ? pickBy(
+            filters,
+            (_, filerName) =>
+              filerName in filtersConfig && Boolean(filtersConfig[filerName].isModal) === isModal
+          )
+        : {}
+    },
+    [filters, filtersConfig]
+  )
+
+  const filterMenu = useMemo(() => getFilterMenu(false), [getFilterMenu])
+  const filterMenuModal = useMemo(() => getFilterMenu(true), [getFilterMenu])
 
   const formInitialValues = useMemo(() => {
     const initialValues = {
       [AUTO_REFRESH_ID]: autoRefreshIsEnabled
     }
 
-    if (!filterMenuRef.current) {
-      for (let filterType in filterMenu) {
-        initialValues[filterType] = filterMenu[filterType]
+    if (!formInitialValuesAreSetRef.current) {
+      for (const [filterName, filterConfig] of Object.entries(filtersConfig)) {
+        if (!filterConfig.isModal) {
+          initialValues[filterName] = filterConfig.initialValue
+        }
       }
-      filterMenuRef.current = filterMenu
+      formInitialValuesAreSetRef.current = true
     }
 
     return initialValues
-  }, [autoRefreshIsEnabled, filterMenu])
+  }, [autoRefreshIsEnabled, filtersConfig])
 
   const formRef = React.useRef(
     createForm({
@@ -112,12 +126,11 @@ const ActionBar = ({
   )
 
   const filterMenuModalInitialState = useMemo(() => {
-    return (
-      filterMenuModal?.initialValues && {
-        ...filterMenuModal.initialValues
-      }
+    return mapValues(
+      pickBy(filtersConfig, filterConfig => filterConfig.isModal),
+      filterConfig => filterConfig.initialValue
     )
-  }, [filterMenuModal?.initialValues])
+  }, [filtersConfig])
 
   const filtersHelper = useCallback(async () => {
     let handleChangeFilters = Promise.resolve(true)
@@ -138,9 +151,47 @@ const ActionBar = ({
     return handleChangeFilters
   }, [changes.counter, dispatch])
 
+  const saveFilters = useCallback(
+    filtersForSaving => {
+      for (const [filterName, filterValue] of Object.entries(filtersForSaving)) {
+        if (
+          !isNil(filtersConfig[filterName]?.initialValue) &&
+          !isEqual(filtersConfig[filterName].initialValue, filterValue)
+        ) {
+          let newFilterValue = filterValue
+
+          if (filterName === DATES_FILTER) {
+            newFilterValue =
+              filterValue.initialSelectedOptionId === CUSTOM_RANGE_DATE_OPTION
+                ? filterValue.value.map(date => new Date(date).getTime()).join('-')
+                : filterValue.initialSelectedOptionId
+          }
+
+          setSearchParams(
+            prevSearchParams => {
+              prevSearchParams.set(filterName, newFilterValue)
+              return prevSearchParams
+            },
+            { replace: true }
+          )
+        } else {
+          setSearchParams(
+            prevSearchParams => {
+              prevSearchParams.delete(filterName)
+              return prevSearchParams
+            },
+            { replace: true }
+          )
+        }
+      }
+    },
+    [filtersConfig, setSearchParams]
+  )
+
   const applyChanges = useCallback(
-    async (formValues, filterMenuModal) => {
+    async (formValues, filters) => {
       const filtersHelperResult = await filtersHelper(changes, dispatch)
+      const newFilters = { ...filters, ...formValues }
 
       if (filtersHelperResult) {
         if (params.name || params.funcName || params.hash) {
@@ -148,46 +199,40 @@ const ActionBar = ({
         }
 
         if (
-          (filterMenuModal.tag === TAG_FILTER_ALL_ITEMS || isEmpty(filterMenuModal.iter)) &&
+          (filters.tag === TAG_FILTER_ALL_ITEMS || isEmpty(filters.iter)) &&
           filtersStore.groupBy === GROUP_BY_NONE
         ) {
           dispatch(setFilters({ groupBy: GROUP_BY_NAME }))
         } else if (
           filtersStore.groupBy === GROUP_BY_NAME &&
-          filterMenuModal.tag !== TAG_FILTER_ALL_ITEMS &&
-          !isEmpty(filterMenuModal.iter)
+          filters.tag !== TAG_FILTER_ALL_ITEMS &&
+          !isEmpty(filters.iter)
         ) {
           dispatch(setFilters({ groupBy: GROUP_BY_NONE }))
         }
 
-        dispatch(
-          setFiltersValues({
-            name: filterMenuName,
-            value: { ...formValues }
-          })
-        )
-
+        saveFilters(newFilters)
         removeSelectedItem && dispatch(removeSelectedItem({}))
         setSelectedRowData && setSelectedRowData({})
         handleExpandAll && handleExpandAll(true)
-        handleRefresh({ ...formValues, ...filterMenuModal })
+        handleRefresh(newFilters)
       }
     },
     [
+      filtersHelper,
       changes,
       dispatch,
-      filterMenuName,
-      filtersHelper,
-      filtersStore.groupBy,
-      handleExpandAll,
-      handleRefresh,
-      navigate,
-      navigateLink,
+      saveFilters,
       params.name,
       params.funcName,
       params.hash,
+      filtersStore.groupBy,
       removeSelectedItem,
-      setSelectedRowData
+      setSelectedRowData,
+      handleExpandAll,
+      handleRefresh,
+      navigate,
+      navigateLink
     ]
   )
 
@@ -196,26 +241,14 @@ const ActionBar = ({
       if (changes.counter > 0 && cancelRequest) {
         cancelRequest(REQUEST_CANCELED)
       } else {
-        dispatch(
-          setFiltersValues({
-            name: filterMenuName,
-            value: { ...formState.values }
-          })
-        )
+        saveFilters(formState.values)
         handleRefresh({
-          ...formState.values,
-          ...filtersStore.filterMenuModal[filterMenuName]?.values ?? {}
+          ...filters,
+          ...formState.values
         })
       }
     },
-    [
-      cancelRequest,
-      changes.counter,
-      dispatch,
-      filterMenuName,
-      filtersStore.filterMenuModal,
-      handleRefresh
-    ]
+    [cancelRequest, changes.counter, filters, handleRefresh, saveFilters]
   )
 
   const handleDateChange = (dates, isPredefined, optionId, input, formState) => {
@@ -233,23 +266,15 @@ const ActionBar = ({
 
     const newFilterValues = { ...formState.values, [DATES_FILTER]: selectedDate }
 
-    dispatch(
-      setFiltersValues({
-        name: filterMenuName,
-        value: newFilterValues
-      })
-    )
-
-    applyChanges(newFilterValues, filterMenuModal.values)
+    applyChanges(newFilterValues, filterMenuModal)
     input.onChange(selectedDate)
   }
 
   useLayoutEffect(() => {
     return () => {
-      filterMenuRef.current = null
-      dispatch(resetFilter(filterMenuName))
+      formInitialValuesAreSetRef.current = false
     }
-  }, [params.projectName, params.name, page, tab, dispatch, filterMenuName])
+  }, [params.projectName, params.name, page, tab])
 
   useEffect(() => {
     if (!isEqual(formRef.current?.getState().values, filterMenu)) {
@@ -259,7 +284,7 @@ const ActionBar = ({
         }
       })
     }
-  }, [filterMenu])
+  }, [filterMenu, filtersConfig])
 
   useEffect(() => {
     if (autoRefreshIsEnabled && autoRefresh && !hidden) {
@@ -271,7 +296,7 @@ const ActionBar = ({
 
       return () => clearInterval(intervalId)
     }
-  }, [autoRefresh, autoRefreshIsStopped, hidden, autoRefreshIsEnabled, filtersStore, refresh])
+  }, [autoRefresh, autoRefreshIsStopped, hidden, autoRefreshIsEnabled, refresh])
 
   return (
     <Form form={formRef.current} onSubmit={() => {}}>
@@ -281,9 +306,8 @@ const ActionBar = ({
             {NAME_FILTER in filterMenu && !filtersConfig[NAME_FILTER].hidden && (
               <div key={NAME_FILTER} className="action-bar__filters-item">
                 <NameFilter
-                  filterMenuName={filterMenuName}
                   applyChanges={value =>
-                    applyChanges({ ...formState.values, name: value }, filterMenuModal?.values ?? {})
+                    applyChanges({ ...formState.values, name: value }, filterMenuModal)
                   }
                 />
               </div>
@@ -312,18 +336,17 @@ const ActionBar = ({
                 </Field>
               </div>
             )}
-            {filterMenuModal && (
-              <FilterMenuModal
-                applyChanges={filterMenuModal => applyChanges(formState.values, filterMenuModal)}
-                filterMenuName={filterMenuName}
-                initialValues={filterMenuModalInitialState}
-                restartFormTrigger={`${tab}`}
-                values={filterMenuModal.values}
-              >
-                {children}
-              </FilterMenuModal>
-            )}
           </div>
+          {!isEmpty(filterMenuModalInitialState) && (
+            <FilterMenuModal
+              applyChanges={filterMenuModal => applyChanges(formState.values, filterMenuModal)}
+              initialValues={filterMenuModalInitialState}
+              restartFormTrigger={`${tab}`}
+              values={filterMenuModal}
+            >
+              {children}
+            </FilterMenuModal>
+          )}
           {(withRefreshButton || !isEmpty(actionButtons)) && (
             <div className="action-bar__actions">
               {actionButtons.map(
@@ -391,7 +414,7 @@ ActionBar.propTypes = {
   autoRefreshIsStopped: PropTypes.bool,
   cancelRequest: PropTypes.func,
   expand: PropTypes.bool,
-  filterMenuName: PropTypes.string.isRequired,
+  filters: PropTypes.object.isRequired,
   filtersConfig: FILTERS_CONFIG.isRequired,
   handleExpandAll: PropTypes.func,
   handleRefresh: PropTypes.func.isRequired,
