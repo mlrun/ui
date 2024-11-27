@@ -204,6 +204,36 @@ Feature: Jobs and workflows
         Then click on "Table_Refresh_Button" element on "Workflows_Monitor_Tab" wizard
         And wait load page
         Then value in "name" column with "text" in "Workflows_Monitor_Table" on "Workflows_Monitor_Tab" wizard should contains "main"
+    
+    @MLJW
+    @passive
+    @smoke
+    Scenario: MLJW088 - Verify filtering by workflows status on Workflows Monitor tab
+        Given open url
+        And wait load page
+        And click on row root with value "cat-vs-dog-classification" in "name" column in "Projects_Table" table on "Projects" wizard
+        And wait load page
+        And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
+        And click on cell with value "Jobs and workflows" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+        And hover "MLRun_Logo" component on "commonPagesHeader" wizard
+        And wait load page
+        And select "Monitor Workflows" tab in "Jobs_Tab_Selector" on "Jobs_Monitor_Tab" wizard
+        When select "Any time" option in "Start_Time_Filter_Dropdown" filter dropdown on "Jobs_Monitor_Tab" wizard
+        Then value in "status" column with "tooltip" in "Workflows_Monitor_Table" on "Workflows_Monitor_Tab" wizard should contains "Completed"
+        Then value in "status" column with "tooltip" in "Workflows_Monitor_Table" on "Workflows_Monitor_Tab" wizard should contains "Failed"
+        When click on cell with row index 2 in "name" column in "Workflows_Monitor_Table" table on "Workflows_Monitor_Tab" wizard
+        And wait load page
+        Then click on "Toggle_View_Button" element on "Workflows_Monitor_Tab" wizard
+        And wait load page
+        Then value in "status" column with "tooltip" in "Workflow_List_View_Table" on "Workflows_Monitor_Tab" wizard should contains "Error"
+        Then value in "status" column with "tooltip" in "Workflow_List_View_Table" on "Workflows_Monitor_Tab" wizard should contains "Completed"
+        And hover "MLRun_Logo" component on "commonPagesHeader" wizard
+        And wait load page
+        When click on cell with row index 2 in "name" column in "Workflow_List_View_Table" table on "Workflows_Monitor_Tab" wizard
+        And wait load page
+        Then verify "State_Icon" element visibility on "Workflows_Monitor_Tab_Info_Pane" wizard
+        Then verify "State_Icon" element on "Workflows_Monitor_Tab_Info_Pane" wizard should display hover tooltip "Common_Tooltips"."Error_Content_Workflow"
+        Then verify "Error_Content" element visibility on "Workflows_Monitor_Tab_Info_Pane" wizard
 
     @MLJW
     @passive
@@ -277,7 +307,18 @@ Feature: Jobs and workflows
         Then value in "status" column with "tooltip" in "Jobs_Monitor_Table" on "Jobs_Monitor_Tab" wizard should contains "Completed"
         Then select "Error" option in "Status_Filter_Dropdown" filter dropdown on "Jobs_Monitor_Tab" wizard
         And wait load page
-        Then value in "status" column with "tooltip" in "Jobs_Monitor_Table" on "Jobs_Monitor_Tab" wizard should contains "Error"
+        Then value in "status" column with "tooltip" in "Jobs_Monitor_Table" on "Jobs_Monitor_Tab" wizard should contains "Error. Columns must be same length as key"
+        When click on cell with row index 1 in "name" column in "Jobs_Monitor_Table" table on "Jobs_Monitor_Tab" wizard
+        And wait load page
+        Then value in "status" column with "tooltip" in "Jobs_Monitor_Table" on "Jobs_Monitor_Tab" wizard should contains "Error. Columns must be same length as key"
+        And wait load page
+        When click on cell with row index 1 in "name" column in "Jobs_Monitor_Table" table on "Jobs_Monitor_Tab" wizard
+        And wait load page
+        Then verify "State_Icon" element visibility on "Jobs_Monitor_Tab_Info_Pane" wizard
+        Then verify "State_Icon" element on "Jobs_Monitor_Tab_Info_Pane" wizard should display hover tooltip "Common_Tooltips"."Error_Content"
+        Then verify "Error_Content" element visibility on "Jobs_Monitor_Tab_Info_Pane" wizard
+        Then "Error_Content" element on "Jobs_Monitor_Tab_Info_Pane" should contains "Error: Columns must be same length as key" value
+        And select "Monitor Jobs" tab in "Jobs_Tab_Selector" on "Jobs_Monitor_Tab" wizard
         When pick up "Custom range" from "09/08/2021 00:00" to "09/09/2021 00:00" in "Date_Time_Picker" via "Start_Time_Filter_Dropdown" on "Jobs_Monitor_Tab" wizard
         Then verify from "09/08/2021 00:00" to "09/09/2021 00:00" filter band in "Start_Time_Filter_Dropdown" filter dropdown on "Jobs_Monitor_Tab" wizard
         And wait load page
@@ -908,7 +949,7 @@ Feature: Jobs and workflows
         Then verify "Monitor Jobs" tab is active in "Jobs_Tab_Selector" on "Jobs_Monitor_Tab" wizard
         When pick up "Custom range" from "09/01/2021 18:00" to "09/03/2021 18:00" in "Date_Time_Picker" via "Start_Time_Filter_Dropdown" on "Jobs_Monitor_Tab" wizard
         Then select "Error" option in "Status_Filter_Dropdown" filter dropdown on "Jobs_Monitor_Tab" wizard
-        Then verify options in action menu on "Jobs_Monitor_Tab" wizard in "Jobs_Monitor_Table" table with "Error" value in "status" column should contains "Jobs_And_Workflows"."Job_Action_Menu_Options"
+        Then verify options in action menu on "Jobs_Monitor_Tab" wizard in "Jobs_Monitor_Table" table with "Error. Reason: [Errno 2] No such file or directory: \'\'" value in "status" column should contains "Jobs_And_Workflows"."Job_Action_Menu_Options"
         Then select "Running" option in "Status_Filter_Dropdown" filter dropdown on "Jobs_Monitor_Tab" wizard
         Then verify options in action menu on "Jobs_Monitor_Tab" wizard in "Jobs_Monitor_Table" table with "Running" value in "status" column should contains "Jobs_And_Workflows"."Running_Job_Action_Menu_Options"
         When pick up "Custom range" from "08/28/2021 18:00" to "09/01/2021 18:00" in "Date_Time_Picker" via "Start_Time_Filter_Dropdown" on "Jobs_Monitor_Tab" wizard

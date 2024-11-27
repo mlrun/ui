@@ -255,6 +255,19 @@ const action = {
     await driver.executeScript('arguments[0].scrollIntoView()', element)
     await driver.sleep(250)
   },
+  checkComponentHintTextWithHover:async function (driver, component, hintComponent, text) {
+    const hintButton = await driver.findElement(component)
+    const hintButtonRect = await hintButton.getRect()
+    const actions = driver.actions({ async: true })
+    await actions
+      .move({ x: parseInt(hintButtonRect.x), y: parseInt(hintButtonRect.y) })
+      .perform()
+    await driver.sleep(250)
+    const hint = await driver.findElement(hintComponent)
+    const hintText = await hint.getText()
+
+    expect(hintText).equal(text)
+  },
   scrollToWebElement
 }
 
