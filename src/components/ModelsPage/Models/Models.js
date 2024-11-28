@@ -187,7 +187,7 @@ const Models = ({ fetchModelFeatureVector }) => {
           filters: {},
           config: {
             signal: abortControllerRef.current.signal,
-            params: { format: 'minimal' }
+            params: { format: 'minimal', kind: 'serving' }
           }
         })
       )

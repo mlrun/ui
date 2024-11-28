@@ -93,7 +93,7 @@ const RealTimePipelines = () => {
           project: params.projectName,
           filters,
           config: {
-            params: { format: 'minimal' },
+            params: { format: 'minimal', kind: 'serving' },
             ui: {
               controller: abortControllerRef.current,
               setRequestErrorMessage
