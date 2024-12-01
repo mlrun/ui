@@ -39,7 +39,7 @@ import {
 } from '../../../constants'
 import createRealTimePipelinesContent from '../../../utils/createRealTimePipelinesContent'
 import { fetchArtifactsFunctions, removePipelines } from '../../../reducers/artifactsReducer'
-import { filtersConfig, generatePageData } from './realTimePipelines.util'
+import { fetchAndParseFunction, filtersConfig, generatePageData } from './realTimePipelines.util'
 import { getNoDataMessage } from '../../../utils/getNoDataMessage'
 import { isRowRendered, useVirtualization } from '../../../hooks/useVirtualization.hook'
 import { setFilters } from '../../../reducers/filtersReducer'
@@ -76,11 +76,12 @@ const RealTimePipelines = () => {
         {
           label: 'View YAML',
           icon: <Yaml />,
-          onClick: toggleConvertedYaml
+          onClick: func =>
+            fetchAndParseFunction(func, dispatch).then(() => toggleConvertedYaml(func))
         }
       ]
     ],
-    [toggleConvertedYaml]
+    [dispatch, toggleConvertedYaml]
   )
 
   const fetchData = useCallback(
@@ -92,6 +93,7 @@ const RealTimePipelines = () => {
           project: params.projectName,
           filters,
           config: {
+            params: { format: 'minimal' },
             ui: {
               controller: abortControllerRef.current,
               setRequestErrorMessage
