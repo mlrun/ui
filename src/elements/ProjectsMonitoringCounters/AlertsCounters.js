@@ -37,14 +37,47 @@ const AlertsCounters = () => {
   const navigate = useNavigate()
   const projectStore = useSelector(store => store.projectStore)
 
-  const projectName = useMemo(
-    () => (pathname === '/projects' ? '*' : paramProjectName),
-    [pathname, paramProjectName]
-  )
+  const alertsData = useMemo(() => {
+    const path = pathname === '/projects' ? '*' : paramProjectName
+    const defaultAlertData = {
+      endpoint: 0,
+      jobs: 0,
+      application: 0,
+      total: 0
+    }
+
+    if (path !== '*') {
+      const endpoint = projectStore.projectSummary.data.endpoint_alerts_count || 1
+      const jobs = projectStore.projectSummary.data.job_alerts_count || 0
+      const application = projectStore.projectSummary.data.other_alerts_count || 0
+
+      return {
+        projectName: path,
+        data: {
+          endpoint,
+          jobs,
+          application,
+          total: endpoint + jobs + application
+        }
+      }
+    }
+
+    return {
+      projectName: path,
+      data: projectStore.jobsMonitoringData.alerts || defaultAlertData
+    }
+  }, [
+    pathname,
+    paramProjectName,
+    projectStore.jobsMonitoringData.alerts,
+    projectStore.projectSummary.data.endpoint_alerts_count,
+    projectStore.projectSummary.data.job_alerts_count,
+    projectStore.projectSummary.data.other_alerts_count
+  ])
 
   const alertsStats = useMemo(
-    () => generateAlertsStats(projectStore.jobsMonitoringData.alerts, navigate, projectName),
-    [navigate, projectName, projectStore.jobsMonitoringData.alerts]
+    () => generateAlertsStats(alertsData.data, navigate, alertsData.projectName),
+    [navigate, alertsData]
   )
 
   return (
@@ -71,7 +104,7 @@ const AlertsCounters = () => {
                 onClick={() => alertsStats.endpoints.link()}
                 data-testid="alerts_endpoint_see_all"
               >
-                {projectStore.jobsMonitoringData.alerts.endpoint}
+                {(alertsData.data.endpoint || 0).toLocaleString()}
               </span>
             )}
           </span>
@@ -87,7 +120,7 @@ const AlertsCounters = () => {
                 onClick={() => alertsStats.job.link()}
                 data-testid="alerts_jobs_see_all"
               >
-                {(projectStore.jobsMonitoringData.alerts.jobs || 0).toLocaleString()}
+                {(alertsData.data.jobs || 0).toLocaleString()}
               </span>
             )}
           </span>
@@ -103,7 +136,7 @@ const AlertsCounters = () => {
                 onClick={() => alertsStats.application.link()}
                 data-testid="alerts_application_see_all"
               >
-                {(projectStore.jobsMonitoringData.alerts.application || 0).toLocaleString()}
+                {(alertsData.data.application || 0).toLocaleString()}
               </span>
             )}
           </span>
@@ -119,7 +152,7 @@ const AlertsCounters = () => {
                 onClick={() => alertsStats.all.link()}
                 data-testid="alerts_total_see_all"
               >
-                {(projectStore.jobsMonitoringData.alerts.total || 0).toLocaleString()}
+                {(alertsData.data.total || 0).toLocaleString()}
               </span>
             )}
           </span>
