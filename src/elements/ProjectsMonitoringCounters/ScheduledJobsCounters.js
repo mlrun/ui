@@ -74,10 +74,10 @@ const ScheduledJobsCounters = () => {
             ) : (
               <span
                 className="stats__link"
-                onClick={scheduledStats.all.link}
+                onClick={scheduledStats.jobs.link}
                 data-testid="scheduled_total_see_all"
               >
-                {scheduledStats.jobs.counter}{' '}
+                {scheduledStats.jobs.counter}
               </span>
             )}
           </span>
@@ -93,14 +93,30 @@ const ScheduledJobsCounters = () => {
                 onClick={scheduledStats.workflows.link}
                 data-testid="scheduled_wf_see_all"
               >
-                {scheduledStats.workflows.counter}{' '}
+                {scheduledStats.workflows.counter}
+              </span>
+            )}
+          </span>
+        </StatsCard.Col>
+        <StatsCard.Col>
+          <h6 className="stats__subtitle">Total</h6>
+          <span className="stats__counter">
+            {projectStore.projectsSummary.loading ? (
+              <Loader section small secondary />
+            ) : (
+              <span
+                className="stats__link"
+                onClick={scheduledStats.all.link}
+                data-testid="scheduled_wf_see_all"
+              >
+                {scheduledStats.all.counter}
               </span>
             )}
           </span>
         </StatsCard.Col>
       </StatsCard.Row>
       <StatsCard.Row>
-        <StatsCard.Col/>
+        <StatsCard.Col />
       </StatsCard.Row>
     </StatsCard>
   )
