@@ -41,6 +41,7 @@ const ProjectsAlerts = () => {
   const params = useParams()
   const dispatch = useDispatch()
   const alertsStore = useSelector(state => state.alertsStore)
+  const filtersStore = useSelector(store => store.filtersStore)
 
   const abortControllerRef = useRef(new AbortController())
 
@@ -114,6 +115,7 @@ const ProjectsAlerts = () => {
       alertsStore={alertsStore}
       actionsMenu={() => []} // TODO
       filters={alertsFilters}
+      filtersStore={filtersStore}
       pageData={{}} //TODO
       refreshAlertsCallback={refreshAlertsCallback}
       requestErrorMessage={requestErrorMessage}
