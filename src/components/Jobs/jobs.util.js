@@ -83,7 +83,7 @@ export const actionButtonHeader = 'Batch Run'
 export const JOB_STEADY_STATES = ['completed', ERROR_STATE, 'aborted', FAILED_STATE]
 export const JOB_RUNNING_STATES = ['running', 'pending']
 
-export const getJobsDetailsMenu = (jobLabels = []) => {
+export const getJobsDetailsMenu = (job = {}) => {
   return [
     {
       label: 'overview',
@@ -103,12 +103,13 @@ export const getJobsDetailsMenu = (jobLabels = []) => {
     },
     {
       label: 'logs',
-      id: 'logs'
+      id: 'logs',
+      hidden: isJobKindLocal(job)
     },
     {
       label: 'pods',
       id: 'pods',
-      hidden: arePodsHidden(jobLabels)
+      hidden: arePodsHidden(job?.labels)
     }
   ]
 }
@@ -129,7 +130,9 @@ export const isJobAborting = (currentJob = {}) => {
 }
 
 export const isJobKindDask = (jobLabels = []) => {
-  return (isObject(jobLabels) ? parseKeyValues(jobLabels) : jobLabels)?.includes(`kind: ${JOB_KIND_DASK}`)
+  return (isObject(jobLabels) ? parseKeyValues(jobLabels) : jobLabels)?.includes(
+    `kind: ${JOB_KIND_DASK}`
+  )
 }
 
 export const isJobKindLocal = job =>

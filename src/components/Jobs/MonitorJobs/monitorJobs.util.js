@@ -20,10 +20,7 @@ such restriction.
 import React from 'react'
 import { isNil, isEmpty, debounce } from 'lodash'
 
-import {
-  FUNCTION_RUN_KINDS,
-  JOBS_PAGE
-} from '../../../constants'
+import { FUNCTION_RUN_KINDS, JOBS_PAGE } from '../../../constants'
 import {
   JOB_STEADY_STATES,
   getInfoHeaders,
@@ -51,7 +48,7 @@ export const generatePageData = (
   return {
     page: JOBS_PAGE,
     details: {
-      menu: getJobsDetailsMenu(selectedJob?.labels),
+      menu: getJobsDetailsMenu(selectedJob),
       type: JOBS_PAGE,
       infoHeaders: getInfoHeaders(!isNil(selectedJob.ui_run)),
       refreshLogs: handleFetchJobLogs,
@@ -90,7 +87,9 @@ export const generateActionsMenu = (
         {
           label: 'Batch re-run',
           icon: <Run />,
-          hidden: !FUNCTION_RUN_KINDS.includes(job?.ui?.originalContent.metadata.labels?.kind) || isDetailsPopUp,
+          hidden:
+            !FUNCTION_RUN_KINDS.includes(job?.ui?.originalContent.metadata.labels?.kind) ||
+            isDetailsPopUp,
           onClick: handleRerunJob
         },
         {
@@ -145,13 +144,7 @@ export const generateActionsMenu = (
 }
 
 export const fetchInitialJobs = debounce(
-  (
-    filters,
-    selectedJob,
-    jobId,
-    refreshJobs,
-    jobsAreInitializedRef
-  ) => {
+  (filters, selectedJob, jobId, refreshJobs, jobsAreInitializedRef) => {
     if (isEmpty(selectedJob) && !jobId && !jobsAreInitializedRef.current) {
       refreshJobs(filters)
       jobsAreInitializedRef.current = true

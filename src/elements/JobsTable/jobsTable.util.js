@@ -32,7 +32,7 @@ export const generatePageData = (
   return {
     page: JOBS_PAGE,
     details: {
-      menu: getJobsDetailsMenu(selectedJob?.labels),
+      menu: getJobsDetailsMenu(selectedJob),
       type: JOBS_PAGE,
       infoHeaders: getInfoHeaders(!isNil(selectedJob.ui_run), selectedJob),
       refreshLogs: handleFetchJobLogs,
