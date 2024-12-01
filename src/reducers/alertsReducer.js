@@ -2,6 +2,7 @@ import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
 
 import alertsApi from '../api/alerts-api'
 import { defaultPendingHandler } from './redux.util'
+import { parseAlerts } from '../utils/parseAlert'
 
 const initialState = {
   alerts: [],
@@ -9,22 +10,16 @@ const initialState = {
   loading: false
 }
 
-export const fetchAlert = createAsyncThunk(
-  'fetchAlert',
-  ({ project, filters, config = {}, params = {} }) => {
-    return alertsApi.getAlerts(project, filters, config).then(({ data }) => {
-      return data
-    })
-  }
-)
-export const fetchAlerts = createAsyncThunk(
-  'fetchAlerts',
-  ({ project, filters, config = {}, params = {} }) => {
-    return alertsApi.getAlert(project, filters, (config = {}), (params = {})).then(({ data }) => {
-      return {}
-    })
-  }
-)
+export const fetchAlert = createAsyncThunk('fetchAlert', ({ project, filters, config }) => {
+  return alertsApi.getAlert(project, filters, config).then(({ data }) => {
+    return parseAlerts(data.activations)
+  })
+})
+export const fetchAlerts = createAsyncThunk('fetchAlerts', ({ project, filters, config }) => {
+  return alertsApi.getAlerts(project, filters, config).then(({ data }) => {
+    return parseAlerts(data.activations)
+  })
+})
 
 const alertsSlice = createSlice({
   name: 'alertsStore',

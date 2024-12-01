@@ -26,6 +26,8 @@ import TableCell from '../TableCell/TableCell'
 
 import { DETAILS_OVERVIEW_TAB } from '../../constants'
 
+// TODO:   rowIsExpanded logic will be part of ML-8516
+// TODO:  selected row logic will be part of ML-8104
 const AlertsTableRow = ({ handleExpandRow, handleSelectItem, rowItem, selectedItem }) => {
   const parent = useRef()
   const params = useParams()

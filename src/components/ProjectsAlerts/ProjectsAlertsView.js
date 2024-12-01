@@ -17,31 +17,33 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import Breadcrumbs from '../../common/Breadcrumbs/Breadcrumbs'
-import ActionBar from '../ActionBar/ActionBar'
-import ProjectsAlertsFilters from './ProjectsAlertsFilters'
-
-import { ALERTS_FILTERS, ALERTS_PAGE } from '../../constants'
-
 import PropTypes from 'prop-types'
+
+import ActionBar from '../ActionBar/ActionBar'
 import AlertsTableRow from '../../elements/AlertsTableRow/AlertsTableRow'
-import { useMemo } from 'react'
-import { createAlertRowData } from '../../utils/createAlertsContent'
+import Breadcrumbs from '../../common/Breadcrumbs/Breadcrumbs'
+import Loader from '../../common/Loader/Loader'
+import NoData from '../../common/NoData/NoData'
+import ProjectsAlertsFilters from './ProjectsAlertsFilters'
 import Table from '../Table/Table'
+
+import { getNoDataMessage } from '../../utils/getNoDataMessage'
+import { ALERTS_FILTERS, ALERTS_PAGE, FUNCTION_FILTERS } from '../../constants'
+import { VIRTUALIZATION_CONFIG } from '../../types'
+import { isRowRendered } from '../../hooks/useVirtualization.hook'
 
 const ProjectAlertsView = ({
   actionsMenu,
-  alerts,
   alertsFiltersConfig,
+  alertsStore,
   filters,
   pageData,
   refreshAlertsCallback,
-  selectedAlert
+  requestErrorMessage,
+  selectedAlert,
+  tableContent,
+  virtualizationConfig
 }) => {
-  const tableContent = useMemo(() => {
-    return alerts.activations.map(alert => createAlertRowData(alert))
-  }, [alerts.activations])
-
   return (
     <>
       <div className="content-wrapper">
@@ -64,27 +66,45 @@ const ProjectAlertsView = ({
                 <ProjectsAlertsFilters />
               </ActionBar>
             </div>
-            <Table
-              actionsMenu={actionsMenu}
-              pageData={pageData}
-              retryRequest={refreshAlertsCallback}
-              selectedItem={selectedAlert}
-              tableClassName="model-endpoints-table"
-              hideActionsMenu
-              tableHeaders={tableContent[0]?.content ?? []}
-            >
-              {tableContent.map((tableItem, index) => (
-                <AlertsTableRow
-                  key={index}
-                  hideActionsMenu
-                  handleSelectItem={() => {}}
-                  rowIndex={index}
-                  rowItem={tableItem}
-                  actionsMenu={[]}
-                  selectedItem={selectedAlert}
-                />
-              ))}
-            </Table>
+            {alertsStore.loading ? (
+              <Loader />
+            ) : tableContent.length === 0 ? (
+              <NoData
+                message={getNoDataMessage(
+                  filters,
+                  alertsFiltersConfig,
+                  requestErrorMessage,
+                  ALERTS_PAGE,
+                  null,
+                  FUNCTION_FILTERS
+                )}
+              />
+            ) : (
+              <Table
+                actionsMenu={actionsMenu}
+                pageData={pageData}
+                retryRequest={refreshAlertsCallback}
+                selectedItem={selectedAlert}
+                tableClassName="alerts-table"
+                hideActionsMenu
+                tableHeaders={tableContent[0]?.content ?? []}
+              >
+                {tableContent.map(
+                  (tableItem, index) =>
+                    isRowRendered(virtualizationConfig, index) && (
+                      <AlertsTableRow
+                        key={index}
+                        hideActionsMenu
+                        handleSelectItem={() => {}}
+                        rowIndex={index}
+                        rowItem={tableItem}
+                        actionsMenu={[]}
+                        selectedItem={selectedAlert}
+                      />
+                    )
+                )}
+              </Table>
+            )}
           </div>
         </div>
       </div>
@@ -95,6 +115,9 @@ const ProjectAlertsView = ({
 ProjectAlertsView.propTypes = {
   alertsFiltersConfig: PropTypes.object.isRequired,
   filters: PropTypes.object.isRequired,
-  refreshAlertsCallback: PropTypes.func.isRequired
+  refreshAlertsCallback: PropTypes.func.isRequired,
+  requestErrorMessage: PropTypes.string.isRequired,
+  tableContent: PropTypes.arrayOf(PropTypes.object).isRequired,
+  virtualizationConfig: VIRTUALIZATION_CONFIG.isRequired
 }
 export default ProjectAlertsView

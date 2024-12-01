@@ -20,19 +20,35 @@ such restriction.
 import dummyData from '../components/ProjectsAlerts/alertsData.json'
 
 const alertsApi = {
-  getAlerts: (project, filters, config = {}, params = {}) => {
+  getAlerts: (project, filters, config = {}) => {
+    // TODO:ML-8514 update newConfig & remove dummy data
+    // const newConfig = {
+    //   ...config,
+    //   params: {
+    //     ...config.params
+    //   }
+    // }
     return new Promise(resolve => {
       setTimeout(() => {
         resolve({ data: dummyData })
       }, 1000)
     })
+    // return mainHttpClient.get(`/projects/${project}/alerts/${alertName}/activations`, newConfig)
   },
   getAlert: (project, alertName, config) => {
+    // TODO:ML-8514 update newConfig & remove dummy data
+    // const newConfig = {
+    //   ...config,
+    //   params: {
+    //     ...config.params
+    //   }
+    // }
     return new Promise(resolve => {
       setTimeout(() => {
         resolve({ data: dummyData })
       }, 1000)
     })
+    // return mainHttpClient.get(`/projects/${project}/alerts/activations`, newConfig)
   }
 }
 

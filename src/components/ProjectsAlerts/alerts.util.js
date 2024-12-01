@@ -30,7 +30,7 @@ import {
   JOB_KIND_JOB,
   JOB_NAME,
   NAME_FILTER,
-  PROJECT_FILTER,
+  PROJECTS_FILTER,
   SEVERITY
 } from '../../constants'
 import {
@@ -41,16 +41,16 @@ import {
 
 export const getAlertsFiltersConfig = () => {
   return {
-    [NAME_FILTER]: { label: 'Alert name', initialValue: '' },
+    [NAME_FILTER]: { label: 'Alert Name:', initialValue: '' },
     [DATES_FILTER]: {
       label: 'Start time:',
       initialValue: getDatePickerFilterValue(datePickerPastOptions, PAST_24_HOUR_DATE_OPTION)
     },
-    [PROJECT_FILTER]: { label: 'Project:', initialValue: FILTER_ALL_ITEMS, isModal: true },
+    [PROJECTS_FILTER]: { label: 'Project:', initialValue: FILTER_ALL_ITEMS, isModal: true },
     [ENTITY_TYPE]: { label: 'Entity Type', initialValue: FILTER_ALL_ITEMS, isModal: true },
     [ENTITY_ID]: { label: 'Entity ID:', initialValue: '', isModal: true },
-    [JOB_NAME]: { label: 'Job name:', initialValue: '', isModal: true },
-    [ENDPOINT_APPLICATION]: { label: 'Endpoint:', initialValue: '', isModal: true },
+    [JOB_NAME]: { label: 'Job Name:', initialValue: '', isModal: true },
+    [ENDPOINT_APPLICATION]: { label: 'Application Name:', initialValue: '', isModal: true },
     [ENDPOINT_RESULT]: { label: 'Result:', initialValue: '', isModal: true },
     [SEVERITY]: { label: 'Severity:', initialValue: [FILTER_ALL_ITEMS], isModal: true },
     [EVENT_TYPE]: { label: 'Event Type:', initialValue: FILTER_ALL_ITEMS, isModal: true }
@@ -101,16 +101,16 @@ export const filterAlertsSeverityOptions = [
 export const filterAlertsEventTypeOptions = [
   { label: 'All', id: FILTER_ALL_ITEMS },
   { label: 'Job Failed', id: 'job-failed' },
-  { label: 'Data Drift Detected', id: 'data-drift-detected' },
-  { label: 'Data Drift Suspected', id: 'data-drift-suspected' },
-  { label: 'Conc Drift Detected', id: 'concept-drift-detected' },
-  { label: 'Conc Drift Suspected', id: 'concept-drift-suspected' },
-  { label: 'MM Perf. Detected', id: 'model-performance-detected' },
-  { label: 'MM Perf. Suspected', id: 'model-performance-suspected' },
-  { label: 'S Perf. Detected', id: 'system-performance-detected' },
-  { label: 'S Perf. Suspected', id: 'system-performance-suspected' },
-  { label: 'MM App Ano. Detected', id: 'mm-app-anomaly-detected' },
-  { label: 'MM App Ano. Suspected', id: 'mm-app-anomaly-suspected' },
-  { label: 'MM App Failed', id: 'mm-app-failed' },
+  { label: 'Data Drift Detected', id: 'data drift detected' },
+  { label: 'Data Drift Suspected', id: 'data drift suspected' },
+  { label: 'Conc Drift Detected', id: 'concept drift detected' },
+  { label: 'Conc Drift Suspected', id: 'concept drift suspected' },
+  { label: 'MM Perf. Detected', id: 'model performance detected' },
+  { label: 'MM Perf. Suspected', id: 'model performance suspected' },
+  { label: 'S Perf. Detected', id: 'system performance detected' },
+  { label: 'S Perf. Suspected', id: 'system performance suspected' },
+  { label: 'MM App Ano. Detected', id: 'mm app anomaly detected' },
+  { label: 'MM App Ano. Suspected', id: 'mm app anomaly suspected' },
+  { label: 'MM App Failed', id: 'mm app failed' },
   { label: 'MM App Failed', id: 'failed' }
 ]

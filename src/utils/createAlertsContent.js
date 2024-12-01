@@ -18,19 +18,19 @@ under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
 import { upperFirst } from 'lodash'
-
 import { formatDatetime } from './datetime'
 
-import { ReactComponent as Application } from 'igz-controls/images/application-icon.svg'
-import { ReactComponent as Endpoint } from '../components/ProjectsAlerts/endpoint.svg'
-import { ReactComponent as Job } from '../components/ProjectsAlerts/job.svg'
-import { ReactComponent as Low } from '../components/ProjectsAlerts/low.svg'
-import { ReactComponent as Normal } from '../components/ProjectsAlerts/normal.svg'
-import { ReactComponent as High } from '../components/ProjectsAlerts/critical.svg'
-import { ReactComponent as Git } from '../components/ProjectsAlerts/git.svg'
-import { ReactComponent as Mail } from '../components/ProjectsAlerts/mail.svg'
-import { ReactComponent as Webhook } from '../components/ProjectsAlerts/webhook.svg'
-import { ReactComponent as Slack } from '../components/ProjectsAlerts/slack.svg'
+import { ReactComponent as Application } from 'igz-controls/images/entity-type-application.svg'
+import { ReactComponent as Endpoint } from 'igz-controls/images/entity-type-endpoint.svg'
+import { ReactComponent as Critical } from 'igz-controls/images/severity-critical.svg'
+import { ReactComponent as Email } from 'igz-controls/images/email-icon.svg'
+import { ReactComponent as Git } from 'igz-controls/images/git-icon.svg'
+import { ReactComponent as High } from 'igz-controls/images/severity-high.svg'
+import { ReactComponent as Job } from 'igz-controls/images/entity-type-job.svg'
+import { ReactComponent as Low } from 'igz-controls/images/severity-low.svg'
+import { ReactComponent as Normal } from 'igz-controls/images/severity-normal.svg'
+import { ReactComponent as Slack } from 'igz-controls/images/slack-icon-colored.svg'
+import { ReactComponent as Webhook } from 'igz-controls/images/webhook-icon.svg'
 
 import {
   APPLICATION,
@@ -39,6 +39,7 @@ import {
   MODEL_ENDPOINT_RESULT,
   MODEL_MONITORING_APPLICATION,
   SEVERITY,
+  SEVERITY_CRITICAL,
   SEVERITY_HIGH,
   SEVERITY_LOW,
   SEVERITY_MEDIUM
@@ -95,11 +96,20 @@ const getSeverityData = severity => {
         value: (
           <div className="severity-cell">
             <High />
-            <span>{upperFirst(SEVERITY_MEDIUM)}</span>
+            <span>{upperFirst(SEVERITY_HIGH)}</span>
           </div>
         ),
-
         tooltip: upperFirst(SEVERITY_HIGH)
+      }
+    case SEVERITY_CRITICAL:
+      return {
+        value: (
+          <div className="severity-cell">
+            <Critical />
+            <span>{upperFirst(SEVERITY_CRITICAL)}</span>
+          </div>
+        ),
+        tooltip: upperFirst(SEVERITY_CRITICAL)
       }
     default:
       return {
@@ -112,7 +122,7 @@ const alertsNotifications = {
   webhook: <Webhook />,
   git: <Git />,
   slack: <Slack />,
-  email: <Mail />
+  email: <Email />
 }
 
 const getNotificationData = notifications =>
@@ -130,12 +140,7 @@ const getNotificationData = notifications =>
   })
 
 export const createAlertRowData = ({ name, ...alert }) => {
-  const createAlertsId = (activationTime = new Date().toISOString()) => {
-    const date = new Date(activationTime)
-
-    return date.getTime().toString(36).slice(-7)
-  }
-  alert.id = createAlertsId(alert.activation_time)
+  alert.id = alert.id.slice(-6)
 
   return {
     data: {

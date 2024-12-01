@@ -17,12 +17,13 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import { useMemo } from 'react'
+import { useCallback, useEffect, useMemo } from 'react'
 
-import { truncate } from 'lodash'
+import { truncate, upperFirst } from 'lodash'
 import { useForm, useFormState } from 'react-final-form'
 import { useSelector } from 'react-redux'
 
+import StatusFilter from '../../common/StatusFilter/StatusFilter'
 import { FormSelect, FormInput } from 'igz-controls/components'
 import { FormOnChange } from 'iguazio.dashboard-react-controls/dist/components'
 
@@ -45,10 +46,9 @@ import {
   FILTER_ALL_ITEMS,
   JOB,
   JOB_NAME,
-  PROJECT_FILTER,
+  PROJECTS_FILTER,
   SEVERITY
 } from '../../constants'
-import StatusFilter from '../../common/StatusFilter/StatusFilter'
 
 const ProjectsAlertsFilters = () => {
   const form = useForm()
@@ -67,6 +67,22 @@ const ProjectsAlertsFilters = () => {
     }))
   }, [projectStore.projectsNames.data])
 
+  const getFieldsToReset = useCallback(entityType => {
+    const fieldsByType = {
+      [FILTER_ALL_ITEMS]: [ENTITY_ID],
+      [APPLICATION]: [ENTITY_ID],
+      [JOB]: [JOB_NAME],
+      [ENDPOINT]: [ENDPOINT_APPLICATION, ENDPOINT_RESULT]
+    }
+
+    const allFields = [ENTITY_ID, JOB_NAME, ENDPOINT_APPLICATION, ENDPOINT_RESULT]
+    return allFields.filter(field => !(fieldsByType[entityType] ?? []).includes(field))
+  }, [])
+
+  useEffect(() => {
+    getFieldsToReset(entityType).forEach(field => form.change(field, ''))
+  }, [entityType, form, getFieldsToReset])
+
   const handleInputChange = (value, inputName) => {
     form.change(inputName, value || '')
   }
@@ -74,7 +90,7 @@ const ProjectsAlertsFilters = () => {
   return (
     <>
       <div className="form-row">
-        <FormSelect label="Project name" name={PROJECT_FILTER} options={projectsList} />
+        <FormSelect label="Project name" name={PROJECTS_FILTER} options={projectsList} />
       </div>
       <div className="form-row">
         <FormSelect
@@ -86,13 +102,13 @@ const ProjectsAlertsFilters = () => {
 
       {(entityType === FILTER_ALL_ITEMS || entityType === APPLICATION) && (
         <div className="form-row">
-          <FormInput label="Endpoint ID" name={ENTITY_ID} placeholder="Search by ID" />
+          <FormInput label="Entity ID" name={ENTITY_ID} placeholder="Search by ID" />
           <FormOnChange handler={value => handleInputChange(value, ENTITY_ID)} name={ENTITY_ID} />
         </div>
       )}
       {entityType === JOB && (
         <div className="form-row">
-          <FormInput label="Job" name={JOB_NAME} placeholder="Search by job name" />
+          <FormInput label={upperFirst(JOB)} name={JOB_NAME} placeholder="Search by job name" />
           <FormOnChange handler={value => handleInputChange(value, JOB_NAME)} name={JOB_NAME} />
         </div>
       )}
