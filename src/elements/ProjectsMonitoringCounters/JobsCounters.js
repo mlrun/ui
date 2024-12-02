@@ -61,7 +61,11 @@ const JobsCounters = () => {
             {projectStore.projectsSummary.loading ? (
               <Loader section small secondary />
             ) : (
-              <span className="stats__link" onClick={jobStats.all.link} data-testid="jobs_see_all">
+              <span
+                className="stats__link"
+                onClick={jobStats.all.link}
+                data-testid="jobs_total_counter"
+              >
                 {jobStats.all.counter}
               </span>
             )}
@@ -73,7 +77,7 @@ const JobsCounters = () => {
                   <Loader section small secondary />
                 ) : (
                   <Tooltip textShow template={<TextTooltipTemplate text={tooltip} />}>
-                    <span>
+                    <span data-testid={`jobs_${statusClass}_counter`}>
                       {counter}
                       <i className={`state-${statusClass}`} />
                     </span>
