@@ -42,7 +42,11 @@ import {
   PAST_24_HOUR_DATE_OPTION,
   PAST_WEEK_DATE_OPTION
 } from './datePicker.util'
-import { generateTypeFilter, jobsStatuses, workflowsStatuses } from '../components/FilterMenu/filterMenu.settings'
+import {
+  generateTypeFilter,
+  jobsStatuses,
+  workflowsStatuses
+} from '../components/FilterMenu/filterMenu.settings'
 
 export const handleAbortJob = (
   abortJob,
@@ -208,7 +212,10 @@ export const getJobsFiltersConfig = (jobName, crossProjects) => {
     [NAME_FILTER]: { label: 'Name:', hidden: Boolean(jobName), initialValue: '' },
     [DATES_FILTER]: {
       label: 'Start time:',
-      initialValue: getDatePickerFilterValue(datePickerPastOptions, crossProjects ? PAST_24_HOUR_DATE_OPTION : PAST_WEEK_DATE_OPTION)
+      initialValue: getDatePickerFilterValue(
+        datePickerPastOptions,
+        crossProjects ? PAST_24_HOUR_DATE_OPTION : PAST_WEEK_DATE_OPTION
+      )
     },
     [PROJECT_FILTER]: { label: 'Project:', initialValue: '', isModal: true },
     [STATUS_FILTER]: { label: 'Status:', initialValue: [FILTER_ALL_ITEMS], isModal: true },
@@ -217,12 +224,15 @@ export const getJobsFiltersConfig = (jobName, crossProjects) => {
   }
 }
 
-export const getWorkflowsFiltersConfig = (crossProjects) => {
+export const getWorkflowsFiltersConfig = crossProjects => {
   return {
     [NAME_FILTER]: { label: 'Name:', initialValue: '' },
     [DATES_FILTER]: {
       label: 'Created at:',
-      initialValue: getDatePickerFilterValue(datePickerPastOptions, crossProjects ? PAST_24_HOUR_DATE_OPTION : PAST_WEEK_DATE_OPTION)
+      initialValue: getDatePickerFilterValue(
+        datePickerPastOptions,
+        crossProjects ? PAST_24_HOUR_DATE_OPTION : PAST_WEEK_DATE_OPTION
+      )
     },
     [PROJECT_FILTER]: { label: 'Project:', initialValue: '', isModal: true },
     [STATUS_FILTER]: { label: 'Status:', initialValue: [FILTER_ALL_ITEMS], isModal: true },
@@ -230,7 +240,7 @@ export const getWorkflowsFiltersConfig = (crossProjects) => {
   }
 }
 
-export const getScheduledFiltersConfig = (crossProjects) => {
+export const getScheduledFiltersConfig = crossProjects => {
   return {
     [NAME_FILTER]: { label: 'Name:', initialValue: '' },
     [DATES_FILTER]: {
@@ -264,11 +274,11 @@ export const parseJobsQueryParamsCallback = (paramName, paramValue) => {
   return paramValue
 }
 
-
 export const parseWorkflowsQueryParamsCallback = (paramName, paramValue) => {
-
   if (paramName === STATUS_FILTER) {
-    const filteredStatuses = paramValue?.split(',').filter(paramStatus => workflowsStatuses.find(status => status.id === paramStatus))
+    const filteredStatuses = paramValue
+      ?.split(',')
+      .filter(paramStatus => workflowsStatuses.find(status => status.id === paramStatus))
 
     return filteredStatuses?.length ? filteredStatuses : null
   }
@@ -278,7 +288,8 @@ export const parseWorkflowsQueryParamsCallback = (paramName, paramValue) => {
 
 export const parseScheduledQueryParamsCallback = (paramName, paramValue) => {
   if (paramName === TYPE_FILTER) {
-    return generateTypeFilter(JOBS_MONITORING_SCHEDULED_TAB).find(type => type.id === paramValue)?.id
+    return generateTypeFilter(JOBS_MONITORING_SCHEDULED_TAB).find(type => type.id === paramValue)
+      ?.id
   }
 
   return paramValue

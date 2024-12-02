@@ -17,9 +17,8 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import React, { useState, useMemo, useEffect, useRef } from 'react'
+import React, { useState, useMemo, useEffect, useRef, useCallback } from 'react'
 import { useParams } from 'react-router-dom'
-import { isEmpty } from 'lodash'
 
 import JobsTable from '../../../elements/JobsTable/JobsTable'
 import TableTop from '../../../elements/TableTop/TableTop'
@@ -37,7 +36,6 @@ import { getSavedSearchParams } from '../../../utils/filter.util'
 
 const JobsMonitoring = () => {
   const [selectedJob, setSelectedJob] = useState({})
-  const [dataIsLoaded, setDataIsLoaded] = useState(false)
   const params = useParams()
   const { isStagingMode } = useMode()
   const {
@@ -53,7 +51,9 @@ const JobsMonitoring = () => {
     setJobRuns,
     setJobs,
     terminateAbortTasksPolling,
-    tabData
+    tabData,
+    paginatedJobs,
+    searchParams
   } = React.useContext(ProjectJobsMonitoringContext)
   const jobsAreInitializedRef = useRef(false)
 
@@ -63,48 +63,36 @@ const JobsMonitoring = () => {
   )
 
   const tableContent = useMemo(
-    () =>
-      createJobsMonitoringContent(params.jobName ? jobRuns : jobs, params.jobName, isStagingMode),
-    [isStagingMode, jobRuns, jobs, params.jobName]
+    () => createJobsMonitoringContent(paginatedJobs, params.jobName, isStagingMode),
+    [isStagingMode, paginatedJobs, params.jobName]
   )
 
-  useEffect(() => {
-    if (isEmpty(selectedJob) && !params.jobId && !dataIsLoaded) {
-      // TODO QP: check for double request after deleting job from details, after pagination will be merged
+  const getBackLink = useCallback(
+    (useSavedParams = false) => {
+      let queryParams = useSavedParams
+        ? getSavedSearchParams(window.location.search)
+        : `?${searchParams.toString()}`
 
-      refreshJobs(filters)
-      setDataIsLoaded(true)
-    }
-  }, [params.jobId, params.jobName, refreshJobs, selectedJob, filters, dataIsLoaded])
+      return `/projects/*/${JOBS_MONITORING_PAGE}/${JOBS_MONITORING_JOBS_TAB}${queryParams}`
+    },
+    [searchParams]
+  )
 
   useEffect(() => {
     const abortController = abortControllerRef.current
 
     return () => {
-      setDataIsLoaded(false)
       setJobs([])
       setJobRuns([])
       abortController.abort(REQUEST_CANCELED)
       jobsAreInitializedRef.current = false
       terminateAbortTasksPolling()
     }
-  }, [
-    params.jobName,
-    params.jobId,
-    terminateAbortTasksPolling,
-    abortControllerRef,
-    setJobs,
-    setJobRuns
-  ])
+  }, [terminateAbortTasksPolling, abortControllerRef, setJobs, setJobRuns])
 
   return (
     <>
-      {params.jobName && (
-        <TableTop
-          link={`/projects/*/${JOBS_MONITORING_PAGE}/${JOBS_MONITORING_JOBS_TAB}${getSavedSearchParams(window.location.search)}`}
-          text={params.jobName}
-        />
-      )}
+      {params.jobName && <TableTop link={getBackLink(true)} text={params.jobName} />}
       <JobsTable
         abortingJobs={abortingJobs}
         ref={{ abortJobRef }}
@@ -113,11 +101,10 @@ const JobsMonitoring = () => {
         filtersConfig={jobsFiltersConfig}
         jobRuns={jobRuns}
         jobs={jobs}
+        paginatedJobs={paginatedJobs}
         requestErrorMessage={requestErrorMessage}
-        navigateLink={`/projects/*/${JOBS_MONITORING_PAGE}/${JOBS_MONITORING_JOBS_TAB}${window.location.search}`}
-        refreshJobs={() =>
-          refreshJobs(filters)
-        }
+        navigateLink={getBackLink()}
+        refreshJobs={() => refreshJobs(filters)}
         selectedJob={selectedJob}
         setAbortingJobs={setAbortingJobs}
         setJobRuns={setJobRuns}

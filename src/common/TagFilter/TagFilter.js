@@ -23,9 +23,10 @@ import { useNavigate, useParams } from 'react-router-dom'
 
 import TagFilterDropdown from './TagFilterDropdown'
 
-import { ReactComponent as Caret } from 'igz-controls/images/dropdown.svg'
-
+import { getDefaultCloseDetailsLink } from '../../utils/link-helper.util'
 import { KEY_CODES, TAG_FILTER_LATEST } from '../../constants'
+
+import { ReactComponent as Caret } from 'igz-controls/images/dropdown.svg'
 
 import './tagFilter.scss'
 
@@ -74,11 +75,7 @@ const TagFilter = ({ label, onChange, page, tagFilterOptions, value }) => {
       })
 
       if (params.jobId || params.name) {
-        navigate(
-          `/projects/${params.projectName}/${page.toLowerCase()}${
-            params.pageTab ? `/${params.pageTab}` : ''
-          }`
-        )
+        navigate(getDefaultCloseDetailsLink(params, page))
       }
 
       setTagFilter(searchItem?.id || event.target.value || TAG_FILTER_LATEST)

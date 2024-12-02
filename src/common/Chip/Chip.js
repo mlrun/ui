@@ -117,7 +117,7 @@ const Chip = React.forwardRef(
         setChipsSizes(state => ({
           ...state,
           [chipIndex]:
-            chipRef.current.getBoundingClientRect().width +
+            (chipRef.current?.getBoundingClientRect?.()?.width ?? 0) +
             parseFloat(marginLeft) +
             parseFloat(marginRight)
         }))

@@ -19,7 +19,7 @@ such restriction.
 */
 import React, { useCallback, useEffect, useRef, useState, useMemo } from 'react'
 import { connect, useDispatch, useSelector } from 'react-redux'
-import { useNavigate, useParams } from 'react-router-dom'
+import { useNavigate, useParams, useSearchParams } from 'react-router-dom'
 
 import AddToFeatureVectorView from './AddToFeatureVectorView'
 import FeaturesTablePanel from '../../elements/FeaturesTablePanel/FeaturesTablePanel'
@@ -71,6 +71,7 @@ const AddToFeatureVectorPage = ({
   const addToFeatureVectorPageRef = useRef(null)
   const abortControllerRef = useRef(new AbortController())
   const params = useParams()
+  const [, setSearchParams] = useSearchParams()
   const navigate = useNavigate()
   const tableStore = useSelector(store => store.tableStore)
   const filtersStore = useSelector(store => store.filtersStore)
@@ -215,7 +216,7 @@ const AddToFeatureVectorPage = ({
     handleRefresh(addToFeatureVectorFilters)
   }, [addToFeatureVectorFilters, handleRefresh])
 
-  const handleRemoveFeature = useCallback(
+  const collapseRowCallback = useCallback(
     feature => {
       const newStoreSelectedRowData = {
         ...featureStore.features.selectedRowData.content
@@ -231,7 +232,7 @@ const AddToFeatureVectorPage = ({
     [featureStore.features.selectedRowData.content, removeFeature, selectedRowData]
   )
 
-  const handleRequestOnExpand = useCallback(
+  const expandRowCallback = useCallback(
     async feature => {
       const featureIdentifier = getFeatureIdentifier(feature)
 
@@ -272,11 +273,11 @@ const AddToFeatureVectorPage = ({
     [fetchFeature, tableStore.isTablePanelOpen]
   )
 
-  const { latestItems, handleExpandRow } = useGroupContent(
+  const { latestItems, toggleRow } = useGroupContent(
     content,
     getFeatureIdentifier,
-    handleRemoveFeature,
-    handleRequestOnExpand,
+    collapseRowCallback,
+    expandRowCallback,
     null,
     FEATURE_STORE_PAGE,
     FEATURES_TAB
@@ -349,15 +350,16 @@ const AddToFeatureVectorPage = ({
       filters={addToFeatureVectorFilters}
       filtersConfig={filtersConfig}
       filtersStore={filtersStore}
-      handleExpandRow={handleExpandRow}
       handleRefresh={handleRefresh}
       handleRefreshWithFilters={handleRefreshWithFilters}
       pageData={pageData}
       ref={addToFeatureVectorPageRef}
       requestErrorMessage={requestErrorMessage}
       selectedRowData={selectedRowData}
+      setSearchParams={setSearchParams}
       tableContent={tableContent}
       tableStore={tableStore}
+      toggleRow={toggleRow}
       virtualizationConfig={virtualizationConfig}
     />
   )

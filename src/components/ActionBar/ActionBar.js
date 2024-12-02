@@ -26,7 +26,7 @@ import { Form } from 'react-final-form'
 import { createForm } from 'final-form'
 import { isEmpty, isEqual, isNil, mapValues, pickBy } from 'lodash'
 import { useDispatch, useSelector } from 'react-redux'
-import { useNavigate, useParams, useSearchParams } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 
 import DatePicker from '../../common/DatePicker/DatePicker'
 import FilterMenuModal from '../FilterMenuModal/FilterMenuModal'
@@ -54,22 +54,23 @@ import { ReactComponent as ExpandIcon } from 'igz-controls/images/expand.svg'
 import { ReactComponent as RefreshIcon } from 'igz-controls/images/refresh.svg'
 
 const ActionBar = ({
+  actionButtons = [],
+  allRowsAreExpanded,
   autoRefreshIsEnabled = false,
   autoRefreshIsStopped = false,
-  actionButtons = [],
   cancelRequest = null,
   children,
-  expand,
   filters,
   filtersConfig,
-  handleExpandAll,
   handleRefresh,
   hidden = false,
   navigateLink,
   page,
   removeSelectedItem = null,
+  setSearchParams,
   setSelectedRowData = null,
   tab = '',
+  toggleAllRows,
   withRefreshButton = true,
   withoutExpandButton
 }) => {
@@ -80,7 +81,6 @@ const ActionBar = ({
   const dispatch = useDispatch()
   const params = useParams()
   const navigate = useNavigate()
-  const [, setSearchParams] = useSearchParams()
 
   const actionBarClassNames = classnames('action-bar', hidden && 'action-bar_hidden')
 
@@ -214,8 +214,8 @@ const ActionBar = ({
         saveFilters(newFilters)
         removeSelectedItem && dispatch(removeSelectedItem({}))
         setSelectedRowData && setSelectedRowData({})
-        handleExpandAll && handleExpandAll(true)
-        handleRefresh(newFilters)
+        toggleAllRows && toggleAllRows(true)
+        handleRefresh(newFilters, true)
       }
     },
     [
@@ -229,7 +229,7 @@ const ActionBar = ({
       filtersStore.groupBy,
       removeSelectedItem,
       setSelectedRowData,
-      handleExpandAll,
+      toggleAllRows,
       handleRefresh,
       navigate,
       navigateLink
@@ -380,10 +380,10 @@ const ActionBar = ({
               {!withoutExpandButton && filtersStore.groupBy !== GROUP_BY_NONE && (
                 <RoundedIcon
                   id="toggle-collapse"
-                  tooltipText={expand ? 'Collapse' : 'Expand all'}
-                  onClick={() => handleExpandAll()}
+                  tooltipText={allRowsAreExpanded ? 'Collapse' : 'Expand all'}
+                  onClick={() => toggleAllRows(allRowsAreExpanded)}
                 >
-                  {expand ? <CollapseIcon /> : <ExpandIcon />}
+                  {allRowsAreExpanded ? <CollapseIcon /> : <ExpandIcon />}
                 </RoundedIcon>
               )}
             </div>
@@ -410,20 +410,21 @@ ActionBar.propTypes = {
       })
     ])
   ),
+  allRowsAreExpanded: PropTypes.bool,
   autoRefreshIsEnabled: PropTypes.bool,
   autoRefreshIsStopped: PropTypes.bool,
   cancelRequest: PropTypes.func,
-  expand: PropTypes.bool,
   filters: PropTypes.object.isRequired,
   filtersConfig: FILTERS_CONFIG.isRequired,
-  handleExpandAll: PropTypes.func,
   handleRefresh: PropTypes.func.isRequired,
   hidden: PropTypes.bool,
   navigateLink: PropTypes.string,
   page: PropTypes.string.isRequired,
   removeSelectedItem: PropTypes.func,
+  setSearchParams: PropTypes.func.isRequired,
   setSelectedRowData: PropTypes.func,
   tab: PropTypes.string,
+  toggleAllRows: PropTypes.func,
   withRefreshButton: PropTypes.bool,
   withoutExpandButton: PropTypes.bool
 }

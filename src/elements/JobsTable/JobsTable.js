@@ -23,8 +23,12 @@ import { isEmpty } from 'lodash'
 import { useDispatch, useSelector } from 'react-redux'
 import { useLocation, useNavigate, useParams } from 'react-router-dom'
 
+import Details from '../../components/Details/Details'
+import JobWizard from '../../components/JobWizard/JobWizard'
 import JobsTableRow from '../JobsTableRow/JobsTableRow'
 import Loader from '../../common/Loader/Loader'
+import NoData from '../../common/NoData/NoData'
+import Pagination from '../../common/Pagination/Pagination'
 import Table from '../../components/Table/Table'
 
 import {
@@ -34,9 +38,6 @@ import {
   MONITOR_JOBS_TAB,
   PANEL_RERUN_MODE
 } from '../../constants'
-import Details from '../../components/Details/Details'
-import JobWizard from '../../components/JobWizard/JobWizard'
-import NoData from '../../common/NoData/NoData'
 import detailsActions from '../../actions/details'
 import getState from '../../utils/getState'
 import jobsActions from '../../actions/jobs'
@@ -49,7 +50,6 @@ import { getCloseDetailsLink, isDetailsTabExists } from '../../utils/link-helper
 import { getJobLogs } from '../../utils/getJobLogs.util'
 import { getNoDataMessage } from '../../utils/getNoDataMessage'
 import { isJobKindLocal, pollAbortingJobs } from '../../components/Jobs/jobs.util'
-import { isRowRendered, useVirtualization } from '../../hooks/useVirtualization.hook'
 import { openPopUp } from 'igz-controls/utils/common.util'
 import { parseJob } from '../../utils/parseJob'
 import { setFilters } from '../../reducers/filtersReducer'
@@ -57,8 +57,6 @@ import { setNotification } from '../../reducers/notificationReducer'
 import { showErrorNotification } from '../../utils/notifications.util'
 import { usePods } from '../../hooks/usePods.hook'
 import { toggleYaml } from '../../reducers/appReducer'
-
-import cssVariables from './jobsTable.scss'
 
 const JobsTable = React.forwardRef(
   (
@@ -70,6 +68,7 @@ const JobsTable = React.forwardRef(
       jobRuns,
       jobs,
       navigateLink,
+      paginatedJobs,
       refreshJobs,
       requestErrorMessage,
       selectedJob,
@@ -96,6 +95,7 @@ const JobsTable = React.forwardRef(
       handleRerunJob,
       jobWizardIsOpened,
       jobWizardMode,
+      paginationConfigJobsRef,
       setConfirmData,
       setEditableItem,
       setJobWizardIsOpened,
@@ -452,23 +452,10 @@ const JobsTable = React.forwardRef(
       }
     }, [params.jobId, selectedJob, setSelectedJob])
 
-    const virtualizationConfig = useVirtualization({
-      rowsData: {
-        content: tableContent
-      },
-      heightData: {
-        headerRowHeight: cssVariables.monitorJobsHeaderRowHeight,
-        rowHeight: cssVariables.monitorJobsRowHeight,
-        rowHeightExtended: cssVariables.monitorJobsRowHeightExtended
-      }
-    })
-
     return (
       <>
         {jobsStore.loading && <Loader />}
-        {((params.jobName && jobRuns.length === 0) || (jobs.length === 0 && !params.jobName)) &&
-        !jobsStore.loading &&
-        filters ? (
+        {paginatedJobs.length === 0 && !jobsStore.loading && filters ? (
           <NoData
             message={getNoDataMessage(
               filters,
@@ -480,38 +467,38 @@ const JobsTable = React.forwardRef(
             )}
           />
         ) : (
-          isEmpty(selectedJob) && (
-            <Table
-              actionsMenu={actionsMenu}
-              handleCancel={() => setSelectedJob({})}
-              pageData={pageData}
-              retryRequest={handleRefreshWithFilters}
-              selectedItem={selectedJob}
-              tab={MONITOR_JOBS_TAB}
-              tableClassName="monitor-jobs-table"
-              tableHeaders={tableContent[0]?.content ?? []}
-              virtualizationConfig={virtualizationConfig}
-            >
-              {tableContent.map(
-                (tableItem, index) =>
-                  isRowRendered(virtualizationConfig, index) && (
-                    <JobsTableRow
-                      actionsMenu={actionsMenu}
-                      handleSelectJob={handleSelectRun}
-                      key={index}
-                      rowItem={tableItem}
-                      selectedJob={selectedJob}
-                    />
-                  )
-              )}
-            </Table>
+          isEmpty(selectedJob) &&
+          !jobsStore.loading && (
+            <>
+              <Table
+                actionsMenu={actionsMenu}
+                handleCancel={() => setSelectedJob({})}
+                pageData={pageData}
+                retryRequest={handleRefreshWithFilters}
+                selectedItem={selectedJob}
+                tab={MONITOR_JOBS_TAB}
+                tableClassName="monitor-jobs-table"
+                tableHeaders={tableContent[0]?.content ?? []}
+              >
+                {tableContent.map((tableItem, index) => (
+                  <JobsTableRow
+                    actionsMenu={actionsMenu}
+                    handleSelectJob={handleSelectRun}
+                    key={index}
+                    rowItem={tableItem}
+                    selectedJob={selectedJob}
+                  />
+                ))}
+              </Table>
+              <Pagination page={pageData.page} paginationConfig={paginationConfigJobsRef.current} />
+            </>
           )
         )}
         {!isEmpty(selectedJob) && (
           <Details
             actionsMenu={actionsMenu}
             detailsMenu={pageData.details.menu}
-            getCloseDetailsLink={() => getCloseDetailsLink(window.location, params.jobName)}
+            getCloseDetailsLink={() => getCloseDetailsLink(params.jobName)}
             handleCancel={() => {
               setSelectedJob({})
               dispatch(setFilters({ saveFilters: true }))
@@ -536,6 +523,7 @@ JobsTable.propTypes = {
   jobRuns: PropTypes.array.isRequired,
   jobs: PropTypes.array.isRequired,
   navigateLink: PropTypes.string.isRequired,
+  paginatedJobs: PropTypes.array.isRequired,
   refreshJobs: PropTypes.func.isRequired,
   requestErrorMessage: PropTypes.string.isRequired,
   selectedJob: PropTypes.object.isRequired,
