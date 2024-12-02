@@ -22,6 +22,7 @@ import { useDispatch } from 'react-redux'
 import { Transition } from 'react-transition-group'
 import { inRange } from 'lodash'
 import PropTypes from 'prop-types'
+import classnames from 'classnames'
 
 import { useTimeout } from '../../hooks/useTimeout'
 
@@ -68,12 +69,18 @@ const Notification = ({ notification, timeoutMs = 10000, ...rest }) => {
   )
   const handleRemoveNotification = itemId => {
     dispatch(removeNotification(itemId))
+    cancelTimeout()
   }
   const handleRetry = item => {
     handleRemoveNotification(item.id)
     cancelTimeout()
     item.retry(item)
   }
+
+  const progressbarClasses = classnames(
+    'notification__progress-bar',
+    isSuccessResponse ? 'notification__progress-bar-success' : 'notification__progress-bar-alert'
+  )
 
   useEffect(() => {
     const element = nodeRef.current
@@ -101,10 +108,6 @@ const Notification = ({ notification, timeoutMs = 10000, ...rest }) => {
             ...transitionStyles[state]
           }}
           ref={nodeRef}
-          onClick={() => {
-            handleRemoveNotification(notification.id)
-            cancelTimeout()
-          }}
         >
           <div className="notification__body">
             <div
@@ -128,22 +131,21 @@ const Notification = ({ notification, timeoutMs = 10000, ...rest }) => {
               </div>
             )}
           </div>
-          <button className="notification__button-close">
+          <button
+            className="notification__button-close"
+            onClick={() => {
+              handleRemoveNotification(notification.id)
+            }}
+          >
             <CloseIcon />
           </button>
-          <div className="notification__progress-bar--wrapper">
-            <div
-              className={`notification__progress-bar--bg notification__progress-bar--${
-                isSuccessResponse ? 'success' : 'alert'
-              }`}
-            ></div>
+          <div className="notification__progress-bar__wrapper">
+            <div className="notification__progress-bar__bg"></div>
             <div
               role="progressbar"
               aria-hidden="false"
               aria-label="notification timer"
-              className={`notification__progress-bar notification__progress-bar--${
-                isSuccessResponse ? 'success' : 'alert'
-              }`}
+              className={progressbarClasses}
               style={{ animationDuration: `${timeoutMs}ms` }}
             ></div>
           </div>
