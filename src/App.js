@@ -206,8 +206,9 @@ const App = () => {
           </Route>
           {[
             'projects/:projectName/functions',
+            'projects/:projectName/functions/:funcName',
             'projects/:projectName/functions/:hash/:tab',
-            'projects/:projectName/functions/:funcName/:tag/:tab'
+            'projects/:projectName/functions/:funcName/:hash/:tab'
           ].map((path, index) => (
             <Fragment key={index}>
               <Route path={path} element={<Functions />} />

@@ -120,6 +120,7 @@ export const DATASETS_PAGE = 'DATASETS'
 export const DATASETS_TAB = 'datasets'
 
 export const FUNCTIONS_PAGE = 'FUNCTIONS'
+export const FUNCTIONS_PAGE_PATH = 'functions'
 export const ARTIFACTS_PAGE = 'ARTIFACTS'
 
 export const FILES_PAGE = 'FILES'

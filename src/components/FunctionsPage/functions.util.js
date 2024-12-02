@@ -53,6 +53,7 @@ import { ReactComponent as Run } from 'igz-controls/images/run.svg'
 import { ReactComponent as Edit } from 'igz-controls/images/edit.svg'
 import { ReactComponent as Yaml } from 'igz-controls/images/yaml.svg'
 import { ReactComponent as DeployIcon } from 'igz-controls/images/deploy-icon.svg'
+import { ReactComponent as HistoryIcon } from 'igz-controls/images/history.svg'
 
 export const page = 'FUNCTIONS'
 export const detailsMenu = [
@@ -148,7 +149,8 @@ export const generateFunctionsPageData = (
   fetchFunctionNuclioLogsTimeout,
   navigate,
   fetchData,
-  filtersStore
+  filtersStore,
+  showAllVersions
 ) => {
   const showAdditionalLogs = selectedFunction.type === FUNCTION_TYPE_APPLICATION
 
@@ -195,7 +197,8 @@ export const generateFunctionsPageData = (
         }
       },
       withLogsRefreshBtn: false,
-      type: FUNCTIONS_PAGE
+      type: FUNCTIONS_PAGE,
+      showAllVersions
     }
   }
 }
@@ -285,7 +288,9 @@ export const generateActionsMenu = (
   deletingFunctions,
   selectedFunction,
   fetchFunction,
-  isDetailsPopUp = false
+  isDetailsPopUp = false,
+  funcName,
+  showAllVersions
 ) => {
   const functionIsDeleting = isFunctionDeleting(func, deletingFunctions)
   const getFullFunction = funcMin => {
@@ -348,6 +353,14 @@ export const generateActionsMenu = (
       }
     ],
     [
+      {
+        id: 'show-all-versions',
+        label: 'Show all versions',
+        icon: <HistoryIcon />,
+        disabled: functionIsDeleting,
+        onClick: () => showAllVersions(func.name),
+        hidden: funcName
+      },
       {
         id: 'build-and-run',
         label: 'Build and run',
@@ -499,33 +512,27 @@ const chooseOrFetchFunction = (selectedFunction, dispatch, fetchFunction, funcMi
 }
 
 export const checkForSelectedFunction = (
-  name,
-  expandedRowsData,
   functions,
   hash,
-  tag,
+  funcNameParam,
   navigate,
   projectName,
   setSelectedFunction,
   dispatch
 ) => {
   queueMicrotask(() => {
-    if (name || hash) {
-      const functionsList = expandedRowsData?.[name]?.content || functions
-
-      if (functionsList.length > 0) {
+    if (hash) {
+      if (functions.length > 0) {
         const searchItem = searchFunctionItem(
           hash,
-          name,
-          tag,
           projectName,
-          functionsList.map(func => func.data ?? func),
+          functions.map(func => func.data ?? func),
           dispatch,
           true
         )
 
         if (!searchItem) {
-          navigate(`/projects/${projectName}/functions${window.location.search}`, { replace: true })
+          navigate(`/projects/${projectName}/functions${funcNameParam ? `/${funcNameParam}` : ''}${window.location.search}`, { replace: true })
         } else {
           setSelectedFunction(prevState => {
             return isEqual(prevState, searchItem) ? prevState : searchItem
@@ -540,8 +547,6 @@ export const checkForSelectedFunction = (
 
 export const searchFunctionItem = (
   paramsHash,
-  paramsName,
-  paramsTag,
   projectName,
   functions,
   dispatch,
@@ -568,13 +573,6 @@ export const searchFunctionItem = (
     })
 
     checkExistence && checkFunctionExistence(item, { tag, name, hash }, projectName, dispatch)
-  } else if (paramsName && paramsTag) {
-    item = functions.find(func => {
-      return isEqual(func.tag, paramsTag) && isEqual(func.name, paramsName)
-    })
-
-    checkExistence &&
-      checkFunctionExistence(item, { name: paramsName, tag: paramsTag }, projectName, dispatch)
   }
 
   return item

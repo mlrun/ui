@@ -18,7 +18,7 @@ under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
 import React from 'react'
-import { useParams } from 'react-router-dom'
+import { Link, useParams } from 'react-router-dom'
 import PropTypes from 'prop-types'
 
 import ActionBar from '../ActionBar/ActionBar'
@@ -30,22 +30,34 @@ import Loader from '../../common/Loader/Loader'
 import NoData from '../../common/NoData/NoData'
 import Table from '../Table/Table'
 import { ConfirmDialog } from 'igz-controls/components'
+import {
+  RoundedIcon,
+  TextTooltipTemplate,
+  Tooltip
+} from 'iguazio.dashboard-react-controls/dist/components'
 
-import { FUNCTIONS_PAGE, PANEL_CREATE_MODE, PANEL_EDIT_MODE } from '../../constants'
+import {
+  FUNCTIONS_PAGE,
+  FUNCTIONS_PAGE_PATH,
+  PANEL_CREATE_MODE,
+  PANEL_EDIT_MODE
+} from '../../constants'
 import { SECONDARY_BUTTON } from 'igz-controls/constants'
 import { FILTERS_CONFIG, VIRTUALIZATION_CONFIG } from '../../types'
 import { getNoDataMessage } from '../../utils/getNoDataMessage'
 import { isRowRendered } from '../../hooks/useVirtualization.hook'
+import { getCloseDetailsLink } from '../../utils/link-helper.util'
+import { getSavedSearchParams } from '../../utils/filter.util'
+
+import { ReactComponent as Back } from 'igz-controls/images/back-arrow.svg'
+import { ReactComponent as HistoryIcon } from 'igz-controls/images/history.svg'
 
 const FunctionsView = ({
   actionsMenu,
-  allRowsAreExpanded,
   closePanel,
   confirmData,
   createFunctionSuccess,
   editableItem,
-  expandedRowsData,
-  filters,
   filtersChangeCallback,
   filtersStore,
   functions,
@@ -64,8 +76,6 @@ const FunctionsView = ({
   selectedFunction,
   setSearchParams,
   tableContent,
-  toggleAllRows,
-  toggleRow,
   virtualizationConfig
 }) => {
   const params = useParams()
@@ -78,15 +88,31 @@ const FunctionsView = ({
         <div className="content">
           <div className="table-container">
             <div className="content__action-bar-wrapper">
+              {params.funcName && (
+                <div className="link-back">
+                  <Link
+                    to={`/projects/${params.projectName}/functions${getSavedSearchParams(window.location.search)}`}
+                    className="link-back__icon"
+                  >
+                    <RoundedIcon id="pipeline-back-btn" tooltipText="Back">
+                      <Back />
+                    </RoundedIcon>
+                  </Link>
+                  <div className="link-back__title">
+                    <HistoryIcon />
+                    <div className="version-history-title" data-testid="version-history">Version history: </div>
+                    <Tooltip template={<TextTooltipTemplate text={params.funcName} />}>
+                      {params.funcName}
+                    </Tooltip>
+                  </div>
+                </div>
+              )}
               <ActionBar
-                allRowsAreExpanded={allRowsAreExpanded}
-                filters={filters}
-                filtersConfig={functionsFiltersConfig}
-                handleRefresh={filtersChangeCallback}
-                navigateLink={`/projects/${params.projectName}/functions${window.location.search}`}
                 page={FUNCTIONS_PAGE}
-                setSearchParams={setSearchParams}
-                toggleAllRows={toggleAllRows}
+                filtersConfig={functionsFiltersConfig}
+                filters={filters}
+                handleRefresh={filtersChangeCallback}
+                navigateLink={`/projects/${params.projectName}/functions${params.funcName ? `/${params.funcName}` : ''}${window.location.search}`}
                 actionButtons={[
                   {
                     hidden: !isDemoMode,
@@ -119,6 +145,9 @@ const FunctionsView = ({
                 {functionsStore.funcLoading && <Loader />}
                 <Table
                   actionsMenu={actionsMenu}
+                  getCloseDetailsLink={() =>
+                    getCloseDetailsLink(window.location, params.funcName || FUNCTIONS_PAGE_PATH)
+                  }
                   handleCancel={handleCancel}
                   pageData={pageData}
                   retryRequest={retryRequest}
@@ -132,13 +161,10 @@ const FunctionsView = ({
                       isRowRendered(virtualizationConfig, index) && (
                         <FunctionsTableRow
                           actionsMenu={actionsMenu}
-                          expandedRowsData={expandedRowsData}
                           handleSelectItem={handleSelectFunction}
-                          key={tableItem.data.ui.identifier}
-                          rowIndex={index}
+                          key={tableItem.data.hash}
                           rowItem={tableItem}
                           selectedItem={selectedFunction}
-                          toggleRow={toggleRow}
                           withQuickActions
                         />
                       )
@@ -189,12 +215,10 @@ FunctionsView.defaultPropTypes = {
 
 FunctionsView.propTypes = {
   actionsMenu: PropTypes.func.isRequired,
-  allRowsAreExpanded: PropTypes.bool.isRequired,
   closePanel: PropTypes.func.isRequired,
   confirmData: PropTypes.object,
   createFunctionSuccess: PropTypes.func.isRequired,
   editableItem: PropTypes.object,
-  expandedRowsData: PropTypes.object.isRequired,
   filtersChangeCallback: PropTypes.func.isRequired,
   filtersStore: PropTypes.object.isRequired,
   functions: PropTypes.arrayOf(PropTypes.object).isRequired,
@@ -212,8 +236,6 @@ FunctionsView.propTypes = {
   selectedFunction: PropTypes.object.isRequired,
   setSearchParams: PropTypes.func.isRequired,
   tableContent: PropTypes.arrayOf(PropTypes.object).isRequired,
-  toggleAllRows: PropTypes.func.isRequired,
-  toggleRow: PropTypes.func.isRequired,
   virtualizationConfig: VIRTUALIZATION_CONFIG.isRequired
 }
 

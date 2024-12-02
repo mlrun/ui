@@ -1,4 +1,5 @@
 @import '~igz-controls/scss/variables';
+@import '~igz-controls/scss/colors';
 @import 'src/scss/mixins';
 
 $functionsRowHeight: $rowHeight;
@@ -7,6 +8,33 @@ $functionsRowHeightExtended: $rowHeightExtended;
 
 .functions-table {
   @include rowsHeight($functionsHeaderRowHeight, $functionsRowHeight, $functionsRowHeightExtended);
+}
+
+.link-back {
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+
+  &__icon {
+    display: flex;
+    align-items: center;
+  }
+
+  &__title {
+    display: flex;
+    gap: 5px;
+    align-items: center;
+    max-width: 600px;
+    margin: 0 5px;
+    overflow: hidden;
+    font-weight: bold;
+    font-size: 24px;
+
+    .version-history-title {
+      flex-shrink: 0;
+      color: $topaz;
+    }
+  }
 }
 
 :export {
