@@ -25,7 +25,8 @@ import { debounce } from 'lodash'
 export const useInitialTableFetch = ({
   fetchData,
   fetchTags,
-  filters
+  filters,
+  requestTrigger
 } = {}) => {
   const params = useParams()
   const isInitialRequestSent = useRef(false)
@@ -56,6 +57,6 @@ export const useInitialTableFetch = ({
     () => () => {
       isInitialRequestSent.current = false
     },
-    [params.projectName]
+    [params.projectName, requestTrigger]
   )
 }

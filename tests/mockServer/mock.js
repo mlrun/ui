@@ -1559,7 +1559,7 @@ function getFuncs(req, res) {
       if (req.query['name'].includes('~')) {
         return func.metadata.name.includes(req.query['name'].slice(1))
       } else {
-        return func.metadata.name === func.query['name']
+        return func.metadata.name === req.query['name']
       }
     })
   }
