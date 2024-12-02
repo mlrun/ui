@@ -22,6 +22,7 @@ import { formatDatetime } from './datetime'
 
 import { ReactComponent as Application } from 'igz-controls/images/entity-type-application.svg'
 import { ReactComponent as Endpoint } from 'igz-controls/images/entity-type-endpoint.svg'
+import { ReactComponent as Error } from 'igz-controls/images/severity-warning.svg'
 import { ReactComponent as Critical } from 'igz-controls/images/severity-critical.svg'
 import { ReactComponent as Email } from 'igz-controls/images/email-icon.svg'
 import { ReactComponent as Git } from 'igz-controls/images/git-icon.svg'
@@ -129,10 +130,13 @@ const getNotificationData = notifications =>
   notifications.map(notification => {
     return {
       icon: (
-        <div
-          className={`table-cell-notification__content ${notification.err !== '' ? 'notification-fail' : ''}`}
-        >
+        <div className={'table-cell-notification'}>
           {alertsNotifications[notification.kind]}
+          {notification.err !== '' && (
+            <div className="notification-fail">
+              <Error />
+            </div>
+          )}
         </div>
       ),
       tooltip: upperFirst(notification.kind)
