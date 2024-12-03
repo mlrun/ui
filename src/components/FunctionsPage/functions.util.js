@@ -198,7 +198,7 @@ export const generateFunctionsPageData = (
       },
       withLogsRefreshBtn: false,
       type: FUNCTIONS_PAGE,
-      showAllVersions
+      // showAllVersions // todo uncomment or remove button from details when we decide about this btn in details 
     }
   }
 }
@@ -526,13 +526,17 @@ export const checkForSelectedFunction = (
         const searchItem = searchFunctionItem(
           hash,
           projectName,
+          funcNameParam,
           functions.map(func => func.data ?? func),
           dispatch,
           true
         )
 
         if (!searchItem) {
-          navigate(`/projects/${projectName}/functions${funcNameParam ? `/${funcNameParam}` : ''}${window.location.search}`, { replace: true })
+          navigate(
+            `/projects/${projectName}/functions${funcNameParam ? `/${funcNameParam}` : ''}${window.location.search}`,
+            { replace: true }
+          )
         } else {
           setSelectedFunction(prevState => {
             return isEqual(prevState, searchItem) ? prevState : searchItem
@@ -548,6 +552,7 @@ export const checkForSelectedFunction = (
 export const searchFunctionItem = (
   paramsHash,
   projectName,
+  funcNameParam,
   functions,
   dispatch,
   checkExistence = false
@@ -555,19 +560,23 @@ export const searchFunctionItem = (
   let item = {}
 
   if (paramsHash) {
-    const withFunctionTag = paramsHash.indexOf(':') > 0
+    const withFunctionTag = paramsHash.includes(':')
     let name,
       tag,
       hash = ''
 
+    if (withFunctionTag) {
+      [name, tag] = paramsHash.split(':')
+    } else {
+      [name, hash] = paramsHash.split('@')
+    }
+
+    name = name || funcNameParam
+
     item = functions.find(func => {
       if (withFunctionTag) {
-        ;[name, tag] = paramsHash.split(':')
-
         return isEqual(func.tag, tag) && isEqual(func.name, name)
       } else {
-        ;[name, hash] = paramsHash.split('@')
-
         return isEqual(func.hash, hash) && isEqual(func.name, name)
       }
     })

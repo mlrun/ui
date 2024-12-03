@@ -18,7 +18,7 @@ under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
 import React from 'react'
-import { Link, useParams } from 'react-router-dom'
+import { useParams } from 'react-router-dom'
 import PropTypes from 'prop-types'
 
 import ActionBar from '../ActionBar/ActionBar'
@@ -30,11 +30,7 @@ import Loader from '../../common/Loader/Loader'
 import NoData from '../../common/NoData/NoData'
 import Table from '../Table/Table'
 import { ConfirmDialog } from 'igz-controls/components'
-import {
-  RoundedIcon,
-  TextTooltipTemplate,
-  Tooltip
-} from 'iguazio.dashboard-react-controls/dist/components'
+import HistoryBackLink from '../../common/HistoryBackLink/historyBackLink'
 
 import {
   FUNCTIONS_PAGE,
@@ -48,9 +44,6 @@ import { getNoDataMessage } from '../../utils/getNoDataMessage'
 import { isRowRendered } from '../../hooks/useVirtualization.hook'
 import { getCloseDetailsLink } from '../../utils/link-helper.util'
 import { getSavedSearchParams } from '../../utils/filter.util'
-
-import { ReactComponent as Back } from 'igz-controls/images/back-arrow.svg'
-import { ReactComponent as HistoryIcon } from 'igz-controls/images/history.svg'
 
 const FunctionsView = ({
   actionsMenu,
@@ -79,6 +72,7 @@ const FunctionsView = ({
   virtualizationConfig
 }) => {
   const params = useParams()
+
   return (
     <>
       <div className="content-wrapper">
@@ -89,23 +83,10 @@ const FunctionsView = ({
           <div className="table-container">
             <div className="content__action-bar-wrapper">
               {params.funcName && (
-                <div className="link-back">
-                  <Link
-                    to={`/projects/${params.projectName}/functions${getSavedSearchParams(window.location.search)}`}
-                    className="link-back__icon"
-                  >
-                    <RoundedIcon id="pipeline-back-btn" tooltipText="Back">
-                      <Back />
-                    </RoundedIcon>
-                  </Link>
-                  <div className="link-back__title">
-                    <HistoryIcon />
-                    <div className="version-history-title" data-testid="version-history">Version history: </div>
-                    <Tooltip template={<TextTooltipTemplate text={params.funcName} />}>
-                      {params.funcName}
-                    </Tooltip>
-                  </div>
-                </div>
+                <HistoryBackLink
+                  link={`/projects/${params.projectName}/functions${getSavedSearchParams(window.location.search)}`}
+                  itemName={params.funcName}
+                />
               )}
               <ActionBar
                 page={FUNCTIONS_PAGE}

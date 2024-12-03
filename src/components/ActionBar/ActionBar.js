@@ -17,7 +17,7 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import React, { useCallback, useEffect, useMemo, useState } from 'react'
+import React, { useCallback, useEffect, useLayoutEffect, useMemo, useState } from 'react'
 import PropTypes from 'prop-types'
 import arrayMutators from 'final-form-arrays'
 import classnames from 'classnames'
@@ -289,7 +289,7 @@ const ActionBar = ({
     }
   }, [autoRefresh, autoRefreshIsStopped, hidden, autoRefreshIsEnabled, refresh])
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     formRef.current.reset(formInitialValues)
   }, [formInitialValues])
 

@@ -66,7 +66,7 @@ import {
   PAST_WEEK_DATE_OPTION
 } from '../../utils/datePicker.util'
 import { toggleYaml } from '../../reducers/appReducer'
-import { getSavedSearchParams, saveSearchParams } from '../../utils/filter.util'
+import { getSavedSearchParams, transformSearchParams } from '../../utils/filter.util'
 
 import cssVariables from './functions.scss'
 
@@ -184,6 +184,7 @@ const Functions = ({
           const paramsFunction = searchFunctionItem(
             params.hash,
             params.projectName,
+            params.funcName,
             [],
             dispatch,
             true
@@ -418,7 +419,7 @@ const Functions = ({
   const showAllVersions = useCallback(
     funcName => {
       navigate(
-        `/projects/${params.projectName}/functions/${funcName}?${saveSearchParams(window.location.search)}`
+        `/projects/${params.projectName}/functions/${funcName}?${transformSearchParams(window.location.search)}`
       )
     },
     [navigate, params.projectName]
@@ -588,7 +589,7 @@ const Functions = ({
         if (currentItem) {
           // todo need better logic for searching currentItem for cases when the function has no tag
           navigate(
-            `/projects/${params.projectName}/functions/${params.funcName ? `${params.funcName}/` : ''}${currentItem.name}@${currentItem.hash}/${tab}${window.location.search}`
+            `/projects/${params.projectName}/functions/${params.funcName}${params.funcName ? '/' : ''}@${currentItem.hash}/${tab}${window.location.search}`
           )
         }
         dispatch(
@@ -617,7 +618,7 @@ const Functions = ({
         if (currentItem) {
           // todo need better logic for searching currentItem for cases when the function has no tag
           navigate(
-            `/projects/${params.projectName}/functions/${params.funcName ? `${params.funcName}/` : ''}${currentItem.name}@${currentItem.hash}/overview${window.location.search}`
+            `/projects/${params.projectName}/functions/${params.funcName}${params.funcName ? '/' : ''}@${currentItem.hash}/overview${window.location.search}`
           )
         }
       }

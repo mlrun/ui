@@ -1,0 +1,28 @@
+@import '~igz-controls/scss/colors';
+
+.history-back-link {
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+
+  &__icon {
+    display: flex;
+    align-items: center;
+  }
+
+  &__title {
+    display: flex;
+    gap: 5px;
+    align-items: center;
+    max-width: 600px;
+    margin: 0 5px;
+    overflow: hidden;
+    font-weight: bold;
+    font-size: 24px;
+
+    &-version {
+      flex-shrink: 0;
+      color: $topaz;
+    }
+  }
+}
