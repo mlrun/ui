@@ -20,7 +20,7 @@ such restriction.
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { connect, useDispatch, useSelector } from 'react-redux'
 import { isEmpty } from 'lodash'
-import { useLocation, useNavigate, useParams } from 'react-router-dom'
+import { useLocation, useNavigate, useParams, useSearchParams } from 'react-router-dom'
 
 import FunctionsView from './FunctionsView'
 import JobWizard from '../JobWizard/JobWizard'
@@ -90,7 +90,7 @@ const Functions = ({
   const [jobWizardIsOpened, setJobWizardIsOpened] = useState(false)
   const [jobWizardMode, setJobWizardMode] = useState(null)
   const filtersStore = useSelector(store => store.filtersStore)
-  const [selectedRowData, setSelectedRowData] = useState({})
+  const [expandedRowsData, setExpandedRowsData] = useState({})
   const [requestErrorMessage, setRequestErrorMessage] = useState('')
   const [deletingFunctions, setDeletingFunctions] = useState({})
   const abortControllerRef = useRef(new AbortController())
@@ -99,6 +99,7 @@ const Functions = ({
   const terminatePollRef = useRef(null)
   const { isDemoMode, isStagingMode } = useMode()
   const params = useParams()
+  const [, setSearchParams] = useSearchParams()
   const navigate = useNavigate()
   const location = useLocation()
   const dispatch = useDispatch()
@@ -197,7 +198,7 @@ const Functions = ({
     filters => {
       setFunctions([])
       setSelectedFunctionMin({})
-      setSelectedRowData({})
+      setExpandedRowsData({})
 
       return fetchData(filters)
     },
@@ -208,7 +209,7 @@ const Functions = ({
     (func, content) => {
       const funcIdentifier = getFunctionIdentifier(func)
 
-      setSelectedRowData(state => {
+      setExpandedRowsData(state => {
         return {
           ...state,
           [funcIdentifier]: {
@@ -225,33 +226,36 @@ const Functions = ({
   const handleCollapse = useCallback(
     func => {
       const funcIdentifier = getFunctionIdentifier(func.data)
-      const newPageDataSelectedRowData = { ...selectedRowData }
+      const newPageDataSelectedRowData = { ...expandedRowsData }
 
       delete newPageDataSelectedRowData[funcIdentifier]
 
-      setSelectedRowData(newPageDataSelectedRowData)
+      setExpandedRowsData(newPageDataSelectedRowData)
     },
-    [selectedRowData]
+    [expandedRowsData]
   )
 
-  const handleExpandAllCallback = (collapse, content) => {
-    const newSelectedRowData = {}
-    if (collapse) {
-      setSelectedRowData({})
-    } else {
-      Object.entries(content).forEach(([key, value]) => {
-        newSelectedRowData[key] = {
-          content: value.map(contentItem =>
-            createFunctionsRowData(contentItem, params.projectName, false)
-          )
-        }
-      })
-    }
+  const handleExpandAllCallback = useCallback(
+    (collapse, content) => {
+      const newSelectedRowData = {}
+      if (collapse) {
+        setExpandedRowsData({})
+      } else {
+        Object.entries(content).forEach(([key, value]) => {
+          newSelectedRowData[key] = {
+            content: value.map(contentItem =>
+              createFunctionsRowData(contentItem, params.projectName, false)
+            )
+          }
+        })
+      }
 
-    setSelectedRowData(newSelectedRowData)
-  }
+      setExpandedRowsData(newSelectedRowData)
+    },
+    [params.projectName]
+  )
 
-  const { latestItems, handleExpandRow, expand, handleExpandAll } = useGroupContent(
+  const { latestItems, allRowsAreExpanded, toggleRow, toggleAllRows } = useGroupContent(
     functions,
     getFunctionIdentifier,
     handleCollapse,
@@ -501,7 +505,6 @@ const Functions = ({
 
   useInitialTableFetch({
     fetchData,
-    setExpandedRowsData: setSelectedRowData,
     createRowData: rowItem => createFunctionsRowData(rowItem, params.projectName),
     filters: functionsFilters
   })
@@ -512,7 +515,7 @@ const Functions = ({
     return () => {
       setSelectedFunctionMin({})
       setFunctions([])
-      setSelectedRowData({})
+      setExpandedRowsData({})
       abortController.abort(REQUEST_CANCELED)
     }
   }, [params.projectName])
@@ -526,7 +529,7 @@ const Functions = ({
   useEffect(() => {
     checkForSelectedFunction(
       params.funcName,
-      selectedRowData,
+      expandedRowsData,
       functions,
       params.hash,
       params.tag,
@@ -543,7 +546,7 @@ const Functions = ({
     params.hash,
     params.projectName,
     params.tag,
-    selectedRowData
+    expandedRowsData
   ])
 
   useEffect(() => {
@@ -674,7 +677,7 @@ const Functions = ({
   const virtualizationConfig = useVirtualization({
     rowsData: {
       content: tableContent,
-      expandedRowsData: selectedRowData,
+      expandedRowsData,
       selectedItem: selectedFunction
     },
     heightData: {
@@ -688,14 +691,15 @@ const Functions = ({
   return (
     <FunctionsView
       actionsMenu={actionsMenu}
+      allRowsAreExpanded={allRowsAreExpanded}
       closePanel={closePanel}
       confirmData={confirmData}
       createFunctionSuccess={createFunctionSuccess}
       editableItem={editableItem}
-      expand={expand}
+      expandedRowsData={expandedRowsData}
+      filters={functionsFilters}
       filtersChangeCallback={filtersChangeCallback}
       filtersStore={filtersStore}
-      filters={functionsFilters}
       functions={functions}
       functionsFiltersConfig={functionsFiltersConfig}
       functionsPanelIsOpen={functionsPanelIsOpen}
@@ -704,16 +708,16 @@ const Functions = ({
       handleCancel={handleCancel}
       handleDeployFunctionFailure={handleDeployFunctionFailure}
       handleDeployFunctionSuccess={handleDeployFunctionSuccess}
-      handleExpandAll={handleExpandAll}
-      handleExpandRow={handleExpandRow}
       handleSelectFunction={handleSelectFunction}
       isDemoMode={isDemoMode}
       pageData={pageData}
-      retryRequest={retryRequestCallback}
       requestErrorMessage={requestErrorMessage}
+      retryRequest={retryRequestCallback}
       selectedFunction={selectedFunction}
-      selectedRowData={selectedRowData}
+      setSearchParams={setSearchParams}
       tableContent={tableContent}
+      toggleAllRows={toggleAllRows}
+      toggleRow={toggleRow}
       virtualizationConfig={virtualizationConfig}
     />
   )

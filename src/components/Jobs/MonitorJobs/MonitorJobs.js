@@ -17,7 +17,7 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import React, { useEffect, useMemo, useRef, useState } from 'react'
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { useDispatch } from 'react-redux'
 
@@ -27,7 +27,6 @@ import TableTop from '../../../elements/TableTop/TableTop'
 import { GROUP_BY_NONE, MONITOR_JOBS_TAB, REQUEST_CANCELED } from '../../../constants'
 import { JobsContext } from '../Jobs'
 import { createJobsMonitorTabContent } from '../../../utils/createJobsContent'
-import { fetchInitialJobs } from './monitorJobs.util'
 import { setFilters } from '../../../reducers/filtersReducer'
 import { useMode } from '../../../hooks/mode.hook'
 import { useFiltersFromSearchParams } from '../../../hooks/useFiltersFromSearchParams.hook'
@@ -45,13 +44,15 @@ const MonitorJobs = () => {
     jobRuns,
     jobs,
     jobsFiltersConfig,
+    paginatedJobs,
     refreshJobs,
     requestErrorMessage,
+    searchParams,
     setAbortingJobs,
     setJobRuns,
     setJobs,
-    terminateAbortTasksPolling,
-    tabData
+    tabData,
+    terminateAbortTasksPolling
   } = React.useContext(JobsContext)
   const jobsAreInitializedRef = useRef(false)
 
@@ -61,27 +62,20 @@ const MonitorJobs = () => {
   )
 
   const tableContent = useMemo(
-    () =>
-      createJobsMonitorTabContent(params.jobName ? jobRuns : jobs, params.jobName, isStagingMode),
-    [isStagingMode, jobRuns, jobs, params.jobName]
+    () => createJobsMonitorTabContent(paginatedJobs, params.jobName, isStagingMode),
+    [isStagingMode, paginatedJobs, params.jobName]
   )
 
-  useEffect(() => {
-    fetchInitialJobs(
-      filters,
-      selectedJob,
-      params.jobId,
-      refreshJobs,
-      jobsAreInitializedRef
-    )
-  }, [
-    dispatch,
-    filters,
-    params.jobId,
-    params.projectName,
-    refreshJobs,
-    selectedJob
-  ])
+  const getBackLink = useCallback(
+    useSavedParams => {
+      let queryParams = useSavedParams
+        ? getSavedSearchParams(window.location.search)
+        : `?${searchParams.toString()}`
+
+      return `/projects/${params.projectName}/jobs/${MONITOR_JOBS_TAB}${queryParams}`
+    },
+    [params.projectName, searchParams]
+  )
 
   useEffect(() => {
     dispatch(setFilters({ groupBy: GROUP_BY_NONE }))
@@ -107,23 +101,19 @@ const MonitorJobs = () => {
 
   return (
     <>
-      {params.jobName && (
-        <TableTop
-          link={`/projects/${params.projectName}/jobs/${MONITOR_JOBS_TAB}${getSavedSearchParams(window.location.search)}`}
-          text={params.jobName}
-        />
-      )}
+      {params.jobName && <TableTop link={getBackLink(true)} text={params.jobName} />}
       <JobsTable
         abortingJobs={abortingJobs}
-        ref={{ abortJobRef }}
         context={JobsContext}
         filters={filters}
         filtersConfig={jobsFiltersConfig}
         jobRuns={jobRuns}
         jobs={jobs}
-        requestErrorMessage={requestErrorMessage}
-        navigateLink={`/projects/${params.projectName}/jobs/${MONITOR_JOBS_TAB}${window.location.search}`}
+        navigateLink={getBackLink()}
+        paginatedJobs={paginatedJobs}
+        ref={{ abortJobRef }}
         refreshJobs={refreshJobs}
+        requestErrorMessage={requestErrorMessage}
         selectedJob={selectedJob}
         setAbortingJobs={setAbortingJobs}
         setJobRuns={setJobRuns}

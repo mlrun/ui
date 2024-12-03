@@ -19,7 +19,7 @@ such restriction.
 */
 import React, { useCallback, useEffect, useState, useMemo, useRef } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { useLocation, useNavigate, useParams } from 'react-router-dom'
+import { useLocation, useNavigate, useParams, useSearchParams } from 'react-router-dom'
 import { isEmpty } from 'lodash'
 
 import AddArtifactTagPopUp from '../../elements/AddArtifactTagPopUp/AddArtifactTagPopUp'
@@ -82,6 +82,7 @@ const Files = () => {
   const location = useLocation()
   const navigate = useNavigate()
   const params = useParams()
+  const [, setSearchParams] = useSearchParams()
   const viewMode = getViewMode(window.location.search)
   const filters = useFiltersFromSearchParams(filtersConfig)
   const abortControllerRef = useRef(new AbortController())
@@ -220,7 +221,7 @@ const Files = () => {
     ]
   )
 
-  const handleRemoveRowData = useCallback(
+  const collapseRowCallback = useCallback(
     file => {
       const newStoreSelectedRowData = {
         ...artifactsStore.files.selectedRowData.content
@@ -236,7 +237,7 @@ const Files = () => {
     [artifactsStore.files.selectedRowData.content, dispatch, selectedRowData]
   )
 
-  const handleExpand = useCallback(
+  const expandRowCallback = useCallback(
     (file, content) => {
       const fileIdentifier = getArtifactIdentifier(file)
 
@@ -254,11 +255,11 @@ const Files = () => {
     [params.projectName]
   )
 
-  const { latestItems, handleExpandRow } = useGroupContent(
+  const { latestItems, toggleRow } = useGroupContent(
     files,
     getArtifactIdentifier,
-    handleRemoveRowData,
-    handleExpand,
+    collapseRowCallback,
+    expandRowCallback,
     null,
     FILES_PAGE
   )
@@ -409,7 +410,6 @@ const Files = () => {
       filters={filters}
       filtersStore={filtersStore}
       getAndSetSelectedArtifact={getAndSetSelectedArtifact}
-      handleExpandRow={handleExpandRow}
       handleRefresh={handleRefresh}
       handleRefreshWithFilters={handleRefreshWithFilters}
       handleRegisterArtifact={handleRegisterArtifact}
@@ -421,10 +421,12 @@ const Files = () => {
       selectedFile={selectedFile}
       selectedRowData={selectedRowData}
       setMaxArtifactsErrorIsShown={setMaxArtifactsErrorIsShown}
+      setSearchParams={setSearchParams}
       setSelectedFileMin={setSelectedFileMin}
       sortProps={{ sortTable, selectedColumnName, getSortingIcon }}
       tableContent={sortedTableContent}
       tableHeaders={sortedTableHeaders}
+      toggleRow={toggleRow}
       viewMode={viewMode}
       virtualizationConfig={virtualizationConfig}
     />

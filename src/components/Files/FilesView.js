@@ -52,7 +52,6 @@ const FilesView = React.forwardRef(
       filters,
       filtersStore,
       getAndSetSelectedArtifact,
-      handleExpandRow,
       handleRefresh,
       handleRefreshWithFilters,
       handleRegisterArtifact,
@@ -63,10 +62,12 @@ const FilesView = React.forwardRef(
       selectedFile,
       selectedRowData,
       setMaxArtifactsErrorIsShown,
+      setSearchParams,
       setSelectedFileMin,
       sortProps,
       tableContent,
       tableHeaders,
+      toggleRow,
       viewMode = null,
       virtualizationConfig
     },
@@ -95,6 +96,7 @@ const FilesView = React.forwardRef(
                   filtersConfig={filtersConfig}
                   handleRefresh={handleRefresh}
                   page={FILES_PAGE}
+                  setSearchParams={setSearchParams}
                   withRefreshButton
                   withoutExpandButton
                 >
@@ -140,13 +142,13 @@ const FilesView = React.forwardRef(
                         isRowRendered(virtualizationConfig, index) && (
                           <ArtifactsTableRow
                             actionsMenu={actionsMenu}
-                            handleExpandRow={handleExpandRow}
                             handleSelectItem={handleSelectFile}
                             key={tableItem.data.ui.identifier}
                             rowIndex={index}
                             rowItem={tableItem}
                             selectedItem={selectedFile}
                             selectedRowData={selectedRowData}
+                            toggleRow={toggleRow}
                           />
                         )
                     )}
@@ -187,7 +189,6 @@ FilesView.propTypes = {
   filters: PropTypes.object.isRequired,
   filtersStore: PropTypes.object.isRequired,
   getAndSetSelectedArtifact: PropTypes.func.isRequired,
-  handleExpandRow: PropTypes.func.isRequired,
   handleRefresh: PropTypes.func.isRequired,
   handleRefreshWithFilters: PropTypes.func.isRequired,
   handleRegisterArtifact: PropTypes.func.isRequired,
@@ -198,10 +199,12 @@ FilesView.propTypes = {
   selectedFile: PropTypes.object.isRequired,
   selectedRowData: PropTypes.object.isRequired,
   setMaxArtifactsErrorIsShown: PropTypes.func.isRequired,
+  setSearchParams: PropTypes.func.isRequired,
   setSelectedFileMin: PropTypes.func.isRequired,
   sortProps: SORT_PROPS,
   tableContent: PropTypes.arrayOf(PropTypes.object).isRequired,
   tableHeaders: PropTypes.arrayOf(PropTypes.object).isRequired,
+  toggleRow: PropTypes.func.isRequired,
   viewMode: PropTypes.string,
   virtualizationConfig: VIRTUALIZATION_CONFIG.isRequired
 }

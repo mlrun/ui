@@ -19,7 +19,7 @@ such restriction.
 */
 import React, { useCallback, useEffect, useLayoutEffect, useMemo, useState } from 'react'
 import PropTypes from 'prop-types'
-import { useNavigate, useParams } from 'react-router-dom'
+import { useParams } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 import { cloneDeep, isEqual } from 'lodash'
 
@@ -52,10 +52,11 @@ import {
   STATUS_FILTER,
   TAG_FILTER
 } from '../../constants'
+import detailsActions from '../../actions/details'
 import { filterSelectOptions, tagFilterOptions } from './filterMenu.settings'
 import { generateProjectsList } from '../../utils/projects'
+import { getDefaultCloseDetailsLink } from '../../utils/link-helper.util'
 import { removeFilters, setFilterProjectOptions, setFilters } from '../../reducers/filtersReducer'
-import detailsActions from '../../actions/details'
 
 import './filterMenu.scss'
 
@@ -66,11 +67,11 @@ const FilterMenu = ({
   cancelRequest = () => {},
   expand = false,
   filters,
-  handleExpandAll = () => {},
   hidden = false,
   onChange,
   page,
   tab = '',
+  toggleAllRows = () => {},
   withoutExpandButton = false
 }) => {
   const [labels, setLabels] = useState('')
@@ -78,7 +79,6 @@ const FilterMenu = ({
   const [entities, setEntities] = useState('')
   const [tagOptions, setTagOptions] = useState(tagFilterOptions)
   const [autoRefresh, setAutoRefresh] = useState(AUTO_REFRESH_ID)
-  const navigate = useNavigate()
   const params = useParams()
   const selectOptions = useMemo(() => cloneDeep(filterSelectOptions), [])
   const dispatch = useDispatch()
@@ -149,18 +149,14 @@ const FilterMenu = ({
         cancelRequest(REQUEST_CANCELED)
       } else {
         if ((params.jobId || params.name) && !isRefreshed) {
-          navigate(
-            `/projects/${params.projectName}/${page.toLowerCase()}${
-              params.pageTab ? `/${params.pageTab}` : tab ? `/${tab}` : ''
-            }`
-          )
+          getDefaultCloseDetailsLink(params, page, tab)
         }
 
-        handleExpandAll && handleExpandAll(true)
+        toggleAllRows && toggleAllRows(true)
         onChange(data)
       }
     },
-    [params, page, tab, handleExpandAll, onChange, navigate, changes.counter, cancelRequest]
+    [params, page, tab, toggleAllRows, onChange, changes.counter, cancelRequest]
   )
 
   const filtersHelper = async (changes, dispatch) => {
@@ -487,7 +483,7 @@ const FilterMenu = ({
             <RoundedIcon
               id="toggle-collapse"
               tooltipText={expand ? 'Collapse' : 'Expand all'}
-              onClick={() => handleExpandAll()}
+              onClick={() => toggleAllRows(expand)}
             >
               {expand ? <CollapseIcon /> : <ExpandIcon />}
             </RoundedIcon>
@@ -505,11 +501,11 @@ FilterMenu.propTypes = {
   cancelRequest: PropTypes.func,
   expand: PropTypes.bool,
   filters: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
-  handleExpandAll: PropTypes.func,
   hidden: PropTypes.bool,
   onChange: PropTypes.func.isRequired,
   page: PropTypes.string.isRequired,
   tab: PropTypes.string,
+  toggleAllRows: PropTypes.func,
   withoutExpandButton: PropTypes.bool
 }
 
