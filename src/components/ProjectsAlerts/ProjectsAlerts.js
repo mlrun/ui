@@ -71,8 +71,12 @@ const ProjectsAlerts = () => {
         })
       )
         .unwrap()
-        .then(data => {
-          setAlerts(data)
+        .then(alerts => {
+          if (alerts?.length > 0) {
+            setAlerts(alerts)
+          } else {
+            setAlerts([])
+          }
         })
     },
     [dispatch, params.id]

@@ -22,6 +22,7 @@ import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
 import alertsApi from '../api/alerts-api'
 import { defaultPendingHandler } from './redux.util'
 import { parseAlerts } from '../utils/parseAlert'
+import { largeResponseCatchHandler } from '../utils/largeResponseCatchHandler'
 
 const initialState = {
   alerts: [],
@@ -29,16 +30,42 @@ const initialState = {
   loading: false
 }
 
-export const fetchAlert = createAsyncThunk('fetchAlert', ({ project, filters, config }) => {
-  return alertsApi.getAlert(project, filters, config).then(({ data }) => {
-    return parseAlerts(data.activations)
-  })
-})
-export const fetchAlerts = createAsyncThunk('fetchAlerts', ({ project, filters, config }) => {
-  return alertsApi.getAlerts(project, filters, config).then(({ data }) => {
-    return parseAlerts(data.activations)
-  })
-})
+export const fetchAlert = createAsyncThunk(
+  'fetchAlert',
+  ({ project, filters, config }, thunkAPI) => {
+    return alertsApi
+      .getAlert(project, filters, config)
+      .then(({ data }) => {
+        return parseAlerts(data.alerts)
+      })
+      .catch(error => {
+        largeResponseCatchHandler(
+          error,
+          'Failed to fetch alerts',
+          thunkAPI.dispatch,
+          config?.ui?.setRequestErrorMessage
+        )
+      })
+  }
+)
+export const fetchAlerts = createAsyncThunk(
+  'fetchAlerts',
+  ({ project, filters, config }, thunkAPI) => {
+    return alertsApi
+      .getAlerts(project, filters, config)
+      .then(({ data }) => {
+        return parseAlerts(data.alerts)
+      })
+      .catch(error => {
+        largeResponseCatchHandler(
+          error,
+          'Failed to fetch alerts',
+          thunkAPI.dispatch,
+          config?.ui?.setRequestErrorMessage
+        )
+      })
+  }
+)
 
 const alertsSlice = createSlice({
   name: 'alertsStore',
