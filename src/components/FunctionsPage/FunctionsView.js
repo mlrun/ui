@@ -51,9 +51,9 @@ const FunctionsView = ({
   confirmData,
   createFunctionSuccess,
   editableItem,
+  filters,
   filtersChangeCallback,
   filtersStore,
-  functions,
   functionsFiltersConfig,
   functionsPanelIsOpen,
   functionsStore,
@@ -94,6 +94,7 @@ const FunctionsView = ({
                 filters={filters}
                 handleRefresh={filtersChangeCallback}
                 navigateLink={`/projects/${params.projectName}/functions${params.funcName ? `/${params.funcName}` : ''}${window.location.search}`}
+                setSearchParams={setSearchParams}
                 actionButtons={[
                   {
                     hidden: !isDemoMode,
@@ -110,7 +111,7 @@ const FunctionsView = ({
             </div>
             {functionsStore.loading ? (
               <Loader />
-            ) : functions.length === 0 ? (
+            ) : tableContent.length === 0 ? (
               <NoData
                 message={getNoDataMessage(
                   filters,
@@ -127,7 +128,7 @@ const FunctionsView = ({
                 <Table
                   actionsMenu={actionsMenu}
                   getCloseDetailsLink={() =>
-                    getCloseDetailsLink(window.location, params.funcName || FUNCTIONS_PAGE_PATH)
+                    getCloseDetailsLink(params.funcName || FUNCTIONS_PAGE_PATH)
                   }
                   handleCancel={handleCancel}
                   pageData={pageData}

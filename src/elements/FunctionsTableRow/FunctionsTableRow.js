@@ -82,7 +82,6 @@ const FunctionsTableRow = ({
 
 FunctionsTableRow.propTypes = {
   actionsMenu: ACTIONS_MENU.isRequired,
-  expandedRowsData: PropTypes.object.isRequired,
   handleSelectItem: PropTypes.func.isRequired,
   rowItem: PropTypes.shape({}).isRequired,
   selectedItem: PropTypes.shape({}).isRequired,
