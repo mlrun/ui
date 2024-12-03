@@ -191,7 +191,7 @@ export const usePagination = ({
   }, [paginationConfigRef, content, searchParams, setSearchParams, hidden])
 
   const handleRefresh = (filters, filtersChange) => {
-    if (filtersChange) {
+    if (filtersChange && (searchParams.get(BE_PAGE) !== '1' || searchParams.get(FE_PAGE) !== '1')) {
       resetPagination(true)
     } else {
       refreshContent(filters)
