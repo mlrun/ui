@@ -33,7 +33,7 @@ const BreadcrumbsDropdown = forwardRef(
   (
     {
       link,
-      list,
+      list = [],
       onClick = () => {},
       screen = '',
       searchValue,
@@ -85,9 +85,10 @@ const BreadcrumbsDropdown = forwardRef(
                   </a>
                 ) : (
                   <Link
-                    to={listItem.linkTo || `${link}/${listItem.id}${screen ? `/${screen}` : ''}${
-                      tab ? `/${tab}` : ''
-                    }`}
+                    to={
+                      listItem.linkTo ||
+                      `${link}/${listItem.id}${screen ? `/${screen}` : ''}${tab ? `/${tab}` : ''}`
+                    }
                     onClick={onClick}
                     id={listItem.id}
                     data-testid={`breadcrumbs-dropdown-item-${listItem.id}`}
