@@ -170,7 +170,7 @@ const WorkflowsTable = React.forwardRef(
           handleFetchFunctionLogs,
           handleFetchJobLogs,
           handleRemoveFunctionLogs,
-          selectedJob?.labels
+          selectedJob
         ),
       [
         handleFetchJobLogs,
