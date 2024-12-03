@@ -82,6 +82,7 @@ const Functions = ({
 }) => {
   const [confirmData, setConfirmData] = useState(null)
   const [functions, setFunctions] = useState([])
+  const [functionVersions, setFunctionVersions] = useState([])
   const [selectedFunctionMin, setSelectedFunctionMin] = useState({})
   const [selectedFunction, setSelectedFunction] = useState({})
   const [editableItem, setEditableItem] = useState(null)
@@ -141,6 +142,9 @@ const Functions = ({
       if (params.funcName) {
         delete requestParams.tag
         requestParams.name = params.funcName
+        setFunctionVersions([])
+      } else {
+        setFunctions([])
       }
 
       return fetchFunctions(params.projectName, filters, {
@@ -178,7 +182,11 @@ const Functions = ({
             deletingFunctionsRef.current = null
           }
 
-          setFunctions(newFunctions)
+          if (params.funcName) {
+            setFunctionVersions(newFunctions)
+          } else {
+            setFunctions(newFunctions)
+          }
 
           return newFunctions
         } else {
@@ -199,7 +207,12 @@ const Functions = ({
               }
             )
           }
-          setFunctions([])
+
+          if (params.funcName) {
+            setFunctionVersions([])
+          } else {
+            setFunctions([])
+          }
         }
       })
     },
@@ -226,10 +239,10 @@ const Functions = ({
 
   const tableContent = useMemo(
     () =>
-      functions.map(contentItem =>
+      (params.funcName ? functionVersions : functions).map(contentItem =>
         createFunctionsRowData(contentItem, params.projectName, Boolean(params.funcName))
       ),
-    [functions, params.funcName, params.projectName]
+    [functionVersions, functions, params.funcName, params.projectName]
   )
 
   const removeFunction = useCallback(
@@ -506,6 +519,7 @@ const Functions = ({
     return () => {
       setSelectedFunctionMin({})
       setFunctions([])
+      setFunctionVersions([])
       abortController.abort(REQUEST_CANCELED)
     }
   }, [params.projectName, params.funcName])
