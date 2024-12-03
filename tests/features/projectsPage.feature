@@ -391,12 +391,15 @@ Feature: Projects Page
         Then "Total_Counter_Number" element in "Monitoring_Jobs_Box" on "Projects" should contains "20" value
         Then verify "Counter_Running_Status_Number" element visibility in "Monitoring_Jobs_Box" on "Projects" wizard
         Then verify "Counter_Running_Status_Icon" element visibility in "Monitoring_Jobs_Box" on "Projects" wizard
+        Then verify "Counter_Running_Status_Icon" element in "Monitoring_Jobs_Box" on "Projects" wizard should display hover tooltip "Common_Tooltips"."In_Process_Jobs"
         Then "Counter_Running_Status_Number" element in "Monitoring_Jobs_Box" on "Projects" should contains "16" value
         Then verify "Counter_Failed_Status_Number" element visibility in "Monitoring_Jobs_Box" on "Projects" wizard
         Then verify "Counter_Failed_Status_Icon" element visibility in "Monitoring_Jobs_Box" on "Projects" wizard
+        Then verify "Counter_Failed_Status_Icon" element in "Monitoring_Jobs_Box" on "Projects" wizard should display hover tooltip "Common_Tooltips"."Failed_Jobs"
         Then "Counter_Failed_Status_Number" element in "Monitoring_Jobs_Box" on "Projects" should contains "3" value
         Then verify "Counter_Completed_Status_Number" element visibility in "Monitoring_Jobs_Box" on "Projects" wizard
         Then verify "Counter_Completed_Status_Icon" element visibility in "Monitoring_Jobs_Box" on "Projects" wizard
+        Then verify "Counter_Completed_Status_Icon" element in "Monitoring_Jobs_Box" on "Projects" wizard should display hover tooltip "Common_Tooltips"."Succeeded"
         Then "Counter_Completed_Status_Number" element in "Monitoring_Jobs_Box" on "Projects" should contains "1" value
         Then verify "See_All_Link" element visibility in "Monitoring_Jobs_Box" on "Projects" wizard
         Then "See_All_Link" element in "Monitoring_Jobs_Box" on "Projects" should contains "See all" value
@@ -443,12 +446,15 @@ Feature: Projects Page
         Then "Total_Counter_Number" element in "Monitoring_Workflows_Box" on "Projects" should contains "3" value
         Then verify "Counter_Running_Status_Number" element visibility in "Monitoring_Workflows_Box" on "Projects" wizard
         Then verify "Counter_Running_Status_Icon" element visibility in "Monitoring_Workflows_Box" on "Projects" wizard
+        Then verify "Counter_Running_Status_Icon" element in "Monitoring_Workflows_Box" on "Projects" wizard should display hover tooltip "Common_Tooltips"."In_Process_Workflows"
         Then "Counter_Running_Status_Number" element in "Monitoring_Workflows_Box" on "Projects" should contains "0" value
         Then verify "Counter_Failed_Status_Number" element visibility in "Monitoring_Workflows_Box" on "Projects" wizard
         Then verify "Counter_Failed_Status_Icon" element visibility in "Monitoring_Workflows_Box" on "Projects" wizard
+        Then verify "Counter_Failed_Status_Icon" element in "Monitoring_Workflows_Box" on "Projects" wizard should display hover tooltip "Common_Tooltips"."Failed_Worflows"
         Then "Counter_Failed_Status_Number" element in "Monitoring_Workflows_Box" on "Projects" should contains "1" value
         Then verify "Counter_Completed_Status_Number" element visibility in "Monitoring_Workflows_Box" on "Projects" wizard
         Then verify "Counter_Completed_Status_Icon" element visibility in "Monitoring_Workflows_Box" on "Projects" wizard
+        Then verify "Counter_Completed_Status_Icon" element in "Monitoring_Workflows_Box" on "Projects" wizard should display hover tooltip "Common_Tooltips"."Succeeded"
         Then "Counter_Completed_Status_Number" element in "Monitoring_Workflows_Box" on "Projects" should contains "2" value
         Then verify "See_All_Link" element visibility in "Monitoring_Workflows_Box" on "Projects" wizard
         Then "See_All_Link" element in "Monitoring_Workflows_Box" on "Projects" should contains "See all" value

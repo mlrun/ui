@@ -377,10 +377,10 @@ function getFeatureSet(req, res) {
 
   if (req.query['format'] === 'minimal') {
     collectedFeatureSets = collectedFeatureSets.map(featureSet => {
-      const metadataFields = ['description', 'name', 'project', 'tag', 'uid', 'labels'].map(
+      const metadataFields = ['name', 'project', 'tag', 'uid', 'labels'].map(
         fieldName => `metadata.${fieldName}`
       )
-      const specFields = ['entities', 'targets', 'engine'].map(fieldName => `spec.${fieldName}`)
+      const specFields = ['description', 'entities', 'targets', 'engine'].map(fieldName => `spec.${fieldName}`)
 
       return pick(featureSet, ['kind', ...metadataFields, 'status.state', ...specFields])
     })
