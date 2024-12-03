@@ -83,7 +83,11 @@ const Breadcrumbs = ({ onClick = () => {} }) => {
   }, [location.pathname, params.projectName, mlrunScreens, projectTabs])
 
   useEffect(() => {
-    if (projectsList.length === 0 && location.pathname !== '/projects') {
+    if (
+      projectsList.length === 0 &&
+      location.pathname !== '/projects' &&
+      !location.pathname.startsWith('/projects/*')
+    ) {
       dispatch(projectsAction.fetchProjects({ format: 'minimal' }))
     }
   }, [dispatch, location.pathname, projectsList.length])
