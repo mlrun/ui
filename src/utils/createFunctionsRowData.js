@@ -33,7 +33,7 @@ const createFunctionsRowData = (func, projectName, isAllVersions) => {
         value: isAllVersions ? func.hash : func.name,
         className: 'table-cell-name',
         getLink: (tab, hash) => {
-          return `/projects/${projectName}/functions${isAllVersions ? `/${func.name}` : ''}/${func.name}@${hash}${`/${tab}`}${window.location.search}`
+          return `/projects/${projectName}/functions/${func.name}${isAllVersions ? '/' : ''}@${hash}${`/${tab}`}${window.location.search}`
         },
         expandedCellContent: {
           value: formatDatetime(func.updated, 'N/A'),
