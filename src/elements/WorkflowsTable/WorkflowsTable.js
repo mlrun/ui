@@ -399,7 +399,7 @@ const WorkflowsTable = React.forwardRef(
     const handleRerun = useCallback(
       workflow => {
         dispatch(workflowsActions.rerunWorkflow(workflow.project, workflow.id))
-          .then(
+          .then(() =>
             dispatch(
               setNotification({
                 status: 200,
