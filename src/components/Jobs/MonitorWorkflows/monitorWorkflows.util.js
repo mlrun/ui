@@ -32,7 +32,6 @@ import {
   isJobKindLocal
 } from '../jobs.util'
 import functionsActions from '../../../actions/functions'
-import workflowsActions from '../../../actions/workflow'
 import {
   detailsMenu as functionsDetailsMenu,
   infoHeaders as functionsInfoHeaders
@@ -169,6 +168,5 @@ export const fetchInitialWorkflows = debounce(
 )
 
 export const monitorWorkflowsActionCreator = {
-  deleteWorkflows: workflowsActions.deleteWorkflows,
   fetchFunctionLogs: functionsActions.fetchFunctionLogs
 }

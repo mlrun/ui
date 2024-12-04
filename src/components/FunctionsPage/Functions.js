@@ -47,7 +47,6 @@ import {
 } from './functions.util'
 import createFunctionsRowData from '../../utils/createFunctionsRowData'
 import functionsActions from '../../actions/functions'
-import jobsActions from '../../actions/jobs'
 import { DANGER_BUTTON, TERTIARY_BUTTON } from 'igz-controls/constants'
 import { getFunctionIdentifier } from '../../utils/getUniqueIdentifier'
 import { isBackgroundTaskRunning } from '../../utils/poll.util'
@@ -61,6 +60,7 @@ import { useGroupContent } from '../../hooks/groupContent.hook'
 import { useMode } from '../../hooks/mode.hook'
 import { useVirtualization } from '../../hooks/useVirtualization.hook'
 import { useInitialTableFetch } from '../../hooks/useInitialTableFetch.hook'
+import { runNewJob } from '../../reducers/jobReducer'
 import { useFiltersFromSearchParams } from '../../hooks/useFiltersFromSearchParams.hook'
 import {
   datePickerPastOptions,
@@ -78,8 +78,7 @@ const Functions = ({
   fetchFunctions,
   functionsStore,
   removeFunctionsError,
-  removeNewFunction,
-  runNewJob
+  removeNewFunction
 }) => {
   const [confirmData, setConfirmData] = useState(null)
   const [functions, setFunctions] = useState([])
@@ -427,8 +426,9 @@ const Functions = ({
             }
           }
 
-          return runNewJob(postData)
+          return dispatch(runNewJob({ postData }))
         })
+        .unwrap()
         .then(() => {
           dispatch(
             setNotification({
@@ -445,7 +445,7 @@ const Functions = ({
           })
         })
     },
-    [deployFunction, dispatch, functionsFilters, refreshFunctions, runNewJob]
+    [deployFunction, dispatch, functionsFilters, refreshFunctions]
   )
 
   const pageData = useMemo(
@@ -724,6 +724,5 @@ const Functions = ({
 }
 
 export default connect(({ functionsStore }) => ({ functionsStore }), {
-  ...functionsActions,
-  ...jobsActions
+  ...functionsActions
 })(React.memo(Functions))

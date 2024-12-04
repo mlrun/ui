@@ -22,8 +22,6 @@ import {
   JOBS_MONITORING_WORKFLOWS_TAB,
   JOBS_MONITORING_SCHEDULED_TAB
 } from '../../constants'
-import jobsActions from '../../actions/jobs'
-import functionsActions from '../../actions/functions'
 
 export const STATS_TOTAL_CARD = 'total'
 
@@ -32,10 +30,3 @@ export const tabs = [
   { id: JOBS_MONITORING_WORKFLOWS_TAB, label: 'Workflows' },
   { id: JOBS_MONITORING_SCHEDULED_TAB, label: 'Scheduled' }
 ]
-
-export const actionCreator = {
-  fetchAllJobRuns: jobsActions.fetchAllJobRuns,
-  fetchFunctionLogs: functionsActions.fetchFunctionLogs,
-  fetchJobFunction: jobsActions.fetchJobFunction,
-  fetchJobs: jobsActions.fetchJobs
-}

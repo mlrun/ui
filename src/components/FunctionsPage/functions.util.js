@@ -39,7 +39,6 @@ import {
   PANEL_FUNCTION_CREATE_MODE,
   FAILED_STATE
 } from '../../constants'
-import jobsActions from '../../actions/jobs'
 import functionsApi from '../../api/functions-api'
 import tasksApi from '../../api/tasks-api'
 import functionsActions from '../../actions/functions'
@@ -303,7 +302,6 @@ export const generateActionsMenu = (
         onClick: funcMin => {
           getFullFunction(funcMin).then(func => {
             if (func?.project && func?.name && func?.hash && func?.ui?.originalContent) {
-              dispatch(jobsActions.fetchJobFunctionSuccess(func.ui.originalContent))
               setJobWizardMode(PANEL_FUNCTION_CREATE_MODE)
             } else {
               showErrorNotification(dispatch, {}, '', 'Failed to retrieve function data')

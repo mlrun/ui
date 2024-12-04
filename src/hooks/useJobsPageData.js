@@ -34,20 +34,14 @@ import {
   MONITOR_JOBS_TAB,
   SCHEDULE_TAB
 } from '../constants'
-import jobsActions from '../actions/jobs'
-import workflowActions from '../actions/workflow'
 import { getJobKindFromLabels } from '../utils/jobs.util'
 import { usePagination } from './usePagination.hook'
 import { parseJob } from '../utils/parseJob'
+import { fetchAllJobRuns, fetchJobs, fetchScheduledJobs } from '../reducers/jobReducer'
+import { fetchWorkflows } from '../reducers/workflowReducer'
 import { useFiltersFromSearchParams } from './useFiltersFromSearchParams.hook'
 
-export const useJobsPageData = (
-  fetchAllJobRuns,
-  fetchJobFunction,
-  fetchJobs,
-  initialTabData,
-  selectedTab
-) => {
+export const useJobsPageData = (initialTabData, selectedTab) => {
   const [jobRuns, setJobRuns] = useState([])
   const [editableItem, setEditableItem] = useState(null)
   const [jobWizardMode, setJobWizardMode] = useState(null)
@@ -111,60 +105,57 @@ export const useJobsPageData = (
         config.params['page-size'] = paginationConfigRunsRef.current[BE_PAGE_SIZE]
       }
 
-      fetchData(projectName, filters, config, params.jobName ?? false).then(response => {
-        if (response?.runs) {
-          const parsedJobs = response.runs
-            .map(job => parseJob(job))
-            .filter(job => {
-              const type = getJobKindFromLabels(job.labels) ?? JOB_KIND_LOCAL
+      dispatch(
+        fetchData({ project: projectName, filters, config, jobName: params.jobName ?? false })
+      )
+        .unwrap()
+        .then(response => {
+          if (response?.runs) {
+            const parsedJobs = response.runs
+              .map(job => parseJob(job))
+              .filter(job => {
+                const type = getJobKindFromLabels(job.labels) ?? JOB_KIND_LOCAL
 
-              return (
-                (!filters.type ||
-                  filters.type === FILTER_ALL_ITEMS ||
-                  filters.type.split(',').includes(type)) &&
-                (!filters.project || job.project.includes(filters.project.toLowerCase()))
-              )
-            })
-          const responseAbortingJobs = parsedJobs.reduce((acc, job) => {
-            if (job.state.value === 'aborting' && job.abortTaskId) {
-              acc[job.abortTaskId] = {
-                uid: job.uid,
-                name: job.name
+                return (
+                  (!filters.type ||
+                    filters.type === FILTER_ALL_ITEMS ||
+                    filters.type.split(',').includes(type)) &&
+                  (!filters.project || job.project.includes(filters.project.toLowerCase()))
+                )
+              })
+            const responseAbortingJobs = parsedJobs.reduce((acc, job) => {
+              if (job.state.value === 'aborting' && job.abortTaskId) {
+                acc[job.abortTaskId] = {
+                  uid: job.uid,
+                  name: job.name
+                }
               }
+
+              return acc
+            }, {})
+
+            if (Object.keys(responseAbortingJobs).length > 0) {
+              setAbortingJobs(responseAbortingJobs)
+              pollAbortingJobs(
+                filters.project?.toLowerCase?.() || params.projectName || '*',
+                abortJobRef,
+                responseAbortingJobs,
+                () => refreshJobs(filters),
+                dispatch
+              )
             }
 
-            return acc
-          }, {})
-
-          if (Object.keys(responseAbortingJobs).length > 0) {
-            setAbortingJobs(responseAbortingJobs)
-            pollAbortingJobs(
-              filters.project?.toLowerCase?.() || params.projectName || '*',
-              abortJobRef,
-              responseAbortingJobs,
-              () => refreshJobs(filters),
-              dispatch
-            )
+            if (params.jobName) {
+              setJobRuns(parsedJobs)
+              paginationConfigRunsRef.current.paginationResponse = response.pagination
+            } else {
+              setJobs(parsedJobs)
+              paginationConfigJobsRef.current.paginationResponse = response.pagination
+            }
           }
-
-          if (params.jobName) {
-            setJobRuns(parsedJobs)
-            paginationConfigRunsRef.current.paginationResponse = response.pagination
-          } else {
-            setJobs(parsedJobs)
-            paginationConfigJobsRef.current.paginationResponse = response.pagination
-          }
-        }
-      })
+        })
     },
-    [
-      dispatch,
-      fetchAllJobRuns,
-      fetchJobs,
-      params.jobName,
-      params.projectName,
-      terminateAbortTasksPolling
-    ]
+    [dispatch, params.jobName, params.projectName, terminateAbortTasksPolling]
   )
 
   const refreshScheduled = useCallback(
@@ -173,47 +164,51 @@ export const useJobsPageData = (
       abortControllerRef.current = new AbortController()
 
       dispatch(
-        jobsActions.fetchScheduledJobs(
-          filters.project ? filters.project.toLowerCase() : params.projectName || '*',
+        fetchScheduledJobs({
+          project: filters.project ? filters.project.toLowerCase() : params.projectName || '*',
           filters,
-          {
+          config: {
             ui: {
               controller: abortControllerRef.current,
               setRequestErrorMessage
             }
           }
-        )
-      ).then(jobs => {
-        if (jobs) {
-          const parsedJobs = jobs
-            .map(job => parseJob(job, SCHEDULE_TAB))
-            .filter(job => {
-              let inDateRange = true
+        })
+      )
+        .unwrap()
+        .then(jobs => {
+          if (jobs) {
+            const parsedJobs = jobs
+              .map(job => parseJob(job, SCHEDULE_TAB))
+              .filter(job => {
+                let inDateRange = true
 
-              if (filters.dates) {
-                const timeTo = filters.dates.value[1]?.getTime?.() || ''
-                const timeFrom = filters.dates.value[0]?.getTime?.() || ''
-                const nextRun = job.nextRun.getTime()
+                if (filters.dates) {
+                  const timeTo = filters.dates.value[1]?.getTime?.() || ''
+                  const timeFrom = filters.dates.value[0]?.getTime?.() || ''
+                  const nextRun = job.nextRun.getTime()
 
-                if (timeFrom) {
-                  inDateRange = nextRun >= timeFrom
+                  if (timeFrom) {
+                    inDateRange = nextRun >= timeFrom
+                  }
+
+                  if (timeTo && inDateRange) {
+                    inDateRange = nextRun <= timeTo
+                  }
                 }
 
-                if (timeTo && inDateRange) {
-                  inDateRange = nextRun <= timeTo
-                }
-              }
+                return (
+                  inDateRange &&
+                  (!filters.type ||
+                    filters.type === FILTER_ALL_ITEMS ||
+                    job.type === filters.type) &&
+                  (!filters.project || job.project.includes(filters.project.toLowerCase()))
+                )
+              })
 
-              return (
-                inDateRange &&
-                (!filters.type || filters.type === FILTER_ALL_ITEMS || job.type === filters.type) &&
-                (!filters.project || job.project.includes(filters.project.toLowerCase()))
-              )
-            })
-
-          setScheduledJobs(parsedJobs)
-        }
-      })
+            setScheduledJobs(parsedJobs)
+          }
+        })
     },
     [dispatch, params.projectName]
   )
@@ -223,17 +218,17 @@ export const useJobsPageData = (
       abortControllerRef.current = new AbortController()
 
       dispatch(
-        workflowActions.fetchWorkflows(
-          filters.project ? filters.project.toLowerCase() : params.projectName || '*',
-          { ...filters, groupBy: GROUP_BY_WORKFLOW },
-          {
+        fetchWorkflows({
+          project: filters.project ? filters.project.toLowerCase() : params.projectName || '*',
+          filter: { ...filters, groupBy: GROUP_BY_WORKFLOW },
+          config: {
             ui: {
               controller: abortControllerRef.current,
               setRequestErrorMessage
             }
           },
-          !params.projectName
-        )
+          withPagination: !params.projectName
+        })
       )
     },
     [dispatch, params.projectName]
@@ -247,8 +242,8 @@ export const useJobsPageData = (
   )
 
   const handleRerunJob = useCallback(
-    async job => await rerunJob(job, fetchJobFunction, setEditableItem, setJobWizardMode, dispatch),
-    [fetchJobFunction, dispatch]
+    async job => await rerunJob(job, setEditableItem, setJobWizardMode, dispatch),
+    [dispatch]
   )
 
   const [handleRefreshJobs, paginatedJobs, searchJobsParams, setSearchJobsParams] = usePagination({
