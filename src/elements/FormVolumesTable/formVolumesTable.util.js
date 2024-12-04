@@ -18,6 +18,8 @@ under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
 import { isNil, map } from 'lodash'
+import { getValidationRules } from 'igz-controls/utils/validation.util'
+
 import {
   V3IO_VOLUME_TYPE,
   CONFIG_MAP_VOLUME_TYPE,
@@ -165,7 +167,9 @@ export const generateVolumeInputsData = (
           label: volumeTypeInputLabels[selectedType],
           required: true,
           textHidden: true,
-          type: 'input'
+          type: 'input',
+          validationRules:
+            selectedType === SECRET_VOLUME_TYPE ? getValidationRules('project.secrets.key') : []
         }
       default:
         return null

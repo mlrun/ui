@@ -39,18 +39,20 @@ const FeaturesView = React.forwardRef(
   (
     {
       actionsMenu,
-      features,
       featureStore,
+      features,
+      filters,
       filtersStore,
       getPopUpTemplate,
-      handleExpandRow,
       handleRefresh,
-      handleRefreshWithStoreFilters,
+      handleRefreshWithFilters,
       pageData,
       requestErrorMessage,
       selectedRowData,
+      setSearchParams,
       tableContent,
       tableStore,
+      toggleRow,
       virtualizationConfig
     },
     { featureStoreRef }
@@ -70,10 +72,11 @@ const FeaturesView = React.forwardRef(
                 })
               }
             ]}
-            filterMenuName={FEATURES_TAB}
+            filters={filters}
             filtersConfig={filtersConfig}
             handleRefresh={handleRefresh}
             page={FEATURE_STORE_PAGE}
+            setSearchParams={setSearchParams}
             tab={FEATURES_TAB}
             withoutExpandButton
           >
@@ -84,12 +87,13 @@ const FeaturesView = React.forwardRef(
           0 ? (
           <NoData
             message={getNoDataMessage(
-              filtersStore,
+              filters,
               filtersConfig,
               requestErrorMessage,
               FEATURE_STORE_PAGE,
               FEATURES_TAB,
-              FEATURES_TAB
+              FEATURES_TAB,
+              filtersStore
             )}
           />
         ) : (
@@ -98,7 +102,7 @@ const FeaturesView = React.forwardRef(
               actionsMenu={actionsMenu}
               hideActionsMenu={tableStore.isTablePanelOpen}
               pageData={pageData}
-              retryRequest={handleRefreshWithStoreFilters}
+              retryRequest={handleRefreshWithFilters}
               tab={FEATURES_TAB}
               tableClassName="features-table"
               tableHeaders={tableContent[0]?.content ?? []}
@@ -110,14 +114,14 @@ const FeaturesView = React.forwardRef(
                     isRowRendered(virtualizationConfig, index) && (
                       <FeatureStoreTableRow
                         actionsMenu={actionsMenu}
-                        handleExpandRow={handleExpandRow}
-                        key={tableItem.data.ui.identifier}
                         hideActionsMenu={tableStore.isTablePanelOpen}
+                        key={tableItem.data.ui.identifier}
                         mainRowItemsCount={2}
                         pageTab={FEATURES_TAB}
                         rowIndex={index}
                         rowItem={tableItem}
                         selectedRowData={selectedRowData}
+                        toggleRow={toggleRow}
                       />
                     )
                 )}
@@ -132,18 +136,20 @@ const FeaturesView = React.forwardRef(
 
 FeaturesView.propTypes = {
   actionsMenu: PropTypes.array.isRequired,
-  features: PropTypes.arrayOf(PropTypes.object).isRequired,
   featureStore: PropTypes.object.isRequired,
+  features: PropTypes.arrayOf(PropTypes.object).isRequired,
+  filters: PropTypes.object.isRequired,
   filtersStore: PropTypes.object.isRequired,
   getPopUpTemplate: PropTypes.func.isRequired,
-  handleExpandRow: PropTypes.func.isRequired,
   handleRefresh: PropTypes.func.isRequired,
-  handleRefreshWithStoreFilters: PropTypes.func.isRequired,
+  handleRefreshWithFilters: PropTypes.func.isRequired,
   pageData: PropTypes.object.isRequired,
   requestErrorMessage: PropTypes.string.isRequired,
   selectedRowData: PropTypes.object.isRequired,
+  setSearchParams: PropTypes.func.isRequired,
   tableContent: PropTypes.arrayOf(PropTypes.object).isRequired,
   tableStore: PropTypes.object.isRequired,
+  toggleRow: PropTypes.func.isRequired,
   virtualizationConfig: VIRTUALIZATION_CONFIG.isRequired
 }
 

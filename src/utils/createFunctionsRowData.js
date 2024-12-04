@@ -33,7 +33,7 @@ const createFunctionsRowData = (func, projectName, showExpandButton) => {
         value: func.name,
         className: 'table-cell-name',
         getLink: (tag, tab, hash) => {
-          return `/projects/${projectName}/functions/${func.name}${tag ? `/${tag}` : `@${hash}`}${`/${tab}`}`
+          return `/projects/${projectName}/functions/${func.name}${tag ? `/${tag}` : `@${hash}`}${`/${tab}`}${window.location.search}`
         },
         expandedCellContent: {
           value: formatDatetime(func.updated, 'N/A'),

@@ -19,7 +19,7 @@ such restriction.
 */
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { useNavigate, useParams } from 'react-router-dom'
+import { useNavigate, useParams, useSearchParams } from 'react-router-dom'
 import classnames from 'classnames'
 import { isNil } from 'lodash'
 
@@ -39,11 +39,13 @@ import {
 } from '../../../constants'
 import createRealTimePipelinesContent from '../../../utils/createRealTimePipelinesContent'
 import { fetchArtifactsFunctions, removePipelines } from '../../../reducers/artifactsReducer'
-import { filtersConfig, generatePageData } from './realTimePipelines.util'
+import { fetchAndParseFunction, filtersConfig, generatePageData } from './realTimePipelines.util'
 import { getNoDataMessage } from '../../../utils/getNoDataMessage'
 import { isRowRendered, useVirtualization } from '../../../hooks/useVirtualization.hook'
 import { setFilters } from '../../../reducers/filtersReducer'
 import { useModelsPage } from '../ModelsPage.context'
+import { useFiltersFromSearchParams } from '../../../hooks/useFiltersFromSearchParams.hook'
+import { useInitialTableFetch } from '../../../hooks/useInitialTableFetch.hook'
 
 import { ReactComponent as Yaml } from 'igz-controls/images/yaml.svg'
 
@@ -61,6 +63,8 @@ const RealTimePipelines = () => {
   const pipelinesRef = useRef(null)
   const pageData = useMemo(() => generatePageData(params.pipelineId), [params.pipelineId])
   const { toggleConvertedYaml } = useModelsPage()
+  const [, setSearchParams] = useSearchParams()
+  const filters = useFiltersFromSearchParams(filtersConfig)
 
   const filterMenuClassNames = classnames(
     'content__action-bar-wrapper',
@@ -73,11 +77,12 @@ const RealTimePipelines = () => {
         {
           label: 'View YAML',
           icon: <Yaml />,
-          onClick: toggleConvertedYaml
+          onClick: func =>
+            fetchAndParseFunction(func, dispatch).then(() => toggleConvertedYaml(func))
         }
       ]
     ],
-    [toggleConvertedYaml]
+    [dispatch, toggleConvertedYaml]
   )
 
   const fetchData = useCallback(
@@ -89,6 +94,7 @@ const RealTimePipelines = () => {
           project: params.projectName,
           filters,
           config: {
+            params: { format: 'minimal', kind: 'serving' },
             ui: {
               controller: abortControllerRef.current,
               setRequestErrorMessage
@@ -98,7 +104,7 @@ const RealTimePipelines = () => {
       )
         .unwrap()
         .then(result => {
-          if(!isNil(result)) {
+          if (!isNil(result)) {
             setPipelines(
               result.filter(
                 func =>
@@ -120,14 +126,23 @@ const RealTimePipelines = () => {
     [fetchData]
   )
 
+  const handleRefreshWithFilters = useCallback(() => {
+    handleRefresh(filters)
+  }, [filters, handleRefresh])
+
   const tableContent = useMemo(() => {
     return createRealTimePipelinesContent(pipelines, params.projectName)
   }, [pipelines, params.projectName])
 
-  useEffect(() => {
-    fetchData({})
-    dispatch(setFilters({ groupBy: GROUP_BY_NAME }))
-  }, [dispatch, fetchData])
+  const fetchInitialData = useCallback(
+    filters => {
+      fetchData(filters)
+      dispatch(setFilters({ groupBy: GROUP_BY_NAME }))
+    },
+    [dispatch, fetchData]
+  )
+
+  useInitialTableFetch({ fetchData: fetchInitialData, filters })
 
   useEffect(() => {
     return () => {
@@ -140,9 +155,12 @@ const RealTimePipelines = () => {
   useEffect(() => {
     if (params.pipelineId && pipelines.length > 0) {
       if (!pipelines.find(item => item.hash === params.pipelineId)) {
-        navigate(`/projects/${params.projectName}/models/${REAL_TIME_PIPELINES_TAB}`, {
-          replace: true
-        })
+        navigate(
+          `/projects/${params.projectName}/models/${REAL_TIME_PIPELINES_TAB}${window.location.search}`,
+          {
+            replace: true
+          }
+        )
       }
     }
   }, [navigate, params.pipelineId, params.projectName, pipelines])
@@ -168,11 +186,12 @@ const RealTimePipelines = () => {
             <ModelsPageTabs />
             <div className="action-bar">
               <ActionBar
-                filterMenuName={REAL_TIME_PIPELINES_TAB}
+                filters={filters}
                 filtersConfig={filtersConfig}
                 handleRefresh={handleRefresh}
-                navigateLink={`/projects/${params.projectName}/models/${REAL_TIME_PIPELINES_TAB}`}
+                navigateLink={`/projects/${params.projectName}/models/${REAL_TIME_PIPELINES_TAB}${window.location.search}`}
                 page={MODELS_PAGE}
+                setSearchParams={setSearchParams}
                 tab={REAL_TIME_PIPELINES_TAB}
                 withoutExpandButton
               />
@@ -181,11 +200,12 @@ const RealTimePipelines = () => {
           {artifactsStore.pipelines.loading ? null : pipelines.length === 0 ? (
             <NoData
               message={getNoDataMessage(
-                filtersStore,
+                filters,
                 filtersConfig,
                 requestErrorMessage,
                 MODELS_PAGE,
-                REAL_TIME_PIPELINES_TAB
+                REAL_TIME_PIPELINES_TAB,
+                filtersStore
               )}
             />
           ) : params.pipelineId ? (
@@ -195,7 +215,7 @@ const RealTimePipelines = () => {
               <Table
                 actionsMenu={actionsMenu}
                 pageData={pageData}
-                retryRequest={fetchData}
+                retryRequest={handleRefreshWithFilters}
                 selectedItem={{}}
                 tab={REAL_TIME_PIPELINES_TAB}
                 tableClassName="pipelines-table"

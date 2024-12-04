@@ -51,16 +51,18 @@ const FeatureSetsView = React.forwardRef(
       featureSetsPanelIsOpen,
       featureStore,
       filtersStore,
-      handleExpandRow,
+      filters,
       handleRefresh,
-      handleRefreshWithStoreFilters,
+      handleRefreshWithFilters,
       pageData,
       requestErrorMessage,
       selectedFeatureSet,
       selectedRowData,
       setFeatureSetsPanelIsOpen,
+      setSearchParams,
       setSelectedFeatureSetMin,
       tableContent,
+      toggleRow,
       virtualizationConfig
     },
     { featureStoreRef }
@@ -80,10 +82,11 @@ const FeatureSetsView = React.forwardRef(
                 onClick: () => setFeatureSetsPanelIsOpen(true)
               }
             ]}
-            filterMenuName={FEATURE_SETS_TAB}
+            filters={filters}
             filtersConfig={filtersConfig}
             handleRefresh={handleRefresh}
             page={FEATURE_STORE_PAGE}
+            setSearchParams={setSearchParams}
             tab={FEATURE_SETS_TAB}
             withoutExpandButton
           >
@@ -93,12 +96,13 @@ const FeatureSetsView = React.forwardRef(
         {featureStore.loading ? null : featureSets.length === 0 ? (
           <NoData
             message={getNoDataMessage(
-              filtersStore,
+              filters,
               filtersConfig,
               requestErrorMessage,
               FEATURE_STORE_PAGE,
               FEATURE_SETS_TAB,
-              FEATURE_SETS_TAB
+              FEATURE_SETS_TAB,
+              filtersStore
             )}
           />
         ) : (
@@ -111,7 +115,7 @@ const FeatureSetsView = React.forwardRef(
               detailsFormInitialValues={detailsFormInitialValues}
               handleCancel={() => setSelectedFeatureSetMin({})}
               pageData={pageData}
-              retryRequest={handleRefreshWithStoreFilters}
+              retryRequest={handleRefreshWithFilters}
               selectedItem={selectedFeatureSet}
               tab={FEATURE_SETS_TAB}
               tableClassName="feature-sets-table"
@@ -123,13 +127,13 @@ const FeatureSetsView = React.forwardRef(
                   isRowRendered(virtualizationConfig, index) && (
                     <FeatureStoreTableRow
                       actionsMenu={actionsMenu}
-                      handleExpandRow={handleExpandRow}
-                      rowIndex={index}
                       key={tableItem.data.ui.identifier}
                       pageTab={FEATURE_SETS_TAB}
+                      rowIndex={index}
                       rowItem={tableItem}
                       selectedItem={selectedFeatureSet}
                       selectedRowData={selectedRowData}
+                      toggleRow={toggleRow}
                     />
                   )
               )}
@@ -159,16 +163,17 @@ FeatureSetsView.propTypes = {
   featureSetsPanelIsOpen: PropTypes.bool.isRequired,
   featureStore: PropTypes.object.isRequired,
   filtersStore: PropTypes.object.isRequired,
-  handleExpandRow: PropTypes.func.isRequired,
   handleRefresh: PropTypes.func.isRequired,
-  handleRefreshWithStoreFilters: PropTypes.func.isRequired,
+  handleRefreshWithFilters: PropTypes.func.isRequired,
   pageData: PropTypes.object.isRequired,
   requestErrorMessage: PropTypes.string.isRequired,
   selectedFeatureSet: PropTypes.object.isRequired,
   selectedRowData: PropTypes.object.isRequired,
   setFeatureSetsPanelIsOpen: PropTypes.func.isRequired,
+  setSearchParams: PropTypes.func.isRequired,
   setSelectedFeatureSetMin: PropTypes.func.isRequired,
   tableContent: PropTypes.arrayOf(PropTypes.object).isRequired,
+  toggleRow: PropTypes.func.isRequired,
   virtualizationConfig: VIRTUALIZATION_CONFIG.isRequired
 }
 

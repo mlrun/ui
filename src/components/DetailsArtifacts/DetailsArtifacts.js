@@ -44,9 +44,10 @@ import './detailsArtifacts.scss'
 
 const DetailsArtifacts = ({
   allowSortBy = null,
-  defaultSortBy = null,
   defaultDirection = 'desc',
+  defaultSortBy = null,
   excludeSortBy = null,
+  isDetailsPopUp = false,
   iteration,
   selectedItem,
   setIteration,
@@ -76,8 +77,14 @@ const DetailsArtifacts = ({
   )
 
   const artifactsTabContent = useMemo(() => {
-    return generateArtifactsTabContent(artifactsPreviewContent, params, iteration, showArtifact)
-  }, [artifactsPreviewContent, iteration, params, showArtifact])
+    return generateArtifactsTabContent(
+      artifactsPreviewContent,
+      params,
+      iteration,
+      showArtifact,
+      isDetailsPopUp
+    )
+  }, [artifactsPreviewContent, iteration, params, showArtifact, isDetailsPopUp])
 
   const { sortTable, selectedColumnName, getSortingIcon, sortedTableContent, sortedTableHeaders } =
     useSortTable({
@@ -148,7 +155,8 @@ const DetailsArtifacts = ({
           })
         )
           .unwrap()
-          .then(responseJob => {
+          .then(
+          responseJob => {
             if (responseJob) {
               const selectedJob = getJobAccordingIteration(responseJob)
 
@@ -156,7 +164,8 @@ const DetailsArtifacts = ({
                 generateArtifactsPreviewContent(selectedJob, selectedJob.artifacts)
               )
             }
-          })
+          }
+        )
       }
 
       if (iteration) {
@@ -182,14 +191,14 @@ const DetailsArtifacts = ({
   )
 
   useEffect(() => {
-    if (params.jobId === selectedItem.uid) {
+    if (params.jobId === selectedItem.uid || isDetailsPopUp) {
       if (selectedItem.iterationStats?.length > 0 && iteration) {
         getJobArtifacts(selectedItem, iteration)
       } else if (selectedItem.iterationStats?.length === 0) {
         getJobArtifacts(selectedItem, null)
       }
     }
-  }, [getJobArtifacts, iteration, params.jobId, params.projectName, selectedItem])
+  }, [getJobArtifacts, iteration, params.jobId, params.projectName, selectedItem, isDetailsPopUp])
 
   useEffect(() => {
     return () => {

@@ -20,44 +20,117 @@ such restriction.
 
 import {
   DATES_FILTER,
+  FILTER_ALL_ITEMS,
+  JOBS_MONITORING_SCHEDULED_TAB,
   LABELS_FILTER,
   NAME_FILTER,
   PROJECT_FILTER,
   STATUS_FILTER,
   TYPE_FILTER
 } from '../constants'
+import {
+  ANY_TIME_DATE_OPTION,
+  datePickerFutureOptions,
+  datePickerPastOptions,
+  getDatePickerFilterValue,
+  NEXT_24_HOUR_DATE_OPTION,
+  PAST_24_HOUR_DATE_OPTION,
+  PAST_WEEK_DATE_OPTION
+} from './datePicker.util'
+import {
+  generateTypeFilter,
+  jobsStatuses,
+  workflowsStatuses
+} from '../components/FilterMenu/filterMenu.settings'
 
 export const getJobKindFromLabels = (labels = []) => {
   return labels.find(label => label.includes('kind:'))?.replace('kind: ', '') ?? ''
 }
 
-export const getJobsFiltersConfig = jobName => {
+export const getJobsFiltersConfig = (jobName, crossProjects) => {
   return {
-    [NAME_FILTER]: { label: 'Name:', hidden: Boolean(jobName) },
-    [DATES_FILTER]: { label: 'Start time:' },
-    [PROJECT_FILTER]: { label: 'Project:' },
-    [STATUS_FILTER]: { label: 'Status:' },
-    [TYPE_FILTER]: { label: 'Type:' },
-    [LABELS_FILTER]: { label: 'Labels:' }
+    [NAME_FILTER]: { label: 'Name:', hidden: Boolean(jobName), initialValue: '' },
+    [DATES_FILTER]: {
+      label: 'Start time:',
+      initialValue: getDatePickerFilterValue(
+        datePickerPastOptions,
+        crossProjects ? PAST_24_HOUR_DATE_OPTION : PAST_WEEK_DATE_OPTION
+      )
+    },
+    [PROJECT_FILTER]: { label: 'Project:', initialValue: '', isModal: true },
+    [STATUS_FILTER]: { label: 'Status:', initialValue: [FILTER_ALL_ITEMS], isModal: true },
+    [TYPE_FILTER]: { label: 'Type:', initialValue: FILTER_ALL_ITEMS, isModal: true },
+    [LABELS_FILTER]: { label: 'Labels:', initialValue: '', isModal: true }
   }
 }
 
-export const getWorkflowsFiltersConfig = () => {
+export const getWorkflowsFiltersConfig = crossProjects => {
   return {
-    [NAME_FILTER]: { label: 'Name:' },
-    [DATES_FILTER]: { label: 'Created at:' },
-    [PROJECT_FILTER]: { label: 'Project:' },
-    [STATUS_FILTER]: { label: 'Status:' },
-    [LABELS_FILTER]: { label: 'Labels:' }
+    [NAME_FILTER]: { label: 'Name:', initialValue: '' },
+    [DATES_FILTER]: {
+      label: 'Created at:',
+      initialValue: getDatePickerFilterValue(
+        datePickerPastOptions,
+        crossProjects ? PAST_24_HOUR_DATE_OPTION : PAST_WEEK_DATE_OPTION
+      )
+    },
+    [PROJECT_FILTER]: { label: 'Project:', initialValue: '', isModal: true },
+    [STATUS_FILTER]: { label: 'Status:', initialValue: [FILTER_ALL_ITEMS], isModal: true },
+    [LABELS_FILTER]: { label: 'Labels:', initialValue: '', isModal: true }
   }
 }
 
-export const getScheduledFiltersConfig = () => {
+export const getScheduledFiltersConfig = crossProjects => {
   return {
-    [NAME_FILTER]: { label: 'Name:' },
-    [DATES_FILTER]: { label: 'Scheduled at:', isFuture: true },
-    [PROJECT_FILTER]: { label: 'Project:' },
-    [TYPE_FILTER]: { label: 'Type:' },
-    [LABELS_FILTER]: { label: 'Labels:' }
+    [NAME_FILTER]: { label: 'Name:', initialValue: '' },
+    [DATES_FILTER]: {
+      label: 'Scheduled at:',
+      isFuture: true,
+      initialValue: getDatePickerFilterValue(
+        datePickerFutureOptions,
+        crossProjects ? NEXT_24_HOUR_DATE_OPTION : ANY_TIME_DATE_OPTION,
+        true
+      )
+    },
+    [PROJECT_FILTER]: { label: 'Project:', initialValue: '', isModal: true },
+    [TYPE_FILTER]: { label: 'Type:', initialValue: FILTER_ALL_ITEMS, isModal: true },
+    [LABELS_FILTER]: { label: 'Labels:', initialValue: '', isModal: true }
   }
+}
+
+export const parseJobsQueryParamsCallback = (paramName, paramValue) => {
+  if (paramName === STATUS_FILTER) {
+    const filteredStatuses = paramValue
+      ?.split(',')
+      .filter(paramStatus => jobsStatuses.find(status => status.id === paramStatus))
+
+    return filteredStatuses?.length ? filteredStatuses : null
+  }
+
+  if (paramName === TYPE_FILTER) {
+    return generateTypeFilter().find(type => type.id === paramValue)?.id
+  }
+
+  return paramValue
+}
+
+export const parseWorkflowsQueryParamsCallback = (paramName, paramValue) => {
+  if (paramName === STATUS_FILTER) {
+    const filteredStatuses = paramValue
+      ?.split(',')
+      .filter(paramStatus => workflowsStatuses.find(status => status.id === paramStatus))
+
+    return filteredStatuses?.length ? filteredStatuses : null
+  }
+
+  return paramValue
+}
+
+export const parseScheduledQueryParamsCallback = (paramName, paramValue) => {
+  if (paramName === TYPE_FILTER) {
+    return generateTypeFilter(JOBS_MONITORING_SCHEDULED_TAB).find(type => type.id === paramValue)
+      ?.id
+  }
+
+  return paramValue
 }

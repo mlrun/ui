@@ -34,7 +34,10 @@ import {
   ITERATIONS_FILTER,
   LABELS_FILTER,
   NAME_FILTER,
-  TAG_FILTER
+  SHOW_ITERATIONS,
+  TAG_FILTER,
+  TAG_FILTER_LATEST,
+  VIEW_SEARCH_PARAMETER
 } from '../../constants'
 import { PRIMARY_BUTTON } from 'igz-controls/constants'
 import { applyTagChanges, chooseOrFetchArtifact } from '../../utils/artifacts.util'
@@ -47,6 +50,7 @@ import { openDeleteConfirmPopUp } from 'igz-controls/utils/common.util'
 import { openPopUp } from 'igz-controls/utils/common.util'
 import { searchArtifactItem } from '../../utils/searchArtifactItem'
 import { setDownloadItem, setShowDownloadsList } from '../../reducers/downloadReducer'
+import { getFilteredSearchParams } from '../../utils/filter.util'
 
 import { ReactComponent as TagIcon } from 'igz-controls/images/tag-icon.svg'
 import { ReactComponent as YamlIcon } from 'igz-controls/images/yaml.svg'
@@ -72,12 +76,12 @@ export const infoHeaders = [
   { label: 'Labels', id: 'labels' }
 ]
 
-export const filters = [
-  { type: TAG_FILTER, label: 'Version tag:' },
-  { type: NAME_FILTER, label: 'Name:' },
-  { type: LABELS_FILTER, label: 'Labels:' },
-  { type: ITERATIONS_FILTER, label: 'Show best iteration only:' }
-]
+export const filtersConfig = {
+  [NAME_FILTER]: { label: 'Name:', initialValue: '' },
+  [TAG_FILTER]: { label: 'Version tag:', initialValue: TAG_FILTER_LATEST, isModal: true },
+  [LABELS_FILTER]: { label: 'Labels:', initialValue: '', isModal: true },
+  [ITERATIONS_FILTER]: { label: 'Show best iteration only:', initialValue: SHOW_ITERATIONS, isModal: true }
+}
 
 export const registerDatasetTitle = 'Register dataset'
 
@@ -102,7 +106,7 @@ export const generateDataSetsDetailsMenu = selectedItem => [
   }
 ]
 
-export const generatePageData = (selectedItem, viewMode, params) => ({
+export const generatePageData = (selectedItem, viewMode, params, isDetailsPopUp = false) => ({
   page: DATASETS_PAGE,
   details: {
     menu: generateDataSetsDetailsMenu(selectedItem),
@@ -112,6 +116,7 @@ export const generatePageData = (selectedItem, viewMode, params) => ({
     withToggleViewBtn: true,
     actionButton: {
       label: 'Train',
+      hidden: isDetailsPopUp,
       variant: PRIMARY_BUTTON,
       onClick: () => handleTrainDataset(selectedItem, params)
     }
@@ -164,7 +169,10 @@ export const checkForSelectedDataset = (
         )
 
         if (!searchItem) {
-          navigate(`/projects/${projectName}/datasets`, { replace: true })
+          navigate(
+            `/projects/${projectName}/datasets${getFilteredSearchParams(window.location.search, [VIEW_SEARCH_PARAMETER])}`,
+            { replace: true }
+          )
         } else {
           setSelectedDataset(prevState => {
             return isEqual(prevState, searchItem) ? prevState : searchItem
@@ -187,10 +195,12 @@ export const generateActionsMenu = (
   handleRefresh,
   datasetsFilters,
   menuPosition,
-  selectedDataset
+  selectedDataset,
+  isDetailsPopUp = false
 ) => {
   const isTargetPathValid = getIsTargetPathValid(datasetMin ?? {}, frontendSpec)
-  const datasetDataCouldBeDeleted = datasetMin?.target_path?.endsWith('.pq') || datasetMin?.target_path?.endsWith('.parquet')
+  const datasetDataCouldBeDeleted =
+    datasetMin?.target_path?.endsWith('.pq') || datasetMin?.target_path?.endsWith('.parquet')
 
   const getFullDataset = datasetMin => {
     return chooseOrFetchArtifact(dispatch, DATASETS_TAB, selectedDataset, datasetMin)
@@ -200,14 +210,17 @@ export const generateActionsMenu = (
     [
       {
         label: 'Add a tag',
-        hidden: menuPosition === ACTION_MENU_PARENT_ROW_EXPANDED,
+        hidden: menuPosition === ACTION_MENU_PARENT_ROW_EXPANDED || isDetailsPopUp,
         icon: <TagIcon />,
         onClick: handleAddTag
       },
       {
         label: 'Download',
         hidden: menuPosition === ACTION_MENU_PARENT_ROW_EXPANDED,
-        disabled: !isTargetPathValid || datasetMin.size > (frontendSpec.artifact_limits.max_download_size ?? ARTIFACT_MAX_DOWNLOAD_SIZE),
+        disabled:
+          !isTargetPathValid ||
+          datasetMin.size >
+            (frontendSpec.artifact_limits.max_download_size ?? ARTIFACT_MAX_DOWNLOAD_SIZE),
         icon: <DownloadIcon />,
         onClick: datasetMin => {
           getFullDataset(datasetMin).then(dataset => {
@@ -241,37 +254,39 @@ export const generateActionsMenu = (
       {
         label: 'Delete',
         icon: <Delete />,
-        hidden: [ACTION_MENU_PARENT_ROW, ACTION_MENU_PARENT_ROW_EXPANDED].includes(menuPosition),
+        hidden: [ACTION_MENU_PARENT_ROW, ACTION_MENU_PARENT_ROW_EXPANDED].includes(menuPosition) || isDetailsPopUp,
         className: 'danger',
         onClick: () =>
-          datasetDataCouldBeDeleted ?
-            openPopUp(DeleteArtifactPopUp, {
-              artifact: datasetMin,
-              artifactType: DATASET_TYPE,
-              category: DATASET_TYPE,
-              filters: datasetsFilters,
-              handleRefresh
-            })
+          datasetDataCouldBeDeleted
+            ? openPopUp(DeleteArtifactPopUp, {
+                artifact: datasetMin,
+                artifactType: DATASET_TYPE,
+                category: DATASET_TYPE,
+                filters: datasetsFilters,
+                handleRefresh
+              })
             : openDeleteConfirmPopUp(
-              'Delete dataset?',
-              `Do you want to delete the dataset "${datasetMin.db_key}"? Deleted datasets can not be restored.`,
-              () => {
-                handleDeleteArtifact(
-                  dispatch,
-                  projectName,
-                  datasetMin.db_key,
-                  datasetMin.uid,
-                  handleRefresh,
-                  datasetsFilters,
-                  DATASET_TYPE
-                )
-              }
-            )
+                'Delete dataset?',
+                `Do you want to delete the dataset "${datasetMin.db_key}"? Deleted datasets can not be restored.`,
+                () => {
+                  handleDeleteArtifact(
+                    dispatch,
+                    projectName,
+                    datasetMin.db_key,
+                    datasetMin.uid,
+                    handleRefresh,
+                    datasetsFilters,
+                    DATASET_TYPE
+                  )
+                }
+              )
       },
       {
         label: 'Delete all',
         icon: <Delete />,
-        hidden: ![ACTION_MENU_PARENT_ROW, ACTION_MENU_PARENT_ROW_EXPANDED].includes(menuPosition),
+        hidden:
+          isDetailsPopUp ||
+          ![ACTION_MENU_PARENT_ROW, ACTION_MENU_PARENT_ROW_EXPANDED].includes(menuPosition),
         className: 'danger',
         onClick: () =>
           openDeleteConfirmPopUp(

@@ -34,20 +34,20 @@ import { isRowExpanded, PARENT_ROW_EXPANDED_CLASS } from '../../utils/tableRows.
 
 const FunctionsTableRow = ({
   actionsMenu,
-  handleExpandRow,
+  expandedRowsData,
   handleSelectItem,
   mainRowItemsCount = 1,
   rowIndex,
   rowItem,
   selectedItem,
-  selectedRowData,
+  toggleRow,
   withQuickActions = false
 }) => {
   const parent = useRef()
   const params = useParams()
   const rowIsExpanded = useMemo(
-    () => isRowExpanded(parent, selectedRowData, rowItem),
-    [rowItem, selectedRowData]
+    () => isRowExpanded(parent, expandedRowsData, rowItem),
+    [rowItem, expandedRowsData]
   )
   const rowClassNames = classnames(
     'table-row',
@@ -82,12 +82,12 @@ const FunctionsTableRow = ({
                           className={cellClassName}
                           data={data}
                           firstCell={index === 0}
-                          handleExpandRow={handleExpandRow}
                           item={rowItem}
                           key={data.id}
                           selectItem={handleSelectItem}
                           selectedItem={selectedItem}
                           showExpandButton
+                          toggleRow={toggleRow}
                         />
                       )
                     )
@@ -98,7 +98,7 @@ const FunctionsTableRow = ({
             </table>
           </td>
 
-          {selectedRowData[rowItem.data.ui.identifier]?.content.map((func, index) => {
+          {expandedRowsData[rowItem.data.ui.identifier]?.content.map((func, index) => {
             const subRowClassNames = classnames(
               'table-row',
               'table-body-row',
@@ -163,13 +163,13 @@ const FunctionsTableRow = ({
                 <TableCell
                   data={value}
                   firstCell={index === 0}
-                  handleExpandRow={handleExpandRow}
                   item={rowItem.data}
                   key={value.id}
                   link={value.getLink?.(rowItem.data.tag, params.tab ?? DETAILS_OVERVIEW_TAB, rowItem.data.hash)}
-                  selectedItem={selectedItem}
                   selectItem={handleSelectItem}
+                  selectedItem={selectedItem}
                   showExpandButton={value.showExpandButton}
+                  toggleRow={toggleRow}
                 />
               )
             )
@@ -189,12 +189,12 @@ const FunctionsTableRow = ({
 
 FunctionsTableRow.propTypes = {
   actionsMenu: ACTIONS_MENU.isRequired,
+  expandedRowsData: PropTypes.object.isRequired,
   handleSelectItem: PropTypes.func.isRequired,
   mainRowItemsCount: PropTypes.number,
   rowIndex: PropTypes.number.isRequired,
   rowItem: PropTypes.shape({}).isRequired,
   selectedItem: PropTypes.shape({}).isRequired,
-  selectedRowData: PropTypes.object.isRequired,
   withQuickActions: PropTypes.bool
 }
 

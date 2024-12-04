@@ -34,6 +34,7 @@ import { usePods } from '../../../hooks/usePods.hook'
 import detailsActions from '../../../actions/details'
 
 import './monitorWorkflows.scss'
+import { useFiltersFromSearchParams } from '../../../hooks/useFiltersFromSearchParams.hook'
 import { deleteWorkflows } from '../../../reducers/workflowReducer'
 
 const MonitorWorkflows = ({ fetchFunctionLogs }) => {
@@ -52,14 +53,15 @@ const MonitorWorkflows = ({ fetchFunctionLogs }) => {
     dateFilter,
     getWorkflows,
     requestErrorMessage,
+    tabData,
     workflowsFiltersConfig
   } = React.useContext(JobsContext)
   const workflowsAreInitializedRef = useRef(false)
-  const [workflowsFilterMenu, workflowsFilterMenuModal, saveFilters] = useSelector(state => [
-    state.filtersStore.filterMenu[MONITOR_WORKFLOWS_TAB],
-    state.filtersStore.filterMenuModal[MONITOR_WORKFLOWS_TAB],
-    state.filtersStore.saveFilters
-  ])
+
+  const filters = useFiltersFromSearchParams(
+    tabData[MONITOR_WORKFLOWS_TAB]?.filtersConfig,
+    tabData[MONITOR_WORKFLOWS_TAB]?.parseQueryParamsCallback
+  )
 
   usePods(dispatch, detailsActions.fetchJobPods, detailsActions.removePods, selectedJob)
 
@@ -97,25 +99,14 @@ const MonitorWorkflows = ({ fetchFunctionLogs }) => {
 
   useEffect(() => {
     fetchInitialWorkflows(
-      { saveFilters, ...workflowsFilterMenu, ...workflowsFilterMenuModal.values },
+      filters,
       params,
       getWorkflows,
       setFilters,
       dispatch,
-      workflowsStore.workflows.data.length,
       workflowsAreInitializedRef
     )
-  }, [
-    dispatch,
-    getWorkflows,
-    workflowsAreLoaded,
-    workflowsStore.workflows.data.length,
-    params,
-    dateFilter,
-    workflowsFilterMenu,
-    workflowsFilterMenuModal.values,
-    saveFilters
-  ])
+  }, [dispatch, getWorkflows, workflowsAreLoaded, params, dateFilter, filters])
 
   return (
     <>
@@ -127,10 +118,10 @@ const MonitorWorkflows = ({ fetchFunctionLogs }) => {
         )}
       </div>
       <WorkflowsTable
-        backLink={`/projects/${params.projectName}/jobs/${MONITOR_WORKFLOWS_TAB}`}
+        backLink={`/projects/${params.projectName}/jobs/${MONITOR_WORKFLOWS_TAB}${window.location.search}`}
         context={JobsContext}
         fetchFunctionLogs={fetchFunctionLogs}
-        filterMenuName={MONITOR_WORKFLOWS_TAB}
+        filters={filters}
         filtersConfig={workflowsFiltersConfig}
         getWorkflows={getWorkflows}
         itemIsSelected={itemIsSelected}

@@ -18,7 +18,7 @@ under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
 import React, { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react'
-import { useParams } from 'react-router-dom'
+import { useParams, useSearchParams } from 'react-router-dom'
 import { connect, useDispatch, useSelector } from 'react-redux'
 import { mapValues, map } from 'lodash'
 
@@ -31,8 +31,6 @@ import {
   CANCEL_REQUEST_TIMEOUT,
   FEATURES_TAB,
   FEATURE_STORE_PAGE,
-  FILTER_MENU,
-  FILTER_MENU_MODAL,
   GROUP_BY_NAME,
   GROUP_BY_NONE,
   LARGE_REQUEST_CANCELED,
@@ -40,13 +38,14 @@ import {
   TAG_FILTER_ALL_ITEMS
 } from '../../../constants'
 import { createFeaturesRowData } from '../../../utils/createFeatureStoreContent'
-import { featuresActionCreator, handleFeaturesResponse } from './features.util'
+import { featuresActionCreator, filtersConfig, handleFeaturesResponse } from './features.util'
 import { getFeatureIdentifier } from '../../../utils/getUniqueIdentifier'
 import { getFilterTagOptions, setFilters } from '../../../reducers/filtersReducer'
 import { setTablePanelOpen } from '../../../reducers/tableReducer'
 import { useGroupContent } from '../../../hooks/groupContent.hook'
 import { useVirtualization } from '../../../hooks/useVirtualization.hook'
 import { useInitialTableFetch } from '../../../hooks/useInitialTableFetch.hook'
+import { useFiltersFromSearchParams } from '../../../hooks/useFiltersFromSearchParams.hook'
 
 import { ReactComponent as Yaml } from 'igz-controls/images/yaml.svg'
 
@@ -68,14 +67,10 @@ const Features = ({
   const [selectedRowData, setSelectedRowData] = useState({})
   const [requestErrorMessage, setRequestErrorMessage] = useState('')
   const params = useParams()
+  const [, setSearchParams] = useSearchParams()
   const featureStore = useSelector(store => store.featureStore)
   const filtersStore = useSelector(store => store.filtersStore)
-  const featuresFilters = useSelector(store => {
-    return {
-      ...store.filtersStore[FILTER_MENU][FEATURES_TAB].values,
-      ...store.filtersStore[FILTER_MENU_MODAL][FEATURES_TAB].values
-    }
-  })
+  const featuresFilters = useFiltersFromSearchParams(filtersConfig)
   const tableStore = useSelector(store => store.tableStore)
   const featureStoreRef = useRef(null)
   const abortControllerRef = useRef(new AbortController())
@@ -107,7 +102,7 @@ const Features = ({
       return mapValues(prevSelectedRowData, feature => ({
         ...feature,
         content: map(feature.content, contentItem =>
-          createFeaturesRowData(contentItem.data, tableStore.isTablePanelOpen)
+          createFeaturesRowData(contentItem.data, tableStore.isTablePanelOpen, false)
         )
       }))
     })
@@ -169,23 +164,26 @@ const Features = ({
     )
   }, [dispatch, fetchFeatureSetsTags, params.projectName])
 
-  const handleRefresh = filters => {
-    fetchTags()
-    setFeatures([])
-    removeFeature()
-    removeEntity()
-    removeFeatures()
-    removeEntities()
-    setSelectedRowData({})
+  const handleRefresh = useCallback(
+    filters => {
+      fetchTags()
+      setFeatures([])
+      removeFeature()
+      removeEntity()
+      removeFeatures()
+      removeEntities()
+      setSelectedRowData({})
 
-    return fetchData(filters)
-  }
+      return fetchData(filters)
+    },
+    [fetchData, fetchTags, removeEntities, removeEntity, removeFeature, removeFeatures]
+  )
 
-  const handleRefreshWithStoreFilters = () => {
+  const handleRefreshWithFilters = useCallback(() => {
     handleRefresh(featuresFilters)
-  }
+  }, [featuresFilters, handleRefresh])
 
-  const handleRemoveFeature = useCallback(
+  const collapseRowCallback = useCallback(
     feature => {
       const newStoreSelectedRowData =
         feature.data.ui.type === 'feature'
@@ -209,7 +207,7 @@ const Features = ({
     ]
   )
 
-  const handleRequestOnExpand = useCallback(
+  const expandRowCallback = useCallback(
     feature => {
       const featureIdentifier = getFeatureIdentifier(feature)
       const fetchData = feature.ui?.type === 'feature' ? fetchFeature : fetchEntity
@@ -225,7 +223,7 @@ const Features = ({
         .then(result => {
           if (result?.length > 0) {
             const content = [...result].map(contentItem =>
-              createFeaturesRowData(contentItem, tableStore.isTablePanelOpen)
+              createFeaturesRowData(contentItem, tableStore.isTablePanelOpen, false)
             )
             setSelectedRowData(state => ({
               ...state,
@@ -251,11 +249,11 @@ const Features = ({
     [fetchEntity, fetchFeature, tableStore.isTablePanelOpen]
   )
 
-  const { latestItems, handleExpandRow } = useGroupContent(
+  const { latestItems, toggleRow } = useGroupContent(
     features,
     getFeatureIdentifier,
-    handleRemoveFeature,
-    handleRequestOnExpand,
+    collapseRowCallback,
+    expandRowCallback,
     null,
     FEATURE_STORE_PAGE,
     FEATURES_TAB
@@ -266,7 +264,9 @@ const Features = ({
       ? latestItems.map(contentItem => {
           return createFeaturesRowData(contentItem, tableStore.isTablePanelOpen, true)
         })
-      : features.map(contentItem => createFeaturesRowData(contentItem, tableStore.isTablePanelOpen))
+      : features.map(contentItem =>
+          createFeaturesRowData(contentItem, tableStore.isTablePanelOpen, false)
+        )
   }, [features, filtersStore.groupBy, latestItems, tableStore.isTablePanelOpen])
 
   const getPopUpTemplate = useCallback(
@@ -340,19 +340,21 @@ const Features = ({
   return (
     <FeaturesView
       actionsMenu={actionsMenu}
-      features={features}
       featureStore={featureStore}
+      features={features}
       filtersStore={filtersStore}
+      filters={featuresFilters}
       getPopUpTemplate={getPopUpTemplate}
-      handleExpandRow={handleExpandRow}
       handleRefresh={handleRefresh}
-      handleRefreshWithStoreFilters={handleRefreshWithStoreFilters}
+      handleRefreshWithFilters={handleRefreshWithFilters}
       pageData={pageData}
       ref={{ featureStoreRef }}
       requestErrorMessage={requestErrorMessage}
       selectedRowData={selectedRowData}
+      setSearchParams={setSearchParams}
       tableContent={tableContent}
       tableStore={tableStore}
+      toggleRow={toggleRow}
       virtualizationConfig={virtualizationConfig}
     />
   )

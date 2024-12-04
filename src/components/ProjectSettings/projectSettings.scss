@@ -32,6 +32,10 @@
         flex: 0 0 auto;
         width: 50%;
         min-width: 650px;
+
+        &:not(:last-child) {
+          border-right: $dividerBorder;
+        }
       }
     }
 

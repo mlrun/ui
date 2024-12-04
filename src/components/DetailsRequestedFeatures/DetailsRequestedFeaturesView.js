@@ -49,6 +49,7 @@ const DetailsRequestedFeaturesView = ({
   confirmDialogData,
   editableItemIndex = null,
   formState,
+  isDetailsPopUp = false,
   handleDelete,
   handleDiscardChanges,
   handleItemClick,
@@ -166,7 +167,7 @@ const DetailsRequestedFeaturesView = ({
                                     {alias}
                                   </Tooltip>
                                   <RoundedIcon
-                                    className={!alias ? 'visibility-hidden' : ''}
+                                    className={!alias || isDetailsPopUp ? 'visibility-hidden' : ''}
                                     onClick={() =>
                                       handleItemClick('features', 'input', index, originalTemplate)
                                     }
@@ -179,7 +180,7 @@ const DetailsRequestedFeaturesView = ({
                             </div>
                             <div className="cell_actions">
                               <RoundedIcon
-                                className={alias && 'visibility-hidden'}
+                                className={(alias || isDetailsPopUp) && 'visibility-hidden'}
                                 onClick={() =>
                                   handleItemClick('features', 'input', index, originalTemplate)
                                 }
@@ -189,7 +190,8 @@ const DetailsRequestedFeaturesView = ({
                               </RoundedIcon>
 
                               <RoundedIcon
-                                onClick={() => setConfirmDialogData({ index, feature })}
+                                  className={isDetailsPopUp && 'visibility-hidden'}
+                                  onClick={() => setConfirmDialogData({ index, feature })}
                                 tooltipText="Delete"
                               >
                                 <Delete />

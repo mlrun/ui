@@ -22,11 +22,13 @@ import PropTypes from 'prop-types'
 import classnames from 'classnames'
 import { groupBy, forEach, isEmpty, map, concat } from 'lodash'
 import { Link, useParams } from 'react-router-dom'
+import { useDispatch, useSelector } from 'react-redux'
 
 import MlReactFlow from '../../common/ReactFlow/MlReactFlow'
 import CodeBlock from '../../common/CodeBlock/CodeBlock'
 import NoData from '../../common/NoData/NoData'
 import { Tooltip, TextTooltipTemplate, RoundedIcon } from 'igz-controls/components'
+import Loader from '../../common/Loader/Loader'
 
 import {
   DEFAULT_EDGE,
@@ -40,6 +42,7 @@ import {
   SECONDARY_NODE
 } from '../../constants'
 import { getLayoutedElements } from '../../common/ReactFlow/mlReactFlow.util'
+import { fetchAndParseFunction } from '../ModelsPage/RealTimePipelines/realTimePipelines.util'
 
 import { ReactComponent as Back } from 'igz-controls/images/back-arrow.svg'
 import { ReactComponent as CloseIcon } from 'igz-controls/images/close.svg'
@@ -54,10 +57,16 @@ const Pipeline = ({ content }) => {
   const [selectedStepData, setSelectedStepData] = useState([])
   const [stepIsSelected, setStepIsSelected] = useState(false)
   const params = useParams()
+  const dispatch = useDispatch()
+  const functionsStore = useSelector(store => store.functionsStore)
 
   useEffect(() => {
-    setPipeline(content.find(contentItem => contentItem.hash === params.pipelineId))
-  }, [content, params.pipelineId])
+    const selectedFunction = content.find(contentItem => contentItem.hash === params.pipelineId)
+
+    fetchAndParseFunction(selectedFunction, dispatch).then(func => {
+      return setPipeline(func)
+    })
+  }, [content, dispatch, params.pipelineId])
 
   useEffect(() => {
     if (selectedStep.data) {
@@ -265,7 +274,7 @@ const Pipeline = ({ content }) => {
           <Link
             to={`/projects/${params.projectName}/models/${
               params.pageTab ?? REAL_TIME_PIPELINES_TAB
-            }`}
+            }${window.location.search}`}
             className="link-back__icon"
           >
             <RoundedIcon id="pipeline-back-btn" tooltipText="Back">
@@ -320,6 +329,8 @@ const Pipeline = ({ content }) => {
             </div>
           )}
         </div>
+      ) : functionsStore.funcLoading ? (
+        <Loader />
       ) : (
         <NoData message="The ingestion function has no steps and therefore no graph." />
       )}

@@ -20,6 +20,7 @@ such restriction.
 import React, { useLayoutEffect, useMemo, useState } from 'react'
 import { useSelector } from 'react-redux'
 import { Outlet, useLocation, useNavigate, useParams } from 'react-router-dom'
+import { defaultsDeep } from 'lodash'
 
 import ContentMenu from '../../elements/ContentMenu/ContentMenu'
 import { ConfirmDialog } from 'igz-controls/components'
@@ -38,12 +39,16 @@ import {
   JOBS_MONITORING_WORKFLOWS_TAB
 } from '../../constants'
 import { TERTIARY_BUTTON } from 'igz-controls/constants'
+import { useFiltersFromSearchParams } from '../../hooks/useFiltersFromSearchParams.hook'
 
 import './projectsJobsMonitoring.scss'
 import {
   getJobsFiltersConfig,
   getScheduledFiltersConfig,
-  getWorkflowsFiltersConfig
+  getWorkflowsFiltersConfig,
+  parseJobsQueryParamsCallback,
+  parseScheduledQueryParamsCallback,
+  parseWorkflowsQueryParamsCallback
 } from '../../utils/jobs.util'
 import { useJobsPageData } from '../../hooks/useJobsPageData'
 
@@ -61,22 +66,52 @@ const ProjectsJobsMonitoring = () => {
   const navigate = useNavigate()
   const artifactsStore = useSelector(store => store.artifactsStore)
   const jobsStore = useSelector(store => store.jobsStore)
+
+  const jobsFiltersConfig = useMemo(
+    () => getJobsFiltersConfig(params.jobName, true),
+    [params.jobName]
+  )
+  const scheduledFiltersConfig = useMemo(() => getScheduledFiltersConfig(true), [])
+  const workflowsFiltersConfig = useMemo(() => getWorkflowsFiltersConfig(true), [])
+  const initialTabData = useMemo(() => {
+    return {
+      [JOBS_MONITORING_JOBS_TAB]: {
+        filtersConfig: jobsFiltersConfig,
+        modalFilters: <JobsMonitoringFilters />,
+        parseQueryParamsCallback: parseJobsQueryParamsCallback
+      },
+      [JOBS_MONITORING_WORKFLOWS_TAB]: {
+        filtersConfig: workflowsFiltersConfig,
+        modalFilters: <WorkflowsMonitoringFilters />,
+        parseQueryParamsCallback: parseWorkflowsQueryParamsCallback
+      },
+      [JOBS_MONITORING_SCHEDULED_TAB]: {
+        filtersConfig: scheduledFiltersConfig,
+        modalFilters: <ScheduledMonitoringFilters />,
+        parseQueryParamsCallback: parseScheduledQueryParamsCallback
+      }
+    }
+  }, [jobsFiltersConfig, scheduledFiltersConfig, workflowsFiltersConfig])
   const {
     abortControllerRef,
     abortJobRef,
     abortingJobs,
     editableItem,
     getWorkflows,
+    handleMonitoring,
+    handleRefreshJobs,
+    handleRerunJob,
     jobRuns,
-    jobs,
     jobWizardIsOpened,
     jobWizardMode,
-    handleMonitoring,
-    handleRerunJob,
+    jobs,
+    paginatedJobs,
+    paginationConfigJobsRef,
     refreshJobs,
     refreshScheduled,
     requestErrorMessage,
     scheduledJobs,
+    searchParams,
     setAbortingJobs,
     setEditableItem,
     setJobRuns,
@@ -84,9 +119,9 @@ const ProjectsJobsMonitoring = () => {
     setJobWizardMode,
     setJobs,
     setScheduledJobs,
-    setSelectedRunProject,
+    setSearchParams,
     terminateAbortTasksPolling
-  } = useJobsPageData()
+  } = useJobsPageData(initialTabData, selectedTab)
 
   const handleTabChange = tabName => {
     setSelectedCard(STATS_TOTAL_CARD)
@@ -104,36 +139,27 @@ const ProjectsJobsMonitoring = () => {
     )
   }, [location.pathname])
 
-  const jobsFiltersConfig = useMemo(() => getJobsFiltersConfig(params.jobName), [params.jobName])
-  const scheduledFiltersConfig = useMemo(() => getScheduledFiltersConfig(), [])
-  const workflowsFiltersConfig = useMemo(() => getWorkflowsFiltersConfig(), [])
-
   const tabData = useMemo(() => {
-    return {
-      [JOBS_MONITORING_JOBS_TAB]: {
-        filtersConfig: jobsFiltersConfig,
-        handleRefresh: refreshJobs,
-        modalFilters: <JobsMonitoringFilters />
+    return defaultsDeep(
+      {
+        [JOBS_MONITORING_JOBS_TAB]: {
+          handleRefresh: handleRefreshJobs
+        },
+        [JOBS_MONITORING_WORKFLOWS_TAB]: {
+          handleRefresh: getWorkflows
+        },
+        [JOBS_MONITORING_SCHEDULED_TAB]: {
+          handleRefresh: refreshScheduled
+        }
       },
-      [JOBS_MONITORING_WORKFLOWS_TAB]: {
-        filtersConfig: workflowsFiltersConfig,
-        handleRefresh: getWorkflows,
-        modalFilters: <WorkflowsMonitoringFilters />
-      },
-      [JOBS_MONITORING_SCHEDULED_TAB]: {
-        filtersConfig: scheduledFiltersConfig,
-        handleRefresh: refreshScheduled,
-        modalFilters: <ScheduledMonitoringFilters />
-      }
-    }
-  }, [
-    getWorkflows,
-    jobsFiltersConfig,
-    refreshJobs,
-    refreshScheduled,
-    scheduledFiltersConfig,
-    workflowsFiltersConfig
-  ])
+      initialTabData
+    )
+  }, [getWorkflows, handleRefreshJobs, initialTabData, refreshScheduled])
+
+  const filters = useFiltersFromSearchParams(
+    tabData[selectedTab]?.filtersConfig,
+    tabData[selectedTab]?.parseQueryParamsCallback
+  )
 
   return (
     <>
@@ -141,7 +167,7 @@ const ProjectsJobsMonitoring = () => {
         <div className="content__header">
           <Breadcrumbs />
         </div>
-        {selectedTab && (
+        {selectedTab && filters && (
           <div className="content">
             <div className="content__action-bar-wrapper">
               <ContentMenu
@@ -150,18 +176,20 @@ const ProjectsJobsMonitoring = () => {
                 onClick={handleTabChange}
                 tabs={tabs}
               />
+
               <ActionBar
                 autoRefreshIsEnabled={selectedTab === JOBS_MONITORING_JOBS_TAB}
                 autoRefreshIsStopped={jobWizardIsOpened || jobsStore.loading}
-                filterMenuName={selectedTab}
+                filters={filters}
                 filtersConfig={tabData[selectedTab].filtersConfig}
                 handleRefresh={tabData[selectedTab].handleRefresh}
                 hidden={Boolean(params.jobId || params.workflowId)}
+                key={selectedTab}
                 page={JOBS_MONITORING_PAGE}
+                setSearchParams={setSearchParams}
                 tab={selectedTab}
                 withRefreshButton
                 withoutExpandButton
-                key={selectedTab}
               >
                 {tabData[selectedTab].modalFilters}
               </ActionBar>
@@ -182,11 +210,14 @@ const ProjectsJobsMonitoring = () => {
                   jobs,
                   jobsFiltersConfig,
                   jobsMonitoringData,
-                  requestErrorMessage,
+                  paginatedJobs,
+                  paginationConfigJobsRef,
                   refreshJobs,
                   refreshScheduled,
+                  requestErrorMessage,
                   scheduledFiltersConfig,
                   scheduledJobs,
+                  searchParams,
                   selectedCard,
                   setAbortingJobs,
                   setConfirmData,
@@ -197,7 +228,7 @@ const ProjectsJobsMonitoring = () => {
                   setJobs,
                   setScheduledJobs,
                   setSelectedCard,
-                  setSelectedRunProject,
+                  tabData,
                   terminateAbortTasksPolling,
                   workflowsFiltersConfig
                 }}

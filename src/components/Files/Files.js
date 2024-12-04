@@ -19,7 +19,7 @@ such restriction.
 */
 import React, { useCallback, useEffect, useState, useMemo, useRef } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { useLocation, useNavigate, useParams } from 'react-router-dom'
+import { useLocation, useNavigate, useParams, useSearchParams } from 'react-router-dom'
 import { isEmpty } from 'lodash'
 
 import AddArtifactTagPopUp from '../../elements/AddArtifactTagPopUp/AddArtifactTagPopUp'
@@ -29,16 +29,15 @@ import RegisterArtifactModal from '../RegisterArtifactModal/RegisterArtifactModa
 import {
   ARTIFACT_OTHER_TYPE,
   ARTIFACT_TYPE,
-  FILES_FILTERS,
   FILES_PAGE,
   FILES_TAB,
-  FILTER_MENU_MODAL,
   GROUP_BY_NAME,
   GROUP_BY_NONE,
   REQUEST_CANCELED
 } from '../../constants'
 import {
   checkForSelectedFile,
+  filtersConfig,
   generateActionsMenu,
   generatePageData,
   handleApplyDetailsChanges,
@@ -63,7 +62,8 @@ import { useGroupContent } from '../../hooks/groupContent.hook'
 import { useSortTable } from '../../hooks/useSortTable.hook'
 import { useInitialTableFetch } from '../../hooks/useInitialTableFetch.hook'
 import { useVirtualization } from '../../hooks/useVirtualization.hook'
-import { useYaml } from '../../hooks/yaml.hook'
+import { useFiltersFromSearchParams } from '../../hooks/useFiltersFromSearchParams.hook'
+import { toggleYaml } from '../../reducers/appReducer'
 
 import './files.scss'
 import cssVariables from './files.scss'
@@ -75,7 +75,6 @@ const Files = () => {
   const [selectedRowData, setSelectedRowData] = useState({})
   const [requestErrorMessage, setRequestErrorMessage] = useState('')
   const [maxArtifactsErrorIsShown, setMaxArtifactsErrorIsShown] = useState(false)
-  const [convertedYaml, toggleConvertedYaml] = useYaml('')
   const artifactsStore = useSelector(store => store.artifactsStore)
   const filtersStore = useSelector(store => store.filtersStore)
   const frontendSpec = useSelector(store => store.appStore.frontendSpec)
@@ -83,24 +82,27 @@ const Files = () => {
   const location = useLocation()
   const navigate = useNavigate()
   const params = useParams()
+  const [, setSearchParams] = useSearchParams()
   const viewMode = getViewMode(window.location.search)
-
+  const filters = useFiltersFromSearchParams(filtersConfig)
   const abortControllerRef = useRef(new AbortController())
   const tagAbortControllerRef = useRef(new AbortController())
   const filesRef = useRef(null)
 
   const pageData = useMemo(() => generatePageData(viewMode), [viewMode])
 
-  const filesFilters = useMemo(
-    () => ({ name: filtersStore.name, ...filtersStore[FILTER_MENU_MODAL][FILES_FILTERS].values }),
-    [filtersStore]
-  )
-
   const detailsFormInitialValues = useMemo(
     () => ({
       tag: selectedFile.tag ?? ''
     }),
     [selectedFile.tag]
+  )
+
+  const toggleConvertedYaml = useCallback(
+    data => {
+      return dispatch(toggleYaml(data))
+    },
+    [dispatch]
   )
 
   const getAndSetSelectedArtifact = useCallback(() => {
@@ -178,15 +180,19 @@ const Files = () => {
     [fetchData, fetchTags]
   )
 
+  const handleRefreshWithFilters = useCallback(() => {
+    handleRefresh(filters)
+  }, [filters, handleRefresh])
+
   const handleAddTag = useCallback(
     artifact => {
       openPopUp(AddArtifactTagPopUp, {
         artifact,
-        onAddTag: () => handleRefresh(filesFilters),
+        onAddTag: () => handleRefresh(filters),
         projectName: params.projectName
       })
     },
-    [handleRefresh, params.projectName, filesFilters]
+    [params.projectName, handleRefresh, filters]
   )
 
   const actionsMenu = useMemo(
@@ -199,23 +205,23 @@ const Files = () => {
         handleAddTag,
         params.projectName,
         handleRefresh,
-        filesFilters,
+        filters,
         menuPosition,
         selectedFile
       ),
     [
-      dispatch,
-      filesFilters,
       frontendSpec,
-      handleAddTag,
-      handleRefresh,
-      params.projectName,
+      dispatch,
       toggleConvertedYaml,
+      handleAddTag,
+      params.projectName,
+      handleRefresh,
+      filters,
       selectedFile
     ]
   )
 
-  const handleRemoveRowData = useCallback(
+  const collapseRowCallback = useCallback(
     file => {
       const newStoreSelectedRowData = {
         ...artifactsStore.files.selectedRowData.content
@@ -231,15 +237,15 @@ const Files = () => {
     [artifactsStore.files.selectedRowData.content, dispatch, selectedRowData]
   )
 
-  const handleExpand = useCallback(
+  const expandRowCallback = useCallback(
     (file, content) => {
       const fileIdentifier = getArtifactIdentifier(file)
 
       setSelectedRowData(state => ({
         ...state,
         [fileIdentifier]: {
-          content: sortListByDate(content[file.db_key ?? file.key], 'updated', false).map(artifact =>
-            createFilesRowData(artifact, params.projectName)
+          content: sortListByDate(content[file.db_key ?? file.key], 'updated', false).map(
+            artifact => createFilesRowData(artifact, params.projectName)
           )
         },
         error: null,
@@ -249,11 +255,11 @@ const Files = () => {
     [params.projectName]
   )
 
-  const { latestItems, handleExpandRow } = useGroupContent(
+  const { latestItems, toggleRow } = useGroupContent(
     files,
     getArtifactIdentifier,
-    handleRemoveRowData,
-    handleExpand,
+    collapseRowCallback,
+    expandRowCallback,
     null,
     FILES_PAGE
   )
@@ -263,7 +269,9 @@ const Files = () => {
       ? latestItems.map(contentItem => {
           return createFilesRowData(contentItem, params.projectName, frontendSpec, true)
         })
-      : files.map(contentItem => createFilesRowData(contentItem, params.projectName, frontendSpec))
+      : files.map(contentItem =>
+          createFilesRowData(contentItem, params.projectName, frontendSpec, false)
+        )
   }, [files, filtersStore.groupBy, frontendSpec, latestItems, params.projectName])
 
   const tableHeaders = useMemo(() => tableContent[0]?.content ?? [], [tableContent])
@@ -305,15 +313,15 @@ const Files = () => {
       }
     }
 
-    handleRefresh(filesFilters)
+    handleRefresh(filters)
   }
 
   useInitialTableFetch({
     createRowData: rowItem => createFilesRowData(rowItem, params.projectName, frontendSpec),
     fetchData,
     fetchTags,
-    filterModalName: FILES_FILTERS,
-    filters: filesFilters,
+    filterModalName: FILES_PAGE,
+    filters,
     setExpandedRowsData: setSelectedRowData,
     sortExpandedRowsDataBy: 'updated'
   })
@@ -372,10 +380,10 @@ const Files = () => {
     openPopUp(RegisterArtifactModal, {
       artifactKind: ARTIFACT_TYPE,
       params,
-      refresh: () => handleRefresh(filesFilters),
+      refresh: () => handleRefresh(filters),
       title: registerArtifactTitle
     })
-  }, [handleRefresh, params, filesFilters])
+  }, [params, handleRefresh, filters])
 
   const virtualizationConfig = useVirtualization({
     rowsData: {
@@ -397,13 +405,13 @@ const Files = () => {
       applyDetailsChanges={applyDetailsChanges}
       applyDetailsChangesCallback={applyDetailsChangesCallback}
       artifactsStore={artifactsStore}
-      convertedYaml={convertedYaml}
       detailsFormInitialValues={detailsFormInitialValues}
       files={files}
+      filters={filters}
       filtersStore={filtersStore}
       getAndSetSelectedArtifact={getAndSetSelectedArtifact}
-      handleExpandRow={handleExpandRow}
       handleRefresh={handleRefresh}
+      handleRefreshWithFilters={handleRefreshWithFilters}
       handleRegisterArtifact={handleRegisterArtifact}
       handleSelectFile={handleSelectFile}
       maxArtifactsErrorIsShown={maxArtifactsErrorIsShown}
@@ -412,14 +420,13 @@ const Files = () => {
       requestErrorMessage={requestErrorMessage}
       selectedFile={selectedFile}
       selectedRowData={selectedRowData}
-      setFiles={setFiles}
       setMaxArtifactsErrorIsShown={setMaxArtifactsErrorIsShown}
+      setSearchParams={setSearchParams}
       setSelectedFileMin={setSelectedFileMin}
-      setSelectedRowData={setSelectedRowData}
       sortProps={{ sortTable, selectedColumnName, getSortingIcon }}
       tableContent={sortedTableContent}
       tableHeaders={sortedTableHeaders}
-      toggleConvertedYaml={toggleConvertedYaml}
+      toggleRow={toggleRow}
       viewMode={viewMode}
       virtualizationConfig={virtualizationConfig}
     />

@@ -66,6 +66,40 @@
   &__title {
     flex: 0 1 100%;
     margin-right: 1rem;
+
+    &-icon {
+      display: flex;
+      justify-content: center;
+      gap: 2px;
+      color: $primary;
+      font-weight: normal;
+      font-size: 1.25rem;
+      margin: 0;
+    }
+  }
+
+  &__alert {
+    margin-right: 8px;
+    display: flex;
+    border-radius: 100px;
+    padding:  3px 8px  ;
+    align-items: center;
+    background-color: $wildSand;
+
+    &-icon {
+      width: 16px;
+      height: 16px;
+
+    path{
+      fill: $ceriseRed;
+    }
+  }
+
+    &-text{
+      color: $primary;
+      font-family: Roboto,sans-serif;
+      font-size: 14px;
+    }
   }
 
   &__info {
@@ -91,6 +125,10 @@
 
   &:hover {
     box-shadow: $previewBoxShadow;
+  }
+
+  .loader-wrapper {
+    position: absolute;
   }
 
   .project-data-card__statistics {

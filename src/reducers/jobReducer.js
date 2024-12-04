@@ -141,7 +141,7 @@ export const fetchAllJobRuns = createAsyncThunk(
     return jobsApi
       .getAllJobRuns(project, newConfig)
       .then(({ data }) => {
-        return data.runs
+        return data
       })
       .catch(error => {
         largeResponseCatchHandler(
@@ -197,7 +197,7 @@ export const fetchJobs = createAsyncThunk('fetchJobs', ({ project, filters, conf
     .then(({ data }) => {
       thunkAPI.dispatch(jobsSlice.actions.setJobsData({ jobs: data.runs || [] }))
 
-      return (data || {}).runs.filter(job => job.metadata.iteration === 0)
+      return { ...data, runs: (data || {}).runs.filter(job => job.metadata.iteration === 0) }
     })
     .catch(error => {
       largeResponseCatchHandler(

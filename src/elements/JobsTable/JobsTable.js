@@ -23,10 +23,13 @@ import { isEmpty } from 'lodash'
 import { useDispatch, useSelector } from 'react-redux'
 import { useLocation, useNavigate, useParams } from 'react-router-dom'
 
+import Details from '../../components/Details/Details'
+import JobWizard from '../../components/JobWizard/JobWizard'
 import JobsTableRow from '../JobsTableRow/JobsTableRow'
 import Loader from '../../common/Loader/Loader'
+import NoData from '../../common/NoData/NoData'
+import Pagination from '../../common/Pagination/Pagination'
 import Table from '../../components/Table/Table'
-import YamlModal from '../../common/YamlModal/YamlModal'
 
 import {
   JOB_KIND_JOB,
@@ -35,9 +38,6 @@ import {
   MONITOR_JOBS_TAB,
   PANEL_RERUN_MODE
 } from '../../constants'
-import Details from '../../components/Details/Details'
-import JobWizard from '../../components/JobWizard/JobWizard'
-import NoData from '../../common/NoData/NoData'
 import detailsActions from '../../actions/details'
 import getState from '../../utils/getState'
 import { DANGER_BUTTON } from 'igz-controls/constants'
@@ -54,16 +54,13 @@ import {
   isJobKindLocal,
   pollAbortingJobs
 } from '../../components/Jobs/jobs.util'
-import { isRowRendered, useVirtualization } from '../../hooks/useVirtualization.hook'
 import { openPopUp } from 'igz-controls/utils/common.util'
 import { parseJob } from '../../utils/parseJob'
 import { setFilters } from '../../reducers/filtersReducer'
 import { setNotification } from '../../reducers/notificationReducer'
 import { showErrorNotification } from '../../utils/notifications.util'
 import { usePods } from '../../hooks/usePods.hook'
-import { useYaml } from '../../hooks/yaml.hook'
-
-import cssVariables from './jobsTable.scss'
+import { toggleYaml } from '../../reducers/appReducer'
 import { fetchJob } from '../../reducers/jobReducer'
 
 const JobsTable = React.forwardRef(
@@ -71,27 +68,24 @@ const JobsTable = React.forwardRef(
     {
       abortingJobs,
       context,
-      filterMenuName = '',
-      filters = null,
-      filtersConfig = null,
+      filters,
+      filtersConfig,
       jobRuns,
       jobs,
       navigateLink,
+      paginatedJobs,
       refreshJobs,
       requestErrorMessage,
       selectedJob,
-      selectedRunProject,
       setAbortingJobs,
       setJobRuns,
       setJobs,
       setSelectedJob,
-      setSelectedRunProject = null,
       tableContent,
       terminateAbortTasksPolling
     },
     { abortJobRef }
   ) => {
-    const [convertedYaml, toggleConvertedYaml] = useYaml('')
     const appStore = useSelector(store => store.appStore)
     const filtersStore = useSelector(store => store.filtersStore)
     const jobsStore = useSelector(store => store.jobsStore)
@@ -99,10 +93,6 @@ const JobsTable = React.forwardRef(
     const dispatch = useDispatch()
     const navigate = useNavigate()
     const location = useLocation()
-    const [jobsFilterMenu, jobsFilterMenuModal] = useSelector(state => [
-      state.filtersStore.filterMenu[MONITOR_JOBS_TAB],
-      state.filtersStore.filterMenuModal[MONITOR_JOBS_TAB]
-    ])
     const fetchJobFunctionsPromiseRef = useRef()
     const {
       editableItem,
@@ -110,6 +100,7 @@ const JobsTable = React.forwardRef(
       handleRerunJob,
       jobWizardIsOpened,
       jobWizardMode,
+      paginationConfigJobsRef,
       setConfirmData,
       setEditableItem,
       setJobWizardIsOpened,
@@ -118,12 +109,23 @@ const JobsTable = React.forwardRef(
 
     usePods(dispatch, detailsActions.fetchJobPods, detailsActions.removePods, selectedJob)
 
+    const toggleConvertedYaml = useCallback(
+      data => {
+        return dispatch(toggleYaml(data))
+      },
+      [dispatch]
+    )
+
     const handleFetchJobLogs = useCallback(
       (item, projectName, setDetailsLogs, streamLogsRef) => {
         return getJobLogs(item.uid, projectName, streamLogsRef, setDetailsLogs, dispatch)
       },
       [dispatch]
     )
+
+    const handleRefreshWithFilters = useCallback(() => {
+      refreshJobs(filters)
+    }, [filters, refreshJobs])
 
     const pageData = useMemo(
       () =>
@@ -182,21 +184,8 @@ const JobsTable = React.forwardRef(
 
           modifyAndSelectRun(item)
         }
-
-        if (
-          (!params.jobName && setSelectedRunProject) ||
-          params.projectName !== selectedRunProject
-        ) {
-          setSelectedRunProject(item.project)
-        }
       },
-      [
-        modifyAndSelectRun,
-        params.jobName,
-        params.projectName,
-        selectedRunProject,
-        setSelectedRunProject
-      ]
+      [modifyAndSelectRun, params.jobName]
     )
 
     const fetchRun = useCallback(
@@ -229,7 +218,7 @@ const JobsTable = React.forwardRef(
       job => {
         const refresh = !isEmpty(selectedJob)
           ? () => fetchRun(job.project)
-          : () => refreshJobs({ ...jobsFilterMenu.values, ...jobsFilterMenuModal.values })
+          : () => refreshJobs(filters)
 
         handleAbortJob(
           job,
@@ -248,8 +237,7 @@ const JobsTable = React.forwardRef(
         abortingJobs,
         dispatch,
         fetchRun,
-        jobsFilterMenu.values,
-        jobsFilterMenuModal.values,
+        filters,
         refreshJobs,
         selectedJob,
         setAbortingJobs,
@@ -295,7 +283,7 @@ const JobsTable = React.forwardRef(
           params.jobName || !isEmpty(selectedJob),
           job,
           refreshJobs,
-          filtersStore,
+          filters,
           dispatch
         ).then(() => {
           if (params.jobName)
@@ -303,19 +291,11 @@ const JobsTable = React.forwardRef(
               location.pathname
                 .split('/')
                 .splice(0, location.pathname.split('/').indexOf(params.jobName) + 1)
-                .join('/')
+                .join('/') + window.location.search
             )
         })
       },
-      [
-        params.jobName,
-        selectedJob,
-        refreshJobs,
-        filtersStore,
-        dispatch,
-        navigate,
-        location.pathname
-      ]
+      [params.jobName, selectedJob, refreshJobs, filters, dispatch, navigate, location.pathname]
     )
 
     const handleConfirmDeleteJob = useCallback(
@@ -376,7 +356,7 @@ const JobsTable = React.forwardRef(
               ...urlPathArray.slice(0, jobNameIndex + 1),
               selectedJob.name,
               ...urlPathArray.slice(jobNameIndex + 1)
-            ].join('/'),
+            ].join('/') + window.location.search,
             { replace: true }
           )
         }
@@ -403,19 +383,16 @@ const JobsTable = React.forwardRef(
           defaultData: jobWizardMode === PANEL_RERUN_MODE ? editableItem?.rerun_object : {},
           mode: jobWizardMode,
           wizardTitle: jobWizardMode === PANEL_RERUN_MODE ? 'Batch re-run' : undefined,
-          onSuccessRequest: () =>
-            refreshJobs({ ...jobsFilterMenu.values, ...jobsFilterMenuModal.values })
+          onSuccessRequest: () => refreshJobs(filters)
         })
 
         setJobWizardIsOpened(true)
       }
     }, [
       editableItem?.rerun_object,
-      filtersStore,
       jobWizardIsOpened,
       jobWizardMode,
-      jobsFilterMenu.values,
-      jobsFilterMenuModal.values,
+      filters,
       params,
       refreshJobs,
       setEditableItem,
@@ -468,65 +445,53 @@ const JobsTable = React.forwardRef(
       }
     }, [params.jobId, selectedJob, setSelectedJob])
 
-    const virtualizationConfig = useVirtualization({
-      rowsData: {
-        content: tableContent
-      },
-      heightData: {
-        headerRowHeight: cssVariables.monitorJobsHeaderRowHeight,
-        rowHeight: cssVariables.monitorJobsRowHeight,
-        rowHeightExtended: cssVariables.monitorJobsRowHeightExtended
-      }
-    })
-
     return (
       <>
         {jobsStore.loading && <Loader />}
-        {((params.jobName && jobRuns.length === 0) || (jobs.length === 0 && !params.jobName)) &&
-        !jobsStore.loading ? (
+        {paginatedJobs.length === 0 && !jobsStore.loading && filters ? (
           <NoData
             message={getNoDataMessage(
-              filtersStore,
-              filtersConfig || filters,
+              filters,
+              filtersConfig,
               requestErrorMessage,
               JOBS_PAGE,
               MONITOR_JOBS_TAB,
-              filterMenuName
+              filtersStore
             )}
           />
         ) : (
-          isEmpty(selectedJob) && (
-            <Table
-              actionsMenu={actionsMenu}
-              handleCancel={() => setSelectedJob({})}
-              pageData={pageData}
-              retryRequest={refreshJobs}
-              selectedItem={selectedJob}
-              tab={MONITOR_JOBS_TAB}
-              tableClassName="monitor-jobs-table"
-              tableHeaders={tableContent[0]?.content ?? []}
-              virtualizationConfig={virtualizationConfig}
-            >
-              {tableContent.map(
-                (tableItem, index) =>
-                  isRowRendered(virtualizationConfig, index) && (
-                    <JobsTableRow
-                      actionsMenu={actionsMenu}
-                      handleSelectJob={handleSelectRun}
-                      key={index}
-                      rowItem={tableItem}
-                      selectedJob={selectedJob}
-                    />
-                  )
-              )}
-            </Table>
+          isEmpty(selectedJob) &&
+          !jobsStore.loading && (
+            <>
+              <Table
+                actionsMenu={actionsMenu}
+                handleCancel={() => setSelectedJob({})}
+                pageData={pageData}
+                retryRequest={handleRefreshWithFilters}
+                selectedItem={selectedJob}
+                tab={MONITOR_JOBS_TAB}
+                tableClassName="monitor-jobs-table"
+                tableHeaders={tableContent[0]?.content ?? []}
+              >
+                {tableContent.map((tableItem, index) => (
+                  <JobsTableRow
+                    actionsMenu={actionsMenu}
+                    handleSelectJob={handleSelectRun}
+                    key={index}
+                    rowItem={tableItem}
+                    selectedJob={selectedJob}
+                  />
+                ))}
+              </Table>
+              <Pagination page={pageData.page} paginationConfig={paginationConfigJobsRef.current} />
+            </>
           )
         )}
         {!isEmpty(selectedJob) && (
           <Details
             actionsMenu={actionsMenu}
             detailsMenu={pageData.details.menu}
-            getCloseDetailsLink={() => getCloseDetailsLink(window.location, params.jobName)}
+            getCloseDetailsLink={() => getCloseDetailsLink(params.jobName)}
             handleCancel={() => {
               setSelectedJob({})
               dispatch(setFilters({ saveFilters: true }))
@@ -538,9 +503,6 @@ const JobsTable = React.forwardRef(
             tab={MONITOR_JOBS_TAB}
           />
         )}
-        {convertedYaml.length > 0 && (
-          <YamlModal convertedYaml={convertedYaml} toggleConvertToYaml={toggleConvertedYaml} />
-        )}
       </>
     )
   }
@@ -549,21 +511,19 @@ const JobsTable = React.forwardRef(
 JobsTable.propTypes = {
   abortingJobs: PropTypes.object.isRequired,
   context: PropTypes.object.isRequired,
-  filterMenuName: PropTypes.string,
-  filters: PropTypes.array,
-  filtersConfig: FILTERS_CONFIG,
+  filters: PropTypes.object.isRequired,
+  filtersConfig: FILTERS_CONFIG.isRequired,
   jobRuns: PropTypes.array.isRequired,
   jobs: PropTypes.array.isRequired,
   navigateLink: PropTypes.string.isRequired,
+  paginatedJobs: PropTypes.array.isRequired,
   refreshJobs: PropTypes.func.isRequired,
   requestErrorMessage: PropTypes.string.isRequired,
   selectedJob: PropTypes.object.isRequired,
-  selectedRunProject: PropTypes.string.isRequired,
   setAbortingJobs: PropTypes.func.isRequired,
   setJobRuns: PropTypes.func.isRequired,
   setJobs: PropTypes.func.isRequired,
   setSelectedJob: PropTypes.func.isRequired,
-  setSelectedRunProject: PropTypes.func,
   tableContent: PropTypes.array.isRequired,
   terminateAbortTasksPolling: PropTypes.func.isRequired
 }

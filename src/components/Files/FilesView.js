@@ -21,25 +21,24 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { isEmpty } from 'lodash'
 
-import ArtifactsActionBar from '../ArtifactsActionBar/ArtifactsActionBar'
 import NoData from '../../common/NoData/NoData'
 import Table from '../Table/Table'
 import Breadcrumbs from '../../common/Breadcrumbs/Breadcrumbs'
-import YamlModal from '../../common/YamlModal/YamlModal'
 import Loader from '../../common/Loader/Loader'
 import PreviewModal from '../../elements/PreviewModal/PreviewModal'
 import ArtifactsTableRow from '../../elements/ArtifactsTableRow/ArtifactsTableRow'
 import Details from '../Details/Details'
 import WarningMessage from '../../common/WarningMessage/WarningMessage'
+import ActionBar from '../ActionBar/ActionBar'
 
 import { ACTIONS_MENU, VIRTUALIZATION_CONFIG } from '../../types'
-import { FILES_FILTERS, FILES_PAGE, FULL_VIEW_MODE } from '../../constants'
+import { FILES_PAGE, FULL_VIEW_MODE } from '../../constants'
 import { SECONDARY_BUTTON } from 'igz-controls/constants'
 import { SORT_PROPS } from 'igz-controls/types'
 import { getNoDataMessage } from '../../utils/getNoDataMessage'
 import { isRowRendered } from '../../hooks/useVirtualization.hook'
-import { registerArtifactTitle, filters } from './files.util'
-import { removeFile } from '../../reducers/artifactsReducer'
+import { registerArtifactTitle, filtersConfig } from './files.util'
+import ArtifactsFilters from '../ArtifactsActionBar/ArtifactsFilters'
 
 const FilesView = React.forwardRef(
   (
@@ -48,13 +47,13 @@ const FilesView = React.forwardRef(
       applyDetailsChanges,
       applyDetailsChangesCallback,
       artifactsStore,
-      convertedYaml,
       detailsFormInitialValues,
       files,
+      filters,
       filtersStore,
       getAndSetSelectedArtifact,
-      handleExpandRow,
       handleRefresh,
+      handleRefreshWithFilters,
       handleRegisterArtifact,
       handleSelectFile,
       maxArtifactsErrorIsShown,
@@ -63,13 +62,12 @@ const FilesView = React.forwardRef(
       selectedFile,
       selectedRowData,
       setMaxArtifactsErrorIsShown,
-      setFiles,
+      setSearchParams,
       setSelectedFileMin,
-      setSelectedRowData,
       sortProps,
       tableContent,
       tableHeaders,
-      toggleConvertedYaml,
+      toggleRow,
       viewMode = null,
       virtualizationConfig
     },
@@ -85,7 +83,7 @@ const FilesView = React.forwardRef(
             {artifactsStore.loading && <Loader />}
             <div className="table-container">
               <div className="content__action-bar-wrapper">
-                <ArtifactsActionBar
+                <ActionBar
                   actionButtons={[
                     {
                       variant: SECONDARY_BUTTON,
@@ -94,24 +92,26 @@ const FilesView = React.forwardRef(
                       onClick: handleRegisterArtifact
                     }
                   ]}
-                  artifacts={files}
-                  filterMenuName={FILES_FILTERS}
+                  filters={filters}
+                  filtersConfig={filtersConfig}
                   handleRefresh={handleRefresh}
                   page={FILES_PAGE}
-                  removeSelectedItem={removeFile}
-                  setContent={setFiles}
-                  setSelectedRowData={setSelectedRowData}
-                />
+                  setSearchParams={setSearchParams}
+                  withRefreshButton
+                  withoutExpandButton
+                >
+                  <ArtifactsFilters artifacts={files} />
+                </ActionBar>
               </div>
               {artifactsStore.loading ? null : files.length === 0 ? (
                 <NoData
                   message={getNoDataMessage(
-                    filtersStore,
                     filters,
+                    filtersConfig,
                     requestErrorMessage,
                     FILES_PAGE,
                     null,
-                    FILES_FILTERS
+                    filtersStore
                   )}
                 />
               ) : (
@@ -130,7 +130,7 @@ const FilesView = React.forwardRef(
                     detailsFormInitialValues={detailsFormInitialValues}
                     handleCancel={() => setSelectedFileMin({})}
                     pageData={pageData}
-                    retryRequest={handleRefresh}
+                    retryRequest={handleRefreshWithFilters}
                     selectedItem={selectedFile}
                     sortProps={sortProps}
                     tableClassName="files-table"
@@ -142,13 +142,13 @@ const FilesView = React.forwardRef(
                         isRowRendered(virtualizationConfig, index) && (
                           <ArtifactsTableRow
                             actionsMenu={actionsMenu}
-                            handleExpandRow={handleExpandRow}
                             handleSelectItem={handleSelectFile}
                             key={tableItem.data.ui.identifier}
                             rowIndex={index}
                             rowItem={tableItem}
                             selectedItem={selectedFile}
                             selectedRowData={selectedRowData}
+                            toggleRow={toggleRow}
                           />
                         )
                     )}
@@ -171,9 +171,6 @@ const FilesView = React.forwardRef(
             </div>
           </div>
         </div>
-        {convertedYaml.length > 0 && (
-          <YamlModal convertedYaml={convertedYaml} toggleConvertToYaml={toggleConvertedYaml} />
-        )}
         {artifactsStore?.preview?.isPreview && (
           <PreviewModal artifact={artifactsStore?.preview?.selectedItem} />
         )}
@@ -187,13 +184,13 @@ FilesView.propTypes = {
   applyDetailsChanges: PropTypes.func.isRequired,
   applyDetailsChangesCallback: PropTypes.func.isRequired,
   artifactsStore: PropTypes.object.isRequired,
-  convertedYaml: PropTypes.string.isRequired,
   detailsFormInitialValues: PropTypes.object.isRequired,
   files: PropTypes.arrayOf(PropTypes.object).isRequired,
+  filters: PropTypes.object.isRequired,
   filtersStore: PropTypes.object.isRequired,
   getAndSetSelectedArtifact: PropTypes.func.isRequired,
-  handleExpandRow: PropTypes.func.isRequired,
   handleRefresh: PropTypes.func.isRequired,
+  handleRefreshWithFilters: PropTypes.func.isRequired,
   handleRegisterArtifact: PropTypes.func.isRequired,
   handleSelectFile: PropTypes.func.isRequired,
   maxArtifactsErrorIsShown: PropTypes.bool.isRequired,
@@ -202,11 +199,12 @@ FilesView.propTypes = {
   selectedFile: PropTypes.object.isRequired,
   selectedRowData: PropTypes.object.isRequired,
   setMaxArtifactsErrorIsShown: PropTypes.func.isRequired,
+  setSearchParams: PropTypes.func.isRequired,
   setSelectedFileMin: PropTypes.func.isRequired,
   sortProps: SORT_PROPS,
   tableContent: PropTypes.arrayOf(PropTypes.object).isRequired,
   tableHeaders: PropTypes.arrayOf(PropTypes.object).isRequired,
-  toggleConvertedYaml: PropTypes.func.isRequired,
+  toggleRow: PropTypes.func.isRequired,
   viewMode: PropTypes.string,
   virtualizationConfig: VIRTUALIZATION_CONFIG.isRequired
 }

@@ -188,6 +188,7 @@ const AddToFeatureVectorPopUp = ({
   return (
     <>
       <Button
+        className={action.className}
         ref={addToFeatureVectorBtn}
         variant={action.variant}
         label={action.label}

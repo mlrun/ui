@@ -18,9 +18,12 @@ under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
 import { MODELS_PAGE, NAME_FILTER } from '../../../constants'
+import functionsActions from '../../../actions/functions'
+import { parseFunction } from '../../../utils/parseFunction'
+import { showErrorNotification } from '../../../utils/notifications.util'
 
 export const filtersConfig = {
-  [NAME_FILTER]: { label: 'Name:' }
+  [NAME_FILTER]: { label: 'Name:', initialValue: '' }
 }
 
 export const generatePageData = hideFilterMenu => ({
@@ -28,3 +31,20 @@ export const generatePageData = hideFilterMenu => ({
   hidePageActionMenu: true,
   hideFilterMenu
 })
+
+export const fetchAndParseFunction = (selectedFunction, dispatch) => {
+  return dispatch(
+    functionsActions.fetchFunction(
+      selectedFunction.project,
+      selectedFunction.name,
+      selectedFunction.hash,
+      selectedFunction.tag
+    )
+  )
+    .then(func => {
+      return parseFunction(func, selectedFunction.project.project)
+    })
+    .catch(error => {
+      showErrorNotification(dispatch, error, '', 'Failed to retrieve function data')
+    })
+}

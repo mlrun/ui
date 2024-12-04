@@ -26,9 +26,10 @@ import { createPortal } from 'react-dom'
 import ModalContainer from 'react-modal-promise'
 
 import Navbar from '../Navbar/Navbar'
+import YamlModal from '../../common/YamlModal/YamlModal'
 
 import { getTransitionEndEventName } from 'igz-controls/utils/common.util'
-import { fetchFrontendSpec } from '../../reducers/appReducer'
+import { fetchFrontendSpec, toggleYaml } from '../../reducers/appReducer'
 import { NAVBAR_WIDTH_CLOSED, NAVBAR_WIDTH_OPENED } from '../../constants'
 import { isProjectValid } from '../../utils/link-helper.util'
 
@@ -49,7 +50,9 @@ const Page = () => {
         ? `${NAVBAR_WIDTH_OPENED}px`
         : `${NAVBAR_WIDTH_CLOSED}px`
   }
-  const { frontendSpec, frontendSpecPopupIsOpened } = useSelector(store => store.appStore)
+  const { frontendSpec, frontendSpecPopupIsOpened, convertedYaml } = useSelector(
+    store => store.appStore
+  )
   const { projects } = useSelector(store => store.projectStore)
 
   useLayoutEffect(() => {
@@ -91,6 +94,12 @@ const Page = () => {
         </div>
       </main>
       {createPortal(<ModalContainer />, document.getElementById('overlay_container'))}
+      {convertedYaml.length > 0 && (
+        <YamlModal
+          convertedYaml={convertedYaml}
+          toggleConvertToYaml={() => dispatch(toggleYaml())}
+        />
+      )}
     </>
   )
 }

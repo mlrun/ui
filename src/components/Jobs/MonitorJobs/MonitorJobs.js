@@ -19,7 +19,7 @@ such restriction.
 */
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useParams } from 'react-router-dom'
-import { useDispatch, useSelector } from 'react-redux'
+import { useDispatch } from 'react-redux'
 
 import JobsTable from '../../../elements/JobsTable/JobsTable'
 import TableTop from '../../../elements/TableTop/TableTop'
@@ -27,17 +27,13 @@ import TableTop from '../../../elements/TableTop/TableTop'
 import { GROUP_BY_NONE, MONITOR_JOBS_TAB, REQUEST_CANCELED } from '../../../constants'
 import { JobsContext } from '../Jobs'
 import { createJobsMonitorTabContent } from '../../../utils/createJobsContent'
-import { fetchInitialJobs } from './monitorJobs.util'
 import { setFilters } from '../../../reducers/filtersReducer'
 import { useMode } from '../../../hooks/mode.hook'
+import { useFiltersFromSearchParams } from '../../../hooks/useFiltersFromSearchParams.hook'
+import { getSavedSearchParams } from '../../../utils/filter.util'
 
 const MonitorJobs = () => {
   const [selectedJob, setSelectedJob] = useState({})
-  const [jobsFilterMenu, jobsFilterMenuModal, saveFilters] = useSelector(state => [
-    state.filtersStore.filterMenu[MONITOR_JOBS_TAB],
-    state.filtersStore.filterMenuModal[MONITOR_JOBS_TAB],
-    state.filtersStore.saveFilters
-  ])
   const params = useParams()
   const dispatch = useDispatch()
   const { isStagingMode } = useMode()
@@ -45,60 +41,41 @@ const MonitorJobs = () => {
     abortControllerRef,
     abortJobRef,
     abortingJobs,
-    dateFilter,
     jobRuns,
     jobs,
     jobsFiltersConfig,
+    paginatedJobs,
     refreshJobs,
     requestErrorMessage,
-    selectedRunProject,
+    searchParams,
     setAbortingJobs,
     setJobRuns,
     setJobs,
-    setSelectedRunProject,
+    tabData,
     terminateAbortTasksPolling
   } = React.useContext(JobsContext)
   const jobsAreInitializedRef = useRef(false)
 
+  const filters = useFiltersFromSearchParams(
+    tabData[MONITOR_JOBS_TAB]?.filtersConfig,
+    tabData[MONITOR_JOBS_TAB]?.parseQueryParamsCallback
+  )
+
   const tableContent = useMemo(
-    () =>
-      createJobsMonitorTabContent(params.jobName ? jobRuns : jobs, params.jobName, isStagingMode),
-    [isStagingMode, jobRuns, jobs, params.jobName]
+    () => createJobsMonitorTabContent(paginatedJobs, params.jobName, isStagingMode),
+    [isStagingMode, paginatedJobs, params.jobName]
   )
 
-  const isJobDataEmpty = useCallback(
-    () => jobs.length === 0 && ((!params.jobName && jobRuns.length === 0) || params.jobName),
-    [jobRuns.length, jobs.length, params.jobName]
-  )
+  const getBackLink = useCallback(
+    useSavedParams => {
+      let queryParams = useSavedParams
+        ? getSavedSearchParams(window.location.search)
+        : `?${searchParams.toString()}`
 
-  useEffect(() => {
-    fetchInitialJobs(
-      {
-        saveFilters,
-        ...jobsFilterMenu.values,
-        ...jobsFilterMenuModal.values
-      },
-      selectedJob,
-      dateFilter,
-      params.jobId,
-      refreshJobs,
-      setFilters,
-      dispatch,
-      isJobDataEmpty,
-      jobsAreInitializedRef
-    )
-  }, [
-    dateFilter,
-    dispatch,
-    isJobDataEmpty,
-    jobsFilterMenu,
-    jobsFilterMenuModal.values,
-    params.jobId,
-    params.projectName,
-    refreshJobs,
-    saveFilters,
-    selectedJob
-  ])
+      return `/projects/${params.projectName}/jobs/${MONITOR_JOBS_TAB}${queryParams}`
+    },
+    [params.projectName, searchParams]
+  )
 
   useEffect(() => {
     dispatch(setFilters({ groupBy: GROUP_BY_NONE }))
@@ -124,26 +101,20 @@ const MonitorJobs = () => {
 
   return (
     <>
-      {params.jobName && (
-        <TableTop
-          link={`/projects/${params.projectName}/jobs/${MONITOR_JOBS_TAB}`}
-          text={params.jobName}
-        />
-      )}
+      {params.jobName && <TableTop link={getBackLink(true)} text={params.jobName} />}
       <JobsTable
         abortingJobs={abortingJobs}
-        ref={{ abortJobRef }}
         context={JobsContext}
-        filterMenuName={MONITOR_JOBS_TAB}
+        filters={filters}
         filtersConfig={jobsFiltersConfig}
         jobRuns={jobRuns}
         jobs={jobs}
-        requestErrorMessage={requestErrorMessage}
-        navigateLink={`/projects/${params.projectName}/jobs/${MONITOR_JOBS_TAB}`}
+        navigateLink={getBackLink()}
+        paginatedJobs={paginatedJobs}
+        ref={{ abortJobRef }}
         refreshJobs={refreshJobs}
+        requestErrorMessage={requestErrorMessage}
         selectedJob={selectedJob}
-        selectedRunProject={selectedRunProject}
-        setSelectedRunProject={setSelectedRunProject}
         setAbortingJobs={setAbortingJobs}
         setJobRuns={setJobRuns}
         setJobs={setJobs}

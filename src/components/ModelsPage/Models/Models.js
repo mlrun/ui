@@ -20,7 +20,7 @@ such restriction.
 import React, { useCallback, useEffect, useMemo, useState, useRef } from 'react'
 import { connect, useDispatch, useSelector } from 'react-redux'
 import { chain, isEmpty, isNil } from 'lodash'
-import { useLocation, useNavigate, useParams } from 'react-router-dom'
+import { useLocation, useNavigate, useParams, useSearchParams } from 'react-router-dom'
 
 import AddArtifactTagPopUp from '../../../elements/AddArtifactTagPopUp/AddArtifactTagPopUp'
 import DeployModelPopUp from '../../../elements/DeployModelPopUp/DeployModelPopUp'
@@ -42,15 +42,14 @@ import {
   GROUP_BY_NAME,
   MODELS_PAGE,
   MODELS_TAB,
-  FILTER_MENU_MODAL,
   GROUP_BY_NONE,
-  MODELS_FILTERS,
   REQUEST_CANCELED,
   MODEL_TYPE,
   FUNCTION_TYPE_SERVING
 } from '../../../constants'
 import {
   checkForSelectedModel,
+  filtersConfig,
   generateActionsMenu,
   generatePageData,
   getFeatureVectorData,
@@ -74,6 +73,7 @@ import { useModelsPage } from '../ModelsPage.context'
 import { useSortTable } from '../../../hooks/useSortTable.hook'
 import { useVirtualization } from '../../../hooks/useVirtualization.hook'
 import { useInitialTableFetch } from '../../../hooks/useInitialTableFetch.hook'
+import { useFiltersFromSearchParams } from '../../../hooks/useFiltersFromSearchParams.hook'
 
 const Models = ({ fetchModelFeatureVector }) => {
   const [models, setModels] = useState([])
@@ -94,17 +94,14 @@ const Models = ({ fetchModelFeatureVector }) => {
   const location = useLocation()
   const navigate = useNavigate()
   const params = useParams()
+  const [, setSearchParams] = useSearchParams()
   const viewMode = getViewMode(window.location.search)
   const { toggleConvertedYaml } = useModelsPage()
-
+  const filters = useFiltersFromSearchParams(filtersConfig)
   const abortControllerRef = useRef(new AbortController())
   const tagAbortControllerRef = useRef(new AbortController())
   const modelsRef = useRef(null)
 
-  const modelsFilters = useMemo(
-    () => ({ name: filtersStore.name, ...filtersStore[FILTER_MENU_MODAL][MODELS_FILTERS].values }),
-    [filtersStore]
-  )
   const { isDemoMode } = useMode()
 
   const pageData = useMemo(
@@ -191,7 +188,7 @@ const Models = ({ fetchModelFeatureVector }) => {
           filters: {},
           config: {
             signal: abortControllerRef.current.signal,
-            params: { format: 'minimal' }
+            params: { format: 'minimal', kind: 'serving' }
           }
         })
       )
@@ -234,15 +231,19 @@ const Models = ({ fetchModelFeatureVector }) => {
     [fetchData, fetchTags]
   )
 
+  const handleRefreshWithFilters = useCallback(() => {
+    handleRefresh(filters)
+  }, [filters, handleRefresh])
+
   const handleAddTag = useCallback(
     artifact => {
       openPopUp(AddArtifactTagPopUp, {
         artifact,
-        onAddTag: () => handleRefresh(modelsFilters),
+        onAddTag: () => handleRefresh(filters),
         projectName: params.projectName
       })
     },
-    [handleRefresh, params.projectName, modelsFilters]
+    [params.projectName, handleRefresh, filters]
   )
 
   const actionsMenu = useMemo(
@@ -255,25 +256,26 @@ const Models = ({ fetchModelFeatureVector }) => {
         handleAddTag,
         params.projectName,
         handleRefresh,
-        modelsFilters,
-        handleDeployModel,
+        filters,
         menuPosition,
-        selectedModel
+        selectedModel,
+        false,
+        handleDeployModel
       ),
     [
-      dispatch,
       frontendSpec,
-      handleAddTag,
-      handleDeployModel,
-      handleRefresh,
-      modelsFilters,
-      params.projectName,
+      dispatch,
       toggleConvertedYaml,
+      handleAddTag,
+      params.projectName,
+      handleRefresh,
+      filters,
+      handleDeployModel,
       selectedModel
     ]
   )
 
-  const handleRemoveRowData = useCallback(
+  const collapseRowCallback = useCallback(
     model => {
       const newStoreSelectedRowData = {
         ...artifactsStore.models.selectedRowData
@@ -289,7 +291,7 @@ const Models = ({ fetchModelFeatureVector }) => {
     [artifactsStore.models.selectedRowData, dispatch, selectedRowData]
   )
 
-  const handleExpand = useCallback(
+  const expandRowCallback = useCallback(
     (model, content) => {
       const modelIdentifier = getArtifactIdentifier(model)
 
@@ -309,11 +311,11 @@ const Models = ({ fetchModelFeatureVector }) => {
     [params.projectName]
   )
 
-  const { latestItems, handleExpandRow } = useGroupContent(
+  const { latestItems, toggleRow } = useGroupContent(
     models,
     getArtifactIdentifier,
-    handleRemoveRowData,
-    handleExpand,
+    collapseRowCallback,
+    expandRowCallback,
     null,
     MODELS_PAGE,
     MODELS_TAB
@@ -360,21 +362,21 @@ const Models = ({ fetchModelFeatureVector }) => {
         navigate(
           `/projects/${params.projectName}/${MODELS_PAGE.toLowerCase()}/${MODELS_TAB}/${
             params.name
-          }/${changes.data.tag.currentFieldValue}/overview`,
+          }/${changes.data.tag.currentFieldValue}/overview${window.location.search}`,
           { replace: true }
         )
       }
     }
 
-    handleRefresh(modelsFilters)
+    handleRefresh(filters)
   }
 
   useInitialTableFetch({
     createRowData: rowItem => createModelsRowData(rowItem, params.projectName, frontendSpec),
     fetchData,
     fetchTags,
-    filterModalName: MODELS_FILTERS,
-    filters: modelsFilters,
+    filterModalName: MODELS_TAB,
+    filters,
     setExpandedRowsData: setSelectedRowData,
     sortExpandedRowsDataBy: 'updated'
   })
@@ -479,14 +481,12 @@ const Models = ({ fetchModelFeatureVector }) => {
   //   }
   // }, [dataIsLoaded, models, tableHeaders])
 
-  useEffect(() => setModels([]), [filtersStore.tag])
-
   const handleRegisterModel = useCallback(() => {
     openPopUp(RegisterModelModal, {
       params,
-      refresh: () => handleRefresh(modelsFilters)
+      refresh: () => handleRefresh(filters)
     })
-  }, [handleRefresh, params, modelsFilters])
+  }, [params, handleRefresh, filters])
 
   const handleTrainModel = () => {
     openPopUp(JobWizard, {
@@ -517,10 +517,11 @@ const Models = ({ fetchModelFeatureVector }) => {
       applyDetailsChangesCallback={applyDetailsChangesCallback}
       artifactsStore={artifactsStore}
       detailsFormInitialValues={detailsFormInitialValues}
+      filters={filters}
       filtersStore={filtersStore}
       getAndSetSelectedArtifact={getAndSetSelectedArtifact}
-      handleExpandRow={handleExpandRow}
       handleRefresh={handleRefresh}
+      handleRefreshWithFilters={handleRefreshWithFilters}
       handleRegisterModel={handleRegisterModel}
       handleTrainModel={handleTrainModel}
       isDemoMode={isDemoMode}
@@ -532,12 +533,12 @@ const Models = ({ fetchModelFeatureVector }) => {
       selectedModel={selectedModel}
       selectedRowData={selectedRowData}
       setMaxArtifactsErrorIsShown={setMaxArtifactsErrorIsShown}
-      setModels={setModels}
+      setSearchParams={setSearchParams}
       setSelectedModelMin={setSelectedModelMin}
-      setSelectedRowData={setSelectedRowData}
       sortProps={{ sortTable, selectedColumnName, getSortingIcon }}
       tableContent={sortedTableContent}
       tableHeaders={sortedTableHeaders}
+      toggleRow={toggleRow}
       viewMode={viewMode}
       virtualizationConfig={virtualizationConfig}
     />

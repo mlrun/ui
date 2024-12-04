@@ -28,6 +28,7 @@ import { countChanges } from '../Details/details.util.js'
 const DetailsRequestedFeatures = ({
   changes,
   formState,
+  isDetailsPopUp = false,
   selectedItem,
   setChanges,
   setChangesData,
@@ -155,12 +156,13 @@ const DetailsRequestedFeatures = ({
       confirmDialogData={confirmDialogData}
       editableItemIndex={editableItemIndex}
       formState={formState}
-      handleDiscardChanges={handleDiscardChanges}
       handleDelete={handleDelete}
+      handleDiscardChanges={handleDiscardChanges}
       handleItemClick={handleItemClick}
+      isDetailsPopUp={isDetailsPopUp}
       onFinishEdit={onFinishEdit}
-      setConfirmDialogData={setConfirmDialogData}
       selectedItem={selectedItem}
+      setConfirmDialogData={setConfirmDialogData}
     />
   )
 }

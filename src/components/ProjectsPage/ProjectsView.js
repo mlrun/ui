@@ -43,6 +43,7 @@ import './projects.scss'
 
 const ProjectsView = ({
   actionsMenu,
+  alertStore,
   closeNewProjectPopUp,
   confirmData = null,
   convertedYaml,
@@ -52,7 +53,7 @@ const ProjectsView = ({
   filteredProjects,
   filterMatches,
   handleCreateProject,
-  handleSearchOnFocus,
+  handleSearchOnChange,
   handleSelectSortOption,
   isDescendingOrder,
   projectsRequestErrorMessage,
@@ -61,7 +62,6 @@ const ProjectsView = ({
   removeNewProjectError,
   selectedProjectsState,
   setCreateProject,
-  setFilterByName,
   setFilterMatches,
   setIsDescendingOrder,
   setSelectedProjectsState,
@@ -137,8 +137,7 @@ const ProjectsView = ({
                   className="projects-search"
                   disabled={projectStore.mlrunUnhealthy.retrying}
                   matches={filterMatches}
-                  onChange={setFilterByName}
-                  onFocus={handleSearchOnFocus}
+                  onChange={handleSearchOnChange}
                   placeholder="Search projects..."
                   setMatches={setFilterMatches}
                   value={filterByName}
@@ -175,6 +174,7 @@ const ProjectsView = ({
                 return (
                   <ProjectCard
                     actionsMenu={actionsMenu}
+                    alert={alertStore[project.metadata.name] || 0}
                     key={project.id || project.metadata.name}
                     project={project}
                     projectSummary={projectStore.projectsSummary.data.find(
@@ -204,6 +204,7 @@ const ProjectsView = ({
 
 ProjectsView.propTypes = {
   actionsMenu: PropTypes.shape({}).isRequired,
+  alertStore: PropTypes.shape({}).isRequired,
   closeNewProjectPopUp: PropTypes.func.isRequired,
   confirmData: PropTypes.shape({}),
   convertedYaml: PropTypes.string.isRequired,
@@ -213,14 +214,13 @@ ProjectsView.propTypes = {
   filteredProjects: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
   filterMatches: PropTypes.arrayOf(PropTypes.string).isRequired,
   handleCreateProject: PropTypes.func.isRequired,
-  handleSearchOnFocus: PropTypes.func.isRequired,
+  handleSearchOnChange: PropTypes.func.isRequired,
   handleSelectSortOption: PropTypes.func.isRequired,
   projectsRequestErrorMessage: PropTypes.string.isRequired,
   refreshProjects: PropTypes.func.isRequired,
   removeNewProjectError: PropTypes.func.isRequired,
   selectedProjectsState: PropTypes.string.isRequired,
   setCreateProject: PropTypes.func.isRequired,
-  setFilterByName: PropTypes.func.isRequired,
   setFilterMatches: PropTypes.func.isRequired,
   setIsDescendingOrder: PropTypes.func.isRequired,
   setSelectedProjectsState: PropTypes.func.isRequired,

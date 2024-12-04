@@ -18,7 +18,7 @@ under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
-import { useLocation, useNavigate, useParams } from 'react-router-dom'
+import { useLocation, useNavigate, useParams, useSearchParams } from 'react-router-dom'
 import { connect, useDispatch, useSelector } from 'react-redux'
 import { cloneDeep, isEmpty } from 'lodash'
 
@@ -28,8 +28,6 @@ import { FeatureStoreContext } from '../FeatureStore'
 import {
   FEATURE_STORE_PAGE,
   FEATURE_VECTORS_TAB,
-  FILTER_MENU,
-  FILTER_MENU_MODAL,
   GROUP_BY_NAME,
   GROUP_BY_NONE,
   REQUEST_CANCELED,
@@ -41,15 +39,14 @@ import {
   generateActionsMenu,
   generatePageData,
   featureVectorsActionCreator,
-  searchFeatureVectorItem
+  searchFeatureVectorItem,
+  generateDetailsFormInitialValue
 } from './featureVectors.util'
 import { DANGER_BUTTON, TERTIARY_BUTTON } from 'igz-controls/constants'
 import { checkTabIsValid, handleApplyDetailsChanges } from '../featureStore.util'
 import { createFeatureVectorsRowData } from '../../../utils/createFeatureStoreContent'
 import { getFeatureVectorIdentifier } from '../../../utils/getUniqueIdentifier'
-import { getFilterTagOptions, setFilters, setModalFiltersValues } from '../../../reducers/filtersReducer'
-import { parseChipsData } from '../../../utils/convertChipsData'
-import { parseFeatureTemplate } from '../../../utils/parseFeatureTemplate'
+import { getFilterTagOptions, setFilters } from '../../../reducers/filtersReducer'
 import { parseFeatureVectors } from '../../../utils/parseFeatureVectors'
 import { setFeaturesPanelData } from '../../../reducers/tableReducer'
 import { setNotification } from '../../../reducers/notificationReducer'
@@ -61,6 +58,7 @@ import { useInitialTableFetch } from '../../../hooks/useInitialTableFetch.hook'
 import { sortListByDate } from '../../../utils'
 import { isDetailsTabExists } from '../../../utils/link-helper.util'
 import { filtersConfig } from './featureVectors.util'
+import { useFiltersFromSearchParams } from '../../../hooks/useFiltersFromSearchParams.hook'
 
 import cssVariables from './featureVectors.scss'
 
@@ -79,14 +77,10 @@ const FeatureVectors = ({
   const [requestErrorMessage, setRequestErrorMessage] = useState('')
   const openPanelByDefault = useOpenPanel()
   const params = useParams()
+  const [, setSearchParams] = useSearchParams()
   const featureStore = useSelector(store => store.featureStore)
   const filtersStore = useSelector(store => store.filtersStore)
-  const featureVectorsFilters = useSelector(store => {
-    return {
-      ...store.filtersStore[FILTER_MENU][FEATURE_VECTORS_TAB].values,
-      ...store.filtersStore[FILTER_MENU_MODAL][FEATURE_VECTORS_TAB].values
-    }
-  })
+  const featureVectorsFilters = useFiltersFromSearchParams(filtersConfig)
   const featureStoreRef = useRef(null)
   const abortControllerRef = useRef(new AbortController())
   const tagAbortControllerRef = useRef(new AbortController())
@@ -104,19 +98,8 @@ const FeatureVectors = ({
   const pageData = useMemo(() => generatePageData(selectedFeatureVector), [selectedFeatureVector])
 
   const detailsFormInitialValues = useMemo(
-    () => ({
-      features: (selectedFeatureVector.specFeatures ?? []).map(featureData => {
-        return { ...parseFeatureTemplate(featureData) }
-      }),
-      description: selectedFeatureVector.description,
-      labels: parseChipsData(selectedFeatureVector.labels, frontendSpec.internal_labels)
-    }),
-    [
-      frontendSpec.internal_labels,
-      selectedFeatureVector.description,
-      selectedFeatureVector.labels,
-      selectedFeatureVector.specFeatures
-    ]
+    () => generateDetailsFormInitialValue(selectedFeatureVector, frontendSpec.internal_labels),
+    [frontendSpec.internal_labels, selectedFeatureVector]
   )
 
   const fetchData = useCallback(
@@ -163,9 +146,12 @@ const FeatureVectors = ({
         .then(() => {
           if (!isEmpty(selectedFeatureVector)) {
             setSelectedFeatureVector({})
-            navigate(`/projects/${params.projectName}/feature-store/feature-vectors`, {
-              replace: true
-            })
+            navigate(
+              `/projects/${params.projectName}/feature-store/feature-vectors${window.location.search}`,
+              {
+                replace: true
+              }
+            )
           }
 
           dispatch(
@@ -183,14 +169,19 @@ const FeatureVectors = ({
                 ? featureVectorsFilters.tag
                 : TAG_FILTER_LATEST
 
-              dispatch(
-                setModalFiltersValues({
-                  name: FEATURE_VECTORS_TAB,
-                  value: {
-                    [TAG_FILTER]: tag
+              setSearchParams(
+                prevSearchParams => {
+                  if (tag === filtersConfig[TAG_FILTER].initialValue) {
+                    prevSearchParams.delete(TAG_FILTER)
+                  } else {
+                    prevSearchParams.set(TAG_FILTER, tag)
                   }
-                })
+
+                  return prevSearchParams
+                },
+                { replace: true }
               )
+
               fetchData({ ...featureVectorsFilters, tag })
             })
         })
@@ -211,6 +202,7 @@ const FeatureVectors = ({
       fetchTags,
       navigate,
       featureVectorsFilters,
+      setSearchParams,
       fetchData
     ]
   )
@@ -249,11 +241,11 @@ const FeatureVectors = ({
     [fetchData, fetchTags]
   )
 
-  const handleRefreshWithStoreFilters = () => {
+  const handleRefreshWithFilters = useCallback(() => {
     handleRefresh(featureVectorsFilters)
-  }
+  }, [featureVectorsFilters, handleRefresh])
 
-  const handleRemoveFeatureVector = useCallback(
+  const collapseRowCallback = useCallback(
     featureVector => {
       const newStoreSelectedRowData = {
         ...featureStore.featureVectors.selectedRowData.content
@@ -270,7 +262,7 @@ const FeatureVectors = ({
     [featureStore.featureVectors.selectedRowData.content, selectedRowData, removeFeatureVector]
   )
 
-  const handleRequestOnExpand = useCallback(
+  const expandRowCallback = useCallback(
     featureVector => {
       const featureVectorIdentifier = getFeatureVectorIdentifier(featureVector)
 
@@ -310,11 +302,11 @@ const FeatureVectors = ({
     [fetchFeatureVector, featureVectorsFilters.tag, params.projectName]
   )
 
-  const { latestItems, handleExpandRow } = useGroupContent(
+  const { latestItems, toggleRow } = useGroupContent(
     featureVectors,
     getFeatureVectorIdentifier,
-    handleRemoveFeatureVector,
-    handleRequestOnExpand,
+    collapseRowCallback,
+    expandRowCallback,
     null,
     FEATURE_STORE_PAGE,
     FEATURE_VECTORS_TAB
@@ -428,9 +420,12 @@ const FeatureVectors = ({
       const selectedItem = searchFeatureVectorItem(content, params.name, params.tag)
 
       if (!selectedItem) {
-        navigate(`/projects/${params.projectName}/feature-store/${FEATURE_VECTORS_TAB}`, {
-          replace: true
-        })
+        navigate(
+          `/projects/${params.projectName}/feature-store/${FEATURE_VECTORS_TAB}${window.location.search}`,
+          {
+            replace: true
+          }
+        )
       } else {
         setSelectedFeatureVector(selectedItem)
       }
@@ -497,18 +492,20 @@ const FeatureVectors = ({
       detailsFormInitialValues={detailsFormInitialValues}
       featureStore={featureStore}
       featureVectors={featureVectors}
+      filters={featureVectorsFilters}
       filtersStore={filtersStore}
-      handleExpandRow={handleExpandRow}
       handleRefresh={handleRefresh}
-      handleRefreshWithStoreFilters={handleRefreshWithStoreFilters}
+      handleRefreshWithFilters={handleRefreshWithFilters}
       pageData={pageData}
       ref={{ featureStoreRef }}
       requestErrorMessage={requestErrorMessage}
       selectedFeatureVector={selectedFeatureVector}
       selectedRowData={selectedRowData}
       setCreateVectorPopUpIsOpen={setCreateVectorPopUpIsOpen}
+      setSearchParams={setSearchParams}
       setSelectedFeatureVector={handleSelectFeatureVector}
       tableContent={tableContent}
+      toggleRow={toggleRow}
       virtualizationConfig={virtualizationConfig}
     />
   )

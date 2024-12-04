@@ -90,7 +90,7 @@ export const actionButtonHeader = 'Batch Run'
 export const JOB_STEADY_STATES = ['completed', ERROR_STATE, 'aborted', FAILED_STATE]
 export const JOB_RUNNING_STATES = ['running', 'pending']
 
-export const getJobsDetailsMenu = (jobLabels = []) => {
+export const getJobsDetailsMenu = (job = {}) => {
   return [
     {
       label: 'overview',
@@ -110,12 +110,13 @@ export const getJobsDetailsMenu = (jobLabels = []) => {
     },
     {
       label: 'logs',
-      id: 'logs'
+      id: 'logs',
+      hidden: isJobKindLocal(job)
     },
     {
       label: 'pods',
       id: 'pods',
-      hidden: arePodsHidden(jobLabels)
+      hidden: arePodsHidden(job?.labels)
     }
   ]
 }

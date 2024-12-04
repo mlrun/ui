@@ -102,6 +102,7 @@ const FeatureVectors = lazyRetry(
 const ProjectsJobsMonitoring = lazyRetry(
   () => import('./components/ProjectsJobsMonitoring/ProjectsJobsMonitoring')
 )
+const ProjectsAlerts = lazyRetry(() => import('./components/ProjectsAlerts/ProjectsAlerts'))
 const JobsMonitoring = lazyRetry(
   () => import('./components/ProjectsJobsMonitoring/JobsMonitoring/JobsMonitoring')
 )
@@ -150,6 +151,9 @@ const App = () => {
           </Route>
           <Route path="projects/:projectName" element={<Navigate replace to={PROJECT_MONITOR} />} />
           <Route path={`projects/:projectName/${PROJECT_MONITOR}`} element={<ProjectMonitor />} />
+
+          {/*TODO: the Alerts Route will be updated with ML-8368 */}
+          <Route path="projects/:id/alerts" element={<ProjectsAlerts />} />
 
           {!isNuclioModeDisabled && (
             <Route

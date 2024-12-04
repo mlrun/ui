@@ -17,10 +17,8 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import React, { useState, useMemo, useEffect, useCallback } from 'react'
+import React, { useState, useMemo, useEffect, useRef, useCallback } from 'react'
 import { useParams } from 'react-router-dom'
-import { useDispatch, useSelector } from 'react-redux'
-import { isEmpty } from 'lodash'
 
 import JobsTable from '../../../elements/JobsTable/JobsTable'
 import TableTop from '../../../elements/TableTop/TableTop'
@@ -33,17 +31,13 @@ import {
   JOBS_MONITORING_PAGE,
   REQUEST_CANCELED
 } from '../../../constants'
+import { useFiltersFromSearchParams } from '../../../hooks/useFiltersFromSearchParams.hook'
+import { getSavedSearchParams } from '../../../utils/filter.util'
 
 const JobsMonitoring = () => {
   const [selectedJob, setSelectedJob] = useState({})
-  const [dataIsLoaded, setDataIsLoaded] = useState(false)
   const params = useParams()
-  const dispatch = useDispatch()
   const { isStagingMode } = useMode()
-  const [jobsFilterMenu, jobsFilterMenuModal] = useSelector(state => [
-    state.filtersStore.filterMenu[JOBS_MONITORING_JOBS_TAB],
-    state.filtersStore.filterMenuModal[JOBS_MONITORING_JOBS_TAB]
-  ])
   const {
     abortControllerRef,
     abortJobRef,
@@ -56,92 +50,66 @@ const JobsMonitoring = () => {
     setAbortingJobs,
     setJobRuns,
     setJobs,
-    setSelectedRunProject,
-    terminateAbortTasksPolling
+    terminateAbortTasksPolling,
+    tabData,
+    paginatedJobs,
+    searchParams
   } = React.useContext(ProjectJobsMonitoringContext)
+  const jobsAreInitializedRef = useRef(false)
+
+  const filters = useFiltersFromSearchParams(
+    tabData[JOBS_MONITORING_JOBS_TAB]?.filtersConfig,
+    tabData[JOBS_MONITORING_JOBS_TAB]?.parseQueryParamsCallback
+  )
 
   const tableContent = useMemo(
-    () =>
-      createJobsMonitoringContent(params.jobName ? jobRuns : jobs, params.jobName, isStagingMode),
-    [isStagingMode, jobRuns, jobs, params.jobName]
+    () => createJobsMonitoringContent(paginatedJobs, params.jobName, isStagingMode),
+    [isStagingMode, paginatedJobs, params.jobName]
   )
 
-  const isJobDataEmpty = useCallback(
-    () => jobs.length === 0 && ((!params.jobName && jobRuns.length === 0) || params.jobName),
-    [jobRuns.length, jobs.length, params.jobName]
+  const getBackLink = useCallback(
+    (useSavedParams = false) => {
+      let queryParams = useSavedParams
+        ? getSavedSearchParams(window.location.search)
+        : `?${searchParams.toString()}`
+
+      return `/projects/*/${JOBS_MONITORING_PAGE}/${JOBS_MONITORING_JOBS_TAB}${queryParams}`
+    },
+    [searchParams]
   )
-
-  useEffect(() => {
-    if (isEmpty(selectedJob) && !params.jobId && !dataIsLoaded) {
-      let filters = {
-        ...jobsFilterMenu.values,
-        ...jobsFilterMenuModal.values
-      }
-
-      refreshJobs(filters)
-      setDataIsLoaded(true)
-    }
-  }, [
-    isJobDataEmpty,
-    dataIsLoaded,
-    dispatch,
-    params.jobId,
-    params.jobName,
-    refreshJobs,
-    selectedJob,
-    jobsFilterMenu.values,
-    jobsFilterMenuModal.values
-  ])
 
   useEffect(() => {
     const abortController = abortControllerRef.current
 
     return () => {
-      setDataIsLoaded(false)
       setJobs([])
       setJobRuns([])
       abortController.abort(REQUEST_CANCELED)
+      jobsAreInitializedRef.current = false
       terminateAbortTasksPolling()
     }
-  }, [
-    params.jobName,
-    params.jobId,
-    terminateAbortTasksPolling,
-    abortControllerRef,
-    setJobs,
-    setJobRuns
-  ])
+  }, [terminateAbortTasksPolling, abortControllerRef, setJobs, setJobRuns])
 
   return (
     <>
-      {params.jobName && (
-        <TableTop
-          link={`/projects/*/${JOBS_MONITORING_PAGE}/${JOBS_MONITORING_JOBS_TAB}`}
-          text={params.jobName}
-        />
-      )}
+      {params.jobName && <TableTop link={getBackLink(true)} text={params.jobName} />}
       <JobsTable
         abortingJobs={abortingJobs}
         ref={{ abortJobRef }}
         context={ProjectJobsMonitoringContext}
-        filterMenuName={JOBS_MONITORING_JOBS_TAB}
+        filters={filters}
         filtersConfig={jobsFiltersConfig}
         jobRuns={jobRuns}
         jobs={jobs}
+        paginatedJobs={paginatedJobs}
         requestErrorMessage={requestErrorMessage}
-        navigateLink={`/projects/*/${JOBS_MONITORING_PAGE}/${JOBS_MONITORING_JOBS_TAB}`}
-        refreshJobs={() =>
-          refreshJobs({
-            ...jobsFilterMenu.values,
-            ...jobsFilterMenuModal.values
-          })
-        }
+        navigateLink={getBackLink()}
+        refreshJobs={() => refreshJobs(filters)}
         selectedJob={selectedJob}
         setAbortingJobs={setAbortingJobs}
         setJobRuns={setJobRuns}
         setJobs={setJobs}
         setSelectedJob={setSelectedJob}
-        setSelectedRunProject={setSelectedRunProject}
         tableContent={tableContent}
         terminateAbortTasksPolling={terminateAbortTasksPolling}
       />

@@ -23,7 +23,6 @@ import { useParams } from 'react-router-dom'
 import PropTypes from 'prop-types'
 
 import JobWizard from '../../components/JobWizard/JobWizard'
-import YamlModal from '../../common/YamlModal/YamlModal'
 import JobsTableRow from '../JobsTableRow/JobsTableRow'
 import Table from '../../components/Table/Table'
 import NoData from '../../common/NoData/NoData'
@@ -39,7 +38,8 @@ import { getNoDataMessage } from '../../utils/getNoDataMessage'
 import { isRowRendered, useVirtualization } from '../../hooks/useVirtualization.hook'
 import { setNotification } from '../../reducers/notificationReducer'
 import { showErrorNotification } from '../../utils/notifications.util'
-import { useYaml } from '../../hooks/yaml.hook'
+import { toggleYaml } from '../../reducers/appReducer'
+import { handleRunScheduledJob, removeScheduledJob } from '../../reducers/jobReducer'
 
 import { ReactComponent as Delete } from 'igz-controls/images/delete.svg'
 import { ReactComponent as Yaml } from 'igz-controls/images/yaml.svg'
@@ -47,23 +47,20 @@ import { ReactComponent as Edit } from 'igz-controls/images/edit.svg'
 import { ReactComponent as Run } from 'igz-controls/images/run.svg'
 
 import cssVariables from './scheduledJobsTable.scss'
-import { handleRunScheduledJob, removeScheduledJob } from '../../reducers/jobReducer'
 
 const ScheduledJobsTable = ({
   context,
+  createTableContent,
   filters = null,
   filtersConfig = null,
-  filterMenuName = '',
   jobs,
   refreshJobs,
-  requestErrorMessage,
-  tableContent
+  requestErrorMessage
 }) => {
   const dispatch = useDispatch()
   const params = useParams()
   const jobsStore = useSelector(store => store.jobsStore)
   const filtersStore = useSelector(store => store.filtersStore)
-  const [convertedYaml, toggleConvertedYaml] = useYaml('')
   const {
     editableItem,
     jobWizardIsOpened,
@@ -79,6 +76,16 @@ const ScheduledJobsTable = ({
       page: JOBS_PAGE
     }
   }, [])
+  const tableContent = useMemo(() => {
+    return createTableContent()
+  }, [createTableContent])
+
+  const toggleConvertedYaml = useCallback(
+    data => {
+      return dispatch(toggleYaml(data))
+    },
+    [dispatch]
+  )
 
   const handleRunJob = useCallback(
     job => {
@@ -97,7 +104,7 @@ const ScheduledJobsTable = ({
             setNotification({
               status: response.status,
               id: Math.random(),
-              message: 'The batch run was started'
+              message: 'Job started'
             })
           )
         })
@@ -123,7 +130,7 @@ const ScheduledJobsTable = ({
       )
         .unwrap()
         .then(response => {
-          refreshJobs(filtersStore)
+          refreshJobs(filters)
           dispatch(
             setNotification({
               status: response.status,
@@ -135,8 +142,12 @@ const ScheduledJobsTable = ({
 
       setConfirmData(null)
     },
-    [filtersStore, params.projectName, refreshJobs, setConfirmData, dispatch]
+    [filters, params.projectName, refreshJobs, setConfirmData, dispatch]
   )
+
+  const handleRefreshWithFilters = useCallback(() => {
+    refreshJobs(filters)
+  }, [filters, refreshJobs])
 
   const onRemoveScheduledJob = useCallback(
     scheduledJob => {
@@ -221,7 +232,7 @@ const ScheduledJobsTable = ({
         defaultData: jobWizardMode === PANEL_EDIT_MODE ? editableItem?.scheduled_object : {},
         mode: jobWizardMode,
         wizardTitle: jobWizardMode === PANEL_EDIT_MODE ? 'Edit job' : undefined,
-        onSuccessRequest: () => refreshJobs(filtersStore)
+        onSuccessRequest: () => refreshJobs(filters)
       })
 
       setJobWizardIsOpened(true)
@@ -229,7 +240,7 @@ const ScheduledJobsTable = ({
   }, [
     editableItem?.project,
     editableItem?.scheduled_object,
-    filtersStore,
+    filters,
     jobWizardIsOpened,
     jobWizardMode,
     params,
@@ -256,12 +267,12 @@ const ScheduledJobsTable = ({
       {jobsStore.loading ? null : jobs.length === 0 ? (
         <NoData
           message={getNoDataMessage(
-            filtersStore,
-            filtersConfig || filters,
+            filters,
+            filtersConfig,
             requestErrorMessage,
             JOBS_PAGE,
             SCHEDULE_TAB,
-            filterMenuName
+            filtersStore
           )}
         />
       ) : (
@@ -269,7 +280,7 @@ const ScheduledJobsTable = ({
           <Table
             actionsMenu={actionsMenu}
             pageData={pageData}
-            retryRequest={refreshJobs}
+            retryRequest={handleRefreshWithFilters}
             tab={SCHEDULE_TAB}
             tableClassName="scheduled-jobs-table"
             tableHeaders={tableContent[0]?.content ?? []}
@@ -284,22 +295,17 @@ const ScheduledJobsTable = ({
           </Table>
         </>
       )}
-      {convertedYaml.length > 0 && (
-        <YamlModal convertedYaml={convertedYaml} toggleConvertToYaml={toggleConvertedYaml} />
-      )}
     </>
   )
 }
 
 ScheduledJobsTable.propTypes = {
   context: PropTypes.object.isRequired,
-  filters: PropTypes.array,
-  filtersConfig: FILTERS_CONFIG,
-  filterMenuName: PropTypes.string,
+  filters: PropTypes.object.isRequired,
+  filtersConfig: FILTERS_CONFIG.isRequired,
   jobs: PropTypes.array.isRequired,
   refreshJobs: PropTypes.func.isRequired,
-  requestErrorMessage: PropTypes.string.isRequired,
-  tableContent: PropTypes.array.isRequired
+  requestErrorMessage: PropTypes.string.isRequired
 }
 
 export default ScheduledJobsTable

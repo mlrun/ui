@@ -20,30 +20,48 @@ such restriction.
 import { useCallback, useRef, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
+import { isEmpty } from 'lodash'
 
 import { monitorJob, pollAbortingJobs, rerunJob } from '../components/Jobs/jobs.util'
+
+import {
+  BE_PAGE,
+  BE_PAGE_SIZE,
+  FILTER_ALL_ITEMS,
+  GROUP_BY_WORKFLOW,
+  JOB_KIND_LOCAL,
+  JOBS_MONITORING_JOBS_TAB,
+  MONITOR_JOBS_TAB,
+  SCHEDULE_TAB
+} from '../constants'
 import { getJobKindFromLabels } from '../utils/jobs.util'
+import { usePagination } from './usePagination.hook'
 import { parseJob } from '../utils/parseJob'
-import { FILTER_ALL_ITEMS, GROUP_BY_WORKFLOW, JOB_KIND_LOCAL, SCHEDULE_TAB } from '../constants'
 import { fetchAllJobRuns, fetchJobs, fetchScheduledJobs } from '../reducers/jobReducer'
 import { fetchWorkflows } from '../reducers/workflowReducer'
+import { useFiltersFromSearchParams } from './useFiltersFromSearchParams.hook'
 
-export const useJobsPageData = () => {
+export const useJobsPageData = (initialTabData, selectedTab) => {
   const [jobRuns, setJobRuns] = useState([])
   const [editableItem, setEditableItem] = useState(null)
   const [jobWizardMode, setJobWizardMode] = useState(null)
   const [jobWizardIsOpened, setJobWizardIsOpened] = useState(false)
   const [jobs, setJobs] = useState([])
   const [abortingJobs, setAbortingJobs] = useState({})
-  const [dateFilter, setDateFilter] = useState(['', ''])
+  const paginationConfigJobsRef = useRef({})
+  const paginationConfigRunsRef = useRef({})
   const abortControllerRef = useRef(new AbortController())
   const abortJobRef = useRef(null)
   const params = useParams()
-  const [selectedRunProject, setSelectedRunProject] = useState(params.projectName || '')
   const [requestErrorMessage, setRequestErrorMessage] = useState('')
   const [scheduledJobs, setScheduledJobs] = useState([])
   const dispatch = useDispatch()
   const appStore = useSelector(store => store.appStore)
+
+  const filters = useFiltersFromSearchParams(
+    initialTabData[selectedTab]?.filtersConfig,
+    initialTabData[selectedTab]?.parseQueryParamsCallback
+  )
 
   const terminateAbortTasksPolling = useCallback(() => {
     abortJobRef?.current?.()
@@ -62,38 +80,38 @@ export const useJobsPageData = () => {
 
       terminateAbortTasksPolling()
 
-      if (filters.dates) {
-        setDateFilter(filters.dates.value)
+      const fetchData = params.jobName ? fetchAllJobRuns : fetchJobs
+      const projectName = filters.project?.toLowerCase?.() || params.projectName || '*'
+      const config = {
+        ui: {
+          controller: abortControllerRef.current,
+          setRequestErrorMessage
+        },
+        params: {}
       }
 
-      const fetchData = params.jobName ? fetchAllJobRuns : fetchJobs
-      const newParams = !params.jobName && {
-        'partition-by': 'project_and_name',
-        'partition-sort-by': 'updated'
+      if (!params.jobName) {
+        config.params['partition-by'] = 'project_and_name'
+        config.params['partition-sort-by'] = 'updated'
+      }
+
+      if (!params.jobName && !isEmpty(paginationConfigJobsRef.current)) {
+        config.params.page = paginationConfigJobsRef.current[BE_PAGE]
+        config.params['page-size'] = paginationConfigJobsRef.current[BE_PAGE_SIZE]
+      }
+
+      if (params.jobName && !isEmpty(paginationConfigRunsRef.current)) {
+        config.params.page = paginationConfigRunsRef.current[BE_PAGE]
+        config.params['page-size'] = paginationConfigRunsRef.current[BE_PAGE_SIZE]
       }
 
       dispatch(
-        fetchData({
-          project: params.jobName
-            ? selectedRunProject || '*'
-            : filters.project
-              ? filters.project.toLowerCase()
-              : params.projectName || '*',
-          filters,
-          config: {
-            ui: {
-              controller: abortControllerRef.current,
-              setRequestErrorMessage
-            },
-            params: { ...newParams }
-          },
-          jobName: params.jobName ?? false
-        })
+        fetchData({ project: projectName, filters, config, jobName: params.jobName ?? false })
       )
         .unwrap()
-        .then(jobs => {
-          if (jobs) {
-            const parsedJobs = jobs
+        .then(response => {
+          if (response?.runs) {
+            const parsedJobs = response.runs
               .map(job => parseJob(job))
               .filter(job => {
                 const type = getJobKindFromLabels(job.labels) ?? JOB_KIND_LOCAL
@@ -119,11 +137,7 @@ export const useJobsPageData = () => {
             if (Object.keys(responseAbortingJobs).length > 0) {
               setAbortingJobs(responseAbortingJobs)
               pollAbortingJobs(
-                params.jobName
-                  ? selectedRunProject || '*'
-                  : filters.project
-                    ? filters.project.toLowerCase()
-                    : params.projectName || '*',
+                filters.project?.toLowerCase?.() || params.projectName || '*',
                 abortJobRef,
                 responseAbortingJobs,
                 () => refreshJobs(filters),
@@ -133,13 +147,15 @@ export const useJobsPageData = () => {
 
             if (params.jobName) {
               setJobRuns(parsedJobs)
+              paginationConfigRunsRef.current.paginationResponse = response.pagination
             } else {
               setJobs(parsedJobs)
+              paginationConfigJobsRef.current.paginationResponse = response.pagination
             }
           }
         })
     },
-    [dispatch, params.jobName, params.projectName, selectedRunProject, terminateAbortTasksPolling]
+    [dispatch, params.jobName, params.projectName, terminateAbortTasksPolling]
   )
 
   const refreshScheduled = useCallback(
@@ -198,17 +214,13 @@ export const useJobsPageData = () => {
   )
 
   const getWorkflows = useCallback(
-    filter => {
+    filters => {
       abortControllerRef.current = new AbortController()
-
-      if (filter.dates) {
-        setDateFilter(filter.dates.value)
-      }
 
       dispatch(
         fetchWorkflows({
-          project: filter.project ? filter.project.toLowerCase() : params.projectName || '*',
-          filter: { ...filter, groupBy: GROUP_BY_WORKFLOW },
+          project: filters.project ? filters.project.toLowerCase() : params.projectName || '*',
+          filter: { ...filters, groupBy: GROUP_BY_WORKFLOW },
           config: {
             ui: {
               controller: abortControllerRef.current,
@@ -234,24 +246,45 @@ export const useJobsPageData = () => {
     [dispatch]
   )
 
+  const [handleRefreshJobs, paginatedJobs, searchJobsParams, setSearchJobsParams] = usePagination({
+    hidden:
+      ![MONITOR_JOBS_TAB, JOBS_MONITORING_JOBS_TAB].includes(selectedTab) ||
+      Boolean(params.jobName),
+    content: jobs,
+    refreshContent: refreshJobs,
+    filters,
+    paginationConfigRef: paginationConfigJobsRef,
+    resetPaginationTrigger: `${params.projectName}_${selectedTab}`
+  })
+  const [handleRefreshRuns, paginatedRuns, searchRunsParams, setSearchRunsParams] = usePagination({
+    hidden: ![MONITOR_JOBS_TAB, JOBS_MONITORING_JOBS_TAB].includes(selectedTab) || !params.jobName,
+    content: jobRuns,
+    refreshContent: refreshJobs,
+    filters,
+    paginationConfigRef: paginationConfigRunsRef,
+    resetPaginationTrigger: `${params.projectName}_${selectedTab}_${params.jobName}`
+  })
+
   return {
     abortControllerRef,
     abortJobRef,
     abortingJobs,
-    dateFilter,
     editableItem,
     getWorkflows,
     handleMonitoring,
+    handleRefreshJobs: params.jobName ? handleRefreshRuns : handleRefreshJobs,
     handleRerunJob,
     jobRuns,
-    jobs,
     jobWizardIsOpened,
     jobWizardMode,
+    jobs,
+    paginatedJobs: params.jobName ? paginatedRuns : paginatedJobs,
+    paginationConfigJobsRef: params.jobName ? paginationConfigRunsRef : paginationConfigJobsRef,
     refreshJobs,
     refreshScheduled,
     requestErrorMessage,
     scheduledJobs,
-    selectedRunProject,
+    searchParams: params.jobName ? searchRunsParams : searchJobsParams,
     setAbortingJobs,
     setEditableItem,
     setJobRuns,
@@ -259,7 +292,7 @@ export const useJobsPageData = () => {
     setJobWizardMode,
     setJobs,
     setScheduledJobs,
-    setSelectedRunProject,
+    setSearchParams: params.jobName ? setSearchRunsParams : setSearchJobsParams,
     terminateAbortTasksPolling
   }
 }

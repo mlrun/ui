@@ -57,6 +57,19 @@ export const ERROR_STATE = 'error'
 export const FAIL_STATE = 'fail'
 export const FAILED_STATE = 'failed'
 
+export const VIEW_SEARCH_PARAMETER = 'view'
+
+/*=========== PAGINATION =============*/
+
+export const BE_PAGE = 'bePage'
+export const FE_PAGE = 'fePage'
+export const BE_PAGE_SIZE = 'bePageSize'
+export const FE_PAGE_SIZE = 'fePageSize'
+export const FE_PAGE_START = 'fePageStart'
+export const FE_PAGE_END = 'fePageEnd'
+export const ITEMS_COUNT_START = 'itemsCountStart'
+export const ITEMS_COUNT_END = 'itemsCountEnd'
+
 /*=========== PAGES & TABS =============*/
 
 export const PROJECTS_PAGE = 'PROJECTS'
@@ -80,6 +93,9 @@ export const JOBS_MONITORING_PAGE = 'jobs-monitoring'
 export const JOBS_MONITORING_JOBS_TAB = 'jobs'
 export const JOBS_MONITORING_WORKFLOWS_TAB = 'workflows'
 export const JOBS_MONITORING_SCHEDULED_TAB = 'scheduled'
+
+export const ALERTS_PAGE = 'ALERTS'
+export const ALERTS_FILTERS = 'alerts'
 
 export const MODELS_PAGE = 'MODELS'
 export const MODELS_TAB = 'models'
@@ -114,9 +130,6 @@ export const CONSUMER_GROUPS_PAGE = 'CONSUMER_GROUPS'
 export const CONSUMER_GROUPS_FILTER = 'CONSUMER_GROUPS_FILTER'
 export const CONSUMER_GROUP_FILTER = 'CONSUMER_GROUP_FILTER'
 
-/*=========== DATASETS =============*/
-export const DATASETS_FILTERS = 'DATASETS_FILTERS'
-
 /*=========== JOBS =============*/
 
 export const FETCH_JOB_PODS_BEGIN = 'FETCH_JOB_PODS_BEGIN'
@@ -125,6 +138,8 @@ export const FETCH_JOB_PODS_SUCCESS = 'FETCH_JOB_PODS_SUCCESS'
 export const JOB_DEFAULT_OUTPUT_PATH = 'v3io:///projects/{{run.project}}/artifacts/{{run.uid}}'
 export const REMOVE_JOB_PODS = 'REMOVE_JOB_PODS'
 export const SET_DELETING_PROJECTS = 'SET_DELETING_PROJECTS'
+export const SET_PROJECT_TOTAL_ALERTS = 'SET_PROJECT_TOTAL_ALERTS'
+export const SET_JOBS_DATA = 'SET_JOBS_DATA'
 export const SET_JOBS_MONITORING_DATA = 'SET_JOBS_MONITORING_DATA'
 export const SET_MLRUN_IS_UNHEALTHY = 'SET_MLRUN_IS_UNHEALTHY'
 export const SET_MLRUN_UNHEALTHY_RETRYING = 'SET_MLRUN_UNHEALTHY_RETRYING'
@@ -263,12 +278,7 @@ export const FUNCTION_FILTERS = 'FUNCTION_FILTERS'
 /*=========== ARTIFACTS =============*/
 
 export const ARTIFACTS_TAB = 'artifacts'
-export const FILES_FILTERS = 'FILES_FILTERS'
 export const ARTIFACT_PREVIEW_TABLE_ROW_LIMIT = 100
-
-/*=========== MODELS =============*/
-
-export const MODELS_FILTERS = 'MODELS_FILTERS'
 
 /*=========== FEATURE STORE =============*/
 
@@ -411,6 +421,7 @@ export const DETAILS_OVERVIEW_TAB = 'overview'
 export const DETAILS_PODS_TAB = 'pods'
 export const DETAILS_PREVIEW_TAB = 'preview'
 export const DETAILS_REQUESTED_FEATURES_TAB = 'requested-features'
+export const DETAILS_ALERTS_TAB = 'alerts'
 export const DETAILS_RESULTS_TAB = 'results'
 export const DETAILS_RETURNED_FEATURES_TAB = 'returned-features'
 export const DETAILS_STATISTICS_TAB = 'statistics'
@@ -424,6 +435,7 @@ export const FETCH_ENDPOINT_METRICS_FAILURE = 'FETCH_ENDPOINT_METRICS_FAILURE'
 export const FETCH_ENDPOINT_METRICS_VALUES_BEGIN = 'FETCH_ENDPOINT_METRICS_VALUES_BEGIN'
 export const FETCH_ENDPOINT_METRICS_VALUES_SUCCESS = 'FETCH_ENDPOINT_METRICS_VALUES_SUCCESS'
 export const FETCH_ENDPOINT_METRICS_VALUES_FAILURE = 'FETCH_ENDPOINT_METRICS_VALUES_FAILURE'
+export const REMOVE_DETAILS_POPUP_INFO_CONTENT = 'REMOVE_DETAILS_POPUP_INFO_CONTENT'
 export const REMOVE_INFO_CONTENT = 'REMOVE_INFO_CONTENT'
 export const REMOVE_MODEL_FEATURE_VECTOR = 'REMOVE_MODEL_FEATURE_VECTOR'
 export const RESET_CHANGES = 'RESET_CHANGES'
@@ -431,6 +443,7 @@ export const SET_CHANGES = 'SET_CHANGES'
 export const SET_CHANGES_COUNTER = 'SET_CHANGES_COUNTER'
 export const SET_CHANGES_DATA = 'SET_CHANGES_DATA'
 export const SET_DETAILS_DATES = 'SET_DETAILS_DATES'
+export const SET_DETAILS_POPUP_INFO_CONTENT = 'SET_DETAILS_POPUP_INFO_CONTENT'
 export const SET_FILTERS_WAS_HANDLED = 'SET_FILTERS_WAS_HANDLED'
 export const SET_EDIT_MODE = 'SET_EDIT_MODE'
 export const SET_INFO_CONTENT = 'SET_INFO_CONTENT'
@@ -504,6 +517,16 @@ export const AUTO_REFRESH_ID = 'auto-refresh'
 export const AUTO_REFRESH = 'Auto Refresh'
 export const ANY_TIME = 'Any time'
 export const STATUS_FILTER_NAME = 'state'
+export const APPLICATION = 'application'
+export const ENDPOINT = 'endpoint'
+export const ENTITY_TYPE = 'entity-type'
+export const ENTITY_ID = 'entity-id'
+export const EVENT_TYPE = 'event-type'
+export const SEVERITY = 'severity'
+export const JOB = 'job'
+export const JOB_NAME = 'job-name'
+export const ENDPOINT_APPLICATION = 'endpoint-application'
+export const ENDPOINT_RESULT = 'endpoint-result'
 
 export const FILTER_MENU = 'filterMenu'
 export const FILTER_MENU_MODAL = 'filterMenuModal'

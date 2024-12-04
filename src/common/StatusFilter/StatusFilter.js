@@ -16,13 +16,15 @@ such restriction.
 */
 import React, { useMemo, memo } from 'react'
 import { useField, useForm } from 'react-final-form'
-import { isEmpty } from 'lodash'
+import { isEmpty, capitalize } from 'lodash'
 
 import { FormOnChange, FormSelect } from 'iguazio.dashboard-react-controls/dist/components'
-import { FILTER_ALL_ITEMS, STATUS_FILTER_NAME } from '../../constants'
+import { FILTER_ALL_ITEMS } from '../../constants'
 import { STATUS_LIST } from '../../types'
+import PropTypes from 'prop-types'
 
-const StatusFilter = ({ statusList, name = STATUS_FILTER_NAME }) => {
+// TODO: Rename component from StatusFilter to a more generic name
+const StatusFilter = ({ statusList, name }) => {
   const { input } = useField(name)
   const { change } = useForm()
 
@@ -59,13 +61,14 @@ const StatusFilter = ({ statusList, name = STATUS_FILTER_NAME }) => {
 
   return (
     <>
-      <FormSelect label="Status" name={name} options={mappedStatusList} multiple />
+      <FormSelect label={capitalize(name)} name={name} options={mappedStatusList} multiple />
       <FormOnChange handler={(value, some) => handleFilterStateChange(value, some)} name={name} />
     </>
   )
 }
 
 StatusFilter.propTypes = {
+  name: PropTypes.string.isRequired,
   statusList: STATUS_LIST.isRequired
 }
 

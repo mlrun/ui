@@ -17,26 +17,29 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
+import { APPLICATION, ENDPOINT, ENTITY_TYPE, JOB } from '../constants'
 
-export const generateGroupedItems = (content, selectedRowData, getIdentifier) => {
-  const groupedItems = {}
+export const generateAlertsStats = (data, navigate, projectName) => {
+  const navigateToAlertsPage = (filters = {}) => {
+    navigate(`/projects/${projectName}/alerts?${new URLSearchParams(filters)}`)
+  }
 
-  content.forEach(contentItem => {
-    const identifier = getIdentifier(contentItem)
-
-    if (selectedRowData?.[identifier]?.content) {
-      groupedItems[identifier] = selectedRowData[identifier]?.content
-    } else {
-      groupedItems[identifier] ??= []
-      groupedItems[identifier].push(contentItem)
+  return {
+    all: {
+      counter: data.all,
+      link: () => navigateToAlertsPage({})
+    },
+    job: {
+      counter: data.job,
+      link: () => navigateToAlertsPage({ [ENTITY_TYPE]: JOB })
+    },
+    endpoints: {
+      counter: data.endpoint,
+      link: () => navigateToAlertsPage({ [ENTITY_TYPE]: ENDPOINT })
+    },
+    application: {
+      counter: data.application,
+      link: () => navigateToAlertsPage({ [ENTITY_TYPE]: APPLICATION })
     }
-  })
-
-  return groupedItems
-}
-
-export const generateContentActionsMenu = (actionsMenu, predefinedActions) => {
-  return typeof actionsMenu === 'function'
-    ? item => [...predefinedActions, ...(actionsMenu(item) ?? [])]
-    : [...predefinedActions, ...(actionsMenu ?? [])]
+  }
 }

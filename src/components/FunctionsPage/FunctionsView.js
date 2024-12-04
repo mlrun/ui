@@ -29,15 +29,9 @@ import FunctionsTableRow from '../../elements/FunctionsTableRow/FunctionsTableRo
 import Loader from '../../common/Loader/Loader'
 import NoData from '../../common/NoData/NoData'
 import Table from '../Table/Table'
-import YamlModal from '../../common/YamlModal/YamlModal'
 import { ConfirmDialog } from 'igz-controls/components'
 
-import {
-  FUNCTIONS_PAGE,
-  FUNCTION_FILTERS,
-  PANEL_CREATE_MODE,
-  PANEL_EDIT_MODE
-} from '../../constants'
+import { FUNCTIONS_PAGE, PANEL_CREATE_MODE, PANEL_EDIT_MODE } from '../../constants'
 import { SECONDARY_BUTTON } from 'igz-controls/constants'
 import { FILTERS_CONFIG, VIRTUALIZATION_CONFIG } from '../../types'
 import { getNoDataMessage } from '../../utils/getNoDataMessage'
@@ -45,12 +39,13 @@ import { isRowRendered } from '../../hooks/useVirtualization.hook'
 
 const FunctionsView = ({
   actionsMenu,
+  allRowsAreExpanded,
   closePanel,
   confirmData,
-  convertedYaml,
   createFunctionSuccess,
   editableItem,
-  expand,
+  expandedRowsData,
+  filters,
   filtersChangeCallback,
   filtersStore,
   functions,
@@ -61,17 +56,16 @@ const FunctionsView = ({
   handleCancel,
   handleDeployFunctionFailure,
   handleDeployFunctionSuccess,
-  handleExpandAll,
-  handleExpandRow,
   handleSelectFunction,
   isDemoMode,
   pageData,
-  retryRequest,
   requestErrorMessage,
+  retryRequest,
   selectedFunction,
-  selectedRowData,
+  setSearchParams,
   tableContent,
-  toggleConvertedYaml,
+  toggleAllRows,
+  toggleRow,
   virtualizationConfig
 }) => {
   const params = useParams()
@@ -85,13 +79,14 @@ const FunctionsView = ({
           <div className="table-container">
             <div className="content__action-bar-wrapper">
               <ActionBar
-                page={FUNCTIONS_PAGE}
-                expand={expand}
+                allRowsAreExpanded={allRowsAreExpanded}
+                filters={filters}
                 filtersConfig={functionsFiltersConfig}
-                filterMenuName={FUNCTION_FILTERS}
-                handleExpandAll={handleExpandAll}
                 handleRefresh={filtersChangeCallback}
-                navigateLink={`/projects/${params.projectName}/functions`}
+                navigateLink={`/projects/${params.projectName}/functions${window.location.search}`}
+                page={FUNCTIONS_PAGE}
+                setSearchParams={setSearchParams}
+                toggleAllRows={toggleAllRows}
                 actionButtons={[
                   {
                     hidden: !isDemoMode,
@@ -111,12 +106,12 @@ const FunctionsView = ({
             ) : functions.length === 0 ? (
               <NoData
                 message={getNoDataMessage(
-                  filtersStore,
+                  filters,
                   functionsFiltersConfig,
                   requestErrorMessage,
                   FUNCTIONS_PAGE,
                   null,
-                  FUNCTION_FILTERS
+                  filtersStore
                 )}
               />
             ) : (
@@ -137,13 +132,13 @@ const FunctionsView = ({
                       isRowRendered(virtualizationConfig, index) && (
                         <FunctionsTableRow
                           actionsMenu={actionsMenu}
-                          handleExpandRow={handleExpandRow}
+                          expandedRowsData={expandedRowsData}
                           handleSelectItem={handleSelectFunction}
-                          rowIndex={index}
                           key={tableItem.data.ui.identifier}
+                          rowIndex={index}
                           rowItem={tableItem}
                           selectedItem={selectedFunction}
-                          selectedRowData={selectedRowData}
+                          toggleRow={toggleRow}
                           withQuickActions
                         />
                       )
@@ -183,9 +178,6 @@ const FunctionsView = ({
           message={confirmData.message}
         />
       )}
-      {convertedYaml.length > 0 && (
-        <YamlModal convertedYaml={convertedYaml} toggleConvertToYaml={toggleConvertedYaml} />
-      )}
     </>
   )
 }
@@ -197,12 +189,12 @@ FunctionsView.defaultPropTypes = {
 
 FunctionsView.propTypes = {
   actionsMenu: PropTypes.func.isRequired,
+  allRowsAreExpanded: PropTypes.bool.isRequired,
   closePanel: PropTypes.func.isRequired,
   confirmData: PropTypes.object,
-  convertedYaml: PropTypes.string.isRequired,
   createFunctionSuccess: PropTypes.func.isRequired,
   editableItem: PropTypes.object,
-  expand: PropTypes.bool.isRequired,
+  expandedRowsData: PropTypes.object.isRequired,
   filtersChangeCallback: PropTypes.func.isRequired,
   filtersStore: PropTypes.object.isRequired,
   functions: PropTypes.arrayOf(PropTypes.object).isRequired,
@@ -213,16 +205,15 @@ FunctionsView.propTypes = {
   handleCancel: PropTypes.func.isRequired,
   handleDeployFunctionFailure: PropTypes.func.isRequired,
   handleDeployFunctionSuccess: PropTypes.func.isRequired,
-  handleExpandAll: PropTypes.func.isRequired,
-  handleExpandRow: PropTypes.func.isRequired,
   handleSelectFunction: PropTypes.func.isRequired,
   pageData: PropTypes.object.isRequired,
-  retryRequest: PropTypes.func.isRequired,
   requestErrorMessage: PropTypes.string.isRequired,
+  retryRequest: PropTypes.func.isRequired,
   selectedFunction: PropTypes.object.isRequired,
-  selectedRowData: PropTypes.object.isRequired,
+  setSearchParams: PropTypes.func.isRequired,
   tableContent: PropTypes.arrayOf(PropTypes.object).isRequired,
-  toggleConvertedYaml: PropTypes.func.isRequired,
+  toggleAllRows: PropTypes.func.isRequired,
+  toggleRow: PropTypes.func.isRequired,
   virtualizationConfig: VIRTUALIZATION_CONFIG.isRequired
 }
 

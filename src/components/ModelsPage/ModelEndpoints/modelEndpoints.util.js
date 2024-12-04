@@ -24,8 +24,10 @@ import { TERTIARY_BUTTON } from 'igz-controls/constants'
 import { showErrorNotification } from '../../../utils/notifications.util'
 import { fetchModelEndpoint } from '../../../reducers/artifactsReducer'
 
+import { ReactComponent as Alert } from 'igz-controls/images/alerts.svg'
+
 export const filtersConfig = {
-  [LABELS_FILTER]: { label: 'Labels:' }
+  [LABELS_FILTER]: { label: 'Labels:', initialValue: '', isModal: true }
 }
 
 const infoHeaders = [
@@ -54,6 +56,11 @@ const detailsMenu = [
   {
     label: 'metrics',
     id: 'metrics'
+  },
+  {
+    label: 'alerts',
+    id: 'alerts',
+    icon: <Alert />
   }
 ]
 
@@ -90,12 +97,10 @@ export const chooseOrFetchModelEndpoint = (dispatch, selectedModelEndpoint, mode
   if (!isEmpty(selectedModelEndpoint)) return Promise.resolve(selectedModelEndpoint)
 
   return dispatch(
-    fetchModelEndpoint(
-      {
-        project: modelEndpointMin.metadata.project,
-        uid: modelEndpointMin.metadata.uid
-      }
-    )
+    fetchModelEndpoint({
+      project: modelEndpointMin.metadata.project,
+      uid: modelEndpointMin.metadata.uid
+    })
   )
     .unwrap()
     .catch(error => {

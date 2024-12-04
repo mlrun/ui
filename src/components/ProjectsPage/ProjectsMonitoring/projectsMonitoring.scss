@@ -44,7 +44,11 @@
 
   &-stats {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(345px, 1fr));
-    gap: 18px 24px;
+    grid-template-columns: 3fr 3fr 3fr 5fr;
+    gap: 9px 8px;
+
+    @media (max-width: 1260px) {
+      grid-template-columns: repeat(2, 1fr);
+    }
   }
 }

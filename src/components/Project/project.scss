@@ -21,6 +21,7 @@
     display: flex;
     flex: 1;
     padding: 24px 40px;
+    background-color: $white;
 
     .general-info {
       display: flex;
@@ -145,16 +146,16 @@
         min-width: 0;
         min-height: 460px;
         margin-right: 20px;
+        padding: 20px;
         overflow-x: auto;
-        background-color: rgba($white, 0.84);
-        border-radius: 4px;
+        background-color: $white;
+        border-radius: 8px;
+        border: $dividerBorder;
+        box-shadow: $projectStatisticsShadow;
 
         &__header {
           z-index: 1;
           min-width: fit-content;
-          padding: 20px;
-          background-color: $white;
-          box-shadow: $projectStatisticsShadow;
 
           &-text {
             min-width: 100%;
@@ -171,8 +172,12 @@
           }
 
           &.table-header {
-            min-height: 180px;
+            min-height: 150px;
           }
+        }
+
+        .no-data-block {
+          background-color: $white;
         }
 
         &_small {
@@ -189,7 +194,7 @@
         }
 
         &__see-all-link {
-          margin: 15px 20px 25px auto;
+          margin: 25px 20px 0 auto;
         }
 
         &__recent-text {
@@ -197,7 +202,7 @@
           align-items: center;
           font-size: 18px;
           min-height: 40px;
-          padding: 15px 0 0 20px;
+          margin: 0 0 5px 0;
 
           .text-sm {
             font-size: 0.75em;

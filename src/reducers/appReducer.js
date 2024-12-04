@@ -22,11 +22,13 @@ import appApi from '../api/app-api'
 import { openPopUp } from 'igz-controls/utils/common.util'
 import { ConfirmDialog } from 'igz-controls/components'
 import { GATEWAY_TIMEOUT_STATUS_CODE } from 'igz-controls/constants'
-import { isEmpty } from 'lodash'
+import { cloneDeep, isEmpty, omit, set } from 'lodash'
+import yaml from 'js-yaml'
 
 import localStorageService from '../utils/localStorageService'
 
 const initialState = {
+  convertedYaml: '',
   frontendSpec: {},
   frontendSpecPopupIsOpened: false
 }
@@ -79,6 +81,20 @@ const appSlice = createSlice({
   name: 'app',
   initialState,
   reducers: {
+    toggleYaml(state, action) {
+      if (!action.payload?.ui) {
+        state.convertedYaml = ''
+      } else {
+        const json = cloneDeep(action.payload.ui?.originalContent) ?? {}
+
+        if (json?.spec?.extra_data) {
+          // removes "model_spec.yaml" from "spec.extra_data"
+          set(json, 'spec.extra_data', omit(json.spec.extra_data, 'model_spec.yaml'))
+        }
+
+        state.convertedYaml = yaml.dump(json, { lineWidth: -1 })
+      }
+    },
     toggleFrontendSpecPopup(state, action) {
       state.frontendSpecPopupIsOpened = action.payload
     }
@@ -92,5 +108,7 @@ const appSlice = createSlice({
     })
   }
 })
+
+export const { toggleYaml } = appSlice.actions
 
 export default appSlice.reducer

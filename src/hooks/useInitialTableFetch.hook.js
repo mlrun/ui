@@ -17,149 +17,40 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import { useEffect, useLayoutEffect, useMemo, useRef } from 'react'
+import { useEffect, useMemo, useRef } from 'react'
 import { useParams } from 'react-router-dom'
-import { useDispatch } from 'react-redux'
-import { debounce, has, isEmpty } from 'lodash'
+import { debounce } from 'lodash'
 
-import {
-  GROUP_BY_FILTER,
-  GROUP_BY_NAME,
-  ITERATIONS_FILTER,
-  NAME_FILTER,
-  TAG_FILTER,
-  TAG_FILTER_ALL_ITEMS
-} from '../constants'
-import { setFilters, setFiltersValues, setModalFiltersValues } from '../reducers/filtersReducer'
-import { expandRowByName } from '../utils/tableRows.util'
 
 export const useInitialTableFetch = ({
-  createRowData,
   fetchData,
   fetchTags,
-  filterModalName,
-  filterName,
-  filters,
-  filtersConfig,
-  setExpandedRowsData,
-  setInitialFilters,
-  sortExpandedRowsDataBy
+  filters
 } = {}) => {
   const params = useParams()
-  const dispatch = useDispatch()
   const isInitialRequestSent = useRef(false)
 
   const sendInitialRequest = useMemo(
     () =>
-      debounce(
-        ({
-          createRowData,
-          dispatch,
-          filters,
-          fetchData,
-          fetchTags,
-          setExpandedRowsData,
-          sortExpandedRowsDataBy
-        } = {}) => {
-          if (!isInitialRequestSent.current) {
-            if (fetchTags) {
-              fetchTags()
-            }
-
-            fetchData(filters).then((result = []) => {
-              if (filters[NAME_FILTER]) {
-                dispatch(
-                  setFilters({
-                    [GROUP_BY_FILTER]: GROUP_BY_NAME
-                  })
-                )
-
-                if (setExpandedRowsData && createRowData) {
-                  expandRowByName(
-                    filters[NAME_FILTER],
-                    result,
-                    setExpandedRowsData,
-                    createRowData,
-                    sortExpandedRowsDataBy
-                  )
-                }
-              }
-            })
-
-            isInitialRequestSent.current = true
+      debounce(({ filters, fetchData, fetchTags } = {}) => {
+        if (!isInitialRequestSent.current) {
+          if (fetchTags) {
+            fetchTags()
           }
+          fetchData(filters)
+          isInitialRequestSent.current = true
         }
-      ),
+      }),
     []
   )
 
-  useLayoutEffect(() => {
-    if (!isInitialRequestSent.current) {
-      if (setInitialFilters) {
-        setInitialFilters()
-      } else {
-        if (params.name) {    
-          if (filterName) {
-            dispatch(
-              setFiltersValues({
-                name: filterName,
-                value: { [NAME_FILTER]: params.name }
-              })
-            )
-          } else {
-            // todo remove when all filters will be changed to new components
-            dispatch(
-              setFilters({
-                [NAME_FILTER]: params.name
-              })
-            )
-          }
-
-          if (filterModalName) {
-            const value = { [ITERATIONS_FILTER]: '', [TAG_FILTER]: TAG_FILTER_ALL_ITEMS }
-
-            if (filtersConfig) {
-              for (const filterName of Object.keys(value)) {
-                if (!has(filtersConfig, filterName)) delete value[filterName]
-              }
-            }
-
-            if (!isEmpty(value)) {
-              dispatch(
-                setModalFiltersValues({
-                  name: filterModalName,
-                  value: value
-                })
-              )
-            }
-          }
-        }
-      }
-    }
-  }, [dispatch, filterModalName, filterName, filtersConfig, params.name, setInitialFilters])
-
   useEffect(() => {
     sendInitialRequest({
-      createRowData,
-      dispatch,
       filters,
       fetchData,
-      fetchTags,
-      setExpandedRowsData,
-      sortExpandedRowsDataBy
+      fetchTags
     })
-  }, [
-    createRowData,
-    dispatch,
-    fetchData,
-    fetchTags,
-    filterModalName,
-    filters,
-    params.name,
-    sendInitialRequest,
-    setExpandedRowsData,
-    sortExpandedRowsDataBy
-  ])
+  }, [fetchData, fetchTags, filters, sendInitialRequest])
 
   useEffect(
     () => () => {
