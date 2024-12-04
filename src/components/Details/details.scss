@@ -105,8 +105,14 @@
           }
 
           .error-container {
-            flex: 1 0 100%;
+            flex: 1;
             margin-left: 0;
+
+            &:not(:last-child) {
+              border-right: $secondaryBorder;
+              margin-right: 1em;
+              padding-right: 1em;
+            }
           }
         }
 
