@@ -162,7 +162,7 @@ const FeatureSets = ({
     handleRefresh(featureSetsFilters)
   }, [featureSetsFilters, handleRefresh])
 
-  const handleRemoveFeatureSet = useCallback(
+  const collapseRowCallback = useCallback(
     featureSet => {
       const newStoreSelectedRowData = {
         ...featureStore.featureSets.selectedRowData.content
@@ -179,7 +179,7 @@ const FeatureSets = ({
     [featureStore.featureSets.selectedRowData.content, selectedRowData, removeFeatureSet]
   )
 
-  const handleRequestOnExpand = useCallback(
+  const expandRowCallback = useCallback(
     item => {
       const featureSetIdentifier = getFeatureSetIdentifier(item)
 
@@ -218,11 +218,11 @@ const FeatureSets = ({
     [fetchExpandedFeatureSet, featureSetsFilters.tag, params.projectName]
   )
 
-  const { latestItems, handleExpandRow } = useGroupContent(
+  const { latestItems, toggleRow } = useGroupContent(
     featureSets,
     getFeatureSetIdentifier,
-    handleRemoveFeatureSet,
-    handleRequestOnExpand,
+    collapseRowCallback,
+    expandRowCallback,
     null,
     FEATURE_STORE_PAGE,
     FEATURE_SETS_TAB
@@ -431,7 +431,6 @@ const FeatureSets = ({
       featureStore={featureStore}
       filtersStore={filtersStore}
       filters={featureSetsFilters}
-      handleExpandRow={handleExpandRow}
       handleRefreshWithFilters={handleRefreshWithFilters}
       handleRefresh={handleRefresh}
       pageData={pageData}
@@ -440,8 +439,10 @@ const FeatureSets = ({
       selectedFeatureSet={selectedFeatureSet}
       selectedRowData={selectedRowData}
       setFeatureSetsPanelIsOpen={setFeatureSetsPanelIsOpen}
+      setSearchParams={setSearchParams}
       setSelectedFeatureSetMin={handleSelectFeatureSet}
       tableContent={tableContent}
+      toggleRow={toggleRow}
       virtualizationConfig={virtualizationConfig}
     />
   )

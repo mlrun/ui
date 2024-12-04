@@ -20,22 +20,42 @@ such restriction.
 import { useCallback, useRef, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
+import { isEmpty } from 'lodash'
 
 import { monitorJob, pollAbortingJobs, rerunJob } from '../components/Jobs/jobs.util'
 
-import { getJobKindFromLabels } from '../utils/jobs.util'
-import { parseJob } from '../utils/parseJob'
+import {
+  BE_PAGE,
+  BE_PAGE_SIZE,
+  FILTER_ALL_ITEMS,
+  GROUP_BY_WORKFLOW,
+  JOB_KIND_LOCAL,
+  JOBS_MONITORING_JOBS_TAB,
+  MONITOR_JOBS_TAB,
+  SCHEDULE_TAB
+} from '../constants'
 import jobsActions from '../actions/jobs'
 import workflowActions from '../actions/workflow'
-import { FILTER_ALL_ITEMS, GROUP_BY_WORKFLOW, JOB_KIND_LOCAL, SCHEDULE_TAB } from '../constants'
+import { getJobKindFromLabels } from '../utils/jobs.util'
+import { usePagination } from './usePagination.hook'
+import { parseJob } from '../utils/parseJob'
+import { useFiltersFromSearchParams } from './useFiltersFromSearchParams.hook'
 
-export const useJobsPageData = (fetchAllJobRuns, fetchJobFunction, fetchJobs) => {
+export const useJobsPageData = (
+  fetchAllJobRuns,
+  fetchJobFunction,
+  fetchJobs,
+  initialTabData,
+  selectedTab
+) => {
   const [jobRuns, setJobRuns] = useState([])
   const [editableItem, setEditableItem] = useState(null)
   const [jobWizardMode, setJobWizardMode] = useState(null)
   const [jobWizardIsOpened, setJobWizardIsOpened] = useState(false)
   const [jobs, setJobs] = useState([])
   const [abortingJobs, setAbortingJobs] = useState({})
+  const paginationConfigJobsRef = useRef({})
+  const paginationConfigRunsRef = useRef({})
   const abortControllerRef = useRef(new AbortController())
   const abortJobRef = useRef(null)
   const params = useParams()
@@ -43,6 +63,11 @@ export const useJobsPageData = (fetchAllJobRuns, fetchJobFunction, fetchJobs) =>
   const [scheduledJobs, setScheduledJobs] = useState([])
   const dispatch = useDispatch()
   const appStore = useSelector(store => store.appStore)
+
+  const filters = useFiltersFromSearchParams(
+    initialTabData[selectedTab]?.filtersConfig,
+    initialTabData[selectedTab]?.parseQueryParamsCallback
+  )
 
   const terminateAbortTasksPolling = useCallback(() => {
     abortJobRef?.current?.()
@@ -62,25 +87,33 @@ export const useJobsPageData = (fetchAllJobRuns, fetchJobFunction, fetchJobs) =>
       terminateAbortTasksPolling()
 
       const fetchData = params.jobName ? fetchAllJobRuns : fetchJobs
-      const newParams = !params.jobName && {
-        'partition-by': 'project_and_name',
-        'partition-sort-by': 'updated'
+      const projectName = filters.project?.toLowerCase?.() || params.projectName || '*'
+      const config = {
+        ui: {
+          controller: abortControllerRef.current,
+          setRequestErrorMessage
+        },
+        params: {}
       }
 
-      fetchData(
-        filters.project?.toLowerCase?.() || params.projectName || '*',
-        filters,
-        {
-          ui: {
-            controller: abortControllerRef.current,
-            setRequestErrorMessage
-          },
-          params: { ...newParams }
-        },
-        params.jobName ?? false
-      ).then(jobs => {
-        if (jobs) {
-          const parsedJobs = jobs
+      if (!params.jobName) {
+        config.params['partition-by'] = 'project_and_name'
+        config.params['partition-sort-by'] = 'updated'
+      }
+
+      if (!params.jobName && !isEmpty(paginationConfigJobsRef.current)) {
+        config.params.page = paginationConfigJobsRef.current[BE_PAGE]
+        config.params['page-size'] = paginationConfigJobsRef.current[BE_PAGE_SIZE]
+      }
+
+      if (params.jobName && !isEmpty(paginationConfigRunsRef.current)) {
+        config.params.page = paginationConfigRunsRef.current[BE_PAGE]
+        config.params['page-size'] = paginationConfigRunsRef.current[BE_PAGE_SIZE]
+      }
+
+      fetchData(projectName, filters, config, params.jobName ?? false).then(response => {
+        if (response?.runs) {
+          const parsedJobs = response.runs
             .map(job => parseJob(job))
             .filter(job => {
               const type = getJobKindFromLabels(job.labels) ?? JOB_KIND_LOCAL
@@ -116,8 +149,10 @@ export const useJobsPageData = (fetchAllJobRuns, fetchJobFunction, fetchJobs) =>
 
           if (params.jobName) {
             setJobRuns(parsedJobs)
+            paginationConfigRunsRef.current.paginationResponse = response.pagination
           } else {
             setJobs(parsedJobs)
+            paginationConfigJobsRef.current.paginationResponse = response.pagination
           }
         }
       })
@@ -216,6 +251,25 @@ export const useJobsPageData = (fetchAllJobRuns, fetchJobFunction, fetchJobs) =>
     [fetchJobFunction, dispatch]
   )
 
+  const [handleRefreshJobs, paginatedJobs, searchJobsParams, setSearchJobsParams] = usePagination({
+    hidden:
+      ![MONITOR_JOBS_TAB, JOBS_MONITORING_JOBS_TAB].includes(selectedTab) ||
+      Boolean(params.jobName),
+    content: jobs,
+    refreshContent: refreshJobs,
+    filters,
+    paginationConfigRef: paginationConfigJobsRef,
+    resetPaginationTrigger: `${params.projectName}_${selectedTab}`
+  })
+  const [handleRefreshRuns, paginatedRuns, searchRunsParams, setSearchRunsParams] = usePagination({
+    hidden: ![MONITOR_JOBS_TAB, JOBS_MONITORING_JOBS_TAB].includes(selectedTab) || !params.jobName,
+    content: jobRuns,
+    refreshContent: refreshJobs,
+    filters,
+    paginationConfigRef: paginationConfigRunsRef,
+    resetPaginationTrigger: `${params.projectName}_${selectedTab}_${params.jobName}`
+  })
+
   return {
     abortControllerRef,
     abortJobRef,
@@ -223,15 +277,19 @@ export const useJobsPageData = (fetchAllJobRuns, fetchJobFunction, fetchJobs) =>
     editableItem,
     getWorkflows,
     handleMonitoring,
+    handleRefreshJobs: params.jobName ? handleRefreshRuns : handleRefreshJobs,
     handleRerunJob,
     jobRuns,
-    jobs,
     jobWizardIsOpened,
     jobWizardMode,
+    jobs,
+    paginatedJobs: params.jobName ? paginatedRuns : paginatedJobs,
+    paginationConfigJobsRef: params.jobName ? paginationConfigRunsRef : paginationConfigJobsRef,
     refreshJobs,
     refreshScheduled,
     requestErrorMessage,
     scheduledJobs,
+    searchParams: params.jobName ? searchRunsParams : searchJobsParams,
     setAbortingJobs,
     setEditableItem,
     setJobRuns,
@@ -239,6 +297,7 @@ export const useJobsPageData = (fetchAllJobRuns, fetchJobFunction, fetchJobs) =>
     setJobWizardMode,
     setJobs,
     setScheduledJobs,
+    setSearchParams: params.jobName ? setSearchRunsParams : setSearchJobsParams,
     terminateAbortTasksPolling
   }
 }

@@ -42,7 +42,6 @@ const TableCell = ({
   className = '',
   data,
   firstCell,
-  handleExpandRow = null,
   item = {
     target_path: '',
     schema: ''
@@ -51,7 +50,8 @@ const TableCell = ({
   onClick = null,
   selectItem = () => {},
   selectedItem = {},
-  showExpandButton = false
+  showExpandButton = false,
+  toggleRow = null
 }) => {
   const dispatch = useDispatch()
   const params = useParams()
@@ -73,12 +73,12 @@ const TableCell = ({
       <TableLinkCell
         className={className}
         data={data}
-        showExpandButton={showExpandButton}
-        handleExpandRow={handleExpandRow}
         item={item}
         link={link}
         selectItem={selectItem}
         selectedItem={selectedItem}
+        showExpandButton={showExpandButton}
+        toggleRow={toggleRow}
       />
     )
   } else if (firstCell && !link) {
@@ -102,7 +102,7 @@ const TableCell = ({
           </Tooltip>
         )}
         {showExpandButton && (
-          <Arrow onClick={e => handleExpandRow(e, item)} className="expand-arrow" />
+          <Arrow onClick={e => toggleRow && toggleRow(e, item)} className="expand-arrow" />
         )}
       </td>
     )
@@ -214,12 +214,12 @@ TableCell.propTypes = {
   className: PropTypes.string,
   data: PropTypes.shape({}).isRequired,
   firstCell: PropTypes.bool,
-  handleExpandRow: PropTypes.func,
   item: PropTypes.oneOfType([PropTypes.shape({}), PropTypes.bool]),
   link: PropTypes.oneOfType([PropTypes.string, PropTypes.bool]),
   selectItem: PropTypes.func,
   selectedItem: PropTypes.shape({}),
-  showExpandButton: PropTypes.bool
+  showExpandButton: PropTypes.bool,
+  toggleRow: PropTypes.func
 }
 
 export default TableCell

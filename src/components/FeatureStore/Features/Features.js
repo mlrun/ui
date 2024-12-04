@@ -18,7 +18,7 @@ under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
 import React, { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react'
-import { useParams } from 'react-router-dom'
+import { useParams, useSearchParams } from 'react-router-dom'
 import { connect, useDispatch, useSelector } from 'react-redux'
 import { mapValues, map } from 'lodash'
 
@@ -67,6 +67,7 @@ const Features = ({
   const [selectedRowData, setSelectedRowData] = useState({})
   const [requestErrorMessage, setRequestErrorMessage] = useState('')
   const params = useParams()
+  const [, setSearchParams] = useSearchParams()
   const featureStore = useSelector(store => store.featureStore)
   const filtersStore = useSelector(store => store.filtersStore)
   const featuresFilters = useFiltersFromSearchParams(filtersConfig)
@@ -101,11 +102,7 @@ const Features = ({
       return mapValues(prevSelectedRowData, feature => ({
         ...feature,
         content: map(feature.content, contentItem =>
-          createFeaturesRowData(
-            contentItem.data,
-            tableStore.isTablePanelOpen,
-            false
-          )
+          createFeaturesRowData(contentItem.data, tableStore.isTablePanelOpen, false)
         )
       }))
     })
@@ -186,7 +183,7 @@ const Features = ({
     handleRefresh(featuresFilters)
   }, [featuresFilters, handleRefresh])
 
-  const handleRemoveFeature = useCallback(
+  const collapseRowCallback = useCallback(
     feature => {
       const newStoreSelectedRowData =
         feature.data.ui.type === 'feature'
@@ -210,7 +207,7 @@ const Features = ({
     ]
   )
 
-  const handleRequestOnExpand = useCallback(
+  const expandRowCallback = useCallback(
     feature => {
       const featureIdentifier = getFeatureIdentifier(feature)
       const fetchData = feature.ui?.type === 'feature' ? fetchFeature : fetchEntity
@@ -226,11 +223,7 @@ const Features = ({
         .then(result => {
           if (result?.length > 0) {
             const content = [...result].map(contentItem =>
-              createFeaturesRowData(
-                contentItem,
-                tableStore.isTablePanelOpen,
-                false
-              )
+              createFeaturesRowData(contentItem, tableStore.isTablePanelOpen, false)
             )
             setSelectedRowData(state => ({
               ...state,
@@ -256,11 +249,11 @@ const Features = ({
     [fetchEntity, fetchFeature, tableStore.isTablePanelOpen]
   )
 
-  const { latestItems, handleExpandRow } = useGroupContent(
+  const { latestItems, toggleRow } = useGroupContent(
     features,
     getFeatureIdentifier,
-    handleRemoveFeature,
-    handleRequestOnExpand,
+    collapseRowCallback,
+    expandRowCallback,
     null,
     FEATURE_STORE_PAGE,
     FEATURES_TAB
@@ -272,18 +265,9 @@ const Features = ({
           return createFeaturesRowData(contentItem, tableStore.isTablePanelOpen, true)
         })
       : features.map(contentItem =>
-          createFeaturesRowData(
-            contentItem,
-            tableStore.isTablePanelOpen,
-            false
-          )
+          createFeaturesRowData(contentItem, tableStore.isTablePanelOpen, false)
         )
-  }, [
-    features,
-    filtersStore.groupBy,
-    latestItems,
-    tableStore.isTablePanelOpen
-  ])
+  }, [features, filtersStore.groupBy, latestItems, tableStore.isTablePanelOpen])
 
   const getPopUpTemplate = useCallback(
     action => {
@@ -356,20 +340,21 @@ const Features = ({
   return (
     <FeaturesView
       actionsMenu={actionsMenu}
-      features={features}
       featureStore={featureStore}
+      features={features}
       filtersStore={filtersStore}
       filters={featuresFilters}
       getPopUpTemplate={getPopUpTemplate}
-      handleExpandRow={handleExpandRow}
       handleRefresh={handleRefresh}
       handleRefreshWithFilters={handleRefreshWithFilters}
       pageData={pageData}
       ref={{ featureStoreRef }}
       requestErrorMessage={requestErrorMessage}
       selectedRowData={selectedRowData}
+      setSearchParams={setSearchParams}
       tableContent={tableContent}
       tableStore={tableStore}
+      toggleRow={toggleRow}
       virtualizationConfig={virtualizationConfig}
     />
   )

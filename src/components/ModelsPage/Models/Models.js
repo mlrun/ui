@@ -20,7 +20,7 @@ such restriction.
 import React, { useCallback, useEffect, useMemo, useState, useRef } from 'react'
 import { connect, useDispatch, useSelector } from 'react-redux'
 import { chain, isEmpty, isNil } from 'lodash'
-import { useLocation, useNavigate, useParams } from 'react-router-dom'
+import { useLocation, useNavigate, useParams, useSearchParams } from 'react-router-dom'
 
 import AddArtifactTagPopUp from '../../../elements/AddArtifactTagPopUp/AddArtifactTagPopUp'
 import DeployModelPopUp from '../../../elements/DeployModelPopUp/DeployModelPopUp'
@@ -94,6 +94,7 @@ const Models = ({ fetchModelFeatureVector }) => {
   const location = useLocation()
   const navigate = useNavigate()
   const params = useParams()
+  const [, setSearchParams] = useSearchParams()
   const viewMode = getViewMode(window.location.search)
   const { toggleConvertedYaml } = useModelsPage()
   const filters = useFiltersFromSearchParams(filtersConfig)
@@ -187,7 +188,7 @@ const Models = ({ fetchModelFeatureVector }) => {
           filters: {},
           config: {
             signal: abortControllerRef.current.signal,
-            params: { format: 'minimal' }
+            params: { format: 'minimal', kind: 'serving' }
           }
         })
       )
@@ -274,7 +275,7 @@ const Models = ({ fetchModelFeatureVector }) => {
     ]
   )
 
-  const handleRemoveRowData = useCallback(
+  const collapseRowCallback = useCallback(
     model => {
       const newStoreSelectedRowData = {
         ...artifactsStore.models.selectedRowData
@@ -290,7 +291,7 @@ const Models = ({ fetchModelFeatureVector }) => {
     [artifactsStore.models.selectedRowData, dispatch, selectedRowData]
   )
 
-  const handleExpand = useCallback(
+  const expandRowCallback = useCallback(
     (model, content) => {
       const modelIdentifier = getArtifactIdentifier(model)
 
@@ -310,11 +311,11 @@ const Models = ({ fetchModelFeatureVector }) => {
     [params.projectName]
   )
 
-  const { latestItems, handleExpandRow } = useGroupContent(
+  const { latestItems, toggleRow } = useGroupContent(
     models,
     getArtifactIdentifier,
-    handleRemoveRowData,
-    handleExpand,
+    collapseRowCallback,
+    expandRowCallback,
     null,
     MODELS_PAGE,
     MODELS_TAB
@@ -371,12 +372,7 @@ const Models = ({ fetchModelFeatureVector }) => {
   }
 
   useInitialTableFetch({
-    createRowData: rowItem =>
-      createModelsRowData(
-        rowItem,
-        params.projectName,
-        frontendSpec
-      ),
+    createRowData: rowItem => createModelsRowData(rowItem, params.projectName, frontendSpec),
     fetchData,
     fetchTags,
     filterModalName: MODELS_TAB,
@@ -524,7 +520,6 @@ const Models = ({ fetchModelFeatureVector }) => {
       filters={filters}
       filtersStore={filtersStore}
       getAndSetSelectedArtifact={getAndSetSelectedArtifact}
-      handleExpandRow={handleExpandRow}
       handleRefresh={handleRefresh}
       handleRefreshWithFilters={handleRefreshWithFilters}
       handleRegisterModel={handleRegisterModel}
@@ -538,10 +533,12 @@ const Models = ({ fetchModelFeatureVector }) => {
       selectedModel={selectedModel}
       selectedRowData={selectedRowData}
       setMaxArtifactsErrorIsShown={setMaxArtifactsErrorIsShown}
+      setSearchParams={setSearchParams}
       setSelectedModelMin={setSelectedModelMin}
       sortProps={{ sortTable, selectedColumnName, getSortingIcon }}
       tableContent={sortedTableContent}
       tableHeaders={sortedTableHeaders}
+      toggleRow={toggleRow}
       viewMode={viewMode}
       virtualizationConfig={virtualizationConfig}
     />

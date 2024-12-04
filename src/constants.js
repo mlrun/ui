@@ -68,6 +68,17 @@ export const FAILED_STATE = 'failed'
 
 export const VIEW_SEARCH_PARAMETER = 'view'
 
+/*=========== PAGINATION =============*/
+
+export const BE_PAGE = 'bePage'
+export const FE_PAGE = 'fePage'
+export const BE_PAGE_SIZE = 'bePageSize'
+export const FE_PAGE_SIZE = 'fePageSize'
+export const FE_PAGE_START = 'fePageStart'
+export const FE_PAGE_END = 'fePageEnd'
+export const ITEMS_COUNT_START = 'itemsCountStart'
+export const ITEMS_COUNT_END = 'itemsCountEnd'
+
 /*=========== PAGES & TABS =============*/
 
 export const PROJECTS_PAGE = 'PROJECTS'

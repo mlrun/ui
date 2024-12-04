@@ -23,22 +23,24 @@ import yaml from 'js-yaml'
 import fs from 'fs'
 import crypto from 'node:crypto'
 import {
-  cloneDeep,
-  remove,
-  defaults,
-  noop,
-  get,
-  random,
-  isArray,
-  isFunction,
+  chunk,
   clamp,
+  cloneDeep,
+  defaults,
   find,
-  set,
-  omit,
   forEach,
-  pick,
+  get,
+  isArray,
+  isEmpty,
+  isFunction,
   isNil,
-  isEmpty
+  noop,
+  omit,
+  orderBy,
+  pick,
+  random,
+  remove,
+  set
 } from 'lodash'
 import mime from 'mime-types'
 
@@ -82,7 +84,7 @@ import {
   updateSchedules
 } from './dateSynchronization.js'
 
-//updating values in files with synthetic data
+// Updating values in files with synthetic data
 updateRuns(runs)
 updatePipelines(pipelines)
 updatePipelineIDs(pipelineIDs)
@@ -182,7 +184,7 @@ const secretKeyTemplate = {
   secret_keys: []
 }
 
-// Mock consts
+// Mock constants
 const mockHome = process.cwd() + '/tests/mockServer'
 const mlrunIngress = '/mlrun-api-ingress.default-tenant.app.vmdev36.lab.iguazeng.com'
 const mlrunAPIIngress = `${mlrunIngress}/api/v1`
@@ -192,7 +194,7 @@ const iguazioApiUrl = '/platform-api.default-tenant.app.vmdev36.lab.iguazeng.com
 const port = 30000
 const NOT_ALLOWED_SECRET_KEY = 'mlrun.'
 
-// Support function
+// Support functions
 function createTask(projectName, config) {
   const newTask = cloneDeep(backgroundTaskTemplate)
   const now = new Date().toISOString()
@@ -280,6 +282,30 @@ function getGraphById(targetId) {
   })
 
   return foundGraph
+}
+
+function getPaginationConfig(data, query) {
+  let paginationQueryConfig = {
+    page: null,
+    'page-size': null,
+    'page-token': null
+  }
+  let pageData = data
+
+  if (query['page-size'] && query.page) {
+    const dataPaginated = chunk(data, query['page-size'])
+    pageData = dataPaginated[query.page - 1] ?? []
+    const pageDataIsEmpty = isEmpty(pageData)
+    const nextPageDataIsEmpty = isEmpty(dataPaginated[query.page])
+
+    paginationQueryConfig = {
+      page: pageDataIsEmpty ? null : parseInt(query.page),
+      'page-size': pageDataIsEmpty ? null : parseInt(query['page-size']),
+      'page-token': nextPageDataIsEmpty || pageDataIsEmpty ? null : '12345'
+    }
+  }
+
+  return [pageData, paginationQueryConfig]
 }
 
 function makeUID(length) {
@@ -836,7 +862,9 @@ function getRuns(req, res) {
     })
   }
 
-  res.send({ runs: collectedRuns })
+  const [paginatedRuns, pagination] = getPaginationConfig(collectedRuns, req.query)
+
+  res.send({ runs: paginatedRuns, pagination })
 }
 
 function getRun(req, res) {
@@ -1288,7 +1316,9 @@ function getArtifacts(req, res) {
     })
   }
 
-  res.send({ artifacts: collectedArtifacts })
+  const [paginatedArtifacts, pagination] = getPaginationConfig(collectedArtifacts, req.query)
+
+  res.send({ artifacts: paginatedArtifacts, pagination })
 }
 
 function getProjectsFeatureSets(req, res) {
@@ -1582,17 +1612,24 @@ function getFuncs(req, res) {
     })
   }
 
-  res.send({ funcs: collectedFuncs })
+  collectedFuncs = orderBy(collectedFuncs, 'metadata.updated', 'desc')
+  const [paginatedFuncs, pagination] = getPaginationConfig(collectedFuncs, req.query)
+
+  res.send({ funcs: paginatedFuncs, pagination })
 }
 
 function getFunc(req, res) {
-  const collectedFunc = funcs.funcs
+  let collectedFuncs = funcs.funcs
     .filter(func => func.metadata.project === req.params['project'])
     .filter(func => func.metadata.name === req.params['func'])
     .filter(func => func.metadata.hash === req.query.hash_key)
 
+  if (req.query.tag) {
+    collectedFuncs = collectedFuncs.filter(func => func.metadata.tag === req.query.tag)
+  }
+
   let respBody = {}
-  if (collectedFunc.length === 0) {
+  if (collectedFuncs.length === 0) {
     res.statusCode = 404
     respBody = {
       detail: {
@@ -1600,7 +1637,7 @@ function getFunc(req, res) {
       }
     }
   } else {
-    respBody = { func: collectedFunc[0] }
+    respBody = { func: collectedFuncs[0] }
   }
 
   res.send(respBody)

@@ -74,7 +74,7 @@ const WorkflowsCounters = () => {
               <span
                 className="stats__link"
                 onClick={workflowsStats.all.link}
-                data-testid="workflows_see_all"
+                data-testid="workflows_total_counter"
               >
                 {workflowsStats.all.counter}
               </span>
@@ -87,7 +87,7 @@ const WorkflowsCounters = () => {
                   <Loader section small secondary />
                 ) : (
                   <Tooltip textShow template={<TextTooltipTemplate text={tooltip} />}>
-                    <span>
+                    <span data-testid={`wf_${statusClass}_counter`}>
                       {counter}
                       <i className={`state-${statusClass}`} />
                     </span>

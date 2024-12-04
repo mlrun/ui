@@ -235,7 +235,7 @@ const jobsActions = {
       .then(({ data }) => {
         dispatch(jobsActions.fetchAllJobRunsSuccess(data.runs || []))
 
-        return data.runs
+        return data
       })
       .catch(error => {
         dispatch(jobsActions.fetchAllJobRunsFailure(error))
@@ -374,7 +374,7 @@ const jobsActions = {
         dispatch(jobsActions.fetchJobsSuccess(newJobs))
         dispatch(jobsActions.setJobsData(data.runs || []))
 
-        return newJobs
+        return { ...data, runs: newJobs }
       })
       .catch(error => {
         dispatch(jobsActions.fetchJobsFailure(error))
