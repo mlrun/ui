@@ -95,6 +95,7 @@ const FunctionsView = ({
                 handleRefresh={filtersChangeCallback}
                 navigateLink={`/projects/${params.projectName}/functions${params.funcName ? `/${params.funcName}` : ''}${window.location.search}`}
                 setSearchParams={setSearchParams}
+                withoutExpandButton
                 actionButtons={[
                   {
                     hidden: !isDemoMode,
