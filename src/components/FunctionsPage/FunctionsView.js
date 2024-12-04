@@ -203,7 +203,6 @@ FunctionsView.propTypes = {
   editableItem: PropTypes.object,
   filtersChangeCallback: PropTypes.func.isRequired,
   filtersStore: PropTypes.object.isRequired,
-  functions: PropTypes.arrayOf(PropTypes.object).isRequired,
   functionsFiltersConfig: FILTERS_CONFIG.isRequired,
   functionsPanelIsOpen: PropTypes.bool.isRequired,
   functionsStore: PropTypes.object.isRequired,

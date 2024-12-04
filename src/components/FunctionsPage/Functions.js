@@ -532,7 +532,7 @@ const Functions = ({
 
   useEffect(() => {
     checkForSelectedFunction(
-      functions,
+      params.funcName ? functionVersions : functions,
       params.hash,
       params.funcName,
       navigate,
@@ -540,7 +540,15 @@ const Functions = ({
       setSelectedFunctionMin,
       dispatch
     )
-  }, [dispatch, functions, navigate, params.hash, params.projectName, params.funcName])
+  }, [
+    dispatch,
+    functions,
+    navigate,
+    params.hash,
+    params.projectName,
+    params.funcName,
+    functionVersions
+  ])
 
   useEffect(() => {
     dispatch(setFilters({ groupBy: GROUP_BY_NONE }))
@@ -696,7 +704,6 @@ const Functions = ({
       filters={functionsFilters}
       filtersChangeCallback={filtersChangeCallback}
       filtersStore={filtersStore}
-      functions={functions}
       functionsFiltersConfig={functionsFiltersConfig}
       functionsPanelIsOpen={functionsPanelIsOpen}
       functionsStore={functionsStore}
