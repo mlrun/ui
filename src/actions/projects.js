@@ -180,8 +180,7 @@ const projectsAction = {
       .getProject(project, params, signal)
       .then(response => {
         dispatch(projectsAction.fetchProjectSuccess(response?.data))
-
-        return response?.data
+        return response
       })
       .catch(error => {
         if (![REQUEST_CANCELED, DEFAULT_ABORT_MSG].includes(error.message)) {

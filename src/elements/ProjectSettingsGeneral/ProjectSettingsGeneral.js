@@ -101,7 +101,7 @@ const ProjectSettingsGeneral = ({
       setProjectIsInitialized(true)
 
       fetchProject(params.projectName)
-        .then(projectResponse => {
+        .then(({ data: projectResponse }) => {
           setTimeout(() => {
             const newInitial = {
               [SOURCE_URL]: projectResponse.spec[SOURCE_URL],

@@ -39,6 +39,8 @@ import projectsAction from '../../actions/projects'
 import { BG_TASK_RUNNING } from '../../utils/poll.util'
 import { onDeleteProject } from './projects.util'
 import { PROJECT_ONLINE_STATUS } from '../../constants'
+import { ConfirmDialog } from 'igz-controls/components'
+import { openPopUp } from 'igz-controls/utils/common.util'
 import { FORBIDDEN_ERROR_STATUS_CODE, PRIMARY_BUTTON } from 'igz-controls/constants'
 import { fetchBackgroundTasks } from '../../reducers/tasksReducer'
 import { setNotification } from '../../reducers/notificationReducer'
@@ -247,8 +249,8 @@ const Projects = () => {
     projectMinimal => {
       if (projectMinimal?.metadata?.name) {
         dispatch(projectsAction.fetchProject(projectMinimal.metadata.name))
-          .then(project => {
-            var blob = new Blob([yaml.dump(project, { lineWidth: -1 })])
+          .then(response => {
+            var blob = new Blob([yaml.dump(response?.data, { lineWidth: -1 })])
 
             FileSaver.saveAs(blob, `${projectMinimal.metadata.name}.yaml`)
           })
@@ -266,8 +268,20 @@ const Projects = () => {
     projectMinimal => {
       if (projectMinimal?.metadata?.name) {
         dispatch(projectsAction.fetchProject(projectMinimal.metadata.name))
-          .then(project => {
-            convertToYaml(project)
+          .then(response => {
+            if (response.headers.get('content-length') > 2000000) {
+              openPopUp(ConfirmDialog, {
+                header: 'Unable to display project YAML',
+                message:
+                  "The project's YAML is too large to display, Use 'Export YAML' to download it.",
+                confirmButton: {
+                  handler: () => exportYaml(projectMinimal),
+                  label: 'Export YAML'
+                }
+              })
+            } else {
+              convertToYaml(response?.data)
+            }
           })
           .catch(error => {
             setConvertedYaml('')
@@ -280,7 +294,7 @@ const Projects = () => {
         setConvertedYaml('')
       }
     },
-    [convertToYaml, dispatch]
+    [convertToYaml, dispatch, exportYaml]
   )
 
   const removeNewProjectError = useCallback(
