@@ -44,6 +44,7 @@ import {
 } from 'lodash'
 import mime from 'mime-types'
 
+import alerts from './data/alerts.json'
 import frontendSpec from './data/frontendSpec.json'
 import projects from './data/projects.json'
 import projectsSummary from './data/summary.json'
@@ -873,6 +874,13 @@ function getRun(req, res) {
   )
 
   res.send({ data: run_prj_uid })
+}
+
+// TODO:ML-8368 add getAlert controller
+
+function getAlerts(req, res) {
+  // TODO:ML-8514 Update getAlerts to support both parameters and query strings.
+  res.send({ alerts: alerts.activations })
 }
 
 function patchRun(req, res) {
@@ -2614,6 +2622,7 @@ app.get(`${mlrunAPIIngress}/project-summaries/:project`, getProjectSummary)
 
 app.get(`${mlrunAPIIngress}/projects/:project/runs`, getRuns)
 app.get(`${mlrunAPIIngress}/projects/*/runs`, getRuns)
+app.get(`${mlrunAPIIngress}/projects/*/alert-activations`, getAlerts)
 app.get(`${mlrunAPIIngress}/run/:project/:uid`, getRun)
 app.patch(`${mlrunAPIIngress}/run/:project/:uid`, patchRun)
 app.delete(`${mlrunAPIIngress}/projects/:project/runs/:uid`, deleteRun)

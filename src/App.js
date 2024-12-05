@@ -102,7 +102,7 @@ const FeatureVectors = lazyRetry(
 const ProjectsJobsMonitoring = lazyRetry(
   () => import('./components/ProjectsJobsMonitoring/ProjectsJobsMonitoring')
 )
-const ProjectsAlerts = lazyRetry(() => import('./components/ProjectsAlerts/ProjectsAlerts'))
+const ProjectsAlerts = lazyRetry(() => import('./components/Alerts/Alerts'))
 const JobsMonitoring = lazyRetry(
   () => import('./components/ProjectsJobsMonitoring/JobsMonitoring/JobsMonitoring')
 )

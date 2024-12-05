@@ -17,30 +17,29 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import { useCallback, useMemo } from 'react'
+import { mainHttpClient } from '../httpClient'
 
-import ProjectAlertsView from './ProjectsAlertsView'
-
-import { getAlertsFiltersConfig, parseAlertsQueryParamsCallback } from './alerts.util'
-import { useFiltersFromSearchParams } from '../../hooks/useFiltersFromSearchParams.hook'
-
-const ProjectsAlerts = () => {
-  const alertsFiltersConfig = useMemo(() => getAlertsFiltersConfig(), [])
-
-  const alertsFilters = useFiltersFromSearchParams(
-    alertsFiltersConfig,
-    parseAlertsQueryParamsCallback
-  )
-
-  const refreshAlertsCallback = useCallback(() => {}, [])
-
-  return (
-    <ProjectAlertsView
-      filters={alertsFilters}
-      alertsFiltersConfig={alertsFiltersConfig}
-      refreshAlertsCallback={refreshAlertsCallback}
-    />
-  )
+const alertsApi = {
+  getAlerts: (project, filters, config = {}) => {
+    // TODO:ML-8514 update newConfig
+    const newConfig = {
+      ...config,
+      params: {
+        ...config.params
+      }
+    }
+    return mainHttpClient.get(`/projects/${project}/alert-activations`, newConfig)
+  },
+  getAlert: (project, alertName, config) => {
+    // TODO:ML-8514 update newConfig
+    const newConfig = {
+      ...config,
+      params: {
+        ...config.params
+      }
+    }
+    return mainHttpClient.get('/projects/{project}/alerts/{alertName}/activations', newConfig)
+  }
 }
 
-export default ProjectsAlerts
+export default alertsApi

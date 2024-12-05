@@ -30,7 +30,7 @@ import {
   JOB_KIND_JOB,
   JOB_NAME,
   NAME_FILTER,
-  PROJECT_FILTER,
+  PROJECTS_FILTER,
   SEVERITY
 } from '../../constants'
 import {
@@ -41,16 +41,16 @@ import {
 
 export const getAlertsFiltersConfig = () => {
   return {
-    [NAME_FILTER]: { label: 'Alert name', initialValue: '' },
+    [NAME_FILTER]: { label: 'Alert Name:', initialValue: '' },
     [DATES_FILTER]: {
       label: 'Start time:',
       initialValue: getDatePickerFilterValue(datePickerPastOptions, PAST_24_HOUR_DATE_OPTION)
     },
-    [PROJECT_FILTER]: { label: 'Project:', initialValue: FILTER_ALL_ITEMS, isModal: true },
+    [PROJECTS_FILTER]: { label: 'Project:', initialValue: FILTER_ALL_ITEMS, isModal: true },
     [ENTITY_TYPE]: { label: 'Entity Type', initialValue: FILTER_ALL_ITEMS, isModal: true },
     [ENTITY_ID]: { label: 'Entity ID:', initialValue: '', isModal: true },
-    [JOB_NAME]: { label: 'Job name:', initialValue: '', isModal: true },
-    [ENDPOINT_APPLICATION]: { label: 'Endpoint:', initialValue: '', isModal: true },
+    [JOB_NAME]: { label: 'Job Name:', initialValue: '', isModal: true },
+    [ENDPOINT_APPLICATION]: { label: 'Application Name:', initialValue: '', isModal: true },
     [ENDPOINT_RESULT]: { label: 'Result:', initialValue: '', isModal: true },
     [SEVERITY]: { label: 'Severity:', initialValue: [FILTER_ALL_ITEMS], isModal: true },
     [EVENT_TYPE]: { label: 'Event Type:', initialValue: FILTER_ALL_ITEMS, isModal: true }
@@ -65,6 +65,15 @@ export const parseAlertsQueryParamsCallback = (paramName, paramValue) => {
 
     return filteredStatuses?.length ? filteredStatuses : null
   }
+
+  if (paramName === ENTITY_TYPE) {
+    return filterAlertsEntityTypeOptions.find(type => type.id === paramValue)?.id
+  }
+
+  if (paramName === EVENT_TYPE) {
+    return filterAlertsEventTypeOptions.find(type => type.id === paramValue)?.id
+  }
+
   return paramValue
 }
 
