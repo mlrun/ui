@@ -32,6 +32,7 @@ import { ReactComponent as JobsWorkflowIcon } from 'igz-controls/images/navbar/m
 import { ReactComponent as ModelsIcon } from 'igz-controls/images/navbar/mlrun-models.svg'
 import { ReactComponent as NuclioIcon } from 'igz-controls/images/navbar/mlrun-realtime-functions.svg'
 import { ReactComponent as FeatureStoreIcon } from 'igz-controls/images/navbar/mlrun-feature-store.svg'
+import { ReactComponent as Documents } from 'igz-controls/images/navbar/documents-icon.svg'
 
 // import { ReactComponent as RTPiplinesIcon } from 'igz-controls/images/timer-outline-icon.svg'
 
@@ -62,6 +63,12 @@ export const getLinks = projectName => {
       id: 'datasets',
       label: 'Datasets',
       link: `${pathname}/datasets`
+    },
+    {
+      icon: <Documents />,
+      id: 'documents',
+      label: 'Documents',
+      link: `${pathname}/documents`
     },
     {
       icon: <ArtifactsIcon />,
