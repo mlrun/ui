@@ -351,7 +351,7 @@ export const generateActionsMenu = (
         className: 'danger',
         disabled: functionIsDeleting,
         onClick: onRemoveFunction,
-        hidden: isDetailsPopUp
+        hidden: isDetailsPopUp || funcName
       }
     ],
     [
