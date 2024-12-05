@@ -19,10 +19,14 @@ such restriction.
 */
 import PropTypes from 'prop-types'
 import {
+  BE_PAGE,
+  BE_PAGE_SIZE,
   DENSITY_CHUNKY,
   DENSITY_DENSE,
   DENSITY_MEDIUM,
   DENSITY_NORMAL,
+  FE_PAGE,
+  FE_PAGE_SIZE,
   PANEL_CREATE_MODE,
   PANEL_EDIT_MODE,
   PANEL_FUNCTION_CREATE_MODE,
@@ -290,3 +294,16 @@ export const STATUS_LIST = PropTypes.arrayOf(
     disabled: PropTypes.bool
   })
 )
+
+export const PAGINATION_CONFIG = PropTypes.shape({
+  [BE_PAGE_SIZE]: PropTypes.number,
+  [FE_PAGE_SIZE]: PropTypes.number,
+  [BE_PAGE]: PropTypes.number,
+  [FE_PAGE]: PropTypes.number,
+  isNewResponse: PropTypes.bool,
+  paginationResponse: PropTypes.shape({
+    page: PropTypes.number,
+    'page-size': PropTypes.number,
+    'page-token': PropTypes.string
+  })
+})

@@ -26,9 +26,10 @@ import {
   SCHEDULE_TAB
 } from '../constants'
 import getState from './getState'
-import { convertTriggerToCrontab, getJobKindFromLabels } from './jobs.util'
+import { getJobKindFromLabels } from './jobs.util'
 import { getJobIdentifier } from './getUniqueIdentifier'
 import { parseKeyValues } from './object'
+import { convertTriggerToCrontab } from '../components/Jobs/jobs.util'
 
 export const jobHasWorkflowLabel = job => {
   return job.labels && 'job-type' in job.labels && job.labels['job-type'] === 'workflow-runner'

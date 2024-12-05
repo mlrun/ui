@@ -39,7 +39,6 @@ import {
   PANEL_FUNCTION_CREATE_MODE,
   FAILED_STATE
 } from '../../constants'
-import jobsActions from '../../actions/jobs'
 import functionsApi from '../../api/functions-api'
 import tasksApi from '../../api/tasks-api'
 import functionsActions from '../../actions/functions'
@@ -303,7 +302,6 @@ export const generateActionsMenu = (
         onClick: funcMin => {
           getFullFunction(funcMin).then(func => {
             if (func?.project && func?.name && func?.hash && func?.ui?.originalContent) {
-              dispatch(jobsActions.fetchJobFunctionSuccess(func.ui.originalContent))
               setJobWizardMode(PANEL_FUNCTION_CREATE_MODE)
             } else {
               showErrorNotification(dispatch, {}, '', 'Failed to retrieve function data')
@@ -502,7 +500,7 @@ const chooseOrFetchFunction = (selectedFunction, dispatch, fetchFunction, funcMi
 
 export const checkForSelectedFunction = (
   name,
-  selectedRowData,
+  expandedRowsData,
   functions,
   hash,
   tag,
@@ -513,7 +511,7 @@ export const checkForSelectedFunction = (
 ) => {
   queueMicrotask(() => {
     if (name || hash) {
-      const functionsList = selectedRowData?.[name]?.content || functions
+      const functionsList = expandedRowsData?.[name]?.content || functions
 
       if (functionsList.length > 0) {
         const searchItem = searchFunctionItem(
@@ -559,11 +557,11 @@ export const searchFunctionItem = (
 
     item = functions.find(func => {
       if (withFunctionTag) {
-        [name, tag] = paramsHash.split(':')
+        ;[name, tag] = paramsHash.split(':')
 
         return isEqual(func.tag, tag) && isEqual(func.name, name)
       } else {
-        [name, hash] = paramsHash.split('@')
+        ;[name, hash] = paramsHash.split('@')
 
         return isEqual(func.hash, hash) && isEqual(func.name, name)
       }

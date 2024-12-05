@@ -17,16 +17,13 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import {
-  DELETE_WORKFLOWS,
-  FETCH_WORKFLOW_BEGIN,
-  FETCH_WORKFLOW_FAILURE,
-  FETCH_WORKFLOW_SUCCESS,
-  FETCH_WORKFLOWS_BEGIN,
-  FETCH_WORKFLOWS_FAILURE,
-  FETCH_WORKFLOWS_SUCCESS,
-  RESET_WORKFLOW
-} from '../constants'
+import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
+import workflowApi from '../api/workflow-api'
+import { parseWorkflow } from '../components/Workflow/workflow.util'
+import { isNil } from 'lodash'
+import { largeResponseCatchHandler } from '../utils/largeResponseCatchHandler'
+import { parseWorkflows } from '../utils/parseWorkflows'
+import { JOBS_MONITORING_WORKFLOWS_TAB, MONITOR_WORKFLOWS_TAB } from '../constants'
 
 const initialState = {
   workflows: {
@@ -42,83 +39,121 @@ const initialState = {
   }
 }
 
-const workflowReducer = (state = initialState, { type, payload }) => {
-  switch (type) {
-    case DELETE_WORKFLOWS:
-      return {
-        ...state,
-        workflows: initialState.workflows
-      }
-    case FETCH_WORKFLOW_BEGIN:
-      return {
-        ...state,
-        activeWorkflow: {
-          ...state.activeWorkflow,
-          loading: true
-        }
-      }
-    case FETCH_WORKFLOW_SUCCESS:
-      return {
-        ...state,
-        activeWorkflow: {
-          ...state.activeWorkflow,
-          data: payload,
-          loading: false,
-          error: null,
-          workflowJobsIds: Object.values(payload.graph).map(jobData => jobData.run_uid)
-        }
-      }
-    case FETCH_WORKFLOW_FAILURE:
-      return {
-        ...state,
-        activeWorkflow: {
-          ...state.activeWorkflow,
-          data: {},
-          loading: false,
-          error: payload,
-          workflowJobsIds: []
-        }
-      }
-    case FETCH_WORKFLOWS_BEGIN:
-      return {
-        ...state,
-        workflows: {
-          ...state.workflows,
-          loading: true
-        }
-      }
-    case FETCH_WORKFLOWS_SUCCESS:
-      return {
-        ...state,
-        workflows: {
-          ...state.workflows,
-          data: payload,
-          loading: false,
-          error: null
-        }
-      }
-    case FETCH_WORKFLOWS_FAILURE:
-      return {
-        ...state,
-        workflows: {
-          ...state.workflows,
-          data: [],
-          loading: false,
-          error: payload
-        }
-      }
-    case RESET_WORKFLOW:
-      return {
-        ...state,
-        activeWorkflow: {
-          ...state.activeWorkflow,
-          data: {},
-          workflowJobsIds: []
-        }
-      }
-    default:
-      return state
-  }
-}
+export const fetchWorkflow = createAsyncThunk('fetchWorkflow', ({ project, workflowId }) => {
+  return workflowApi.getWorkflow(project, workflowId).then(response => parseWorkflow(response.data))
+})
+export const fetchWorkflows = createAsyncThunk(
+  'fetchWorkflows',
+  async ({ project, filter, config, withPagination }, { rejectWithValue }) => {
+    const page = project === '*' ? JOBS_MONITORING_WORKFLOWS_TAB : MONITOR_WORKFLOWS_TAB
+    let result = []
+    let nextPageToken = ''
 
-export default workflowReducer
+    config?.ui?.setRequestErrorMessage?.('')
+
+    const errorHandler = error => {
+      largeResponseCatchHandler(
+        error,
+        'Failed to fetch workflows',
+        null,
+        config?.ui?.setRequestErrorMessage
+      )
+
+      return rejectWithValue(error)
+    }
+
+    try {
+      if (withPagination) {
+        while (!isNil(nextPageToken)) {
+          const response = await workflowApi.getWorkflows(project, filter, config, nextPageToken)
+
+          if (response.error) {
+            nextPageToken = null
+            return errorHandler(response.error)
+          } else {
+            result = result.concat(response.data.runs)
+            nextPageToken = response.data.next_page_token
+          }
+        }
+
+        if (filter.project) {
+          result = result.filter(workflow =>
+            workflow.project.includes(filter.project.toLowerCase())
+          )
+        }
+
+        return parseWorkflows(result, page)
+      } else {
+        const response = await workflowApi.getWorkflows(project, filter, config)
+
+        if (response.error) {
+          return errorHandler(response.error)
+        }
+
+        return parseWorkflows(response.data.runs, page)
+      }
+    } catch (error) {
+      return errorHandler(error)
+    }
+  }
+)
+
+export const rerunWorkflow = createAsyncThunk('rerunWorkflow', ({ project, workflowId }) => {
+  return workflowApi.rerunWorkflow(project, workflowId)
+})
+
+const workflowsSlice = createSlice({
+  name: 'workflowsStore',
+  initialState,
+  reducers: {
+    deleteWorkflows(state) {
+      state.workflows = initialState.workflows
+    },
+    resetWorkflow(state) {
+      state.activeWorkflow.data = {}
+      state.activeWorkflow.workflowJobsIds = []
+    }
+  },
+  extraReducers: builder => {
+    builder.addCase(fetchWorkflow.pending, state => {
+      state.activeWorkflow.loading = true
+    })
+    builder.addCase(fetchWorkflow.fulfilled, (state, action) => {
+      state.activeWorkflow = {
+        data: action.payload,
+        loading: false,
+        error: null,
+        workflowJobsIds: Object.values(action.payload.graph).map(jobData => jobData.run_uid)
+      }
+    })
+    builder.addCase(fetchWorkflow.rejected, (state, action) => {
+      state.activeWorkflow = {
+        data: {},
+        loading: false,
+        error: action.payload,
+        workflowJobsIds: []
+      }
+    })
+    builder.addCase(fetchWorkflows.pending, state => {
+      state.workflows.loading = true
+    })
+    builder.addCase(fetchWorkflows.fulfilled, (state, action) => {
+      state.workflows = {
+        data: action.payload,
+        loading: false,
+        error: null
+      }
+    })
+    builder.addCase(fetchWorkflows.rejected, (state, action) => {
+      state.workflows = {
+        data: [],
+        loading: false,
+        error: action.payload
+      }
+    })
+  }
+})
+
+export const { deleteWorkflows, resetWorkflow } = workflowsSlice.actions
+
+export default workflowsSlice.reducer

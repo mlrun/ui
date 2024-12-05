@@ -21,13 +21,16 @@ import JobPopUp from '../elements/DetailsPopUp/JobPopUp/JobPopUp'
 import FunctionPopUp from '../elements/DetailsPopUp/FunctionPopUp/FunctionPopUp'
 
 import {
+  BE_PAGE,
   ERROR_STATE,
+  FE_PAGE,
   JOB_KIND_WORKFLOW,
   JOBS_MONITORING_JOBS_TAB,
   JOBS_MONITORING_PAGE,
   JOBS_PAGE,
   MONITOR_JOBS_TAB,
   MONITOR_WORKFLOWS_TAB,
+  NAME_FILTER,
   PROJECT_FILTER
 } from '../constants'
 import { openPopUp } from 'igz-controls/utils/common.util'
@@ -64,7 +67,11 @@ export const createJobsMonitorTabContent = (jobs, jobName, isStagingMode) => {
             )
           : ''
       } else {
-        return `/projects/${job.project}/${JOBS_PAGE.toLowerCase()}/${MONITOR_JOBS_TAB}/${job.name}${saveAndTransformSearchParams(window.location.search)}`
+        return `/projects/${job.project}/${JOBS_PAGE.toLowerCase()}/${MONITOR_JOBS_TAB}/${job.name}${saveAndTransformSearchParams(
+          window.location.search,
+          true,
+          [BE_PAGE, FE_PAGE, NAME_FILTER]
+        )}`
       }
     }
 
@@ -443,7 +450,13 @@ export const createJobsMonitoringContent = (jobs, jobName, isStagingMode) => {
             }/${job.project}/${job.uid}/${tab.toLowerCase()}${window.location.search}`
           : ''
       } else {
-        return `/projects/*/${JOBS_MONITORING_PAGE}/${JOBS_MONITORING_JOBS_TAB}/${job.name}${saveAndTransformSearchParams(window.location.search)}${window.location.search ? '&' : '?'}${`${PROJECT_FILTER}=${job.project}`}`
+        const savedAndTransformedSearchParams = saveAndTransformSearchParams(
+          window.location.search,
+          true,
+          [BE_PAGE, FE_PAGE, NAME_FILTER]
+        )
+
+        return `/projects/*/${JOBS_MONITORING_PAGE}/${JOBS_MONITORING_JOBS_TAB}/${job.name}${savedAndTransformedSearchParams}${savedAndTransformedSearchParams ? '&' : '?'}${`${PROJECT_FILTER}=${job.project}`}`
       }
     }
 
@@ -544,7 +557,7 @@ export const createJobsMonitoringContent = (jobs, jobName, isStagingMode) => {
   })
 }
 
-export const createScheduleJobsMonitoringContent = (jobs) => {
+export const createScheduleJobsMonitoringContent = jobs => {
   return jobs.map(job => {
     const identifierUnique = getJobIdentifier(job, true)
     const [, projectName, lastRunUid, lastRunIter] =

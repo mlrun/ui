@@ -1,0 +1,468 @@
+{
+  "activations": [
+    {
+      "id": "a1b2c3d4-5662c7a4470ef28ed1df450e80d37624de7e1749",
+      "name": "alert_1",
+      "project": "workflow-proj",
+      "activation_time": "2024-10-23T10:15:30Z",
+      "notifications": [
+        {
+          "kind": "email",
+          "err": ""
+        },
+        {
+          "kind": "webhook",
+          "err": ""
+        },
+        {
+          "kind": "git",
+          "err": ""
+        },
+        {
+          "kind": "slack",
+          "err": ""
+        }
+      ],
+      "entity_id": "5662c7a4470ef28ed1df450e80d37624de7e1749.histogram-data-drift.general_drift",
+      "entity_kind": "model-endpoint-result",
+      "criteria": {
+        "count": 3,
+        "period": "30m"
+      },
+      "event_kind": "data-drift-detected",
+      "severity": "medium",
+      "number_of_events": 15
+    },
+    {
+      "id": "b2c3d4e5-6772c8b5581ef39fd2df561f91e47635f8f2e263",
+      "name": "alert_2",
+      "project": "tutorial-admin",
+      "activation_time": "2024-10-24T12:20:30Z",
+      "notifications": [
+        {
+          "kind": "email",
+          "err": "fail"
+        },
+        {
+          "kind": "webhook",
+          "err": "fail"
+        },
+        {
+          "kind": "git",
+          "err": "fail"
+        },
+        {
+          "kind": "slack",
+          "err": "fail"
+        }
+      ],
+      "entity_id": "trainer-train.5a8037bd46cf192ce7e94b25f06a8d13",
+      "entity_kind": "job",
+      "criteria": {
+        "count": 10,
+        "period": "2h"
+      },
+      "event_kind": "concept-drift-suspected",
+      "severity": "low",
+      "number_of_events": 7
+    },
+    {
+      "id": "c3d4e5f6-7883d9c6692ef40fe3df672a02f58746f9f3e374",
+      "name": "alert_3",
+      "project": "workflow-proj",
+      "activation_time": "2024-10-25T14:45:00Z",
+      "notifications": [
+        {
+          "kind": "webhook",
+          "err": ""
+        }
+      ],
+      "entity_id": "application-1",
+      "entity_kind": "model-monitoring-application",
+      "criteria": {
+        "count": 2,
+        "period": "1h"
+      },
+      "event_kind": "mm-app-anomaly-detected",
+      "severity": "high",
+      "number_of_events": 12
+    },
+    {
+      "id": "d4e5f6g7-8994ea1a780f0b1fg4df783b13f69857a0d4e485",
+      "name": "alert_4",
+      "project": "analysis-hub",
+      "activation_time": "2024-10-26T08:10:20Z",
+      "notifications": [
+        {
+          "kind": "email",
+          "err": ""
+        },
+        {
+          "kind": "git",
+          "err": "Authentication failed"
+        }
+      ],
+      "entity_id": "d5e6f4b3970ef28ed1df450e80d37624de7e1749.feature-importance.general_drift",
+      "entity_kind": "model-endpoint-result",
+      "criteria": {
+        "count": 8,
+        "period": "1h"
+      },
+      "event_kind": "model-performance-detected",
+      "severity": "low",
+      "number_of_events": 5
+    },
+    {
+      "id": "e5f6g7h8-9105fb2b891f1c2hg5df894c24f70968b1e5f596",
+      "name": "alert_5",
+      "project": "reporting-app",
+      "activation_time": "2024-10-27T16:55:10Z",
+      "notifications": [
+        {
+          "kind": "slack",
+          "err": ""
+        }
+      ],
+      "entity_id": "batch-inference-v2-infer.7ad15b839fc206e4ba9f02c84f31e57a",
+      "entity_kind": "job",
+      "criteria": {
+        "count": 4,
+        "period": "3h"
+      },
+      "event_kind": "system-performance-suspected",
+      "severity": "high",
+      "number_of_events": 20
+    },
+    {
+      "id": "f6g7h8i9-1026fc3c902f2d3hi6df915d35g81079c2f6g717",
+      "name": "alert_6",
+      "project": "tutorial-admin",
+      "activation_time": "2024-10-28T09:25:40Z",
+      "notifications": [
+        {
+          "kind": "email",
+          "err": "SMTP server not reachable"
+        }
+      ],
+      "entity_id": "a2b4c6d8970ef28ed1df450e80d37624de7e1749.statistical-shift.general_drift",
+      "entity_kind": "model-endpoint-result",
+      "criteria": {
+        "count": 6,
+        "period": "2h"
+      },
+      "event_kind": "mm-app-failed",
+      "severity": "high",
+      "number_of_events": 3
+    },
+    {
+      "id": "g7h8i9j0-2137gd4d013f3e4ij7df026e46h92180d3g7h829",
+      "name": "alert_7",
+      "project": "workflow-proj",
+      "activation_time": "2024-10-29T07:30:50Z",
+      "notifications": [
+        {
+          "kind": "webhook",
+          "err": ""
+        }
+      ],
+      "entity_id": "c6d3e7f0970ef28ed1df450e80d37624de7e1749.data-quality-issue.drift",
+      "entity_kind": "model-endpoint-result",
+      "criteria": {
+        "count": 1,
+        "period": "30m"
+      },
+      "event_kind": "model-performance-suspected",
+      "severity": "low",
+      "number_of_events": 4
+    },
+    {
+      "id": "h8i9j0k1-3248he5e124g4f5jk8df137f57i032c4h8i9310",
+      "name": "alert_8",
+      "project": "analysis-hub",
+      "activation_time": "2024-10-30T11:15:10Z",
+      "notifications": [
+        {
+          "kind": "slack",
+          "err": "Failed to send notification due to network issue"
+        }
+      ],
+      "entity_id": "batch-inference-v1-infer.c3b47590a6821d7ef9f2ab04c8e163a5",
+      "entity_kind": "job",
+      "criteria": {
+        "count": 9,
+        "period": "4h"
+      },
+      "event_kind": "concept-drift-detected",
+      "severity": "medium",
+      "number_of_events": 16
+    },
+    {
+      "id":   "i9j0k1l2-4359if6f235h5g6kl9df248g68j143d5i9j0421",
+      "name": "alert_9",
+      "project": "reporting-app",
+      "activation_time": "2024-10-31T17:05:35Z",
+      "notifications": [
+        {
+          "kind": "email",
+          "err": ""
+        },
+        {
+          "kind": "webhook",
+          "err": ""
+        }
+      ],
+      "entity_id": "d9e8f5b4970ef28ed1df450e80d37624de7e1749.input-missing-values.general_drift",
+      "entity_kind": "model-endpoint-result",
+      "criteria": {
+        "count": 7,
+        "period": "1h"
+      },
+      "event_kind": "data-drift-suspected",
+      "severity": "high",
+      "number_of_events": 18
+    },
+    {
+      "id": "j0k1l2m3-5460jg7g346i6h7lm0df359h79k254e6j0k1532",
+      "name": "alert_10",
+      "project": "workflow-proj",
+      "activation_time": "2024-11-01T06:20:15Z",
+      "notifications": [
+        {
+          "kind": "git",
+          "err": ""
+        }
+      ],
+      "entity_id": "c2a3e1f8970ef28ed1df450e80d37624de7e1749.class-distribution.general_drift",
+      "entity_kind": "model-endpoint-result",
+      "criteria": {
+        "count": 5,
+        "period": "2h"
+      },
+      "event_kind": "system-performance-detected",
+      "severity": "medium",
+      "number_of_events": 9
+    },
+    {
+      "id": "k1l2m3n4-6571kh8h457j7i8mn1df460i80l365f7k1l2643",
+      "name": "alert_11",
+      "project": "analysis-hub",
+      "activation_time": "2024-11-02T14:10:50Z",
+      "notifications": [
+        {
+          "kind": "email",
+          "err": ""
+        },
+        {
+          "kind": "webhook",
+          "err": "API endpoint not responding"
+        }
+      ],
+      "entity_id": "f3d4b5a1970ef28ed1df450e80d37624de7e1749.outlier-detection.general_drift",
+      "entity_kind": "model-endpoint-result",
+      "criteria": {
+        "count": 10,
+        "period": "3h"
+      },
+      "event_kind": "mm-app-anomaly-suspected",
+      "severity": "high",
+      "number_of_events": 13
+    },
+    {
+      "id": "l2m3n4o5-7682li9i568k8jno2df571j91m476g8l2m3754",
+      "name": "alert_12",
+      "project": "tutorial-admin",
+      "activation_time": "2024-11-03T18:35:25Z",
+      "notifications": [
+        {
+          "kind": "slack",
+          "err": ""
+        }
+      ],
+      "entity_id": "tutorial-function.af2de87229ab49139748db785e0c3d6b",
+      "entity_kind": "job",
+      "criteria": {
+        "count": 3,
+        "period": "1h"
+      },
+      "event_kind": "failed",
+      "severity": "low",
+      "number_of_events": 14
+    },
+    {
+      "id": "m3n4o5p6-8793mj0j679l9knp3df682k02n587h9m3n4875",
+      "name": "alert_13",
+      "project": "workflow-proj",
+      "activation_time": "2024-11-04T09:05:00Z",
+      "notifications": [
+        {
+          "kind": "email",
+          "err": "SMTP server not reachable"
+        }
+      ],
+      "entity_id": "d5e6f4b3970ef28ed1df450e80d37624de7e1749.feature-importance.general_drift",
+      "entity_kind": "model-endpoint-result",
+      "criteria": {
+        "count": 8,
+        "period": "4h"
+      },
+      "event_kind": "concept-drift-suspected",
+      "severity": "high",
+      "number_of_events": 6
+    },
+    {
+      "id": "n4o5p6q7-9804nk1k780m0lop4df793l13o698i0n4o5986",
+      "name": "alert_14",
+      "project": "reporting-app",
+      "activation_time": "2024-11-05T13:15:45Z",
+      "notifications": [
+        {
+          "kind": "webhook",
+          "err": ""
+        }
+      ],
+      "entity_id": "application-2",
+      "entity_kind": "model-monitoring-application",
+      "criteria": {
+        "count": 2,
+        "period": "30m"
+      },
+      "event_kind": "mm-app-failed",
+      "severity": "high",
+      "number_of_events": 11
+    },
+    {
+      "id": "o5p6q7r8-0915ol2l891n1mp5df804m24p709j1o5p6097",
+      "name": "alert_15",
+      "project": "tutorial-admin",
+      "activation_time": "2024-11-06T12:25:20Z",
+      "notifications": [
+        {
+          "kind": "git",
+          "err": ""
+        }
+      ],
+      "entity_id": "get-data.a23bcd3ef5d9f0174abc8e09324a76bc",
+      "entity_kind": "job",
+      "criteria": {
+        "count": 5,
+        "period": "2h"
+      },
+      "event_kind": "data-drift-detected",
+      "severity": "low",
+      "number_of_events": 2
+    },
+    {
+      "id": "p6q7r8s9-1026pm3m902o2nq6df915n35q810k2p6q7108",
+      "name": "alert_16",
+      "project": "workflow-proj",
+      "activation_time": "2024-11-07T14:00:35Z",
+      "notifications": [
+        {
+          "kind": "slack",
+          "err": "Failed to send notification due to network issue"
+        }
+      ],
+      "entity_id": "c9e7f6a3970ef28ed1df450e80d37624de7e1749.null-value-frequency.general_drift",
+      "entity_kind": "model-endpoint-result",
+      "criteria": {
+        "count": 7,
+        "period": "1h"
+      },
+      "event_kind": "system-performance-suspected",
+      "severity": "high",
+      "number_of_events": 17
+    },
+    {
+      "id": "q7r8s9t0-2137qn4n013p3or7df026o46r92190l3q7r8219",
+      "name": "alert_17",
+      "project": "analysis-hub",
+      "activation_time": "2024-11-08T08:40:55Z",
+      "notifications": [
+        {
+          "kind": "email",
+          "err": ""
+        },
+        {
+          "kind": "webhook",
+          "err": ""
+        }
+      ],
+      "entity_id": "b4d5f8e7970ef28ed1df450e80d37624de7e1749.imbalance-ratio.general_drift",
+      "entity_kind": "model-endpoint-result",
+      "criteria": {
+        "count": 9,
+        "period": "3h"
+      },
+      "event_kind": "model-performance-detected",
+      "severity": "high",
+      "number_of_events": 19
+    },
+    {
+      "id": "r8s9t0u1-3248ro5o124q4ps8df137p57s032m4r8s9320",
+      "name": "alert_18",
+      "project": "reporting-app",
+      "activation_time": "2024-11-09T11:50:30Z",
+      "notifications": [
+        {
+          "kind": "webhook",
+          "err": ""
+        }
+      ],
+      "entity_id": "get-dev.af12d780b9ce4a6c0357ef3941b5ad68",
+      "entity_kind": "job",
+      "criteria": {
+        "count": 6,
+        "period": "4h"
+      },
+      "event_kind": "concept-drift-detected",
+      "severity": "low",
+      "number_of_events": 8
+    },
+    {
+      "id":"s9t0u1v2-4359sp6p235r4qt9df248q68t143n5s9t0421",
+      "name": "alert_19",
+      "project": "tutorial-admin",
+      "activation_time": "2024-11-10T10:10:10Z",
+      "notifications": [
+        {
+          "kind": "git",
+          "err": ""
+        }
+      ],
+      "entity_id": "model-endpoint-19.app-19.result-19",
+      "entity_kind": "model-endpoint-result",
+      "criteria": {
+        "count": 4,
+        "period": "2h"
+      },
+      "event_kind": "mm-app-anomaly-detected",
+      "severity": "high",
+      "number_of_events": 10
+    },
+    {
+      "id": "t0u1v2w3-5460tq7q346s5ru0df359r79u254o6t0u1532",
+      "name": "alert_20",
+      "project": "workflow-proj",
+      "activation_time": "2024-11-11T13:30:45Z",
+      "notifications": [
+        {
+          "kind": "email",
+          "err": ""
+        },
+        {
+          "kind": "slack",
+          "err": "Failed to send notification due to network issue"
+        }
+      ],
+      "entity_id": "d5e6f4b3970ef28ed1df450e80d37624de7e1749.feature-importance.general_drift",
+      "entity_kind": "model-endpoint-result",
+      "criteria": {
+        "count": 1,
+        "period": "30m"
+      },
+      "event_kind": "mm-app-failed",
+      "severity": "high",
+      "number_of_events": 5
+    }
+  ]
+}

@@ -31,8 +31,7 @@ export const isProjectValid = (navigate, projects, currentProjectName) => {
   if (
     projects.length > 0 &&
     currentProjectName &&
-    !projects
-      .some(project => project?.metadata?.name === currentProjectName)
+    !projects.some(project => project?.metadata?.name === currentProjectName)
   ) {
     navigate('/projects', { replace: true })
   }
@@ -42,11 +41,20 @@ export const generateUrlFromRouterPath = link => {
   return new URL(link, window.location.origin).toString()
 }
 
-export const getCloseDetailsLink = (location, paramName) => {
-  return location.pathname
-    .split('/')
-    .splice(0, location.pathname.split('/').lastIndexOf(paramName) + 1)
-    .join('/') + window.location.search
+export const getCloseDetailsLink = paramName => {
+  const link =
+    window.location.pathname
+      .split('/')
+      .splice(0, window.location.pathname.split('/').lastIndexOf(paramName) + 1)
+      .join('/') + window.location.search
+
+  return generateUrlFromRouterPath(link)
+}
+
+export const getDefaultCloseDetailsLink = (params, page, tab) => {
+  return `/projects/${params.projectName}/${page.toLowerCase()}${
+    params.pageTab ? `/${params.pageTab}` : tab ? `/${tab}` : ''
+  }${window.location.search}`
 }
 
 export const generateLinkToDetailsPanel = (

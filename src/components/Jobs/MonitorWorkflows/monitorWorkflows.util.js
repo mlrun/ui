@@ -20,12 +20,7 @@ such restriction.
 import React from 'react'
 import { debounce } from 'lodash'
 
-import {
-  FUNCTIONS_PAGE,
-  GROUP_BY_NONE,
-  GROUP_BY_WORKFLOW,
-  JOBS_PAGE
-} from '../../../constants'
+import { FUNCTIONS_PAGE, GROUP_BY_NONE, GROUP_BY_WORKFLOW, JOBS_PAGE } from '../../../constants'
 import {
   getJobsDetailsMenu,
   getInfoHeaders,
@@ -37,7 +32,6 @@ import {
   isJobKindLocal
 } from '../jobs.util'
 import functionsActions from '../../../actions/functions'
-import workflowsActions from '../../../actions/workflow'
 import {
   detailsMenu as functionsDetailsMenu,
   infoHeaders as functionsInfoHeaders
@@ -56,7 +50,7 @@ export const generatePageData = (
   handleFetchFunctionLogs,
   handleFetchJobLogs,
   handleRemoveFunctionLogs,
-  selectedJobLabels
+  selectedJob
 ) => {
   return {
     page: JOBS_PAGE,
@@ -64,7 +58,7 @@ export const generatePageData = (
       type: !isEveryObjectValueEmpty(selectedFunction) ? FUNCTIONS_PAGE : JOBS_PAGE,
       menu: !isEveryObjectValueEmpty(selectedFunction)
         ? functionsDetailsMenu
-        : getJobsDetailsMenu(selectedJobLabels),
+        : getJobsDetailsMenu(selectedJob),
       infoHeaders: !isEveryObjectValueEmpty(selectedFunction)
         ? functionsInfoHeaders
         : getInfoHeaders(false),
@@ -160,14 +154,7 @@ export const generateActionsMenu = (
 }
 
 export const fetchInitialWorkflows = debounce(
-  (
-    filters,
-    params,
-    getWorkflows,
-    setFilters,
-    dispatch,
-    workflowsAreInitializedRef
-  ) => {
+  (filters, params, getWorkflows, setFilters, dispatch, workflowsAreInitializedRef) => {
     if (!workflowsAreInitializedRef.current) {
       if (params.workflowId) {
         dispatch(setFilters({ groupBy: GROUP_BY_NONE }))
@@ -181,6 +168,5 @@ export const fetchInitialWorkflows = debounce(
 )
 
 export const monitorWorkflowsActionCreator = {
-  deleteWorkflows: workflowsActions.deleteWorkflows,
   fetchFunctionLogs: functionsActions.fetchFunctionLogs
 }

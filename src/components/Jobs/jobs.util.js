@@ -17,7 +17,7 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import { get, isObject } from 'lodash'
+import { capitalize, chain, defaultsDeep, get, isEmpty, isObject } from 'lodash'
 
 import tasksApi from '../../api/tasks-api'
 
@@ -37,11 +37,18 @@ import {
   ERROR_STATE,
   FAILED_STATE
 } from '../../constants'
-import jobsActions from '../../actions/jobs'
 import { generateKeyValues, parseKeyValues, truncateUid } from '../../utils'
 import { BG_TASK_FAILED, BG_TASK_SUCCEEDED, pollTask } from '../../utils/poll.util'
 import { setNotification } from '../../reducers/notificationReducer'
 import { showErrorNotification } from '../../utils/notifications.util'
+import {
+  abortJob,
+  deleteAllJobRuns,
+  deleteJob,
+  fetchJobFunction,
+  fetchJobFunctions
+} from '../../reducers/jobReducer'
+import { generateFunctionPriorityLabel } from '../../utils/generateFunctionPriorityLabel'
 
 export const page = JOBS_PAGE
 const LOG_LEVEL_ID = 'logLevel'
@@ -83,7 +90,7 @@ export const actionButtonHeader = 'Batch Run'
 export const JOB_STEADY_STATES = ['completed', ERROR_STATE, 'aborted', FAILED_STATE]
 export const JOB_RUNNING_STATES = ['running', 'pending']
 
-export const getJobsDetailsMenu = (jobLabels = []) => {
+export const getJobsDetailsMenu = (job = {}) => {
   return [
     {
       label: 'overview',
@@ -103,12 +110,13 @@ export const getJobsDetailsMenu = (jobLabels = []) => {
     },
     {
       label: 'logs',
-      id: 'logs'
+      id: 'logs',
+      hidden: isJobKindLocal(job)
     },
     {
       label: 'pods',
       id: 'pods',
-      hidden: arePodsHidden(jobLabels)
+      hidden: arePodsHidden(job?.labels)
     }
   ]
 }
@@ -129,7 +137,9 @@ export const isJobAborting = (currentJob = {}) => {
 }
 
 export const isJobKindDask = (jobLabels = []) => {
-  return (isObject(jobLabels) ? parseKeyValues(jobLabels) : jobLabels)?.includes(`kind: ${JOB_KIND_DASK}`)
+  return (isObject(jobLabels) ? parseKeyValues(jobLabels) : jobLabels)?.includes(
+    `kind: ${JOB_KIND_DASK}`
+  )
 }
 
 export const isJobKindLocal = job =>
@@ -146,12 +156,6 @@ export const arePodsHidden = (jobLabels = []) => {
     JOB_KIND_MPIJOB,
     JOB_KIND_DATABRICKS
   ].includes(jobKind)
-}
-
-export const actionCreator = {
-  fetchAllJobRuns: jobsActions.fetchAllJobRuns,
-  fetchJobFunction: jobsActions.fetchJobFunction,
-  fetchJobs: jobsActions.fetchJobs
 }
 
 const generateEditableItem = (functionData, job) => {
@@ -196,13 +200,7 @@ const generateEditableItem = (functionData, job) => {
   }
 }
 
-export const getJobFunctionData = async (
-  job,
-  fetchJobFunction,
-  dispatch,
-  fetchFunctionTemplate,
-  fetchJobFunctionSuccess
-) => {
+export const getJobFunctionData = async (job, dispatch, fetchFunctionTemplate) => {
   const functionPath = job?.function ?? job?.func
   let functionProject = ''
   let functionNameWithHash
@@ -217,10 +215,6 @@ export const getJobFunctionData = async (
       const funcData = result?.functions[0]
 
       if (funcData) {
-        if (fetchJobFunctionSuccess) {
-          dispatch(fetchJobFunctionSuccess(funcData))
-        }
-
         return funcData
       }
     })
@@ -230,21 +224,17 @@ export const getJobFunctionData = async (
     functionHash = functionNameWithHash.replace(/.*@/g, '')
 
     if (functionName && functionHash) {
-      promise = fetchJobFunction(functionProject, functionName, functionHash)
+      promise = dispatch(
+        fetchJobFunction({ project: functionProject, functionName, hash: functionHash })
+      ).unwrap()
     }
   }
 
   return promise
 }
 
-export const rerunJob = async (
-  job,
-  fetchJobFunction,
-  setEditableItem,
-  setJobWizardMode,
-  dispatch
-) => {
-  const functionData = await getJobFunctionData(job, fetchJobFunction, dispatch)
+export const rerunJob = async (job, setEditableItem, setJobWizardMode, dispatch) => {
+  const functionData = await getJobFunctionData(job, dispatch)
 
   if (functionData) {
     setJobWizardMode(PANEL_RERUN_MODE)
@@ -253,7 +243,6 @@ export const rerunJob = async (
 }
 
 export const handleAbortJob = (
-  abortJob,
   projectName,
   job,
   setNotification,
@@ -273,7 +262,8 @@ export const handleAbortJob = (
     })
   )
 
-  abortJob(projectName, job)
+  dispatch(abortJob({ projectName, job }))
+    .unwrap()
     .then(response => {
       const abortTaskId = get(response, 'metadata.name', '')
 
@@ -311,7 +301,6 @@ export const handleAbortJob = (
     .catch(error => {
       showErrorNotification(dispatch, error, 'Failed to abort job', '', () =>
         handleAbortJob(
-          abortJob,
           projectName,
           job,
           setNotification,
@@ -388,4 +377,80 @@ const abortJobSuccessHandler = (dispatch, job) => {
       message: `Job ${job.name} (${truncateUid(job.uid)}) was aborted`
     })
   )
+}
+
+/**
+ * Enriches a job run object with the associated function tag(s)
+ * @param {Object} jobRun - The job run object to enrich
+ * @param {Object} dispatch - dispatch method
+ * @param {Function} fetchJobFunctions - The function to fetch job functions from an API
+ * @param {Object} fetchJobFunctionsPromiseRef - A ref object used to store a reference to
+ * the promise returned by the `fetchJobFunctions` function.
+ * @returns {Promise<Object>} A Promise that resolves with the enriched job run object
+ */
+export const enrichRunWithFunctionFields = (dispatch, jobRun, fetchJobFunctionsPromiseRef) => {
+  fetchJobFunctionsPromiseRef.current = Promise.resolve()
+
+  if (jobRun?.function) {
+    const [, functionProject = '', functionName = '', functionHash = ''] =
+      jobRun.function?.match?.(/(.+)\/(.+)@(.+)/) || []
+
+    if (functionProject && functionName && functionHash) {
+      fetchJobFunctionsPromiseRef.current = dispatch(
+        fetchJobFunctions({ project: functionProject, hash: functionHash })
+      ).unwrap()
+    }
+  }
+
+  return fetchJobFunctionsPromiseRef.current
+    .then(funcs => {
+      if (!isEmpty(funcs)) {
+        const tagsList = chain(funcs).map('metadata.tag').compact().uniq().value()
+
+        defaultsDeep(jobRun, {
+          ui: {
+            functionTag: tagsList.join(', '),
+            runOnSpot: capitalize(funcs[0].spec.preemption_mode ?? ''),
+            priority: generateFunctionPriorityLabel(funcs[0].spec.priority_class_name ?? '')
+          }
+        })
+      } else {
+        defaultsDeep(jobRun, {
+          ui: {
+            functionTag: '',
+            runOnSpot: '',
+            priority: ''
+          }
+        })
+      }
+
+      return jobRun
+    })
+    .catch(error => {
+      showErrorNotification(dispatch, error, 'Failed to fetch function tag', '')
+    })
+}
+
+export const handleDeleteJob = (isJobRunSelected, job, refreshJobs, filters, dispatch) => {
+  return dispatch((isJobRunSelected ? deleteJob : deleteAllJobRuns)({ project: job.project, job }))
+    .unwrap()
+    .then(() => {
+      refreshJobs(filters)
+      dispatch(
+        setNotification({
+          status: 200,
+          id: Math.random(),
+          message: 'Job is successfully deleted'
+        })
+      )
+    })
+    .catch(error => {
+      showErrorNotification(dispatch, error, 'Deleting job failed', '', () => handleDeleteJob(job))
+    })
+}
+
+export const convertTriggerToCrontab = trigger => {
+  return !isEmpty(trigger)
+    ? `${trigger.minute ?? '*/10'} ${trigger.hour ?? '*'} ${trigger.day ?? '*'} ${trigger.month ?? '*'} ${trigger.day_of_week ?? '*'}`
+    : ''
 }

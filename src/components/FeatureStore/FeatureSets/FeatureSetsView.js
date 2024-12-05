@@ -52,7 +52,6 @@ const FeatureSetsView = React.forwardRef(
       featureStore,
       filtersStore,
       filters,
-      handleExpandRow,
       handleRefresh,
       handleRefreshWithFilters,
       pageData,
@@ -60,8 +59,10 @@ const FeatureSetsView = React.forwardRef(
       selectedFeatureSet,
       selectedRowData,
       setFeatureSetsPanelIsOpen,
+      setSearchParams,
       setSelectedFeatureSetMin,
       tableContent,
+      toggleRow,
       virtualizationConfig
     },
     { featureStoreRef }
@@ -85,6 +86,7 @@ const FeatureSetsView = React.forwardRef(
             filtersConfig={filtersConfig}
             handleRefresh={handleRefresh}
             page={FEATURE_STORE_PAGE}
+            setSearchParams={setSearchParams}
             tab={FEATURE_SETS_TAB}
             withoutExpandButton
           >
@@ -125,13 +127,13 @@ const FeatureSetsView = React.forwardRef(
                   isRowRendered(virtualizationConfig, index) && (
                     <FeatureStoreTableRow
                       actionsMenu={actionsMenu}
-                      handleExpandRow={handleExpandRow}
-                      rowIndex={index}
                       key={tableItem.data.ui.identifier}
                       pageTab={FEATURE_SETS_TAB}
+                      rowIndex={index}
                       rowItem={tableItem}
                       selectedItem={selectedFeatureSet}
                       selectedRowData={selectedRowData}
+                      toggleRow={toggleRow}
                     />
                   )
               )}
@@ -161,7 +163,6 @@ FeatureSetsView.propTypes = {
   featureSetsPanelIsOpen: PropTypes.bool.isRequired,
   featureStore: PropTypes.object.isRequired,
   filtersStore: PropTypes.object.isRequired,
-  handleExpandRow: PropTypes.func.isRequired,
   handleRefresh: PropTypes.func.isRequired,
   handleRefreshWithFilters: PropTypes.func.isRequired,
   pageData: PropTypes.object.isRequired,
@@ -169,8 +170,10 @@ FeatureSetsView.propTypes = {
   selectedFeatureSet: PropTypes.object.isRequired,
   selectedRowData: PropTypes.object.isRequired,
   setFeatureSetsPanelIsOpen: PropTypes.func.isRequired,
+  setSearchParams: PropTypes.func.isRequired,
   setSelectedFeatureSetMin: PropTypes.func.isRequired,
   tableContent: PropTypes.arrayOf(PropTypes.object).isRequired,
+  toggleRow: PropTypes.func.isRequired,
   virtualizationConfig: VIRTUALIZATION_CONFIG.isRequired
 }
 

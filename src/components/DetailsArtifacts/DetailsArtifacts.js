@@ -18,7 +18,7 @@ under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
 import React, { useState, useEffect, useCallback, useMemo } from 'react'
-import { connect, useDispatch, useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { useParams } from 'react-router-dom'
 import PropTypes from 'prop-types'
 import classnames from 'classnames'
@@ -28,7 +28,6 @@ import NoData from '../../common/NoData/NoData'
 import { TextTooltipTemplate, Tooltip, Tip } from 'igz-controls/components'
 import Loader from '../../common/Loader/Loader'
 
-import jobsActions from '../../actions/jobs'
 import { generateArtifactIdentifiers } from '../Details/details.util'
 import {
   generateArtifactsPreviewContent,
@@ -39,6 +38,7 @@ import { useSortTable } from '../../hooks/useSortTable.hook'
 import { ALLOW_SORT_BY, DEFAULT_SORT_BY, EXCLUDE_SORT_BY } from 'igz-controls/types'
 import { fetchArtifacts } from '../../reducers/artifactsReducer'
 import { getChipLabelAndValue } from '../../utils/getChipLabelAndValue'
+import { fetchJob } from '../../reducers/jobReducer'
 
 import './detailsArtifacts.scss'
 
@@ -47,7 +47,6 @@ const DetailsArtifacts = ({
   defaultDirection = 'desc',
   defaultSortBy = null,
   excludeSortBy = null,
-  fetchJob,
   isDetailsPopUp = false,
   iteration,
   selectedItem,
@@ -148,7 +147,15 @@ const DetailsArtifacts = ({
       }
 
       if (workflowId) {
-        return fetchJob(job.project || params.projectName, params.jobId, iteration).then(
+        return dispatch(
+          fetchJob({
+            project: job.project || params.projectName,
+            jobId: params.jobId,
+            iter: iteration
+          })
+        )
+          .unwrap()
+          .then(
           responseJob => {
             if (responseJob) {
               const selectedJob = getJobAccordingIteration(responseJob)
@@ -180,7 +187,7 @@ const DetailsArtifacts = ({
           }
         })
     },
-    [dispatch, fetchJob, params.jobId, params.projectName]
+    [dispatch, params.jobId, params.projectName]
   )
 
   useEffect(() => {
@@ -277,4 +284,4 @@ DetailsArtifacts.propTypes = {
   setIterationOption: PropTypes.func.isRequired
 }
 
-export default connect(null, { ...jobsActions })(DetailsArtifacts)
+export default DetailsArtifacts

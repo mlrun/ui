@@ -77,17 +77,5 @@ export const useFiltersFromSearchParams = (
     return getFiltersFromSearchParams(filtersConfig, searchParams, paramsParsingCallback)
   }, [filtersConfig, paramsParsingCallback, searchParams])
 
-  // TODO QP: test with pagination and if it won't work correctly fall back to useState, but in this case need to fix double requests
-
-  // const [filters, setFilters] = useState(
-  //   getFiltersFromSearchParams(filtersConfig, searchParams, paramsParsingCallback)
-  // )
-
-  // useLayoutEffect(() => {
-  //   if (filtersConfig) {
-  //     setFilters(getFiltersFromSearchParams(filtersConfig, searchParams, paramsParsingCallback))
-  //   }
-  // }, [dispatch, filtersConfig, paramsParsingCallback, searchParams])
-
   return filters
 }

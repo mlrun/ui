@@ -99,6 +99,12 @@
         flex: 1;
         max-width: 150px;
       }
+
+      &-notification {
+        .notification-fail svg > * {
+          fill: $silver;
+        }
+      }
     }
 
     &:has(.actions-menu__container-active) {
@@ -109,16 +115,16 @@
   &.table {
     &__scrolled {
       .table-cell-name {
-        &:after {
-          content: '';
+        &::after {
           position: absolute;
           top: 0;
-          bottom: 0;
           right: 0;
+          bottom: 0;
           width: 5px;
           background-color: inherit;
           border-right: $secondaryBorder;
-          box-shadow: 2px 0px 2px -1px rgba($black, 0.2);
+          box-shadow: 2px 0 2px -1px rgba($black, 0.2);
+          content: '';
         }
       }
 
@@ -197,10 +203,10 @@
 
         &_hidden {
           font-size: 0;
-          *  {
+
+          * {
             visibility: hidden;
           }
-          
 
           .chip {
             visibility: hidden;
@@ -230,9 +236,9 @@
 
         a {
           position: relative;
+          width: 100%;
           margin: 0;
           text-decoration: none;
-          width: 100%;
 
           span {
             display: block;
@@ -265,6 +271,11 @@
 
         .chip_short {
           max-width: 100px;
+        }
+
+        .severity-cell {
+          display: flex;
+          gap: 4px;
         }
       }
     }

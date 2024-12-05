@@ -30,11 +30,7 @@ import {
   ERROR_STATE,
   FAILED_STATE
 } from '../constants'
-import {
-  ANY_TIME_DATE_OPTION,
-  datePickerPastOptions,
-  getDatePickerFilterValue
-} from './datePicker.util'
+import { ANY_TIME_DATE_OPTION } from './datePicker.util'
 
 export const generateMonitoringStats = (data, navigate, tab) => {
   const navigateToJobsMonitoringPage = (filters = {}) => {
@@ -51,17 +47,10 @@ export const generateMonitoringStats = (data, navigate, tab) => {
           {
             counter: data.running,
             link: () =>
-              navigateToJobsMonitoringPage(
-                {
-                  [STATUS_FILTER]: ['running', 'pending', 'aborting']
-                },
-                {
-                  [DATES_FILTER]: getDatePickerFilterValue(
-                    datePickerPastOptions,
-                    ANY_TIME_DATE_OPTION
-                  )
-                }
-              ),
+              navigateToJobsMonitoringPage({
+                [STATUS_FILTER]: ['running', 'pending', 'aborting'],
+                [DATES_FILTER]: ANY_TIME_DATE_OPTION
+              }),
             statusClass: 'running',
             tooltip: 'Aborting, Pending, Running'
           },
@@ -89,15 +78,10 @@ export const generateMonitoringStats = (data, navigate, tab) => {
             {
               counter: data.running,
               link: () =>
-                navigateToJobsMonitoringPage(
-                  { [STATUS_FILTER]: ['running'] },
-                  {
-                    [DATES_FILTER]: getDatePickerFilterValue(
-                      datePickerPastOptions,
-                      ANY_TIME_DATE_OPTION
-                    )
-                  }
-                ),
+                navigateToJobsMonitoringPage({
+                  [STATUS_FILTER]: ['running'],
+                  [DATES_FILTER]: ANY_TIME_DATE_OPTION
+                }),
               statusClass: 'running',
               tooltip: 'Running'
             },
