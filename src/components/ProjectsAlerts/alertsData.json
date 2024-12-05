@@ -41,19 +41,35 @@
       "notifications": [
         {
           "kind": "email",
-          "err": "fail"
+          "err": "fail",
+          "summary": {
+            "failed": 2,
+            "succeeded": 4
+          }
         },
         {
           "kind": "webhook",
-          "err": "fail"
+          "err": "fail",
+          "summary": {
+            "failed": 2,
+            "succeeded": 4
+          }
         },
         {
           "kind": "git",
-          "err": "fail"
+          "err": "fail",
+          "summary": {
+            "failed": 2,
+            "succeeded": 4
+          }
         },
         {
           "kind": "slack",
-          "err": "fail"
+          "err": "fail",
+          "summary": {
+            "failed": 2,
+            "succeeded": 4
+          }
         }
       ],
       "entity_id": "trainer-train.5a8037bd46cf192ce7e94b25f06a8d13",
@@ -99,7 +115,11 @@
         },
         {
           "kind": "git",
-          "err": "Authentication failed"
+          "err": "Authentication failed",
+          "summary": {
+            "failed": 2,
+            "succeeded": 4
+          }
         }
       ],
       "entity_id": "d5e6f4b3970ef28ed1df450e80d37624de7e1749.feature-importance.general_drift",
@@ -141,7 +161,11 @@
       "notifications": [
         {
           "kind": "email",
-          "err": "SMTP server not reachable"
+          "err": "SMTP server not reachable",
+          "summary": {
+            "failed": 2,
+            "succeeded": 4
+          }
         }
       ],
       "entity_id": "a2b4c6d8970ef28ed1df450e80d37624de7e1749.statistical-shift.general_drift",
