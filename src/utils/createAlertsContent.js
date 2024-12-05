@@ -125,6 +125,7 @@ const alertsNotifications = {
   slack: <Slack />,
   email: <Email />
 }
+
 const getNotificationData = notifications =>
   notifications.map(notification => {
     return {
