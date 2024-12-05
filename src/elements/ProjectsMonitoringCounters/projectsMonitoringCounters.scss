@@ -1,4 +1,5 @@
 @import '~igz-controls/scss/colors';
+@import '~igz-controls/scss/borders';
 
 .monitoring-stats {
   flex-direction: column;
@@ -21,31 +22,19 @@
 
   .stats {
     &__subtitle {
+      display: inline-block;
       margin: 0 0 5px 0;
       color: $topaz;
       font-weight: normal;
       font-size: 1rem;
     }
 
-    &__placeholder-subtitle{
+    &__placeholder-subtitle {
       height: 24px;
     }
 
-    &__header-icon {
-      height: 20px;
-      width: 20px;
-      margin-right: 5px;
-
-      path {
-        fill: $ceriseRed;
-      }
-    }
-
     &__counter {
-      display: flex;
-      flex: 1;
       min-height: 58px;
-      margin: 0 0 5px 0;
       color: $primary;
       font-weight: 700;
       font-size: 38px;
@@ -67,6 +56,21 @@
 
     .link {
       font-size: 1rem;
+    }
+  }
+
+  .project-card__info {
+    .stats__subtitle {
+      font-size: inherit;
+      margin: 0 5px 0 0;
+    }
+
+    .stats__counter {
+      font-size: 1rem;
+      min-height: auto;
+      border-right: $secondaryBorder;
+      margin-right: 0.75em;
+      padding-right: 0.75em;
     }
   }
 

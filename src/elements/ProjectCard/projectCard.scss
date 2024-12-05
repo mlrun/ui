@@ -82,7 +82,7 @@
     margin-right: 8px;
     display: flex;
     border-radius: 100px;
-    padding:  3px 8px  ;
+    padding: 3px 8px;
     align-items: center;
     background-color: $wildSand;
 
@@ -90,14 +90,14 @@
       width: 16px;
       height: 16px;
 
-    path{
-      fill: $ceriseRed;
+      path {
+        fill: $ceriseRed;
+      }
     }
-  }
 
-    &-text{
+    &-text {
       color: $primary;
-      font-family: Roboto,sans-serif;
+      font-family: Roboto, sans-serif;
       font-size: 14px;
     }
   }
@@ -105,17 +105,16 @@
   &__info {
     display: flex;
     align-items: center;
+    justify-content: flex-end;
     font-size: 0.75rem;
     color: $topaz;
 
-    & > *:first-child {
-      flex: 0 0 auto;
+    & *:not(:last-child) {
       margin-right: 5px;
-      color: $spunPearl;
     }
 
     &-icon {
-      flex: 0 1 25px;
+      flex: 0 1 12px;
 
       & * {
         fill: $spunPearl;

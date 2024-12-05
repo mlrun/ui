@@ -22,7 +22,6 @@
 
       &:not(:last-child) {
         margin-bottom: 1em;
-        min-height: 40px;
       }
     }
 
@@ -41,6 +40,19 @@
       font-weight: normal;
       font-size: 1.25rem;
       margin: 0;
+
+      &-icon {
+        margin-right: 5px;
+
+        svg {
+          height: 20px;
+          width: 20px;
+
+          path {
+            fill: $ceriseRed;
+          }
+        }
+      }
     }
   }
 }
