@@ -36,7 +36,8 @@ import {
   FUNCTIONS_PAGE,
   FUNCTIONS_PAGE_PATH,
   PANEL_CREATE_MODE,
-  PANEL_EDIT_MODE
+  PANEL_EDIT_MODE,
+  ALL_VERSIONS_PATH
 } from '../../constants'
 import { SECONDARY_BUTTON } from 'igz-controls/constants'
 import { FILTERS_CONFIG, VIRTUALIZATION_CONFIG } from '../../types'
@@ -62,6 +63,7 @@ const FunctionsView = ({
   handleDeployFunctionFailure,
   handleDeployFunctionSuccess,
   handleSelectFunction,
+  isAllVersions,
   isDemoMode,
   pageData,
   requestErrorMessage,
@@ -82,7 +84,7 @@ const FunctionsView = ({
         <div className="content">
           <div className="table-container">
             <div className="content__action-bar-wrapper">
-              {params.funcName && (
+              {isAllVersions && (
                 <HistoryBackLink
                   link={`/projects/${params.projectName}/functions${getSavedSearchParams(window.location.search)}`}
                   itemName={params.funcName}
@@ -93,7 +95,7 @@ const FunctionsView = ({
                 filtersConfig={functionsFiltersConfig}
                 filters={filters}
                 handleRefresh={filtersChangeCallback}
-                navigateLink={`/projects/${params.projectName}/functions${params.funcName ? `/${params.funcName}` : ''}${window.location.search}`}
+                navigateLink={`/projects/${params.projectName}/functions${isAllVersions ? `/${params.funcName}/${ALL_VERSIONS_PATH}` : ''}${window.location.search}`}
                 setSearchParams={setSearchParams}
                 withoutExpandButton
                 actionButtons={[
@@ -129,7 +131,7 @@ const FunctionsView = ({
                 <Table
                   actionsMenu={actionsMenu}
                   getCloseDetailsLink={() =>
-                    getCloseDetailsLink(params.funcName || FUNCTIONS_PAGE_PATH)
+                    getCloseDetailsLink(isAllVersions ? ALL_VERSIONS_PATH : FUNCTIONS_PAGE_PATH)
                   }
                   handleCancel={handleCancel}
                   pageData={pageData}
@@ -145,7 +147,7 @@ const FunctionsView = ({
                         <FunctionsTableRow
                           actionsMenu={actionsMenu}
                           handleSelectItem={handleSelectFunction}
-                          key={tableItem.data.hash}
+                          key={tableItem.data.hash + index}
                           rowItem={tableItem}
                           selectedItem={selectedFunction}
                           withQuickActions
@@ -212,6 +214,7 @@ FunctionsView.propTypes = {
   handleDeployFunctionFailure: PropTypes.func.isRequired,
   handleDeployFunctionSuccess: PropTypes.func.isRequired,
   handleSelectFunction: PropTypes.func.isRequired,
+  isAllVersions: PropTypes.bool.isRequired,
   pageData: PropTypes.object.isRequired,
   requestErrorMessage: PropTypes.string.isRequired,
   retryRequest: PropTypes.func.isRequired,

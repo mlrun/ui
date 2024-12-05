@@ -34,7 +34,8 @@ import {
   DATES_FILTER,
   NAME_FILTER,
   SHOW_UNTAGGED_FILTER,
-  GROUP_BY_NONE
+  GROUP_BY_NONE,
+  ALL_VERSIONS_PATH
 } from '../../constants'
 import {
   checkForSelectedFunction,
@@ -76,6 +77,7 @@ const Functions = ({
   fetchFunction,
   fetchFunctions,
   functionsStore,
+  isAllVersions = false,
   removeFunctionsError,
   removeNewFunction
 }) => {
@@ -104,22 +106,22 @@ const Functions = ({
 
   const functionsFiltersConfig = useMemo(() => {
     return {
-      [NAME_FILTER]: { label: 'Name:', initialValue: '', hidden: !isEmpty(params.funcName) },
+      [NAME_FILTER]: { label: 'Name:', initialValue: '', hidden: isAllVersions },
       [DATES_FILTER]: {
         label: 'Updated:',
         initialValue: getDatePickerFilterValue(
           datePickerPastOptions,
-          params.funcName ? ANY_TIME_DATE_OPTION : PAST_WEEK_DATE_OPTION
+          isAllVersions ? ANY_TIME_DATE_OPTION : PAST_WEEK_DATE_OPTION
         )
       },
       [SHOW_UNTAGGED_FILTER]: {
         label: 'Show untagged:',
         initialValue: true,
         isModal: true,
-        hidden: isEmpty(params.funcName)
+        hidden: !isAllVersions
       }
     }
-  }, [params.funcName])
+  }, [isAllVersions])
 
   const functionsFilters = useFiltersFromSearchParams(functionsFiltersConfig)
 
@@ -137,7 +139,7 @@ const Functions = ({
         tag: TAG_LATEST
       }
 
-      if (params.funcName) {
+      if (isAllVersions) {
         delete requestParams.tag
         requestParams.name = params.funcName
         setFunctionVersions([])
@@ -175,7 +177,7 @@ const Functions = ({
             )
           }
 
-          if (params.funcName) {
+          if (isAllVersions) {
             setFunctionVersions(newFunctions)
           } else {
             setFunctions(newFunctions)
@@ -184,7 +186,7 @@ const Functions = ({
           return newFunctions
         } else {
           const paramsFunction = searchFunctionItem(
-            params.hash,
+            params.id,
             params.projectName,
             params.funcName,
             [],
@@ -194,14 +196,14 @@ const Functions = ({
 
           if (!paramsFunction) {
             navigate(
-              `/projects/${params.projectName}/functions${params.funcName ? getSavedSearchParams(window.location.search) : window.location.search}`,
+              `/projects/${params.projectName}/functions${isAllVersions ? getSavedSearchParams(window.location.search) : window.location.search}`,
               {
                 replace: true
               }
             )
           }
 
-          if (params.funcName) {
+          if (isAllVersions) {
             setFunctionVersions([])
           } else {
             setFunctions([])
@@ -212,9 +214,10 @@ const Functions = ({
     [
       dispatch,
       fetchFunctions,
+      isAllVersions,
       navigate,
       params.funcName,
-      params.hash,
+      params.id,
       params.projectName,
       terminateDeleteTasksPolling
     ]
@@ -232,10 +235,10 @@ const Functions = ({
 
   const tableContent = useMemo(
     () =>
-      (params.funcName ? functionVersions : functions).map(contentItem =>
-        createFunctionsRowData(contentItem, params.projectName, Boolean(params.funcName))
+      (isAllVersions ? functionVersions : functions).map(contentItem =>
+        createFunctionsRowData(contentItem, params.projectName, Boolean(isAllVersions))
       ),
-    [functionVersions, functions, params.funcName, params.projectName]
+    [functionVersions, functions, isAllVersions, params.projectName]
   )
 
   const removeFunction = useCallback(
@@ -271,12 +274,9 @@ const Functions = ({
 
           if (!isEmpty(selectedFunction)) {
             setSelectedFunctionMin({})
-            navigate(
-              `/projects/${params.projectName}/functions${params.funcName ? getSavedSearchParams(window.location.search) : window.location.search}`,
-              {
-                replace: true
-              }
-            )
+            navigate(`/projects/${params.projectName}/functions${window.location.search}`, {
+              replace: true
+            })
           }
         }
       })
@@ -289,7 +289,6 @@ const Functions = ({
       fetchData,
       functionsFilters,
       navigate,
-      params.funcName,
       params.projectName,
       selectedFunction
     ]
@@ -422,7 +421,7 @@ const Functions = ({
   const showAllVersions = useCallback(
     funcName => {
       navigate(
-        `/projects/${params.projectName}/functions/${funcName}?${transformSearchParams(window.location.search)}`
+        `/projects/${params.projectName}/functions/${funcName}/${ALL_VERSIONS_PATH}?${transformSearchParams(window.location.search)}`
       )
     },
     [navigate, params.projectName]
@@ -438,17 +437,9 @@ const Functions = ({
         navigate,
         fetchData,
         filtersStore,
-        params.funcName ? null : () => showAllVersions(selectedFunction.name)
+        isAllVersions ? null : () => showAllVersions(selectedFunction.name)
       ),
-    [
-      dispatch,
-      fetchData,
-      filtersStore,
-      navigate,
-      params.funcName,
-      selectedFunction,
-      showAllVersions
-    ]
+    [dispatch, fetchData, filtersStore, navigate, isAllVersions, selectedFunction, showAllVersions]
   )
 
   const actionsMenu = useMemo(
@@ -468,7 +459,7 @@ const Functions = ({
         selectedFunction,
         fetchFunction,
         false,
-        params.funcName,
+        isAllVersions,
         showAllVersions
       ),
     [
@@ -481,7 +472,7 @@ const Functions = ({
       deletingFunctions,
       selectedFunction,
       fetchFunction,
-      params.funcName,
+      isAllVersions,
       showAllVersions
     ]
   )
@@ -500,7 +491,7 @@ const Functions = ({
   useInitialTableFetch({
     fetchData,
     filters: functionsFilters,
-    requestTrigger: params.funcName
+    requestTrigger: isAllVersions
   })
 
   useEffect(() => {
@@ -512,32 +503,34 @@ const Functions = ({
       setFunctionVersions([])
       abortController.abort(REQUEST_CANCELED)
     }
-  }, [params.projectName, params.funcName])
+  }, [params.projectName, isAllVersions])
 
   useEffect(() => {
-    if (params.hash && pageData.details.menu.length > 0) {
+    if (params.id && pageData.details.menu.length > 0) {
       isDetailsTabExists(params.tab, pageData.details.menu, navigate, location)
     }
-  }, [navigate, pageData.details.menu, location, params.hash, params.tab])
+  }, [navigate, pageData.details.menu, location, params.id, params.tab])
 
   useEffect(() => {
     checkForSelectedFunction(
-      params.funcName ? functionVersions : functions,
-      params.hash,
+      isAllVersions ? functionVersions : functions,
+      params.id,
       params.funcName,
       navigate,
       params.projectName,
       setSelectedFunctionMin,
-      dispatch
+      dispatch,
+      isAllVersions
     )
   }, [
     dispatch,
     functions,
     navigate,
-    params.hash,
     params.projectName,
-    params.funcName,
-    functionVersions
+    params.id,
+    functionVersions,
+    isAllVersions,
+    params.funcName
   ])
 
   useEffect(() => {
@@ -601,7 +594,7 @@ const Functions = ({
         if (currentItem) {
           // todo need better logic for searching currentItem for cases when the function has no tag
           navigate(
-            `/projects/${params.projectName}/functions/${params.funcName}${params.funcName ? '/' : ''}@${currentItem.hash}/${tab}${window.location.search}`
+            `/projects/${params.projectName}/functions/${params.funcName}${isAllVersions ? `/${ALL_VERSIONS_PATH}` : ''}/@${currentItem.hash}/${tab}${window.location.search}`
           )
         }
         dispatch(
@@ -630,7 +623,7 @@ const Functions = ({
         if (currentItem) {
           // todo need better logic for searching currentItem for cases when the function has no tag
           navigate(
-            `/projects/${params.projectName}/functions/${params.funcName}${params.funcName ? '/' : ''}@${currentItem.hash}/overview${window.location.search}`
+            `/projects/${params.projectName}/functions/${params.funcName}${isAllVersions ? `/${ALL_VERSIONS_PATH}` : ''}/@${currentItem.hash}/overview${window.location.search}`
           )
         }
       }
@@ -702,6 +695,7 @@ const Functions = ({
       handleDeployFunctionFailure={handleDeployFunctionFailure}
       handleDeployFunctionSuccess={handleDeployFunctionSuccess}
       handleSelectFunction={handleSelectFunction}
+      isAllVersions={isAllVersions}
       isDemoMode={isDemoMode}
       pageData={pageData}
       requestErrorMessage={requestErrorMessage}

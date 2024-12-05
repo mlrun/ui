@@ -37,7 +37,8 @@ import {
   FUNCTION_TYPE_SERVING,
   FUNCTIONS_PAGE,
   PANEL_FUNCTION_CREATE_MODE,
-  FAILED_STATE
+  FAILED_STATE,
+  ALL_VERSIONS_PATH
 } from '../../constants'
 import functionsApi from '../../api/functions-api'
 import tasksApi from '../../api/tasks-api'
@@ -47,6 +48,7 @@ import { parseFunction } from '../../utils/parseFunction'
 import { setNotification } from '../../reducers/notificationReducer'
 import { showErrorNotification } from '../../utils/notifications.util'
 import { getFunctionLogs, getFunctionNuclioLogs } from '../../utils/getFunctionLogs'
+import { parseIdentifier } from '../../utils'
 
 import { ReactComponent as Delete } from 'igz-controls/images/delete.svg'
 import { ReactComponent as Run } from 'igz-controls/images/run.svg'
@@ -197,8 +199,8 @@ export const generateFunctionsPageData = (
         }
       },
       withLogsRefreshBtn: false,
-      type: FUNCTIONS_PAGE,
-      // showAllVersions // todo uncomment or remove button from details when we decide about this btn in details 
+      type: FUNCTIONS_PAGE
+      // showAllVersions // todo uncomment or remove button from details when we decide about this btn in details
     }
   }
 }
@@ -289,7 +291,7 @@ export const generateActionsMenu = (
   selectedFunction,
   fetchFunction,
   isDetailsPopUp = false,
-  funcName,
+  isAllVersions,
   showAllVersions
 ) => {
   const functionIsDeleting = isFunctionDeleting(func, deletingFunctions)
@@ -349,7 +351,7 @@ export const generateActionsMenu = (
         className: 'danger',
         disabled: functionIsDeleting,
         onClick: onRemoveFunction,
-        hidden: isDetailsPopUp || funcName
+        hidden: isDetailsPopUp || isAllVersions
       }
     ],
     [
@@ -359,7 +361,7 @@ export const generateActionsMenu = (
         icon: <HistoryIcon />,
         disabled: functionIsDeleting,
         onClick: () => showAllVersions(func.name),
-        hidden: funcName
+        hidden: isAllVersions
       },
       {
         id: 'build-and-run',
@@ -513,18 +515,19 @@ const chooseOrFetchFunction = (selectedFunction, dispatch, fetchFunction, funcMi
 
 export const checkForSelectedFunction = (
   functions,
-  hash,
+  id,
   funcNameParam,
   navigate,
   projectName,
   setSelectedFunction,
-  dispatch
+  dispatch,
+  isAllVersions
 ) => {
   queueMicrotask(() => {
-    if (hash) {
+    if (id) {
       if (functions.length > 0) {
         const searchItem = searchFunctionItem(
-          hash,
+          id,
           projectName,
           funcNameParam,
           functions.map(func => func.data ?? func),
@@ -534,7 +537,7 @@ export const checkForSelectedFunction = (
 
         if (!searchItem) {
           navigate(
-            `/projects/${projectName}/functions${funcNameParam ? `/${funcNameParam}` : ''}${window.location.search}`,
+            `/projects/${projectName}/functions${isAllVersions ? `/${funcNameParam}/${ALL_VERSIONS_PATH}` : ''}${window.location.search}`,
             { replace: true }
           )
         } else {
@@ -550,7 +553,7 @@ export const checkForSelectedFunction = (
 }
 
 export const searchFunctionItem = (
-  paramsHash,
+  paramsId,
   projectName,
   funcNameParam,
   functions,
@@ -559,29 +562,18 @@ export const searchFunctionItem = (
 ) => {
   let item = {}
 
-  if (paramsHash) {
-    const withFunctionTag = paramsHash.includes(':')
-    let name,
-      tag,
-      hash = ''
-
-    if (withFunctionTag) {
-      [name, tag] = paramsHash.split(':')
-    } else {
-      [name, hash] = paramsHash.split('@')
-    }
-
-    name = name || funcNameParam
+  if (paramsId) {
+    const { tag, uid: hash } = parseIdentifier(paramsId)
 
     item = functions.find(func => {
-      if (withFunctionTag) {
-        return isEqual(func.tag, tag) && isEqual(func.name, name)
+      if (tag) {
+        return isEqual(func.tag, tag) && isEqual(func.name, funcNameParam)
       } else {
-        return isEqual(func.hash, hash) && isEqual(func.name, name)
+        return isEqual(func.hash, hash) && isEqual(func.name, funcNameParam)
       }
     })
 
-    checkExistence && checkFunctionExistence(item, { tag, name, hash }, projectName, dispatch)
+    checkExistence && checkFunctionExistence(item, { tag, name: funcNameParam, hash }, projectName, dispatch)
   }
 
   return item
