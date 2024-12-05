@@ -129,10 +129,9 @@ const alertsNotifications = {
 const getNotificationData = notifications =>
   notifications.map(notification => {
     const hasError = notification.err !== ''
-    const tooltipContent =
-      hasError && notification?.summary
-        ? `${notification.summary.succeeded} done, ${notification.summary.failed} failed`
-        : notification.kind
+    const tooltipContent = notification?.summary
+      ? `${notification.summary.succeeded} done, ${notification.summary.failed} failed`
+      : notification.kind
     return {
       icon: (
         <div className={'table-cell-notification'}>

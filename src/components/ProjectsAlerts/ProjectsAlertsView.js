@@ -28,7 +28,7 @@ import ProjectsAlertsFilters from './ProjectsAlertsFilters'
 import Table from '../Table/Table'
 
 import { getNoDataMessage } from '../../utils/getNoDataMessage'
-import { ALERTS_FILTERS, ALERTS_PAGE, FUNCTION_FILTERS } from '../../constants'
+import { ALERTS_FILTERS, ALERTS_PAGE } from '../../constants'
 import { VIRTUALIZATION_CONFIG } from '../../types'
 import { isRowRendered } from '../../hooks/useVirtualization.hook'
 
@@ -37,6 +37,7 @@ const ProjectAlertsView = ({
   alertsFiltersConfig,
   alertsStore,
   filters,
+  filtersStore,
   pageData,
   refreshAlertsCallback,
   requestErrorMessage,
@@ -76,7 +77,7 @@ const ProjectAlertsView = ({
                   requestErrorMessage,
                   ALERTS_PAGE,
                   null,
-                  FUNCTION_FILTERS
+                  filtersStore
                 )}
               />
             ) : (
@@ -115,6 +116,7 @@ const ProjectAlertsView = ({
 ProjectAlertsView.propTypes = {
   alertsFiltersConfig: PropTypes.object.isRequired,
   filters: PropTypes.object.isRequired,
+  filtersStore: PropTypes.object.isRequired,
   refreshAlertsCallback: PropTypes.func.isRequired,
   requestErrorMessage: PropTypes.string.isRequired,
   tableContent: PropTypes.arrayOf(PropTypes.object).isRequired,
