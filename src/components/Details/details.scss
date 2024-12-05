@@ -55,10 +55,15 @@
 
         &__status {
           color: $topaz;
-          display: flex;
-          flex-flow: row wrap;
-          align-items: center;
           line-height: 25px;
+
+          &-row {
+            display: flex;
+            flex-flow: row wrap;
+            align-items: center;
+            flex: 1 0 100%;
+            margin-bottom: 5px;
+          }
         }
 
         &__back-btn {
@@ -91,6 +96,7 @@
           }
 
           .state {
+            display: inline-block;
             min-width: 18px;
 
             i {
@@ -99,7 +105,14 @@
           }
 
           .error-container {
+            flex: 1;
             margin-left: 0;
+
+            &:not(:last-child) {
+              border-right: $secondaryBorder;
+              margin-right: 1em;
+              padding-right: 1em;
+            }
           }
         }
 
