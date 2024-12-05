@@ -4,19 +4,65 @@
 .notification {
   position: relative;
   z-index: 1000;
+  display: flex;
+  justify-content: space-between;
   align-self: flex-end;
-  margin-right: 24px;
-  margin-bottom: 10px;
-  padding: 15px;
+  margin-bottom: 1rem;
+  padding: 8px;
   color: $white;
   background-color: $darkPurple;
   border-radius: 5px;
   box-shadow: $tooltipShadow;
+  cursor: pointer;
+  overflow: hidden;
   opacity: 0;
+
+  &__progress-bar {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 5px;
+    z-index: 1;
+    opacity: 0.7;
+    transform-origin: left;
+    animation: notification__trackprogress-bar linear 1 forwards;
+    animation-play-state: running;
+
+    &__wrapper {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      height: 5px;
+    }
+
+    &__bg {
+      width: 100%;
+      height: 100%;
+      opacity: 0.3;
+    }
+
+    &-success {
+      background-color: $brightTurquoise;
+    }
+
+    &-alert {
+      background-color: $burntSienna;
+    }
+  }
+
+  &:hover {
+    .notification__progress-bar {
+      animation-play-state: paused;
+    }
+  }
 
   &__body {
     display: flex;
     align-items: center;
+    margin: 5px 20px 5px 0;
+    padding: 6px;
 
     &__button-retry {
       margin-left: 15px;
@@ -42,7 +88,7 @@
       justify-content: center;
       width: 24px;
       height: 24px;
-      margin-right: 5px;
+      margin-right: 10px;
       border-radius: 50%;
     }
 
@@ -53,5 +99,14 @@
     &__icon-success {
       background-color: $brightTurquoise;
     }
+  }
+}
+
+@keyframes notification__trackprogress-bar {
+  0% {
+    transform: scaleX(1);
+  }
+  100% {
+    transform: scaleX(0);
   }
 }
