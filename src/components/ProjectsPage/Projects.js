@@ -273,7 +273,7 @@ const Projects = () => {
             if (response.headers.get('content-length') > yamlByteSizeLimit) {
               openPopUp(ConfirmDialog, {
                 header: "The project YAML can't be displayed",
-                message: "The file is too large to display. Use 'Export YAML' to download it.",
+                message: "The file is too large to display. Press 'Export YAML' to download it.",
                 confirmButton: {
                   handler: () => exportYaml(projectMinimal),
                   label: 'Export YAML'
