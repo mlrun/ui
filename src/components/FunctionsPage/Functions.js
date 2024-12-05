@@ -101,7 +101,6 @@ const Functions = ({
   const navigate = useNavigate()
   const location = useLocation()
   const dispatch = useDispatch()
-  const deletingFunctionsRef = useRef(null)
 
   const functionsFiltersConfig = useMemo(() => {
     return {
@@ -165,20 +164,15 @@ const Functions = ({
             return acc
           }, {})
 
-          const deletingFunctionForPoll = !isEmpty(deletingFunctions)
-            ? deletingFunctions
-            : deletingFunctionsRef.current
-
-          if (!isEmpty(deletingFunctionForPoll)) {
-            setDeletingFunctions(deletingFunctionForPoll)
+          if (!isEmpty(deletingFunctions)) {
+            setDeletingFunctions(deletingFunctions)
             pollDeletingFunctions(
               params.projectName,
               terminatePollRef,
-              deletingFunctionForPoll,
+              deletingFunctions,
               () => fetchData(filters),
               dispatch
             )
-            deletingFunctionsRef.current = null
           }
 
           if (params.funcName) {
@@ -264,22 +258,18 @@ const Functions = ({
               }
             }
 
-            if (!params.funcName) {
-              pollDeletingFunctions(
-                params.projectName,
-                terminatePollRef,
-                newDeletingFunctions,
-                () => fetchData(functionsFilters),
-                dispatch
-              )
-            } else {
-              deletingFunctionsRef.current = newDeletingFunctions
-            }
+            pollDeletingFunctions(
+              params.projectName,
+              terminatePollRef,
+              newDeletingFunctions,
+              () => fetchData(functionsFilters),
+              dispatch
+            )
 
             return newDeletingFunctions
           })
 
-          if (!isEmpty(selectedFunction) || params.funcName) {
+          if (!isEmpty(selectedFunction)) {
             setSelectedFunctionMin({})
             navigate(
               `/projects/${params.projectName}/functions${params.funcName ? getSavedSearchParams(window.location.search) : window.location.search}`,
