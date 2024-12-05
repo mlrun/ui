@@ -23,6 +23,7 @@ import { LABELS_FILTER, MODEL_ENDPOINTS_TAB, MODELS_PAGE } from '../../../consta
 import { TERTIARY_BUTTON } from 'igz-controls/constants'
 import { showErrorNotification } from '../../../utils/notifications.util'
 import { fetchModelEndpoint } from '../../../reducers/artifactsReducer'
+import { formatDatetime } from '../../../utils'
 
 import { ReactComponent as Alert } from 'igz-controls/images/alerts.svg'
 
@@ -79,7 +80,8 @@ export const generatePageData = (
       variant: TERTIARY_BUTTON,
       disabled: !model_monitoring_dashboard_url,
       onClick: () => handleMonitoring(selectedItem)
-    }
+    },
+    additionalHeaderInfo: formatDatetime(selectedItem?.metadata?.created, 'N/A')
   }
 })
 
