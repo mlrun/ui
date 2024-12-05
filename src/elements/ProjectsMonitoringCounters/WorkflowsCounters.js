@@ -67,7 +67,7 @@ const WorkflowsCounters = () => {
       <StatsCard.Row>
         <StatsCard.Col>
           <div className="stats__placeholder-subtitle" />
-          <span className="stats__counter">
+          <div className="stats__counter">
             {projectStore.projectsSummary.loading ? (
               <Loader section small secondary />
             ) : (
@@ -79,7 +79,7 @@ const WorkflowsCounters = () => {
                 {workflowsStats.total.counter}
               </span>
             )}
-          </span>
+          </div>
           <ul className="projects-monitoring-legend__status">
             {workflowsStats.counters.map(({ counter, link, statusClass, tooltip }) => (
               <li className="link" onClick={link} key={`${statusClass}-jobs`}>
@@ -98,9 +98,7 @@ const WorkflowsCounters = () => {
           </ul>
         </StatsCard.Col>
       </StatsCard.Row>
-      <StatsCard.Row>
-        <StatsCard.Col />
-      </StatsCard.Row>
+      <StatsCard.Row></StatsCard.Row>
     </StatsCard>
   )
 }

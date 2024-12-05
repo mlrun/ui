@@ -30,9 +30,10 @@ const StatsCard = ({ children, className = '', onClick = () => {} }) => {
   )
 }
 
-StatsCard.Header = ({ children = null, title = '' }) => {
+StatsCard.Header = ({ children = null, icon = '', iconClass = '', title = '' }) => {
   return (
     <div className="stats-card__row">
+      {icon && <i className={iconClass}>{icon}</i>}
       {title && <h5 className="stats-card__title">{title}</h5>}
       {children}
     </div>
