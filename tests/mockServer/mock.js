@@ -880,6 +880,13 @@ function getRun(req, res) {
 
 function getAlerts(req, res) {
   // TODO:ML-8514 Update getAlerts to support both parameters and query strings.
+  res.send({ alerts: alerts.activations })
+}
+
+// TODO:ML-8368 add getAlert controller
+
+function getAlerts(req, res) {
+  // TODO:ML-8514 Update getAlerts to support both parameters and query strings.
   const { pagination } = alerts
   res.send({ activations: alerts.activations, pagination })
 }
