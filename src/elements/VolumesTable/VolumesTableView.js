@@ -30,13 +30,13 @@ import { Tip, Tooltip, TextTooltipTemplate } from 'igz-controls/components'
 
 import {
   getVolumeTypeInput,
+  isNameNotUnique,
   isPathNotUnique,
   selectTypeOptions,
   tableHeaders,
   V3IO
 } from './volumesTable.util'
 import { joinDataOfArrayOrObject } from '../../utils'
-import { isNameNotUnique } from '../../components/JobsPanel/jobsPanel.util'
 
 import { ReactComponent as Plus } from 'igz-controls/images/plus.svg'
 import { ReactComponent as Delete } from 'igz-controls/images/delete.svg'

@@ -18,7 +18,7 @@ under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
 import React, { useEffect, useState, useMemo, useLayoutEffect, useCallback } from 'react'
-import { connect, useSelector } from 'react-redux'
+import { useSelector } from 'react-redux'
 import { useNavigate, useParams, Outlet, useLocation } from 'react-router-dom'
 import { defaultsDeep } from 'lodash'
 
@@ -40,7 +40,9 @@ import {
   SCHEDULE_TAB
 } from '../../constants'
 import { TERTIARY_BUTTON, PRIMARY_BUTTON } from 'igz-controls/constants'
-import { actionButtonHeader, actionCreator, tabs } from './jobs.util'
+import { actionButtonHeader, tabs } from './jobs.util'
+// import { TERTIARY_BUTTON } from 'igz-controls/constants'
+// import { actionsMenuHeader, monitorJob, rerunJob, tabs } from './jobs.util'
 import { isPageTabValid } from '../../utils/link-helper.util'
 import {
   getJobsFiltersConfig,
@@ -59,7 +61,7 @@ import { useFiltersFromSearchParams } from '../../hooks/useFiltersFromSearchPara
 
 export const JobsContext = React.createContext({})
 
-const Jobs = ({ fetchAllJobRuns, fetchJobFunction, fetchJobs }) => {
+const Jobs = () => {
   const [confirmData, setConfirmData] = useState(null)
   const [selectedTab, setSelectedTab] = useState(null)
   const params = useParams()
@@ -120,7 +122,7 @@ const Jobs = ({ fetchAllJobRuns, fetchJobFunction, fetchJobs }) => {
     setScheduledJobs,
     setSearchParams,
     terminateAbortTasksPolling
-  } = useJobsPageData(fetchAllJobRuns, fetchJobFunction, fetchJobs, initialTabData, selectedTab)
+  } = useJobsPageData(initialTabData, selectedTab)
 
   const handleActionsMenuClick = () => {
     setJobWizardMode(PANEL_CREATE_MODE)
@@ -313,6 +315,4 @@ const Jobs = ({ fetchAllJobRuns, fetchJobFunction, fetchJobs }) => {
   )
 }
 
-export default connect(null, {
-  ...actionCreator
-})(React.memo(Jobs))
+export default React.memo(Jobs)

@@ -35,9 +35,9 @@ import { createWorkflowsMonitoringContent } from '../../../utils/createJobsConte
 import { useMode } from '../../../hooks/mode.hook'
 import { usePods } from '../../../hooks/usePods.hook'
 import detailsActions from '../../../actions/details'
-import workflowsActions from '../../../actions/workflow'
 import { actionCreator } from './workflowsMonitoring.util'
 import { useFiltersFromSearchParams } from '../../../hooks/useFiltersFromSearchParams.hook'
+import { deleteWorkflows } from '../../../reducers/workflowReducer'
 
 const WorkflowsMonitoring = ({ fetchFunctionLogs }) => {
   const [selectedFunction, setSelectedFunction] = useState({})
@@ -88,7 +88,7 @@ const WorkflowsMonitoring = ({ fetchFunctionLogs }) => {
 
   useEffect(() => {
     return () => {
-      dispatch(workflowsActions.deleteWorkflows())
+      dispatch(deleteWorkflows())
       setWorkflowsAreLoaded(false)
     }
   }, [dispatch])

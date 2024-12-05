@@ -18,7 +18,7 @@ under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
 import React, { useLayoutEffect, useMemo, useState } from 'react'
-import { connect, useSelector } from 'react-redux'
+import { useSelector } from 'react-redux'
 import { Outlet, useLocation, useNavigate, useParams } from 'react-router-dom'
 import { defaultsDeep } from 'lodash'
 
@@ -31,7 +31,7 @@ import JobsMonitoringFilters from './JobsMonitoring/JobsMonitoringFilters'
 import ScheduledMonitoringFilters from './ScheduledMonitoring/ScheduledMonitoringFilters'
 import WorkflowsMonitoringFilters from './WorkflowsMonitoring/WorkflowsMonitoringFilters'
 
-import { actionCreator, STATS_TOTAL_CARD, tabs } from './projectsJobsMotinoring.util'
+import { STATS_TOTAL_CARD, tabs } from './projectsJobsMotinoring.util'
 import {
   JOBS_MONITORING_JOBS_TAB,
   JOBS_MONITORING_PAGE,
@@ -54,7 +54,7 @@ import { useJobsPageData } from '../../hooks/useJobsPageData'
 
 export const ProjectJobsMonitoringContext = React.createContext({})
 
-const ProjectsJobsMonitoring = ({ fetchAllJobRuns, fetchJobFunction, fetchJobs }) => {
+const ProjectsJobsMonitoring = () => {
   const [confirmData, setConfirmData] = useState(null)
   const [selectedTab, setSelectedTab] = useState(null)
   const { jobsMonitoringData } = useSelector(store => store.projectStore)
@@ -121,7 +121,7 @@ const ProjectsJobsMonitoring = ({ fetchAllJobRuns, fetchJobFunction, fetchJobs }
     setScheduledJobs,
     setSearchParams,
     terminateAbortTasksPolling
-  } = useJobsPageData(fetchAllJobRuns, fetchJobFunction, fetchJobs, initialTabData, selectedTab)
+  } = useJobsPageData(initialTabData, selectedTab)
 
   const handleTabChange = tabName => {
     setSelectedCard(STATS_TOTAL_CARD)
@@ -264,6 +264,4 @@ const ProjectsJobsMonitoring = ({ fetchAllJobRuns, fetchJobFunction, fetchJobs }
   )
 }
 
-export default connect(null, {
-  ...actionCreator
-})(ProjectsJobsMonitoring)
+export default ProjectsJobsMonitoring

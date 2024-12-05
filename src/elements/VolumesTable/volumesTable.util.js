@@ -58,3 +58,7 @@ export const getVolumeTypeInput = type => {
 export const isPathNotUnique = (path, volumeMounts) => {
   return volumeMounts.some(volumeMount => volumeMount.data.mountPath === path)
 }
+
+export const isNameNotUnique = (newName, content) => {
+  return content.some(item => newName === item?.data.name && newName !== '')
+}

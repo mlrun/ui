@@ -17,64 +17,15 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import {
-  ABORT_JOB_BEGIN,
-  ABORT_JOB_FAILURE,
-  ABORT_JOB_SUCCESS,
-  DELETE_JOB_BEGIN,
-  DELETE_JOB_FAILURE,
-  DELETE_JOB_SUCCESS,
-  EDIT_JOB_BEGIN,
-  EDIT_JOB_FAILURE,
-  EDIT_JOB_SUCCESS,
-  FETCH_ALL_JOB_RUNS_BEGIN,
-  FETCH_ALL_JOB_RUNS_FAILURE,
-  FETCH_ALL_JOB_RUNS_SUCCESS,
-  FETCH_JOBS_BEGIN,
-  FETCH_JOBS_FAILURE,
-  FETCH_JOBS_SUCCESS,
-  FETCH_JOB_BEGIN,
-  FETCH_JOB_FAILURE,
-  FETCH_JOB_FUNCTIONS_BEGIN,
-  FETCH_JOB_FUNCTIONS_FAILURE,
-  FETCH_JOB_FUNCTIONS_SUCCESS,
-  FETCH_JOB_FUNCTION_BEGIN,
-  FETCH_JOB_FUNCTION_FAILURE,
-  FETCH_JOB_FUNCTION_SUCCESS,
-  FETCH_JOB_LOGS_BEGIN,
-  FETCH_JOB_LOGS_FAILURE,
-  FETCH_JOB_LOGS_SUCCESS,
-  FETCH_JOB_SUCCESS,
-  FETCH_SCHEDULED_JOBS_BEGIN,
-  FETCH_SCHEDULED_JOBS_FAILURE,
-  FETCH_SCHEDULED_JOBS_SUCCESS,
-  REMOVE_JOB,
-  REMOVE_JOB_ERROR,
-  REMOVE_JOB_FUNCTION,
-  REMOVE_NEW_JOB,
-  REMOVE_SCHEDULED_JOB_FAILURE,
-  RUN_NEW_JOB_BEGIN,
-  RUN_NEW_JOB_FAILURE,
-  RUN_NEW_JOB_SUCCESS,
-  SET_JOBS_DATA,
-  SET_LOADING,
-  SET_NEW_JOB,
-  SET_NEW_JOB_CREDENTIALS_ACCESS_KEY,
-  SET_NEW_JOB_ENVIRONMENT_VARIABLES,
-  SET_NEW_JOB_HYPER_PARAMETERS,
-  SET_NEW_JOB_INPUTS,
-  SET_NEW_JOB_NODE_SELECTOR,
-  SET_NEW_JOB_PARAMETERS,
-  SET_NEW_JOB_PREEMTION_MODE,
-  SET_NEW_JOB_PRIORITY_CLASS_NAME,
-  SET_NEW_JOB_SECRET_SOURCES,
-  SET_NEW_JOB_SELECTOR_CRITERIA,
-  SET_NEW_JOB_SELECTOR_RESULT,
-  SET_NEW_JOB_VOLUMES,
-  SET_NEW_JOB_VOLUME_MOUNTS,
-  SET_TUNING_STRATEGY,
-  SET_URL
-} from '../constants'
+import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
+import jobsApi from '../api/jobs-api'
+import { hideLoading, showLoading } from './redux.util'
+import { get } from 'lodash'
+import { FILTER_ALL_ITEMS } from '../constants'
+import { largeResponseCatchHandler } from '../utils/largeResponseCatchHandler'
+import functionsApi from '../api/functions-api'
+import { showErrorNotification } from '../utils/notifications.util'
+import { getNewJobErrorMsg } from '../components/JobWizard/JobWizard.util'
 
 const initialState = {
   jobsData: [],
@@ -124,521 +75,308 @@ const initialState = {
   scheduled: []
 }
 
-const jobReducer = (state = initialState, { type, payload }) => {
-  switch (type) {
-    case ABORT_JOB_BEGIN:
-      return {
-        ...state,
-        loading: true
-      }
-    case ABORT_JOB_FAILURE:
-      return {
-        ...state,
-        loading: false,
-        error: payload
-      }
-    case ABORT_JOB_SUCCESS:
-      return {
-        ...state,
-        loading: false,
-        error: null
-      }
-    case DELETE_JOB_BEGIN:
-      return {
-        ...state,
-        loading: true
-      }
-    case DELETE_JOB_FAILURE:
-      return {
-        ...state,
-        loading: false,
-        error: payload
-      }
-    case DELETE_JOB_SUCCESS:
-      return {
-        ...state,
-        loading: false,
-        error: null
-      }
-    case EDIT_JOB_BEGIN:
-      return {
-        ...state,
-        loading: true
-      }
-    case EDIT_JOB_SUCCESS:
-      return {
-        ...state,
-        loading: false
-      }
-    case EDIT_JOB_FAILURE:
-      return {
-        ...state,
-        error: payload,
-        loading: false
-      }
-    case FETCH_ALL_JOB_RUNS_BEGIN:
-      return {
-        ...state,
-        loading: true
-      }
-    case FETCH_ALL_JOB_RUNS_FAILURE:
-      return {
-        ...state,
-        loading: false,
-        error: payload
-      }
-    case FETCH_ALL_JOB_RUNS_SUCCESS:
-      return {
-        ...state,
-        loading: false,
-        error: null,
-        jobRuns: payload
-      }
-    case FETCH_JOB_LOGS_BEGIN:
-      return {
-        ...state,
-        logs: {
-          ...state.logs,
-          loading: true
-        }
-      }
-    case FETCH_JOB_BEGIN:
-      return {
-        ...state,
-        loading: true
-      }
-    case FETCH_JOB_FAILURE:
-      return {
-        ...state,
-        loading: false,
-        error: payload
-      }
-    case FETCH_JOB_SUCCESS:
-      return {
-        ...state,
-        loading: false,
-        error: null,
-        job: payload
-      }
-    case FETCH_JOB_FUNCTION_BEGIN:
-      return {
-        ...state,
-        loading: true,
-        jobFunc: {}
-      }
-    case FETCH_JOB_FUNCTION_FAILURE:
-      return {
-        ...state,
-        loading: false,
-        error: payload,
-        jobFunc: {}
-      }
-    case FETCH_JOB_FUNCTION_SUCCESS:
-      return {
-        ...state,
-        loading: false,
-        error: null,
-        jobFunc: payload
-      }
-    case FETCH_JOB_FUNCTIONS_BEGIN:
-      return {
-        ...state,
-        loading: true
-      }
-    case FETCH_JOB_FUNCTIONS_FAILURE:
-      return {
-        ...state,
-        loading: false,
-        error: payload
-      }
-    case FETCH_JOB_FUNCTIONS_SUCCESS:
-      return {
-        ...state,
-        loading: false,
-        error: null
-      }
-    case FETCH_JOB_LOGS_FAILURE:
-      return {
-        ...state,
-        logs: {
-          data: [],
-          loading: false,
-          error: payload
-        }
-      }
-    case FETCH_JOB_LOGS_SUCCESS:
-      return {
-        ...state,
-        logs: {
-          loading: false,
-          error: null
-        }
-      }
-    case FETCH_JOBS_BEGIN:
-      return {
-        ...state,
-        loading: true
-      }
-    case FETCH_JOBS_FAILURE:
-      return {
-        ...state,
-        jobs: [],
-        loading: false,
-        error: payload
-      }
-    case FETCH_JOBS_SUCCESS:
-      return {
-        ...state,
-        jobs: payload,
-        loading: false
-      }
-    case FETCH_SCHEDULED_JOBS_BEGIN:
-      return {
-        ...state,
-        loading: true
-      }
-    case FETCH_SCHEDULED_JOBS_FAILURE:
-      return {
-        ...state,
-        scheduled: [],
-        loading: false,
-        error: payload
-      }
-    case FETCH_SCHEDULED_JOBS_SUCCESS:
-      return {
-        ...state,
-        scheduled: payload,
-        loading: false
-      }
-    case REMOVE_JOB:
-      return {
-        ...state,
-        job: {}
-      }
-    case REMOVE_JOB_ERROR:
-      return {
-        ...state,
-        error: null
-      }
-    case REMOVE_JOB_FUNCTION:
-      return {
-        ...state,
-        jobFunc: {}
-      }
-    case REMOVE_NEW_JOB:
-      return {
-        ...state,
-        newJob: {
-          ...initialState.newJob
-        }
-      }
-    case RUN_NEW_JOB_BEGIN:
-      return {
-        ...state,
-        loading: true
-      }
-    case RUN_NEW_JOB_FAILURE:
-      return {
-        ...state,
-        error: payload,
-        loading: false
-      }
-    case RUN_NEW_JOB_SUCCESS:
-      return {
-        ...state,
-        error: null,
-        loading: false
-      }
-    case REMOVE_SCHEDULED_JOB_FAILURE:
-      return {
-        ...state,
-        loading: false,
-        error: payload
-      }
-    case SET_JOBS_DATA:
-      return {
-        ...state,
-        jobsData: payload
-      }
-    case SET_LOADING: {
-      return {
-        ...state,
-        loading: payload
-      }
-    }
-    case SET_NEW_JOB:
-      return {
-        ...state,
-        newJob: {
-          ...state.newJob,
-          task: {
-            ...state.newJob.task,
-            spec: {
-              ...state.newJob.task.spec,
-              parameters: payload.parameters,
-              inputs: payload.inputs,
-              secret_sources: payload.secret_sources
-            }
-          },
-          function: {
-            ...state.newJob.function,
-            metadata: {
-              ...state.newJob.function.metadata,
-              credentials: {
-                ...state.newJob.function.metadata.credentials,
-                access_key: payload.access_key
-              }
-            },
-            spec: {
-              ...state.newJob.function.spec,
-              volume_mounts: payload.volume_mounts,
-              volumes: payload.volumes,
-              env: payload.environmentVariables,
-              node_selector: payload.node_selector,
-              preemption_mode: payload.preemption_mode,
-              priority_class_name: payload.priority_class_name
-            }
-          }
-        }
-      }
-    case SET_NEW_JOB_CREDENTIALS_ACCESS_KEY:
-      return {
-        ...state,
-        newJob: {
-          ...state.newJob,
-          function: {
-            ...state.newJob.function,
-            metadata: {
-              ...state.newJob.function.metadata,
-              credentials: {
-                ...state.newJob.function.metadata.credentials,
-                access_key: payload
-              }
-            }
-          }
-        }
-      }
-    case SET_NEW_JOB_ENVIRONMENT_VARIABLES:
-      return {
-        ...state,
-        newJob: {
-          ...state.newJob,
-          function: {
-            ...state.newJob.function,
-            spec: {
-              ...state.newJob.function.spec,
-              env: payload
-            }
-          }
-        }
-      }
-    case SET_NEW_JOB_INPUTS:
-      return {
-        ...state,
-        newJob: {
-          ...state.newJob,
-          task: {
-            ...state.newJob.task,
-            spec: {
-              ...state.newJob.task.spec,
-              inputs: payload
-            }
-          }
-        }
-      }
-    case SET_NEW_JOB_NODE_SELECTOR:
-      return {
-        ...state,
-        newJob: {
-          ...state.newJob,
-          function: {
-            ...state.newJob.function,
-            spec: {
-              ...state.newJob.function.spec,
-              node_selector: payload
-            }
-          }
-        }
-      }
-    case SET_NEW_JOB_PARAMETERS:
-      return {
-        ...state,
-        newJob: {
-          ...state.newJob,
-          task: {
-            ...state.newJob.task,
-            spec: {
-              ...state.newJob.task.spec,
-              parameters: payload
-            }
-          }
-        }
-      }
-    case SET_NEW_JOB_PREEMTION_MODE:
-      return {
-        ...state,
-        newJob: {
-          ...state.newJob,
-          function: {
-            ...state.newJob.function,
-            spec: {
-              ...state.newJob.function.spec,
-              preemption_mode: payload
-            }
-          }
-        }
-      }
-    case SET_NEW_JOB_PRIORITY_CLASS_NAME:
-      return {
-        ...state,
-        newJob: {
-          ...state.newJob,
-          function: {
-            ...state.newJob.function,
-            spec: {
-              ...state.newJob.function.spec,
-              priority_class_name: payload
-            }
-          }
-        }
-      }
-    case SET_NEW_JOB_SECRET_SOURCES:
-      return {
-        ...state,
-        newJob: {
-          ...state.newJob,
-          task: {
-            ...state.newJob.task,
-            spec: {
-              ...state.newJob.task.spec,
-              secret_sources: payload
-            }
-          }
-        }
-      }
-    case SET_NEW_JOB_VOLUME_MOUNTS:
-      return {
-        ...state,
-        newJob: {
-          ...state.newJob,
-          function: {
-            ...state.newJob.function,
-            spec: {
-              ...state.newJob.function.spec,
-              volume_mounts: payload
-            }
-          }
-        }
-      }
-    case SET_NEW_JOB_VOLUMES:
-      return {
-        ...state,
-        newJob: {
-          ...state.newJob,
-          function: {
-            ...state.newJob.function,
-            spec: {
-              ...state.newJob.function.spec,
-              volumes: payload
-            }
-          }
-        }
-      }
-    case SET_NEW_JOB_HYPER_PARAMETERS:
-      return {
-        ...state,
-        newJob: {
-          ...state.newJob,
-          task: {
-            ...state.newJob.task,
-            spec: {
-              ...state.newJob.task.spec,
-              hyperparams: payload
-            }
-          }
-        }
-      }
-    case SET_NEW_JOB_SELECTOR_CRITERIA: {
-      return {
-        ...state,
-        newJob: {
-          ...state.newJob,
-          task: {
-            ...state.newJob.task,
-            spec: {
-              ...state.newJob.task.spec,
-              hyper_param_options: {
-                ...state.newJob.task.spec.hyper_param_options,
-                selector: {
-                  ...state.newJob.task.spec.hyper_param_options.selector,
-                  criteria: payload
-                }
-              }
-            }
-          }
-        }
-      }
-    }
-    case SET_NEW_JOB_SELECTOR_RESULT: {
-      return {
-        ...state,
-        newJob: {
-          ...state.newJob,
-          task: {
-            ...state.newJob.task,
-            spec: {
-              ...state.newJob.task.spec,
-              hyper_param_options: {
-                ...state.newJob.task.spec.hyper_param_options,
-                selector: {
-                  ...state.newJob.task.spec.hyper_param_options.selector,
-                  result: payload
-                }
-              }
-            }
-          }
-        }
-      }
-    }
-    case SET_TUNING_STRATEGY: {
-      return {
-        ...state,
-        newJob: {
-          ...state.newJob,
-          task: {
-            ...state.newJob.task,
-            spec: {
-              ...state.newJob.task.spec,
-              hyper_param_options: {
-                ...state.newJob.task.spec.hyper_param_options,
-                strategy: payload
-              }
-            }
-          }
-        }
-      }
-    }
-    case SET_URL: {
-      return {
-        ...state,
-        newJob: {
-          ...state.newJob,
-          task: {
-            ...state.newJob.task,
-            spec: {
-              ...state.newJob.task.spec,
-              hyper_param_options: {
-                ...state.newJob.task.spec.hyper_param_options,
-                param_file: payload
-              }
-            }
-          }
-        }
-      }
-    }
-    default:
-      return state
+const generateRequestParams = (filters, jobName) => {
+  const params = {
+    iter: false
   }
+
+  if (filters?.labels) {
+    params.label = filters.labels.split(',')
+  }
+
+  if (jobName) {
+    params.name = jobName
+  } else if (filters?.name) {
+    params.name = `~${filters.name}`
+  }
+
+  if (
+    filters?.state &&
+    filters.state !== FILTER_ALL_ITEMS &&
+    !filters.state.includes(FILTER_ALL_ITEMS)
+  ) {
+    params.state = filters.state
+  }
+
+  if (filters?.dates) {
+    if (filters.dates.value[0]) {
+      params.start_time_from = filters.dates.value[0].toISOString()
+    }
+
+    if (filters.dates.value[1] && !filters.dates.isPredefined) {
+      params.start_time_to = filters.dates.value[1].toISOString()
+    }
+  }
+
+  return params
 }
 
-export default jobReducer
+export const abortJob = createAsyncThunk('abortJob', ({ project, job }) => {
+  return jobsApi.abortJob(project, job.uid, job.iteration).then(response => {
+    return get(response, 'data', {})
+  })
+})
+export const deleteAllJobRuns = createAsyncThunk('deleteAllJobRuns', ({ project, job }) => {
+  return jobsApi.deleteAllJobRuns(project, job.name)
+})
+export const deleteJob = createAsyncThunk('deleteJob', ({ project, job }) => {
+  return jobsApi.deleteJob(project, job.uid)
+})
+export const editJob = createAsyncThunk('editJob', ({ postData, project }) => {
+  return jobsApi.editJob(postData, project)
+})
+export const fetchAllJobRuns = createAsyncThunk(
+  'fetchAllJobRuns',
+  ({ project, filters, config, jobName }, thunkAPI) => {
+    const newConfig = {
+      ...config,
+      params: {
+        ...config?.params,
+        ...generateRequestParams(filters, jobName)
+      }
+    }
+
+    config?.ui?.setRequestErrorMessage?.('')
+
+    return jobsApi
+      .getAllJobRuns(project, newConfig)
+      .then(({ data }) => {
+        return data
+      })
+      .catch(error => {
+        largeResponseCatchHandler(
+          error,
+          'Failed to fetch jobs',
+          thunkAPI.dispatch,
+          config?.ui?.setRequestErrorMessage
+        )
+      })
+  }
+)
+export const fetchJob = createAsyncThunk('fetchJob', ({ project, jobId, iter }) => {
+  return jobsApi.getJob(project, jobId, iter).then(res => {
+    return res.data.data
+  })
+})
+export const fetchJobFunction = createAsyncThunk(
+  'fetchJobFunction',
+  ({ project, functionName, hash }, thunkAPI) => {
+    return functionsApi
+      .getFunction(project, functionName, hash)
+      .then(res => {
+        return res.data.func
+      })
+      .catch(error => {
+        showErrorNotification(thunkAPI.dispatch, error, 'Job’s function failed to load')
+      })
+  }
+)
+export const fetchJobFunctions = createAsyncThunk('fetchJobFunctions', ({ project, hash }) => {
+  return functionsApi.getFunctions(project, null, {}, hash).then(res => {
+    return res.data?.funcs
+  })
+})
+export const fetchJobLogs = createAsyncThunk('fetchJobLogs', ({ id, project }) => {
+  return jobsApi.getJobLogs(id, project).then(result => {
+    return result
+  })
+})
+export const fetchJobs = createAsyncThunk('fetchJobs', ({ project, filters, config }, thunkAPI) => {
+  config?.ui?.setRequestErrorMessage?.('')
+
+  const newConfig = {
+    ...config,
+    params: {
+      ...config?.params,
+      ...generateRequestParams(filters)
+    }
+  }
+
+  return jobsApi
+    .getJobs(project, newConfig)
+    .then(({ data }) => {
+      thunkAPI.dispatch(jobsSlice.actions.setJobsData({ jobs: data.runs || [] }))
+
+      return { ...data, runs: (data || {}).runs.filter(job => job.metadata.iteration === 0) }
+    })
+    .catch(error => {
+      largeResponseCatchHandler(
+        error,
+        'Failed to fetch jobs',
+        thunkAPI.dispatch,
+        config?.ui?.setRequestErrorMessage
+      )
+    })
+})
+export const fetchScheduledJobs = createAsyncThunk(
+  'fetchScheduledJobs',
+  ({ project, filters, config }, thunkAPI) => {
+    config?.ui?.setRequestErrorMessage?.('')
+
+    const newConfig = {
+      ...config,
+      params: {
+        ...config?.params,
+        include_last_run: 'yes'
+      }
+    }
+
+    if (filters?.owner) {
+      newConfig.params.owner = filters.owner
+    }
+
+    if (filters?.name) {
+      newConfig.params.name = `~${filters.name}`
+    }
+
+    if (filters?.labels) {
+      newConfig.params.label = filters.labels?.split(',')
+    }
+
+    return jobsApi
+      .getScheduledJobs(project, newConfig)
+      .then(({ data }) => {
+        return (data || {}).schedules
+      })
+      .catch(error => {
+        largeResponseCatchHandler(
+          error,
+          'Failed to fetch scheduled jobs',
+          thunkAPI.dispatch,
+          config?.ui?.setRequestErrorMessage
+        )
+      })
+  }
+)
+export const fetchSpecificJobs = createAsyncThunk(
+  'fetchSpecificJobs',
+  ({ project, filters, jobList }) => {
+    const params = {
+      ...generateRequestParams(filters)
+    }
+
+    return jobsApi.getSpecificJobs(project, params, jobList).then(({ data }) => {
+      return data.runs
+    })
+  }
+)
+export const handleRunScheduledJob = createAsyncThunk(
+  'handleRunScheduledJob',
+  ({ postData, project, job }) => {
+    return jobsApi.runScheduledJob(postData, project, job)
+  }
+)
+export const removeScheduledJob = createAsyncThunk(
+  'removeScheduledJob',
+  ({ project, scheduleName }) => {
+    return jobsApi.removeScheduledJob(project, scheduleName)
+  }
+)
+export const runNewJob = createAsyncThunk('runNewJob', ({ postData }) => {
+  return jobsApi.runJob(postData).then(result => result)
+})
+
+const jobsSlice = createSlice({
+  name: 'jobsStore',
+  initialState,
+  reducers: {
+    removeJobFunction(state) {
+      state.jobFunc = {}
+    },
+    setJobsData(state, action) {
+      state.jobsData = action.payload
+    }
+  },
+  extraReducers: builder => {
+    builder.addCase(abortJob.pending, showLoading)
+    builder.addCase(abortJob.fulfilled, hideLoading)
+    builder.addCase(abortJob.rejected, hideLoading)
+    builder.addCase(deleteAllJobRuns.pending, showLoading)
+    builder.addCase(deleteAllJobRuns.fulfilled, hideLoading)
+    builder.addCase(deleteAllJobRuns.rejected, hideLoading)
+    builder.addCase(deleteJob.pending, showLoading)
+    builder.addCase(deleteJob.fulfilled, hideLoading)
+    builder.addCase(deleteJob.rejected, hideLoading)
+    builder.addCase(editJob.pending, showLoading)
+    builder.addCase(editJob.fulfilled, hideLoading)
+    builder.addCase(editJob.rejected, hideLoading)
+    builder.addCase(fetchAllJobRuns.pending, showLoading)
+    builder.addCase(fetchAllJobRuns.fulfilled, (state, action) => {
+      state.error = null
+      state.jobRuns = action.payload
+      state.loading = false
+    })
+    builder.addCase(fetchAllJobRuns.rejected, hideLoading)
+    builder.addCase(fetchJob.pending, showLoading)
+    builder.addCase(fetchJob.fulfilled, (state, action) => {
+      state.error = null
+      state.job = action.payload
+      state.loading = false
+    })
+    builder.addCase(fetchJob.rejected, hideLoading)
+    builder.addCase(fetchJobFunction.pending, showLoading)
+    builder.addCase(fetchJobFunction.fulfilled, (state, action) => {
+      state.error = null
+      state.jobFunc = action.payload
+      state.loading = false
+    })
+    builder.addCase(fetchJobFunction.rejected, hideLoading)
+    builder.addCase(fetchJobFunctions.pending, showLoading)
+    builder.addCase(fetchJobFunctions.fulfilled, (state, action) => {
+      state.error = null
+      state.jobFunc = action.payload
+      state.loading = false
+    })
+    builder.addCase(fetchJobFunctions.rejected, hideLoading)
+    builder.addCase(fetchJobLogs.pending, (state, action) => {
+      state.logs.loading = true
+      state.logs.error = null
+    })
+    builder.addCase(fetchJobLogs.fulfilled, (state, action) => {
+      state.logs.error = null
+      state.logs.loading = false
+    })
+    builder.addCase(fetchJobLogs.rejected, (state, action) => {
+      state.logs.loading = false
+      state.logs.error = action.payload
+    })
+    builder.addCase(fetchJobs.pending, showLoading)
+    builder.addCase(fetchJobs.fulfilled, (state, action) => {
+      state.error = null
+      state.jobs = action.payload
+      state.loading = false
+    })
+    builder.addCase(fetchJobs.rejected, (state, action) => {
+      state.error = action.payload
+      state.jobs = []
+      state.loading = false
+    })
+    builder.addCase(fetchScheduledJobs.pending, showLoading)
+    builder.addCase(fetchScheduledJobs.fulfilled, (state, action) => {
+      state.error = null
+      state.scheduled = action.payload
+      state.loading = false
+    })
+    builder.addCase(fetchScheduledJobs.rejected, (state, action) => {
+      state.error = action.payload
+      state.scheduled = []
+      state.loading = false
+    })
+    builder.addCase(removeScheduledJob.rejected, (state, action) => {
+      state.error = action.payload
+    })
+    builder.addCase(runNewJob.pending, showLoading)
+    builder.addCase(runNewJob.fulfilled, (state, action) => {
+      state.error = null
+      state.loading = false
+    })
+    builder.addCase(runNewJob.rejected, (state, action) => {
+      state.error = getNewJobErrorMsg(action.payload)
+      state.loading = false
+    })
+  }
+})
+
+export const { removeJobFunction, setJobsData } = jobsSlice.actions
+
+export default jobsSlice.reducer
