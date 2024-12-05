@@ -266,10 +266,11 @@ const Projects = () => {
 
   const viewYaml = useCallback(
     projectMinimal => {
+      const yamlByteSizeLimit = 2000000
       if (projectMinimal?.metadata?.name) {
         dispatch(projectsAction.fetchProject(projectMinimal.metadata.name))
           .then(response => {
-            if (response.headers.get('content-length') > 2000000) {
+            if (response.headers.get('content-length') > yamlByteSizeLimit) {
               openPopUp(ConfirmDialog, {
                 header: 'Unable to display project YAML',
                 message:
