@@ -41,6 +41,7 @@ const ProjectsAlerts = () => {
   const params = useParams()
   const dispatch = useDispatch()
   const alertsStore = useSelector(state => state.alertsStore)
+  const filtersStore = useSelector(store => store.filtersStore)
 
   const abortControllerRef = useRef(new AbortController())
 
@@ -70,8 +71,12 @@ const ProjectsAlerts = () => {
         })
       )
         .unwrap()
-        .then(data => {
-          setAlerts(data)
+        .then(alerts => {
+          if (alerts?.length > 0) {
+            setAlerts(alerts)
+          } else {
+            setAlerts([])
+          }
         })
     },
     [dispatch, params.id]
@@ -114,6 +119,7 @@ const ProjectsAlerts = () => {
       alertsStore={alertsStore}
       actionsMenu={() => []} // TODO
       filters={alertsFilters}
+      filtersStore={filtersStore}
       pageData={{}} //TODO
       refreshAlertsCallback={refreshAlertsCallback}
       requestErrorMessage={requestErrorMessage}

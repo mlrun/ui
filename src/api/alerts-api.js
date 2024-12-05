@@ -17,38 +17,28 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import dummyData from '../components/ProjectsAlerts/alertsData.json'
+import { mainHttpClient } from '../httpClient'
 
 const alertsApi = {
   getAlerts: (project, filters, config = {}) => {
-    // TODO:ML-8514 update newConfig & remove dummy data
-    // const newConfig = {
-    //   ...config,
-    //   params: {
-    //     ...config.params
-    //   }
-    // }
-    return new Promise(resolve => {
-      setTimeout(() => {
-        resolve({ data: dummyData })
-      }, 1000)
-    })
-    // return mainHttpClient.get(`/projects/${project}/alerts/${alertName}/activations`, newConfig)
+    // TODO:ML-8514 update newConfig
+    const newConfig = {
+      ...config,
+      params: {
+        ...config.params
+      }
+    }
+    return mainHttpClient.get(`/projects/${project}/alert-activations`, newConfig)
   },
   getAlert: (project, alertName, config) => {
-    // TODO:ML-8514 update newConfig & remove dummy data
-    // const newConfig = {
-    //   ...config,
-    //   params: {
-    //     ...config.params
-    //   }
-    // }
-    return new Promise(resolve => {
-      setTimeout(() => {
-        resolve({ data: dummyData })
-      }, 1000)
-    })
-    // return mainHttpClient.get(`/projects/${project}/alerts/activations`, newConfig)
+    // TODO:ML-8514 update newConfig
+    const newConfig = {
+      ...config,
+      params: {
+        ...config.params
+      }
+    }
+    return mainHttpClient.get('/projects/{project}/alerts/{alertName}/activations', newConfig)
   }
 }
 

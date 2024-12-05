@@ -125,26 +125,22 @@ const alertsNotifications = {
   slack: <Slack />,
   email: <Email />
 }
-
 const getNotificationData = notifications =>
   notifications.map(notification => {
-    const hasError = notification.err !== ''
-    const tooltipContent =
-      hasError && notification?.summary
-        ? `${notification.summary.succeeded} done, ${notification.summary.failed} failed`
-        : notification.kind
     return {
       icon: (
         <div className={'table-cell-notification'}>
           {alertsNotifications[notification.kind]}
-          {hasError && (
+          {notification.err !== '' && (
             <div className="notification-fail">
               <Error />
             </div>
           )}
         </div>
       ),
-      tooltip: upperFirst(tooltipContent)
+      tooltip: upperFirst(
+        `${notification.summary.succeeded} done, ${notification.summary.failed} failed`
+      )
     }
   })
 
