@@ -18,10 +18,10 @@ under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
 import { useCallback, useMemo, useRef, useState } from 'react'
-import { useParams } from 'react-router-dom'
+import { useParams, useSearchParams } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 
-import ProjectAlertsView from './ProjectsAlertsView'
+import AlertsView from './AlertsView'
 
 import { getAlertsFiltersConfig, parseAlertsQueryParamsCallback } from './alerts.util'
 import { useFiltersFromSearchParams } from '../../hooks/useFiltersFromSearchParams.hook'
@@ -33,12 +33,13 @@ import { useInitialTableFetch } from '../../hooks/useInitialTableFetch.hook'
 
 import cssVariables from './alerts.scss'
 
-const ProjectsAlerts = () => {
+const Alerts = () => {
   const [alerts, setAlerts] = useState([])
   const [requestErrorMessage, setRequestErrorMessage] = useState('')
   const [selectedAlert] = useState({})
   const [selectedRowData] = useState({})
   const params = useParams()
+  const [, setSearchParams] = useSearchParams()
   const dispatch = useDispatch()
   const alertsStore = useSelector(state => state.alertsStore)
   const filtersStore = useSelector(store => store.filtersStore)
@@ -115,7 +116,7 @@ const ProjectsAlerts = () => {
   })
 
   return (
-    <ProjectAlertsView
+    <AlertsView
       alerts={alerts}
       alertsFiltersConfig={alertsFiltersConfig}
       alertsStore={alertsStore}
@@ -126,10 +127,11 @@ const ProjectsAlerts = () => {
       refreshAlertsCallback={refreshAlertsCallback}
       requestErrorMessage={requestErrorMessage}
       selectedAlert={selectedAlert}
+      setSearchParams={setSearchParams}
       tableContent={tableContent}
       virtualizationConfig={virtualizationConfig}
     />
   )
 }
 
-export default ProjectsAlerts
+export default Alerts

@@ -17,6 +17,7 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
+import classNames from 'classnames'
 import { upperFirst } from 'lodash'
 import { formatDatetime } from './datetime'
 
@@ -127,20 +128,18 @@ const alertsNotifications = {
 
 const getNotificationData = notifications =>
   notifications.map(notification => {
+    const tableCellClassName = classNames('table-cell-notification__content', {
+      'notification-fail': notification.err !== ''
+    })
+
     return {
-      icon: (
-        <div
-          className={`table-cell-notification__content ${notification.err !== '' ? 'notification-fail' : ''}`}
-        >
-          {alertsNotifications[notification.kind]}
-        </div>
-      ),
+      icon: <div className={tableCellClassName}>{alertsNotifications[notification.kind]}</div>,
       tooltip: upperFirst(notification.kind)
     }
   })
 
 export const createAlertRowData = ({ name, ...alert }) => {
-  alert.id = alert.id.slice(-6)
+  alert.id = alert.id.slice(-6) // Use the last 6 characters of the database ID as the alert ID
 
   return {
     data: {
@@ -169,7 +168,7 @@ export const createAlertRowData = ({ name, ...alert }) => {
         id: `eventType.${alert.id}`,
         headerId: 'eventType',
         headerLabel: 'Event Type',
-        value: alert.event_kind.split('-').join(' '),
+        value: alert.event_kind?.split('-')?.join(' '),
         className: 'table-cell-1'
       },
       {
@@ -206,14 +205,14 @@ export const createAlertRowData = ({ name, ...alert }) => {
         id: `criteriaCount.${alert.id}`,
         headerId: 'criteriaCount',
         headerLabel: 'Trigger criteria count',
-        value: alert.criteria.count,
+        value: alert.criteria?.count,
         className: 'table-cell-1'
       },
       {
         id: `criteriaTime.${alert.id}`,
         headerId: 'criteriaTime',
         headerLabel: 'Trigger criteria time period',
-        value: alert.criteria.period,
+        value: alert.criteria?.period,
         className: 'table-cell-1'
       },
       {

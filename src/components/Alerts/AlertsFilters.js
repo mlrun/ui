@@ -50,7 +50,7 @@ import {
   SEVERITY
 } from '../../constants'
 
-const ProjectsAlertsFilters = () => {
+const AlertsFilters = () => {
   const form = useForm()
   const {
     values: { [ENTITY_TYPE]: entityType }
@@ -148,4 +148,4 @@ const ProjectsAlertsFilters = () => {
   )
 }
 
-export default ProjectsAlertsFilters
+export default AlertsFilters

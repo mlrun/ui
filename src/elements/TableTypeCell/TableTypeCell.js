@@ -84,13 +84,12 @@ const TableTypeCell = ({ className = '', data }) => {
       >
         {typesOfJob[data.value]?.icon ?? capitalize(data.value)}
       </Tooltip>
-      {data.text && <div style={{ marginLeft: '10px' }}>{data.value}</div>}
     </td>
   )
 }
 
 TableTypeCell.propTypes = {
-  text: PropTypes.string,
+  className: PropTypes.string,
   data: PropTypes.shape({}).isRequired
 }
 
