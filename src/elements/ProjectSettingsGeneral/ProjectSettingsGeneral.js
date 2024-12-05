@@ -104,22 +104,22 @@ const ProjectSettingsGeneral = ({
         .then(response => {
           setTimeout(() => {
             const newInitial = {
-              [SOURCE_URL]: response?.data.spec[SOURCE_URL],
-              [ARTIFACT_PATH]: response?.data.spec[ARTIFACT_PATH],
-              [LOAD_SOURCE_ON_RUN]: response?.data.spec[LOAD_SOURCE_ON_RUN],
-              [DEFAULT_IMAGE]: response?.data.spec[DEFAULT_IMAGE],
-              [DESCRIPTION]: response?.data.spec[DESCRIPTION],
-              [GOALS]: response?.data.spec[GOALS],
-              [PARAMS]: parseObjectToKeyValue(response?.data.spec[PARAMS]),
+              [SOURCE_URL]: response?.data?.spec[SOURCE_URL],
+              [ARTIFACT_PATH]: response?.data?.spec[ARTIFACT_PATH],
+              [LOAD_SOURCE_ON_RUN]: response?.data?.spec[LOAD_SOURCE_ON_RUN],
+              [DEFAULT_IMAGE]: response?.data?.spec[DEFAULT_IMAGE],
+              [DESCRIPTION]: response?.data?.spec[DESCRIPTION],
+              [GOALS]: response?.data?.spec[GOALS],
+              [PARAMS]: parseObjectToKeyValue(response?.data?.spec[PARAMS]),
               [LABELS]: parseChipsData(
-                response?.data.metadata[LABELS],
+                response?.data?.metadata[LABELS],
                 frontendSpec.internal_labels || []
               )
             }
 
             if (areNodeSelectorsSupported) {
               newInitial[NODE_SELECTORS] = parseObjectToKeyValue(
-                response?.data.spec[NODE_SELECTORS]
+                response?.data?.spec[NODE_SELECTORS]
               )
             }
 
