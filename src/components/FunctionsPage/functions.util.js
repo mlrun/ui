@@ -344,7 +344,7 @@ export const generateActionsMenu = (
           getFullFunction(funcMin).then(func => !isEmpty(func) && toggleConvertedYaml(func))
       },
       {
-        label: 'Delete',
+        label: 'Delete all versions',
         icon: <Delete />,
         className: 'danger',
         disabled: functionIsDeleting,
