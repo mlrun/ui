@@ -52,7 +52,6 @@ const DatasetsView = React.forwardRef(
       filters,
       filtersStore,
       getAndSetSelectedArtifact,
-      handleExpandRow,
       handleRefresh,
       handleRefreshWithFilters,
       handleRegisterDataset,
@@ -62,10 +61,12 @@ const DatasetsView = React.forwardRef(
       selectedDataset,
       selectedRowData,
       setMaxArtifactsErrorIsShown,
+      setSearchParams,
       setSelectedDatasetMin,
       sortProps,
       tableContent,
       tableHeaders,
+      toggleRow,
       viewMode = null,
       virtualizationConfig
     },
@@ -94,6 +95,7 @@ const DatasetsView = React.forwardRef(
                   filtersConfig={filtersConfig}
                   handleRefresh={handleRefresh}
                   page={DATASETS_PAGE}
+                  setSearchParams={setSearchParams}
                   withRefreshButton
                   withoutExpandButton
                 >
@@ -141,12 +143,12 @@ const DatasetsView = React.forwardRef(
                         isRowRendered(virtualizationConfig, index) && (
                           <ArtifactsTableRow
                             actionsMenu={actionsMenu}
-                            handleExpandRow={handleExpandRow}
                             key={tableItem.data.ui.identifier}
                             rowIndex={index}
                             rowItem={tableItem}
                             selectedItem={selectedDataset}
                             selectedRowData={selectedRowData}
+                            toggleRow={toggleRow}
                           />
                         )
                     )}
@@ -184,10 +186,9 @@ DatasetsView.propTypes = {
   artifactsStore: PropTypes.object.isRequired,
   datasets: PropTypes.arrayOf(PropTypes.object).isRequired,
   detailsFormInitialValues: PropTypes.object.isRequired,
-  getAndSetSelectedArtifact: PropTypes.func.isRequired,
   filters: PropTypes.object.isRequired,
   filtersStore: PropTypes.object.isRequired,
-  handleExpandRow: PropTypes.func.isRequired,
+  getAndSetSelectedArtifact: PropTypes.func.isRequired,
   handleRefresh: PropTypes.func.isRequired,
   handleRefreshWithFilters: PropTypes.func.isRequired,
   handleRegisterDataset: PropTypes.func.isRequired,
@@ -197,10 +198,12 @@ DatasetsView.propTypes = {
   selectedDataset: PropTypes.object.isRequired,
   selectedRowData: PropTypes.object.isRequired,
   setMaxArtifactsErrorIsShown: PropTypes.func.isRequired,
+  setSearchParams: PropTypes.func.isRequired,
   setSelectedDatasetMin: PropTypes.func.isRequired,
   sortProps: SORT_PROPS,
   tableContent: PropTypes.arrayOf(PropTypes.object).isRequired,
   tableHeaders: PropTypes.arrayOf(PropTypes.object).isRequired,
+  toggleRow: PropTypes.func.isRequired,
   viewMode: PropTypes.string,
   virtualizationConfig: VIRTUALIZATION_CONFIG.isRequired
 }

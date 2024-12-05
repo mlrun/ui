@@ -39,7 +39,7 @@ import { formatDatetime } from '../../../utils'
 import { TERTIARY_BUTTON } from 'igz-controls/constants'
 import { ACTIONS_MENU } from '../../../types'
 import { getViewMode } from '../../../utils/helper'
-import { generateUrlFromRouterPath } from '../../../utils/link-helper.util'
+import { generateUrlFromRouterPath, getDefaultCloseDetailsLink } from '../../../utils/link-helper.util'
 import { getFilteredSearchParams } from '../../../utils/filter.util'
 
 import { ReactComponent as Close } from 'igz-controls/images/close.svg'
@@ -134,11 +134,13 @@ const DetailsHeader = ({
           {isDetailsScreen && !pageData.details.hideBackBtn && !isDetailsPopUp && (
             <Link
               className="item-header__back-btn"
-              to={generateUrlFromRouterPath(
+              to={
                 getCloseDetailsLink
-                  ? getCloseDetailsLink(window.location, selectedItem.name)
-                  : window.location.pathname.split('/').slice(0, -2).join('/')
-              )}
+                  ? getCloseDetailsLink(selectedItem.name)
+                  : generateUrlFromRouterPath(
+                      window.location.pathname.split('/').slice(0, -2).join('/')
+                    )
+              }
               onClick={handleBackClick}
             >
               <RoundedIcon id="go-back" tooltipText="Go to list">
@@ -167,17 +169,18 @@ const DetailsHeader = ({
         <div className="item-header__status">
           {/*In the Workflow page we display both Jobs and Functions items. The function contains `updated` property.
             The job contains startTime property.*/}
-          <span className="updated data-ellipsis">
-            {Object.keys(selectedItem).length > 0 &&
-            pageData.page === JOBS_PAGE &&
-            !selectedItem?.updated
-              ? formatDatetime(
-                  selectedItem?.startTime,
-                  stateValue === 'aborted' ? 'N/A' : 'Not yet started'
-                )
-              : selectedItem?.updated
-                ? formatDatetime(selectedItem?.updated, 'N/A')
-                : selectedItem?.status?.last_request
+          <div className="item-header__status-row">
+            <span className="updated data-ellipsis">
+              {Object.keys(selectedItem).length > 0 &&
+              pageData.page === JOBS_PAGE &&
+              !selectedItem?.updated
+                ? formatDatetime(
+                    selectedItem?.startTime,
+                    stateValue === 'aborted' ? 'N/A' : 'Not yet started'
+                  )
+                : selectedItem?.updated
+                  ? formatDatetime(selectedItem?.updated, 'N/A')
+                  : selectedItem?.status?.last_request
                   ? formatDatetime(selectedItem.status.last_request, 'N/A')
                   : ''}
           </span>
@@ -185,35 +188,37 @@ const DetailsHeader = ({
             <Tooltip className="state" template={<TextTooltipTemplate text={stateLabel} />}>
               <i className={stateClassName} />
             </Tooltip>
-          )}
-          {selectedItem.ui?.customError?.title && selectedItem.ui?.customError?.message && (
-            <Tooltip
-              className="error-container"
-              template={
-                <TextTooltipTemplate
-                  text={`${selectedItem.ui.customError.title} ${selectedItem.ui.customError.message}`}
-                />
-              }
-            >
-              {selectedItem.ui.customError.title} {selectedItem.ui.customError.message}
-            </Tooltip>
-          )}
-          {errorMessage && (
-            <Tooltip
-              className="error-container"
-              template={<TextTooltipTemplate text={errorMessage} />}
-            >
-              {errorMessage}
-            </Tooltip>
-          )}
-          {!isEmpty(detailsStore.pods.podsPending) && (
-            <span className="left-margin">
-              {`${detailsStore.pods.podsPending.length} of ${detailsStore.pods.podsList.length} pods are pending`}
-            </span>
-          )}
-          {detailsStore.pods.error && (
-            <span className="item-header__pods-error left-margin">Failed to load pods</span>
-          )}
+          )}</div>
+          <div className="item-header__status-row">
+            {selectedItem.ui?.customError?.title && selectedItem.ui?.customError?.message && (
+              <Tooltip
+                className="error-container"
+                template={
+                  <TextTooltipTemplate
+                    text={`${selectedItem.ui.customError.title} ${selectedItem.ui.customError.message}`}
+                  />
+                }
+              >
+                {selectedItem.ui.customError.title} {selectedItem.ui.customError.message}
+              </Tooltip>
+            )}
+            {errorMessage && (
+              <Tooltip
+                className="error-container"
+                template={<TextTooltipTemplate text={errorMessage} />}
+              >
+                {errorMessage}
+              </Tooltip>
+            )}
+            {!isEmpty(detailsStore.pods.podsPending) && (
+              <span className="left-margin">
+                {`${detailsStore.pods.podsPending.length} of ${detailsStore.pods.podsList.length} pods are pending`}
+              </span>
+            )}
+            {detailsStore.pods.error && (
+              <span className="item-header__pods-error left-margin">Failed to load pods</span>
+            )}
+          </div>
         </div>
       </div>
       <div className="item-header__custom-elements">
@@ -326,12 +331,8 @@ const DetailsHeader = ({
                 data-testid="details-close-btn"
                 to={
                   getCloseDetailsLink
-                    ? generateUrlFromRouterPath(
-                        getCloseDetailsLink(window.location, selectedItem.name)
-                      )
-                    : `/projects/${params.projectName}/${pageData.page.toLowerCase()}${
-                        params.pageTab ? `/${params.pageTab}` : tab ? `/${tab}` : ''
-                      }`
+                    ? getCloseDetailsLink(selectedItem.name)
+                    : getDefaultCloseDetailsLink(params, pageData.page, tab)
                 }
                 onClick={handleCancelClick}
               >

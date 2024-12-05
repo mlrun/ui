@@ -37,7 +37,6 @@ import { isRowExpanded, PARENT_ROW_EXPANDED_CLASS } from '../../utils/tableRows.
 
 const FeatureStoreTableRow = ({
   actionsMenu,
-  handleExpandRow = () => {},
   handleSelectItem = () => {},
   hideActionsMenu = false,
   mainRowItemsCount = 1,
@@ -45,7 +44,8 @@ const FeatureStoreTableRow = ({
   rowIndex,
   rowItem,
   selectedItem = {},
-  selectedRowData
+  selectedRowData,
+  toggleRow = () => {}
 }) => {
   const parent = useRef()
   const params = useParams()
@@ -88,7 +88,6 @@ const FeatureStoreTableRow = ({
                           className={cellClassName}
                           data={data}
                           firstCell={index === 0}
-                          handleExpandRow={handleExpandRow}
                           item={rowItem}
                           key={data.id}
                           link={
@@ -99,6 +98,7 @@ const FeatureStoreTableRow = ({
                           selectItem={handleSelectItem}
                           selectedItem={selectedItem}
                           showExpandButton={data.showExpandButton}
+                          toggleRow={toggleRow}
                         />
                       )
                     )
@@ -188,14 +188,14 @@ const FeatureStoreTableRow = ({
                   className={cellClassNames}
                   data={value}
                   firstCell={index === 0}
-                  handleExpandRow={handleExpandRow}
                   item={rowItem.data}
                   key={value.id}
                   link={value.getLink?.(params.tab ?? DETAILS_OVERVIEW_TAB)}
                   onClick={value.handleClick}
-                  selectedItem={selectedItem}
                   selectItem={handleSelectItem}
+                  selectedItem={selectedItem}
                   showExpandButton={value.showExpandButton}
+                  toggleRow={toggleRow}
                 />
               )
             )
@@ -213,7 +213,6 @@ const FeatureStoreTableRow = ({
 
 FeatureStoreTableRow.propTypes = {
   actionsMenu: ACTIONS_MENU.isRequired,
-  handleExpandRow: PropTypes.func,
   handleSelectItem: PropTypes.func,
   hideActionsMenu: PropTypes.bool,
   mainRowItemsCount: PropTypes.number,
@@ -221,7 +220,8 @@ FeatureStoreTableRow.propTypes = {
   rowIndex: PropTypes.number.isRequired,
   rowItem: PropTypes.shape({}).isRequired,
   selectedItem: PropTypes.shape({}),
-  selectedRowData: PropTypes.shape({}).isRequired
+  selectedRowData: PropTypes.shape({}).isRequired,
+  toggleRow: PropTypes.func
 }
 
 export default React.memo(FeatureStoreTableRow)

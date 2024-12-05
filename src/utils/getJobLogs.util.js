@@ -17,33 +17,30 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-export const getJobLogs = (
-  uid,
-  projectName,
-  streamLogsRef,
-  setDetailsLogs,
-  fetchJobLogs,
-  dispatch
-) => {
+import { fetchJobLogs } from '../reducers/jobReducer'
+
+export const getJobLogs = (id, project, streamLogsRef, setDetailsLogs, dispatch) => {
   setDetailsLogs('')
 
-  dispatch(fetchJobLogs(uid, projectName)).then(res => {
-    const reader = res.body?.getReader()
+  dispatch(fetchJobLogs({ id, project }))
+    .unwrap()
+    .then(res => {
+      const reader = res.body?.getReader()
 
-    if (reader) {
-      const decoder = new TextDecoder()
-      const read = () => {
-        reader.read().then(({ done, value }) => {
-          if (done) {
-            return
-          }
+      if (reader) {
+        const decoder = new TextDecoder()
+        const read = () => {
+          reader.read().then(({ done, value }) => {
+            if (done) {
+              return
+            }
 
-          setDetailsLogs(prevState => prevState + decoder.decode(value))
-        })
+            setDetailsLogs(prevState => prevState + decoder.decode(value))
+          })
+        }
+
+        streamLogsRef.current = read
+        read()
       }
-
-      streamLogsRef.current = read
-      read()
-    }
-  })
+    })
 }

@@ -18,16 +18,13 @@ under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
 import React, { useCallback, useEffect, useMemo, useRef } from 'react'
-import { Link, useLocation } from 'react-router-dom'
-import { useDispatch, useSelector } from 'react-redux'
+import { Link } from 'react-router-dom'
 import classnames from 'classnames'
 
 import BreadcrumbsDropdown from '../../../elements/BreadcrumbsDropdown/BreadcrumbsDropdown'
 import { RoundedIcon } from 'igz-controls/components'
 
 import { scrollToElement } from '../../../utils/scroll.util'
-import projectsAction from '../../../actions/projects'
-import { generateProjectsList } from '../../../utils/projects'
 
 import { ReactComponent as ArrowIcon } from 'igz-controls/images/arrow.svg'
 
@@ -40,6 +37,7 @@ const BreadcrumbsStep = React.forwardRef(
       mlrunScreens,
       onClick,
       params,
+      projectsList,
       searchValue,
       setSearchValue,
       setShowProjectsList,
@@ -53,9 +51,6 @@ const BreadcrumbsStep = React.forwardRef(
   ) => {
     const projectListRef = useRef()
     const separatorRef = useRef()
-    const dispatch = useDispatch()
-    const location = useLocation()
-    const projectStore = useSelector(state => state.projectStore)
 
     const isParam = useMemo(() => Object.values(params ?? {}).includes(urlPart), [urlPart, params])
     const label = useMemo(
@@ -70,9 +65,6 @@ const BreadcrumbsStep = React.forwardRef(
       () => index === urlParts.pathItems.length - 1,
       [index, urlParts.pathItems.length]
     )
-    const projectsList = useMemo(() => {
-      return generateProjectsList(projectStore.projectsNames.data)
-    }, [projectStore.projectsNames.data])
 
     const separatorClassNames = classnames(
       'breadcrumbs__separator',
@@ -132,12 +124,6 @@ const BreadcrumbsStep = React.forwardRef(
         window.removeEventListener('click', handleCloseDropdown)
       }
     }, [handleCloseDropdown])
-
-    useEffect(() => {
-      if (projectsList.length === 0 && location.pathname !== '/projects') {
-        dispatch(projectsAction.fetchProjects({ format: 'minimal' }))
-      }
-    }, [dispatch, location.pathname, projectsList.length])
 
     const handleSeparatorClick = (nextItem, separatorRef) => {
       const nextItemIsScreen = Boolean(mlrunScreens.find(screen => screen.label === nextItem))

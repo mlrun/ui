@@ -19,7 +19,7 @@ such restriction.
 */
 import React, { useCallback, useEffect, useRef, useState, useMemo } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { useLocation, useNavigate, useParams } from 'react-router-dom'
+import { useLocation, useNavigate, useParams, useSearchParams } from 'react-router-dom'
 
 import DatasetsView from './DatasetsView'
 import AddArtifactTagPopUp from '../../elements/AddArtifactTagPopUp/AddArtifactTagPopUp'
@@ -81,6 +81,7 @@ const Datasets = () => {
   const location = useLocation()
   const navigate = useNavigate()
   const params = useParams()
+  const [, setSearchParams] = useSearchParams()
   const filters = useFiltersFromSearchParams(filtersConfig)
   const abortControllerRef = useRef(new AbortController())
   const tagAbortControllerRef = useRef(new AbortController())
@@ -252,7 +253,7 @@ const Datasets = () => {
     handleRefresh(filters)
   }
 
-  const handleExpand = useCallback(
+  const expandRowCallback = useCallback(
     (dataset, content) => {
       const dataSetIdentifier = getArtifactIdentifier(dataset)
 
@@ -272,7 +273,7 @@ const Datasets = () => {
     [params.projectName]
   )
 
-  const handleRemoveRowData = useCallback(
+  const collapseRowCallback = useCallback(
     dataset => {
       const newStoreSelectedRowData = {
         ...artifactsStore.dataSets.selectedRowData.content
@@ -288,11 +289,11 @@ const Datasets = () => {
     [artifactsStore.dataSets.selectedRowData.content, dispatch, selectedRowData]
   )
 
-  const { latestItems, handleExpandRow } = useGroupContent(
+  const { latestItems, toggleRow } = useGroupContent(
     datasets,
     getArtifactIdentifier,
-    handleRemoveRowData,
-    handleExpand,
+    collapseRowCallback,
+    expandRowCallback,
     null,
     DATASETS_PAGE
   )
@@ -410,7 +411,6 @@ const Datasets = () => {
       filters={filters}
       filtersStore={filtersStore}
       getAndSetSelectedArtifact={getAndSetSelectedArtifact}
-      handleExpandRow={handleExpandRow}
       handleRefresh={handleRefresh}
       handleRefreshWithFilters={handleRefreshWithFilters}
       handleRegisterDataset={handleRegisterDataset}
@@ -421,10 +421,12 @@ const Datasets = () => {
       selectedDataset={selectedDataset}
       selectedRowData={selectedRowData}
       setMaxArtifactsErrorIsShown={setMaxArtifactsErrorIsShown}
+      setSearchParams={setSearchParams}
       setSelectedDatasetMin={setSelectedDatasetMin}
       sortProps={{ sortTable, selectedColumnName, getSortingIcon }}
       tableContent={sortedTableContent}
       tableHeaders={sortedTableHeaders}
+      toggleRow={toggleRow}
       viewMode={viewMode}
       virtualizationConfig={virtualizationConfig}
     />

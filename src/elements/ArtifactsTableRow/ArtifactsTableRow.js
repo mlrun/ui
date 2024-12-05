@@ -40,15 +40,15 @@ import { isRowExpanded, PARENT_ROW_EXPANDED_CLASS } from '../../utils/tableRows.
 
 const ArtifactsTableRow = ({
   actionsMenu,
-  handleExpandRow = null,
   handleSelectItem = () => {},
   hideActionsMenu = false,
-  rowIndex,
   mainRowItemsCount = 1,
+  rowIndex,
   rowItem,
   selectedItem,
   selectedRowData,
-  tab = ''
+  tab = '',
+  toggleRow = null
 }) => {
   const parent = useRef()
   const params = useParams()
@@ -90,7 +90,6 @@ const ArtifactsTableRow = ({
                           className={cellClassName}
                           data={data}
                           firstCell={index === 0}
-                          handleExpandRow={handleExpandRow}
                           item={rowItem}
                           key={data.id}
                           link={
@@ -101,6 +100,7 @@ const ArtifactsTableRow = ({
                           selectItem={handleSelectItem}
                           selectedItem={selectedItem}
                           showExpandButton
+                          toggleRow={toggleRow}
                         />
                       )
                     )
@@ -198,15 +198,15 @@ const ArtifactsTableRow = ({
                 <TableCell
                   className={cellClassNames}
                   data={value}
-                  handleExpandRow={handleExpandRow}
                   firstCell={index === 0 && params.pageTab !== MODEL_ENDPOINTS_TAB}
                   item={rowItem.data}
                   key={value.id}
                   link={value.getLink?.(params.tab ?? DETAILS_OVERVIEW_TAB)}
                   onClick={value.handleClick}
-                  selectedItem={selectedItem}
                   selectItem={handleSelectItem}
+                  selectedItem={selectedItem}
                   showExpandButton={value.showExpandButton}
+                  toggleRow={toggleRow}
                 />
               )
             )
@@ -229,13 +229,13 @@ const ArtifactsTableRow = ({
 
 ArtifactsTableRow.propTypes = {
   actionsMenu: ACTIONS_MENU.isRequired,
-  handleExpandRow: PropTypes.func,
   handleSelectItem: PropTypes.func,
   mainRowItemsCount: PropTypes.number,
   rowIndex: PropTypes.number.isRequired,
   rowItem: PropTypes.shape({}).isRequired,
   selectedItem: PropTypes.shape({}).isRequired,
-  tab: PropTypes.string
+  tab: PropTypes.string,
+  toggleRow: PropTypes.func
 }
 
 export default React.memo(ArtifactsTableRow)

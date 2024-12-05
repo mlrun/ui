@@ -48,7 +48,6 @@ const FeatureVectorsView = React.forwardRef(
       featureVectors,
       filters,
       filtersStore,
-      handleExpandRow,
       handleRefresh,
       handleRefreshWithFilters,
       pageData,
@@ -56,8 +55,10 @@ const FeatureVectorsView = React.forwardRef(
       selectedFeatureVector,
       selectedRowData,
       setCreateVectorPopUpIsOpen,
+      setSearchParams,
       setSelectedFeatureVector,
       tableContent,
+      toggleRow,
       virtualizationConfig
     },
     { featureStoreRef }
@@ -79,6 +80,7 @@ const FeatureVectorsView = React.forwardRef(
             filtersConfig={filtersConfig}
             handleRefresh={handleRefresh}
             page={FEATURE_STORE_PAGE}
+            setSearchParams={setSearchParams}
             tab={FEATURE_VECTORS_TAB}
             withoutExpandButton
           >
@@ -117,13 +119,13 @@ const FeatureVectorsView = React.forwardRef(
                   isRowRendered(virtualizationConfig, index) && (
                     <FeatureStoreTableRow
                       actionsMenu={actionsMenu}
-                      handleExpandRow={handleExpandRow}
                       key={tableItem.data?.ui?.identifier ?? index}
                       pageTab={FEATURE_VECTORS_TAB}
                       rowIndex={index}
                       rowItem={tableItem}
                       selectedItem={selectedFeatureVector}
                       selectedRowData={selectedRowData}
+                      toggleRow={toggleRow}
                     />
                   )
               )}
@@ -152,7 +154,6 @@ FeatureVectorsView.propTypes = {
   featureVectors: PropTypes.arrayOf(PropTypes.object).isRequired,
   filters: PropTypes.object.isRequired,
   filtersStore: PropTypes.object.isRequired,
-  handleExpandRow: PropTypes.func.isRequired,
   handleRefresh: PropTypes.func.isRequired,
   handleRefreshWithFilters: PropTypes.func.isRequired,
   pageData: PropTypes.object.isRequired,
@@ -160,8 +161,10 @@ FeatureVectorsView.propTypes = {
   selectedFeatureVector: PropTypes.object.isRequired,
   selectedRowData: PropTypes.object.isRequired,
   setCreateVectorPopUpIsOpen: PropTypes.func.isRequired,
+  setSearchParams: PropTypes.func.isRequired,
   setSelectedFeatureVector: PropTypes.func.isRequired,
   tableContent: PropTypes.arrayOf(PropTypes.object).isRequired,
+  toggleRow: PropTypes.func.isRequired,
   virtualizationConfig: VIRTUALIZATION_CONFIG.isRequired
 }
 

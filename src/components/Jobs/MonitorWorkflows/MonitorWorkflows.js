@@ -35,8 +35,9 @@ import detailsActions from '../../../actions/details'
 
 import './monitorWorkflows.scss'
 import { useFiltersFromSearchParams } from '../../../hooks/useFiltersFromSearchParams.hook'
+import { deleteWorkflows } from '../../../reducers/workflowReducer'
 
-const MonitorWorkflows = ({ deleteWorkflows, fetchFunctionLogs }) => {
+const MonitorWorkflows = ({ fetchFunctionLogs }) => {
   const [selectedFunction, setSelectedFunction] = useState({})
   const [workflowsAreLoaded, setWorkflowsAreLoaded] = useState(false)
   const [workflowIsLoaded, setWorkflowIsLoaded] = useState(false)
@@ -91,10 +92,10 @@ const MonitorWorkflows = ({ deleteWorkflows, fetchFunctionLogs }) => {
 
   useEffect(() => {
     return () => {
-      deleteWorkflows()
+      dispatch(deleteWorkflows())
       setWorkflowsAreLoaded(false)
     }
-  }, [deleteWorkflows])
+  }, [dispatch])
 
   useEffect(() => {
     fetchInitialWorkflows(

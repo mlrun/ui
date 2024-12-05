@@ -29,7 +29,6 @@ import NoData from '../../common/NoData/NoData'
 import Loader from '../../common/Loader/Loader'
 
 import functionsActions from '../../actions/functions'
-import jobsActions from '../../actions/jobs'
 import { DANGER_BUTTON, FORBIDDEN_ERROR_STATUS_CODE } from 'igz-controls/constants'
 import { FILTERS_CONFIG } from '../../types'
 import { JOB_KIND_WORKFLOW, JOBS_PAGE, PANEL_EDIT_MODE, SCHEDULE_TAB } from '../../constants'
@@ -40,6 +39,7 @@ import { isRowRendered, useVirtualization } from '../../hooks/useVirtualization.
 import { setNotification } from '../../reducers/notificationReducer'
 import { showErrorNotification } from '../../utils/notifications.util'
 import { toggleYaml } from '../../reducers/appReducer'
+import { handleRunScheduledJob, removeScheduledJob } from '../../reducers/jobReducer'
 
 import { ReactComponent as Delete } from 'igz-controls/images/delete.svg'
 import { ReactComponent as Yaml } from 'igz-controls/images/yaml.svg'
@@ -90,14 +90,15 @@ const ScheduledJobsTable = ({
   const handleRunJob = useCallback(
     job => {
       dispatch(
-        jobsActions.handleRunScheduledJob(
-          {
+        handleRunScheduledJob({
+          postData: {
             ...job.scheduled_object
           },
-          job.project || params.projectName,
-          job.name
-        )
+          project: job.project || params.projectName,
+          job: job.name
+        })
       )
+        .unwrap()
         .then(response => {
           dispatch(
             setNotification({
@@ -122,17 +123,22 @@ const ScheduledJobsTable = ({
   const handleRemoveScheduledJob = useCallback(
     schedule => {
       dispatch(
-        jobsActions.removeScheduledJob(params.projectName || schedule.project, schedule.name)
-      ).then(response => {
-        refreshJobs(filters)
-        dispatch(
-          setNotification({
-            status: response.status,
-            id: Math.random(),
-            message: 'Job is successfully deleted'
-          })
-        )
-      })
+        removeScheduledJob({
+          projects: params.projectName || schedule.project,
+          scheduleName: schedule.name
+        })
+      )
+        .unwrap()
+        .then(response => {
+          refreshJobs(filters)
+          dispatch(
+            setNotification({
+              status: response.status,
+              id: Math.random(),
+              message: 'Job is successfully deleted'
+            })
+          )
+        })
 
       setConfirmData(null)
     },
@@ -164,27 +170,19 @@ const ScheduledJobsTable = ({
 
   const handleEditScheduleJob = useCallback(
     editableItem => {
-      const fetchJobFunction = (functionProject, functionName, functionHash) => {
-        return dispatch(jobsActions.fetchJobFunction(functionProject, functionName, functionHash))
-      }
+      getJobFunctionData(editableItem, dispatch, functionsActions.fetchFunctionTemplate).then(
+        functionData => {
+          setEditableItem({
+            ...editableItem,
+            scheduled_object: {
+              ...editableItem.scheduled_object,
+              function: functionData
+            }
+          })
 
-      getJobFunctionData(
-        editableItem,
-        fetchJobFunction,
-        dispatch,
-        functionsActions.fetchFunctionTemplate,
-        jobsActions.fetchJobFunctionSuccess
-      ).then(functionData => {
-        setEditableItem({
-          ...editableItem,
-          scheduled_object: {
-            ...editableItem.scheduled_object,
-            function: functionData
-          }
-        })
-
-        setJobWizardMode(PANEL_EDIT_MODE)
-      })
+          setJobWizardMode(PANEL_EDIT_MODE)
+        }
+      )
     },
     [dispatch, setEditableItem, setJobWizardMode]
   )

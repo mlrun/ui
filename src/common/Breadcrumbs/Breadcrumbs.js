@@ -17,15 +17,18 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import React, { useMemo, useRef, useState } from 'react'
+import React, { useEffect, useMemo, useRef, useState } from 'react'
 import PropTypes from 'prop-types'
 import { useLocation, useParams } from 'react-router-dom'
+import { useDispatch, useSelector } from 'react-redux'
 
 import BreadcrumbsStep from './BreadcrumbsStep/BreadcrumbsStep'
 
 import { useMode } from '../../hooks/mode.hook'
 import { generateMlrunScreens, generateTabsList } from './breadcrumbs.util'
 import { PROJECTS_PAGE_PATH } from '../../constants'
+import projectsAction from '../../actions/projects'
+import { generateProjectsList } from '../../utils/projects'
 
 import './breadcrumbs.scss'
 
@@ -35,8 +38,15 @@ const Breadcrumbs = ({ onClick = () => {} }) => {
   const [showProjectsList, setShowProjectsList] = useState(false)
   const { isDemoMode } = useMode()
   const breadcrumbsRef = useRef()
+  const dispatch = useDispatch()
   const params = useParams()
   const location = useLocation()
+
+  const projectStore = useSelector(state => state.projectStore)
+
+  const projectsList = useMemo(() => {
+    return generateProjectsList(projectStore.projectsNames.data)
+  }, [projectStore.projectsNames.data])
 
   const mlrunScreens = useMemo(() => {
     return generateMlrunScreens(params, isDemoMode)
@@ -72,6 +82,16 @@ const Breadcrumbs = ({ onClick = () => {} }) => {
     }
   }, [location.pathname, params.projectName, mlrunScreens, projectTabs])
 
+  useEffect(() => {
+    if (
+      projectsList.length === 0 &&
+      location.pathname !== '/projects' &&
+      !location.pathname.startsWith('/projects/*')
+    ) {
+      dispatch(projectsAction.fetchProjects({ format: 'minimal' }))
+    }
+  }, [dispatch, location.pathname, projectsList.length])
+
   return (
     <nav data-testid="breadcrumbs" className="breadcrumbs" ref={breadcrumbsRef}>
       <ul className="breadcrumbs__list">
@@ -83,6 +103,7 @@ const Breadcrumbs = ({ onClick = () => {} }) => {
               mlrunScreens={mlrunScreens}
               onClick={onClick}
               params={params}
+              projectsList={projectsList}
               ref={breadcrumbsRef}
               searchValue={searchValue}
               setSearchValue={setSearchValue}

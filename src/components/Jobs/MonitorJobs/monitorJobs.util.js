@@ -18,55 +18,22 @@ under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
 import React from 'react'
-import { isNil, isEmpty, debounce } from 'lodash'
+import { isEmpty, debounce } from 'lodash'
 
-import {
-  FUNCTION_RUN_KINDS,
-  JOBS_PAGE
-} from '../../../constants'
+import { FUNCTION_RUN_KINDS } from '../../../constants'
 import {
   JOB_STEADY_STATES,
-  getInfoHeaders,
-  getJobsDetailsMenu,
   isJobKindAbortable,
   isJobKindDask,
   isJobAborting,
   JOB_RUNNING_STATES
 } from '../jobs.util'
 
-import { TERTIARY_BUTTON } from 'igz-controls/constants'
-
 import { ReactComponent as MonitorIcon } from 'igz-controls/images/monitor-icon.svg'
 import { ReactComponent as Run } from 'igz-controls/images/run.svg'
 import { ReactComponent as Cancel } from 'igz-controls/images/close.svg'
 import { ReactComponent as Yaml } from 'igz-controls/images/yaml.svg'
 import { ReactComponent as Delete } from 'igz-controls/images/delete.svg'
-
-export const generatePageData = (
-  handleFetchJobLogs,
-  selectedJob,
-  jobsDashboardUrl,
-  handleMonitoring
-) => {
-  return {
-    page: JOBS_PAGE,
-    details: {
-      menu: getJobsDetailsMenu(selectedJob?.labels),
-      type: JOBS_PAGE,
-      infoHeaders: getInfoHeaders(!isNil(selectedJob.ui_run)),
-      refreshLogs: handleFetchJobLogs,
-      removeLogs: () => {},
-      withLogsRefreshBtn: true,
-      actionButton: {
-        label: 'Resource monitoring',
-        tooltip: !jobsDashboardUrl ? 'Grafana service unavailable' : '',
-        variant: TERTIARY_BUTTON,
-        disabled: !jobsDashboardUrl,
-        onClick: () => handleMonitoring(selectedJob)
-      }
-    }
-  }
-}
 
 export const generateActionsMenu = (
   job,
@@ -90,7 +57,9 @@ export const generateActionsMenu = (
         {
           label: 'Batch re-run',
           icon: <Run />,
-          hidden: !FUNCTION_RUN_KINDS.includes(job?.ui?.originalContent.metadata.labels?.kind) || isDetailsPopUp,
+          hidden:
+            !FUNCTION_RUN_KINDS.includes(job?.ui?.originalContent.metadata.labels?.kind) ||
+            isDetailsPopUp,
           onClick: handleRerunJob
         },
         {
@@ -145,13 +114,7 @@ export const generateActionsMenu = (
 }
 
 export const fetchInitialJobs = debounce(
-  (
-    filters,
-    selectedJob,
-    jobId,
-    refreshJobs,
-    jobsAreInitializedRef
-  ) => {
+  (filters, selectedJob, jobId, refreshJobs, jobsAreInitializedRef) => {
     if (isEmpty(selectedJob) && !jobId && !jobsAreInitializedRef.current) {
       refreshJobs(filters)
       jobsAreInitializedRef.current = true

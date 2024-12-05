@@ -245,7 +245,7 @@ const FeatureVectors = ({
     handleRefresh(featureVectorsFilters)
   }, [featureVectorsFilters, handleRefresh])
 
-  const handleRemoveFeatureVector = useCallback(
+  const collapseRowCallback = useCallback(
     featureVector => {
       const newStoreSelectedRowData = {
         ...featureStore.featureVectors.selectedRowData.content
@@ -262,7 +262,7 @@ const FeatureVectors = ({
     [featureStore.featureVectors.selectedRowData.content, selectedRowData, removeFeatureVector]
   )
 
-  const handleRequestOnExpand = useCallback(
+  const expandRowCallback = useCallback(
     featureVector => {
       const featureVectorIdentifier = getFeatureVectorIdentifier(featureVector)
 
@@ -302,11 +302,11 @@ const FeatureVectors = ({
     [fetchFeatureVector, featureVectorsFilters.tag, params.projectName]
   )
 
-  const { latestItems, handleExpandRow } = useGroupContent(
+  const { latestItems, toggleRow } = useGroupContent(
     featureVectors,
     getFeatureVectorIdentifier,
-    handleRemoveFeatureVector,
-    handleRequestOnExpand,
+    collapseRowCallback,
+    expandRowCallback,
     null,
     FEATURE_STORE_PAGE,
     FEATURE_VECTORS_TAB
@@ -494,7 +494,6 @@ const FeatureVectors = ({
       featureVectors={featureVectors}
       filters={featureVectorsFilters}
       filtersStore={filtersStore}
-      handleExpandRow={handleExpandRow}
       handleRefresh={handleRefresh}
       handleRefreshWithFilters={handleRefreshWithFilters}
       pageData={pageData}
@@ -503,8 +502,10 @@ const FeatureVectors = ({
       selectedFeatureVector={selectedFeatureVector}
       selectedRowData={selectedRowData}
       setCreateVectorPopUpIsOpen={setCreateVectorPopUpIsOpen}
+      setSearchParams={setSearchParams}
       setSelectedFeatureVector={handleSelectFeatureVector}
       tableContent={tableContent}
+      toggleRow={toggleRow}
       virtualizationConfig={virtualizationConfig}
     />
   )

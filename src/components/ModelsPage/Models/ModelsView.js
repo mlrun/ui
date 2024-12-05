@@ -50,7 +50,6 @@ const ModelsView = React.forwardRef(
       filters,
       filtersStore,
       getAndSetSelectedArtifact,
-      handleExpandRow,
       handleRefresh,
       handleRefreshWithFilters,
       handleRegisterModel,
@@ -63,10 +62,12 @@ const ModelsView = React.forwardRef(
       selectedModel,
       selectedRowData,
       setMaxArtifactsErrorIsShown,
+      setSearchParams,
       setSelectedModelMin,
       sortProps = null,
       tableContent,
       tableHeaders,
+      toggleRow,
       viewMode = null,
       virtualizationConfig
     },
@@ -99,6 +100,7 @@ const ModelsView = React.forwardRef(
                 filtersConfig={filtersConfig}
                 handleRefresh={handleRefresh}
                 page={MODELS_PAGE}
+                setSearchParams={setSearchParams}
                 tab={MODELS_TAB}
                 withRefreshButton
                 withoutExpandButton
@@ -148,13 +150,13 @@ const ModelsView = React.forwardRef(
                       isRowRendered(virtualizationConfig, index) && (
                         <ArtifactsTableRow
                           actionsMenu={actionsMenu}
-                          handleExpandRow={handleExpandRow}
-                          rowIndex={index}
                           key={tableItem.data.ui.identifier}
+                          rowIndex={index}
                           rowItem={tableItem}
                           selectedItem={selectedModel}
                           selectedRowData={selectedRowData}
                           tab={MODELS_TAB}
+                          toggleRow={toggleRow}
                         />
                       )
                   )}
@@ -189,7 +191,6 @@ ModelsView.propTypes = {
   filters: PropTypes.object.isRequired,
   filtersStore: PropTypes.object.isRequired,
   getAndSetSelectedArtifact: PropTypes.func.isRequired,
-  handleExpandRow: PropTypes.func.isRequired,
   handleRefresh: PropTypes.func.isRequired,
   handleRefreshWithFilters: PropTypes.func.isRequired,
   handleRegisterModel: PropTypes.func.isRequired,
@@ -202,10 +203,12 @@ ModelsView.propTypes = {
   selectedModel: PropTypes.object.isRequired,
   selectedRowData: PropTypes.object.isRequired,
   setMaxArtifactsErrorIsShown: PropTypes.func.isRequired,
+  setSearchParams: PropTypes.func.isRequired,
   setSelectedModelMin: PropTypes.func.isRequired,
   sortProps: SORT_PROPS,
   tableContent: PropTypes.arrayOf(PropTypes.object).isRequired,
   tableHeaders: PropTypes.arrayOf(PropTypes.object).isRequired,
+  toggleRow: PropTypes.func.isRequired,
   viewMode: PropTypes.string,
   virtualizationConfig: VIRTUALIZATION_CONFIG.isRequired
 }

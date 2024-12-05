@@ -17,12 +17,7 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import { capitalize, chain, defaultsDeep, get, isEmpty } from 'lodash'
 
-import { pollAbortingJobs } from '../components/Jobs/jobs.util'
-import { showErrorNotification } from './notifications.util'
-import { generateFunctionPriorityLabel } from './generateFunctionPriorityLabel'
-import { setNotification } from '../reducers/notificationReducer'
 import {
   DATES_FILTER,
   FILTER_ALL_ITEMS,
@@ -42,162 +37,11 @@ import {
   PAST_24_HOUR_DATE_OPTION,
   PAST_WEEK_DATE_OPTION
 } from './datePicker.util'
-import { generateTypeFilter, jobsStatuses, workflowsStatuses } from '../components/FilterMenu/filterMenu.settings'
-
-export const handleAbortJob = (
-  abortJob,
-  job,
-  setNotification,
-  refreshJobs,
-  setConfirmData,
-  dispatch,
-  abortJobRef,
-  setJobStatusAborting,
-  abortingJobs = {},
-  setAbortingJobs
-) => {
-  dispatch(
-    setNotification({
-      status: 200,
-      id: Math.random(),
-      message: 'Job abortion in progress'
-    })
-  )
-
-  dispatch(abortJob(job.project, job))
-    .then(response => {
-      const abortTaskId = get(response, 'metadata.name', '')
-
-      setJobStatusAborting?.(abortTaskId)
-
-      if (setAbortingJobs) {
-        setAbortingJobs(state => {
-          const newAbortingJobs = {
-            ...state,
-            [abortTaskId]: {
-              uid: job.uid,
-              name: job.name
-            }
-          }
-
-          pollAbortingJobs(job.project, abortJobRef, newAbortingJobs, refreshJobs, dispatch)
-
-          return newAbortingJobs
-        })
-      } else {
-        pollAbortingJobs(
-          job.project,
-          abortJobRef,
-          {
-            [abortTaskId]: {
-              uid: job.uid,
-              name: job.name
-            }
-          },
-          refreshJobs,
-          dispatch
-        )
-      }
-    })
-    .catch(error => {
-      showErrorNotification(dispatch, error, 'Failed to abort job', '', () =>
-        handleAbortJob(
-          abortJob,
-          job,
-          setNotification,
-          refreshJobs,
-          setConfirmData,
-          dispatch,
-          abortJobRef,
-          setJobStatusAborting,
-          abortingJobs,
-          setAbortingJobs
-        )
-      )
-    })
-
-  setConfirmData(null)
-}
-
-/**
- * Enriches a job run object with the associated function tag(s)
- * @param {Object} jobRun - The job run object to enrich
- * @param {Object} dispatch - dispatch method
- * @param {Function} fetchJobFunctions - The function to fetch job functions from an API
- * @param {Object} fetchJobFunctionsPromiseRef - A ref object used to store a reference to
- * the promise returned by the `fetchJobFunctions` function.
- * @returns {Promise<Object>} A Promise that resolves with the enriched job run object
- */
-export const enrichRunWithFunctionFields = (
-  dispatch,
-  jobRun,
-  fetchJobFunctions,
-  fetchJobFunctionsPromiseRef
-) => {
-  fetchJobFunctionsPromiseRef.current = Promise.resolve()
-
-  if (jobRun?.function) {
-    const [, functionProject = '', functionName = '', functionHash = ''] =
-      jobRun.function?.match?.(/(.+)\/(.+)@(.+)/) || []
-
-    if (functionProject && functionName && functionHash) {
-      fetchJobFunctionsPromiseRef.current = dispatch(
-        fetchJobFunctions(functionProject, functionHash)
-      )
-    }
-  }
-
-  return fetchJobFunctionsPromiseRef.current
-    .then(funcs => {
-      if (!isEmpty(funcs)) {
-        const tagsList = chain(funcs).map('metadata.tag').compact().uniq().value()
-
-        defaultsDeep(jobRun, {
-          ui: {
-            functionTag: tagsList.join(', '),
-            runOnSpot: capitalize(funcs[0].spec.preemption_mode ?? ''),
-            priority: generateFunctionPriorityLabel(funcs[0].spec.priority_class_name ?? '')
-          }
-        })
-      } else {
-        defaultsDeep(jobRun, {
-          ui: {
-            functionTag: '',
-            runOnSpot: '',
-            priority: ''
-          }
-        })
-      }
-
-      return jobRun
-    })
-    .catch(error => {
-      showErrorNotification(dispatch, error, 'Failed to fetch function tag', '')
-    })
-}
-
-export const handleDeleteJob = (deleteJob, job, refreshJobs, filters, dispatch) => {
-  return dispatch(deleteJob(job.project, job))
-    .then(() => {
-      refreshJobs(filters)
-      dispatch(
-        setNotification({
-          status: 200,
-          id: Math.random(),
-          message: 'Job is successfully deleted'
-        })
-      )
-    })
-    .catch(error => {
-      showErrorNotification(dispatch, error, 'Deleting job failed', '', () => handleDeleteJob(job))
-    })
-}
-
-export const convertTriggerToCrontab = trigger => {
-  return !isEmpty(trigger)
-    ? `${trigger.minute ?? '*/10'} ${trigger.hour ?? '*'} ${trigger.day ?? '*'} ${trigger.month ?? '*'} ${trigger.day_of_week ?? '*'}`
-    : ''
-}
+import {
+  generateTypeFilter,
+  jobsStatuses,
+  workflowsStatuses
+} from '../components/FilterMenu/filterMenu.settings'
 
 export const getJobKindFromLabels = (labels = []) => {
   return labels.find(label => label.includes('kind:'))?.replace('kind: ', '') ?? ''
@@ -208,7 +52,10 @@ export const getJobsFiltersConfig = (jobName, crossProjects) => {
     [NAME_FILTER]: { label: 'Name:', hidden: Boolean(jobName), initialValue: '' },
     [DATES_FILTER]: {
       label: 'Start time:',
-      initialValue: getDatePickerFilterValue(datePickerPastOptions, crossProjects ? PAST_24_HOUR_DATE_OPTION : PAST_WEEK_DATE_OPTION)
+      initialValue: getDatePickerFilterValue(
+        datePickerPastOptions,
+        crossProjects ? PAST_24_HOUR_DATE_OPTION : PAST_WEEK_DATE_OPTION
+      )
     },
     [PROJECT_FILTER]: { label: 'Project:', initialValue: '', isModal: true },
     [STATUS_FILTER]: { label: 'Status:', initialValue: [FILTER_ALL_ITEMS], isModal: true },
@@ -217,12 +64,15 @@ export const getJobsFiltersConfig = (jobName, crossProjects) => {
   }
 }
 
-export const getWorkflowsFiltersConfig = (crossProjects) => {
+export const getWorkflowsFiltersConfig = crossProjects => {
   return {
     [NAME_FILTER]: { label: 'Name:', initialValue: '' },
     [DATES_FILTER]: {
       label: 'Created at:',
-      initialValue: getDatePickerFilterValue(datePickerPastOptions, crossProjects ? PAST_24_HOUR_DATE_OPTION : PAST_WEEK_DATE_OPTION)
+      initialValue: getDatePickerFilterValue(
+        datePickerPastOptions,
+        crossProjects ? PAST_24_HOUR_DATE_OPTION : PAST_WEEK_DATE_OPTION
+      )
     },
     [PROJECT_FILTER]: { label: 'Project:', initialValue: '', isModal: true },
     [STATUS_FILTER]: { label: 'Status:', initialValue: [FILTER_ALL_ITEMS], isModal: true },
@@ -230,7 +80,7 @@ export const getWorkflowsFiltersConfig = (crossProjects) => {
   }
 }
 
-export const getScheduledFiltersConfig = (crossProjects) => {
+export const getScheduledFiltersConfig = crossProjects => {
   return {
     [NAME_FILTER]: { label: 'Name:', initialValue: '' },
     [DATES_FILTER]: {
@@ -264,11 +114,11 @@ export const parseJobsQueryParamsCallback = (paramName, paramValue) => {
   return paramValue
 }
 
-
 export const parseWorkflowsQueryParamsCallback = (paramName, paramValue) => {
-
   if (paramName === STATUS_FILTER) {
-    const filteredStatuses = paramValue?.split(',').filter(paramStatus => workflowsStatuses.find(status => status.id === paramStatus))
+    const filteredStatuses = paramValue
+      ?.split(',')
+      .filter(paramStatus => workflowsStatuses.find(status => status.id === paramStatus))
 
     return filteredStatuses?.length ? filteredStatuses : null
   }
@@ -278,7 +128,8 @@ export const parseWorkflowsQueryParamsCallback = (paramName, paramValue) => {
 
 export const parseScheduledQueryParamsCallback = (paramName, paramValue) => {
   if (paramName === TYPE_FILTER) {
-    return generateTypeFilter(JOBS_MONITORING_SCHEDULED_TAB).find(type => type.id === paramValue)?.id
+    return generateTypeFilter(JOBS_MONITORING_SCHEDULED_TAB).find(type => type.id === paramValue)
+      ?.id
   }
 
   return paramValue

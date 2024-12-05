@@ -19,7 +19,7 @@ such restriction.
 */
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { useNavigate, useParams } from 'react-router-dom'
+import { useNavigate, useParams, useSearchParams } from 'react-router-dom'
 import classnames from 'classnames'
 import { isNil } from 'lodash'
 
@@ -63,6 +63,7 @@ const RealTimePipelines = () => {
   const pipelinesRef = useRef(null)
   const pageData = useMemo(() => generatePageData(params.pipelineId), [params.pipelineId])
   const { toggleConvertedYaml } = useModelsPage()
+  const [, setSearchParams] = useSearchParams()
   const filters = useFiltersFromSearchParams(filtersConfig)
 
   const filterMenuClassNames = classnames(
@@ -93,7 +94,7 @@ const RealTimePipelines = () => {
           project: params.projectName,
           filters,
           config: {
-            params: { format: 'minimal' },
+            params: { format: 'minimal', kind: 'serving' },
             ui: {
               controller: abortControllerRef.current,
               setRequestErrorMessage
@@ -190,6 +191,7 @@ const RealTimePipelines = () => {
                 handleRefresh={handleRefresh}
                 navigateLink={`/projects/${params.projectName}/models/${REAL_TIME_PIPELINES_TAB}${window.location.search}`}
                 page={MODELS_PAGE}
+                setSearchParams={setSearchParams}
                 tab={REAL_TIME_PIPELINES_TAB}
                 withoutExpandButton
               />

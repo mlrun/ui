@@ -24,9 +24,9 @@ import { forEach } from 'lodash'
 import Input from '../../common/Input/Input'
 import { Tooltip, TextTooltipTemplate } from 'igz-controls/components'
 
-import { isNameNotUnique } from '../../components/JobsPanel/jobsPanel.util'
 import {
   getVolumeTypeInput,
+  isNameNotUnique,
   isPathNotUnique,
   V3IO
 } from '../VolumesTable/volumesTable.util'
@@ -35,12 +35,7 @@ import { ReactComponent as Checkmark } from 'igz-controls/images/checkmark.svg'
 
 import './editableVolumesRow.scss'
 
-const EditableVolumesRow = ({
-  content,
-  handleEdit,
-  selectedVolume,
-  setSelectedVolume
-}) => {
+const EditableVolumesRow = ({ content, handleEdit, selectedVolume, setSelectedVolume }) => {
   const [validation, setValidation] = useState({
     isNameValid: true,
     isTypeValid: true,
@@ -94,9 +89,7 @@ const EditableVolumesRow = ({
               }
               required
               requiredText="This field is required"
-              setInvalid={value =>
-                setValidation(state => ({ ...state, isNameValid: value }))
-              }
+              setInvalid={value => setValidation(state => ({ ...state, isNameValid: value }))}
               type="text"
               value={selectedVolume.newName ?? selectedVolume.data.name}
             />
@@ -124,9 +117,7 @@ const EditableVolumesRow = ({
             }
             required
             requiredText="This field is required"
-            setInvalid={value =>
-              setValidation(state => ({ ...state, isPathValid: value }))
-            }
+            setInvalid={value => setValidation(state => ({ ...state, isPathValid: value }))}
             type="text"
             value={selectedVolume.newPath ?? selectedVolume.data.mountPath}
           />
@@ -148,9 +139,7 @@ const EditableVolumesRow = ({
             }
             required={selectedVolume.type.value !== V3IO}
             requiredText="This field is invalid"
-            setInvalid={value =>
-              setValidation(state => ({ ...state, isTypeNameValid: value }))
-            }
+            setInvalid={value => setValidation(state => ({ ...state, isTypeNameValid: value }))}
             type="text"
             value={selectedVolume.type.name}
           />
@@ -194,9 +183,7 @@ const EditableVolumesRow = ({
               }
               required
               requiredText="This field is required"
-              setInvalid={value =>
-                setValidation(state => ({ ...state, isAccessKeyValid: value }))
-              }
+              setInvalid={value => setValidation(state => ({ ...state, isAccessKeyValid: value }))}
               type="text"
               value={selectedVolume.type.accessKey}
             />

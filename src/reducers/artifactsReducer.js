@@ -22,7 +22,7 @@ import { defaultPendingHandler, hideLoading, showLoading } from './redux.util'
 import artifactsApi from '../api/artifacts-api'
 import functionsApi from '../api/functions-api'
 import modelEndpointsApi from '../api/modelEndpoints-api'
-import { ARTIFACTS_TAB, DATASETS_TAB, FUNCTION_TYPE_SERVING, MODELS_TAB } from '../constants'
+import { ARTIFACTS_TAB, DATASETS_TAB, MODELS_TAB } from '../constants'
 import { filterArtifacts } from '../utils/filterArtifacts'
 import { generateArtifacts } from '../utils/generateArtifacts'
 import { parseModelEndpoints } from '../utils/parseModelEndpoints'
@@ -221,11 +221,7 @@ export const fetchArtifactsFunctions = createAsyncThunk(
     return functionsApi
       .getFunctions(project, filters, config, null)
       .then(({ data }) => {
-        return parseFunctions(
-          data.funcs.filter(
-            func => func.kind === FUNCTION_TYPE_SERVING && func.metadata.tag?.length
-          )
-        )
+        return parseFunctions(data.funcs)
       })
       .catch(error => {
         largeResponseCatchHandler(
