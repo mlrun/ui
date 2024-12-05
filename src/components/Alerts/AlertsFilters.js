@@ -74,8 +74,8 @@ const ProjectsAlertsFilters = () => {
       [JOB]: [JOB_NAME],
       [ENDPOINT]: [ENDPOINT_APPLICATION, ENDPOINT_RESULT]
     }
-
     const allFields = [ENTITY_ID, JOB_NAME, ENDPOINT_APPLICATION, ENDPOINT_RESULT]
+
     return allFields.filter(field => !(fieldsByType[entityType] ?? []).includes(field))
   }, [])
 

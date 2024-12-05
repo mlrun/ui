@@ -18,6 +18,7 @@ under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
 import { useCallback, useMemo, useRef, useState } from 'react'
+import { useParams } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 
 import ProjectAlertsView from './ProjectsAlertsView'
@@ -25,7 +26,6 @@ import ProjectAlertsView from './ProjectsAlertsView'
 import { getAlertsFiltersConfig, parseAlertsQueryParamsCallback } from './alerts.util'
 import { useFiltersFromSearchParams } from '../../hooks/useFiltersFromSearchParams.hook'
 
-import { useParams } from 'react-router-dom'
 import { fetchAlerts } from '../../reducers/alertsReducer'
 import { useVirtualization } from '../../hooks/useVirtualization.hook'
 import { createAlertRowData } from '../../utils/createAlertsContent'
@@ -81,6 +81,7 @@ const ProjectsAlerts = () => {
     },
     [dispatch, params.id]
   )
+
   const tableContent = useMemo(() => {
     return alerts.map(alert => createAlertRowData(alert))
   }, [alerts])
@@ -88,6 +89,7 @@ const ProjectsAlerts = () => {
   const refreshAlertsCallback = useCallback(
     filters => {
       setAlerts([])
+
       return fetchData(filters)
     },
     [fetchData]
