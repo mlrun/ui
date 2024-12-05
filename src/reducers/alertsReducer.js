@@ -54,7 +54,7 @@ export const fetchAlerts = createAsyncThunk(
     return alertsApi
       .getAlerts(project, filters, config)
       .then(({ data }) => {
-        return parseAlerts(data.alerts)
+        return { ...data, activations: parseAlerts(data.activations) || [] }
       })
       .catch(error => {
         largeResponseCatchHandler(

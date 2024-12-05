@@ -20,11 +20,12 @@ such restriction.
 import PropTypes from 'prop-types'
 
 import ActionBar from '../ActionBar/ActionBar'
+import AlertsFilters from './AlertsFilters'
 import AlertsTableRow from '../../elements/AlertsTableRow/AlertsTableRow'
 import Breadcrumbs from '../../common/Breadcrumbs/Breadcrumbs'
 import Loader from '../../common/Loader/Loader'
 import NoData from '../../common/NoData/NoData'
-import AlertsFilters from './AlertsFilters'
+import Pagination from '../../common/Pagination/Pagination'
 import Table from '../Table/Table'
 
 import { getNoDataMessage } from '../../utils/getNoDataMessage'
@@ -39,6 +40,7 @@ const AlertsView = ({
   filters,
   filtersStore,
   pageData,
+  paginationConfigJobsAlerts,
   refreshAlertsCallback,
   requestErrorMessage,
   selectedAlert,
@@ -83,30 +85,36 @@ const AlertsView = ({
                 )}
               />
             ) : (
-              <Table
-                actionsMenu={actionsMenu}
-                pageData={pageData}
-                retryRequest={refreshAlertsCallback}
-                selectedItem={selectedAlert}
-                tableClassName="alerts-table"
-                hideActionsMenu
-                tableHeaders={tableContent[0]?.content ?? []}
-              >
-                {tableContent.map(
-                  (tableItem, index) =>
-                    isRowRendered(virtualizationConfig, index) && (
-                      <AlertsTableRow
-                        key={index}
-                        hideActionsMenu
-                        handleSelectItem={() => {}}
-                        rowIndex={index}
-                        rowItem={tableItem}
-                        actionsMenu={[]}
-                        selectedItem={selectedAlert}
-                      />
-                    )
-                )}
-              </Table>
+              <>
+                <Table
+                  actionsMenu={actionsMenu}
+                  pageData={pageData}
+                  retryRequest={refreshAlertsCallback}
+                  selectedItem={selectedAlert}
+                  tableClassName="alerts-table"
+                  hideActionsMenu
+                  tableHeaders={tableContent[0]?.content ?? []}
+                >
+                  {tableContent.map(
+                    (tableItem, index) =>
+                      isRowRendered(virtualizationConfig, index) && (
+                        <AlertsTableRow
+                          key={index}
+                          hideActionsMenu
+                          handleSelectItem={() => {}}
+                          rowIndex={index}
+                          rowItem={tableItem}
+                          actionsMenu={[]}
+                          selectedItem={selectedAlert}
+                        />
+                      )
+                  )}
+                </Table>
+                <Pagination
+                  page={ALERTS_PAGE}
+                  paginationConfig={paginationConfigJobsAlerts.current}
+                />
+              </>
             )}
           </div>
         </div>
@@ -121,6 +129,7 @@ AlertsView.propTypes = {
   filtersStore: PropTypes.object.isRequired,
   refreshAlertsCallback: PropTypes.func.isRequired,
   requestErrorMessage: PropTypes.string.isRequired,
+  paginationConfigJobsAlerts: PropTypes.object.isRequired,
   setSearchParams: PropTypes.func.isRequired,
   tableContent: PropTypes.arrayOf(PropTypes.object).isRequired,
   virtualizationConfig: VIRTUALIZATION_CONFIG.isRequired

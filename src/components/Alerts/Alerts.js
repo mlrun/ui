@@ -45,6 +45,7 @@ const Alerts = () => {
   const filtersStore = useSelector(store => store.filtersStore)
 
   const abortControllerRef = useRef(new AbortController())
+  const paginationConfigJobsAlerts = useRef({})
 
   const alertsFiltersConfig = useMemo(() => getAlertsFiltersConfig(), [])
 
@@ -73,8 +74,9 @@ const Alerts = () => {
       )
         .unwrap()
         .then(alerts => {
-          if (alerts?.length > 0) {
-            setAlerts(alerts)
+          if (alerts?.activations?.length > 0) {
+            setAlerts(alerts.activations)
+            paginationConfigJobsAlerts.current.paginationResponse = alerts.pagination
           } else {
             setAlerts([])
           }
@@ -124,6 +126,7 @@ const Alerts = () => {
       filters={alertsFilters}
       filtersStore={filtersStore}
       pageData={{}} //TODO
+      paginationConfigJobsAlerts={paginationConfigJobsAlerts}
       refreshAlertsCallback={refreshAlertsCallback}
       requestErrorMessage={requestErrorMessage}
       selectedAlert={selectedAlert}

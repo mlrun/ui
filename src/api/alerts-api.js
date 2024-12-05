@@ -28,8 +28,10 @@ const alertsApi = {
         ...config.params
       }
     }
+
     return mainHttpClient.get(`/projects/${project}/alert-activations`, newConfig)
   },
+
   getAlert: (project, alertName, config) => {
     // TODO:ML-8514 update newConfig
     const newConfig = {
@@ -38,6 +40,7 @@ const alertsApi = {
         ...config.params
       }
     }
+
     return mainHttpClient.get('/projects/{project}/alerts/{alertName}/activations', newConfig)
   }
 }
