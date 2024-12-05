@@ -38,11 +38,7 @@ import {
 } from '../../../constants'
 import { createModelEndpointsRowData } from '../../../utils/createArtifactsContent'
 import { fetchModelEndpoints, removeModelEndpoints } from '../../../reducers/artifactsReducer'
-import {
-  chooseOrFetchModelEndpoint,
-  filtersConfig,
-  generatePageData
-} from './modelEndpoints.util'
+import { chooseOrFetchModelEndpoint, filtersConfig, generatePageData } from './modelEndpoints.util'
 import { getNoDataMessage } from '../../../utils/getNoDataMessage'
 import { isDetailsTabExists } from '../../../utils/link-helper.util'
 import { setFilters } from '../../../reducers/filtersReducer'
@@ -131,7 +127,7 @@ const ModelEndpoints = () => {
             }
           },
           params: {
-            start: 'now-10m'
+            latest_only: 'True'
           }
         })
       )
@@ -174,7 +170,7 @@ const ModelEndpoints = () => {
     [dispatch, fetchData]
   )
 
-  useInitialTableFetch({fetchData: fetchInitialData, filters })
+  useInitialTableFetch({ fetchData: fetchInitialData, filters })
 
   useEffect(() => {
     return () => {

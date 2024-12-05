@@ -117,6 +117,9 @@ const TableLinkCell = ({
               )}
             </div>
           )}
+          {data.additionalInfo && Object.values(selectedItem).length !== 0 && (
+            <span className="link-subtext">{data.additionalInfo}</span>
+          )}
         </Link>
       )}
       {showExpandButton && (

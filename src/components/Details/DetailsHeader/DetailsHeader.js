@@ -177,11 +177,9 @@ const DetailsHeader = ({
                 )
               : selectedItem?.updated
                 ? formatDatetime(selectedItem?.updated, 'N/A')
-                : selectedItem?.spec?.model.includes(':') // 'model-key:model-tag'
-                  ? selectedItem.spec.model.replace(/^.*:/, '') // remove key
-                  : selectedItem?.spec?.model
-                    ? selectedItem?.metadata?.uid
-                    : ''}
+                : selectedItem?.status?.last_request
+                  ? formatDatetime(selectedItem.status.last_request, 'N/A')
+                  : ''}
           </span>
           {stateValue && stateLabel && (
             <Tooltip className="state" template={<TextTooltipTemplate text={stateLabel} />}>

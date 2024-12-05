@@ -41,7 +41,7 @@ import { openPopUp } from 'igz-controls/utils/common.util'
 
 export const generateArtifactsContent = (detailsType, selectedItem, projectName) => {
   if (detailsType === MODEL_ENDPOINTS_TAB) {
-    const monitoringFeatureSetUri = selectedItem?.status?.monitoring_feature_set_uri ?? ''
+    const monitoringFeatureSetUri = selectedItem?.spec?.monitoring_feature_set_uri ?? ''
     const featureSetParsedUri = parseUri(monitoringFeatureSetUri)
 
     return {
@@ -50,9 +50,6 @@ export const generateArtifactsContent = (detailsType, selectedItem, projectName)
       },
       model_class: {
         value: selectedItem?.spec?.model_class ?? '-'
-      },
-      stream_path: {
-        value: selectedItem?.spec?.stream_path ?? '-'
       },
       model_artifact: {
         value: selectedItem?.spec?.model_uri?.replace(/^store:\/\/artifacts\//, ''),
@@ -90,9 +87,6 @@ export const generateArtifactsContent = (detailsType, selectedItem, projectName)
       },
       error_count: {
         value: selectedItem?.status?.error_count ?? '-'
-      },
-      accuracy: {
-        value: selectedItem?.status?.accuracy ?? '-'
       }
     }
   } else {

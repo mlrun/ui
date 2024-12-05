@@ -38,9 +38,7 @@ const infoHeaders = [
   { label: 'Function Tag', id: 'function_tag' },
   { label: 'Feature set', id: 'monitoring_feature_set_uri' },
   { label: 'Last prediction', id: 'last_prediction' },
-  { label: 'Error count', id: 'error_count' },
-  { label: 'Accuracy', id: 'accuracy' },
-  { label: 'Stream path', id: 'stream_path' }
+  { label: 'Error count', id: 'error_count' }
 ]
 
 const detailsMenu = [
@@ -99,6 +97,7 @@ export const chooseOrFetchModelEndpoint = (dispatch, selectedModelEndpoint, mode
   return dispatch(
     fetchModelEndpoint({
       project: modelEndpointMin.metadata.project,
+      name: modelEndpointMin.name,
       uid: modelEndpointMin.metadata.uid
     })
   )
