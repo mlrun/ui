@@ -19,6 +19,7 @@ such restriction.
 */
 import { formatDatetime } from './datetime'
 import { getFunctionImage } from '../components/FunctionsPage/functions.util'
+import { ALL_VERSIONS_PATH } from '../constants'
 
 const createFunctionsRowData = (func, projectName, isAllVersions) => {
   return {
@@ -33,7 +34,7 @@ const createFunctionsRowData = (func, projectName, isAllVersions) => {
         value: isAllVersions ? func.hash : func.name,
         className: 'table-cell-name',
         getLink: (tab, hash) => {
-          return `/projects/${projectName}/functions/${func.name}${isAllVersions ? '/' : ''}@${hash}${`/${tab}`}${window.location.search}`
+          return `/projects/${projectName}/functions/${func.name}${isAllVersions ? `/${ALL_VERSIONS_PATH}` : ''}/@${hash}${`/${tab}`}${window.location.search}`
         },
         expandedCellContent: {
           value: formatDatetime(func.updated, 'N/A'),
