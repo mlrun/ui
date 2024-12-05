@@ -19,6 +19,7 @@ such restriction.
 */
 import { configureStore } from '@reduxjs/toolkit'
 
+import alertsStore from '../reducers/alertsReducer'
 import appStore from '../reducers/appReducer'
 import artifactsStore from '../reducers/artifactsReducer'
 import detailsStore from '../reducers/detailsReducer'
@@ -36,6 +37,7 @@ import workflowsStore from '../reducers/workflowReducer'
 
 const toolkitStore = configureStore({
   reducer: {
+    alertsStore,
     appStore,
     artifactsStore,
     detailsStore,
