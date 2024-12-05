@@ -32,10 +32,9 @@ import { monitorJob } from '../../../components/Jobs/jobs.util'
 import { generateActionsMenu } from '../../../components/Jobs/MonitorJobs/monitorJobs.util'
 import { showErrorNotification } from '../../../utils/notifications.util'
 import { usePods } from '../../../hooks/usePods.hook'
-
-import jobsActions from '../../../actions/jobs'
 import detailsActions from '../../../actions/details'
 import { toggleYaml } from '../../../reducers/appReducer'
+import { fetchJob } from '../../../reducers/jobReducer'
 
 const JobPopUp = ({ isOpen, jobData, onResolve }) => {
   const dispatch = useDispatch()
@@ -54,14 +53,7 @@ const JobPopUp = ({ isOpen, jobData, onResolve }) => {
 
   const handleFetchJobLogs = useCallback(
     (item, projectName, setDetailsLogs, streamLogsRef) => {
-      return getJobLogs(
-        item.uid,
-        projectName,
-        streamLogsRef,
-        setDetailsLogs,
-        jobsActions.fetchJobLogs,
-        dispatch
-      )
+      return getJobLogs(item.uid, projectName, streamLogsRef, setDetailsLogs, dispatch)
     },
     [dispatch]
   )
@@ -106,10 +98,11 @@ const JobPopUp = ({ isOpen, jobData, onResolve }) => {
     selectedJob
   ])
 
-  const fetchJob = useCallback(() => {
+  const handleFetchJob = useCallback(() => {
     setIsLoading(true)
 
-    return dispatch(jobsActions.fetchJob(jobData.project, jobData.uid, jobData.iter))
+    return dispatch(fetchJob({ project: jobData.project, jobId: jobData.uid, iter: jobData.iter }))
+      .unwrap()
       .then(job => {
         if (job) {
           setSelectedJob(parseJob(job))
@@ -127,14 +120,14 @@ const JobPopUp = ({ isOpen, jobData, onResolve }) => {
 
   useEffect(() => {
     if (isEmpty(selectedJob)) {
-      fetchJob()
+      handleFetchJob()
     }
-  }, [fetchJob, selectedJob])
+  }, [handleFetchJob, selectedJob])
 
   return (
     <DetailsPopUp
       actionsMenu={actionsMenu}
-      handleRefresh={fetchJob}
+      handleRefresh={handleFetchJob}
       isLoading={isLoading}
       isOpen={isOpen}
       onResolve={onResolve}

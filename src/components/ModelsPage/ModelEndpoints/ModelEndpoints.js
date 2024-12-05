@@ -19,7 +19,7 @@ such restriction.
 */
 import React, { useState, useRef, useCallback, useEffect, useMemo } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { useLocation, useNavigate, useParams } from 'react-router-dom'
+import { useLocation, useNavigate, useParams, useSearchParams } from 'react-router-dom'
 import { isEmpty } from 'lodash'
 
 import ArtifactsTableRow from '../../../elements/ArtifactsTableRow/ArtifactsTableRow'
@@ -38,11 +38,7 @@ import {
 } from '../../../constants'
 import { createModelEndpointsRowData } from '../../../utils/createArtifactsContent'
 import { fetchModelEndpoints, removeModelEndpoints } from '../../../reducers/artifactsReducer'
-import {
-  chooseOrFetchModelEndpoint,
-  filtersConfig,
-  generatePageData
-} from './modelEndpoints.util'
+import { chooseOrFetchModelEndpoint, filtersConfig, generatePageData } from './modelEndpoints.util'
 import { getNoDataMessage } from '../../../utils/getNoDataMessage'
 import { isDetailsTabExists } from '../../../utils/link-helper.util'
 import { setFilters } from '../../../reducers/filtersReducer'
@@ -70,6 +66,7 @@ const ModelEndpoints = () => {
   const dispatch = useDispatch()
   const abortControllerRef = useRef(new AbortController())
   const modelEndpointsRef = useRef(null)
+  const [, setSearchParams] = useSearchParams()
   const filters = useFiltersFromSearchParams(filtersConfig)
 
   const { handleMonitoring, toggleConvertedYaml } = useModelsPage()
@@ -174,7 +171,7 @@ const ModelEndpoints = () => {
     [dispatch, fetchData]
   )
 
-  useInitialTableFetch({fetchData: fetchInitialData, filters })
+  useInitialTableFetch({ fetchData: fetchInitialData, filters })
 
   useEffect(() => {
     return () => {
@@ -263,6 +260,7 @@ const ModelEndpoints = () => {
                 handleRefresh={handleRefresh}
                 navigateLink={`/projects/${params.projectName}/models/${MODEL_ENDPOINTS_TAB}${window.location.search}`}
                 page={MODELS_PAGE}
+                setSearchParams={setSearchParams}
                 tab={MODEL_ENDPOINTS_TAB}
                 withoutExpandButton
               >

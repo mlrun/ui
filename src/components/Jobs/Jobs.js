@@ -18,8 +18,9 @@ under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
 import React, { useEffect, useState, useMemo, useLayoutEffect, useCallback } from 'react'
-import { connect, useSelector } from 'react-redux'
+import { useSelector } from 'react-redux'
 import { useNavigate, useParams, Outlet, useLocation } from 'react-router-dom'
+import { defaultsDeep } from 'lodash'
 
 import Breadcrumbs from '../../common/Breadcrumbs/Breadcrumbs'
 import ContentMenu from '../../elements/ContentMenu/ContentMenu'
@@ -39,7 +40,9 @@ import {
   SCHEDULE_TAB
 } from '../../constants'
 import { TERTIARY_BUTTON, PRIMARY_BUTTON } from 'igz-controls/constants'
-import { actionButtonHeader, actionCreator, tabs } from './jobs.util'
+import { actionButtonHeader, tabs } from './jobs.util'
+// import { TERTIARY_BUTTON } from 'igz-controls/constants'
+// import { actionsMenuHeader, monitorJob, rerunJob, tabs } from './jobs.util'
 import { isPageTabValid } from '../../utils/link-helper.util'
 import {
   getJobsFiltersConfig,
@@ -58,7 +61,7 @@ import { useFiltersFromSearchParams } from '../../hooks/useFiltersFromSearchPara
 
 export const JobsContext = React.createContext({})
 
-const Jobs = ({ fetchAllJobRuns, fetchJobFunction, fetchJobs }) => {
+const Jobs = () => {
   const [confirmData, setConfirmData] = useState(null)
   const [selectedTab, setSelectedTab] = useState(null)
   const params = useParams()
@@ -70,22 +73,46 @@ const Jobs = ({ fetchAllJobRuns, fetchJobFunction, fetchJobs }) => {
   const artifactsStore = useSelector(store => store.artifactsStore)
   const appStore = useSelector(store => store.appStore)
 
+  const initialTabData = useMemo(() => {
+    return {
+      [MONITOR_JOBS_TAB]: {
+        filtersConfig: getJobsFiltersConfig(params.jobName),
+        modalFilters: <JobsFilters />,
+        parseQueryParamsCallback: parseJobsQueryParamsCallback
+      },
+      [MONITOR_WORKFLOWS_TAB]: {
+        filtersConfig: getWorkflowsFiltersConfig(),
+        modalFilters: <WorkflowsFilters />,
+        parseQueryParamsCallback: parseWorkflowsQueryParamsCallback
+      },
+      [SCHEDULE_TAB]: {
+        filtersConfig: getScheduledFiltersConfig(),
+        modalFilters: <ScheduledJobsFilters />,
+        parseQueryParamsCallback: parseScheduledQueryParamsCallback
+      }
+    }
+  }, [params.jobName])
+
   const {
     abortControllerRef,
     abortJobRef,
     abortingJobs,
     editableItem,
     getWorkflows,
+    handleMonitoring,
+    handleRefreshJobs,
+    handleRerunJob,
     jobRuns,
-    jobs,
     jobWizardIsOpened,
     jobWizardMode,
-    handleMonitoring,
-    handleRerunJob,
+    jobs,
+    paginatedJobs,
+    paginationConfigJobsRef,
     refreshJobs,
     refreshScheduled,
     requestErrorMessage,
     scheduledJobs,
+    searchParams,
     setAbortingJobs,
     setEditableItem,
     setJobRuns,
@@ -93,8 +120,9 @@ const Jobs = ({ fetchAllJobRuns, fetchJobFunction, fetchJobs }) => {
     setJobWizardMode,
     setJobs,
     setScheduledJobs,
+    setSearchParams,
     terminateAbortTasksPolling
-  } = useJobsPageData(fetchAllJobRuns, fetchJobFunction, fetchJobs)
+  } = useJobsPageData(initialTabData, selectedTab)
 
   const handleActionsMenuClick = () => {
     setJobWizardMode(PANEL_CREATE_MODE)
@@ -109,27 +137,21 @@ const Jobs = ({ fetchAllJobRuns, fetchJobFunction, fetchJobs }) => {
   )
 
   const tabData = useMemo(() => {
-    return {
-      [MONITOR_JOBS_TAB]: {
-        filtersConfig: getJobsFiltersConfig(params.jobName),
-        handleRefresh: refreshJobs,
-        modalFilters: <JobsFilters />,
-        parseQueryParamsCallback: parseJobsQueryParamsCallback
+    return defaultsDeep(
+      {
+        [MONITOR_JOBS_TAB]: {
+          handleRefresh: handleRefreshJobs
+        },
+        [MONITOR_WORKFLOWS_TAB]: {
+          handleRefresh: getWorkflows
+        },
+        [SCHEDULE_TAB]: {
+          handleRefresh: refreshScheduled
+        }
       },
-      [MONITOR_WORKFLOWS_TAB]: {
-        filtersConfig: getWorkflowsFiltersConfig(),
-        handleRefresh: getWorkflows,
-        modalFilters: <WorkflowsFilters />,
-        parseQueryParamsCallback: parseWorkflowsQueryParamsCallback
-      },
-      [SCHEDULE_TAB]: {
-        filtersConfig: getScheduledFiltersConfig(),
-        handleRefresh: refreshScheduled,
-        modalFilters: <ScheduledJobsFilters />,
-        parseQueryParamsCallback: parseScheduledQueryParamsCallback
-      }
-    }
-  }, [getWorkflows, params.jobName, refreshJobs, refreshScheduled])
+      initialTabData
+    )
+  }, [getWorkflows, handleRefreshJobs, initialTabData, refreshScheduled])
 
   useLayoutEffect(() => {
     setSelectedTab(
@@ -212,11 +234,12 @@ const Jobs = ({ fetchAllJobRuns, fetchJobFunction, fetchJobs }) => {
                 filtersConfig={tabData[selectedTab].filtersConfig}
                 handleRefresh={tabData[selectedTab].handleRefresh}
                 hidden={Boolean(params.jobId || params.workflowId)}
+                key={selectedTab}
                 page={JOBS_MONITORING_PAGE}
+                setSearchParams={setSearchParams}
                 tab={selectedTab}
                 withRefreshButton
                 withoutExpandButton
-                key={selectedTab}
               >
                 {tabData[selectedTab].modalFilters}
               </ActionBar>
@@ -231,15 +254,18 @@ const Jobs = ({ fetchAllJobRuns, fetchJobFunction, fetchJobs }) => {
                   getWorkflows,
                   handleRerunJob,
                   jobRuns,
+                  jobWizardIsOpened,
+                  jobWizardMode,
                   jobs,
                   jobsFiltersConfig: tabData[MONITOR_JOBS_TAB].filtersConfig,
-                  jobWizardMode,
-                  jobWizardIsOpened,
+                  paginatedJobs,
+                  paginationConfigJobsRef,
                   refreshJobs,
                   refreshScheduled,
                   requestErrorMessage,
-                  scheduledJobs,
                   scheduledFiltersConfig: tabData[SCHEDULE_TAB].filtersConfig,
+                  scheduledJobs,
+                  searchParams,
                   setAbortingJobs,
                   setConfirmData,
                   setEditableItem,
@@ -248,8 +274,8 @@ const Jobs = ({ fetchAllJobRuns, fetchJobFunction, fetchJobs }) => {
                   setJobWizardMode,
                   setJobs,
                   setScheduledJobs,
-                  terminateAbortTasksPolling,
                   tabData,
+                  terminateAbortTasksPolling,
                   workflowsFiltersConfig: tabData[MONITOR_WORKFLOWS_TAB].filtersConfig
                 }}
               >
@@ -289,6 +315,4 @@ const Jobs = ({ fetchAllJobRuns, fetchJobFunction, fetchJobs }) => {
   )
 }
 
-export default connect(null, {
-  ...actionCreator
-})(React.memo(Jobs))
+export default React.memo(Jobs)
