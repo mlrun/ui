@@ -20,8 +20,8 @@ such restriction.
 import React, { useCallback, useMemo, useRef } from 'react'
 import PropTypes from 'prop-types'
 import classnames from 'classnames'
-import { useNavigate, useParams, useSearchParams } from 'react-router-dom'
-import { isEmpty, max, min } from 'lodash'
+import { useNavigate, useSearchParams } from 'react-router-dom'
+import { max, min } from 'lodash'
 
 import { RoundedIcon } from 'igz-controls/components'
 
@@ -36,7 +36,7 @@ import {
   ITEMS_COUNT_START
 } from '../../constants'
 import { PAGINATION_CONFIG } from '../../types'
-import { getDefaultCloseDetailsLink } from '../../utils/link-helper.util'
+import { getCloseDetailsLink } from '../../utils/link-helper.util'
 
 import { ReactComponent as DoubleArrow } from 'igz-controls/images/pagination-double-arrow.svg'
 import { ReactComponent as Arrow } from 'igz-controls/images/pagination-arrow.svg'
@@ -45,10 +45,9 @@ import './pagination.scss'
 
 const threeDotsString = '...'
 
-const Pagination = ({ page, paginationConfig, selectedItem = {} }) => {
+const Pagination = ({ page, paginationConfig, selectedItemName = '' }) => {
   const [, setSearchParams] = useSearchParams()
   const navigate = useNavigate()
-  const params = useParams()
   const paginationPagesRef = useRef()
   const leftSideRef = useRef(0)
   const rightSideRef = useRef(0)
@@ -78,10 +77,10 @@ const Pagination = ({ page, paginationConfig, selectedItem = {} }) => {
   }, [paginationConfig])
 
   const handlePageChange = useCallback(() => {
-    if (!isEmpty(selectedItem)) {
-      navigate(getDefaultCloseDetailsLink(params, page), { replace: true })
+    if (selectedItemName) {
+      navigate(getCloseDetailsLink(selectedItemName, true), { replace: true })
     }
-  }, [navigate, page, params, selectedItem])
+  }, [navigate, selectedItemName])
 
   const paginationItems = useMemo(() => {
     if (!paginationConfig[FE_PAGE]) return []
@@ -309,7 +308,7 @@ const Pagination = ({ page, paginationConfig, selectedItem = {} }) => {
 Pagination.propTypes = {
   page: PropTypes.string.isRequired,
   paginationConfig: PAGINATION_CONFIG.isRequired,
-  selectedItem: PropTypes.shape({})
+  selectedItemName: PropTypes.string
 }
 
 export default Pagination

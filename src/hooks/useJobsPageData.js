@@ -41,7 +41,11 @@ import { fetchAllJobRuns, fetchJobs, fetchScheduledJobs } from '../reducers/jobR
 import { fetchWorkflows } from '../reducers/workflowReducer'
 import { useFiltersFromSearchParams } from './useFiltersFromSearchParams.hook'
 
-export const useJobsPageData = (initialTabData, selectedTab) => {
+export const useJobsPageData = (
+  setSelectedJob,
+  initialTabData,
+  selectedTab
+) => {
   const [jobRuns, setJobRuns] = useState([])
   const [editableItem, setEditableItem] = useState(null)
   const [jobWizardMode, setJobWizardMode] = useState(null)
@@ -52,6 +56,7 @@ export const useJobsPageData = (initialTabData, selectedTab) => {
   const paginationConfigRunsRef = useRef({})
   const abortControllerRef = useRef(new AbortController())
   const abortJobRef = useRef(null)
+  const fetchJobFunctionsPromiseRef = useRef()
   const params = useParams()
   const [requestErrorMessage, setRequestErrorMessage] = useState('')
   const [scheduledJobs, setScheduledJobs] = useState([])
@@ -270,6 +275,7 @@ export const useJobsPageData = (initialTabData, selectedTab) => {
     abortJobRef,
     abortingJobs,
     editableItem,
+    fetchJobFunctionsPromiseRef,
     getWorkflows,
     handleMonitoring,
     handleRefreshJobs: params.jobName ? handleRefreshRuns : handleRefreshJobs,

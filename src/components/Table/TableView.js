@@ -52,7 +52,6 @@ const TableView = ({
   tableHeaders,
   tablePanelRef,
   tableRef,
-  toggleConvertedYaml,
   virtualizationConfig
 }) => {
   const tableClass = classnames(

@@ -20,7 +20,7 @@ such restriction.
 import React, { useLayoutEffect, useMemo, useState } from 'react'
 import { useSelector } from 'react-redux'
 import { Outlet, useLocation, useNavigate, useParams } from 'react-router-dom'
-import { defaultsDeep } from 'lodash'
+import { defaultsDeep, isEmpty } from 'lodash'
 
 import ContentMenu from '../../elements/ContentMenu/ContentMenu'
 import { ConfirmDialog } from 'igz-controls/components'
@@ -55,6 +55,7 @@ import { useJobsPageData } from '../../hooks/useJobsPageData'
 export const ProjectJobsMonitoringContext = React.createContext({})
 
 const ProjectsJobsMonitoring = () => {
+  const [selectedJob, setSelectedJob] = useState({})
   const [confirmData, setConfirmData] = useState(null)
   const [selectedTab, setSelectedTab] = useState(null)
   const { jobsMonitoringData } = useSelector(store => store.projectStore)
@@ -97,6 +98,7 @@ const ProjectsJobsMonitoring = () => {
     abortJobRef,
     abortingJobs,
     editableItem,
+    fetchJobFunctionsPromiseRef,
     getWorkflows,
     handleMonitoring,
     handleRefreshJobs,
@@ -121,7 +123,7 @@ const ProjectsJobsMonitoring = () => {
     setScheduledJobs,
     setSearchParams,
     terminateAbortTasksPolling
-  } = useJobsPageData(initialTabData, selectedTab)
+  } = useJobsPageData(setSelectedJob, initialTabData, selectedTab)
 
   const handleTabChange = tabName => {
     setSelectedCard(STATS_TOTAL_CARD)
@@ -179,11 +181,13 @@ const ProjectsJobsMonitoring = () => {
 
               <ActionBar
                 autoRefreshIsEnabled={selectedTab === JOBS_MONITORING_JOBS_TAB}
-                autoRefreshIsStopped={jobWizardIsOpened || jobsStore.loading}
+                autoRefreshIsStopped={
+                  jobWizardIsOpened || jobsStore.loading || !isEmpty(selectedJob)
+                }
                 filters={filters}
                 filtersConfig={tabData[selectedTab].filtersConfig}
                 handleRefresh={tabData[selectedTab].handleRefresh}
-                hidden={Boolean(params.jobId || params.workflowId)}
+                hidden={Boolean(params.workflowId)}
                 key={selectedTab}
                 page={JOBS_MONITORING_PAGE}
                 setSearchParams={setSearchParams}
@@ -201,6 +205,7 @@ const ProjectsJobsMonitoring = () => {
                   abortJobRef,
                   abortingJobs,
                   editableItem,
+                  fetchJobFunctionsPromiseRef,
                   getWorkflows,
                   handleMonitoring,
                   handleRerunJob,
@@ -219,6 +224,7 @@ const ProjectsJobsMonitoring = () => {
                   scheduledJobs,
                   searchParams,
                   selectedCard,
+                  selectedJob,
                   setAbortingJobs,
                   setConfirmData,
                   setEditableItem,
@@ -228,6 +234,7 @@ const ProjectsJobsMonitoring = () => {
                   setJobs,
                   setScheduledJobs,
                   setSelectedCard,
+                  setSelectedJob,
                   tabData,
                   terminateAbortTasksPolling,
                   workflowsFiltersConfig

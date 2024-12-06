@@ -445,9 +445,7 @@ export const createJobsMonitoringContent = (jobs, jobName, isStagingMode) => {
     const getLink = tab => {
       if (jobName) {
         return validateArguments(job.uid, tab, job.name)
-          ? `/projects/*/${JOBS_MONITORING_PAGE}/${JOBS_MONITORING_JOBS_TAB}${
-              job.name ? `/${job.name}` : ''
-            }/${job.project}/${job.uid}/${tab.toLowerCase()}${window.location.search}`
+          ? `/projects/*/${JOBS_MONITORING_PAGE}/${JOBS_MONITORING_JOBS_TAB}/${jobName}/${job.uid}/${tab.toLowerCase()}${window.location.search}`
           : ''
       } else {
         const savedAndTransformedSearchParams = saveAndTransformSearchParams(

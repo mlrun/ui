@@ -17,7 +17,7 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import React, { useCallback, useEffect, useMemo, useRef } from 'react'
 import { useParams } from 'react-router-dom'
 import { useDispatch } from 'react-redux'
 
@@ -33,7 +33,6 @@ import { useFiltersFromSearchParams } from '../../../hooks/useFiltersFromSearchP
 import { getSavedSearchParams } from '../../../utils/filter.util'
 
 const MonitorJobs = () => {
-  const [selectedJob, setSelectedJob] = useState({})
   const params = useParams()
   const dispatch = useDispatch()
   const { isStagingMode } = useMode()
@@ -41,6 +40,7 @@ const MonitorJobs = () => {
     abortControllerRef,
     abortJobRef,
     abortingJobs,
+    fetchJobFunctionsPromiseRef,
     jobRuns,
     jobs,
     jobsFiltersConfig,
@@ -48,9 +48,11 @@ const MonitorJobs = () => {
     refreshJobs,
     requestErrorMessage,
     searchParams,
+    selectedJob,
     setAbortingJobs,
     setJobRuns,
     setJobs,
+    setSelectedJob,
     tabData,
     terminateAbortTasksPolling
   } = React.useContext(JobsContext)
@@ -97,7 +99,7 @@ const MonitorJobs = () => {
       jobsAreInitializedRef.current = false
       terminateAbortTasksPolling()
     }
-  }, [params.projectName, params.jobName, params.jobId, terminateAbortTasksPolling])
+  }, [params.projectName, params.jobName, terminateAbortTasksPolling])
 
   return (
     <>
@@ -111,9 +113,10 @@ const MonitorJobs = () => {
         jobs={jobs}
         navigateLink={getBackLink()}
         paginatedJobs={paginatedJobs}
-        ref={{ abortJobRef }}
+        ref={{ abortJobRef, fetchJobFunctionsPromiseRef }}
         refreshJobs={refreshJobs}
         requestErrorMessage={requestErrorMessage}
+        searchParams={searchParams}
         selectedJob={selectedJob}
         setAbortingJobs={setAbortingJobs}
         setJobRuns={setJobRuns}
