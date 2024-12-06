@@ -28,31 +28,28 @@ import { ReactComponent as HistoryIcon } from 'igz-controls/images/history.svg'
 
 import './historyBackLink.scss'
 
-const HistoryBackLink = ({link, itemName}) => {
-    return (
-        <div className="history-back-link">
-        <Link
-          to={link}
-          className="history-back-link__icon"
-        >
-          <RoundedIcon id="history-back-link-btn" tooltipText="Back">
-            <Back />
-          </RoundedIcon>
-        </Link>
-        <div className="history-back-link__title">
-          <HistoryIcon />
-          <div className="history-back-link__title-version" data-testid="version-history">Version history: </div>
-          <Tooltip template={<TextTooltipTemplate text={itemName} />}>
-            {itemName}
-          </Tooltip>
+const HistoryBackLink = ({ itemName, link }) => {
+  return (
+    <div className="history-back-link">
+      <Link to={link} className="history-back-link__icon">
+        <RoundedIcon id="history-back-link-btn" tooltipText="Back">
+          <Back />
+        </RoundedIcon>
+      </Link>
+      <div className="history-back-link__title">
+        <HistoryIcon />
+        <div className="history-back-link__title-version" data-testid="version-history">
+          Version history:{' '}
         </div>
+        <Tooltip template={<TextTooltipTemplate text={itemName} />}>{itemName}</Tooltip>
       </div>
-    )
+    </div>
+  )
 }
 
 HistoryBackLink.propTypes = {
-  link: PropTypes.string.isRequired,
   itemName: PropTypes.string.isRequired,
+  link: PropTypes.string.isRequired
 }
 
 export default HistoryBackLink
