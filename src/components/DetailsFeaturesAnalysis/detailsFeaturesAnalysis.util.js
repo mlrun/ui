@@ -25,7 +25,7 @@ import { ReactComponent as LabelColumn } from 'igz-controls/images/ic_target-wit
 export const generateFeaturesAnalysis = (modelEndpoint = {}) => {
   const currentStats = modelEndpoint?.status?.current_stats ?? {}
   const driftMeasures = modelEndpoint?.status?.drift_measures ?? {}
-  const featureStats = modelEndpoint?.status?.feature_stats ?? {}
+  const featureStats = modelEndpoint?.spec?.feature_stats ?? {}
   const labelNames = modelEndpoint?.spec?.label_names ?? []
 
   const tableHeaders = [

@@ -23,7 +23,7 @@ import { getArtifactIdentifier } from './getUniqueIdentifier'
 export const parseModelEndpoints = endpoints =>
   endpoints.map(endpoint => ({
     ...endpoint,
-    name: endpoint.spec.model.split(':')[0],
+    name: endpoint.metadata.name,
     state: getState(endpoint.status.state),
     ui: {
       originalContent: endpoint,

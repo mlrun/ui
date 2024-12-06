@@ -20,8 +20,10 @@ such restriction.
 import { mainHttpClient } from '../httpClient'
 
 const modelEndpointsApi = {
-  getModelEndpoint: (project, uid) =>
-    mainHttpClient.get(`/projects/${project}/model-endpoints/${uid}?feature_analysis=true`),
+  getModelEndpoint: (project, name, uid) =>
+    mainHttpClient.get(
+      `/projects/${project}/model-endpoints/${name}?endpoint_id=${uid}&feature_analysis=true`
+    ),
   getModelEndpoints: (project, filters, config = {}, params = {}) => {
     const newConfig = {
       ...config,

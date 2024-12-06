@@ -136,7 +136,7 @@ const JobWizard = ({
   useEffect(() => {
     if (!isEditMode) {
       dispatch(projectsAction.fetchProject(params.projectName, { format: 'minimal' }))
-        .then(project => setCurrentProject(project))
+        .then(response => setCurrentProject(response?.data))
         .catch(error => {
           showErrorNotification(dispatch, error, 'The project failed to load')
         })
