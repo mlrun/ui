@@ -27,15 +27,15 @@ import JobWizard from '../JobWizard/JobWizard'
 import NewFunctionPopUp from '../../elements/NewFunctionPopUp/NewFunctionPopUp'
 
 import {
-  FUNCTIONS_PAGE,
-  GROUP_BY_NAME,
   TAG_LATEST,
   REQUEST_CANCELED,
   DETAILS_BUILD_LOG_TAB,
   JOB_DEFAULT_OUTPUT_PATH,
   DATES_FILTER,
   NAME_FILTER,
-  SHOW_UNTAGGED_FILTER
+  SHOW_UNTAGGED_FILTER,
+  GROUP_BY_NONE,
+  ALL_VERSIONS_PATH
 } from '../../constants'
 import {
   checkForSelectedFunction,
@@ -48,7 +48,6 @@ import {
 import createFunctionsRowData from '../../utils/createFunctionsRowData'
 import functionsActions from '../../actions/functions'
 import { DANGER_BUTTON, TERTIARY_BUTTON } from 'igz-controls/constants'
-import { getFunctionIdentifier } from '../../utils/getUniqueIdentifier'
 import { isBackgroundTaskRunning } from '../../utils/poll.util'
 import { isDetailsTabExists } from '../../utils/link-helper.util'
 import { openPopUp } from 'igz-controls/utils/common.util'
@@ -56,18 +55,19 @@ import { parseFunctions } from '../../utils/parseFunctions'
 import { setFilters } from '../../reducers/filtersReducer'
 import { setNotification } from '../../reducers/notificationReducer'
 import { showErrorNotification } from '../../utils/notifications.util'
-import { useGroupContent } from '../../hooks/groupContent.hook'
 import { useMode } from '../../hooks/mode.hook'
 import { useVirtualization } from '../../hooks/useVirtualization.hook'
 import { useInitialTableFetch } from '../../hooks/useInitialTableFetch.hook'
 import { runNewJob } from '../../reducers/jobReducer'
 import { useFiltersFromSearchParams } from '../../hooks/useFiltersFromSearchParams.hook'
 import {
+  ANY_TIME_DATE_OPTION,
   datePickerPastOptions,
   getDatePickerFilterValue,
   PAST_WEEK_DATE_OPTION
 } from '../../utils/datePicker.util'
 import { toggleYaml } from '../../reducers/appReducer'
+import { getSavedSearchParams, transformSearchParams } from '../../utils/filter.util'
 
 import cssVariables from './functions.scss'
 
@@ -77,11 +77,13 @@ const Functions = ({
   fetchFunction,
   fetchFunctions,
   functionsStore,
+  isAllVersions = false,
   removeFunctionsError,
   removeNewFunction
 }) => {
   const [confirmData, setConfirmData] = useState(null)
   const [functions, setFunctions] = useState([])
+  const [functionVersions, setFunctionVersions] = useState([])
   const [selectedFunctionMin, setSelectedFunctionMin] = useState({})
   const [selectedFunction, setSelectedFunction] = useState({})
   const [editableItem, setEditableItem] = useState(null)
@@ -89,7 +91,6 @@ const Functions = ({
   const [jobWizardIsOpened, setJobWizardIsOpened] = useState(false)
   const [jobWizardMode, setJobWizardMode] = useState(null)
   const filtersStore = useSelector(store => store.filtersStore)
-  const [expandedRowsData, setExpandedRowsData] = useState({})
   const [requestErrorMessage, setRequestErrorMessage] = useState('')
   const [deletingFunctions, setDeletingFunctions] = useState({})
   const abortControllerRef = useRef(new AbortController())
@@ -105,14 +106,22 @@ const Functions = ({
 
   const functionsFiltersConfig = useMemo(() => {
     return {
-      [NAME_FILTER]: { label: 'Name:', initialValue: '' },
+      [NAME_FILTER]: { label: 'Name:', initialValue: '', hidden: isAllVersions },
       [DATES_FILTER]: {
         label: 'Updated:',
-        initialValue: getDatePickerFilterValue(datePickerPastOptions, PAST_WEEK_DATE_OPTION)
+        initialValue: getDatePickerFilterValue(
+          datePickerPastOptions,
+          isAllVersions ? ANY_TIME_DATE_OPTION : PAST_WEEK_DATE_OPTION
+        )
       },
-      [SHOW_UNTAGGED_FILTER]: { label: 'Show untagged:', initialValue: false, isModal: true }
+      [SHOW_UNTAGGED_FILTER]: {
+        label: 'Show untagged:',
+        initialValue: true,
+        isModal: true,
+        hidden: !isAllVersions
+      }
     }
-  }, [])
+  }, [isAllVersions])
 
   const functionsFilters = useFiltersFromSearchParams(functionsFiltersConfig)
 
@@ -125,15 +134,25 @@ const Functions = ({
     filters => {
       terminateDeleteTasksPolling()
       abortControllerRef.current = new AbortController()
+      const requestParams = {
+        format: 'minimal',
+        tag: TAG_LATEST
+      }
+
+      if (isAllVersions) {
+        delete requestParams.tag
+        requestParams.name = params.funcName
+        setFunctionVersions([])
+      } else {
+        setFunctions([])
+      }
 
       return fetchFunctions(params.projectName, filters, {
         ui: {
           controller: abortControllerRef.current,
           setRequestErrorMessage
         },
-        params: {
-          format: 'minimal'
-        }
+        params: requestParams
       }).then(functions => {
         if (functions?.length > 0) {
           const newFunctions = parseFunctions(functions, params.projectName)
@@ -158,37 +177,48 @@ const Functions = ({
             )
           }
 
-          setFunctions(newFunctions)
+          if (isAllVersions) {
+            setFunctionVersions(newFunctions)
+          } else {
+            setFunctions(newFunctions)
+          }
 
           return newFunctions
         } else {
           const paramsFunction = searchFunctionItem(
-            params.hash,
-            params.funcName,
-            params.tag,
+            params.id,
             params.projectName,
+            params.funcName,
             [],
             dispatch,
             true
           )
 
           if (!paramsFunction) {
-            navigate(`/projects/${params.projectName}/functions${window.location.search}`, {
-              replace: true
-            })
+            navigate(
+              `/projects/${params.projectName}/functions${isAllVersions ? getSavedSearchParams(window.location.search) : window.location.search}`,
+              {
+                replace: true
+              }
+            )
           }
-          setFunctions([])
+
+          if (isAllVersions) {
+            setFunctionVersions([])
+          } else {
+            setFunctions([])
+          }
         }
       })
     },
     [
       dispatch,
       fetchFunctions,
+      isAllVersions,
       navigate,
       params.funcName,
-      params.hash,
+      params.id,
       params.projectName,
-      params.tag,
       terminateDeleteTasksPolling
     ]
   )
@@ -197,78 +227,18 @@ const Functions = ({
     filters => {
       setFunctions([])
       setSelectedFunctionMin({})
-      setExpandedRowsData({})
 
       return fetchData(filters)
     },
     [fetchData]
   )
 
-  const handleExpand = useCallback(
-    (func, content) => {
-      const funcIdentifier = getFunctionIdentifier(func)
-
-      setExpandedRowsData(state => {
-        return {
-          ...state,
-          [funcIdentifier]: {
-            content: content[func.name].map(contentItem =>
-              createFunctionsRowData(contentItem, params.projectName, false)
-            )
-          }
-        }
-      })
-    },
-    [params.projectName]
-  )
-
-  const handleCollapse = useCallback(
-    func => {
-      const funcIdentifier = getFunctionIdentifier(func.data)
-      const newPageDataSelectedRowData = { ...expandedRowsData }
-
-      delete newPageDataSelectedRowData[funcIdentifier]
-
-      setExpandedRowsData(newPageDataSelectedRowData)
-    },
-    [expandedRowsData]
-  )
-
-  const handleExpandAllCallback = useCallback(
-    (collapse, content) => {
-      const newSelectedRowData = {}
-      if (collapse) {
-        setExpandedRowsData({})
-      } else {
-        Object.entries(content).forEach(([key, value]) => {
-          newSelectedRowData[key] = {
-            content: value.map(contentItem =>
-              createFunctionsRowData(contentItem, params.projectName, false)
-            )
-          }
-        })
-      }
-
-      setExpandedRowsData(newSelectedRowData)
-    },
-    [params.projectName]
-  )
-
-  const { latestItems, allRowsAreExpanded, toggleRow, toggleAllRows } = useGroupContent(
-    functions,
-    getFunctionIdentifier,
-    handleCollapse,
-    handleExpand,
-    null,
-    FUNCTIONS_PAGE,
-    null,
-    handleExpandAllCallback
-  )
-
   const tableContent = useMemo(
     () =>
-      latestItems.map(contentItem => createFunctionsRowData(contentItem, params.projectName, true)),
-    [latestItems, params.projectName]
+      (isAllVersions ? functionVersions : functions).map(contentItem =>
+        createFunctionsRowData(contentItem, params.projectName, Boolean(isAllVersions))
+      ),
+    [functionVersions, functions, isAllVersions, params.projectName]
   )
 
   const removeFunction = useCallback(
@@ -448,6 +418,15 @@ const Functions = ({
     [deployFunction, dispatch, functionsFilters, refreshFunctions]
   )
 
+  const showAllVersions = useCallback(
+    funcName => {
+      navigate(
+        `/projects/${params.projectName}/functions/${funcName}/${ALL_VERSIONS_PATH}?${transformSearchParams(window.location.search)}`
+      )
+    },
+    [navigate, params.projectName]
+  )
+
   const pageData = useMemo(
     () =>
       generateFunctionsPageData(
@@ -457,9 +436,10 @@ const Functions = ({
         fetchFunctionNuclioLogsTimeout,
         navigate,
         fetchData,
-        filtersStore
+        filtersStore,
+        isAllVersions ? null : () => showAllVersions(selectedFunction.name)
       ),
-    [dispatch, fetchData, filtersStore, navigate, selectedFunction]
+    [dispatch, fetchData, filtersStore, navigate, isAllVersions, selectedFunction, showAllVersions]
   )
 
   const actionsMenu = useMemo(
@@ -477,7 +457,10 @@ const Functions = ({
         buildAndRunFunc,
         deletingFunctions,
         selectedFunction,
-        fetchFunction
+        fetchFunction,
+        false,
+        isAllVersions,
+        showAllVersions
       ),
     [
       dispatch,
@@ -488,7 +471,9 @@ const Functions = ({
       buildAndRunFunc,
       deletingFunctions,
       selectedFunction,
-      fetchFunction
+      fetchFunction,
+      isAllVersions,
+      showAllVersions
     ]
   )
 
@@ -505,8 +490,8 @@ const Functions = ({
 
   useInitialTableFetch({
     fetchData,
-    createRowData: rowItem => createFunctionsRowData(rowItem, params.projectName),
-    filters: functionsFilters
+    filters: functionsFilters,
+    requestTrigger: isAllVersions
   })
 
   useEffect(() => {
@@ -515,42 +500,41 @@ const Functions = ({
     return () => {
       setSelectedFunctionMin({})
       setFunctions([])
-      setExpandedRowsData({})
+      setFunctionVersions([])
       abortController.abort(REQUEST_CANCELED)
     }
-  }, [params.projectName])
+  }, [params.projectName, isAllVersions])
 
   useEffect(() => {
-    if ((params.funcName || params.hash) && pageData.details.menu.length > 0) {
+    if (params.id && pageData.details.menu.length > 0) {
       isDetailsTabExists(params.tab, pageData.details.menu, navigate, location)
     }
-  }, [navigate, pageData.details.menu, location, params.hash, params.funcName, params.tab])
+  }, [navigate, pageData.details.menu, location, params.id, params.tab])
 
   useEffect(() => {
     checkForSelectedFunction(
+      isAllVersions ? functionVersions : functions,
+      params.id,
       params.funcName,
-      expandedRowsData,
-      functions,
-      params.hash,
-      params.tag,
       navigate,
       params.projectName,
       setSelectedFunctionMin,
-      dispatch
+      dispatch,
+      isAllVersions
     )
   }, [
     dispatch,
     functions,
     navigate,
-    params.funcName,
-    params.hash,
     params.projectName,
-    params.tag,
-    expandedRowsData
+    params.id,
+    functionVersions,
+    isAllVersions,
+    params.funcName
   ])
 
   useEffect(() => {
-    dispatch(setFilters({ groupBy: GROUP_BY_NAME }))
+    dispatch(setFilters({ groupBy: GROUP_BY_NONE }))
   }, [dispatch, params.projectName])
 
   const filtersChangeCallback = filters => {
@@ -607,9 +591,12 @@ const Functions = ({
       if (functions.length) {
         const currentItem = functions.find(func => func.name === name && func.tag === tag)
 
-        navigate(
-          `/projects/${params.projectName}/functions/${currentItem.hash}/${tab}${window.location.search}`
-        )
+        if (currentItem) {
+          // todo need better logic for searching currentItem for cases when the function has no tag
+          navigate(
+            `/projects/${params.projectName}/functions/${params.funcName}${isAllVersions ? `/${ALL_VERSIONS_PATH}` : ''}/@${currentItem.hash}/${tab}${window.location.search}`
+          )
+        }
         dispatch(
           setNotification({
             status: 200,
@@ -633,9 +620,12 @@ const Functions = ({
 
         showErrorNotification(dispatch, error, '', 'Failed to deploy the function')
 
-        navigate(
-          `/projects/${params.projectName}/functions/${currentItem.hash}/overview${window.location.search}`
-        )
+        if (currentItem) {
+          // todo need better logic for searching currentItem for cases when the function has no tag
+          navigate(
+            `/projects/${params.projectName}/functions/${params.funcName}${isAllVersions ? `/${ALL_VERSIONS_PATH}` : ''}/@${currentItem.hash}/overview${window.location.search}`
+          )
+        }
       }
     })
   }
@@ -677,7 +667,6 @@ const Functions = ({
   const virtualizationConfig = useVirtualization({
     rowsData: {
       content: tableContent,
-      expandedRowsData,
       selectedItem: selectedFunction
     },
     heightData: {
@@ -691,16 +680,13 @@ const Functions = ({
   return (
     <FunctionsView
       actionsMenu={actionsMenu}
-      allRowsAreExpanded={allRowsAreExpanded}
       closePanel={closePanel}
       confirmData={confirmData}
       createFunctionSuccess={createFunctionSuccess}
       editableItem={editableItem}
-      expandedRowsData={expandedRowsData}
       filters={functionsFilters}
       filtersChangeCallback={filtersChangeCallback}
       filtersStore={filtersStore}
-      functions={functions}
       functionsFiltersConfig={functionsFiltersConfig}
       functionsPanelIsOpen={functionsPanelIsOpen}
       functionsStore={functionsStore}
@@ -709,6 +695,7 @@ const Functions = ({
       handleDeployFunctionFailure={handleDeployFunctionFailure}
       handleDeployFunctionSuccess={handleDeployFunctionSuccess}
       handleSelectFunction={handleSelectFunction}
+      isAllVersions={isAllVersions}
       isDemoMode={isDemoMode}
       pageData={pageData}
       requestErrorMessage={requestErrorMessage}
@@ -716,8 +703,6 @@ const Functions = ({
       selectedFunction={selectedFunction}
       setSearchParams={setSearchParams}
       tableContent={tableContent}
-      toggleAllRows={toggleAllRows}
-      toggleRow={toggleRow}
       virtualizationConfig={virtualizationConfig}
     />
   )

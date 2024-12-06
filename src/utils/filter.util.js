@@ -21,7 +21,7 @@ such restriction.
 const SAVED_PARAMS = 'savedParams'
 
 export const getSavedSearchParams = searchParams => {
-  return atob(new URLSearchParams(searchParams)?.get(SAVED_PARAMS) ?? '') ?? searchParams
+  return atob(new URLSearchParams(searchParams)?.get(SAVED_PARAMS) ?? '') ?? ''
 }
 
 export const saveAndTransformSearchParams = (
@@ -37,6 +37,10 @@ export const saveAndTransformSearchParams = (
   }
 
   return searchParams ? `${newSearchParams}${SAVED_PARAMS}=${btoa(searchParams)}` : ''
+}
+
+export const transformSearchParams = (params) => {
+  return params ? `${SAVED_PARAMS}=${btoa(params)}` : ''
 }
 
 export const getFilteredSearchParams = (searchParams, excludeParamsNames = []) => {
