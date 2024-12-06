@@ -125,8 +125,8 @@ const App = () => {
           <Route path="projects" element={<Projects />} />
           <Route path={`projects/*/${JOBS_MONITORING_PAGE}/*`} element={<ProjectsJobsMonitoring />}>
             {[
-              `${JOBS_MONITORING_JOBS_TAB}/:jobName/:jobProjectName/:jobId/:tab`,
-              `${JOBS_MONITORING_JOBS_TAB}/:jobProjectName/:jobId/:tab`,
+              `${JOBS_MONITORING_JOBS_TAB}/:jobName/:jobId/:tab`,
+              `${JOBS_MONITORING_JOBS_TAB}/:jobId/:tab`,
               `${JOBS_MONITORING_JOBS_TAB}/:jobName`,
               `${JOBS_MONITORING_JOBS_TAB}`
             ].map((path, index) => {

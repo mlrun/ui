@@ -243,7 +243,6 @@ export const rerunJob = async (job, setEditableItem, setJobWizardMode, dispatch)
 }
 
 export const handleAbortJob = (
-  projectName,
   job,
   setNotification,
   refreshJobs,
@@ -262,7 +261,7 @@ export const handleAbortJob = (
     })
   )
 
-  dispatch(abortJob({ projectName, job }))
+  dispatch(abortJob({ projectName: job.project, job }))
     .unwrap()
     .then(response => {
       const abortTaskId = get(response, 'metadata.name', '')
@@ -279,13 +278,13 @@ export const handleAbortJob = (
             }
           }
 
-          pollAbortingJobs(projectName, abortJobRef, newAbortingJobs, refreshJobs, dispatch)
+          pollAbortingJobs(job.project, abortJobRef, newAbortingJobs, refreshJobs, dispatch)
 
           return newAbortingJobs
         })
       } else {
         pollAbortingJobs(
-          projectName,
+          job.project,
           abortJobRef,
           {
             [abortTaskId]: {
@@ -301,7 +300,6 @@ export const handleAbortJob = (
     .catch(error => {
       showErrorNotification(dispatch, error, 'Failed to abort job', '', () =>
         handleAbortJob(
-          projectName,
           job,
           setNotification,
           refreshJobs,
@@ -383,7 +381,6 @@ const abortJobSuccessHandler = (dispatch, job) => {
  * Enriches a job run object with the associated function tag(s)
  * @param {Object} jobRun - The job run object to enrich
  * @param {Object} dispatch - dispatch method
- * @param {Function} fetchJobFunctions - The function to fetch job functions from an API
  * @param {Object} fetchJobFunctionsPromiseRef - A ref object used to store a reference to
  * the promise returned by the `fetchJobFunctions` function.
  * @returns {Promise<Object>} A Promise that resolves with the enriched job run object
@@ -445,7 +442,9 @@ export const handleDeleteJob = (isJobRunSelected, job, refreshJobs, filters, dis
       )
     })
     .catch(error => {
-      showErrorNotification(dispatch, error, 'Deleting job failed', '', () => handleDeleteJob(job))
+      showErrorNotification(dispatch, error, 'Deleting job failed', '', () =>
+        handleDeleteJob(isJobRunSelected, job, refreshJobs, filters, dispatch)
+      )
     })
 }
 
