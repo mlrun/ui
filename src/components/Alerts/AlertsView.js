@@ -39,9 +39,10 @@ const AlertsView = ({
   alertsStore,
   filters,
   filtersStore,
+  handleRefreshAlerts,
+  handleRefreshWithFilters,
   pageData,
   paginationConfigJobsAlerts,
-  refreshAlertsCallback,
   requestErrorMessage,
   selectedAlert,
   setSearchParams,
@@ -62,7 +63,7 @@ const AlertsView = ({
                 filterMenuName={ALERTS_FILTERS}
                 filtersConfig={alertsFiltersConfig}
                 filters={filters}
-                handleRefresh={refreshAlertsCallback}
+                handleRefresh={handleRefreshAlerts}
                 page={ALERTS_PAGE}
                 setSearchParams={setSearchParams}
                 withRefreshButton
@@ -89,7 +90,7 @@ const AlertsView = ({
                 <Table
                   actionsMenu={actionsMenu}
                   pageData={pageData}
-                  retryRequest={refreshAlertsCallback}
+                  retryRequest={handleRefreshWithFilters}
                   selectedItem={selectedAlert}
                   tableClassName="alerts-table"
                   hideActionsMenu
@@ -111,7 +112,7 @@ const AlertsView = ({
                   )}
                 </Table>
                 <Pagination
-                  page={ALERTS_PAGE}
+                  page={ALERTS_PAGE} // TODO: replace with pageData in ML-8104
                   paginationConfig={paginationConfigJobsAlerts.current}
                 />
               </>
@@ -127,7 +128,8 @@ AlertsView.propTypes = {
   alertsFiltersConfig: PropTypes.object.isRequired,
   filters: PropTypes.object.isRequired,
   filtersStore: PropTypes.object.isRequired,
-  refreshAlertsCallback: PropTypes.func.isRequired,
+  handleRefreshAlerts: PropTypes.func.isRequired,
+  handleRefreshWithFilters: PropTypes.func.isRequired,
   requestErrorMessage: PropTypes.string.isRequired,
   paginationConfigJobsAlerts: PropTypes.object.isRequired,
   setSearchParams: PropTypes.func.isRequired,
