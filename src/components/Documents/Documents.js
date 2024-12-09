@@ -17,10 +17,18 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
+import { useSearchParams } from 'react-router-dom'
+
 import DocumentsView from './DocumentsView'
 
+import { useFiltersFromSearchParams } from '../../hooks/useFiltersFromSearchParams.hook'
+import { filtersConfig } from './documents.util'
+
 const Documents = () => {
-  return <DocumentsView />
+  const filters = useFiltersFromSearchParams(filtersConfig)
+  const [, setSearchParams] = useSearchParams()
+
+  return <DocumentsView filters={filters} setSearchParams={setSearchParams} />
 }
 
 export default Documents
