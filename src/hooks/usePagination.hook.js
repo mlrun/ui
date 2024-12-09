@@ -33,9 +33,9 @@ import {
 } from '../constants'
 
 export const usePagination = ({
-  bePageSize = 1000,
+  bePageSize = 10,
   content = [],
-  fePageSize = 50,
+  fePageSize = 2,
   filters,
   hidden = false,
   paginationConfigRef,

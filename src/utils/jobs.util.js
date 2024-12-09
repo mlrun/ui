@@ -17,8 +17,10 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
+import { cloneDeep, debounce } from 'lodash'
 
 import {
+  BE_PAGE,
   DATES_FILTER,
   FILTER_ALL_ITEMS,
   JOBS_MONITORING_SCHEDULED_TAB,
@@ -42,6 +44,40 @@ import {
   jobsStatuses,
   workflowsStatuses
 } from '../components/FilterMenu/filterMenu.settings'
+import { getCloseDetailsLink } from './link-helper.util'
+
+export const checkForSelectedJob = debounce(
+  (
+    paginatedJobs,
+    jobName,
+    jobId,
+    navigate,
+    setSelectedJob,
+    modifyAndSelectRun,
+    searchParams,
+    paginationConfigJobsRef
+  ) => {
+    if (jobId) {
+      const searchBePage = parseInt(searchParams.get(BE_PAGE))
+      const configBePage = paginationConfigJobsRef.current[BE_PAGE]
+
+      if (paginatedJobs?.length > 0 && searchBePage === configBePage) {
+        const selectedPaginatedJob = paginatedJobs.find(paginatedJob => {
+          return paginatedJob.uid === jobId
+        })
+
+        if (!selectedPaginatedJob) {
+          navigate(getCloseDetailsLink(jobName, true), { replace: true })
+        } else if (selectedPaginatedJob) {
+          modifyAndSelectRun(cloneDeep(selectedPaginatedJob))
+        }
+      }
+    } else {
+      setSelectedJob({})
+    }
+  },
+  20
+)
 
 export const getJobKindFromLabels = (labels = []) => {
   return labels.find(label => label.includes('kind:'))?.replace('kind: ', '') ?? ''
