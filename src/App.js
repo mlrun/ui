@@ -113,6 +113,7 @@ const ScheduledMonitoring = lazyRetry(
 const WorkflowsMonitoring = lazyRetry(
   () => import('./components/ProjectsJobsMonitoring/WorkflowsMonitoring/WorkflowsMonitoring')
 )
+const Documents = lazyRetry(() => import('./components/Documents/Documents'))
 
 const App = () => {
   const { isNuclioModeDisabled } = useNuclioMode()
@@ -287,6 +288,11 @@ const App = () => {
           ].map((path, index) => (
             <Fragment key={index}>
               <Route path={path} element={<Files />} />
+            </Fragment>
+          ))}
+          {['projects/:projectName/documents'].map((path, index) => (
+            <Fragment key={index}>
+              <Route path={path} element={<Documents />} />
             </Fragment>
           ))}
           <Route path="*" element={<Navigate replace to="projects" />} />
