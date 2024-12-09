@@ -267,21 +267,21 @@ export const generateAlerts = (data, dispatch) => {
 export const generateMonitoringCounters = (data, dispatch) => {
   const monitoringCounters = {
     jobs: {
-      all: 0,
       completed: 0,
       failed: 0,
-      running: 0
+      running: 0,
+      total: 0
     },
     workflows: {
-      all: 0,
       completed: 0,
       failed: 0,
-      running: 0
+      running: 0,
+      total: 0
     },
     scheduled: {
-      all: 0,
       jobs: 0,
-      workflows: 0
+      workflows: 0,
+      total: 0
     },
     alerts: {
       endpoint: 0,
@@ -292,10 +292,7 @@ export const generateMonitoringCounters = (data, dispatch) => {
   }
 
   data.forEach(project => {
-    monitoringCounters.jobs.all += project.runs_completed_recent_count || 0
-    monitoringCounters.jobs.all += project.runs_failed_recent_count || 0
-    monitoringCounters.jobs.all += project.runs_running_count || 0
-    monitoringCounters.jobs.all +=
+    monitoringCounters.jobs.total +=
       project.runs_completed_recent_count ||
       0 + project.runs_failed_recent_count ||
       0 + project.runs_running_count ||
@@ -303,10 +300,7 @@ export const generateMonitoringCounters = (data, dispatch) => {
     monitoringCounters.jobs.completed += project.runs_completed_recent_count || 0
     monitoringCounters.jobs.failed += project.runs_failed_recent_count || 0
     monitoringCounters.jobs.running += project.runs_running_count || 0
-    monitoringCounters.workflows.all += project.pipelines_completed_recent_count || 0
-    monitoringCounters.workflows.all += project.pipelines_failed_recent_count || 0
-    monitoringCounters.workflows.all += project.pipelines_running_count || 0
-    monitoringCounters.workflows.all +=
+    monitoringCounters.workflows.total +=
       project.pipelines_completed_recent_count ||
       0 + project.pipelines_failed_recent_count ||
       0 + project.pipelines_running_count ||
@@ -314,7 +308,7 @@ export const generateMonitoringCounters = (data, dispatch) => {
     monitoringCounters.workflows.completed += project.pipelines_completed_recent_count || 0
     monitoringCounters.workflows.failed += project.pipelines_failed_recent_count || 0
     monitoringCounters.workflows.running += project.pipelines_running_count || 0
-    monitoringCounters.scheduled.all +=
+    monitoringCounters.scheduled.total +=
       project.distinct_scheduled_jobs_pending_count ||
       0 + project.distinct_scheduled_pipelines_pending_count ||
       0
