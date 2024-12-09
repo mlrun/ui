@@ -17,12 +17,12 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import classNames from 'classnames'
 import { upperFirst } from 'lodash'
 import { formatDatetime } from './datetime'
 
 import { ReactComponent as Application } from 'igz-controls/images/entity-type-application.svg'
 import { ReactComponent as Endpoint } from 'igz-controls/images/entity-type-endpoint.svg'
+import { ReactComponent as Error } from 'igz-controls/images/severity-warning.svg'
 import { ReactComponent as Critical } from 'igz-controls/images/severity-critical.svg'
 import { ReactComponent as Email } from 'igz-controls/images/email-icon.svg'
 import { ReactComponent as Git } from 'igz-controls/images/git-icon.svg'
@@ -128,18 +128,58 @@ const alertsNotifications = {
 
 const getNotificationData = notifications =>
   notifications.map(notification => {
-    const tableCellClassName = classNames('table-cell-notification__content', {
-      'notification-fail': notification.err !== ''
-    })
-
     return {
-      icon: <div className={tableCellClassName}>{alertsNotifications[notification.kind]}</div>,
-      tooltip: upperFirst(notification.kind)
+      icon: (
+        <div className="table-cell-notification">
+          {alertsNotifications[notification.kind]}
+          {notification.err !== '' && (
+            <div className="notification-fail">
+              <Error />
+            </div>
+          )}
+        </div>
+      ),
+      info: (
+        <div className="">
+          {`${notification.summary.succeeded} done, `}
+          <span className={notification.summary.failed > 0 ? 'text-red' : ''}>
+            {`${notification.summary.failed} failed`}
+          </span>
+        </div>
+      ),
+      name: notification.kind
     }
   })
 
+const getNotification = notifications => {
+  // notifications.map(notification => {
+  const notification = notifications[0]
+  return (
+    <div className="table-notification">
+      <div className="icon">
+        {alertsNotifications[notification.kind]}
+        {notification.err !== '' && (
+          <div className="notification-fail">
+            <Error />
+          </div>
+        )}
+      </div>
+      <div className="container">
+        <div className="title">{notification.kind}</div>
+        <div className="info">
+          {`${notification.summary.succeeded} done, `}
+          <span className={notification.summary.failed > 0 ? 'failed' : ''}>
+            {`${notification.summary.failed} failed`}
+          </span>
+        </div>
+      </div>
+    </div>
+  )
+  // })
+}
+
 export const createAlertRowData = ({ name, ...alert }) => {
-  alert.id = alert.id.slice(-6) // Use the last 6 characters of the database ID as the alert ID
+  alert.id = alert.id.slice(-6)
 
   return {
     data: {
@@ -222,6 +262,13 @@ export const createAlertRowData = ({ name, ...alert }) => {
         value: getNotificationData(alert.notifications),
         className: 'table-cell-small table-cell-notification',
         type: 'icons'
+      },
+      {
+        id: `customRow.${alert.id}`,
+        headerId: 'customRow',
+        headerLabel: 'Custom Row',
+        value: getNotification(alert.notifications),
+        className: 'table-cell-custom'
       }
     ]
   }
