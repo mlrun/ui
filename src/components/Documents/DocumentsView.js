@@ -19,12 +19,18 @@ such restriction.
 */
 import React from 'react'
 import { useSelector } from 'react-redux'
+import PropTypes from 'prop-types'
 
 import Breadcrumbs from '../../common/Breadcrumbs/Breadcrumbs'
 import Loader from '../../common/Loader/Loader'
 import PageHeader from '../../elements/PageHeader/PageHeader'
+import ActionBar from '../ActionBar/ActionBar'
+import ArtifactsFilters from '../ArtifactsActionBar/ArtifactsFilters'
 
-const DocumentsView = () => {
+import { DOCUMENTS_PAGE } from '../../constants'
+import { filtersConfig } from './documents.util'
+
+const DocumentsView = ({ filters, setSearchParams }) => {
   const artifactsStore = useSelector(store => store.artifactsStore)
 
   return (
@@ -39,11 +45,30 @@ const DocumentsView = () => {
             description="Short explanation about what documents are and what they can do for you and for your project."
           />
           {artifactsStore.loading && <Loader />}
-          <div className="table-container"></div>
+          <div className="table-container">
+            <div className="content__action-bar-wrapper">
+              <ActionBar
+                filters={filters}
+                filtersConfig={filtersConfig}
+                handleRefresh={() => {}}
+                page={DOCUMENTS_PAGE}
+                setSearchParams={setSearchParams}
+                withRefreshButton
+                withoutExpandButton
+              >
+                <ArtifactsFilters artifacts={[]} />
+              </ActionBar>
+            </div>
+          </div>
         </div>
       </div>
     </>
   )
+}
+
+DocumentsView.propTypes = {
+  filters: PropTypes.object.isRequired,
+  setSearchParams: PropTypes.func.isRequired
 }
 
 export default DocumentsView
