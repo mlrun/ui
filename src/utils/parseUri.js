@@ -82,6 +82,10 @@ const parseUri = uri =>
     /^store:\/\/(?<kind>.+?)\/(?<project>.+?)\/(?<key>.+?)(#(?<iteration>.+?))?(:(?<tag>.+?))?(@(?<uid>.+))?$/
   )?.groups ?? {}
 
+const parseIdentifier = identifier =>
+  (identifier ?? '').match(/(#(?<iteration>.+?))?(:(?<tag>.+?))?(@(?<uid>.+))?$/)
+    ?.groups ?? {}
+
 const kindToScreen = {
   artifacts: FILES_TAB,
   datasets: `feature-store/${DATASETS_TAB}`,
@@ -109,4 +113,4 @@ const generateNuclioLink = pathname => {
   return linkUrl.toString()
 }
 
-export { generateLinkPath, generateNuclioLink, parseUri }
+export { generateLinkPath, generateNuclioLink, parseUri, parseIdentifier }

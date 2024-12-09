@@ -51,7 +51,8 @@ import {
   JOBS_MONITORING_PAGE,
   JOBS_MONITORING_JOBS_TAB,
   JOBS_MONITORING_WORKFLOWS_TAB,
-  JOBS_MONITORING_SCHEDULED_TAB
+  JOBS_MONITORING_SCHEDULED_TAB,
+  ALL_VERSIONS_PATH
 } from './constants'
 
 import 'reactflow/dist/style.css'
@@ -206,11 +207,12 @@ const App = () => {
           </Route>
           {[
             'projects/:projectName/functions',
-            'projects/:projectName/functions/:hash/:tab',
-            'projects/:projectName/functions/:funcName/:tag/:tab'
+            'projects/:projectName/functions/:funcName/:id/:tab',
+            `projects/:projectName/functions/:funcName/${ALL_VERSIONS_PATH}`,
+            `projects/:projectName/functions/:funcName/${ALL_VERSIONS_PATH}/:id/:tab`
           ].map((path, index) => (
             <Fragment key={index}>
-              <Route path={path} element={<Functions />} />
+              <Route path={path} element={<Functions isAllVersions={[2,3].includes(index)} />} />
             </Fragment>
           ))}
           <Route
