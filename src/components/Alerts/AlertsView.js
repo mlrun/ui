@@ -28,10 +28,8 @@ import NoData from '../../common/NoData/NoData'
 import Pagination from '../../common/Pagination/Pagination'
 import Table from '../Table/Table'
 
-import { getNoDataMessage } from '../../utils/getNoDataMessage'
 import { ALERTS_FILTERS, ALERTS_PAGE } from '../../constants'
-import { VIRTUALIZATION_CONFIG } from '../../types'
-import { isRowRendered } from '../../hooks/useVirtualization.hook'
+import { getNoDataMessage } from '../../utils/getNoDataMessage'
 
 const AlertsView = ({
   actionsMenu,
@@ -46,8 +44,7 @@ const AlertsView = ({
   requestErrorMessage,
   selectedAlert,
   setSearchParams,
-  tableContent,
-  virtualizationConfig
+  tableContent
 }) => {
   return (
     <>
@@ -96,20 +93,17 @@ const AlertsView = ({
                   hideActionsMenu
                   tableHeaders={tableContent[0]?.content ?? []}
                 >
-                  {tableContent.map(
-                    (tableItem, index) =>
-                      isRowRendered(virtualizationConfig, index) && (
-                        <AlertsTableRow
-                          key={index}
-                          hideActionsMenu
-                          handleSelectItem={() => {}}
-                          rowIndex={index}
-                          rowItem={tableItem}
-                          actionsMenu={[]}
-                          selectedItem={selectedAlert}
-                        />
-                      )
-                  )}
+                  {tableContent.map((tableItem, index) => (
+                    <AlertsTableRow
+                      key={index}
+                      hideActionsMenu
+                      handleSelectItem={() => {}}
+                      rowIndex={index}
+                      rowItem={tableItem}
+                      actionsMenu={[]}
+                      selectedItem={selectedAlert}
+                    />
+                  ))}
                 </Table>
                 <Pagination
                   page={ALERTS_PAGE} // TODO: replace with pageData in ML-8104
@@ -133,7 +127,6 @@ AlertsView.propTypes = {
   requestErrorMessage: PropTypes.string.isRequired,
   paginationConfigJobsAlerts: PropTypes.object.isRequired,
   setSearchParams: PropTypes.func.isRequired,
-  tableContent: PropTypes.arrayOf(PropTypes.object).isRequired,
-  virtualizationConfig: VIRTUALIZATION_CONFIG.isRequired
+  tableContent: PropTypes.arrayOf(PropTypes.object).isRequired
 }
 export default AlertsView

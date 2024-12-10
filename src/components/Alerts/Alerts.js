@@ -26,13 +26,9 @@ import { createAlertRowData } from '../../utils/createAlertsContent'
 import { getAlertsFiltersConfig, parseAlertsQueryParamsCallback } from './alerts.util'
 import { useAlertsPageData } from '../../hooks/useAlertsPageData'
 import { useFiltersFromSearchParams } from '../../hooks/useFiltersFromSearchParams.hook'
-import { useVirtualization } from '../../hooks/useVirtualization.hook'
-
-import cssVariables from './alerts.scss'
 
 const Alerts = () => {
-  const [selectedAlert] = useState({})
-  const [selectedRowData] = useState({})
+  const [selectedAlert] = useState({}) //TODO: implement logic in ML-8104
   const alertsStore = useSelector(state => state.alertsStore)
   const filtersStore = useSelector(store => store.filtersStore)
 
@@ -66,20 +62,6 @@ const Alerts = () => {
     return paginatedAlerts.map(alert => createAlertRowData(alert))
   }, [paginatedAlerts])
 
-  const virtualizationConfig = useVirtualization({
-    rowsData: {
-      content: tableContent,
-      expandedRowsData: selectedRowData,
-      selectedItem: selectedAlert
-    },
-    heightData: {
-      headerRowHeight: cssVariables.$alertsHeaderRowHeight,
-      rowHeight: cssVariables.$alertsRowHeight,
-      rowHeightExtended: cssVariables.$alertsRowHeightExtended
-    },
-    activateTableScroll: true
-  })
-
   return (
     <AlertsView
       alerts={paginatedAlerts}
@@ -96,7 +78,6 @@ const Alerts = () => {
       selectedAlert={selectedAlert}
       setSearchParams={setSearchParams}
       tableContent={tableContent}
-      virtualizationConfig={virtualizationConfig}
     />
   )
 }
