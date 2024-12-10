@@ -53,9 +53,7 @@ export const useAlertsPageData = filters => {
             params: {
               format: 'minimal',
               page: paginationConfigJobsAlerts.current[BE_PAGE],
-              'page-size': paginationConfigJobsAlerts.current[BE_PAGE_SIZE],
-              'partition-by': 'project_and_name', // TODO: check with Kate
-              'partition-sort-by': 'updated' // TODO: check with Kate
+              'page-size': paginationConfigJobsAlerts.current[BE_PAGE_SIZE]
             }
           }
         })

@@ -2,6 +2,9 @@
   "project_summaries": [
     {
       "name": "cat-vs-dog-classification",
+      "endpoint_alerts_count": 4,
+      "job_alerts_count": 2,
+      "other_alerts_count": 6,
       "files_count": 2,
       "feature_sets_count": 0,
       "models_count": 0,
@@ -32,6 +35,9 @@
     },
     {
       "name": "default",
+      "endpoint_alerts_count": 3,
+      "project.job_alerts_count": 6,
+      "other_alerts_count": 1,
       "files_count": 2,
       "feature_sets_count": 23,
       "models_count": 1,
@@ -47,6 +53,9 @@
     },
     {
       "name": "fraud-demo2-admin",
+      "endpoint_alerts_count": 1,
+      "job_alerts_count": 8,
+      "other_alerts_count": 2,
       "files_count": 0,
       "feature_sets_count": 1,
       "models_count": 0,
