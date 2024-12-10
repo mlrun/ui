@@ -39,8 +39,8 @@ export const generateMonitoringStats = (data, navigate, tab) => {
 
   return tab === JOBS_MONITORING_JOBS_TAB
     ? {
-        all: {
-          counter: data.all || 0,
+        total: {
+          counter: data.total || 0,
           link: () => navigateToJobsMonitoringPage({ [STATUS_FILTER]: [FILTER_ALL_ITEMS] })
         },
         counters: [
@@ -70,8 +70,8 @@ export const generateMonitoringStats = (data, navigate, tab) => {
       }
     : tab === JOBS_MONITORING_WORKFLOWS_TAB
       ? {
-          all: {
-            counter: data.all || 0,
+          total: {
+            counter: data.total || 0,
             link: () => navigateToJobsMonitoringPage({ [STATUS_FILTER]: [FILTER_ALL_ITEMS] })
           },
           counters: [
@@ -101,8 +101,8 @@ export const generateMonitoringStats = (data, navigate, tab) => {
           ]
         }
       : {
-          all: {
-            counter: data.all || 0,
+          total: {
+            counter: data.total || 0,
             link: () => navigateToJobsMonitoringPage({ [TYPE_FILTER]: FILTER_ALL_ITEMS }, {})
           },
           jobs: {

@@ -51,7 +51,8 @@ import {
   JOBS_MONITORING_PAGE,
   JOBS_MONITORING_JOBS_TAB,
   JOBS_MONITORING_WORKFLOWS_TAB,
-  JOBS_MONITORING_SCHEDULED_TAB
+  JOBS_MONITORING_SCHEDULED_TAB,
+  ALL_VERSIONS_PATH
 } from './constants'
 
 import 'reactflow/dist/style.css'
@@ -112,6 +113,7 @@ const ScheduledMonitoring = lazyRetry(
 const WorkflowsMonitoring = lazyRetry(
   () => import('./components/ProjectsJobsMonitoring/WorkflowsMonitoring/WorkflowsMonitoring')
 )
+const Documents = lazyRetry(() => import('./components/Documents/Documents'))
 
 const App = () => {
   const { isNuclioModeDisabled } = useNuclioMode()
@@ -125,8 +127,8 @@ const App = () => {
           <Route path="projects" element={<Projects />} />
           <Route path={`projects/*/${JOBS_MONITORING_PAGE}/*`} element={<ProjectsJobsMonitoring />}>
             {[
-              `${JOBS_MONITORING_JOBS_TAB}/:jobName/:jobProjectName/:jobId/:tab`,
-              `${JOBS_MONITORING_JOBS_TAB}/:jobProjectName/:jobId/:tab`,
+              `${JOBS_MONITORING_JOBS_TAB}/:jobName/:jobId/:tab`,
+              `${JOBS_MONITORING_JOBS_TAB}/:jobId/:tab`,
               `${JOBS_MONITORING_JOBS_TAB}/:jobName`,
               `${JOBS_MONITORING_JOBS_TAB}`
             ].map((path, index) => {
@@ -206,11 +208,12 @@ const App = () => {
           </Route>
           {[
             'projects/:projectName/functions',
-            'projects/:projectName/functions/:hash/:tab',
-            'projects/:projectName/functions/:funcName/:tag/:tab'
+            'projects/:projectName/functions/:funcName/:id/:tab',
+            `projects/:projectName/functions/:funcName/${ALL_VERSIONS_PATH}`,
+            `projects/:projectName/functions/:funcName/${ALL_VERSIONS_PATH}/:id/:tab`
           ].map((path, index) => (
             <Fragment key={index}>
-              <Route path={path} element={<Functions />} />
+              <Route path={path} element={<Functions isAllVersions={[2,3].includes(index)} />} />
             </Fragment>
           ))}
           <Route
@@ -285,6 +288,11 @@ const App = () => {
           ].map((path, index) => (
             <Fragment key={index}>
               <Route path={path} element={<Files />} />
+            </Fragment>
+          ))}
+          {['projects/:projectName/documents'].map((path, index) => (
+            <Fragment key={index}>
+              <Route path={path} element={<Documents />} />
             </Fragment>
           ))}
           <Route path="*" element={<Navigate replace to="projects" />} />

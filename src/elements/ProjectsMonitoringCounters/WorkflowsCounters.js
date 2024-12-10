@@ -73,10 +73,10 @@ const WorkflowsCounters = () => {
             ) : (
               <span
                 className="stats__link"
-                onClick={workflowsStats.all.link}
+                onClick={workflowsStats.total.link}
                 data-testid="workflows_total_counter"
               >
-                {workflowsStats.all.counter}
+                {workflowsStats.total.counter}
               </span>
             )}
           </span>

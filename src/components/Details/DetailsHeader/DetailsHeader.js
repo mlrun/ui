@@ -50,6 +50,7 @@ import { ReactComponent as Back } from 'igz-controls/images/back-arrow.svg'
 import { ReactComponent as Refresh } from 'igz-controls/images/refresh.svg'
 import { ReactComponent as EnlargeIcon } from 'igz-controls/images/ml-enlarge.svg'
 import { ReactComponent as MinimizeIcon } from 'igz-controls/images/ml-minimize.svg'
+import { ReactComponent as HistoryIcon } from 'igz-controls/images/history.svg'
 
 const DetailsHeader = ({
   actionsMenu,
@@ -72,7 +73,7 @@ const DetailsHeader = ({
   const params = useParams()
   const navigate = useNavigate()
   const viewMode = getViewMode(window.location.search)
-  const { actionButton, withToggleViewBtn } = pageData.details
+  const { actionButton, withToggleViewBtn, showAllVersions } = pageData.details
   const headerRef = useRef()
 
   const errorMessage = useMemo(
@@ -141,7 +142,7 @@ const DetailsHeader = ({
                 getCloseDetailsLink
                   ? getCloseDetailsLink(selectedItem.name)
                   : generateUrlFromRouterPath(
-                      window.location.pathname.split('/').slice(0, -2).join('/')
+                      window.location.pathname.split('/').slice(0, -2).join('/') + window.location.search
                     )
               }
               onClick={handleBackClick}
@@ -262,6 +263,15 @@ const DetailsHeader = ({
             tooltip={actionButton.tooltip}
             variant={actionButton.variant}
           />
+        )}
+        {showAllVersions && (
+          <RoundedIcon
+            id="showAllVersions"
+            onClick={() => showAllVersions()}
+            tooltipText="Show all versions"
+          >
+            <HistoryIcon />
+          </RoundedIcon>
         )}
         {isDetailsScreen && (
           <RoundedIcon

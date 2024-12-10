@@ -268,8 +268,8 @@ export const handleRunScheduledJob = createAsyncThunk(
 )
 export const removeScheduledJob = createAsyncThunk(
   'removeScheduledJob',
-  ({ project, scheduleName }) => {
-    return jobsApi.removeScheduledJob(project, scheduleName)
+  ({ projectName, scheduleName }) => {
+    return jobsApi.removeScheduledJob({ projectName, scheduleName })
   }
 )
 export const runNewJob = createAsyncThunk('runNewJob', ({ postData }) => {

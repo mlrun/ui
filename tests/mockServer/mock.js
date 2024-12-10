@@ -1568,7 +1568,7 @@ function getFuncs(req, res) {
       if (req.query['name'].includes('~')) {
         return func.metadata.name.includes(req.query['name'].slice(1))
       } else {
-        return func.metadata.name === func.query['name']
+        return func.metadata.name === req.query['name']
       }
     })
   }
@@ -2260,6 +2260,21 @@ function getModelEndpoints(req, res) {
         features: null
       }
     }))
+
+  if (req.query['name'] && req.query['function_name']) {
+    collectedEndpoints = collectedEndpoints.filter(
+      endpoint =>
+        endpoint.metadata.name === req.query['name'] &&
+        endpoint.spec.function_name === req.query['function_name']
+    )
+  }
+
+  if (req.query['latest_only']) {
+    collectedEndpoints = collectedEndpoints.filter(
+      endpoint => endpoint.spec.function_tag === 'latest'
+    )
+  }
+
   if (req.query['label']) {
     collectedEndpoints = collectedEndpoints.filter(endpoint =>
       filterByLabels(endpoint.metadata.labels, req.query['label'])
@@ -2267,14 +2282,6 @@ function getModelEndpoints(req, res) {
   }
 
   res.send({ endpoints: collectedEndpoints })
-}
-
-function getModelEndpoint(req, res) {
-  const endpoint = modelEndpoints.endpoints.find(
-    item => item.metadata.project === req.params.project && item.metadata.uid === req.params.uid
-  )
-
-  res.send(endpoint)
 }
 
 function getMetrics(req, res) {
@@ -2707,7 +2714,6 @@ app.get(`${mlrunAPIIngress}/log/:project/:uid`, getLog)
 app.get(`${mlrunAPIIngress}/projects/:project/runtime-resources`, getRuntimeResources)
 
 app.get(`${mlrunAPIIngress}/projects/:project/model-endpoints`, getModelEndpoints)
-app.get(`${mlrunAPIIngress}/projects/:project/model-endpoints/:uid`, getModelEndpoint)
 app.get(`${mlrunAPIIngress}/projects/:project/model-endpoints/:uid/metrics`, getMetrics)
 app.get(
   `${mlrunAPIIngress}/projects/:project/model-endpoints/:uid/metrics-values`,

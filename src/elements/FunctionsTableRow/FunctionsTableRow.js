@@ -17,182 +17,72 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import React, { useMemo, useRef } from 'react'
+import React, { useRef } from 'react'
 import PropTypes from 'prop-types'
 import classnames from 'classnames'
 import { useParams } from 'react-router-dom'
-import { isEmpty } from 'lodash'
 
 import ActionsMenu from '../../common/ActionsMenu/ActionsMenu'
 import TableCell from '../TableCell/TableCell'
 
 import { ACTIONS_MENU } from '../../types'
 import { DETAILS_OVERVIEW_TAB } from '../../constants'
-import { generateTableRowTestId } from '../../utils/generateTableRowTestId'
 import { getFunctionIdentifier } from '../../utils/getUniqueIdentifier'
-import { isRowExpanded, PARENT_ROW_EXPANDED_CLASS } from '../../utils/tableRows.util'
 
 const FunctionsTableRow = ({
   actionsMenu,
-  expandedRowsData,
   handleSelectItem,
-  mainRowItemsCount = 1,
-  rowIndex,
   rowItem,
   selectedItem,
-  toggleRow,
   withQuickActions = false
 }) => {
   const parent = useRef()
   const params = useParams()
-  const rowIsExpanded = useMemo(
-    () => isRowExpanded(parent, expandedRowsData, rowItem),
-    [rowItem, expandedRowsData]
-  )
+
   const rowClassNames = classnames(
     'table-row',
     'table-body-row',
     'parent-row',
     getFunctionIdentifier(selectedItem, true) === rowItem.data?.ui?.identifierUnique &&
-      !rowIsExpanded &&
-      'table-row_active',
-    rowIsExpanded && PARENT_ROW_EXPANDED_CLASS
+      'table-row_active'
   )
 
   return (
     <tr className={rowClassNames} ref={parent}>
-      {rowIsExpanded ? (
-        <>
-          <td
-            data-testid={generateTableRowTestId(rowIndex)}
-            className={`table-body__cell
-              ${rowIsExpanded && 'row_grouped-by'}`}
-          >
-            <table cellPadding="0" cellSpacing="0" className="table">
-              <tbody className="table-body">
-                <tr className="table-row">
-                  {rowItem.content.map((data, index) => {
-                    const cellClassName = classnames(
-                      index >= mainRowItemsCount && 'table-body__cell_hidden'
-                    )
-
-                    return (
-                      !data.hidden && (
-                        <TableCell
-                          className={cellClassName}
-                          data={data}
-                          firstCell={index === 0}
-                          item={rowItem}
-                          key={data.id}
-                          selectItem={handleSelectItem}
-                          selectedItem={selectedItem}
-                          showExpandButton
-                          toggleRow={toggleRow}
-                        />
-                      )
-                    )
-                  })}
-                  <td className="table-body__cell table-cell-icon" />
-                </tr>
-              </tbody>
-            </table>
-          </td>
-
-          {expandedRowsData[rowItem.data.ui.identifier]?.content.map((func, index) => {
-            const subRowClassNames = classnames(
-              'table-row',
-              'table-body-row',
-              selectedItem.name &&
-                getFunctionIdentifier(selectedItem, true) === func.data.ui.identifierUnique &&
-                'table-row_active'
+      <>
+        {rowItem.content.map((value, index) => {
+          return (
+            !value.hidden && (
+              <TableCell
+                data={value}
+                firstCell={index === 0}
+                item={rowItem.data}
+                key={value.id}
+                link={value.getLink?.(
+                  params.tab ?? DETAILS_OVERVIEW_TAB,
+                  rowItem.data.hash
+                )}
+                selectedItem={selectedItem}
+                selectItem={handleSelectItem}
+              />
             )
-
-            return (
-              <td
-                data-testid={generateTableRowTestId(rowIndex, index)}
-                className="table-body__cell"
-                key={index}
-              >
-                <table cellPadding="0" cellSpacing="0" className="table">
-                  <tbody className="table-body">
-                    <tr className={subRowClassNames}>
-                      {func.content.map((value, index) => {
-                        const cellClassNames = classnames(
-                          !isEmpty(selectedItem) &&
-                            index >= mainRowItemsCount &&
-                            'table-body__cell_hidden'
-                        )
-
-                        return (
-                          !value.hidden && (
-                            <TableCell
-                              className={cellClassNames}
-                              data={value.expandedCellContent ? value.expandedCellContent : value}
-                              item={func.data}
-                              link={value.getLink?.(
-                                func.data.tag,
-                                params.tab ?? DETAILS_OVERVIEW_TAB,
-                                func.data.hash
-                              )}
-                              key={value.id}
-                              selectItem={handleSelectItem}
-                              selectedItem={selectedItem}
-                            />
-                          )
-                        )
-                      })}
-                      <td className="table-body__cell table-cell-icon">
-                        <ActionsMenu
-                          dataItem={func.data}
-                          menu={actionsMenu}
-                          withQuickActions={withQuickActions}
-                        />
-                      </td>
-                    </tr>
-                  </tbody>
-                </table>
-              </td>
-            )
-          })}
-        </>
-      ) : (
-        <>
-          {rowItem.content.map((value, index) => {
-            return (
-              !value.hidden && (
-                <TableCell
-                  data={value}
-                  firstCell={index === 0}
-                  item={rowItem.data}
-                  key={value.id}
-                  link={value.getLink?.(rowItem.data.tag, params.tab ?? DETAILS_OVERVIEW_TAB, rowItem.data.hash)}
-                  selectItem={handleSelectItem}
-                  selectedItem={selectedItem}
-                  showExpandButton={value.showExpandButton}
-                  toggleRow={toggleRow}
-                />
-              )
-            )
-          })}
-          <td className="table-body__cell table-cell-icon">
-            <ActionsMenu
-              dataItem={rowItem.data}
-              menu={actionsMenu}
-              withQuickActions={withQuickActions}
-            />
-          </td>
-        </>
-      )}
+          )
+        })}
+        <td className="table-body__cell table-cell-icon">
+          <ActionsMenu
+            dataItem={rowItem.data}
+            menu={actionsMenu}
+            withQuickActions={withQuickActions}
+          />
+        </td>
+      </>
     </tr>
   )
 }
 
 FunctionsTableRow.propTypes = {
   actionsMenu: ACTIONS_MENU.isRequired,
-  expandedRowsData: PropTypes.object.isRequired,
   handleSelectItem: PropTypes.func.isRequired,
-  mainRowItemsCount: PropTypes.number,
-  rowIndex: PropTypes.number.isRequired,
   rowItem: PropTypes.shape({}).isRequired,
   selectedItem: PropTypes.shape({}).isRequired,
   withQuickActions: PropTypes.bool
