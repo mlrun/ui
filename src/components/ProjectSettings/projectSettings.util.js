@@ -143,7 +143,7 @@ export const generateMembers = (membersResponse, membersDispatch, owner) => {
 
 export const isProjectMembersTabShown = (
   projectMembershipIsEnabled,
-  userIsOwner,
+  userIsProjectOwner,
   { activeUser, members }
 ) => {
   if (!projectMembershipIsEnabled) {
@@ -162,7 +162,7 @@ export const isProjectMembersTabShown = (
           )))
   )
 
-  return userIsOwner || userIsAdmin || userIsProjectSecurityAdmin
+  return userIsProjectOwner || userIsAdmin || userIsProjectSecurityAdmin
 }
 
 const isOwnerInMembersList = (ownerId, membersList) => {

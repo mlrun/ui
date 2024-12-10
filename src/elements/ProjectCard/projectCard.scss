@@ -79,12 +79,13 @@
   }
 
   &__alert {
-    margin-right: 8px;
     display: flex;
-    border-radius: 100px;
-    padding: 3px 8px;
+    gap: 2px;
     align-items: center;
+    margin-right: 8px;
+    padding: 3px 8px;
     background-color: $wildSand;
+    border-radius: 100px;
 
     &-icon {
       width: 16px;
@@ -97,8 +98,8 @@
 
     &-text {
       color: $primary;
-      font-family: Roboto, sans-serif;
       font-size: 14px;
+      font-family: Roboto, sans-serif;
     }
   }
 

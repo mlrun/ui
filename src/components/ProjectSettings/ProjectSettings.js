@@ -71,13 +71,13 @@ const ProjectSettings = () => {
     [frontendSpec]
   )
 
-  const isProjectOwner = useMemo(() => {
+  const userIsProjectOwner = useMemo(() => {
     return membersState?.activeUser?.data?.id === membersState?.projectInfo?.owner.id
   }, [membersState])
 
   const projectMembersTabIsShown = useMemo(
-    () => isProjectMembersTabShown(projectMembershipIsEnabled, isProjectOwner, membersState),
-    [isProjectOwner, membersState, projectMembershipIsEnabled]
+    () => isProjectMembersTabShown(projectMembershipIsEnabled, userIsProjectOwner, membersState),
+    [userIsProjectOwner, membersState, projectMembershipIsEnabled]
   )
 
   const fetchProjectIdAndOwner = useCallback(() => {
@@ -313,7 +313,9 @@ const ProjectSettings = () => {
                     )
                   }}
                   className="delete-project-btn"
-                  disabled={!isProjectOwner || projectStore.loading || projectStore.project.loading}
+                  disabled={
+                    !userIsProjectOwner || projectStore.loading || projectStore.project.loading
+                  }
                 />
               )}
             </div>
