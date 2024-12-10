@@ -366,9 +366,8 @@ const WorkflowsTable = React.forwardRef(
             location.pathname
               .split('/')
               .splice(0, location.pathname.split('/').indexOf(params.workflowId) + 1)
-              .join('/')
-          + window.location.search
-        )
+              .join('/') + window.location.search
+          )
         })
       },
       [dispatch, filters, location.pathname, navigate, params.workflowId, refreshWorkflow]
@@ -398,7 +397,8 @@ const WorkflowsTable = React.forwardRef(
       workflow => {
         dispatch(rerunWorkflow({ project: workflow.project, workflowId: workflow.id }))
           .unwrap()
-          .then(() =>
+          .then(() => {
+            handleRetry()
             dispatch(
               setNotification({
                 status: 200,
@@ -406,14 +406,14 @@ const WorkflowsTable = React.forwardRef(
                 message: 'Workflow ran successfully.'
               })
             )
-          )
+          })
           .catch(error => {
             showErrorNotification(dispatch, error, 'Workflow did not run successfully', '', () =>
               handleRerun(workflow)
             )
           })
       },
-      [dispatch]
+      [dispatch, handleRetry]
     )
 
     const actionsMenu = useMemo(() => {
