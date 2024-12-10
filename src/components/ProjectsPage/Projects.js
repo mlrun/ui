@@ -110,6 +110,7 @@ const Projects = () => {
     [isDescendingOrder, sortProjectId]
   )
 
+  /* eslint-disable-next-line no-console */
   console.log('hello', confirmData)
 
   const refreshProjects = useCallback(() => {
