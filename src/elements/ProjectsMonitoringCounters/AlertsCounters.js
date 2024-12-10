@@ -53,17 +53,15 @@ const AlertsCounters = () => {
         <StatsCard.Col>
           <div className="project-card__info">
             <span className="stats__subtitle">Total</span>
-            <div className="stats__counter">
+            <div
+              className="stats__counter"
+              onClick={() => alertsStats.all.link()}
+              data-testid="alerts_total_counter"
+            >
               {projectStore.projectsSummary.loading ? (
                 <Loader section small secondary />
               ) : (
-                <span
-                  className="stats__link"
-                  onClick={() => alertsStats.all.link()}
-                  data-testid="alerts_total_counter"
-                >
-                  {(projectStore.jobsMonitoringData.alerts.total || 0).toLocaleString()}
-                </span>
+                (projectStore.jobsMonitoringData.alerts.total || 0).toLocaleString()
               )}
             </div>
             <ClockIcon className="project-card__info-icon" />
@@ -73,55 +71,54 @@ const AlertsCounters = () => {
       </StatsCard.Header>
       <StatsCard.Row>
         <StatsCard.Col>
-          <h6 className="stats__subtitle">Endpoint</h6>
-          <div className="stats__counter">
-            {projectStore.projectsSummary.loading ? (
-              <Loader section small secondary />
-            ) : (
-              <span
-                className="stats__link"
-                onClick={() => alertsStats.endpoints.link()}
-                data-testid="alerts_endpoint_counter"
-              >
-                {projectStore.jobsMonitoringData.alerts.endpoint}
-              </span>
-            )}
+          <div
+            className="stats__link"
+            onClick={alertsStats.endpoints.link}
+            data-testid="alerts_endpoint_counter"
+          >
+            <div className="stats__counter">
+              {projectStore.projectsSummary.loading ? (
+                <Loader section small secondary />
+              ) : (
+                projectStore.jobsMonitoringData.alerts.endpoint
+              )}
+            </div>
+            <h6 className="stats__subtitle">Endpoint</h6>
           </div>
         </StatsCard.Col>
         <StatsCard.Col>
-          <h6 className="stats__subtitle">Jobs</h6>
-          <div className="stats__counter">
-            {projectStore.projectsSummary.loading ? (
-              <Loader section small secondary />
-            ) : (
-              <span
-                className="stats__link"
-                onClick={() => alertsStats.job.link()}
-                data-testid="alerts_jobs_counter"
-              >
-                {(projectStore.jobsMonitoringData.alerts.jobs || 0).toLocaleString()}
-              </span>
-            )}
+          <div
+            className="stats__link"
+            onClick={alertsStats.job.link}
+            data-testid="alerts_jobs_counter"
+          >
+            <div className="stats__counter">
+              {projectStore.projectsSummary.loading ? (
+                <Loader section small secondary />
+              ) : (
+                (projectStore.jobsMonitoringData.alerts.jobs || 0).toLocaleString()
+              )}
+            </div>
+            <h6 className="stats__subtitle">Jobs</h6>
           </div>
         </StatsCard.Col>
         <StatsCard.Col>
-          <h6 className="stats__subtitle">Application</h6>
-          <div className="stats__counter">
-            {projectStore.projectsSummary.loading ? (
-              <Loader section small secondary />
-            ) : (
-              <span
-                className="stats__link"
-                onClick={() => alertsStats.application.link()}
-                data-testid="alerts_application_counter"
-              >
-                {(projectStore.jobsMonitoringData.alerts.application || 0).toLocaleString()}
-              </span>
-            )}
+          <div
+            className="stats__link"
+            onClick={alertsStats.application.link}
+            data-testid="alerts_application_counter"
+          >
+            <div className="stats__counter">
+              {projectStore.projectsSummary.loading ? (
+                <Loader section small secondary />
+              ) : (
+                (projectStore.jobsMonitoringData.alerts.application || 0).toLocaleString()
+              )}
+            </div>
+            <h6 className="stats__subtitle">Application</h6>
           </div>
         </StatsCard.Col>
       </StatsCard.Row>
-      <StatsCard.Row></StatsCard.Row>
     </StatsCard>
   )
 }

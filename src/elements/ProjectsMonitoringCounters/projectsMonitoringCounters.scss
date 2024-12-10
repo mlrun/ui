@@ -1,6 +1,14 @@
 @import '~igz-controls/scss/colors';
 @import '~igz-controls/scss/borders';
 
+@mixin counterLinkHover {
+  cursor: pointer;
+  text-decoration: underline;
+  color: $topaz;
+  text-underline-offset: 1px;
+  text-decoration-thickness: 2px;
+}
+
 .monitoring-stats {
   flex-direction: column;
   flex-wrap: unset;
@@ -16,61 +24,72 @@
     flex: unset;
 
     &:last-child {
-      margin-top: auto;
+      padding: 20px 0;
     }
   }
 
   .stats {
     &__subtitle {
       display: inline-block;
-      margin: 0 0 5px 0;
+      margin: 0;
       color: $topaz;
       font-weight: normal;
-      font-size: 1rem;
-    }
-
-    &__placeholder-subtitle {
-      height: 24px;
+      font-size: 0.75rem;
     }
 
     &__counter {
-      min-height: 58px;
       color: $primary;
-      font-weight: 700;
-      font-size: 38px;
-      align-items: center;
-      justify-content: center;
-    }
-
-    &__link {
-      color: $darkPurple;
-      cursor: pointer;
+      font-weight: 400;
+      font-size: 28px;
 
       &:hover {
-        text-decoration: underline;
-        color: $topaz;
-        text-underline-offset: 1px;
-        text-decoration-thickness: 2px;
+        @include counterLinkHover;
       }
     }
 
-    .link {
-      font-size: 1rem;
+    &__status {
+      i[class^='state-'] {
+        margin-left: 5px;
+      }
+    }
+
+    &__link {
+      cursor: pointer;
+
+      &:hover {
+        .stats__counter {
+          @include counterLinkHover;
+        }
+      }
     }
   }
 
   .project-card__info {
+    justify-content: flex-end;
+    margin-left: 1rem;
+
     .stats__subtitle {
       font-size: inherit;
       margin: 0 5px 0 0;
     }
 
     .stats__counter {
+      position: relative;
       font-size: 1rem;
-      min-height: auto;
-      border-right: $secondaryBorder;
-      margin-right: 0.75em;
+      margin-right: 0.6em;
       padding-right: 0.75em;
+
+      &:after {
+        content: '';
+        display: inline-block;
+        width: 1px;
+        background-color: $mulledWineThree;
+        position: absolute;
+        right: 0;
+        top: 0;
+        bottom: 0;
+        margin: 3px 0;
+      }
     }
   }
 

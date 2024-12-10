@@ -3,52 +3,25 @@
 .projects-monitoring {
   &-container {
     margin-bottom: 2rem;
-    padding: 30px;
+    padding: 20px;
     background-color: $wildSand;
 
     .page-header {
-      margin: 0 20px 0 0;
-    }
-  }
-
-  &-legend {
-    display: flex;
-    align-items: baseline;
-    margin-bottom: 2em;
-
-    &__status {
-      display: flex;
-      flex-flow: row nowrap;
-      justify-content: center;
-      margin: 0;
-      padding: 0;
-      list-style-type: none;
-
-      li {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        padding: 0 0.75rem;
-
-        [class^='state-'] {
-          margin-left: 5px;
-        }
-
-        &.link {
-          color: $primary;
-          font-size: 13px;
-        }
-      }
+      margin-bottom: 1em;
     }
   }
 
   &-stats {
     display: grid;
-    grid-template-columns: 3fr 3fr 4fr 4fr;
-    gap: 9px 8px;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 15px;
 
-    @media (max-width: 1260px) {
-      grid-template-columns: repeat(2, 1fr);
+    @media screen and (min-width: 1600px) {
+      grid-template-columns: 4fr 4fr 3.5fr 4fr;
     }
+  }
+
+  [class^='state-'] {
+    margin-left: 5px;
   }
 }

@@ -51,17 +51,15 @@ const ScheduledJobsCounters = () => {
         <StatsCard.Col>
           <div className="project-card__info">
             <span className="stats__subtitle">Total</span>
-            <div className="stats__counter">
+            <div
+              className="stats__counter"
+              onClick={scheduledStats.total.link}
+              data-testid="scheduled_total_counter"
+            >
               {projectStore.projectsSummary.loading ? (
                 <Loader section small secondary />
               ) : (
-                <span
-                  className="stats__link"
-                  onClick={scheduledStats.total.link}
-                  data-testid="scheduled_total_counter"
-                >
-                  {scheduledStats.total.counter}
-                </span>
+                scheduledStats.total.counter
               )}
             </div>
             <ClockIcon className="project-card__info-icon" />
@@ -83,39 +81,38 @@ const ScheduledJobsCounters = () => {
       </StatsCard.Header>
       <StatsCard.Row>
         <StatsCard.Col>
-          <h6 className="stats__subtitle">Jobs</h6>
-          <div className="stats__counter">
-            {projectStore.projectsSummary.loading ? (
-              <Loader section small secondary />
-            ) : (
-              <span
-                className="stats__link"
-                onClick={scheduledStats.jobs.link}
-                data-testid="scheduled_jobs_counter"
-              >
-                {scheduledStats.jobs.counter}
-              </span>
-            )}
+          <div
+            className="stats__link"
+            onClick={scheduledStats.jobs.link}
+            data-testid="scheduled_jobs_counter"
+          >
+            <div className="stats__counter">
+              {projectStore.projectsSummary.loading ? (
+                <Loader section small secondary />
+              ) : (
+                scheduledStats.jobs.counter
+              )}
+            </div>
+            <h6 className="stats__subtitle">Jobs</h6>
           </div>
         </StatsCard.Col>
         <StatsCard.Col>
-          <h6 className="stats__subtitle">Workflows</h6>
-          <div className="stats__counter">
-            {projectStore.projectsSummary.loading ? (
-              <Loader section small secondary />
-            ) : (
-              <span
-                className="stats__link"
-                onClick={scheduledStats.workflows.link}
-                data-testid="scheduled_wf_counter"
-              >
-                {scheduledStats.workflows.counter}
-              </span>
-            )}
+          <div
+            className="stats__link"
+            onClick={scheduledStats.workflows.link}
+            data-testid="scheduled_wf_counter"
+          >
+            <div className="stats__counter">
+              {projectStore.projectsSummary.loading ? (
+                <Loader section small secondary />
+              ) : (
+                scheduledStats.workflows.counter
+              )}
+            </div>
+            <h6 className="stats__subtitle">Workflows</h6>
           </div>
         </StatsCard.Col>
       </StatsCard.Row>
-      <StatsCard.Row></StatsCard.Row>
     </StatsCard>
   )
 }
