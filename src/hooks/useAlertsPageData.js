@@ -17,7 +17,6 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-
 import { useCallback, useRef, useState } from 'react'
 import { useDispatch } from 'react-redux'
 import { useParams } from 'react-router-dom'
@@ -30,7 +29,7 @@ export const useAlertsPageData = filters => {
   const [requestErrorMessage, setRequestErrorMessage] = useState('')
 
   const abortControllerRef = useRef(new AbortController())
-  const paginationConfigJobsAlerts = useRef({})
+  const paginationConfigAlertsRef = useRef({})
 
   const params = useParams()
   const dispatch = useDispatch()
@@ -52,17 +51,17 @@ export const useAlertsPageData = filters => {
             },
             params: {
               format: 'minimal',
-              page: paginationConfigJobsAlerts.current[BE_PAGE],
-              'page-size': paginationConfigJobsAlerts.current[BE_PAGE_SIZE]
+              page: paginationConfigAlertsRef.current[BE_PAGE],
+              'page-size': paginationConfigAlertsRef.current[BE_PAGE_SIZE]
             }
           }
         })
       )
         .unwrap()
-        .then(alerts => {
-          if (alerts?.activations?.length > 0) {
-            setAlerts(alerts.activations)
-            paginationConfigJobsAlerts.current.paginationResponse = alerts.pagination
+        .then(response => {
+          if (response?.activations?.length > 0) {
+            setAlerts(response.activations)
+            paginationConfigAlertsRef.current.paginationResponse = response.pagination
           } else {
             setAlerts([])
           }
@@ -74,14 +73,14 @@ export const useAlertsPageData = filters => {
   const [handleRefreshAlerts, paginatedAlerts, , setSearchParams] = usePagination({
     content: alerts,
     refreshContent: refreshAlerts,
-    paginationConfigRef: paginationConfigJobsAlerts,
+    paginationConfigRef: paginationConfigAlertsRef,
     resetPaginationTrigger: params.projectName
   })
   return {
     abortControllerRef,
     handleRefreshAlerts,
     paginatedAlerts,
-    paginationConfigJobsAlerts,
+    paginationConfigAlertsRef,
     refreshAlerts,
     requestErrorMessage,
     setAlerts,

@@ -40,7 +40,7 @@ const AlertsView = ({
   handleRefreshAlerts,
   handleRefreshWithFilters,
   pageData,
-  paginationConfigJobsAlerts,
+  paginationConfigAlertsRef,
   requestErrorMessage,
   selectedAlert,
   setSearchParams,
@@ -107,7 +107,7 @@ const AlertsView = ({
                 </Table>
                 <Pagination
                   page={ALERTS_PAGE} // TODO: replace with pageData in ML-8104
-                  paginationConfig={paginationConfigJobsAlerts.current}
+                  paginationConfig={paginationConfigAlertsRef.current}
                 />
               </>
             )}
@@ -125,7 +125,7 @@ AlertsView.propTypes = {
   handleRefreshAlerts: PropTypes.func.isRequired,
   handleRefreshWithFilters: PropTypes.func.isRequired,
   requestErrorMessage: PropTypes.string.isRequired,
-  paginationConfigJobsAlerts: PropTypes.object.isRequired,
+  paginationConfigAlertsRef: PropTypes.object.isRequired,
   setSearchParams: PropTypes.func.isRequired,
   tableContent: PropTypes.arrayOf(PropTypes.object).isRequired
 }

@@ -42,7 +42,7 @@ const Alerts = () => {
   const {
     handleRefreshAlerts,
     paginatedAlerts,
-    paginationConfigJobsAlerts,
+    paginationConfigAlertsRef,
     requestErrorMessage,
     refreshAlerts,
     setAlerts,
@@ -73,7 +73,7 @@ const Alerts = () => {
       handleRefreshAlerts={handleRefreshAlerts}
       handleRefreshWithFilters={handleRefreshWithFilters}
       pageData={{}} //TODO
-      paginationConfigJobsAlerts={paginationConfigJobsAlerts}
+      paginationConfigAlertsRef={paginationConfigAlertsRef}
       requestErrorMessage={requestErrorMessage}
       selectedAlert={selectedAlert}
       setSearchParams={setSearchParams}
