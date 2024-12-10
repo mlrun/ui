@@ -130,9 +130,9 @@ const getNotificationData = notifications =>
   notifications.map(notification => {
     return {
       icon: (
-        <div className="table-cell-notification">
+        <div className="alert-row-notification">
           {alertsNotifications[notification.kind]}
-          {notification.err !== '' && (
+          {notification.error !== '' && (
             <div className="notification-fail">
               <Error />
             </div>

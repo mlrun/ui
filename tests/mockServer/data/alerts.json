@@ -8,7 +8,7 @@
       "notifications": [
         {
           "kind": "email",
-          "err": "",
+          "error": "",
           "summary": {
             "failed": 0,
             "succeeded": 4
@@ -16,7 +16,7 @@
         },
         {
           "kind": "webhook",
-          "err": "",
+          "error": "",
           "summary": {
             "failed": 0,
             "succeeded": 4
@@ -24,7 +24,7 @@
         },
         {
           "kind": "git",
-          "err": "",
+          "error": "",
           "summary": {
             "failed": 0,
             "succeeded": 4
@@ -32,7 +32,7 @@
         },
         {
           "kind": "slack",
-          "err": "",
+          "error": "",
           "summary": {
             "failed": 0,
             "succeeded": 4
@@ -57,7 +57,7 @@
       "notifications": [
         {
           "kind": "email",
-          "err": "fail",
+          "error": "fail",
           "summary": {
             "failed": 2,
             "succeeded": 4
@@ -65,7 +65,7 @@
         },
         {
           "kind": "webhook",
-          "err": "fail",
+          "error": "fail",
           "summary": {
             "failed": 2,
             "succeeded": 4
@@ -73,7 +73,7 @@
         },
         {
           "kind": "git",
-          "err": "fail",
+          "error": "fail",
           "summary": {
             "failed": 2,
             "succeeded": 4
@@ -81,7 +81,7 @@
         },
         {
           "kind": "slack",
-          "err": "fail",
+          "error": "fail",
           "summary": {
             "failed": 2,
             "succeeded": 4
@@ -106,7 +106,7 @@
       "notifications": [
         {
           "kind": "webhook",
-          "err": "",
+          "error": "",
           "summary": {
             "failed": 0,
             "succeeded": 4
@@ -131,7 +131,7 @@
       "notifications": [
         {
           "kind": "email",
-          "err": "",
+          "error": "",
           "summary": {
             "failed": 0,
             "succeeded": 4
@@ -139,7 +139,7 @@
         },
         {
           "kind": "git",
-          "err": "Authentication failed",
+          "error": "Authentication failed",
           "summary": {
             "failed": 2,
             "succeeded": 4
@@ -164,7 +164,7 @@
       "notifications": [
         {
           "kind": "slack",
-          "err": "",
+          "error": "",
           "summary": {
             "failed": 0,
             "succeeded": 4
@@ -189,7 +189,7 @@
       "notifications": [
         {
           "kind": "email",
-          "err": "SMTP server not reachable",
+          "error": "SMTP server not reachable",
           "summary": {
             "failed": 2,
             "succeeded": 4
@@ -214,7 +214,7 @@
       "notifications": [
         {
           "kind": "webhook",
-          "err": "",
+          "error": "",
           "summary": {
             "failed": 0,
             "succeeded": 4
@@ -239,7 +239,7 @@
       "notifications": [
         {
           "kind": "slack",
-          "err": "Failed to send notification due to network issue",
+          "error": "Failed to send notification due to network issue",
           "summary": {
             "failed": 2,
             "succeeded": 4
@@ -264,7 +264,7 @@
       "notifications": [
         {
           "kind": "email",
-          "err": "",
+          "error": "",
           "summary": {
             "failed": 0,
             "succeeded": 4
@@ -272,7 +272,7 @@
         },
         {
           "kind": "webhook",
-          "err": "",
+          "error": "",
           "summary": {
             "failed": 0,
             "succeeded": 4
@@ -297,7 +297,7 @@
       "notifications": [
         {
           "kind": "git",
-          "err": "",
+          "error": "",
           "summary": {
             "failed": 0,
             "succeeded": 4
@@ -322,7 +322,7 @@
       "notifications": [
         {
           "kind": "email",
-          "err": "",
+          "error": "",
           "summary": {
             "failed": 0,
             "succeeded": 4
@@ -330,7 +330,7 @@
         },
         {
           "kind": "webhook",
-          "err": "API endpoint not responding",
+          "error": "API endpoint not responding",
           "summary": {
             "failed": 8,
             "succeeded": 4
@@ -356,7 +356,7 @@
       "notifications": [
         {
           "kind": "slack",
-          "err": "",
+          "error": "",
           "summary": {
             "failed": 0,
             "succeeded": 4
@@ -382,7 +382,7 @@
       "notifications": [
         {
           "kind": "email",
-          "err": "SMTP server not reachable",
+          "error": "SMTP server not reachable",
           "summary": {
             "failed": 3,
             "succeeded": 4
@@ -407,7 +407,7 @@
       "notifications": [
         {
           "kind": "webhook",
-          "err": "",
+          "error": "",
           "summary": {
             "failed": 0,
             "succeeded": 4
@@ -432,7 +432,7 @@
       "notifications": [
         {
           "kind": "git",
-          "err": "",
+          "error": "",
           "summary": {
           "failed": 0,
           "succeeded": 4
@@ -457,7 +457,7 @@
       "notifications": [
         {
           "kind": "slack",
-          "err": "Failed to send notification due to network issue",
+          "error": "Failed to send notification due to network issue",
           "summary": {
             "failed": 1,
             "succeeded": 4
@@ -482,7 +482,7 @@
       "notifications": [
         {
           "kind": "email",
-          "err": "",
+          "error": "",
           "summary": {
             "failed": 0,
             "succeeded": 4
@@ -490,7 +490,7 @@
         },
         {
           "kind": "webhook",
-          "err": "",
+          "error": "",
           "summary": {
             "failed": 0,
             "succeeded": 4
@@ -515,7 +515,7 @@
       "notifications": [
         {
           "kind": "webhook",
-          "err": "",
+          "error": "",
           "summary": {
             "failed": 0,
             "succeeded": 4
@@ -540,7 +540,7 @@
       "notifications": [
         {
           "kind": "git",
-          "err": "",
+          "error": "",
           "summary": {
             "failed": 0,
             "succeeded": 4
@@ -565,7 +565,7 @@
       "notifications": [
         {
           "kind": "email",
-          "err": "",
+          "error": "",
           "summary": {
             "failed": 0,
             "succeeded": 4
@@ -573,7 +573,7 @@
         },
         {
           "kind": "slack",
-          "err": "Failed to send notification due to network issue",
+          "error": "Failed to send notification due to network issue",
           "summary": {
             "failed": 2,
             "succeeded": 4

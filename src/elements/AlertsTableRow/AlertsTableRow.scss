@@ -1,0 +1,27 @@
+@import '~igz-controls/scss/colors';
+
+.alert-row {
+  &-notification {
+    position: relative;
+    flex: 0 0 auto;
+    min-width: 75px;
+
+    .notification-fail {
+      position: absolute;
+      top: 9px;
+      left: 14px;
+
+      path {
+        fill: $burntSienna;
+      }
+
+      svg {
+        width: 14px;
+        height: 14px;
+        padding: 1px;
+        background-color: $white;
+        border-radius: 50%;
+      }
+    }
+  }
+}
