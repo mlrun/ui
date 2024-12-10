@@ -82,7 +82,7 @@
     margin-right: 8px;
     display: flex;
     border-radius: 100px;
-    padding:  3px 8px  ;
+    padding: 3px 8px;
     align-items: center;
     background-color: $wildSand;
 
@@ -90,14 +90,14 @@
       width: 16px;
       height: 16px;
 
-    path{
-      fill: $ceriseRed;
+      path {
+        fill: $ceriseRed;
+      }
     }
-  }
 
-    &-text{
+    &-text {
       color: $primary;
-      font-family: Roboto,sans-serif;
+      font-family: Roboto, sans-serif;
       font-size: 14px;
     }
   }
@@ -125,10 +125,6 @@
 
   &:hover {
     box-shadow: $previewBoxShadow;
-  }
-
-  .loader-wrapper {
-    position: absolute;
   }
 
   .project-data-card__statistics {
