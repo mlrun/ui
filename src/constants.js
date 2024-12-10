@@ -120,14 +120,19 @@ export const DATASETS_PAGE = 'DATASETS'
 export const DATASETS_TAB = 'datasets'
 
 export const FUNCTIONS_PAGE = 'FUNCTIONS'
+export const FUNCTIONS_PAGE_PATH = 'functions'
 export const ARTIFACTS_PAGE = 'ARTIFACTS'
 
 export const FILES_PAGE = 'FILES'
 export const FILES_TAB = 'files'
 
+export const DOCUMENTS_PAGE = 'documents'
+
 export const PROJECT_MONITOR = 'monitor'
 
 export const PROJECT_QUICK_ACTIONS_PAGE = 'quick-actions'
+
+export const ALL_VERSIONS_PATH = 'all-versions'
 
 /*=========== CONSUMER_GROUPS =============*/
 
