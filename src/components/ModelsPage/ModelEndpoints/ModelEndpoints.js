@@ -128,7 +128,7 @@ const ModelEndpoints = () => {
             }
           },
           params: {
-            start: 'now-10m'
+            latest_only: 'True'
           }
         })
       )

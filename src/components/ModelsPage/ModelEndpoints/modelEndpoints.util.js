@@ -23,6 +23,7 @@ import { LABELS_FILTER, MODEL_ENDPOINTS_TAB, MODELS_PAGE } from '../../../consta
 import { TERTIARY_BUTTON } from 'igz-controls/constants'
 import { showErrorNotification } from '../../../utils/notifications.util'
 import { fetchModelEndpoint } from '../../../reducers/artifactsReducer'
+import { formatDatetime } from '../../../utils'
 
 import { ReactComponent as Alert } from 'igz-controls/images/alerts.svg'
 
@@ -38,9 +39,7 @@ const infoHeaders = [
   { label: 'Function Tag', id: 'function_tag' },
   { label: 'Feature set', id: 'monitoring_feature_set_uri' },
   { label: 'Last prediction', id: 'last_prediction' },
-  { label: 'Error count', id: 'error_count' },
-  { label: 'Accuracy', id: 'accuracy' },
-  { label: 'Stream path', id: 'stream_path' }
+  { label: 'Error count', id: 'error_count' }
 ]
 
 const detailsMenu = [
@@ -81,7 +80,8 @@ export const generatePageData = (
       variant: TERTIARY_BUTTON,
       disabled: !model_monitoring_dashboard_url,
       onClick: () => handleMonitoring(selectedItem)
-    }
+    },
+    additionalHeaderInfo: formatDatetime(selectedItem?.metadata?.created, 'N/A')
   }
 })
 
@@ -99,6 +99,7 @@ export const chooseOrFetchModelEndpoint = (dispatch, selectedModelEndpoint, mode
   return dispatch(
     fetchModelEndpoint({
       project: modelEndpointMin.metadata.project,
+      name: modelEndpointMin.name,
       uid: modelEndpointMin.metadata.uid
     })
   )

@@ -52,7 +52,7 @@ const functionsApi = {
       newConfig.params.until = dateFilterValue[1]
     }
 
-    if (!filters?.[SHOW_UNTAGGED_FILTER]) {
+    if (!newConfig.params.tag && !filters?.[SHOW_UNTAGGED_FILTER]) {
       newConfig.params.tag = '*'
     }
 

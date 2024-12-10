@@ -75,8 +75,8 @@ const jobsApi = {
   getScheduledJobs: (project, newConfig) => {
     return mainHttpClient.get(`/projects/${project}/schedules`, newConfig)
   },
-  removeScheduledJob: (project, scheduleName) =>
-    mainHttpClient.delete(`/projects/${project}/schedules/${scheduleName}`),
+  removeScheduledJob: ({ projectName, scheduleName }) =>
+    mainHttpClient.delete(`/projects/${projectName}/schedules/${scheduleName}`),
   runJob: postData => mainHttpClient.post('/submit_job', postData),
   runScheduledJob: (postData, project, job) =>
     mainHttpClient.post(`/projects/${project}/schedules/${job}/invoke`, postData)

@@ -17,7 +17,7 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import React, { useState, useMemo, useEffect, useRef, useCallback } from 'react'
+import React, { useMemo, useEffect, useRef, useCallback } from 'react'
 import { useParams } from 'react-router-dom'
 
 import JobsTable from '../../../elements/JobsTable/JobsTable'
@@ -35,25 +35,27 @@ import { useFiltersFromSearchParams } from '../../../hooks/useFiltersFromSearchP
 import { getSavedSearchParams } from '../../../utils/filter.util'
 
 const JobsMonitoring = () => {
-  const [selectedJob, setSelectedJob] = useState({})
   const params = useParams()
   const { isStagingMode } = useMode()
   const {
     abortControllerRef,
     abortJobRef,
     abortingJobs,
+    fetchJobFunctionsPromiseRef,
     jobRuns,
     jobs,
     jobsFiltersConfig,
-    requestErrorMessage,
+    paginatedJobs,
     refreshJobs,
+    requestErrorMessage,
+    searchParams,
+    selectedJob,
     setAbortingJobs,
     setJobRuns,
     setJobs,
-    terminateAbortTasksPolling,
+    setSelectedJob,
     tabData,
-    paginatedJobs,
-    searchParams
+    terminateAbortTasksPolling
   } = React.useContext(ProjectJobsMonitoringContext)
   const jobsAreInitializedRef = useRef(false)
 
@@ -95,16 +97,17 @@ const JobsMonitoring = () => {
       {params.jobName && <TableTop link={getBackLink(true)} text={params.jobName} />}
       <JobsTable
         abortingJobs={abortingJobs}
-        ref={{ abortJobRef }}
         context={ProjectJobsMonitoringContext}
         filters={filters}
         filtersConfig={jobsFiltersConfig}
         jobRuns={jobRuns}
         jobs={jobs}
-        paginatedJobs={paginatedJobs}
-        requestErrorMessage={requestErrorMessage}
         navigateLink={getBackLink()}
+        paginatedJobs={paginatedJobs}
+        ref={{ abortJobRef, fetchJobFunctionsPromiseRef }}
         refreshJobs={() => refreshJobs(filters)}
+        requestErrorMessage={requestErrorMessage}
+        searchParams={searchParams}
         selectedJob={selectedJob}
         setAbortingJobs={setAbortingJobs}
         setJobRuns={setJobRuns}

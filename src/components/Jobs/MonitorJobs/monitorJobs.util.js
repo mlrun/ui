@@ -18,7 +18,7 @@ under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
 import React from 'react'
-import { isEmpty, debounce } from 'lodash'
+import { isEmpty } from 'lodash'
 
 import { FUNCTION_RUN_KINDS } from '../../../constants'
 import {
@@ -112,12 +112,3 @@ export const generateActionsMenu = (
     ]
   }
 }
-
-export const fetchInitialJobs = debounce(
-  (filters, selectedJob, jobId, refreshJobs, jobsAreInitializedRef) => {
-    if (isEmpty(selectedJob) && !jobId && !jobsAreInitializedRef.current) {
-      refreshJobs(filters)
-      jobsAreInitializedRef.current = true
-    }
-  }
-)

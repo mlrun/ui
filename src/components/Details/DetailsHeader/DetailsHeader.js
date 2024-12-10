@@ -39,7 +39,10 @@ import { formatDatetime } from '../../../utils'
 import { TERTIARY_BUTTON } from 'igz-controls/constants'
 import { ACTIONS_MENU } from '../../../types'
 import { getViewMode } from '../../../utils/helper'
-import { generateUrlFromRouterPath, getDefaultCloseDetailsLink } from '../../../utils/link-helper.util'
+import {
+  generateUrlFromRouterPath,
+  getDefaultCloseDetailsLink
+} from '../../../utils/link-helper.util'
 import { getFilteredSearchParams } from '../../../utils/filter.util'
 
 import { ReactComponent as Close } from 'igz-controls/images/close.svg'
@@ -47,6 +50,7 @@ import { ReactComponent as Back } from 'igz-controls/images/back-arrow.svg'
 import { ReactComponent as Refresh } from 'igz-controls/images/refresh.svg'
 import { ReactComponent as EnlargeIcon } from 'igz-controls/images/ml-enlarge.svg'
 import { ReactComponent as MinimizeIcon } from 'igz-controls/images/ml-minimize.svg'
+import { ReactComponent as HistoryIcon } from 'igz-controls/images/history.svg'
 
 const DetailsHeader = ({
   actionsMenu,
@@ -69,7 +73,7 @@ const DetailsHeader = ({
   const params = useParams()
   const navigate = useNavigate()
   const viewMode = getViewMode(window.location.search)
-  const { actionButton, withToggleViewBtn } = pageData.details
+  const { actionButton, withToggleViewBtn, showAllVersions } = pageData.details
   const headerRef = useRef()
 
   const errorMessage = useMemo(
@@ -138,7 +142,7 @@ const DetailsHeader = ({
                 getCloseDetailsLink
                   ? getCloseDetailsLink(selectedItem.name)
                   : generateUrlFromRouterPath(
-                      window.location.pathname.split('/').slice(0, -2).join('/')
+                      window.location.pathname.split('/').slice(0, -2).join('/') + window.location.search
                     )
               }
               onClick={handleBackClick}
@@ -149,21 +153,9 @@ const DetailsHeader = ({
             </Link>
           )}
           <Tooltip
-            template={
-              <TextTooltipTemplate
-                text={
-                  selectedItem.name ||
-                  selectedItem.db_key ||
-                  selectedItem.spec?.model?.replace(/:.*$/, '')
-                }
-              />
-            }
+            template={<TextTooltipTemplate text={selectedItem.name || selectedItem.db_key} />}
           >
-            {
-              selectedItem.name ||
-                selectedItem.db_key ||
-                selectedItem.spec?.model?.replace(/:.*$/, '') // 'model-key:model-tag', remove tag
-            }
+            {selectedItem.name || selectedItem.db_key}
           </Tooltip>
         </h3>
         <div className="item-header__status">
@@ -180,11 +172,7 @@ const DetailsHeader = ({
                   )
                 : selectedItem?.updated
                   ? formatDatetime(selectedItem?.updated, 'N/A')
-                  : selectedItem?.spec?.model.includes(':') // 'model-key:model-tag'
-                    ? selectedItem.spec.model.replace(/^.*:/, '') // remove key
-                    : selectedItem?.spec?.model
-                      ? selectedItem?.metadata?.uid
-                      : ''}
+                  : pageData.details.additionalHeaderInfo || ''}
             </span>
             {stateValue && stateLabel && (
               <Tooltip className="state" template={<TextTooltipTemplate text={stateLabel} />}>
@@ -275,6 +263,15 @@ const DetailsHeader = ({
             tooltip={actionButton.tooltip}
             variant={actionButton.variant}
           />
+        )}
+        {showAllVersions && (
+          <RoundedIcon
+            id="showAllVersions"
+            onClick={() => showAllVersions()}
+            tooltipText="Show all versions"
+          >
+            <HistoryIcon />
+          </RoundedIcon>
         )}
         {isDetailsScreen && (
           <RoundedIcon

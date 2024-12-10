@@ -17,17 +17,18 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import getState from './getState'
-import { getArtifactIdentifier } from './getUniqueIdentifier'
+import { useSearchParams } from 'react-router-dom'
 
-export const parseModelEndpoints = endpoints =>
-  endpoints.map(endpoint => ({
-    ...endpoint,
-    name: endpoint.metadata.name,
-    state: getState(endpoint.status.state),
-    ui: {
-      originalContent: endpoint,
-      identifier: getArtifactIdentifier(endpoint),
-      identifierUnique: getArtifactIdentifier(endpoint, true)
-    }
-  }))
+import DocumentsView from './DocumentsView'
+
+import { useFiltersFromSearchParams } from '../../hooks/useFiltersFromSearchParams.hook'
+import { filtersConfig } from './documents.util'
+
+const Documents = () => {
+  const filters = useFiltersFromSearchParams(filtersConfig)
+  const [, setSearchParams] = useSearchParams()
+
+  return <DocumentsView filters={filters} setSearchParams={setSearchParams} />
+}
+
+export default Documents
