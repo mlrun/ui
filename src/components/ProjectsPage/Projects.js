@@ -110,6 +110,8 @@ const Projects = () => {
     [isDescendingOrder, sortProjectId]
   )
 
+  console.log('hello', confirmData)
+
   const refreshProjects = useCallback(() => {
     abortControllerRef.current = new AbortController()
 
