@@ -241,11 +241,14 @@ export const fetchArtifactsFunction = createAsyncThunk(
     })
   }
 )
-export const fetchModelEndpoint = createAsyncThunk('fetchModelEndpoint', ({ project, uid }) => {
-  return modelEndpointsApi.getModelEndpoint(project, uid).then(({ data: endpoint }) => {
-    return parseModelEndpoints([endpoint])?.[0]
-  })
-})
+export const fetchModelEndpoint = createAsyncThunk(
+  'fetchModelEndpoint',
+  ({ project, name, uid }) => {
+    return modelEndpointsApi.getModelEndpoint(project, name, uid).then(({ data: endpoint }) => {
+      return parseModelEndpoints([endpoint])?.[0]
+    })
+  }
+)
 export const fetchModelEndpoints = createAsyncThunk(
   'fetchModelEndpoints',
   ({ project, filters, config, params }, thunkAPI) => {

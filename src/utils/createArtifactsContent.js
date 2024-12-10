@@ -421,13 +421,10 @@ const getDriftStatusData = driftStatus => {
 }
 
 export const createModelEndpointsRowData = (artifact, project) => {
-  const { name, tag = '-' } =
-    (artifact.spec?.model ?? '').match(/^(?<name>.*?)(:(?<tag>.*))?$/)?.groups ?? {}
   const functionUri = artifact.spec?.function_uri
     ? `store://functions/${artifact.spec.function_uri}`
     : ''
   const { key: functionName } = parseUri(functionUri)
-  const isEndpointTypeRouter = artifact?.status?.endpoint_type === 2
 
   return {
     data: {
@@ -438,21 +435,24 @@ export const createModelEndpointsRowData = (artifact, project) => {
         id: `key.${artifact.ui.identifierUnique}`,
         headerId: 'name',
         headerLabel: 'Name',
-        value: name,
+        value: artifact.name,
         className: 'table-cell-name',
         getLink: tab =>
-          validateArguments(artifact.metadata?.uid, name)
+          validateArguments(artifact.metadata?.uid, artifact.name)
             ? generateLinkToDetailsPanel(
                 project,
                 MODELS_TAB,
                 MODEL_ENDPOINTS_TAB,
-                name,
+                artifact.name,
                 artifact.metadata?.uid,
                 tab
               )
             : '',
         showStatus: true,
-        tooltip: artifact.spec?.model_uri ? `${name} - ${artifact.spec?.model_uri}` : name
+        tooltip: artifact.spec?.model_uri
+          ? `${artifact.name} - ${artifact.spec?.model_uri}`
+          : artifact.name,
+        additionalInfo: `${artifact.spec.function_name}:${artifact.spec.function_tag}`
       },
       {
         id: `functionName.${artifact.ui.identifierUnique}`,
@@ -475,10 +475,10 @@ export const createModelEndpointsRowData = (artifact, project) => {
         type: 'hidden'
       },
       {
-        id: `version.${artifact.ui.identifierUnique}`,
-        headerId: 'version',
-        headerLabel: 'Version',
-        value: isEndpointTypeRouter ? '' : artifact?.status?.children?.length > 0 ? 'Router' : tag,
+        id: `functionTag.${artifact.ui.identifierUnique}`,
+        headerId: 'functionTag',
+        headerLabel: 'Function Tag',
+        value: artifact.spec?.function_tag,
         className: 'table-cell-small'
       },
       {
