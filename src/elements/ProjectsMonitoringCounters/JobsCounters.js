@@ -63,10 +63,10 @@ const JobsCounters = () => {
             ) : (
               <span
                 className="stats__link"
-                onClick={jobStats.all.link}
+                onClick={jobStats.total.link}
                 data-testid="jobs_total_counter"
               >
-                {jobStats.all.counter}
+                {jobStats.total.counter}
               </span>
             )}
           </span>
