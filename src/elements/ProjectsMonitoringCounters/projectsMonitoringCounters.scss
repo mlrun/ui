@@ -65,6 +65,7 @@
   }
 
   .project-card__info {
+    align-items: baseline;
     justify-content: flex-end;
     margin-left: 1rem;
 
@@ -90,6 +91,11 @@
         bottom: 0;
         margin: 3px 0;
       }
+    }
+
+    .project-card__info-icon {
+      position: relative;
+      top: 2px;
     }
   }
 

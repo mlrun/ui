@@ -18,7 +18,7 @@
       flex-flow: row nowrap;
       flex: 1 0 100%;
       justify-content: space-between;
-      align-items: center;
+      align-items: baseline;
 
       &:not(:last-child) {
         margin-bottom: 1em;
