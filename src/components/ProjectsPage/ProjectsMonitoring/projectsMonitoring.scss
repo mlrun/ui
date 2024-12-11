@@ -2,9 +2,7 @@
 
 .projects-monitoring {
   &-container {
-    margin-bottom: 2rem;
-    padding: 20px;
-    background-color: $wildSand;
+    margin-bottom: 3rem;
 
     .page-header {
       margin-bottom: 1em;
@@ -16,7 +14,7 @@
     grid-template-columns: repeat(2, 1fr);
     gap: 15px;
 
-    @media screen and (min-width: 1600px) {
+    @media screen and (min-width: 1500px) {
       grid-template-columns: 4fr 4fr 3.5fr 4fr;
     }
   }
