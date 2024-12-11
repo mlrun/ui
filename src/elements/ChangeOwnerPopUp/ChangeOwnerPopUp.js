@@ -116,7 +116,6 @@ const ChangeOwnerPopUp = ({ changeOwnerCallback, projectId }) => {
   }
 
   const generateSuggestionList = async (memberName, resolve) => {
-    console.log('sup')
     const params = {
       'filter[assigned_policies]': '[$contains_any]Developer,Project Admin',
       'page[size]': 200
