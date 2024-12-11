@@ -60,17 +60,27 @@ const ContentMenu = ({ activeTab = '', disabled = false, screen, tabs = [], onCl
           return (
             !tab.hidden && (
               <li data-testid={tab.id} className={tabClassNames} key={tab.id}>
-                <Link
-                  to={generateRedirectLink(tab.id)}
-                  className={tab.icon && 'content-menu__item-icon'}
-                  onClick={onClick && (e => handleClick(e, tab.id))}
-                >
-                  {tab.icon && <i>{tab.icon}</i>}
-                  {tab.label ?? tab.id}
-                  {window.mlrunConfig.betaMode === 'enabled' && tab.preview && (
-                    <span className="content-menu__item__preview"> (Beta)</span>
-                  )}
-                </Link>
+                {params['*'] !== tab.id ? (
+                  <Link
+                    to={generateRedirectLink(tab.id)}
+                    className={tab.icon && 'content-menu__item-icon'}
+                    onClick={onClick && (e => handleClick(e, tab.id))}
+                  >
+                    {tab.icon && <i>{tab.icon}</i>}
+                    {tab.label ?? tab.id}
+                    {window.mlrunConfig.betaMode === 'enabled' && tab.preview && (
+                      <span className="content-menu__item__preview"> (Beta)</span>
+                    )}
+                  </Link>
+                ) : (
+                  <span>
+                    {tab.icon && <i>{tab.icon}</i>}
+                    {tab.label ?? tab.id}
+                    {window.mlrunConfig.betaMode === 'enabled' && tab.preview && (
+                      <span className="content-menu__item__preview"> (Beta)</span>
+                    )}
+                  </span>
+                )}
               </li>
             )
           )
