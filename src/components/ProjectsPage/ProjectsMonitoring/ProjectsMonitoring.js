@@ -28,20 +28,7 @@ import './projectsMonitoring.scss'
 const ProjectsMonitoring = () => {
   return (
     <div className="projects-monitoring-container">
-      <div className="projects-monitoring-legend">
-        <PageHeader title="Monitoring" />
-        <ul className="projects-monitoring-legend__status">
-          <li>
-            In Process <i className="state-running"></i>
-          </li>
-          <li>
-            Failed <i className="state-failed"></i>
-          </li>
-          <li>
-            Succeeded <i className="state-completed"></i>
-          </li>
-        </ul>
-      </div>
+      <PageHeader title="Monitoring" />
       <div className="projects-monitoring-stats">
         <JobsCounters />
         {/* Todo: Delete WorkflowsCounters after ML-5460 is impplemented */}
