@@ -47,7 +47,7 @@ export const getAlertsFiltersConfig = () => {
       initialValue: getDatePickerFilterValue(datePickerPastOptions, PAST_24_HOUR_DATE_OPTION)
     },
     [PROJECTS_FILTER]: { label: 'Project:', initialValue: FILTER_ALL_ITEMS, isModal: true },
-    [ENTITY_TYPE]: { label: 'Entity Type', initialValue: FILTER_ALL_ITEMS, isModal: true },
+    [ENTITY_TYPE]: { label: 'Entity Type:', initialValue: FILTER_ALL_ITEMS, isModal: true },
     [ENTITY_ID]: { label: 'Entity ID:', initialValue: '', isModal: true },
     [JOB_NAME]: { label: 'Job Name:', initialValue: '', isModal: true },
     [ENDPOINT_APPLICATION]: { label: 'Application Name:', initialValue: '', isModal: true },

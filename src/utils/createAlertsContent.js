@@ -158,8 +158,8 @@ export const createAlertRowData = ({ name, ...alert }) => {
         headerId: 'alertName',
         headerLabel: 'Alert Name',
         value: name,
-        className: 'table-cell-1',
-        getLink: () => {}, //TODO: Implement in ML-8368
+        className: 'table-cell-name',
+        getLink: () => {}, //TODO: Implement in ML-8103
         showStatus: true,
         tooltip: name,
         type: 'link'

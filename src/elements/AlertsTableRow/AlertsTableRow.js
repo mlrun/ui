@@ -34,7 +34,7 @@ const AlertsTableRow = ({ handleExpandRow, handleSelectItem, rowItem, selectedIt
   const parent = useRef()
   const params = useParams()
 
-  const rowClassNames = classnames('table-row', 'table-body-row', 'parent-row')
+  const rowClassNames = classnames('alert-row', 'table-row', 'table-body-row', 'parent-row')
 
   return (
     <tr className={rowClassNames} ref={parent}>

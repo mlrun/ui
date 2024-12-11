@@ -590,5 +590,6 @@
       "severity": "high",
       "number_of_events": 5
     }
-  ]
+  ],
+  "pagination":{ "page": 1, "page-size": 1000, "page-token": null }
 }
