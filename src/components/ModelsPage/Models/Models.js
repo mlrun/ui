@@ -35,21 +35,20 @@ import {
   fetchArtifactsFunctions,
   fetchArtifactTags,
   fetchModels,
-  removeModel,
   removeModels
 } from '../../../reducers/artifactsReducer'
 import {
-  GROUP_BY_NAME,
   MODELS_PAGE,
   MODELS_TAB,
   GROUP_BY_NONE,
   REQUEST_CANCELED,
   MODEL_TYPE,
-  FUNCTION_TYPE_SERVING
+  FUNCTION_TYPE_SERVING,
+  ALL_VERSIONS_PATH
 } from '../../../constants'
 import {
   checkForSelectedModel,
-  filtersConfig,
+  getFiltersConfig,
   generateActionsMenu,
   generatePageData,
   getFeatureVectorData,
@@ -58,30 +57,28 @@ import {
 } from './models.util'
 import detailsActions from '../../../actions/details'
 import { createModelsRowData } from '../../../utils/createArtifactsContent'
-import { getArtifactIdentifier } from '../../../utils/getUniqueIdentifier'
 import { getFilterTagOptions, setFilters } from '../../../reducers/filtersReducer'
 import { getViewMode } from '../../../utils/helper'
 import { isDetailsTabExists } from '../../../utils/link-helper.util'
 import { openPopUp } from 'igz-controls/utils/common.util'
-import { sortListByDate } from '../../../utils'
 import { parseChipsData } from '../../../utils/convertChipsData'
 import { setFullSelectedArtifact } from '../../../utils/artifacts.util'
 import { setNotification } from '../../../reducers/notificationReducer'
-import { useGroupContent } from '../../../hooks/groupContent.hook'
 import { useMode } from '../../../hooks/mode.hook'
 import { useModelsPage } from '../ModelsPage.context'
 import { useSortTable } from '../../../hooks/useSortTable.hook'
 import { useVirtualization } from '../../../hooks/useVirtualization.hook'
 import { useInitialTableFetch } from '../../../hooks/useInitialTableFetch.hook'
 import { useFiltersFromSearchParams } from '../../../hooks/useFiltersFromSearchParams.hook'
+import { transformSearchParams } from '../../../utils/filter.util'
 
-const Models = ({ fetchModelFeatureVector }) => {
+const Models = ({ fetchModelFeatureVector, isAllVersions }) => {
   const [models, setModels] = useState([])
+  const [modelVersions, setModelVersions] = useState([])
   const [requestErrorMessage, setRequestErrorMessage] = useState('')
   const [maxArtifactsErrorIsShown, setMaxArtifactsErrorIsShown] = useState(false)
   const [selectedModel, setSelectedModel] = useState({})
   const [selectedModelMin, setSelectedModelMin] = useState({})
-  const [selectedRowData, setSelectedRowData] = useState({})
   //temporarily commented till ML-5606 will be done
   // const [metricsCounter, setMetricsCounter] = useState(0)
   // const [dataIsLoaded, setDataIsLoaded] = useState(false)
@@ -97,7 +94,7 @@ const Models = ({ fetchModelFeatureVector }) => {
   const [, setSearchParams] = useSearchParams()
   const viewMode = getViewMode(window.location.search)
   const { toggleConvertedYaml } = useModelsPage()
-  const filters = useFiltersFromSearchParams(filtersConfig)
+  const filters = useFiltersFromSearchParams(getFiltersConfig(isAllVersions))
   const abortControllerRef = useRef(new AbortController())
   const tagAbortControllerRef = useRef(new AbortController())
   const modelsRef = useRef(null)
@@ -124,9 +121,10 @@ const Models = ({ fetchModelFeatureVector }) => {
       navigate,
       selectedModelMin,
       setSelectedModel,
-      params.projectName
+      params.projectName,
+      isAllVersions
     )
-  }, [dispatch, navigate, params.projectName, selectedModelMin])
+  }, [dispatch, isAllVersions, navigate, params.projectName, selectedModelMin])
 
   useEffect(() => {
     getAndSetSelectedArtifact()
@@ -135,6 +133,16 @@ const Models = ({ fetchModelFeatureVector }) => {
   const fetchData = useCallback(
     async filters => {
       abortControllerRef.current = new AbortController()
+
+      const requestParams = {
+        format: 'minimal'
+      }
+
+      if (!isAllVersions) {
+        requestParams['partition-by'] = 'project_and_name'
+      } else {
+        requestParams.name = params.name
+      }
 
       return dispatch(
         fetchModels({
@@ -145,21 +153,26 @@ const Models = ({ fetchModelFeatureVector }) => {
               controller: abortControllerRef.current,
               setRequestErrorMessage
             },
-            params: { format: 'minimal' }
+            params: requestParams
           }
         })
       )
         .unwrap()
         .then(result => {
           if (result) {
-            setModels(result)
+            if (isAllVersions) {
+              setModelVersions(result)
+            } else {
+              setModels(result)
+            }
+
             setMaxArtifactsErrorIsShown(result.length === 1000)
           }
 
           return result
         })
     },
-    [dispatch, params]
+    [dispatch, isAllVersions, params.name, params.projectName]
   )
 
   const fetchTags = useCallback(() => {
@@ -219,9 +232,9 @@ const Models = ({ fetchModelFeatureVector }) => {
   const handleRefresh = useCallback(
     filters => {
       fetchTags()
-      setSelectedRowData({})
       setSelectedModelMin({})
       setModels([])
+      setModelVersions([])
       //temporarily commented till ML-5606 will be done
       // setTableHeaders([])
       // setDataIsLoaded(false)
@@ -246,8 +259,17 @@ const Models = ({ fetchModelFeatureVector }) => {
     [params.projectName, handleRefresh, filters]
   )
 
+  const showAllVersions = useCallback(
+    modelName => {
+      navigate(
+        `/projects/${params.projectName}/${MODELS_PAGE.toLowerCase()}/${MODELS_TAB}/${modelName}/${ALL_VERSIONS_PATH}?${transformSearchParams(window.location.search)}`
+      )
+    },
+    [navigate, params.projectName]
+  )
+
   const actionsMenu = useMemo(
-    () => (modelMin, menuPosition) =>
+    () => modelMin =>
       generateActionsMenu(
         modelMin,
         frontendSpec,
@@ -257,10 +279,11 @@ const Models = ({ fetchModelFeatureVector }) => {
         params.projectName,
         handleRefresh,
         filters,
-        menuPosition,
         selectedModel,
+        showAllVersions,
+        isAllVersions,
         false,
-        handleDeployModel
+        handleDeployModel,
       ),
     [
       frontendSpec,
@@ -270,66 +293,18 @@ const Models = ({ fetchModelFeatureVector }) => {
       params.projectName,
       handleRefresh,
       filters,
+      selectedModel,
       handleDeployModel,
-      selectedModel
+      showAllVersions,
+      isAllVersions
     ]
   )
 
-  const collapseRowCallback = useCallback(
-    model => {
-      const newStoreSelectedRowData = {
-        ...artifactsStore.models.selectedRowData
-      }
-      const newPageDataSelectedRowData = { ...selectedRowData }
-
-      delete newStoreSelectedRowData[model.data.ui.identifier]
-      delete newPageDataSelectedRowData[model.data.ui.identifier]
-
-      dispatch(removeModel(newStoreSelectedRowData))
-      setSelectedRowData(newPageDataSelectedRowData)
-    },
-    [artifactsStore.models.selectedRowData, dispatch, selectedRowData]
-  )
-
-  const expandRowCallback = useCallback(
-    (model, content) => {
-      const modelIdentifier = getArtifactIdentifier(model)
-
-      setSelectedRowData(state => {
-        return {
-          ...state,
-          [modelIdentifier]: {
-            content: sortListByDate(content[model.db_key ?? model.key], 'updated', false).map(
-              artifact => createModelsRowData(artifact, params.projectName)
-            )
-          },
-          error: null,
-          loading: false
-        }
-      })
-    },
-    [params.projectName]
-  )
-
-  const { latestItems, toggleRow } = useGroupContent(
-    models,
-    getArtifactIdentifier,
-    collapseRowCallback,
-    expandRowCallback,
-    null,
-    MODELS_PAGE,
-    MODELS_TAB
-  )
-
   const tableContent = useMemo(() => {
-    return filtersStore.groupBy === GROUP_BY_NAME
-      ? latestItems.map(contentItem => {
-          return createModelsRowData(contentItem, params.projectName, frontendSpec, null, true)
-        })
-      : models.map(contentItem =>
-          createModelsRowData(contentItem, params.projectName, frontendSpec)
-        )
-  }, [filtersStore.groupBy, frontendSpec, latestItems, models, params.projectName])
+    return (isAllVersions ? modelVersions : models).map(contentItem =>
+      createModelsRowData(contentItem, params.projectName, isAllVersions)
+    )
+  }, [isAllVersions, modelVersions, models, params.projectName])
 
   const tableHeaders = useMemo(() => tableContent[0]?.content ?? [], [tableContent])
 
@@ -353,16 +328,19 @@ const Models = ({ fetchModelFeatureVector }) => {
     [dispatch, params.projectName, selectedModel]
   )
 
-  const applyDetailsChangesCallback = changes => {
+  const applyDetailsChangesCallback = (changes, selectedItem) => {
     if ('tag' in changes.data) {
-      setSelectedRowData({})
-      setModels([])
+      if (isAllVersions) {
+        setModelVersions([])
+      } else {
+        setModels([])
+      }
 
       if (changes.data.tag.currentFieldValue) {
         navigate(
-          `/projects/${params.projectName}/${MODELS_PAGE.toLowerCase()}/${MODELS_TAB}/${
-            params.name
-          }/${changes.data.tag.currentFieldValue}/overview${window.location.search}`,
+          `/projects/${params.projectName}/${MODELS_PAGE.toLowerCase()}/${MODELS_TAB}/${params.name}${isAllVersions ? `/${ALL_VERSIONS_PATH}` : ''}/:${
+            changes.data.tag.currentFieldValue
+          }@${selectedItem.uid}/overview${window.location.search}`,
           { replace: true }
         )
       }
@@ -372,20 +350,17 @@ const Models = ({ fetchModelFeatureVector }) => {
   }
 
   useInitialTableFetch({
-    createRowData: rowItem => createModelsRowData(rowItem, params.projectName, frontendSpec),
     fetchData,
     fetchTags,
-    filterModalName: MODELS_TAB,
     filters,
-    setExpandedRowsData: setSelectedRowData,
-    sortExpandedRowsDataBy: 'updated'
+    requestTrigger: isAllVersions
   })
 
   useEffect(() => {
-    if (params.name && params.tag && pageData.details.menu.length > 0) {
+    if (params.id && pageData.details.menu.length > 0) {
       isDetailsTabExists(params.tab, pageData.details.menu, navigate, location)
     }
-  }, [navigate, location, pageData.details.menu, params.name, params.tag, params.tab])
+  }, [navigate, location, pageData.details.menu, params.tab, params.id])
 
   useEffect(() => {
     const tagAbortControllerCurrent = tagAbortControllerRef.current
@@ -394,7 +369,6 @@ const Models = ({ fetchModelFeatureVector }) => {
       setModels([])
       dispatch(removeModels())
       setSelectedModelMin({})
-      setSelectedRowData({})
       //temporarily commented till ML-5606 will be done
       // setTableHeaders([])
       // setDataIsLoaded(false)
@@ -410,25 +384,14 @@ const Models = ({ fetchModelFeatureVector }) => {
   useEffect(() => {
     checkForSelectedModel(
       params.name,
-      selectedRowData,
-      models,
-      params.tag,
-      params.iter,
-      params.uid,
+      isAllVersions ? modelVersions : models,
+      params.id,
       navigate,
       params.projectName,
-      setSelectedModelMin
+      setSelectedModelMin,
+      isAllVersions
     )
-  }, [
-    models,
-    navigate,
-    params.iter,
-    params.name,
-    params.projectName,
-    params.tag,
-    params.uid,
-    selectedRowData
-  ])
+  }, [isAllVersions, modelVersions, models, navigate, params.id, params.name, params.projectName])
 
   useEffect(() => {
     if (
@@ -499,7 +462,6 @@ const Models = ({ fetchModelFeatureVector }) => {
   const virtualizationConfig = useVirtualization({
     rowsData: {
       content: sortedTableContent,
-      expandedRowsData: selectedRowData,
       selectedItem: selectedModel
     },
     heightData: {
@@ -524,21 +486,22 @@ const Models = ({ fetchModelFeatureVector }) => {
       handleRefreshWithFilters={handleRefreshWithFilters}
       handleRegisterModel={handleRegisterModel}
       handleTrainModel={handleTrainModel}
+      isAllVersions={isAllVersions}
       isDemoMode={isDemoMode}
       maxArtifactsErrorIsShown={maxArtifactsErrorIsShown}
-      models={models}
+      models={isAllVersions ? modelVersions : models}
+      modelName={params.name}
       pageData={pageData}
+      projectName={params.projectName}
       ref={{ modelsRef }}
       requestErrorMessage={requestErrorMessage}
       selectedModel={selectedModel}
-      selectedRowData={selectedRowData}
       setMaxArtifactsErrorIsShown={setMaxArtifactsErrorIsShown}
       setSearchParams={setSearchParams}
       setSelectedModelMin={setSelectedModelMin}
       sortProps={{ sortTable, selectedColumnName, getSortingIcon }}
       tableContent={sortedTableContent}
       tableHeaders={sortedTableHeaders}
-      toggleRow={toggleRow}
       viewMode={viewMode}
       virtualizationConfig={virtualizationConfig}
     />

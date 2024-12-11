@@ -130,7 +130,7 @@ const ArtifactPopUp = ({ artifactData, isOpen, onResolve }) => {
   ])
 
   const actionsMenu = useMemo(
-    () => (fileMin, menuPosition) =>
+    () => fileMin =>
       artifactContext.generateActionsMenu(
         fileMin,
         frontendSpec,
@@ -140,8 +140,9 @@ const ArtifactPopUp = ({ artifactData, isOpen, onResolve }) => {
         artifactData.project,
         fetchArtifact,
         {},
-        menuPosition,
         selectedArtifact,
+        () => {},
+        false,
         true
       ),
     [

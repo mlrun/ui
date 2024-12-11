@@ -1320,6 +1320,20 @@ function getArtifacts(req, res) {
     })
   }
 
+  if (req.query['partition-by']) {
+    const uniqueObjects = {}
+
+    collectedArtifacts.forEach(artifact => {
+      const name = artifact.spec?.db_key ?? artifact.db_key
+      const lastUpdate = new Date(artifact.metadata.updated)
+
+      if (!uniqueObjects[name] || new Date(uniqueObjects[name].metadata.updated) < lastUpdate) {
+        uniqueObjects[name] = artifact
+      }
+    })
+    collectedArtifacts = Object.values(uniqueObjects)
+  }
+
   const [paginatedArtifacts, pagination] = getPaginationConfig(collectedArtifacts, req.query)
 
   res.send({ artifacts: paginatedArtifacts, pagination })

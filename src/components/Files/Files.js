@@ -20,45 +20,35 @@ such restriction.
 import React, { useCallback, useEffect, useState, useMemo, useRef } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useLocation, useNavigate, useParams, useSearchParams } from 'react-router-dom'
-import { isEmpty } from 'lodash'
 
 import AddArtifactTagPopUp from '../../elements/AddArtifactTagPopUp/AddArtifactTagPopUp'
 import FilesView from './FilesView'
 import RegisterArtifactModal from '../RegisterArtifactModal/RegisterArtifactModal'
 
 import {
+  ALL_VERSIONS_PATH,
   ARTIFACT_OTHER_TYPE,
   ARTIFACT_TYPE,
-  FILES_PAGE,
   FILES_TAB,
-  GROUP_BY_NAME,
   GROUP_BY_NONE,
   REQUEST_CANCELED
 } from '../../constants'
 import {
   checkForSelectedFile,
-  filtersConfig,
+  getFiltersConfig,
   generateActionsMenu,
   generatePageData,
   handleApplyDetailsChanges,
   registerArtifactTitle
 } from './files.util'
 import { createFilesRowData } from '../../utils/createArtifactsContent'
-import {
-  fetchArtifactTags,
-  fetchFiles,
-  removeFile,
-  removeFiles
-} from '../../reducers/artifactsReducer'
-import { getArtifactIdentifier } from '../../utils/getUniqueIdentifier'
+import { fetchArtifactTags, fetchFiles, removeFiles } from '../../reducers/artifactsReducer'
 import { getFilterTagOptions, setFilters } from '../../reducers/filtersReducer'
 import { getViewMode } from '../../utils/helper'
 import { isDetailsTabExists } from '../../utils/link-helper.util'
 import { openPopUp } from 'igz-controls/utils/common.util'
-import { sortListByDate } from '../../utils'
 import { setFullSelectedArtifact } from '../../utils/artifacts.util'
 import { setNotification } from '../../reducers/notificationReducer'
-import { useGroupContent } from '../../hooks/groupContent.hook'
 import { useSortTable } from '../../hooks/useSortTable.hook'
 import { useInitialTableFetch } from '../../hooks/useInitialTableFetch.hook'
 import { useVirtualization } from '../../hooks/useVirtualization.hook'
@@ -67,12 +57,13 @@ import { toggleYaml } from '../../reducers/appReducer'
 
 import './files.scss'
 import cssVariables from './files.scss'
+import { transformSearchParams } from '../../utils/filter.util'
 
-const Files = () => {
+const Files = ({ isAllVersions = false }) => {
   const [files, setFiles] = useState([])
+  const [fileVersions, setFileVersions] = useState([])
   const [selectedFile, setSelectedFile] = useState({})
   const [selectedFileMin, setSelectedFileMin] = useState({})
-  const [selectedRowData, setSelectedRowData] = useState({})
   const [requestErrorMessage, setRequestErrorMessage] = useState('')
   const [maxArtifactsErrorIsShown, setMaxArtifactsErrorIsShown] = useState(false)
   const artifactsStore = useSelector(store => store.artifactsStore)
@@ -84,7 +75,7 @@ const Files = () => {
   const params = useParams()
   const [, setSearchParams] = useSearchParams()
   const viewMode = getViewMode(window.location.search)
-  const filters = useFiltersFromSearchParams(filtersConfig)
+  const filters = useFiltersFromSearchParams(getFiltersConfig(isAllVersions))
   const abortControllerRef = useRef(new AbortController())
   const tagAbortControllerRef = useRef(new AbortController())
   const filesRef = useRef(null)
@@ -112,9 +103,10 @@ const Files = () => {
       navigate,
       selectedFileMin,
       setSelectedFile,
-      params.projectName
+      params.projectName,
+      isAllVersions
     )
-  }, [dispatch, navigate, params.projectName, selectedFileMin])
+  }, [dispatch, isAllVersions, navigate, params.projectName, selectedFileMin])
 
   useEffect(() => {
     getAndSetSelectedArtifact()
@@ -123,6 +115,16 @@ const Files = () => {
   const fetchData = useCallback(
     filters => {
       abortControllerRef.current = new AbortController()
+
+      const requestParams = {
+        format: 'minimal'
+      }
+
+      if (!isAllVersions) {
+        requestParams['partition-by'] = 'project_and_name'
+      } else {
+        requestParams.name = params.name
+      }
 
       return dispatch(
         fetchFiles({
@@ -133,23 +135,26 @@ const Files = () => {
               controller: abortControllerRef.current,
               setRequestErrorMessage
             },
-            params: {
-              format: 'minimal'
-            }
+            params: requestParams
           }
         })
       )
         .unwrap()
         .then(result => {
           if (result) {
-            setFiles(result)
+            if (isAllVersions) {
+              setFileVersions(result)
+            } else {
+              setFiles(result)
+            }
+
             setMaxArtifactsErrorIsShown(result.length === 1000)
           }
 
           return result
         })
     },
-    [dispatch, params.projectName]
+    [dispatch, isAllVersions, params.name, params.projectName]
   )
 
   const fetchTags = useCallback(() => {
@@ -171,9 +176,9 @@ const Files = () => {
   const handleRefresh = useCallback(
     filters => {
       fetchTags()
-      setSelectedRowData({})
       setSelectedFileMin({})
       setFiles([])
+      setFileVersions([])
 
       return fetchData(filters)
     },
@@ -195,8 +200,17 @@ const Files = () => {
     [params.projectName, handleRefresh, filters]
   )
 
+  const showAllVersions = useCallback(
+    filetName => {
+      navigate(
+        `/projects/${params.projectName}/files/${filetName}/${ALL_VERSIONS_PATH}?${transformSearchParams(window.location.search)}`
+      )
+    },
+    [navigate, params.projectName]
+  )
+
   const actionsMenu = useMemo(
-    () => (fileMin, menuPosition) =>
+    () => fileMin =>
       generateActionsMenu(
         fileMin,
         frontendSpec,
@@ -206,8 +220,9 @@ const Files = () => {
         params.projectName,
         handleRefresh,
         filters,
-        menuPosition,
-        selectedFile
+        selectedFile,
+        showAllVersions,
+        isAllVersions
       ),
     [
       frontendSpec,
@@ -217,62 +232,17 @@ const Files = () => {
       params.projectName,
       handleRefresh,
       filters,
-      selectedFile
+      selectedFile,
+      showAllVersions,
+      isAllVersions
     ]
   )
 
-  const collapseRowCallback = useCallback(
-    file => {
-      const newStoreSelectedRowData = {
-        ...artifactsStore.files.selectedRowData.content
-      }
-      const newPageDataSelectedRowData = { ...selectedRowData }
-
-      delete newStoreSelectedRowData[file.data.ui.identifier]
-      delete newPageDataSelectedRowData[file.data.ui.identifier]
-
-      dispatch(removeFile(newStoreSelectedRowData))
-      setSelectedRowData(newPageDataSelectedRowData)
-    },
-    [artifactsStore.files.selectedRowData.content, dispatch, selectedRowData]
-  )
-
-  const expandRowCallback = useCallback(
-    (file, content) => {
-      const fileIdentifier = getArtifactIdentifier(file)
-
-      setSelectedRowData(state => ({
-        ...state,
-        [fileIdentifier]: {
-          content: sortListByDate(content[file.db_key ?? file.key], 'updated', false).map(
-            artifact => createFilesRowData(artifact, params.projectName)
-          )
-        },
-        error: null,
-        loading: false
-      }))
-    },
-    [params.projectName]
-  )
-
-  const { latestItems, toggleRow } = useGroupContent(
-    files,
-    getArtifactIdentifier,
-    collapseRowCallback,
-    expandRowCallback,
-    null,
-    FILES_PAGE
-  )
-
   const tableContent = useMemo(() => {
-    return filtersStore.groupBy === GROUP_BY_NAME
-      ? latestItems.map(contentItem => {
-          return createFilesRowData(contentItem, params.projectName, frontendSpec, true)
-        })
-      : files.map(contentItem =>
-          createFilesRowData(contentItem, params.projectName, frontendSpec, false)
-        )
-  }, [files, filtersStore.groupBy, frontendSpec, latestItems, params.projectName])
+    return (isAllVersions ? fileVersions : files).map(contentItem =>
+      createFilesRowData(contentItem, params.projectName, isAllVersions)
+    )
+  }, [fileVersions, files, isAllVersions, params.projectName])
 
   const tableHeaders = useMemo(() => tableContent[0]?.content ?? [], [tableContent])
 
@@ -300,14 +270,19 @@ const Files = () => {
     [dispatch, params.projectName, selectedFile]
   )
 
-  const applyDetailsChangesCallback = changes => {
+  const applyDetailsChangesCallback = (changes, selectedItem) => {
     if ('tag' in changes.data) {
-      setSelectedRowData({})
-      setFiles([])
+      if (isAllVersions) {
+        setFileVersions([])
+      } else {
+        setFiles([])
+      }
 
       if (changes.data.tag.currentFieldValue) {
         navigate(
-          `/projects/${params.projectName}/files/${params.name}/${changes.data.tag.currentFieldValue}/overview`,
+          `/projects/${params.projectName}/files/${params.name}${isAllVersions ? `/${ALL_VERSIONS_PATH}` : ''}/:${
+            changes.data.tag.currentFieldValue
+          }@${selectedItem.uid}/overview${window.location.search}`,
           { replace: true }
         )
       }
@@ -317,64 +292,55 @@ const Files = () => {
   }
 
   useInitialTableFetch({
-    createRowData: rowItem => createFilesRowData(rowItem, params.projectName, frontendSpec),
     fetchData,
     fetchTags,
-    filterModalName: FILES_PAGE,
     filters,
-    setExpandedRowsData: setSelectedRowData,
-    sortExpandedRowsDataBy: 'updated'
+    requestTrigger: isAllVersions
   })
 
   useEffect(() => {
-    if (params.name && params.tag && pageData.details.menu.length > 0) {
+    if (params.id && pageData.details.menu.length > 0) {
       isDetailsTabExists(params.tab, pageData.details.menu, navigate, location)
     }
-  }, [navigate, location, pageData.details.menu, params.name, params.tag, params.tab])
+  }, [navigate, location, pageData.details.menu, params.id, params.tab])
 
   useEffect(() => {
     const tagAbortControllerCurrent = tagAbortControllerRef.current
 
     return () => {
       setFiles([])
+      setFileVersions([])
       dispatch(removeFiles())
       setSelectedFileMin({})
-      setSelectedRowData({})
       abortControllerRef.current.abort(REQUEST_CANCELED)
       tagAbortControllerCurrent.abort(REQUEST_CANCELED)
     }
   }, [params.projectName, dispatch, tagAbortControllerRef])
 
-  useEffect(() => setFiles([]), [filtersStore.tag])
 
   useEffect(() => {
     dispatch(setFilters({ groupBy: GROUP_BY_NONE }))
   }, [dispatch, params.projectName])
 
-  const handleSelectFile = useCallback(
-    file => {
-      const { db_key: name, tag, iter, uid } = file
-
-      checkForSelectedFile(
-        name,
-        selectedRowData,
-        files,
-        tag,
-        iter,
-        uid,
-        navigate,
-        params.projectName,
-        setSelectedFileMin
-      )
-    },
-    [files, navigate, params.projectName, selectedRowData]
-  )
-
   useEffect(() => {
-    if (params.name && isEmpty(selectedFileMin)) {
-      handleSelectFile({ db_key: params.name, tag: params.tag, iter: params.iter })
-    }
-  }, [handleSelectFile, params.iter, params.name, params.tag, selectedFileMin])
+    checkForSelectedFile(
+      params.name,
+      isAllVersions ? fileVersions : files,
+      params.id,
+      params.projectName,
+      setSelectedFileMin,
+      navigate,
+      isAllVersions
+    )
+  }, [
+    fileVersions,
+    files,
+    isAllVersions,
+    navigate,
+    params.id,
+    params.name,
+    params.projectName
+  ])
 
   const handleRegisterArtifact = useCallback(() => {
     openPopUp(RegisterArtifactModal, {
@@ -388,7 +354,6 @@ const Files = () => {
   const virtualizationConfig = useVirtualization({
     rowsData: {
       content: sortedTableContent,
-      expandedRowsData: selectedRowData,
       selectedItem: selectedFile
     },
     heightData: {
@@ -406,27 +371,27 @@ const Files = () => {
       applyDetailsChangesCallback={applyDetailsChangesCallback}
       artifactsStore={artifactsStore}
       detailsFormInitialValues={detailsFormInitialValues}
-      files={files}
+      files={isAllVersions ? fileVersions : files}
+      fileName={params.name}
       filters={filters}
       filtersStore={filtersStore}
       getAndSetSelectedArtifact={getAndSetSelectedArtifact}
       handleRefresh={handleRefresh}
       handleRefreshWithFilters={handleRefreshWithFilters}
       handleRegisterArtifact={handleRegisterArtifact}
-      handleSelectFile={handleSelectFile}
+      isAllVersions={isAllVersions}
       maxArtifactsErrorIsShown={maxArtifactsErrorIsShown}
       pageData={pageData}
+      projectName={params.projectName}
       ref={{ filesRef }}
       requestErrorMessage={requestErrorMessage}
       selectedFile={selectedFile}
-      selectedRowData={selectedRowData}
       setMaxArtifactsErrorIsShown={setMaxArtifactsErrorIsShown}
       setSearchParams={setSearchParams}
       setSelectedFileMin={setSelectedFileMin}
       sortProps={{ sortTable, selectedColumnName, getSortingIcon }}
       tableContent={sortedTableContent}
       tableHeaders={sortedTableHeaders}
-      toggleRow={toggleRow}
       viewMode={viewMode}
       virtualizationConfig={virtualizationConfig}
     />

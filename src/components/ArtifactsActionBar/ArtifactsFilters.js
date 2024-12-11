@@ -28,7 +28,7 @@ import { ITERATIONS_FILTER, LABELS_FILTER, SHOW_ITERATIONS, TAG_FILTER } from '.
 
 import './artifactsFilters.scss'
 
-const ArtifactsFilters = ({ artifacts }) => {
+const ArtifactsFilters = ({ artifacts, isAllVersions }) => {
   const form = useForm()
 
   const handleIter = value => {
@@ -42,21 +42,27 @@ const ArtifactsFilters = ({ artifacts }) => {
   return (
     <div className="artifacts-filters">
       <div className="form-row">
-        <FormInput label="Labels" name={LABELS_FILTER} placeholder="key1,key2=value,..."
-                   tip="Add ~ before the filter value to return substring and case insensitive value." />
+        <FormInput
+          label="Labels"
+          name={LABELS_FILTER}
+          placeholder="key1,key2=value,..."
+          tip="Add ~ before the filter value to return substring and case insensitive value."
+        />
         <FormOnChange name={LABELS_FILTER} handler={handleLabelsChange} />
       </div>
       <div className="form-row">
         <FormTagFilter content={artifacts} label="Version tag" name={TAG_FILTER} />
       </div>
-      <div className="form-row">
-        <FormCheckBox
-          className="artifacts-filters__iter"
-          label="Show best iteration only"
-          name={ITERATIONS_FILTER}
-        />
-        <FormOnChange name={ITERATIONS_FILTER} handler={handleIter} />
-      </div>
+      {isAllVersions && (
+        <div className="form-row">
+          <FormCheckBox
+            className="artifacts-filters__iter"
+            label="Show best iteration only"
+            name={ITERATIONS_FILTER}
+          />
+          <FormOnChange name={ITERATIONS_FILTER} handler={handleIter} />
+        </div>
+      )}
     </div>
   )
 }

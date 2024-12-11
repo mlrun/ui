@@ -24,21 +24,20 @@ import Prism from 'prismjs'
 import { PopUpDialog } from 'igz-controls/components'
 
 import {
+  ALL_VERSIONS_PATH,
   NAME_FILTER,
   MODELS_PAGE,
   MODELS_TAB,
   TAG_LATEST,
   FULL_VIEW_MODE,
   MODEL_TYPE,
-  ACTION_MENU_PARENT_ROW,
-  ACTION_MENU_PARENT_ROW_EXPANDED,
   ARTIFACT_MAX_DOWNLOAD_SIZE,
   LABELS_FILTER,
   TAG_FILTER,
   ITERATIONS_FILTER,
   TAG_FILTER_LATEST,
-  SHOW_ITERATIONS,
-  VIEW_SEARCH_PARAMETER
+  VIEW_SEARCH_PARAMETER,
+  TAG_FILTER_ALL_ITEMS
 } from '../../../constants'
 import { showArtifactsPreview, updateArtifact } from '../../../reducers/artifactsReducer'
 import { FORBIDDEN_ERROR_STATUS_CODE } from 'igz-controls/constants'
@@ -55,6 +54,7 @@ import { setDownloadItem, setShowDownloadsList } from '../../../reducers/downloa
 import { showErrorNotification } from '../../../utils/notifications.util'
 import { openPopUp } from 'igz-controls/utils/common.util'
 import { getFilteredSearchParams } from '../../../utils/filter.util'
+import { parseIdentifier } from '../../../utils'
 
 import { ReactComponent as TagIcon } from 'igz-controls/images/tag-icon.svg'
 import { ReactComponent as YamlIcon } from 'igz-controls/images/yaml.svg'
@@ -63,13 +63,23 @@ import { ReactComponent as Copy } from 'igz-controls/images/copy-to-clipboard-ic
 import { ReactComponent as Delete } from 'igz-controls/images/delete.svg'
 import { ReactComponent as DeployIcon } from 'igz-controls/images/deploy-icon.svg'
 import { ReactComponent as DownloadIcon } from 'igz-controls/images/download.svg'
+import { ReactComponent as HistoryIcon } from 'igz-controls/images/history.svg'
 
-export const filtersConfig = {
-  [NAME_FILTER]: { label: 'Name:', initialValue: '' },
-  [TAG_FILTER]: { label: 'Version tag:', initialValue: TAG_FILTER_LATEST, isModal: true },
+export const getFiltersConfig = isAllVersions => ({
+  [NAME_FILTER]: { label: 'Name:', initialValue: '', hidden: isAllVersions },
+  [TAG_FILTER]: {
+    label: 'Version tag:',
+    initialValue: isAllVersions ? TAG_FILTER_ALL_ITEMS : TAG_FILTER_LATEST,
+    isModal: true
+  },
   [LABELS_FILTER]: { label: 'Labels:', initialValue: '', isModal: true },
-  [ITERATIONS_FILTER]: { label: 'Show best iteration only:', initialValue: SHOW_ITERATIONS, isModal: true }
-}
+  [ITERATIONS_FILTER]: {
+    label: 'Show best iteration only:',
+    initialValue: '',
+    isModal: true,
+    hidden: !isAllVersions
+  }
+})
 
 export const infoHeaders = [
   {
@@ -201,31 +211,32 @@ export const handleApplyDetailsChanges = (
 }
 
 export const checkForSelectedModel = (
-  name,
-  selectedRowData,
+  paramsName,
   models,
-  tag,
-  iter,
-  uid,
+  paramsId,
   navigate,
   projectName,
-  setSelectedModel
+  setSelectedModel,
+  isAllVersions
 ) => {
   queueMicrotask(() => {
-    if (name) {
-      const artifacts = selectedRowData?.[name]?.content || models
+    if (paramsId) {
+      const { tag, uid, iter } = parseIdentifier(paramsId)
 
-      if (artifacts.length > 0) {
+      if (models.length > 0) {
         const searchItem = searchArtifactItem(
-          artifacts.map(artifact => artifact.data ?? artifact),
-          name,
+          models.map(artifact => artifact.data ?? artifact),
+          paramsName,
           tag,
           iter,
           uid
         )
 
         if (!searchItem) {
-          navigate(`/projects/${projectName}/models/models${getFilteredSearchParams(window.location.search, [VIEW_SEARCH_PARAMETER])}`)
+          navigate(
+            `/projects/${projectName}/models/models${isAllVersions ? `/${paramsName}/${ALL_VERSIONS_PATH}` : ''}${getFilteredSearchParams(window.location.search, [VIEW_SEARCH_PARAMETER])}`,
+            { replace: true }
+          )
         } else {
           setSelectedModel(prevState => {
             return isEqual(prevState, searchItem) ? prevState : searchItem
@@ -247,8 +258,9 @@ export const generateActionsMenu = (
   projectName,
   handleRefresh,
   modelsFilters,
-  menuPosition,
   selectedModel,
+  showAllVersions,
+  isAllVersions,
   isDetailsPopUp = false,
   handleDeployModel
 ) => {
@@ -262,13 +274,12 @@ export const generateActionsMenu = (
     [
       {
         label: 'Add a tag',
-        hidden: menuPosition === ACTION_MENU_PARENT_ROW_EXPANDED || isDetailsPopUp,
+        hidden: isDetailsPopUp,
         icon: <TagIcon />,
         onClick: handleAddTag
       },
       {
         label: 'Download',
-        hidden: menuPosition === ACTION_MENU_PARENT_ROW_EXPANDED,
         disabled:
           !isTargetPathValid ||
           modelMin.size >
@@ -293,13 +304,11 @@ export const generateActionsMenu = (
       },
       {
         label: 'Copy URI',
-        hidden: menuPosition === ACTION_MENU_PARENT_ROW_EXPANDED,
         icon: <Copy />,
         onClick: model => copyToClipboard(generateUri(model, MODELS_TAB), dispatch)
       },
       {
         label: 'View YAML',
-        hidden: menuPosition === ACTION_MENU_PARENT_ROW_EXPANDED,
         icon: <YamlIcon />,
         onClick: modelMin => getFullModel(modelMin).then(toggleConvertedYaml)
       },
@@ -307,7 +316,7 @@ export const generateActionsMenu = (
         label: 'Delete',
         icon: <Delete />,
         className: 'danger',
-        hidden: [ACTION_MENU_PARENT_ROW, ACTION_MENU_PARENT_ROW_EXPANDED].includes(menuPosition) || isDetailsPopUp,
+        hidden: isDetailsPopUp,
         onClick: () =>
           openDeleteConfirmPopUp(
             'Delete model?',
@@ -328,7 +337,7 @@ export const generateActionsMenu = (
       {
         label: 'Delete all',
         icon: <Delete />,
-        hidden: ![ACTION_MENU_PARENT_ROW, ACTION_MENU_PARENT_ROW_EXPANDED].includes(menuPosition) || isDetailsPopUp,
+        hidden: isAllVersions || isDetailsPopUp,
         className: 'danger',
         onClick: () =>
           openDeleteConfirmPopUp(
@@ -351,6 +360,13 @@ export const generateActionsMenu = (
       }
     ],
     [
+      {
+        id: 'show-all-versions',
+        label: 'Show all versions',
+        icon: <HistoryIcon />,
+        onClick: () => showAllVersions(modelMin.db_key),
+        hidden: isAllVersions
+      },
       {
         label: 'Preview',
         id: 'model-preview',

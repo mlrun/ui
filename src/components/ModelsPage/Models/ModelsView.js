@@ -32,12 +32,15 @@ import ActionBar from '../../ActionBar/ActionBar'
 import ArtifactsFilters from '../../ArtifactsActionBar/ArtifactsFilters'
 
 import { ACTIONS_MENU, VIRTUALIZATION_CONFIG } from '../../../types'
-import { FULL_VIEW_MODE, MODELS_PAGE, MODELS_TAB } from '../../../constants'
+import { FULL_VIEW_MODE, MODELS_PAGE, MODELS_TAB, ALL_VERSIONS_PATH } from '../../../constants'
 import { SECONDARY_BUTTON, PRIMARY_BUTTON } from 'igz-controls/constants'
 import { SORT_PROPS } from 'igz-controls/types'
-import { filtersConfig } from './models.util'
+import { getFiltersConfig } from './models.util'
 import { getNoDataMessage } from '../../../utils/getNoDataMessage'
 import { isRowRendered } from '../../../hooks/useVirtualization.hook'
+import HistoryBackLink from '../../../common/HistoryBackLink/historyBackLink'
+import { getSavedSearchParams } from '../../../utils/filter.util'
+import { getCloseDetailsLink } from '../../../utils/link-helper.util'
 
 const ModelsView = React.forwardRef(
   (
@@ -54,20 +57,21 @@ const ModelsView = React.forwardRef(
       handleRefreshWithFilters,
       handleRegisterModel,
       handleTrainModel,
+      isAllVersions,
       isDemoMode,
       maxArtifactsErrorIsShown,
       models,
+      modelName,
       pageData,
+      projectName,
       requestErrorMessage,
       selectedModel,
-      selectedRowData,
       setMaxArtifactsErrorIsShown,
       setSearchParams,
       setSelectedModelMin,
       sortProps = null,
       tableContent,
       tableHeaders,
-      toggleRow,
       viewMode = null,
       virtualizationConfig
     },
@@ -97,7 +101,8 @@ const ModelsView = React.forwardRef(
                   }
                 ]}
                 filters={filters}
-                filtersConfig={filtersConfig}
+                filtersConfig={getFiltersConfig(isAllVersions)}
+                navigateLink={`/projects/${projectName}/models/models${isAllVersions ? `/${modelName}/${ALL_VERSIONS_PATH}` : ''}${window.location.search}`}
                 handleRefresh={handleRefresh}
                 page={MODELS_PAGE}
                 setSearchParams={setSearchParams}
@@ -108,11 +113,19 @@ const ModelsView = React.forwardRef(
                 <ArtifactsFilters artifacts={models} />
               </ActionBar>
             </div>
+            {isAllVersions && (
+              <div className='content__history-back-link-wrapper'>
+                <HistoryBackLink
+                  itemName={modelName}
+                  link={`/projects/${projectName}/models/models${getSavedSearchParams(window.location.search)}`}
+                />
+              </div>
+            )}
             {artifactsStore.loading ? null : models.length === 0 ? (
               <NoData
                 message={getNoDataMessage(
                   filters,
-                  filtersConfig,
+                  getFiltersConfig(isAllVersions),
                   requestErrorMessage,
                   MODELS_PAGE,
                   MODELS_TAB,
@@ -121,9 +134,9 @@ const ModelsView = React.forwardRef(
               />
             ) : (
               <>
-                {(selectedRowData.loading ||
-                  artifactsStore.models.modelLoading ||
-                  artifactsStore.pipelines.loading) && <Loader />}
+                {(artifactsStore.models.modelLoading || artifactsStore.pipelines.loading) && (
+                  <Loader />
+                )}
                 {maxArtifactsErrorIsShown && (
                   <WarningMessage
                     message="The query response displays up to 1000 items. Use filters to narrow down the results."
@@ -135,6 +148,9 @@ const ModelsView = React.forwardRef(
                   applyDetailsChanges={applyDetailsChanges}
                   applyDetailsChangesCallback={applyDetailsChangesCallback}
                   detailsFormInitialValues={detailsFormInitialValues}
+                  getCloseDetailsLink={() =>
+                    getCloseDetailsLink(isAllVersions ? ALL_VERSIONS_PATH : MODELS_TAB)
+                  }
                   handleCancel={() => setSelectedModelMin({})}
                   pageData={pageData}
                   retryRequest={handleRefreshWithFilters}
@@ -154,9 +170,7 @@ const ModelsView = React.forwardRef(
                           rowIndex={index}
                           rowItem={tableItem}
                           selectedItem={selectedModel}
-                          selectedRowData={selectedRowData}
                           tab={MODELS_TAB}
-                          toggleRow={toggleRow}
                         />
                       )
                   )}
@@ -195,20 +209,21 @@ ModelsView.propTypes = {
   handleRefreshWithFilters: PropTypes.func.isRequired,
   handleRegisterModel: PropTypes.func.isRequired,
   handleTrainModel: PropTypes.func.isRequired,
+  isAllVersions: PropTypes.bool.isRequired,
   isDemoMode: PropTypes.bool.isRequired,
   maxArtifactsErrorIsShown: PropTypes.bool.isRequired,
   models: PropTypes.arrayOf(PropTypes.object).isRequired,
+  modelName: PropTypes.string,
   pageData: PropTypes.object.isRequired,
+  projectName: PropTypes.string.isRequired,
   requestErrorMessage: PropTypes.string.isRequired,
   selectedModel: PropTypes.object.isRequired,
-  selectedRowData: PropTypes.object.isRequired,
   setMaxArtifactsErrorIsShown: PropTypes.func.isRequired,
   setSearchParams: PropTypes.func.isRequired,
   setSelectedModelMin: PropTypes.func.isRequired,
   sortProps: SORT_PROPS,
   tableContent: PropTypes.arrayOf(PropTypes.object).isRequired,
   tableHeaders: PropTypes.arrayOf(PropTypes.object).isRequired,
-  toggleRow: PropTypes.func.isRequired,
   viewMode: PropTypes.string,
   virtualizationConfig: VIRTUALIZATION_CONFIG.isRequired
 }

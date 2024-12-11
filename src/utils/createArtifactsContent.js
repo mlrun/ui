@@ -25,11 +25,11 @@ import FunctionPopUp from '../elements/DetailsPopUp/FunctionPopUp/FunctionPopUp'
 
 import {
   ARTIFACTS_PAGE,
-  DATASETS_PAGE,
   FILES_PAGE,
   MODELS_PAGE,
   MODELS_TAB,
-  MODEL_ENDPOINTS_TAB
+  MODEL_ENDPOINTS_TAB,
+  ALL_VERSIONS_PATH
 } from '../constants'
 import { parseKeyValues } from './object'
 import { formatDatetime } from './datetime'
@@ -44,23 +44,28 @@ import { ReactComponent as SeverityOk } from 'igz-controls/images/severity-ok.sv
 import { ReactComponent as SeverityWarning } from 'igz-controls/images/severity-warning.svg'
 import { ReactComponent as SeverityError } from 'igz-controls/images/severity-error.svg'
 
-export const createArtifactsContent = (artifacts, page, pageTab, project, frontendSpec) => {
+export const createArtifactsContent = (artifacts, page, pageTab, project, isAllVersions) => {
   return (artifacts.filter(artifact => !artifact.link_iteration) ?? []).map(artifact => {
     if (page === ARTIFACTS_PAGE) {
       return createArtifactsRowData(artifact)
     } else if (page === MODELS_PAGE) {
       if (pageTab === MODELS_TAB) {
-        return createModelsRowData(artifact, project, frontendSpec, null, false)
+        return createModelsRowData(artifact, project, isAllVersions, null)
       } else if (pageTab === MODEL_ENDPOINTS_TAB) {
         return createModelEndpointsRowData(artifact, project)
       }
     } else if (page === FILES_PAGE) {
-      return createFilesRowData(artifact, project, frontendSpec)
+      return createFilesRowData(artifact, project, isAllVersions)
     }
 
-    return createDatasetsRowData(artifact, project, frontendSpec)
+    return createDatasetsRowData(artifact, project, isAllVersions)
   })
 }
+
+const getDetailsLink = (artifact, artifactPathFragment, tab, project, isAllVersions) =>
+  validateArguments(artifact.db_key, tab, artifact.uid) // todo unify url
+    ? `/projects/${project}/${artifactPathFragment}/${artifact.db_key}${isAllVersions ? `/${ALL_VERSIONS_PATH}` : ''}/${artifact.tag ? `:${artifact.tag}` : ''}@${artifact.uid}${`/${tab}`}${window.location.search}`
+    : ''
 
 const createArtifactsRowData = artifact => {
   return {
@@ -105,8 +110,6 @@ const createArtifactsRowData = artifact => {
   }
 }
 
-const getIter = artifact => (isNaN(parseInt(artifact?.iter)) ? '' : ` #${artifact?.iter}`)
-
 export const getIsTargetPathValid = (artifact, frontendSpec) =>
   frontendSpec?.allowed_artifact_path_prefixes_list
     ? frontendSpec.allowed_artifact_path_prefixes_list.some(prefix => {
@@ -114,49 +117,18 @@ export const getIsTargetPathValid = (artifact, frontendSpec) =>
       })
     : false
 
-export const createModelsRowData = (
-  artifact,
-  project,
-  frontendSpec,
-  metricsCounter,
-  showExpandButton
-) => {
-  const iter = getIter(artifact)
+export const createModelsRowData = (artifact, project, isAllVersions, metricsCounter) => {
   //temporarily commented till ML-5606 will be done
   // const currentMetricsCount = Object.keys(artifact?.metrics ?? {}).length ?? 0
   const content = [
     {
       id: `key.${artifact.ui.identifierUnique}`,
-      headerId: 'name',
-      headerLabel: 'Name',
-      value: artifact.db_key,
+      headerId: isAllVersions ? 'uid' : 'name',
+      headerLabel: isAllVersions ? 'UID' : 'Name',
+      value: isAllVersions ? artifact.uid : artifact.db_key,
       className: 'table-cell-name',
-      getLink: tab =>
-        validateArguments(artifact.db_key, tab, artifact.tree)
-          ? generateLinkToDetailsPanel(
-              project,
-              MODELS_TAB,
-              MODELS_TAB,
-              artifact.db_key,
-              artifact.tag,
-              tab,
-              artifact.tree,
-              artifact.iter
-            )
-          : '',
-      expandedCellContent: {
-        headerId: 'name',
-        className: 'table-cell-name',
-        showTag: true,
-        tooltip: artifact.tag ? `${artifact.tag}${iter}` : `${artifact.tree}${iter}`,
-        type: 'date',
-        value: formatDatetime(artifact.updated, 'N/A')
-      },
-      rowExpanded: {
-        getLink: false
-      },
-      showTag: true,
-      showExpandButton
+      getLink: tab => getDetailsLink(artifact, 'models/models', tab, project, isAllVersions),
+      showTag: true
     },
     {
       id: `labels.${artifact.ui.identifierUnique}`,
@@ -274,9 +246,7 @@ export const createModelsRowData = (
   }
 }
 
-export const createFilesRowData = (artifact, project, frontendSpec, showExpandButton) => {
-  const iter = getIter(artifact)
-
+export const createFilesRowData = (artifact, project, isAllVersions) => {
   return {
     data: {
       ...artifact
@@ -284,36 +254,12 @@ export const createFilesRowData = (artifact, project, frontendSpec, showExpandBu
     content: [
       {
         id: `key.${artifact.ui.identifierUnique}`,
-        headerId: 'name',
-        headerLabel: 'Name',
-        value: artifact.db_key,
+        headerId: isAllVersions ? 'uid' : 'name',
+        headerLabel: isAllVersions ? 'UID' : 'Name',
+        value: isAllVersions ? artifact.uid : artifact.db_key,
         className: 'table-cell-name',
-        getLink: tab =>
-          validateArguments(artifact.db_key, tab, artifact.tree)
-            ? generateLinkToDetailsPanel(
-                project,
-                FILES_PAGE,
-                null,
-                artifact.db_key,
-                artifact.tag,
-                tab,
-                artifact.tree,
-                artifact.iter
-              )
-            : '',
-        expandedCellContent: {
-          headerId: 'name',
-          className: 'table-cell-name',
-          showTag: true,
-          tooltip: artifact.tag ? `${artifact.tag}${iter}` : `${artifact.tree}${iter}`,
-          type: 'date',
-          value: formatDatetime(artifact.updated, 'N/A')
-        },
-        rowExpanded: {
-          getLink: false
-        },
-        showTag: true,
-        showExpandButton
+        getLink: tab => getDetailsLink(artifact, 'files', tab, project, isAllVersions),
+        showTag: true
       },
       {
         id: `version.${artifact.ui.identifierUnique}`,
@@ -529,9 +475,7 @@ export const createModelEndpointsRowData = (artifact, project) => {
   }
 }
 
-export const createDatasetsRowData = (artifact, project, frontendSpec, showExpandButton) => {
-  const iter = getIter(artifact)
-
+export const createDatasetsRowData = (artifact, project, isAllVersions) => {
   return {
     data: {
       ...artifact
@@ -543,32 +487,8 @@ export const createDatasetsRowData = (artifact, project, frontendSpec, showExpan
         headerLabel: 'Name',
         value: artifact.db_key,
         className: 'table-cell-name',
-        getLink: tab =>
-          validateArguments(artifact.db_key, tab, artifact.tree)
-            ? generateLinkToDetailsPanel(
-                project,
-                DATASETS_PAGE,
-                null,
-                artifact.db_key,
-                artifact.tag,
-                tab,
-                artifact.tree,
-                artifact.iter
-              )
-            : '',
-        expandedCellContent: {
-          headerId: 'name',
-          className: 'table-cell-name',
-          showTag: true,
-          tooltip: artifact.tag ? `${artifact.tag}${iter}` : `${artifact.tree}${iter}`,
-          type: 'date',
-          value: formatDatetime(artifact.updated, 'N/A')
-        },
-        rowExpanded: {
-          getLink: false
-        },
-        showTag: true,
-        showExpandButton
+        getLink: tab => getDetailsLink(artifact, 'datasets', tab, project, isAllVersions),
+        showTag: true
       },
       {
         id: `labels.${artifact.ui.identifierUnique}`,
