@@ -42,7 +42,9 @@
       margin: 0;
 
       &-icon {
+        position: relative;
         margin-right: 5px;
+        top: 3px;
 
         svg {
           height: 20px;
