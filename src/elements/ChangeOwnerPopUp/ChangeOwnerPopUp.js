@@ -27,7 +27,11 @@ import Input from '../../common/Input/Input'
 import { Button, PopUpDialog } from 'igz-controls/components'
 
 import projectsIguazioApi from '../../api/projects-iguazio-api'
-import { FORBIDDEN_ERROR_STATUS_CODE, SECONDARY_BUTTON, TERTIARY_BUTTON } from 'igz-controls/constants'
+import {
+  FORBIDDEN_ERROR_STATUS_CODE,
+  SECONDARY_BUTTON,
+  TERTIARY_BUTTON
+} from 'igz-controls/constants'
 import { deleteUnsafeHtml } from '../../utils'
 import { getErrorMsg } from 'igz-controls/utils/common.util'
 import { isIgzVersionCompatible } from '../../utils/isIgzVersionCompatible'
@@ -111,7 +115,7 @@ const ChangeOwnerPopUp = ({ changeOwnerCallback, projectId }) => {
     }
   }
 
-  const generateSuggestionList = debounce(async (memberName, resolve) => {
+  const generateSuggestionList = async (memberName, resolve) => {
     const params = {
       'filter[assigned_policies]': '[$contains_any]Developer,Project Admin',
       'page[size]': 200
@@ -147,9 +151,9 @@ const ChangeOwnerPopUp = ({ changeOwnerCallback, projectId }) => {
     }
 
     resolve(formattedUsers)
-  }, 200)
+  }
 
-  const onSearchChange = memberName => {
+  const onSearchChange = debounce(memberName => {
     const memberNameEscaped = deleteUnsafeHtml(memberName)
     setSearchValue(memberNameEscaped)
 
@@ -165,7 +169,7 @@ const ChangeOwnerPopUp = ({ changeOwnerCallback, projectId }) => {
     } else {
       setNewOwnerId('')
     }
-  }
+  }, 500)
 
   return (
     <div className="change-owner">
