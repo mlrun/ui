@@ -109,14 +109,12 @@
     color: $topaz;
     font-size: 0.75rem;
 
-    & > *:first-child {
-      flex: 0 0 auto;
+    & *:not(:last-child) {
       margin-right: 5px;
-      color: $spunPearl;
     }
 
     &-icon {
-      flex: 0 1 25px;
+      flex: 0 1 12px;
 
       & * {
         fill: $spunPearl;

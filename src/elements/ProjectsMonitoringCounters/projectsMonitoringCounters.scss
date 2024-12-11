@@ -1,4 +1,13 @@
 @import '~igz-controls/scss/colors';
+@import '~igz-controls/scss/borders';
+
+@mixin counterLinkHover {
+  cursor: pointer;
+  text-decoration: underline;
+  color: $topaz;
+  text-underline-offset: 1px;
+  text-decoration-thickness: 2px;
+}
 
 .monitoring-stats {
   flex-direction: column;
@@ -15,58 +24,78 @@
     flex: unset;
 
     &:last-child {
-      margin-top: auto;
+      padding: 20px 0;
     }
   }
 
   .stats {
     &__subtitle {
-      margin: 0 0 5px 0;
+      display: inline-block;
+      margin: 0;
       color: $topaz;
       font-weight: normal;
-      font-size: 1rem;
-    }
-
-    &__placeholder-subtitle{
-      height: 24px;
-    }
-
-    &__header-icon {
-      height: 20px;
-      width: 20px;
-      margin-right: 5px;
-
-      path {
-        fill: $ceriseRed;
-      }
+      font-size: 0.75rem;
     }
 
     &__counter {
-      display: flex;
-      flex: 1;
-      min-height: 58px;
-      margin: 0 0 5px 0;
       color: $primary;
-      font-weight: 700;
-      font-size: 38px;
-      align-items: center;
-      justify-content: center;
-    }
-
-    &__link {
-      color: $darkPurple;
-      cursor: pointer;
+      font-weight: 400;
+      font-size: 28px;
 
       &:hover {
-        text-decoration: underline;
-        color: $topaz;
-        text-underline-offset: 1px;
-        text-decoration-thickness: 2px;
+        @include counterLinkHover;
       }
     }
 
-    .link {
+    &__status {
+      i[class^='state-'] {
+        margin-left: 5px;
+      }
+    }
+
+    &__link {
+      cursor: pointer;
+
+      &:hover {
+        .stats__counter {
+          @include counterLinkHover;
+        }
+      }
+    }
+  }
+
+  .project-card__info {
+    align-items: baseline;
+    justify-content: flex-end;
+    margin-left: 1rem;
+
+    .stats__subtitle {
+      font-size: inherit;
+      margin: 0 5px 0 0;
+    }
+
+    .stats__counter {
+      position: relative;
       font-size: 1rem;
+      margin-right: 0.6em;
+      padding-right: 0.75em;
+
+      &:after {
+        content: '';
+        display: inline-block;
+        width: 1px;
+        background-color: $mulledWineThree;
+        position: absolute;
+        right: 0;
+        top: 0;
+        bottom: 0;
+        margin: 3px 0;
+      }
+    }
+
+    .project-card__info-icon {
+      position: relative;
+      top: 2px;
     }
   }
 
