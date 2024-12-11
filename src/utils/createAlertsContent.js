@@ -139,8 +139,6 @@ const getNotificationData = notifications =>
   })
 
 export const createAlertRowData = ({ name, ...alert }) => {
-  alert.id = alert.id.slice(-6) // Use the last 6 characters of the database ID as the alert ID
-
   return {
     data: {
       ...alert
