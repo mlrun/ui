@@ -483,9 +483,9 @@ export const createDatasetsRowData = (artifact, project, isAllVersions) => {
     content: [
       {
         id: `key.${artifact.ui.identifierUnique}`,
-        headerId: 'name',
-        headerLabel: 'Name',
-        value: artifact.db_key,
+        headerId: isAllVersions ? 'uid' : 'name',
+        headerLabel: isAllVersions ? 'UID' : 'Name',
+        value: isAllVersions ? artifact.uid : artifact.db_key,
         className: 'table-cell-name',
         getLink: tab => getDetailsLink(artifact, 'datasets', tab, project, isAllVersions),
         showTag: true
