@@ -132,7 +132,7 @@ const getNotificationData = notifications =>
       icon: (
         <div className="alert-row-notification">
           {alertsNotifications[notification.kind]}
-          {notification.error && (
+          {notification?.error && (
             <div className="notification-fail">
               <Error />
             </div>
