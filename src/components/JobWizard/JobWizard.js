@@ -328,7 +328,7 @@ const JobWizard = ({
         })
         .then(() => {
           return navigate(
-            `/projects/${params.projectName}/jobs/${isSchedule ? SCHEDULE_TAB : MONITOR_JOBS_TAB}`
+            `/projects/${params.projectName}/jobs/${isSchedule ? SCHEDULE_TAB : MONITOR_JOBS_TAB}${window.location.search}`
           )
         })
         .catch(error => {
@@ -377,7 +377,7 @@ const JobWizard = ({
           )
         })
         .then(() => {
-          navigate(`/projects/${params.projectName}/jobs/${SCHEDULE_TAB}`)
+          navigate(`/projects/${params.projectName}/jobs/${SCHEDULE_TAB}${window.location.search}`)
         })
         .catch(error => {
           showErrorNotification(dispatch, error, '', getSaveJobErrorMsg(error))
