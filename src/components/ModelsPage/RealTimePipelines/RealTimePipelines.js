@@ -184,18 +184,16 @@ const RealTimePipelines = () => {
         <div className="table-container">
           <div className={filterMenuClassNames}>
             <ModelsPageTabs />
-            <div className="action-bar">
-              <ActionBar
-                filters={filters}
-                filtersConfig={filtersConfig}
-                handleRefresh={handleRefresh}
-                navigateLink={`/projects/${params.projectName}/models/${REAL_TIME_PIPELINES_TAB}${window.location.search}`}
-                page={MODELS_PAGE}
-                setSearchParams={setSearchParams}
-                tab={REAL_TIME_PIPELINES_TAB}
-                withoutExpandButton
-              />
-            </div>
+            <ActionBar
+              filters={filters}
+              filtersConfig={filtersConfig}
+              handleRefresh={handleRefresh}
+              navigateLink={`/projects/${params.projectName}/models/${REAL_TIME_PIPELINES_TAB}${window.location.search}`}
+              page={MODELS_PAGE}
+              setSearchParams={setSearchParams}
+              tab={REAL_TIME_PIPELINES_TAB}
+              withoutExpandButton
+            />
           </div>
           {artifactsStore.pipelines.loading ? null : pipelines.length === 0 ? (
             <NoData
