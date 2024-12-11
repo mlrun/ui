@@ -17,34 +17,20 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import { useCallback, useMemo, useRef, useState } from 'react'
-import { useParams, useSearchParams } from 'react-router-dom'
-import { useDispatch, useSelector } from 'react-redux'
+import { useCallback, useMemo, useState } from 'react'
+import { useSelector } from 'react-redux'
 
 import AlertsView from './AlertsView'
 
+import { createAlertRowData } from '../../utils/createAlertsContent'
 import { getAlertsFiltersConfig, parseAlertsQueryParamsCallback } from './alerts.util'
+import { useAlertsPageData } from '../../hooks/useAlertsPageData'
 import { useFiltersFromSearchParams } from '../../hooks/useFiltersFromSearchParams.hook'
 
-import { fetchAlerts } from '../../reducers/alertsReducer'
-import { useVirtualization } from '../../hooks/useVirtualization.hook'
-import { createAlertRowData } from '../../utils/createAlertsContent'
-import { useInitialTableFetch } from '../../hooks/useInitialTableFetch.hook'
-
-import cssVariables from './alerts.scss'
-
 const Alerts = () => {
-  const [alerts, setAlerts] = useState([])
-  const [requestErrorMessage, setRequestErrorMessage] = useState('')
-  const [selectedAlert] = useState({})
-  const [selectedRowData] = useState({})
-  const params = useParams()
-  const [, setSearchParams] = useSearchParams()
-  const dispatch = useDispatch()
+  const [selectedAlert] = useState({}) //TODO: implement logic in ML-8104
   const alertsStore = useSelector(state => state.alertsStore)
   const filtersStore = useSelector(store => store.filtersStore)
-
-  const abortControllerRef = useRef(new AbortController())
 
   const alertsFiltersConfig = useMemo(() => getAlertsFiltersConfig(), [])
 
@@ -53,83 +39,45 @@ const Alerts = () => {
     parseAlertsQueryParamsCallback
   )
 
-  const fetchData = useCallback(
-    filters => {
-      abortControllerRef.current = new AbortController()
-      dispatch(
-        fetchAlerts({
-          project: params.id,
-          filters,
-          config: {
-            ui: {
-              controller: abortControllerRef.current,
-              setRequestErrorMessage
-            },
-            params: {
-              format: 'minimal'
-            }
-          }
-        })
-      )
-        .unwrap()
-        .then(alerts => {
-          if (alerts?.length > 0) {
-            setAlerts(alerts)
-          } else {
-            setAlerts([])
-          }
-        })
-    },
-    [dispatch, params.id]
-  )
+  const {
+    handleRefreshAlerts,
+    paginatedAlerts,
+    paginationConfigAlertsRef,
+    requestErrorMessage,
+    refreshAlerts,
+    setAlerts,
+    setSearchParams
+  } = useAlertsPageData(alertsFilters)
 
-  const tableContent = useMemo(() => {
-    return alerts.map(alert => createAlertRowData(alert))
-  }, [alerts])
-
-  const refreshAlertsCallback = useCallback(
+  const handleRefreshWithFilters = useCallback(
     filters => {
       setAlerts([])
 
-      return fetchData(filters)
+      return refreshAlerts(filters)
     },
-    [fetchData]
+    [refreshAlerts, setAlerts]
   )
 
-  useInitialTableFetch({
-    fetchData,
-    filters: alertsFilters
-  })
-
-  const virtualizationConfig = useVirtualization({
-    rowsData: {
-      content: tableContent,
-      expandedRowsData: selectedRowData,
-      selectedItem: selectedAlert
-    },
-    heightData: {
-      headerRowHeight: cssVariables.$alertsHeaderRowHeight,
-      rowHeight: cssVariables.$alertsRowHeight,
-      rowHeightExtended: cssVariables.$alertsRowHeightExtended
-    },
-    activateTableScroll: true
-  })
+  const tableContent = useMemo(() => {
+    return paginatedAlerts.map(alert => createAlertRowData(alert))
+  }, [paginatedAlerts])
 
   return (
     <AlertsView
-      alerts={alerts}
+      alerts={paginatedAlerts}
       alertsFiltersConfig={alertsFiltersConfig}
       alertsStore={alertsStore}
       actionsMenu={() => []} // TODO
       filters={alertsFilters}
       filtersStore={filtersStore}
+      handleRefreshAlerts={handleRefreshAlerts}
+      handleRefreshWithFilters={handleRefreshWithFilters}
       pageData={{}} //TODO
-      refreshAlertsCallback={refreshAlertsCallback}
+      paginationConfigAlertsRef={paginationConfigAlertsRef}
       requestErrorMessage={requestErrorMessage}
       selectedAlert={selectedAlert}
       setSearchParams={setSearchParams}
       tableContent={tableContent}
-      virtualizationConfig={virtualizationConfig}
     />
   )
 }
