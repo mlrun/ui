@@ -884,7 +884,7 @@ function getAlerts(req, res) {
 
   const [paginatedAlerts, pagination] = getPaginationConfig(collectedAlerts, req.query)
 
-  res.send({ alerts: paginatedAlerts, pagination })
+  res.send({ activations: paginatedAlerts, pagination })
 }
 
 function patchRun(req, res) {
