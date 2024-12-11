@@ -60,7 +60,7 @@ const ContentMenu = ({ activeTab = '', disabled = false, screen, tabs = [], onCl
           return (
             !tab.hidden && (
               <li data-testid={tab.id} className={tabClassNames} key={tab.id}>
-                {!params['*'].includes(tab.id) ? (
+                {activeTab !== tab.id ? (
                   <Link
                     to={generateRedirectLink(tab.id)}
                     className={tab.icon && 'content-menu__item-icon'}
