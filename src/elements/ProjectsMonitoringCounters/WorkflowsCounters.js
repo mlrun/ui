@@ -49,10 +49,25 @@ const WorkflowsCounters = () => {
   return (
     <StatsCard className="monitoring-stats">
       <StatsCard.Header title="Workflows">
-        <div className="project-card__info">
-          <ClockIcon className="project-card__info-icon" />
-          <span>Past 24 hours</span>
-        </div>
+        <StatsCard.Col>
+          <div className="project-card__info">
+            <span className="stats__subtitle">Total</span>
+            <div
+              className="stats__counter"
+              onClick={workflowsStats.total.link}
+              data-testid="scheduled_total_counter"
+            >
+              {projectStore.projectsSummary.loading ? (
+                <Loader section small secondary />
+              ) : (
+                workflowsStats.total.counter
+              )}
+            </div>
+            <ClockIcon className="project-card__info-icon" />
+            <span>Past 24 hours</span>
+          </div>
+        </StatsCard.Col>
+
         {/* Todo: Use in the future
         <DatePicker
           date={filter.dates.value[0]}
@@ -65,41 +80,41 @@ const WorkflowsCounters = () => {
         /> */}
       </StatsCard.Header>
       <StatsCard.Row>
-        <StatsCard.Col>
-          <div className="stats__placeholder-subtitle" />
-          <span className="stats__counter">
+        {/* <StatsCard.Col>
+          <div className="stats__counter">
             {projectStore.projectsSummary.loading ? (
               <Loader section small secondary />
             ) : (
               <span
                 className="stats__link"
-                onClick={workflowsStats.total.link}
-                data-testid="workflows_total_counter"
+                onClick={scheduledStats.jobs.link}
+                data-testid="scheduled_jobs_counter"
               >
-                {workflowsStats.total.counter}
+                {scheduledStats.jobs.counter}
               </span>
             )}
-          </span>
-          <ul className="projects-monitoring-legend__status">
-            {workflowsStats.counters.map(({ counter, link, statusClass, tooltip }) => (
-              <li className="link" onClick={link} key={`${statusClass}-jobs`}>
+          </div>
+        </StatsCard.Col> */}
+
+        {workflowsStats.counters.map(({ counter, label, link, statusClass, tooltip }) => (
+          <StatsCard.Col key={`${statusClass}-jobs`}>
+            <div className="stats__link" onClick={link} data-testid={`wf_${statusClass}_counter`}>
+              <div className="stats__counter">
                 {projectStore.projectsSummary.loading ? (
                   <Loader section small secondary />
                 ) : (
-                  <Tooltip textShow template={<TextTooltipTemplate text={tooltip} />}>
-                    <span data-testid={`wf_${statusClass}_counter`}>
-                      {counter}
-                      <i className={`state-${statusClass}`} />
-                    </span>
-                  </Tooltip>
+                  counter
                 )}
-              </li>
-            ))}
-          </ul>
-        </StatsCard.Col>
-      </StatsCard.Row>
-      <StatsCard.Row>
-        <StatsCard.Col />
+              </div>
+              <div data-testid={`wf_${statusClass}_status`} className="stats__status">
+                <Tooltip textShow template={<TextTooltipTemplate text={tooltip} />}>
+                  <h6 className="stats__subtitle">{label}</h6>
+                  <i className={`state-${statusClass}`} />
+                </Tooltip>
+              </div>
+            </div>
+          </StatsCard.Col>
+        ))}
       </StatsCard.Row>
     </StatsCard>
   )
