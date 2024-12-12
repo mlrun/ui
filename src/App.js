@@ -216,17 +216,14 @@ const App = () => {
               <Route path={path} element={<Functions isAllVersions={[2,3].includes(index)} />} />
             </Fragment>
           ))}
-          <Route
-            path="projects/:projectName/feature-store/datasets/*"
-            element={<Navigate to=":name/:tag/:iter/:tab" replace />}
-          />
           {[
             'projects/:projectName/datasets',
-            'projects/:projectName/datasets/:name/:tag/:tab',
-            'projects/:projectName/datasets/:name/:tag/:iter/:tab'
+            'projects/:projectName/datasets/:datasetName/:id/:tab',
+            `projects/:projectName/datasets/:datasetName/${ALL_VERSIONS_PATH}`,
+            `projects/:projectName/datasets/:datasetName/${ALL_VERSIONS_PATH}/:id/:tab`
           ].map((path, index) => (
             <Fragment key={index}>
-              <Route path={path} element={<Datasets />} />
+              <Route path={path} element={<Datasets isAllVersions={[2,3].includes(index)} />} />
             </Fragment>
           ))}
           <Route
@@ -256,12 +253,12 @@ const App = () => {
           <Route path="projects/:projectName/models/*" element={<ModelsPage />}>
             {[
               `${MODELS_TAB}`,
-              `${MODELS_TAB}/:name/:tab`,
-              `${MODELS_TAB}/:name/:tag/:tab`,
-              `${MODELS_TAB}/:name/:tag/:iter/:tab`
+              `${MODELS_TAB}/:modelName/:id/:tab`,
+              `${MODELS_TAB}/:modelName/${ALL_VERSIONS_PATH}`,
+              `${MODELS_TAB}/:modelName/${ALL_VERSIONS_PATH}/:id/:tab`
             ].map((path, index) => (
               <Fragment key={index}>
-                <Route path={path} element={<Models />} />
+                <Route path={path} element={<Models isAllVersions={[2,3].includes(index)} />} />
               </Fragment>
             ))}
             {[`${MODEL_ENDPOINTS_TAB}`, `${MODEL_ENDPOINTS_TAB}/:name/:tag/:tab`].map(
@@ -283,11 +280,12 @@ const App = () => {
           </Route>
           {[
             'projects/:projectName/files',
-            'projects/:projectName/files/:name/:tag/:tab',
-            'projects/:projectName/files/:name/:tag/:iter/:tab'
+            'projects/:projectName/files/:fileName/:id/:tab',
+            `projects/:projectName/files/:fileName/${ALL_VERSIONS_PATH}`,
+            `projects/:projectName/files/:fileName/${ALL_VERSIONS_PATH}/:id/:tab`
           ].map((path, index) => (
             <Fragment key={index}>
-              <Route path={path} element={<Files />} />
+              <Route path={path} element={<Files isAllVersions={[2,3].includes(index)} />} />
             </Fragment>
           ))}
           {['projects/:projectName/documents'].map((path, index) => (

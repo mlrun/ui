@@ -131,6 +131,14 @@ body {
       }
     }
   }
+
+  &__history-back-link-wrapper {
+    padding-bottom: 5px;
+
+    .history-back-link__title {
+      max-width: 100%;
+    }
+  }
 }
 
 /* =========== MAIN ============= */

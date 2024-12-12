@@ -30,15 +30,18 @@ import ArtifactsTableRow from '../../elements/ArtifactsTableRow/ArtifactsTableRo
 import Details from '../Details/Details'
 import WarningMessage from '../../common/WarningMessage/WarningMessage'
 import ActionBar from '../ActionBar/ActionBar'
+import ArtifactsFilters from '../ArtifactsActionBar/ArtifactsFilters'
+import HistoryBackLink from '../../common/HistoryBackLink/historyBackLink'
 
 import { ACTIONS_MENU, VIRTUALIZATION_CONFIG } from '../../types'
-import { FILES_PAGE, FULL_VIEW_MODE } from '../../constants'
+import { FILES_PAGE, FULL_VIEW_MODE, ALL_VERSIONS_PATH, FILES_TAB } from '../../constants'
 import { SECONDARY_BUTTON } from 'igz-controls/constants'
 import { SORT_PROPS } from 'igz-controls/types'
 import { getNoDataMessage } from '../../utils/getNoDataMessage'
 import { isRowRendered } from '../../hooks/useVirtualization.hook'
-import { registerArtifactTitle, filtersConfig } from './files.util'
-import ArtifactsFilters from '../ArtifactsActionBar/ArtifactsFilters'
+import { registerArtifactTitle } from './files.util'
+import { getSavedSearchParams } from '../../utils/filter.util'
+import { getCloseDetailsLink } from '../../utils/link-helper.util'
 
 const FilesView = React.forwardRef(
   (
@@ -49,25 +52,26 @@ const FilesView = React.forwardRef(
       artifactsStore,
       detailsFormInitialValues,
       files,
+      fileName,
       filters,
+      filtersConfig,
       filtersStore,
       getAndSetSelectedArtifact,
       handleRefresh,
       handleRefreshWithFilters,
       handleRegisterArtifact,
-      handleSelectFile,
+      isAllVersions,
       maxArtifactsErrorIsShown,
       pageData,
+      projectName,
       requestErrorMessage,
       selectedFile,
-      selectedRowData,
       setMaxArtifactsErrorIsShown,
       setSearchParams,
       setSelectedFileMin,
       sortProps,
       tableContent,
       tableHeaders,
-      toggleRow,
       viewMode = null,
       virtualizationConfig
     },
@@ -83,6 +87,12 @@ const FilesView = React.forwardRef(
             {artifactsStore.loading && <Loader />}
             <div className="table-container">
               <div className="content__action-bar-wrapper">
+                {isAllVersions && (
+                  <HistoryBackLink
+                    itemName={fileName}
+                    link={`/projects/${projectName}/files${getSavedSearchParams(window.location.search)}`}
+                  />
+                )}
                 <ActionBar
                   actionButtons={[
                     {
@@ -94,6 +104,7 @@ const FilesView = React.forwardRef(
                   ]}
                   filters={filters}
                   filtersConfig={filtersConfig}
+                  navigateLink={`/projects/${projectName}/files${isAllVersions ? `/${fileName}/${ALL_VERSIONS_PATH}` : ''}${window.location.search}`}
                   handleRefresh={handleRefresh}
                   page={FILES_PAGE}
                   setSearchParams={setSearchParams}
@@ -116,7 +127,7 @@ const FilesView = React.forwardRef(
                 />
               ) : (
                 <>
-                  {(selectedRowData.loading || artifactsStore.files.fileLoading) && <Loader />}
+                  {artifactsStore.files.fileLoading && <Loader />}
                   {maxArtifactsErrorIsShown && (
                     <WarningMessage
                       message="The query response displays up to 1000 items. Use filters to narrow down the results."
@@ -128,6 +139,9 @@ const FilesView = React.forwardRef(
                     applyDetailsChanges={applyDetailsChanges}
                     applyDetailsChangesCallback={applyDetailsChangesCallback}
                     detailsFormInitialValues={detailsFormInitialValues}
+                    getCloseDetailsLink={() =>
+                      getCloseDetailsLink(isAllVersions ? ALL_VERSIONS_PATH : FILES_TAB)
+                    }
                     handleCancel={() => setSelectedFileMin({})}
                     pageData={pageData}
                     retryRequest={handleRefreshWithFilters}
@@ -142,13 +156,10 @@ const FilesView = React.forwardRef(
                         isRowRendered(virtualizationConfig, index) && (
                           <ArtifactsTableRow
                             actionsMenu={actionsMenu}
-                            handleSelectItem={handleSelectFile}
-                            key={tableItem.data.ui.identifier}
+                            key={tableItem.data.ui.identifierUnique}
                             rowIndex={index}
                             rowItem={tableItem}
                             selectedItem={selectedFile}
-                            selectedRowData={selectedRowData}
-                            toggleRow={toggleRow}
                           />
                         )
                     )}
@@ -186,25 +197,26 @@ FilesView.propTypes = {
   artifactsStore: PropTypes.object.isRequired,
   detailsFormInitialValues: PropTypes.object.isRequired,
   files: PropTypes.arrayOf(PropTypes.object).isRequired,
+  fileName: PropTypes.string,
   filters: PropTypes.object.isRequired,
+  filtersConfig: PropTypes.object.isRequired,
   filtersStore: PropTypes.object.isRequired,
   getAndSetSelectedArtifact: PropTypes.func.isRequired,
   handleRefresh: PropTypes.func.isRequired,
   handleRefreshWithFilters: PropTypes.func.isRequired,
   handleRegisterArtifact: PropTypes.func.isRequired,
-  handleSelectFile: PropTypes.func.isRequired,
+  isAllVersions: PropTypes.bool.isRequired,
   maxArtifactsErrorIsShown: PropTypes.bool.isRequired,
   pageData: PropTypes.object.isRequired,
+  projectName: PropTypes.string.isRequired,
   requestErrorMessage: PropTypes.string.isRequired,
   selectedFile: PropTypes.object.isRequired,
-  selectedRowData: PropTypes.object.isRequired,
   setMaxArtifactsErrorIsShown: PropTypes.func.isRequired,
   setSearchParams: PropTypes.func.isRequired,
   setSelectedFileMin: PropTypes.func.isRequired,
   sortProps: SORT_PROPS,
   tableContent: PropTypes.arrayOf(PropTypes.object).isRequired,
   tableHeaders: PropTypes.arrayOf(PropTypes.object).isRequired,
-  toggleRow: PropTypes.func.isRequired,
   viewMode: PropTypes.string,
   virtualizationConfig: VIRTUALIZATION_CONFIG.isRequired
 }

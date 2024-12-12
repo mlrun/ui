@@ -191,7 +191,7 @@ const ActionBar = ({
       const newFilters = { ...filters, ...formValues }
 
       if (filtersHelperResult) {
-        if (params.name || params.id) {
+        if ((params.name && params.tag) || params.id) {
           navigate(navigateLink)
         }
 
@@ -220,6 +220,7 @@ const ActionBar = ({
       changes,
       dispatch,
       params.name,
+      params.tag,
       params.id,
       filtersStore.groupBy,
       saveFilters,
