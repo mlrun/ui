@@ -379,11 +379,16 @@ function filterByLabels(elementLabels, requestLabels) {
   return false
 }
 
-function getPartitionedData(arr, groupBy='name') {
-  return chain(arr)
-      .groupBy(groupBy)
-      .map(group => maxBy(group, obj => new Date(obj.updated)))
-      .value()
+function getPartitionedData(
+  listOfItems,
+  pathToPartition,
+  pathToUpdated,
+  defaultPathToPartition
+) {
+  return chain(listOfItems)
+    .groupBy(arrayItem => get(arrayItem, pathToPartition, defaultPathToPartition))
+    .map(group => maxBy(group, groupItem => new Date(get(groupItem, pathToUpdated))))
+    .value()
 }
 
 // Request Handlers
@@ -848,7 +853,7 @@ function getRuns(req, res) {
   }
 
   if (req.query['partition-by'] && req.query['partition-sort-by']) {
-    collectedRuns = getPartitionedData(collectedRuns)
+    collectedRuns = getPartitionedData(collectedRuns, 'metadata.name', 'status.last_update')
   }
 
   if (req.query['name']) {
@@ -1320,7 +1325,12 @@ function getArtifacts(req, res) {
   }
 
   if (req.query['partition-by']) {
-    collectedArtifacts = getPartitionedData(collectedArtifacts)
+    collectedArtifacts = getPartitionedData(
+      collectedArtifacts,
+      'spec.db_key',
+      'metadata.updated',
+      'db_key'
+    )
   }
 
   const [paginatedArtifacts, pagination] = getPaginationConfig(collectedArtifacts, req.query)
