@@ -225,24 +225,18 @@ const JobsTable = React.forwardRef(
     )
 
     const onDeleteJob = useCallback(
-      job => {
-        handleDeleteJob(
-          params.jobName || !isEmpty(selectedJob),
-          job,
-          refreshJobs,
-          filters,
-          dispatch
-        ).then(() => {
+      (job, deleteAllRuns) => {
+        handleDeleteJob(deleteAllRuns, job, refreshJobs, filters, dispatch).then(() => {
           if (params.jobName) {
             navigate(getCloseDetailsLink(params.jobName, true))
           }
         })
       },
-      [params.jobName, selectedJob, refreshJobs, filters, dispatch, navigate]
+      [params.jobName, refreshJobs, filters, dispatch, navigate]
     )
 
     const handleConfirmDeleteJob = useCallback(
-      job => {
+      (job, deleteAllRuns) => {
         setConfirmData({
           item: job,
           header: 'Delete job?',
@@ -253,7 +247,7 @@ const JobsTable = React.forwardRef(
             setConfirmData(null)
           },
           confirmHandler: () => {
-            onDeleteJob(job)
+            onDeleteJob(job, deleteAllRuns)
             setConfirmData(null)
           }
         })
@@ -272,7 +266,9 @@ const JobsTable = React.forwardRef(
           handleConfirmAbortJob,
           toggleConvertedYaml,
           selectedJob,
-          handleConfirmDeleteJob
+          handleConfirmDeleteJob,
+          false,
+          params.jobName
         )
     }, [
       handleRerunJob,
@@ -282,7 +278,8 @@ const JobsTable = React.forwardRef(
       handleConfirmAbortJob,
       toggleConvertedYaml,
       selectedJob,
-      handleConfirmDeleteJob
+      handleConfirmDeleteJob,
+      params.jobName
     ])
 
     useEffect(() => {
