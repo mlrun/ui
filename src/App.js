@@ -213,7 +213,7 @@ const App = () => {
             `projects/:projectName/functions/:funcName/${ALL_VERSIONS_PATH}/:id/:tab`
           ].map((path, index) => (
             <Fragment key={index}>
-              <Route path={path} element={<Functions isAllVersions={[2,3].includes(index)} />} />
+              <Route path={path} element={<Functions isAllVersions={[2, 3].includes(index)} />} />
             </Fragment>
           ))}
           <Route
@@ -290,7 +290,11 @@ const App = () => {
               <Route path={path} element={<Files />} />
             </Fragment>
           ))}
-          {['projects/:projectName/documents'].map((path, index) => (
+          {[
+            'projects/:projectName/documents',
+            'projects/:projectName/documents/:name/:tag/:tab',
+            'projects/:projectName/documents/:name/:tag/:iter/:tab'
+          ].map((path, index) => (
             <Fragment key={index}>
               <Route path={path} element={<Documents />} />
             </Fragment>
