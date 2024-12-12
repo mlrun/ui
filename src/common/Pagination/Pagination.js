@@ -45,7 +45,7 @@ import './pagination.scss'
 
 const threeDotsString = '...'
 
-const Pagination = ({ page, paginationConfig, selectedItemName = '' }) => {
+const Pagination = ({ closeParamName = '', paginationConfig }) => {
   const [, setSearchParams] = useSearchParams()
   const navigate = useNavigate()
   const paginationPagesRef = useRef()
@@ -77,10 +77,10 @@ const Pagination = ({ page, paginationConfig, selectedItemName = '' }) => {
   }, [paginationConfig])
 
   const handlePageChange = useCallback(() => {
-    if (selectedItemName) {
-      navigate(getCloseDetailsLink(selectedItemName, true), { replace: true })
+    if (closeParamName) {
+      navigate(getCloseDetailsLink(closeParamName, true), { replace: true })
     }
-  }, [navigate, selectedItemName])
+  }, [navigate, closeParamName])
 
   const paginationItems = useMemo(() => {
     if (!paginationConfig[FE_PAGE]) return []
@@ -306,9 +306,8 @@ const Pagination = ({ page, paginationConfig, selectedItemName = '' }) => {
 }
 
 Pagination.propTypes = {
-  page: PropTypes.string.isRequired,
-  paginationConfig: PAGINATION_CONFIG.isRequired,
-  selectedItemName: PropTypes.string
+  closeParamName: PropTypes.string,
+  paginationConfig: PAGINATION_CONFIG.isRequired
 }
 
 export default Pagination

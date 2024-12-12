@@ -247,7 +247,7 @@ const functionsActions = {
         .then(({ data }) => {
           dispatch(functionsActions.fetchFunctionsSuccess(data.funcs))
 
-          return data.funcs
+          return data
         })
         .catch(error => {
           dispatch(functionsActions.fetchFunctionsFailure(error.message))
