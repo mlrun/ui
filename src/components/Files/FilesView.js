@@ -30,6 +30,8 @@ import ArtifactsTableRow from '../../elements/ArtifactsTableRow/ArtifactsTableRo
 import Details from '../Details/Details'
 import WarningMessage from '../../common/WarningMessage/WarningMessage'
 import ActionBar from '../ActionBar/ActionBar'
+import ArtifactsFilters from '../ArtifactsActionBar/ArtifactsFilters'
+import HistoryBackLink from '../../common/HistoryBackLink/historyBackLink'
 
 import { ACTIONS_MENU, VIRTUALIZATION_CONFIG } from '../../types'
 import { FILES_PAGE, FULL_VIEW_MODE, ALL_VERSIONS_PATH, FILES_TAB } from '../../constants'
@@ -38,8 +40,6 @@ import { SORT_PROPS } from 'igz-controls/types'
 import { getNoDataMessage } from '../../utils/getNoDataMessage'
 import { isRowRendered } from '../../hooks/useVirtualization.hook'
 import { registerArtifactTitle } from './files.util'
-import ArtifactsFilters from '../ArtifactsActionBar/ArtifactsFilters'
-import HistoryBackLink from '../../common/HistoryBackLink/historyBackLink'
 import { getSavedSearchParams } from '../../utils/filter.util'
 import { getCloseDetailsLink } from '../../utils/link-helper.util'
 

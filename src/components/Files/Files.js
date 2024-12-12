@@ -54,10 +54,10 @@ import { useInitialTableFetch } from '../../hooks/useInitialTableFetch.hook'
 import { useVirtualization } from '../../hooks/useVirtualization.hook'
 import { useFiltersFromSearchParams } from '../../hooks/useFiltersFromSearchParams.hook'
 import { toggleYaml } from '../../reducers/appReducer'
+import { transformSearchParams } from '../../utils/filter.util'
 
 import './files.scss'
 import cssVariables from './files.scss'
-import { transformSearchParams } from '../../utils/filter.util'
 
 const Files = ({ isAllVersions = false }) => {
   const [files, setFiles] = useState([])

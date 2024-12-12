@@ -177,7 +177,6 @@ export const checkForSelectedDataset = (
         )
 
         if (!searchItem) {
-          console.error('sdfds')
           navigate(
             `/projects/${projectName}/datasets${isAllVersions ? `/${paramsName}/${ALL_VERSIONS_PATH}` : ''}${getFilteredSearchParams(window.location.search, [VIEW_SEARCH_PARAMETER])}`,
             { replace: true }

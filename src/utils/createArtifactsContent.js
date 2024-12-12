@@ -62,7 +62,7 @@ export const createArtifactsContent = (artifacts, page, pageTab, project, isAllV
   })
 }
 
-const getDetailsLink = (artifact, artifactPathFragment, tab, project, isAllVersions) =>
+const getArtifactsDetailsLink = (artifact, artifactPathFragment, tab, project, isAllVersions) =>
   validateArguments(artifact.db_key, tab, artifact.uid)
     ? `/projects/${project}/${artifactPathFragment}/${artifact.db_key}${isAllVersions ? `/${ALL_VERSIONS_PATH}` : ''}/${artifact.tag ? `:${artifact.tag}` : ''}@${artifact.uid}${`/${tab}`}${window.location.search}`
     : ''
@@ -127,7 +127,7 @@ export const createModelsRowData = (artifact, project, isAllVersions, metricsCou
       headerLabel: isAllVersions ? 'UID' : 'Name',
       value: isAllVersions ? artifact.uid : artifact.db_key,
       className: 'table-cell-name',
-      getLink: tab => getDetailsLink(artifact, 'models/models', tab, project, isAllVersions),
+      getLink: tab => getArtifactsDetailsLink(artifact, 'models/models', tab, project, isAllVersions),
       showTag: true
     },
     {
@@ -258,7 +258,7 @@ export const createFilesRowData = (artifact, project, isAllVersions) => {
         headerLabel: isAllVersions ? 'UID' : 'Name',
         value: isAllVersions ? artifact.uid : artifact.db_key,
         className: 'table-cell-name',
-        getLink: tab => getDetailsLink(artifact, 'files', tab, project, isAllVersions),
+        getLink: tab => getArtifactsDetailsLink(artifact, 'files', tab, project, isAllVersions),
         showTag: true
       },
       {
@@ -487,7 +487,7 @@ export const createDatasetsRowData = (artifact, project, isAllVersions) => {
         headerLabel: isAllVersions ? 'UID' : 'Name',
         value: isAllVersions ? artifact.uid : artifact.db_key,
         className: 'table-cell-name',
-        getLink: tab => getDetailsLink(artifact, 'datasets', tab, project, isAllVersions),
+        getLink: tab => getArtifactsDetailsLink(artifact, 'datasets', tab, project, isAllVersions),
         showTag: true
       },
       {

@@ -50,6 +50,7 @@ import { searchArtifactItem } from '../../utils/searchArtifactItem'
 import { setDownloadItem, setShowDownloadsList } from '../../reducers/downloadReducer'
 import { openPopUp } from 'igz-controls/utils/common.util'
 import { getFilteredSearchParams } from '../../utils/filter.util'
+import { parseIdentifier } from '../../utils'
 
 import { ReactComponent as TagIcon } from 'igz-controls/images/tag-icon.svg'
 import { ReactComponent as YamlIcon } from 'igz-controls/images/yaml.svg'
@@ -58,7 +59,6 @@ import { ReactComponent as Copy } from 'igz-controls/images/copy-to-clipboard-ic
 import { ReactComponent as Delete } from 'igz-controls/images/delete.svg'
 import { ReactComponent as DownloadIcon } from 'igz-controls/images/download.svg'
 import { ReactComponent as HistoryIcon } from 'igz-controls/images/history.svg'
-import { parseIdentifier } from '../../utils'
 
 export const getFiltersConfig = isAllVersions => ({
   [NAME_FILTER]: { label: 'Name:', initialValue: '', hidden: isAllVersions },

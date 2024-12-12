@@ -23,6 +23,7 @@ import yaml from 'js-yaml'
 import fs from 'fs'
 import crypto from 'node:crypto'
 import {
+  chain,
   chunk,
   clamp,
   cloneDeep,
@@ -34,6 +35,7 @@ import {
   isEmpty,
   isFunction,
   isNil,
+  maxBy,
   noop,
   omit,
   orderBy,
@@ -375,6 +377,13 @@ function filterByLabels(elementLabels, requestLabels) {
   }
 
   return false
+}
+
+function getPartitionedData(arr, groupBy='name') {
+  return chain(arr)
+      .groupBy(groupBy)
+      .map(group => maxBy(group, obj => new Date(obj.updated)))
+      .value()
 }
 
 // Request Handlers
@@ -839,17 +848,7 @@ function getRuns(req, res) {
   }
 
   if (req.query['partition-by'] && req.query['partition-sort-by']) {
-    const uniqueObjects = {}
-
-    collectedRuns.forEach(run => {
-      const name = run.metadata.name
-      const lastUpdate = new Date(run.status.last_update)
-
-      if (!uniqueObjects[name] || new Date(uniqueObjects[name].status.last_update) < lastUpdate) {
-        uniqueObjects[name] = run
-      }
-    })
-    collectedRuns = Object.values(uniqueObjects)
+    collectedRuns = getPartitionedData(collectedRuns)
   }
 
   if (req.query['name']) {
@@ -1321,17 +1320,7 @@ function getArtifacts(req, res) {
   }
 
   if (req.query['partition-by']) {
-    const uniqueObjects = {}
-
-    collectedArtifacts.forEach(artifact => {
-      const name = artifact.spec?.db_key ?? artifact.db_key
-      const lastUpdate = new Date(artifact.metadata.updated)
-
-      if (!uniqueObjects[name] || new Date(uniqueObjects[name].metadata.updated) < lastUpdate) {
-        uniqueObjects[name] = artifact
-      }
-    })
-    collectedArtifacts = Object.values(uniqueObjects)
+    collectedArtifacts = getPartitionedData(collectedArtifacts)
   }
 
   const [paginatedArtifacts, pagination] = getPaginationConfig(collectedArtifacts, req.query)
