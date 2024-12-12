@@ -18,6 +18,7 @@ under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
 import {
+  ALERTS_TAB,
   DOCUMENTS_TAB,
   FEATURE_SETS_TAB,
   FEATURE_VECTORS_TAB,
@@ -69,6 +70,11 @@ export const generateMlrunScreens = params =>
         }
       ]
     : [
+        {
+          label: 'Alerts monitoring',
+          id: ALERTS_TAB,
+          linkTo: `/${PROJECTS_PAGE_PATH}/*/${ALERTS_TAB}`
+        },
         {
           label: 'Jobs monitoring',
           id: JOBS_MONITORING_PAGE,
