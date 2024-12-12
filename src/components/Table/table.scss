@@ -99,12 +99,6 @@
         flex: 1;
         max-width: 150px;
       }
-
-      &-notification {
-        .notification-fail svg > * {
-          fill: $silver;
-        }
-      }
     }
 
     &:has(.actions-menu__container-active) {

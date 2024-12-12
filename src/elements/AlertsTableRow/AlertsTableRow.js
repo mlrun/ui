@@ -26,13 +26,15 @@ import TableCell from '../TableCell/TableCell'
 
 import { DETAILS_OVERVIEW_TAB } from '../../constants'
 
+import './AlertsTableRow.scss'
+
 // TODO:   rowIsExpanded logic will be part of ML-8516
 // TODO:  selected row logic will be part of ML-8104
 const AlertsTableRow = ({ handleExpandRow, handleSelectItem, rowItem, selectedItem }) => {
   const parent = useRef()
   const params = useParams()
 
-  const rowClassNames = classnames('table-row', 'table-body-row', 'parent-row')
+  const rowClassNames = classnames('alert-row', 'table-row', 'table-body-row', 'parent-row')
 
   return (
     <tr className={rowClassNames} ref={parent}>
