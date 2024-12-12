@@ -43,6 +43,7 @@ import {
   DATA_INPUTS_STEP,
   FUNCTION_SELECTION_STEP,
   HYPERPARAMETER_STRATEGY_STEP,
+  JOBS_MONITORING_JOBS_TAB,
   JOB_WIZARD_FILTERS,
   MONITOR_JOBS_TAB,
   PANEL_CREATE_MODE,
@@ -300,6 +301,25 @@ const JobWizard = ({
     [isBatchInference, isEditMode, isRunMode, isTrain, selectedFunctionData]
   )
 
+  const searchParams = useCallback(
+    isSchedule => {
+      const urlPath = window.location.pathname.split('/')
+      const pageIndex = urlPath.findIndex(item => item === params.projectName) + 1
+      const pageName = urlPath[pageIndex]
+      const tabName = params?.['*']
+
+      if (pageName !== JOBS_MONITORING_JOBS_TAB) {
+        return
+      }
+
+      return (isSchedule && tabName === SCHEDULE_TAB) ||
+        (!isSchedule && tabName === MONITOR_JOBS_TAB)
+        ? window.location.search
+        : ''
+    },
+    [params]
+  )
+
   const runJobHandler = useCallback(
     (formData, selectedFunctionData, params, isSchedule) => {
       const jobRequestData = generateJobRequestData(
@@ -328,14 +348,14 @@ const JobWizard = ({
         })
         .then(() => {
           return navigate(
-            `/projects/${params.projectName}/jobs/${isSchedule ? SCHEDULE_TAB : MONITOR_JOBS_TAB}${window.location.search}`
+            `/projects/${params.projectName}/jobs/${isSchedule ? SCHEDULE_TAB : MONITOR_JOBS_TAB}${searchParams(isSchedule)}`
           )
         })
         .catch(error => {
           showErrorNotification(dispatch, error, '', getNewJobErrorMsg(error))
         })
     },
-    [dispatch, mode, navigate, onSuccessRequest, resolveModal]
+    [dispatch, mode, navigate, onSuccessRequest, resolveModal, searchParams]
   )
 
   const editJobHandler = useCallback(
