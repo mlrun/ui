@@ -63,7 +63,7 @@ export const createArtifactsContent = (artifacts, page, pageTab, project, isAllV
 }
 
 const getDetailsLink = (artifact, artifactPathFragment, tab, project, isAllVersions) =>
-  validateArguments(artifact.db_key, tab, artifact.uid) // todo unify url
+  validateArguments(artifact.db_key, tab, artifact.uid)
     ? `/projects/${project}/${artifactPathFragment}/${artifact.db_key}${isAllVersions ? `/${ALL_VERSIONS_PATH}` : ''}/${artifact.tag ? `:${artifact.tag}` : ''}@${artifact.uid}${`/${tab}`}${window.location.search}`
     : ''
 
