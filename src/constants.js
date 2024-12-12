@@ -95,6 +95,7 @@ export const JOBS_MONITORING_WORKFLOWS_TAB = 'workflows'
 export const JOBS_MONITORING_SCHEDULED_TAB = 'scheduled'
 
 export const ALERTS_PAGE = 'ALERTS'
+export const ALERTS_TAB = 'alerts'
 export const ALERTS_FILTERS = 'alerts'
 export const MODEL_ENDPOINT_RESULT = 'model-endpoint-result'
 export const MODEL_MONITORING_APPLICATION = 'model-monitoring-application'
@@ -126,7 +127,8 @@ export const ARTIFACTS_PAGE = 'ARTIFACTS'
 export const FILES_PAGE = 'FILES'
 export const FILES_TAB = 'files'
 
-export const DOCUMENTS_PAGE = 'documents'
+export const DOCUMENTS_PAGE = 'DOCUMENTS'
+export const DOCUMENTS_TAB = 'documents'
 
 export const PROJECT_MONITOR = 'monitor'
 
