@@ -35,7 +35,7 @@ import HistoryBackLink from '../../common/HistoryBackLink/historyBackLink'
 
 import { ALL_VERSIONS_PATH, DATASETS_PAGE, DATASETS_TAB, FULL_VIEW_MODE } from '../../constants'
 import { getNoDataMessage } from '../../utils/getNoDataMessage'
-import { registerDatasetTitle, getFiltersConfig } from './datasets.util'
+import { registerDatasetTitle } from './datasets.util'
 import { ACTIONS_MENU, VIRTUALIZATION_CONFIG } from '../../types'
 import { SECONDARY_BUTTON } from 'igz-controls/constants'
 import { SORT_PROPS } from 'igz-controls/types'
@@ -54,6 +54,7 @@ const DatasetsView = React.forwardRef(
       datasetName,
       detailsFormInitialValues,
       filters,
+      filtersConfig,
       filtersStore,
       getAndSetSelectedArtifact,
       handleRefresh,
@@ -102,7 +103,7 @@ const DatasetsView = React.forwardRef(
                     }
                   ]}
                   filters={filters}
-                  filtersConfig={getFiltersConfig(isAllVersions)}
+                  filtersConfig={filtersConfig}
                   navigateLink={`/projects/${projectName}/${DATASETS_TAB}${isAllVersions ? `/${datasetName}/${ALL_VERSIONS_PATH}` : ''}${window.location.search}`}
                   handleRefresh={handleRefresh}
                   page={DATASETS_PAGE}
@@ -117,7 +118,7 @@ const DatasetsView = React.forwardRef(
                 <NoData
                   message={getNoDataMessage(
                     filters,
-                    getFiltersConfig(isAllVersions),
+                    filtersConfig,
                     requestErrorMessage,
                     DATASETS_PAGE,
                     null,
@@ -198,6 +199,7 @@ DatasetsView.propTypes = {
   datasetName: PropTypes.string,
   detailsFormInitialValues: PropTypes.object.isRequired,
   filters: PropTypes.object.isRequired,
+  filtersConfig: PropTypes.object.isRequired,
   filtersStore: PropTypes.object.isRequired,
   getAndSetSelectedArtifact: PropTypes.func.isRequired,
   handleRefresh: PropTypes.func.isRequired,

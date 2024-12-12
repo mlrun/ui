@@ -75,10 +75,12 @@ const Datasets = ({ isAllVersions = false }) => {
   const navigate = useNavigate()
   const params = useParams()
   const [, setSearchParams] = useSearchParams()
-  const filters = useFiltersFromSearchParams(getFiltersConfig(isAllVersions))
   const abortControllerRef = useRef(new AbortController())
   const tagAbortControllerRef = useRef(new AbortController())
   const datasetsRef = useRef(null)
+
+  const filtersConfig = useMemo(() => getFiltersConfig(isAllVersions), [isAllVersions])
+  const filters = useFiltersFromSearchParams(filtersConfig)
 
   const pageData = useMemo(
     () => generatePageData(selectedDataset, viewMode, params),
@@ -376,6 +378,7 @@ const Datasets = ({ isAllVersions = false }) => {
       datasetName={params.datasetName}
       detailsFormInitialValues={detailsFormInitialValues}
       filters={filters}
+      filtersConfig={filtersConfig}
       filtersStore={filtersStore}
       getAndSetSelectedArtifact={getAndSetSelectedArtifact}
       handleRefresh={handleRefresh}

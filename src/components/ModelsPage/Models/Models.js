@@ -94,10 +94,12 @@ const Models = ({ fetchModelFeatureVector, isAllVersions }) => {
   const [, setSearchParams] = useSearchParams()
   const viewMode = getViewMode(window.location.search)
   const { toggleConvertedYaml } = useModelsPage()
-  const filters = useFiltersFromSearchParams(getFiltersConfig(isAllVersions))
   const abortControllerRef = useRef(new AbortController())
   const tagAbortControllerRef = useRef(new AbortController())
   const modelsRef = useRef(null)
+
+  const filtersConfig = useMemo(() => getFiltersConfig(isAllVersions), [isAllVersions])
+  const filters = useFiltersFromSearchParams(filtersConfig)
 
   const { isDemoMode } = useMode()
 
@@ -283,7 +285,7 @@ const Models = ({ fetchModelFeatureVector, isAllVersions }) => {
         showAllVersions,
         isAllVersions,
         false,
-        handleDeployModel,
+        handleDeployModel
       ),
     [
       frontendSpec,
@@ -391,7 +393,15 @@ const Models = ({ fetchModelFeatureVector, isAllVersions }) => {
       setSelectedModelMin,
       isAllVersions
     )
-  }, [isAllVersions, modelVersions, models, navigate, params.id, params.modelName, params.projectName])
+  }, [
+    isAllVersions,
+    modelVersions,
+    models,
+    navigate,
+    params.id,
+    params.modelName,
+    params.projectName
+  ])
 
   useEffect(() => {
     if (
@@ -480,6 +490,7 @@ const Models = ({ fetchModelFeatureVector, isAllVersions }) => {
       artifactsStore={artifactsStore}
       detailsFormInitialValues={detailsFormInitialValues}
       filters={filters}
+      filtersConfig={filtersConfig}
       filtersStore={filtersStore}
       getAndSetSelectedArtifact={getAndSetSelectedArtifact}
       handleRefresh={handleRefresh}

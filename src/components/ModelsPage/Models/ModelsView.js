@@ -35,7 +35,6 @@ import { ACTIONS_MENU, VIRTUALIZATION_CONFIG } from '../../../types'
 import { FULL_VIEW_MODE, MODELS_PAGE, MODELS_TAB, ALL_VERSIONS_PATH } from '../../../constants'
 import { SECONDARY_BUTTON, PRIMARY_BUTTON } from 'igz-controls/constants'
 import { SORT_PROPS } from 'igz-controls/types'
-import { getFiltersConfig } from './models.util'
 import { getNoDataMessage } from '../../../utils/getNoDataMessage'
 import { isRowRendered } from '../../../hooks/useVirtualization.hook'
 import HistoryBackLink from '../../../common/HistoryBackLink/historyBackLink'
@@ -51,6 +50,7 @@ const ModelsView = React.forwardRef(
       artifactsStore,
       detailsFormInitialValues,
       filters,
+      filtersConfig,
       filtersStore,
       getAndSetSelectedArtifact,
       handleRefresh,
@@ -101,7 +101,7 @@ const ModelsView = React.forwardRef(
                   }
                 ]}
                 filters={filters}
-                filtersConfig={getFiltersConfig(isAllVersions)}
+                filtersConfig={filtersConfig}
                 navigateLink={`/projects/${projectName}/models/models${isAllVersions ? `/${modelName}/${ALL_VERSIONS_PATH}` : ''}${window.location.search}`}
                 handleRefresh={handleRefresh}
                 page={MODELS_PAGE}
@@ -125,7 +125,7 @@ const ModelsView = React.forwardRef(
               <NoData
                 message={getNoDataMessage(
                   filters,
-                  getFiltersConfig(isAllVersions),
+                  filtersConfig,
                   requestErrorMessage,
                   MODELS_PAGE,
                   MODELS_TAB,
@@ -203,6 +203,7 @@ ModelsView.propTypes = {
   applyDetailsChangesCallback: PropTypes.func.isRequired,
   artifactsStore: PropTypes.object.isRequired,
   filters: PropTypes.object.isRequired,
+  filtersConfig : PropTypes.object.isRequired,
   filtersStore: PropTypes.object.isRequired,
   getAndSetSelectedArtifact: PropTypes.func.isRequired,
   handleRefresh: PropTypes.func.isRequired,

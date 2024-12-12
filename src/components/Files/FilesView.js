@@ -37,7 +37,7 @@ import { SECONDARY_BUTTON } from 'igz-controls/constants'
 import { SORT_PROPS } from 'igz-controls/types'
 import { getNoDataMessage } from '../../utils/getNoDataMessage'
 import { isRowRendered } from '../../hooks/useVirtualization.hook'
-import { registerArtifactTitle, getFiltersConfig } from './files.util'
+import { registerArtifactTitle } from './files.util'
 import ArtifactsFilters from '../ArtifactsActionBar/ArtifactsFilters'
 import HistoryBackLink from '../../common/HistoryBackLink/historyBackLink'
 import { getSavedSearchParams } from '../../utils/filter.util'
@@ -54,6 +54,7 @@ const FilesView = React.forwardRef(
       files,
       fileName,
       filters,
+      filtersConfig,
       filtersStore,
       getAndSetSelectedArtifact,
       handleRefresh,
@@ -102,7 +103,7 @@ const FilesView = React.forwardRef(
                     }
                   ]}
                   filters={filters}
-                  filtersConfig={getFiltersConfig(isAllVersions)}
+                  filtersConfig={filtersConfig}
                   navigateLink={`/projects/${projectName}/files${isAllVersions ? `/${fileName}/${ALL_VERSIONS_PATH}` : ''}${window.location.search}`}
                   handleRefresh={handleRefresh}
                   page={FILES_PAGE}
@@ -117,7 +118,7 @@ const FilesView = React.forwardRef(
                 <NoData
                   message={getNoDataMessage(
                     filters,
-                    getFiltersConfig(isAllVersions),
+                    filtersConfig,
                     requestErrorMessage,
                     FILES_PAGE,
                     null,
@@ -198,6 +199,7 @@ FilesView.propTypes = {
   files: PropTypes.arrayOf(PropTypes.object).isRequired,
   fileName: PropTypes.string,
   filters: PropTypes.object.isRequired,
+  filtersConfig: PropTypes.object.isRequired,
   filtersStore: PropTypes.object.isRequired,
   getAndSetSelectedArtifact: PropTypes.func.isRequired,
   handleRefresh: PropTypes.func.isRequired,

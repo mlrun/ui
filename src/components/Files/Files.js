@@ -75,10 +75,12 @@ const Files = ({ isAllVersions = false }) => {
   const params = useParams()
   const [, setSearchParams] = useSearchParams()
   const viewMode = getViewMode(window.location.search)
-  const filters = useFiltersFromSearchParams(getFiltersConfig(isAllVersions))
   const abortControllerRef = useRef(new AbortController())
   const tagAbortControllerRef = useRef(new AbortController())
   const filesRef = useRef(null)
+
+  const filtersConfig = useMemo(() => getFiltersConfig(isAllVersions), [isAllVersions])
+  const filters = useFiltersFromSearchParams(filtersConfig)
 
   const pageData = useMemo(() => generatePageData(viewMode), [viewMode])
 
@@ -374,6 +376,7 @@ const Files = ({ isAllVersions = false }) => {
       files={isAllVersions ? fileVersions : files}
       fileName={params.fileName}
       filters={filters}
+      filtersConfig={filtersConfig}
       filtersStore={filtersStore}
       getAndSetSelectedArtifact={getAndSetSelectedArtifact}
       handleRefresh={handleRefresh}
