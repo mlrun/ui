@@ -18,6 +18,7 @@ under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
 import {
+  DOCUMENTS_PAGE,
   FEATURE_SETS_TAB,
   FEATURE_VECTORS_TAB,
   FEATURES_TAB,
@@ -47,6 +48,7 @@ export const generateMlrunScreens = params =>
         },
         { label: 'Feature store', id: 'feature-store' },
         { label: 'Datasets', id: 'datasets' },
+        { label: 'Documents', id: DOCUMENTS_PAGE },
         { label: 'Artifacts', id: 'files' },
         { label: 'Models', id: 'models' },
         { label: 'Jobs and workflows', id: 'jobs' },
