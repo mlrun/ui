@@ -141,7 +141,7 @@ const Models = ({ fetchModelFeatureVector, isAllVersions }) => {
       if (!isAllVersions) {
         requestParams['partition-by'] = 'project_and_name'
       } else {
-        requestParams.name = params.name
+        requestParams.name = params.modelName
       }
 
       return dispatch(
@@ -172,7 +172,7 @@ const Models = ({ fetchModelFeatureVector, isAllVersions }) => {
           return result
         })
     },
-    [dispatch, isAllVersions, params.name, params.projectName]
+    [dispatch, isAllVersions, params.modelName, params.projectName]
   )
 
   const fetchTags = useCallback(() => {
@@ -338,7 +338,7 @@ const Models = ({ fetchModelFeatureVector, isAllVersions }) => {
 
       if (changes.data.tag.currentFieldValue) {
         navigate(
-          `/projects/${params.projectName}/${MODELS_PAGE.toLowerCase()}/${MODELS_TAB}/${params.name}${isAllVersions ? `/${ALL_VERSIONS_PATH}` : ''}/:${
+          `/projects/${params.projectName}/${MODELS_PAGE.toLowerCase()}/${MODELS_TAB}/${params.modelName}${isAllVersions ? `/${ALL_VERSIONS_PATH}` : ''}/:${
             changes.data.tag.currentFieldValue
           }@${selectedItem.uid}/overview${window.location.search}`,
           { replace: true }
@@ -383,7 +383,7 @@ const Models = ({ fetchModelFeatureVector, isAllVersions }) => {
 
   useEffect(() => {
     checkForSelectedModel(
-      params.name,
+      params.modelName,
       isAllVersions ? modelVersions : models,
       params.id,
       navigate,
@@ -391,7 +391,7 @@ const Models = ({ fetchModelFeatureVector, isAllVersions }) => {
       setSelectedModelMin,
       isAllVersions
     )
-  }, [isAllVersions, modelVersions, models, navigate, params.id, params.name, params.projectName])
+  }, [isAllVersions, modelVersions, models, navigate, params.id, params.modelName, params.projectName])
 
   useEffect(() => {
     if (
@@ -490,7 +490,7 @@ const Models = ({ fetchModelFeatureVector, isAllVersions }) => {
       isDemoMode={isDemoMode}
       maxArtifactsErrorIsShown={maxArtifactsErrorIsShown}
       models={isAllVersions ? modelVersions : models}
-      modelName={params.name}
+      modelName={params.modelName}
       pageData={pageData}
       projectName={params.projectName}
       ref={{ modelsRef }}

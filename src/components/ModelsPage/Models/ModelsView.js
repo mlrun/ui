@@ -166,7 +166,7 @@ const ModelsView = React.forwardRef(
                       isRowRendered(virtualizationConfig, index) && (
                         <ArtifactsTableRow
                           actionsMenu={actionsMenu}
-                          key={tableItem.data.ui.identifier}
+                          key={tableItem.data.ui.identifierUnique}
                           rowIndex={index}
                           rowItem={tableItem}
                           selectedItem={selectedModel}

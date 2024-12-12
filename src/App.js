@@ -218,9 +218,9 @@ const App = () => {
           ))}
           {[
             'projects/:projectName/datasets',
-            'projects/:projectName/datasets/:name/:id/:tab',
-            `projects/:projectName/datasets/:name/${ALL_VERSIONS_PATH}`,
-            `projects/:projectName/datasets/:name/${ALL_VERSIONS_PATH}/:id/:tab`
+            'projects/:projectName/datasets/:datasetName/:id/:tab',
+            `projects/:projectName/datasets/:datasetName/${ALL_VERSIONS_PATH}`,
+            `projects/:projectName/datasets/:datasetName/${ALL_VERSIONS_PATH}/:id/:tab`
           ].map((path, index) => (
             <Fragment key={index}>
               <Route path={path} element={<Datasets isAllVersions={[2,3].includes(index)} />} />
@@ -253,9 +253,9 @@ const App = () => {
           <Route path="projects/:projectName/models/*" element={<ModelsPage />}>
             {[
               `${MODELS_TAB}`,
-              `${MODELS_TAB}/:name/:id/:tab`,
-              `${MODELS_TAB}/:name/${ALL_VERSIONS_PATH}`,
-              `${MODELS_TAB}/:name/${ALL_VERSIONS_PATH}/:id/:tab`
+              `${MODELS_TAB}/:modelName/:id/:tab`,
+              `${MODELS_TAB}/:modelName/${ALL_VERSIONS_PATH}`,
+              `${MODELS_TAB}/:modelName/${ALL_VERSIONS_PATH}/:id/:tab`
             ].map((path, index) => (
               <Fragment key={index}>
                 <Route path={path} element={<Models isAllVersions={[2,3].includes(index)} />} />
@@ -280,9 +280,9 @@ const App = () => {
           </Route>
           {[
             'projects/:projectName/files',
-            'projects/:projectName/files/:name/:id/:tab',
-            `projects/:projectName/files/:name/${ALL_VERSIONS_PATH}`,
-            `projects/:projectName/files/:name/${ALL_VERSIONS_PATH}/:id/:tab`
+            'projects/:projectName/files/:fileName/:id/:tab',
+            `projects/:projectName/files/:fileName/${ALL_VERSIONS_PATH}`,
+            `projects/:projectName/files/:fileName/${ALL_VERSIONS_PATH}/:id/:tab`
           ].map((path, index) => (
             <Fragment key={index}>
               <Route path={path} element={<Files isAllVersions={[2,3].includes(index)} />} />

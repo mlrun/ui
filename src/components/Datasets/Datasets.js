@@ -124,7 +124,7 @@ const Datasets = ({ isAllVersions = false }) => {
       }
 
       if (isAllVersions) {
-        requestParams.name = params.name
+        requestParams.name = params.datasetName
       } else {
         requestParams['partition-by'] = 'project_and_name'
       }
@@ -157,7 +157,7 @@ const Datasets = ({ isAllVersions = false }) => {
           return result
         })
     },
-    [dispatch, isAllVersions, params.name, params.projectName]
+    [dispatch, isAllVersions, params.datasetName, params.projectName]
   )
 
   const fetchTags = useCallback(() => {
@@ -264,7 +264,7 @@ const Datasets = ({ isAllVersions = false }) => {
 
       if (changes.data.tag.currentFieldValue) {
         navigate(
-          `/projects/${params.projectName}/${DATASETS_PAGE.toLowerCase()}/${params.name}${isAllVersions ? `/${ALL_VERSIONS_PATH}` : ''}/:${
+          `/projects/${params.projectName}/${DATASETS_PAGE.toLowerCase()}/${params.datasetName}${isAllVersions ? `/${ALL_VERSIONS_PATH}` : ''}/:${
             changes.data.tag.currentFieldValue
           }@${selectedItem.uid}/overview${window.location.search}`,
           { replace: true }
@@ -313,7 +313,7 @@ const Datasets = ({ isAllVersions = false }) => {
 
   useEffect(() => {
     checkForSelectedDataset(
-      params.name,
+      params.datasetName,
       isAllVersions ? datasetVersions : datasets,
       params.id,
       params.projectName,
@@ -327,7 +327,7 @@ const Datasets = ({ isAllVersions = false }) => {
     isAllVersions,
     navigate,
     params.id,
-    params.name,
+    params.datasetName,
     params.projectName
   ])
 
@@ -373,7 +373,7 @@ const Datasets = ({ isAllVersions = false }) => {
       applyDetailsChangesCallback={applyDetailsChangesCallback}
       artifactsStore={artifactsStore}
       datasets={isAllVersions ? datasetVersions : datasets}
-      datasetName={params.name}
+      datasetName={params.datasetName}
       detailsFormInitialValues={detailsFormInitialValues}
       filters={filters}
       filtersStore={filtersStore}

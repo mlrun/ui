@@ -123,7 +123,7 @@ const Files = ({ isAllVersions = false }) => {
       if (!isAllVersions) {
         requestParams['partition-by'] = 'project_and_name'
       } else {
-        requestParams.name = params.name
+        requestParams.name = params.fileName
       }
 
       return dispatch(
@@ -154,7 +154,7 @@ const Files = ({ isAllVersions = false }) => {
           return result
         })
     },
-    [dispatch, isAllVersions, params.name, params.projectName]
+    [dispatch, isAllVersions, params.fileName, params.projectName]
   )
 
   const fetchTags = useCallback(() => {
@@ -280,7 +280,7 @@ const Files = ({ isAllVersions = false }) => {
 
       if (changes.data.tag.currentFieldValue) {
         navigate(
-          `/projects/${params.projectName}/files/${params.name}${isAllVersions ? `/${ALL_VERSIONS_PATH}` : ''}/:${
+          `/projects/${params.projectName}/files/${params.fileName}${isAllVersions ? `/${ALL_VERSIONS_PATH}` : ''}/:${
             changes.data.tag.currentFieldValue
           }@${selectedItem.uid}/overview${window.location.search}`,
           { replace: true }
@@ -324,7 +324,7 @@ const Files = ({ isAllVersions = false }) => {
 
   useEffect(() => {
     checkForSelectedFile(
-      params.name,
+      params.fileName,
       isAllVersions ? fileVersions : files,
       params.id,
       params.projectName,
@@ -338,7 +338,7 @@ const Files = ({ isAllVersions = false }) => {
     isAllVersions,
     navigate,
     params.id,
-    params.name,
+    params.fileName,
     params.projectName
   ])
 
@@ -372,7 +372,7 @@ const Files = ({ isAllVersions = false }) => {
       artifactsStore={artifactsStore}
       detailsFormInitialValues={detailsFormInitialValues}
       files={isAllVersions ? fileVersions : files}
-      fileName={params.name}
+      fileName={params.fileName}
       filters={filters}
       filtersStore={filtersStore}
       getAndSetSelectedArtifact={getAndSetSelectedArtifact}

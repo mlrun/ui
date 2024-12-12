@@ -192,7 +192,6 @@ const ActionBar = ({
       const newFilters = { ...filters, ...formValues }
 
       if (filtersHelperResult) {
-        // todo remove from condition params.name && params.tag when new grouping will be added to feature store and modelEndpoints
         if ((params.name && params.tag) || params.id) {
           navigate(navigateLink)
         }
