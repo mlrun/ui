@@ -59,9 +59,6 @@ const JobsTable = React.forwardRef(
       context,
       filters,
       filtersConfig,
-      jobRuns,
-      jobs,
-      navigateLink,
       paginatedJobs,
       refreshJobs,
       requestErrorMessage,
@@ -71,8 +68,7 @@ const JobsTable = React.forwardRef(
       setJobRuns,
       setJobs,
       setSelectedJob,
-      tableContent,
-      terminateAbortTasksPolling
+      tableContent
     },
     { abortJobRef, fetchJobFunctionsPromiseRef }
   ) => {
@@ -297,6 +293,7 @@ const JobsTable = React.forwardRef(
             ...params,
             projectName: editableItem?.rerun_object?.task?.metadata?.project || params.projectName
           },
+          tab: MONITOR_JOBS_TAB,
           onWizardClose: () => {
             setEditableItem(null)
             setJobWizardMode(null)

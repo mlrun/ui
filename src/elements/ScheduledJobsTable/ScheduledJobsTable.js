@@ -227,6 +227,7 @@ const ScheduledJobsTable = ({
           ...params,
           projectName: editableItem?.project || params.projectName
         },
+        tab: SCHEDULE_TAB,
         onWizardClose: () => {
           setEditableItem(null)
           setJobWizardMode(null)
