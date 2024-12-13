@@ -1,0 +1,27 @@
+@import '~igz-controls/scss/mixins';
+
+.collections-list {
+  display: flex;
+  flex-direction: column;
+
+  &__header {
+    &-item {
+      margin: 0;
+      padding: 10px 0;
+      font-size: 18px;
+      border-bottom: $secondaryBorder;
+    }
+  }
+
+  &__body {
+    display: flex;
+    flex-direction: column;
+
+    &-item {
+      display: flex;
+      align-items: center;
+      height: 45px;
+      border-bottom: $secondaryBorder;
+    }
+  }
+}
