@@ -27,10 +27,13 @@ import JobWizard from '../JobWizard/JobWizard'
 import NewFunctionPopUp from '../../elements/NewFunctionPopUp/NewFunctionPopUp'
 
 import {
-  ALL_VERSIONS_PATH,
-  DATES_FILTER,
+  TAG_LATEST,
+  REQUEST_CANCELED,
   DETAILS_BUILD_LOG_TAB,
-  FUNCTIONS_PAGE,
+  JOB_DEFAULT_OUTPUT_PATH,
+  DATES_FILTER,
+  NAME_FILTER,
+  SHOW_UNTAGGED_FILTER,
   GROUP_BY_NONE,
   ALL_VERSIONS_PATH,
   BE_PAGE,
