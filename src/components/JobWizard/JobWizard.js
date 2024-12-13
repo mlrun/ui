@@ -568,7 +568,7 @@ JobWizard.propTypes = {
   onResolve: PropTypes.func.isRequired,
   onSuccessRequest: PropTypes.func,
   onWizardClose: PropTypes.func,
-  page: PropTypes.string,
+  page: PropTypes.string.isRequired,
   params: PropTypes.shape({}).isRequired,
   prePopulatedData: PropTypes.shape({}),
   wizardTitle: PropTypes.string
