@@ -636,6 +636,7 @@ const WorkflowsTable = React.forwardRef(
             ...params,
             projectName: editableItem?.rerun_object?.task?.metadata?.project || params.projectName
           },
+          page: JOBS_PAGE,
           onWizardClose: () => {
             setEditableItem(null)
             setJobWizardMode(null)

@@ -136,6 +136,7 @@ export const generatePageData = (selectedItem, viewMode, params, isDetailsPopUp 
 const handleTrainDataset = (selectedItem, params) => {
   openPopUp(JobWizard, {
     params,
+    page: DATASETS_PAGE,
     isTrain: true,
     wizardTitle: 'Train model',
     prePopulatedData: {

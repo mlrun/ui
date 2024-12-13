@@ -90,6 +90,7 @@ const JobWizard = ({
   onResolve,
   onSuccessRequest = () => {},
   onWizardClose = null,
+  page = '',
   params,
   prePopulatedData = {},
   removeHubFunctions,
@@ -303,22 +304,20 @@ const JobWizard = ({
 
   const searchParams = useCallback(
     isSchedule => {
-      const urlPath = window.location.pathname.split('/')
-      const pageIndex = urlPath.findIndex(item => item === params.projectName) + 1
-      const pageName = urlPath[pageIndex]
       const tabName = params?.['*']
 
-      if (pageName !== JOBS_MONITORING_JOBS_TAB) {
-        return
+      if (page.toLocaleLowerCase() !== JOBS_MONITORING_JOBS_TAB) {
+        return ''
       }
-
       return (isSchedule && tabName === SCHEDULE_TAB) ||
         (!isSchedule && tabName === MONITOR_JOBS_TAB)
         ? window.location.search
         : ''
     },
-    [params]
+    [params, page]
   )
+
+  searchParams()
 
   const runJobHandler = useCallback(
     (formData, selectedFunctionData, params, isSchedule) => {
@@ -569,6 +568,7 @@ JobWizard.propTypes = {
   onResolve: PropTypes.func.isRequired,
   onSuccessRequest: PropTypes.func,
   onWizardClose: PropTypes.func,
+  page: PropTypes.string,
   params: PropTypes.shape({}).isRequired,
   prePopulatedData: PropTypes.shape({}),
   wizardTitle: PropTypes.string

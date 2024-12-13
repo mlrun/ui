@@ -74,6 +74,7 @@ export const ITEMS_COUNT_END = 'itemsCountEnd'
 
 export const PROJECTS_PAGE = 'PROJECTS'
 export const PROJECTS_PAGE_PATH = 'projects'
+export const PROJECTS_TAB = 'projects'
 export const PROJECTS_SETTINGS_PAGE = 'SETTINGS'
 export const PROJECTS_SETTINGS_GENERAL_TAB = 'general'
 export const PROJECTS_SETTINGS_MEMBERS_TAB = 'members'
@@ -122,6 +123,7 @@ export const DATASETS_TAB = 'datasets'
 
 export const FUNCTIONS_PAGE = 'FUNCTIONS'
 export const FUNCTIONS_PAGE_PATH = 'functions'
+export const FUNCTIONS_TAB = 'functions'
 export const ARTIFACTS_PAGE = 'ARTIFACTS'
 
 export const FILES_PAGE = 'FILES'

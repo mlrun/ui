@@ -464,6 +464,7 @@ const Models = ({ fetchModelFeatureVector, isAllVersions }) => {
   const handleTrainModel = () => {
     openPopUp(JobWizard, {
       params,
+      page: MODELS_PAGE,
       isTrain: true,
       wizardTitle: 'Train model'
     })

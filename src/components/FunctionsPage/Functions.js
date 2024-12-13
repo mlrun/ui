@@ -27,13 +27,10 @@ import JobWizard from '../JobWizard/JobWizard'
 import NewFunctionPopUp from '../../elements/NewFunctionPopUp/NewFunctionPopUp'
 
 import {
-  TAG_LATEST,
-  REQUEST_CANCELED,
-  DETAILS_BUILD_LOG_TAB,
-  JOB_DEFAULT_OUTPUT_PATH,
+  ALL_VERSIONS_PATH,
   DATES_FILTER,
-  NAME_FILTER,
-  SHOW_UNTAGGED_FILTER,
+  DETAILS_BUILD_LOG_TAB,
+  FUNCTIONS_PAGE,
   GROUP_BY_NONE,
   ALL_VERSIONS_PATH,
   BE_PAGE,
@@ -625,6 +622,7 @@ const Functions = ({
     if (!jobWizardIsOpened && jobWizardMode) {
       openPopUp(JobWizard, {
         params,
+        page: FUNCTIONS_PAGE,
         onWizardClose: () => {
           setJobWizardMode(null)
           setJobWizardIsOpened(false)

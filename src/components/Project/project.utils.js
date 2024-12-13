@@ -21,7 +21,7 @@ import React from 'react'
 
 import JobWizard from '../JobWizard/JobWizard'
 
-import { ARTIFACT_TYPE, DATASET_TYPE } from '../../constants'
+import { ARTIFACT_TYPE, DATASET_TYPE, PROJECT_MONITOR } from '../../constants'
 import { PRIMARY_BUTTON, FORBIDDEN_ERROR_STATUS_CODE } from 'igz-controls/constants'
 import { openPopUp } from 'igz-controls/utils/common.util'
 import { showErrorNotification } from '../../utils/notifications.util'
@@ -56,7 +56,8 @@ export const generateCreateNewOptions = (
     id: 'batchRun',
     handler: () => {
       openPopUp(JobWizard, {
-        params
+        params,
+        page: PROJECT_MONITOR
       })
     }
   },
@@ -98,7 +99,7 @@ export const generateCreateNewOptions = (
 ]
 
 export const generateTipMessageForCounter = (counter = '', page = '') => {
-  return `Each ${counter} can have multiple versions, produced by multiple runs and given multiple tags. 
+  return `Each ${counter} can have multiple versions, produced by multiple runs and given multiple tags.
           You can browse them in the ${page} page.`
 }
 
