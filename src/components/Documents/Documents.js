@@ -17,18 +17,31 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
+import { useMemo, useState } from 'react'
 import { useSearchParams } from 'react-router-dom'
 
 import DocumentsView from './DocumentsView'
 
 import { useFiltersFromSearchParams } from '../../hooks/useFiltersFromSearchParams.hook'
-import { filtersConfig } from './documents.util'
+import { filtersConfig, generatePageData } from './documents.util'
+import { getViewMode } from '../../utils/helper'
 
 const Documents = () => {
+  const [selectedDocument] = useState({})
   const filters = useFiltersFromSearchParams(filtersConfig)
   const [, setSearchParams] = useSearchParams()
+  const viewMode = getViewMode(window.location.search)
 
-  return <DocumentsView filters={filters} setSearchParams={setSearchParams} />
+  const pageData = useMemo(() => generatePageData(viewMode), [viewMode])
+
+  return (
+    <DocumentsView
+      filters={filters}
+      pageData={pageData}
+      selectedDocument={selectedDocument}
+      setSearchParams={setSearchParams}
+    />
+  )
 }
 
 export default Documents

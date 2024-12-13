@@ -18,6 +18,9 @@ under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
 import {
+  DOCUMENTS_PAGE,
+  DOCUMENTS_TAB,
+  FULL_VIEW_MODE,
   ITERATIONS_FILTER,
   LABELS_FILTER,
   NAME_FILTER,
@@ -34,5 +37,50 @@ export const filtersConfig = {
     label: 'Show best iteration only:',
     initialValue: SHOW_ITERATIONS,
     isModal: true
+  }
+}
+
+export const detailsMenu = [
+  {
+    label: 'overview',
+    id: 'overview'
+  },
+  {
+    label: 'collections',
+    id: 'collections'
+  },
+  {
+    label: 'metadata',
+    id: 'metadata'
+  }
+]
+
+export const infoHeaders = [
+  { label: 'Key', id: 'db_key' },
+  {
+    label: 'Hash',
+    id: 'hash',
+    tip: 'Represents hash of the data. when the data changes the hash would change'
+  },
+  { label: 'Version tag', id: 'tag' },
+  { label: 'Original source', id: 'original_source' },
+  { label: 'Iter', id: 'iter' },
+  { label: 'URI', id: 'target_uri' },
+  { label: 'Path', id: 'target_path' },
+  { label: 'UID', id: 'uid' },
+  { label: 'Updated', id: 'updated' },
+  { label: 'Labels', id: 'labels' }
+]
+
+export const generatePageData = viewMode => {
+  return {
+    page: DOCUMENTS_PAGE,
+    details: {
+      type: DOCUMENTS_TAB,
+      menu: detailsMenu,
+      infoHeaders,
+      hideBackBtn: viewMode === FULL_VIEW_MODE,
+      withToggleViewBtn: true
+    }
   }
 }

@@ -46,7 +46,8 @@ const DetailsInfoItem = React.forwardRef(
       chipsData = {
         chips: [],
         chipOptions: {},
-        delimiter: null
+        delimiter: null,
+        isEditEnabled: true
       },
       currentField = '',
       detailsInfoDispatch = () => {},
@@ -148,7 +149,7 @@ const DetailsInfoItem = React.forwardRef(
             className={`details-item__${chipsClassName}`}
             delimiter={chipsData.delimiter}
             elements={chipsData.chips}
-            isEditMode={!isDetailsPopUp}
+            isEditMode={chipsData.isEditEnabled ?? !isDetailsPopUp}
             visibleChipsMaxLength="all"
           />
         </div>

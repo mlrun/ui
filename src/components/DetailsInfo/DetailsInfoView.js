@@ -30,6 +30,7 @@ import { isEveryObjectValueEmpty } from '../../utils/isEveryObjectValueEmpty'
 import {
   ARTIFACTS_PAGE,
   DATASETS_PAGE,
+  DOCUMENTS_PAGE,
   FEATURE_SETS_TAB,
   FEATURE_STORE_PAGE,
   FILES_PAGE,
@@ -86,7 +87,8 @@ const DetailsInfoView = React.forwardRef(
               pageData.page === FILES_PAGE ||
               pageData.page === FUNCTIONS_PAGE ||
               pageData.page === MODELS_PAGE ||
-              pageData.page === FEATURE_STORE_PAGE) &&
+              pageData.page === FEATURE_STORE_PAGE ||
+              pageData.page === DOCUMENTS_PAGE) &&
               params.pageTab !== FEATURE_SETS_TAB && <h3 className="item-info__header">General</h3>}
             <ul className="item-info__details">
               {pageData.details.infoHeaders?.map(header => {
@@ -133,7 +135,8 @@ const DetailsInfoView = React.forwardRef(
                   pageData.page === DATASETS_PAGE ||
                   pageData.page === FILES_PAGE ||
                   pageData.page === MODELS_PAGE ||
-                  pageData.page === FEATURE_STORE_PAGE
+                  pageData.page === FEATURE_STORE_PAGE ||
+                  pageData.page === DOCUMENTS_PAGE
                 ) {
                   if (header.id === 'labels') {
                     chipsData.chips = formState.values.labels
@@ -201,6 +204,12 @@ const DetailsInfoView = React.forwardRef(
                 <>
                   <h3 className="item-info__header">Producer</h3>
                   <ul className="item-info__details">{additionalInfo.producer}</ul>
+                </>
+              )}
+              {!isEveryObjectValueEmpty(additionalInfo.document_loader) && (
+                <>
+                  <h3 className="item-info__header">Document loader</h3>
+                  <ul className="item-info__details">{additionalInfo.document_loader}</ul>
                 </>
               )}
               {!isEveryObjectValueEmpty(additionalInfo.drift) && (

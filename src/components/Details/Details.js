@@ -41,6 +41,7 @@ import {
   ARTIFACTS_PAGE,
   DATASETS_TAB,
   DETAILS_OVERVIEW_TAB,
+  DOCUMENTS_TAB,
   FILES_TAB,
   FUNCTIONS_PAGE,
   JOBS_PAGE,
@@ -148,7 +149,8 @@ const Details = ({
         pageData.details.type === FILES_TAB ||
         pageData.details.type === MODELS_TAB ||
         pageData.details.type === MODEL_ENDPOINTS_TAB ||
-        pageData.details.type === DATASETS_TAB
+        pageData.details.type === DATASETS_TAB ||
+        pageData.details.type === DOCUMENTS_TAB
       ) {
         setDetailsInfo(
           generateArtifactsContent(pageData.details.type, selectedItem, params.projectName)

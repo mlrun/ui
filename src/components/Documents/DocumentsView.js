@@ -26,11 +26,12 @@ import Loader from '../../common/Loader/Loader'
 import PageHeader from '../../elements/PageHeader/PageHeader'
 import ActionBar from '../ActionBar/ActionBar'
 import ArtifactsFilters from '../ArtifactsActionBar/ArtifactsFilters'
+import Table from '../Table/Table'
 
 import { DOCUMENTS_PAGE } from '../../constants'
 import { filtersConfig } from './documents.util'
 
-const DocumentsView = ({ filters, setSearchParams }) => {
+const DocumentsView = ({ filters, pageData, selectedDocument, setSearchParams }) => {
   const artifactsStore = useSelector(store => store.artifactsStore)
 
   return (
@@ -59,6 +60,20 @@ const DocumentsView = ({ filters, setSearchParams }) => {
                 <ArtifactsFilters artifacts={[]} />
               </ActionBar>
             </div>
+            <Table
+              actionsMenu={[]}
+              applyDetailsChanges={() => {}}
+              applyDetailsChangesCallback={() => {}}
+              detailsFormInitialValues={{}}
+              handleCancel={() => {}}
+              pageData={pageData}
+              retryRequest={() => {}}
+              selectedItem={selectedDocument}
+              sortProps={{}}
+              tableClassName="documents-table"
+              tableHeaders={[]}
+              virtualizationConfig={{}}
+            ></Table>
           </div>
         </div>
       </div>
@@ -68,6 +83,8 @@ const DocumentsView = ({ filters, setSearchParams }) => {
 
 DocumentsView.propTypes = {
   filters: PropTypes.object.isRequired,
+  pageData: PropTypes.object.isRequired,
+  selectedDocument: PropTypes.object.isRequired,
   setSearchParams: PropTypes.func.isRequired
 }
 
