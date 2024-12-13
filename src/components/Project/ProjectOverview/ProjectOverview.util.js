@@ -23,7 +23,7 @@ import JobWizard from '../../JobWizard/JobWizard'
 import RegisterArtifactModal from '../../RegisterArtifactModal/RegisterArtifactModal'
 import RegisterModelModal from '../../../elements/RegisterModelModal/RegisterModelModal'
 
-import { ARTIFACT_TYPE, DATASET_TYPE, PROJECT_QUICK_ACTIONS_PAGE } from '../../../constants'
+import { ARTIFACT_TYPE, DATASET_TYPE } from '../../../constants'
 import { SECONDARY_BUTTON, TERTIARY_BUTTON } from 'igz-controls/constants'
 import { generateNuclioLink } from '../../../utils'
 import { isSubmitDisabled } from 'igz-controls/utils/form.util'
@@ -255,8 +255,7 @@ export const getInitialCards = (params, navigate, isDemoMode) => {
             return {
               component: JobWizard,
               props: {
-                params,
-                page: PROJECT_QUICK_ACTIONS_PAGE
+                params
               },
               type: 'modal'
             }
@@ -323,7 +322,6 @@ export const getInitialCards = (params, navigate, isDemoMode) => {
               component: JobWizard,
               props: {
                 params,
-                page: PROJECT_QUICK_ACTIONS_PAGE,
                 isTrain: true,
                 wizardTitle: 'Train model',
                 isOverview: true
@@ -419,7 +417,6 @@ export const getInitialCards = (params, navigate, isDemoMode) => {
               component: JobWizard,
               props: {
                 params,
-                page: PROJECT_QUICK_ACTIONS_PAGE,
                 isBatchInference: true,
                 wizardTitle: 'Batch inference'
               },

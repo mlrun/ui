@@ -43,7 +43,6 @@ import {
   DATA_INPUTS_STEP,
   FUNCTION_SELECTION_STEP,
   HYPERPARAMETER_STRATEGY_STEP,
-  JOBS_MONITORING_JOBS_TAB,
   JOB_WIZARD_FILTERS,
   MONITOR_JOBS_TAB,
   PANEL_CREATE_MODE,
@@ -90,10 +89,10 @@ const JobWizard = ({
   onResolve,
   onSuccessRequest = () => {},
   onWizardClose = null,
-  page = '',
   params,
   prePopulatedData = {},
   removeHubFunctions,
+  tab = '',
   wizardTitle = 'Batch run'
 }) => {
   const formRef = React.useRef(
@@ -304,17 +303,12 @@ const JobWizard = ({
 
   const searchParams = useCallback(
     isSchedule => {
-      const tabName = params?.['*']
-
-      if (page.toLocaleLowerCase() !== JOBS_MONITORING_JOBS_TAB) {
-        return ''
+      if ((!isSchedule && tab === MONITOR_JOBS_TAB) || (isSchedule && tab === SCHEDULE_TAB)) {
+        return window.location.search
       }
-      return (isSchedule && tabName === SCHEDULE_TAB) ||
-        (!isSchedule && tabName === MONITOR_JOBS_TAB)
-        ? window.location.search
-        : ''
+      return ''
     },
-    [params, page]
+    [tab]
   )
 
   searchParams()
@@ -568,9 +562,9 @@ JobWizard.propTypes = {
   onResolve: PropTypes.func.isRequired,
   onSuccessRequest: PropTypes.func,
   onWizardClose: PropTypes.func,
-  page: PropTypes.string.isRequired,
   params: PropTypes.shape({}).isRequired,
   prePopulatedData: PropTypes.shape({}),
+  tab: PropTypes.string,
   wizardTitle: PropTypes.string
 }
 

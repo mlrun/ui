@@ -30,7 +30,6 @@ import {
   ALL_VERSIONS_PATH,
   DATES_FILTER,
   DETAILS_BUILD_LOG_TAB,
-  FUNCTIONS_PAGE,
   GROUP_BY_NONE,
   ALL_VERSIONS_PATH,
   BE_PAGE,
@@ -622,7 +621,6 @@ const Functions = ({
     if (!jobWizardIsOpened && jobWizardMode) {
       openPopUp(JobWizard, {
         params,
-        page: FUNCTIONS_PAGE,
         onWizardClose: () => {
           setJobWizardMode(null)
           setJobWizardIsOpened(false)
