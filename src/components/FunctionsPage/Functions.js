@@ -622,7 +622,6 @@ const Functions = ({
     if (!jobWizardIsOpened && jobWizardMode) {
       openPopUp(JobWizard, {
         params,
-        page: FUNCTIONS_PAGE,
         onWizardClose: () => {
           setJobWizardMode(null)
           setJobWizardIsOpened(false)
