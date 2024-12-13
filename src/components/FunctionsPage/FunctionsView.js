@@ -26,11 +26,12 @@ import Breadcrumbs from '../../common/Breadcrumbs/Breadcrumbs'
 import FunctionsFilters from './FunctionsFilters'
 import FunctionsPanel from '../FunctionsPanel/FunctionsPanel'
 import FunctionsTableRow from '../../elements/FunctionsTableRow/FunctionsTableRow'
+import HistoryBackLink from '../../common/HistoryBackLink/historyBackLink'
 import Loader from '../../common/Loader/Loader'
 import NoData from '../../common/NoData/NoData'
+import Pagination from '../../common/Pagination/Pagination'
 import Table from '../Table/Table'
 import { ConfirmDialog } from 'igz-controls/components'
-import HistoryBackLink from '../../common/HistoryBackLink/historyBackLink'
 
 import {
   FUNCTIONS_PAGE,
@@ -39,11 +40,10 @@ import {
   PANEL_EDIT_MODE,
   ALL_VERSIONS_PATH
 } from '../../constants'
+import { FILTERS_CONFIG } from '../../types'
 import { SECONDARY_BUTTON } from 'igz-controls/constants'
-import { FILTERS_CONFIG, VIRTUALIZATION_CONFIG } from '../../types'
-import { getNoDataMessage } from '../../utils/getNoDataMessage'
-import { isRowRendered } from '../../hooks/useVirtualization.hook'
 import { getCloseDetailsLink } from '../../utils/link-helper.util'
+import { getNoDataMessage } from '../../utils/getNoDataMessage'
 import { getSavedSearchParams } from '../../utils/filter.util'
 
 const FunctionsView = ({
@@ -53,7 +53,6 @@ const FunctionsView = ({
   createFunctionSuccess,
   editableItem,
   filters,
-  filtersChangeCallback,
   filtersStore,
   functionsFiltersConfig,
   functionsPanelIsOpen,
@@ -62,16 +61,17 @@ const FunctionsView = ({
   handleCancel,
   handleDeployFunctionFailure,
   handleDeployFunctionSuccess,
+  handleRefreshFunctions,
   handleSelectFunction,
   isAllVersions,
   isDemoMode,
   pageData,
+  paginationConfigFunctionsRef,
   requestErrorMessage,
   retryRequest,
   selectedFunction,
-  setSearchParams,
-  tableContent,
-  virtualizationConfig
+  setSearchFunctionsParams,
+  tableContent
 }) => {
   const params = useParams()
 
@@ -94,9 +94,9 @@ const FunctionsView = ({
                 page={FUNCTIONS_PAGE}
                 filtersConfig={functionsFiltersConfig}
                 filters={filters}
-                handleRefresh={filtersChangeCallback}
+                handleRefresh={handleRefreshFunctions}
                 navigateLink={`/projects/${params.projectName}/functions${isAllVersions ? `/${params.funcName}/${ALL_VERSIONS_PATH}` : ''}${window.location.search}`}
-                setSearchParams={setSearchParams}
+                setSearchParams={setSearchFunctionsParams}
                 withoutExpandButton
                 actionButtons={[
                   {
@@ -139,22 +139,22 @@ const FunctionsView = ({
                   selectedItem={selectedFunction}
                   tableClassName="functions-table"
                   tableHeaders={tableContent[0]?.content ?? []}
-                  virtualizationConfig={virtualizationConfig}
                 >
-                  {tableContent.map(
-                    (tableItem, index) =>
-                      isRowRendered(virtualizationConfig, index) && (
-                        <FunctionsTableRow
-                          actionsMenu={actionsMenu}
-                          handleSelectItem={handleSelectFunction}
-                          key={tableItem.data.hash + index}
-                          rowItem={tableItem}
-                          selectedItem={selectedFunction}
-                          withQuickActions
-                        />
-                      )
-                  )}
+                  {tableContent.map((tableItem, index) => (
+                    <FunctionsTableRow
+                      actionsMenu={actionsMenu}
+                      handleSelectItem={handleSelectFunction}
+                      key={tableItem.data.hash + index}
+                      rowItem={tableItem}
+                      selectedItem={selectedFunction}
+                      withQuickActions
+                    />
+                  ))}
                 </Table>
+                <Pagination
+                  paginationConfig={paginationConfigFunctionsRef.current}
+                  closeParamName={isAllVersions ? ALL_VERSIONS_PATH : FUNCTIONS_PAGE_PATH}
+                />
               </>
             )}
           </div>
@@ -204,7 +204,6 @@ FunctionsView.propTypes = {
   confirmData: PropTypes.object,
   createFunctionSuccess: PropTypes.func.isRequired,
   editableItem: PropTypes.object,
-  filtersChangeCallback: PropTypes.func.isRequired,
   filtersStore: PropTypes.object.isRequired,
   functionsFiltersConfig: FILTERS_CONFIG.isRequired,
   functionsPanelIsOpen: PropTypes.bool.isRequired,
@@ -213,15 +212,15 @@ FunctionsView.propTypes = {
   handleCancel: PropTypes.func.isRequired,
   handleDeployFunctionFailure: PropTypes.func.isRequired,
   handleDeployFunctionSuccess: PropTypes.func.isRequired,
+  handleRefreshFunctions: PropTypes.func.isRequired,
   handleSelectFunction: PropTypes.func.isRequired,
   isAllVersions: PropTypes.bool.isRequired,
   pageData: PropTypes.object.isRequired,
   requestErrorMessage: PropTypes.string.isRequired,
   retryRequest: PropTypes.func.isRequired,
   selectedFunction: PropTypes.object.isRequired,
-  setSearchParams: PropTypes.func.isRequired,
-  tableContent: PropTypes.arrayOf(PropTypes.object).isRequired,
-  virtualizationConfig: VIRTUALIZATION_CONFIG.isRequired
+  setSearchFunctionsParams: PropTypes.func.isRequired,
+  tableContent: PropTypes.arrayOf(PropTypes.object).isRequired
 }
 
 export default FunctionsView

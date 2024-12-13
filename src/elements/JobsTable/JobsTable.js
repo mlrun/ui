@@ -383,9 +383,8 @@ const JobsTable = React.forwardRef(
                 ))}
               </Table>
               <Pagination
-                page={pageData.page}
                 paginationConfig={paginationConfigJobsRef.current}
-                selectedItemName={selectedJob.name}
+                closeParamName={selectedJob.name}
               />
             </>
           )

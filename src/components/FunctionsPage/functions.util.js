@@ -38,7 +38,8 @@ import {
   FUNCTIONS_PAGE,
   PANEL_FUNCTION_CREATE_MODE,
   FAILED_STATE,
-  ALL_VERSIONS_PATH
+  ALL_VERSIONS_PATH,
+  BE_PAGE
 } from '../../constants'
 import functionsApi from '../../api/functions-api'
 import tasksApi from '../../api/tasks-api'
@@ -443,8 +444,16 @@ export const pollDeletingFunctions = (
 }
 
 export const setFullSelectedFunction = debounce(
-  (dispatch, navigate, fetchFunction, selectedFunctionMin, setSelectedFunction, projectName) => {
-    if (isEmpty(selectedFunctionMin)) {
+  (
+    dispatch,
+    navigate,
+    fetchFunction,
+    selectedFunctionMin,
+    setSelectedFunction,
+    projectName,
+    functionId
+  ) => {
+    if (isEmpty(selectedFunctionMin) || !functionId) {
       setSelectedFunction({})
     } else {
       const { name, hash, tag } = selectedFunctionMin
@@ -455,11 +464,13 @@ export const setFullSelectedFunction = debounce(
         })
         .catch(() => {
           setSelectedFunction({})
-          navigate(`/projects/${projectName}/functions${window.location.search}`, { replace: true })
+          navigate(`/projects/${projectName}/functions${window.location.search}`, {
+            replace: true
+          })
         })
     }
   },
-  10
+  20
 )
 
 const functionDeletingSuccessHandler = (dispatch, func) => {
@@ -513,21 +524,26 @@ const chooseOrFetchFunction = (selectedFunction, dispatch, fetchFunction, funcMi
   )
 }
 
-export const checkForSelectedFunction = (
-  functions,
-  id,
-  funcNameParam,
-  navigate,
-  projectName,
-  setSelectedFunction,
-  dispatch,
-  isAllVersions
-) => {
-  queueMicrotask(() => {
-    if (id) {
-      if (functions.length > 0) {
+export const checkForSelectedFunction = debounce(
+  (
+    functions,
+    funcId,
+    funcNameParam,
+    navigate,
+    projectName,
+    setSelectedFunction,
+    dispatch,
+    isAllVersions,
+    searchParams,
+    paginationConfigRef
+  ) => {
+    if (funcId) {
+      const searchBePage = parseInt(searchParams.get(BE_PAGE))
+      const configBePage = paginationConfigRef.current[BE_PAGE]
+
+      if (functions.length > 0 && searchBePage === configBePage) {
         const searchItem = searchFunctionItem(
-          id,
+          funcId,
           projectName,
           funcNameParam,
           functions.map(func => func.data ?? func),
@@ -549,8 +565,9 @@ export const checkForSelectedFunction = (
     } else {
       setSelectedFunction({})
     }
-  })
-}
+  },
+  20
+)
 
 export const searchFunctionItem = (
   paramsId,
@@ -573,7 +590,8 @@ export const searchFunctionItem = (
       }
     })
 
-    checkExistence && checkFunctionExistence(item, { tag, name: funcNameParam, hash }, projectName, dispatch)
+    checkExistence &&
+      checkFunctionExistence(item, { tag, name: funcNameParam, hash }, projectName, dispatch)
   }
 
   return item
