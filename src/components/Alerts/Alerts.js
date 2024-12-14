@@ -17,8 +17,9 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import { useCallback, useMemo, useState } from 'react'
-import { useSelector } from 'react-redux'
+import { useCallback, useEffect, useMemo, useState } from 'react'
+import { useParams } from 'react-router-dom'
+import { useDispatch, useSelector } from 'react-redux'
 
 import AlertsView from './AlertsView'
 
@@ -26,12 +27,17 @@ import { createAlertRowData } from '../../utils/createAlertsContent'
 import { getAlertsFiltersConfig, parseAlertsQueryParamsCallback } from './alerts.util'
 import { useAlertsPageData } from '../../hooks/useAlertsPageData'
 import { useFiltersFromSearchParams } from '../../hooks/useFiltersFromSearchParams.hook'
+import projectsAction from '../../actions/projects'
 
 const Alerts = () => {
+  const { id: projectId } = useParams()
   const [selectedAlert] = useState({}) //TODO: implement logic in ML-8104
+  const [, setProjectsRequestErrorMessage] = useState('')
   const alertsStore = useSelector(state => state.alertsStore)
   const filtersStore = useSelector(store => store.filtersStore)
+  const dispatch = useDispatch()
 
+  const isCrossProjects = useMemo(() => projectId === '*', [projectId])
   const alertsFiltersConfig = useMemo(() => getAlertsFiltersConfig(), [])
 
   const alertsFilters = useFiltersFromSearchParams(
@@ -59,8 +65,17 @@ const Alerts = () => {
   )
 
   const tableContent = useMemo(() => {
-    return paginatedAlerts.map(alert => createAlertRowData(alert))
-  }, [paginatedAlerts])
+    return paginatedAlerts.map(alert => createAlertRowData(alert, isCrossProjects))
+  }, [isCrossProjects, paginatedAlerts])
+
+  const fetchMinimalProjects = useCallback(() => {
+    dispatch(projectsAction.fetchProjects({ format: 'minimal' }, setProjectsRequestErrorMessage))
+  }, [dispatch])
+
+  useEffect(() => {
+    dispatch(projectsAction.removeProjects())
+    fetchMinimalProjects()
+  }, [dispatch, fetchMinimalProjects])
 
   return (
     <AlertsView
@@ -72,6 +87,7 @@ const Alerts = () => {
       filtersStore={filtersStore}
       handleRefreshAlerts={handleRefreshAlerts}
       handleRefreshWithFilters={handleRefreshWithFilters}
+      isCrossProjects={isCrossProjects}
       pageData={{}} //TODO
       paginationConfigAlertsRef={paginationConfigAlertsRef}
       requestErrorMessage={requestErrorMessage}

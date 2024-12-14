@@ -23,6 +23,16 @@ import alertsApi from '../api/alerts-api'
 import { defaultPendingHandler } from './redux.util'
 import { parseAlerts } from '../utils/parseAlert'
 import { largeResponseCatchHandler } from '../utils/largeResponseCatchHandler'
+import {
+  ENDPOINT_APPLICATION,
+  ENDPOINT_RESULT,
+  ENTITY_ID,
+  ENTITY_KIND,
+  ENTITY_TYPE,
+  EVENT_TYPE,
+  FILTER_ALL_ITEMS,
+  MODEL_ENDPOINT_RESULT
+} from '../constants'
 
 const initialState = {
   alerts: [],
@@ -30,11 +40,65 @@ const initialState = {
   loading: false
 }
 
+const generateRequestParams = filters => {
+  const params = {}
+  if (filters.name) {
+    params.name = `~${filters.name}`
+  }
+
+  if (filters?.dates) {
+    if (filters.dates.value[0]) {
+      params.start = filters.dates.value[0].toISOString()
+    }
+
+    if (filters.dates.value[1]) {
+      params.end = filters.dates.value[1].toISOString()
+    }
+  }
+
+  if (filters?.[ENTITY_TYPE] && filters?.[ENTITY_TYPE] !== FILTER_ALL_ITEMS) {
+    params[ENTITY_KIND] = filters?.[ENTITY_TYPE]
+  }
+
+  if (filters?.[ENTITY_TYPE] === FILTER_ALL_ITEMS) {
+    if (!filters?.[ENTITY_ID]) return
+    params[ENTITY_KIND] = filters?.[ENTITY_ID] || ''
+  } else if (filters?.[ENTITY_TYPE] === MODEL_ENDPOINT_RESULT) {
+    if (!(filters?.[ENDPOINT_APPLICATION] && filters?.[ENDPOINT_RESULT])) return
+    params[ENTITY_KIND] =
+      `*.${filters?.[ENDPOINT_APPLICATION] || '*'}.result.${filters?.[ENDPOINT_RESULT]}*`
+  }
+
+  if (
+    filters?.severity &&
+    filters.severity !== FILTER_ALL_ITEMS &&
+    !filters.severity.includes(FILTER_ALL_ITEMS)
+  ) {
+    params.severity = filters.severity
+  }
+
+  if (filters?.[EVENT_TYPE] && filters?.[EVENT_TYPE] !== FILTER_ALL_ITEMS) {
+    params[EVENT_TYPE] = filters?.[EVENT_TYPE]
+  }
+
+  return params
+}
+
 export const fetchAlert = createAsyncThunk(
   'fetchAlert',
   ({ project, filters, config }, thunkAPI) => {
+    const newConfig = {
+      ...config,
+      params: {
+        ...config.params,
+        ...generateRequestParams(filters, project)
+      }
+    }
+
+    config?.ui?.setRequestErrorMessage?.('')
+
     return alertsApi
-      .getAlert(project, filters, config)
+      .getAlert(project, filters, newConfig)
       .then(({ data }) => {
         return parseAlerts(data.activations || [])
       })
@@ -51,8 +115,18 @@ export const fetchAlert = createAsyncThunk(
 export const fetchAlerts = createAsyncThunk(
   'fetchAlerts',
   ({ project, filters, config }, thunkAPI) => {
+    const newConfig = {
+      ...config,
+      params: {
+        ...config.params,
+        ...generateRequestParams(filters, project)
+      }
+    }
+
+    config?.ui?.setRequestErrorMessage?.('')
+
     return alertsApi
-      .getAlerts(project, filters, config)
+      .getAlerts(project, newConfig)
       .then(({ data }) => {
         return { ...data, activations: parseAlerts(data.activations || []) }
       })

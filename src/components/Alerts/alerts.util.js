@@ -17,6 +17,8 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
+import { upperFirst } from 'lodash'
+
 import {
   APPLICATION,
   DATES_FILTER,
@@ -27,11 +29,17 @@ import {
   ENTITY_TYPE,
   EVENT_TYPE,
   FILTER_ALL_ITEMS,
+  JOB,
   JOB_KIND_JOB,
   JOB_NAME,
+  MODEL_ENDPOINT_RESULT,
+  MODEL_MONITORING_APPLICATION,
   NAME_FILTER,
   PROJECTS_FILTER,
-  SEVERITY
+  SEVERITY,
+  SEVERITY_HIGH,
+  SEVERITY_LOW,
+  SEVERITY_MEDIUM
 } from '../../constants'
 import {
   datePickerPastOptions,
@@ -71,7 +79,7 @@ export const parseAlertsQueryParamsCallback = (paramName, paramValue) => {
   }
 
   if (paramName === EVENT_TYPE) {
-    return filterAlertsEventTypeOptions.find(type => type.id === paramValue)?.id
+    return alertsEventTypeOptions.find(type => type.id === paramValue)?.id
   }
 
   return paramValue
@@ -80,37 +88,75 @@ export const parseAlertsQueryParamsCallback = (paramName, paramValue) => {
 export const allProjectsOption = [
   {
     id: FILTER_ALL_ITEMS,
-    label: 'All'
+    label: upperFirst(FILTER_ALL_ITEMS)
   }
 ]
 
 export const filterAlertsEntityTypeOptions = [
-  { label: 'All', id: FILTER_ALL_ITEMS },
-  { label: 'Jobs', id: JOB_KIND_JOB },
-  { label: 'Endpoint', id: ENDPOINT },
-  { label: 'Application', id: APPLICATION }
+  { label: upperFirst(FILTER_ALL_ITEMS), id: FILTER_ALL_ITEMS },
+  { label: upperFirst(JOB), id: JOB_KIND_JOB },
+  { label: upperFirst(ENDPOINT), id: 'model-endpoint-result' },
+  { label: upperFirst(APPLICATION), id: 'model-monitoring-application' }
 ]
 
 export const filterAlertsSeverityOptions = [
-  { label: 'All', id: FILTER_ALL_ITEMS, status: FILTER_ALL_ITEMS },
-  { label: 'Critical', id: 'critical', status: 'critical' },
-  { label: 'High', id: 'high', status: 'high' },
-  { label: 'Low', id: 'low', status: 'low' }
+  { label: upperFirst(FILTER_ALL_ITEMS), id: FILTER_ALL_ITEMS, status: FILTER_ALL_ITEMS },
+  { label: upperFirst(SEVERITY_HIGH), id: SEVERITY_HIGH, status: SEVERITY_HIGH },
+  { label: upperFirst(SEVERITY_MEDIUM), id: SEVERITY_MEDIUM, status: SEVERITY_MEDIUM },
+  { label: upperFirst(SEVERITY_LOW), id: SEVERITY_LOW, status: SEVERITY_LOW }
 ]
 
-export const filterAlertsEventTypeOptions = [
-  { label: 'All', id: FILTER_ALL_ITEMS },
-  { label: 'Job Failed', id: 'job-failed' },
-  { label: 'Data Drift Detected', id: 'data-drift-detected' },
-  { label: 'Data Drift Suspected', id: 'data-drift-suspected' },
-  { label: 'Conc Drift Detected', id: 'concept-drift-detected' },
-  { label: 'Conc Drift Suspected', id: 'concept-drift-suspected' },
-  { label: 'MM Perf. Detected', id: 'model-performance-detected' },
-  { label: 'MM Perf. Suspected', id: 'model-performance-suspected' },
-  { label: 'S Perf. Detected', id: 'system-performance-detected' },
-  { label: 'S Perf. Suspected', id: 'system-performance-suspected' },
-  { label: 'MM App Ano. Detected', id: 'mm-app-anomaly-detected' },
-  { label: 'MM App Ano. Suspected', id: 'mm-app-anomaly-suspected' },
-  { label: 'MM App Failed', id: 'mm-app-failed' },
-  { label: 'MM App Failed', id: 'failed' }
+const alertsEventTypeOptions = [
+  { label: upperFirst(FILTER_ALL_ITEMS), id: FILTER_ALL_ITEMS },
+  { label: 'Job Failed', id: 'failed', ENTITY_TYPE: JOB_KIND_JOB },
+  { label: 'Data Drift Detected', id: 'data-drift-detected', ENTITY_TYPE: MODEL_ENDPOINT_RESULT },
+  { label: 'Data Drift Suspected', id: 'data-drift-suspected', ENTITY_TYPE: MODEL_ENDPOINT_RESULT },
+  {
+    label: 'Conc Drift Detected',
+    id: 'concept-drift-detected',
+    ENTITY_TYPE: MODEL_ENDPOINT_RESULT
+  },
+  {
+    label: 'Conc Drift Suspected',
+    id: 'concept-drift-suspected',
+    ENTITY_TYPE: MODEL_ENDPOINT_RESULT
+  },
+  {
+    label: 'MM Perf. Detected',
+    id: 'model-performance-detected',
+    ENTITY_TYPE: MODEL_ENDPOINT_RESULT
+  },
+  {
+    label: 'MM Perf. Suspected',
+    id: 'model-performance-suspected',
+    ENTITY_TYPE: MODEL_ENDPOINT_RESULT
+  },
+  {
+    label: 'S Perf. Detected',
+    id: 'system-performance-detected',
+    ENTITY_TYPE: MODEL_ENDPOINT_RESULT
+  },
+  {
+    label: 'S Perf. Suspected',
+    id: 'system-performance-suspected',
+    ENTITY_TYPE: MODEL_ENDPOINT_RESULT
+  },
+  {
+    label: 'MM App Ano. Detected',
+    id: 'mm-app-anomaly-detected',
+    ENTITY_TYPE: MODEL_ENDPOINT_RESULT
+  },
+  {
+    label: 'MM App Ano. Suspected',
+    id: 'mm-app-anomaly-suspected',
+    ENTITY_TYPE: MODEL_ENDPOINT_RESULT
+  },
+  { label: 'MM App Failed', id: 'mm-app-failed', ENTITY_TYPE: MODEL_MONITORING_APPLICATION }
 ]
+export const filterAlertsEventTypeOptions = entityType => {
+  if (entityType === FILTER_ALL_ITEMS) {
+    return alertsEventTypeOptions
+  }
+
+  return alertsEventTypeOptions.filter(option => option.ENTITY_TYPE === entityType)
+}

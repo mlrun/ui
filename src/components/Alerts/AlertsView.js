@@ -39,6 +39,7 @@ const AlertsView = ({
   filtersStore,
   handleRefreshAlerts,
   handleRefreshWithFilters,
+  isCrossProjects,
   pageData,
   paginationConfigAlertsRef,
   requestErrorMessage,
@@ -66,7 +67,7 @@ const AlertsView = ({
                 withRefreshButton
                 withoutExpandButton
               >
-                <AlertsFilters />
+                <AlertsFilters isCrossProjects={isCrossProjects} />
               </ActionBar>
             </div>
             {alertsStore.loading ? (
@@ -124,6 +125,7 @@ AlertsView.propTypes = {
   filtersStore: PropTypes.object.isRequired,
   handleRefreshAlerts: PropTypes.func.isRequired,
   handleRefreshWithFilters: PropTypes.func.isRequired,
+  isCrossProjects: PropTypes.bool.isRequired,
   requestErrorMessage: PropTypes.string.isRequired,
   paginationConfigAlertsRef: PropTypes.object.isRequired,
   setSearchParams: PropTypes.func.isRequired,

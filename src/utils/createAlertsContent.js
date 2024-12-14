@@ -145,7 +145,7 @@ const getNotificationData = notifications =>
     }
   })
 
-export const createAlertRowData = ({ name, ...alert }) => {
+export const createAlertRowData = ({ name, ...alert }, isCrossProjects) => {
   return {
     data: {
       ...alert
@@ -162,13 +162,17 @@ export const createAlertRowData = ({ name, ...alert }) => {
         tooltip: name,
         type: 'link'
       },
-      {
-        id: `projectName.${alert.id}`,
-        headerId: 'projectName',
-        headerLabel: 'Project name',
-        value: alert.project,
-        className: 'table-cell-1'
-      },
+      ...(isCrossProjects
+        ? [
+            {
+              id: `projectName.${alert.id}`,
+              headerId: 'projectName',
+              headerLabel: 'Project name',
+              value: alert.project,
+              className: 'table-cell-1'
+            }
+          ]
+        : []),
       {
         id: `eventType.${alert.id}`,
         headerId: 'eventType',
