@@ -36,6 +36,7 @@ import { ReactComponent as Webhook } from 'igz-controls/images/webhook-icon.svg'
 import {
   APPLICATION,
   ENDPOINT,
+  DETAILS_ALERT_APPLICATION,
   JOB,
   MODEL_ENDPOINT_RESULT,
   MODEL_MONITORING_APPLICATION,
@@ -51,16 +52,31 @@ const getEntityTypeData = entityType => {
     case MODEL_ENDPOINT_RESULT:
       return {
         value: <Endpoint />,
+        detailsValue: (
+          <div className="alert-icon-cell">
+            <Endpoint /> <span>{upperFirst(ENDPOINT)}</span>
+          </div>
+        ),
         tooltip: upperFirst(ENDPOINT)
       }
     case MODEL_MONITORING_APPLICATION:
       return {
         value: <Application />,
+        detailsValue: (
+          <div className="alert-icon-cell">
+            <Application /> <span>{upperFirst(APPLICATION)}</span>
+          </div>
+        ),
         tooltip: upperFirst(APPLICATION)
       }
     case JOB:
       return {
         value: <Job />,
+        detailsValue: (
+          <div className="alert-icon-cell">
+            <Job /> <span>{upperFirst(upperFirst(JOB))}</span>
+          </div>
+        ),
         tooltip: upperFirst(JOB)
       }
     default:
@@ -75,7 +91,7 @@ const getSeverityData = severity => {
     case SEVERITY_LOW:
       return {
         value: (
-          <div className="severity-cell">
+          <div className="alert-icon-cell">
             <Low />
             <span>{upperFirst(SEVERITY_LOW)}</span>
           </div>
@@ -85,7 +101,7 @@ const getSeverityData = severity => {
     case SEVERITY_MEDIUM:
       return {
         value: (
-          <div className="severity-cell">
+          <div className="alert-icon-cell">
             <Normal />
             <span>{upperFirst(SEVERITY_MEDIUM)}</span>
           </div>
@@ -95,7 +111,7 @@ const getSeverityData = severity => {
     case SEVERITY_HIGH:
       return {
         value: (
-          <div className="severity-cell">
+          <div className="alert-icon-cell">
             <High />
             <span>{upperFirst(SEVERITY_HIGH)}</span>
           </div>
@@ -105,7 +121,7 @@ const getSeverityData = severity => {
     case SEVERITY_CRITICAL:
       return {
         value: (
-          <div className="severity-cell">
+          <div className="alert-icon-cell">
             <Critical />
             <span>{upperFirst(SEVERITY_CRITICAL)}</span>
           </div>
@@ -146,9 +162,69 @@ const getNotificationData = notifications =>
   })
 
 export const createAlertRowData = ({ name, ...alert }) => {
+  const getLink = alert => {
+    const queryString = window.location.search
+    const { entity_kind: entityType, entity_id, project, alertName, id } = alert
+
+    //TODO: getLink will be updated with ML-8104 & ML-8105
+
+    // if (entityType === MODEL_ENDPOINT_RESULT) {
+    //   const [endpointId, , , name] = entity_id.split('.')
+    //   return `/projects/*/alerts/${project}/${alertName}/${name}/${endpointId}/${DETAILS_ALERT_APPLICATION}${queryString}`
+    // }
+    //
+    // if (entityType === JOB) {
+    //   return job
+    //     ? `/projects/*/alerts/${project}/${alertName}/${job.name}/${job.jobUid}/${DETAILS_ALERT_APPLICATION}${queryString}`
+    //     : ''
+    // }
+
+    if (entityType === MODEL_MONITORING_APPLICATION) {
+      const [, applicationName] = entity_id.split('.')
+      return `/projects/*/alerts/${project}/${alertName}/${applicationName}/${id}/${DETAILS_ALERT_APPLICATION}${queryString}`
+    }
+
+    return ''
+  }
+
+  const severity = {
+    value: getSeverityData(alert.severity).value,
+    tooltip: getSeverityData(alert.severity).tooltip
+  }
+
+  const entityType = {
+    value: getEntityTypeData(alert.entity_kind).value,
+    detailsValue: getEntityTypeData(alert.entity_kind).detailsValue,
+    tooltip: getEntityTypeData(alert.entity_kind).tooltip
+  }
+  const notifications = getNotificationData(alert.notifications)
+  alert.activationTime = formatDatetime(alert.activation_time, '-')
+  alert.alertName = alert.name
+
+  if (alert.entity_kind === JOB) {
+    alert.uid = alert.entity_id.split('.')[1]
+    alert.job = {
+      name: alert.entity_id.split('.')[0],
+      jobUid: alert.entity_id.split('.')[1],
+      kind: alert.entity_kind
+    }
+  }
+
+  if (alert.entity_kind === MODEL_ENDPOINT_RESULT) {
+    alert.endpointName = alert.entity_id.split('.')[1]
+    alert.uid = alert.entity_id.split('.')[0]
+  }
+
+  if (alert.entity_kind === MODEL_MONITORING_APPLICATION) {
+    alert.uid = alert.id
+    alert.applicationName = alert.entity_id.split('.')[1]
+  }
   return {
     data: {
-      ...alert
+      ...alert,
+      severity,
+      entityType,
+      notifications
     },
     content: [
       {
@@ -157,8 +233,7 @@ export const createAlertRowData = ({ name, ...alert }) => {
         headerLabel: 'Alert Name',
         value: name,
         className: 'table-cell-name',
-        getLink: () => {}, //TODO: Implement in ML-8103
-        showStatus: true,
+        getLink: () => getLink(alert),
         tooltip: name,
         type: 'link'
       },
@@ -195,7 +270,7 @@ export const createAlertRowData = ({ name, ...alert }) => {
         id: `timestamp.${alert.id}`,
         headerId: 'timestamp',
         headerLabel: 'Timestamp',
-        value: formatDatetime(alert.activation_time, '-'),
+        value: alert.activationTime,
         className: 'table-cell-1'
       },
       {
@@ -225,7 +300,7 @@ export const createAlertRowData = ({ name, ...alert }) => {
         headerId: 'notifications',
         headerLabel: 'Notifications',
         value: getNotificationData(alert.notifications),
-        className: 'table-cell-small table-cell-notification',
+        className: 'icons-container alert-row-notification-cell',
         type: 'icons'
       }
     ]

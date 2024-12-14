@@ -17,20 +17,26 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import { useCallback, useMemo, useState } from 'react'
-import { useSelector } from 'react-redux'
+import { useCallback, useEffect, useMemo, useState } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
 
 import AlertsView from './AlertsView'
 
 import { createAlertRowData } from '../../utils/createAlertsContent'
 import { getAlertsFiltersConfig, parseAlertsQueryParamsCallback } from './alerts.util'
 import { useAlertsPageData } from '../../hooks/useAlertsPageData'
+import { generatePageData } from './alerts.util'
 import { useFiltersFromSearchParams } from '../../hooks/useFiltersFromSearchParams.hook'
 
+import { useParams } from 'react-router-dom'
+import { getJobLogs } from '../../utils/getJobLogs.util'
+
 const Alerts = () => {
-  const [selectedAlert] = useState({}) //TODO: implement logic in ML-8104
+  const [selectedAlert, setSelectedAlert] = useState({})
   const alertsStore = useSelector(state => state.alertsStore)
   const filtersStore = useSelector(store => store.filtersStore)
+  const params = useParams()
+  const dispatch = useDispatch()
 
   const alertsFiltersConfig = useMemo(() => getAlertsFiltersConfig(), [])
 
@@ -62,17 +68,43 @@ const Alerts = () => {
     return paginatedAlerts.map(alert => createAlertRowData(alert))
   }, [paginatedAlerts])
 
+  const handleCancel = () => {
+    setSelectedAlert({})
+  }
+
+  const handleFetchJobLogs = useCallback(
+    (item, projectName, setDetailsLogs, streamLogsRef) => {
+      return getJobLogs(item.uid, projectName, streamLogsRef, setDetailsLogs, dispatch)
+    },
+    [dispatch]
+  )
+
+  const pageData = useMemo(
+    () => generatePageData(handleFetchJobLogs, selectedAlert),
+    [handleFetchJobLogs, selectedAlert]
+  )
+
+  useEffect(() => {
+    if (tableContent.length === 0) return
+    const alert = tableContent.find(({ data }) => data.uid && data.uid === params.id)
+    if (alert) {
+      setSelectedAlert({ ...alert.data })
+    } else {
+      return setSelectedAlert({})
+    }
+  }, [params, tableContent])
+
   return (
     <AlertsView
-      alerts={paginatedAlerts}
+      actionsMenu={[]} // TODO
       alertsFiltersConfig={alertsFiltersConfig}
       alertsStore={alertsStore}
-      actionsMenu={() => []} // TODO
       filters={alertsFilters}
       filtersStore={filtersStore}
+      handleCancel={handleCancel}
       handleRefreshAlerts={handleRefreshAlerts}
       handleRefreshWithFilters={handleRefreshWithFilters}
-      pageData={{}} //TODO
+      pageData={pageData}
       paginationConfigAlertsRef={paginationConfigAlertsRef}
       requestErrorMessage={requestErrorMessage}
       selectedAlert={selectedAlert}
