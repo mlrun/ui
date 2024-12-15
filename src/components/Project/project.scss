@@ -33,8 +33,8 @@
       &__row {
         display: flex;
         justify-content: space-between;
-        color: $primary;
         margin-top: 5px;
+        color: $primary;
 
         .row-label {
           display: inline-block;
@@ -79,8 +79,8 @@
 
       &__toolbar {
         display: flex;
-        justify-content: space-between;
         align-items: center;
+        justify-content: space-between;
         margin-bottom: 15px;
 
         &-banner {
@@ -149,8 +149,8 @@
         padding: 20px;
         overflow-x: auto;
         background-color: $white;
-        border-radius: 8px;
         border: $dividerBorder;
+        border-radius: 8px;
         box-shadow: $projectStatisticsShadow;
 
         &__header {
@@ -200,13 +200,13 @@
         &__recent-text {
           display: flex;
           align-items: center;
-          font-size: 18px;
           min-height: 40px;
           margin: 0 0 5px 0;
+          font-size: 18px;
 
           .text-sm {
-            font-size: 0.75em;
             margin-left: 5px;
+            font-size: 0.75em;
           }
         }
 
@@ -223,7 +223,31 @@
 
       &__statistics-section {
         display: flex;
-        margin-bottom: 25px;
+
+        @media (max-width: 1400px) {
+          flex-wrap: wrap;
+        }
+
+        &-item {
+          display: flex;
+          flex-direction: row;
+          width: 100%;
+          margin-bottom: 25px;
+
+          @media (min-width: 1400px) {
+            &:first-child {
+              margin-right: 10px;
+            }
+
+            &:last-child {
+              margin-left: 10px;
+            }
+          }
+        }
+
+        &-alert {
+          flex: 2 1 0;
+        }
       }
     }
   }

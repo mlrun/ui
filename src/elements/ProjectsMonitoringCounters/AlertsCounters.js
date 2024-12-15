@@ -36,11 +36,47 @@ const AlertsCounters = () => {
   const navigate = useNavigate()
   const projectStore = useSelector(store => store.projectStore)
 
-  const projectName = useMemo(() => (paramProjectName ? paramProjectName : '*'), [paramProjectName])
+  const alertsData = useMemo(() => {
+    const path = pathname === '/projects' ? '*' : paramProjectName
+    const defaultAlertData = {
+      endpoint: 0,
+      jobs: 0,
+      application: 0,
+      total: 0
+    }
+
+    if (path !== '*') {
+      const endpoint = projectStore.projectSummary.data.endpoint_alerts_count || 0
+      const jobs = projectStore.projectSummary.data.job_alerts_count || 0
+      const application = projectStore.projectSummary.data.other_alerts_count || 0
+
+      return {
+        projectName: path,
+        data: {
+          endpoint,
+          jobs,
+          application,
+          total: endpoint + jobs + application
+        }
+      }
+    }
+
+    return {
+      projectName: path,
+      data: projectStore.jobsMonitoringData.alerts || defaultAlertData
+    }
+  }, [
+    pathname,
+    paramProjectName,
+    projectStore.jobsMonitoringData.alerts,
+    projectStore.projectSummary.data.endpoint_alerts_count,
+    projectStore.projectSummary.data.job_alerts_count,
+    projectStore.projectSummary.data.other_alerts_count
+  ])
 
   const alertsStats = useMemo(
-    () => generateAlertsStats(projectStore.jobsMonitoringData.alerts, navigate, projectName),
-    [navigate, projectName, projectStore.jobsMonitoringData.alerts]
+    () => generateAlertsStats(alertsData.data, navigate, alertsData.projectName),
+    [navigate, alertsData]
   )
 
   return (
