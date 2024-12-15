@@ -50,17 +50,29 @@ const getEntityTypeData = entityType => {
   switch (entityType) {
     case MODEL_ENDPOINT_RESULT:
       return {
-        value: <Endpoint />,
+        value: (
+          <span data-testid={ENDPOINT}>
+            <Endpoint />
+          </span>
+        ),
         tooltip: upperFirst(ENDPOINT)
       }
     case MODEL_MONITORING_APPLICATION:
       return {
-        value: <Application />,
+        value: (
+          <span data-testid={APPLICATION}>
+            <Application />
+          </span>
+        ),
         tooltip: upperFirst(APPLICATION)
       }
     case JOB:
       return {
-        value: <Job />,
+        value: (
+          <span data-testid={JOB}>
+            <Job />
+          </span>
+        ),
         tooltip: upperFirst(JOB)
       }
     default:
@@ -130,7 +142,10 @@ const getNotificationData = notifications =>
   notifications.map(notification => {
     return {
       icon: (
-        <div className="alert-row-notification">
+        <div
+          data-testid={`${notification.kind}-${notification.err.length === 0 ? 'success' : 'fail'}`}
+          className="alert-row-notification"
+        >
           {alertsNotifications[notification.kind]}
           {notification?.err && (
             <div className="notification-fail">
