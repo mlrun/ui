@@ -23,6 +23,7 @@ import yaml from 'js-yaml'
 import fs from 'fs'
 import crypto from 'node:crypto'
 import {
+  chain,
   chunk,
   clamp,
   cloneDeep,
@@ -34,6 +35,7 @@ import {
   isEmpty,
   isFunction,
   isNil,
+  maxBy,
   noop,
   omit,
   orderBy,
@@ -375,6 +377,18 @@ function filterByLabels(elementLabels, requestLabels) {
   }
 
   return false
+}
+
+function getPartitionedData(
+  listOfItems,
+  pathToPartition,
+  pathToUpdated,
+  defaultPathToPartition
+) {
+  return chain(listOfItems)
+    .groupBy(arrayItem => get(arrayItem, pathToPartition, defaultPathToPartition))
+    .map(group => maxBy(group, groupItem => new Date(get(groupItem, pathToUpdated))))
+    .value()
 }
 
 // Request Handlers
@@ -839,17 +853,7 @@ function getRuns(req, res) {
   }
 
   if (req.query['partition-by'] && req.query['partition-sort-by']) {
-    const uniqueObjects = {}
-
-    collectedRuns.forEach(run => {
-      const name = run.metadata.name
-      const lastUpdate = new Date(run.status.last_update)
-
-      if (!uniqueObjects[name] || new Date(uniqueObjects[name].status.last_update) < lastUpdate) {
-        uniqueObjects[name] = run
-      }
-    })
-    collectedRuns = Object.values(uniqueObjects)
+    collectedRuns = getPartitionedData(collectedRuns, 'metadata.name', 'status.last_update')
   }
 
   if (req.query['name']) {
@@ -884,7 +888,7 @@ function getAlerts(req, res) {
 
   const [paginatedAlerts, pagination] = getPaginationConfig(collectedAlerts, req.query)
 
-  res.send({ alerts: paginatedAlerts, pagination })
+  res.send({ activations: paginatedAlerts, pagination })
 }
 
 function patchRun(req, res) {
@@ -1318,6 +1322,15 @@ function getArtifacts(req, res) {
         ...fieldsToPick
       ])
     })
+  }
+
+  if (req.query['partition-by']) {
+    collectedArtifacts = getPartitionedData(
+      collectedArtifacts,
+      'spec.db_key',
+      'metadata.updated',
+      'db_key'
+    )
   }
 
   const [paginatedArtifacts, pagination] = getPaginationConfig(collectedArtifacts, req.query)

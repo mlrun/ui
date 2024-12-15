@@ -28,7 +28,7 @@ import {
   MODEL_TYPE,
   MODELS_TAB
 } from '../constants'
-import { TAG_FILTER_ALL_ITEMS, TAG_FILTER_LATEST } from '../constants'
+import { TAG_FILTER_ALL_ITEMS, TAG_FILTER_LATEST, ALL_VERSIONS_PATH } from '../constants'
 import {
   deleteTag,
   editTag,
@@ -197,7 +197,7 @@ const generateArtifactTags = artifacts => {
 }
 
 export const setFullSelectedArtifact = debounce(
-  (tab, dispatch, navigate, selectedArtifactMin, setSelectedArtifact, projectName) => {
+  (tab, dispatch, navigate, selectedArtifactMin, setSelectedArtifact, projectName, isAllVersions) => {
     if (isEmpty(selectedArtifactMin)) {
       setSelectedArtifact({})
     } else {
@@ -210,7 +210,11 @@ export const setFullSelectedArtifact = debounce(
           setSelectedArtifact(artifact)
         })
         .catch(error => {
-          navigate(`/projects/${projectName}/${tab}${window.location.search}`, { replace: true })
+          if (tab === MODELS_TAB) {
+            navigate(`/projects/${projectName}/${tab}/${tab}${isAllVersions ? `/${ALL_VERSIONS_PATH}` : ''}${window.location.search}`, { replace: true })
+          } else {
+            navigate(`/projects/${projectName}/${tab}${isAllVersions ? `/${ALL_VERSIONS_PATH}` : ''}${window.location.search}`, { replace: true })
+          }
           showArtifactErrorNotification(dispatch, error, tab)
         })
     }

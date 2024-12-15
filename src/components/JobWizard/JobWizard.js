@@ -92,6 +92,7 @@ const JobWizard = ({
   params,
   prePopulatedData = {},
   removeHubFunctions,
+  tab = '',
   wizardTitle = 'Batch run'
 }) => {
   const formRef = React.useRef(
@@ -300,6 +301,18 @@ const JobWizard = ({
     [isBatchInference, isEditMode, isRunMode, isTrain, selectedFunctionData]
   )
 
+  const searchParams = useCallback(
+    isSchedule => {
+      if ((!isSchedule && tab === MONITOR_JOBS_TAB) || (isSchedule && tab === SCHEDULE_TAB)) {
+        return window.location.search
+      }
+      return ''
+    },
+    [tab]
+  )
+
+  searchParams()
+
   const runJobHandler = useCallback(
     (formData, selectedFunctionData, params, isSchedule) => {
       const jobRequestData = generateJobRequestData(
@@ -328,14 +341,14 @@ const JobWizard = ({
         })
         .then(() => {
           return navigate(
-            `/projects/${params.projectName}/jobs/${isSchedule ? SCHEDULE_TAB : MONITOR_JOBS_TAB}`
+            `/projects/${params.projectName}/jobs/${isSchedule ? SCHEDULE_TAB : MONITOR_JOBS_TAB}${searchParams(isSchedule)}`
           )
         })
         .catch(error => {
           showErrorNotification(dispatch, error, '', getNewJobErrorMsg(error))
         })
     },
-    [dispatch, mode, navigate, onSuccessRequest, resolveModal]
+    [dispatch, mode, navigate, onSuccessRequest, resolveModal, searchParams]
   )
 
   const editJobHandler = useCallback(
@@ -377,7 +390,7 @@ const JobWizard = ({
           )
         })
         .then(() => {
-          navigate(`/projects/${params.projectName}/jobs/${SCHEDULE_TAB}`)
+          navigate(`/projects/${params.projectName}/jobs/${SCHEDULE_TAB}${window.location.search}`)
         })
         .catch(error => {
           showErrorNotification(dispatch, error, '', getSaveJobErrorMsg(error))
@@ -551,6 +564,7 @@ JobWizard.propTypes = {
   onWizardClose: PropTypes.func,
   params: PropTypes.shape({}).isRequired,
   prePopulatedData: PropTypes.shape({}),
+  tab: PropTypes.string,
   wizardTitle: PropTypes.string
 }
 

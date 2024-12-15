@@ -38,7 +38,8 @@ import {
   MONITOR_JOBS_TAB,
   MONITOR_WORKFLOWS_TAB,
   PANEL_RERUN_MODE,
-  WORKFLOW_GRAPH_VIEW
+  WORKFLOW_GRAPH_VIEW,
+  SCHEDULE_TAB
 } from '../../constants'
 import {
   generateActionsMenu,
@@ -636,6 +637,7 @@ const WorkflowsTable = React.forwardRef(
             ...params,
             projectName: editableItem?.rerun_object?.task?.metadata?.project || params.projectName
           },
+          tab: SCHEDULE_TAB,
           onWizardClose: () => {
             setEditableItem(null)
             setJobWizardMode(null)

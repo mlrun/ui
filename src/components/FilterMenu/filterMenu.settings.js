@@ -18,6 +18,9 @@ under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
 import {
+  ERROR_STATE,
+  FAILED_STATE,
+  FILTER_ALL_ITEMS,
   GROUP_BY_FILTER,
   GROUP_BY_NAME,
   GROUP_BY_NONE,
@@ -29,19 +32,17 @@ import {
   JOB_KIND_MPIJOB,
   JOB_KIND_SPARK,
   JOB_KIND_WORKFLOW,
-  PROJECT_FILTER,
-  SORT_BY,
-  FILTER_ALL_ITEMS,
-  STATUS_FILTER,
-  TAG_FILTER_ALL_ITEMS,
-  TAG_FILTER_LATEST,
   JOB_KIND_NUCLIO,
   JOB_KIND_SERVING,
   JOB_KIND_APPLICATION,
   JOB_KIND_REMOTE,
-  ERROR_STATE,
-  FAILED_STATE,
-  JOBS_MONITORING_SCHEDULED_TAB
+  JOBS_MONITORING_JOBS_TAB,
+  JOBS_MONITORING_SCHEDULED_TAB,
+  PROJECT_FILTER,
+  SORT_BY,
+  STATUS_FILTER,
+  TAG_FILTER_ALL_ITEMS,
+  TAG_FILTER_LATEST
 } from '../../constants'
 
 export const jobsStatuses = [
@@ -80,15 +81,27 @@ export const generateTypeFilter = tab => {
     { label: 'All', id: FILTER_ALL_ITEMS },
     { label: 'Job', id: JOB_KIND_JOB },
     { label: 'Workflow', id: JOB_KIND_WORKFLOW, hidden: tab !== JOBS_MONITORING_SCHEDULED_TAB },
-    { label: 'Nuclio', id: `${JOB_KIND_REMOTE},${JOB_KIND_NUCLIO}` },
-    { label: 'Application', id: JOB_KIND_APPLICATION },
-    { label: 'Serving', id: JOB_KIND_SERVING },
+    {
+      label: 'Nuclio',
+      id: `${JOB_KIND_REMOTE},${JOB_KIND_NUCLIO}`,
+      hidden: [JOBS_MONITORING_JOBS_TAB, JOBS_MONITORING_SCHEDULED_TAB].includes(tab)
+    },
+    {
+      label: 'Application',
+      id: JOB_KIND_APPLICATION,
+      hidden: [JOBS_MONITORING_JOBS_TAB, JOBS_MONITORING_SCHEDULED_TAB].includes(tab)
+    },
+    {
+      label: 'Serving',
+      id: JOB_KIND_SERVING,
+      hidden: [JOBS_MONITORING_JOBS_TAB, JOBS_MONITORING_SCHEDULED_TAB].includes(tab)
+    },
     { label: 'Spark', id: JOB_KIND_SPARK },
     { label: 'Horovod', id: JOB_KIND_MPIJOB },
     { label: 'Dask', id: JOB_KIND_DASK },
     { label: 'Databricks', id: JOB_KIND_DATABRICKS },
-    { label: 'Local', id: JOB_KIND_LOCAL },
-    { label: 'Handler', id: JOB_KIND_HANDLER }
+    { label: 'Local', id: JOB_KIND_LOCAL, hidden: tab === JOBS_MONITORING_SCHEDULED_TAB },
+    { label: 'Handler', id: JOB_KIND_HANDLER, hidden: tab === JOBS_MONITORING_SCHEDULED_TAB }
   ]
 }
 

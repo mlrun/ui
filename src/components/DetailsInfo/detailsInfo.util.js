@@ -32,7 +32,7 @@ import {
   MODEL_ENDPOINTS_TAB,
   MLRUN_STORAGE_INPUT_PATH_SCHEME
 } from '../../constants'
-import { formatDatetime, parseUri } from '../../utils'
+import { formatDatetime, parseKeyValues, parseUri } from '../../utils'
 import { getChipOptions } from '../../utils/getChipOptions'
 import { getLimitsGpuType } from '../../elements/FormResourcesUnits/formResourcesUnits.util'
 import { isEveryObjectValueEmpty } from '../../utils/isEveryObjectValueEmpty'
@@ -239,6 +239,40 @@ export const generateProducerDetailsInfo = (selectedItem, isDetailsPopUp) => {
         </li>
       )
     })
+  }
+}
+
+export const generateDocumentLoaderDetailsInfo = (selectedItem, isDetailsPopUp) => {
+  if (!isEveryObjectValueEmpty(selectedItem) && selectedItem.document_loader) {
+    return (
+      <>
+        <li className="details-item" key="class">
+          <div className="details-item__header">Class</div>
+          <DetailsInfoItem
+            info={selectedItem.document_loader.loader_class_name}
+            isDetailsPopUp={isDetailsPopUp}
+          />
+        </li>
+        <li className="details-item" key="source_name">
+          <div className="details-item__header">Source name</div>
+          <DetailsInfoItem
+            info={selectedItem.document_loader.src_name}
+            isDetailsPopUp={isDetailsPopUp}
+          />
+        </li>
+        <li className="details-item" key="parameters">
+          <div className="details-item__header">Parameters</div>
+          <DetailsInfoItem
+            chipsData={{
+              chips: parseKeyValues(selectedItem.document_loader.kwargs),
+              chipOptions: getChipOptions('results'),
+              isEditEnabled: false
+            }}
+            isDetailsPopUp={isDetailsPopUp}
+          />
+        </li>
+      </>
+    )
   }
 }
 

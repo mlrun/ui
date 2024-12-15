@@ -41,11 +41,7 @@ import { fetchAllJobRuns, fetchJobs, fetchScheduledJobs } from '../reducers/jobR
 import { fetchWorkflows } from '../reducers/workflowReducer'
 import { useFiltersFromSearchParams } from './useFiltersFromSearchParams.hook'
 
-export const useJobsPageData = (
-  setSelectedJob,
-  initialTabData,
-  selectedTab
-) => {
+export const useJobsPageData = (setSelectedJob, initialTabData, selectedTab) => {
   const [jobRuns, setJobRuns] = useState([])
   const [editableItem, setEditableItem] = useState(null)
   const [jobWizardMode, setJobWizardMode] = useState(null)

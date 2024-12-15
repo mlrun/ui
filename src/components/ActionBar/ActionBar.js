@@ -65,7 +65,6 @@ const ActionBar = ({
   handleRefresh,
   hidden = false,
   navigateLink,
-  page,
   removeSelectedItem = null,
   setSearchParams,
   setSelectedRowData = null,
@@ -192,7 +191,7 @@ const ActionBar = ({
       const newFilters = { ...filters, ...formValues }
 
       if (filtersHelperResult) {
-        if (params.name || params.id) {
+        if ((params.name && params.tag) || params.id) {
           navigate(navigateLink)
         }
 
@@ -221,6 +220,7 @@ const ActionBar = ({
       changes,
       dispatch,
       params.name,
+      params.tag,
       params.id,
       filtersStore.groupBy,
       saveFilters,
@@ -414,7 +414,6 @@ ActionBar.propTypes = {
   handleRefresh: PropTypes.func.isRequired,
   hidden: PropTypes.bool,
   navigateLink: PropTypes.string,
-  page: PropTypes.string.isRequired,
   removeSelectedItem: PropTypes.func,
   setSearchParams: PropTypes.func.isRequired,
   setSelectedRowData: PropTypes.func,

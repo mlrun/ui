@@ -54,21 +54,23 @@ const ActionsMenu = ({
     isShowMenu && 'actions-menu__container-active'
   )
 
-  const clickHandler = useCallback(event => {
-    if (
-      !event.target.closest('.actions-menu-button')
-    ) {
-      setIsShowMenu(false)
-    }
-  }, [setIsShowMenu])
+  const clickHandler = useCallback(
+    event => {
+      if (!event.target.closest('.actions-menu-button')) {
+        setIsShowMenu(false)
+      }
+    },
+    [setIsShowMenu]
+  )
 
-  const scrollHandler = useCallback(event => {
-    if (
-      !event.target.closest('.actions-menu__body')
-    ) {
-      setIsShowMenu(false)
-    }
-  }, [setIsShowMenu])
+  const scrollHandler = useCallback(
+    event => {
+      if (!event.target.closest('.actions-menu__body')) {
+        setIsShowMenu(false)
+      }
+    },
+    [setIsShowMenu]
+  )
 
   const onMouseOut = () => {
     if (isShowMenu) {
@@ -93,7 +95,7 @@ const ActionsMenu = ({
   }, [dataItem, menu, menuPosition])
 
   useEffect(() => {
-    setIsIconDisplayed(actionMenu[0].some(menuItem => menuItem.icon))
+    setIsIconDisplayed(actionMenu[0]?.some(menuItem => menuItem.icon))
   }, [actionMenu])
 
   useEffect(() => {

@@ -31,14 +31,17 @@ import Details from '../Details/Details'
 import WarningMessage from '../../common/WarningMessage/WarningMessage'
 import ActionBar from '../ActionBar/ActionBar'
 import ArtifactsFilters from '../ArtifactsActionBar/ArtifactsFilters'
+import HistoryBackLink from '../../common/HistoryBackLink/historyBackLink'
 
-import { DATASETS_PAGE, FULL_VIEW_MODE } from '../../constants'
+import { ALL_VERSIONS_PATH, DATASETS_PAGE, DATASETS_TAB, FULL_VIEW_MODE } from '../../constants'
 import { getNoDataMessage } from '../../utils/getNoDataMessage'
-import { registerDatasetTitle, filtersConfig } from './datasets.util'
+import { registerDatasetTitle } from './datasets.util'
 import { ACTIONS_MENU, VIRTUALIZATION_CONFIG } from '../../types'
 import { SECONDARY_BUTTON } from 'igz-controls/constants'
 import { SORT_PROPS } from 'igz-controls/types'
 import { isRowRendered } from '../../hooks/useVirtualization.hook'
+import { getSavedSearchParams } from '../../utils/filter.util'
+import { getCloseDetailsLink } from '../../utils/link-helper.util'
 
 const DatasetsView = React.forwardRef(
   (
@@ -48,25 +51,27 @@ const DatasetsView = React.forwardRef(
       applyDetailsChangesCallback,
       artifactsStore,
       datasets,
+      datasetName,
       detailsFormInitialValues,
       filters,
+      filtersConfig,
       filtersStore,
       getAndSetSelectedArtifact,
       handleRefresh,
       handleRefreshWithFilters,
       handleRegisterDataset,
+      isAllVersions,
       maxArtifactsErrorIsShown,
       pageData,
+      projectName,
       requestErrorMessage,
       selectedDataset,
-      selectedRowData,
       setMaxArtifactsErrorIsShown,
       setSearchParams,
       setSelectedDatasetMin,
       sortProps,
       tableContent,
       tableHeaders,
-      toggleRow,
       viewMode = null,
       virtualizationConfig
     },
@@ -82,6 +87,12 @@ const DatasetsView = React.forwardRef(
             {artifactsStore.loading && <Loader />}
             <div className="table-container">
               <div className="content__action-bar-wrapper">
+                {isAllVersions && (
+                  <HistoryBackLink
+                    itemName={datasetName}
+                    link={`/projects/${projectName}/datasets${getSavedSearchParams(window.location.search)}`}
+                  />
+                )}
                 <ActionBar
                   actionButtons={[
                     {
@@ -93,13 +104,14 @@ const DatasetsView = React.forwardRef(
                   ]}
                   filters={filters}
                   filtersConfig={filtersConfig}
+                  navigateLink={`/projects/${projectName}/${DATASETS_TAB}${isAllVersions ? `/${datasetName}/${ALL_VERSIONS_PATH}` : ''}${window.location.search}`}
                   handleRefresh={handleRefresh}
                   page={DATASETS_PAGE}
                   setSearchParams={setSearchParams}
                   withRefreshButton
                   withoutExpandButton
                 >
-                  <ArtifactsFilters artifacts={datasets} />
+                  <ArtifactsFilters artifacts={datasets} isAllVersions={isAllVersions} />
                 </ActionBar>
               </div>
               {artifactsStore.loading ? null : datasets.length === 0 ? (
@@ -115,9 +127,7 @@ const DatasetsView = React.forwardRef(
                 />
               ) : (
                 <>
-                  {(selectedRowData.loading || artifactsStore.dataSets.datasetLoading) && (
-                    <Loader />
-                  )}
+                  {artifactsStore.dataSets.datasetLoading && <Loader />}
                   {maxArtifactsErrorIsShown && (
                     <WarningMessage
                       message="The query response displays up to 1000 items. Use filters to narrow down the results."
@@ -129,6 +139,9 @@ const DatasetsView = React.forwardRef(
                     applyDetailsChanges={applyDetailsChanges}
                     applyDetailsChangesCallback={applyDetailsChangesCallback}
                     detailsFormInitialValues={detailsFormInitialValues}
+                    getCloseDetailsLink={() =>
+                      getCloseDetailsLink(isAllVersions ? ALL_VERSIONS_PATH : DATASETS_TAB)
+                    }
                     handleCancel={() => setSelectedDatasetMin({})}
                     pageData={pageData}
                     retryRequest={handleRefreshWithFilters}
@@ -143,12 +156,10 @@ const DatasetsView = React.forwardRef(
                         isRowRendered(virtualizationConfig, index) && (
                           <ArtifactsTableRow
                             actionsMenu={actionsMenu}
-                            key={tableItem.data.ui.identifier}
+                            key={tableItem.data.ui.identifierUnique}
                             rowIndex={index}
                             rowItem={tableItem}
                             selectedItem={selectedDataset}
-                            selectedRowData={selectedRowData}
-                            toggleRow={toggleRow}
                           />
                         )
                     )}
@@ -185,25 +196,27 @@ DatasetsView.propTypes = {
   applyDetailsChangesCallback: PropTypes.func.isRequired,
   artifactsStore: PropTypes.object.isRequired,
   datasets: PropTypes.arrayOf(PropTypes.object).isRequired,
+  datasetName: PropTypes.string,
   detailsFormInitialValues: PropTypes.object.isRequired,
   filters: PropTypes.object.isRequired,
+  filtersConfig: PropTypes.object.isRequired,
   filtersStore: PropTypes.object.isRequired,
   getAndSetSelectedArtifact: PropTypes.func.isRequired,
   handleRefresh: PropTypes.func.isRequired,
   handleRefreshWithFilters: PropTypes.func.isRequired,
   handleRegisterDataset: PropTypes.func.isRequired,
+  isAllVersions: PropTypes.bool.isRequired,
   maxArtifactsErrorIsShown: PropTypes.bool.isRequired,
   pageData: PropTypes.object.isRequired,
+  projectName: PropTypes.string.isRequired,
   requestErrorMessage: PropTypes.string.isRequired,
   selectedDataset: PropTypes.object.isRequired,
-  selectedRowData: PropTypes.object.isRequired,
   setMaxArtifactsErrorIsShown: PropTypes.func.isRequired,
   setSearchParams: PropTypes.func.isRequired,
   setSelectedDatasetMin: PropTypes.func.isRequired,
   sortProps: SORT_PROPS,
   tableContent: PropTypes.arrayOf(PropTypes.object).isRequired,
   tableHeaders: PropTypes.arrayOf(PropTypes.object).isRequired,
-  toggleRow: PropTypes.func.isRequired,
   viewMode: PropTypes.string,
   virtualizationConfig: VIRTUALIZATION_CONFIG.isRequired
 }

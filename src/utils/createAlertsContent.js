@@ -17,12 +17,12 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import classNames from 'classnames'
 import { upperFirst } from 'lodash'
 import { formatDatetime } from './datetime'
 
 import { ReactComponent as Application } from 'igz-controls/images/entity-type-application.svg'
 import { ReactComponent as Endpoint } from 'igz-controls/images/entity-type-endpoint.svg'
+import { ReactComponent as Error } from 'igz-controls/images/severity-warning.svg'
 import { ReactComponent as Critical } from 'igz-controls/images/severity-critical.svg'
 import { ReactComponent as Email } from 'igz-controls/images/email-icon.svg'
 import { ReactComponent as Git } from 'igz-controls/images/git-icon.svg'
@@ -128,19 +128,24 @@ const alertsNotifications = {
 
 const getNotificationData = notifications =>
   notifications.map(notification => {
-    const tableCellClassName = classNames('table-cell-notification__content', {
-      'notification-fail': notification.err !== ''
-    })
-
     return {
-      icon: <div className={tableCellClassName}>{alertsNotifications[notification.kind]}</div>,
-      tooltip: upperFirst(notification.kind)
+      icon: (
+        <div className="alert-row-notification">
+          {alertsNotifications[notification.kind]}
+          {notification?.err && (
+            <div className="notification-fail">
+              <Error />
+            </div>
+          )}
+        </div>
+      ),
+      tooltip: upperFirst(
+        `${notification.summary.succeeded} done, ${notification.summary.failed} failed`
+      )
     }
   })
 
 export const createAlertRowData = ({ name, ...alert }) => {
-  alert.id = alert.id.slice(-6) // Use the last 6 characters of the database ID as the alert ID
-
   return {
     data: {
       ...alert

@@ -8,19 +8,35 @@
       "notifications": [
         {
           "kind": "email",
-          "err": ""
+          "err": "",
+          "summary": {
+            "failed": 0,
+            "succeeded": 4
+          }
         },
         {
           "kind": "webhook",
-          "err": ""
+          "err": "",
+          "summary": {
+            "failed": 0,
+            "succeeded": 4
+          }
         },
         {
           "kind": "git",
-          "err": ""
+          "err": "",
+          "summary": {
+            "failed": 0,
+            "succeeded": 4
+          }
         },
         {
           "kind": "slack",
-          "err": ""
+          "err": "",
+          "summary": {
+            "failed": 0,
+            "succeeded": 4
+          }
         }
       ],
       "entity_id": "5662c7a4470ef28ed1df450e80d37624de7e1749.histogram-data-drift.general_drift",
@@ -41,19 +57,35 @@
       "notifications": [
         {
           "kind": "email",
-          "err": "fail"
+          "err": "fail",
+          "summary": {
+            "failed": 2,
+            "succeeded": 4
+          }
         },
         {
           "kind": "webhook",
-          "err": "fail"
+          "err": "fail",
+          "summary": {
+            "failed": 2,
+            "succeeded": 4
+          }
         },
         {
           "kind": "git",
-          "err": "fail"
+          "err": "fail",
+          "summary": {
+            "failed": 2,
+            "succeeded": 4
+          }
         },
         {
           "kind": "slack",
-          "err": "fail"
+          "err": "fail",
+          "summary": {
+            "failed": 2,
+            "succeeded": 4
+          }
         }
       ],
       "entity_id": "trainer-train.5a8037bd46cf192ce7e94b25f06a8d13",
@@ -74,7 +106,11 @@
       "notifications": [
         {
           "kind": "webhook",
-          "err": ""
+          "err": "",
+          "summary": {
+            "failed": 0,
+            "succeeded": 4
+          }
         }
       ],
       "entity_id": "application-1",
@@ -95,11 +131,19 @@
       "notifications": [
         {
           "kind": "email",
-          "err": ""
+          "err": "",
+          "summary": {
+            "failed": 0,
+            "succeeded": 4
+          }
         },
         {
           "kind": "git",
-          "err": "Authentication failed"
+          "err": "Authentication failed",
+          "summary": {
+            "failed": 2,
+            "succeeded": 4
+          }
         }
       ],
       "entity_id": "d5e6f4b3970ef28ed1df450e80d37624de7e1749.feature-importance.general_drift",
@@ -120,7 +164,11 @@
       "notifications": [
         {
           "kind": "slack",
-          "err": ""
+          "err": "",
+          "summary": {
+            "failed": 0,
+            "succeeded": 4
+          }
         }
       ],
       "entity_id": "batch-inference-v2-infer.7ad15b839fc206e4ba9f02c84f31e57a",
@@ -141,7 +189,11 @@
       "notifications": [
         {
           "kind": "email",
-          "err": "SMTP server not reachable"
+          "err": "SMTP server not reachable",
+          "summary": {
+            "failed": 2,
+            "succeeded": 4
+          }
         }
       ],
       "entity_id": "a2b4c6d8970ef28ed1df450e80d37624de7e1749.statistical-shift.general_drift",
@@ -162,7 +214,11 @@
       "notifications": [
         {
           "kind": "webhook",
-          "err": ""
+          "err": "",
+          "summary": {
+            "failed": 0,
+            "succeeded": 4
+          }
         }
       ],
       "entity_id": "c6d3e7f0970ef28ed1df450e80d37624de7e1749.data-quality-issue.drift",
@@ -183,7 +239,11 @@
       "notifications": [
         {
           "kind": "slack",
-          "err": "Failed to send notification due to network issue"
+          "err": "Failed to send notification due to network issue",
+          "summary": {
+            "failed": 2,
+            "succeeded": 4
+          }
         }
       ],
       "entity_id": "batch-inference-v1-infer.c3b47590a6821d7ef9f2ab04c8e163a5",
@@ -204,11 +264,19 @@
       "notifications": [
         {
           "kind": "email",
-          "err": ""
+          "err": "",
+          "summary": {
+            "failed": 0,
+            "succeeded": 4
+          }
         },
         {
           "kind": "webhook",
-          "err": ""
+          "err": "",
+          "summary": {
+            "failed": 0,
+            "succeeded": 4
+          }
         }
       ],
       "entity_id": "d9e8f5b4970ef28ed1df450e80d37624de7e1749.input-missing-values.general_drift",
@@ -229,7 +297,11 @@
       "notifications": [
         {
           "kind": "git",
-          "err": ""
+          "err": "",
+          "summary": {
+            "failed": 0,
+            "succeeded": 4
+          }
         }
       ],
       "entity_id": "c2a3e1f8970ef28ed1df450e80d37624de7e1749.class-distribution.general_drift",
@@ -250,11 +322,20 @@
       "notifications": [
         {
           "kind": "email",
-          "err": ""
+          "err": "",
+          "summary": {
+            "failed": 0,
+            "succeeded": 4
+          }
         },
         {
           "kind": "webhook",
-          "err": "API endpoint not responding"
+          "err": "API endpoint not responding",
+          "summary": {
+            "failed": 8,
+            "succeeded": 4
+          }
+
         }
       ],
       "entity_id": "f3d4b5a1970ef28ed1df450e80d37624de7e1749.outlier-detection.general_drift",
@@ -275,7 +356,12 @@
       "notifications": [
         {
           "kind": "slack",
-          "err": ""
+          "err": "",
+          "summary": {
+            "failed": 0,
+            "succeeded": 4
+          }
+
         }
       ],
       "entity_id": "tutorial-function.af2de87229ab49139748db785e0c3d6b",
@@ -296,7 +382,11 @@
       "notifications": [
         {
           "kind": "email",
-          "err": "SMTP server not reachable"
+          "err": "SMTP server not reachable",
+          "summary": {
+            "failed": 3,
+            "succeeded": 4
+          }
         }
       ],
       "entity_id": "d5e6f4b3970ef28ed1df450e80d37624de7e1749.feature-importance.general_drift",
@@ -317,7 +407,11 @@
       "notifications": [
         {
           "kind": "webhook",
-          "err": ""
+          "err": "",
+          "summary": {
+            "failed": 0,
+            "succeeded": 4
+          }
         }
       ],
       "entity_id": "application-2",
@@ -338,7 +432,11 @@
       "notifications": [
         {
           "kind": "git",
-          "err": ""
+          "err": "",
+          "summary": {
+          "failed": 0,
+          "succeeded": 4
+        }
         }
       ],
       "entity_id": "get-data.a23bcd3ef5d9f0174abc8e09324a76bc",
@@ -359,7 +457,11 @@
       "notifications": [
         {
           "kind": "slack",
-          "err": "Failed to send notification due to network issue"
+          "err": "Failed to send notification due to network issue",
+          "summary": {
+            "failed": 1,
+            "succeeded": 4
+          }
         }
       ],
       "entity_id": "c9e7f6a3970ef28ed1df450e80d37624de7e1749.null-value-frequency.general_drift",
@@ -380,11 +482,19 @@
       "notifications": [
         {
           "kind": "email",
-          "err": ""
+          "err": "",
+          "summary": {
+            "failed": 0,
+            "succeeded": 4
+          }
         },
         {
           "kind": "webhook",
-          "err": ""
+          "err": "",
+          "summary": {
+            "failed": 0,
+            "succeeded": 4
+          }
         }
       ],
       "entity_id": "b4d5f8e7970ef28ed1df450e80d37624de7e1749.imbalance-ratio.general_drift",
@@ -405,7 +515,11 @@
       "notifications": [
         {
           "kind": "webhook",
-          "err": ""
+          "err": "",
+          "summary": {
+            "failed": 0,
+            "succeeded": 4
+          }
         }
       ],
       "entity_id": "get-dev.af12d780b9ce4a6c0357ef3941b5ad68",
@@ -426,7 +540,11 @@
       "notifications": [
         {
           "kind": "git",
-          "err": ""
+          "err": "",
+          "summary": {
+            "failed": 0,
+            "succeeded": 4
+          }
         }
       ],
       "entity_id": "model-endpoint-19.app-19.result-19",
@@ -447,11 +565,19 @@
       "notifications": [
         {
           "kind": "email",
-          "err": ""
+          "err": "",
+          "summary": {
+            "failed": 0,
+            "succeeded": 4
+          }
         },
         {
           "kind": "slack",
-          "err": "Failed to send notification due to network issue"
+          "err": "Failed to send notification due to network issue",
+          "summary": {
+            "failed": 2,
+            "succeeded": 4
+          }
         }
       ],
       "entity_id": "d5e6f4b3970ef28ed1df450e80d37624de7e1749.feature-importance.general_drift",

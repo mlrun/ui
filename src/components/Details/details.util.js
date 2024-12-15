@@ -143,6 +143,10 @@ export const generateArtifactsContent = (detailsType, selectedItem, projectName)
         value: selectedItem.target_path,
         copyToClipboard: true
       },
+      original_source: {
+        value: selectedItem.src_path,
+        copyToClipboard: true
+      },
       target_uri: {
         value: selectedItem.URI,
         copyToClipboard: true
@@ -160,6 +164,10 @@ export const generateArtifactsContent = (detailsType, selectedItem, projectName)
       tree: {
         value: selectedItem.tree,
         copyToClipboard: selectedItem.tree?.length > 0
+      },
+      uid: {
+        value: selectedItem.uid,
+        copyToClipboard: selectedItem.uid?.length > 0
       },
       updated: {
         value: formatDatetime(selectedItem.updated, 'N/A')

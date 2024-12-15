@@ -17,31 +17,28 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import { useMemo, useState } from 'react'
-import { useSearchParams } from 'react-router-dom'
+import React from 'react'
+import PropTypes from 'prop-types'
 
-import DocumentsView from './DocumentsView'
+import './detailsCollections.scss'
 
-import { useFiltersFromSearchParams } from '../../hooks/useFiltersFromSearchParams.hook'
-import { filtersConfig, generatePageData } from './documents.util'
-import { getViewMode } from '../../utils/helper'
-
-const Documents = () => {
-  const [selectedDocument] = useState({})
-  const filters = useFiltersFromSearchParams(filtersConfig)
-  const [, setSearchParams] = useSearchParams()
-  const viewMode = getViewMode(window.location.search)
-
-  const pageData = useMemo(() => generatePageData(viewMode), [viewMode])
-
+const DetailsCollections = ({ selectedItem }) => {
   return (
-    <DocumentsView
-      filters={filters}
-      pageData={pageData}
-      selectedDocument={selectedDocument}
-      setSearchParams={setSearchParams}
-    />
+    <div className="collections-list">
+      <div className="collections-list__header">
+        <h5 className="collections-list__header-item">Name</h5>
+      </div>
+      <div className="collections-list__body">
+        {Object.keys(selectedItem.collections).map((collectionItemKey, index) => (
+          <div className="collections-list__body-item">{collectionItemKey}</div>
+        ))}
+      </div>
+    </div>
   )
 }
 
-export default Documents
+DetailsCollections.propTypes = {
+  selectedItem: PropTypes.object.isRequired
+}
+
+export default DetailsCollections

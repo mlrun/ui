@@ -48,10 +48,24 @@ const ScheduledJobsCounters = () => {
   return (
     <StatsCard className="monitoring-stats">
       <StatsCard.Header title="Scheduled">
-        <div className="project-card__info">
-          <ClockIcon className="project-card__info-icon" />
-          <span>Next 24 hours</span>
-        </div>
+        <StatsCard.Col>
+          <div className="project-card__info">
+            <span className="stats__subtitle">Total</span>
+            <div
+              className="stats__counter"
+              onClick={scheduledStats.total.link}
+              data-testid="scheduled_total_counter"
+            >
+              {projectStore.projectsSummary.loading ? (
+                <Loader section small secondary />
+              ) : (
+                scheduledStats.total.counter
+              )}
+            </div>
+            <ClockIcon className="project-card__info-icon" />
+            <span>Next 24 hours</span>
+          </div>
+        </StatsCard.Col>
 
         {/* Todo: Use in the future
         <DatePicker
@@ -67,56 +81,37 @@ const ScheduledJobsCounters = () => {
       </StatsCard.Header>
       <StatsCard.Row>
         <StatsCard.Col>
-          <h6 className="stats__subtitle">Jobs</h6>
-          <span className="stats__counter">
-            {projectStore.projectsSummary.loading ? (
-              <Loader section small secondary />
-            ) : (
-              <span
-                className="stats__link"
-                onClick={scheduledStats.jobs.link}
-                data-testid="scheduled_jobs_counter"
-              >
-                {scheduledStats.jobs.counter}
-              </span>
-            )}
-          </span>
+          <div
+            className="stats__link"
+            onClick={scheduledStats.jobs.link}
+            data-testid="scheduled_jobs_counter"
+          >
+            <div className="stats__counter">
+              {projectStore.projectsSummary.loading ? (
+                <Loader section small secondary />
+              ) : (
+                scheduledStats.jobs.counter
+              )}
+            </div>
+            <h6 className="stats__subtitle">Jobs</h6>
+          </div>
         </StatsCard.Col>
         <StatsCard.Col>
-          <h6 className="stats__subtitle">Workflows</h6>
-          <span className="stats__counter">
-            {projectStore.projectsSummary.loading ? (
-              <Loader section small secondary />
-            ) : (
-              <span
-                className="stats__link"
-                onClick={scheduledStats.workflows.link}
-                data-testid="scheduled_wf_counter"
-              >
-                {scheduledStats.workflows.counter}
-              </span>
-            )}
-          </span>
+          <div
+            className="stats__link"
+            onClick={scheduledStats.workflows.link}
+            data-testid="scheduled_wf_counter"
+          >
+            <div className="stats__counter">
+              {projectStore.projectsSummary.loading ? (
+                <Loader section small secondary />
+              ) : (
+                scheduledStats.workflows.counter
+              )}
+            </div>
+            <h6 className="stats__subtitle">Workflows</h6>
+          </div>
         </StatsCard.Col>
-        <StatsCard.Col>
-          <h6 className="stats__subtitle">Total</h6>
-          <span className="stats__counter">
-            {projectStore.projectsSummary.loading ? (
-              <Loader section small secondary />
-            ) : (
-              <span
-                className="stats__link"
-                onClick={scheduledStats.total.link}
-                data-testid="scheduled_total_counter"
-              >
-                {scheduledStats.total.counter}
-              </span>
-            )}
-          </span>
-        </StatsCard.Col>
-      </StatsCard.Row>
-      <StatsCard.Row>
-        <StatsCard.Col />
       </StatsCard.Row>
     </StatsCard>
   )

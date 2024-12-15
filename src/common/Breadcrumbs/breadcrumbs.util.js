@@ -18,6 +18,8 @@ under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
 import {
+  ALERTS_TAB,
+  DOCUMENTS_TAB,
   FEATURE_SETS_TAB,
   FEATURE_VECTORS_TAB,
   FEATURES_TAB,
@@ -47,6 +49,7 @@ export const generateMlrunScreens = params =>
         },
         { label: 'Feature store', id: 'feature-store' },
         { label: 'Datasets', id: 'datasets' },
+        { label: 'Documents', id: DOCUMENTS_TAB },
         { label: 'Artifacts', id: 'files' },
         { label: 'Models', id: 'models' },
         { label: 'Jobs and workflows', id: 'jobs' },
@@ -67,6 +70,11 @@ export const generateMlrunScreens = params =>
         }
       ]
     : [
+        {
+          label: 'Alerts monitoring',
+          id: ALERTS_TAB,
+          linkTo: `/${PROJECTS_PAGE_PATH}/*/${ALERTS_TAB}`
+        },
         {
           label: 'Jobs monitoring',
           id: JOBS_MONITORING_PAGE,
