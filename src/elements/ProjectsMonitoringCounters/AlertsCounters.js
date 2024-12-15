@@ -18,7 +18,7 @@ under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
 import React, { useMemo } from 'react'
-import { useLocation, useNavigate, useParams } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 
 import { useSelector } from 'react-redux'
 
@@ -32,15 +32,11 @@ import { generateAlertsStats } from '../../utils/generateAlertsStats'
 import './projectsMonitoringCounters.scss'
 
 const AlertsCounters = () => {
-  const { pathname } = useLocation()
   const { projectName: paramProjectName } = useParams()
   const navigate = useNavigate()
   const projectStore = useSelector(store => store.projectStore)
 
-  const projectName = useMemo(
-    () => (pathname === '/projects' ? '*' : paramProjectName),
-    [pathname, paramProjectName]
-  )
+  const projectName = useMemo(() => (paramProjectName ? paramProjectName : '*'), [paramProjectName])
 
   const alertsStats = useMemo(
     () => generateAlertsStats(projectStore.jobsMonitoringData.alerts, navigate, projectName),

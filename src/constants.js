@@ -538,6 +538,8 @@ export const ENTITY_TYPE = 'entity-type'
 export const ENTITY_KIND = 'entity-kind'
 export const ENTITY_ID = 'entity-id'
 export const EVENT_TYPE = 'event-type'
+export const EVENT_KIND = 'event-kind'
+
 export const SEVERITY = 'severity'
 export const JOB = 'job'
 export const JOB_NAME = 'job-name'

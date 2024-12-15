@@ -24,14 +24,16 @@ import { defaultPendingHandler } from './redux.util'
 import { parseAlerts } from '../utils/parseAlert'
 import { largeResponseCatchHandler } from '../utils/largeResponseCatchHandler'
 import {
-  ENDPOINT_APPLICATION,
-  ENDPOINT_RESULT,
   ENTITY_ID,
+  // ENDPOINT_APPLICATION,
+  // ENDPOINT_RESULT,
+  // ENTITY_ID,
   ENTITY_KIND,
   ENTITY_TYPE,
+  EVENT_KIND,
   EVENT_TYPE,
-  FILTER_ALL_ITEMS,
-  MODEL_ENDPOINT_RESULT
+  FILTER_ALL_ITEMS
+  // MODEL_ENDPOINT_RESULT
 } from '../constants'
 
 const initialState = {
@@ -41,6 +43,7 @@ const initialState = {
 }
 
 const generateRequestParams = filters => {
+  console.log(filters)
   const params = {}
   if (filters.name) {
     params.name = `~${filters.name}`
@@ -60,14 +63,18 @@ const generateRequestParams = filters => {
     params[ENTITY_KIND] = filters?.[ENTITY_TYPE]
   }
 
-  if (filters?.[ENTITY_TYPE] === FILTER_ALL_ITEMS) {
-    if (!filters?.[ENTITY_ID]) return
-    params[ENTITY_KIND] = filters?.[ENTITY_ID] || ''
-  } else if (filters?.[ENTITY_TYPE] === MODEL_ENDPOINT_RESULT) {
-    if (!(filters?.[ENDPOINT_APPLICATION] && filters?.[ENDPOINT_RESULT])) return
-    params[ENTITY_KIND] =
-      `*.${filters?.[ENDPOINT_APPLICATION] || '*'}.result.${filters?.[ENDPOINT_RESULT]}*`
-  }
+  params[ENTITY_ID] = `*${filters?.[ENTITY_ID]}*`
+
+  // if (filters?.[ENTITY_TYPE] === FILTER_ALL_ITEMS) {
+  //   if (!filters?.[ENTITY_ID]) params[ENTITY_KIND] = filters?.[ENTITY_ID] || ''
+  // } else if (filters?.[ENTITY_TYPE] === MODEL_ENDPOINT_RESULT) {
+  //   if (!(filters?.[ENDPOINT_APPLICATION] && filters?.[ENDPOINT_RESULT]))
+  //     params[ENTITY_KIND] =
+  //       `*.${filters?.[ENDPOINT_APPLICATION] || '*'}.result.${filters?.[ENDPOINT_RESULT]}*`
+  // } mm-app-failed-ongqxxdxry-0-auto-3-None
+  //   mm-app-failed-ongqxxdxry-0-manual-3-3m
+  // "2024-11-06T12:25:20Z"
+  // "2024-12-01T06:27:00.000Z
 
   if (
     filters?.severity &&
@@ -78,7 +85,7 @@ const generateRequestParams = filters => {
   }
 
   if (filters?.[EVENT_TYPE] && filters?.[EVENT_TYPE] !== FILTER_ALL_ITEMS) {
-    params[EVENT_TYPE] = filters?.[EVENT_TYPE]
+    params[EVENT_KIND] = filters?.[EVENT_TYPE]
   }
 
   return params
