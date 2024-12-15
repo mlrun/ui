@@ -37,7 +37,7 @@ const AlertsCounters = () => {
   const projectStore = useSelector(store => store.projectStore)
 
   const alertsData = useMemo(() => {
-    const path = pathname === '/projects' ? '*' : paramProjectName
+    const projectName = paramProjectName ? paramProjectName : '*'
     const defaultAlertData = {
       endpoint: 0,
       jobs: 0,
@@ -45,13 +45,13 @@ const AlertsCounters = () => {
       total: 0
     }
 
-    if (path !== '*') {
+    if (projectName !== '*') {
       const endpoint = projectStore.projectSummary.data.endpoint_alerts_count || 0
       const jobs = projectStore.projectSummary.data.job_alerts_count || 0
       const application = projectStore.projectSummary.data.other_alerts_count || 0
 
       return {
-        projectName: path,
+        projectName,
         data: {
           endpoint,
           jobs,
@@ -62,11 +62,10 @@ const AlertsCounters = () => {
     }
 
     return {
-      projectName: path,
+      projectName,
       data: projectStore.jobsMonitoringData.alerts || defaultAlertData
     }
   }, [
-    pathname,
     paramProjectName,
     projectStore.jobsMonitoringData.alerts,
     projectStore.projectSummary.data.endpoint_alerts_count,
@@ -93,7 +92,7 @@ const AlertsCounters = () => {
               {projectStore.projectsSummary.loading ? (
                 <Loader section small secondary />
               ) : (
-                (projectStore.jobsMonitoringData.alerts.total || 0).toLocaleString()
+                (alertsData.data.total || 0).toLocaleString()
               )}
             </div>
             <ClockIcon className="project-card__info-icon" />
@@ -112,7 +111,7 @@ const AlertsCounters = () => {
               {projectStore.projectsSummary.loading ? (
                 <Loader section small secondary />
               ) : (
-                projectStore.jobsMonitoringData.alerts.endpoint
+                (alertsData.data.endpoint || 0).toLocaleString()
               )}
             </div>
             <h6 className="stats__subtitle">Endpoint</h6>
@@ -128,7 +127,7 @@ const AlertsCounters = () => {
               {projectStore.projectsSummary.loading ? (
                 <Loader section small secondary />
               ) : (
-                (projectStore.jobsMonitoringData.alerts.jobs || 0).toLocaleString()
+                (alertsData.data.jobs || 0).toLocaleString()
               )}
             </div>
             <h6 className="stats__subtitle">Jobs</h6>
@@ -144,7 +143,7 @@ const AlertsCounters = () => {
               {projectStore.projectsSummary.loading ? (
                 <Loader section small secondary />
               ) : (
-                (projectStore.jobsMonitoringData.alerts.application || 0).toLocaleString()
+                (alertsData.data.application || 0).toLocaleString()
               )}
             </div>
             <h6 className="stats__subtitle">Application</h6>
