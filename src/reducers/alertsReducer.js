@@ -23,18 +23,7 @@ import alertsApi from '../api/alerts-api'
 import { defaultPendingHandler } from './redux.util'
 import { parseAlerts } from '../utils/parseAlert'
 import { largeResponseCatchHandler } from '../utils/largeResponseCatchHandler'
-import {
-  ENTITY_ID,
-  // ENDPOINT_APPLICATION,
-  // ENDPOINT_RESULT,
-  // ENTITY_ID,
-  ENTITY_KIND,
-  ENTITY_TYPE,
-  EVENT_KIND,
-  EVENT_TYPE,
-  FILTER_ALL_ITEMS
-  // MODEL_ENDPOINT_RESULT
-} from '../constants'
+import { ENTITY_KIND, ENTITY_TYPE, EVENT_KIND, EVENT_TYPE, FILTER_ALL_ITEMS } from '../constants'
 
 const initialState = {
   alerts: [],
@@ -43,7 +32,6 @@ const initialState = {
 }
 
 const generateRequestParams = filters => {
-  console.log(filters)
   const params = {}
   if (filters.name) {
     params.name = `~${filters.name}`
@@ -51,30 +39,19 @@ const generateRequestParams = filters => {
 
   if (filters?.dates) {
     if (filters.dates.value[0]) {
-      params.start = filters.dates.value[0].toISOString()
+      params.since = filters.dates.value[0].toISOString()
     }
 
-    if (filters.dates.value[1]) {
-      params.end = filters.dates.value[1].toISOString()
+    if (filters.dates.value[1] && !filters.dates.isPredefined) {
+      params.until = filters.dates.value[1].toISOString()
     }
   }
+
+  // TODO: add logic for the entity-id based on entity-type after integration with backend
 
   if (filters?.[ENTITY_TYPE] && filters?.[ENTITY_TYPE] !== FILTER_ALL_ITEMS) {
     params[ENTITY_KIND] = filters?.[ENTITY_TYPE]
   }
-
-  params[ENTITY_ID] = `*${filters?.[ENTITY_ID]}*`
-
-  // if (filters?.[ENTITY_TYPE] === FILTER_ALL_ITEMS) {
-  //   if (!filters?.[ENTITY_ID]) params[ENTITY_KIND] = filters?.[ENTITY_ID] || ''
-  // } else if (filters?.[ENTITY_TYPE] === MODEL_ENDPOINT_RESULT) {
-  //   if (!(filters?.[ENDPOINT_APPLICATION] && filters?.[ENDPOINT_RESULT]))
-  //     params[ENTITY_KIND] =
-  //       `*.${filters?.[ENDPOINT_APPLICATION] || '*'}.result.${filters?.[ENDPOINT_RESULT]}*`
-  // } mm-app-failed-ongqxxdxry-0-auto-3-None
-  //   mm-app-failed-ongqxxdxry-0-manual-3-3m
-  // "2024-11-06T12:25:20Z"
-  // "2024-12-01T06:27:00.000Z
 
   if (
     filters?.severity &&
