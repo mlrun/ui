@@ -68,6 +68,7 @@ const DetailsArtifacts = ({
 
   const dispatch = useDispatch()
   const artifactsStore = useSelector(store => store.artifactsStore)
+  const isJobLoading = useSelector(store => store.jobsStore.jobLoading)
 
   const showArtifact = useCallback(
     id => {
@@ -207,7 +208,7 @@ const DetailsArtifacts = ({
     }
   }, [params.jobId, params.projectName, selectedItem, iteration])
 
-  return artifactsStore.loading ? (
+  return artifactsStore.loading || isJobLoading ? (
     <Loader />
   ) : artifactsPreviewContent.length === 0 ? (
     <NoData message={requestErrorMessage} />
