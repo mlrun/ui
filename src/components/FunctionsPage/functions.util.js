@@ -119,6 +119,7 @@ const handleFetchFunctionLogs = (
 }
 
 const handleFetchFunctionApplicationLogs = (
+  dispatch,
   item,
   projectName,
   setDetailsLogs,
@@ -126,6 +127,7 @@ const handleFetchFunctionApplicationLogs = (
   fetchFunctionNuclioLogsTimeout
 ) => {
   return getFunctionNuclioLogs(
+    dispatch,
     fetchFunctionNuclioLogs,
     fetchFunctionNuclioLogsTimeout,
     projectName,
@@ -183,14 +185,14 @@ export const generateFunctionsPageData = (
       },
       refreshAdditionalLogs: (item, projectName, setDetailsLogs) => {
         if (showAdditionalLogs && selectedFunction.tag) {
-          return () =>
-            handleFetchFunctionApplicationLogs(
-              item,
-              projectName,
-              setDetailsLogs,
-              functionsActions.fetchFunctionNuclioLogs,
-              fetchFunctionNuclioLogsTimeout
-            )
+          return handleFetchFunctionApplicationLogs(
+            dispatch,
+            item,
+            projectName,
+            setDetailsLogs,
+            functionsActions.fetchFunctionNuclioLogs,
+            fetchFunctionNuclioLogsTimeout
+          )
         }
       },
       removeLogs: () => handleRemoveLogs(fetchFunctionLogsTimeout),
