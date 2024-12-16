@@ -146,7 +146,10 @@ const getNotificationData = notifications =>
   notifications.map(notification => {
     return {
       icon: (
-        <div className="alert-row-notification">
+        <div
+          data-testid={`${notification.kind}-${notification.err.length === 0 ? 'success' : 'fail'}`}
+          className="alert-row-notification"
+        >
           {alertsNotifications[notification.kind]}
           {notification?.err && (
             <div className="notification-fail">

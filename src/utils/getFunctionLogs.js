@@ -73,7 +73,9 @@ export const getFunctionLogs = (
           const hash = response.find(item => item.name === name && item.tag === TAG_LATEST).hash
 
           if (hash) {
-            navigate(`/projects/${projectName}/functions/${hash}/build-log${window.location.search}`)
+            navigate(
+              `/projects/${projectName}/functions/${hash}/build-log${window.location.search}`
+            )
           }
         })
       }
@@ -86,6 +88,7 @@ export const getFunctionLogs = (
 }
 
 export const getFunctionNuclioLogs = (
+  dispatch,
   fetchFunctionNuclioLogs,
   fetchFunctionNuclioLogsTimeoutRef,
   projectName,
@@ -93,7 +96,7 @@ export const getFunctionNuclioLogs = (
   tag,
   setDetailsLogs
 ) => {
-  fetchFunctionNuclioLogs(projectName, name, tag).then(response => {
+  dispatch(fetchFunctionNuclioLogs(projectName, name, tag)).then(response => {
     if (isFunctionTransient(response)) {
       clearLogsTimeout(fetchFunctionNuclioLogsTimeoutRef)
 
