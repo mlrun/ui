@@ -36,7 +36,7 @@ export const fetchAlert = createAsyncThunk(
     return alertsApi
       .getAlert(project, filters, config)
       .then(({ data }) => {
-        return parseAlerts(data.alerts)
+        return parseAlerts(data.activations || [])
       })
       .catch(error => {
         largeResponseCatchHandler(
@@ -54,7 +54,7 @@ export const fetchAlerts = createAsyncThunk(
     return alertsApi
       .getAlerts(project, filters, config)
       .then(({ data }) => {
-        return parseAlerts(data.alerts)
+        return { ...data, activations: parseAlerts(data.activations || []) }
       })
       .catch(error => {
         largeResponseCatchHandler(

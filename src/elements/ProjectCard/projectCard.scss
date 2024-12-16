@@ -69,53 +69,52 @@
 
     &-icon {
       display: flex;
-      justify-content: center;
       gap: 2px;
+      justify-content: center;
+      margin: 0;
       color: $primary;
       font-weight: normal;
       font-size: 1.25rem;
-      margin: 0;
     }
   }
 
   &__alert {
-    margin-right: 8px;
     display: flex;
-    border-radius: 100px;
-    padding:  3px 8px  ;
+    gap: 2px;
     align-items: center;
+    margin-right: 8px;
+    padding: 3px 8px;
     background-color: $wildSand;
+    border-radius: 100px;
 
     &-icon {
       width: 16px;
       height: 16px;
 
-    path{
-      fill: $ceriseRed;
+      path {
+        fill: $ceriseRed;
+      }
     }
-  }
 
-    &-text{
+    &-text {
       color: $primary;
-      font-family: Roboto,sans-serif;
       font-size: 14px;
+      font-family: Roboto, sans-serif;
     }
   }
 
   &__info {
     display: flex;
     align-items: center;
-    font-size: 0.75rem;
     color: $topaz;
+    font-size: 0.75rem;
 
-    & > *:first-child {
-      flex: 0 0 auto;
+    & *:not(:last-child) {
       margin-right: 5px;
-      color: $spunPearl;
     }
 
     &-icon {
-      flex: 0 1 25px;
+      flex: 0 1 12px;
 
       & * {
         fill: $spunPearl;
@@ -125,10 +124,6 @@
 
   &:hover {
     box-shadow: $previewBoxShadow;
-  }
-
-  .loader-wrapper {
-    position: absolute;
   }
 
   .project-data-card__statistics {

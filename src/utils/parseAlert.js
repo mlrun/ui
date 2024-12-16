@@ -23,8 +23,8 @@ export const parseAlerts = alerts => {
       ...alert,
       ui: {
         ...alert,
-        identifier: `${alert.id.slice(-6)}`,
-        identifierUnique: `${alert.name}.${alert.id.slice(-6)}`
+        identifier: alert.id,
+        identifierUnique: `${alert.name}.${alert.id}`
       }
     }
   })

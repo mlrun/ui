@@ -41,14 +41,19 @@ export const generateUrlFromRouterPath = link => {
   return new URL(link, window.location.origin).toString()
 }
 
-export const getCloseDetailsLink = paramName => {
+export const getCloseDetailsLink = (paramName, ignoreOrigin) => {
   const link =
     window.location.pathname
       .split('/')
       .splice(0, window.location.pathname.split('/').lastIndexOf(paramName) + 1)
       .join('/') + window.location.search
 
-  return generateUrlFromRouterPath(link)
+  return ignoreOrigin ? link : generateUrlFromRouterPath(link)
+}
+
+//TODO: the getCloseDetailsAlertLink will be updated with ML-8368
+export const getCloseDetailsAlertLink = () => {
+  return `/projects/*/alerts/${window.location.search}`
 }
 
 export const getDefaultCloseDetailsLink = (params, page, tab) => {

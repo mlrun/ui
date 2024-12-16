@@ -26,29 +26,34 @@ import Breadcrumbs from '../../common/Breadcrumbs/Breadcrumbs'
 import FunctionsFilters from './FunctionsFilters'
 import FunctionsPanel from '../FunctionsPanel/FunctionsPanel'
 import FunctionsTableRow from '../../elements/FunctionsTableRow/FunctionsTableRow'
+import HistoryBackLink from '../../common/HistoryBackLink/historyBackLink'
 import Loader from '../../common/Loader/Loader'
 import NoData from '../../common/NoData/NoData'
+import Pagination from '../../common/Pagination/Pagination'
 import Table from '../Table/Table'
 import { ConfirmDialog } from 'igz-controls/components'
 
-import { FUNCTIONS_PAGE, PANEL_CREATE_MODE, PANEL_EDIT_MODE } from '../../constants'
+import {
+  FUNCTIONS_PAGE,
+  FUNCTIONS_PAGE_PATH,
+  PANEL_CREATE_MODE,
+  PANEL_EDIT_MODE,
+  ALL_VERSIONS_PATH
+} from '../../constants'
+import { FILTERS_CONFIG } from '../../types'
 import { SECONDARY_BUTTON } from 'igz-controls/constants'
-import { FILTERS_CONFIG, VIRTUALIZATION_CONFIG } from '../../types'
+import { getCloseDetailsLink } from '../../utils/link-helper.util'
 import { getNoDataMessage } from '../../utils/getNoDataMessage'
-import { isRowRendered } from '../../hooks/useVirtualization.hook'
+import { getSavedSearchParams } from '../../utils/filter.util'
 
 const FunctionsView = ({
   actionsMenu,
-  allRowsAreExpanded,
   closePanel,
   confirmData,
   createFunctionSuccess,
   editableItem,
-  expandedRowsData,
   filters,
-  filtersChangeCallback,
   filtersStore,
-  functions,
   functionsFiltersConfig,
   functionsPanelIsOpen,
   functionsStore,
@@ -56,19 +61,20 @@ const FunctionsView = ({
   handleCancel,
   handleDeployFunctionFailure,
   handleDeployFunctionSuccess,
+  handleRefreshFunctions,
   handleSelectFunction,
+  isAllVersions,
   isDemoMode,
   pageData,
+  paginationConfigFunctionsRef,
   requestErrorMessage,
   retryRequest,
   selectedFunction,
-  setSearchParams,
-  tableContent,
-  toggleAllRows,
-  toggleRow,
-  virtualizationConfig
+  setSearchFunctionsParams,
+  tableContent
 }) => {
   const params = useParams()
+
   return (
     <>
       <div className="content-wrapper">
@@ -78,15 +84,20 @@ const FunctionsView = ({
         <div className="content">
           <div className="table-container">
             <div className="content__action-bar-wrapper">
+              {isAllVersions && (
+                <HistoryBackLink
+                  link={`/projects/${params.projectName}/functions${getSavedSearchParams(window.location.search)}`}
+                  itemName={params.funcName}
+                />
+              )}
               <ActionBar
-                allRowsAreExpanded={allRowsAreExpanded}
-                filters={filters}
-                filtersConfig={functionsFiltersConfig}
-                handleRefresh={filtersChangeCallback}
-                navigateLink={`/projects/${params.projectName}/functions${window.location.search}`}
                 page={FUNCTIONS_PAGE}
-                setSearchParams={setSearchParams}
-                toggleAllRows={toggleAllRows}
+                filtersConfig={functionsFiltersConfig}
+                filters={filters}
+                handleRefresh={handleRefreshFunctions}
+                navigateLink={`/projects/${params.projectName}/functions${isAllVersions ? `/${params.funcName}/${ALL_VERSIONS_PATH}` : ''}${window.location.search}`}
+                setSearchParams={setSearchFunctionsParams}
+                withoutExpandButton
                 actionButtons={[
                   {
                     hidden: !isDemoMode,
@@ -103,7 +114,7 @@ const FunctionsView = ({
             </div>
             {functionsStore.loading ? (
               <Loader />
-            ) : functions.length === 0 ? (
+            ) : tableContent.length === 0 ? (
               <NoData
                 message={getNoDataMessage(
                   filters,
@@ -119,31 +130,31 @@ const FunctionsView = ({
                 {functionsStore.funcLoading && <Loader />}
                 <Table
                   actionsMenu={actionsMenu}
+                  getCloseDetailsLink={() =>
+                    getCloseDetailsLink(isAllVersions ? ALL_VERSIONS_PATH : FUNCTIONS_PAGE_PATH)
+                  }
                   handleCancel={handleCancel}
                   pageData={pageData}
                   retryRequest={retryRequest}
                   selectedItem={selectedFunction}
                   tableClassName="functions-table"
                   tableHeaders={tableContent[0]?.content ?? []}
-                  virtualizationConfig={virtualizationConfig}
                 >
-                  {tableContent.map(
-                    (tableItem, index) =>
-                      isRowRendered(virtualizationConfig, index) && (
-                        <FunctionsTableRow
-                          actionsMenu={actionsMenu}
-                          expandedRowsData={expandedRowsData}
-                          handleSelectItem={handleSelectFunction}
-                          key={tableItem.data.ui.identifier}
-                          rowIndex={index}
-                          rowItem={tableItem}
-                          selectedItem={selectedFunction}
-                          toggleRow={toggleRow}
-                          withQuickActions
-                        />
-                      )
-                  )}
+                  {tableContent.map((tableItem, index) => (
+                    <FunctionsTableRow
+                      actionsMenu={actionsMenu}
+                      handleSelectItem={handleSelectFunction}
+                      key={tableItem.data.hash + index}
+                      rowItem={tableItem}
+                      selectedItem={selectedFunction}
+                      withQuickActions
+                    />
+                  ))}
                 </Table>
+                <Pagination
+                  paginationConfig={paginationConfigFunctionsRef.current}
+                  closeParamName={isAllVersions ? ALL_VERSIONS_PATH : FUNCTIONS_PAGE_PATH}
+                />
               </>
             )}
           </div>
@@ -189,15 +200,11 @@ FunctionsView.defaultPropTypes = {
 
 FunctionsView.propTypes = {
   actionsMenu: PropTypes.func.isRequired,
-  allRowsAreExpanded: PropTypes.bool.isRequired,
   closePanel: PropTypes.func.isRequired,
   confirmData: PropTypes.object,
   createFunctionSuccess: PropTypes.func.isRequired,
   editableItem: PropTypes.object,
-  expandedRowsData: PropTypes.object.isRequired,
-  filtersChangeCallback: PropTypes.func.isRequired,
   filtersStore: PropTypes.object.isRequired,
-  functions: PropTypes.arrayOf(PropTypes.object).isRequired,
   functionsFiltersConfig: FILTERS_CONFIG.isRequired,
   functionsPanelIsOpen: PropTypes.bool.isRequired,
   functionsStore: PropTypes.object.isRequired,
@@ -205,16 +212,15 @@ FunctionsView.propTypes = {
   handleCancel: PropTypes.func.isRequired,
   handleDeployFunctionFailure: PropTypes.func.isRequired,
   handleDeployFunctionSuccess: PropTypes.func.isRequired,
+  handleRefreshFunctions: PropTypes.func.isRequired,
   handleSelectFunction: PropTypes.func.isRequired,
+  isAllVersions: PropTypes.bool.isRequired,
   pageData: PropTypes.object.isRequired,
   requestErrorMessage: PropTypes.string.isRequired,
   retryRequest: PropTypes.func.isRequired,
   selectedFunction: PropTypes.object.isRequired,
-  setSearchParams: PropTypes.func.isRequired,
-  tableContent: PropTypes.arrayOf(PropTypes.object).isRequired,
-  toggleAllRows: PropTypes.func.isRequired,
-  toggleRow: PropTypes.func.isRequired,
-  virtualizationConfig: VIRTUALIZATION_CONFIG.isRequired
+  setSearchFunctionsParams: PropTypes.func.isRequired,
+  tableContent: PropTypes.arrayOf(PropTypes.object).isRequired
 }
 
 export default FunctionsView

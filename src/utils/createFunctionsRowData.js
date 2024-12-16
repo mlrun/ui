@@ -19,8 +19,9 @@ such restriction.
 */
 import { formatDatetime } from './datetime'
 import { getFunctionImage } from '../components/FunctionsPage/functions.util'
+import { ALL_VERSIONS_PATH } from '../constants'
 
-const createFunctionsRowData = (func, projectName, showExpandButton) => {
+const createFunctionsRowData = (func, projectName, isAllVersions) => {
   return {
     data: {
       ...func
@@ -28,12 +29,12 @@ const createFunctionsRowData = (func, projectName, showExpandButton) => {
     content: [
       {
         id: `name.${func.ui.identifierUnique}`,
-        headerId: 'name',
-        headerLabel: 'Name',
-        value: func.name,
+        headerId: isAllVersions ? 'hash' : 'name',
+        headerLabel: isAllVersions ? 'Hash' : 'Name',
+        value: isAllVersions ? func.hash : func.name,
         className: 'table-cell-name',
-        getLink: (tag, tab, hash) => {
-          return `/projects/${projectName}/functions/${func.name}${tag ? `/${tag}` : `@${hash}`}${`/${tab}`}${window.location.search}`
+        getLink: (tab, hash) => {
+          return `/projects/${projectName}/functions/${func.name}${isAllVersions ? `/${ALL_VERSIONS_PATH}` : ''}/@${hash}${`/${tab}`}${window.location.search}`
         },
         expandedCellContent: {
           value: formatDatetime(func.updated, 'N/A'),
@@ -44,7 +45,6 @@ const createFunctionsRowData = (func, projectName, showExpandButton) => {
         },
         showTag: true,
         showStatus: true,
-        showExpandButton
       },
       {
         id: `kind.${func.ui.identifierUnique}`,
@@ -60,7 +60,8 @@ const createFunctionsRowData = (func, projectName, showExpandButton) => {
         headerLabel: 'Hash',
         value: func.hash,
         className: 'table-cell-1',
-        type: 'hash'
+        type: 'hash',
+        hidden: isAllVersions
       },
       {
         id: `updated.${func.ui.identifierUnique}`,

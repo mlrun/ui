@@ -24,9 +24,8 @@ import JobWizard from '../JobWizard/JobWizard'
 import DeleteArtifactPopUp from '../../elements/DeleteArtifactPopUp/DeleteArtifactPopUp'
 
 import {
-  ACTION_MENU_PARENT_ROW,
-  ACTION_MENU_PARENT_ROW_EXPANDED,
   ARTIFACT_MAX_DOWNLOAD_SIZE,
+  ALL_VERSIONS_PATH,
   DATASET_TYPE,
   DATASETS_PAGE,
   DATASETS_TAB,
@@ -34,8 +33,8 @@ import {
   ITERATIONS_FILTER,
   LABELS_FILTER,
   NAME_FILTER,
-  SHOW_ITERATIONS,
   TAG_FILTER,
+  TAG_FILTER_ALL_ITEMS,
   TAG_FILTER_LATEST,
   VIEW_SEARCH_PARAMETER
 } from '../../constants'
@@ -51,6 +50,7 @@ import { openPopUp } from 'igz-controls/utils/common.util'
 import { searchArtifactItem } from '../../utils/searchArtifactItem'
 import { setDownloadItem, setShowDownloadsList } from '../../reducers/downloadReducer'
 import { getFilteredSearchParams } from '../../utils/filter.util'
+import { parseIdentifier } from '../../utils'
 
 import { ReactComponent as TagIcon } from 'igz-controls/images/tag-icon.svg'
 import { ReactComponent as YamlIcon } from 'igz-controls/images/yaml.svg'
@@ -58,6 +58,7 @@ import { ReactComponent as ArtifactView } from 'igz-controls/images/eye-icon.svg
 import { ReactComponent as Copy } from 'igz-controls/images/copy-to-clipboard-icon.svg'
 import { ReactComponent as Delete } from 'igz-controls/images/delete.svg'
 import { ReactComponent as DownloadIcon } from 'igz-controls/images/download.svg'
+import { ReactComponent as HistoryIcon } from 'igz-controls/images/history.svg'
 
 export const infoHeaders = [
   {
@@ -76,12 +77,21 @@ export const infoHeaders = [
   { label: 'Labels', id: 'labels' }
 ]
 
-export const filtersConfig = {
-  [NAME_FILTER]: { label: 'Name:', initialValue: '' },
-  [TAG_FILTER]: { label: 'Version tag:', initialValue: TAG_FILTER_LATEST, isModal: true },
+export const getFiltersConfig = isAllVersions => ({
+  [NAME_FILTER]: { label: 'Name:', initialValue: '', hidden: isAllVersions },
+  [TAG_FILTER]: {
+    label: 'Version tag:',
+    initialValue: isAllVersions ? TAG_FILTER_ALL_ITEMS : TAG_FILTER_LATEST,
+    isModal: true
+  },
   [LABELS_FILTER]: { label: 'Labels:', initialValue: '', isModal: true },
-  [ITERATIONS_FILTER]: { label: 'Show best iteration only:', initialValue: SHOW_ITERATIONS, isModal: true }
-}
+  [ITERATIONS_FILTER]: {
+    label: 'Show best iteration only:',
+    initialValue: '',
+    isModal: true,
+    hidden: !isAllVersions
+  }
+})
 
 export const registerDatasetTitle = 'Register dataset'
 
@@ -145,24 +155,22 @@ export const handleApplyDetailsChanges = (
 }
 
 export const checkForSelectedDataset = (
-  name,
-  selectedRowData,
+  paramsName,
   datasets,
-  tag,
-  iter,
-  uid,
+  paramsId,
   projectName,
   setSelectedDataset,
-  navigate
+  navigate,
+  isAllVersions
 ) => {
   queueMicrotask(() => {
-    if (name) {
-      const artifacts = selectedRowData?.[name]?.content || datasets
+    if (paramsId) {
+      const { tag, uid, iter } = parseIdentifier(paramsId)
 
-      if (artifacts.length > 0) {
+      if (datasets.length > 0) {
         const searchItem = searchArtifactItem(
-          artifacts.map(artifact => artifact.data ?? artifact),
-          name,
+          datasets.map(artifact => artifact.data ?? artifact),
+          paramsName,
           tag,
           iter,
           uid
@@ -170,7 +178,7 @@ export const checkForSelectedDataset = (
 
         if (!searchItem) {
           navigate(
-            `/projects/${projectName}/datasets${getFilteredSearchParams(window.location.search, [VIEW_SEARCH_PARAMETER])}`,
+            `/projects/${projectName}/datasets${isAllVersions ? `/${paramsName}/${ALL_VERSIONS_PATH}` : ''}${getFilteredSearchParams(window.location.search, [VIEW_SEARCH_PARAMETER])}`,
             { replace: true }
           )
         } else {
@@ -194,8 +202,9 @@ export const generateActionsMenu = (
   projectName,
   handleRefresh,
   datasetsFilters,
-  menuPosition,
   selectedDataset,
+  showAllVersions,
+  isAllVersions,
   isDetailsPopUp = false
 ) => {
   const isTargetPathValid = getIsTargetPathValid(datasetMin ?? {}, frontendSpec)
@@ -210,13 +219,12 @@ export const generateActionsMenu = (
     [
       {
         label: 'Add a tag',
-        hidden: menuPosition === ACTION_MENU_PARENT_ROW_EXPANDED || isDetailsPopUp,
+        hidden: isDetailsPopUp,
         icon: <TagIcon />,
         onClick: handleAddTag
       },
       {
         label: 'Download',
-        hidden: menuPosition === ACTION_MENU_PARENT_ROW_EXPANDED,
         disabled:
           !isTargetPathValid ||
           datasetMin.size >
@@ -241,20 +249,18 @@ export const generateActionsMenu = (
       },
       {
         label: 'Copy URI',
-        hidden: menuPosition === ACTION_MENU_PARENT_ROW_EXPANDED,
         icon: <Copy />,
         onClick: datasetMin => copyToClipboard(generateUri(datasetMin, DATASETS_TAB), dispatch)
       },
       {
         label: 'View YAML',
-        hidden: menuPosition === ACTION_MENU_PARENT_ROW_EXPANDED,
         icon: <YamlIcon />,
         onClick: datasetMin => getFullDataset(datasetMin).then(toggleConvertedYaml)
       },
       {
         label: 'Delete',
         icon: <Delete />,
-        hidden: [ACTION_MENU_PARENT_ROW, ACTION_MENU_PARENT_ROW_EXPANDED].includes(menuPosition) || isDetailsPopUp,
+        hidden: isDetailsPopUp,
         className: 'danger',
         onClick: () =>
           datasetDataCouldBeDeleted
@@ -284,9 +290,7 @@ export const generateActionsMenu = (
       {
         label: 'Delete all',
         icon: <Delete />,
-        hidden:
-          isDetailsPopUp ||
-          ![ACTION_MENU_PARENT_ROW, ACTION_MENU_PARENT_ROW_EXPANDED].includes(menuPosition),
+        hidden: isDetailsPopUp || isAllVersions,
         className: 'danger',
         onClick: () =>
           openDeleteConfirmPopUp(
@@ -309,6 +313,13 @@ export const generateActionsMenu = (
       }
     ],
     [
+      {
+        id: 'show-all-versions',
+        label: 'Show all versions',
+        icon: <HistoryIcon />,
+        onClick: () => showAllVersions(datasetMin.db_key),
+        hidden: isAllVersions
+      },
       {
         label: 'Preview',
         id: 'dataset-preview',

@@ -38,9 +38,11 @@ import TabsSlider from '../../common/TabsSlider/TabsSlider'
 import { TERTIARY_BUTTON, PRIMARY_BUTTON } from 'igz-controls/constants'
 import detailsActions from '../../actions/details'
 import {
+  ALERTS_PAGE,
   ARTIFACTS_PAGE,
   DATASETS_TAB,
   DETAILS_OVERVIEW_TAB,
+  DOCUMENTS_TAB,
   FILES_TAB,
   FUNCTIONS_PAGE,
   JOBS_PAGE,
@@ -49,6 +51,7 @@ import {
 } from '../../constants'
 import { ACTIONS_MENU } from '../../types'
 import {
+  generateAlertsContent,
   generateArtifactsContent,
   generateFeatureStoreContent,
   generateFunctionsContent,
@@ -89,7 +92,8 @@ const Details = ({
   setIteration,
   setIterationOption,
   showWarning,
-  tab = ''
+  tab = '',
+  withActionMenu = true
 }) => {
   const applyChangesRef = useRef()
   const dispatch = useDispatch()
@@ -143,12 +147,15 @@ const Details = ({
     if (!isEveryObjectValueEmpty(selectedItem)) {
       if (pageData.details.type === JOBS_PAGE) {
         setDetailsInfo(generateJobsContent(selectedItem))
+      } else if (pageData.details.type === ALERTS_PAGE) {
+        setDetailsInfo(generateAlertsContent(selectedItem))
       } else if (
         pageData.details.type === ARTIFACTS_PAGE ||
         pageData.details.type === FILES_TAB ||
         pageData.details.type === MODELS_TAB ||
         pageData.details.type === MODEL_ENDPOINTS_TAB ||
-        pageData.details.type === DATASETS_TAB
+        pageData.details.type === DATASETS_TAB ||
+        pageData.details.type === DOCUMENTS_TAB
       ) {
         setDetailsInfo(
           generateArtifactsContent(pageData.details.type, selectedItem, params.projectName)
@@ -285,14 +292,17 @@ const Details = ({
               selectedItem={selectedItem}
               setIteration={setIteration}
               tab={tab}
+              withActionMenu={withActionMenu}
             />
-            <TabsSlider
-              initialTab={isDetailsPopUp ? detailsPopUpSelectedTab : params.tab}
-              isDetailsPopUp={isDetailsPopUp}
-              onClick={newTab => setDetailsPopUpSelectedTab && setDetailsPopUpSelectedTab(newTab)}
-              skipLink={isDetailsPopUp}
-              tabsList={detailsMenu}
-            />
+            {withActionMenu && (
+              <TabsSlider
+                initialTab={isDetailsPopUp ? detailsPopUpSelectedTab : params.tab}
+                isDetailsPopUp={isDetailsPopUp}
+                onClick={newTab => setDetailsPopUpSelectedTab && setDetailsPopUpSelectedTab(newTab)}
+                skipLink={isDetailsPopUp}
+                tabsList={detailsMenu}
+              />
+            )}
           </div>
           <div className="item-info">
             <DetailsTabsContent

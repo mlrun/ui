@@ -21,39 +21,48 @@ import { isEqual, keyBy } from 'lodash'
 import { formatDate } from './datePicker.util'
 import {
   ADD_TO_FEATURE_VECTOR_TAB,
+  ALERTS_PAGE,
   ANY_TIME,
+  CONSUMER_GROUP_PAGE,
+  CONSUMER_GROUPS_PAGE,
+  DATES_FILTER,
   DATASETS_PAGE,
   DATE_FILTER_ANY_TIME,
   DATE_RANGE_TIME_FILTER,
+  ENDPOINT_APPLICATION,
+  ENDPOINT_RESULT,
   ENTITIES_FILTER,
+  ENTITY_ID,
+  ENTITY_TYPE,
+  EVENT_TYPE,
   FEATURE_SETS_TAB,
   FEATURE_VECTORS_TAB,
   FEATURES_TAB,
+  FILTER_ALL_ITEMS,
   FILES_PAGE,
   FUNCTIONS_PAGE,
   GROUP_BY_FILTER,
   GROUP_BY_NONE,
   ITERATIONS_FILTER,
+  JOB_NAME,
   JOBS_PAGE,
   LABELS_FILTER,
   MODEL_ENDPOINTS_TAB,
   MODELS_TAB,
   MONITOR_WORKFLOWS_TAB,
+  MONITOR_JOBS_TAB,
   NAME_FILTER,
+  PROJECT_FILTER,
+  PROJECTS_FILTER,
   REAL_TIME_PIPELINES_TAB,
+  SCHEDULE_TAB,
+  SEVERITY,
   SHOW_ITERATIONS,
   SHOW_UNTAGGED_FILTER,
-  FILTER_ALL_ITEMS,
   STATUS_FILTER,
   TAG_FILTER,
   TAG_FILTER_ALL_ITEMS,
-  DATES_FILTER,
-  PROJECT_FILTER,
-  TYPE_FILTER,
-  CONSUMER_GROUP_PAGE,
-  CONSUMER_GROUPS_PAGE,
-  MONITOR_JOBS_TAB,
-  SCHEDULE_TAB
+  TYPE_FILTER
 } from '../constants'
 
 const messageNamesList = {
@@ -105,10 +114,20 @@ const messageNamesList = {
   [CONSUMER_GROUPS_PAGE]: {
     plural: 'Consumer groups'
   },
+  [ALERTS_PAGE]: {
+    plural: 'Alerts'
+  },
   default: ''
 }
 
-export const getNoDataMessage = (filters, filtersConfig, defaultMessage, page, tab, filtersStore) => {
+export const getNoDataMessage = (
+  filters,
+  filtersConfig,
+  defaultMessage,
+  page,
+  tab,
+  filtersStore
+) => {
   if (defaultMessage) return defaultMessage
 
   if (Array.isArray(filtersConfig)) {
@@ -173,32 +192,45 @@ const getVisibleFilterTypes = (filtersConfig, filters, filtersStore) => {
     const isIterVisible =
       type === ITERATIONS_FILTER && filters[ITERATIONS_FILTER] === SHOW_ITERATIONS
     const isInputVisible =
-      (type === NAME_FILTER ||
-        type === LABELS_FILTER ||
+      (type === ENDPOINT_APPLICATION ||
         type === ENTITIES_FILTER ||
+        type === ENTITY_ID ||
+        type === ENDPOINT_RESULT ||
+        type === JOB_NAME ||
+        type === LABELS_FILTER ||
+        type === NAME_FILTER ||
         type === PROJECT_FILTER) &&
       filters[type]?.length > 0
     const isStatusVisible =
       type === STATUS_FILTER && !isEqual(filters[STATUS_FILTER], [FILTER_ALL_ITEMS])
+    const isEntityTypeVisible =
+      type === ENTITY_TYPE && !isEqual(filters[ENTITY_TYPE], FILTER_ALL_ITEMS)
+    const isEventTypeVisible =
+      type === EVENT_TYPE && !isEqual(filters[EVENT_TYPE], FILTER_ALL_ITEMS)
+    const isProjectsVisible =
+      type === PROJECTS_FILTER && !isEqual(filters[PROJECTS_FILTER], FILTER_ALL_ITEMS)
+    const isSeverityVisible = type === SEVERITY && !isEqual(filters[SEVERITY], [FILTER_ALL_ITEMS])
     const isTypeVisible = type === TYPE_FILTER && !isEqual(filters[TYPE_FILTER], FILTER_ALL_ITEMS)
     const isDateVisible =
       (type === DATE_RANGE_TIME_FILTER &&
         !isEqual(filters[DATES_FILTER]?.value, DATE_FILTER_ANY_TIME)) ||
       (type === DATES_FILTER && !isEqual(filters[DATES_FILTER]?.value, DATE_FILTER_ANY_TIME))
-    const isShowUntaggedVisible =
-      type === SHOW_UNTAGGED_FILTER &&
-      !filters[SHOW_UNTAGGED_FILTER]
+    const isShowUntaggedVisible = type === SHOW_UNTAGGED_FILTER && !filters[SHOW_UNTAGGED_FILTER]
     const isGroupByVisible = type === GROUP_BY_FILTER && filtersStore.groupBy !== GROUP_BY_NONE
 
     return (
-      isTagVisible ||
+      isDateVisible ||
+      isEntityTypeVisible ||
+      isEventTypeVisible ||
+      isGroupByVisible ||
       isIterVisible ||
       isInputVisible ||
-      isStatusVisible ||
-      isTypeVisible ||
-      isDateVisible ||
+      isProjectsVisible ||
+      isSeverityVisible ||
       isShowUntaggedVisible ||
-      isGroupByVisible
+      isStatusVisible ||
+      isTagVisible ||
+      isTypeVisible
     )
   })
 }

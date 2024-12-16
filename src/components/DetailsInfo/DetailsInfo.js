@@ -30,9 +30,11 @@ import { handleFinishEdit } from '../Details/details.util'
 import { isEveryObjectValueEmpty } from '../../utils/isEveryObjectValueEmpty'
 import {
   generateConfigurationDetailsInfo,
+  generateDocumentLoaderDetailsInfo,
   generateDriftDetailsInfo,
   generateProducerDetailsInfo,
-  generateSourcesDetailsInfo
+  generateSourcesDetailsInfo,
+  generateAlertsDetailsInfo
 } from './detailsInfo.util'
 
 const DetailsInfo = React.forwardRef(
@@ -115,8 +117,15 @@ const DetailsInfo = React.forwardRef(
       [selectedItem, isDetailsPopUp]
     )
 
+    const document_loader = useMemo(
+      () => generateDocumentLoaderDetailsInfo(selectedItem, isDetailsPopUp),
+      [selectedItem, isDetailsPopUp]
+    )
+
     const drift = useMemo(() => generateDriftDetailsInfo(selectedItem), [selectedItem])
 
+    const alerts = useMemo(() => generateAlertsDetailsInfo(pageData), [pageData])
+    console.log({ alerts })
     const configuration = useMemo(
       () => generateConfigurationDetailsInfo(selectedItem),
       [selectedItem]
@@ -141,7 +150,7 @@ const DetailsInfo = React.forwardRef(
 
     return (
       <DetailsInfoView
-        additionalInfo={{ configuration, drift, producer, sources }}
+        additionalInfo={{ alerts, configuration, document_loader, drift, producer, sources }}
         detailsInfoDispatch={detailsInfoDispatch}
         detailsInfoState={detailsInfoState}
         detailsStore={detailsStore}
@@ -168,5 +177,7 @@ DetailsInfo.propTypes = {
   setChangesData: PropTypes.func.isRequired,
   setChangesCounter: PropTypes.func.isRequired
 }
+
+DetailsInfo.displayName = 'DetailsInfo'
 
 export default DetailsInfo

@@ -39,7 +39,7 @@
           }
         }
       ],
-      "entity_id": "5662c7a4470ef28ed1df450e80d37624de7e1749.histogram-data-drift.general_drift",
+      "entity_id": "5662c7a4470ef28ed1df450e80d37624de7e1749.histogram-data-drift.result.general_drift",
       "entity_kind": "model-endpoint-result",
       "criteria": {
         "count": 3,
@@ -52,7 +52,7 @@
     {
       "id": "b2c3d4e5-6772c8b5581ef39fd2df561f91e47635f8f2e263",
       "name": "alert_2",
-      "project": "tutorial-admin",
+      "project": "default",
       "activation_time": "2024-10-24T12:20:30Z",
       "notifications": [
         {
@@ -88,7 +88,7 @@
           }
         }
       ],
-      "entity_id": "trainer-train.5a8037bd46cf192ce7e94b25f06a8d13",
+      "entity_id": "job-name-1.1d3a8b0833b74f55b008537b1e19ea57",
       "entity_kind": "job",
       "criteria": {
         "count": 10,
@@ -105,6 +105,22 @@
       "activation_time": "2024-10-25T14:45:00Z",
       "notifications": [
         {
+          "kind": "email",
+          "err": "",
+          "summary": {
+            "failed": 0,
+            "succeeded": 4
+          }
+        },
+        {
+          "kind": "git",
+          "err": "Authentication failed",
+          "summary": {
+            "failed": 2,
+            "succeeded": 4
+          }
+        },
+        {
           "kind": "webhook",
           "err": "",
           "summary": {
@@ -113,7 +129,7 @@
           }
         }
       ],
-      "entity_id": "application-1",
+      "entity_id": "default.application-1",
       "entity_kind": "model-monitoring-application",
       "criteria": {
         "count": 2,
@@ -146,7 +162,7 @@
           }
         }
       ],
-      "entity_id": "d5e6f4b3970ef28ed1df450e80d37624de7e1749.feature-importance.general_drift",
+      "entity_id": "d5e6f4b3970ef28ed1df450e80d37624de7e1749.feature-importance.result.general_drift",
       "entity_kind": "model-endpoint-result",
       "criteria": {
         "count": 8,
@@ -196,7 +212,7 @@
           }
         }
       ],
-      "entity_id": "a2b4c6d8970ef28ed1df450e80d37624de7e1749.statistical-shift.general_drift",
+      "entity_id": "a2b4c6d8970ef28ed1df450e80d37624de7e1749.statistical-shift.result.general_drift",
       "entity_kind": "model-endpoint-result",
       "criteria": {
         "count": 6,
@@ -221,7 +237,7 @@
           }
         }
       ],
-      "entity_id": "c6d3e7f0970ef28ed1df450e80d37624de7e1749.data-quality-issue.drift",
+      "entity_id": "c6d3e7f0970ef28ed1df450e80d37624de7e1749.data-quality-issue.result.drift",
       "entity_kind": "model-endpoint-result",
       "criteria": {
         "count": 1,
@@ -279,7 +295,7 @@
           }
         }
       ],
-      "entity_id": "d9e8f5b4970ef28ed1df450e80d37624de7e1749.input-missing-values.general_drift",
+      "entity_id": "d9e8f5b4970ef28ed1df450e80d37624de7e1749.input-missing-values.result.general_drift",
       "entity_kind": "model-endpoint-result",
       "criteria": {
         "count": 7,
@@ -304,7 +320,7 @@
           }
         }
       ],
-      "entity_id": "c2a3e1f8970ef28ed1df450e80d37624de7e1749.class-distribution.general_drift",
+      "entity_id": "c2a3e1f8970ef28ed1df450e80d37624de7e1749.class-distribution.result.general_drift",
       "entity_kind": "model-endpoint-result",
       "criteria": {
         "count": 5,
@@ -338,7 +354,7 @@
 
         }
       ],
-      "entity_id": "f3d4b5a1970ef28ed1df450e80d37624de7e1749.outlier-detection.general_drift",
+      "entity_id": "f3d4b5a1970ef28ed1df450e80d37624de7e1749.outlier-detection.result.general_drift",
       "entity_kind": "model-endpoint-result",
       "criteria": {
         "count": 10,
@@ -389,7 +405,7 @@
           }
         }
       ],
-      "entity_id": "d5e6f4b3970ef28ed1df450e80d37624de7e1749.feature-importance.general_drift",
+      "entity_id": "d5e6f4b3970ef28ed1df450e80d37624de7e1749.feature-importance.result.general_drift",
       "entity_kind": "model-endpoint-result",
       "criteria": {
         "count": 8,
@@ -414,7 +430,7 @@
           }
         }
       ],
-      "entity_id": "application-2",
+      "entity_id": "default.application-2",
       "entity_kind": "model-monitoring-application",
       "criteria": {
         "count": 2,
@@ -464,7 +480,7 @@
           }
         }
       ],
-      "entity_id": "c9e7f6a3970ef28ed1df450e80d37624de7e1749.null-value-frequency.general_drift",
+      "entity_id": "c9e7f6a3970ef28ed1df450e80d37624de7e1749.null-value-frequency.result.general_drift",
       "entity_kind": "model-endpoint-result",
       "criteria": {
         "count": 7,
@@ -497,7 +513,7 @@
           }
         }
       ],
-      "entity_id": "b4d5f8e7970ef28ed1df450e80d37624de7e1749.imbalance-ratio.general_drift",
+      "entity_id": "b4d5f8e7970ef28ed1df450e80d37624de7e1749.imbalance-ratio.result.general_drift",
       "entity_kind": "model-endpoint-result",
       "criteria": {
         "count": 9,
@@ -547,7 +563,7 @@
           }
         }
       ],
-      "entity_id": "model-endpoint-19.app-19.result-19",
+      "entity_id": "model-endpoint-19.app-19.result.result-19",
       "entity_kind": "model-endpoint-result",
       "criteria": {
         "count": 4,
@@ -590,5 +606,6 @@
       "severity": "high",
       "number_of_events": 5
     }
-  ]
+  ],
+  "pagination":{ "page": 1, "page-size": 1000, "page-token": null }
 }

@@ -124,7 +124,7 @@ const ScheduledJobsTable = ({
     schedule => {
       dispatch(
         removeScheduledJob({
-          projects: params.projectName || schedule.project,
+          projectName: params.projectName || schedule.project,
           scheduleName: schedule.name
         })
       )
@@ -138,6 +138,9 @@ const ScheduledJobsTable = ({
               message: 'Job is successfully deleted'
             })
           )
+        })
+        .catch(error => {
+          showErrorNotification(dispatch, error)
         })
 
       setConfirmData(null)
@@ -224,6 +227,7 @@ const ScheduledJobsTable = ({
           ...params,
           projectName: editableItem?.project || params.projectName
         },
+        tab: SCHEDULE_TAB,
         onWizardClose: () => {
           setEditableItem(null)
           setJobWizardMode(null)

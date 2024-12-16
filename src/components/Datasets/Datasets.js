@@ -26,51 +26,44 @@ import AddArtifactTagPopUp from '../../elements/AddArtifactTagPopUp/AddArtifactT
 import RegisterArtifactModal from '../RegisterArtifactModal/RegisterArtifactModal'
 
 import {
+  ALL_VERSIONS_PATH,
   DATASETS_PAGE,
   DATASETS_TAB,
   DATASET_TYPE,
-  GROUP_BY_NAME,
   GROUP_BY_NONE,
   REQUEST_CANCELED
 } from '../../constants'
-import {
-  fetchArtifactTags,
-  fetchDataSets,
-  removeDataSet,
-  removeDataSets
-} from '../../reducers/artifactsReducer'
+import { fetchArtifactTags, fetchDataSets, removeDataSets } from '../../reducers/artifactsReducer'
 import {
   checkForSelectedDataset,
-  filtersConfig,
+  getFiltersConfig,
   generateActionsMenu,
   generatePageData,
   handleApplyDetailsChanges,
   registerDatasetTitle
 } from './datasets.util'
 import { createDatasetsRowData } from '../../utils/createArtifactsContent'
-import { getArtifactIdentifier } from '../../utils/getUniqueIdentifier'
 import { getFilterTagOptions, setFilters } from '../../reducers/filtersReducer'
 import { getViewMode } from '../../utils/helper'
 import { isDetailsTabExists } from '../../utils/link-helper.util'
 import { openPopUp } from 'igz-controls/utils/common.util'
-import { sortListByDate } from '../../utils'
 import { setFullSelectedArtifact } from '../../utils/artifacts.util'
 import { setNotification } from '../../reducers/notificationReducer'
-import { useGroupContent } from '../../hooks/groupContent.hook'
 import { useSortTable } from '../../hooks/useSortTable.hook'
 import { useVirtualization } from '../../hooks/useVirtualization.hook'
 import { useInitialTableFetch } from '../../hooks/useInitialTableFetch.hook'
 import { useFiltersFromSearchParams } from '../../hooks/useFiltersFromSearchParams.hook'
 import { toggleYaml } from '../../reducers/appReducer'
+import { transformSearchParams } from '../../utils/filter.util'
 
 import './datasets.scss'
 import cssVariables from './datasets.scss'
 
-const Datasets = () => {
+const Datasets = ({ isAllVersions = false }) => {
   const [datasets, setDatasets] = useState([])
+  const [datasetVersions, setDatasetVersions] = useState([])
   const [selectedDataset, setSelectedDataset] = useState({})
   const [selectedDatasetMin, setSelectedDatasetMin] = useState({})
-  const [selectedRowData, setSelectedRowData] = useState({})
   const [requestErrorMessage, setRequestErrorMessage] = useState('')
   const [maxArtifactsErrorIsShown, setMaxArtifactsErrorIsShown] = useState(false)
   const artifactsStore = useSelector(store => store.artifactsStore)
@@ -82,10 +75,12 @@ const Datasets = () => {
   const navigate = useNavigate()
   const params = useParams()
   const [, setSearchParams] = useSearchParams()
-  const filters = useFiltersFromSearchParams(filtersConfig)
   const abortControllerRef = useRef(new AbortController())
   const tagAbortControllerRef = useRef(new AbortController())
   const datasetsRef = useRef(null)
+
+  const filtersConfig = useMemo(() => getFiltersConfig(isAllVersions), [isAllVersions])
+  const filters = useFiltersFromSearchParams(filtersConfig)
 
   const pageData = useMemo(
     () => generatePageData(selectedDataset, viewMode, params),
@@ -106,9 +101,10 @@ const Datasets = () => {
       navigate,
       selectedDatasetMin,
       setSelectedDataset,
-      params.projectName
+      params.projectName,
+      isAllVersions
     )
-  }, [dispatch, navigate, params.projectName, selectedDatasetMin])
+  }, [dispatch, isAllVersions, navigate, params.projectName, selectedDatasetMin])
 
   const toggleConvertedYaml = useCallback(
     data => {
@@ -125,6 +121,16 @@ const Datasets = () => {
     filters => {
       abortControllerRef.current = new AbortController()
 
+      const requestParams = {
+        format: 'minimal'
+      }
+
+      if (isAllVersions) {
+        requestParams.name = params.datasetName
+      } else {
+        requestParams['partition-by'] = 'project_and_name'
+      }
+
       return dispatch(
         fetchDataSets({
           project: params.projectName,
@@ -134,23 +140,26 @@ const Datasets = () => {
               controller: abortControllerRef.current,
               setRequestErrorMessage
             },
-            params: {
-              format: 'minimal'
-            }
+            params: requestParams
           }
         })
       )
         .unwrap()
         .then(result => {
           if (result) {
-            setDatasets(result)
+            if (isAllVersions) {
+              setDatasetVersions(result)
+            } else {
+              setDatasets(result)
+            }
+
             setMaxArtifactsErrorIsShown(result.length === 1000)
           }
 
           return result
         })
     },
-    [dispatch, params.projectName]
+    [dispatch, isAllVersions, params.datasetName, params.projectName]
   )
 
   const fetchTags = useCallback(() => {
@@ -172,9 +181,9 @@ const Datasets = () => {
   const handleRefresh = useCallback(
     filters => {
       fetchTags()
-      setSelectedRowData({})
       setSelectedDatasetMin({})
       setDatasets([])
+      setDatasetVersions([])
 
       return fetchData(filters)
     },
@@ -196,8 +205,17 @@ const Datasets = () => {
     [params.projectName, handleRefresh, filters]
   )
 
+  const showAllVersions = useCallback(
+    datasetName => {
+      navigate(
+        `/projects/${params.projectName}/datasets/${datasetName}/${ALL_VERSIONS_PATH}?${transformSearchParams(window.location.search)}`
+      )
+    },
+    [navigate, params.projectName]
+  )
+
   const actionsMenu = useMemo(
-    () => (datasetMin, menuPosition) =>
+    () => datasetMin =>
       generateActionsMenu(
         datasetMin,
         frontendSpec,
@@ -207,8 +225,9 @@ const Datasets = () => {
         params.projectName,
         handleRefresh,
         filters,
-        menuPosition,
-        selectedDataset
+        selectedDataset,
+        showAllVersions,
+        isAllVersions
       ),
     [
       dispatch,
@@ -216,8 +235,10 @@ const Datasets = () => {
       frontendSpec,
       handleAddTag,
       handleRefresh,
+      isAllVersions,
       params.projectName,
       selectedDataset,
+      showAllVersions,
       toggleConvertedYaml
     ]
   )
@@ -235,16 +256,19 @@ const Datasets = () => {
     [dispatch, params.projectName, selectedDataset]
   )
 
-  const applyDetailsChangesCallback = changes => {
+  const applyDetailsChangesCallback = (changes, selectedItem) => {
     if ('tag' in changes.data) {
-      setSelectedRowData({})
-      setDatasets([])
+      if (isAllVersions) {
+        setDatasetVersions([])
+      } else {
+        setDatasets([])
+      }
 
       if (changes.data.tag.currentFieldValue) {
         navigate(
-          `/projects/${params.projectName}/${DATASETS_PAGE.toLowerCase()}/${params.name}/${
+          `/projects/${params.projectName}/${DATASETS_PAGE.toLowerCase()}/${params.datasetName}${isAllVersions ? `/${ALL_VERSIONS_PATH}` : ''}/:${
             changes.data.tag.currentFieldValue
-          }/overview${window.location.search}`,
+          }@${selectedItem.uid}/overview${window.location.search}`,
           { replace: true }
         )
       }
@@ -253,60 +277,11 @@ const Datasets = () => {
     handleRefresh(filters)
   }
 
-  const expandRowCallback = useCallback(
-    (dataset, content) => {
-      const dataSetIdentifier = getArtifactIdentifier(dataset)
-
-      setSelectedRowData(state => {
-        return {
-          ...state,
-          [dataSetIdentifier]: {
-            content: sortListByDate(content[dataset.db_key ?? dataset.key], 'updated', false).map(
-              contentItem => createDatasetsRowData(contentItem, params.projectName)
-            ),
-            error: null,
-            loading: false
-          }
-        }
-      })
-    },
-    [params.projectName]
-  )
-
-  const collapseRowCallback = useCallback(
-    dataset => {
-      const newStoreSelectedRowData = {
-        ...artifactsStore.dataSets.selectedRowData.content
-      }
-      const newPageDataSelectedRowData = { ...selectedRowData }
-
-      delete newStoreSelectedRowData[dataset.data.ui.identifier]
-      delete newPageDataSelectedRowData[dataset.data.ui.identifier]
-
-      dispatch(removeDataSet(newStoreSelectedRowData))
-      setSelectedRowData(newPageDataSelectedRowData)
-    },
-    [artifactsStore.dataSets.selectedRowData.content, dispatch, selectedRowData]
-  )
-
-  const { latestItems, toggleRow } = useGroupContent(
-    datasets,
-    getArtifactIdentifier,
-    collapseRowCallback,
-    expandRowCallback,
-    null,
-    DATASETS_PAGE
-  )
-
   const tableContent = useMemo(() => {
-    return filtersStore.groupBy === GROUP_BY_NAME
-      ? latestItems.map(contentItem => {
-          return createDatasetsRowData(contentItem, params.projectName, frontendSpec, true)
-        })
-      : datasets.map(contentItem =>
-          createDatasetsRowData(contentItem, params.projectName, frontendSpec, false)
-        )
-  }, [datasets, filtersStore.groupBy, frontendSpec, latestItems, params.projectName])
+    return (isAllVersions ? datasetVersions : datasets).map(contentItem =>
+      createDatasetsRowData(contentItem, params.projectName, isAllVersions)
+    )
+  }, [datasetVersions, datasets, isAllVersions, params.projectName])
 
   const tableHeaders = useMemo(() => tableContent[0]?.content ?? [], [tableContent])
 
@@ -322,20 +297,17 @@ const Datasets = () => {
     })
 
   useInitialTableFetch({
-    createRowData: rowItem => createDatasetsRowData(rowItem, params.projectName, frontendSpec),
     fetchData,
     fetchTags,
-    filterModalName: DATASETS_PAGE,
     filters,
-    setExpandedRowsData: setSelectedRowData,
-    sortExpandedRowsDataBy: 'updated'
+    requestTrigger: isAllVersions
   })
 
   useEffect(() => {
-    if (params.name && params.tag && pageData.details.menu.length > 0) {
+    if (params.id && pageData.details.menu.length > 0) {
       isDetailsTabExists(params.tab, pageData.details.menu, navigate, location)
     }
-  }, [location, navigate, pageData.details.menu, params.name, params.tab, params.tag])
+  }, [location, navigate, pageData.details.menu, params.id, params.tab])
 
   useEffect(() => {
     dispatch(setFilters({ groupBy: GROUP_BY_NONE }))
@@ -343,25 +315,22 @@ const Datasets = () => {
 
   useEffect(() => {
     checkForSelectedDataset(
-      params.name,
-      selectedRowData,
-      datasets,
-      params.tag,
-      params.iter,
-      params.uid,
+      params.datasetName,
+      isAllVersions ? datasetVersions : datasets,
+      params.id,
       params.projectName,
       setSelectedDatasetMin,
-      navigate
+      navigate,
+      isAllVersions
     )
   }, [
+    datasetVersions,
     datasets,
+    isAllVersions,
     navigate,
-    params.iter,
-    params.name,
-    params.projectName,
-    params.tag,
-    params.uid,
-    selectedRowData
+    params.id,
+    params.datasetName,
+    params.projectName
   ])
 
   useEffect(() => {
@@ -369,9 +338,9 @@ const Datasets = () => {
 
     return () => {
       setDatasets([])
+      setDatasetVersions([])
       dispatch(removeDataSets())
       setSelectedDatasetMin({})
-      setSelectedRowData({})
       abortControllerRef.current.abort(REQUEST_CANCELED)
       tagAbortControllerCurrent.abort(REQUEST_CANCELED)
     }
@@ -389,7 +358,6 @@ const Datasets = () => {
   const virtualizationConfig = useVirtualization({
     rowsData: {
       content: sortedTableContent,
-      expandedRowsData: selectedRowData,
       selectedItem: selectedDataset
     },
     heightData: {
@@ -406,27 +374,29 @@ const Datasets = () => {
       applyDetailsChanges={applyDetailsChanges}
       applyDetailsChangesCallback={applyDetailsChangesCallback}
       artifactsStore={artifactsStore}
-      datasets={datasets}
+      datasets={isAllVersions ? datasetVersions : datasets}
+      datasetName={params.datasetName}
       detailsFormInitialValues={detailsFormInitialValues}
       filters={filters}
+      filtersConfig={filtersConfig}
       filtersStore={filtersStore}
       getAndSetSelectedArtifact={getAndSetSelectedArtifact}
       handleRefresh={handleRefresh}
       handleRefreshWithFilters={handleRefreshWithFilters}
       handleRegisterDataset={handleRegisterDataset}
+      isAllVersions={isAllVersions}
       maxArtifactsErrorIsShown={maxArtifactsErrorIsShown}
       pageData={pageData}
+      projectName={params.projectName}
       ref={{ datasetsRef }}
       requestErrorMessage={requestErrorMessage}
       selectedDataset={selectedDataset}
-      selectedRowData={selectedRowData}
       setMaxArtifactsErrorIsShown={setMaxArtifactsErrorIsShown}
       setSearchParams={setSearchParams}
       setSelectedDatasetMin={setSelectedDatasetMin}
       sortProps={{ sortTable, selectedColumnName, getSortingIcon }}
       tableContent={sortedTableContent}
       tableHeaders={sortedTableHeaders}
-      toggleRow={toggleRow}
       viewMode={viewMode}
       virtualizationConfig={virtualizationConfig}
     />

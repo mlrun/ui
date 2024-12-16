@@ -28,8 +28,10 @@ import { Tip } from 'igz-controls/components'
 
 import { isEveryObjectValueEmpty } from '../../utils/isEveryObjectValueEmpty'
 import {
+  ALERTS_PAGE,
   ARTIFACTS_PAGE,
   DATASETS_PAGE,
+  DOCUMENTS_PAGE,
   FEATURE_SETS_TAB,
   FEATURE_STORE_PAGE,
   FILES_PAGE,
@@ -50,7 +52,8 @@ const DetailsInfoView = React.forwardRef(
       additionalInfo = {
         drift: [],
         producer: [],
-        sources: {}
+        sources: {},
+        alerts: []
       },
       detailsInfoDispatch,
       detailsInfoState,
@@ -81,12 +84,14 @@ const DetailsInfoView = React.forwardRef(
       !isEveryObjectValueEmpty(infoContent) && (
         <>
           <div className="item-info__details-wrapper">
-            {(pageData.page === ARTIFACTS_PAGE ||
+            {(pageData.page === ALERTS_PAGE ||
+              pageData.page === ARTIFACTS_PAGE ||
               pageData.page === DATASETS_PAGE ||
               pageData.page === FILES_PAGE ||
               pageData.page === FUNCTIONS_PAGE ||
               pageData.page === MODELS_PAGE ||
-              pageData.page === FEATURE_STORE_PAGE) &&
+              pageData.page === FEATURE_STORE_PAGE ||
+              pageData.page === DOCUMENTS_PAGE) &&
               params.pageTab !== FEATURE_SETS_TAB && <h3 className="item-info__header">General</h3>}
             <ul className="item-info__details">
               {pageData.details.infoHeaders?.map(header => {
@@ -129,11 +134,13 @@ const DetailsInfoView = React.forwardRef(
                       : ''
                   info = infoContent[header.id]?.value
                 } else if (
+                  pageData.page === ALERTS_PAGE ||
                   pageData.page === ARTIFACTS_PAGE ||
                   pageData.page === DATASETS_PAGE ||
                   pageData.page === FILES_PAGE ||
                   pageData.page === MODELS_PAGE ||
-                  pageData.page === FEATURE_STORE_PAGE
+                  pageData.page === FEATURE_STORE_PAGE ||
+                  pageData.page === DOCUMENTS_PAGE
                 ) {
                   if (header.id === 'labels') {
                     chipsData.chips = formState.values.labels
@@ -203,6 +210,12 @@ const DetailsInfoView = React.forwardRef(
                   <ul className="item-info__details">{additionalInfo.producer}</ul>
                 </>
               )}
+              {!isEveryObjectValueEmpty(additionalInfo.document_loader) && (
+                <>
+                  <h3 className="item-info__header">Document loader</h3>
+                  <ul className="item-info__details">{additionalInfo.document_loader}</ul>
+                </>
+              )}
               {!isEveryObjectValueEmpty(additionalInfo.drift) && (
                 <>
                   <h3 className="item-info__header">Histogram Data Drift Application</h3>
@@ -220,6 +233,32 @@ const DetailsInfoView = React.forwardRef(
                   isDetailsPopUp={isDetailsPopUp}
                   sources={additionalInfo.sources}
                 />
+              )}
+              {!isEveryObjectValueEmpty(additionalInfo?.alerts?.triggerCriteriaDetailsInfo) && (
+                <>
+                  <h3 className="item-info__header">Trigger criteria</h3>
+                  <ul className="item-info__details">
+                    {additionalInfo?.alerts?.triggerCriteriaDetailsInfo}
+                  </ul>
+                </>
+              )}
+              {!isEveryObjectValueEmpty(additionalInfo?.alerts?.notificationsDetailsInfo) && (
+                <>
+                  <h3 className="item-info__header">Notifications</h3>
+                  <ul className="item-info__details item-info__details-notification">
+                    {console.log(additionalInfo?.alerts?.notificationsDetailsInfo)}
+                    {/*{additionalInfo?.alerts?.notificationsDetailsInfo.map((notification, index) => (*/}
+                    {/*  <li className="item" key={index}>*/}
+                    {/*    <span className="icon">{notification}</span>*/}
+                    {/*    <div>*/}
+                    {/*      <div className="title">Title</div>*/}
+                    {/*      <div className="text">{notification.key}</div>*/}
+                    {/*    </div>*/}
+                    {/*  </li>*/}
+                    {/*))}*/}
+                    {additionalInfo?.alerts?.notificationsDetailsInfo}
+                  </ul>
+                </>
               )}
             </div>
           )}
@@ -245,5 +284,7 @@ DetailsInfoView.propTypes = {
   params: PropTypes.shape({}).isRequired,
   selectedItem: PropTypes.shape({}).isRequired
 }
+
+DetailsInfoView.displayName = 'DetailsInfoView'
 
 export default DetailsInfoView

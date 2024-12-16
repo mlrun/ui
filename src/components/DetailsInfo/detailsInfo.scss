@@ -31,6 +31,34 @@ $itemInfoWithoutPadding: item-info-without-padding;
     padding: 0 0 0 0;
     list-style-type: none;
 
+    &-notification {
+      display: flex;
+
+      .text {
+        color: $topaz;
+        font-size: 15px;
+      }
+
+      .title {
+        font-size: 13px;
+      }
+
+      .text-red {
+        color: $ceriseRed;
+      }
+
+      .item:not(:last-child) {
+        border-right: $wildSand solid 1.5px;
+      }
+
+      .item {
+        display: flex;
+        align-items: center;
+        padding-right: 10px;
+        padding-left: 5px;
+      }
+    }
+
     &-wrapper {
       flex: 1;
       min-width: 100%;
@@ -163,5 +191,5 @@ $itemInfoWithoutPadding: item-info-without-padding;
 }
 
 :export {
-  itemInfoWithoutPadding: $itemInfoWithoutPadding;
+  iteminfowithoutpadding: $itemInfoWithoutPadding;
 }

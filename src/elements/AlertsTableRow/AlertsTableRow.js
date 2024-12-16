@@ -17,22 +17,33 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import { useRef } from 'react'
+import { useMemo, useRef } from 'react'
 import PropTypes from 'prop-types'
 import classnames from 'classnames'
 import { useParams } from 'react-router-dom'
 
 import TableCell from '../TableCell/TableCell'
 
-import { DETAILS_OVERVIEW_TAB } from '../../constants'
+import { ALERTS_PAGE, DETAILS_OVERVIEW_TAB } from '../../constants'
+import { getIdentifierMethod } from '../../utils/getUniqueIdentifier'
+
+import './AlertsTableRow.scss'
 
 // TODO:   rowIsExpanded logic will be part of ML-8516
-// TODO:  selected row logic will be part of ML-8104
 const AlertsTableRow = ({ handleExpandRow, handleSelectItem, rowItem, selectedItem }) => {
   const parent = useRef()
   const params = useParams()
 
-  const rowClassNames = classnames('table-row', 'table-body-row', 'parent-row')
+  const getIdentifier = useMemo(() => getIdentifierMethod(ALERTS_PAGE), [])
+  const rowClassNames = classnames(
+    'alert-row',
+    'table-row',
+    'table-body-row',
+    'parent-row',
+    selectedItem?.name &&
+      getIdentifier(selectedItem, true) === rowItem?.data?.ui?.identifierUnique &&
+      'table-row_active'
+  )
 
   return (
     <tr className={rowClassNames} ref={parent}>

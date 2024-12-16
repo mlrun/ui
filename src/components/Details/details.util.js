@@ -22,6 +22,7 @@ import { get, isEmpty, isEqual, cloneDeep } from 'lodash'
 import ArtifactPopUp from '../../elements/DetailsPopUp/ArtifactPopUp/ArtifactPopUp'
 import FunctionPopUp from '../../elements/DetailsPopUp/FunctionPopUp/FunctionPopUp'
 import FeatureSetPopUp from '../../elements/DetailsPopUp/FeatureSetPopUp/FeatureSetPopUp'
+import JobPopUp from '../../elements/DetailsPopUp/JobPopUp/JobPopUp'
 
 import {
   DATASETS_PAGE,
@@ -143,6 +144,10 @@ export const generateArtifactsContent = (detailsType, selectedItem, projectName)
         value: selectedItem.target_path,
         copyToClipboard: true
       },
+      original_source: {
+        value: selectedItem.src_path,
+        copyToClipboard: true
+      },
       target_uri: {
         value: selectedItem.URI,
         copyToClipboard: true
@@ -161,11 +166,15 @@ export const generateArtifactsContent = (detailsType, selectedItem, projectName)
         value: selectedItem.tree,
         copyToClipboard: selectedItem.tree?.length > 0
       },
+      uid: {
+        value: selectedItem.uid,
+        copyToClipboard: selectedItem.uid?.length > 0
+      },
       updated: {
         value: formatDatetime(selectedItem.updated, 'N/A')
       },
       framework: {
-        value: detailsType === MODELS_TAB ? (selectedItem.framework ?? '') : null
+        value: detailsType === MODELS_TAB ? selectedItem.framework ?? '' : null
       },
       algorithm: {
         value: selectedItem.algorithm
@@ -187,6 +196,56 @@ export const generateFeatureStoreContent = (detailsType, selectedItem) => {
     return generateFeatureSetsOverviewContent(selectedItem)
   } else if (detailsType === FEATURE_VECTORS_TAB) {
     return generateFeatureVectorsOverviewContent(selectedItem)
+  }
+}
+
+export const generateAlertsContent = selectedItem => {
+  return {
+    uid: {
+      value: selectedItem.uid
+    },
+    endpoint_name: {
+      value: selectedItem.endpointName
+    },
+    projectName: {
+      value: selectedItem.project
+    },
+    jobName: {
+      value: selectedItem?.job?.name
+    },
+    applicationName: {
+      value: selectedItem.applicationName
+    },
+    type: {
+      value: selectedItem?.entityType?.detailsValue
+    },
+    timestamp: {
+      value: selectedItem?.activationTime
+    },
+    severity: {
+      value: selectedItem?.severity?.value
+    },
+    job: {
+      value: selectedItem?.job?.jobUid,
+      shouldPopUp: !isEmpty(selectedItem?.job?.jobUid),
+      handleClick: () =>
+        openPopUp(JobPopUp, {
+          jobData: {
+            project: selectedItem?.job?.name,
+            uid: selectedItem?.job?.jobUid,
+            iter: 0
+          }
+        })
+    },
+    triggerCriteriaCount: {
+      value: selectedItem.criteria.count
+    },
+    triggerCriteriaTimePeriod: {
+      value: selectedItem.criteria.period
+    },
+    notifications: {
+      value: selectedItem.notifications
+    }
   }
 }
 

@@ -17,177 +17,46 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import React, { useMemo, useRef } from 'react'
+import React, { useRef } from 'react'
 import PropTypes from 'prop-types'
 import classnames from 'classnames'
 import { useParams } from 'react-router-dom'
 import { isEmpty } from 'lodash'
 
 import ActionsMenu from '../../common/ActionsMenu/ActionsMenu'
-import ErrorMessage from '../../common/ErrorMessage/ErrorMessage'
 import TableCell from '../TableCell/TableCell'
 
 import { ACTIONS_MENU } from '../../types'
 import {
-  ACTION_MENU_PARENT_ROW,
-  ACTION_MENU_PARENT_ROW_EXPANDED,
   DETAILS_OVERVIEW_TAB,
   MODEL_ENDPOINTS_TAB
 } from '../../constants'
-import { generateTableRowTestId } from '../../utils/generateTableRowTestId'
 import { getArtifactIdentifier } from '../../utils/getUniqueIdentifier'
-import { isRowExpanded, PARENT_ROW_EXPANDED_CLASS } from '../../utils/tableRows.util'
 
 const ArtifactsTableRow = ({
   actionsMenu,
   handleSelectItem = () => {},
   hideActionsMenu = false,
   mainRowItemsCount = 1,
-  rowIndex,
   rowItem,
   selectedItem,
-  selectedRowData,
   tab = '',
-  toggleRow = null
 }) => {
   const parent = useRef()
   const params = useParams()
-  const rowIsExpanded = useMemo(
-    () => isRowExpanded(parent, selectedRowData, rowItem),
-    [rowItem, selectedRowData]
-  )
+
   const rowClassNames = classnames(
     'table-row',
     'table-body-row',
     'parent-row',
     (selectedItem?.db_key || selectedItem?.spec?.model) &&
       getArtifactIdentifier(selectedItem, true) === rowItem.data.ui.identifierUnique &&
-      !rowIsExpanded &&
-      'table-row_active',
-    rowIsExpanded && PARENT_ROW_EXPANDED_CLASS
+      'table-row_active'
   )
 
   return (
     <tr className={rowClassNames} ref={parent}>
-      {rowIsExpanded ? (
-        <>
-          <td
-            data-testid={generateTableRowTestId(rowIndex)}
-            className={`table-body__cell
-              ${rowIsExpanded && 'row_grouped-by'}`}
-          >
-            <table cellPadding="0" cellSpacing="0" className="table">
-              <tbody className="table-body">
-                <tr className="table-row">
-                  {rowItem.content.map((data, index) => {
-                    const cellClassName = classnames(
-                      index >= mainRowItemsCount && 'table-body__cell_hidden'
-                    )
-
-                    return (
-                      !data.hidden && (
-                        <TableCell
-                          className={cellClassName}
-                          data={data}
-                          firstCell={index === 0}
-                          item={rowItem}
-                          key={data.id}
-                          link={
-                            data.rowExpanded?.getLink
-                              ? data.rowExpanded.getLink(params.tab ?? DETAILS_OVERVIEW_TAB)
-                              : ''
-                          }
-                          selectItem={handleSelectItem}
-                          selectedItem={selectedItem}
-                          showExpandButton
-                          toggleRow={toggleRow}
-                        />
-                      )
-                    )
-                  })}
-                  {!hideActionsMenu && (
-                    <td className="table-body__cell table-cell-icon">
-                      <ActionsMenu
-                        dataItem={rowItem.data}
-                        menu={actionsMenu}
-                        menuPosition={ACTION_MENU_PARENT_ROW_EXPANDED}
-                      />
-                    </td>
-                  )}
-                </tr>
-              </tbody>
-            </table>
-          </td>
-          {selectedRowData[rowItem.data.ui.identifier]?.error ? (
-            <td className="table-body__cell">
-              <ErrorMessage message={selectedRowData[rowItem.data.ui.identifier]?.error?.message} />
-            </td>
-          ) : (
-            selectedRowData[rowItem.data.ui.identifier]?.content?.map((tableContentItem, index) => {
-              const subRowClassNames = classnames(
-                'table-row',
-                'table-body-row',
-                selectedItem.key &&
-                  tableContentItem.data.ui.identifierUnique ===
-                    getArtifactIdentifier(selectedItem, true) &&
-                  'table-row_active'
-              )
-
-              return (
-                <td
-                  data-testid={generateTableRowTestId(rowIndex, index)}
-                  className="table-body__cell"
-                  key={index}
-                >
-                  <table cellPadding="0" cellSpacing="0" className="table">
-                    <tbody className="table-body">
-                      <tr className={subRowClassNames}>
-                        {
-                          <>
-                            {tableContentItem.content.map((value, index) => {
-                              const cellClassNames = classnames(
-                                !isEmpty(selectedItem) &&
-                                  index >= mainRowItemsCount &&
-                                  'table-body__cell_hidden'
-                              )
-
-                              return (
-                                !value.hidden && (
-                                  <TableCell
-                                    className={cellClassNames}
-                                    data={
-                                      value.expandedCellContent ? value.expandedCellContent : value
-                                    }
-                                    item={tableContentItem.data}
-                                    link={value.getLink?.(params.tab ?? DETAILS_OVERVIEW_TAB)}
-                                    key={value.id}
-                                    selectItem={handleSelectItem}
-                                    selectedItem={selectedItem}
-                                  />
-                                )
-                              )
-                            })}
-                            {!hideActionsMenu && (
-                              <td className="table-body__cell table-cell-icon">
-                                <ActionsMenu
-                                  dataItem={tableContentItem.data}
-                                  withQuickActions
-                                  menu={actionsMenu}
-                                />
-                              </td>
-                            )}
-                          </>
-                        }
-                      </tr>
-                    </tbody>
-                  </table>
-                </td>
-              )
-            })
-          )}
-        </>
-      ) : (
-        <>
+       <>
           {rowItem.content.map((value, index) => {
             const cellClassNames = classnames(
               !isEmpty(selectedItem) && index >= mainRowItemsCount && 'table-body__cell_hidden'
@@ -205,8 +74,6 @@ const ArtifactsTableRow = ({
                   onClick={value.handleClick}
                   selectItem={handleSelectItem}
                   selectedItem={selectedItem}
-                  showExpandButton={value.showExpandButton}
-                  toggleRow={toggleRow}
                 />
               )
             )
@@ -217,12 +84,10 @@ const ArtifactsTableRow = ({
                 dataItem={rowItem.data}
                 withQuickActions={tab !== MODEL_ENDPOINTS_TAB}
                 menu={actionsMenu}
-                menuPosition={rowItem.content[0]?.showExpandButton ? ACTION_MENU_PARENT_ROW : ''}
               />
             </td>
           )}
         </>
-      )}
     </tr>
   )
 }
@@ -235,7 +100,6 @@ ArtifactsTableRow.propTypes = {
   rowItem: PropTypes.shape({}).isRequired,
   selectedItem: PropTypes.shape({}).isRequired,
   tab: PropTypes.string,
-  toggleRow: PropTypes.func
 }
 
 export default React.memo(ArtifactsTableRow)

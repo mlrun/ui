@@ -17,7 +17,7 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import React, { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react'
+import React, { useCallback, useEffect, useLayoutEffect, useMemo, useState } from 'react'
 import PropTypes from 'prop-types'
 import arrayMutators from 'final-form-arrays'
 import classnames from 'classnames'
@@ -65,7 +65,6 @@ const ActionBar = ({
   handleRefresh,
   hidden = false,
   navigateLink,
-  page,
   removeSelectedItem = null,
   setSearchParams,
   setSelectedRowData = null,
@@ -76,7 +75,6 @@ const ActionBar = ({
 }) => {
   const [autoRefresh, setAutoRefresh] = useState(autoRefreshIsEnabled)
   const filtersStore = useSelector(store => store.filtersStore)
-  const formInitialValuesAreSetRef = useRef(false)
   const changes = useSelector(store => store.detailsStore.changes)
   const dispatch = useDispatch()
   const params = useParams()
@@ -90,7 +88,9 @@ const ActionBar = ({
         ? pickBy(
             filters,
             (_, filerName) =>
-              filerName in filtersConfig && Boolean(filtersConfig[filerName].isModal) === isModal
+              filerName in filtersConfig &&
+              !filtersConfig[filerName].hidden &&
+              Boolean(filtersConfig[filerName].isModal) === isModal
           )
         : {}
     },
@@ -105,13 +105,10 @@ const ActionBar = ({
       [AUTO_REFRESH_ID]: autoRefreshIsEnabled
     }
 
-    if (!formInitialValuesAreSetRef.current) {
-      for (const [filterName, filterConfig] of Object.entries(filtersConfig)) {
-        if (!filterConfig.isModal) {
-          initialValues[filterName] = filterConfig.initialValue
-        }
+    for (const [filterName, filterConfig] of Object.entries(filtersConfig)) {
+      if (!filterConfig.isModal && !filterConfig.hidden) {
+        initialValues[filterName] = filterConfig.initialValue
       }
-      formInitialValuesAreSetRef.current = true
     }
 
     return initialValues
@@ -127,7 +124,7 @@ const ActionBar = ({
 
   const filterMenuModalInitialState = useMemo(() => {
     return mapValues(
-      pickBy(filtersConfig, filterConfig => filterConfig.isModal),
+      pickBy(filtersConfig, filterConfig => filterConfig.isModal && !filterConfig.hidden),
       filterConfig => filterConfig.initialValue
     )
   }, [filtersConfig])
@@ -194,7 +191,7 @@ const ActionBar = ({
       const newFilters = { ...filters, ...formValues }
 
       if (filtersHelperResult) {
-        if (params.name || params.funcName || params.hash) {
+        if ((params.name && params.tag) || params.id) {
           navigate(navigateLink)
         }
 
@@ -222,11 +219,11 @@ const ActionBar = ({
       filtersHelper,
       changes,
       dispatch,
-      saveFilters,
       params.name,
-      params.funcName,
-      params.hash,
+      params.tag,
+      params.id,
       filtersStore.groupBy,
+      saveFilters,
       removeSelectedItem,
       setSelectedRowData,
       toggleAllRows,
@@ -270,12 +267,6 @@ const ActionBar = ({
     input.onChange(selectedDate)
   }
 
-  useLayoutEffect(() => {
-    return () => {
-      formInitialValuesAreSetRef.current = false
-    }
-  }, [params.projectName, params.name, page, tab])
-
   useEffect(() => {
     if (!isEqual(formRef.current?.getState().values, filterMenu)) {
       formRef.current?.batch(() => {
@@ -297,6 +288,10 @@ const ActionBar = ({
       return () => clearInterval(intervalId)
     }
   }, [autoRefresh, autoRefreshIsStopped, hidden, autoRefreshIsEnabled, refresh])
+
+  useLayoutEffect(() => {
+    formRef.current.reset(formInitialValues)
+  }, [formInitialValues])
 
   return (
     <Form form={formRef.current} onSubmit={() => {}}>
@@ -419,7 +414,6 @@ ActionBar.propTypes = {
   handleRefresh: PropTypes.func.isRequired,
   hidden: PropTypes.bool,
   navigateLink: PropTypes.string,
-  page: PropTypes.string.isRequired,
   removeSelectedItem: PropTypes.func,
   setSearchParams: PropTypes.func.isRequired,
   setSelectedRowData: PropTypes.func,

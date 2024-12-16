@@ -17,7 +17,7 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import { capitalize, isNil, isNumber } from 'lodash'
+import { capitalize, isNil, isNumber, upperFirst } from 'lodash'
 
 import DetailsInfoItem from '../../elements/DetailsInfoItem/DetailsInfoItem'
 
@@ -25,6 +25,7 @@ import { Tip } from 'igz-controls/components'
 import JobPopUp from '../../elements/DetailsPopUp/JobPopUp/JobPopUp'
 
 import {
+  ALERTS_PAGE,
   FEATURE_STORE_PAGE,
   FILES_PAGE,
   FUNCTION_TYPE_APPLICATION,
@@ -32,7 +33,7 @@ import {
   MODEL_ENDPOINTS_TAB,
   MLRUN_STORAGE_INPUT_PATH_SCHEME
 } from '../../constants'
-import { formatDatetime, parseUri } from '../../utils'
+import { formatDatetime, parseKeyValues, parseUri } from '../../utils'
 import { getChipOptions } from '../../utils/getChipOptions'
 import { getLimitsGpuType } from '../../elements/FormResourcesUnits/formResourcesUnits.util'
 import { isEveryObjectValueEmpty } from '../../utils/isEveryObjectValueEmpty'
@@ -196,6 +197,46 @@ export const generateDriftDetailsInfo = modelEndpoint => {
     : []
 }
 
+export const generateAlertsDetailsInfo = pageData => {
+  if (pageData.page === ALERTS_PAGE) {
+    const triggerCriteria = pageData?.details?.triggerCriteria
+    const notifications = pageData?.selectedAlert?.notifications
+    const AlertsDetailsInfo = {
+      notificationsDetailsInfo: [],
+      triggerCriteriaDetailsInfo: []
+    }
+    AlertsDetailsInfo.notificationsDetailsInfo = notifications.map((notification, index) => (
+      <li className="item" key={index}>
+        <span className="icon">{notification.icon}</span>
+        <div>
+          <div className="title">{upperFirst(notification.kind)}</div>
+          <div className="text">
+            {`${notification.succeeded} done, `}
+            <span className={notification.failed > 0 ? 'text-red' : ''}>
+              {`${notification.failed} failed`}
+            </span>
+          </div>
+        </div>
+      </li>
+    ))
+
+    AlertsDetailsInfo.triggerCriteriaDetailsInfo = triggerCriteria.map(trigger => {
+      return (
+        <li className="details-item" key={trigger.id}>
+          <div className="details-item__header details-item__header_max-width">
+            {trigger.label}:
+          </div>
+          <DetailsInfoItem info={trigger.value} />
+        </li>
+      )
+    })
+
+    return AlertsDetailsInfo
+  } else {
+    return []
+  }
+}
+
 export const generateProducerDetailsInfo = (selectedItem, isDetailsPopUp) => {
   if (!isEveryObjectValueEmpty(selectedItem) && selectedItem.producer) {
     return Object.entries(selectedItem.producer).map(([key, value]) => {
@@ -239,6 +280,40 @@ export const generateProducerDetailsInfo = (selectedItem, isDetailsPopUp) => {
         </li>
       )
     })
+  }
+}
+
+export const generateDocumentLoaderDetailsInfo = (selectedItem, isDetailsPopUp) => {
+  if (!isEveryObjectValueEmpty(selectedItem) && selectedItem.document_loader) {
+    return (
+      <>
+        <li className="details-item" key="class">
+          <div className="details-item__header">Class</div>
+          <DetailsInfoItem
+            info={selectedItem.document_loader.loader_class_name}
+            isDetailsPopUp={isDetailsPopUp}
+          />
+        </li>
+        <li className="details-item" key="source_name">
+          <div className="details-item__header">Source name</div>
+          <DetailsInfoItem
+            info={selectedItem.document_loader.src_name}
+            isDetailsPopUp={isDetailsPopUp}
+          />
+        </li>
+        <li className="details-item" key="parameters">
+          <div className="details-item__header">Parameters</div>
+          <DetailsInfoItem
+            chipsData={{
+              chips: parseKeyValues(selectedItem.document_loader.kwargs),
+              chipOptions: getChipOptions('results'),
+              isEditEnabled: false
+            }}
+            isDetailsPopUp={isDetailsPopUp}
+          />
+        </li>
+      </>
+    )
   }
 }
 

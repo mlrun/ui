@@ -95,6 +95,7 @@ export const JOBS_MONITORING_WORKFLOWS_TAB = 'workflows'
 export const JOBS_MONITORING_SCHEDULED_TAB = 'scheduled'
 
 export const ALERTS_PAGE = 'ALERTS'
+export const ALERTS_TAB = 'alerts'
 export const ALERTS_FILTERS = 'alerts'
 export const MODEL_ENDPOINT_RESULT = 'model-endpoint-result'
 export const MODEL_MONITORING_APPLICATION = 'model-monitoring-application'
@@ -120,14 +121,20 @@ export const DATASETS_PAGE = 'DATASETS'
 export const DATASETS_TAB = 'datasets'
 
 export const FUNCTIONS_PAGE = 'FUNCTIONS'
+export const FUNCTIONS_PAGE_PATH = 'functions'
 export const ARTIFACTS_PAGE = 'ARTIFACTS'
 
 export const FILES_PAGE = 'FILES'
 export const FILES_TAB = 'files'
 
+export const DOCUMENTS_PAGE = 'DOCUMENTS'
+export const DOCUMENTS_TAB = 'documents'
+
 export const PROJECT_MONITOR = 'monitor'
 
 export const PROJECT_QUICK_ACTIONS_PAGE = 'quick-actions'
+
+export const ALL_VERSIONS_PATH = 'all-versions'
 
 /*=========== CONSUMER_GROUPS =============*/
 
@@ -416,6 +423,7 @@ export const DETAILS_ANALYSIS_TAB = 'analysis'
 export const DETAILS_ARTIFACTS_TAB = 'artifacts'
 export const DETAILS_BUILD_LOG_TAB = 'build-log'
 export const DETAILS_CODE_TAB = 'code'
+export const DETAILS_COLLECTIONS_TAB = 'collections'
 export const DETAILS_DRIFT_ANALYSIS_TAB = 'drift-analysis'
 export const DETAILS_FEATURES_ANALYSIS_TAB = 'features-analysis'
 export const DETAILS_FEATURES_TAB = 'features'
@@ -428,6 +436,7 @@ export const DETAILS_PODS_TAB = 'pods'
 export const DETAILS_PREVIEW_TAB = 'preview'
 export const DETAILS_REQUESTED_FEATURES_TAB = 'requested-features'
 export const DETAILS_ALERTS_TAB = 'alerts'
+export const DETAILS_ALERT_APPLICATION = 'alert'
 export const DETAILS_RESULTS_TAB = 'results'
 export const DETAILS_RETURNED_FEATURES_TAB = 'returned-features'
 export const DETAILS_STATISTICS_TAB = 'statistics'

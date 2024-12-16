@@ -32,6 +32,10 @@ import {
 } from '../constants'
 import { ANY_TIME_DATE_OPTION } from './datePicker.util'
 
+const IN_PROCESS = 'In Process'
+const FAILED = 'Failed'
+const SUCCEEDED = 'Succeeded'
+
 export const generateMonitoringStats = (data, navigate, tab) => {
   const navigateToJobsMonitoringPage = (filters = {}) => {
     navigate(`/projects/*/${JOBS_MONITORING_PAGE}/${tab}?${new URLSearchParams(filters)}`)
@@ -39,8 +43,8 @@ export const generateMonitoringStats = (data, navigate, tab) => {
 
   return tab === JOBS_MONITORING_JOBS_TAB
     ? {
-        all: {
-          counter: data.all || 0,
+        total: {
+          counter: data.total || 0,
           link: () => navigateToJobsMonitoringPage({ [STATUS_FILTER]: [FILTER_ALL_ITEMS] })
         },
         counters: [
@@ -52,26 +56,29 @@ export const generateMonitoringStats = (data, navigate, tab) => {
                 [DATES_FILTER]: ANY_TIME_DATE_OPTION
               }),
             statusClass: 'running',
-            tooltip: 'Aborting, Pending, Running'
+            tooltip: 'Aborting, Pending, Running',
+            label: IN_PROCESS
           },
           {
             counter: data.failed,
             link: () => navigateToJobsMonitoringPage({ [STATUS_FILTER]: [ERROR_STATE, 'aborted'] }),
             statusClass: 'failed',
-            tooltip: 'Aborted, Error'
+            tooltip: 'Aborted, Error',
+            label: FAILED
           },
           {
             counter: data.completed,
             link: () => navigateToJobsMonitoringPage({ [STATUS_FILTER]: ['completed'] }),
             statusClass: 'completed',
-            tooltip: 'Completed'
+            tooltip: 'Completed',
+            label: SUCCEEDED
           }
         ]
       }
     : tab === JOBS_MONITORING_WORKFLOWS_TAB
       ? {
-          all: {
-            counter: data.all || 0,
+          total: {
+            counter: data.total || 0,
             link: () => navigateToJobsMonitoringPage({ [STATUS_FILTER]: [FILTER_ALL_ITEMS] })
           },
           counters: [
@@ -83,26 +90,29 @@ export const generateMonitoringStats = (data, navigate, tab) => {
                   [DATES_FILTER]: ANY_TIME_DATE_OPTION
                 }),
               statusClass: 'running',
-              tooltip: 'Running'
+              tooltip: 'Running',
+              label: IN_PROCESS
             },
             {
               counter: data.failed,
               link: () =>
                 navigateToJobsMonitoringPage({ [STATUS_FILTER]: [ERROR_STATE, FAILED_STATE] }),
               statusClass: 'failed',
-              tooltip: 'Error, Failed'
+              tooltip: 'Error, Failed',
+              label: FAILED
             },
             {
               counter: data.completed,
               link: () => navigateToJobsMonitoringPage({ [STATUS_FILTER]: ['completed'] }),
               statusClass: 'completed',
-              tooltip: 'Completed'
+              tooltip: 'Completed',
+              label: SUCCEEDED
             }
           ]
         }
       : {
-          all: {
-            counter: data.all || 0,
+          total: {
+            counter: data.total || 0,
             link: () => navigateToJobsMonitoringPage({ [TYPE_FILTER]: FILTER_ALL_ITEMS }, {})
           },
           jobs: {

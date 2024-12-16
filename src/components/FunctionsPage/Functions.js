@@ -17,7 +17,7 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import React, { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react'
 import { connect, useDispatch, useSelector } from 'react-redux'
 import { isEmpty } from 'lodash'
 import { useLocation, useNavigate, useParams, useSearchParams } from 'react-router-dom'
@@ -27,15 +27,17 @@ import JobWizard from '../JobWizard/JobWizard'
 import NewFunctionPopUp from '../../elements/NewFunctionPopUp/NewFunctionPopUp'
 
 import {
-  FUNCTIONS_PAGE,
-  GROUP_BY_NAME,
   TAG_LATEST,
   REQUEST_CANCELED,
   DETAILS_BUILD_LOG_TAB,
   JOB_DEFAULT_OUTPUT_PATH,
   DATES_FILTER,
   NAME_FILTER,
-  SHOW_UNTAGGED_FILTER
+  SHOW_UNTAGGED_FILTER,
+  GROUP_BY_NONE,
+  ALL_VERSIONS_PATH,
+  BE_PAGE,
+  BE_PAGE_SIZE
 } from '../../constants'
 import {
   checkForSelectedFunction,
@@ -45,31 +47,28 @@ import {
   searchFunctionItem,
   setFullSelectedFunction
 } from './functions.util'
-import createFunctionsRowData from '../../utils/createFunctionsRowData'
-import functionsActions from '../../actions/functions'
-import { DANGER_BUTTON, TERTIARY_BUTTON } from 'igz-controls/constants'
-import { getFunctionIdentifier } from '../../utils/getUniqueIdentifier'
-import { isBackgroundTaskRunning } from '../../utils/poll.util'
-import { isDetailsTabExists } from '../../utils/link-helper.util'
-import { openPopUp } from 'igz-controls/utils/common.util'
-import { parseFunctions } from '../../utils/parseFunctions'
-import { setFilters } from '../../reducers/filtersReducer'
-import { setNotification } from '../../reducers/notificationReducer'
-import { showErrorNotification } from '../../utils/notifications.util'
-import { useGroupContent } from '../../hooks/groupContent.hook'
-import { useMode } from '../../hooks/mode.hook'
-import { useVirtualization } from '../../hooks/useVirtualization.hook'
-import { useInitialTableFetch } from '../../hooks/useInitialTableFetch.hook'
-import { runNewJob } from '../../reducers/jobReducer'
-import { useFiltersFromSearchParams } from '../../hooks/useFiltersFromSearchParams.hook'
 import {
+  ANY_TIME_DATE_OPTION,
   datePickerPastOptions,
   getDatePickerFilterValue,
   PAST_WEEK_DATE_OPTION
 } from '../../utils/datePicker.util'
+import createFunctionsRowData from '../../utils/createFunctionsRowData'
+import functionsActions from '../../actions/functions'
+import { DANGER_BUTTON, TERTIARY_BUTTON } from 'igz-controls/constants'
+import { getSavedSearchParams, transformSearchParams } from '../../utils/filter.util'
+import { isBackgroundTaskRunning } from '../../utils/poll.util'
+import { isDetailsTabExists } from '../../utils/link-helper.util'
+import { openPopUp } from 'igz-controls/utils/common.util'
+import { parseFunctions } from '../../utils/parseFunctions'
+import { runNewJob } from '../../reducers/jobReducer'
+import { setFilters } from '../../reducers/filtersReducer'
+import { setNotification } from '../../reducers/notificationReducer'
+import { showErrorNotification } from '../../utils/notifications.util'
 import { toggleYaml } from '../../reducers/appReducer'
-
-import cssVariables from './functions.scss'
+import { useFiltersFromSearchParams } from '../../hooks/useFiltersFromSearchParams.hook'
+import { useMode } from '../../hooks/mode.hook'
+import { usePagination } from '../../hooks/usePagination.hook'
 
 const Functions = ({
   deleteFunction,
@@ -77,11 +76,13 @@ const Functions = ({
   fetchFunction,
   fetchFunctions,
   functionsStore,
+  isAllVersions = false,
   removeFunctionsError,
   removeNewFunction
 }) => {
   const [confirmData, setConfirmData] = useState(null)
   const [functions, setFunctions] = useState([])
+  const [functionVersions, setFunctionVersions] = useState([])
   const [selectedFunctionMin, setSelectedFunctionMin] = useState({})
   const [selectedFunction, setSelectedFunction] = useState({})
   const [editableItem, setEditableItem] = useState(null)
@@ -89,9 +90,10 @@ const Functions = ({
   const [jobWizardIsOpened, setJobWizardIsOpened] = useState(false)
   const [jobWizardMode, setJobWizardMode] = useState(null)
   const filtersStore = useSelector(store => store.filtersStore)
-  const [expandedRowsData, setExpandedRowsData] = useState({})
   const [requestErrorMessage, setRequestErrorMessage] = useState('')
   const [deletingFunctions, setDeletingFunctions] = useState({})
+  const paginationConfigFunctionsRef = useRef({})
+  const paginationConfigFunctionVersionsRef = useRef({})
   const abortControllerRef = useRef(new AbortController())
   const fetchFunctionLogsTimeout = useRef(null)
   const fetchFunctionNuclioLogsTimeout = useRef(null)
@@ -105,14 +107,22 @@ const Functions = ({
 
   const functionsFiltersConfig = useMemo(() => {
     return {
-      [NAME_FILTER]: { label: 'Name:', initialValue: '' },
+      [NAME_FILTER]: { label: 'Name:', initialValue: '', hidden: isAllVersions },
       [DATES_FILTER]: {
         label: 'Updated:',
-        initialValue: getDatePickerFilterValue(datePickerPastOptions, PAST_WEEK_DATE_OPTION)
+        initialValue: getDatePickerFilterValue(
+          datePickerPastOptions,
+          isAllVersions ? ANY_TIME_DATE_OPTION : PAST_WEEK_DATE_OPTION
+        )
       },
-      [SHOW_UNTAGGED_FILTER]: { label: 'Show untagged:', initialValue: false, isModal: true }
+      [SHOW_UNTAGGED_FILTER]: {
+        label: 'Show untagged:',
+        initialValue: true,
+        isModal: true,
+        hidden: !isAllVersions
+      }
     }
-  }, [])
+  }, [isAllVersions])
 
   const functionsFilters = useFiltersFromSearchParams(functionsFiltersConfig)
 
@@ -125,150 +135,120 @@ const Functions = ({
     filters => {
       terminateDeleteTasksPolling()
       abortControllerRef.current = new AbortController()
+      const requestParams = {
+        format: 'minimal',
+        tag: TAG_LATEST
+      }
+
+      if (isAllVersions) {
+        delete requestParams.tag
+        requestParams.name = params.funcName
+        setFunctionVersions([])
+      } else {
+        setFunctions([])
+      }
+
+      if (!isAllVersions && !isEmpty(paginationConfigFunctionsRef.current)) {
+        requestParams.page = paginationConfigFunctionsRef.current[BE_PAGE]
+        requestParams['page-size'] = paginationConfigFunctionsRef.current[BE_PAGE_SIZE]
+      }
+
+      if (isAllVersions && !isEmpty(paginationConfigFunctionVersionsRef.current)) {
+        requestParams.page = paginationConfigFunctionVersionsRef.current[BE_PAGE]
+        requestParams['page-size'] = paginationConfigFunctionVersionsRef.current[BE_PAGE_SIZE]
+      }
 
       return fetchFunctions(params.projectName, filters, {
         ui: {
           controller: abortControllerRef.current,
           setRequestErrorMessage
         },
-        params: {
-          format: 'minimal'
-        }
-      }).then(functions => {
-        if (functions?.length > 0) {
-          const newFunctions = parseFunctions(functions, params.projectName)
-          const deletingFunctions = newFunctions.reduce((acc, func) => {
-            if (func.deletion_task_id && !func.deletion_error && !acc[func.deletion_task_id]) {
-              acc[func.deletion_task_id] = {
-                name: func.name
+        params: requestParams
+      }).then(response => {
+        if (response?.funcs) {
+          if (isAllVersions) {
+            paginationConfigFunctionVersionsRef.current.paginationResponse = response.pagination
+          } else {
+            paginationConfigFunctionsRef.current.paginationResponse = response.pagination
+          }
+
+          if (response.funcs?.length > 0) {
+            const newFunctions = parseFunctions(response.funcs, params.projectName)
+            const deletingFunctions = newFunctions.reduce((acc, func) => {
+              if (func.deletion_task_id && !func.deletion_error && !acc[func.deletion_task_id]) {
+                acc[func.deletion_task_id] = {
+                  name: func.name
+                }
               }
+
+              return acc
+            }, {})
+
+            if (!isEmpty(deletingFunctions)) {
+              setDeletingFunctions(deletingFunctions)
+              pollDeletingFunctions(
+                params.projectName,
+                terminatePollRef,
+                deletingFunctions,
+                () => fetchData(filters),
+                dispatch
+              )
             }
 
-            return acc
-          }, {})
+            if (isAllVersions) {
+              setFunctionVersions(newFunctions)
+            } else {
+              setFunctions(newFunctions)
+            }
 
-          if (!isEmpty(deletingFunctions)) {
-            setDeletingFunctions(deletingFunctions)
-            pollDeletingFunctions(
+            return newFunctions
+          } else {
+            const paramsFunction = searchFunctionItem(
+              params.id,
               params.projectName,
-              terminatePollRef,
-              deletingFunctions,
-              () => fetchData(filters),
-              dispatch
+              params.funcName,
+              [],
+              dispatch,
+              true
             )
+
+            if (!paramsFunction) {
+              navigate(
+                `/projects/${params.projectName}/functions${isAllVersions ? getSavedSearchParams(window.location.search) : window.location.search}`,
+                {
+                  replace: true
+                }
+              )
+            }
+
+            if (isAllVersions) {
+              setFunctionVersions([])
+            } else {
+              setFunctions([])
+            }
           }
-
-          setFunctions(newFunctions)
-
-          return newFunctions
-        } else {
-          const paramsFunction = searchFunctionItem(
-            params.hash,
-            params.funcName,
-            params.tag,
-            params.projectName,
-            [],
-            dispatch,
-            true
-          )
-
-          if (!paramsFunction) {
-            navigate(`/projects/${params.projectName}/functions${window.location.search}`, {
-              replace: true
-            })
-          }
-          setFunctions([])
         }
       })
     },
     [
       dispatch,
       fetchFunctions,
+      isAllVersions,
       navigate,
       params.funcName,
-      params.hash,
+      params.id,
       params.projectName,
-      params.tag,
       terminateDeleteTasksPolling
     ]
   )
 
   const refreshFunctions = useCallback(
     filters => {
-      setFunctions([])
       setSelectedFunctionMin({})
-      setExpandedRowsData({})
 
       return fetchData(filters)
     },
     [fetchData]
-  )
-
-  const handleExpand = useCallback(
-    (func, content) => {
-      const funcIdentifier = getFunctionIdentifier(func)
-
-      setExpandedRowsData(state => {
-        return {
-          ...state,
-          [funcIdentifier]: {
-            content: content[func.name].map(contentItem =>
-              createFunctionsRowData(contentItem, params.projectName, false)
-            )
-          }
-        }
-      })
-    },
-    [params.projectName]
-  )
-
-  const handleCollapse = useCallback(
-    func => {
-      const funcIdentifier = getFunctionIdentifier(func.data)
-      const newPageDataSelectedRowData = { ...expandedRowsData }
-
-      delete newPageDataSelectedRowData[funcIdentifier]
-
-      setExpandedRowsData(newPageDataSelectedRowData)
-    },
-    [expandedRowsData]
-  )
-
-  const handleExpandAllCallback = useCallback(
-    (collapse, content) => {
-      const newSelectedRowData = {}
-      if (collapse) {
-        setExpandedRowsData({})
-      } else {
-        Object.entries(content).forEach(([key, value]) => {
-          newSelectedRowData[key] = {
-            content: value.map(contentItem =>
-              createFunctionsRowData(contentItem, params.projectName, false)
-            )
-          }
-        })
-      }
-
-      setExpandedRowsData(newSelectedRowData)
-    },
-    [params.projectName]
-  )
-
-  const { latestItems, allRowsAreExpanded, toggleRow, toggleAllRows } = useGroupContent(
-    functions,
-    getFunctionIdentifier,
-    handleCollapse,
-    handleExpand,
-    null,
-    FUNCTIONS_PAGE,
-    null,
-    handleExpandAllCallback
-  )
-
-  const tableContent = useMemo(
-    () =>
-      latestItems.map(contentItem => createFunctionsRowData(contentItem, params.projectName, true)),
-    [latestItems, params.projectName]
   )
 
   const removeFunction = useCallback(
@@ -448,6 +428,15 @@ const Functions = ({
     [deployFunction, dispatch, functionsFilters, refreshFunctions]
   )
 
+  const showAllVersions = useCallback(
+    funcName => {
+      navigate(
+        `/projects/${params.projectName}/functions/${funcName}/${ALL_VERSIONS_PATH}?${transformSearchParams(window.location.search)}`
+      )
+    },
+    [navigate, params.projectName]
+  )
+
   const pageData = useMemo(
     () =>
       generateFunctionsPageData(
@@ -457,9 +446,10 @@ const Functions = ({
         fetchFunctionNuclioLogsTimeout,
         navigate,
         fetchData,
-        filtersStore
+        filtersStore,
+        isAllVersions ? null : () => showAllVersions(selectedFunction.name)
       ),
-    [dispatch, fetchData, filtersStore, navigate, selectedFunction]
+    [dispatch, fetchData, filtersStore, navigate, isAllVersions, selectedFunction, showAllVersions]
   )
 
   const actionsMenu = useMemo(
@@ -477,7 +467,10 @@ const Functions = ({
         buildAndRunFunc,
         deletingFunctions,
         selectedFunction,
-        fetchFunction
+        fetchFunction,
+        false,
+        isAllVersions,
+        showAllVersions
       ),
     [
       dispatch,
@@ -488,74 +481,37 @@ const Functions = ({
       buildAndRunFunc,
       deletingFunctions,
       selectedFunction,
-      fetchFunction
+      fetchFunction,
+      isAllVersions,
+      showAllVersions
     ]
   )
 
   useEffect(() => {
-    setFullSelectedFunction(
-      dispatch,
-      navigate,
-      fetchFunction,
-      selectedFunctionMin,
-      setSelectedFunction,
-      params.projectName
-    )
-  }, [dispatch, fetchFunction, navigate, params.projectName, selectedFunctionMin])
-
-  useInitialTableFetch({
-    fetchData,
-    createRowData: rowItem => createFunctionsRowData(rowItem, params.projectName),
-    filters: functionsFilters
-  })
+    return () => {
+      setFunctions([])
+      setFunctionVersions([])
+    }
+  }, [params.projectName])
 
   useEffect(() => {
     const abortController = abortControllerRef.current
 
     return () => {
       setSelectedFunctionMin({})
-      setFunctions([])
-      setExpandedRowsData({})
       abortController.abort(REQUEST_CANCELED)
     }
-  }, [params.projectName])
+  }, [params.projectName, isAllVersions])
 
   useEffect(() => {
-    if ((params.funcName || params.hash) && pageData.details.menu.length > 0) {
+    if (params.id && pageData.details.menu.length > 0) {
       isDetailsTabExists(params.tab, pageData.details.menu, navigate, location)
     }
-  }, [navigate, pageData.details.menu, location, params.hash, params.funcName, params.tab])
+  }, [navigate, pageData.details.menu, location, params.id, params.tab])
 
   useEffect(() => {
-    checkForSelectedFunction(
-      params.funcName,
-      expandedRowsData,
-      functions,
-      params.hash,
-      params.tag,
-      navigate,
-      params.projectName,
-      setSelectedFunctionMin,
-      dispatch
-    )
-  }, [
-    dispatch,
-    functions,
-    navigate,
-    params.funcName,
-    params.hash,
-    params.projectName,
-    params.tag,
-    expandedRowsData
-  ])
-
-  useEffect(() => {
-    dispatch(setFilters({ groupBy: GROUP_BY_NAME }))
+    dispatch(setFilters({ groupBy: GROUP_BY_NONE }))
   }, [dispatch, params.projectName])
-
-  const filtersChangeCallback = filters => {
-    refreshFunctions(filters)
-  }
 
   const retryRequestCallback = useCallback(() => {
     refreshFunctions(functionsFilters)
@@ -607,9 +563,12 @@ const Functions = ({
       if (functions.length) {
         const currentItem = functions.find(func => func.name === name && func.tag === tag)
 
-        navigate(
-          `/projects/${params.projectName}/functions/${currentItem.hash}/${tab}${window.location.search}`
-        )
+        if (currentItem) {
+          // todo need better logic for searching currentItem for cases when the function has no tag
+          navigate(
+            `/projects/${params.projectName}/functions/${params.funcName}${isAllVersions ? `/${ALL_VERSIONS_PATH}` : ''}/@${currentItem.hash}/${tab}${window.location.search}`
+          )
+        }
         dispatch(
           setNotification({
             status: 200,
@@ -633,9 +592,12 @@ const Functions = ({
 
         showErrorNotification(dispatch, error, '', 'Failed to deploy the function')
 
-        navigate(
-          `/projects/${params.projectName}/functions/${currentItem.hash}/overview${window.location.search}`
-        )
+        if (currentItem) {
+          // todo need better logic for searching currentItem for cases when the function has no tag
+          navigate(
+            `/projects/${params.projectName}/functions/${params.funcName}${isAllVersions ? `/${ALL_VERSIONS_PATH}` : ''}/@${currentItem.hash}/overview${window.location.search}`
+          )
+        }
       }
     })
   }
@@ -674,33 +636,98 @@ const Functions = ({
     }
   }, [editableItem, jobWizardIsOpened, jobWizardMode, params])
 
-  const virtualizationConfig = useVirtualization({
-    rowsData: {
-      content: tableContent,
-      expandedRowsData,
-      selectedItem: selectedFunction
-    },
-    heightData: {
-      headerRowHeight: cssVariables.functionsHeaderRowHeight,
-      rowHeight: cssVariables.functionsRowHeight,
-      rowHeightExtended: cssVariables.functionsRowHeightExtended
-    },
-    activateTableScroll: true
+  const [
+    handleRefreshFunctions,
+    paginatedFunctions,
+    searchFunctionsParams,
+    setSearchFunctionsParams
+  ] = usePagination({
+    hidden: isAllVersions,
+    content: functions,
+    refreshContent: refreshFunctions,
+    filters: functionsFilters,
+    paginationConfigRef: paginationConfigFunctionsRef,
+    resetPaginationTrigger: `${params.projectName}`
   })
+  const [
+    handleRefreshFunctionVersions,
+    paginatedFunctionVersions,
+    searchFunctionVersionsParams,
+    setSearchFunctionVersionsParams
+  ] = usePagination({
+    hidden: !isAllVersions,
+    content: functionVersions,
+    refreshContent: refreshFunctions,
+    filters: functionsFilters,
+    paginationConfigRef: paginationConfigFunctionVersionsRef,
+    resetPaginationTrigger: `${params.projectName}_${isAllVersions}`
+  })
+
+  const tableContent = useMemo(
+    () =>
+      (isAllVersions ? paginatedFunctionVersions : paginatedFunctions).map(contentItem =>
+        createFunctionsRowData(contentItem, params.projectName, Boolean(isAllVersions))
+      ),
+    [isAllVersions, paginatedFunctionVersions, paginatedFunctions, params.projectName]
+  )
+
+  useLayoutEffect(() => {
+    checkForSelectedFunction(
+      isAllVersions ? paginatedFunctionVersions : paginatedFunctions,
+      params.id,
+      params.funcName,
+      navigate,
+      params.projectName,
+      setSelectedFunctionMin,
+      dispatch,
+      isAllVersions,
+      isAllVersions ? searchFunctionVersionsParams : searchFunctionsParams,
+      isAllVersions ? paginationConfigFunctionVersionsRef : paginationConfigFunctionsRef
+    )
+  }, [
+    dispatch,
+    functionVersions,
+    functions,
+    isAllVersions,
+    navigate,
+    paginatedFunctionVersions,
+    paginatedFunctions,
+    params.funcName,
+    params.id,
+    params.projectName,
+    searchFunctionVersionsParams,
+    searchFunctionsParams
+  ])
+
+  useEffect(() => {
+    setFullSelectedFunction(
+      dispatch,
+      navigate,
+      fetchFunction,
+      selectedFunctionMin,
+      setSelectedFunction,
+      params.projectName,
+      params.id
+    )
+  }, [
+    dispatch,
+    fetchFunction,
+    isAllVersions,
+    navigate,
+    params.projectName,
+    params.id,
+    selectedFunctionMin
+  ])
 
   return (
     <FunctionsView
       actionsMenu={actionsMenu}
-      allRowsAreExpanded={allRowsAreExpanded}
       closePanel={closePanel}
       confirmData={confirmData}
       createFunctionSuccess={createFunctionSuccess}
       editableItem={editableItem}
-      expandedRowsData={expandedRowsData}
       filters={functionsFilters}
-      filtersChangeCallback={filtersChangeCallback}
       filtersStore={filtersStore}
-      functions={functions}
       functionsFiltersConfig={functionsFiltersConfig}
       functionsPanelIsOpen={functionsPanelIsOpen}
       functionsStore={functionsStore}
@@ -708,17 +735,24 @@ const Functions = ({
       handleCancel={handleCancel}
       handleDeployFunctionFailure={handleDeployFunctionFailure}
       handleDeployFunctionSuccess={handleDeployFunctionSuccess}
+      handleRefreshFunctions={
+        isAllVersions ? handleRefreshFunctionVersions : handleRefreshFunctions
+      }
       handleSelectFunction={handleSelectFunction}
+      isAllVersions={isAllVersions}
       isDemoMode={isDemoMode}
       pageData={pageData}
+      paginationConfigFunctionsRef={
+        isAllVersions ? paginationConfigFunctionVersionsRef : paginationConfigFunctionsRef
+      }
       requestErrorMessage={requestErrorMessage}
       retryRequest={retryRequestCallback}
       selectedFunction={selectedFunction}
+      setSearchFunctionsParams={
+        isAllVersions ? setSearchFunctionVersionsParams : setSearchFunctionsParams
+      }
       setSearchParams={setSearchParams}
       tableContent={tableContent}
-      toggleAllRows={toggleAllRows}
-      toggleRow={toggleRow}
-      virtualizationConfig={virtualizationConfig}
     />
   )
 }
