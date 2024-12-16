@@ -167,7 +167,7 @@ const getNotificationData = notifications =>
 export const createAlertRowData = ({ name, ...alert }) => {
   const getLink = alert => {
     const queryString = window.location.search
-    const { entity_kind: entityType, entity_id, project, alertName, id } = alert
+    const { job, entity_kind: entityType, entity_id, project, alertName, id } = alert
 
     //TODO: getLink will be updated with ML-8104 & ML-8105
 
@@ -176,11 +176,11 @@ export const createAlertRowData = ({ name, ...alert }) => {
     //   return `/projects/*/alerts/${project}/${alertName}/${name}/${endpointId}/${DETAILS_ALERT_APPLICATION}${queryString}`
     // }
     //
-    // if (entityType === JOB) {
-    //   return job
-    //     ? `/projects/*/alerts/${project}/${alertName}/${job.name}/${job.jobUid}/${DETAILS_ALERT_APPLICATION}${queryString}`
-    //     : ''
-    // }
+    if (entityType === JOB) {
+      return job
+        ? `/projects/*/alerts/${project}/${alertName}/${job.name}/${job.jobUid}/${DETAILS_ALERT_APPLICATION}${queryString}`
+        : ''
+    }
 
     if (entityType === MODEL_MONITORING_APPLICATION) {
       const [, applicationName] = entity_id.split('.')
