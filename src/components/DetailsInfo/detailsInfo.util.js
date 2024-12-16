@@ -196,49 +196,53 @@ export const generateDriftDetailsInfo = modelEndpoint => {
     : []
 }
 
+const producerListOrder = ['name', 'kind', 'tag', 'uri', 'owner', 'uid', 'workflow']
+
 export const generateProducerDetailsInfo = (selectedItem, isDetailsPopUp) => {
   if (!isEveryObjectValueEmpty(selectedItem) && selectedItem.producer) {
-    return Object.entries(selectedItem.producer).map(([key, value]) => {
-      let producerData = {}
-      let isUri = key === 'uri'
-      const handleOpenJobDetails = jobData => {
-        openPopUp(JobPopUp, { jobData })
-      }
-
-      if (isUri) {
-        // value is in the form of: project/uid-iteration
-        const [project, rest] = value.split('/')
-        const [uid, iter] = rest?.split('-') ?? []
-
-        producerData = {
-          project,
-          uid,
-          iter
+    return Object.entries(selectedItem.producer)
+      .sort((a, b) => producerListOrder.indexOf(a[0]) - producerListOrder.indexOf(b[0]))
+      .map(([key, value]) => {
+        let producerData = {}
+        let isUri = key === 'uri'
+        const handleOpenJobDetails = jobData => {
+          openPopUp(JobPopUp, { jobData })
         }
-      }
 
-      return (
-        <li className="details-item" key={key}>
-          <div className="details-item__header">
-            {key === 'uri' || key === 'uid' ? key.toUpperCase() : capitalize(key)}:
-            {key === 'uid' && (
-              <Tip
-                className="details-item__tip"
-                text="Unique identifier representing the job or the workflow that generated the artifact"
-              />
-            )}
-          </div>
-          <DetailsInfoItem
-            item={{
-              shouldPopUp: isUri,
-              handleClick: () => isUri && handleOpenJobDetails(producerData)
-            }}
-            info={value}
-            isDetailsPopUp={isDetailsPopUp}
-          />
-        </li>
-      )
-    })
+        if (isUri) {
+          // value is in the form of: project/uid-iteration
+          const [project, rest] = value.split('/')
+          const [uid, iter] = rest?.split('-') ?? []
+
+          producerData = {
+            project,
+            uid,
+            iter
+          }
+        }
+
+        return (
+          <li className="details-item" key={key}>
+            <div className="details-item__header">
+              {key === 'uri' || key === 'uid' ? key.toUpperCase() : capitalize(key)}:
+              {key === 'uid' && (
+                <Tip
+                  className="details-item__tip"
+                  text="Unique identifier representing the job or the workflow that generated the artifact"
+                />
+              )}
+            </div>
+            <DetailsInfoItem
+              item={{
+                shouldPopUp: isUri,
+                handleClick: () => isUri && handleOpenJobDetails(producerData)
+              }}
+              info={value}
+              isDetailsPopUp={isDetailsPopUp}
+            />
+          </li>
+        )
+      })
   }
 }
 
