@@ -548,6 +548,7 @@ const JobWizard = ({
             {(functionsStore.loading ||
               functionsStore.funcLoading ||
               jobsStore.loading ||
+              jobsStore.jobLoading ||
               projectIsLoading) && <Loader />}
           </>
         )

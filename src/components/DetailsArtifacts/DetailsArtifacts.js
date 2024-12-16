@@ -166,26 +166,26 @@ const DetailsArtifacts = ({
             }
           }
         )
-      }
+      } else {
+        if (iteration) {
+          config.params.iter = iteration
+        }
 
-      if (iteration) {
-        config.params.iter = iteration
+        dispatch(
+          fetchArtifacts({
+            project: job.project || params.projectName,
+            filters: {},
+            config,
+            setRequestErrorMessage
+          })
+        )
+          .unwrap()
+          .then(result => {
+            if (result) {
+              setArtifactsPreviewContent(generateArtifactsPreviewContent(job, result))
+            }
+          })
       }
-
-      dispatch(
-        fetchArtifacts({
-          project: job.project || params.projectName,
-          filters: {},
-          config,
-          setRequestErrorMessage
-        })
-      )
-        .unwrap()
-        .then(result => {
-          if (result) {
-            setArtifactsPreviewContent(generateArtifactsPreviewContent(job, result))
-          }
-        })
     },
     [dispatch, params.jobId, params.projectName]
   )

@@ -231,7 +231,12 @@ const Jobs = () => {
                     onClick: () => handleMonitoring(selectedJob, true)
                   }
                 ]}
-                autoRefreshIsStopped={jobWizardIsOpened || jobsStore.loading}
+                autoRefreshIsEnabled={selectedTab === MONITOR_JOBS_TAB}
+                autoRefreshIsStopped={
+                  jobWizardIsOpened ||
+                  jobsStore.loading ||
+                  jobsStore.jobLoading
+                }
                 autoRefreshStopTrigger={!isEmpty(selectedJob)}
                 filters={filters}
                 filtersConfig={initialTabData[selectedTab].filtersConfig}
@@ -292,10 +297,8 @@ const Jobs = () => {
               >
                 <Outlet />
               </JobsContext.Provider>
-              {(jobsStore.loading ||
-                workflowsStore.workflows.loading ||
+              {(jobsStore.jobLoading ||
                 workflowsStore.activeWorkflow.loading ||
-                functionsStore.loading ||
                 functionsStore.funcLoading) && <Loader />}
             </div>
           </div>

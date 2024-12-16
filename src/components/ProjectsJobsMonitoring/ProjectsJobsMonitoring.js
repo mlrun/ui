@@ -30,6 +30,7 @@ import ActionBar from '../ActionBar/ActionBar'
 import JobsMonitoringFilters from './JobsMonitoring/JobsMonitoringFilters'
 import ScheduledMonitoringFilters from './ScheduledMonitoring/ScheduledMonitoringFilters'
 import WorkflowsMonitoringFilters from './WorkflowsMonitoring/WorkflowsMonitoringFilters'
+import Loader from '../../common/Loader/Loader'
 
 import { STATS_TOTAL_CARD, tabs } from './projectsJobsMotinoring.util'
 import {
@@ -67,6 +68,8 @@ const ProjectsJobsMonitoring = () => {
   const navigate = useNavigate()
   const artifactsStore = useSelector(store => store.artifactsStore)
   const jobsStore = useSelector(store => store.jobsStore)
+  const workflowsStore = useSelector(store => store.workflowsStore)
+  const functionsStore = useSelector(store => store.functionsStore)
 
   const jobsFiltersConfig = useMemo(
     () => getJobsFiltersConfig(params.jobName, true),
@@ -182,7 +185,10 @@ const ProjectsJobsMonitoring = () => {
               <ActionBar
                 autoRefreshIsEnabled={selectedTab === JOBS_MONITORING_JOBS_TAB}
                 autoRefreshIsStopped={
-                  jobWizardIsOpened || jobsStore.loading || !isEmpty(selectedJob)
+                  jobWizardIsOpened ||
+                  jobsStore.loading ||
+                  jobsStore.jobLoading ||
+                  !isEmpty(selectedJob)
                 }
                 filters={filters}
                 filtersConfig={tabData[selectedTab].filtersConfig}
@@ -242,6 +248,9 @@ const ProjectsJobsMonitoring = () => {
               >
                 <Outlet />
               </ProjectJobsMonitoringContext.Provider>
+              {(jobsStore.jobLoading ||
+                workflowsStore.activeWorkflow.loading ||
+                functionsStore.funcLoading) && <Loader />}
             </div>
           </div>
         )}

@@ -687,10 +687,10 @@ const WorkflowsTable = React.forwardRef(
     return (
       <>
         {workflowsStore.workflows.loading && <Loader />}
-        {(!workflowsStore.workflows.loading &&
-          !params.workflowId &&
-          workflowsStore.workflows.data.length === 0) ||
-        requestErrorMessage ? (
+        {workflowsStore.workflows.loading ? null : (!workflowsStore.workflows.loading &&
+            !params.workflowId &&
+            workflowsStore.workflows.data.length === 0) ||
+          requestErrorMessage ? (
           <NoData
             message={getNoDataMessage(
               filters,

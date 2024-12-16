@@ -30,6 +30,7 @@ import { getNewJobErrorMsg } from '../components/JobWizard/JobWizard.util'
 const initialState = {
   jobsData: [],
   job: {},
+  jobLoading: false,
   jobFunc: {},
   jobRuns: [],
   jobs: [],
@@ -307,25 +308,33 @@ const jobsSlice = createSlice({
       state.loading = false
     })
     builder.addCase(fetchAllJobRuns.rejected, hideLoading)
-    builder.addCase(fetchJob.pending, showLoading)
+    builder.addCase(fetchJob.pending, (state, action) => {
+      state.jobLoading = true
+    })
     builder.addCase(fetchJob.fulfilled, (state, action) => {
       state.error = null
       state.job = action.payload
-      state.loading = false
+      state.jobLoading = false
     })
-    builder.addCase(fetchJob.rejected, hideLoading)
+    builder.addCase(fetchJob.rejected, (state, action) => {
+      state.jobLoading = false
+    })
     builder.addCase(fetchJobFunction.pending, showLoading)
     builder.addCase(fetchJobFunction.fulfilled, (state, action) => {
       state.error = null
       state.jobFunc = action.payload
       state.loading = false
     })
-    builder.addCase(fetchJobFunction.rejected, hideLoading)
-    builder.addCase(fetchJobFunctions.pending, showLoading)
+    builder.addCase(fetchJobFunction.rejected, (state, action) => {
+      state.jobLoading = false
+    })
+    builder.addCase(fetchJobFunctions.pending, (state, action) => {
+      state.jobLoading = true
+    })
     builder.addCase(fetchJobFunctions.fulfilled, (state, action) => {
       state.error = null
       state.jobFunc = action.payload
-      state.loading = false
+      state.jobLoading = false
     })
     builder.addCase(fetchJobFunctions.rejected, hideLoading)
     builder.addCase(fetchJobLogs.pending, (state, action) => {
