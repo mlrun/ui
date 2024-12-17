@@ -536,7 +536,7 @@ export const APPLICATION = 'application'
 export const ENDPOINT = 'endpoint'
 export const ENTITY_TYPE = 'entity-type'
 export const ENTITY_KIND = 'entity-kind'
-export const ENTITY_ID = 'entity-id'
+export const ENTITY_ID = 'entity'
 export const EVENT_TYPE = 'event-type'
 export const EVENT_KIND = 'event-kind'
 

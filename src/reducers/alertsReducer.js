@@ -23,7 +23,20 @@ import alertsApi from '../api/alerts-api'
 import { defaultPendingHandler } from './redux.util'
 import { parseAlerts } from '../utils/parseAlert'
 import { largeResponseCatchHandler } from '../utils/largeResponseCatchHandler'
-import { ENTITY_KIND, ENTITY_TYPE, EVENT_KIND, EVENT_TYPE, FILTER_ALL_ITEMS } from '../constants'
+import {
+  ENDPOINT_APPLICATION,
+  ENDPOINT_RESULT,
+  ENTITY_ID,
+  ENTITY_KIND,
+  ENTITY_TYPE,
+  EVENT_KIND,
+  EVENT_TYPE,
+  FILTER_ALL_ITEMS,
+  JOB,
+  JOB_NAME,
+  MODEL_ENDPOINT_RESULT,
+  MODEL_MONITORING_APPLICATION
+} from '../constants'
 
 const initialState = {
   alerts: [],
@@ -33,24 +46,44 @@ const initialState = {
 
 const generateRequestParams = filters => {
   const params = {}
-  if (filters.name) {
+
+  if (filters?.name?.trim()) {
     params.name = `~${filters.name}`
   }
 
-  if (filters?.dates) {
-    if (filters.dates.value[0]) {
-      params.since = filters.dates.value[0].toISOString()
-    }
-
-    if (filters.dates.value[1] && !filters.dates.isPredefined) {
-      params.until = filters.dates.value[1].toISOString()
-    }
+  if (filters?.dates?.value?.[0]) {
+    params.since = filters.dates.value[0].toISOString()
   }
 
-  // TODO: add logic for the entity-id based on entity-type after integration with backend
+  if (filters?.dates?.value?.[1] && !filters.dates.isPredefined) {
+    params.until = filters.dates.value[1].toISOString()
+  }
 
-  if (filters?.[ENTITY_TYPE] && filters?.[ENTITY_TYPE] !== FILTER_ALL_ITEMS) {
-    params[ENTITY_KIND] = filters?.[ENTITY_TYPE]
+  const entityType = filters?.[ENTITY_TYPE]
+  const entityId = filters?.[ENTITY_ID]?.trim()
+
+  if (entityType && entityType !== FILTER_ALL_ITEMS) {
+    params[ENTITY_KIND] = entityType
+  }
+
+  if (
+    entityType &&
+    (entityType === FILTER_ALL_ITEMS || entityType === MODEL_MONITORING_APPLICATION) &&
+    entityId
+  ) {
+    params[ENTITY_ID] = `~${entityId}`
+  }
+
+  if (entityType && entityType === JOB && filters?.[JOB_NAME].trim()) {
+    params[ENTITY_ID] = `~${filters?.[JOB_NAME]}*`
+  }
+
+  const endpointApplication = filters?.[ENDPOINT_APPLICATION]?.trim()
+  const endpointResult = filters?.[ENDPOINT_RESULT]?.trim()
+
+  if (entityType === MODEL_ENDPOINT_RESULT && (endpointApplication || endpointResult)) {
+    const metricName = endpointResult ? `*${endpointResult}` : ''
+    params[ENTITY_ID] = `~*${endpointApplication || ''}*.result.${metricName}*`
   }
 
   if (

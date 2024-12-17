@@ -36,7 +36,6 @@ import {
 } from './alerts.util'
 
 import {
-  APPLICATION,
   ENDPOINT_APPLICATION,
   ENDPOINT_RESULT,
   ENTITY_ID,
@@ -46,6 +45,7 @@ import {
   JOB,
   JOB_NAME,
   MODEL_ENDPOINT_RESULT,
+  MODEL_MONITORING_APPLICATION,
   PROJECTS_FILTER,
   SEVERITY
 } from '../../constants'
@@ -70,7 +70,7 @@ const AlertsFilters = ({ isCrossProjects }) => {
   const getFieldsToReset = useCallback(entityType => {
     const fieldsByType = {
       [FILTER_ALL_ITEMS]: [ENTITY_ID],
-      [APPLICATION]: [ENTITY_ID],
+      [MODEL_MONITORING_APPLICATION]: [ENTITY_ID],
       [JOB]: [JOB_NAME],
       [MODEL_ENDPOINT_RESULT]: [ENDPOINT_APPLICATION, ENDPOINT_RESULT]
     }
@@ -102,7 +102,7 @@ const AlertsFilters = ({ isCrossProjects }) => {
         />
       </div>
 
-      {(entityType === FILTER_ALL_ITEMS || entityType === APPLICATION) && (
+      {(entityType === FILTER_ALL_ITEMS || entityType === MODEL_MONITORING_APPLICATION) && (
         <div className="form-row">
           <FormInput label="Entity ID" name={ENTITY_ID} placeholder="Search by ID" />
           <FormOnChange handler={value => handleInputChange(value, ENTITY_ID)} name={ENTITY_ID} />
