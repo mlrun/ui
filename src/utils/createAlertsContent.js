@@ -164,7 +164,9 @@ const getNotificationData = notifications =>
     }
   })
 
-export const createAlertRowData = ({ name, ...alert }) => {
+export const createAlertRowData = ({ ...alert }) => {
+  const { name } = alert
+
   const getLink = alert => {
     const queryString = window.location.search
     const { entity_kind: entityType, entity_id, project, alertName, id } = alert

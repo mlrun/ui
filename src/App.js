@@ -157,7 +157,6 @@ const App = () => {
           {/*TODO: the Alerts Route will be updated with ML-8368 */}
           {[
             'projects/:id/alerts',
-            'projects/:id/alerts/:project/:alertName/:entityName/:id/:tab',
             'projects/:id/alerts/:project/:alertName/:entityName/:id/:tab'
           ].map((path, index) => (
             <Fragment key={index}>
