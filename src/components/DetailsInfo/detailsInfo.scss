@@ -71,6 +71,11 @@ $itemInfoWithoutPadding: item-info-without-padding;
         font-weight: 500;
         font-size: 15px;
         line-height: 18px;
+
+        &_max-content-width {
+          width: max-content;
+          min-width: 160px;
+        }
       }
 
       &__tip {
@@ -84,6 +89,11 @@ $itemInfoWithoutPadding: item-info-without-padding;
         min-width: 110px;
         color: $topaz;
         word-break: break-word;
+        .alert-icon-cell {
+          display: flex;
+          gap: 4px;
+          align-items: center;
+        }
 
         &_multiline {
           display: inline-block;

@@ -164,7 +164,7 @@ const getNotificationData = notifications =>
     }
   })
 
-export const createAlertRowData = ({ ...alert }) => {
+export const createAlertRowData = ({ ...alert }, isCrossProjects) => {
   const { name } = alert
 
   const getLink = alert => {
@@ -247,7 +247,8 @@ export const createAlertRowData = ({ ...alert }) => {
         headerId: 'projectName',
         headerLabel: 'Project name',
         value: alert.project,
-        className: 'table-cell-1'
+        className: 'table-cell-1',
+        hidden: !isCrossProjects
       },
       {
         id: `eventType.${alert.id}`,
