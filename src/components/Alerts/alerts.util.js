@@ -136,26 +136,28 @@ export const filterAlertsEventTypeOptions = [
 ]
 
 export const alertsHeaders = type => {
-  if (!type) return []
+  if (type) {
+    const headers = [
+      { label: 'Project Name', id: 'projectName' },
+      { label: 'Job Name', id: 'jobName' },
+      { label: 'Endpoint Name', id: 'endpoint_name' },
+      { label: 'Application Name', id: 'applicationName' },
+      { label: 'Type', id: 'type' },
+      { label: 'Timestamp', id: 'timestamp' },
+      { label: 'Severity', id: SEVERITY },
+      { label: 'Job', id: 'job' }
+    ]
 
-  const headers = [
-    { label: 'Project Name', id: 'projectName' },
-    { label: 'Job Name', id: 'jobName' },
-    { label: 'Endpoint Name', id: 'endpoint_name' },
-    { label: 'Application Name', id: 'applicationName' },
-    { label: 'Type', id: 'type' },
-    { label: 'Timestamp', id: 'timestamp' },
-    { label: 'Severity', id: SEVERITY },
-    { label: 'Job', id: 'job' }
-  ]
+    const entityType = {
+      [JOB]: ['endpoint_name', 'applicationName'],
+      [MODEL_ENDPOINT_RESULT]: [JOB, 'jobName', 'applicationName'],
+      [MODEL_MONITORING_APPLICATION]: ['endpoint_name', JOB, 'jobName']
+    }
 
-  const entityType = {
-    [JOB]: ['endpoint_name', 'applicationName'],
-    [MODEL_ENDPOINT_RESULT]: [JOB, 'jobName', 'applicationName'],
-    [MODEL_MONITORING_APPLICATION]: ['endpoint_name', JOB, 'jobName']
+    return headers.filter(header => !entityType[type]?.includes(header.id))
   }
 
-  return headers.filter(header => !entityType[type]?.includes(header.id))
+  return []
 }
 
 const triggerCriteria = criteria => {

@@ -111,6 +111,22 @@
             "failed": 0,
             "succeeded": 4
           }
+        },
+        {
+          "kind": "git",
+          "err": "fail",
+          "summary": {
+            "failed": 2,
+            "succeeded": 4
+          }
+        },
+        {
+          "kind": "slack",
+          "err": "fail",
+          "summary": {
+            "failed": 2,
+            "succeeded": 4
+          }
         }
       ],
       "entity_id": "default.application-1",
@@ -140,6 +156,22 @@
         {
           "kind": "git",
           "err": "Authentication failed",
+          "summary": {
+            "failed": 2,
+            "succeeded": 4
+          }
+        },
+        {
+          "kind": "git",
+          "err": "fail",
+          "summary": {
+            "failed": 2,
+            "succeeded": 4
+          }
+        },
+        {
+          "kind": "slack",
+          "err": "fail",
           "summary": {
             "failed": 2,
             "succeeded": 4

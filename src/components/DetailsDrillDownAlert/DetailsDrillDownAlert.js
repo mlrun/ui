@@ -21,9 +21,9 @@ import React from 'react'
 import PropTypes from 'prop-types'
 
 import DetailsInfo from '../DetailsInfo/DetailsInfo'
-// import DetailsLogs from '../DetailsLogs/DetailsLogs'
+import DetailsLogs from '../DetailsLogs/DetailsLogs'
 
-// import { JOB } from '../../constants'
+import { JOB } from '../../constants'
 
 import '../DetailsInfo/detailsInfo.scss'
 
@@ -43,19 +43,18 @@ const DetailsDrillDownAlert = React.forwardRef(
           setChangesCounter={setChangesCounter}
           setChangesData={setChangesData}
         />
-        {/*TODO: DetailsLogs will be implemented in  ML-8104*/}
-        {/*{pageData.details.entityType === JOB && (*/}
-        {/*  <DetailsLogs*/}
-        {/*    item={selectedItem}*/}
-        {/*    logsTitle={pageData.details.logsTitle}*/}
-        {/*    noDataMessage={pageData.details.logsNoDataMessage}*/}
-        {/*    refreshAdditionalLogs={pageData.details.refreshAdditionalLogs}*/}
-        {/*    refreshLogs={pageData.details.refreshLogs}*/}
-        {/*    removeAdditionalLogs={pageData.details.removeAdditionalLogs}*/}
-        {/*    removeLogs={() => {}}*/}
-        {/*    withLogsRefreshBtn*/}
-        {/*  />*/}
-        {/*)}*/}
+        {pageData.details.entityType === JOB && (
+          <DetailsLogs
+            item={selectedItem}
+            logsTitle={pageData.details.logsTitle}
+            noDataMessage={pageData.details.logsNoDataMessage}
+            refreshAdditionalLogs={pageData.details.refreshAdditionalLogs}
+            refreshLogs={pageData.details.refreshLogs}
+            removeAdditionalLogs={pageData.details.removeAdditionalLogs}
+            removeLogs={() => {}}
+            withLogsRefreshBtn
+          />
+        )}
       </>
     )
   }

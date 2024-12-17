@@ -164,10 +164,12 @@ const getNotificationData = notifications =>
     }
   })
 
-export const createAlertRowData = ({ name, ...alert }) => {
+export const createAlertRowData = ({ ...alert }) => {
+  const { name } = alert
+
   const getLink = alert => {
     const queryString = window.location.search
-    const { job, entity_kind: entityType, entity_id, project, alertName, id } = alert
+    const { alertName, entity_kind: entityType, entity_id, job, project, uid } = alert
 
     //TODO: getLink will be updated with ML-8104 & ML-8105
 
@@ -183,8 +185,8 @@ export const createAlertRowData = ({ name, ...alert }) => {
     }
 
     if (entityType === MODEL_MONITORING_APPLICATION) {
-      const [, applicationName] = entity_id.split('.')
-      return `/projects/*/alerts/${project}/${alertName}/${applicationName}/${id}/${DETAILS_ALERT_APPLICATION}${queryString}`
+      const [, applicationName] = entity_id.split('_')
+      return `/projects/*/alerts/${project}/${alertName}/${applicationName}/${uid}/${DETAILS_ALERT_APPLICATION}${queryString}`
     }
 
     return ''
@@ -219,8 +221,8 @@ export const createAlertRowData = ({ name, ...alert }) => {
   }
 
   if (alert.entity_kind === MODEL_MONITORING_APPLICATION) {
-    alert.uid = alert.id
-    alert.applicationName = alert.entity_id.split('.')[1]
+    alert.uid = `${alert.id}`
+    alert.applicationName = alert.entity_id.split('_')[1]
   }
   return {
     data: {
