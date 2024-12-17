@@ -28,7 +28,7 @@ import TimePicker from '../TimePicker/TimePicker'
 import { Button, Tip, Tooltip, TextTooltipTemplate, PopUpDialog } from 'igz-controls/components'
 import { SelectOption } from 'igz-controls/elements'
 
-import { SECONDARY_BUTTON } from 'igz-controls/constants'
+import { PRIMARY_BUTTON } from 'igz-controls/constants'
 import { CUSTOM_RANGE_DATE_OPTION } from '../../utils/datePicker.util'
 import { DATE_PICKER_TIME_FRAME_LIMITS } from '../../types'
 
@@ -276,7 +276,7 @@ const DatePickerView = React.forwardRef(
               >
                 {!isEmpty(invalidMessage) && <ErrorMessage message={invalidMessage} />}
                 <Button
-                  variant={SECONDARY_BUTTON}
+                  variant={PRIMARY_BUTTON}
                   label="Apply"
                   onClick={onApplyChanges}
                   className="date-picker__apply-btn"

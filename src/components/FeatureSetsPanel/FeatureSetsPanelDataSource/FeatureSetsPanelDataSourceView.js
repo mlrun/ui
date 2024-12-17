@@ -30,7 +30,7 @@ import { Button } from 'igz-controls/components'
 
 import { CSV, kindOptions, PARQUET } from './featureSetsPanelDataSource.util'
 import { comboboxSelectList } from '../UrlPath.utils'
-import { SECONDARY_BUTTON } from 'igz-controls/constants'
+import { PRIMARY_BUTTON } from 'igz-controls/constants'
 
 import { ReactComponent as Pencil } from 'igz-controls/images/edit.svg'
 
@@ -89,7 +89,7 @@ const FeatureSetsPanelDataSourceView = ({
                 </>
               }
               onClick={() => setShowSchedule(state => !state)}
-              variant={SECONDARY_BUTTON}
+              variant={PRIMARY_BUTTON}
             />
             {showSchedule && (
               <ScheduleFeatureSet

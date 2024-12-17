@@ -26,7 +26,7 @@ import Table from '../../Table/Table'
 import FeatureStorePageTabs from '../FeatureStorePageTabs/FeatureStorePageTabs'
 
 import { FEATURE_STORE_PAGE, FEATURES_TAB } from '../../../constants'
-import { SECONDARY_BUTTON } from 'igz-controls/constants'
+import { PRIMARY_BUTTON } from 'igz-controls/constants'
 import { VIRTUALIZATION_CONFIG } from '../../../types'
 import { filtersConfig } from './features.util'
 import { getNoDataMessage } from '../../../utils/getNoDataMessage'
@@ -68,7 +68,7 @@ const FeaturesView = React.forwardRef(
                 template: getPopUpTemplate({
                   className: 'action-button',
                   label: addToFeatureVectorTitle,
-                  variant: SECONDARY_BUTTON
+                  variant: PRIMARY_BUTTON
                 })
               }
             ]}

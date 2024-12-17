@@ -33,7 +33,6 @@ import { Button, Modal, ConfirmDialog } from 'igz-controls/components'
 import {
   FORBIDDEN_ERROR_STATUS_CODE,
   MODAL_SM,
-  SECONDARY_BUTTON,
   TERTIARY_BUTTON,
   PRIMARY_BUTTON
 } from 'igz-controls/constants'
@@ -184,7 +183,7 @@ const RegisterArtifactModal = ({
             disabled: isSubmitDisabled(formState),
             label: 'Register',
             onClick: formState.handleSubmit,
-            variant: SECONDARY_BUTTON
+            variant: PRIMARY_BUTTON
           }
         ]
     return defaultActions.map(action => <Button {...action} />)

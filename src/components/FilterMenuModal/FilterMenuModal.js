@@ -27,6 +27,7 @@ import { useDispatch } from 'react-redux'
 
 import { PopUpDialog, RoundedIcon, Button } from 'igz-controls/components'
 
+import { PRIMARY_BUTTON, TERTIARY_BUTTON } from 'iguazio.dashboard-react-controls/dist/constants'
 import { isTargetElementInContainerElement } from '../../utils/checkElementsPosition.utils'
 import { setModalFiltersValues } from '../../reducers/filtersReducer'
 
@@ -38,8 +39,8 @@ export const FilterMenuWizardContext = React.createContext({})
 
 const FilterMenuModal = ({
   applyChanges = null,
-  applyButton = { label: 'Apply', variant: 'secondary' },
-  cancelButton = { label: 'Clear', variant: 'tertiary' },
+  applyButton = { label: 'Apply', variant: PRIMARY_BUTTON },
+  cancelButton = { label: 'Clear', variant: TERTIARY_BUTTON },
   children,
   filterMenuName = '',
   header = 'Filter by',

@@ -27,7 +27,7 @@ import ScheduleCron from '../../ScheduleCron/ScheduleCron'
 import { Button, RoundedIcon } from 'igz-controls/components'
 
 import { tabs } from './scheduleFeatureSet.util'
-import { SECONDARY_BUTTON } from 'igz-controls/constants'
+import { PRIMARY_BUTTON } from 'igz-controls/constants'
 
 import { ReactComponent as Schedule } from 'igz-controls/images/clock.svg'
 import { ReactComponent as CloseIcon } from 'igz-controls/images/close.svg'
@@ -91,7 +91,7 @@ const ScheduleFeatureSetView = ({
         {isWeekDaysEmpty && <ErrorMessage message="Must select at least one day option" />}
       </div>
       <Button
-        variant={SECONDARY_BUTTON}
+        variant={PRIMARY_BUTTON}
         label={
           <>
             <Schedule />

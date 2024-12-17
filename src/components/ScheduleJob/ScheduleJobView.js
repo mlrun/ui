@@ -25,7 +25,7 @@ import ScheduleJobSimple from '../ScheduleJobSimple/ScheduleJobSimple'
 import ScheduleCron from '../ScheduleCron/ScheduleCron'
 import { Button } from 'igz-controls/components'
 
-import { SECONDARY_BUTTON } from 'igz-controls/constants'
+import { PRIMARY_BUTTON } from 'igz-controls/constants'
 import { tabs } from './scheduleJobData'
 
 import { ReactComponent as Schedule } from 'igz-controls/images/clock.svg'
@@ -105,7 +105,7 @@ const ScheduleJobView = ({
         validation={validation}
       />
       <Button
-        variant={SECONDARY_BUTTON}
+        variant={PRIMARY_BUTTON}
         label={
           <>
             <Schedule />
