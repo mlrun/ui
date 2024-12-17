@@ -38,6 +38,7 @@ import { PRIMARY_BUTTON } from 'igz-controls/constants'
 import { getCloseDetailsLink } from '../../../utils/link-helper.util'
 import { getDefaultFirstHeader } from '../../../utils/createArtifactsContent'
 import { getNoDataMessage } from '../../../utils/getNoDataMessage'
+import { TERTIARY_BUTTON } from 'iguazio.dashboard-react-controls/dist/constants'
 
 const ModelsView = React.forwardRef(
   (
@@ -83,7 +84,7 @@ const ModelsView = React.forwardRef(
               <ActionBar
                 actionButtons={[
                   {
-                    variant: PRIMARY_BUTTON,
+                    variant: TERTIARY_BUTTON,
                     label: 'Train model',
                     className: 'action-button',
                     onClick: handleTrainModel
