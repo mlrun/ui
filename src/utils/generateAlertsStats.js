@@ -25,8 +25,8 @@ export const generateAlertsStats = (data, navigate, projectName) => {
   }
 
   return {
-    all: {
-      counter: data.all,
+    total: {
+      counter: data.total,
       link: () => navigateToAlertsPage({})
     },
     job: {
