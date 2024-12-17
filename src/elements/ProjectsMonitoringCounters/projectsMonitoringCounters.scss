@@ -2,9 +2,9 @@
 @import '~igz-controls/scss/borders';
 
 @mixin counterLinkHover {
-  cursor: pointer;
-  text-decoration: underline;
   color: $topaz;
+  text-decoration: underline;
+  cursor: pointer;
   text-underline-offset: 1px;
   text-decoration-thickness: 2px;
 }
@@ -16,6 +16,7 @@
   border: 1px solid $frenchLilac;
 
   &.alerts-card {
+    height: 100%;
     background-color: $carouselPink;
     border: 1px solid $babyPink;
   }
@@ -65,37 +66,52 @@
   }
 
   .project-card__info {
+    display: flex;
     align-items: baseline;
+    align-items: center;
     justify-content: flex-end;
     margin-left: 1rem;
+    color: $topaz;
+    font-size: 0.75rem;
+
+    & *:not(:last-child) {
+      margin-right: 5px;
+    }
+
+    &-icon {
+      flex: 0 1 12px;
+
+      & * {
+        fill: $spunPearl;
+      }
+    }
 
     .stats__subtitle {
-      font-size: inherit;
       margin: 0 5px 0 0;
+      font-size: inherit;
     }
 
     .stats__counter {
       position: relative;
-      font-size: 1rem;
       margin-right: 0.6em;
       padding-right: 0.75em;
+      font-size: 1rem;
 
-      &:after {
-        content: '';
+      &::after {
+        position: absolute;
+        top: 0;
+        right: 0;
+        bottom: 0;
         display: inline-block;
         width: 1px;
-        background-color: $mulledWineThree;
-        position: absolute;
-        right: 0;
-        top: 0;
-        bottom: 0;
         margin: 3px 0;
+        background-color: $mulledWineThree;
+        content: '';
       }
     }
 
     .project-card__info-icon {
       position: relative;
-      top: 2px;
     }
   }
 
