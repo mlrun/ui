@@ -162,17 +162,14 @@ export const createAlertRowData = ({ name, ...alert }, isCrossProjects) => {
         tooltip: name,
         type: 'link'
       },
-      ...(isCrossProjects
-        ? [
-            {
-              id: `projectName.${alert.id}`,
-              headerId: 'projectName',
-              headerLabel: 'Project name',
-              value: alert.project,
-              className: 'table-cell-1'
-            }
-          ]
-        : []),
+      {
+        id: `projectName.${alert.id}`,
+        headerId: 'projectName',
+        headerLabel: 'Project name',
+        value: alert.project,
+        className: 'table-cell-1',
+        hidden: !isCrossProjects
+      },
       {
         id: `eventType.${alert.id}`,
         headerId: 'eventType',
