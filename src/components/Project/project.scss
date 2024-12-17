@@ -224,29 +224,37 @@
       &__statistics-section {
         display: flex;
 
+        &-alert {
+          flex: 2 1 calc(50% - 22px);
+          margin-bottom: 25px;
+        }
+
+        &-tab {
+          flex: 1 1 calc(25% - 22px);
+          box-sizing: border-box;
+          margin: 0 20px 25px 0;
+        }
+
         @media (max-width: 1400px) {
           flex-wrap: wrap;
-        }
 
-        &-item {
-          display: flex;
-          flex-direction: row;
-          width: 100%;
-          margin-bottom: 25px;
+          .last {
+            margin: 0;
+          }
 
-          @media (min-width: 1400px) {
-            &:first-child {
-              margin-right: 10px;
-            }
+          &-alert {
+            flex: 2 1 calc(66.66% - 22px);
+            margin-bottom: 25px;
+          }
+
+          &-tab {
+            flex: 1 1 calc(33.33% - 22px);
+            margin-bottom: 25px;
 
             &:last-child {
-              margin-left: 10px;
+              margin-right: 0;
             }
           }
-        }
-
-        &-alert {
-          flex: 2 1 0;
         }
       }
     }

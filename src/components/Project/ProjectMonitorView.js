@@ -127,7 +127,7 @@ const ProjectMonitorView = ({
               </div>
             </div>
             <div className="main-info__statistics-section">
-              <div className="main-info__statistics-section-item">
+              <div className="main-info__statistics-section-tab">
                 <ProjectSummaryCard
                   counterValue={projectSummary.data.models_count ?? 0}
                   link={`/projects/${params.projectName}/models`}
@@ -135,6 +135,8 @@ const ProjectMonitorView = ({
                   tip={generateTipMessageForCounter('model', 'Models')}
                   title="Models"
                 />
+              </div>
+              <div className="main-info__statistics-section-tab">
                 <ProjectSummaryCard
                   counterValue={projectSummary.data.feature_sets_count ?? 0}
                   link={`/projects/${params.projectName}/feature-store`}
@@ -142,6 +144,8 @@ const ProjectMonitorView = ({
                   tip={generateTipMessageForCounter('feature set', 'Feature store')}
                   title="Feature sets"
                 />
+              </div>
+              <div className="main-info__statistics-section-tab last">
                 <ProjectSummaryCard
                   counterValue={projectSummary.data.files_count ?? 0}
                   link={`/projects/${params.projectName}/files`}
@@ -150,7 +154,7 @@ const ProjectMonitorView = ({
                   title="Artifacts"
                 />
               </div>
-              <div className="main-info__statistics-section-item">
+              <div className="main-info__statistics-section-tab">
                 {nuclioStreamsAreEnabled && (
                   <ProjectSummaryCard
                     counterValue={
@@ -168,9 +172,9 @@ const ProjectMonitorView = ({
                     }
                   />
                 )}
-                <div className="main-info__statistics-section-alert">
-                  <AlertsCounters />
-                </div>
+              </div>
+              <div className="main-info__statistics-section-alert">
+                <AlertsCounters />
               </div>
             </div>
             <div className="main-info__statistics-section">
