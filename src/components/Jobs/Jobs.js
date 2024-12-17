@@ -124,11 +124,7 @@ const Jobs = () => {
     setScheduledJobs,
     setSearchParams,
     terminateAbortTasksPolling
-  } = useJobsPageData(
-    setSelectedJob,
-    initialTabData,
-    selectedTab
-  )
+  } = useJobsPageData(setSelectedJob, initialTabData, selectedTab)
 
   const handleActionsMenuClick = () => {
     setJobWizardMode(PANEL_CREATE_MODE)
@@ -231,7 +227,7 @@ const Jobs = () => {
                       : '',
                     variant: TERTIARY_BUTTON,
                     disabled: !appStore.frontendSpec.jobs_dashboard_url,
-                    onClick: () => handleMonitoring()
+                    onClick: handleMonitoring
                   }
                 ]}
                 autoRefreshIsEnabled={selectedTab === MONITOR_JOBS_TAB}
@@ -261,6 +257,7 @@ const Jobs = () => {
                   editableItem,
                   fetchJobFunctionsPromiseRef,
                   getWorkflows,
+                  handleMonitoring,
                   handleRerunJob,
                   jobRuns,
                   jobWizardIsOpened,
