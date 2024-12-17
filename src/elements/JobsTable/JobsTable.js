@@ -240,7 +240,7 @@ const JobsTable = React.forwardRef(
         setConfirmData({
           item: job,
           header: 'Delete job?',
-          message: `Are you sure you want to delete the job "${job.name}"? Deleted jobs can not be restored.`,
+          message: `Are you sure you want to delete ${deleteAllRuns ? 'all runs of' : ''} the job "${job.name}"${deleteAllRuns ? '' : ` with the UID "${job.uid}"`}? Deleted jobs can not be restored.`,
           btnConfirmLabel: 'Delete',
           btnConfirmType: DANGER_BUTTON,
           rejectHandler: () => {
