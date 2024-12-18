@@ -164,18 +164,20 @@ const getNotificationData = notifications =>
     }
   })
 
-export const createAlertRowData = ({ name, ...alert }) => {
+export const createAlertRowData = ({ ...alert }, isCrossProjects) => {
+  const { name } = alert
+
   const getLink = alert => {
     const queryString = window.location.search
-    const { job, entity_kind: entityType, entity_id, project, alertName, id } = alert
+    const { job, entity_kind: entityType, entity_id, project, alertName, uid } = alert
 
     //TODO: getLink will be updated with ML-8104 & ML-8105
 
-    // if (entityType === MODEL_ENDPOINT_RESULT) {
-    //   const [endpointId, , , name] = entity_id.split('.')
-    //   return `/projects/*/alerts/${project}/${alertName}/${name}/${endpointId}/${DETAILS_ALERT_APPLICATION}${queryString}`
-    // }
-    //
+    if (entityType === MODEL_ENDPOINT_RESULT) {
+      const [endpointId, , , name] = entity_id.split('.')
+      return `/projects/*/alerts/${project}/${alertName}/${name}/${endpointId}/${DETAILS_ALERT_APPLICATION}${queryString}`
+    }
+
     if (entityType === JOB) {
       return job
         ? `/projects/*/alerts/${project}/${alertName}/${job.name}/${job.jobUid}/${DETAILS_ALERT_APPLICATION}${queryString}`
@@ -183,8 +185,8 @@ export const createAlertRowData = ({ name, ...alert }) => {
     }
 
     if (entityType === MODEL_MONITORING_APPLICATION) {
-      const [, applicationName] = entity_id.split('.')
-      return `/projects/*/alerts/${project}/${alertName}/${applicationName}/${id}/${DETAILS_ALERT_APPLICATION}${queryString}`
+      const [, applicationName] = entity_id.split('_')
+      return `/projects/*/alerts/${project}/${alertName}/${applicationName}/${uid}/${DETAILS_ALERT_APPLICATION}${queryString}`
     }
 
     return ''
@@ -219,8 +221,8 @@ export const createAlertRowData = ({ name, ...alert }) => {
   }
 
   if (alert.entity_kind === MODEL_MONITORING_APPLICATION) {
-    alert.uid = alert.id
-    alert.applicationName = alert.entity_id.split('.')[1]
+    alert.uid = `${alert.id}`
+    alert.applicationName = alert.entity_id.split('_')[1]
   }
   return {
     data: {
@@ -245,7 +247,8 @@ export const createAlertRowData = ({ name, ...alert }) => {
         headerId: 'projectName',
         headerLabel: 'Project name',
         value: alert.project,
-        className: 'table-cell-1'
+        className: 'table-cell-1',
+        hidden: !isCrossProjects
       },
       {
         id: `eventType.${alert.id}`,

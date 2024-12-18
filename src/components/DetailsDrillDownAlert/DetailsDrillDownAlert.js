@@ -21,9 +21,10 @@ import React from 'react'
 import PropTypes from 'prop-types'
 
 import DetailsInfo from '../DetailsInfo/DetailsInfo'
-// import DetailsLogs from '../DetailsLogs/DetailsLogs'
+import DetailsLogs from '../DetailsLogs/DetailsLogs'
+import DetailsMetrics from '../DetailsMetrics/DetailsMetrics'
 
-// import { JOB } from '../../constants'
+import { JOB, MODEL_ENDPOINT_RESULT } from '../../constants'
 
 import '../DetailsInfo/detailsInfo.scss'
 
@@ -43,19 +44,29 @@ const DetailsDrillDownAlert = React.forwardRef(
           setChangesCounter={setChangesCounter}
           setChangesData={setChangesData}
         />
-        {/*TODO: DetailsLogs will be implemented in  ML-8104*/}
-        {/*{pageData.details.entityType === JOB && (*/}
-        {/*  <DetailsLogs*/}
-        {/*    item={selectedItem}*/}
-        {/*    logsTitle={pageData.details.logsTitle}*/}
-        {/*    noDataMessage={pageData.details.logsNoDataMessage}*/}
-        {/*    refreshAdditionalLogs={pageData.details.refreshAdditionalLogs}*/}
-        {/*    refreshLogs={pageData.details.refreshLogs}*/}
-        {/*    removeAdditionalLogs={pageData.details.removeAdditionalLogs}*/}
-        {/*    removeLogs={() => {}}*/}
-        {/*    withLogsRefreshBtn*/}
-        {/*  />*/}
-        {/*)}*/}
+        {pageData.details.entityType === JOB && (
+          <DetailsLogs
+            item={selectedItem}
+            logsTitle={pageData.details.logsTitle}
+            noDataMessage={pageData.details.logsNoDataMessage}
+            refreshAdditionalLogs={pageData.details.refreshAdditionalLogs}
+            refreshLogs={pageData.details.refreshLogs}
+            removeAdditionalLogs={pageData.details.removeAdditionalLogs}
+            removeLogs={() => {}}
+            withLogsRefreshBtn
+          />
+        )}
+
+        {pageData.details.entityType === MODEL_ENDPOINT_RESULT && (
+          <DetailsMetrics
+            selectedItem={{
+              metadata: {
+                uid: '540bae4d7c7c437fa5b9f0657a4187db',
+                project: 'kate-project-mm'
+              }
+            }}
+          />
+        )}
       </>
     )
   }
