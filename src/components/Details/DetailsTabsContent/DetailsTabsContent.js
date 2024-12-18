@@ -40,6 +40,7 @@ import DetailsResults from '../../DetailsResults/DetailsResults'
 import DetailsStatistics from '../../DetailsStatistics/DetailsStatistics'
 import DetailsTransformations from '../../DetailsTransformations/DetailsTransformations'
 import NoData from '../../../common/NoData/NoData'
+import DetailsCollections from '../../DetailsCollections/DetailsCollections'
 
 import { isJobKindDask, JOB_STEADY_STATES } from '../../Jobs/jobs.util'
 
@@ -49,7 +50,7 @@ import {
   DETAILS_ARTIFACTS_TAB,
   DETAILS_BUILD_LOG_TAB,
   DETAILS_CODE_TAB,
-  // DETAILS_COLLECTIONS_TAB,
+  DETAILS_COLLECTIONS_TAB,
   DETAILS_DRIFT_ANALYSIS_TAB,
   DETAILS_FEATURES_ANALYSIS_TAB,
   DETAILS_FEATURES_TAB,
@@ -66,7 +67,6 @@ import {
   DETAILS_STATISTICS_TAB,
   DETAILS_TRANSFORMATIONS_TAB
 } from '../../../constants'
-// import DetailsCollections from '../../DetailsCollections/DetailsCollections'
 
 const DetailsTabsContent = ({
   applyChangesRef,
@@ -232,9 +232,8 @@ const DetailsTabsContent = ({
           setChangesCounter={setChangesCounter}
         />
       )
-    //TODO: uncomment when Collections tab is merged to dev
-    // case DETAILS_COLLECTIONS_TAB:
-    //   return <DetailsCollections selectedItem={selectedItem} />
+    case DETAILS_COLLECTIONS_TAB:
+      return <DetailsCollections selectedItem={selectedItem} />
     default:
       return null
   }

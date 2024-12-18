@@ -223,7 +223,7 @@ const App = () => {
             `projects/:projectName/datasets/:datasetName/${ALL_VERSIONS_PATH}/:id/:tab`
           ].map((path, index) => (
             <Fragment key={index}>
-              <Route path={path} element={<Datasets isAllVersions={[2,3].includes(index)} />} />
+              <Route path={path} element={<Datasets isAllVersions={[2, 3].includes(index)} />} />
             </Fragment>
           ))}
           <Route
@@ -258,7 +258,7 @@ const App = () => {
               `${MODELS_TAB}/:modelName/${ALL_VERSIONS_PATH}/:id/:tab`
             ].map((path, index) => (
               <Fragment key={index}>
-                <Route path={path} element={<Models isAllVersions={[2,3].includes(index)} />} />
+                <Route path={path} element={<Models isAllVersions={[2, 3].includes(index)} />} />
               </Fragment>
             ))}
             {[`${MODEL_ENDPOINTS_TAB}`, `${MODEL_ENDPOINTS_TAB}/:name/:tag/:tab`].map(
@@ -285,16 +285,17 @@ const App = () => {
             `projects/:projectName/files/:fileName/${ALL_VERSIONS_PATH}/:id/:tab`
           ].map((path, index) => (
             <Fragment key={index}>
-              <Route path={path} element={<Files isAllVersions={[2,3].includes(index)} />} />
+              <Route path={path} element={<Files isAllVersions={[2, 3].includes(index)} />} />
             </Fragment>
           ))}
           {[
             'projects/:projectName/documents',
-            'projects/:projectName/documents/:name/:tag/:tab',
-            'projects/:projectName/documents/:name/:tag/:iter/:tab'
+            'projects/:projectName/documents/:documentName/:id/:tab',
+            `projects/:projectName/documents/:documentName/${ALL_VERSIONS_PATH}`,
+            `projects/:projectName/documents/:documentName/${ALL_VERSIONS_PATH}/:id/:tab`
           ].map((path, index) => (
             <Fragment key={index}>
-              <Route path={path} element={<Documents />} />
+              <Route path={path} element={<Documents isAllVersions={[2, 3].includes(index)} />} />
             </Fragment>
           ))}
           <Route path="*" element={<Navigate replace to="projects" />} />

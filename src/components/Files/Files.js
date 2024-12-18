@@ -20,6 +20,7 @@ such restriction.
 import React, { useCallback, useEffect, useState, useMemo, useRef } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useLocation, useNavigate, useParams, useSearchParams } from 'react-router-dom'
+import PropTypes from 'prop-types'
 
 import AddArtifactTagPopUp from '../../elements/AddArtifactTagPopUp/AddArtifactTagPopUp'
 import FilesView from './FilesView'
@@ -81,7 +82,6 @@ const Files = ({ isAllVersions = false }) => {
 
   const filtersConfig = useMemo(() => getFiltersConfig(isAllVersions), [isAllVersions])
   const filters = useFiltersFromSearchParams(filtersConfig)
-
   const pageData = useMemo(() => generatePageData(viewMode), [viewMode])
 
   const detailsFormInitialValues = useMemo(
@@ -319,7 +319,6 @@ const Files = ({ isAllVersions = false }) => {
     }
   }, [params.projectName, dispatch, tagAbortControllerRef])
 
-
   useEffect(() => {
     dispatch(setFilters({ groupBy: GROUP_BY_NONE }))
   }, [dispatch, params.projectName])
@@ -334,15 +333,7 @@ const Files = ({ isAllVersions = false }) => {
       navigate,
       isAllVersions
     )
-  }, [
-    fileVersions,
-    files,
-    isAllVersions,
-    navigate,
-    params.id,
-    params.fileName,
-    params.projectName
-  ])
+  }, [fileVersions, files, isAllVersions, navigate, params.id, params.fileName, params.projectName])
 
   const handleRegisterArtifact = useCallback(() => {
     openPopUp(RegisterArtifactModal, {
@@ -399,6 +390,10 @@ const Files = ({ isAllVersions = false }) => {
       virtualizationConfig={virtualizationConfig}
     />
   )
+}
+
+Files.propTypes = {
+  isAllVersions: PropTypes.bool.isRequired
 }
 
 export default Files

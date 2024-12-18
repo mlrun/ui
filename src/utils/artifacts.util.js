@@ -24,6 +24,7 @@ import {
   ARTIFACT_TYPE,
   DATASET_TYPE,
   DATASETS_TAB,
+  DOCUMENTS_TAB,
   FILES_TAB,
   MODEL_TYPE,
   MODELS_TAB
@@ -35,7 +36,8 @@ import {
   addTag,
   fetchDataSet,
   fetchFile,
-  fetchModel
+  fetchModel,
+  fetchDocument
 } from '../reducers/artifactsReducer'
 import { getArtifactIdentifier } from './getUniqueIdentifier'
 import { parseArtifacts } from './parseArtifacts'
@@ -197,7 +199,15 @@ const generateArtifactTags = artifacts => {
 }
 
 export const setFullSelectedArtifact = debounce(
-  (tab, dispatch, navigate, selectedArtifactMin, setSelectedArtifact, projectName, isAllVersions) => {
+  (
+    tab,
+    dispatch,
+    navigate,
+    selectedArtifactMin,
+    setSelectedArtifact,
+    projectName,
+    isAllVersions
+  ) => {
     if (isEmpty(selectedArtifactMin)) {
       setSelectedArtifact({})
     } else {
@@ -211,9 +221,15 @@ export const setFullSelectedArtifact = debounce(
         })
         .catch(error => {
           if (tab === MODELS_TAB) {
-            navigate(`/projects/${projectName}/${tab}/${tab}${isAllVersions ? `/${ALL_VERSIONS_PATH}` : ''}${window.location.search}`, { replace: true })
+            navigate(
+              `/projects/${projectName}/${tab}/${tab}${isAllVersions ? `/${ALL_VERSIONS_PATH}` : ''}${window.location.search}`,
+              { replace: true }
+            )
           } else {
-            navigate(`/projects/${projectName}/${tab}${isAllVersions ? `/${ALL_VERSIONS_PATH}` : ''}${window.location.search}`, { replace: true })
+            navigate(
+              `/projects/${projectName}/${tab}${isAllVersions ? `/${ALL_VERSIONS_PATH}` : ''}${window.location.search}`,
+              { replace: true }
+            )
           }
           showArtifactErrorNotification(dispatch, error, tab)
         })
@@ -243,24 +259,36 @@ export const chooseOrFetchArtifact = (dispatch, tab, selectedArtifact, artifactM
 }
 
 const getArtifactFetchMethod = tab => {
-  return tab === DATASETS_TAB
-    ? fetchDataSet
-    : tab === FILES_TAB
-      ? fetchFile
-      : tab === MODELS_TAB
-        ? fetchModel
-        : null
+  switch (tab) {
+    case DATASETS_TAB:
+      return fetchDataSet
+    case FILES_TAB:
+      return fetchFile
+    case MODELS_TAB:
+      return fetchModel
+    case DOCUMENTS_TAB:
+      return fetchDocument
+    default:
+      return null
+  }
 }
 
 export const showArtifactErrorNotification = (dispatch, error, tab) => {
-  const customArtifactErrorMsg =
-    tab === DATASETS_TAB
-      ? 'Failed to retrieve dataset data'
-      : tab === FILES_TAB
-        ? 'Failed to retrieve artifact data'
-        : tab === MODELS_TAB
-          ? 'Failed to retrieve model data'
-          : null
+  let customArtifactErrorMsg = ''
+
+  switch (tab) {
+    case DATASETS_TAB:
+      customArtifactErrorMsg = 'Failed to retrieve dataset data'
+      break
+    case FILES_TAB:
+      customArtifactErrorMsg = 'Failed to retrieve artifact data'
+      break
+    case MODELS_TAB:
+      customArtifactErrorMsg = 'Failed to retrieve model data'
+      break
+    default:
+      customArtifactErrorMsg = 'Failed to retrieve document data'
+  }
 
   showErrorNotification(dispatch, error, '', customArtifactErrorMsg)
 }
