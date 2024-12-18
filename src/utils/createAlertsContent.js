@@ -82,7 +82,7 @@ const getEntityTypeData = entityType => {
   }
 }
 const getTriggerCriticalTimePeriod = line => {
-  const units = { y: 'Year', m: 'Month', d: 'Day', h: 'Hour', s: 'Second', ms: 'Millisecond' }
+  const units = { y: 'Year', m: 'Month', d: 'Day', h: 'Hour', ms: 'Millisecond', s: 'Second' }
 
   return line
     ? {

@@ -115,7 +115,7 @@
       "entity_kind": "model-monitoring-application",
       "criteria": {
         "count": 2,
-        "period": "1h"
+        "period": "1h 1s"
       },
       "event_kind": "mm-app-anomaly-detected",
       "severity": "high",
@@ -148,7 +148,7 @@
       "entity_kind": "model-endpoint-result",
       "criteria": {
         "count": 8,
-        "period": "1h"
+        "period": "1ms"
       },
       "event_kind": "model-performance-detected",
       "severity": "low",
@@ -197,8 +197,7 @@
       "entity_id": "a2b4c6d8970ef28ed1df450e80d37624de7e1749.statistical-shift.result.general_drift",
       "entity_kind": "model-endpoint-result",
       "criteria": {
-        "count": 6,
-        "period": "2h"
+        "count": 6
       },
       "event_kind": "mm-app-failed",
       "severity": "high",
