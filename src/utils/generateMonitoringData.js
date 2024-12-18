@@ -49,7 +49,7 @@ export const generateMonitoringStats = (data, navigate, tab) => {
         },
         counters: [
           {
-            counter: data.running,
+            counter: data.running || 0,
             link: () =>
               navigateToJobsMonitoringPage({
                 [STATUS_FILTER]: ['running', 'pending', 'aborting'],
@@ -60,14 +60,14 @@ export const generateMonitoringStats = (data, navigate, tab) => {
             label: IN_PROCESS
           },
           {
-            counter: data.failed,
+            counter: data.failed || 0,
             link: () => navigateToJobsMonitoringPage({ [STATUS_FILTER]: [ERROR_STATE, 'aborted'] }),
             statusClass: 'failed',
             tooltip: 'Aborted, Error',
             label: FAILED
           },
           {
-            counter: data.completed,
+            counter: data.completed || 0,
             link: () => navigateToJobsMonitoringPage({ [STATUS_FILTER]: ['completed'] }),
             statusClass: 'completed',
             tooltip: 'Completed',
@@ -83,7 +83,7 @@ export const generateMonitoringStats = (data, navigate, tab) => {
           },
           counters: [
             {
-              counter: data.running,
+              counter: data.running || 0,
               link: () =>
                 navigateToJobsMonitoringPage({
                   [STATUS_FILTER]: ['running'],
@@ -94,7 +94,7 @@ export const generateMonitoringStats = (data, navigate, tab) => {
               label: IN_PROCESS
             },
             {
-              counter: data.failed,
+              counter: data.failed || 0,
               link: () =>
                 navigateToJobsMonitoringPage({ [STATUS_FILTER]: [ERROR_STATE, FAILED_STATE] }),
               statusClass: 'failed',
@@ -102,7 +102,7 @@ export const generateMonitoringStats = (data, navigate, tab) => {
               label: FAILED
             },
             {
-              counter: data.completed,
+              counter: data.completed || 0,
               link: () => navigateToJobsMonitoringPage({ [STATUS_FILTER]: ['completed'] }),
               statusClass: 'completed',
               tooltip: 'Completed',
