@@ -81,6 +81,26 @@ const getEntityTypeData = entityType => {
       }
   }
 }
+const getTriggerCriticalTimePeriod = line => {
+  const units = { y: 'Year', m: 'Month', d: 'Day', h: 'Hour', s: 'Second', ms: 'Millisecond' }
+
+  return line
+    ? {
+        value: (
+          <span>
+            {line
+              .split(/,?\s+/)
+              .map(part => {
+                const unit = Object.keys(units).find(key => part.endsWith(key))
+                const value = part.slice(0, -unit?.length || 0)
+                return unit ? `${value} ${units[unit]}${parseInt(value, 10) > 1 ? 's' : ''}` : '--'
+              })
+              .join(' ')}
+          </span>
+        )
+      }
+    : { value: <span>N/A</span> }
+}
 
 const getSeverityData = severity => {
   switch (severity) {
@@ -232,7 +252,7 @@ export const createAlertRowData = ({ name, ...alert }) => {
         id: `criteriaTime.${alert.id}`,
         headerId: 'criteriaTime',
         headerLabel: 'Trigger criteria time period',
-        value: alert.criteria?.period,
+        value: getTriggerCriticalTimePeriod(alert.criteria?.period).value,
         className: 'table-cell-1'
       },
       {
