@@ -40,11 +40,12 @@ const ProjectCardView = React.forwardRef(({ actionsMenu, alert, project, statist
   const chipRef = useRef()
   const navigate = useNavigate()
 
-  const deletingProjects = useSelector(state => state.projectStore.deletingProjects)
+  const { deletingProjects, projectsToDelete } = useSelector(state => state.projectStore)
 
   return (
     <div className="project-card">
-      {Object.values(deletingProjects).includes(project.metadata.name) && <Loader section />}
+      {(Object.values(deletingProjects).includes(project.metadata.name) ||
+        projectsToDelete.includes(project.metadata.name)) && <Loader section />}
       <div
         onClick={event => {
           if (
