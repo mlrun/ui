@@ -98,7 +98,7 @@ const AlertsCounters = () => {
               </div>
             </div>
             <ClockIcon className="project-card__info-icon" />
-            <span>Last 24 hours</span>
+            <span>Past 24 hours</span>
           </div>
         </StatsCard.Col>
       </StatsCard.Header>
