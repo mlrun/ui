@@ -26,6 +26,12 @@ $itemInfoWithoutPadding: item-info-without-padding;
     font-size: 18px;
   }
 
+  &__popup-header {
+    margin: 0;
+    padding-bottom: 12px;
+    font-size: 18px;
+  }
+
   &__details {
     margin: 0 0 21px;
     padding: 0 0 0 0;
@@ -89,6 +95,7 @@ $itemInfoWithoutPadding: item-info-without-padding;
         min-width: 110px;
         color: $topaz;
         word-break: break-word;
+
         .alert-icon-cell {
           display: flex;
           gap: 4px;
@@ -170,6 +177,12 @@ $itemInfoWithoutPadding: item-info-without-padding;
         display: none;
       }
     }
+
+    &__logs {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
   }
 
   &__full-width {
@@ -178,5 +191,5 @@ $itemInfoWithoutPadding: item-info-without-padding;
 }
 
 :export {
-  itemInfoWithoutPadding: $itemInfoWithoutPadding;
+  iteminfowithoutpadding: $itemInfoWithoutPadding;
 }
