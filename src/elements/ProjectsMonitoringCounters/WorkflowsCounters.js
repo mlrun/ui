@@ -51,17 +51,19 @@ const WorkflowsCounters = () => {
       <StatsCard.Header title="Workflows">
         <StatsCard.Col>
           <div className="project-card__info">
-            <span className="stats__subtitle">Total</span>
             <div
-              className="stats__counter"
-              onClick={workflowsStats.total.link}
+              className="stats__link"
               data-testid="scheduled_total_counter"
+              onClick={workflowsStats.total.link}
             >
-              {projectStore.projectsSummary.loading ? (
-                <Loader section small secondary />
-              ) : (
-                workflowsStats.total.counter
-              )}
+              <span className="stats__subtitle">Total</span>
+              <div className="stats__counter">
+                {projectStore.projectsSummary.loading ? (
+                  <Loader section small secondary />
+                ) : (
+                  workflowsStats.total.counter
+                )}
+              </div>
             </div>
             <ClockIcon className="project-card__info-icon" />
             <span>Past 24 hours</span>

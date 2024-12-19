@@ -50,7 +50,7 @@ export const getJobsStatistics = (projectCounter, projectName) => {
         projectCounter.data.runs_failed_recent_count > 0 && !projectCounter.error
           ? 'failed'
           : 'default',
-      counterTooltip: 'Last 24 hours',
+      counterTooltip: 'Past 24 hours',
       link: `/projects/${projectName}/jobs/${MONITOR_JOBS_TAB}`
     },
     scheduled: {
