@@ -113,7 +113,6 @@ const Alerts = () => {
       alerts={paginatedAlerts}
       alertsFiltersConfig={alertsFiltersConfig}
       alertsStore={alertsStore}
-      actionsMenu={[]} // TODO
       filters={alertsFilters}
       filtersStore={filtersStore}
       handleCancel={handleCancel}
