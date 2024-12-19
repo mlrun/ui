@@ -105,9 +105,10 @@ const Documents = ({ isAllVersions = false }) => {
       selectedDocumentMin,
       setSelectedDocument,
       params.projectName,
+      params.id,
       isAllVersions
     )
-  }, [dispatch, isAllVersions, navigate, params.projectName, selectedDocumentMin])
+  }, [dispatch, isAllVersions, navigate, params.projectName, params.id, selectedDocumentMin])
 
   const fetchData = useCallback(
     filters => {

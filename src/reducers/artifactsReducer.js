@@ -178,7 +178,10 @@ export const fetchDataSets = createAsyncThunk(
       .then(({ data }) => {
         const result = parseArtifacts(data.artifacts)
 
-        return generateArtifacts(filterArtifacts(result), DATASETS_TAB, data.artifacts)
+        return {
+          ...data,
+          artifacts: generateArtifacts(filterArtifacts(result), DATASETS_TAB, data.artifacts)
+        }
       })
       .catch(error => {
         largeResponseCatchHandler(
@@ -246,7 +249,10 @@ export const fetchFiles = createAsyncThunk(
       .then(({ data }) => {
         const result = parseArtifacts(data.artifacts)
 
-        return generateArtifacts(filterArtifacts(result), ARTIFACTS_TAB, data.artifacts)
+        return {
+          ...data,
+          artifacts: generateArtifacts(filterArtifacts(result), ARTIFACTS_TAB, data.artifacts)
+        }
       })
       .catch(error => {
         largeResponseCatchHandler(
@@ -336,7 +342,7 @@ export const fetchModels = createAsyncThunk(
       .then(({ data }) => {
         const result = filterArtifacts(parseArtifacts(data.artifacts))
 
-        return generateArtifacts(result, MODELS_TAB, data.artifacts)
+        return { ...data, artifacts: generateArtifacts(result, MODELS_TAB, data.artifacts) }
       })
       .catch(error => {
         largeResponseCatchHandler(
@@ -507,7 +513,7 @@ const artifactsSlice = createSlice({
     })
     builder.addCase(fetchDataSets.fulfilled, (state, action) => {
       state.error = null
-      state.dataSets.allData = action.payload
+      state.dataSets.allData = action.payload?.artifacts ?? []
       state.dataSets.loading = false
       state.loading = state.models.loading || state.files.loading
     })
@@ -530,7 +536,7 @@ const artifactsSlice = createSlice({
     })
     builder.addCase(fetchFiles.fulfilled, (state, action) => {
       state.error = null
-      state.files.allData = action.payload
+      state.files.allData = action.payload?.artifacts ?? []
       state.files.loading = false
       state.loading = state.models.loading || state.dataSets.loading
     })
@@ -573,7 +579,7 @@ const artifactsSlice = createSlice({
     })
     builder.addCase(fetchModels.fulfilled, (state, action) => {
       state.error = null
-      state.models.allData = action.payload
+      state.models.allData = action.payload?.artifacts ?? []
       state.models.loading = false
       state.loading = state.files.loading || state.dataSets.loading
     })

@@ -206,9 +206,10 @@ export const setFullSelectedArtifact = debounce(
     selectedArtifactMin,
     setSelectedArtifact,
     projectName,
+    artifactId,
     isAllVersions
   ) => {
-    if (isEmpty(selectedArtifactMin)) {
+    if (isEmpty(selectedArtifactMin) || !artifactId) {
       setSelectedArtifact({})
     } else {
       const { db_key, tree, tag, iter, uid } = selectedArtifactMin
@@ -222,12 +223,12 @@ export const setFullSelectedArtifact = debounce(
         .catch(error => {
           if (tab === MODELS_TAB) {
             navigate(
-              `/projects/${projectName}/${tab}/${tab}${isAllVersions ? `/${ALL_VERSIONS_PATH}` : ''}${window.location.search}`,
+              `/projects/${projectName}/${tab}/${tab}${isAllVersions ? `/${db_key}/${ALL_VERSIONS_PATH}` : ''}${window.location.search}`,
               { replace: true }
             )
           } else {
             navigate(
-              `/projects/${projectName}/${tab}${isAllVersions ? `/${ALL_VERSIONS_PATH}` : ''}${window.location.search}`,
+              `/projects/${projectName}/${tab}${isAllVersions ? `/${db_key}/${ALL_VERSIONS_PATH}` : ''}${window.location.search}`,
               { replace: true }
             )
           }
@@ -235,7 +236,7 @@ export const setFullSelectedArtifact = debounce(
         })
     }
   },
-  50
+  20
 )
 
 export const chooseOrFetchArtifact = (dispatch, tab, selectedArtifact, artifactMin) => {
