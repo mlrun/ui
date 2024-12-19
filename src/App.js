@@ -155,7 +155,14 @@ const App = () => {
           <Route path={`projects/:projectName/${PROJECT_MONITOR}`} element={<ProjectMonitor />} />
 
           {/*TODO: the Alerts Route will be updated with ML-8368 */}
-          <Route path="projects/:id/alerts" element={<ProjectsAlerts />} />
+          {[
+            'projects/:id/alerts',
+            'projects/:id/alerts/:project/:alertName/:entityName/:uid/:tab'
+          ].map((path, index) => (
+            <Fragment key={index}>
+              <Route path={path} element={<ProjectsAlerts />} />
+            </Fragment>
+          ))}
 
           {!isNuclioModeDisabled && (
             <Route

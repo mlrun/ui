@@ -19,6 +19,7 @@ such restriction.
 */
 import {
   ADD_TO_FEATURE_VECTOR_TAB,
+  ALERTS_PAGE,
   FEATURE_SETS_TAB,
   FEATURE_VECTORS_TAB,
   FEATURES_TAB
@@ -50,6 +51,13 @@ export const getFunctionIdentifier = (func, unique) => {
     if (func?.hash) identifier += `.${func.hash}`
     if (func?.tag) identifier += `.${func.tag}`
   }
+
+  return identifier
+}
+export const getAlertIdentifier = (alert, unique) => {
+  let identifier = `${alert?.name || ''}`
+
+  if (unique && alert?.uid) identifier += `.${alert.id}`
 
   return identifier
 }
@@ -119,6 +127,8 @@ export const getV3ioStreamShardLagIdentifier = v3ioStream => {
 
 export const getIdentifierMethod = tab => {
   switch (tab) {
+    case ALERTS_PAGE:
+      return getAlertIdentifier
     case FEATURES_TAB:
     case ADD_TO_FEATURE_VECTOR_TAB:
       return getFeatureIdentifier
