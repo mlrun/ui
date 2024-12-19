@@ -18,11 +18,12 @@ under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
 import { useCallback, useRef, useState } from 'react'
-import { useDispatch } from 'react-redux'
 import { useParams } from 'react-router-dom'
+import { useDispatch } from 'react-redux'
+
+import { BE_PAGE, BE_PAGE_SIZE, FILTER_ALL_ITEMS, PROJECTS_FILTER } from '../constants'
 import { usePagination } from './usePagination.hook'
 import { fetchAlerts } from '../reducers/alertsReducer'
-import { BE_PAGE, BE_PAGE_SIZE } from '../constants'
 
 export const useAlertsPageData = filters => {
   const [alerts, setAlerts] = useState([])
@@ -39,10 +40,14 @@ export const useAlertsPageData = filters => {
       setAlerts([])
 
       abortControllerRef.current = new AbortController()
+      const projectName =
+        params.projectName || filters?.[PROJECTS_FILTER]?.toLowerCase?.() !== FILTER_ALL_ITEMS
+          ? filters?.[PROJECTS_FILTER]?.toLowerCase?.()
+          : params.id
 
       dispatch(
         fetchAlerts({
-          project: params.id,
+          project: projectName,
           filters,
           config: {
             ui: {
@@ -50,7 +55,6 @@ export const useAlertsPageData = filters => {
               setRequestErrorMessage
             },
             params: {
-              format: 'minimal',
               page: paginationConfigAlertsRef.current[BE_PAGE],
               'page-size': paginationConfigAlertsRef.current[BE_PAGE_SIZE]
             }
@@ -61,17 +65,18 @@ export const useAlertsPageData = filters => {
         .then(response => {
           if (response?.activations?.length > 0) {
             setAlerts(response.activations)
-            paginationConfigAlertsRef.current.paginationResponse = response.pagination
           } else {
             setAlerts([])
           }
+          paginationConfigAlertsRef.current.paginationResponse = response.pagination
         })
     },
-    [dispatch, params.id]
+    [dispatch, params.id, params.projectName]
   )
 
   const [handleRefreshAlerts, paginatedAlerts, , setSearchParams] = usePagination({
     content: alerts,
+    filters,
     refreshContent: refreshAlerts,
     paginationConfigRef: paginationConfigAlertsRef,
     resetPaginationTrigger: params.projectName

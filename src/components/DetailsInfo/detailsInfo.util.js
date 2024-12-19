@@ -218,7 +218,7 @@ export const generateAlertsDetailsInfo = pageData => {
     AlertsDetailsInfo.triggerCriteriaDetailsInfo = triggerCriteria.map(trigger => {
       return (
         <li className="details-item" key={trigger.id}>
-          <div className="details-item__header details-item__header_max-width">
+          <div className="details-item__header details-item__header_max-content-width">
             {trigger.label}:
           </div>
           <DetailsInfoItem info={trigger.value} />
