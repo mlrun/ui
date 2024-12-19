@@ -226,7 +226,6 @@ export const fetchArtifactPreview = async (
   }
 
   if (['png', 'jpg', 'jpeg', 'html'].includes(fileFormat)) {
-    
     const chunkSize = sizeConfigs.max_chunk_size ?? ARTIFACT_MAX_CHUNK_SIZE
     let fullFile = new Blob()
     let response = {}
