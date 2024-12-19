@@ -34,28 +34,28 @@ $itemInfoWithoutPadding: item-info-without-padding;
     &-notification {
       display: flex;
       flex-wrap: wrap;
+      row-gap: 10px;
 
       .text {
-        margin-right: 12px;
         color: $topaz;
         font-size: 15px;
       }
 
       .icon {
-        .notification-fail {
-          position: absolute;
-          top: 17px;
-          left: 20px;
-
-          svg {
-            width: 14px;
-            height: 14px;
-          }
+        svg {
+          width: 40px;
+          height: 40px;
         }
 
-        svg {
-          width: 32px;
-          height: 32px;
+        .notification-fail {
+          position: absolute;
+          top: 22px;
+          left: 27px;
+
+          svg {
+            width: 16px;
+            height: 16px;
+          }
         }
       }
 
@@ -69,14 +69,15 @@ $itemInfoWithoutPadding: item-info-without-padding;
       }
 
       .item:not(:last-child) {
-        border-right: $silver solid 1px;
+        margin-right: 12px;
+        border-right: $secondaryBorder;
       }
 
       .item {
         display: flex;
-        gap: 5px;
+        gap: 10px;
         align-items: center;
-        margin: 6px 12px 0 6px;
+        padding-right: 12px;
       }
     }
 
