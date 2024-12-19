@@ -36,13 +36,7 @@ import { showErrorNotification } from '../../utils/notifications.util'
 import { useModalBlockHistory } from '../../hooks/useModalBlockHistory.hook'
 import { isSubmitDisabled } from 'igz-controls/utils/form.util'
 
-const AddArtifactTagPopUp = ({
-  artifact,
-  isOpen,
-  onAddTag = () => {},
-  onResolve,
-  projectName
-}) => {
+const AddArtifactTagPopUp = ({ artifact, isOpen, onAddTag = () => {}, onResolve, projectName }) => {
   const dispatch = useDispatch()
   const [initialValues] = useState({
     artifactTag: ''

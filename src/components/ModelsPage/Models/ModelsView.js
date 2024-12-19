@@ -21,25 +21,29 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { isEmpty } from 'lodash'
 
+import ActionBar from '../../ActionBar/ActionBar'
+import ArtifactsFilters from '../../ArtifactsActionBar/ArtifactsFilters'
 import ArtifactsTableRow from '../../../elements/ArtifactsTableRow/ArtifactsTableRow'
+import Details from '../../Details/Details'
+import HistoryBackLink from '../../../common/HistoryBackLink/historyBackLink'
 import Loader from '../../../common/Loader/Loader'
 import ModelsPageTabs from '../ModelsPageTabs/ModelsPageTabs'
 import NoData from '../../../common/NoData/NoData'
+import Pagination from '../../../common/Pagination/Pagination'
 import Table from '../../Table/Table'
-import Details from '../../Details/Details'
-import WarningMessage from '../../../common/WarningMessage/WarningMessage'
-import ActionBar from '../../ActionBar/ActionBar'
-import ArtifactsFilters from '../../ArtifactsActionBar/ArtifactsFilters'
-import HistoryBackLink from '../../../common/HistoryBackLink/historyBackLink'
 
-import { ACTIONS_MENU, VIRTUALIZATION_CONFIG } from '../../../types'
-import { FULL_VIEW_MODE, MODELS_PAGE, MODELS_TAB, ALL_VERSIONS_PATH } from '../../../constants'
+import { ACTIONS_MENU } from '../../../types'
+import {
+  FULL_VIEW_MODE,
+  MODELS_PAGE,
+  MODELS_TAB,
+  ALL_VERSIONS_PATH,
+  DATASETS_TAB
+} from '../../../constants'
 import { SECONDARY_BUTTON, PRIMARY_BUTTON } from 'igz-controls/constants'
-import { SORT_PROPS } from 'igz-controls/types'
-import { getNoDataMessage } from '../../../utils/getNoDataMessage'
-import { isRowRendered } from '../../../hooks/useVirtualization.hook'
-import { getSavedSearchParams } from '../../../utils/filter.util'
 import { getCloseDetailsLink } from '../../../utils/link-helper.util'
+import { getNoDataMessage } from '../../../utils/getNoDataMessage'
+import { getSavedSearchParams } from '../../../utils/filter.util'
 
 const ModelsView = React.forwardRef(
   (
@@ -53,27 +57,24 @@ const ModelsView = React.forwardRef(
       filtersConfig,
       filtersStore,
       getAndSetSelectedArtifact,
-      handleRefresh,
+      handleRefreshModels,
       handleRefreshWithFilters,
       handleRegisterModel,
       handleTrainModel,
       isAllVersions,
       isDemoMode,
-      maxArtifactsErrorIsShown,
-      models,
       modelName,
+      models,
       pageData,
+      paginationConfigModelsRef,
       projectName,
       requestErrorMessage,
       selectedModel,
-      setMaxArtifactsErrorIsShown,
-      setSearchParams,
+      setSearchModelsParams,
       setSelectedModelMin,
-      sortProps = null,
       tableContent,
       tableHeaders,
-      viewMode = null,
-      virtualizationConfig
+      viewMode = null
     },
     { modelsRef }
   ) => {
@@ -103,9 +104,9 @@ const ModelsView = React.forwardRef(
                 filters={filters}
                 filtersConfig={filtersConfig}
                 navigateLink={`/projects/${projectName}/models/models${isAllVersions ? `/${modelName}/${ALL_VERSIONS_PATH}` : ''}${window.location.search}`}
-                handleRefresh={handleRefresh}
+                handleRefresh={handleRefreshModels}
                 page={MODELS_PAGE}
-                setSearchParams={setSearchParams}
+                setSearchParams={setSearchModelsParams}
                 tab={MODELS_TAB}
                 withRefreshButton
                 withoutExpandButton
@@ -114,14 +115,14 @@ const ModelsView = React.forwardRef(
               </ActionBar>
             </div>
             {isAllVersions && (
-              <div className='content__history-back-link-wrapper'>
+              <div className="content__history-back-link-wrapper">
                 <HistoryBackLink
                   itemName={modelName}
                   link={`/projects/${projectName}/models/models${getSavedSearchParams(window.location.search)}`}
                 />
               </div>
             )}
-            {artifactsStore.loading ? null : models.length === 0 ? (
+            {artifactsStore.loading ? null : tableContent.length === 0 ? (
               <NoData
                 message={getNoDataMessage(
                   filters,
@@ -137,12 +138,6 @@ const ModelsView = React.forwardRef(
                 {(artifactsStore.models.modelLoading || artifactsStore.pipelines.loading) && (
                   <Loader />
                 )}
-                {maxArtifactsErrorIsShown && (
-                  <WarningMessage
-                    message="The query response displays up to 1000 items. Use filters to narrow down the results."
-                    handleClose={() => setMaxArtifactsErrorIsShown(false)}
-                  />
-                )}
                 <Table
                   actionsMenu={actionsMenu}
                   applyDetailsChanges={applyDetailsChanges}
@@ -155,26 +150,25 @@ const ModelsView = React.forwardRef(
                   pageData={pageData}
                   retryRequest={handleRefreshWithFilters}
                   selectedItem={selectedModel}
-                  sortProps={sortProps}
                   tab={MODELS_TAB}
                   tableClassName="models-table"
                   tableHeaders={tableHeaders ?? []}
-                  virtualizationConfig={virtualizationConfig}
                 >
-                  {tableContent.map(
-                    (tableItem, index) =>
-                      isRowRendered(virtualizationConfig, index) && (
-                        <ArtifactsTableRow
-                          actionsMenu={actionsMenu}
-                          key={tableItem.data.ui.identifierUnique}
-                          rowIndex={index}
-                          rowItem={tableItem}
-                          selectedItem={selectedModel}
-                          tab={MODELS_TAB}
-                        />
-                      )
-                  )}
+                  {tableContent.map((tableItem, index) => (
+                    <ArtifactsTableRow
+                      actionsMenu={actionsMenu}
+                      key={tableItem.data.ui.identifierUnique}
+                      rowIndex={index}
+                      rowItem={tableItem}
+                      selectedItem={selectedModel}
+                      tab={MODELS_TAB}
+                    />
+                  ))}
                 </Table>
+                <Pagination
+                  paginationConfig={paginationConfigModelsRef.current}
+                  closeParamName={isAllVersions ? ALL_VERSIONS_PATH : DATASETS_TAB}
+                />
               </>
             )}
             {viewMode === FULL_VIEW_MODE && !isEmpty(selectedModel) && (
@@ -203,30 +197,26 @@ ModelsView.propTypes = {
   applyDetailsChangesCallback: PropTypes.func.isRequired,
   artifactsStore: PropTypes.object.isRequired,
   filters: PropTypes.object.isRequired,
-  filtersConfig : PropTypes.object.isRequired,
+  filtersConfig: PropTypes.object.isRequired,
   filtersStore: PropTypes.object.isRequired,
   getAndSetSelectedArtifact: PropTypes.func.isRequired,
-  handleRefresh: PropTypes.func.isRequired,
+  handleRefreshModels: PropTypes.func.isRequired,
   handleRefreshWithFilters: PropTypes.func.isRequired,
   handleRegisterModel: PropTypes.func.isRequired,
   handleTrainModel: PropTypes.func.isRequired,
   isAllVersions: PropTypes.bool.isRequired,
   isDemoMode: PropTypes.bool.isRequired,
-  maxArtifactsErrorIsShown: PropTypes.bool.isRequired,
-  models: PropTypes.arrayOf(PropTypes.object).isRequired,
   modelName: PropTypes.string,
+  models: PropTypes.arrayOf(PropTypes.object).isRequired,
   pageData: PropTypes.object.isRequired,
   projectName: PropTypes.string.isRequired,
   requestErrorMessage: PropTypes.string.isRequired,
   selectedModel: PropTypes.object.isRequired,
-  setMaxArtifactsErrorIsShown: PropTypes.func.isRequired,
-  setSearchParams: PropTypes.func.isRequired,
+  setSearchModelsParams: PropTypes.func.isRequired,
   setSelectedModelMin: PropTypes.func.isRequired,
-  sortProps: SORT_PROPS,
   tableContent: PropTypes.arrayOf(PropTypes.object).isRequired,
   tableHeaders: PropTypes.arrayOf(PropTypes.object).isRequired,
-  viewMode: PropTypes.string,
-  virtualizationConfig: VIRTUALIZATION_CONFIG.isRequired
+  viewMode: PropTypes.string
 }
 
 export default ModelsView

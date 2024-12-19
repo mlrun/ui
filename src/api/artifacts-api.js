@@ -29,12 +29,8 @@ import {
   TAG_FILTER_LATEST
 } from '../constants'
 
-const MAX_ARTIFACTS_LIMIT = 1000
-
 const fetchArtifacts = (project, filters, config = {}, withLatestTag, withExactName) => {
-  const params = {
-    limit: MAX_ARTIFACTS_LIMIT
-  }
+  const params = {}
 
   if (filters?.labels) {
     params.label = filters.labels?.split(',')

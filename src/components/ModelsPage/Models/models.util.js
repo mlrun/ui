@@ -18,7 +18,7 @@ under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
 import React from 'react'
-import { cloneDeep, isEmpty, isEqual, omit } from 'lodash'
+import { cloneDeep, debounce, isEmpty, isEqual, omit } from 'lodash'
 import Prism from 'prismjs'
 
 import { PopUpDialog } from 'igz-controls/components'
@@ -37,7 +37,8 @@ import {
   ITERATIONS_FILTER,
   TAG_FILTER_LATEST,
   VIEW_SEARCH_PARAMETER,
-  TAG_FILTER_ALL_ITEMS
+  TAG_FILTER_ALL_ITEMS,
+  BE_PAGE
 } from '../../../constants'
 import { showArtifactsPreview, updateArtifact } from '../../../reducers/artifactsReducer'
 import { FORBIDDEN_ERROR_STATUS_CODE } from 'igz-controls/constants'
@@ -210,20 +211,24 @@ export const handleApplyDetailsChanges = (
   }
 }
 
-export const checkForSelectedModel = (
-  paramsName,
-  models,
-  paramsId,
-  navigate,
-  projectName,
-  setSelectedModel,
-  isAllVersions
-) => {
-  queueMicrotask(() => {
+export const checkForSelectedModel = debounce(
+  (
+    paramsName,
+    models,
+    paramsId,
+    navigate,
+    projectName,
+    setSelectedModel,
+    isAllVersions,
+    searchParams,
+    paginationConfigRef
+  ) => {
     if (paramsId) {
+      const searchBePage = parseInt(searchParams.get(BE_PAGE))
+      const configBePage = paginationConfigRef.current[BE_PAGE]
       const { tag, uid, iter } = parseIdentifier(paramsId)
 
-      if (models.length > 0) {
+      if (models.length > 0 && searchBePage === configBePage) {
         const searchItem = searchArtifactItem(
           models.map(artifact => artifact.data ?? artifact),
           paramsName,
@@ -234,7 +239,10 @@ export const checkForSelectedModel = (
 
         if (!searchItem) {
           navigate(
-            `/projects/${projectName}/models/models${isAllVersions ? `/${paramsName}/${ALL_VERSIONS_PATH}` : ''}${getFilteredSearchParams(window.location.search, [VIEW_SEARCH_PARAMETER])}`,
+            `/projects/${projectName}/models/models${isAllVersions ? `/${paramsName}/${ALL_VERSIONS_PATH}` : ''}${getFilteredSearchParams(
+              window.location.search,
+              [VIEW_SEARCH_PARAMETER]
+            )}`,
             { replace: true }
           )
         } else {
@@ -246,8 +254,9 @@ export const checkForSelectedModel = (
     } else {
       setSelectedModel({})
     }
-  })
-}
+  },
+  20
+)
 
 export const generateActionsMenu = (
   modelMin,
