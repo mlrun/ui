@@ -30,27 +30,24 @@
 
       &__col {
         display: flex;
-        flex: 0 0 auto;
-        width: 100%;
+        flex: 1;
 
-        @media screen and (min-width: 992px) {
-          width: 50%;
-        }
+        margin-bottom: 1rem;
 
         &-right {
+          flex: 1 0 auto;
+          align-items: center;
           justify-content: flex-end;
         }
       }
 
       &-item {
         display: flex;
-        flex: 0 0 100%;
         align-items: flex-end;
         justify-content: flex-start;
-        margin-bottom: 1rem;
 
-        @media screen and (min-width: 992px) {
-          max-width: 435px;
+        & > *:not(:last-child) {
+          margin: 0 15px 0 0;
         }
 
         .data-ellipsis,
@@ -100,10 +97,6 @@
       width: auto;
       min-width: auto;
     }
-  }
-
-  &-search {
-    margin-right: 10px;
   }
 
   &-modal_opened {

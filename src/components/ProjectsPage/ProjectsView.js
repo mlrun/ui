@@ -120,15 +120,6 @@ const ProjectsView = ({
                   tabs={projectsStates}
                   onClick={setSelectedProjectsState}
                 />
-
-                <Sort
-                  disabled={projectStore.mlrunUnhealthy.retrying}
-                  isDescendingOrder={isDescendingOrder}
-                  onSelectOption={handleSelectSortOption}
-                  options={projectsSortOptions}
-                  selectedId={sortProjectId}
-                  setIsDescendingOrder={setIsDescendingOrder}
-                />
               </div>
             </div>
             <div className="projects-content-header__col projects-content-header__col-right">
@@ -142,6 +133,14 @@ const ProjectsView = ({
                   setMatches={setFilterMatches}
                   value={filterByName}
                 />
+                <Sort
+                  disabled={projectStore.mlrunUnhealthy.retrying}
+                  isDescendingOrder={isDescendingOrder}
+                  onSelectOption={handleSelectSortOption}
+                  options={projectsSortOptions}
+                  selectedId={sortProjectId}
+                  setIsDescendingOrder={setIsDescendingOrder}
+                />
                 <PageActionsMenu
                   actionsMenuHeader={'New Project'}
                   disabled={projectStore.mlrunUnhealthy.retrying}
@@ -149,16 +148,16 @@ const ProjectsView = ({
                   showActionsMenu
                   variant={PRIMARY_BUTTON}
                 />
-                <RoundedIcon
-                  disabled={projectStore.mlrunUnhealthy.retrying}
-                  onClick={refreshProjects}
-                  className="panel-title__btn_close"
-                  tooltipText="Refresh"
-                  id="pop-up-close-btn"
-                >
-                  <RefreshIcon />
-                </RoundedIcon>
               </div>
+              <RoundedIcon
+                disabled={projectStore.mlrunUnhealthy.retrying}
+                onClick={refreshProjects}
+                className="panel-title__btn_close"
+                tooltipText="Refresh"
+                id="pop-up-close-btn"
+              >
+                <RefreshIcon />
+              </RoundedIcon>
             </div>
           </div>
         </div>

@@ -125,7 +125,7 @@ const DetailsInfo = React.forwardRef(
     const drift = useMemo(() => generateDriftDetailsInfo(selectedItem), [selectedItem])
 
     const alerts = useMemo(() => generateAlertsDetailsInfo(pageData), [pageData])
-    console.log({ alerts })
+
     const configuration = useMemo(
       () => generateConfigurationDetailsInfo(selectedItem),
       [selectedItem]

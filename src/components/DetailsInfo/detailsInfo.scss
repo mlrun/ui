@@ -33,14 +33,35 @@ $itemInfoWithoutPadding: item-info-without-padding;
 
     &-notification {
       display: flex;
+      flex-wrap: wrap;
 
       .text {
+        margin-right: 12px;
         color: $topaz;
         font-size: 15px;
       }
 
+      .icon {
+        .notification-fail {
+          position: absolute;
+          top: 17px;
+          left: 20px;
+
+          svg {
+            width: 14px;
+            height: 14px;
+          }
+        }
+
+        svg {
+          width: 32px;
+          height: 32px;
+        }
+      }
+
       .title {
-        font-size: 13px;
+        font-weight: bold;
+        font-size: 10px;
       }
 
       .text-red {
@@ -48,14 +69,14 @@ $itemInfoWithoutPadding: item-info-without-padding;
       }
 
       .item:not(:last-child) {
-        border-right: $wildSand solid 1.5px;
+        border-right: $silver solid 1px;
       }
 
       .item {
         display: flex;
+        gap: 5px;
         align-items: center;
-        padding-right: 10px;
-        padding-left: 5px;
+        margin: 6px 12px 0 6px;
       }
     }
 

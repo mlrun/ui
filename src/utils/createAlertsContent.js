@@ -146,7 +146,10 @@ const getNotificationData = notifications =>
   notifications.map(notification => {
     return {
       icon: (
-        <div className="alert-row-notification">
+        <div
+          data-testid={`${notification.kind}-${notification.err.length === 0 ? 'success' : 'fail'}`}
+          className="alert-row-notification"
+        >
           {alertsNotifications[notification.kind]}
           {notification?.err && (
             <div className="notification-fail">
@@ -163,63 +166,13 @@ const getNotificationData = notifications =>
       failed: notification.summary.failed
     }
   })
-//
-// const getNotification = notifications =>
-//   notifications.map(notification => {
-//     return {
-//       icon: (
-//         <div style={{ border: 'solid 1px green' }} className="alert-row-notification">
-//           {alertsNotifications[notification.kind]}
-//           {notification?.err && (
-//             <div className="notification-fail">
-//               <Error />
-//             </div>
-//           )}
-//         </div>
-//       ),
-//       info: (
-//         <div className="">
-//           {`${notification.summary.succeeded} done, `}
-//           <span className={notification.summary.failed > 0 ? 'text-red' : ''}>
-//             {`${notification.summary.failed} failed`}
-//           </span>
-//         </div>
-//       ),
-//       name: notification.kind
-//     }
-//   })
 
-// const getNotificationData = notifications => {
-//   // notifications.map(notification => {
-//   const notification = notifications[0]
-//   return (
-//     <div className="table-notification">
-//       <div className="icon">
-//         {alertsNotifications[notification.kind]}
-//         {notification.err !== '' && (
-//           <div className="notification-fail">
-//             <Error />
-//           </div>
-//         )}
-//       </div>
-//       <div className="container">
-//         <div className="title">{notification.kind}</div>
-//         <div className="info">
-//           {`${notification.summary.succeeded} done, `}
-//           <span className={notification.summary.failed > 0 ? 'failed' : ''}>
-//             {`${notification.summary.failed} failed`}
-//           </span>
-//         </div>
-//       </div>
-//     </div>
-//   )
-//   // })
-// }
+export const createAlertRowData = ({ ...alert }) => {
+  const { name } = alert
 
-export const createAlertRowData = ({ name, ...alert }) => {
   const getLink = alert => {
     const queryString = window.location.search
-    const { entity_kind: entityType, entity_id, project, alertName, id } = alert
+    const { alertName, entity_kind: entityType, entity_id, project, uid } = alert
 
     //TODO: getLink will be updated with ML-8104 & ML-8105
 
@@ -235,8 +188,8 @@ export const createAlertRowData = ({ name, ...alert }) => {
     // }
 
     if (entityType === MODEL_MONITORING_APPLICATION) {
-      const [, applicationName] = entity_id.split('.')
-      return `/projects/*/alerts/${project}/${alertName}/${applicationName}/${id}/${DETAILS_ALERT_APPLICATION}${queryString}`
+      const [, applicationName] = entity_id.split('_')
+      return `/projects/*/alerts/${project}/${alertName}/${applicationName}/${uid}/${DETAILS_ALERT_APPLICATION}${queryString}`
     }
 
     return ''
@@ -271,8 +224,8 @@ export const createAlertRowData = ({ name, ...alert }) => {
   }
 
   if (alert.entity_kind === MODEL_MONITORING_APPLICATION) {
-    alert.uid = alert.id
-    alert.applicationName = alert.entity_id.split('.')[1]
+    alert.uid = `${alert.id}`
+    alert.applicationName = alert.entity_id.split('_')[1]
   }
   return {
     data: {

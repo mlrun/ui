@@ -242,20 +242,10 @@ const DetailsInfoView = React.forwardRef(
                   </ul>
                 </>
               )}
-              {!isEveryObjectValueEmpty(additionalInfo?.alerts?.notificationsDetailsInfo) && (
+              {!isEveryObjectValueEmpty(additionalInfo?.alerts?.triggerCriteriaDetailsInfo) && (
                 <>
                   <h3 className="item-info__header">Notifications</h3>
                   <ul className="item-info__details item-info__details-notification">
-                    {console.log(additionalInfo?.alerts?.notificationsDetailsInfo)}
-                    {/*{additionalInfo?.alerts?.notificationsDetailsInfo.map((notification, index) => (*/}
-                    {/*  <li className="item" key={index}>*/}
-                    {/*    <span className="icon">{notification}</span>*/}
-                    {/*    <div>*/}
-                    {/*      <div className="title">Title</div>*/}
-                    {/*      <div className="text">{notification.key}</div>*/}
-                    {/*    </div>*/}
-                    {/*  </li>*/}
-                    {/*))}*/}
                     {additionalInfo?.alerts?.notificationsDetailsInfo}
                   </ul>
                 </>

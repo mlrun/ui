@@ -30,11 +30,6 @@
   }
 
   &__wrapper {
-    position: relative;
-    width: 100%;
-    max-height: 500px; /* מגבלת גובה לגלילה */
-    overflow-y: auto;
-
     .content & {
       position: absolute;
       top: 0;
@@ -103,81 +98,6 @@
       &-small {
         flex: 1;
         max-width: 150px;
-      }
-
-      &-notification {
-        position: relative;
-
-        .notification-fail {
-          position: absolute;
-          top: 9px;
-          left: 14px;
-
-          path {
-            fill: $burntSienna;
-          }
-
-          svg {
-            width: 14px;
-            height: 14px;
-            padding: 1px;
-            background-color: white;
-            border-radius: 50%;
-          }
-        }
-      }
-    }
-
-    .table-notification {
-      display: flex;
-
-      .container:not(:last-child) {
-        padding-right: 5px;
-        border-right: $wildSand solid 2px;
-      }
-
-      .icon {
-        position: relative;
-        padding-right: 5px;
-
-        .notification-fail {
-          position: absolute;
-          top: 18px;
-          left: 22px;
-
-          path {
-            fill: $burntSienna;
-          }
-
-          svg {
-            width: 20px;
-            height: 20px;
-            padding: 1px;
-            background-color: white;
-            border-radius: 50%;
-          }
-        }
-
-        svg {
-          width: 40px;
-          height: 40px;
-        }
-      }
-
-      .title {
-        color: $primary;
-        font-size: 13px;
-        font-family: Roboto;
-      }
-
-      .info {
-        color: $topaz;
-        font-size: 15px;
-        font-family: Roboto;
-
-        .failed {
-          color: $burntSienna;
-        }
       }
     }
 

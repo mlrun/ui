@@ -18,6 +18,7 @@ under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
 import { useCallback, useEffect, useMemo, useState } from 'react'
+import { useParams } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 
 import AlertsView from './AlertsView'
@@ -28,7 +29,6 @@ import { useAlertsPageData } from '../../hooks/useAlertsPageData'
 import { generatePageData } from './alerts.util'
 import { useFiltersFromSearchParams } from '../../hooks/useFiltersFromSearchParams.hook'
 
-import { useParams } from 'react-router-dom'
 import { getJobLogs } from '../../utils/getJobLogs.util'
 
 const Alerts = () => {
@@ -85,12 +85,14 @@ const Alerts = () => {
   )
 
   useEffect(() => {
-    if (tableContent.length === 0) return
-    const alert = tableContent.find(({ data }) => data.uid && data.uid === params.id)
-    if (alert) {
-      setSelectedAlert({ ...alert.data })
-    } else {
-      return setSelectedAlert({})
+    if (tableContent.length > 0) {
+      const alert = tableContent.find(({ data }) => data.uid && data.uid === params.uid)
+
+      if (alert) {
+        setSelectedAlert({ ...alert.data })
+      } else {
+        return setSelectedAlert({})
+      }
     }
   }, [params, tableContent])
 
