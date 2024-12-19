@@ -169,7 +169,7 @@ export const createAlertRowData = ({ ...alert }, isCrossProjects) => {
 
   const getLink = alert => {
     const queryString = window.location.search
-    const { job, entity_kind: entityType, entity_id, project, alertName, uid } = alert
+    const { alertName, job, entity_kind: entityType, entity_id, project, uid } = alert
 
     //TODO: getLink will be updated with ML-8104 & ML-8105
 

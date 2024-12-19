@@ -17,13 +17,19 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import React from 'react'
+import React, { useCallback } from 'react'
 import PropTypes from 'prop-types'
 
+import AlertLogsPopup from './AlertLogPopup'
+
 import DetailsInfo from '../DetailsInfo/DetailsInfo'
+import { RoundedIcon } from 'iguazio.dashboard-react-controls/dist/components'
 import DetailsLogs from '../DetailsLogs/DetailsLogs'
 import DetailsMetrics from '../DetailsMetrics/DetailsMetrics'
 
+import { openPopUp } from 'iguazio.dashboard-react-controls/dist/utils/common.util'
+
+import { ReactComponent as EnlargeIcon } from 'igz-controls/images/ml-enlarge.svg'
 import { JOB, MODEL_ENDPOINT_RESULT } from '../../constants'
 
 import '../DetailsInfo/detailsInfo.scss'
@@ -33,6 +39,10 @@ const DetailsDrillDownAlert = React.forwardRef(
     { detailsStore, isDetailsPopUp, pageData, selectedItem, setChangesCounter, setChangesData },
     applyChangesRef
   ) => {
+    const openRegisterModelModal = useCallback(() => {
+      openPopUp(AlertLogsPopup, { selectedItem, pageData })
+    }, [pageData, selectedItem])
+
     return (
       <>
         <DetailsInfo
@@ -45,28 +55,41 @@ const DetailsDrillDownAlert = React.forwardRef(
           setChangesData={setChangesData}
         />
         {pageData.details.entityType === JOB && (
-          <DetailsLogs
-            item={selectedItem}
-            logsTitle={pageData.details.logsTitle}
-            noDataMessage={pageData.details.logsNoDataMessage}
-            refreshAdditionalLogs={pageData.details.refreshAdditionalLogs}
-            refreshLogs={pageData.details.refreshLogs}
-            removeAdditionalLogs={pageData.details.removeAdditionalLogs}
-            removeLogs={() => {}}
-            withLogsRefreshBtn
-          />
+          <>
+            <div className="item-info__details__logs">
+              <h3 className="item-info__header">Job Logs</h3>
+              <div
+                className="details-close-btn"
+                data-testid="details-close-btn"
+                onClick={openRegisterModelModal}
+              >
+                <RoundedIcon tooltipText="Close" id="details-close">
+                  <EnlargeIcon />
+                </RoundedIcon>
+              </div>
+            </div>
+            <DetailsLogs
+              item={selectedItem}
+              logsTitle={pageData.details.logsTitle}
+              noDataMessage={pageData.details.logsNoDataMessage}
+              refreshAdditionalLogs={pageData.details.refreshAdditionalLogs}
+              refreshLogs={pageData.details.refreshLogs}
+              removeAdditionalLogs={pageData.details.removeAdditionalLogs}
+              removeLogs={() => {}}
+              withLogsRefreshBtn
+            />
+          </>
         )}
-
-        {pageData.details.entityType === MODEL_ENDPOINT_RESULT && (
-          <DetailsMetrics
-            selectedItem={{
-              metadata: {
-                uid: '540bae4d7c7c437fa5b9f0657a4187db',
-                project: 'kate-project-mm'
-              }
-            }}
-          />
-        )}
+          {pageData.details.entityType === MODEL_ENDPOINT_RESULT && (
+              <DetailsMetrics
+                  selectedItem={{
+                      metadata: {
+                          uid: '540bae4d7c7c437fa5b9f0657a4187db',
+                          project: 'kate-project-mm'
+                      }
+                  }}
+              />
+          )}
       </>
     )
   }
