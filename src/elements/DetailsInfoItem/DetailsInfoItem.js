@@ -30,6 +30,7 @@ import DetailsInfoItemChip from '../DetailsInfoItemChip/DetailsInfoItemChip'
 import Input from '../../common/Input/Input'
 import { FormInput, FormOnChange, FormTextarea } from 'igz-controls/components'
 import { Tooltip, TextTooltipTemplate, RoundedIcon } from 'igz-controls/components'
+import { TAG_LATEST } from '../../constants'
 
 import { CHIP_OPTIONS } from '../../types'
 import { getValidationRules } from 'igz-controls/utils/validation.util'
@@ -276,17 +277,19 @@ const DetailsInfoItem = React.forwardRef(
           ) : (
             <>
               <Tooltip template={<TextTooltipTemplate text={info} />}>{info}</Tooltip>
-              <RoundedIcon
-                className="details-item__data-btn-edit"
-                onClick={() => {
-                  if (editableFieldType.length === 0) {
-                    onClick(currentField, item?.editModeType, info)
-                  }
-                }}
-                tooltipText="Edit"
-              >
-                <Edit />
-              </RoundedIcon>
+              {info !== TAG_LATEST && (
+                <RoundedIcon
+                  className="details-item__data-btn-edit"
+                  onClick={() => {
+                    if (editableFieldType.length === 0) {
+                      onClick(currentField, item?.editModeType, info)
+                    }
+                  }}
+                  tooltipText="Edit"
+                >
+                  <Edit />
+                </RoundedIcon>
+              )}
             </>
           )}
         </div>

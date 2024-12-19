@@ -27,7 +27,7 @@ import { createForm } from 'final-form'
 import { Button, FormInput, Modal } from 'igz-controls/components'
 import Loader from '../../common/Loader/Loader'
 
-import { DATASET_TYPE, MODEL_TYPE } from '../../constants'
+import { DATASET_TYPE, MODEL_TYPE, TAG_LATEST } from '../../constants'
 import { SECONDARY_BUTTON, TERTIARY_BUTTON } from 'igz-controls/constants'
 import { addTag, fetchArtifacts } from '../../reducers/artifactsReducer'
 import { getValidationRules } from 'igz-controls/utils/validation.util'
@@ -170,6 +170,11 @@ const AddArtifactTagPopUp = ({ artifact, isOpen, onAddTag = () => {}, onResolve,
                           name: 'uniqueness',
                           label: 'Tag name must be unique',
                           pattern: value => !artifactTags.includes(value)
+                        },
+                        {
+                          name: 'latest',
+                          label: 'Tag name "latest" is reserved',
+                          pattern: value => value !== TAG_LATEST
                         }
                       ])}
                     />
