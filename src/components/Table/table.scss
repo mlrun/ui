@@ -187,6 +187,10 @@
           margin-left: 2px;
         }
       }
+
+      .icons-container {
+        min-width: 150px;
+      }
     }
 
     &-body {
@@ -267,9 +271,10 @@
           max-width: 100px;
         }
 
-        .severity-cell {
+        .alert-icon-cell {
           display: flex;
           gap: 4px;
+          align-items: center;
         }
       }
     }

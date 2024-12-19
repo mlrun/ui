@@ -25,6 +25,7 @@ import { Tip } from 'igz-controls/components'
 import JobPopUp from '../../elements/DetailsPopUp/JobPopUp/JobPopUp'
 
 import {
+  ALERTS_PAGE,
   FEATURE_STORE_PAGE,
   FILES_PAGE,
   FUNCTION_TYPE_APPLICATION,
@@ -39,6 +40,7 @@ import { isEveryObjectValueEmpty } from '../../utils/isEveryObjectValueEmpty'
 import { roundFloats } from '../../utils/roundFloats'
 import { generateFunctionPriorityLabel } from '../../utils/generateFunctionPriorityLabel'
 import { openPopUp } from 'igz-controls/utils/common.util'
+import { TextTooltipTemplate, Tooltip } from 'iguazio.dashboard-react-controls/dist/components'
 
 export const generateArtifactsInfoContent = (page, pageTab, selectedItem) => {
   if (pageTab === MODEL_ENDPOINTS_TAB) {
@@ -55,7 +57,7 @@ export const generateArtifactsInfoContent = (page, pageTab, selectedItem) => {
       selectedItem.target_path,
       selectedItem.tree,
       formatDatetime(selectedItem.updated, 'N/A'),
-      page === MODELS_PAGE ? (selectedItem.framework ?? '') : null,
+      page === MODELS_PAGE ? selectedItem.framework ?? '' : null,
       selectedItem.labels ?? [],
       selectedItem.sources
     ].filter(content => !isNil(content))
@@ -194,6 +196,40 @@ export const generateDriftDetailsInfo = modelEndpoint => {
         )
       })
     : []
+}
+
+export const generateAlertsDetailsInfo = pageData => {
+  if (pageData.page === ALERTS_PAGE) {
+    const triggerCriteria = pageData?.details?.triggerCriteria
+    const notifications = pageData?.selectedAlert?.notifications
+    const AlertsDetailsInfo = {
+      notificationsDetailsInfo: [],
+      triggerCriteriaDetailsInfo: []
+    }
+    AlertsDetailsInfo.notificationsDetailsInfo = notifications.map((valueItem, index) => (
+      <Tooltip
+        key={valueItem.tooltip + index}
+        template={<TextTooltipTemplate text={valueItem.tooltip} />}
+      >
+        {valueItem.icon}
+      </Tooltip>
+    ))
+
+    AlertsDetailsInfo.triggerCriteriaDetailsInfo = triggerCriteria.map(trigger => {
+      return (
+        <li className="details-item" key={trigger.id}>
+          <div className="details-item__header details-item__header_max-content-width">
+            {trigger.label}:
+          </div>
+          <DetailsInfoItem info={trigger.value} />
+        </li>
+      )
+    })
+
+    return AlertsDetailsInfo
+  } else {
+    return []
+  }
 }
 
 const producerListOrder = ['name', 'kind', 'tag', 'uri', 'owner', 'uid', 'workflow']

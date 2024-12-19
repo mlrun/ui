@@ -22,6 +22,7 @@ import PropTypes from 'prop-types'
 import { useSelector } from 'react-redux'
 import { useParams } from 'react-router-dom'
 
+import DetailsDrillDownAlert from '../../DetailsDrillDownAlert/DetailsDrillDownAlert'
 import DetailsAlerts from '../../DetailsAlerts/DetailsAlerts'
 import DetailsAnalysis from '../../DetailsAnalysis/DetailsAnalysis'
 import DetailsArtifacts from '../../DetailsArtifacts/DetailsArtifacts'
@@ -44,6 +45,7 @@ import NoData from '../../../common/NoData/NoData'
 import { isJobKindDask, JOB_STEADY_STATES } from '../../Jobs/jobs.util'
 
 import {
+  DETAILS_ALERT_APPLICATION,
   DETAILS_ALERTS_TAB,
   DETAILS_ANALYSIS_TAB,
   DETAILS_ARTIFACTS_TAB,
@@ -177,12 +179,12 @@ const DetailsTabsContent = ({
     case DETAILS_METADATA_TAB:
     case DETAILS_FEATURES_TAB:
     case DETAILS_RETURNED_FEATURES_TAB:
-      return (detailsStore.modelFeatureVectorData.features ??
+      return detailsStore.modelFeatureVectorData.features ??
         (selectedItem.schema ||
           selectedItem.entities ||
           selectedItem.features ||
           selectedItem.inputs ||
-          selectedItem.outputs)) ? (
+          selectedItem.outputs) ? (
         <DetailsMetadata
           selectedItem={
             selectedItem.schema ||
@@ -230,6 +232,18 @@ const DetailsTabsContent = ({
           setChanges={setChanges}
           setChangesData={setChangesData}
           setChangesCounter={setChangesCounter}
+        />
+      )
+    case DETAILS_ALERT_APPLICATION:
+      return (
+        <DetailsDrillDownAlert
+          detailsStore={detailsStore}
+          isDetailsPopUp={isDetailsPopUp}
+          pageData={pageData}
+          ref={applyChangesRef}
+          selectedItem={selectedItem}
+          setChangesCounter={setChangesCounter}
+          setChangesData={setChangesData}
         />
       )
     //TODO: uncomment when Collections tab is merged to dev

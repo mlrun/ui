@@ -20,6 +20,7 @@ such restriction.
 import { upperFirst } from 'lodash'
 
 import {
+  ALERTS_PAGE,
   APPLICATION,
   DATES_FILTER,
   ENDPOINT,
@@ -83,6 +84,22 @@ export const parseAlertsQueryParamsCallback = (paramName, paramValue) => {
   }
 
   return paramValue
+}
+
+export const generatePageData = (handleFetchJobLogs, selectedAlert) => {
+  return {
+    page: ALERTS_PAGE,
+    details: {
+      type: ALERTS_PAGE,
+      entityType: selectedAlert.entity_kind,
+      infoHeaders: alertsHeaders(selectedAlert.entity_kind),
+      menu: [],
+      notifications,
+      refreshLogs: handleFetchJobLogs,
+      triggerCriteria: triggerCriteria(selectedAlert.criteria)
+    },
+    selectedAlert
+  }
 }
 
 export const allProjectsOption = [
@@ -160,3 +177,45 @@ export const filterAlertsEventTypeOptions = entityType => {
 
   return alertsEventTypeOptions.filter(option => option.ENTITY_TYPE === entityType)
 }
+
+export const alertsHeaders = type => {
+  if (type) {
+    const headers = [
+      { label: 'Project Name', id: 'projectName' },
+      { label: 'Job Name', id: 'jobName' },
+      { label: 'Endpoint Name', id: 'endpoint_name' },
+      { label: 'Application Name', id: 'applicationName' },
+      { label: 'Type', id: 'type' },
+      { label: 'Timestamp', id: 'timestamp' },
+      { label: 'Severity', id: SEVERITY },
+      { label: 'Job', id: 'job' }
+    ]
+
+    const entityType = {
+      [JOB]: ['endpoint_name', 'applicationName'],
+      [MODEL_ENDPOINT_RESULT]: [JOB, 'jobName', 'applicationName'],
+      [MODEL_MONITORING_APPLICATION]: ['endpoint_name', JOB, 'jobName']
+    }
+
+    return headers.filter(header => !entityType[type]?.includes(header.id))
+  }
+
+  return []
+}
+
+const triggerCriteria = criteria => {
+  return [
+    {
+      label: 'Trigger criteria count',
+      id: 'triggerCriteriaCount',
+      value: criteria?.count
+    },
+    {
+      label: 'Trigger criteria time period',
+      id: 'triggerCriteriaTimePeriod',
+      value: criteria?.period
+    }
+  ]
+}
+
+export const notifications = [{ label: 'Notifications', id: 'notifications' }]

@@ -66,7 +66,8 @@ const DetailsHeader = ({
   pageData,
   selectedItem,
   setIteration,
-  tab
+  tab,
+  withActionMenu = true
 }) => {
   const [headerIsMultiline, setHeaderIsMultiline] = useState(false)
   const detailsStore = useSelector(store => store.detailsStore)
@@ -142,7 +143,8 @@ const DetailsHeader = ({
                 getCloseDetailsLink
                   ? getCloseDetailsLink(selectedItem.name)
                   : generateUrlFromRouterPath(
-                      window.location.pathname.split('/').slice(0, -2).join('/') + window.location.search
+                      window.location.pathname.split('/').slice(0, -2).join('/') +
+                        window.location.search
                     )
               }
               onClick={handleBackClick}
@@ -282,7 +284,7 @@ const DetailsHeader = ({
             <Refresh />
           </RoundedIcon>
         )}
-        <ActionsMenu dataItem={selectedItem} menu={actionsMenu} time={500} />
+        {withActionMenu && <ActionsMenu dataItem={selectedItem} menu={actionsMenu} time={500} />}
         <div className="item-header__navigation-buttons">
           {withToggleViewBtn && !isDetailsPopUp && (
             <>

@@ -25,17 +25,20 @@ import AlertsView from './AlertsView'
 
 import { createAlertRowData } from '../../utils/createAlertsContent'
 import { getAlertsFiltersConfig, parseAlertsQueryParamsCallback } from './alerts.util'
+import { generatePageData } from './alerts.util'
+import { getJobLogs } from '../../utils/getJobLogs.util'
+import projectsAction from '../../actions/projects'
 import { useAlertsPageData } from '../../hooks/useAlertsPageData'
 import { useFiltersFromSearchParams } from '../../hooks/useFiltersFromSearchParams.hook'
-import projectsAction from '../../actions/projects'
 
 const Alerts = () => {
+  const [selectedAlert, setSelectedAlert] = useState({})
   const { id: projectId } = useParams()
-  const [selectedAlert] = useState({}) //TODO: implement logic in ML-8104
   const [, setProjectsRequestErrorMessage] = useState('')
   const alertsStore = useSelector(state => state.alertsStore)
   const filtersStore = useSelector(store => store.filtersStore)
   const dispatch = useDispatch()
+  const params = useParams()
 
   const isCrossProjects = useMemo(() => projectId === '*', [projectId])
   const alertsFiltersConfig = useMemo(() => getAlertsFiltersConfig(), [])
@@ -77,18 +80,46 @@ const Alerts = () => {
     fetchMinimalProjects()
   }, [dispatch, fetchMinimalProjects])
 
+  const handleCancel = () => {
+    setSelectedAlert({})
+  }
+
+  const handleFetchJobLogs = useCallback(
+    (item, projectName, setDetailsLogs, streamLogsRef) => {
+      return getJobLogs(item.uid, projectName, streamLogsRef, setDetailsLogs, dispatch)
+    },
+    [dispatch]
+  )
+
+  const pageData = useMemo(
+    () => generatePageData(handleFetchJobLogs, selectedAlert),
+    [handleFetchJobLogs, selectedAlert]
+  )
+
+  useEffect(() => {
+    if (tableContent.length > 0) {
+      const alert = tableContent.find(({ data }) => data.uid && data.uid === params.uid)
+
+      if (alert) {
+        setSelectedAlert({ ...alert.data })
+      } else {
+        return setSelectedAlert({})
+      }
+    }
+  }, [params, tableContent])
+
   return (
     <AlertsView
       alerts={paginatedAlerts}
       alertsFiltersConfig={alertsFiltersConfig}
       alertsStore={alertsStore}
-      actionsMenu={() => []} // TODO
       filters={alertsFilters}
       filtersStore={filtersStore}
+      handleCancel={handleCancel}
       handleRefreshAlerts={handleRefreshAlerts}
       handleRefreshWithFilters={handleRefreshWithFilters}
       isCrossProjects={isCrossProjects}
-      pageData={{}} //TODO
+      pageData={pageData}
       paginationConfigAlertsRef={paginationConfigAlertsRef}
       requestErrorMessage={requestErrorMessage}
       selectedAlert={selectedAlert}
