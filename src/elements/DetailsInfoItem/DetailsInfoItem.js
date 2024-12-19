@@ -344,4 +344,6 @@ DetailsInfoItem.propTypes = {
   state: PropTypes.string
 }
 
+DetailsInfoItem.displayName = 'DetailsInfoItem'
+
 export default DetailsInfoItem
