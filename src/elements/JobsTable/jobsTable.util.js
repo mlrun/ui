@@ -48,3 +48,10 @@ export const generatePageData = (
     }
   }
 }
+
+export const getConfirmDeleteJobMessage = (job, isDeleteAll) => {
+  const runsCannotBeRestored = 'Deleted runs can not be restored.'
+  const deleteAll = `Are you sure you want to delete all runs of the job "${job.name}"?`
+  const deleteRun = `Are you sure you want to delete the run with the UID "${job.uid}" of the job "${job.name}"?`
+  return `${(isDeleteAll ? deleteAll : deleteRun)} ${runsCannotBeRestored}`
+}

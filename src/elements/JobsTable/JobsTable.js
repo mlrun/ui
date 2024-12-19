@@ -43,7 +43,7 @@ import { DANGER_BUTTON } from 'igz-controls/constants'
 import { FILTERS_CONFIG } from '../../types'
 import { checkForSelectedJob } from '../../utils/jobs.util'
 import { generateActionsMenu } from '../../components/Jobs/MonitorJobs/monitorJobs.util'
-import { generatePageData } from './jobsTable.util'
+import { generatePageData, getConfirmDeleteJobMessage } from './jobsTable.util'
 import { getCloseDetailsLink, isDetailsTabExists } from '../../utils/link-helper.util'
 import { getJobLogs } from '../../utils/getJobLogs.util'
 import { getNoDataMessage } from '../../utils/getNoDataMessage'
@@ -225,8 +225,8 @@ const JobsTable = React.forwardRef(
     )
 
     const onDeleteJob = useCallback(
-      (job, deleteAllRuns) => {
-        handleDeleteJob(deleteAllRuns, job, refreshJobs, filters, dispatch).then(() => {
+      (job, isDeleteAll) => {
+        handleDeleteJob(isDeleteAll, job, refreshJobs, filters, dispatch).then(() => {
           if (params.jobName) {
             navigate(getCloseDetailsLink(params.jobName, true))
           }
@@ -236,18 +236,18 @@ const JobsTable = React.forwardRef(
     )
 
     const handleConfirmDeleteJob = useCallback(
-      (job, deleteAllRuns) => {
+      (job, isDeleteAll) => {
         setConfirmData({
           item: job,
           header: 'Delete job?',
-          message: `Are you sure you want to delete ${deleteAllRuns ? 'all runs' : `the run with the UID "${job.uid}"`} of the job "${job.name}"? Deleted runs can not be restored.`,
+          message: getConfirmDeleteJobMessage(job, isDeleteAll),
           btnConfirmLabel: 'Delete',
           btnConfirmType: DANGER_BUTTON,
           rejectHandler: () => {
             setConfirmData(null)
           },
           confirmHandler: () => {
-            onDeleteJob(job, deleteAllRuns)
+            onDeleteJob(job, isDeleteAll)
             setConfirmData(null)
           }
         })

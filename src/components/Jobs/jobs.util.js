@@ -428,9 +428,9 @@ export const enrichRunWithFunctionFields = (dispatch, jobRun, fetchJobFunctionsP
     })
 }
 
-export const handleDeleteJob = (deleteAllRuns, job, refreshJobs, filters, dispatch) => {
+export const handleDeleteJob = (isDeleteAll, job, refreshJobs, filters, dispatch) => {
   
-  return dispatch((deleteAllRuns ? deleteAllJobRuns : deleteJob)({ project: job.project, job }))
+  return dispatch((isDeleteAll ? deleteAllJobRuns : deleteJob)({ project: job.project, job }))
     .unwrap()
     .then(() => {
       refreshJobs(filters)
@@ -444,7 +444,7 @@ export const handleDeleteJob = (deleteAllRuns, job, refreshJobs, filters, dispat
     })
     .catch(error => {
       showErrorNotification(dispatch, error, 'Deleting job failed', '', () =>
-        handleDeleteJob(deleteAllRuns, job, refreshJobs, filters, dispatch)
+        handleDeleteJob(isDeleteAll, job, refreshJobs, filters, dispatch)
       )
     })
 }
