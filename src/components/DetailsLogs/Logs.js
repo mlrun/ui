@@ -74,4 +74,6 @@ Logs.propTypes = {
   withLogsRefreshBtn: PropTypes.bool.isRequired
 }
 
+Logs.displayName = 'Logs'
+
 export default Logs

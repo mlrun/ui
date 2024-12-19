@@ -109,9 +109,25 @@
             "failed": 0,
             "succeeded": 4
           }
+        },
+        {
+          "kind": "git",
+          "err": "fail",
+          "summary": {
+            "failed": 2,
+            "succeeded": 4
+          }
+        },
+        {
+          "kind": "slack",
+          "err": "fail",
+          "summary": {
+            "failed": 2,
+            "succeeded": 4
+          }
         }
       ],
-      "entity_id": "application-1",
+      "entity_id": "default.application-1",
       "entity_kind": "model-monitoring-application",
       "criteria": {
         "count": 2,
@@ -138,6 +154,22 @@
         {
           "kind": "git",
           "err": "Authentication failed",
+          "summary": {
+            "failed": 2,
+            "succeeded": 4
+          }
+        },
+        {
+          "kind": "git",
+          "err": "fail",
+          "summary": {
+            "failed": 2,
+            "succeeded": 4
+          }
+        },
+        {
+          "kind": "slack",
+          "err": "fail",
           "summary": {
             "failed": 2,
             "succeeded": 4
@@ -301,7 +333,7 @@
           }
         }
       ],
-      "entity_id": "c2a3e1f8970ef28ed1df450e80d37624de7e1749.class-distribution.general_drift",
+      "entity_id": "c2a3e1f8970ef28ed1df450e80d37624de7e1749.class-distribution.result.general_drift",
       "entity_kind": "model-endpoint-result",
       "criteria": {
         "count": 5,
@@ -411,7 +443,7 @@
           }
         }
       ],
-      "entity_id": "application-2",
+      "entity_id": "default.application-2",
       "entity_kind": "model-monitoring-application",
       "criteria": {
         "count": 2,

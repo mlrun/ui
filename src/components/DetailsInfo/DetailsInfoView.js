@@ -28,6 +28,7 @@ import { Tip } from 'igz-controls/components'
 
 import { isEveryObjectValueEmpty } from '../../utils/isEveryObjectValueEmpty'
 import {
+  ALERTS_PAGE,
   ARTIFACTS_PAGE,
   DATASETS_PAGE,
   DOCUMENTS_PAGE,
@@ -51,7 +52,8 @@ const DetailsInfoView = React.forwardRef(
       additionalInfo = {
         drift: [],
         producer: [],
-        sources: {}
+        sources: {},
+        alerts: []
       },
       detailsInfoDispatch,
       detailsInfoState,
@@ -82,7 +84,8 @@ const DetailsInfoView = React.forwardRef(
       !isEveryObjectValueEmpty(infoContent) && (
         <>
           <div className="item-info__details-wrapper">
-            {(pageData.page === ARTIFACTS_PAGE ||
+            {(pageData.page === ALERTS_PAGE ||
+              pageData.page === ARTIFACTS_PAGE ||
               pageData.page === DATASETS_PAGE ||
               pageData.page === FILES_PAGE ||
               pageData.page === FUNCTIONS_PAGE ||
@@ -131,6 +134,7 @@ const DetailsInfoView = React.forwardRef(
                       : ''
                   info = infoContent[header.id]?.value
                 } else if (
+                  pageData.page === ALERTS_PAGE ||
                   pageData.page === ARTIFACTS_PAGE ||
                   pageData.page === DATASETS_PAGE ||
                   pageData.page === FILES_PAGE ||
@@ -230,6 +234,22 @@ const DetailsInfoView = React.forwardRef(
                   sources={additionalInfo.sources}
                 />
               )}
+              {!isEveryObjectValueEmpty(additionalInfo?.alerts?.triggerCriteriaDetailsInfo) && (
+                <>
+                  <h3 className="item-info__header">Trigger criteria</h3>
+                  <ul className="item-info__details">
+                    {additionalInfo?.alerts?.triggerCriteriaDetailsInfo}
+                  </ul>
+                </>
+              )}
+              {!isEveryObjectValueEmpty(additionalInfo?.alerts?.triggerCriteriaDetailsInfo) && (
+                <>
+                  <h3 className="item-info__header">Notifications</h3>
+                  <ul className="item-info__details item-info__details-notification">
+                    {additionalInfo?.alerts?.notificationsDetailsInfo}
+                  </ul>
+                </>
+              )}
             </div>
           )}
         </>
@@ -254,5 +274,7 @@ DetailsInfoView.propTypes = {
   params: PropTypes.shape({}).isRequired,
   selectedItem: PropTypes.shape({}).isRequired
 }
+
+DetailsInfoView.displayName = 'DetailsInfoView'
 
 export default DetailsInfoView

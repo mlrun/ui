@@ -155,7 +155,14 @@ const App = () => {
           <Route path={`projects/:projectName/${PROJECT_MONITOR}`} element={<ProjectMonitor />} />
 
           {/*TODO: the Alerts Route will be updated with ML-8368 */}
-          <Route path="projects/:id/alerts" element={<ProjectsAlerts />} />
+          {[
+            'projects/:id/alerts',
+            'projects/:id/alerts/:project/:alertName/:entityName/:uid/:tab'
+          ].map((path, index) => (
+            <Fragment key={index}>
+              <Route path={path} element={<ProjectsAlerts />} />
+            </Fragment>
+          ))}
 
           {!isNuclioModeDisabled && (
             <Route
@@ -223,7 +230,7 @@ const App = () => {
             `projects/:projectName/datasets/:datasetName/${ALL_VERSIONS_PATH}/:id/:tab`
           ].map((path, index) => (
             <Fragment key={index}>
-              <Route path={path} element={<Datasets isAllVersions={[2,3].includes(index)} />} />
+              <Route path={path} element={<Datasets isAllVersions={[2, 3].includes(index)} />} />
             </Fragment>
           ))}
           <Route
@@ -258,7 +265,7 @@ const App = () => {
               `${MODELS_TAB}/:modelName/${ALL_VERSIONS_PATH}/:id/:tab`
             ].map((path, index) => (
               <Fragment key={index}>
-                <Route path={path} element={<Models isAllVersions={[2,3].includes(index)} />} />
+                <Route path={path} element={<Models isAllVersions={[2, 3].includes(index)} />} />
               </Fragment>
             ))}
             {[`${MODEL_ENDPOINTS_TAB}`, `${MODEL_ENDPOINTS_TAB}/:name/:tag/:tab`].map(
@@ -285,7 +292,7 @@ const App = () => {
             `projects/:projectName/files/:fileName/${ALL_VERSIONS_PATH}/:id/:tab`
           ].map((path, index) => (
             <Fragment key={index}>
-              <Route path={path} element={<Files isAllVersions={[2,3].includes(index)} />} />
+              <Route path={path} element={<Files isAllVersions={[2, 3].includes(index)} />} />
             </Fragment>
           ))}
           {[
