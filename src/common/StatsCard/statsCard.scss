@@ -53,7 +53,7 @@
         font-size: 1.25rem;
       }
 
-      &--with-icon {
+      &_with-icon {
         padding-left: 18px;
 
         @media screen and (min-width: 1600px) {
@@ -83,6 +83,10 @@
           }
         }
       }
+    }
+
+    &__title-tip {
+      margin-left: 5px;
     }
   }
 }

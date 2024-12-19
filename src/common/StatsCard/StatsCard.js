@@ -34,14 +34,14 @@ const StatsCard = ({ children, className = '', onClick = () => {} }) => {
 }
 
 StatsCard.Header = ({ children = null, icon = '', iconClass = '', title = '', tip = '' }) => {
-  const titleClass = classNames('stats-card__title', icon && 'stats-card__title--with-icon')
+  const titleClass = classNames('stats-card__title', icon && 'stats-card__title_with-icon')
 
   return (
     <div className="stats-card__row">
       <div className={titleClass}>
         {icon && <i className={iconClass}>{icon}</i>}
         {title && <span>{title}</span>}
-        {tip && <Tip className="project-data-card__header-tip" text={tip} />}
+        {tip && <Tip className="stats-card__title-tip" text={tip} />}
       </div>
       {children}
     </div>
