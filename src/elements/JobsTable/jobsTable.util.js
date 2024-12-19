@@ -39,7 +39,7 @@ export const generatePageData = (
       removeLogs: () => {},
       withLogsRefreshBtn: true,
       actionButton: {
-        label: 'Resource monitoring',
+        label: 'Run resource monitoring',
         tooltip: !jobsDashboardUrl ? 'Grafana service unavailable' : '',
         variant: TERTIARY_BUTTON,
         disabled: !jobsDashboardUrl,

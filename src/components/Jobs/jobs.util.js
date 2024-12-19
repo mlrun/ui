@@ -316,10 +316,10 @@ export const handleAbortJob = (
   setConfirmData(null)
 }
 
-export const monitorJob = (jobs_dashboard_url, item, projectName) => {
+export const monitorJob = (jobs_dashboard_url, item, projectName, isProject) => {
   let redirectUrl = jobs_dashboard_url
-    .replace('{filter_name}', item ? 'uid' : 'project')
-    .replace('{filter_value}', item ? item.uid : projectName)
+    .replace('{filter_name}', !isProject ? 'uid' : 'project')
+    .replace('{filter_value}', !isProject ? item.uid : projectName)
 
   window.open(redirectUrl, '_blank')
 }
