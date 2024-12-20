@@ -108,7 +108,7 @@ const DownloadItem = ({ downloadItem }) => {
               throw new Error('Error during loading the file')
             }
 
-            config.params.offset += chunkSize
+            config.params.offset += response.data.byteLength
           }
 
           response.data = fullFile
