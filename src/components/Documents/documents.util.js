@@ -18,11 +18,12 @@ under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
 import React from 'react'
-import { cloneDeep, isEmpty, isEqual, omit } from 'lodash'
+import { cloneDeep, debounce, isEmpty, isEqual, omit } from 'lodash'
 
 import {
   ALL_VERSIONS_PATH,
   ARTIFACT_MAX_DOWNLOAD_SIZE,
+  BE_PAGE,
   DOCUMENT_TYPE,
   DOCUMENTS_PAGE,
   DOCUMENTS_TAB,
@@ -283,20 +284,24 @@ export const handleApplyDetailsChanges = (
   }
 }
 
-export const checkForSelectedDocument = (
-  paramsName,
-  documents,
-  paramsId,
-  projectName,
-  setSelectedDocument,
-  navigate,
-  isAllVersions
-) => {
-  queueMicrotask(() => {
+export const checkForSelectedDocument = debounce(
+  (
+    paramsName,
+    documents,
+    paramsId,
+    projectName,
+    setSelectedDocument,
+    navigate,
+    isAllVersions,
+    searchParams,
+    paginationConfigRef
+  ) => {
     if (paramsId) {
+      const searchBePage = parseInt(searchParams.get(BE_PAGE))
+      const configBePage = paginationConfigRef.current[BE_PAGE]
       const { tag, uid, iter } = parseIdentifier(paramsId)
 
-      if (documents.length > 0) {
+      if (documents.length > 0 && searchBePage === configBePage) {
         const searchItem = searchArtifactItem(
           documents.map(artifact => artifact.data ?? artifact),
           paramsName,
@@ -307,7 +312,10 @@ export const checkForSelectedDocument = (
 
         if (!searchItem) {
           navigate(
-            `/projects/${projectName}/${DOCUMENTS_TAB}${isAllVersions ? `/${paramsName}/${ALL_VERSIONS_PATH}` : ''}${getFilteredSearchParams(window.location.search, [VIEW_SEARCH_PARAMETER])}`,
+            `/projects/${projectName}/documents${isAllVersions ? `/${paramsName}/${ALL_VERSIONS_PATH}` : ''}${getFilteredSearchParams(
+              window.location.search,
+              [VIEW_SEARCH_PARAMETER]
+            )}`,
             { replace: true }
           )
         } else {
@@ -319,5 +327,5 @@ export const checkForSelectedDocument = (
     } else {
       setSelectedDocument({})
     }
-  })
-}
+  }
+)
