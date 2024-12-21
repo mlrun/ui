@@ -200,7 +200,9 @@ export const generateDriftDetailsInfo = modelEndpoint => {
 
 export const generateAlertsDetailsInfo = pageData => {
   if (pageData.page === ALERTS_PAGE) {
-    const triggerCriteria = pageData?.details?.triggerCriteria
+    const triggerCriteriaContent = pageData?.details?.triggerCriteria(
+      pageData?.selectedAlert?.criteria
+    )
     const notifications = pageData?.selectedAlert?.notifications
     const AlertsDetailsInfo = {
       notificationsDetailsInfo: [],
@@ -215,12 +217,10 @@ export const generateAlertsDetailsInfo = pageData => {
       </Tooltip>
     ))
 
-    AlertsDetailsInfo.triggerCriteriaDetailsInfo = triggerCriteria.map(trigger => {
+    AlertsDetailsInfo.triggerCriteriaDetailsInfo = triggerCriteriaContent.map(trigger => {
       return (
         <li className="details-item" key={trigger.id}>
-          <div className="details-item__header details-item__header_max-content-width">
-            {trigger.label}:
-          </div>
+          <div className="alert-row__details-alert-header">{trigger.label}:</div>
           <DetailsInfoItem info={trigger.value} />
         </li>
       )

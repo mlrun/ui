@@ -98,8 +98,7 @@ const Alerts = () => {
 
   useEffect(() => {
     if (tableContent.length > 0) {
-      const alert = tableContent.find(({ data }) => data.uid && data.uid === params.uid)
-
+      const alert = tableContent.find(({ data }) => data.id && data.id === params.alertId)
       if (alert) {
         setSelectedAlert({ ...alert.data })
       } else {
