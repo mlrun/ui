@@ -33,13 +33,7 @@ import Pagination from '../../../common/Pagination/Pagination'
 import Table from '../../Table/Table'
 
 import { ACTIONS_MENU } from '../../../types'
-import {
-  FULL_VIEW_MODE,
-  MODELS_PAGE,
-  MODELS_TAB,
-  ALL_VERSIONS_PATH,
-  DATASETS_TAB
-} from '../../../constants'
+import { FULL_VIEW_MODE, MODELS_PAGE, MODELS_TAB, ALL_VERSIONS_PATH } from '../../../constants'
 import { SECONDARY_BUTTON, PRIMARY_BUTTON } from 'igz-controls/constants'
 import { getCloseDetailsLink } from '../../../utils/link-helper.util'
 import { getNoDataMessage } from '../../../utils/getNoDataMessage'
@@ -167,7 +161,7 @@ const ModelsView = React.forwardRef(
                 </Table>
                 <Pagination
                   paginationConfig={paginationConfigModelsRef.current}
-                  closeParamName={isAllVersions ? ALL_VERSIONS_PATH : DATASETS_TAB}
+                  closeParamName={isAllVersions ? ALL_VERSIONS_PATH : MODELS_TAB}
                 />
               </>
             )}

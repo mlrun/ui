@@ -41,6 +41,7 @@ import {
 } from '../reducers/artifactsReducer'
 import { getArtifactIdentifier } from './getUniqueIdentifier'
 import { parseArtifacts } from './parseArtifacts'
+import { parseIdentifier } from './parseUri'
 import { setFilters, setModalFiltersValues } from '../reducers/filtersReducer'
 import { showErrorNotification } from './notifications.util'
 
@@ -212,28 +213,31 @@ export const setFullSelectedArtifact = debounce(
     if (isEmpty(selectedArtifactMin) || !artifactId) {
       setSelectedArtifact({})
     } else {
+      const { tag: paramsTag, uid: paramsUid } = parseIdentifier(artifactId)
       const { db_key, tree, tag, iter, uid } = selectedArtifactMin
       const fetchArtifactData = getArtifactFetchMethod(tab)
 
-      dispatch(fetchArtifactData({ projectName, artifactName: db_key, uid, tree, tag, iter }))
-        .unwrap()
-        .then(artifact => {
-          setSelectedArtifact(artifact)
-        })
-        .catch(error => {
-          if (tab === MODELS_TAB) {
-            navigate(
-              `/projects/${projectName}/${tab}/${tab}${isAllVersions ? `/${db_key}/${ALL_VERSIONS_PATH}` : ''}${window.location.search}`,
-              { replace: true }
-            )
-          } else {
-            navigate(
-              `/projects/${projectName}/${tab}${isAllVersions ? `/${db_key}/${ALL_VERSIONS_PATH}` : ''}${window.location.search}`,
-              { replace: true }
-            )
-          }
-          showArtifactErrorNotification(dispatch, error, tab)
-        })
+      if (paramsUid === uid && paramsTag === tag) {
+        dispatch(fetchArtifactData({ projectName, artifactName: db_key, uid, tree, tag, iter }))
+          .unwrap()
+          .then(artifact => {
+            setSelectedArtifact(artifact)
+          })
+          .catch(error => {
+            if (tab === MODELS_TAB) {
+              navigate(
+                `/projects/${projectName}/${tab}/${tab}${isAllVersions ? `/${db_key}/${ALL_VERSIONS_PATH}` : ''}${window.location.search}`,
+                { replace: true }
+              )
+            } else {
+              navigate(
+                `/projects/${projectName}/${tab}${isAllVersions ? `/${db_key}/${ALL_VERSIONS_PATH}` : ''}${window.location.search}`,
+                { replace: true }
+              )
+            }
+            showArtifactErrorNotification(dispatch, error, tab)
+          })
+      }
     }
   },
   20
