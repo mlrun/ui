@@ -384,6 +384,7 @@ const Documents = ({ isAllVersions = false }) => {
       filters={documentsFilters}
       filtersConfig={filtersConfig}
       filtersStore={filtersStore}
+      getAndSetSelectedArtifact={getAndSetSelectedArtifact}
       handleRefreshDocuments={
         isAllVersions ? handleRefreshDocumentVersions : handleRefreshDocuments
       }

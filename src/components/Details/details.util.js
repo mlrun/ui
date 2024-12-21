@@ -145,7 +145,7 @@ export const generateArtifactsContent = (detailsType, selectedItem, projectName)
         copyToClipboard: true
       },
       original_source: {
-        value: selectedItem.src_path,
+        value: selectedItem.original_source,
         copyToClipboard: true
       },
       target_uri: {
@@ -174,7 +174,7 @@ export const generateArtifactsContent = (detailsType, selectedItem, projectName)
         value: formatDatetime(selectedItem.updated, 'N/A')
       },
       framework: {
-        value: detailsType === MODELS_TAB ? selectedItem.framework ?? '' : null
+        value: detailsType === MODELS_TAB ? (selectedItem.framework ?? '') : null
       },
       algorithm: {
         value: selectedItem.algorithm
