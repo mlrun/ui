@@ -72,6 +72,7 @@ $itemInfoWithoutPadding: item-info-without-padding;
 
       &__header {
         display: flex;
+        align-self: center;
         width: 160px;
         min-width: 100px;
         font-weight: 500;
@@ -98,8 +99,13 @@ $itemInfoWithoutPadding: item-info-without-padding;
 
         .alert-icon-cell {
           display: flex;
-          gap: 4px;
+          gap: 8px;
           align-items: center;
+
+          svg {
+            width: 20px;
+            height: 20px;
+          }
         }
 
         &_multiline {
@@ -191,5 +197,5 @@ $itemInfoWithoutPadding: item-info-without-padding;
 }
 
 :export {
-  iteminfowithoutpadding: $itemInfoWithoutPadding;
+  itemInfoWithoutPadding: $itemInfoWithoutPadding;
 }

@@ -297,11 +297,12 @@ const App = () => {
           ))}
           {[
             'projects/:projectName/documents',
-            'projects/:projectName/documents/:name/:tag/:tab',
-            'projects/:projectName/documents/:name/:tag/:iter/:tab'
+            'projects/:projectName/documents/:documentName/:id/:tab',
+            `projects/:projectName/documents/:documentName/${ALL_VERSIONS_PATH}`,
+            `projects/:projectName/documents/:documentName/${ALL_VERSIONS_PATH}/:id/:tab`
           ].map((path, index) => (
             <Fragment key={index}>
-              <Route path={path} element={<Documents />} />
+              <Route path={path} element={<Documents isAllVersions={[2, 3].includes(index)} />} />
             </Fragment>
           ))}
           <Route path="*" element={<Navigate replace to="projects" />} />

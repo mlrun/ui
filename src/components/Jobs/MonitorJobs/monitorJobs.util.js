@@ -45,7 +45,8 @@ export const generateActionsMenu = (
   toggleConvertedYaml,
   selectedJob,
   handleConfirmDeleteJob,
-  isDetailsPopUp = false
+  isDetailsPopUp = false,
+  jobName
 ) => {
   if (job?.uid) {
     const jobKindIsAbortable = isJobKindAbortable(job, abortable_function_kinds)
@@ -92,11 +93,18 @@ export const generateActionsMenu = (
           onClick: toggleConvertedYaml
         },
         {
-          label: 'Delete',
+          label: 'Delete run',
           icon: <Delete />,
           className: 'danger',
-          onClick: handleConfirmDeleteJob,
+          onClick: (job) => handleConfirmDeleteJob(job),
           hidden: JOB_RUNNING_STATES.includes(job?.state?.value) || isDetailsPopUp
+        },
+        {
+          label: 'Delete all runs',
+          icon: <Delete />,
+          className: 'danger',
+          onClick: (job) => handleConfirmDeleteJob(job, true),
+          hidden: JOB_RUNNING_STATES.includes(job?.state?.value) || jobName || isDetailsPopUp
         }
       ]
     ]

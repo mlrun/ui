@@ -22,18 +22,15 @@ import { mainHttpClient, mainHttpClientV2 } from '../httpClient'
 import {
   ARTIFACT_OTHER_TYPE,
   DATASET_TYPE,
+  DOCUMENT_TYPE,
   MODEL_TYPE,
   SHOW_ITERATIONS,
   TAG_FILTER_ALL_ITEMS,
   TAG_FILTER_LATEST
 } from '../constants'
 
-const MAX_ARTIFACTS_LIMIT = 1000
-
 const fetchArtifacts = (project, filters, config = {}, withLatestTag, withExactName) => {
-  const params = {
-    limit: MAX_ARTIFACTS_LIMIT
-  }
+  const params = {}
 
   if (filters?.labels) {
     params.label = filters.labels?.split(',')
@@ -146,21 +143,6 @@ const artifactsApi = {
   getArtifacts: (project, filters, config, withExactName) => {
     return fetchArtifacts(project, filters, config, false, withExactName)
   },
-  getExpandedDataSet: (project, dataSet, iter, tag) => {
-    return fetchArtifacts(
-      project,
-      {},
-      {
-        params: {
-          category: DATASET_TYPE,
-          name: dataSet,
-          tag: tag === TAG_FILTER_ALL_ITEMS ? '*' : tag,
-          'best-iteration': Boolean(iter),
-          format: 'minimal'
-        }
-      }
-    )
-  },
   getDataSets: (project, filters, config = {}) => {
     const newConfig = {
       ...config,
@@ -169,20 +151,13 @@ const artifactsApi = {
 
     return fetchArtifacts(project, filters, newConfig, true)
   },
-  getExpandedFile: (project, file, iter, tag) => {
-    return fetchArtifacts(
-      project,
-      {},
-      {
-        params: {
-          category: ARTIFACT_OTHER_TYPE,
-          name: file,
-          tag: tag === TAG_FILTER_ALL_ITEMS ? '*' : tag,
-          'best-iteration': Boolean(iter),
-          format: 'minimal'
-        }
-      }
-    )
+  getDocuments: (project, filters, config = {}) => {
+    const newConfig = {
+      ...config,
+      params: { ...config.params, category: DOCUMENT_TYPE }
+    }
+
+    return fetchArtifacts(project, filters, newConfig, true)
   },
   getFiles: (project, filters, config = {}) => {
     const newConfig = {
@@ -191,21 +166,6 @@ const artifactsApi = {
     }
 
     return fetchArtifacts(project, filters, newConfig, true)
-  },
-  getExpandedModel: (project, model, iter, tag) => {
-    return fetchArtifacts(
-      project,
-      {},
-      {
-        params: {
-          category: MODEL_TYPE,
-          name: model,
-          tag: tag === TAG_FILTER_ALL_ITEMS ? '*' : tag,
-          'best-iteration': Boolean(iter),
-          format: 'minimal'
-        }
-      }
-    )
   },
   getModels: (project, filters, config = {}) => {
     const newConfig = {
