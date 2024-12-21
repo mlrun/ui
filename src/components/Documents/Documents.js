@@ -17,9 +17,11 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
-import { useLocation, useNavigate, useParams, useSearchParams } from 'react-router-dom'
+import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react'
+import { useLocation, useNavigate, useParams } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
+import PropTypes from 'prop-types'
+import { isEmpty } from 'lodash'
 
 import DocumentsView from './DocumentsView'
 import AddArtifactTagPopUp from '../../elements/AddArtifactTagPopUp/AddArtifactTagPopUp'
@@ -35,9 +37,10 @@ import {
 import { getViewMode } from '../../utils/helper'
 import { parseChipsData } from '../../utils/convertChipsData'
 import { toggleYaml } from '../../reducers/appReducer'
-import { setFullSelectedArtifact } from '../../utils/artifacts.util'
 import {
   ALL_VERSIONS_PATH,
+  BE_PAGE,
+  BE_PAGE_SIZE,
   DOCUMENT_TYPE,
   DOCUMENTS_TAB,
   GROUP_BY_NONE,
@@ -48,25 +51,20 @@ import { getFilterTagOptions, setFilters } from '../../reducers/filtersReducer'
 import { openPopUp } from 'igz-controls/utils/common.util'
 import { transformSearchParams } from '../../utils/filter.util'
 import { createDocumentsRowData } from '../../utils/createArtifactsContent'
-import { useSortTable } from '../../hooks/useSortTable.hook'
 import { setNotification } from '../../reducers/notificationReducer'
-import { useInitialTableFetch } from '../../hooks/useInitialTableFetch.hook'
 import { isDetailsTabExists } from '../../utils/link-helper.util'
-import { useVirtualization } from '../../hooks/useVirtualization.hook'
+import { usePagination } from '../../hooks/usePagination.hook'
+import { setFullSelectedArtifact } from '../../utils/artifacts.util'
 
 import './documents.scss'
-import cssVariables from './documents.scss'
-import PropTypes from 'prop-types'
 
 const Documents = ({ isAllVersions = false }) => {
   const [documents, setDocuments] = useState([])
   const [documentVersions, setDocumentVersions] = useState([])
   const [selectedDocument, setSelectedDocument] = useState({})
-  const [, setSearchParams] = useSearchParams()
   const viewMode = getViewMode(window.location.search)
   const [selectedDocumentMin, setSelectedDocumentMin] = useState({})
   const [requestErrorMessage, setRequestErrorMessage] = useState('')
-  const [maxArtifactsErrorIsShown, setMaxArtifactsErrorIsShown] = useState(false)
   const artifactsStore = useSelector(store => store.artifactsStore)
   const filtersStore = useSelector(store => store.filtersStore)
   const frontendSpec = useSelector(store => store.appStore.frontendSpec)
@@ -77,9 +75,11 @@ const Documents = ({ isAllVersions = false }) => {
   const abortControllerRef = useRef(new AbortController())
   const tagAbortControllerRef = useRef(new AbortController())
   const documentsRef = useRef(null)
+  const paginationConfigDocumentsRef = useRef({})
+  const paginationConfigDocumentVersionsRef = useRef({})
 
   const filtersConfig = useMemo(() => getFiltersConfig(isAllVersions), [isAllVersions])
-  const filters = useFiltersFromSearchParams(filtersConfig)
+  const documentsFilters = useFiltersFromSearchParams(filtersConfig)
   const pageData = useMemo(() => generatePageData(viewMode), [viewMode])
 
   const detailsFormInitialValues = useMemo(
@@ -97,19 +97,6 @@ const Documents = ({ isAllVersions = false }) => {
     [dispatch]
   )
 
-  const getAndSetSelectedArtifact = useCallback(() => {
-    setFullSelectedArtifact(
-      DOCUMENTS_TAB,
-      dispatch,
-      navigate,
-      selectedDocumentMin,
-      setSelectedDocument,
-      params.projectName,
-      params.id,
-      isAllVersions
-    )
-  }, [dispatch, isAllVersions, navigate, params.projectName, params.id, selectedDocumentMin])
-
   const fetchData = useCallback(
     filters => {
       abortControllerRef.current = new AbortController()
@@ -118,10 +105,22 @@ const Documents = ({ isAllVersions = false }) => {
         format: 'minimal'
       }
 
-      if (!isAllVersions) {
-        requestParams['partition-by'] = 'project_and_name'
-      } else {
+      if (isAllVersions) {
         requestParams.name = params.documentName
+        setDocumentVersions([])
+      } else {
+        requestParams['partition-by'] = 'project_and_name'
+        setDocuments([])
+      }
+
+      if (!isAllVersions && !isEmpty(paginationConfigDocumentsRef.current)) {
+        requestParams.page = paginationConfigDocumentsRef.current[BE_PAGE]
+        requestParams['page-size'] = paginationConfigDocumentsRef.current[BE_PAGE_SIZE]
+      }
+
+      if (isAllVersions && !isEmpty(paginationConfigDocumentVersionsRef.current)) {
+        requestParams.page = paginationConfigDocumentVersionsRef.current[BE_PAGE]
+        requestParams['page-size'] = paginationConfigDocumentVersionsRef.current[BE_PAGE_SIZE]
       }
 
       return dispatch(
@@ -138,18 +137,18 @@ const Documents = ({ isAllVersions = false }) => {
         })
       )
         .unwrap()
-        .then(result => {
-          if (result) {
+        .then(response => {
+          if (response?.artifacts) {
             if (isAllVersions) {
-              setDocumentVersions(result)
+              paginationConfigDocumentVersionsRef.current.paginationResponse = response.pagination
+              setDocumentVersions(response.artifacts || [])
             } else {
-              setDocuments(result)
+              paginationConfigDocumentsRef.current.paginationResponse = response.pagination
+              setDocuments(response.artifacts || [])
             }
-
-            setMaxArtifactsErrorIsShown(result.length === 1000)
           }
 
-          return result
+          return response
         })
     },
     [dispatch, isAllVersions, params.documentName, params.projectName]
@@ -171,12 +170,10 @@ const Documents = ({ isAllVersions = false }) => {
     )
   }, [dispatch, params.projectName])
 
-  const handleRefresh = useCallback(
+  const refreshDocuments = useCallback(
     filters => {
       fetchTags()
       setSelectedDocumentMin({})
-      setDocuments([])
-      setDocumentVersions([])
 
       return fetchData(filters)
     },
@@ -184,18 +181,18 @@ const Documents = ({ isAllVersions = false }) => {
   )
 
   const handleRefreshWithFilters = useCallback(() => {
-    handleRefresh(filters)
-  }, [filters, handleRefresh])
+    refreshDocuments(documentsFilters)
+  }, [documentsFilters, refreshDocuments])
 
   const handleAddTag = useCallback(
     artifact => {
       openPopUp(AddArtifactTagPopUp, {
         artifact,
-        onAddTag: () => handleRefresh(filters),
+        onAddTag: () => refreshDocuments(documentsFilters),
         projectName: params.projectName
       })
     },
-    [params.projectName, handleRefresh, filters]
+    [params.projectName, refreshDocuments, documentsFilters]
   )
 
   const showAllVersions = useCallback(
@@ -216,8 +213,8 @@ const Documents = ({ isAllVersions = false }) => {
         toggleConvertedYaml,
         handleAddTag,
         params.projectName,
-        handleRefresh,
-        filters,
+        refreshDocuments,
+        documentsFilters,
         selectedDocument,
         showAllVersions,
         isAllVersions
@@ -228,32 +225,13 @@ const Documents = ({ isAllVersions = false }) => {
       toggleConvertedYaml,
       handleAddTag,
       params.projectName,
-      handleRefresh,
-      filters,
+      refreshDocuments,
+      documentsFilters,
       selectedDocument,
       showAllVersions,
       isAllVersions
     ]
   )
-
-  const tableContent = useMemo(() => {
-    return (isAllVersions ? documentVersions : documents).map(contentItem =>
-      createDocumentsRowData(contentItem, params.projectName, isAllVersions)
-    )
-  }, [documentVersions, documents, isAllVersions, params.projectName])
-
-  const tableHeaders = useMemo(() => tableContent[0]?.content ?? [], [tableContent])
-
-  const { sortTable, selectedColumnName, getSortingIcon, sortedTableContent, sortedTableHeaders } =
-    useSortTable({
-      headers: tableHeaders,
-      content: tableContent,
-      sortConfig: {
-        excludeSortBy: ['labels', 'size'],
-        defaultSortBy: 'updated',
-        defaultDirection: 'desc'
-      }
-    })
 
   const applyDetailsChanges = useCallback(
     changes => {
@@ -286,15 +264,57 @@ const Documents = ({ isAllVersions = false }) => {
       }
     }
 
-    handleRefresh(filters)
+    refreshDocuments(documentsFilters)
   }
 
-  useInitialTableFetch({
-    fetchData,
-    fetchTags,
-    filters,
-    requestTrigger: isAllVersions
+  const [
+    handleRefreshDocuments,
+    paginatedDocuments,
+    searchDocumentsParams,
+    setSearchDocumentsParams
+  ] = usePagination({
+    hidden: isAllVersions,
+    content: documents,
+    refreshContent: refreshDocuments,
+    filters: documentsFilters,
+    paginationConfigRef: paginationConfigDocumentsRef,
+    resetPaginationTrigger: `${params.projectName}`
   })
+
+  const [
+    handleRefreshDocumentVersions,
+    paginatedDocumentVersions,
+    searchDocumentVersionsParams,
+    setSearchDocumentVersionsParams
+  ] = usePagination({
+    hidden: !isAllVersions,
+    content: documentVersions,
+    refreshContent: refreshDocuments,
+    filters: documentsFilters,
+    paginationConfigRef: paginationConfigDocumentVersionsRef,
+    resetPaginationTrigger: `${params.projectName}_${isAllVersions}`
+  })
+
+  const tableContent = useMemo(() => {
+    return (isAllVersions ? paginatedDocumentVersions : paginatedDocuments).map(contentItem =>
+      createDocumentsRowData(contentItem, params.projectName, isAllVersions)
+    )
+  }, [paginatedDocumentVersions, paginatedDocuments, isAllVersions, params.projectName])
+
+  const tableHeaders = useMemo(() => tableContent[0]?.content ?? [], [tableContent])
+
+  const getAndSetSelectedArtifact = useCallback(() => {
+    setFullSelectedArtifact(
+      DOCUMENTS_TAB,
+      dispatch,
+      navigate,
+      selectedDocumentMin,
+      setSelectedDocument,
+      params.projectName,
+      params.id,
+      isAllVersions
+    )
+  }, [dispatch, isAllVersions, navigate, params.projectName, params.id, selectedDocumentMin])
 
   useEffect(() => {
     if (params.id && pageData.details.menu.length > 0) {
@@ -303,11 +323,16 @@ const Documents = ({ isAllVersions = false }) => {
   }, [navigate, location, pageData.details.menu, params.id, params.tab])
 
   useEffect(() => {
-    const tagAbortControllerCurrent = tagAbortControllerRef.current
-
     return () => {
       setDocuments([])
       setDocumentVersions([])
+    }
+  }, [params.projectName])
+
+  useEffect(() => {
+    const tagAbortControllerCurrent = tagAbortControllerRef.current
+
+    return () => {
       dispatch(removeDocuments())
       setSelectedDocumentMin({})
       abortControllerRef.current.abort(REQUEST_CANCELED)
@@ -319,42 +344,33 @@ const Documents = ({ isAllVersions = false }) => {
     dispatch(setFilters({ groupBy: GROUP_BY_NONE }))
   }, [dispatch, params.projectName])
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     checkForSelectedDocument(
       params.documentName,
-      isAllVersions ? documentVersions : documents,
+      isAllVersions ? paginatedDocumentVersions : paginatedDocuments,
       params.id,
       params.projectName,
       setSelectedDocumentMin,
       navigate,
-      isAllVersions
+      isAllVersions,
+      isAllVersions ? searchDocumentVersionsParams : searchDocumentsParams,
+      isAllVersions ? paginationConfigDocumentVersionsRef : paginationConfigDocumentsRef
     )
   }, [
     isAllVersions,
     navigate,
-    params.id,
+    paginatedDocumentVersions,
+    paginatedDocuments,
     params.documentName,
+    params.id,
     params.projectName,
-    documentVersions,
-    documents
+    searchDocumentVersionsParams,
+    searchDocumentsParams
   ])
 
   useEffect(() => {
     getAndSetSelectedArtifact()
   }, [getAndSetSelectedArtifact])
-
-  const virtualizationConfig = useVirtualization({
-    rowsData: {
-      content: sortedTableContent,
-      selectedItem: selectedDocument
-    },
-    heightData: {
-      headerRowHeight: cssVariables.documentsHeaderRowHeight,
-      rowHeight: cssVariables.documentsRowHeight,
-      rowHeightExtended: cssVariables.documentsRowHeightExtended
-    },
-    activateTableScroll: true
-  })
 
   return (
     <DocumentsView
@@ -363,29 +379,32 @@ const Documents = ({ isAllVersions = false }) => {
       applyDetailsChangesCallback={applyDetailsChangesCallback}
       artifactsStore={artifactsStore}
       detailsFormInitialValues={detailsFormInitialValues}
-      documents={isAllVersions ? documentVersions : documents}
       documentName={params.documentName}
-      filters={filters}
+      documents={isAllVersions ? documentVersions : documents}
+      filters={documentsFilters}
       filtersConfig={filtersConfig}
       filtersStore={filtersStore}
-      getAndSetSelectedArtifact={getAndSetSelectedArtifact}
-      handleRefresh={handleRefresh}
+      handleRefreshDocuments={
+        isAllVersions ? handleRefreshDocumentVersions : handleRefreshDocuments
+      }
       handleRefreshWithFilters={handleRefreshWithFilters}
       isAllVersions={isAllVersions}
-      maxArtifactsErrorIsShown={maxArtifactsErrorIsShown}
       pageData={pageData}
+      paginationConfigDocumentsRef={
+        isAllVersions ? paginationConfigDocumentVersionsRef : paginationConfigDocumentsRef
+      }
       projectName={params.projectName}
       ref={{ documentsRef }}
+      refreshDocuments={refreshDocuments}
       requestErrorMessage={requestErrorMessage}
       selectedDocument={selectedDocument}
-      setMaxArtifactsErrorIsShown={setMaxArtifactsErrorIsShown}
-      setSearchParams={setSearchParams}
+      setSearchDocumentsParams={
+        isAllVersions ? setSearchDocumentVersionsParams : setSearchDocumentsParams
+      }
       setSelectedDocumentMin={setSelectedDocumentMin}
-      sortProps={{ sortTable, selectedColumnName, getSortingIcon }}
-      tableContent={sortedTableContent}
-      tableHeaders={sortedTableHeaders}
+      tableContent={tableContent}
+      tableHeaders={tableHeaders}
       viewMode={viewMode}
-      virtualizationConfig={virtualizationConfig}
     />
   )
 }
