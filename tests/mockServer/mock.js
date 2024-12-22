@@ -379,12 +379,7 @@ function filterByLabels(elementLabels, requestLabels) {
   return false
 }
 
-function getPartitionedData(
-  listOfItems,
-  pathToPartition,
-  pathToUpdated,
-  defaultPathToPartition
-) {
+function getPartitionedData(listOfItems, pathToPartition, pathToUpdated, defaultPathToPartition) {
   return chain(listOfItems)
     .groupBy(arrayItem => get(arrayItem, pathToPartition, defaultPathToPartition))
     .map(group => maxBy(group, groupItem => new Date(get(groupItem, pathToUpdated))))
@@ -884,11 +879,65 @@ function getRun(req, res) {
 
 function getAlerts(req, res) {
   // TODO:ML-8514 Update getAlerts to support both parameters and query strings.
-  const collectedAlerts = alerts.activations
+  let collectedAlerts = alerts.activations
 
   const [paginatedAlerts, pagination] = getPaginationConfig(collectedAlerts, req.query)
 
-  res.send({ activations: paginatedAlerts, pagination })
+  if (req.query['name']) {
+    collectedAlerts = collectedAlerts.filter(schedule =>
+      schedule.name.includes(req.query['name'].slice(1))
+    )
+  }
+  if (req.query['severity']) {
+    collectedAlerts = collectedAlerts.filter(schedule =>
+      schedule.severity.includes(req.query['severity'])
+    )
+  }
+  if (req.query['entity-kind']) {
+    collectedAlerts = collectedAlerts.filter(schedule =>
+      schedule.entity_kind.includes(req.query['entity-kind'])
+    )
+  }
+  if (req.query['event-kind']) {
+    collectedAlerts = collectedAlerts.filter(schedule =>
+      schedule.event_kind.includes(req.query['event-kind'])
+    )
+  }
+
+  if (req.query['entity']) {
+    collectedAlerts = collectedAlerts.filter(schedule =>
+      schedule.name.includes(req.query['name'].slice(1))
+    )
+  }
+
+  if (req.query['since']) {
+    const sinceTime = new Date(req.query['since']).getTime()
+    collectedAlerts = collectedAlerts.filter(
+      alert => new Date(alert.activation_time).getTime() >= sinceTime
+    )
+  }
+
+  if (req.query['until']) {
+    const untilTime = new Date(req.query['until']).getTime()
+    collectedAlerts = collectedAlerts.filter(
+      alert => new Date(alert.activation_time).getTime() <= untilTime
+    )
+  }
+
+  // let collectedFeatureSetDigests = []
+  // const findDigestByFeatureSetIndex = index =>
+  //   collectedFeatureSetDigests.find(digest => digest.feature_set_index === index)
+  //
+  // console.log(findDigestByFeatureSetIndex)
+  // if (req.query['entity']) {
+  //   collectedAlerts = collectedAlerts.filter(feature => {
+  //     return findDigestByFeatureSetIndex(feature.feature_set_index)?.spec?.entities.some(
+  //       item => item.name === req.query['entity']
+  //     )
+  //   })
+  // }
+
+  res.send({ activations: collectedAlerts, paginatedAlerts, pagination })
 }
 
 function patchRun(req, res) {
