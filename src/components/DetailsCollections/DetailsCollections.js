@@ -27,20 +27,13 @@ const DetailsCollections = ({ selectedItem }) => {
     <div className="collections-list">
       <div className="collections-list__header">
         <h5 className="collections-list__header-item">Name</h5>
-        <h5 className="collections-list__header-item">Collection</h5>
       </div>
       <div className="collections-list__body">
-        {Object.entries(selectedItem?.collections || {}).map(
-          ([collectionItemKey, collectionItemValue]) => (
-            <div
-              className="collections-list__body-item"
-              key={collectionItemKey + collectionItemValue}
-            >
-              <div className="collections-list__body-key">{collectionItemKey}</div>
-              <div className="collections-list__body-value">{collectionItemValue}</div>
-            </div>
-          )
-        )}
+        {Object.keys(selectedItem?.collections || {}).map(collectionItemKey => (
+          <div className="collections-list__body-item" key={collectionItemKey}>
+            {collectionItemKey}
+          </div>
+        ))}
       </div>
     </div>
   )

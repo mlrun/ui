@@ -6,38 +6,27 @@
   flex-direction: column;
 
   &__header {
-    display: flex;
-    align-items: center;
     position: sticky;
     top: 0;
-    border-bottom: $secondaryBorder;
     background-color: $white;
 
     &-item {
-      flex: 0;
-      min-width: 300px;
       margin: 0;
       padding: 10px 0;
       font-size: 18px;
+      border-bottom: $secondaryBorder;
     }
   }
 
   &__body {
     display: flex;
-    flex-flow: column nowrap;
-    align-items: flex-start;
+    flex-direction: column;
 
     &-item {
       display: flex;
-      flex: 1;
-      width: 100%;
+      align-items: center;
+      height: 45px;
       border-bottom: $secondaryBorder;
-
-      [class^='collections-list__body-'] {
-        min-width: 300px;
-        margin: 0;
-        padding: 10px 0;
-      }
     }
   }
 }
