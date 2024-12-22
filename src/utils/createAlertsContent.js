@@ -86,24 +86,29 @@ const getEntityTypeData = entityType => {
   }
 }
 const getTriggerCriticalTimePeriod = line => {
-  const units = { y: 'year', m: 'month', d: 'day', h: 'hour', ms: 'millisecond', s: 'second' }
+  const units = {
+    y: 'year',
+    m: 'month',
+    d: 'day',
+    h: 'hour',
+    ms: 'millisecond',
+    s: 'second'
+  }
 
-  return line
-    ? {
-        value: (
-          <span>
-            {line
-              .split(/,?\s+/)
-              .map(part => {
-                const unit = Object.keys(units).find(key => part.endsWith(key))
-                const value = part.slice(0, -unit?.length || 0)
-                return unit ? `${value} ${units[unit]}${parseInt(value, 10) > 1 ? 's' : ''}` : '--'
-              })
-              .join(', ')}
-          </span>
-        )
-      }
-    : { value: <span>N/A</span> }
+  const formatPart = part => {
+    const unit = Object.keys(units).find(key => part.endsWith(key))
+    if (!unit) return 'N/A'
+
+    const value = part.slice(0, -unit.length)
+    const isPlural = parseInt(value, 10) > 1
+
+    return `${value} ${units[unit]}${isPlural ? 's' : ''}`
+  }
+
+  const renderValue = line => line.split(/,?\s+/).map(formatPart).join(', ')
+  return {
+    value: <span>{line ? renderValue(line) : 'N/A'}</span>
+  }
 }
 
 const getSeverityData = severity => {
