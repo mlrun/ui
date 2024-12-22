@@ -29,7 +29,7 @@ const AlertLogsPopup = ({ isOpen, onResolve, pageData, selectedItem }) => {
 
   return (
     <Modal show={isOpen} onClose={onResolve} size={MODAL_MAX} location={location} noHeader>
-      <h3 className="item-info__popup-header">Job Logs</h3>
+      <h3 className="alert-row__popup-header">Job Logs</h3>
       <DetailsLogs
         item={selectedItem}
         logsTitle={pageData.details.logsTitle}

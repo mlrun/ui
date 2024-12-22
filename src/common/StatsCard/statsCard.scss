@@ -10,8 +10,12 @@
     background-color: $white;
     border-radius: 8px;
     box-shadow: $previewBoxShadowInit;
-    padding: 20px 25px 15px;
-    transition: box-shadow 0.3s ease-in-out;
+    padding: 15px;
+    transition: all 0.3s ease-in-out;
+
+    @media screen and (min-width: 1500px) {
+      padding: 20px 25px 15px;
+    }
 
     &__row {
       display: flex;
@@ -36,25 +40,53 @@
     }
 
     &__title {
+      position: relative;
+      display: flex;
+      align-items: center;
       color: $primary;
       font-weight: normal;
-      font-size: 1.25rem;
+      font-size: 1rem;
       margin: 0;
+      transition: font-size 0.3s ease-in-out;
+
+      @media screen and (min-width: 1600px) {
+        font-size: 1.25rem;
+      }
+
+      &_with-icon {
+        padding-left: 18px;
+
+        @media screen and (min-width: 1600px) {
+          padding-left: 23px;
+        }
+      }
 
       &-icon {
-        position: relative;
-        margin-right: 5px;
-        top: 3px;
+        position: absolute;
+        left: 0;
+        top: 1px;
+        height: 16px;
+        width: 16px;
+        transition: all 0.3s ease-in-out;
 
-        svg {
+        @media screen and (min-width: 1600px) {
           height: 20px;
           width: 20px;
+        }
+
+        svg {
+          height: inherit;
+          width: inherit;
 
           path {
             fill: $ceriseRed;
           }
         }
       }
+    }
+
+    &__title-tip {
+      margin-left: 5px;
     }
   }
 }

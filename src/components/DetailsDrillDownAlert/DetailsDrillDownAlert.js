@@ -55,7 +55,7 @@ const DetailsDrillDownAlert = React.forwardRef(
         />
         {pageData.details.entityType === JOB && (
           <>
-            <div className="item-info__details__logs">
+            <div className="alert-row__details-alert-logs">
               <h3 className="item-info__header">Job Logs</h3>
               <div
                 className="details-close-btn"

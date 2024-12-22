@@ -43,7 +43,7 @@ import { DANGER_BUTTON } from 'igz-controls/constants'
 import { FILTERS_CONFIG } from '../../types'
 import { checkForSelectedJob } from '../../utils/jobs.util'
 import { generateActionsMenu } from '../../components/Jobs/MonitorJobs/monitorJobs.util'
-import { generatePageData } from './jobsTable.util'
+import { generatePageData, getConfirmDeleteJobMessage } from './jobsTable.util'
 import { getCloseDetailsLink, isDetailsTabExists } from '../../utils/link-helper.util'
 import { getJobLogs } from '../../utils/getJobLogs.util'
 import { getNoDataMessage } from '../../utils/getNoDataMessage'
@@ -221,35 +221,29 @@ const JobsTable = React.forwardRef(
     )
 
     const onDeleteJob = useCallback(
-      job => {
-        handleDeleteJob(
-          params.jobName || !isEmpty(selectedJob),
-          job,
-          refreshJobs,
-          filters,
-          dispatch
-        ).then(() => {
+      (job, isDeleteAll) => {
+        handleDeleteJob(isDeleteAll, job, refreshJobs, filters, dispatch).then(() => {
           if (params.jobName) {
             navigate(getCloseDetailsLink(params.jobName, true))
           }
         })
       },
-      [params.jobName, selectedJob, refreshJobs, filters, dispatch, navigate]
+      [params.jobName, refreshJobs, filters, dispatch, navigate]
     )
 
     const handleConfirmDeleteJob = useCallback(
-      job => {
+      (job, isDeleteAll) => {
         setConfirmData({
           item: job,
           header: 'Delete job?',
-          message: `Are you sure you want to delete the job "${job.name}"? Deleted jobs can not be restored.`,
+          message: getConfirmDeleteJobMessage(job, isDeleteAll),
           btnConfirmLabel: 'Delete',
           btnConfirmType: DANGER_BUTTON,
           rejectHandler: () => {
             setConfirmData(null)
           },
           confirmHandler: () => {
-            onDeleteJob(job)
+            onDeleteJob(job, isDeleteAll)
             setConfirmData(null)
           }
         })
@@ -268,7 +262,9 @@ const JobsTable = React.forwardRef(
           handleConfirmAbortJob,
           toggleConvertedYaml,
           selectedJob,
-          handleConfirmDeleteJob
+          handleConfirmDeleteJob,
+          false,
+          params.jobName
         )
     }, [
       handleRerunJob,
@@ -278,7 +274,8 @@ const JobsTable = React.forwardRef(
       handleConfirmAbortJob,
       toggleConvertedYaml,
       selectedJob,
-      handleConfirmDeleteJob
+      handleConfirmDeleteJob,
+      params.jobName
     ])
 
     useEffect(() => {

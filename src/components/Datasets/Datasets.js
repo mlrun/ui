@@ -17,9 +17,10 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import React, { useCallback, useEffect, useRef, useState, useMemo } from 'react'
+import React, { useCallback, useEffect, useRef, useState, useMemo, useLayoutEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { useLocation, useNavigate, useParams, useSearchParams } from 'react-router-dom'
+import { useLocation, useNavigate, useParams } from 'react-router-dom'
+import { isEmpty } from 'lodash'
 
 import DatasetsView from './DatasetsView'
 import AddArtifactTagPopUp from '../../elements/AddArtifactTagPopUp/AddArtifactTagPopUp'
@@ -31,7 +32,9 @@ import {
   DATASETS_TAB,
   DATASET_TYPE,
   GROUP_BY_NONE,
-  REQUEST_CANCELED
+  REQUEST_CANCELED,
+  BE_PAGE,
+  BE_PAGE_SIZE
 } from '../../constants'
 import { fetchArtifactTags, fetchDataSets, removeDataSets } from '../../reducers/artifactsReducer'
 import {
@@ -49,15 +52,12 @@ import { isDetailsTabExists } from '../../utils/link-helper.util'
 import { openPopUp } from 'igz-controls/utils/common.util'
 import { setFullSelectedArtifact } from '../../utils/artifacts.util'
 import { setNotification } from '../../reducers/notificationReducer'
-import { useSortTable } from '../../hooks/useSortTable.hook'
-import { useVirtualization } from '../../hooks/useVirtualization.hook'
-import { useInitialTableFetch } from '../../hooks/useInitialTableFetch.hook'
-import { useFiltersFromSearchParams } from '../../hooks/useFiltersFromSearchParams.hook'
 import { toggleYaml } from '../../reducers/appReducer'
 import { transformSearchParams } from '../../utils/filter.util'
+import { useFiltersFromSearchParams } from '../../hooks/useFiltersFromSearchParams.hook'
+import { usePagination } from '../../hooks/usePagination.hook'
 
 import './datasets.scss'
-import cssVariables from './datasets.scss'
 
 const Datasets = ({ isAllVersions = false }) => {
   const [datasets, setDatasets] = useState([])
@@ -65,7 +65,6 @@ const Datasets = ({ isAllVersions = false }) => {
   const [selectedDataset, setSelectedDataset] = useState({})
   const [selectedDatasetMin, setSelectedDatasetMin] = useState({})
   const [requestErrorMessage, setRequestErrorMessage] = useState('')
-  const [maxArtifactsErrorIsShown, setMaxArtifactsErrorIsShown] = useState(false)
   const artifactsStore = useSelector(store => store.artifactsStore)
   const filtersStore = useSelector(store => store.filtersStore)
   const frontendSpec = useSelector(store => store.appStore.frontendSpec)
@@ -74,13 +73,14 @@ const Datasets = ({ isAllVersions = false }) => {
   const location = useLocation()
   const navigate = useNavigate()
   const params = useParams()
-  const [, setSearchParams] = useSearchParams()
+  const paginationConfigDatasetsRef = useRef({})
+  const paginationConfigDatasetVersionsRef = useRef({})
   const abortControllerRef = useRef(new AbortController())
   const tagAbortControllerRef = useRef(new AbortController())
   const datasetsRef = useRef(null)
 
   const filtersConfig = useMemo(() => getFiltersConfig(isAllVersions), [isAllVersions])
-  const filters = useFiltersFromSearchParams(filtersConfig)
+  const datasetsFilters = useFiltersFromSearchParams(filtersConfig)
 
   const pageData = useMemo(
     () => generatePageData(selectedDataset, viewMode, params),
@@ -94,28 +94,12 @@ const Datasets = ({ isAllVersions = false }) => {
     [selectedDataset.tag]
   )
 
-  const getAndSetSelectedArtifact = useCallback(() => {
-    setFullSelectedArtifact(
-      DATASETS_TAB,
-      dispatch,
-      navigate,
-      selectedDatasetMin,
-      setSelectedDataset,
-      params.projectName,
-      isAllVersions
-    )
-  }, [dispatch, isAllVersions, navigate, params.projectName, selectedDatasetMin])
-
   const toggleConvertedYaml = useCallback(
     data => {
       return dispatch(toggleYaml(data))
     },
     [dispatch]
   )
-
-  useEffect(() => {
-    getAndSetSelectedArtifact()
-  }, [getAndSetSelectedArtifact])
 
   const fetchData = useCallback(
     filters => {
@@ -127,8 +111,20 @@ const Datasets = ({ isAllVersions = false }) => {
 
       if (isAllVersions) {
         requestParams.name = params.datasetName
+        setDatasetVersions([])
       } else {
         requestParams['partition-by'] = 'project_and_name'
+        setDatasets([])
+      }
+
+      if (!isAllVersions && !isEmpty(paginationConfigDatasetsRef.current)) {
+        requestParams.page = paginationConfigDatasetsRef.current[BE_PAGE]
+        requestParams['page-size'] = paginationConfigDatasetsRef.current[BE_PAGE_SIZE]
+      }
+
+      if (isAllVersions && !isEmpty(paginationConfigDatasetVersionsRef.current)) {
+        requestParams.page = paginationConfigDatasetVersionsRef.current[BE_PAGE]
+        requestParams['page-size'] = paginationConfigDatasetVersionsRef.current[BE_PAGE_SIZE]
       }
 
       return dispatch(
@@ -145,18 +141,18 @@ const Datasets = ({ isAllVersions = false }) => {
         })
       )
         .unwrap()
-        .then(result => {
-          if (result) {
+        .then(response => {
+          if (response?.artifacts) {
             if (isAllVersions) {
-              setDatasetVersions(result)
+              paginationConfigDatasetVersionsRef.current.paginationResponse = response.pagination
+              setDatasetVersions(response.artifacts || [])
             } else {
-              setDatasets(result)
+              paginationConfigDatasetsRef.current.paginationResponse = response.pagination
+              setDatasets(response.artifacts || [])
             }
-
-            setMaxArtifactsErrorIsShown(result.length === 1000)
           }
 
-          return result
+          return response
         })
     },
     [dispatch, isAllVersions, params.datasetName, params.projectName]
@@ -178,12 +174,10 @@ const Datasets = ({ isAllVersions = false }) => {
     )
   }, [dispatch, params.projectName])
 
-  const handleRefresh = useCallback(
+  const refreshDatasets = useCallback(
     filters => {
       fetchTags()
       setSelectedDatasetMin({})
-      setDatasets([])
-      setDatasetVersions([])
 
       return fetchData(filters)
     },
@@ -191,18 +185,18 @@ const Datasets = ({ isAllVersions = false }) => {
   )
 
   const handleRefreshWithFilters = useCallback(() => {
-    handleRefresh(filters)
-  }, [filters, handleRefresh])
+    refreshDatasets(datasetsFilters)
+  }, [datasetsFilters, refreshDatasets])
 
   const handleAddTag = useCallback(
     artifact => {
       openPopUp(AddArtifactTagPopUp, {
         artifact,
-        onAddTag: () => handleRefresh(filters),
+        onAddTag: () => refreshDatasets(datasetsFilters),
         projectName: params.projectName
       })
     },
-    [params.projectName, handleRefresh, filters]
+    [params.projectName, refreshDatasets, datasetsFilters]
   )
 
   const showAllVersions = useCallback(
@@ -223,18 +217,18 @@ const Datasets = ({ isAllVersions = false }) => {
         toggleConvertedYaml,
         handleAddTag,
         params.projectName,
-        handleRefresh,
-        filters,
+        refreshDatasets,
+        datasetsFilters,
         selectedDataset,
         showAllVersions,
         isAllVersions
       ),
     [
       dispatch,
-      filters,
+      datasetsFilters,
       frontendSpec,
       handleAddTag,
-      handleRefresh,
+      refreshDatasets,
       isAllVersions,
       params.projectName,
       selectedDataset,
@@ -274,34 +268,8 @@ const Datasets = ({ isAllVersions = false }) => {
       }
     }
 
-    handleRefresh(filters)
+    refreshDatasets(datasetsFilters)
   }
-
-  const tableContent = useMemo(() => {
-    return (isAllVersions ? datasetVersions : datasets).map(contentItem =>
-      createDatasetsRowData(contentItem, params.projectName, isAllVersions)
-    )
-  }, [datasetVersions, datasets, isAllVersions, params.projectName])
-
-  const tableHeaders = useMemo(() => tableContent[0]?.content ?? [], [tableContent])
-
-  const { sortTable, selectedColumnName, getSortingIcon, sortedTableContent, sortedTableHeaders } =
-    useSortTable({
-      headers: tableHeaders,
-      content: tableContent,
-      sortConfig: {
-        excludeSortBy: ['labels', 'size'],
-        defaultSortBy: 'updated',
-        defaultDirection: 'desc'
-      }
-    })
-
-  useInitialTableFetch({
-    fetchData,
-    fetchTags,
-    filters,
-    requestTrigger: isAllVersions
-  })
 
   useEffect(() => {
     if (params.id && pageData.details.menu.length > 0) {
@@ -314,31 +282,16 @@ const Datasets = ({ isAllVersions = false }) => {
   }, [dispatch, params.projectName])
 
   useEffect(() => {
-    checkForSelectedDataset(
-      params.datasetName,
-      isAllVersions ? datasetVersions : datasets,
-      params.id,
-      params.projectName,
-      setSelectedDatasetMin,
-      navigate,
-      isAllVersions
-    )
-  }, [
-    datasetVersions,
-    datasets,
-    isAllVersions,
-    navigate,
-    params.id,
-    params.datasetName,
-    params.projectName
-  ])
+    return () => {
+      setDatasets([])
+      setDatasetVersions([])
+    }
+  }, [params.projectName])
 
   useEffect(() => {
     const tagAbortControllerCurrent = tagAbortControllerRef.current
 
     return () => {
-      setDatasets([])
-      setDatasetVersions([])
       dispatch(removeDataSets())
       setSelectedDatasetMin({})
       abortControllerRef.current.abort(REQUEST_CANCELED)
@@ -350,23 +303,82 @@ const Datasets = ({ isAllVersions = false }) => {
     openPopUp(RegisterArtifactModal, {
       artifactKind: DATASET_TYPE,
       params,
-      refresh: () => handleRefresh(filters),
+      refresh: () => refreshDatasets(datasetsFilters),
       title: registerDatasetTitle
     })
-  }, [params, handleRefresh, filters])
+  }, [params, refreshDatasets, datasetsFilters])
 
-  const virtualizationConfig = useVirtualization({
-    rowsData: {
-      content: sortedTableContent,
-      selectedItem: selectedDataset
-    },
-    heightData: {
-      headerRowHeight: cssVariables.datasetsHeaderRowHeight,
-      rowHeight: cssVariables.datasetsRowHeight,
-      rowHeightExtended: cssVariables.datasetsRowHeightExtended
-    },
-    activateTableScroll: true
+  const [handleRefreshDatasets, paginatedDatasets, searchDatasetsParams, setSearchDatasetsParams] =
+    usePagination({
+      hidden: isAllVersions,
+      content: datasets,
+      refreshContent: refreshDatasets,
+      filters: datasetsFilters,
+      paginationConfigRef: paginationConfigDatasetsRef,
+      resetPaginationTrigger: `${params.projectName}`
+    })
+  const [
+    handleRefreshDatasetVersions,
+    paginatedDatasetVersions,
+    searchDatasetVersionsParams,
+    setSearchDatasetVersionsParams
+  ] = usePagination({
+    hidden: !isAllVersions,
+    content: datasetVersions,
+    refreshContent: refreshDatasets,
+    filters: datasetsFilters,
+    paginationConfigRef: paginationConfigDatasetVersionsRef,
+    resetPaginationTrigger: `${params.projectName}_${isAllVersions}`
   })
+
+  const tableContent = useMemo(() => {
+    return (isAllVersions ? paginatedDatasetVersions : paginatedDatasets).map(contentItem =>
+      createDatasetsRowData(contentItem, params.projectName, isAllVersions)
+    )
+  }, [isAllVersions, paginatedDatasetVersions, paginatedDatasets, params.projectName])
+
+  const tableHeaders = useMemo(() => tableContent[0]?.content ?? [], [tableContent])
+
+  useLayoutEffect(() => {
+    checkForSelectedDataset(
+      params.datasetName,
+      isAllVersions ? paginatedDatasetVersions : paginatedDatasets,
+      params.id,
+      params.projectName,
+      setSelectedDatasetMin,
+      navigate,
+      isAllVersions,
+      isAllVersions ? searchDatasetVersionsParams : searchDatasetsParams,
+      isAllVersions ? paginationConfigDatasetVersionsRef : paginationConfigDatasetsRef
+    )
+  }, [
+    isAllVersions,
+    navigate,
+    params.id,
+    params.datasetName,
+    params.projectName,
+    paginatedDatasetVersions,
+    paginatedDatasets,
+    searchDatasetVersionsParams,
+    searchDatasetsParams
+  ])
+
+  const getAndSetSelectedArtifact = useCallback(() => {
+    setFullSelectedArtifact(
+      DATASETS_TAB,
+      dispatch,
+      navigate,
+      selectedDatasetMin,
+      setSelectedDataset,
+      params.projectName,
+      params.id,
+      isAllVersions
+    )
+  }, [dispatch, isAllVersions, navigate, params.projectName, params.id, selectedDatasetMin])
+
+  useEffect(() => {
+    getAndSetSelectedArtifact()
+  }, [getAndSetSelectedArtifact])
 
   return (
     <DatasetsView
@@ -374,31 +386,32 @@ const Datasets = ({ isAllVersions = false }) => {
       applyDetailsChanges={applyDetailsChanges}
       applyDetailsChangesCallback={applyDetailsChangesCallback}
       artifactsStore={artifactsStore}
-      datasets={isAllVersions ? datasetVersions : datasets}
       datasetName={params.datasetName}
+      datasets={isAllVersions ? datasetVersions : datasets}
       detailsFormInitialValues={detailsFormInitialValues}
-      filters={filters}
+      filters={datasetsFilters}
       filtersConfig={filtersConfig}
       filtersStore={filtersStore}
       getAndSetSelectedArtifact={getAndSetSelectedArtifact}
-      handleRefresh={handleRefresh}
+      handleRefreshDatasets={isAllVersions ? handleRefreshDatasetVersions : handleRefreshDatasets}
       handleRefreshWithFilters={handleRefreshWithFilters}
       handleRegisterDataset={handleRegisterDataset}
       isAllVersions={isAllVersions}
-      maxArtifactsErrorIsShown={maxArtifactsErrorIsShown}
       pageData={pageData}
+      paginationConfigDatasetsRef={
+        isAllVersions ? paginationConfigDatasetVersionsRef : paginationConfigDatasetsRef
+      }
       projectName={params.projectName}
       ref={{ datasetsRef }}
       requestErrorMessage={requestErrorMessage}
       selectedDataset={selectedDataset}
-      setMaxArtifactsErrorIsShown={setMaxArtifactsErrorIsShown}
-      setSearchParams={setSearchParams}
+      setSearchDatasetsParams={
+        isAllVersions ? setSearchDatasetVersionsParams : setSearchDatasetsParams
+      }
       setSelectedDatasetMin={setSelectedDatasetMin}
-      sortProps={{ sortTable, selectedColumnName, getSortingIcon }}
-      tableContent={sortedTableContent}
-      tableHeaders={sortedTableHeaders}
+      tableContent={tableContent}
+      tableHeaders={tableHeaders}
       viewMode={viewMode}
-      virtualizationConfig={virtualizationConfig}
     />
   )
 }

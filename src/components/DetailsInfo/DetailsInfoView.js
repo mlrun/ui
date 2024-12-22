@@ -245,7 +245,7 @@ const DetailsInfoView = React.forwardRef(
               {!isEveryObjectValueEmpty(additionalInfo?.alerts?.triggerCriteriaDetailsInfo) && (
                 <>
                   <h3 className="item-info__header">Notifications</h3>
-                  <ul className="item-info__details item-info__details-notification">
+                  <ul className="item-info__details alert-row__item-info-notification">
                     {additionalInfo?.alerts?.notificationsDetailsInfo}
                   </ul>
                 </>

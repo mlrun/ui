@@ -22,7 +22,7 @@ import { defaultPendingHandler, hideLoading, showLoading } from './redux.util'
 import artifactsApi from '../api/artifacts-api'
 import functionsApi from '../api/functions-api'
 import modelEndpointsApi from '../api/modelEndpoints-api'
-import { ARTIFACTS_TAB, DATASETS_TAB, MODELS_TAB } from '../constants'
+import { ARTIFACTS_TAB, DATASETS_TAB, MODELS_TAB, DOCUMENTS_TAB } from '../constants'
 import { filterArtifacts } from '../utils/filterArtifacts'
 import { generateArtifacts } from '../utils/generateArtifacts'
 import { parseModelEndpoints } from '../utils/parseModelEndpoints'
@@ -33,6 +33,17 @@ import { largeResponseCatchHandler } from '../utils/largeResponseCatchHandler'
 
 const initialState = {
   artifacts: [],
+  documents: {
+    allData: [],
+    filteredData: [],
+    loading: false,
+    documentLoading: false,
+    selectedRowData: {
+      content: {},
+      error: null,
+      loading: false
+    }
+  },
   dataSets: {
     allData: [],
     filteredData: [],
@@ -167,12 +178,49 @@ export const fetchDataSets = createAsyncThunk(
       .then(({ data }) => {
         const result = parseArtifacts(data.artifacts)
 
-        return generateArtifacts(filterArtifacts(result), DATASETS_TAB, data.artifacts)
+        return {
+          ...data,
+          artifacts: generateArtifacts(filterArtifacts(result), DATASETS_TAB, data.artifacts)
+        }
       })
       .catch(error => {
         largeResponseCatchHandler(
           error,
           'Failed to fetch datasets',
+          thunkAPI.dispatch,
+          config?.ui?.setRequestErrorMessage
+        )
+      })
+  }
+)
+export const fetchDocument = createAsyncThunk(
+  'fetchDocument',
+  ({ projectName, artifactName, uid, tree, tag, iter }) => {
+    return artifactsApi
+      .getArtifact(projectName, artifactName, uid, tree, tag, iter)
+      .then(response => {
+        const result = parseArtifacts([response.data])
+
+        return generateArtifacts(filterArtifacts(result), DOCUMENTS_TAB, [response.data])?.[0]
+      })
+  }
+)
+export const fetchDocuments = createAsyncThunk(
+  'fetchDocuments',
+  ({ project, filters, config }, thunkAPI) => {
+    config?.ui?.setRequestErrorMessage?.('')
+
+    return artifactsApi
+      .getDocuments(project, filters, config)
+      .then(({ data }) => {
+        const result = parseArtifacts(data.artifacts)
+
+        return generateArtifacts(filterArtifacts(result), DOCUMENTS_TAB, data.artifacts)
+      })
+      .catch(error => {
+        largeResponseCatchHandler(
+          error,
+          'Failed to fetch documents',
           thunkAPI.dispatch,
           config?.ui?.setRequestErrorMessage
         )
@@ -201,7 +249,10 @@ export const fetchFiles = createAsyncThunk(
       .then(({ data }) => {
         const result = parseArtifacts(data.artifacts)
 
-        return generateArtifacts(filterArtifacts(result), ARTIFACTS_TAB, data.artifacts)
+        return {
+          ...data,
+          artifacts: generateArtifacts(filterArtifacts(result), ARTIFACTS_TAB, data.artifacts)
+        }
       })
       .catch(error => {
         largeResponseCatchHandler(
@@ -291,7 +342,7 @@ export const fetchModels = createAsyncThunk(
       .then(({ data }) => {
         const result = filterArtifacts(parseArtifacts(data.artifacts))
 
-        return generateArtifacts(result, MODELS_TAB, data.artifacts)
+        return { ...data, artifacts: generateArtifacts(result, MODELS_TAB, data.artifacts) }
       })
       .catch(error => {
         largeResponseCatchHandler(
@@ -322,6 +373,16 @@ const artifactsSlice = createSlice({
     },
     removeDataSet(state, action) {
       state.dataSets.selectedRowData = {
+        content: action.payload,
+        error: null,
+        loading: false
+      }
+    },
+    removeDocuments(state) {
+      state.documents = initialState.documents
+    },
+    removeDocument(state, action) {
+      state.documents.selectedRowData = {
         content: action.payload,
         error: null,
         loading: false
@@ -427,9 +488,32 @@ const artifactsSlice = createSlice({
       state.dataSets.loading = true
       state.loading = true
     })
+    builder.addCase(fetchDocument.pending, state => {
+      state.documents.documentLoading = true
+    })
+    builder.addCase(fetchDocument.fulfilled, state => {
+      state.documents.documentLoading = false
+    })
+    builder.addCase(fetchDocument.rejected, state => {
+      state.documents.documentLoading = false
+    })
+    builder.addCase(fetchDocuments.pending, state => {
+      state.documents.loading = true
+      state.loading = true
+    })
+    builder.addCase(fetchDocuments.fulfilled, (state, action) => {
+      state.error = null
+      state.documents.allData = action.payload
+      state.documents.loading = false
+      state.loading = false
+    })
+    builder.addCase(fetchDocuments.rejected, state => {
+      state.documents.loading = false
+      state.loading = false
+    })
     builder.addCase(fetchDataSets.fulfilled, (state, action) => {
       state.error = null
-      state.dataSets.allData = action.payload
+      state.dataSets.allData = action.payload?.artifacts ?? []
       state.dataSets.loading = false
       state.loading = state.models.loading || state.files.loading
     })
@@ -452,7 +536,7 @@ const artifactsSlice = createSlice({
     })
     builder.addCase(fetchFiles.fulfilled, (state, action) => {
       state.error = null
-      state.files.allData = action.payload
+      state.files.allData = action.payload?.artifacts ?? []
       state.files.loading = false
       state.loading = state.models.loading || state.dataSets.loading
     })
@@ -495,7 +579,7 @@ const artifactsSlice = createSlice({
     })
     builder.addCase(fetchModels.fulfilled, (state, action) => {
       state.error = null
-      state.models.allData = action.payload
+      state.models.allData = action.payload?.artifacts ?? []
       state.models.loading = false
       state.loading = state.files.loading || state.dataSets.loading
     })
@@ -511,6 +595,7 @@ export const {
   closeArtifactsPreview,
   removeDataSet,
   removeDataSets,
+  removeDocuments,
   removeFile,
   removeFiles,
   removeModel,

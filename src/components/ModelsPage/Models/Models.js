@@ -20,16 +20,13 @@ such restriction.
 import React, { useCallback, useEffect, useMemo, useState, useRef } from 'react'
 import { connect, useDispatch, useSelector } from 'react-redux'
 import { chain, isEmpty, isNil } from 'lodash'
-import { useLocation, useNavigate, useParams, useSearchParams } from 'react-router-dom'
+import { useLocation, useNavigate, useParams } from 'react-router-dom'
 
 import AddArtifactTagPopUp from '../../../elements/AddArtifactTagPopUp/AddArtifactTagPopUp'
 import DeployModelPopUp from '../../../elements/DeployModelPopUp/DeployModelPopUp'
 import ModelsView from './ModelsView'
 import RegisterModelModal from '../../../elements/RegisterModelModal/RegisterModelModal'
 import JobWizard from '../../JobWizard/JobWizard'
-
-import './models.scss'
-import cssVariables from './models.scss'
 
 import {
   fetchArtifactsFunctions,
@@ -44,7 +41,9 @@ import {
   REQUEST_CANCELED,
   MODEL_TYPE,
   FUNCTION_TYPE_SERVING,
-  ALL_VERSIONS_PATH
+  ALL_VERSIONS_PATH,
+  BE_PAGE,
+  BE_PAGE_SIZE
 } from '../../../constants'
 import {
   checkForSelectedModel,
@@ -64,19 +63,18 @@ import { openPopUp } from 'igz-controls/utils/common.util'
 import { parseChipsData } from '../../../utils/convertChipsData'
 import { setFullSelectedArtifact } from '../../../utils/artifacts.util'
 import { setNotification } from '../../../reducers/notificationReducer'
+import { transformSearchParams } from '../../../utils/filter.util'
+import { useFiltersFromSearchParams } from '../../../hooks/useFiltersFromSearchParams.hook'
 import { useMode } from '../../../hooks/mode.hook'
 import { useModelsPage } from '../ModelsPage.context'
-import { useSortTable } from '../../../hooks/useSortTable.hook'
-import { useVirtualization } from '../../../hooks/useVirtualization.hook'
-import { useInitialTableFetch } from '../../../hooks/useInitialTableFetch.hook'
-import { useFiltersFromSearchParams } from '../../../hooks/useFiltersFromSearchParams.hook'
-import { transformSearchParams } from '../../../utils/filter.util'
+import { usePagination } from '../../../hooks/usePagination.hook'
+
+import './models.scss'
 
 const Models = ({ fetchModelFeatureVector, isAllVersions }) => {
   const [models, setModels] = useState([])
   const [modelVersions, setModelVersions] = useState([])
   const [requestErrorMessage, setRequestErrorMessage] = useState('')
-  const [maxArtifactsErrorIsShown, setMaxArtifactsErrorIsShown] = useState(false)
   const [selectedModel, setSelectedModel] = useState({})
   const [selectedModelMin, setSelectedModelMin] = useState({})
   //temporarily commented till ML-5606 will be done
@@ -91,15 +89,16 @@ const Models = ({ fetchModelFeatureVector, isAllVersions }) => {
   const location = useLocation()
   const navigate = useNavigate()
   const params = useParams()
-  const [, setSearchParams] = useSearchParams()
   const viewMode = getViewMode(window.location.search)
   const { toggleConvertedYaml } = useModelsPage()
+  const paginationConfigModelsRef = useRef({})
+  const paginationConfigModelVersionsRef = useRef({})
   const abortControllerRef = useRef(new AbortController())
   const tagAbortControllerRef = useRef(new AbortController())
   const modelsRef = useRef(null)
 
   const filtersConfig = useMemo(() => getFiltersConfig(isAllVersions), [isAllVersions])
-  const filters = useFiltersFromSearchParams(filtersConfig)
+  const modelsFilters = useFiltersFromSearchParams(filtersConfig)
 
   const { isDemoMode } = useMode()
 
@@ -116,22 +115,6 @@ const Models = ({ fetchModelFeatureVector, isAllVersions }) => {
     [frontendSpec.internal_labels, selectedModel.labels, selectedModel.tag]
   )
 
-  const getAndSetSelectedArtifact = useCallback(() => {
-    setFullSelectedArtifact(
-      MODELS_TAB,
-      dispatch,
-      navigate,
-      selectedModelMin,
-      setSelectedModel,
-      params.projectName,
-      isAllVersions
-    )
-  }, [dispatch, isAllVersions, navigate, params.projectName, selectedModelMin])
-
-  useEffect(() => {
-    getAndSetSelectedArtifact()
-  }, [getAndSetSelectedArtifact])
-
   const fetchData = useCallback(
     async filters => {
       abortControllerRef.current = new AbortController()
@@ -140,10 +123,22 @@ const Models = ({ fetchModelFeatureVector, isAllVersions }) => {
         format: 'minimal'
       }
 
-      if (!isAllVersions) {
-        requestParams['partition-by'] = 'project_and_name'
-      } else {
+      if (isAllVersions) {
         requestParams.name = params.modelName
+        setModelVersions([])
+      } else {
+        requestParams['partition-by'] = 'project_and_name'
+        setModels([])
+      }
+
+      if (!isAllVersions && !isEmpty(paginationConfigModelsRef.current)) {
+        requestParams.page = paginationConfigModelsRef.current[BE_PAGE]
+        requestParams['page-size'] = paginationConfigModelsRef.current[BE_PAGE_SIZE]
+      }
+
+      if (isAllVersions && !isEmpty(paginationConfigModelVersionsRef.current)) {
+        requestParams.page = paginationConfigModelVersionsRef.current[BE_PAGE]
+        requestParams['page-size'] = paginationConfigModelVersionsRef.current[BE_PAGE_SIZE]
       }
 
       return dispatch(
@@ -160,18 +155,18 @@ const Models = ({ fetchModelFeatureVector, isAllVersions }) => {
         })
       )
         .unwrap()
-        .then(result => {
-          if (result) {
+        .then(response => {
+          if (response?.artifacts) {
             if (isAllVersions) {
-              setModelVersions(result)
+              paginationConfigModelVersionsRef.current.paginationResponse = response.pagination
+              setModelVersions(response.artifacts || [])
             } else {
-              setModels(result)
+              paginationConfigModelsRef.current.paginationResponse = response.pagination
+              setModels(response.artifacts || [])
             }
-
-            setMaxArtifactsErrorIsShown(result.length === 1000)
           }
 
-          return result
+          return response
         })
     },
     [dispatch, isAllVersions, params.modelName, params.projectName]
@@ -231,12 +226,10 @@ const Models = ({ fetchModelFeatureVector, isAllVersions }) => {
     [dispatch, params.projectName]
   )
 
-  const handleRefresh = useCallback(
+  const refreshModels = useCallback(
     filters => {
       fetchTags()
       setSelectedModelMin({})
-      setModels([])
-      setModelVersions([])
       //temporarily commented till ML-5606 will be done
       // setTableHeaders([])
       // setDataIsLoaded(false)
@@ -247,24 +240,26 @@ const Models = ({ fetchModelFeatureVector, isAllVersions }) => {
   )
 
   const handleRefreshWithFilters = useCallback(() => {
-    handleRefresh(filters)
-  }, [filters, handleRefresh])
+    refreshModels(modelsFilters)
+  }, [modelsFilters, refreshModels])
 
   const handleAddTag = useCallback(
     artifact => {
       openPopUp(AddArtifactTagPopUp, {
         artifact,
-        onAddTag: () => handleRefresh(filters),
+        onAddTag: () => refreshModels(modelsFilters),
         projectName: params.projectName
       })
     },
-    [params.projectName, handleRefresh, filters]
+    [params.projectName, refreshModels, modelsFilters]
   )
 
   const showAllVersions = useCallback(
     modelName => {
       navigate(
-        `/projects/${params.projectName}/${MODELS_PAGE.toLowerCase()}/${MODELS_TAB}/${modelName}/${ALL_VERSIONS_PATH}?${transformSearchParams(window.location.search)}`
+        `/projects/${params.projectName}/${MODELS_PAGE.toLowerCase()}/${MODELS_TAB}/${modelName}/${ALL_VERSIONS_PATH}?${transformSearchParams(
+          window.location.search
+        )}`
       )
     },
     [navigate, params.projectName]
@@ -279,8 +274,8 @@ const Models = ({ fetchModelFeatureVector, isAllVersions }) => {
         toggleConvertedYaml,
         handleAddTag,
         params.projectName,
-        handleRefresh,
-        filters,
+        refreshModels,
+        modelsFilters,
         selectedModel,
         showAllVersions,
         isAllVersions,
@@ -293,29 +288,14 @@ const Models = ({ fetchModelFeatureVector, isAllVersions }) => {
       toggleConvertedYaml,
       handleAddTag,
       params.projectName,
-      handleRefresh,
-      filters,
+      refreshModels,
+      modelsFilters,
       selectedModel,
       handleDeployModel,
       showAllVersions,
       isAllVersions
     ]
   )
-
-  const tableContent = useMemo(() => {
-    return (isAllVersions ? modelVersions : models).map(contentItem =>
-      createModelsRowData(contentItem, params.projectName, isAllVersions)
-    )
-  }, [isAllVersions, modelVersions, models, params.projectName])
-
-  const tableHeaders = useMemo(() => tableContent[0]?.content ?? [], [tableContent])
-
-  const { sortTable, selectedColumnName, getSortingIcon, sortedTableContent, sortedTableHeaders } =
-    useSortTable({
-      headers: tableHeaders,
-      content: tableContent,
-      sortConfig: { excludeSortBy: 'labels', defaultSortBy: 'updated', defaultDirection: 'desc' }
-    })
 
   const applyDetailsChanges = useCallback(
     changes => {
@@ -348,15 +328,8 @@ const Models = ({ fetchModelFeatureVector, isAllVersions }) => {
       }
     }
 
-    handleRefresh(filters)
+    refreshModels(modelsFilters)
   }
-
-  useInitialTableFetch({
-    fetchData,
-    fetchTags,
-    filters,
-    requestTrigger: isAllVersions
-  })
 
   useEffect(() => {
     if (params.id && pageData.details.menu.length > 0) {
@@ -365,10 +338,16 @@ const Models = ({ fetchModelFeatureVector, isAllVersions }) => {
   }, [navigate, location, pageData.details.menu, params.tab, params.id])
 
   useEffect(() => {
+    return () => {
+      setModels([])
+      setModelVersions([])
+    }
+  }, [params.projectName])
+
+  useEffect(() => {
     const tagAbortControllerCurrent = tagAbortControllerRef.current
 
     return () => {
-      setModels([])
       dispatch(removeModels())
       setSelectedModelMin({})
       //temporarily commented till ML-5606 will be done
@@ -377,31 +356,11 @@ const Models = ({ fetchModelFeatureVector, isAllVersions }) => {
       abortControllerRef.current.abort(REQUEST_CANCELED)
       tagAbortControllerCurrent.abort(REQUEST_CANCELED)
     }
-  }, [dispatch, params.projectName, setModels, tagAbortControllerRef])
+  }, [dispatch, params.projectName, tagAbortControllerRef])
 
   useEffect(() => {
     dispatch(setFilters({ groupBy: GROUP_BY_NONE }))
   }, [dispatch, params.projectName])
-
-  useEffect(() => {
-    checkForSelectedModel(
-      params.modelName,
-      isAllVersions ? modelVersions : models,
-      params.id,
-      navigate,
-      params.projectName,
-      setSelectedModelMin,
-      isAllVersions
-    )
-  }, [
-    isAllVersions,
-    modelVersions,
-    models,
-    navigate,
-    params.id,
-    params.modelName,
-    params.projectName
-  ])
 
   useEffect(() => {
     if (
@@ -457,9 +416,9 @@ const Models = ({ fetchModelFeatureVector, isAllVersions }) => {
   const handleRegisterModel = useCallback(() => {
     openPopUp(RegisterModelModal, {
       params,
-      refresh: () => handleRefresh(filters)
+      refresh: () => refreshModels(modelsFilters)
     })
-  }, [params, handleRefresh, filters])
+  }, [params, refreshModels, modelsFilters])
 
   const handleTrainModel = () => {
     openPopUp(JobWizard, {
@@ -470,18 +429,77 @@ const Models = ({ fetchModelFeatureVector, isAllVersions }) => {
     })
   }
 
-  const virtualizationConfig = useVirtualization({
-    rowsData: {
-      content: sortedTableContent,
-      selectedItem: selectedModel
-    },
-    heightData: {
-      headerRowHeight: cssVariables.modelsHeaderRowHeight,
-      rowHeight: cssVariables.modelsRowHeight,
-      rowHeightExtended: cssVariables.modelsRowHeightExtended
-    },
-    activateTableScroll: true
+  const [handleRefreshModels, paginatedModels, searchModelsParams, setSearchModelsParams] =
+    usePagination({
+      hidden: isAllVersions,
+      content: models,
+      refreshContent: refreshModels,
+      filters: modelsFilters,
+      paginationConfigRef: paginationConfigModelsRef,
+      resetPaginationTrigger: `${params.projectName}`
+    })
+  const [
+    handleRefreshModelVersions,
+    paginatedModelVersions,
+    searchModelVersionsParams,
+    setSearchModelVersionsParams
+  ] = usePagination({
+    hidden: !isAllVersions,
+    content: modelVersions,
+    refreshContent: refreshModels,
+    filters: modelsFilters,
+    paginationConfigRef: paginationConfigModelVersionsRef,
+    resetPaginationTrigger: `${params.projectName}_${isAllVersions}`
   })
+
+  const tableContent = useMemo(() => {
+    return (isAllVersions ? paginatedModelVersions : paginatedModels).map(contentItem =>
+      createModelsRowData(contentItem, params.projectName, isAllVersions)
+    )
+  }, [isAllVersions, paginatedModelVersions, paginatedModels, params.projectName])
+
+  const tableHeaders = useMemo(() => tableContent[0]?.content ?? [], [tableContent])
+
+  useEffect(() => {
+    checkForSelectedModel(
+      params.modelName,
+      isAllVersions ? paginatedModelVersions : paginatedModels,
+      params.id,
+      navigate,
+      params.projectName,
+      setSelectedModelMin,
+      isAllVersions,
+      isAllVersions ? searchModelVersionsParams : searchModelsParams,
+      isAllVersions ? paginationConfigModelVersionsRef : paginationConfigModelsRef
+    )
+  }, [
+    isAllVersions,
+    paginatedModelVersions,
+    paginatedModels,
+    navigate,
+    params.id,
+    params.modelName,
+    params.projectName,
+    searchModelVersionsParams,
+    searchModelsParams
+  ])
+
+  const getAndSetSelectedArtifact = useCallback(() => {
+    setFullSelectedArtifact(
+      MODELS_TAB,
+      dispatch,
+      navigate,
+      selectedModelMin,
+      setSelectedModel,
+      params.projectName,
+      params.id,
+      isAllVersions
+    )
+  }, [dispatch, isAllVersions, navigate, params.projectName, params.id, selectedModelMin])
+
+  useEffect(() => {
+    getAndSetSelectedArtifact()
+  }, [getAndSetSelectedArtifact])
 
   return (
     <ModelsView
@@ -490,32 +508,31 @@ const Models = ({ fetchModelFeatureVector, isAllVersions }) => {
       applyDetailsChangesCallback={applyDetailsChangesCallback}
       artifactsStore={artifactsStore}
       detailsFormInitialValues={detailsFormInitialValues}
-      filters={filters}
+      filters={modelsFilters}
       filtersConfig={filtersConfig}
       filtersStore={filtersStore}
       getAndSetSelectedArtifact={getAndSetSelectedArtifact}
-      handleRefresh={handleRefresh}
+      handleRefreshModels={isAllVersions ? handleRefreshModelVersions : handleRefreshModels}
       handleRefreshWithFilters={handleRefreshWithFilters}
       handleRegisterModel={handleRegisterModel}
       handleTrainModel={handleTrainModel}
       isAllVersions={isAllVersions}
       isDemoMode={isDemoMode}
-      maxArtifactsErrorIsShown={maxArtifactsErrorIsShown}
-      models={isAllVersions ? modelVersions : models}
       modelName={params.modelName}
+      models={isAllVersions ? modelVersions : models}
       pageData={pageData}
+      paginationConfigModelsRef={
+        isAllVersions ? paginationConfigModelVersionsRef : paginationConfigModelsRef
+      }
       projectName={params.projectName}
       ref={{ modelsRef }}
       requestErrorMessage={requestErrorMessage}
       selectedModel={selectedModel}
-      setMaxArtifactsErrorIsShown={setMaxArtifactsErrorIsShown}
-      setSearchParams={setSearchParams}
+      setSearchModelsParams={isAllVersions ? setSearchModelVersionsParams : setSearchModelsParams}
       setSelectedModelMin={setSelectedModelMin}
-      sortProps={{ sortTable, selectedColumnName, getSortingIcon }}
-      tableContent={sortedTableContent}
-      tableHeaders={sortedTableHeaders}
+      tableContent={tableContent}
+      tableHeaders={tableHeaders}
       viewMode={viewMode}
-      virtualizationConfig={virtualizationConfig}
     />
   )
 }

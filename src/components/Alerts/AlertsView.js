@@ -33,7 +33,6 @@ import { getCloseDetailsAlertLink } from '../../utils/link-helper.util'
 import { ALERTS_FILTERS, ALERTS_PAGE } from '../../constants'
 
 const AlertsView = ({
-  actionsMenu,
   alertsFiltersConfig,
   alertsStore,
   filters,
@@ -88,7 +87,7 @@ const AlertsView = ({
             ) : (
               <>
                 <Table
-                  actionsMenu={actionsMenu}
+                  actionsMenu={[]}
                   getCloseDetailsLink={() => getCloseDetailsAlertLink()} //TODO: the getCloseDetailsLink will be updated with ML-8368
                   pageData={pageData}
                   retryRequest={handleRefreshWithFilters}
@@ -125,7 +124,6 @@ const AlertsView = ({
 }
 
 AlertsView.propTypes = {
-  actionsMenu: PropTypes.array.isRequired,
   alertsFiltersConfig: PropTypes.object.isRequired,
   alertsStore: PropTypes.object.isRequired,
   filters: PropTypes.object.isRequired,

@@ -21,27 +21,25 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { isEmpty } from 'lodash'
 
-import PreviewModal from '../../elements/PreviewModal/PreviewModal'
-import Breadcrumbs from '../../common/Breadcrumbs/Breadcrumbs'
-import Table from '../Table/Table'
-import ArtifactsTableRow from '../../elements/ArtifactsTableRow/ArtifactsTableRow'
-import Loader from '../../common/Loader/Loader'
-import NoData from '../../common/NoData/NoData'
-import Details from '../Details/Details'
-import WarningMessage from '../../common/WarningMessage/WarningMessage'
 import ActionBar from '../ActionBar/ActionBar'
 import ArtifactsFilters from '../ArtifactsActionBar/ArtifactsFilters'
+import ArtifactsTableRow from '../../elements/ArtifactsTableRow/ArtifactsTableRow'
+import Breadcrumbs from '../../common/Breadcrumbs/Breadcrumbs'
+import Details from '../Details/Details'
 import HistoryBackLink from '../../common/HistoryBackLink/historyBackLink'
+import Loader from '../../common/Loader/Loader'
+import NoData from '../../common/NoData/NoData'
+import Pagination from '../../common/Pagination/Pagination'
+import PreviewModal from '../../elements/PreviewModal/PreviewModal'
+import Table from '../Table/Table'
 
 import { ALL_VERSIONS_PATH, DATASETS_PAGE, DATASETS_TAB, FULL_VIEW_MODE } from '../../constants'
-import { getNoDataMessage } from '../../utils/getNoDataMessage'
-import { registerDatasetTitle } from './datasets.util'
-import { ACTIONS_MENU, VIRTUALIZATION_CONFIG } from '../../types'
+import { ACTIONS_MENU } from '../../types'
 import { SECONDARY_BUTTON } from 'igz-controls/constants'
-import { SORT_PROPS } from 'igz-controls/types'
-import { isRowRendered } from '../../hooks/useVirtualization.hook'
-import { getSavedSearchParams } from '../../utils/filter.util'
 import { getCloseDetailsLink } from '../../utils/link-helper.util'
+import { getNoDataMessage } from '../../utils/getNoDataMessage'
+import { getSavedSearchParams } from '../../utils/filter.util'
+import { registerDatasetTitle } from './datasets.util'
 
 const DatasetsView = React.forwardRef(
   (
@@ -50,30 +48,28 @@ const DatasetsView = React.forwardRef(
       applyDetailsChanges,
       applyDetailsChangesCallback,
       artifactsStore,
-      datasets,
       datasetName,
+      datasets,
       detailsFormInitialValues,
       filters,
       filtersConfig,
       filtersStore,
       getAndSetSelectedArtifact,
-      handleRefresh,
+      handleRefreshDatasets,
       handleRefreshWithFilters,
       handleRegisterDataset,
       isAllVersions,
-      maxArtifactsErrorIsShown,
       pageData,
+      paginationConfigDatasetsRef,
       projectName,
       requestErrorMessage,
       selectedDataset,
-      setMaxArtifactsErrorIsShown,
+      setSearchDatasetsParams,
       setSearchParams,
       setSelectedDatasetMin,
-      sortProps,
       tableContent,
       tableHeaders,
-      viewMode = null,
-      virtualizationConfig
+      viewMode = null
     },
     { datasetsRef }
   ) => {
@@ -105,16 +101,16 @@ const DatasetsView = React.forwardRef(
                   filters={filters}
                   filtersConfig={filtersConfig}
                   navigateLink={`/projects/${projectName}/${DATASETS_TAB}${isAllVersions ? `/${datasetName}/${ALL_VERSIONS_PATH}` : ''}${window.location.search}`}
-                  handleRefresh={handleRefresh}
+                  handleRefresh={handleRefreshDatasets}
                   page={DATASETS_PAGE}
-                  setSearchParams={setSearchParams}
+                  setSearchParams={setSearchDatasetsParams}
                   withRefreshButton
                   withoutExpandButton
                 >
                   <ArtifactsFilters artifacts={datasets} isAllVersions={isAllVersions} />
                 </ActionBar>
               </div>
-              {artifactsStore.loading ? null : datasets.length === 0 ? (
+              {artifactsStore.loading ? null : tableContent.length === 0 ? (
                 <NoData
                   message={getNoDataMessage(
                     filters,
@@ -128,12 +124,6 @@ const DatasetsView = React.forwardRef(
               ) : (
                 <>
                   {artifactsStore.dataSets.datasetLoading && <Loader />}
-                  {maxArtifactsErrorIsShown && (
-                    <WarningMessage
-                      message="The query response displays up to 1000 items. Use filters to narrow down the results."
-                      handleClose={() => setMaxArtifactsErrorIsShown(false)}
-                    />
-                  )}
                   <Table
                     actionsMenu={actionsMenu}
                     applyDetailsChanges={applyDetailsChanges}
@@ -146,24 +136,23 @@ const DatasetsView = React.forwardRef(
                     pageData={pageData}
                     retryRequest={handleRefreshWithFilters}
                     selectedItem={selectedDataset}
-                    sortProps={sortProps}
                     tableClassName="datasets-table"
                     tableHeaders={tableHeaders ?? []}
-                    virtualizationConfig={virtualizationConfig}
                   >
-                    {tableContent.map(
-                      (tableItem, index) =>
-                        isRowRendered(virtualizationConfig, index) && (
-                          <ArtifactsTableRow
-                            actionsMenu={actionsMenu}
-                            key={tableItem.data.ui.identifierUnique}
-                            rowIndex={index}
-                            rowItem={tableItem}
-                            selectedItem={selectedDataset}
-                          />
-                        )
-                    )}
+                    {tableContent.map((tableItem, index) => (
+                      <ArtifactsTableRow
+                        actionsMenu={actionsMenu}
+                        key={tableItem.data.ui.identifierUnique}
+                        rowIndex={index}
+                        rowItem={tableItem}
+                        selectedItem={selectedDataset}
+                      />
+                    ))}
                   </Table>
+                  <Pagination
+                    paginationConfig={paginationConfigDatasetsRef.current}
+                    closeParamName={isAllVersions ? ALL_VERSIONS_PATH : DATASETS_TAB}
+                  />
                 </>
               )}
               {viewMode === FULL_VIEW_MODE && !isEmpty(selectedDataset) && (
@@ -195,30 +184,26 @@ DatasetsView.propTypes = {
   applyDetailsChanges: PropTypes.func.isRequired,
   applyDetailsChangesCallback: PropTypes.func.isRequired,
   artifactsStore: PropTypes.object.isRequired,
-  datasets: PropTypes.arrayOf(PropTypes.object).isRequired,
   datasetName: PropTypes.string,
+  datasets: PropTypes.arrayOf(PropTypes.object).isRequired,
   detailsFormInitialValues: PropTypes.object.isRequired,
   filters: PropTypes.object.isRequired,
   filtersConfig: PropTypes.object.isRequired,
   filtersStore: PropTypes.object.isRequired,
   getAndSetSelectedArtifact: PropTypes.func.isRequired,
-  handleRefresh: PropTypes.func.isRequired,
+  handleRefreshDatasets: PropTypes.func.isRequired,
   handleRefreshWithFilters: PropTypes.func.isRequired,
   handleRegisterDataset: PropTypes.func.isRequired,
   isAllVersions: PropTypes.bool.isRequired,
-  maxArtifactsErrorIsShown: PropTypes.bool.isRequired,
   pageData: PropTypes.object.isRequired,
   projectName: PropTypes.string.isRequired,
   requestErrorMessage: PropTypes.string.isRequired,
   selectedDataset: PropTypes.object.isRequired,
-  setMaxArtifactsErrorIsShown: PropTypes.func.isRequired,
-  setSearchParams: PropTypes.func.isRequired,
+  setSearchDatasetsParams: PropTypes.func.isRequired,
   setSelectedDatasetMin: PropTypes.func.isRequired,
-  sortProps: SORT_PROPS,
   tableContent: PropTypes.arrayOf(PropTypes.object).isRequired,
   tableHeaders: PropTypes.arrayOf(PropTypes.object).isRequired,
-  viewMode: PropTypes.string,
-  virtualizationConfig: VIRTUALIZATION_CONFIG.isRequired
+  viewMode: PropTypes.string
 }
 
 export default DatasetsView

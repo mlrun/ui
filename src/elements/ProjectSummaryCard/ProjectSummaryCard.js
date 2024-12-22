@@ -18,11 +18,12 @@ under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
 import React from 'react'
-import { Link } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import PropTypes from 'prop-types'
 
 import Loader from '../../common/Loader/Loader'
-import { Tip, Tooltip, TextTooltipTemplate } from 'igz-controls/components'
+import { Tooltip, TextTooltipTemplate } from 'igz-controls/components'
+import StatsCard from '../../common/StatsCard/StatsCard'
 
 const ProjectSummaryCard = ({
   counterValue,
@@ -32,32 +33,38 @@ const ProjectSummaryCard = ({
   title,
   tooltipText = null
 }) => {
+  const navigate = useNavigate()
   return (
-    <Link to={link} className="project-data-card project-data-card_small">
-      <Tooltip
-        className="data-ellipsis"
-        hidden={!tooltipText}
-        template={<TextTooltipTemplate text={tooltipText} />}
-      >
-        <div className="project-data-card__header">
-          <div className="project-data-card__header-text data-ellipsis">
-            {title}
-            {tip && <Tip className="project-data-card__header-tip" text={tip} />}
-          </div>
-          <div className="project-data-card__statistics">
-            <div className="project-data-card__statistics-item">
-              {projectSummary.loading ? (
-                <Loader section />
-              ) : (
-                <div className="project-data-card__statistics-value statistics_default">
-                  {projectSummary.error ? 'N/A' : counterValue}
+    <StatsCard className="monitoring-stats">
+      <StatsCard.Header title={title} tip={tip}></StatsCard.Header>
+      <StatsCard.Row>
+        <StatsCard.Col>
+          <Tooltip
+            className="data-ellipsis"
+            hidden={!tooltipText}
+            template={<TextTooltipTemplate text={tooltipText} />}
+          >
+            <div className="project-data-card__header">
+              <div
+                className="stats__link"
+                onClick={() => navigate(link)}
+                data-testid={`monitoring-${title}`}
+              >
+                <div className="stats__counter">
+                  {projectSummary.loading ? (
+                    <Loader section small secondary />
+                  ) : projectSummary.error ? (
+                    'N/A'
+                  ) : (
+                    counterValue
+                  )}
                 </div>
-              )}
+              </div>
             </div>
-          </div>
-        </div>
-      </Tooltip>
-    </Link>
+          </Tooltip>
+        </StatsCard.Col>
+      </StatsCard.Row>
+    </StatsCard>
   )
 }
 

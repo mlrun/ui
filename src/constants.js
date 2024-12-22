@@ -601,6 +601,7 @@ export const LOAD_SOURCE_ON_RUN = 'load_source_on_run'
 
 export const ARTIFACT_TYPE = 'artifact'
 export const DATASET_TYPE = 'dataset'
+export const DOCUMENT_TYPE = 'document'
 export const MODEL_TYPE = 'model'
 export const ARTIFACT_OTHER_TYPE = 'other'
 
