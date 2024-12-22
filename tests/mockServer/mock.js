@@ -924,19 +924,6 @@ function getAlerts(req, res) {
     )
   }
 
-  // let collectedFeatureSetDigests = []
-  // const findDigestByFeatureSetIndex = index =>
-  //   collectedFeatureSetDigests.find(digest => digest.feature_set_index === index)
-  //
-  // console.log(findDigestByFeatureSetIndex)
-  // if (req.query['entity']) {
-  //   collectedAlerts = collectedAlerts.filter(feature => {
-  //     return findDigestByFeatureSetIndex(feature.feature_set_index)?.spec?.entities.some(
-  //       item => item.name === req.query['entity']
-  //     )
-  //   })
-  // }
-
   res.send({ activations: collectedAlerts, paginatedAlerts, pagination })
 }
 
