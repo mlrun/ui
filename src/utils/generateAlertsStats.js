@@ -17,7 +17,7 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import { APPLICATION, ENDPOINT, ENTITY_TYPE, JOB } from '../constants'
+import { ENTITY_TYPE, JOB, MODEL_ENDPOINT_RESULT, MODEL_MONITORING_APPLICATION } from '../constants'
 
 export const generateAlertsStats = (data, navigate, projectName) => {
   const navigateToAlertsPage = (filters = {}) => {
@@ -25,8 +25,8 @@ export const generateAlertsStats = (data, navigate, projectName) => {
   }
 
   return {
-    all: {
-      counter: data.all,
+    total: {
+      counter: data.total,
       link: () => navigateToAlertsPage({})
     },
     job: {
@@ -35,11 +35,11 @@ export const generateAlertsStats = (data, navigate, projectName) => {
     },
     endpoints: {
       counter: data.endpoint,
-      link: () => navigateToAlertsPage({ [ENTITY_TYPE]: ENDPOINT })
+      link: () => navigateToAlertsPage({ [ENTITY_TYPE]: MODEL_ENDPOINT_RESULT })
     },
     application: {
       counter: data.application,
-      link: () => navigateToAlertsPage({ [ENTITY_TYPE]: APPLICATION })
+      link: () => navigateToAlertsPage({ [ENTITY_TYPE]: MODEL_MONITORING_APPLICATION })
     }
   }
 }

@@ -458,18 +458,21 @@ export const setFullSelectedFunction = debounce(
     if (isEmpty(selectedFunctionMin) || !functionId) {
       setSelectedFunction({})
     } else {
+      const { uid: paramsHash } = parseIdentifier(functionId)
       const { name, hash, tag } = selectedFunctionMin
 
-      fetchAndParseFunction(dispatch, fetchFunction, projectName, name, hash, tag, true)
-        .then(parsedFunction => {
-          setSelectedFunction(parsedFunction)
-        })
-        .catch(() => {
-          setSelectedFunction({})
-          navigate(`/projects/${projectName}/functions${window.location.search}`, {
-            replace: true
+      if (paramsHash === hash) {
+        fetchAndParseFunction(dispatch, fetchFunction, projectName, name, hash, tag, true)
+          .then(parsedFunction => {
+            setSelectedFunction(parsedFunction)
           })
-        })
+          .catch(() => {
+            setSelectedFunction({})
+            navigate(`/projects/${projectName}/functions${window.location.search}`, {
+              replace: true
+            })
+          })
+      }
     }
   },
   20
@@ -567,8 +570,7 @@ export const checkForSelectedFunction = debounce(
     } else {
       setSelectedFunction({})
     }
-  },
-  20
+  }
 )
 
 export const searchFunctionItem = (

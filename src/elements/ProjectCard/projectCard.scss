@@ -13,6 +13,11 @@
   cursor: pointer;
   transition: box-shadow 0.3s ease-in-out;
 
+  & > .section-loader {
+    position: absolute;
+    z-index: 10;
+  }
+
   @include gradient('card');
 
   &__general-info {

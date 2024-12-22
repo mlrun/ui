@@ -18,9 +18,9 @@ under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
 import { useCallback, useEffect, useMemo } from 'react'
-
-import { truncate, upperFirst } from 'lodash'
+import PropTypes from 'prop-types'
 import { useForm, useFormState } from 'react-final-form'
+import { truncate, upperFirst } from 'lodash'
 import { useSelector } from 'react-redux'
 
 import StatusFilter from '../../common/StatusFilter/StatusFilter'
@@ -36,8 +36,6 @@ import {
 } from './alerts.util'
 
 import {
-  APPLICATION,
-  ENDPOINT,
   ENDPOINT_APPLICATION,
   ENDPOINT_RESULT,
   ENTITY_ID,
@@ -46,11 +44,13 @@ import {
   FILTER_ALL_ITEMS,
   JOB,
   JOB_NAME,
+  MODEL_ENDPOINT_RESULT,
+  MODEL_MONITORING_APPLICATION,
   PROJECTS_FILTER,
   SEVERITY
 } from '../../constants'
 
-const AlertsFilters = () => {
+const AlertsFilters = ({ isCrossProjects }) => {
   const form = useForm()
   const {
     values: { [ENTITY_TYPE]: entityType }
@@ -70,9 +70,9 @@ const AlertsFilters = () => {
   const getFieldsToReset = useCallback(entityType => {
     const fieldsByType = {
       [FILTER_ALL_ITEMS]: [ENTITY_ID],
-      [APPLICATION]: [ENTITY_ID],
+      [MODEL_MONITORING_APPLICATION]: [ENTITY_ID],
       [JOB]: [JOB_NAME],
-      [ENDPOINT]: [ENDPOINT_APPLICATION, ENDPOINT_RESULT]
+      [MODEL_ENDPOINT_RESULT]: [ENDPOINT_APPLICATION, ENDPOINT_RESULT]
     }
     const allFields = [ENTITY_ID, JOB_NAME, ENDPOINT_APPLICATION, ENDPOINT_RESULT]
 
@@ -89,9 +89,11 @@ const AlertsFilters = () => {
 
   return (
     <>
-      <div className="form-row">
-        <FormSelect label="Project name" name={PROJECTS_FILTER} options={projectsList} />
-      </div>
+      {isCrossProjects && (
+        <div className="form-row">
+          <FormSelect label="Project name" name={PROJECTS_FILTER} options={projectsList} />
+        </div>
+      )}
       <div className="form-row">
         <FormSelect
           label="Entity type"
@@ -100,7 +102,7 @@ const AlertsFilters = () => {
         />
       </div>
 
-      {(entityType === FILTER_ALL_ITEMS || entityType === APPLICATION) && (
+      {(entityType === FILTER_ALL_ITEMS || entityType === MODEL_MONITORING_APPLICATION) && (
         <div className="form-row">
           <FormInput label="Entity ID" name={ENTITY_ID} placeholder="Search by ID" />
           <FormOnChange handler={value => handleInputChange(value, ENTITY_ID)} name={ENTITY_ID} />
@@ -112,7 +114,7 @@ const AlertsFilters = () => {
           <FormOnChange handler={value => handleInputChange(value, JOB_NAME)} name={JOB_NAME} />
         </div>
       )}
-      {entityType === ENDPOINT && (
+      {entityType === MODEL_ENDPOINT_RESULT && (
         <>
           <div className="form-row">
             <FormInput
@@ -142,10 +144,18 @@ const AlertsFilters = () => {
         <StatusFilter statusList={filterAlertsSeverityOptions} name={SEVERITY} />
       </div>
       <div className="form-row">
-        <FormSelect label="Event type" name={EVENT_TYPE} options={filterAlertsEventTypeOptions} />
+        <FormSelect
+          label="Event type"
+          name={EVENT_TYPE}
+          options={filterAlertsEventTypeOptions(entityType)}
+        />
       </div>
     </>
   )
+}
+
+AlertsFilters.propTypes = {
+  isCrossProjects: PropTypes.bool.isRequired
 }
 
 export default AlertsFilters

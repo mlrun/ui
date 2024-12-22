@@ -362,7 +362,7 @@ const WorkflowsTable = React.forwardRef(
 
     const onDeleteJob = useCallback(
       job => {
-        handleDeleteJob(true, job, refreshWorkflow, filters, dispatch).then(() => {
+        handleDeleteJob(false, job, refreshWorkflow, filters, dispatch).then(() => {
           navigate(
             location.pathname
               .split('/')

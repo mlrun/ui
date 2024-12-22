@@ -29,8 +29,10 @@ const DetailsCollections = ({ selectedItem }) => {
         <h5 className="collections-list__header-item">Name</h5>
       </div>
       <div className="collections-list__body">
-        {Object.keys(selectedItem.collections).map((collectionItemKey, index) => (
-          <div className="collections-list__body-item">{collectionItemKey}</div>
+        {Object.keys(selectedItem?.collections || {}).map((collectionItemKey, index) => (
+          <div className="collections-list__body-item" key={collectionItemKey}>
+            {collectionItemKey}
+          </div>
         ))}
       </div>
     </div>

@@ -50,17 +50,19 @@ const ScheduledJobsCounters = () => {
       <StatsCard.Header title="Scheduled">
         <StatsCard.Col>
           <div className="project-card__info">
-            <span className="stats__subtitle">Total</span>
             <div
-              className="stats__counter"
-              onClick={scheduledStats.total.link}
+              className="stats__link"
               data-testid="scheduled_total_counter"
+              onClick={scheduledStats.total.link}
             >
-              {projectStore.projectsSummary.loading ? (
-                <Loader section small secondary />
-              ) : (
-                scheduledStats.total.counter
-              )}
+              <span className="stats__subtitle">Total</span>
+              <div className="stats__counter">
+                {projectStore.projectsSummary.loading ? (
+                  <Loader section small secondary />
+                ) : (
+                  scheduledStats.total.counter
+                )}
+              </div>
             </div>
             <ClockIcon className="project-card__info-icon" />
             <span>Next 24 hours</span>
