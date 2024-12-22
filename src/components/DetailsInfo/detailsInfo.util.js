@@ -211,7 +211,7 @@ export const generateAlertsDetailsInfo = pageData => {
         <div>
           <div className="notifications-item_header">{upperFirst(notification.kind)}</div>
           <div className="notifications-item_header-text">
-            {`${notification.succeeded} done `}
+            {`${notification.succeeded} success `}
             <span className={notification.failed > 0 ? 'text-red' : ''}>
               {`${notification.failed} failed`}
             </span>
