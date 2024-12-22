@@ -269,7 +269,6 @@ export const generateActionsMenu = (
       {
         label: 'Delete',
         icon: <Delete />,
-        disabled: datasetMin?.tag === TAG_FILTER_LATEST,
         hidden: isDetailsPopUp,
         className: 'danger',
         onClick: () =>

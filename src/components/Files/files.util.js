@@ -251,7 +251,6 @@ export const generateActionsMenu = (
       {
         label: 'Delete',
         icon: <Delete />,
-        disabled: fileMin?.tag === TAG_FILTER_LATEST,
         hidden: isDetailsPopUp,
         className: 'danger',
         onClick: () =>
