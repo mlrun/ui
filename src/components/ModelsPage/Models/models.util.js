@@ -325,6 +325,7 @@ export const generateActionsMenu = (
         label: 'Delete',
         icon: <Delete />,
         className: 'danger',
+        disabled: modelMin?.tag === TAG_FILTER_LATEST,
         hidden: isDetailsPopUp,
         onClick: () =>
           openDeleteConfirmPopUp(
@@ -344,7 +345,7 @@ export const generateActionsMenu = (
           )
       },
       {
-        label: 'Delete all',
+        label: 'Delete all versions',
         icon: <Delete />,
         hidden: isAllVersions || isDetailsPopUp,
         className: 'danger',

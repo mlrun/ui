@@ -269,6 +269,7 @@ export const generateActionsMenu = (
       {
         label: 'Delete',
         icon: <Delete />,
+        disabled: datasetMin?.tag === TAG_FILTER_LATEST,
         hidden: isDetailsPopUp,
         className: 'danger',
         onClick: () =>
@@ -297,7 +298,7 @@ export const generateActionsMenu = (
               )
       },
       {
-        label: 'Delete all',
+        label: 'Delete all versions',
         icon: <Delete />,
         hidden: isDetailsPopUp || isAllVersions,
         className: 'danger',
