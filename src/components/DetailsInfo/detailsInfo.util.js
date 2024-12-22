@@ -206,11 +206,11 @@ export const generateAlertsDetailsInfo = pageData => {
       triggerCriteriaDetailsInfo: []
     }
     AlertsDetailsInfo.notificationsDetailsInfo = notifications.map((notification, index) => (
-      <li className="item" key={index}>
-        <div className="icon">{notification.icon}</div>
+      <li className="notifications-item" key={index}>
+        <div className="notifications-item_icon">{notification.icon}</div>
         <div>
-          <div className="title">{upperFirst(notification.kind)}</div>
-          <div className="text">
+          <div className="notifications-item_header">{upperFirst(notification.kind)}</div>
+          <div className="notifications-item_header-text">
             {`${notification.succeeded} done `}
             <span className={notification.failed > 0 ? 'text-red' : ''}>
               {`${notification.failed} failed`}

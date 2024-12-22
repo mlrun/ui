@@ -34,51 +34,7 @@ $itemInfoWithoutPadding: item-info-without-padding;
     &-notification {
       display: flex;
       flex-wrap: wrap;
-      row-gap: 10px;
-
-      .text {
-        color: $topaz;
-        font-size: 15px;
-      }
-
-      .icon {
-        svg {
-          width: 40px;
-          height: 40px;
-        }
-
-        .notification-fail {
-          position: absolute;
-          top: 22px;
-          left: 27px;
-
-          svg {
-            width: 16px;
-            height: 16px;
-          }
-        }
-      }
-
-      .title {
-        font-weight: bold;
-        font-size: 10px;
-      }
-
-      .text-red {
-        color: $ceriseRed;
-      }
-
-      .item:not(:last-child) {
-        margin-right: 12px;
-        border-right: $secondaryBorder;
-      }
-
-      .item {
-        display: flex;
-        gap: 10px;
-        align-items: center;
-        padding-right: 12px;
-      }
+      gap: 5px;
     }
 
     &-wrapper {
