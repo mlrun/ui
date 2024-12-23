@@ -20,7 +20,7 @@ such restriction.
 import React, { useCallback } from 'react'
 import PropTypes from 'prop-types'
 
-import AlertLogsPopup from './AlertLogPopup'
+import AlertLogsModal from './AlertLogPopup'
 
 import DetailsInfo from '../DetailsInfo/DetailsInfo'
 import DetailsLogs from '../DetailsLogs/DetailsLogs'
@@ -38,8 +38,8 @@ const DetailsDrillDownAlert = React.forwardRef(
     { detailsStore, isDetailsPopUp, pageData, selectedItem, setChangesCounter, setChangesData },
     applyChangesRef
   ) => {
-    const openRegisterModelModal = useCallback(() => {
-      openPopUp(AlertLogsPopup, { selectedItem, pageData })
+    const openAlertsLogsModal = useCallback(() => {
+      openPopUp(AlertLogsModal, { selectedItem, pageData })
     }, [pageData, selectedItem])
 
     return (
@@ -60,7 +60,7 @@ const DetailsDrillDownAlert = React.forwardRef(
               <div
                 className="details-close-btn"
                 data-testid="details-close-btn"
-                onClick={openRegisterModelModal}
+                onClick={openAlertsLogsModal}
               >
                 <RoundedIcon tooltipText="Close" id="details-close">
                   <EnlargeIcon />

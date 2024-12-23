@@ -17,6 +17,7 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
+import PropTypes from 'prop-types'
 import { useLocation } from 'react-router-dom'
 
 import DetailsLogs from '../DetailsLogs/DetailsLogs'
@@ -24,7 +25,7 @@ import { Modal } from 'igz-controls/components'
 
 import { MODAL_MAX } from 'iguazio.dashboard-react-controls/dist/constants'
 
-const AlertLogsPopup = ({ isOpen, onResolve, pageData, selectedItem }) => {
+const AlertLogsModal = ({ isOpen, onResolve, pageData, selectedItem }) => {
   const location = useLocation()
 
   return (
@@ -46,4 +47,11 @@ const AlertLogsPopup = ({ isOpen, onResolve, pageData, selectedItem }) => {
   )
 }
 
-export default AlertLogsPopup
+AlertLogsModal.propTypes = {
+  isOpen: PropTypes.bool.isRequired,
+  onResolve: PropTypes.func.isRequired,
+  pageData: PropTypes.object.isRequired,
+  selectedItem: PropTypes.shape({}).isRequired
+}
+
+export default AlertLogsModal

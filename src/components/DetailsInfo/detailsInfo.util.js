@@ -42,6 +42,27 @@ import { generateFunctionPriorityLabel } from '../../utils/generateFunctionPrior
 import { openPopUp } from 'igz-controls/utils/common.util'
 import { TextTooltipTemplate, Tooltip } from 'iguazio.dashboard-react-controls/dist/components'
 
+export const generateTriggerInfoContent = criteria => {
+  if (criteria) {
+    return [
+      {
+        label: 'Trigger criteria count',
+        id: 'triggerCriteriaCount',
+        value: criteria?.count
+      },
+      {
+        label: 'Trigger criteria time period',
+        id: 'triggerCriteriaTimePeriod',
+        value: criteria?.period
+      }
+    ]
+  }
+
+  return []
+}
+
+export const notifications = [{ label: 'Notifications', id: 'notifications' }]
+
 export const generateArtifactsInfoContent = (page, pageTab, selectedItem) => {
   if (pageTab === MODEL_ENDPOINTS_TAB) {
     const { name, tag } =
@@ -198,12 +219,9 @@ export const generateDriftDetailsInfo = modelEndpoint => {
     : []
 }
 
-export const generateAlertsDetailsInfo = pageData => {
-  if (pageData.page === ALERTS_PAGE) {
-    const triggerCriteriaContent = pageData?.details?.triggerCriteria(
-      pageData?.selectedAlert?.criteria
-    )
-    const notifications = pageData?.selectedAlert?.notifications
+export const generateAlertsDetailsInfo = selectedItem => {
+  if (selectedItem.page === ALERTS_PAGE) {
+    const triggerCriteriaContent = generateTriggerInfoContent(selectedItem?.criteria)
     const AlertsDetailsInfo = {
       notificationsDetailsInfo: [],
       triggerCriteriaDetailsInfo: []
