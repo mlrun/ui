@@ -31,11 +31,6 @@ $itemInfoWithoutPadding: item-info-without-padding;
     padding: 0 0 0 0;
     list-style-type: none;
 
-    &-notification {
-      display: flex;
-      gap: 5px;
-    }
-
     &-wrapper {
       flex: 1;
       min-width: 100%;
@@ -72,11 +67,6 @@ $itemInfoWithoutPadding: item-info-without-padding;
         font-weight: 500;
         font-size: 15px;
         line-height: 18px;
-
-        &_max-content-width {
-          width: max-content;
-          min-width: 160px;
-        }
       }
 
       &__tip {
@@ -90,17 +80,6 @@ $itemInfoWithoutPadding: item-info-without-padding;
         min-width: 110px;
         color: $topaz;
         word-break: break-word;
-
-        .alert-icon-cell {
-          display: flex;
-          gap: 8px;
-          align-items: center;
-
-          svg {
-            width: 20px;
-            height: 20px;
-          }
-        }
 
         &_multiline {
           display: inline-block;
