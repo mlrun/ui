@@ -113,14 +113,8 @@ const JobsTable = React.forwardRef(
     }, [filters, refreshJobs])
 
     const pageData = useMemo(
-      () =>
-        generatePageData(
-          handleFetchJobLogs,
-          selectedJob,
-          appStore.frontendSpec.jobs_dashboard_url,
-          handleMonitoring
-        ),
-      [handleFetchJobLogs, selectedJob, appStore.frontendSpec.jobs_dashboard_url, handleMonitoring]
+      () => generatePageData(handleFetchJobLogs, selectedJob),
+      [handleFetchJobLogs, selectedJob]
     )
 
     const setJobStatusAborting = useCallback(
