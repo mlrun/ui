@@ -94,11 +94,8 @@ export const generatePageData = (handleFetchJobLogs, selectedAlert) => {
       entityType: selectedAlert.entity_kind,
       infoHeaders: alertsHeaders(selectedAlert.entity_kind),
       menu: [],
-      notifications,
-      refreshLogs: handleFetchJobLogs,
-      triggerCriteria: triggerCriteria
-    },
-    selectedAlert
+      refreshLogs: handleFetchJobLogs
+    }
   }
 }
 
@@ -212,24 +209,3 @@ export const alertsHeaders = type => {
 
   return []
 }
-
-const triggerCriteria = criteria => {
-  if (criteria) {
-    return [
-      {
-        label: 'Trigger criteria count',
-        id: 'triggerCriteriaCount',
-        value: criteria?.count
-      },
-      {
-        label: 'Trigger criteria time period',
-        id: 'triggerCriteriaTimePeriod',
-        value: criteria?.period
-      }
-    ]
-  }
-
-  return []
-}
-
-export const notifications = [{ label: 'Notifications', id: 'notifications' }]
