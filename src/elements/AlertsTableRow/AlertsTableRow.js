@@ -29,8 +29,7 @@ import { getIdentifierMethod } from '../../utils/getUniqueIdentifier'
 
 import './AlertsTableRow.scss'
 
-// TODO:   rowIsExpanded logic will be part of ML-8516
-const AlertsTableRow = ({ handleExpandRow, handleSelectItem, rowItem, selectedItem }) => {
+const AlertsTableRow = ({ handleSelectItem, ifRowSelected, rowItem, selectedItem, toggleRow }) => {
   const parent = useRef()
   const params = useParams()
 
@@ -46,15 +45,15 @@ const AlertsTableRow = ({ handleExpandRow, handleSelectItem, rowItem, selectedIt
   )
 
   return (
-    <tr className={rowClassNames} ref={parent}>
-      <>
-        {rowItem.content.map((value, index) => {
-          return (
+    <>
+      <tr className={rowClassNames} ref={parent}>
+        {rowItem.content.map(
+          (value, index) =>
             !value.hidden && (
               <TableCell
+                className="alert-row__td"
                 data={value}
                 firstCell={index === 0}
-                handleExpandRow={handleExpandRow}
                 item={rowItem.data}
                 key={value.id}
                 link={value.getLink?.(
@@ -65,12 +64,16 @@ const AlertsTableRow = ({ handleExpandRow, handleSelectItem, rowItem, selectedIt
                 selectedItem={selectedItem}
                 selectItem={handleSelectItem}
                 showExpandButton={value.showExpandButton}
+                toggleRow={toggleRow}
               />
             )
-          )
-        })}
-      </>
-    </tr>
+        )}
+        {/*//TODO: move to scss file*/}
+        <td style={{ flex: '1 1 100%' }}>
+          {ifRowSelected && <div style={{ border: '1px solid orange' }}>Selected</div>}
+        </td>
+      </tr>
+    </>
   )
 }
 
@@ -79,7 +82,8 @@ AlertsTableRow.propTypes = {
   mainRowItemsCount: PropTypes.number,
   rowIndex: PropTypes.number.isRequired,
   rowItem: PropTypes.shape({}).isRequired,
-  selectedItem: PropTypes.shape({}).isRequired
+  selectedItem: PropTypes.shape({}).isRequired,
+  toggleRow: PropTypes.func
 }
 
 export default AlertsTableRow

@@ -33,11 +33,12 @@ import { useFiltersFromSearchParams } from '../../hooks/useFiltersFromSearchPara
 
 const Alerts = () => {
   const [selectedAlert, setSelectedAlert] = useState({})
-  const { id: projectId } = useParams()
+  const [selectedRowData, setSelectedRowData] = useState({})
   const [, setProjectsRequestErrorMessage] = useState('')
   const alertsStore = useSelector(state => state.alertsStore)
   const filtersStore = useSelector(store => store.filtersStore)
   const dispatch = useDispatch()
+  const { id: projectId } = useParams()
   const params = useParams()
 
   const isCrossProjects = useMemo(() => projectId === '*', [projectId])
@@ -67,9 +68,11 @@ const Alerts = () => {
     [refreshAlerts, setAlerts]
   )
 
+  const isMetricsTab = true //TODO: remove
+
   const tableContent = useMemo(() => {
-    return paginatedAlerts.map(alert => createAlertRowData(alert, isCrossProjects))
-  }, [isCrossProjects, paginatedAlerts])
+    return paginatedAlerts.map(alert => createAlertRowData(alert, isCrossProjects, isMetricsTab))
+  }, [isMetricsTab, isCrossProjects, paginatedAlerts])
 
   const fetchMinimalProjects = useCallback(() => {
     dispatch(projectsAction.fetchProjects({ format: 'minimal' }, setProjectsRequestErrorMessage))
@@ -95,6 +98,11 @@ const Alerts = () => {
     () => generatePageData(handleFetchJobLogs, selectedAlert),
     [handleFetchJobLogs, selectedAlert]
   )
+
+  const toggleRow = useCallback((e, item) => {
+    // TODO: update
+    setSelectedRowData(item)
+  }, [])
 
   useEffect(() => {
     if (tableContent.length > 0) {
@@ -122,8 +130,10 @@ const Alerts = () => {
       paginationConfigAlertsRef={paginationConfigAlertsRef}
       requestErrorMessage={requestErrorMessage}
       selectedAlert={selectedAlert}
+      selectedRowData={selectedRowData}
       setSearchParams={setSearchParams}
       tableContent={tableContent}
+      toggleRow={toggleRow}
     />
   )
 }

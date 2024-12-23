@@ -41,7 +41,6 @@ import {
 const AlertsDetailsMetrics = ({ selectedItem }) => {
   const [metrics, setMetrics] = useState([])
   const [requestErrorMessage, setRequestErrorMessage] = useState('')
-  const metricsContainerRef = useRef(null)
   const metricsValuesAbortController = useRef(new AbortController())
   const prevSelectedEndPointNameRef = useRef('')
   const [metricOptionsAreLoaded, setMetricOptionsAreLoaded] = useState(false)
@@ -162,7 +161,7 @@ const AlertsDetailsMetrics = ({ selectedItem }) => {
       {generatedMetrics.length === 0 && !detailsStore.loadingCounter && requestErrorMessage ? (
         <NoData message={requestErrorMessage} />
       ) : (
-        <div ref={metricsContainerRef} className="metrics">
+        <div className="metrics">
           {generatedMetrics.map(([applicationName, applicationMetrics]) => (
             <React.Fragment key={applicationName}>
               <div className="metrics__app-name">{applicationName}</div>

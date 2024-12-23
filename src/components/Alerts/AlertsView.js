@@ -46,7 +46,9 @@ const AlertsView = ({
   requestErrorMessage,
   selectedAlert,
   setSearchParams,
-  tableContent
+  selectedRowData,
+  tableContent,
+  toggleRow
 }) => {
   return (
     <>
@@ -98,17 +100,22 @@ const AlertsView = ({
                   tableHeaders={tableContent[0]?.content ?? []}
                   withActionMenu={false}
                 >
-                  {tableContent.map((tableItem, index) => (
-                    <AlertsTableRow
-                      key={index}
-                      hideActionsMenu
-                      handleSelectItem={() => {}}
-                      rowIndex={index}
-                      rowItem={tableItem}
-                      actionsMenu={[]}
-                      selectedItem={selectedAlert}
-                    />
-                  ))}
+                  {tableContent.map((tableItem, index) => {
+                    const ifRowSelected = tableItem?.data?.id === selectedRowData.id //TODO: update logic
+                    return (
+                      <AlertsTableRow
+                        key={index}
+                        hideActionsMenu
+                        handleSelectItem={() => {}}
+                        ifRowSelected={ifRowSelected}
+                        rowIndex={index}
+                        rowItem={tableItem}
+                        actionsMenu={[]}
+                        toggleRow={toggleRow}
+                        selectedItem={selectedAlert}
+                      />
+                    )
+                  })}
                 </Table>
                 <Pagination
                   page={pageData.page}
@@ -137,6 +144,7 @@ AlertsView.propTypes = {
   requestErrorMessage: PropTypes.string.isRequired,
   selectedAlert: PropTypes.object.isRequired,
   setSearchParams: PropTypes.func.isRequired,
-  tableContent: PropTypes.arrayOf(PropTypes.object).isRequired
+  tableContent: PropTypes.arrayOf(PropTypes.object).isRequired,
+  toggleRow: PropTypes.func.isRequired
 }
 export default AlertsView
