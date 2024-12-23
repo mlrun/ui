@@ -18,6 +18,7 @@ under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
 import { capitalize, isNil, isNumber, upperFirst } from 'lodash'
+import classNames from 'classnames'
 
 import DetailsInfoItem from '../../elements/DetailsInfoItem/DetailsInfoItem'
 
@@ -40,7 +41,6 @@ import { isEveryObjectValueEmpty } from '../../utils/isEveryObjectValueEmpty'
 import { roundFloats } from '../../utils/roundFloats'
 import { generateFunctionPriorityLabel } from '../../utils/generateFunctionPriorityLabel'
 import { openPopUp } from 'igz-controls/utils/common.util'
-import classNames from 'classnames'
 
 export const generateArtifactsInfoContent = (page, pageTab, selectedItem) => {
   if (pageTab === MODEL_ENDPOINTS_TAB) {
