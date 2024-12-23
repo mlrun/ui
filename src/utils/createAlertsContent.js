@@ -159,7 +159,7 @@ const getNotificationData = notifications =>
         </div>
       ),
       tooltip: upperFirst(
-        `${notification.summary.succeeded} done, ${notification.summary.failed} failed`
+        `${notification.summary.succeeded} success, ${notification.summary.failed} failed`
       )
     }
   })
