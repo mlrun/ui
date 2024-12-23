@@ -136,7 +136,8 @@ TableView.propTypes = {
   tableHeadRef: PropTypes.shape({}),
   tableHeaders: PropTypes.array,
   tablePanelRef: PropTypes.shape({}),
-  virtualizationConfig: VIRTUALIZATION_CONFIG.isRequired
+  virtualizationConfig: VIRTUALIZATION_CONFIG.isRequired,
+  withActionMenu: PropTypes.bool
 }
 
 export default TableView

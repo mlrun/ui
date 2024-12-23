@@ -147,31 +147,33 @@ const projectsAction = {
     payload: error
   }),
   createProjectSuccess: () => ({ type: CREATE_PROJECT_SUCCESS }),
-  deleteProject: (project, deleteNonEmpty) => dispatch => {
-    dispatch(projectsAction.deleteProjectBegin())
+  deleteProject: (projectName, deleteNonEmpty) => dispatch => {
+    dispatch(projectsAction.deleteProjectBegin(projectName))
 
     return projectsApi
-      .deleteProject(project, deleteNonEmpty)
+      .deleteProject(projectName, deleteNonEmpty)
       .then(response => {
-        dispatch(projectsAction.deleteProjectSuccess())
+        dispatch(projectsAction.deleteProjectSuccess(projectName))
 
         return response
       })
       .catch(error => {
-        dispatch(projectsAction.deleteProjectFailure())
+        dispatch(projectsAction.deleteProjectFailure(projectName))
 
         throw error
       })
   },
-  deleteProjectBegin: () => ({
-    type: DELETE_PROJECT_BEGIN
+  deleteProjectBegin: (projectName) => ({
+    type: DELETE_PROJECT_BEGIN,
+    payload: projectName
   }),
-  deleteProjectFailure: error => ({
+  deleteProjectFailure: (projectName) => ({
     type: DELETE_PROJECT_FAILURE,
-    payload: error
+    payload: projectName
   }),
-  deleteProjectSuccess: () => ({
-    type: DELETE_PROJECT_SUCCESS
+  deleteProjectSuccess: (projectName) => ({
+    type: DELETE_PROJECT_SUCCESS,
+    payload: projectName
   }),
   fetchProject: (project, params, signal) => dispatch => {
     dispatch(projectsAction.fetchProjectBegin())

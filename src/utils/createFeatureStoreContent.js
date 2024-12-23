@@ -132,11 +132,7 @@ export const createFeatureSetsRowData = (featureSet, project, pageTab, showExpan
   }
 }
 
-export const createFeaturesRowData = (
-  feature,
-  isTablePanelOpen,
-  showExpandButton
-) => {
+export const createFeaturesRowData = (feature, isTablePanelOpen, showExpandButton) => {
   return {
     data: {
       ...feature

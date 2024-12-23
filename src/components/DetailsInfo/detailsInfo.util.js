@@ -42,6 +42,25 @@ import { roundFloats } from '../../utils/roundFloats'
 import { generateFunctionPriorityLabel } from '../../utils/generateFunctionPriorityLabel'
 import { openPopUp } from 'igz-controls/utils/common.util'
 
+export const generateTriggerInfoContent = criteria => {
+  if (criteria) {
+    return [
+      {
+        label: 'Trigger criteria count',
+        id: 'triggerCriteriaCount',
+        value: criteria?.count
+      },
+      {
+        label: 'Trigger criteria time period',
+        id: 'triggerCriteriaTimePeriod',
+        value: criteria?.period
+      }
+    ]
+  }
+
+  return []
+}
+
 export const generateArtifactsInfoContent = (page, pageTab, selectedItem) => {
   if (pageTab === MODEL_ENDPOINTS_TAB) {
     const { name, tag } =
@@ -198,14 +217,14 @@ export const generateDriftDetailsInfo = modelEndpoint => {
     : []
 }
 
-export const generateAlertsDetailsInfo = pageData => {
-  if (pageData.page === ALERTS_PAGE) {
-    const triggerCriteria = pageData?.details?.triggerCriteria
-    const notifications = pageData?.selectedAlert?.notifications
+export const generateAlertsDetailsInfo = selectedItem => {
+  if (selectedItem.page === ALERTS_PAGE) {
+    const triggerCriteriaContent = generateTriggerInfoContent(selectedItem?.criteria)
     const AlertsDetailsInfo = {
       notificationsDetailsInfo: [],
       triggerCriteriaDetailsInfo: []
     }
+    const notifications = selectedItem?.notifications
     AlertsDetailsInfo.notificationsDetailsInfo = notifications.map((notification, index) => (
       <li className="notifications-item" key={index}>
         <div className="notifications-item_icon">{notification.icon}</div>
@@ -226,12 +245,10 @@ export const generateAlertsDetailsInfo = pageData => {
       </li>
     ))
 
-    AlertsDetailsInfo.triggerCriteriaDetailsInfo = triggerCriteria.map(trigger => {
+    AlertsDetailsInfo.triggerCriteriaDetailsInfo = triggerCriteriaContent.map(trigger => {
       return (
         <li className="details-item" key={trigger.id}>
-          <div className="details-item__header details-item__header_max-width">
-            {trigger.label}:
-          </div>
+          <div className="alert-row__details-alert-header">{trigger.label}:</div>
           <DetailsInfoItem info={trigger.value} />
         </li>
       )

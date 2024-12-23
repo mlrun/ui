@@ -18,7 +18,7 @@ under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
 import React from 'react'
-import { isEqual } from 'lodash'
+import { debounce, isEqual } from 'lodash'
 
 import JobWizard from '../JobWizard/JobWizard'
 import DeleteArtifactPopUp from '../../elements/DeleteArtifactPopUp/DeleteArtifactPopUp'
@@ -36,7 +36,8 @@ import {
   TAG_FILTER,
   TAG_FILTER_ALL_ITEMS,
   TAG_FILTER_LATEST,
-  VIEW_SEARCH_PARAMETER
+  VIEW_SEARCH_PARAMETER,
+  BE_PAGE
 } from '../../constants'
 import { PRIMARY_BUTTON } from 'igz-controls/constants'
 import { applyTagChanges, chooseOrFetchArtifact } from '../../utils/artifacts.util'
@@ -154,20 +155,24 @@ export const handleApplyDetailsChanges = (
   return applyTagChanges(changes, selectedItem, projectName, dispatch, setNotification)
 }
 
-export const checkForSelectedDataset = (
-  paramsName,
-  datasets,
-  paramsId,
-  projectName,
-  setSelectedDataset,
-  navigate,
-  isAllVersions
-) => {
-  queueMicrotask(() => {
+export const checkForSelectedDataset = debounce(
+  (
+    paramsName,
+    datasets,
+    paramsId,
+    projectName,
+    setSelectedDataset,
+    navigate,
+    isAllVersions,
+    searchParams,
+    paginationConfigRef
+  ) => {
     if (paramsId) {
+      const searchBePage = parseInt(searchParams.get(BE_PAGE))
+      const configBePage = paginationConfigRef.current[BE_PAGE]
       const { tag, uid, iter } = parseIdentifier(paramsId)
 
-      if (datasets.length > 0) {
+      if (datasets.length > 0 && searchBePage === configBePage) {
         const searchItem = searchArtifactItem(
           datasets.map(artifact => artifact.data ?? artifact),
           paramsName,
@@ -178,7 +183,10 @@ export const checkForSelectedDataset = (
 
         if (!searchItem) {
           navigate(
-            `/projects/${projectName}/datasets${isAllVersions ? `/${paramsName}/${ALL_VERSIONS_PATH}` : ''}${getFilteredSearchParams(window.location.search, [VIEW_SEARCH_PARAMETER])}`,
+            `/projects/${projectName}/datasets${isAllVersions ? `/${paramsName}/${ALL_VERSIONS_PATH}` : ''}${getFilteredSearchParams(
+              window.location.search,
+              [VIEW_SEARCH_PARAMETER]
+            )}`,
             { replace: true }
           )
         } else {
@@ -190,8 +198,8 @@ export const checkForSelectedDataset = (
     } else {
       setSelectedDataset({})
     }
-  })
-}
+  }
+)
 
 export const generateActionsMenu = (
   datasetMin,
@@ -288,7 +296,7 @@ export const generateActionsMenu = (
               )
       },
       {
-        label: 'Delete all',
+        label: 'Delete all versions',
         icon: <Delete />,
         hidden: isDetailsPopUp || isAllVersions,
         className: 'danger',

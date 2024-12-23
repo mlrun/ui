@@ -28,12 +28,11 @@ import NoData from '../../common/NoData/NoData'
 import Pagination from '../../common/Pagination/Pagination'
 import Table from '../Table/Table'
 
+import { ALERTS_FILTERS, ALERTS_PAGE } from '../../constants'
 import { getNoDataMessage } from '../../utils/getNoDataMessage'
 import { getCloseDetailsAlertLink } from '../../utils/link-helper.util'
-import { ALERTS_FILTERS, ALERTS_PAGE } from '../../constants'
 
 const AlertsView = ({
-  actionsMenu,
   alertsFiltersConfig,
   alertsStore,
   filters,
@@ -41,6 +40,7 @@ const AlertsView = ({
   handleCancel,
   handleRefreshAlerts,
   handleRefreshWithFilters,
+  isCrossProjects,
   pageData,
   paginationConfigAlertsRef,
   requestErrorMessage,
@@ -68,7 +68,7 @@ const AlertsView = ({
                 withRefreshButton
                 withoutExpandButton
               >
-                <AlertsFilters />
+                <AlertsFilters isCrossProjects={isCrossProjects} />
               </ActionBar>
             </div>
             {alertsStore.loading ? (
@@ -87,7 +87,7 @@ const AlertsView = ({
             ) : (
               <>
                 <Table
-                  actionsMenu={actionsMenu}
+                  actionsMenu={[]}
                   getCloseDetailsLink={() => getCloseDetailsAlertLink()} //TODO: the getCloseDetailsLink will be updated with ML-8368
                   pageData={pageData}
                   retryRequest={handleRefreshWithFilters}
@@ -124,7 +124,6 @@ const AlertsView = ({
 }
 
 AlertsView.propTypes = {
-  actionsMenu: PropTypes.array.isRequired,
   alertsFiltersConfig: PropTypes.object.isRequired,
   alertsStore: PropTypes.object.isRequired,
   filters: PropTypes.object.isRequired,
@@ -132,6 +131,7 @@ AlertsView.propTypes = {
   handleCancel: PropTypes.func.isRequired,
   handleRefreshAlerts: PropTypes.func.isRequired,
   handleRefreshWithFilters: PropTypes.func.isRequired,
+  isCrossProjects: PropTypes.bool.isRequired,
   pageData: PropTypes.object.isRequired,
   paginationConfigAlertsRef: PropTypes.object.isRequired,
   requestErrorMessage: PropTypes.string.isRequired,
