@@ -38,7 +38,7 @@ import {
   TIME_FRAME_LIMITS
 } from '../../utils/datePicker.util'
 
-const AlertsDetailsMetrics = ({ selectedItem }) => {
+const DetailsAlertsMetrics = ({ selectedItem }) => {
   const [metrics, setMetrics] = useState([])
   const [requestErrorMessage, setRequestErrorMessage] = useState('')
   const metricsContainerRef = useRef(null)
@@ -181,8 +181,8 @@ const AlertsDetailsMetrics = ({ selectedItem }) => {
   )
 }
 
-AlertsDetailsMetrics.propTypes = {
+DetailsAlertsMetrics.propTypes = {
   selectedItem: PropTypes.object.isRequired
 }
 
-export default React.memo(AlertsDetailsMetrics)
+export default React.memo(DetailsAlertsMetrics)

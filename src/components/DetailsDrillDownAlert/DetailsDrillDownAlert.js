@@ -20,7 +20,7 @@ such restriction.
 import React, { useCallback } from 'react'
 import PropTypes from 'prop-types'
 
-import AlertsDetailsMetrics from './AlertsDetailsMetrics'
+import DetailsAlertsMetrics from './DetailsAlertsMetrics'
 import AlertLogsPopup from './AlertLogPopup'
 import DetailsInfo from '../DetailsInfo/DetailsInfo'
 import DetailsLogs from '../DetailsLogs/DetailsLogs'
@@ -80,7 +80,7 @@ const DetailsDrillDownAlert = React.forwardRef(
           </>
         )}
         {pageData.details.entityType === MODEL_ENDPOINT_RESULT && (
-          <AlertsDetailsMetrics selectedItem={selectedItem} />
+          <DetailsAlertsMetrics selectedItem={selectedItem} />
         )}
       </>
     )
