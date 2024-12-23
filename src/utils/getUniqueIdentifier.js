@@ -57,8 +57,7 @@ export const getFunctionIdentifier = (func, unique) => {
 export const getAlertIdentifier = (alert, unique) => {
   let identifier = `${alert?.name || ''}`
 
-  if (unique && alert?.uid) identifier += `.${alert.id}`
-
+  if (unique && alert?.id) identifier += `.${alert.id}`
   return identifier
 }
 

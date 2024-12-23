@@ -296,7 +296,7 @@ export const generateActionsMenu = (
               )
       },
       {
-        label: 'Delete all',
+        label: 'Delete all versions',
         icon: <Delete />,
         hidden: isDetailsPopUp || isAllVersions,
         className: 'danger',

@@ -23,6 +23,7 @@ import { useDispatch, useSelector } from 'react-redux'
 
 import AlertsView from './AlertsView'
 
+import { ALERTS_PAGE } from '../../constants'
 import { createAlertRowData } from '../../utils/createAlertsContent'
 import { getAlertsFiltersConfig, parseAlertsQueryParamsCallback } from './alerts.util'
 import { generatePageData } from './alerts.util'
@@ -98,10 +99,9 @@ const Alerts = () => {
 
   useEffect(() => {
     if (tableContent.length > 0) {
-      const alert = tableContent.find(({ data }) => data.uid && data.uid === params.uid)
-
+      const alert = tableContent.find(({ data }) => data.id && data.id === params.alertId)
       if (alert) {
-        setSelectedAlert({ ...alert.data })
+        setSelectedAlert({ ...alert.data, page: ALERTS_PAGE })
       } else {
         return setSelectedAlert({})
       }
