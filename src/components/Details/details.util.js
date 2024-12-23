@@ -153,7 +153,7 @@ export const generateArtifactsContent = (detailsType, selectedItem, projectName)
         copyToClipboard: true
       },
       original_source: {
-        value: selectedItem.src_path,
+        value: selectedItem.original_source,
         copyToClipboard: true
       },
       target_uri: {
