@@ -210,13 +210,14 @@ export const generateAlertsDetailsInfo = pageData => {
       <li className="notifications-item" key={index}>
         <div className="notifications-item_icon">{notification.icon}</div>
         <div>
-          <div className="notifications-item-header">{upperFirst(notification.kind)}</div>
-          <div className="notifications-item-header-text">
-            {`${notification.succeeded} success `}
+          <div className="notifications-item__header">{upperFirst(notification.kind)}</div>
+          <div className="notifications-item__header-text">
+            `${notification.succeeded} success `
             <span
-              className={classNames('notifications-item-header-text_failed', {
-                'notifications-item-header-text_success': notification.failed > 0
-              })}
+              className={classNames(
+                'notifications-item__header-text_failed',
+                notification.failed > 0 && 'notifications-item__header-text_success'
+              )}
             >
               {`${notification.failed} failed`}
             </span>
