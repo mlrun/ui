@@ -61,7 +61,7 @@
     }
   }
 
-  &_header {
+  &-header {
     font-weight: bold;
     font-size: 10px;
 
@@ -69,7 +69,11 @@
       color: $topaz;
       font-size: 15px;
 
-      .text-red {
+      &_failed {
+        color: inherit;
+      }
+
+      &_success {
         color: $ceriseRed;
       }
     }

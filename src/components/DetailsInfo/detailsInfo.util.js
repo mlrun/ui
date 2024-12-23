@@ -40,6 +40,7 @@ import { isEveryObjectValueEmpty } from '../../utils/isEveryObjectValueEmpty'
 import { roundFloats } from '../../utils/roundFloats'
 import { generateFunctionPriorityLabel } from '../../utils/generateFunctionPriorityLabel'
 import { openPopUp } from 'igz-controls/utils/common.util'
+import classNames from 'classnames'
 
 export const generateArtifactsInfoContent = (page, pageTab, selectedItem) => {
   if (pageTab === MODEL_ENDPOINTS_TAB) {
@@ -209,10 +210,14 @@ export const generateAlertsDetailsInfo = pageData => {
       <li className="notifications-item" key={index}>
         <div className="notifications-item_icon">{notification.icon}</div>
         <div>
-          <div className="notifications-item_header">{upperFirst(notification.kind)}</div>
-          <div className="notifications-item_header-text">
+          <div className="notifications-item-header">{upperFirst(notification.kind)}</div>
+          <div className="notifications-item-header-text">
             {`${notification.succeeded} success `}
-            <span className={notification.failed > 0 ? 'text-red' : ''}>
+            <span
+              className={classNames('notifications-item-header-text_failed', {
+                'notifications-item-header-text_success': notification.failed > 0
+              })}
+            >
               {`${notification.failed} failed`}
             </span>
           </div>
