@@ -105,14 +105,6 @@
       "activation_time": "2024-10-25T14:45:00Z",
       "notifications": [
         {
-          "kind": "email",
-          "err": "",
-          "summary": {
-            "failed": 0,
-            "succeeded": 4
-          }
-        },
-        {
           "kind": "webhook",
           "err": "",
           "summary": {
