@@ -525,9 +525,9 @@ export const createModelEndpointsRowData = (artifact, project) => {
         id: `driftStatus.${artifact.ui.identifierUnique}`,
         headerId: 'drift',
         headerLabel: 'Drift Status',
-        value: getDriftStatusData(artifact.status?.drift_status).value,
+        value: getDriftStatusData(artifact.status?.result_status).value,
         className: 'table-cell-small',
-        tooltip: getDriftStatusData(artifact.status?.drift_status).tooltip
+        tooltip: getDriftStatusData(artifact.status?.result_status).tooltip
       }
     ]
   }
