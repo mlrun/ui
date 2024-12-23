@@ -20,25 +20,11 @@ such restriction.
 import { mainHttpClient } from '../httpClient'
 
 const alertsApi = {
-  getAlerts: (project, filters, config = {}) => {
-    // TODO:ML-8514 update newConfig
-    const newConfig = {
-      ...config,
-      params: {
-        ...config.params
-      }
-    }
+  getAlerts: (project, newConfig) => {
     return mainHttpClient.get(`/projects/${project}/alert-activations`, newConfig)
   },
-  getAlert: (project, alertName, config) => {
-    // TODO:ML-8514 update newConfig
-    const newConfig = {
-      ...config,
-      params: {
-        ...config.params
-      }
-    }
-    return mainHttpClient.get('/projects/{project}/alerts/{alertName}/activations', newConfig)
+  getAlert: (project, alertName, newConfig) => {
+    return mainHttpClient.get(`/projects/${project}/alerts/${alertName}/activations`, newConfig)
   }
 }
 

@@ -23,6 +23,20 @@ import alertsApi from '../api/alerts-api'
 import { defaultPendingHandler } from './redux.util'
 import { parseAlerts } from '../utils/parseAlert'
 import { largeResponseCatchHandler } from '../utils/largeResponseCatchHandler'
+import {
+  ENDPOINT_APPLICATION,
+  ENDPOINT_RESULT,
+  ENTITY_ID,
+  ENTITY_KIND,
+  ENTITY_TYPE,
+  EVENT_KIND,
+  EVENT_TYPE,
+  FILTER_ALL_ITEMS,
+  JOB,
+  JOB_NAME,
+  MODEL_ENDPOINT_RESULT,
+  MODEL_MONITORING_APPLICATION
+} from '../constants'
 
 const initialState = {
   alerts: [],
@@ -30,11 +44,78 @@ const initialState = {
   loading: false
 }
 
+const generateRequestParams = filters => {
+  const params = {}
+
+  if (filters?.name?.trim()) {
+    params.name = `~${filters.name}`
+  }
+
+  if (filters?.dates?.value?.[0]) {
+    params.since = filters.dates.value[0].toISOString()
+  }
+
+  if (filters?.dates?.value?.[1] && !filters.dates.isPredefined) {
+    params.until = filters.dates.value[1].toISOString()
+  }
+
+  const entityType = filters?.[ENTITY_TYPE]
+  const entityId = filters?.[ENTITY_ID]?.trim()
+
+  if (entityType && entityType !== FILTER_ALL_ITEMS) {
+    params[ENTITY_KIND] = entityType
+  }
+
+  if (
+    entityType &&
+    (entityType === FILTER_ALL_ITEMS || entityType === MODEL_MONITORING_APPLICATION) &&
+    entityId
+  ) {
+    params[ENTITY_ID] = `~${entityId}`
+  }
+
+  if (entityType && entityType === JOB && filters?.[JOB_NAME].trim()) {
+    params[ENTITY_ID] = `~${filters?.[JOB_NAME]}*`
+  }
+
+  const endpointApplication = filters?.[ENDPOINT_APPLICATION]?.trim()
+  const endpointResult = filters?.[ENDPOINT_RESULT]?.trim()
+
+  if (entityType === MODEL_ENDPOINT_RESULT && (endpointApplication || endpointResult)) {
+    const metricName = endpointResult ? `*${endpointResult}` : ''
+    params[ENTITY_ID] = `~*${endpointApplication || ''}*.result.${metricName}*`
+  }
+
+  if (
+    filters?.severity &&
+    filters.severity !== FILTER_ALL_ITEMS &&
+    !filters.severity.includes(FILTER_ALL_ITEMS)
+  ) {
+    params.severity = filters.severity
+  }
+
+  if (filters?.[EVENT_TYPE] && filters?.[EVENT_TYPE] !== FILTER_ALL_ITEMS) {
+    params[EVENT_KIND] = filters?.[EVENT_TYPE]
+  }
+
+  return params
+}
+
 export const fetchAlert = createAsyncThunk(
   'fetchAlert',
   ({ project, filters, config }, thunkAPI) => {
+    const newConfig = {
+      ...config,
+      params: {
+        ...config.params,
+        ...generateRequestParams(filters, project)
+      }
+    }
+
+    config?.ui?.setRequestErrorMessage?.('')
+
     return alertsApi
-      .getAlert(project, filters, config)
+      .getAlert(project, filters, newConfig)
       .then(({ data }) => {
         return parseAlerts(data.activations || [])
       })
@@ -51,8 +132,18 @@ export const fetchAlert = createAsyncThunk(
 export const fetchAlerts = createAsyncThunk(
   'fetchAlerts',
   ({ project, filters, config }, thunkAPI) => {
+    const newConfig = {
+      ...config,
+      params: {
+        ...config.params,
+        ...generateRequestParams(filters, project)
+      }
+    }
+
+    config?.ui?.setRequestErrorMessage?.('')
+
     return alertsApi
-      .getAlerts(project, filters, config)
+      .getAlerts(project, newConfig)
       .then(({ data }) => {
         return { ...data, activations: parseAlerts(data.activations || []) }
       })

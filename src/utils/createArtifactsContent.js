@@ -127,7 +127,8 @@ export const createModelsRowData = (artifact, project, isAllVersions, metricsCou
       headerLabel: isAllVersions ? 'UID' : 'Name',
       value: isAllVersions ? artifact.uid : artifact.db_key,
       className: 'table-cell-name',
-      getLink: tab => getArtifactsDetailsLink(artifact, 'models/models', tab, project, isAllVersions),
+      getLink: tab =>
+        getArtifactsDetailsLink(artifact, 'models/models', tab, project, isAllVersions),
       showTag: true
     },
     {
@@ -324,6 +325,63 @@ export const createFilesRowData = (artifact, project, isAllVersions) => {
   }
 }
 
+export const createDocumentsRowData = (artifact, project, isAllVersions) => {
+  return {
+    data: {
+      ...artifact
+    },
+    content: [
+      {
+        id: `key.${artifact.ui.identifierUnique}`,
+        headerId: isAllVersions ? 'uid' : 'name',
+        headerLabel: isAllVersions ? 'UID' : 'Name',
+        value: isAllVersions ? artifact.uid : artifact.db_key,
+        className: 'table-cell-name',
+        getLink: tab => getArtifactsDetailsLink(artifact, 'documents', tab, project, isAllVersions),
+        showTag: true
+      },
+      {
+        id: `updated.${artifact.ui.identifierUnique}`,
+        headerId: 'updated',
+        headerLabel: 'Updated',
+        value: formatDatetime(artifact.updated, 'N/A'),
+        className: 'table-cell-2'
+      },
+      {
+        id: `labels.${artifact.ui.identifierUnique}`,
+        headerId: 'labels',
+        headerLabel: 'Labels',
+        value: parseKeyValues(artifact.labels),
+        className: 'table-cell-1',
+        type: 'labels'
+      },
+      {
+        id: `producer.${artifact.ui.identifierUnique}`,
+        headerId: 'producer',
+        headerLabel: 'Producer',
+        value: artifact.producer?.name || '',
+        template: (
+          <TableProducerCell
+            bodyCellClassName="table-cell-1"
+            id="producer"
+            producer={artifact.producer}
+          />
+        ),
+        className: 'table-cell-1',
+        type: 'producer'
+      },
+      {
+        id: `owner.${artifact.ui.identifierUnique}`,
+        headerId: 'owner',
+        headerLabel: 'Owner',
+        value: artifact.producer?.owner,
+        className: 'table-cell-1',
+        type: 'owner'
+      }
+    ]
+  }
+}
+
 const getDriftStatusData = driftStatus => {
   switch (String(driftStatus)) {
     case '0':
@@ -467,9 +525,9 @@ export const createModelEndpointsRowData = (artifact, project) => {
         id: `driftStatus.${artifact.ui.identifierUnique}`,
         headerId: 'drift',
         headerLabel: 'Drift Status',
-        value: getDriftStatusData(artifact.status?.drift_status).value,
+        value: getDriftStatusData(artifact.status?.result_status).value,
         className: 'table-cell-small',
-        tooltip: getDriftStatusData(artifact.status?.drift_status).tooltip
+        tooltip: getDriftStatusData(artifact.status?.result_status).tooltip
       }
     ]
   }

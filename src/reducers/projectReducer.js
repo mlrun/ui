@@ -88,6 +88,7 @@ import {
 
 const initialState = {
   deletingProjects: {},
+  projectsToDelete: [],
   error: null,
   jobsMonitoringData: {
     jobs: {},
@@ -106,6 +107,7 @@ const initialState = {
   project: {
     data: null,
     error: null,
+    isDeletingBegun: false,
     dataSets: {
       data: null,
       loading: false,
@@ -223,22 +225,17 @@ const projectReducer = (state = initialState, { type, payload }) => {
     case DELETE_PROJECT_BEGIN:
       return {
         ...state,
-        loading: true
+        projectsToDelete: [...state.projectsToDelete, payload]
       }
     case DELETE_PROJECT_FAILURE:
       return {
         ...state,
-        error: payload,
-        loading: false
+        projectsToDelete: state.projectsToDelete.filter(projectName => projectName !== payload)
       }
     case DELETE_PROJECT_SUCCESS:
       return {
         ...state,
-        error: null,
-        loading: false,
-        project: {
-          ...initialState.project
-        }
+        projectsToDelete: state.projectsToDelete.filter(projectName => projectName !== payload)
       }
     case FETCH_PROJECT_BEGIN:
       return {

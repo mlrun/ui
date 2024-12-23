@@ -181,9 +181,6 @@
         }
 
         &_small {
-          flex: 1 1 0;
-          min-height: 155px;
-
           .project-data-card__header {
             height: 100%;
 
@@ -222,37 +219,36 @@
       }
 
       &__statistics-section {
-        display: flex;
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 15px;
+        margin-bottom: 25px;
 
-        &-alert {
-          flex: 2 1 calc(50% - 22px);
-          margin-bottom: 25px;
+        &_left {
+          display: flex;
+          gap: 15px;
         }
 
-        &-tab {
-          flex: 1 1 calc(25% - 22px);
-          box-sizing: border-box;
-          margin: 0 20px 25px 0;
+        &_right {
+          display: flex;
+          gap: 15px;
         }
 
-        @media (max-width: 1400px) {
-          flex-wrap: wrap;
+        .monitoring-stats {
+          flex: 1;
+          padding: 15px;
 
-          .last {
-            margin: 0;
+          @media screen and (min-width: 1300px) {
+            padding: 20px;
           }
 
-          &-alert {
-            flex: 2 1 calc(66.66% - 22px);
-            margin-bottom: 25px;
+          &.alerts-card {
+            flex: 2;
           }
 
-          &-tab {
-            flex: 1 1 calc(33.33% - 22px);
-            margin-bottom: 25px;
-
-            &:last-child {
-              margin-right: 0;
+          .stats-card__title {
+            @media screen and (max-width: 1400px) {
+              font-size: 1vi;
             }
           }
         }

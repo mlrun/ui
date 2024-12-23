@@ -53,7 +53,7 @@ const getEntityTypeData = entityType => {
       return {
         value: <Endpoint />,
         detailsValue: (
-          <div className="alert-icon-cell">
+          <div className="alert-row__details-alert-icon-cell">
             <Endpoint /> <span>{upperFirst(ENDPOINT)}</span>
           </div>
         ),
@@ -63,7 +63,7 @@ const getEntityTypeData = entityType => {
       return {
         value: <Application />,
         detailsValue: (
-          <div className="alert-icon-cell">
+          <div className="alert-row__details-alert-icon-cell">
             <Application /> <span>{upperFirst(APPLICATION)}</span>
           </div>
         ),
@@ -73,7 +73,7 @@ const getEntityTypeData = entityType => {
       return {
         value: <Job />,
         detailsValue: (
-          <div className="alert-icon-cell">
+          <div className="alert-row__details-alert-icon-cell">
             <Job /> <span>{upperFirst(upperFirst(JOB))}</span>
           </div>
         ),
@@ -116,7 +116,7 @@ const getSeverityData = severity => {
     case SEVERITY_LOW:
       return {
         value: (
-          <div className="alert-icon-cell">
+          <div className="alert-row__details-alert-icon-cell">
             <Low />
             <span>{upperFirst(SEVERITY_LOW)}</span>
           </div>
@@ -126,7 +126,7 @@ const getSeverityData = severity => {
     case SEVERITY_MEDIUM:
       return {
         value: (
-          <div className="alert-icon-cell">
+          <div className="alert-row__details-alert-icon-cell">
             <Normal />
             <span>{upperFirst(SEVERITY_MEDIUM)}</span>
           </div>
@@ -136,7 +136,7 @@ const getSeverityData = severity => {
     case SEVERITY_HIGH:
       return {
         value: (
-          <div className="alert-icon-cell">
+          <div className="alert-row__details-alert-icon-cell">
             <High />
             <span>{upperFirst(SEVERITY_HIGH)}</span>
           </div>
@@ -146,7 +146,7 @@ const getSeverityData = severity => {
     case SEVERITY_CRITICAL:
       return {
         value: (
-          <div className="alert-icon-cell">
+          <div className="alert-row__details-alert-icon-cell">
             <Critical />
             <span>{upperFirst(SEVERITY_CRITICAL)}</span>
           </div>
@@ -184,34 +184,34 @@ const getNotificationData = notifications =>
         </div>
       ),
       tooltip: upperFirst(
-        `${notification.summary.succeeded} done, ${notification.summary.failed} failed`
+        `${notification.summary.succeeded} success, ${notification.summary.failed} failed`
       )
     }
   })
 
-export const createAlertRowData = ({ ...alert }) => {
+export const createAlertRowData = ({ ...alert }, isCrossProjects) => {
   const { name } = alert
 
   const getLink = alert => {
     const queryString = window.location.search
-    const { alertName, entity_kind: entityType, entity_id, project, uid } = alert
+    const { alertName, entity_kind: entityType, entity_id, id: alertId, job, project, uid } = alert
 
-    //TODO: getLink will be updated with ML-8104 & ML-8105
+    //TODO: getLink will be updated with ML-8102
 
     // if (entityType === MODEL_ENDPOINT_RESULT) {
     //   const [endpointId, , , name] = entity_id.split('.')
-    //   return `/projects/*/alerts/${project}/${alertName}/${name}/${endpointId}/${DETAILS_ALERT_APPLICATION}${queryString}`
+    //   return `/projects/*/alerts/${project}/${alertName}/${alertId}/${name}/${endpointId}/${DETAILS_ALERT_APPLICATION}${queryString}`
     // }
     //
-    // if (entityType === JOB) {
-    //   return job
-    //     ? `/projects/*/alerts/${project}/${alertName}/${job.name}/${job.jobUid}/${DETAILS_ALERT_APPLICATION}${queryString}`
-    //     : ''
-    // }
+    if (entityType === JOB) {
+      return job
+        ? `/projects/*/alerts/${project}/${alertName}/${alertId}/${job.name}/${job.jobUid}/${DETAILS_ALERT_APPLICATION}${queryString}`
+        : ''
+    }
 
     if (entityType === MODEL_MONITORING_APPLICATION) {
       const [, applicationName] = entity_id.split('_')
-      return `/projects/*/alerts/${project}/${alertName}/${applicationName}/${uid}/${DETAILS_ALERT_APPLICATION}${queryString}`
+      return `/projects/*/alerts/${project}/${alertName}/${alertId}/${applicationName}/${uid}/${DETAILS_ALERT_APPLICATION}${queryString}`
     }
 
     return ''
@@ -230,6 +230,7 @@ export const createAlertRowData = ({ ...alert }) => {
   const notifications = getNotificationData(alert.notifications)
   alert.activationTime = formatDatetime(alert.activation_time, '-')
   alert.alertName = alert.name
+  alert.id = `${alert.id}`
 
   if (alert.entity_kind === JOB) {
     alert.uid = alert.entity_id.split('.')[1]
@@ -246,7 +247,7 @@ export const createAlertRowData = ({ ...alert }) => {
   }
 
   if (alert.entity_kind === MODEL_MONITORING_APPLICATION) {
-    alert.uid = `${alert.id}`
+    alert.uid = alert.id
     alert.applicationName = alert.entity_id.split('_')[1]
   }
   return {
@@ -272,7 +273,8 @@ export const createAlertRowData = ({ ...alert }) => {
         headerId: 'projectName',
         headerLabel: 'Project name',
         value: alert.project,
-        className: 'table-cell-1'
+        className: 'table-cell-1',
+        hidden: !isCrossProjects
       },
       {
         id: `eventType.${alert.id}`,

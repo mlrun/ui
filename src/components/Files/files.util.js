@@ -18,7 +18,7 @@ under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
 import React from 'react'
-import { isEqual } from 'lodash'
+import { debounce, isEqual } from 'lodash'
 
 import DeleteArtifactPopUp from '../../elements/DeleteArtifactPopUp/DeleteArtifactPopUp'
 
@@ -37,7 +37,8 @@ import {
   TAG_FILTER,
   TAG_FILTER_ALL_ITEMS,
   TAG_FILTER_LATEST,
-  VIEW_SEARCH_PARAMETER
+  VIEW_SEARCH_PARAMETER,
+  BE_PAGE
 } from '../../constants'
 import { applyTagChanges, chooseOrFetchArtifact } from '../../utils/artifacts.util'
 import { copyToClipboard } from '../../utils/copyToClipboard'
@@ -45,10 +46,9 @@ import { getIsTargetPathValid } from '../../utils/createArtifactsContent'
 import { showArtifactsPreview } from '../../reducers/artifactsReducer'
 import { generateUri } from '../../utils/resources'
 import { handleDeleteArtifact } from '../../utils/handleDeleteArtifact'
-import { openDeleteConfirmPopUp } from 'igz-controls/utils/common.util'
+import { openDeleteConfirmPopUp, openPopUp } from 'igz-controls/utils/common.util'
 import { searchArtifactItem } from '../../utils/searchArtifactItem'
 import { setDownloadItem, setShowDownloadsList } from '../../reducers/downloadReducer'
-import { openPopUp } from 'igz-controls/utils/common.util'
 import { getFilteredSearchParams } from '../../utils/filter.util'
 import { parseIdentifier } from '../../utils'
 
@@ -139,20 +139,24 @@ export const handleApplyDetailsChanges = (
   return applyTagChanges(changes, selectedItem, projectName, dispatch, setNotification)
 }
 
-export const checkForSelectedFile = (
-  paramsName,
-  files,
-  paramsId,
-  projectName,
-  setSelectedFile,
-  navigate,
-  isAllVersions
-) => {
-  queueMicrotask(() => {
+export const checkForSelectedFile = debounce(
+  (
+    paramsName,
+    files,
+    paramsId,
+    projectName,
+    setSelectedFile,
+    navigate,
+    isAllVersions,
+    searchParams,
+    paginationConfigRef
+  ) => {
     if (paramsId) {
+      const searchBePage = parseInt(searchParams.get(BE_PAGE))
+      const configBePage = paginationConfigRef.current[BE_PAGE]
       const { tag, uid, iter } = parseIdentifier(paramsId)
 
-      if (files.length > 0) {
+      if (files.length > 0 && searchBePage === configBePage) {
         const searchItem = searchArtifactItem(
           files.map(artifact => artifact.data ?? artifact),
           paramsName,
@@ -163,7 +167,10 @@ export const checkForSelectedFile = (
 
         if (!searchItem) {
           navigate(
-            `/projects/${projectName}/files${isAllVersions ? `/${paramsName}/${ALL_VERSIONS_PATH}` : ''}${getFilteredSearchParams(window.location.search, [VIEW_SEARCH_PARAMETER])}`,
+            `/projects/${projectName}/files${isAllVersions ? `/${paramsName}/${ALL_VERSIONS_PATH}` : ''}${getFilteredSearchParams(
+              window.location.search,
+              [VIEW_SEARCH_PARAMETER]
+            )}`,
             { replace: true }
           )
         } else {
@@ -175,8 +182,8 @@ export const checkForSelectedFile = (
     } else {
       setSelectedFile({})
     }
-  })
-}
+  }
+)
 
 export const generateActionsMenu = (
   fileMin,

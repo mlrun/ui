@@ -83,20 +83,22 @@ const AlertsCounters = () => {
       <StatsCard.Header title="Alerts" icon={<Alerts />} iconClass="stats-card__title-icon">
         <StatsCard.Col>
           <div className="project-card__info">
-            <span className="stats__subtitle">Total</span>
             <div
-              className="stats__counter"
-              onClick={() => alertsStats.all.link()}
+              className="stats__link"
               data-testid="alerts_total_counter"
+              onClick={alertsStats.total.link}
             >
-              {projectStore.projectsSummary.loading ? (
-                <Loader section small secondary />
-              ) : (
-                (alertsData.data.total || 0).toLocaleString()
-              )}
+              <span className="stats__subtitle">Total</span>
+              <div className="stats__counter">
+                {projectStore.projectsSummary.loading ? (
+                  <Loader section small secondary />
+                ) : (
+                  (alertsData.data.total || 0).toLocaleString()
+                )}
+              </div>
             </div>
             <ClockIcon className="project-card__info-icon" />
-            <span>Last 24 hours</span>
+            <span>Past 24 hours</span>
           </div>
         </StatsCard.Col>
       </StatsCard.Header>

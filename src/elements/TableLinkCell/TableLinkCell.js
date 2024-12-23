@@ -95,7 +95,8 @@ const TableLinkCell = ({
             ((link.match(/functions/) ||
               link.match(/models/) ||
               link.match(/files/) ||
-              link.match(/datasets/)) &&
+              link.match(/datasets/) ||
+              link.match(/documents/)) &&
               Object.values(selectedItem).length !== 0)) && (
             <div className="date-uid-row">
               {(item.startTime || item.updated) && (
@@ -107,7 +108,7 @@ const TableLinkCell = ({
                     link.match(/datasets/)
                       ? formatDatetime(item.updated, 'N/A')
                       : formatDatetime(
-                          item.startTime,
+                          item.startTime || item.created,
                           stateValue === 'aborted' ? 'N/A' : 'Not yet started'
                         ))}
                 </span>
