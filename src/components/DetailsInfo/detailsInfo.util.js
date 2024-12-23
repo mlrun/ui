@@ -61,8 +61,6 @@ export const generateTriggerInfoContent = criteria => {
   return []
 }
 
-export const notifications = [{ label: 'Notifications', id: 'notifications' }]
-
 export const generateArtifactsInfoContent = (page, pageTab, selectedItem) => {
   if (pageTab === MODEL_ENDPOINTS_TAB) {
     const { name, tag } =
@@ -226,6 +224,7 @@ export const generateAlertsDetailsInfo = selectedItem => {
       notificationsDetailsInfo: [],
       triggerCriteriaDetailsInfo: []
     }
+    const notifications = selectedItem?.notifications
     AlertsDetailsInfo.notificationsDetailsInfo = notifications.map((valueItem, index) => (
       <Tooltip
         key={valueItem.tooltip + index}

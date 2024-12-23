@@ -26,6 +26,7 @@ import ApplicationMetricCard from '../DetailsMetrics/ApplicationMetricCard'
 import DatePicker from '../../common/DatePicker/DatePicker'
 import NoData from '../../common/NoData/NoData'
 import NoMetricData from '../DetailsMetrics/NoMetricData'
+import StatsCard from '../../common/StatsCard/StatsCard'
 
 import { REQUEST_CANCELED } from '../../constants'
 import detailsActions from '../../actions/details'
@@ -37,6 +38,8 @@ import {
   PAST_24_HOUR_DATE_OPTION,
   TIME_FRAME_LIMITS
 } from '../../utils/datePicker.util'
+
+import { ReactComponent as MetricsIcon } from 'igz-controls/images/metrics-icon.svg'
 
 const DetailsAlertsMetrics = ({ selectedItem }) => {
   const [metrics, setMetrics] = useState([])
@@ -103,11 +106,12 @@ const DetailsAlertsMetrics = ({ selectedItem }) => {
     [dispatch, setMetrics, metricsValuesAbortController]
   )
 
-  useEffect(() => {
+  const fetchMetrics = useCallback(() => {
     if (selectedItem.uid !== prevSelectedEndPointNameRef.current) {
       prevSelectedEndPointNameRef.current = selectedItem.uid
       return
     }
+
     if (
       metricOptionsAreLoaded &&
       selectedItem?.uid &&
@@ -125,23 +129,23 @@ const DetailsAlertsMetrics = ({ selectedItem }) => {
     } else {
       setMetrics([])
     }
+  }, [
+    selectedItem,
+    metricOptionsAreLoaded,
+    detailsStore.metricsOptions,
+    detailsStore.dates.value,
+    fetchData,
+    setMetrics
+  ])
+
+  useEffect(() => {
+    fetchMetrics()
 
     return () => {
       metricsValuesAbortController.current?.abort(REQUEST_CANCELED)
       setMetrics([])
     }
-  }, [
-    metricOptionsAreLoaded,
-    fetchData,
-    selectedItem.fullName,
-    selectedItem.project,
-    selectedItem.uid,
-    detailsStore.dates.value,
-    detailsStore.metricsOptions.all,
-    detailsStore.metricsOptions.selectedByEndpoint,
-    setMetrics,
-    metricsValuesAbortController
-  ])
+  }, [fetchMetrics, setMetrics])
 
   return (
     <div className="metrics-wrapper">
@@ -159,8 +163,17 @@ const DetailsAlertsMetrics = ({ selectedItem }) => {
         />
       </div>
 
-      {generatedMetrics.length === 0 && !detailsStore.loadingCounter && requestErrorMessage ? (
-        <NoData message={requestErrorMessage} />
+      {generatedMetrics.length === 0 ? (
+        !detailsStore.loadingCounter ? (
+          requestErrorMessage ? (
+            <NoData message={requestErrorMessage} />
+          ) : (
+            <StatsCard className="metrics__empty-select">
+              <MetricsIcon />
+              <div>Metrics data not found</div>
+            </StatsCard>
+          )
+        ) : null
       ) : (
         <div ref={metricsContainerRef} className="metrics">
           {generatedMetrics.map(([applicationName, applicationMetrics]) => (
