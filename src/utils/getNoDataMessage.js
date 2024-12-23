@@ -74,7 +74,7 @@ const messageNamesList = {
     plural: 'Datasets'
   },
   [DOCUMENTS_PAGE]: {
-    plural: 'Datasets'
+    plural: 'Documents'
   },
   [FEATURE_SETS_TAB]: {
     plural: 'Feature-Sets'
