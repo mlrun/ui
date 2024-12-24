@@ -159,8 +159,11 @@ const getNotificationData = notifications =>
         </div>
       ),
       tooltip: upperFirst(
-        `${notification.summary.succeeded} done, ${notification.summary.failed} failed`
-      )
+        `${notification.summary.succeeded} success, ${notification.summary.failed} failed`
+      ),
+      kind: notification.kind,
+      succeeded: notification.summary.succeeded,
+      failed: notification.summary.failed
     }
   })
 
@@ -171,7 +174,7 @@ export const createAlertRowData = ({ ...alert }, isCrossProjects) => {
     const queryString = window.location.search
     const { alertName, entity_kind: entityType, entity_id, id: alertId, job, project, uid } = alert
 
-    if (entityType === MODEL_ENDPOINT_RESULT) {
+      if (entityType === MODEL_ENDPOINT_RESULT) {
       const [endpointId, , , name] = entity_id.split('.')
       return `/projects/*/alerts/${project}/${alertName}/${alertId}/${name}/${endpointId}/${DETAILS_ALERT_APPLICATION}${queryString}`
     }

@@ -215,7 +215,10 @@ export const fetchDocuments = createAsyncThunk(
       .then(({ data }) => {
         const result = parseArtifacts(data.artifacts)
 
-        return generateArtifacts(filterArtifacts(result), DOCUMENTS_TAB, data.artifacts)
+        return {
+          ...data,
+          artifacts: generateArtifacts(filterArtifacts(result), DOCUMENTS_TAB, data.artifacts)
+        }
       })
       .catch(error => {
         largeResponseCatchHandler(
@@ -503,7 +506,7 @@ const artifactsSlice = createSlice({
     })
     builder.addCase(fetchDocuments.fulfilled, (state, action) => {
       state.error = null
-      state.documents.allData = action.payload
+      state.documents.allData = action.payload?.artifacts ?? []
       state.documents.loading = false
       state.loading = false
     })

@@ -33,13 +33,7 @@ import Pagination from '../../common/Pagination/Pagination'
 import PreviewModal from '../../elements/PreviewModal/PreviewModal'
 import Table from '../Table/Table'
 
-import {
-  FILES_PAGE,
-  FULL_VIEW_MODE,
-  ALL_VERSIONS_PATH,
-  FILES_TAB,
-  DATASETS_TAB
-} from '../../constants'
+import { FILES_PAGE, FULL_VIEW_MODE, ALL_VERSIONS_PATH, FILES_TAB } from '../../constants'
 import { ACTIONS_MENU } from '../../types'
 import { SECONDARY_BUTTON } from 'igz-controls/constants'
 import { getCloseDetailsLink } from '../../utils/link-helper.util'
@@ -156,7 +150,7 @@ const FilesView = React.forwardRef(
                   </Table>
                   <Pagination
                     paginationConfig={paginationConfigFilesRef.current}
-                    closeParamName={isAllVersions ? ALL_VERSIONS_PATH : DATASETS_TAB}
+                    closeParamName={isAllVersions ? ALL_VERSIONS_PATH : FILES_TAB}
                   />
                 </>
               )}

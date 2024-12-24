@@ -29,6 +29,7 @@ import {
   DATASETS_PAGE,
   DATE_FILTER_ANY_TIME,
   DATE_RANGE_TIME_FILTER,
+  DOCUMENTS_PAGE,
   ENDPOINT_APPLICATION,
   ENDPOINT_RESULT,
   ENTITIES_FILTER,
@@ -71,6 +72,9 @@ const messageNamesList = {
   },
   [DATASETS_PAGE]: {
     plural: 'Datasets'
+  },
+  [DOCUMENTS_PAGE]: {
+    plural: 'Documents'
   },
   [FEATURE_SETS_TAB]: {
     plural: 'Feature-Sets'
@@ -163,12 +167,7 @@ const getSelectedDateValue = (filterType, filters) => {
     : ANY_TIME
 }
 
-const generateNoEntriesFoundMessage = (
-  visibleFilterTypes,
-  filtersConfig,
-  filters,
-  messageNames
-) => {
+const generateNoEntriesFoundMessage = (visibleFilterTypes, filtersConfig, filters) => {
   return visibleFilterTypes.reduce((message, filterType, index) => {
     const label = filtersConfig[filterType].label
     const value = [ITERATIONS_FILTER].includes(filterType)

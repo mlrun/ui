@@ -27,18 +27,16 @@ import ActionBar from '../ActionBar/ActionBar'
 import ArtifactsFilters from '../ArtifactsActionBar/ArtifactsFilters'
 import Table from '../Table/Table'
 import NoData from '../../common/NoData/NoData'
-import WarningMessage from '../../common/WarningMessage/WarningMessage'
 import ArtifactsTableRow from '../../elements/ArtifactsTableRow/ArtifactsTableRow'
 import Details from '../Details/Details'
+import Pagination from '../../common/Pagination/Pagination'
 
 import { ALL_VERSIONS_PATH, DOCUMENTS_PAGE, DOCUMENTS_TAB, FULL_VIEW_MODE } from '../../constants'
 import HistoryBackLink from '../../common/HistoryBackLink/historyBackLink'
 import { getSavedSearchParams } from '../../utils/filter.util'
 import { getNoDataMessage } from '../../utils/getNoDataMessage'
-import { isRowRendered } from '../../hooks/useVirtualization.hook'
 import { getCloseDetailsLink } from '../../utils/link-helper.util'
-import { ACTIONS_MENU, VIRTUALIZATION_CONFIG } from '../../types'
-import { SORT_PROPS } from 'igz-controls/types'
+import { ACTIONS_MENU } from '../../types'
 
 const DocumentsView = React.forwardRef(
   (
@@ -54,22 +52,19 @@ const DocumentsView = React.forwardRef(
       filtersConfig,
       filtersStore,
       getAndSetSelectedArtifact,
-      handleRefresh,
+      handleRefreshDocuments,
       handleRefreshWithFilters,
       isAllVersions,
-      maxArtifactsErrorIsShown,
       pageData,
+      paginationConfigDocumentsRef,
       projectName,
       requestErrorMessage,
       selectedDocument,
-      setMaxArtifactsErrorIsShown,
-      setSearchParams,
+      setSearchDocumentsParams,
       setSelectedDocumentMin,
-      sortProps,
       tableContent,
       tableHeaders,
-      viewMode = null,
-      virtualizationConfig
+      viewMode = null
     },
     { documentsRef }
   ) => {
@@ -93,16 +88,16 @@ const DocumentsView = React.forwardRef(
                   filters={filters}
                   filtersConfig={filtersConfig}
                   navigateLink={`/projects/${projectName}/${DOCUMENTS_TAB}${isAllVersions ? `/${documentName}/${ALL_VERSIONS_PATH}` : ''}${window.location.search}`}
-                  handleRefresh={handleRefresh}
+                  handleRefresh={handleRefreshDocuments}
                   page={DOCUMENTS_PAGE}
-                  setSearchParams={setSearchParams}
+                  setSearchParams={setSearchDocumentsParams}
                   withRefreshButton
                   withoutExpandButton
                 >
                   <ArtifactsFilters artifacts={documents} />
                 </ActionBar>
               </div>
-              {artifactsStore.loading ? null : documents.length === 0 ? (
+              {artifactsStore.loading ? null : tableContent.length === 0 ? (
                 <NoData
                   message={getNoDataMessage(
                     filters,
@@ -116,12 +111,6 @@ const DocumentsView = React.forwardRef(
               ) : (
                 <>
                   {artifactsStore.documents.documentLoading && <Loader />}
-                  {maxArtifactsErrorIsShown && (
-                    <WarningMessage
-                      message="The query response displays up to 1000 items. Use filters to narrow down the results."
-                      handleClose={() => setMaxArtifactsErrorIsShown(false)}
-                    />
-                  )}
                   <Table
                     actionsMenu={actionsMenu}
                     applyDetailsChanges={applyDetailsChanges}
@@ -134,24 +123,23 @@ const DocumentsView = React.forwardRef(
                     pageData={pageData}
                     retryRequest={handleRefreshWithFilters}
                     selectedItem={selectedDocument}
-                    sortProps={sortProps}
                     tableClassName="documents-table"
                     tableHeaders={tableHeaders ?? []}
-                    virtualizationConfig={virtualizationConfig}
                   >
-                    {tableContent.map(
-                      (tableItem, index) =>
-                        isRowRendered(virtualizationConfig, index) && (
-                          <ArtifactsTableRow
-                            actionsMenu={actionsMenu}
-                            key={tableItem.data.ui.identifierUnique}
-                            rowIndex={index}
-                            rowItem={tableItem}
-                            selectedItem={selectedDocument}
-                          />
-                        )
-                    )}
+                    {tableContent.map((tableItem, index) => (
+                      <ArtifactsTableRow
+                        actionsMenu={actionsMenu}
+                        key={tableItem.data.ui.identifierUnique}
+                        rowIndex={index}
+                        rowItem={tableItem}
+                        selectedItem={selectedDocument}
+                      />
+                    ))}
                   </Table>
+                  <Pagination
+                    paginationConfig={paginationConfigDocumentsRef.current}
+                    closeParamName={isAllVersions ? ALL_VERSIONS_PATH : DOCUMENTS_TAB}
+                  />
                 </>
               )}
               {viewMode === FULL_VIEW_MODE && !isEmpty(selectedDocument) && (
@@ -181,28 +169,24 @@ DocumentsView.propTypes = {
   applyDetailsChangesCallback: PropTypes.func.isRequired,
   artifactsStore: PropTypes.object.isRequired,
   detailsFormInitialValues: PropTypes.object.isRequired,
-  documents: PropTypes.arrayOf(PropTypes.object).isRequired,
   documentName: PropTypes.string,
+  documents: PropTypes.arrayOf(PropTypes.object).isRequired,
   filters: PropTypes.object.isRequired,
   filtersConfig: PropTypes.object.isRequired,
   filtersStore: PropTypes.object.isRequired,
   getAndSetSelectedArtifact: PropTypes.func.isRequired,
-  handleRefresh: PropTypes.func.isRequired,
+  handleRefreshDocuments: PropTypes.func.isRequired,
   handleRefreshWithFilters: PropTypes.func.isRequired,
   isAllVersions: PropTypes.bool.isRequired,
-  maxArtifactsErrorIsShown: PropTypes.bool.isRequired,
   pageData: PropTypes.object.isRequired,
   projectName: PropTypes.string.isRequired,
   requestErrorMessage: PropTypes.string.isRequired,
   selectedDocument: PropTypes.object.isRequired,
-  setMaxArtifactsErrorIsShown: PropTypes.func.isRequired,
-  setSearchParams: PropTypes.func.isRequired,
+  setSearchDocumentsParams: PropTypes.func.isRequired,
   setSelectedDocumentMin: PropTypes.func.isRequired,
-  sortProps: SORT_PROPS,
   tableContent: PropTypes.arrayOf(PropTypes.object).isRequired,
   tableHeaders: PropTypes.arrayOf(PropTypes.object).isRequired,
-  viewMode: PropTypes.string,
-  virtualizationConfig: VIRTUALIZATION_CONFIG.isRequired
+  viewMode: PropTypes.string
 }
 
 export default DocumentsView

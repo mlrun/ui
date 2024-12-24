@@ -1,3 +1,4 @@
+@import '~igz-controls/scss/colors';
 @import '~igz-controls/scss/mixins';
 
 .collections-list {
@@ -5,6 +6,10 @@
   flex-direction: column;
 
   &__header {
+    position: sticky;
+    top: 0;
+    background-color: $white;
+
     &-item {
       margin: 0;
       padding: 10px 0;
