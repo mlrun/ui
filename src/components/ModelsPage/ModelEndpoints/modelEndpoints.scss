@@ -3,10 +3,14 @@
 
 $modelEndpointsRowHeight: $rowHeightSmall;
 $modelEndpointsHeaderRowHeight: $headerRowHeight;
-$modelEndpointsRowHeightExtended: $rowHeightSmall;
+$modelEndpointsRowHeightExtended: $rowHeightExtended;
 
 .model-endpoints-table {
-  @include rowsHeight($modelEndpointsHeaderRowHeight, $modelEndpointsRowHeight, $modelEndpointsRowHeightExtended);
+  @include rowsHeight(
+    $modelEndpointsHeaderRowHeight,
+    $modelEndpointsRowHeight,
+    $modelEndpointsRowHeightExtended
+  );
 }
 
 :export {
