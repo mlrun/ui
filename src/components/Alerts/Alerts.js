@@ -23,9 +23,13 @@ import { useDispatch, useSelector } from 'react-redux'
 
 import AlertsView from './AlertsView'
 
+import { ALERTS_PAGE } from '../../constants'
 import { createAlertRowData } from '../../utils/createAlertsContent'
-import { getAlertsFiltersConfig, parseAlertsQueryParamsCallback } from './alerts.util'
-import { generatePageData } from './alerts.util'
+import {
+  getAlertsFiltersConfig,
+  generatePageData,
+  parseAlertsQueryParamsCallback
+} from './alerts.util'
 import { getJobLogs } from '../../utils/getJobLogs.util'
 import projectsAction from '../../actions/projects'
 import { useAlertsPageData } from '../../hooks/useAlertsPageData'
@@ -33,7 +37,6 @@ import { useFiltersFromSearchParams } from '../../hooks/useFiltersFromSearchPara
 
 const Alerts = () => {
   const [selectedAlert, setSelectedAlert] = useState({})
-  const [selectedRowData, setSelectedRowData] = useState({})
   const [, setProjectsRequestErrorMessage] = useState('')
   const alertsStore = useSelector(state => state.alertsStore)
   const filtersStore = useSelector(store => store.filtersStore)
@@ -68,11 +71,9 @@ const Alerts = () => {
     [refreshAlerts, setAlerts]
   )
 
-  const isMetricsTab = true //TODO: remove
-
   const tableContent = useMemo(() => {
-    return paginatedAlerts.map(alert => createAlertRowData(alert, isCrossProjects, isMetricsTab))
-  }, [isMetricsTab, isCrossProjects, paginatedAlerts])
+    return paginatedAlerts.map(alert => createAlertRowData(alert, isCrossProjects))
+  }, [isCrossProjects, paginatedAlerts])
 
   const fetchMinimalProjects = useCallback(() => {
     dispatch(projectsAction.fetchProjects({ format: 'minimal' }, setProjectsRequestErrorMessage))
@@ -95,20 +96,15 @@ const Alerts = () => {
   )
 
   const pageData = useMemo(
-    () => generatePageData(handleFetchJobLogs, selectedAlert),
+    () => generatePageData(selectedAlert, handleFetchJobLogs),
     [handleFetchJobLogs, selectedAlert]
   )
-
-  const toggleRow = useCallback((e, item) => {
-    // TODO: update
-    setSelectedRowData(item)
-  }, [])
 
   useEffect(() => {
     if (tableContent.length > 0) {
       const alert = tableContent.find(({ data }) => data.id && data.id === params.alertId)
       if (alert) {
-        setSelectedAlert({ ...alert.data })
+        setSelectedAlert({ ...alert.data, page: ALERTS_PAGE })
       } else {
         return setSelectedAlert({})
       }
@@ -130,10 +126,8 @@ const Alerts = () => {
       paginationConfigAlertsRef={paginationConfigAlertsRef}
       requestErrorMessage={requestErrorMessage}
       selectedAlert={selectedAlert}
-      selectedRowData={selectedRowData}
       setSearchParams={setSearchParams}
       tableContent={tableContent}
-      toggleRow={toggleRow}
     />
   )
 }

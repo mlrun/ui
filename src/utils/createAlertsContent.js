@@ -164,7 +164,7 @@ const getNotificationData = notifications =>
     }
   })
 
-export const createAlertRowData = ({ ...alert }, isCrossProjects, showExpandButton) => {
+export const createAlertRowData = ({ ...alert }, isCrossProjects, showExpandButton = false) => {
   const { name } = alert
 
   const getLink = alert => {

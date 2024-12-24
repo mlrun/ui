@@ -17,22 +17,22 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import { useMemo, useRef } from 'react'
+import React, { useMemo, useRef } from 'react'
 import PropTypes from 'prop-types'
 import classnames from 'classnames'
 import { useParams } from 'react-router-dom'
 
+import DetailsAlertsMetrics from '../../components/DetailsDrillDownAlert/DetailsAlertsMetrics'
 import TableCell from '../TableCell/TableCell'
 
-import { ALERTS_PAGE, DETAILS_OVERVIEW_TAB } from '../../constants'
+import { ALERTS_PAGE, DETAILS_OVERVIEW_TAB, MODEL_ENDPOINTS_TAB } from '../../constants'
 import { getIdentifierMethod } from '../../utils/getUniqueIdentifier'
 
 import './AlertsTableRow.scss'
 
-const AlertsTableRow = ({ handleSelectItem, ifRowSelected, rowItem, selectedItem, toggleRow }) => {
+const AlertsTableRow = ({ ifRowSelected, filters, rowItem, selectedItem, toggleRow }) => {
   const parent = useRef()
   const params = useParams()
-
   const getIdentifier = useMemo(() => getIdentifierMethod(ALERTS_PAGE), [])
   const rowClassNames = classnames(
     'alert-row',
@@ -43,36 +43,38 @@ const AlertsTableRow = ({ handleSelectItem, ifRowSelected, rowItem, selectedItem
       getIdentifier(selectedItem, true) === rowItem?.data?.ui?.identifierUnique &&
       'table-row_active'
   )
-
   return (
     <>
       <tr className={rowClassNames} ref={parent}>
-        {rowItem.content.map(
-          (value, index) =>
-            !value.hidden && (
-              <TableCell
-                className="alert-row__td"
-                data={value}
-                firstCell={index === 0}
-                item={rowItem.data}
-                key={value.id}
-                link={value.getLink?.(
-                  rowItem.data.tag,
-                  params.tab ?? DETAILS_OVERVIEW_TAB,
-                  rowItem.data.hash
-                )}
-                selectedItem={selectedItem}
-                selectItem={handleSelectItem}
-                showExpandButton={value.showExpandButton}
-                toggleRow={toggleRow}
-              />
-            )
-        )}
-        {/*//TODO: move to scss file*/}
-        <td style={{ flex: '1 1 100%' }}>
-          {ifRowSelected && <div style={{ border: '1px solid orange' }}>Selected</div>}
-        </td>
+        {rowItem.content.map((value, index) => (
+          <React.Fragment key={value.id}>
+            <TableCell
+              data={value}
+              firstCell={index === 0}
+              item={rowItem.data}
+              link={value.getLink?.(
+                rowItem.data.tag,
+                params.tab ?? DETAILS_OVERVIEW_TAB,
+                rowItem.data.hash
+              )}
+              selectedItem={selectedItem}
+              showExpandButton={value.showExpandButton}
+              toggleRow={toggleRow}
+            />
+          </React.Fragment>
+        ))}
       </tr>
+      {ifRowSelected && (
+        <tr>
+          <td colSpan={rowItem.content.length}>
+            <DetailsAlertsMetrics
+              filters={filters}
+              location={MODEL_ENDPOINTS_TAB}
+              selectedItem={selectedItem}
+            />
+          </td>
+        </tr>
+      )}
     </>
   )
 }
@@ -82,8 +84,7 @@ AlertsTableRow.propTypes = {
   mainRowItemsCount: PropTypes.number,
   rowIndex: PropTypes.number.isRequired,
   rowItem: PropTypes.shape({}).isRequired,
-  selectedItem: PropTypes.shape({}).isRequired,
-  toggleRow: PropTypes.func
+  selectedItem: PropTypes.shape({}).isRequired
 }
 
 export default AlertsTableRow

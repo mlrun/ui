@@ -26,6 +26,7 @@ import ApplicationMetricCard from '../DetailsMetrics/ApplicationMetricCard'
 import DatePicker from '../../common/DatePicker/DatePicker'
 import NoData from '../../common/NoData/NoData'
 import NoMetricData from '../DetailsMetrics/NoMetricData'
+import StatsCard from '../../common/StatsCard/StatsCard'
 
 import { ALERTS_PAGE, REQUEST_CANCELED } from '../../constants'
 import detailsActions from '../../actions/details'
@@ -38,17 +39,19 @@ import {
   TIME_FRAME_LIMITS
 } from '../../utils/datePicker.util'
 
-const AlertsDetailsMetrics = ({ selectedItem, filters, location = ALERTS_PAGE }) => {
+import { ReactComponent as MetricsIcon } from 'igz-controls/images/metrics-icon.svg'
+
+const DetailsAlertsMetrics = ({ selectedItem, filters, location = ALERTS_PAGE }) => {
   const [metrics, setMetrics] = useState([])
   const [requestErrorMessage, setRequestErrorMessage] = useState('')
+  const metricsContainerRef = useRef(null)
   const metricsValuesAbortController = useRef(new AbortController())
   const prevSelectedEndPointNameRef = useRef('')
-  const [metricOptionsAreLoaded, setMetricOptionsAreLoaded] = useState(false)
+
   const detailsStore = useSelector(store => store.detailsStore)
   const dispatch = useDispatch()
 
   const isAlertsPage = useMemo(() => location === ALERTS_PAGE, [location])
-
   const generatedMetrics = useMemo(() => {
     return groupMetricByApplication(metrics, true)
   }, [metrics])
@@ -80,11 +83,11 @@ const AlertsDetailsMetrics = ({ selectedItem, filters, location = ALERTS_PAGE })
     handleChangeDates(past24hoursOption.handler(), true, PAST_24_HOUR_DATE_OPTION)
   }, [handleChangeDates])
 
-  useEffect(() => {
-    dispatch(
-      modelEndpointsActions.fetchModelEndpointMetrics(selectedItem.project, selectedItem.uid)
-    ).then(() => setMetricOptionsAreLoaded(true))
-  }, [dispatch, selectedItem.project, selectedItem.uid])
+  // useEffect(() => {
+  //   dispatch(
+  //     modelEndpointsActions.fetchModelEndpointMetrics(selectedItem.project, selectedItem.uid)
+  //   ).then()
+  // }, [dispatch, selectedItem.project, selectedItem.uid])
 
   const fetchData = useCallback(
     (params, projectName, uid) => {
@@ -104,49 +107,35 @@ const AlertsDetailsMetrics = ({ selectedItem, filters, location = ALERTS_PAGE })
     [dispatch, setMetrics, metricsValuesAbortController]
   )
 
-  useEffect(() => {
+  const fetchMetrics = useCallback(() => {
     if (selectedItem.uid !== prevSelectedEndPointNameRef.current) {
       prevSelectedEndPointNameRef.current = selectedItem.uid
       return
     }
-    if (
-      metricOptionsAreLoaded &&
-      selectedItem?.uid &&
-      detailsStore.metricsOptions.all.length > 0 &&
-      detailsStore.metricsOptions.selectedByEndpoint[selectedItem?.uid]
-    ) {
-      const params = { name: [selectedItem.fullName] }
+    const params = { name: [selectedItem.fullName] }
 
-      if (detailsStore.dates.value[0] && detailsStore.dates.value[1]) {
-        params.start = detailsStore.dates.value[0].getTime()
-        params.end = detailsStore.dates.value[1].getTime()
-      }
-
-      fetchData(params, selectedItem.project, selectedItem.uid).then()
-    } else {
-      setMetrics([])
+    if (isAlertsPage && detailsStore.dates.value[0] && detailsStore.dates.value[1]) {
+      params.start = detailsStore.dates.value[0].getTime()
+      params.end = detailsStore.dates.value[1].getTime()
+    }
+    if (!isAlertsPage) {
+      params.start = '1732461360199'
+      params.end = '1735053360199'
     }
 
+    fetchData(params, selectedItem.project, selectedItem.uid).then()
+  }, [isAlertsPage, selectedItem, detailsStore.dates.value, fetchData])
+
+  useEffect(() => {
+    fetchMetrics()
     return () => {
       metricsValuesAbortController.current?.abort(REQUEST_CANCELED)
       setMetrics([])
     }
-  }, [
-    metricOptionsAreLoaded,
-    fetchData,
-    selectedItem.fullName,
-    selectedItem.project,
-    selectedItem.uid,
-    detailsStore.dates.value,
-    detailsStore.metricsOptions.all,
-    detailsStore.metricsOptions.selectedByEndpoint,
-    setMetrics,
-    metricsValuesAbortController
-  ])
+  }, [fetchMetrics, setMetrics])
 
   return (
-    //   TODO: add to class
-    <div style={{ width: '100%', height: 'fit-content' }} className="">
+    <div>
       {isAlertsPage && (
         <div className="metrics__custom-filters">
           <DatePicker
@@ -163,10 +152,19 @@ const AlertsDetailsMetrics = ({ selectedItem, filters, location = ALERTS_PAGE })
         </div>
       )}
 
-      {generatedMetrics.length === 0 && !detailsStore.loadingCounter && requestErrorMessage ? (
-        <NoData message={requestErrorMessage} />
+      {generatedMetrics.length === 0 ? (
+        !detailsStore.loadingCounter ? (
+          requestErrorMessage ? (
+            <NoData message={requestErrorMessage} />
+          ) : (
+            <StatsCard className="metrics__empty-select">
+              <MetricsIcon />
+              <div>Metrics data not found</div>
+            </StatsCard>
+          )
+        ) : null
       ) : (
-        <div className="metrics">
+        <div ref={metricsContainerRef} className="metrics alerts-table__metrics">
           {generatedMetrics.map(([applicationName, applicationMetrics]) => (
             <React.Fragment key={applicationName}>
               {isAlertsPage && <div className="metrics__app-name">{applicationName}</div>}
@@ -185,9 +183,8 @@ const AlertsDetailsMetrics = ({ selectedItem, filters, location = ALERTS_PAGE })
   )
 }
 
-AlertsDetailsMetrics.propTypes = {
-  location: PropTypes.string,
+DetailsAlertsMetrics.propTypes = {
   selectedItem: PropTypes.object.isRequired
 }
 
-export default React.memo(AlertsDetailsMetrics)
+export default React.memo(DetailsAlertsMetrics)

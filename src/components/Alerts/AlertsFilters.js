@@ -50,7 +50,7 @@ import {
   SEVERITY
 } from '../../constants'
 
-const AlertsFilters = ({ isCrossProjects }) => {
+const AlertsFilters = ({ isAlertsPage, isCrossProjects }) => {
   const form = useForm()
   const {
     values: { [ENTITY_TYPE]: entityType }
@@ -94,13 +94,15 @@ const AlertsFilters = ({ isCrossProjects }) => {
           <FormSelect label="Project name" name={PROJECTS_FILTER} options={projectsList} />
         </div>
       )}
-      <div className="form-row">
-        <FormSelect
-          label="Entity type"
-          name={ENTITY_TYPE}
-          options={filterAlertsEntityTypeOptions}
-        />
-      </div>
+      {isAlertsPage && (
+        <div className="form-row">
+          <FormSelect
+            label="Entity type"
+            name={ENTITY_TYPE}
+            options={filterAlertsEntityTypeOptions}
+          />
+        </div>
+      )}
 
       {(entityType === FILTER_ALL_ITEMS || entityType === MODEL_MONITORING_APPLICATION) && (
         <div className="form-row">

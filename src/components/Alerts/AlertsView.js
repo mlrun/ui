@@ -32,9 +32,13 @@ import { getNoDataMessage } from '../../utils/getNoDataMessage'
 import { getCloseDetailsAlertLink } from '../../utils/link-helper.util'
 import { ALERTS_FILTERS, ALERTS_PAGE } from '../../constants'
 
+import './alerts.scss'
+import classNames from 'classnames'
+
 const AlertsView = ({
   alertsFiltersConfig,
   alertsStore,
+  isAlertsPage = true,
   filters,
   filtersStore,
   handleCancel,
@@ -50,14 +54,18 @@ const AlertsView = ({
   tableContent,
   toggleRow
 }) => {
+  const content = classNames('content', !isAlertsPage && 'alerts-table__content')
+
   return (
     <>
       <div className="content-wrapper">
-        <div className="content__header">
-          <Breadcrumbs />
-        </div>
-        <div className="content">
-          <div className="table-container">
+        {isAlertsPage && (
+          <div className="content__header">
+            <Breadcrumbs />
+          </div>
+        )}
+        <div className={content}>
+          <div className="table-container alerts-table__container">
             <div className="content__action-bar-wrapper">
               <ActionBar
                 autoRefreshIsStopped={true}
@@ -70,7 +78,7 @@ const AlertsView = ({
                 withRefreshButton
                 withoutExpandButton
               >
-                <AlertsFilters isCrossProjects={isCrossProjects} />
+                <AlertsFilters isAlertsPage={isAlertsPage} isCrossProjects={isCrossProjects} />
               </ActionBar>
             </div>
             {alertsStore.loading ? (
@@ -90,10 +98,10 @@ const AlertsView = ({
               <>
                 <Table
                   actionsMenu={[]}
-                  getCloseDetailsLink={() => getCloseDetailsAlertLink()} //TODO: the getCloseDetailsLink will be updated with ML-8368
+                  getCloseDetailsLink={() => getCloseDetailsAlertLink()}
                   pageData={pageData}
                   retryRequest={handleRefreshWithFilters}
-                  selectedItem={selectedAlert}
+                  selectedItem={isAlertsPage ? selectedAlert : {}}
                   tableClassName="alerts-table"
                   handleCancel={handleCancel}
                   hideActionsMenu
@@ -101,18 +109,20 @@ const AlertsView = ({
                   withActionMenu={false}
                 >
                   {tableContent.map((tableItem, index) => {
-                    const ifRowSelected = tableItem?.data?.id === selectedRowData.id //TODO: update logic
+                    const ifRowSelected = tableItem?.data?.id === selectedAlert?.id && !isAlertsPage
                     return (
                       <AlertsTableRow
                         key={index}
                         hideActionsMenu
                         handleSelectItem={() => {}}
+                        filters={filters}
                         ifRowSelected={ifRowSelected}
                         rowIndex={index}
                         rowItem={tableItem}
                         actionsMenu={[]}
                         toggleRow={toggleRow}
                         selectedItem={selectedAlert}
+                        selectedRowData={selectedRowData}
                       />
                     )
                   })}
@@ -135,9 +145,10 @@ AlertsView.propTypes = {
   alertsStore: PropTypes.object.isRequired,
   filters: PropTypes.object.isRequired,
   filtersStore: PropTypes.object.isRequired,
-  handleCancel: PropTypes.func.isRequired,
+  handleCancel: PropTypes.func,
   handleRefreshAlerts: PropTypes.func.isRequired,
   handleRefreshWithFilters: PropTypes.func.isRequired,
+  isAlertsPage: PropTypes.bool,
   isCrossProjects: PropTypes.bool.isRequired,
   pageData: PropTypes.object.isRequired,
   paginationConfigAlertsRef: PropTypes.object.isRequired,
@@ -145,6 +156,6 @@ AlertsView.propTypes = {
   selectedAlert: PropTypes.object.isRequired,
   setSearchParams: PropTypes.func.isRequired,
   tableContent: PropTypes.arrayOf(PropTypes.object).isRequired,
-  toggleRow: PropTypes.func.isRequired
+  toggleRow: PropTypes.func
 }
 export default AlertsView

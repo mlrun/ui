@@ -323,6 +323,7 @@ const ActionBar = ({
                         onChange={(dates, isPredefined, optionId) =>
                           handleDateChange(dates, isPredefined, optionId, input, formState)
                         }
+                        timeFrameLimit={filtersConfig[DATES_FILTER].timeFrameLimit}
                         type="date-range-time"
                         withLabels
                       />
