@@ -199,13 +199,11 @@ export const createAlertRowData = ({ ...alert }, isCrossProjects) => {
     const queryString = window.location.search
     const { alertName, entity_kind: entityType, entity_id, id: alertId, job, project, uid } = alert
 
-    //TODO: getLink will be updated with ML-8102
+      if (entityType === MODEL_ENDPOINT_RESULT) {
+      const [endpointId, , , name] = entity_id.split('.')
+      return `/projects/*/alerts/${project}/${alertName}/${alertId}/${name}/${endpointId}/${DETAILS_ALERT_APPLICATION}${queryString}`
+    }
 
-    // if (entityType === MODEL_ENDPOINT_RESULT) {
-    //   const [endpointId, , , name] = entity_id.split('.')
-    //   return `/projects/*/alerts/${project}/${alertName}/${alertId}/${name}/${endpointId}/${DETAILS_ALERT_APPLICATION}${queryString}`
-    // }
-    //
     if (entityType === JOB) {
       return job
         ? `/projects/*/alerts/${project}/${alertName}/${alertId}/${job.name}/${job.jobUid}/${DETAILS_ALERT_APPLICATION}${queryString}`
@@ -245,8 +243,11 @@ export const createAlertRowData = ({ ...alert }, isCrossProjects) => {
   }
 
   if (alert.entity_kind === MODEL_ENDPOINT_RESULT) {
-    alert.endpointName = alert.entity_id.split('.')[1]
-    alert.uid = alert.entity_id.split('.')[0]
+    const [uid, endpointName, ...rest] = alert.entity_id.split('.')
+    const fullName = [endpointName, ...rest].join('.')
+    alert.endpointName = endpointName
+    alert.uid = uid
+    alert.fullName = `${alert.project}.${fullName}`
   }
 
   if (alert.entity_kind === MODEL_MONITORING_APPLICATION) {

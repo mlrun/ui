@@ -20,13 +20,13 @@ such restriction.
 import React, { useCallback } from 'react'
 import PropTypes from 'prop-types'
 
-import AlertLogsModal from './AlertLogPopup'
-
+import AlertLogsModal from './AlertLogsModal'
+import DetailsAlertsMetrics from './DetailsAlertsMetrics'
 import DetailsInfo from '../DetailsInfo/DetailsInfo'
 import DetailsLogs from '../DetailsLogs/DetailsLogs'
 import { RoundedIcon } from 'iguazio.dashboard-react-controls/dist/components'
 
-import { JOB } from '../../constants'
+import { JOB, MODEL_ENDPOINT_RESULT } from '../../constants'
 import { openPopUp } from 'iguazio.dashboard-react-controls/dist/utils/common.util'
 
 import { ReactComponent as EnlargeIcon } from 'igz-controls/images/ml-enlarge.svg'
@@ -78,6 +78,9 @@ const DetailsDrillDownAlert = React.forwardRef(
               withLogsRefreshBtn
             />
           </>
+        )}
+        {pageData.details.entityType === MODEL_ENDPOINT_RESULT && (
+          <DetailsAlertsMetrics selectedItem={selectedItem} />
         )}
       </>
     )
