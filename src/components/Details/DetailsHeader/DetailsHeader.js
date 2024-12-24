@@ -19,7 +19,7 @@ such restriction.
 */
 import React, { useCallback, useRef, useEffect, useState, useMemo } from 'react'
 import PropTypes from 'prop-types'
-import { Link, useNavigate, useParams } from 'react-router-dom'
+import { Link, useLocation, useNavigate, useParams } from 'react-router-dom'
 import { isEmpty } from 'lodash'
 import { useSelector } from 'react-redux'
 import classNames from 'classnames'
@@ -76,6 +76,7 @@ const DetailsHeader = ({
   const viewMode = getViewMode(window.location.search)
   const { actionButton, withToggleViewBtn, showAllVersions } = pageData.details
   const headerRef = useRef()
+  const location = useLocation()
 
   const errorMessage = useMemo(
     () =>
@@ -292,7 +293,7 @@ const DetailsHeader = ({
                 <RoundedIcon
                   onClick={() => {
                     navigate(
-                      `${window.location.pathname}${window.location.search}${window.location.search ? '&' : '?'}${VIEW_SEARCH_PARAMETER}=full`
+                      `${location.pathname}${window.location.search}${window.location.search ? '&' : '?'}${VIEW_SEARCH_PARAMETER}=full`
                     )
                   }}
                   id="full-view"
@@ -305,7 +306,7 @@ const DetailsHeader = ({
                 <RoundedIcon
                   onClick={() => {
                     navigate(
-                      `${window.location.pathname}${getFilteredSearchParams(window.location.search, [VIEW_SEARCH_PARAMETER])}`
+                      `${location.pathname}${getFilteredSearchParams(window.location.search, [VIEW_SEARCH_PARAMETER])}`
                     )
                   }}
                   id="table-view"
