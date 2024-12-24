@@ -339,7 +339,6 @@ const ActionBar = ({
             <FilterMenuModal
               applyChanges={filterMenuModal => applyChanges(formState.values, filterMenuModal)}
               initialValues={filterMenuModalInitialState}
-              restartFormTrigger={`${tab}`}
               values={filterMenuModal}
             >
               {children}
