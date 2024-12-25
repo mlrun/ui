@@ -103,12 +103,12 @@ const DownloadItem = ({ downloadItem }) => {
             response = await api.getArtifactPreview(downloadItem.projectName, config)
 
             if (response?.data) {
-              fullFile = new Blob([fullFile, response.data], { type: response.data.type })
+              fullFile = new Blob([fullFile, response.data])
             } else {
               throw new Error('Error during loading the file')
             }
 
-            config.params.offset += chunkSize
+            config.params.offset += response.data.byteLength ?? chunkSize
           }
 
           response.data = fullFile

@@ -318,7 +318,10 @@ const ActionBar = ({
                         date={input.value.value[0]}
                         dateTo={input.value.value[1]}
                         hasFutureOptions={filtersConfig[DATES_FILTER].isFuture}
-                        selectedOptionId={input.value.initialSelectedOptionId}
+                        selectedOptionId={
+                          filterMenu[DATES_FILTER]?.initialSelectedOptionId ||
+                          input.value.initialSelectedOptionId
+                        }
                         label=""
                         onChange={(dates, isPredefined, optionId) =>
                           handleDateChange(dates, isPredefined, optionId, input, formState)
@@ -337,7 +340,6 @@ const ActionBar = ({
             <FilterMenuModal
               applyChanges={filterMenuModal => applyChanges(formState.values, filterMenuModal)}
               initialValues={filterMenuModalInitialState}
-              restartFormTrigger={`${tab}`}
               values={filterMenuModal}
             >
               {children}

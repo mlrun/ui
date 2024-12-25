@@ -167,10 +167,6 @@
             line-height: 23px;
           }
 
-          &-tip {
-            margin-left: 5px;
-          }
-
           &.table-header {
             min-height: 150px;
           }
@@ -225,22 +221,25 @@
         margin-bottom: 25px;
 
         &_left {
-          display: grid;
-          grid-template-columns: repeat(3, 1fr);
+          display: flex;
           gap: 15px;
         }
 
         &_right {
-          display: grid;
-          grid-template-columns: 1fr 2fr;
+          display: flex;
           gap: 15px;
         }
 
         .monitoring-stats {
+          flex: 1;
           padding: 15px;
 
           @media screen and (min-width: 1300px) {
             padding: 20px;
+          }
+
+          &.alerts-card {
+            flex: 2;
           }
 
           .stats-card__title {

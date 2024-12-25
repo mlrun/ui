@@ -85,6 +85,31 @@ const getEntityTypeData = entityType => {
       }
   }
 }
+const getTriggerCriticalTimePeriod = line => {
+  const units = {
+    y: 'year',
+    m: 'month',
+    d: 'day',
+    h: 'hour',
+    ms: 'millisecond',
+    s: 'second'
+  }
+
+  const formatPart = part => {
+    const unit = Object.keys(units).find(key => part.endsWith(key))
+    if (!unit) return 'N/A'
+
+    const value = part.slice(0, -unit.length)
+    const isPlural = parseInt(value, 10) > 1
+
+    return `${value} ${units[unit]}${isPlural ? 's' : ''}`
+  }
+
+  const renderValue = line => line.split(/,?\s+/).map(formatPart).join(', ')
+  return {
+    value: <span>{line ? renderValue(line) : 'N/A'}</span>
+  }
+}
 
 const getSeverityData = severity => {
   switch (severity) {
@@ -159,8 +184,11 @@ const getNotificationData = notifications =>
         </div>
       ),
       tooltip: upperFirst(
-        `${notification.summary.succeeded} done, ${notification.summary.failed} failed`
-      )
+        `${notification.summary.succeeded} success, ${notification.summary.failed} failed`
+      ),
+      kind: notification.kind,
+      succeeded: notification.summary.succeeded,
+      failed: notification.summary.failed
     }
   })
 
@@ -301,7 +329,7 @@ export const createAlertRowData = ({ ...alert }, isCrossProjects, showExpandButt
         id: `criteriaTime.${alert.id}`,
         headerId: 'criteriaTime',
         headerLabel: 'Trigger criteria time period',
-        value: alert.criteria?.period,
+        value: getTriggerCriticalTimePeriod(alert.criteria?.period).value,
         className: 'table-cell-1'
       },
       {

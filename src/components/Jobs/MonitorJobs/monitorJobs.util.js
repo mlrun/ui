@@ -18,7 +18,6 @@ under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
 import React from 'react'
-import { isEmpty } from 'lodash'
 
 import { FUNCTION_RUN_KINDS } from '../../../constants'
 import {
@@ -64,7 +63,7 @@ export const generateActionsMenu = (
           onClick: handleRerunJob
         },
         {
-          label: 'Monitoring',
+          label: "Run's resource monitoring",
           icon: <MonitorIcon />,
           tooltip: !jobs_dashboard_url
             ? 'Grafana service unavailable'
@@ -72,8 +71,7 @@ export const generateActionsMenu = (
               ? 'Unavailable for Dask jobs'
               : '',
           disabled: !jobs_dashboard_url || jobKindIsDask,
-          onClick: handleMonitoring,
-          hidden: !isEmpty(selectedJob)
+          onClick: handleMonitoring
         },
         {
           label: 'Abort',

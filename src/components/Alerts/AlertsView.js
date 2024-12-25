@@ -28,9 +28,9 @@ import NoData from '../../common/NoData/NoData'
 import Pagination from '../../common/Pagination/Pagination'
 import Table from '../Table/Table'
 
+import { ALERTS_FILTERS, ALERTS_PAGE } from '../../constants'
 import { getNoDataMessage } from '../../utils/getNoDataMessage'
 import { getCloseDetailsAlertLink } from '../../utils/link-helper.util'
-import { ALERTS_FILTERS, ALERTS_PAGE } from '../../constants'
 
 import './alerts.scss'
 import classNames from 'classnames'

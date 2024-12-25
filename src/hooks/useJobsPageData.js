@@ -41,7 +41,7 @@ import { fetchAllJobRuns, fetchJobs, fetchScheduledJobs } from '../reducers/jobR
 import { fetchWorkflows } from '../reducers/workflowReducer'
 import { useFiltersFromSearchParams } from './useFiltersFromSearchParams.hook'
 
-export const useJobsPageData = (setSelectedJob, initialTabData, selectedTab) => {
+export const useJobsPageData = (initialTabData, selectedTab) => {
   const [jobRuns, setJobRuns] = useState([])
   const [editableItem, setEditableItem] = useState(null)
   const [jobWizardMode, setJobWizardMode] = useState(null)
@@ -236,8 +236,8 @@ export const useJobsPageData = (setSelectedJob, initialTabData, selectedTab) => 
   )
 
   const handleMonitoring = useCallback(
-    item => {
-      monitorJob(appStore.frontendSpec.jobs_dashboard_url, item, params.projectName)
+    (item, isProject) => {
+      monitorJob(appStore.frontendSpec.jobs_dashboard_url, item, params.projectName, isProject)
     },
     [appStore.frontendSpec.jobs_dashboard_url, params.projectName]
   )

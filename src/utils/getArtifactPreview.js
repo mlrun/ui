@@ -246,7 +246,7 @@ export const fetchArtifactPreview = async (
         throw new Error('Error during loading the preview file')
       }
 
-      config.params.offset += chunkSize
+      config.params.offset += response.data.size ?? chunkSize
     }
 
     response.data = fullFile

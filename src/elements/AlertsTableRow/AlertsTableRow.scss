@@ -1,4 +1,5 @@
 @import '~igz-controls/scss/colors';
+@import '~igz-controls/scss/borders';
 
 .alert-row {
   flex-wrap: wrap;
@@ -13,6 +14,44 @@
   }
 
   &__item-info-notification {
+    display: flex;
+    gap: 5px;
+  }
+
+  &__details-alert-icon-cell {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+
+    svg {
+      width: 20px;
+      height: 20px;
+    }
+  }
+
+  &__details-alert-header {
+    display: flex;
+    align-self: center;
+    min-width: 160px;
+    font-weight: 500;
+    font-size: 15px;
+    line-height: 18px;
+  }
+
+  &__details-alert-logs {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  &__popup-header {
+    margin: 0;
+    padding-bottom: 12px;
+    font-size: 18px;
+  }
+
+  &__item-info-notification {
+    flex-wrap: wrap;
     display: flex;
     gap: 5px;
   }
@@ -78,5 +117,55 @@
     flex-direction: column;
     justify-items: center;
     margin-top: 8px;
+  }
+}
+
+.notifications-item {
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+  align-items: center;
+  margin: 12px 0 12px 0;
+  padding-right: 12px;
+
+  &:not(:last-child) {
+    margin-right: 12px;
+    border-right: $secondaryBorder;
+  }
+
+  &_icon {
+    svg {
+      width: 40px;
+      height: 40px;
+    }
+
+    .notification-fail {
+      position: absolute;
+      top: 22px;
+      left: 27px;
+
+      svg {
+        width: 16px;
+        height: 16px;
+      }
+    }
+  }
+
+  &__header {
+    font-weight: bold;
+    font-size: 10px;
+
+    &-text {
+      color: $topaz;
+      font-size: 15px;
+
+      &_failed {
+        color: inherit;
+      }
+
+      &_success {
+        color: $ceriseRed;
+      }
+    }
   }
 }
