@@ -20,8 +20,8 @@ such restriction.
 import React, { useCallback } from 'react'
 import PropTypes from 'prop-types'
 
-import AlertsDetailsMetrics from './AlertsDetailsMetrics'
 import AlertLogsPopup from './AlertLogPopup'
+import DetailsAlertsMetrics from './DetailsAlertsMetrics'
 import DetailsInfo from '../DetailsInfo/DetailsInfo'
 import DetailsLogs from '../DetailsLogs/DetailsLogs'
 import { RoundedIcon } from 'iguazio.dashboard-react-controls/dist/components'
@@ -80,7 +80,7 @@ const DetailsDrillDownAlert = React.forwardRef(
           </>
         )}
         {pageData.details.entityType === MODEL_ENDPOINT_RESULT && (
-          <AlertsDetailsMetrics selectedItem={selectedItem} />
+          <DetailsAlertsMetrics selectedItem={selectedItem} />
         )}
       </>
     )

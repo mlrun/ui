@@ -25,7 +25,7 @@ import { useParams } from 'react-router-dom'
 import DetailsAlertsMetrics from '../../components/DetailsDrillDownAlert/DetailsAlertsMetrics'
 import TableCell from '../TableCell/TableCell'
 
-import { ALERTS_PAGE, DETAILS_OVERVIEW_TAB, MODEL_ENDPOINTS_TAB } from '../../constants'
+import { ALERTS_PAGE, DETAILS_OVERVIEW_TAB } from '../../constants'
 import { getIdentifierMethod } from '../../utils/getUniqueIdentifier'
 
 import './AlertsTableRow.scss'
@@ -65,11 +65,11 @@ const AlertsTableRow = ({ ifRowSelected, filters, rowItem, selectedItem, toggleR
         ))}
       </tr>
       {ifRowSelected && (
-        <tr>
-          <td colSpan={rowItem.content.length}>
+        <tr className="alert-row__expanded-row">
+          <td>
             <DetailsAlertsMetrics
               filters={filters}
-              location={MODEL_ENDPOINTS_TAB}
+              isAlertsPage={false}
               selectedItem={selectedItem}
             />
           </td>

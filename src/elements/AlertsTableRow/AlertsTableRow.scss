@@ -74,6 +74,9 @@
   }
 
   &__expanded-row {
+    display: flex;
+    flex-direction: column;
+    justify-items: center;
     margin-top: 8px;
   }
 }

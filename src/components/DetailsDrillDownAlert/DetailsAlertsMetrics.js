@@ -28,12 +28,13 @@ import NoData from '../../common/NoData/NoData'
 import NoMetricData from '../DetailsMetrics/NoMetricData'
 import StatsCard from '../../common/StatsCard/StatsCard'
 
-import { ALERTS_PAGE, REQUEST_CANCELED } from '../../constants'
+import { REQUEST_CANCELED } from '../../constants'
 import detailsActions from '../../actions/details'
 import modelEndpointsActions from '../../actions/modelEndpoints'
 import { groupMetricByApplication } from '../../elements/MetricsSelector/metricsSelector.util'
 
 import {
+  CUSTOM_RANGE_DATE_OPTION,
   datePickerPastOptions,
   PAST_24_HOUR_DATE_OPTION,
   TIME_FRAME_LIMITS
@@ -41,7 +42,7 @@ import {
 
 import { ReactComponent as MetricsIcon } from 'igz-controls/images/metrics-icon.svg'
 
-const DetailsAlertsMetrics = ({ selectedItem, filters, location = ALERTS_PAGE }) => {
+const DetailsAlertsMetrics = ({ selectedItem, filters, isAlertsPage = true }) => {
   const [metrics, setMetrics] = useState([])
   const [requestErrorMessage, setRequestErrorMessage] = useState('')
   const metricsContainerRef = useRef(null)
@@ -51,7 +52,6 @@ const DetailsAlertsMetrics = ({ selectedItem, filters, location = ALERTS_PAGE })
   const detailsStore = useSelector(store => store.detailsStore)
   const dispatch = useDispatch()
 
-  const isAlertsPage = useMemo(() => location === ALERTS_PAGE, [location])
   const generatedMetrics = useMemo(() => {
     return groupMetricByApplication(metrics, true)
   }, [metrics])
@@ -83,12 +83,6 @@ const DetailsAlertsMetrics = ({ selectedItem, filters, location = ALERTS_PAGE })
     handleChangeDates(past24hoursOption.handler(), true, PAST_24_HOUR_DATE_OPTION)
   }, [handleChangeDates])
 
-  // useEffect(() => {
-  //   dispatch(
-  //     modelEndpointsActions.fetchModelEndpointMetrics(selectedItem.project, selectedItem.uid)
-  //   ).then()
-  // }, [dispatch, selectedItem.project, selectedItem.uid])
-
   const fetchData = useCallback(
     (params, projectName, uid) => {
       metricsValuesAbortController.current = new AbortController()
@@ -118,13 +112,18 @@ const DetailsAlertsMetrics = ({ selectedItem, filters, location = ALERTS_PAGE })
       params.start = detailsStore.dates.value[0].getTime()
       params.end = detailsStore.dates.value[1].getTime()
     }
-    if (!isAlertsPage) {
-      params.start = '1732461360199'
-      params.end = '1735053360199'
-    }
 
+    if (!isAlertsPage) {
+      if (filters?.dates?.initialSelectedOptionId === CUSTOM_RANGE_DATE_OPTION) {
+        params.start = filters?.dates.value[0].getTime()
+        params.end = filters?.dates.value[1].getTime()
+      } else {
+        params.start = filters?.dates.value[0].getTime()
+        params.end = Date.now()
+      }
+    }
     fetchData(params, selectedItem.project, selectedItem.uid).then()
-  }, [isAlertsPage, selectedItem, detailsStore.dates.value, fetchData])
+  }, [isAlertsPage, filters, selectedItem, detailsStore.dates.value, fetchData])
 
   useEffect(() => {
     fetchMetrics()
@@ -184,6 +183,7 @@ const DetailsAlertsMetrics = ({ selectedItem, filters, location = ALERTS_PAGE })
 }
 
 DetailsAlertsMetrics.propTypes = {
+  isAlertsPage: PropTypes.bool,
   selectedItem: PropTypes.object.isRequired
 }
 
