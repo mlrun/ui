@@ -17,7 +17,7 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import { cloneDeep, debounce, isEmpty } from 'lodash'
+import { cloneDeep, debounce, isEmpty, isNil } from 'lodash'
 
 import artifactApi from '../api/artifacts-api'
 import {
@@ -217,7 +217,7 @@ export const setFullSelectedArtifact = debounce(
       const { db_key, tree, tag, iter, uid } = selectedArtifactMin
       const fetchArtifactData = getArtifactFetchMethod(tab)
 
-      if (paramsUid === uid && paramsTag === tag) {
+      if (paramsUid === uid && (paramsTag === tag || (isNil(paramsTag) && isNil(tag)))) {
         dispatch(fetchArtifactData({ projectName, artifactName: db_key, uid, tree, tag, iter }))
           .unwrap()
           .then(artifact => {

@@ -94,7 +94,7 @@ const DocumentsView = React.forwardRef(
                   withRefreshButton
                   withoutExpandButton
                 >
-                  <ArtifactsFilters artifacts={documents} />
+                  <ArtifactsFilters artifacts={documents} isAllVersions={isAllVersions} />
                 </ActionBar>
               </div>
               {artifactsStore.loading ? null : tableContent.length === 0 ? (

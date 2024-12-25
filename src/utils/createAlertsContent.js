@@ -85,6 +85,31 @@ const getEntityTypeData = entityType => {
       }
   }
 }
+const getTriggerCriticalTimePeriod = line => {
+  const units = {
+    y: 'year',
+    m: 'month',
+    d: 'day',
+    h: 'hour',
+    ms: 'millisecond',
+    s: 'second'
+  }
+
+  const formatPart = part => {
+    const unit = Object.keys(units).find(key => part.endsWith(key))
+    if (!unit) return 'N/A'
+
+    const value = part.slice(0, -unit.length)
+    const isPlural = parseInt(value, 10) > 1
+
+    return `${value} ${units[unit]}${isPlural ? 's' : ''}`
+  }
+
+  const renderValue = line => line.split(/,?\s+/).map(formatPart).join(', ')
+  return {
+    value: <span>{line ? renderValue(line) : 'N/A'}</span>
+  }
+}
 
 const getSeverityData = severity => {
   switch (severity) {
@@ -174,13 +199,11 @@ export const createAlertRowData = ({ ...alert }, isCrossProjects) => {
     const queryString = window.location.search
     const { alertName, entity_kind: entityType, entity_id, id: alertId, job, project, uid } = alert
 
-    //TODO: getLink will be updated with ML-8102
+      if (entityType === MODEL_ENDPOINT_RESULT) {
+      const [endpointId, , , name] = entity_id.split('.')
+      return `/projects/*/alerts/${project}/${alertName}/${alertId}/${name}/${endpointId}/${DETAILS_ALERT_APPLICATION}${queryString}`
+    }
 
-    // if (entityType === MODEL_ENDPOINT_RESULT) {
-    //   const [endpointId, , , name] = entity_id.split('.')
-    //   return `/projects/*/alerts/${project}/${alertName}/${alertId}/${name}/${endpointId}/${DETAILS_ALERT_APPLICATION}${queryString}`
-    // }
-    //
     if (entityType === JOB) {
       return job
         ? `/projects/*/alerts/${project}/${alertName}/${alertId}/${job.name}/${job.jobUid}/${DETAILS_ALERT_APPLICATION}${queryString}`
@@ -220,8 +243,11 @@ export const createAlertRowData = ({ ...alert }, isCrossProjects) => {
   }
 
   if (alert.entity_kind === MODEL_ENDPOINT_RESULT) {
-    alert.endpointName = alert.entity_id.split('.')[1]
-    alert.uid = alert.entity_id.split('.')[0]
+    const [uid, endpointName, ...rest] = alert.entity_id.split('.')
+    const fullName = [endpointName, ...rest].join('.')
+    alert.endpointName = endpointName
+    alert.uid = uid
+    alert.fullName = `${alert.project}.${fullName}`
   }
 
   if (alert.entity_kind === MODEL_MONITORING_APPLICATION) {
@@ -302,7 +328,7 @@ export const createAlertRowData = ({ ...alert }, isCrossProjects) => {
         id: `criteriaTime.${alert.id}`,
         headerId: 'criteriaTime',
         headerLabel: 'Trigger criteria time period',
-        value: alert.criteria?.period,
+        value: getTriggerCriticalTimePeriod(alert.criteria?.period).value,
         className: 'table-cell-1'
       },
       {

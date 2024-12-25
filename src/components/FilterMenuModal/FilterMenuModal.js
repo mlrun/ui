@@ -17,14 +17,13 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import React, { useCallback, useEffect, useRef, useState } from 'react'
+import React, { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react'
 import PropTypes from 'prop-types'
 import classnames from 'classnames'
 import { Form } from 'react-final-form'
 import { createForm } from 'final-form'
 import { isEmpty, isEqual, reduce, throttle } from 'lodash'
 import { useDispatch } from 'react-redux'
-import { useParams } from 'react-router-dom'
 
 import { PopUpDialog, RoundedIcon, Button } from 'igz-controls/components'
 
@@ -45,7 +44,6 @@ const FilterMenuModal = ({
   filterMenuName = '',
   header = 'Filter by',
   initialValues,
-  restartFormTrigger = null,
   values,
   withoutApplyButton = false,
   wizardClassName = ''
@@ -53,7 +51,6 @@ const FilterMenuModal = ({
   const [filtersWizardIsShown, setFiltersWizardIsShown] = useState(false)
   const filtersIconButtonRef = useRef()
   const dispatch = useDispatch()
-  const params = useParams()
   const formRef = React.useRef(
     createForm({
       onSubmit: () => {},
@@ -101,19 +98,10 @@ const FilterMenuModal = ({
     }
   }, [hideFiltersWizard])
 
-  useEffect(() => {
-    const ref = formRef.current
-
-    return () => {
-      ref.restart(initialValues)
-    }
+  useLayoutEffect(() => {
+    formRef.current.reset(initialValues)
   }, [
-    params.pageTab,
-    params.projectName,
-    restartFormTrigger,
-    dispatch,
     initialValues,
-    filterMenuName
   ])
 
   const getFilterCounter = formState => {
@@ -232,7 +220,6 @@ FilterMenuModal.propTypes = {
   filterMenuName: PropTypes.string,
   header: PropTypes.string,
   initialValues: PropTypes.shape({}).isRequired,
-  restartFormTrigger: PropTypes.oneOfType([PropTypes.string, PropTypes.bool]),
   values: PropTypes.shape({}).isRequired,
   withoutApplyButton: PropTypes.bool,
   wizardClassName: PropTypes.string

@@ -123,7 +123,7 @@ const ProjectsJobsMonitoring = () => {
     setScheduledJobs,
     setSearchParams,
     terminateAbortTasksPolling
-  } = useJobsPageData(setSelectedJob, initialTabData, selectedTab)
+  } = useJobsPageData(initialTabData, selectedTab)
 
   const handleTabChange = tabName => {
     setSelectedCard(STATS_TOTAL_CARD)
