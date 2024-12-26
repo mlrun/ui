@@ -235,7 +235,7 @@ const Jobs = () => {
                   jobWizardIsOpened || jobsStore.loading || !isEmpty(selectedJob)
                 }
                 filters={filters}
-                filtersConfig={tabData[selectedTab].filtersConfig}
+                filtersConfig={initialTabData[selectedTab].filtersConfig}
                 handleRefresh={tabData[selectedTab].handleRefresh}
                 hidden={Boolean(params.workflowId)}
                 key={selectedTab}
