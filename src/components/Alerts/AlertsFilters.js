@@ -67,6 +67,13 @@ const AlertsFilters = ({ isCrossProjects }) => {
     }))
   }, [projectStore.projectsNames.data])
 
+  const truncatedEventTypeOptions = useMemo(() => {
+    return filterAlertsEventTypeOptions(entityType).map(item => ({
+      ...item,
+      label: truncate(item.label, { length: 26 })
+    }))
+  }, [entityType])
+
   const getFieldsToReset = useCallback(entityType => {
     const fieldsByType = {
       [FILTER_ALL_ITEMS]: [ENTITY_ID],
@@ -144,11 +151,7 @@ const AlertsFilters = ({ isCrossProjects }) => {
         <StatusFilter statusList={filterAlertsSeverityOptions} name={SEVERITY} />
       </div>
       <div className="form-row">
-        <FormSelect
-          label="Event type"
-          name={EVENT_TYPE}
-          options={filterAlertsEventTypeOptions(entityType)}
-        />
+        <FormSelect label="Event type" name={EVENT_TYPE} options={truncatedEventTypeOptions} />
       </div>
     </>
   )

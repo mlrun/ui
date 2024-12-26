@@ -136,7 +136,7 @@ const alertsEventTypeOptions = [
     ENTITY_TYPE: MODEL_ENDPOINT_RESULT
   },
   {
-    label: 'MM Perf. Detected',
+    label: 'MM performance detected',
     id: 'model-performance-detected',
     ENTITY_TYPE: MODEL_ENDPOINT_RESULT
   },
@@ -146,7 +146,7 @@ const alertsEventTypeOptions = [
     ENTITY_TYPE: MODEL_ENDPOINT_RESULT
   },
   {
-    label: 'S Perf. Detected',
+    label: 'System performance detected',
     id: 'system-performance-detected',
     ENTITY_TYPE: MODEL_ENDPOINT_RESULT
   },
