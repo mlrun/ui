@@ -435,6 +435,63 @@ Feature: Artifacts Page
     Then verify "Overview" tab is active in "Info_Pane_Tab_Selector" on "Files_Info_Pane" wizard
     Then verify "Overview_Sources_Headers" on "Files_Info_Pane" wizard should contains "Files_Info_Pane"."Overview_Sources_Headers"
     Then verify "Overview_Sources_Headers" element visibility on "Files_Info_Pane" wizard
+    When click on cell with value "raw-data" in "name" column in "Files_Table" table on "Files" wizard
+    And wait load page
+    Then click on "Source_Path" element on "Files_Info_Pane" wizard
+    And wait load page
+    Then verify if "Modal_Transition_Popup" popup dialog appears
+    Then verify "Title" element visibility on "Modal_Transition_Popup" wizard
+    Then "Title" element on "Modal_Transition_Popup" should contains "survival-curves_km-timelines" value
+    Then verify "Data_Status" element visibility on "Modal_Transition_Popup" wizard
+    Then "Data_Status" element on "Modal_Transition_Popup" should contains "Aug 29, 2021, 10:54:15 PM" value
+    Then verify "Refresh_Button" element visibility on "Modal_Transition_Popup" wizard
+    Then click on "Refresh_Button" element on "Modal_Transition_Popup" wizard
+    And wait load page
+    Then verify "Refresh_Button" element visibility on "Modal_Transition_Popup" wizard
+    Then verify "Action_Menu" element visibility on "Modal_Transition_Popup" wizard
+    Then verify "Action_Menu" dropdown element on "Modal_Transition_Popup" wizard should contains "Common_Lists"."Action_Menu_List_Dataset_Transition_Popup"
+    Then verify "Cross_Close_Button" element visibility on "Modal_Transition_Popup" wizard
+    Then click on "Cross_Close_Button" element on "Modal_Transition_Popup" wizard
+    And wait load page
+    Then click on "Source_Path" element on "Files_Info_Pane" wizard
+    And wait load page
+    Then select "Download" option in action menu on "Modal_Transition_Popup" wizard
+    And wait load page
+    Then verify "Download_Pop_Up" element visibility on "Downloads_Popup" wizard
+    And wait load page
+    Then verify "Download_Pop_Up_Cross_Cancel_Button" element visibility on "Downloads_Popup" wizard
+    And wait load page
+    Then verify "Download_Pop_Up_Cross_Cancel_Button" element visibility on "Downloads_Popup" wizard
+    And wait load page
+    Then verify "Header_Download_Pop_Up" element visibility on "Downloads_Popup" wizard
+    Then "Header_Download_Pop_Up" element on "Downloads_Popup" should contains "Downloads" value
+    Then click on "Download_Pop_Up_Cross_Cancel_Button" element on "Downloads_Popup" wizard
+    Then select "Copy URI" option in action menu on "Modal_Transition_Popup" wizard
+    And wait load page
+    Then verify if "Notification_Popup" popup dialog appears
+    Then verify "Notification_Pop_Up" element visibility on "Notification_Popup" wizard
+    Then "Notification_Pop_Up" element on "Notification_Popup" should contains "Copied to clipboard successfully" value
+    Then verify "Notification_Pop_Up_Cross_Close_Button" element visibility on "Notification_Popup" wizard
+    Then click on "Notification_Pop_Up_Cross_Close_Button" element on "Notification_Popup" wizard
+    Then select "View YAML" option in action menu on "Modal_Transition_Popup" wizard
+    Then verify if "View_YAML" popup dialog appears
+    Then verify "Cross_Cancel_Button" element visibility on "View_YAML" wizard
+    Then verify "YAML_Modal_Container" element visibility on "View_YAML" wizard
+    Then click on "Cross_Cancel_Button" element on "View_YAML" wizard
+    Then verify "Tab_Selector" on "Modal_Transition_Popup" wizard should contains "Datasets_Info_Pane"."Tab_List"
+    Then verify "Overview" tab is active in "Tab_Selector" on "Modal_Transition_Popup" wizard
+    Then select "Preview" tab in "Tab_Selector" on "Modal_Transition_Popup" wizard
+    Then verify "Preview" tab is active in "Tab_Selector" on "Modal_Transition_Popup" wizard
+    Then select "Metadata" tab in "Tab_Selector" on "Modal_Transition_Popup" wizard
+    Then verify "Metadata" tab is active in "Tab_Selector" on "Modal_Transition_Popup" wizard
+    Then select "Analysis" tab in "Tab_Selector" on "Modal_Transition_Popup" wizard
+    Then verify "Analysis" tab is active in "Tab_Selector" on "Modal_Transition_Popup" wizard
+    Then select "Overview" tab in "Tab_Selector" on "Modal_Transition_Popup" wizard
+    Then verify "Overview" tab is active in "Tab_Selector" on "Modal_Transition_Popup" wizard
+    Then verify "Overview_General_Headers" on "Modal_Transition_Popup" wizard should contains "Datasets_Info_Pane"."Overview_General_Headers"
+    Then verify "Overview_Producer_Headers" on "Modal_Transition_Popup" wizard should contains "Datasets_Info_Pane"."Overview_Producer_Headers"
+    Then verify "Overview_Sources_Headers" element visibility on "Modal_Transition_Popup" wizard
+    Then verify "Overview_Sources_Headers" on "Modal_Transition_Popup" wizard should contains "Datasets_Info_Pane"."Overview_Sources_Headers"
 
   @MLA
   @passive
@@ -557,7 +614,7 @@ Feature: Artifacts Page
     And wait load page
     When click on cell with row index 1 in "name" column in "Files_Table" table on "Files" wizard
     And wait load page
-    Then verify redirection from "projects/default/files/INVALID/latest/0/overview" to "projects/default/files/INVALID/latest/0/overview"
+    Then verify redirection from "projects/default/files/INVALID/latest/0/overview" to "projects/default/files"
     And select "tab" with "Datasets" value in breadcrumbs menu
     And wait load page
     And select "tab" with "Artifacts" value in breadcrumbs menu

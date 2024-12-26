@@ -106,8 +106,6 @@ module.exports = {
     ),
     Files_Table: commonTable(filesTable),
     Register_File_Button: By.css('.content__action-bar-wrapper .action-bar__actions .action-button'),
-    Table_FilterBy_Button: By.css(
-      '.content .content__action-bar-wrapper .action-bar__filters .filters-button button'
-    )
+    Table_FilterBy_Button: By.css('[data-testid="filter-menu-btn"]')
   }
 }

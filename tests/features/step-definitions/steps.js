@@ -1048,6 +1048,18 @@ Then(
 )
 
 Then(
+  'verify {string} element in {string} on {string} wizard should display hover tooltip {string}.{string}',
+  async function(inputField, accordion, wizard, constStorage, constValue) {
+    await checkComponentHintTextWithHover(
+      this.driver,
+      pageObjects[wizard][accordion][inputField],
+      pageObjects['commonPagesHeader']['Common_Tolltip'],
+      pageObjectsConsts[constStorage][constValue]
+    )
+  }
+)
+
+Then(
   'verify {string} on {string} wizard should display {string}.{string} in {string}',
   async function(inputField, wizard, constStorage, constValue, commonTipType) {
     await checkHintText(

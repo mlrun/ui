@@ -1193,18 +1193,18 @@ Feature: Datasets Page
     Then verify that 9 row elements are displayed in "Datasets_Table" on "Datasets" wizard
     Then click on cell with row index 1 in "expand_btn" column in "Datasets_Table" table on "Datasets" wizard
     And wait load page
-    Then verify that 10 row elements are displayed in "Datasets_Table" on "Datasets" wizard
+    Then verify that 9 row elements are displayed in "Datasets_Table" on "Datasets" wizard
     Then select "View YAML" option in action menu on "Datasets" wizard in "Datasets_Table" table at row with "latest" value in "name_expand_btn" column
     Then verify if "View_YAML" popup dialog appears
-    Then verify that 10 row elements are displayed in "Datasets_Table" on "Datasets" wizard
+    Then verify that 9 row elements are displayed in "Datasets_Table" on "Datasets" wizard
     Then click on "Cross_Cancel_Button" element on "View_YAML" wizard
-    Then verify that 10 row elements are displayed in "Datasets_Table" on "Datasets" wizard
+    Then verify that 9 row elements are displayed in "Datasets_Table" on "Datasets" wizard
     Then click on cell with row index 2 in "name" column in "Datasets_Table" table on "Datasets" wizard
     And wait load page
     Then verify "Info_Pane_Tab_Selector" on "Datasets_Info_Pane" wizard should contains "Datasets_Info_Pane"."Tab_List"
-    Then verify that 10 row elements are displayed in "Datasets_Table" on "Datasets" wizard
+    Then verify that 9 row elements are displayed in "Datasets_Table" on "Datasets" wizard
     Then click on "Cross_Close_Button" element on "Datasets_Info_Pane" wizard
-    Then verify that 10 row elements are displayed in "Datasets_Table" on "Datasets" wizard
+    Then verify that 9 row elements are displayed in "Datasets_Table" on "Datasets" wizard
     Then click on cell with row index 1 in "expand_btn" column in "Datasets_Table" table on "Datasets" wizard
     And wait load page
     Then verify that 9 row elements are displayed in "Datasets_Table" on "Datasets" wizard

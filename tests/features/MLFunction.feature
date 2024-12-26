@@ -93,6 +93,7 @@ Feature: ML Functions
         Then verify "Overview_Headers" on "ML_Function_Info_Pane" wizard should contains "ML_Function_Info_Pane"."Overview_Headers"
         Then click on "Cross_Close_Button" element on "ML_Function_Info_Pane" wizard
         When click on cell with row index 1 in "name" column in "Functions_Table" table on "ML_Functions" wizard
+        And wait load page
         Then verify "Header" element visibility on "ML_Function_Info_Pane" wizard
         Then verify "Updated" element visibility on "ML_Function_Info_Pane" wizard
         Then verify "Cross_Close_Button" element visibility on "ML_Function_Info_Pane" wizard
@@ -645,6 +646,8 @@ Feature: ML Functions
         And set tear-down property "function" created in "default" project with "new-aqa-function-00" value
         Then click on "Save_Button" element on "New_Function" wizard
         And wait load page
+        When click on cell with row index 1 in "name" column in "Functions_Table" table on "ML_Functions" wizard
+        And wait load page
         Then "Header" element on "ML_Function_Info_Pane" should contains "new-aqa-function-00" value
         Then check "new-aqa-function-00" value in "name" column in "Overview_Table" table on "ML_Function_Info_Pane" wizard
         Then check "job" value in "kind" column in "Overview_Table" table on "ML_Function_Info_Pane" wizard
@@ -1079,7 +1082,7 @@ Feature: ML Functions
         Then verify "Cross_Cancel_Button" element visibility on "View_YAML" wizard
         Then verify "YAML_Modal_Container" element visibility on "View_YAML" wizard
         Then click on "Cross_Cancel_Button" element on "View_YAML" wizard
-        Then click on cell with row index 8 in "expand_btn" column in "Functions_Table" table on "ML_Functions" wizard
+        Then click on cell with row index 9 in "expand_btn" column in "Functions_Table" table on "ML_Functions" wizard
         And wait load page
         Then select "View YAML" option in action menu on "ML_Functions" wizard in "Functions_Table" table at row with "Nov 23, 2021, 11:31:51 AM" value in "name" column
         Then verify if "View_YAML" popup dialog appears
