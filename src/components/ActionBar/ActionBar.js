@@ -39,13 +39,14 @@ import {
   DATES_FILTER,
   GROUP_BY_NAME,
   GROUP_BY_NONE,
+  INTERNAL_AUTO_REFRESH_ID,
   NAME_FILTER,
   REQUEST_CANCELED,
   TAG_FILTER_ALL_ITEMS
 } from '../../constants'
 import detailsActions from '../../actions/details'
 import { FILTERS_CONFIG } from '../../types'
-import { setFilters } from '../../reducers/filtersReducer'
+import { setFilters, toggleAutoRefresh } from '../../reducers/filtersReducer'
 import { setFieldState } from 'igz-controls/utils/form.util'
 import { CUSTOM_RANGE_DATE_OPTION } from '../../utils/datePicker.util'
 
@@ -58,22 +59,31 @@ const ActionBar = ({
   allRowsAreExpanded,
   autoRefreshIsEnabled = false,
   autoRefreshIsStopped = false,
+  autoRefreshStopTrigger = false,
   cancelRequest = null,
   children,
   filters,
   filtersConfig,
+  handleAutoRefreshPrevValueChange,
   handleRefresh,
   hidden = false,
+  internalAutoRefreshIsEnabled = false,
   navigateLink,
   removeSelectedItem = null,
   setSearchParams,
   setSelectedRowData = null,
   tab = '',
   toggleAllRows,
+  withAutoRefresh = false,
+  withInternalAutoRefresh = false,
   withRefreshButton = true,
   withoutExpandButton
 }) => {
   const [autoRefresh, setAutoRefresh] = useState(autoRefreshIsEnabled)
+  const [internalAutoRefresh, setInternalAutoRefresh] = useState(internalAutoRefreshIsEnabled)
+  const [internalAutoRefreshPrevValue, setInternalAutoRefreshPrevValue] = useState(
+    internalAutoRefreshIsEnabled
+  )
   const filtersStore = useSelector(store => store.filtersStore)
   const changes = useSelector(store => store.detailsStore.changes)
   const dispatch = useDispatch()
@@ -102,7 +112,8 @@ const ActionBar = ({
 
   const formInitialValues = useMemo(() => {
     const initialValues = {
-      [AUTO_REFRESH_ID]: autoRefreshIsEnabled
+      [AUTO_REFRESH_ID]: autoRefreshIsEnabled,
+      [INTERNAL_AUTO_REFRESH_ID]: internalAutoRefreshIsEnabled
     }
 
     for (const [filterName, filterConfig] of Object.entries(filtersConfig)) {
@@ -112,7 +123,7 @@ const ActionBar = ({
     }
 
     return initialValues
-  }, [autoRefreshIsEnabled, filtersConfig])
+  }, [autoRefreshIsEnabled, filtersConfig, internalAutoRefreshIsEnabled])
 
   const formRef = React.useRef(
     createForm({
@@ -278,7 +289,7 @@ const ActionBar = ({
   }, [filterMenu, filtersConfig])
 
   useEffect(() => {
-    if (autoRefreshIsEnabled && autoRefresh && !hidden) {
+    if ((autoRefresh || internalAutoRefresh) && !hidden) {
       const intervalId = setInterval(() => {
         if (!autoRefreshIsStopped) {
           refresh(formRef.current.getState())
@@ -287,7 +298,35 @@ const ActionBar = ({
 
       return () => clearInterval(intervalId)
     }
-  }, [autoRefresh, autoRefreshIsStopped, hidden, autoRefreshIsEnabled, refresh])
+  }, [
+    autoRefresh,
+    autoRefreshIsStopped,
+    hidden,
+    refresh,
+    internalAutoRefresh,
+    withInternalAutoRefresh
+  ])
+
+  useEffect(() => {
+    if (autoRefreshStopTrigger && internalAutoRefresh) {
+      formRef.current?.change(INTERNAL_AUTO_REFRESH_ID, false)
+      setInternalAutoRefreshPrevValue(true)
+      dispatch(toggleAutoRefresh(false))
+      handleAutoRefreshPrevValueChange && handleAutoRefreshPrevValueChange(true)
+    } else if (!autoRefreshStopTrigger && internalAutoRefreshPrevValue) {
+      setInternalAutoRefreshPrevValue(false)
+      setInternalAutoRefresh(true)
+      dispatch(toggleAutoRefresh(true))
+      formRef.current?.change(INTERNAL_AUTO_REFRESH_ID, true)
+      handleAutoRefreshPrevValueChange && handleAutoRefreshPrevValueChange(false)
+    }
+  }, [
+    internalAutoRefreshPrevValue,
+    autoRefreshStopTrigger,
+    internalAutoRefresh,
+    handleAutoRefreshPrevValueChange,
+    dispatch
+  ])
 
   useLayoutEffect(() => {
     formRef.current.reset(formInitialValues)
@@ -362,14 +401,35 @@ const ActionBar = ({
                     />
                   ))
               )}
-              {autoRefreshIsEnabled && (
+              {withAutoRefresh && !withInternalAutoRefresh && (
                 <FormCheckBox
                   className="auto-refresh"
                   label={AUTO_REFRESH}
                   name={AUTO_REFRESH_ID}
                 />
               )}
-              <FormOnChange handler={setAutoRefresh} name={AUTO_REFRESH_ID} />
+              <FormOnChange
+                handler={value => {
+                  dispatch(toggleAutoRefresh(value))
+                  setAutoRefresh(value)
+                }}
+                name={AUTO_REFRESH_ID}
+              />
+              {withInternalAutoRefresh && (
+                <FormCheckBox
+                  className="auto-refresh"
+                  disabled={autoRefreshStopTrigger}
+                  label={AUTO_REFRESH}
+                  name={INTERNAL_AUTO_REFRESH_ID}
+                />
+              )}
+              <FormOnChange
+                handler={value => {
+                  setInternalAutoRefresh(value)
+                  dispatch(toggleAutoRefresh(value))
+                }}
+                name={INTERNAL_AUTO_REFRESH_ID}
+              />
               {withRefreshButton && (
                 <RoundedIcon tooltipText="Refresh" onClick={() => refresh(formState)} id="refresh">
                   <RefreshIcon />
@@ -426,4 +486,4 @@ ActionBar.propTypes = {
   withoutExpandButton: PropTypes.bool
 }
 
-export default ActionBar
+export default React.memo(ActionBar)

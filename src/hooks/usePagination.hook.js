@@ -31,6 +31,7 @@ import {
   ITEMS_COUNT_END,
   ITEMS_COUNT_START
 } from '../constants'
+import { useSelector } from 'react-redux'
 
 export const usePagination = ({
   bePageSize = 1000,
@@ -45,6 +46,7 @@ export const usePagination = ({
   const [searchParams, setSearchParams] = useSearchParams()
   const [paginatedContent, setPaginatedContent] = useState([])
   const resetPaginationTriggerRef = useRef(resetPaginationTrigger)
+  const filtersStore = useSelector(store => store.filtersStore)
 
   const refreshContentDebounced = useMemo(() => {
     return debounce(filters => refreshContent(filters))
@@ -189,6 +191,19 @@ export const usePagination = ({
       paginationConfigRef.current.paginationResponse = null
     }
   }, [paginationConfigRef, content, searchParams, setSearchParams, hidden])
+
+  useEffect(() => {
+    if (filtersStore.autoRefresh && paginationConfigRef.current[BE_PAGE] > 1) {
+      setSearchParams(
+        prevSearchParams => {
+          prevSearchParams.set(BE_PAGE, 1)
+          prevSearchParams.set(FE_PAGE, 1)
+          return prevSearchParams
+        },
+        { replace: true }
+      )
+    }
+  }, [filtersStore.autoRefresh, paginationConfigRef, setSearchParams])
 
   const handleRefresh = (filters, filtersChange) => {
     if (filtersChange && (searchParams.get(BE_PAGE) !== '1' || searchParams.get(FE_PAGE) !== '1')) {
