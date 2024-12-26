@@ -17,6 +17,7 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
+import classNames from 'classnames'
 import PropTypes from 'prop-types'
 
 import ActionBar from '../ActionBar/ActionBar'
@@ -33,7 +34,6 @@ import { getNoDataMessage } from '../../utils/getNoDataMessage'
 import { getCloseDetailsAlertLink } from '../../utils/link-helper.util'
 
 import './alerts.scss'
-import classNames from 'classnames'
 
 const AlertsView = ({
   alertsFiltersConfig,
@@ -109,14 +109,14 @@ const AlertsView = ({
                   withActionMenu={false}
                 >
                   {tableContent.map((tableItem, index) => {
-                    const ifRowSelected = tableItem?.data?.id === selectedAlert?.id && !isAlertsPage
+                    const isRowSelected = tableItem?.data?.id === selectedAlert?.id && !isAlertsPage
                     return (
                       <AlertsTableRow
                         key={index}
                         hideActionsMenu
                         handleSelectItem={() => {}}
                         filters={filters}
-                        ifRowSelected={ifRowSelected}
+                        isRowSelected={isRowSelected}
                         rowIndex={index}
                         rowItem={tableItem}
                         actionsMenu={[]}

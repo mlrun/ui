@@ -30,7 +30,7 @@ import { getIdentifierMethod } from '../../utils/getUniqueIdentifier'
 
 import './AlertsTableRow.scss'
 
-const AlertsTableRow = ({ ifRowSelected, filters, rowItem, selectedItem, toggleRow }) => {
+const AlertsTableRow = ({ isRowSelected, filters, rowItem, selectedItem, toggleRow }) => {
   const parent = useRef()
   const params = useParams()
   const getIdentifier = useMemo(() => getIdentifierMethod(ALERTS_PAGE), [])
@@ -46,25 +46,28 @@ const AlertsTableRow = ({ ifRowSelected, filters, rowItem, selectedItem, toggleR
   return (
     <>
       <tr className={rowClassNames} ref={parent}>
-        {rowItem.content.map((value, index) => (
-          <React.Fragment key={value.id}>
-            <TableCell
-              data={value}
-              firstCell={index === 0}
-              item={rowItem.data}
-              link={value.getLink?.(
-                rowItem.data.tag,
-                params.tab ?? DETAILS_OVERVIEW_TAB,
-                rowItem.data.hash
-              )}
-              selectedItem={selectedItem}
-              showExpandButton={value.showExpandButton}
-              toggleRow={toggleRow}
-            />
-          </React.Fragment>
-        ))}
+        {rowItem.content.map(
+          (value, index) =>
+            !value.hidden && (
+              <React.Fragment key={value.id}>
+                <TableCell
+                  data={value}
+                  firstCell={index === 0}
+                  item={rowItem.data}
+                  link={value.getLink?.(
+                    rowItem.data.tag,
+                    params.tab ?? DETAILS_OVERVIEW_TAB,
+                    rowItem.data.hash
+                  )}
+                  selectedItem={selectedItem}
+                  showExpandButton={value.showExpandButton}
+                  toggleRow={toggleRow}
+                />
+              </React.Fragment>
+            )
+        )}
       </tr>
-      {ifRowSelected && (
+      {isRowSelected && (
         <tr className="alert-row__expanded-row">
           <td>
             <DetailsAlertsMetrics
@@ -81,6 +84,7 @@ const AlertsTableRow = ({ ifRowSelected, filters, rowItem, selectedItem, toggleR
 
 AlertsTableRow.propTypes = {
   handleSelectItem: PropTypes.func.isRequired,
+  isRowSelected: PropTypes.bool,
   mainRowItemsCount: PropTypes.number,
   rowIndex: PropTypes.number.isRequired,
   rowItem: PropTypes.shape({}).isRequired,
