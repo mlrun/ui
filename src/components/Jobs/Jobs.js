@@ -234,7 +234,7 @@ const Jobs = () => {
                 autoRefreshIsStopped={jobWizardIsOpened || jobsStore.loading}
                 autoRefreshStopTrigger={!isEmpty(selectedJob)}
                 filters={filters}
-                filtersConfig={tabData[selectedTab].filtersConfig}
+                filtersConfig={initialTabData[selectedTab].filtersConfig}
                 handleRefresh={tabData[selectedTab].handleRefresh}
                 handleAutoRefreshPrevValueChange={setAutoRefreshPrevValue}
                 hidden={Boolean(params.workflowId)}
