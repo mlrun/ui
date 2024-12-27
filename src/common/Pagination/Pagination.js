@@ -20,7 +20,7 @@ such restriction.
 import React, { useCallback, useMemo, useRef } from 'react'
 import PropTypes from 'prop-types'
 import classnames from 'classnames'
-import { useNavigate, useSearchParams } from 'react-router-dom'
+import { useLocation, useNavigate, useSearchParams } from 'react-router-dom'
 import { max, min } from 'lodash'
 
 import { RoundedIcon } from 'igz-controls/components'
@@ -51,6 +51,7 @@ const Pagination = ({ closeParamName = '', paginationConfig }) => {
   const paginationPagesRef = useRef()
   const leftSideRef = useRef(0)
   const rightSideRef = useRef(0)
+  const location = useLocation()
 
   // Total pages are now calculated based on start and end pages
   const totalPagesCount = useMemo(
@@ -78,9 +79,9 @@ const Pagination = ({ closeParamName = '', paginationConfig }) => {
 
   const handlePageChange = useCallback(() => {
     if (closeParamName) {
-      navigate(getCloseDetailsLink(closeParamName, true), { replace: true })
+      navigate(getCloseDetailsLink(closeParamName, location, true), { replace: true })
     }
-  }, [navigate, closeParamName])
+  }, [closeParamName, navigate, location])
 
   const paginationItems = useMemo(() => {
     if (!paginationConfig[FE_PAGE]) return []
