@@ -107,7 +107,12 @@
           "name": "churn-project-admin",
           "tag": "latest"
         },
-        "sources": []
+        "sources": [
+          {
+            "name": "dataset",
+            "path": "store://datasets/churn-project-admin/survival-curves_km-timelines#0:latest"
+          }
+        ]
       },
       "status": {}
     },

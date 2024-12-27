@@ -98,6 +98,7 @@ module.exports = {
   Common_Lists: {
     Action_Menu_List: ['Add a tag', 'Download', 'Copy URI', 'View YAML', 'Delete'],
     Action_Menu_List_Expanded: ['Add a tag', 'Download', 'Copy URI', 'View YAML', 'Delete all'],
+    Action_Menu_List_Dataset_Transition_Popup: ['Download', 'Copy URI', 'View YAML'],
     Handler_List: ['train'],
     Pods_Priority_List: ['Low','Medium', 'High'],
     Ranking_Criteria_List: ['Min','Max']
@@ -335,7 +336,15 @@ module.exports = {
   },
   Common_Tooltips:{
     FilterBy_Button: 'Filter',
-    Refresh_Button: 'Refresh'
+    Refresh_Button: 'Refresh',
+    In_Process_Jobs: 'Aborting, Pending, Running',
+    In_Process_Workflows: 'Running',
+    Failed_Jobs: 'Aborted, Error',
+    Failed_Worflows: 'Error, Failed',
+    Succeeded: 'Completed',
+    Error_Content: 'Error. Columns must be same length as key',
+    Error_Content_Workflow: 
+      'Error. 2021-08-29 20:01:36.582972: W tensorflow/stream_executor/platform/default/dso_loader.cc:60] Could not load dynamic library \'libcudart.so.11.0\'; dlerror: libcudart.so.11.0: cannot open shared object file: No such file or directory; LD_LIBRARY_PATH: /usr/local/lib:/usr/local/lib: 2021-08-29 20:01:36.583019: I tensorflow/stream_executor/cuda/cudart_stub.cc:29] Ignore above cudart dlerror if you do not have a GPU set up on your machine. 2021-08-29 20:01:46.470042: I tensorflow/compiler/jit/xla_cpu_device.cc:41] Not creating XLA devices, tf_xla_enable_xla_devices not set 2021-08-29 20:01:46.470263: W tensorflow/stream_executor/platform/default/dso_loader.cc:60] Could not load dynamic library \'libcuda.so.1\'; dlerror: libcuda.so.1: cannot open shared object file: No such file or directory; LD_LIBRARY_PATH: /usr/local/lib:/usr/local/lib: 2021-08-29 20:01:46.470283: W tensorflow/stream_executor/cuda/cuda_driver.cc:326] failed call to cuInit: UNKNOWN ERROR (303) 2021-08-29 20:01:46.470306: I tensorflow/stream_executor/cuda/cuda_diagnostics.cc:156] kernel driver does not appear to be running on this host (train-1193bacd-worker-0): /proc/driver/nvidia/version does not exist 2021-08-29 20:01:46.518782: I tensorflow/core/platform/cpu_feature_guard.cc:142] This TensorFlow binary is optimized with oneAPI Deep Neural Network Library (oneDNN) to use the following CPU instructions in performance-critical operations: AVX2 FMA To enable them in other operations, rebuild TensorFlow with the appropriate compiler flags. 2021-08-29 20:01:46.518927: I tensorflow/compiler/jit/xla_gpu_device.cc:99] Not creating XLA devices, tf_xla_enable_xla_devices not set Some callbacks may not have access to the averaged metrics, see https://github.com/horovod/horovod/issues/2440 Traceback (most recent call last): File "/User/demos/image-classification-with-distributed-training/src-tfv2/horovod-training.py", line 116, in <module> hvd.callbacks.LearningRateWarmupCallback(warmup_epochs=5, verbose=1), TypeError: __init__() missing 1 required positional argument: \'initial_lr\''
   },
   Input_Hint: {
     Artifact_Names_Unique: 'Artifact names in the same project must be unique',
@@ -468,7 +477,7 @@ module.exports = {
   Messages: {
     How_To_Create:
     'See how to create a serving function in https://docs.mlrun.org/en/stable/serving/built-in-model-serving.html and https://docs.mlrun.org/en/stable/tutorials/03-model-serving.html',
-    Metrics_Empty_Select_Message: 'Choose metrics to view endpoint\’s data'
+    Metrics_Empty_Select_Message: 'Choose metrics to view endpoint’s data'
   },
   Jobs_Monitoring: {
     Tab_List: ['Jobs', 'Workflows', 'Scheduled']
@@ -527,7 +536,7 @@ module.exports = {
     Project_Already_Exists: /A project named "[^"]+[$"] already exists/,
     Projects_Limit_Reached:
       'The system already has the maximum number of projects. An existing project must be deleted before you can create another.',
-    MLRunAccessDeniedError: 'MLRunAccessDeniedError(\'Not allowed to create\/update internal secrets (key starts with mlrun\.)\')',
+    MLRunAccessDeniedError: 'MLRunAccessDeniedError(\'Not allowed to create/update internal secrets (key starts with mlrun.)\')',
     Must_Select_One: 'Must select at least one',
     Must_Select_One_Partition: 'Must select at least one partitioning option',
     Already_Scheduled: 'This job is already scheduled',
@@ -539,7 +548,7 @@ module.exports = {
     Jobs_Status_Filter_Options: ['All', 'Aborted', 'Aborting', 'Completed', 'Error', 'Running', 'Pending'],
     Workflows_Status_Filter_Options: ['All', 'Error', 'Failed', 'Running', 'Completed'],
     Jobs_Type_Filter_Options: ['All', 'Local', 'Dask', 'Databricks', 'Handler', 'Job', 'Horovod', 'Spark'],
-    Scheduled_Type_Filter_Options: ['All', 'Jobs', 'Workflows'],
+    Scheduled_Type_Filter_Options: ['All', 'Job', 'Workflow', 'Nuclio', 'Application', 'Serving', 'Spark', 'Horovod', 'Dask', 'Databricks', 'Local', 'Handler'],
     Group_By_Filter_Options: ['None', 'Name'],
     Start_Time_Filter_Options: [
       'Any time',
