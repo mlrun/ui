@@ -59,6 +59,7 @@ const JobsTable = React.forwardRef(
       context,
       filters,
       filtersConfig,
+      autoRefreshPrevValue,
       paginatedJobs,
       refreshJobs,
       requestErrorMessage,
@@ -373,6 +374,14 @@ const JobsTable = React.forwardRef(
               <Pagination
                 paginationConfig={paginationConfigJobsRef.current}
                 closeParamName={selectedJob.name}
+                disabledNextDoubleBtnTooltip={
+                  filtersStore.autoRefresh
+                    ? 'Uncheck Auto Refresh to view more results'
+                    : autoRefreshPrevValue
+                      ? 'Close detailed view and uncheck Auto Refresh to view more results'
+                      : ''
+                }
+                disableNextDoubleBtn={filtersStore.autoRefresh || autoRefreshPrevValue}
               />
             </>
           )
