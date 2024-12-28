@@ -20,6 +20,7 @@ such restriction.
 import React from 'react'
 import PropTypes from 'prop-types'
 import { isEmpty } from 'lodash'
+import { useLocation } from 'react-router-dom'
 
 import ActionBar from '../ActionBar/ActionBar'
 import ArtifactsFilters from '../ArtifactsActionBar/ArtifactsFilters'
@@ -72,6 +73,8 @@ const FilesView = React.forwardRef(
     },
     { filesRef }
   ) => {
+    const location = useLocation()
+
     return (
       <>
         <div className="content-wrapper" ref={filesRef}>
@@ -129,7 +132,7 @@ const FilesView = React.forwardRef(
                     applyDetailsChangesCallback={applyDetailsChangesCallback}
                     detailsFormInitialValues={detailsFormInitialValues}
                     getCloseDetailsLink={() =>
-                      getCloseDetailsLink(isAllVersions ? ALL_VERSIONS_PATH : FILES_TAB)
+                      getCloseDetailsLink(isAllVersions ? ALL_VERSIONS_PATH : FILES_TAB, location)
                     }
                     handleCancel={() => setSelectedFileMin({})}
                     pageData={pageData}
