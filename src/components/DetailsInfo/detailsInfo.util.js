@@ -48,12 +48,12 @@ export const generateTriggerInfoContent = criteria => {
       {
         label: 'Trigger criteria count',
         id: 'triggerCriteriaCount',
-        value: criteria?.count
+        value: criteria?.count || 'N/A'
       },
       {
         label: 'Trigger criteria time period',
         id: 'triggerCriteriaTimePeriod',
-        value: criteria?.period
+        value: criteria?.period || 'N/A'
       }
     ]
   }
@@ -248,7 +248,7 @@ export const generateAlertsDetailsInfo = selectedItem => {
     AlertsDetailsInfo.triggerCriteriaDetailsInfo = triggerCriteriaContent.map(trigger => {
       return (
         <li className="details-item" key={trigger.id}>
-          <div className="alert-row__details-alert-header">{trigger.label}:</div>
+          <div className="details-item__header">{trigger.label}:</div>
           <DetailsInfoItem info={trigger.value} />
         </li>
       )
