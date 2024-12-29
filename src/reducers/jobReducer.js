@@ -272,8 +272,11 @@ export const removeScheduledJob = createAsyncThunk(
     return jobsApi.removeScheduledJob({ projectName, scheduleName })
   }
 )
-export const runNewJob = createAsyncThunk('runNewJob', ({ postData }) => {
-  return jobsApi.runJob(postData).then(result => result)
+export const runNewJob = createAsyncThunk('runNewJob', ({ postData }, thunkAPI) => {
+  return jobsApi
+    .runJob(postData)
+    .then(result => result)
+    .catch(error => thunkAPI.rejectWithValue(error))
 })
 
 const jobsSlice = createSlice({
