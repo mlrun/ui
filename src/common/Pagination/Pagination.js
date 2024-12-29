@@ -21,7 +21,7 @@ import React, { useCallback, useMemo, useRef } from 'react'
 import PropTypes from 'prop-types'
 import classnames from 'classnames'
 import { useLocation, useNavigate, useSearchParams } from 'react-router-dom'
-import { max, min } from 'lodash'
+import { max } from 'lodash'
 
 import { RoundedIcon } from 'igz-controls/components'
 
@@ -208,18 +208,6 @@ const Pagination = ({
     return { width: paginationItemWidth }
   }, [])
 
-  const getPaginationPagesStyle = useCallback(
-    (paginationItems, paginationItem, index) => {
-      const maxFePages = paginationConfig[BE_PAGE_SIZE] / paginationConfig[FE_PAGE_SIZE]
-      const maxPage = max(paginationItems)
-      const maxPageCount = min([7, maxPage, maxFePages])
-      const paginationPagesWidth = `${maxPageCount * 40}px`
-
-      return { minWidth: paginationPagesWidth }
-    },
-    [paginationConfig]
-  )
-
   return (
     <div className="pagination">
       {paginationConfig.isNewResponse && (
@@ -247,11 +235,7 @@ const Pagination = ({
               <Arrow />
             </RoundedIcon>
 
-            <div
-              className="pagination-pages"
-              ref={paginationPagesRef}
-              style={getPaginationPagesStyle(paginationItems)}
-            >
+            <div className="pagination-pages" ref={paginationPagesRef}>
               {paginationItems.map(
                 (pageItem, index) =>
                   pageItem && (
