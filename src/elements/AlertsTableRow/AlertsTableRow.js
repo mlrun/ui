@@ -17,11 +17,12 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import { useMemo, useRef } from 'react'
+import React, { useMemo, useRef } from 'react'
 import PropTypes from 'prop-types'
 import classnames from 'classnames'
 import { useParams } from 'react-router-dom'
 
+import DetailsAlertsMetrics from '../../components/DetailsDrillDownAlert/DetailsAlertsMetrics'
 import TableCell from '../TableCell/TableCell'
 
 import { ALERTS_PAGE, DETAILS_OVERVIEW_TAB } from '../../constants'
@@ -29,11 +30,16 @@ import { getIdentifierMethod } from '../../utils/getUniqueIdentifier'
 
 import './AlertsTableRow.scss'
 
-// TODO:   rowIsExpanded logic will be part of ML-8516
-const AlertsTableRow = ({ handleExpandRow, handleSelectItem, rowItem, selectedItem }) => {
+const AlertsTableRow = ({
+  className,
+  isRowSelected,
+  filters,
+  rowItem,
+  selectedItem,
+  toggleRow
+}) => {
   const parent = useRef()
   const params = useParams()
-
   const getIdentifier = useMemo(() => getIdentifierMethod(ALERTS_PAGE), [])
   const rowClassNames = classnames(
     'alert-row',
@@ -44,38 +50,50 @@ const AlertsTableRow = ({ handleExpandRow, handleSelectItem, rowItem, selectedIt
       getIdentifier(selectedItem, true) === rowItem?.data?.ui?.identifierUnique &&
       'table-row_active'
   )
-
   return (
-    <tr className={rowClassNames} ref={parent}>
-      <>
-        {rowItem.content.map((value, index) => {
-          return (
+    <>
+      <tr className={rowClassNames} ref={parent}>
+        {rowItem.content.map(
+          (value, index) =>
             !value.hidden && (
-              <TableCell
-                data={value}
-                firstCell={index === 0}
-                handleExpandRow={handleExpandRow}
-                item={rowItem.data}
-                key={value.id}
-                link={value.getLink?.(
-                  rowItem.data.tag,
-                  params.tab ?? DETAILS_OVERVIEW_TAB,
-                  rowItem.data.hash
-                )}
-                selectedItem={selectedItem}
-                selectItem={handleSelectItem}
-                showExpandButton={value.showExpandButton}
-              />
+              <React.Fragment key={value.id}>
+                <TableCell
+                  data={value}
+                  className={className}
+                  firstCell={index === 0}
+                  item={rowItem.data}
+                  link={value.getLink?.(
+                    rowItem.data.tag,
+                    params.tab ?? DETAILS_OVERVIEW_TAB,
+                    rowItem.data.hash
+                  )}
+                  selectedItem={selectedItem}
+                  showExpandButton={value.showExpandButton}
+                  toggleRow={toggleRow}
+                />
+              </React.Fragment>
             )
-          )
-        })}
-      </>
-    </tr>
+        )}
+      </tr>
+      {isRowSelected && (
+        <tr className="alert-row__expanded-row">
+          <td>
+            <DetailsAlertsMetrics
+              filters={filters}
+              isAlertsPage={false}
+              selectedItem={selectedItem}
+            />
+          </td>
+        </tr>
+      )}
+    </>
   )
 }
 
 AlertsTableRow.propTypes = {
+  className: PropTypes.string,
   handleSelectItem: PropTypes.func.isRequired,
+  isRowSelected: PropTypes.bool,
   mainRowItemsCount: PropTypes.number,
   rowIndex: PropTypes.number.isRequired,
   rowItem: PropTypes.shape({}).isRequired,

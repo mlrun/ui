@@ -1,16 +1,11 @@
-@import '~igz-controls/scss/variables';
-@import 'src/scss/mixins';
-
-$alertsRowHeight: $rowHeight;
-$alertsHeaderRowHeight: $headerRowHeight;
-$alertsRowHeightExtended: $rowHeightExtended;
-
 .alerts-table {
-  @include rowsHeight($alertsHeaderRowHeight, $alertsRowHeight, $alertsRowHeightExtended);
-}
+  min-width: 1120px;
 
-:export {
-  alertsRowHeight: $alertsRowHeight;
-  alertsHeaderRowHeight: $alertsHeaderRowHeight;
-  alertsRowHeightExtended: $alertsRowHeightExtended;
+  &__metrics {
+    margin: 8px 12px;
+  }
+
+  &__content {
+    padding: 0;
+  }
 }
