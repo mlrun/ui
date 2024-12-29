@@ -15,44 +15,7 @@
 
   &__item-info-notification {
     display: flex;
-    gap: 5px;
-  }
-
-  &__details-alert-icon-cell {
-    display: flex;
-    gap: 8px;
-    align-items: center;
-
-    svg {
-      width: 20px;
-      height: 20px;
-    }
-  }
-
-  &__details-alert-header {
-    display: flex;
-    align-self: center;
-    min-width: 160px;
-    font-weight: 500;
-    font-size: 15px;
-    line-height: 18px;
-  }
-
-  &__details-alert-logs {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-  }
-
-  &__popup-header {
-    margin: 0;
-    padding-bottom: 12px;
-    font-size: 18px;
-  }
-
-  &__item-info-notification {
     flex-wrap: wrap;
-    display: flex;
     gap: 5px;
   }
 
@@ -109,6 +72,12 @@
         background-color: $white;
         border-radius: 50%;
       }
+    }
+  }
+
+  td:first-child.alert-row__cell--expanded-selected-cell {
+    svg {
+      transform: rotate(90deg);
     }
   }
 

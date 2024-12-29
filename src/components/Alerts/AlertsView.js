@@ -110,8 +110,10 @@ const AlertsView = ({
                 >
                   {tableContent.map((tableItem, index) => {
                     const isRowSelected = tableItem?.data?.id === selectedAlert?.id && !isAlertsPage
+                    const selectedRowClassName = `${isRowSelected ? 'alert-row__cell--expanded-selected-cell' : ''} `
                     return (
                       <AlertsTableRow
+                        className={selectedRowClassName}
                         key={index}
                         hideActionsMenu
                         handleSelectItem={() => {}}

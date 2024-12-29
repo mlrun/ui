@@ -30,7 +30,14 @@ import { getIdentifierMethod } from '../../utils/getUniqueIdentifier'
 
 import './AlertsTableRow.scss'
 
-const AlertsTableRow = ({ isRowSelected, filters, rowItem, selectedItem, toggleRow }) => {
+const AlertsTableRow = ({
+  className,
+  isRowSelected,
+  filters,
+  rowItem,
+  selectedItem,
+  toggleRow
+}) => {
   const parent = useRef()
   const params = useParams()
   const getIdentifier = useMemo(() => getIdentifierMethod(ALERTS_PAGE), [])
@@ -52,6 +59,7 @@ const AlertsTableRow = ({ isRowSelected, filters, rowItem, selectedItem, toggleR
               <React.Fragment key={value.id}>
                 <TableCell
                   data={value}
+                  className={className}
                   firstCell={index === 0}
                   item={rowItem.data}
                   link={value.getLink?.(
@@ -83,6 +91,7 @@ const AlertsTableRow = ({ isRowSelected, filters, rowItem, selectedItem, toggleR
 }
 
 AlertsTableRow.propTypes = {
+  className: PropTypes.string,
   handleSelectItem: PropTypes.func.isRequired,
   isRowSelected: PropTypes.bool,
   mainRowItemsCount: PropTypes.number,
