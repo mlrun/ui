@@ -639,15 +639,6 @@ const commonFormSubtext = By.css('.form-text div p')
 const commonScheduleButton = By.css('.modal__content [data-testid="schedule-btn"]')
 const commonRunSaveButton = By.css('.modal__content [data-testid="run-btn"]')
 
-const commonLabelFilterInput = inputGroup(
-  generateInputGroup(
-    '[data-testid="labels-form-field-input"]',
-    true,
-    false,
-    '.form-field__warning svg'
-  )
-)
-
 const commonProjectFilterInput = inputGroup(
   generateInputGroup('[data-testid="project-form-field-input"]', true, false, true)
 )
@@ -659,6 +650,72 @@ const commonTableTreeFilterDropdown = dropdownComponent(
     '.form-tag-filter__dropdown .form-tag-filter__dropdown-item'
   )
 )
+
+const actionMenuStructureTransitionPopup = {
+  root: '.table__item-popup .item-header__buttons .actions-menu__container',
+  menuElements: {
+    open_button: 'button',
+    options: '.actions-menu__body .actions-menu__option'
+  }
+}
+
+const infoPaneTabSelector = {
+  root: '.table__item-popup .tabs-slider__tabs',
+  header: {},
+  body: {
+    row: {
+      root: '.tabs-slider__tab',
+      fields: {
+        key: '',
+        hintButton: '.tip-container'
+      }
+    }
+  }
+}
+
+const infoPaneOverviewHeaders = {
+  root: '.table__item-popup .item-info__details-wrapper:nth-of-type(1)',
+  header: {},
+  body: {
+    row: {
+      root: 'li:not(li.details-item_hidden)',
+      fields: {
+        key: '.details-item__header',
+        link: '.details-item__data .link',
+        value: '.details-item__data'
+      }
+    }
+  }
+}
+
+const infoPaneOverviewProducerHeaders = {
+  root: '.table__item-popup .item-info__details-wrapper:nth-of-type(2)',
+  header: {},
+  body: {
+    row: {
+      root: '.item-info__details',
+      fields: {
+        key: '.details-item__header',
+        link: '.details-item__data .link',
+        value: '.details-item__data'
+      }
+    }
+  }
+}
+
+const infoPaneOverviewSourcesHeaders = {
+  root: '.table__item-popup .item-info__details-wrapper:nth-of-type(2)',
+  header: {},
+  body: {
+    row: {
+      root: '.info-sources',
+      fields: {
+        key: '.info-sources__table-key',
+        value: '.info-sources__table-value'
+      }
+    }
+  }
+}
 
 module.exports = {
   createNewProject: {
@@ -743,6 +800,17 @@ module.exports = {
     Metrics_Apply_Button: By.css('[data-testid="metrics-selector-buttons"] .btn-secondary'),
     Metrics_Clear_Button: By.css('[data-testid="metrics-selector-buttons"] .btn-tertiary')
   },
+  modalTransitionPopup: {
+    Title: By.css('.table__item-popup .item-header__title'),
+    Data_Status: By.css('.table__item-popup .item-header__status-row .updated'),
+    Refresh_Button: By.css('.table__item-popup .item-header__buttons [data-testid="refresh"]'),
+    Action_Menu: actionMenu(actionMenuStructureTransitionPopup),
+    Cross_Close_Button: By.css('.table__item-popup .item-header__buttons [data-testid="details-close-btn"]'),
+    Tab_Selector: commonTable(infoPaneTabSelector),
+    Overview_General_Headers: commonTable(infoPaneOverviewHeaders),
+    Overview_Producer_Headers: commonTable(infoPaneOverviewProducerHeaders),
+    Overview_Sources_Headers: commonTable(infoPaneOverviewSourcesHeaders),
+  },
   modalWizardForm: {
     Title: By.css('.modal .modal__header-title'),
     Cross_Close_Button: By.css('.modal .modal__header-button'),
@@ -825,7 +893,7 @@ module.exports = {
       )
     ),
     Run_Details_Labels_Value: By.css(
-      '.job-wizard__run-details .form-row:nth-of-type(4) .chips-wrapper [id="runDetails.labels[0].value"]'
+      'div:nth-child(4) > div > div.chips__wrapper > div > div > div:nth-child(1) > div > div > div > input.input-label-value'
     ),
     Close_Label_Button: By.css(
       '.job-wizard__run-details .form-row:nth-of-type(4) .chips .chips-wrapper .item-icon-close'

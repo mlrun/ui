@@ -192,14 +192,14 @@ const getNotificationData = notifications =>
     }
   })
 
-export const createAlertRowData = ({ ...alert }, isCrossProjects) => {
+export const createAlertRowData = ({ ...alert }, isCrossProjects, showExpandButton = false) => {
   const { name } = alert
 
   const getLink = alert => {
     const queryString = window.location.search
     const { alertName, entity_kind: entityType, entity_id, id: alertId, job, project, uid } = alert
 
-      if (entityType === MODEL_ENDPOINT_RESULT) {
+    if (entityType === MODEL_ENDPOINT_RESULT) {
       const [endpointId, , , name] = entity_id.split('.')
       return `/projects/*/alerts/${project}/${alertName}/${alertId}/${name}/${endpointId}/${DETAILS_ALERT_APPLICATION}${queryString}`
     }
@@ -268,9 +268,10 @@ export const createAlertRowData = ({ ...alert }, isCrossProjects) => {
         headerLabel: 'Alert Name',
         value: name,
         className: 'table-cell-name',
-        getLink: () => getLink(alert),
+        getLink: () => (!showExpandButton ? getLink(alert) : ''),
         tooltip: name,
-        type: 'link'
+        type: 'link',
+        showExpandButton
       },
       {
         id: `projectName.${alert.id}`,

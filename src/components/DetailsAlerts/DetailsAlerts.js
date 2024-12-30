@@ -17,16 +17,86 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
+import React, { useCallback, useMemo, useState } from 'react'
+import { useSelector } from 'react-redux'
 
-import React from 'react'
+import AlertsView from '../Alerts/AlertsView'
 
-const DetailsAlerts = ({ selectedItem }) => {
+import { createAlertRowData } from '../../utils/createAlertsContent'
+import {
+  generatePageData,
+  getAlertsFiltersConfig,
+  parseAlertsQueryParamsCallback
+} from '../../components/Alerts/alerts.util'
+import { useAlertsPageData } from '../../hooks/useAlertsPageData'
+import { useFiltersFromSearchParams } from '../../hooks/useFiltersFromSearchParams.hook'
+
+const DetailsAlerts = () => {
+  const [selectedAlert, setSelectedAlert] = useState({})
+  const alertsStore = useSelector(state => state.alertsStore)
+  const filtersStore = useSelector(store => store.filtersStore)
+
+  const alertsFiltersConfig = useMemo(() => getAlertsFiltersConfig(true), [])
+
+  const alertsFilters = useFiltersFromSearchParams(
+    alertsFiltersConfig,
+    parseAlertsQueryParamsCallback
+  )
+
+  const {
+    handleRefreshAlerts,
+    paginatedAlerts,
+    paginationConfigAlertsRef,
+    requestErrorMessage,
+    refreshAlerts,
+    setAlerts,
+    setSearchParams
+  } = useAlertsPageData(alertsFilters, false)
+
+  const handleRefreshWithFilters = useCallback(
+    filters => {
+      setAlerts([])
+
+      return refreshAlerts(filters)
+    },
+    [refreshAlerts, setAlerts]
+  )
+
+  const tableContent = useMemo(() => {
+    return paginatedAlerts.map(alert => createAlertRowData(alert, false, true))
+  }, [paginatedAlerts])
+
+  const pageData = useMemo(() => generatePageData(selectedAlert), [selectedAlert])
+
+  const toggleRow = useCallback(
+    (e, item) => {
+      setSelectedAlert(prev => {
+        const selectedAlert = tableContent.find(({ data }) => data?.id === item?.id)
+        return prev?.id !== item.id ? selectedAlert?.data || {} : {}
+      })
+    },
+    [tableContent]
+  )
+
   return (
-    <div>
-      <h2>Alerts</h2>
-      <p>This tab shows alerts for the selected item.</p>
-    </div>
+    <AlertsView
+      alerts={paginatedAlerts}
+      alertsFiltersConfig={alertsFiltersConfig}
+      alertsStore={alertsStore}
+      filters={alertsFilters}
+      filtersStore={filtersStore}
+      handleRefreshAlerts={handleRefreshAlerts}
+      handleRefreshWithFilters={handleRefreshWithFilters}
+      isAlertsPage={false}
+      isCrossProjects={false}
+      pageData={pageData}
+      paginationConfigAlertsRef={paginationConfigAlertsRef}
+      requestErrorMessage={requestErrorMessage}
+      selectedAlert={selectedAlert}
+      setSearchParams={setSearchParams}
+      tableContent={tableContent}
+      toggleRow={toggleRow}
+    />
   )
 }
-
-export default DetailsAlerts
+export default React.memo(DetailsAlerts)

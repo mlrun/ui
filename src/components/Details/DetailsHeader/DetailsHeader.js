@@ -142,7 +142,7 @@ const DetailsHeader = ({
               className="item-header__back-btn"
               to={
                 getCloseDetailsLink
-                  ? getCloseDetailsLink(selectedItem.name)
+                  ? getCloseDetailsLink(selectedItem.name, location)
                   : generateUrlFromRouterPath(
                       window.location.pathname.split('/').slice(0, -2).join('/') +
                         window.location.search
@@ -334,7 +334,7 @@ const DetailsHeader = ({
                 data-testid="details-close-btn"
                 to={
                   getCloseDetailsLink
-                    ? getCloseDetailsLink(selectedItem.name)
+                    ? getCloseDetailsLink(selectedItem.name, location)
                     : getDefaultCloseDetailsLink(params, pageData.page, tab)
                 }
                 onClick={handleCancelClick}

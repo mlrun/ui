@@ -41,6 +41,7 @@ const MonitorJobs = () => {
     abortJobRef,
     abortingJobs,
     fetchJobFunctionsPromiseRef,
+    autoRefreshPrevValue,
     jobRuns,
     jobs,
     jobsFiltersConfig,
@@ -109,6 +110,7 @@ const MonitorJobs = () => {
         context={JobsContext}
         filters={filters}
         filtersConfig={jobsFiltersConfig}
+        autoRefreshPrevValue={autoRefreshPrevValue}
         jobRuns={jobRuns}
         jobs={jobs}
         navigateLink={getBackLink()}

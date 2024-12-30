@@ -41,11 +41,11 @@ export const generateUrlFromRouterPath = link => {
   return new URL(link, window.location.origin).toString()
 }
 
-export const getCloseDetailsLink = (paramName, ignoreOrigin) => {
+export const getCloseDetailsLink = (paramName, location, ignoreOrigin) => {
   const link =
-    window.location.pathname
+    location.pathname
       .split('/')
-      .splice(0, window.location.pathname.split('/').lastIndexOf(paramName) + 1)
+      .splice(0, location.pathname.split('/').lastIndexOf(paramName) + 1)
       .join('/') + window.location.search
 
   return ignoreOrigin ? link : generateUrlFromRouterPath(link)

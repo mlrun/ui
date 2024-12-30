@@ -18,7 +18,7 @@ under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
 import React from 'react'
-import { useParams } from 'react-router-dom'
+import { useLocation, useParams } from 'react-router-dom'
 import PropTypes from 'prop-types'
 
 import ActionBar from '../ActionBar/ActionBar'
@@ -74,6 +74,7 @@ const FunctionsView = ({
   tableContent
 }) => {
   const params = useParams()
+  const location = useLocation()
 
   return (
     <>
@@ -131,7 +132,10 @@ const FunctionsView = ({
                 <Table
                   actionsMenu={actionsMenu}
                   getCloseDetailsLink={() =>
-                    getCloseDetailsLink(isAllVersions ? ALL_VERSIONS_PATH : FUNCTIONS_PAGE_PATH)
+                    getCloseDetailsLink(
+                      isAllVersions ? ALL_VERSIONS_PATH : FUNCTIONS_PAGE_PATH,
+                      location
+                    )
                   }
                   handleCancel={handleCancel}
                   pageData={pageData}

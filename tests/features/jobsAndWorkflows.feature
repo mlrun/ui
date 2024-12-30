@@ -181,7 +181,7 @@ Feature: Jobs and workflows
         And wait load page
         Then verify "Date_Picker_Filter_Dropdown" element visibility on "Jobs_Monitor_Tab" wizard
         Then verify "Date_Picker_Filter_Dropdown" dropdown element on "Jobs_Monitor_Tab" wizard should contains "Dropdown_Options"."Date_Picker_Filter_Options"
-        Then verify "Date_Picker_Filter_Dropdown" dropdown on "Jobs_Monitor_Tab" wizard selected option value "Past 24 hours"
+        Then verify "Date_Picker_Filter_Dropdown" dropdown on "Jobs_Monitor_Tab" wizard selected option value "Past week"
         Then verify "Jobs_Monitor_Table" element visibility on "Jobs_Monitor_Tab" wizard
         When select "Any time" option in "Date_Picker_Filter_Dropdown" filter dropdown on "Jobs_Monitor_Tab" wizard
         And wait load page
@@ -472,7 +472,7 @@ Feature: Jobs and workflows
         Then verify from "01/01/2021 00:00" to "01/01/2023 00:00" filter band in "Custom_Range_Filter_Dropdown" filter dropdown on "Jobs_Monitor_Tab" wizard
         Then click on "Arrow_Back" element on "Jobs_Monitor_Tab" wizard
         And wait load page
-        Then verify from "01/01/2021 00:00" to "01/01/2023 00:00" filter band in "Custom_Range_Filter_Dropdown" filter dropdown on "Jobs_Monitor_Tab" wizard
+        Then verify "Date_Picker_Filter_Dropdown" dropdown on "Jobs_Monitor_Tab" wizard selected option value "Any time"
 
     @MLJW
     @smoke
@@ -503,7 +503,6 @@ Feature: Jobs and workflows
         Then verify "Updated" element visibility on "Jobs_Monitor_Tab_Info_Pane" wizard
         Then verify "Cross_Close_Button" element visibility on "Jobs_Monitor_Tab_Info_Pane" wizard
         Then verify "Resource_Monitoring_Button" element visibility on "Jobs_Monitor_Tab_Info_Pane" wizard
-        Then verify "Info_Pane_Refresh_Button" element visibility on "Jobs_Monitor_Tab_Info_Pane" wizard
         Then verify "Info_Pane_Tab_Selector" on "Jobs_Monitor_Tab_Info_Pane" wizard should contains "Jobs_Monitor_Tab_Info_Pane"."Tab_List"
         Then verify "Overview" tab is active in "Info_Pane_Tab_Selector" on "Jobs_Monitor_Tab_Info_Pane" wizard
         Then verify "Overview_Headers" on "Jobs_Monitor_Tab_Info_Pane" wizard should contains "Jobs_Monitor_Tab_Info_Pane"."Overview_Headers"
@@ -683,6 +682,26 @@ Feature: Jobs and workflows
         Then "Cancel_Button" element on "Common_Popup" should contains "Cancel" value
         Then verify "Delete_Button" element visibility on "Common_Popup" wizard
         Then "Delete_Button" element on "Common_Popup" should contains "Delete" value
+        Then click on "Cancel_Button" element on "Common_Popup" wizard
+        And wait load page
+        Then select "project" with "cat-vs-dog-classification" value in breadcrumbs menu
+        And wait load page
+        Then verify breadcrumbs "project" label should be equal "cat-vs-dog-classification" value
+        Then verify "Schedule" tab is active in "Jobs_Tab_Selector" on "Jobs_Monitor_Tab" wizard
+        Then select "Delete" option in action menu on "Schedule_Monitor_Tab" wizard in "Schedule_Monitor_Table" table at row with "tf2-serving" value in "name" column
+        Then verify if "Common_Popup" popup dialog appears
+        Then click on "Delete_Button" element on "Common_Popup" wizard
+        And wait load page
+        Then verify "Notification_Pop_Up" element visibility on "Notification_Popup" wizard
+        And wait load page
+        And wait load page
+        Then "Notification_Pop_Up" element on "Notification_Popup" should contains "Job is successfully deleted" value
+        And wait load page
+        Then verify "Notification_Pop_Up_Cross_Close_Button" element visibility on "Notification_Popup" wizard
+        Then click on "Notification_Pop_Up_Cross_Close_Button" element on "Notification_Popup" wizard
+        Then check "tf2-serving" value not in "name" column in "Schedule_Monitor_Table" table on "Schedule_Monitor_Tab" wizard
+        When click on cell with row index 1 in "name" column in "Schedule_Monitor_Table" table on "Schedule_Monitor_Tab" wizard
+        And wait load page
 
     @MLJW
     @smoke
@@ -1031,7 +1050,7 @@ Feature: Jobs and workflows
         Then click on "Title" element on "FilterBy_Popup" wizard
         Then click on "Apply_Button" element on "FilterBy_Popup" wizard
         And wait load page
-        Then verify options in action menu on "Jobs_Monitor_Tab" wizard in "Jobs_Monitor_Table" table with "Error" value in "status" column should contains "Jobs_And_Workflows"."Job_Action_Menu_Options"
+        Then verify options in action menu on "Jobs_Monitor_Tab" wizard in "Jobs_Monitor_Table" table with "Error. [Errno 2] No such file or directory: \'\'" value in "status" column should contains "Jobs_And_Workflows"."Job_Action_Menu_Options"
         Then click on "Table_FilterBy_Button" element on "Jobs_Monitor_Tab" wizard
         Then select "Error" option in "Status_Filter_Dropdown" filter dropdown on "FilterBy_Popup" wizard
         Then click on "Title" element on "FilterBy_Popup" wizard
@@ -1247,7 +1266,6 @@ Feature: Jobs and workflows
         Then "Notification_Pop_Up" element on "Notification_Popup" should contains "This function either does not exist or was deleted" value
         Then verify "Notification_Pop_Up_Cross_Close_Button" element visibility on "Notification_Popup" wizard
         Then click on "Notification_Pop_Up_Cross_Close_Button" element on "Notification_Popup" wizard
-
 
     @MLJW
     @smoke
@@ -2405,6 +2423,68 @@ Feature: Jobs and workflows
         Then verify "Hyper_Toggle_Switch" element not exists in "Parameters_Accordion" on "Modal_Wizard_Form" wizard
     
     @MLJW
+    @smoke
+    Scenario: MLJW049 - Check Abort action on Monitor Jobs tab
+        Given open url
+        And wait load page
+        And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
+        And wait load page
+        And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
+        And click on cell with value "Jobs and workflows" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+        And hover "MLRun_Logo" component on "commonPagesHeader" wizard
+        And wait load page
+        Then verify "Monitor Jobs" tab is active in "Jobs_Tab_Selector" on "Jobs_Monitor_Tab" wizard
+        Then select "Abort" option in action menu on "Jobs_Monitor_Tab" wizard in "Jobs_Monitor_Table" table at row with "erann-test" value in "name" column
+        And wait load page
+        Then verify if "Common_Popup" popup dialog appears
+        Then verify "Cross_Cancel_Button" element visibility on "Common_Popup" wizard
+        Then verify "Title" element visibility on "Common_Popup" wizard
+        Then click on "Cross_Cancel_Button" element on "Common_Popup" wizard
+        And wait load page
+        Then verify "Title" element not exists on "Common_Popup" wizard
+        Then select "Abort" option in action menu on "Jobs_Monitor_Tab" wizard in "Jobs_Monitor_Table" table at row with "erann-test" value in "name" column
+        And wait load page
+        Then verify if "Common_Popup" popup dialog appears
+        Then verify "Cross_Cancel_Button" element visibility on "Common_Popup" wizard
+        Then verify "Title" element visibility on "Common_Popup" wizard
+        Then "Title" element on "Common_Popup" should contains "Abort job?" value
+        Then "Description" element on "Common_Popup" should contains "Are you sure you want to abort the job \"erann-test\"?" value
+        Then verify "Confirm_Button" element visibility on "Common_Popup" wizard
+        Then verify "Confirm_Button" element on "Common_Popup" wizard is enabled
+        Then "Confirm_Button" element on "Common_Popup" should contains "Abort" value
+        Then verify "Cancel_Button" element visibility on "Common_Popup" wizard
+        Then verify "Cancel_Button" element on "Common_Popup" wizard is enabled
+        Then "Cancel_Button" element on "Common_Popup" should contains "Cancel" value
+        Then click on "Cancel_Button" element on "Common_Popup" wizard
+        And wait load page
+        Then verify "Title" element not exists on "Common_Popup" wizard
+        Then select "Abort" option in action menu on "Jobs_Monitor_Tab" wizard in "Jobs_Monitor_Table" table at row with "erann-test" value in "name" column
+        And wait load page
+        Then click on "Confirm_Button" element on "Common_Popup" wizard
+        And wait load page
+        Then verify "Notification_Pop_Up" element visibility on "Notification_Popup" wizard
+        And wait load page
+        Then "Notification_Pop_Up" element on "Notification_Popup" should contains "Job abortion in progress" value
+        And wait load page
+        Then verify "Notification_Pop_Up_Cross_Close_Button" element visibility on "Notification_Popup" wizard
+        Then click on "Notification_Pop_Up_Cross_Close_Button" element on "Notification_Popup" wizard
+        Then verify "Table_Refresh_Button" element visibility on "Jobs_Monitor_Tab" wizard
+        Then click on "Table_Refresh_Button" element on "Jobs_Monitor_Tab" wizard
+        And wait load page
+        Then value in "status" column with "tooltip" in "Jobs_Monitor_Table" on "Jobs_Monitor_Tab" wizard should contains "Aborting"
+        Then wait for 10 seconds
+        Then verify "Notification_Pop_Up" element visibility on "Notification_Popup" wizard
+        And wait load page
+        Then "Notification_Pop_Up" element on "Notification_Popup" should contains "Job erann-test was aborted" value
+        And wait load page
+        Then verify "Notification_Pop_Up_Cross_Close_Button" element visibility on "Notification_Popup" wizard
+        Then click on "Notification_Pop_Up_Cross_Close_Button" element on "Notification_Popup" wizard
+        Then verify "Table_Refresh_Button" element visibility on "Jobs_Monitor_Tab" wizard
+        Then click on "Table_Refresh_Button" element on "Jobs_Monitor_Tab" wizard
+        And wait load page
+        Then value in "status" column with "tooltip" in "Jobs_Monitor_Table" on "Jobs_Monitor_Tab" wizard should contains "Aborted"
+    
+    @MLJW
     @passive
     @smoke
     Scenario: MLJW087 - Check Retry option in action menu on Workflows Monitor tab
@@ -2433,4 +2513,35 @@ Feature: Jobs and workflows
         Then "Retry_Button" element on "Notification_Popup" should contains "RETRY" value
         Then verify "Notification_Pop_Up_Cross_Close_Button" element visibility on "Notification_Popup" wizard
         Then click on "Notification_Pop_Up_Cross_Close_Button" element on "Notification_Popup" wizard
-         
+
+    @MLJW
+    @passive
+    @smoke
+    Scenario: MLJW088 - Verify filtering by workflows status on Workflows Monitor tab
+        Given open url
+        And wait load page
+        And click on row root with value "cat-vs-dog-classification" in "name" column in "Projects_Table" table on "Projects" wizard
+        And wait load page
+        And hover "Project_Navigation_Toggler" component on "commonPagesHeader" wizard
+        And click on cell with value "Jobs and workflows" in "link" column in "General_Info_Quick_Links" table on "commonPagesHeader" wizard
+        And hover "MLRun_Logo" component on "commonPagesHeader" wizard
+        And wait load page
+        And select "Monitor Workflows" tab in "Jobs_Tab_Selector" on "Jobs_Monitor_Tab" wizard
+        When select "Any time" option in "Date_Picker_Filter_Dropdown" filter dropdown on "Jobs_Monitor_Tab" wizard
+        And wait load page
+        Then value in "status" column with "tooltip" in "Workflows_Monitor_Table" on "Workflows_Monitor_Tab" wizard should contains "Completed"
+        Then value in "status" column with "tooltip" in "Workflows_Monitor_Table" on "Workflows_Monitor_Tab" wizard should contains "Failed"
+        When click on cell with row index 2 in "name" column in "Workflows_Monitor_Table" table on "Workflows_Monitor_Tab" wizard
+        And wait load page
+        Then click on "Toggle_View_Button" element on "Workflows_Monitor_Tab" wizard
+        And wait load page
+        Then value in "status" column with "tooltip" in "Workflow_List_View_Table" on "Workflows_Monitor_Tab" wizard should contains "Error"
+        Then value in "status" column with "tooltip" in "Workflow_List_View_Table" on "Workflows_Monitor_Tab" wizard should contains "Completed"
+        And hover "MLRun_Logo" component on "commonPagesHeader" wizard
+        And wait load page
+        When click on cell with row index 2 in "name" column in "Workflow_List_View_Table" table on "Workflows_Monitor_Tab" wizard
+        And wait load page
+        Then verify "State_Icon" element visibility on "Workflows_Monitor_Tab_Info_Pane" wizard
+        Then verify "State_Icon" element on "Workflows_Monitor_Tab_Info_Pane" wizard should display hover tooltip "Common_Tooltips"."Error_Content_Workflow"
+        Then verify "Error_Content" element visibility on "Workflows_Monitor_Tab_Info_Pane" wizard
+        

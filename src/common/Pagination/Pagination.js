@@ -20,7 +20,7 @@ such restriction.
 import React, { useCallback, useMemo, useRef } from 'react'
 import PropTypes from 'prop-types'
 import classnames from 'classnames'
-import { useNavigate, useSearchParams } from 'react-router-dom'
+import { useLocation, useNavigate, useSearchParams } from 'react-router-dom'
 import { max, min } from 'lodash'
 
 import { RoundedIcon } from 'igz-controls/components'
@@ -45,12 +45,18 @@ import './pagination.scss'
 
 const threeDotsString = '...'
 
-const Pagination = ({ closeParamName = '', paginationConfig }) => {
+const Pagination = ({
+  closeParamName = '',
+  disableNextDoubleBtn = false,
+  disabledNextDoubleBtnTooltip = '',
+  paginationConfig
+}) => {
   const [, setSearchParams] = useSearchParams()
   const navigate = useNavigate()
   const paginationPagesRef = useRef()
   const leftSideRef = useRef(0)
   const rightSideRef = useRef(0)
+  const location = useLocation()
 
   // Total pages are now calculated based on start and end pages
   const totalPagesCount = useMemo(
@@ -63,11 +69,12 @@ const Pagination = ({ closeParamName = '', paginationConfig }) => {
       prevBtn: paginationConfig[FE_PAGE] === 1,
       prevDoubleBtn: paginationConfig[BE_PAGE] === 1,
       nextBtn:
-        paginationConfig[FE_PAGE] === paginationConfig[FE_PAGE_END] &&
-        !paginationConfig.paginationResponse?.['page-token'],
-      nextDoubleBtn: !paginationConfig.paginationResponse?.['page-token']
+        (paginationConfig[FE_PAGE] === paginationConfig[FE_PAGE_END] && disableNextDoubleBtn) ||
+        (paginationConfig[FE_PAGE] === paginationConfig[FE_PAGE_END] &&
+          !paginationConfig.paginationResponse?.['page-token']),
+      nextDoubleBtn: disableNextDoubleBtn || !paginationConfig.paginationResponse?.['page-token']
     }
-  }, [paginationConfig])
+  }, [disableNextDoubleBtn, paginationConfig])
 
   const prevDoubleBtnTooltip = useMemo(() => {
     const visiblePagesCount = paginationConfig[BE_PAGE_SIZE] / paginationConfig[FE_PAGE_SIZE]
@@ -78,9 +85,9 @@ const Pagination = ({ closeParamName = '', paginationConfig }) => {
 
   const handlePageChange = useCallback(() => {
     if (closeParamName) {
-      navigate(getCloseDetailsLink(closeParamName, true), { replace: true })
+      navigate(getCloseDetailsLink(closeParamName, location, true), { replace: true })
     }
-  }, [navigate, closeParamName])
+  }, [closeParamName, navigate, location])
 
   const paginationItems = useMemo(() => {
     if (!paginationConfig[FE_PAGE]) return []
@@ -289,9 +296,11 @@ const Pagination = ({ closeParamName = '', paginationConfig }) => {
               className="pagination-navigate-btn"
               onClick={() => goToNextBePage()}
               tooltipText={
-                !navigationDisableState.nextDoubleBtn
-                  ? `Load page ${paginationConfig[FE_PAGE_END] + 1}+`
-                  : ''
+                navigationDisableState.nextDoubleBtn && disabledNextDoubleBtnTooltip
+                  ? disabledNextDoubleBtnTooltip
+                  : !navigationDisableState.nextDoubleBtn
+                    ? `Load page ${paginationConfig[FE_PAGE_END] + 1}+`
+                    : ''
               }
               disabled={navigationDisableState.nextDoubleBtn}
             >
@@ -307,6 +316,8 @@ const Pagination = ({ closeParamName = '', paginationConfig }) => {
 
 Pagination.propTypes = {
   closeParamName: PropTypes.string,
+  disableNextDoubleBtn: PropTypes.bool,
+  disabledNextDoubleBtnTooltip: PropTypes.string,
   paginationConfig: PAGINATION_CONFIG.isRequired
 }
 

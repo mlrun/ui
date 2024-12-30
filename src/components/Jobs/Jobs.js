@@ -64,6 +64,7 @@ export const JobsContext = React.createContext({})
 const Jobs = () => {
   const [confirmData, setConfirmData] = useState(null)
   const [selectedTab, setSelectedTab] = useState(null)
+  const [autoRefreshPrevValue, setAutoRefreshPrevValue] = useState(false)
   const [selectedJob, setSelectedJob] = useState({})
   const params = useParams()
   const navigate = useNavigate()
@@ -230,18 +231,19 @@ const Jobs = () => {
                     onClick: () => handleMonitoring(selectedJob, true)
                   }
                 ]}
-                autoRefreshIsEnabled={selectedTab === MONITOR_JOBS_TAB}
-                autoRefreshIsStopped={
-                  jobWizardIsOpened || jobsStore.loading || !isEmpty(selectedJob)
-                }
+                autoRefreshIsStopped={jobWizardIsOpened || jobsStore.loading}
+                autoRefreshStopTrigger={!isEmpty(selectedJob)}
                 filters={filters}
-                filtersConfig={tabData[selectedTab].filtersConfig}
+                filtersConfig={initialTabData[selectedTab].filtersConfig}
                 handleRefresh={tabData[selectedTab].handleRefresh}
+                handleAutoRefreshPrevValueChange={setAutoRefreshPrevValue}
                 hidden={Boolean(params.workflowId)}
                 key={selectedTab}
                 page={JOBS_MONITORING_PAGE}
                 setSearchParams={setSearchParams}
                 tab={selectedTab}
+                withAutoRefresh
+                withInternalAutoRefresh={params.jobName}
                 withRefreshButton
                 withoutExpandButton
               >
@@ -259,6 +261,7 @@ const Jobs = () => {
                   getWorkflows,
                   handleMonitoring,
                   handleRerunJob,
+                  autoRefreshPrevValue,
                   jobRuns,
                   jobWizardIsOpened,
                   jobWizardMode,

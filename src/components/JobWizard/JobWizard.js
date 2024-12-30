@@ -128,9 +128,10 @@ const JobWizard = ({
     }
     dispatch(resetModalFilter({ name: JOB_WIZARD_FILTERS }))
     dispatch(removeJobFunction())
+    functionsStore.func && dispatch(functionsActions.removeFunction())
     onResolve()
     onWizardClose && onWizardClose()
-  }, [dispatch, onResolve, onWizardClose, showSchedule])
+  }, [dispatch, functionsStore.func, onResolve, onWizardClose, showSchedule])
 
   const { handleCloseModal, resolveModal } = useModalBlockHistory(closeModal, formRef.current)
 
@@ -174,13 +175,15 @@ const JobWizard = ({
   }, [fetchFunctionTemplate, fetchHubFunction, isBatchInference, isTrain, resolveModal])
 
   useEffect(() => {
-    if (!isEmpty(jobsStore.jobFunc)) {
+    if (!isEmpty(jobsStore.jobFunc) || !isEmpty(functionsStore.func)) {
       setSelectedFunctionData({
-        name: jobsStore.jobFunc.metadata.name,
-        functions: [jobsStore.jobFunc]
+        name: !isEmpty(functionsStore.func)
+          ? functionsStore.func.metadata.name
+          : jobsStore.jobFunc.metadata.name,
+        functions: !isEmpty(functionsStore.func) ? [functionsStore.func] : [jobsStore.jobFunc]
       })
     }
-  }, [isEditMode, isRunMode, jobsStore.jobFunc])
+  }, [functionsStore.func, isEditMode, isRunMode, jobsStore.jobFunc])
 
   const setJobData = useCallback(
     (formState, jobFormData, jobAdditionalData) => {
