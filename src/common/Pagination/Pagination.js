@@ -201,7 +201,7 @@ const Pagination = ({
     }
   }
 
-  const getPageNumberStyle = useCallback((paginationItems, paginationItem, index) => {
+  const getPageNumberStyle = useCallback(paginationItems => {
     const maxPage = max(paginationItems)
     const paginationItemWidth = `${maxPage.toString().length}ch`
 
@@ -209,7 +209,7 @@ const Pagination = ({
   }, [])
 
   const getPaginationPagesStyle = useCallback(
-    (paginationItems, paginationItem, index) => {
+    paginationItems => {
       const maxFePages = paginationConfig[BE_PAGE_SIZE] / paginationConfig[FE_PAGE_SIZE]
       const maxPage = max(paginationItems)
       const maxPageCount = min([7, maxPage, maxFePages])
@@ -231,7 +231,7 @@ const Pagination = ({
             <RoundedIcon
               id="pagination-navigate-double-prev-btn"
               className="pagination-navigate-btn pagination-navigate-prev-btn"
-              onClick={() => goToPrevBePage()}
+              onClick={goToPrevBePage}
               tooltipText={!navigationDisableState.prevDoubleBtn ? prevDoubleBtnTooltip : ''}
               disabled={navigationDisableState.prevDoubleBtn}
             >
@@ -240,7 +240,7 @@ const Pagination = ({
             <RoundedIcon
               id="pagination-navigate-prev-btn"
               className="pagination-navigate-btn pagination-navigate-prev-btn"
-              onClick={() => goToPrevFePage()}
+              onClick={goToPrevFePage}
               tooltipText={!navigationDisableState.prevBtn ? 'Previous page' : ''}
               disabled={navigationDisableState.prevBtn}
             >
@@ -262,7 +262,9 @@ const Pagination = ({
                           ? 'pagination-dots'
                           : `pagination-page-${pageItem}`
                       }
-                      onClick={() => goToPage(pageItem)}
+                      onClick={
+                        pageItem !== paginationConfig[FE_PAGE] ? () => goToPage(pageItem) : null
+                      }
                       className={classnames(
                         'pagination-btn',
                         pageItem !== threeDotsString && 'pagination-page-btn',
@@ -285,7 +287,7 @@ const Pagination = ({
             <RoundedIcon
               id="pagination-navigate-next-btn"
               className="pagination-navigate-btn"
-              onClick={() => goToNextFePage()}
+              onClick={goToNextFePage}
               tooltipText={!navigationDisableState.nextBtn ? 'Next page' : ''}
               disabled={navigationDisableState.nextBtn}
             >
@@ -294,7 +296,7 @@ const Pagination = ({
             <RoundedIcon
               id="pagination-navigate-next-double-btn"
               className="pagination-navigate-btn"
-              onClick={() => goToNextBePage()}
+              onClick={goToNextBePage}
               tooltipText={
                 navigationDisableState.nextDoubleBtn && disabledNextDoubleBtnTooltip
                   ? disabledNextDoubleBtnTooltip
