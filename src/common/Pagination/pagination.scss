@@ -6,9 +6,11 @@
   justify-content: space-between;
   align-items: center;
   padding: 10px 4px 4px;
+  z-index: 1;
 
-  .pagination-items-count, .pagination-items-selector {
-    width: 140px
+  .pagination-items-count,
+  .pagination-items-selector {
+    width: 140px;
   }
 
   .pagination-items-selector {

@@ -338,18 +338,10 @@ Feature: Projects Page
         Then verify "Monitoring_Container" element visibility in "Projects_Monitoring_Container" on "Projects" wizard
         Then verify "Monitoring_Container_Title" element visibility in "Projects_Monitoring_Container" on "Projects" wizard
         Then "Monitoring_Container_Title" element in "Projects_Monitoring_Container" on "Projects" should contains "Monitoring" value
-        Then verify "Monitoring_Container_Running_Status" element visibility in "Projects_Monitoring_Container" on "Projects" wizard
-        Then verify "Monitoring_Container_Running_Icon" element visibility in "Projects_Monitoring_Container" on "Projects" wizard
-        Then "Monitoring_Container_Running_Status" element in "Projects_Monitoring_Container" on "Projects" should contains "In Process" value
-        Then verify "Monitoring_Container_Failed_Status" element visibility in "Projects_Monitoring_Container" on "Projects" wizard
-        Then verify "Monitoring_Container_Failed_Icon" element visibility in "Projects_Monitoring_Container" on "Projects" wizard
-        Then "Monitoring_Container_Failed_Status" element in "Projects_Monitoring_Container" on "Projects" should contains "Failed" value
-        Then verify "Monitoring_Container_Completed_Status" element visibility in "Projects_Monitoring_Container" on "Projects" wizard
-        Then verify "Monitoring_Container_Completed_Icon" element visibility in "Projects_Monitoring_Container" on "Projects" wizard
-        Then "Monitoring_Container_Completed_Status" element in "Projects_Monitoring_Container" on "Projects" should contains "Succeeded" value
         Then verify "Monitoring_Jobs_Box" element visibility in "Projects_Monitoring_Container" on "Projects" wizard
         Then verify "Monitoring_Workflows_Box" element visibility in "Projects_Monitoring_Container" on "Projects" wizard
         Then verify "Monitoring_Scheduled_Box" element visibility in "Projects_Monitoring_Container" on "Projects" wizard
+        Then verify "Monitoring_Alerts_Box" element visibility in "Projects_Monitoring_Container" on "Projects" wizard
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         And wait load page
         Then verify breadcrumbs "tab" label should be equal "Project monitoring" value
@@ -360,6 +352,7 @@ Feature: Projects Page
         Then verify "Monitoring_Jobs_Box" element visibility in "Projects_Monitoring_Container" on "Projects" wizard
         Then verify "Monitoring_Workflows_Box" element visibility in "Projects_Monitoring_Container" on "Projects" wizard
         Then verify "Monitoring_Scheduled_Box" element visibility in "Projects_Monitoring_Container" on "Projects" wizard
+        Then verify "Monitoring_Alerts_Box" element visibility in "Projects_Monitoring_Container" on "Projects" wizard
         And click on row root with value "default" in "name" column in "Projects_Table" table on "Projects" wizard
         Then verify breadcrumbs "tab" label should be equal "Project monitoring" value
         Then verify breadcrumbs "project" label should be equal "default" value
@@ -369,13 +362,12 @@ Feature: Projects Page
         Then verify "Monitoring_Jobs_Box" element visibility in "Projects_Monitoring_Container" on "Projects" wizard
         Then verify "Monitoring_Workflows_Box" element visibility in "Projects_Monitoring_Container" on "Projects" wizard
         Then verify "Monitoring_Scheduled_Box" element visibility in "Projects_Monitoring_Container" on "Projects" wizard
+        Then verify "Monitoring_Alerts_Box" element visibility in "Projects_Monitoring_Container" on "Projects" wizard
 
     @MLPr
     @smoke
     Scenario: MLPr016 - Check components on Jobs counter box
         Given open url
-        And wait load page
-        And turn on demo mode
         And wait load page
         Then verify "Monitoring_Container" element visibility in "Projects_Monitoring_Container" on "Projects" wizard
         Then verify "Monitoring_Container_Title" element visibility in "Projects_Monitoring_Container" on "Projects" wizard
@@ -386,38 +378,48 @@ Feature: Projects Page
         Then verify "Filtering_Time_Period" element visibility in "Monitoring_Jobs_Box" on "Projects" wizard
         Then "Filtering_Time_Period" element in "Monitoring_Jobs_Box" on "Projects" should contains "Past 24 hours" value
         Then verify "Total_Counter_Title" element visibility in "Monitoring_Jobs_Box" on "Projects" wizard
-        Then "Total_Counter_Title" element in "Monitoring_Jobs_Box" on "Projects" should contains "Jobs" value
+        Then "Total_Counter_Title" element in "Monitoring_Jobs_Box" on "Projects" should contains "Total" value
         Then verify "Total_Counter_Number" element visibility in "Monitoring_Jobs_Box" on "Projects" wizard
-        Then "Total_Counter_Number" element in "Monitoring_Jobs_Box" on "Projects" should contains "20" value
         Then verify "Counter_Running_Status_Number" element visibility in "Monitoring_Jobs_Box" on "Projects" wizard
+        Then verify "Counter_Running_Status_Subtitle" element visibility in "Monitoring_Jobs_Box" on "Projects" wizard
+        Then "Counter_Running_Status_Subtitle" element in "Monitoring_Jobs_Box" on "Projects" should contains "In Process" value
         Then verify "Counter_Running_Status_Icon" element visibility in "Monitoring_Jobs_Box" on "Projects" wizard
-        Then "Counter_Running_Status_Number" element in "Monitoring_Jobs_Box" on "Projects" should contains "16" value
+        Then verify "Counter_Running_Status_Icon" element in "Monitoring_Jobs_Box" on "Projects" wizard should display hover tooltip "Common_Tooltips"."In_Process_Jobs"
         Then verify "Counter_Failed_Status_Number" element visibility in "Monitoring_Jobs_Box" on "Projects" wizard
+        Then verify "Counter_Failed_Status_Subtitle" element visibility in "Monitoring_Jobs_Box" on "Projects" wizard
+        Then "Counter_Failed_Status_Subtitle" element in "Monitoring_Jobs_Box" on "Projects" should contains "Failed" value
         Then verify "Counter_Failed_Status_Icon" element visibility in "Monitoring_Jobs_Box" on "Projects" wizard
-        Then "Counter_Failed_Status_Number" element in "Monitoring_Jobs_Box" on "Projects" should contains "3" value
+        Then verify "Counter_Failed_Status_Icon" element in "Monitoring_Jobs_Box" on "Projects" wizard should display hover tooltip "Common_Tooltips"."Failed_Jobs"
         Then verify "Counter_Completed_Status_Number" element visibility in "Monitoring_Jobs_Box" on "Projects" wizard
+        Then verify "Counter_Completed_Status_Subtitle" element visibility in "Monitoring_Jobs_Box" on "Projects" wizard
+        Then "Counter_Completed_Status_Subtitle" element in "Monitoring_Jobs_Box" on "Projects" should contains "Succeeded" value
         Then verify "Counter_Completed_Status_Icon" element visibility in "Monitoring_Jobs_Box" on "Projects" wizard
+        Then verify "Counter_Completed_Status_Icon" element in "Monitoring_Jobs_Box" on "Projects" wizard should display hover tooltip "Common_Tooltips"."Succeeded"
         Then "Counter_Completed_Status_Number" element in "Monitoring_Jobs_Box" on "Projects" should contains "1" value
-        Then verify "See_All_Link" element visibility in "Monitoring_Jobs_Box" on "Projects" wizard
-        Then "See_All_Link" element in "Monitoring_Jobs_Box" on "Projects" should contains "See all" value
         When click on "Counter_Running_Status_Number" element in "Monitoring_Jobs_Box" on "Projects" wizard
         And wait load page
-        Then verify redirection to "projects/*/jobs-monitoring/jobs"
+        Then verify redirection to "projects/*/jobs-monitoring/jobs?state=running%2Cpending%2Caborting&dates=anyTime&bePage=1&fePage=1"
         Then navigate back
         And wait load page
         When click on "Counter_Failed_Status_Number" element in "Monitoring_Jobs_Box" on "Projects" wizard
         And wait load page
-        Then verify redirection to "projects/*/jobs-monitoring/jobs"
+        Then verify redirection to "projects/*/jobs-monitoring/jobs?state=error%2Caborted&bePage=1&fePage=1"
+        Then verify breadcrumbs "cross" label should be equal "Jobs monitoring" value
+        Then verify breadcrumbs "projectsPage" label should be equal "Projects" value
         Then navigate back
         And wait load page
         When click on "Counter_Completed_Status_Number" element in "Monitoring_Jobs_Box" on "Projects" wizard
         And wait load page
-        Then verify redirection to "projects/*/jobs-monitoring/jobs"
+        Then verify redirection to "projects/*/jobs-monitoring/jobs?state=completed&bePage=1&fePage=1"
+        Then verify breadcrumbs "cross" label should be equal "Jobs monitoring" value
+        Then verify breadcrumbs "projectsPage" label should be equal "Projects" value
         Then navigate back
         And wait load page
-        When click on "See_All_Link" element in "Monitoring_Jobs_Box" on "Projects" wizard
+        When click on "Total_Counter_Number" element in "Monitoring_Jobs_Box" on "Projects" wizard
         And wait load page
-        Then verify redirection to "projects/*/jobs-monitoring/jobs"
+        Then verify redirection to "projects/*/jobs-monitoring/jobs?state=all&bePage=1&fePage=1"
+        Then verify breadcrumbs "cross" label should be equal "Jobs monitoring" value
+        Then verify breadcrumbs "projectsPage" label should be equal "Projects" value
         Then navigate back
         And wait load page
         Then verify "Monitoring_Container" element visibility in "Projects_Monitoring_Container" on "Projects" wizard
@@ -426,8 +428,6 @@ Feature: Projects Page
     @smoke
     Scenario: MLPr017 - Check components on Workflows counter box
         Given open url
-        And wait load page
-        And turn on demo mode
         And wait load page
         Then verify "Monitoring_Container" element visibility in "Projects_Monitoring_Container" on "Projects" wizard
         Then verify "Monitoring_Container_Title" element visibility in "Projects_Monitoring_Container" on "Projects" wizard
@@ -438,37 +438,48 @@ Feature: Projects Page
         Then verify "Filtering_Time_Period" element visibility in "Monitoring_Workflows_Box" on "Projects" wizard
         Then "Filtering_Time_Period" element in "Monitoring_Workflows_Box" on "Projects" should contains "Past 24 hours" value
         Then verify "Total_Counter_Title" element visibility in "Monitoring_Workflows_Box" on "Projects" wizard
-        Then "Total_Counter_Title" element in "Monitoring_Workflows_Box" on "Projects" should contains "Workflows" value
+        Then "Total_Counter_Title" element in "Monitoring_Workflows_Box" on "Projects" should contains "Total" value
         Then verify "Total_Counter_Number" element visibility in "Monitoring_Workflows_Box" on "Projects" wizard
-        Then "Total_Counter_Number" element in "Monitoring_Workflows_Box" on "Projects" should contains "3" value
         Then verify "Counter_Running_Status_Number" element visibility in "Monitoring_Workflows_Box" on "Projects" wizard
+        Then verify "Counter_Running_Status_Subtitle" element visibility in "Monitoring_Workflows_Box" on "Projects" wizard
+        Then "Counter_Running_Status_Subtitle" element in "Monitoring_Workflows_Box" on "Projects" should contains "In Process" value
         Then verify "Counter_Running_Status_Icon" element visibility in "Monitoring_Workflows_Box" on "Projects" wizard
-        Then "Counter_Running_Status_Number" element in "Monitoring_Workflows_Box" on "Projects" should contains "0" value
+        Then verify "Counter_Running_Status_Icon" element in "Monitoring_Workflows_Box" on "Projects" wizard should display hover tooltip "Common_Tooltips"."In_Process_Workflows"
         Then verify "Counter_Failed_Status_Number" element visibility in "Monitoring_Workflows_Box" on "Projects" wizard
+        Then verify "Counter_Failed_Status_Subtitle" element visibility in "Monitoring_Workflows_Box" on "Projects" wizard
+        Then "Counter_Failed_Status_Subtitle" element in "Monitoring_Workflows_Box" on "Projects" should contains "Failed" value
         Then verify "Counter_Failed_Status_Icon" element visibility in "Monitoring_Workflows_Box" on "Projects" wizard
-        Then "Counter_Failed_Status_Number" element in "Monitoring_Workflows_Box" on "Projects" should contains "1" value
+        Then verify "Counter_Failed_Status_Icon" element in "Monitoring_Workflows_Box" on "Projects" wizard should display hover tooltip "Common_Tooltips"."Failed_Worflows"
         Then verify "Counter_Completed_Status_Number" element visibility in "Monitoring_Workflows_Box" on "Projects" wizard
+        Then verify "Counter_Completed_Status_Subtitle" element visibility in "Monitoring_Workflows_Box" on "Projects" wizard
+        Then "Counter_Completed_Status_Subtitle" element in "Monitoring_Workflows_Box" on "Projects" should contains "Succeeded" value
         Then verify "Counter_Completed_Status_Icon" element visibility in "Monitoring_Workflows_Box" on "Projects" wizard
-        Then "Counter_Completed_Status_Number" element in "Monitoring_Workflows_Box" on "Projects" should contains "2" value
-        Then verify "See_All_Link" element visibility in "Monitoring_Workflows_Box" on "Projects" wizard
-        Then "See_All_Link" element in "Monitoring_Workflows_Box" on "Projects" should contains "See all" value
+        Then verify "Counter_Completed_Status_Icon" element in "Monitoring_Workflows_Box" on "Projects" wizard should display hover tooltip "Common_Tooltips"."Succeeded"
         When click on "Counter_Running_Status_Number" element in "Monitoring_Workflows_Box" on "Projects" wizard
         And wait load page
-        Then verify redirection to "projects/*/jobs-monitoring/workflows"
+        Then verify redirection to "projects/*/jobs-monitoring/workflows?state=running&dates=anyTime"
+        Then verify breadcrumbs "cross" label should be equal "Jobs monitoring" value
+        Then verify breadcrumbs "projectsPage" label should be equal "Projects" value
         Then navigate back
         And wait load page
         When click on "Counter_Failed_Status_Number" element in "Monitoring_Workflows_Box" on "Projects" wizard
         And wait load page
-        Then verify redirection to "projects/*/jobs-monitoring/workflows"
+        Then verify redirection to "projects/*/jobs-monitoring/workflows?state=error%2Cfailed"
+        Then verify breadcrumbs "cross" label should be equal "Jobs monitoring" value
+        Then verify breadcrumbs "projectsPage" label should be equal "Projects" value
         Then navigate back
         And wait load page
         When click on "Counter_Completed_Status_Number" element in "Monitoring_Workflows_Box" on "Projects" wizard
         And wait load page
-        Then verify redirection to "projects/*/jobs-monitoring/workflows"
+        Then verify redirection to "projects/*/jobs-monitoring/workflows?state=completed"
+        Then verify breadcrumbs "cross" label should be equal "Jobs monitoring" value
+        Then verify breadcrumbs "projectsPage" label should be equal "Projects" value
         Then navigate back
         And wait load page
-        When click on "See_All_Link" element in "Monitoring_Workflows_Box" on "Projects" wizard
-        Then verify redirection to "projects/*/jobs-monitoring/workflows"
+        When click on "Total_Counter_Number" element in "Monitoring_Workflows_Box" on "Projects" wizard
+        Then verify redirection to "projects/*/jobs-monitoring/workflows?state=all"
+        Then verify breadcrumbs "cross" label should be equal "Jobs monitoring" value
+        Then verify breadcrumbs "projectsPage" label should be equal "Projects" value
         Then navigate back
         And wait load page
         Then verify "Monitoring_Container" element visibility in "Projects_Monitoring_Container" on "Projects" wizard
@@ -477,8 +488,6 @@ Feature: Projects Page
     @smoke
     Scenario: MLPr018 - Check components on Sheduled counter box
         Given open url
-        And wait load page
-        And turn on demo mode
         And wait load page
         Then verify "Monitoring_Container" element visibility in "Projects_Monitoring_Container" on "Projects" wizard
         Then verify "Monitoring_Container_Title" element visibility in "Projects_Monitoring_Container" on "Projects" wizard
@@ -493,32 +502,136 @@ Feature: Projects Page
         Then verify "Total_Workflows_Counter_Title" element visibility in "Monitoring_Scheduled_Box" on "Projects" wizard
         Then "Total_Workflows_Counter_Title" element in "Monitoring_Scheduled_Box" on "Projects" should contains "Workflows" value
         Then verify "Total_Job_Counter_Number" element visibility in "Monitoring_Scheduled_Box" on "Projects" wizard
-        Then "Total_Job_Counter_Number" element in "Monitoring_Scheduled_Box" on "Projects" should contains "7" value
         Then verify "Total_Workflows_Counter_Number" element visibility in "Monitoring_Scheduled_Box" on "Projects" wizard
-        Then "Total_Workflows_Counter_Number" element in "Monitoring_Scheduled_Box" on "Projects" should contains "1" value
-        Then verify "Jobs_See_All_Link" element visibility in "Monitoring_Scheduled_Box" on "Projects" wizard
-        Then "Jobs_See_All_Link" element in "Monitoring_Scheduled_Box" on "Projects" should contains "See all" value
-        Then verify "Workflows_See_All_Link" element visibility in "Monitoring_Scheduled_Box" on "Projects" wizard
-        Then "Workflows_See_All_Link" element in "Monitoring_Scheduled_Box" on "Projects" should contains "See all" value
         Then verify "Total_Scheduled_Title" element visibility in "Monitoring_Scheduled_Box" on "Projects" wizard
         Then "Total_Scheduled_Title" element in "Monitoring_Scheduled_Box" on "Projects" should contains "Total" value
         Then verify "Total_Scheduled_Number" element visibility in "Monitoring_Scheduled_Box" on "Projects" wizard
+        When click on "Total_Scheduled_Number" element in "Monitoring_Scheduled_Box" on "Projects" wizard
+        Then verify redirection to "projects/*/jobs-monitoring/scheduled?type=all"
+        Then verify breadcrumbs "cross" label should be equal "Jobs monitoring" value
+        Then verify breadcrumbs "projectsPage" label should be equal "Projects" value
+        And wait load page
+        Then navigate back
+        And wait load page
+        When click on "Total_Workflows_Counter_Number" element in "Monitoring_Scheduled_Box" on "Projects" wizard
+        Then verify redirection to "projects/*/jobs-monitoring/scheduled?type=workflow"
+        Then verify breadcrumbs "cross" label should be equal "Jobs monitoring" value
+        Then verify breadcrumbs "projectsPage" label should be equal "Projects" value
+        And wait load page
+        Then navigate back
+        And wait load page
+        When click on "Total_Job_Counter_Number" element in "Monitoring_Scheduled_Box" on "Projects" wizard
+        Then verify redirection to "projects/*/jobs-monitoring/scheduled?type=job"
+        Then verify breadcrumbs "cross" label should be equal "Jobs monitoring" value
+        Then verify breadcrumbs "projectsPage" label should be equal "Projects" value
+        And wait load page
+        Then navigate back
+        And wait load page
+        Then verify "Monitoring_Container" element visibility in "Projects_Monitoring_Container" on "Projects" wizard
+
+    @MLPr
+    @smoke
+    Scenario: MLPr020 - Check components on Alerts counter box
+        Given open url
+        And wait load page
+        Then verify "Monitoring_Container" element visibility in "Projects_Monitoring_Container" on "Projects" wizard
+        Then verify "Monitoring_Container_Title" element visibility in "Projects_Monitoring_Container" on "Projects" wizard
+        Then "Monitoring_Container_Title" element in "Projects_Monitoring_Container" on "Projects" should contains "Monitoring" value
+        Then verify "Monitoring_Alerts_Box" element visibility in "Projects_Monitoring_Container" on "Projects" wizard
+        Then verify "Monitoring_Alerts_Box_Title" element visibility in "Monitoring_Alerts_Box" on "Projects" wizard
+        Then "Monitoring_Alerts_Box_Title" element in "Monitoring_Alerts_Box" on "Projects" should contains "Alerts" value
+        Then verify "Monitoring_Alerts_Box_Title_Icon" element visibility in "Monitoring_Alerts_Box" on "Projects" wizard
+        Then verify "Filtering_Time_Period" element visibility in "Monitoring_Alerts_Box" on "Projects" wizard
+        Then "Filtering_Time_Period" element in "Monitoring_Alerts_Box" on "Projects" should contains "Past 24 hours" value
+        Then verify "Total_Endpoint_Counter_Title" element visibility in "Monitoring_Alerts_Box" on "Projects" wizard
+        Then "Total_Endpoint_Counter_Title" element in "Monitoring_Alerts_Box" on "Projects" should contains "Endpoint" value
+        Then verify "Total_Endpoint_Counter_Number" element visibility in "Monitoring_Alerts_Box" on "Projects" wizard
+        Then verify "Total_Jobs_Counter_Title" element visibility in "Monitoring_Alerts_Box" on "Projects" wizard
+        Then "Total_Jobs_Counter_Title" element in "Monitoring_Alerts_Box" on "Projects" should contains "Jobs" value
+        Then verify "Total_Jobs_Counter_Number" element visibility in "Monitoring_Alerts_Box" on "Projects" wizard
+        Then verify "Total_Application_Counter_Title" element visibility in "Monitoring_Alerts_Box" on "Projects" wizard
+        Then "Total_Application_Counter_Title" element in "Monitoring_Alerts_Box" on "Projects" should contains "Application" value
+        Then verify "Total_Application_Counter_Number" element visibility in "Monitoring_Alerts_Box" on "Projects" wizard
+        Then verify "Total_Alerts_Title" element visibility in "Monitoring_Alerts_Box" on "Projects" wizard
+        Then "Total_Alerts_Title" element in "Monitoring_Alerts_Box" on "Projects" should contains "Total" value
+        Then verify "Total_Alerts_Number" element visibility in "Monitoring_Alerts_Box" on "Projects" wizard
+        Then "Total_Alerts_Number" element in "Monitoring_Alerts_Box" on "Projects" should contains "27" value
+        When click on "Total_Alerts_Number" element in "Monitoring_Alerts_Box" on "Projects" wizard
+        Then verify redirection to "projects/*/alerts?bePage=1&fePage=1"
+        Then verify breadcrumbs "cross" label should be equal "Alerts monitoring" value
+        Then verify breadcrumbs "projectsPage" label should be equal "Projects" value
+        And wait load page
+        Then navigate back
+        And wait load page
+        When click on "Total_Endpoint_Counter_Number" element in "Monitoring_Alerts_Box" on "Projects" wizard
+        Then verify redirection to "projects/*/alerts?entity-type=model-endpoint-result&bePage=1&fePage=1"
+        Then verify breadcrumbs "cross" label should be equal "Alerts monitoring" value
+        Then verify breadcrumbs "projectsPage" label should be equal "Projects" value
+        And wait load page
+        Then navigate back
+        And wait load page
+        When click on "Total_Jobs_Counter_Number" element in "Monitoring_Alerts_Box" on "Projects" wizard
+        Then verify redirection to "projects/*/alerts?entity-type=job&bePage=1&fePage=1"
+        Then verify breadcrumbs "cross" label should be equal "Alerts monitoring" value
+        Then verify breadcrumbs "projectsPage" label should be equal "Projects" value
+        And wait load page
+        Then navigate back
+        And wait load page
+        When click on "Total_Application_Counter_Number" element in "Monitoring_Alerts_Box" on "Projects" wizard
+        Then verify redirection to "projects/*/alerts?entity-type=model-monitoring-application&bePage=1&fePage=1"
+        Then verify breadcrumbs "cross" label should be equal "Alerts monitoring" value
+        Then verify breadcrumbs "projectsPage" label should be equal "Projects" value
+        And wait load page
+        Then navigate back
+        And wait load page
+        Then verify "Monitoring_Container" element visibility in "Projects_Monitoring_Container" on "Projects" wizard
+
+    @MLPr
+    @smoke
+    Scenario: MLPr021 - Check components numbers on Monitoring container
+        Given open url
+        And wait load page
+        Then verify "Monitoring_Container" element visibility in "Projects_Monitoring_Container" on "Projects" wizard
+        Then verify "Monitoring_Container_Title" element visibility in "Projects_Monitoring_Container" on "Projects" wizard
+        Then "Monitoring_Container_Title" element in "Projects_Monitoring_Container" on "Projects" should contains "Monitoring" value
+        Then verify "Monitoring_Jobs_Box_Title" element visibility in "Monitoring_Jobs_Box" on "Projects" wizard
+        Then "Monitoring_Jobs_Box_Title" element in "Monitoring_Jobs_Box" on "Projects" should contains "Jobs" value
+        Then verify "Total_Counter_Number" element visibility in "Monitoring_Jobs_Box" on "Projects" wizard
+        Then "Total_Counter_Number" element in "Monitoring_Jobs_Box" on "Projects" should contains "20" value
+        Then verify "Counter_Running_Status_Number" element visibility in "Monitoring_Jobs_Box" on "Projects" wizard
+        Then "Counter_Running_Status_Number" element in "Monitoring_Jobs_Box" on "Projects" should contains "16" value
+        Then verify "Counter_Failed_Status_Number" element visibility in "Monitoring_Jobs_Box" on "Projects" wizard
+        Then "Counter_Failed_Status_Number" element in "Monitoring_Jobs_Box" on "Projects" should contains "3" value
+        Then verify "Counter_Completed_Status_Number" element visibility in "Monitoring_Jobs_Box" on "Projects" wizard
+        Then "Counter_Completed_Status_Number" element in "Monitoring_Jobs_Box" on "Projects" should contains "1" value
+        Then verify "Monitoring_Workflows_Box_Title" element visibility in "Monitoring_Workflows_Box" on "Projects" wizard
+        Then "Monitoring_Workflows_Box_Title" element in "Monitoring_Workflows_Box" on "Projects" should contains "Workflows" value
+        Then verify "Total_Counter_Number" element visibility in "Monitoring_Workflows_Box" on "Projects" wizard
+        Then "Total_Counter_Number" element in "Monitoring_Workflows_Box" on "Projects" should contains "3" value
+        Then verify "Counter_Running_Status_Number" element visibility in "Monitoring_Workflows_Box" on "Projects" wizard
+        Then "Counter_Running_Status_Number" element in "Monitoring_Workflows_Box" on "Projects" should contains "0" value
+        Then verify "Counter_Failed_Status_Number" element visibility in "Monitoring_Workflows_Box" on "Projects" wizard
+        Then "Counter_Failed_Status_Number" element in "Monitoring_Workflows_Box" on "Projects" should contains "1" value
+        Then verify "Counter_Completed_Status_Number" element visibility in "Monitoring_Workflows_Box" on "Projects" wizard
+        Then "Counter_Completed_Status_Number" element in "Monitoring_Workflows_Box" on "Projects" should contains "2" value
+        Then verify "Monitoring_Scheduled_Box" element visibility in "Projects_Monitoring_Container" on "Projects" wizard
+        Then verify "Monitoring_Scheduled_Box_Title" element visibility in "Monitoring_Scheduled_Box" on "Projects" wizard
+        Then "Monitoring_Scheduled_Box_Title" element in "Monitoring_Scheduled_Box" on "Projects" should contains "Scheduled" value
+        Then verify "Total_Job_Counter_Number" element visibility in "Monitoring_Scheduled_Box" on "Projects" wizard
+        Then "Total_Job_Counter_Number" element in "Monitoring_Scheduled_Box" on "Projects" should contains "7" value
+        Then verify "Total_Workflows_Counter_Number" element visibility in "Monitoring_Scheduled_Box" on "Projects" wizard
+        Then "Total_Workflows_Counter_Number" element in "Monitoring_Scheduled_Box" on "Projects" should contains "1" value
+        Then verify "Total_Scheduled_Number" element visibility in "Monitoring_Scheduled_Box" on "Projects" wizard
         Then "Total_Scheduled_Number" element in "Monitoring_Scheduled_Box" on "Projects" should contains "8" value
-        Then verify "Total_See_All_Link" element visibility in "Monitoring_Scheduled_Box" on "Projects" wizard
-        Then "Total_See_All_Link" element in "Monitoring_Scheduled_Box" on "Projects" should contains "See all" value
-        When click on "Jobs_See_All_Link" element in "Monitoring_Scheduled_Box" on "Projects" wizard
-        Then verify redirection to "projects/*/jobs-monitoring/scheduled"
-        And wait load page
-        Then navigate back
-        And wait load page
-        When click on "Workflows_See_All_Link" element in "Monitoring_Scheduled_Box" on "Projects" wizard
-        Then verify redirection to "projects/*/jobs-monitoring/scheduled"
-        And wait load page
-        Then navigate back
-        And wait load page
-        When click on "Total_See_All_Link" element in "Monitoring_Scheduled_Box" on "Projects" wizard
-        Then verify redirection to "projects/*/jobs-monitoring/scheduled"
-        And wait load page
+        Then verify "Monitoring_Alerts_Box" element visibility in "Projects_Monitoring_Container" on "Projects" wizard
+        Then verify "Monitoring_Alerts_Box_Title" element visibility in "Monitoring_Alerts_Box" on "Projects" wizard
+        Then "Monitoring_Alerts_Box_Title" element in "Monitoring_Alerts_Box" on "Projects" should contains "Alerts" value
+        Then verify "Total_Endpoint_Counter_Number" element visibility in "Monitoring_Alerts_Box" on "Projects" wizard
+        Then "Total_Endpoint_Counter_Number" element in "Monitoring_Alerts_Box" on "Projects" should contains "8" value
+        Then verify "Total_Jobs_Counter_Number" element visibility in "Monitoring_Alerts_Box" on "Projects" wizard
+        Then "Total_Jobs_Counter_Number" element in "Monitoring_Alerts_Box" on "Projects" should contains "10" value
+        Then verify "Total_Application_Counter_Number" element visibility in "Monitoring_Alerts_Box" on "Projects" wizard
+        Then "Total_Application_Counter_Number" element in "Monitoring_Alerts_Box" on "Projects" should contains "9" value
 
     @MLPr
     @mlrunUnhealthyTest

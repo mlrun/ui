@@ -32,7 +32,7 @@ import {
 const initialState = {
   groupBy: GROUP_BY_NAME,
   iter: SHOW_ITERATIONS,
-
+  autoRefresh: false,
   tagOptions: null,
   projectOptions: [],
   [FILTER_MENU_MODAL]: {}
@@ -98,6 +98,9 @@ const filtersSlice = createSlice({
     },
     setFilterProjectOptions(state, action) {
       state.projectOptions = action.payload
+    },
+    toggleAutoRefresh(state, action) {
+      state.autoRefresh = action.payload
     }
   },
   extraReducers: builder => {
@@ -115,7 +118,8 @@ export const {
   setFiltersValues,
   setModalFiltersValues,
   setModalFiltersInitialValues,
-  setFilterProjectOptions
+  setFilterProjectOptions,
+  toggleAutoRefresh
 } = filtersSlice.actions
 
 export default filtersSlice.reducer

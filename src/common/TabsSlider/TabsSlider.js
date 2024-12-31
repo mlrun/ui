@@ -191,7 +191,7 @@ const TabsSlider = ({
                   className={tabClassName}
                   data-tab={tab.id}
                   to={generateUrlFromRouterPath(
-                    `${window.location.pathname?.replace(/^$|([^/]+$)/, tab.id)}${location.search ?? ''}`
+                    `${window.location.pathname?.replace(/^$|([^/]+$)/, tab.id)}${location.search ?? ''}${tab.query ?? ''}`
                   )}
                   onClick={() => onSelectTab(tab)}
                   key={tab.id}

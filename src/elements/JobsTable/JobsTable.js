@@ -59,6 +59,7 @@ const JobsTable = React.forwardRef(
       context,
       filters,
       filtersConfig,
+      autoRefreshPrevValue,
       paginatedJobs,
       refreshJobs,
       requestErrorMessage,
@@ -218,11 +219,11 @@ const JobsTable = React.forwardRef(
       (job, isDeleteAll) => {
         handleDeleteJob(isDeleteAll, job, refreshJobs, filters, dispatch).then(() => {
           if (params.jobName) {
-            navigate(getCloseDetailsLink(params.jobName, true))
+            navigate(getCloseDetailsLink(params.jobName, location, true))
           }
         })
       },
-      [params.jobName, refreshJobs, filters, dispatch, navigate]
+      [refreshJobs, filters, dispatch, params.jobName, navigate, location]
     )
 
     const handleConfirmDeleteJob = useCallback(
@@ -319,7 +320,8 @@ const JobsTable = React.forwardRef(
         setSelectedJob,
         modifyAndSelectRun,
         searchParams,
-        paginationConfigJobsRef
+        paginationConfigJobsRef,
+        location
       )
     }, [
       searchParams,
@@ -330,7 +332,8 @@ const JobsTable = React.forwardRef(
       params.jobName,
       params.projectName,
       setSelectedJob,
-      modifyAndSelectRun
+      modifyAndSelectRun,
+      location
     ])
 
     return (
@@ -352,7 +355,7 @@ const JobsTable = React.forwardRef(
             <>
               <Table
                 actionsMenu={actionsMenu}
-                getCloseDetailsLink={() => getCloseDetailsLink(params.jobName)}
+                getCloseDetailsLink={() => getCloseDetailsLink(params.jobName, location)}
                 handleCancel={() => setSelectedJob({})}
                 pageData={pageData}
                 retryRequest={handleRefreshWithFilters}
@@ -373,6 +376,14 @@ const JobsTable = React.forwardRef(
               <Pagination
                 paginationConfig={paginationConfigJobsRef.current}
                 closeParamName={selectedJob.name}
+                disabledNextDoubleBtnTooltip={
+                  filtersStore.autoRefresh
+                    ? 'Uncheck Auto Refresh to view more results'
+                    : autoRefreshPrevValue
+                      ? 'Close detailed view and uncheck Auto Refresh to view more results'
+                      : ''
+                }
+                disableNextDoubleBtn={filtersStore.autoRefresh || autoRefreshPrevValue}
               />
             </>
           )

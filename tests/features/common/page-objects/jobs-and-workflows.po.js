@@ -42,7 +42,7 @@ const tabSelector = {
     row: {
       root: '.content-menu__item',
       fields: {
-        key: 'a'
+        key: ''
       }
     }
   }
@@ -246,7 +246,7 @@ const scheduleMonitorTable = {
     row: {
       root: '.table-row',
       fields: {
-        name: '.table-body__cell:nth-of-type(1) a',
+        name: '.table-body__cell:nth-of-type(1) > div',
         type: {
           componentType: labelComponent,
           structure: generateLabelGroup(

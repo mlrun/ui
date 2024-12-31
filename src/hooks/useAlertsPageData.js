@@ -25,7 +25,7 @@ import { BE_PAGE, BE_PAGE_SIZE, FILTER_ALL_ITEMS, PROJECTS_FILTER } from '../con
 import { usePagination } from './usePagination.hook'
 import { fetchAlerts } from '../reducers/alertsReducer'
 
-export const useAlertsPageData = filters => {
+export const useAlertsPageData = (filters, isAlertsPage) => {
   const [alerts, setAlerts] = useState([])
   const [requestErrorMessage, setRequestErrorMessage] = useState('')
 
@@ -38,10 +38,11 @@ export const useAlertsPageData = filters => {
   const refreshAlerts = useCallback(
     filters => {
       setAlerts([])
-
       abortControllerRef.current = new AbortController()
-      const projectName =
-        params.projectName || filters?.[PROJECTS_FILTER]?.toLowerCase?.() !== FILTER_ALL_ITEMS
+
+      const projectName = !isAlertsPage
+        ? params.projectName || params.id
+        : filters?.[PROJECTS_FILTER]?.toLowerCase?.() !== FILTER_ALL_ITEMS
           ? filters?.[PROJECTS_FILTER]?.toLowerCase?.()
           : params.id
 
@@ -71,7 +72,7 @@ export const useAlertsPageData = filters => {
           paginationConfigAlertsRef.current.paginationResponse = response.pagination
         })
     },
-    [dispatch, params.id, params.projectName]
+    [dispatch, isAlertsPage, params.id, params.projectName]
   )
 
   const [handleRefreshAlerts, paginatedAlerts, , setSearchParams] = usePagination({

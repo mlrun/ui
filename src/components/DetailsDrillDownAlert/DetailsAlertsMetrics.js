@@ -34,6 +34,7 @@ import modelEndpointsActions from '../../actions/modelEndpoints'
 import { groupMetricByApplication } from '../../elements/MetricsSelector/metricsSelector.util'
 
 import {
+  CUSTOM_RANGE_DATE_OPTION,
   datePickerPastOptions,
   PAST_24_HOUR_DATE_OPTION,
   TIME_FRAME_LIMITS
@@ -41,13 +42,13 @@ import {
 
 import { ReactComponent as MetricsIcon } from 'igz-controls/images/metrics-icon.svg'
 
-const DetailsAlertsMetrics = ({ selectedItem }) => {
+const DetailsAlertsMetrics = ({ selectedItem, filters, isAlertsPage = true }) => {
   const [metrics, setMetrics] = useState([])
   const [requestErrorMessage, setRequestErrorMessage] = useState('')
   const metricsContainerRef = useRef(null)
   const metricsValuesAbortController = useRef(new AbortController())
   const prevSelectedEndPointNameRef = useRef('')
-  const [metricOptionsAreLoaded, setMetricOptionsAreLoaded] = useState(false)
+
   const detailsStore = useSelector(store => store.detailsStore)
   const dispatch = useDispatch()
 
@@ -82,12 +83,6 @@ const DetailsAlertsMetrics = ({ selectedItem }) => {
     handleChangeDates(past24hoursOption.handler(), true, PAST_24_HOUR_DATE_OPTION)
   }, [handleChangeDates])
 
-  useEffect(() => {
-    dispatch(
-      modelEndpointsActions.fetchModelEndpointMetrics(selectedItem.project, selectedItem.uid)
-    ).then(() => setMetricOptionsAreLoaded(true))
-  }, [dispatch, selectedItem.project, selectedItem.uid])
-
   const fetchData = useCallback(
     (params, projectName, uid) => {
       metricsValuesAbortController.current = new AbortController()
@@ -111,36 +106,27 @@ const DetailsAlertsMetrics = ({ selectedItem }) => {
       prevSelectedEndPointNameRef.current = selectedItem.uid
       return
     }
+    const params = { name: [selectedItem.fullName] }
 
-    if (
-      metricOptionsAreLoaded &&
-      selectedItem?.uid &&
-      detailsStore.metricsOptions.all.length > 0 &&
-      detailsStore.metricsOptions.selectedByEndpoint[selectedItem?.uid]
-    ) {
-      const params = { name: [selectedItem.fullName] }
-
-      if (detailsStore.dates.value[0] && detailsStore.dates.value[1]) {
-        params.start = detailsStore.dates.value[0].getTime()
-        params.end = detailsStore.dates.value[1].getTime()
-      }
-
-      fetchData(params, selectedItem.project, selectedItem.uid).then()
-    } else {
-      setMetrics([])
+    if (isAlertsPage && detailsStore.dates.value[0] && detailsStore.dates.value[1]) {
+      params.start = detailsStore.dates.value[0].getTime()
+      params.end = detailsStore.dates.value[1].getTime()
     }
-  }, [
-    selectedItem,
-    metricOptionsAreLoaded,
-    detailsStore.metricsOptions,
-    detailsStore.dates.value,
-    fetchData,
-    setMetrics
-  ])
+
+    if (!isAlertsPage) {
+      if (filters?.dates?.initialSelectedOptionId === CUSTOM_RANGE_DATE_OPTION) {
+        params.start = filters?.dates.value[0].getTime()
+        params.end = filters?.dates.value[1].getTime()
+      } else {
+        params.start = filters?.dates.value[0].getTime()
+        params.end = Date.now()
+      }
+    }
+    fetchData(params, selectedItem.project, selectedItem.uid).then()
+  }, [isAlertsPage, filters, selectedItem, detailsStore.dates.value, fetchData])
 
   useEffect(() => {
     fetchMetrics()
-
     return () => {
       metricsValuesAbortController.current?.abort(REQUEST_CANCELED)
       setMetrics([])
@@ -148,20 +134,22 @@ const DetailsAlertsMetrics = ({ selectedItem }) => {
   }, [fetchMetrics, setMetrics])
 
   return (
-    <div className="metrics-wrapper">
-      <div className="metrics__custom-filters">
-        <DatePicker
-          className="details-date-picker"
-          date={detailsStore.dates.value[0]}
-          dateTo={detailsStore.dates.value[1]}
-          selectedOptionId={detailsStore.dates.selectedOptionId}
-          label=""
-          onChange={handleChangeDates}
-          type="date-range-time"
-          timeFrameLimit={TIME_FRAME_LIMITS.MONTH}
-          withLabels
-        />
-      </div>
+    <div>
+      {isAlertsPage && (
+        <div className="metrics__custom-filters">
+          <DatePicker
+            className="details-date-picker"
+            date={detailsStore.dates.value[0]}
+            dateTo={detailsStore.dates.value[1]}
+            selectedOptionId={detailsStore.dates.selectedOptionId}
+            label=""
+            onChange={handleChangeDates}
+            type="date-range-time"
+            timeFrameLimit={TIME_FRAME_LIMITS.MONTH}
+            withLabels
+          />
+        </div>
+      )}
 
       {generatedMetrics.length === 0 ? (
         !detailsStore.loadingCounter ? (
@@ -175,10 +163,10 @@ const DetailsAlertsMetrics = ({ selectedItem }) => {
           )
         ) : null
       ) : (
-        <div ref={metricsContainerRef} className="metrics">
+        <div ref={metricsContainerRef} className="metrics alerts-table__metrics">
           {generatedMetrics.map(([applicationName, applicationMetrics]) => (
             <React.Fragment key={applicationName}>
-              <div className="metrics__app-name">{applicationName}</div>
+              {isAlertsPage && <div className="metrics__app-name">{applicationName}</div>}
               {applicationMetrics.map(metric =>
                 !metric.data || isEmpty(metric.points) ? (
                   <NoMetricData key={metric.id} title={metric.title} />
@@ -195,6 +183,7 @@ const DetailsAlertsMetrics = ({ selectedItem }) => {
 }
 
 DetailsAlertsMetrics.propTypes = {
+  isAlertsPage: PropTypes.bool,
   selectedItem: PropTypes.object.isRequired
 }
 

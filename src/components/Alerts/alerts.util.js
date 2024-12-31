@@ -45,15 +45,17 @@ import {
 import {
   datePickerPastOptions,
   getDatePickerFilterValue,
-  PAST_24_HOUR_DATE_OPTION
+  PAST_24_HOUR_DATE_OPTION,
+  TIME_FRAME_LIMITS
 } from '../../utils/datePicker.util'
 
-export const getAlertsFiltersConfig = () => {
+export const getAlertsFiltersConfig = (timeFrameLimit = false) => {
   return {
     [NAME_FILTER]: { label: 'Alert Name:', initialValue: '' },
     [DATES_FILTER]: {
       label: 'Start time:',
-      initialValue: getDatePickerFilterValue(datePickerPastOptions, PAST_24_HOUR_DATE_OPTION)
+      initialValue: getDatePickerFilterValue(datePickerPastOptions, PAST_24_HOUR_DATE_OPTION),
+      timeFrameLimit: timeFrameLimit ? TIME_FRAME_LIMITS.MONTH : Infinity
     },
     [PROJECTS_FILTER]: { label: 'Project:', initialValue: FILTER_ALL_ITEMS, isModal: true },
     [ENTITY_TYPE]: { label: 'Entity Type:', initialValue: FILTER_ALL_ITEMS, isModal: true },
@@ -86,7 +88,7 @@ export const parseAlertsQueryParamsCallback = (paramName, paramValue) => {
   return paramValue
 }
 
-export const generatePageData = (handleFetchJobLogs, selectedAlert) => {
+export const generatePageData = (selectedAlert, handleFetchJobLogs = () => {}) => {
   return {
     page: ALERTS_PAGE,
     details: {
@@ -109,8 +111,8 @@ export const allProjectsOption = [
 export const filterAlertsEntityTypeOptions = [
   { label: upperFirst(FILTER_ALL_ITEMS), id: FILTER_ALL_ITEMS },
   { label: upperFirst(JOB), id: JOB_KIND_JOB },
-  { label: upperFirst(ENDPOINT), id: 'model-endpoint-result' },
-  { label: upperFirst(APPLICATION), id: 'model-monitoring-application' }
+  { label: upperFirst(ENDPOINT), id: MODEL_ENDPOINT_RESULT },
+  { label: upperFirst(APPLICATION), id: MODEL_MONITORING_APPLICATION }
 ]
 
 export const filterAlertsSeverityOptions = [

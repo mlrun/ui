@@ -146,6 +146,7 @@ Feature: Feature Store Page
         Then click on "Apply_Button" element on "FilterBy_Popup" wizard
         And wait load page
         When click on cell with row index 2 in "name" column in "Feature_Sets_Table" table on "Feature_Store_Feature_Sets_Tab" wizard
+        And wait load page
         Then verify "Header" element visibility on "Feature_Sets_Info_Pane" wizard
         Then verify "Updated" element visibility on "Feature_Sets_Info_Pane" wizard
         Then verify "Apply_Changes_Button" element not exists on "Feature_Sets_Info_Pane" wizard
@@ -173,6 +174,7 @@ Feature: Feature Store Page
         Then verify "Apply_Changes_Button" element not exists on "Feature_Sets_Info_Pane" wizard
         Then click on "Cross_Close_Button" element on "Feature_Sets_Info_Pane" wizard
         When click on cell with row index 1 in "name" column in "Feature_Sets_Table" table on "Feature_Store_Feature_Sets_Tab" wizard
+        And wait load page
         When add rows to "Labels_Table" table on "Feature_Sets_Info_Pane" wizard
             | key_input | value_input |
             |    key1   |    value1   |
@@ -273,6 +275,7 @@ Feature: Feature Store Page
         And wait load page
         Then verify "Feature Sets" tab is active in "Feature_Store_Tab_Selector" on "Feature_Store_Feature_Sets_Tab" wizard
         When click on cell with row index 1 in "name" column in "Feature_Sets_Table" table on "Feature_Store_Feature_Sets_Tab" wizard
+        And wait load page
         Then select "Features" tab in "Info_Pane_Tab_Selector" on "Feature_Sets_Info_Pane" wizard
         Then verify "Features" tab is active in "Info_Pane_Tab_Selector" on "Features_Info_Pane" wizard
         Then verify "Feature Sets" tab is active in "Feature_Store_Tab_Selector" on "Feature_Store_Feature_Sets_Tab" wizard
@@ -297,6 +300,7 @@ Feature: Feature Store Page
         And wait load page
         Then verify "Feature Sets" tab is active in "Feature_Store_Tab_Selector" on "Feature_Store_Feature_Sets_Tab" wizard
         When click on cell with row index 1 in "name" column in "Feature_Sets_Table" table on "Feature_Store_Feature_Sets_Tab" wizard
+        And wait load page
         Then select "Transformations" tab in "Info_Pane_Tab_Selector" on "Feature_Sets_Info_Pane" wizard
         Then verify "Transformations" tab is active in "Info_Pane_Tab_Selector" on "Transformations_Info_Pane" wizard
         Then verify "Feature Sets" tab is active in "Feature_Store_Tab_Selector" on "Feature_Store_Feature_Sets_Tab" wizard
@@ -322,6 +326,7 @@ Feature: Feature Store Page
         And wait load page
         Then verify "Feature Sets" tab is active in "Feature_Store_Tab_Selector" on "Feature_Store_Feature_Sets_Tab" wizard
         When click on cell with row index 1 in "name" column in "Feature_Sets_Table" table on "Feature_Store_Feature_Sets_Tab" wizard
+        And wait load page
         Then select "Preview" tab in "Info_Pane_Tab_Selector" on "Feature_Sets_Info_Pane" wizard
         Then verify "Preview" tab is active in "Info_Pane_Tab_Selector" on "Preview_Info_Pane" wizard
         Then verify "Feature Sets" tab is active in "Feature_Store_Tab_Selector" on "Feature_Store_Feature_Sets_Tab" wizard
@@ -346,6 +351,7 @@ Feature: Feature Store Page
         And wait load page
         Then verify "Feature Sets" tab is active in "Feature_Store_Tab_Selector" on "Feature_Store_Feature_Sets_Tab" wizard
         When click on cell with row index 1 in "name" column in "Feature_Sets_Table" table on "Feature_Store_Feature_Sets_Tab" wizard
+        And wait load page
         Then select "Statistics" tab in "Info_Pane_Tab_Selector" on "Feature_Sets_Info_Pane" wizard
         Then verify "Statistics" tab is active in "Info_Pane_Tab_Selector" on "Analysis_Info_Pane" wizard
         Then verify cell with "Statistics" value in "key" column in "Info_Pane_Tab_Selector" table on "Feature_Sets_Info_Pane" wizard should display "Label_Hint"."Feature_Sets_Statistics"
@@ -370,6 +376,7 @@ Feature: Feature Store Page
         And wait load page
         Then verify "Feature Sets" tab is active in "Feature_Store_Tab_Selector" on "Feature_Store_Feature_Sets_Tab" wizard
         When click on cell with row index 1 in "name" column in "Feature_Sets_Table" table on "Feature_Store_Feature_Sets_Tab" wizard
+        And wait load page
         Then select "Analysis" tab in "Info_Pane_Tab_Selector" on "Feature_Sets_Info_Pane" wizard
         Then verify "Analysis" tab is active in "Info_Pane_Tab_Selector" on "Analysis_Info_Pane" wizard
         Then verify "Feature Sets" tab is active in "Feature_Store_Tab_Selector" on "Feature_Store_Feature_Sets_Tab" wizard
@@ -1220,6 +1227,7 @@ Feature: Feature Store Page
         And wait load page
         Then verify "Feature Sets" tab is active in "Feature_Store_Tab_Selector" on "Feature_Store_Feature_Sets_Tab" wizard
         When click on cell with row index 1 in "name" column in "Feature_Sets_Table" table on "Feature_Store_Feature_Sets_Tab" wizard
+        And wait load page
         Then verify "Action_Menu" element visibility on "Feature_Sets_Info_Pane" wizard
         Then select "View YAML" option in action menu on "Feature_Sets_Info_Pane" wizard
         Then verify if "View_YAML" popup dialog appears
@@ -1662,6 +1670,7 @@ Feature: Feature Store Page
         * create "test_fs" Feature Set in "automation-test-name001" project with code 200
         Then click on "Table_Refresh_Button" element on "Feature_Store_Feature_Sets_Tab" wizard
         And click on cell with value "test_fs" in "name" column in "Feature_Sets_Table" table on "Feature_Store_Feature_Sets_Tab" wizard
+        And wait load page
         Then select "Preview" tab in "Info_Pane_Tab_Selector" on "Feature_Sets_Info_Pane" wizard
         And wait load page
         Then "No_Data_Message" component on "commonPagesHeader" should contains "No_Data_Message"."No_Data"
@@ -1678,6 +1687,7 @@ Feature: Feature Store Page
         * create "test_fv" Feature Vector in "automation-test-name001" project with code 200
         Then click on "Table_Refresh_Button" element on "Feature_Store_Features_Vectors_Tab" wizard
         And click on cell with value "test_fv" in "name" column in "Feature_Vectors_Table" table on "Feature_Store_Features_Vectors_Tab" wizard
+        And wait load page
         Then select "Requested Features" tab in "Info_Pane_Tab_Selector" on "Feature_Vectors_Info_Pane" wizard
         And wait load page
         Then "No_Data_Message" component on "commonPagesHeader" should contains "No_Data_Message"."No_Data"
@@ -1702,7 +1712,7 @@ Feature: Feature Store Page
         When click on cell with row index 1 in "name" column in "Feature_Sets_Table" table on "Feature_Store_Feature_Sets_Tab" wizard
         Then verify redirection from "projects/automation-test-010/feature-store/INVALID" to "projects/automation-test-010/feature-store/feature-sets"
         When click on cell with row index 1 in "name" column in "Feature_Sets_Table" table on "Feature_Store_Feature_Sets_Tab" wizard
-        Then verify redirection from "projects/automation-test-010/feature-store/feature-sets/INVALID/latest/overview" to "projects/automation-test-010/feature-store/feature-sets/INVALID/latest/overview"
+        Then verify redirection from "projects/automation-test-010/feature-store/feature-sets/INVALID/latest/overview" to "projects/automation-test-010/feature-store/feature-sets"
         And select "tab" with "Datasets" value in breadcrumbs menu
         And wait load page
         And select "tab" with "Feature store" value in breadcrumbs menu
@@ -1732,7 +1742,7 @@ Feature: Feature Store Page
         When select "Feature Vectors" tab in "Feature_Store_Tab_Selector" on "Feature_Store_Feature_Sets_Tab" wizard
         And wait load page
         When click on cell with row index 1 in "name" column in "Feature_Vectors_Table" table on "Feature_Store_Features_Vectors_Tab" wizard
-        Then verify redirection from "projects/automation-test-010/feature-store/feature-vectors/INVALID/latest/overview" to "projects/automation-test-010/feature-store/feature-vectors/INVALID/latest/overview"
+        Then verify redirection from "projects/automation-test-010/feature-store/feature-vectors/INVALID/latest/overview" to "projects/automation-test-010/feature-store/feature-vectors"
         When select "Features" tab in "Feature_Store_Tab_Selector" on "Feature_Store_Feature_Sets_Tab" wizard
         And wait load page
         When select "Feature Vectors" tab in "Feature_Store_Tab_Selector" on "Feature_Store_Feature_Sets_Tab" wizard
