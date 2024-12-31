@@ -182,7 +182,7 @@ export const generateArtifactsContent = (detailsType, selectedItem, projectName)
         value: formatDatetime(selectedItem.updated, 'N/A')
       },
       framework: {
-        value: detailsType === MODELS_TAB ? (selectedItem.framework ?? '') : null
+        value: detailsType === MODELS_TAB ? selectedItem.framework ?? '' : null
       },
       algorithm: {
         value: selectedItem.algorithm
@@ -239,7 +239,7 @@ export const generateAlertsContent = selectedItem => {
       handleClick: () =>
         openPopUp(JobPopUp, {
           jobData: {
-            project: selectedItem?.job?.name,
+            project: selectedItem?.project,
             uid: selectedItem?.job?.jobUid,
             iter: 0
           }
