@@ -719,6 +719,8 @@ main {
 .form {
   color: $primary;
 
+
+
   [class*='form-col'] {
     display: flex;
     flex: 1 0 0;
@@ -739,6 +741,10 @@ main {
 
     &.align-stretch {
       align-items: stretch;
+    }
+
+    &.drop-down{
+      width: 225px !important;
     }
   }
 

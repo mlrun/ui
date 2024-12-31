@@ -20,7 +20,7 @@ such restriction.
 import { useCallback, useEffect, useMemo } from 'react'
 import PropTypes from 'prop-types'
 import { useForm, useFormState } from 'react-final-form'
-import { truncate, upperFirst } from 'lodash'
+import { upperFirst } from 'lodash'
 import { useSelector } from 'react-redux'
 
 import StatusFilter from '../../common/StatusFilter/StatusFilter'
@@ -63,16 +63,9 @@ const AlertsFilters = ({ isAlertsPage, isCrossProjects }) => {
 
     return [...allProjectsOption, ...generatedProjects].map(item => ({
       ...item,
-      label: truncate(item.label, { length: 26 })
+      label: item.label
     }))
   }, [projectStore.projectsNames.data])
-
-  const truncatedEventTypeOptions = useMemo(() => {
-    return filterAlertsEventTypeOptions(entityType).map(item => ({
-      ...item,
-      label: truncate(item.label, { length: 26 })
-    }))
-  }, [entityType])
 
   const getFieldsToReset = useCallback(entityType => {
     const fieldsByType = {
@@ -98,7 +91,12 @@ const AlertsFilters = ({ isAlertsPage, isCrossProjects }) => {
     <>
       {isCrossProjects && (
         <div className="form-row">
-          <FormSelect label="Project name" name={PROJECTS_FILTER} options={projectsList} />
+          <FormSelect
+            dropDownClassName="form-row drop-down"
+            label="Project name"
+            name={PROJECTS_FILTER}
+            options={projectsList}
+          />
         </div>
       )}
       {isAlertsPage && (
@@ -153,7 +151,12 @@ const AlertsFilters = ({ isAlertsPage, isCrossProjects }) => {
         <StatusFilter statusList={filterAlertsSeverityOptions} name={SEVERITY} />
       </div>
       <div className="form-row">
-        <FormSelect label="Event type" name={EVENT_TYPE} options={truncatedEventTypeOptions} />
+        <FormSelect
+          dropDownClassName="form-row drop-down"
+          label="Event type"
+          name={EVENT_TYPE}
+          options={filterAlertsEventTypeOptions(entityType)}
+        />
       </div>
     </>
   )
