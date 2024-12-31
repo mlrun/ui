@@ -11,6 +11,24 @@ $stickyHeaderHeight: 55px;
   height: fit-content;
   margin-bottom: 30px;
 
+  &-wrapper {
+    &_note {
+      display: flex;
+      align-items: center;
+      position: sticky;
+      top: 55px;
+      font-size: 0.75rem;
+      background-color: $white;
+      padding-bottom: 15px;
+      z-index: 2;
+
+      svg {
+        width: 18px;
+        height: 18px;
+      }
+    }
+  }
+
   &__custom-filters {
     position: sticky;
     top: 0;
@@ -19,7 +37,6 @@ $stickyHeaderHeight: 55px;
     flex-wrap: wrap;
     align-items: center;
     justify-content: flex-end;
-    height: $stickyHeaderHeight;
     background-color: $white;
 
     > * {
@@ -403,10 +420,6 @@ $stickyHeaderHeight: 55px;
   z-index: 1;
   box-shadow: 0 -10px 0 0 $white;
   padding-bottom: 1em;
-}
-
-.no-data-block {
-  height: calc(100% - $stickyHeaderHeight);
 }
 
 #chartjs-tooltip-metric {

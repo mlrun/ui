@@ -38,6 +38,7 @@ const infoHeaders = [
   { label: 'Function URI', id: 'function_uri' },
   { label: 'Function Tag', id: 'function_tag' },
   { label: 'Feature set', id: 'monitoring_feature_set_uri' },
+  { label: 'Sampling percentage', id: 'sampling_percentage' },
   { label: 'Last prediction', id: 'last_prediction' },
   { label: 'Error count', id: 'error_count' }
 ]
