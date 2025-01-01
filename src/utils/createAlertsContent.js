@@ -301,7 +301,8 @@ export const createAlertRowData = ({ ...alert }, isCrossProjects, showExpandButt
         headerLabel: 'Entity Type',
         value: getEntityTypeData(alert.entity_kind).value,
         className: 'table-cell-small',
-        tooltip: getEntityTypeData(alert.entity_kind).tooltip
+        tooltip: getEntityTypeData(alert.entity_kind).tooltip,
+        hidden: !isCrossProjects && showExpandButton
       },
       {
         id: `timestamp.${alert.id}`,
