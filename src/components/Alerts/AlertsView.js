@@ -18,7 +18,9 @@ under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
 import classNames from 'classnames'
+import { toLower } from 'lodash'
 import PropTypes from 'prop-types'
+import { useLocation } from 'react-router-dom'
 
 import ActionBar from '../ActionBar/ActionBar'
 import AlertsFilters from './AlertsFilters'
@@ -31,7 +33,7 @@ import Table from '../Table/Table'
 
 import { ALERTS_FILTERS, ALERTS_PAGE } from '../../constants'
 import { getNoDataMessage } from '../../utils/getNoDataMessage'
-import { getCloseDetailsAlertLink } from '../../utils/link-helper.util'
+import { getCloseDetailsLink } from '../../utils/link-helper.util'
 
 import './alerts.scss'
 
@@ -55,6 +57,7 @@ const AlertsView = ({
   toggleRow
 }) => {
   const content = classNames('content', !isAlertsPage && 'alerts-table__content')
+  const location = useLocation()
 
   return (
     <>
@@ -98,7 +101,7 @@ const AlertsView = ({
               <>
                 <Table
                   actionsMenu={[]}
-                  getCloseDetailsLink={() => getCloseDetailsAlertLink()}
+                  getCloseDetailsLink={() => getCloseDetailsLink(toLower(ALERTS_PAGE), location)}
                   pageData={pageData}
                   retryRequest={handleRefreshWithFilters}
                   selectedItem={isAlertsPage ? selectedAlert : {}}
@@ -130,6 +133,7 @@ const AlertsView = ({
                   })}
                 </Table>
                 <Pagination
+                  closeParamName={toLower(ALERTS_PAGE)}
                   page={pageData.page}
                   paginationConfig={paginationConfigAlertsRef.current}
                 />
