@@ -153,17 +153,17 @@ const alertsEventTypeOptions = [
     ENTITY_TYPE: MODEL_ENDPOINT_RESULT
   },
   {
-    label: 'S perf. suspected',
+    label: 'System performance suspected',
     id: 'system-performance-suspected',
     ENTITY_TYPE: MODEL_ENDPOINT_RESULT
   },
   {
-    label: 'MM app ano. detected',
+    label: 'MM app anomaly detected',
     id: 'mm-app-anomaly-detected',
     ENTITY_TYPE: MODEL_ENDPOINT_RESULT
   },
   {
-    label: 'MM app ano. suspected',
+    label: 'MM app anomaly suspected',
     id: 'mm-app-anomaly-suspected',
     ENTITY_TYPE: MODEL_ENDPOINT_RESULT
   },
