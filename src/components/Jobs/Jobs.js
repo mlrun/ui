@@ -231,7 +231,6 @@ const Jobs = () => {
                     onClick: () => handleMonitoring(selectedJob, true)
                   }
                 ]}
-                autoRefreshIsEnabled={selectedTab === MONITOR_JOBS_TAB}
                 autoRefreshIsStopped={
                   jobWizardIsOpened ||
                   jobsStore.loading ||
