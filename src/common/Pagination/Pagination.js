@@ -231,7 +231,7 @@ const Pagination = ({
             <RoundedIcon
               id="pagination-navigate-double-prev-btn"
               className="pagination-navigate-btn pagination-navigate-prev-btn"
-              onClick={goToPrevBePage}
+              onClick={() => goToPrevBePage()}
               tooltipText={!navigationDisableState.prevDoubleBtn ? prevDoubleBtnTooltip : ''}
               disabled={navigationDisableState.prevDoubleBtn}
             >
@@ -240,7 +240,7 @@ const Pagination = ({
             <RoundedIcon
               id="pagination-navigate-prev-btn"
               className="pagination-navigate-btn pagination-navigate-prev-btn"
-              onClick={goToPrevFePage}
+              onClick={() => goToPrevFePage()}
               tooltipText={!navigationDisableState.prevBtn ? 'Previous page' : ''}
               disabled={navigationDisableState.prevBtn}
             >
@@ -287,7 +287,7 @@ const Pagination = ({
             <RoundedIcon
               id="pagination-navigate-next-btn"
               className="pagination-navigate-btn"
-              onClick={goToNextFePage}
+              onClick={() => goToNextFePage()}
               tooltipText={!navigationDisableState.nextBtn ? 'Next page' : ''}
               disabled={navigationDisableState.nextBtn}
             >
@@ -296,7 +296,7 @@ const Pagination = ({
             <RoundedIcon
               id="pagination-navigate-next-double-btn"
               className="pagination-navigate-btn"
-              onClick={goToNextBePage}
+              onClick={() => goToNextBePage()}
               tooltipText={
                 navigationDisableState.nextDoubleBtn && disabledNextDoubleBtnTooltip
                   ? disabledNextDoubleBtnTooltip
