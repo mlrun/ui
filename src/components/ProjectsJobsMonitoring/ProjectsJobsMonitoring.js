@@ -17,7 +17,7 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import React, { useLayoutEffect, useMemo, useState } from 'react'
+import React, { useCallback, useLayoutEffect, useMemo, useState } from 'react'
 import { useSelector } from 'react-redux'
 import { Outlet, useLocation, useNavigate, useParams } from 'react-router-dom'
 import { defaultsDeep, isEmpty } from 'lodash'
@@ -161,6 +161,11 @@ const ProjectsJobsMonitoring = () => {
     )
   }, [getWorkflows, handleRefreshJobs, initialTabData, refreshScheduled])
 
+  const handleActionMenuRefresh = useCallback((...args) => {
+    setSelectedJob({})
+    tabData[selectedTab].handleRefresh(args)
+  }, [selectedTab, tabData])
+
   const filters = useFiltersFromSearchParams(
     tabData[selectedTab]?.filtersConfig,
     tabData[selectedTab]?.parseQueryParamsCallback
@@ -192,7 +197,7 @@ const ProjectsJobsMonitoring = () => {
                 }
                 filters={filters}
                 filtersConfig={tabData[selectedTab].filtersConfig}
-                handleRefresh={tabData[selectedTab].handleRefresh}
+                handleRefresh={handleActionMenuRefresh}
                 hidden={Boolean(params.workflowId)}
                 key={selectedTab}
                 page={JOBS_MONITORING_PAGE}

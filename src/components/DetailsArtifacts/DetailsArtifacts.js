@@ -149,7 +149,7 @@ const DetailsArtifacts = ({
 
       if (workflowId) {
         return dispatch(
-          fetchJob({
+          fetchJob({ // todo remove this request in ML-8608 and use data from selectedJib (it will be up to date)
             project: job.project || params.projectName,
             jobId: params.jobId,
             iter: iteration
@@ -192,14 +192,14 @@ const DetailsArtifacts = ({
   )
 
   useEffect(() => {
-    if (params.jobId === selectedItem.uid || isDetailsPopUp) {
+    if ((params.jobId === selectedItem.uid || isDetailsPopUp) && !isJobLoading) {
       if (selectedItem.iterationStats?.length > 0 && iteration) {
         getJobArtifacts(selectedItem, iteration)
       } else if (selectedItem.iterationStats?.length === 0) {
         getJobArtifacts(selectedItem, null)
       }
     }
-  }, [getJobArtifacts, iteration, params.jobId, params.projectName, selectedItem, isDetailsPopUp])
+  }, [getJobArtifacts, iteration, params.jobId, params.projectName, selectedItem, isDetailsPopUp, isJobLoading])
 
   useEffect(() => {
     return () => {
@@ -208,8 +208,8 @@ const DetailsArtifacts = ({
     }
   }, [params.jobId, params.projectName, selectedItem, iteration])
 
-  return artifactsStore.loading || isJobLoading ? (
-    <Loader />
+  return artifactsStore.loading ? (
+    <Loader section />
   ) : artifactsPreviewContent.length === 0 ? (
     <NoData message={requestErrorMessage} />
   ) : (

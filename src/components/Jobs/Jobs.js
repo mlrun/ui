@@ -156,6 +156,11 @@ const Jobs = () => {
     )
   }, [getWorkflows, handleRefreshJobs, initialTabData, refreshScheduled])
 
+  const handleActionMenuRefresh = useCallback((...args) => {
+    setSelectedJob({})
+    tabData[selectedTab].handleRefresh(args)
+  }, [selectedTab, tabData])
+
   useLayoutEffect(() => {
     setSelectedTab(
       location.pathname.includes(`${JOBS_PAGE_PATH}/${MONITOR_JOBS_TAB}`)
@@ -239,7 +244,7 @@ const Jobs = () => {
                 autoRefreshStopTrigger={!isEmpty(selectedJob)}
                 filters={filters}
                 filtersConfig={initialTabData[selectedTab].filtersConfig}
-                handleRefresh={tabData[selectedTab].handleRefresh}
+                handleRefresh={handleActionMenuRefresh}
                 handleAutoRefreshPrevValueChange={setAutoRefreshPrevValue}
                 hidden={Boolean(params.workflowId)}
                 key={selectedTab}
