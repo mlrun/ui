@@ -68,7 +68,7 @@ const DetailsArtifacts = ({
 
   const dispatch = useDispatch()
   const artifactsStore = useSelector(store => store.artifactsStore)
-  const isJobLoading = useSelector(store => store.jobsStore.jobLoading)
+  const isJobLoading = useSelector(store => Boolean(store.jobsStore.jobLoadingCounter))
 
   const showArtifact = useCallback(
     id => {

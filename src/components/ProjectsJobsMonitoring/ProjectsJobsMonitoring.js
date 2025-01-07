@@ -187,7 +187,7 @@ const ProjectsJobsMonitoring = () => {
                 autoRefreshIsStopped={
                   jobWizardIsOpened ||
                   jobsStore.loading ||
-                  jobsStore.jobLoading ||
+                  Boolean(jobsStore.jobLoadingCounter) ||
                   !isEmpty(selectedJob)
                 }
                 filters={filters}
@@ -248,7 +248,7 @@ const ProjectsJobsMonitoring = () => {
               >
                 <Outlet />
               </ProjectJobsMonitoringContext.Provider>
-              {(jobsStore.jobLoading ||
+              {(Boolean(jobsStore.jobLoadingCounter) ||
                 workflowsStore.activeWorkflow.loading ||
                 functionsStore.funcLoading) && <Loader />}
             </div>
