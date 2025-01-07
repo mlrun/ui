@@ -439,7 +439,9 @@ function getFeatureSet(req, res) {
       const metadataFields = ['name', 'project', 'tag', 'uid', 'labels'].map(
         fieldName => `metadata.${fieldName}`
       )
-      const specFields = ['description', 'entities', 'targets', 'engine'].map(fieldName => `spec.${fieldName}`)
+      const specFields = ['description', 'entities', 'targets', 'engine'].map(
+        fieldName => `spec.${fieldName}`
+      )
 
       return pick(featureSet, ['kind', ...metadataFields, 'status.state', ...specFields])
     })
@@ -1290,6 +1292,7 @@ function getProjectsArtifactTags(req, res) {
 function getArtifacts(req, res) {
   const categories = {
     dataset: ['dataset'],
+    document: ['document'],
     model: ['model'],
     other: ['', 'table', 'link', 'plot', 'chart', 'plotly', 'artifact']
   }
@@ -1372,7 +1375,7 @@ function getArtifacts(req, res) {
   collectedArtifacts = collectedArtifacts.sort((prevArtifact, nextArtifact) => {
     const datePrevArtifact = new Date(prevArtifact.metadata.updated)
     const dateNextArtifact = new Date(nextArtifact.metadata.updated)
-    return dateNextArtifact - datePrevArtifact 
+    return dateNextArtifact - datePrevArtifact
   })
 
   const [paginatedArtifacts, pagination] = getPaginationConfig(collectedArtifacts, req.query)
