@@ -22,7 +22,7 @@ import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
 import classnames from 'classnames'
 import { forEach, isEmpty } from 'lodash'
-import { useLocation, useNavigate, useParams } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 
 import Details from '../Details/Details'
 import MlReactFlow from '../../common/ReactFlow/MlReactFlow'
@@ -88,7 +88,6 @@ const Workflow = ({
   const params = useParams()
   const navigate = useNavigate()
   const { isStagingMode } = useMode()
-  const location = useLocation()
 
   const graphViewClassNames = classnames(
     'graph-view',
@@ -264,7 +263,7 @@ const Workflow = ({
               <Details
                 actionsMenu={actionsMenu}
                 detailsMenu={pageData.details.menu}
-                getCloseDetailsLink={() => getCloseDetailsLink(params.workflowId, location)}
+                getCloseDetailsLink={() => getCloseDetailsLink(params.workflowId)}
                 handleCancel={handleCancel}
                 pageData={pageData}
                 retryRequest={refreshJobs}
@@ -276,7 +275,7 @@ const Workflow = ({
         ) : (
           <Table
             actionsMenu={actionsMenu}
-            getCloseDetailsLink={() => getCloseDetailsLink(params.workflowId, location)}
+            getCloseDetailsLink={() => getCloseDetailsLink(params.workflowId)}
             handleCancel={handleCancel}
             hideActionsMenu
             pageData={pageData}
