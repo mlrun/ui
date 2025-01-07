@@ -34,8 +34,6 @@ import detailsActions from '../../actions/details'
 import modelEndpointsActions from '../../actions/modelEndpoints'
 import { groupMetricByApplication } from '../../elements/MetricsSelector/metricsSelector.util'
 
-import { ReactComponent as NoteIcon } from 'igz-controls/images/severity-low.svg'
-
 import {
   getDateRangeBefore,
   METRIC_RAW_TOTAL_POINTS,
@@ -258,10 +256,6 @@ const DetailsMetrics = ({ selectedItem }) => {
           withLabels
         />
       </div>
-      <div className="metrics-wrapper_note">
-        <NoteIcon />
-        Values shown are approximate if using sampling for monitoring this model endpoint
-      </div>
       {generatedMetrics.length === 0 ? (
         !detailsStore.loadingCounter ? (
           requestErrorMessage ? (
@@ -290,6 +284,7 @@ const DetailsMetrics = ({ selectedItem }) => {
                             className="empty-invocation-card"
                             key={metric.id}
                             title="Endpoint call count"
+                            tip="All values are approximate when using sampling to monitor this model endpoint"
                           />
                           {chooseMetricsDataCard}
                         </React.Fragment>

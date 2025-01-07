@@ -99,7 +99,10 @@ const InvocationsMetricCard = forwardRef(
           >
             {isInvocationCardExpanded ? <MinimizeIcon /> : <EnlargeIcon />}
           </RoundedIcon>
-          <StatsCard.Header title="Endpoint call count">
+          <StatsCard.Header
+            title="Endpoint call count"
+            tip="All values are approximate when using sampling to monitor this model endpoint"
+          >
             <div className={invocationCardHeaderClassnames}>
               <div className="metrics__card-invocation-header_drift-icon-container">
                 {resultPercentageDrift.icon}

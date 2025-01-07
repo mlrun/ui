@@ -11,24 +11,6 @@ $stickyHeaderHeight: 55px;
   height: fit-content;
   margin-bottom: 30px;
 
-  &-wrapper {
-    &_note {
-      display: flex;
-      align-items: center;
-      position: sticky;
-      top: 55px;
-      font-size: 0.75rem;
-      background-color: $white;
-      padding-bottom: 15px;
-      z-index: 2;
-
-      svg {
-        width: 18px;
-        height: 18px;
-      }
-    }
-  }
-
   &__custom-filters {
     position: sticky;
     top: 0;

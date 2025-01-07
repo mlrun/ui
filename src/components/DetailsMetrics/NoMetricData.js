@@ -23,10 +23,10 @@ import StatsCard from '../../common/StatsCard/StatsCard'
 
 import { ReactComponent as NoDataIcon } from 'igz-controls/images/no-data-metric-icon.svg'
 
-const NoMetricData = ({ title = '', message = 'No data to show', className = '' }) => {
+const NoMetricData = ({ title = '', message = 'No data to show', className = '', tip = '' }) => {
   return (
     <StatsCard className={`metrics__card ${className}`}>
-      <StatsCard.Header title={title}></StatsCard.Header>
+      <StatsCard.Header title={title} tip={tip}></StatsCard.Header>
       <div className="metrics__empty-card">
         <div>
           <NoDataIcon />
