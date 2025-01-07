@@ -288,6 +288,9 @@ const jobsSlice = createSlice({
     },
     setJobsData(state, action) {
       state.jobsData = action.payload
+    },
+    setJobFunction(state, action) {
+      state.jobFunc = action.payload
     }
   },
   extraReducers: builder => {
@@ -380,6 +383,6 @@ const jobsSlice = createSlice({
   }
 })
 
-export const { removeJobFunction, setJobsData } = jobsSlice.actions
+export const { removeJobFunction, setJobsData, setJobFunction } = jobsSlice.actions
 
 export default jobsSlice.reducer
