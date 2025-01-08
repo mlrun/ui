@@ -17,7 +17,7 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import React, { useCallback, useLayoutEffect, useMemo, useState } from 'react'
+import React, { useLayoutEffect, useMemo, useState } from 'react'
 import { useSelector } from 'react-redux'
 import { Outlet, useLocation, useNavigate, useParams } from 'react-router-dom'
 import { defaultsDeep, isEmpty } from 'lodash'
@@ -148,7 +148,10 @@ const ProjectsJobsMonitoring = () => {
     return defaultsDeep(
       {
         [JOBS_MONITORING_JOBS_TAB]: {
-          handleRefresh: handleRefreshJobs
+          handleRefresh: (...args) => {
+            setSelectedJob({})
+            handleRefreshJobs(...args)
+          }
         },
         [JOBS_MONITORING_WORKFLOWS_TAB]: {
           handleRefresh: getWorkflows
@@ -160,11 +163,6 @@ const ProjectsJobsMonitoring = () => {
       initialTabData
     )
   }, [getWorkflows, handleRefreshJobs, initialTabData, refreshScheduled])
-
-  const handleActionMenuRefresh = useCallback((...args) => {
-    setSelectedJob({})
-    tabData[selectedTab].handleRefresh(args)
-  }, [selectedTab, tabData])
 
   const filters = useFiltersFromSearchParams(
     tabData[selectedTab]?.filtersConfig,
@@ -197,7 +195,7 @@ const ProjectsJobsMonitoring = () => {
                 }
                 filters={filters}
                 filtersConfig={tabData[selectedTab].filtersConfig}
-                handleRefresh={handleActionMenuRefresh}
+                handleRefresh={tabData[selectedTab].handleRefresh}
                 hidden={Boolean(params.workflowId)}
                 key={selectedTab}
                 page={JOBS_MONITORING_PAGE}

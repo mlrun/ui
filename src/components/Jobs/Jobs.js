@@ -143,7 +143,10 @@ const Jobs = () => {
     return defaultsDeep(
       {
         [MONITOR_JOBS_TAB]: {
-          handleRefresh: handleRefreshJobs
+          handleRefresh: (...args) => {
+            setSelectedJob({})
+            handleRefreshJobs(...args)
+          }
         },
         [MONITOR_WORKFLOWS_TAB]: {
           handleRefresh: getWorkflows
@@ -155,11 +158,6 @@ const Jobs = () => {
       initialTabData
     )
   }, [getWorkflows, handleRefreshJobs, initialTabData, refreshScheduled])
-
-  const handleActionMenuRefresh = useCallback((...args) => {
-    setSelectedJob({})
-    tabData[selectedTab].handleRefresh(args)
-  }, [selectedTab, tabData])
 
   useLayoutEffect(() => {
     setSelectedTab(
@@ -244,7 +242,7 @@ const Jobs = () => {
                 autoRefreshStopTrigger={!isEmpty(selectedJob)}
                 filters={filters}
                 filtersConfig={initialTabData[selectedTab].filtersConfig}
-                handleRefresh={handleActionMenuRefresh}
+                handleRefresh={tabData[selectedTab].handleRefresh}
                 handleAutoRefreshPrevValueChange={setAutoRefreshPrevValue}
                 hidden={Boolean(params.workflowId)}
                 key={selectedTab}
