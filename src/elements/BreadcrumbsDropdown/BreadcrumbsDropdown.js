@@ -64,10 +64,11 @@ const BreadcrumbsDropdown = forwardRef(
               listItem.id.toLocaleLowerCase().startsWith(searchValue.toLocaleLowerCase())
             )
             .map(listItem => {
+              const isSelected = selectedItem === listItem.id
               const dropdownItemClassNames = classnames(
                 'breadcrumbs__dropdown-item',
                 'data-ellipsis',
-                selectedItem === listItem.id && 'breadcrumbs__dropdown-item_selected'
+                isSelected && 'breadcrumbs__dropdown-item_selected'
               )
 
               return (
@@ -100,7 +101,13 @@ const BreadcrumbsDropdown = forwardRef(
                       listItem.linkTo ||
                       `${link}/${listItem.id}${screen ? `/${screen}` : ''}${tab ? `/${tab}` : ''}`
                     }
-                    onClick={onClick}
+                    onClick={e => {
+                      if (isSelected) {
+                        e.preventDefault()
+                      } else {
+                        onClick()
+                      }
+                    }}
                     id={listItem.id}
                     data-testid={`breadcrumbs-dropdown-item-${listItem.id}`}
                     key={listItem.id}
@@ -109,7 +116,7 @@ const BreadcrumbsDropdown = forwardRef(
                     <Tooltip template={<TextTooltipTemplate text={listItem.label} />}>
                       {listItem.label}
                     </Tooltip>
-                    {selectedItem === listItem.id && <CheckmarkIcon className="checkmark" />}
+                    {isSelected && <CheckmarkIcon className="checkmark" />}
                   </Link>
                 ))
               )
