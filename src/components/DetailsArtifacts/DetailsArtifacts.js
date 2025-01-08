@@ -68,6 +68,7 @@ const DetailsArtifacts = ({
 
   const dispatch = useDispatch()
   const artifactsStore = useSelector(store => store.artifactsStore)
+  const isJobLoading = useSelector(store => Boolean(store.jobsStore.jobLoadingCounter))
 
   const showArtifact = useCallback(
     id => {
@@ -148,7 +149,7 @@ const DetailsArtifacts = ({
 
       if (workflowId) {
         return dispatch(
-          fetchJob({
+          fetchJob({ // todo remove this request in ML-8608 and use data from the selectedJob (it will be up to date)
             project: job.project || params.projectName,
             jobId: params.jobId,
             iter: iteration
@@ -166,39 +167,39 @@ const DetailsArtifacts = ({
             }
           }
         )
-      }
+      } else {
+        if (iteration) {
+          config.params.iter = iteration
+        }
 
-      if (iteration) {
-        config.params.iter = iteration
+        dispatch(
+          fetchArtifacts({
+            project: job.project || params.projectName,
+            filters: {},
+            config,
+            setRequestErrorMessage
+          })
+        )
+          .unwrap()
+          .then(result => {
+            if (result) {
+              setArtifactsPreviewContent(generateArtifactsPreviewContent(job, result))
+            }
+          })
       }
-
-      dispatch(
-        fetchArtifacts({
-          project: job.project || params.projectName,
-          filters: {},
-          config,
-          setRequestErrorMessage
-        })
-      )
-        .unwrap()
-        .then(result => {
-          if (result) {
-            setArtifactsPreviewContent(generateArtifactsPreviewContent(job, result))
-          }
-        })
     },
     [dispatch, params.jobId, params.projectName]
   )
 
   useEffect(() => {
-    if (params.jobId === selectedItem.uid || isDetailsPopUp) {
+    if ((params.jobId === selectedItem.uid || isDetailsPopUp) && !isJobLoading) {
       if (selectedItem.iterationStats?.length > 0 && iteration) {
         getJobArtifacts(selectedItem, iteration)
       } else if (selectedItem.iterationStats?.length === 0) {
         getJobArtifacts(selectedItem, null)
       }
     }
-  }, [getJobArtifacts, iteration, params.jobId, params.projectName, selectedItem, isDetailsPopUp])
+  }, [getJobArtifacts, iteration, params.jobId, params.projectName, selectedItem, isDetailsPopUp, isJobLoading])
 
   useEffect(() => {
     return () => {
@@ -208,7 +209,7 @@ const DetailsArtifacts = ({
   }, [params.jobId, params.projectName, selectedItem, iteration])
 
   return artifactsStore.loading ? (
-    <Loader />
+    <Loader section />
   ) : artifactsPreviewContent.length === 0 ? (
     <NoData message={requestErrorMessage} />
   ) : (
