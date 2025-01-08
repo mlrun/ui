@@ -325,7 +325,8 @@ const jobsSlice = createSlice({
       state.jobFunc = action.payload
       state.loading = false
     })
-    builder.addCase(fetchJobFunction.rejected, (state, action) => {
+    builder.addCase(fetchJobFunction.rejected, hideLoading)
+    builder.addCase(fetchJobFunctions.rejected, (state, action) => {
       state.jobLoadingCounter--
     })
     builder.addCase(fetchJobFunctions.pending, (state, action) => {
@@ -336,7 +337,6 @@ const jobsSlice = createSlice({
       state.jobFunc = action.payload
       state.jobLoadingCounter--
     })
-    builder.addCase(fetchJobFunctions.rejected, hideLoading)
     builder.addCase(fetchJobLogs.pending, (state, action) => {
       state.logs.loading = true
       state.logs.error = null
