@@ -219,11 +219,11 @@ const JobsTable = React.forwardRef(
       (job, isDeleteAll) => {
         handleDeleteJob(isDeleteAll, job, refreshJobs, filters, dispatch).then(() => {
           if (params.jobName) {
-            navigate(getCloseDetailsLink(params.jobName, location, true))
+            navigate(getCloseDetailsLink(params.jobName, true))
           }
         })
       },
-      [refreshJobs, filters, dispatch, params.jobName, navigate, location]
+      [refreshJobs, filters, dispatch, params.jobName, navigate]
     )
 
     const handleConfirmDeleteJob = useCallback(
@@ -320,8 +320,7 @@ const JobsTable = React.forwardRef(
         setSelectedJob,
         modifyAndSelectRun,
         searchParams,
-        paginationConfigJobsRef,
-        location
+        paginationConfigJobsRef
       )
     }, [
       searchParams,
@@ -332,8 +331,7 @@ const JobsTable = React.forwardRef(
       params.jobName,
       params.projectName,
       setSelectedJob,
-      modifyAndSelectRun,
-      location
+      modifyAndSelectRun
     ])
 
     return (
@@ -355,7 +353,7 @@ const JobsTable = React.forwardRef(
             <>
               <Table
                 actionsMenu={actionsMenu}
-                getCloseDetailsLink={() => getCloseDetailsLink(params.jobName, location)}
+                getCloseDetailsLink={() => getCloseDetailsLink(params.jobName)}
                 handleCancel={() => setSelectedJob({})}
                 pageData={pageData}
                 retryRequest={handleRefreshWithFilters}
