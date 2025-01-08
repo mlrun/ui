@@ -32,6 +32,7 @@ import {
   SCHEDULE_TAB,
   REAL_TIME_PIPELINES_TAB,
   JOBS_MONITORING_PAGE,
+  JOBS_PAGE_PATH,
   PROJECTS_PAGE_PATH
 } from '../../constants'
 import { generateNuclioLink } from '../../utils'
@@ -78,7 +79,7 @@ export const generateMlrunScreens = params =>
         {
           label: 'Jobs monitoring',
           id: JOBS_MONITORING_PAGE,
-          linkTo: `/${PROJECTS_PAGE_PATH}/*/${JOBS_MONITORING_PAGE}`
+          linkTo: `/${PROJECTS_PAGE_PATH}/*/${JOBS_MONITORING_PAGE}/${JOBS_PAGE_PATH}`
         }
       ]
 
