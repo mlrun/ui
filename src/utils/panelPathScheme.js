@@ -37,8 +37,8 @@ export const generateProjectsList = (projectsList, currentProject) =>
       return prevProject.id === currentProject
         ? -1
         : nextProject.id === currentProject
-        ? 1
-        : prevProject.id.localeCompare(nextProject.id)
+          ? 1
+          : prevProject.id.localeCompare(nextProject.id)
     })
 
 export const generateArtifactsList = artifacts => {
@@ -95,6 +95,7 @@ export const pathTips = projectItem => {
     'feature-vectors': 'feature-vector',
     artifacts: 'artifact',
     datasets: 'dataset',
+    documents: 'document',
     models: 'model'
   }
   const reference = pathType[projectItem]
