@@ -34,6 +34,10 @@
 
     &_selected {
       font-weight: bold;
+
+      &:hover {
+        cursor: default;
+      }
     }
 
     .checkmark {
