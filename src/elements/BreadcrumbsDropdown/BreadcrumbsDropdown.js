@@ -73,19 +73,7 @@ const BreadcrumbsDropdown = forwardRef(
 
               return (
                 !listItem.hidden &&
-                (selectedItem === listItem.id ? (
-                  <span
-                    id={listItem.id}
-                    data-testid={`breadcrumbs-dropdown-item-selected${listItem.id}`}
-                    key={listItem.id}
-                    className={dropdownItemClassNames}
-                  >
-                    <Tooltip template={<TextTooltipTemplate text={listItem.label} />}>
-                      {listItem.label}
-                    </Tooltip>
-                    <CheckmarkIcon className="checkmark" />
-                  </span>
-                ) : listItem.link ? (
+                (listItem.link ? (
                   <a
                     href={listItem.link}
                     id={listItem.id}
@@ -94,6 +82,7 @@ const BreadcrumbsDropdown = forwardRef(
                     className={dropdownItemClassNames}
                   >
                     <span>{listItem.label}</span>
+                    {isSelected && <CheckmarkIcon className="checkmark" />}
                   </a>
                 ) : (
                   <Link
