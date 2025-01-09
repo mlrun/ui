@@ -34,7 +34,7 @@ import { parseChipsData } from '../../../utils/convertChipsData'
 import { ReactComponent as Delete } from 'igz-controls/images/delete.svg'
 import { ReactComponent as Yaml } from 'igz-controls/images/yaml.svg'
 
-export const generateFeatureVectorsDetailsMenu = selectedItem => [
+export const generateFeatureVectorsDetailsMenu = (selectedItem, isDemoMode) => [
   {
     label: 'overview',
     id: 'overview'
@@ -60,7 +60,8 @@ export const generateFeatureVectorsDetailsMenu = selectedItem => [
   },
   {
     label: 'analysis',
-    id: 'analysis'
+    id: 'analysis',
+    hidden: !isDemoMode
   }
 ]
 
@@ -83,12 +84,12 @@ export const filtersConfig = {
   [LABELS_FILTER]: { label: 'Labels:', initialValue: '', isModal: true }
 }
 
-export const generatePageData = selectedFeatureSet => {
+export const generatePageData = (selectedFeatureSet, isDemoMode) => {
   return {
     page: FEATURE_STORE_PAGE,
     details: {
       type: FEATURE_VECTORS_TAB,
-      menu: generateFeatureVectorsDetailsMenu(selectedFeatureSet),
+      menu: generateFeatureVectorsDetailsMenu(selectedFeatureSet, isDemoMode),
       infoHeaders: featureSetsInfoHeaders
     }
   }

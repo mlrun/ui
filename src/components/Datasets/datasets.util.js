@@ -96,7 +96,7 @@ export const getFiltersConfig = isAllVersions => ({
 
 export const registerDatasetTitle = 'Register dataset'
 
-export const generateDataSetsDetailsMenu = selectedItem => [
+export const generateDataSetsDetailsMenu = (selectedItem, isDemoMode) => [
   {
     label: 'overview',
     id: 'overview'
@@ -113,14 +113,20 @@ export const generateDataSetsDetailsMenu = selectedItem => [
   {
     label: 'analysis',
     id: 'analysis',
-    hidden: !selectedItem.extra_data
+    hidden: !isDemoMode || !selectedItem.extra_data
   }
 ]
 
-export const generatePageData = (selectedItem, viewMode, params, isDetailsPopUp = false) => ({
+export const generatePageData = (
+  selectedItem,
+  viewMode,
+  params,
+  isDetailsPopUp = false,
+  isDemoMode
+) => ({
   page: DATASETS_PAGE,
   details: {
-    menu: generateDataSetsDetailsMenu(selectedItem),
+    menu: generateDataSetsDetailsMenu(selectedItem, isDemoMode),
     infoHeaders,
     type: DATASETS_TAB,
     hideBackBtn: viewMode === FULL_VIEW_MODE,
