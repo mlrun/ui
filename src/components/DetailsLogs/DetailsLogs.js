@@ -57,7 +57,7 @@ const DetailsLogs = ({
         removeLogs()
       }
     }
-  }, [item, refreshLogs, withLogsRefreshBtn])
+  }, [item, refreshLogs, removeLogs, withLogsRefreshBtn])
 
   useEffect(() => {
     refreshAdditionalLogs &&

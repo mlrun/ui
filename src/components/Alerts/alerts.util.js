@@ -96,7 +96,8 @@ export const generatePageData = (selectedAlert, handleFetchJobLogs = () => {}) =
       entityType: selectedAlert.entity_kind,
       infoHeaders: alertsHeaders(selectedAlert.entity_kind),
       menu: [],
-      refreshLogs: handleFetchJobLogs
+      refreshLogs: handleFetchJobLogs,
+      removeLogs: () => {}
     }
   }
 }
