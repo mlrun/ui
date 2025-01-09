@@ -21,7 +21,14 @@ import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
 import jobsApi from '../api/jobs-api'
 import { hideLoading, showLoading } from './redux.util'
 import { get } from 'lodash'
-import { FILTER_ALL_ITEMS } from '../constants'
+import {
+  DATES_FILTER,
+  FILTER_ALL_ITEMS,
+  LABELS_FILTER,
+  NAME_FILTER,
+  STATUS_FILTER,
+  TYPE_FILTER
+} from '../constants'
 import { largeResponseCatchHandler } from '../utils/largeResponseCatchHandler'
 import functionsApi from '../api/functions-api'
 import { showErrorNotification } from '../utils/notifications.util'
@@ -81,31 +88,41 @@ const generateRequestParams = (filters, jobName) => {
     iter: false
   }
 
-  if (filters?.labels) {
-    params.label = filters.labels.split(',')
+  if (filters?.[TYPE_FILTER] && filters[TYPE_FILTER] !== FILTER_ALL_ITEMS) {
+    params.label = [`kind=${filters[TYPE_FILTER]}`]
+  }
+
+  if (filters?.[LABELS_FILTER]) {
+    const labelList = filters[LABELS_FILTER].split(',')
+
+    if (!params.label || labelList.some(label => label.startsWith('kind='))) {
+      params.label = labelList
+    } else {
+      params.label = params.label.concat(labelList)
+    }
   }
 
   if (jobName) {
     params.name = jobName
-  } else if (filters?.name) {
-    params.name = `~${filters.name}`
+  } else if (filters?.[NAME_FILTER]) {
+    params.name = `~${filters[NAME_FILTER]}`
   }
 
   if (
-    filters?.state &&
-    filters.state !== FILTER_ALL_ITEMS &&
-    !filters.state.includes(FILTER_ALL_ITEMS)
+    filters?.[STATUS_FILTER] &&
+    filters[STATUS_FILTER] !== FILTER_ALL_ITEMS &&
+    !filters[STATUS_FILTER].includes(FILTER_ALL_ITEMS)
   ) {
-    params.state = filters.state
+    params.state = filters[STATUS_FILTER]
   }
 
-  if (filters?.dates) {
-    if (filters.dates.value[0]) {
-      params.start_time_from = filters.dates.value[0].toISOString()
+  if (filters?.[DATES_FILTER]) {
+    if (filters[DATES_FILTER].value[0]) {
+      params.start_time_from = filters[DATES_FILTER].value[0].toISOString()
     }
 
-    if (filters.dates.value[1] && !filters.dates.isPredefined) {
-      params.start_time_to = filters.dates.value[1].toISOString()
+    if (filters[DATES_FILTER].value[1] && !filters[DATES_FILTER].isPredefined) {
+      params.start_time_to = filters[DATES_FILTER].value[1].toISOString()
     }
   }
 
@@ -198,7 +215,7 @@ export const fetchJobs = createAsyncThunk('fetchJobs', ({ project, filters, conf
     .then(({ data }) => {
       thunkAPI.dispatch(jobsSlice.actions.setJobsData({ jobs: data.runs || [] }))
 
-      return { ...data, runs: (data || {}).runs.filter(job => job.metadata.iteration === 0) }
+      return data
     })
     .catch(error => {
       largeResponseCatchHandler(
