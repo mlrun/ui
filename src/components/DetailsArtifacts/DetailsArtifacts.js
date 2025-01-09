@@ -68,7 +68,6 @@ const DetailsArtifacts = ({
 
   const dispatch = useDispatch()
   const artifactsStore = useSelector(store => store.artifactsStore)
-  const isJobLoading = useSelector(store => Boolean(store.jobsStore.jobLoadingCounter))
 
   const showArtifact = useCallback(
     id => {
@@ -192,14 +191,14 @@ const DetailsArtifacts = ({
   )
 
   useEffect(() => {
-    if ((params.jobId === selectedItem.uid || isDetailsPopUp) && !isJobLoading) {
+    if (params.jobId === selectedItem.uid || isDetailsPopUp) {
       if (selectedItem.iterationStats?.length > 0 && iteration) {
         getJobArtifacts(selectedItem, iteration)
       } else if (selectedItem.iterationStats?.length === 0) {
         getJobArtifacts(selectedItem, null)
       }
     }
-  }, [getJobArtifacts, iteration, params.jobId, params.projectName, selectedItem, isDetailsPopUp, isJobLoading])
+  }, [getJobArtifacts, iteration, params.jobId, params.projectName, selectedItem, isDetailsPopUp])
 
   useEffect(() => {
     return () => {
