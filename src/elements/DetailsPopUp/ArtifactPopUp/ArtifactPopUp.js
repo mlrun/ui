@@ -40,7 +40,7 @@ import {
 } from '../../../components/ModelsPage/Models/models.util'
 
 import { fetchDataSets, fetchFiles, fetchModels } from '../../../reducers/artifactsReducer'
-import { ARTIFACTS_TAB, DATASETS_TAB, FILES_TAB, MODELS_TAB } from '../../../constants'
+import { DATASETS_TAB, FILES_TAB, MODEL_TYPE, MODELS_TAB } from '../../../constants'
 import { toggleYaml } from '../../../reducers/appReducer'
 
 const ArtifactPopUp = ({ artifactData, isOpen, onResolve }) => {
@@ -58,18 +58,18 @@ const ArtifactPopUp = ({ artifactData, isOpen, onResolve }) => {
           pageData: generateDatasetPageData(selectedArtifact, viewMode, {}, true),
           fetchArtifact: fetchDataSets
         }
-      : artifactData.kind === ARTIFACTS_TAB
+      : artifactData.kind === MODEL_TYPE
         ? {
-            type: FILES_TAB,
-            generateActionsMenu: generateFileActionsMenu,
-            pageData: generateFilePageData(viewMode),
-            fetchArtifact: fetchFiles
-          }
-        : {
             type: MODELS_TAB,
             generateActionsMenu: generateModelActionsMenu,
             pageData: generateModelPageData(selectedArtifact, viewMode),
             fetchArtifact: fetchModels
+          }
+        : {
+            type: FILES_TAB,
+            generateActionsMenu: generateFileActionsMenu,
+            pageData: generateFilePageData(viewMode),
+            fetchArtifact: fetchFiles
           }
   }, [selectedArtifact, artifactData.kind, viewMode])
 
@@ -122,16 +122,7 @@ const ArtifactPopUp = ({ artifactData, isOpen, onResolve }) => {
 
         onResolve()
       })
-  }, [
-    artifactContext,
-    dispatch,
-    onResolve,
-    artifactData.iteration,
-    artifactData.key,
-    artifactData.project,
-    artifactData.tag,
-    artifactData.uid
-  ])
+  }, [artifactData, artifactContext, dispatch, onResolve])
 
   const actionsMenu = useMemo(
     () => fileMin =>
