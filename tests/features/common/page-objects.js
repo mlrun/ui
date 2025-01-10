@@ -83,6 +83,7 @@ module.exports = {
   New_Function: sidePanel['newFunction'],
   New_JobTemplate_Edit: sidePanel['newJobTemplateEdit'],
   Notification_Popup: interactivePopup['notificationPopUp'],
+  Pagination_Info_Pane: infoPane['paginationInfoPane'],
   Preview_Info_Pane: infoPane['previewInfoPane'],
   Preview_Popup: interactivePopup['previewPopup'],
   Project: project['project'],

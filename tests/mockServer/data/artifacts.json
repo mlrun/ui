@@ -37477,6 +37477,9 @@
         "tree": "046fb43a-3e95-45f2-883a-5da998c23be7",
         "uid": "aa141aed7895c6586853a2464ab3bc12d6e3b555",
         "updated": "2024-12-17 16:23:17.322164+00:00",
+        "labels": {
+          "source": "http://www.some.url.com/path/to/data!params"
+        },
         "created": "2024-12-17 16:23:17.323329+00:00",
         "tag": "latest"
       },
