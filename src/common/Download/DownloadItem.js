@@ -46,7 +46,7 @@ const DownloadItem = ({ downloadItem }) => {
   const downloadAbortControllerRef = useRef(null)
   const timeoutRef = useRef(null)
   const dispatch = useDispatch()
-  console.log('downloadItem', downloadItem)
+
   let file = useMemo(
     () =>
       downloadItem.fileName ??
