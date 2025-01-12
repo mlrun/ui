@@ -274,7 +274,7 @@ const ProjectSettings = () => {
           }}
           closePopUp={confirmData.rejectHandler}
           confirmButton={{
-            handler: confirmData.confirmHandler,
+            handler: () => confirmData.confirmHandler(confirmData.item),
             label: confirmData.btnConfirmLabel,
             variant: confirmData.btnConfirmType
           }}
@@ -284,7 +284,7 @@ const ProjectSettings = () => {
         />
       )}
 
-      { projectStore.projectsToDelete.includes(params.projectName) && <Loader />}
+      {projectStore.projectsToDelete.includes(params.projectName) && <Loader />}
 
       <div className="settings">
         <div className="settings__header">

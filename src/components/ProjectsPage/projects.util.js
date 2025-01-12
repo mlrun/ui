@@ -328,7 +328,7 @@ export const generateMonitoringCounters = (data, dispatch) => {
 
 export const onDeleteProject = (project, setConfirmData, ...args) => {
   setConfirmData({
-    item: project,
+    item: null,
     header: 'Delete project?',
     message: `You are trying to delete the project "${project.metadata.name}". Deleted projects cannot be restored`,
     btnConfirmLabel: 'Delete',
