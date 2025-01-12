@@ -396,7 +396,6 @@ const Documents = ({ isAllVersions = false }) => {
       }
       projectName={params.projectName}
       ref={{ documentsRef }}
-      refreshDocuments={refreshDocuments}
       requestErrorMessage={requestErrorMessage}
       selectedDocument={selectedDocument}
       setSearchDocumentsParams={

@@ -37552,6 +37552,7 @@
         "key": "doc1",
         "project": "default",
         "iter": 0,
+        "labels": {"kind": "milvus"},
         "tree": "50a5b1c2-023e-42bf-95f6-450eef01d883",
         "uid": "7638a89a4a2e6aa0dc746b49595aad3ada3b91ed",
         "updated": "2024-12-17 16:22:25.112551+00:00",

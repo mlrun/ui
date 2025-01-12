@@ -24,6 +24,7 @@ import {
   AZURE_STORAGE_INPUT_PATH_SCHEME,
   DATASET_TYPE,
   DBFS_STORAGE_INPUT_PATH_SCHEME,
+  DOCUMENT_TYPE,
   GOOGLE_STORAGE_INPUT_PATH_SCHEME,
   HTTP_STORAGE_INPUT_PATH_SCHEME,
   HTTPS_STORAGE_INPUT_PATH_SCHEME,
@@ -43,7 +44,7 @@ const targetPathRegex =
 const httpTargetPathRegex =
   /^(http|https):(\/\/\/|\/\/)(?!.*:\/\/)([\w\-._~:/?#[\]%@!$&'()*+,;=]+)$/i
 const mlrunTargetPathRegex =
-  /^(artifacts|feature-vectors|datasets|models)\/(\S+?)\/(\S+?)(#(\S+?))?(:(\S+?))?(@(\S+))?$/
+  /^(artifacts|feature-vectors|datasets|models|documents)\/(\S+?)\/(\S+?)(#(\S+?))?(:(\S+?))?(@(\S+))?$/
 
 export const pathPlaceholders = {
   [MLRUN_STORAGE_INPUT_PATH_SCHEME]: 'artifacts/my-project/my-artifact:my-tag',
@@ -74,6 +75,7 @@ export const pathTips = projectItem => {
     'feature-vectors': 'feature-vector',
     artifacts: 'artifact',
     datasets: 'dataset',
+    documents: 'document',
     models: 'model'
   }
   const reference = pathType[projectItem]
@@ -101,6 +103,10 @@ export const storePathTypes = [
   {
     label: 'Datasets',
     id: 'datasets'
+  },
+  {
+    label: 'Documents',
+    id: 'documents'
   },
   {
     label: 'Models',
@@ -243,8 +249,8 @@ export const generateProjectsList = (projectsList, currentProject) =>
       return prevProject.id === currentProject
         ? -1
         : nextProject.id === currentProject
-        ? 1
-        : prevProject.id.localeCompare(nextProject.id)
+          ? 1
+          : prevProject.id.localeCompare(nextProject.id)
     })
 
 export const generateComboboxMatchesList = (
@@ -345,8 +351,10 @@ export const getArtifacts = (dispatch, project, storePathType, setDataInputState
             storePathType === 'artifacts'
               ? ARTIFACT_OTHER_TYPE
               : storePathType === 'datasets'
-              ? DATASET_TYPE
-              : MODEL_TYPE
+                ? DATASET_TYPE
+                : storePathType === 'documents'
+                  ? DOCUMENT_TYPE
+                  : MODEL_TYPE
         }
       }
     })

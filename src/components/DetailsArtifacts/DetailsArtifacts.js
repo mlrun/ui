@@ -148,7 +148,7 @@ const DetailsArtifacts = ({
 
       if (workflowId) {
         return dispatch(
-          fetchJob({
+          fetchJob({ // todo remove this request in ML-8608 and use data from the selectedJob (it will be up to date)
             project: job.project || params.projectName,
             jobId: params.jobId,
             iter: iteration
@@ -166,26 +166,26 @@ const DetailsArtifacts = ({
             }
           }
         )
-      }
+      } else {
+        if (iteration) {
+          config.params.iter = iteration
+        }
 
-      if (iteration) {
-        config.params.iter = iteration
+        dispatch(
+          fetchArtifacts({
+            project: job.project || params.projectName,
+            filters: {},
+            config,
+            setRequestErrorMessage
+          })
+        )
+          .unwrap()
+          .then(result => {
+            if (result) {
+              setArtifactsPreviewContent(generateArtifactsPreviewContent(job, result))
+            }
+          })
       }
-
-      dispatch(
-        fetchArtifacts({
-          project: job.project || params.projectName,
-          filters: {},
-          config,
-          setRequestErrorMessage
-        })
-      )
-        .unwrap()
-        .then(result => {
-          if (result) {
-            setArtifactsPreviewContent(generateArtifactsPreviewContent(job, result))
-          }
-        })
     },
     [dispatch, params.jobId, params.projectName]
   )
@@ -208,7 +208,7 @@ const DetailsArtifacts = ({
   }, [params.jobId, params.projectName, selectedItem, iteration])
 
   return artifactsStore.loading ? (
-    <Loader />
+    <Loader section />
   ) : artifactsPreviewContent.length === 0 ? (
     <NoData message={requestErrorMessage} />
   ) : (

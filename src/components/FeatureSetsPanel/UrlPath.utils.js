@@ -23,6 +23,7 @@ import {
   AZURE_STORAGE_INPUT_PATH_SCHEME,
   DATASET_TYPE,
   DBFS_STORAGE_INPUT_PATH_SCHEME,
+  DOCUMENT_TYPE,
   GOOGLE_STORAGE_INPUT_PATH_SCHEME,
   MLRUN_STORAGE_INPUT_PATH_SCHEME,
   MODEL_TYPE,
@@ -120,6 +121,10 @@ export const projectItemsPathTypes = [
     id: 'datasets'
   },
   {
+    label: 'Documents',
+    id: 'documents'
+  },
+  {
     label: 'Models',
     id: 'models'
   }
@@ -128,8 +133,8 @@ export const projectItemsPathTypes = [
 export const isUrlInputValid = (pathInputType, pathInputValue, dataSourceKind) => {
   const regExp =
     dataSourceKind === CSV
-      ? /^(artifacts|datasets|models)\/(\S+?)\/(\S+?)(#(\S+?))?(:(\S+?))?(@(\S+))?(?<!\/)$/
-      : /^(artifacts|datasets|models)\/(\S+?)\/(\S+?)(#(\S+?))?(:(\S+?))?(@(\S+))?$/
+      ? /^(artifacts|datasets|models|documents)\/(\S+?)\/(\S+?)(#(\S+?))?(:(\S+?))?(@(\S+))?(?<!\/)$/
+      : /^(artifacts|datasets|models|documents)\/(\S+?)\/(\S+?)(#(\S+?))?(:(\S+?))?(@(\S+))?$/
   const valueIsNotEmpty = pathInputValue?.trim().length > 0
   const defaultValidation = valueIsNotEmpty && /^[^\s]*\/[^\s]*$/.test(pathInputValue)
 
@@ -162,8 +167,10 @@ export const getArtifacts = (dispatch, project, projectItemType, setArtifacts) =
             projectItemType === 'artifacts'
               ? ARTIFACT_OTHER_TYPE
               : projectItemType === 'datasets'
-              ? DATASET_TYPE
-              : MODEL_TYPE
+                ? DATASET_TYPE
+                : projectItemType === 'documents'
+                  ? DOCUMENT_TYPE
+                  : MODEL_TYPE
         }
       }
     })
