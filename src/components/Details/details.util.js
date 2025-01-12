@@ -26,6 +26,7 @@ import JobPopUp from '../../elements/DetailsPopUp/JobPopUp/JobPopUp'
 
 import {
   DATASETS_PAGE,
+  DOCUMENTS_TAB,
   FEATURE_SETS_TAB,
   FEATURE_STORE_PAGE,
   FEATURE_VECTORS_TAB,
@@ -192,7 +193,7 @@ export const generateArtifactsContent = (detailsType, selectedItem, projectName)
         fieldData: {
           name: 'labels'
         },
-        editModeEnabled: detailsType === MODELS_TAB,
+        editModeEnabled: detailsType === MODELS_TAB || detailsType === DOCUMENTS_TAB,
         editModeType: 'chips'
       }
     }
@@ -239,7 +240,7 @@ export const generateAlertsContent = selectedItem => {
       handleClick: () =>
         openPopUp(JobPopUp, {
           jobData: {
-            project: selectedItem?.job?.name,
+            project: selectedItem?.project,
             uid: selectedItem?.job?.jobUid,
             iter: 0
           }

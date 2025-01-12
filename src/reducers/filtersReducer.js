@@ -23,6 +23,7 @@ import { set } from 'lodash'
 import {
   ARTIFACT_OTHER_TYPE,
   DATASET_TYPE,
+  DOCUMENT_TYPE,
   FILTER_MENU_MODAL,
   GROUP_BY_NAME,
   MODEL_TYPE,
@@ -47,7 +48,7 @@ export const getFilterTagOptions = createAsyncThunk(
       config
     }
     const fetchTagsPromise =
-      [ARTIFACT_OTHER_TYPE, MODEL_TYPE, DATASET_TYPE].includes(category) && dispatch
+      [ARTIFACT_OTHER_TYPE, MODEL_TYPE, DATASET_TYPE, DOCUMENT_TYPE].includes(category) && dispatch
         ? dispatch(fetchTags(fetchTagsArguments)).unwrap()
         : fetchTags(fetchTagsArguments)
 

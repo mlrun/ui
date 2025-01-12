@@ -21,7 +21,14 @@ import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
 import jobsApi from '../api/jobs-api'
 import { hideLoading, showLoading } from './redux.util'
 import { get } from 'lodash'
-import { FILTER_ALL_ITEMS } from '../constants'
+import {
+  DATES_FILTER,
+  FILTER_ALL_ITEMS,
+  LABELS_FILTER,
+  NAME_FILTER,
+  STATUS_FILTER,
+  TYPE_FILTER
+} from '../constants'
 import { largeResponseCatchHandler } from '../utils/largeResponseCatchHandler'
 import functionsApi from '../api/functions-api'
 import { showErrorNotification } from '../utils/notifications.util'
@@ -30,6 +37,7 @@ import { getNewJobErrorMsg } from '../components/JobWizard/JobWizard.util'
 const initialState = {
   jobsData: [],
   job: {},
+  jobLoadingCounter: 0,
   jobFunc: {},
   jobRuns: [],
   jobs: [],
@@ -80,31 +88,41 @@ const generateRequestParams = (filters, jobName) => {
     iter: false
   }
 
-  if (filters?.labels) {
-    params.label = filters.labels.split(',')
+  if (filters?.[TYPE_FILTER] && filters[TYPE_FILTER] !== FILTER_ALL_ITEMS) {
+    params.label = [`kind=${filters[TYPE_FILTER]}`]
+  }
+
+  if (filters?.[LABELS_FILTER]) {
+    const labelList = filters[LABELS_FILTER].split(',')
+
+    if (!params.label || labelList.some(label => label.startsWith('kind='))) {
+      params.label = labelList
+    } else {
+      params.label = params.label.concat(labelList)
+    }
   }
 
   if (jobName) {
     params.name = jobName
-  } else if (filters?.name) {
-    params.name = `~${filters.name}`
+  } else if (filters?.[NAME_FILTER]) {
+    params.name = `~${filters[NAME_FILTER]}`
   }
 
   if (
-    filters?.state &&
-    filters.state !== FILTER_ALL_ITEMS &&
-    !filters.state.includes(FILTER_ALL_ITEMS)
+    filters?.[STATUS_FILTER] &&
+    filters[STATUS_FILTER] !== FILTER_ALL_ITEMS &&
+    !filters[STATUS_FILTER].includes(FILTER_ALL_ITEMS)
   ) {
-    params.state = filters.state
+    params.state = filters[STATUS_FILTER]
   }
 
-  if (filters?.dates) {
-    if (filters.dates.value[0]) {
-      params.start_time_from = filters.dates.value[0].toISOString()
+  if (filters?.[DATES_FILTER]) {
+    if (filters[DATES_FILTER].value[0]) {
+      params.start_time_from = filters[DATES_FILTER].value[0].toISOString()
     }
 
-    if (filters.dates.value[1] && !filters.dates.isPredefined) {
-      params.start_time_to = filters.dates.value[1].toISOString()
+    if (filters[DATES_FILTER].value[1] && !filters[DATES_FILTER].isPredefined) {
+      params.start_time_to = filters[DATES_FILTER].value[1].toISOString()
     }
   }
 
@@ -197,7 +215,7 @@ export const fetchJobs = createAsyncThunk('fetchJobs', ({ project, filters, conf
     .then(({ data }) => {
       thunkAPI.dispatch(jobsSlice.actions.setJobsData({ jobs: data.runs || [] }))
 
-      return { ...data, runs: (data || {}).runs.filter(job => job.metadata.iteration === 0) }
+      return data
     })
     .catch(error => {
       largeResponseCatchHandler(
@@ -272,8 +290,11 @@ export const removeScheduledJob = createAsyncThunk(
     return jobsApi.removeScheduledJob({ projectName, scheduleName })
   }
 )
-export const runNewJob = createAsyncThunk('runNewJob', ({ postData }) => {
-  return jobsApi.runJob(postData).then(result => result)
+export const runNewJob = createAsyncThunk('runNewJob', ({ postData }, thunkAPI) => {
+  return jobsApi
+    .runJob(postData)
+    .then(result => result)
+    .catch(error => thunkAPI.rejectWithValue(error))
 })
 
 const jobsSlice = createSlice({
@@ -285,6 +306,9 @@ const jobsSlice = createSlice({
     },
     setJobsData(state, action) {
       state.jobsData = action.payload
+    },
+    setJobFunction(state, action) {
+      state.jobFunc = action.payload
     }
   },
   extraReducers: builder => {
@@ -307,27 +331,39 @@ const jobsSlice = createSlice({
       state.loading = false
     })
     builder.addCase(fetchAllJobRuns.rejected, hideLoading)
-    builder.addCase(fetchJob.pending, showLoading)
+    builder.addCase(fetchJob.pending, (state, action) => {
+      state.jobLoadingCounter++
+    })
     builder.addCase(fetchJob.fulfilled, (state, action) => {
       state.error = null
       state.job = action.payload
-      state.loading = false
+      state.jobLoadingCounter--
     })
-    builder.addCase(fetchJob.rejected, hideLoading)
-    builder.addCase(fetchJobFunction.pending, showLoading)
+    builder.addCase(fetchJob.rejected, (state, action) => {
+      state.jobLoadingCounter--
+    })
+    builder.addCase(fetchJobFunction.pending, (state, action) => {
+      state.jobLoadingCounter++
+    })
     builder.addCase(fetchJobFunction.fulfilled, (state, action) => {
       state.error = null
       state.jobFunc = action.payload
-      state.loading = false
+      state.jobLoadingCounter--
     })
-    builder.addCase(fetchJobFunction.rejected, hideLoading)
-    builder.addCase(fetchJobFunctions.pending, showLoading)
+    builder.addCase(fetchJobFunction.rejected, (state, action) => {
+      state.jobLoadingCounter--
+    })
+    builder.addCase(fetchJobFunctions.rejected, (state, action) => {
+      state.jobLoadingCounter--
+    })
+    builder.addCase(fetchJobFunctions.pending, (state, action) => {
+      state.jobLoadingCounter++
+    })
     builder.addCase(fetchJobFunctions.fulfilled, (state, action) => {
       state.error = null
       state.jobFunc = action.payload
-      state.loading = false
+      state.jobLoadingCounter--
     })
-    builder.addCase(fetchJobFunctions.rejected, hideLoading)
     builder.addCase(fetchJobLogs.pending, (state, action) => {
       state.logs.loading = true
       state.logs.error = null
@@ -377,6 +413,6 @@ const jobsSlice = createSlice({
   }
 })
 
-export const { removeJobFunction, setJobsData } = jobsSlice.actions
+export const { removeJobFunction, setJobsData, setJobFunction } = jobsSlice.actions
 
 export default jobsSlice.reducer

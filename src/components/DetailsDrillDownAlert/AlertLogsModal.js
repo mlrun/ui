@@ -29,8 +29,14 @@ const AlertLogsModal = ({ isOpen, onResolve, pageData, selectedItem }) => {
   const location = useLocation()
 
   return (
-    <Modal show={isOpen} onClose={onResolve} size={MODAL_MAX} location={location} noHeader>
-      <h3 className="alert-row__popup-header">Job Logs</h3>
+    <Modal
+      title="Job Logs"
+      className="alerts-logs"
+      show={isOpen}
+      onClose={onResolve}
+      size={MODAL_MAX}
+      location={location}
+    >
       <DetailsLogs
         item={selectedItem}
         logsTitle={pageData.details.logsTitle}

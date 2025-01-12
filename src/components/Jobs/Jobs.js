@@ -143,7 +143,10 @@ const Jobs = () => {
     return defaultsDeep(
       {
         [MONITOR_JOBS_TAB]: {
-          handleRefresh: handleRefreshJobs
+          handleRefresh: (...args) => {
+            setSelectedJob({})
+            handleRefreshJobs(...args)
+          }
         },
         [MONITOR_WORKFLOWS_TAB]: {
           handleRefresh: getWorkflows
@@ -231,7 +234,11 @@ const Jobs = () => {
                     onClick: () => handleMonitoring(selectedJob, true)
                   }
                 ]}
-                autoRefreshIsStopped={jobWizardIsOpened || jobsStore.loading}
+                autoRefreshIsStopped={
+                  jobWizardIsOpened ||
+                  jobsStore.loading ||
+                  Boolean(jobsStore.jobLoadingCounter)
+                }
                 autoRefreshStopTrigger={!isEmpty(selectedJob)}
                 filters={filters}
                 filtersConfig={initialTabData[selectedTab].filtersConfig}
@@ -292,10 +299,8 @@ const Jobs = () => {
               >
                 <Outlet />
               </JobsContext.Provider>
-              {(jobsStore.loading ||
-                workflowsStore.workflows.loading ||
+              {(Boolean(jobsStore.jobLoadingCounter) ||
                 workflowsStore.activeWorkflow.loading ||
-                functionsStore.loading ||
                 functionsStore.funcLoading) && <Loader />}
             </div>
           </div>

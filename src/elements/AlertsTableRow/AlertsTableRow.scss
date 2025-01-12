@@ -129,3 +129,17 @@
     }
   }
 }
+
+.alerts-logs {
+  &.modal {
+    .modal__header {
+      align-items: flex-start;
+      padding: 1rem 2rem;
+      min-height: auto;
+
+      &-title {
+        font-size: 18px;
+      }
+    }
+  }
+}
