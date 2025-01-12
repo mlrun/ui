@@ -92,10 +92,6 @@ const AlertsFilters = ({ isAlertsPage, isCrossProjects }) => {
       {isCrossProjects && (
         <div className="form-row">
           <FormSelect label="Project name" name={PROJECT_FILTER} options={projectsList} />
-          <FormOnChange
-            handler={value => handleInputChange(value, PROJECT_FILTER)}
-            name={PROJECT_FILTER}
-          />
         </div>
       )}
       {isAlertsPage && (
