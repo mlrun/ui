@@ -69,11 +69,8 @@ const DetailsDrillDownAlert = React.forwardRef(
             </div>
             <DetailsLogs
               item={selectedItem}
-              logsTitle={pageData.details.logsTitle}
               noDataMessage={pageData.details.logsNoDataMessage}
-              refreshAdditionalLogs={pageData.details.refreshAdditionalLogs}
               refreshLogs={pageData.details.refreshLogs}
-              removeAdditionalLogs={pageData.details.removeAdditionalLogs}
               removeLogs={pageData.details.removeLogs}
               withLogsRefreshBtn
             />
