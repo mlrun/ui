@@ -106,7 +106,7 @@ const FilesView = React.forwardRef(
                   withRefreshButton
                   withoutExpandButton
                 >
-                  <ArtifactsFilters artifacts={files} isAllVersions={isAllVersions} />
+                  <ArtifactsFilters artifacts={files} />
                 </ActionBar>
               </div>
               {artifactsStore.loading ? null : tableContent.length === 0 ? (

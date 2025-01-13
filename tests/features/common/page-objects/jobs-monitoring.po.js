@@ -39,7 +39,7 @@ const tabSelector = {
     row: {
       root: '.content-menu__item',
       fields: {
-        key: 'a'
+        key: ''
       }
     }
   }
@@ -82,11 +82,10 @@ const overallTable = {
           )
         },
         name: '[data-testid="name"] a .link',
+        uid: '[data-testid="uid"] a .link',
         project_name: '[data-testid="projectName"] .data-ellipsis',
         datetime:
           '.table-body__cell:nth-of-type(1) a .date-uid-row .link-subtext:nth-of-type(1)',
-        uid:
-          '.table-body__cell:nth-of-type(1) a .date-uid-row .link-subtext:nth-of-type(2)',
         duration: '.table-body__cell:nth-of-type(3) .data-ellipsis',
         owner: '.table-body__cell:nth-of-type(4) .data-ellipsis',
         action_menu: {
@@ -132,6 +131,14 @@ const commonCustomRangeFilter = dropdownComponent(
     '[data-testid="date-picker-input"] input',
     '.date-picker__pop-up .select__item',
     '.data-ellipsis .data-ellipsis',
+    false
+  )
+)
+
+const commonSearchByNameFilterInput = inputGroup(
+  generateInputGroup(
+    '[data-testid="name-form-field-input"]',
+    true,
     false
   )
 )
@@ -222,28 +229,17 @@ module.exports = {
         icon: ''
       }
     }),
-    Search_By_Name_Filter_Input: inputGroup(
-      generateInputGroup(
-        '[data-testid="name-form-field-input"]',
-        true,
-        false
-      )
-    ),
+    Search_By_Name_Filter_Input: commonSearchByNameFilterInput,
     Date_Picker_Filter_Dropdown: commonDatePickerFilter,
     Custom_Range_Filter_Dropdown: commonCustomRangeFilter,
     Date_Time_Picker: datepicker(dateTimePickerCalendars),
-    Jobs_Table: commonTable(overallTable)
+    Jobs_Table: commonTable(overallTable),
+    Arrow_Back: By.css('a.link-back__icon')
   },
   crossWorkflowsMonitorTab: {
     Cross_Jobs_Tab_Selector: commonTable(tabSelector),
     Table_FilterBy_Button: By.css('[data-testid="filter-menu-btn-tooltip-wrapper"]'),
-    Search_By_Name_Filter_Input: inputGroup(
-      generateInputGroup(
-        '[data-testid="name-form-field-input"]',
-        true,
-        false
-      )
-    ),
+    Search_By_Name_Filter_Input: commonSearchByNameFilterInput,
     Date_Picker_Filter_Dropdown: commonDatePickerFilter,
     Custom_Range_Filter_Dropdown: commonCustomRangeFilter,
     Date_Time_Picker: datepicker(dateTimePickerCalendars),
@@ -254,13 +250,7 @@ module.exports = {
   crossScheduledMonitorTab: {
     Cross_Jobs_Tab_Selector: commonTable(tabSelector),
     Table_FilterBy_Button: By.css('[data-testid="filter-menu-btn-tooltip-wrapper"]'),
-    Search_By_Name_Filter_Input: inputGroup(
-      generateInputGroup(
-        '[data-testid="name-form-field-input"]',
-        true,
-        false
-      )
-    ),
+    Search_By_Name_Filter_Input: commonSearchByNameFilterInput,
     Date_Picker_Filter_Dropdown: commonDatePickerFilter,
     Custom_Range_Filter_Dropdown: commonCustomRangeFilter,
     Date_Time_Picker: datepicker(dateTimePickerCalendars),

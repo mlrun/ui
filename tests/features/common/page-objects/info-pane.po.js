@@ -843,5 +843,13 @@ module.exports = {
     Header: By.css('.graph-pane__title span'),
     Cross_Close_Button: By.css('.graph-pane__title .round-icon-cp .round-icon-cp__circle'),
     Overview_Headers: commonTable(modelsRealTimeinfoPaneOverviewHeaders)
+  },
+  paginationInfoPane: {
+    BE_Pagination_Navigate_Prev: By.css('[data-testid="pagination-navigate-double-prev-btn"] button'),
+    BE_Pagination_Navigate_Next: By.css('[data-testid="pagination-navigate-next-double-btn"] button'),
+    FE_Pagination_Navigate_Next: By.css('[data-testid="pagination-navigate-next-btn"] button'), 
+    FE_Pagination_Navigate_Prev: By.css('[data-testid="pagination-navigate-prev-btn"] button'), 
+    Pagination_Page_Number: By.css('.pagination-pages .pagination-page-number'),
+    Pagination_Count: By.css('.pagination .pagination-items-count')
   }
 }

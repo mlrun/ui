@@ -1375,6 +1375,39 @@ Then(
 )
 
 Then(
+  'verify action menu on {string} wizard in {string} table with {string} value in {string} column should contains {string}.{string} without scroll',
+  async function (wizard, table, value, column, constWizard, constValue) {
+    const arr = await findRowIndexesByColumnValue(
+      this.driver,
+      pageObjects[wizard][table],
+      column,
+      value
+    )
+    const indx = arr[0]
+    const actionMenuSel = await getCellByIndexColumn(
+      this.driver,
+      pageObjects[wizard][table],
+      indx,
+      'action_menu'
+    )
+
+    await hoverComponent(
+      this.driver,
+      pageObjects[wizard][table]['tableFields'][column](indx),
+      false
+    )
+    await this.driver.sleep(500)
+    await openActionMenu(this.driver, actionMenuSel)
+    await this.driver.sleep(500)
+    await checkActionMenuOptions(
+      this.driver,
+      pageObjects[wizard][table]['tableFields']['action_menu'](indx),
+      pageObjectsConsts[constWizard][constValue]
+    )
+  }
+)
+
+Then(
   'verify that in action menu on {string} wizard in {string} table with {string} value in {string} column {string} option is enabled',
   async function (wizard, table, value, column, option) {
     const arr = await findRowIndexesByColumnValue(

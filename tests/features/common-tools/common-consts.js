@@ -481,19 +481,15 @@ module.exports = {
   },
   Jobs_Monitoring: {
     Tab_List: ['Jobs', 'Workflows', 'Scheduled']
-    // Job_Action_Menu_Options: ['Batch re-run', 'Monitoring', 'View YAML', 'Delete'],
-    // Job_Overview_Action_Menu_Options: ['View YAML', 'Batch re-run', 'Delete'],
-    // Running_Job_Action_Menu_Options: ['Monitoring', 'Abort', 'View YAML'],
-    // Workflows_Action_Menu_Options: ['View YAML'],
-    // Workflows_Info_Pane_Action_Menu_Options: ['Batch re-run', 'Monitoring', 'View YAML', 'Delete'],
-    // Pending_Job_Action_Menu_Options: ['Batch re-run', 'Monitoring', 'Abort', 'View YAML'],
-    // Schedule_Action_Menu_Options: ['Run now', 'Edit', 'Delete', 'View YAML']
   },
   Jobs_And_Workflows: {
     Tab_List: ['Monitor Jobs', 'Monitor Workflows', 'Schedule'],
-    Job_Action_Menu_Options: ['Batch re-run', 'Monitoring', 'View YAML', 'Delete'],
-    Job_Overview_Action_Menu_Options: ['View YAML', 'Batch re-run', 'Delete'],
+    Job_Action_Menu_Options: ['Batch re-run', 'Run\'s resource monitoring', 'View YAML', 'Delete run'],
+    Job_List_Action_Menu_Options: ['Batch re-run', 'Run\'s resource monitoring', 'View YAML', 'Delete run', 'Delete all runs'],
+    Job_Overview_Action_Menu_Options: ['View YAML', 'Run\'s resource monitoring', 'Batch re-run', 'Delete run'],
     Running_Job_Action_Menu_Options: ['Monitoring', 'Abort', 'View YAML'],
+    Delete_Run_Message: /Are you sure you want to delete the run with the UID "(.+?)" of the job "(.+?)"\? Deleted runs can not be restored./,
+    Delete_All_Runs_Message: /Are you sure you want to delete all runs of the job "(.+?)"\? Deleted runs can not be restored./,
     Workflows_Action_Menu_Options: ['View YAML', 'Retry'],
     Workflows_Info_Pane_Action_Menu_Options: ['Batch re-run', 'Monitoring', 'View YAML', 'Delete'],
     Pending_Job_Action_Menu_Options: ['Batch re-run', 'Monitoring', 'Abort', 'View YAML'],
@@ -548,7 +544,7 @@ module.exports = {
     Jobs_Status_Filter_Options: ['All', 'Aborted', 'Aborting', 'Completed', 'Error', 'Running', 'Pending'],
     Workflows_Status_Filter_Options: ['All', 'Error', 'Failed', 'Running', 'Completed'],
     Jobs_Type_Filter_Options: ['All', 'Local', 'Dask', 'Databricks', 'Handler', 'Job', 'Horovod', 'Spark'],
-    Scheduled_Type_Filter_Options: ['All', 'Job', 'Workflow', 'Nuclio', 'Application', 'Serving', 'Spark', 'Horovod', 'Dask', 'Databricks', 'Local', 'Handler'],
+    Scheduled_Type_Filter_Options: ['All', 'Job', 'Workflow', 'Spark', 'Horovod', 'Dask', 'Databricks'],
     Group_By_Filter_Options: ['None', 'Name'],
     Start_Time_Filter_Options: [
       'Any time',
@@ -614,9 +610,11 @@ module.exports = {
   No_Data_Message: {
     Common_Message_Jobs_Monitoring: /No data matches the filter: "Start time: \d{2}\/\d{2}\/\d{4} \d{2}:\d{2} - \d{2}\/\d{2}\/\d{4} \d{2}:\d{2}, Project: test"/,
     Common_Message_Jobs_Monitoring_Status: /No data matches the filter: "Created at: \d{2}\/\d{2}\/\d{4} \d{2}:\d{2} - \d{2}\/\d{2}\/\d{4} \d{2}:\d{2}, Status: (.+?)"/,
+    Common_Message_Jobs_Monitoring_Workflows: /No data matches the filter: "Created at: \d{2}\/\d{2}\/\d{4} \d{2}:\d{2} - \d{2}\/\d{2}\/\d{4} \d{2}:\d{2}, Project: test"/,
     Common_Message_Jobs_Monitoring_Type: /No data matches the filter: "Start time: \d{2}\/\d{2}\/\d{4} \d{2}:\d{2} - \d{2}\/\d{2}\/\d{4} \d{2}:\d{2}, Type: (.+?)"/,
-    Common_Message_Monitor_Jobs: /No data matches the filter: "Start time: \d{2}\/\d{2}\/\d{4} \d{2}:\d{2} - \d{2}\/\d{2}\/\d{4} \d{2}:\d{2}"/,
     Common_Message_Jobs_Monitoring_Scheduled: /No data matches the filter: "Scheduled at: \d{2}\/\d{2}\/\d{4} \d{2}:\d{2} - \d{2}\/\d{2}\/\d{4} \d{2}:\d{2}, Project: test"/,
+    Common_Message_Monitor_Jobs: /No data matches the filter: "Start time: \d{2}\/\d{2}\/\d{4} \d{2}:\d{2} - \d{2}\/\d{2}\/\d{4} \d{2}:\d{2}"/,
+    Common_Message_Monitor_Jobs_Name: /No data matches the filter: "Name: (.+?)"/,
     Common_Message: 'No data matches the filter: "Version Tag: latest, Name: ccccc"',
     Common_Message_Feature: 'No data matches the filter: "Version Tag: latest"',
     Common_Message_Feature_Vector_Tab: 'No data matches the filter: "Tag: latest, Project: test-test"',
