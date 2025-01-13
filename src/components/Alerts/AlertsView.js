@@ -20,7 +20,6 @@ such restriction.
 import classNames from 'classnames'
 import { toLower } from 'lodash'
 import PropTypes from 'prop-types'
-import { useLocation } from 'react-router-dom'
 
 import ActionBar from '../ActionBar/ActionBar'
 import AlertsFilters from './AlertsFilters'
@@ -31,7 +30,7 @@ import NoData from '../../common/NoData/NoData'
 import Pagination from '../../common/Pagination/Pagination'
 import Table from '../Table/Table'
 
-import { ALERTS_FILTERS, ALERTS_PAGE } from '../../constants'
+import { ALERTS_FILTERS, ALERTS_PAGE, ALERTS_PAGE_PATH } from '../../constants'
 import { getNoDataMessage } from '../../utils/getNoDataMessage'
 import { getCloseDetailsLink } from '../../utils/link-helper.util'
 
@@ -57,7 +56,6 @@ const AlertsView = ({
   toggleRow
 }) => {
   const content = classNames('content', !isAlertsPage && 'alerts-table__content')
-  const location = useLocation()
 
   return (
     <>
@@ -101,7 +99,7 @@ const AlertsView = ({
               <>
                 <Table
                   actionsMenu={[]}
-                  getCloseDetailsLink={() => getCloseDetailsLink(toLower(ALERTS_PAGE), location)}
+                  getCloseDetailsLink={() => getCloseDetailsLink(ALERTS_PAGE_PATH)}
                   pageData={pageData}
                   retryRequest={handleRefreshWithFilters}
                   selectedItem={isAlertsPage ? selectedAlert : {}}

@@ -95,6 +95,7 @@ export const JOBS_MONITORING_WORKFLOWS_TAB = 'workflows'
 export const JOBS_MONITORING_SCHEDULED_TAB = 'scheduled'
 
 export const ALERTS_PAGE = 'ALERTS'
+export const ALERTS_PAGE_PATH = 'alerts'
 export const ALERTS_TAB = 'alerts'
 export const ALERTS_FILTERS = 'alerts'
 export const MODEL_ENDPOINT_RESULT = 'model-endpoint-result'
