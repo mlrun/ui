@@ -38,7 +38,8 @@ import {
   TAG_FILTER_LATEST,
   VIEW_SEARCH_PARAMETER,
   TAG_FILTER_ALL_ITEMS,
-  BE_PAGE
+  BE_PAGE,
+  SHOW_ITERATIONS
 } from '../../../constants'
 import { showArtifactsPreview, updateArtifact } from '../../../reducers/artifactsReducer'
 import { FORBIDDEN_ERROR_STATUS_CODE } from 'igz-controls/constants'
@@ -76,9 +77,8 @@ export const getFiltersConfig = isAllVersions => ({
   [LABELS_FILTER]: { label: 'Labels:', initialValue: '', isModal: true },
   [ITERATIONS_FILTER]: {
     label: 'Show best iteration only:',
-    initialValue: '',
-    isModal: true,
-    hidden: !isAllVersions
+    initialValue: isAllVersions ? '' : SHOW_ITERATIONS,
+    isModal: true
   }
 })
 

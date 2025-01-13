@@ -105,7 +105,7 @@ const ModelsView = React.forwardRef(
                 withRefreshButton
                 withoutExpandButton
               >
-                <ArtifactsFilters artifacts={models} isAllVersions={isAllVersions} />
+                <ArtifactsFilters artifacts={models} />
               </ActionBar>
             </div>
             {isAllVersions && (
