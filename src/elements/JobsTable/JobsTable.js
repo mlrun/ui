@@ -17,7 +17,7 @@ illegal under applicable law, and the grant of the foregoing license
 under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
-import React, { useMemo, useCallback, useEffect } from 'react'
+import React, { useMemo, useCallback, useEffect, useLayoutEffect } from 'react'
 import PropTypes from 'prop-types'
 import { isEmpty } from 'lodash'
 import { useDispatch, useSelector } from 'react-redux'
@@ -219,11 +219,11 @@ const JobsTable = React.forwardRef(
       (job, isDeleteAll) => {
         handleDeleteJob(isDeleteAll, job, refreshJobs, filters, dispatch).then(() => {
           if (params.jobName) {
-            navigate(getCloseDetailsLink(params.jobName, location, true))
+            navigate(getCloseDetailsLink(params.jobName, true))
           }
         })
       },
-      [refreshJobs, filters, dispatch, params.jobName, navigate, location]
+      [refreshJobs, filters, dispatch, params.jobName, navigate]
     )
 
     const handleConfirmDeleteJob = useCallback(
@@ -311,7 +311,7 @@ const JobsTable = React.forwardRef(
       setJobWizardMode
     ])
 
-    useEffect(() => {
+    useLayoutEffect(() => {
       checkForSelectedJob(
         paginatedJobs,
         params.jobName,
@@ -320,8 +320,7 @@ const JobsTable = React.forwardRef(
         setSelectedJob,
         modifyAndSelectRun,
         searchParams,
-        paginationConfigJobsRef,
-        location
+        paginationConfigJobsRef
       )
     }, [
       searchParams,
@@ -332,8 +331,7 @@ const JobsTable = React.forwardRef(
       params.jobName,
       params.projectName,
       setSelectedJob,
-      modifyAndSelectRun,
-      location
+      modifyAndSelectRun
     ])
 
     return (
@@ -355,7 +353,7 @@ const JobsTable = React.forwardRef(
             <>
               <Table
                 actionsMenu={actionsMenu}
-                getCloseDetailsLink={() => getCloseDetailsLink(params.jobName, location)}
+                getCloseDetailsLink={() => getCloseDetailsLink(params.jobName)}
                 handleCancel={() => setSelectedJob({})}
                 pageData={pageData}
                 retryRequest={handleRefreshWithFilters}

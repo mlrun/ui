@@ -55,8 +55,7 @@ export const checkForSelectedJob = debounce(
     setSelectedJob,
     modifyAndSelectRun,
     searchParams,
-    paginationConfigJobsRef,
-    location
+    paginationConfigJobsRef
   ) => {
     if (jobId) {
       const searchBePage = parseInt(searchParams.get(BE_PAGE))
@@ -68,7 +67,7 @@ export const checkForSelectedJob = debounce(
         })
 
         if (!selectedPaginatedJob) {
-          navigate(getCloseDetailsLink(jobName, location, true), { replace: true })
+          navigate(getCloseDetailsLink(jobName, true), { replace: true })
         } else if (selectedPaginatedJob) {
           modifyAndSelectRun(cloneDeep(selectedPaginatedJob))
         }
