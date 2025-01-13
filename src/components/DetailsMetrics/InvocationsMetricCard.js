@@ -23,7 +23,7 @@ import classNames from 'classnames'
 
 import StatsCard from '../../common/StatsCard/StatsCard'
 import MetricChart from '../MetricChart/MetricChart'
-import { RoundedIcon } from 'igz-controls/components'
+import { RoundedIcon, Tip } from 'igz-controls/components'
 
 import {
   calculatePercentageDrift,
@@ -124,7 +124,13 @@ const InvocationsMetricCard = forwardRef(
             <div
               className={`metrics__card-invocation-content ${!isInvocationCardExpanded && 'metrics__card-invocation-content-visible'}`}
             >
-              <div className="metrics__card-invocation-content-title">Endpoint call count</div>
+              <div className="metrics__card-invocation-content-title">
+                Endpoint call count
+                <Tip
+                  className="stats-card__title-tip"
+                  text="All values are approximate when using sampling to monitor this model endpoint"
+                />
+              </div>
               <div className="metrics__card-invocation-content-container">
                 <div className="metrics__card-invocation-content-container_drift_icon">
                   {resultPercentageDrift.icon}
