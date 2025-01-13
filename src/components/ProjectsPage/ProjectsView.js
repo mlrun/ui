@@ -97,7 +97,7 @@ const ProjectsView = ({
           }}
           closePopUp={confirmData.rejectHandler}
           confirmButton={{
-            handler: () => confirmData.confirmHandler(confirmData.item),
+            handler: confirmData.confirmHandler,
             label: confirmData.btnConfirmLabel,
             variant: confirmData.btnConfirmType
           }}

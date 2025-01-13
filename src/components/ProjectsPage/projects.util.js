@@ -161,7 +161,7 @@ export const handleDeleteProjectError = (
       rejectHandler: () => {
         setConfirmData(null)
       },
-      confirmHandler: project => {
+      confirmHandler: () => {
         handleDeleteProject(
           project,
           true,
@@ -328,7 +328,7 @@ export const generateMonitoringCounters = (data, dispatch) => {
 
 export const onDeleteProject = (project, setConfirmData, ...args) => {
   setConfirmData({
-    item: null,
+    item: project,
     header: 'Delete project?',
     message: `You are trying to delete the project "${project.metadata.name}". Deleted projects cannot be restored`,
     btnConfirmLabel: 'Delete',
@@ -336,8 +336,7 @@ export const onDeleteProject = (project, setConfirmData, ...args) => {
     rejectHandler: () => {
       setConfirmData(null)
     },
-    confirmHandler: deleteNonEmpty =>
-      handleDeleteProject(project, deleteNonEmpty, setConfirmData, ...args)
+    confirmHandler: () => handleDeleteProject(project, false, setConfirmData, ...args)
   })
 }
 
