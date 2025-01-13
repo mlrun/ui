@@ -18,7 +18,6 @@ under the Apache 2.0 license is conditioned upon your compliance with
 such restriction.
 */
 import classNames from 'classnames'
-import { toLower } from 'lodash'
 import PropTypes from 'prop-types'
 
 import ActionBar from '../ActionBar/ActionBar'
@@ -131,7 +130,7 @@ const AlertsView = ({
                   })}
                 </Table>
                 <Pagination
-                  closeParamName={toLower(ALERTS_PAGE)}
+                  closeParamName={ALERTS_PAGE_PATH}
                   page={pageData.page}
                   paginationConfig={paginationConfigAlertsRef.current}
                 />
