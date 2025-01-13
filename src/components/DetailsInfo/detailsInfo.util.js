@@ -62,6 +62,8 @@ export const generateTriggerInfoContent = criteria => {
   return []
 }
 
+export const notifications = [{ label: 'Notifications', id: 'notifications' }]
+
 export const generateArtifactsInfoContent = (page, pageTab, selectedItem) => {
   if (pageTab === MODEL_ENDPOINTS_TAB) {
     const { name, tag } =
