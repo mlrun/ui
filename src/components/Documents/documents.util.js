@@ -267,7 +267,7 @@ export const handleApplyDetailsChanges = (
           setNotification({
             status: response.status,
             id: Math.random(),
-            message: 'Model was updated successfully'
+            message: 'Document was updated successfully'
           })
         )
       })
@@ -275,7 +275,7 @@ export const handleApplyDetailsChanges = (
         const customErrorMsg =
           error.response?.status === FORBIDDEN_ERROR_STATUS_CODE
             ? 'Permission denied'
-            : getErrorMsg(error, 'Failed to update the model')
+            : getErrorMsg(error, 'Failed to update the document')
 
         showErrorNotification(dispatch, error, '', customErrorMsg, () =>
           handleApplyDetailsChanges(changes, projectName, selectedItem, setNotification, dispatch)
