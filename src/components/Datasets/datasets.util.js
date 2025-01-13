@@ -37,7 +37,8 @@ import {
   TAG_FILTER_ALL_ITEMS,
   TAG_FILTER_LATEST,
   VIEW_SEARCH_PARAMETER,
-  BE_PAGE
+  BE_PAGE,
+  SHOW_ITERATIONS
 } from '../../constants'
 import { PRIMARY_BUTTON } from 'igz-controls/constants'
 import { applyTagChanges, chooseOrFetchArtifact } from '../../utils/artifacts.util'
@@ -88,9 +89,8 @@ export const getFiltersConfig = isAllVersions => ({
   [LABELS_FILTER]: { label: 'Labels:', initialValue: '', isModal: true },
   [ITERATIONS_FILTER]: {
     label: 'Show best iteration only:',
-    initialValue: '',
-    isModal: true,
-    hidden: !isAllVersions
+    initialValue: isAllVersions ? '' : SHOW_ITERATIONS,
+    isModal: true
   }
 })
 

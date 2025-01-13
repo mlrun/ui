@@ -34,7 +34,9 @@ import {
   GROUP_BY_NONE,
   REQUEST_CANCELED,
   BE_PAGE,
-  BE_PAGE_SIZE
+  BE_PAGE_SIZE,
+  ITERATIONS_FILTER,
+  SHOW_ITERATIONS
 } from '../../constants'
 import { fetchArtifactTags, fetchDataSets, removeDataSets } from '../../reducers/artifactsReducer'
 import {
@@ -113,7 +115,11 @@ const Datasets = ({ isAllVersions = false }) => {
         requestParams.name = params.datasetName
         setDatasetVersions([])
       } else {
-        requestParams['partition-by'] = 'project_and_name'
+        if (filters[ITERATIONS_FILTER] !== SHOW_ITERATIONS) {
+          requestParams['partition-by'] = 'project_and_name'
+          requestParams['partition-sort-by'] = 'updated'
+        }
+        
         setDatasets([])
       }
 

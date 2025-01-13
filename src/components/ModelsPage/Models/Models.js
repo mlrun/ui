@@ -43,7 +43,9 @@ import {
   FUNCTION_TYPE_SERVING,
   ALL_VERSIONS_PATH,
   BE_PAGE,
-  BE_PAGE_SIZE
+  BE_PAGE_SIZE,
+  ITERATIONS_FILTER,
+  SHOW_ITERATIONS
 } from '../../../constants'
 import {
   checkForSelectedModel,
@@ -127,7 +129,11 @@ const Models = ({ fetchModelFeatureVector, isAllVersions }) => {
         requestParams.name = params.modelName
         setModelVersions([])
       } else {
-        requestParams['partition-by'] = 'project_and_name'
+        if (filters[ITERATIONS_FILTER] !== SHOW_ITERATIONS) {
+          requestParams['partition-by'] = 'project_and_name'
+          requestParams['partition-sort-by'] = 'updated'
+        }
+
         setModels([])
       }
 

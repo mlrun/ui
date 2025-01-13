@@ -38,7 +38,7 @@ const tabSelector = {
     row: {
       root: '.content-menu__item',
       fields: {
-        key: 'a'
+        key: ''
       }
     }
   }
