@@ -336,7 +336,7 @@ export const createDocumentsRowData = (artifact, project, isAllVersions) => {
         headerId: isAllVersions ? 'uid' : 'name',
         headerLabel: isAllVersions ? 'UID' : 'Name',
         value: isAllVersions ? artifact.uid : artifact.db_key,
-        className: 'table-cell-name ',
+        className: 'table-cell-name',
         getLink: tab => getArtifactsDetailsLink(artifact, 'documents', tab, project, isAllVersions),
         showTag: true
       },
