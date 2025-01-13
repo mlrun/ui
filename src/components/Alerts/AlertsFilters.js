@@ -46,7 +46,7 @@ import {
   JOB_NAME,
   MODEL_ENDPOINT_RESULT,
   MODEL_MONITORING_APPLICATION,
-  PROJECTS_FILTER,
+  PROJECT_FILTER,
   SEVERITY
 } from '../../constants'
 
@@ -91,7 +91,7 @@ const AlertsFilters = ({ isAlertsPage, isCrossProjects }) => {
     <>
       {isCrossProjects && (
         <div className="form-row">
-          <FormSelect label="Project name" name={PROJECTS_FILTER} options={projectsList} />
+          <FormSelect label="Project name" name={PROJECT_FILTER} options={projectsList} />
         </div>
       )}
       {isAlertsPage && (

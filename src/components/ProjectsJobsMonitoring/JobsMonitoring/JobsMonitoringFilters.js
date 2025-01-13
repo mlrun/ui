@@ -39,7 +39,7 @@ const JobsMonitoringFilters = () => {
   }
 
   return (
-    <div>
+    <>
       <div className="form-row">
         <FormInput name={PROJECT_FILTER} placeholder="Search by project name..." />
         <FormOnChange
@@ -69,7 +69,7 @@ const JobsMonitoringFilters = () => {
           name={LABELS_FILTER}
         />
       </div>
-    </div>
+    </>
   )
 }
 

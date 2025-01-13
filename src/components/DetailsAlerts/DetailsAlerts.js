@@ -51,7 +51,7 @@ const DetailsAlerts = () => {
     refreshAlerts,
     setAlerts,
     setSearchParams
-  } = useAlertsPageData(alertsFilters, false)
+  } = useAlertsPageData(alertsFilters)
 
   const handleRefreshWithFilters = useCallback(
     filters => {

@@ -21,7 +21,7 @@ import { useCallback, useRef, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { useDispatch } from 'react-redux'
 
-import { BE_PAGE, BE_PAGE_SIZE, FILTER_ALL_ITEMS, PROJECTS_FILTER } from '../constants'
+import { BE_PAGE, BE_PAGE_SIZE, FILTER_ALL_ITEMS, PROJECT_FILTER } from '../constants'
 import { usePagination } from './usePagination.hook'
 import { fetchAlerts } from '../reducers/alertsReducer'
 
@@ -39,11 +39,11 @@ export const useAlertsPageData = (filters, isAlertsPage) => {
     filters => {
       setAlerts([])
       abortControllerRef.current = new AbortController()
-
       const projectName = !isAlertsPage
         ? params.projectName || params.id
-        : filters?.[PROJECTS_FILTER]?.toLowerCase?.() !== FILTER_ALL_ITEMS
-          ? filters?.[PROJECTS_FILTER]?.toLowerCase?.()
+        : filters?.[PROJECT_FILTER]?.toLowerCase?.() !== FILTER_ALL_ITEMS &&
+            params?.projectName !== FILTER_ALL_ITEMS
+          ? filters[PROJECT_FILTER]?.toLowerCase()
           : params.id
 
       dispatch(
