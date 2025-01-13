@@ -76,10 +76,11 @@ export const generateArtifactsTabContent = (
 ) => {
   const handleOpenArtifactPopUp = artifact => {
     const artifactData = {
+      kind: artifact.kind,
       project: artifact.project || params.projectName,
-      name: artifact.db_key || artifact.key,
-      iter: artifact.iter,
-      tree: artifact.tree,
+      key: artifact.db_key || artifact.key,
+      iteration: artifact.iter,
+      uid: artifact.tree,
       tag: artifact.tag
     }
 
